@@ -91,6 +91,7 @@ extraResourceOptions=
 8=MySpellInterface.cpp
 9=SpellCheckEngineOption.cpp
 10=SpellCheckerOptionsDialog.cpp
+11=PersonalDictionary.cpp
 [Header]
 1=../include/SpellCheckerOptionsDialog.h
 2=../include/AspellInterface.h
@@ -102,6 +103,7 @@ extraResourceOptions=
 8=../include/SpellCheckEngineOption.h
 9=../include/SpellCheckUserInterface.h
 10=../include/XmlSpellCheckDialog.h
+11=../include/PersonalDictionary.h
 [Resource]
 [Other]
 [History]
