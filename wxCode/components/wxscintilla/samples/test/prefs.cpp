@@ -3,7 +3,7 @@
 // Purpose:     wxScintilla test preferences
 // Maintainer:  Otto Wyss
 // Created:     2003-09-01
-// RCS-ID:      $Id: prefs.cpp,v 1.2 2004-12-02 18:33:10 wyo Exp $
+// RCS-ID:      $Id: prefs.cpp,v 1.3 2005-02-08 17:31:39 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -80,7 +80,7 @@ wxChar* CppWordlist3 =
        overload p page par param post pre ref relates remarks return \
        retval sa section see showinitializer since skip skipline struct \
        subsection test throw todo typedef union until var verbatim \
-       verbinclude version warning weakgroup $ @ "" & < > # { }");
+       verbinclude version warning weakgroup $ @ \" & < > # { }");
 
 // Python
 wxChar* PythonWordlist1 =

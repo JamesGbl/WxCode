@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.14 2005-02-04 20:19:55 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.15 2005-02-08 17:29:56 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -2623,7 +2623,7 @@ bool wxScintilla::LoadFile(const wxString& filename)
         {
 #if wxUSE_UNICODE
             wxMemoryBuffer buffer(len+1);
-            success = (file.Read(buffer.GetData(), len) == len);
+            success = (file.Read(buffer.GetData(), len) == (int)len);
             if (success) {
                 ((char*)buffer.GetData())[len] = 0;
                 contents = wxString(buffer, *wxConvCurrent, len);
@@ -2786,7 +2786,11 @@ void wxScintilla::OnChar(wxKeyEvent& evt) {
 
     if (!m_lastKeyDownConsumed && !skip) {
 #if wxUSE_UNICODE
+#if !wxCHECK_VERSION(2, 5, 0)
+        int key = evt.m_rawCode;
+#else
         int key = evt.GetUnicodeKey();
+#endif
         bool keyOk = true;
 
         // if the unicode key code is not really a unicode character (it may
