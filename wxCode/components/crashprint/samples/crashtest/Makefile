@@ -3,7 +3,7 @@
 ## Purpose:     crashtest
 ## Maintainer:  Otto Wyss
 ## Created:     2004-10-01
-## RCS-ID:      $Id: Makefile,v 1.6 2004-11-22 18:27:11 wyo Exp $
+## RCS-ID:      $Id: Makefile,v 1.7 2004-11-24 21:40:35 wyo Exp $
 ## Copyright:   (c) 2004 wxCode
 ## Licence:     wxWindows
 ##############################################################################
@@ -16,10 +16,10 @@ SRC = crashtest.cpp \
 PRG = crashtest
 
 # source directories
-vpath %.cpp $(WXCODE)/crashprint/src
+vpath %.cpp ../../crashprint/src
 
 # additional header directories
-INC = -I$(WXCODE)/crashprint/include
+INC = -I../../crashprint/include
 
 ##############################################################################
 # implementation, change only if other settings or other targets are needed
