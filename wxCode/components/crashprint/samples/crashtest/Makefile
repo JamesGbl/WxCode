@@ -3,13 +3,13 @@
 ## Purpose:     crashtest
 ## Maintainer:  Otto Wyss
 ## Created:     2004-10-01
-## RCS-ID:      $Id: Makefile,v 1.2 2004-10-04 20:33:06 wyo Exp $
+## RCS-ID:      $Id: Makefile,v 1.3 2004-10-25 17:09:49 wyo Exp $
 ## Copyright:   (c) wxCode
 ## Licence:     wxWidgets licence
 ##############################################################################
 
 # list of source files
-SRC = app.cpp \
+SRC = crashtest.cpp \
       crashprint.cpp
 
 # executable name
@@ -43,19 +43,19 @@ endif
 OBJ = $(SRC:.cpp=.o)
 
 .cpp.o:
-	g++ -c $(INC) `$(WXCONFIG) --cxxflags` -g -o $@ $<
+    g++ -c $(INC) `$(WXCONFIG) --cxxflags` -g -o $@ $<
 
-all:	$(PRG)
-$(PRG):	$(OBJ)
-	g++ -o $@ $^ `$(WXCONFIG) --static --libs`
+all:    $(PRG)
+$(PRG): $(OBJ)
+    g++ -o $@ $^ `$(WXCONFIG) --static --libs`
 
-debug:	$(PRG)d
-$(PRG)d:	$(OBJ)
-	g++ -o $@ $^ `$(WXCONFIG) --libs`
+debug:  $(PRG)d
+$(PRG)d:    $(OBJ)
+    g++ -o $@ $^ `$(WXCONFIG) --libs`
 
-univdebug:	$(PRG)ud
-$(PRG)ud:	$(OBJ)
-	g++ -o $@ $^ `$(WXCONFIG) --libs`
+univdebug:  $(PRG)ud
+$(PRG)ud:   $(OBJ)
+    g++ -o $@ $^ `$(WXCONFIG) --libs`
 
 clean:
-	rm -f *.o
+    rm -f *.o
