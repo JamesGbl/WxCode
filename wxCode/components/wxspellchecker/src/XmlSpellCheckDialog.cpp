@@ -1,4 +1,5 @@
 #include "XmlSpellCheckDialog.h"
+#include "XmlPersonalDictionaryDialog.h"
 
 #include <wx/xrc/xmlres.h>
 
@@ -147,7 +148,6 @@ void XmlSpellCheckDialog::CreateDialog(wxWindow* pParent)
           (wxObjectEventFunction) (wxEventFunction) (wxCommandEventFunction) &XmlSpellCheckDialog::OnEditCustomDictionary);
     }
     
-    
     if (XRCCTRL(*this,"ButtonOptions",wxButton))
     {
       Connect(XRCID("ButtonOptions"),  wxEVT_COMMAND_BUTTON_CLICKED,
@@ -156,7 +156,7 @@ void XmlSpellCheckDialog::CreateDialog(wxWindow* pParent)
 
     //EVT_LISTBOX(XRCID("ListBoxSuggestions"), XmlSpellCheckDialog::OnChangeSuggestionSelection) 
     //EVT_LISTBOX_DCLICK(XRCID("ListBoxSuggestions"), XmlSpellCheckDialog::OnDblClkSuggestionSelection)
-    if (XRCCTRL(*this,"ListBoxSuggestions",wxButton))
+    if (XRCCTRL(*this,"ListBoxSuggestions",wxListBox))
     {
       Connect(XRCID("ListBoxSuggestions"),  wxEVT_COMMAND_LISTBOX_SELECTED,
           (wxObjectEventFunction) (wxEventFunction) (wxCommandEventFunction) &XmlSpellCheckDialog::OnChangeSuggestionSelection);
@@ -395,8 +395,8 @@ void XmlSpellCheckDialog::SetMispelledWord(const wxString& strMispelling)
 
 void XmlSpellCheckDialog::OnOptions(wxCommandEvent& event)
 {
-  m_pSpellCheckEngine->PresentOptions();
-  // Create a really basic dialog with a scrolled panel that gets dynamically populated
+  //m_pSpellCheckEngine->PresentOptions();
+  // Create a really basic dialog that gets dynamically populated
   // with controls based on the m_pSpellCheckEngine->GetOptions();
   SpellCheckerOptionsDialog OptionsDialog(this, m_pSpellCheckEngine->GetSpellCheckEngineName() + _T(" Options"), m_pSpellCheckEngine);
   if (OptionsDialog.ShowModal() == wxID_OK)
@@ -409,119 +409,5 @@ void XmlSpellCheckDialog::OnOptions(wxCommandEvent& event)
         m_pSpellCheckEngine->AddOptionToMap(it->second);
     }
   }
-}
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-//
-//    XmlPersonalDictionaryDialog
-//
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-BEGIN_EVENT_TABLE(XmlPersonalDictionaryDialog, wxDialog)
-  EVT_BUTTON(XRCID("ButtonAddToDict"), XmlPersonalDictionaryDialog::AddWordToPersonalDictionary)
-  EVT_BUTTON(XRCID("ButtonReplaceInDict"), XmlPersonalDictionaryDialog::ReplaceInPersonalDictionary)
-  EVT_BUTTON(XRCID("ButtonRemoveFromDict"), XmlPersonalDictionaryDialog::RemoveFromPersonalDictionary)
-  EVT_BUTTON(XRCID("ButtonClose"), XmlPersonalDictionaryDialog::OnClose)
-END_EVENT_TABLE()
-
-XmlPersonalDictionaryDialog::XmlPersonalDictionaryDialog(wxWindow* parent, wxString strResourceFile, wxString strResource, wxSpellCheckEngineInterface* pEngine)
-{
-  m_pSpellCheckEngine = pEngine;
-  m_strResourceFile = strResourceFile;
-  m_strDialogResource = strResource;
-
-  CreateDialog(parent);
-}
-
-XmlPersonalDictionaryDialog::~XmlPersonalDictionaryDialog()
-{
-}
-
-void XmlPersonalDictionaryDialog::CreateDialog(wxWindow* pParent)
-{
-  // Load the XML resource
-  wxXmlResource::Get()->InitAllHandlers();
-  wxXmlResource::Get()->LoadDialog(this, pParent, m_strDialogResource);
-  
-  // Verify that the controls we need are present
-
-  // Now present the word list to the user
-
-  PopulatePersonalWordListBox();
-}
-
-void XmlPersonalDictionaryDialog::PopulatePersonalWordListBox()
-{
-  if (m_pSpellCheckEngine != NULL)
-  {
-    wxListBox* pListBox = XRCCTRL(*this, "ListPersonalWords", wxListBox);
-
-    if (pListBox)
-    {
-      // Get a list of suggestions to populate the list box
-      wxArrayString PersonalWords = m_pSpellCheckEngine->GetWordListAsArray();
-
-      pListBox->Clear();
-
-      // Add each suggestion to the list
-      for (unsigned int nCtr = 0; nCtr < PersonalWords.GetCount(); nCtr++)
-        pListBox->Append(PersonalWords[nCtr]);
-
-      // If the previous word had no suggestions than the box may be disabled, enable it here to be safe
-      pListBox->Enable(TRUE);
-    }
-  }
-}
-
-void XmlPersonalDictionaryDialog::AddWordToPersonalDictionary(wxCommandEvent& event)
-{
-  if (m_pSpellCheckEngine != NULL)
-  {
-    TransferDataFromWindow();
-
-    wxWindow* pText = XRCCTRL(*this, "TextNewPersonalWord", wxWindow);
-
-    if (pText != NULL)
-    {
-      wxString strNewWord = pText->GetLabel();
-
-      if (!strNewWord.Trim().IsEmpty())
-        m_pSpellCheckEngine->AddWordToDictionary(strNewWord);
-    }
-
-    PopulatePersonalWordListBox();
-  }
-}
-
-void XmlPersonalDictionaryDialog::ReplaceInPersonalDictionary(wxCommandEvent& event)
-{
-}
-
-void XmlPersonalDictionaryDialog::RemoveFromPersonalDictionary(wxCommandEvent& event)
-{
-  if (m_pSpellCheckEngine != NULL)
-  {
-    TransferDataFromWindow();
-    wxListBox* pListBox = XRCCTRL(*this, "ListPersonalWords", wxListBox);
-    if (pListBox)
-    {
-      wxString strNewWord = pListBox->GetStringSelection();
-      if (!strNewWord.Trim().IsEmpty())
-      {
-        if (!(m_pSpellCheckEngine->RemoveWordFromDictionary(strNewWord)))
-          ::wxMessageBox(_T("There was an error removing \"" + strNewWord + "\" to the personal dictionary"));
-      }
-    }
-    PopulatePersonalWordListBox();
-  }
-}
-
-
-
-void XmlPersonalDictionaryDialog::OnClose(wxCommandEvent& event)
-{
-  EndModal(true);
 }
 
