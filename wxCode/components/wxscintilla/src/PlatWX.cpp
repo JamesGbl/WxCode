@@ -39,7 +39,9 @@ PRectangle PRectangleFromwxRect(wxRect rc) {
 
 wxColour wxColourFromCA(const ColourAllocated& ca) {
     ColourDesired cd(ca.AsLong());
-    return wxColour(cd.GetRed(), cd.GetGreen(), cd.GetBlue());
+    return wxColour((unsigned char)cd.GetRed(),
+                    (unsigned char)cd.GetGreen(),
+                    (unsigned char)cd.GetBlue());
 }
 
 //----------------------------------------------------------------------
@@ -1040,7 +1042,8 @@ void ListBoxImpl::GetValue(int n, char *value, int len) {
 
 void ListBoxImpl::RegisterImage(int type, const char *xpm_data) {
     wxMemoryInputStream stream(xpm_data, strlen(xpm_data)+1);
-    wxBitmap bmp(wxImage(stream, wxBITMAP_TYPE_XPM));
+    wxImage img(stream, wxBITMAP_TYPE_XPM);
+    wxBitmap bmp(img);
 
     if (! imgList) {
         // assumes all images are the same size

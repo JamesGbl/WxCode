@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.8 2004-12-03 18:23:28 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.9 2004-12-08 18:42:55 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -46,7 +46,9 @@ static long wxColourAsLong(const wxColour& co) {
 
 static wxColour wxColourFromLong(long c) {
     wxColour clr;
-    clr.Set(c & 0xff, (c >> 8) & 0xff, (c >> 16) & 0xff);
+    clr.Set((unsigned char)(c & 0xff),
+            (unsigned char)((c >> 8) & 0xff),
+            (unsigned char)((c >> 16) & 0xff));
     return clr;
 }
 
@@ -58,7 +60,7 @@ static wxColour wxColourFromSpec(const wxString& spec) {
     spec.Mid(1,2).ToLong(&red,   16);
     spec.Mid(3,2).ToLong(&green, 16);
     spec.Mid(5,2).ToLong(&blue,  16);
-    return wxColour(red, green, blue);
+    return wxColour((unsigned char)red, (unsigned char)green, (unsigned char)blue);
 }
 
 //----------------------------------------------------------------------
@@ -2554,7 +2556,7 @@ bool wxScintilla::LoadFile(const wxString& filename)
 #if wxUSE_UNICODE
             wxMemoryBuffer buffer(len+1);
             success = (file.Read(buffer.GetData(), len) == len);
-        if (success) {
+            if (success) {
                 ((char*)buffer.GetData())[len] = 0;
                 contents = wxString(buffer, *wxConvCurrent, len);
             }
@@ -2565,7 +2567,13 @@ bool wxScintilla::LoadFile(const wxString& filename)
 #endif
         }
         else
-            success = true;     // empty file is ok
+        {
+            if (len == 0)
+                success = true;     // empty file is ok
+            else
+                success = false; // len == wxInvalidOffset
+        }
+
 
         if (success)
         {
