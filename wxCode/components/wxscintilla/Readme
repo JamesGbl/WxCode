@@ -1,12 +1,12 @@
 Component:  wxScintilla
-Release:    1.62.0a
+Release:    1.62.1
 Documents:  http://www.yellowbrain.com/stc/index.html
 wxWidgets:  2.4.x
 Maintainer: Otto Wyss (wyo)
 Subdir:     wxscintilla
 
 Description:
-wxScintilla is a wrapper around the Scintilla edit control (see 
-http://www.scintilla.org). It's copied from wxStyledTextCtrl done by Robin Dunn.
+wxScintilla is a wrapper around the Scintilla edit control (see
+http://www.scintilla.org). It's derived from wxStyledTextCtrl done by Robin Dunn.
 
 For further instructions see the BuildInfo.txt inside the "build" directory.
