@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by: Otto Wyss
 // Created:     04/01/98
-// RCS-ID:      $Id: treelisttest.cpp,v 1.11 2004-11-11 19:15:31 wyo Exp $
+// RCS-ID:      $Id: treelisttest.cpp,v 1.12 2005-02-09 16:48:45 wyo Exp $
 // Copyright:   (c) wxCode
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -1100,7 +1100,7 @@ void MyTreeListCtrl::OnItemActivated(wxTreeEvent& event)
     MyTreeItemData *item = (MyTreeItemData *)GetItemData(itemId);
 
     if (item) item->ShowInfo(this);
-    wxLogMessage(wxString::Format ("OnItemActivated, column=%d", event.GetInt()));
+    wxLogMessage(wxString::Format (wxT("OnItemActivated, column=%d"), event.GetInt()));
     event.Skip();
 }
 

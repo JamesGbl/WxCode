@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.27 2005-01-08 21:58:38 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.28 2005-02-09 16:48:45 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -48,7 +48,7 @@ enum {
 class WXDLLEXPORT wxTreeListColumnInfo: public wxObject {
 
 public:
-    wxTreeListColumnInfo (const wxString &text = wxT(""),
+    wxTreeListColumnInfo (const wxString &text = wxEmptyString,
                           int width = DEFAULT_COL_WIDTH,
                           int flag = wxALIGN_LEFT,
                           int image = -1,
@@ -220,7 +220,7 @@ public:
                        int image = -1,
                        bool shown = true,
                        bool edit = false) {
-        InsertColumn (before, 
+        InsertColumn (before,
                       wxTreeListColumnInfo (text, width, flag, image, shown, edit));
     }
     void InsertColumn (int before, const wxTreeListColumnInfo& col);
@@ -463,7 +463,7 @@ public:
     void UnselectAll();
     // select this item
     void SelectItem (const wxTreeItemId& item,
-                     const wxTreeItemId& last = (wxTreeItemId*)NULL, 
+                     const wxTreeItemId& last = (wxTreeItemId*)NULL,
                      bool unselect_others = true);
     // select all items in the expanded tree
     void SelectAll();
@@ -521,7 +521,7 @@ public:
         { return m_main_win; }
 
     virtual wxSize DoGetBestSize() const;
-    
+
 protected:
     // header window, responsible for column visualization and manipulation
     wxTreeListHeaderWindow* m_header_win;
