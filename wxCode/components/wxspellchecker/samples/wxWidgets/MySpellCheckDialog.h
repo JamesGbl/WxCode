@@ -26,6 +26,8 @@ public:
 		void OnIgnoreAll(wxCommandEvent& event);
 		void OnAddWordToCustomDictionary(wxCommandEvent& event);
 		void OnEditCustomDictionary(wxCommandEvent& event);
+    void OnInit(wxInitDialogEvent& event);
+    void PopulateLanguageCombo();
 		void OnChangeLanguage(wxCommandEvent& event);
 		void OnChangeSuggestionSelection(wxCommandEvent& event);
 		void OnDblClkSuggestionSelection(wxCommandEvent& event);
