@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.37 2004-10-27 17:35:29 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.38 2004-10-30 08:11:22 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -398,42 +398,35 @@ public:
     // the "cookie" passed to GetFirstChild() and GetNextChild() should be
     // the same!
 
-    // get the first child of this item
+    // get child of this item
 #if !wxCHECK_VERSION(2, 5, 0)
     wxTreeItemId GetFirstChild(const wxTreeItemId& item, long& cookie) const;
-#else
-    wxTreeItemId GetFirstChild(const wxTreeItemId& item, wxTreeItemIdValue& cookie) const;
-#endif
-    // get the next child
-#if !wxCHECK_VERSION(2, 5, 0)
     wxTreeItemId GetNextChild(const wxTreeItemId& item, long& cookie) const;
-#else
-    wxTreeItemId GetNextChild(const wxTreeItemId& item, wxTreeItemIdValue& cookie) const;
-#endif
-    // get the prev child
-#if !wxCHECK_VERSION(2, 5, 0)
     wxTreeItemId GetPrevChild(const wxTreeItemId& item, long& cookie) const;
 #else
+    wxTreeItemId GetFirstChild(const wxTreeItemId& item, wxTreeItemIdValue& cookie) const;
+    wxTreeItemId GetNextChild(const wxTreeItemId& item, wxTreeItemIdValue& cookie) const;
     wxTreeItemId GetPrevChild(const wxTreeItemId& item, wxTreeItemIdValue& cookie) const;
 #endif
-    // get the last child of this item - this method doesn't use cookies
     wxTreeItemId GetLastChild(const wxTreeItemId& item) const;
 
-    // get the next sibling of this item
+    // get sibling of this item
     wxTreeItemId GetNextSibling(const wxTreeItemId& item) const;
-    // get the previous sibling
     wxTreeItemId GetPrevSibling(const wxTreeItemId& item) const;
 
-    // get first visible item
-    wxTreeItemId GetFirstVisibleItem() const;
-    // get the next visible item: item must be visible itself!
-    // see IsVisible() and wxTreeCtrl::GetFirstVisibleItem()
-    wxTreeItemId GetNextVisible(const wxTreeItemId& item) const;
-    // get the previous visible item: item must be visible itself!
-    wxTreeItemId GetPrevVisible(const wxTreeItemId& item) const;
+    // get item in the full tree (currently only for internal use)
+    wxTreeItemId GetNext(const wxTreeItemId& item, bool expanded = false) const;
+    wxTreeItemId GetPrev(const wxTreeItemId& item, bool expanded = false) const;
 
-    // Only for internal use right now, but should probably be public
-    wxTreeItemId GetNext(const wxTreeItemId& item) const;
+    // get expanded item, see IsExpanded()
+    wxTreeItemId GetFirstExpandedItem() const;
+    wxTreeItemId GetNextExpanded(const wxTreeItemId& item) const;
+    wxTreeItemId GetPrevExpanded(const wxTreeItemId& item) const;
+
+    // get visible item, see IsVisible()
+    wxTreeItemId GetFirstVisibleItem() const;
+    wxTreeItemId GetNextVisible(const wxTreeItemId& item) const;
+    wxTreeItemId GetPrevVisible(const wxTreeItemId& item) const;
 
     // operations
     // ----------
@@ -1695,13 +1688,12 @@ wxTreeListItem *wxTreeListItem::HitTest(const wxPoint& point,
     }
 
     // evaluate children
-    size_t count = m_children.Count();
-    for ( size_t n = 0; n < count; n++ )
+    long count = m_children.Count();
+    for (long n = 0; n < count; n++ )
     {
         wxTreeListItem *res = m_children[n]->HitTest(point, theCtrl,
                                                      flags, level + 1);
-        if ( res != NULL )
-            return res;
+        if ( res != NULL ) return res;
     }
 
     return (wxTreeListItem*) NULL;
@@ -2186,195 +2178,178 @@ bool wxTreeListMainWindow::IsBold(const wxTreeItemId& item) const
 // navigation
 // ----------------------------------------------------------------------------
 
-wxTreeItemId wxTreeListMainWindow::GetItemParent(const wxTreeItemId& item) const
-{
-    wxCHECK_MSG( item.IsOk(), wxTreeItemId(), wxT("invalid tree item") );
+wxTreeItemId wxTreeListMainWindow::GetItemParent (const wxTreeItemId& item) const {
+    wxCHECK_MSG (item.IsOk(), wxTreeItemId(), wxT("invalid tree item"));
 
     return ((wxTreeListItem*) item.m_pItem)->GetItemParent();
 }
 
 #if !wxCHECK_VERSION(2, 5, 0)
 wxTreeItemId wxTreeListMainWindow::GetFirstChild(const wxTreeItemId& item,
-                                                 long& cookie) const
+                                                 long& cookie) const {
 #else
 wxTreeItemId wxTreeListMainWindow::GetFirstChild(const wxTreeItemId& item,
-                                                 wxTreeItemIdValue& cookie) const
+                                                 wxTreeItemIdValue& cookie) const {
 #endif
-{
-    wxCHECK_MSG( item.IsOk(), wxTreeItemId(), wxT("invalid tree item") );
+    wxCHECK_MSG (item.IsOk(), wxTreeItemId(), wxT("invalid tree item"));
 
     cookie = 0;
-    return GetNextChild(item, cookie);
+    return GetNextChild (item, cookie);
 }
 
 #if !wxCHECK_VERSION(2, 5, 0)
 wxTreeItemId wxTreeListMainWindow::GetNextChild(const wxTreeItemId& item,
-                                                long& cookie) const
+                                                long& cookie) const {
 #else
 wxTreeItemId wxTreeListMainWindow::GetNextChild(const wxTreeItemId& item,
-                                                wxTreeItemIdValue& cookie) const
+                                                wxTreeItemIdValue& cookie) const {
 #endif
-{
-    wxCHECK_MSG( item.IsOk(), wxTreeItemId(), wxT("invalid tree item") );
+    wxCHECK_MSG (item.IsOk(), wxTreeItemId(), wxT("invalid tree item"));
 
     wxArrayTreeListItems& children = ((wxTreeListItem*) item.m_pItem)->GetChildren();
 
-    // it's ok to cast cookie to size_t, we never have indices big enough to
-    // overflow "void *"
-    size_t *pIndex = (size_t *)&cookie;
-    if ( *pIndex < children.Count() )
-    {
-        return children.Item((*pIndex)++);
-    }
-    else
-    {
-        // there are no more of them
-        return wxTreeItemId();
-    }
+    // it's ok to cast cookie to size_t, we never have indices which overflow "void*"
+    long *pIndex = &cookie;
+    return (*pIndex < (long)children.Count()-1)? children.Item((*pIndex)++): wxTreeItemId();
 }
 
 #if !wxCHECK_VERSION(2, 5, 0)
 wxTreeItemId wxTreeListMainWindow::GetPrevChild(const wxTreeItemId& item,
-                                                long& cookie) const
+                                                long& cookie) const {
 #else
 wxTreeItemId wxTreeListMainWindow::GetPrevChild(const wxTreeItemId& item,
-                                                wxTreeItemIdValue& cookie) const
+                                                wxTreeItemIdValue& cookie) const {
 #endif
-{
-    wxCHECK_MSG( item.IsOk(), wxTreeItemId(), wxT("invalid tree item") );
+    wxCHECK_MSG (item.IsOk(), wxTreeItemId(), wxT("invalid tree item"));
 
     wxArrayTreeListItems& children = ((wxTreeListItem*) item.m_pItem)->GetChildren();
 
-    // it's ok to cast cookie to size_t, we never have indices big enough to
-    // overflow "void *"
-    size_t *pIndex = (size_t *)&cookie;
-    if ( *pIndex > 0 )
-    {
-        return children.Item(--(*pIndex));
-    }
-    else
-    {
-        // there are no more of them
-        return wxTreeItemId();
-    }
+    // it's ok to cast cookie to size_t, we never have indices which overflow "void*"
+    long *pIndex = &cookie;
+    return (*pIndex > 0)? children.Item(--(*pIndex)): wxTreeItemId();
 }
 
-wxTreeItemId wxTreeListMainWindow::GetLastChild(const wxTreeItemId& item) const
-{
-    wxCHECK_MSG( item.IsOk(), wxTreeItemId(), wxT("invalid tree item") );
+wxTreeItemId wxTreeListMainWindow::GetLastChild(const wxTreeItemId& item) const {
+    wxCHECK_MSG (item.IsOk(), wxTreeItemId(), wxT("invalid tree item"));
 
     wxArrayTreeListItems& children = ((wxTreeListItem*) item.m_pItem)->GetChildren();
-    return (children.IsEmpty() ? wxTreeItemId() : wxTreeItemId(children.Last()));
+
+    return (!children.IsEmpty())? wxTreeItemId(children.Last()): wxTreeItemId();
 }
 
-wxTreeItemId wxTreeListMainWindow::GetNextSibling(const wxTreeItemId& item) const
-{
-    wxCHECK_MSG( item.IsOk(), wxTreeItemId(), wxT("invalid tree item") );
+wxTreeItemId wxTreeListMainWindow::GetNextSibling (const wxTreeItemId& item) const {
+    wxCHECK_MSG (item.IsOk(), wxTreeItemId(), wxT("invalid tree item"));
 
+    // get parent
     wxTreeListItem *i = (wxTreeListItem*) item.m_pItem;
     wxTreeListItem *parent = i->GetItemParent();
-    if ( parent == NULL )
-    {
-        // root item doesn't have any siblings
-        return wxTreeItemId();
-    }
+    if (parent == NULL) return wxTreeItemId(); // root item doesn't have any siblings
 
+    // get index
     wxArrayTreeListItems& siblings = parent->GetChildren();
-    int index = siblings.Index(i);
-    wxASSERT( index != wxNOT_FOUND ); // I'm not a child of my parent?
+    long index = siblings.Index (i);
+    wxASSERT (index != wxNOT_FOUND); // I'm not a child of my parent?
 
-    size_t n = (size_t)(index + 1);
-    return n == siblings.Count() ? wxTreeItemId() : wxTreeItemId(siblings[n]);
+    long n = index + 1;
+    return (n < (long)siblings.Count())? wxTreeItemId(siblings[n]): wxTreeItemId();
 }
 
-wxTreeItemId wxTreeListMainWindow::GetPrevSibling(const wxTreeItemId& item)
-    const
-{
-    wxCHECK_MSG( item.IsOk(), wxTreeItemId(), wxT("invalid tree item") );
+wxTreeItemId wxTreeListMainWindow::GetPrevSibling (const wxTreeItemId& item) const {
+    wxCHECK_MSG (item.IsOk(), wxTreeItemId(), wxT("invalid tree item"));
 
+    // get parent
     wxTreeListItem *i = (wxTreeListItem*) item.m_pItem;
     wxTreeListItem *parent = i->GetItemParent();
-    if ( parent == NULL )
-    {
-        // root item doesn't have any siblings
-        return wxTreeItemId();
-    }
+    if (parent == NULL) return wxTreeItemId(); // root item doesn't have any siblings
 
+    // get index
     wxArrayTreeListItems& siblings = parent->GetChildren();
-    int index = siblings.Index(i);
-    wxASSERT( index != wxNOT_FOUND ); // I'm not a child of my parent?
+    long index = siblings.Index(i);
+    wxASSERT (index != wxNOT_FOUND); // I'm not a child of my parent?
 
-    return index == 0 ? wxTreeItemId()
-                      : wxTreeItemId(siblings[(size_t)(index - 1)]);
+    long n = index - 1;
+    return (n >= 0)? wxTreeItemId(siblings[n]): wxTreeItemId();
 }
 
 // Only for internal use right now, but should probably be public
-wxTreeItemId wxTreeListMainWindow::GetNext(const wxTreeItemId& item) const
-{
-    wxCHECK_MSG( item.IsOk(), wxTreeItemId(), wxT("invalid tree item") );
+wxTreeItemId wxTreeListMainWindow::GetNext (const wxTreeItemId& item, bool expanded) const {
+    wxCHECK_MSG (item.IsOk(), wxTreeItemId(), wxT("invalid tree item"));
 
-    wxTreeListItem *i = (wxTreeListItem*) item.m_pItem;
+    // First see if there are any children, return first child
+    if (!expanded || ((wxTreeListItem*)item.m_pItem)->IsExpanded()) {
+        wxArrayTreeListItems& children = ((wxTreeListItem*)item.m_pItem)->GetChildren();
+        if (children.GetCount() > 0) return children.Item (0);
+    }
 
-    // First see if there are any children.
-    wxArrayTreeListItems& children = i->GetChildren();
-    if (children.GetCount() > 0)
-    {
-         return children.Item(0);
-    }
-    else
-    {
-         // Try a sibling of this or ancestor instead
-         wxTreeItemId p = item;
-         wxTreeItemId toFind;
-         do
-         {
-              toFind = GetNextSibling(p);
-              p = GetItemParent(p);
-         } while (p.IsOk() && !toFind.IsOk());
-         return toFind;
-    }
+    // get sibling of this item or of the ancestors instead
+    wxTreeItemId next;
+    wxTreeItemId parent = item;
+    do {
+        next = GetNextSibling (parent);
+        parent = GetItemParent (parent);
+    } while (!next.IsOk() && parent.IsOk());
+    return next;
 }
 
-wxTreeItemId wxTreeListMainWindow::GetFirstVisibleItem() const
-{
-    wxTreeItemId id = GetRootItem();
-    if (!id.IsOk())
-        return id;
+// Only for internal use right now, but should probably be public
+wxTreeItemId wxTreeListMainWindow::GetPrev (const wxTreeItemId& item, bool expanded) const {
+    wxCHECK_MSG (item.IsOk(), wxTreeItemId(), wxT("invalid tree item"));
 
-    do
-    {
-        if (IsVisible(id))
-              return id;
-        id = GetNext(id);
-    } while (id.IsOk());
+    // First see if there are any children, return first child
+    if (!expanded || ((wxTreeListItem*)item.m_pItem)->IsExpanded()) {
+        wxArrayTreeListItems& children = ((wxTreeListItem*)item.m_pItem)->GetChildren();
+        if (children.GetCount() > 0) return children.Item (children.GetCount()-1);
+    }
 
+    // get sibling of this item or of the ancestors instead
+    wxTreeItemId next;
+    wxTreeItemId parent = item;
+    do {
+        next = GetPrevSibling (parent);
+        parent = GetItemParent (parent);
+    } while (!next.IsOk() && parent.IsOk());
+    return next;
+}
+
+wxTreeItemId wxTreeListMainWindow::GetFirstExpandedItem() const {
+    return GetNextExpanded (GetRootItem());
+}
+
+wxTreeItemId wxTreeListMainWindow::GetNextExpanded (const wxTreeItemId& item) const {
+    wxCHECK_MSG (item.IsOk(), wxTreeItemId(), _T("invalid tree item"));
+
+    return GetNext (item, true);
+}
+
+wxTreeItemId wxTreeListMainWindow::GetPrevExpanded (const wxTreeItemId& item) const {
+    wxCHECK_MSG (item.IsOk(), wxTreeItemId(), wxT("invalid tree item"));
+
+    return GetPrev (item, true);
+}
+
+wxTreeItemId wxTreeListMainWindow::GetFirstVisibleItem() const {
+    return GetNextVisible (GetRootItem());
+}
+
+wxTreeItemId wxTreeListMainWindow::GetNextVisible (const wxTreeItemId& item) const {
+    wxCHECK_MSG (item.IsOk(), wxTreeItemId(), _T("invalid tree item"));
+
+    wxTreeItemId id = GetNext (item, true);
+    while (id.IsOk()) {
+        if (IsVisible (id)) return id;
+        id = GetNext(id, true);
+    }
     return wxTreeItemId();
 }
 
-wxTreeItemId wxTreeListMainWindow::GetNextVisible(const wxTreeItemId& item)
-    const
-{
-    wxCHECK_MSG( item.IsOk(), wxTreeItemId(), wxT("invalid tree item") );
+wxTreeItemId wxTreeListMainWindow::GetPrevVisible (const wxTreeItemId& item) const {
+    wxCHECK_MSG (item.IsOk(), wxTreeItemId(), wxT("invalid tree item"));
 
-    wxTreeItemId id = item;
-    if (id.IsOk())
-    {
-        while (id = GetNext(id), id.IsOk())
-        {
-            if (IsVisible(id))
-                return id;
-        }
+    wxTreeItemId id = GetPrev (item, true);
+    while (id.IsOk()) {
+        if (IsVisible (id)) return id;
+        id = GetPrev(id, true);
     }
-    return wxTreeItemId();
-}
-
-wxTreeItemId wxTreeListMainWindow::GetPrevVisible(const wxTreeItemId& item)
-    const
-{
-    wxCHECK_MSG( item.IsOk(), wxTreeItemId(), wxT("invalid tree item") );
-
-    wxFAIL_MSG(wxT("not implemented"));
-
     return wxTreeItemId();
 }
 
@@ -2615,59 +2590,38 @@ void wxTreeListMainWindow::Expand(const wxTreeItemId& itemId)
     ProcessEvent( event );
 }
 
-void wxTreeListMainWindow::ExpandAll(const wxTreeItemId& item)
-{
+void wxTreeListMainWindow::ExpandAll(const wxTreeItemId& item) {
     Expand(item);
-    if ( IsExpanded(item) )
-    {
+    if (IsExpanded(item)){
 #if !wxCHECK_VERSION(2, 5, 0)
         long cookie;
 #else
         wxTreeItemIdValue cookie;
 #endif
-        wxTreeItemId child = GetFirstChild(item, cookie);
-        while ( child.IsOk() )
-        {
+        wxTreeItemId child = GetFirstChild (item, cookie);
+        while (child.IsOk()) {
             ExpandAll(child);
-
             child = GetNextChild(item, cookie);
         }
     }
 }
 
-void wxTreeListMainWindow::Collapse(const wxTreeItemId& itemId)
-{
+void wxTreeListMainWindow::Collapse(const wxTreeItemId& itemId) {
     wxTreeListItem *item = (wxTreeListItem*) itemId.m_pItem;
 
-    if ( !item->IsExpanded() )
-        return;
+    if (!item->IsExpanded()) return;
 
-    wxTreeEvent event( wxEVT_COMMAND_TREE_ITEM_COLLAPSING, m_owner->GetId() );
-    event.SetItem( (long) item );
-    event.SetEventObject( /*this*/m_owner );
-    if ( m_owner->ProcessEvent( event ) && !event.IsAllowed() )
-    {
-        // cancelled by program
-        return;
-    }
+    wxTreeEvent event (wxEVT_COMMAND_TREE_ITEM_COLLAPSING, m_owner->GetId() );
+    event.SetItem ((long)item);
+    event.SetEventObject (m_owner);
+    if (m_owner->ProcessEvent (event) && !event.IsAllowed()) return; // collapse canceled
 
     item->Collapse();
-
-#if 0  // TODO why should items be collapsed recursively?
-    wxArrayTreeListItems& children = item->GetChildren();
-    size_t count = children.Count();
-    for ( size_t n = 0; n < count; n++ )
-    {
-        Collapse(children[n]);
-    }
-#endif
-
     CalculatePositions();
-
     RefreshSubtree(item);
 
-    event.SetEventType(wxEVT_COMMAND_TREE_ITEM_COLLAPSED);
-    ProcessEvent( event );
+    event.SetEventType (wxEVT_COMMAND_TREE_ITEM_COLLAPSED);
+    ProcessEvent (event);
 }
 
 void wxTreeListMainWindow::CollapseAndReset(const wxTreeItemId& item)
@@ -2706,8 +2660,8 @@ void wxTreeListMainWindow::UnselectAllChildren(wxTreeListItem *item)
     if (item->HasChildren())
     {
         wxArrayTreeListItems& children = item->GetChildren();
-        size_t count = children.Count();
-        for ( size_t n = 0; n < count; ++n )
+        long count = children.Count();
+        for (long n = 0; n < count; ++n )
         {
             UnselectAllChildren(children[n]);
         }
@@ -2736,8 +2690,8 @@ bool wxTreeListMainWindow::TagNextChildren(wxTreeListItem *crt_item, wxTreeListI
     int index = children.Index(crt_item);
     wxASSERT( index != wxNOT_FOUND ); // I'm not a child of my parent?
 
-    size_t count = children.Count();
-    for (size_t n=(size_t)(index+1); n<count; ++n)
+    long count = children.Count();
+    for (long n= (long)(index+1); n < count; ++n)
     {
         if (TagAllChildrenUntilLast(children[n], last_item, select)) return TRUE;
     }
@@ -2756,8 +2710,8 @@ bool wxTreeListMainWindow::TagAllChildrenUntilLast(wxTreeListItem *crt_item, wxT
     if (crt_item->HasChildren())
     {
         wxArrayTreeListItems& children = crt_item->GetChildren();
-        size_t count = children.Count();
-        for ( size_t n = 0; n < count; ++n )
+        long count = children.Count();
+        for (long n = 0; n < count; ++n )
         {
             if (TagAllChildrenUntilLast(children[n], last_item, select))
                 return TRUE;
@@ -2921,8 +2875,8 @@ void wxTreeListMainWindow::FillArray(wxTreeListItem *item,
     if ( item->HasChildren() )
     {
         wxArrayTreeListItems& children = item->GetChildren();
-        size_t count = children.GetCount();
-        for ( size_t n = 0; n < count; ++n )
+        long count = children.GetCount();
+        for (long n = 0; n < count; ++n )
             FillArray(children[n], array);
     }
 }
@@ -3049,7 +3003,7 @@ void wxTreeListMainWindow::SortChildren(const wxTreeItemId& itemId)
     //else: don't make the tree dirty as nothing changed
 }
 
-wxTreeItemId wxTreeListMainWindow::FindItem (const wxTreeItemId& item, const wxString& str, int flags) {
+wxTreeItemId wxTreeListMainWindow::FindItem (const wxTreeItemId& item, const wxString& str, int mode) {
 #if !wxCHECK_VERSION(2, 5, 0)
     long cookie = 0;
 #else
@@ -3057,44 +3011,49 @@ wxTreeItemId wxTreeListMainWindow::FindItem (const wxTreeItemId& item, const wxS
 #endif
     wxTreeItemId next = item;
     if (!next.IsOk()) next = GetSelection();
-    if (!next.IsOk()) {
+    if (next.IsOk()) {
+        if (mode & wxTL_MODE_NAV_LEVEL) {
+            next = GetNextSibling (next);
+        }else if (mode & wxTL_MODE_NAV_VISIBLE) { // 
+            next = GetNextVisible (next);
+        }else if (mode & wxTL_MODE_NAV_EXPANDED) {
+            next = GetNextExpanded (next);
+        }else{ // (mode & wxTL_MODE_NAV_FULLTREE) default
+            next = GetNext (next);
+        }
+    }else{
         if (HasFlag(wxTR_HIDE_ROOT)) {
             next = (wxTreeListItem*)GetFirstChild (GetRootItem().m_pItem, cookie).m_pItem;
         } else {
             next = (wxTreeListItem*)GetRootItem().m_pItem;
         }
     }
-    if (!next.IsOk()) return item;
+    if (!next.IsOk()) return item; // return entered item, no next found
 
     // start checking the next items
     wxString itemText;
     while (next.IsOk()) {
-        itemText = GetItemText (next);
-        if (flags & wxTL_SEARCH_LEVEL) {
-            next = GetNextSibling (next);
-        }else if (flags & wxTL_SEARCH_FULL) {
-            wxTreeItemId n = GetFirstChild (next, cookie);
-            if (!n.IsOk())
-                n = GetNextSibling (next);
-            if (!n.IsOk())
-                n = GetNextSibling (GetItemParent (next));
-            next = n;
-        }else{ // wxTL_SEARCH_VISIBLE
-            next = GetNextVisible (next);
-        }
-        if (!next.IsOk()) break; // done
-        if (flags & wxTL_SEARCH_PARTIAL) {
+        if (mode & wxTL_MODE_FIND_PARTIAL) {
             itemText = GetItemText (next).Mid (0, str.Length());
         }else{
             itemText = GetItemText (next);
         }
-        if (flags & wxTL_SEARCH_NOCASE) {
+        if (mode & wxTL_MODE_FIND_NOCASE) {
             if (itemText.CmpNoCase (str) == 0) return next;
         }else{
             if (itemText.Cmp (str) == 0) return next;
         }
+        if (mode & wxTL_MODE_NAV_LEVEL) {
+            next = GetNextSibling (next);
+        }else if (mode & wxTL_MODE_NAV_VISIBLE) { // 
+            next = GetNextVisible (next);
+        }else if (mode & wxTL_MODE_NAV_EXPANDED) {
+            next = GetNextExpanded (next);
+        }else{ // (mode & wxTL_MODE_NAV_FULLTREE) default
+            next = GetNext (next);
+        }
     }
-    return item;
+    return item; // return entered item, no next found
 }
 
 void wxTreeListMainWindow::SetDragItem (const wxTreeItemId& item) {
@@ -3399,8 +3358,7 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
     // Handle hide root (only level 0)
     if (HasFlag(wxTR_HIDE_ROOT) && (level == 0)) {
         wxArrayTreeListItems& children = item->GetChildren();
-        int n;
-        for (n = 0; n < (int)children.Count(); n++) {
+        for (long n = 0; n < (long)children.Count(); n++) {
             PaintLevel (children[n], dc, 1, y, x_maincol);
         }
         // end after expanding root
@@ -3553,8 +3511,7 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
             oldY = y_mid + h/2;
         }
         int y2;
-        int n;
-        for (n = 0; n < (int)children.Count(); ++n) {
+        for (long n = 0; n < (long)children.Count(); ++n) {
 
             y2 = y + h/2;
             PaintLevel (children[n], dc, level+1, y, x_maincol);
@@ -3916,9 +3873,9 @@ void wxTreeListMainWindow::OnChar( wxKeyEvent &event )
                 m_findStr.Append (event.m_keyCode);
                 m_findTimer->Start (FIND_TIMER_TICKS, wxTIMER_ONE_SHOT);
                 wxTreeItemId dummy = (wxTreeItemId*)NULL;
-                wxTreeItemId item = FindItem (dummy, m_findStr, wxTL_SEARCH_VISIBLE |
-                                                                wxTL_SEARCH_PARTIAL |
-                                                                wxTL_SEARCH_NOCASE);
+                wxTreeItemId item = FindItem (dummy, m_findStr, wxTL_MODE_NAV_EXPANDED |
+                                                                wxTL_MODE_FIND_PARTIAL |
+                                                                wxTL_MODE_FIND_NOCASE);
                 if (item.IsOk()) {
                     EnsureVisible (item);
                     SelectItem (item);
@@ -4323,7 +4280,7 @@ void wxTreeListMainWindow::CalculateLevel( wxTreeListItem *item, wxDC &dc,
 
 Recurse:
     wxArrayTreeListItems& children = item->GetChildren();
-    size_t n, count = children.Count();
+    long n, count = (long)children.Count();
     ++level;
     for (n = 0; n < count; ++n )
         CalculateLevel( children[n], dc, level, y, x_colstart );  // recurse
@@ -4344,7 +4301,7 @@ void wxTreeListMainWindow::CalculatePositions()
 
     int y = 2;
     int x_colstart = 0;
-    for(size_t i = 0; i < GetMainColumn(); ++i) {
+    for (int i = 0; i < (int)GetMainColumn(); ++i) {
         if (!m_owner->GetHeaderWindow()->GetColumnShown(i)) continue;
         x_colstart += m_owner->GetHeaderWindow()->GetColumnWidth(i);
     }
@@ -4407,8 +4364,8 @@ void wxTreeListMainWindow::RefreshSelectedUnder(wxTreeListItem *item)
         RefreshLine(item);
 
     const wxArrayTreeListItems& children = item->GetChildren();
-    size_t count = children.GetCount();
-    for ( size_t n = 0; n < count; n++ )
+    long count = children.GetCount();
+    for (long n = 0; n < count; n++ )
     {
         RefreshSelectedUnder(children[n]);
     }
@@ -4451,7 +4408,7 @@ void wxTreeListMainWindow::SetItemText(const wxTreeItemId& item, size_t column,
 }
 
 wxString wxTreeListMainWindow::GetItemText(const wxTreeItemId& item,
-                                     size_t column) const
+                                           size_t column) const
 {
     wxCHECK_MSG( item.IsOk(), wxT(""), wxT("invalid tree item") );
 
@@ -4718,6 +4675,21 @@ wxTreeItemId wxTreeListCtrl::GetNextSibling(const wxTreeItemId& item) const
 wxTreeItemId wxTreeListCtrl::GetPrevSibling(const wxTreeItemId& item) const
 { return m_main_win->GetPrevSibling(item); }
 
+wxTreeItemId wxTreeListCtrl::GetNext(const wxTreeItemId& item, bool expanded) const
+{ return m_main_win->GetNext(item, expanded); }
+
+wxTreeItemId wxTreeListCtrl::GetPrev(const wxTreeItemId& item, bool expanded) const
+{ return m_main_win->GetPrev(item, expanded); }
+
+wxTreeItemId wxTreeListCtrl::GetFirstExpandedItem() const
+{ return m_main_win->GetFirstExpandedItem(); }
+
+wxTreeItemId wxTreeListCtrl::GetNextExpanded(const wxTreeItemId& item) const
+{ return m_main_win->GetNextExpanded(item); }
+
+wxTreeItemId wxTreeListCtrl::GetPrevExpanded(const wxTreeItemId& item) const
+{ return m_main_win->GetPrevExpanded(item); }
+
 wxTreeItemId wxTreeListCtrl::GetFirstVisibleItem() const
 { return m_main_win->GetFirstVisibleItem(); }
 
@@ -4726,9 +4698,6 @@ wxTreeItemId wxTreeListCtrl::GetNextVisible(const wxTreeItemId& item) const
 
 wxTreeItemId wxTreeListCtrl::GetPrevVisible(const wxTreeItemId& item) const
 { return m_main_win->GetPrevVisible(item); }
-
-wxTreeItemId wxTreeListCtrl::GetNext(const wxTreeItemId& item) const
-{ return m_main_win->GetNext(item); }
 
 wxTreeItemId wxTreeListCtrl::AddRoot(const wxString& text, int image,
                                      int selectedImage, wxTreeItemData* data)
@@ -4834,8 +4803,8 @@ int wxTreeListCtrl::OnCompareItems(const wxTreeItemId& item1,
 void wxTreeListCtrl::SortChildren(const wxTreeItemId& item)
 { m_main_win->SortChildren(item); }
 
-wxTreeItemId wxTreeListCtrl::FindItem (const wxTreeItemId& item, const wxString& str, int flags)
-{ return m_main_win->FindItem (item, str, flags); }
+wxTreeItemId wxTreeListCtrl::FindItem (const wxTreeItemId& item, const wxString& str, int mode)
+{ return m_main_win->FindItem (item, str, mode); }
 
 void wxTreeListCtrl::SetDragItem (const wxTreeItemId& item)
 { m_main_win->SetDragItem (item); }
