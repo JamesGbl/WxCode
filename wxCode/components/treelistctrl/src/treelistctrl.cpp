@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.35 2004-10-16 17:54:32 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.36 2004-10-25 17:19:04 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -3257,6 +3257,7 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
     int total_w = m_owner->GetHeaderWindow()->GetWidth();
     int total_h = GetLineHeight(item);
     int off_h = HasFlag(wxTR_ROW_LINES) ? 1 : 0;
+    wxDCClipper clipper (dc, 0, item->GetY(), total_w, total_h); // only within line
 
     long text_w = 0, text_h = 0;
     dc.GetTextExtent( item->GetText(GetMainColumn()), &text_w, &text_h );
@@ -3301,7 +3302,10 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
     int x_colstart = 0;
     for ( size_t i = 0; i < GetColumnCount(); ++i ) {
         if (!m_owner->GetHeaderWindow()->GetColumnShown(i)) continue;
+
         int col_w = m_owner->GetHeaderWindow()->GetColumnWidth(i);
+        wxDCClipper clipper (dc, x_colstart, item->GetY(), col_w, total_h); // only within column
+
         int x = 0;
         int image = NO_IMAGE;
         int image_w = 0;
@@ -3343,7 +3347,6 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
         int text_x = x + image_w;
         if (i == GetMainColumn()) item->SetTextX (text_x);
 
-        wxDCClipper clipper (dc, x_colstart, item->GetY(), col_w, total_h); // only within column
         if (!HasFlag (wxTR_FULL_ROW_HIGHLIGHT)) {
             if (i == GetMainColumn()) {
                 if (item == m_dragItem) {
@@ -3541,7 +3544,6 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
         // clip to the column width
         size_t clip_width = m_owner->GetHeaderWindow()->
                             GetColumn(m_main_column).GetWidth();
-        wxDCClipper clipper(dc, x_maincol, y_top, clip_width, 10000);
 
         // process lower levels
         int oldY;
@@ -3558,6 +3560,7 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
             PaintLevel (children[n], dc, level+1, y, x_maincol);
 
             // draw vertical line
+            wxDCClipper clipper(dc, x_maincol, y_top, clip_width, 10000);
             if (!HasFlag (wxTR_NO_LINES)) {
                 x = item->GetX();
                 dc.DrawLine (x, oldY, x, y2);
