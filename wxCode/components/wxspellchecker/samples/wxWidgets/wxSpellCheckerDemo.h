@@ -43,7 +43,6 @@ public:
     void OnSpellCheckAbiwordUI(wxCommandEvent& event);
     void OnEditOptions(wxCommandEvent& event);
     void OnEditPersonalDictionary(wxCommandEvent& event);
-    void OnEditDownloadDictionaries(wxCommandEvent& event);
     void SpellCheck(wxSpellCheckEngineInterface* pSpellChecker);
     wxSpellCheckEngineInterface* ReturnSelectedSpellCheckEngine();
     void XmlSpellCheck(wxString strDialogResource);

@@ -36,7 +36,6 @@
 #include "AspellInterface.h"
 #include "MySpellInterface.h"
 #include "SpellCheckerOptionsDialog.h"
-#include "DictionaryWizard.h"
 
 // ----------------------------------------------------------------------------
 // constants
@@ -58,7 +57,6 @@ enum
     FileUseMySpell = 10005,
     EditOptions = 10006,
     EditPersonalDictionary = 10007,
-    EditDownloadDictionaries = 10008,
 };
 
 // ----------------------------------------------------------------------------
@@ -83,7 +81,6 @@ BEGIN_EVENT_TABLE(MyFrame, wxFrame)
     EVT_MENU(FileSpellCheckAbiwordUI, MyFrame::OnSpellCheckAbiwordUI)
     EVT_MENU(EditOptions, MyFrame::OnEditOptions)
     EVT_MENU(EditPersonalDictionary, MyFrame::OnEditPersonalDictionary)
-    EVT_MENU(EditDownloadDictionaries, MyFrame::OnEditDownloadDictionaries)
 END_EVENT_TABLE()
 
 // Create a new application object: this macro will allow wxWindows to create
@@ -153,8 +150,6 @@ MyFrame::MyFrame(const wxString& title)
     wxMenu* menuEdit = new wxMenu;
     menuEdit->Append(EditOptions, _T("&Options"), _T("Edit the options for the currently selected spell checking engine"));
     menuEdit->Append(EditPersonalDictionary, _T("Personal Dictionary\tCtrl+P"), _T("Edit the personal dictionary for the selected spell check engine"));
-    menuEdit->AppendSeparator();
-    menuEdit->Append(EditDownloadDictionaries, _T("Download Dictionaries\tCtrl+D"), _T("Download new or updated dictionaries for the selected spell check engine"));
 
     // now append the freshly created menu to the menu bar...
     wxMenuBar *menuBar = new wxMenuBar();
@@ -293,14 +288,6 @@ void MyFrame::OnEditPersonalDictionary(wxCommandEvent& event)
 {
   XmlPersonalDictionaryDialog PersonalDictionaryDialog(NULL, _T("resource.xrc"), _T("PersonalDictionary"), ReturnSelectedSpellCheckEngine());
   PersonalDictionaryDialog.ShowModal();
-}
-
-void MyFrame::OnEditDownloadDictionaries(wxCommandEvent& event)
-{
-  //::wxMessageBox("Downloading dictionaries!");
-  DictionaryWizard *pWizard = new DictionaryWizard(this);
-  pWizard->Run();
-  pWizard->Destroy();
 }
 
 void MyFrame::SpellCheck(wxSpellCheckEngineInterface* pSpellChecker)
