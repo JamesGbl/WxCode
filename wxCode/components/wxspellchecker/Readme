@@ -3,7 +3,7 @@ Component:  wxSpellChecker
 Subdir:     wxspellchecker
 Parts:      ???
 More infos: -
-wxWidgets:  2.4.2
+wxWidgets:  2.4.2, 2.5.1
 
 Description:
 wxSpellChecker is an library that provides an API to use various spell checker
