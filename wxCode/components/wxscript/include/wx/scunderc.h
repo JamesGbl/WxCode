@@ -11,16 +11,18 @@
 
 
 
-#ifdef wxSCRIPT_USE_UNDERC
+#if defined(wxSCRIPT_USE_UNDERC) && !defined(__SCUNDERC_H__)
+#define __SCUNDERC_H__
+
 
 // includes
 #include <ostream.h>
 #include <istream.h>
-#include "ucdl.h"
-#include "for_each.h"
+#include "ucdl.h"			// UnderC
+//#include "for_each.h"
 #include "ucri.h"
 
-#include "wx/script.h"
+#include "wx/script.h"		// base classes
 
 
 //! An UnderC interpreted function.

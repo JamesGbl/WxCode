@@ -13,6 +13,23 @@
 // includes
 #include "wx/script.h"
 
+// now, we can include specific interpreter wrappers
+#ifdef wxSCRIPT_USE_CINT
+#include "wx/sccint.h"
+#endif
+
+#ifdef wxSCRIPT_USE_UNDERC
+#include "wx/scunderc.h"
+#endif
+
+#ifdef wxSCRIPT_USE_LUA
+#include "wx/sclua.h"
+#endif
+
+#ifdef wxSCRIPT_USE_BASIC
+#include "wx/scbasic.h"
+#endif
+
 
 // setup static
 wxString wxScriptFile::m_strFileExt[] = { "cxx", "uc", "lua" };
@@ -208,9 +225,6 @@ wxScriptFile *wxScriptInterpreter::Load(const wxString &file, wxScriptFileType t
 	wxScriptFile *p = NULL;
 
 	switch (t) {
-	case wxRECOGNIZE_SCRIPTFILE:		// just to avoid warnings
-		break;
-
 	case wxCINT_SCRIPTFILE:
 #ifdef wxSCRIPT_USE_CINT
 		p = new wxScriptFileCINT();
@@ -227,6 +241,11 @@ wxScriptFile *wxScriptInterpreter::Load(const wxString &file, wxScriptFileType t
 #ifdef wxSCRIPT_USE_LUA		
 		p = new wxScriptFileLua();
 #endif
+		break;
+
+	case wxRECOGNIZE_SCRIPTFILE:		// just to avoid warnings
+	default:
+	    wxScriptInterpreter::m_strLastErr = "Interpreter unavailable.";
 		break;
 	}
 	

@@ -11,10 +11,13 @@
 
 
 // includes
-#include <wx/tokenzr.h>
 #include "wx/script.h"
-
 #ifdef wxSCRIPT_USE_UNDERC				// compile-time choice (see wx/script.h)
+
+// required includes
+#include <wx/tokenzr.h>
+#include "wx/scunderc.h"
+
 
 
 
@@ -35,7 +38,7 @@ bool wxUnderC::Init()
 
 void wxUnderC::GetFunctionListComplete(wxScriptFunctionArray &arr) const
 {
-    XNTable *pglob = uc_global();
+/*    XNTable *pglob = uc_global();
     XFunctions fnclist = pglob->functions();
     //XFunction *f;
     
@@ -59,7 +62,7 @@ void wxUnderC::GetFunctionListComplete(wxScriptFunctionArray &arr) const
         // get the arg 
         arr.Add(new wxScriptFunctionUnderC(name, ret, arg, narg));
     }  
-}
+*/}
 
 
 #if 0       // this is a perfectly working function: the only problem
@@ -157,7 +160,7 @@ void wxUnderC::GetFunctionListComplete(wxScriptFunctionArray &arr) const
 void wxUnderC::GetFunctionList(wxScriptFunctionArray &arr) const
 {
     arr.Clear();
-	wxScriptFunctionArray arr = GetFunctionListComplete();
+	GetFunctionListComplete(arr);
 	
 	// be sure that this is not a standard function
 	for (int i=0; i < arr.GetCount(); i++) {
@@ -193,16 +196,16 @@ bool wxScriptFunctionUnderC::Exec(wxScriptVar &ret, wxScriptVar *arg) const
 	// an error ?
 	if (!okay) {
          
-        uc_result_pos(-1, str.GetWriteBuf(256), 256, 0, 0);
+        ////////////////////////uc_result_pos(-1, str.GetWriteBuf(256), 256, 0, 0);
         str.UngetWriteBuf();
         
         // set the error description and return FALSE...
         wxScriptInterpreter::m_strLastErr = str;
-        return FALSE:
+        return FALSE;
 	}
 
 	// get returned value...
-	uc_result_pos(0, str.GetWriteBuf(128), 128, 0, 0);
+	///////////////////////////////uc_result_pos(0, str.GetWriteBuf(128), 128, 0, 0);
 	str.UngetWriteBuf();
 	
 #ifdef __WXDEBUG__
@@ -212,9 +215,9 @@ bool wxScriptFunctionUnderC::Exec(wxScriptVar &ret, wxScriptVar *arg) const
 	type.Trim(TRUE);
 	
 	// remove the begin & end parentheses: type should be like "(rettype)"
-	wxASSERT(type.Get(0) == '(');
-	wxASSERT(type.GetLast() == ')');
-	type.RemoveAt(0, 1);
+	wxASSERT(type.GetChar(0) == '(');
+	wxASSERT(type.Last() == ')');
+	type.Remove(0, 1);
 	type.RemoveLast();
 	
 	// now make a integrity check

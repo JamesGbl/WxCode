@@ -12,8 +12,10 @@
 
 // includes
 #include "wx/script.h"
-
 #ifdef wxSCRIPT_USE_CINT				// compile-time choice (see wx/script.h)
+
+// required includes
+#include "wx/sccint.h"
 
 
 // -----------------

@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
-// Name:        sclua.h
-// Purpose:     wxScriptFunctionLua, wxScriptFileLua, wxLua
+// Name:        scbasic.h
+// Purpose:     wxScriptFunctionBasic, wxScriptFileBasic, wxBasic
 // Author:      Francesco Montorsi
 // Modified by: 
 // Created:     2004/6/5
@@ -11,32 +11,29 @@
 
 
 
-#ifdef wxSCRIPT_USE_LUA
+#if defined(wxSCRIPT_USE_BASIC) && !defined(__SCBASIC_H__)
+#define __SCBASIC_H__
+
 
 // includes
-extern "C" {			// this wrapping is very important: Lua is a C library !!!
-	#include <lua.h>
-	#include <lauxlib.h>
-	#include <lualib.h>
-};
-#include "wx/script.h"
+#include "wx/script.h"		// base classes
+/*
 
 
-
-//! A Lua interpreted function.
-class wxScriptFunctionLua : public wxScriptFunction
+//! A Basic interpreted function.
+class wxScriptFunctionBasic : public wxScriptFunction
 {
 public:
 
 	//! Creates the object; no info about return value and
-	//! arguments are required since Lua does not store them.
-	wxScriptFunctionLua(const wxString &name = wxEmptyString) { 
+	//! arguments are required since wxBasic does not store them.
+	wxScriptFunctionBasic(const wxString &name = wxEmptyString) { 
 		Set(name, "", NULL, 0);
 	}
 
 
 	virtual wxScriptFunction *Clone() const {
-		wxScriptFunction *newf = new wxScriptFunctionLua();
+		wxScriptFunction *newf = new wxScriptFunctionBasic();
 		newf->DeepCopy(this);
 		return newf;
 	}
@@ -47,12 +44,12 @@ public:
 
 
 
-//! A Lua file script.
-class wxScriptFileLua : public wxScriptFile
+//! A wxBasic file script.
+class wxScriptFileBasic : public wxScriptFile
 {
 public:
-	wxScriptFileLua(const wxString &toload = wxEmptyString) { 
-		m_tScriptFile = wxLUA_SCRIPTFILE;
+	wxScriptFileBasic(const wxString &toload = wxEmptyString) { 
+		m_tScriptFile = wxBASIC_SCRIPTFILE;
 		if (!toload.IsEmpty())
 			Load(toload);
 	}
@@ -63,22 +60,16 @@ public:
 
 
 
-//! The Lua interpreter.
-class wxLua : public wxScriptInterpreter
+//! The wxBasic interpreter.
+class wxBasic : public wxScriptInterpreter
 {
-public:
-
-	//! The LUA state of the interpreter. This variable is public because
-	//! is must be accessible also by extern functions/classes.
-	lua_State *m_state;
-
 protected:
 	
 	//! TRUE if the script interpreter is ready to work.
 	bool m_bInit;
 
-	//! The Lua standard libraries loaded by wxLua.
-	static luaL_reg luaLibs[16];
+	//! The Basic standard libraries loaded by wxBasic.
+	static BasicL_reg BasicLibs[16];
 
 	//! The array of the standard functions of UnderC.
 	wxScriptFunctionArray m_arrStd;
@@ -89,11 +80,11 @@ protected:
 	wxScriptFunctionArray GetFunctionListComplete() const;
 
 public:
-	wxLua() : m_bInit(FALSE) {}
-	virtual ~wxLua() { lua_close(m_state); }
+	wxBasic() : m_bInit(FALSE) {}
+	virtual ~wxBasic() { Basic_close(m_state); }
 
 	//! Returns the global instance of this class.
-	static wxLua *Get() { return m_pLua; }
+	static wxBasic *Get() { return m_pBasic; }
 
 	//! Inits UnderC.
 	virtual bool Init();
@@ -105,8 +96,8 @@ public:
 	virtual wxScriptFunctionArray GetFunctionList() const;
 };
 
+*/
 
-
-#endif		// wxSCRIPT_USE_LUA
+#endif		// wxSCRIPT_USE_BASIC
 
 

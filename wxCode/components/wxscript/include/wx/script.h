@@ -41,6 +41,10 @@
 #define wxSCRIPT_USE_LUA
 #endif
 
+#ifndef wxSCRIPT_NO_BASIC
+#define wxSCRIPT_USE_BASIC
+#endif
+
 
 
 // Includes
@@ -525,20 +529,6 @@ public:		// virtual functions
 		wxScriptFunction *newf = new x();         \
 		newf->DeepCopy(this);                     \
 		return newf; }    
-
-// now, we can include specific interpreter wrappers
-#ifdef wxSCRIPT_USE_CINT
-#include "wx/sccint.h"
-#endif
-
-#ifdef wxSCRIPT_USE_UNDERC
-#include "wx/scunderc.h"
-#endif
-
-#ifdef wxSCRIPT_USE_LUA
-#include "wx/sclua.h"
-#endif
-
 
 #endif		// SCRIPT_H
 

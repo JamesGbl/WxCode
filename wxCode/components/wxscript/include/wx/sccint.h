@@ -10,16 +10,15 @@
 /////////////////////////////////////////////////////////////////////////////
 
 
-#ifndef CINT_H
-#define CINT_H
 
-#ifdef wxSCRIPT_USE_CINT
-
+#if defined(wxSCRIPT_USE_CINT) && !defined(__SCCINT_H__)
+#define __SCCINT_H__
 
 
 // includes
 #include <G__ci.h>			// CINT required
 #include <Api.h>
+#include "wx/script.h"		// base classes
 
 
 //! An interpreted function.
@@ -75,7 +74,7 @@ public:
 	virtual void GetFunctionList(wxScriptFunctionArray &) const;
 };
 
-#endif		// wxCINT
-#endif		// CINT_H
+
+#endif		// wxSCRIPT_USE_CINT
 
 

@@ -19,11 +19,3 @@ bool uc_func2(bool input)
 {
 	return !input;
 }
-
-myClass *uc_func3()
-{
-	myClass *r = new myClass();
-	r->set(true);
-	return r;
-}
-

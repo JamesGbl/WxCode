@@ -23,33 +23,20 @@
 ///////////////////////////////////////////////////////////////////////
 
 
-// To be correctly linked this test program needs many libraries:
+// To be correctly compiled this test program needs many libraries:
 //
 // ucc12.lib           for the UnderC interpreter
 // libcint.lib         for the CINT interpreter
 // tolua.lib 
 //  + lua.lib 
-//  + lualib.lib       for the LUA interpreter & TOLUA utility
+//  + lualib.lib    for the LUA interpreter & TOLUA utility
 //
 // and wxWidgets libraries
 //
 //
-// If you want to disable one or more of these dependencies you can compile
-// the wxscript.lib library defining one of the following symbols:
-//
-//   wxSCRIPT_NO_LUA
-//   wxSCRIPT_NO_CINT
-//   wxSCRIPT_NO_UNDERC
-//   wxSCRIPT_NO_BASIC
-//
-// If you disable one or more of the interpreters, then you will need
-// to rebuilt this test program without one or more of the following
-// defines:
-
-#define TEST_LUA
-//#define TEST_CINT		// currently disabled because it does not compile on my RH9
-//#define TEST_UNDERC	// some implementation problems...
-#define TEST_BASIC
+// If you want to disable one or more of these dependencies you can define
+// the wxSCRIPT_NO_UNDERC or wxSCRIPT_NO_CINT or wxSCRIPT_NO_LUA at compile
+// time using the -D switch of your compiler.
 
 
 // ----------------------------------------------------------------------------
@@ -65,7 +52,17 @@
 #include <wx/filename.h>
 
 #include <stdio.h>			// miscellaneous includes
-#include <wx/script.h>		// our interpreters...
+#include <tolua.h>
+
+#include <wx/script.h>		// our interpreter...
+#include "Test.h"
+
+
+#ifdef wxSCRIPT_USE_LUA
+
+	// for advanced testing
+	//TOLUA_API int tolua_toexport_open(lua_State *);
+#endif
 
 
 // without this pragma, the stupid compiler precompiles #defines below so that
@@ -73,7 +70,6 @@
 #ifdef __VISUALC__
     #pragma hdrstop
 #endif
-
 
 
 
@@ -194,6 +190,74 @@ void CallFnc2(const wxScriptFunctionArray &arr)
 	}
 }
 
+void CallAdvanced(const wxScriptFunctionArray &arr)
+{
+	wxScriptFunction *flua = arr.Get("lua_advanced");
+
+	// this is the test object we will pass to our LUA function:
+	// it should be able to modify it and return it...
+	myClass test;
+	test.set(FALSE);
+
+	wxScriptVar result;
+	wxScriptVar args[2];
+
+	args[0] = wxScriptVar("myClass*", (int *)(&test));
+	args[1] = wxScriptVar();
+
+	if (flua) {
+
+		// we cannot check if this is our function...
+		if (!flua->Exec(result, args)) {
+			
+			wxPrintf("Execution failed: %s", wxScriptInterpreter::GetLastErr().c_str());
+			
+		} else {
+
+			// if everything was right, result is a pointer to myClass * !!!
+			if (!result.GetType().isPointer()) {
+				wxPrintf("Invalid return value...");
+				return;
+			}
+
+			myClass *returned = (myClass *)result.GetPointer();
+			//bool check = (returned == &test);
+			
+			wxPrintf(">%s(myClass(false)) returned myClass(%d)\n", 
+				flua->GetName().c_str(),
+				returned->get());
+		}		
+	}
+
+#ifdef wxSCRIPT_USE_UNDERC
+#if 0
+	// normally, to call a script function (whose you know name, return type
+	// and argument list types) you should just write something like:
+	const char *fncname = "uc_func3";
+	wxScriptFunction *myfnc = arr.Get(fncname);
+	wxScriptVar ret;
+
+	// exec that function
+	bool bexec = (myfnc ? myfnc->Exec(ret, NULL) : FALSE);
+	
+	// get our real object pointer which can then be normally used in
+	// the C++ code of this program...
+	mcMathSystem *ms = (mcMathSystem *)ret.GetPointer();
+	
+	if (bexec && ms) {
+
+		wxPrintf(">Called %s; the returned address is %s and the number of lines\n",
+			" contained in the returned mcMathSystem is %d.\n",
+			myfnc->GetName().c_str(), ret.GetContentString(), ms->GetLineCount());
+
+	} else {
+
+		wxPrintf(">Error calling the %s function !!!", fncname);
+	}
+#endif
+#endif
+}
+
 void MainTestSet()
 {
 	wxString basepath = wxGetCwd();
@@ -208,7 +272,7 @@ void MainTestSet()
 	wxPrintf(">Base path is: '%s'\n", basepath.c_str());
 
 	// init
-	wxScriptInterpreter::Init(TRUE, TRUE, TRUE);
+	wxScriptInterpreter::Init(TRUE, FALSE, TRUE);
 	wxPrintf(">I'm initializing the script interpreter...\n");
 	if (!wxScriptInterpreter::areAllReady()) {
 		wxPrintf("Initialization failed.");
@@ -216,7 +280,7 @@ void MainTestSet()
 		return;
 	}
 
-#ifdef TEST_CINT
+#ifdef wxSCRIPT_USE_CINT
 	// load a CINT script file
 	wxPrintf(">Loading the 'script1.cxx'...\n");
 	wxScriptFile *file1 = wxScriptInterpreter::Load(basepath + "script1.cxx");
@@ -227,7 +291,7 @@ void MainTestSet()
 	}
 #endif
 
-#ifdef TEST_UNDERC
+#ifdef wxSCRIPT_USE_UNDERC
 	// load an UnderC script file
 	wxPrintf(">Loading the 'script2.uc'...\n");
 	wxScriptFile *file2 = wxScriptInterpreter::Load(basepath + "script2.uc");
@@ -238,7 +302,13 @@ void MainTestSet()
 	}
 #endif
 
-#ifdef TEST_LUA
+
+#ifdef wxSCRIPT_USE_LUA
+#if 0
+	// before loading a Lua script file, open the ToExport package
+	// created through the TOLUA program
+	tolua_toexport_open(wxLua::Get()->m_state);
+#endif
 	// load a Lua script file
 	wxPrintf(">Loading the 'script3.lua'...\n");
 	wxScriptFile *file3 = wxScriptInterpreter::Load(basepath + "script3.lua");
@@ -259,6 +329,7 @@ void MainTestSet()
 	// do some function calls with a lot of tests to be sure everything is okay
 	CallFnc1(arr);
 	CallFnc2(arr);
+	//CallAdvanced(arr);
 
 	// leave some space
 	wxPrintf(">Test completed.\n\n\n");

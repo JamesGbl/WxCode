@@ -40,8 +40,34 @@
   How does it work ?
  --------------------
 
-  [TOWRITE]
-  
+  wxScript just inits the required interpreters and then uses their native APIs to
+  get access to the functions loaded from the scripts.
+  The interpreters' APIs are not too difficult to learn; the problem is that they
+  are all different and sometimes, wxScript has to perform some 'hacks' to emulate
+  functions not immediately available through the interpreter's API.
+  Thus, wxScript hides all interpreter-specific code and problems, providing to the
+  programmer a simple & clean way to access scripted functions.
+
+
+
+  Why wxScript supports different interpreters instead of 
+  focusing on the powerful feature of a specific one ?
+ ---------------------------------------------------------
+
+  There are various answer to this question:
+  1) Lua is good for extending applications with lightweight & easy-to-read scripts
+     since this language has been specifically designed with this purpose.
+     UnderC and CINT instead are good for programmers (since they're C++ intepreters)
+     that want to extend their application in a OOP way or that just want to use
+     a familiar language.
+  2) The user of your program is not forced to learn the scripting language you choice
+     since with wxScript you can load scripts in different languages getting the same
+     results.
+  3) When I started to look around for a script intepreter which suited my requirements,
+     I came across various open-source ones and since I had to read good part of all their
+     docs to understand if it was what I was searching, it was not a big problem
+     support them all... :-)
+
 
 
   How can I compile wxScript and its samples ?

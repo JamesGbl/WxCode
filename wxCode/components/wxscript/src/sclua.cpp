@@ -10,12 +10,14 @@
 
 
 // includes
-#include <wx/tokenzr.h>
 #include "wx/script.h"
+#ifdef wxSCRIPT_USE_LUA				// compile-time choice (see wx/script.h)
+
+// required includes
+#include <wx/tokenzr.h>
+#include "wx/sclua.h"
 #include <tolua.h>
 #include <math.h>
-
-#ifdef wxSCRIPT_USE_LUA				// compile-time choice (see wx/script.h)
 
 // init STATICs
 luaL_reg wxLua::luaLibs[] = {

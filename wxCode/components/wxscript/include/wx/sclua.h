@@ -11,7 +11,9 @@
 
 
 
-#ifdef wxSCRIPT_USE_LUA
+#if defined(wxSCRIPT_USE_LUA) && !defined(__SCLUA_H__)
+#define __SCLUA_H__
+
 
 // includes
 extern "C" {			// this wrapping is very important: Lua is a C library !!!
@@ -19,7 +21,8 @@ extern "C" {			// this wrapping is very important: Lua is a C library !!!
 	#include <lauxlib.h>
 	#include <lualib.h>
 };
-#include "wx/script.h"
+
+#include "wx/script.h"		// base classes
 
 
 
