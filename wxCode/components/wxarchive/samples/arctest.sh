@@ -3,7 +3,7 @@
 # Name:        arctest.sh
 # Purpose:     Test script for wxArchive classes
 # Author:      Mike Wetherell
-# RCS-ID:      $Id: arctest.sh,v 1.2 2004-07-17 14:31:16 chiclero Exp $
+# RCS-ID:      $Id: arctest.sh,v 1.3 2004-11-27 23:48:04 chiclero Exp $
 # Copyright:   (c) 2004 Mike Wetherell
 # Licence:     wxWindows licence
 #############################################################################
@@ -278,10 +278,12 @@ archivertest() {
         echo
 
         # compare with the original zip
-        echo check full meta-data preserved...
-        cmp $archive.bak $archive || exit
-        echo yes
-        echo
+        if [ "$type" = "zip" ]; then
+            echo check full meta-data preserved...
+            cmp $archive.bak $archive || exit
+            echo yes
+            echo
+        fi
 
         domodify
         doextract
@@ -320,17 +322,25 @@ unarchivertest() {
 }
 
 
-# self tests
-# 
+# zip self tests
 selftest zip
 appendedziptest
 
-## check compatibilty with other archivers
-##
+## check compatibilty with other zippers
 have zip zip            && archivertest   zip -r $archive $testdir
 have unzip zip          && unarchivertest unzip $archive
 
 have pkzip zip          && archivertest   pkzip -P $archive \@$tmpdir/filelist
 have pkunzip zip        && unarchivertest pkunzip -d $archive
+
+# tar self tests
+selftest tar
+
+# compatibilty with tar and pax
+have tar tar            && archivertest   tar cvf $archive $testdir
+have tar tar            && unarchivertest tar xvf $archive
+
+have pax tar            && archivertest   pax -wf $archive $testdir
+have pax tar            && unarchivertest pax -rf $archive
 
 echo "**** SUCCESS *****"
