@@ -765,8 +765,14 @@ bool wxXml2Document::Load(wxInputStream &stream, wxString *pErr)
 bool wxXml2Document::Save(wxOutputStream &stream,
 						 const wxString &encoding, int /*indentstep*/) const
 {
+	xmlCharEncodingHandler *encoder = NULL;
+
+	// use one of the libxml2 encoders if required...
+	if (!encoding.IsEmpty())
+		encoder = xmlFindCharEncodingHandler(encoding);
+
 	xmlOutputBuffer *ob = xmlOutputBufferCreateIO(WriteXMLInStream, NULL,
-								(void *)(&stream), NULL);
+								(void *)(&stream), encoder);
 
 	// set up output options
 	xmlKeepBlanksDefault(0);

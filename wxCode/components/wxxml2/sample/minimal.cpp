@@ -347,7 +347,8 @@ void MyFrame::OnSave(wxCommandEvent& WXUNUSED(event))
 
 	// ask the user where we must save
 	wxFileDialog fd(this, "Save HML example file as...", "", "", 
-		"XML and HTML files|*.xml;*.html;*.xhtml|All files|*.*", wxSAVE | wxOVERWRITE_PROMPT );
+		"XML and HTML files|*.xml;*.html;*.xhtml|All files|*.*",
+		wxSAVE | wxOVERWRITE_PROMPT );
 	if (fd.ShowModal() == wxID_CANCEL)
 		return;
 
@@ -372,16 +373,22 @@ void MyFrame::OnSave(wxCommandEvent& WXUNUSED(event))
 	//    <!-- [sample comment] -->.
 	//
 	body.AddCommentChild(
-		wxT(" HTML exported by wxXml2 wrappers for libxml2 - ") \
-		wxT(" write to frm@users.sourceforge.net if you encounter any ") \
-		wxT(" problem or if you want to give suggestions or advices. "));
+		wxT(" This is a dummy comment "));
 
 	// also add a simple paragraph... <P>text</P>
-	body.AddTextChild("P",
+	body.AddTextChild("p",
 		wxT(" HTML exported by wxXml2 wrappers for libxml2 - ") \
 		wxT(" write to frm@users.sourceforge.net if you encounter any ") \
 		wxT(" problem or if you want to give suggestions or advices. "));
 
+#define CHECK_UNICODE
+#ifdef CHECK_UNICODE
+	// then, do a little check for non-UTF8 characters
+	body.AddCommentChild(
+		wxT(" In the followig text child, some non-UTF8 characters are used "));
+	body.AddTextChild("p",
+		wxT("/u20ac"));
+#endif
 
 	// now, save the file where the user chose
 	if (doc.Save(fd.GetPath())) {
