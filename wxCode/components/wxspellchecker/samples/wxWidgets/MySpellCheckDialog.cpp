@@ -329,21 +329,20 @@ void MySpellingDialog::SetMisspelledWord(const wxString& strMisspelling)
       pContextText->SetEditable(FALSE);
       pContextText->Clear();
       
-      #if wxCHECK_VERSION(2, 5, 0)
-        // This code works in the 2.5.x branch
-        wxString strContext = Context.GetContext();
-        pContextText->SetValue(strContext.Left(Context.GetOffset()));
-        wxColour originalTextColour = pContextText->GetDefaultStyle().GetTextColour();
-        pContextText->SetDefaultStyle(wxTextAttr(*wxRED));
-        pContextText->AppendText(strContext.Mid(Context.GetOffset(), Context.GetLength()));
-        pContextText->SetDefaultStyle(wxTextAttr(originalTextColour));
-        pContextText->AppendText(strContext.Right(strContext.Length() - (Context.GetOffset() + Context.GetLength())));
-      #else  
-        // This code works in the 2.4.x branch
-        pContextText->SetValue(Context.GetContext());
-        pContextText->SetSelection(Context.GetOffset(), Context.GetOffset() + Context.GetLength());
-        pContextText->SetStyle(Context.GetOffset(), Context.GetOffset() + Context.GetLength(), wxTextAttr(*wxRED, *wxLIGHT_GREY));
-      #endif
+        #ifdef __WXGTK20__        
+          wxString strContext = Context.GetContext();
+          pContextText->SetValue(strContext.Left(Context.GetOffset()));
+          wxColour originalTextColour = pContextText->GetDefaultStyle().GetTextColour();
+          pContextText->SetDefaultStyle(wxTextAttr(*wxRED));
+          pContextText->AppendText(strContext.Mid(Context.GetOffset(), Context.GetLength()));
+          pContextText->SetDefaultStyle(wxTextAttr(originalTextColour));
+          pContextText->AppendText(strContext.Right(strContext.Length() - (Context.GetOffset() + Context.GetLength())));
+        #else  
+          // This code works for GTK 1.x and MSW
+          pContextText->SetValue(Context.GetContext());
+          pContextText->SetSelection(Context.GetOffset(), Context.GetOffset() + Context.GetLength());
+          pContextText->SetStyle(Context.GetOffset(), Context.GetOffset() + Context.GetLength(), wxTextAttr(*wxRED, *wxLIGHT_GREY));
+        #endif
     }
   }
   TransferDataToWindow();
