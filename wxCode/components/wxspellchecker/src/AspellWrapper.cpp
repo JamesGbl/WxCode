@@ -66,6 +66,8 @@ bool AspellWrapper::LoadFunctions()
     AspellDictInfoListElements = (aspell_dict_info_list_elements_type)m_AspellLibrary.GetSymbol(_("aspell_dict_info_list_elements"));
     AspellDictInfoEnumerationNext = (aspell_dict_info_enumeration_next_type)m_AspellLibrary.GetSymbol(_("aspell_dict_info_enumeration_next"));
     DeleteAspellDictInfoEnumeration = (delete_aspell_dict_info_enumeration_type)m_AspellLibrary.GetSymbol(_("delete_aspell_dict_info_enumeration"));
+    AspellConfigRemove = (aspell_config_remove_type)m_AspellLibrary.GetSymbol(_("aspell_config_remove"));
+    
 
     return true;
   }

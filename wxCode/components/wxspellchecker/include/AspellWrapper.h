@@ -216,6 +216,7 @@ public:
   aspell_dict_info_list_elements_type AspellDictInfoListElements;
   aspell_dict_info_enumeration_next_type AspellDictInfoEnumerationNext;
   delete_aspell_dict_info_enumeration_type DeleteAspellDictInfoEnumeration;
+  aspell_config_remove_type AspellConfigRemove;
   
   void SetLibraryPath(wxString& strPath) { m_strLibraryPath = strPath; }
   wxString GetLibraryPath() { return m_strLibraryPath; }
