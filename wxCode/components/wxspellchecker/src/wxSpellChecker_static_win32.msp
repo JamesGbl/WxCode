@@ -1,86 +1,86 @@
-[Project]
-name=wxSpellChecker_static
-type=3
-defaultConfig=1
+[Project]
+name=wxSpellChecker_static
+type=3
+defaultConfig=1
 
 
-[Debug]
-// compiler 
-workingDirectory=../samples/wxWidgets/Debug
-arguments=
-intermediateFilesDirectory=Debug_static
-outputFilesDirectory=Debug_static
-compilerPreprocessor=_X86_=1, WIN32,_WIN32,WINVER=0x0400,__WIN95__,__GNUWIN32__,__WIN32__,STRICT,__WXMSW__,__WINDOWS__
-extraCompilerOptions=
-compilerIncludeDirectory=..\include, ..
-noWarning=0
-defaultWarning=0
-allWarning=1
-extraWarning=0
-isoWarning=0
-warningsAsErrors=0
-debugType=1
-debugLevel=2
-exceptionEnabled=1
-runtimeTypeEnabled=1
-optimizeLevel=0
+[Debug]
+// compiler 
+workingDirectory=../samples/wxWidgets/Debug
+arguments=
+intermediateFilesDirectory=Debug_static
+outputFilesDirectory=Debug_static
+compilerPreprocessor=_X86_=1, WIN32,_WIN32,WINVER=0x0400,__WIN95__,__GNUWIN32__,__WIN32__,STRICT,__WXMSW__,__WINDOWS__
+extraCompilerOptions=
+compilerIncludeDirectory=..\include, ..
+noWarning=0
+defaultWarning=0
+allWarning=1
+extraWarning=0
+isoWarning=0
+warningsAsErrors=0
+debugType=1
+debugLevel=2
+exceptionEnabled=1
+runtimeTypeEnabled=1
+optimizeLevel=0
 
-// linker
-libraryPath=
-outputFilename=../lib/libwx_spellcheckd.a
-libraries=
-extraLinkerOptions=
-ignoreStartupFile=0
-ignoreDefaultLibs=0
-stripExecutableFile=0
+// linker
+libraryPath=
+outputFilename=../lib/libwx_spellcheckd.a
+libraries=
+extraLinkerOptions=
+ignoreStartupFile=0
+ignoreDefaultLibs=0
+stripExecutableFile=0
 
-// archive
-extraArchiveOptions=
+// archive
+extraArchiveOptions=
 
-//resource
-resourcePreprocessor=
-resourceIncludeDirectory=
-extraResourceOptions=
+//resource
+resourcePreprocessor=
+resourceIncludeDirectory=
+extraResourceOptions=
 
-[Release]
-// compiler 
-workingDirectory=../samples/wxWidgets/Release
-arguments=
-intermediateFilesDirectory=Release_static
-outputFilesDirectory=Release_static
-compilerPreprocessor=_X86_=1, WIN32,_WIN32,WINVER=0x0400,__WIN95__,__GNUWIN32__,__WIN32__,STRICT,__WXMSW__,__WINDOWS__
-extraCompilerOptions=
-compilerIncludeDirectory=..\include, ..
-noWarning=0
-defaultWarning=0
-allWarning=1
-extraWarning=0
-isoWarning=0
-warningsAsErrors=0
-debugType=0
-debugLevel=1
-exceptionEnabled=1
-runtimeTypeEnabled=1
-optimizeLevel=2
+[Release]
+// compiler 
+workingDirectory=../samples/wxWidgets/Release
+arguments=
+intermediateFilesDirectory=Release_static
+outputFilesDirectory=Release_static
+compilerPreprocessor=_X86_=1, WIN32,_WIN32,WINVER=0x0400,__WIN95__,__GNUWIN32__,__WIN32__,STRICT,__WXMSW__,__WINDOWS__
+extraCompilerOptions=
+compilerIncludeDirectory=..\include, ..
+noWarning=0
+defaultWarning=0
+allWarning=1
+extraWarning=0
+isoWarning=0
+warningsAsErrors=0
+debugType=0
+debugLevel=1
+exceptionEnabled=1
+runtimeTypeEnabled=1
+optimizeLevel=2
 
-// linker
-libraryPath=
-outputFilename=../lib/libwx_spellcheck.a
-libraries=
-extraLinkerOptions=
-ignoreStartupFile=40
-ignoreDefaultLibs=6
-stripExecutableFile=21
+// linker
+libraryPath=
+outputFilename=../lib/libwx_spellcheck.a
+libraries=
+extraLinkerOptions=
+ignoreStartupFile=1
+ignoreDefaultLibs=1
+stripExecutableFile=1
 
-// archive
-extraArchiveOptions=
+// archive
+extraArchiveOptions=
 
-//resource
-resourcePreprocessor=
-resourceIncludeDirectory=
-extraResourceOptions=
+//resource
+resourcePreprocessor=
+resourceIncludeDirectory=
+extraResourceOptions=
 
-[Source]
+[Source]
 1=AspellInterface.cpp
 2=MySpellCheckDialog.cpp
 3=Outlook97LikeDialog.cpp
@@ -92,15 +92,21 @@ extraResourceOptions=
 9=AspellWrapper.cpp
 10=XmlSpellCheckDialog.cpp
 11=MySpellInterface.cpp
+12=SpellCheckEngineOption.cpp
+13=SpellCheckerOptionsDialog.cpp
+14=exports.cpp
 [Header]
 [Resource]
 [Other]
 [History]
-AspellWrapper.cpp,476
-SpellCheckUserInterface.cpp,321
-..\include\SpellCheckEngineInterface.h,3335
-..\include\AspellInterface.h,895
-SpellCheckEngineInterface.cpp,4282
-..\include\MySpellInterface.h,1308
-AspellInterface.cpp,3674
-MySpellInterface.cpp,3293
+AspellInterface.cpp,3648
+..\include\MySpellInterface.h,1269
+SpellCheckEngineInterface.cpp,4197
+..\include\AspellInterface.h,827
+..\include\SpellCheckEngineInterface.h,3333
+SpellCheckUserInterface.cpp,315
+AspellWrapper.cpp,452
+XmlSpellCheckDialog.cpp,15622
+SpellCheckerOptionsDialog.cpp,0
+Outlook97LikeDialog.cpp,10161
+MySpellInterface.cpp,7504

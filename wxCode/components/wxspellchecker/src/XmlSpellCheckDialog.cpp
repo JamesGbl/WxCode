@@ -1,10 +1,10 @@
 #include "XmlSpellCheckDialog.h"
-
 #include <wx/xrc/xmlres.h>
 
 #include <wx/listbox.h>
 #include <wx/valgen.h>
 
+#include "SpellCheckerOptionsDialog.h"
 /*
   The following control IDs are used
 
@@ -387,7 +387,7 @@ void XmlSpellCheckDialog::OnOptions(wxCommandEvent& event)
   m_pSpellCheckEngine->PresentOptions();
   // Create a really basic dialog with a scrolled panel that gets dynamically populated
   // with controls based on the m_pSpellCheckEngine->GetOptions();
-  wxDialog OptionsDialog(this, -1, "Options");
+  SpellCheckerOptionsDialog OptionsDialog(this, "Options", m_pSpellCheckEngine->GetOptions());
   OptionsDialog.ShowModal();
 }
 

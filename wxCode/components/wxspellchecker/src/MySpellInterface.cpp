@@ -230,13 +230,18 @@ bool MySpellInterface::SavePersonalDictionary()
   sPath.Assign(wxFileName::GetCwd(), MySpellInterface::Personal_Dictionary_Filename);
 
   wxTextFile DictFile(sPath.GetFullPath());
+  
+  // Remove any existing personal dictionary files
+  if (DictFile.Exists())
+    ::wxRemoveFile(sPath.GetFullPath());
+  
   if (!DictFile.Open())
   {
     wxMessageBox("Unable to open personal dictionary file");
     return false;
   }
 
-  DictFile.Clear();
+  //DictFile.Clear();
   for (unsigned int i=0; i<m_PersonalDictionary.GetCount(); i++)
   {
     DictFile.AddLine(m_PersonalDictionary[i]);
