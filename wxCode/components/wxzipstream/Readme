@@ -1,0 +1,9 @@
+Maintainer: Ryan Norton (ryannpcs)
+Component:  wxZipStream
+Subdir:     wxzipstream
+Parts:      D, S
+More infos: 
+wxWidgets:  2.4.2
+
+Description:
+Zip file I/O for wxWidgets
