@@ -427,23 +427,23 @@ to a newer version: see
 <A HREF="#wxtreelistctrlgetchildrencount">wxTreeListCtrl::GetChildrenCount</A><BR>
 <A HREF="#wxtreelistctrlgetcount">wxTreeListCtrl::GetCount</A><BR>
 <A HREF="#wxtreelistctrlgetfirstchild">wxTreeListCtrl::GetFirstChild</A><BR>
-<A HREF="#wxtreelistctrlgetheaderwindow">wxTreeListCtrl::GetHeaderWindow</A><BR>
-<A HREF="#wxtreelistctrlgetmainwindow">wxTreeListCtrl::GetMainWindow</A><BR>
 <A HREF="#wxtreelistctrlgetfirstvisibleitem">wxTreeListCtrl::GetFirstVisibleItem</A><BR>
+<A HREF="#wxtreelistctrlgetheaderwindow">wxTreeListCtrl::GetHeaderWindow</A><BR>
 <A HREF="#wxtreelistctrlgetimagelist">wxTreeListCtrl::GetImageList</A><BR>
 <A HREF="#wxtreelistctrlgetindent">wxTreeListCtrl::GetIndent</A><BR>
 <A HREF="#wxtreelistctrlgetitembackgroundcolour">wxTreeListCtrl::GetItemBackgroundColour</A><BR>
 <A HREF="#wxtreelistctrlgetitemdata">wxTreeListCtrl::GetItemData</A><BR>
 <A HREF="#wxtreelistctrlgetitemfont">wxTreeListCtrl::GetItemFont</A><BR>
 <A HREF="#wxtreelistctrlgetitemimage">wxTreeListCtrl::GetItemImage</A><BR>
+<A HREF="#wxtreelistctrlgetitemparent">wxTreeListCtrl::GetItemParent</A><BR>
 <A HREF="#wxtreelistctrlgetitemtext">wxTreeListCtrl::GetItemText</A><BR>
 <A HREF="#wxtreelistctrlgetitemtextcolour">wxTreeListCtrl::GetItemTextColour</A><BR>
 <A HREF="#wxtreelistctrlgetlastchild">wxTreeListCtrl::GetLastChild</A><BR>
 <A HREF="#wxtreelistctrlgetlinespacing">wxTreeListCtrl::GetLineSpacing</A><BR>
+<A HREF="#wxtreelistctrlgetmainwindow">wxTreeListCtrl::GetMainWindow</A><BR>
 <A HREF="#wxtreelistctrlgetnextchild">wxTreeListCtrl::GetNextChild</A><BR>
 <A HREF="#wxtreelistctrlgetnextsibling">wxTreeListCtrl::GetNextSibling</A><BR>
 <A HREF="#wxtreelistctrlgetnextvisible">wxTreeListCtrl::GetNextVisible</A><BR>
-<A HREF="#wxtreelistctrlgetitemparent">wxTreeListCtrl::GetItemParent</A><BR>
 <A HREF="#wxtreelistctrlgetprevchild">wxTreeListCtrl::GetPrevChild</A><BR>
 <A HREF="#wxtreelistctrlgetprevsibling">wxTreeListCtrl::GetPrevSibling</A><BR>
 <A HREF="#wxtreelistctrlgetprevvisible">wxTreeListCtrl::GetPrevVisible</A><BR>
@@ -453,13 +453,13 @@ to a newer version: see
 <A HREF="#wxtreelistctrlgetstateimagelist">wxTreeListCtrl::GetStateImageList</A><BR>
 <A HREF="#wxtreelistctrlgetwindowstyle">wxTreeListCtrl::GetWindowStyle</A><BR>
 <A HREF="#wxtreelistctrlgetwindowstyleflag">wxTreeListCtrl::GetWindowStyleFlag</A><BR>
+<A HREF="#wxtreelistctrlhaschildren">wxTreeListCtrl::HasChildren</A><BR>
 <A HREF="#wxtreelistctrlhittest">wxTreeListCtrl::HitTest</A><BR>
 <A HREF="#wxtreelistctrlinsertitem">wxTreeListCtrl::InsertItem</A><BR>
 <A HREF="#wxtreelistctrlisbold">wxTreeListCtrl::IsBold</A><BR>
 <A HREF="#wxtreelistctrlisexpanded">wxTreeListCtrl::IsExpanded</A><BR>
 <A HREF="#wxtreelistctrlisselected">wxTreeListCtrl::IsSelected</A><BR>
 <A HREF="#wxtreelistctrlisvisible">wxTreeListCtrl::IsVisible</A><BR>
-<A HREF="#wxtreelistctrlhaschildren">wxTreeListCtrl::HasChildren</A><BR>
 <A HREF="#wxtreelistctrlitemhaschildren">wxTreeListCtrl::ItemHasChildren</A><BR>
 <A HREF="#wxtreelistctrloncompareitems">wxTreeListCtrl::OnCompareItems</A><BR>
 <A HREF="#wxtreelistctrlprependitem">wxTreeListCtrl::PrependItem</A><BR>
@@ -712,11 +712,73 @@ Expands the given item and all subitems recursively.<P>
 <H3>wxTreeListCtrl::FindItem</H3>
 <P>
 <B>wxTreeItemId</B> <B>FindItem</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>const wxString&amp;</B><I> str</I>,
- <B>bool</B><I>partial=false</I>, <B>bool</B><I>nocase=false</I>)<P>
-Returns the next visible item in the tree which matches exactly the entered string, starting 
-from the currently selected item. If partial=true is specified only the first characters 
-up to the length of the entered string are matched. If nocase=true the matching is done case 
-insensitive. If no item is selected the find starts a the beginning of the tree.<P>
+ <B>int</B><I>flags=0</I>)<P>
+Returns the next visible item in the tree which matches the entered string, starting from 
+the currently selected item. If no item is selected the find starts a the beginning of the 
+tree.<P>
+The flags have the following meaning:<P>
+
+
+<TABLE>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxTL_SEARCH_LEVEL
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Searches within only the current level.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxTL_SEARCH_VISIBLE
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Searches within all visible items.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxTL_SEARCH_FULL
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Searches within the full tree.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxTL_SEARCH_PARTIAL
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Matches only partial up to the submitted text length.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxTL_SEARCH_NOCASE
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Matches case insensitive.
+</FONT></TD></TR>
+
+
+</TABLE>
+<P>
 
 <HR>
 <A NAME="wxtreelistctrlgetitemrect"></A>
@@ -773,31 +835,18 @@ Returns an invalid tree item if there are no further children.<P>
 <B>See also</B><P>
 
 <HR>
-<A NAME="wxtreelistctrlgetheaderwindow"></A>
-<H3>wxTreeListCtrl::GetHeaderWindow</H3>
-<P>
-<B>wxTreeListHeaderWindow*</B> <B>GetHeaderWindow</B>() <B>const</B><P>
-Returns the pointer to the header window.<P>
-
-<HR>
-<A NAME="wxtreelistctrlgetmainwindow"></A>
-<H3>wxTreeListCtrl::GetMainWindow</H3>
-<P>
-<B>wxTreeListMainWindow*</B> <B>GetMainWindow</B>() <B>const</B><P>
-Returns the pointer to the main window.<P>
-<A HREF="manual_wxtreelistctrl.html#wxtreelistctrlgetnextchild">wxTreeListCtrl::GetNextChild</A>,
-<A HREF="manual_wxtreelistctrl.html#wxtreelistctrlgetnextsibling">wxTreeListCtrl::GetNextSibling</A><P>
-<B><FONT COLOR="#0000C8">wxPython note:</FONT></B> In wxPython the returned wxTreeItemId and the new cookie
-value are both returned as a tuple containing the two values.<P>
-<B><FONT COLOR="#0000C8">wxPerl note:</FONT></B> In wxPerl this method only takes the <TT>item</TT> parameter, and
-  returns a 2-element list <TT>( item, cookie )</TT>.<P>
-
-<HR>
 <A NAME="wxtreelistctrlgetfirstvisibleitem"></A>
 <H3>wxTreeListCtrl::GetFirstVisibleItem</H3>
 <P>
 <B>wxTreeItemId</B> <B>GetFirstVisibleItem</B>() <B>const</B><P>
 Returns the first visible item.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetheaderwindow"></A>
+<H3>wxTreeListCtrl::GetHeaderWindow</H3>
+<P>
+<B>wxTreeListHeaderWindow*</B> <B>GetHeaderWindow</B>() <B>const</B><P>
+Returns the pointer to the header window.<P>
 
 <HR>
 <A NAME="wxtreelistctrlgetimagelist"></A>
@@ -907,6 +956,13 @@ item is expanded and the normal image is shown when it is collapsed)
 <P>
 
 <HR>
+<A NAME="wxtreelistctrlgetitemparent"></A>
+<H3>wxTreeListCtrl::GetItemParent</H3>
+<P>
+<B>wxTreeItemId</B> <B>GetItemParent</B>(<B>const wxTreeItemId&amp;</B><I> item</I>) <B>const</B><P>
+Returns the item's parent.<P>
+
+<HR>
 <A NAME="wxtreelistctrlgetitemtext"></A>
 <H3>wxTreeListCtrl::GetItemText</H3>
 <P>
@@ -939,6 +995,19 @@ Returns the last child of the item (or an invalid tree item if this item has no 
 <P>
 <B>int</B> <B>GetLineSpacing</B>() <B>const</B><P>
 Returns the space above and below the text on each line.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetmainwindow"></A>
+<H3>wxTreeListCtrl::GetMainWindow</H3>
+<P>
+<B>wxTreeListMainWindow*</B> <B>GetMainWindow</B>() <B>const</B><P>
+Returns the pointer to the main window.<P>
+<A HREF="manual_wxtreelistctrl.html#wxtreelistctrlgetnextchild">wxTreeListCtrl::GetNextChild</A>,
+<A HREF="manual_wxtreelistctrl.html#wxtreelistctrlgetnextsibling">wxTreeListCtrl::GetNextSibling</A><P>
+<B><FONT COLOR="#0000C8">wxPython note:</FONT></B> In wxPython the returned wxTreeItemId and the new cookie
+value are both returned as a tuple containing the two values.<P>
+<B><FONT COLOR="#0000C8">wxPerl note:</FONT></B> In wxPerl this method only takes the <TT>item</TT> parameter, and
+  returns a 2-element list <TT>( item, cookie )</TT>.<P>
 
 <HR>
 <A NAME="wxtreelistctrlgetnextchild"></A>
@@ -976,13 +1045,6 @@ Returns an invalid tree item if there are no further siblings.<P>
 <P>
 <B>wxTreeItemId</B> <B>GetNextVisible</B>(<B>const wxTreeItemId&amp;</B><I> item</I>) <B>const</B><P>
 Returns the next visible item.<P>
-
-<HR>
-<A NAME="wxtreelistctrlgetitemparent"></A>
-<H3>wxTreeListCtrl::GetItemParent</H3>
-<P>
-<B>wxTreeItemId</B> <B>GetItemParent</B>(<B>const wxTreeItemId&amp;</B><I> item</I>) <B>const</B><P>
-Returns the item's parent.<P>
 
 <HR>
 <A NAME="wxtreelistctrlgetprevchild"></A>
@@ -1071,6 +1133,13 @@ Returns the state image list (from which application-defined state images are ta
 <P>
 <B>long</B> <B>GetWindowStyleFlag</B>() <B>const</B><P>
 ???<P>
+
+<HR>
+<A NAME="wxtreelistctrlhaschildren"></A>
+<H3>wxTreeListCtrl::HasChildren</H3>
+<P>
+<B>bool</B> <B>HasChildren</B>(<B>const wxTreeItemId&amp;</B><I> item</I>) <B>const</B><P>
+Returns TRUE if the item has children.???<P>
 
 <HR>
 <A NAME="wxtreelistctrlhittest"></A>
@@ -1261,13 +1330,6 @@ Returns TRUE if the item is selected.<P>
 <P>
 <B>bool</B> <B>IsVisible</B>(<B>const wxTreeItemId&amp;</B><I> item</I>) <B>const</B><P>
 Returns TRUE if the item is visible (it might be outside the view, or not expanded).<P>
-
-<HR>
-<A NAME="wxtreelistctrlhaschildren"></A>
-<H3>wxTreeListCtrl::HasChildren</H3>
-<P>
-<B>bool</B> <B>HasChildren</B>(<B>const wxTreeItemId&amp;</B><I> item</I>) <B>const</B><P>
-Returns TRUE if the item has children.???<P>
 
 <HR>
 <A NAME="wxtreelistctrlitemhaschildren"></A>
