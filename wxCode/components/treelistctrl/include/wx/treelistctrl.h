@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Modified by: Alberto Griggio, 2002
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.2 2004-03-21 08:28:25 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.3 2004-03-21 09:26:52 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows license
@@ -35,7 +35,9 @@ class GIZMODLLEXPORT wxTreeListHeaderWindow;
 class GIZMODLLEXPORT wxTreeListMainWindow;
 
 // Using this typedef removes an ambiguity when calling Remove()
+#ifdef __WXMSW__
 typedef void *wxTreeItemIdValue;
+#endif
 
 //-----------------------------------------------------------------------------
 // wxTreeListColumnAttrs
