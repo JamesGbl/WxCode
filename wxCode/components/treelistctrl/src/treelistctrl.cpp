@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.54 2004-11-18 20:46:14 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.55 2004-11-19 18:29:03 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -1460,7 +1460,7 @@ void wxTreeListHeaderWindow::SetColumnWidth (int column, int width)
 
 void wxTreeListHeaderWindow::InsertColumn (int before, const wxTreeListColumnInfo& col)
 {
-    wxCHECK_RET(before < GetColumnCount(), wxT("Invalid column index"));
+    wxCHECK_RET ((before >= 0) && (before < GetColumnCount()), wxT("Invalid column index"));
     m_columns.Insert(col, before);
     m_total_col_width += col.GetWidth();
     m_owner->AdjustMyScrollbars();
@@ -1470,7 +1470,7 @@ void wxTreeListHeaderWindow::InsertColumn (int before, const wxTreeListColumnInf
 
 void wxTreeListHeaderWindow::RemoveColumn (int column)
 {
-    wxCHECK_RET((column >= 0) && (column < GetColumnCount()), wxT("Invalid column"));
+    wxCHECK_RET ((column >= 0) && (column < GetColumnCount()), wxT("Invalid column"));
     m_total_col_width -= m_columns[column].GetWidth();
     m_columns.RemoveAt(column);
     m_owner->AdjustMyScrollbars();
@@ -1480,7 +1480,7 @@ void wxTreeListHeaderWindow::RemoveColumn (int column)
 
 void wxTreeListHeaderWindow::SetColumn (int column, const wxTreeListColumnInfo& info)
 {
-    wxCHECK_RET((column >= 0) && (column < GetColumnCount()), wxT("Invalid column"));
+    wxCHECK_RET ((column >= 0) && (column < GetColumnCount()), wxT("Invalid column"));
     int w = m_columns[column].GetWidth();
     m_columns[column] = info;
     if (w != info.GetWidth()) {
@@ -1980,7 +1980,7 @@ void wxTreeListMainWindow::SetItemImage(const wxTreeItemId& item,
                                         int column,
                                         int image, wxTreeItemIcon which)
 {
-    wxCHECK_RET( item.IsOk(), wxT("invalid tree item") );
+    wxCHECK_RET (item.IsOk(), wxT("invalid tree item") );
 
     wxTreeListItem *pItem = (wxTreeListItem*) item.m_pItem;
     pItem->SetImage(column, image, which);
@@ -1993,7 +1993,7 @@ void wxTreeListMainWindow::SetItemImage(const wxTreeItemId& item,
 void wxTreeListMainWindow::SetItemData(const wxTreeItemId& item,
                                        wxTreeItemData *data)
 {
-    wxCHECK_RET( item.IsOk(), wxT("invalid tree item") );
+    wxCHECK_RET (item.IsOk(), wxT("invalid tree item") );
 
     ((wxTreeListItem*) item.m_pItem)->SetData(data);
 }
@@ -2001,7 +2001,7 @@ void wxTreeListMainWindow::SetItemData(const wxTreeItemId& item,
 void wxTreeListMainWindow::SetItemHasChildren(const wxTreeItemId& item,
                                               bool has)
 {
-    wxCHECK_RET( item.IsOk(), wxT("invalid tree item") );
+    wxCHECK_RET (item.IsOk(), wxT("invalid tree item") );
 
     wxTreeListItem *pItem = (wxTreeListItem*) item.m_pItem;
     pItem->SetHasPlus(has);
@@ -2010,7 +2010,7 @@ void wxTreeListMainWindow::SetItemHasChildren(const wxTreeItemId& item,
 
 void wxTreeListMainWindow::SetItemBold(const wxTreeItemId& item, bool bold)
 {
-    wxCHECK_RET( item.IsOk(), wxT("invalid tree item") );
+    wxCHECK_RET (item.IsOk(), wxT("invalid tree item") );
 
     // avoid redrawing the tree if no real change
     wxTreeListItem *pItem = (wxTreeListItem*) item.m_pItem;
@@ -2024,7 +2024,7 @@ void wxTreeListMainWindow::SetItemBold(const wxTreeItemId& item, bool bold)
 void wxTreeListMainWindow::SetItemTextColour(const wxTreeItemId& item,
                                              const wxColour& col)
 {
-    wxCHECK_RET( item.IsOk(), wxT("invalid tree item") );
+    wxCHECK_RET (item.IsOk(), wxT("invalid tree item") );
 
     wxTreeListItem *pItem = (wxTreeListItem*) item.m_pItem;
     pItem->Attr().SetTextColour(col);
@@ -2034,7 +2034,7 @@ void wxTreeListMainWindow::SetItemTextColour(const wxTreeItemId& item,
 void wxTreeListMainWindow::SetItemBackgroundColour(const wxTreeItemId& item,
                                                    const wxColour& col)
 {
-    wxCHECK_RET( item.IsOk(), wxT("invalid tree item") );
+    wxCHECK_RET (item.IsOk(), wxT("invalid tree item") );
 
     wxTreeListItem *pItem = (wxTreeListItem*) item.m_pItem;
     pItem->Attr().SetBackgroundColour(col);
@@ -2044,7 +2044,7 @@ void wxTreeListMainWindow::SetItemBackgroundColour(const wxTreeItemId& item,
 void wxTreeListMainWindow::SetItemFont(const wxTreeItemId& item,
                                        const wxFont& font)
 {
-    wxCHECK_RET( item.IsOk(), wxT("invalid tree item") );
+    wxCHECK_RET (item.IsOk(), wxT("invalid tree item") );
 
     wxTreeListItem *pItem = (wxTreeListItem*) item.m_pItem;
     pItem->Attr().SetFont(font);
@@ -2434,7 +2434,7 @@ void wxTreeListMainWindow::SendDeleteEvent(wxTreeListItem *item) {
 void wxTreeListMainWindow::DeleteChildren(const wxTreeItemId& itemId) {
 
     wxTreeListItem *item = (wxTreeListItem*) itemId.m_pItem;
-    wxCHECK_RET (item == m_rootItem, _T("invalid item, root may not be deleted this way!"));
+    wxCHECK_RET (item != m_rootItem, _T("invalid item, root may not be deleted this way!"));
 
     m_dirty = true; // do this first so stuff below doesn't cause flicker
     item->DeleteChildren (this);
@@ -2443,7 +2443,7 @@ void wxTreeListMainWindow::DeleteChildren(const wxTreeItemId& itemId) {
 void wxTreeListMainWindow::Delete (const wxTreeItemId& itemId) {
 
     wxTreeListItem *item = (wxTreeListItem*) itemId.m_pItem;
-    wxCHECK_RET (item == m_rootItem, _T("invalid item, root may not be deleted this way!"));
+    wxCHECK_RET (item != m_rootItem, _T("invalid item, root may not be deleted this way!"));
 
     // don't stay with invalid m_shiftItem or we will crash in the next call to OnChar()
     bool changeKeyCurrent = false;
@@ -2481,7 +2481,7 @@ void wxTreeListMainWindow::Expand(const wxTreeItemId& itemId)
 {
     wxTreeListItem *item = (wxTreeListItem*) itemId.m_pItem;
 
-    wxCHECK_RET( item, _T("invalid item in wxTreeListMainWindow::Expand") );
+    wxCHECK_RET (item, _T("invalid item in wxTreeListMainWindow::Expand") );
 
     if ( !item->HasPlus() )
         return;
@@ -2638,7 +2638,7 @@ bool wxTreeListMainWindow::TagAllChildrenUntilLast (wxTreeListItem *crt_item,
 void wxTreeListMainWindow::SelectItem(const wxTreeItemId& itemId,
                                       const wxTreeItemId& lastId,
                                       bool unselect_others) {
-    wxCHECK_RET( itemId.IsOk(), wxT("invalid tree item") );
+    wxCHECK_RET (itemId.IsOk(), wxT("invalid tree item") );
 
     bool is_single = !HasFlag(wxTR_MULTIPLE);
     wxTreeListItem *item = (wxTreeListItem*) itemId.m_pItem;
@@ -2828,11 +2828,11 @@ int wxTreeListMainWindow::OnCompareItems(const wxTreeItemId& item1,
 
 void wxTreeListMainWindow::SortChildren(const wxTreeItemId& itemId)
 {
-    wxCHECK_RET( itemId.IsOk(), wxT("invalid tree item") );
+    wxCHECK_RET (itemId.IsOk(), wxT("invalid tree item"));
 
     wxTreeListItem *item = (wxTreeListItem*) itemId.m_pItem;
 
-    wxCHECK_RET( !s_treeBeingSorted,
+    wxCHECK_RET (!s_treeBeingSorted,
                  wxT("wxTreeListMainWindow::SortChildren is not reentrant") );
 
     wxArrayTreeListItems& children = item->GetChildren();
@@ -4198,7 +4198,7 @@ bool wxTreeListMainWindow::SetForegroundColour(const wxColour& colour)
 void wxTreeListMainWindow::SetItemText(const wxTreeItemId& item, int column,
                                        const wxString& text)
 {
-    wxCHECK_RET( item.IsOk(), wxT("invalid tree item") );
+    wxCHECK_RET (item.IsOk(), wxT("invalid tree item"));
 
     wxClientDC dc(this);
     wxTreeListItem *pItem = (wxTreeListItem*) item.m_pItem;
