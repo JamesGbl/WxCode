@@ -9,45 +9,62 @@
 	<include file="../../../build/defaults.bkl"/>
 	
 
-	<!-- Settings for this component -->
-	<!-- =========================== -->
+
+	<!-- Enables/disables required libraries -->
+	<!-- =================================== -->
+
+    <option name="USE_PYTHON">
+    	<values>0,1</values>
+		<default-value>1</default-value>
+		<description>If 0 Python won't be used</description>
+    </option>
+    <option name="USE_LUA">
+    	<values>0,1</values>
+		<default-value>1</default-value>
+		<description>If 0 LUA won't be used</description>
+    </option>
+    <option name="USE_CINT">
+    	<values>0,1</values>
+		<default-value>0</default-value>
+		<description>If 0 CINT won't be used</description>
+    </option>
+    <option name="USE_UNDERC">
+    	<values>0,1</values>
+		<default-value>0</default-value>
+		<description>If 0 UnderC won't be used</description>
+    </option>
+
+	
+	
+	<!-- Directories for required libraries -->
+	<!-- ================================== -->
 
     <option name="PYTHON_DIR" category="path">
-	<default-value>c:$(DIRSEP)Python</default-value>
-	<description>The Python library main folder</description>
+		<default-value>c:\Python</default-value>
+		<description>The Python library main folder</description>
     </option>
     <option name="LUA_DIR" category="path">
-	<default-value>c:$(DIRSEP)lua</default-value>
-	<description>The LUA library main folder</description>
+		<default-value>c:\lua</default-value>
+		<description>The LUA library main folder</description>
     </option>
     <option name="TOLUA_DIR" category="path">
-	<default-value>c:$(DIRSEP)tolua</default-value>
-	<description>The TOLUA library main folder</description>
+		<default-value>c:\tolua</default-value>
+		<description>The TOLUA library main folder</description>
     </option>
-
     <option name="CINT_DIR" category="path">
-	<default-value>c:$(DIRSEP)cint</default-value>
-	<description>The CINT library main folder</description>
+		<default-value>c:\cint</default-value>
+		<description>The CINT library main folder</description>
     </option>
-    <option name="UCC_DIR" category="path">
-	<default-value>c:$(DIRSEP)ucc</default-value>
-	<description>The UnderC library main folder</description>
+    <option name="UNDERC_DIR" category="path">
+		<default-value>c:\ucc</default-value>
+		<description>The UnderC library main folder</description>
     </option>
     
-    <template id="twxscript">
-        <stdlib>$(PYTHON_DIR)</stdlib>    
-        <stdlib>$(LUA_DIR)</stdlib>
-        <stdlib>$(TOLUA_DIR)</stdlib>
-        
-        <!-- currently disabled -->
-<!--        <stdlib>$(CINT_DIR)</stdlib>
-        <stdlib>$(UCC_DIR)</stdlib>	       -->
-
-        <define>wxSCRIPT_NO_CINT</define>
-        <define>wxSCRIPT_NO_UNDERC</define>
-        <define>wxSCRIPT_NO_PYTHON</define>        
-    </template>
-
+    
+	
+	<!--         COMPONENT VARIABLES        -->
+	<!-- ================================== -->
+	
 	<set var="COMP_NAME">wxscript</set>
 	<set var="COMP_SRC">../src/script.cpp ../src/scpython.cpp 
                  		../src/sccint.cpp ../src/scunderc.cpp
@@ -60,13 +77,110 @@
    	<set var="COMP_SAMPLE2_SRC">../tests/test2/Test.cpp</set>
 	<set var="COMP_SAMPLE2_DIR">../tests/test2</set>
 
+	<!-- Additional source file -->
 	<if cond="FORMAT=='msvc' or FORMAT=='msvc6prj'">
 		<set var="COMP_SAMPLE2_SRC" append="1">../tests/test2/stackwalker.cpp</set>
 	</if>
-
-
+	
 	<!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->
 	<include file="../../../build/wxcode.bkl"/>
+
+	
+		
+	<!--  Variables for required libraries  -->
+	<!-- ================================== -->
+
+    <!-- __INCLUDE_ARG is a variable set for all formats to the /I or -I switch. -->
+    <if cond="FORMAT!='msvc6prj'"><set var="INCLUDE_SWITCH">$(__INCLUDE_ARG)</set></if>
+    <if cond="FORMAT!='msvc6prj'"><set var="LIBPATH_SWITCH">$(__LIBDIR_ARG)</set></if>
+    <if cond="FORMAT!='msvc6prj'"><set var="DEFINE_SWITCH">$(__DEFINE_ARG)</set></if>
+    
+    <set var="PYTHONLIB_POSTFIX">
+    	<if cond="BUILD=='debug'">_d</if>
+    </set>
+
+	<if cond="FORMAT!='msvc6prj'">
+		<set var="SCRIPTINCLUDE1"><if cond="USE_PYTHON=='1'">$(INCLUDE_SWITCH)$(PYTHON_DIR)$(DIRSEP)include</if></set>
+		<set var="SCRIPTINCLUDE2"><if cond="USE_LUA=='1'">$(INCLUDE_SWITCH)$(LUA_DIR)$(DIRSEP)include $(INCLUDE_SWITCH)$(TOLUA_DIR)$(DIRSEP)include</if></set>
+		<set var="SCRIPTINCLUDE3"><if cond="USE_CINT=='1'">$(INCLUDE_SWITCH)$(CINT_DIR)$(DIRSEP)include</if></set>
+		<set var="SCRIPTINCLUDE4"><if cond="USE_UNDERC=='1'">$(INCLUDE_SWITCH)$(UNDERC_DIR)$(DIRSEP)include</if></set>
+		<set var="SCRIPTINCLUDE">$(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) $(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4)</set>
+	</if>
+
+	<if cond="FORMAT!='msvc6prj'">
+		<set var="SCRIPTLIBPATH1"><if cond="USE_PYTHON=='1'">$(LIBPATH_SWITCH)$(PYTHON_DIR)$(DIRSEP)libs</if></set>
+		<set var="SCRIPTLIBPATH2"><if cond="USE_LUA=='1'">$(LIBPATH_SWITCH)$(LUA_DIR)$(DIRSEP)lib $(LIBPATH_SWITCH)$(TOLUA_DIR)$(DIRSEP)lib</if></set>
+		<set var="SCRIPTLIBPATH3"><if cond="USE_CINT=='1'">$(LIBPATH_SWITCH)$(CINT_DIR)$(DIRSEP)lib</if></set>
+		<set var="SCRIPTLIBPATH4"><if cond="USE_UNDERC=='1'">$(LIBPATH_SWITCH)$(UNDERC_DIR)$(DIRSEP)lib</if></set>
+		<set var="SCRIPTLIBPATH">$(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4)</set>
+	</if>
+
+	<if cond="FORMAT!='msvc6prj'">
+		<set var="SCRIPTDEFINE1"><if cond="USE_PYTHON=='0'">$(DEFINE_SWITCH)wxSCRIPT_NO_PYTHON</if></set>
+		<set var="SCRIPTDEFINE2"><if cond="USE_LUA=='0'">$(DEFINE_SWITCH)wxSCRIPT_NO_LUA</if></set>
+		<set var="SCRIPTDEFINE3"><if cond="USE_CINT=='0'">$(DEFINE_SWITCH)wxSCRIPT_NO_CINT</if></set>
+		<set var="SCRIPTDEFINE4"><if cond="USE_UNDERC=='0'">$(DEFINE_SWITCH)wxSCRIPT_NO_UNDERC</if></set>
+		<set var="SCRIPTDEFINE">$(SCRIPTDEFINE1) $(SCRIPTDEFINE2) $(SCRIPTDEFINE3) $(SCRIPTDEFINE4)</set>
+	</if>
+
+	<if cond="FORMAT!='msvc6prj'">
+		<set var="SCRIPTLIB1"><if cond="USE_PYTHON=='1'">python24$(PYTHONLIB_POSTFIX)</if></set>
+		<set var="SCRIPTLIB2A"><if cond="USE_LUA=='1'">lua</if></set>
+		<set var="SCRIPTLIB2B"><if cond="USE_LUA=='1'">lualib</if></set>
+		<set var="SCRIPTLIB2C"><if cond="USE_LUA=='1'">tolua</if></set>
+		<set var="SCRIPTLIB3"><if cond="USE_CINT=='1'">cint</if></set>
+		<set var="SCRIPTLIB4"><if cond="USE_UNDERC=='1'">ucc12</if></set>
+	</if>
+			
+	
+	
+	<!--               TEMPLATES            -->
+	<!-- ================================== -->
+	
+	<template id="twxscript">
+		<if cond="FORMAT!='msvc6prj'">
+    	 	<cppflags>$(SCRIPTDEFINE) $(SCRIPTINCLUDE)</cppflags>
+    	 	<ldflags>$(SCRIPTLIBPATH)</ldflags>
+     	</if>
+     	<if cond="FORMAT=='msvc6prj'">
+     		<include>$(PYTHON_DIR)\include</include>
+     		<lib-path>$(PYTHON_DIR)\libs</lib-path>
+     		<stdlib>$(LUA_DIR)</stdlib>
+     		<stdlib>$(TOLUA_DIR)</stdlib>
+     		<stdlib>$(CINT_DIR)</stdlib>
+     		<stdlib>$(UNDERC_DIR)</stdlib>
+     		
+     		<!-- temporary disabled -->
+     		<define>wxSCRIPT_NO_UNDERC</define>
+     		<define>wxSCRIPT_NO_CINT</define>
+     	</if>
+    </template>
+
+   <define-tag name="scriptlibs" rules="exe,dll,lib">
+		<if cond="FORMAT!='msvc6prj'">
+			<sys-lib>$(SCRIPTLIB1)</sys-lib>
+			<sys-lib>$(SCRIPTLIB2A)</sys-lib>
+			<sys-lib>$(SCRIPTLIB2B)</sys-lib>
+			<sys-lib>$(SCRIPTLIB2C)</sys-lib>
+			<sys-lib>$(SCRIPTLIB3)</sys-lib>
+			<sys-lib>$(SCRIPTLIB4)</sys-lib>
+		</if>
+     	<if cond="FORMAT=='msvc6prj'">
+     		<sys-lib>python24$(PYTHONLIB_POSTFIX)</sys-lib>
+     		<sys-lib>lua</sys-lib>
+     		<sys-lib>lualib</sys-lib>
+     		<sys-lib>tolua</sys-lib>
+
+     		<!-- temporary disabled
+     		<sys-lib>cint</sys-lib>
+     		<sys-lib>ucc12</sys-lib>  -->
+     	</if>
+    </define-tag>
+
+
+	
+	<!--          COMPONENT TARGETS         -->
+	<!-- ================================== -->
 
 	<!-- The real target: wxcode.bkl does not declare a real target but a template called
 	     "complib". In this way modifications are allowed to the basic template. -->
@@ -74,21 +188,13 @@
 		<libname>$(COMP_NAME)$(WXLIBPOSTFIX)</libname>
 	</lib>
 
-
 	<!-- The first sample of the component: as for the LIB target, this exe derives from a 
 	     template contained in wxcode.bkl which can be modified here -->
 	<exe id="minimal" template="compsample,twxscript">
 		<app-type>console</app-type>
 
 		<library>wxscript</library>
-        <sys-lib>lua</sys-lib>
-        <sys-lib>lualib</sys-lib>
-        <sys-lib>tolua</sys-lib>
-
-        <!-- currently disabled -->
-<!--    <sys-lib>cint</sys-lib>
-        <sys-lib>ucc12</sys-lib>   -->		
-
+		<scriptlibs/>
 		<wxlibs/>
 		<syslibs/>
 	</exe>
@@ -101,14 +207,7 @@
 		<app-type>console</app-type>
 
 		<library>wxscript</library>
-        <sys-lib>lua</sys-lib>
-        <sys-lib>lualib</sys-lib>
-        <sys-lib>tolua</sys-lib>
-
-        <!-- currently disabled -->
-<!--        <sys-lib>cint</sys-lib>
-        <sys-lib>ucc12</sys-lib>   -->		
-
+		<scriptlibs/>
 		<wxlibs/>
 		<syslibs/>
 	</exe>

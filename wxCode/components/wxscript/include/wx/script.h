@@ -185,6 +185,12 @@ protected:
 	};
 
 public:
+
+	//! Copy constructor.
+	wxScriptVar(const wxScriptVar &var) {
+		Copy(var);
+	}
+
 	wxScriptVar(const wxString &type = wxEmptyString, 
 				const wxString &content = wxEmptyString) : m_content(0) {
 		SetType(type);
@@ -207,7 +213,11 @@ public:
 		wxASSERT(GetType().isPointer());
 	}
 
-	virtual ~wxScriptVar() {}
+	virtual ~wxScriptVar() { ResetContent(); }
+
+
+	wxScriptVar &operator=(const wxScriptVar &tocopy)
+		{ Copy(tocopy); return *this; }
 
 
 
@@ -215,7 +225,7 @@ public:
 	//! \name SET functions. @{
 
 	//! Sets the type of this variable; wxScriptTypeInfo::Set() is used.
-	virtual void SetType(const wxString &str) { m_tType.Set(str); }
+	virtual void SetType(const wxString &str)		{ m_tType.Set(str); }
 
 	//! Sets the contents of this variable.
 	virtual void SetContent(const wxString &);
@@ -239,6 +249,9 @@ public:
 	//! Sets as empty the current contents (deleting eventually allocated memory).
 	virtual void ResetContent();
 
+	//! Copies the given wxScriptVar object.
+	virtual void Copy(const wxScriptVar &var);
+
 	//@}
 
 
@@ -256,6 +269,8 @@ public:
 	double GetContentDouble() const		{ return (m_tType == wxSTG_INT || m_tType == wxSTG_LONG) ? m_content : m_floatcontent; }
 
 	//! Returns the contents encoded in a string.
+	//! If the content is set to a pointer to CHAR, then the string
+	//! pointed is returned enclosed in double quotes.
 	virtual wxString GetContentString() const;	
 
 	//! Returns the memory address hold by this variable if it is set
@@ -414,8 +429,9 @@ enum wxScriptFileType {
 	wxCINT_SCRIPTFILE = 0,		// extension = "cxx"
 	wxUNDERC_SCRIPTFILE = 1,	// extension = "uc"
 	wxLUA_SCRIPTFILE = 2,		// extension = "lua"
+	wxPYTHON_SCRIPTFILE = 3,	// extension = "py"
 
-	wxSCRIPT_SUPPORTED_FORMATS = 3		// this must be the last
+	wxSCRIPT_SUPPORTED_FORMATS = 4		// this must be the last
 };
 
 
@@ -464,6 +480,7 @@ public:
 class wxCINT;
 class wxUnderC;
 class wxLua;
+class wxPython;
 
 //! A singleton class that wraps all the script interpreters supported.
 class wxScriptInterpreter
@@ -475,6 +492,7 @@ protected:		// use wxCINT::Get(), wxUnderC::Get() or wxLua::Get() to
 	static wxCINT *m_pCINT;
 	static wxUnderC *m_pUnderC;
 	static wxLua *m_pLua;
+	static wxPython *m_pPython;
 
 public:		// ctor & dtor
 
@@ -493,7 +511,8 @@ public:		// static functions
 	// functions: wxCINT::Get(), wxUnderC::Get() ....	
 
 	//! Initializes the script interpreter.
-	static bool Init(bool bCINT = TRUE, bool bUnderC = TRUE, bool bLua = TRUE);
+	static bool Init(bool bCINT = TRUE, bool bUnderC = TRUE, 
+						bool bLua = TRUE, bool bPython = TRUE);
 
 	//! Deallocates the script interpreter.
 	static void Cleanup();

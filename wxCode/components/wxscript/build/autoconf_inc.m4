@@ -54,3 +54,51 @@ dnl ### begin block 20_COND_PLATFORM_MAC_1 ###
         COND_PLATFORM_MAC_1=""
     fi
     AC_SUBST(COND_PLATFORM_MAC_1)
+dnl ### begin block 20_COND_USE_CINT_0 ###
+    COND_USE_CINT_0="#"
+    if test "x$USE_CINT" = "x0" ; then
+        COND_USE_CINT_0=""
+    fi
+    AC_SUBST(COND_USE_CINT_0)
+dnl ### begin block 20_COND_USE_CINT_1 ###
+    COND_USE_CINT_1="#"
+    if test "x$USE_CINT" = "x1" ; then
+        COND_USE_CINT_1=""
+    fi
+    AC_SUBST(COND_USE_CINT_1)
+dnl ### begin block 20_COND_USE_LUA_0 ###
+    COND_USE_LUA_0="#"
+    if test "x$USE_LUA" = "x0" ; then
+        COND_USE_LUA_0=""
+    fi
+    AC_SUBST(COND_USE_LUA_0)
+dnl ### begin block 20_COND_USE_LUA_1 ###
+    COND_USE_LUA_1="#"
+    if test "x$USE_LUA" = "x1" ; then
+        COND_USE_LUA_1=""
+    fi
+    AC_SUBST(COND_USE_LUA_1)
+dnl ### begin block 20_COND_USE_PYTHON_0 ###
+    COND_USE_PYTHON_0="#"
+    if test "x$USE_PYTHON" = "x0" ; then
+        COND_USE_PYTHON_0=""
+    fi
+    AC_SUBST(COND_USE_PYTHON_0)
+dnl ### begin block 20_COND_USE_PYTHON_1 ###
+    COND_USE_PYTHON_1="#"
+    if test "x$USE_PYTHON" = "x1" ; then
+        COND_USE_PYTHON_1=""
+    fi
+    AC_SUBST(COND_USE_PYTHON_1)
+dnl ### begin block 20_COND_USE_UNDERC_0 ###
+    COND_USE_UNDERC_0="#"
+    if test "x$USE_UNDERC" = "x0" ; then
+        COND_USE_UNDERC_0=""
+    fi
+    AC_SUBST(COND_USE_UNDERC_0)
+dnl ### begin block 20_COND_USE_UNDERC_1 ###
+    COND_USE_UNDERC_1="#"
+    if test "x$USE_UNDERC" = "x1" ; then
+        COND_USE_UNDERC_1=""
+    fi
+    AC_SUBST(COND_USE_UNDERC_1)

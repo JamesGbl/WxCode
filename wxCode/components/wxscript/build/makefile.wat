@@ -22,6 +22,18 @@ CPPFLAGS =
 # Standard linker flags 
 LDFLAGS = 
 
+# If 0 Python won't be used [0,1]
+USE_PYTHON = 1
+
+# If 0 LUA won't be used [0,1]
+USE_LUA = 1
+
+# If 0 CINT won't be used [0,1]
+USE_CINT = 0
+
+# If 0 UnderC won't be used [0,1]
+USE_UNDERC = 0
+
 # The Python library main folder 
 PYTHON_DIR = c:\Python
 
@@ -30,6 +42,12 @@ LUA_DIR = c:\lua
 
 # The TOLUA library main folder 
 TOLUA_DIR = c:\tolua
+
+# The CINT library main folder 
+CINT_DIR = c:\cint
+
+# The UnderC library main folder 
+UNDERC_DIR = c:\ucc
 
 # Compile Unicode build of wxWindows? [0,1]
 UNICODE = 0
@@ -68,6 +86,58 @@ WXSUBLIBPOSTFIX =
 !ifeq UNICODE 0
 WXSUBLIBPOSTFIX = d
 !endif
+!endif
+PYTHONLIB_POSTFIX =
+!ifeq BUILD debug
+PYTHONLIB_POSTFIX = _d
+!endif
+SCRIPTINCLUDE1 =
+!ifeq USE_PYTHON 1
+SCRIPTINCLUDE1 = -i=$(PYTHON_DIR)\include
+!endif
+SCRIPTINCLUDE2 =
+!ifeq USE_LUA 1
+SCRIPTINCLUDE2 = -i=$(LUA_DIR)\include -i=$(TOLUA_DIR)\include
+!endif
+SCRIPTINCLUDE3 =
+!ifeq USE_CINT 1
+SCRIPTINCLUDE3 = -i=$(CINT_DIR)\include
+!endif
+SCRIPTINCLUDE4 =
+!ifeq USE_UNDERC 1
+SCRIPTINCLUDE4 = -i=$(UNDERC_DIR)\include
+!endif
+SCRIPTLIBPATH1 =
+!ifeq USE_PYTHON 1
+SCRIPTLIBPATH1 = libpath $(PYTHON_DIR)\libs
+!endif
+SCRIPTLIBPATH2 =
+!ifeq USE_LUA 1
+SCRIPTLIBPATH2 = libpath $(LUA_DIR)\lib libpath $(TOLUA_DIR)\lib
+!endif
+SCRIPTLIBPATH3 =
+!ifeq USE_CINT 1
+SCRIPTLIBPATH3 = libpath $(CINT_DIR)\lib
+!endif
+SCRIPTLIBPATH4 =
+!ifeq USE_UNDERC 1
+SCRIPTLIBPATH4 = libpath $(UNDERC_DIR)\lib
+!endif
+SCRIPTDEFINE1 =
+!ifeq USE_PYTHON 0
+SCRIPTDEFINE1 = -dwxSCRIPT_NO_PYTHON
+!endif
+SCRIPTDEFINE2 =
+!ifeq USE_LUA 0
+SCRIPTDEFINE2 = -dwxSCRIPT_NO_LUA
+!endif
+SCRIPTDEFINE3 =
+!ifeq USE_CINT 0
+SCRIPTDEFINE3 = -dwxSCRIPT_NO_CINT
+!endif
+SCRIPTDEFINE4 =
+!ifeq USE_UNDERC 0
+SCRIPTDEFINE4 = -dwxSCRIPT_NO_UNDERC
 !endif
 __UNICODE_DEFINE_p =
 !ifeq UNICODE 1
@@ -110,6 +180,30 @@ WXLIBPOSTFIX = ud
 WXLIBPOSTFIX = u
 !endif
 !endif
+__SCRIPTLIB1_p =
+!ifeq USE_PYTHON 1
+__SCRIPTLIB1_p = python24$(PYTHONLIB_POSTFIX).lib
+!endif
+__SCRIPTLIB2A_p =
+!ifeq USE_LUA 1
+__SCRIPTLIB2A_p = lua.lib
+!endif
+__SCRIPTLIB2B_p =
+!ifeq USE_LUA 1
+__SCRIPTLIB2B_p = lualib.lib
+!endif
+__SCRIPTLIB2C_p =
+!ifeq USE_LUA 1
+__SCRIPTLIB2C_p = tolua.lib
+!endif
+__SCRIPTLIB3_p =
+!ifeq USE_CINT 1
+__SCRIPTLIB3_p = cint.lib
+!endif
+__SCRIPTLIB4_p =
+!ifeq USE_UNDERC 1
+__SCRIPTLIB4_p = ucc12.lib
+!endif
 __DEBUG_DEFINE_p =
 !ifeq BUILD debug
 __DEBUG_DEFINE_p = -d__WXDEBUG__
@@ -119,9 +213,9 @@ __DEBUG_DEFINE_p = -d__WXDEBUG__
 
 WXSCRIPT_CXXFLAGS = $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) &
 	-i=$(WXWIN)\include -i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) &
-	-i=..\include -i=$(PYTHON_DIR)\include -i=$(LUA_DIR)\include &
-	-i=$(TOLUA_DIR)\include -dwxSCRIPT_NO_CINT -dwxSCRIPT_NO_UNDERC &
-	-dwxSCRIPT_NO_PYTHON $(CPPFLAGS) $(CXXFLAGS)
+	-i=..\include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) $(SCRIPTDEFINE3) &
+	$(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) $(SCRIPTINCLUDE3) &
+	$(SCRIPTINCLUDE4) $(CPPFLAGS) $(CXXFLAGS)
 WXSCRIPT_OBJECTS =  &
 	watcom\wxscript_script.obj &
 	watcom\wxscript_scpython.obj &
@@ -130,18 +224,18 @@ WXSCRIPT_OBJECTS =  &
 	watcom\wxscript_sclua.obj
 MINIMAL_CXXFLAGS = $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) &
 	-i=..\include -i=$(WXWIN)\include &
-	-i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) -i=$(PYTHON_DIR)\include &
-	-i=$(LUA_DIR)\include -i=$(TOLUA_DIR)\include -dwxSCRIPT_NO_CINT &
-	-dwxSCRIPT_NO_UNDERC -dwxSCRIPT_NO_PYTHON $(__DEBUG_DEFINE_p) -d__WXMSW__ &
-	$(CPPFLAGS) $(CXXFLAGS)
+	-i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) $(SCRIPTDEFINE1) &
+	$(SCRIPTDEFINE2) $(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) &
+	$(SCRIPTINCLUDE2) $(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(__DEBUG_DEFINE_p) &
+	-d__WXMSW__ $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  &
 	watcom\minimal_Test.obj
 MINIMAL2_CXXFLAGS = $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) &
 	-i=..\include -i=$(WXWIN)\include &
-	-i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) -i=$(PYTHON_DIR)\include &
-	-i=$(LUA_DIR)\include -i=$(TOLUA_DIR)\include -dwxSCRIPT_NO_CINT &
-	-dwxSCRIPT_NO_UNDERC -dwxSCRIPT_NO_PYTHON $(__DEBUG_DEFINE_p) -d__WXMSW__ &
-	$(CPPFLAGS) $(CXXFLAGS)
+	-i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) $(SCRIPTDEFINE1) &
+	$(SCRIPTDEFINE2) $(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) &
+	$(SCRIPTINCLUDE2) $(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(__DEBUG_DEFINE_p) &
+	-d__WXMSW__ $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL2_OBJECTS =  &
 	watcom\minimal2_Test.obj
 
@@ -197,9 +291,9 @@ cleandocs :
 	@%append watcom\minimal.lbc option quiet
 	@%append watcom\minimal.lbc name $^@
 	@%append watcom\minimal.lbc option caseexact
-	@%append watcom\minimal.lbc $(LDFLAGS) $(__DEBUGINFO_0) libpath ..\lib libpath $(WXWIN)\lib\wat_lib libpath $(PYTHON_DIR)\lib libpath $(LUA_DIR)\lib libpath $(TOLUA_DIR)\lib system nt ref 'main_'
+	@%append watcom\minimal.lbc $(LDFLAGS) $(__DEBUGINFO_0) libpath ..\lib libpath $(WXWIN)\lib\wat_lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) system nt ref 'main_'
 	@for %i in ($(MINIMAL_OBJECTS)) do @%append watcom\minimal.lbc file %i
-	@for %i in ( ..\lib\wxscript$(WXLIBPOSTFIX).lib lua.lib lualib.lib tolua.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxmsw25$(WXLIBPOSTFIX)_html.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\minimal.lbc library %i
+	@for %i in ( ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw25$(WXLIBPOSTFIX)_core.lib wxmsw25$(WXLIBPOSTFIX)_html.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\minimal.lbc library %i
 	@%append watcom\minimal.lbc
 	wlink @watcom\minimal.lbc
 
@@ -208,9 +302,9 @@ cleandocs :
 	@%append watcom\minimal2.lbc option quiet
 	@%append watcom\minimal2.lbc name $^@
 	@%append watcom\minimal2.lbc option caseexact
-	@%append watcom\minimal2.lbc $(LDFLAGS) $(__DEBUGINFO_0) libpath ..\lib libpath $(WXWIN)\lib\wat_lib libpath $(PYTHON_DIR)\lib libpath $(LUA_DIR)\lib libpath $(TOLUA_DIR)\lib system nt ref 'main_'
+	@%append watcom\minimal2.lbc $(LDFLAGS) $(__DEBUGINFO_0) libpath ..\lib libpath $(WXWIN)\lib\wat_lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) system nt ref 'main_'
 	@for %i in ($(MINIMAL2_OBJECTS)) do @%append watcom\minimal2.lbc file %i
-	@for %i in ( ..\lib\wxscript$(WXLIBPOSTFIX).lib lua.lib lualib.lib tolua.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxmsw25$(WXLIBPOSTFIX)_html.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\minimal2.lbc library %i
+	@for %i in ( ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw25$(WXLIBPOSTFIX)_core.lib wxmsw25$(WXLIBPOSTFIX)_html.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\minimal2.lbc library %i
 	@%append watcom\minimal2.lbc
 	wlink @watcom\minimal2.lbc
 

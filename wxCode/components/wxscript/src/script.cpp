@@ -34,10 +34,11 @@
 
 // setup static
 wxString wxScriptFile::m_strFileExt[];
+wxString wxScriptInterpreter::m_strLastErr;
 wxCINT *wxScriptInterpreter::m_pCINT = NULL;
 wxUnderC *wxScriptInterpreter::m_pUnderC = NULL;
 wxLua *wxScriptInterpreter::m_pLua = NULL;
-wxString wxScriptInterpreter::m_strLastErr;
+wxPython *wxScriptInterpreter::m_pPython = NULL;
 
 
 // global objects
@@ -71,7 +72,7 @@ wxScriptInterpreter::wxScriptInterpreter()
 wxScriptInterpreter::~wxScriptInterpreter()
 {}
 
-bool wxScriptInterpreter::Init(bool bCINT, bool bUnderC, bool bLua)
+bool wxScriptInterpreter::Init(bool bCINT, bool bUnderC, bool bLua, bool bPython)
 {
 	// two conditions must be met in order to properly init of the
 	// supported interpreter: 
@@ -107,11 +108,18 @@ bool wxScriptInterpreter::Init(bool bCINT, bool bUnderC, bool bLua)
 	if (bLua) m_pLua->Init();
 #endif
 
+#ifdef wxSCRIPT_USE_PYTHON
+	wxSAFE_DELETE(m_pPython);
+	if (bPython) m_pPython = new wxPython();
+	if (bPython) m_pPython->Init();
+#endif
+
 	// just to avoid compiler warnings when one of the
 	// wxSCRIPT_USE_LUA/UNDERC/CINT is not defined...
 	wxUnusedVar(bLua);
 	wxUnusedVar(bUnderC);
 	wxUnusedVar(bCINT);
+	wxUnusedVar(bPython);
 
 	// create global objects
 	wxScriptTypeVOID = new wxScriptTypeInfo(wxT("void"));
@@ -147,6 +155,10 @@ void wxScriptInterpreter::Cleanup()
 	wxSAFE_DELETE(m_pLua);
 #endif
 
+#ifdef wxSCRIPT_USE_PYTHON
+	wxSAFE_DELETE(m_pPython);
+#endif
+
 	wxSAFE_DELETE(wxScriptTypeVOID);
 	wxSAFE_DELETE(wxScriptTypeINT);
 	wxSAFE_DELETE(wxScriptTypeCHAR);
@@ -179,6 +191,10 @@ bool wxScriptInterpreter::areAllReady()
 #ifdef wxSCRIPT_USE_LUA
 	if (m_pLua) res &= m_pLua->isReady();
 #endif
+	
+#ifdef wxSCRIPT_USE_PYTHON
+	if (m_pPython) res &= m_pPython->isReady();
+#endif
 
 	return res;
 }
@@ -197,6 +213,10 @@ void wxScriptInterpreter::GetTotalFunctionList(wxScriptFunctionArray &arr)
 	
 #ifdef wxSCRIPT_USE_LUA
 	wxLua::Get()->GetFunctionList(arrlua);
+#endif
+	
+#ifdef wxSCRIPT_USE_PYTHON
+	wxPython::Get()->GetFunctionList(arrlua);
 #endif
 
 	// append all the functions collected in one single array
@@ -248,6 +268,12 @@ wxScriptFile *wxScriptInterpreter::Load(const wxString &file, wxScriptFileType t
 	case wxLUA_SCRIPTFILE:
 #ifdef wxSCRIPT_USE_LUA		
 		p = new wxScriptFileLua();
+#endif
+		break;
+		
+	case wxPYTHON_SCRIPTFILE:
+#ifdef wxSCRIPT_USE_PYTHON		
+		p = new wxScriptFilePython();
 #endif
 		break;
 
@@ -430,10 +456,37 @@ void wxScriptTypeInfo::SetGenericType(wxScriptTypeGeneric t)
 // wxSCRIPTVAR
 // --------------------
 
+void wxScriptVar::Copy(const wxScriptVar &var)
+{
+	// delete old contents (*before* setting the new type)
+	ResetContent();
+
+	// then, copy the type
+	m_tType = var.m_tType;
+
+	// then, copy the content
+	wxString content(var.GetContentString());
+
+	if (m_tType.GetGenericType() == wxSTG_POINTER &&
+		m_tType.GetPointerType().GetGenericType() == wxSTG_CHAR) {
+
+		// remove the double quotes
+		content.RemoveLast();
+		content.Remove(0, 1);
+	}
+
+	SetContent(content);
+}
+
 void wxScriptVar::ResetContent()
 {
-	if (m_tType.GetGenericType() == wxSTG_POINTER && m_content != 0)
-		delete ((void*)m_content);
+	if (m_tType.GetGenericType() == wxSTG_POINTER && m_content != 0) {
+
+		if (m_tType.GetPointerType().GetGenericType() == wxSTG_CHAR)
+			delete [] ((char*)m_content);
+		else
+			delete ((void*)m_content);
+	}
 
 	m_content = 0;
 }
@@ -469,9 +522,13 @@ void wxScriptVar::SetContent(const wxString &str)
 		// an exception is for char*
 		if (m_tType.GetPointerType().GetGenericType() == wxSTG_CHAR) {
 
-			// create a memory buffer encoded in ANSI standard
-			char *pmem = new char[str.Len()];
-			strcpy(pmem, WX2LUA(str));
+			// create a memory buffer encoded in UTF8 standard
+			wxCharBuffer cb(str.mb_str(wxConvUTF8));
+			const char *original = cb.data();
+			int asciilen = strlen(original);
+
+			char *pmem = new char[asciilen+1];
+			strcpy(pmem, original);
 
 			// and then set that memory address as the content of this var
 			m_content = (long)pmem;

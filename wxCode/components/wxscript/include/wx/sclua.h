@@ -25,7 +25,10 @@ extern "C" {			// this wrapping is very important: Lua is a C library !!!
 #include "wx/script.h"		// base classes
 
 
-// for string conversions (all LUA functions uses always chars)
+
+// String conversions (all LUA functions uses always chars)
+// ---------------------------------------------------------
+
 #if wxUSE_UNICODE
 	#define WX2LUA(x)		(wxString(x).mb_str(wxConvUTF8).data())
 #else
@@ -33,6 +36,8 @@ extern "C" {			// this wrapping is very important: Lua is a C library !!!
 #endif
 
 #define LUA2WX(x)			(wxString(x, wxConvUTF8))
+
+
 
 
 //! A Lua interpreted function.
@@ -87,7 +92,7 @@ protected:
 	//! The Lua standard libraries loaded by wxLua.
 	static luaL_reg luaLibs[16];
 
-	//! The array of the standard functions of UnderC.
+	//! The array of the standard functions of lua.
 	wxScriptFunctionArray m_arrStd;
 
 

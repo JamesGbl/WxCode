@@ -275,6 +275,8 @@ void MainTestSet()
 		wxScriptInterpreter::Cleanup();
 		return;
 	}
+
+	delete file1;
 #endif
 
 #ifdef TEST_UNDERC
@@ -286,6 +288,8 @@ void MainTestSet()
 		wxScriptInterpreter::Cleanup();
 		return;
 	}
+
+	delete file2;
 #endif
 
 #ifdef TEST_LUA
@@ -297,6 +301,8 @@ void MainTestSet()
 		wxScriptInterpreter::Cleanup();
 		return;
 	}
+
+	delete file3;
 #endif
 
 	// get function list

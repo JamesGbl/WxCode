@@ -44,6 +44,10 @@
 
 //#include "stdafx.h"  // should be uncommented for precompiled headers
 
+#ifdef _UNICODE
+#define UNICODE
+#endif
+
 #include <windows.h>
 #include <string>
 #include <vector>

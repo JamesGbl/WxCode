@@ -17,7 +17,25 @@
 
 // includes
 #include "wx/script.h"		// base classes
-/*
+
+// Python includes
+#include <Python.h>
+
+
+
+
+// String conversions (all python functions uses always chars)
+// ---------------------------------------------------------
+
+#if wxUSE_UNICODE
+	#define WX2PY(x)		(wxString(x).mb_str(wxConvUTF8).data())
+#else
+	#define WX2PY(x)		(wxString(x).mb_str(wxConvUTF8))
+#endif
+
+#define PY2WX(x)			(wxString(x, wxConvUTF8))
+
+
 
 
 //! A Python interpreted function.
@@ -63,40 +81,38 @@ public:
 //! The wxPython interpreter.
 class wxPython : public wxScriptInterpreter
 {
+public:
+
+	PyObject *m_pModule, *m_pDict, *m_pLocals, *m_pGlobals;
+
 protected:
-	
-	//! TRUE if the script interpreter is ready to work.
-	bool m_bInit;
 
-	//! The Python standard libraries loaded by wxPython.
-	static PythonL_reg PythonLibs[16];
-
-	//! The array of the standard functions of UnderC.
+	//! The array of the standard functions of python.
 	wxScriptFunctionArray m_arrStd;
 
 	//! Returns the array containing ALL currently interpreted functions.
 	//! This functions is different from #GetFunctionList() because
 	//! it doesn't exclude functions loaded by default by UnderC.
-	wxScriptFunctionArray GetFunctionListComplete() const;
+	virtual void GetFunctionListComplete(wxScriptFunctionArray &) const;
 
 public:
-	wxPython() : m_bInit(FALSE) {}
-	virtual ~wxPython() { Python_close(m_state); }
+	wxPython() {}//: m_bInit(FALSE) {}
+	virtual ~wxPython() { Py_Finalize(); }
 
 	//! Returns the global instance of this class.
 	static wxPython *Get() { return m_pPython; }
 
-	//! Inits UnderC.
+	//! Inits Python interpreter.
 	virtual bool Init();
 
-	//! Returns TRUE if UnderC is ready.
-	virtual bool isReady() const { return m_bInit; }
+	//! Returns TRUE if Python is ready.
+	virtual bool isReady() const;
 
 	//! Returns the list of the functions currently recognized by the interpreter.
-	virtual wxScriptFunctionArray GetFunctionList() const;
+	virtual void GetFunctionList(wxScriptFunctionArray &) const;
 };
 
-*/
+
 
 #endif		// wxSCRIPT_USE_PYTHON
 

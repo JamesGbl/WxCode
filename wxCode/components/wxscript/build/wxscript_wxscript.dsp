@@ -42,8 +42,8 @@ RSC=rc.exe
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\wxscript"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /GR /GX /w /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /I "..\include" /I "c:\Python\include" /I "c:\lua\include" /I "c:\tolua\include" /Fd..\lib\wxscriptu.pdb /D "WIN32" /D "_LIB" /D "_UNICODE" /D "wxSCRIPT_NO_CINT" /D "wxSCRIPT_NO_UNDERC" /D "wxSCRIPT_NO_PYTHON" /c
-# ADD CPP /nologo /FD /MD /GR /GX /w /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /I "..\include" /I "c:\Python\include" /I "c:\lua\include" /I "c:\tolua\include" /Fd..\lib\wxscriptu.pdb /D "WIN32" /D "_LIB" /D "_UNICODE" /D "wxSCRIPT_NO_CINT" /D "wxSCRIPT_NO_UNDERC" /D "wxSCRIPT_NO_PYTHON" /c
+# ADD BASE CPP /nologo /FD /MD /GR /GX /w /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /I "..\include" /I "c:\Python\include" /I "c:\lua\include" /I "c:\tolua\include" /I "c:\cint\include" /I "c:\ucc\include" /Fd..\lib\wxscriptu.pdb /D "WIN32" /D "_LIB" /D "_UNICODE" /D "wxSCRIPT_NO_UNDERC" /D "wxSCRIPT_NO_CINT" /c
+# ADD CPP /nologo /FD /MD /GR /GX /w /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /I "..\include" /I "c:\Python\include" /I "c:\lua\include" /I "c:\tolua\include" /I "c:\cint\include" /I "c:\ucc\include" /Fd..\lib\wxscriptu.pdb /D "WIN32" /D "_LIB" /D "_UNICODE" /D "wxSCRIPT_NO_UNDERC" /D "wxSCRIPT_NO_CINT" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -65,8 +65,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\wxscript"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswud" /I "..\include" /I "c:\Python\include" /I "c:\lua\include" /I "c:\tolua\include" /Zi /Gm /GZ /Fd..\lib\wxscriptud.pdb /D "WIN32" /D "_LIB" /D "_UNICODE" /D "_DEBUG" /D "wxSCRIPT_NO_CINT" /D "wxSCRIPT_NO_UNDERC" /D "wxSCRIPT_NO_PYTHON" /c
-# ADD CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswud" /I "..\include" /I "c:\Python\include" /I "c:\lua\include" /I "c:\tolua\include" /Zi /Gm /GZ /Fd..\lib\wxscriptud.pdb /D "WIN32" /D "_LIB" /D "_UNICODE" /D "_DEBUG" /D "wxSCRIPT_NO_CINT" /D "wxSCRIPT_NO_UNDERC" /D "wxSCRIPT_NO_PYTHON" /c
+# ADD BASE CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswud" /I "..\include" /I "c:\Python\include" /I "c:\lua\include" /I "c:\tolua\include" /I "c:\cint\include" /I "c:\ucc\include" /Zi /Gm /GZ /Fd..\lib\wxscriptud.pdb /D "WIN32" /D "_LIB" /D "_UNICODE" /D "_DEBUG" /D "wxSCRIPT_NO_UNDERC" /D "wxSCRIPT_NO_CINT" /c
+# ADD CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswud" /I "..\include" /I "c:\Python\include" /I "c:\lua\include" /I "c:\tolua\include" /I "c:\cint\include" /I "c:\ucc\include" /Zi /Gm /GZ /Fd..\lib\wxscriptud.pdb /D "WIN32" /D "_LIB" /D "_UNICODE" /D "_DEBUG" /D "wxSCRIPT_NO_UNDERC" /D "wxSCRIPT_NO_CINT" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -88,8 +88,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\wxscript"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /GR /GX /w /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /I "..\include" /I "c:\Python\include" /I "c:\lua\include" /I "c:\tolua\include" /Fd..\lib\wxscript.pdb /D "WIN32" /D "_LIB" /D "wxSCRIPT_NO_CINT" /D "wxSCRIPT_NO_UNDERC" /D "wxSCRIPT_NO_PYTHON" /c
-# ADD CPP /nologo /FD /MD /GR /GX /w /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /I "..\include" /I "c:\Python\include" /I "c:\lua\include" /I "c:\tolua\include" /Fd..\lib\wxscript.pdb /D "WIN32" /D "_LIB" /D "wxSCRIPT_NO_CINT" /D "wxSCRIPT_NO_UNDERC" /D "wxSCRIPT_NO_PYTHON" /c
+# ADD BASE CPP /nologo /FD /MD /GR /GX /w /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /I "..\include" /I "c:\Python\include" /I "c:\lua\include" /I "c:\tolua\include" /I "c:\cint\include" /I "c:\ucc\include" /Fd..\lib\wxscript.pdb /D "WIN32" /D "_LIB" /D "wxSCRIPT_NO_UNDERC" /D "wxSCRIPT_NO_CINT" /c
+# ADD CPP /nologo /FD /MD /GR /GX /w /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /I "..\include" /I "c:\Python\include" /I "c:\lua\include" /I "c:\tolua\include" /I "c:\cint\include" /I "c:\ucc\include" /Fd..\lib\wxscript.pdb /D "WIN32" /D "_LIB" /D "wxSCRIPT_NO_UNDERC" /D "wxSCRIPT_NO_CINT" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -111,8 +111,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\wxscript"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswd" /I "..\include" /I "c:\Python\include" /I "c:\lua\include" /I "c:\tolua\include" /Zi /Gm /GZ /Fd..\lib\wxscriptd.pdb /D "WIN32" /D "_LIB" /D "_DEBUG" /D "wxSCRIPT_NO_CINT" /D "wxSCRIPT_NO_UNDERC" /D "wxSCRIPT_NO_PYTHON" /c
-# ADD CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswd" /I "..\include" /I "c:\Python\include" /I "c:\lua\include" /I "c:\tolua\include" /Zi /Gm /GZ /Fd..\lib\wxscriptd.pdb /D "WIN32" /D "_LIB" /D "_DEBUG" /D "wxSCRIPT_NO_CINT" /D "wxSCRIPT_NO_UNDERC" /D "wxSCRIPT_NO_PYTHON" /c
+# ADD BASE CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswd" /I "..\include" /I "c:\Python\include" /I "c:\lua\include" /I "c:\tolua\include" /I "c:\cint\include" /I "c:\ucc\include" /Zi /Gm /GZ /Fd..\lib\wxscriptd.pdb /D "WIN32" /D "_LIB" /D "_DEBUG" /D "wxSCRIPT_NO_UNDERC" /D "wxSCRIPT_NO_CINT" /c
+# ADD CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswd" /I "..\include" /I "c:\Python\include" /I "c:\lua\include" /I "c:\tolua\include" /I "c:\cint\include" /I "c:\ucc\include" /Zi /Gm /GZ /Fd..\lib\wxscriptd.pdb /D "WIN32" /D "_LIB" /D "_DEBUG" /D "wxSCRIPT_NO_UNDERC" /D "wxSCRIPT_NO_CINT" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe

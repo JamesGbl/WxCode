@@ -58,7 +58,6 @@
 #include <wx/script.h>		// our interpreter...
 #include "Test.h"
 
-
 #ifdef wxSCRIPT_USE_LUA
 
 	// for advanced testing
@@ -74,7 +73,7 @@
 
 
 // first of all, decide if we can use the system...
-#if defined(__VISUALC__) && defined(__MCDEBUG__) && !defined(_UNICODE)
+#if defined(__VISUALC__)
 	#define mcDETECT_MEMORY_LEAKS
 #endif
 
@@ -166,6 +165,7 @@ void CallFnc1(const wxScriptFunctionArray &arr)
 	wxScriptFunction *fcint = arr.Get(wxT("cint_func1"));
 	wxScriptFunction *fuc = arr.Get(wxT("uc_func1"));
 	wxScriptFunction *flua = arr.Get(wxT("lua_func1"));
+	wxScriptFunction *fpy = arr.Get(wxT("py_func1"));
 
 	wxScriptVar result;
 	wxScriptVar args[3];
@@ -208,6 +208,20 @@ void CallFnc1(const wxScriptFunctionArray &arr)
 		} else {
 			
 			wxPrintf(wxT(">%s('try', 3) returned %s\n"), flua->GetName().c_str(), 
+				result.GetContentString().c_str());
+		}
+	}
+
+	if (fpy) {
+
+		// we cannot check if this is our function...
+		if (!fpy->Exec(result, args)) {
+			
+			wxPrintf(wxT("Execution failed: %s"), wxScriptInterpreter::GetLastErr().c_str());
+			
+		} else {
+			
+			wxPrintf(wxT(">%s('try', 3) returned %s\n"), fpy->GetName().c_str(), 
 				result.GetContentString().c_str());
 		}
 	}
@@ -370,6 +384,8 @@ void MainTestSet()
 		wxScriptInterpreter::Cleanup();
 		return;
 	}
+
+	delete file1;
 #endif
 
 #ifdef wxSCRIPT_USE_UNDERC
@@ -381,6 +397,8 @@ void MainTestSet()
 		wxScriptInterpreter::Cleanup();
 		return;
 	}
+
+	delete file2;
 #endif
 
 
@@ -394,10 +412,25 @@ void MainTestSet()
 	wxPrintf(wxT(">Loading the 'script3.lua'...\n"));
 	wxScriptFile *file3 = wxScriptInterpreter::Load(basepath + wxT("script3.lua"));
 	if (!file3) {
-		wxPrintf(wxT("\nLoad failed: %s"), wxScriptInterpreter::GetLastErr().c_str());
+		wxPrintf(wxT("\nLoad failed: %s"), wxScriptInterpreter::GetLastErr().c_str());		
 		wxScriptInterpreter::Cleanup();
 		return;
 	}
+
+	delete file3;
+#endif
+
+#ifdef wxSCRIPT_USE_PYTHON
+	// load a Lua script file
+	wxPrintf(wxT(">Loading the 'script4.py'...\n"));
+	wxScriptFile *file4 = wxScriptInterpreter::Load(basepath + wxT("script4.py"));
+	if (!file4) {
+		wxPrintf(wxT("\nLoad failed: %s"), wxScriptInterpreter::GetLastErr().c_str());		
+		wxScriptInterpreter::Cleanup();
+		return;
+	}
+
+	delete file4;
 #endif
 
 	// get function list

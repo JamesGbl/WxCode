@@ -22,6 +22,18 @@ CPPFLAGS =
 # Standard linker flags 
 LDFLAGS = 
 
+# If 0 Python won't be used [0,1]
+USE_PYTHON = 1
+
+# If 0 LUA won't be used [0,1]
+USE_LUA = 1
+
+# If 0 CINT won't be used [0,1]
+USE_CINT = 0
+
+# If 0 UnderC won't be used [0,1]
+USE_UNDERC = 0
+
 # The Python library main folder 
 PYTHON_DIR = c:\Python
 
@@ -30,6 +42,12 @@ LUA_DIR = c:\lua
 
 # The TOLUA library main folder 
 TOLUA_DIR = c:\tolua
+
+# The CINT library main folder 
+CINT_DIR = c:\cint
+
+# The UnderC library main folder 
+UNDERC_DIR = c:\ucc
 
 # Compile Unicode build of wxWindows? [0,1]
 UNICODE = 0
@@ -50,10 +68,10 @@ WXWIN = c:\wxWidgets
 
 WXSCRIPT_CXXFLAGS = -DHAVE_W32API_H $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
 	$(__DEBUGINFO) -I$(WXWIN)\include \
-	-I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) -I..\include \
-	-I$(PYTHON_DIR)\include -I$(LUA_DIR)\include -I$(TOLUA_DIR)\include \
-	-DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC -DwxSCRIPT_NO_PYTHON -Wall \
-	$(CPPFLAGS) $(CXXFLAGS)
+	-I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) -I..\include $(SCRIPTDEFINE1) \
+	$(SCRIPTDEFINE2) $(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) \
+	$(SCRIPTINCLUDE2) $(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) -Wall $(CPPFLAGS) \
+	$(CXXFLAGS)
 WXSCRIPT_OBJECTS =  \
 	mingw\wxscript_script.o \
 	mingw\wxscript_scpython.o \
@@ -62,18 +80,18 @@ WXSCRIPT_OBJECTS =  \
 	mingw\wxscript_sclua.o
 MINIMAL_CXXFLAGS = -DHAVE_W32API_H $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
 	$(__DEBUGINFO) -I..\include -I$(WXWIN)\include \
-	-I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) -I$(PYTHON_DIR)\include \
-	-I$(LUA_DIR)\include -I$(TOLUA_DIR)\include -DwxSCRIPT_NO_CINT \
-	-DwxSCRIPT_NO_UNDERC -DwxSCRIPT_NO_PYTHON $(__DEBUG_DEFINE_p) -D__WXMSW__ \
-	-Wall $(CPPFLAGS) $(CXXFLAGS)
+	-I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) $(SCRIPTDEFINE1) \
+	$(SCRIPTDEFINE2) $(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) \
+	$(SCRIPTINCLUDE2) $(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(__DEBUG_DEFINE_p) \
+	-D__WXMSW__ -Wall $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	mingw\minimal_Test.o
 MINIMAL2_CXXFLAGS = -DHAVE_W32API_H $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
 	$(__DEBUGINFO) -I..\include -I$(WXWIN)\include \
-	-I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) -I$(PYTHON_DIR)\include \
-	-I$(LUA_DIR)\include -I$(TOLUA_DIR)\include -DwxSCRIPT_NO_CINT \
-	-DwxSCRIPT_NO_UNDERC -DwxSCRIPT_NO_PYTHON $(__DEBUG_DEFINE_p) -D__WXMSW__ \
-	-Wall $(CPPFLAGS) $(CXXFLAGS)
+	-I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) $(SCRIPTDEFINE1) \
+	$(SCRIPTDEFINE2) $(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) \
+	$(SCRIPTINCLUDE2) $(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(__DEBUG_DEFINE_p) \
+	-D__WXMSW__ -Wall $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL2_OBJECTS =  \
 	mingw\minimal2_Test.o
 
@@ -83,6 +101,45 @@ ifeq ($(BUILD),debug)
 ifeq ($(UNICODE),0)
 WXSUBLIBPOSTFIX = d
 endif
+endif
+ifeq ($(BUILD),debug)
+PYTHONLIB_POSTFIX = _d
+endif
+ifeq ($(USE_PYTHON),1)
+SCRIPTINCLUDE1 = -I$(PYTHON_DIR)\include
+endif
+ifeq ($(USE_LUA),1)
+SCRIPTINCLUDE2 = -I$(LUA_DIR)\include -I$(TOLUA_DIR)\include
+endif
+ifeq ($(USE_CINT),1)
+SCRIPTINCLUDE3 = -I$(CINT_DIR)\include
+endif
+ifeq ($(USE_UNDERC),1)
+SCRIPTINCLUDE4 = -I$(UNDERC_DIR)\include
+endif
+ifeq ($(USE_PYTHON),1)
+SCRIPTLIBPATH1 = -L$(PYTHON_DIR)\libs
+endif
+ifeq ($(USE_LUA),1)
+SCRIPTLIBPATH2 = -L$(LUA_DIR)\lib -L$(TOLUA_DIR)\lib
+endif
+ifeq ($(USE_CINT),1)
+SCRIPTLIBPATH3 = -L$(CINT_DIR)\lib
+endif
+ifeq ($(USE_UNDERC),1)
+SCRIPTLIBPATH4 = -L$(UNDERC_DIR)\lib
+endif
+ifeq ($(USE_PYTHON),0)
+SCRIPTDEFINE1 = -DwxSCRIPT_NO_PYTHON
+endif
+ifeq ($(USE_LUA),0)
+SCRIPTDEFINE2 = -DwxSCRIPT_NO_LUA
+endif
+ifeq ($(USE_CINT),0)
+SCRIPTDEFINE3 = -DwxSCRIPT_NO_CINT
+endif
+ifeq ($(USE_UNDERC),0)
+SCRIPTDEFINE4 = -DwxSCRIPT_NO_UNDERC
 endif
 ifeq ($(UNICODE),1)
 __UNICODE_DEFINE_p = -D_UNICODE
@@ -107,6 +164,24 @@ ifeq ($(BUILD),release)
 ifeq ($(UNICODE),1)
 WXLIBPOSTFIX = u
 endif
+endif
+ifeq ($(USE_PYTHON),1)
+__SCRIPTLIB1_p = -lpython24$(PYTHONLIB_POSTFIX)
+endif
+ifeq ($(USE_LUA),1)
+__SCRIPTLIB2A_p = -llua
+endif
+ifeq ($(USE_LUA),1)
+__SCRIPTLIB2B_p = -llualib
+endif
+ifeq ($(USE_LUA),1)
+__SCRIPTLIB2C_p = -ltolua
+endif
+ifeq ($(USE_CINT),1)
+__SCRIPTLIB3_p = -lcint
+endif
+ifeq ($(USE_UNDERC),1)
+__SCRIPTLIB4_p = -lucc12
 endif
 ifeq ($(BUILD),debug)
 __DEBUG_DEFINE_p = -D__WXDEBUG__
@@ -163,10 +238,10 @@ cleandocs:
 	ranlib $@
 
 ..\tests\test1\minimal.exe: $(MINIMAL_OBJECTS) ..\lib\libwxscript$(WXLIBPOSTFIX).a
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -L..\lib -L$(WXWIN)\lib\gcc_lib -L$(PYTHON_DIR)\lib -L$(LUA_DIR)\lib -L$(TOLUA_DIR)\lib   ..\lib\libwxscript$(WXLIBPOSTFIX).a -llua -llualib -ltolua -lwxmsw25$(WXLIBPOSTFIX)_core -lwxmsw25$(WXLIBPOSTFIX)_html -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -L..\lib -L$(WXWIN)\lib\gcc_lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4)   ..\lib\libwxscript$(WXLIBPOSTFIX).a $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) -lwxmsw25$(WXLIBPOSTFIX)_core -lwxmsw25$(WXLIBPOSTFIX)_html -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
 ..\tests\test2\minimal2.exe: $(MINIMAL2_OBJECTS) ..\lib\libwxscript$(WXLIBPOSTFIX).a
-	$(CXX) -o $@ $(MINIMAL2_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -L..\lib -L$(WXWIN)\lib\gcc_lib -L$(PYTHON_DIR)\lib -L$(LUA_DIR)\lib -L$(TOLUA_DIR)\lib   ..\lib\libwxscript$(WXLIBPOSTFIX).a -llua -llualib -ltolua -lwxmsw25$(WXLIBPOSTFIX)_core -lwxmsw25$(WXLIBPOSTFIX)_html -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+	$(CXX) -o $@ $(MINIMAL2_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -L..\lib -L$(WXWIN)\lib\gcc_lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4)   ..\lib\libwxscript$(WXLIBPOSTFIX).a $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) -lwxmsw25$(WXLIBPOSTFIX)_core -lwxmsw25$(WXLIBPOSTFIX)_html -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
 mingw\wxscript_script.o: ./../src/script.cpp
 	$(CXX) -c -o $@ $(WXSCRIPT_CXXFLAGS) $<
