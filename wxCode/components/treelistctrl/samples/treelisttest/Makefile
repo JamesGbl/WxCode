@@ -3,7 +3,7 @@
 ## Purpose:     treelisttest
 ## Maintainer:  Otto Wyss
 ## Created:     2004-03-22
-## RCS-ID:      $Id: Makefile,v 1.2 2004-07-19 19:42:25 wyo Exp $
+## RCS-ID:      $Id: Makefile,v 1.3 2004-07-24 14:30:54 wyo Exp $
 ## Copyright:   (c) wyoDesktop
 ## Licence:     wxWidgets licence
 ##############################################################################
@@ -37,7 +37,7 @@ ifeq ($(MAKECMDGOALS),debug)
   WXCONFIG=wxgtkd-2.4-config --prefix=/usr
 endif
 ifeq ($(MAKECMDGOALS),univdebug)
-  WXCONFIG=$(WXDEVEL_Debug)wxgtkd-2.5-config --inplace
+  WXCONFIG=$(WXDEVEL_Debug)wx-config --inplace
 endif
 
 OBJ = $(SRC:.cpp=.o)
