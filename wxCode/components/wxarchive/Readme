@@ -6,49 +6,18 @@ More infos:
 wxWidgets:  2.5.3+
  
 Description:
-Tar streams for wxWidgets. This is beta software.
+Tar/Pax streams for wxWidgets. This is beta software.
 
-The tar streams are in src/tarstrm.cpp and include/wx/tarstrm.h.
-You can include these in your own project (there's no makefile to
-build them into a lib).
+The tar streams are in src/tarstrm.cpp and include/wx/tarstrm.h. You
+can include these in your own project (there's no makefile to build
+them into a lib).
 
 Currently there is no tar specific docs, however see the docs
 about archive classes in general:
 http://www.lpthe.jussieu.fr/~zeitlin/wxWindows/docs/wxwin_wxarc.html
 
-There is an example program in 'samples/arc.cpp', and a cppunit
-test suite in the 'tests' directory.
-
-You can generate makefiles for the tests and sample as follows
-(makefiles will be included in the tarball when this is
-released):
-
-check out the component, e.g.:
-
-$ cvs -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/wxcode login 
-$ cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/wxcode co wxCode/components/wxarchive
-
-then move it to wxWidgets/contrib, e.g:
-
-$ mv wxCode/components/wxarchive wxWidgets/contrib
-
-(so you should have a directory 'wxWidgets/contrib/wxarchive').
-
-Makefiles can be generated using wxWidgets' bakefiles. Bakefile
-can be obtained from (http://bakefile.sourceforge.net). Create
-(or add to) Bakefiles.local.bkgen in your
-wxWidgets/build/bakefiles directory:
-
-<?xml version="1.0" ?>
-<bakefile-gen>
-    <input>
-        ../../contrib/wxarchive/*/*.bkl
-    </input>
-</bakefile-gen>
-
-Then run bakefile_gen (from inside the wxWidgets/build/bakefiles dir):
-
-    bakefile_gen -b '../../contrib/wxarchive/*/*.bkl'
+There is an example program in 'samples/arc.cpp', and a cppunit test
+suite in the 'tests' directory.
 
 As well as the tests in the 'tests' directory there is also a
 test script 'samples/arctest.sh' which tests the sample program
@@ -59,3 +28,52 @@ wherever 'arc' is then run the script).
 The script is a Bourne shell script, it can also be run on
 Windows using MSYS or Cygwin.
 
+You can create your own makefiles or project files for these, or
+alternatively you can generate them using Bakefile (makefiles will be
+included in the tarball when this is released).
+
+The instructions for generating and using the makefiles follow. These
+makefile are a bit less than perfect right now and might need a little
+hand editing in some cases. I'll try and improve them.
+
+Check out the component, e.g.:
+
+$ cvs -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/wxcode login 
+$ cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/wxcode co wxCode/components/wxarchive
+
+Bakefile can be obtained from (http://bakefile.sourceforge.net).
+
+Set the WXWIN environment variable to point to your wxWidgets
+sources. Then run bakefile_gen from inside the wxCode/components/wxarchive
+directory. e.g. on Windows that might be:
+
+    C:\>set WXWIN=C:\wxWidgets
+    C:\>cd wxCode\components\wxarchive
+    C:\wxCode\components\wxarchive>bakefile_gen
+
+The makefiles also require WXWIN to be set. For the Windows command
+line makefiles you can pass WX_UNICODE=1 for a unicode build, and
+WX_DEBUG=0 for a release build, e.g. for a unicode build with BCC:
+
+C:\wxCode\components\wxarchive\samples>set WXWIN=C:\wxWidgets
+C:\wxCode\components\wxarchive\samples>make -f makefile.bcc WX_UNICODE=1
+
+For a unix system you will also need to generate configure. To
+do this you will need aclocal, autoconf and cppunit installed.
+
+First run aclocal, it will need to be able to find wxwin.m4,
+bakefile.m4 and cppunit.m4, you can specify locations for these with
+the -I option if it can't find them. Next run autoconf, e.g.:
+
+    $ cd wxCode/components/wxarchive
+    $ aclocal -I /usr/local/share/aclocal
+    $ autoconf
+
+Then an example of running configure and make:
+
+$ ~/wxCode/components/wxarchive/configure --with-wxdir=$HOME/build/gtkud
+$ cd tests
+$ WXWIN=~/wxWidgets make
+
+In this example the wxWidgets source directory is '~/wxWidgets', and
+we are using a GTK+ build of it that is in '$HOME/build/gtkud'.
