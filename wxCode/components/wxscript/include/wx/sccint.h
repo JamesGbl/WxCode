@@ -33,14 +33,9 @@ public:
 						 wxScriptTypeInfo *arr = NULL, int n = 0) { Set(name, ret, arr, n);	}
 	virtual ~wxScriptFunctionCINT() {}
 
-
-	virtual wxScriptFunction *Clone() const {
-		wxScriptFunction *newf = new wxScriptFunctionCINT();
-		newf->DeepCopy(this);
-		return newf;
-	}
-
 	virtual bool Exec(wxScriptVar &ret, wxScriptVar *arg) const;
+	
+	wxSCRIPTFNC_IMPLEMENT_CLONE(wxScriptFunctionCINT)
 };
 
 

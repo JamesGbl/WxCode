@@ -16,7 +16,19 @@
 #define SCRIPT_H
 
 
-// defines for conditional compilation
+// defines for conditional compilation: in this way you can choose
+// at compile-time which interpreter you want to support: this is 
+// very useful when you have not time to get all the libs for all
+// the interpreters supported by wxScript.
+//
+// To define this, you should use the universal -D (or /D for MSVC)
+// compile option in your makefiles for all the wxScript source files:
+//
+//    gcc -c -DwxSCRIPT_NO_CINT src/script.cpp         [ example how the
+//    gcc -c -DwxSCRIPT_NO_CINT src/sclua.cpp       <--[ makefile output
+//    gcc -c -DwxSCRIPT_NO_CINT src/sccint.cpp         [ should appear
+//    [...]
+// 
 #ifndef wxSCRIPT_NO_CINT
 #define wxSCRIPT_USE_CINT
 #endif
@@ -41,6 +53,7 @@
 // Defines & macros
 // ------------------
 
+//! The maximum number of arguments for a single function.
 #define wxSCRIPTFNC_MAX_ARGS			32
 
 #ifndef wxSAFE_DELETE
@@ -55,13 +68,10 @@
 #ifdef __VISUALC__
 #define wxSCRIPT_EXPORT		_declspec(dllexport)
 #else
-#define wxSCRIPT_EXPORT
+#define wxSCRIPT_EXPORT     // GCC always exports everything
 #endif
 #endif
 
-
-//class wxScriptFunction;
-//WX_DECLARE_OBJARRAY(wxScriptFunction, wxNativeScriptedFunctionArray);
 
 
 
@@ -509,6 +519,12 @@ public:		// virtual functions
 };
 
 
+// to avoid a lot of repetitions
+#define wxSCRIPTFNC_IMPLEMENT_CLONE(x)            \
+	virtual wxScriptFunction *Clone() const {     \
+		wxScriptFunction *newf = new x();         \
+		newf->DeepCopy(this);                     \
+		return newf; }    
 
 // now, we can include specific interpreter wrappers
 #ifdef wxSCRIPT_USE_CINT

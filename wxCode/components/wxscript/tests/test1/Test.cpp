@@ -229,6 +229,7 @@ void CallAdvanced(const wxScriptFunctionArray &arr)
 	}
 
 #ifdef wxSCRIPT_USE_UNDERC
+#if 0
 	// normally, to call a script function (whose you know name, return type
 	// and argument list types) you should just write something like:
 	const char *fncname = "uc_func3";
@@ -252,6 +253,7 @@ void CallAdvanced(const wxScriptFunctionArray &arr)
 
 		wxPrintf(">Error calling the %s function !!!", fncname);
 	}
+#endif
 #endif
 }
 

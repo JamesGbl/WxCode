@@ -28,10 +28,46 @@ bool wxUnderC::Init()
 	m_bInit = (uc_init(NULL, TRUE) == 0);
 
 	// fill the std array
-	m_arrStd = GetFunctionListComplete();
+	GetFunctionListComplete(m_arrStd);
 
 	return m_bInit;
 }
+
+void wxUnderC::GetFunctionListComplete(wxScriptFunctionArray &arr) const
+{
+    XNTable *pglob = uc_global();
+    XFunctions fnclist = pglob->functions();
+    //XFunction *f;
+    
+    for (XFunctions::iterator f = fnclist.begin(); f != fnclist.end(); f = f.next()) {
+    
+        // get the name & return type
+        wxString name = f->name();
+        wxString ret = f->ret_type()->as_str();
+        
+        wxScriptTypeInfo arg[wxSCRIPTFNC_MAX_ARGS];
+		int narg = 0;
+			
+		// parse arg list
+		XStringList arglist;
+		XTList tlist;
+        f->get_args(tlist, arglist);
+        string str;
+		FOR_EACH(str, arglist)
+			arg[narg++] = wxScriptTypeInfo(str.c_str());
+        
+        // get the arg 
+        arr.Add(new wxScriptFunctionUnderC(name, ret, arg, narg));
+    }  
+}
+
+
+#if 0       // this is a perfectly working function: the only problem
+            // is that this one uses an old way to get the function
+            // list based on the "#funs" command.... the currently
+            // used GetFunctionListComplete() function uses the
+            // UCRI (UnderC Reflection Interface) to obtain the
+            // same results with less efforts...
 
 void wxUnderC::GetFunctionListComplete(wxScriptFunctionArray &arr) const
 {
@@ -102,7 +138,7 @@ void wxUnderC::GetFunctionListComplete(wxScriptFunctionArray &arr) const
 			toparse = toparse.AfterFirst('(');		// remove func name
 			toparse = toparse.BeforeLast(')');
 			
-			wxScriptTypeInfo arg[16];
+			wxScriptTypeInfo arg[wxSCRIPTFNC_MAX_ARGS];
 			int narg = 0;
 			
 			// parse arg list
@@ -115,6 +151,8 @@ void wxUnderC::GetFunctionListComplete(wxScriptFunctionArray &arr) const
 		}
 	}
 }
+
+#endif
 
 void wxUnderC::GetFunctionList(wxScriptFunctionArray &arr) const
 {
@@ -147,11 +185,48 @@ void wxUnderC::GetFunctionList(wxScriptFunctionArray &arr) const
 bool wxScriptFunctionUnderC::Exec(wxScriptVar &ret, wxScriptVar *arg) const
 {
 	wxString cmd = GetCallString(arg);
+	wxString str;
 
 	// exec this function
-	uc_exec(wxStringBuffer(cmd, cmd.Len()));
+	bool okay = (uc_exec(wxStringBuffer(cmd, cmd.Len())) == 0);
+
+	// an error ?
+	if (!okay) {
+         
+        uc_result_pos(-1, str.GetWriteBuf(256), 256, 0, 0);
+        str.UngetWriteBuf();
+        
+        // set the error description and return FALSE...
+        wxScriptInterpreter::m_strLastErr = str;
+        return FALSE:
+	}
 
 	// get returned value...
+	uc_result_pos(0, str.GetWriteBuf(128), 128, 0, 0);
+	str.UngetWriteBuf();
+	
+#ifdef __WXDEBUG__
+	// and parse it
+	wxString type = str.BeforeLast(')');
+	type.Trim(FALSE);
+	type.Trim(TRUE);
+	
+	// remove the begin & end parentheses: type should be like "(rettype)"
+	wxASSERT(type.Get(0) == '(');
+	wxASSERT(type.GetLast() == ')');
+	type.RemoveAt(0, 1);
+	type.RemoveLast();
+	
+	// now make a integrity check
+	wxScriptTypeInfo info(type);
+	wxASSERT_MSG(info == m_tReturn, 
+        "The return type does not match the function's return type");
+	
+#endif
+
+    // convert from string to m_tReturn...
+    str = str.AfterLast(')');
+    ret.SetContent(str);
 
 	return TRUE;
 }
@@ -171,6 +246,7 @@ bool wxScriptFileUnderC::Load(const wxString &file)
 	//wxStringBuffer(m_strFileName, 64);
 	char buff[256];
 	strcpy(buff, m_strFileName);
+	
 	uc_load(buff);
 
 	return TRUE;
@@ -178,4 +254,5 @@ bool wxScriptFileUnderC::Load(const wxString &file)
 
 
 #endif		// wxSCRIPT_USE_UNDERC
+
 

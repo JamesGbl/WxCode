@@ -33,14 +33,9 @@ public:
 	wxScriptFunctionLua(const wxString &name = wxEmptyString) { Set(name, "", NULL, 0); }
 	virtual ~wxScriptFunctionLua() {}
 
-
-	virtual wxScriptFunction *Clone() const {
-		wxScriptFunction *newf = new wxScriptFunctionLua();
-		newf->DeepCopy(this);
-		return newf;
-	}
-
 	virtual bool Exec(wxScriptVar &ret, wxScriptVar *arg) const;
+	
+	wxSCRIPTFNC_IMPLEMENT_CLONE(wxScriptFunctionLua)
 };
 
 

@@ -14,7 +14,12 @@
 #ifdef wxSCRIPT_USE_UNDERC
 
 // includes
+#include <ostream.h>
+#include <istream.h>
 #include "ucdl.h"
+#include "for_each.h"
+#include "ucri.h"
+
 #include "wx/script.h"
 
 
@@ -30,14 +35,9 @@ public:
 		Set(name, ret, arr, n);
 	}
 
-
-	virtual wxScriptFunction *Clone() const {
-		wxScriptFunction *newf = new wxScriptFunctionUnderC();
-		newf->DeepCopy(this);
-		return newf;
-	}
-
 	virtual bool Exec(wxScriptVar &ret, wxScriptVar *arg) const;
+	
+	wxSCRIPTFNC_IMPLEMENT_CLONE(wxScriptFunctionUnderC)
 };
 
 
