@@ -8,7 +8,8 @@
 #include "wx/wx.h"
 #endif
 
-#include "SpellCheckDialogInterface.h"
+#include "SpellCheckUserInterface.h"
+#include "SpellCheckEngineInterface.h"
 
 // modelless SpellChecker dialog
 class XmlSpellCheckDialog : public wxDialog, public wxSpellCheckUserInterface
@@ -43,28 +44,6 @@ private:
     wxString m_strResourceFile;
     wxString m_strDialogResource;
     wxString m_strWordListResource;
-};
-
-class XmlPersonalDictionaryDialog : public wxDialog
-{
-public:
-  XmlPersonalDictionaryDialog(wxWindow* parent, wxString strResourceFile, wxString strResource, wxSpellCheckEngineInterface* pEngine);
-  ~XmlPersonalDictionaryDialog();
-
-  void CreateDialog(wxWindow* pParent);
-  void PopulatePersonalWordListBox();
-  void AddWordToPersonalDictionary(wxCommandEvent& event);
-  void ReplaceInPersonalDictionary(wxCommandEvent& event);
-  void RemoveFromPersonalDictionary(wxCommandEvent& event);
-  void OnClose(wxCommandEvent& event);
-
-protected:
-  wxSpellCheckEngineInterface* m_pSpellCheckEngine;
-  wxString m_strResourceFile;
-  wxString m_strDialogResource;
-
-private:
-    DECLARE_EVENT_TABLE()
 };
 
 #endif  // __XML_SPELL_CHECK_DIALOG__
