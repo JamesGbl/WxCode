@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.7 2004-04-14 20:45:28 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.8 2004-04-19 20:25:10 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -571,6 +571,9 @@ public:
                       wxTreeItemIcon which = wxTreeItemIcon_Normal);
     int GetItemImage(const wxTreeItemId& item, size_t column,
                      wxTreeItemIcon which = wxTreeItemIcon_Normal) const;
+
+    void SetFocus();
+
 protected:
     wxTreeListCtrl* m_owner; // ALB
 
@@ -4539,7 +4542,11 @@ wxString wxTreeListMainWindow::GetItemText(const wxTreeItemId& item,
     return ((wxTreeListItem*) item.m_pItem)->GetText(column);
 }
 
-//-----------------------------
+void wxTreeListMainWindow::SetFocus()
+{
+    wxWindow::SetFocus();
+}
+
 
 //-----------------------------------------------------------------------------
 //  wxTreeListCtrl
