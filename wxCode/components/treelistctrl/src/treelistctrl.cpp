@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.52 2004-11-11 19:42:59 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.53 2004-11-11 21:24:47 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -1675,7 +1675,7 @@ wxTreeListItem *wxTreeListItem::HitTest (const wxPoint& point,
             // else check for each column except main
             int x = 0;
             for (int j = 0; j < theCtrl->GetColumnCount(); ++j) {
-                if (!header_win->IsColumnShown(i)) continue;
+                if (!header_win->IsColumnShown(j)) continue;
                 int w = header_win->GetColumnWidth (j);
                 if ((j != maincol) && (point.x >= x && point.x < x+w)) {
                     flags |= wxTREE_HITTEST_ONITEMCOLUMN;
