@@ -642,7 +642,7 @@ Creates the tree list control. See <A HREF="manual_wxtreelistctrl.html#wxtreelis
 <H3>wxTreeListCtrl::Delete</H3>
 <P>
 <B>void</B> <B>Delete</B>(<B>const wxTreeItemId&amp;</B><I> item</I>)<P>
-Deletes the specified item (except the root). A <TT>EVT_TREE_DELETE_ITEM</TT> event 
+Deletes the specified item (except the root). A <TT>EVT_TREE_DELETE_ITEM</TT> event
 will be generated.<P>
 This function may cause a subsequent call to GetNextChild to fail.<P>
 
@@ -714,8 +714,8 @@ Expands the given item and all subitems recursively.<P>
 <B>wxTreeItemId</B> <B>FindItem</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>const wxString&amp;</B><I> str</I>,
  <B>int</B><I>flags=0</I>)<P>
 Returns the next visible item in the tree which matches the entered string, starting from
-the currently selected item. If no item is selected the find starts a the beginning of the
-tree.<P>
+the entered item. If no item the find starts a the beginning of the tree. If no item found
+an empty item (NULL) is returned.<P>
 The flags have the following meaning:<P>
 
 
