@@ -1,0 +1,56 @@
+<?xml version="1.0" ?>
+<makefile>
+
+
+	<!-- Some defaults for the variables used by wxCode bakefiles -->
+	<include file="../../../build/defaults.bkl"/>
+	
+
+	<!-- The wxXml2 settings -->
+	<!-- =================== -->
+
+	<option name="LIBXML2_DIR" category="path">
+		<default-value>c:\libxml2</default-value>
+		<description>The libxml2 library main folder</description>
+	</option>
+
+	<option name="ICONV_DIR" category="path">
+		<default-value>c:\iconv</default-value>
+		<description>The iconv library main folder</description>
+	</option>
+
+	<set var="COMP_NAME">wxxml2</set>
+	<set var="COMP_SRC">../src/xml2.cpp</set>
+	<set var="COMP_SAMPLE_SRC">../sample/minimal.cpp</set>
+
+
+
+	<!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->
+	<include file="../../../build/wxcode.bkl"/>
+
+	<!-- The real target: not declared in wxcode_end.bkl because
+	     in this way modifications are allowed to the basic template. -->
+	<lib id="wxxml2" template="complib">
+		<stdlib>$(LIBXML2_DIR)</stdlib>
+		<stdlib>$(ICONV_DIR)</stdlib>
+	</lib>
+
+	<!-- The sample of wxXml2 -->
+	<exe id="minimal" template="compsample">
+		<stdlib>$(LIBXML2_DIR)</stdlib>
+		<stdlib>$(ICONV_DIR)</stdlib>
+
+		<sys-lib>wxxml2</sys-lib>
+		<sys-lib>libxml2</sys-lib>
+		<sys-lib>iconv</sys-lib>
+		<wxlibs/>
+		<syslibs/>
+	</exe>
+
+	<!-- The DOCS target -->
+	<cd-and-run id="docs">
+		<cd>..$(DIRSEP)docs</cd>
+		<run>doxygen</run>
+	</cd-and-run>
+	
+</makefile>

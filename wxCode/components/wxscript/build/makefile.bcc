@@ -39,21 +39,6 @@ CPPFLAGS = -a8 -g0
 LDFLAGS = 
 !endif
 
-# Compile Unicode build of wxWindows? [0,1]
-!ifndef UNICODE
-UNICODE = 0
-!endif
-
-# The wxWidgets library main folder 
-!ifndef WXWIN
-WXWIN = c:\wxWidgets
-!endif
-
-# Type of compiled binaries [debug,release]
-!ifndef BUILD
-BUILD = debug
-!endif
-
 # The LUA library main folder 
 !ifndef LUA_DIR
 LUA_DIR = c:\lua
@@ -64,14 +49,24 @@ LUA_DIR = c:\lua
 TOLUA_DIR = c:\tolua
 !endif
 
-# The CINT library main folder 
-!ifndef CINT_DIR
-CINT_DIR = c:\cint
-!endif
-
 # The UnderC library main folder 
 !ifndef UCC_DIR
 UCC_DIR = c:\ucc
+!endif
+
+# Compile Unicode build of wxWindows? [0,1]
+!ifndef UNICODE
+UNICODE = 0
+!endif
+
+# Type of compiled binaries [debug,release]
+!ifndef BUILD
+BUILD = debug
+!endif
+
+# The wxWidgets library main folder 
+!ifndef WXWIN
+WXWIN = c:\wxWidgets
 !endif
 
 
@@ -82,24 +77,28 @@ UCC_DIR = c:\ucc
 
 ### Variables: ###
 
-WXSCRIPT_CXXFLAGS = -I$(BCCDIR)\include $(__UNICODE_DEFINE_p) \
-	$(__OPTIMIZEFLAG) $(__DEBUGINFO) -I$(WXWIN)\include -I..\include -I..\src \
-	-I$(LUA_DIR)\include -I$(TOLUA_DIR)\include -I$(CINT_DIR) \
-	-I$(UCC_DIR)\include -I$(WXWIN)\lib\bcc_lib\msw$(WXLIBPOSTFIX) \
+WXSCRIPT_CXXFLAGS = -I$(BCCDIR)\include -I$(WXWIN)\include \
+	-I$(WXWIN)\lib\bcc_lib\msw$(WXLIBPOSTFIX) -I..\include \
+	-I$(LUA_DIR)\include -I$(TOLUA_DIR)\include -I$(UCC_DIR)\include \
 	-DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC $(CPPFLAGS) $(CXXFLAGS)
 WXSCRIPT_OBJECTS =  \
-	..\lib\wxscript_script.obj \
-	..\lib\wxscript_scbasic.obj \
-	..\lib\wxscript_sccint.obj \
-	..\lib\wxscript_scunderc.obj \
-	..\lib\wxscript_sclua.obj
-TEST1_CXXFLAGS = -I$(BCCDIR)\include $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
-	$(__DEBUGINFO) -I$(WXWIN)\include -I..\include -I..\src -I$(LUA_DIR)\include \
-	-I$(TOLUA_DIR)\include -I$(CINT_DIR) -I$(UCC_DIR)\include \
-	-I$(WXWIN)\lib\bcc_lib\msw$(WXLIBPOSTFIX) -DwxSCRIPT_NO_CINT \
-	-DwxSCRIPT_NO_UNDERC $(__DEBUG_DEFINE_p) -D__WXMSW__ $(CPPFLAGS) $(CXXFLAGS)
-TEST1_OBJECTS =  \
-	..\lib\test1_Test.obj
+	borland\wxscript_script.obj \
+	borland\wxscript_scbasic.obj \
+	borland\wxscript_sccint.obj \
+	borland\wxscript_scunderc.obj \
+	borland\wxscript_sclua.obj
+MINIMAL_CXXFLAGS = -I$(BCCDIR)\include -I$(WXWIN)\include \
+	-I$(WXWIN)\lib\bcc_lib\msw$(WXLIBPOSTFIX) -I..\include \
+	-I$(LUA_DIR)\include -I$(TOLUA_DIR)\include -I$(UCC_DIR)\include \
+	-DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC $(__DEBUG_DEFINE_p) -D__WXMSW__ \
+	$(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_OBJECTS =  \
+	borland\minimal_script.obj \
+	borland\minimal_scbasic.obj \
+	borland\minimal_sccint.obj \
+	borland\minimal_scunderc.obj \
+	borland\minimal_sclua.obj \
+	borland\minimal_Test.obj
 
 ### Conditionally set variables: ###
 
@@ -108,15 +107,6 @@ WXSUBLIBPOSTFIX = d
 !endif
 !if "$(BUILD)" == "debug"
 __DEBUG_DEFINE_p = -D__WXDEBUG__
-!endif
-!if "$(UNICODE)" == "1"
-__UNICODE_DEFINE_p = -D_UNICODE
-!endif
-!if "$(BUILD)" == "debug"
-__OPTIMIZEFLAG = -Od
-!endif
-!if "$(BUILD)" == "release"
-__OPTIMIZEFLAG = -O2
 !endif
 !if "$(BUILD)" == "debug" && "$(UNICODE)" == "0"
 WXLIBPOSTFIX = d
@@ -127,32 +117,39 @@ WXLIBPOSTFIX = ud
 !if "$(BUILD)" == "release" && "$(UNICODE)" == "1"
 WXLIBPOSTFIX = u
 !endif
-!if "$(BUILD)" == "debug"
-__DEBUGINFO = -v
-!endif
-!if "$(BUILD)" == "release"
-__DEBUGINFO = -v-
-!endif
 
 
-all: ..\lib
-..\lib:
-	-if not exist ..\lib mkdir ..\lib
+
+all: borland
+borland:
+	-if not exist borland mkdir borland
 
 ### Targets: ###
 
-all: ..\lib\wxscript.lib ..\lib\test1.exe
+all: ..\lib\wxscript.lib ..\tests\test1\minimal.exe
 
 clean: 
-	-if exist ..\lib\*.obj del ..\lib\*.obj
-	-if exist ..\lib\*.res del ..\lib\*.res
+	-if exist borland\*.obj del borland\*.obj
+	-if exist borland\*.res del borland\*.res
 	-if exist ..\lib\wxscript.lib del ..\lib\wxscript.lib
-	-if exist ..\lib\test1.exe del ..\lib\test1.exe
-	-if exist ..\lib\test1.tds del ..\lib\test1.tds
-	-if exist ..\lib\test1.ilc del ..\lib\test1.ilc
-	-if exist ..\lib\test1.ild del ..\lib\test1.ild
-	-if exist ..\lib\test1.ilf del ..\lib\test1.ilf
-	-if exist ..\lib\test1.ils del ..\lib\test1.ils
+	-if exist ..\tests\test1\minimal.exe del ..\tests\test1\minimal.exe
+	-if exist ..\tests\test1\minimal.tds del ..\tests\test1\minimal.tds
+	-if exist ..\tests\test1\minimal.ilc del ..\tests\test1\minimal.ilc
+	-if exist ..\tests\test1\minimal.ild del ..\tests\test1\minimal.ild
+	-if exist ..\tests\test1\minimal.ilf del ..\tests\test1\minimal.ilf
+	-if exist ..\tests\test1\minimal.ils del ..\tests\test1\minimal.ils
+
+tarball: 
+	( cd .. && tar -cvzf wxscript.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
+
+zip: 
+	( cd .. && zip -r9 wxscript.zip *  -x *.pdb -x *.log -x *.o* )
+
+docs: 
+	( cd ..\docs && doxygen )
+
+cleandocs: 
+	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
 ..\lib\wxscript.lib: $(WXSCRIPT_OBJECTS)
 	if exist $@ del $@
@@ -160,26 +157,41 @@ clean:
 	$(WXSCRIPT_OBJECTS)
 |
 
-..\lib\test1.exe: $(TEST1_OBJECTS) ..\lib\wxscript.lib
-	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(LUA_DIR)\lib -L$(TOLUA_DIR)\lib -L$(CINT_DIR)\lib -L$(UCC_DIR)\lib -L$(WXWIN)\lib\bcc_lib @&&|
-	c0x32.obj $(TEST1_OBJECTS),$@,, ..\lib\wxscript.lib lua.lib lualib.lib tolua.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32.lib,,
+..\tests\test1\minimal.exe: $(MINIMAL_OBJECTS) ..\lib\wxscript.lib
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -L$(WXWIN)\lib\bcc_lib -L..\lib -L$(LUA_DIR)\lib -L$(TOLUA_DIR)\lib -L$(UCC_DIR)\lib -ap @&&|
+	c0x32.obj $(MINIMAL_OBJECTS),$@,, ..\lib\wxscript.lib lua.lib lualib.lib tolua.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32.lib,,
 |
 
-..\lib\wxscript_script.obj: .\..\src\script.cpp
+borland\wxscript_script.obj: .\..\src\script.cpp
 	$(CXX) -q -c -P -o$@ $(WXSCRIPT_CXXFLAGS) $**
 
-..\lib\wxscript_scbasic.obj: .\..\src\scbasic.cpp
+borland\wxscript_scbasic.obj: .\..\src\scbasic.cpp
 	$(CXX) -q -c -P -o$@ $(WXSCRIPT_CXXFLAGS) $**
 
-..\lib\wxscript_sccint.obj: .\..\src\sccint.cpp
+borland\wxscript_sccint.obj: .\..\src\sccint.cpp
 	$(CXX) -q -c -P -o$@ $(WXSCRIPT_CXXFLAGS) $**
 
-..\lib\wxscript_scunderc.obj: .\..\src\scunderc.cpp
+borland\wxscript_scunderc.obj: .\..\src\scunderc.cpp
 	$(CXX) -q -c -P -o$@ $(WXSCRIPT_CXXFLAGS) $**
 
-..\lib\wxscript_sclua.obj: .\..\src\sclua.cpp
+borland\wxscript_sclua.obj: .\..\src\sclua.cpp
 	$(CXX) -q -c -P -o$@ $(WXSCRIPT_CXXFLAGS) $**
 
-..\lib\test1_Test.obj: .\..\tests\test1\Test.cpp
-	$(CXX) -q -c -P -o$@ $(TEST1_CXXFLAGS) $**
+borland\minimal_script.obj: .\..\src\script.cpp
+	$(CXX) -q -c -P -o$@ $(MINIMAL_CXXFLAGS) $**
+
+borland\minimal_scbasic.obj: .\..\src\scbasic.cpp
+	$(CXX) -q -c -P -o$@ $(MINIMAL_CXXFLAGS) $**
+
+borland\minimal_sccint.obj: .\..\src\sccint.cpp
+	$(CXX) -q -c -P -o$@ $(MINIMAL_CXXFLAGS) $**
+
+borland\minimal_scunderc.obj: .\..\src\scunderc.cpp
+	$(CXX) -q -c -P -o$@ $(MINIMAL_CXXFLAGS) $**
+
+borland\minimal_sclua.obj: .\..\src\sclua.cpp
+	$(CXX) -q -c -P -o$@ $(MINIMAL_CXXFLAGS) $**
+
+borland\minimal_Test.obj: .\..\tests\test1\Test.cpp
+	$(CXX) -q -c -P -o$@ $(MINIMAL_CXXFLAGS) $**
 

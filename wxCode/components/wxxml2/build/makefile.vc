@@ -22,6 +22,12 @@ CPPFLAGS =
 # Standard linker flags 
 LDFLAGS = 
 
+# The libxml2 library main folder 
+LIBXML2_DIR = c:\libxml2
+
+# The iconv library main folder 
+ICONV_DIR = c:\iconv
+
 # Compile Unicode build of wxWindows? [0,1]
 UNICODE = 0
 
@@ -39,18 +45,18 @@ WXWIN = c:\wxWidgets
 
 ### Variables: ###
 
-KEYBINDER_CXXFLAGS = /MD /DWIN32 /I$(WXWIN)\include \
-	/I$(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) /I..\include /GR /GX $(CPPFLAGS) \
+WXXML2_CXXFLAGS = /MD /DWIN32 /I$(WXWIN)\include \
+	/I$(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) /I..\include \
+	/I$(LIBXML2_DIR)\include /I$(ICONV_DIR)\include /GR /GX $(CPPFLAGS) \
 	$(CXXFLAGS)
-KEYBINDER_OBJECTS =  \
-	msvc\keybinder_keybinder.obj \
-	msvc\keybinder_menuutils.obj
+WXXML2_OBJECTS =  \
+	msvc\wxxml2_xml2.obj
 MINIMAL_CXXFLAGS = /MD /DWIN32 /I$(WXWIN)\include \
 	/I$(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) /I..\include /D_WINDOWS \
-	$(__DEBUG_DEFINE_p) /D__WXMSW__ /GR /GX $(CPPFLAGS) $(CXXFLAGS)
+	/I$(LIBXML2_DIR)\include /I$(ICONV_DIR)\include $(__DEBUG_DEFINE_p) \
+	/D__WXMSW__ /GR /GX $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
-	msvc\minimal_keybinder.obj \
-	msvc\minimal_menuutils.obj \
+	msvc\minimal_xml2.obj \
 	msvc\minimal_minimal.obj
 
 ### Conditionally set variables: ###
@@ -79,49 +85,43 @@ msvc:
 
 ### Targets: ###
 
-all: ..\lib\keybinder.lib ..\sample\minimal.exe
+all: ..\lib\wxxml2.lib ..\sample\minimal.exe
 
 clean: 
 	-if exist msvc\*.obj del msvc\*.obj
 	-if exist msvc\*.res del msvc\*.res
-	-if exist ..\lib\keybinder.lib del ..\lib\keybinder.lib
+	-if exist ..\lib\wxxml2.lib del ..\lib\wxxml2.lib
 	-if exist ..\sample\minimal.exe del ..\sample\minimal.exe
 	-if exist ..\sample\minimal.ilk del ..\sample\minimal.ilk
 	-if exist ..\sample\minimal.pdb del ..\sample\minimal.pdb
 
 tarball: 
-	( cd .. && tar -cvzf keybinder.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
+	( cd .. && tar -cvzf wxxml2.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
 
 zip: 
-	( cd .. && zip -r9 keybinder.zip *  -x *.pdb -x *.log -x *.o* )
-
-docs: 
-	( cd ..\docs && doxygen )
+	( cd .. && zip -r9 wxxml2.zip *  -x *.pdb -x *.log -x *.o* )
 
 cleandocs: 
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
-..\lib\keybinder.lib: $(KEYBINDER_OBJECTS)
+..\lib\wxxml2.lib: $(WXXML2_OBJECTS)
 	if exist $@ del $@
 	lib /NOLOGO /OUT:$@ @<<
-	$(KEYBINDER_OBJECTS)
+	$(WXXML2_OBJECTS)
 <<
 
-..\sample\minimal.exe: $(MINIMAL_OBJECTS) ..\lib\keybinder.lib
-	link /NOLOGO /OUT:$@ $(LDFLAGS) /LIBPATH:$(WXWIN)\lib\vc_lib /SUBSYSTEM:WINDOWS /LIBPATH:..\lib @<<
-	$(MINIMAL_OBJECTS)  ..\lib\keybinder.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
+..\sample\minimal.exe: $(MINIMAL_OBJECTS)
+	link /NOLOGO /OUT:$@ $(LDFLAGS) /LIBPATH:$(WXWIN)\lib\vc_lib /SUBSYSTEM:WINDOWS /LIBPATH:..\lib /LIBPATH:$(LIBXML2_DIR)\lib /LIBPATH:$(ICONV_DIR)\lib @<<
+	$(MINIMAL_OBJECTS)  wxxml2.lib libxml2.lib iconv.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
 
-msvc\keybinder_keybinder.obj: .\..\src\keybinder.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(KEYBINDER_CXXFLAGS) $**
+docs: 
+	( cd ..\docs && doxygen )
 
-msvc\keybinder_menuutils.obj: .\..\src\menuutils.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(KEYBINDER_CXXFLAGS) $**
+msvc\wxxml2_xml2.obj: .\..\src\xml2.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(WXXML2_CXXFLAGS) $**
 
-msvc\minimal_keybinder.obj: .\..\src\keybinder.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(MINIMAL_CXXFLAGS) $**
-
-msvc\minimal_menuutils.obj: .\..\src\menuutils.cpp
+msvc\minimal_xml2.obj: .\..\src\xml2.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(MINIMAL_CXXFLAGS) $**
 
 msvc\minimal_minimal.obj: .\..\sample\minimal.cpp

@@ -22,26 +22,23 @@ CPPFLAGS =
 # Standard linker flags 
 LDFLAGS = 
 
-# Compile Unicode build of wxWindows? [0,1]
-UNICODE = 0
-
-# The wxWidgets library main folder 
-WXWIN = c:\wxWidgets
-
-# Type of compiled binaries [debug,release]
-BUILD = debug
-
 # The LUA library main folder 
 LUA_DIR = c:\lua
 
 # The TOLUA library main folder 
 TOLUA_DIR = c:\tolua
 
-# The CINT library main folder 
-CINT_DIR = c:\cint
-
 # The UnderC library main folder 
 UCC_DIR = c:\ucc
+
+# Compile Unicode build of wxWindows? [0,1]
+UNICODE = 0
+
+# Type of compiled binaries [debug,release]
+BUILD = debug
+
+# The wxWidgets library main folder 
+WXWIN = c:\wxWidgets
 
 
 
@@ -72,34 +69,9 @@ WXSUBLIBPOSTFIX =
 WXSUBLIBPOSTFIX = d
 !endif
 !endif
-__DEBUGINFO_7 =
-!ifeq BUILD debug
-__DEBUGINFO_7 = debug all
-!endif
-!ifeq BUILD release
-__DEBUGINFO_7 = 
-!endif
 __DEBUG_DEFINE_p =
 !ifeq BUILD debug
 __DEBUG_DEFINE_p = -d__WXDEBUG__
-!endif
-__UNICODE_DEFINE_p =
-!ifeq UNICODE 1
-__UNICODE_DEFINE_p = -d_UNICODE
-!endif
-__OPTIMIZEFLAG =
-!ifeq BUILD debug
-__OPTIMIZEFLAG = -od
-!endif
-!ifeq BUILD release
-__OPTIMIZEFLAG = -ot -ox
-!endif
-__DEBUGINFO =
-!ifeq BUILD debug
-__DEBUGINFO = -d2
-!endif
-!ifeq BUILD release
-__DEBUGINFO = -d0
 !endif
 WXLIBPOSTFIX =
 !ifeq BUILD debug
@@ -120,73 +92,105 @@ WXLIBPOSTFIX = u
 
 ### Variables: ###
 
-WXSCRIPT_CXXFLAGS = $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) &
-	-i=$(WXWIN)\include -i=..\include -i=..\src -i=$(LUA_DIR)\include &
-	-i=$(TOLUA_DIR)\include -i=$(CINT_DIR) -i=$(UCC_DIR)\include &
-	-i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) -dwxSCRIPT_NO_CINT &
-	-dwxSCRIPT_NO_UNDERC $(CPPFLAGS) $(CXXFLAGS)
+WXSCRIPT_CXXFLAGS = -i=$(WXWIN)\include &
+	-i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) -i=..\include &
+	-i=$(LUA_DIR)\include -i=$(TOLUA_DIR)\include -i=$(UCC_DIR)\include &
+	-dwxSCRIPT_NO_CINT -dwxSCRIPT_NO_UNDERC $(CPPFLAGS) $(CXXFLAGS)
 WXSCRIPT_OBJECTS =  &
-	..\lib\wxscript_script.obj &
-	..\lib\wxscript_scbasic.obj &
-	..\lib\wxscript_sccint.obj &
-	..\lib\wxscript_scunderc.obj &
-	..\lib\wxscript_sclua.obj
-TEST1_CXXFLAGS = $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) &
-	-i=$(WXWIN)\include -i=..\include -i=..\src -i=$(LUA_DIR)\include &
-	-i=$(TOLUA_DIR)\include -i=$(CINT_DIR) -i=$(UCC_DIR)\include &
-	-i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) -dwxSCRIPT_NO_CINT &
-	-dwxSCRIPT_NO_UNDERC $(__DEBUG_DEFINE_p) -d__WXMSW__ $(CPPFLAGS) $(CXXFLAGS)
-TEST1_OBJECTS =  &
-	..\lib\test1_Test.obj
+	watcom\wxscript_script.obj &
+	watcom\wxscript_scbasic.obj &
+	watcom\wxscript_sccint.obj &
+	watcom\wxscript_scunderc.obj &
+	watcom\wxscript_sclua.obj
+MINIMAL_CXXFLAGS = -i=$(WXWIN)\include &
+	-i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) -i=..\include &
+	-i=$(LUA_DIR)\include -i=$(TOLUA_DIR)\include -i=$(UCC_DIR)\include &
+	-dwxSCRIPT_NO_CINT -dwxSCRIPT_NO_UNDERC $(__DEBUG_DEFINE_p) -d__WXMSW__ &
+	$(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_OBJECTS =  &
+	watcom\minimal_script.obj &
+	watcom\minimal_scbasic.obj &
+	watcom\minimal_sccint.obj &
+	watcom\minimal_scunderc.obj &
+	watcom\minimal_sclua.obj &
+	watcom\minimal_Test.obj
 
 
-all : ..\lib
-..\lib :
-	-if not exist ..\lib mkdir ..\lib
+
+all: watcom
+watcom:
+	-if not exist watcom mkdir watcom
 
 ### Targets: ###
 
-all : .SYMBOLIC ..\lib\wxscript.lib ..\lib\test1.exe
+all : .SYMBOLIC ..\lib\wxscript.lib ..\tests\test1\minimal.exe
 
 clean : .SYMBOLIC 
-	-if exist ..\lib\*.obj del ..\lib\*.obj
-	-if exist ..\lib\*.res del ..\lib\*.res
-	-if exist ..\lib\*.lbc del ..\lib\*.lbc
-	-if exist ..\lib\*.ilk del ..\lib\*.ilk
+	-if exist watcom\*.obj del watcom\*.obj
+	-if exist watcom\*.res del watcom\*.res
+	-if exist watcom\*.lbc del watcom\*.lbc
+	-if exist watcom\*.ilk del watcom\*.ilk
 	-if exist ..\lib\wxscript.lib del ..\lib\wxscript.lib
-	-if exist ..\lib\test1.exe del ..\lib\test1.exe
+	-if exist ..\tests\test1\minimal.exe del ..\tests\test1\minimal.exe
+
+tarball :  
+	( cd .. && tar -cvzf wxscript.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
+
+zip :  
+	( cd .. && zip -r9 wxscript.zip *  -x *.pdb -x *.log -x *.o* )
+
+docs :  
+	( cd ..\docs && doxygen )
+
+cleandocs :  
+	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
 ..\lib\wxscript.lib :  $(WXSCRIPT_OBJECTS)
-	@%create ..\lib\wxscript.lbc
-	@for %i in ($(WXSCRIPT_OBJECTS)) do @%append ..\lib\wxscript.lbc +%i
-	wlib -q -p4096 -n -b $^@ @..\lib\wxscript.lbc
+	@%create watcom\wxscript.lbc
+	@for %i in ($(WXSCRIPT_OBJECTS)) do @%append watcom\wxscript.lbc +%i
+	wlib -q -p4096 -n -b $^@ @watcom\wxscript.lbc
 
-..\lib\test1.exe :  $(TEST1_OBJECTS) ..\lib\wxscript.lib
-	@%create ..\lib\test1.lbc
-	@%append ..\lib\test1.lbc option quiet
-	@%append ..\lib\test1.lbc name $^@
-	@%append ..\lib\test1.lbc option caseexact
-	@%append ..\lib\test1.lbc $(LDFLAGS) $(__DEBUGINFO_7) libpath $(LUA_DIR)\lib libpath $(TOLUA_DIR)\lib libpath $(CINT_DIR)\lib libpath $(UCC_DIR)\lib libpath $(WXWIN)\lib\wat_lib
-	@for %i in ($(TEST1_OBJECTS)) do @%append ..\lib\test1.lbc file %i
-	@for %i in ( ..\lib\wxscript.lib lua.lib lualib.lib tolua.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append ..\lib\test1.lbc library %i
-	@%append ..\lib\test1.lbc
-	wlink @..\lib\test1.lbc
+..\tests\test1\minimal.exe :  $(MINIMAL_OBJECTS) ..\lib\wxscript.lib
+	@%create watcom\minimal.lbc
+	@%append watcom\minimal.lbc option quiet
+	@%append watcom\minimal.lbc name $^@
+	@%append watcom\minimal.lbc option caseexact
+	@%append watcom\minimal.lbc $(LDFLAGS) libpath $(WXWIN)\lib\wat_lib libpath ..\lib libpath $(LUA_DIR)\lib libpath $(TOLUA_DIR)\lib libpath $(UCC_DIR)\lib system nt ref 'main_'
+	@for %i in ($(MINIMAL_OBJECTS)) do @%append watcom\minimal.lbc file %i
+	@for %i in ( ..\lib\wxscript.lib lua.lib lualib.lib tolua.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\minimal.lbc library %i
+	@%append watcom\minimal.lbc
+	wlink @watcom\minimal.lbc
 
-..\lib\wxscript_script.obj :  .AUTODEPEND .\..\src\script.cpp
+watcom\wxscript_script.obj :  .AUTODEPEND .\..\src\script.cpp
 	$(CXX) -zq -fo=$^@ $(WXSCRIPT_CXXFLAGS) $<
 
-..\lib\wxscript_scbasic.obj :  .AUTODEPEND .\..\src\scbasic.cpp
+watcom\wxscript_scbasic.obj :  .AUTODEPEND .\..\src\scbasic.cpp
 	$(CXX) -zq -fo=$^@ $(WXSCRIPT_CXXFLAGS) $<
 
-..\lib\wxscript_sccint.obj :  .AUTODEPEND .\..\src\sccint.cpp
+watcom\wxscript_sccint.obj :  .AUTODEPEND .\..\src\sccint.cpp
 	$(CXX) -zq -fo=$^@ $(WXSCRIPT_CXXFLAGS) $<
 
-..\lib\wxscript_scunderc.obj :  .AUTODEPEND .\..\src\scunderc.cpp
+watcom\wxscript_scunderc.obj :  .AUTODEPEND .\..\src\scunderc.cpp
 	$(CXX) -zq -fo=$^@ $(WXSCRIPT_CXXFLAGS) $<
 
-..\lib\wxscript_sclua.obj :  .AUTODEPEND .\..\src\sclua.cpp
+watcom\wxscript_sclua.obj :  .AUTODEPEND .\..\src\sclua.cpp
 	$(CXX) -zq -fo=$^@ $(WXSCRIPT_CXXFLAGS) $<
 
-..\lib\test1_Test.obj :  .AUTODEPEND .\..\tests\test1\Test.cpp
-	$(CXX) -zq -fo=$^@ $(TEST1_CXXFLAGS) $<
+watcom\minimal_script.obj :  .AUTODEPEND .\..\src\script.cpp
+	$(CXX) -zq -fo=$^@ $(MINIMAL_CXXFLAGS) $<
+
+watcom\minimal_scbasic.obj :  .AUTODEPEND .\..\src\scbasic.cpp
+	$(CXX) -zq -fo=$^@ $(MINIMAL_CXXFLAGS) $<
+
+watcom\minimal_sccint.obj :  .AUTODEPEND .\..\src\sccint.cpp
+	$(CXX) -zq -fo=$^@ $(MINIMAL_CXXFLAGS) $<
+
+watcom\minimal_scunderc.obj :  .AUTODEPEND .\..\src\scunderc.cpp
+	$(CXX) -zq -fo=$^@ $(MINIMAL_CXXFLAGS) $<
+
+watcom\minimal_sclua.obj :  .AUTODEPEND .\..\src\sclua.cpp
+	$(CXX) -zq -fo=$^@ $(MINIMAL_CXXFLAGS) $<
+
+watcom\minimal_Test.obj :  .AUTODEPEND .\..\tests\test1\Test.cpp
+	$(CXX) -zq -fo=$^@ $(MINIMAL_CXXFLAGS) $<
 

@@ -1,76 +1,38 @@
 <?xml version="1.0" ?>
 
-
-<!-- 
-                THE KEYBINDER BAKEFILE
-
-     You can use this bakefile to generate various
-     makefiles using Bakefile (http://bakefile.sourceforge.net).
-
-
-     Usage:
-         bakefile -ftheformatyoulike lua.bkl
-     then
-         mymake -fmakefile.mymakeext
-
-     To make this clearer, with MSVC you should type:
-         bakefile -fmsvc lua.bkl
-         nmake -fmakefile.vc
-
-     If you want to regenerate the makefiles for all the formats
-     supported, just type:
-
-         bakefile_gen
--->
-     
+<!-- Created by: Francesco Montorsi <frm@users.sourceforge.net>     -->
+<!-- Date: 9/10/2004                                                -->
 
 <makefile>
 
+	<!-- Some defaults for the variables used by wxCode bakefiles -->
+	<include file="../../../build/defaults.bkl"/>
+	
 
-    <include file="wxbase.bkl"/>
+	<!-- Settings for this component -->
+	<!-- =========================== -->
 
-
-    <!--                                                            -->
-    <!--                        OPTIONS                             -->
-    <!--                                                            -->
-    <option name="WXWIN" category="path">
-	<default-value>c:\wxWidgets</default-value>
-	<description>The wxWidgets library main folder</description>
-    </option>
-
+	<set var="COMP_NAME">keybinder</set>
+	<set var="COMP_SRC">../src/keybinder.cpp ../src/menuutils.cpp</set>
+	<set var="COMP_SAMPLE_SRC">../sample/minimal.cpp</set>
 
 
 
-    <!--                                                            -->
-    <!--                         TARGETS                            -->
-    <!--                                                            -->
-    <set var="BUILDDIR">..$(DIRSEP)lib</set>
-    <lib id="keybinder" template="wxbase">
-        <sources>../src/keybinder.cpp ../src/menuutils.cpp</sources>
+	<!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->
+	<include file="../../../build/wxcode.bkl"/>
 
-        <include>..$(DIRSEP)include</include>
-        <include>$(WXWIN)$(WXLIBINCLUDE)</include>
-        <include>$(WXWIN)$(DIRSEP)include</include>
-        <lib-path>$(WXWIN)$(WXLIBPATH)</lib-path>
-    </lib>
+	<!-- The real target: wxcode.bkl does not declare a real target but a template called
+	     "complib". In this way modifications are allowed to the basic template. -->
+	<lib id="keybinder" template="complib"></lib>
 
-    <set var="BUILDDIR">..$(DIRSEP)sample</set>
-    <exe id="sample" template="wxbase">
-        <include>..$(DIRSEP)include</include>
-        <include>$(WXWIN)$(WXLIBINCLUDE)</include>
-        <include>$(WXWIN)$(DIRSEP)include</include>
-        <lib-path>$(WXWIN)$(WXLIBPATH)</lib-path>
-
-        <sources>../sample/minimal.cpp</sources>
-	<win32-res>..$(DIRSEP)sample$(DIRSEP)minimal.rc</win32-res>
-        <res-include>..$(DIRSEP)sample</res-include>
-        <app-type>gui</app-type>
-
-	<!-- The keybinder library must be the first for MINGW -->
-        <library>keybinder</library>
-        <wxlibs/>
-        <syslibs/>
-    </exe>
-
+	<!-- The sample of the component: as for the LIB target, this exe derives from a 
+	     template contained in wxcode.bkl which can be modified here -->
+	<exe id="minimal" template="compsample">
+		<win32-res>..$(DIRSEP)sample$(DIRSEP)minimal.rc</win32-res>
+		<library>keybinder</library>
+		<wxlibs/>
+		<syslibs/>
+	</exe>
+	
 </makefile>
 

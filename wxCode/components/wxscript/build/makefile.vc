@@ -22,26 +22,23 @@ CPPFLAGS =
 # Standard linker flags 
 LDFLAGS = 
 
-# Compile Unicode build of wxWindows? [0,1]
-UNICODE = 0
-
-# The wxWidgets library main folder 
-WXWIN = c:\wxWidgets
-
-# Type of compiled binaries [debug,release]
-BUILD = debug
-
 # The LUA library main folder 
 LUA_DIR = c:\lua
 
 # The TOLUA library main folder 
 TOLUA_DIR = c:\tolua
 
-# The CINT library main folder 
-CINT_DIR = c:\cint
-
 # The UnderC library main folder 
 UCC_DIR = c:\ucc
+
+# Compile Unicode build of wxWindows? [0,1]
+UNICODE = 0
+
+# Type of compiled binaries [debug,release]
+BUILD = debug
+
+# The wxWidgets library main folder 
+WXWIN = c:\wxWidgets
 
 
 
@@ -51,27 +48,28 @@ UCC_DIR = c:\ucc
 
 ### Variables: ###
 
-WXSCRIPT_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
-	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
-	/Fd..\lib\wxscript.pdb $(____DEBUGRUNTIME) /I$(WXWIN)\include /I..\include \
-	/I..\src /I$(LUA_DIR)\include /I$(TOLUA_DIR)\include /I$(CINT_DIR) \
-	/I$(UCC_DIR)\include /I$(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) \
-	/DwxSCRIPT_NO_CINT /DwxSCRIPT_NO_UNDERC /GR /GX $(CPPFLAGS) $(CXXFLAGS)
+WXSCRIPT_CXXFLAGS = /MD /DWIN32 /I$(WXWIN)\include \
+	/I$(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) /I..\include /I$(LUA_DIR)\include \
+	/I$(TOLUA_DIR)\include /I$(UCC_DIR)\include /DwxSCRIPT_NO_CINT \
+	/DwxSCRIPT_NO_UNDERC /GR /GX $(CPPFLAGS) $(CXXFLAGS)
 WXSCRIPT_OBJECTS =  \
-	..\lib\wxscript_script.obj \
-	..\lib\wxscript_scbasic.obj \
-	..\lib\wxscript_sccint.obj \
-	..\lib\wxscript_scunderc.obj \
-	..\lib\wxscript_sclua.obj
-TEST1_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
-	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) /Fd..\lib\test1.pdb \
-	$(____DEBUGRUNTIME) /I$(WXWIN)\include /I..\include /I..\src \
-	/I$(LUA_DIR)\include /I$(TOLUA_DIR)\include /I$(CINT_DIR) \
-	/I$(UCC_DIR)\include /I$(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) \
-	/DwxSCRIPT_NO_CINT /DwxSCRIPT_NO_UNDERC $(__DEBUG_DEFINE_p) /D__WXMSW__ /GR \
-	/GX $(CPPFLAGS) $(CXXFLAGS)
-TEST1_OBJECTS =  \
-	..\lib\test1_Test.obj
+	msvc\wxscript_script.obj \
+	msvc\wxscript_scbasic.obj \
+	msvc\wxscript_sccint.obj \
+	msvc\wxscript_scunderc.obj \
+	msvc\wxscript_sclua.obj
+MINIMAL_CXXFLAGS = /MD /DWIN32 /I$(WXWIN)\include \
+	/I$(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) /I..\include /I$(LUA_DIR)\include \
+	/I$(TOLUA_DIR)\include /I$(UCC_DIR)\include /DwxSCRIPT_NO_CINT \
+	/DwxSCRIPT_NO_UNDERC /D_CONSOLE $(__DEBUG_DEFINE_p) /D__WXMSW__ /GR /GX \
+	$(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_OBJECTS =  \
+	msvc\minimal_script.obj \
+	msvc\minimal_scbasic.obj \
+	msvc\minimal_sccint.obj \
+	msvc\minimal_scunderc.obj \
+	msvc\minimal_sclua.obj \
+	msvc\minimal_Test.obj
 
 ### Conditionally set variables: ###
 
@@ -79,46 +77,7 @@ TEST1_OBJECTS =  \
 WXSUBLIBPOSTFIX = d
 !endif
 !if "$(BUILD)" == "debug"
-__DEBUGINFO_13 = /DEBUG
-!endif
-!if "$(BUILD)" == "release"
-__DEBUGINFO_13 = 
-!endif
-!if "$(BUILD)" == "debug"
 __DEBUG_DEFINE_p = /D__WXDEBUG__
-!endif
-!if "$(BUILD)" == "debug"
-__WARNINGS = /W4
-!endif
-!if "$(BUILD)" == "release"
-__WARNINGS = /w
-!endif
-!if "$(UNICODE)" == "1"
-__UNICODE_DEFINE_p = /D_UNICODE
-!endif
-!if "$(BUILD)" == "debug"
-__OPTIMIZEFLAG = /Od
-!endif
-!if "$(BUILD)" == "release"
-__OPTIMIZEFLAG = /O2
-!endif
-!if "$(BUILD)" == "debug"
-__DEBUGINFO = /Zi
-!endif
-!if "$(BUILD)" == "release"
-__DEBUGINFO = 
-!endif
-!if "$(BUILD)" == "debug"
-____DEBUGRUNTIME = /D_DEBUG
-!endif
-!if "$(BUILD)" == "release"
-____DEBUGRUNTIME = 
-!endif
-!if "$(BUILD)" == "debug"
-__DEBUGRUNTIME = d
-!endif
-!if "$(BUILD)" == "release"
-__DEBUGRUNTIME = 
 !endif
 !if "$(BUILD)" == "debug" && "$(UNICODE)" == "0"
 WXLIBPOSTFIX = d
@@ -131,21 +90,34 @@ WXLIBPOSTFIX = u
 !endif
 
 
-all: ..\lib
-..\lib:
-	-if not exist ..\lib mkdir ..\lib
+
+all: msvc
+msvc:
+	-if not exist msvc mkdir msvc
 
 ### Targets: ###
 
-all: ..\lib\wxscript.lib ..\lib\test1.exe
+all: ..\lib\wxscript.lib ..\tests\test1\minimal.exe
 
 clean: 
-	-if exist ..\lib\*.obj del ..\lib\*.obj
-	-if exist ..\lib\*.res del ..\lib\*.res
+	-if exist msvc\*.obj del msvc\*.obj
+	-if exist msvc\*.res del msvc\*.res
 	-if exist ..\lib\wxscript.lib del ..\lib\wxscript.lib
-	-if exist ..\lib\test1.exe del ..\lib\test1.exe
-	-if exist ..\lib\test1.ilk del ..\lib\test1.ilk
-	-if exist ..\lib\test1.pdb del ..\lib\test1.pdb
+	-if exist ..\tests\test1\minimal.exe del ..\tests\test1\minimal.exe
+	-if exist ..\tests\test1\minimal.ilk del ..\tests\test1\minimal.ilk
+	-if exist ..\tests\test1\minimal.pdb del ..\tests\test1\minimal.pdb
+
+tarball: 
+	( cd .. && tar -cvzf wxscript.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
+
+zip: 
+	( cd .. && zip -r9 wxscript.zip *  -x *.pdb -x *.log -x *.o* )
+
+docs: 
+	( cd ..\docs && doxygen )
+
+cleandocs: 
+	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
 ..\lib\wxscript.lib: $(WXSCRIPT_OBJECTS)
 	if exist $@ del $@
@@ -153,26 +125,41 @@ clean:
 	$(WXSCRIPT_OBJECTS)
 <<
 
-..\lib\test1.exe: $(TEST1_OBJECTS) ..\lib\wxscript.lib
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_13) /LIBPATH:$(LUA_DIR)\lib /LIBPATH:$(TOLUA_DIR)\lib /LIBPATH:$(CINT_DIR)\lib /LIBPATH:$(UCC_DIR)\lib /LIBPATH:$(WXWIN)\lib\vc_lib @<<
-	$(TEST1_OBJECTS)  ..\lib\wxscript.lib lua.lib lualib.lib tolua.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
+..\tests\test1\minimal.exe: $(MINIMAL_OBJECTS) ..\lib\wxscript.lib
+	link /NOLOGO /OUT:$@ $(LDFLAGS) /LIBPATH:$(WXWIN)\lib\vc_lib /LIBPATH:..\lib /LIBPATH:$(LUA_DIR)\lib /LIBPATH:$(TOLUA_DIR)\lib /LIBPATH:$(UCC_DIR)\lib /SUBSYSTEM:CONSOLE @<<
+	$(MINIMAL_OBJECTS)  ..\lib\wxscript.lib lua.lib lualib.lib tolua.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
 
-..\lib\wxscript_script.obj: .\..\src\script.cpp
+msvc\wxscript_script.obj: .\..\src\script.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(WXSCRIPT_CXXFLAGS) $**
 
-..\lib\wxscript_scbasic.obj: .\..\src\scbasic.cpp
+msvc\wxscript_scbasic.obj: .\..\src\scbasic.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(WXSCRIPT_CXXFLAGS) $**
 
-..\lib\wxscript_sccint.obj: .\..\src\sccint.cpp
+msvc\wxscript_sccint.obj: .\..\src\sccint.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(WXSCRIPT_CXXFLAGS) $**
 
-..\lib\wxscript_scunderc.obj: .\..\src\scunderc.cpp
+msvc\wxscript_scunderc.obj: .\..\src\scunderc.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(WXSCRIPT_CXXFLAGS) $**
 
-..\lib\wxscript_sclua.obj: .\..\src\sclua.cpp
+msvc\wxscript_sclua.obj: .\..\src\sclua.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(WXSCRIPT_CXXFLAGS) $**
 
-..\lib\test1_Test.obj: .\..\tests\test1\Test.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(TEST1_CXXFLAGS) $**
+msvc\minimal_script.obj: .\..\src\script.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(MINIMAL_CXXFLAGS) $**
+
+msvc\minimal_scbasic.obj: .\..\src\scbasic.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(MINIMAL_CXXFLAGS) $**
+
+msvc\minimal_sccint.obj: .\..\src\sccint.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(MINIMAL_CXXFLAGS) $**
+
+msvc\minimal_scunderc.obj: .\..\src\scunderc.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(MINIMAL_CXXFLAGS) $**
+
+msvc\minimal_sclua.obj: .\..\src\sclua.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(MINIMAL_CXXFLAGS) $**
+
+msvc\minimal_Test.obj: .\..\tests\test1\Test.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(MINIMAL_CXXFLAGS) $**
 

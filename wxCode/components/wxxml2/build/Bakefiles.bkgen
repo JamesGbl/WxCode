@@ -3,10 +3,11 @@
 <!-- Created by: Francesco Montorsi <frm@users.sourceforge.net>     -->
 <!-- Date: 9/10/2004                                                -->
 
+
 <bakefile-gen>
 
 
-    <input>keybinder.bkl</input>
+    <input>wxxml2.bkl</input>
 
 
     <disable-formats>dmars,dmars_smake,cbx_unix,cbuilderx,msevc4prj,msvc6prj</disable-formats>

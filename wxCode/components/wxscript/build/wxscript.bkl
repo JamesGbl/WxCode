@@ -1,38 +1,16 @@
 <?xml version="1.0" ?>
 
-
-<!-- 
-                THE WXSCRIPT BAKEFILE
-
-     You can use this bakefile to generate various
-     makefiles using Bakefile (http://bakefile.sourceforge.net).
-
-
-     Usage:
-         bakefile -ftheformatyoulike lua.bkl
-     then
-         mymake -fmakefile.mymakeext
-
-     To make this clearer, with MSVC you should type:
-         bakefile -fmsvc lua.bkl
-         nmake -fmakefile.vc
-
-     If you want to regenerate the makefiles for all the formats
-     supported, just type:
-
-         bakefile_gen
--->
-     
+<!-- Created by: Francesco Montorsi <frm@users.sourceforge.net>     -->
+<!-- Date: 9/10/2004                                                -->
 
 <makefile>
 
+	<!-- Some defaults for the variables used by wxCode bakefiles -->
+	<include file="../../../build/defaults.bkl"/>
+	
 
-    <include file="wxbase.bkl"/>
-
-
-    <!--                                                            -->
-    <!--                        OPTIONS                             -->
-    <!--                                                            -->
+	<!-- Settings for this component -->
+	<!-- =========================== -->
 
     <option name="LUA_DIR" category="path">
 	<default-value>c:$(DIRSEP)lua</default-value>
@@ -52,65 +30,49 @@
 	<default-value>c:$(DIRSEP)ucc</default-value>
 	<description>The UnderC library main folder</description>
     </option>
-
-
-
-
-    <!-- Define some utilities ... -->
-    <template id="scriptbase" template="wxbase">
-	<include>..$(DIRSEP)include</include>
-        <include>..$(DIRSEP)src</include>
-
-        <include>$(LUA_DIR)/include</include>
-        <include>$(TOLUA_DIR)/include</include>
-        <include>$(CINT_DIR)</include>
-        <include>$(UCC_DIR)/include</include>
-
-        <lib-path>$(LUA_DIR)/lib</lib-path>
-        <lib-path>$(TOLUA_DIR)/lib</lib-path>
-        <lib-path>$(CINT_DIR)/lib</lib-path>
-        <lib-path>$(UCC_DIR)/lib</lib-path>
-
-        <include>$(WXWIN)$(WXLIBINCLUDE)</include>
-        <lib-path>$(WXWIN)$(WXLIBPATH)</lib-path>
+    
+    <template id="twxscript">
+        <stdlib>$(LUA_DIR)</stdlib>
+        <stdlib>$(TOLUA_DIR)</stdlib>
+<!--        <stdlib>$(CINT_DIR)</stdlib>	-->
+        <stdlib>$(UCC_DIR)</stdlib>
 
         <define>wxSCRIPT_NO_CINT</define>
-        <define>wxSCRIPT_NO_UNDERC</define>
+        <define>wxSCRIPT_NO_UNDERC</define>	    
     </template>
 
-    <set var="MSVC_LIBS">lua.lib lualib.lib tolua.lib</set>
-    <set var="BORLAND_LIBS">+lua.lib +lualib.lib +tolua.lib</set>
-    <set var="MINGW_LIBS">liblua.a liblualib.a libtolua.a</set>
+	<set var="COMP_NAME">wxscript</set>
+	<set var="COMP_SRC">../src/script.cpp ../src/scbasic.cpp 
+                 		../src/sccint.cpp ../src/scunderc.cpp
+                 		../src/sclua.cpp</set>
+	<set var="COMP_SAMPLE_SRC">../tests/test1/Test.cpp</set>
+	<set var="COMP_SAMPLE_DIR">../tests/test1</set>
 
 
 
+	<!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->
+	<include file="../../../build/wxcode.bkl"/>
 
-    <!--                                                            -->
-    <!--                         TARGETS                            -->
-    <!--                                                            -->
+	<!-- The real target: wxcode.bkl does not declare a real target but a template called
+	     "complib". In this way modifications are allowed to the basic template. -->
+	<lib id="wxscript" template="complib,twxscript"></lib>
 
+	<!-- The sample of the component: as for the LIB target, this exe derives from a 
+	     template contained in wxcode.bkl which can be modified here -->
+	<exe id="minimal" template="compsample,twxscript">
+		<library>$(COMP_NAME)</library>
+		<app-type>console</app-type>
 
-    <set var="BUILDDIR">..$(DIRSEP)lib</set>
-    <lib id="wxscript" template="scriptbase">
-        <sources>../src/script.cpp ../src/scbasic.cpp 
-                 ../src/sccint.cpp ../src/scunderc.cpp
-                 ../src/sclua.cpp</sources>
-    </lib>
-
-    <exe id="test1" template="scriptbase">
-        <sources>../tests/test1/Test.cpp</sources>
-        <library>wxscript</library>
-
-	<!-- The wxscript library must be the first for MINGW -->
         <sys-lib>lua</sys-lib>
         <sys-lib>lualib</sys-lib>
         <sys-lib>tolua</sys-lib>
+
 <!--        <sys-lib>cint</sys-lib>
-        <sys-lib>ucc12</sys-lib>   -->
+        <sys-lib>ucc12</sys-lib>   -->		
 
-        <wxlibs/>
-        <syslibs/>
-    </exe>
-
+		<wxlibs/>
+		<syslibs/>
+	</exe>
+	
 </makefile>
 

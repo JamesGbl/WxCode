@@ -22,26 +22,23 @@ CPPFLAGS =
 # Standard linker flags 
 LDFLAGS = 
 
-# Compile Unicode build of wxWindows? [0,1]
-UNICODE = 0
-
-# The wxWidgets library main folder 
-WXWIN = c:\wxWidgets
-
-# Type of compiled binaries [debug,release]
-BUILD = debug
-
 # The LUA library main folder 
 LUA_DIR = c:\lua
 
 # The TOLUA library main folder 
 TOLUA_DIR = c:\tolua
 
-# The CINT library main folder 
-CINT_DIR = c:\cint
-
 # The UnderC library main folder 
 UCC_DIR = c:\ucc
+
+# Compile Unicode build of wxWindows? [0,1]
+UNICODE = 0
+
+# Type of compiled binaries [debug,release]
+BUILD = debug
+
+# The wxWidgets library main folder 
+WXWIN = c:\wxWidgets
 
 
 
@@ -51,25 +48,28 @@ UCC_DIR = c:\ucc
 
 ### Variables: ###
 
-WXSCRIPT_CXXFLAGS = -DHAVE_W32API_H $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
-	$(__DEBUGINFO) -I$(WXWIN)\include -I..\include -I..\src -I$(LUA_DIR)\include \
-	-I$(TOLUA_DIR)\include -I$(CINT_DIR) -I$(UCC_DIR)\include \
-	-I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) -DwxSCRIPT_NO_CINT \
-	-DwxSCRIPT_NO_UNDERC -Wall $(CPPFLAGS) $(CXXFLAGS)
+WXSCRIPT_CXXFLAGS = -I$(WXWIN)\include \
+	-I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) -I..\include \
+	-I$(LUA_DIR)\include -I$(TOLUA_DIR)\include -I$(UCC_DIR)\include \
+	-DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC $(CPPFLAGS) $(CXXFLAGS)
 WXSCRIPT_OBJECTS =  \
-	..\lib\wxscript_script.o \
-	..\lib\wxscript_scbasic.o \
-	..\lib\wxscript_sccint.o \
-	..\lib\wxscript_scunderc.o \
-	..\lib\wxscript_sclua.o
-TEST1_CXXFLAGS = -DHAVE_W32API_H $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
-	$(__DEBUGINFO) -I$(WXWIN)\include -I..\include -I..\src -I$(LUA_DIR)\include \
-	-I$(TOLUA_DIR)\include -I$(CINT_DIR) -I$(UCC_DIR)\include \
-	-I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) -DwxSCRIPT_NO_CINT \
-	-DwxSCRIPT_NO_UNDERC $(__DEBUG_DEFINE_p) -D__WXMSW__ -Wall $(CPPFLAGS) \
-	$(CXXFLAGS)
-TEST1_OBJECTS =  \
-	..\lib\test1_Test.o
+	mingw\wxscript_script.o \
+	mingw\wxscript_scbasic.o \
+	mingw\wxscript_sccint.o \
+	mingw\wxscript_scunderc.o \
+	mingw\wxscript_sclua.o
+MINIMAL_CXXFLAGS = -I$(WXWIN)\include \
+	-I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) -I..\include \
+	-I$(LUA_DIR)\include -I$(TOLUA_DIR)\include -I$(UCC_DIR)\include \
+	-DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC $(__DEBUG_DEFINE_p) -D__WXMSW__ \
+	$(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_OBJECTS =  \
+	mingw\minimal_script.o \
+	mingw\minimal_scbasic.o \
+	mingw\minimal_sccint.o \
+	mingw\minimal_scunderc.o \
+	mingw\minimal_sclua.o \
+	mingw\minimal_Test.o
 
 ### Conditionally set variables: ###
 
@@ -80,15 +80,6 @@ endif
 endif
 ifeq ($(BUILD),debug)
 __DEBUG_DEFINE_p = -D__WXDEBUG__
-endif
-ifeq ($(UNICODE),1)
-__UNICODE_DEFINE_p = -D_UNICODE
-endif
-ifeq ($(BUILD),debug)
-__OPTIMIZEFLAG = -O0
-endif
-ifeq ($(BUILD),release)
-__OPTIMIZEFLAG = -O2
 endif
 ifeq ($(BUILD),debug)
 ifeq ($(UNICODE),0)
@@ -105,52 +96,75 @@ ifeq ($(UNICODE),1)
 WXLIBPOSTFIX = u
 endif
 endif
-ifeq ($(BUILD),debug)
-__DEBUGINFO = -g
-endif
-ifeq ($(BUILD),release)
-__DEBUGINFO = 
-endif
 
 
-all: ..\lib
-..\lib:
-	-if not exist ..\lib mkdir ..\lib
+
+all: mingw
+mingw:
+	-if not exist mingw mkdir mingw
+
 
 ### Targets: ###
 
-all: ..\lib\libwxscript.a ..\lib\test1.exe
+all: ..\lib\libwxscript.a ..\tests\test1\minimal.exe
 
 clean: 
-	-if exist ..\lib\*.o del ..\lib\*.o
+	-if exist mingw\*.o del mingw\*.o
 	-if exist ..\lib\libwxscript.a del ..\lib\libwxscript.a
-	-if exist ..\lib\test1.exe del ..\lib\test1.exe
+	-if exist ..\tests\test1\minimal.exe del ..\tests\test1\minimal.exe
+
+tarball: 
+	( cd .. && tar -cvzf wxscript.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
+
+zip: 
+	( cd .. && zip -r9 wxscript.zip *  -x *.pdb -x *.log -x *.o* )
+
+docs: 
+	( cd ..\docs && doxygen )
+
+cleandocs: 
+	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
 ..\lib\libwxscript.a: $(WXSCRIPT_OBJECTS)
 	if exist $@ del $@
 	ar rcu $@ $(WXSCRIPT_OBJECTS)
 	ranlib $@
 
-..\lib\test1.exe: $(TEST1_OBJECTS) ..\lib\libwxscript.a
-	$(CXX) -o $@ $(TEST1_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -L$(LUA_DIR)\lib -L$(TOLUA_DIR)\lib -L$(CINT_DIR)\lib -L$(UCC_DIR)\lib -L$(WXWIN)\lib\gcc_lib  ..\lib\libwxscript.a -llua -llualib -ltolua -lwxmsw25$(WXLIBPOSTFIX)_core -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXSUBLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+..\tests\test1\minimal.exe: $(MINIMAL_OBJECTS) ..\lib\libwxscript.a
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) -L$(WXWIN)\lib\gcc_lib -L..\lib -L$(LUA_DIR)\lib -L$(TOLUA_DIR)\lib -L$(UCC_DIR)\lib   ..\lib\libwxscript.a -llua -llualib -ltolua -lwxmsw25$(WXLIBPOSTFIX)_core -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXSUBLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
-..\lib\wxscript_script.o: ./../src/script.cpp
+mingw\wxscript_script.o: ./../src/script.cpp
 	$(CXX) -c -o $@ $(WXSCRIPT_CXXFLAGS) $<
 
-..\lib\wxscript_scbasic.o: ./../src/scbasic.cpp
+mingw\wxscript_scbasic.o: ./../src/scbasic.cpp
 	$(CXX) -c -o $@ $(WXSCRIPT_CXXFLAGS) $<
 
-..\lib\wxscript_sccint.o: ./../src/sccint.cpp
+mingw\wxscript_sccint.o: ./../src/sccint.cpp
 	$(CXX) -c -o $@ $(WXSCRIPT_CXXFLAGS) $<
 
-..\lib\wxscript_scunderc.o: ./../src/scunderc.cpp
+mingw\wxscript_scunderc.o: ./../src/scunderc.cpp
 	$(CXX) -c -o $@ $(WXSCRIPT_CXXFLAGS) $<
 
-..\lib\wxscript_sclua.o: ./../src/sclua.cpp
+mingw\wxscript_sclua.o: ./../src/sclua.cpp
 	$(CXX) -c -o $@ $(WXSCRIPT_CXXFLAGS) $<
 
-..\lib\test1_Test.o: ./../tests/test1/Test.cpp
-	$(CXX) -c -o $@ $(TEST1_CXXFLAGS) $<
+mingw\minimal_script.o: ./../src/script.cpp
+	$(CXX) -c -o $@ $(MINIMAL_CXXFLAGS) $<
+
+mingw\minimal_scbasic.o: ./../src/scbasic.cpp
+	$(CXX) -c -o $@ $(MINIMAL_CXXFLAGS) $<
+
+mingw\minimal_sccint.o: ./../src/sccint.cpp
+	$(CXX) -c -o $@ $(MINIMAL_CXXFLAGS) $<
+
+mingw\minimal_scunderc.o: ./../src/scunderc.cpp
+	$(CXX) -c -o $@ $(MINIMAL_CXXFLAGS) $<
+
+mingw\minimal_sclua.o: ./../src/sclua.cpp
+	$(CXX) -c -o $@ $(MINIMAL_CXXFLAGS) $<
+
+mingw\minimal_Test.o: ./../tests/test1/Test.cpp
+	$(CXX) -c -o $@ $(MINIMAL_CXXFLAGS) $<
 
 .PHONY: all clean
 

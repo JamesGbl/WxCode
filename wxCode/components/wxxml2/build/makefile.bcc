@@ -39,6 +39,16 @@ CPPFLAGS = -a8 -g0
 LDFLAGS = 
 !endif
 
+# The libxml2 library main folder 
+!ifndef LIBXML2_DIR
+LIBXML2_DIR = c:\libxml2
+!endif
+
+# The iconv library main folder 
+!ifndef ICONV_DIR
+ICONV_DIR = c:\iconv
+!endif
+
 # Compile Unicode build of wxWindows? [0,1]
 !ifndef UNICODE
 UNICODE = 0
@@ -62,18 +72,17 @@ WXWIN = c:\wxWidgets
 
 ### Variables: ###
 
-KEYBINDER_CXXFLAGS = -I$(BCCDIR)\include -I$(WXWIN)\include \
-	-I$(WXWIN)\lib\bcc_lib\msw$(WXLIBPOSTFIX) -I..\include $(CPPFLAGS) \
-	$(CXXFLAGS)
-KEYBINDER_OBJECTS =  \
-	borland\keybinder_keybinder.obj \
-	borland\keybinder_menuutils.obj
+WXXML2_CXXFLAGS = -I$(BCCDIR)\include -I$(WXWIN)\include \
+	-I$(WXWIN)\lib\bcc_lib\msw$(WXLIBPOSTFIX) -I..\include \
+	-I$(LIBXML2_DIR)\include -I$(ICONV_DIR)\include $(CPPFLAGS) $(CXXFLAGS)
+WXXML2_OBJECTS =  \
+	borland\wxxml2_xml2.obj
 MINIMAL_CXXFLAGS = -I$(BCCDIR)\include -I$(WXWIN)\include \
-	-I$(WXWIN)\lib\bcc_lib\msw$(WXLIBPOSTFIX) -I..\include $(__DEBUG_DEFINE_p) \
+	-I$(WXWIN)\lib\bcc_lib\msw$(WXLIBPOSTFIX) -I..\include \
+	-I$(LIBXML2_DIR)\include -I$(ICONV_DIR)\include $(__DEBUG_DEFINE_p) \
 	-D__WXMSW__ $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
-	borland\minimal_keybinder.obj \
-	borland\minimal_menuutils.obj \
+	borland\minimal_xml2.obj \
 	borland\minimal_minimal.obj
 
 ### Conditionally set variables: ###
@@ -102,12 +111,12 @@ borland:
 
 ### Targets: ###
 
-all: ..\lib\keybinder.lib ..\sample\minimal.exe
+all: ..\lib\wxxml2.lib ..\sample\minimal.exe
 
 clean: 
 	-if exist borland\*.obj del borland\*.obj
 	-if exist borland\*.res del borland\*.res
-	-if exist ..\lib\keybinder.lib del ..\lib\keybinder.lib
+	-if exist ..\lib\wxxml2.lib del ..\lib\wxxml2.lib
 	-if exist ..\sample\minimal.exe del ..\sample\minimal.exe
 	-if exist ..\sample\minimal.tds del ..\sample\minimal.tds
 	-if exist ..\sample\minimal.ilc del ..\sample\minimal.ilc
@@ -116,38 +125,32 @@ clean:
 	-if exist ..\sample\minimal.ils del ..\sample\minimal.ils
 
 tarball: 
-	( cd .. && tar -cvzf keybinder.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
+	( cd .. && tar -cvzf wxxml2.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
 
 zip: 
-	( cd .. && zip -r9 keybinder.zip *  -x *.pdb -x *.log -x *.o* )
-
-docs: 
-	( cd ..\docs && doxygen )
+	( cd .. && zip -r9 wxxml2.zip *  -x *.pdb -x *.log -x *.o* )
 
 cleandocs: 
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
-..\lib\keybinder.lib: $(KEYBINDER_OBJECTS)
+..\lib\wxxml2.lib: $(WXXML2_OBJECTS)
 	if exist $@ del $@
 	tlib /a /p4096 $@ @&&|
-	$(KEYBINDER_OBJECTS)
+	$(WXXML2_OBJECTS)
 |
 
-..\sample\minimal.exe: $(MINIMAL_OBJECTS) ..\lib\keybinder.lib
-	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -L$(WXWIN)\lib\bcc_lib -aa -L..\lib @&&|
-	c0w32.obj $(MINIMAL_OBJECTS),$@,, ..\lib\keybinder.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32.lib,,
+..\sample\minimal.exe: $(MINIMAL_OBJECTS)
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -L$(WXWIN)\lib\bcc_lib -aa -L..\lib -L$(LIBXML2_DIR)\lib -L$(ICONV_DIR)\lib @&&|
+	c0w32.obj $(MINIMAL_OBJECTS),$@,, wxxml2.lib libxml2.lib iconv.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32.lib,,
 |
 
-borland\keybinder_keybinder.obj: .\..\src\keybinder.cpp
-	$(CXX) -q -c -P -o$@ $(KEYBINDER_CXXFLAGS) $**
+docs: 
+	( cd ..\docs && doxygen )
 
-borland\keybinder_menuutils.obj: .\..\src\menuutils.cpp
-	$(CXX) -q -c -P -o$@ $(KEYBINDER_CXXFLAGS) $**
+borland\wxxml2_xml2.obj: .\..\src\xml2.cpp
+	$(CXX) -q -c -P -o$@ $(WXXML2_CXXFLAGS) $**
 
-borland\minimal_keybinder.obj: .\..\src\keybinder.cpp
-	$(CXX) -q -c -P -o$@ $(MINIMAL_CXXFLAGS) $**
-
-borland\minimal_menuutils.obj: .\..\src\menuutils.cpp
+borland\minimal_xml2.obj: .\..\src\xml2.cpp
 	$(CXX) -q -c -P -o$@ $(MINIMAL_CXXFLAGS) $**
 
 borland\minimal_minimal.obj: .\..\sample\minimal.cpp
