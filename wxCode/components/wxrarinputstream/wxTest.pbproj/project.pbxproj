@@ -1,0 +1,462 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 38;
+	objects = {
+		2B13922E04CD0AE100A80164 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = wxTest.h;
+			refType = 4;
+		};
+		2B39A0B204D1AD3100A80164 = {
+			children = (
+				2B39A0BF04D1AD5A00A80164,
+				2B85E8B204D0F99B00A80164,
+				2B39A0D104D1D53200A80164,
+				2B39A0C704D1ADA400A80164,
+				2B39A0C904D1ADC300A80164,
+				2BA2AFCE04CFA73000A80164,
+				2B39A0C004D1AD5A00A80164,
+				2B39A0C204D1AD5A00A80164,
+				2B39A0D204D1D53200A80164,
+				2B8B2AD5C5B0B25A00B28850,
+			);
+			isa = PBXGroup;
+			name = Frameworks/Libs;
+			refType = 4;
+		};
+		2B39A0BF04D1AD5A00A80164 = {
+			isa = PBXFileReference;
+			name = "libwx_mac-2.4.0.rsrc";
+			path = "/usr/local/lib/libwx_mac-2.4.0.rsrc";
+			refType = 0;
+		};
+		2B39A0C004D1AD5A00A80164 = {
+			isa = PBXFileReference;
+			name = "libwx_mac-2.4.a";
+			path = "/usr/local/lib/libwx_mac-2.4.a";
+			refType = 0;
+		};
+		2B39A0C204D1AD5A00A80164 = {
+			isa = PBXFileReference;
+			name = "libwx_mac-2.5.a";
+			path = "/usr/local/lib/libwx_mac-2.5.a";
+			refType = 0;
+		};
+		2B39A0C704D1ADA400A80164 = {
+			isa = PBXFrameworkReference;
+			name = System.framework;
+			path = /System/Library/Frameworks/System.framework;
+			refType = 0;
+		};
+		2B39A0C804D1ADA400A80164 = {
+			fileRef = 2B39A0C704D1ADA400A80164;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		2B39A0C904D1ADC300A80164 = {
+			isa = PBXFrameworkReference;
+			name = Carbon.framework;
+			path = /System/Library/Frameworks/Carbon.framework;
+			refType = 0;
+		};
+		2B39A0CA04D1ADC300A80164 = {
+			fileRef = 2B39A0C904D1ADC300A80164;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		2B39A0D104D1D53200A80164 = {
+			isa = PBXFileReference;
+			name = "libwx_macd-2.5.0.rsrc";
+			path = "/usr/local/lib/libwx_macd-2.5.0.rsrc";
+			refType = 0;
+		};
+		2B39A0D204D1D53200A80164 = {
+			isa = PBXFileReference;
+			name = "libwx_macd-2.5.a";
+			path = "/usr/local/lib/libwx_macd-2.5.a";
+			refType = 0;
+		};
+		2B39A0D504D1D81E00A80164 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = setup.h;
+			path = "/usr/local/lib/wx/include/macd-2.5/wx/setup.h";
+			refType = 0;
+		};
+		2B39A0D604D1D81E00A80164 = {
+			fileRef = 2B39A0D504D1D81E00A80164;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		2B39A13804D1E7F300A80164 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = notebook.cpp;
+			path = /Users/ryannorton/Desktop/wxWindows/samples/notebook/notebook.cpp;
+			refType = 0;
+		};
+		2B39A13904D1E7F300A80164 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = notebook.h;
+			path = /Users/ryannorton/Desktop/wxWindows/samples/notebook/notebook.h;
+			refType = 0;
+		};
+		2B52DD71050909FE00D7E411 = {
+			fileRef = 2B8B2ADDC5B0BFC200B28850;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		2B52DD72050909FE00D7E411 = {
+			fileRef = 2B8B2ADEC5B0BFC200B28850;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		2B52DD73050912AD00D7E411 = {
+			fileRef = 2BCDC38A04C9F8D900A80164;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		2B52DD740509150900D7E411 = {
+			fileRef = 2B8B2AD5C5B0B25A00B28850;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		2B61A62D04FAE00C00CD28B4 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = main.cpp;
+			refType = 4;
+		};
+		2B61A62E04FAE00C00CD28B4 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = old.h;
+			refType = 4;
+		};
+		2B61A62F04FAE00C00CD28B4 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = re.c;
+			refType = 4;
+		};
+		2B61A63004FAE00C00CD28B4 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = re.h;
+			refType = 4;
+		};
+		2B61A63F04FAE59D00CD28B4 = {
+			fileRef = 2B39A0D204D1D53200A80164;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		2B61A64004FAE5A000CD28B4 = {
+			fileRef = 2B39A0D104D1D53200A80164;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		2B623C38C5B0CAF6005B85D3 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = XZip.cpp;
+			path = "/Users/ryannorton/Desktop/XZip_demo Folder/XZip.cpp";
+			refType = 0;
+		};
+		2B85E8B204D0F99B00A80164 = {
+			isa = PBXFileReference;
+			name = "libwx_mac-2.5.0.rsrc";
+			path = "/usr/local/lib/libwx_mac-2.5.0.rsrc";
+			refType = 0;
+		};
+		2B8B2AD5C5B0B25A00B28850 = {
+			isa = PBXFileReference;
+			name = librar.a;
+			path = /Users/ryannorton/Desktop/unrar.1.1/librar.a;
+			refType = 0;
+		};
+		2B8B2AD7C5B0B34800B28850 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = smallfn.cpp;
+			path = /Users/ryannorton/Desktop/unrar.1.1/smallfn.cpp;
+			refType = 0;
+		};
+		2B8B2AD8C5B0B34800B28850 = {
+			fileRef = 2B8B2AD7C5B0B34800B28850;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		2B8B2AD9C5B0B47B00B28850 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = mediaplayer.cpp;
+			path = /Users/ryannorton/Desktop/cvs/wxAudio/mediaplayer.cpp;
+			refType = 0;
+		};
+		2B8B2ADAC5B0B47B00B28850 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = mediaplayer.h;
+			path = /Users/ryannorton/Desktop/cvs/wxAudio/mediaplayer.h;
+			refType = 0;
+		};
+		2B8B2ADDC5B0BFC200B28850 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = dll.cpp;
+			path = /Users/ryannorton/Desktop/unrar.1.1/dll.cpp;
+			refType = 0;
+		};
+		2B8B2ADEC5B0BFC200B28850 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = dll.hpp;
+			path = /Users/ryannorton/Desktop/unrar.1.1/dll.hpp;
+			refType = 0;
+		};
+		2B91690304D2115900A80164 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = menu.cpp;
+			path = /Users/ryannorton/Desktop/wxWindows/samples/menu/menu.cpp;
+			refType = 0;
+		};
+		2BA2AFCA04CFA55400A80164 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = metal.r;
+			path = /Users/ryannorton/Desktop/metal.r;
+			refType = 0;
+		};
+		2BA2AFCB04CFA55400A80164 = {
+			fileRef = 2BA2AFCA04CFA55400A80164;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		2BA2AFCE04CFA73000A80164 = {
+			isa = PBXFrameworkReference;
+			name = QuickTime.framework;
+			path = /System/Library/Frameworks/QuickTime.framework;
+			refType = 0;
+		};
+		2BC325C904F9742200C3031D = {
+			children = (
+				2B39A0D504D1D81E00A80164,
+				2B39A13804D1E7F300A80164,
+				2B39A13904D1E7F300A80164,
+				2B91690304D2115900A80164,
+				2B8B2AD7C5B0B34800B28850,
+				2B8B2AD9C5B0B47B00B28850,
+				2B8B2ADAC5B0B47B00B28850,
+				2B8B2ADDC5B0BFC200B28850,
+				2B8B2ADEC5B0BFC200B28850,
+				2B623C38C5B0CAF6005B85D3,
+			);
+			isa = PBXGroup;
+			name = comp;
+			refType = 4;
+		};
+		2BCDC38504C9F8C100A80164 = {
+			children = (
+				2BC325C904F9742200C3031D,
+				2B39A0B204D1AD3100A80164,
+				2BCDC39B04CA09A900A80164,
+				2BCDC39204C9F93900A80164,
+				2BCDC38A04C9F8D900A80164,
+				2B13922E04CD0AE100A80164,
+				2B61A62D04FAE00C00CD28B4,
+				2B61A62E04FAE00C00CD28B4,
+				2B61A62F04FAE00C00CD28B4,
+				2B61A63004FAE00C00CD28B4,
+			);
+			isa = PBXGroup;
+			refType = 4;
+		};
+		2BCDC38704C9F8C100A80164 = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "\U0001-D__WXDEBUG__ ";
+			};
+			isa = PBXBuildStyle;
+			name = Development;
+		};
+		2BCDC38804C9F8C100A80164 = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				OPTIMIZATION_CFLAGS = "-O2";
+			};
+			isa = PBXBuildStyle;
+			name = Deployment;
+		};
+		2BCDC38904C9F8C100A80164 = {
+			buildStyles = (
+				2BCDC38704C9F8C100A80164,
+				2BCDC38804C9F8C100A80164,
+			);
+			hasScannedForEncodings = 1;
+			isa = PBXProject;
+			mainGroup = 2BCDC38504C9F8C100A80164;
+			productRefGroup = 2BCDC39204C9F93900A80164;
+			projectDirPath = "";
+			targets = (
+				2BCDC39004C9F93900A80164,
+			);
+		};
+		2BCDC38A04C9F8D900A80164 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = wxTest.cpp;
+			refType = 4;
+		};
+		2BCDC38B04C9F93900A80164 = {
+			buildActionMask = 2147483647;
+			files = (
+				2B39A0D604D1D81E00A80164,
+				2B52DD72050909FE00D7E411,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2BCDC38C04C9F93900A80164 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2BCDC38D04C9F93900A80164 = {
+			buildActionMask = 2147483647;
+			files = (
+				2B8B2AD8C5B0B34800B28850,
+				2B52DD71050909FE00D7E411,
+				2B52DD73050912AD00D7E411,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2BCDC38E04C9F93900A80164 = {
+			buildActionMask = 2147483647;
+			files = (
+				2B39A0C804D1ADA400A80164,
+				2B39A0CA04D1ADC300A80164,
+				2B61A63F04FAE59D00CD28B4,
+				2B52DD740509150900D7E411,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2BCDC38F04C9F93900A80164 = {
+			buildActionMask = 2147483647;
+			files = (
+				2BA2AFCB04CFA55400A80164,
+				2B61A64004FAE5A000CD28B4,
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2BCDC39004C9F93900A80164 = {
+			buildPhases = (
+				2BCDC38B04C9F93900A80164,
+				2BCDC38C04C9F93900A80164,
+				2BCDC38D04C9F93900A80164,
+				2BCDC38E04C9F93900A80164,
+				2BCDC38F04C9F93900A80164,
+			);
+			buildSettings = {
+				HEADER_SEARCH_PATHS = "/Users/ryannorton/Desktop/unrar.1.1 /usr/local/lib/wx/include/macd-2.5 /Users/ryannorton/Desktop/wxWindows/include";
+				INSTALL_PATH = /Users/ryannorton/Desktop/wxTest;
+				LIBRARY_SEARCH_PATHS = /Users/ryannorton/Desktop/unrar.1.1;
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "-D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES";
+				OTHER_LDFLAGS = "-lz -lpthread";
+				OTHER_RESMERGERFLAGS = "-srcIs DF";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = wxTest;
+				PROFILING_CODE = YES;
+				SECTORDER_FLAGS = "";
+				USE_GCC3_PFE_SUPPORT = NO;
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = app;
+			};
+			dependencies = (
+			);
+			isa = PBXApplicationTarget;
+			name = wxTest;
+			productInstallPath = /Users/ryannorton/Desktop/wxTest;
+			productName = wxTest;
+			productReference = 2BCDC39104C9F93900A80164;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+</dict>
+</plist>
+";
+		};
+		2BCDC39104C9F93900A80164 = {
+			isa = PBXApplicationReference;
+			path = wxTest.app;
+			refType = 3;
+		};
+		2BCDC39204C9F93900A80164 = {
+			children = (
+				2BCDC39104C9F93900A80164,
+			);
+			isa = PBXGroup;
+			name = Products;
+			refType = 4;
+		};
+		2BCDC39B04CA09A900A80164 = {
+			children = (
+				2BA2AFCA04CFA55400A80164,
+			);
+			isa = PBXGroup;
+			name = RESOURCES;
+			refType = 4;
+		};
+	};
+	rootObject = 2BCDC38904C9F8C100A80164;
+}

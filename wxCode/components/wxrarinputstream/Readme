@@ -6,4 +6,9 @@ More infos:
 wxWidgets:  2.4.2
 
 Description:
-Rar file extraction for wxWidgets
+Rar file extraction for wxWidgets.
+
+Contains a modified version of the unrar
+library from rarsoft that allows it
+to compile on most platforms
+(tested on OSX, LINUX and WINDOWS).
