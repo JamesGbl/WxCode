@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.24 2004-09-28 18:04:17 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.25 2004-09-28 20:10:56 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -621,6 +621,7 @@ protected:
 
     int                  m_dragCount;
     wxPoint              m_dragStart;
+    wxTimer             *m_dragTimer;
     wxTreeListItem      *m_dropItem;
 
     wxTimer             *m_renameTimer;
@@ -1822,6 +1823,7 @@ void wxTreeListMainWindow::Init()
 
     m_dragCount = 0;
     m_isDragging = FALSE;
+    m_dragTimer = new wxTimer (this, -1);
     m_dropItem = (wxTreeListItem*)NULL;
 
     m_renameTimer = new wxTreeListRenameTimer( this );
@@ -1907,6 +1909,7 @@ wxTreeListMainWindow::~wxTreeListMainWindow()
 
     DeleteAllItems();
 
+    delete m_dragTimer;
     delete m_renameTimer;
     delete m_findTimer;
     if (m_ownsImageListNormal) delete m_imageListNormal;
@@ -4066,7 +4069,8 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
         return;
     }
 
-    if (event.LeftDown()) SetFocus();
+    if (event.LeftDown() || event.RightDown()) SetFocus();
+    if (event.LeftUp() || event.RightUp()) m_dragCount = 0; // just in case
 
     wxClientDC dc(this);
     PrepareDC(dc);
@@ -4079,12 +4083,14 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
     if (event.Dragging()){
         if (m_isDragging) return; // already done
 
-        if (m_dragCount == 0) m_dragStart = wxPoint(x,y);
-        m_dragCount++;
-        if (m_dragCount != 3) {
-            // wait until user drags a bit further...
-            return;
+        // determine drag start
+        if (m_dragCount == 0) {
+            m_dragStart = wxPoint(x,y);
+            m_dragTimer->Start (250, wxTIMER_ONE_SHOT); // minimum drag 250ms
         }
+        m_dragCount++;
+        if (m_dragCount < 3) return; // minimum drag 3 pixel
+        if (m_dragTimer->IsRunning()) return;
         m_dragCount = 0;
 
         // we're going to drag this item
@@ -4099,9 +4105,8 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
         nevent.SetEventObject (m_owner);
         m_owner->GetEventHandler()->ProcessEvent(nevent);
 
-    }else if (event.Moving() ||
-              (event.LeftUp() || event.RightUp()) && m_isDragging) {
-        if (!m_isDragging) return; // nothing to do
+    }else if (event.Moving() || (event.LeftUp() || event.RightUp()) && m_isDragging) {
+        if (!m_isDragging) return; // noting to do
 
         // end dragging
         m_isDragging = false;
@@ -4115,7 +4120,7 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
 
     }else{ // here we process only the messages which happen on tree items
 
-        if ( item == NULL ) return; // nothing to do
+        if (item == NULL) return; // nothing to do
 
         if (event.RightDown()) {
             SetFocus();
