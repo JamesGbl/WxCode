@@ -42,9 +42,9 @@ CFG=wxscintilla - Win32 Debug
 # PROP Intermediate_Dir "Release_DLL"
 # PROP Target_Dir ""
 CPP=cl.exe
-# ADD BASE CPP /nologo /MDd /W3 /GX /Zi /Od /I "$(WXSTABLE)\include" /I "$(WXCODE)\wxscintilla\include" /I "$(WXSTABLE)\lib\mswdll" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "__WINDOWS__" /D "__WXMSW__" /D DEBUG=1 /D "__WXDEBUG__" /D "__WIN95__" /D "__WIN32__" /D WINVER=0x0400 /D "STRICT" /D WXUSINGDLL=1 /D "WXBUILD_STC_DLL" /YX /FD /c
+# ADD BASE CPP /nologo /MDd /W3 /GX /Zi /Od /I "$(WXSTABLE)\include" /I "..\include" /I "$(WXSTABLE)\lib\mswdll" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "__WINDOWS__" /D "__WXMSW__" /D DEBUG=1 /D "__WXDEBUG__" /D "__WIN95__" /D "__WIN32__" /D WINVER=0x0400 /D "STRICT" /D WXUSINGDLL=1 /D "WXBUILD_STC_DLL" /YX /FD /c
 # SUBTRACT BASE CPP /u
-# ADD CPP /nologo /MD /W3 /GX /Zi /O2 /Ob2 /I "$(WXSTABLE)\include" /I "$(WXCODE)\wxscintilla\include" /I "$(WXSTABLE)\lib\mswdll" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "__WINDOWS__" /D "__WXMSW__" /D "__WIN95__" /D "__WIN32__" /D WINVER=0x0400 /D "STRICT" /D "WXUSINGDLL" /D "WXMAKING_STC_DLL" /D "SCI_LEXER" /D "LINK_LEXERS" /D "__WX__" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GX /Zi /O2 /Ob2 /I "$(WXSTABLE)\include" /I "..\include" /I "$(WXSTABLE)\lib\mswdll" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "__WINDOWS__" /D "__WXMSW__" /D "__WIN95__" /D "__WIN32__" /D WINVER=0x0400 /D "STRICT" /D "WXUSINGDLL" /D "WXMAKING_STC_DLL" /D "SCI_LEXER" /D "LINK_LEXERS" /D "__WX__" /YX /FD /c
 # SUBTRACT CPP /u
 MTL=midl.exe
 RSC=rc.exe
@@ -72,9 +72,9 @@ LINK32=link.exe
 # PROP Intermediate_Dir "Debug_DLL"
 # PROP Target_Dir ""
 CPP=cl.exe
-# ADD BASE CPP /nologo /MDd /W3 /GX /Zi /Od /I "$(WXSTABLE)\include" /I "$(WXCODE)\wxscintilla\include" /I "$(WXSTABLE)\lib\mswd" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "__WINDOWS__" /D "__WXMSW__" /D DEBUG=1 /D "__WXDEBUG__" /D "__WIN95__" /D "__WIN32__" /D WINVER=0x0400 /D "STRICT" /FD /c
+# ADD BASE CPP /nologo /MDd /W3 /GX /Zi /Od /I "$(WXSTABLE)\include" /I "..\include" /I "$(WXSTABLE)\lib\mswd" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "__WINDOWS__" /D "__WXMSW__" /D DEBUG=1 /D "__WXDEBUG__" /D "__WIN95__" /D "__WIN32__" /D WINVER=0x0400 /D "STRICT" /FD /c
 # SUBTRACT BASE CPP /YX
-# ADD CPP /nologo /MDd /W3 /GX /Zi /Od /I "$(WXSTABLE)\include" /I "$(WXCODE)\wxscintilla\include" /I "$(WXSTABLE)\lib\mswdlld" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "__WINDOWS__" /D "__WXMSW__" /D DEBUG=1 /D "__WXDEBUG__" /D "__WIN95__" /D "__WIN32__" /D WINVER=0x0400 /D "STRICT" /D "WXUSINGDLL" /D "WXMAKING_STC_DLL" /D "SCI_LEXER" /D "LINK_LEXERS" /D "__WX__" /YX /FD /c
+# ADD CPP /nologo /MDd /W3 /GX /Zi /Od /I "$(WXSTABLE)\include" /I "..\include" /I "$(WXSTABLE)\lib\mswdlld" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "__WINDOWS__" /D "__WXMSW__" /D DEBUG=1 /D "__WXDEBUG__" /D "__WIN95__" /D "__WIN32__" /D WINVER=0x0400 /D "STRICT" /D "WXUSINGDLL" /D "WXMAKING_STC_DLL" /D "SCI_LEXER" /D "LINK_LEXERS" /D "__WX__" /YX /FD /c
 # SUBTRACT CPP /u
 MTL=midl.exe
 RSC=rc.exe
@@ -103,7 +103,7 @@ LINK32=link.exe
 LINK32=link.exe
 CPP=cl.exe
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GX /O1 /Ob2 /I "$(WXSTABLE)\include" /I "$(WXCODE)\wxscintilla\include" /I "$(WXSTABLE)\lib\msw" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_WINDOWS" /D "__WINDOWS__" /D "__WXMSW__" /D "__HACK_MY_MSDEV40__" /D "__WIN95__" /D "__WIN32__" /D WINVER=0x0400 /D "STRICT" /D "SCI_LEXER" /D "LINK_LEXERS" /D "__WX__" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GX /O1 /Ob2 /I "$(WXSTABLE)\include" /I "..\include" /I "$(WXSTABLE)\lib\msw" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_WINDOWS" /D "__WINDOWS__" /D "__WXMSW__" /D "__HACK_MY_MSDEV40__" /D "__WIN95__" /D "__WIN32__" /D WINVER=0x0400 /D "STRICT" /D "SCI_LEXER" /D "LINK_LEXERS" /D "__WX__" /YX /FD /c
 RSC=rc.exe
 # ADD BASE RSC /l 0x809
 # ADD RSC /l 0x809
@@ -129,7 +129,7 @@ LIB32=link.exe -lib
 LINK32=link.exe
 CPP=cl.exe
 # ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MDd /W3 /GX /Zi /Od /I "$(WXSTABLE)\include" /I "$(WXCODE)\wxscintilla\include" /I "$(WXSTABLE)\lib\mswd" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "__WINDOWS__" /D "__WXMSW__" /D DEBUG=1 /D "__WXDEBUG__" /D "__WIN95__" /D "__WIN32__" /D WINVER=0x0400 /D "STRICT" /D "SCI_LEXER" /D "LINK_LEXERS" /D "__WX__" /YX /FD /c
+# ADD CPP /nologo /MDd /W3 /GX /Zi /Od /I "$(WXSTABLE)\include" /I "..\include" /I "$(WXSTABLE)\lib\mswd" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "__WINDOWS__" /D "__WXMSW__" /D DEBUG=1 /D "__WXDEBUG__" /D "__WIN95__" /D "__WIN32__" /D WINVER=0x0400 /D "STRICT" /D "SCI_LEXER" /D "LINK_LEXERS" /D "__WX__" /YX /FD /c
 RSC=rc.exe
 # ADD BASE RSC /l 0x809
 # ADD RSC /l 0x809
