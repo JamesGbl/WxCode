@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.40 2004-10-30 18:22:27 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.41 2004-10-31 09:05:55 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -90,9 +90,9 @@ static const int EXTRA_HEIGHT = 4;
 static const int HEADER_OFFSET_X = 1;
 static const int HEADER_OFFSET_Y = 1;
 
-static const int DRAG_TIMER_TICKS = 250; // minimum drag wait 250ms
-static const int FIND_TIMER_TICKS = 500; // minimum find wait 500ms
-static const int RENAME_TIMER_TICKS = 250; // minimum rename wait 250ms
+static const int DRAG_TIMER_TICKS = 200; // minimum drag wait time in ms
+static const int FIND_TIMER_TICKS = 200; // minimum find wait time in ms
+static const int RENAME_TIMER_TICKS = 200; // minimum rename wait time in ms
 
 const wxChar* wxTreeListCtrlNameStr = wxT("treelistctrl");
 
