@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.3 2004-03-24 18:32:59 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.4 2004-03-25 20:02:14 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -513,7 +513,7 @@ public:
 
     // searching
     wxTreeItemId FindItem (const wxTreeItemId& item, const wxString& str,
-                           bool partial=false);
+                           bool partial=false, bool nocase=false);
 
     // deprecated functions: use Set/GetItemImage directly
         // get the selected item image
@@ -3035,7 +3035,8 @@ void wxTreeListMainWindow::SortChildren(const wxTreeItemId& itemId)
     //else: don't make the tree dirty as nothing changed
 }
 
-wxTreeItemId wxTreeListMainWindow::FindItem (const wxTreeItemId& item, const wxString& str, bool partial) {
+wxTreeItemId wxTreeListMainWindow::FindItem (const wxTreeItemId& item, const wxString& str, 
+                                             bool partial, bool nocase) {
     wxTreeItemId next = item;
     if (!next.IsOk()) next = GetSelection();
     if (!next.IsOk()) {
@@ -3048,11 +3049,17 @@ wxTreeItemId wxTreeListMainWindow::FindItem (const wxTreeItemId& item, const wxS
     }
     if (!next.IsOk()) return item;
     next = GetNextVisible (next);
+    wxString itemText;
     while (next.IsOk()) {
         if (!partial) {
-            if (GetItemText (next).IsSameAs (str)) return next;
+            itemText = GetItemText (next);
         }else{
-            if (GetItemText (next).Index (str) == 0) return next;
+            itemText = GetItemText (next).Mid (0, str.Length());
+        }
+        if (!nocase) {
+            if (itemText.Cmp (str) == 0) return next;
+        }else{
+            if (itemText.CmpNoCase (str) == 0) return next;
         }
         next = GetNextVisible (next);
     }
@@ -3895,7 +3902,7 @@ void wxTreeListMainWindow::OnChar( wxKeyEvent &event )
                 m_findStr.Append (event.m_keyCode);
                 m_findTimer->Start (500, wxTIMER_ONE_SHOT);
                 wxTreeItemId dummy = (wxTreeItemId*)NULL;
-                wxTreeItemId item = FindItem (dummy, m_findStr, true);
+                wxTreeItemId item = FindItem (dummy, m_findStr, true, true);
                 if (item.IsOk()) SelectItem (item);
             }
             event.Skip();
@@ -4805,8 +4812,9 @@ int wxTreeListCtrl::OnCompareItems(const wxTreeItemId& item1,
 void wxTreeListCtrl::SortChildren(const wxTreeItemId& item)
 { m_main_win->SortChildren(item); }
 
-wxTreeItemId wxTreeListCtrl::FindItem (const wxTreeItemId& item, const wxString& str, bool partial)
-{ return m_main_win->FindItem (item, str, partial); }
+wxTreeItemId wxTreeListCtrl::FindItem (const wxTreeItemId& item, const wxString& str, 
+                                       bool partial, bool nocase)
+{ return m_main_win->FindItem (item, str, partial, nocase); }
 
 bool wxTreeListCtrl::SetBackgroundColour(const wxColour& colour)
 { return m_main_win->SetBackgroundColour(colour); }
