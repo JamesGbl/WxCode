@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.25 2004-09-28 20:10:56 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.26 2004-09-29 18:51:18 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -79,7 +79,7 @@ const int LINEHEIGHT = 10;
 const int PIXELS_PER_UNIT = 10;
 const int LINEATROOT = 5;
 const int MARGIN = 2;
-const int MININDENT = 10;
+const int MININDENT = 16;
 const int BTNWIDTH = 11;
 const int BTNHEIGHT = 11;
 
@@ -3297,40 +3297,43 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
     for ( size_t i = 0; i < GetColumnCount(); ++i ) {
         if (!m_owner->GetHeaderWindow()->GetColumnShown(i)) continue;
         int col_w = m_owner->GetHeaderWindow()->GetColumnWidth(i);
+        int x = 0;
         int image = NO_IMAGE;
-        int image_x = 0;
         int image_w = 0;
         if(i == GetMainColumn()) {
             if (m_imageListNormal) image = item->GetCurrentImage();
-            image_x = item->GetX() - m_btnWidth2;
-            image_x += item->HasPlus()? m_btnWidth + MARGIN: 0;
-            image_w = (image != NO_IMAGE)? m_imgWidth + MARGIN: 0;
-            item->SetTextX (image_x + image_w);
-        }
-        else
-        {
+            x = item->GetX() + MARGIN;
+            if (!HasButtons()) {
+                x += -m_indent/2;
+            }else if (item->HasPlus()) {
+                x += -m_btnWidth2+m_btnWidth + LINEATROOT;
+            }else{
+                x += -m_indent -m_btnWidth2+m_btnWidth + LINEATROOT;
+            }
+        }else{
             image = item->GetImage(i);
-            image_x = x_colstart + MARGIN;
-            image_w = (image != NO_IMAGE)? m_imgWidth + MARGIN: 0;
+            x = x_colstart + MARGIN;
         }
+        if (image != NO_IMAGE) image_w = m_imgWidth + MARGIN;
 
         // honor text alignment
         wxString text = item->GetText(i);
         switch ( m_owner->GetHeaderWindow()->GetColumn(i).GetAlignment() ) {
         case wxTL_ALIGN_LEFT:
-            // already left aligned
+            // nothing to do, already left aligned
             break;
         case wxTL_ALIGN_RIGHT:
-            dc.GetTextExtent(text, &text_w, NULL);
-            image_x = x_colstart + col_w - (image_w + text_w + MARGIN);
+            dc.GetTextExtent (text, &text_w, NULL);
+            x = x_colstart + col_w - (image_w + text_w + MARGIN);
             break;
         case wxTL_ALIGN_CENTER:
             dc.GetTextExtent(text, &text_w, NULL);
             int w = col_w - image_w - text_w;
-            image_x = x_colstart + (w > 0)? w: 0;
+            x = x_colstart + (w > 0)? w: 0;
             break;
         }
-        int text_x = image_x + image_w;
+        int text_x = x + image_w;
+        if (i == GetMainColumn()) item->SetTextX (text_x);
 
         wxDCClipper clipper (dc, x_colstart, item->GetY(), col_w, total_h); // only within column
         if (!HasFlag (wxTR_FULL_ROW_HIGHLIGHT) && (i == GetMainColumn())) {
@@ -3360,11 +3363,11 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
         dc.SetBackgroundMode (wxTRANSPARENT);
 
         if (image != NO_IMAGE) {
-            int image_y = item->GetY() + img_extraH;
-            m_imageListNormal->Draw (image, dc, image_x, image_y, wxIMAGELIST_DRAW_TRANSPARENT );
+            int y = item->GetY() + img_extraH;
+            m_imageListNormal->Draw (image, dc, x, y, wxIMAGELIST_DRAW_TRANSPARENT );
         }
         int text_y = item->GetY() + text_extraH;
-        dc.DrawText ( text, (wxCoord)text_x, (wxCoord)text_y );
+        dc.DrawText (text, (wxCoord)text_x, (wxCoord)text_y);
 
         x_colstart += col_w;
     }
@@ -3379,7 +3382,6 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
 {
     // Handle hide root (only level 0)
     if (HasFlag(wxTR_HIDE_ROOT) && (level == 0)) {
-        // always expand hidden root
         wxArrayTreeListItems& children = item->GetChildren();
         int n;
         for (n = 0; n < (int)children.Count(); n++) {
@@ -3391,12 +3393,16 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
 
     // calculate position of vertical lines
     int x = x_maincol + MARGIN; // start of column
-    if (HasFlag (wxTR_LINES_AT_ROOT)) x += LINEATROOT; // space for lines at root
-    if (HasButtons()) x += m_btnWidth2; // middle of button
-    if (!HasFlag (wxTR_HIDE_ROOT)) {
-        x += m_indent * level; // indent according to level
+    if (HasFlag(wxTR_LINES_AT_ROOT)) x += LINEATROOT; // space for lines at root
+    if (HasButtons()) {
+        x += -m_btnWidth2 + m_btnWidth; // half button space
     }else{
-        if (level > 0) x += m_indent * (level-1); // but not level 1
+        x += m_indent/2;
+    }
+    if (HasFlag(wxTR_HIDE_ROOT)) {
+        x += m_indent * (level-1); // indent but not level 1
+    }else{
+        x += m_indent * level; // indent according to level
     }
 
     // set position of vertical line
@@ -3413,7 +3419,7 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
 
     if (IsExposed(exposed_x, exposed_y, 10000, h)) { // 10000 = very much
 
-        if (HasFlag(wxTR_ROW_LINES)) {
+        if (HasFlag(wxTR_ROW_LINES)) { // horizontal lines between rows
             //dc.DestroyClippingRegion();
             int total_width = m_owner->GetHeaderWindow()->GetWidth();
             // if the background colour is white, choose a
@@ -3421,7 +3427,7 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
             dc.SetPen (*((GetBackgroundColour() == *wxWHITE)?
                         wxMEDIUM_GREY_PEN : wxWHITE_PEN));
             dc.DrawLine(0, y_top, total_width, y_top);
-            dc.DrawLine(0, y, total_width, y);
+            dc.DrawLine(0, y_top+h, total_width, y_top+h);
         }
 
         // draw item
@@ -3431,21 +3437,33 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
         dc.SetBrush(*wxWHITE_BRUSH);
         dc.SetPen(m_dottedPen);
 
-        if (((level == 0) || ((level == 1) && HasFlag(wxTR_HIDE_ROOT))) &&
-            HasFlag(wxTR_LINES_AT_ROOT) && !HasFlag(wxTR_NO_LINES)) {
-            int rootPos = x_maincol + MARGIN;
-            dc.DrawLine (rootPos, y_mid, rootPos+LINEATROOT, y_mid);
-        }
-
+        // clip to the column width
         size_t clip_width = m_owner->GetHeaderWindow()->
                             GetColumn(m_main_column).GetWidth();
+        wxDCClipper clipper(dc, x_maincol, y_top, clip_width, 10000);
 
-        if (item->HasPlus() && HasButtons())  // should the item show a button?
-        {
-            // clip to the column width
-            wxDCClipper clipper(dc, x_maincol, y_top, clip_width, 10000);
+        if (!HasFlag(wxTR_NO_LINES)) { // connection lines
 
-            if (m_imageListButtons != NULL) {
+            // draw the horizontal line here
+            dc.SetPen(m_dottedPen);
+            int x2 = x - m_indent;
+            if (x2 < (x_maincol + MARGIN)) x2 = x_maincol + MARGIN;
+            int x3 = x - m_btnWidth2 + m_btnWidth;
+            if (!HasButtons()) {
+                dc.DrawLine (x2, y_mid, x2 + m_indent/2, y_mid);
+            }else if (m_imageListButtons || item->HasPlus()) {
+                dc.DrawLine (x2, y_mid, x - m_btnWidth2, y_mid);
+                if (item->HasPlus()) {
+                    dc.DrawLine (x3, y_mid, x3 + LINEATROOT + MARGIN, y_mid);
+                }
+            }else{
+                dc.DrawLine (x2, y_mid, x3 -m_indent + LINEATROOT + MARGIN, y_mid);
+            }
+        }
+
+        if (item->HasPlus() && HasButtons()) { // should the item show a button?
+
+            if (m_imageListButtons) {
 
                 // draw the image button here
                 int image = wxTreeItemIcon_Normal;
@@ -3494,25 +3512,6 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
 
             }
 
-            if (!HasFlag(wxTR_NO_LINES)) {
-                dc.SetPen(m_dottedPen);
-                if (!(level == 0) && !((level == 1) && HasFlag(wxTR_HIDE_ROOT))) {
-                    dc.DrawLine(x+m_btnWidth2, y_mid, x+m_btnWidth2+LINEATROOT-MARGIN, y_mid);
-                }
-            }
-
-        }else if (!HasFlag(wxTR_NO_LINES)) { // no button; maybe a line?
-
-            // clip to the column width
-            wxDCClipper clipper(dc, x_maincol, y_top, clip_width, 10000);
-
-            // draw the horizontal line here
-            dc.SetPen(m_dottedPen);
-            if (!(level == 0) && !((level == 1) && HasFlag(wxTR_HIDE_ROOT))) {
-                int x2 = x;
-                if (!HasButtons()) x2 = x - m_indent;
-                dc.DrawLine(x2, y_mid, x2+m_btnWidth2+LINEATROOT-MARGIN, y_mid);
-            }
         }
 
     }
@@ -3546,26 +3545,15 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
             PaintLevel (children[n], dc, level+1, y, x_maincol);
 
             // draw vertical line
-            if (!HasFlag(wxTR_NO_LINES)) {
-                if (children[n]->HasPlus() && HasButtons()) {
-                    if (HasButtons()) {
-                        dc.DrawLine(x+m_indent, oldY, x+m_indent, y2 - m_btnHeight2);
-                    }else{
-                        dc.DrawLine(x, oldY, x, y2 - m_btnHeight2);
-                    }
-                    oldY = y2 + m_btnHeight2;
-                }else{
-                    if (HasButtons()) {
-                        dc.DrawLine(x+m_indent, oldY, x+m_indent, y2);
-                    }else{
-                        dc.DrawLine(x, oldY, x, y2);
-                    }
-                    oldY = y2;
-                }
+            if (!HasFlag (wxTR_NO_LINES)) {
+                x = item->GetX();
+                dc.DrawLine (x, oldY, x, y2);
+                oldY = y2;
             }
         }
     }
 }
+
 
 // ----------------------------------------------------------------------------
 // wxWindows callbacks
@@ -4289,17 +4277,22 @@ void wxTreeListMainWindow::CalculateSize( wxTreeListItem *item, wxDC &dc )
 }
 
 // -----------------------------------------------------------------------------
-// for developper : y is now the top of the level
-// not the middle of it !
 void wxTreeListMainWindow::CalculateLevel( wxTreeListItem *item, wxDC &dc,
                                         int level, int &y, int x_colstart )
 {
     // calculate position of vertical lines
     int x = x_colstart + MARGIN; // start of column
     if (HasFlag(wxTR_LINES_AT_ROOT)) x += LINEATROOT; // space for lines at root
-    if (HasButtons()) x += m_btnWidth2; // space for buttons etc.
-    if (!HasFlag(wxTR_HIDE_ROOT)) x += m_indent; // indent root as well
-    x += m_indent * level; // indent according to level
+    if (HasButtons()) {
+        x += -m_btnWidth2 + m_btnWidth; // half button space
+    }else{
+        x += m_indent/2;
+    }
+    if (HasFlag(wxTR_HIDE_ROOT)) {
+        x += m_indent * (level-1); // indent but not level 1
+    }else{
+        x += m_indent * level; // indent according to level
+    }
 
     // a hidden root is not evaluated, but its children are always
     if (HasFlag(wxTR_HIDE_ROOT) && (level == 0)) goto Recurse;
