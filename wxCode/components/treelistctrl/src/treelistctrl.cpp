@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.45 2004-11-04 17:04:59 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.46 2004-11-05 19:43:23 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -382,10 +382,10 @@ public:
     // get the root tree item
     wxTreeItemId GetRootItem() const { return m_rootItem; }
 
-    // get the item currently selected, return count (not with wxTR_MULTIPLE)
+    // get the item currently selected, only is a single one is selected
     wxTreeItemId GetSelection() const { return m_selectItem; }
 
-    // get the items currently selected (only with wxTR_MULTIPLE)
+    // get all the items currently selected, return count of items
     size_t GetSelections(wxArrayTreeItemIds&) const;
 
     // get the parent of this item (may return NULL if root)
@@ -563,11 +563,9 @@ public:
     size_t GetColumnCount() const
     { return m_owner->GetHeaderWindow()->GetColumnCount(); }
 
-    void SetMainColumn(size_t column)
-    {
-        if(column < GetColumnCount())
-            m_main_column = column;
-    }
+    void SetMainColumn (size_t column)
+    { if(column < GetColumnCount()) m_main_column = column; }
+
     size_t GetMainColumn() const { return m_main_column; }
 
     void SetItemText(const wxTreeItemId& item, size_t column,
@@ -2673,28 +2671,21 @@ void wxTreeListMainWindow::SelectItem(const wxTreeItemId& itemId,
     if (m_owner->GetEventHandler()->ProcessEvent (event) && !event.IsAllowed()) return;
 
     // unselect all if unselect other items
+    bool unselected = false; // see that UnselectAll is done only once
     if (unselect_others) {
         if (is_single) {
             Unselect(); // to speed up thing
         }else{
             UnselectAll();
+            unselected = true;
         }
     }
 
     // select item or item range
-    if (is_single || !lastId) {
+    if (lastId.IsOk() && (itemId != lastId)) {
 
-        // select item according its old selection
-        if (is_single) {
-            m_selectItem = (!item->IsSelected())? item: (wxTreeListItem*)NULL;
-        }
-        item->SetHilight (!item->IsSelected());
-        RefreshLine (item);
-
-    }else{
-
+        if (!unselected) UnselectAll();
         wxTreeListItem *last = (wxTreeListItem*) lastId.m_pItem;
-        UnselectAll();
 
         // select item range according Y-position
         if (last->GetY() < item->GetY()) {
@@ -2707,6 +2698,15 @@ void wxTreeListMainWindow::SelectItem(const wxTreeItemId& itemId,
             }
         }
     
+    }else{
+
+        // select item according its old selection
+        item->SetHilight (!item->IsSelected());
+        RefreshLine (item);
+        if (unselect_others) {
+            m_selectItem = (item->IsSelected())? item: (wxTreeListItem*)NULL;
+        }
+
     }
 
     // send event to user code
@@ -2715,7 +2715,7 @@ void wxTreeListMainWindow::SelectItem(const wxTreeItemId& itemId,
 }
 
 void wxTreeListMainWindow::SelectAll() {
-    wxCHECK_RET (HasFlag(wxTR_MULTIPLE), wxT("invalid tree style") );
+    wxCHECK_RET (HasFlag(wxTR_MULTIPLE), wxT("invalid tree style"));
 
     // send event to user code
     wxTreeEvent event (wxEVT_COMMAND_TREE_SEL_CHANGING, m_owner->GetId());
