@@ -300,6 +300,16 @@ Expands the given item.
 
 Expands the given item and all subitems recursively.
 
+\membersection{wxTreeListCtrl::FindItem}\label{wxtreelistctrlfinditem}
+
+\func{wxTreeItemId}{FindItem}{\param{const wxTreeItemId\&}{ item}, \param{const wxString\&}{ str},
+ \param{bool}{partial=false}}
+
+Returns the next visible item in the tree which matches exactly the entered string, starting 
+from the currently selected item. If partial=true is specified only the first characters 
+up to the length of the entered string are matched. If no item is selected the find starts a 
+the beginning of the tree.
+
 \membersection{wxTreeListCtrl::GetBoundingRect}\label{wxtreelistctrlgetitemrect}
 
 \constfunc{bool}{GetBoundingRect}{\param{const wxTreeItemId\&}{ item}, \param{wxRect\& }{rect}, \param{bool }{textOnly = FALSE}}

@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by:
 // Created:     04/01/98
-// RCS-ID:      $Id: treelisttest.cpp,v 1.1 2004-03-17 18:47:15 wyo Exp $
+// RCS-ID:      $Id: treelisttest.cpp,v 1.2 2004-03-24 18:41:51 wyo Exp $
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -37,7 +37,7 @@
 #include "wx/colordlg.h"
 #include "wx/image.h"
 #include "wx/imaglist.h"
-#include "wx/components/treelistctrl.h"
+#include "wx/treelistctrl.h"
 
 #include "math.h"
 

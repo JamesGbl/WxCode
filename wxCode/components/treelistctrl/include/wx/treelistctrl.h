@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Modified by: Alberto Griggio, 2002
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.3 2004-03-21 09:26:52 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.4 2004-03-24 18:41:51 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows license
@@ -488,7 +488,7 @@ public:
     void SortChildren(const wxTreeItemId& item);
 
     // searching
-    wxTreeItemId FindItem (const wxTreeItemId& item, const wxString &str, bool partial=false);
+    wxTreeItemId FindItem (const wxTreeItemId& item, const wxString& str, bool partial=false);
 
     // overridden base class virtuals
     virtual bool SetBackgroundColour(const wxColour& colour);
