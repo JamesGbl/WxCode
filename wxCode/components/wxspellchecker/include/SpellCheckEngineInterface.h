@@ -71,6 +71,7 @@ public:
   virtual int AddWordToDictionary(const wxString& strWord) = 0;
   virtual int RemoveWordFromDictionary(const wxString& strWord) = 0;
   virtual wxArrayString GetWordListAsArray() = 0;
+  bool IsPersonalDictionaryModified() { return m_bPersonalDictionaryModified; }
 	virtual void PresentOptions();
   virtual int GetUserCorrection(const wxString& strMisspelling);
   virtual void DefineContext(const wxString& strText, long nOffset, long nLength);

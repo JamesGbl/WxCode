@@ -46,6 +46,8 @@ public:
   virtual int AddWordToDictionary(const wxString& strWord);
   virtual int RemoveWordFromDictionary(const wxString& strWord);
   virtual wxArrayString GetWordListAsArray();
+  PersonalDictionary* GetPersonalDictionary() { return &m_PersonalDictionary; }
+
 
 private:  
 	MySpell* m_pMySpell;

@@ -35,6 +35,7 @@ public:
   virtual int RemoveWordFromDictionary(const wxString& strWord);
   virtual wxArrayString GetWordListAsArray();
 	virtual void PresentOptions();
+  PersonalDictionary* GetPersonalDictionary() { return &m_PersonalDictionary; }
 
 private:  
   // Aspell data structures
