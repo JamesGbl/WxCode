@@ -3,7 +3,7 @@
 // Purpose:     wxCrashPrint
 // Maintainer:  Wyo
 // Created:     2004-09-28
-// RCS-ID:      $Id: crashprint.cpp,v 1.2 2004-10-04 17:46:32 wyo Exp $
+// RCS-ID:      $Id: crashprint.cpp,v 1.3 2004-10-04 20:33:20 wyo Exp $
 // Copyright:   (c) wxCode
 // Licence:     wxWidgets licence
 //////////////////////////////////////////////////////////////////////////////
@@ -61,11 +61,11 @@
 // wxCrashPrint
 //----------------------------------------------------------------------------
 
-void wxCrashPrint::wxCrashPrint (int flags, const wxString &fname) {
-}
+wxCrashPrint::wxCrashPrint (int flags, const wxString &fname) {
 
-void wxCrashPrint::~wxCrashPrint () {
-}
+    m_flags = flags;
+    m_fname = fname;
+};
 
 //----------------------------------------------------------------------------
 // settings functions
@@ -73,23 +73,24 @@ void wxCrashPrint::~wxCrashPrint () {
 //----------------------------------------------------------------------------
 // general functions
 
-void wxFileList::Report () {
+void wxCrashPrint::Report () {
+    wxString appname = wxApp::GetAppName();
 
     // get the backtrace with synbols
-    const maxCount = 100;
+    const int maxCount = 100;
     void *btBuffer [maxCount];
     int btCount;
     btCount = backtrace (btBuffer, maxCount);
     if (btCount < 0) {
-        printf (_T("\n%s: Backtrace could not be created\n"), GetAppName().c_str());
+        printf (_T("\n%s: Backtrace could not be created\n"), appname.c_str());
     }
     char **btStrings;
     btStrings = backtrace_symbols (btBuffer, btCount);
     if (!btStrings) }
-        printf (_T("\n%s: Backtrace could not get symbols\n"), GetAppName().c_str());
+        printf (_T("\n%s: Backtrace could not get symbols\n"), appname.c_str());
     }
 
-    printf (_T("\n%s: Application crashed, see backtrace!\n"), GetAppName().c_str());
+    printf (_T("\n%s: Application crashed, see backtrace!\n"), appname.c_str());
 
     // format backtrace lines
      printf ("Obtained %zd stack frames.\n", btCount); //?

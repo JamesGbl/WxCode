@@ -3,7 +3,7 @@
 // Purpose:     wxCrashPrint class
 // Maintainer:  Wyo
 // Created:     2004-09-28
-// RCS-ID:      $Id: crashprint.h,v 1.1 2004-10-01 18:39:06 wyo Exp $
+// RCS-ID:      $Id: crashprint.h,v 1.2 2004-10-04 20:32:44 wyo Exp $
 // Copyright:   (c) wxCode
 // Licence:     wxWidgets licence
 //////////////////////////////////////////////////////////////////////////////
@@ -40,15 +40,14 @@ class wxCrashPrint {
 
 public:
 
-    //! default constructor
-    wxCrashPrint (int flags = 0, const wxString &fname = wxEmptyString) {}
+    //! constructor
+    wxCrashPrint (int flags = 0, const wxString &fname = wxEmptyString);
 
-    //! create constructor
-    wxCrashPrint () {
-    }
+    //! destructor
+    ~wxCrashPrint () {};
 
     // format and print report
-    Report ();
+    void Report ();
 
 private:
 
