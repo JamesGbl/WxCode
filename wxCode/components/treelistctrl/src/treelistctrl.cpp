@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.14 2004-05-19 16:02:27 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.15 2004-05-27 19:35:21 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -3084,7 +3084,7 @@ wxTreeItemId wxTreeListMainWindow::FindItem (const wxTreeItemId& item, const wxS
                 n = GetNextSibling (GetItemParent (next));
             next = n;
         }else{ // wxTL_SEARCH_VISIBLE
-            next = GetNextVisible (next);
+            next = GetNext (next);
         }
         if (!next.IsOk()) break; // done
         if (flags & wxTL_SEARCH_PARTIAL) {
