@@ -451,6 +451,7 @@ void SurfaceImpl::MeasureWidths(Font &font, const char *s, int len, int *positio
     wxString str = sci2wx(s, len);
     SetFont(font);
 
+#if !wxCHECK_VERSION(2, 5, 0)
 #ifndef __WXMAC__
     // Calculate the position of each character based on the widths of
     // the previous characters
@@ -477,6 +478,10 @@ void SurfaceImpl::MeasureWidths(Font &font, const char *s, int len, int *positio
         tpos[i] = w;
     }
 #endif
+#else
+    wxArrayInt tpos;
+    hdc->GetPartialTextExtents(str, tpos);
+#endif
 
 
 #if wxUSE_UNICODE
@@ -501,10 +506,16 @@ void SurfaceImpl::MeasureWidths(Font &font, const char *s, int len, int *positio
 #else
 
     // If not unicode then just use the widths we have
+#if !wxCHECK_VERSION(2, 5, 0)
     memcpy(positions, tpos, len * sizeof(*tpos));
+#else
+    memcpy(positions, tpos.begin(), len * sizeof(int));
+#endif
 #endif
 
+#if !wxCHECK_VERSION(2, 5, 0)
     delete [] tpos;
+#endif
 }
 
 
@@ -1277,25 +1288,46 @@ double ElapsedTime::Duration(bool reset) {
 //----------------------------------------------------------------------
 
 #if wxUSE_UNICODE
+
+#include "UniConversion.h"
+
+// Convert using Scintilla's functions instead of wx's, Scintilla's are more
+// forgiving and won't assert...
+
 wxString sci2wx(const char* str, size_t len)
 {
-    // note: we assume that str is of length len not including the terminating null.
-
     if (!len)
         return wxEmptyString;
-    else if (str[len-1] == 0)
-        // It's already terminated correctly.
-        return wxString(str, wxConvUTF8, len);
 
-    char *buffer=new char[len+1];
-    strncpy(buffer, str, len);
-    buffer[len]=0;
+    size_t wclen = UCS2Length(str, len);
+    wxWCharBuffer buffer(wclen+1);
 
-    wxString cstr(buffer, wxConvUTF8, len);
-
-    delete[] buffer;
-    return cstr;
+    size_t actualLen = UCS2FromUTF8(str, len, buffer.data(), wclen+1);
+    return wxString(buffer.data(), actualLen);
 }
+
+
+
+wxString sci2wx(const char* str)
+{
+    return stc2wx(str, strlen(str));
+}
+
+
+const wxWX2MBbuf wx2stc(const wxString& str)
+{
+    const wchar_t* wcstr = str.c_str();
+    size_t wclen         = str.length();
+    size_t len           = UTF8Length(wcstr, wclen);
+
+    wxCharBuffer buffer(len+1);
+    UTF8FromUCS2(wcstr, wclen, buffer.data(), len);
+
+    // TODO check NULL termination!!
+
+    return buffer;
+}
+
 #endif
 
 

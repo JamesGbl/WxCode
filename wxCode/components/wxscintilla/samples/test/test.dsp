@@ -7,23 +7,23 @@
 CFG=test - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
-!MESSAGE 
+!MESSAGE
 !MESSAGE NMAKE /f "editor.mak".
-!MESSAGE 
+!MESSAGE
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
-!MESSAGE 
+!MESSAGE
 !MESSAGE NMAKE /f "editor.mak" CFG="test - Win32 Debug"
-!MESSAGE 
+!MESSAGE
 !MESSAGE Possible choices for configuration are:
-!MESSAGE 
+!MESSAGE
 !MESSAGE "test - Win32 DebugUniv" (based on "Win32 (x86) Application")
 !MESSAGE "test - Win32 ReleaseUniv" (based on "Win32 (x86) Application")
 !MESSAGE "test - Win32 DebugDev" (based on "Win32 (x86) Application")
 !MESSAGE "test - Win32 ReleaseDev" (based on "Win32 (x86) Application")
 !MESSAGE "test - Win32 Debug" (based on "Win32 (x86) Application")
 !MESSAGE "test - Win32 Release" (based on "Win32 (x86) Application")
-!MESSAGE 
+!MESSAGE
 
 # Begin Project
 # PROP AllowPerConfigDependencies 0
@@ -58,7 +58,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib winmm.lib wsock32.lib wxbase25d.lib wxbase25d_net.lib wxbase25d_odbc.lib wxbase25d_xml.lib wxexpatd.lib wxjpegd.lib wxmswuniv25d_adv.lib wxmswuniv25d_core.lib wxmswuniv25d_dbgrid.lib wxmswuniv25d_gl.lib wxmswuniv25d_html.lib wxpngd.lib wxregexd.lib wxtiffd.lib wxzlibd.lib wxscintillad.lib /nologo /subsystem:windows /debug /machine:I386 /out:"DebugUniv/test.exe" /libpath:"$(WXDEVEL)\lib\vc_lib" /libpath:"..\..\lib"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib winmm.lib wsock32.lib wxbase25d.lib wxbase25d_net.lib wxbase25d_odbc.lib wxbase25d_xml.lib wxexpatd.lib wxjpegd.lib wxmswuniv25d_adv.lib wxmswuniv25d_core.lib wxmswuniv25d_dbgrid.lib wxmswuniv25d_gl.lib wxmswuniv25d_html.lib wxpngd.lib wxregexd.lib wxtiffd.lib wxzlibd.lib wxscintillaunivd.lib /nologo /subsystem:windows /debug /machine:I386 /out:"DebugUniv/test.exe" /libpath:"$(WXDEVEL)\lib\vc_lib" /libpath:"..\..\lib"
 # SUBTRACT LINK32 /profile
 
 !ELSEIF  "$(CFG)" == "test - Win32 ReleaseUniv"
@@ -86,7 +86,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase25.lib wxbase25_net.lib wxbase25_odbc.lib wxbase25_xml.lib wxexpat.lib wxjpeg.lib wxmswuniv25_adv.lib wxmswuniv25_core.lib wxmswuniv25_dbgrid.lib wxmswuniv25_gl.lib wxmswuniv25_html.lib wxpng.lib wxregex.lib wxtiff.lib wxzlib.lib wxscintilla.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"LIBCMT.lib" /out:"ReleaseUniv/test.exe" /libpath:"$(WXDEVEL)\lib\vc_lib" /libpath:"..\..\lib"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase25.lib wxbase25_net.lib wxbase25_odbc.lib wxbase25_xml.lib wxexpat.lib wxjpeg.lib wxmswuniv25_adv.lib wxmswuniv25_core.lib wxmswuniv25_dbgrid.lib wxmswuniv25_gl.lib wxmswuniv25_html.lib wxpng.lib wxregex.lib wxtiff.lib wxzlib.lib wxscintillauniv.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"LIBCMT.lib" /out:"ReleaseUniv/test.exe" /libpath:"$(WXDEVEL)\lib\vc_lib" /libpath:"..\..\lib"
 # SUBTRACT LINK32 /profile /map /debug
 
 !ELSEIF  "$(CFG)" == "test - Win32 DebugDev"
@@ -103,7 +103,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /Gi /GX /ZI /Od /I "$(WXDEVEL)\include" /I "$(..\..\include" /I "$(WXDEVEL)\lib\vc_lib\mswd" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXDEBUG__" /D WXDEBUG=1 /D "__WXMSW__" /FR /FD /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /Gi /GX /ZI /Od /I "$(WXDEVEL)\include" /I "..\..\include" /I "$(WXDEVEL)\lib\vc_lib\mswd" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXDEBUG__" /D WXDEBUG=1 /D "__WXMSW__" /FR /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
@@ -114,7 +114,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib winmm.lib wsock32.lib wxbase25d.lib wxbase25d_net.lib wxbase25d_odbc.lib wxbase25d_xml.lib wxexpatd.lib wxjpegd.lib wxmsw25d_adv.lib wxmsw25d_core.lib wxmsw25d_dbgrid.lib wxmsw25d_gl.lib wxmsw25d_html.lib wxpngd.lib wxregexd.lib wxtiffd.lib wxzlibd.lib wxscintillad.lib /nologo /subsystem:windows /debug /machine:I386 /out:"DebugDev/test.exe" /libpath:"$(WXDEVEL)\lib\vc_lib" /libpath:"..\..\lib"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib winmm.lib wsock32.lib wxbase25d.lib wxbase25d_net.lib wxbase25d_odbc.lib wxbase25d_xml.lib wxexpatd.lib wxjpegd.lib wxmsw25d_adv.lib wxmsw25d_core.lib wxmsw25d_dbgrid.lib wxmsw25d_gl.lib wxmsw25d_html.lib wxpngd.lib wxregexd.lib wxtiffd.lib wxzlibd.lib wxscintilladevd.lib /nologo /subsystem:windows /debug /machine:I386 /out:"DebugDev/test.exe" /libpath:"$(WXDEVEL)\lib\vc_lib" /libpath:"..\..\lib"
 # SUBTRACT LINK32 /profile
 
 !ELSEIF  "$(CFG)" == "test - Win32 ReleaseDev"
@@ -142,7 +142,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase25.lib wxbase25_net.lib wxbase25_odbc.lib wxbase25_xml.lib wxexpat.lib wxjpeg.lib wxmsw25_adv.lib wxmsw25_core.lib wxmsw25_dbgrid.lib wxmsw25_gl.lib wxmsw25_html.lib wxpng.lib wxregex.lib wxtiff.lib wxzlib.lib wxscintilla.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"LIBCMT.lib" /out:"ReleaseDev/test.exe" /libpath:"$(WXDEVEL)\lib\vc_lib" /libpath:"..\..\lib"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase25.lib wxbase25_net.lib wxbase25_odbc.lib wxbase25_xml.lib wxexpat.lib wxjpeg.lib wxmsw25_adv.lib wxmsw25_core.lib wxmsw25_dbgrid.lib wxmsw25_gl.lib wxmsw25_html.lib wxpng.lib wxregex.lib wxtiff.lib wxzlib.lib wxscintilladev.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"LIBCMT.lib" /out:"ReleaseDev/test.exe" /libpath:"$(WXDEVEL)\lib\vc_lib" /libpath:"..\..\lib"
 # SUBTRACT LINK32 /profile /map /debug
 
 !ELSEIF  "$(CFG)" == "test - Win32 Debug"
@@ -201,7 +201,7 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxmsw.lib jpeg.lib png.lib regex.lib tiff.lib zlib.lib wxscintilla.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"LIBCMT.lib" /out:"Release/test.exe" /libpath:"$(WXSTABLE)\lib" /libpath:"..\..\lib"
 # SUBTRACT LINK32 /profile /map /debug
 
-!ENDIF 
+!ENDIF
 
 # Begin Target
 

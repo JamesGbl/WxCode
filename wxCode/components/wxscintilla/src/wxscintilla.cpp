@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.9 2004-12-08 18:42:55 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.10 2004-12-18 16:11:48 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -54,13 +54,18 @@ static wxColour wxColourFromLong(long c) {
 
 
 static wxColour wxColourFromSpec(const wxString& spec) {
-    // spec should be "#RRGGBB"
-    long red, green, blue;
-    red = green = blue = 0;
-    spec.Mid(1,2).ToLong(&red,   16);
-    spec.Mid(3,2).ToLong(&green, 16);
-    spec.Mid(5,2).ToLong(&blue,  16);
-    return wxColour((unsigned char)red, (unsigned char)green, (unsigned char)blue);
+    // spec should be a colour name or "#RRGGBB"
+    if (spec.GetChar(0) == wxT('#')) {
+
+        long red, green, blue;
+        red = green = blue = 0;
+        spec.Mid(1,2).ToLong(&red,   16);
+        spec.Mid(3,2).ToLong(&green, 16);
+        spec.Mid(5,2).ToLong(&blue,  16);
+        return wxColour((unsigned char)red, (unsigned char)green, (unsigned char)blue);
+    }else{
+        return wxColour(spec);
+    }
 }
 
 //----------------------------------------------------------------------
@@ -117,7 +122,7 @@ BEGIN_EVENT_TABLE(wxScintilla, wxControl)
     EVT_SYS_COLOUR_CHANGED      (wxScintilla::OnSysColourChanged)
     EVT_ERASE_BACKGROUND        (wxScintilla::OnEraseBackground)
     EVT_MENU_RANGE              (10, 16, wxScintilla::OnMenu)
-    EVT_LISTBOX_DCLICK          (-1, wxScintilla::OnListBox)
+    EVT_LISTBOX_DCLICK          (wxID_ANY, wxScintilla::OnListBox)
 END_EVENT_TABLE()
 
 
@@ -170,6 +175,10 @@ void wxScintilla::Create(wxWindow *parent,
     // Put Scintilla into unicode (UTF-8) mode
     SetCodePage(wxSCI_CP_UTF8);
 #endif
+
+#if wxCHECK_VERSION(2, 5, 0)
+    SetBestFittingSize(size);
+#endif
 }
 
 
@@ -185,7 +194,26 @@ long wxScintilla::SendMsg(int msg, long wp, long lp) {
     return m_swx->WndProc(msg, wp, lp);
 }
 
+//----------------------------------------------------------------------
 
+// Set the vertical scrollbar to use instead of the ont that's built-in.
+void wxScintilla::SetVScrollBar(wxScrollBar* bar)  {
+    m_vScrollBar = bar;
+    if (bar != NULL) {
+        // ensure that the built-in scrollbar is not visible
+        SetScrollbar(wxVERTICAL, 0, 0, 0);
+    }
+}
+
+
+// Set the horizontal scrollbar to use instead of the ont that's built-in.
+void wxScintilla::SetHScrollBar(wxScrollBar* bar)  {
+    m_hScrollBar = bar;
+    if (bar != NULL) {
+        // ensure that the built-in scrollbar is not visible
+        SetScrollbar(wxHORIZONTAL, 0, 0, 0);
+    }
+}
 
 //----------------------------------------------------------------------
 // BEGIN generated section.  The following code is automatically generated
@@ -193,7 +221,7 @@ long wxScintilla::SendMsg(int msg, long wp, long lp) {
 //       this file.  Edit wxscintilla.cpp.in or gen_iface.py instead and regenerate.
 
 
-// Add text to the document.
+// Add text to the document at current position.
 void wxScintilla::AddText(const wxString& text) {
                     wxWX2MBbuf buf = (wxWX2MBbuf)wx2sci(text);
                     SendMsg(2001, strlen(buf), (long)(const char*)buf);
@@ -225,7 +253,7 @@ void wxScintilla::ClearDocumentStyle() {
     SendMsg(2005, 0, 0);
 }
 
-// The number of characters in the document.
+// Returns the number of characters in the document.
 int wxScintilla::GetLength() {
     return SendMsg(2006, 0, 0);
 }
@@ -1520,6 +1548,36 @@ int wxScintilla::GetWrapMode() {
     return SendMsg(2269, 0, 0);
 }
 
+// Set the display mode of visual flags for wrapped lines.
+void wxScintilla::SetWrapVisualFlags(int wrapVisualFlags) {
+    SendMsg(2460, wrapVisualFlags, 0);
+}
+
+// Retrive the display mode of visual flags for wrapped lines.
+int wxScintilla::GetWrapVisualFlags() {
+    return SendMsg(2461, 0, 0);
+}
+
+// Set the location of visual flags for wrapped lines.
+void wxScintilla::SetWrapVisualFlagsLocation(int wrapVisualFlagsLocation) {
+    SendMsg(2462, wrapVisualFlagsLocation, 0);
+}
+
+// Retrive the location of visual flags for wrapped lines.
+int wxScintilla::GetWrapVisualFlagsLocation() {
+    return SendMsg(2463, 0, 0);
+}
+
+// Set the start indent for wrapped lines.
+void wxScintilla::SetWrapStartIndent(int indent) {
+    SendMsg(2464, indent, 0);
+}
+
+// Retrive the start indent for wrapped lines.
+int wxScintilla::GetWrapStartIndent() {
+    return SendMsg(2465, 0, 0);
+}
+
 // Sets the degree of caching of layout information.
 void wxScintilla::SetLayoutCache(int mode) {
     SendMsg(2272, mode, 0);
@@ -2351,6 +2409,11 @@ int wxScintilla::AutoCompGetCurrent() {
     return SendMsg(2445, 0, 0);
 }
 
+// Enlarge the document to a particular size of text bytes.
+void wxScintilla::Allocate(int bytes) {
+    SendMsg(2446, bytes, 0);
+}
+
 // Start notifying the container of all key presses and commands.
 void wxScintilla::StartRecord() {
     SendMsg(3001, 0, 0);
@@ -2407,8 +2470,8 @@ int wxScintilla::GetCurrentLine() {
 //
 //      bold                    turns on bold
 //      italic                  turns on italics
-//      fore:#RRGGBB            sets the foreground colour
-//      back:#RRGGBB            sets the background colour
+//      fore:[name or #RRGGBB]  sets the foreground colour
+//      back:[name or #RRGGBB]  sets the background colour
 //      face:[facename]         sets the font face name to use
 //      size:[num]              sets the font size in points
 //      eol                     turns on eol filling
@@ -2550,7 +2613,9 @@ bool wxScintilla::LoadFile(const wxString& filename)
     if (file.IsOpened())
     {
         wxString contents;
-        off_t len = file.Length();
+        // get the file size (assume it is not huge file...)
+        size_t len = file.Length();
+
         if (len > 0)
         {
 #if wxUSE_UNICODE
@@ -2562,7 +2627,7 @@ bool wxScintilla::LoadFile(const wxString& filename)
             }
 #else
             wxString buffer;
-            success = (file.Read(wxStringBuffer(buffer, len), len) == len);
+            success = (file.Read(wxStringBuffer(buffer, len), len) == (int)len);
             contents = buffer;
 #endif
         }
@@ -2706,7 +2771,14 @@ void wxScintilla::OnChar(wxKeyEvent& evt) {
     // to let the char through in that case, otherwise if only ctrl or only
     // alt let's skip it.
     bool ctrl = evt.ControlDown();
+#ifdef __WXMAC__
+    // On the Mac the Alt key is just a modifier key (like Shift) so we need
+    // to allow the char events to be processed when Alt is pressed.
+    // TODO:  Should we check MetaDown instead in this case?
+    bool alt = false;
+#else
     bool alt  = evt.AltDown();
+#endif
     bool skip = ((ctrl || alt) && ! (ctrl && alt));
 
     int key = evt.GetKeyCode();
@@ -2714,7 +2786,11 @@ void wxScintilla::OnChar(wxKeyEvent& evt) {
 //     printf("OnChar key:%d  consumed:%d  ctrl:%d  alt:%d  skip:%d\n",
 //            key, m_lastKeyDownConsumed, ctrl, alt, skip);
 
+#if !wxCHECK_VERSION(2, 5, 0)
     if ( (key <= WXK_START || key > WXK_NUMPAD_DIVIDE) &&
+#else
+    if ( (key <= WXK_START || key > WXK_COMMAND) &&
+#endif
          !m_lastKeyDownConsumed && !skip) {
         m_swx->DoAddChar(key);
         return;

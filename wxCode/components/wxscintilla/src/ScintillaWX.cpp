@@ -9,7 +9,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: ScintillaWX.cpp,v 1.4 2004-12-08 18:42:55 wyo Exp $
+// RCS-ID:      $Id: ScintillaWX.cpp,v 1.5 2004-12-18 16:11:36 wyo Exp $
 // Copyright:   (c) 2000 by Total Control Software
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -261,17 +261,17 @@ bool ScintillaWX::SetIdle(bool on) {
 
 
 void ScintillaWX::SetTicking(bool on) {
-    wxSCITimer* steTimer;
+    wxSCITimer* stiTimer;
     if (timer.ticking != on) {
         timer.ticking = on;
         if (timer.ticking) {
-            steTimer = new wxSCITimer(this);
-            steTimer->Start(timer.tickSize);
-            timer.tickerID = steTimer;
+            stiTimer = new wxSCITimer(this);
+            stiTimer->Start(timer.tickSize);
+            timer.tickerID = stiTimer;
         } else {
-            steTimer = (wxSCITimer*)timer.tickerID;
-            steTimer->Stop();
-            delete steTimer;
+            stiTimer = (wxSCITimer*)timer.tickerID;
+            stiTimer->Stop();
+            delete stiTimer;
             timer.tickerID = 0;
         }
     }

@@ -12,7 +12,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.h,v 1.7 2004-12-04 18:25:17 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.h,v 1.8 2004-12-18 16:08:11 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -2833,11 +2833,11 @@ public:
 
 
     // Set the vertical scrollbar to use instead of the ont that's built-in.
-    void SetVScrollBar(wxScrollBar* bar) { m_vScrollBar = bar; }
+    void SetVScrollBar(wxScrollBar* bar);
 
 
     // Set the horizontal scrollbar to use instead of the ont that's built-in.
-    void SetHScrollBar(wxScrollBar* bar) { m_hScrollBar = bar; }
+    void SetHScrollBar(wxScrollBar* bar);
 
     // Can be used to prevent the EVT_CHAR handler from adding the char
     bool GetLastKeydownProcessed() { return m_lastKeyDownConsumed; }
