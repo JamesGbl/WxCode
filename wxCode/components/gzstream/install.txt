@@ -1,0 +1,62 @@
+Using the Tarball
+-----------------
+
+Download:
+http://prdownloads.sourceforge.net/wxcode/gzstream.tar.gz?download
+
+Extract the tarball under the contrib directory of your wxWidgets directory,
+e.g.:
+
+    cd wxWidgets/contrib
+    tar xzvf ../../gzstream.tar.gz
+
+To build the library on Windows use the appropriate makefile in
+wxWidgets/contrib/components/gzstream/src. For the test program use the
+makefiles in ../samples.
+
+For other platforms, rerun configure in your wxWidgets build directory. A
+contrib/components/gzstream subdirectory will be created with the makefiles
+in it.
+
+The library will be created in the same directory as wxWidgets' own libraries.
+
+The documentation is available as Windows HTML help here:
+../docs/htmlhelp/wxgz.chm. And in htb format here: ../docs/htb/wxgz.htb (for
+viewing with wxWidgets' helpview). If you want plain html then unzip the htb.
+
+Using CVS
+---------
+
+The generated makefiles and documentation are not present in the CVS, so
+it is usually easier to use the tarball.
+
+To generate the makefiles bakefile must be installed
+(http://bakefile.sourceforge.net). Create (or add to) Bakefiles.local.bkgen
+in your wxWidgets/build/bakefiles directory:
+
+<?xml version="1.0" ?>
+<bakefile-gen>
+    <input>
+        ../../contrib/components/*/*.bkl
+        ../../contrib/components/*/*/*.bkl
+        ../../contrib/components/*/*/*/*.bkl
+    </input>
+</bakefile-gen>
+
+Then run bakefile_gen (from inside the wxWidgets/build/bakefiles dir):
+
+    bakefile_gen -b '../../contrib/components/gzstream/*/*.bkl'
+
+To build the documentation, tex2rtf must be installed
+(http://www.wxwindows.org/tex2rtf/download.htm). The makefile is in
+../docs/latex and assumes a unix-like make and utilities.
+
+'make' with no arguments builds HTML in ../docs/html. For other formats you
+can do:
+
+    make htmlhelp   - requires MS Html Help Workshop
+    make htb        - requires zip
+    make winhelp    - requires MS Help Workshop
+
+-----
+M.J.Wetherell, April 2004

@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<!-- $Id: gzstream.bkl,v 1.1 2004-04-30 23:18:47 chiclero Exp $ -->
+
+<makefile>
+
+    <set var="CONTRIB_HDR_DIR">$(SRCDIR)/../include</set>
+    <include file="../../../../build/bakefiles/common_contrib.bkl"/>
+
+    <set var="GZSTREAM_SRC">
+        gzstream.cpp
+    </set>
+
+    <headers template="wx_contrib_headers">
+        <files>
+            wx/gzstream.h
+        </files>
+    </headers>
+
+    <dll id="gzstreamdll" template="wx_contrib_dll" cond="SHARED=='1'">
+        <define>WXUSINGDLL</define>
+        <define>WXMAKINGDLL_GZSTREAM</define>
+        <sources>$(GZSTREAM_SRC)</sources>
+        <wx-lib>base</wx-lib>
+    </dll>
+    
+    <lib id="gzstreamlib" template="wx_contrib_lib" cond="SHARED=='0'">
+        <sources>$(GZSTREAM_SRC)</sources>
+    </lib>
+    
+    <set var="MSVC6PRJ_MERGED_TARGETS" append="1">
+        gzstream=gzstreamlib+gzstreamdll
+    </set>
+
+</makefile>

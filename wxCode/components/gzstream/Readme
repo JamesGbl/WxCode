@@ -1,0 +1,33 @@
+Maintainer: Michael Wetherell (chiclero)
+Component:  gzstream
+Subdir:     gzstream
+Parts:      DS
+More infos: -
+wxWidgets:  2.5.1
+
+wxGzipInputStream and wxGzipOutputStream, classes to read
+and write gzips.
+
+These classes where part of wxWidgets for a short time,
+however they have now been obsoleted by improvements
+to wxZlibInputStream and wxZlibOutputStream, which can
+now read and write gzips themselves (the current CVS HEAD
+supports that and wxWidgets 2.5.2 will be the first release
+that will support it).
+
+However, these classes provide a few features which
+wxZlibInput/OutputStream do not (access to the header
+fields), so I have made them available here in case anyone
+needs to use them.
+
+Download:
+http://prdownloads.sourceforge.net/wxcode/gzstream.tar.gz?download
+
+Extract the tarball under the contrib directory of your
+wxWidgets directory, e.g.:
+
+    cd wxWidgets/contrib
+    tar xzvf ../../gzstream.tar.gz
+
+and see wxWidgets/contrib/components/gzstream/install.txt
+for more information.

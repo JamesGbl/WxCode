@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<!-- $Id: gziptest.bkl,v 1.1 2004-04-30 23:18:47 chiclero Exp $ -->
+
+<makefile>
+
+    <include file="../../../../build/bakefiles/common_samples.bkl"/>
+
+    <exe id="gziptest" template="wx_sample_console" template_append="wx_append">
+        <include>$(SRCDIR)/../include</include>
+        <sources>gziptest.cpp</sources>
+
+        <wx-lib>base</wx-lib>
+        <sys-lib>$(wxwin.libToLink("gzstream"))</sys-lib>
+
+        <if cond="IS_MSVC_PRJ=='1' and MONOLITHIC=='0'">
+            <depends-on-dsp>gzstream:..\src\gzstream.dsp</depends-on-dsp>
+        </if>
+    </exe>
+
+</makefile>
