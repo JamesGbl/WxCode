@@ -3,7 +3,7 @@
 // Purpose:     CrashTest application
 // Maintainer:  Otto Wyss
 // Created:     2004-10-01
-// RCS-ID:      $Id: crashtest.cpp,v 1.1 2004-10-25 17:09:14 wyo Exp $
+// RCS-ID:      $Id: crashtest.cpp,v 1.2 2004-10-25 18:56:46 wyo Exp $
 // Copyright:   (c) wxCode
 // Licence:     wxWindows licence
 //////////////////////////////////////////////////////////////////////////////
@@ -139,21 +139,18 @@ bool App::OnInit () {
     printf (_T("%s\n\n"), APP_DESCR.c_str());
 
     // force crash
-#if defined(__linux__)
-    g_crashprint.Report();
-#endif
     wxWindow *w; w->Show();
 
     return false;
 }
 
-#if defined(__WINDOWS__)
 int App::OnExit () {
+#if defined(__WINDOWS__)
     // unload BlackBox dll
     if (m_blackboxDll) wxDllLoader::UnloadLibrary (m_blackboxDll);
+#endif
     return 0;
 }
-#endif
 
 #if defined(__linux__)
 void App::OnFatalException () {
