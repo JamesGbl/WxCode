@@ -32,6 +32,15 @@ public:
   
   wxString GetDictionaryNameFromFileName(wxString& strFileName);
   
+  // I'm not sure which dictionaries to download (Standard or Win32 Aspell).  The differences are as follows:
+  // Standard Aspell:
+  //    Packaged in tar.bz2 packages
+  //    May need to be "compiled" for their platform
+  //    More dictionaries available in this format than Win32
+  // Win32 Aspell:
+  //    Packaged in zip-compatible executables
+  //    Pre-compiled for the "x86 byte order"
+  // For now, the following functions will provide the ability to download from both locations
   bool RetrieveDictionaryListFromStandardAspell(wxArrayString& DictionaryArray);
   wxString DownloadDictionaryFromStandardAspell(wxString& strDictionary);
   bool RetrieveDictionaryListFromWin32Aspell(wxArrayString& DictionaryArray);
