@@ -3,7 +3,7 @@
 ## Purpose:     treelisttest
 ## Maintainer:  Otto Wyss
 ## Created:     2004-03-22
-## RCS-ID:      $Id: Makefile,v 1.5 2004-11-24 21:41:48 wyo Exp $
+## RCS-ID:      $Id: Makefile,v 1.6 2004-11-24 22:20:16 wyo Exp $
 ## Copyright:   (c) wyoDesktop
 ## Licence:     wxWidgets licence
 ##############################################################################
@@ -16,10 +16,10 @@ SRC = treelisttest.cpp \
 PRG = treelisttest
 
 # source directories
-vpath %.cpp ../../treelistctrl/src
+vpath %.cpp ../../src
 
 # additional header directories
-INC = -I../../treelistctrl/include
+INC = -I../../include
 
 ##############################################################################
 # implementation, change only if other settings or other targets are needed
