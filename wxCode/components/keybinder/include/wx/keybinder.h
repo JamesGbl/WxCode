@@ -27,7 +27,7 @@
 #include "wx/menu.h"
 #include "wx/button.h"
 #include "wx/stattext.h"
-
+#include "wx/textctrl.h"
 
 
 // The maximum number of shortcuts associated with each wxCmd.
@@ -369,7 +369,7 @@ public:
 #else
 
 	// the other ports doesn't use MSWShouldPreProcessMessage...
-	#define wxADD_KEYBINDER_SUPPORT()			{}
+	#define wxADD_KEYBINDER_SUPPORT()			/* expand to nothing */
 
 #endif
 
