@@ -1,3 +1,14 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Name:        treelistctrl.tex
+%% Purpose:     wxTreeListCtrl documentation
+%% Author:      Otto Wyss
+%% Modified by:
+%% Created:     25.4.2004
+%% RCS-ID:      $Id: treelistctrl.tex,v 1.5 2004-04-26 19:05:08 wyo Exp $
+%% Copyright:   (c) wxCode
+%% License:     wxWindows license
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{\class{wxTreeListCtrl}}\label{wxtreelistctrl}
 
 A tree list control presents information as a hierarchy, with items that may be expanded
@@ -366,32 +377,17 @@ Returns an invalid tree item if there are no further children.
 
 \wxheading{See also}
 
-\membersection{wxTreeListCtrl::GetHeaderWindow}\label{wxtreelistctrlgetheaderwindow}
-
-\constfunc{wxTreeListHeaderWindow*}{GetHeaderWindow}{\void}
-
-Returns the pointer to the header window.
-
-\membersection{wxTreeListCtrl::GetMainWindow}\label{wxtreelistctrlgetmainwindow}
-
-\constfunc{wxTreeListMainWindow*}{GetMainWindow}{\void}
-
-Returns the pointer to the main window.
-
-\helpref{wxTreeListCtrl::GetNextChild}{wxtreelistctrlgetnextchild},
-\helpref{wxTreeListCtrl::GetNextSibling}{wxtreelistctrlgetnextsibling}
-
-\pythonnote{In wxPython the returned wxTreeItemId and the new cookie
-value are both returned as a tuple containing the two values.}
-
-\perlnote{In wxPerl this method only takes the {\tt item} parameter, and
-  returns a 2-element list {\tt ( item, cookie )}.}
-
 \membersection{wxTreeListCtrl::GetFirstVisibleItem}\label{wxtreelistctrlgetfirstvisibleitem}
 
 \constfunc{wxTreeItemId}{GetFirstVisibleItem}{\void}
 
 Returns the first visible item.
+
+\membersection{wxTreeListCtrl::GetHeaderWindow}\label{wxtreelistctrlgetheaderwindow}
+
+\constfunc{wxTreeListHeaderWindow*}{GetHeaderWindow}{\void}
+
+Returns the pointer to the header window.
 
 \membersection{wxTreeListCtrl::GetImageList}\label{wxtreelistctrlgetimagelist}
 
@@ -469,6 +465,12 @@ item is expanded and the normal image is shown when it is collapsed)
 (which is shown when an expanded item is currently selected)
 \end{itemize}
 
+\membersection{wxTreeListCtrl::GetItemParent}\label{wxtreelistctrlgetitemparent}
+
+\constfunc{wxTreeItemId}{GetItemParent}{\param{const wxTreeItemId\&}{ item}}
+
+Returns the item's parent.
+
 \membersection{wxTreeListCtrl::GetItemText}\label{wxtreelistctrlgetitemtext}
 
 \constfunc{wxString}{GetItemText}{\param{const wxTreeItemId\&}{ item}}
@@ -502,6 +504,21 @@ Returns the last child of the item (or an invalid tree item if this item has no 
 \constfunc{int}{GetLineSpacing}{\void}
 
 Returns the space above and below the text on each line.
+
+\membersection{wxTreeListCtrl::GetMainWindow}\label{wxtreelistctrlgetmainwindow}
+
+\constfunc{wxTreeListMainWindow*}{GetMainWindow}{\void}
+
+Returns the pointer to the main window.
+
+\helpref{wxTreeListCtrl::GetNextChild}{wxtreelistctrlgetnextchild},
+\helpref{wxTreeListCtrl::GetNextSibling}{wxtreelistctrlgetnextsibling}
+
+\pythonnote{In wxPython the returned wxTreeItemId and the new cookie
+value are both returned as a tuple containing the two values.}
+
+\perlnote{In wxPerl this method only takes the {\tt item} parameter, and
+  returns a 2-element list {\tt ( item, cookie )}.}
 
 \membersection{wxTreeListCtrl::GetNextChild}\label{wxtreelistctrlgetnextchild}
 
@@ -545,12 +562,6 @@ Returns an invalid tree item if there are no further siblings.
 \constfunc{wxTreeItemId}{GetNextVisible}{\param{const wxTreeItemId\&}{ item}}
 
 Returns the next visible item.
-
-\membersection{wxTreeListCtrl::GetItemParent}\label{wxtreelistctrlgetitemparent}
-
-\constfunc{wxTreeItemId}{GetItemParent}{\param{const wxTreeItemId\&}{ item}}
-
-Returns the item's parent.
 
 \membersection{wxTreeListCtrl::GetPrevChild}\label{wxtreelistctrlgetprevchild}
 
@@ -643,6 +654,12 @@ Returns the state image list (from which application-defined state images are ta
 
 ???
 
+\membersection{wxTreeListCtrl::HasChildren}\label{wxtreelistctrlhaschildren}
+
+\constfunc{bool}{HasChildren}{\param{const wxTreeItemId\&}{ item}}
+
+Returns TRUE if the item has children.???
+
 \membersection{wxTreeListCtrl::HitTest}\label{wxtreelistctrlhittest}
 
 \func{wxTreeItemId}{HitTest}{\param{const wxPoint\& }{point}}
@@ -721,12 +738,6 @@ Returns TRUE if the item is selected.
 \constfunc{bool}{IsVisible}{\param{const wxTreeItemId\&}{ item}}
 
 Returns TRUE if the item is visible (it might be outside the view, or not expanded).
-
-\membersection{wxTreeListCtrl::HasChildren}\label{wxtreelistctrlhaschildren}
-
-\constfunc{bool}{HasChildren}{\param{const wxTreeItemId\&}{ item}}
-
-Returns TRUE if the item has children.???
 
 \membersection{wxTreeListCtrl::ItemHasChildren}\label{wxtreelistctrlitemhaschildren}
 
