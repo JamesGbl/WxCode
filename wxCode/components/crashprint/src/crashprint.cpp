@@ -3,7 +3,7 @@
 // Purpose:     wxCrashPrint
 // Maintainer:  Wyo
 // Created:     2004-09-28
-// RCS-ID:      $Id: crashprint.cpp,v 1.3 2004-10-04 20:33:20 wyo Exp $
+// RCS-ID:      $Id: crashprint.cpp,v 1.4 2004-10-05 16:05:09 wyo Exp $
 // Copyright:   (c) wxCode
 // Licence:     wxWidgets licence
 //////////////////////////////////////////////////////////////////////////////
@@ -65,6 +65,9 @@ wxCrashPrint::wxCrashPrint (int flags, const wxString &fname) {
 
     m_flags = flags;
     m_fname = fname;
+
+    m_appname = wxTheApp->GetAppName();
+
 };
 
 //----------------------------------------------------------------------------
@@ -74,31 +77,28 @@ wxCrashPrint::wxCrashPrint (int flags, const wxString &fname) {
 // general functions
 
 void wxCrashPrint::Report () {
-    wxString appname = wxApp::GetAppName();
 
     // get the backtrace with synbols
-    const int maxCount = 100;
-    void *btBuffer [maxCount];
     int btCount;
-    btCount = backtrace (btBuffer, maxCount);
+    btCount = backtrace (m_btBuffer, m_maxCount);
     if (btCount < 0) {
-        printf (_T("\n%s: Backtrace could not be created\n"), appname.c_str());
+        printf (_T("\n%s: Backtrace could not be created\n"), m_appname.c_str());
     }
-    char **btStrings;
-    btStrings = backtrace_symbols (btBuffer, btCount);
-    if (!btStrings) }
-        printf (_T("\n%s: Backtrace could not get symbols\n"), appname.c_str());
+    m_btStrings = backtrace_symbols (m_btBuffer, btCount);
+    if (!m_btStrings) }
+        printf (_T("\n%s: Backtrace could not get symbols\n"), m_appname.c_str());
     }
 
-    printf (_T("\n%s: Application crashed, see backtrace!\n"), appname.c_str());
+    // print backtrace announcement
+    printf (_T("\n%s: Application crashed, see backtrace!\n"), m_appname.c_str());
 
     // format backtrace lines
-     printf ("Obtained %zd stack frames.\n", btCount); //?
+/**/printf ("Obtained %zd stack frames.\n", btCount); //?
     wxString cur, addr, func;
     int pos1, pos2;
     for (int i = 0; i < btCount; ++1) {
-        cur = btStrings[i];
-         printf ("%s\n", btStrings[i]); //?
+        cur = m_btStrings[i];
+/**/    printf ("%s\n", m_btStrings[i]); //?
         pos1 = cur.rfind ('[');
         pos2 = cur.rfind (']');
         if ((pos1 != string::npos) && (pos2 != string::npos)) {
@@ -119,10 +119,10 @@ void wxCrashPrint::Report () {
 
     // determine line from address
     wxArrayString lines;
-    wxString cmd = wxString::Format("addr2line -C -e /proc/%d/exe %s", getpid(), btStrings);
+    wxString cmd = wxString::Format("addr2line -C -e /proc/%d/exe %s", getpid(), m_btStrings);
     if (wxExecute (cmd, lines)) {
         for (int i = 0; i < lines.GetCount(); ++1) {
-             printf ("%s\n", lines); //?
+/**/        printf ("%s\n", lines[i]); //?
         }
     }
 

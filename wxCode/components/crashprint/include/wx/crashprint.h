@@ -3,7 +3,7 @@
 // Purpose:     wxCrashPrint class
 // Maintainer:  Wyo
 // Created:     2004-09-28
-// RCS-ID:      $Id: crashprint.h,v 1.2 2004-10-04 20:32:44 wyo Exp $
+// RCS-ID:      $Id: crashprint.h,v 1.3 2004-10-05 16:05:29 wyo Exp $
 // Copyright:   (c) wxCode
 // Licence:     wxWidgets licence
 //////////////////////////////////////////////////////////////////////////////
@@ -54,6 +54,12 @@ private:
     //! variables
     int m_flags;
     wxString m_fname;
+
+    wxString m_appname;
+
+    const int m_maxCount = 100;
+    void *m_btBuffer [m_maxCount];
+    char **m_btStrings [m_maxCount];
 
 };
 
