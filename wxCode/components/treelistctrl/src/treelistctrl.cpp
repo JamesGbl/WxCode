@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.33 2004-10-07 18:26:13 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.34 2004-10-08 16:02:49 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -80,7 +80,6 @@ WX_DEFINE_ARRAY(short, wxArrayShort);
 static const int NO_IMAGE = -1;
 
 static const int LINEHEIGHT = 10;
-static const int PIXELS_PER_UNIT = 10;
 static const int LINEATROOT = 5;
 static const int MARGIN = 2;
 static const int MININDENT = 16;
@@ -90,6 +89,10 @@ static const int EXTRA_WIDTH = 4;
 static const int EXTRA_HEIGHT = 4;
 static const int HEADER_OFFSET_X = 1;
 static const int HEADER_OFFSET_Y = 1;
+
+static const int DRAG_TIMER_TICKS = 250; // minimum drag wait 250ms
+static const int FIND_TIMER_TICKS = 500; // minimum find wait 500ms
+static const int RENAME_TIMER_TICKS = 250; // minimum rename wait 250ms
 
 const wxChar* wxTreeListCtrlNameStr = wxT("treelistctrl");
 
@@ -506,7 +509,6 @@ public:
         { int dummy; return HitTest(point, dummy); }
     wxTreeItemId HitTest(const wxPoint& point, int& flags)
     { int col; return HitTest(point, flags, col); }
-    // ALB
     wxTreeItemId HitTest(const wxPoint& point, int& flags, int& column);
 
 
@@ -560,7 +562,7 @@ public:
     void OnChar( wxKeyEvent &event );
     void OnMouse( wxMouseEvent &event );
     void OnIdle( wxIdleEvent &event );
-    void OnScroll(wxScrollWinEvent& event); // ALB
+    void OnScroll(wxScrollWinEvent& event);
 
     // implementation helpers
     void SendDeleteEvent(wxTreeListItem *itemBeingDeleted);
@@ -773,7 +775,7 @@ public:
     int GetCurrentImage() const;
 
     void SetText( const wxString &text );
-    void SetText(size_t col, const wxString& text) // ALB
+    void SetText(size_t col, const wxString& text)
     {
         if(col < m_text.GetCount())
             m_text[col] = text;
@@ -843,7 +845,7 @@ public:
                              int level );
     wxTreeListItem *HitTest( const wxPoint& point,
                              const wxTreeListMainWindow *,
-                             int &flags, int& column /*ALB*/,
+                             int &flags, int& column,
                              int level );
 
     void Expand() { m_isCollapsed = FALSE; }
@@ -1832,7 +1834,7 @@ void wxTreeListMainWindow::Init()
     m_dragTimer = new wxTimer (this, -1);
     m_dragItem = (wxTreeListItem*)NULL;
 
-    m_renameTimer = new wxTreeListRenameTimer( this );
+    m_renameTimer = new wxTreeListRenameTimer (this);
     m_lastOnSame = FALSE;
     m_left_down_selection = false;
 
@@ -1901,11 +1903,10 @@ bool wxTreeListMainWindow::Create(wxTreeListCtrl *parent,
         m_dottedPen = wxPen(bmp, 1);
     }
 #else
-    //m_dottedPen = wxPen( *wxGREY_PEN, 1, wxDOT );  // too slow under XFree86
+//?    m_dottedPen = wxPen( *wxGREY_PEN, 1, wxDOT );  // too slow under XFree86
     m_dottedPen = wxPen( wxT("grey"), 0, 0 ); // Bitmap based pen is not supported by GTK!
 #endif
 
-    // ALB
     m_owner = parent;
     m_main_column = 0;
 
@@ -2396,7 +2397,6 @@ wxTreeItemId wxTreeListMainWindow::DoInsertItem(const wxTreeItemId& parentId,
 
     m_dirty = TRUE;     // do this first so stuff below doesn't cause flicker
 
-    // ALB
     wxArrayString arr;
     arr.Alloc(GetColumnCount());
     for(size_t i = 0; i < GetColumnCount(); ++i) {
@@ -2425,7 +2425,6 @@ wxTreeItemId wxTreeListMainWindow::AddRoot(const wxString& text,
 
     m_dirty = TRUE;     // do this first so stuff below doesn't cause flicker
 
-    // ALB
     wxArrayString arr;
     arr.Alloc(GetColumnCount());
     for(size_t i = 0; i < GetColumnCount(); ++i) {
@@ -2982,41 +2981,31 @@ void wxTreeListMainWindow::ScrollTo(const wxTreeItemId &item)
     // now scroll to the item
     int item_y = gitem->GetY();
 
+    int xUnit, yUnit;
+    GetScrollPixelsPerUnit (&xUnit, &yUnit);
     int start_x = 0;
     int start_y = 0;
-    GetViewStart( &start_x, &start_y );
-    start_y *= PIXELS_PER_UNIT;
+    GetViewStart (&start_x, &start_y);
+    start_y *= yUnit;
 
     int client_h = 0;
     int client_w = 0;
-    GetClientSize( &client_w, &client_h );
+    GetClientSize (&client_w, &client_h);
 
-    if (item_y < start_y+3)
-    {
-        // going down
-        int x = 0;
-        int y = 0;
-        m_anchor->GetSize( x, y, this );
-        x = m_owner->GetHeaderWindow()->GetWidth(); //m_total_col_width; // ALB
-        y += PIXELS_PER_UNIT+2; // one more scrollbar unit + 2 pixels
-        //x += PIXELS_PER_UNIT+2; // one more scrollbar unit + 2 pixels
-        int x_pos = GetScrollPos( wxHORIZONTAL );
-        // Item should appear at top
-        SetScrollbars( PIXELS_PER_UNIT, PIXELS_PER_UNIT, x/PIXELS_PER_UNIT, y/PIXELS_PER_UNIT, x_pos, item_y/PIXELS_PER_UNIT );
-    }
-    else if (item_y+GetLineHeight(gitem) > start_y+client_h)
-    {
-        // going up
-        int x = 0;
-        int y = 0;
-        m_anchor->GetSize( x, y, this );
-        y += PIXELS_PER_UNIT+2; // one more scrollbar unit + 2 pixels
-        //x += PIXELS_PER_UNIT+2; // one more scrollbar unit + 2 pixels
-        x = m_owner->GetHeaderWindow()->GetWidth(); //m_total_col_width; // ALB
-        item_y += PIXELS_PER_UNIT+2;
-        int x_pos = GetScrollPos( wxHORIZONTAL );
-        // Item should appear at bottom
-        SetScrollbars( PIXELS_PER_UNIT, PIXELS_PER_UNIT, x/PIXELS_PER_UNIT, y/PIXELS_PER_UNIT, x_pos, (item_y+GetLineHeight(gitem)-client_h)/PIXELS_PER_UNIT );
+    int x = 0;
+    int y = 0;
+    m_anchor->GetSize (x, y, this);
+    x = m_owner->GetHeaderWindow()->GetWidth();
+    y += yUnit + 2; // one more scrollbar unit + 2 pixels
+    int x_pos = GetScrollPos( wxHORIZONTAL );
+
+    if (item_y < start_y+3) {
+        // going down, item should appear at top
+        SetScrollbars (xUnit, yUnit, x/xUnit, y/yUnit, x_pos, item_y/yUnit);
+    }else if (item_y+GetLineHeight(gitem) > start_y+client_h) {
+        // going up, item should appear at bottom
+        item_y += yUnit + 2;
+        SetScrollbars (xUnit, yUnit, x/xUnit, y/yUnit, x_pos, (item_y+GetLineHeight(gitem)-client_h)/yUnit );
     }
 }
 
@@ -3034,7 +3023,7 @@ static int LINKAGEMODE tree_ctrl_compare_func(wxTreeListItem **item1,
 int wxTreeListMainWindow::OnCompareItems(const wxTreeItemId& item1,
                                const wxTreeItemId& item2)
 {
-    // ALB: delegate to m_owner, to let the user overrride the comparison
+    // delegate to m_owner, to let the user overrride the comparison
     //return wxStrcmp(GetItemText(item1), GetItemText(item2));
     return m_owner->OnCompareItems(item1, item2);
 }
@@ -3219,25 +3208,22 @@ void wxTreeListMainWindow::AssignButtonsImageList(wxImageList *imageList)
 // helpers
 // ----------------------------------------------------------------------------
 
-void wxTreeListMainWindow::AdjustMyScrollbars()
-{
-    if (m_anchor)
-    {
+void wxTreeListMainWindow::AdjustMyScrollbars() {
+    if (m_anchor) {
+        int xUnit, yUnit;
+        GetScrollPixelsPerUnit (&xUnit, &yUnit);
+        if (xUnit == 0) xUnit = GetCharWidth();
+        if (yUnit == 0) yUnit = m_lineHeight;
         int x = 0, y = 0;
-        m_anchor->GetSize( x, y, this );
-        y += PIXELS_PER_UNIT+2; // one more scrollbar unit + 2 pixels
-        //x += PIXELS_PER_UNIT+2; // one more scrollbar unit + 2 pixels
-        int x_pos = GetScrollPos( wxHORIZONTAL );
-        int y_pos = GetScrollPos( wxVERTICAL );
+        m_anchor->GetSize (x, y, this);
+        y += yUnit + 2; // one more scrollbar unit + 2 pixels
+        int x_pos = GetScrollPos (wxHORIZONTAL);
+        int y_pos = GetScrollPos (wxVERTICAL);
         x = m_owner->GetHeaderWindow()->GetWidth() + 2;
-        if(x < GetClientSize().GetWidth()) x_pos = 0;
-        //m_total_col_width + 2; // ALB
-        SetScrollbars( PIXELS_PER_UNIT, PIXELS_PER_UNIT, x/PIXELS_PER_UNIT,
-                       y/PIXELS_PER_UNIT, x_pos, y_pos );
-    }
-    else
-    {
-        SetScrollbars( 0, 0, 0, 0 );
+        if (x < GetClientSize().GetWidth()) x_pos = 0;
+        SetScrollbars (xUnit, yUnit, x/xUnit, y/yUnit, x_pos, y_pos);
+    }else{
+        SetScrollbars (0, 0, 0, 0);
     }
 }
 
@@ -3920,7 +3906,7 @@ void wxTreeListMainWindow::OnChar( wxKeyEvent &event )
             if (event.m_keyCode >= (int)' ') {
                 if (!m_findTimer->IsRunning()) m_findStr.Clear();
                 m_findStr.Append (event.m_keyCode);
-                m_findTimer->Start (500, wxTIMER_ONE_SHOT);
+                m_findTimer->Start (FIND_TIMER_TICKS, wxTIMER_ONE_SHOT);
                 wxTreeItemId dummy = (wxTreeItemId*)NULL;
                 wxTreeItemId item = FindItem (dummy, m_findStr, wxTL_SEARCH_VISIBLE |
                                                                 wxTL_SEARCH_PARTIAL |
@@ -3976,11 +3962,13 @@ bool wxTreeListMainWindow::GetBoundingRect(const wxTreeItemId& item,
 
     wxTreeListItem *i = (wxTreeListItem*) item.m_pItem;
 
+    int xUnit, yUnit;
+    GetScrollPixelsPerUnit (&xUnit, &yUnit);
     int startX, startY;
     GetViewStart(& startX, & startY);
 
-    rect.x = i->GetX() - startX*PIXELS_PER_UNIT;
-    rect.y = i->GetY() - startY*PIXELS_PER_UNIT;
+    rect.x = i->GetX() - startX * xUnit;
+    rect.y = i->GetY() - startY * yUnit;
     rect.width = i->GetWidth();
     //rect.height = i->GetHeight();
     rect.height = GetLineHeight(i);
@@ -4079,7 +4067,7 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
 
         // determine drag start
         if (m_dragCount == 0) {
-            m_dragTimer->Start (250, wxTIMER_ONE_SHOT); // minimum drag 250ms
+            m_dragTimer->Start (DRAG_TIMER_TICKS, wxTIMER_ONE_SHOT);
         }
         m_dragCount++;
         if (m_dragCount < 3) return; // minimum drag 3 pixel
@@ -4095,8 +4083,8 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
                               ? wxEVT_COMMAND_TREE_BEGIN_DRAG
                               : wxEVT_COMMAND_TREE_BEGIN_RDRAG;
         wxTreeEvent nevent (command, m_owner->GetId());
-        nevent.SetItem ((long) m_current);
         nevent.SetEventObject (m_owner);
+        nevent.SetItem ((long)item); // the item the drag is started
         nevent.Veto(); // dragging must be explicit allowed!
         m_owner->GetEventHandler()->ProcessEvent (nevent);
 
@@ -4112,11 +4100,11 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
         RefreshSelected();
 
         // send drag end event event
-        wxTreeEvent event (wxEVT_COMMAND_TREE_END_DRAG, m_owner->GetId());
-        event.SetItem ((long)item); // FIXME what means item here? 
-        event.SetPoint (p);
-        event.SetEventObject (m_owner);
-        m_owner->GetEventHandler()->ProcessEvent(event);
+        wxTreeEvent nevent (wxEVT_COMMAND_TREE_END_DRAG, m_owner->GetId());
+        nevent.SetEventObject (m_owner);
+        nevent.SetItem ((long)item); // the item the drag is ended
+        nevent.SetPoint (p);
+        m_owner->GetEventHandler()->ProcessEvent (nevent);
 
     }else if (m_dragCount > 0) { // just in case dragging is initiated
 
@@ -4132,24 +4120,22 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
     }
 
     if (event.RightDown()) {
+
         SetFocus();
         wxTreeEvent nevent (wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, m_owner->GetId());
+        nevent.SetEventObject (m_owner);
         nevent.SetItem ((long)item);
         nevent.SetPoint (p);
-        nevent.SetEventObject (m_owner);
-        m_owner->GetEventHandler()->ProcessEvent(nevent);
+        m_owner->GetEventHandler()->ProcessEvent (nevent);
 
     }else if (event.LeftUp()) {
-        if (m_lastOnSame) {
 
+        if (m_lastOnSame) {
             if ((item == m_current) &&
-                (flags & wxTREE_HITTEST_ONITEMLABEL) &&
-                HasFlag (wxTR_EDIT_LABELS)){
-                if (m_renameTimer->IsRunning()) m_renameTimer->Stop();
-                m_renameTimer->Start (100, TRUE);
+                (flags & wxTREE_HITTEST_ONITEMLABEL) && HasFlag (wxTR_EDIT_LABELS)){
+                m_renameTimer->Start (RENAME_TIMER_TICKS, wxTIMER_ONE_SHOT);
             }
             m_lastOnSame = FALSE;
-
         }
 
         // determine the selection if not done by left down
@@ -4201,11 +4187,10 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
             m_lastOnSame = FALSE;
 
             // send activate event first
-            wxTreeEvent nevent( wxEVT_COMMAND_TREE_ITEM_ACTIVATED,
-                                m_owner->GetId() );
+            wxTreeEvent nevent (wxEVT_COMMAND_TREE_ITEM_ACTIVATED, m_owner->GetId());
+            nevent.SetEventObject (m_owner);
             nevent.SetItem ((long)item);
             nevent.SetPoint (p);
-            nevent.SetEventObject (m_owner);
             if (!m_owner->GetEventHandler()->ProcessEvent (nevent)) {
 
                 // if the user code didn't process the activate event,
@@ -4214,6 +4199,7 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
                 if (item->HasPlus()) Toggle(item);
             }
         }
+
     }else{ // any other event skip just in case
 
         event.Skip();
@@ -4432,7 +4418,6 @@ bool wxTreeListMainWindow::SetForegroundColour(const wxColour& colour)
     return TRUE;
 }
 
-//----------- ALB -------------
 void wxTreeListMainWindow::SetItemText(const wxTreeItemId& item, size_t column,
                                     const wxString& text)
 {
@@ -4820,7 +4805,7 @@ void wxTreeListCtrl::Edit(const wxTreeItemId& item)
 int wxTreeListCtrl::OnCompareItems(const wxTreeItemId& item1,
                                    const wxTreeItemId& item2)
 {
-    // ALB: do the comparison here, and not delegate to m_main_win, in order
+    // do the comparison here, and not delegate to m_main_win, in order
     // to let the user override it
     //return m_main_win->OnCompareItems(item1, item2);
     return wxStrcmp(GetItemText(item1), GetItemText(item2));
@@ -4836,15 +4821,15 @@ void wxTreeListCtrl::SetDragItem (const wxTreeItemId& item)
 { m_main_win->SetDragItem (item); }
 
 bool wxTreeListCtrl::SetBackgroundColour(const wxColour& colour)
-{ 
+{
     if (!m_main_win) return false;
-    return m_main_win->SetBackgroundColour(colour); 
+    return m_main_win->SetBackgroundColour(colour);
 }
 
 bool wxTreeListCtrl::SetForegroundColour(const wxColour& colour)
-{ 
+{
     if (!m_main_win) return false;
-    return m_main_win->SetForegroundColour(colour); 
+    return m_main_win->SetForegroundColour(colour);
 }
 
 size_t wxTreeListCtrl::GetColumnCount() const
