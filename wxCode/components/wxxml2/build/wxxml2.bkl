@@ -46,11 +46,5 @@
 		<wxlibs/>
 		<syslibs/>
 	</exe>
-
-	<!-- The DOCS target -->
-	<cd-and-run id="docs">
-		<cd>..$(DIRSEP)docs</cd>
-		<run>doxygen</run>
-	</cd-and-run>
 	
 </makefile>

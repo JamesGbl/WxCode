@@ -66,9 +66,34 @@ WXSUBLIBPOSTFIX =
 WXSUBLIBPOSTFIX = d
 !endif
 !endif
+__DEBUGINFO_7 =
+!ifeq BUILD debug
+__DEBUGINFO_7 = debug all
+!endif
+!ifeq BUILD release
+__DEBUGINFO_7 = 
+!endif
 __DEBUG_DEFINE_p =
 !ifeq BUILD debug
 __DEBUG_DEFINE_p = -d__WXDEBUG__
+!endif
+__UNICODE_DEFINE_p =
+!ifeq UNICODE 1
+__UNICODE_DEFINE_p = -d_UNICODE
+!endif
+__OPTIMIZEFLAG =
+!ifeq BUILD debug
+__OPTIMIZEFLAG = -od
+!endif
+!ifeq BUILD release
+__OPTIMIZEFLAG = -ot -ox
+!endif
+__DEBUGINFO =
+!ifeq BUILD debug
+__DEBUGINFO = -d2
+!endif
+!ifeq BUILD release
+__DEBUGINFO = -d0
 !endif
 WXLIBPOSTFIX =
 !ifeq BUILD debug
@@ -89,15 +114,16 @@ WXLIBPOSTFIX = u
 
 ### Variables: ###
 
-WXXML2_CXXFLAGS = -i=$(WXWIN)\include &
-	-i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) -i=..\include &
-	-i=$(LIBXML2_DIR)\include -i=$(ICONV_DIR)\include $(CPPFLAGS) $(CXXFLAGS)
+WXXML2_CXXFLAGS = $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) &
+	-i=$(WXWIN)\include -i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) &
+	-i=..\include -i=$(LIBXML2_DIR)\include -i=$(ICONV_DIR)\include $(CPPFLAGS) &
+	$(CXXFLAGS)
 WXXML2_OBJECTS =  &
 	watcom\wxxml2_xml2.obj
-MINIMAL_CXXFLAGS = -i=$(WXWIN)\include &
-	-i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) -i=..\include &
-	-i=$(LIBXML2_DIR)\include -i=$(ICONV_DIR)\include $(__DEBUG_DEFINE_p) &
-	-d__WXMSW__ $(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_CXXFLAGS = $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) &
+	-i=$(WXWIN)\include -i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) &
+	-i=..\include -i=$(LIBXML2_DIR)\include -i=$(ICONV_DIR)\include &
+	$(__DEBUG_DEFINE_p) -d__WXMSW__ $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  &
 	watcom\minimal_xml2.obj &
 	watcom\minimal_minimal.obj
@@ -126,6 +152,21 @@ tarball :
 zip :  
 	( cd .. && zip -r9 wxxml2.zip *  -x *.pdb -x *.log -x *.o* )
 
+cleanbuilddirs :  
+	-if exist msvc rmdir /S /Q msvc
+	-if exist watcom rmdir /S /Q watcom
+	-if exist borland rmdir /S /Q borland
+	-if exist mingw rmdir /S /Q mingw
+
+cleanall :  clean cleanbuilddirs
+	del /S /Q ..\*.log >NUL
+	del /S /Q ..\*.lib >NUL
+	del /S /Q ..\*.a >NUL
+	del /S /Q ..\*.exe >NUL
+
+docs :  
+	( cd ..\docs && doxygen )
+
 cleandocs :  
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
@@ -139,14 +180,11 @@ cleandocs :
 	@%append watcom\minimal.lbc option quiet
 	@%append watcom\minimal.lbc name $^@
 	@%append watcom\minimal.lbc option caseexact
-	@%append watcom\minimal.lbc $(LDFLAGS) libpath $(WXWIN)\lib\wat_lib system nt_win ref '_WinMain@16' libpath ..\lib libpath $(LIBXML2_DIR)\lib libpath $(ICONV_DIR)\lib
+	@%append watcom\minimal.lbc $(LDFLAGS) $(__DEBUGINFO_7) libpath $(WXWIN)\lib\wat_lib system nt_win ref '_WinMain@16' libpath ..\lib libpath $(LIBXML2_DIR)\lib libpath $(ICONV_DIR)\lib
 	@for %i in ($(MINIMAL_OBJECTS)) do @%append watcom\minimal.lbc file %i
 	@for %i in ( wxxml2.lib libxml2.lib iconv.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\minimal.lbc library %i
 	@%append watcom\minimal.lbc
 	wlink @watcom\minimal.lbc
-
-docs :  
-	( cd ..\docs && doxygen )
 
 watcom\wxxml2_xml2.obj :  .AUTODEPEND .\..\src\xml2.cpp
 	$(CXX) -zq -fo=$^@ $(WXXML2_CXXFLAGS) $<

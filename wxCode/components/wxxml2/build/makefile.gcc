@@ -45,15 +45,18 @@ WXWIN = c:\wxWidgets
 
 ### Variables: ###
 
-WXXML2_CXXFLAGS = -I$(WXWIN)\include \
+WXXML2_CXXFLAGS = -DHAVE_W32API_H $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
+	$(__DEBUGINFO) -I$(WXWIN)\include \
 	-I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) -I..\include \
-	-I$(LIBXML2_DIR)\include -I$(ICONV_DIR)\include $(CPPFLAGS) $(CXXFLAGS)
+	-I$(LIBXML2_DIR)\include -I$(ICONV_DIR)\include -Wall $(CPPFLAGS) \
+	$(CXXFLAGS)
 WXXML2_OBJECTS =  \
 	mingw\wxxml2_xml2.o
-MINIMAL_CXXFLAGS = -I$(WXWIN)\include \
+MINIMAL_CXXFLAGS = -DHAVE_W32API_H $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
+	$(__DEBUGINFO) -I$(WXWIN)\include \
 	-I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) -I..\include \
 	-I$(LIBXML2_DIR)\include -I$(ICONV_DIR)\include $(__DEBUG_DEFINE_p) \
-	-D__WXMSW__ $(CPPFLAGS) $(CXXFLAGS)
+	-D__WXMSW__ -Wall $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	mingw\minimal_xml2.o \
 	mingw\minimal_minimal.o
@@ -67,6 +70,15 @@ endif
 endif
 ifeq ($(BUILD),debug)
 __DEBUG_DEFINE_p = -D__WXDEBUG__
+endif
+ifeq ($(UNICODE),1)
+__UNICODE_DEFINE_p = -D_UNICODE
+endif
+ifeq ($(BUILD),debug)
+__OPTIMIZEFLAG = -O0
+endif
+ifeq ($(BUILD),release)
+__OPTIMIZEFLAG = -O2
 endif
 ifeq ($(BUILD),debug)
 ifeq ($(UNICODE),0)
@@ -82,6 +94,12 @@ ifeq ($(BUILD),release)
 ifeq ($(UNICODE),1)
 WXLIBPOSTFIX = u
 endif
+endif
+ifeq ($(BUILD),debug)
+__DEBUGINFO = -g
+endif
+ifeq ($(BUILD),release)
+__DEBUGINFO = 
 endif
 
 
@@ -106,6 +124,21 @@ tarball:
 zip: 
 	( cd .. && zip -r9 wxxml2.zip *  -x *.pdb -x *.log -x *.o* )
 
+cleanbuilddirs: 
+	-if exist msvc rmdir /S /Q msvc
+	-if exist watcom rmdir /S /Q watcom
+	-if exist borland rmdir /S /Q borland
+	-if exist mingw rmdir /S /Q mingw
+
+cleanall: clean cleanbuilddirs
+	del /S /Q ..\*.log >NUL
+	del /S /Q ..\*.lib >NUL
+	del /S /Q ..\*.a >NUL
+	del /S /Q ..\*.exe >NUL
+
+docs: 
+	( cd ..\docs && doxygen )
+
 cleandocs: 
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
@@ -115,10 +148,7 @@ cleandocs:
 	ranlib $@
 
 ..\sample\minimal.exe: $(MINIMAL_OBJECTS)
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) -L$(WXWIN)\lib\gcc_lib -Wl,--subsystem,windows -mwindows -L..\lib -L$(LIBXML2_DIR)\lib -L$(ICONV_DIR)\lib  -lwxxml2 -llibxml2 -liconv -lwxmsw25$(WXLIBPOSTFIX)_core -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXSUBLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
-
-docs: 
-	( cd ..\docs && doxygen )
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -L$(WXWIN)\lib\gcc_lib -Wl,--subsystem,windows -mwindows -L..\lib -L$(LIBXML2_DIR)\lib -L$(ICONV_DIR)\lib  -lwxxml2 -llibxml2 -liconv -lwxmsw25$(WXLIBPOSTFIX)_core -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXSUBLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
 mingw\wxxml2_xml2.o: ./../src/xml2.cpp
 	$(CXX) -c -o $@ $(WXXML2_CXXFLAGS) $<

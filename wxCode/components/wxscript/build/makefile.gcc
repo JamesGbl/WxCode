@@ -48,21 +48,23 @@ WXWIN = c:\wxWidgets
 
 ### Variables: ###
 
-WXSCRIPT_CXXFLAGS = -I$(WXWIN)\include \
+WXSCRIPT_CXXFLAGS = -DHAVE_W32API_H $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
+	$(__DEBUGINFO) -I$(WXWIN)\include \
 	-I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) -I..\include \
 	-I$(LUA_DIR)\include -I$(TOLUA_DIR)\include -I$(UCC_DIR)\include \
-	-DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC $(CPPFLAGS) $(CXXFLAGS)
+	-DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC -Wall $(CPPFLAGS) $(CXXFLAGS)
 WXSCRIPT_OBJECTS =  \
 	mingw\wxscript_script.o \
 	mingw\wxscript_scbasic.o \
 	mingw\wxscript_sccint.o \
 	mingw\wxscript_scunderc.o \
 	mingw\wxscript_sclua.o
-MINIMAL_CXXFLAGS = -I$(WXWIN)\include \
+MINIMAL_CXXFLAGS = -DHAVE_W32API_H $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
+	$(__DEBUGINFO) -I$(WXWIN)\include \
 	-I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) -I..\include \
 	-I$(LUA_DIR)\include -I$(TOLUA_DIR)\include -I$(UCC_DIR)\include \
 	-DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC $(__DEBUG_DEFINE_p) -D__WXMSW__ \
-	$(CPPFLAGS) $(CXXFLAGS)
+	-Wall $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	mingw\minimal_script.o \
 	mingw\minimal_scbasic.o \
@@ -81,6 +83,15 @@ endif
 ifeq ($(BUILD),debug)
 __DEBUG_DEFINE_p = -D__WXDEBUG__
 endif
+ifeq ($(UNICODE),1)
+__UNICODE_DEFINE_p = -D_UNICODE
+endif
+ifeq ($(BUILD),debug)
+__OPTIMIZEFLAG = -O0
+endif
+ifeq ($(BUILD),release)
+__OPTIMIZEFLAG = -O2
+endif
 ifeq ($(BUILD),debug)
 ifeq ($(UNICODE),0)
 WXLIBPOSTFIX = d
@@ -95,6 +106,12 @@ ifeq ($(BUILD),release)
 ifeq ($(UNICODE),1)
 WXLIBPOSTFIX = u
 endif
+endif
+ifeq ($(BUILD),debug)
+__DEBUGINFO = -g
+endif
+ifeq ($(BUILD),release)
+__DEBUGINFO = 
 endif
 
 
@@ -119,6 +136,18 @@ tarball:
 zip: 
 	( cd .. && zip -r9 wxscript.zip *  -x *.pdb -x *.log -x *.o* )
 
+cleanbuilddirs: 
+	-if exist msvc rmdir /S /Q msvc
+	-if exist watcom rmdir /S /Q watcom
+	-if exist borland rmdir /S /Q borland
+	-if exist mingw rmdir /S /Q mingw
+
+cleanall: clean cleanbuilddirs
+	del /S /Q ..\*.log >NUL
+	del /S /Q ..\*.lib >NUL
+	del /S /Q ..\*.a >NUL
+	del /S /Q ..\*.exe >NUL
+
 docs: 
 	( cd ..\docs && doxygen )
 
@@ -131,7 +160,7 @@ cleandocs:
 	ranlib $@
 
 ..\tests\test1\minimal.exe: $(MINIMAL_OBJECTS) ..\lib\libwxscript.a
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) -L$(WXWIN)\lib\gcc_lib -L..\lib -L$(LUA_DIR)\lib -L$(TOLUA_DIR)\lib -L$(UCC_DIR)\lib   ..\lib\libwxscript.a -llua -llualib -ltolua -lwxmsw25$(WXLIBPOSTFIX)_core -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXSUBLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -L$(WXWIN)\lib\gcc_lib -L..\lib -L$(LUA_DIR)\lib -L$(TOLUA_DIR)\lib -L$(UCC_DIR)\lib   ..\lib\libwxscript.a -llua -llualib -ltolua -lwxmsw25$(WXLIBPOSTFIX)_core -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXSUBLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
 mingw\wxscript_script.o: ./../src/script.cpp
 	$(CXX) -c -o $@ $(WXSCRIPT_CXXFLAGS) $<

@@ -69,9 +69,34 @@ WXSUBLIBPOSTFIX =
 WXSUBLIBPOSTFIX = d
 !endif
 !endif
+__DEBUGINFO_7 =
+!ifeq BUILD debug
+__DEBUGINFO_7 = debug all
+!endif
+!ifeq BUILD release
+__DEBUGINFO_7 = 
+!endif
 __DEBUG_DEFINE_p =
 !ifeq BUILD debug
 __DEBUG_DEFINE_p = -d__WXDEBUG__
+!endif
+__UNICODE_DEFINE_p =
+!ifeq UNICODE 1
+__UNICODE_DEFINE_p = -d_UNICODE
+!endif
+__OPTIMIZEFLAG =
+!ifeq BUILD debug
+__OPTIMIZEFLAG = -od
+!endif
+!ifeq BUILD release
+__OPTIMIZEFLAG = -ot -ox
+!endif
+__DEBUGINFO =
+!ifeq BUILD debug
+__DEBUGINFO = -d2
+!endif
+!ifeq BUILD release
+__DEBUGINFO = -d0
 !endif
 WXLIBPOSTFIX =
 !ifeq BUILD debug
@@ -92,21 +117,22 @@ WXLIBPOSTFIX = u
 
 ### Variables: ###
 
-WXSCRIPT_CXXFLAGS = -i=$(WXWIN)\include &
-	-i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) -i=..\include &
-	-i=$(LUA_DIR)\include -i=$(TOLUA_DIR)\include -i=$(UCC_DIR)\include &
-	-dwxSCRIPT_NO_CINT -dwxSCRIPT_NO_UNDERC $(CPPFLAGS) $(CXXFLAGS)
+WXSCRIPT_CXXFLAGS = $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) &
+	-i=$(WXWIN)\include -i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) &
+	-i=..\include -i=$(LUA_DIR)\include -i=$(TOLUA_DIR)\include &
+	-i=$(UCC_DIR)\include -dwxSCRIPT_NO_CINT -dwxSCRIPT_NO_UNDERC $(CPPFLAGS) &
+	$(CXXFLAGS)
 WXSCRIPT_OBJECTS =  &
 	watcom\wxscript_script.obj &
 	watcom\wxscript_scbasic.obj &
 	watcom\wxscript_sccint.obj &
 	watcom\wxscript_scunderc.obj &
 	watcom\wxscript_sclua.obj
-MINIMAL_CXXFLAGS = -i=$(WXWIN)\include &
-	-i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) -i=..\include &
-	-i=$(LUA_DIR)\include -i=$(TOLUA_DIR)\include -i=$(UCC_DIR)\include &
-	-dwxSCRIPT_NO_CINT -dwxSCRIPT_NO_UNDERC $(__DEBUG_DEFINE_p) -d__WXMSW__ &
-	$(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_CXXFLAGS = $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) &
+	-i=$(WXWIN)\include -i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) &
+	-i=..\include -i=$(LUA_DIR)\include -i=$(TOLUA_DIR)\include &
+	-i=$(UCC_DIR)\include -dwxSCRIPT_NO_CINT -dwxSCRIPT_NO_UNDERC &
+	$(__DEBUG_DEFINE_p) -d__WXMSW__ $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  &
 	watcom\minimal_script.obj &
 	watcom\minimal_scbasic.obj &
@@ -139,6 +165,18 @@ tarball :
 zip :  
 	( cd .. && zip -r9 wxscript.zip *  -x *.pdb -x *.log -x *.o* )
 
+cleanbuilddirs :  
+	-if exist msvc rmdir /S /Q msvc
+	-if exist watcom rmdir /S /Q watcom
+	-if exist borland rmdir /S /Q borland
+	-if exist mingw rmdir /S /Q mingw
+
+cleanall :  clean cleanbuilddirs
+	del /S /Q ..\*.log >NUL
+	del /S /Q ..\*.lib >NUL
+	del /S /Q ..\*.a >NUL
+	del /S /Q ..\*.exe >NUL
+
 docs :  
 	( cd ..\docs && doxygen )
 
@@ -155,7 +193,7 @@ cleandocs :
 	@%append watcom\minimal.lbc option quiet
 	@%append watcom\minimal.lbc name $^@
 	@%append watcom\minimal.lbc option caseexact
-	@%append watcom\minimal.lbc $(LDFLAGS) libpath $(WXWIN)\lib\wat_lib libpath ..\lib libpath $(LUA_DIR)\lib libpath $(TOLUA_DIR)\lib libpath $(UCC_DIR)\lib system nt ref 'main_'
+	@%append watcom\minimal.lbc $(LDFLAGS) $(__DEBUGINFO_7) libpath $(WXWIN)\lib\wat_lib libpath ..\lib libpath $(LUA_DIR)\lib libpath $(TOLUA_DIR)\lib libpath $(UCC_DIR)\lib system nt ref 'main_'
 	@for %i in ($(MINIMAL_OBJECTS)) do @%append watcom\minimal.lbc file %i
 	@for %i in ( ..\lib\wxscript.lib lua.lib lualib.lib tolua.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\minimal.lbc library %i
 	@%append watcom\minimal.lbc

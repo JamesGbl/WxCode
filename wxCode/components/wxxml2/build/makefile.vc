@@ -45,13 +45,17 @@ WXWIN = c:\wxWidgets
 
 ### Variables: ###
 
-WXXML2_CXXFLAGS = /MD /DWIN32 /I$(WXWIN)\include \
+WXXML2_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
+	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) /Fd..\lib\wxxml2.pdb \
+	$(____DEBUGRUNTIME) /I$(WXWIN)\include \
 	/I$(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) /I..\include \
 	/I$(LIBXML2_DIR)\include /I$(ICONV_DIR)\include /GR /GX $(CPPFLAGS) \
 	$(CXXFLAGS)
 WXXML2_OBJECTS =  \
 	msvc\wxxml2_xml2.obj
-MINIMAL_CXXFLAGS = /MD /DWIN32 /I$(WXWIN)\include \
+MINIMAL_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
+	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
+	/Fd..\sample\minimal.pdb $(____DEBUGRUNTIME) /I$(WXWIN)\include \
 	/I$(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) /I..\include /D_WINDOWS \
 	/I$(LIBXML2_DIR)\include /I$(ICONV_DIR)\include $(__DEBUG_DEFINE_p) \
 	/D__WXMSW__ /GR /GX $(CPPFLAGS) $(CXXFLAGS)
@@ -65,7 +69,46 @@ MINIMAL_OBJECTS =  \
 WXSUBLIBPOSTFIX = d
 !endif
 !if "$(BUILD)" == "debug"
+__DEBUGINFO_13 = /DEBUG
+!endif
+!if "$(BUILD)" == "release"
+__DEBUGINFO_13 = 
+!endif
+!if "$(BUILD)" == "debug"
 __DEBUG_DEFINE_p = /D__WXDEBUG__
+!endif
+!if "$(BUILD)" == "debug"
+__WARNINGS = /W4
+!endif
+!if "$(BUILD)" == "release"
+__WARNINGS = /w
+!endif
+!if "$(UNICODE)" == "1"
+__UNICODE_DEFINE_p = /D_UNICODE
+!endif
+!if "$(BUILD)" == "debug"
+__OPTIMIZEFLAG = /Od
+!endif
+!if "$(BUILD)" == "release"
+__OPTIMIZEFLAG = /O2
+!endif
+!if "$(BUILD)" == "debug"
+__DEBUGINFO = /Zi
+!endif
+!if "$(BUILD)" == "release"
+__DEBUGINFO = 
+!endif
+!if "$(BUILD)" == "debug"
+____DEBUGRUNTIME = /D_DEBUG
+!endif
+!if "$(BUILD)" == "release"
+____DEBUGRUNTIME = 
+!endif
+!if "$(BUILD)" == "debug"
+__DEBUGRUNTIME = d
+!endif
+!if "$(BUILD)" == "release"
+__DEBUGRUNTIME = 
 !endif
 !if "$(BUILD)" == "debug" && "$(UNICODE)" == "0"
 WXLIBPOSTFIX = d
@@ -101,6 +144,21 @@ tarball:
 zip: 
 	( cd .. && zip -r9 wxxml2.zip *  -x *.pdb -x *.log -x *.o* )
 
+cleanbuilddirs: 
+	-if exist msvc rmdir /S /Q msvc
+	-if exist watcom rmdir /S /Q watcom
+	-if exist borland rmdir /S /Q borland
+	-if exist mingw rmdir /S /Q mingw
+
+cleanall: clean cleanbuilddirs
+	del /S /Q ..\*.log >NUL
+	del /S /Q ..\*.lib >NUL
+	del /S /Q ..\*.a >NUL
+	del /S /Q ..\*.exe >NUL
+
+docs: 
+	( cd ..\docs && doxygen )
+
 cleandocs: 
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
@@ -111,12 +169,9 @@ cleandocs:
 <<
 
 ..\sample\minimal.exe: $(MINIMAL_OBJECTS)
-	link /NOLOGO /OUT:$@ $(LDFLAGS) /LIBPATH:$(WXWIN)\lib\vc_lib /SUBSYSTEM:WINDOWS /LIBPATH:..\lib /LIBPATH:$(LIBXML2_DIR)\lib /LIBPATH:$(ICONV_DIR)\lib @<<
+	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_13) /LIBPATH:$(WXWIN)\lib\vc_lib /SUBSYSTEM:WINDOWS /LIBPATH:..\lib /LIBPATH:$(LIBXML2_DIR)\lib /LIBPATH:$(ICONV_DIR)\lib @<<
 	$(MINIMAL_OBJECTS)  wxxml2.lib libxml2.lib iconv.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
-
-docs: 
-	( cd ..\docs && doxygen )
 
 msvc\wxxml2_xml2.obj: .\..\src\xml2.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(WXXML2_CXXFLAGS) $**

@@ -77,7 +77,8 @@ WXWIN = c:\wxWidgets
 
 ### Variables: ###
 
-WXSCRIPT_CXXFLAGS = -I$(BCCDIR)\include -I$(WXWIN)\include \
+WXSCRIPT_CXXFLAGS = -I$(BCCDIR)\include $(__UNICODE_DEFINE_p) \
+	$(__OPTIMIZEFLAG) $(__DEBUGINFO) -I$(WXWIN)\include \
 	-I$(WXWIN)\lib\bcc_lib\msw$(WXLIBPOSTFIX) -I..\include \
 	-I$(LUA_DIR)\include -I$(TOLUA_DIR)\include -I$(UCC_DIR)\include \
 	-DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC $(CPPFLAGS) $(CXXFLAGS)
@@ -87,7 +88,8 @@ WXSCRIPT_OBJECTS =  \
 	borland\wxscript_sccint.obj \
 	borland\wxscript_scunderc.obj \
 	borland\wxscript_sclua.obj
-MINIMAL_CXXFLAGS = -I$(BCCDIR)\include -I$(WXWIN)\include \
+MINIMAL_CXXFLAGS = -I$(BCCDIR)\include $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
+	$(__DEBUGINFO) -I$(WXWIN)\include \
 	-I$(WXWIN)\lib\bcc_lib\msw$(WXLIBPOSTFIX) -I..\include \
 	-I$(LUA_DIR)\include -I$(TOLUA_DIR)\include -I$(UCC_DIR)\include \
 	-DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC $(__DEBUG_DEFINE_p) -D__WXMSW__ \
@@ -108,6 +110,15 @@ WXSUBLIBPOSTFIX = d
 !if "$(BUILD)" == "debug"
 __DEBUG_DEFINE_p = -D__WXDEBUG__
 !endif
+!if "$(UNICODE)" == "1"
+__UNICODE_DEFINE_p = -D_UNICODE
+!endif
+!if "$(BUILD)" == "debug"
+__OPTIMIZEFLAG = -Od
+!endif
+!if "$(BUILD)" == "release"
+__OPTIMIZEFLAG = -O2
+!endif
 !if "$(BUILD)" == "debug" && "$(UNICODE)" == "0"
 WXLIBPOSTFIX = d
 !endif
@@ -116,6 +127,12 @@ WXLIBPOSTFIX = ud
 !endif
 !if "$(BUILD)" == "release" && "$(UNICODE)" == "1"
 WXLIBPOSTFIX = u
+!endif
+!if "$(BUILD)" == "debug"
+__DEBUGINFO = -v
+!endif
+!if "$(BUILD)" == "release"
+__DEBUGINFO = -v-
 !endif
 
 
@@ -145,6 +162,18 @@ tarball:
 zip: 
 	( cd .. && zip -r9 wxscript.zip *  -x *.pdb -x *.log -x *.o* )
 
+cleanbuilddirs: 
+	-if exist msvc rmdir /S /Q msvc
+	-if exist watcom rmdir /S /Q watcom
+	-if exist borland rmdir /S /Q borland
+	-if exist mingw rmdir /S /Q mingw
+
+cleanall: clean cleanbuilddirs
+	del /S /Q ..\*.log >NUL
+	del /S /Q ..\*.lib >NUL
+	del /S /Q ..\*.a >NUL
+	del /S /Q ..\*.exe >NUL
+
 docs: 
 	( cd ..\docs && doxygen )
 
@@ -158,7 +187,7 @@ cleandocs:
 |
 
 ..\tests\test1\minimal.exe: $(MINIMAL_OBJECTS) ..\lib\wxscript.lib
-	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -L$(WXWIN)\lib\bcc_lib -L..\lib -L$(LUA_DIR)\lib -L$(TOLUA_DIR)\lib -L$(UCC_DIR)\lib -ap @&&|
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(WXWIN)\lib\bcc_lib -L..\lib -L$(LUA_DIR)\lib -L$(TOLUA_DIR)\lib -L$(UCC_DIR)\lib -ap @&&|
 	c0x32.obj $(MINIMAL_OBJECTS),$@,, ..\lib\wxscript.lib lua.lib lualib.lib tolua.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32.lib,,
 |
 
