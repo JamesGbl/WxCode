@@ -1,14 +1,30 @@
 <?xml version="1.0" ?>
-<!-- $Id: arc.bkl,v 1.4 2004-11-27 23:50:46 chiclero Exp $ -->
+<!-- $Id: arc.bkl,v 1.5 2005-04-02 11:29:38 chiclero Exp $ -->
 
 <makefile>
 
-    <include file="../../../build/bakefiles/common_samples.bkl"/>
+    <include file="presets/wx.bkl"/>
 
-    <exe id="arc" template="wx_sample_console" template_append="wx_append">
+    <set var="DEBUGINFO">
+        <if cond="FORMAT!='autoconf' and WX_DEBUG=='1'">on</if>
+    </set>
+    <set var="DLLFLAG">
+        <if cond="FORMAT!='autoconf' and WX_SHARED=='1'">WXUSINGDLL</if>
+    </set>
+    
+    <exe id="arc" template="wx">
         <include>$(SRCDIR)/../include</include>
-        <sources>arc.cpp</sources>
-        <sources>../src/tarstrm.cpp</sources>
+
+        <debug-info>$(DEBUGINFO)</debug-info>
+        <define>$(DLLFLAG)</define>
+        <runtime-libs>dynamic</runtime-libs>
+        <threading>multi</threading>
+
+        <sources>
+            arc.cpp
+            ../src/tarstrm.cpp
+        </sources>
+
         <wx-lib>base</wx-lib>
     </exe>
 

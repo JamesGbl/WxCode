@@ -1,31 +1,42 @@
 <?xml version="1.0" ?>
-<!-- $Id: test.bkl,v 1.1 2004-11-27 23:55:10 chiclero Exp $ -->
+<!-- $Id: test.bkl,v 1.2 2005-04-02 11:29:38 chiclero Exp $ -->
 
 <makefile>
 
-    <include file="../../../build/bakefiles/common_samples.bkl"/>
+    <include file="presets/wx.bkl"/>
 
-    <exe id="test" template="wx_test_console"
-                   template_append="wx_append_base">
+    <option name="CPPUNIT_CFLAGS">
+        <default-value></default-value>
+        <description>Compiler flags to find CppUnit headers</description>
+    </option>
+    <option name="CPPUNIT_LIBS">
+        <default-value></default-value>
+        <description>Linker flags to find CppUnit libs</description>
+    </option>
 
-        <set var="TESTDIR">../../../tests</set>
+    <set var="DEBUGINFO">
+        <if cond="FORMAT!='autoconf' and WX_DEBUG=='1'">on</if>
+    </set>
+    <set var="DLLFLAG">
+        <if cond="FORMAT!='autoconf' and WX_SHARED=='1'">WXUSINGDLL</if>
+    </set>
+    
+    <exe id="test" template="wx">
+        <set var="TESTDIR">$(DOLLAR)(WXWIN)/tests</set>
+
+        <cppflags>$(CPPUNIT_CFLAGS)</cppflags>
+        <ldflags>$(CPPUNIT_LIBS)</ldflags>
+
+        <debug-info>$(DEBUGINFO)</debug-info>
+        <define>$(DLLFLAG)</define>
+        <runtime-libs>dynamic</runtime-libs>
+        <threading>multi</threading>
 
         <include>$(SRCDIR)/../include</include>
-        <include>$(SRCDIR)/$(TESTDIR)</include>
-        <include>$(SRCDIR)/$(TESTDIR)/archive</include>
-
-        <if cond="WX_DISABLE_PRECOMP_HEADERS=='0'">
-            <if cond="FORMAT!='autoconf' and TOOLKIT=='MSW'">
-                <sources>$(TESTDIR)/dummy.cpp</sources>
-                <precomp-headers-gen>$(TESTDIR)/dummy.cpp</precomp-headers-gen>
-            </if>
-            <precomp-headers-header>testprec.h</precomp-headers-header>
-            <precomp-headers>on</precomp-headers>
-            <precomp-headers-file>testprec_$(id)</precomp-headers-file>
-        </if>
+        <include>$(TESTDIR)</include>
+        <include>$(TESTDIR)/archive</include>
 
         <sources>
-            $(TESTDIR)/test.cpp
             arctest.cpp
             tartest.cpp
             ../src/tarstrm.cpp
