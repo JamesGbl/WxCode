@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.16 2004-06-21 19:30:53 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.17 2004-06-23 20:51:32 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -3696,6 +3696,7 @@ void wxTreeListMainWindow::OnPaint( wxPaintEvent &WXUNUSED(event) )
 void wxTreeListMainWindow::OnSetFocus( wxFocusEvent &event )
 {
     m_hasFocus = TRUE;
+    SetWindowStyle (GetWindowStyle() || wxRAISED_BORDER);
 
     RefreshSelected();
 
@@ -3705,6 +3706,7 @@ void wxTreeListMainWindow::OnSetFocus( wxFocusEvent &event )
 void wxTreeListMainWindow::OnKillFocus( wxFocusEvent &event )
 {
     m_hasFocus = FALSE;
+    SetWindowStyle (GetWindowStyle() && !wxRAISED_BORDER);
 
     RefreshSelected();
 
