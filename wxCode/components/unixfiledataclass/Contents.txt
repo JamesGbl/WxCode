@@ -1,0 +1,60 @@
+FileData is a class to encapsulate some *nix-specific things that wxWidgets (very reasonably) ignores.  Unlike wxStat, it deals correctly with symlinks.  It can be compiled "as-is" into a project, or you can comment out just methods you don't need.
+
+The following methods access information, mostly just by returning parts of statstruct:
+
+IsFileExecutable();
+CanTHISUserRead();
+CanTHISUserWrite();
+CanTHISUserExecute();
+CanTHISUserRename();
+CanTHISUserChmod();
+
+IsUserReadable();
+IsUserWriteable();
+IsUserExecutable();
+IsGroupReadable();
+IsGroupWriteable();
+IsGroupExecutable();
+IsOtherReadable();
+IsOtherWriteable();
+IsOtherExecutable();
+IsSetuid();
+IsSetgid();
+IsSticky();
+
+PermissionsToText();       // Returns a string describing the filetype & permissions eg -rwxr--r--
+GetPermissions();           // Returns Permissions in numerical form
+
+OwnerID();
+GroupID();
+GetOwner();                 // Returns name as string
+GetGroup();
+
+AccessTime();
+ModificationTime();
+ChangedTime();
+
+Size();
+GetParsedSize();
+GetBlocksize();
+GetBlockNo();
+GetInodeNo();
+GetHardLinkNo();
+
+IsRegularFile();
+IsDir();
+IsSymlink();
+IsCharDev();
+IsBlkDev();
+IsSocket();
+IsFIFO();
+
+Type();                          // Returns string version of type eg "Directory"
+
+GetSymlinkDestination(); 
+
+The last three methods attempt to change permissions, ownership and group
+
+DoChmod();
+DoChangeOwner();
+DoChangeGroup();
