@@ -290,6 +290,14 @@ int AspellInterface::SetDefaultOptions()
   SuggestionModeOption.AddPossibleValue(wxString(_T("bad-spellers")));
   AddOptionToMap(SuggestionModeOption);
 
+  SpellCheckEngineOption FilterModeOption(_T("mode"), _T("Filter Mode"), wxString(_T("none")));
+  FilterModeOption.AddPossibleValue(wxString(_T("none")));
+  FilterModeOption.AddPossibleValue(wxString(_T("url")));
+  FilterModeOption.AddPossibleValue(wxString(_T("email")));
+  FilterModeOption.AddPossibleValue(wxString(_T("sgml")));
+  FilterModeOption.AddPossibleValue(wxString(_T("tex")));
+  AddOptionToMap(FilterModeOption);
+
   SpellCheckEngineOption IgnoreCaseOption(_T("ignore-case"), _T("Ignore Case"), false);
   AddOptionToMap(IgnoreCaseOption);
 
