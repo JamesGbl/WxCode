@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.11 2005-01-20 19:27:02 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.12 2005-01-20 19:32:03 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -1652,8 +1652,7 @@ void wxScintilla::LinesJoin() {
     SendMsg(2288, 0, 0);
 }
 
-// Split the lines in the target into lines that are less wide than pixelWidth
-// where possible.
+// Split the lines in the target into lines that are less wide than pixel where possible.
 void wxScintilla::LinesSplit(int pixels) {
     SendMsg(2289, pixels, 0);
 }

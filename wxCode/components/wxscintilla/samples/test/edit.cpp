@@ -3,7 +3,7 @@
 // Purpose:     wxScintilla test module
 // Maintainer:  Otto Wyss
 // Created:     2003-09-01
-// RCS-ID:      $Id: edit.cpp,v 1.2 2004-12-02 18:33:10 wyo Exp $
+// RCS-ID:      $Id: edit.cpp,v 1.3 2005-01-20 19:27:39 wyo Exp $
 // Copyright:   (c) 2004wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -145,13 +145,17 @@ Edit::Edit (wxWindow *parent, wxWindowID id,
     SetYCaretPolicy (wxSCI_CARET_EVEN|wxSCI_VISIBLE_STRICT|wxSCI_CARET_SLOP, 1);
 
     // markers
-    MarkerDefine (wxSCI_MARKNUM_FOLDER,        wxSCI_MARK_DOTDOTDOT, _T("BLACK"), _T("BLACK"));
-    MarkerDefine (wxSCI_MARKNUM_FOLDEROPEN,    wxSCI_MARK_ARROWDOWN, _T("BLACK"), _T("BLACK"));
-    MarkerDefine (wxSCI_MARKNUM_FOLDERSUB,     wxSCI_MARK_EMPTY,     _T("BLACK"), _T("BLACK"));
-    MarkerDefine (wxSCI_MARKNUM_FOLDEREND,     wxSCI_MARK_DOTDOTDOT, _T("BLACK"), _T("WHITE"));
-    MarkerDefine (wxSCI_MARKNUM_FOLDEROPENMID, wxSCI_MARK_ARROWDOWN, _T("BLACK"), _T("WHITE"));
-    MarkerDefine (wxSCI_MARKNUM_FOLDERMIDTAIL, wxSCI_MARK_EMPTY,     _T("BLACK"), _T("BLACK"));
-    MarkerDefine (wxSCI_MARKNUM_FOLDERTAIL,    wxSCI_MARK_EMPTY,     _T("BLACK"), _T("BLACK"));
+    MarkerDefine (wxSCI_MARKNUM_FOLDER, wxSCI_MARK_BOXPLUS);
+    MarkerSetBackground (wxSCI_MARKNUM_FOLDER, wxColour (_T("BLACK")));
+    MarkerSetForeground (wxSCI_MARKNUM_FOLDER, wxColour (_T("WHITE")));
+    MarkerDefine (wxSCI_MARKNUM_FOLDEROPEN, wxSCI_MARK_BOXMINUS);
+    MarkerSetBackground (wxSCI_MARKNUM_FOLDEROPEN, wxColour (_T("BLACK")));
+    MarkerSetForeground (wxSCI_MARKNUM_FOLDEROPEN, wxColour (_T("WHITE")));
+    MarkerDefine (wxSCI_MARKNUM_FOLDERSUB, wxSCI_MARK_EMPTY);
+    MarkerDefine (wxSCI_MARKNUM_FOLDEREND, wxSCI_MARK_SHORTARROW);
+    MarkerDefine (wxSCI_MARKNUM_FOLDEROPENMID, wxSCI_MARK_ARROWDOWN);
+    MarkerDefine (wxSCI_MARKNUM_FOLDERMIDTAIL, wxSCI_MARK_EMPTY);
+    MarkerDefine (wxSCI_MARKNUM_FOLDERTAIL, wxSCI_MARK_EMPTY);
 
     // miscelaneous
     m_LineNrMargin = TextWidth (wxSCI_STYLE_LINENUMBER, _T("_999999"));
