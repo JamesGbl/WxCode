@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.34 2004-10-08 16:02:49 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.35 2004-10-16 17:54:32 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -3252,7 +3252,6 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
     }else{
         colText = GetForegroundColour();
     }
-    dc.SetTextForeground (colText);
     wxColour colTextHilight = wxSystemSettings::GetSystemColour(wxSYS_COLOUR_HIGHLIGHTTEXT);
 
     int total_w = m_owner->GetHeaderWindow()->GetWidth();
@@ -3292,6 +3291,8 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
             }
             dc.SetTextForeground (colTextHilight);
         }
+    }else{
+        dc.SetTextForeground (colText);
     }
     dc.DrawRectangle (0, item->GetY() + off_h, total_w, total_h - off_h);
 
@@ -3343,28 +3344,32 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
         if (i == GetMainColumn()) item->SetTextX (text_x);
 
         wxDCClipper clipper (dc, x_colstart, item->GetY(), col_w, total_h); // only within column
-        if (!HasFlag (wxTR_FULL_ROW_HIGHLIGHT) && (i == GetMainColumn())) {
-            if (item == m_dragItem) {
-                dc.SetBrush (*m_hilightBrush);
-#ifndef __WXMAC__ // don't draw rect outline if we already have the background color
-                dc.SetPen ((item == m_dragItem)? *wxBLACK_PEN: *wxTRANSPARENT_PEN);
-#endif // !__WXMAC__
-                dc.SetTextForeground (colTextHilight);
-                dc.DrawRectangle (text_x, item->GetY() + off_h, text_w, total_h - off_h);
-            }else if (item->IsSelected()) {
-                if (!m_isDragging && m_hasFocus) {
+        if (!HasFlag (wxTR_FULL_ROW_HIGHLIGHT)) {
+            if (i == GetMainColumn()) {
+                if (item == m_dragItem) {
                     dc.SetBrush (*m_hilightBrush);
 #ifndef __WXMAC__ // don't draw rect outline if we already have the background color
-                    dc.SetPen (*wxBLACK_PEN);
+                    dc.SetPen ((item == m_dragItem)? *wxBLACK_PEN: *wxTRANSPARENT_PEN);
 #endif // !__WXMAC__
-                }else{
-                    dc.SetBrush (*m_hilightUnfocusedBrush);
+                    dc.SetTextForeground (colTextHilight);
+                    dc.DrawRectangle (text_x, item->GetY() + off_h, text_w, total_h - off_h);
+                }else if (item->IsSelected()) {
+                    if (!m_isDragging && m_hasFocus) {
+                        dc.SetBrush (*m_hilightBrush);
 #ifndef __WXMAC__ // don't draw rect outline if we already have the background color
-                  dc.SetPen (*wxTRANSPARENT_PEN);
+                        dc.SetPen (*wxBLACK_PEN);
 #endif // !__WXMAC__
+                    }else{
+                        dc.SetBrush (*m_hilightUnfocusedBrush);
+#ifndef __WXMAC__ // don't draw rect outline if we already have the background color
+                      dc.SetPen (*wxTRANSPARENT_PEN);
+#endif // !__WXMAC__
+                    }
+                    dc.DrawRectangle (text_x, item->GetY() + off_h, text_w, total_h - off_h);
+                    dc.SetTextForeground (colTextHilight);
                 }
-                dc.DrawRectangle (text_x, item->GetY() + off_h, text_w, total_h - off_h);
-                dc.SetTextForeground (colTextHilight);
+            }else{
+                dc.SetTextForeground (colText);
             }
         }
 
