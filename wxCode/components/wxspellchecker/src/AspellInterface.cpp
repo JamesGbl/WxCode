@@ -74,6 +74,8 @@ int AspellInterface::InitializeSpellCheckEngine()
 	if (m_AspellConfig == NULL)
 		return FALSE;
 
+  ApplyOptions();
+  
   AspellCanHaveError* ret = m_AspellWrapper.NewAspellSpeller(m_AspellConfig);
   if (m_AspellWrapper.AspellError(ret) != 0)
 	{
