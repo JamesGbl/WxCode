@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.26 2004-11-22 18:38:50 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.27 2005-01-08 21:58:38 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -529,8 +529,9 @@ protected:
     // main window, the "true" tree ctrl
     wxTreeListMainWindow* m_main_win;
 
-    void OnSize(wxSizeEvent& event);
     void CalculateAndSetHeaderHeight();
+    void DoHeaderLayout();
+    void OnSize(wxSizeEvent& event);
 
 private:
     int m_headerHeight;

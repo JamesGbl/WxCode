@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.66 2004-12-20 19:29:08 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.67 2005-01-08 21:58:17 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -4289,8 +4289,7 @@ void wxTreeListCtrl::CalculateAndSetHeaderHeight()
     }
 }
 
-
-void wxTreeListCtrl::OnSize(wxSizeEvent& WXUNUSED(event))
+void wxTreeListCtrl::DoHeaderLayout()
 {
     int w, h;
     GetClientSize(&w, &h);
@@ -4300,6 +4299,10 @@ void wxTreeListCtrl::OnSize(wxSizeEvent& WXUNUSED(event))
         m_main_win->SetSize(0, m_headerHeight + 1, w, h - m_headerHeight - 1);
 }
 
+void wxTreeListCtrl::OnSize(wxSizeEvent& WXUNUSED(event))
+{
+    DoHeaderLayout();
+}
 
 size_t wxTreeListCtrl::GetCount() const { return m_main_win->GetCount(); }
 
@@ -4671,7 +4674,10 @@ wxString wxTreeListCtrl::GetColumnText(int column) const
 { return m_header_win->GetColumnText(column); }
 
 void wxTreeListCtrl::AddColumn(const wxTreeListColumnInfo& col)
-{ m_header_win->AddColumn(col); }
+{
+    m_header_win->AddColumn(col);
+    DoHeaderLayout();
+}
 
 void wxTreeListCtrl::InsertColumn(int before,
                                   const wxTreeListColumnInfo& col)
