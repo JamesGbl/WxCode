@@ -3,10 +3,10 @@
 #include <wx/xrc/xmlres.h>
 
 BEGIN_EVENT_TABLE(XmlPersonalDictionaryDialog, wxDialog)
-  EVT_BUTTON(XRCID("ButtonAddToDict"), XmlPersonalDictionaryDialog::AddWordToPersonalDictionary)
-  EVT_BUTTON(XRCID("ButtonReplaceInDict"), XmlPersonalDictionaryDialog::ReplaceInPersonalDictionary)
-  EVT_BUTTON(XRCID("ButtonRemoveFromDict"), XmlPersonalDictionaryDialog::RemoveFromPersonalDictionary)
-  EVT_BUTTON(XRCID("ButtonClose"), XmlPersonalDictionaryDialog::OnClose)
+  EVT_BUTTON(XRCID(_T("ButtonAddToDict")), XmlPersonalDictionaryDialog::AddWordToPersonalDictionary)
+  EVT_BUTTON(XRCID(_T("ButtonReplaceInDict")), XmlPersonalDictionaryDialog::ReplaceInPersonalDictionary)
+  EVT_BUTTON(XRCID(_T("ButtonRemoveFromDict")), XmlPersonalDictionaryDialog::RemoveFromPersonalDictionary)
+  EVT_BUTTON(XRCID(_T("ButtonClose")), XmlPersonalDictionaryDialog::OnClose)
 END_EVENT_TABLE()
 
 XmlPersonalDictionaryDialog::XmlPersonalDictionaryDialog(wxWindow* parent, wxString strResourceFile, wxString strResource, wxSpellCheckEngineInterface* pEngine)
@@ -43,7 +43,7 @@ void XmlPersonalDictionaryDialog::PopulatePersonalWordListBox()
 {
   if (m_pSpellCheckEngine != NULL)
   {
-    wxListBox* pListBox = XRCCTRL(*this, "ListPersonalWords", wxListBox);
+    wxListBox* pListBox = XRCCTRL(*this, _T("ListPersonalWords"), wxListBox);
 
     if (pListBox)
     {
@@ -68,7 +68,7 @@ void XmlPersonalDictionaryDialog::AddWordToPersonalDictionary(wxCommandEvent& ev
   {
     TransferDataFromWindow();
 
-    wxTextCtrl* pText = XRCCTRL(*this, "TextNewPersonalWord", wxTextCtrl);
+    wxTextCtrl* pText = XRCCTRL(*this, _T("TextNewPersonalWord"), wxTextCtrl);
 
     if (pText != NULL)
     {
@@ -76,6 +76,9 @@ void XmlPersonalDictionaryDialog::AddWordToPersonalDictionary(wxCommandEvent& ev
 
       if (!strNewWord.Trim().IsEmpty())
         m_pSpellCheckEngine->AddWordToDictionary(strNewWord);
+      
+      // Clear the text control
+      pText->Clear();
     }
 
     PopulatePersonalWordListBox();
@@ -84,6 +87,35 @@ void XmlPersonalDictionaryDialog::AddWordToPersonalDictionary(wxCommandEvent& ev
 
 void XmlPersonalDictionaryDialog::ReplaceInPersonalDictionary(wxCommandEvent& event)
 {
+  if (m_pSpellCheckEngine != NULL)
+  {
+    TransferDataFromWindow();
+    
+    wxString strOldWord = _T("");
+    wxString strNewWord = _T("");
+
+    // Find the old word
+    wxListBox* pListBox = XRCCTRL(*this, _T("ListPersonalWords"), wxListBox);
+    if (pListBox)
+      strOldWord = pListBox->GetStringSelection();
+    
+    // Find the new word
+    wxTextCtrl* pText = XRCCTRL(*this, _T("TextNewPersonalWord"), wxTextCtrl);
+    if (pText)
+    {
+      strNewWord = pText->GetValue();
+      
+      // Clear the text control
+      pText->Clear();
+    }
+
+    if (!strOldWord.IsEmpty() && !strNewWord.IsEmpty())
+    {
+      m_pSpellCheckEngine->RemoveWordFromDictionary(strOldWord);
+      m_pSpellCheckEngine->AddWordToDictionary(strNewWord);
+      PopulatePersonalWordListBox();
+    }
+  }
 }
 
 void XmlPersonalDictionaryDialog::RemoveFromPersonalDictionary(wxCommandEvent& event)
@@ -91,14 +123,14 @@ void XmlPersonalDictionaryDialog::RemoveFromPersonalDictionary(wxCommandEvent& e
   if (m_pSpellCheckEngine != NULL)
   {
     TransferDataFromWindow();
-    wxListBox* pListBox = XRCCTRL(*this, "ListPersonalWords", wxListBox);
+    wxListBox* pListBox = XRCCTRL(*this, _T("ListPersonalWords"), wxListBox);
     if (pListBox)
     {
-      wxString strNewWord = pListBox->GetStringSelection();
-      if (!strNewWord.Trim().IsEmpty())
+      wxString strWord = pListBox->GetStringSelection();
+      if (!strWord.Trim().IsEmpty())
       {
-        if (!(m_pSpellCheckEngine->RemoveWordFromDictionary(strNewWord)))
-          ::wxMessageBox(_T("There was an error removing \"" + strNewWord + "\" to the personal dictionary"));
+        if (!(m_pSpellCheckEngine->RemoveWordFromDictionary(strWord)))
+          ::wxMessageBox(_T("There was an error removing \"") + strWord + _T("\" to the personal dictionary"));
       }
     }
     PopulatePersonalWordListBox();
