@@ -12,7 +12,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.h,v 1.11 2005-01-21 22:16:55 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.h,v 1.12 2005-01-22 08:24:43 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -2263,6 +2263,7 @@ public:
     bool GetUseVerticalScrollBar();
 
     // Append a string to the end of the document without changing the selection.
+    void AppendText (const wxString& text);
     void AppendText (int length, const wxString& text);
 
     // Is drawing done in two phases with backgrounds drawn before foregrounds?

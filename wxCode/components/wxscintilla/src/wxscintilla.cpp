@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.12 2005-01-20 19:32:03 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.13 2005-01-22 08:27:39 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -1624,6 +1624,12 @@ void wxScintilla::SetUseVerticalScrollBar(bool show) {
 // Is the vertical scroll bar visible?
 bool wxScintilla::GetUseVerticalScrollBar() {
     return SendMsg(2281, 0, 0) != 0;
+}
+
+// Add text to the document at current position.
+void wxScintilla::AppendText(const wxString& text) {
+    wxWX2MBbuf buf = (wxWX2MBbuf)wx2sci(text);
+    SendMsg(2282, strlen(buf), (long)(const char*)buf);
 }
 
 // Append a string to the end of the document without changing the selection.
