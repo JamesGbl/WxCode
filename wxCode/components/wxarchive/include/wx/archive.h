@@ -2,7 +2,7 @@
 // Name:        archive.h
 // Purpose:     Streams for archive formats
 // Author:      Mike Wetherell
-// RCS-ID:      $Id: archive.h,v 1.4 2004-07-14 18:24:21 chiclero Exp $
+// RCS-ID:      $Id: archive.h,v 1.5 2004-09-09 15:53:52 chiclero Exp $
 // Copyright:   (c) 2004 Mike Wetherell
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -45,12 +45,13 @@ public:
     wxArchiveEntry() : m_notifier(NULL) { }
     virtual ~wxArchiveEntry() { }
 
-    virtual wxDateTime GetDateTime() const = 0;
-    virtual off_t      GetSize() const = 0;
-    virtual off_t      GetOffset() const = 0;
-    virtual bool       IsDir() const = 0;
-    virtual wxString   GetInternalName() const = 0;
-    virtual wxString   GetName(wxPathFormat format = wxPATH_NATIVE) const = 0;
+    virtual wxDateTime   GetDateTime() const = 0;
+    virtual off_t        GetSize() const = 0;
+    virtual off_t        GetOffset() const = 0;
+    virtual bool         IsDir() const = 0;
+    virtual wxString     GetInternalName() const = 0;
+    virtual wxPathFormat GetInternalFormat() const = 0;
+    virtual wxString     GetName(wxPathFormat format = wxPATH_NATIVE) const = 0;
 
     virtual void SetDateTime(const wxDateTime& dt) = 0;
     virtual void SetSize(off_t size) = 0;
@@ -60,34 +61,22 @@ public:
     
     wxArchiveEntry *Clone() const { return DoClone(); }
 
-    inline void SetNotifier(wxArchiveNotifier& notifier);
+    void SetNotifier(wxArchiveNotifier& notifier);
     virtual void UnsetNotifier() { m_notifier = NULL; }
+    virtual bool IsUpdatePending() const { return false; }
 
 protected:
     virtual void SetOffset(off_t offset) = 0;
     virtual wxArchiveEntry* DoClone() const = 0;
 
     wxArchiveNotifier *GetNotifier() const { return m_notifier; }
-    inline wxArchiveEntry& operator=(const wxArchiveEntry& entry);
+    wxArchiveEntry& operator=(const wxArchiveEntry& entry);
 
 private:
     wxArchiveNotifier *m_notifier;
 
     DECLARE_ABSTRACT_CLASS(wxArchiveEntry)
 };
-
-void wxArchiveEntry::SetNotifier(wxArchiveNotifier& notifier)
-{
-    UnsetNotifier();
-    m_notifier = &notifier;
-    m_notifier->OnEntryChanged(*this);
-}
-
-wxArchiveEntry& wxArchiveEntry::operator=(const wxArchiveEntry& entry)
-{
-    m_notifier = entry.m_notifier;
-    return *this;
-}
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -259,12 +248,17 @@ private:
 class wxArchiveClassFactory : public wxObject
 {
 public:
+    virtual ~wxArchiveClassFactory() { }
+
     wxArchiveEntry *NewEntry()
         { return DoNewEntry(); }
     wxArchiveInputStream *NewStream(wxInputStream& stream)
         { return DoNewStream(stream); }
     wxArchiveOutputStream *NewStream(wxOutputStream& stream)
         { return DoNewStream(stream); }
+
+    virtual wxString GetInternalName(const wxString& name,
+                                     wxPathFormat format = wxPATH_NATIVE) = 0;
 
     void SetConv(wxMBConv& conv) { m_pConv = &conv; }
     wxMBConv& GetConv() const { return *m_pConv; }
@@ -350,8 +344,6 @@ void _wxSetArchiveIteratorValue(std::pair<X, Y>& val, Z entry, Z WXUNUSED(d)) {
     val = std::make_pair(X(entry->GetInternalName()), Y(entry));
 }
 
-// Older versions of VC++ don't allow typename here but some compilers
-// require it
 #if defined _MSC_VER && _MSC_VER < 1300
 template <class Arc, class T = Arc::entry_type*>
 #else

@@ -2,7 +2,7 @@
 // Name:        archive.cpp
 // Purpose:     Streams for archive formats
 // Author:      Mike Wetherell
-// RCS-ID:      $Id: archive.cpp,v 1.3 2004-07-08 05:36:46 chiclero Exp $
+// RCS-ID:      $Id: archive.cpp,v 1.4 2004-09-09 15:53:52 chiclero Exp $
 // Copyright:   (c) Mike Wetherell
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -49,5 +49,22 @@ wxArchiveOutputStream::wxArchiveOutputStream(wxOutputStream& stream,
   : wxFilterOutputStream(stream),
     m_conv(conv)
 {
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// wxArchiveEntry
+
+void wxArchiveEntry::SetNotifier(wxArchiveNotifier& notifier)
+{
+    UnsetNotifier();
+    m_notifier = &notifier;
+    m_notifier->OnEntryChanged(*this);
+}
+
+wxArchiveEntry& wxArchiveEntry::operator=(const wxArchiveEntry& entry)
+{
+    m_notifier = entry.m_notifier;
+    return *this;
 }
 

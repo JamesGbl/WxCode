@@ -1,8 +1,8 @@
-////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 // Name:        arc.cpp
 // Purpose:     Examples for archive classes
 // Author:      Mike Wetherell
-// RCS-ID:      $Id: arc.cpp,v 1.5 2004-07-17 14:31:16 chiclero Exp $
+// RCS-ID:      $Id: arc.cpp,v 1.6 2004-09-09 15:53:52 chiclero Exp $
 // Copyright:   (c) Mike Wetherell
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -125,11 +125,11 @@ bool ArcApp::Create()
 
     for (NameMap::iterator it = files.begin(); it != files.end(); ++it) {
         wxString name = it->second;
+        wxDateTime dt(wxFileModificationTime(name));
 
         *m_info << "adding " << name.mb_str() << std::endl;
 
         if (wxDirExists(name)) {
-            wxDateTime dt = wxFileName(name, _T("")).GetModificationTime();
             if (!arc->PutNextDirEntry(name, dt))
                 return false;
         }
@@ -137,7 +137,6 @@ bool ArcApp::Create()
             wxFFileInputStream in(name);
 
             if (in.Ok()) {
-                wxDateTime dt = wxFileName(name).GetModificationTime();
                 if (!arc->PutNextEntry(name, dt, in.GetSize()) ||
                         !arc->Write(in) || !in.Eof())
                     return false;
@@ -158,9 +157,9 @@ bool ArcApp::Create()
 bool ArcApp::Extract()
 {
     wxArchiveInputStreamPtr arc(m_factory->NewStream(*m_in));
-    wxArchiveEntryPtr       entry(arc->GetNextEntry());
+    wxArchiveEntryPtr       entry;
 
-    for (; entry.get(); entry.reset(arc->GetNextEntry())) {
+    while (entry.reset(arc->GetNextEntry()), entry.get() != NULL) {
         if (!m_args.empty() && !entry->GetName().Matches(m_args[0]))
             continue;
         *m_info << "extracting " << entry->GetName().mb_str() << std::endl;
@@ -197,9 +196,9 @@ bool ArcApp::Extract()
 bool ArcApp::List()
 {
     wxArchiveInputStreamPtr arc(m_factory->NewStream(*m_in));
-    wxArchiveEntryPtr       entry(arc->GetNextEntry());
+    wxArchiveEntryPtr       entry;
 
-    for (; entry.get() && arc->CloseEntry(); entry.reset(arc->GetNextEntry()))
+    while (entry.reset(arc->GetNextEntry()), entry.get() && arc->CloseEntry())
         if (m_args.empty() || entry->GetName().Matches(m_args[0]))
             *m_info
                 << std::setw(9) << entry->GetSize() << " "
@@ -218,15 +217,17 @@ bool ArcApp::List()
 
 bool ArcApp::Remove()
 {
+    system("if [ \"$D\" ]; then konsole -e gdb -p $PPID & sleep 5; fi");
+
     wxString pattern = m_args[0];
 
     wxArchiveInputStreamPtr  arc(m_factory->NewStream(*m_in));
     wxArchiveOutputStreamPtr outarc(m_factory->NewStream(*m_out));
-    wxArchiveEntryPtr        entry(arc->GetNextEntry());
+    wxArchiveEntryPtr        entry;
 
     outarc->SetExtra(arc->GetExtra());
 
-    for (; entry.get(); entry.reset(arc->GetNextEntry()))
+    while (entry.reset(arc->GetNextEntry()), entry.get() != NULL)
         if (entry->GetName().Matches(pattern))
             *m_info << "removing " << entry->GetName().mb_str() << std::endl;
         else
@@ -251,11 +252,11 @@ bool ArcApp::Rename()
 
     wxArchiveInputStreamPtr  arc(m_factory->NewStream(*m_in));
     wxArchiveOutputStreamPtr outarc(m_factory->NewStream(*m_out));
-    wxArchiveEntryPtr        entry(arc->GetNextEntry());
+    wxArchiveEntryPtr        entry;
 
     outarc->SetExtra(arc->GetExtra());
 
-    for (; entry.get(); entry.reset(arc->GetNextEntry())) {
+    while (entry.reset(arc->GetNextEntry()), entry.get() != NULL) {
         if (entry->GetName() == from) {
             *m_info << "renaming '" << from.mb_str()
                     << "' to '" << to.mb_str() << "'" << std::endl;
@@ -308,7 +309,7 @@ bool ArcApp::Add()
 
             if (wxDirExists(name)) {
                 *m_info << "adding " << name.mb_str() << std::endl;
-                wxDateTime dt = wxFileName(name, _T("")).GetModificationTime();
+                wxDateTime dt(wxFileModificationTime(name));
                 if (!outarc->PutNextDirEntry(name, dt))
                     return false;
                 keep = false;
@@ -317,7 +318,7 @@ bool ArcApp::Add()
 
                 if (file.Ok()) {
                     *m_info << "adding " << name.mb_str() << std::endl;
-                    wxDateTime dt = wxFileName(name).GetModificationTime();
+                    wxDateTime dt(wxFileModificationTime(name));
                     if (!outarc->PutNextEntry(name, dt, file.GetSize()) ||
                             !outarc->Write(file) || !file.Eof())
                         return false;
@@ -345,25 +346,24 @@ class DirTraverser : public wxDirTraverser
 {
 public:
     DirTraverser(NameMap& files,
-                 wxArchiveEntry& entry,
+                 wxArchiveClassFactory& factory,
                  const wxString& exclude1,
                  const wxString& exclude2)
     :   m_files(files),
-        m_entry(entry),
-        m_exclude1(exclude1),
-        m_exclude2(exclude2)
+        m_factory(factory),
+        m_exclude1(factory.GetInternalName(exclude1)),
+        m_exclude2(factory.GetInternalName(exclude2))
     { }
 
     virtual ~DirTraverser() { }
 
     wxDirTraverseResult OnFile(const wxString& name)
     {
-        m_entry.SetName(name);
-        wxString key = m_entry.GetInternalName();
+        wxString key = m_factory.GetInternalName(name);
 
         // exclude the files given in m_exclude# plus any files who's name
         // would degenerate to "" in the archive e.g. "/" or "." for zip or tar
-        if (!key.empty() && m_exclude1 != name && m_exclude2 != name) {
+        if (!key.empty() && key != m_exclude1 && key != m_exclude2) {
             NameMap::iterator it = m_files.lower_bound(key);
 
             if (it != m_files.end() && it->first == key)
@@ -388,9 +388,9 @@ public:
 
 private:
     NameMap& m_files;
-    wxArchiveEntry& m_entry;
-    wxFileName m_exclude1;
-    wxFileName m_exclude2;
+    wxArchiveClassFactory& m_factory;
+    wxString m_exclude1;
+    wxString m_exclude2;
 };
 
 
@@ -407,8 +407,7 @@ void ArcApp::MakeFileList(
     const wxString& exclude1,
     const wxString& exclude2)
 {
-    wxArchiveEntryPtr entry(m_factory->NewEntry());
-    DirTraverser traverser(files, *entry, exclude1, exclude2);
+    DirTraverser traverser(files, *m_factory, exclude1, exclude2);
 
     for (size_t i = 0; i < m_args.size(); ++i) {
 #ifndef __WXMSW__

@@ -21,31 +21,27 @@ $ cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/wxcode co wxCode/com
 
 then move it to wxWidgets/contrib, e.g:
 
-$ mv wxCode/components wxWidgets/contrib
+$ mv wxCode/components/wxarchive wxWidgets/contrib
 
-Makefiles can be generated using wxWidgets' bakefiles, a temporary
-arrangement (i.e. hijacking wxWidgets' files is a temporary
-measure, I'll keep on using bakefile of course). Bakefile can be
+(so you should have a directory 'wxWidgets/contrib/wxarchive').
+
+Makefiles can be generated using wxWidgets' bakefiles. Bakefile can be
 obtained from (http://bakefile.sourceforge.net). Create (or add to)
 Bakefiles.local.bkgen in your wxWidgets/build/bakefiles directory:
 
 <?xml version="1.0" ?>
 <bakefile-gen>
     <input>
-        ../../contrib/components/*/*.bkl
-        ../../contrib/components/*/*/*.bkl
-        ../../contrib/components/*/*/*/*.bkl
+        ../../contrib/wxarchive/*/*.bkl
     </input>
 </bakefile-gen>
 
 Then run bakefile_gen (from inside the wxWidgets/build/bakefiles dir):
 
-    bakefile_gen -b '../../contrib/components/wxarchive/*/*.bkl'
+    bakefile_gen -b '../../contrib/wxarchive/*/*.bkl'
 
-The test script tests the arc sample program against itself, and
-will also test it against zip/unzip and pkzip/pkunzip if they are
-in the path. By default it looks for 'arc' in the current directory
-(so 'cd' to wherever 'arc' is then run the script).
-
-It's a unix shell script (probably not a very good idea), but it
-runs ok on MSYS or Cygwin on Windows.
+The test script (a Bourne shell script) tests the arc sample
+program against itself, and will also test it against zip/unzip
+and pkzip/pkunzip if they are in the path. By default it looks for
+'arc' in the current directory (so 'cd' to wherever 'arc' is then run
+the script). The script can be run on Windows using MSYS or Cygwin.
