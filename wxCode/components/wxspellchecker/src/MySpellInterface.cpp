@@ -114,6 +114,8 @@ wxString MySpellInterface::CheckSpelling(wxString strText)
 
   int nDiff = 0;
 
+  strText += " ";
+
   wxString strDelimiters = _T(" \t\r\n.,?!@#$%^&*()-=_+[]{}\\|;:\"<>/~0123456789");
   wxStringTokenizer tkz(strText, strDelimiters);
   while ( tkz.HasMoreTokens() )
@@ -164,6 +166,8 @@ wxString MySpellInterface::CheckSpelling(wxString strText)
       }
     }
   }
+
+  strText = strText.Left(strText.Len() - 1);
 
   return strText;
 }
