@@ -177,7 +177,7 @@ SOURCE=..\src\ScintillaWX.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\include\wx\wxscintilla.h
+SOURCE=..\include\wx\wxscintilla.h
 # End Source File
 # End Group
 # Begin Group "Scintilla"
