@@ -669,12 +669,12 @@ Returns the current anchor position.
 <p>
 Set the selection based on the assumption that the anchor position is less than the current position. They do not make the caret visible. The table shows the positions of the anchor and the current position after using either.
 </p>
-<table cellpadding="3" cellspacing="0" border="1" summary="SetSelection caret positioning">   <thead align="center">
+<table cellpadding="3" cellspacing="0" border="1" summary="SetSelection caret positioning"><thead align="center">
 <tr>
   <th></th>
   <th>anchor</th>
   <th>current</th>
-</tr></thead><tbody align="center">
+</tr></thead><tbody align="left">
 <tr>
   <th><code>SetSelectionStart</code></th>
   <td><code>pos</code></td>
@@ -2164,7 +2164,7 @@ The colour of highlighted call tip text can be set; the default colour is dark b
 <p>
 To allow the container application to perform any of the actions available to the user with keyboard, all the keyboard actions are commands. They do not take any parameters. These commands are also used when redefining the key bindings with the <a class="message" href="#CmdKeyAssign"><code>CmdKeyAssign</code></a>.
 </p>
-<table border="0" summary="Keyboard commands">   <tbody>
+<table border="0" summary="Keyboard commands"><tbody>
 <tr>
   <td><code>wxSCI_CMD_LINEDOWN</code></td>
   <td><code>wxSCI_CMD_LINEDOWNEXTEND</code></td>
@@ -2296,7 +2296,7 @@ The <code>wxSCI_CMD_[[VC]HOME|LINEEND]WRAP...</code> commands are like their nam
 <h3 id="KeyBindings">Key bindings</h3>
 
 <p>
-There is a default binding of keys to commands that is defined in the Scintilla source in the file <code>KeyMap.cxx</code> by the constant <code>KeyMap::MapDefault[]</code>. This table maps key definitions to <code>wxSCI_CMD_...</code> with no parameters (mostly the <a class="jump" href="#KeyboardCommands">keyboard commands</a> discussed above, but any Scintilla command that has no arguments can be mapped). You can change the mapping to suit your own rquirements.
+There is a default binding of keys to commands that is defined in the table below. This table maps key definitions to <code>wxSCI_CMD_...</code> with no parameters (mostly the <a class="jump" href="#KeyboardCommands">keyboard commands</a> discussed above, but any Scintilla command that has no arguments can be mapped). You can change the mapping to suit your own rquirements.
 </p>
 
 <p><code>
@@ -2316,6 +2316,330 @@ The key code is a visible or control character or a key from the <code>wxSCI_KEY
 </p>
 <p>
 The modifiers are a combination of zero or more of <code>wxSCI_SCMOD_ALT</code>, <code>wxSCI_SCMOD_CTRL</code>, and <code>wxSCI_SCMOD_SHIFT</code>. If you are building a table, you might want to use <code>wxSCI_SCMOD_NORM</code>, which has the value 0, to mean no modifiers.
+</p>
+<table border="0" summary="Key bindings"><tbody>
+<tr>
+  <th>Key</th>
+  <th>Modifiers</th>
+  <th>Command</th>
+</tr>
+</tbody><tbody valign="top">
+<tr>
+  <td><code>DOWN</code></td>
+  <td><code>NULL</code></td>
+  <td><code>LINEDOWN</code></td>
+</tr><tr>
+  <td><code>DOWN</code></td>
+  <td><code>SHIFT</code></td>
+  <td><code>LINEDOWNEXTEND</code></td>
+</tr><tr>
+  <td><code>DOWN</code></td>
+  <td><code></code></td>
+  <td><code></code></td>
+</tr><tr>
+  <td><code>DOWN</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>LINESCROLLDOWN</code></td>
+</tr><tr>
+  <td><code>DOWN</code></td>
+  <td><code>ALT+SHIFT</code></td>
+  <td><code>LINEDOWNRECTEXTEND</code></td>
+</tr><tr>
+  <td><code>UP</code></td>
+  <td><code>NULL</code></td>
+  <td><code>LINEUP</code></td>
+</tr><tr>
+  <td><code>UP</code></td>
+  <td><code>SHIFT</code></td>
+  <td><code>LINEUPEXTEND</code></td>
+</tr><tr>
+  <td><code>UP</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>LINESCROLLUP</code></td>
+</tr><tr>
+  <td><code>UP</code></td>
+  <td><code>ALT+SHIFT</code></td>
+  <td><code>LINEUPRECTEXTEND</code></td>
+</tr><tr>
+  <td><code>LEFT</code></td>
+  <td><code>NULL</code></td>
+  <td><code>CHARLEFT</code></td>
+</tr><tr>
+  <td><code>LEFT</code></td>
+  <td><code>SHIFT</code></td>
+  <td><code>CHARLEFTEXTEND</code></td>
+</tr><tr>
+  <td><code>LEFT</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>WORDLEFT</code></td>
+</tr><tr>
+  <td><code>LEFT</code></td>
+  <td><code>CTRL+SHIFT</code></td>
+  <td><code>WORDLEFTEXTEND</code></td>
+</tr><tr>
+  <td><code>LEFT</code></td>
+  <td><code>ALT+SHIFT</code></td>
+  <td><code>CHARLEFTRECTEXTEND</code></td>
+</tr><tr>
+  <td><code>RIGHT</code></td>
+  <td><code>NULL</code></td>
+  <td><code>CHARRIGHT</code></td>
+</tr><tr>
+  <td><code>RIGHT</code></td>
+  <td><code>SHIFT</code></td>
+  <td><code>CHARRIGHTEXTEND</code></td>
+</tr><tr>
+  <td><code>RIGHT</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>WORDRIGHT</code></td>
+</tr><tr>
+  <td><code>RIGHT</code></td>
+  <td><code>CTRL+SHIFT</code></td>
+  <td><code>WORDRIGHTEXTEND</code></td>
+</tr><tr>
+  <td><code>RIGHT</code></td>
+  <td><code>ALT+SHIFT</code></td>
+  <td><code>CHARRIGHTRECTEXTEND</code></td>
+</tr><tr>
+  <td><code>HOME</code></td>
+  <td><code>NULL</code></td>
+  <td><code>VCHOME</code></td>
+</tr><tr>
+  <td><code>HOME</code></td>
+  <td><code>SHIFT</code></td>
+  <td><code>VCHOMEEXTEND</code></td>
+</tr><tr>
+  <td><code>HOME</code></td>
+  <td><code>ALT+SHIFT</code></td>
+  <td><code>VCHOMERECTEXTEND</code></td>
+</tr><tr>
+  <td><code>HOME</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>DOCUMENTSTART</code></td>
+</tr><tr>
+  <td><code>HOME</code></td>
+  <td><code>CTRL+SHIFT</code></td>
+  <td><code>DOCUMENTSTARTEXTEND</code></td>
+</tr><tr>
+  <td><code>HOME</code></td>
+  <td><code>ALT</code></td>
+  <td><code>HOMEDISPLAY</code></td>
+</tr><tr>
+  <td><code>END</code></td>
+  <td><code>NULL</code></td>
+  <td><code>LINEEND</code></td>
+</tr><tr>
+  <td><code>END</code></td>
+  <td><code>SHIFT</code></td>
+  <td><code>LINEENDEXTEND</code></td>
+</tr><tr>
+  <td><code>END</code></td>
+  <td><code>ALT+SHIFT</code></td>
+  <td><code>LINEENDRECTEXTEND</code></td>
+</tr><tr>
+  <td><code>END</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>DOCUMENTEND</code></td>
+</tr><tr>
+  <td><code>END</code></td>
+  <td><code>CTRL+SHIFT</code></td>
+  <td><code>DOCUMENTENDEXTEND</code></td>
+</tr><tr>
+  <td><code>END</code></td>
+  <td><code>ALT</code></td>
+  <td><code>LINEENDDISPLAY</code></td>
+</tr><tr>
+  <td><code>PRIOR</code></td>
+  <td><code>NULL</code></td>
+  <td><code>PAGEUP</code></td>
+</tr><tr>
+  <td><code>PRIOR</code></td>
+  <td><code>SHIFT</code></td>
+  <td><code>PAGEUPEXTEND</code></td>
+</tr><tr>
+  <td><code>PRIOR</code></td>
+  <td><code>ALT+SHIFT</code></td>
+  <td><code>PAGEUPRECTEXTEND</code></td>
+</tr><tr>
+  <td><code>NEXT</code></td>
+  <td><code>NULL</code></td>
+  <td><code>PAGEDOWN</code></td>
+</tr><tr>
+  <td><code>NEXT</code></td>
+  <td><code>SHIFT</code></td>
+  <td><code>PAGEDOWNEXTEND</code></td>
+</tr><tr>
+  <td><code>NEXT</code></td>
+  <td><code>ALT+SHIFT</code></td>
+  <td><code>PAGEDOWNRECTEXTEND</code></td>
+</tr><tr>
+  <td><code>'['</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>PARAUP</code></td>
+</tr><tr>
+  <td><code>'['</code></td>
+  <td><code>CTRL+SHIFT</code></td>
+  <td><code>PARAUPEXTEND</code></td>
+</tr><tr>
+  <td><code>']'</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>PARADOWN</code></td>
+</tr><tr>
+  <td><code>']'</code></td>
+  <td><code>CTRL+SHIFT</code></td>
+  <td><code>PARADOWNEXTEND</code></td>
+</tr><tr>
+  <td><code>'/'</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>WORDPARTLEFT</code></td>
+</tr><tr>
+  <td><code>'/'</code></td>
+  <td><code>CTRL+SHIFT</code></td>
+  <td><code>WORDPARTLEFTEXTEND</code></td>
+</tr><tr>
+  <td><code>'\'</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>WORDPARTRIGHT</code></td>
+</tr><tr>
+  <td><code>'\'</code></td>
+  <td><code>CTRL+SHIFT</code></td>
+  <td><code>WORDPARTRIGHTEXTEND</code></td>
+</tr><tr>
+  <td><code>DELETE</code></td>
+  <td><code>NULL</code></td>
+  <td><code>CLEAR</code></td>
+</tr><tr>
+  <td><code>DELETE</code></td>
+  <td><code>SHIFT</code></td>
+  <td><code>CUT</code></td>
+</tr><tr>
+  <td><code>DELETE</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>DELWORDRIGHT</code></td>
+</tr><tr>
+  <td><code>DELETE</code></td>
+  <td><code>CTRL+SHIFT</code></td>
+  <td><code>DELLINERIGHT</code></td>
+</tr><tr>
+  <td><code>INSERT</code></td>
+  <td><code>NULL</code></td>
+  <td><code>EDITTOGGLEOVERTYPE</code></td>
+</tr><tr>
+  <td><code>INSERT</code></td>
+  <td><code>SHIFT</code></td>
+  <td><code>PASTE</code></td>
+</tr><tr>
+  <td><code>INSERT</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>COPY</code></td>
+</tr><tr>
+  <td><code>ESCAPE</code></td>
+  <td><code>NULL</code></td>
+  <td><code>CANCEL</code></td>
+</tr><tr>
+  <td><code>BACK</code></td>
+  <td><code>NULL</code></td>
+  <td><code>DELETEBACK</code></td>
+</tr><tr>
+  <td><code>BACK</code></td>
+  <td><code>SHIFT</code></td>
+  <td><code>DELETEBACK</code></td>
+</tr><tr>
+  <td><code>BACK</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>DELWORDLEFT</code></td>
+</tr><tr>
+  <td><code>BACK</code></td>
+  <td><code>ALT</code></td>
+  <td><code>UNDO</code></td>
+</tr><tr>
+  <td><code>BACK</code></td>
+  <td><code>CTRL+SHIFT</code></td>
+  <td><code>DELLINELEFT</code></td>
+</tr><tr>
+  <td><code>TAB</code></td>
+  <td><code>NULL</code></td>
+  <td><code>TAB</code></td>
+</tr><tr>
+  <td><code>TAB</code></td>
+  <td><code>SHIFT</code></td>
+  <td><code>BACKTAB</code></td>
+</tr><tr>
+  <td><code>RETURN</code></td>
+  <td><code>NULL</code></td>
+  <td><code>NEWLINE</code></td>
+</tr><tr>
+  <td><code>RETURN</code></td>
+  <td><code>SHIFT</code></td>
+  <td><code>NEWLINE</code></td>
+</tr><tr>
+  <td><code>ADD</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>ZOOMIN</code></td>
+</tr><tr>
+  <td><code>SUBTRACT</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>ZOOMOUT</code></td>
+</tr><tr>
+  <td><code>DIVIDE</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>SETZOOM</code></td>
+</tr><tr>
+  <td><code>'A'</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>SELECTALL</code></td>
+</tr><tr>
+  <td><code>'C'</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>COPY</code></td>
+</tr><tr>
+  <td><code>'D'</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>LINEDUPLICATE</code></td>
+</tr><tr>
+  <td><code>'L'</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>LINECUT</code></td>
+</tr><tr>
+  <td><code>'L'</code></td>
+  <td><code>CTRL+SHIFT</code></td>
+  <td><code>LINEDELETE</code></td>
+</tr><tr>
+  <td><code>'T'</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>LINETRANSPOSE</code></td>
+</tr><tr>
+  <td><code>'T'</code></td>
+  <td><code>CTRL+SHIFT</code></td>
+  <td><code>LINECOPY</code></td>
+</tr><tr>
+  <td><code>'U'</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>LOWERCASE</code></td>
+</tr><tr>
+  <td><code>'U'</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>UPPERCASE</code></td>
+</tr><tr>
+  <td><code>'V'</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>PASTE</code></td>
+</tr><tr>
+  <td><code>'X'</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>CUT</code></td>
+</tr><tr>
+  <td><code>'Y'</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>REDO</code></td>
+</tr><tr>
+  <td><code>'Z'</code></td>
+  <td><code>CTRL</code></td>
+  <td><code>UNDO</code></td>
+</tr>
+</tbody></table>
+<p>
+<b>Note:</b> The entries 'D', 'L', 'T', 'U' seldom fits anyones need, so simply remove them with <code>CmdKeyClear</code> if you don't need them.
 </p>
 
 <h4 id="CmdKeyAssign">void CmdKeyAssign (int key, int modifiers, int cmd)</h4>
