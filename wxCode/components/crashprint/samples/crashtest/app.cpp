@@ -3,7 +3,7 @@
 // Purpose:     CrashTest application
 // Maintainer:  Otto Wyss
 // Created:     2004-10-01
-// RCS-ID:      $Id: app.cpp,v 1.3 2004-10-04 20:33:06 wyo Exp $
+// RCS-ID:      $Id: app.cpp,v 1.4 2004-10-05 20:33:46 wyo Exp $
 // Copyright:   (c) wxCode
 // Licence:     wxWindows licence
 //////////////////////////////////////////////////////////////////////////////
@@ -49,7 +49,7 @@
 
 const wxString APP_NAME = _T("CrashTest");
 const wxString APP_DESCR = _(
-    "This application test if the crash print is correct.n"
+    "This application tests if the crash print is correct."
 );
 
 const wxString APP_MAINT = _T("Otto Wyss");
@@ -74,7 +74,7 @@ const wxString APP_INFOS = _(
 wxString g_appname;
 
 //! crashprint
-wxCrashPrint *g_crashprint = (wxCrashPrint*)NULL;
+wxCrashPrint g_crashprint;
 
 //----------------------------------------------------------------------------
 //! application
@@ -112,11 +112,11 @@ bool App::OnInit () {
     g_appname.Append (APP_NAME);
 
     // print welcome
-    printf (_T("%s (%s)\n\n"), g_appname.c_str(), APP_VERSION.c_str());
+    printf (_T("%s (%s)\n"), g_appname.c_str(), APP_VERSION.c_str());
     printf (_T("%s\n\n"), APP_DESCR.c_str());
 
     // simulate crash
-    g_crashprint->Report();
+    g_crashprint.Report();
 
-    return true;
+    return false;
 }
