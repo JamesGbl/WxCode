@@ -75,6 +75,7 @@ public:
 	virtual void PresentOptions();
   virtual int GetUserCorrection(const wxString& strMisspelling);
   virtual void DefineContext(const wxString& strText, long nOffset, long nLength);
+  void ShowOption(const wxString& strOption, bool bShow = true);
 
   class MispellingContext
   {

@@ -187,3 +187,9 @@ void wxSpellCheckEngineInterface::SaveUserOptions()
   }
 }
 
+void wxSpellCheckEngineInterface::ShowOption(const wxString& strOption, bool bShow /*= true*/)
+{
+  OptionsMap::iterator it = m_Options.find(strOption);
+  if (it != m_Options.end())
+    it->second.SetShowOption(bShow);
+}
