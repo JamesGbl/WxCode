@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by: Otto Wyss
 // Created:     04/01/98
-// RCS-ID:      $Id: treelisttest.cpp,v 1.8 2004-11-04 17:10:27 wyo Exp $
+// RCS-ID:      $Id: treelisttest.cpp,v 1.9 2004-11-08 18:56:58 wyo Exp $
 // Copyright:   (c) wxCode
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -74,7 +74,6 @@
 #define MENU_LINK(name) EVT_MENU(TreeListTest_##name, MyFrame::On##name)
 
 BEGIN_EVENT_TABLE(MyFrame, wxFrame)
-    EVT_IDLE(MyFrame::OnIdle)
     EVT_SIZE(MyFrame::OnSize)
 
     MENU_LINK(Quit)
@@ -339,26 +338,6 @@ void MyFrame::TogStyle(int id, long flag)
 #endif // !MSW/MSW
 
     GetMenuBar()->Check(id, (style & flag) != 0);
-}
-
-void MyFrame::OnIdle(wxIdleEvent& event)
-{
-#if wxUSE_STATUSBAR
-    if ( m_treeListCtrl )
-    {
-        wxTreeItemId idRoot = m_treeListCtrl->GetRootItem();
-
-        SetStatusText(wxString::Format
-                      (
-                        _T("Root/last item is %svisible/%svisible"),
-                        m_treeListCtrl->IsVisible(idRoot) ? _T("") : _T("not "),
-                        m_treeListCtrl->IsVisible(m_treeListCtrl->GetLastChild(idRoot))
-                            ? _T("") : _T("not ")
-                      ), 1);
-    }
-#endif // wxUSE_STATUSBAR
-
-    event.Skip();
 }
 
 void MyFrame::OnSize(wxSizeEvent& event)
