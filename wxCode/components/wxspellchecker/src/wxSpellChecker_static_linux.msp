@@ -11,7 +11,7 @@ arguments=
 intermediateFilesDirectory=Debug_static
 outputFilesDirectory=Debug_static
 compilerPreprocessor=
-extraCompilerOptions=`wxgtk2-2.5-config --cxxflags`
+extraCompilerOptions=`${WXSTABLE}/bin/wxgtkd-2.4-config --cxxflags`
 compilerIncludeDirectory=../include, ..
 noWarning=0
 defaultWarning=0
@@ -31,8 +31,8 @@ outputFilename=../lib/libwx_spellcheckd.a
 libraries=
 extraLinkerOptions=
 ignoreStartupFile=1
-ignoreDefaultLibs=1
-stripExecutableFile=1
+ignoreDefaultLibs=0
+stripExecutableFile=0
 
 // archive
 extraArchiveOptions=
@@ -49,7 +49,7 @@ arguments=
 intermediateFilesDirectory=Release_static
 outputFilesDirectory=Release_static
 compilerPreprocessor=
-extraCompilerOptions=`wxgtk2-2.5-config --cxxflags`
+extraCompilerOptions=`${WXSTABLE}/bin/wxgtk-2.4-config --cxxflags`
 compilerIncludeDirectory=../include, ..
 noWarning=0
 defaultWarning=0
@@ -68,9 +68,9 @@ libraryPath=
 outputFilename=../lib/libwx_spellcheck.a
 libraries=
 extraLinkerOptions=
-ignoreStartupFile=1
-ignoreDefaultLibs=1
-stripExecutableFile=1
+ignoreStartupFile=80
+ignoreDefaultLibs=8
+stripExecutableFile=69
 
 // archive
 extraArchiveOptions=
@@ -99,27 +99,3 @@ extraResourceOptions=
 [Resource]
 [Other]
 [History]
-MySpellInterface.cpp,1322
-AspellInterface.cpp,9645
-../include/MySpellInterface.h,995
-SpellCheckEngineInterface.cpp,4881
-../include/AspellInterface.h,628
-../include/SpellCheckEngineInterface.h,2061
-SpellCheckUserInterface.cpp,224
-MySpellCheckDialog.cpp,12839
-../MySpell/myspell.hxx,0
-AspellWrapper.cpp,805
-XmlSpellCheckDialog.cpp,17694
-../include/SpellCheckEngineOption.h,1946
-SpellCheckEngineOption.cpp,4834
-../include/aspell.h,15202
-SpellCheckDialogInterface.cpp,0
-Outlook97LikeDialog.cpp,73
-SpellCheckerOptionsDialog.cpp,215
-../include/SpellCheckerOptionsDialog.h,406
-../include/SpellCheckUserInterface.h,1158
-SentryLikeDialog.cpp,11662
-../include/XmlSpellCheckDialog.h,2080
-../include/AspellWrapper.h,14298
-exports.cpp,293
-exports.cpp,293

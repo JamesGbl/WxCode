@@ -10,7 +10,7 @@ arguments=
 intermediateFilesDirectory=Debug
 outputFilesDirectory=Debug
 compilerPreprocessor=
-extraCompilerOptions=`wxgtk2-2.5-config --cxxflags`
+extraCompilerOptions=`${WXSTABLE}/bin/wxgtkd-2.4-config --cxxflags`
 compilerIncludeDirectory=../../include, ../..
 noWarning=0
 defaultWarning=0
@@ -28,7 +28,7 @@ optimizeLevel=0
 libraryPath=
 outputFilename=../../bin//wxSpellCheckerDemod
 libraries=
-extraLinkerOptions=`wxgtk2-2.5-config --libs` -lwx_gtk2_xrc-2.5 ../../lib/libwx_spellcheckd.a ../../lib/libmyspelld.a
+extraLinkerOptions=../../lib/libwx_spellcheckd.a ../../lib/libmyspelld.a ${WXSTABLE}/lib/libwx_gtkd_xrc-2.4.a `${WXSTABLE}/bin/wxgtkd-2.4-config --libs`
 ignoreStartupFile=0
 ignoreDefaultLibs=0
 stripExecutableFile=0
@@ -37,7 +37,7 @@ stripExecutableFile=0
 extraArchiveOptions=
 
 //resource
-resourcePreprocessor=__WIN32__,__WIN95__,__GNUWIN32__
+resourcePreprocessor=
 resourceIncludeDirectory=
 extraResourceOptions=
 
@@ -48,7 +48,7 @@ arguments=
 intermediateFilesDirectory=Release
 outputFilesDirectory=Release
 compilerPreprocessor=
-extraCompilerOptions=`wxgtk2-2.5-config --cxxflags`
+extraCompilerOptions=`${WXSTABLE}/bin/wxgtk-2.4-config --cxxflags`
 compilerIncludeDirectory=../../include, ../..
 noWarning=0
 defaultWarning=0
@@ -66,7 +66,7 @@ optimizeLevel=2
 libraryPath=
 outputFilename=../../bin/wxSpellCheckerDemo
 libraries=
-extraLinkerOptions=`wxgtk2-2.5-config --libs` -lwx_gtk2_xrc-2.5 ../../lib/libwx_spellcheck.a ../../lib/libmyspell.a
+extraLinkerOptions=../../lib/libwx_spellcheck.a ../../lib/libmyspell.a ${WXSTABLE}/lib/libwx_gtk_xrc-2.4.a `${WXSTABLE}/bin/wxgtk-2.4-config --libs`
 ignoreStartupFile=0
 ignoreDefaultLibs=0
 stripExecutableFile=1
@@ -86,6 +86,3 @@ extraResourceOptions=
 [Resource]
 [Other]
 [History]
-wxSpellCheckerDemo.cpp,6894
-wxSpellCheckerDemo.h,796
-wxSpellCheckerDemo.h,796
