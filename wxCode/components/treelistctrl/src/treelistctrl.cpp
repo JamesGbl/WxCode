@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.6 2004-04-11 20:31:20 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.7 2004-04-14 20:45:28 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -3061,7 +3061,7 @@ void wxTreeListMainWindow::SortChildren(const wxTreeItemId& itemId)
     //else: don't make the tree dirty as nothing changed
 }
 
-wxTreeItemId wxTreeListMainWindow::FindItem (const wxTreeItemId& item, const wxString& str, 
+wxTreeItemId wxTreeListMainWindow::FindItem (const wxTreeItemId& item, const wxString& str,
                                              bool partial, bool nocase) {
     wxTreeItemId next = item;
     if (!next.IsOk()) next = GetSelection();
@@ -3262,7 +3262,6 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
         dc.DrawRectangle (0, item->GetY() + offset,
                           m_owner->GetHeaderWindow()->GetWidth(), total_h-offset);
     }
-#if 0 // this code is probably not needed
     else
     {
         wxColour colBg;
@@ -3272,7 +3271,6 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
             colBg = m_backgroundColour;
         dc.SetBrush(wxBrush(colBg, wxTRANSPARENT));
     }
-#endif
 
     dc.SetBackgroundMode(wxTRANSPARENT);
     int text_extraH = (total_h > text_h) ? (total_h - text_h)/2 : 0;
@@ -3777,18 +3775,10 @@ void wxTreeListMainWindow::OnChar( wxKeyEvent &event )
         case WXK_BACK:
             {
                 wxTreeItemId prev = GetItemParent( m_current );
-#if !wxCHECK_VERSION(2, 5, 0)
-                if ((m_current == (wxTreeListItem*)GetRootItem().m_pItem) ||
-#else
-                if ((m_current == GetRootItem()) ||
-#endif
-                    (prev == GetRootItem()) && HasFlag(wxTR_HIDE_ROOT))
+                if ((prev == GetRootItem()) && HasFlag(wxTR_HIDE_ROOT))
                 {
-                    wxTreeEvent event( wxEVT_COMMAND_TREE_ITEM_ACTIVATED,
-                                       m_owner->GetId() );
-                    event.SetItem(-1);
-                    event.SetEventObject( /*this*/m_owner );
-                    m_owner->GetEventHandler()->ProcessEvent( event );
+                    // don't go to root if it is hidden
+                    prev = GetPrevSibling( m_current );
                 }
                 if (prev)
                 {
@@ -4057,14 +4047,11 @@ void wxTreeListMainWindow::Edit( const wxTreeItemId& item )
     if (m_dirty) wxYieldIfNeeded();
 
     wxString s = m_currentEdit->GetText(/*ALB*/m_main_column);
-    int x = m_currentEdit->GetX();
+    int x = m_currentEdit->GetX() + m_imgWidth2;
     int y = m_currentEdit->GetY();
-    int w = m_currentEdit->GetWidth();
-    int h = m_currentEdit->GetHeight();
-
-    x += m_imgWidth;
-    w -= m_imgWidth + 4; // I don't know why +4 is needed
-
+    int w = wxMin (m_currentEdit->GetWidth(), 
+                   m_owner->GetHeaderWindow()->GetWidth()) - m_imgWidth2;
+    int h = m_currentEdit->GetHeight() + 2;
     wxClientDC dc(this);
     PrepareDC( dc );
     x = dc.LogicalToDeviceX( x );
@@ -4075,8 +4062,8 @@ void wxTreeListMainWindow::Edit( const wxTreeItemId& item )
                                               &m_renameRes,
                                               this,
                                               s,
-                                              wxPoint(x-4,y-4),
-                                              wxSize(w+11,h+8));
+                                              wxPoint (x,y),
+                                              wxSize (w,h));
     text->SetFocus();
 }
 
@@ -4892,7 +4879,7 @@ int wxTreeListCtrl::OnCompareItems(const wxTreeItemId& item1,
 void wxTreeListCtrl::SortChildren(const wxTreeItemId& item)
 { m_main_win->SortChildren(item); }
 
-wxTreeItemId wxTreeListCtrl::FindItem (const wxTreeItemId& item, const wxString& str, 
+wxTreeItemId wxTreeListCtrl::FindItem (const wxTreeItemId& item, const wxString& str,
                                        bool partial, bool nocase)
 { return m_main_win->FindItem (item, str, partial, nocase); }
 
