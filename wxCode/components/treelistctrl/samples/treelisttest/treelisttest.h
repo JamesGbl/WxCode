@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by:
 // Created:     04/01/98
-// RCS-ID:      $Id: treelisttest.h,v 1.3 2004-09-22 16:02:46 wyo Exp $
+// RCS-ID:      $Id: treelisttest.h,v 1.4 2004-09-27 17:45:22 wyo Exp $
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -87,8 +87,8 @@ public:
     void GetItemsRecursively(const wxTreeItemId& idParent,
                              wxTreeItemIdValue cookie = 0);
 
-    void CreateImageList(int size = 16);
-    void CreateButtonsImageList(int size = 11);
+    void CreateImageList (int size = 0);
+    void CreateButtonsImageList (int size = 0);
 
     void AddTestItemsToTree(size_t numChildren, size_t depth);
 

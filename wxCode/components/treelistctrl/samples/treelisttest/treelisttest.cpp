@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by: Otto Wyss
 // Created:     04/01/98
-// RCS-ID:      $Id: treelisttest.cpp,v 1.3 2004-09-22 16:02:46 wyo Exp $
+// RCS-ID:      $Id: treelisttest.cpp,v 1.4 2004-09-27 17:45:21 wyo Exp $
 // Copyright:   (c) wxCode
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -543,7 +543,7 @@ void MyFrame::OnSetImageSize(wxCommandEvent& WXUNUSED(event))
     if ( size == -1 )
         return;
 
-    m_treeListCtrl->CreateImageList(size);
+    m_treeListCtrl->CreateImageList (size);
     wxGetApp().SetShowImages(true);
 }
 
@@ -551,30 +551,28 @@ void MyFrame::OnToggleImages(wxCommandEvent& WXUNUSED(event))
 {
     if ( wxGetApp().ShowImages() )
     {
-        m_treeListCtrl->CreateImageList(-1);
+        m_treeListCtrl->CreateImageList (-1);
         wxGetApp().SetShowImages(false);
     }
     else
     {
-        m_treeListCtrl->CreateImageList(0);
+        m_treeListCtrl->CreateImageList (16);
         wxGetApp().SetShowImages(true);
     }
 }
 
 void MyFrame::OnToggleButtons(wxCommandEvent& WXUNUSED(event))
 {
-#if !defined(__WXMSW__)
     if ( wxGetApp().ShowButtons() )
     {
-        m_treeListCtrl->CreateButtonsImageList(-1);
+        m_treeListCtrl->CreateButtonsImageList (-1);
         wxGetApp().SetShowButtons(false);
     }
     else
     {
-        m_treeListCtrl->CreateButtonsImageList(15);
+        m_treeListCtrl->CreateButtonsImageList (16);
         wxGetApp().SetShowButtons(true);
     }
-#endif
 }
 
 void MyFrame::OnCollapseAndReset(wxCommandEvent& WXUNUSED(event))
@@ -652,90 +650,77 @@ MyTreeListCtrl::MyTreeListCtrl(wxWindow *parent, const wxWindowID id,
 {
     m_reverseSort = false;
 
-    CreateImageList();
+    CreateImageList (16);
 
     // Add some items to the tree
     AddTestItemsToTree(5, 2);
 }
 
-void MyTreeListCtrl::CreateImageList(int size)
+void MyTreeListCtrl::CreateImageList (int size)
 {
-    if ( size == -1 )
-    {
-        SetImageList(NULL);
+    if (size == -1){
+        SetImageList (NULL);
         return;
     }
-    if ( size == 0 )
-        size = m_imageSize;
-    else
-        m_imageSize = size;
+    if (size == 0) {
+        size = wxIcon (icon1_xpm).GetWidth();
+    }
+    m_imageSize = size;
 
     // Make an image list containing small icons
-    wxImageList *images = new wxImageList(size, size, true);
+    wxImageList *images = new wxImageList (size, size, true);
 
     // should correspond to TreeListCtrlIcon_xxx enum
     wxBusyCursor wait;
     wxIcon icons[5];
-    icons[0] = wxIcon(icon1_xpm);
-    icons[1] = wxIcon(icon2_xpm);
-    icons[2] = wxIcon(icon3_xpm);
-    icons[3] = wxIcon(icon4_xpm);
-    icons[4] = wxIcon(icon5_xpm);
+    icons[0] = wxIcon (icon1_xpm);
+    icons[1] = wxIcon (icon2_xpm);
+    icons[2] = wxIcon (icon3_xpm);
+    icons[3] = wxIcon (icon4_xpm);
+    icons[4] = wxIcon (icon5_xpm);
 
-    int sizeOrig = icons[0].GetWidth();
-    for ( size_t i = 0; i < WXSIZEOF(icons); i++ )
-    {
-        if ( size == sizeOrig )
-        {
-            images->Add(icons[i]);
-        }
-        else
-        {
-            images->Add(wxBitmap(wxBitmap(icons[i]).ConvertToImage().Rescale(size, size)));
+    for (size_t i = 0; i < WXSIZEOF(icons); i++) {
+        if (size == m_imageSize) {
+            images->Add (icons[i]);
+        }else{
+            images->Add (wxBitmap(wxBitmap(icons[i]).ConvertToImage().Rescale (size, size)));
         }
     }
 
-    AssignImageList(images);
+    AssignImageList (images);
 }
 
-#if !defined(__WXMSW__)
-void MyTreeListCtrl::CreateButtonsImageList(int size)
+void MyTreeListCtrl::CreateButtonsImageList (int size)
 {
-    if ( size == -1 )
-    {
-        SetButtonsImageList(NULL);
+    if (size == -1) {
+        SetButtonsImageList (NULL);
         return;
     }
+    if (size == 0) {
+        size = wxIcon (icon3_xpm).GetWidth();
+    }
+    int imageSize = size;
 
     // Make an image list containing small icons
-    wxImageList *images = new wxImageList(size, size, true);
+    wxImageList *images = new wxImageList (size, size, true);
 
     // should correspond to TreeListCtrlIcon_xxx enum
     wxBusyCursor wait;
     wxIcon icons[4];
-    icons[0] = wxIcon(icon3_xpm);   // closed
-    icons[1] = wxIcon(icon3_xpm);   // closed, selected
-    icons[2] = wxIcon(icon5_xpm);   // open
-    icons[3] = wxIcon(icon5_xpm);   // open, selected
+    icons[0] = wxIcon (icon3_xpm);   // closed
+    icons[1] = wxIcon (icon3_xpm);   // closed, selected
+    icons[2] = wxIcon (icon5_xpm);   // open
+    icons[3] = wxIcon (icon5_xpm);   // open, selected
 
-    for ( size_t i = 0; i < WXSIZEOF(icons); i++ )
-    {
-        int sizeOrig = icons[i].GetWidth();
-        if ( size == sizeOrig )
-        {
-            images->Add(icons[i]);
-        }
-        else
-        {
-            images->Add(wxBitmap(wxBitmap(icons[i]).ConvertToImage().Rescale(size, size)));
+    for (size_t i = 0; i < WXSIZEOF(icons); i++) {
+        if (size == m_imageSize) {
+            images->Add (icons[i]);
+        }else{
+            images->Add(wxBitmap(wxBitmap(icons[i]).ConvertToImage().Rescale (size, size)));
         }
     }
 
-    AssignButtonsImageList(images);
-#else
-void MyTreeListCtrl::CreateButtonsImageList(int WXUNUSED(size))
-{
-#endif
+    AssignButtonsImageList (images);
 }
 
 MyTreeListCtrl::~MyTreeListCtrl()
