@@ -1,4 +1,4 @@
-# Microsoft Developer Studio Project File - Name="wxxml2" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="wxxml2_wxxml2" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
@@ -46,8 +46,8 @@ RSC=rc.exe
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\wxxml2"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MD /w /W0 /GR /GX /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /D "WIN32" /D "_LIB" /D "_UNICODE" /Fd"..\lib\wxxml2u.pdb" /FD /c
-# ADD CPP /nologo /MD /w /W0 /GR /GX /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /D "WIN32" /D "_LIB" /D "_UNICODE" /Fd"..\lib\wxxml2u.pdb" /FD /c
+# ADD BASE CPP /nologo /FD /MD /GR /GX /w /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2u.pdb /D "WIN32" /D "_LIB" /D "__WXMSW__" /D "_UNICODE" /c
+# ADD CPP /nologo /FD /MD /GR /GX /w /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2u.pdb /D "WIN32" /D "_LIB" /D "__WXMSW__" /D "_UNICODE" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -69,8 +69,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\wxxml2"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswud" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /D "WIN32" /D "_LIB" /D "_UNICODE" /D "_DEBUG" /Fd"..\lib\wxxml2ud.pdb" /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswud" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /D "WIN32" /D "_LIB" /D "_UNICODE" /D "_DEBUG" /Fd"..\lib\wxxml2ud.pdb" /FD /GZ /c
+# ADD BASE CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswud" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\wxxml2ud.pdb /D "WIN32" /D "_LIB" /D "__WXDEBUG__" /D "__WXMSW__" /D "_UNICODE" /D "_DEBUG" /c
+# ADD CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswud" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\wxxml2ud.pdb /D "WIN32" /D "_LIB" /D "__WXDEBUG__" /D "__WXMSW__" /D "_UNICODE" /D "_DEBUG" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -92,8 +92,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\wxxml2"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MD /w /W0 /GR /GX /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /D "WIN32" /D "_LIB" /Fd"..\lib\wxxml2.pdb" /FD /c
-# ADD CPP /nologo /MD /w /W0 /GR /GX /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /D "WIN32" /D "_LIB" /Fd"..\lib\wxxml2.pdb" /FD /c
+# ADD BASE CPP /nologo /FD /MD /GR /GX /w /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2.pdb /D "WIN32" /D "_LIB" /D "__WXMSW__" /c
+# ADD CPP /nologo /FD /MD /GR /GX /w /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2.pdb /D "WIN32" /D "_LIB" /D "__WXMSW__" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -115,8 +115,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\wxxml2"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswd" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /D "WIN32" /D "_LIB" /D "_DEBUG" /Fd"..\lib\wxxml2d.pdb" /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswd" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /D "WIN32" /D "_LIB" /D "_DEBUG" /Fd"..\lib\wxxml2d.pdb" /FD /GZ /c
+# ADD BASE CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswd" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\wxxml2d.pdb /D "WIN32" /D "_LIB" /D "__WXDEBUG__" /D "__WXMSW__" /D "_DEBUG" /c
+# ADD CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswd" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\wxxml2d.pdb /D "WIN32" /D "_LIB" /D "__WXDEBUG__" /D "__WXMSW__" /D "_DEBUG" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -138,8 +138,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\wxxml2"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MD /w /W0 /GR /GX /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /D "WIN32" /D "_LIB" /D "_UNICODE" /D "LIBXML_STATIC" /Fd"..\lib\wxxml2u.pdb" /FD /c
-# ADD CPP /nologo /MD /w /W0 /GR /GX /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /D "WIN32" /D "_LIB" /D "_UNICODE" /D "LIBXML_STATIC" /Fd"..\lib\wxxml2u.pdb" /FD /c
+# ADD BASE CPP /nologo /FD /MD /GR /GX /w /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2u.pdb /D "WIN32" /D "_LIB" /D "__WXMSW__" /D "_UNICODE" /D "LIBXML_STATIC" /c
+# ADD CPP /nologo /FD /MD /GR /GX /w /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2u.pdb /D "WIN32" /D "_LIB" /D "__WXMSW__" /D "_UNICODE" /D "LIBXML_STATIC" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -161,8 +161,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\wxxml2"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswud" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /D "WIN32" /D "_LIB" /D "_UNICODE" /D "_DEBUG" /D "LIBXML_STATIC" /Fd"..\lib\wxxml2ud.pdb" /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswud" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /D "WIN32" /D "_LIB" /D "_UNICODE" /D "_DEBUG" /D "LIBXML_STATIC" /Fd"..\lib\wxxml2ud.pdb" /FD /GZ /c
+# ADD BASE CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswud" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\wxxml2ud.pdb /D "WIN32" /D "_LIB" /D "__WXDEBUG__" /D "__WXMSW__" /D "_UNICODE" /D "_DEBUG" /D "LIBXML_STATIC" /c
+# ADD CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswud" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\wxxml2ud.pdb /D "WIN32" /D "_LIB" /D "__WXDEBUG__" /D "__WXMSW__" /D "_UNICODE" /D "_DEBUG" /D "LIBXML_STATIC" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -184,8 +184,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\wxxml2"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MD /w /W0 /GR /GX /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /D "WIN32" /D "_LIB" /D "LIBXML_STATIC" /Fd"..\lib\wxxml2.pdb" /FD /c
-# ADD CPP /nologo /MD /w /W0 /GR /GX /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /D "WIN32" /D "_LIB" /D "LIBXML_STATIC" /Fd"..\lib\wxxml2.pdb" /FD /c
+# ADD BASE CPP /nologo /FD /MD /GR /GX /w /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2.pdb /D "WIN32" /D "_LIB" /D "__WXMSW__" /D "LIBXML_STATIC" /c
+# ADD CPP /nologo /FD /MD /GR /GX /w /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2.pdb /D "WIN32" /D "_LIB" /D "__WXMSW__" /D "LIBXML_STATIC" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -207,8 +207,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\wxxml2"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswd" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /D "WIN32" /D "_LIB" /D "_DEBUG" /D "LIBXML_STATIC" /Fd"..\lib\wxxml2d.pdb" /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswd" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /D "WIN32" /D "_LIB" /D "_DEBUG" /D "LIBXML_STATIC" /Fd"..\lib\wxxml2d.pdb" /FD /GZ /c
+# ADD BASE CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswd" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\wxxml2d.pdb /D "WIN32" /D "_LIB" /D "__WXDEBUG__" /D "__WXMSW__" /D "_DEBUG" /D "LIBXML_STATIC" /c
+# ADD CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswd" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\wxxml2d.pdb /D "WIN32" /D "_LIB" /D "__WXDEBUG__" /D "__WXMSW__" /D "_DEBUG" /D "LIBXML_STATIC" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -218,7 +218,7 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo /out:"..\lib\wxxml2d.lib"
 # ADD LIB32 /nologo /out:"..\lib\wxxml2d.lib"
 
-!ENDIF 
+!ENDIF
 
 # Begin Target
 
@@ -235,12 +235,25 @@ LIB32=link.exe -lib
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=.\..\src\xml2.cpp
+SOURCE=.\..\src\dtd.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\wx\xml2.h
+SOURCE=.\..\src\xml2.cpp
+# End Source File
+# End Group
+# Begin Group "Header Files"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\..\include\wx\dtd.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\..\include\wx\xml2.h
 # End Source File
 # End Group
 # End Target
 # End Project
+

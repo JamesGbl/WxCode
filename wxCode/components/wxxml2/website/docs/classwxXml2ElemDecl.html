@@ -8,24 +8,378 @@
 <h1>wxXml2ElemDecl Class Reference</h1>An element declaration.  
 <a href="#_details">More...</a>
 <p>
-<code>#include &lt;<a class="el" href="xml2_8h-source.html">xml2.h</a>&gt;</code>
+<code>#include &lt;<a class="el" href="dtd_8h-source.html">dtd.h</a>&gt;</code>
 <p>
 <p>Inheritance diagram for wxXml2ElemDecl:
 <p><center><img src="classwxXml2ElemDecl.png" usemap="#wxXml2ElemDecl_map" border="0" alt=""></center>
 <map name="wxXml2ElemDecl_map">
-<area href="classwxXml2Wrapper.html" alt="wxXml2Wrapper" shape="rect" coords="0,0,108,24">
+<area href="classwxXml2BaseNode.html" alt="wxXml2BaseNode" shape="rect" coords="0,56,113,80">
+<area href="classwxXml2Wrapper.html" alt="wxXml2Wrapper" shape="rect" coords="0,0,113,24">
 </map>
 <a href="classwxXml2ElemDecl-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
+<tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2ElemDecl.html#a0">wxXml2ElemDecl</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2ElemDecl.html#a1">wxXml2ElemDecl</a> (xmlElement *n)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Wraps the given libxml2 structure.  <a href="#a1"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2ElemDecl.html#a2">wxXml2ElemDecl</a> (const <a class="el" href="classwxXml2ElemDecl.html">wxXml2ElemDecl</a> &amp;n)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Copies the given wrapper (does not imply the XML structure copy).  <a href="#a2"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2ElemDecl.html#a3">wxXml2ElemDecl</a> (const <a class="el" href="classwxXml2DTD.html">wxXml2DTD</a> &amp;parent, const wxString &amp;name, <a class="el" href="dtd_8h.html#a45">wxXml2ElementTypeVal</a> val=wxXML_ELEMENT_TYPE_ELEMENT, const <a class="el" href="classwxXml2ElemContent.html">wxXml2ElemContent</a> &amp;content=<a class="el" href="dtd_8h.html#a11">wxXml2EmptyElemContent</a>)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a new element declaration and automatically link it to the given parent.  <a href="#a3"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2ElemDecl.html#a4">~wxXml2ElemDecl</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2ElemDecl.html#a5">operator==</a> (const <a class="el" href="classwxXml2ElemDecl.html">wxXml2ElemDecl</a> &amp;decl) const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2ElemDecl.html#a6">operator!=</a> (const <a class="el" href="classwxXml2ElemDecl.html">wxXml2ElemDecl</a> &amp;decl) const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxXml2ElemDecl.html">wxXml2ElemDecl</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2ElemDecl.html#a7">operator=</a> (const <a class="el" href="classwxXml2ElemDecl.html">wxXml2ElemDecl</a> &amp;decl)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2ElemDecl.html#a8">Create</a> (const <a class="el" href="classwxXml2DTD.html">wxXml2DTD</a> &amp;parent, const wxString &amp;name, <a class="el" href="dtd_8h.html#a45">wxXml2ElementTypeVal</a> val, const <a class="el" href="classwxXml2ElemContent.html">wxXml2ElemContent</a> &amp;content)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">xmlElement *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2ElemDecl.html#a9">GetObj</a> () const </td></tr>
+
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 An element declaration. 
 <p>
 This type of node is used only inside an inlined/external DTD. 
 <p>
-<hr>The documentation for this class was generated from the following file:<ul>
-<li><a class="el" href="xml2_8h-source.html">xml2.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Dec 31 11:02:10 2004 for wxXml2 by&nbsp;
+<hr><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" name="a0" doxytag="wxXml2ElemDecl::wxXml2ElemDecl"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">wxXml2ElemDecl::wxXml2ElemDecl           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap><code> [inline]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="a1" doxytag="wxXml2ElemDecl::wxXml2ElemDecl"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">wxXml2ElemDecl::wxXml2ElemDecl           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">xmlElement *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>n</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap><code> [inline]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Wraps the given libxml2 structure. 
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="a2" doxytag="wxXml2ElemDecl::wxXml2ElemDecl"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">wxXml2ElemDecl::wxXml2ElemDecl           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">const <a class="el" href="classwxXml2ElemDecl.html">wxXml2ElemDecl</a> &amp;&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>n</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap><code> [inline]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Copies the given wrapper (does not imply the XML structure copy). 
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="a3" doxytag="wxXml2ElemDecl::wxXml2ElemDecl"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">wxXml2ElemDecl::wxXml2ElemDecl           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">const <a class="el" href="classwxXml2DTD.html">wxXml2DTD</a> &amp;&nbsp;</td>
+          <td class="mdname" nowrap> <em>parent</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap>const wxString &amp;&nbsp;</td>
+          <td class="mdname" nowrap> <em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap><a class="el" href="dtd_8h.html#a45">wxXml2ElementTypeVal</a>&nbsp;</td>
+          <td class="mdname" nowrap> <em>val</em> = <code>wxXML_ELEMENT_TYPE_ELEMENT</code>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap>const <a class="el" href="classwxXml2ElemContent.html">wxXml2ElemContent</a> &amp;&nbsp;</td>
+          <td class="mdname" nowrap> <em>content</em> = <code><a class="el" href="dtd_8h.html#a11">wxXml2EmptyElemContent</a></code></td>
+        </tr>
+        <tr>
+          <td class="md"></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"><code> [inline]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Creates a new element declaration and automatically link it to the given parent. 
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="a4" doxytag="wxXml2ElemDecl::~wxXml2ElemDecl"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">virtual wxXml2ElemDecl::~<a class="el" href="classwxXml2ElemDecl.html">wxXml2ElemDecl</a>           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap><code> [inline, virtual]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+    </td>
+  </tr>
+</table>
+<hr><h2>Member Function Documentation</h2>
+<a class="anchor" name="a8" doxytag="wxXml2ElemDecl::Create"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">void wxXml2ElemDecl::Create           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">const <a class="el" href="classwxXml2DTD.html">wxXml2DTD</a> &amp;&nbsp;</td>
+          <td class="mdname" nowrap> <em>parent</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap>const wxString &amp;&nbsp;</td>
+          <td class="mdname" nowrap> <em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap><a class="el" href="dtd_8h.html#a45">wxXml2ElementTypeVal</a>&nbsp;</td>
+          <td class="mdname" nowrap> <em>val</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap>const <a class="el" href="classwxXml2ElemContent.html">wxXml2ElemContent</a> &amp;&nbsp;</td>
+          <td class="mdname" nowrap> <em>content</em></td>
+        </tr>
+        <tr>
+          <td class="md"></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="a9" doxytag="wxXml2ElemDecl::GetObj"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">xmlElement* wxXml2ElemDecl::GetObj           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap> const<code> [inline]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+
+<p>
+Reimplemented from <a class="el" href="classwxXml2BaseNode.html#z0_6">wxXml2BaseNode</a>.    </td>
+  </tr>
+</table>
+<a class="anchor" name="a6" doxytag="wxXml2ElemDecl::operator!="></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">bool wxXml2ElemDecl::operator!=           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">const <a class="el" href="classwxXml2ElemDecl.html">wxXml2ElemDecl</a> &amp;&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>decl</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap> const<code> [inline]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="a7" doxytag="wxXml2ElemDecl::operator="></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"><a class="el" href="classwxXml2ElemDecl.html">wxXml2ElemDecl</a>&amp; wxXml2ElemDecl::operator=           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">const <a class="el" href="classwxXml2ElemDecl.html">wxXml2ElemDecl</a> &amp;&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>decl</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap><code> [inline]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="a5" doxytag="wxXml2ElemDecl::operator=="></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">bool wxXml2ElemDecl::operator==           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">const <a class="el" href="classwxXml2ElemDecl.html">wxXml2ElemDecl</a> &amp;&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>decl</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap> const</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+    </td>
+  </tr>
+</table>
+<hr>The documentation for this class was generated from the following files:<ul>
+<li><a class="el" href="dtd_8h-source.html">dtd.h</a><li><a class="el" href="dtd_8cpp.html">dtd.cpp</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Sat Jan 1 21:15:08 2005 for wxXml2 by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.3.9.1 </small></address>
 </body>

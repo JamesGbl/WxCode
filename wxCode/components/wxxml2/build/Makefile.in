@@ -30,15 +30,16 @@ ICONV_DIR = @ICONV_DIR@
 ### Variables: ###
 
 DESTDIR = 
-WXXML2_CXXFLAGS = -I../include -I$(LIBXML2_DIR)/include -I$(ICONV_DIR)/include \
-	`wx-config --cxxflags` -Wall $(CPPFLAGS) $(CXXFLAGS)
-WXXML2_OBJECTS =  \
-	autoconf/wxxml2_xml2.o
 MINIMAL_CXXFLAGS = -I../include -I$(LIBXML2_DIR)/include \
-	-I$(ICONV_DIR)/include `wx-config --cxxflags` -Wall $(CPPFLAGS) $(CXXFLAGS)
+	-I$(ICONV_DIR)/include $(__STATIC_DEF_p) `wx-config --cxxflags` -Wall \
+	$(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
-	autoconf/minimal_xml2.o \
 	autoconf/minimal_minimal.o
+WXXML2_CXXFLAGS = -I../include -I$(LIBXML2_DIR)/include -I$(ICONV_DIR)/include \
+	$(__STATIC_DEF_p) `wx-config --cxxflags` -Wall $(CPPFLAGS) $(CXXFLAGS)
+WXXML2_OBJECTS =  \
+	autoconf/wxxml2_xml2.o \
+	autoconf/wxxml2_dtd.o
 
 ### Conditionally set variables: ###
 
@@ -53,11 +54,12 @@ COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd = $(NM) \
 	autoconf/minimal$(EXEEXT) | if grep -q pmwin.763 ; then emxbind -ep \
 	autoconf/minimal$(EXEEXT) ; fi
 @COND_PLATFORM_OS2_1@__minimal___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd)
+@COND_SHARED_0@__STATIC_DEF_p = -DLIBXML_STATIC
 
 
 ### Targets: ###
 
-all: ../lib/$(LIBPREFIX)wxxml2$(WXLIBPOSTFIX)$(LIBEXT) ../sample/minimal$(EXEEXT)
+all: ../sample/minimal$(EXEEXT) ../lib/$(LIBPREFIX)wxxml2$(WXLIBPOSTFIX)$(LIBEXT)
 
 install: all
 
@@ -68,8 +70,8 @@ install-strip: install
 clean: 
 	rm -rf autoconf/.deps autoconf/.pch
 	rm -f autoconf/*.o
-	rm -f ../lib/$(LIBPREFIX)wxxml2$(WXLIBPOSTFIX)$(LIBEXT)
 	rm -f ../sample/minimal$(EXEEXT)
+	rm -f ../lib/$(LIBPREFIX)wxxml2$(WXLIBPOSTFIX)$(LIBEXT)
 
 distclean: clean
 	rm -f config.cache config.log config.status bk-deps bk-make-pch shared-ld-sh Makefile
@@ -98,25 +100,25 @@ docs:
 cleandocs: 
 	rm -rf ../docs/html
 
+../sample/minimal$(EXEEXT): $(MINIMAL_OBJECTS) ../lib/$(LIBPREFIX)wxxml2$(WXLIBPOSTFIX)$(LIBEXT) ../lib/$(LIBPREFIX)wxxml2$(WXLIBPOSTFIX)$(LIBEXT)
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS)  $(LDFLAGS_GUI) -L../lib -L$(LIBXML2_DIR)/lib -L$(ICONV_DIR)/lib `wx-config --libs`  ../lib/$(LIBPREFIX)wxxml2$(WXLIBPOSTFIX)$(LIBEXT) -lxml2 -liconv
+	
+	$(__minimal___mac_setfilecmd)
+	$(__minimal___os2_emxbindcmd)
+
 ../lib/$(LIBPREFIX)wxxml2$(WXLIBPOSTFIX)$(LIBEXT): $(WXXML2_OBJECTS)
 	rm -f $@
 	$(AR) rcu $@ $(WXXML2_OBJECTS)
 	$(RANLIB) $@
 
-../sample/minimal$(EXEEXT): $(MINIMAL_OBJECTS)
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS)  $(LDFLAGS_GUI) -L../lib -L$(LIBXML2_DIR)/lib -L$(ICONV_DIR)/lib `wx-config --libs`  -lxml2 -liconv
-	
-	$(__minimal___mac_setfilecmd)
-	$(__minimal___os2_emxbindcmd)
+autoconf/minimal_minimal.o: $(srcdir)/../sample/minimal.cpp
+	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $<
 
 autoconf/wxxml2_xml2.o: $(srcdir)/../src/xml2.cpp
 	$(CXXC) -c -o $@ $(WXXML2_CXXFLAGS) $<
 
-autoconf/minimal_xml2.o: $(srcdir)/../src/xml2.cpp
-	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $<
-
-autoconf/minimal_minimal.o: $(srcdir)/../sample/minimal.cpp
-	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $<
+autoconf/wxxml2_dtd.o: $(srcdir)/../src/dtd.cpp
+	$(CXXC) -c -o $@ $(WXXML2_CXXFLAGS) $<
 
 
 # Include dependency info, if present:

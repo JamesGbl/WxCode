@@ -8,7 +8,7 @@
 <h1>wxXml2DTD Class Reference</h1>Represents an XML Document Type Definition (DTD): you can find the W3C recommendation for DTDs at <a href="http://www.w3.org/TR/REC-he.">http://www.w3.org/TR/REC-he.</a>  
 <a href="#_details">More...</a>
 <p>
-<code>#include &lt;<a class="el" href="xml2_8h-source.html">xml2.h</a>&gt;</code>
+<code>#include &lt;<a class="el" href="dtd_8h-source.html">dtd.h</a>&gt;</code>
 <p>
 <p>Inheritance diagram for wxXml2DTD:
 <p><center><img src="classwxXml2DTD.png" usemap="#wxXml2DTD_map" border="0" alt=""></center>
@@ -96,7 +96,7 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">xmlDtd *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2DTD.html#a26">GetObj</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the associated XML structure.  <a href="#a26"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxXml2Node.html">wxXml2Node</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2DTD.html#a27">GetRoot</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxXml2BaseNode.html">wxXml2BaseNode</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2DTD.html#a27">GetRoot</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the root node for this DTD.  <a href="#a27"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2DTD.html#a28">SetName</a> (const wxString &amp;p)</td></tr>
@@ -107,16 +107,35 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2DTD.html#a31">SetExternalURI</a> (const wxString &amp;u)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The external URI is kept in the field named "SystemID" by libxml2.  <a href="#a31"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets the external URI for this DTD.  <a href="#a31"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2DTD.html#a32">SetRoot</a> (<a class="el" href="classwxXml2ElemDecl.html">wxXml2ElemDecl</a> &amp;node)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets the root node for this DTD.  <a href="#a32"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2DTD.html#a33">SetRoot</a> (<a class="el" href="classwxXml2AttrDecl.html">wxXml2AttrDecl</a> &amp;node)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2DTD.html#a34">SetRoot</a> (<a class="el" href="classwxXml2EntityDecl.html">wxXml2EntityDecl</a> &amp;node)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2DTD.html#a35">AddElemDecl</a> (const wxString &amp;name, <a class="el" href="dtd_8h.html#a45">wxXml2ElementTypeVal</a> val=wxXML_ELEMENT_TYPE_ELEMENT, const <a class="el" href="classwxXml2ElemContent.html">wxXml2ElemContent</a> &amp;content=<a class="el" href="dtd_8h.html#a11">wxXml2EmptyElemContent</a>)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2DTD.html#a36">AddAttrDecl</a> (const wxString &amp;element, const wxString &amp;name, const <a class="el" href="classwxXml2Namespace.html">wxXml2Namespace</a> &amp;ns=<a class="el" href="xml2_8h.html#a12">wxXml2EmptyNamespace</a>, <a class="el" href="dtd_8h.html#a48">wxXml2AttributeType</a> type=wxXML_ATTRIBUTE_CDATA, <a class="el" href="dtd_8h.html#a49">wxXml2AttributeDefault</a> def=wxXML_ATTRIBUTE_NONE, const wxString &amp;defaultval=wxEmptyString, const <a class="el" href="classwxXml2Enumeration.html">wxXml2Enumeration</a> &amp;e=<a class="el" href="dtd_8h.html#a10">wxXml2EmptyEnumeration</a>)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2DTD.html#a37">AddEntityDecl</a> (const wxString &amp;name, <a class="el" href="dtd_8h.html#a50">wxXml2EntityType</a> type=wxXML_INTERNAL_GENERAL_ENTITY, const wxString &amp;externalID=wxEmptyString, const wxString &amp;systemID=wxEmptyString, const wxString &amp;content=wxEmptyString)</td></tr>
+
 <tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2DTD.html#b0">Destroy</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destroys the data wrapped by this class freeing its memory.  <a href="#b0"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2DTD.html#b1">Copy</a> (const <a class="el" href="classwxXml2DTD.html">wxXml2DTD</a> &amp;dtd)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2DTD.html#b1">SetAsEmpty</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2DTD.html#b2">GetPrivate</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets this element as empty: that is wrapping a NULL pointer.  <a href="#b1"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2DTD.html#b2">Copy</a> (const <a class="el" href="classwxXml2DTD.html">wxXml2DTD</a> &amp;dtd)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the private member of the wrapped structure.  <a href="#b2"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2DTD.html#b3">GetPrivate</a> () const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the private member of the wrapped structure.  <a href="#b3"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2DTD.html#b4">SetRoot</a> (<a class="el" href="classwxXml2BaseNode.html">wxXml2BaseNode</a> &amp;node)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is not public because FIXME.  <a href="#b4"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Represents an XML Document Type Definition (DTD): you can find the W3C recommendation for DTDs at <a href="http://www.w3.org/TR/REC-he.">http://www.w3.org/TR/REC-he.</a> 
@@ -338,7 +357,172 @@ Destroys this DTD if it is completely unlinked from a greater XML tree.
   </tr>
 </table>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="b1" doxytag="wxXml2DTD::Copy"></a><p>
+<a class="anchor" name="a36" doxytag="wxXml2DTD::AddAttrDecl"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">void wxXml2DTD::AddAttrDecl           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">const wxString &amp;&nbsp;</td>
+          <td class="mdname" nowrap> <em>element</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap>const wxString &amp;&nbsp;</td>
+          <td class="mdname" nowrap> <em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap>const <a class="el" href="classwxXml2Namespace.html">wxXml2Namespace</a> &amp;&nbsp;</td>
+          <td class="mdname" nowrap> <em>ns</em> = <code><a class="el" href="xml2_8h.html#a12">wxXml2EmptyNamespace</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap><a class="el" href="dtd_8h.html#a48">wxXml2AttributeType</a>&nbsp;</td>
+          <td class="mdname" nowrap> <em>type</em> = <code>wxXML_ATTRIBUTE_CDATA</code>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap><a class="el" href="dtd_8h.html#a49">wxXml2AttributeDefault</a>&nbsp;</td>
+          <td class="mdname" nowrap> <em>def</em> = <code>wxXML_ATTRIBUTE_NONE</code>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap>const wxString &amp;&nbsp;</td>
+          <td class="mdname" nowrap> <em>defaultval</em> = <code>wxEmptyString</code>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap>const <a class="el" href="classwxXml2Enumeration.html">wxXml2Enumeration</a> &amp;&nbsp;</td>
+          <td class="mdname" nowrap> <em>e</em> = <code><a class="el" href="dtd_8h.html#a10">wxXml2EmptyEnumeration</a></code></td>
+        </tr>
+        <tr>
+          <td class="md"></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="a35" doxytag="wxXml2DTD::AddElemDecl"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">void wxXml2DTD::AddElemDecl           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">const wxString &amp;&nbsp;</td>
+          <td class="mdname" nowrap> <em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap><a class="el" href="dtd_8h.html#a45">wxXml2ElementTypeVal</a>&nbsp;</td>
+          <td class="mdname" nowrap> <em>val</em> = <code>wxXML_ELEMENT_TYPE_ELEMENT</code>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap>const <a class="el" href="classwxXml2ElemContent.html">wxXml2ElemContent</a> &amp;&nbsp;</td>
+          <td class="mdname" nowrap> <em>content</em> = <code><a class="el" href="dtd_8h.html#a11">wxXml2EmptyElemContent</a></code></td>
+        </tr>
+        <tr>
+          <td class="md"></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="a37" doxytag="wxXml2DTD::AddEntityDecl"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">void wxXml2DTD::AddEntityDecl           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">const wxString &amp;&nbsp;</td>
+          <td class="mdname" nowrap> <em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap><a class="el" href="dtd_8h.html#a50">wxXml2EntityType</a>&nbsp;</td>
+          <td class="mdname" nowrap> <em>type</em> = <code>wxXML_INTERNAL_GENERAL_ENTITY</code>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap>const wxString &amp;&nbsp;</td>
+          <td class="mdname" nowrap> <em>externalID</em> = <code>wxEmptyString</code>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap>const wxString &amp;&nbsp;</td>
+          <td class="mdname" nowrap> <em>systemID</em> = <code>wxEmptyString</code>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap>const wxString &amp;&nbsp;</td>
+          <td class="mdname" nowrap> <em>content</em> = <code>wxEmptyString</code></td>
+        </tr>
+        <tr>
+          <td class="md"></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="b2" doxytag="wxXml2DTD::Copy"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -565,7 +749,7 @@ Returns the associated XML structure.
     </td>
   </tr>
 </table>
-<a class="anchor" name="b2" doxytag="wxXml2DTD::GetPrivate"></a><p>
+<a class="anchor" name="b3" doxytag="wxXml2DTD::GetPrivate"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -593,7 +777,7 @@ Returns the private member of the wrapped structure.
 <p>
 This function should be used to implement copy constructor and assignment operators. 
 <p>
-Implements <a class="el" href="classwxXml2Wrapper.html#b1">wxXml2Wrapper</a>.    </td>
+Implements <a class="el" href="classwxXml2Wrapper.html#b2">wxXml2Wrapper</a>.    </td>
   </tr>
 </table>
 <a class="anchor" name="a27" doxytag="wxXml2DTD::GetRoot"></a><p>
@@ -602,7 +786,7 @@ Implements <a class="el" href="classwxXml2Wrapper.html#b1">wxXml2Wrapper</a>.   
     <td class="mdRow">
       <table cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td class="md" nowrap valign="top"><a class="el" href="classwxXml2Node.html">wxXml2Node</a> wxXml2DTD::GetRoot           </td>
+          <td class="md" nowrap valign="top"><a class="el" href="classwxXml2BaseNode.html">wxXml2BaseNode</a> wxXml2DTD::GetRoot           </td>
           <td class="md" valign="top">(&nbsp;</td>
           <td class="mdname1" valign="top" nowrap>          </td>
           <td class="md" valign="top">&nbsp;)&nbsp;</td>
@@ -709,7 +893,7 @@ See wxXml2DTD's class description for more info about the difference between inl
 <p>
 Returns TRUE if this DTD is a "full" DTD: that is, it's not a *reference* to an external DTD but it contains at least one declaration of a node type. 
 <p>
-A "full" DTD can be an inlined DTD obtained using the <a class="el" href="classwxXml2Document.html#a18">wxXml2Document::GetDTD()</a> function or it could be a standalone DTD loaded using <a class="el" href="classwxXml2DTD.html#a10">wxXml2DTD::Load()</a> function. See wxXml2DTD's class description for more info about the difference between inlined/external DTD.     </td>
+A "full" DTD can be an inlined DTD obtained using the <a class="el" href="classwxXml2Document.html#a19">wxXml2Document::GetDTD()</a> function or it could be a standalone DTD loaded using <a class="el" href="classwxXml2DTD.html#a10">wxXml2DTD::Load()</a> function. See wxXml2DTD's class description for more info about the difference between inlined/external DTD.     </td>
   </tr>
 </table>
 <a class="anchor" name="a16" doxytag="wxXml2DTD::IsNonEmpty"></a><p>
@@ -1113,6 +1297,37 @@ Saves the DTD into the given wxOutputStream.
     </td>
   </tr>
 </table>
+<a class="anchor" name="b1" doxytag="wxXml2DTD::SetAsEmpty"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">void wxXml2DTD::SetAsEmpty           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap><code> [inline, protected, virtual]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Sets this element as empty: that is wrapping a NULL pointer. 
+<p>
+This function *must not* free the memory of the currently wrapped pointer: it must just reset that pointer to NULL. This function is used by <a class="el" href="classwxXml2Wrapper.html#a4">DestroyIfUnlinked()</a>. 
+<p>
+Implements <a class="el" href="classwxXml2Wrapper.html#b1">wxXml2Wrapper</a>.    </td>
+  </tr>
+</table>
 <a class="anchor" name="a30" doxytag="wxXml2DTD::SetExternalID"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
@@ -1166,8 +1381,9 @@ Saves the DTD into the given wxOutputStream.
     <td>
 
 <p>
-The external URI is kept in the field named "SystemID" by libxml2. 
+Sets the external URI for this DTD. 
 <p>
+<dl compact><dt><b>Note:</b></dt><dd>The external URI is kept in the field named "SystemID" by libxml2. </dd></dl>
     </td>
   </tr>
 </table>
@@ -1195,6 +1411,122 @@ The external URI is kept in the field named "SystemID" by libxml2.
     </td>
     <td>
 
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="a34" doxytag="wxXml2DTD::SetRoot"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">void wxXml2DTD::SetRoot           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top"><a class="el" href="classwxXml2EntityDecl.html">wxXml2EntityDecl</a> &amp;&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>node</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap><code> [inline]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="a33" doxytag="wxXml2DTD::SetRoot"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">void wxXml2DTD::SetRoot           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top"><a class="el" href="classwxXml2AttrDecl.html">wxXml2AttrDecl</a> &amp;&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>node</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap><code> [inline]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="a32" doxytag="wxXml2DTD::SetRoot"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">void wxXml2DTD::SetRoot           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top"><a class="el" href="classwxXml2ElemDecl.html">wxXml2ElemDecl</a> &amp;&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>node</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap><code> [inline]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Sets the root node for this DTD. 
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="b4" doxytag="wxXml2DTD::SetRoot"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">void wxXml2DTD::SetRoot           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top"><a class="el" href="classwxXml2BaseNode.html">wxXml2BaseNode</a> &amp;&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>node</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap><code> [protected]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is not public because FIXME. 
 <p>
     </td>
   </tr>
@@ -1228,8 +1560,8 @@ The external URI is kept in the field named "SystemID" by libxml2.
   </tr>
 </table>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li><a class="el" href="xml2_8h-source.html">xml2.h</a><li><a class="el" href="xml2_8cpp.html">xml2.cpp</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Dec 31 11:02:10 2004 for wxXml2 by&nbsp;
+<li><a class="el" href="dtd_8h-source.html">dtd.h</a><li><a class="el" href="dtd_8cpp.html">dtd.cpp</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Sat Jan 1 21:15:08 2005 for wxXml2 by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.3.9.1 </small></address>
 </body>

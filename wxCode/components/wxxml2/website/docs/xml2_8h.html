@@ -16,74 +16,85 @@
 <a href="xml2_8h-source.html">Go to the source code of this file.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Classes</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtagXml2BaseNode.html">tagXml2BaseNode</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The common part of all XML nodes.  <a href="structtagXml2BaseNode.html#_details">More...</a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2.html">wxXml2</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A wrapper for some libxml2 static functions regarding the entire parser.  <a href="classwxXml2.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Wrapper.html">wxXml2Wrapper</a></td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Provides some standard method for all wxXml2 wrappers.  <a href="classwxXml2Wrapper.html#_details">More...</a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Provides some standard method for all <a class="el" href="classwxXml2.html">wxXml2</a> wrappers.  <a href="classwxXml2Wrapper.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Property.html">wxXml2Property</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Represents a node property.  <a href="classwxXml2Property.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Namespace.html">wxXml2Namespace</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Represents an XML namespace.  <a href="classwxXml2Namespace.html#_details">More...</a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2DTD.html">wxXml2DTD</a></td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Represents an XML Document Type Definition (DTD): you can find the W3C recommendation for DTDs at <a href="http://www.w3.org/TR/REC-he.">http://www.w3.org/TR/REC-he.</a>  <a href="classwxXml2DTD.html#_details">More...</a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2ElemDecl.html">wxXml2ElemDecl</a></td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">An element declaration.  <a href="classwxXml2ElemDecl.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html">wxXml2Document</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This class holds XML data/document as parsed by the libxml2 parser.  <a href="classwxXml2Document.html#_details">More...</a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2BaseNode.html">wxXml2BaseNode</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A generic XML node.  <a href="classwxXml2BaseNode.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Node.html">wxXml2Node</a></td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Represents node in XML document.  <a href="classwxXml2Node.html#_details">More...</a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Represents a node in XML documents.  <a href="classwxXml2Node.html#_details">More...</a><br></td></tr>
 <tr><td colspan="2"><br><h2>Defines</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a0">WXXMLDLLEXPORT</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a1">WX2XML</a>(str)&nbsp;&nbsp;&nbsp;((xmlChar *)str.mb_str(wxConvUTF8))</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a2">wxCHECK_NULL_POINTERS</a>(x, y)</td></tr>
+
+<tr><td colspan="2"><br><h2>Typedefs</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="structtagXml2BaseNode.html">tagXml2BaseNode</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a9">wxXml2BaseNodeObj</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The common part of all XML nodes.  <a href="#a9"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Enumerations</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">enum &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a25">wxXml2NodeType</a> { <br>
-&nbsp;&nbsp;<a class="el" href="xml2_8h.html#a25a12">wxXML_ELEMENT_NODE</a> =  1, 
-<a class="el" href="xml2_8h.html#a25a13">wxXML_TEXT_NODE</a> =  3, 
-<a class="el" href="xml2_8h.html#a25a14">wxXML_CDATA_SECTION_NODE</a> =  4, 
-<a class="el" href="xml2_8h.html#a25a15">wxXML_ENTITY_REF_NODE</a> =  5, 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">enum &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a28">wxXml2NodeType</a> { <br>
+&nbsp;&nbsp;<a class="el" href="xml2_8h.html#a28a15">wxXML_ELEMENT_NODE</a> =  1, 
+<a class="el" href="xml2_8h.html#a28a16">wxXML_TEXT_NODE</a> =  3, 
+<a class="el" href="xml2_8h.html#a28a17">wxXML_CDATA_SECTION_NODE</a> =  4, 
+<a class="el" href="xml2_8h.html#a28a18">wxXML_ENTITY_REF_NODE</a> =  5, 
 <br>
-&nbsp;&nbsp;<a class="el" href="xml2_8h.html#a25a16">wxXML_PI_NODE</a> =  7, 
-<a class="el" href="xml2_8h.html#a25a17">wxXML_COMMENT_NODE</a> =  8, 
-<a class="el" href="xml2_8h.html#a25a18">wxXML_DOCUMENT_NODE</a> =  9, 
-<a class="el" href="xml2_8h.html#a25a19">wxXML_HTML_DOCUMENT_NODE</a> =  13, 
+&nbsp;&nbsp;<a class="el" href="xml2_8h.html#a28a19">wxXML_PI_NODE</a> =  7, 
+<a class="el" href="xml2_8h.html#a28a20">wxXML_COMMENT_NODE</a> =  8, 
+<a class="el" href="xml2_8h.html#a28a21">wxXML_DOCUMENT_NODE</a> =  9, 
+<a class="el" href="xml2_8h.html#a28a22">wxXML_HTML_DOCUMENT_NODE</a> =  13, 
 <br>
-&nbsp;&nbsp;<a class="el" href="xml2_8h.html#a25a20">wxXML_DTD_NODE</a> =  14, 
-<a class="el" href="xml2_8h.html#a25a21">wxXML_ELEMENT_DECL</a> =  15, 
-<a class="el" href="xml2_8h.html#a25a22">wxXML_ATTRIBUTE_DECL</a> =  16, 
-<a class="el" href="xml2_8h.html#a25a23">wxXML_ENTITY_DECL</a> =  17, 
+&nbsp;&nbsp;<a class="el" href="xml2_8h.html#a28a23">wxXML_DTD_NODE</a> =  14, 
+<a class="el" href="xml2_8h.html#a28a24">wxXML_ELEMENT_DECL</a> =  15, 
+<a class="el" href="xml2_8h.html#a28a25">wxXML_ATTRIBUTE_DECL</a> =  16, 
+<a class="el" href="xml2_8h.html#a28a26">wxXML_ENTITY_DECL</a> =  17, 
 <br>
-&nbsp;&nbsp;<a class="el" href="xml2_8h.html#a25a24">wxXML_NAMESPACE_DECL</a> =  18
+&nbsp;&nbsp;<a class="el" href="xml2_8h.html#a28a27">wxXML_NAMESPACE_DECL</a> =  18
 <br>
  }</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Represents an XML node type.  <a href="#a25">More...</a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Represents an XML node type.  <a href="#a28">More...</a><br></td></tr>
 <tr><td colspan="2"><br><h2>Variables</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">WXXMLDLLEXPORT&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a2">wxXml2Node</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">WXXMLDLLEXPORT&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a3">wxXml2BaseNode</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">WXXMLDLLEXPORT&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a3">wxXml2Property</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">WXXMLDLLEXPORT&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a4">wxXml2Node</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">WXXMLDLLEXPORT&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a4">wxXml2Namespace</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">WXXMLDLLEXPORT&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a5">wxXml2Property</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">WXXMLDLLEXPORT&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a5">wxXml2DTD</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">WXXMLDLLEXPORT&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a6">wxXml2Namespace</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">WXXMLDLLEXPORT&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a6">wxXml2Document</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">WXXMLDLLEXPORT&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a7">wxXml2Document</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxXml2Node.html">wxXml2Node</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a7">wxXml2EmptyNode</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">WXXMLDLLEXPORT&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a8">wxXml2DTD</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxXml2Property.html">wxXml2Property</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a8">wxXml2EmptyProperty</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxXml2Node.html">wxXml2Node</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a10">wxXml2EmptyNode</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxXml2Namespace.html">wxXml2Namespace</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a9">wxXml2EmptyNamespace</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxXml2Property.html">wxXml2Property</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a11">wxXml2EmptyProperty</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxXml2DTD.html">wxXml2DTD</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a10">wxXml2EmptyDTD</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxXml2Namespace.html">wxXml2Namespace</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a12">wxXml2EmptyNamespace</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxXml2Document.html">wxXml2Document</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a11">wxXml2EmptyDoc</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxXml2Document.html">wxXml2Document</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a13">wxXml2EmptyDoc</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxXml2BaseNode.html">wxXml2BaseNode</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="xml2_8h.html#a14">wxXml2EmptyBaseNode</a></td></tr>
 
 </table>
 <hr><h2>Define Documentation</h2>
@@ -115,6 +126,42 @@
     </td>
   </tr>
 </table>
+<a class="anchor" name="a2" doxytag="xml2.h::wxCHECK_NULL_POINTERS"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">#define wxCHECK_NULL_POINTERS          </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">x,         <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap>y&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+<b>Value:</b><div class="fragment"><pre class="fragment"><span class="keywordflow">if</span> (x == NULL &amp;&amp; y == NULL)                     \
+                <span class="keywordflow">return</span> TRUE;                                    \
+        <span class="keywordflow">if</span> ((x == NULL &amp;&amp; y != NULL) ||         \
+                (x != NULL &amp;&amp; y == NULL))               \
+                <span class="keywordflow">return</span> FALSE;
+</pre></div>    </td>
+  </tr>
+</table>
 <a class="anchor" name="a0" doxytag="xml2.h::WXXMLDLLEXPORT"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
@@ -138,14 +185,40 @@
     </td>
   </tr>
 </table>
-<hr><h2>Enumeration Type Documentation</h2>
-<a class="anchor" name="a25" doxytag="xml2.h::wxXml2NodeType"></a><p>
+<hr><h2>Typedef Documentation</h2>
+<a class="anchor" name="a9" doxytag="xml2.h::wxXml2BaseNodeObj"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
       <table cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td class="md" nowrap valign="top">enum <a class="el" href="xml2_8h.html#a25">wxXml2NodeType</a>          </td>
+          <td class="md" nowrap valign="top">typedef struct <a class="el" href="structtagXml2BaseNode.html">tagXml2BaseNode</a>  <a class="el" href="structtagXml2BaseNode.html">wxXml2BaseNodeObj</a>          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+The common part of all XML nodes. 
+<p>
+This structure have been copied-and-pasted from line 440 of tree.h of the libxml2 xmlNode structure.     </td>
+  </tr>
+</table>
+<hr><h2>Enumeration Type Documentation</h2>
+<a class="anchor" name="a28" doxytag="xml2.h::wxXml2NodeType"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">enum <a class="el" href="xml2_8h.html#a28">wxXml2NodeType</a>          </td>
         </tr>
       </table>
     </td>
@@ -161,51 +234,51 @@
 <p>
 Represents an XML node type. 
 <p>
-LibXML2 allows a lot of different element types, but the following are the types you can use with the wxXml2 wrappers... <dl compact><dt><b>Enumeration values: </b></dt><dd>
+LibXML2 allows a lot of different element types, but the following are the types you can use with the <a class="el" href="classwxXml2.html">wxXml2</a> wrappers... <dl compact><dt><b>Enumeration values: </b></dt><dd>
 <table border="0" cellspacing="2" cellpadding="0">
-<tr><td valign="top"><em><a class="anchor" name="a25a12" doxytag="wxXML_ELEMENT_NODE"></a>wxXML_ELEMENT_NODE</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="a28a15" doxytag="wxXML_ELEMENT_NODE"></a>wxXML_ELEMENT_NODE</em>&nbsp;</td><td>
 Container nodes; they are characterized by the NAME, the NAMESPACE and the CHILDRENs. 
 <p>
 They create something like: &lt;name&gt;children&lt;/name&gt; or (if namespace != wxXml2EmptyNamespace), &lt;NS:NAME&gt;children&lt;/NS:NAME&gt; Examples: <a class="el" href="classwxXml2Node.html">wxXml2Node</a> container(wxXML_ELEMENT_NODE, parentnode, "MYTAG"); container.AddChild(....);</td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a25a13" doxytag="wxXML_TEXT_NODE"></a>wxXML_TEXT_NODE</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="a28a16" doxytag="wxXML_TEXT_NODE"></a>wxXML_TEXT_NODE</em>&nbsp;</td><td>
 Nodes containing text; they are characterized by VALUE (or CONTENT). </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a25a14" doxytag="wxXML_CDATA_SECTION_NODE"></a>wxXML_CDATA_SECTION_NODE</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="a28a17" doxytag="wxXML_CDATA_SECTION_NODE"></a>wxXML_CDATA_SECTION_NODE</em>&nbsp;</td><td>
 Creates something like: &lt;![CDATA[content]]&gt; To use this type of node, create a container node and then use the SetType(wxXML_CDATA_SECTION_NODE) function. 
 <p>
-To set content use <a class="el" href="classwxXml2Node.html#z3_2">wxXml2Node::SetContent</a>. </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a25a15" doxytag="wxXML_ENTITY_REF_NODE"></a>wxXML_ENTITY_REF_NODE</em>&nbsp;</td><td>
+To set content use <a class="el" href="classwxXml2Node.html#a22">wxXml2Node::SetContent</a>. </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="a28a18" doxytag="wxXML_ENTITY_REF_NODE"></a>wxXML_ENTITY_REF_NODE</em>&nbsp;</td><td>
 Like a text node, but this node contains only an "entity". 
 <p>
 Entities are strings like: &amp; or " or &lt; .... To create them, use <a class="el" href="classwxXml2Node.html">wxXml2Node</a> entityref(wxXML_TEXT_NODE, parentnode, "&amp;amp;"); containernode.AddChild(entityref); </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a25a16" doxytag="wxXML_PI_NODE"></a>wxXML_PI_NODE</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="a28a19" doxytag="wxXML_PI_NODE"></a>wxXML_PI_NODE</em>&nbsp;</td><td>
 Creates a Processing Instruction (PI) node. 
 <p>
-Such type of nodes looks like: &lt;?name content ?&gt; To use this type of node, create a container node and then use SetType(). To add 'properties', you cannot use <a class="el" href="classwxXml2Property.html">wxXml2Property</a>; instead use <a class="el" href="classwxXml2Node.html#z3_2">wxXml2Node::SetContent</a>("property=\"value\""). </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a25a17" doxytag="wxXML_COMMENT_NODE"></a>wxXML_COMMENT_NODE</em>&nbsp;</td><td>
+Such type of nodes looks like: &lt;?name content ?&gt; To use this type of node, create a container node and then use SetType(). To add 'properties', you cannot use <a class="el" href="classwxXml2Property.html">wxXml2Property</a>; instead use <a class="el" href="classwxXml2Node.html#a22">wxXml2Node::SetContent</a>("property=\"value\""). </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="a28a20" doxytag="wxXML_COMMENT_NODE"></a>wxXML_COMMENT_NODE</em>&nbsp;</td><td>
 Creates a comment node: . </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a25a18" doxytag="wxXML_DOCUMENT_NODE"></a>wxXML_DOCUMENT_NODE</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="a28a21" doxytag="wxXML_DOCUMENT_NODE"></a>wxXML_DOCUMENT_NODE</em>&nbsp;</td><td>
 The value of the "type" member of an xmlDoc structure. 
 <p>
 This value is used to identify a node as a <a class="el" href="classwxXml2Document.html">wxXml2Document</a>. Never use it directly: use <a class="el" href="classwxXml2Document.html">wxXml2Document</a> instead. </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a25a19" doxytag="wxXML_HTML_DOCUMENT_NODE"></a>wxXML_HTML_DOCUMENT_NODE</em>&nbsp;</td><td>
-Like <a class="el" href="xml2_8h.html#a25a18">wxXML_DOCUMENT_NODE</a>. </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a25a20" doxytag="wxXML_DTD_NODE"></a>wxXML_DTD_NODE</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="a28a22" doxytag="wxXML_HTML_DOCUMENT_NODE"></a>wxXML_HTML_DOCUMENT_NODE</em>&nbsp;</td><td>
+Like <a class="el" href="xml2_8h.html#a28a21">wxXML_DOCUMENT_NODE</a>. </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="a28a23" doxytag="wxXML_DTD_NODE"></a>wxXML_DTD_NODE</em>&nbsp;</td><td>
 The value of the "type" member of an xmlDtd structure. 
 <p>
 This value is used to identify a node as a <a class="el" href="classwxXml2DTD.html">wxXml2DTD</a>. Never use it directly: use <a class="el" href="classwxXml2DTD.html">wxXml2DTD</a> instead. </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a25a21" doxytag="wxXML_ELEMENT_DECL"></a>wxXML_ELEMENT_DECL</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="a28a24" doxytag="wxXML_ELEMENT_DECL"></a>wxXML_ELEMENT_DECL</em>&nbsp;</td><td>
 A DTD node which declares an element. 
 <p>
 Looks like: &lt;!ELEMENT mynode (#PCDATA)&gt; </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a25a22" doxytag="wxXML_ATTRIBUTE_DECL"></a>wxXML_ATTRIBUTE_DECL</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="a28a25" doxytag="wxXML_ATTRIBUTE_DECL"></a>wxXML_ATTRIBUTE_DECL</em>&nbsp;</td><td>
 A DTD node which declares an attribute. 
 <p>
 Looks like: &lt;!ATTLIST myattr type #PCDATA "defaultvalue"&gt; </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a25a23" doxytag="wxXML_ENTITY_DECL"></a>wxXML_ENTITY_DECL</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="a28a26" doxytag="wxXML_ENTITY_DECL"></a>wxXML_ENTITY_DECL</em>&nbsp;</td><td>
 A DTD node which declares an entity. 
 <p>
 Looks like: &lt;!ENTITY myentity "entity's replacement"&gt; </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a25a24" doxytag="wxXML_NAMESPACE_DECL"></a>wxXML_NAMESPACE_DECL</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="a28a27" doxytag="wxXML_NAMESPACE_DECL"></a>wxXML_NAMESPACE_DECL</em>&nbsp;</td><td>
 The value of the "type" member of an xmlNs structure. 
 <p>
 This value is used to identify a node as a <a class="el" href="classwxXml2Namespace.html">wxXml2Namespace</a>. Never use it directly: use <a class="el" href="classwxXml2Namespace.html">wxXml2Namespace</a> instead. </td></tr>
@@ -215,7 +288,30 @@ This value is used to identify a node as a <a class="el" href="classwxXml2Namesp
   </tr>
 </table>
 <hr><h2>Variable Documentation</h2>
-<a class="anchor" name="a6" doxytag="xml2.h::wxXml2Document"></a><p>
+<a class="anchor" name="a3" doxytag="xml2.h::wxXml2BaseNode"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">class WXXMLDLLEXPORT <a class="el" href="classwxXml2BaseNode.html">wxXml2BaseNode</a>          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="a7" doxytag="xml2.h::wxXml2Document"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -238,7 +334,7 @@ This value is used to identify a node as a <a class="el" href="classwxXml2Namesp
     </td>
   </tr>
 </table>
-<a class="anchor" name="a5" doxytag="xml2.h::wxXml2DTD"></a><p>
+<a class="anchor" name="a8" doxytag="xml2.h::wxXml2DTD"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -261,13 +357,13 @@ This value is used to identify a node as a <a class="el" href="classwxXml2Namesp
     </td>
   </tr>
 </table>
-<a class="anchor" name="a11" doxytag="xml2.h::wxXml2EmptyDoc"></a><p>
+<a class="anchor" name="a14" doxytag="xml2.h::wxXml2EmptyBaseNode"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
       <table cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td class="md" nowrap valign="top"><a class="el" href="classwxXml2Document.html">wxXml2Document</a> <a class="el" href="xml2_8h.html#a11">wxXml2EmptyDoc</a>          </td>
+          <td class="md" nowrap valign="top"><a class="el" href="classwxXml2BaseNode.html">wxXml2BaseNode</a> <a class="el" href="xml2_8h.html#a14">wxXml2EmptyBaseNode</a>          </td>
         </tr>
       </table>
     </td>
@@ -284,13 +380,13 @@ This value is used to identify a node as a <a class="el" href="classwxXml2Namesp
     </td>
   </tr>
 </table>
-<a class="anchor" name="a10" doxytag="xml2.h::wxXml2EmptyDTD"></a><p>
+<a class="anchor" name="a13" doxytag="xml2.h::wxXml2EmptyDoc"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
       <table cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td class="md" nowrap valign="top"><a class="el" href="classwxXml2DTD.html">wxXml2DTD</a> <a class="el" href="xml2_8h.html#a10">wxXml2EmptyDTD</a>          </td>
+          <td class="md" nowrap valign="top"><a class="el" href="classwxXml2Document.html">wxXml2Document</a> <a class="el" href="xml2_8h.html#a13">wxXml2EmptyDoc</a>          </td>
         </tr>
       </table>
     </td>
@@ -307,13 +403,13 @@ This value is used to identify a node as a <a class="el" href="classwxXml2Namesp
     </td>
   </tr>
 </table>
-<a class="anchor" name="a9" doxytag="xml2.h::wxXml2EmptyNamespace"></a><p>
+<a class="anchor" name="a12" doxytag="xml2.h::wxXml2EmptyNamespace"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
       <table cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td class="md" nowrap valign="top"><a class="el" href="classwxXml2Namespace.html">wxXml2Namespace</a> <a class="el" href="xml2_8h.html#a9">wxXml2EmptyNamespace</a>          </td>
+          <td class="md" nowrap valign="top"><a class="el" href="classwxXml2Namespace.html">wxXml2Namespace</a> <a class="el" href="xml2_8h.html#a12">wxXml2EmptyNamespace</a>          </td>
         </tr>
       </table>
     </td>
@@ -330,13 +426,13 @@ This value is used to identify a node as a <a class="el" href="classwxXml2Namesp
     </td>
   </tr>
 </table>
-<a class="anchor" name="a7" doxytag="xml2.h::wxXml2EmptyNode"></a><p>
+<a class="anchor" name="a10" doxytag="xml2.h::wxXml2EmptyNode"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
       <table cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td class="md" nowrap valign="top"><a class="el" href="classwxXml2Node.html">wxXml2Node</a> <a class="el" href="xml2_8h.html#a7">wxXml2EmptyNode</a>          </td>
+          <td class="md" nowrap valign="top"><a class="el" href="classwxXml2Node.html">wxXml2Node</a> <a class="el" href="xml2_8h.html#a10">wxXml2EmptyNode</a>          </td>
         </tr>
       </table>
     </td>
@@ -353,13 +449,13 @@ This value is used to identify a node as a <a class="el" href="classwxXml2Namesp
     </td>
   </tr>
 </table>
-<a class="anchor" name="a8" doxytag="xml2.h::wxXml2EmptyProperty"></a><p>
+<a class="anchor" name="a11" doxytag="xml2.h::wxXml2EmptyProperty"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
       <table cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td class="md" nowrap valign="top"><a class="el" href="classwxXml2Property.html">wxXml2Property</a> <a class="el" href="xml2_8h.html#a8">wxXml2EmptyProperty</a>          </td>
+          <td class="md" nowrap valign="top"><a class="el" href="classwxXml2Property.html">wxXml2Property</a> <a class="el" href="xml2_8h.html#a11">wxXml2EmptyProperty</a>          </td>
         </tr>
       </table>
     </td>
@@ -376,7 +472,7 @@ This value is used to identify a node as a <a class="el" href="classwxXml2Namesp
     </td>
   </tr>
 </table>
-<a class="anchor" name="a4" doxytag="xml2.h::wxXml2Namespace"></a><p>
+<a class="anchor" name="a6" doxytag="xml2.h::wxXml2Namespace"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -399,7 +495,7 @@ This value is used to identify a node as a <a class="el" href="classwxXml2Namesp
     </td>
   </tr>
 </table>
-<a class="anchor" name="a2" doxytag="xml2.h::wxXml2Node"></a><p>
+<a class="anchor" name="a4" doxytag="xml2.h::wxXml2Node"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -422,7 +518,7 @@ This value is used to identify a node as a <a class="el" href="classwxXml2Namesp
     </td>
   </tr>
 </table>
-<a class="anchor" name="a3" doxytag="xml2.h::wxXml2Property"></a><p>
+<a class="anchor" name="a5" doxytag="xml2.h::wxXml2Property"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -445,7 +541,7 @@ This value is used to identify a node as a <a class="el" href="classwxXml2Namesp
     </td>
   </tr>
 </table>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Dec 31 11:02:10 2004 for wxXml2 by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Sat Jan 1 21:15:08 2005 for wxXml2 by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.3.9.1 </small></address>
 </body>

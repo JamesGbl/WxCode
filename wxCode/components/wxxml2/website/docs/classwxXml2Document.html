@@ -20,7 +20,7 @@
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a0">wxXml2Document</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructs a new empty document ready to be used.  <a href="#a0"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates an empty document.  <a href="#a0"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a1">wxXml2Document</a> (<a class="el" href="classwxXml2Node.html">wxXml2Node</a> &amp;root)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructs a document and sets its root to the given node.  <a href="#a1"></a><br></td></tr>
@@ -42,78 +42,84 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxXml2Document.html">wxXml2Document</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a8">operator=</a> (const <a class="el" href="classwxXml2Document.html">wxXml2Document</a> &amp;doc)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a9">Load</a> (wxInputStream &amp;stream, wxString *pErr=NULL)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a9">Create</a> (const wxString &amp;version=wxT("1.0"))</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Parses the data from the given wxInputStream. See <a class="el" href="classwxXml2Document.html#a9">Load()</a>.  <a href="#a9"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a10">Load</a> (const wxString &amp;filename, wxString *pErr=NULL)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a new empty XML document with the given version.  <a href="#a9"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a10">Load</a> (wxInputStream &amp;stream, wxString *pErr=NULL)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">pointer is not NULL.  <a href="#a10"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a11">Save</a> (wxOutputStream &amp;stream, const wxString &amp;encoding=wxT("UTF-8"), int indentstep=1) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Parses the data from the given wxInputStream. See <a class="el" href="classwxXml2Document.html#a10">Load()</a>.  <a href="#a10"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a11">Load</a> (const wxString &amp;filename, wxString *pErr=NULL)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the number of bytes written: -1 if there were errors.  <a href="#a11"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a12">Save</a> (const wxString &amp;filename, const wxString &amp;encoding=wxT("UTF-8"), int indentstep=1) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">pointer is not NULL.  <a href="#a11"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a12">Save</a> (wxOutputStream &amp;stream, const wxString &amp;encoding=wxT("UTF-8"), int indentstep=1) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns TRUE on success.  <a href="#a12"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a13">IsNonEmpty</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the number of bytes written: -1 if there were errors.  <a href="#a12"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a13">Save</a> (const wxString &amp;filename, const wxString &amp;encoding=wxT("UTF-8"), int indentstep=1) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns TRUE if this object is wrapping a non-NULL object.  <a href="#a13"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a14">IsOk</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns TRUE on success.  <a href="#a13"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a14">IsNonEmpty</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns TRUE if everything is okay in the XML tree structure.  <a href="#a14"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a15">IsUnlinked</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns TRUE if this object is wrapping a non-NULL object.  <a href="#a14"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a15">IsOk</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns always TRUE since documents are entities which contain links to other structures (<a class="el" href="classwxXml2DTD.html">wxXml2DTD</a>, <a class="el" href="classwxXml2Node.html">wxXml2Node</a>...) but a doc is never linked with structures that are not own by itself.  <a href="#a15"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a16">IsDTDValid</a> (wxString *err=NULL, int bUseInternal=0) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns TRUE if everything is okay in the XML tree structure.  <a href="#a15"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a16">IsUnlinked</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Checks if this document is conform to the DTD which it holds.  <a href="#a16"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxXml2Node.html">wxXml2Node</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a17">GetRoot</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns always TRUE since documents are entities which contain links to other structures (<a class="el" href="classwxXml2DTD.html">wxXml2DTD</a>, <a class="el" href="classwxXml2Node.html">wxXml2Node</a>...) but a doc is never linked with structures that are not own by itself.  <a href="#a16"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a17">IsDTDValid</a> (wxString *err=NULL, int bUseInternal=0) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the root node of the document.  <a href="#a17"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxXml2DTD.html">wxXml2DTD</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a18">GetDTD</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Checks if this document is conform to the DTD which it holds.  <a href="#a17"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxXml2Node.html">wxXml2Node</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a18">GetRoot</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the internal DTD associated with this document.  <a href="#a18"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">wxString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a19">GetVersion</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the root node of the document.  <a href="#a18"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxXml2DTD.html">wxXml2DTD</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a19">GetDTD</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns version of document (may be empty).  <a href="#a19"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">wxString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a20">GetFileEncoding</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the internal DTD associated with this document.  <a href="#a19"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">wxString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a20">GetVersion</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns encoding of document (may be empty).  <a href="#a20"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">xmlDoc *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a21">GetObj</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns version of document (may be empty).  <a href="#a20"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">wxString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a21">GetFileEncoding</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the libxml2 underlying object.  <a href="#a21"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a22">SetRoot</a> (<a class="el" href="classwxXml2Node.html">wxXml2Node</a> &amp;node)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns encoding of document (may be empty).  <a href="#a21"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">xmlDoc *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a22">GetObj</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Changes the root of the document (deleting old one).  <a href="#a22"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a23">SetDTD</a> (<a class="el" href="classwxXml2DTD.html">wxXml2DTD</a> &amp;dtd)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the libxml2 underlying object.  <a href="#a22"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a23">SetRoot</a> (<a class="el" href="classwxXml2Node.html">wxXml2Node</a> &amp;node)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets the DTD for this document.  <a href="#a23"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a24">SetStyleSheet</a> (const wxString &amp;xslfile)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Changes the root of the document (deleting old one).  <a href="#a23"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a24">SetDTD</a> (<a class="el" href="classwxXml2DTD.html">wxXml2DTD</a> &amp;dtd)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a PI node of the type: &lt;?xml-stylesheet type="text/xsl" href="xslfile"?&gt; where "xslfile" is the given URI to an XSL file.  <a href="#a24"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a25">SetMathMLDTD</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets the DTD for this document.  <a href="#a24"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a25">SetStyleSheet</a> (const wxString &amp;xslfile)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets the MathML DTD for this document.  <a href="#a25"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a26">SetXHTMLStrictDTD</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a PI node of the type: &lt;?xml-stylesheet type="text/xsl" href="xslfile"?&gt; where "xslfile" is the given URI to an XSL file.  <a href="#a25"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a26">SetMathMLDTD</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets the XHTML DTD for this document.  <a href="#a26"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a27">SetXHTMLTransitionalDTD</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets the MathML DTD for this document.  <a href="#a26"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a27">SetXHTMLStrictDTD</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a28">SetXHTMLFrameSetDTD</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets the XHTML DTD for this document.  <a href="#a27"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a28">SetXHTMLTransitionalDTD</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#a29">SetXHTMLFrameSetDTD</a> ()</td></tr>
 
 <tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#b0">Destroy</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destroys the data wrapped by this class freeing its memory.  <a href="#b0"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#b1">Copy</a> (const <a class="el" href="classwxXml2Document.html">wxXml2Document</a> &amp;doc)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#b1">SetAsEmpty</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#b2">GetPrivate</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets this element as empty: that is wrapping a NULL pointer.  <a href="#b1"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#b2">Copy</a> (const <a class="el" href="classwxXml2Document.html">wxXml2Document</a> &amp;doc)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the private member of the wrapped structure.  <a href="#b2"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxXml2Document.html#b3">GetPrivate</a> () const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the private member of the wrapped structure.  <a href="#b3"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 This class holds XML data/document as parsed by the libxml2 parser. 
 <p>
-Use <a class="el" href="classwxXml2Document.html#a9">Load</a> and <a class="el" href="classwxXml2Document.html#a11">Save</a> to perform IO on wxStream or on wxFile objects. Use the <a class="el" href="classwxXml2Document.html#a17">GetRoot()</a> function to edit the contents of the XML document through <a class="el" href="classwxXml2Node.html">wxXml2Node</a> functions. 
+Use <a class="el" href="classwxXml2Document.html#a10">Load</a> and <a class="el" href="classwxXml2Document.html#a12">Save</a> to perform IO on wxStream or on wxFile objects. Use the <a class="el" href="classwxXml2Document.html#a18">GetRoot()</a> function to edit the contents of the XML document through <a class="el" href="classwxXml2Node.html">wxXml2Node</a> functions. 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" name="a0" doxytag="wxXml2Document::wxXml2Document"></a><p>
@@ -140,9 +146,9 @@ Use <a class="el" href="classwxXml2Document.html#a9">Load</a> and <a class="el" 
     <td>
 
 <p>
-Constructs a new empty document ready to be used. 
+Creates an empty document. 
 <p>
-Unlike almost all other <a class="el" href="classwxXml2Wrapper.html">wxXml2Wrapper</a> this function creates a new document ready to be used and not an empty one.     </td>
+Use the <a class="el" href="classwxXml2Document.html#a9">Create</a> function before using it.     </td>
   </tr>
 </table>
 <a class="anchor" name="a1" doxytag="wxXml2Document::wxXml2Document"></a><p>
@@ -295,7 +301,7 @@ Destructor.
   </tr>
 </table>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="b1" doxytag="wxXml2Document::Copy"></a><p>
+<a class="anchor" name="b2" doxytag="wxXml2Document::Copy"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -319,6 +325,36 @@ Destructor.
     </td>
     <td>
 
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="a9" doxytag="wxXml2Document::Create"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">bool wxXml2Document::Create           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">const wxString &amp;&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>version</em> = <code>wxT("1.0")</code>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Creates a new empty XML document with the given version. 
 <p>
     </td>
   </tr>
@@ -354,7 +390,7 @@ This function should not try to update the reference count since it should have 
 Implements <a class="el" href="classwxXml2Wrapper.html#b0">wxXml2Wrapper</a>.    </td>
   </tr>
 </table>
-<a class="anchor" name="a18" doxytag="wxXml2Document::GetDTD"></a><p>
+<a class="anchor" name="a19" doxytag="wxXml2Document::GetDTD"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -384,7 +420,7 @@ If no internal DTDs are associated then wxXml2EmptyDTD is returned. <dl compact>
     </td>
   </tr>
 </table>
-<a class="anchor" name="a20" doxytag="wxXml2Document::GetFileEncoding"></a><p>
+<a class="anchor" name="a21" doxytag="wxXml2Document::GetFileEncoding"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -413,7 +449,7 @@ Returns encoding of document (may be empty).
 Note: this is the encoding original file was saved in, *not* the encoding of in-memory representation!     </td>
   </tr>
 </table>
-<a class="anchor" name="a21" doxytag="wxXml2Document::GetObj"></a><p>
+<a class="anchor" name="a22" doxytag="wxXml2Document::GetObj"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -442,7 +478,7 @@ Returns the libxml2 underlying object.
     </td>
   </tr>
 </table>
-<a class="anchor" name="b2" doxytag="wxXml2Document::GetPrivate"></a><p>
+<a class="anchor" name="b3" doxytag="wxXml2Document::GetPrivate"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -470,10 +506,10 @@ Returns the private member of the wrapped structure.
 <p>
 This function should be used to implement copy constructor and assignment operators. 
 <p>
-Implements <a class="el" href="classwxXml2Wrapper.html#b1">wxXml2Wrapper</a>.    </td>
+Implements <a class="el" href="classwxXml2Wrapper.html#b2">wxXml2Wrapper</a>.    </td>
   </tr>
 </table>
-<a class="anchor" name="a17" doxytag="wxXml2Document::GetRoot"></a><p>
+<a class="anchor" name="a18" doxytag="wxXml2Document::GetRoot"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -502,7 +538,7 @@ Returns the root node of the document.
     </td>
   </tr>
 </table>
-<a class="anchor" name="a19" doxytag="wxXml2Document::GetVersion"></a><p>
+<a class="anchor" name="a20" doxytag="wxXml2Document::GetVersion"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -531,7 +567,7 @@ Returns version of document (may be empty).
     </td>
   </tr>
 </table>
-<a class="anchor" name="a16" doxytag="wxXml2Document::IsDTDValid"></a><p>
+<a class="anchor" name="a17" doxytag="wxXml2Document::IsDTDValid"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -572,11 +608,11 @@ Checks if this document is conform to the DTD which it holds.
     <tr><td valign="top"></td><td valign="top"><em>bUseInternal</em>&nbsp;</td><td>If this parameter is set to 1, then the internal subset (m_doc-&gt;intSubset) will be used. If this parameter is set to 0, then the external subset (m_doc-&gt;extSubset) will be used. If this parameter is set to -1, then the subset will be chosen automatically (the first valid one). </td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Note:</b></dt><dd>Libxml2 does not specify if a document can hold both an internal and an external subset. Anyway, the internal one should be the preferred choice; besides, it is the DTD returned by <a class="el" href="classwxXml2Document.html#a18">GetDTD()</a> function. </dd></dl>
+<dl compact><dt><b>Note:</b></dt><dd>Libxml2 does not specify if a document can hold both an internal and an external subset. Anyway, the internal one should be the preferred choice; besides, it is the DTD returned by <a class="el" href="classwxXml2Document.html#a19">GetDTD()</a> function. </dd></dl>
     </td>
   </tr>
 </table>
-<a class="anchor" name="a13" doxytag="wxXml2Document::IsNonEmpty"></a><p>
+<a class="anchor" name="a14" doxytag="wxXml2Document::IsNonEmpty"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -607,7 +643,7 @@ Returns TRUE if this object is wrapping a non-NULL object.
 Implements <a class="el" href="classwxXml2Wrapper.html#a3">wxXml2Wrapper</a>.    </td>
   </tr>
 </table>
-<a class="anchor" name="a14" doxytag="wxXml2Document::IsOk"></a><p>
+<a class="anchor" name="a15" doxytag="wxXml2Document::IsOk"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -636,7 +672,7 @@ Returns TRUE if everything is okay in the XML tree structure.
     </td>
   </tr>
 </table>
-<a class="anchor" name="a15" doxytag="wxXml2Document::IsUnlinked"></a><p>
+<a class="anchor" name="a16" doxytag="wxXml2Document::IsUnlinked"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -667,7 +703,7 @@ Returns always TRUE since documents are entities which contain links to other st
 Implements <a class="el" href="classwxXml2Wrapper.html#a2">wxXml2Wrapper</a>.    </td>
   </tr>
 </table>
-<a class="anchor" name="a10" doxytag="wxXml2Document::Load"></a><p>
+<a class="anchor" name="a11" doxytag="wxXml2Document::Load"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -706,7 +742,7 @@ pointer is not NULL.
 Returns TRUE on success. Returns FALSE otherwise &amp; provide an error description if the given     </td>
   </tr>
 </table>
-<a class="anchor" name="a9" doxytag="wxXml2Document::Load"></a><p>
+<a class="anchor" name="a10" doxytag="wxXml2Document::Load"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -740,7 +776,7 @@ Returns TRUE on success. Returns FALSE otherwise &amp; provide an error descript
     <td>
 
 <p>
-Parses the data from the given wxInputStream. See <a class="el" href="classwxXml2Document.html#a9">Load()</a>. 
+Parses the data from the given wxInputStream. See <a class="el" href="classwxXml2Document.html#a10">Load()</a>. 
 <p>
     </td>
   </tr>
@@ -829,7 +865,7 @@ Parses the data from the given wxInputStream. See <a class="el" href="classwxXml
     </td>
   </tr>
 </table>
-<a class="anchor" name="a12" doxytag="wxXml2Document::Save"></a><p>
+<a class="anchor" name="a13" doxytag="wxXml2Document::Save"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -874,7 +910,7 @@ Returns TRUE on success.
     </td>
   </tr>
 </table>
-<a class="anchor" name="a11" doxytag="wxXml2Document::Save"></a><p>
+<a class="anchor" name="a12" doxytag="wxXml2Document::Save"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -919,7 +955,38 @@ Returns the number of bytes written: -1 if there were errors.
     </td>
   </tr>
 </table>
-<a class="anchor" name="a23" doxytag="wxXml2Document::SetDTD"></a><p>
+<a class="anchor" name="b1" doxytag="wxXml2Document::SetAsEmpty"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">void wxXml2Document::SetAsEmpty           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap><code> [inline, protected, virtual]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Sets this element as empty: that is wrapping a NULL pointer. 
+<p>
+This function *must not* free the memory of the currently wrapped pointer: it must just reset that pointer to NULL. This function is used by <a class="el" href="classwxXml2Wrapper.html#a4">DestroyIfUnlinked()</a>. 
+<p>
+Implements <a class="el" href="classwxXml2Wrapper.html#b1">wxXml2Wrapper</a>.    </td>
+  </tr>
+</table>
+<a class="anchor" name="a24" doxytag="wxXml2Document::SetDTD"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -949,7 +1016,7 @@ Sets the DTD for this document.
     </td>
   </tr>
 </table>
-<a class="anchor" name="a25" doxytag="wxXml2Document::SetMathMLDTD"></a><p>
+<a class="anchor" name="a26" doxytag="wxXml2Document::SetMathMLDTD"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -978,7 +1045,7 @@ Sets the MathML DTD for this document.
     </td>
   </tr>
 </table>
-<a class="anchor" name="a22" doxytag="wxXml2Document::SetRoot"></a><p>
+<a class="anchor" name="a23" doxytag="wxXml2Document::SetRoot"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -1008,7 +1075,7 @@ Changes the root of the document (deleting old one).
     </td>
   </tr>
 </table>
-<a class="anchor" name="a24" doxytag="wxXml2Document::SetStyleSheet"></a><p>
+<a class="anchor" name="a25" doxytag="wxXml2Document::SetStyleSheet"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -1038,7 +1105,7 @@ Creates a PI node of the type: &lt;?xml-stylesheet type="text/xsl" href="xslfile
     </td>
   </tr>
 </table>
-<a class="anchor" name="a28" doxytag="wxXml2Document::SetXHTMLFrameSetDTD"></a><p>
+<a class="anchor" name="a29" doxytag="wxXml2Document::SetXHTMLFrameSetDTD"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -1065,7 +1132,7 @@ Creates a PI node of the type: &lt;?xml-stylesheet type="text/xsl" href="xslfile
     </td>
   </tr>
 </table>
-<a class="anchor" name="a26" doxytag="wxXml2Document::SetXHTMLStrictDTD"></a><p>
+<a class="anchor" name="a27" doxytag="wxXml2Document::SetXHTMLStrictDTD"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -1094,7 +1161,7 @@ Sets the XHTML DTD for this document.
     </td>
   </tr>
 </table>
-<a class="anchor" name="a27" doxytag="wxXml2Document::SetXHTMLTransitionalDTD"></a><p>
+<a class="anchor" name="a28" doxytag="wxXml2Document::SetXHTMLTransitionalDTD"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -1123,7 +1190,7 @@ Sets the XHTML DTD for this document.
 </table>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="xml2_8h-source.html">xml2.h</a><li><a class="el" href="xml2_8cpp.html">xml2.cpp</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Dec 31 11:02:10 2004 for wxXml2 by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Sat Jan 1 21:15:08 2005 for wxXml2 by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.3.9.1 </small></address>
 </body>

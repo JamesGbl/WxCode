@@ -20,7 +20,8 @@
 	</option>
 
 	<set var="COMP_NAME">wxxml2</set>
-	<set var="COMP_SRC">../src/xml2.cpp</set>
+	<set var="COMP_SRC">../src/xml2.cpp ../src/dtd.cpp</set>
+	<set var="COMP_HDR">../include/wx/xml2.h ../include/wx/dtd.h</set>	
 	<set var="COMP_SAMPLE_SRC">../sample/minimal.cpp</set>
 
 
@@ -34,14 +35,6 @@
 	when compiling wxxml2 with MINGW compiler -->
 	<set var="STATIC_DEF"><if cond="SHARED=='0'">LIBXML_STATIC</if></set>
 
-	<!-- The real target: not declared in wxcode_end.bkl because
-	     in this way modifications are allowed to the basic template. -->
-	<lib id="wxxml2" template="complib">
-		<stdlib>$(LIBXML2_DIR)</stdlib>
-		<stdlib>$(ICONV_DIR)</stdlib>
-		<define>$(STATIC_DEF)</define>
-		<libname>$(COMP_NAME)$(WXLIBPOSTFIX)</libname>
-	</lib>
 
 	<!-- The sample of wxXml2 -->
 	<exe id="minimal" template="compsample">
@@ -49,7 +42,6 @@
 		<stdlib>$(ICONV_DIR)</stdlib>
 		<define>$(STATIC_DEF)</define>
 
-		<depends>wxxml2</depends>
 		<library>wxxml2</library>
 		<if cond="FORMAT=='mingw' or FORMAT=='autoconf'"><sys-lib>xml2</sys-lib></if>
 		<if cond="FORMAT!='mingw' and FORMAT!='autoconf'"><sys-lib>libxml2</sys-lib></if>
@@ -57,5 +49,17 @@
 		<wxlibs/>
 		<syslibs/>
 	</exe>
-	
+
+	<!-- The real target: not declared in wxcode_end.bkl because
+	     in this way modifications are allowed to the basic template. -->
+	<lib id="wxxml2" template="complib">
+		<stdlib>$(LIBXML2_DIR)</stdlib>
+		<stdlib>$(ICONV_DIR)</stdlib>
+		<define>$(STATIC_DEF)</define>
+		<libname>$(COMP_NAME)$(WXLIBPOSTFIX)</libname>
+		
+		<headers>$(COMP_HDR)</headers>
+		<dependency-of>minimal</dependency-of>
+	</lib>
+		
 </makefile>

@@ -33,41 +33,17 @@
 #include "wx/wfstream.h"		// not included by wxprec.h
 #include "wx/filename.h"
 #include "wx/xml2.h"
-
+#include "wx/dtd.h"
 
 
 // implementation of dynamic classes
-
 IMPLEMENT_ABSTRACT_CLASS(wxXml2Wrapper, wxObject)
 IMPLEMENT_DYNAMIC_CLASS(wxXml2BaseNode, wxXml2Wrapper)
-IMPLEMENT_DYNAMIC_CLASS(wxXml2ElemDecl, wxXml2BaseNode)
 IMPLEMENT_DYNAMIC_CLASS(wxXml2Node, wxXml2BaseNode)
 
 IMPLEMENT_DYNAMIC_CLASS(wxXml2Document, wxXml2Wrapper)
 IMPLEMENT_DYNAMIC_CLASS(wxXml2Property, wxXml2Wrapper)
 IMPLEMENT_DYNAMIC_CLASS(wxXml2Namespace, wxXml2Wrapper)
-IMPLEMENT_DYNAMIC_CLASS(wxXml2DTD, wxXml2Wrapper)
-
-IMPLEMENT_DYNAMIC_CLASS(wxXml2ElemContent, wxXml2Wrapper)
-
-
-// a macro used in the overloaded operator==; this is the return table:
-//
-//         x            y          returns
-//       NULL          NULL          TRUE		(they are equal)
-//       NULL        non-NULL        FALSE		(they are different)
-//     non-NULL        NULL          FALSE		(they are different)
-//     non-NULL      non-NULL      nothing: no 'return' statement is executed:
-//                                 x and y could be equal but they could also
-//                                 be different. The code following the macro
-//                                 must care about this possibility
-//
-#define CHECK_NULL_POINTERS(x, y)		\
-	if (x == NULL && y == NULL)			\
-		return TRUE;					\
-	if ((x == NULL && y != NULL) ||		\
-		(x != NULL && y == NULL))		\
-		return FALSE;
 
 
 // global instances (they wraps NULL pointers)
@@ -75,7 +51,6 @@ wxXml2Document wxXml2EmptyDoc(NULL);
 wxXml2Node wxXml2EmptyNode(NULL);
 wxXml2Property wxXml2EmptyProperty(NULL);
 wxXml2Namespace wxXml2EmptyNamespace(NULL, wxXml2EmptyNode);
-wxXml2DTD wxXml2EmptyDTD(NULL);
 wxXml2BaseNode wxXml2EmptyBaseNode(NULL);
 
 
@@ -87,6 +62,13 @@ wxXml2BaseNode wxXml2EmptyBaseNode(NULL);
 
 void wxXml2Wrapper::DestroyIfUnlinked()
 {
+	if (IsNonEmpty() == FALSE) {
+
+		wxLogDebug("%s::DestroyIfUnlinked - NOT destroyed (because empty)", 
+			GetClassInfo()->GetClassName());
+		return;
+	}
+
 	DecRefCount();
 	int refcount = GetRefCount();
 	
@@ -97,7 +79,8 @@ void wxXml2Wrapper::DestroyIfUnlinked()
 	// in this case we must not destroy the libxml2 structure,
 	// otherwise the other wrapper would almost certainly throw
 	// an exception since it would try to access invalid memory...
-	if (IsUnlinked() && refcount == 0) {
+	bool unlinked = IsUnlinked();
+	if (unlinked && refcount == 0) {
 		
 		// ... anyway, if there are no parents of this structure
 		// and no wrappers are embedding it, then we can safely
@@ -110,11 +93,57 @@ void wxXml2Wrapper::DestroyIfUnlinked()
 
 		// the memory associated with this property will be freed
 		// by the node which owns this object or by another wrapper	
+		SetAsEmpty();
+
 		wxLogDebug("%s::DestroyIfUnlinked - NOT destroyed (because %s)", 
 			GetClassInfo()->GetClassName(),
-			(!IsUnlinked() ? "still linked" : 
+			(!unlinked ? "still linked" : 
 					wxString::Format("refcount is %d", refcount).c_str()));
 	}
+}
+
+
+
+//-----------------------------------------------------------------------------
+//  wxXml2BaseNode
+//-----------------------------------------------------------------------------
+
+void wxXml2BaseNode::SetNext(const wxXml2BaseNode &next)
+{	
+	if (wxXml2EmptyBaseNode != next)
+		xmlAddNextSibling((xmlNode *)m_obj, (xmlNode *)next.GetObj());
+	else
+		m_obj->next = NULL;
+}
+
+void wxXml2BaseNode::SetChildren(const wxXml2BaseNode &n)
+{
+	// FIXME: we need to update only parent/children pointers ?
+	m_obj->children = n.GetObj();
+	n.GetObj()->parent = m_obj;
+}
+
+bool wxXml2BaseNode::IsUnlinked() const
+{
+	if (m_obj == NULL)
+		return TRUE;
+
+	// if we have all null pointers, we are not linked anywhere
+	if (m_obj != NULL && m_obj->parent == NULL && 
+		m_obj->prev == NULL &&	m_obj->next == NULL)
+		return TRUE;
+
+	// at least one link is valid
+	return FALSE;
+}
+
+bool wxXml2BaseNode::operator==(const wxXml2BaseNode &n) const
+{
+	wxCHECK_NULL_POINTERS(n.GetObj(), GetObj());
+
+	if (n.GetObj() == GetObj())
+		return TRUE;
+	return FALSE;
 }
 
 
@@ -125,7 +154,7 @@ void wxXml2Wrapper::DestroyIfUnlinked()
 
 bool wxXml2Property::operator==(const wxXml2Property &p) const
 {
-	CHECK_NULL_POINTERS(p.GetObj(), GetObj());
+	wxCHECK_NULL_POINTERS(p.GetObj(), GetObj());
 
 	// the same name and same value are required
 	if (GetName().CmpNoCase(p.GetName()) == 0 &&
@@ -225,7 +254,7 @@ wxXml2Namespace::wxXml2Namespace(xmlNs *ns, wxXml2Node &owner)
 
 bool wxXml2Namespace::operator==(const wxXml2Namespace &ns) const
 {
-	CHECK_NULL_POINTERS(ns.GetObj(), GetObj());
+	wxCHECK_NULL_POINTERS(ns.GetObj(), GetObj());
 
 	if (GetPrefix() == ns.GetPrefix() &&
 		GetURI().CmpNoCase(ns.GetURI()) == 0)
@@ -274,296 +303,6 @@ void wxXml2Namespace::SetURI(const wxString &href)
 	xmlFree((void *)m_ns->href);
 	m_ns->href = xmlStrdup(WX2XML(href));
 }
-
-
-
-
-
-//-----------------------------------------------------------------------------
-//  wxXml2DTD - creation functions
-//-----------------------------------------------------------------------------
-
-void wxXml2DTD::Create(const wxXml2Document &doc,
-					   const wxString &name, const wxString &externalID,
-						const wxString &systemid)
-{
-	UnwrappingOld();
-
-	// xmlNewDtd API will link this DTD with the given document...
-	m_dtd = xmlNewDtd(doc.GetObj(), WX2XML(name),
-					WX2XML(externalID), WX2XML(systemid));
-	JustWrappedNew();
-}
-
-bool wxXml2DTD::operator==(const wxXml2DTD &dtd) const
-{
-	CHECK_NULL_POINTERS(dtd.GetObj(), GetObj());
-
-	if (GetName() == dtd.GetName() &&
-		GetSystemID() == dtd.GetSystemID() &&
-		GetExternalID() == dtd.GetExternalID())
-		return TRUE;
-	return FALSE;
-}
-
-bool wxXml2DTD::IsOk() const
-{
-	if (m_dtd == NULL)
-		return FALSE;
-
-	if (GetName() == wxEmptyString)
-		return FALSE;
-
-	// if we are an external reference, then we should
-	// be a SYSTEM or a PUBLIC subset...
-	if (IsExternalReference() &&
-		!IsSystemSubset() &&
-		!IsPublicSubset())
-		return FALSE;
-
-	return TRUE;
-}
-
-bool wxXml2DTD::Load(const wxString &filename, wxString *pErr)
-{
-	wxFileInputStream stream(filename);	
-	if (!stream.IsOk() || !wxFileName::FileExists(filename)) return FALSE;		
-	return Load(stream, pErr);
-}
-	
-bool wxXml2DTD::Save(const wxString &filename) const
-{
-	wxFileOutputStream stream(filename);
-	if (!stream.IsOk()) return FALSE;
-	return (Save(stream) != -1);
-}
-
-// helper function for wxXml2DTD::Load
-static void XMLDTDMsg(void *ctx, const char *pszFormat, ...)
-{
-	// get the variable argument list
-	va_list argptr;
-	va_start(argptr, pszFormat);
-	wxString str = wxString::FormatV(pszFormat, argptr);
-	va_end(argptr);
-
-	// append the error string to the private member of the parser context
-	xmlParserCtxt *p = (xmlParserCtxt *)ctx;
-	wxString *err = (wxString *)p->_private;
-	if (err != NULL) *err += str;
-}
-
-// helper function for wxXml2DTD::Load
-static int XMLDTDRead(void *ctx, char *buffer, int len)
-{
-	wxInputStream *stream = (wxInputStream*)ctx;
-	return stream->Read(buffer, len).LastRead();
-}
-
-bool wxXml2DTD::Load(wxInputStream &stream, wxString *pErr)
-{
-	// are we attached to a wxXml2Document ?
-	xmlDoc *doc = (m_dtd ? m_dtd->parent : NULL);
-	if (doc) xmlUnlinkNode((xmlNode *)m_dtd);
-
-	// init the SAX handler
-	xmlSAXHandler h;
-	memset(&h, 0, sizeof(h));
-	xmlSAX2InitDefaultSAXHandler(&h, 0);
-
-	// set the error & warning handlers
-	h.error = XMLDTDMsg;
-	h.warning = XMLDTDMsg;
-	h._private = pErr;
-
-	// xmlSAXHandler::fatalError is unused (in LibXML2 2.5.x),
-	// however, we set it anyway to support future versions...
-	h.fatalError = XMLDTDMsg;
-
-	// setup our input buffer
-	xmlParserInputBuffer *myparserbuf = xmlAllocParserInputBuffer(XML_CHAR_ENCODING_NONE);
-	myparserbuf->readcallback = XMLDTDRead;
-	myparserbuf->context = &stream;
-
-	// parse from buffer
-	wxString error;
-	UnwrappingOld();
-	m_dtd = xmlIOParseDTD(&h, myparserbuf, XML_CHAR_ENCODING_NONE);
-	JustWrappedNew();		// don't forget this
-	
-	if (!IsOk())
-		return FALSE;		// don't proceed
-
-	// reattach to the old wxXml2Document, if there was one...
-	if (doc)
-		wxXml2Document(doc).SetDTD(*this);
-
-	// the xmlParserInputBuffer has been already freed by libxml2
-	// and the SAX handler is on the stack... we can return	
-	return TRUE;
-}
-
-// helper function for wxXml2DTD::Save
-static int XMLDTDWrite(void *context, const char *buffer, int len)
-{
-	wxOutputStream *stream = (wxOutputStream *)context;
-
-	// even if our m_dtd->doc pointer is NULL, xmlNodeDumpOutput
-	// will create the header:
-	//
-	//  <!DOCTYPE none PUBLIC "none" "none" [    and the footer    ]>
-	//
-	// so, we must remove them...
-
-	const char *towrite = buffer;
-	if (strncmp(buffer, "<!DOCTYPE", 9) == 0) {
-
-		// discard all characters placed before the first "[" symbol
-		while (towrite[0] != '[' && len > 0) {
-			towrite++;
-			len--;
-		}
-
-		// remove also the "[" symbol...
-		towrite++;
-		len--;
-
-		// eventually remove also the newline which follow it...
-		if (towrite[0] == '\n') {
-			towrite++;
-			len--;
-		}
-	}
-
-	if (strncmp(towrite+len-2, "]>", 2) == 0) {
-
-		// remove the "]>" symbol...
-		len -= 2;
-	}
-
-	stream->Write(towrite, len);
-	return stream->LastWrite();
-}
-
-int wxXml2DTD::Save(wxOutputStream &stream) const
-{
-	// setup the output buffer
-	xmlOutputBuffer *buf = xmlAllocOutputBuffer(NULL);
-	buf->context = &stream;
-	buf->writecallback = XMLDTDWrite;	
-
-	// dump this DTD node
-	xmlNodeDumpOutput(buf, NULL, (xmlNode *)m_dtd, 1, 0, NULL);
-	
-	int written = buf->written;
-	if (written == 0) {
-
-		// for some reason, xmlNodeDumpOutput does not call the callback
-		// function we gave him so we call it now...
-		written = XMLDTDWrite(&stream, 
-				(const char *)buf->buffer->content, buf->buffer->use);
-	}
-
-	return written;
-}
-
-bool wxXml2DTD::IsPublicSubset() const
-{
-	// if we are public, then we should have both a 
-	// non-empty SystemID (which contains our external URI, in reality)
-	// and a non-empty ExternalID
-	return m_dtd->SystemID != NULL &&
-		m_dtd->ExternalID != NULL;
-}
-
-bool wxXml2DTD::IsSystemSubset() const
-{
-	// SYSTEM subsets only need a SystemID so if we are really
-	// a system subset we should have an empty ExternalID
-	return m_dtd->SystemID != NULL &&
-		m_dtd->ExternalID == NULL;
-}
-
-bool wxXml2DTD::IsExternalReference() const
-{
-	// just check if we have any children: if we don't
-	// it is because we are just a sort of link to a
-	// full DTD located somewhere else...
-	if (GetRoot() == wxXml2EmptyNode)
-		return TRUE;
-	return FALSE;
-}
-
-wxXml2Node wxXml2DTD::GetRoot() const
-{ 
-	if (m_dtd == NULL || m_dtd->children == NULL)
-		return wxXml2EmptyNode;
-
-	wxXml2Node ret(m_dtd->children);
-
-#ifdef __WXDEBUG__
-	// be sure that our children are DTD declarations...
-	wxXml2NodeType t = ret.GetType();
-	wxASSERT(t == wxXML_ELEMENT_DECL ||
-		t == wxXML_ATTRIBUTE_DECL ||
-		t == wxXML_ENTITY_DECL ||
-		t == wxXML_NAMESPACE_DECL ||
-		t == wxXML_COMMENT_NODE);		// don't forget comments: they are allowed in DTDs
-#endif
-	return ret;
-}
-
-void wxXml2DTD::SetRoot(wxXml2ElemDecl &node)
-{
-	m_dtd->children = (xmlNode*)node.GetObj();
-}
-
-bool wxXml2DTD::LoadFullDTD(wxString *perr)
-{
-	if (IsSystemSubset()) {
-
-		// we have our DTD somewhere on this system:
-		// load it supposing that the SystemID which
-		// should be an URI for XML specification
-		// is just the name of our file...
-		return Load(GetSystemID(), perr);
-
-	}
-	
-	wxASSERT(IsPublicSubset());
-	
-	// public DTD loading is not implemented yet:
-	// we would need a URI parser to do that and 
-	// we should also create an HTTP connection, probably....
-	// let me know if you need this feature.
-	//wxASSERT(0);
-	if (perr)
-		*perr = "PUBLIC DTD loading not supported.";
-	
-	return FALSE;
-}
-
-void wxXml2DTD::SetName(const wxString &str)
-{
-	// reset the name string
-	xmlFree((void *)m_dtd->name);
-	m_dtd->name = xmlStrdup(WX2XML(str));
-}
-
-void wxXml2DTD::SetSystemID(const wxString &str)
-{
-	// reset the SystemID string
-	xmlFree((void *)m_dtd->SystemID);
-	m_dtd->SystemID = xmlStrdup(WX2XML(str));
-}
-
-void wxXml2DTD::SetExternalID(const wxString &str)
-{
-	// reset the ExternalID string
-	xmlFree((void *)m_dtd->ExternalID);
-	m_dtd->ExternalID = xmlStrdup(WX2XML(str));
-}
-
 
 
 
@@ -803,6 +542,8 @@ wxXml2Node wxXml2Node::AddPIChild(const wxString &name, const wxString &content)
 
 	// use CreateTemp even if the created node won't be really temporaneous...
 	child.CreateTemp(wxXML_PI_NODE, doc, name, content);
+	doc.DestroyIfUnlinked();
+
 	return child;
 }
 
@@ -878,48 +619,6 @@ void wxXml2Node::AddNext(wxXml2Node &node)
 
 
 //-----------------------------------------------------------------------------
-//  wxXml2BaseNode
-//-----------------------------------------------------------------------------
-
-void wxXml2BaseNode::SetNext(const wxXml2BaseNode &next)
-{	
-	if (wxXml2EmptyBaseNode != next)
-		xmlAddNextSibling((xmlNode *)m_obj, (xmlNode *)next.GetObj());
-	else
-		m_obj->next = NULL;
-}
-
-void wxXml2BaseNode::SetChildren(const wxXml2BaseNode &n)
-{
-	// FIXME
-	m_obj->children = n.GetObj();
-}
-
-bool wxXml2BaseNode::IsUnlinked() const
-{
-	if (m_obj == NULL)
-		return TRUE;
-
-	// if we have all null pointers, we are not linked anywhere
-	if (m_obj != NULL && m_obj->parent == NULL && 
-		m_obj->prev == NULL &&	m_obj->next == NULL)
-		return TRUE;
-
-	// at least one link is valid
-	return FALSE;
-}
-
-bool wxXml2BaseNode::operator==(const wxXml2BaseNode &n) const
-{
-	CHECK_NULL_POINTERS(n.GetObj(), GetObj());
-
-	return TRUE;
-}
-
-
-
-
-//-----------------------------------------------------------------------------
 //  wxXml2Node - set functions
 //-----------------------------------------------------------------------------
 
@@ -953,7 +652,7 @@ bool wxXml2Node::Cmp(const wxXml2Node &node) const
 {
 	// check contained data
 	if (CmpNoNs(node)) {
-		CHECK_NULL_POINTERS(node.GetObj(), GetObj());
+		wxCHECK_NULL_POINTERS(node.GetObj(), GetObj());
 
 		// also check namespace
 		if (GetNamespace() == node.GetNamespace()) {
@@ -969,7 +668,7 @@ bool wxXml2Node::Cmp(const wxXml2Node &node) const
 
 bool wxXml2Node::CmpNoNs(const wxXml2Node &node) const
 {
-	CHECK_NULL_POINTERS(node.GetObj(), GetObj());
+	wxCHECK_NULL_POINTERS(node.GetObj(), GetObj());
 
 	// check contained data
 	if (GetName().CmpNoCase(node.GetName()) == 0 &&
@@ -1054,6 +753,8 @@ wxXml2Node wxXml2Node::Find(const wxString &name, const wxString &content,
 
 	// create a temporary node so that we can use the other overload of Find()
 	tmp.CreateTemp(wxXML_ELEMENT_NODE, doc, name, content);
+	doc.DestroyIfUnlinked();
+
 	return Find(tmp, occ, bNS);
 }
 
@@ -1123,6 +824,18 @@ bool wxXml2Node::operator==(const wxXml2Node &node) const
 //-----------------------------------------------------------------------------
 //  wxXml2Document
 //-----------------------------------------------------------------------------
+
+bool wxXml2Document::Create(const wxString &version)
+{
+	// create a new empty doc
+	m_doc = xmlNewDoc(WX2XML(version));
+	if (!m_doc) return FALSE;
+
+	// and set its refcount to 1
+	JustWrappedNew();
+
+	return IsOk();
+}
 
 // helper function for wxXml2Document::Load
 static void XMLDocumentMsg(void *ctx, const char *pszFormat, ...)

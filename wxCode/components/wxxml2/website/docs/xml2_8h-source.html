@@ -56,732 +56,741 @@
 00048 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
 00049 <span class="preprocessor"></span>
 00050 <span class="comment">// these are required because the compiler must know about their existence</span>
-<a name="l00051"></a><a class="code" href="xml2_8h.html#a2">00051</a> <span class="keyword">class </span><a class="code" href="xml2_8h.html#a0">WXXMLDLLEXPORT</a> <a class="code" href="xml2_8h.html#a2">wxXml2Node</a>;
-<a name="l00052"></a><a class="code" href="xml2_8h.html#a3">00052</a> <span class="keyword">class </span><a class="code" href="xml2_8h.html#a0">WXXMLDLLEXPORT</a> <a class="code" href="xml2_8h.html#a3">wxXml2Property</a>;
-<a name="l00053"></a><a class="code" href="xml2_8h.html#a4">00053</a> <span class="keyword">class </span><a class="code" href="xml2_8h.html#a0">WXXMLDLLEXPORT</a> <a class="code" href="xml2_8h.html#a4">wxXml2Namespace</a>;
-<a name="l00054"></a><a class="code" href="xml2_8h.html#a5">00054</a> <span class="keyword">class </span><a class="code" href="xml2_8h.html#a0">WXXMLDLLEXPORT</a> <a class="code" href="xml2_8h.html#a5">wxXml2DTD</a>;
-<a name="l00055"></a><a class="code" href="xml2_8h.html#a6">00055</a> <span class="keyword">class </span><a class="code" href="xml2_8h.html#a0">WXXMLDLLEXPORT</a> <a class="code" href="xml2_8h.html#a6">wxXml2Document</a>;
-00056 
+<a name="l00051"></a><a class="code" href="xml2_8h.html#a3">00051</a> <span class="keyword">class </span><a class="code" href="xml2_8h.html#a0">WXXMLDLLEXPORT</a> <a class="code" href="xml2_8h.html#a3">wxXml2BaseNode</a>;
+<a name="l00052"></a><a class="code" href="xml2_8h.html#a4">00052</a> <span class="keyword">class </span><a class="code" href="xml2_8h.html#a0">WXXMLDLLEXPORT</a> <a class="code" href="xml2_8h.html#a4">wxXml2Node</a>;
+<a name="l00053"></a><a class="code" href="xml2_8h.html#a5">00053</a> <span class="keyword">class </span><a class="code" href="xml2_8h.html#a0">WXXMLDLLEXPORT</a> <a class="code" href="xml2_8h.html#a5">wxXml2Property</a>;
+<a name="l00054"></a><a class="code" href="xml2_8h.html#a6">00054</a> <span class="keyword">class </span><a class="code" href="xml2_8h.html#a0">WXXMLDLLEXPORT</a> <a class="code" href="xml2_8h.html#a6">wxXml2Namespace</a>;
+<a name="l00055"></a><a class="code" href="xml2_8h.html#a7">00055</a> <span class="keyword">class </span><a class="code" href="xml2_8h.html#a0">WXXMLDLLEXPORT</a> <a class="code" href="xml2_8h.html#a7">wxXml2Document</a>;
+<a name="l00056"></a><a class="code" href="xml2_8h.html#a8">00056</a> <span class="keyword">class </span><a class="code" href="xml2_8h.html#a0">WXXMLDLLEXPORT</a> <a class="code" href="dtd_8h.html#a0">wxXml2DTD</a>;                 <span class="comment">// defined in "dtd.h"</span>
 00057 
-00058 <span class="comment">// this macro converts from wxStrings to xmlChars</span>
-<a name="l00059"></a><a class="code" href="xml2_8h.html#a1">00059</a> <span class="preprocessor">#define WX2XML(str)             ((xmlChar *)str.mb_str(wxConvUTF8))</span>
-00060 <span class="preprocessor"></span>
-00061 
-<a name="l00064"></a><a class="code" href="xml2_8h.html#a25">00064</a> <span class="keyword">enum</span> <a class="code" href="xml2_8h.html#a25">wxXml2NodeType</a>
-00065 {
-00066     <span class="comment">// note: values are synchronized with xmlElementType from libxml2 2.5.x</span>
-00067         <span class="comment">//       </span>
-00068 
-00078     <a class="code" href="xml2_8h.html#a25a12">wxXML_ELEMENT_NODE</a> =                1,
-00079 
-00081     <a class="code" href="xml2_8h.html#a25a13">wxXML_TEXT_NODE</a> =                   3,
-00082 
-00087         <a class="code" href="xml2_8h.html#a25a14">wxXML_CDATA_SECTION_NODE</a> =      4,
-00088 
-00094         <a class="code" href="xml2_8h.html#a25a15">wxXML_ENTITY_REF_NODE</a> =         5,
-00095 
-00101         <a class="code" href="xml2_8h.html#a25a16">wxXML_PI_NODE</a> =                         7,
-00102 
-00104     <a class="code" href="xml2_8h.html#a25a17">wxXML_COMMENT_NODE</a> =                8,
-00105 
+00058 
+00059 <span class="comment">// this macro converts from wxStrings to xmlChars</span>
+<a name="l00060"></a><a class="code" href="xml2_8h.html#a1">00060</a> <span class="preprocessor">#define WX2XML(str)             ((xmlChar *)str.mb_str(wxConvUTF8))</span>
+00061 <span class="preprocessor"></span>
+00062 
+<a name="l00065"></a><a class="code" href="xml2_8h.html#a28">00065</a> <span class="keyword">enum</span> <a class="code" href="xml2_8h.html#a28">wxXml2NodeType</a>
+00066 {
+00067     <span class="comment">// note: values are synchronized with xmlElementType from libxml2 2.5.x</span>
+00068         <span class="comment">//       </span>
+00069 
+00079     <a class="code" href="xml2_8h.html#a28a15">wxXML_ELEMENT_NODE</a> =                1,
+00080 
+00082     <a class="code" href="xml2_8h.html#a28a16">wxXML_TEXT_NODE</a> =                   3,
+00083 
+00088         <a class="code" href="xml2_8h.html#a28a17">wxXML_CDATA_SECTION_NODE</a> =      4,
+00089 
+00095         <a class="code" href="xml2_8h.html#a28a18">wxXML_ENTITY_REF_NODE</a> =         5,
+00096 
+00102         <a class="code" href="xml2_8h.html#a28a19">wxXML_PI_NODE</a> =                         7,
+00103 
+00105     <a class="code" href="xml2_8h.html#a28a20">wxXML_COMMENT_NODE</a> =                8,
 00106 
-00110     <a class="code" href="xml2_8h.html#a25a18">wxXML_DOCUMENT_NODE</a> =               9,
-00111     <a class="code" href="xml2_8h.html#a25a19">wxXML_HTML_DOCUMENT_NODE</a> =  13,             
-00112 
-00116         <a class="code" href="xml2_8h.html#a25a20">wxXML_DTD_NODE</a> =                        14,
-00117 
+00107 
+00111     <a class="code" href="xml2_8h.html#a28a21">wxXML_DOCUMENT_NODE</a> =               9,
+00112     <a class="code" href="xml2_8h.html#a28a22">wxXML_HTML_DOCUMENT_NODE</a> =  13,             
+00113 
+00117         <a class="code" href="xml2_8h.html#a28a23">wxXML_DTD_NODE</a> =                        14,
 00118 
-00119 <span class="comment">// these three element still needs to be wrapped:</span>
-00120 
-00123     <a class="code" href="xml2_8h.html#a25a21">wxXML_ELEMENT_DECL</a> = 15,
-00124 
-00127     <a class="code" href="xml2_8h.html#a25a22">wxXML_ATTRIBUTE_DECL</a> = 16,
-00128 
-00131     <a class="code" href="xml2_8h.html#a25a23">wxXML_ENTITY_DECL</a> = 17,
-00132 
+00119 
+00120 <span class="comment">// these three element still needs to be wrapped:</span>
+00121 
+00124     <a class="code" href="xml2_8h.html#a28a24">wxXML_ELEMENT_DECL</a> = 15,
+00125 
+00128     <a class="code" href="xml2_8h.html#a28a25">wxXML_ATTRIBUTE_DECL</a> = 16,
+00129 
+00132     <a class="code" href="xml2_8h.html#a28a26">wxXML_ENTITY_DECL</a> = 17,
 00133 
-00137     <a class="code" href="xml2_8h.html#a25a24">wxXML_NAMESPACE_DECL</a> = 18
-00138 
-00139         <span class="comment">// I don't even know when these one are used... sorry</span>
-00140     <span class="comment">//wxXML_XINCLUDE_START = 19,</span>
-00141     <span class="comment">//wxXML_XINCLUDE_END = 20</span>
-00142 };
-00143 
+00134 
+00138     <a class="code" href="xml2_8h.html#a28a27">wxXML_NAMESPACE_DECL</a> = 18
+00139 
+00140         <span class="comment">// I don't even know when these one are used... sorry</span>
+00141     <span class="comment">//wxXML_XINCLUDE_START = 19,</span>
+00142     <span class="comment">//wxXML_XINCLUDE_END = 20</span>
+00143 };
 00144 
 00145 
-00146 <span class="comment">// global instances of empty objects</span>
-00147 <span class="keyword">extern</span> <a class="code" href="xml2_8h.html#a2">wxXml2Node</a> wxXml2EmptyNode;
-00148 <span class="keyword">extern</span> <a class="code" href="xml2_8h.html#a3">wxXml2Property</a> wxXml2EmptyProperty;
-00149 <span class="keyword">extern</span> <a class="code" href="xml2_8h.html#a4">wxXml2Namespace</a> wxXml2EmptyNamespace;
-00150 <span class="keyword">extern</span> <a class="code" href="xml2_8h.html#a5">wxXml2DTD</a> wxXml2EmptyDTD;
-00151 <span class="keyword">extern</span> <a class="code" href="xml2_8h.html#a6">wxXml2Document</a> wxXml2EmptyDoc;
-00152 
-00153 
-00154 
-00155 
-<a name="l00157"></a><a class="code" href="classwxXml2Wrapper.html">00157</a> <span class="keyword">class </span><a class="code" href="xml2_8h.html#a0">WXXMLDLLEXPORT</a> wxXml2Wrapper : <span class="keyword">public</span> wxObject
-00158 {
-00159         DECLARE_ABSTRACT_CLASS(wxXml2Wrapper)
+<a name="l00149"></a><a class="code" href="structtagXml2BaseNode.html">00149</a> <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structtagXml2BaseNode.html">tagXml2BaseNode</a> {
+00150 
+<a name="l00151"></a><a class="code" href="structtagXml2BaseNode.html#o0">00151</a>     <span class="keywordtype">void</span>           *_private;   <span class="comment">/* application data */</span>
+<a name="l00152"></a><a class="code" href="structtagXml2BaseNode.html#o1">00152</a>     xmlElementType   type;      <span class="comment">/* type number, must be second ! */</span>
+<a name="l00153"></a><a class="code" href="structtagXml2BaseNode.html#o2">00153</a>     <span class="keyword">const</span> xmlChar   *name;      <span class="comment">/* the name of the node, or the entity */</span>
+<a name="l00154"></a><a class="code" href="structtagXml2BaseNode.html#o3">00154</a>     <span class="keyword">struct </span><a class="code" href="structtagXml2BaseNode.html">tagXml2BaseNode</a> *children;   <span class="comment">/* parent-&gt;childs link */</span>
+<a name="l00155"></a><a class="code" href="structtagXml2BaseNode.html#o4">00155</a>     <span class="keyword">struct </span><a class="code" href="structtagXml2BaseNode.html">tagXml2BaseNode</a> *last;       <span class="comment">/* last child link */</span>
+<a name="l00156"></a><a class="code" href="structtagXml2BaseNode.html#o5">00156</a>     <span class="keyword">struct </span><a class="code" href="structtagXml2BaseNode.html">tagXml2BaseNode</a> *parent;     <span class="comment">/* child-&gt;parent link */</span>
+<a name="l00157"></a><a class="code" href="structtagXml2BaseNode.html#o6">00157</a>     <span class="keyword">struct </span><a class="code" href="structtagXml2BaseNode.html">tagXml2BaseNode</a> *next;       <span class="comment">/* next sibling link  */</span>
+<a name="l00158"></a><a class="code" href="structtagXml2BaseNode.html#o7">00158</a>     <span class="keyword">struct </span><a class="code" href="structtagXml2BaseNode.html">tagXml2BaseNode</a> *prev;       <span class="comment">/* previous sibling link  */</span>
+<a name="l00159"></a><a class="code" href="structtagXml2BaseNode.html#o8">00159</a>     <span class="keyword">struct </span>_xmlDoc  *doc;       <span class="comment">/* the containing document */</span>
 00160 
-00161 <span class="keyword">protected</span>:
+00161 } <a class="code" href="structtagXml2BaseNode.html">wxXml2BaseNodeObj</a>;
 00162 
-00166         <span class="keyword">virtual</span> <span class="keywordtype">void</span> Destroy() = 0;
-00167 
-00170         <span class="comment">/*virtual void Copy(const wxXml2Wrapper &amp;tocopy) = 0;*/</span>
-00171 
-00173         <span class="keyword">virtual</span> <span class="keywordtype">int</span> &amp;GetPrivate() <span class="keyword">const </span>= 0;    
-00174 
-00175 <span class="keyword">protected</span>:              <span class="comment">// reference counting utilities</span>
-00176 
-00238 
-<a name="l00239"></a><a class="code" href="classwxXml2Wrapper.html#b2">00239</a>         <span class="keywordtype">void</span> ResetRefCount()
-00240                 { <span class="keywordflow">if</span> (IsNonEmpty()) GetPrivate() = 0; }
-00241 
-<a name="l00242"></a><a class="code" href="classwxXml2Wrapper.html#b3">00242</a>         <span class="keywordtype">void</span> IncRefCount()
-00243                 { <span class="keywordflow">if</span> (IsNonEmpty()) GetPrivate()++; }
-00244 
-<a name="l00245"></a><a class="code" href="classwxXml2Wrapper.html#b4">00245</a>         <span class="keywordtype">void</span> DecRefCount()
-00246                 { <span class="keywordflow">if</span> (IsNonEmpty()) GetPrivate()--; }
-00247 
-<a name="l00248"></a><a class="code" href="classwxXml2Wrapper.html#b5">00248</a>         <span class="keywordtype">int</span> GetRefCount()<span class="keyword"> const</span>
-00249 <span class="keyword">                </span>{ <span class="keywordflow">if</span> (IsNonEmpty()) <span class="keywordflow">return</span> (int)(GetPrivate()); <span class="keywordflow">else</span> <span class="keywordflow">return</span> 0; }
-00250 
-<a name="l00253"></a><a class="code" href="classwxXml2Wrapper.html#b6">00253</a>         <span class="keywordtype">void</span> UnwrappingOld()
-00254                 { DestroyIfUnlinked(); }
-00255 
-<a name="l00258"></a><a class="code" href="classwxXml2Wrapper.html#b7">00258</a>         <span class="keywordtype">void</span> JustWrappedNew()
-00259                 { IncRefCount(); }
-00260 
-00261 <span class="keyword">public</span>:
-00262 
-<a name="l00264"></a><a class="code" href="classwxXml2Wrapper.html#a0">00264</a>         wxXml2Wrapper() {}
-00265 
-<a name="l00270"></a><a class="code" href="classwxXml2Wrapper.html#a1">00270</a>         <span class="keyword">virtual</span> ~wxXml2Wrapper() {}
-00271 
-00272 
-00274         <span class="keyword">virtual</span> <span class="keywordtype">bool</span> IsUnlinked() <span class="keyword">const </span>= 0;
-00275 
-00277         <span class="keyword">virtual</span> <span class="keywordtype">bool</span> IsNonEmpty() <span class="keyword">const </span>= 0;
-00278 
-00280         <span class="keyword">virtual</span> <span class="keywordtype">void</span> DestroyIfUnlinked();
-00281 };
-00282 
-00283 
-00284 
-<a name="l00289"></a><a class="code" href="classwxXml2Property.html">00289</a> <span class="keyword">class </span><a class="code" href="xml2_8h.html#a0">WXXMLDLLEXPORT</a> <a class="code" href="xml2_8h.html#a3">wxXml2Property</a> : <span class="keyword">public</span> wxXml2Wrapper
-00290 {
-00291         DECLARE_DYNAMIC_CLASS(<a class="code" href="xml2_8h.html#a3">wxXml2Property</a>)
-00292 
-00293         
-00294         xmlAttr *m_attr;
-00295 
-00296 <span class="keyword">protected</span>:
-00297 
-<a name="l00298"></a><a class="code" href="classwxXml2Property.html#b0">00298</a>         <span class="keywordtype">void</span> <a class="code" href="classwxXml2Wrapper.html#b0">Destroy</a>() {
-00299                 <span class="keywordflow">if</span> (m_attr) xmlRemoveProp(m_attr);
-00300                 m_attr = NULL;
-00301         }
-00302 
-<a name="l00303"></a><a class="code" href="classwxXml2Property.html#b1">00303</a>         <span class="keywordtype">void</span> Copy(<span class="keyword">const</span> wxXml2Property &amp;prop)
-00304                 { <a class="code" href="classwxXml2Wrapper.html#b6">UnwrappingOld</a>(); m_attr = prop.<a class="code" href="classwxXml2Property.html#r0">m_attr</a>; <a class="code" href="classwxXml2Wrapper.html#b7">JustWrappedNew</a>(); }
-00305 
-<a name="l00306"></a><a class="code" href="classwxXml2Property.html#b2">00306</a>         <span class="keywordtype">int</span> &amp;<a class="code" href="classwxXml2Wrapper.html#b1">GetPrivate</a>()<span class="keyword"> const</span>
-00307 <span class="keyword">                </span>{ <span class="keywordflow">return</span> (<span class="keywordtype">int</span> &amp;)(m_attr-&gt;_private); }
-00308 
-00309 <span class="keyword">public</span>:
+00163 
+00164 <span class="comment">// a macro used in the overloaded operator==; this is the return table:</span>
+00165 <span class="comment">//</span>
+00166 <span class="comment">//         x            y          returns</span>
+00167 <span class="comment">//       NULL          NULL          TRUE               (they are equal)</span>
+00168 <span class="comment">//       NULL        non-NULL        FALSE              (they are different)</span>
+00169 <span class="comment">//     non-NULL        NULL          FALSE              (they are different)</span>
+00170 <span class="comment">//     non-NULL      non-NULL      nothing: no 'return' statement is executed:</span>
+00171 <span class="comment">//                                 x and y could be equal but they could also</span>
+00172 <span class="comment">//                                 be different. The code following the macro</span>
+00173 <span class="comment">//                                 must care about this possibility</span>
+00174 <span class="comment">//</span>
+<a name="l00175"></a><a class="code" href="xml2_8h.html#a2">00175</a> <span class="preprocessor">#define wxCHECK_NULL_POINTERS(x, y)             \</span>
+00176 <span class="preprocessor">        if (x == NULL &amp;&amp; y == NULL)                     \</span>
+00177 <span class="preprocessor">                return TRUE;                                    \</span>
+00178 <span class="preprocessor">        if ((x == NULL &amp;&amp; y != NULL) ||         \</span>
+00179 <span class="preprocessor">                (x != NULL &amp;&amp; y == NULL))               \</span>
+00180 <span class="preprocessor">                return FALSE;</span>
+00181 <span class="preprocessor"></span>
+00182 
+00183 
+00184 <span class="comment">// global instances of empty objects</span>
+00185 <span class="keyword">extern</span> <a class="code" href="xml2_8h.html#a4">wxXml2Node</a> wxXml2EmptyNode;
+00186 <span class="keyword">extern</span> <a class="code" href="xml2_8h.html#a5">wxXml2Property</a> wxXml2EmptyProperty;
+00187 <span class="keyword">extern</span> <a class="code" href="xml2_8h.html#a6">wxXml2Namespace</a> wxXml2EmptyNamespace;
+00188 <span class="keyword">extern</span> <a class="code" href="xml2_8h.html#a7">wxXml2Document</a> wxXml2EmptyDoc;
+00189 <span class="keyword">extern</span> <a class="code" href="xml2_8h.html#a3">wxXml2BaseNode</a> wxXml2EmptyBaseNode;
+00190 
+00191 
+<a name="l00196"></a><a class="code" href="classwxXml2.html">00196</a> <span class="keyword">class </span><a class="code" href="xml2_8h.html#a0">WXXMLDLLEXPORT</a> wxXml2 : <span class="keyword">public</span> wxObject
+00197 {
+00198 <span class="keyword">public</span>:
+<a name="l00199"></a><a class="code" href="classwxXml2.html#a0">00199</a>         wxXml2() {}
+<a name="l00200"></a><a class="code" href="classwxXml2.html#a1">00200</a>         <span class="keyword">virtual</span> ~wxXml2() {}
+00201 
+<a name="l00204"></a><a class="code" href="classwxXml2.html#e0">00204</a>         <span class="keyword">static</span> <span class="keywordtype">void</span> Init() 
+00205                 { xmlInitMemory(); xmlInitParser(); }
+00206 
+<a name="l00210"></a><a class="code" href="classwxXml2.html#e1">00210</a>         <span class="keyword">static</span> <span class="keywordtype">void</span> Cleanup() 
+00211                 { xmlCleanupParser(); }
+00212 };
+00213 
+00214 
+00215 
+<a name="l00217"></a><a class="code" href="classwxXml2Wrapper.html">00217</a> <span class="keyword">class </span><a class="code" href="xml2_8h.html#a0">WXXMLDLLEXPORT</a> wxXml2Wrapper : <span class="keyword">public</span> wxObject
+00218 {
+00219         DECLARE_ABSTRACT_CLASS(wxXml2Wrapper)
+00220 
+00221 <span class="keyword">protected</span>:
+00222 
+00226         <span class="keyword">virtual</span> <span class="keywordtype">void</span> Destroy() = 0;
+00227 
+00232         <span class="keyword">virtual</span> <span class="keywordtype">void</span> SetAsEmpty() = 0;
+00233 
+00236         <span class="comment">/*virtual void Copy(const wxXml2Wrapper &amp;tocopy) = 0;*/</span>
+00237 
+00239         <span class="keyword">virtual</span> <span class="keywordtype">int</span> &amp;GetPrivate() <span class="keyword">const </span>= 0;    
+00240 
+00241 <span class="keyword">protected</span>:              <span class="comment">// reference counting utilities</span>
+00242 
+00304 
+<a name="l00305"></a><a class="code" href="classwxXml2Wrapper.html#b3">00305</a>         <span class="keywordtype">void</span> ResetRefCount()
+00306                 { <span class="keywordflow">if</span> (IsNonEmpty()) GetPrivate() = 0; }
+00307 
+<a name="l00308"></a><a class="code" href="classwxXml2Wrapper.html#b4">00308</a>         <span class="keywordtype">void</span> IncRefCount()
+00309                 { <span class="keywordflow">if</span> (IsNonEmpty()) GetPrivate()++; }
 00310 
-<a name="l00312"></a><a class="code" href="classwxXml2Property.html#a0">00312</a>         <a class="code" href="xml2_8h.html#a3">wxXml2Property</a>() : m_attr(NULL) {}
+<a name="l00311"></a><a class="code" href="classwxXml2Wrapper.html#b5">00311</a>         <span class="keywordtype">void</span> DecRefCount()
+00312                 { <span class="keywordflow">if</span> (IsNonEmpty()) GetPrivate()--; }
 00313 
-<a name="l00315"></a><a class="code" href="classwxXml2Property.html#a1">00315</a>     <a class="code" href="xml2_8h.html#a3">wxXml2Property</a>(<span class="keyword">const</span> wxString &amp;name, 
-00316                                         <span class="keyword">const</span> wxString &amp;value,
-00317                                         wxXml2Node &amp;owner = wxXml2EmptyNode) : m_attr(NULL)
-00318                 { Create(name, value, owner); }
-00319 
-<a name="l00321"></a><a class="code" href="classwxXml2Property.html#a2">00321</a>         <a class="code" href="xml2_8h.html#a3">wxXml2Property</a>(xmlAttr *pattr) : m_attr(pattr) 
-00322                 { <a class="code" href="classwxXml2Wrapper.html#b7">JustWrappedNew</a>(); }
-00323 
-<a name="l00325"></a><a class="code" href="classwxXml2Property.html#a3">00325</a>         <a class="code" href="xml2_8h.html#a3">wxXml2Property</a>(<span class="keyword">const</span> wxXml2Property &amp;prop) : m_attr(NULL)
-00326                 { Copy(prop); }
-00327 
-<a name="l00329"></a><a class="code" href="classwxXml2Property.html#a4">00329</a>         <span class="keyword">virtual</span> ~<a class="code" href="xml2_8h.html#a3">wxXml2Property</a>() { <a class="code" href="classwxXml2Wrapper.html#a4">DestroyIfUnlinked</a>(); }
-00330 
+<a name="l00314"></a><a class="code" href="classwxXml2Wrapper.html#b6">00314</a>         <span class="keywordtype">int</span> GetRefCount()<span class="keyword"> const</span>
+00315 <span class="keyword">                </span>{ <span class="keywordflow">if</span> (IsNonEmpty()) <span class="keywordflow">return</span> (int)(GetPrivate()); <span class="keywordflow">else</span> <span class="keywordflow">return</span> 0; }
+00316 
+<a name="l00319"></a><a class="code" href="classwxXml2Wrapper.html#b7">00319</a>         <span class="keywordtype">void</span> UnwrappingOld()
+00320                 { DestroyIfUnlinked(); }
+00321 
+<a name="l00324"></a><a class="code" href="classwxXml2Wrapper.html#b8">00324</a>         <span class="keywordtype">void</span> JustWrappedNew()
+00325                 { IncRefCount(); }
+00326 
+00327 <span class="keyword">public</span>:
+00328 
+<a name="l00330"></a><a class="code" href="classwxXml2Wrapper.html#a0">00330</a>         wxXml2Wrapper() {}
 00331 
-00332 <span class="keyword">public</span>:         <span class="comment">// operators</span>
-00333 
-00336         <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> wxXml2Property &amp;p) <span class="keyword">const</span>;
-00337         
-<a name="l00339"></a><a class="code" href="classwxXml2Property.html#a6">00339</a>         <span class="keywordtype">bool</span> operator!=(<span class="keyword">const</span> wxXml2Property &amp;p)<span class="keyword"> const          </span>{ <span class="keywordflow">return</span> !(*<span class="keyword">this</span> == p); }
-00340 
-<a name="l00342"></a><a class="code" href="classwxXml2Property.html#a7">00342</a>         <a class="code" href="xml2_8h.html#a3">wxXml2Property</a> &amp;operator=(<span class="keyword">const</span> wxXml2Property &amp;p)
-00343                 { Copy(p); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+<a name="l00336"></a><a class="code" href="classwxXml2Wrapper.html#a1">00336</a>         <span class="keyword">virtual</span> ~wxXml2Wrapper() {}
+00337 
+00338 
+00340         <span class="keyword">virtual</span> <span class="keywordtype">bool</span> IsUnlinked() <span class="keyword">const </span>= 0;
+00341 
+00343         <span class="keyword">virtual</span> <span class="keywordtype">bool</span> IsNonEmpty() <span class="keyword">const </span>= 0;
 00344 
-00345 <span class="keyword">public</span>:         <span class="comment">// miscellaneous</span>
-00346 
-00348         <span class="keywordtype">void</span> Create(<span class="keyword">const</span> wxString &amp;name, 
-00349                                 <span class="keyword">const</span> wxString &amp;value,
-00350                                 wxXml2Node &amp;owner = wxXml2EmptyNode);
-00351     
-00353         <span class="keywordtype">bool</span> <a class="code" href="classwxXml2Wrapper.html#a2">IsUnlinked</a>() <span class="keyword">const</span>;
-00354 
-<a name="l00356"></a><a class="code" href="classwxXml2Property.html#a10">00356</a>         <span class="keywordtype">bool</span> <a class="code" href="classwxXml2Wrapper.html#a3">IsNonEmpty</a>()<span class="keyword"> const</span>
-00357 <span class="keyword">                </span>{ <span class="keywordflow">return</span> m_attr != NULL; }
+00346         <span class="keyword">virtual</span> <span class="keywordtype">void</span> DestroyIfUnlinked();
+00347 };
+00348 
+00349 
+00350 
+<a name="l00355"></a><a class="code" href="classwxXml2Property.html">00355</a> <span class="keyword">class </span><a class="code" href="xml2_8h.html#a0">WXXMLDLLEXPORT</a> <a class="code" href="xml2_8h.html#a5">wxXml2Property</a> : <span class="keyword">public</span> wxXml2Wrapper
+00356 {
+00357         DECLARE_DYNAMIC_CLASS(<a class="code" href="xml2_8h.html#a5">wxXml2Property</a>)
 00358 
-00359 
-00360 <span class="keyword">public</span>:         <span class="comment">// getters</span>
+00359         
+00360         xmlAttr *m_attr;
 00361 
-<a name="l00362"></a><a class="code" href="classwxXml2Property.html#a11">00362</a>     wxString            GetName()<span class="keyword"> const                 </span>{ <span class="keywordflow">return</span> m_attr-&gt;name; }
-<a name="l00363"></a><a class="code" href="classwxXml2Property.html#a12">00363</a>     wxString            GetValue()<span class="keyword"> const</span>
-00364 <span class="keyword">                </span>{ <span class="keywordflow">if</span> (m_attr-&gt;children) <span class="keywordflow">return</span> m_attr-&gt;children-&gt;content; <span class="keywordflow">return</span> wxEmptyString; }
-00365 
-<a name="l00366"></a><a class="code" href="classwxXml2Property.html#a13">00366</a>     <a class="code" href="xml2_8h.html#a3">wxXml2Property</a>      GetNext()<span class="keyword"> const                 </span>{ <span class="keywordflow">return</span> <a class="code" href="xml2_8h.html#a3">wxXml2Property</a>(m_attr-&gt;next); }
-<a name="l00367"></a><a class="code" href="classwxXml2Property.html#a14">00367</a>         <a class="code" href="xml2_8h.html#a3">wxXml2Property</a>  GetPrevious()<span class="keyword"> const             </span>{ <span class="keywordflow">return</span> <a class="code" href="xml2_8h.html#a3">wxXml2Property</a>(m_attr-&gt;prev); }
+00362 <span class="keyword">protected</span>:
+00363 
+<a name="l00364"></a><a class="code" href="classwxXml2Property.html#b0">00364</a>         <span class="keywordtype">void</span> <a class="code" href="classwxXml2Wrapper.html#b0">Destroy</a>() {
+00365                 <span class="keywordflow">if</span> (m_attr) xmlRemoveProp(m_attr);
+00366                 <a class="code" href="classwxXml2Wrapper.html#b1">SetAsEmpty</a>();
+00367         }
 00368 
-00369         <a class="code" href="xml2_8h.html#a2">wxXml2Node</a>              GetOwner() <span class="keyword">const</span>;       <span class="comment">// cannot be implemented here: wxXml2Node not defined yet</span>
-00370 
-<a name="l00372"></a><a class="code" href="classwxXml2Property.html#a16">00372</a>         xmlAttr *GetObj()<span class="keyword"> const                                 </span>{ <span class="keywordflow">return</span> m_attr; }
-00373         
+<a name="l00369"></a><a class="code" href="classwxXml2Property.html#b1">00369</a>         <span class="keywordtype">void</span> <a class="code" href="classwxXml2Wrapper.html#b1">SetAsEmpty</a>()
+00370                 { m_attr = NULL; }
+00371 
+<a name="l00372"></a><a class="code" href="classwxXml2Property.html#b2">00372</a>         <span class="keywordtype">void</span> Copy(<span class="keyword">const</span> wxXml2Property &amp;prop)
+00373                 { <a class="code" href="classwxXml2Wrapper.html#b7">UnwrappingOld</a>(); m_attr = prop.<a class="code" href="classwxXml2Property.html#r0">m_attr</a>; <a class="code" href="classwxXml2Wrapper.html#b8">JustWrappedNew</a>(); }
 00374 
-00375 <span class="keyword">public</span>:         <span class="comment">// setters    </span>
-00376 
-00377     <span class="keywordtype">void</span> SetValue(<span class="keyword">const</span> wxString &amp;value);
-00378     <span class="keywordtype">void</span> SetName(<span class="keyword">const</span> wxString &amp;name);
+<a name="l00375"></a><a class="code" href="classwxXml2Property.html#b3">00375</a>         <span class="keywordtype">int</span> &amp;<a class="code" href="classwxXml2Wrapper.html#b2">GetPrivate</a>()<span class="keyword"> const</span>
+00376 <span class="keyword">                </span>{ <span class="keywordflow">return</span> (<span class="keywordtype">int</span> &amp;)(m_attr-&gt;_private); }
+00377 
+00378 <span class="keyword">public</span>:
 00379 
-00380     <span class="keywordtype">void</span> SetNext(wxXml2Property &amp;next);
-00381         <span class="keywordtype">void</span> SetPrevious(wxXml2Property &amp;prev);
+<a name="l00381"></a><a class="code" href="classwxXml2Property.html#a0">00381</a>         <a class="code" href="xml2_8h.html#a5">wxXml2Property</a>() : m_attr(NULL) {}
 00382 
-00384         <span class="keywordtype">void</span> SetOwner(wxXml2Node &amp;owner);
-00385 };
-00386 
-00387 
+<a name="l00384"></a><a class="code" href="classwxXml2Property.html#a1">00384</a>     <a class="code" href="xml2_8h.html#a5">wxXml2Property</a>(<span class="keyword">const</span> wxString &amp;name, 
+00385                                         <span class="keyword">const</span> wxString &amp;value,
+00386                                         wxXml2Node &amp;owner = wxXml2EmptyNode) : m_attr(NULL)
+00387                 { Create(name, value, owner); }
 00388 
-<a name="l00404"></a><a class="code" href="classwxXml2Namespace.html">00404</a> <span class="keyword">class </span><a class="code" href="xml2_8h.html#a0">WXXMLDLLEXPORT</a> <a class="code" href="xml2_8h.html#a4">wxXml2Namespace</a> : <span class="keyword">public</span> wxXml2Wrapper
-00405 {
-00406         DECLARE_DYNAMIC_CLASS(<a class="code" href="xml2_8h.html#a4">wxXml2Namespace</a>)
-00407 
-00408         
-00409         xmlNs *m_ns;
-00410 
-00415         xmlNode *m_owner;
-00416 
-00417 <span class="keyword">protected</span>:
-00418 
-<a name="l00419"></a><a class="code" href="classwxXml2Namespace.html#b0">00419</a>         <span class="keywordtype">void</span> <a class="code" href="classwxXml2Wrapper.html#b0">Destroy</a>() {
-00420                 <span class="keywordflow">if</span> (m_ns) xmlFreeNs(m_ns);
-00421                 m_ns = NULL;
-00422         }
+<a name="l00390"></a><a class="code" href="classwxXml2Property.html#a2">00390</a>         <a class="code" href="xml2_8h.html#a5">wxXml2Property</a>(xmlAttr *pattr) : m_attr(pattr) 
+00391                 { <a class="code" href="classwxXml2Wrapper.html#b8">JustWrappedNew</a>(); }
+00392 
+<a name="l00394"></a><a class="code" href="classwxXml2Property.html#a3">00394</a>         <a class="code" href="xml2_8h.html#a5">wxXml2Property</a>(<span class="keyword">const</span> wxXml2Property &amp;prop) : m_attr(NULL)
+00395                 { Copy(prop); }
+00396 
+<a name="l00398"></a><a class="code" href="classwxXml2Property.html#a4">00398</a>         <span class="keyword">virtual</span> ~<a class="code" href="xml2_8h.html#a5">wxXml2Property</a>() { <a class="code" href="classwxXml2Wrapper.html#a4">DestroyIfUnlinked</a>(); }
+00399 
+00400 
+00401 <span class="keyword">public</span>:         <span class="comment">// operators</span>
+00402 
+00405         <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> wxXml2Property &amp;p) <span class="keyword">const</span>;
+00406         
+<a name="l00408"></a><a class="code" href="classwxXml2Property.html#a6">00408</a>         <span class="keywordtype">bool</span> operator!=(<span class="keyword">const</span> wxXml2Property &amp;p)<span class="keyword"> const          </span>{ <span class="keywordflow">return</span> !(*<span class="keyword">this</span> == p); }
+00409 
+<a name="l00411"></a><a class="code" href="classwxXml2Property.html#a7">00411</a>         <a class="code" href="xml2_8h.html#a5">wxXml2Property</a> &amp;operator=(<span class="keyword">const</span> wxXml2Property &amp;p)
+00412                 { Copy(p); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+00413 
+00414 <span class="keyword">public</span>:         <span class="comment">// miscellaneous</span>
+00415 
+00417         <span class="keywordtype">void</span> Create(<span class="keyword">const</span> wxString &amp;name, 
+00418                                 <span class="keyword">const</span> wxString &amp;value,
+00419                                 wxXml2Node &amp;owner = wxXml2EmptyNode);
+00420     
+00422         <span class="keywordtype">bool</span> <a class="code" href="classwxXml2Wrapper.html#a2">IsUnlinked</a>() <span class="keyword">const</span>;
 00423 
-<a name="l00424"></a><a class="code" href="classwxXml2Namespace.html#b1">00424</a>         <span class="keywordtype">void</span> Copy(<span class="keyword">const</span> wxXml2Namespace &amp;ns) {
-00425                 <a class="code" href="classwxXml2Wrapper.html#b6">UnwrappingOld</a>();
-00426                 m_ns = ns.<a class="code" href="classwxXml2Namespace.html#r0">m_ns</a>;
-00427                 m_owner = ns.<a class="code" href="classwxXml2Namespace.html#r1">m_owner</a>;
-00428                 <a class="code" href="classwxXml2Wrapper.html#b7">JustWrappedNew</a>();
-00429         }
+<a name="l00425"></a><a class="code" href="classwxXml2Property.html#a10">00425</a>         <span class="keywordtype">bool</span> <a class="code" href="classwxXml2Wrapper.html#a3">IsNonEmpty</a>()<span class="keyword"> const</span>
+00426 <span class="keyword">                </span>{ <span class="keywordflow">return</span> m_attr != NULL; }
+00427 
+00428 
+00429 <span class="keyword">public</span>:         <span class="comment">// getters</span>
 00430 
-<a name="l00431"></a><a class="code" href="classwxXml2Namespace.html#b2">00431</a>         <span class="keywordtype">int</span> &amp;<a class="code" href="classwxXml2Wrapper.html#b1">GetPrivate</a>()<span class="keyword"> const</span>
-00432 <span class="keyword">                </span>{ <span class="keywordflow">return</span> (<span class="keywordtype">int</span> &amp;)(m_ns-&gt;_private); }
-00433 
-00434 <span class="keyword">public</span>:
+<a name="l00431"></a><a class="code" href="classwxXml2Property.html#a11">00431</a>     wxString GetName()<span class="keyword"> const</span>
+00432 <span class="keyword">                </span>{ <span class="keywordflow">if</span> (m_attr) <span class="keywordflow">return</span> m_attr-&gt;name; <span class="keywordflow">return</span> wxEmptyString; }
+<a name="l00433"></a><a class="code" href="classwxXml2Property.html#a12">00433</a>     wxString GetValue()<span class="keyword"> const</span>
+00434 <span class="keyword">                </span>{ <span class="keywordflow">if</span> (m_attr-&gt;children) <span class="keywordflow">return</span> m_attr-&gt;children-&gt;content; <span class="keywordflow">return</span> wxEmptyString; }
 00435 
-<a name="l00437"></a><a class="code" href="classwxXml2Namespace.html#a0">00437</a>         <a class="code" href="xml2_8h.html#a4">wxXml2Namespace</a>() : m_ns(NULL), m_owner(NULL) {}
-00438 
-<a name="l00442"></a><a class="code" href="classwxXml2Namespace.html#a1">00442</a>     <a class="code" href="xml2_8h.html#a4">wxXml2Namespace</a>(<span class="keyword">const</span> wxString &amp;prefix, <span class="keyword">const</span> wxString &amp;uri,
-00443                                         wxXml2Node &amp;owner = wxXml2EmptyNode) : m_ns(NULL), m_owner(NULL)
-00444                 { Create(prefix, uri, owner); }
-00445 
-00447         <a class="code" href="xml2_8h.html#a4">wxXml2Namespace</a>(xmlNs *ns, wxXml2Node &amp;owner);
-00448 
-<a name="l00450"></a><a class="code" href="classwxXml2Namespace.html#a3">00450</a>         <a class="code" href="xml2_8h.html#a4">wxXml2Namespace</a>(<span class="keyword">const</span> wxXml2Namespace &amp;ns) : m_ns(NULL), m_owner(NULL)
-00451                 { Copy(ns); }
+<a name="l00436"></a><a class="code" href="classwxXml2Property.html#a13">00436</a>     <a class="code" href="xml2_8h.html#a5">wxXml2Property</a> GetNext()<span class="keyword"> const</span>
+00437 <span class="keyword">                </span>{ <span class="keywordflow">if</span> (m_attr) <span class="keywordflow">return</span> <a class="code" href="xml2_8h.html#a5">wxXml2Property</a>(m_attr-&gt;next); <span class="keywordflow">return</span> wxXml2EmptyProperty; }
+<a name="l00438"></a><a class="code" href="classwxXml2Property.html#a14">00438</a>         <a class="code" href="xml2_8h.html#a5">wxXml2Property</a> GetPrevious()<span class="keyword"> const</span>
+00439 <span class="keyword">                </span>{ <span class="keywordflow">if</span> (m_attr) <span class="keywordflow">return</span> <a class="code" href="xml2_8h.html#a5">wxXml2Property</a>(m_attr-&gt;prev); <span class="keywordflow">return</span> wxXml2EmptyProperty; }
+00440 
+00441         <a class="code" href="xml2_8h.html#a4">wxXml2Node</a> GetOwner() <span class="keyword">const</span>;    <span class="comment">// cannot be implemented here: wxXml2Node not defined yet</span>
+00442 
+<a name="l00444"></a><a class="code" href="classwxXml2Property.html#a16">00444</a>         xmlAttr *GetObj()<span class="keyword"> const</span>
+00445 <span class="keyword">                </span>{ <span class="keywordflow">return</span> m_attr; }
+00446         
+00447 
+00448 <span class="keyword">public</span>:         <span class="comment">// setters    </span>
+00449 
+00450     <span class="keywordtype">void</span> SetValue(<span class="keyword">const</span> wxString &amp;value);
+00451     <span class="keywordtype">void</span> SetName(<span class="keyword">const</span> wxString &amp;name);
 00452 
-<a name="l00455"></a><a class="code" href="classwxXml2Namespace.html#a4">00455</a>     <span class="keyword">virtual</span> ~<a class="code" href="xml2_8h.html#a4">wxXml2Namespace</a>() { <a class="code" href="classwxXml2Wrapper.html#a4">DestroyIfUnlinked</a>(); }
-00456 
-00457 
-00458 <span class="keyword">public</span>:         <span class="comment">// operators</span>
+00453     <span class="keywordtype">void</span> SetNext(wxXml2Property &amp;next);
+00454         <span class="keywordtype">void</span> SetPrevious(wxXml2Property &amp;prev);
+00455 
+00457         <span class="keywordtype">void</span> SetOwner(wxXml2Node &amp;owner);
+00458 };
 00459 
-00460         <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> wxXml2Namespace &amp;ns) <span class="keyword">const</span>;
-<a name="l00461"></a><a class="code" href="classwxXml2Namespace.html#a6">00461</a>         <span class="keywordtype">bool</span> operator!=(<span class="keyword">const</span> wxXml2Namespace &amp;p)<span class="keyword"> const         </span>{ <span class="keywordflow">return</span> !(*<span class="keyword">this</span> == p); }
-00462         
-<a name="l00463"></a><a class="code" href="classwxXml2Namespace.html#a7">00463</a>         <a class="code" href="xml2_8h.html#a4">wxXml2Namespace</a> &amp;operator=(<span class="keyword">const</span> wxXml2Namespace &amp;n)
-00464                 { Copy(n); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
-00465 
-00466 <span class="keyword">public</span>:         <span class="comment">// miscellaneous</span>
-00467 
-00469         <span class="keywordtype">void</span> Create(<span class="keyword">const</span> wxString &amp;prefix, <span class="keyword">const</span> wxString &amp;uri, wxXml2Node &amp;owner);
-00470         
-<a name="l00475"></a><a class="code" href="classwxXml2Namespace.html#a9">00475</a>         <span class="keywordtype">bool</span> <a class="code" href="classwxXml2Wrapper.html#a2">IsUnlinked</a>()<span class="keyword"> const</span>
-00476 <span class="keyword">                </span>{ <span class="keywordflow">return</span> (m_owner == NULL) || (m_ns == NULL); }
-00477 
-<a name="l00479"></a><a class="code" href="classwxXml2Namespace.html#a10">00479</a>         <span class="keywordtype">bool</span> <a class="code" href="classwxXml2Wrapper.html#a3">IsNonEmpty</a>()<span class="keyword"> const</span>
-00480 <span class="keyword">                </span>{ <span class="keywordflow">return</span> m_ns != NULL; }
-00481 
-00482 
-00483 <span class="keyword">public</span>:         <span class="comment">// getters</span>
-00484     
-<a name="l00485"></a><a class="code" href="classwxXml2Namespace.html#a11">00485</a>         wxString        GetPrefix()<span class="keyword"> const                       </span>{ <span class="keywordflow">return</span> m_ns-&gt;prefix; }
-<a name="l00486"></a><a class="code" href="classwxXml2Namespace.html#a12">00486</a>     wxString    GetURI()<span class="keyword"> const                          </span>{ <span class="keywordflow">return</span> m_ns-&gt;href; }  
-00487 
-<a name="l00489"></a><a class="code" href="classwxXml2Namespace.html#a13">00489</a>         xmlNs           *GetObj()<span class="keyword"> const                         </span>{ <span class="keywordflow">return</span> m_ns; }
-00490         
+00460 
+00461 
+<a name="l00477"></a><a class="code" href="classwxXml2Namespace.html">00477</a> <span class="keyword">class </span><a class="code" href="xml2_8h.html#a0">WXXMLDLLEXPORT</a> <a class="code" href="xml2_8h.html#a6">wxXml2Namespace</a> : <span class="keyword">public</span> wxXml2Wrapper
+00478 {
+00479         DECLARE_DYNAMIC_CLASS(<a class="code" href="xml2_8h.html#a6">wxXml2Namespace</a>)
+00480 
+00481         
+00482         xmlNs *m_ns;
+00483 
+00488         xmlNode *m_owner;
+00489 
+00490 <span class="keyword">protected</span>:
 00491 
-00492 <span class="keyword">public</span>:         <span class="comment">// setters</span>
-00493 
-00494     <span class="keywordtype">void</span> SetPrefix(<span class="keyword">const</span> wxString &amp;p);
-00495     <span class="keywordtype">void</span> SetURI(<span class="keyword">const</span> wxString &amp;u);
-00496 };
-00497 
-00498 
+<a name="l00492"></a><a class="code" href="classwxXml2Namespace.html#b0">00492</a>         <span class="keywordtype">void</span> <a class="code" href="classwxXml2Wrapper.html#b0">Destroy</a>() {
+00493                 <span class="keywordflow">if</span> (m_ns) xmlFreeNs(m_ns);
+00494                 <a class="code" href="classwxXml2Wrapper.html#b1">SetAsEmpty</a>();
+00495         }
+00496 
+<a name="l00497"></a><a class="code" href="classwxXml2Namespace.html#b1">00497</a>         <span class="keywordtype">void</span> <a class="code" href="classwxXml2Wrapper.html#b1">SetAsEmpty</a>()
+00498                 { m_ns = NULL; }
 00499 
-00500 
-<a name="l00535"></a><a class="code" href="classwxXml2DTD.html">00535</a> <span class="keyword">class </span><a class="code" href="xml2_8h.html#a0">WXXMLDLLEXPORT</a> <a class="code" href="xml2_8h.html#a5">wxXml2DTD</a> : <span class="keyword">public</span> wxXml2Wrapper
-00536 {
-00537         DECLARE_DYNAMIC_CLASS(<a class="code" href="xml2_8h.html#a5">wxXml2DTD</a>)
-00538 
-00539         
-00540         xmlDtd *m_dtd;
+<a name="l00500"></a><a class="code" href="classwxXml2Namespace.html#b2">00500</a>         <span class="keywordtype">void</span> Copy(<span class="keyword">const</span> wxXml2Namespace &amp;ns) {
+00501                 <a class="code" href="classwxXml2Wrapper.html#b7">UnwrappingOld</a>();
+00502                 m_ns = ns.<a class="code" href="classwxXml2Namespace.html#r0">m_ns</a>;
+00503                 m_owner = ns.<a class="code" href="classwxXml2Namespace.html#r1">m_owner</a>;
+00504                 <a class="code" href="classwxXml2Wrapper.html#b8">JustWrappedNew</a>();
+00505         }
+00506 
+<a name="l00507"></a><a class="code" href="classwxXml2Namespace.html#b3">00507</a>         <span class="keywordtype">int</span> &amp;<a class="code" href="classwxXml2Wrapper.html#b2">GetPrivate</a>()<span class="keyword"> const</span>
+00508 <span class="keyword">                </span>{ <span class="keywordflow">return</span> (<span class="keywordtype">int</span> &amp;)(m_ns-&gt;_private); }
+00509 
+00510 <span class="keyword">public</span>:
+00511 
+<a name="l00513"></a><a class="code" href="classwxXml2Namespace.html#a0">00513</a>         <a class="code" href="xml2_8h.html#a6">wxXml2Namespace</a>() : m_ns(NULL), m_owner(NULL) {}
+00514 
+<a name="l00518"></a><a class="code" href="classwxXml2Namespace.html#a1">00518</a>     <a class="code" href="xml2_8h.html#a6">wxXml2Namespace</a>(<span class="keyword">const</span> wxString &amp;prefix, <span class="keyword">const</span> wxString &amp;uri,
+00519                                         wxXml2Node &amp;owner = wxXml2EmptyNode) : m_ns(NULL), m_owner(NULL)
+00520                 { Create(prefix, uri, owner); }
+00521 
+00523         <a class="code" href="xml2_8h.html#a6">wxXml2Namespace</a>(xmlNs *ns, wxXml2Node &amp;owner);
+00524 
+<a name="l00526"></a><a class="code" href="classwxXml2Namespace.html#a3">00526</a>         <a class="code" href="xml2_8h.html#a6">wxXml2Namespace</a>(<span class="keyword">const</span> wxXml2Namespace &amp;ns) : m_ns(NULL), m_owner(NULL)
+00527                 { Copy(ns); }
+00528 
+<a name="l00531"></a><a class="code" href="classwxXml2Namespace.html#a4">00531</a>     <span class="keyword">virtual</span> ~<a class="code" href="xml2_8h.html#a6">wxXml2Namespace</a>() { <a class="code" href="classwxXml2Wrapper.html#a4">DestroyIfUnlinked</a>(); }
+00532 
+00533 
+00534 <span class="keyword">public</span>:         <span class="comment">// operators</span>
+00535 
+00536         <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> wxXml2Namespace &amp;ns) <span class="keyword">const</span>;
+<a name="l00537"></a><a class="code" href="classwxXml2Namespace.html#a6">00537</a>         <span class="keywordtype">bool</span> operator!=(<span class="keyword">const</span> wxXml2Namespace &amp;p)<span class="keyword"> const         </span>{ <span class="keywordflow">return</span> !(*<span class="keyword">this</span> == p); }
+00538         
+<a name="l00539"></a><a class="code" href="classwxXml2Namespace.html#a7">00539</a>         <a class="code" href="xml2_8h.html#a6">wxXml2Namespace</a> &amp;operator=(<span class="keyword">const</span> wxXml2Namespace &amp;n)
+00540                 { Copy(n); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
 00541 
-00542 <span class="keyword">protected</span>:
+00542 <span class="keyword">public</span>:         <span class="comment">// miscellaneous</span>
 00543 
-<a name="l00544"></a><a class="code" href="classwxXml2DTD.html#b0">00544</a>         <span class="keywordtype">void</span> <a class="code" href="classwxXml2Wrapper.html#b0">Destroy</a>() {
-00545                 <span class="keywordflow">if</span> (m_dtd) xmlFreeDtd(m_dtd);
-00546                 m_dtd = NULL;
-00547         }
-00548 
-<a name="l00549"></a><a class="code" href="classwxXml2DTD.html#b1">00549</a>         <span class="keywordtype">void</span> Copy(<span class="keyword">const</span> wxXml2DTD &amp;dtd) {
-00550                 <a class="code" href="classwxXml2Wrapper.html#b6">UnwrappingOld</a>();
-00551                 m_dtd = dtd.<a class="code" href="classwxXml2DTD.html#r0">m_dtd</a>;
-00552                 <a class="code" href="classwxXml2Wrapper.html#b7">JustWrappedNew</a>();
-00553         }
-00554 
-<a name="l00555"></a><a class="code" href="classwxXml2DTD.html#b2">00555</a>         <span class="keywordtype">int</span> &amp;<a class="code" href="classwxXml2Wrapper.html#b1">GetPrivate</a>()<span class="keyword"> const</span>
-00556 <span class="keyword">                </span>{ <span class="keywordflow">return</span> (<span class="keywordtype">int</span> &amp;)(m_dtd-&gt;_private); }
+00545         <span class="keywordtype">void</span> Create(<span class="keyword">const</span> wxString &amp;prefix, <span class="keyword">const</span> wxString &amp;uri, wxXml2Node &amp;owner);
+00546         
+<a name="l00551"></a><a class="code" href="classwxXml2Namespace.html#a9">00551</a>         <span class="keywordtype">bool</span> <a class="code" href="classwxXml2Wrapper.html#a2">IsUnlinked</a>()<span class="keyword"> const</span>
+00552 <span class="keyword">                </span>{ <span class="keywordflow">return</span> (m_owner == NULL) || (m_ns == NULL); }
+00553 
+<a name="l00555"></a><a class="code" href="classwxXml2Namespace.html#a10">00555</a>         <span class="keywordtype">bool</span> <a class="code" href="classwxXml2Wrapper.html#a3">IsNonEmpty</a>()<span class="keyword"> const</span>
+00556 <span class="keyword">                </span>{ <span class="keywordflow">return</span> m_ns != NULL; }
 00557 
-00558 <span class="keyword">public</span>:
-00559 
-<a name="l00561"></a><a class="code" href="classwxXml2DTD.html#a0">00561</a>         <a class="code" href="xml2_8h.html#a5">wxXml2DTD</a>() : m_dtd(NULL) {}
-00562 
-<a name="l00565"></a><a class="code" href="classwxXml2DTD.html#a1">00565</a>         <a class="code" href="xml2_8h.html#a5">wxXml2DTD</a>(<span class="keyword">const</span> wxString &amp;file) : m_dtd(NULL) 
-00566                 { Load(file); }
-00567 
-<a name="l00569"></a><a class="code" href="classwxXml2DTD.html#a2">00569</a>     <a class="code" href="xml2_8h.html#a5">wxXml2DTD</a>(<span class="keyword">const</span> wxXml2Document &amp;doc,
-00570                                 <span class="keyword">const</span> wxString &amp;name, <span class="keyword">const</span> wxString &amp;externalid,
-00571                                 <span class="keyword">const</span> wxString &amp;systemid) : m_dtd(NULL) 
-00572                 { Create(doc, name, externalid, systemid); }
-00573 
-<a name="l00575"></a><a class="code" href="classwxXml2DTD.html#a3">00575</a>         <a class="code" href="xml2_8h.html#a5">wxXml2DTD</a>(xmlDtd *dtd) : m_dtd(dtd)
-00576                 { <a class="code" href="classwxXml2Wrapper.html#b7">JustWrappedNew</a>(); }
+00558 
+00559 <span class="keyword">public</span>:         <span class="comment">// getters</span>
+00560     
+<a name="l00561"></a><a class="code" href="classwxXml2Namespace.html#a11">00561</a>         wxString GetPrefix()<span class="keyword"> const</span>
+00562 <span class="keyword">                </span>{ <span class="keywordflow">if</span> (m_ns) <span class="keywordflow">return</span> m_ns-&gt;prefix; <span class="keywordflow">return</span> wxEmptyString; }
+<a name="l00563"></a><a class="code" href="classwxXml2Namespace.html#a12">00563</a>     wxString GetURI()<span class="keyword"> const</span>
+00564 <span class="keyword">                </span>{ <span class="keywordflow">if</span> (m_ns) <span class="keywordflow">return</span> m_ns-&gt;href; <span class="keywordflow">return</span> wxEmptyString; }  
+00565 
+<a name="l00567"></a><a class="code" href="classwxXml2Namespace.html#a13">00567</a>         xmlNs *GetObj()<span class="keyword"> const</span>
+00568 <span class="keyword">                </span>{ <span class="keywordflow">return</span> m_ns; }
+00569         
+00570 <span class="keyword">public</span>:         <span class="comment">// setters</span>
+00571 
+00572     <span class="keywordtype">void</span> SetPrefix(<span class="keyword">const</span> wxString &amp;p);
+00573     <span class="keywordtype">void</span> SetURI(<span class="keyword">const</span> wxString &amp;u);
+00574 };
+00575 
+00576 
 00577 
-<a name="l00579"></a><a class="code" href="classwxXml2DTD.html#a4">00579</a>         <a class="code" href="xml2_8h.html#a5">wxXml2DTD</a>(<span class="keyword">const</span> wxXml2DTD &amp;dtd) : m_dtd(NULL)
-00580                 { Copy(dtd); }
-00581 
-<a name="l00584"></a><a class="code" href="classwxXml2DTD.html#a5">00584</a>     <span class="keyword">virtual</span> ~<a class="code" href="xml2_8h.html#a5">wxXml2DTD</a>() { <a class="code" href="classwxXml2Wrapper.html#a4">DestroyIfUnlinked</a>(); }
-00585 
+00578 
+<a name="l00583"></a><a class="code" href="classwxXml2Document.html">00583</a> <span class="keyword">class </span><a class="code" href="xml2_8h.html#a0">WXXMLDLLEXPORT</a> <a class="code" href="xml2_8h.html#a7">wxXml2Document</a> : <span class="keyword">public</span> wxXml2Wrapper
+00584 {
+00585         DECLARE_DYNAMIC_CLASS(<a class="code" href="xml2_8h.html#a7">wxXml2Document</a>)
 00586 
-00587 <span class="keyword">public</span>:         <span class="comment">// operators</span>
-00588 
-00589         <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> wxXml2DTD &amp;ns) <span class="keyword">const</span>;
-<a name="l00590"></a><a class="code" href="classwxXml2DTD.html#a7">00590</a>         <span class="keywordtype">bool</span> operator!=(<span class="keyword">const</span> wxXml2DTD &amp;p)<span class="keyword"> const               </span>{ <span class="keywordflow">return</span> !(*<span class="keyword">this</span> == p); }
+00587         
+00588         xmlDoc *m_doc;
+00589 
+00590 <span class="keyword">protected</span>:
 00591 
-<a name="l00592"></a><a class="code" href="classwxXml2DTD.html#a8">00592</a>         <a class="code" href="xml2_8h.html#a5">wxXml2DTD</a> &amp;operator=(<span class="keyword">const</span> wxXml2DTD &amp;dtd)
-00593                 { Copy(dtd); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
-00594 
-00595 <span class="keyword">public</span>:         <span class="comment">// miscellaneous</span>
+<a name="l00592"></a><a class="code" href="classwxXml2Document.html#b0">00592</a>         <span class="keywordtype">void</span> <a class="code" href="classwxXml2Wrapper.html#b0">Destroy</a>() {
+00593                 <span class="keywordflow">if</span> (m_doc) xmlFreeDoc(m_doc);
+00594                 <a class="code" href="classwxXml2Wrapper.html#b1">SetAsEmpty</a>();
+00595         }
 00596 
-00598         <span class="keywordtype">void</span> Create(<span class="keyword">const</span> wxXml2Document &amp;doc,
-00599                                 <span class="keyword">const</span> wxString &amp;name, <span class="keyword">const</span> wxString &amp;externalid,
-00600                                 <span class="keyword">const</span> wxString &amp;systemid);
-00601 
-00602 
-00606         <span class="keywordtype">bool</span> Load(wxInputStream &amp;, wxString *pErr = NULL);
-00607         
-00609         <span class="keywordtype">bool</span> Load(<span class="keyword">const</span> wxString &amp;filename, wxString *pErr = NULL);
+<a name="l00597"></a><a class="code" href="classwxXml2Document.html#b1">00597</a>         <span class="keywordtype">void</span> <a class="code" href="classwxXml2Wrapper.html#b1">SetAsEmpty</a>()
+00598                 { m_doc = NULL; }
+00599 
+<a name="l00600"></a><a class="code" href="classwxXml2Document.html#b2">00600</a>         <span class="keywordtype">void</span> Copy(<span class="keyword">const</span> wxXml2Document &amp;doc) {
+00601                 <a class="code" href="classwxXml2Wrapper.html#b7">UnwrappingOld</a>();
+00602                 m_doc = doc.<a class="code" href="classwxXml2Document.html#r0">m_doc</a>;
+00603                 <a class="code" href="classwxXml2Wrapper.html#b8">JustWrappedNew</a>();
+00604         }
+00605 
+<a name="l00606"></a><a class="code" href="classwxXml2Document.html#b3">00606</a>         <span class="keywordtype">int</span> &amp;<a class="code" href="classwxXml2Wrapper.html#b2">GetPrivate</a>()<span class="keyword"> const</span>
+00607 <span class="keyword">                </span>{ <span class="keywordflow">return</span> (<span class="keywordtype">int</span> &amp;)(m_doc-&gt;_private); }
+00608 
+00609 <span class="keyword">public</span>:
 00610 
-00612         <span class="keywordtype">int</span> Save(wxOutputStream &amp;) <span class="keyword">const</span>;
-00613 
-00615         <span class="keywordtype">bool</span> Save(<span class="keyword">const</span> wxString &amp;filename) <span class="keyword">const</span>;
-00616 
-00620         <span class="keywordtype">bool</span> LoadFullDTD(wxString *pErr = NULL);
-00621 
+<a name="l00613"></a><a class="code" href="classwxXml2Document.html#a0">00613</a>     <a class="code" href="xml2_8h.html#a7">wxXml2Document</a>() 
+00614                 { m_doc = NULL; }
+00615 
+00617         <a class="code" href="xml2_8h.html#a7">wxXml2Document</a>(wxXml2Node &amp;root);
+00618 
+<a name="l00620"></a><a class="code" href="classwxXml2Document.html#a2">00620</a>     <a class="code" href="xml2_8h.html#a7">wxXml2Document</a>(<span class="keyword">const</span> wxString &amp;filename) 
+00621                 { m_doc = xmlParseFile(filename); <span class="comment">/* WX2XML is not needed */</span> <a class="code" href="classwxXml2Wrapper.html#b8">JustWrappedNew</a>(); }
 00622 
-00623 <span class="keyword">public</span>:         <span class="comment">// checkers</span>
-00624 
-00626         <span class="keywordtype">bool</span> IsOk() <span class="keyword">const</span>;
-00627 
-<a name="l00629"></a><a class="code" href="classwxXml2DTD.html#a16">00629</a>         <span class="keywordtype">bool</span> <a class="code" href="classwxXml2Wrapper.html#a3">IsNonEmpty</a>()<span class="keyword"> const</span>
-00630 <span class="keyword">                </span>{ <span class="keywordflow">return</span> m_dtd != NULL; }
-00631 
-<a name="l00634"></a><a class="code" href="classwxXml2DTD.html#a17">00634</a>         <span class="keywordtype">bool</span> <a class="code" href="classwxXml2Wrapper.html#a2">IsUnlinked</a>()<span class="keyword"> const</span>
-00635 <span class="keyword">                </span>{ <span class="keywordflow">if</span> (!m_dtd) <span class="keywordflow">return</span> TRUE; <span class="keywordflow">return</span> (m_dtd-&gt;parent == NULL); }
-00636 
-00641         <span class="keywordtype">bool</span> IsExternalReference() <span class="keyword">const</span>;
-00642 
-00650         <span class="keywordtype">bool</span> IsSystemSubset() <span class="keyword">const</span>;
-00651 
-00660         <span class="keywordtype">bool</span> IsPublicSubset() <span class="keyword">const</span>;
-00661 
-<a name="l00670"></a><a class="code" href="classwxXml2DTD.html#a21">00670</a>         <span class="keywordtype">bool</span> IsFullDTD()<span class="keyword"> const</span>
-00671 <span class="keyword">                </span>{ <span class="keywordflow">return</span> !IsExternalReference(); }
-00672 
-00673 <span class="keyword">public</span>:         <span class="comment">// getters</span>
-00674     
-<a name="l00678"></a><a class="code" href="classwxXml2DTD.html#a22">00678</a>         wxString GetExternalID()<span class="keyword"> const</span>
-00679 <span class="keyword">                </span>{ <span class="keywordflow">if</span> (IsPublicSubset()) <span class="keywordflow">return</span> m_dtd-&gt;ExternalID; <span class="keywordflow">return</span> wxEmptyString; }
-00680 
-<a name="l00686"></a><a class="code" href="classwxXml2DTD.html#a23">00686</a>         wxString GetExternalURI()<span class="keyword"> const</span>
-00687 <span class="keyword">                </span>{ <span class="keywordflow">if</span> (IsPublicSubset()) <span class="keywordflow">return</span> m_dtd-&gt;SystemID; <span class="keywordflow">return</span> wxEmptyString; }
-00688 
-<a name="l00692"></a><a class="code" href="classwxXml2DTD.html#a24">00692</a>     wxString GetSystemID()<span class="keyword"> const</span>
-00693 <span class="keyword">                </span>{ <span class="keywordflow">if</span> (IsSystemSubset()) <span class="keywordflow">return</span> m_dtd-&gt;SystemID; <span class="keywordflow">return</span> wxEmptyString; }
-00694 
-<a name="l00698"></a><a class="code" href="classwxXml2DTD.html#a25">00698</a>     wxString GetName()<span class="keyword"> const                    </span>{ <span class="keywordflow">return</span> m_dtd-&gt;name; } 
+<a name="l00624"></a><a class="code" href="classwxXml2Document.html#a3">00624</a>         <a class="code" href="xml2_8h.html#a7">wxXml2Document</a>(xmlDoc *doc) : m_doc(doc) 
+00625                 { <a class="code" href="classwxXml2Wrapper.html#b8">JustWrappedNew</a>(); }
+00626 
+<a name="l00628"></a><a class="code" href="classwxXml2Document.html#a4">00628</a>         <a class="code" href="xml2_8h.html#a7">wxXml2Document</a>(<span class="keyword">const</span> wxXml2Document &amp;doc) : m_doc(NULL)
+00629                 { Copy(doc); }
+00630 
+<a name="l00632"></a><a class="code" href="classwxXml2Document.html#a5">00632</a>     <span class="keyword">virtual</span> ~<a class="code" href="xml2_8h.html#a7">wxXml2Document</a>() 
+00633                 { <a class="code" href="classwxXml2Wrapper.html#a4">DestroyIfUnlinked</a>(); }
+00634 
+00635 
+00636 <span class="keyword">public</span>:         <span class="comment">// operators</span>
+00637         
+00638         <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> wxXml2Document &amp;doc) <span class="keyword">const</span>;
+<a name="l00639"></a><a class="code" href="classwxXml2Document.html#a7">00639</a>         <span class="keywordtype">bool</span> operator!=(<span class="keyword">const</span> wxXml2Document &amp;doc)<span class="keyword"> const        </span>{ <span class="keywordflow">return</span> !(*<span class="keyword">this</span> == doc); }
+00640 
+<a name="l00641"></a><a class="code" href="classwxXml2Document.html#a8">00641</a>         <a class="code" href="xml2_8h.html#a7">wxXml2Document</a> &amp;operator=(<span class="keyword">const</span> wxXml2Document &amp;doc)
+00642                 { Copy(doc); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+00643 
+00644 
+00645 <span class="keyword">public</span>:         <span class="comment">// create, load &amp; save</span>
+00646 
+00648         <span class="keywordtype">bool</span> Create(<span class="keyword">const</span> wxString &amp;version = wxT(<span class="stringliteral">"1.0"</span>));
+00649 
+00651     <span class="keywordtype">bool</span> Load(wxInputStream &amp;stream, wxString *pErr = NULL);
+00652 
+00656     <span class="keywordtype">bool</span> Load(<span class="keyword">const</span> wxString &amp;filename, wxString *pErr = NULL);
+00657     
+00660     <span class="keywordtype">int</span> Save(wxOutputStream &amp;stream, <span class="keyword">const</span> wxString &amp;encoding = wxT(<span class="stringliteral">"UTF-8"</span>), 
+00661                 <span class="keywordtype">int</span> indentstep = 1) <span class="keyword">const</span>;
+00662 
+00665     <span class="keywordtype">bool</span> Save(<span class="keyword">const</span> wxString &amp;filename, <span class="keyword">const</span> wxString &amp;encoding = wxT(<span class="stringliteral">"UTF-8"</span>), 
+00666                 <span class="keywordtype">int</span> indentstep = 1) <span class="keyword">const</span>;
+00667 
+00668 
+00669 <span class="keyword">public</span>:         <span class="comment">// miscellaneous</span>
+00670 
+<a name="l00672"></a><a class="code" href="classwxXml2Document.html#a14">00672</a>         <span class="keywordtype">bool</span> <a class="code" href="classwxXml2Wrapper.html#a3">IsNonEmpty</a>()<span class="keyword"> const</span>
+00673 <span class="keyword">                </span>{ <span class="keywordflow">return</span> m_doc != NULL; }
+00674 
+<a name="l00676"></a><a class="code" href="classwxXml2Document.html#a15">00676</a>     <span class="keywordtype">bool</span> IsOk()<span class="keyword"> const </span>
+00677 <span class="keyword">                </span>{ <span class="keywordflow">return</span> xmlDocGetRootElement(m_doc) != NULL; }
+00678 
+<a name="l00682"></a><a class="code" href="classwxXml2Document.html#a16">00682</a>         <span class="keywordtype">bool</span> <a class="code" href="classwxXml2Wrapper.html#a2">IsUnlinked</a>()<span class="keyword"> const</span>
+00683 <span class="keyword">                </span>{ <span class="keywordflow">return</span> TRUE; }
+00684 
+00696         <span class="keywordtype">bool</span> IsDTDValid(wxString *err = NULL, <span class="keywordtype">int</span> bUseInternal = 0) <span class="keyword">const</span>;
+00697 
+00698 <span class="keyword">public</span>:         <span class="comment">// getters</span>
 00699 
-<a name="l00701"></a><a class="code" href="classwxXml2DTD.html#a26">00701</a>         xmlDtd *GetObj()<span class="keyword"> const                          </span>{ <span class="keywordflow">return</span> m_dtd; }
-00702         
-00706         <a class="code" href="xml2_8h.html#a2">wxXml2Node</a> GetRoot() <span class="keyword">const</span>;
-00707 
-00708 <span class="keyword">public</span>:         <span class="comment">// setters</span>
-00709 
-00710     <span class="keywordtype">void</span> SetName(<span class="keyword">const</span> wxString &amp;p);
-00711         <span class="keywordtype">void</span> SetSystemID(<span class="keyword">const</span> wxString &amp;u);
-00712 
-00713         <span class="keywordtype">void</span> SetExternalID(<span class="keyword">const</span> wxString &amp;u);
-00714 
-<a name="l00716"></a><a class="code" href="classwxXml2DTD.html#a31">00716</a>         <span class="keywordtype">void</span> SetExternalURI(<span class="keyword">const</span> wxString &amp;u)
-00717                 { SetSystemID(u); }
-00718 };
-00719 
-00720 
-<a name="l00723"></a><a class="code" href="classwxXml2ElemDecl.html">00723</a> <span class="keyword">class </span><a class="code" href="xml2_8h.html#a0">WXXMLDLLEXPORT</a> wxXml2ElemDecl : <span class="keyword">public</span> wxXml2Wrapper
-00724 {
-00725 };
+00701     <a class="code" href="xml2_8h.html#a4">wxXml2Node</a> GetRoot() <span class="keyword">const</span>;
+00702 
+00710         <a class="code" href="dtd_8h.html#a0">wxXml2DTD</a> GetDTD() <span class="keyword">const</span>;
+00711 
+<a name="l00713"></a><a class="code" href="classwxXml2Document.html#a20">00713</a>     wxString GetVersion()<span class="keyword"> const</span>
+00714 <span class="keyword">                </span>{ <span class="keywordflow">if</span> (m_doc) <span class="keywordflow">return</span> m_doc-&gt;version; <span class="keywordflow">return</span> wxEmptyString; }
+00715 
+<a name="l00719"></a><a class="code" href="classwxXml2Document.html#a21">00719</a>     wxString GetFileEncoding()<span class="keyword"> const</span>
+00720 <span class="keyword">                </span>{ <span class="keywordflow">if</span> (m_doc) <span class="keywordflow">return</span> m_doc-&gt;encoding; <span class="keywordflow">return</span> wxEmptyString; }
+00721 
+<a name="l00723"></a><a class="code" href="classwxXml2Document.html#a22">00723</a>         xmlDoc *GetObj()<span class="keyword"> const</span>
+00724 <span class="keyword">                </span>{ <span class="keywordflow">return</span> m_doc; }
+00725 
 00726 
-00727 
+00727 <span class="keyword">public</span>:         <span class="comment">// setters</span>
 00728 
-<a name="l00733"></a><a class="code" href="classwxXml2Document.html">00733</a> <span class="keyword">class </span><a class="code" href="xml2_8h.html#a0">WXXMLDLLEXPORT</a> <a class="code" href="xml2_8h.html#a6">wxXml2Document</a> : <span class="keyword">public</span> wxXml2Wrapper
-00734 {
-00735         DECLARE_DYNAMIC_CLASS(<a class="code" href="xml2_8h.html#a6">wxXml2Document</a>)
-00736 
-00737         
-00738         xmlDoc *m_doc;
+00730     <span class="keywordtype">void</span> SetRoot(wxXml2Node &amp;node);
+00731 
+00733         <span class="keywordtype">void</span> SetDTD(wxXml2DTD &amp;dtd);
+00734 
+00738         <span class="keywordtype">void</span> SetStyleSheet(<span class="keyword">const</span> wxString &amp;xslfile);
 00739 
-00740 <span class="keyword">protected</span>:
+00740 <span class="keyword">public</span>:         <span class="comment">// some common DTDs</span>
 00741 
-<a name="l00742"></a><a class="code" href="classwxXml2Document.html#b0">00742</a>         <span class="keywordtype">void</span> <a class="code" href="classwxXml2Wrapper.html#b0">Destroy</a>() {
-00743                 <span class="keywordflow">if</span> (m_doc) xmlFreeDoc(m_doc);
-00744                 m_doc = NULL;
-00745         }
-00746 
-<a name="l00747"></a><a class="code" href="classwxXml2Document.html#b1">00747</a>         <span class="keywordtype">void</span> Copy(<span class="keyword">const</span> wxXml2Document &amp;doc) {
-00748                 <a class="code" href="classwxXml2Wrapper.html#b6">UnwrappingOld</a>();
-00749                 m_doc = doc.<a class="code" href="classwxXml2Document.html#r0">m_doc</a>;
-00750                 <a class="code" href="classwxXml2Wrapper.html#b7">JustWrappedNew</a>();
-00751         }
+00743         <span class="keywordtype">void</span> SetMathMLDTD();
+00744 
+00746         <span class="keywordtype">void</span> SetXHTMLStrictDTD();
+00747         <span class="keywordtype">void</span> SetXHTMLTransitionalDTD();
+00748         <span class="keywordtype">void</span> SetXHTMLFrameSetDTD();
+00749 };
+00750 
+00751 
 00752 
-<a name="l00753"></a><a class="code" href="classwxXml2Document.html#b2">00753</a>         <span class="keywordtype">int</span> &amp;<a class="code" href="classwxXml2Wrapper.html#b1">GetPrivate</a>()<span class="keyword"> const</span>
-00754 <span class="keyword">                </span>{ <span class="keywordflow">return</span> (<span class="keywordtype">int</span> &amp;)(m_doc-&gt;_private); }
-00755 
-00756 <span class="keyword">public</span>:
-00757 
-<a name="l00761"></a><a class="code" href="classwxXml2Document.html#a0">00761</a>     <a class="code" href="xml2_8h.html#a6">wxXml2Document</a>() 
-00762                 { m_doc = xmlNewDoc((xmlChar*)wxT(<span class="stringliteral">"1.0"</span>)); <a class="code" href="classwxXml2Wrapper.html#b7">JustWrappedNew</a>(); }
-00763 
-00765         <a class="code" href="xml2_8h.html#a6">wxXml2Document</a>(wxXml2Node &amp;root);
+<a name="l00763"></a><a class="code" href="classwxXml2BaseNode.html">00763</a> <span class="keyword">class </span><a class="code" href="xml2_8h.html#a0">WXXMLDLLEXPORT</a> <a class="code" href="xml2_8h.html#a3">wxXml2BaseNode</a> : <span class="keyword">public</span> wxXml2Wrapper
+00764 {
+00765         DECLARE_DYNAMIC_CLASS(<a class="code" href="xml2_8h.html#a3">wxXml2BaseNode</a>)
 00766 
-<a name="l00768"></a><a class="code" href="classwxXml2Document.html#a2">00768</a>     <a class="code" href="xml2_8h.html#a6">wxXml2Document</a>(<span class="keyword">const</span> wxString &amp;filename) 
-00769                 { m_doc = xmlParseFile(filename); <span class="comment">/* WX2XML is not needed */</span> <a class="code" href="classwxXml2Wrapper.html#b7">JustWrappedNew</a>(); }
-00770 
-<a name="l00772"></a><a class="code" href="classwxXml2Document.html#a3">00772</a>         <a class="code" href="xml2_8h.html#a6">wxXml2Document</a>(xmlDoc *doc) : m_doc(doc) 
-00773                 { <a class="code" href="classwxXml2Wrapper.html#b7">JustWrappedNew</a>(); }
-00774 
-<a name="l00776"></a><a class="code" href="classwxXml2Document.html#a4">00776</a>         <a class="code" href="xml2_8h.html#a6">wxXml2Document</a>(<span class="keyword">const</span> wxXml2Document &amp;doc) : m_doc(NULL)
-00777                 { Copy(doc); }
-00778 
-<a name="l00780"></a><a class="code" href="classwxXml2Document.html#a5">00780</a>     <span class="keyword">virtual</span> ~<a class="code" href="xml2_8h.html#a6">wxXml2Document</a>() 
-00781                 { <span class="comment">/*DestroyIfUnlinked();*/</span> }
-00782 
-00783 
-00784 <span class="keyword">public</span>:         <span class="comment">// operators</span>
-00785         
-00786         <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> wxXml2Document &amp;doc) <span class="keyword">const</span>;
-<a name="l00787"></a><a class="code" href="classwxXml2Document.html#a7">00787</a>         <span class="keywordtype">bool</span> operator!=(<span class="keyword">const</span> wxXml2Document &amp;doc)<span class="keyword"> const        </span>{ <span class="keywordflow">return</span> !(*<span class="keyword">this</span> == doc); }
+00767         
+00768         <a class="code" href="structtagXml2BaseNode.html">wxXml2BaseNodeObj</a> *m_obj;
+00769 
+00770 <span class="keyword">protected</span>:
+00771 
+<a name="l00772"></a><a class="code" href="classwxXml2BaseNode.html#b0">00772</a>         <span class="keywordtype">void</span> <a class="code" href="classwxXml2Wrapper.html#b0">Destroy</a>() {
+00773                 <span class="keywordflow">if</span> (m_obj) xmlFree(m_obj);
+00774                 <a class="code" href="classwxXml2Wrapper.html#b1">SetAsEmpty</a>();
+00775         }
+00776 
+<a name="l00777"></a><a class="code" href="classwxXml2BaseNode.html#b1">00777</a>         <span class="keywordtype">void</span> <a class="code" href="classwxXml2Wrapper.html#b1">SetAsEmpty</a>()
+00778                 { m_obj = NULL; }
+00779 
+<a name="l00780"></a><a class="code" href="classwxXml2BaseNode.html#b2">00780</a>         <span class="keywordtype">void</span>  Copy(<span class="keyword">const</span> wxXml2BaseNode &amp;n) {
+00781                 <a class="code" href="classwxXml2Wrapper.html#b7">UnwrappingOld</a>();
+00782                 m_obj = n.<a class="code" href="classwxXml2BaseNode.html#r0">m_obj</a>;
+00783                 <a class="code" href="classwxXml2Wrapper.html#b8">JustWrappedNew</a>();
+00784         }
+00785 
+<a name="l00786"></a><a class="code" href="classwxXml2BaseNode.html#b3">00786</a>         <span class="keywordtype">int</span> &amp;<a class="code" href="classwxXml2Wrapper.html#b2">GetPrivate</a>()<span class="keyword"> const</span>
+00787 <span class="keyword">                </span>{ <span class="keywordflow">return</span> (<span class="keywordtype">int</span> &amp;)(m_obj-&gt;_private); }
 00788 
-<a name="l00789"></a><a class="code" href="classwxXml2Document.html#a8">00789</a>         <a class="code" href="xml2_8h.html#a6">wxXml2Document</a> &amp;operator=(<span class="keyword">const</span> wxXml2Document &amp;doc)
-00790                 { Copy(doc); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
-00791 
-00792 
-00793 <span class="keyword">public</span>:         <span class="comment">// load &amp; save</span>
-00794 
-00796     <span class="keywordtype">bool</span> Load(wxInputStream &amp;stream, wxString *pErr = NULL);
-00797 
-00801     <span class="keywordtype">bool</span> Load(<span class="keyword">const</span> wxString &amp;filename, wxString *pErr = NULL);
-00802     
-00805     <span class="keywordtype">int</span> Save(wxOutputStream &amp;stream, <span class="keyword">const</span> wxString &amp;encoding = wxT(<span class="stringliteral">"UTF-8"</span>), 
-00806                 <span class="keywordtype">int</span> indentstep = 1) <span class="keyword">const</span>;
-00807 
-00810     <span class="keywordtype">bool</span> Save(<span class="keyword">const</span> wxString &amp;filename, <span class="keyword">const</span> wxString &amp;encoding = wxT(<span class="stringliteral">"UTF-8"</span>), 
-00811                 <span class="keywordtype">int</span> indentstep = 1) <span class="keyword">const</span>;
+00789 <span class="keyword">public</span>:
+00790 
+<a name="l00791"></a><a class="code" href="classwxXml2BaseNode.html#a0">00791</a>         <a class="code" href="xml2_8h.html#a3">wxXml2BaseNode</a>() : m_obj(NULL) {}
+<a name="l00792"></a><a class="code" href="classwxXml2BaseNode.html#a1">00792</a>         <a class="code" href="xml2_8h.html#a3">wxXml2BaseNode</a>(<a class="code" href="structtagXml2BaseNode.html">wxXml2BaseNodeObj</a> *p) : m_obj(p) { <a class="code" href="classwxXml2Wrapper.html#b8">JustWrappedNew</a>(); }
+00793 
+<a name="l00794"></a><a class="code" href="classwxXml2BaseNode.html#a2">00794</a>         <span class="keyword">virtual</span> ~<a class="code" href="xml2_8h.html#a3">wxXml2BaseNode</a>() {}
+00795 
+00796 
+00798         <span class="keywordtype">bool</span> <a class="code" href="classwxXml2Wrapper.html#a2">IsUnlinked</a>() <span class="keyword">const</span>;
+00799 
+<a name="l00801"></a><a class="code" href="classwxXml2BaseNode.html#a4">00801</a>         <span class="keywordtype">bool</span> <a class="code" href="classwxXml2Wrapper.html#a3">IsNonEmpty</a>()<span class="keyword"> const</span>
+00802 <span class="keyword">                </span>{ <span class="keywordflow">return</span> m_obj != NULL; }
+00803 
+00804 
+00805 <span class="keyword">public</span>:         <span class="comment">// operators</span>
+00806         
+00807         <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> wxXml2BaseNode &amp;decl) <span class="keyword">const</span>;
+<a name="l00808"></a><a class="code" href="classwxXml2BaseNode.html#a6">00808</a>         <span class="keywordtype">bool</span> operator!=(<span class="keyword">const</span> wxXml2BaseNode &amp;decl)<span class="keyword"> const       </span>{ <span class="keywordflow">return</span> !(*<span class="keyword">this</span> == decl); }
+00809 
+<a name="l00810"></a><a class="code" href="classwxXml2BaseNode.html#a7">00810</a>         <a class="code" href="xml2_8h.html#a3">wxXml2BaseNode</a> &amp;operator=(<span class="keyword">const</span> wxXml2BaseNode &amp;decl)
+00811                 { Copy(decl); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
 00812 
 00813 
-00814 <span class="keyword">public</span>:         <span class="comment">// miscellaneous</span>
+00814 <span class="keyword">public</span>:         <span class="comment">// getters</span>
 00815 
-<a name="l00817"></a><a class="code" href="classwxXml2Document.html#a13">00817</a>         <span class="keywordtype">bool</span> <a class="code" href="classwxXml2Wrapper.html#a3">IsNonEmpty</a>()<span class="keyword"> const</span>
-00818 <span class="keyword">                </span>{ <span class="keywordflow">return</span> m_doc != NULL; }
-00819 
-<a name="l00821"></a><a class="code" href="classwxXml2Document.html#a14">00821</a>     <span class="keywordtype">bool</span> IsOk()<span class="keyword"> const </span>
-00822 <span class="keyword">                </span>{ <span class="keywordflow">return</span> xmlDocGetRootElement(m_doc) != NULL; }
-00823 
-<a name="l00827"></a><a class="code" href="classwxXml2Document.html#a15">00827</a>         <span class="keywordtype">bool</span> <a class="code" href="classwxXml2Wrapper.html#a2">IsUnlinked</a>()<span class="keyword"> const</span>
-00828 <span class="keyword">                </span>{ <span class="keywordflow">return</span> TRUE; }
-00829 
-00841         <span class="keywordtype">bool</span> IsDTDValid(wxString *err = NULL, <span class="keywordtype">int</span> bUseInternal = 0) <span class="keyword">const</span>;
+00821     
+<a name="l00822"></a><a class="code" href="classwxXml2BaseNode.html#z0_0">00822</a>     <a class="code" href="xml2_8h.html#a28">wxXml2NodeType</a> GetType()<span class="keyword"> const</span>
+00823 <span class="keyword">                </span>{ <span class="keywordflow">return</span> (wxXml2NodeType)((int)m_obj-&gt;type); }
+<a name="l00824"></a><a class="code" href="classwxXml2BaseNode.html#z0_1">00824</a>     <a class="code" href="xml2_8h.html#a3">wxXml2BaseNode</a> GetParent()<span class="keyword"> const</span>
+00825 <span class="keyword">                </span>{ <span class="keywordflow">if</span> (m_obj) <span class="keywordflow">return</span> <a class="code" href="xml2_8h.html#a3">wxXml2BaseNode</a>(m_obj-&gt;parent); <span class="keywordflow">return</span> wxXml2EmptyBaseNode; }
+<a name="l00826"></a><a class="code" href="classwxXml2BaseNode.html#z0_2">00826</a>     <a class="code" href="xml2_8h.html#a3">wxXml2BaseNode</a> GetChildren()<span class="keyword"> const          </span>
+00827 <span class="keyword">                </span>{ <span class="keywordflow">if</span> (m_obj) <span class="keywordflow">return</span> <a class="code" href="xml2_8h.html#a3">wxXml2BaseNode</a>(m_obj-&gt;children); <span class="keywordflow">return</span> wxXml2EmptyBaseNode; }
+<a name="l00828"></a><a class="code" href="classwxXml2BaseNode.html#z0_3">00828</a>     <a class="code" href="xml2_8h.html#a3">wxXml2BaseNode</a> GetFirstChild()<span class="keyword"> const        </span>
+00829 <span class="keyword">                </span>{ <span class="keywordflow">return</span> GetChildren(); }
+<a name="l00830"></a><a class="code" href="classwxXml2BaseNode.html#z0_4">00830</a>     <a class="code" href="xml2_8h.html#a3">wxXml2BaseNode</a> GetNext()<span class="keyword"> const              </span>
+00831 <span class="keyword">                </span>{ <span class="keywordflow">if</span> (m_obj) <span class="keywordflow">return</span> <a class="code" href="xml2_8h.html#a3">wxXml2BaseNode</a>(m_obj-&gt;next); <span class="keywordflow">return</span> wxXml2EmptyBaseNode; }
+<a name="l00832"></a><a class="code" href="classwxXml2BaseNode.html#z0_5">00832</a>         <a class="code" href="xml2_8h.html#a3">wxXml2BaseNode</a> GetPrevious()<span class="keyword"> const      </span>
+00833 <span class="keyword">                </span>{ <span class="keywordflow">if</span> (m_obj) <span class="keywordflow">return</span> <a class="code" href="xml2_8h.html#a3">wxXml2BaseNode</a>(m_obj-&gt;prev); <span class="keywordflow">return</span> wxXml2EmptyBaseNode; }
+00834 
+<a name="l00835"></a><a class="code" href="classwxXml2BaseNode.html#z0_6">00835</a>         <a class="code" href="structtagXml2BaseNode.html">wxXml2BaseNodeObj</a> *GetObj()<span class="keyword"> const</span>
+00836 <span class="keyword">                </span>{ <span class="keywordflow">return</span> m_obj; }
+00837 
+00839 
+00840 
+00841 <span class="keyword">public</span>:         <span class="comment">// setters</span>
 00842 
-00843 <span class="keyword">public</span>:         <span class="comment">// getters</span>
-00844 
-00846     <a class="code" href="xml2_8h.html#a2">wxXml2Node</a> GetRoot() <span class="keyword">const</span>;
 00847 
-00855         <a class="code" href="xml2_8h.html#a5">wxXml2DTD</a> GetDTD() <span class="keyword">const</span>;
-00856 
-<a name="l00858"></a><a class="code" href="classwxXml2Document.html#a19">00858</a>     wxString GetVersion()<span class="keyword"> const                 </span>{ <span class="keywordflow">return</span> m_doc-&gt;version; }
+<a name="l00848"></a><a class="code" href="classwxXml2BaseNode.html#z1_0">00848</a>     <span class="keywordtype">void</span> SetType(wxXml2NodeType type)
+00849                 { m_obj-&gt;type = (xmlElementType)((int)type); }
+00850 
+00851     <span class="keywordtype">void</span> SetChildren(<span class="keyword">const</span> wxXml2BaseNode &amp;child);
+00852     <span class="keywordtype">void</span> SetNext(<span class="keyword">const</span> wxXml2BaseNode &amp;next);
+00853         <span class="keywordtype">void</span> SetPrevious(<span class="keyword">const</span> wxXml2BaseNode &amp;prev);
+00854 
+00856 };
+00857 
+00858 
 00859 
-<a name="l00863"></a><a class="code" href="classwxXml2Document.html#a20">00863</a>     wxString GetFileEncoding()<span class="keyword"> const    </span>{ <span class="keywordflow">return</span> m_doc-&gt;encoding; }
-00864 
-<a name="l00866"></a><a class="code" href="classwxXml2Document.html#a21">00866</a>         xmlDoc *GetObj()<span class="keyword"> const                          </span>{ <span class="keywordflow">return</span> m_doc; }
-00867 
-00868 
-00869 <span class="keyword">public</span>:         <span class="comment">// setters</span>
-00870 
-00872     <span class="keywordtype">void</span> SetRoot(wxXml2Node &amp;node);
+<a name="l00868"></a><a class="code" href="classwxXml2Node.html">00868</a> <span class="keyword">class </span><a class="code" href="xml2_8h.html#a0">WXXMLDLLEXPORT</a> <a class="code" href="xml2_8h.html#a4">wxXml2Node</a> : <span class="keyword">public</span> <a class="code" href="xml2_8h.html#a3">wxXml2BaseNode</a>
+00869 {
+00870         DECLARE_DYNAMIC_CLASS(<a class="code" href="xml2_8h.html#a4">wxXml2Node</a>)
+00871 
+00872 <span class="keyword">protected</span>:
 00873 
-00875         <span class="keywordtype">void</span> SetDTD(wxXml2DTD &amp;dtd);
-00876 
-00880         <span class="keywordtype">void</span> SetStyleSheet(<span class="keyword">const</span> wxString &amp;xslfile);
-00881 
-00882 <span class="keyword">public</span>:         <span class="comment">// some common DTDs</span>
-00883 
-00885         <span class="keywordtype">void</span> SetMathMLDTD();
-00886 
-00888         <span class="keywordtype">void</span> SetXHTMLStrictDTD();
-00889         <span class="keywordtype">void</span> SetXHTMLTransitionalDTD();
-00890         <span class="keywordtype">void</span> SetXHTMLFrameSetDTD();
-00891 };
-00892 
-00893 
-00894 
+00878         <span class="keywordtype">void</span> Build(<span class="keyword">const</span> <a class="code" href="xml2_8h.html#a28">wxXml2NodeType</a> type,
+00879                                 <a class="code" href="xml2_8h.html#a4">wxXml2Node</a> &amp;parent,
+00880                                 <a class="code" href="xml2_8h.html#a7">wxXml2Document</a> &amp;document = <a class="code" href="xml2_8cpp.html#a0">wxXml2EmptyDoc</a>, 
+00881                                 <a class="code" href="xml2_8h.html#a6">wxXml2Namespace</a> &amp;ns = <a class="code" href="xml2_8cpp.html#a3">wxXml2EmptyNamespace</a>,
+00882                                 <span class="keyword">const</span> wxString &amp;name = wxEmptyString, 
+00883                                 <span class="keyword">const</span> wxString &amp;content = wxEmptyString,
+00884                                 <a class="code" href="xml2_8h.html#a5">wxXml2Property</a> &amp;props = <a class="code" href="xml2_8cpp.html#a2">wxXml2EmptyProperty</a>, 
+00885                                 <a class="code" href="xml2_8h.html#a4">wxXml2Node</a> &amp;next = <a class="code" href="xml2_8cpp.html#a1">wxXml2EmptyNode</a>,
+00886                                 <a class="code" href="xml2_8h.html#a4">wxXml2Node</a> &amp;previous = <a class="code" href="xml2_8cpp.html#a1">wxXml2EmptyNode</a>,
+00887                                 <a class="code" href="xml2_8h.html#a4">wxXml2Node</a> &amp;children = <a class="code" href="xml2_8cpp.html#a1">wxXml2EmptyNode</a>);
+00888 
+<a name="l00890"></a><a class="code" href="classwxXml2Node.html#b1">00890</a>         <span class="keywordtype">void</span> <a class="code" href="classwxXml2BaseNode.html#b0">Destroy</a>() {
+00891                 xmlUnlinkNode((xmlNode *)m_obj);
+00892                 xmlFreeNode((xmlNode *)m_obj);
+00893                 <a class="code" href="classwxXml2BaseNode.html#b1">SetAsEmpty</a>();
+00894         }
 00895 
-<a name="l00904"></a><a class="code" href="classwxXml2Node.html">00904</a> <span class="keyword">class </span><a class="code" href="xml2_8h.html#a0">WXXMLDLLEXPORT</a> <a class="code" href="xml2_8h.html#a2">wxXml2Node</a> : <span class="keyword">public</span> wxXml2Wrapper
-00905 {
-00906         DECLARE_DYNAMIC_CLASS(<a class="code" href="xml2_8h.html#a2">wxXml2Node</a>)
+00896         <span class="comment">/*</span>
+00897 <span class="comment">        void Copy(const wxXml2Node &amp;n) {</span>
+00898 <span class="comment">                UnwrappingOld();</span>
+00899 <span class="comment">                m_obj = n.m_obj;</span>
+00900 <span class="comment">                JustWrappedNew();</span>
+00901 <span class="comment">        }</span>
+00902 <span class="comment"></span>
+00903 <span class="comment">        int &amp;GetPrivate() const</span>
+00904 <span class="comment">                { return (int &amp;)(m_obj-&gt;_private); }*/</span>
+00905 
+00906 <span class="keyword">public</span>:
 00907 
-00908         
-00909         xmlNode *m_node;
-00910 
-00911 <span class="keyword">protected</span>:
-00912 
-00917         <span class="keywordtype">void</span> Build(<span class="keyword">const</span> <a class="code" href="xml2_8h.html#a25">wxXml2NodeType</a> type,
-00918                                 <a class="code" href="xml2_8h.html#a2">wxXml2Node</a> &amp;parent,
-00919                                 <a class="code" href="xml2_8h.html#a6">wxXml2Document</a> &amp;document = <a class="code" href="xml2_8cpp.html#a1">wxXml2EmptyDoc</a>, 
-00920                                 <a class="code" href="xml2_8h.html#a4">wxXml2Namespace</a> &amp;ns = <a class="code" href="xml2_8cpp.html#a4">wxXml2EmptyNamespace</a>,
-00921                                 <span class="keyword">const</span> wxString &amp;name = wxEmptyString, 
-00922                                 <span class="keyword">const</span> wxString &amp;content = wxEmptyString,
-00923                                 <a class="code" href="xml2_8h.html#a3">wxXml2Property</a> &amp;props = <a class="code" href="xml2_8cpp.html#a3">wxXml2EmptyProperty</a>, 
-00924                                 <a class="code" href="xml2_8h.html#a2">wxXml2Node</a> &amp;next = <a class="code" href="xml2_8cpp.html#a2">wxXml2EmptyNode</a>,
-00925                                 <a class="code" href="xml2_8h.html#a2">wxXml2Node</a> &amp;previous = <a class="code" href="xml2_8cpp.html#a2">wxXml2EmptyNode</a>,
-00926                                 <a class="code" href="xml2_8h.html#a2">wxXml2Node</a> &amp;children = <a class="code" href="xml2_8cpp.html#a2">wxXml2EmptyNode</a>);
-00927 
-<a name="l00928"></a><a class="code" href="classwxXml2Node.html#b1">00928</a>         <span class="keywordtype">void</span> <a class="code" href="classwxXml2Wrapper.html#b0">Destroy</a>() {
-00929                 xmlUnlinkNode(m_node);
-00930                 xmlFreeNode(m_node);
-00931                 m_node = NULL;
-00932         }
+<a name="l00910"></a><a class="code" href="classwxXml2Node.html#a0">00910</a>         <a class="code" href="xml2_8h.html#a4">wxXml2Node</a>() {
+00911                 <span class="comment">// before this node can be used it must be constructed through</span>
+00912                 <span class="comment">// Create****() functions. See below.</span>
+00913                 m_obj = NULL;
+00914         }
+00915 
+<a name="l00921"></a><a class="code" href="classwxXml2Node.html#a1">00921</a>     <a class="code" href="xml2_8h.html#a4">wxXml2Node</a>(wxXml2Document &amp;doc,
+00922                                 <span class="keyword">const</span> wxString &amp;name = wxEmptyString, 
+00923                                 wxXml2Namespace &amp;ns = wxXml2EmptyNamespace)
+00924                 { CreateRoot(doc, name, ns); }
+00925 
+<a name="l00927"></a><a class="code" href="classwxXml2Node.html#a2">00927</a>     <a class="code" href="xml2_8h.html#a4">wxXml2Node</a>(wxXml2NodeType type,
+00928                                 wxXml2Node &amp;parent,
+00929                                 <span class="keyword">const</span> wxString &amp;name, 
+00930                                 <span class="keyword">const</span> wxString &amp;content = wxEmptyString,
+00931                                 wxXml2Namespace &amp;ns = wxXml2EmptyNamespace)
+00932                 { CreateChild(type, parent, name, content, ns); }
 00933 
-<a name="l00934"></a><a class="code" href="classwxXml2Node.html#b2">00934</a>         <span class="keywordtype">void</span> Copy(<span class="keyword">const</span> wxXml2Node &amp;n) {
-00935                 <a class="code" href="classwxXml2Wrapper.html#b6">UnwrappingOld</a>();
-00936                 m_node = n.<a class="code" href="classwxXml2Node.html#r0">m_node</a>;
-00937                 <a class="code" href="classwxXml2Wrapper.html#b7">JustWrappedNew</a>();
-00938         }
-00939 
-<a name="l00940"></a><a class="code" href="classwxXml2Node.html#b3">00940</a>         <span class="keywordtype">int</span> &amp;<a class="code" href="classwxXml2Wrapper.html#b1">GetPrivate</a>()<span class="keyword"> const</span>
-00941 <span class="keyword">                </span>{ <span class="keywordflow">return</span> (<span class="keywordtype">int</span> &amp;)(m_node-&gt;_private); }
-00942 
-00943 <span class="keyword">public</span>:
-00944 
-<a name="l00947"></a><a class="code" href="classwxXml2Node.html#a0">00947</a>         <a class="code" href="xml2_8h.html#a2">wxXml2Node</a>() {
-00948                 <span class="comment">// before this node can be used it must be constructed through</span>
-00949                 <span class="comment">// Create****() functions. See below.</span>
-00950                 m_node = NULL;
-00951         }
-00952 
-<a name="l00958"></a><a class="code" href="classwxXml2Node.html#a1">00958</a>     <a class="code" href="xml2_8h.html#a2">wxXml2Node</a>(wxXml2Document &amp;doc,
-00959                                 <span class="keyword">const</span> wxString &amp;name = wxEmptyString, 
-00960                                 wxXml2Namespace &amp;ns = wxXml2EmptyNamespace) : m_node(NULL)
-00961                 { CreateRoot(doc, name, ns); }
-00962 
-<a name="l00964"></a><a class="code" href="classwxXml2Node.html#a2">00964</a>     <a class="code" href="xml2_8h.html#a2">wxXml2Node</a>(wxXml2NodeType type,
-00965                                 wxXml2Node &amp;parent,
-00966                                 <span class="keyword">const</span> wxString &amp;name, 
-00967                                 <span class="keyword">const</span> wxString &amp;content = wxEmptyString,
-00968                                 wxXml2Namespace &amp;ns = wxXml2EmptyNamespace) : m_node(NULL)
-00969                 { CreateChild(type, parent, name, content, ns); }
-00970 
-<a name="l00973"></a><a class="code" href="classwxXml2Node.html#a3">00973</a>     <a class="code" href="xml2_8h.html#a2">wxXml2Node</a>(wxXml2NodeType type, wxXml2Document &amp;doc,
-00974                                 <span class="keyword">const</span> wxString &amp;name = wxEmptyString, 
-00975                                 <span class="keyword">const</span> wxString &amp;content = wxEmptyString,
-00976                                 wxXml2Namespace &amp;ns = wxXml2EmptyNamespace) : m_node(NULL)
-00977                 { CreateTemp(type, doc, name, content, ns);     }
-00978 
-<a name="l00981"></a><a class="code" href="classwxXml2Node.html#a4">00981</a>         <a class="code" href="xml2_8h.html#a2">wxXml2Node</a>(xmlNode *node) : m_node(NULL)
-00982                 { m_node = node; <a class="code" href="classwxXml2Wrapper.html#b7">JustWrappedNew</a>(); }
-00983 
-<a name="l00985"></a><a class="code" href="classwxXml2Node.html#a5">00985</a>         <a class="code" href="xml2_8h.html#a2">wxXml2Node</a>(<span class="keyword">const</span> wxXml2Node &amp;n) : m_node(NULL)
-00986                 { Copy(n); }
-00987 
-<a name="l00988"></a><a class="code" href="classwxXml2Node.html#a6">00988</a>         <span class="keyword">virtual</span> ~<a class="code" href="xml2_8h.html#a2">wxXml2Node</a>() { <a class="code" href="classwxXml2Wrapper.html#a4">DestroyIfUnlinked</a>(); }
-00989 
-00990 
-00991 <span class="keyword">public</span>:         <span class="comment">// operators</span>
-00992         
-00993         <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> wxXml2Node &amp;node) <span class="keyword">const</span>;
-<a name="l00994"></a><a class="code" href="classwxXml2Node.html#a8">00994</a>         <span class="keywordtype">bool</span> operator!=(<span class="keyword">const</span> wxXml2Node &amp;p)<span class="keyword"> const                              </span>{ <span class="keywordflow">return</span> !(*<span class="keyword">this</span> == p); }
-00995         
-<a name="l00996"></a><a class="code" href="classwxXml2Node.html#a9">00996</a>         <a class="code" href="xml2_8h.html#a2">wxXml2Node</a> &amp;operator=(<span class="keyword">const</span> wxXml2Node &amp;n)
-00997                 { Copy(n); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
-00998 
-<a name="l01000"></a><a class="code" href="classwxXml2Node.html#a10">01000</a>         <span class="keywordtype">bool</span> <a class="code" href="classwxXml2Wrapper.html#a3">IsNonEmpty</a>()<span class="keyword"> const</span>
-01001 <span class="keyword">                </span>{ <span class="keywordflow">return</span> m_node != NULL; }
-01002 
-01003 <span class="keyword">public</span>:
-01004 
-01008 
-01037         <span class="keywordtype">void</span> CreateRoot(wxXml2Document &amp;doc,
-01038                                 <span class="keyword">const</span> wxString &amp;name = wxEmptyString, 
-01039                                 wxXml2Namespace &amp;ns = wxXml2EmptyNamespace,
-01040                                 wxXml2Property &amp;props = wxXml2EmptyProperty);
-01041                 
-01043         <span class="keywordtype">void</span> CreateChild(wxXml2NodeType type,
-01044                                 wxXml2Node &amp;parent,
-01045                                 <span class="keyword">const</span> wxString &amp;name, 
-01046                                 <span class="keyword">const</span> wxString &amp;content = wxEmptyString,
-01047                                 wxXml2Namespace &amp;ns = wxXml2EmptyNamespace,
-01048                                 wxXml2Property &amp;props = wxXml2EmptyProperty, 
-01049                                 wxXml2Node &amp;next = wxXml2EmptyNode);
-01050 
-01055         <span class="keywordtype">void</span> CreateTemp(wxXml2NodeType type, 
-01056                                 wxXml2Document &amp;doc,
-01057                                 <span class="keyword">const</span> wxString &amp;name = wxEmptyString, 
-01058                                 <span class="keyword">const</span> wxString &amp;content = wxEmptyString,
-01059                                 wxXml2Namespace &amp;ns = wxXml2EmptyNamespace,
-01060                                 wxXml2Property &amp;props = wxXml2EmptyProperty);   
-01061 
-01063         <a class="code" href="xml2_8h.html#a2">wxXml2Node</a> AddContainerChild(<span class="keyword">const</span> wxString &amp;name);
-01064 
-01069         <a class="code" href="xml2_8h.html#a2">wxXml2Node</a> AddTextChild(<span class="keyword">const</span> wxString &amp;name, <span class="keyword">const</span> wxString &amp;content);
-01070 
-01072         <a class="code" href="xml2_8h.html#a2">wxXml2Node</a> AddCommentChild(<span class="keyword">const</span> wxString &amp;content);
-01073 
-01075         <a class="code" href="xml2_8h.html#a2">wxXml2Node</a> AddCDATAChild(<span class="keyword">const</span> wxString &amp;content);
-01076 
-01078         <a class="code" href="xml2_8h.html#a2">wxXml2Node</a> AddPIChild(<span class="keyword">const</span> wxString &amp;name, <span class="keyword">const</span> wxString &amp;content);
-01079 
-01087         <a class="code" href="xml2_8h.html#a2">wxXml2Node</a> AddBreakLineChild(<span class="keywordtype">int</span> breaklines = 1);
-01088 
-01091         <a class="code" href="xml2_8h.html#a3">wxXml2Property</a> AddProperty(<span class="keyword">const</span> wxString &amp;name, <span class="keyword">const</span> wxString &amp;value);
-01092 
-01095         <a class="code" href="xml2_8h.html#a4">wxXml2Namespace</a> AddNamespace(<span class="keyword">const</span> wxString &amp;prefix, <span class="keyword">const</span> wxString &amp;href);
-01096         
-01098 
+<a name="l00936"></a><a class="code" href="classwxXml2Node.html#a3">00936</a>     <a class="code" href="xml2_8h.html#a4">wxXml2Node</a>(wxXml2NodeType type, wxXml2Document &amp;doc,
+00937                                 <span class="keyword">const</span> wxString &amp;name = wxEmptyString, 
+00938                                 <span class="keyword">const</span> wxString &amp;content = wxEmptyString,
+00939                                 wxXml2Namespace &amp;ns = wxXml2EmptyNamespace)
+00940                 { CreateTemp(type, doc, name, content, ns);     }
+00941 
+<a name="l00944"></a><a class="code" href="classwxXml2Node.html#a4">00944</a>         <a class="code" href="xml2_8h.html#a4">wxXml2Node</a>(xmlNode *node)
+00945                 { m_obj = (<a class="code" href="structtagXml2BaseNode.html">wxXml2BaseNodeObj</a> *)node; <a class="code" href="classwxXml2Wrapper.html#b8">JustWrappedNew</a>(); }
+00946 
+<a name="l00948"></a><a class="code" href="classwxXml2Node.html#a5">00948</a>         <a class="code" href="xml2_8h.html#a4">wxXml2Node</a>(<span class="keyword">const</span> wxXml2Node &amp;n)
+00949                 { <a class="code" href="classwxXml2BaseNode.html#b2">Copy</a>(n); }
+00950 
+<a name="l00952"></a><a class="code" href="classwxXml2Node.html#a6">00952</a>         <a class="code" href="xml2_8h.html#a4">wxXml2Node</a>(<span class="keyword">const</span> wxXml2BaseNode &amp;n)
+00953                 { m_obj = n.<a class="code" href="classwxXml2BaseNode.html#z0_6">GetObj</a>(); <a class="code" href="classwxXml2Wrapper.html#b8">JustWrappedNew</a>(); }
+00954 
+<a name="l00955"></a><a class="code" href="classwxXml2Node.html#a7">00955</a>         <span class="keyword">virtual</span> ~<a class="code" href="xml2_8h.html#a4">wxXml2Node</a>() { <a class="code" href="classwxXml2Wrapper.html#a4">DestroyIfUnlinked</a>(); }
+00956 
+00957 
+00958 <span class="keyword">public</span>:         <span class="comment">// operators</span>
+00959         
+00960         <span class="keywordtype">bool</span> <a class="code" href="classwxXml2BaseNode.html#a5">operator==</a>(<span class="keyword">const</span> wxXml2Node &amp;node) <span class="keyword">const</span>;
+<a name="l00961"></a><a class="code" href="classwxXml2Node.html#a9">00961</a>         <span class="keywordtype">bool</span> <a class="code" href="classwxXml2BaseNode.html#a6">operator!=</a>(<span class="keyword">const</span> wxXml2Node &amp;p)<span class="keyword"> const                              </span>{ <span class="keywordflow">return</span> !(*<span class="keyword">this</span> == p); }
+00962         
+<a name="l00963"></a><a class="code" href="classwxXml2Node.html#a10">00963</a>         <a class="code" href="xml2_8h.html#a4">wxXml2Node</a> &amp;<a class="code" href="classwxXml2BaseNode.html#a7">operator=</a>(<span class="keyword">const</span> wxXml2Node &amp;n)
+00964                 { <a class="code" href="classwxXml2BaseNode.html#b2">Copy</a>(n); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+00965 
+00966 
+00967 <span class="keyword">public</span>:
+00968 
+00972 
+01001         <span class="keywordtype">void</span> CreateRoot(wxXml2Document &amp;doc,
+01002                                 <span class="keyword">const</span> wxString &amp;name = wxEmptyString, 
+01003                                 wxXml2Namespace &amp;ns = wxXml2EmptyNamespace,
+01004                                 wxXml2Property &amp;props = wxXml2EmptyProperty);
+01005                 
+01007         <span class="keywordtype">void</span> CreateChild(wxXml2NodeType type,
+01008                                 wxXml2Node &amp;parent,
+01009                                 <span class="keyword">const</span> wxString &amp;name, 
+01010                                 <span class="keyword">const</span> wxString &amp;content = wxEmptyString,
+01011                                 wxXml2Namespace &amp;ns = wxXml2EmptyNamespace,
+01012                                 wxXml2Property &amp;props = wxXml2EmptyProperty, 
+01013                                 wxXml2Node &amp;next = wxXml2EmptyNode);
+01014 
+01019         <span class="keywordtype">void</span> CreateTemp(wxXml2NodeType type, 
+01020                                 wxXml2Document &amp;doc,
+01021                                 <span class="keyword">const</span> wxString &amp;name = wxEmptyString, 
+01022                                 <span class="keyword">const</span> wxString &amp;content = wxEmptyString,
+01023                                 wxXml2Namespace &amp;ns = wxXml2EmptyNamespace,
+01024                                 wxXml2Property &amp;props = wxXml2EmptyProperty);   
+01025 
+01027         <a class="code" href="xml2_8h.html#a4">wxXml2Node</a> AddContainerChild(<span class="keyword">const</span> wxString &amp;name);
+01028 
+01033         <a class="code" href="xml2_8h.html#a4">wxXml2Node</a> AddTextChild(<span class="keyword">const</span> wxString &amp;name, <span class="keyword">const</span> wxString &amp;content);
+01034 
+01036         <a class="code" href="xml2_8h.html#a4">wxXml2Node</a> AddCommentChild(<span class="keyword">const</span> wxString &amp;content);
+01037 
+01039         <a class="code" href="xml2_8h.html#a4">wxXml2Node</a> AddCDATAChild(<span class="keyword">const</span> wxString &amp;content);
+01040 
+01042         <a class="code" href="xml2_8h.html#a4">wxXml2Node</a> AddPIChild(<span class="keyword">const</span> wxString &amp;name, <span class="keyword">const</span> wxString &amp;content);
+01043 
+01051         <a class="code" href="xml2_8h.html#a4">wxXml2Node</a> AddBreakLineChild(<span class="keywordtype">int</span> breaklines = 1);
+01052 
+01055         <a class="code" href="xml2_8h.html#a5">wxXml2Property</a> AddProperty(<span class="keyword">const</span> wxString &amp;name, <span class="keyword">const</span> wxString &amp;value);
+01056 
+01059         <a class="code" href="xml2_8h.html#a6">wxXml2Namespace</a> AddNamespace(<span class="keyword">const</span> wxString &amp;prefix, <span class="keyword">const</span> wxString &amp;href);
+01060         
+01062 
+01063 
+01068     
+01070         <span class="keywordtype">void</span> AddProperty(wxXml2Property &amp;prop);
+01071 
+01073         <span class="keywordtype">void</span> AddChild(wxXml2Node &amp;node);
+01074 
+01076         <span class="keywordtype">void</span> AddPrevious(wxXml2Node &amp;node);
+01077 
+01079         <span class="keywordtype">void</span> AddNext(wxXml2Node &amp;node);
+01080         
+01082     
+01083 <span class="keyword">public</span>:
+01084 
+<a name="l01085"></a><a class="code" href="classwxXml2Node.html#a11">01085</a>         <a class="code" href="xml2_8h.html#a7">wxXml2Document</a> GetDoc()<span class="keyword"> const</span>
+01086 <span class="keyword">                </span>{ <span class="keywordflow">if</span> (<a class="code" href="classwxXml2BaseNode.html#z0_6">GetObj</a>()) <span class="keywordflow">return</span> <a class="code" href="xml2_8h.html#a7">wxXml2Document</a>(<a class="code" href="classwxXml2BaseNode.html#z0_6">GetObj</a>()-&gt;doc); <span class="keywordflow">return</span> wxXml2EmptyDoc; }
+<a name="l01087"></a><a class="code" href="classwxXml2Node.html#a12">01087</a>     <a class="code" href="xml2_8h.html#a5">wxXml2Property</a> GetProperties()<span class="keyword"> const</span>
+01088 <span class="keyword">                </span>{ <span class="keywordflow">if</span> (<a class="code" href="classwxXml2BaseNode.html#z0_6">GetObj</a>()) <span class="keywordflow">return</span> <a class="code" href="xml2_8h.html#a5">wxXml2Property</a>(<a class="code" href="classwxXml2BaseNode.html#z0_6">GetObj</a>()-&gt;properties); <span class="keywordflow">return</span> wxXml2EmptyProperty; }
+01089 
+<a name="l01090"></a><a class="code" href="classwxXml2Node.html#a13">01090</a>     <a class="code" href="xml2_8h.html#a6">wxXml2Namespace</a> GetNamespace()<span class="keyword"> const</span>
+01091 <span class="keyword">                </span>{ <span class="keywordflow">if</span> (<a class="code" href="classwxXml2BaseNode.html#z0_6">GetObj</a>()) <span class="keywordflow">return</span> <a class="code" href="xml2_8h.html#a6">wxXml2Namespace</a>(<a class="code" href="classwxXml2BaseNode.html#z0_6">GetObj</a>()-&gt;ns, (<a class="code" href="xml2_8h.html#a4">wxXml2Node</a> &amp;)(*<span class="keyword">this</span>)); <span class="keywordflow">return</span> wxXml2EmptyNamespace; }
+<a name="l01092"></a><a class="code" href="classwxXml2Node.html#a14">01092</a>         <a class="code" href="xml2_8h.html#a6">wxXml2Namespace</a> GetNamespaceDecl()<span class="keyword"> const</span>
+01093 <span class="keyword">                </span>{ <span class="keywordflow">if</span> (<a class="code" href="classwxXml2BaseNode.html#z0_6">GetObj</a>()) <span class="keywordflow">return</span> <a class="code" href="xml2_8h.html#a6">wxXml2Namespace</a>(<a class="code" href="classwxXml2BaseNode.html#z0_6">GetObj</a>()-&gt;nsDef, (<a class="code" href="xml2_8h.html#a4">wxXml2Node</a> &amp;)(*<span class="keyword">this</span>)); <span class="keywordflow">return</span> wxXml2EmptyNamespace; }
+01094 
+<a name="l01095"></a><a class="code" href="classwxXml2Node.html#a15">01095</a>     wxString GetName()<span class="keyword"> const</span>
+01096 <span class="keyword">                </span>{ <span class="keywordflow">if</span> (<a class="code" href="classwxXml2BaseNode.html#z0_6">GetObj</a>()) <span class="keywordflow">return</span> <a class="code" href="classwxXml2BaseNode.html#z0_6">GetObj</a>()-&gt;<a class="code" href="structtagXml2BaseNode.html#o2">name</a>; <span class="keywordflow">return</span> wxEmptyString; }
+<a name="l01097"></a><a class="code" href="classwxXml2Node.html#a16">01097</a>     wxString GetContent()<span class="keyword"> const </span>
+01098 <span class="keyword">                </span>{ <span class="keywordflow">if</span> (<a class="code" href="classwxXml2BaseNode.html#z0_6">GetObj</a>()) <span class="keywordflow">return</span> <a class="code" href="classwxXml2BaseNode.html#z0_6">GetObj</a>()-&gt;content; <span class="keywordflow">return</span> wxEmptyString; }
 01099 
-01104     
-01106         <span class="keywordtype">void</span> AddProperty(wxXml2Property &amp;prop);
+<a name="l01102"></a><a class="code" href="classwxXml2Node.html#a17">01102</a>         xmlNode *<a class="code" href="classwxXml2BaseNode.html#z0_6">GetObj</a>()<span class="keyword"> const                                 </span>{ <span class="keywordflow">return</span> (xmlNode *)m_obj; }
+01103 
+01106         <span class="keywordtype">bool</span> GetPropVal(<span class="keyword">const</span> wxString &amp;propName, wxString *value) <span class="keyword">const</span>;
 01107 
-01109         <span class="keywordtype">void</span> AddChild(wxXml2Node &amp;node);
-01110 
-01112         <span class="keywordtype">void</span> AddPrevious(wxXml2Node &amp;node);
-01113 
-01115         <span class="keywordtype">void</span> AddNext(wxXml2Node &amp;node);
-01116         
-01118 
-01119 
-01120 <span class="keyword">public</span>:         <span class="comment">// getters</span>
-01121 
-01127     
-<a name="l01128"></a><a class="code" href="classwxXml2Node.html#z2_0">01128</a>     <a class="code" href="xml2_8h.html#a25">wxXml2NodeType</a>      GetType()<span class="keyword"> const                 </span>{ <span class="keywordflow">return</span> (wxXml2NodeType)((int)m_node-&gt;type); }
-<a name="l01129"></a><a class="code" href="classwxXml2Node.html#z2_1">01129</a>     wxString            GetName()<span class="keyword"> const                 </span>{ <span class="keywordflow">return</span> m_node-&gt;name; }
-<a name="l01130"></a><a class="code" href="classwxXml2Node.html#z2_2">01130</a>     wxString            GetContent()<span class="keyword"> const              </span>{ <span class="keywordflow">return</span> m_node-&gt;content; }
-01131 
-<a name="l01132"></a><a class="code" href="classwxXml2Node.html#z2_3">01132</a>     <a class="code" href="xml2_8h.html#a2">wxXml2Node</a>          GetParent()<span class="keyword"> const               </span>{ <span class="keywordflow">return</span> <a class="code" href="xml2_8h.html#a2">wxXml2Node</a>(m_node-&gt;parent); }
-<a name="l01133"></a><a class="code" href="classwxXml2Node.html#z2_4">01133</a>     <a class="code" href="xml2_8h.html#a2">wxXml2Node</a>          GetChildren()<span class="keyword"> const             </span>{ <span class="keywordflow">return</span> <a class="code" href="xml2_8h.html#a2">wxXml2Node</a>(m_node-&gt;children); }
-<a name="l01134"></a><a class="code" href="classwxXml2Node.html#z2_5">01134</a>     <a class="code" href="xml2_8h.html#a2">wxXml2Node</a>          GetFirstChild()<span class="keyword"> const   </span>{ <span class="keywordflow">return</span> GetChildren(); }
-<a name="l01135"></a><a class="code" href="classwxXml2Node.html#z2_6">01135</a>     <a class="code" href="xml2_8h.html#a2">wxXml2Node</a>          GetNext()<span class="keyword"> const                 </span>{ <span class="keywordflow">return</span> <a class="code" href="xml2_8h.html#a2">wxXml2Node</a>(m_node-&gt;next); }
-<a name="l01136"></a><a class="code" href="classwxXml2Node.html#z2_7">01136</a>         <a class="code" href="xml2_8h.html#a2">wxXml2Node</a>              GetPrevious()<span class="keyword"> const             </span>{ <span class="keywordflow">return</span> <a class="code" href="xml2_8h.html#a2">wxXml2Node</a>(m_node-&gt;prev); }
+01110     wxString GetPropVal(<span class="keyword">const</span> wxString &amp;propName, <span class="keyword">const</span> wxString &amp;defaultVal) <span class="keyword">const</span>;
+01111 
+<a name="l01113"></a><a class="code" href="classwxXml2Node.html#a20">01113</a>         <a class="code" href="xml2_8h.html#a4">wxXml2Node</a> Get(<span class="keyword">const</span> wxString &amp;name, <span class="keywordtype">int</span> n = 0)<span class="keyword"> const</span>
+01114 <span class="keyword">                </span>{ <span class="keywordflow">return</span> Find(name, wxT(<span class="stringliteral">""</span>), n); }
+01115         
+<a name="l01116"></a><a class="code" href="classwxXml2Node.html#a21">01116</a>     <span class="keywordtype">void</span> SetName(<span class="keyword">const</span> wxString &amp;name)
+01117                 { xmlNodeSetName(<a class="code" href="classwxXml2BaseNode.html#z0_6">GetObj</a>(), <a class="code" href="xml2_8h.html#a1">WX2XML</a>(name)); }
+<a name="l01118"></a><a class="code" href="classwxXml2Node.html#a22">01118</a>     <span class="keywordtype">void</span> SetContent(<span class="keyword">const</span> wxString &amp;cont)
+01119                 { xmlNodeSetContent(<a class="code" href="classwxXml2BaseNode.html#z0_6">GetObj</a>(), <a class="code" href="xml2_8h.html#a1">WX2XML</a>(cont)); }
+01120 
+01121     <span class="keywordtype">void</span> SetProperties(<span class="keyword">const</span> wxXml2Property &amp;prop);
+01122     <span class="keywordtype">void</span> SetNamespace(wxXml2Namespace &amp;ns);
+01123 
+01124 <span class="keyword">public</span>:         <span class="comment">// miscellaneous</span>
+01125 
+01129         
+<a name="l01132"></a><a class="code" href="classwxXml2Node.html#z4_0">01132</a>         <span class="keywordtype">bool</span> Contains(<span class="keyword">const</span> wxXml2Node &amp;tofind)<span class="keyword"> const</span>
+01133 <span class="keyword">                </span>{ <span class="keywordflow">return</span> (Find(tofind) != wxXml2EmptyNode); }
+01134 
+01136     <span class="keywordtype">bool</span> HasProp(<span class="keyword">const</span> wxString &amp;propName) <span class="keyword">const</span>;
 01137 
-<a name="l01138"></a><a class="code" href="classwxXml2Node.html#z2_8">01138</a>         <a class="code" href="xml2_8h.html#a6">wxXml2Document</a>  GetDoc()<span class="keyword"> const                  </span>{ <span class="keywordflow">return</span> <a class="code" href="xml2_8h.html#a6">wxXml2Document</a>(m_node-&gt;doc); }
-<a name="l01139"></a><a class="code" href="classwxXml2Node.html#z2_9">01139</a>     <a class="code" href="xml2_8h.html#a3">wxXml2Property</a>      GetProperties()<span class="keyword"> const   </span>{ <span class="keywordflow">return</span> <a class="code" href="xml2_8h.html#a3">wxXml2Property</a>(m_node-&gt;properties); }
-01140 
-<a name="l01141"></a><a class="code" href="classwxXml2Node.html#z2_10">01141</a>     <a class="code" href="xml2_8h.html#a4">wxXml2Namespace</a> GetNamespace()<span class="keyword"> const                </span>{ <span class="keywordflow">return</span> <a class="code" href="xml2_8h.html#a4">wxXml2Namespace</a>(m_node-&gt;ns, (<a class="code" href="xml2_8h.html#a2">wxXml2Node</a> &amp;)(*<span class="keyword">this</span>)); }
-<a name="l01142"></a><a class="code" href="classwxXml2Node.html#z2_11">01142</a>         <a class="code" href="xml2_8h.html#a4">wxXml2Namespace</a> GetNamespaceDecl()<span class="keyword"> const        </span>{ <span class="keywordflow">return</span> <a class="code" href="xml2_8h.html#a4">wxXml2Namespace</a>(m_node-&gt;nsDef, (<a class="code" href="xml2_8h.html#a2">wxXml2Node</a> &amp;)(*<span class="keyword">this</span>)); }
-01143 
-<a name="l01146"></a><a class="code" href="classwxXml2Node.html#z2_12">01146</a>         xmlNode *GetObj()<span class="keyword"> const                                 </span>{ <span class="keywordflow">return</span> m_node; }
-01147 
-01150         <span class="keywordtype">bool</span> GetPropVal(<span class="keyword">const</span> wxString &amp;propName, wxString *value) <span class="keyword">const</span>;
-01151 
-01154     wxString GetPropVal(<span class="keyword">const</span> wxString &amp;propName, <span class="keyword">const</span> wxString &amp;defaultVal) <span class="keyword">const</span>;
-01155 
-<a name="l01157"></a><a class="code" href="classwxXml2Node.html#z2_15">01157</a>         <a class="code" href="xml2_8h.html#a2">wxXml2Node</a> Get(<span class="keyword">const</span> wxString &amp;name, <span class="keywordtype">int</span> n = 0)<span class="keyword"> const</span>
-01158 <span class="keyword">                </span>{ <span class="keywordflow">return</span> Find(name, wxT(<span class="stringliteral">""</span>), n); }
-01159         
-01161 
-01162 
-01163 <span class="keyword">public</span>:         <span class="comment">// setters</span>
-01164 
-01169 
-<a name="l01170"></a><a class="code" href="classwxXml2Node.html#z3_0">01170</a>     <span class="keywordtype">void</span> SetType(wxXml2NodeType type)           { m_node-&gt;type = (xmlElementType)((int)type); }
-<a name="l01171"></a><a class="code" href="classwxXml2Node.html#z3_1">01171</a>     <span class="keywordtype">void</span> SetName(<span class="keyword">const</span> wxString &amp;name)          { xmlNodeSetName(GetObj(), <a class="code" href="xml2_8h.html#a1">WX2XML</a>(name)); }
-<a name="l01172"></a><a class="code" href="classwxXml2Node.html#z3_2">01172</a>     <span class="keywordtype">void</span> SetContent(<span class="keyword">const</span> wxString &amp;cont)       { xmlNodeSetContent(GetObj(), <a class="code" href="xml2_8h.html#a1">WX2XML</a>(cont)); }
-01173 
-01174     <span class="keywordtype">void</span> SetChildren(<span class="keyword">const</span> wxXml2Node &amp;child);
-01175     <span class="keywordtype">void</span> SetNext(<span class="keyword">const</span> wxXml2Node &amp;next);
-01176         <span class="keywordtype">void</span> SetPrevious(<span class="keyword">const</span> wxXml2Node &amp;prev);
-01177 
-01178     <span class="keywordtype">void</span> SetProperties(<span class="keyword">const</span> wxXml2Property &amp;prop);
-01179     <span class="keywordtype">void</span> SetNamespace(wxXml2Namespace &amp;ns);
-01180 
-01181         <span class="comment">// these two would require the entire reconstruction of the node....</span>
-01182         <span class="comment">//void SetDoc(const wxXml2Document &amp;doc){ Build(GetType(), GetParent(), doc, GetNamespace(), GetName(), GetContent(), GetProperties(), GetNext()); }</span>
-01183     <span class="comment">//void SetParent(wxXml2Node &amp;parent){ Build(GetType(), parent, GetDoc(), GetNamespace(), GetName(), GetContent(), GetProperties(), GetNext()); }</span>
-01184     
-01186     
-01187 
-01188 <span class="keyword">public</span>:         <span class="comment">// miscellaneous</span>
-01189 
-01193         
-<a name="l01196"></a><a class="code" href="classwxXml2Node.html#z4_0">01196</a>         <span class="keywordtype">bool</span> Contains(<span class="keyword">const</span> wxXml2Node &amp;tofind)<span class="keyword"> const</span>
-01197 <span class="keyword">                </span>{ <span class="keywordflow">return</span> (Find(tofind) != wxXml2EmptyNode); }
-01198 
-01200     <span class="keywordtype">bool</span> HasProp(<span class="keyword">const</span> wxString &amp;propName) <span class="keyword">const</span>;
-01201 
-01203         <span class="keywordtype">bool</span> <a class="code" href="classwxXml2Wrapper.html#a2">IsUnlinked</a>() <span class="keyword">const</span>;
-01204         
-01207         <span class="keywordtype">void</span> MakeUpper();
-01208 
-01211         <span class="keywordtype">void</span> MakeLower();
-01212 
-01215         <span class="keywordtype">bool</span> Cmp(<span class="keyword">const</span> wxXml2Node &amp;node) <span class="keyword">const</span>;
-01216 
-01218         <span class="keywordtype">bool</span> CmpNoNs(<span class="keyword">const</span> wxXml2Node &amp;node) <span class="keyword">const</span>;
-01219 
-01223         <span class="keywordtype">void</span> Replace(<span class="keyword">const</span> wxXml2Node &amp;newnode);
-01224 
-01238         <a class="code" href="xml2_8h.html#a2">wxXml2Node</a> Find(<span class="keyword">const</span> wxString &amp;name, 
-01239                                         <span class="keyword">const</span> wxString &amp;content = wxEmptyString,
-01240                                         <span class="keywordtype">int</span> occ = 0, <span class="keywordtype">bool</span> bNS = TRUE) <span class="keyword">const</span>;
-01241 
-01244         <a class="code" href="xml2_8h.html#a2">wxXml2Node</a> Find(<span class="keyword">const</span> wxXml2Node &amp;tofind, <span class="keywordtype">int</span> occ = 0, <span class="keywordtype">bool</span> bNS = TRUE) <span class="keyword">const</span>;
-01245 
-01255         <span class="keywordtype">void</span> Encapsulate(<span class="keyword">const</span> wxString &amp;nodename);
-01256         
-01258 };
-01259 
-01260 <span class="preprocessor">#endif // _WX_XML2_H_</span>
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Fri Dec 31 11:02:10 2004 for wxXml2 by&nbsp;
+01140         <span class="keywordtype">void</span> MakeUpper();
+01141 
+01144         <span class="keywordtype">void</span> MakeLower();
+01145 
+01148         <span class="keywordtype">bool</span> Cmp(<span class="keyword">const</span> wxXml2Node &amp;node) <span class="keyword">const</span>;
+01149 
+01151         <span class="keywordtype">bool</span> CmpNoNs(<span class="keyword">const</span> wxXml2Node &amp;node) <span class="keyword">const</span>;
+01152 
+01156         <span class="keywordtype">void</span> Replace(<span class="keyword">const</span> wxXml2Node &amp;newnode);
+01157 
+01171         <a class="code" href="xml2_8h.html#a4">wxXml2Node</a> Find(<span class="keyword">const</span> wxString &amp;name, 
+01172                                         <span class="keyword">const</span> wxString &amp;content = wxEmptyString,
+01173                                         <span class="keywordtype">int</span> occ = 0, <span class="keywordtype">bool</span> bNS = TRUE) <span class="keyword">const</span>;
+01174 
+01177         <a class="code" href="xml2_8h.html#a4">wxXml2Node</a> Find(<span class="keyword">const</span> wxXml2Node &amp;tofind, <span class="keywordtype">int</span> occ = 0, <span class="keywordtype">bool</span> bNS = TRUE) <span class="keyword">const</span>;
+01178 
+01188         <span class="keywordtype">void</span> Encapsulate(<span class="keyword">const</span> wxString &amp;nodename);
+01189         
+01191 };
+01192 
+01193 <span class="preprocessor">#endif // _WX_XML2_H_</span>
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Sat Jan 1 21:15:08 2005 for wxXml2 by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.3.9.1 </small></address>
 </body>
