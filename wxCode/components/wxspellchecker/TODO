@@ -1,5 +1,3 @@
-Makefiles need to be generated for Linux (and possibly Win32?)
-
 Populating the "Lanuage" combo box via the available options (or remove the combo) on the Mozilla-like dialog
 
 Add the C interface and create a shared wxSpellChecker DLL

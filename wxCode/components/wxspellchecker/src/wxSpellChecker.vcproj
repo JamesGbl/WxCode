@@ -20,7 +20,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\wxWidgets-Contrib\aspell-0.60\interfaces\cc&quot;;&quot;C:\wxWidgets-Contrib\wxspellchecker&quot;;&quot;C:\wxWidgets-Contrib\wxspellchecker\include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\wxWidgets-Contrib\aspell-0.60\interfaces\cc&quot;;&quot;C:\wxWidgets-Contrib\wxspellchecker&quot;;&quot;C:\wxWidgets-Contrib\wxspellchecker\include&quot;..\include;.."
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -61,7 +61,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;C:\wxWidgets-Contrib\aspell-0.60\interfaces\cc&quot;;&quot;C:\wxWidgets-Contrib\wxspellchecker&quot;;&quot;C:\wxWidgets-Contrib\wxspellchecker\include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\wxWidgets-Contrib\aspell-0.60\interfaces\cc&quot;;&quot;C:\wxWidgets-Contrib\wxspellchecker&quot;;&quot;C:\wxWidgets-Contrib\wxspellchecker\include&quot;..\include;.."
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
