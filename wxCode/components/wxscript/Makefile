@@ -18,6 +18,7 @@ LIB_OBJECTS = src/script.o src/sccint.o src/sclua.o src/scunderc.o src/scbasic.o
 TEST1_OBJECTS = tests/test1/test.o
 TEST2_OBJECTS = tests/test2/test.o
 
+EXTRAFLAGS=-DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC -I/home/fre/prog/tolua-5.0/include
 
 
 
