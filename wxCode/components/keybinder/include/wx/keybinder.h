@@ -919,7 +919,7 @@ public:
 	wxKeyMonitorTextCtrl(
 		wxWindow* parent,
 		wxWindowID id,
-		const wxString& value = "",
+		const wxString& value = wxEmptyString,
 		const wxPoint& pos = wxDefaultPosition,
 		const wxSize& size = wxDefaultSize,
 		long style = wxTE_PROCESS_ENTER,
@@ -1057,7 +1057,7 @@ public:
 		const wxPoint& pos = wxDefaultPosition,
 		const wxSize& size = wxDefaultSize, 
 		long style = wxTAB_TRAVERSAL,
-		const wxString& name = "wxKeyConfigPanel");
+		const wxString& name = wxT("wxKeyConfigPanel"));
 
 	virtual ~wxKeyConfigPanel() {}
 
@@ -1071,7 +1071,7 @@ public:		// import commands
 	//! of the ImportXXXX functions have been called yet), this
 	//! function creates it with the "rootname" label.
 	virtual void ImportMenuBarCmd(wxMenuBar *, 
-								const wxString &rootname = "Menu bar");
+								const wxString &rootname = wxT("Menu bar"));
 
 	//! Adds to the tree of user-editable commands, the raw list of
 	//! the commmands contained in the n-th key profile.
@@ -1079,7 +1079,7 @@ public:		// import commands
 	//! #ImportMenuBarCmd), this function creates a raw list of the
 	//! commands contained in the key binder since a wxKeyBinder does 
 	//! not contain hierarchical info about the keybindings.
-	virtual void ImportKeyProfileCmd(int n, const wxString &rootname = "Commands");
+	virtual void ImportKeyProfileCmd(int n, const wxString &rootname = wxT("Commands"));
 
 
 public:		// keyprofile utilities
@@ -1092,7 +1092,7 @@ public:		// keyprofile utilities
 	//!       To force the selection of a profile, you should use the
 	//!       GetProfiles()->SetSelection() function.
 	virtual void AddProfile(wxKeyProfile *p, bool bImport = FALSE, 
-							const wxString &rootname = "Commands");
+							const wxString &rootname = wxT("Commands"));
 							
 	//! Adds all the profiles stored in the given array.
 	virtual void AddProfiles(wxKeyProfileArray &arr);

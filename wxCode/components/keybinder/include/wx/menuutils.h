@@ -241,7 +241,7 @@ public:
 	//! Works like #FillTreeBranch but this function also removes all the tree
 	//! items (before starting) and then builds the root with the given label.
 	void FillTreeCtrl(wxMenuBar *p, wxTreeCtrl *ctrl, 
-		const wxString &rootname = "root") {
+		const wxString &rootname = wxT("root")) {
 		ctrl->DeleteAllItems();
 		FillTreeBranch(p, ctrl, ctrl->AddRoot(rootname));
 	}

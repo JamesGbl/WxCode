@@ -833,19 +833,57 @@ wxXml2Node wxXml2Node::Find(const wxXml2Node &tofind, int occ, bool bNS) const
 	return wxXml2EmptyNode;
 }
 
-void wxXml2Node::Replace(const wxXml2Node &newnode)
+wxXml2Node wxXml2Node::Replace(const wxXml2Node &newnode)
 {
 	// we've got a perfect API for this...
 	xmlReplaceNode(GetObj(), newnode.GetObj());
+
+	UnwrappingOld();
+	m_obj = (wxXml2BaseNodeObj*)newnode.GetObj();
+	JustWrappedNew();
+
+	return *this;
 }
 
-void wxXml2Node::Encapsulate(const wxString &nodename)
+wxXml2Node wxXml2Node::Encapsulate(const wxString &nodename,
+									const wxString &content,
+									wxXml2Namespace &ns,
+									wxXml2Property &prop)
 {
-	wxXml2Node tmp, copy(*this);
+	wxXml2Node copy(*this);
 
-	tmp.CreateTemp(wxXML_ELEMENT_NODE, wxXml2EmptyDoc, nodename);
-	this->Replace(tmp);
-	this->AddChild(copy);
+	// create a node of the given name
+	wxXml2Node tmp;
+	tmp.CreateTemp(wxXML_ELEMENT_NODE, wxXml2EmptyDoc, nodename,
+					content, ns, prop);
+	
+	// insert "tmp" to the 
+	xmlNode *parent = GetObj()->parent;
+	xmlNode *prev = GetObj()->prev;
+	xmlNode *next = GetObj()->next;
+
+	// change the links of this node's SIBLINGS and PARENT/CHILDREN
+	if (parent && parent->children == tmp.GetObj()) 
+		parent->children = tmp.GetObj();
+	if (prev) prev->next = tmp.GetObj();
+	if (next) next->prev = tmp.GetObj();
+	
+	// change the links of the TMP node
+	tmp.GetObj()->prev = prev;
+	tmp.GetObj()->next = next;
+	tmp.GetObj()->parent = parent;
+	tmp.GetObj()->children = GetObj();
+
+	// change the links of THIS node
+	GetObj()->parent = tmp.GetObj();
+	
+
+	UnwrappingOld();
+	m_obj = (wxXml2BaseNodeObj*)tmp.GetObj();
+	JustWrappedNew();
+	
+	// we should now be linked with "tmp"
+	return *this;
 }
 
 bool wxXml2Node::operator==(const wxXml2Node &node) const

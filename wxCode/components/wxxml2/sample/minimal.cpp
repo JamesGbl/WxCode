@@ -179,7 +179,7 @@ IMPLEMENT_APP(MyApp)
 	class mcLeakDetector {
 
 	public:
-		mcLeakDetector() { /*mcDUMP_ON_EXIT;*/ }
+		mcLeakDetector() { mcDUMP_ON_EXIT; }
 		~mcLeakDetector() {}
 	};
 
@@ -190,7 +190,7 @@ IMPLEMENT_APP(MyApp)
 	// static variables of the program) and end it at the very
 	// end of the program (when, after the main() or winmain(),
 	// the framework removes the static variables).
-	//static mcLeakDetector detector;
+	static mcLeakDetector detector;
 
 #endif
 
@@ -619,8 +619,20 @@ void MyFrame::OnSaveAdv(wxCommandEvent &)
 	root.AddTextChild(wxT("textchild"), greekstring);
 #endif
 
+	// create some simple nodes just to highlight the indentation feature used below...
+	root.AddContainerChild(wxT("mydata"));
+	root.Get(wxT("mydata")).AddContainerChild(wxT("mysubdata"));
+	root.Get(wxT("mydata")).Get(wxT("mysubdata")).AddTextChild("subdata1", "mytext");
+	root.Get(wxT("mydata")).Get(wxT("mysubdata")).AddTextChild("subdata2", "mytext");
+
+	// let's test the Encapsulate function
+	root.Get(wxT("mydata")).AddContainerChild(wxT("mysubdata3"));
+	root.Get(wxT("mydata")).Get(wxT("mysubdata3")).Encapsulate(wxT("mysubdata2"));
+	root.Get(wxT("mydata")).Get(wxT("mysubdata2")).Get(wxT("mysubdata3")).AddTextChild("subdata2", "mytext");
+
 	// now, save the file where the user choose
-	if (doc.Save(fd.GetPath(), wxT("utf8"), wxXML2DOC_USE_NATIVE_NEWLINES | wxXML2DOC_USE_INDENTATION)) {
+	if (doc.Save(fd.GetPath(), wxT("utf8"), 
+		wxXML2DOC_USE_NATIVE_NEWLINES | wxXML2DOC_USE_INDENTATION)) {
 		
 		int ret = wxMessageBox(wxT("File correctly saved. Do you want to load it ?"), 
 			wxT("Question"), wxYES_NO | wxICON_QUESTION);

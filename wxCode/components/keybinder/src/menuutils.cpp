@@ -56,6 +56,12 @@ int wxFindMenuItem(wxMenuBar *p, const wxString &str)
 }
 
 
+#ifdef __WXGTK__
+
+	#include "wx/gtk/private.h"
+	#include <gdk/gdkkeysyms.h>
+
+#endif
 
 
 
@@ -75,12 +81,12 @@ void wxMenuCmd::Update()
 	// from the label.
 	str.Trim();
 	if (str == m_pItem->GetLabel())
-		str += " ";
+		str += wxT(" ");
 #endif
 
 	if (m_nShortcuts <= 0) {
 	
-		wxLogDebug("wxMenuCmd::Update - no shortcuts defined for [%s]", str.c_str());
+		wxLogDebug(wxT("wxMenuCmd::Update - no shortcuts defined for [%s]"), str.c_str());
 
 		// no more shortcuts for this menuitem: SetText()
 		// will delete the hotkeys associated...
@@ -88,8 +94,8 @@ void wxMenuCmd::Update()
 		return;
 	}
 
-	wxString newtext = str+"\t"+GetShortcut(0)->GetStr();
-	wxLogDebug("wxMenuCmd::Update - setting the new text to [%s]", newtext.c_str());
+	wxString newtext = str+wxT("\t")+GetShortcut(0)->GetStr();
+	wxLogDebug(wxT("wxMenuCmd::Update - setting the new text to [%s]"), newtext.c_str());
 	
 #if defined( __WXMSW__ )
 
@@ -100,13 +106,19 @@ void wxMenuCmd::Update()
 
 	   // on GTK, the SetAccel() function doesn't have any effect...	   
 	   m_pItem->SetText(newtext);
+
+#ifdef __WXGTK20__
+
+	   gtk_menu_item_set_accel_path(GTK_MENU_ITEM(m_pItem), wxGTK_CONV(newtext));
+
+#endif
 #endif
 }
 
 void wxMenuCmd::Exec(wxObject *origin, wxEvtHandler *client)
 {
 	wxCommandEvent menuEvent(wxEVT_COMMAND_MENU_SELECTED, GetId()); 
-	wxASSERT_MSG(client, "An empty client handler ?!?");
+	wxASSERT_MSG(client, wxT("An empty client handler ?!?"));
 
 	// set up the event and process it...
 	menuEvent.SetEventObject(origin);
@@ -134,7 +146,7 @@ wxCmd *wxMenuCmd::CreateNew(int id)
 
 void wxMenuWalker::WalkMenuItem(wxMenuBar *p, wxMenuItem *m, void *data)
 {
-	wxLogDebug("wxMenuWalker::WalkMenuItem - walking on [%s] at level [%d]", 
+	wxLogDebug(wxT("wxMenuWalker::WalkMenuItem - walking on [%s] at level [%d]"), 
 				m->GetLabel().c_str(), m_nLevel);
 	void *tmp = OnMenuItemWalk(p, m, data);
 
@@ -142,7 +154,7 @@ void wxMenuWalker::WalkMenuItem(wxMenuBar *p, wxMenuItem *m, void *data)
 
 		// if this item contains a sub menu, add recursively the menu items
 		// of that sub menu... using the cookie from OnMenuItemWalk.
-		wxLogDebug("wxMenuWalker::WalkMenuItem - recursing on [%s]", m->GetLabel().c_str());
+		wxLogDebug(wxT("wxMenuWalker::WalkMenuItem - recursing on [%s]"), m->GetLabel().c_str());
 		m_nLevel++;
 		WalkMenu(p, m->GetSubMenu(), tmp);
 		OnMenuExit(p, m->GetSubMenu(), tmp);
@@ -155,7 +167,7 @@ void wxMenuWalker::WalkMenuItem(wxMenuBar *p, wxMenuItem *m, void *data)
 
 void wxMenuWalker::WalkMenu(wxMenuBar *p, wxMenu *m, void *data)
 {
-	wxLogDebug("wxMenuWalker::WalkMenu - walking on [%s] at level [%d]", 
+	wxLogDebug(wxT("wxMenuWalker::WalkMenu - walking on [%s] at level [%d]"), 
 				m->GetTitle().c_str(), m_nLevel);
 	for (int i=0; i < (int)m->GetMenuItemCount(); i++) {
 
@@ -188,7 +200,7 @@ void wxMenuWalker::Walk(wxMenuBar *p, void *data)
 		wxMenu *m = p->GetMenu(i);
 
 		m_nLevel++;
-		wxLogDebug("wxMenuWalker::Walk - walking on [%s] at level [%d]", 
+		wxLogDebug(wxT("wxMenuWalker::Walk - walking on [%s] at level [%d]"), 
 					p->GetLabelTop(i).c_str(), m_nLevel);
 		void *tmp = OnMenuWalk(p, m, data);
 
@@ -301,7 +313,7 @@ void wxMenuComboListWalker::FillComboListCtrl(wxMenuBar *p, wxComboBox *combo)
 
 void *wxMenuComboListWalker::OnMenuWalk(wxMenuBar *p, wxMenu *m, void *)
 {
-	wxLogDebug("wxMenuWalker::OnMenuWalk - walking on [%s]", m->GetTitle().c_str());
+	wxLogDebug(wxT("wxMenuWalker::OnMenuWalk - walking on [%s]"), m->GetTitle().c_str());
 	wxString toadd;
 
 	// find the index of the given menu
@@ -333,14 +345,14 @@ void *wxMenuComboListWalker::OnMenuWalk(wxMenuBar *p, wxMenu *m, void *)
 	wxClientData *cd = new wxExComboItemData();	
 
 	// and create a new element in our combbox
-	wxLogDebug("wxMenuWalker::OnMenuWalk - appending [%s]", toadd.c_str());
+	wxLogDebug(wxT("wxMenuWalker::OnMenuWalk - appending [%s]"), toadd.c_str());
 	m_pCategories->Append(toadd, cd);
 	return cd;
 }
 
 void *wxMenuComboListWalker::OnMenuItemWalk(wxMenuBar *, wxMenuItem *m, void *data)
 {
-	wxLogDebug("wxMenuWalker::OnMenuItemWalk - walking on [%s]", m->GetLabel().c_str());
+	wxLogDebug(wxT("wxMenuWalker::OnMenuItemWalk - walking on [%s]"), m->GetLabel().c_str());
 	//int last = m_pCategories->GetCount()-1;
 	wxExComboItemData *p = (wxExComboItemData *)data;//m_pCategories->GetClientObject(last);
 
@@ -348,7 +360,7 @@ void *wxMenuComboListWalker::OnMenuItemWalk(wxMenuBar *, wxMenuItem *m, void *da
 	if (m->GetSubMenu() == NULL)
 		p->Append(m->GetLabel(), m->GetId());
 	else
-		m_strAcc += " | " + m->GetLabel();
+		m_strAcc += wxT(" | ") + m->GetLabel();
 
 	// no info to give to wxMenuComboListWalker::OnMenuWalk
 	return NULL;//(void *)str;
@@ -356,11 +368,11 @@ void *wxMenuComboListWalker::OnMenuItemWalk(wxMenuBar *, wxMenuItem *m, void *da
 
 void wxMenuComboListWalker::OnMenuExit(wxMenuBar *, wxMenu *m, void *)
 {
-	wxLogDebug("wxMenuWalker::OnMenuExit - walking on [%s]", m->GetTitle().c_str());
+	wxLogDebug(wxT("wxMenuWalker::OnMenuExit - walking on [%s]"), m->GetTitle().c_str());
 
 	if (!m_strAcc.IsEmpty()){// && m_strAcc.Right() == str) {
 
-		int diff = m_strAcc.Find('|', TRUE);
+		int diff = m_strAcc.Find(wxT('|'), TRUE);
 
 		if (diff == wxNOT_FOUND)
 			m_strAcc = wxEmptyString;
@@ -407,7 +419,7 @@ void *wxMenuShortcutWalker::OnMenuItemWalk(wxMenuBar *, wxMenuItem *m, void *)
 void wxMenuShortcutWalker::DeleteData(void *data)
 {
 	wxASSERT_MSG(data == NULL, 
-		"wxMenuShortcutWalker does not use the 'data' parameter");
+		wxT("wxMenuShortcutWalker does not use the 'data' parameter"));
 	data = data;	// to avoid warnings about unused arg
 }
 

@@ -206,15 +206,15 @@ IMPLEMENT_APP(MyApp)
 // the application class
 // ----------------------------------------------------------------------------
 
-// 'Main program' equivalent: the program execution "starts" here
+// wxT('Main program') equivalent: the program execution "starts" here
 bool MyApp::OnInit()
 {
     // create the main application window
-    MyFrame *frame = new MyFrame(_T("Minimal wxWindows App"));
+    MyFrame *frame = new MyFrame(wxT("Minimal wxWindows App"));
 
 
 	// create an useful log window
-	wxLogWindow *pwindow = new wxLogWindow(frame, "log");
+	wxLogWindow *pwindow = new wxLogWindow(frame, wxT("log"));
 	pwindow->GetFrame()->Move(50, 50+350);
 	pwindow->GetFrame()->SetSize(800, 300);
 
@@ -256,17 +256,17 @@ MyFrame::MyFrame(const wxString& title)
 
 	// containing a wxStaticText
 	box->Add(new wxStaticText(panel, -1, 
-			"This is the keybinder sample program.\n\n"
-			"This little sample supports two key profiles that "
-			"you can edit through the 'File|KeyBindings' command.\n"
-			"In particular, they differ for the shortcuts bind to the 'Shortcut #1' command.\n"
-			"Enjoy this sample !"), 0, wxALL, 5);
+			wxT("This is the keybinder sample program.\n\n")
+			wxT("This little sample supports two key profiles that ")
+			wxT("you can edit through the 'File|KeyBindings' command.\n")
+			wxT("In particular, they differ for the shortcuts bind to the 'Shortcut #1' command.\n")
+			wxT("Enjoy this sample !")), 0, wxALL, 5);
 	
 	// and a text control
 	wxTextCtrl *text = new wxTextCtrl(panel, -1, 
-			"This text control is used to show that a wxKeyBinder requires to be "
-			"attached to all the child windows if you want to be sure to intercept "
-			"all hotkeys...", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE);
+			wxT("This text control is used to show that a wxKeyBinder requires to be ")
+			wxT("attached to all the child windows if you want to be sure to intercept ")
+			wxT("all hotkeys..."), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE);
 	box->Add(text, 1, wxALL | wxGROW, 5);
 	panel->SetSizer(box);
 
@@ -280,17 +280,17 @@ MyFrame::MyFrame(const wxString& title)
     wxMenu *helpMenu = new wxMenu;
     helpMenu->Append(Minimal_About, _T("&About...\tF1"), _T("Show about dialog"));
 	
-	wxString str = "A dummy shortcut description; "
-		"add/delete/edit all the shortcuts you want to this test command.";
+	wxString str = wxT("A dummy shortcut description; ")
+		wxT("add/delete/edit all the shortcuts you want to this test command.");
 	
 	wxMenu *sub = new wxMenu;
-	sub->Append(Minimal_Shortcut1, _T("Shortcut #1\tCtrl+1"), _T(str));
-	sub->Append(Minimal_Shortcut2, _T("Shortcut #2\tCtrl+2"), _T(str));
-	sub->Append(Minimal_Shortcut3, _T("Shortcut #3\tCtrl+3"), _T(str));
+	sub->Append(Minimal_Shortcut1, _T("Shortcut #1\tCtrl+1"), str);
+	sub->Append(Minimal_Shortcut2, _T("Shortcut #2\tCtrl+2"), str);
+	sub->Append(Minimal_Shortcut3, _T("Shortcut #3\tCtrl+3"), str);
 	
-	wxString str2 = "A wxKeyConfigPanel build flag...";
+	wxString str2 = wxT("A wxKeyConfigPanel build flag...");
 	
-	menuFile->Append(-1, "Shortcuts", sub);
+	menuFile->Append(-1, wxT("Shortcuts"), sub);
 	menuFile->AppendSeparator();
 	menuFile->Append(Minimal_Keybindings, _T("Keybindings\tF8"), _T(""));
 	menuFile->AppendCheckItem(Minimal_ShowKeyProfiles, _T("Show profiles"), str2);
@@ -329,18 +329,18 @@ MyFrame::MyFrame(const wxString& title)
 #if wxUSE_KEYBINDER
 	wxKeyProfile *pPrimary, *pSecondary;
 
-	pPrimary = new wxKeyProfile("Primary", "Our primary keyprofile");
+	pPrimary = new wxKeyProfile(wxT("Primary"), wxT("Our primary keyprofile"));
 	pPrimary->ImportMenuBarCmd(menuBar);
 
 	pSecondary = new wxKeyProfile(*pPrimary);
-	pSecondary->SetName("Secondary");
-	pSecondary->SetDesc("Our secondary keyprofile");
+	pSecondary->SetName(wxT("Secondary"));
+	pSecondary->SetDesc(wxT("Our secondary keyprofile"));
 
 	// just to show some features....
-	pPrimary->AddShortcut(Minimal_Shortcut1, wxKeyBind("CTRL+SHIFT+E"));
+	pPrimary->AddShortcut(Minimal_Shortcut1, wxKeyBind(wxT("CTRL+SHIFT+E")));
 
 	// and to make some differences between the two key profiles
-	pSecondary->GetCmd(Minimal_Shortcut1)->GetShortcut(0)->Set(wxKeyBind("ALT+F10"));
+	pSecondary->GetCmd(Minimal_Shortcut1)->GetShortcut(0)->Set(wxKeyBind(wxT("ALT+F10")));
 
 	// put both keyprofiles into our array
 	arr.Add(pPrimary);
@@ -398,13 +398,13 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 }
 
 void MyFrame::OnShortcut1(wxCommandEvent &)
-{ wxMessageBox("Hi !!\nThis is shortcut #1.", "Dummy msg", wxOK, this); }
+{ wxMessageBox(wxT("Hi !!\nThis is shortcut #1."), wxT("Dummy msg"), wxOK, this); }
 
 void MyFrame::OnShortcut2(wxCommandEvent &)
-{ wxMessageBox("Hi !!\nThis is shortcut #2.", "Dummy msg", wxOK, this); }
+{ wxMessageBox(wxT("Hi !!\nThis is shortcut #2."), wxT("Dummy msg"), wxOK, this); }
 
 void MyFrame::OnShortcut3(wxCommandEvent &)
-{ wxMessageBox("Hi !!\nThis is shortcut #3.", "Dummy msg", wxOK, this); }
+{ wxMessageBox(wxT("Hi !!\nThis is shortcut #3."), wxT("Dummy msg"), wxOK, this); }
 
 void MyFrame::OnKeybindings(wxCommandEvent &)
 {
@@ -426,7 +426,7 @@ void MyFrame::OnKeybindings(wxCommandEvent &)
 		// then, when the dialog is destroyed, wxKeyBinder holds
 		// invalid pointers which will provoke a crash !!
 	
-		MyDialog dlg(this, "Keybindings", mode | wxKEYBINDER_SHOW_APPLYBUTTON);
+		MyDialog dlg(this, wxT("Keybindings"), mode | wxKEYBINDER_SHOW_APPLYBUTTON);
 
 		// does the user wants to enable key profiles ?
 		dlg.m_p->EnableKeyProfiles(bprofiles);
@@ -445,8 +445,8 @@ void MyFrame::OnKeybindings(wxCommandEvent &)
 		// select the right keyprofile
 		UpdateArr(MyFrame::arr, sel);
 		
-		wxMessageBox(wxString::Format("Selected the %d-th profile (named '%s').",
-					sel+1, MyFrame::arr.Item(sel)->GetName().c_str()), "Profile selected");
+		wxMessageBox(wxString::Format(wxT("Selected the %d-th profile (named '%s')."),
+					sel+1, MyFrame::arr.Item(sel)->GetName().c_str()), wxT("Profile selected"));
 	}
 }
 
@@ -457,23 +457,23 @@ void MyFrame::OnLoad(wxCommandEvent &)
 	// of commands we want wxCmd::Load to be able to recognize...	
 	wxMenuCmd::Register(GetMenuBar());
 
-	wxConfig *cfg = new wxConfig("KeyBinder sample");
+	wxConfig *cfg = new wxConfig(wxT("KeyBinder sample"));
 	if (arr.Load(cfg)) {
 
 		int total = 0;
 		for (int i=0; i<arr.GetCount(); i++)
 			total += arr.Item(i)->GetCmdCount();
 		wxMessageBox(wxString::Format(
-					"All the keyprofiles have been correctly loaded (%d keybindings in total).\n"
-					"The first selecteed profile will be applied.", total),
-					"Success");
+					wxT("All the keyprofiles have been correctly loaded (%d keybindings in total).\n")
+					wxT("The first selecteed profile will be applied."), total),
+					wxT("Success"));
 
 		// make sure to attach the first loaded keybinder
 		UpdateArr(MyFrame::arr, 0);
 
 	} else {
 
-		wxMessageBox("Something wrong while loading !", "Error", wxOK | wxICON_ERROR);
+		wxMessageBox(wxT("Something wrong while loading !"), wxT("Error"), wxOK | wxICON_ERROR);
 	}
 
 	delete cfg;
@@ -481,18 +481,18 @@ void MyFrame::OnLoad(wxCommandEvent &)
 
 void MyFrame::OnSave(wxCommandEvent &)
 {
-	wxConfig *cfg = new wxConfig("KeyBinder sample");
+	wxConfig *cfg = new wxConfig(wxT("KeyBinder sample"));
 	if (arr.Save(cfg)) {
 
 		int total = 0;
 		for (int i=0; i<arr.GetCount(); i++)
 			total += arr.Item(i)->GetCmdCount();
 					
-		wxMessageBox(wxString::Format("All the [%d] keyprofiles have been correctly saved.", total), "Success");
+		wxMessageBox(wxString::Format(wxT("All the [%d] keyprofiles have been correctly saved."), total), wxT("Success"));
 
 	} else {
 
-		wxMessageBox("Something wrong while saving !", "Error", wxOK | wxICON_ERROR);
+		wxMessageBox(wxT("Something wrong while saving !"), wxT("Error"), wxOK | wxICON_ERROR);
 	}
 
 	delete cfg;

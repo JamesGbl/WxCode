@@ -36,6 +36,15 @@
 	<set var="STATIC_DEF"><if cond="SHARED=='0' and FORMAT=='mingw'">LIBXML_STATIC</if></set>
 
 
+	<!-- The real target: not declared in wxcode_end.bkl because
+	     in this way modifications are allowed to the basic template. -->
+	<lib id="wxxml2" template="complib">
+		<stdlib>$(LIBXML2_DIR)</stdlib>
+		<stdlib>$(ICONV_DIR)</stdlib>
+		<define>$(STATIC_DEF)</define>
+		<libname>$(COMP_NAME)$(WXLIBPOSTFIX)</libname>
+	</lib>
+	
 	<!-- The sample of wxXml2 -->
 	<exe id="minimal" template="compsample">
 		<stdlib>$(LIBXML2_DIR)</stdlib>
@@ -49,17 +58,5 @@
 		<wxlibs/>
 		<syslibs/>
 	</exe>
-
-	<!-- The real target: not declared in wxcode_end.bkl because
-	     in this way modifications are allowed to the basic template. -->
-	<lib id="wxxml2" template="complib">
-		<stdlib>$(LIBXML2_DIR)</stdlib>
-		<stdlib>$(ICONV_DIR)</stdlib>
-		<define>$(STATIC_DEF)</define>
-		<libname>$(COMP_NAME)$(WXLIBPOSTFIX)</libname>
-		
-		<headers>$(COMP_HDR)</headers>
-		<dependency-of>minimal</dependency-of>
-	</lib>
 		
 </makefile>

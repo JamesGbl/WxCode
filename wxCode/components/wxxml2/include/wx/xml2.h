@@ -1315,7 +1315,8 @@ public:		// miscellaneous
 	//! Unlinks the old node from it's current context, prune the new one 
 	//! at the same place. If cur was already inserted in a document it is 
 	//! first unlinked from its existing context.
-	void Replace(const wxXml2Node &newnode);
+	//! \return The new node (that is, *this)	
+	wxXml2Node Replace(const wxXml2Node &newnode);
 
 	//! Searches the occ-th occurence of a node with the given name & content, 
 	//! among the children of this node. If bNS == TRUE, this function also checks
@@ -1347,7 +1348,11 @@ public:		// miscellaneous
 	//! before:          <mynodetagname>[...]</mynodetagname>
 	//! after:   <newtag><mynodetagname>[...]</mynodetagname></newtag>
 	//!
-	void Encapsulate(const wxString &nodename);
+	//! \return The new node (that is, *this)
+	wxXml2Node Encapsulate(const wxString &nodename,
+ 				const wxString &content = wxEmptyString,
+				wxXml2Namespace &ns = wxXml2EmptyNamespace,
+				wxXml2Property &props = wxXml2EmptyProperty);
 	
 	//@}
 };

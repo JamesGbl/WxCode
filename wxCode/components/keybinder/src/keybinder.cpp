@@ -145,60 +145,60 @@ wxString wxKeyBind::NumpadKeyCodeToString(int keyCode)
 		break;
 
 	case WXK_NUMPAD_SPACE:
-		res << "SPACE"; break;
+		res << wxT("SPACE"); break;
 	case WXK_NUMPAD_TAB:
-		res << "TAB"; break;
+		res << wxT("TAB"); break;
 	case WXK_NUMPAD_ENTER:
-		res << "ENTER"; break;
+		res << wxT("ENTER"); break;
 
 	case WXK_NUMPAD_F1:
 	case WXK_NUMPAD_F2:
 	case WXK_NUMPAD_F3:
 	case WXK_NUMPAD_F4:
-		res << "F" << keyCode - WXK_NUMPAD_F1;
+		res << wxT("F") << keyCode - WXK_NUMPAD_F1;
 		break;
 
 	case WXK_NUMPAD_LEFT:
-		res << "LEFT"; break;
+		res << wxT("LEFT"); break;
 	case WXK_NUMPAD_UP:
-		res << "UP"; break;
+		res << wxT("UP"); break;
 	case WXK_NUMPAD_RIGHT:
-		res << "RIGHT"; break;
+		res << wxT("RIGHT"); break;
 	case WXK_NUMPAD_DOWN:
-		res << "DOWN"; break;
+		res << wxT("DOWN"); break;
 		
 	case WXK_NUMPAD_HOME:
-		res << "HOME"; break;
+		res << wxT("HOME"); break;
 	case WXK_NUMPAD_PRIOR:
-		res << "PRIOR"; break;
+		res << wxT("PRIOR"); break;
 	case WXK_NUMPAD_PAGEUP:
-		res << "PAGEUP"; break;
+		res << wxT("PAGEUP"); break;
 	case WXK_NUMPAD_NEXT:
-		res << "NEXT"; break;
+		res << wxT("NEXT"); break;
 	case WXK_NUMPAD_PAGEDOWN:
-		res << "PAGEDOWN"; break;
+		res << wxT("PAGEDOWN"); break;
 	case WXK_NUMPAD_END:
-		res << "END"; break;
+		res << wxT("END"); break;
 	case WXK_NUMPAD_BEGIN:
-		res << "BEGIN"; break;
+		res << wxT("BEGIN"); break;
 	case WXK_NUMPAD_INSERT:
-		res << "INSERT"; break;
+		res << wxT("INSERT"); break;
 	case WXK_NUMPAD_DELETE:
-		res << "DELETE"; break;
+		res << wxT("DELETE"); break;
 	case WXK_NUMPAD_EQUAL:
-		res << "="; break;
+		res << wxT("="); break;
 	case WXK_NUMPAD_MULTIPLY:
-		res << "*"; break;
+		res << wxT("*"); break;
 	case WXK_NUMPAD_ADD:
-		res << "+"; break;
+		res << wxT("+"); break;
 	case WXK_NUMPAD_SEPARATOR:
-		res << "SEPARATOR"; break;
+		res << wxT("SEPARATOR"); break;
 	case WXK_NUMPAD_SUBTRACT:
-		res << "-"; break;
+		res << wxT("-"); break;
 	case WXK_NUMPAD_DECIMAL:
-		res << "."; break;
+		res << wxT("."); break;
 	case WXK_NUMPAD_DIVIDE:
-		res << "/"; break;
+		res << wxT("/"); break;
 	}
 
 	return res;
@@ -221,7 +221,7 @@ wxString wxKeyBind::KeyCodeToString(int keyCode)
 	case WXK_PAUSE:
 	case WXK_NUMLOCK:
 	case WXK_SCROLL :
-		wxLogDebug("wxKeyBind::KeyCodeToString - ignored key: [%d]", keyCode);
+		wxLogDebug(wxT("wxKeyBind::KeyCodeToString - ignored key: [%d]"), keyCode);
 		return wxEmptyString;
 
 		// these must be ABSOLUTELY ignored: they are key modifiers
@@ -260,67 +260,67 @@ wxString wxKeyBind::KeyCodeToString(int keyCode)
 		// ---------------------------
 
 	case WXK_BACK:
-        res << "BACK"; break;
+        res << wxT("BACK"); break;
 	case WXK_TAB:
-        res << "TAB"; break;
+        res << wxT("TAB"); break;
 	case WXK_RETURN:
-        res << "RETURN"; break;
+        res << wxT("RETURN"); break;
 	case WXK_ESCAPE:
-        res << "ESCAPE"; break;
+        res << wxT("ESCAPE"); break;
 	case WXK_SPACE:
-        res << "SPACE"; break;
+        res << wxT("SPACE"); break;
 	case WXK_DELETE:
-        res << "DELETE"; break;
+        res << wxT("DELETE"); break;
 	case WXK_MULTIPLY:
-		res << "*"; break;
+		res << wxT("*"); break;
 	case WXK_ADD:
-		res << "+"; break;
+		res << wxT("+"); break;
 	case WXK_SEPARATOR:
-		res << "SEPARATOR"; break;
+		res << wxT("SEPARATOR"); break;
 	case WXK_SUBTRACT:
-		res << "-"; break;
+		res << wxT("-"); break;
 	case WXK_DECIMAL:
-		res << "."; break;
+		res << wxT("."); break;
 	case WXK_DIVIDE:
-		res << "/"; break;
+		res << wxT("/"); break;
 	case WXK_PAGEUP:
-		res << "PAGEUP"; break;
+		res << wxT("PAGEUP"); break;
 	case WXK_PAGEDOWN:
-		res << "PAGEDOWN"; break;
+		res << wxT("PAGEDOWN"); break;
 	case WXK_LEFT:
-        res << "LEFT"; break;
+        res << wxT("LEFT"); break;
 	case WXK_UP:
-        res << "UP"; break;
+        res << wxT("UP"); break;
 	case WXK_RIGHT:
-        res << "RIGHT"; break;
+        res << wxT("RIGHT"); break;
 	case WXK_DOWN:
-        res << "DOWN"; break;
+        res << wxT("DOWN"); break;
 	case WXK_SELECT:
-        res << "SELECT"; break;
+        res << wxT("SELECT"); break;
 	case WXK_PRINT:
-        res << "PRINT"; break;
+        res << wxT("PRINT"); break;
 	case WXK_EXECUTE:
-        res << "EXECUTE"; break;
+        res << wxT("EXECUTE"); break;
 	case WXK_SNAPSHOT:
-        res << "SNAPSHOT"; break;
+        res << wxT("SNAPSHOT"); break;
 	case WXK_INSERT:
-        res << "INSERT"; break;
+        res << wxT("INSERT"); break;
 	case WXK_HELP:
-        res << "HELP"; break;
+        res << wxT("HELP"); break;
 	case WXK_CANCEL:
-        res << "CANCEL"; break;
+        res << wxT("CANCEL"); break;
 	case WXK_MENU:
-        res << "MENU"; break;
+        res << wxT("MENU"); break;
 	case WXK_CAPITAL:
-        res << "CAPITAL"; break;
+        res << wxT("CAPITAL"); break;
 	case WXK_PRIOR:
-        res << "PRIOR"; break;
+        res << wxT("PRIOR"); break;
 	case WXK_NEXT:
-        res << "NEXT"; break;
+        res << wxT("NEXT"); break;
 	case WXK_END:
-        res << "END"; break;
+        res << wxT("END"); break;
 	case WXK_HOME:
-        res << "HOME"; break;
+        res << wxT("HOME"); break;
 		
 
 
@@ -334,13 +334,13 @@ wxString wxKeyBind::KeyCodeToString(int keyCode)
 			
 		} else if ((res=NumpadKeyCodeToString(keyCode)) != wxEmptyString) {
 
-			res << " (numpad)";		// so it is clear it's different from other keys
+			res << wxT(" (numpad)");		// so it is clear it's different from other keys
 			break;
 
 		} else {
 			
 			// we couldn't create a description for the given keycode...
-			wxLogDebug("wxKeyBind::KeyCodeToString - unknown key: [%d]", keyCode);
+			wxLogDebug(wxT("wxKeyBind::KeyCodeToString - unknown key: [%d]"), keyCode);
 			return wxEmptyString;
 		}
 	}
@@ -351,7 +351,7 @@ wxString wxKeyBind::KeyCodeToString(int keyCode)
 int wxKeyBind::StringToKeyCode(const wxString &keyName)
 {
 	// a function key ?
-	if (keyName.StartsWith("F") && keyName.Len() > 1) {
+	if (keyName.StartsWith(wxT("F")) && keyName.Len() > 1) {
 
 		long n;
 		keyName.Right(keyName.Len()-1).ToLong(&n);
@@ -359,13 +359,13 @@ int wxKeyBind::StringToKeyCode(const wxString &keyName)
 	}
 
 	// a special key ?
-	if (keyName == "BACK") return WXK_BACK;
-	if (keyName == "ENTER") return WXK_RETURN;
-	if (keyName == "RETURN") return WXK_RETURN;
-	if (keyName == "TAB") return WXK_TAB;
-	if (keyName == "ESCAPE") return WXK_ESCAPE;
-	if (keyName == "SPACE") return WXK_SPACE;
-	if (keyName == "DELETE") return WXK_DELETE;
+	if (keyName == wxT("BACK")) return WXK_BACK;
+	if (keyName == wxT("ENTER")) return WXK_RETURN;
+	if (keyName == wxT("RETURN")) return WXK_RETURN;
+	if (keyName == wxT("TAB")) return WXK_TAB;
+	if (keyName == wxT("ESCAPE")) return WXK_ESCAPE;
+	if (keyName == wxT("SPACE")) return WXK_SPACE;
+	if (keyName == wxT("DELETE")) return WXK_DELETE;
 
 	// it should be an ASCII key...
 	return (int)keyName.GetChar(0);
@@ -376,11 +376,11 @@ wxString wxKeyBind::KeyModifierToString(int keyModifier)
     wxString result;
 
     if (keyModifier & wxACCEL_CTRL)
-        result += "Ctrl+";
+        result += wxT("Ctrl+");
     if (keyModifier & wxACCEL_ALT)
-        result += "Alt+";
+        result += wxT("Alt+");
     if (keyModifier & wxACCEL_SHIFT)
-        result += "Shift+";
+        result += wxT("Shift+");
 
     return result;
 }
@@ -393,13 +393,13 @@ int wxKeyBind::StringToKeyModifier(const wxString &keyModifier)
 	wxString str = keyModifier;
 	str.MakeUpper();
 
-    if (str.Contains("ALT"))
+    if (str.Contains(wxT("ALT")))
         mod |= wxACCEL_ALT;
 
-    if (str.Contains("CTRL"))
+    if (str.Contains(wxT("CTRL")))
         mod |= wxACCEL_CTRL;
 
-    if (str.Contains("SHIFT"))
+    if (str.Contains(wxT("SHIFT")))
         mod |= wxACCEL_SHIFT;
 
     return mod;
@@ -501,10 +501,10 @@ bool wxCmd::Save(wxConfigBase *p, const wxString &key) const
 	// build the shortcut string separing each one with a "|"
 	wxString shortcuts;
 	for (int j=0; j < GetShortcutCount(); j++)
-		shortcuts += GetShortcut(j)->GetStr() + "|";
+		shortcuts += GetShortcut(j)->GetStr() + wxT("|");
 	
 	// write the entry in the format NAME|DESC|SHORTCUT1|SHORTCUT2...|SHORTCUTn
-	wxString value = wxString::Format("%s|%s|%s", 									
+	wxString value = wxString::Format(wxT("%s|%s|%s"), 									
 									GetName().c_str(),
 									GetDescription().c_str(), 
 									shortcuts.c_str());
@@ -514,11 +514,11 @@ bool wxCmd::Save(wxConfigBase *p, const wxString &key) const
 bool wxCmd::Load(wxConfigBase *p, const wxString &key)
 {
 	wxString fmt;
-	if (!p->Read(key, &fmt, "|"))
+	if (!p->Read(key, &fmt, wxT("|")))
 		return FALSE;
 			
 	// extract name & desc
-	wxStringTokenizer tknzr(fmt, "|");	
+	wxStringTokenizer tknzr(fmt, wxT("|"));	
 	wxString name = tknzr.GetNextToken();
 	wxString desc = tknzr.GetNextToken();
 	if (name.IsEmpty())
@@ -604,8 +604,8 @@ int wxBinderApp::FilterEvent(wxEvent &ev)
 		if (focused != NULL && focused != client && 
 			GetTopLevelParent(focused) != client) {
 			
-			wxLogDebug("wxBinderApp::FilterEvent - discarding this keypress because our "
-					"main frame does not have the focus...");
+			wxLogDebug(wxT("wxBinderApp::FilterEvent - discarding this keypress because our ")
+					wxT("main frame does not have the focus..."));
 			return -1;
 		}
 
@@ -681,7 +681,7 @@ void wxKeyBinder::Attach(wxWindow *p)
 	if (p->GetExtraStyle() & wxWS_EX_TRANSIENT)
 		return;		// do not attach ourselves to temporary windows !!
 	
-	wxLogDebug("wxKeyBinder::Attach - attaching to [%s]", p->GetName().c_str());
+	wxLogDebug(wxT("wxKeyBinder::Attach - attaching to [%s]"), p->GetName().c_str());
 
 	// create a new event handler for this window
 	wxEvtHandler *h = new wxBinderEvtHandler(this, p);
@@ -717,7 +717,7 @@ void wxKeyBinder::Detach(wxWindow *p)
 	if (!p || !IsAttachedTo(p))
 		return;		// this is not attached...
 	
-	wxLogDebug("wxKeyBinder::Detach - detaching from [%s]", p->GetName().c_str());
+	wxLogDebug(wxT("wxKeyBinder::Detach - detaching from [%s]"), p->GetName().c_str());
 	
 	// remove the event handler
 	int idx = FindHandlerIdxFor(p);
@@ -730,7 +730,7 @@ void wxKeyBinder::Detach(wxWindow *p)
 
 void wxKeyBinder::DetachAll()
 {
-	wxLogDebug("wxKeyBinder::DetachAll - detaching from all my [%d] targets", GetAttachedWndCount());
+	wxLogDebug(wxT("wxKeyBinder::DetachAll - detaching from all my [%d] targets"), GetAttachedWndCount());
 
 	// delete all handlers (they will automatically remove themselves from
 	// event handler chains)
@@ -760,9 +760,9 @@ void wxKeyBinder::OnChar(wxKeyEvent &event, wxEvtHandler *next)
 	// AVOID TO INTERCEPT Alt+F4 KEYPRESSES !!!
 	// For some reasons on wxMSW 2.5.2 (at least) this provokes a crash
 	// which is really difficult to spot... better leave it...
-	if (p && p->IsBindTo(wxKeyBind("Alt+F4"))) {
+	if (p && p->IsBindTo(wxKeyBind(wxT("Alt+F4")))) {
 	
-		wxLogDebug("wxKeyBinder::OnChar - ignoring an Alt+F4 event [%d]", event.GetKeyCode());
+		wxLogDebug(wxT("wxKeyBinder::OnChar - ignoring an Alt+F4 event [%d]"), event.GetKeyCode());
 		event.Skip();
 		return;
 	}
@@ -770,7 +770,7 @@ void wxKeyBinder::OnChar(wxKeyEvent &event, wxEvtHandler *next)
 	// if the given event is not a shortcut key...
 	if (p == NULL) {
 	
-		wxLogDebug("wxKeyBinder::OnChar - ignoring this keyevent [%d]", event.GetKeyCode());
+		wxLogDebug(wxT("wxKeyBinder::OnChar - ignoring this keyevent [%d]"), event.GetKeyCode());
 		event.Skip();		// ... skip it
 		
 	} else {
@@ -786,13 +786,13 @@ void wxKeyBinder::OnChar(wxKeyEvent &event, wxEvtHandler *next)
 
 		if (client == NULL) {
 
-			wxLogDebug("wxKeyBinder::OnChar - ignoring this keyevent [%d] because I'm not "
-				"attached to the window which generated the keypress...", event.GetKeyCode());
+			wxLogDebug(wxT("wxKeyBinder::OnChar - ignoring this keyevent [%d] because I'm not ")
+				wxT("attached to the window which generated the keypress..."), event.GetKeyCode());
 			event.Skip();		// ... skip it
 			return;
 		}
 
-		wxLogDebug("wxKeyBinder::OnChar - calling the Exec() function of a wxCmd on [%d]", event.GetKeyCode());
+		wxLogDebug(wxT("wxKeyBinder::OnChar - calling the Exec() function of a wxCmd on [%d]"), event.GetKeyCode());
 		p->Exec(event.GetEventObject(),		// otherwise, tell wxCmd to send the
 				client);	// associated wxEvent to the next handler in the chain
 	}
@@ -800,7 +800,7 @@ void wxKeyBinder::OnChar(wxKeyEvent &event, wxEvtHandler *next)
 
 bool wxKeyBinder::Save(wxConfigBase *cfg, const wxString &key) const
 {
-	wxString basekey = (key.IsEmpty() ? wxString("") : wxString(key + "/"));
+	wxString basekey = (key.IsEmpty() ? wxString(wxT("")) : wxString(key + wxT("/")));
 	bool b = TRUE;
 	
 	for (int i=0; i < m_arrCmd.GetCount(); i++) {
@@ -808,7 +808,7 @@ bool wxKeyBinder::Save(wxConfigBase *cfg, const wxString &key) const
 		wxCmd *curr = m_arrCmd.Item(i);
 
 		// write the key in the format: bindID-typeID
-		wxString keyname = wxString::Format("%sbind%d-type%d", 
+		wxString keyname = wxString::Format(wxT("%sbind%d-type%d"), 
 			basekey.c_str(), curr->GetId(), curr->GetType());
 
 		// save this wxCmd...
@@ -834,20 +834,20 @@ bool wxKeyBinder::Load(wxConfigBase *p, const wxString &key)
 	while (cont) {
 
 		// try to decode this entry
-		if (str.StartsWith("bind")) {
+		if (str.StartsWith(wxT("bind"))) {
 
-			wxString id(str.BeforeFirst('-'));
-			wxString type(str.AfterFirst('-'));
-			id = id.Right(id.Len()-wxString("bind").Len());	
-			type = type.Right(type.Len()-wxString("type").Len());	
+			wxString id(str.BeforeFirst(wxT('-')));
+			wxString type(str.AfterFirst(wxT('-')));
+			id = id.Right(id.Len()-wxString(wxT("bind")).Len());	
+			type = type.Right(type.Len()-wxString(wxT("type")).Len());	
 
 			// is this a valid entry ?
 			if (id.IsNumber() && type.IsNumber() &&
 				p->GetEntryType(str) == wxConfigBase::Type_String) {
 
 				// we will interpret this group as a command ID
-				int nid = atoi(id);
-				int ntype = atoi(type);
+				int nid = wxAtoi(id);
+				int ntype = wxAtoi(type);
 
 				// create & load this command
 				wxCmd *cmd = wxCmd::CreateNew(ntype, nid);
@@ -878,9 +878,9 @@ bool wxKeyBinder::Load(wxConfigBase *p, const wxString &key)
 
 bool wxKeyProfile::Save(wxConfigBase *cfg, const wxString &key) const
 {
-	wxString basekey = (key.IsEmpty() ? "" : "/") + wxString("keyprof-") + GetName();	
+	wxString basekey = (key.IsEmpty() ? wxT("") : wxT("/")) + wxString(wxT("keyprof-")) + GetName();	
 
-	if (!cfg->Write(basekey + "/desc", GetDesc()))
+	if (!cfg->Write(basekey + wxT("/desc"), GetDesc()))
 		return FALSE;
 
 	// tell wxKeyBinder to save all keybindings into a group with our name
@@ -900,21 +900,21 @@ bool wxKeyProfile::Load(wxConfigBase *p, const wxString &key)
 	while (cont) {
 
 		// try to decode this group name
-		if (str.StartsWith("keyprof-")) {
+		if (str.StartsWith(wxT("keyprof-"))) {
 
-			wxString name(str.AfterFirst('-'));
+			wxString name(str.AfterFirst(wxT('-')));
 			wxString desc;
 			p->SetPath(str);		// enter into this group
 
 			// is this a valid entry ?
-			if (p->HasEntry("desc")) {
+			if (p->HasEntry(wxT("desc"))) {
 
-				if (!p->Read("desc", &desc))
+				if (!p->Read(wxT("desc"), &desc))
 					return FALSE;
 
 				SetName(name);
 				SetDesc(desc);
-				return wxKeyBinder::Load(p, key + "/" + str);	// load from this path
+				return wxKeyBinder::Load(p, key + wxT("/") + str);	// load from this path
 			}
 		}
 
@@ -999,10 +999,10 @@ wxKeyConfigPanel::wxKeyConfigPanel(wxWindow* parent,
 
 	wxASSERT_MSG((m_nBuildMode & wxKEYBINDER_USE_LISTBOX) ||
 				(m_nBuildMode & wxKEYBINDER_USE_TREECTRL),
-				"You must specify one of the two !!");
+				wxT("You must specify one of the two !!"));
 	wxASSERT_MSG(!((m_nBuildMode & wxKEYBINDER_USE_LISTBOX) &&
 				 (m_nBuildMode & wxKEYBINDER_USE_TREECTRL)),
-				"You cannot specify them both !!");
+				wxT("You cannot specify them both !!"));
 
 	// build everything
 	BuildCtrls();
@@ -1042,19 +1042,19 @@ void wxKeyConfigPanel::BuildCtrls()
     m_pKeyField = new wxKeyMonitorTextCtrl(this, wxKEYBINDER_KEY_FIELD_ID);
     m_pBindings = new wxListBox(this, wxKEYBINDER_BINDINGS_BOX_ID);
 
-    m_pAssignBtn = new wxButton(this, wxKEYBINDER_ASSIGN_KEY_ID, "&Add");
-    m_pRemoveBtn = new wxButton(this, wxKEYBINDER_REMOVE_KEY_ID, "&Remove");
-    m_pRemoveAllBtn = new wxButton(this, wxKEYBINDER_REMOVEALL_KEY_ID, "Remove all");
+    m_pAssignBtn = new wxButton(this, wxKEYBINDER_ASSIGN_KEY_ID, wxT("&Add"));
+    m_pRemoveBtn = new wxButton(this, wxKEYBINDER_REMOVE_KEY_ID, wxT("&Remove"));
+    m_pRemoveAllBtn = new wxButton(this, wxKEYBINDER_REMOVEALL_KEY_ID, wxT("Remove all"));
 	
-	m_pCurrCmdField = new wxStaticText(this, -1, "", wxDefaultPosition, 
+	m_pCurrCmdField = new wxStaticText(this, -1, wxT(""), wxDefaultPosition, 
 		wxSize(-1, 20), wxSUNKEN_BORDER | wxST_NO_AUTORESIZE | wxALIGN_CENTRE);
 	m_pCurrCmdField->SetBackgroundColour(wxColour(255, 255, 255));	
 	
 #ifdef __WXGTK__
-    m_pDescLabel = new wxTextCtrl(this, -1, "", wxDefaultPosition, 
+    m_pDescLabel = new wxTextCtrl(this, -1, wxT(""), wxDefaultPosition, 
 								 wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE);
 #else
-	m_pDescLabel = new wxStaticText(this, -1, "", wxDefaultPosition, 
+	m_pDescLabel = new wxStaticText(this, -1, wxT(""), wxDefaultPosition, 
 		wxSize(-1, 40), wxSIMPLE_BORDER | wxST_NO_AUTORESIZE);
 	m_pDescLabel->SetBackgroundColour(wxColour(255, 255, 255));
 #endif
@@ -1078,14 +1078,14 @@ void wxKeyConfigPanel::BuildCtrls()
 	if (m_nBuildMode & wxKEYBINDER_SHOW_ADDREMOVE_PROFILE) {
 
 		// create the Add & remove profile buttons
-		sizer->Add(new wxButton(this, wxKEYBINDER_ADD_PROFILEBTN_ID, "Add new"), 0, 
+		sizer->Add(new wxButton(this, wxKEYBINDER_ADD_PROFILEBTN_ID, wxT("Add new")), 0, 
 							wxGROW | wxLEFT | wxRIGHT | wxBOTTOM, 5);
-		sizer->Add(new wxButton(this, wxKEYBINDER_REMOVE_PROFILEBTN_ID, "Remove"), 0, 
+		sizer->Add(new wxButton(this, wxKEYBINDER_REMOVE_PROFILEBTN_ID, wxT("Remove")), 0, 
 							wxGROW | wxLEFT | wxRIGHT | wxBOTTOM, 5);
 	}
 
 	m_pKeyProfilesSizer = new wxBoxSizer(wxVERTICAL);
-	m_pKeyProfilesSizer->Add(new wxStaticText(this, -1, "Key profile:"), 0, wxGROW | wxALL, 5);
+	m_pKeyProfilesSizer->Add(new wxStaticText(this, -1, wxT("Key profile:")), 0, wxGROW | wxALL, 5);
 	m_pKeyProfilesSizer->Add(sizer, 0, wxGROW | wxLEFT | wxRIGHT, 5);
 	m_pKeyProfilesSizer->Add(new wxStaticLine(this, -1), 0, wxGROW | wxALL, 5);
 }
@@ -1098,16 +1098,16 @@ wxSizer *wxKeyConfigPanel::BuildColumn1()
 	if (m_nBuildMode & wxKEYBINDER_USE_TREECTRL) {
 
 		// add the treectrl
-		column1->Add(new wxStaticText(this, -1, "Commands:"), 0, wxGROW | wxALL, 5);
+		column1->Add(new wxStaticText(this, -1, wxT("Commands:")), 0, wxGROW | wxALL, 5);
 		column1->Add(m_pCommandsTree, 1, wxGROW | wxRIGHT | wxLEFT | wxBOTTOM, 5);
 
 	} else {
 
 		// add a combobox + listbox
-		column1->Add(new wxStaticText(this, -1, "Categories:"), 0, wxGROW | wxALL, 5);
+		column1->Add(new wxStaticText(this, -1, wxT("Categories:")), 0, wxGROW | wxALL, 5);
 		column1->Add(m_pCategories, 1, wxGROW | wxRIGHT | wxLEFT | wxBOTTOM, 5);
 
-		column1->Add(new wxStaticText(this, -1, "Commands:"), 0, 
+		column1->Add(new wxStaticText(this, -1, wxT("Commands:")), 0, 
 									wxGROW | wxRIGHT | wxLEFT | wxBOTTOM, 5);
 		column1->Add(m_pCommandsList, 5, wxGROW | wxRIGHT | wxLEFT | wxBOTTOM, 5);
 	}
@@ -1117,9 +1117,9 @@ wxSizer *wxKeyConfigPanel::BuildColumn1()
 
 wxSizer *wxKeyConfigPanel::BuildColumn2()
 {
-	// SECOND COLUMN: "Current keys" + "Press new shortcut key"
+	// SECOND COLUMN: wxT("Current keys") + "Press new shortcut key"
 	wxBoxSizer *column2 = new wxBoxSizer(wxVERTICAL);
-    column2->Add(new wxStaticText(this, -1, "Current shortcuts:"), 0, wxGROW | wxALL, 5);
+    column2->Add(new wxStaticText(this, -1, wxT("Current shortcuts:")), 0, wxGROW | wxALL, 5);
     column2->Add(m_pBindings, 2, wxGROW | wxRIGHT | wxLEFT, 5);
 
 	wxBoxSizer *removebtns = new wxBoxSizer(wxHORIZONTAL);
@@ -1128,9 +1128,9 @@ wxSizer *wxKeyConfigPanel::BuildColumn2()
 
 	column2->Add(removebtns, 0, wxGROW);
 	//column2->Add(new wxStaticLine(this, -1), 0, wxGROW | wxALL, 10);
-	column2->Add(new wxStaticText(this, -1, "New shortcut:"), 0, wxGROW | wxALL, 5);
+	column2->Add(new wxStaticText(this, -1, wxT("New shortcut:")), 0, wxGROW | wxALL, 5);
     column2->Add(m_pKeyField, 0, wxGROW | wxLEFT | wxRIGHT, 5);
-	column2->Add(new wxStaticText(this, -1, "Currently assigned to:"), 0, wxGROW | wxALL, 5);
+	column2->Add(new wxStaticText(this, -1, wxT("Currently assigned to:")), 0, wxGROW | wxALL, 5);
 	column2->Add(m_pCurrCmdField, 0, wxGROW | wxLEFT | wxRIGHT, 5);
     column2->Add(m_pAssignBtn, 0, wxGROW | wxALL, 5);
 
@@ -1152,7 +1152,7 @@ wxSizer *wxKeyConfigPanel::BuildMain(wxSizer *column1, wxSizer *column2, bool bA
 	main->Add(new wxStaticLine(this, -1), 0, wxGROW | wxALL, 5);
 	
 	// key description
-	main->Add(new wxStaticText(this, -1, "Description:"), 0, wxGROW | wxALL, 5);
+	main->Add(new wxStaticText(this, -1, wxT("Description:")), 0, wxGROW | wxALL, 5);
 #ifdef __WXGTK__
 	main->Add(m_pDescLabel, 0, wxGROW | wxLEFT | wxRIGHT | wxBOTTOM, 5);
 #else
@@ -1163,8 +1163,8 @@ wxSizer *wxKeyConfigPanel::BuildMain(wxSizer *column1, wxSizer *column2, bool bA
 	if (bApplyBtn) {
 
 		wxBoxSizer *btn = new wxBoxSizer(wxHORIZONTAL);
-        wxButton *applyBtn = new wxButton(this, wxID_APPLY,  "A&pply");
-        wxButton *cancelBtn = new wxButton(this, wxID_CANCEL, "C&ancel");
+        wxButton *applyBtn = new wxButton(this, wxID_APPLY,  wxT("A&pply"));
+        wxButton *cancelBtn = new wxButton(this, wxID_CANCEL, wxT("C&ancel"));
 		
 		// create the button panel with some interleaved spacer
 		btn->Add(1, 1, 1, wxGROW);
@@ -1253,7 +1253,7 @@ void wxKeyConfigPanel::ImportKeyProfileCmd(int n, const wxString &rootname)
 		}
 
 		// in the categories combobox just add a generic title
-		m_pCategories->Append("Generic");
+		m_pCategories->Append(wxT("Generic"));
 	}
 }
 
@@ -1318,7 +1318,7 @@ void wxKeyConfigPanel::Reset()
 #ifdef __WXGTK__
 	m_pDescLabel->Clear();
 #else
-	m_pDescLabel->SetLabel("");
+	m_pDescLabel->SetLabel(wxT(""));
 #endif
 	m_pKeyField->Clear();
 }
@@ -1429,7 +1429,7 @@ wxKeyProfileArray wxKeyConfigPanel::GetProfiles() const
 
 void wxKeyConfigPanel::UpdateButtons()
 {
-	wxLogDebug("wxKeyConfigPanel::UpdateButtons");
+	wxLogDebug(wxT("wxKeyConfigPanel::UpdateButtons"));
 	wxString str;
 
 	// is the remove button to be enabled ?
@@ -1452,7 +1452,7 @@ void wxKeyConfigPanel::UpdateButtons()
 
 		} else {
 
-			str = "None";
+			str = wxT("None");
 			m_pCurrCmd = NULL;
 		}
 	}
@@ -1462,7 +1462,7 @@ void wxKeyConfigPanel::UpdateButtons()
 
 void wxKeyConfigPanel::UpdateDesc()
 {
-	wxLogDebug("wxKeyConfigPanel::UpdateDesc");
+	wxLogDebug(wxT("wxKeyConfigPanel::UpdateDesc"));
 	wxCmd *p = GetSelCmd();
 
 	if (p != NULL) {
@@ -1476,7 +1476,7 @@ void wxKeyConfigPanel::UpdateDesc()
 	} else {
 
 		// an invalid command is selected ? clear this field...
-		m_pDescLabel->SetLabel("");
+		m_pDescLabel->SetLabel(wxT(""));
 	}
 }
 
@@ -1496,7 +1496,7 @@ void wxKeyConfigPanel::FillInBindings()
 
 void wxKeyConfigPanel::ApplyChanges()
 {
-	wxLogDebug("wxKeyConfigPanel::ApplyChanges");
+	wxLogDebug(wxT("wxKeyConfigPanel::ApplyChanges"));
 	wxKeyProfile *prof = GetSelProfile();
 	wxASSERT(prof);
 
@@ -1595,7 +1595,7 @@ void wxKeyConfigPanel::OnProfileEditing(wxCommandEvent &ev)
 
 void wxKeyConfigPanel::OnTreeCommandSelected(wxTreeEvent &)
 {
-	wxLogDebug("wxKeyConfigPanel::OnTreeCommandSelected");
+	wxLogDebug(wxT("wxKeyConfigPanel::OnTreeCommandSelected"));
 
 	// one of the group in the tree ctrl has been selected:
 	// the listbox with the keybindings must be synchronized...
@@ -1611,7 +1611,7 @@ void wxKeyConfigPanel::OnTreeCommandSelected(wxTreeEvent &)
 
 void wxKeyConfigPanel::OnListCommandSelected(wxCommandEvent &)
 {
-	wxLogDebug("wxKeyConfigPanel::OnListCommandSelected");
+	wxLogDebug(wxT("wxKeyConfigPanel::OnListCommandSelected"));
 
 	// like OnTreeCommandSelected
     FillInBindings();
@@ -1621,7 +1621,7 @@ void wxKeyConfigPanel::OnListCommandSelected(wxCommandEvent &)
 
 void wxKeyConfigPanel::OnBindingSelected(wxCommandEvent &)
 {
-	wxLogDebug("wxKeyConfigPanel::OnBindingSelected");
+	wxLogDebug(wxT("wxKeyConfigPanel::OnBindingSelected"));
 
 	// the remove button should be enabled if the
 	// element just selected is valid...
@@ -1630,7 +1630,7 @@ void wxKeyConfigPanel::OnBindingSelected(wxCommandEvent &)
 
 void wxKeyConfigPanel::OnCategorySelected(wxCommandEvent &ev)
 {
-	wxLogDebug("wxKeyConfigPanel::OnCategorySelected");
+	wxLogDebug(wxT("wxKeyConfigPanel::OnCategorySelected"));
 
 	// update selection
 	int sel = m_pCategories->GetSelection();
@@ -1651,7 +1651,7 @@ void wxKeyConfigPanel::OnCategorySelected(wxCommandEvent &ev)
 
 void wxKeyConfigPanel::OnProfileSelected(wxCommandEvent &)
 {
-	wxLogDebug("wxKeyConfigPanel::OnProfileSelected");
+	wxLogDebug(wxT("wxKeyConfigPanel::OnProfileSelected"));
 
 	int selidx = m_pKeyProfiles->GetSelection();
 	wxKeyProfile *sel = NULL;
@@ -1699,9 +1699,9 @@ void wxKeyConfigPanel::OnAssignKey(wxCommandEvent &)
 	if (sel->GetShortcutCount() >= wxCMD_MAX_SHORTCUTS) {
 		
 		// sorry...
-		wxMessageBox(wxString::Format("Cannot add more than %d shortcuts "
-					"to a single command...", wxCMD_MAX_SHORTCUTS),
-					"Cannot add another shortcut");
+		wxMessageBox(wxString::Format(wxT("Cannot add more than %d shortcuts ")
+					wxT("to a single command..."), wxCMD_MAX_SHORTCUTS),
+					wxT("Cannot add another shortcut"));
 		return;
 	}
 	
@@ -1751,9 +1751,9 @@ void wxKeyConfigPanel::OnAddProfile(wxCommandEvent &)
 	if (!sel) return;
 
 	wxTextEntryDialog dlg(this, 
-		"Input the name of the new profile.\n"
-		"The new profile will be initially set to a copy of the last selected profile.",
-		"Add new profile");
+		wxT("Input the name of the new profile.\n")
+		wxT("The new profile will be initially set to a copy of the last selected profile."),
+		wxT("Add new profile"));
 	dlg.SetValue(sel->GetName());
 
 	if (dlg.ShowModal() == wxID_CANCEL)
@@ -1773,7 +1773,7 @@ void wxKeyConfigPanel::OnRemoveProfile(wxCommandEvent &)
 
 	if (m_pKeyProfiles->GetCount() == 1) {
 
-		wxMessageBox("Cannot delete this profile. It's the only profile available.");
+		wxMessageBox(wxT("Cannot delete this profile. It's the only profile available."));
 		return;
 	}
 
