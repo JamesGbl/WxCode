@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.62 2004-12-16 17:01:13 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.63 2004-12-16 19:13:35 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -3428,7 +3428,7 @@ void wxTreeListMainWindow::OnSetFocus( wxFocusEvent &event )
     m_hasFocus = true;
 //?    SetWindowStyle (GetWindowStyle() | wxRAISED_BORDER);
     RefreshSelected();
-    RefreshLine (m_curItem);
+    if (m_curItem) RefreshLine (m_curItem);
     event.Skip();
 }
 
@@ -3437,7 +3437,7 @@ void wxTreeListMainWindow::OnKillFocus( wxFocusEvent &event )
     m_hasFocus = false;
 //?    SetWindowStyle (GetWindowStyle() & ~wxRAISED_BORDER);
     RefreshSelected();
-    RefreshLine (m_curItem);
+    if (m_curItem) RefreshLine (m_curItem);
     event.Skip();
 }
 
