@@ -1,10 +1,12 @@
 Maintainer: Otto Wyss (wyo)
 Component:  wxCrashPrint
-Version:    2004-09-28
+Version:    2004-10-25
 Subdir:     crashprint
 Parts:
 More infos: -
-wxWidgets:  2.4.2, 2.5.1
+wxWidgets:  2.4.x, 2.5.x
 
 Description:
-This class formats and prints a report in case the application crashes.
+This class formats and prints a report in case the application crashes on
+Linux. Also included is the implementation of the BlackBox.dll which does 
+the same on Windows.
