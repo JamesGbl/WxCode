@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Modified by: Alberto Griggio, 2002
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.24 2004-11-11 19:14:56 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.25 2004-11-18 20:45:44 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows license
@@ -163,7 +163,7 @@ public:
     // ---------
 
     // get the total number of items in the control
-    long GetCount() const;
+    size_t GetCount() const;
 
     // indent is the number of pixels the children are indented relative to
     // the parents position. SetIndent() also redraws the control
@@ -347,7 +347,7 @@ public:
 
     // if 'recursively' is FALSE, only immediate children count, otherwise
     // the returned number is the number of all items in this branch
-    long GetChildrenCount (const wxTreeItemId& item, bool recursively = true);
+    size_t GetChildrenCount (const wxTreeItemId& item, bool recursively = true);
 
     // navigation
     // ----------
@@ -361,7 +361,7 @@ public:
     wxTreeItemId GetSelection() const;
 
     // get the items currently selected, return the number of such item
-    long GetSelections (wxArrayTreeItemIds&) const;
+    size_t GetSelections (wxArrayTreeItemIds&) const;
 
     // get the parent of this item (may return NULL if root)
     wxTreeItemId GetItemParent (const wxTreeItemId& item) const;
@@ -427,7 +427,7 @@ public:
 
     // insert a new item before the one with the given index
     wxTreeItemId InsertItem (const wxTreeItemId& parent,
-                             long index,
+                             size_t index,
                              const wxString& text,
                              int image = -1, int selectedImage = -1,
                              wxTreeItemData *data = NULL);

@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.53 2004-11-11 21:24:47 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.54 2004-11-18 20:46:14 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -263,7 +263,7 @@ public:
     // ---------
 
     // get the total number of items in the control
-    long GetCount() const;
+    size_t GetCount() const;
 
     // indent is the number of pixels the children are indented relative to
     // the parents position. SetIndent() also redraws the control
@@ -379,7 +379,7 @@ public:
 
     // if 'recursively' is false, only immediate children count, otherwise
     // the returned number is the number of all items in this branch
-    long GetChildrenCount(const wxTreeItemId& item, bool recursively = true);
+    size_t GetChildrenCount(const wxTreeItemId& item, bool recursively = true);
 
     // navigation
     // ----------
@@ -393,7 +393,7 @@ public:
     wxTreeItemId GetSelection() const { return m_selectItem; }
 
     // get all the items currently selected, return count of items
-    long GetSelections(wxArrayTreeItemIds&) const;
+    size_t GetSelections(wxArrayTreeItemIds&) const;
 
     // get the parent of this item (may return NULL if root)
     wxTreeItemId GetItemParent(const wxTreeItemId& item) const;
@@ -459,7 +459,7 @@ public:
 
     // insert a new item before the one with the given index
     wxTreeItemId InsertItem(const wxTreeItemId& parent,
-                            long index,
+                            size_t index,
                             const wxString& text,
                             int image = -1, int selectedImage = -1,
                             wxTreeItemData *data = NULL);
@@ -648,7 +648,7 @@ protected:
 
     // misc helpers
     wxTreeItemId DoInsertItem(const wxTreeItemId& parent,
-                              long previous,
+                              size_t previous,
                               const wxString& text,
                               int image, int selectedImage,
                               wxTreeItemData *data);
@@ -830,9 +830,9 @@ public:
     void DeleteChildren(wxTreeListMainWindow *tree = NULL);
 
     // get count of all children (and grand children if 'recursively')
-    long GetChildrenCount(bool recursively = true) const;
+    size_t GetChildrenCount(bool recursively = true) const;
 
-    void Insert(wxTreeListItem *child, long index)
+    void Insert(wxTreeListItem *child, size_t index)
     { m_children.Insert(child, index); }
 
     void GetSize( int &x, int &y, const wxTreeListMainWindow* );
@@ -1541,8 +1541,8 @@ wxTreeListItem::~wxTreeListItem()
 
 void wxTreeListItem::DeleteChildren (wxTreeListMainWindow *tree)
 {
-    long count = m_children.Count();
-    for (long n = 0; n < count; n++ )
+    size_t count = m_children.Count();
+    for (size_t n = 0; n < count; n++ )
     {
         wxTreeListItem *child = m_children[n];
         if (tree)
@@ -1563,14 +1563,14 @@ void wxTreeListItem::SetText( const wxString &text )
     }
 }
 
-long wxTreeListItem::GetChildrenCount (bool recursively) const
+size_t wxTreeListItem::GetChildrenCount (bool recursively) const
 {
-    long count = m_children.Count();
+    size_t count = m_children.Count();
     if ( !recursively )
         return count;
 
-    long total = count;
-    for (long n = 0; n < count; ++n)
+    size_t total = count;
+    for (size_t n = 0; n < count; ++n)
     {
         total += m_children[n]->GetChildrenCount();
     }
@@ -1588,8 +1588,8 @@ void wxTreeListItem::GetSize( int &x, int &y,
 
     if (IsExpanded())
     {
-        long count = m_children.Count();
-        for ( long n = 0; n < count; ++n )
+        size_t count = m_children.Count();
+        for (size_t n = 0; n < count; ++n )
         {
             m_children[n]->GetSize( x, y, theButton );
         }
@@ -1696,8 +1696,8 @@ wxTreeListItem *wxTreeListItem::HitTest (const wxPoint& point,
 
     // else evaluate children
     wxTreeListItem *child;
-    long count = m_children.Count();
-    for (long n = 0; n < count; n++) {
+    size_t count = m_children.Count();
+    for (size_t n = 0; n < count; n++) {
         child = m_children[n]->HitTest (point, theCtrl, flags, column, level+1);
         if (child) return child;
     }
@@ -1887,7 +1887,7 @@ wxTreeListMainWindow::~wxTreeListMainWindow()
 // accessors
 //-----------------------------------------------------------------------------
 
-long wxTreeListMainWindow::GetCount() const
+size_t wxTreeListMainWindow::GetCount() const
 {
     return m_rootItem == NULL? 0: m_rootItem->GetChildrenCount();
 }
@@ -1905,7 +1905,7 @@ void wxTreeListMainWindow::SetLineSpacing(unsigned int spacing)
     CalculateLineHeight();
 }
 
-long wxTreeListMainWindow::GetChildrenCount(const wxTreeItemId& item,
+size_t wxTreeListMainWindow::GetChildrenCount(const wxTreeItemId& item,
                                               bool recursively)
 {
     wxCHECK_MSG( item.IsOk(), 0u, wxT("invalid tree item") );
@@ -2215,10 +2215,9 @@ wxTreeItemId wxTreeListMainWindow::GetNextSibling (const wxTreeItemId& item) con
 
     // get index
     wxArrayTreeListItems& siblings = parent->GetChildren();
-    long index = siblings.Index (i);
+    size_t index = siblings.Index (i);
     wxASSERT (index != wxNOT_FOUND); // I'm not a child of my parent?
-    long n = index + 1;
-    return (n < (long)siblings.Count())? wxTreeItemId(siblings[n]): wxTreeItemId();
+    return (index < siblings.Count()-1)? wxTreeItemId(siblings[index+1]): wxTreeItemId();
 }
 
 wxTreeItemId wxTreeListMainWindow::GetPrevSibling (const wxTreeItemId& item) const {
@@ -2231,11 +2230,9 @@ wxTreeItemId wxTreeListMainWindow::GetPrevSibling (const wxTreeItemId& item) con
 
     // get index
     wxArrayTreeListItems& siblings = parent->GetChildren();
-    long index = siblings.Index(i);
+    size_t index = siblings.Index(i);
     wxASSERT (index != wxNOT_FOUND); // I'm not a child of my parent?
-
-    long n = index - 1;
-    return (n >= 0)? wxTreeItemId(siblings[n]): wxTreeItemId();
+    return (index >= 1)? wxTreeItemId(siblings[index-1]): wxTreeItemId();
 }
 
 // Only for internal use right now, but should probably be public
@@ -2325,7 +2322,7 @@ wxTreeItemId wxTreeListMainWindow::GetPrevVisible (const wxTreeItemId& item) con
 // ----------------------------------------------------------------------------
 
 wxTreeItemId wxTreeListMainWindow::DoInsertItem (const wxTreeItemId& parentId,
-                                                 long previous,
+                                                 size_t previous,
                                                  const wxString& text,
                                                  int image, int selImage,
                                                  wxTreeItemData *data) {
@@ -2401,7 +2398,7 @@ wxTreeItemId wxTreeListMainWindow::InsertItem (const wxTreeItemId& parentId,
 }
 
 wxTreeItemId wxTreeListMainWindow::InsertItem (const wxTreeItemId& parentId,
-                                               long before,
+                                               size_t before,
                                                const wxString& text,
                                                int image, int selImage,
                                                wxTreeItemData *data) {
@@ -2581,8 +2578,8 @@ void wxTreeListMainWindow::UnselectAllChildren (wxTreeListItem *item) {
     }
     if (item->HasChildren()) {
         wxArrayTreeListItems& children = item->GetChildren();
-        long count = children.Count();
-        for (long n = 0; n < count; ++n) {
+        size_t count = children.Count();
+        for (size_t n = 0; n < count; ++n) {
             UnselectAllChildren (children[n]);
         }
     }
@@ -2611,8 +2608,8 @@ bool wxTreeListMainWindow::TagNextChildren (wxTreeListItem *crt_item,
     wxASSERT (index != wxNOT_FOUND); // I'm not a child of my parent?
 
     if (parent->HasChildren() && parent->IsExpanded()) {
-        long count = children.Count();
-        for (long n = (long)(index+1); n < count; ++n) {
+        size_t count = children.Count();
+        for (size_t n = (index+1); n < count; ++n) {
             if (TagAllChildrenUntilLast (children[n], last_item)) return true;
         }
     }
@@ -2629,8 +2626,8 @@ bool wxTreeListMainWindow::TagAllChildrenUntilLast (wxTreeListItem *crt_item,
 
     if (crt_item->HasChildren() && crt_item->IsExpanded()) {
         wxArrayTreeListItems& children = crt_item->GetChildren();
-        long count = children.Count();
-        for (long n = 0; n < count; ++n) {
+        size_t count = children.Count();
+        for (size_t n = 0; n < count; ++n) {
             if (TagAllChildrenUntilLast (children[n], last_item)) return true;
         }
     }
@@ -2742,12 +2739,12 @@ void wxTreeListMainWindow::FillArray (wxTreeListItem *item,
 
     if (item->HasChildren()) {
         wxArrayTreeListItems& children = item->GetChildren();
-        long count = children.GetCount();
-        for (long n = 0; n < count; ++n) FillArray (children[n], array);
+        size_t count = children.GetCount();
+        for (size_t n = 0; n < count; ++n) FillArray (children[n], array);
     }
 }
 
-long wxTreeListMainWindow::GetSelections (wxArrayTreeItemIds &array) const {
+size_t wxTreeListMainWindow::GetSelections (wxArrayTreeItemIds &array) const {
     array.Empty();
     wxTreeItemId idRoot = GetRootItem();
     if (idRoot.IsOk()) FillArray ((wxTreeListItem*) idRoot.m_pItem, array);
@@ -3069,7 +3066,7 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
     int off_h = HasFlag(wxTR_ROW_LINES) ? 1 : 0;
     wxDCClipper clipper (dc, 0, item->GetY(), total_w, total_h); // only within line
 
-    long text_w = 0, text_h = 0;
+    int text_w = 0, text_h = 0;
     dc.GetTextExtent( item->GetText(GetMainColumn()), &text_w, &text_h );
 
     // determine background and show it
@@ -3212,7 +3209,7 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
     // Handle hide root (only level 0)
     if (HasFlag(wxTR_HIDE_ROOT) && (level == 0)) {
         wxArrayTreeListItems& children = item->GetChildren();
-        for (long n = 0; n < (long)children.Count(); n++) {
+        for (size_t n = 0; n < children.Count(); n++) {
             PaintLevel (children[n], dc, 1, y, x_maincol);
         }
         // end after expanding root
@@ -3365,7 +3362,7 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
             oldY = y_mid + h/2;
         }
         int y2;
-        for (long n = 0; n < (long)children.Count(); ++n) {
+        for (size_t n = 0; n < children.Count(); ++n) {
 
             y2 = y + h/2;
             PaintLevel (children[n], dc, level+1, y, x_maincol);
@@ -4286,7 +4283,7 @@ void wxTreeListCtrl::OnSize(wxSizeEvent& WXUNUSED(event))
 }
 
 
-long wxTreeListCtrl::GetCount() const { return m_main_win->GetCount(); }
+size_t wxTreeListCtrl::GetCount() const { return m_main_win->GetCount(); }
 
 unsigned int wxTreeListCtrl::GetIndent() const
 { return m_main_win->GetIndent(); }
@@ -4427,7 +4424,7 @@ bool wxTreeListCtrl::IsSelected(const wxTreeItemId& item) const
 bool wxTreeListCtrl::IsBold(const wxTreeItemId& item) const
 { return m_main_win->IsBold(item); }
 
-long wxTreeListCtrl::GetChildrenCount(const wxTreeItemId& item, bool rec)
+size_t wxTreeListCtrl::GetChildrenCount(const wxTreeItemId& item, bool rec)
 { return m_main_win->GetChildrenCount(item, rec); }
 
 wxTreeItemId wxTreeListCtrl::GetRootItem() const
@@ -4436,7 +4433,7 @@ wxTreeItemId wxTreeListCtrl::GetRootItem() const
 wxTreeItemId wxTreeListCtrl::GetSelection() const
 { return m_main_win->GetSelection(); }
 
-long wxTreeListCtrl::GetSelections(wxArrayTreeItemIds& arr) const
+size_t wxTreeListCtrl::GetSelections(wxArrayTreeItemIds& arr) const
 { return m_main_win->GetSelections(arr); }
 
 wxTreeItemId wxTreeListCtrl::GetItemParent(const wxTreeItemId& item) const
@@ -4530,7 +4527,7 @@ wxTreeItemId wxTreeListCtrl::InsertItem(const wxTreeItemId& parent,
 }
 
 wxTreeItemId wxTreeListCtrl::InsertItem(const wxTreeItemId& parent,
-                                        long index,
+                                        size_t index,
                                         const wxString& text, int image,
                                         int selectedImage,
                                         wxTreeItemData* data)

@@ -4,7 +4,7 @@
 %% Author:      Otto Wyss
 %% Modified by:
 %% Created:     25.4.2004
-%% RCS-ID:      $Id: treelistctrl.tex,v 1.12 2004-11-11 19:16:01 wyo Exp $
+%% RCS-ID:      $Id: treelistctrl.tex,v 1.13 2004-11-18 20:45:20 wyo Exp $
 %% Copyright:   (c) wxCode
 %% License:     wxWindows license
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -364,14 +364,14 @@ This function is only available in the generic version.
 
 \membersection{wxTreeListCtrl::GetChildrenCount}\label{wxtreelistctrlgetchildrencount}
 
-\constfunc{long}{GetChildrenCount}{\param{const wxTreeItemId\&}{ item}, \param{bool}{ recursively = true}}
+\constfunc{size_t}{GetChildrenCount}{\param{const wxTreeItemId\&}{ item}, \param{bool}{ recursively = true}}
 
 Returns the number of items in the branch. If {\it recursively} is TRUE, returns the total number
 of descendants, otherwise only one level of children is counted.
 
 \membersection{wxTreeListCtrl::GetCount}\label{wxtreelistctrlgetcount}
 
-\constfunc{long}{GetCount}{\void}
+\constfunc{size_t}{GetCount}{\void}
 
 Returns the number of items in the control.
 
@@ -655,7 +655,7 @@ this style.
 
 \membersection{wxTreeListCtrl::GetSelections}\label{wxtreelistctrlgetselections}
 
-\constfunc{long}{GetSelections}{\param{wxArrayTreeItemIds\& }{selection}}
+\constfunc{size_t}{GetSelections}{\param{wxArrayTreeItemIds\& }{selection}}
 
 Fills the array of tree items passed in with the currently selected items. This
 function can be called only if the control has the wxTR\_MULTIPLE style.
@@ -730,7 +730,7 @@ returned as a tuple.}
 \func{wxTreeItemId}{InsertItem}{\param{const wxTreeItemId\& }{parent}, \param{const wxTreeItemId\& }{previous}, \param{const wxString\&}{ text},
  \param{int}{ image = -1}, \param{int}{ selImage = -1}, \param{wxTreeItemData*}{ data = NULL}}
 
-\func{wxTreeItemId}{InsertItem}{\param{const wxTreeItemId\& }{parent}, \param{long}{ before}, \param{const wxString\&}{ text},
+\func{wxTreeItemId}{InsertItem}{\param{const wxTreeItemId\& }{parent}, \param{size_t}{ index}, \param{const wxString\&}{ text},
  \param{int}{ image = -1}, \param{int}{ selImage = -1}, \param{wxTreeItemData*}{ data = NULL}}
 
 Inserts an item after a given one ({\it previous}) or before one identified by its position ({\it before}).

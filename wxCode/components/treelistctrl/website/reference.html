@@ -817,7 +817,7 @@ of descendants, otherwise only one level of children is counted.<P>
 <A NAME="wxtreelistctrlgetcount"></A>
 <H3>wxTreeListCtrl::GetCount</H3>
 <P>
-<B>int</B> <B>GetCount</B>() <B>const</B><P>
+<B>size_t</B> <B>GetCount</B>() <B>const</B><P>
 Returns the number of items in the control.<P>
 
 <HR>
@@ -945,7 +945,7 @@ Returns the font of the item label.<P>
 <B>int</B> <B>GetItemImage</B>(<B>const wxTreeItemId&amp;</B><I> item</I>,
  <B>wxTreeItemIcon</B><I> which = wxTreeItemIcon_Normal</I>) <B>const</B><P>
 Gets the specified item image of the main column.<P>
-<B>int</B> <B>GetItemImage</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>size_t</B><I> column</I>,
+<B>int</B> <B>GetItemImage</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>int</B><I> column</I>,
  <B>wxTreeItemIcon</B><I> which = wxTreeItemIcon_Normal</I>) <B>const</B><P>
 Gets the specified item image of the entered column.<P>
 The value of <I>which</I> may be:<P>
@@ -975,7 +975,7 @@ Returns the item's parent.<P>
 <P>
 <B>wxString</B> <B>GetItemText</B>(<B>const wxTreeItemId&amp;</B><I> item</I>) <B>const</B><P>
 Returns the item text of the main column.<P>
-<B>wxString</B> <B>GetItemText</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>size_t</B><I> column</I>) <B>const</B><P>
+<B>wxString</B> <B>GetItemText</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>int</B><I> column</I>) <B>const</B><P>
 Returns the item text of the entered column.<P>
 
 <HR>
@@ -1311,7 +1311,7 @@ returned as a tuple.<P>
 <P>
 <B>wxTreeItemId</B> <B>InsertItem</B>(<B>const wxTreeItemId&amp; </B><I>parent</I>, <B>const wxTreeItemId&amp; </B><I>previous</I>, <B>const wxString&amp;</B><I> text</I>,
  <B>int</B><I> image = -1</I>, <B>int</B><I> selImage = -1</I>, <B>wxTreeItemData*</B><I> data = NULL</I>)<P>
-<B>wxTreeItemId</B> <B>InsertItem</B>(<B>const wxTreeItemId&amp; </B><I>parent</I>, <B>size_t</B><I> before</I>, <B>const wxString&amp;</B><I> text</I>,
+<B>wxTreeItemId</B> <B>InsertItem</B>(<B>const wxTreeItemId&amp; </B><I>parent</I>, <B>size_t</B><I> index</I>, <B>const wxString&amp;</B><I> text</I>,
  <B>int</B><I> image = -1</I>, <B>int</B><I> selImage = -1</I>, <B>wxTreeItemData*</B><I> data = NULL</I>)<P>
 Inserts an item after a given one (<I>previous</I>) or before one identified by its position (<I>before</I>).
 <I>before</I> must be less than the number of children.<P>
@@ -1580,7 +1580,7 @@ usage and loading time.<P>
  <B>wxTreeItemIcon</B><I> which = wxTreeItemIcon_Normal</I>)<P>
 Sets the specified item image of the main column. See <A HREF="manual_wxtreelistctrl.html#wxtreelistctrlgetitemimage">GetItemImage</A>
 for the description of the <I>which</I> parameter.<P>
-<B>void</B> <B>SetItemImage</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>size_t</B><I> column</I>, <B>int</B><I> image</I>,
+<B>void</B> <B>SetItemImage</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>int</B><I> column</I>, <B>int</B><I> image</I>,
  <B>wxTreeItemIcon</B><I> which = wxTreeItemIcon_Normal</I>)<P>
 Sets the specified item image of the entered column. See <A HREF="manual_wxtreelistctrl.html#wxtreelistctrlgetitemimage">GetItemImage</A>
 for the description of the <I>which</I> parameter.<P>
@@ -1591,7 +1591,7 @@ for the description of the <I>which</I> parameter.<P>
 <P>
 <B>void</B> <B>SetItemText</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>const wxString&amp;</B><I> text</I>)<P>
 Sets the item text of the main column.<P>
-<B>void</B> <B>SetItemText</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>size_t</B><I> column</I>, <B>const wxString&amp;</B><I> text</I>)<P>
+<B>void</B> <B>SetItemText</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>int</B><I> column</I>, <B>const wxString&amp;</B><I> text</I>)<P>
 Sets the item text of the entered column.<P>
 
 <HR>
@@ -1663,7 +1663,7 @@ all items if it does have this style.<P>
 <H3>wxTreeListCtrl::AddColumn</H3>
 <P>
 <B>void</B> <B>AddColumn</B>(<B>const wxString&amp;</B><I> text</I>)<P>
-<B>void</B> <B>AddColumn</B>(<B>const wxString&amp;</B><I> text</I>, <B>size_t</B><I> width</I>, <B>wxTreeListColumnAlign</B><I> alignment = wxTL_ALIGN_LEFT</I>)<P>
+<B>void</B> <B>AddColumn</B>(<B>const wxString&amp;</B><I> text</I>, <B>int</B><I> width</I>, <B>wxTreeListColumnAlign</B><I> alignment = wxTL_ALIGN_LEFT</I>)<P>
 <B>void</B> <B>AddColumn</B>(<B>const wxTreeListColumnInfo&amp;</B><I> col</I>)<P>
 Adds a column.<P>
 
@@ -1671,58 +1671,58 @@ Adds a column.<P>
 <A NAME="wxtreelistctrlgetcolumn"></A>
 <H3>wxTreeListCtrl::GetColumn</H3>
 <P>
-<B>wxTreeListColumnInfo&amp;</B> <B>GetColumn</B>(<B>size_t</B><I> column</I>)<P>
-<B>wxTreeListColumnInfo&amp;</B> <B>GetColumn</B>(<B>size_t</B><I> column</I>) <B>const</B><P>
+<B>wxTreeListColumnInfo&amp;</B> <B>GetColumn</B>(<B>int</B><I> column</I>)<P>
+<B>wxTreeListColumnInfo&amp;</B> <B>GetColumn</B>(<B>int</B><I> column</I>) <B>const</B><P>
 Returns the infos of the columns.<P>
 
 <HR>
 <A NAME="wxtreelistctrlgetcolumnalignment"></A>
 <H3>wxTreeListCtrl::GetColumnAlignment</H3>
 <P>
-<B>wxTreeListColumnAlign</B> <B>GetColumnAlignment</B>(<B>size_t</B><I> column</I>) <B>const</B><P>
+<B>wxTreeListColumnAlign</B> <B>GetColumnAlignment</B>(<B>int</B><I> column</I>) <B>const</B><P>
 Returns the alignment of the columns.<P>
 
 <HR>
 <A NAME="wxtreelistctrlgetcolumncount"></A>
 <H3>wxTreeListCtrl::GetColumnCount</H3>
 <P>
-<B>size_t</B> <B>GetColumnCount</B>() <B>const</B><P>
+<B>int</B> <B>GetColumnCount</B>() <B>const</B><P>
 Returns the number of columns.<P>
 
 <HR>
 <A NAME="wxtreelistctrlgetcolumnimage"></A>
 <H3>wxTreeListCtrl::GetColumnImage</H3>
 <P>
-<B>int</B> <B>GetColumnImage</B>(<B>size_t</B><I> column</I>) <B>const</B><P>
+<B>int</B> <B>GetColumnImage</B>(<B>int</B><I> column</I>) <B>const</B><P>
 Returns the image of the columns.<P>
 
 <HR>
 <A NAME="wxtreelistctrlgetcolumntext"></A>
 <H3>wxTreeListCtrl::GetColumnText</H3>
 <P>
-<B>wxString</B> <B>GetColumnText</B>(<B>size_t</B><I> column</I>) <B>const</B><P>
+<B>wxString</B> <B>GetColumnText</B>(<B>int</B><I> column</I>) <B>const</B><P>
 Returns the text of the columns.<P>
 
 <HR>
 <A NAME="wxtreelistctrlgetcolumnwidth"></A>
 <H3>wxTreeListCtrl::GetColumnWidth</H3>
 <P>
-<B>size_t</B> <B>GetColumnWidth</B>(<B>size_t</B><I> column</I>) <B>const</B><P>
+<B>int</B> <B>GetColumnWidth</B>(<B>int</B><I> column</I>) <B>const</B><P>
 Returns the width of the columns.<P>
 
 <HR>
 <A NAME="wxtreelistctrlgetmaincolumn"></A>
 <H3>wxTreeListCtrl::GetMainColumn</H3>
 <P>
-<B>size_t</B> <B>GetMainColumn</B>() <B>const</B><P>
+<B>int</B> <B>GetMainColumn</B>() <B>const</B><P>
 Returns the number of the main column.<P>
 
 <HR>
 <A NAME="wxtreelistctrlinsertcolumn"></A>
 <H3>wxTreeListCtrl::InsertColumn</H3>
 <P>
-<B>void</B> <B>InsertColumn</B>(<B>size_t</B><I> before</I>, <B>const wxString&amp;</B><I> text</I>)<P>
-<B>void</B> <B>InsertColumn</B>(<B>size_t</B><I> before</I>, <B>const wxString&amp;</B><I> text</I>, <B>size_t</B><I> width</I>,
+<B>void</B> <B>InsertColumn</B>(<B>int</B><I> before</I>, <B>const wxString&amp;</B><I> text</I>)<P>
+<B>void</B> <B>InsertColumn</B>(<B>int</B><I> before</I>, <B>const wxString&amp;</B><I> text</I>, <B>int</B><I> width</I>,
  <B>wxTreeListColumnAlign</B><I> alignment = wxTL_ALIGN_LEFT</I>)<P>
 Inserts a column before(???) the entered column.<P>
 
@@ -1730,63 +1730,63 @@ Inserts a column before(???) the entered column.<P>
 <A NAME="wxtreelistctrliscolumnshown"></A>
 <H3>wxTreeListCtrl::IsColumnShown</H3>
 <P>
-<B>bool</B> <B>IsColumnShown</B>(<B>size_t</B><I> column</I>) <B>const</B><P>
+<B>bool</B> <B>IsColumnShown</B>(<B>int</B><I> column</I>) <B>const</B><P>
 Returns if the columns is shown.<P>
 
 <HR>
 <A NAME="wxtreelistctrlremovecolumn"></A>
 <H3>wxTreeListCtrl::RemoveColumn</H3>
 <P>
-<B>void</B> <B>RemoveColumn</B>(<B>size_t</B><I> column</I>)<P>
+<B>void</B> <B>RemoveColumn</B>(<B>int</B><I> column</I>)<P>
 Removes the entered column.<P>
 
 <HR>
 <A NAME="wxtreelistctrlsetcolumn"></A>
 <H3>wxTreeListCtrl::SetColumn</H3>
 <P>
-<B>void</B> <B>SetColumn</B>(<B>size_t</B><I> column</I>, <B>const wxTreeListColumnInfo&amp;</B><I> info</I>)<P>
+<B>void</B> <B>SetColumn</B>(<B>int</B><I> column</I>, <B>const wxTreeListColumnInfo&amp;</B><I> info</I>)<P>
 Sets the infos of the column.<P>
 
 <HR>
 <A NAME="wxtreelistctrlsetcolumnalignment"></A>
 <H3>wxTreeListCtrl::SetColumnAlignment</H3>
 <P>
-<B>void</B> <B>SetColumnAlignment</B>(<B>size_t</B><I> column</I>, <B>const wxTreeListColumnAlign</B><I> align</I>)<P>
+<B>void</B> <B>SetColumnAlignment</B>(<B>int</B><I> column</I>, <B>const wxTreeListColumnAlign</B><I> align</I>)<P>
 Sets the alignment of the column.<P>
 
 <HR>
 <A NAME="wxtreelistctrlsetcolumnimage"></A>
 <H3>wxTreeListCtrl::SetColumnImage</H3>
 <P>
-<B>void</B> <B>SetColumnImage</B>(<B>size_t</B><I> column</I>, <B>int</B><I> image</I>)<P>
+<B>void</B> <B>SetColumnImage</B>(<B>int</B><I> column</I>, <B>int</B><I> image</I>)<P>
 Sets the image of the column.<P>
 
 <HR>
 <A NAME="wxtreelistctrlsetcolumntext"></A>
 <H3>wxTreeListCtrl::SetColumnText</H3>
 <P>
-<B>void</B> <B>SetColumnText</B>(<B>size_t</B><I> column</I>, <B>const wxString&amp;</B><I> text</I>)<P>
+<B>void</B> <B>SetColumnText</B>(<B>int</B><I> column</I>, <B>const wxString&amp;</B><I> text</I>)<P>
 Sets the text of the column.<P>
 
 <HR>
 <A NAME="wxtreelistctrlsetcolumnwidth"></A>
 <H3>wxTreeListCtrl::SetColumnWidth</H3>
 <P>
-<B>void</B> <B>SetColumnWidth</B>(<B>size_t</B><I> column</I>, <B>size_t</B><I> width</I>)<P>
+<B>void</B> <B>SetColumnWidth</B>(<B>int</B><I> column</I>, <B>int</B><I> width</I>)<P>
 Sets the width of the column.<P>
 
 <HR>
 <A NAME="wxtreelistctrlsetmaincolumn"></A>
 <H3>wxTreeListCtrl::SetMainColumn</H3>
 <P>
-<B>void</B> <B>SetMainColumn</B>(<B>size_t</B><I> column</I>)<P>
+<B>void</B> <B>SetMainColumn</B>(<B>int</B><I> column</I>)<P>
 Set the main column.<P>
 
 <HR>
 <A NAME="wxtreelistctrlshowcolumn"></A>
 <H3>wxTreeListCtrl::ShowColumn</H3>
 <P>
-<B>void</B> <B>ShowColumn</B>(<B>size_t</B><I> column</I>, <B>bool</B><I> shown</I>)<P>
+<B>void</B> <B>ShowColumn</B>(<B>int</B><I> column</I>, <B>bool</B><I> shown</I>)<P>
 Shows/hides the column.<P>
 <B>Members (item specific</B><P>
 
