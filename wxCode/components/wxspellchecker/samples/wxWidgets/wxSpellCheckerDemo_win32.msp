@@ -1,15 +1,15 @@
 [Project]
 name=wxSpellCheckerDemo
 type=5
-defaultConfig=1
+defaultConfig=0
 
 [Debug]
 // compiler 
-workingDirectory=Debug
+workingDirectory=../../bin
 arguments=
 intermediateFilesDirectory=Debug
 outputFilesDirectory=Debug
-compilerPreprocessor=_X86_=1, WIN32,_WIN32,WINVER=0x0400,__WIN95__,__GNUWIN32__,__WIN32__,STRICT,__WXMSW__,__WINDOWS__
+compilerPreprocessor=_X86_=1, WIN32,_WIN32,WINVER=0x0400,__WIN95__,__GNUWIN32__,__WIN32__,STRICT,__WXMSW__,__WINDOWS__,__WXDEBUG__
 extraCompilerOptions=
 compilerIncludeDirectory=..\..\include, ..\..
 noWarning=0
@@ -25,7 +25,7 @@
 optimizeLevel=0
 
 // linker
-libraryPath=../../lib
+libraryPath=..\..\lib
 outputFilename=../../bin/wxSpellCheckerDemod.exe
 libraries=wx_spellcheckd, wxxrcd, wxmswd, regexd, pngd, jpegd, zlibd, tiffd, stdc++, gcc, odbc32, wsock32, winspool, winmm, shell32, comctl32, ctl3d32, odbc32, advapi32, odbc32, wsock32, opengl32, glu32, ole32, oleaut32, uuid
 extraLinkerOptions=../../lib/libmyspelld.a
@@ -43,7 +43,7 @@
 
 [Release]
 // compiler 
-workingDirectory=Release
+workingDirectory=../../bin
 arguments=
 intermediateFilesDirectory=Release
 outputFilesDirectory=Release
@@ -63,7 +63,7 @@
 optimizeLevel=2
 
 // linker
-libraryPath=../../lib
+libraryPath=..\..\lib
 outputFilename=../../bin/wxSpellCheckerDemo.exe
 libraries=wx_spellcheck, wxxrc, wxmsw, regex, png, jpeg, zlib, tiff, stdc++, gcc, odbc32, wsock32, winspool, winmm, shell32, comctl32, ctl3d32, odbc32, advapi32, odbc32, wsock32, opengl32, glu32, ole32, oleaut32, uuid
 extraLinkerOptions=../../lib/libmyspell.a
@@ -86,4 +86,4 @@
 [Resource]
 [Other]
 [History]
-wxSpellCheckerDemo.cpp,0
+wxSpellCheckerDemo.cpp,0
