@@ -1414,7 +1414,7 @@ Text is drawn in the foreground colour. The space in each character cell that is
 </p>
 
 <div class="divider2"></div>
-v<h4><a name="StyleSetEOLFilled">void StyleSetEOLFilled (int style, bool filled)</a></h4>
+<h4><a name="StyleSetEOLFilled">void StyleSetEOLFilled (int style, bool filled)</a></h4>
 <p>
 If the last character in the line has a style with this attribute set, the remainder of the line up to the right edge of the window is filled with the background colour set for the last character. This is useful when a document contains embedded sections in another language such as HTML pages with embedded JavaScript. By setting <code>filled</code> to <code>true</code> and a consistent background colour (different from the background colour set for the HTML styles) to all JavaScript styles then JavaScript sections will be easily distinguished from HTML.
 </p>
@@ -1426,33 +1426,37 @@ You can set a style to use a different character set than the default. The place
 </p>
 <p>
 The character sets supported on Windows are:<br />
-<code>wxwxSCI_CMD_CHARSET_ANSI</code>,<br />
-<code>wxwxSCI_CMD_CHARSET_ARABIC</code>,<br />
-<code>wxwxSCI_CMD_CHARSET_BALTIC</code>,<br />
-<code>wxwxSCI_CMD_CHARSET_CHINESEBIG5</code>,<br />
-<code>wxwxSCI_CMD_CHARSET_DEFAULT</code>,<br />
-<code>wxwxSCI_CMD_CHARSET_EASTEUROPE</code>,<br />
-<code>wxwxSCI_CMD_CHARSET_GB2312</code>,<br />
-<code>wxwxSCI_CMD_CHARSET_GREEK</code>,<br />
-<code>wxwxSCI_CMD_CHARSET_HANGUL</code>,<br />
-<code>wxwxSCI_CMD_CHARSET_HEBREW</code>,<br />
-<code>wxwxSCI_CMD_CHARSET_JOHAB</code>,<br />
-<code>wxwxSCI_CMD_CHARSET_MAC</code>,<br />
-<code>wxwxSCI_CMD_CHARSET_OEM</code>,<br />
-<code>wxwxSCI_CMD_CHARSET_SHIFTJIS</code>,<br />
-<code>wxwxSCI_CMD_CHARSET_SYMBOL</code>,<br />
-<code>wxwxSCI_CMD_CHARSET_THAI</code>,<br />
-<code>wxwxSCI_CMD_CHARSET_TURKISH</code>,<br />
-<code>wxwxSCI_CMD_CHARSET_VIETNAMESE</code>.
+<ul style="list-style-type:none">
+<li><code>wxwxSCI_CMD_CHARSET_ANSI</code></li>
+<li><code>wxwxSCI_CMD_CHARSET_ARABIC</code></li>
+<li><code>wxwxSCI_CMD_CHARSET_BALTIC</code></li>
+<li><code>wxwxSCI_CMD_CHARSET_CHINESEBIG5</code></li>
+<li><code>wxwxSCI_CMD_CHARSET_DEFAULT</code></li>
+<li><code>wxwxSCI_CMD_CHARSET_EASTEUROPE</code></li>
+<li><code>wxwxSCI_CMD_CHARSET_GB2312</code></li>
+<li><code>wxwxSCI_CMD_CHARSET_GREEK</code></li>
+<li><code>wxwxSCI_CMD_CHARSET_HANGUL</code></li>
+<li><code>wxwxSCI_CMD_CHARSET_HEBREW</code></li>
+<li><code>wxwxSCI_CMD_CHARSET_JOHAB</code></li>
+<li><code>wxwxSCI_CMD_CHARSET_MAC</code></li>
+<li><code>wxwxSCI_CMD_CHARSET_OEM</code></li>
+<li><code>wxwxSCI_CMD_CHARSET_SHIFTJIS</code></li>
+<li><code>wxwxSCI_CMD_CHARSET_SYMBOL</code></li>
+<li><code>wxwxSCI_CMD_CHARSET_THAI</code></li>
+<li><code>wxwxSCI_CMD_CHARSET_TURKISH</code></li>
+<li><code>wxwxSCI_CMD_CHARSET_VIETNAMESE</code></li>
+</ul>
 </p>
 <p>
 The character sets supported on GTK+ are:<br />
-<code>wxwxSCI_CMD_CHARSET_ANSI</code>,<br />
-<code>wxwxSCI_CMD_CHARSET_EASTEUROPE</code>,<br />
-<code>wxwxSCI_CMD_CHARSET_GB2312</code>,<br />
-<code>wxwxSCI_CMD_CHARSET_HANGUL</code>,<br />
-<code>wxwxSCI_CMD_CHARSET_SHIFTJIS</code>.
 </p>
+<ul style="list-style-type:none">
+<li><code>wxwxSCI_CMD_CHARSET_ANSI</code></li>
+<li><code>wxwxSCI_CMD_CHARSET_EASTEUROPE</code></li>
+<li><code>wxwxSCI_CMD_CHARSET_GB2312</code></li>
+<li><code>wxwxSCI_CMD_CHARSET_HANGUL</code></li>
+<li><code>wxwxSCI_CMD_CHARSET_SHIFTJIS</code></li>
+</ul>
 
 <div class="divider2"></div>
 <h4><a name="StyleSetCase">void StyleSetCase (int style, int caseMode)</a></h4>
@@ -1562,7 +1566,7 @@ See also: <code><a class="message" href="#StyleSetHotSpot">StyleSetHotSpot</a></
 <h4><a name="SetControlCharSymbol">void SetControlCharSymbol (int symbol)</a><br />
     <a name="GetControlCharSymbol">int GetControlCharSymbol()</a></h4>
 <p>
-By default, Scintilla displays control characters (characters with codes less than 32) in a rounded rectangle as ASCII mnemonics: "NUL", "SOH", "STX", "ETX", "EOT", "ENQ", "ACK",  "BEL", "BS", "HT", "LF", "VT", "FF", "CR", "SO", "SI", "DLE", "DC1", "DC2", "DC3", "DC4", "NAK", "SYN", "ETB", "CAN", "EM", "SUB", "ESC", "FS", "GS", "RS", "US". These mnemonics come from the early days of signaling, though some are still used (LF = Line Feed, BS = Back Space, CR = Carriage Return, for example).
+By default, Scintilla displays control characters (characters with codes less than 32) in a rounded rectangle as ASCII mnemonics:<br />"<code>NUL</code>", "<code>SOH</code>", "<code>STX</code>", "<code>ETX</code>", "<code>EOT</code>", "<code>ENQ</code>", "<code>ACK</code>", "<code>BEL</code>", "<code>BS</code>", "<code>HT</code>", "<code>LF</code>", "<code>VT</code>", "<code>FF</code>", "<code>CR</code>", "<code>SO</code>", "<code>SI</code>", "<code>DLE</code>", "<code>DC1</code>", "<code>DC2</code>", "<code>DC3</code>", "<code>DC4</code>", "<code>NAK</code>", "<code>SYN</code>", "<code>ETB</code>", "<code>CAN</code>", "<code>EM</code>", "<code>SUB</code>", "<code>ESC</code>", "<code>FS</code>", "<code>GS</code>", "<code>RS</code>", "<code>US</code>". These mnemonics come from the early days of signaling, though some are still used (<code>LF</code> = Line Feed, <code>BS</code> = Back Space, <code>CR</code> = Carriage Return, for example).
 </p>
 <p>
 You can choose to replace these mnemonics by a nominated symbol with an ASCII code in the range 32 to 255. If you set a symbol value less than 32, all control characters are displayed as mnemonics. The symbol you set is rendered in the font of the style set for the character. You can read back the current symbol with the <code>GetControlCharSymbol</code>. The default symbol value is 0.
@@ -1885,20 +1889,23 @@ The markers are drawn in the order of their numbers, so higher numbered markers 
 <div class="divider2"></div>
 <h4><a name="MarkerDefine">void MarkerDefine (int markerNumber, int markerSymbol)</a></h4>
 <p>
-Associates a marker number in the range 0 to 31 with one of the marker symbols or an ASCII character. The general-purpose marker symbols currently available are:<br />  <code>wxSCI_MARK_CIRCLE</code>,<br />
-<code>wxSCI_MARK_ROUNDRECT</code>,<br />
-<code>wxSCI_MARK_ARROW</code>,<br />
-<code>wxSCI_MARK_SMALLRECT</code>,<br />
-<code>wxSCI_MARK_SHORTARROW</code>,<br />
-<code>wxSCI_MARK_EMPTY</code>,<br />
-<code>wxSCI_MARK_ARROWDOWN</code>,<br />
-<code>wxSCI_MARK_MINUS</code>,<br />
-<code>wxSCI_MARK_PLUS</code>,<br />
-<code>wxSCI_MARK_ARROWS</code>,<br />
-<code>wxSCI_MARK_DOTDOTDOT</code>,<br />
-<code>wxSCI_MARK_EMPTY</code>,<br />
-<code>wxSCI_MARK_BACKGROUND</code>.
+Associates a marker number in the range 0 to 31 with one of the marker symbols or an ASCII character. The general-purpose marker symbols currently available are:
 </p>
+<ul style="list-style-type:none">
+<li><code>wxSCI_MARK_CIRCLE</code></li>
+<li><code>wxSCI_MARK_ROUNDRECT</code></li>
+<li><code>wxSCI_MARK_ARROW</code></li>
+<li><code>wxSCI_MARK_SMALLRECT</code></li>
+<li><code>wxSCI_MARK_SHORTARROW</code></li>
+<li><code>wxSCI_MARK_EMPTY</code></li>
+<li><code>wxSCI_MARK_ARROWDOWN</code></li>
+<li><code>wxSCI_MARK_MINUS</code></li>
+<li><code>wxSCI_MARK_PLUS</code></li>
+<li><code>wxSCI_MARK_ARROWS</code></li>
+<li><code>wxSCI_MARK_DOTDOTDOT</code></li>
+<li><code>wxSCI_MARK_EMPTY</code></li>
+<li><code>wxSCI_MARK_BACKGROUND</code></li>
+</ul>
 
 <div class="divider2"></div>
 <h4><a name="MarkerDefineBitmap">void MarkerDefineBitmap (int markerNumber, const wxBitmap& bmp)</a></h4>
@@ -1909,24 +1916,25 @@ Markers can be set to pixmaps. Pixmaps use the <code>wxSCI_MARK_PIXMAP</code> ma
 The <code>wxSCI_MARK_BACKGROUND</code> marker changes the background colour of the line only. The <code>wxSCI_MARK_EMPTY</code> symbol is invisible, allowing client code to track the movement of lines. You would also use it if you changed the folding style and wanted one or more of the <code>wxSCI_FOLDERNUM_</code>* markers to have no associated symbol.
 </p>
 <p>
-There are also marker symbols designed for use in the folding margin in a flattened tree style.<br />
-<code>wxSCI_MARK_BOXMINUS</code>,<br />
-<code>wxSCI_MARK_BOXMINUSCONNECTED</code>,<br />
-<code>wxSCI_MARK_BOXPLUS</code>,<br />
-<code>wxSCI_MARK_BOXPLUSCONNECTED</code>,<br />
-<code>wxSCI_MARK_CIRCLEMINUS</code>,<br />
-<code>wxSCI_MARK_CIRCLEMINUSCONNECTED</code>,<br />
-<code>wxSCI_MARK_CIRCLEPLUS</code>,<br />
-<code>wxSCI_MARK_CIRCLEPLUSCONNECTED</code>,<br />
-<code>wxSCI_MARK_LCORNER</code>,<br />
-<code>wxSCI_MARK_LCORNERCURVE</code>,<br />
-<code>wxSCI_MARK_TCORNER</code>,<br />
-<code>wxSCI_MARK_TCORNERCURVE</code>,<br />
-<code>wxSCI_MARK_VLINE</code>.
+There are also marker symbols designed for use in the folding margin in a flattened tree style.
 </p>
+<ul style="list-style-type:none">
+<li><code>wxSCI_MARK_BOXMINUS</code>,<br />
+<li><code>wxSCI_MARK_BOXMINUSCONNECTED</code>,<br />
+<li><code>wxSCI_MARK_BOXPLUS</code>,<br />
+<li><code>wxSCI_MARK_BOXPLUSCONNECTED</code>,<br />
+<li><code>wxSCI_MARK_CIRCLEMINUS</code>,<br />
+<li><code>wxSCI_MARK_CIRCLEMINUSCONNECTED</code>,<br />
+<li><code>wxSCI_MARK_CIRCLEPLUS</code>,<br />
+<li><code>wxSCI_MARK_CIRCLEPLUSCONNECTED</code>,<br />
+<li><code>wxSCI_MARK_LCORNER</code>,<br />
+<li><code>wxSCI_MARK_LCORNERCURVE</code>,<br />
+<li><code>wxSCI_MARK_TCORNER</code>,<br />
+<li><code>wxSCI_MARK_TCORNERCURVE</code>,<br />
+<li><code>wxSCI_MARK_VLINE</code>.
+</ul>
 <p>
-Characters can be used as markers by adding the ASCII value of the character to <code>wxSCI_MARK_CHARACTER</code> (10000). For example, to use 'A' (ASCII code 65) as marker number 1 use:<br />
-<code>MarkerDefine (1, wxSCI_MARK_CHARACTER+65)</code>. <br />
+Characters can be used as markers by adding the ASCII value of the character to <code>wxSCI_MARK_CHARACTER</code> (10000). For example, to use 'A' (ASCII code 65) as marker number 1 use <code>MarkerDefine (1, wxSCI_MARK_CHARACTER+65)</code>.
 </p>
 <p>
 The marker numbers <code>wxSCI_MARKNUM_FOLDER</code> and <code>wxSCI_MARKNUM_FOLDEROPEN </code> are used for showing that a fold is present and open or closed. Any symbols may be assigned for this purpose although the (<code>wxSCI_MARK_PLUS</code>, <code>wxSCI_MARK_MINUS</code>) pair or the (<code>wxSCI_MARK_ARROW</code>, <code>wxSCI_MARK_ARROWDOWN</code>) pair are good choices. As well as these two, more assignments are needed for the flattened tree style:<br />
@@ -2518,13 +2526,31 @@ A key definition contains the key code in the low 16-bits and the key modifiers 
 <code>keyDefinition = keyCode + (keyMod &lt;&lt; 16)</code>
 </p>
 <p>
-The key code is a visible or control character or a key from the <code>wxSCI_KEY_...</code> enumeration, which contains:<br />
-<code>wxSCI_KEY_ADD</code>, <code>wxSCI_KEY_BACK</code>, <code>wxSCI_KEY_DELETE</code>, <code>wxSCI_KEY_DIVIDE</code>, <code>wxSCI_KEY_DOWN</code>, <code>wxSCI_KEY_END</code>, <code>wxSCI_KEY_ESCAPE</code>, <code>wxSCI_KEY_HOME</code>, <code>wxSCI_KEY_INSERT</code>, <code>wxSCI_KEY_LEFT</code>, <code>wxSCI_KEY_NEXT</code> (Page Down), <code>wxSCI_KEY_PRIOR</code> (Page Up), <code>wxSCI_KEY_RETURN</code>, <code>wxSCI_KEY_RIGHT</code>, <code>wxSCI_KEY_SUBTRACT</code>, <code>wxSCI_KEY_TAB</code>, and <code>wxSCI_KEY_UP</code>.
+The key code is a visible or control character or a key from the <code>wxSCI_KEY_...</code> enumeration, which contains:
 </p>
+<ul style="list-style-type:none">
+<li><code>wxSCI_KEY_ADD</code></li>
+<li><code>wxSCI_KEY_BACK</code></li>
+<li><code>wxSCI_KEY_DELETE</code></li>
+<li><code>wxSCI_KEY_DIVIDE</code></li>
+<li><code>wxSCI_KEY_DOWN</code></li>
+<li><code>wxSCI_KEY_END</code></li>
+<li><code>wxSCI_KEY_ESCAPE</code></li>
+<li><code>wxSCI_KEY_HOME</code></li>
+<li><code>wxSCI_KEY_INSERT</code></li>
+<li><code>wxSCI_KEY_LEFT</code></li>
+<li><code>wxSCI_KEY_NEXT</code> (Page Down)</li>
+<li><code>wxSCI_KEY_PRIOR</code> (Page Up)</li>
+<li><code>wxSCI_KEY_RETURN</code></li>
+<li><code>wxSCI_KEY_RIGHT</code></li>
+<li><code>wxSCI_KEY_SUBTRACT</code></li>
+<li><code>wxSCI_KEY_TAB</code></li>
+<li><code>wxSCI_KEY_UP</code></li>
+</ul>
 <p>
-The modifiers are a combination of zero or more of <code>wxSCI_SCMOD_ALT</code>, <code>wxSCI_SCMOD_CTRL</code>, and <code>wxSCI_SCMOD_SHIFT</code>. If you are building a table, you might want to use <code>wxSCI_SCMOD_NORM</code>, which has the value 0, to mean no modifiers.
+The modifiers are a combination of zero or more of <code>wxSCI_SCMOD_ALT</code>, <code>wxSCI_SCMOD_CTRL</code>, and <code>wxSCI_SCMOD_SHIFT</code>. If you are building a table, you might want to use <code>wxSCI_SCMOD_NULL</code> to mean no modifiers.
 </p>
-<table border="0" summary="Key bindings"><tbody>
+<table border="0" summary="Key bindings"><tbody align="left">
 <tr>
   <th>Key</th>
   <th>Modifiers</th>
