@@ -7,6 +7,9 @@ SpellCheckerOptionsDialog::SpellCheckerOptionsDialog(wxWindow* pParent, const wx
 {
   m_pOptionsMap = pOptionsMap;
   CreateControls();
+  GetSizer()->Fit(this);
+  GetSizer()->SetSizeHints(this);
+  Centre();
 }
 
 void SpellCheckerOptionsDialog::CreateControls()
@@ -30,11 +33,11 @@ void SpellCheckerOptionsDialog::CreateControls()
     wxBoxSizer* item5 = new wxBoxSizer(wxHORIZONTAL);
     item2->Add(item5, 0, wxALIGN_RIGHT|wxALL, 5);
 
-    wxButton* item6 = new wxButton( item1, wxID_OK, _("OK"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxButton* item6 = new wxButton( item1, wxID_OK, _T("OK"), wxDefaultPosition, wxDefaultSize, 0 );
     item6->SetDefault();
     item5->Add(item6, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxButton* item7 = new wxButton( item1, wxID_CANCEL, _("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxButton* item7 = new wxButton( item1, wxID_CANCEL, _T("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
     item5->Add(item7, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 ////@end SpellCheckerOptionsDialog content construction
@@ -55,15 +58,33 @@ void SpellCheckerOptionsDialog::PopulateOptionsSizer(wxSizer* pSizer)
       int nOptionType = CurrentOption.GetOptionType();
       // Label
       if (nOptionType != SpellCheckEngineOption::BOOLEAN)
-        pSizer->Add(new wxStaticText(this, -1, CurrentOption.GetText() + " (" + wxString::Format("%d", nOptionType) + ") :"));
+        pSizer->Add(new wxStaticText(this, -1, CurrentOption.GetText() + _T(":")), 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
       else
         pSizer->Add(5, 5, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5); // Spacer
       
       // Value
       if (nOptionType == SpellCheckEngineOption::STRING)
       {
-        wxTextCtrl* item5 = new wxTextCtrl( this, -1, CurrentOption.GetValueAsString(), wxDefaultPosition, wxDefaultSize, 0 );
-        pSizer->Add(item5, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+        // If CurrentOption.GetPossibleValuesArray()->GetCount() > 0, we should probably display a wxChoice control
+        // rather than an edit field, populate the choices from the array contents and default to CurrentOption.GetValueAsString()
+        if (CurrentOption.GetPossibleValuesArray()->GetCount() > 0)
+        {
+          wxString* ChoiceStrings = NULL;
+          wxChoice* pChoice = new wxChoice( this, -1, wxDefaultPosition, wxDefaultSize, 0, ChoiceStrings);
+          VariantArray* pArray = CurrentOption.GetPossibleValuesArray();
+          for (unsigned int i=0; i<pArray->GetCount(); i++)
+            pChoice->Append(pArray->Item(i));
+          //Set the default item IF it's in the wxChoice
+          if (pChoice->FindString(CurrentOption.GetValueAsString()) != -1)
+            pChoice->SetStringSelection(CurrentOption.GetValueAsString());
+          // Finally add this wxChoice control to the dialog
+          pSizer->Add(pChoice, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+        }
+        else
+        {
+          wxTextCtrl* item5 = new wxTextCtrl( this, -1, CurrentOption.GetValueAsString(), wxDefaultPosition, wxDefaultSize, 0 );
+          pSizer->Add(item5, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+        }
       }
       else if (nOptionType == SpellCheckEngineOption::LONG)
       {
@@ -77,7 +98,7 @@ void SpellCheckerOptionsDialog::PopulateOptionsSizer(wxSizer* pSizer)
       }
       else if (nOptionType == SpellCheckEngineOption::BOOLEAN)
       {
-        wxCheckBox* item11 = new wxCheckBox( this, -1, CurrentOption.GetText() + " (" + wxString::Format("%d", nOptionType) + ")", wxDefaultPosition, wxDefaultSize, 0 );
+        wxCheckBox* item11 = new wxCheckBox( this, -1, CurrentOption.GetText(), wxDefaultPosition, wxDefaultSize, 0 );
         item11->SetValue(CurrentOption.GetBoolValue());
         pSizer->Add(item11, 1, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
       }
@@ -90,7 +111,7 @@ void SpellCheckerOptionsDialog::PopulateOptionsSizer(wxSizer* pSizer)
         wxTextCtrl* item14 = new wxTextCtrl( this, -1, CurrentOption.GetValueAsString(), wxDefaultPosition, wxDefaultSize, 0 );
         item13->Add(item14, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
     
-        wxButton* item15 = new wxButton( this, -1, _("..."), wxDefaultPosition, wxDefaultSize, 0 );
+        wxButton* item15 = new wxButton( this, -1, _T("..."), wxDefaultPosition, wxDefaultSize, 0 );
         item13->Add(item15, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
       }
       else
@@ -104,5 +125,5 @@ void SpellCheckerOptionsDialog::PopulateOptionsSizer(wxSizer* pSizer)
 
 void SpellCheckerOptionsDialog::OnOK(wxCommandEvent& event)
 {
-  ::wxMessageBox("Go ahead!");
+  ::wxMessageBox(_T("Go ahead!"));
 }
