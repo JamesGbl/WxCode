@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.10 2004-12-18 16:11:48 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.11 2005-01-20 19:27:02 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -223,14 +223,14 @@ void wxScintilla::SetHScrollBar(wxScrollBar* bar)  {
 
 // Add text to the document at current position.
 void wxScintilla::AddText(const wxString& text) {
-                    wxWX2MBbuf buf = (wxWX2MBbuf)wx2sci(text);
-                    SendMsg(2001, strlen(buf), (long)(const char*)buf);
+    wxWX2MBbuf buf = (wxWX2MBbuf)wx2sci(text);
+    SendMsg(2001, strlen(buf), (long)(const char*)buf);
 }
 
 // Add text to the document w/length parameter, this allows for binary data to be added.
 void wxScintilla::AddText(const int length, const wxString& text) {
-                    wxWX2MBbuf buf = (wxWX2MBbuf)wx2sci(text);
-                    SendMsg(2001, length, (long)(const char*)buf);
+    wxWX2MBbuf buf = (wxWX2MBbuf)wx2sci(text);
+    SendMsg(2001, length, (long)(const char*)buf);
 }
 
 // Add array of cells to document.
@@ -346,7 +346,7 @@ int wxScintilla::GetViewWhiteSpace() {
 }
 
 // Make white space characters invisible, always visible or visible outside indentation.
-void wxScintilla::SetViewWhiteSpace(int viewWS) {
+void wxScintilla::SetViewWhiteSpace (int viewWS) {
     SendMsg(2021, viewWS, 0);
 }
 
@@ -463,15 +463,8 @@ void wxScintilla::SetCodePage(int codePage) {
 
 // Set the symbol used for a particular marker number,
 // and optionally the fore and background colours.
-void wxScintilla::MarkerDefine(int markerNumber, int markerSymbol,
-                const wxColour& foreground,
-                const wxColour& background) {
-
-                SendMsg(2040, markerNumber, markerSymbol);
-                if (foreground.Ok())
-                    MarkerSetForeground(markerNumber, foreground);
-                if (background.Ok())
-                    MarkerSetBackground(markerNumber, background);
+void wxScintilla::MarkerDefine(int markerNumber, int markerSymbol) {
+    SendMsg(2040, markerNumber, markerSymbol);
 }
 
 // Set the foreground colour used for a particular marker number.
@@ -540,8 +533,8 @@ int wxScintilla::GetMarginType(int margin) {
 }
 
 // Set the width of a margin to a width expressed in pixels.
-void wxScintilla::SetMarginWidth(int margin, int pixelWidth) {
-    SendMsg(2242, margin, pixelWidth);
+void wxScintilla::SetMarginWidth(int margin, int pixels) {
+    SendMsg(2242, margin, pixels);
 }
 
 // Retrieve the width of a margin in pixels.
@@ -620,8 +613,8 @@ void wxScintilla::StyleSetUnderline(int style, bool underline) {
 }
 
 // Set a style to be mixed case, or to force upper or lower case.
-void wxScintilla::StyleSetCase(int style, int caseForce) {
-    SendMsg(2060, style, caseForce);
+void wxScintilla::StyleSetCase(int style, int caseMode) {
+    SendMsg(2060, style, caseMode);
 }
 
 // Set the character set of the font in a style.
@@ -680,8 +673,8 @@ int wxScintilla::GetCaretPeriod() {
 }
 
 // Get the time in milliseconds that the caret is on and off. 0 = steady on.
-void wxScintilla::SetCaretPeriod(int periodMilliseconds) {
-    SendMsg(2076, periodMilliseconds, 0);
+void wxScintilla::SetCaretPeriod (int milliseconds) {
+    SendMsg(2076, milliseconds, 0);
 }
 
 // Set the set of characters making up words for when moving or selecting by word.
@@ -770,13 +763,13 @@ void wxScintilla::SetCaretLineVisible(bool show) {
 }
 
 // Get the colour of the background of the line containing the caret.
-wxColour wxScintilla::GetCaretLineBack() {
+wxColour wxScintilla::GetCaretLineBackground() {
     long c = SendMsg(2097, 0, 0);
     return wxColourFromLong(c);
 }
 
 // Set the colour of the background of the line containing the caret.
-void wxScintilla::SetCaretLineBack(const wxColour& back) {
+void wxScintilla::SetCaretLineBackground (const wxColour& back) {
     SendMsg(2098, wxColourAsLong(back), 0);
 }
 
@@ -1135,8 +1128,8 @@ int wxScintilla::GetLineCount() {
 }
 
 // Sets the size in pixels of the left margin.
-void wxScintilla::SetMarginLeft(int pixelWidth) {
-    SendMsg(2155, 0, pixelWidth);
+void wxScintilla::SetMarginLeft(int pixels) {
+    SendMsg(2155, 0, pixels);
 }
 
 // Returns the size in pixels of the left margin.
@@ -1145,8 +1138,8 @@ int wxScintilla::GetMarginLeft() {
 }
 
 // Sets the size in pixels of the right margin.
-void wxScintilla::SetMarginRight(int pixelWidth) {
-    SendMsg(2157, 0, pixelWidth);
+void wxScintilla::SetMarginRight(int pixels) {
+    SendMsg(2157, 0, pixels);
 }
 
 // Returns the size in pixels of the right margin.
@@ -1160,8 +1153,8 @@ bool wxScintilla::GetModify() {
 }
 
 // Select a range of text.
-void wxScintilla::SetSelection(int start, int end) {
-    SendMsg(2160, start, end);
+void wxScintilla::SetSelection(int startPos, int endPos) {
+    SendMsg(2160, startPos, endPos);
 }
 
 // Retrieve the selected text.
@@ -1203,8 +1196,8 @@ wxString wxScintilla::GetTextRange(int startPos, int endPos) {
 }
 
 // Draw the selection in normal style or with selection highlighted.
-void wxScintilla::HideSelection(bool normal) {
-    SendMsg(2163, normal, 0);
+void wxScintilla::HideSelection(bool hide) {
+    SendMsg(2163, hide, 0);
 }
 
 // Retrieve the line containing a position.
@@ -1309,8 +1302,8 @@ bool wxScintilla::GetOvertype() {
 }
 
 // Set the width of the insert mode caret.
-void wxScintilla::SetCaretWidth(int pixelWidth) {
-    SendMsg(2188, pixelWidth, 0);
+void wxScintilla::SetCaretWidth(int pixels) {
+    SendMsg(2188, pixels, 0);
 }
 
 // Returns the width of the insert mode caret.
@@ -1401,8 +1394,8 @@ int wxScintilla::CallTipPosAtStart() {
 }
 
 // Highlight a segment of the definition.
-void wxScintilla::CallTipSetHighlight(int start, int end) {
-    SendMsg(2204, start, end);
+void wxScintilla::CallTipSetHighlight(int startPos, int endPos) {
+    SendMsg(2204, startPos, endPos);
 }
 
 // Set the background colour for the call tip.
@@ -1589,8 +1582,8 @@ int wxScintilla::GetLayoutCache() {
 }
 
 // Sets the document width assumed for scrolling.
-void wxScintilla::SetScrollWidth(int pixelWidth) {
-    SendMsg(2274, pixelWidth, 0);
+void wxScintilla::SetScrollWidth(int pixels) {
+    SendMsg(2274, pixels, 0);
 }
 
 // Retrieve the document width assumed for scrolling.
@@ -1661,8 +1654,8 @@ void wxScintilla::LinesJoin() {
 
 // Split the lines in the target into lines that are less wide than pixelWidth
 // where possible.
-void wxScintilla::LinesSplit(int pixelWidth) {
-    SendMsg(2289, pixelWidth, 0);
+void wxScintilla::LinesSplit(int pixels) {
+    SendMsg(2289, pixels, 0);
 }
 
 // Set the colours used as a chequerboard pattern in the fold margin
@@ -2036,8 +2029,8 @@ wxColour wxScintilla::GetEdgeColour() {
 }
 
 // Change the colour used in edge indication.
-void wxScintilla::SetEdgeColour(const wxColour& edgeColour) {
-    SendMsg(2365, wxColourAsLong(edgeColour), 0);
+void wxScintilla::SetEdgeColour(const wxColour& colour) {
+    SendMsg(2365, wxColourAsLong(colour), 0);
 }
 
 // Sets the current caret position to be the search anchor.
@@ -2116,8 +2109,8 @@ bool wxScintilla::GetSCIFocus() {
 }
 
 // Change error status - 0 = OK.
-void wxScintilla::SetStatus(int statusCode) {
-    SendMsg(2382, statusCode, 0);
+void wxScintilla::SetStatus (int status) {
+    SendMsg(2382, status, 0);
 }
 
 // Get error status.
@@ -2136,12 +2129,12 @@ bool wxScintilla::GetMouseDownCaptures() {
 }
 
 // Sets the cursor to one of the SC_CURSOR* values.
-void wxScintilla::SetSCICursor(int cursorType) {
+void wxScintilla::SetCursorType (int cursorType) {
     SendMsg(2386, cursorType, 0);
 }
 
 // Get cursor type.
-int wxScintilla::GetSCICursor() {
+int wxScintilla::GetCursorType() {
     return SendMsg(2387, 0, 0);
 }
 
@@ -2276,8 +2269,8 @@ int wxScintilla::PositionAfter(int pos) {
 }
 
 // Copy a range of text to the clipboard. Positions are clipped into the document.
-void wxScintilla::CopyRange(int start, int end) {
-    SendMsg(2419, start, end);
+void wxScintilla::CopyRange(int startPos, int endPos) {
+    SendMsg(2419, startPos, endPos);
 }
 
 // Copy argument text to the clipboard.
@@ -2414,6 +2407,11 @@ void wxScintilla::Allocate(int bytes) {
     SendMsg(2446, bytes, 0);
 }
 
+// Returns the position of a column on a line taking the width of tabs into account.
+int wxScintilla::FindColumn (int line, int column) {
+    return SendMsg(2456, line, column);
+}
+
 // Start notifying the container of all key presses and commands.
 void wxScintilla::StartRecord() {
     SendMsg(3001, 0, 0);
@@ -2435,8 +2433,8 @@ int wxScintilla::GetLexer() {
 }
 
 // Colourise a segment of the document using the current lexing language.
-void wxScintilla::Colourise(int start, int end) {
-    SendMsg(4003, start, end);
+void wxScintilla::Colourise(int startPos, int endPos) {
+    SendMsg(4003, startPos, endPos);
 }
 
 // Set up a value that may be used by a lexer for some optional feature.
