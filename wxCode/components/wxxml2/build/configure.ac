@@ -30,10 +30,10 @@ AC_CANONICAL_SYSTEM
 #       they are forbidden... remove them before using this file
 #
 AC_DEFUN([MY_ARG_ENABLE], [AC_ARG_ENABLE($1, 
-			AC_HELP_STRING([--enable-$1], 				# Remove the space between the two hyphens
+			AC_HELP_STRING([--enable-$1],
 			[$2 (default is $3)]),, [enable_$1=$3])])
 AC_DEFUN([MY_ARG_WITH], [AC_ARG_WITH($1, 
-			AC_HELP_STRING([--with-$1],  				# Remove the space between the two hyphens
+			AC_HELP_STRING([--with-$1],
 			[$2 (default is $3)]),, [with_$1=$3])])
 
 MY_ARG_ENABLE([shared], [Builds shared libraries instead of static libraries], [no])

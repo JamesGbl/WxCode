@@ -77,6 +77,13 @@ __DEBUG_DEFINE_p =
 !ifeq BUILD debug
 __DEBUG_DEFINE_p = -d__WXDEBUG__
 !endif
+__WARNINGS =
+!ifeq BUILD debug
+__WARNINGS = -wx
+!endif
+!ifeq BUILD release
+__WARNINGS = 
+!endif
 __UNICODE_DEFINE_p =
 !ifeq UNICODE 1
 __UNICODE_DEFINE_p = -d_UNICODE
@@ -114,15 +121,15 @@ WXLIBPOSTFIX = u
 
 ### Variables: ###
 
-WXXML2_CXXFLAGS = $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) &
-	-i=$(WXWIN)\include -i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) &
-	-i=..\include -i=$(LIBXML2_DIR)\include -i=$(ICONV_DIR)\include $(CPPFLAGS) &
-	$(CXXFLAGS)
+WXXML2_CXXFLAGS = $(__WARNINGS) $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) &
+	$(__DEBUGINFO) -i=$(WXWIN)\include &
+	-i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) -i=..\include &
+	-i=$(LIBXML2_DIR)\include -i=$(ICONV_DIR)\include $(CPPFLAGS) $(CXXFLAGS)
 WXXML2_OBJECTS =  &
 	watcom\wxxml2_xml2.obj &
 	watcom\wxxml2_dtd.obj
-MINIMAL_CXXFLAGS = $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) &
-	-i=..\include -i=$(WXWIN)\include &
+MINIMAL_CXXFLAGS = $(__WARNINGS) $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) &
+	$(__DEBUGINFO) -i=..\include -i=$(WXWIN)\include &
 	-i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) -i=$(LIBXML2_DIR)\include &
 	-i=$(ICONV_DIR)\include $(__DEBUG_DEFINE_p) -d__WXMSW__ $(CPPFLAGS) &
 	$(CXXFLAGS)
@@ -143,6 +150,7 @@ clean : .SYMBOLIC
 	-if exist watcom\*.res del watcom\*.res
 	-if exist watcom\*.lbc del watcom\*.lbc
 	-if exist watcom\*.ilk del watcom\*.ilk
+	-if exist watcom\*.pch del watcom\*.pch
 	-if exist ..\lib\wxxml2$(WXLIBPOSTFIX).lib del ..\lib\wxxml2$(WXLIBPOSTFIX).lib
 	-if exist ..\sample\minimal.exe del ..\sample\minimal.exe
 

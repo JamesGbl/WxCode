@@ -78,22 +78,22 @@ WXSCRIPT_OBJECTS =  \
 	mingw\wxscript_sccint.o \
 	mingw\wxscript_scunderc.o \
 	mingw\wxscript_sclua.o
-MINIMAL_CXXFLAGS = -DHAVE_W32API_H $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
+TEST1_CXXFLAGS = -DHAVE_W32API_H $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
 	$(__DEBUGINFO) -I..\include -I$(WXWIN)\include \
 	-I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) $(SCRIPTDEFINE1) \
 	$(SCRIPTDEFINE2) $(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) \
 	$(SCRIPTINCLUDE2) $(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(__DEBUG_DEFINE_p) \
 	-D__WXMSW__ -Wall $(CPPFLAGS) $(CXXFLAGS)
-MINIMAL_OBJECTS =  \
-	mingw\minimal_Test.o
-MINIMAL2_CXXFLAGS = -DHAVE_W32API_H $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
+TEST1_OBJECTS =  \
+	mingw\test1_Test.o
+TEST2_CXXFLAGS = -DHAVE_W32API_H $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
 	$(__DEBUGINFO) -I..\include -I$(WXWIN)\include \
 	-I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) $(SCRIPTDEFINE1) \
 	$(SCRIPTDEFINE2) $(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) \
 	$(SCRIPTINCLUDE2) $(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(__DEBUG_DEFINE_p) \
 	-D__WXMSW__ -Wall $(CPPFLAGS) $(CXXFLAGS)
-MINIMAL2_OBJECTS =  \
-	mingw\minimal2_Test.o
+TEST2_OBJECTS =  \
+	mingw\test2_Test.o
 
 ### Conditionally set variables: ###
 
@@ -200,13 +200,13 @@ mingw:
 
 ### Targets: ###
 
-all: ..\lib\libwxscript$(WXLIBPOSTFIX).a ..\tests\test1\minimal.exe ..\tests\test2\minimal2.exe
+all: ..\lib\libwxscript$(WXLIBPOSTFIX).a ..\tests\test1\test1.exe ..\tests\test2\test2.exe
 
 clean: 
 	-if exist mingw\*.o del mingw\*.o
 	-if exist ..\lib\libwxscript$(WXLIBPOSTFIX).a del ..\lib\libwxscript$(WXLIBPOSTFIX).a
-	-if exist ..\tests\test1\minimal.exe del ..\tests\test1\minimal.exe
-	-if exist ..\tests\test2\minimal2.exe del ..\tests\test2\minimal2.exe
+	-if exist ..\tests\test1\test1.exe del ..\tests\test1\test1.exe
+	-if exist ..\tests\test2\test2.exe del ..\tests\test2\test2.exe
 
 tarball: 
 	( cd .. && tar -cvzf wxscript.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
@@ -237,11 +237,11 @@ cleandocs:
 	ar rcu $@ $(WXSCRIPT_OBJECTS)
 	ranlib $@
 
-..\tests\test1\minimal.exe: $(MINIMAL_OBJECTS) ..\lib\libwxscript$(WXLIBPOSTFIX).a
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -L..\lib -L$(WXWIN)\lib\gcc_lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4)   ..\lib\libwxscript$(WXLIBPOSTFIX).a $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) -lwxmsw25$(WXLIBPOSTFIX)_core -lwxmsw25$(WXLIBPOSTFIX)_html -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+..\tests\test1\test1.exe: $(TEST1_OBJECTS) ..\lib\libwxscript$(WXLIBPOSTFIX).a
+	$(CXX) -o $@ $(TEST1_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -L..\lib -L$(WXWIN)\lib\gcc_lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4)   ..\lib\libwxscript$(WXLIBPOSTFIX).a $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) -lwxmsw25$(WXLIBPOSTFIX)_core -lwxmsw25$(WXLIBPOSTFIX)_html -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
-..\tests\test2\minimal2.exe: $(MINIMAL2_OBJECTS) ..\lib\libwxscript$(WXLIBPOSTFIX).a
-	$(CXX) -o $@ $(MINIMAL2_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -L..\lib -L$(WXWIN)\lib\gcc_lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4)   ..\lib\libwxscript$(WXLIBPOSTFIX).a $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) -lwxmsw25$(WXLIBPOSTFIX)_core -lwxmsw25$(WXLIBPOSTFIX)_html -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+..\tests\test2\test2.exe: $(TEST2_OBJECTS) ..\lib\libwxscript$(WXLIBPOSTFIX).a
+	$(CXX) -o $@ $(TEST2_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -L..\lib -L$(WXWIN)\lib\gcc_lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4)   ..\lib\libwxscript$(WXLIBPOSTFIX).a $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) -lwxmsw25$(WXLIBPOSTFIX)_core -lwxmsw25$(WXLIBPOSTFIX)_html -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
 mingw\wxscript_script.o: ./../src/script.cpp
 	$(CXX) -c -o $@ $(WXSCRIPT_CXXFLAGS) $<
@@ -258,11 +258,11 @@ mingw\wxscript_scunderc.o: ./../src/scunderc.cpp
 mingw\wxscript_sclua.o: ./../src/sclua.cpp
 	$(CXX) -c -o $@ $(WXSCRIPT_CXXFLAGS) $<
 
-mingw\minimal_Test.o: ./../tests/test1/Test.cpp
-	$(CXX) -c -o $@ $(MINIMAL_CXXFLAGS) $<
+mingw\test1_Test.o: ./../tests/test1/Test.cpp
+	$(CXX) -c -o $@ $(TEST1_CXXFLAGS) $<
 
-mingw\minimal2_Test.o: ./../tests/test2/Test.cpp
-	$(CXX) -c -o $@ $(MINIMAL2_CXXFLAGS) $<
+mingw\test2_Test.o: ./../tests/test2/Test.cpp
+	$(CXX) -c -o $@ $(TEST2_CXXFLAGS) $<
 
 .PHONY: all clean
 

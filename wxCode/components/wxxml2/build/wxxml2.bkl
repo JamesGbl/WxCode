@@ -54,7 +54,7 @@
 		<library>wxxml2</library>
 		<if cond="FORMAT=='mingw' or FORMAT=='autoconf'"><sys-lib>xml2</sys-lib></if>
 		<if cond="FORMAT!='mingw' and FORMAT!='autoconf'"><sys-lib>libxml2</sys-lib></if>
-		<sys-lib>iconv</sys-lib>
+		<if cond="FORMAT!='autoconf'"><sys-lib>iconv</sys-lib></if>
 		<wxlibs/>
 		<syslibs/>
 	</exe>

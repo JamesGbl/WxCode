@@ -53,8 +53,10 @@
 #include <wx/filename.h>
 
 #include <stdio.h>			// miscellaneous includes
+#ifdef __VISUALC__
 #include <conio.h>			// miscellaneous includes
-#include <wx/script.h>		// our interpreters...
+#endif
+#include <wx/script.h>			// our interpreters...
 
 
 // without this pragma, the stupid compiler precompiles #defines below so that
@@ -63,6 +65,7 @@
     #pragma hdrstop
 #endif
 
+#define CUSTOM_SCRIPT			wxT("math.script")
 
 
 // first of all, decide if we can use the system...
@@ -126,14 +129,14 @@ void MainTestSet()
 	if (basepath.Right(5).IsSameAs(wxT("build"), FALSE))
 		basepath = basepath.Left(basepath.Len()-6) + wxFileName::GetPathSeparator() + wxT("tests");
 		
-	basepath +=	wxFileName::GetPathSeparator();
+	basepath += wxFileName::GetPathSeparator();
 	basepath += wxT("testscripts");
 	basepath += wxFileName::GetPathSeparator();
 	
 	wxPrintf(wxT(">Base path is: '%s'\n"), basepath.c_str());
 
 	// load the script
-	wxString filename(basepath + wxT("math.script"));
+	wxString filename(basepath + CUSTOM_SCRIPT);
 	wxScriptFile *pf = wxScriptInterpreter::Load(filename, wxRECOGNIZE_FROM_COMMENT);
 	if (pf == NULL) {
 		wxPrintf(wxT(">Failed to load '%s'.\n"), filename.c_str());
@@ -187,7 +190,9 @@ int main(int, char **)
 	wxPrintf(wxT("\n\n"));
 	wxPrintf(wxT(" wxScript test program\n"));
 	wxPrintf(wxT(" -------------------------\n\n"));
-	wxPrintf(wxT(" I will now run a customizable script ('%s') which I\n\n"));
+	wxPrintf(wxT(" I will now run a customizable script ('%s')\n"), CUSTOM_SCRIPT);
+	wxPrintf(wxT(" and then I will compute the functions it contains\n"));
+	wxPrintf(wxT(" for some fixed values (1,2,3...10).\n\n"));
   
 	// init
 	wxScriptInterpreter::Init();		// use default interpreters

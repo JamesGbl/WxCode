@@ -119,22 +119,22 @@ WXSCRIPT_OBJECTS =  \
 	borland\wxscript_sccint.obj \
 	borland\wxscript_scunderc.obj \
 	borland\wxscript_sclua.obj
-MINIMAL_CXXFLAGS = -I$(BCCDIR)\include $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
+TEST1_CXXFLAGS = -I$(BCCDIR)\include $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
 	$(__DEBUGINFO) -I..\include -I$(WXWIN)\include \
 	-I$(WXWIN)\lib\bcc_lib\msw$(WXLIBPOSTFIX) $(SCRIPTDEFINE1) \
 	$(SCRIPTDEFINE2) $(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) \
 	$(SCRIPTINCLUDE2) $(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(__DEBUG_DEFINE_p) \
 	-D__WXMSW__ $(CPPFLAGS) $(CXXFLAGS)
-MINIMAL_OBJECTS =  \
-	borland\minimal_Test.obj
-MINIMAL2_CXXFLAGS = -I$(BCCDIR)\include $(__UNICODE_DEFINE_p) \
-	$(__OPTIMIZEFLAG) $(__DEBUGINFO) -I..\include -I$(WXWIN)\include \
+TEST1_OBJECTS =  \
+	borland\test1_Test.obj
+TEST2_CXXFLAGS = -I$(BCCDIR)\include $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
+	$(__DEBUGINFO) -I..\include -I$(WXWIN)\include \
 	-I$(WXWIN)\lib\bcc_lib\msw$(WXLIBPOSTFIX) $(SCRIPTDEFINE1) \
 	$(SCRIPTDEFINE2) $(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) \
 	$(SCRIPTINCLUDE2) $(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(__DEBUG_DEFINE_p) \
 	-D__WXMSW__ $(CPPFLAGS) $(CXXFLAGS)
-MINIMAL2_OBJECTS =  \
-	borland\minimal2_Test.obj
+TEST2_OBJECTS =  \
+	borland\test2_Test.obj
 
 ### Conditionally set variables: ###
 
@@ -233,24 +233,25 @@ borland:
 
 ### Targets: ###
 
-all: ..\lib\wxscript$(WXLIBPOSTFIX).lib ..\tests\test1\minimal.exe ..\tests\test2\minimal2.exe
+all: ..\lib\wxscript$(WXLIBPOSTFIX).lib ..\tests\test1\test1.exe ..\tests\test2\test2.exe
 
 clean: 
 	-if exist borland\*.obj del borland\*.obj
 	-if exist borland\*.res del borland\*.res
+	-if exist borland\*.csm del borland\*.csm
 	-if exist ..\lib\wxscript$(WXLIBPOSTFIX).lib del ..\lib\wxscript$(WXLIBPOSTFIX).lib
-	-if exist ..\tests\test1\minimal.exe del ..\tests\test1\minimal.exe
-	-if exist ..\tests\test1\minimal.tds del ..\tests\test1\minimal.tds
-	-if exist ..\tests\test1\minimal.ilc del ..\tests\test1\minimal.ilc
-	-if exist ..\tests\test1\minimal.ild del ..\tests\test1\minimal.ild
-	-if exist ..\tests\test1\minimal.ilf del ..\tests\test1\minimal.ilf
-	-if exist ..\tests\test1\minimal.ils del ..\tests\test1\minimal.ils
-	-if exist ..\tests\test2\minimal2.exe del ..\tests\test2\minimal2.exe
-	-if exist ..\tests\test2\minimal2.tds del ..\tests\test2\minimal2.tds
-	-if exist ..\tests\test2\minimal2.ilc del ..\tests\test2\minimal2.ilc
-	-if exist ..\tests\test2\minimal2.ild del ..\tests\test2\minimal2.ild
-	-if exist ..\tests\test2\minimal2.ilf del ..\tests\test2\minimal2.ilf
-	-if exist ..\tests\test2\minimal2.ils del ..\tests\test2\minimal2.ils
+	-if exist ..\tests\test1\test1.exe del ..\tests\test1\test1.exe
+	-if exist ..\tests\test1\test1.tds del ..\tests\test1\test1.tds
+	-if exist ..\tests\test1\test1.ilc del ..\tests\test1\test1.ilc
+	-if exist ..\tests\test1\test1.ild del ..\tests\test1\test1.ild
+	-if exist ..\tests\test1\test1.ilf del ..\tests\test1\test1.ilf
+	-if exist ..\tests\test1\test1.ils del ..\tests\test1\test1.ils
+	-if exist ..\tests\test2\test2.exe del ..\tests\test2\test2.exe
+	-if exist ..\tests\test2\test2.tds del ..\tests\test2\test2.tds
+	-if exist ..\tests\test2\test2.ilc del ..\tests\test2\test2.ilc
+	-if exist ..\tests\test2\test2.ild del ..\tests\test2\test2.ild
+	-if exist ..\tests\test2\test2.ilf del ..\tests\test2\test2.ilf
+	-if exist ..\tests\test2\test2.ils del ..\tests\test2\test2.ils
 
 tarball: 
 	( cd .. && tar -cvzf wxscript.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
@@ -282,14 +283,14 @@ cleandocs:
 	$(WXSCRIPT_OBJECTS)
 |
 
-..\tests\test1\minimal.exe: $(MINIMAL_OBJECTS) ..\lib\wxscript$(WXLIBPOSTFIX).lib
+..\tests\test1\test1.exe: $(TEST1_OBJECTS) ..\lib\wxscript$(WXLIBPOSTFIX).lib
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L..\lib -L$(WXWIN)\lib\bcc_lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) -ap @&&|
-	c0x32.obj $(MINIMAL_OBJECTS),$@,, ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw25$(WXLIBPOSTFIX)_core.lib wxmsw25$(WXLIBPOSTFIX)_html.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32.lib,,
+	c0x32.obj $(TEST1_OBJECTS),$@,, ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw25$(WXLIBPOSTFIX)_core.lib wxmsw25$(WXLIBPOSTFIX)_html.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32.lib,,
 |
 
-..\tests\test2\minimal2.exe: $(MINIMAL2_OBJECTS) ..\lib\wxscript$(WXLIBPOSTFIX).lib
+..\tests\test2\test2.exe: $(TEST2_OBJECTS) ..\lib\wxscript$(WXLIBPOSTFIX).lib
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L..\lib -L$(WXWIN)\lib\bcc_lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) -ap @&&|
-	c0x32.obj $(MINIMAL2_OBJECTS),$@,, ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw25$(WXLIBPOSTFIX)_core.lib wxmsw25$(WXLIBPOSTFIX)_html.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32.lib,,
+	c0x32.obj $(TEST2_OBJECTS),$@,, ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw25$(WXLIBPOSTFIX)_core.lib wxmsw25$(WXLIBPOSTFIX)_html.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32.lib,,
 |
 
 borland\wxscript_script.obj: .\..\src\script.cpp
@@ -307,9 +308,9 @@ borland\wxscript_scunderc.obj: .\..\src\scunderc.cpp
 borland\wxscript_sclua.obj: .\..\src\sclua.cpp
 	$(CXX) -q -c -P -o$@ $(WXSCRIPT_CXXFLAGS) $**
 
-borland\minimal_Test.obj: .\..\tests\test1\Test.cpp
-	$(CXX) -q -c -P -o$@ $(MINIMAL_CXXFLAGS) $**
+borland\test1_Test.obj: .\..\tests\test1\Test.cpp
+	$(CXX) -q -c -P -o$@ $(TEST1_CXXFLAGS) $**
 
-borland\minimal2_Test.obj: .\..\tests\test2\Test.cpp
-	$(CXX) -q -c -P -o$@ $(MINIMAL2_CXXFLAGS) $**
+borland\test2_Test.obj: .\..\tests\test2\Test.cpp
+	$(CXX) -q -c -P -o$@ $(TEST2_CXXFLAGS) $**
 

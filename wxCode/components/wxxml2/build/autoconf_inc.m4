@@ -60,9 +60,3 @@ dnl ### begin block 20_COND_PLATFORM_OS2_1 ###
         COND_PLATFORM_OS2_1=""
     fi
     AC_SUBST(COND_PLATFORM_OS2_1)
-dnl ### begin block 20_COND_SHARED_0 ###
-    COND_SHARED_0="#"
-    if test "x$SHARED" = "x0" ; then
-        COND_SHARED_0=""
-    fi
-    AC_SUBST(COND_SHARED_0)

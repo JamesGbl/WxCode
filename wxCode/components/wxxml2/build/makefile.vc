@@ -132,6 +132,7 @@ all: ..\lib\wxxml2$(WXLIBPOSTFIX).lib ..\sample\minimal.exe
 clean: 
 	-if exist msvc\*.obj del msvc\*.obj
 	-if exist msvc\*.res del msvc\*.res
+	-if exist msvc\*.pch del msvc\*.pch
 	-if exist ..\lib\wxxml2$(WXLIBPOSTFIX).lib del ..\lib\wxxml2$(WXLIBPOSTFIX).lib
 	-if exist ..\sample\minimal.exe del ..\sample\minimal.exe
 	-if exist ..\sample\minimal.ilk del ..\sample\minimal.ilk

@@ -21,13 +21,11 @@ srcdir = @srcdir@
 top_builddir = @top_builddir@
 libdir = @libdir@
 includedir = @includedir@
-LDFLAGS_GUI = @LDFLAGS_GUI@
 AR = @AR@
 RANLIB = @RANLIB@
 CXX = @CXX@
 CXXFLAGS = @CXXFLAGS@
 CPPFLAGS = @CPPFLAGS@
-LDFLAGS = @LDFLAGS@
 LIBXML2_DIR = @LIBXML2_DIR@
 ICONV_DIR = @ICONV_DIR@
 
@@ -116,19 +114,19 @@ install-lib:
 	$(RANLIB) $@
 
 ../sample/minimal$(EXEEXT): $(MINIMAL_OBJECTS) ../lib/$(LIBPREFIX)wxxml2$(WXLIBPOSTFIX)$(LIBEXT)
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS)  -L../lib $(LDFLAGS_GUI) -L$(LIBXML2_DIR)/lib -L$(ICONV_DIR)/lib `wx-config --libs`  ../lib/$(LIBPREFIX)wxxml2$(WXLIBPOSTFIX)$(LIBEXT) -lxml2 -liconv
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) -L../lib -L../lib `wx-config --libs`  -lwxxml2$(WXLIBPOSTFIX) -lxml2
 	
 	$(__minimal___mac_setfilecmd)
 	$(__minimal___os2_emxbindcmd)
 
 wxxml2_xml2.o: $(srcdir)/../src/xml2.cpp
-	$(CXXC) -c -o $@ $(WXXML2_CXXFLAGS) $<
+	$(CXXC) -c -o $@ $(WXXML2_CXXFLAGS) $(srcdir)/../src/xml2.cpp
 
 wxxml2_dtd.o: $(srcdir)/../src/dtd.cpp
-	$(CXXC) -c -o $@ $(WXXML2_CXXFLAGS) $<
+	$(CXXC) -c -o $@ $(WXXML2_CXXFLAGS) $(srcdir)/../src/dtd.cpp
 
 minimal_minimal.o: $(srcdir)/../sample/minimal.cpp
-	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $<
+	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/../sample/minimal.cpp
 
 
 # Include dependency info, if present:

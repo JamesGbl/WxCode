@@ -79,25 +79,25 @@ WXSCRIPT_OBJECTS =  \
 	msvc\wxscript_sccint.obj \
 	msvc\wxscript_scunderc.obj \
 	msvc\wxscript_sclua.obj
-MINIMAL_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
+TEST1_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
 	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
-	/Fd..\tests\test1\minimal.pdb $(____DEBUGRUNTIME) /I..\include \
+	/Fd..\tests\test1\test1.pdb $(____DEBUGRUNTIME) /I..\include \
 	/I$(WXWIN)\include /I$(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) \
 	$(SCRIPTDEFINE1) $(SCRIPTDEFINE2) $(SCRIPTDEFINE3) $(SCRIPTDEFINE4) \
 	$(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) $(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) \
 	/D_CONSOLE $(__DEBUG_DEFINE_p) /D__WXMSW__ /GR /GX $(CPPFLAGS) $(CXXFLAGS)
-MINIMAL_OBJECTS =  \
-	msvc\minimal_Test.obj
-MINIMAL2_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
+TEST1_OBJECTS =  \
+	msvc\test1_Test.obj
+TEST2_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
 	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
-	/Fd..\tests\test2\minimal2.pdb $(____DEBUGRUNTIME) /I..\include \
+	/Fd..\tests\test2\test2.pdb $(____DEBUGRUNTIME) /I..\include \
 	/I$(WXWIN)\include /I$(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) \
 	$(SCRIPTDEFINE1) $(SCRIPTDEFINE2) $(SCRIPTDEFINE3) $(SCRIPTDEFINE4) \
 	$(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) $(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) \
 	/D_CONSOLE $(__DEBUG_DEFINE_p) /D__WXMSW__ /GR /GX $(CPPFLAGS) $(CXXFLAGS)
-MINIMAL2_OBJECTS =  \
-	msvc\minimal2_Test.obj \
-	msvc\minimal2_stackwalker.obj
+TEST2_OBJECTS =  \
+	msvc\test2_Test.obj \
+	msvc\test2_stackwalker.obj
 
 ### Conditionally set variables: ###
 
@@ -220,18 +220,19 @@ msvc:
 
 ### Targets: ###
 
-all: ..\lib\wxscript$(WXLIBPOSTFIX).lib ..\tests\test1\minimal.exe ..\tests\test2\minimal2.exe
+all: ..\lib\wxscript$(WXLIBPOSTFIX).lib ..\tests\test1\test1.exe ..\tests\test2\test2.exe
 
 clean: 
 	-if exist msvc\*.obj del msvc\*.obj
 	-if exist msvc\*.res del msvc\*.res
+	-if exist msvc\*.pch del msvc\*.pch
 	-if exist ..\lib\wxscript$(WXLIBPOSTFIX).lib del ..\lib\wxscript$(WXLIBPOSTFIX).lib
-	-if exist ..\tests\test1\minimal.exe del ..\tests\test1\minimal.exe
-	-if exist ..\tests\test1\minimal.ilk del ..\tests\test1\minimal.ilk
-	-if exist ..\tests\test1\minimal.pdb del ..\tests\test1\minimal.pdb
-	-if exist ..\tests\test2\minimal2.exe del ..\tests\test2\minimal2.exe
-	-if exist ..\tests\test2\minimal2.ilk del ..\tests\test2\minimal2.ilk
-	-if exist ..\tests\test2\minimal2.pdb del ..\tests\test2\minimal2.pdb
+	-if exist ..\tests\test1\test1.exe del ..\tests\test1\test1.exe
+	-if exist ..\tests\test1\test1.ilk del ..\tests\test1\test1.ilk
+	-if exist ..\tests\test1\test1.pdb del ..\tests\test1\test1.pdb
+	-if exist ..\tests\test2\test2.exe del ..\tests\test2\test2.exe
+	-if exist ..\tests\test2\test2.ilk del ..\tests\test2\test2.ilk
+	-if exist ..\tests\test2\test2.pdb del ..\tests\test2\test2.pdb
 
 tarball: 
 	( cd .. && tar -cvzf wxscript.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
@@ -263,14 +264,14 @@ cleandocs:
 	$(WXSCRIPT_OBJECTS)
 <<
 
-..\tests\test1\minimal.exe: $(MINIMAL_OBJECTS) ..\lib\wxscript$(WXLIBPOSTFIX).lib
+..\tests\test1\test1.exe: $(TEST1_OBJECTS) ..\lib\wxscript$(WXLIBPOSTFIX).lib
 	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_0) /LIBPATH:..\lib /LIBPATH:$(WXWIN)\lib\vc_lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) /SUBSYSTEM:CONSOLE @<<
-	$(MINIMAL_OBJECTS)  ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw25$(WXLIBPOSTFIX)_core.lib wxmsw25$(WXLIBPOSTFIX)_html.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
+	$(TEST1_OBJECTS)  ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw25$(WXLIBPOSTFIX)_core.lib wxmsw25$(WXLIBPOSTFIX)_html.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
 
-..\tests\test2\minimal2.exe: $(MINIMAL2_OBJECTS) ..\lib\wxscript$(WXLIBPOSTFIX).lib
+..\tests\test2\test2.exe: $(TEST2_OBJECTS) ..\lib\wxscript$(WXLIBPOSTFIX).lib
 	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_0) /LIBPATH:..\lib /LIBPATH:$(WXWIN)\lib\vc_lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) /SUBSYSTEM:CONSOLE @<<
-	$(MINIMAL2_OBJECTS)  ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw25$(WXLIBPOSTFIX)_core.lib wxmsw25$(WXLIBPOSTFIX)_html.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
+	$(TEST2_OBJECTS)  ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw25$(WXLIBPOSTFIX)_core.lib wxmsw25$(WXLIBPOSTFIX)_html.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
 
 msvc\wxscript_script.obj: .\..\src\script.cpp
@@ -288,12 +289,12 @@ msvc\wxscript_scunderc.obj: .\..\src\scunderc.cpp
 msvc\wxscript_sclua.obj: .\..\src\sclua.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(WXSCRIPT_CXXFLAGS) $**
 
-msvc\minimal_Test.obj: .\..\tests\test1\Test.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(MINIMAL_CXXFLAGS) $**
+msvc\test1_Test.obj: .\..\tests\test1\Test.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(TEST1_CXXFLAGS) $**
 
-msvc\minimal2_Test.obj: .\..\tests\test2\Test.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(MINIMAL2_CXXFLAGS) $**
+msvc\test2_Test.obj: .\..\tests\test2\Test.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(TEST2_CXXFLAGS) $**
 
-msvc\minimal2_stackwalker.obj: .\..\tests\test2\stackwalker.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(MINIMAL2_CXXFLAGS) $**
+msvc\test2_stackwalker.obj: .\..\tests\test2\stackwalker.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(TEST2_CXXFLAGS) $**
 

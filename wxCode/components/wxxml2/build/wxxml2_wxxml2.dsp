@@ -42,8 +42,8 @@ RSC=rc.exe
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\wxxml2"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /GR /GX /w /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2u.pdb /D "WIN32" /D "_LIB" /D "_UNICODE" /c
-# ADD CPP /nologo /FD /MD /GR /GX /w /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2u.pdb /D "WIN32" /D "_LIB" /D "_UNICODE" /c
+# ADD BASE CPP /nologo /FD /MD /GR /GX /w /O2 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2u.pdb /D "WIN32" /D "_LIB" /D "_UNICODE" /c
+# ADD CPP /nologo /FD /MD /GR /GX /w /O2 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2u.pdb /D "WIN32" /D "_LIB" /D "_UNICODE" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -88,8 +88,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\wxxml2"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /GR /GX /w /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2.pdb /D "WIN32" /D "_LIB" /c
-# ADD CPP /nologo /FD /MD /GR /GX /w /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2.pdb /D "WIN32" /D "_LIB" /c
+# ADD BASE CPP /nologo /FD /MD /GR /GX /w /O2 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2.pdb /D "WIN32" /D "_LIB" /c
+# ADD CPP /nologo /FD /MD /GR /GX /w /O2 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2.pdb /D "WIN32" /D "_LIB" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe

@@ -43,8 +43,8 @@ RSC=rc.exe
 # PROP Output_Dir "..\sample"
 # PROP Intermediate_Dir "msvc6prj\minimal"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /GR /GX /w /O1 /I "..\include" /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /Fd..\sample\minimal.pdb /I "c:\libxml2\include" /I "c:\iconv\include" /D "WIN32" /D "_UNICODE" /D "_WINDOWS" /D "__WXMSW__" /c
-# ADD CPP /nologo /FD /MD /GR /GX /w /O1 /I "..\include" /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /Fd..\sample\minimal.pdb /I "c:\libxml2\include" /I "c:\iconv\include" /D "WIN32" /D "_UNICODE" /D "_WINDOWS" /D "__WXMSW__" /c
+# ADD BASE CPP /nologo /FD /MD /GR /GX /w /O2 /I "..\include" /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /Fd..\sample\minimal.pdb /I "c:\libxml2\include" /I "c:\iconv\include" /D "WIN32" /D "_UNICODE" /D "_WINDOWS" /D "__WXMSW__" /c
+# ADD CPP /nologo /FD /MD /GR /GX /w /O2 /I "..\include" /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /Fd..\sample\minimal.pdb /I "c:\libxml2\include" /I "c:\iconv\include" /D "WIN32" /D "_UNICODE" /D "_WINDOWS" /D "__WXMSW__" /c
 # ADD BASE MTL /nologo /D "WIN32" /D "_UNICODE" /D "_WINDOWS" /D "__WXMSW__" /mktyplib203 /win32
 # ADD MTL /nologo /D "WIN32" /D "_UNICODE" /D "_WINDOWS" /D "__WXMSW__" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_UNICODE" /i "..\include" /i "c:\wxWidgets\include" /i "c:\wxWidgets\lib\vc_lib\mswu" /d "_WINDOWS" /i "c:\libxml2\include" /i "c:\iconv\include" /d __WXMSW__
@@ -93,8 +93,8 @@ LINK32=link.exe
 # PROP Output_Dir "..\sample"
 # PROP Intermediate_Dir "msvc6prj\minimal"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /GR /GX /w /O1 /I "..\include" /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /Fd..\sample\minimal.pdb /I "c:\libxml2\include" /I "c:\iconv\include" /D "WIN32" /D "_WINDOWS" /D "__WXMSW__" /c
-# ADD CPP /nologo /FD /MD /GR /GX /w /O1 /I "..\include" /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /Fd..\sample\minimal.pdb /I "c:\libxml2\include" /I "c:\iconv\include" /D "WIN32" /D "_WINDOWS" /D "__WXMSW__" /c
+# ADD BASE CPP /nologo /FD /MD /GR /GX /w /O2 /I "..\include" /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /Fd..\sample\minimal.pdb /I "c:\libxml2\include" /I "c:\iconv\include" /D "WIN32" /D "_WINDOWS" /D "__WXMSW__" /c
+# ADD CPP /nologo /FD /MD /GR /GX /w /O2 /I "..\include" /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /Fd..\sample\minimal.pdb /I "c:\libxml2\include" /I "c:\iconv\include" /D "WIN32" /D "_WINDOWS" /D "__WXMSW__" /c
 # ADD BASE MTL /nologo /D "WIN32" /D "_WINDOWS" /D "__WXMSW__" /mktyplib203 /win32
 # ADD MTL /nologo /D "WIN32" /D "_WINDOWS" /D "__WXMSW__" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /i "..\include" /i "c:\wxWidgets\include" /i "c:\wxWidgets\lib\vc_lib\msw" /d "_WINDOWS" /i "c:\libxml2\include" /i "c:\iconv\include" /d __WXMSW__

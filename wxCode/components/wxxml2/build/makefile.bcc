@@ -132,6 +132,7 @@ all: ..\lib\wxxml2$(WXLIBPOSTFIX).lib ..\sample\minimal.exe
 clean: 
 	-if exist borland\*.obj del borland\*.obj
 	-if exist borland\*.res del borland\*.res
+	-if exist borland\*.csm del borland\*.csm
 	-if exist ..\lib\wxxml2$(WXLIBPOSTFIX).lib del ..\lib\wxxml2$(WXLIBPOSTFIX).lib
 	-if exist ..\sample\minimal.exe del ..\sample\minimal.exe
 	-if exist ..\sample\minimal.tds del ..\sample\minimal.tds
