@@ -315,6 +315,7 @@ void MyFrame::SpellCheck(wxSpellCheckEngineInterface* pSpellChecker)
       textCtrl->SetValue(strNewText);
     }
   }
+  ::wxMessageBox(_T("Spell Check Completed"));
 }
 
 wxSpellCheckEngineInterface* MyFrame::ReturnSelectedSpellCheckEngine()
