@@ -1,0 +1,122 @@
+<HTML>
+<head><title>wxMimeTypes</title></head>
+
+<BODY BGCOLOR=#FFFFFF>
+<FONT FACE="Arial, Lucida, Helvetica">
+<A NAME="wxMimeTypes"></A>
+
+<H2>wxMimeTypes</H2>
+<p>
+wxMimeTypes allows to retrieve and to set all the mime type information of file:
+</p>
+<ul>
+<li>Gets the mime type of a file through filename and/or content</li>
+<li>Reads all and some the data of a mime type, e.g. application, icon</li>
+<li>Writes the data of a mime type, creates it if necessary</li>
+</ul>
+<B>Include files</B><P>&lt;wx/mimetypes.h&gt;<P>
+<A HREF="#wxmimetypesconstr">wxMimeTypes::wxMimeTypes</A><BR>
+<A HREF="#wxmimetypesgetmimetype">wxMimeTypes::GetMimeType</A><BR>
+<A HREF="#wxmimetypesgetmimetypebycontent">wxMimeTypes::GetMimeTypeByContent</A><BR>
+<A HREF="#wxmimetypesgetmimetypebyfilename">wxMimeTypes::GetMimeTypeByFilename</A><BR>
+<A HREF="#wxmimetypesgetapplication">wxMimeTypes::GetApplication</A><BR>
+<A HREF="#wxmimetypessetapplication">wxMimeTypes::SetApplication</A><BR>
+<A HREF="#wxmimetypesgetdata">wxMimeTypes::GetData</A><BR>
+<A HREF="#wxmimetypessetdata">wxMimeTypes::SetData</A><BR>
+<A HREF="#wxmimetypesgeticon">wxMimeTypes::GetIcon</A><BR>
+<A HREF="#wxmimetypesseticon">wxMimeTypes::SetIcon</A><BR>
+<P>
+
+<HR>
+<A NAME="wxMimeTypesconstr"></A>
+<H3>wxMimeTypes::wxMimeTypes</H3>
+<P>
+<B></B> <B>wxMimeTypes</B>()
+<P>
+Constructor.
+<P>
+
+<HR>
+<A NAME="wxmimetypesgetmimetype"></A>
+<H3>wxMimeTypes::GetMimeType</H3>
+<P>
+<B>wxString</B> <B>GetMimeType</B>(<B>const wxString&amp; </B><I>filename</I>) <B>const</B>
+<P>
+Returns the first found mime type of a file. First the filename (complete or extension) is tried. If no mime type is found the content of the file is analysed. If none is found an empty string is returned.
+<P>
+
+<HR>
+<A NAME="wxmimetypesgetmimetypebycontent"></A>
+<H3>wxMimeTypes::GetMimeTypeByContent</H3>
+<P>
+<B>wxString</B> <B>GetMimeTypeByContent</B>(<B>const wxString&amp; </B><I>filename</I>) <B>const</B>
+<P>
+Returns the first found mime type of a file. Only the content is analysed. If none is found an empty string is returned.
+<P>
+
+<HR>
+<A NAME="wxmimetypesgetmimetypebyfilename"></A>
+<H3>wxMimeTypes::GetMimeTypeByFilename</H3>
+<P>
+<B>wxString</B> <B>GetMimeTypeByFilename</B>(<B>const wxString&amp; </B><I>filename</I>) <B>const</B>
+<P>
+Returns the first found mime type of a file. Only the filename (complete or extension), is tried. If none is found an empty string is returned.
+<P>
+
+<HR>
+<A NAME="wxmimetypesgetapplication"></A>
+<H3>wxMimeTypes::GetApplication</H3>
+<P>
+<B>wxString</B> <B>GetApplication</B>(<B>const wxString&amp; </B><I>mimetype</I>) <B>const</B>
+<P>
+Returns the default application name (including full path) which handles this mime type.
+<P>
+
+<HR>
+<A NAME="wxmimetypessetapplication"></A>
+<H3>wxMimeTypes::SetApplication</H3>
+<P>
+<B>bool</B> <B>SetApplication</B>(<B>const wxString&amp;</B><I> mimetype</I>, <B>const wxString&amp; </B><I>filename</I>)
+<P>
+Sets the default application name (any kind of path) of this mime type. If the mime type couldn't be updated (e.g. it doesn't exists) or if the application's full path couldn't be determined, false is returned.
+<P>
+This function should only be used by applications to set themselfs as the standard application of a mime type, otherwise SetData should be used.
+<P>
+
+<HR>
+<A NAME="wxmimetypesgetdata"></A>
+<H3>wxMimeTypes::GetData</H3>
+<P>
+<B>wxMimeTypeData*</B> <B>GetData</B>(<B>const wxString&amp; </B><I>mimetype</I>) <B>const</B>
+<P>
+Returns the full data of this mime type.
+<P>
+
+<HR>
+<A NAME="wxmimetypessetdata"></A>
+<H3>wxMimeTypes::SetData</H3>
+<P>
+<B>bool</B> <B>SetData</B>(<B>const wxString&amp;</B><I> mimetype</I>, <B>wxMimeTypeData* </B><I>data</I>, <B>bool</B><I> force = false</I>)
+<P>
+Sets the full data of this mime type. If the mime type doesn't exists and force is true, the mime type is created. If it couldn't be updated or created, false is returned.
+<P>
+
+<HR>
+<A NAME="wxmimetypesgeticon"></A>
+<H3>wxMimeTypes::GetIcon</H3>
+<P>
+<B>wxIcon</B> <B>GetIcon</B>(<B>const wxString&amp; </B><I>mimetype</I>) <B>const</B>
+<P>
+Returns the icon which is associated with this mime type.
+<P>
+
+<HR>
+<A NAME="wxmimetypesseticon"></A>
+<H3>wxMimeTypes::SetIcon</H3>
+<P>
+<B>bool</B> <B>SetIcon</B>(<B>const wxString&amp;</B><I> mimetype</I>, <B>const wxIcon&amp; </B><I>icon</I>)
+<P>
+Sets the icon of this mime type. If the mime type couldn't be updated (e.g. it doesn't exists), false is returned.
+<P>
+
+</FONT></BODY></HTML>
