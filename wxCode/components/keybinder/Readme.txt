@@ -21,7 +21,8 @@ single keybind to each command.
  ------------
 
  -> on Win32 with wxMSW:
-    use the MSVC++ project file to compile the sample & (eventually) the lib (if you need it).
+    Go into the BUILD folder of the keybinder; there you will find the makefiles
+    for MSVC (nmake), BORLAND, WATCOM and MINGW compilers...
 
  -> on Linux with wxX11/wxGTK:
     use the Makefile placed in the main folder to compile both the sample & the lib.
