@@ -1,0 +1,9 @@
+Maintainer: Ryan Norton (ryannpcs)
+Component:  wxBZipStream
+Subdir:     wxbzipstream
+Parts:      D, S
+More infos: 
+wxWidgets:  2.4.2
+
+Description:
+Bzip compression/decompression streams for wxWindows
