@@ -1,0 +1,8 @@
+WXDIR = $(WXWIN)
+
+TARGET=myminimal
+
+OBJECTS = $(TARGET).obj
+
+!include $(WXDIR)\src\makeprog.b32
+
