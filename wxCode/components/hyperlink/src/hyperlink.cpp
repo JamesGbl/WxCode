@@ -3,7 +3,7 @@
 // Purpose:     wxHyperLink control
 // Maintainer:  Wyo
 // Created:     2003-04-07
-// RCS-ID:      $Id: hyperlink.cpp,v 1.2 2004-11-22 18:34:04 wyo Exp $
+// RCS-ID:      $Id: hyperlink.cpp,v 1.3 2004-11-25 21:58:01 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -199,6 +199,7 @@ void wxHyperLink::ExecuteLink (const wxString &link) {
             cmd.Replace(_T("file://"), wxEmptyString);
             ::wxExecute(cmd);
         }
+        delete filetype;
     }
 }
 
