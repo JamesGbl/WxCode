@@ -13,3 +13,5 @@ Possibly move the Mozilla, Outlook, and Sentry dialogs to separate XML resources
 Add the C interface and create a shared wxSpellChecker DLL
 
 Get rid of the "Unknown style flag wxWS_EX_BLOCK_EVENTS" error message box that XmlSpellCheckDialog throws
+
+Use something like valgrind to remove any memory leaks
