@@ -53,6 +53,9 @@ class WXXMLDLLEXPORT wxXml2Property;
 class WXXMLDLLEXPORT wxXml2Namespace;
 class WXXMLDLLEXPORT wxXml2DTD;
 class WXXMLDLLEXPORT wxXml2Document;
+class WXXMLDLLEXPORT wxXml2ElemDecl;
+class WXXMLDLLEXPORT wxXml2ElemContent;
+class WXXMLDLLEXPORT wxXml2BaseNode;
 
 
 // this macro converts from wxStrings to xmlChars
@@ -149,7 +152,7 @@ extern wxXml2Property wxXml2EmptyProperty;
 extern wxXml2Namespace wxXml2EmptyNamespace;
 extern wxXml2DTD wxXml2EmptyDTD;
 extern wxXml2Document wxXml2EmptyDoc;
-
+extern wxXml2BaseNode wxXml2EmptyBaseNode;
 
 
 
@@ -709,12 +712,270 @@ public:		// setters
 
     void SetName(const wxString &p);
 	void SetSystemID(const wxString &u);
-
 	void SetExternalID(const wxString &u);
 
-	//! The external URI is kept in the field named "SystemID" by libxml2.
+	//! Sets the external URI for this DTD.
+	//! \note The external URI is kept in the field named "SystemID" by libxml2.
 	void SetExternalURI(const wxString &u)
 		{ SetSystemID(u); }
+
+	//! Sets the root node for this DTD.
+	void SetRoot(wxXml2ElemDecl &node);
+};
+
+
+enum wxXml2ElementTypeVal {
+    wxXML_ELEMENT_TYPE_UNDEFINED = 0,
+    wxXML_ELEMENT_TYPE_EMPTY = 1,
+    wxXML_ELEMENT_TYPE_ANY,
+    wxXML_ELEMENT_TYPE_MIXED,
+    wxXML_ELEMENT_TYPE_ELEMENT
+};
+
+enum wxXml2ElementContentType {
+	wxXML_ELEMENT_CONTENT_PCDATA = 1,
+    wxXML_ELEMENT_CONTENT_ELEMENT,
+    wxXML_ELEMENT_CONTENT_SEQ,
+    wxXML_ELEMENT_CONTENT_OR,
+};
+
+enum wxXml2ElementContentOccur {
+    wxXML_ELEMENT_CONTENT_ONCE = 1,
+    wxXML_ELEMENT_CONTENT_OPT,
+    wxXML_ELEMENT_CONTENT_MULT,
+    wxXML_ELEMENT_CONTENT_PLUS,
+};
+
+
+class WXXMLDLLEXPORT wxXml2ElemContent : public wxXml2Wrapper
+{
+	DECLARE_DYNAMIC_CLASS(wxXml2ElemContent)
+
+	//! The libxml2 structure which holds the data.
+	xmlElementContent *m_cont;
+
+protected:
+
+	void Destroy() {
+		if (m_cont) xmlFree(m_cont);
+		m_cont = NULL;
+	}
+
+	void  Copy(const wxXml2ElemContent &n) {
+		UnwrappingOld();
+		m_cont = n.m_cont;
+		JustWrappedNew();
+	}
+
+	int &GetPrivate() const
+		{ return (int &)(m_cont); }
+
+public:
+
+	wxXml2ElemContent() : m_cont(NULL) {}
+
+	wxXml2ElemContent(const wxString &name, wxXml2ElementContentType val)
+		{ m_cont=NULL; Create(name, val); }
+
+	virtual ~wxXml2ElemContent() {}
+
+	bool IsUnlinked() const
+		{ return FALSE; }
+
+	bool IsNonEmpty() const
+		{ return m_cont != NULL; }
+
+
+public:		// operators
+	
+	bool operator==(const wxXml2ElemContent &decl) const;
+	bool operator!=(const wxXml2ElemContent &decl) const 	{ return !(*this == decl); }
+
+	wxXml2ElemContent &operator=(const wxXml2ElemContent &decl)
+		{ Copy(decl); return *this; }
+
+
+public:		// miscellaneous
+
+	void Create(const wxString &name, wxXml2ElementContentType val) {
+
+		m_cont = xmlNewElementContent(WX2XML(name), (xmlElementContentType)val);
+	}
+
+	xmlElementContent *GetObj() const
+		{ return m_cont; }
+};
+
+
+typedef struct tagXml2BaseNode {
+
+    void           *_private;	/* application data */
+    xmlElementType   type;	/* type number, must be second ! */
+    const xmlChar   *name;      /* the name of the node, or the entity */
+    struct tagXml2BaseNode *children;	/* parent->childs link */
+    struct tagXml2BaseNode *last;	/* last child link */
+    struct tagXml2BaseNode *parent;	/* child->parent link */
+    struct tagXml2BaseNode *next;	/* next sibling link  */
+    struct tagXml2BaseNode *prev;	/* previous sibling link  */
+    struct _xmlDoc  *doc;	/* the containing document */
+
+} wxXml2BaseNodeObj;
+
+
+//! A generic node.
+class WXXMLDLLEXPORT wxXml2BaseNode : public wxXml2Wrapper
+{
+	DECLARE_DYNAMIC_CLASS(wxXml2BaseNode)
+
+	//! The libxml2 structure.
+	wxXml2BaseNodeObj *m_obj;
+
+protected:
+
+	void Destroy() {
+		if (m_obj) xmlFree(m_obj);
+		m_obj = NULL;
+	}
+
+	void  Copy(const wxXml2BaseNode &n) {
+		UnwrappingOld();
+		m_obj = n.m_obj;
+		JustWrappedNew();
+	}
+
+	int &GetPrivate() const
+		{ return (int &)(m_obj->_private); }
+
+public:
+
+	wxXml2BaseNode() : m_obj(NULL) {}
+	wxXml2BaseNode(wxXml2BaseNodeObj *p) : m_obj(p) { JustWrappedNew(); }
+
+	virtual ~wxXml2BaseNode() {}
+
+
+	//! Is this node linked to a wider XML tree ?
+	bool IsUnlinked() const;
+
+	//! Returns TRUE if this object is wrapping a non-NULL object.
+	bool IsNonEmpty() const
+		{ return m_obj != NULL; }
+
+
+public:		// operators
+	
+	bool operator==(const wxXml2BaseNode &decl) const;
+	bool operator!=(const wxXml2BaseNode &decl) const 	{ return !(*this == decl); }
+
+	wxXml2BaseNode &operator=(const wxXml2BaseNode &decl)
+		{ Copy(decl); return *this; }
+
+
+public:		// getters
+
+	///////////////////////////////////////////////////////////////////////////////////////////////
+    //! \name Getters 
+	//! These functions wrap on the fly the internal pointers of the libxml2
+	//! structure and then return them (this is why they return objects and not
+	//! references to objects). @{
+    
+    wxXml2NodeType	GetType() const			{ return (wxXml2NodeType)((int)m_obj->type); }
+    wxXml2BaseNode	GetParent() const 		{ return wxXml2BaseNode(m_obj->parent); }
+    wxXml2BaseNode	GetChildren() const		{ return wxXml2BaseNode(m_obj->children); }
+    wxXml2BaseNode	GetFirstChild() const	{ return GetChildren(); }
+    wxXml2BaseNode	GetNext() const			{ return wxXml2BaseNode(m_obj->next); }
+	wxXml2BaseNode	GetPrevious() const		{ return wxXml2BaseNode(m_obj->prev); }
+
+	wxXml2BaseNodeObj *GetObj() const
+		{ return m_obj; }
+
+	//@}
+
+
+public:		// setters
+
+	///////////////////////////////////////////////////////////////////////////////////////////////
+	//! \name Setters: still not tested all & unstable.
+	//! These functions are dangereous since they can break the libxml2 internal
+	//! tree if they are not used carefully. Try to avoid them. @{
+
+    void SetType(wxXml2NodeType type)
+		{ m_obj->type = (xmlElementType)((int)type); }
+
+    void SetChildren(const wxXml2BaseNode &child);
+    void SetNext(const wxXml2BaseNode &next);
+	void SetPrevious(const wxXml2BaseNode &prev);
+
+    //@}
+
+};
+
+
+//! An element declaration.
+//! This type of node is used only inside an inlined/external DTD.
+class WXXMLDLLEXPORT wxXml2ElemDecl : public wxXml2BaseNode
+{
+	DECLARE_DYNAMIC_CLASS(wxXml2ElemDecl)
+
+	//! The libxml2 structure which holds the data.
+	xmlElement *m_elem;
+
+protected:
+
+	void Destroy() {
+		if (m_elem) xmlFree(m_elem);
+		m_elem = NULL;
+	}
+
+	void  Copy(const wxXml2ElemDecl &n) {
+		UnwrappingOld();
+		m_elem = n.m_elem;
+		JustWrappedNew();
+	}
+
+	int &GetPrivate() const
+		{ return (int &)(m_elem->_private); }
+
+public:
+
+	wxXml2ElemDecl() : m_elem(NULL) {}
+
+	//! Wraps the given libxml2 structure.
+	wxXml2ElemDecl(xmlElement *n) : m_elem(n) 
+		{ JustWrappedNew(); }
+
+	//! Copies the given wrapper (does not imply the XML structure copy).
+	wxXml2ElemDecl(const wxXml2ElemDecl &n) : m_elem(NULL)
+		{ Copy(n); }
+	
+
+	wxXml2ElemDecl(const wxXml2DTD &parent, const wxString &name, 
+				wxXml2ElementTypeVal val, wxXml2ElemContent *content) 
+		{ m_elem=NULL; Create(parent, name, val, content); }
+
+	virtual ~wxXml2ElemDecl() {}
+
+
+public:		// operators
+	
+	bool operator==(const wxXml2ElemDecl &decl) const;
+	bool operator!=(const wxXml2ElemDecl &decl) const 	{ return !(*this == decl); }
+
+	wxXml2ElemDecl &operator=(const wxXml2ElemDecl &decl)
+		{ Copy(decl); return *this; }
+
+
+public:		// miscellaneous
+
+	void Create(const wxXml2DTD &parent, const wxString &name, 
+				wxXml2ElementTypeVal val, wxXml2ElemContent *content) {
+
+		m_elem = xmlAddElementDecl(NULL, parent.GetObj(), WX2XML(name), 
+									(xmlElementTypeVal)val, content->GetObj());
+	}
+
+	xmlElement *GetObj() const
+		{ return m_elem; }
 };
 
 
@@ -894,12 +1155,12 @@ public:		// some common DTDs
 //!
 //! \todo Add better Unicode support.
 //!
-class WXXMLDLLEXPORT wxXml2Node : public wxXml2Wrapper
+class WXXMLDLLEXPORT wxXml2Node : public wxXml2BaseNode
 {
 	DECLARE_DYNAMIC_CLASS(wxXml2Node)
 
 	//! The libxml2 structure we are wrapping.
-	xmlNode *m_node;
+	//xmlNode *m_node;
 
 protected:
 
@@ -919,19 +1180,19 @@ protected:
 				wxXml2Node &children = wxXml2EmptyNode);
 
 	void Destroy() {
-		xmlUnlinkNode(m_node);
-		xmlFreeNode(m_node);
-		m_node = NULL;
+		xmlUnlinkNode((xmlNode *)m_obj);
+		xmlFreeNode((xmlNode *)m_obj);
+		m_obj = NULL;
 	}
 
 	void Copy(const wxXml2Node &n) {
 		UnwrappingOld();
-		m_node = n.m_node;
+		m_obj = n.m_obj;
 		JustWrappedNew();
 	}
 
 	int &GetPrivate() const
-		{ return (int &)(m_node->_private); }
+		{ return (int &)(m_obj->_private); }
 
 public:
 
@@ -940,7 +1201,7 @@ public:
 	wxXml2Node() {
 		// before this node can be used it must be constructed through
 		// Create****() functions. See below.
-		m_node = NULL;
+		m_obj = NULL;
 	}
 
 	//! Builds a new node as root element of the given document. The node is
@@ -950,7 +1211,7 @@ public:
 	//! next, previous == NULL.
     wxXml2Node(wxXml2Document &doc,
 				const wxString &name = wxEmptyString, 
-				wxXml2Namespace &ns = wxXml2EmptyNamespace) : m_node(NULL)
+				wxXml2Namespace &ns = wxXml2EmptyNamespace)
 		{ CreateRoot(doc, name, ns); }
 
 	//! Builds a new node as child of the given node.
@@ -958,7 +1219,7 @@ public:
 				wxXml2Node &parent,
 				const wxString &name, 
 				const wxString &content = wxEmptyString,
-				wxXml2Namespace &ns = wxXml2EmptyNamespace) : m_node(NULL)
+				wxXml2Namespace &ns = wxXml2EmptyNamespace)
 		{ CreateChild(type, parent, name, content, ns);	}
 
 	//! Builds a new node unlinked from the main tree. This node must be considered
@@ -966,17 +1227,21 @@ public:
     wxXml2Node(wxXml2NodeType type, wxXml2Document &doc,
 				const wxString &name = wxEmptyString, 
 				const wxString &content = wxEmptyString,
-				wxXml2Namespace &ns = wxXml2EmptyNamespace) : m_node(NULL)
+				wxXml2Namespace &ns = wxXml2EmptyNamespace)
 		{ CreateTemp(type, doc, name, content, ns);	}
 
 	//! Wraps the given XML node. This function doesn't copy the given
 	//! structure, it just attach it to this object.
-	wxXml2Node(xmlNode *node) : m_node(NULL)
-		{ m_node = node; JustWrappedNew(); }
+	wxXml2Node(xmlNode *node)
+		{ m_obj = (wxXml2BaseNodeObj *)node; JustWrappedNew(); }
 
 	//! Copies the given wrapper (does not imply the XML structure copy).
-	wxXml2Node(const wxXml2Node &n) : m_node(NULL)
+	wxXml2Node(const wxXml2Node &n)
 		{ Copy(n); }
+
+	//! Copies the given wrapper (does not imply the XML structure copy).
+	wxXml2Node(const wxXml2BaseNode &n)
+		{ m_obj = n.GetObj(); JustWrappedNew(); }
 
 	virtual ~wxXml2Node() { DestroyIfUnlinked(); }
 
@@ -989,9 +1254,6 @@ public:		// operators
 	wxXml2Node &operator=(const wxXml2Node &n)
 		{ Copy(n); return *this; }
 
-	//! Returns TRUE if this object is wrapping a non-NULL object.
-	bool IsNonEmpty() const
-		{ return m_node != NULL; }
 
 public:
 
@@ -1108,35 +1370,21 @@ public:
 	void AddNext(wxXml2Node &node);
 	
 	//@}
-
-
-public:		// getters
-
-	///////////////////////////////////////////////////////////////////////////////////////////////
-    //! \name Getters 
-	//! These functions wrap on the fly the internal pointers of the libxml2
-	//! structure and then return them (this is why they return objects and not
-	//! references to objects). @{
     
-    wxXml2NodeType	GetType() const			{ return (wxXml2NodeType)((int)m_node->type); }
-    wxString		GetName() const			{ return m_node->name; }
-    wxString		GetContent() const		{ return m_node->content; }
+public:
 
-    wxXml2Node		GetParent() const 		{ return wxXml2Node(m_node->parent); }
-    wxXml2Node		GetChildren() const		{ return wxXml2Node(m_node->children); }
-    wxXml2Node		GetFirstChild() const	{ return GetChildren(); }
-    wxXml2Node		GetNext() const			{ return wxXml2Node(m_node->next); }
-	wxXml2Node		GetPrevious() const		{ return wxXml2Node(m_node->prev); }
+	wxXml2Document  GetDoc() const			{ return wxXml2Document(GetObj()->doc); }
+    wxXml2Property	GetProperties() const	{ return wxXml2Property(GetObj()->properties); }
 
-	wxXml2Document  GetDoc() const			{ return wxXml2Document(m_node->doc); }
-    wxXml2Property	GetProperties() const	{ return wxXml2Property(m_node->properties); }
+    wxXml2Namespace GetNamespace() const		{ return wxXml2Namespace(GetObj()->ns, (wxXml2Node &)(*this)); }
+	wxXml2Namespace GetNamespaceDecl() const	{ return wxXml2Namespace(GetObj()->nsDef, (wxXml2Node &)(*this)); }
 
-    wxXml2Namespace GetNamespace() const		{ return wxXml2Namespace(m_node->ns, (wxXml2Node &)(*this)); }
-	wxXml2Namespace GetNamespaceDecl() const	{ return wxXml2Namespace(m_node->nsDef, (wxXml2Node &)(*this)); }
+    wxString		GetName() const			{ return GetObj()->name; }
+    wxString		GetContent() const		{ return GetObj()->content; }
 
 	//! Returns the libxml2 node structure wrapped by this object. Use this function
 	//! only if you know what to do with the returned structure.
-	xmlNode *GetObj() const					{ return m_node; }
+	xmlNode *GetObj() const					{ return (xmlNode *)m_obj; }
 
 	//! Returns TRUE if a property named 'propName' exists in this node and, in this
 	//! case, returns its value in 'value'.
@@ -1150,33 +1398,12 @@ public:		// getters
 	wxXml2Node Get(const wxString &name, int n = 0)	const
 		{ return Find(name, wxT(""), n); }
 	
-	//@}
 
-
-public:		// setters
-
-	///////////////////////////////////////////////////////////////////////////////////////////////
-	//! \name Setters: still not tested all & unstable.
-	//! These functions are dangereous since they can break the libxml2 internal
-	//! tree if they are not used carefully. Try to avoid them. @{
-
-    void SetType(wxXml2NodeType type)		{ m_node->type = (xmlElementType)((int)type); }
     void SetName(const wxString &name)		{ xmlNodeSetName(GetObj(), WX2XML(name)); }
     void SetContent(const wxString &cont)	{ xmlNodeSetContent(GetObj(), WX2XML(cont)); }
 
-    void SetChildren(const wxXml2Node &child);
-    void SetNext(const wxXml2Node &next);
-	void SetPrevious(const wxXml2Node &prev);
-
     void SetProperties(const wxXml2Property &prop);
     void SetNamespace(wxXml2Namespace &ns);
-
-	// these two would require the entire reconstruction of the node....
-	//void SetDoc(const wxXml2Document &doc){ Build(GetType(), GetParent(), doc, GetNamespace(), GetName(), GetContent(), GetProperties(), GetNext()); }
-    //void SetParent(wxXml2Node &parent){ Build(GetType(), parent, GetDoc(), GetNamespace(), GetName(), GetContent(), GetProperties(), GetNext()); }
-    
-    //@}
-    
 
 public:		// miscellaneous
 
@@ -1192,9 +1419,6 @@ public:		// miscellaneous
 	//! Returns TRUE if this node has a property with the given name.
     bool HasProp(const wxString &propName) const;
 
-	//! Is this node linked to a wider XML tree ?
-	bool IsUnlinked() const;
-	
 	//! Makes the name of this tag all uppercase.
 	//! Recursively updates the names of all children tags.
 	void MakeUpper();

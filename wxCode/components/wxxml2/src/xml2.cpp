@@ -37,12 +37,18 @@
 
 
 // implementation of dynamic classes
+
 IMPLEMENT_ABSTRACT_CLASS(wxXml2Wrapper, wxObject)
-IMPLEMENT_DYNAMIC_CLASS(wxXml2Node, wxXml2Wrapper)
+IMPLEMENT_DYNAMIC_CLASS(wxXml2BaseNode, wxXml2Wrapper)
+IMPLEMENT_DYNAMIC_CLASS(wxXml2ElemDecl, wxXml2BaseNode)
+IMPLEMENT_DYNAMIC_CLASS(wxXml2Node, wxXml2BaseNode)
+
 IMPLEMENT_DYNAMIC_CLASS(wxXml2Document, wxXml2Wrapper)
 IMPLEMENT_DYNAMIC_CLASS(wxXml2Property, wxXml2Wrapper)
 IMPLEMENT_DYNAMIC_CLASS(wxXml2Namespace, wxXml2Wrapper)
 IMPLEMENT_DYNAMIC_CLASS(wxXml2DTD, wxXml2Wrapper)
+
+IMPLEMENT_DYNAMIC_CLASS(wxXml2ElemContent, wxXml2Wrapper)
 
 
 // a macro used in the overloaded operator==; this is the return table:
@@ -70,7 +76,7 @@ wxXml2Node wxXml2EmptyNode(NULL);
 wxXml2Property wxXml2EmptyProperty(NULL);
 wxXml2Namespace wxXml2EmptyNamespace(NULL, wxXml2EmptyNode);
 wxXml2DTD wxXml2EmptyDTD(NULL);
-
+wxXml2BaseNode wxXml2EmptyBaseNode(NULL);
 
 
 
@@ -401,68 +407,62 @@ bool wxXml2DTD::Load(wxInputStream &stream, wxString *pErr)
 static int XMLDTDWrite(void *context, const char *buffer, int len)
 {
 	wxOutputStream *stream = (wxOutputStream *)context;
-	stream->Write(buffer, len);
+
+	// even if our m_dtd->doc pointer is NULL, xmlNodeDumpOutput
+	// will create the header:
+	//
+	//  <!DOCTYPE none PUBLIC "none" "none" [    and the footer    ]>
+	//
+	// so, we must remove them...
+
+	const char *towrite = buffer;
+	if (strncmp(buffer, "<!DOCTYPE", 9) == 0) {
+
+		// discard all characters placed before the first "[" symbol
+		while (towrite[0] != '[' && len > 0) {
+			towrite++;
+			len--;
+		}
+
+		// remove also the "[" symbol...
+		towrite++;
+		len--;
+
+		// eventually remove also the newline which follow it...
+		if (towrite[0] == '\n') {
+			towrite++;
+			len--;
+		}
+	}
+
+	if (strncmp(towrite+len-2, "]>", 2) == 0) {
+
+		// remove the "]>" symbol...
+		len -= 2;
+	}
+
+	stream->Write(towrite, len);
 	return stream->LastWrite();
 }
-/*
-xmlDtdDumpOutput(xmlSaveCtxtPtr ctxt, xmlDtdPtr dtd) {
-    xmlOutputBufferPtr buf;
-    int format, level;
-    xmlDocPtr doc;
-
-     * Dump the notations first they are not in the DTD children list
-     * Do this only on a standalone DTD or on the internal subset though.
-     
-	   if ((dtd->notations != NULL) && ((dtd->doc == NULL) ||
-        (dtd->doc->intSubset == dtd))) {
-        xmlDumpNotationTable(buf->buffer, (xmlNotationTablePtr) dtd->notations);
-    }
-    format = ctxt->format;
-    level = ctxt->level;
-    doc = ctxt->doc;
-    ctxt->format = 0;
-    ctxt->level = -1;
-    ctxt->doc = dtd->doc;
-    xmlNodeListDumpOutput(ctxt, dtd->children);
-}
-*/
 
 int wxXml2DTD::Save(wxOutputStream &stream) const
 {
-	// are we attached to a wxXml2Document ?
-/*	xmlDoc *doc = (m_dtd ? m_dtd->parent : NULL);
-	if (doc) xmlUnlinkNode((xmlNode *)m_dtd);
-
-	// we must create a temporary document containing
-	// only ourselves...
-	wxXml2Document tmp;
-	wxXml2DTD dtd(*this);
-	tmp.SetDTD(dtd);
-	int written = tmp.Save(stream);
-
-	// reattach to the old wxXml2Document, if there was one...
-	if (doc)
-		wxXml2Document(doc).SetDTD((wxXml2DTD &)*this);*/
+	// setup the output buffer
 	xmlOutputBuffer *buf = xmlAllocOutputBuffer(NULL);
 	buf->context = &stream;
-	buf->writecallback = XMLDTDWrite;
-	m_dtd->doc = NULL;
-	xmlNodeDumpOutput(buf, NULL, (xmlNode *)m_dtd, 1, 0, NULL);
-	int written = buf->written;
- /*   xmlSaveCtxt ctxt;
-    memset(&ctxt, 0, sizeof(ctxt));
-    ctxt.doc = NULL;
-    ctxt.buf = buf;
-    ctxt.level = 0;
-    ctxt.format = 1;
-    ctxt.encoding = (const xmlChar *)NULL;
-    xmlSaveCtxtInit(&ctxt);
+	buf->writecallback = XMLDTDWrite;	
 
-	ctxt->format = 0;
-    ctxt->level = -1;
-    ctxt->doc = dtd->doc;
-    //xmlNodeListDumpOutput(ctxt, dtd->children);
-	xmlNodeDump(*/
+	// dump this DTD node
+	xmlNodeDumpOutput(buf, NULL, (xmlNode *)m_dtd, 1, 0, NULL);
+	
+	int written = buf->written;
+	if (written == 0) {
+
+		// for some reason, xmlNodeDumpOutput does not call the callback
+		// function we gave him so we call it now...
+		written = XMLDTDWrite(&stream, 
+				(const char *)buf->buffer->content, buf->buffer->use);
+	}
 
 	return written;
 }
@@ -511,6 +511,11 @@ wxXml2Node wxXml2DTD::GetRoot() const
 		t == wxXML_COMMENT_NODE);		// don't forget comments: they are allowed in DTDs
 #endif
 	return ret;
+}
+
+void wxXml2DTD::SetRoot(wxXml2ElemDecl &node)
+{
+	m_dtd->children = (xmlNode*)node.GetObj();
 }
 
 bool wxXml2DTD::LoadFullDTD(wxString *perr)
@@ -636,7 +641,7 @@ void wxXml2Node::Build(const wxXml2NodeType type, wxXml2Node &parent,
 			} else {
 
 				// yes, it is.... we just need to create a wxXML_ENTITY_REF_NODE nodetype
-				m_node = xmlNewReference(doc.GetObj(), WX2XML(content));
+				m_obj = (wxXml2BaseNodeObj *)xmlNewReference(doc.GetObj(), WX2XML(content));
 				JustWrappedNew();
 				SetNamespace(ns);
 			}
@@ -647,14 +652,14 @@ void wxXml2Node::Build(const wxXml2NodeType type, wxXml2Node &parent,
 		if (!name.IsEmpty()) {
 
 			if (wxXml2EmptyNode != parent) {
-				m_node = xmlNewTextChild(parent.GetObj(),
-							ns.GetObj(), WX2XML(name), WX2XML(content));
+				m_obj = (wxXml2BaseNodeObj *)xmlNewTextChild(parent.GetObj(),
+									ns.GetObj(), WX2XML(name), WX2XML(content));
 				JustWrappedNew();
 
 			} else {
 				// this function can accept NULL as first argument
-				m_node = xmlNewDocRawNode(doc.GetObj(), ns.GetObj(),
-					  WX2XML(name), WX2XML(content));
+				m_obj = (wxXml2BaseNodeObj *)xmlNewDocRawNode(doc.GetObj(), ns.GetObj(),
+									WX2XML(name), WX2XML(content));
 				JustWrappedNew();
 			}
 
@@ -664,14 +669,14 @@ void wxXml2Node::Build(const wxXml2NodeType type, wxXml2Node &parent,
 			// they would create first a wxXML_ELEMENT_NODE with a wxXML_TEXT_NODE
 			// as child; instead we want to create directly a wxXML_TEXT_NODE...
 			if (wxXml2EmptyNode != parent) {
-				m_node = xmlNewText(WX2XML(content));
+				m_obj = (wxXml2BaseNodeObj *)xmlNewText(WX2XML(content));
 				parent.AddChild(*this);
 				JustWrappedNew();
 
 			} else {
 
 				// this function can accept NULL as first argument
-				m_node = xmlNewDocText(doc.GetObj(), WX2XML(content));
+				m_obj = (wxXml2BaseNodeObj *)xmlNewDocText(doc.GetObj(), WX2XML(content));
 				JustWrappedNew();
 			}
 		}
@@ -685,20 +690,20 @@ void wxXml2Node::Build(const wxXml2NodeType type, wxXml2Node &parent,
 				"tags after special nodes like wxXML_PI_NODE or wxXML_CDATA_NODE, "
 				"use one of wxXml2Node::Add***Child() on the parent of the special "
 				"node. Special nodes cannot have children.");
-			m_node = xmlNewChild(parent.GetObj(), ns.GetObj(), WX2XML(name), NULL);
+			m_obj = (wxXml2BaseNodeObj *)xmlNewChild(parent.GetObj(), ns.GetObj(), WX2XML(name), NULL);
 			JustWrappedNew();
 
 		} else {
 
 			// this function can accept NULL as first argument
-			m_node = xmlNewDocRawNode(doc.GetObj(), ns.GetObj(), WX2XML(name), NULL);
+			m_obj = (wxXml2BaseNodeObj *)xmlNewDocRawNode(doc.GetObj(), ns.GetObj(), WX2XML(name), NULL);
 			JustWrappedNew();
 		}
 		break;
 
 	case wxXML_COMMENT_NODE:
 		if (wxXml2EmptyNode != parent) {
-			m_node = xmlNewComment(WX2XML(content));
+			m_obj = (wxXml2BaseNodeObj *)xmlNewComment(WX2XML(content));
 			JustWrappedNew();
 
 			// set this comment as child of the given parent
@@ -706,22 +711,22 @@ void wxXml2Node::Build(const wxXml2NodeType type, wxXml2Node &parent,
 		} else {
 
 			// this function can accept NULL as first argument
-			m_node = xmlNewDocComment(doc.GetObj(), WX2XML(content));
+			m_obj = (wxXml2BaseNodeObj *)xmlNewDocComment(doc.GetObj(), WX2XML(content));
 			JustWrappedNew();
 		}
 		break;
 
 	case wxXML_CDATA_SECTION_NODE:
-		m_node = xmlNewChild(parent.GetObj(), ns.GetObj(), WX2XML(name), NULL);
+		m_obj = (wxXml2BaseNodeObj *)xmlNewChild(parent.GetObj(), ns.GetObj(), WX2XML(name), NULL);
 		JustWrappedNew();
 
 		// change the type of this node & its contents
-		m_node->type = (xmlElementType)wxXML_CDATA_SECTION_NODE;
-		xmlNodeSetContent(m_node, WX2XML(content));
+		m_obj->type = (xmlElementType)wxXML_CDATA_SECTION_NODE;
+		xmlNodeSetContent((xmlNode *)m_obj, WX2XML(content));
 		break;
 
 	case wxXML_PI_NODE:
-		m_node = xmlNewPI(WX2XML(name), WX2XML(content));
+		m_obj = (wxXml2BaseNodeObj *)xmlNewPI(WX2XML(name), WX2XML(content));
 		JustWrappedNew();
 
 		wxASSERT_MSG(doc != wxXml2EmptyDoc, 
@@ -729,7 +734,7 @@ void wxXml2Node::Build(const wxXml2NodeType type, wxXml2Node &parent,
 			"document since it must be placed before any other type of node");
 		
 		// prepend the node to the children list of the document
-		xmlAddPrevSibling(doc.GetObj()->children, m_node);
+		xmlAddPrevSibling(doc.GetObj()->children, (xmlNode *)m_obj);
 		break;
 
 	case wxXML_ENTITY_REF_NODE:
@@ -792,7 +797,7 @@ wxXml2Node wxXml2Node::AddCDATAChild(const wxString &content)
 wxXml2Node wxXml2Node::AddPIChild(const wxString &name, const wxString &content)
 {
 	// this must be a valid node.
-	wxASSERT(m_node != NULL && m_node->doc != NULL);
+	wxASSERT(m_obj != NULL && m_obj->doc != NULL);
 	wxXml2Node child;
 	wxXml2Document doc(GetDoc());
 
@@ -873,34 +878,61 @@ void wxXml2Node::AddNext(wxXml2Node &node)
 
 
 //-----------------------------------------------------------------------------
+//  wxXml2BaseNode
+//-----------------------------------------------------------------------------
+
+void wxXml2BaseNode::SetNext(const wxXml2BaseNode &next)
+{	
+	if (wxXml2EmptyBaseNode != next)
+		xmlAddNextSibling((xmlNode *)m_obj, (xmlNode *)next.GetObj());
+	else
+		m_obj->next = NULL;
+}
+
+void wxXml2BaseNode::SetChildren(const wxXml2BaseNode &n)
+{
+	// FIXME
+	m_obj->children = n.GetObj();
+}
+
+bool wxXml2BaseNode::IsUnlinked() const
+{
+	if (m_obj == NULL)
+		return TRUE;
+
+	// if we have all null pointers, we are not linked anywhere
+	if (m_obj != NULL && m_obj->parent == NULL && 
+		m_obj->prev == NULL &&	m_obj->next == NULL)
+		return TRUE;
+
+	// at least one link is valid
+	return FALSE;
+}
+
+bool wxXml2BaseNode::operator==(const wxXml2BaseNode &n) const
+{
+	CHECK_NULL_POINTERS(n.GetObj(), GetObj());
+
+	return TRUE;
+}
+
+
+
+
+//-----------------------------------------------------------------------------
 //  wxXml2Node - set functions
 //-----------------------------------------------------------------------------
 
-void wxXml2Node::SetNext(const wxXml2Node &next)
-{
-	//GetNext().Destroy();
-	if (wxXml2EmptyNode != next)
-		xmlAddNextSibling(m_node, next.GetObj());
-	else
-		m_node->next = NULL;
-}
-
-void wxXml2Node::SetChildren(const wxXml2Node &n)
-{
-	// FIXME
-	m_node->children = n.GetObj();
-}
-
 void wxXml2Node::SetProperties(const wxXml2Property &prop)
 {
-	m_node->properties = prop.GetObj();
-	prop.GetObj()->parent = m_node;
+	GetObj()->properties = prop.GetObj();
+	prop.GetObj()->parent = (xmlNode *)m_obj;
 }
 
 void wxXml2Node::SetNamespace(wxXml2Namespace &ns)
 {
 	//ns.SetOwner(*this);
-	m_node->ns = ns.GetObj();
+	GetObj()->ns = ns.GetObj();
 
 	// set namespace for all the children of this node
 	wxXml2Node p = this->GetChildren();
@@ -988,20 +1020,6 @@ wxString wxXml2Node::GetPropVal(const wxString &propName,
 		return tmp;
     else
 		return defaultVal;
-}
-
-bool wxXml2Node::IsUnlinked() const
-{
-	if (m_node == NULL)
-		return TRUE;
-
-	// if we have all null pointers, we are not linked anywhere
-	if (m_node != NULL && m_node->parent == NULL && 
-		m_node->prev == NULL &&	m_node->next == NULL)
-		return TRUE;
-
-	// at least one link is valid
-	return FALSE;
 }
 
 void wxXml2Node::MakeUpper()

@@ -21,6 +21,8 @@
 #include "wx/wxprec.h"
 #include "wx/xml2.h"				// include libxml2 wrapper definitions
 
+#include <wx/mstream.h>
+
 
 #ifdef __BORLANDC__
     #pragma hdrstop
@@ -94,7 +96,7 @@ public:
     void OnQuit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
 
-	wxStaticText *m_text;
+	wxTextCtrl *m_text;
 	
 	void LoadXML(const wxString &filename);
 	void LoadDTD(const wxString &filename);
@@ -231,14 +233,14 @@ MyFrame::MyFrame(const wxString& title)
     SetIcon(wxICON(mondrian));
 
 #if 1
-	// create the wxStaticText where the file structure is shown
-	m_text = new wxStaticText(this, -1, 
+	// create the wxTextCtrl where the file structure is shown
+	m_text = new wxTextCtrl(this, -1, 
 		"This program will provide some examples about the three main operations "
 		"it provides on XML files:\n\n"
 		"\t- Loading: wxXml2 allows you to load any XML file including DTDs.\n"
 		"\t- Editing: wxXml2 allows you to create, edit, manipulate any XML file.\n"
 		"\t- Saving: wxXml2 can saves XML trees or DTDs to memory buffers or to files.", 
-		wxDefaultPosition, wxDefaultSize, wxST_NO_AUTORESIZE | wxALIGN_LEFT | wxSUNKEN_BORDER);
+		wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE);
 	m_text->SetBackgroundColour(*wxWHITE);
 #endif
 
@@ -309,7 +311,11 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 #define STEP			4
 
 
-// helper recursive function
+// helper recursive function: THIS IS ONLY A "DIDACTIVE" EXAMPLE OF A
+// RECURSIVE FUNCTION WHICH CAN BE USED TO WALK AN XML TREE... 
+// IF YOU JUST NEED TO OUTPUT THE CONTENTS OF AN XML TREE YOU CAN USE
+// THE wxXml2Document::Save FUNCTION ON A wxMemoryOutputStream AS
+// MyFrame::LoadDTD DOES TO SHOW TO THE USER THE STRUCTURE OF AN XML DTD.
 void ParseNode(const wxXml2Node &node, wxString &str, int n)
 {
 	wxLogDebug("ParseNode - parsing [%s]", node.GetName().c_str());
@@ -430,7 +436,7 @@ void MyFrame::LoadXML(const wxString &filename)
 	ParseNodeAndSiblings(root, tree, indent);
 
 	// show it to the user	
-	m_text->SetLabel(tree);
+	m_text->SetValue(tree);
 }
 
 void MyFrame::LoadDTD(const wxString &filename)
@@ -445,18 +451,19 @@ void MyFrame::LoadDTD(const wxString &filename)
 	}
 
 	// show the wxXml2Node tree in a simple format...
-	/*wxString tree;
-	wxXml2Node root = doc.GetRoot();
-	int indent = 3;
-	tree.Alloc(1024);
+	wxMemoryOutputStream stream;
+	wxString str;
 
-	// get a string with the tree structure...
-	ParseNodeAndSiblings(root, tree, indent);
-
-	// show it to the user	
-	m_text->SetLabel(tree);*/
-
-	doc.Save("saved.dtd");
+	// we won't use the ParseNodeAndSiblings because it requires
+	// wxXml2Nodes to parse: here we have instead wxXml2ElemDecl,
+	// wxXml2AttrDecl... node types.
+	str.Alloc(1024);	
+	doc.Save(stream);
+	
+	// copy the stream into a wxString and change the text shown to the user...
+	stream.CopyTo(str.GetWriteBuf(stream.LastWrite()), stream.LastWrite());
+	str[stream.LastWrite()] = '\0';
+	m_text->SetValue(str);
 }
 
 void MyFrame::OnLoadXML(wxCommandEvent& WXUNUSED(event))
@@ -618,7 +625,7 @@ void MyFrame::OnSaveDTD(wxCommandEvent &)
 	// TO ALLOW THE DEFINITION OF ELEMENTS, ENTITIES, ATTRIBUTES.
 
 	doc.Create(wxXml2EmptyDoc, "mydtd", "", "");
-	xmlValidCtxt *c = xmlNewValidCtxt();
+	/*xmlValidCtxt *c = xmlNewValidCtxt();
 
 	xmlElementContent contents;
 	memset(&contents, 0, sizeof(contents));
@@ -626,9 +633,25 @@ void MyFrame::OnSaveDTD(wxCommandEvent &)
 	contents.ocur = XML_ELEMENT_CONTENT_MULT;
 	contents.name = xmlStrdup(WX2XML(wxString("myelement")));
 	xmlAddElementDecl(c, doc.GetObj(), WX2XML(wxString("myelement")), 
-		XML_ELEMENT_TYPE_ELEMENT, &contents);
+		XML_ELEMENT_TYPE_ELEMENT, &contents);*/
 
-	doc.Save(fd.GetPath());
+	wxXml2ElemDecl myelem(doc, "myelement", wxXML_ELEMENT_TYPE_ELEMENT, 
+				new wxXml2ElemContent("myelement", wxXML_ELEMENT_CONTENT_PCDATA));
+	doc.SetRoot(myelem);
+
+	// now, save the file where the user choose
+	if (doc.Save(fd.GetPath())) {
+		
+		int ret = wxMessageBox("File correctly saved. Do you want to load it ?", 
+			"Question", wxYES_NO | wxICON_QUESTION);
+		
+		if (ret == wxYES) LoadDTD(fd.GetPath());
+
+	} else {
+
+		wxMessageBox("File could not be correctly saved !!!", 
+					"Error", wxOK | wxICON_ERROR);
+	}
 }
 
 void MyFrame::OnValid(wxCommandEvent &)
