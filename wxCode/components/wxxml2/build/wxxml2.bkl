@@ -41,8 +41,7 @@
 		<stdlib>$(LIBXML2_DIR)</stdlib>
 		<stdlib>$(ICONV_DIR)</stdlib>
 
-		<sys-lib>wxxml2</sys-lib>
-		<sys-lib>libxml2</sys-lib>
+		<sys-lib>xml2</sys-lib>
 		<sys-lib>iconv</sys-lib>
 		<wxlibs/>
 		<syslibs/>

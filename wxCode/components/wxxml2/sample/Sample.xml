@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- This sample file can be validated using the Sample.dtd file -->
+<!-- This file was intentionally left without a DOCTYPE declaration
+to test the wxXml2DTD::LoadFullDTD() function -->
 <myrootnode>
 
-	<myclient1>
+	<myclient>
 		<name>Bill Gates</name>
 		<phone>123456789</phone>
 		<mydata type="text">Micro$oft</mydata>
-	</myclient1>
+	</myclient>
 	
-	<myclient2 stupidity="max">
+	<myclient>
 		<name>Mr. X</name>
 		<phone>123456789</phone>
 		<mydata type="link">http://www.stupid.com</mydata>
-	</myclient1>
+	</myclient>
 
 </myrootnode>

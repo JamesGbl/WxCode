@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE math PUBLIC "-//W3C//DTD MathML 2.0//EN" "http://www.w3.org/TR/MathML2/dtd/mathml2.dtd">
+<html lang="en">
+  <head>
+    <title>Hi! I'm a sample HTML file</title>
+  </head>
+  <body>
+<!-- This is a dummy comment -->
+    <p> HTML exported by wxXml2 wrappers for libxml2 -  write to frm@users.sourceforge.net if you encounter any  problem or if you want to give suggestions or advices. </p>
+<!-- In the followig text child, some non-UTF8 characters are used -->
+    <p>/u20ac</p>
+  </body>
+</html>

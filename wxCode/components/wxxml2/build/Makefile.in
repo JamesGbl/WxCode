@@ -104,7 +104,7 @@ cleandocs:
 	$(RANLIB) $@
 
 ../sample/minimal$(EXEEXT): $(MINIMAL_OBJECTS)
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS)  $(LDFLAGS_GUI) -L../lib -L$(LIBXML2_DIR)/lib -L$(ICONV_DIR)/lib `wx-config --libs`  -lwxxml2 -llibxml2 -liconv
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS)  $(LDFLAGS_GUI) -L../lib -L$(LIBXML2_DIR)/lib -L$(ICONV_DIR)/lib `wx-config --libs`  -lxml2 -liconv
 	
 	$(__minimal___mac_setfilecmd)
 	$(__minimal___os2_emxbindcmd)

@@ -1,0 +1,14 @@
+<!-- 
+	The Document Type Definition (DTD)
+        for the "Sample.xml" included.
+-->
+
+
+<!ELEMENT myrootnode (myclient*)>
+
+<!ELEMENT myclient (name, phone, mydata)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT phone (#PCDATA)>
+<!ELEMENT mydata (#PCDATA)>
+<!ATTLIST mydata type (text|link) #REQUIRED>
+
