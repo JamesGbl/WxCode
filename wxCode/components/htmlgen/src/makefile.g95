@@ -1,0 +1,30 @@
+CFLAGS=-ggdb -W -Wall -D_X86_=1 -DWIN32 -D_WIN32 -DWINVER=0x0400 -D__WIN95__ -D__WIN32__ -D__WINDOWS__ -mwindows -D__WXMSW__ -D__GNUWIN32__ -DSTRICT -fno-pcc-struct-return -fno-rtti -fno-exceptions -fvtable-thunks -D__WXDEBUG__
+
+INCLUDES=-I$(WXWIN)/include -I$(WXWIN)/include/wx/msw/gnuwin32
+
+LDFLAGS=--pipe -fvtable-thunks -Wl,--subsystem,windows -mwindows -L$(WXWIN)/lib
+
+LIBS=-lhtgen -lwx -ljpeg -lxpm -ltiff -lpng -lzlib -lwinspool -lshell32 -lcomctl32 -lctl3d32 -lodbc32 -ladvapi32 -lole32 -loleaut32 -luuid -lwsock32 -lopengl32 -lglu32 -lstdc++ 
+
+OBJECTS=htgen.o
+
+lib:	libhtgen.a
+
+libhtgen.a:	$(OBJECTS)
+	ar -rc libhtgen.a $(OBJECTS) 
+	cp libhtgen.a $(MINGDIR)/lib
+
+%.o:	%.cpp makefile.g95
+	gcc $(CFLAGS) $(INCLUDES) -D$*_cpp -c $*.cpp
+
+%_test: lib
+	gcc $(CFLAGS) $(INCLUDES) -D$*_test $*.cpp $(LDFLAGS) $(LIBS)
+
+check:	htgen_test
+	./a.exe
+
+dist:	check
+	tar cvf htgen.tar htgen.cpp makefile.g95 makefile.linux readme.txt
+	gzip htgen.tar
+	command /c copy htgen.tar.gz a:
+

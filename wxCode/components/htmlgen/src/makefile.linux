@@ -1,0 +1,15 @@
+CFLAGS=-ggdb -W -Wall `wx-config --cxxflags`
+LDFLAGS=`wx-config --libs`
+
+OBJECTS=html.o
+
+lib:	libhtgen.a
+
+libhtgen.a:	$(OBJECTS)
+	ar -rc libhtgen.a $(OBJECTS) 
+
+%.o:	%.cpp makefile.linux
+	gcc $(CFLAGS) $(INCLUDES) -D$*_cpp -c $*.cpp
+
+%_test:	$(OBJECTS)
+	gcc $(CFLAGS) $(INCLUDES) -D$*_test $*.cpp $(OBJECTS) $(LDFLAGS) $(LIBS)
