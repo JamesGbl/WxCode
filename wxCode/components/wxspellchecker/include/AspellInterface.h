@@ -13,6 +13,7 @@
 #include "SpellCheckEngineInterface.h"
 
 #include "AspellWrapper.h"
+#include "PersonalDictionary.h"
 
 class AspellInterface : public wxSpellCheckEngineInterface
 {
@@ -35,10 +36,16 @@ public:
   virtual wxArrayString GetWordListAsArray();
 	virtual void PresentOptions();
 
+private:  
+  // Aspell data structures
   AspellWrapper m_AspellWrapper;
 	AspellConfig* m_AspellConfig;
 	AspellSpeller* m_AspellSpeller;
   AspellDocumentChecker* m_AspellChecker;
+  
+  // Aspell has personal dictionary support, but it lacks the ability to remove words from the
+  //  personal dictionary.  So for now, we'll just use the generic PersonalDictionary
+  PersonalDictionary m_PersonalDictionary;
 
 	// Use new_aspell_config and new_aspell_speller for initialization
 	// Use aspell_config_replace to set options (language, data location, case-sensitive, ...)
