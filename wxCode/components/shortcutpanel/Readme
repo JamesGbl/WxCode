@@ -7,4 +7,4 @@ wxWidgets:  2.4.0
 
 Description:
 Originally written by Jonatan Magnusson of Phoenix Data, this component provides an
-old-style \"Outlook-like\" shortcut bar within a wxPanel derived class.
+old-style "Outlook-like" shortcut bar within a wxPanel derived class.
