@@ -16,6 +16,7 @@
 #include "wx/file.h"
 
 #include "SpellCheckUserInterface.h"
+#include "PersonalDictionary.h"
 
 #include "MySpell/myspell.hxx"
 
@@ -51,11 +52,8 @@ private:
   
   wxString m_strAffixFile;
   wxString m_strDictionaryFile;
-  wxArrayString m_PersonalDictionary;
-  bool LoadPersonalDictionary();
-  bool SavePersonalDictionary();
   
-  static const wxString Personal_Dictionary_Filename;
+  PersonalDictionary m_PersonalDictionary;
 };
 
 #endif  // __MYSPELL_CHECK_INTERFACE__

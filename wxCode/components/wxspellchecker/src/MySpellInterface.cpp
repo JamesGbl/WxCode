@@ -5,8 +5,6 @@
 #include <wx/textfile.h>
 #include <wx/config.h>
 
-const wxString MySpellInterface::Personal_Dictionary_Filename = _T(".MySpellPersonalDictionary");
-
 MySpellInterface::MySpellInterface(wxSpellCheckUserInterface* pDlg /* = NULL */)
 {
   m_pSpellUserInterface = pDlg;
@@ -19,7 +17,7 @@ MySpellInterface::MySpellInterface(wxSpellCheckUserInterface* pDlg /* = NULL */)
 
   SetDefaultOptions();
 
-  LoadPersonalDictionary();
+  m_PersonalDictionary.LoadPersonalDictionary();
   
   InitializeSpellCheckEngine();
 }
@@ -30,8 +28,8 @@ MySpellInterface::~MySpellInterface()
 
   if (m_bPersonalDictionaryModified)
   {
-    if (wxYES == ::wxMessageBox("Would you like to save any of your changes to your personal dictionary?", "Save Changes", wxYES_NO | wxICON_QUESTION))
-      SavePersonalDictionary();
+    //if (wxYES == ::wxMessageBox("Would you like to save any of your changes to your personal dictionary?", "Save Changes", wxYES_NO | wxICON_QUESTION))
+      m_PersonalDictionary.SavePersonalDictionary();
   }
   
   UninitializeSpellCheckEngine();
@@ -130,8 +128,8 @@ wxString MySpellInterface::CheckSpelling(wxString strText)
       if (m_AlwaysIgnoreList.Index(token) != wxNOT_FOUND)
         continue;
 
-      // If this word is in the always ignore list, then just move on
-      if (m_PersonalDictionary.Index(token) != wxNOT_FOUND)
+      // If this word is in the personal dictionary, then just move on
+      if (m_PersonalDictionary.IsWordInDictionary(token))
         continue;
       
       bool bReplaceFromMap = FALSE;
@@ -195,100 +193,29 @@ bool MySpellInterface::IsWordInDictionary(const wxString& strWord)
   if (m_pMySpell == NULL)
     return false;
 
-  return (m_pMySpell->spell(strWord) == 1);
+  return ((m_pMySpell->spell(strWord) == 1) || (m_PersonalDictionary.IsWordInDictionary(strWord)));
 }
 
 int MySpellInterface::AddWordToDictionary(const wxString& strWord)
 {
-  m_PersonalDictionary.Add(strWord);
-  m_PersonalDictionary.Sort();
+  m_PersonalDictionary.AddWord(strWord);
   m_bPersonalDictionaryModified = true;
   return true;
 }
 
 int MySpellInterface::RemoveWordFromDictionary(const wxString& strWord)
 {
-  m_PersonalDictionary.Remove(strWord);
+  m_PersonalDictionary.RemoveWord(strWord);
   m_bPersonalDictionaryModified = true;
   return true;
 }
 
 wxArrayString MySpellInterface::GetWordListAsArray()
 {
-  return m_PersonalDictionary;
-
+  return m_PersonalDictionary.GetWordListAsArray();
 }
 
 // Since MySpell doesn't have a concept of a personal dictionary, we can create a file
 // to hold new words and if spell check fails then we check this map before asking the user
 // It's not the best (as it won't support the affix feature of MySpell), but it'll work
-bool MySpellInterface::LoadPersonalDictionary()
-{
-  wxFileName sPath; 
-  sPath.Assign(wxFileName::GetCwd(), MySpellInterface::Personal_Dictionary_Filename);
-
-  wxTextFile DictFile(sPath.GetFullPath());
-  if (!DictFile.Exists())
-  {
-    return false;
-  }
-  if (!DictFile.Open())
-  {
-    wxMessageBox("Unable to open personal dictionary file");
-    return false;
-  }
-
-  m_PersonalDictionary.Clear();
-  if (DictFile.GetLineCount() > 0)
-  {
-    wxString strWord;
-    for ( strWord = DictFile.GetFirstLine(); !DictFile.Eof(); strWord = DictFile.GetNextLine() )
-    {
-      strWord.Trim(FALSE); // Trim on the left
-      strWord.Trim(TRUE);  // Trim on the right
-      if (strWord.IsEmpty() || strWord == _T(";"))
-        continue;
-  
-      m_PersonalDictionary.Add(strWord);
-    }
-    // Handle the last line
-    strWord.Trim(FALSE); // Trim on the left
-    strWord.Trim(TRUE);  // Trim on the right
-  
-    if (!(strWord.IsEmpty()) && (strWord != _T(";")))
-      m_PersonalDictionary.Add(strWord);
-  }
-  
-  DictFile.Close();
-  return true;
-}
-
-
-bool MySpellInterface::SavePersonalDictionary()
-{
-  wxFileName sPath; 
-  sPath.Assign(wxFileName::GetCwd(), MySpellInterface::Personal_Dictionary_Filename);
-
-  wxTextFile DictFile(sPath.GetFullPath());
-  
-  // Remove any existing personal dictionary files
-  if (DictFile.Exists())
-    ::wxRemoveFile(sPath.GetFullPath());
-  
-  if (!DictFile.Create())
-  {
-    wxMessageBox("Unable to open personal dictionary file");
-    return false;
-  }
-
-  //DictFile.Clear();
-  for (unsigned int i=0; i<m_PersonalDictionary.GetCount(); i++)
-  {
-    DictFile.AddLine(m_PersonalDictionary[i]);
-    wxPrintf(m_PersonalDictionary[i]);
-  }
-  DictFile.Write();
-  DictFile.Close();
-  return true;
-}
 
