@@ -272,18 +272,27 @@ void AspellInterface::PresentOptions()
 //	extra-dicts -> extra dictionaries to use
 int AspellInterface::SetDefaultOptions()
 {
-	wxString strDataDir = wxString::Format("%s%c%s", ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), "data");
-	wxString strDictDir = wxString::Format("%s%c%s", ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), "dict");
+	wxString strDataDir = wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("data"));
+	wxString strDictDir = wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("dict"));
+  wxString strLanguage = _T("en_US");
 
-  SpellCheckEngineOption LanguageOption("lang", "Language Code", "en_US"); // A list of possible values would be good here
+  SpellCheckEngineOption LanguageOption(_T("lang"), _T("Language Code"), strLanguage); // A list of possible values would be good here
   AddOptionToMap(LanguageOption);
-  SpellCheckEngineOption DataDirOption("data-dir", "Language Data File Directory", strDataDir, SpellCheckEngineOption::DIR);
+  SpellCheckEngineOption DataDirOption(_T("data-dir"), _T("Language Data File Directory"), strDataDir, SpellCheckEngineOption::DIR);
   AddOptionToMap(DataDirOption);
-  SpellCheckEngineOption DictDirOption("dict-dir", "Language Word List Directory", strDictDir, SpellCheckEngineOption::DIR);
+  SpellCheckEngineOption DictDirOption(_T("dict-dir"), _T("Language Word List Directory"), strDictDir, SpellCheckEngineOption::DIR);
   AddOptionToMap(DictDirOption);
   
-  SpellCheckEngineOption IgnoreCaseOption("ignore-case", "Ignore Case", false);
+  SpellCheckEngineOption SuggestionModeOption(_T("sug-mode"), _T("Suggestion Mode"), wxString(_T("normal")));
+  SuggestionModeOption.AddPossibleValue(wxString(_T("ultra")));
+  SuggestionModeOption.AddPossibleValue(wxString(_T("fast")));
+  SuggestionModeOption.AddPossibleValue(wxString(_T("normal")));
+  SuggestionModeOption.AddPossibleValue(wxString(_T("bad-spellers")));
+  AddOptionToMap(SuggestionModeOption);
+
+  SpellCheckEngineOption IgnoreCaseOption(_T("ignore-case"), _T("Ignore Case"), false);
   AddOptionToMap(IgnoreCaseOption);
+
   
   // One thing to note is that the absence of certain files (en.dat and en_phonet.dat in the case of english)
   //  in the data-dir directory causes the aspell library to have an "abnormal termination message under windows)
