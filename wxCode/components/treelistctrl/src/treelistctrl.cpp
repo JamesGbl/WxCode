@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.57 2004-11-22 18:38:50 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.58 2004-11-25 18:01:49 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -1322,8 +1322,8 @@ void wxTreeListHeaderWindow::OnMouse( wxMouseEvent &event )
 
         if (event.ButtonUp())
         {
-            ReleaseMouse();
             m_isDragging = false;
+            if (HasCapture()) ReleaseMouse();
             m_dirty = true;
             SetColumnWidth( m_column, m_currentX - m_minX );
             Refresh();
@@ -1379,9 +1379,9 @@ void wxTreeListHeaderWindow::OnMouse( wxMouseEvent &event )
             if (hit_border && event.LeftDown())
             {
                 m_isDragging = true;
+                CaptureMouse();
                 m_currentX = x;
                 DrawCurrent();
-                CaptureMouse();
                 SendListEvent(wxEVT_COMMAND_LIST_COL_BEGIN_DRAG,
                               event.GetPosition());
             }
@@ -3813,6 +3813,7 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
         // we're going to drag
         m_dragCount = 0;
         m_isDragging = true;
+        CaptureMouse();
         RefreshSelected();
 
         // send drag start event
@@ -3829,15 +3830,13 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
         nevent.Veto(); // dragging must be explicit allowed!
         m_owner->GetEventHandler()->ProcessEvent (nevent);
 
-        CaptureMouse();
-
     }else if (m_isDragging) { // any other event but not event.Dragging()
 
-        ReleaseMouse();
 
         // end dragging
         m_dragCount = 0;
         m_isDragging = false;
+        if (HasCapture()) ReleaseMouse();
         RefreshSelected();
 
         // send drag end event event
