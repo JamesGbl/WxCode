@@ -395,7 +395,6 @@ void XmlSpellCheckDialog::SetMispelledWord(const wxString& strMispelling)
 
 void XmlSpellCheckDialog::OnOptions(wxCommandEvent& event)
 {
-  //m_pSpellCheckEngine->PresentOptions();
   // Create a really basic dialog that gets dynamically populated
   // with controls based on the m_pSpellCheckEngine->GetOptions();
   SpellCheckerOptionsDialog OptionsDialog(this, m_pSpellCheckEngine->GetSpellCheckEngineName() + _T(" Options"), m_pSpellCheckEngine);

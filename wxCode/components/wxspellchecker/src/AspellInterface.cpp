@@ -324,27 +324,6 @@ wxArrayString AspellInterface::GetWordListAsArray()
   return m_PersonalDictionary.GetWordListAsArray();
 }
 
-void AspellInterface::PresentOptions()
-{
-  wxLog* OldLog = wxLog::SetActiveTarget(new wxLogStderr);
-
-  AspellKeyInfoEnumeration* elements = m_AspellWrapper.AspellConfigPossibleElements(m_AspellConfig, FALSE);
-
-  wxString strMessage;
-  const struct AspellKeyInfo* info;
-  while ( (info = m_AspellWrapper.AspellKeyInfoEnumerationNext(elements)) != NULL )
-  {
-    // add to configuration list
-    wxString strLine = wxString::Format("%s : %s : %s : %s: %s\r\n", info->name, info->def, info->desc, info->otherdata, m_AspellWrapper.AspellConfigRetrieve(m_AspellConfig, info->name));
-    ::wxLogMessage(strLine);
-    strMessage += strLine;
-  }
-  m_AspellWrapper.DeleteAspellKeyInfoEnumeration(elements); 
-  ::wxMessageBox(strMessage);
-
-  delete wxLog::SetActiveTarget(OldLog);
-}
-
 ///////////// Options /////////////////
 //
 // Aspell Options:

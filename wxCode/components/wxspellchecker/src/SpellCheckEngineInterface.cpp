@@ -32,14 +32,6 @@ void wxSpellCheckEngineInterface::SetSpellCheckUserInterface(wxSpellCheckUserInt
 		pDlg->SetSpellCheckEngine(this);
 }
 
-void wxSpellCheckEngineInterface::PresentOptions()
-{
-	// This function should present the options to the user and set new values
-	//	based on the user input
-	// An example would be displaying a dialog with all the user options and
-	//	changing the options if the user clicked OK
-}
-
 int wxSpellCheckEngineInterface::GetUserCorrection(const wxString& strMisspelling)  //Show function will show the dialog and not return until the user makes a decision
 {
   // Populate the listbox with suggestions
