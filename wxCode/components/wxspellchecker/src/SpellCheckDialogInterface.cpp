@@ -10,10 +10,10 @@ wxSpellCheckDialogInterface::~wxSpellCheckDialogInterface()
 {
 }
 
-int wxSpellCheckDialogInterface::PresentSpellCheckUserInterface(const wxString& strMispelling)
+int wxSpellCheckDialogInterface::PresentSpellCheckUserInterface(const wxString& strMisspelling)
 {
   // If the dialog is being presented, then default the previous action flag first
-  SetMispelledWord(strMispelling);
+  SetMisspelledWord(strMisspelling);
 		
 	m_nLastAction = ACTION_INITIAL;
 

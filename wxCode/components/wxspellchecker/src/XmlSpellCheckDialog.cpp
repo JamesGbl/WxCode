@@ -52,10 +52,10 @@ XmlSpellCheckDialog::~XmlSpellCheckDialog()
 {
 }
 
-int XmlSpellCheckDialog::PresentSpellCheckUserInterface(const wxString& strMispelling)
+int XmlSpellCheckDialog::PresentSpellCheckUserInterface(const wxString& strMisspelling)
 {
   // If the dialog is being presented, then default the previous action flag first
-  SetMispelledWord(strMispelling);
+  SetMisspelledWord(strMisspelling);
 	m_nLastAction = ACTION_INITIAL;
 
   ShowModal();
@@ -174,12 +174,12 @@ void XmlSpellCheckDialog::CreateDialog(wxWindow* pParent)
     // Add data transfer validators
     if (XRCCTRL(*this,"TextMisspelledWord",wxTextCtrl))
     {
-      wxGenericValidator MisspellingValidator(&m_strMispelledWord);
+      wxGenericValidator MisspellingValidator(&m_strMisspelledWord);
       XRCCTRL(*this,"TextMisspelledWord",wxTextCtrl)->SetValidator(MisspellingValidator);
     }
     else if (XRCCTRL(*this,"StaticMisspelledWord",wxStaticText))
     {
-      wxGenericValidator MisspellingValidator(&m_strMispelledWord);
+      wxGenericValidator MisspellingValidator(&m_strMisspelledWord);
       XRCCTRL(*this,"StaticMisspelledWord",wxStaticText)->SetValidator(MisspellingValidator);
     }
 
@@ -254,7 +254,7 @@ void XmlSpellCheckDialog::OnIgnoreWord(wxCommandEvent& event)
 
 void XmlSpellCheckDialog::OnReplaceAll(wxCommandEvent& event)
 {
-	// Set a flag indicating that the user doesn't want to look at any more mispelling words
+	// Set a flag indicating that the user doesn't want to look at any more misspelling words
 	//	I guess that in this case, we always accept the first suggestion.
 	// Possibly the meaning for this one is actually that we should replace all occurrences of THIS WORD only
 	//	and send this replacement information to aspell_speller_store_repl (optionally)
@@ -265,7 +265,7 @@ void XmlSpellCheckDialog::OnReplaceAll(wxCommandEvent& event)
 
 void XmlSpellCheckDialog::OnIgnoreAll(wxCommandEvent& event)
 {
-	// Set a flag indicating that the user doesn't want to look at any more mispelling words
+	// Set a flag indicating that the user doesn't want to look at any more misspelling words
 	//	assume that all words are spelled correctly
 	// Possibly the meaning for this one is actually that we should ignore all occurrences of THIS WORD only
   m_nLastAction = ACTION_IGNORE_ALWAYS;
@@ -278,7 +278,7 @@ void XmlSpellCheckDialog::OnAddWordToCustomDictionary(wxCommandEvent& event)
 	// Nothing really needed for this other than adding the word to the custom dictionary and closing the dialog
   if (m_pSpellCheckEngine != NULL)
   {
-    m_pSpellCheckEngine->AddWordToDictionary(m_strMispelledWord);
+    m_pSpellCheckEngine->AddWordToDictionary(m_strMisspelledWord);
   }
 
   Show(FALSE);
@@ -328,9 +328,9 @@ void XmlSpellCheckDialog::OnDblClkSuggestionSelection(wxCommandEvent& event)
   }
 }
 
-void XmlSpellCheckDialog::SetMispelledWord(const wxString& strMispelling)
+void XmlSpellCheckDialog::SetMisspelledWord(const wxString& strMisspelling)
 {
-  m_strMispelledWord = strMispelling;
+  m_strMisspelledWord = strMisspelling;
 
   if (m_pSpellCheckEngine != NULL)
   {
@@ -339,7 +339,7 @@ void XmlSpellCheckDialog::SetMispelledWord(const wxString& strMispelling)
     if (pListBox)
     {
       // Get a list of suggestions to populate the list box
-      wxArrayString SuggestionArray = m_pSpellCheckEngine->GetSuggestions(m_strMispelledWord);
+      wxArrayString SuggestionArray = m_pSpellCheckEngine->GetSuggestions(m_strMisspelledWord);
       pListBox->Clear();
       if (SuggestionArray.GetCount() > 0)
       {
@@ -366,7 +366,7 @@ void XmlSpellCheckDialog::SetMispelledWord(const wxString& strMispelling)
 
     if (pContextText)
     {
-      wxSpellCheckEngineInterface::MispellingContext Context = m_pSpellCheckEngine->GetCurrentMispellingContext();
+      wxSpellCheckEngineInterface::MisspellingContext Context = m_pSpellCheckEngine->GetCurrentMisspellingContext();
 
       pContextText->SetEditable(FALSE);
 

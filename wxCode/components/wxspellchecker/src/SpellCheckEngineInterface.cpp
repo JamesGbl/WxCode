@@ -40,11 +40,11 @@ int wxSpellCheckEngineInterface::GetUserCorrection(const wxString& strMisspellin
 
 	if (nLastAction == wxSpellCheckUserInterface::ACTION_REPLACE_ALWAYS)
 	{
-		m_AlwaysReplaceMap[m_pSpellUserInterface->GetMispelledWord()] = m_pSpellUserInterface->GetReplacementText();
+		m_AlwaysReplaceMap[m_pSpellUserInterface->GetMisspelledWord()] = m_pSpellUserInterface->GetReplacementText();
 	}
 	else if (nLastAction == wxSpellCheckUserInterface::ACTION_IGNORE_ALWAYS)
 	{
-		m_AlwaysIgnoreList.Add(m_pSpellUserInterface->GetMispelledWord());
+		m_AlwaysIgnoreList.Add(m_pSpellUserInterface->GetMisspelledWord());
 	}
 	else if (nLastAction == wxSpellCheckUserInterface::ACTION_CLOSE)
 	{
@@ -62,9 +62,9 @@ void wxSpellCheckEngineInterface::DefineContext(const wxString& strText, long nO
   //  grab the 50 characters before the nOffset and the 50 characters + nLength after nOffset
   // Then, do a Find from the front and the back of this 100 + nLength character string looking
   //  for a space character.  Trim off this space character and all characters preceding/after 
-  //  it based on if it's before or after the mispelled word.
+  //  it based on if it's before or after the misspelled word.
   // Also, if there are NOT 50 characters before the nOffset don't bother trimming off at the space.
-  // Likewise for less than 50 characters following the mispelled word.
+  // Likewise for less than 50 characters following the misspelled word.
   // Special allowances should be made to not have newline characters (\r or \n) in the context.
 
   wxString strLocalText = strText;
@@ -89,7 +89,7 @@ void wxSpellCheckEngineInterface::DefineContext(const wxString& strText, long nO
     bTrimEnd = TRUE;
   }
 
-	nEndPosition += nOffset - nStartPosition;  // Without this, we're only grabbing the number of characters for starting at the mispelled word
+	nEndPosition += nOffset - nStartPosition;  // Without this, we're only grabbing the number of characters for starting at the misspelled word
 	wxString strContext;
 	if ((unsigned)nEndPosition == wxSTRING_MAXLEN)
 	  strContext = strLocalText.Mid(nStartPosition);

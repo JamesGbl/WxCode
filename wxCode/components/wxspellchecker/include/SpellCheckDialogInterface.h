@@ -20,7 +20,7 @@ public:
 	virtual ~wxSpellCheckDialogInterface();
 
 public:
-	virtual int PresentSpellCheckUserInterface(const wxString& strMispelling);
+	virtual int PresentSpellCheckUserInterface(const wxString& strMisspelling);
 };
 
 #endif  // __SPELL_CHECK_DIALOG_INTERFACE__

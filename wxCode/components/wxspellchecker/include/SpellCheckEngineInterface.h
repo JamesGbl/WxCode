@@ -33,7 +33,7 @@ public:
   virtual ~wxSpellCheckEngineInterface();
 
 protected:
-  StringToStringMap m_AlwaysReplaceMap;	// We need a map here to store the mispelled word and its replacement
+  StringToStringMap m_AlwaysReplaceMap;	// We need a map here to store the misspelled word and its replacement
   wxArrayString m_AlwaysIgnoreList;
 	bool m_bPersonalDictionaryModified;
 
@@ -76,15 +76,15 @@ public:
   virtual void DefineContext(const wxString& strText, long nOffset, long nLength);
   void ShowOption(const wxString& strOption, bool bShow = true);
 
-  class MispellingContext
+  class MisspellingContext
   {
   protected:
-    wxString m_strContext;  // fragment of the document containing word prior to and following the mispelled word
-    long m_nOffset;         // zero based offset into the strContext where the mispell word begins
-    long m_nLength;         // length of the mispelled word within strContext
+    wxString m_strContext;  // fragment of the document containing word prior to and following the misspelled word
+    long m_nOffset;         // zero based offset into the strContext where the misspell word begins
+    long m_nLength;         // length of the misspelled word within strContext
 
   public:  
-    MispellingContext::MispellingContext()
+    MisspellingContext::MisspellingContext()
     {
       m_strContext = "";
       m_nOffset = 0;
@@ -98,10 +98,10 @@ public:
     void SetLength(long nLength) { m_nLength = nLength; }
   };
   
-    virtual MispellingContext GetCurrentMispellingContext() { return m_Context; }
+    virtual MisspellingContext GetCurrentMisspellingContext() { return m_Context; }
 
   protected:
-    MispellingContext m_Context;
+    MisspellingContext m_Context;
 };
 
 #endif  // __SPELL_CHECK_ENGINE_INTERFACE__

@@ -33,7 +33,7 @@ public:
 		void OnDblClkSuggestionSelection(wxCommandEvent& event);
     void OnClose(wxCommandEvent& event);
     
-    virtual void SetMispelledWord(const wxString& strMispelling);
+    virtual void SetMisspelledWord(const wxString& strMisspelling);
  		void CreateDialog();
 
 private:

@@ -50,18 +50,18 @@ void MySpellingDialog::CreateDialog()
 
 	// Now add the controls
 	
-	// First the mispelling section
-	wxFlexGridSizer* pMispellingSizer = new wxFlexGridSizer(3, 5, 5);
+	// First the misspelling section
+	wxFlexGridSizer* pMisspellingSizer = new wxFlexGridSizer(3, 5, 5);
 
-	pMispellingSizer->Add(new wxStaticText(this, -1, _T("Mispelled Word:"), wxDefaultPosition));
-	pMispellingSizer->Add(new wxTextCtrl(this, IDC_TEXT_MISPELLED_WORD, _T(""), wxDefaultPosition, wxDefaultSize, wxTE_READONLY, wxTextValidator(wxFILTER_NONE, &m_strMispelledWord)), 1, wxEXPAND | wxALIGN_CENTER);
-	pMispellingSizer->Add(new wxButton(this, IDC_BUTTON_RECHECK_PAGE, _T("Recheck Page")), 0, wxEXPAND);
-	pMispellingSizer->Add(new wxStaticText(this, -1, _T("Replace with:"), wxDefaultPosition), 0, wxEXPAND | wxGROW | wxALIGN_CENTER);
-	pMispellingSizer->Add(new wxTextCtrl(this, IDC_TEXT_REPLACE_WITH, _T(""), wxDefaultPosition, wxDefaultSize, 0, wxTextValidator(wxFILTER_NONE, &m_strReplaceWithText)), 1, wxEXPAND | wxALIGN_CENTER);
-	pMispellingSizer->Add(new wxButton(this, IDC_BUTTON_CHECK_WORD, _T("Check Word")), 0, wxEXPAND);
-	pMispellingSizer->AddGrowableCol(1);
+	pMisspellingSizer->Add(new wxStaticText(this, -1, _T("Misspelled Word:"), wxDefaultPosition));
+	pMisspellingSizer->Add(new wxTextCtrl(this, IDC_TEXT_MISSPELLED_WORD, _T(""), wxDefaultPosition, wxDefaultSize, wxTE_READONLY, wxTextValidator(wxFILTER_NONE, &m_strMisspelledWord)), 1, wxEXPAND | wxALIGN_CENTER);
+	pMisspellingSizer->Add(new wxButton(this, IDC_BUTTON_RECHECK_PAGE, _T("Recheck Page")), 0, wxEXPAND);
+	pMisspellingSizer->Add(new wxStaticText(this, -1, _T("Replace with:"), wxDefaultPosition), 0, wxEXPAND | wxGROW | wxALIGN_CENTER);
+	pMisspellingSizer->Add(new wxTextCtrl(this, IDC_TEXT_REPLACE_WITH, _T(""), wxDefaultPosition, wxDefaultSize, 0, wxTextValidator(wxFILTER_NONE, &m_strReplaceWithText)), 1, wxEXPAND | wxALIGN_CENTER);
+	pMisspellingSizer->Add(new wxButton(this, IDC_BUTTON_CHECK_WORD, _T("Check Word")), 0, wxEXPAND);
+	pMisspellingSizer->AddGrowableCol(1);
 	
-	pTopSizer->Add(pMispellingSizer, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 10);
+	pTopSizer->Add(pMisspellingSizer, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 10);
 
 	// Now the suggestions section
 	pTopSizer->Add(new wxStaticText(this, -1, _T("Suggestions:"), wxDefaultPosition), 0, wxLEFT | wxRIGHT | wxTOP, 10);
@@ -157,7 +157,7 @@ void MySpellingDialog::OnIgnoreWord(wxCommandEvent& event)
 
 void MySpellingDialog::OnReplaceAll(wxCommandEvent& event)
 {
-	// Set a flag indicating that the user doesn't want to look at any more mispelling words
+	// Set a flag indicating that the user doesn't want to look at any more misspelling words
 	//	I guess that in this case, we always accept the first suggestion.
 	// Possibly the meaning for this one is actually that we should replace all occurrences of THIS WORD only
 	//	and send this replacement information to aspell_speller_store_repl (optionally)
@@ -167,7 +167,7 @@ void MySpellingDialog::OnReplaceAll(wxCommandEvent& event)
 
 void MySpellingDialog::OnIgnoreAll(wxCommandEvent& event)
 {
-	// Set a flag indicating that the user doesn't want to look at any more mispelling words
+	// Set a flag indicating that the user doesn't want to look at any more misspelling words
 	//	assume that all words are spelled correctly
 	// Possibly the meaning for this one is actually that we should ignore all occurrences of THIS WORD only
   m_nLastAction = ACTION_IGNORE_ALWAYS;
@@ -179,8 +179,8 @@ void MySpellingDialog::OnAddWordToCustomDictionary(wxCommandEvent& event)
 	// Nothing really needed for this other than adding the word to the custom dictionary and closing the dialog
   if (m_pSpellCheckEngine != NULL)
   {
-    if (!(m_pSpellCheckEngine->AddWordToDictionary(m_strMispelledWord)))
-      ::wxMessageBox(_T("There was an error adding \"") + m_strMispelledWord + _T("\" to the personal dictionary"));
+    if (!(m_pSpellCheckEngine->AddWordToDictionary(m_strMisspelledWord)))
+      ::wxMessageBox(_T("There was an error adding \"") + m_strMisspelledWord + _T("\" to the personal dictionary"));
   }
   Show(FALSE);
 }
@@ -293,9 +293,9 @@ void MySpellingDialog::OnDblClkSuggestionSelection(wxCommandEvent& event)
   }
 }
 
-void MySpellingDialog::SetMispelledWord(const wxString& strMispelling)
+void MySpellingDialog::SetMisspelledWord(const wxString& strMisspelling)
 {
-  m_strMispelledWord = strMispelling;
+  m_strMisspelledWord = strMisspelling;
 
   if (m_pSpellCheckEngine != NULL)
   {
@@ -303,7 +303,7 @@ void MySpellingDialog::SetMispelledWord(const wxString& strMispelling)
     if (pListBox)
     {
       // Get a list of suggestions to populate the list box
-      wxArrayString SuggestionArray = m_pSpellCheckEngine->GetSuggestions(m_strMispelledWord);
+      wxArrayString SuggestionArray = m_pSpellCheckEngine->GetSuggestions(m_strMisspelledWord);
       pListBox->Clear();
       if (SuggestionArray.GetCount() > 0)
       {
@@ -325,7 +325,7 @@ void MySpellingDialog::SetMispelledWord(const wxString& strMispelling)
     wxTextCtrl* pContextText = (wxTextCtrl*)FindWindow(IDC_TEXT_CONTEXT);
     if (pContextText)
     {
-      wxSpellCheckEngineInterface::MispellingContext Context = m_pSpellCheckEngine->GetCurrentMispellingContext();
+      wxSpellCheckEngineInterface::MisspellingContext Context = m_pSpellCheckEngine->GetCurrentMisspellingContext();
       pContextText->SetEditable(FALSE);
       pContextText->Clear();
       

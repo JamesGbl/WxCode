@@ -9,24 +9,24 @@ SpellCheckCmdLineInterface::~SpellCheckCmdLineInterface()
 {
 }
 
-int SpellCheckCmdLineInterface::PresentSpellCheckUserInterface(const wxString& strMispelling)
+int SpellCheckCmdLineInterface::PresentSpellCheckUserInterface(const wxString& strMisspelling)
 {
-  SetMispelledWord(strMispelling);
+  SetMisspelledWord(strMisspelling);
 		
 	m_nLastAction = ACTION_INITIAL;
 
-  PrintMispelling();
+  PrintMisspelling();
   PrintSuggestions();
   GetFeedback();
 
 	return m_nLastAction;
 }
 
-void SpellCheckCmdLineInterface::PrintMispelling()
+void SpellCheckCmdLineInterface::PrintMisspelling()
 {
   if (m_pSpellCheckEngine)
   {
-    wxSpellCheckEngineInterface::MispellingContext Context = m_pSpellCheckEngine->GetCurrentMispellingContext();
+    wxSpellCheckEngineInterface::MisspellingContext Context = m_pSpellCheckEngine->GetCurrentMisspellingContext();
     wxString strContext = Context.GetContext();
     // Append the closing marker first since the opening marker would shift where the closing marker would have to go
     strContext.insert(Context.GetOffset() + Context.GetLength(), "<-**");
@@ -41,7 +41,7 @@ void SpellCheckCmdLineInterface::PrintSuggestions()
 
   if (m_pSpellCheckEngine)
   {
-    wxArrayString SuggestionArray = m_pSpellCheckEngine->GetSuggestions(m_strMispelledWord);
+    wxArrayString SuggestionArray = m_pSpellCheckEngine->GetSuggestions(m_strMisspelledWord);
     if (SuggestionArray.GetCount() > 0)
     {
       // Add each suggestion to the list

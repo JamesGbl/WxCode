@@ -42,7 +42,7 @@ SuggestMgr::~SuggestMgr()
 
 
 
-// generate suggestions for a mispelled word
+// generate suggestions for a misspelled word
 //    pass in address of array of char * pointers
 
 int SuggestMgr::suggest(char** wlst, int ns, const char * word)

@@ -19,8 +19,8 @@ public:
 	virtual ~SpellCheckCmdLineInterface();
 
 public:
-	virtual int PresentSpellCheckUserInterface(const wxString& strMispelling);
-  void PrintMispelling();
+	virtual int PresentSpellCheckUserInterface(const wxString& strMisspelling);
+  void PrintMisspelling();
   void PrintSuggestions();
   void GetFeedback();
 };

@@ -30,20 +30,20 @@ public:
 protected:
   wxSpellCheckEngineInterface* m_pSpellCheckEngine;
 
-  wxString m_strMispelledWord;
+  wxString m_strMisspelledWord;
 	wxString m_strReplaceWithText;
   wxString m_strContext;
 
   int m_nLastAction;
 
 public:
-  virtual void SetMispelledWord(const wxString& strMispelling) { m_strMispelledWord = strMispelling; }
-	wxString GetMispelledWord() { return m_strMispelledWord; }
+  virtual void SetMisspelledWord(const wxString& strMisspelling) { m_strMisspelledWord = strMisspelling; }
+	wxString GetMisspelledWord() { return m_strMisspelledWord; }
 	wxString GetReplacementText() { return m_strReplaceWithText; }
 	wxString GetContext() { return m_strContext; }
 	int GetLastAction() { return m_nLastAction; }
 	void SetSpellCheckEngine(wxSpellCheckEngineInterface* pEngine) { m_pSpellCheckEngine = pEngine; }
-	virtual int PresentSpellCheckUserInterface(const wxString& strMispelling) = 0;
+	virtual int PresentSpellCheckUserInterface(const wxString& strMisspelling) = 0;
 };
 
 #endif  // __SPELL_CHECK_USER_INTERFACE__
