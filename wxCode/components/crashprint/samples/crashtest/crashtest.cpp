@@ -3,7 +3,7 @@
 // Purpose:     CrashTest application
 // Maintainer:  Otto Wyss
 // Created:     2004-10-01
-// RCS-ID:      $Id: crashtest.cpp,v 1.5 2004-12-21 19:05:21 wyo Exp $
+// RCS-ID:      $Id: crashtest.cpp,v 1.6 2005-02-09 16:48:09 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -51,9 +51,9 @@
 //============================================================================
 
 const wxString APP_NAME = _T("CrashTest");
-const wxString APP_DESCR = _(
-    "This application tests if the crash print is correct."
-);
+const wxString APP_DESCR = _("\
+This application tests if the crash print is correct.\
+");
 
 const wxString APP_MAINT = _T("Otto Wyss");
 const wxString APP_VENDOR = _T("wxCode");
@@ -66,10 +66,10 @@ const wxString APP_BUILD = _T(__DATE__);
 const wxString APP_WEBSITE = _T("http://wxcode.sourceforge.net");
 const wxString APP_MAIL = _T("http://wxcode.sourceforge.net/feedback.php");
 
-const wxString APP_INFOS = _(
-    "If you like this app and want to help just subscribe to the users mailing \n"
-    "and ask what you can do."
-);
+const wxString APP_INFOS = _("\
+If you like this app and want to help just subscribe to the users mailing \n\
+and ask what you can do.\
+");
 
 
 //----------------------------------------------------------------------------
@@ -123,7 +123,7 @@ bool App::OnInit () {
 
 #if defined(__WINDOWS__)
     // BlackBox dll (crash handling)
-    m_blackboxDll.Load ("BlackBox.dll");
+    m_blackboxDll.Load (_T("BlackBox.dll"));
 #endif
 
 #if defined(__linux__)
@@ -137,8 +137,8 @@ bool App::OnInit () {
     g_appname.Append (APP_NAME);
 
     // print welcome
-    printf (_T("%s (%s)\n"), g_appname.c_str(), APP_VERSION.c_str());
-    printf (_T("%s\n\n"), APP_DESCR.c_str());
+    wxPrintf (_T("%s (%s)\n"), g_appname.c_str(), APP_VERSION.c_str());
+    wxPrintf (_T("%s\n\n"), APP_DESCR.c_str());
 
     // force crash
     wxWindow *w = NULL; w->Show();

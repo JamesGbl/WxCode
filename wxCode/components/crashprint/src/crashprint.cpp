@@ -3,7 +3,7 @@
 // Purpose:     wxCrashPrint
 // Maintainer:  Wyo
 // Created:     2004-09-28
-// RCS-ID:      $Id: crashprint.cpp,v 1.9 2004-11-22 18:27:11 wyo Exp $
+// RCS-ID:      $Id: crashprint.cpp,v 1.10 2005-02-09 16:48:09 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -82,15 +82,15 @@ void wxCrashPrint::Report () {
     int btCount;
     btCount = backtrace (m_btBuffer, maxBtCount);
     if (btCount < 0) {
-        printf (_T("\n%s: Backtrace could not be created\n"), appname.c_str());
+        wxPrintf (_T("\n%s: Backtrace could not be created\n"), appname.c_str());
     }
     m_btStrings = backtrace_symbols (m_btBuffer, btCount);
     if (!m_btStrings) {
-        printf (_T("\n%s: Backtrace could not get symbols\n"), appname.c_str());
+        wxPrintf (_T("\n%s: Backtrace could not get symbols\n"), appname.c_str());
     }
 
     // print backtrace announcement
-    printf (_T("\n*** %s (%s) crashed ***, see backtrace!\n"), appname.c_str(), wxVERSION_STRING);
+    wxPrintf (_T("\n*** %s (%s) crashed ***, see backtrace!\n"), appname.c_str(), wxVERSION_STRING);
 
     // format backtrace lines
     int status;
@@ -121,15 +121,15 @@ void wxCrashPrint::Report () {
     }
 
     // determine line from address
-    wxString cmd = wxString::Format ("addr2line -e /proc/%d/exe -s ", getpid());
+    wxString cmd = wxString::Format (_T("addr2line -e /proc/%d/exe -s "), getpid());
     wxArrayString fnames;
     if (wxExecute (cmd + addrs, fnames) != -1) {
         for (int i = 0; i < fnames.GetCount(); ++i) {
-            printf ("%s at %s\n", lines[i].c_str(), fnames[i].c_str());
+            wxPrintf (_T("%s at %s\n"), lines[i].c_str(), fnames[i].c_str());
         }
     }else{
         for (int i = 0; i < lines.GetCount(); ++i) {
-            printf ("%s\n", lines[i].c_str());
+            wxPrintf (_T("%s\n"), lines[i].c_str());
         }
     }
 
