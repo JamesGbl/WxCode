@@ -1,0 +1,15 @@
+Component:  UnixFiledataClass
+Release:    1.0
+Documents:  http://wxcode.sourceforge.net/components/unixfiledataclass/index.html
+wxWidgets:  2.4.x, 2.5.x
+Maintainer: David Hart (dghart)
+Subdir:     unixfiledataclass
+
+Description:
+FileData is a class to encapsulate some *nix-specific things that wxWidgets (very
+reasonably) ignores.  It has accessors for information about a file\"s permissions,
+ownership etc, and methods to modify these where possible.  Unlike wxStat, it deals
+correctly with symlinks.
+ 
+None of this is rocket science, most methods just returning parts of statstruct. 
+However I hope it saves some wheel-reinvention.
