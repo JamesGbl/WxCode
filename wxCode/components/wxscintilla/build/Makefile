@@ -1,0 +1,158 @@
+##############################################################################
+## File:        Makefile
+## Purpose:     wxScintilla
+## Maintainer:  Otto Wyss
+## Created:     2004-09-19
+## RCS-ID:      $Id: Makefile,v 1.1 2004-11-12 18:49:39 wyo Exp $
+## Copyright:   (c) wxCode
+## Licence:     wxWidgets licence
+##############################################################################
+
+# list of source files
+SRC = PlatWX.cpp \
+      ScintillaWX.cpp \
+      stc.cpp \
+      AutoComplete.cxx \
+      CallTip.cxx \
+      CellBuffer.cxx \
+      ContractionState.cxx \
+      Document.cxx \
+      DocumentAccessor.cxx \
+      Editor.cxx \
+      Indicator.cxx \
+      KeyMap.cxx \
+      KeyWords.cxx \
+      LexAda.cxx \
+      LexAPDL.cxx \
+      LexAsm.cxx \
+      LexAsn1.cxx \
+      LexAU3.cxx \
+      LexAVE.cxx \
+      LexBaan.cxx \
+      LexBash.cxx \
+      LexBullant.cxx \
+      LexCLW.cxx \
+      LexConf.cxx \
+      LexCPP.cxx \
+      LexCrontab.cxx \
+      LexCSS.cxx \
+      LexEiffel.cxx \
+      LexErlang.cxx \
+      LexEScript.cxx \
+      LexForth.cxx \
+      LexFortran.cxx \
+      LexGui4Cli.cxx \
+      LexHTML.cxx \
+      LexKix.cxx \
+      LexLisp.cxx \
+      LexLout.cxx \
+      LexLua.cxx \
+      LexMatlab.cxx \
+      LexMetapost.cxx \
+      LexMMIXAL.cxx \
+      LexMPT.cxx \
+      LexMSSQL.cxx \
+      LexNsis.cxx \
+      LexOthers.cxx \
+      LexPascal.cxx \
+      LexPB.cxx \
+      LexPerl.cxx \
+      LexPOV.cxx \
+      LexPS.cxx \
+      LexPython.cxx \
+      LexRuby.cxx \
+      LexScriptol.cxx \
+      LexSpecman.cxx \
+      LexSQL.cxx \
+      LexTeX.cxx \
+      LexVB.cxx \
+      LexVerilog.cxx \
+      LexVHDL.cxx \
+      LexYAML.cxx \
+      LineMarker.cxx \
+      PropSet.cxx \
+      RESearch.cxx \
+      ScintillaBase.cxx \
+      Style.cxx \
+      StyleContext.cxx \
+      UniConversion.cxx \
+      ViewStyle.cxx \
+      WindowAccessor.cxx \
+      XPM.cxx
+
+# source directories
+vpath %.cpp $(WXCODE)/styledtextctrl/src
+vpath %.cxx $(WXCODE)/styledtextctrl/src/scintilla/src
+
+# additional header directories
+INC = -I$(WXCODE)/styledtextctrl/src/scintilla/include/ \
+      -I$(WXCODE)/styledtextctrl/include/ \
+      -I$(WXCODE)/styledtextctrl/src/scintilla/src/
+
+DEF = -D__WX__=1 -DSCI_LEXER -DLINK_LEXERS
+
+# objects
+OBJ = $(patsubst %.cxx,%.o,$(SRC:.cpp=.o))
+
+# library
+LIB = libwxscintilla
+
+
+##############################################################################
+# implementation, change only if other settings or other targets are needed
+
+ifneq ($(WXDEVEL),)
+  WXDEVEL_Release = $(WXDEVEL)/Release/
+  WXDEVEL_Debug = $(WXDEVEL)/Debug/
+  WXDEVEL_Univ = $(WXDEVEL)/Univ/
+endif
+
+ifeq ($(MAKECMDGOALS),)
+  WXCONFIG=wx-config
+  GTKCONFIG=gtk-config
+endif
+ifeq ($(MAKECMDGOALS),release)
+  WXCONFIG=wx-config
+  GTKCONFIG=gtk-config
+endif
+ifeq ($(MAKECMDGOALS),debug)
+  WXCONFIG=wxgtkd-2.4-config
+  GTKCONFIG=gtk-config
+endif
+ifeq ($(MAKECMDGOALS),develdebug)
+  WXCONFIG=$(WXDEVEL_Debug)wx-config --inplace
+  GTKCONFIG=pkg-config gtk+-2.0
+endif
+ifeq ($(MAKECMDGOALS),univdebug)
+  WXCONFIG=$(WXDEVEL_Univ)wx-config --inplace
+  GTKCONFIG=pkg-config gtk+-2.0
+endif
+
+%.o:	%.cpp
+	g++ -fpic -c $(DEF) $(INC) `$(WXCONFIG) --cxxflags` `$(GTKCONFIG) --cflags` -g -o $@ $<
+
+%.o:	%.cxx
+	g++ -fpic -c $(DEF) $(INC) `$(WXCONFIG) --cxxflags` `$(GTKCONFIG) --cflags` -g -o $@ $<
+
+all:	$(LIB)
+$(LIB):	$(OBJ)
+	g++ -fpic --share -o $@ $^ `$(WXCONFIG) --libs`
+
+release:	$(LIB)r
+$(LIB)r:	$(OBJ)
+	g++ -fpic --share -o $@ $^ `$(WXCONFIG) --static --libs`
+
+debug:	$(LIB)d
+$(LIB)d:	$(OBJ)
+	g++ -fpic --share -o $@ $^ `$(WXCONFIG) --libs`
+
+develdebug:	$(LIB)dd
+$(LIB)dd:	$(OBJ)
+	g++ -fpic --share -o $@ $^ `$(WXCONFIG) --libs`
+
+univdebug:	$(LIB)ud
+$(LIB)ud:	$(OBJ)
+	g++ -fpic --share -o $@ $^ `$(WXCONFIG) --libs`
+
+clean:
+	rm -f *.o
