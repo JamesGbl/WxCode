@@ -9,17 +9,19 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: ScintillaWX.cpp,v 1.10 2005-02-27 15:49:26 wyo Exp $
+// RCS-ID:      $Id: ScintillaWX.cpp,v 1.11 2005-03-02 20:37:22 wyo Exp $
 // Copyright:   (c) 2000 by Total Control Software
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
-
 
 #include "ScintillaWX.h"
 //?#include "ExternalLexer.h"
 #include "PlatWX.h"
 #include "wx/wxscintilla.h"
 #include <wx/textbuf.h>
+#ifdef __WXMSW__
+#include <wx/msw/private.h> // GetHwndOf()
+#endif
 
 //----------------------------------------------------------------------
 // Helper classes
@@ -857,7 +859,7 @@ int  ScintillaWX::DoKeyDown(const wxKeyEvent& evt, bool* consumed)
          alt   = evt.AltDown();
     if (ctrl && key >= 1 && key <= 26)
         key += 'A' - 1;
- 
+
 
     switch (key) {
     case WXK_DOWN:              key = SCK_DOWN;     break;
