@@ -3,7 +3,7 @@
  ---------------------
  
  Component:  wxxml2
- Release:    2004-08-03
+ Release:    2004-12-22
  Documents:  http://wxcode.sourceforge.net/components/wxscript/index.html
  wxWidgets:  2.4.x, 2.5.x
  Maintainer: Francesco Montorsi (frm)
@@ -41,6 +41,13 @@
  programmer to use them is to build xml2.cpp together with the sources of
  its app. Nonetheless, someone may find a library more portable and thus
  you can use the makefiles in the BUILD folder to create a little lib.
+
+ Obviously these wrappers require the presence of the LIBXML2 library
+ and, only on win32, of the ICONV library. These two libraries are cross-platform
+ and can be compiled with various compilers. If you want to download the
+ precompiled binaries for win32, I suggest you to download the LIBS package
+ of the MathStudio project (http://sourceforge.net/projects/mathstudio) which
+ contains these two libraries compiled with MSVC, BORLAND and MINGW compilers.
 
  The most important thing you should do if you've never used these classes
  before is to build the sample and read its source file.

@@ -156,7 +156,7 @@ bool wxXml2Property::IsUnlinked() const
 void wxXml2Property::SetValue(const wxString &value)
 {
 	// reset the TEXT child node
-	xmlFreeFunc((void *)m_attr->children->content);
+	xmlFree((void *)m_attr->children->content);
 	m_attr->children->content = xmlStrdup(WX2XML(value));
 }
 
@@ -398,17 +398,39 @@ bool wxXml2DTD::Load(wxInputStream &stream, wxString *pErr)
 }
 
 // helper function for wxXml2DTD::Save
-/*static int (void *context, const char *buffer, int len)
+static int XMLDTDWrite(void *context, const char *buffer, int len)
 {
 	wxOutputStream *stream = (wxOutputStream *)context;
 	stream->Write(buffer, len);
 	return stream->LastWrite();
-}*/
-	
+}
+/*
+xmlDtdDumpOutput(xmlSaveCtxtPtr ctxt, xmlDtdPtr dtd) {
+    xmlOutputBufferPtr buf;
+    int format, level;
+    xmlDocPtr doc;
+
+     * Dump the notations first they are not in the DTD children list
+     * Do this only on a standalone DTD or on the internal subset though.
+     
+	   if ((dtd->notations != NULL) && ((dtd->doc == NULL) ||
+        (dtd->doc->intSubset == dtd))) {
+        xmlDumpNotationTable(buf->buffer, (xmlNotationTablePtr) dtd->notations);
+    }
+    format = ctxt->format;
+    level = ctxt->level;
+    doc = ctxt->doc;
+    ctxt->format = 0;
+    ctxt->level = -1;
+    ctxt->doc = dtd->doc;
+    xmlNodeListDumpOutput(ctxt, dtd->children);
+}
+*/
+
 int wxXml2DTD::Save(wxOutputStream &stream) const
 {
 	// are we attached to a wxXml2Document ?
-	xmlDoc *doc = (m_dtd ? m_dtd->parent : NULL);
+/*	xmlDoc *doc = (m_dtd ? m_dtd->parent : NULL);
 	if (doc) xmlUnlinkNode((xmlNode *)m_dtd);
 
 	// we must create a temporary document containing
@@ -420,7 +442,27 @@ int wxXml2DTD::Save(wxOutputStream &stream) const
 
 	// reattach to the old wxXml2Document, if there was one...
 	if (doc)
-		wxXml2Document(doc).SetDTD((wxXml2DTD &)*this);
+		wxXml2Document(doc).SetDTD((wxXml2DTD &)*this);*/
+	xmlOutputBuffer *buf = xmlAllocOutputBuffer(NULL);
+	buf->context = &stream;
+	buf->writecallback = XMLDTDWrite;
+	m_dtd->doc = NULL;
+	xmlNodeDumpOutput(buf, NULL, (xmlNode *)m_dtd, 1, 0, NULL);
+	int written = buf->written;
+ /*   xmlSaveCtxt ctxt;
+    memset(&ctxt, 0, sizeof(ctxt));
+    ctxt.doc = NULL;
+    ctxt.buf = buf;
+    ctxt.level = 0;
+    ctxt.format = 1;
+    ctxt.encoding = (const xmlChar *)NULL;
+    xmlSaveCtxtInit(&ctxt);
+
+	ctxt->format = 0;
+    ctxt->level = -1;
+    ctxt->doc = dtd->doc;
+    //xmlNodeListDumpOutput(ctxt, dtd->children);
+	xmlNodeDump(*/
 
 	return written;
 }

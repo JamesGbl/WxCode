@@ -24,24 +24,35 @@
 	<set var="COMP_SAMPLE_SRC">../sample/minimal.cpp</set>
 
 
-
 	<!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->
 	<include file="../../../build/wxcode.bkl"/>
+
+
+
+	<!-- Be sure to include this line in your projects which use the
+	libxml2 library: otherwise you'll get "undefined references to __xmlFree"
+	when compiling wxxml2 with MINGW compiler -->
+	<set var="STATIC_DEF"><if cond="SHARED=='0'">LIBXML_STATIC</if></set>
 
 	<!-- The real target: not declared in wxcode_end.bkl because
 	     in this way modifications are allowed to the basic template. -->
 	<lib id="wxxml2" template="complib">
 		<stdlib>$(LIBXML2_DIR)</stdlib>
 		<stdlib>$(ICONV_DIR)</stdlib>
-		<libname>$(COMP_NAME)$(WXLIBPOSTFIX)</libname>		
+		<define>$(STATIC_DEF)</define>
+		<libname>$(COMP_NAME)$(WXLIBPOSTFIX)</libname>
 	</lib>
 
 	<!-- The sample of wxXml2 -->
 	<exe id="minimal" template="compsample">
 		<stdlib>$(LIBXML2_DIR)</stdlib>
 		<stdlib>$(ICONV_DIR)</stdlib>
+		<define>$(STATIC_DEF)</define>
 
-		<sys-lib>xml2</sys-lib>
+		<depends>wxxml2</depends>
+		<library>wxxml2</library>
+		<if cond="FORMAT=='mingw' or FORMAT=='autoconf'"><sys-lib>xml2</sys-lib></if>
+		<if cond="FORMAT!='mingw' and FORMAT!='autoconf'"><sys-lib>libxml2</sys-lib></if>
 		<sys-lib>iconv</sys-lib>
 		<wxlibs/>
 		<syslibs/>

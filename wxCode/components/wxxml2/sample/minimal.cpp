@@ -159,16 +159,11 @@ IMPLEMENT_APP(MyApp)
 	// test program. Anyway,  you can find it also online at:
 	//     http://www.codeproject.com/tools/leakfinder.asp
 	#include <crtdbg.h>
-	//#include <windows.h>
-	#include "stackwalker.h"
 
 	// define some useful macros
-	#define new			new(_NORMAL_BLOCK, THIS_FILE, __LINE__)
+	#define new                 new(_NORMAL_BLOCK, THIS_FILE, __LINE__)
+	#define mcDUMP_ON_EXIT		{ _CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF); }
 
-	#define mcDUMP_ON_EXIT				{ _CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF); }
-	#define mcSTART_DETECTION			{ InitAllocCheck(ACOutput_Advanced, FALSE, FALSE); }
-	#define mcEND_DETECTION				{ DeInitAllocCheck(); }
-	#define mcEND_DETECTION_AND_DUMP	{ DeInitAllocCheck(); _CrtDumpMemoryLeaks(); }
 	
 	#undef THIS_FILE
 	static char THIS_FILE[] = __FILE__;
@@ -179,8 +174,8 @@ IMPLEMENT_APP(MyApp)
 	class mcLeakDetector {
 
 	public:
-		mcLeakDetector() { mcSTART_DETECTION; mcDUMP_ON_EXIT; }
-		~mcLeakDetector() { mcEND_DETECTION; }
+		mcLeakDetector() { /*mcDUMP_ON_EXIT;*/ }
+		~mcLeakDetector() {}
 	};
 
 	// ...infact, instancing a STATIC mcLeakDetector class, we
@@ -191,33 +186,6 @@ IMPLEMENT_APP(MyApp)
 	// end of the program (when, after the main() or winmain(),
 	// the framework removes the static variables).
 	//static mcLeakDetector detector;
-
-
-	// this little class instead is used to generate a 'memdiff'
-	// of the heap state from its creation to its destruction.
-	class mcFindMemoryLeaks
-	{
-		  _CrtMemState m_checkpoint;
-
-	public:
-
-		  mcFindMemoryLeaks()
-		  {
-				_CrtMemCheckpoint(&m_checkpoint);
-		  };
-
-		  ~mcFindMemoryLeaks()
-		  {
-				_CrtMemState checkpoint;
-				_CrtMemCheckpoint(&checkpoint);
-
-				_CrtMemState diff;
-				_CrtMemDifference(&diff, &m_checkpoint, &checkpoint);
-
-				_CrtMemDumpStatistics(&diff);
-				_CrtMemDumpAllObjectsSince(&diff);
-		  };
-	};
 
 #endif
 
@@ -477,7 +445,7 @@ void MyFrame::LoadDTD(const wxString &filename)
 	}
 
 	// show the wxXml2Node tree in a simple format...
-	wxString tree;
+	/*wxString tree;
 	wxXml2Node root = doc.GetRoot();
 	int indent = 3;
 	tree.Alloc(1024);
@@ -486,7 +454,9 @@ void MyFrame::LoadDTD(const wxString &filename)
 	ParseNodeAndSiblings(root, tree, indent);
 
 	// show it to the user	
-	m_text->SetLabel(tree);
+	m_text->SetLabel(tree);*/
+
+	doc.Save("saved.dtd");
 }
 
 void MyFrame::OnLoadXML(wxCommandEvent& WXUNUSED(event))
