@@ -216,7 +216,7 @@ Allocate a document buffer large enough to store a given number of bytes.  The d
 
 <div class="divider2"></div>
 <h4><a name="AddText">void AddText (const wxString& text)</a><br />
-                     >void AddText (const int length, const wxString& text)</a></h4>
+                      void AddText (const int length, const wxString& text)</a></h4>
 <p>
 Inserts the string at the current position. The current position is set at the end of the inserted text, but it is not scrolled into view. If you need to add strings with binary values (e.g. Unicode characters), use the form with the <code>length</code> parameter.
 </p>
@@ -229,7 +229,7 @@ This behaves just like <code>AddText</code>, but inserts styled text.
 
 <div class="divider2"></div>
 <h4><a name="AppendText">void AppendText (const wxString& text)</a><br />
-                        >void AppendText (int length, const wxString& text)</a></h4>
+                         void AppendText (int length, const wxString& text)</a></h4>
 <p>
 Appends the string at the last position in the document. The current selection is not changed and the new text is not scrolled into view. If you need to add strings with binary values (e.g. Unicode characters), use the form with the <code>length</code> parameter.
 </p>
@@ -372,7 +372,7 @@ See also: <code><a class="message" href="#SearchInTarget">SearchInTarget</a></co
 
 <div class="divider2"></div>
 <h4><a name="SearchAnchor">void SearchAnchor()</a><br />
-    <a name="SearchNext">int SearchNext (int flags, const wxString& text)</a></h4>
+    <a name="SearchNext">int SearchNext (int flags, const wxString& text)</a><br />
     <a name="SearchPrev">int SearchPrev (int flags, const wxString& text)</a></h4>
 <p>
 These provide relocatable search support. This allows multiple incremental interactive searches to be macro recorded while still setting the selection to found text so the find/select operation is self-contained. They send <a class="message" href="#wxEVT_SCI_MACRORECORD"><code>wxEVT_SCI_MACRORECORD</code></a> <a class="jump" href="#Notifications">notifications</a> if macro recording is enabled.
@@ -455,6 +455,8 @@ This replaces the target using regular expressions. The replacement string is fo
 
 <div class="divider1"></div>
 <h3 id="Overtype">Overtype</h3>
+<p>
+</p>
 
 <div class="divider2"></div>
 <h4><a name="SetOvertype">void SetOvertype (bool overtype)</a><br />
@@ -498,6 +500,8 @@ GTK+ does not really support <code>CanPaste</code> and always returns <code>true
 
 <div class="divider1"></div>
 <h3 id="ErrorHandling">Error handling</h3>
+<p>
+</p>
 
 <div class="divider2"></div>
 <h4><a name="SetStatus">void SetStatus (int status)</a><br />
@@ -1179,6 +1183,8 @@ By default, the colour of visible white space is determined by the lexer in use.
 
 <div class="divider1"></div>
 <h3 id="Cursor">Cursor</h3>
+<p>
+</p>
 
 <div class="divider2"></div>
 <h4><a name="SetCursorType">void SetCursorType (int cursorType)</a><br />
@@ -1203,6 +1209,8 @@ Cursor values 1 through 7 have defined cursors, but only <code>wxSCI_CURSORWAIT<
 
 <div class="divider1"></div>
 <h3 id="MouseCapture">Mouse capture</h3>
+<p>
+</p>
 
 <div class="divider2"></div>
 <h4><a name="SetMouseDownCaptures">void SetMouseDownCaptures (bool captures)</a><br />
@@ -1418,31 +1426,31 @@ You can set a style to use a different character set than the default. The place
 </p>
 <p>
 The character sets supported on Windows are:<br />
-<code>wxwxSCI_CMD_CHARSET_ANSI</code>,
-<code>wxwxSCI_CMD_CHARSET_ARABIC</code>,
-<code>wxwxSCI_CMD_CHARSET_BALTIC</code>,
-<code>wxwxSCI_CMD_CHARSET_CHINESEBIG5</code>,
-<code>wxwxSCI_CMD_CHARSET_DEFAULT</code>,
-<code>wxwxSCI_CMD_CHARSET_EASTEUROPE</code>,
-<code>wxwxSCI_CMD_CHARSET_GB2312</code>,
-<code>wxwxSCI_CMD_CHARSET_GREEK</code>,
-<code>wxwxSCI_CMD_CHARSET_HANGUL</code>,
-<code>wxwxSCI_CMD_CHARSET_HEBREW</code>,
-<code>wxwxSCI_CMD_CHARSET_JOHAB</code>,
-<code>wxwxSCI_CMD_CHARSET_MAC</code>,
-<code>wxwxSCI_CMD_CHARSET_OEM</code>,
-<code>wxwxSCI_CMD_CHARSET_SHIFTJIS</code>,
-<code>wxwxSCI_CMD_CHARSET_SYMBOL</code>,
-<code>wxwxSCI_CMD_CHARSET_THAI</code>,
-<code>wxwxSCI_CMD_CHARSET_TURKISH</code>,
+<code>wxwxSCI_CMD_CHARSET_ANSI</code>,<br />
+<code>wxwxSCI_CMD_CHARSET_ARABIC</code>,<br />
+<code>wxwxSCI_CMD_CHARSET_BALTIC</code>,<br />
+<code>wxwxSCI_CMD_CHARSET_CHINESEBIG5</code>,<br />
+<code>wxwxSCI_CMD_CHARSET_DEFAULT</code>,<br />
+<code>wxwxSCI_CMD_CHARSET_EASTEUROPE</code>,<br />
+<code>wxwxSCI_CMD_CHARSET_GB2312</code>,<br />
+<code>wxwxSCI_CMD_CHARSET_GREEK</code>,<br />
+<code>wxwxSCI_CMD_CHARSET_HANGUL</code>,<br />
+<code>wxwxSCI_CMD_CHARSET_HEBREW</code>,<br />
+<code>wxwxSCI_CMD_CHARSET_JOHAB</code>,<br />
+<code>wxwxSCI_CMD_CHARSET_MAC</code>,<br />
+<code>wxwxSCI_CMD_CHARSET_OEM</code>,<br />
+<code>wxwxSCI_CMD_CHARSET_SHIFTJIS</code>,<br />
+<code>wxwxSCI_CMD_CHARSET_SYMBOL</code>,<br />
+<code>wxwxSCI_CMD_CHARSET_THAI</code>,<br />
+<code>wxwxSCI_CMD_CHARSET_TURKISH</code>,<br />
 <code>wxwxSCI_CMD_CHARSET_VIETNAMESE</code>.
 </p>
 <p>
 The character sets supported on GTK+ are:<br />
-<code>wxwxSCI_CMD_CHARSET_ANSI</code>,
-<code>wxwxSCI_CMD_CHARSET_EASTEUROPE</code>,
-<code>wxwxSCI_CMD_CHARSET_GB2312</code>,
-<code>wxwxSCI_CMD_CHARSET_HANGUL</code>,
+<code>wxwxSCI_CMD_CHARSET_ANSI</code>,<br />
+<code>wxwxSCI_CMD_CHARSET_EASTEUROPE</code>,<br />
+<code>wxwxSCI_CMD_CHARSET_GB2312</code>,<br />
+<code>wxwxSCI_CMD_CHARSET_HANGUL</code>,<br />
 <code>wxwxSCI_CMD_CHARSET_SHIFTJIS</code>.
 </p>
 
@@ -1877,7 +1885,19 @@ The markers are drawn in the order of their numbers, so higher numbered markers 
 <div class="divider2"></div>
 <h4><a name="MarkerDefine">void MarkerDefine (int markerNumber, int markerSymbol)</a></h4>
 <p>
-Associates a marker number in the range 0 to 31 with one of the marker symbols or an ASCII character. The general-purpose marker symbols currently available are:<br />  <code>wxSCI_MARK_CIRCLE</code>, <code>wxSCI_MARK_ROUNDRECT</code>, <code>wxSCI_MARK_ARROW</code>, <code>wxSCI_MARK_SMALLRECT</code>, <code>wxSCI_MARK_SHORTARROW</code>, <code>wxSCI_MARK_EMPTY</code>, <code>wxSCI_MARK_ARROWDOWN</code>, <code>wxSCI_MARK_MINUS</code>, <code>wxSCI_MARK_PLUS</code>, <code>wxSCI_MARK_ARROWS</code>, <code>wxSCI_MARK_DOTDOTDOT</code>, <code>wxSCI_MARK_EMPTY</code> and <code>wxSCI_MARK_BACKGROUND</code>.
+Associates a marker number in the range 0 to 31 with one of the marker symbols or an ASCII character. The general-purpose marker symbols currently available are:<br />  <code>wxSCI_MARK_CIRCLE</code>,<br />
+<code>wxSCI_MARK_ROUNDRECT</code>,<br />
+<code>wxSCI_MARK_ARROW</code>,<br />
+<code>wxSCI_MARK_SMALLRECT</code>,<br />
+<code>wxSCI_MARK_SHORTARROW</code>,<br />
+<code>wxSCI_MARK_EMPTY</code>,<br />
+<code>wxSCI_MARK_ARROWDOWN</code>,<br />
+<code>wxSCI_MARK_MINUS</code>,<br />
+<code>wxSCI_MARK_PLUS</code>,<br />
+<code>wxSCI_MARK_ARROWS</code>,<br />
+<code>wxSCI_MARK_DOTDOTDOT</code>,<br />
+<code>wxSCI_MARK_EMPTY</code>,<br />
+<code>wxSCI_MARK_BACKGROUND</code>.
 </p>
 
 <div class="divider2"></div>
@@ -1890,7 +1910,19 @@ The <code>wxSCI_MARK_BACKGROUND</code> marker changes the background colour of t
 </p>
 <p>
 There are also marker symbols designed for use in the folding margin in a flattened tree style.<br />
-<code>wxSCI_MARK_BOXMINUS</code>, <code>wxSCI_MARK_BOXMINUSCONNECTED</code>, <code>wxSCI_MARK_BOXPLUS</code>, <code>wxSCI_MARK_BOXPLUSCONNECTED</code>, <code>wxSCI_MARK_CIRCLEMINUS</code>, <code>wxSCI_MARK_CIRCLEMINUSCONNECTED</code>, <code>wxSCI_MARK_CIRCLEPLUS</code>, <code>wxSCI_MARK_CIRCLEPLUSCONNECTED</code>, <code>wxSCI_MARK_LCORNER</code>, <code>wxSCI_MARK_LCORNERCURVE</code>, <code>wxSCI_MARK_TCORNER</code>, <code>wxSCI_MARK_TCORNERCURVE</code>, and <code>wxSCI_MARK_VLINE</code>.
+<code>wxSCI_MARK_BOXMINUS</code>,<br />
+<code>wxSCI_MARK_BOXMINUSCONNECTED</code>,<br />
+<code>wxSCI_MARK_BOXPLUS</code>,<br />
+<code>wxSCI_MARK_BOXPLUSCONNECTED</code>,<br />
+<code>wxSCI_MARK_CIRCLEMINUS</code>,<br />
+<code>wxSCI_MARK_CIRCLEMINUSCONNECTED</code>,<br />
+<code>wxSCI_MARK_CIRCLEPLUS</code>,<br />
+<code>wxSCI_MARK_CIRCLEPLUSCONNECTED</code>,<br />
+<code>wxSCI_MARK_LCORNER</code>,<br />
+<code>wxSCI_MARK_LCORNERCURVE</code>,<br />
+<code>wxSCI_MARK_TCORNER</code>,<br />
+<code>wxSCI_MARK_TCORNERCURVE</code>,<br />
+<code>wxSCI_MARK_VLINE</code>.
 </p>
 <p>
 Characters can be used as markers by adding the ASCII value of the character to <code>wxSCI_MARK_CHARACTER</code> (10000). For example, to use 'A' (ASCII code 65) as marker number 1 use:<br />
