@@ -1,0 +1,202 @@
+<HTML>
+ <HEAD>
+ <!-- $MVD$:app("MicroVision WebExpress") -->
+ <!-- $MVD$:color("18","66","Custom #1") -->
+ <TITLE>Writing online help</TITLE><META
+  HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+ <META NAME="GENERATOR" CONTENT="Microsoft FrontPage Express 2.0">
+ </HEAD>
+ <BODY BGCOLOR=#FFFFFF TEXT=#000000 LINK=#FF0000 VLINK=#000000>
+ <P>
+  <TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=0 BORDER=4>
+   <TR>
+    <TD COLSPAN=2 BGCOLOR=#660000 VALIGN=CENTER><P>
+    <!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"><FONT SIZE=4><FONT COLOR=#FFFFFF>Writing a dialog based wxWindows application</FONT></FONT></FONT></TD></TR>
+  </TABLE>
+ </P><P ALIGN=CENTER>
+  <CENTER><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"><FONT SIZE=1>(c) 1999 Marco Ghislanzoni, &lt;</FONT></FONT><A HREF="mailto:marco@promo.it"><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"><FONT SIZE=1>marco@promo.it</FONT></FONT></A><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"><FONT SIZE=1>&gt;</FONT></FONT></CENTER></P><P><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">Sometimes
+  even a minimal application is... too much!</FONT>
+ </P><P>
+ <!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">Suppose you need a really simple application. No menu, no toolbar, no status bar. Just few buttons, a pair of text boxes and that's it. Too simple to be useful? Well, it could be a currency converter or a tiny desktop clock...</FONT></P>
+ <P>
+ <!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">This kind of applications have to be designed to take as little desktop space as possible. And since they are so simple they don't even need a menu, a toolbar or a status bar. For example, in the case of a desktop clock it does not even need a single button (suppose the correct time is taken directly from the operating system so no Set button is necessary.) You run it and it shows itself on the desktop. You can drag it around and leave where you like most. Then, when tired of having it there, you just press the system close button (in Windows 95 is the small 'x' in the upper right corner) and it's gone.</FONT></P>
+ <P>
+ <!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">In this article we will see how to write such a dialog based application. At the end you will find the links to download two sample dialog based applications.</FONT></P>
+ <H2>
+ <!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">The main window</FONT></H2>
+ <P>
+ <!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">A dialog based application simply is a wxWindows application that has a dialog box as its main (and usually only) window. Thus, like in any other wxWindows based application, the first thing to do is to derive a class from wxApp and then implement its OnInit method. If it were a standard application (i.e. with a frame as its main window), you would then derive a class from wxFrame, initialize it, and then set it as the main application window with a (non mandatory) call to SetTopWindow. If this were the case, the code would look like this (from the </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier"><FONT SIZE=4><B>minimal</B></FONT></FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"><B> </B></FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">sample in the standard wxWindows distribution):</FONT></P><PRE><BLOCKQUOTE>// Define a new frame type: this is going to be our main frame<BR>class <FONT
+   COLOR=#FF0000>MyFrame</FONT> : public <FONT COLOR=#FF0000>wxFrame</FONT><BR>{<BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+   FACE="Courier">   ...</FONT><BR><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+   FACE="Courier">   private:</FONT><BR><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+   FACE="Courier">   ...</FONT><BR><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+   FACE="Courier">   // any class wishing to process wxWindows events must use this macro</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+   FACE="Courier">   DECLARE_EVENT_TABLE()</FONT><BR>};<BR><BR>...<BR><BR>bool MyApp::OnInit()<BR>{<BR>   // Create the main application window<BR>   <FONT
+   COLOR=#FF0000>MyFrame</FONT> *frame = new <FONT COLOR=#FF0000>MyFrame</FONT>(&quot;Minimal wxWindows App&quot;,<BR>                                 wxPoint(50, 50), wxSize(450, 340));<BR><BR>   // Show it and tell the application that it's our main window<BR>   frame-&gt;Show(TRUE);<BR>   SetTopWindow(frame);<BR><BR>   // success: wxApp::OnRun() will be called which will enter the main message<BR>   // loop and the application will run. If we returned FALSE here, the<BR>   // application would exit immediately.<BR>   return TRUE;<BR>}</BLOCKQUOTE></PRE></BLOCKQUOTE><P>
+<!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">But in a dialog based application the main window is a dialog box and thus it's derived from wxDialog rather than from wxFrame. Here is a similar code excerpt but for a dialog based application (code is taken from the </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier"><B>dlgapp</B></FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"> sample accompanying this article):</FONT></P><PRE><BLOCKQUOTE><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">// Define a new dialog type: this is going to be our main window</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">class </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier"><FONT COLOR=#FF0000>MyDialog</FONT></FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier"> : public </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier"><FONT COLOR=#FF0000>wxDialog</FONT></FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier"></FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">{</FONT><BR><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   ...</FONT><BR><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   private:</FONT><BR><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   ...</FONT><BR><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   // any class wishing to process wxWindows events must use this macro</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   DECLARE_EVENT_TABLE()</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">};</FONT><BR><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">...</FONT><BR><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">// `Main program' equivalent: the program execution &quot;starts&quot; here</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">bool MyApp::OnInit()</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">{</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">    // Create the main application window (a dialog in this case)</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">    </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier"><FONT COLOR=#FF0000>MyDialog</FONT></FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier"> *dialog = new </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier"><FONT COLOR=#FF0000>MyDialog</FONT></FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier">(&quot;Dialog based App&quot;,</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">                                 wxPoint(50, 50), wxSize(200, 200));</FONT><BR><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">    // Show it and tell the application that it's our main window</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">    dialog-&gt;Show(TRUE);</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">    SetTopWindow(dialog);</FONT><BR><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">    // success: wxApp::OnRun() will be called which will enter the main message</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">    // loop and the application will run. If we returned FALSE here, the</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">    // application would exit immediately.</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">    return TRUE;</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">}</FONT></BLOCKQUOTE></PRE></BLOCKQUOTE><P>
+<!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">As you can see the two pieces of codes are very similar except for the class the main window is derived from (marked in red.)</FONT></P>
+<H2>
+<!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">Events handling</FONT></H2>
+<P>
+<!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">In both cases the main window class is the one that handles the events and thus has to contain the </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier"><B>DECLARE_EVENT_TABLE()</B></FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"> instruction in its declaration. The events are then managed in the usual way, associating each one with the corresponding handling method. The particularity is that in a dialog based application you will deal mostly with command handling events, that is with events generated by the controls that populate the dialog.</FONT></P>
+<P>
+<!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">Here is an example of event handling table for a dialog based application (from </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier"><B>dlgapp</B></FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"> sample):</FONT></P><PRE><BLOCKQUOTE><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">BEGIN_EVENT_TABLE(MyDialog, wxDialog)</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">EVT_BUTTON(Dlgapp_CelToFar, MyDialog::OnCelToFar)</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">EVT_BUTTON(Dlgapp_FarToCel, MyDialog::OnFarToCel)</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">EVT_BUTTON(Dlgapp_About,    MyDialog::OnAbout)</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">EVT_BUTTON(Dlgapp_Close,    MyDialog::OnQuit)</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">// We have to implement this to force closing</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">// the dialog when the 'x' system button is pressed</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">EVT_CLOSE(                  MyDialog::OnQuit)</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">END_EVENT_TABLE()</FONT><BR></BLOCKQUOTE></PRE></BLOCKQUOTE><P>
+<!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">As you can see all the managed events are related to buttons that populate the dialog, but there could also be, for example, events responding to text change in a text box etc. There is also an </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier"><B>EVT_CLOSE</B></FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"> event entry that normally wouldn't be present because the wxWindows framework handles the closing event by itself. More about this particularity will come later.</FONT></P>
+<H2>
+<!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">Populating the main dialog</FONT></H2>
+<P>
+<!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">By the way, up to now our main dialog window doesn't contain any control at all. There are two ways of populating the dialog with controls. The simpler (but boring) one is creating and positioning the various controls inside the dialog constructor. The second way is loading the entire dialog from an external resource (wxResource or native Windows resource.) The second approach requires a little attention because of the way the resources are implemented in wxWindows to make them portable.</FONT>
+</P><P>
+<!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">The next coding example shows how to do populate the dialog from inside its constructor. Just remember that it's convenient to store a pointer for each control you're going to access later while you don't need a pointer for the remaining controls:</FONT>
+</P><PRE><BLOCKQUOTE><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">// dialog constructor</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">MyDialog::MyDialog(const wxString&amp; title, const wxPoint&amp; pos, const wxSize&amp; size)</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">: wxDialog((wxDialog *)NULL, -1, title, pos, size)</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">{</FONT><BR><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   // create and position controls in the dialog</FONT><BR><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   // create static box to enclose text and conversion buttons</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   wxStaticBox *statBox = new wxStaticBox(this, Dlgapp_StaticBox,</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">                                          wxString(&quot;Convert&quot;),</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">                                          wxPoint(5,0), wxSize(130, 100));</FONT><BR><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   // static text celsius</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   wxStaticText *celText = new wxStaticText(this, Dlgapp_CelText,</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">                                            wxString(&quot;Celsius:&quot;), wxPoint(10,15));</FONT><BR><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   // text control (declared in MyDialog, pointer stored for later access)</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier"><FONT COLOR=#FF0000>celDegree</FONT></FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier"> = new wxTextCtrl(this, Dlgapp_CelDegree, wxString(&quot;&quot;),</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">                              wxPoint(10,30), wxSize(50,20));</FONT><BR><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   // static text fahrenheit</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   wxStaticText *fahrText = new wxStaticText(this, Dlgapp_FahrText,</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">                        wxString(&quot;Fahrenheit:&quot;), wxPoint(10,55));</FONT><BR><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   // text control (declared in MyDialog, pointer stored for later access)</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier"><FONT COLOR=#FF0000>fahrDegree</FONT></FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier"> = new wxTextCtrl(this, Dlgapp_FahrDegree, wxString(&quot;&quot;),</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">                                 wxPoint(10,70), wxSize(50,20));</FONT><BR><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   // four buttons, we don't need to reference them later</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   wxButton *btnCelToFahr = new wxButton( this, Dlgapp_CelToFahr,</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">                                         &quot;C -&gt; F&quot;, wxPoint(80,30), wxSize(50,20));</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   wxButton *btnFahrToCel = new wxButton( this, Dlgapp_FahrToCel,</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">                                         &quot;F -&gt; C&quot;, wxPoint(80,70), wxSize(50,20));</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   wxButton *btnAbout = new wxButton( this, Dlgapp_About,</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">                                      &quot;About&quot;, wxPoint(10,110), wxSize(50,20));</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   wxButton *btnClose = new wxButton( this, Dlgapp_Close,</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">                                      &quot;Close&quot;, wxPoint(80,110), wxSize(50,20));</FONT><BR><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   // no default button</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">}</FONT></BLOCKQUOTE></PRE></BLOCKQUOTE><P>
+<!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier">celDegree</FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"> and </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier">fahrDegree</FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"> have been declared as members of </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier">MyDialog</FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"> so that we can use them to access the related control inside the event handling code. Otherwise we can assign a name to the controls we need to access later and then retrieve a pointer to them using the </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier"><B>wxFindWindowByName</B></FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"> function.</FONT></P>
+<P>
+<!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">The next piece of code shows how to load the dialog from an external WXR file. You need to pay attention to the compiler and the operating system you are working with since they could behave differently than expected. The following code (belonging the the </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier"><B>calc</B></FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"> sample accompanying this article) has been adapted from the </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier"><B>resource</B></FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"> sample coming with the standard wxWindows distribution. You should look at this sample and at the wxWindows documentation to find out more about handling WXR files and resources.</FONT></P><PRE><BLOCKQUOTE><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">// `Main program' equivalent: the program execution &quot;starts&quot; here</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">bool TheApp::OnInit()</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">{</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">#if defined(__WXMSW__)</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   // Load the .wxr 'file' from a .rc resource, under Windows.</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   dialog1 = wxLoadUserResource(&quot;dialog1&quot;, &quot;WXRDATA&quot;);</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   // All resources in the file (only one in this case) get parsed</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   // by this call.</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   wxResourceParseString(dialog1);</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">#else</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   // Simply parse the data pointed to by the variable dialog1.</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   // If there were several resources, there would be several</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   // variables, and this would need to be called several times.</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   wxResourceParseData(dialog1);</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">#endif</FONT><BR><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   // Create dialog</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   MainDialog *dialog = new MainDialog();</FONT><BR><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   if (dialog-&gt;LoadFromResource(NULL, &quot;dialog1&quot;))</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   {</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">      dialog-&gt;txtDisplay = (wxStaticText *)wxFindWindowByName(&quot;lblDisp&quot;, dialog);</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">      if (dialog-&gt;txtDisplay)</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">      {</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">         dialog-&gt;txtDisplay-&gt;SetLabel(&quot;0.&quot;);</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">      }</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   }</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   else</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   {</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">      wxMessageBox(&quot;Error loading resources!&quot;, &quot;ERROR!&quot;,</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">      wxOK | wxICON_EXCLAMATION, NULL);</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">      return FALSE;</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   }</FONT><BR><BR><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   // Show it and tell the application that it's our main window</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   dialog-&gt;Show(TRUE);</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   SetTopWindow(dialog);</FONT><BR><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   // success: wxApp::OnRun() will be called which will enter the main message</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   // loop and the application will run. If we returned FALSE here, the</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   // application would exit immediately.</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   return TRUE;</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">}</FONT><BR></BLOCKQUOTE></PRE></BLOCKQUOTE><P>
+<!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">In the code above the main dialog is first created using the default constructor </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier">MainDialog()</FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"> (equivalent to </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier">wxDialog()</FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">) and then populated with </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier"><B>LoadFromResource</B></FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">. Once the dialog has been loaded, the controls we are interested in can be addressed using </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier"><B>wxFindWindowByName</B></FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"> to retrieve a pointer to them. Then the main dialog is shown like any other window using the </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier"><B>Show</B></FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"> method. By the way, the dialog resources had been created using </FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"><B>DialogEd</B></FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"> in the standard wxWindows distribution.</FONT></P>
+<H2>
+<!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">Closing the application</FONT></H2>
+<P>
+<!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">Normally you don't have to care about closing the main application window since wxWindows will deal automatically with it, i.e. ending the application when all of its windows have been closed. But dialog windows behave differently from frame windows. When an application main window is closed, if it's a frame window it's automatically destroyed. The application object, recognizing it doesn't have a window any more shuts-down the application and everything goes fine. But if the main application window is a dialog, closing the window with the 'x' system button of with </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier"><B>Close()</B></FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"> just causes the dialog to be hidden. Thus the application still has a window (the dialog) even if it's hidden and so doesn't shut-down. It simply sits there with its only window hidden and incapable of getting any user input. To put it simply, it's stuck. It's still running but we cannot interact with it because its only window is hidden.</FONT>
+</P><P>
+<!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">To prevent this unpleasant situation we have to make sure that, when closed, the main dialog is destroyed rather than hidden. In this way the automatic application shut-down will work correctly. To do so we need to call the </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier"><B>Destroy()</B></FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"> method rather than </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier">Close()</FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"> when handling the quit or exit command. We also need to handle the </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier"><B>EVT_CLOSE</B></FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"> event, generated by clicking the small 'x' in the upper right corner, in the same way so to ensure the application is properly terminated if exited in this way (look at the </FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"><B>Events handling</B></FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"> paragraph.) Here is the code that handles the quit command:</FONT></P><PRE><BLOCKQUOTE><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">void MyDialog::OnQuit(wxCommandEvent&amp; WXUNUSED(event))</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">{</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   // --&gt; Don't use Close with a wxDialog,</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   // use Destroy instead.</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   Destroy();</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">}</FONT></BLOCKQUOTE></PRE></BLOCKQUOTE><H2>
+<!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">Adding an Icon</FONT></H2>
+<P>
+<!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">Under Windows 95 the dialog based application we have outlined has a little defect. The problem is that it's main window (the dialog) doesn't have an associated icon and thus no icon is displayed in the title bar near to the application name nor it appears in the task bar. We cannot define an icon the same way we do for a wxFrame derived main window because wxDialog doesn't have a SetIcon method. So the only thing we can do is to provide, under Windows 95, a similar method for the our wxDialog derived class.</FONT></P>
+<P>
+<!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">Fortunately wxWindows comes complete with source code so it's easy to go into Windows' specific wxFrame code to see how SetIcon is implemented. Here is the wxFrame SetIcon code adapted to our wxDialog derived class:</FONT></P><PRE><BLOCKQUOTE><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">void MyDialog::SetIcon(const wxIcon&amp; icon)</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">{</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   m_icon = icon;</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">#ifdef __WIN95__</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">   if ( m_icon.Ok() )</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">      SendMessage((HWND) GetHWND(), WM_SETICON,</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">                  (WPARAM)TRUE, (LPARAM)(HICON) m_icon.GetHICON());</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">#endif</FONT><BR><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">}</FONT></BLOCKQUOTE></PRE></BLOCKQUOTE><P>
+<!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">It works by sending a Windows native </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier">WM_SETICON</FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"> message to the dialog and passing the icon to display. This code is Windows 95 specific since previous versions didn't have such a message. </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier">m_icon</FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"> is defined in </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier">MyDialog</FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"> as </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier">wxIcon</FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">. The icon can be loaded in </FONT><!-- $MVD$:face("Untitled Font Set 2") --><FONT FACE="Courier">MyDialog</FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">'s constructor using the code:</FONT>
+</P><PRE><BLOCKQUOTE><!-- $MVD$:face("Untitled Font Set 2") --><FONT
+  FACE="Courier">SetIcon(wxICON(mondrian));</FONT></BLOCKQUOTE></PRE></BLOCKQUOTE><P>
+<!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">that will actually show the icon under Windows 95 only.</FONT></P>
+<H2>
+<!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">Sample applications</FONT></H2>
+<P>
+<!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">Here is the complete source code of two dialog based applications. The code has been tested under Windows 95 with Visual C++ 5.0 compiler but it's supposed to work with other operating systems/compiler. Any kind of feed-back will be really appreciated.</FONT></P>
+<P>
+<!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"><B>Download</B></FONT><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">:</FONT></P>
+<P>
+<A HREF="dlgapp.zip"><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">dlgapp</FONT></A><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"> A simple dialog based application. Converts Celsius degree to Fahrenheit and viceversa.</FONT>
+</P><P>
+<A HREF="calc.zip"><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica">calc</FONT></A><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"> A dialog based application that implements a small desktop calculator having just the four basic operations.</FONT>&nbsp;</P>
+<P ALIGN=CENTER>
+ <CENTER><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"><!-- $MVD$:spaceretainer() -->&nbsp;</FONT><BR CLEAR=ALL>
+ <!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"><FONT SIZE=1>(c) 1999 Marco Ghislanzoni, &lt;</FONT></FONT><A HREF="mailto:marco@promo.it"><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"><FONT SIZE=1>marco@promo.it</FONT></FONT></A><!-- $MVD$:face("Untitled Font Set 1") --><FONT FACE="Arial,Lucida Sans,Helvetica"><FONT SIZE=1>&gt;</FONT></FONT></BODY></HTML>
