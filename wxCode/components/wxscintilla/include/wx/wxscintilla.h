@@ -12,9 +12,9 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.h,v 1.2 2004-11-13 10:37:07 wyo Exp $
-// Copyright:   (c) 2000 by Total Control Software
-// Licence:     wxWindows license
+// RCS-ID:      $Id: wxscintilla.h,v 1.3 2004-11-22 19:47:39 wyo Exp $
+// Copyright:   (c) 2004 wxCode
+// Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
 
 #ifndef __WXSCINTILLA_H__
