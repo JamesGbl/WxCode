@@ -4,33 +4,44 @@
 #include <wx/tokenzr.h>
 #include <wx/textfile.h>
 
+
 const wxString MySpellInterface::Personal_Dictionary_Filename = _T(".MySpellPersonalDictionary");
 
 MySpellInterface::MySpellInterface(wxSpellCheckUserInterface* pDlg /* = NULL */)
 {
   m_pSpellUserInterface = pDlg;
+
   if (m_pSpellUserInterface != NULL)
+
     m_pSpellUserInterface->SetSpellCheckEngine(this);
+
   
   m_pMySpell = NULL;
   
+
   SetDefaultOptions();
 
   InitializeSpellCheckEngine();
 }
 
+
 MySpellInterface::~MySpellInterface()
+
 {
 }
 
+
 int MySpellInterface::InitializeSpellCheckEngine()
+
 {
   m_pMySpell= new MySpell(m_strAffixFile.c_str(), m_strDictionaryFile.c_str());
   
   return (m_pMySpell != NULL);
 }
 
+
 int MySpellInterface::UninitializeSpellCheckEngine()
+
 {
   if (m_pMySpell)
   {
@@ -40,9 +51,12 @@ int MySpellInterface::UninitializeSpellCheckEngine()
   return TRUE;
 }
 
+
 int MySpellInterface::SetDefaultOptions()
+
 {
 	m_strAffixFile = wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("en_US.aff"));
+
 	m_strDictionaryFile = wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("en_US.dic"));
   
   SpellCheckEngineOption AffixFileOption(_T("affix-file"), _T("Affix File"), m_strAffixFile, SpellCheckEngineOption::FILE);
@@ -51,9 +65,12 @@ int MySpellInterface::SetDefaultOptions()
   AddOptionToMap(DictFileOption);
 
   return TRUE;
+
 }
 
+
 int MySpellInterface::SetOption(SpellCheckEngineOption& Option)
+
 {
   // MySpell doesn't really have any options that I know of other than the affix and
   // dictionary files.  To change those, a new MySpell instance must be created though
@@ -79,15 +96,22 @@ int MySpellInterface::SetOption(SpellCheckEngineOption& Option)
   // We'll something changed so tear down the old spell check engine and create a new one
   UninitializeSpellCheckEngine();
   return InitializeSpellCheckEngine();
+
 }
 
+
 wxString MySpellInterface::CheckSpelling(wxString strText)
+
 {
   if (m_pMySpell == NULL)
+
     return "";
 
+
   int nDiff = 0;
+
   
+
   wxStringTokenizer tkz(strText);
   while ( tkz.HasMoreTokens() )
   {
@@ -97,87 +121,141 @@ wxString MySpellInterface::CheckSpelling(wxString strText)
     if  (!(m_pMySpell->spell(token)))
     {
       // If this word is in the always ignore list, then just move on
+
       if (m_AlwaysIgnoreList.Index(token) != wxNOT_FOUND)
+
         continue;
 
+
       // If this word is in the always ignore list, then just move on
+
       if (m_PersonalDictionary.Index(token) != wxNOT_FOUND)
+
         continue;
+
       
+
       bool bReplaceFromMap = FALSE;
+
       StringToStringMap::iterator WordFinder = m_AlwaysReplaceMap.find(token);
+
       if (WordFinder != m_AlwaysReplaceMap.end())
+
         bReplaceFromMap = TRUE;
+
       
+
       int nUserReturnValue = 0;
+
       if (!bReplaceFromMap)
+
       {
+
         // Define the context of the word
+
         DefineContext(strText, tkz.GetPosition(), token.Length());
+
   
+
         // Print out the misspelling and get a replasment from the user 
+
         // Present the dialog so the user can tell us what to do with this word
+
         nUserReturnValue = GetUserCorrection(token);  //Show function will show the dialog and not return until the user makes a decision
+
       }
+
       
+
       if (nUserReturnValue == wxSpellCheckUserInterface::ACTION_CLOSE)
+
       {
+
         break;
+
       }
+
       else if ((nUserReturnValue == wxSpellCheckUserInterface::ACTION_REPLACE) || bReplaceFromMap)
+
       {
+
         wxString strReplacementText = (bReplaceFromMap) ? (*WordFinder).second : m_pSpellUserInterface->GetReplacementText();
+
         // Increase/Decreate the character difference so that the next loop is on track
+
         nDiff += strReplacementText.Length() - token.Length();
+
         m_bPersonalDictionaryModified = TRUE;	// Storing this information modifies the dictionary
+
         // Replace the misspelled word with the replacement */
+
         strText.replace(tkz.GetPosition(), token.Length(), strReplacementText);
+
       }
+
     }
   }
 	
+
   return strText;
+
 }
 
+
 wxArrayString MySpellInterface::GetSuggestions(const wxString& strMisspelledWord)
+
 {
   wxArrayString wxReturnArray;
+
   wxReturnArray.Empty();
+
 
   if (m_pMySpell)
   {
     char **wlst;
 
+
     int ns = m_pMySpell->suggest(&wlst,strMisspelledWord.c_str());
     for (int i=0; i < ns; i++)
     {
       wxReturnArray.Add(wlst[i]);
+
       free(wlst[i]);
     }
     free(wlst);
   }
   
   return wxReturnArray;
+
 }
 
 bool MySpellInterface::IsWordInDictionary(const wxString& strWord)
+
 {
   if (m_pMySpell == NULL)
+
     return false;
 
-  return (m_pMySpell->spell(strWord));
+
+
+  return (m_pMySpell->spell(strWord) == 1);
+
 }
 
+
 int MySpellInterface::AddWordToDictionary(const wxString& strWord)
+
 {
   m_PersonalDictionary.Add(strWord);
   m_PersonalDictionary.Sort();
   return true;
 }
 
+
 wxArrayString MySpellInterface::GetWordListAsArray()
 {
   return m_PersonalDictionary;
+
 }
 
 // Since MySpell doesn't have a concept of a personal dictionary, we can create a file
@@ -224,6 +302,7 @@ bool MySpellInterface::LoadPersonalDictionary()
   return true;
 }
 
+
 bool MySpellInterface::SavePersonalDictionary()
 {
   wxFileName sPath; 
@@ -249,4 +328,5 @@ bool MySpellInterface::SavePersonalDictionary()
   DictFile.Close();
   return true;
 }
+
 
