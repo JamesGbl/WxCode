@@ -1,0 +1,91 @@
+[Project]
+name=wxSpellCheckerDemo
+type=5
+defaultConfig=0
+
+[Debug]
+// compiler 
+workingDirectory=../../bin
+arguments=
+intermediateFilesDirectory=Debug
+outputFilesDirectory=Debug
+compilerPreprocessor=
+extraCompilerOptions=`wxgtk2-2.5-config --cxxflags`
+compilerIncludeDirectory=../../include, ../..
+noWarning=0
+defaultWarning=0
+allWarning=1
+extraWarning=0
+isoWarning=0
+warningsAsErrors=0
+debugType=1
+debugLevel=2
+exceptionEnabled=0
+runtimeTypeEnabled=0
+optimizeLevel=0
+
+// linker
+libraryPath=
+outputFilename=../../bin//wxSpellCheckerDemod
+libraries=
+extraLinkerOptions=`wxgtk2-2.5-config --libs` -lwx_gtk2_xrc-2.5 ../../lib/libwx_spellcheckd.a ../../lib/libmyspelld.a
+ignoreStartupFile=0
+ignoreDefaultLibs=0
+stripExecutableFile=0
+
+// archive
+extraArchiveOptions=
+
+//resource
+resourcePreprocessor=__WIN32__,__WIN95__,__GNUWIN32__
+resourceIncludeDirectory=
+extraResourceOptions=
+
+[Release]
+// compiler 
+workingDirectory=../../bin
+arguments=
+intermediateFilesDirectory=Release
+outputFilesDirectory=Release
+compilerPreprocessor=
+extraCompilerOptions=`wxgtk2-2.5-config --cxxflags`
+compilerIncludeDirectory=../../include, ../..
+noWarning=0
+defaultWarning=0
+allWarning=1
+extraWarning=0
+isoWarning=0
+warningsAsErrors=0
+debugType=0
+debugLevel=1
+exceptionEnabled=0
+runtimeTypeEnabled=0
+optimizeLevel=2
+
+// linker
+libraryPath=
+outputFilename=../../bin/wxSpellCheckerDemo
+libraries=
+extraLinkerOptions=`wxgtk2-2.5-config --libs` -lwx_gtk2_xrc-2.5 ../../lib/libwx_spellcheck.a ../../lib/libmyspell.a
+ignoreStartupFile=0
+ignoreDefaultLibs=0
+stripExecutableFile=1
+
+// archive
+extraArchiveOptions=
+
+//resource
+resourcePreprocessor=
+resourceIncludeDirectory=
+extraResourceOptions=
+
+[Source]
+1=wxSpellCheckerDemo.cpp
+[Header]
+1=wxSpellCheckerDemo.h
+[Resource]
+[Other]
+[History]
+wxSpellCheckerDemo.cpp,6894
+wxSpellCheckerDemo.h,796
+wxSpellCheckerDemo.h,796
