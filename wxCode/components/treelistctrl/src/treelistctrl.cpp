@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.51 2004-11-11 19:26:46 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.52 2004-11-11 19:42:59 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -165,46 +165,55 @@ public:
 
     // column information manipulation
     const wxTreeListColumnInfo& GetColumn (int column) const{
-        wxCHECK_MSG(column < GetColumnCount(), wxInvalidTreeListColumnInfo, wxT("Invalid column"));
+        wxCHECK_MSG ((column >= 0) && (column < GetColumnCount()),
+                     wxInvalidTreeListColumnInfo, wxT("Invalid column"));
         return m_columns[column];
     }
     wxTreeListColumnInfo& GetColumn (int column) {
-        wxCHECK_MSG(column < GetColumnCount(), wxInvalidTreeListColumnInfo, wxT("Invalid column"));
+        wxCHECK_MSG ((column >= 0) && (column < GetColumnCount()),
+                     wxInvalidTreeListColumnInfo, wxT("Invalid column"));
         return m_columns[column];
     }
     void SetColumn (int column, const wxTreeListColumnInfo& info);
 
     wxString GetColumnText (int column) const {
-        wxCHECK_MSG(column < GetColumnCount(), wxEmptyString, wxT("Invalid column"));
+        wxCHECK_MSG ((column >= 0) && (column < GetColumnCount()),
+                     wxEmptyString, wxT("Invalid column"));
         return m_columns[column].GetText();
     }
     void SetColumnText (int column, const wxString& text) {
-        wxCHECK_RET(column < GetColumnCount(), wxT("Invalid column"));
+        wxCHECK_RET ((column >= 0) && (column < GetColumnCount()),
+                     wxT("Invalid column"));
         m_columns[column].SetText (text);
     }
 
     int GetColumnAlignment (int column) const {
-        wxCHECK_MSG(column < GetColumnCount(), wxALIGN_LEFT, wxT("Invalid column"));
+        wxCHECK_MSG ((column >= 0) && (column < GetColumnCount()),
+                     wxALIGN_LEFT, wxT("Invalid column"));
         return m_columns[column].GetAlignment();
     }
     void SetColumnAlignment (int column, int flag) {
-        wxCHECK_RET(column < GetColumnCount(), wxT("Invalid column"));
+        wxCHECK_RET ((column >= 0) && (column < GetColumnCount()),
+                     wxT("Invalid column"));
         m_columns[column].SetAlignment (flag);
     }
 
     int GetColumnWidth (int column) const {
-        wxCHECK_MSG(column < GetColumnCount(), -1, wxT("Invalid column"));
+        wxCHECK_MSG ((column >= 0) && (column < GetColumnCount()),
+                     -1, wxT("Invalid column"));
         return m_columns[column].GetWidth();
     }
     void SetColumnWidth (int column, int width);
 
     bool IsColumnEditable (int column) const {
-        wxCHECK_MSG(column < GetColumnCount(), wxALIGN_LEFT, wxT("Invalid column"));
+        wxCHECK_MSG ((column >= 0) && (column < GetColumnCount()),
+                     false, wxT("Invalid column"));
         return m_columns[column].IsEditable();
     }
 
     bool IsColumnShown (int column) const {
-        wxCHECK_MSG(column < GetColumnCount(), wxALIGN_LEFT, wxT("Invalid column"));
+        wxCHECK_MSG ((column >= 0) && (column < GetColumnCount()),
+                     true, wxT("Invalid column"));
         return m_columns[column].IsShown();
     }
 
@@ -562,7 +571,7 @@ public:
     { return m_owner->GetHeaderWindow()->GetColumnCount(); }
 
     void SetMainColumn (int column)
-    { if(column < GetColumnCount()) m_main_column = column; }
+    { if ((column >= 0) && (column < GetColumnCount())) m_main_column = column; }
 
     int GetMainColumn() const { return m_main_column; }
 
@@ -1438,7 +1447,7 @@ void wxTreeListHeaderWindow::AddColumn(const wxTreeListColumnInfo& col)
 
 void wxTreeListHeaderWindow::SetColumnWidth (int column, int width)
 {
-    if(column < GetColumnCount()) {
+    if ((column >= 0) && (column < GetColumnCount())) {
         m_total_col_width -= m_columns[column].GetWidth();
         m_columns[column].SetWidth(width);
         m_total_col_width += width;
@@ -1461,7 +1470,7 @@ void wxTreeListHeaderWindow::InsertColumn (int before, const wxTreeListColumnInf
 
 void wxTreeListHeaderWindow::RemoveColumn (int column)
 {
-    wxCHECK_RET(column < GetColumnCount(), wxT("Invalid column"));
+    wxCHECK_RET((column >= 0) && (column < GetColumnCount()), wxT("Invalid column"));
     m_total_col_width -= m_columns[column].GetWidth();
     m_columns.RemoveAt(column);
     m_owner->AdjustMyScrollbars();
@@ -1471,7 +1480,7 @@ void wxTreeListHeaderWindow::RemoveColumn (int column)
 
 void wxTreeListHeaderWindow::SetColumn (int column, const wxTreeListColumnInfo& info)
 {
-    wxCHECK_RET(column < GetColumnCount(), wxT("Invalid column"));
+    wxCHECK_RET((column >= 0) && (column < GetColumnCount()), wxT("Invalid column"));
     int w = m_columns[column].GetWidth();
     m_columns[column] = info;
     if (w != info.GetWidth()) {
@@ -3696,7 +3705,7 @@ bool wxTreeListMainWindow::GetBoundingRect(const wxTreeItemId& item,
 
 void wxTreeListMainWindow::EditLabel (const wxTreeItemId& item, int column) {
     if (!item.IsOk()) return;
-    if ((column < 0) || (column >= GetColumnCount())) return;
+    if (!((column >= 0) && (column < GetColumnCount()))) return;
 
     m_editItem = (wxTreeListItem*) item.m_pItem;
 
@@ -3884,7 +3893,7 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
     }else if (event.LeftUp()) {
 
         if (m_lastOnSame) {
-            if ((item == m_curItem) &&
+            if ((item == m_curItem) && (m_curColumn != -1) &&
                 (m_owner->GetHeaderWindow()->IsColumnEditable (m_curColumn)) &&
                 (flags & (wxTREE_HITTEST_ONITEMLABEL | wxTREE_HITTEST_ONITEMCOLUMN))){
                 m_renameTimer->Start (RENAME_TIMER_TICKS, wxTIMER_ONE_SHOT);
