@@ -32,10 +32,11 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxbase25d.lib wxmsw25d_adv.lib wxmsw25d_core.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib wxmsw25d_html.lib wxmsw25d_fl.lib wxbase25d_xml.lib wxmsw25d_xrc.lib comctl32.lib rpcrt4.lib winmm.lib wsock32.lib oleacc.lib odbc32.lib MySpelld.lib wxSpellCheckerd.lib"
+				AdditionalDependencies="wxbase25d.lib wxmsw25d_adv.lib wxmsw25d_core.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib wxmsw25d_html.lib wxbase25d_xml.lib wxmsw25d_xrc.lib comctl32.lib rpcrt4.lib winmm.lib wsock32.lib oleacc.lib odbc32.lib MySpelld.lib wxSpellCheckerd.lib"
 				ShowProgress="0"
-				OutputFile="$(OutDir)/wxSpellCheckerDemo.exe"
+				OutputFile="../../bin/wxSpellCheckerDemoD.exe"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="..\..\lib"
 				IgnoreAllDefaultLibraries="FALSE"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/wxSpellCheckerDemo.pdb"
@@ -81,9 +82,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw25_adv.lib wxmsw25_core.lib wxbase25.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib wxmsw25_html.lib wxmsw25_fl.lib wxbase25_xml.lib wxmsw25_xrc.lib comctl32.lib rpcrt4.lib winmm.lib wsock32.lib oleacc.lib odbc32.lib MySpell.lib wxSpellChecker.lib"
-				OutputFile="$(OutDir)/wxSpellCheckerDemo.exe"
+				AdditionalDependencies="wxmsw25_adv.lib wxmsw25_core.lib wxbase25.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib wxmsw25_html.lib wxbase25_xml.lib wxmsw25_xrc.lib comctl32.lib rpcrt4.lib winmm.lib wsock32.lib oleacc.lib odbc32.lib MySpell.lib wxSpellChecker.lib"
+				OutputFile="../../bin/wxSpellCheckerDemo.exe"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="..\..\lib"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -167,6 +169,9 @@
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
+			<File
+				RelativePath=".\wxSpellCheckerDemo.rc">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
