@@ -2,7 +2,7 @@
 // Name:        arc.cpp
 // Purpose:     Examples for archive classes
 // Author:      Mike Wetherell
-// RCS-ID:      $Id: arc.cpp,v 1.4 2004-07-14 18:24:21 chiclero Exp $
+// RCS-ID:      $Id: arc.cpp,v 1.5 2004-07-17 14:31:16 chiclero Exp $
 // Copyright:   (c) Mike Wetherell
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -79,7 +79,7 @@ public:
                       const wxString& exclude2);
 
     // commit or rollback changes
-    void Commit(bool commit);
+    bool Commit(bool commit);
 
     // data members used by the examples
     wxString m_archive;                 // the archive file name
@@ -246,9 +246,6 @@ bool ArcApp::Remove()
 
 bool ArcApp::Rename()
 {
-#ifdef __UNIX__
-    system("if [ \"$D\" ]; then konsole -e gdb -p $PPID & sleep 10; fi");
-#endif
     wxString from = m_args[0];
     wxString to = m_args[1];
 
@@ -471,7 +468,7 @@ bool ArcApp::MakeFactory()
 /////////////////////////////////////////////////////////////////////////////
 // Commit or rollback changes
 
-void ArcApp::Commit(bool commit)
+bool ArcApp::Commit(bool commit)
 {
     if (!m_output.empty()) {
         bool exists = wxFileExists(m_archive);
@@ -481,15 +478,71 @@ void ArcApp::Commit(bool commit)
                 *m_info << "commiting changes\n";
                 wxRemove(m_archive);
             }
-            if (wxRename(m_output, m_archive) == -1)
+            if (wxRename(m_output, m_archive) == -1) {
                 wxLogSysError(_T("can't commit '%s'"), m_archive.c_str());
+                return false;
+            }
         } else {
             if (exists)
                 *m_info << "rolling back changes\n";
             wxRemove(m_output);
         }
     }
+
+    return commit;
 }
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Windows workaround, seeking returns success on pipes but doesn't work
+
+#ifdef __WXMSW__
+bool IsPipe(FILE *fp) {
+    return fp != NULL &&
+        GetFileType((HANDLE)_get_osfhandle(fileno(fp))) == FILE_TYPE_PIPE;
+}
+
+class FFileOutputStream : public wxFFileOutputStream
+{
+public:
+    FFileOutputStream(const wxString& name) :
+        wxFFileOutputStream(name) { m_pipe = IsPipe(m_file->fp()); }
+    FFileOutputStream(FILE *fp) :
+        wxFFileOutputStream(fp), m_pipe(IsPipe(fp)) { }
+
+    off_t SeekO(off_t pos, wxSeekMode mode = wxFromStart) {
+        return m_pipe ? wxInvalidOffset : wxFFileOutputStream::SeekO(pos, mode);
+    }
+    off_t TellO() const {
+        return m_pipe ? wxInvalidOffset : wxFFileOutputStream::TellO();
+    }
+
+private:
+    bool m_pipe;
+};
+
+class FFileInputStream : public wxFFileInputStream
+{
+public:
+    FFileInputStream(const wxString& name) :
+        wxFFileInputStream(name) { m_pipe = IsPipe(m_file->fp()); }
+    FFileInputStream(FILE *fp) :
+        wxFFileInputStream(fp), m_pipe(IsPipe(fp)) { }
+
+    off_t SeekI(off_t pos, wxSeekMode mode = wxFromStart) {
+        return m_pipe ? wxInvalidOffset : wxFFileInputStream::SeekI(pos, mode);
+    }
+    off_t TellI() const {
+        return m_pipe ? wxInvalidOffset : wxFFileInputStream::TellI();
+    }
+
+private:
+    bool m_pipe;
+};
+#else
+typedef wxFFileOutputStream FFileOutputStream;
+typedef wxFFileInputStream FFileInputStream;
+#endif
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -558,7 +611,7 @@ int ArcApp::OnRun()
     m_in.reset();
     m_out.reset();
 
-    Commit(ok);
+    ok = Commit(ok);
         
     // IsCmd populates m_availCmds, now use it to make a usage string
     wxString usage = _T("Usage: ") + progname +
@@ -643,10 +696,10 @@ bool ArcApp::IsCmd(const wxString& cmd,
     if (inputOutput & I) {
         if (m_filter) {
             Reopen("rb", stdin);
-            m_in.reset(new wxFFileInputStream(stdin));
+            m_in.reset(new FFileInputStream(stdin));
         }
         else {
-            m_in.reset(new wxFFileInputStream(m_archive));
+            m_in.reset(new FFileInputStream(m_archive));
             if (!m_in->Ok())
                 return false;
         }
@@ -657,11 +710,11 @@ bool ArcApp::IsCmd(const wxString& cmd,
         if (m_filter) {
             m_info = &std::cerr;
             Reopen("wb", stdout);
-            m_out.reset(new wxFFileOutputStream(stdout));
+            m_out.reset(new FFileOutputStream(stdout));
         }
         else {
             wxString output = m_archive + _T(".tmp");
-            m_out.reset(new wxFFileOutputStream(output));
+            m_out.reset(new FFileOutputStream(output));
             if (!m_out->Ok())
                 return false;
             m_output = output;

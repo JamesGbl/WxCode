@@ -2,7 +2,7 @@
 // Name:        zipstrm.cpp
 // Purpose:     Streams for Zip files
 // Author:      Mike Wetherell
-// RCS-ID:      $Id: zipstrm2.cpp,v 1.2 2004-07-14 18:24:21 chiclero Exp $
+// RCS-ID:      $Id: zipstrm2.cpp,v 1.3 2004-07-17 14:31:16 chiclero Exp $
 // Copyright:   (c) Mike Wetherell
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -325,10 +325,13 @@ size_t wxTeeInputStream::GetData(char *buffer, size_t size)
 {
     if (m_wbacksize) {
         size_t len = m_buf.GetDataLen();
-        wxASSERT(m_wbacksize <= len - m_end);
-        m_end = len - m_wbacksize;
-        m_parent_i_stream->Ungetch(m_buf + m_end, m_wbacksize);
-        m_buf.SetDataLen(m_end);
+        len = len > m_wbacksize ? len - m_wbacksize : 0;
+        m_buf.SetDataLen(len);
+        if (m_end > len) {
+            wxFAIL; // we've already returned data that's now being ungot
+            m_end = len;
+        }
+        m_parent_i_stream->Ungetch(m_wback, m_wbacksize);
         free(m_wback);
         m_wback = NULL;
         m_wbacksize = 0;
@@ -486,8 +489,8 @@ void wxZipEntry::SetName(const wxString& name,
     else
         m_Name = name;
 
-    m_IsDir = !m_Name.empty() && m_Name.Last() == '/';
-    if (m_IsDir)
+    SetIsDir(!m_Name.empty() && m_Name.Last() == '/');
+    if (IsDir())
         m_Name.erase(m_Name.length() - 1);
 
     while (!m_Name.empty() && *m_Name.begin() == '/')
@@ -731,13 +734,14 @@ size_t wxZipEntry::WriteCentral(wxOutputStream& stream, wxMBConv& conv) const
 }
 
 
-void wxZipEntry::ReadDescriptor(wxInputStream& stream)
+size_t wxZipEntry::ReadDescriptor(wxInputStream& stream)
 {
     wxDataInputStream ds(stream);
     wxUint32 n = ds.Read32();
     SetCrc(n == SUMS_MAGIC ? ds.Read32() : n);
     SetCompressedSize(ds.Read32());
     SetSize(ds.Read32());
+    return n == SUMS_MAGIC ? SUMS_SIZE + 4 : SUMS_SIZE;
 }
 
 
@@ -1257,9 +1261,11 @@ size_t wxZipInputStream2::OnSysRead(void *buffer, size_t size)
     m_lasterror = m_decomp->GetLastError();
 
     if (Eof()) {
+        bool sums = m_entry.GetFlags() & wxZIP_SUMS_FOLLOW;
+
         if (!m_raw) {
-            if (m_entry.GetFlags() & wxZIP_SUMS_FOLLOW)
-                m_entry.ReadDescriptor(*m_parent_i_stream);
+            if (sums)
+                m_headerSize += m_entry.ReadDescriptor(*m_parent_i_stream);
 
             m_lasterror = wxSTREAM_READ_ERROR;
 
@@ -1273,9 +1279,13 @@ size_t wxZipInputStream2::OnSysRead(void *buffer, size_t size)
                 else
                     m_lasterror = wxSTREAM_EOF;
             }
+        } else if (sums) {
+            off_t descriptor = m_decomp->TellI() - m_entry.GetCompressedSize();
+            wxASSERT(descriptor == SUMS_SIZE || descriptor == SUMS_SIZE + 4);
+            m_headerSize += descriptor;
         }
 
-        if (m_entry.GetFlags() & wxZIP_SUMS_FOLLOW) {
+        if (sums) {
             wxZipEntry *entry = GetRef(m_entry.GetKey());
             if (entry) {
                 entry->SetCrc(m_entry.GetCrc());

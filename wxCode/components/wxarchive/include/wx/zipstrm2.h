@@ -2,7 +2,7 @@
 // Name:        zipstrm.h
 // Purpose:     Streams for Zip files
 // Author:      Mike Wetherell
-// RCS-ID:      $Id: zipstrm2.h,v 1.2 2004-07-14 18:24:21 chiclero Exp $
+// RCS-ID:      $Id: zipstrm2.h,v 1.3 2004-07-17 14:31:16 chiclero Exp $
 // Copyright:   (c) Mike Wetherell
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -240,7 +240,7 @@ private:
     size_t ReadCentral(wxInputStream& stream, wxMBConv& conv);
     size_t WriteCentral(wxOutputStream& stream, wxMBConv& conv) const;
 
-    void ReadDescriptor(wxInputStream& stream);
+    size_t ReadDescriptor(wxInputStream& stream);
 
     wxUint8    m_SystemMadeBy;       // one of enum wxZipSystem
     wxUint8    m_VersionMadeBy;      // major * 10 + minor

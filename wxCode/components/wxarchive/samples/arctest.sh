@@ -3,7 +3,7 @@
 # Name:        arctest.sh
 # Purpose:     Test script for wxArchive classes
 # Author:      Mike Wetherell
-# RCS-ID:      $Id: arctest.sh,v 1.1 2004-07-14 18:26:49 chiclero Exp $
+# RCS-ID:      $Id: arctest.sh,v 1.2 2004-07-17 14:31:16 chiclero Exp $
 # Copyright:   (c) 2004 Mike Wetherell
 # Licence:     wxWindows licence
 #############################################################################
@@ -12,7 +12,7 @@
 # configure
 #
 arc=arc                 # the name of the arc program
-arcpath=.               # places to look for arc
+arcpath=$PATH:.         # places to look for arc
 tmpdir=arctest.tmp      # temp files (relative path)
 
 
@@ -58,7 +58,7 @@ starttest() {
     # the context
     archiver=$1                 # empty (self-test), or external archiver
     type=$2                     # e.g. 'zip' or 'tar'
-    testdir=`casename $tmpdir/test`
+    testdir=$tmpdir/test
     archive=$testdir.$type
 }
 
@@ -67,16 +67,16 @@ starttest() {
 #
 maketestdata() {
     # make test data
-    mkdir `casename $tmpdir` || exit
+    mkdir $tmpdir || exit
     trap fail_handler 0
-    mkdir `casename $testdir` || exit
+    mkdir $testdir || exit
 
-    mkdir `casename $testdir/text` || exit
+    mkdir $testdir/text || exit
     zerofile 0 0 $testdir/text/empty
-    date > `casename $testdir/text/small` || exit
-    cp $0 `casename $testdir/text/script` || exit
+    date > $testdir/text/small || exit
+    cp $0 $testdir/text/script || exit
 
-    mkdir `casename $testdir/bin` || exit
+    mkdir $testdir/bin || exit
     binfile 0 $testdir/bin/bin0
     binfile 1000 $testdir/bin/bin1
     binfile 4095 $testdir/bin/bin2
@@ -84,7 +84,7 @@ maketestdata() {
     binfile 4097 $testdir/bin/bin4
     binfile 16384 $testdir/bin/bin5
 
-    mkdir `casename $testdir/zero` || exit
+    mkdir $testdir/zero || exit
     zerofile 5 0 $testdir/zero/zero1
     zerofile 1024 32 $testdir/zero/zero2
     zerofile 32768 77 $testdir/zero/zero3
@@ -118,14 +118,14 @@ fail_handler() {
 #
 binfile() {
     echo | awk "{ for (i = 0; i < $1; i++) printf \"%c\", rand()*256 }" |
-        (if [ $2 = - ]; then cat; else cat > `casename $2`; fi) || exit
+        (if [ $2 = - ]; then cat; else cat > $2; fi) || exit
 }
 
 
 # make a test file with all bytes the same
 #
 zerofile() {
-    echo | awk "{ for (i = 0; i < $1; i++) printf \"%c\", $2 }" > `casename $3` || exit
+    echo | awk "{ for (i = 0; i < $1; i++) printf \"%c\", $2 }" > $3 || exit
 }
 
 
@@ -171,7 +171,7 @@ domodify() {
     echo
 
     # write a test file and try adding that
-    addname=`casename $testdir/newfile`
+    addname=$testdir/newfile
     echo "New file added as a test" > $addname || exit
     runarc add $archive $addname
     echo
@@ -182,17 +182,6 @@ domodify() {
 #
 entryname() {
     runarc list $archive | awk "/$1/ { print \$4 }"
-}
-
-
-# some archivers upcase filenames, and some lower names are are all upper case
-#
-casename() {
-    if [ "$forcecase" = "upper" ]; then
-        echo $1 | tr [a-z] [A-Z]
-    else
-        echo $1
-    fi
 }
 
 
@@ -210,7 +199,19 @@ doextract() {
 #
 doverify() {
     echo verify...
-    diff -r $testdir.bak $testdir || exit
+
+    find $testdir | tr [A-Z] [a-z] | sort > $tmpdir/filelist.out
+    find $testdir.bak | sed 's/\.bak//' | tr [A-Z] [a-z] |
+        sort > $tmpdir/filelist.bak
+
+    diff $tmpdir/filelist.out $tmpdir/filelist.bak || exit
+
+    for file in `cat $tmpdir/filelist.out`
+    do
+        test -d $file ||
+            cmp $file `echo $file | sed "s|$testdir|$testdir.bak|"` || exit
+    done
+
     echo success
     echo
 }
@@ -256,7 +257,7 @@ have() {
 # test against an external archiver
 #
 archivertest() {
-    for mode in normal #pipe
+    for mode in normal pipe
     do
         echo "---- Compatability test against '$archiver' (Format: $type, Mode: $mode) ----"
         maketestdata
@@ -293,7 +294,7 @@ archivertest() {
 # test against an external unarchiver
 # 
 unarchivertest() {
-    for mode in normal #pipe
+    for mode in normal pipe
     do
         if [ "$archiver" = "" ]; then
             echo "---- Self test (Format: $type, Mode: $mode) ----"
@@ -303,6 +304,7 @@ unarchivertest() {
         maketestdata
 
         runarc create $archive $testdir
+        cp $archive $archive.bak
         echo
 
         domodify
@@ -323,14 +325,12 @@ unarchivertest() {
 selftest zip
 appendedziptest
 
-# check compatibilty with other archivers
-#
+## check compatibilty with other archivers
+##
 have zip zip            && archivertest   zip -r $archive $testdir
 have unzip zip          && unarchivertest unzip $archive
 
-forcecase=upper
 have pkzip zip          && archivertest   pkzip -P $archive \@$tmpdir/filelist
 have pkunzip zip        && unarchivertest pkunzip -d $archive
-forcecase=
 
 echo "**** SUCCESS *****"
