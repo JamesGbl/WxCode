@@ -12,6 +12,7 @@
 
 // includes
 #include "wx/script.h"
+#include <wx/filename.h>
 
 // now, we can include specific interpreter wrappers
 #ifdef wxSCRIPT_USE_CINT
@@ -206,6 +207,13 @@ void wxScriptInterpreter::GetTotalFunctionList(wxScriptFunctionArray &arr)
 
 wxScriptFile *wxScriptInterpreter::Load(const wxString &file, wxScriptFileType type)
 {
+	// first of all, check that the file exist...
+	if (!wxFileName::FileExists(file)) {
+
+		wxScriptInterpreter::m_strLastErr = "The file [" + file + "] does not exist.";
+		return FALSE;
+	}
+
 	// assign an invalid value just to avoid warnings
 	wxScriptFileType t = wxRECOGNIZE_SCRIPTFILE;
 
