@@ -1,9 +1,9 @@
-Maintainer: Francesco Montorsi (frm)
 Component:  keybinder
-Subdir:     keybinder
-Parts:      DS
-More infos:
+Release:    2004-09-08
+Documents:  http://wxcode.sourceforge.net/components/keybinder/index.html
 wxWidgets:  2.4.x, 2.5.x
+Maintainer: Francesco Montorsi (frm)
+Subdir:     keybinder
 
 Description:
 A generic system to bind one or more keyshortcuts to the commands you want

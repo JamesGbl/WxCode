@@ -23,7 +23,9 @@
 
 	<!-- The real target: wxcode.bkl does not declare a real target but a template called
 	     "complib". In this way modifications are allowed to the basic template. -->
-	<lib id="keybinder" template="complib"></lib>
+	<lib id="keybinder" template="complib">
+		<libname>$(COMP_NAME)$(WXLIBPOSTFIX)</libname>
+	</lib>
 
 	<!-- The sample of the component: as for the LIB target, this exe derives from a 
 	     template contained in wxcode.bkl which can be modified here -->

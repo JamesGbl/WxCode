@@ -1,12 +1,13 @@
   wxScript component info
  -------------------------
 
- Maintainer: Francesco Montorsi (frm)
  Component:  wxscript
+ Release:    2004-09-07
+ Documents:  http://wxcode.sourceforge.net/components/wxscript/index.html
+ wxWidgets:  2.4.x, 2.5.x
+ Maintainer: Francesco Montorsi (frm)
  Subdir:     wxscript
- Parts:      DS
- wxWidgets:  2.4.x,2.5.x
-
+ 
  Description:
  A set of abstract classes to add a script-interpreter to your wxWidgets
  applications/libraries.
@@ -16,7 +17,6 @@
  component to learn how to use a single set of powerful classes: wxLua, wxUnderC and wxCINT
  all exposes the same functions adding to the program Lua & C++ script-interpreting
  capabilities.
-
 
 
   What is wxScript ?

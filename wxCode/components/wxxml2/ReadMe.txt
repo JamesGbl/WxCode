@@ -1,13 +1,13 @@
 
  wxXml2 component info
  ---------------------
-
- Maintainer: Francesco Montorsi (frm)
+ 
  Component:  wxxml2
+ Release:    2004-08-03
+ Documents:  http://wxcode.sourceforge.net/components/wxscript/index.html
+ wxWidgets:  2.4.x, 2.5.x
+ Maintainer: Francesco Montorsi (frm)
  Subdir:     wxxml2
- Parts:      DS
- More infos: 
- wxWidgets:  2.4.x,2.5.x
  
  Description:
  A simple set of classes (wxXml2Namespace, wxXml2NodeProperty, wxXml2Node and

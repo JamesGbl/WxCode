@@ -46,8 +46,8 @@ WXWIN = c:\wxWidgets
 ### Variables: ###
 
 WXXML2_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
-	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) /Fd..\lib\wxxml2.pdb \
-	$(____DEBUGRUNTIME) /I$(WXWIN)\include \
+	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
+	/Fd..\lib\wxxml2$(WXLIBPOSTFIX).pdb $(____DEBUGRUNTIME) /I$(WXWIN)\include \
 	/I$(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) /I..\include \
 	/I$(LIBXML2_DIR)\include /I$(ICONV_DIR)\include /GR /GX $(CPPFLAGS) \
 	$(CXXFLAGS)
@@ -128,12 +128,12 @@ msvc:
 
 ### Targets: ###
 
-all: ..\lib\wxxml2.lib ..\sample\minimal.exe
+all: ..\lib\wxxml2$(WXLIBPOSTFIX).lib ..\sample\minimal.exe
 
 clean: 
 	-if exist msvc\*.obj del msvc\*.obj
 	-if exist msvc\*.res del msvc\*.res
-	-if exist ..\lib\wxxml2.lib del ..\lib\wxxml2.lib
+	-if exist ..\lib\wxxml2$(WXLIBPOSTFIX).lib del ..\lib\wxxml2$(WXLIBPOSTFIX).lib
 	-if exist ..\sample\minimal.exe del ..\sample\minimal.exe
 	-if exist ..\sample\minimal.ilk del ..\sample\minimal.ilk
 	-if exist ..\sample\minimal.pdb del ..\sample\minimal.pdb
@@ -162,7 +162,7 @@ docs:
 cleandocs: 
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
-..\lib\wxxml2.lib: $(WXXML2_OBJECTS)
+..\lib\wxxml2$(WXLIBPOSTFIX).lib: $(WXXML2_OBJECTS)
 	if exist $@ del $@
 	lib /NOLOGO /OUT:$@ @<<
 	$(WXXML2_OBJECTS)

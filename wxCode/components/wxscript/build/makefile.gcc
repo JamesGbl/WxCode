@@ -123,11 +123,11 @@ mingw:
 
 ### Targets: ###
 
-all: ..\lib\libwxscript.a ..\tests\test1\minimal.exe
+all: ..\lib\libwxscript$(WXLIBPOSTFIX).a ..\tests\test1\minimal.exe
 
 clean: 
 	-if exist mingw\*.o del mingw\*.o
-	-if exist ..\lib\libwxscript.a del ..\lib\libwxscript.a
+	-if exist ..\lib\libwxscript$(WXLIBPOSTFIX).a del ..\lib\libwxscript$(WXLIBPOSTFIX).a
 	-if exist ..\tests\test1\minimal.exe del ..\tests\test1\minimal.exe
 
 tarball: 
@@ -154,13 +154,13 @@ docs:
 cleandocs: 
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
-..\lib\libwxscript.a: $(WXSCRIPT_OBJECTS)
+..\lib\libwxscript$(WXLIBPOSTFIX).a: $(WXSCRIPT_OBJECTS)
 	if exist $@ del $@
 	ar rcu $@ $(WXSCRIPT_OBJECTS)
 	ranlib $@
 
-..\tests\test1\minimal.exe: $(MINIMAL_OBJECTS) ..\lib\libwxscript.a
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -L$(WXWIN)\lib\gcc_lib -L..\lib -L$(LUA_DIR)\lib -L$(TOLUA_DIR)\lib -L$(UCC_DIR)\lib   ..\lib\libwxscript.a -llua -llualib -ltolua -lwxmsw25$(WXLIBPOSTFIX)_core -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXSUBLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+..\tests\test1\minimal.exe: $(MINIMAL_OBJECTS) ..\lib\libwxscript$(WXLIBPOSTFIX).a
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -L$(WXWIN)\lib\gcc_lib -L..\lib -L$(LUA_DIR)\lib -L$(TOLUA_DIR)\lib -L$(UCC_DIR)\lib   ..\lib\libwxscript$(WXLIBPOSTFIX).a -llua -llualib -ltolua -lwxmsw25$(WXLIBPOSTFIX)_core -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXSUBLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
 mingw\wxscript_script.o: ./../src/script.cpp
 	$(CXX) -c -o $@ $(WXSCRIPT_CXXFLAGS) $<

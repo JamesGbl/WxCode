@@ -44,6 +44,9 @@ MINIMAL_OBJECTS =  \
 
 @COND_DEPS_TRACKING_1@CXXC = $(top_builddir)./bk-deps $(CXX)
 @COND_DEPS_TRACKING_0@CXXC = $(CXX)
+@COND_BUILD_DEBUG_UNICODE_1@WXLIBPOSTFIX = ud
+@COND_BUILD_DEBUG_UNICODE_0@WXLIBPOSTFIX = d
+@COND_BUILD_RELEASE_UNICODE_1@WXLIBPOSTFIX = u
 @COND_PLATFORM_MAC_1@__minimal___mac_setfilecmd = \
 @COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL minimal$(EXEEXT)
 COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd = $(NM) \
@@ -54,7 +57,7 @@ COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd = $(NM) \
 
 ### Targets: ###
 
-all: ../lib/$(LIBPREFIX)wxxml2$(LIBEXT) ../sample/minimal$(EXEEXT)
+all: ../lib/$(LIBPREFIX)wxxml2$(WXLIBPOSTFIX)$(LIBEXT) ../sample/minimal$(EXEEXT)
 
 install: all
 
@@ -65,7 +68,7 @@ install-strip: install
 clean: 
 	rm -rf autoconf/.deps autoconf/.pch
 	rm -f autoconf/*.o
-	rm -f ../lib/$(LIBPREFIX)wxxml2$(LIBEXT)
+	rm -f ../lib/$(LIBPREFIX)wxxml2$(WXLIBPOSTFIX)$(LIBEXT)
 	rm -f ../sample/minimal$(EXEEXT)
 
 distclean: clean
@@ -95,7 +98,7 @@ docs:
 cleandocs: 
 	rm -rf ../docs/html
 
-../lib/$(LIBPREFIX)wxxml2$(LIBEXT): $(WXXML2_OBJECTS)
+../lib/$(LIBPREFIX)wxxml2$(WXLIBPOSTFIX)$(LIBEXT): $(WXXML2_OBJECTS)
 	rm -f $@
 	$(AR) rcu $@ $(WXXML2_OBJECTS)
 	$(RANLIB) $@

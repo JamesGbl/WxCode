@@ -111,11 +111,11 @@ mingw:
 
 ### Targets: ###
 
-all: ..\lib\libwxxml2.a ..\sample\minimal.exe
+all: ..\lib\libwxxml2$(WXLIBPOSTFIX).a ..\sample\minimal.exe
 
 clean: 
 	-if exist mingw\*.o del mingw\*.o
-	-if exist ..\lib\libwxxml2.a del ..\lib\libwxxml2.a
+	-if exist ..\lib\libwxxml2$(WXLIBPOSTFIX).a del ..\lib\libwxxml2$(WXLIBPOSTFIX).a
 	-if exist ..\sample\minimal.exe del ..\sample\minimal.exe
 
 tarball: 
@@ -142,7 +142,7 @@ docs:
 cleandocs: 
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
-..\lib\libwxxml2.a: $(WXXML2_OBJECTS)
+..\lib\libwxxml2$(WXLIBPOSTFIX).a: $(WXXML2_OBJECTS)
 	if exist $@ del $@
 	ar rcu $@ $(WXXML2_OBJECTS)
 	ranlib $@

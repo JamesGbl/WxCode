@@ -136,14 +136,14 @@ watcom:
 
 ### Targets: ###
 
-all : .SYMBOLIC ..\lib\wxxml2.lib ..\sample\minimal.exe
+all : .SYMBOLIC ..\lib\wxxml2$(WXLIBPOSTFIX).lib ..\sample\minimal.exe
 
 clean : .SYMBOLIC 
 	-if exist watcom\*.obj del watcom\*.obj
 	-if exist watcom\*.res del watcom\*.res
 	-if exist watcom\*.lbc del watcom\*.lbc
 	-if exist watcom\*.ilk del watcom\*.ilk
-	-if exist ..\lib\wxxml2.lib del ..\lib\wxxml2.lib
+	-if exist ..\lib\wxxml2$(WXLIBPOSTFIX).lib del ..\lib\wxxml2$(WXLIBPOSTFIX).lib
 	-if exist ..\sample\minimal.exe del ..\sample\minimal.exe
 
 tarball :  
@@ -170,7 +170,7 @@ docs :
 cleandocs :  
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
-..\lib\wxxml2.lib :  $(WXXML2_OBJECTS)
+..\lib\wxxml2$(WXLIBPOSTFIX).lib :  $(WXXML2_OBJECTS)
 	@%create watcom\wxxml2.lbc
 	@for %i in ($(WXXML2_OBJECTS)) do @%append watcom\wxxml2.lbc +%i
 	wlib -q -p4096 -n -b $^@ @watcom\wxxml2.lbc

@@ -53,13 +53,16 @@ MINIMAL_OBJECTS =  \
 
 @COND_DEPS_TRACKING_1@CXXC = $(top_builddir)./bk-deps $(CXX)
 @COND_DEPS_TRACKING_0@CXXC = $(CXX)
+@COND_BUILD_DEBUG_UNICODE_1@WXLIBPOSTFIX = ud
+@COND_BUILD_DEBUG_UNICODE_0@WXLIBPOSTFIX = d
+@COND_BUILD_RELEASE_UNICODE_1@WXLIBPOSTFIX = u
 @COND_PLATFORM_MAC_1@__minimal___mac_setfilecmd = \
 @COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL minimal$(EXEEXT)
 
 
 ### Targets: ###
 
-all: ../lib/$(LIBPREFIX)wxscript$(LIBEXT) ../tests/test1/minimal$(EXEEXT)
+all: ../lib/$(LIBPREFIX)wxscript$(WXLIBPOSTFIX)$(LIBEXT) ../tests/test1/minimal$(EXEEXT)
 
 install: all
 
@@ -70,7 +73,7 @@ install-strip: install
 clean: 
 	rm -rf autoconf/.deps autoconf/.pch
 	rm -f autoconf/*.o
-	rm -f ../lib/$(LIBPREFIX)wxscript$(LIBEXT)
+	rm -f ../lib/$(LIBPREFIX)wxscript$(WXLIBPOSTFIX)$(LIBEXT)
 	rm -f ../tests/test1/minimal$(EXEEXT)
 
 distclean: clean
@@ -100,13 +103,13 @@ docs:
 cleandocs: 
 	rm -rf ../docs/html
 
-../lib/$(LIBPREFIX)wxscript$(LIBEXT): $(WXSCRIPT_OBJECTS)
+../lib/$(LIBPREFIX)wxscript$(WXLIBPOSTFIX)$(LIBEXT): $(WXSCRIPT_OBJECTS)
 	rm -f $@
 	$(AR) rcu $@ $(WXSCRIPT_OBJECTS)
 	$(RANLIB) $@
 
-../tests/test1/minimal$(EXEEXT): $(MINIMAL_OBJECTS) ../lib/$(LIBPREFIX)wxscript$(LIBEXT)
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS)  -L../lib -L$(LUA_DIR)/lib -L$(TOLUA_DIR)/lib -L$(UCC_DIR)/lib  `wx-config --libs`  ../lib/$(LIBPREFIX)wxscript$(LIBEXT) -llua -llualib -ltolua
+../tests/test1/minimal$(EXEEXT): $(MINIMAL_OBJECTS) ../lib/$(LIBPREFIX)wxscript$(WXLIBPOSTFIX)$(LIBEXT)
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS)  -L../lib -L$(LUA_DIR)/lib -L$(TOLUA_DIR)/lib -L$(UCC_DIR)/lib  `wx-config --libs`  ../lib/$(LIBPREFIX)wxscript$(WXLIBPOSTFIX)$(LIBEXT) -llua -llualib -ltolua
 	
 	$(__minimal___mac_setfilecmd)
 

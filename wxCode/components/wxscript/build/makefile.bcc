@@ -143,12 +143,12 @@ borland:
 
 ### Targets: ###
 
-all: ..\lib\wxscript.lib ..\tests\test1\minimal.exe
+all: ..\lib\wxscript$(WXLIBPOSTFIX).lib ..\tests\test1\minimal.exe
 
 clean: 
 	-if exist borland\*.obj del borland\*.obj
 	-if exist borland\*.res del borland\*.res
-	-if exist ..\lib\wxscript.lib del ..\lib\wxscript.lib
+	-if exist ..\lib\wxscript$(WXLIBPOSTFIX).lib del ..\lib\wxscript$(WXLIBPOSTFIX).lib
 	-if exist ..\tests\test1\minimal.exe del ..\tests\test1\minimal.exe
 	-if exist ..\tests\test1\minimal.tds del ..\tests\test1\minimal.tds
 	-if exist ..\tests\test1\minimal.ilc del ..\tests\test1\minimal.ilc
@@ -180,15 +180,15 @@ docs:
 cleandocs: 
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
-..\lib\wxscript.lib: $(WXSCRIPT_OBJECTS)
+..\lib\wxscript$(WXLIBPOSTFIX).lib: $(WXSCRIPT_OBJECTS)
 	if exist $@ del $@
 	tlib /a /p4096 $@ @&&|
 	$(WXSCRIPT_OBJECTS)
 |
 
-..\tests\test1\minimal.exe: $(MINIMAL_OBJECTS) ..\lib\wxscript.lib
+..\tests\test1\minimal.exe: $(MINIMAL_OBJECTS) ..\lib\wxscript$(WXLIBPOSTFIX).lib
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(WXWIN)\lib\bcc_lib -L..\lib -L$(LUA_DIR)\lib -L$(TOLUA_DIR)\lib -L$(UCC_DIR)\lib -ap @&&|
-	c0x32.obj $(MINIMAL_OBJECTS),$@,, ..\lib\wxscript.lib lua.lib lualib.lib tolua.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32.lib,,
+	c0x32.obj $(MINIMAL_OBJECTS),$@,, ..\lib\wxscript$(WXLIBPOSTFIX).lib lua.lib lualib.lib tolua.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32.lib,,
 |
 
 borland\wxscript_script.obj: .\..\src\script.cpp

@@ -33,6 +33,7 @@
 	<lib id="wxxml2" template="complib">
 		<stdlib>$(LIBXML2_DIR)</stdlib>
 		<stdlib>$(ICONV_DIR)</stdlib>
+		<libname>$(COMP_NAME)$(WXLIBPOSTFIX)</libname>		
 	</lib>
 
 	<!-- The sample of wxXml2 -->

@@ -109,11 +109,11 @@ mingw:
 
 ### Targets: ###
 
-all: ..\lib\libkeybinder.a ..\sample\minimal.exe
+all: ..\lib\libkeybinder$(WXLIBPOSTFIX).a ..\sample\minimal.exe
 
 clean: 
 	-if exist mingw\*.o del mingw\*.o
-	-if exist ..\lib\libkeybinder.a del ..\lib\libkeybinder.a
+	-if exist ..\lib\libkeybinder$(WXLIBPOSTFIX).a del ..\lib\libkeybinder$(WXLIBPOSTFIX).a
 	-if exist ..\sample\minimal.exe del ..\sample\minimal.exe
 
 tarball: 
@@ -140,13 +140,13 @@ docs:
 cleandocs: 
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
-..\lib\libkeybinder.a: $(KEYBINDER_OBJECTS)
+..\lib\libkeybinder$(WXLIBPOSTFIX).a: $(KEYBINDER_OBJECTS)
 	if exist $@ del $@
 	ar rcu $@ $(KEYBINDER_OBJECTS)
 	ranlib $@
 
-..\sample\minimal.exe: $(MINIMAL_OBJECTS) mingw\minimal_minimal_rc.o ..\lib\libkeybinder.a
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -L$(WXWIN)\lib\gcc_lib -Wl,--subsystem,windows -mwindows -L..\lib  ..\lib\libkeybinder.a -lwxmsw25$(WXLIBPOSTFIX)_core -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXSUBLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+..\sample\minimal.exe: $(MINIMAL_OBJECTS) mingw\minimal_minimal_rc.o ..\lib\libkeybinder$(WXLIBPOSTFIX).a
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -L$(WXWIN)\lib\gcc_lib -Wl,--subsystem,windows -mwindows -L..\lib  ..\lib\libkeybinder$(WXLIBPOSTFIX).a -lwxmsw25$(WXLIBPOSTFIX)_core -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXSUBLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
 mingw\keybinder_keybinder.o: ./../src/keybinder.cpp
 	$(CXX) -c -o $@ $(KEYBINDER_CXXFLAGS) $<

@@ -41,9 +41,9 @@ WXWIN = c:\wxWidgets
 
 KEYBINDER_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
 	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
-	/Fd..\lib\keybinder.pdb $(____DEBUGRUNTIME) /I$(WXWIN)\include \
-	/I$(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) /I..\include /GR /GX $(CPPFLAGS) \
-	$(CXXFLAGS)
+	/Fd..\lib\keybinder$(WXLIBPOSTFIX).pdb $(____DEBUGRUNTIME) \
+	/I$(WXWIN)\include /I$(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) /I..\include \
+	/GR /GX $(CPPFLAGS) $(CXXFLAGS)
 KEYBINDER_OBJECTS =  \
 	msvc\keybinder_keybinder.obj \
 	msvc\keybinder_menuutils.obj
@@ -132,12 +132,12 @@ msvc:
 
 ### Targets: ###
 
-all: ..\lib\keybinder.lib ..\sample\minimal.exe
+all: ..\lib\keybinder$(WXLIBPOSTFIX).lib ..\sample\minimal.exe
 
 clean: 
 	-if exist msvc\*.obj del msvc\*.obj
 	-if exist msvc\*.res del msvc\*.res
-	-if exist ..\lib\keybinder.lib del ..\lib\keybinder.lib
+	-if exist ..\lib\keybinder$(WXLIBPOSTFIX).lib del ..\lib\keybinder$(WXLIBPOSTFIX).lib
 	-if exist ..\sample\minimal.exe del ..\sample\minimal.exe
 	-if exist ..\sample\minimal.ilk del ..\sample\minimal.ilk
 	-if exist ..\sample\minimal.pdb del ..\sample\minimal.pdb
@@ -166,15 +166,15 @@ docs:
 cleandocs: 
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
-..\lib\keybinder.lib: $(KEYBINDER_OBJECTS)
+..\lib\keybinder$(WXLIBPOSTFIX).lib: $(KEYBINDER_OBJECTS)
 	if exist $@ del $@
 	lib /NOLOGO /OUT:$@ @<<
 	$(KEYBINDER_OBJECTS)
 <<
 
-..\sample\minimal.exe: $(MINIMAL_OBJECTS) msvc\minimal_minimal.res ..\lib\keybinder.lib
+..\sample\minimal.exe: $(MINIMAL_OBJECTS) msvc\minimal_minimal.res ..\lib\keybinder$(WXLIBPOSTFIX).lib
 	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_13) /LIBPATH:$(WXWIN)\lib\vc_lib /SUBSYSTEM:WINDOWS /LIBPATH:..\lib @<<
-	$(MINIMAL_OBJECTS)  ..\lib\keybinder.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
+	$(MINIMAL_OBJECTS)  ..\lib\keybinder$(WXLIBPOSTFIX).lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
 
 msvc\keybinder_keybinder.obj: .\..\src\keybinder.cpp

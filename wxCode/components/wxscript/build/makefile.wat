@@ -149,14 +149,14 @@ watcom:
 
 ### Targets: ###
 
-all : .SYMBOLIC ..\lib\wxscript.lib ..\tests\test1\minimal.exe
+all : .SYMBOLIC ..\lib\wxscript$(WXLIBPOSTFIX).lib ..\tests\test1\minimal.exe
 
 clean : .SYMBOLIC 
 	-if exist watcom\*.obj del watcom\*.obj
 	-if exist watcom\*.res del watcom\*.res
 	-if exist watcom\*.lbc del watcom\*.lbc
 	-if exist watcom\*.ilk del watcom\*.ilk
-	-if exist ..\lib\wxscript.lib del ..\lib\wxscript.lib
+	-if exist ..\lib\wxscript$(WXLIBPOSTFIX).lib del ..\lib\wxscript$(WXLIBPOSTFIX).lib
 	-if exist ..\tests\test1\minimal.exe del ..\tests\test1\minimal.exe
 
 tarball :  
@@ -183,19 +183,19 @@ docs :
 cleandocs :  
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
-..\lib\wxscript.lib :  $(WXSCRIPT_OBJECTS)
+..\lib\wxscript$(WXLIBPOSTFIX).lib :  $(WXSCRIPT_OBJECTS)
 	@%create watcom\wxscript.lbc
 	@for %i in ($(WXSCRIPT_OBJECTS)) do @%append watcom\wxscript.lbc +%i
 	wlib -q -p4096 -n -b $^@ @watcom\wxscript.lbc
 
-..\tests\test1\minimal.exe :  $(MINIMAL_OBJECTS) ..\lib\wxscript.lib
+..\tests\test1\minimal.exe :  $(MINIMAL_OBJECTS) ..\lib\wxscript$(WXLIBPOSTFIX).lib
 	@%create watcom\minimal.lbc
 	@%append watcom\minimal.lbc option quiet
 	@%append watcom\minimal.lbc name $^@
 	@%append watcom\minimal.lbc option caseexact
 	@%append watcom\minimal.lbc $(LDFLAGS) $(__DEBUGINFO_7) libpath $(WXWIN)\lib\wat_lib libpath ..\lib libpath $(LUA_DIR)\lib libpath $(TOLUA_DIR)\lib libpath $(UCC_DIR)\lib system nt ref 'main_'
 	@for %i in ($(MINIMAL_OBJECTS)) do @%append watcom\minimal.lbc file %i
-	@for %i in ( ..\lib\wxscript.lib lua.lib lualib.lib tolua.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\minimal.lbc library %i
+	@for %i in ( ..\lib\wxscript$(WXLIBPOSTFIX).lib lua.lib lualib.lib tolua.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\minimal.lbc library %i
 	@%append watcom\minimal.lbc
 	wlink @watcom\minimal.lbc
 
