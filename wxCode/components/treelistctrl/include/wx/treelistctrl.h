@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Modified by: Alberto Griggio, 2002
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.13 2004-06-08 18:37:46 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.14 2004-09-28 18:03:55 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows license
@@ -23,16 +23,9 @@
 #include <wx/pen.h>
 #include <wx/listctrl.h> // for wxListEvent
 
-#ifdef GIZMOISDLL
-#define GIZMODLLEXPORT WXDLLEXPORT
-#else
-#define GIZMODLLEXPORT
-#endif
-
-
-class GIZMODLLEXPORT wxTreeListItem;
-class GIZMODLLEXPORT wxTreeListHeaderWindow;
-class GIZMODLLEXPORT wxTreeListMainWindow;
+class WXDLLEXPORT wxTreeListItem;
+class WXDLLEXPORT wxTreeListHeaderWindow;
+class WXDLLEXPORT wxTreeListMainWindow;
 
 
 // Using this typedef removes an ambiguity when calling Remove()
@@ -55,7 +48,7 @@ enum wxTreeListColumnAlign {
 };
 
 
-class GIZMODLLEXPORT wxTreeListColumnInfo: public wxObject {
+class WXDLLEXPORT wxTreeListColumnInfo: public wxObject {
 public:
     enum { DEFAULT_COL_WIDTH = 100 };
 
@@ -134,10 +127,10 @@ const int wxTL_SEARCH_NOCASE  = 0x0020;
 
 // additional flag for HitTest
 const int wxTREE_HITTEST_ONITEMCOLUMN = 0x2000;
-extern GIZMODLLEXPORT const wxChar* wxTreeListCtrlNameStr;
+extern WXDLLEXPORT const wxChar* wxTreeListCtrlNameStr;
 
 
-class GIZMODLLEXPORT wxTreeListCtrl : public wxControl
+class WXDLLEXPORT wxTreeListCtrl : public wxControl
 {
 public:
     // creation
@@ -528,6 +521,9 @@ public:
     // overridden base class virtuals
     virtual bool SetBackgroundColour(const wxColour& colour);
     virtual bool SetForegroundColour(const wxColour& colour);
+
+    // drop over item
+    void SetDropItem (wxTreeListItem *item = (wxTreeListItem*)NULL);
 
 
     wxTreeListHeaderWindow* GetHeaderWindow() const

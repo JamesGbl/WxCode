@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.23 2004-09-27 17:45:50 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.24 2004-09-28 18:04:17 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -542,6 +542,9 @@ public:
     virtual bool SetBackgroundColour(const wxColour& colour);
     virtual bool SetForegroundColour(const wxColour& colour);
 
+    // drop over item
+    void SetDropItem (wxTreeListItem *item = (wxTreeListItem*)NULL);
+
     // callbacks
     void OnPaint( wxPaintEvent &event );
     void OnSetFocus( wxFocusEvent &event );
@@ -618,6 +621,7 @@ protected:
 
     int                  m_dragCount;
     wxPoint              m_dragStart;
+    wxTreeListItem      *m_dropItem;
 
     wxTimer             *m_renameTimer;
     wxString             m_renameRes;
@@ -1818,6 +1822,7 @@ void wxTreeListMainWindow::Init()
 
     m_dragCount = 0;
     m_isDragging = FALSE;
+    m_dropItem = (wxTreeListItem*)NULL;
 
     m_renameTimer = new wxTreeListRenameTimer( this );
     m_lastOnSame = FALSE;
@@ -3090,6 +3095,10 @@ wxTreeItemId wxTreeListMainWindow::FindItem (const wxTreeItemId& item, const wxS
     return item;
 }
 
+void wxTreeListMainWindow::SetDropItem (wxTreeListItem *item) {
+    m_dropItem = item;
+}
+
 wxImageList *wxTreeListMainWindow::GetImageList() const
 {
     return m_imageListNormal;
@@ -3250,26 +3259,32 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
     dc.GetTextExtent( item->GetText(GetMainColumn()), &text_w, &text_h );
 
     // determine background and show it
-    if (item->IsSelected() && HasFlag (wxTR_FULL_ROW_HIGHLIGHT)) {
-        if (!m_isDragging) {
-            dc.SetBrush (*(m_hasFocus? m_hilightBrush: m_hilightUnfocusedBrush));
-        }else{
-            dc.SetBrush (*(m_hilightUnfocusedBrush));
-        }
-#ifndef __WXMAC__ // don't draw rect outline if we already have the background color
-        dc.SetPen ((m_hasFocus)? *wxBLACK_PEN: *wxTRANSPARENT_PEN);
-#else
-        dc.SetPen (*wxTRANSPARENT_PEN);
-#endif // !__WXMAC__
+    wxColour colBg;
+    if (attr && attr->HasBackgroundColour()) {
+        colBg = attr->GetBackgroundColour();
     }else{
-        wxColour colBg;
-        if (attr && attr->HasBackgroundColour()) {
-            colBg = attr->GetBackgroundColour();
-        }else{
-            colBg = m_backgroundColour;
+        colBg = m_backgroundColour;
+    }
+    dc.SetBrush (wxBrush (colBg, wxSOLID));
+    dc.SetPen (*wxTRANSPARENT_PEN);
+    if (HasFlag (wxTR_FULL_ROW_HIGHLIGHT)) {
+        if (m_dropItem && (m_dropItem == item)) {
+            dc.SetBrush (*(m_hilightBrush));
+#ifndef __WXMAC__ // don't draw rect outline if we already have the background color
+            dc.SetPen (*wxBLACK_PEN);
+#endif // !__WXMAC__
+            dc.SetTextForeground (wxSystemSettings::GetSystemColour(wxSYS_COLOUR_HIGHLIGHTTEXT));
+        }else if (item->IsSelected()) {
+            if (!m_isDragging) {
+                dc.SetBrush (*(m_hasFocus? m_hilightBrush: m_hilightUnfocusedBrush));
+            }else{
+                dc.SetBrush (*(m_hilightUnfocusedBrush));
+            }
+#ifndef __WXMAC__ // don't draw rect outline if we already have the background color
+            dc.SetPen ((m_hasFocus)? *wxBLACK_PEN: *wxTRANSPARENT_PEN);
+#endif // !__WXMAC__
+            dc.SetTextForeground (wxSystemSettings::GetSystemColour(wxSYS_COLOUR_HIGHLIGHTTEXT));
         }
-        dc.SetBrush (wxBrush (colBg, wxSOLID));
-        dc.SetPen (*wxTRANSPARENT_PEN);
     }
     dc.DrawRectangle (0, item->GetY() + off_h, total_w, total_h - off_h);
 
@@ -3284,7 +3299,8 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
         int image_w = 0;
         if(i == GetMainColumn()) {
             if (m_imageListNormal) image = item->GetCurrentImage();
-            image_x = item->GetX() + (m_btnWidth-m_btnWidth2) + LINEATROOT;
+            image_x = item->GetX() - m_btnWidth2;
+            image_x += item->HasPlus()? m_btnWidth + MARGIN: 0;
             image_w = (image != NO_IMAGE)? m_imgWidth + MARGIN: 0;
             item->SetTextX (image_x + image_w);
         }
@@ -3314,8 +3330,15 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
         int text_x = image_x + image_w;
 
         wxDCClipper clipper (dc, x_colstart, item->GetY(), col_w, total_h); // only within column
-        if (item->IsSelected()) {
-            if ((i == GetMainColumn()) && !HasFlag (wxTR_FULL_ROW_HIGHLIGHT)) {
+        if (!HasFlag (wxTR_FULL_ROW_HIGHLIGHT) && (i == GetMainColumn())) {
+            if (m_dropItem && (m_dropItem == item)) {
+                dc.SetBrush (*(m_hilightBrush));
+#ifndef __WXMAC__ // don't draw rect outline if we already have the background color
+                dc.SetPen (*wxBLACK_PEN);
+#endif // !__WXMAC__
+                dc.DrawRectangle (text_x, item->GetY() + off_h, text_w, total_h - off_h);
+                dc.SetTextForeground (wxSystemSettings::GetSystemColour(wxSYS_COLOUR_HIGHLIGHTTEXT));
+            }else if (item->IsSelected()) {
                 if (!m_isDragging) {
                     dc.SetBrush (*(m_hasFocus? m_hilightBrush: m_hilightUnfocusedBrush));
                 }else{
@@ -3323,23 +3346,14 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
                 }
 #ifndef __WXMAC__ // don't draw rect outline if we already have the background color
                 dc.SetPen ((m_hasFocus)? *wxBLACK_PEN: *wxTRANSPARENT_PEN);
-#else
-                dc.SetPen (*wxTRANSPARENT_PEN);
 #endif // !__WXMAC__
                 dc.DrawRectangle (text_x, item->GetY() + off_h, text_w, total_h - off_h);
-            }
-            if ((i == GetMainColumn()) || HasFlag (wxTR_FULL_ROW_HIGHLIGHT)) {
                 dc.SetTextForeground (wxSystemSettings::GetSystemColour(wxSYS_COLOUR_HIGHLIGHTTEXT));
             }
         }else{
             dc.SetTextForeground (colText);
         }
 
-#ifndef __WXMAC__ // don't draw rect outline if we already have the background color
-        dc.SetPen((m_hasFocus)? *wxBLACK_PEN: *wxTRANSPARENT_PEN);
-#else
-        dc.SetPen(*wxTRANSPARENT_PEN);
-#endif // !__WXMAC__
         dc.SetBackgroundMode (wxTRANSPARENT);
 
         if (image != NO_IMAGE) {
@@ -4787,6 +4801,9 @@ void wxTreeListCtrl::SortChildren(const wxTreeItemId& item)
 
 wxTreeItemId wxTreeListCtrl::FindItem (const wxTreeItemId& item, const wxString& str, int flags)
 { return m_main_win->FindItem (item, str, flags); }
+
+void wxTreeListCtrl::SetDropItem (wxTreeListItem *item)
+{ m_main_win->SetDropItem (item); }
 
 bool wxTreeListCtrl::SetBackgroundColour(const wxColour& colour)
 { return m_main_win->SetBackgroundColour(colour); }
