@@ -3,7 +3,7 @@
 ## Purpose:     wxScintilla
 ## Maintainer:  Otto Wyss
 ## Created:     2004-09-19
-## RCS-ID:      $Id: Makefile,v 1.5 2004-11-19 18:33:46 wyo Exp $
+## RCS-ID:      $Id: Makefile,v 1.6 2005-03-01 17:26:17 wyo Exp $
 ## Copyright:   (c) 2004 wxCode
 ## Licence:     wxWindows
 ##############################################################################
@@ -129,10 +129,10 @@ ifeq ($(MAKECMDGOALS),univdebug)
 endif
 
 %.o:	%.cpp
-	g++ -fpic -c $(DEF) $(INC) `$(WXCONFIG) --cxxflags` `$(GTKCONFIG) --cflags` -g -o $@ $<
+	g++ -fpic -c $(DEF) $(INC) `$(WXCONFIG) --cxxflags` -g -o $@ $<
 
 %.o:	%.cxx
-	g++ -fpic -c $(DEF) $(INC) `$(WXCONFIG) --cxxflags` `$(GTKCONFIG) --cflags` -g -o $@ $<
+	g++ -fpic -c $(DEF) $(INC) `$(WXCONFIG) --cxxflags` -g -o $@ $<
 
 all:	$(LIB).so
 $(LIB).so:	$(OBJ)
