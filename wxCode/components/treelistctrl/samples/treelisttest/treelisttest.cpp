@@ -2,10 +2,10 @@
 // Name:        treelisttest.cpp
 // Purpose:     wxTreeListCtrl sample
 // Author:      Julian Smart
-// Modified by:
+// Modified by: Otto Wyss
 // Created:     04/01/98
-// RCS-ID:      $Id: treelisttest.cpp,v 1.2 2004-03-24 18:41:51 wyo Exp $
-// Copyright:   (c) Julian Smart
+// RCS-ID:      $Id: treelisttest.cpp,v 1.3 2004-09-22 16:02:46 wyo Exp $
+// Copyright:   (c) wxCode
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
 
@@ -25,16 +25,16 @@
 #include "wx/wxprec.h"
 
 #ifdef __BORLANDC__
-    #pragma hdrstop
+  #pragma hdrstop
 #endif
 
-// for all others, include the necessary headers (this file is usually all you
-// need because it includes almost all "standard" wxWindows headers)
 #ifndef WX_PRECOMP
-    #include "wx/wx.h"
+  #include "wx/wx.h"
+  #include "wx/log.h"
 #endif
 
 #include "wx/colordlg.h"
+
 #include "wx/image.h"
 #include "wx/imaglist.h"
 #include "wx/treelistctrl.h"
@@ -155,17 +155,20 @@ bool MyApp::OnInit()
     MyFrame *frame = new MyFrame(wxT("wxTreeListCtrl Test"), 50, 50, 450, 600);
 
     // Show the frame
-    frame->Show(TRUE);
+    frame->Show(true);
     SetTopWindow(frame);
 
-    return TRUE;
+    return true;
 }
 
 
 // My frame constructor
 MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h)
-       : wxFrame((wxFrame *)NULL, -1, title, wxPoint(x, y), wxSize(w, h)),
-         m_treeListCtrl(NULL), m_textCtrl(NULL)
+       : wxFrame((wxFrame *)NULL, wxID_ANY, title, wxPoint(x, y), wxSize(w, h)),
+         m_treeListCtrl(NULL)
+#if wxUSE_LOG
+         , m_textCtrl(NULL)
+#endif // wxUSE_LOG
 {
     // This reduces flicker effects - even better would be to define
     // OnEraseBackground to do nothing. When the tree control's scrollbars are
@@ -186,20 +189,20 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h)
     file_menu->AppendSeparator();
     file_menu->Append(TreeListTest_Quit, wxT("E&xit\tAlt-X"));
 
-    style_menu->Append(TreeListTest_TogButtons, wxT("Toggle &normal buttons"), wxT(""), TRUE);
-    style_menu->Append(TreeListTest_TogTwist, wxT("Toggle &twister buttons"), wxT(""), TRUE);
-    style_menu->Append(TreeListTest_ToggleButtons, wxT("Toggle image &buttons"), wxT(""), TRUE);
+    style_menu->AppendCheckItem(TreeListTest_TogButtons, wxT("Toggle &normal buttons"));
+    style_menu->AppendCheckItem(TreeListTest_TogTwist, wxT("Toggle &twister buttons"));
+    style_menu->AppendCheckItem(TreeListTest_ToggleButtons, wxT("Toggle image &buttons"));
     style_menu->AppendSeparator();
-    style_menu->Append(TreeListTest_TogLines, wxT("Toggle &connecting lines"), wxT(""), TRUE);
-    style_menu->Append(TreeListTest_TogRootLines, wxT("Toggle &lines at root"), wxT(""), TRUE);
-    style_menu->Append(TreeListTest_TogHideRoot, wxT("Toggle &hidden root"), wxT(""), TRUE);
-    style_menu->Append(TreeListTest_TogBorder, wxT("Toggle &item border"), wxT(""), TRUE);
-    style_menu->Append(TreeListTest_TogFullHighlight, wxT("Toggle &full row highlight"), wxT(""), TRUE);
-    style_menu->Append(TreeListTest_TogEdit, wxT("Toggle &edit mode"), wxT(""), TRUE);
+    style_menu->AppendCheckItem(TreeListTest_TogLines, wxT("Toggle &connecting lines"));
+    style_menu->AppendCheckItem(TreeListTest_TogRootLines, wxT("Toggle &lines at root"));
+    style_menu->AppendCheckItem(TreeListTest_TogHideRoot, wxT("Toggle &hidden root"));
+    style_menu->AppendCheckItem(TreeListTest_TogBorder, wxT("Toggle &item border"));
+    style_menu->AppendCheckItem(TreeListTest_TogFullHighlight, wxT("Toggle &full row highlight"));
+    style_menu->AppendCheckItem(TreeListTest_TogEdit, wxT("Toggle &edit mode"));
 #ifndef NO_MULTIPLE_SELECTION
-    style_menu->Append(TreeListTest_ToggleSel, wxT("Toggle &selection mode"), wxT(""), TRUE);
+    style_menu->AppendCheckItem(TreeListTest_ToggleSel, wxT("Toggle &selection mode"));
 #endif // NO_MULTIPLE_SELECTION
-    style_menu->Append(TreeListTest_ToggleImages, wxT("Toggle show ima&ges"), wxT(""), TRUE);
+    style_menu->AppendCheckItem(TreeListTest_ToggleImages, wxT("Toggle show ima&ges"));
     style_menu->Append(TreeListTest_SetImageSize, wxT("Set image si&ze..."));
     style_menu->AppendSeparator();
     style_menu->Append(TreeListTest_SetFgColour, wxT("Set &foreground colour..."));
@@ -227,6 +230,7 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h)
     tree_menu->AppendSeparator();
     tree_menu->Append(TreeListTest_IncIndent, wxT("Add 5 points to indentation\tAlt-I"));
     tree_menu->Append(TreeListTest_DecIndent, wxT("Reduce indentation by 5 points\tAlt-R"));
+    tree_menu->AppendSeparator();
 
     item_menu->Append(TreeListTest_Dump, wxT("&Dump item children"));
     item_menu->Append(TreeListTest_Rename, wxT("&Rename item..."));
@@ -252,20 +256,23 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h)
     SetMenuBar(menu_bar);
 #endif // wxUSE_MENUS
 
+#if wxUSE_LOG
     // create the controls
-    m_textCtrl = new wxTextCtrl(this, -1, wxT(""),
+    m_textCtrl = new wxTextCtrl(this, wxID_ANY, wxT(""),
                                 wxDefaultPosition, wxDefaultSize,
                                 wxTE_MULTILINE | wxSUNKEN_BORDER);
+#endif // wxUSE_LOG
 
     CreateTreeWithDefStyle();
 
-    menu_bar->Check(TreeListTest_ToggleImages, TRUE);
+    menu_bar->Check(TreeListTest_ToggleImages, true);
 
 #if wxUSE_STATUSBAR
     // create a status bar
     CreateStatusBar(2);
 #endif // wxUSE_STATUSBAR
 
+#if wxUSE_LOG
 #ifdef __WXMOTIF__
     // For some reason, we get a memcpy crash in wxLogStream::DoLogStream
     // on gcc/wxMotif, if we use wxLogTextCtl. Maybe it's just gcc?
@@ -275,11 +282,14 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h)
     wxLogTextCtrl *logWindow = new wxLogTextCtrl(m_textCtrl);
     delete wxLog::SetActiveTarget(logWindow);
 #endif
+#endif // wxUSE_LOG
 }
 
 MyFrame::~MyFrame()
 {
+#if wxUSE_LOG
     delete wxLog::SetActiveTarget(NULL);
+#endif // wxUSE_LOG
 }
 
 void MyFrame::CreateTreeWithDefStyle()
@@ -296,7 +306,7 @@ void MyFrame::CreateTreeWithDefStyle()
     // everything
     wxMenuBar *mbar = GetMenuBar();
     mbar->Check(TreeListTest_TogButtons, (style & wxTR_HAS_BUTTONS) != 0);
-    mbar->Check(TreeListTest_TogButtons, (style & wxTR_TWIST_BUTTONS) != 0);
+    mbar->Check(TreeListTest_TogTwist, (style & wxTR_TWIST_BUTTONS) != 0);
     mbar->Check(TreeListTest_TogLines, (style & wxTR_NO_LINES) == 0);
     mbar->Check(TreeListTest_TogRootLines, (style & wxTR_LINES_AT_ROOT) != 0);
     mbar->Check(TreeListTest_TogHideRoot, (style & wxTR_HIDE_ROOT) != 0);
@@ -317,7 +327,7 @@ void MyFrame::TogStyle(int id, long flag)
 {
     long style = m_treeListCtrl->GetWindowStyle() ^ flag;
 
-    // most treelistctrl styles can't be changed on the fly using the native
+    // most TreeListCtrl styles can't be changed on the fly using the native
     // control and the tree must be recreated
 #ifndef __WXMSW__
     m_treeListCtrl->SetWindowStyle(style);
@@ -351,7 +361,11 @@ void MyFrame::OnIdle(wxIdleEvent& event)
 
 void MyFrame::OnSize(wxSizeEvent& event)
 {
-    if ( m_treeListCtrl && m_textCtrl )
+    if ( m_treeListCtrl
+#if wxUSE_LOG
+                    && m_textCtrl
+#endif // wxUSE_LOG
+                                  )
     {
         Resize();
     }
@@ -362,13 +376,18 @@ void MyFrame::OnSize(wxSizeEvent& event)
 void MyFrame::Resize()
 {
     wxSize size = GetClientSize();
-    m_treeListCtrl->SetSize(0, 0, size.x, 2*size.y/3);
+    m_treeListCtrl->SetSize(0, 0, size.x, size.y
+#if !wxUSE_LOG
+                                            );
+#else
+                                            *2/3);
     m_textCtrl->SetSize(0, 2*size.y/3, size.x, size.y/3);
+#endif
 }
 
 void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 {
-    Close(TRUE);
+    Close(true);
 }
 
 void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
@@ -406,7 +425,7 @@ void MyFrame::OnCount(wxCommandEvent& WXUNUSED(event))
 
     CHECK_ITEM( item );
 
-    int i = m_treeListCtrl->GetChildrenCount( item, FALSE );
+    int i = m_treeListCtrl->GetChildrenCount( item, false );
 
     wxLogMessage(wxT("%d children"), i);
 }
@@ -525,7 +544,7 @@ void MyFrame::OnSetImageSize(wxCommandEvent& WXUNUSED(event))
         return;
 
     m_treeListCtrl->CreateImageList(size);
-    wxGetApp().SetShowImages(TRUE);
+    wxGetApp().SetShowImages(true);
 }
 
 void MyFrame::OnToggleImages(wxCommandEvent& WXUNUSED(event))
@@ -533,27 +552,29 @@ void MyFrame::OnToggleImages(wxCommandEvent& WXUNUSED(event))
     if ( wxGetApp().ShowImages() )
     {
         m_treeListCtrl->CreateImageList(-1);
-        wxGetApp().SetShowImages(FALSE);
+        wxGetApp().SetShowImages(false);
     }
     else
     {
         m_treeListCtrl->CreateImageList(0);
-        wxGetApp().SetShowImages(TRUE);
+        wxGetApp().SetShowImages(true);
     }
 }
 
 void MyFrame::OnToggleButtons(wxCommandEvent& WXUNUSED(event))
 {
+#if !defined(__WXMSW__)
     if ( wxGetApp().ShowButtons() )
     {
         m_treeListCtrl->CreateButtonsImageList(-1);
-        wxGetApp().SetShowButtons(FALSE);
+        wxGetApp().SetShowButtons(false);
     }
     else
     {
         m_treeListCtrl->CreateButtonsImageList(15);
-        wxGetApp().SetShowButtons(TRUE);
+        wxGetApp().SetShowButtons(true);
     }
+#endif
 }
 
 void MyFrame::OnCollapseAndReset(wxCommandEvent& WXUNUSED(event))
@@ -629,7 +650,7 @@ MyTreeListCtrl::MyTreeListCtrl(wxWindow *parent, const wxWindowID id,
                        long style)
           : wxTreeListCtrl(parent, id, pos, size, style)
 {
-    m_reverseSort = FALSE;
+    m_reverseSort = false;
 
     CreateImageList();
 
@@ -650,7 +671,7 @@ void MyTreeListCtrl::CreateImageList(int size)
         m_imageSize = size;
 
     // Make an image list containing small icons
-    wxImageList *images = new wxImageList(size, size, TRUE);
+    wxImageList *images = new wxImageList(size, size, true);
 
     // should correspond to TreeListCtrlIcon_xxx enum
     wxBusyCursor wait;
@@ -677,6 +698,7 @@ void MyTreeListCtrl::CreateImageList(int size)
     AssignImageList(images);
 }
 
+#if !defined(__WXMSW__)
 void MyTreeListCtrl::CreateButtonsImageList(int size)
 {
     if ( size == -1 )
@@ -686,7 +708,7 @@ void MyTreeListCtrl::CreateButtonsImageList(int size)
     }
 
     // Make an image list containing small icons
-    wxImageList *images = new wxImageList(size, size, TRUE);
+    wxImageList *images = new wxImageList(size, size, true);
 
     // should correspond to TreeListCtrlIcon_xxx enum
     wxBusyCursor wait;
@@ -710,6 +732,10 @@ void MyTreeListCtrl::CreateButtonsImageList(int size)
     }
 
     AssignButtonsImageList(images);
+#else
+void MyTreeListCtrl::CreateButtonsImageList(int WXUNUSED(size))
+{
+#endif
 }
 
 MyTreeListCtrl::~MyTreeListCtrl()
@@ -786,7 +812,7 @@ void MyTreeListCtrl::AddTestItemsToTree(size_t numChildren,
                                     size_t depth)
 {
     int image = wxGetApp().ShowImages() ? MyTreeListCtrl::TreeListCtrlIcon_Folder : -1;
-    AddColumn (_T("Main"), 200, wxTL_ALIGN_LEFT);
+    AddColumn (_T("Main"), 250);
     wxTreeItemId rootId = AddRoot(wxT("Root"),
                                   image, image,
                                   new MyTreeItemData(wxT("Root item")));
@@ -1191,5 +1217,5 @@ void MyTreeItemData::ShowInfo(wxTreeListCtrl *tree)
                  Bool2String(tree->IsExpanded(GetId())),
                  Bool2String(tree->IsBold(GetId())),
                  tree->GetChildrenCount(GetId()),
-                 tree->GetChildrenCount(GetId(), FALSE));
+                 tree->GetChildrenCount(GetId(), false));
 }

@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by:
 // Created:     04/01/98
-// RCS-ID:      $Id: treelisttest.h,v 1.2 2004-07-19 18:47:07 wyo Exp $
+// RCS-ID:      $Id: treelisttest.h,v 1.3 2004-09-22 16:02:46 wyo Exp $
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -19,7 +19,7 @@
 class MyApp : public wxApp
 {
 public:
-    MyApp() { m_showImages = TRUE; m_showButtons = FALSE; }
+    MyApp() { m_showImages = true; m_showButtons = false; }
 
     bool OnInit();
 
@@ -92,7 +92,7 @@ public:
 
     void AddTestItemsToTree(size_t numChildren, size_t depth);
 
-    void DoSortChildren(const wxTreeItemId& item, bool reverse = FALSE)
+    void DoSortChildren(const wxTreeItemId& item, bool reverse = false)
         { m_reverseSort = reverse; wxTreeListCtrl::SortChildren(item); }
     void DoEnsureVisible() { if (m_lastItem.IsOk()) EnsureVisible(m_lastItem); }
 
@@ -186,8 +186,8 @@ public:
     void OnSetImageSize(wxCommandEvent& event);
     void OnCollapseAndReset(wxCommandEvent& event);
 
-    void OnSetBold(wxCommandEvent& WXUNUSED(event)) { DoSetBold(TRUE); }
-    void OnClearBold(wxCommandEvent& WXUNUSED(event)) { DoSetBold(FALSE); }
+    void OnSetBold(wxCommandEvent& WXUNUSED(event)) { DoSetBold(true); }
+    void OnClearBold(wxCommandEvent& WXUNUSED(event)) { DoSetBold(false); }
 
     void OnEnsureVisible(wxCommandEvent& event);
 
@@ -196,13 +196,16 @@ public:
 
     void OnRename(wxCommandEvent& event);
     void OnSort(wxCommandEvent& WXUNUSED(event)) { DoSort(); }
-    void OnSortRev(wxCommandEvent& WXUNUSED(event)) { DoSort(TRUE); }
+    void OnSortRev(wxCommandEvent& WXUNUSED(event)) { DoSort(true); }
 
     void OnAddItem(wxCommandEvent& event);
     void OnInsertItem(wxCommandEvent& event);
 
     void OnIncIndent(wxCommandEvent& event);
     void OnDecIndent(wxCommandEvent& event);
+
+    void OnIncSpacing(wxCommandEvent& event);
+    void OnDecSpacing(wxCommandEvent& event);
 
     void OnToggleIcon(wxCommandEvent& event);
 
@@ -212,7 +215,7 @@ public:
 private:
     void TogStyle(int id, long flag);
 
-    void DoSort(bool reverse = FALSE);
+    void DoSort(bool reverse = false);
 
     void Resize();
 
@@ -220,9 +223,11 @@ private:
     void CreateTree(long style);
 
     MyTreeListCtrl *m_treeListCtrl;
+#if wxUSE_LOG
     wxTextCtrl *m_textCtrl;
+#endif // wxUSE_LOG
 
-    void DoSetBold(bool bold = TRUE);
+    void DoSetBold(bool bold = true);
 
     DECLARE_EVENT_TABLE()
 };
@@ -266,10 +271,13 @@ enum
     TreeListTest_InsertItem,
     TreeListTest_IncIndent,
     TreeListTest_DecIndent,
+    TreeListTest_IncSpacing,
+    TreeListTest_DecSpacing,
     TreeListTest_ToggleIcon,
     TreeListTest_Select,
     TreeListTest_Unselect,
     TreeListTest_SelectRoot,
     TreeListTest_Ctrl = 1000
 };
+
 #endif // _TREELISTTEST_H_
