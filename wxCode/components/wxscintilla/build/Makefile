@@ -3,9 +3,9 @@
 ## Purpose:     wxScintilla
 ## Maintainer:  Otto Wyss
 ## Created:     2004-09-19
-## RCS-ID:      $Id: Makefile,v 1.4 2004-11-14 10:17:01 wyo Exp $
-## Copyright:   (c) wxCode
-## Licence:     wxWidgets licence
+## RCS-ID:      $Id: Makefile,v 1.5 2004-11-19 18:33:46 wyo Exp $
+## Copyright:   (c) 2004 wxCode
+## Licence:     wxWindows
 ##############################################################################
 
 # list of source files
