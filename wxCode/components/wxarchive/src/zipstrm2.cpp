@@ -2,7 +2,7 @@
 // Name:        zipstrm.cpp
 // Purpose:     Streams for Zip files
 // Author:      Mike Wetherell
-// RCS-ID:      $Id: zipstrm2.cpp,v 1.3 2004-07-17 14:31:16 chiclero Exp $
+// RCS-ID:      $Id: zipstrm2.cpp,v 1.4 2004-07-17 21:47:59 chiclero Exp $
 // Copyright:   (c) Mike Wetherell
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -290,6 +290,8 @@ public:
     size_t GetData(char *buffer, size_t size);
     void   Final() { m_end = m_buf.GetDataLen(); }
 
+    wxInputStream& Read(void *buffer, size_t size);
+
 protected:
     virtual size_t OnSysRead(void *buffer, size_t size);
     virtual off_t OnSysTell() const { return m_pos; }
@@ -311,12 +313,19 @@ wxTeeInputStream::wxTeeInputStream(wxInputStream& stream)
 }
 
 
+wxInputStream& wxTeeInputStream::Read(void *buffer, size_t size)
+{
+    size_t count = wxInputStream::Read(buffer, size).LastRead();
+    m_end = m_buf.GetDataLen();
+    m_buf.AppendData(buffer, count);
+    return *this;
+}
+
+
 size_t wxTeeInputStream::OnSysRead(void *buffer, size_t size)
 {
     size_t count = m_parent_i_stream->Read(buffer, size).LastRead();
     m_lasterror = m_parent_i_stream->GetLastError();
-    m_end = m_buf.GetDataLen();
-    m_buf.AppendData(buffer, count);
     return count;
 }
 
@@ -1261,7 +1270,7 @@ size_t wxZipInputStream2::OnSysRead(void *buffer, size_t size)
     m_lasterror = m_decomp->GetLastError();
 
     if (Eof()) {
-        bool sums = m_entry.GetFlags() & wxZIP_SUMS_FOLLOW;
+        bool sums = (m_entry.GetFlags() & wxZIP_SUMS_FOLLOW) != 0;
 
         if (!m_raw) {
             if (sums)
