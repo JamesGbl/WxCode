@@ -1,4 +1,4 @@
-a {
+a  href {
     font-weight: bold;
     text-decoration: underline;
 }
@@ -11,9 +11,24 @@ a:visited {
     color: blue;
 }
 
+a name {
+    font-weight: bold;
+    text-decoration: none;
+}
+
 body {
     background: #ffffff;
     margin: 0.5em;
+}
+
+.divider1 {
+    margin-top: 1em;
+    border-bottom: 1px solid;
+}
+
+.divider2 {
+    margin-top: 1em;
+    border-bottom: 1px dotted;
 }
 
 h1 {
@@ -47,6 +62,7 @@ h4 {
 p {
     margin-top: 0em;
     margin-bottom: 0.3em;
+    font-size: 0.9em;
 }
 
 table {
@@ -61,12 +77,12 @@ ul {
 
 code {
     font-family: "Courier new", Monospaced, Serif;
-    font-size: 0.9em;
+    font-size: 1em;
     font-weight: bold;
 }
 
 term {
     font-family: "Courier new", Monospaced, Serif;
-    font-size: 0.9em;
+    font-size: 1em;
     font-weight: bold;
 }

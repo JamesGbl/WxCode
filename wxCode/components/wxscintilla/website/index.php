@@ -31,17 +31,18 @@ The <a href="reference.html" target=_top>API reference</a> can be read online he
 
 <h4>Screenshots</h4>
 <p align=center>
-<img src="images/wyoeditor01.png">
+<img src="images/wyoeditor01.png"><br />
+Screen shot of wyoEditor, see <a href="http://freshmeat.net/projects/wyoeditor" target=_top>here</a>.
 </p>
 
 <h4>Download</h4>
 <p>
-See <a href="http://wxcode.sourceforge.net/index.php?page=complist.php" target=_top>project list</a>, click on the release of <b>wxScintilla</b>.
+Go to the <a href="http://wxcode.sourceforge.net/index.php?page=complist.php" target=_top>project list</a>, click on the release of <b>wxScintilla</b>.
 </p>
 
 <h4>New releases</h4>
 <p>
-No releases are announced, you have to check the project list from time to time or ask the maintainer.
+No releases are announced, you have to check the project list from time to time or ask in the wxCode mailing list.
 </p>
 
 <h4>Latest info, open issues, etc.</h4>
