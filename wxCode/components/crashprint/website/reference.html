@@ -6,5 +6,45 @@
 <A NAME="wxCrashPrint"></A>
 
 <H2>wxCrashPrint</H2>
+<P>
+This class formats and prints a report in case the application crashes.
+<P>
+
+<B>Include files</B><P>
+&lt;wx/crashprint.h&gt;<P>
+
+<B>Members (tree specific</B><P>
+<A HREF="#wxcrashprintconstr">wxCrashPrint::wxCrashPrint</A><BR>
+<A HREF="#topic2">wxCrashPrint::~wxCrashPrint</A><BR>
+<A HREF="#wxcrashprintsetfocus">wxCrashPrint::SetFocus</A><BR>
+<P>
+
+<HR>
+<A NAME="wxcrashprintconstr"></A>
+<H3>wxCrashPrint::wxCrashPrint</H3>
+<P>
+<B></B> <B>wxCrashPrint</B>(<B>int</B><I> flag = 0</I>, <B>const wxString&amp; </B><I>fname = wxEmptyString</I>)<P>
+Constructor.<P>
+<B>Parameters</B><P>
+<I>flag</I><UL><UL>
+Not defined so far.</UL></UL>
+<P>
+<I>fname</I><UL><UL>
+Filename to write instead of stderr, default empty.</UL></UL>
+<P>
+
+<HR>
+<A NAME="topic2"></A>
+<H3>wxCrashPrint::~wxCrashPrint</H3>
+<P>
+<B>void</B> <B>~wxCrashPrint</B>()<P>
+Destructor.<P>
+
+<HR>
+<A NAME="wxcrashprintreport"></A>
+<H3>wxCrashPrint::Report</H3>
+<P>
+<B>void</B> <B>Report</B>()<P>
+Creates and formats a backtrace report and writes it to stderr or to a file if specified.<P>
 
 </FONT></BODY></HTML>

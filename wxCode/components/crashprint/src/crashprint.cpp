@@ -3,7 +3,7 @@
 // Purpose:     wxCrashPrint
 // Maintainer:  Wyo
 // Created:     2004-09-28
-// RCS-ID:      $Id: crashprint.cpp,v 1.1 2004-10-01 18:45:42 wyo Exp $
+// RCS-ID:      $Id: crashprint.cpp,v 1.2 2004-10-04 17:46:32 wyo Exp $
 // Copyright:   (c) wxCode
 // Licence:     wxWidgets licence
 //////////////////////////////////////////////////////////////////////////////
@@ -93,15 +93,35 @@ void wxFileList::Report () {
 
     // format backtrace lines
      printf ("Obtained %zd stack frames.\n", btCount); //?
-    wxString cur, addr;
+    wxString cur, addr, func;
     int pos1, pos2;
     for (int i = 0; i < btCount; ++1) {
         cur = btStrings[i];
          printf ("%s\n", btStrings[i]); //?
         pos1 = cur.rfind ('[');
         pos2 = cur.rfind (']');
-        if ((pos1 != string::npos) && (pos2 != string::npos))
+        if ((pos1 != string::npos) && (pos2 != string::npos)) {
             addr = cur.substr (pos1 + 1, pos2 - pos1 - 1);
+        }
+        pos1 = cur.find ("(_Z");
+        pos2 = cur.rfind ('+');
+        if (pos2 != string::npos)) {
+            if (pos1 != string::npos) {
+                func = cur.substr (pos1 + 1, pos2 - pos1 - 1);
+                func = abi::__cxa_demangle (func.c_str(), 0, 0, &status);
+            }else
+                pos1 = cur.rfind ('(');
+                func = cur.substr (pos1 + 1, pos2 - pos1 - 1);
+            }
+        }
+    }
+
+    // determine line from address
+    wxArrayString lines;
+    wxString cmd = wxString::Format("addr2line -C -e /proc/%d/exe %s", getpid(), btStrings);
+    if (wxExecute (cmd, lines)) {
+        for (int i = 0; i < lines.GetCount(); ++1) {
+             printf ("%s\n", lines); //?
         }
     }
 

@@ -3,11 +3,41 @@
 %% Purpose:     wxCrashPrint documentation
 %% Maintainer:  Otto Wyss
 %% Created:     2004-09-28
-%% RCS-ID:      $Id: crashprint.tex,v 1.1 2004-10-01 18:37:54 wyo Exp $
+%% RCS-ID:      $Id: crashprint.tex,v 1.2 2004-10-04 17:45:39 wyo Exp $
 %% Copyright:   (c) wxCode
 %% License:     wxWindows license
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{\class{wxCrashPrint}}\label{wxCrashPrint}
+\section{\class{wxCrashPrint}}\label{wxcrashprint}
 
 This class formats and prints a report in case the application crashes.
+
+\wxheading{Include files}
+
+<wx/crashprint.h>
+
+\latexignore{\rtfignore{\wxheading{Members (tree specific}}}
+
+\membersection{wxCrashPrint::wxCrashPrint}\label{wxcrashprintconstr}
+
+\func{}{wxCrashPrint}{\param{int}{ flags = 0}, \param{const wxString\& }{fname = wxEmptyString}}
+
+Constructor.
+
+\wxheading{Parameters}
+
+\docparam{flags}{Not defined so far.}
+
+\docparam{fname}{Filename to write instead of stderr, default empty.}
+
+\membersection{wxCrashPrint::\destruct{wxCrashPrint}}
+
+\func{void}{\destruct{wxCrashPrint}}{\void}
+
+Destructor.
+
+\membersection{wxCrashPrint::Report}\label{wxcrashprintreport}
+
+\func{void}{Report}{\void}
+
+Creates and formats a backtrace report and writes it to stderr or to a file if specified.
