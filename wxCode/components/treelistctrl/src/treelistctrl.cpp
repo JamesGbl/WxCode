@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.10 2004-04-28 17:21:23 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.11 2004-04-29 18:51:33 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -1641,7 +1641,7 @@ wxTreeListItem *wxTreeListItem::HitTest(const wxPoint& point,
 
             // check for button hit
             if (HasPlus() && theCtrl->HasButtons()) {
-                int bntX = m_x - theCtrl->GetIndent() - theCtrl->m_btnWidth2;
+                int bntX = m_x - theCtrl->m_btnWidth2;
                 int bntY = y_mid - theCtrl->m_btnHeight2;
                 if ((point.x > bntX) && (point.x < (bntX + theCtrl->m_btnWidth)) &&
                     (point.y > bntY) && (point.y < (bntY + theCtrl->m_btnHeight))) {
@@ -1651,12 +1651,14 @@ wxTreeListItem *wxTreeListItem::HitTest(const wxPoint& point,
             }
 
             // check for image hit
-            int imgX = m_x - theCtrl->m_imgWidth2;
-            int imgY = y_mid - theCtrl->m_imgHeight2;
-            if ((point.x >= imgX) && (point.x <= (imgX + theCtrl->m_imgWidth)) &&
-                (point.y >= imgY) && (point.y <= (imgY + theCtrl->m_imgHeight))) {
-                flags |= wxTREE_HITTEST_ONITEMICON;
-                return this;
+            if (theCtrl->m_imgWidth > 0) {
+                int imgX = m_x - theCtrl->m_imgWidth2;
+                int imgY = y_mid - theCtrl->m_imgHeight2;
+                if ((point.x >= imgX) && (point.x <= (imgX + theCtrl->m_imgWidth)) &&
+                    (point.y >= imgY) && (point.y <= (imgY + theCtrl->m_imgHeight))) {
+                    flags |= wxTREE_HITTEST_ONITEMICON;
+                    return this;
+                }
             }
 
             // check for label hit
@@ -3262,18 +3264,22 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
         if (!m_owner->GetHeaderWindow()->GetColumnShown(i)) continue;
         int colwidth = m_owner->GetHeaderWindow()->GetColumnWidth(i);
         int image;
-        int image_x = x_colstart + MARGIN;
+        int image_x = 0;
         int image_w = 0;
         if(i == GetMainColumn()) {
             image = item->GetCurrentImage();
-            image_x = item->GetX() - m_imgWidth2;
-            image_w = m_imgWidth + MARGIN;
+            if (HasButtons()) {
+                 image_x = item->GetX() + (m_btnWidth-m_btnWidth2) + LINEATROOT;
+            }else{
+                 image_x = item->GetX() - m_imgWidth2;
+            }
         }
         else
         {
             image = item->GetImage(i);
-            if (image != NO_IMAGE) image_w = m_imgWidth + MARGIN;
+            image_x = x_colstart + MARGIN;
         }
+        if (image != NO_IMAGE) image_w = m_imgWidth + MARGIN;
 
         // honor text alignment
         wxString text = item->GetText(i);
@@ -3328,10 +3334,17 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
 
     // calculate position of vertical lines
     int x = x_colstart + MARGIN; // start of column
-    if (HasFlag(wxTR_LINES_AT_ROOT)) x += LINEATROOT; // space for lines at root
-    if (HasButtons()) x += m_btnWidth2; // space for buttons etc.
-    if (!HasFlag(wxTR_HIDE_ROOT)) x += m_indent; // indent root as well
-    x += m_indent * level; // indent according to level
+    if (HasFlag (wxTR_LINES_AT_ROOT)) x += LINEATROOT; // space for lines at root
+    if (HasButtons()) {
+        x += m_btnWidth2; // middle of button
+    }else{
+        if (m_imgWidth > 0) x += m_imgWidth2; // middle of image
+    }
+    if (!HasFlag (wxTR_HIDE_ROOT)) {
+        x += m_indent * level; // indent according to level
+    }else{
+        if (level > 0) x += m_indent * (level-1); // but not level 1
+    }
 
     // handle column text
     item->SetX (x);
@@ -3372,15 +3385,9 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
 
         size_t clip_width = m_owner->GetHeaderWindow()->
                             GetColumn(m_main_column).GetWidth();
-        //m_columns[m_main_column].GetWidth();
 
         if (item->HasPlus() && HasButtons())  // should the item show a button?
         {
-            if (!HasFlag(wxTR_NO_LINES)) {
-                int lineOffset = m_indent - m_btnWidth2;
-                dc.DrawLine(x-lineOffset, y_mid, x-m_imgWidth2, y_mid);
-            }
-
             // clip to the column width
             wxDCClipper clipper(dc, x_colstart, y_top, clip_width, 10000);
 
@@ -3408,7 +3415,7 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
 
                 if (item->IsExpanded())
                 {
-                    button[0].x = (x-m_indent) - m_btnWidth2;
+                    button[0].x = x - m_btnWidth2;
                     button[0].y = y_mid - (m_btnHeight/3-1);
                     button[1].x = button[0].x + m_btnWidth;
                     button[1].y = button[0].y;
@@ -3417,7 +3424,7 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
                 }
                 else
                 {
-                    button[0].x = (x-m_indent) - (m_btnWidth/3-1);
+                    button[0].x = x - (m_btnWidth/3-1);
                     button[0].y = y_mid-m_btnHeight2;
                     button[1].x = button[0].x;
                     button[1].y = button[0].y + m_btnHeight;
@@ -3433,16 +3440,25 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
                 // draw the plus sign here
                 dc.SetPen(*wxGREY_PEN);
                 dc.SetBrush(*wxWHITE_BRUSH);
-                int xpos = x - m_indent;
-                dc.DrawRectangle (xpos-m_btnWidth2, y_mid-m_btnHeight2,
+                dc.DrawRectangle (x-m_btnWidth2, y_mid-m_btnHeight2,
                                   m_btnWidth, m_btnHeight);
                 dc.SetPen(*wxBLACK_PEN);
-                dc.DrawLine (xpos-(m_btnWidth2-3), y_mid,
-                             xpos+(m_btnWidth2-2), y_mid);
+                dc.DrawLine (x-(m_btnWidth2-3), y_mid,
+                             x+(m_btnWidth2-2), y_mid);
                 if (!item->IsExpanded())
-                    dc.DrawLine (xpos, y_mid-(m_btnHeight2-2),
-                                 xpos, y_mid+(m_btnHeight2-1));
+                    dc.DrawLine (x, y_mid-(m_btnHeight2-2),
+                                 x, y_mid+(m_btnHeight2-1));
                 dc.SetPen(m_dottedPen);
+            }
+
+            if (!HasFlag(wxTR_NO_LINES)) {
+                if (!(level == 0) && !((level == 1) && HasFlag(wxTR_HIDE_ROOT))) {
+                    if (m_imgWidth > 0) {
+                        dc.DrawLine(x+m_btnWidth2, y_mid, x+m_indent-m_imgWidth2, y_mid);
+                    }else{
+                        dc.DrawLine(x+m_btnWidth2, y_mid, x+m_btnWidth2+LINEATROOT-MARGIN, y_mid);
+                    }
+                }
             }
         }
         else if (!HasFlag(wxTR_NO_LINES))  // no button; maybe a line?
@@ -3452,7 +3468,13 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
 
             // draw the horizontal line here
             if (!(level == 0) && !((level == 1) && HasFlag(wxTR_HIDE_ROOT))) {
-                dc.DrawLine(x-m_indent, y_mid, x-m_imgWidth2, y_mid);
+                int x2 = x;
+                if (!HasFlag(wxTR_HAS_BUTTONS)) x2 = x - m_indent;
+                if (m_imgWidth > 0) {
+                    dc.DrawLine(x2, y_mid, x2+m_indent-m_imgWidth2, y_mid);
+                }else{
+                    dc.DrawLine(x2, y_mid, x2+m_btnWidth2+LINEATROOT-MARGIN, y_mid);
+                }
             }
         }
 
@@ -3502,21 +3524,34 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
         wxDCClipper clipper(dc, x_colstart, y_top, clip_width, 10000);
 
         // process lower levels
-        int oldY = y_mid + m_imgHeight2;
+        int oldY;
+        if (m_imgWidth > 0) {
+            oldY = y_mid + m_imgHeight2;
+        }else{
+            oldY = y_mid + h/2;
+        }
         int y2;
         int n;
-        for (n = 0; n < (int)children.Count(); n++) {
+        for (n = 0; n < (int)children.Count(); ++n) {
 
             if (!HasFlag(wxTR_NO_LINES))
             {
                 // draw line down to last child
                 if (children[n]->HasPlus() && HasButtons()) {
                     y2 = y + h/2 - m_btnHeight2;
-                    dc.DrawLine(x, oldY, x, y2);
+                    if (HasButtons()) {
+                        dc.DrawLine(x+m_indent, oldY, x+m_indent, y2);
+                    }else{
+                        dc.DrawLine(x, oldY, x, y2);
+                    }
                     oldY = y2 + m_btnHeight;
                 }else{
                     y2 = y + h/2;
-                    dc.DrawLine(x, oldY, x, y2);
+                    if (HasButtons()) {
+                        dc.DrawLine(x+m_indent, oldY, x+m_indent, y2);
+                    }else{
+                        dc.DrawLine(x, oldY, x, y2);
+                    }
                     oldY = y2;
                 }
             }
