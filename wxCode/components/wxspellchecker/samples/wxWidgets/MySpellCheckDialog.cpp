@@ -176,7 +176,8 @@ void MySpellingDialog::OnAddWordToCustomDictionary(wxCommandEvent& event)
 	// Nothing really needed for this other than adding the word to the custom dictionary and closing the dialog
   if (m_pSpellCheckEngine != NULL)
   {
-    m_pSpellCheckEngine->AddWordToDictionary(m_strMispelledWord);
+    if (!(m_pSpellCheckEngine->AddWordToDictionary(m_strMispelledWord)))
+      ::wxMessageBox(_T("There was an error adding \"" + m_strMispelledWord + "\" to the personal dictionary"));
   }
   Show(FALSE);
 }
@@ -372,7 +373,10 @@ void MyPersonalDictionaryDialog::AddWordToPersonalDictionary(wxCommandEvent& eve
     {
       wxString strNewWord = pText->GetLabel();
       if (!strNewWord.Trim().IsEmpty())
-      m_pSpellCheckEngine->AddWordToDictionary(strNewWord);
+      {
+        if (!(m_pSpellCheckEngine->AddWordToDictionary(strNewWord)))
+          ::wxMessageBox(_T("There was an error adding \"" + strNewWord + "\" to the personal dictionary"));
+      }
     }
     PopulatePersonalWordListBox();
   }

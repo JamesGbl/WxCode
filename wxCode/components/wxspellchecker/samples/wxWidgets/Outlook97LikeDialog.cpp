@@ -153,7 +153,8 @@ void Outlook97LikeDialog::OnAddWordToCustomDictionary(wxCommandEvent& event)
 	// Nothing really needed for this other than adding the word to the custom dictionary and closing the dialog
   if (m_pSpellCheckEngine != NULL)
   {
-    m_pSpellCheckEngine->AddWordToDictionary(m_strMispelledWord);
+    if (!(m_pSpellCheckEngine->AddWordToDictionary(m_strMispelledWord)))
+      ::wxMessageBox(_T("There was an error adding \"" + m_strMispelledWord + "\" to the personal dictionary"));
   }
   Show(FALSE);
 }
