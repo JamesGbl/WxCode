@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.61 2004-12-14 18:33:22 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.62 2004-12-16 17:01:13 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -3092,7 +3092,7 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
             }
             dc.SetTextForeground (colTextHilight);
         }else if (item == m_curItem) {
-            dc.SetPen (*wxBLACK_PEN);
+            dc.SetPen (m_hasFocus? *wxBLACK_PEN: *wxTRANSPARENT_PEN);
         }
         dc.DrawRectangle (0, item->GetY() + off_h, total_w, total_h - off_h);
     }else{
@@ -3171,7 +3171,7 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
                     }
                     dc.SetTextForeground (colTextHilight);
                 }else if (item == m_curItem) {
-                    dc.SetPen (*wxBLACK_PEN);
+                    dc.SetPen (m_hasFocus? *wxBLACK_PEN: *wxTRANSPARENT_PEN);
                 }
                 dc.DrawRectangle (text_x, item->GetY() + off_h, text_w, total_h - off_h);
             }else{
@@ -3428,6 +3428,7 @@ void wxTreeListMainWindow::OnSetFocus( wxFocusEvent &event )
     m_hasFocus = true;
 //?    SetWindowStyle (GetWindowStyle() | wxRAISED_BORDER);
     RefreshSelected();
+    RefreshLine (m_curItem);
     event.Skip();
 }
 
@@ -3436,6 +3437,7 @@ void wxTreeListMainWindow::OnKillFocus( wxFocusEvent &event )
     m_hasFocus = false;
 //?    SetWindowStyle (GetWindowStyle() & ~wxRAISED_BORDER);
     RefreshSelected();
+    RefreshLine (m_curItem);
     event.Skip();
 }
 
