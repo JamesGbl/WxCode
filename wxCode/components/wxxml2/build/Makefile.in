@@ -31,12 +31,11 @@ ICONV_DIR = @ICONV_DIR@
 
 DESTDIR = 
 MINIMAL_CXXFLAGS = -I../include -I$(LIBXML2_DIR)/include \
-	-I$(ICONV_DIR)/include $(__STATIC_DEF_p) `wx-config --cxxflags` -Wall \
-	$(CPPFLAGS) $(CXXFLAGS)
+	-I$(ICONV_DIR)/include `wx-config --cxxflags` -Wall $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	autoconf/minimal_minimal.o
 WXXML2_CXXFLAGS = -I../include -I$(LIBXML2_DIR)/include -I$(ICONV_DIR)/include \
-	$(__STATIC_DEF_p) `wx-config --cxxflags` -Wall $(CPPFLAGS) $(CXXFLAGS)
+	`wx-config --cxxflags` -Wall $(CPPFLAGS) $(CXXFLAGS)
 WXXML2_OBJECTS =  \
 	autoconf/wxxml2_xml2.o \
 	autoconf/wxxml2_dtd.o
@@ -54,7 +53,6 @@ COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd = $(NM) \
 	autoconf/minimal$(EXEEXT) | if grep -q pmwin.763 ; then emxbind -ep \
 	autoconf/minimal$(EXEEXT) ; fi
 @COND_PLATFORM_OS2_1@__minimal___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd)
-@COND_SHARED_0@__STATIC_DEF_p = -DLIBXML_STATIC
 
 
 ### Targets: ###

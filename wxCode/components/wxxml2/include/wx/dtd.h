@@ -108,9 +108,62 @@ enum wxXml2EntityType {
 };
 
 
-//! The type of content of a wxXml2ElemDecl object.
-class WXXMLDLLEXPORT wxXml2ElemContent : public wxXml2Wrapper
+//! A wxXml2 wrapper of an object which is not covered by COW
+//! (since the libxml2 structures wrapped by wxXml2HelpWrapper-derived
+//! classes does not have space to store the reference count; they do
+//! not have a "_private" member!).
+//! When using the copy constructor of this class, a deep copy will be
+//! performed (instead of a light one as done by wxXml2Wrapper).
+class WXXMLDLLEXPORT wxXml2HelpWrapper : public wxObject
 {
+	DECLARE_ABSTRACT_CLASS(wxXml2HelpWrapper)
+
+	//! TRUE if this class was linked to a wxXml2AttrDecl.
+	bool m_bLinked;
+
+protected:
+
+	//! Destroys this object.
+	virtual void Destroy() = 0;
+
+	//! Destroys this object only if it is unlinked.
+	virtual void DestroyIfUnlinked();
+
+	//! Marks this element as linked/unlinked.
+	//! Linked objects won't be deleted by the constructor.
+	void Link(bool linking = TRUE)
+		{ wxASSERT_MSG(m_bLinked != linking || linking == FALSE, 
+		  wxT("Cannot link this node another time; already linked !!")); 
+		  m_bLinked = linking; }
+
+public:
+	wxXml2HelpWrapper() { m_bLinked=FALSE; }
+	virtual ~wxXml2HelpWrapper() {}
+};
+
+
+
+//! The type of content of a wxXml2ElemDecl object.
+//! This class is used to describe the contents of an XML DTD node like:
+//!
+//!                  <!ELEMENT name .... >
+//!                                  ^------- wxXml2ElemContent
+//!
+//! A wxXml2ElemContent may look like:
+//! 
+//!   (#PCDATA)
+//!   (mysubelement1,mysubelement2)           a "seq" content
+//!   (mysubelement1|mysubelement2)           a "choice" content
+//!   (#PCDATA|myelem|myelem2|(a|b|c)*)       a "mixed" content
+//!
+//! The ANY or EMPTY values are handled directly by wxXml2ElemDecl.
+//! The occurrence mode can be *, +, ? or nothing.
+//! See the "Element Type Declarations" in the document
+//! http://www.w3.org/TR/REC-xml for more info.
+//!
+class WXXMLDLLEXPORT wxXml2ElemContent : public wxXml2HelpWrapper
+{
+	friend class wxXml2ElemDecl;
 	DECLARE_DYNAMIC_CLASS(wxXml2ElemContent)
 
 	//! The libxml2 structure which holds the data.
@@ -119,37 +172,28 @@ class WXXMLDLLEXPORT wxXml2ElemContent : public wxXml2Wrapper
 protected:
 
 	void Destroy() {
-		if (m_cont) xmlFree(m_cont);
+		if (m_cont) xmlFreeElementContent(m_cont);
 		SetAsEmpty();
 	}
 
 	void SetAsEmpty()
 		{ m_cont = NULL; }
 
-	void  Copy(const wxXml2ElemContent &n) {
-		UnwrappingOld();
-		m_cont = n.m_cont;
-		JustWrappedNew();
-	}
+	void Copy(const wxXml2ElemContent &n)
+		{ m_cont = xmlCopyElementContent(n.m_cont); }
 
-	int &GetPrivate() const
-		{ return (int &)(m_cont); }
 
 public:
 
-	wxXml2ElemContent(xmlElementContent *cont = NULL) : m_cont(cont) {}
-	wxXml2ElemContent(const wxString &name, wxXml2ElementContentType val)
-		{ m_cont=NULL; Create(name, val); }
+	wxXml2ElemContent(xmlElementContent *cont = NULL) 
+		: m_cont(cont) {}
+
+	wxXml2ElemContent(const wxString &name, 
+					wxXml2ElementContentType val = wxXML_ELEMENT_CONTENT_PCDATA,
+					wxXml2ElementContentOccur occ = wxXML_ELEMENT_CONTENT_ONCE)
+		{ m_cont=NULL; Create(name, val, occ); }
 
 	virtual ~wxXml2ElemContent() { DestroyIfUnlinked(); }
-
-
-
-	bool IsUnlinked() const
-		{ return TRUE; }
-
-	bool IsNonEmpty() const
-		{ return m_cont != NULL; }
 
 
 public:		// operators
@@ -163,10 +207,12 @@ public:		// operators
 
 public:		// miscellaneous
 
-	void Create(const wxString &name, wxXml2ElementContentType val) {
+	void Create(const wxString &name, 
+			wxXml2ElementContentType val,
+			wxXml2ElementContentOccur occ);
 
-		m_cont = xmlNewElementContent(WX2XML(name), (xmlElementContentType)val);
-	}
+	bool IsNonEmpty() const
+		{ return m_cont != NULL; }
 
 	xmlElementContent *GetObj() const
 		{ return m_cont; }
@@ -175,8 +221,15 @@ public:		// miscellaneous
 
 
 //! An XML attribute enumeration.
-class WXXMLDLLEXPORT wxXml2Enumeration : public wxXml2Wrapper
+//! This is used to represent the wxXml2AttrDecl enumerations:
+//!
+//! <!ATTLIST elemname attrname (value1|value2|value3) >
+//!                             ----------------------
+//!                               wxXml2Enumeration 
+//!
+class WXXMLDLLEXPORT wxXml2Enumeration : public wxXml2HelpWrapper
 {
+	friend class wxXml2AttrDecl;
 	DECLARE_DYNAMIC_CLASS(wxXml2Enumeration)
 
 	//! The libxml2 structure which holds the data.
@@ -192,32 +245,21 @@ protected:
 	void SetAsEmpty()
 		{ m_enum = NULL; }
 
-	void  Copy(const wxXml2Enumeration &n) {
-		UnwrappingOld();
-		m_enum = n.m_enum;
-		JustWrappedNew();
-	}
-
-	int &GetPrivate() const
-		{ return (int &)(m_enum); }
+	void Copy(const wxXml2Enumeration &n)
+		{ m_enum = xmlCopyEnumeration(n.m_enum); }
 
 public:
 
 	wxXml2Enumeration(xmlEnumeration *towrap = NULL) : m_enum(towrap) {}
+	wxXml2Enumeration(const wxXml2Enumeration &tocopy) { Copy(tocopy); }
+
 	wxXml2Enumeration(const wxString &name, const wxXml2Enumeration &next)
 		{ m_enum=NULL; Create(name, next); }
 	wxXml2Enumeration(const wxString &list)
 		{ m_enum=NULL; Create(list); }
 
-	virtual ~wxXml2Enumeration() { DestroyIfUnlinked(); }
-
-
-
-	bool IsUnlinked() const
-		{ return TRUE; }
-
-	bool IsNonEmpty() const
-		{ return m_enum != NULL; }
+	virtual ~wxXml2Enumeration() 
+		{ DestroyIfUnlinked(); }
 
 
 public:		// operators
@@ -235,7 +277,13 @@ public:		// miscellaneous
 	void Create(const wxString &list);
 
 	//! Appends another enumerated value to this one.
-	void Append(const wxXml2Enumeration &e);
+	void Append(const wxXml2Enumeration &e)
+		{ Append(e.GetObj()); }
+	
+	void Append(xmlEnumeration *e);
+
+	bool IsNonEmpty() const
+		{ return m_enum != NULL; }
 
 	xmlEnumeration *GetObj() const
 		{ return m_enum; }
@@ -246,6 +294,16 @@ public:		// miscellaneous
 
 //! An element declaration.
 //! This type of node is used only inside an inlined/external DTD.
+//! Looks like:
+//!                  <!ELEMENT name .... >
+//!                                 ------------- wxXml2ElemContent
+//!
+//! wxXml2ElemDecl handles also the cases:
+//!
+//! <!ELEMENT name ANY> 
+//! <!ELEMENT name EMPTY>
+//!
+//! setting the appropriate wxXml2ElementTypeVal value.
 class WXXMLDLLEXPORT wxXml2ElemDecl : public wxXml2BaseNode
 {
 	DECLARE_DYNAMIC_CLASS(wxXml2ElemDecl)
@@ -266,7 +324,7 @@ public:
 	//! link it to the given parent.
 	wxXml2ElemDecl(const wxXml2DTD &parent, const wxString &name, 
 				wxXml2ElementTypeVal val = wxXML_ELEMENT_TYPE_ELEMENT, 
-				const wxXml2ElemContent &content = wxXml2EmptyElemContent) 
+				wxXml2ElemContent &content = wxXml2EmptyElemContent) 
 		{ Create(parent, name, val, content); }
 
 	virtual ~wxXml2ElemDecl() { DestroyIfUnlinked(); }
@@ -284,16 +342,25 @@ public:		// operators
 public:		// miscellaneous
 
 	void Create(const wxXml2DTD &parent, const wxString &name, 
-				wxXml2ElementTypeVal val, const wxXml2ElemContent &content);
-
+				wxXml2ElementTypeVal val, wxXml2ElemContent &content);
 	xmlElement *GetObj() const
 		{ return (xmlElement *)m_obj; }
 };
 
 
 
-//! An element declaration.
+//! An attribute declaration.
+//! This node is used to build attribute lists.
 //! This type of node is used only inside an inlined/external DTD.
+//! Looks like:
+//! 
+//!              <!ATTLIST elemname
+//!                        attr1name CDATA #REQUIRED/#IMPLIED
+//!                        attr2name CDATA #FIXED fixvalue
+//!                        attr3name (token1|token2|token3) >
+//!                                  ----------------------
+//!                                     wxXml2Enumeration
+//!
 class WXXMLDLLEXPORT wxXml2AttrDecl : public wxXml2BaseNode
 {
 	DECLARE_DYNAMIC_CLASS(wxXml2AttrDecl)
@@ -321,7 +388,7 @@ public:
 				wxXml2AttributeType type = wxXML_ATTRIBUTE_CDATA, 
 				wxXml2AttributeDefault def = wxXML_ATTRIBUTE_NONE,
 				const wxString &defaultval = wxEmptyString, 
-				const wxXml2Enumeration &e = wxXml2EmptyEnumeration) 
+				/*const*/ wxXml2Enumeration &e = wxXml2EmptyEnumeration) 
 		{ Create(parent, element, name, ns, type, def, defaultval, e); }
 
 	virtual ~wxXml2AttrDecl() { DestroyIfUnlinked(); }
@@ -341,7 +408,7 @@ public:		// miscellaneous
 	void Create(const wxXml2DTD &parent, const wxString &element,
 				const wxString &name, const wxXml2Namespace &ns,
 				wxXml2AttributeType type, wxXml2AttributeDefault def,
-				const wxString &defaultval, const wxXml2Enumeration &e);
+				const wxString &defaultval, /*const*/ wxXml2Enumeration &e);
 
 	xmlAttribute *GetObj() const
 		{ return (xmlAttribute*)m_obj; }
@@ -350,8 +417,14 @@ public:		// miscellaneous
 
 
 
-//! An element declaration.
+//! An entity declaration.
 //! This type of node is used only inside an inlined/external DTD.
+//! Looks like:
+//!
+//!             <!ENTITY name SYSTEM SystemID>
+//! or
+//!             <!ENTITY name PUBLIC PubID SystemID>
+//!
 class WXXMLDLLEXPORT wxXml2EntityDecl : public wxXml2BaseNode
 {
 	DECLARE_DYNAMIC_CLASS(wxXml2EntityDecl)
@@ -588,7 +661,7 @@ public:		// getters
 	//! returns wxEmptyString.
 	//! See #IsPublicSubset().
 	wxString GetExternalID() const
-		{ if (IsPublicSubset()) return m_dtd->ExternalID; return wxEmptyString; }
+		{ if (IsPublicSubset()) return XML2WX(m_dtd->ExternalID); return wxEmptyString; }
 
 	//! Returns the external URI (Uniform Resource Indicator)
 	//! if this is a PUBLIC entity otherwise returns wxEmptyString.
@@ -596,18 +669,18 @@ public:		// getters
 	//! \note Libxml2 holds the external URI into the SystemID field of the
 	//!       xmlDtd structure when this is a PUBLIC entity.
 	wxString GetExternalURI() const
-		{ if (IsPublicSubset()) return m_dtd->SystemID; return wxEmptyString; }
+		{ if (IsPublicSubset()) return XML2WX(m_dtd->SystemID); return wxEmptyString; }
 
 	//! Returns the systemID if this is a SYSTEM entity otherwise
 	//! returns wxEmptyString.
 	//! See #IsSystemSubset().
     wxString GetSystemID() const
-		{ if (IsSystemSubset()) return m_dtd->SystemID; return wxEmptyString; }
+		{ if (IsSystemSubset()) return XML2WX(m_dtd->SystemID); return wxEmptyString; }
 
 	//! Returns the name of this DTD.
 	//! This is always non-empty: both when this is a reference to
 	//! a full external DTD and when this is an inlined DTD.
-    wxString GetName() const			{ return m_dtd->name; }	
+    wxString GetName() const			{ return XML2WX(m_dtd->name); }	
 
 	//! Returns the associated XML structure.
 	xmlDtd *GetObj() const				{ return m_dtd; }
@@ -639,18 +712,27 @@ public:		// setters
 
 public:		// DTD node creation made easy
 
+	//! Creates a new wxXml2ElemDecl object and adds it to this DTD.
+	//! \note This function requires a non-const wxXml2ElemContent
+	//!       reference because it modifies it (setting to TRUE its
+	//!       link flag; see wxXml2HelpWrapper::Link for more info).
 	void AddElemDecl(const wxString &name, 
 				wxXml2ElementTypeVal val = wxXML_ELEMENT_TYPE_ELEMENT, 
-				const wxXml2ElemContent &content = wxXml2EmptyElemContent);
+				/*const*/ wxXml2ElemContent &content = wxXml2EmptyElemContent);
 
+	//! Creates a new wxXml2AttrDecl object and adds it to this DTD.
+	//! \note This function requires a non-const wxXml2Enumeration
+	//!       reference because it modifies it (setting to TRUE its
+	//!       link flag; see wxXml2HelpWrapper::Link for more info).
 	void AddAttrDecl(const wxString &element,
 				const wxString &name, 
 				const wxXml2Namespace &ns = wxXml2EmptyNamespace,
 				wxXml2AttributeType type = wxXML_ATTRIBUTE_CDATA, 
 				wxXml2AttributeDefault def = wxXML_ATTRIBUTE_NONE,
 				const wxString &defaultval = wxEmptyString, 
-				const wxXml2Enumeration &e = wxXml2EmptyEnumeration);
+				/*const*/ wxXml2Enumeration &e = wxXml2EmptyEnumeration);
 
+	//! Creates a new wxXml2EntityDecl object and adds it to this DTD.
 	void AddEntityDecl(const wxString &name,
 					wxXml2EntityType type = wxXML_INTERNAL_GENERAL_ENTITY, 
 					const wxString &externalID = wxEmptyString,

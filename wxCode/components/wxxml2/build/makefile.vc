@@ -28,9 +28,6 @@ LIBXML2_DIR = c:\libxml2
 # The iconv library main folder 
 ICONV_DIR = c:\iconv
 
-# What type of library to build? [0,1]
-SHARED = 0
-
 # Compile Unicode build of wxWindows? [0,1]
 UNICODE = 0
 
@@ -52,16 +49,16 @@ MINIMAL_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__DEBUG_DEFINE_p) /D__WXMSW__ 
 	$(__WARNINGS) $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	/Fd..\sample\minimal.pdb $(____DEBUGRUNTIME) /D_WINDOWS /I..\include \
 	/I$(WXWIN)\include /I$(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) \
-	/I$(LIBXML2_DIR)\include /I$(ICONV_DIR)\include $(__STATIC_DEF_p) /GR /GX \
-	$(CPPFLAGS) $(CXXFLAGS)
+	/I$(LIBXML2_DIR)\include /I$(ICONV_DIR)\include /GR /GX $(CPPFLAGS) \
+	$(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	msvc\minimal_minimal.obj
 WXXML2_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__DEBUG_DEFINE_p) /D__WXMSW__ \
 	$(__WARNINGS) $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	/Fd..\lib\wxxml2$(WXLIBPOSTFIX).pdb $(____DEBUGRUNTIME) /I$(WXWIN)\include \
 	/I$(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) /I..\include \
-	/I$(LIBXML2_DIR)\include /I$(ICONV_DIR)\include $(__STATIC_DEF_p) /GR /GX \
-	$(CPPFLAGS) $(CXXFLAGS)
+	/I$(LIBXML2_DIR)\include /I$(ICONV_DIR)\include /GR /GX $(CPPFLAGS) \
+	$(CXXFLAGS)
 WXXML2_OBJECTS =  \
 	msvc\wxxml2_xml2.obj \
 	msvc\wxxml2_dtd.obj
@@ -121,9 +118,6 @@ WXLIBPOSTFIX = ud
 !endif
 !if "$(BUILD)" == "release" && "$(UNICODE)" == "1"
 WXLIBPOSTFIX = u
-!endif
-!if "$(SHARED)" == "0"
-__STATIC_DEF_p = /DLIBXML_STATIC
 !endif
 
 

@@ -56,8 +56,18 @@ class WXXMLDLLEXPORT wxXml2Document;
 class WXXMLDLLEXPORT wxXml2DTD;			// defined in "dtd.h"
 
 
-// this macro converts from wxStrings to xmlChars
-#define WX2XML(str)		((xmlChar *)str.mb_str(wxConvUTF8))
+//! Converts from wxStrings to xmlChars.
+//! Libxml2 takes sequences of xmlChar (which is defined to be *always* unsigned char)
+//! which are asupposed to be always in UTF8: thus WX2XML converts wxStrings to UTF8.
+#ifdef wxUSE_UNICODE
+	#define WX2XML(str)		((xmlChar *)(str.mb_str(wxConvUTF8).data()))
+#else
+	#define WX2XML(str)		((xmlChar *)(str.mb_str(wxConvUTF8)))
+#endif
+
+//! Converts from xmlChars to wxStrings.
+//! 
+#define XML2WX(str)		(wxString((const wxChar *)str, wxConvUTF8))
 
 
 //! Represents an XML node type. LibXML2 allows a lot of different element types,
@@ -209,6 +219,16 @@ public:
 	//! wxXml2Wrapper objects to avoid memory leaks.
 	static void Cleanup() 
 		{ xmlCleanupParser(); }
+		
+	//! Returns a string with the libxml2 library version used when
+	//! this source was compiled.
+	static wxString GetLibxml2Version()
+		{ return wxT(LIBXML_DOTTED_VERSION); }
+		
+	//! Checks the compiled library version against the include one.
+	//! If something is wrong, a warning or a fatal error is generated.
+	static void TestLibxml2Version()
+		{ LIBXML_TEST_VERSION; }
 };
 
 
@@ -248,7 +268,7 @@ protected:		// reference counting utilities
 	//! Consider the following code:
 	//! \code
 	//!     wxXml2Document doc;
-	//!     wxXml2Node root(doc, "root_of_my_doc");
+	//!     wxXml2Node root(doc, "root_of_doc");
 	//!     
 	//!     // copy the root node
 	//!     wxXml2Node copy(root);
@@ -257,12 +277,12 @@ protected:		// reference counting utilities
 	//!     // save the document
 	//!     doc.Save(....);
 	//! \endcode
-	//! The result won't be a document with a root named "root_of_my_doc"
+	//! The result won't be a document with a root named "root_of_doc"
 	//! but a document with "myroot" as root's name.
 	//! This is because deep copies are never performed, unlike, for example,
 	//! in wxString's COW system where the string is shared until a non-const
 	//! function is called.
-	//! The libxml2 structure is always shared with wxXml2Wrapper.
+	//! The libxml2 structures are always shared with wxXml2Wrapper.
 	//! 
 	//! However, a reference count is still required to avoid things like:
 	//! \code
@@ -429,9 +449,9 @@ public:		// miscellaneous
 public:		// getters
 
     wxString GetName() const
-		{ if (m_attr) return m_attr->name; return wxEmptyString; }
+		{ if (m_attr) return XML2WX(m_attr->name); return wxEmptyString; }
     wxString GetValue() const
-		{ if (m_attr->children) return m_attr->children->content; return wxEmptyString; }
+		{ if (m_attr->children) return XML2WX(m_attr->children->content); return wxEmptyString; }
 
     wxXml2Property GetNext() const
 		{ if (m_attr) return wxXml2Property(m_attr->next); return wxXml2EmptyProperty; }
@@ -559,9 +579,9 @@ public:		// miscellaneous
 public:		// getters
     
 	wxString GetPrefix() const
-		{ if (m_ns) return m_ns->prefix; return wxEmptyString; }
+		{ if (m_ns) return XML2WX(m_ns->prefix); return wxEmptyString; }
     wxString GetURI() const
-		{ if (m_ns) return m_ns->href; return wxEmptyString; }	
+		{ if (m_ns) return XML2WX(m_ns->href); return wxEmptyString; }	
 
 	//! Returns the associated XML structure
 	xmlNs *GetObj() const
@@ -618,7 +638,11 @@ public:
 
 	//! Loads the given filename and parse it.
     wxXml2Document(const wxString &filename) 
-		{ m_doc = xmlParseFile(filename); /* WX2XML is not needed */ JustWrappedNew(); }
+#ifdef wxUSE_UNICODE
+		{ m_doc = xmlParseFile((const char *)WX2XML(filename)); JustWrappedNew(); }
+#else
+		{ m_doc = xmlParseFile((const char *)filename); JustWrappedNew(); }
+#endif
 
 	//! Wraps the given libxml2 structure.
 	wxXml2Document(xmlDoc *doc) : m_doc(doc) 
@@ -711,13 +735,13 @@ public:		// getters
 
     //! Returns version of document (may be empty).
     wxString GetVersion() const
-		{ if (m_doc) return m_doc->version; return wxEmptyString; }
+		{ if (m_doc) return XML2WX(m_doc->version); return wxEmptyString; }
 
     //! Returns encoding of document (may be empty).
     //! Note: this is the encoding original file was saved in, *not* the
     //! encoding of in-memory representation!
     wxString GetFileEncoding() const
-		{ if (m_doc) return m_doc->encoding; return wxEmptyString; }
+		{ if (m_doc) return XML2WX(m_doc->encoding); return wxEmptyString; }
 
 	//! Returns the libxml2 underlying object.
 	xmlDoc *GetObj() const
@@ -893,15 +917,6 @@ protected:
 		SetAsEmpty();
 	}
 
-	/*
-	void Copy(const wxXml2Node &n) {
-		UnwrappingOld();
-		m_obj = n.m_obj;
-		JustWrappedNew();
-	}
-
-	int &GetPrivate() const
-		{ return (int &)(m_obj->_private); }*/
 
 public:
 
@@ -1080,7 +1095,19 @@ public:
 	
 	//@}
     
-public:
+public:		// getters
+
+    wxXml2Node GetParent() const
+		{ return wxXml2Node(wxXml2BaseNode::GetParent()); }
+    wxXml2Node GetChildren() const		
+		{ return wxXml2Node(wxXml2BaseNode::GetChildren()); }
+    wxXml2Node GetFirstChild() const	
+		{ return wxXml2Node(wxXml2BaseNode::GetFirstChild()); }
+    wxXml2Node GetNext() const
+		{ return wxXml2Node(wxXml2BaseNode::GetNext()); }
+	wxXml2Node GetPrevious() const	
+		{ return wxXml2Node(wxXml2BaseNode::GetPrevious()); }
+
 
 	wxXml2Document GetDoc() const
 		{ if (GetObj()) return wxXml2Document(GetObj()->doc); return wxXml2EmptyDoc; }
@@ -1093,9 +1120,9 @@ public:
 		{ if (GetObj()) return wxXml2Namespace(GetObj()->nsDef, (wxXml2Node &)(*this)); return wxXml2EmptyNamespace; }
 
     wxString GetName() const
-		{ if (GetObj()) return GetObj()->name; return wxEmptyString; }
+		{ if (GetObj()) return XML2WX(GetObj()->name); return wxEmptyString; }
     wxString GetContent() const	
-		{ if (GetObj()) return GetObj()->content; return wxEmptyString; }
+		{ if (GetObj()) return XML2WX(GetObj()->content); return wxEmptyString; }
 
 	//! Returns the libxml2 node structure wrapped by this object. Use this function
 	//! only if you know what to do with the returned structure.

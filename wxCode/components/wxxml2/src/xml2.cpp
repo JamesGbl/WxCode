@@ -64,7 +64,7 @@ void wxXml2Wrapper::DestroyIfUnlinked()
 {
 	if (IsNonEmpty() == FALSE) {
 
-		wxLogDebug("%s::DestroyIfUnlinked - NOT destroyed (because empty)", 
+		wxLogDebug(wxT("%s::DestroyIfUnlinked - nothing to destroy (empty)"), 
 			GetClassInfo()->GetClassName());
 		return;
 	}
@@ -86,7 +86,7 @@ void wxXml2Wrapper::DestroyIfUnlinked()
 		// and no wrappers are embedding it, then we can safely
 		// destroy it.
 		Destroy();
-		wxLogDebug("%s::DestroyIfUnlinked - destroyed", 
+		wxLogDebug(wxT("%s::DestroyIfUnlinked - destroyed"), 
 			GetClassInfo()->GetClassName());
 
 	} else {
@@ -95,10 +95,10 @@ void wxXml2Wrapper::DestroyIfUnlinked()
 		// by the node which owns this object or by another wrapper	
 		SetAsEmpty();
 
-		wxLogDebug("%s::DestroyIfUnlinked - NOT destroyed (because %s)", 
+		wxLogDebug(wxT("%s::DestroyIfUnlinked - NOT destroyed (because %s)"), 
 			GetClassInfo()->GetClassName(),
-			(!unlinked ? "still linked" : 
-					wxString::Format("refcount is %d", refcount).c_str()));
+			(!unlinked ? wxT("linked") : 
+					wxString::Format(wxT("refcount is %d"), refcount).c_str()));
 	}
 }
 
@@ -272,8 +272,8 @@ void wxXml2Namespace::Create(const wxString &prefix,
 	// create the property; if the owner is an empty node, the property
 	// will be created unlinked from the main tree.
 	wxASSERT_MSG(owner != wxXml2EmptyNode, 
-              "If I create an unlinked namespace, its "
-			  "memory will never be freed...");
+              wxT("If I create an unlinked namespace, its ")
+			  wxT("memory will never be freed..."));
 	m_ns = xmlNewNs(owner.GetObj(), WX2XML(uri), WX2XML(prefix));
 	m_owner = owner.GetObj();		// update also the owner pointer
 	JustWrappedNew();
@@ -363,7 +363,7 @@ void wxXml2Node::Build(const wxXml2NodeType type, wxXml2Node &parent,
 	case wxXML_TEXT_NODE:
 
 		// is the content of this text child an entity ?
-		if (content.StartsWith("&") && content.Last() == ';') {
+		if (content.StartsWith(wxT("&")) && content.Last() == ';') {
 
 			// yes, it is; just check if the caller
 			// also wants to create a tag which wraps the entity
@@ -425,10 +425,10 @@ void wxXml2Node::Build(const wxXml2NodeType type, wxXml2Node &parent,
 		if (wxXml2EmptyNode != parent) {
 
 			wxASSERT_MSG(parent.GetType() == wxXML_ELEMENT_NODE,
-				"Cannot add children to a non-container node. If you want to add "
-				"tags after special nodes like wxXML_PI_NODE or wxXML_CDATA_NODE, "
-				"use one of wxXml2Node::Add***Child() on the parent of the special "
-				"node. Special nodes cannot have children.");
+				wxT("Cannot add children to a non-container node. If you want to add ")
+				wxT("tags after special nodes like wxXML_PI_NODE or wxXML_CDATA_NODE, ")
+				wxT("use one of wxXml2Node::Add***Child() on the parent of the special ")
+				wxT("node. Special nodes cannot have children."));
 			m_obj = (wxXml2BaseNodeObj *)xmlNewChild(parent.GetObj(), ns.GetObj(), WX2XML(name), NULL);
 			JustWrappedNew();
 
@@ -469,30 +469,30 @@ void wxXml2Node::Build(const wxXml2NodeType type, wxXml2Node &parent,
 		JustWrappedNew();
 
 		wxASSERT_MSG(doc != wxXml2EmptyDoc, 
-			"A PI node must have no parents: it must be attached directly to a "
-			"document since it must be placed before any other type of node");
+			wxT("A PI node must have no parents: it must be attached directly to a ")
+			wxT("document since it must be placed before any other type of node"));
 		
 		// prepend the node to the children list of the document
 		xmlAddPrevSibling(doc.GetObj()->children, (xmlNode *)m_obj);
 		break;
 
 	case wxXML_ENTITY_REF_NODE:
-		wxASSERT_MSG(0, "Such node is not supported directly: you should create "
-			"a text node (wxXML_TEXT_NODE) whose content is an entity. In this "
-			"way, a wxXML_ENTITY_REF_NODE node will be created automatically");
+		wxASSERT_MSG(0, wxT("Such node is not supported directly: you should create ")
+			wxT("a text node (wxXML_TEXT_NODE) whose content is an entity. In this ")
+			wxT("way, a wxXML_ENTITY_REF_NODE node will be created automatically"));
 
 	case wxXML_DTD_NODE:
 	case wxXML_DOCUMENT_NODE:
 	case wxXML_HTML_DOCUMENT_NODE:
 	case wxXML_NAMESPACE_DECL:
-		wxASSERT_MSG(0, "Such type of node cannot be created !!\n"
-						"You must use wxXml2Document, wxXml2DTD or wxXml2Namespace "
-						"to create such types of 'nodes'...");
+		wxASSERT_MSG(0, wxT("Such type of node cannot be created !!\n")
+						wxT("You must use wxXml2Document, wxXml2DTD or wxXml2Namespace ")
+						wxT("to create such types of 'nodes'..."));
 
 	case wxXML_ELEMENT_DECL:
 	case wxXML_ATTRIBUTE_DECL:
 	case wxXML_ENTITY_DECL:
-		wxASSERT_MSG(0, "still not wrapped");
+		wxASSERT_MSG(0, wxT("still not wrapped"));
 		break;
 	}
 
@@ -550,7 +550,7 @@ wxXml2Node wxXml2Node::AddPIChild(const wxString &name, const wxString &content)
 wxXml2Node wxXml2Node::AddBreakLineChild(int breaklines)
 {
 	// a "break line child" is just a text node with a new line.
-	return AddTextChild(wxT(""), wxString('\n', breaklines));
+	return AddTextChild(wxEmptyString, wxString(wxT('\n'), breaklines));
 }
 
 wxXml2Property wxXml2Node::AddProperty(const wxString &name, const wxString &value)
@@ -761,7 +761,7 @@ wxXml2Node wxXml2Node::Find(const wxString &name, const wxString &content,
 wxXml2Node wxXml2Node::Find(const wxXml2Node &tofind, int occ, bool bNS) const
 {
 	// check pointer is okay
-	wxASSERT_MSG(tofind != NULL, "Invalid pointer");
+	wxASSERT_MSG(tofind != NULL, wxT("Invalid pointer"));
 
 	// declare some variables
 	wxXml2Node r = wxXml2EmptyNode, n = GetChildren();
@@ -843,7 +843,7 @@ static void XMLDocumentMsg(void *ctx, const char *pszFormat, ...)
 	// get the variable argument list
 	va_list argptr;
 	va_start(argptr, pszFormat);
-	wxString str = wxString::FormatV(pszFormat, argptr);
+	wxString str = wxString::FormatV(wxString(pszFormat, wxConvUTF8), argptr);
 	va_end(argptr);
 
 	// append the error string to the private member of the parser context
@@ -893,7 +893,7 @@ bool wxXml2Document::Load(wxInputStream &stream, wxString *pErr)
 	// parse from buffer
 	wxString error;
 	UnwrappingOld();
-	m_doc = xmlSAXParseMemoryWithData(&h, buf, l, 1, &error);
+	m_doc = xmlSAXParseMemoryWithData(&h, (const char *)WX2XML(buf), l, 1, &error);	
 	JustWrappedNew();
 
 	// copy error string
@@ -909,7 +909,7 @@ int wxXml2Document::Save(wxOutputStream &stream,
 
 	// use one of the libxml2 encoders if required...
 	if (!encoding.IsEmpty())
-		encoder = xmlFindCharEncodingHandler(encoding);
+		encoder = xmlFindCharEncodingHandler((const char *)WX2XML(encoding));
 
 	xmlOutputBuffer *ob = xmlOutputBufferCreateIO(XMLDocumentWrite, NULL,
 								(void *)(&stream), encoder);
@@ -923,7 +923,7 @@ int wxXml2Document::Save(wxOutputStream &stream,
 
 	// save file & return (the output buffer will be deleted by libxml2)
 	xmlSubstituteEntitiesDefault(0);
-	int res = xmlSaveFormatFileTo(ob, m_doc, encoding, 1);
+	int res = xmlSaveFormatFileTo(ob, m_doc, (const char *)WX2XML(encoding), 1);
 
 	// restore old indentation string
 	//xmlTreeIndentString = old;
@@ -1008,8 +1008,8 @@ wxXml2DTD wxXml2Document::GetDTD() const
 void wxXml2Document::SetMathMLDTD()
 {
 	// this is the standard DTD reference for MathML 2.0 documents
-	wxXml2DTD mathml(*this, "math", "-//W3C//DTD MathML 2.0//EN",
-          "http://www.w3.org/TR/MathML2/dtd/mathml2.dtd");
+	wxXml2DTD mathml(*this, wxT("math"), wxT("-//W3C//DTD MathML 2.0//EN"),
+          wxT("http://www.w3.org/TR/MathML2/dtd/mathml2.dtd"));
 
 	SetDTD(mathml);
 }
@@ -1017,8 +1017,8 @@ void wxXml2Document::SetMathMLDTD()
 void wxXml2Document::SetXHTMLStrictDTD()
 {
 	// this is a standard DTD reference for XHTML 1.0 documents
-	wxXml2DTD xhtml(*this, "html", "-//W3C//DTD XHTML 1.0 Strict//EN",
-					"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd");
+	wxXml2DTD xhtml(*this, wxT("html"), wxT("-//W3C//DTD XHTML 1.0 Strict//EN"),
+					wxT("http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"));
 
 	SetDTD(xhtml);
 }
@@ -1026,8 +1026,8 @@ void wxXml2Document::SetXHTMLStrictDTD()
 void wxXml2Document::SetXHTMLTransitionalDTD()
 {
 	// this is a standard DTD reference for XHTML 1.0 documents
-	wxXml2DTD xhtml(*this, "html", "-//W3C//DTD XHTML 1.0 Transitional//EN",
-					"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd");
+	wxXml2DTD xhtml(*this, wxT("html"), wxT("-//W3C//DTD XHTML 1.0 Transitional//EN"),
+					wxT("http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"));
 
 	SetDTD(xhtml);
 }
@@ -1035,15 +1035,15 @@ void wxXml2Document::SetXHTMLTransitionalDTD()
 void wxXml2Document::SetXHTMLFrameSetDTD()
 {
 	// this is a standard DTD reference for XHTML 1.0 documents
-	wxXml2DTD xhtml(*this, "html", "-//W3C//DTD XHTML 1.0 Frameset//EN",
-					"http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd");
+	wxXml2DTD xhtml(*this, wxT("html"), wxT("-//W3C//DTD XHTML 1.0 Frameset//EN"),
+					wxT("http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd"));
 
 	SetDTD(xhtml);
 }
 
 void wxXml2Document::SetStyleSheet(const wxString &xslfile)
 {
-	wxString content(wxT("type=\"text/xsl\" href=\"" + xslfile + "\""));
+	wxString content(wxT("type=\"text/xsl\" href=\"") + xslfile + wxT("\""));
 	wxXml2Node root(GetRoot());
 	
 	if (root == wxXml2EmptyNode) {
@@ -1081,7 +1081,7 @@ static void XMLValidationMsg(void *out, const char *pszFormat, ...)
 	// get the variable argument list
 	va_list argptr;
 	va_start(argptr, pszFormat);
-	wxString str = wxString::FormatV(pszFormat, argptr);
+	wxString str = wxString::FormatV(wxString(pszFormat, wxConvUTF8), argptr);
 	va_end(argptr);
 
 	// append the error/warning string to the void pointer

@@ -28,9 +28,6 @@ LIBXML2_DIR = c:\libxml2
 # The iconv library main folder 
 ICONV_DIR = c:\iconv
 
-# What type of library to build? [0,1]
-SHARED = 0
-
 # Compile Unicode build of wxWindows? [0,1]
 UNICODE = 0
 
@@ -114,24 +111,19 @@ WXLIBPOSTFIX = ud
 WXLIBPOSTFIX = u
 !endif
 !endif
-__STATIC_DEF_p =
-!ifeq SHARED 0
-__STATIC_DEF_p = -dLIBXML_STATIC
-!endif
 
 ### Variables: ###
 
 MINIMAL_CXXFLAGS = $(__DEBUG_DEFINE_p) -d__WXMSW__ $(__UNICODE_DEFINE_p) &
 	$(__OPTIMIZEFLAG) $(__DEBUGINFO) -i=..\include -i=$(WXWIN)\include &
 	-i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) -i=$(LIBXML2_DIR)\include &
-	-i=$(ICONV_DIR)\include $(__STATIC_DEF_p) $(CPPFLAGS) $(CXXFLAGS)
+	-i=$(ICONV_DIR)\include $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  &
 	watcom\minimal_minimal.obj
 WXXML2_CXXFLAGS = $(__DEBUG_DEFINE_p) -d__WXMSW__ $(__UNICODE_DEFINE_p) &
 	$(__OPTIMIZEFLAG) $(__DEBUGINFO) -i=$(WXWIN)\include &
 	-i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) -i=..\include &
-	-i=$(LIBXML2_DIR)\include -i=$(ICONV_DIR)\include $(__STATIC_DEF_p) &
-	$(CPPFLAGS) $(CXXFLAGS)
+	-i=$(LIBXML2_DIR)\include -i=$(ICONV_DIR)\include $(CPPFLAGS) $(CXXFLAGS)
 WXXML2_OBJECTS =  &
 	watcom\wxxml2_xml2.obj &
 	watcom\wxxml2_dtd.obj

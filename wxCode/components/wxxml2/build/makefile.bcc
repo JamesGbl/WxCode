@@ -49,11 +49,6 @@ LIBXML2_DIR = c:\libxml2
 ICONV_DIR = c:\iconv
 !endif
 
-# What type of library to build? [0,1]
-!ifndef SHARED
-SHARED = 0
-!endif
-
 # Compile Unicode build of wxWindows? [0,1]
 !ifndef UNICODE
 UNICODE = 0
@@ -80,15 +75,13 @@ WXWIN = c:\wxWidgets
 MINIMAL_CXXFLAGS = -I$(BCCDIR)\include $(__DEBUG_DEFINE_p) -D__WXMSW__ \
 	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -I..\include \
 	-I$(WXWIN)\include -I$(WXWIN)\lib\bcc_lib\msw$(WXLIBPOSTFIX) \
-	-I$(LIBXML2_DIR)\include -I$(ICONV_DIR)\include $(__STATIC_DEF_p) \
-	$(CPPFLAGS) $(CXXFLAGS)
+	-I$(LIBXML2_DIR)\include -I$(ICONV_DIR)\include $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	borland\minimal_minimal.obj
 WXXML2_CXXFLAGS = -I$(BCCDIR)\include $(__DEBUG_DEFINE_p) -D__WXMSW__ \
 	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -I$(WXWIN)\include \
 	-I$(WXWIN)\lib\bcc_lib\msw$(WXLIBPOSTFIX) -I..\include \
-	-I$(LIBXML2_DIR)\include -I$(ICONV_DIR)\include $(__STATIC_DEF_p) \
-	$(CPPFLAGS) $(CXXFLAGS)
+	-I$(LIBXML2_DIR)\include -I$(ICONV_DIR)\include $(CPPFLAGS) $(CXXFLAGS)
 WXXML2_OBJECTS =  \
 	borland\wxxml2_xml2.obj \
 	borland\wxxml2_dtd.obj
@@ -124,9 +117,6 @@ WXLIBPOSTFIX = ud
 !endif
 !if "$(BUILD)" == "release" && "$(UNICODE)" == "1"
 WXLIBPOSTFIX = u
-!endif
-!if "$(SHARED)" == "0"
-__STATIC_DEF_p = -DLIBXML_STATIC
 !endif
 
 

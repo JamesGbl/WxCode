@@ -43,13 +43,18 @@ IMPLEMENT_DYNAMIC_CLASS(wxXml2AttrDecl, wxXml2BaseNode)
 IMPLEMENT_DYNAMIC_CLASS(wxXml2EntityDecl, wxXml2BaseNode)
 IMPLEMENT_DYNAMIC_CLASS(wxXml2DTD, wxXml2Wrapper)
 
-IMPLEMENT_DYNAMIC_CLASS(wxXml2Enumeration, wxXml2Wrapper)
-IMPLEMENT_DYNAMIC_CLASS(wxXml2ElemContent, wxXml2Wrapper)
+IMPLEMENT_ABSTRACT_CLASS(wxXml2HelpWrapper, wxObject)
+IMPLEMENT_DYNAMIC_CLASS(wxXml2Enumeration, wxXml2HelpWrapper)
+IMPLEMENT_DYNAMIC_CLASS(wxXml2ElemContent, wxXml2HelpWrapper)
 
 
 // global instances (they wraps NULL pointers)
 wxXml2DTD wxXml2EmptyDTD(NULL);
 wxXml2Enumeration wxXml2EmptyEnumeration(NULL);
+wxXml2ElemDecl wxXml2EmptyElemDecl(NULL);
+wxXml2AttrDecl wxXml2EmptyAttrDecl(NULL);
+wxXml2EntityDecl wxXml2EmptyEntityDecl(NULL);
+wxXml2ElemContent wxXml2EmptyElemContent(NULL);
 
 
 
@@ -59,8 +64,17 @@ wxXml2Enumeration wxXml2EmptyEnumeration(NULL);
 //-----------------------------------------------------------------------------
 
 void wxXml2ElemDecl::Create(const wxXml2DTD &parent, const wxString &name,
-							wxXml2ElementTypeVal val, const wxXml2ElemContent &content)
+							wxXml2ElementTypeVal val, wxXml2ElemContent &content)
 {
+	// we should do:
+	// if (content != wxXml2EmptyElemContent)
+	// 	content.Link();
+	// as wxXml2AttrDecl does with the wxXml2Enumeration objects;
+	// however, for some reason, xmlAddElementDecl will _copy_ the
+	// given xmlElementContent object and thus we must *not*
+	// tell to the given wxXml2ElemContent that libxml2 will free
+	// its memory...
+
 	UnwrappingOld();	
 	m_obj = (wxXml2BaseNodeObj*)xmlAddElementDecl(NULL, parent.GetObj(), WX2XML(name), 
 											(xmlElementTypeVal)val, content.GetObj());
@@ -74,7 +88,7 @@ bool wxXml2ElemDecl::operator==(const wxXml2ElemDecl &n) const
 	if (GetObj()->etype == n.GetObj()->etype &&
 		GetObj()->content == n.GetObj()->content &&
 		GetObj()->attributes == n.GetObj()->attributes &&
-		wxString(GetObj()->prefix).Cmp(n.GetObj()->prefix) == 0)
+		XML2WX(GetObj()->prefix).Cmp(XML2WX(n.GetObj()->prefix)) == 0)
 		return TRUE;
 	return FALSE;
 }
@@ -89,10 +103,15 @@ bool wxXml2ElemDecl::operator==(const wxXml2ElemDecl &n) const
 void wxXml2AttrDecl::Create(const wxXml2DTD &parent, const wxString &element,
 							const wxString &name, const wxXml2Namespace &ns,
 							wxXml2AttributeType type, wxXml2AttributeDefault def,
-							const wxString &defaultval, const wxXml2Enumeration &e)
+							const wxString &defaultval, wxXml2Enumeration &e)
 {
 	xmlEnumeration *enumeration = NULL;
-	if (e != wxXml2EmptyEnumeration) enumeration = e.GetObj();
+	if (e != wxXml2EmptyEnumeration) {
+		enumeration = e.GetObj();
+
+		// libxml2 will free the xmlEnumeration when freeing this xmlAttribute...
+		e.Link();
+	}
 
 	xmlChar *prefix = NULL;
 	if (ns != wxXml2EmptyNamespace) prefix = WX2XML(ns.GetPrefix());
@@ -112,13 +131,36 @@ bool wxXml2AttrDecl::operator==(const wxXml2AttrDecl &n) const
 
 	if (GetObj()->atype == n.GetObj()->atype &&
 		GetObj()->def == n.GetObj()->def &&
-		wxString(GetObj()->defaultValue).Cmp(n.GetObj()->defaultValue) == 0 &&
-		wxString(GetObj()->prefix).Cmp(n.GetObj()->prefix) == 0 &&
-		wxString(GetObj()->elem).Cmp(n.GetObj()->elem) == 0 &&
+		XML2WX(GetObj()->defaultValue).Cmp(XML2WX(n.GetObj()->defaultValue)) == 0 &&
+		XML2WX(GetObj()->prefix).Cmp(XML2WX(n.GetObj()->prefix)) == 0 &&
+		XML2WX(GetObj()->elem).Cmp(XML2WX(n.GetObj()->elem)) == 0 &&
 		GetObj()->tree == n.GetObj()->tree)
 		return TRUE;
 	return FALSE;
 }
+
+
+
+
+//-----------------------------------------------------------------------------
+//  wxXml2HelpWrapper
+//-----------------------------------------------------------------------------
+
+void wxXml2HelpWrapper::DestroyIfUnlinked()
+{
+	if (!m_bLinked) {
+
+		Destroy();
+		wxLogDebug(wxT("%s::DestroyIfUnlinked - destroyed"), 
+			GetClassInfo()->GetClassName());
+
+	} else {
+
+		wxLogDebug(wxT("%s::DestroyIfUnlinked - NOT destroyed (because linked)"),
+			GetClassInfo()->GetClassName());
+	}
+}
+
 
 
 
@@ -148,8 +190,34 @@ bool wxXml2EntityDecl::operator==(const wxXml2EntityDecl &n) const
 	wxCHECK_NULL_POINTERS(GetObj(), n.GetObj());
 
 	if (GetObj()->etype == n.GetObj()->etype &&
-		wxString(GetObj()->ExternalID).Cmp(n.GetObj()->ExternalID) == 0 &&
-		wxString(GetObj()->SystemID).Cmp(n.GetObj()->SystemID) == 0)
+		XML2WX(GetObj()->ExternalID).Cmp(XML2WX(n.GetObj()->ExternalID)) == 0 &&
+		XML2WX(GetObj()->SystemID).Cmp(XML2WX(n.GetObj()->SystemID)) == 0)
+		return TRUE;
+	return FALSE;
+}
+
+
+
+
+//-----------------------------------------------------------------------------
+//  wxXml2ElemContent
+//-----------------------------------------------------------------------------
+
+void wxXml2ElemContent::Create(const wxString &name, wxXml2ElementContentType val,
+							wxXml2ElementContentOccur occ)
+{
+	// create the new object
+	m_cont = xmlNewElementContent(WX2XML(name), (xmlElementContentType)val);
+	m_cont->ocur = (xmlElementContentOccur)occ;
+}
+
+bool wxXml2ElemContent::operator==(const wxXml2ElemContent &n) const
+{
+	wxCHECK_NULL_POINTERS(n.GetObj(), GetObj());
+
+	if (XML2WX(GetObj()->name).Cmp(XML2WX(n.GetObj()->name)) == 0 &&
+		XML2WX(GetObj()->prefix).Cmp(XML2WX(n.GetObj()->prefix)) == 0 &&
+		GetObj()->type == n.GetObj()->type)
 		return TRUE;
 	return FALSE;
 }
@@ -170,31 +238,34 @@ void wxXml2Enumeration::Create(const wxString &name, const wxXml2Enumeration &ne
 
 void wxXml2Enumeration::Create(const wxString &list)
 {
-	wxStringTokenizer tknzr(list, "|");
+	wxStringTokenizer tknzr(list, wxT("|"));
 	if (!tknzr.HasMoreTokens()) return;
 
 	Create(tknzr.GetNextToken(), wxXml2EmptyEnumeration);
 	while (tknzr.HasMoreTokens()) {
 
 		// create a new enumeration and append it to this list
-		Append(wxXml2Enumeration(tknzr.GetNextToken(), wxXml2EmptyEnumeration));
+		xmlEnumeration *next = xmlCreateEnumeration(WX2XML(tknzr.GetNextToken()));
+
+		//
+		Append(next);
 	}
 }
 
-void wxXml2Enumeration::Append(const wxXml2Enumeration &e)
+void wxXml2Enumeration::Append(xmlEnumeration *e)
 {
 	wxXml2Enumeration &p = *this;
 	while (p.GetObj()->next != NULL)
 		p = p.GetObj()->next;
 
-	p.GetObj()->next = e.GetObj();
+	p.GetObj()->next = e;
 }
 
 bool wxXml2Enumeration::operator==(const wxXml2Enumeration &n) const
 {
 	wxCHECK_NULL_POINTERS(GetObj(), n.GetObj());
 
-	if (wxString(n.GetObj()->name).Cmp(GetObj()->name) == 0)
+	if (XML2WX(n.GetObj()->name).Cmp(XML2WX(GetObj()->name)) == 0)
 		return TRUE;
 	return FALSE;
 }
@@ -267,7 +338,7 @@ static void XMLDTDMsg(void *ctx, const char *pszFormat, ...)
 	// get the variable argument list
 	va_list argptr;
 	va_start(argptr, pszFormat);
-	wxString str = wxString::FormatV(pszFormat, argptr);
+	wxString str = wxString::FormatV(wxString(pszFormat, wxConvUTF8), argptr);
 	va_end(argptr);
 
 	// append the error string to the private member of the parser context
@@ -475,7 +546,7 @@ bool wxXml2DTD::LoadFullDTD(wxString *perr)
 	// let me know if you need this feature.
 	//wxASSERT(0);
 	if (perr)
-		*perr = "PUBLIC DTD loading not supported.";
+		*perr = wxT("PUBLIC DTD loading not supported.");
 	
 	return FALSE;
 }
@@ -503,7 +574,7 @@ void wxXml2DTD::SetExternalID(const wxString &str)
 
 void wxXml2DTD::AddElemDecl(const wxString &name, 
 							wxXml2ElementTypeVal val,
-							const wxXml2ElemContent &content)
+							wxXml2ElemContent &content)
 {
 	// we just need to create a wxXml2ElemDecl.
 	wxXml2ElemDecl n(*this, name, val, content);
@@ -518,7 +589,7 @@ void wxXml2DTD::AddAttrDecl(const wxString &element,
 				wxXml2AttributeType type, 
 				wxXml2AttributeDefault def,
 				const wxString &defaultval, 
-				const wxXml2Enumeration &e)
+				/*const*/ wxXml2Enumeration &e)
 {
 	// we just need to create a wxXml2AttrDecl.
 	wxXml2AttrDecl n(*this, element, name, ns, type, def, defaultval, e);

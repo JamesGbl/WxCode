@@ -208,7 +208,7 @@ bool MyApp::OnInit()
 
 #if 1
 	// create an useful log window
-	wxLogWindow *pwindow = new wxLogWindow(frame, "log");
+	wxLogWindow *pwindow = new wxLogWindow(frame, wxT("log"));
 	pwindow->GetFrame()->Move(50, 50+350);
 	pwindow->GetFrame()->SetSize(800, 300);
 
@@ -241,7 +241,7 @@ int MyApp::OnExit()
 
 // frame constructor
 MyFrame::MyFrame(const wxString& title)
-       : wxFrame(NULL, wxID_ANY, title, wxPoint(50, 50), wxSize(400, 300))
+       : wxFrame(NULL, wxID_ANY, title, wxPoint(50, 50), wxSize(500, 300))
 {
     // set the frame icon
     SetIcon(wxICON(mondrian));
@@ -249,11 +249,11 @@ MyFrame::MyFrame(const wxString& title)
 #if 1
 	// create the wxTextCtrl where the file structure is shown
 	m_text = new wxTextCtrl(this, -1, 
-		"This program will provide some examples about the three main operations "
-		"it provides on XML files:\n\n"
-		"\t- Loading: wxXml2 allows you to load any XML file including DTDs.\n"
-		"\t- Editing: wxXml2 allows you to create, edit, manipulate any XML file.\n"
-		"\t- Saving: wxXml2 can saves XML trees or DTDs to memory buffers or to files.", 
+		wxT("This program will provide some examples about the three main operations ")
+		wxT("it provides on XML files:\n\n")
+		wxT("\t- Loading: wxXml2 allows you to load any XML file including DTDs.\n")
+		wxT("\t- Editing: wxXml2 allows you to create, edit, manipulate any XML file.\n")
+		wxT("\t- Saving: wxXml2 can saves XML trees or DTDs to memory buffers or to files."), 
 		wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE);
 	m_text->SetBackgroundColour(*wxWHITE);
 #endif
@@ -310,12 +310,14 @@ void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
     wxString msg;
-    msg.Printf( _T("This is a little demonstration of wxXml2 wrappers for libxml2.\n\n"
-					"They are based on original Vaclav Slavik's design but they\n"
-					"use libxml2 (which is a widely-used, powerful cross-platform\n"
-					"library) instead of EXPAT.\n\n"
-					"The classes were rewritten by Francesco Montorsi (frm@users.sourceforge.net)\n"
-					"and this sample is a modified version of the minimal sample of wxWidgets."));
+    msg.Printf( wxT("This is a little demonstration of wxXml2 wrappers for libxml2.\n\n")
+				wxT("They are based on original Vaclav Slavik's design but they\n")
+				wxT("use libxml2 (which is a widely-used, powerful cross-platform\n")
+				wxT("library) instead of EXPAT.\n\n")
+				wxT("The classes were rewritten by Francesco Montorsi (frm@users.sourceforge.net)\n")
+				wxT("and this sample is a modified version of the minimal sample of wxWidgets.\n\n")
+				wxT("This sample program was compiled with libxml2 version %s."),
+					wxXml2::GetLibxml2Version().c_str());
 
     wxMessageBox(msg, _T("About Minimal"), wxOK | wxICON_INFORMATION, this);
 }
@@ -332,8 +334,8 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 // MyFrame::LoadDTD DOES TO SHOW TO THE USER THE STRUCTURE OF AN XML DTD.
 void ParseNode(const wxXml2Node &node, wxString &str, int n)
 {
-	wxLogDebug("ParseNode - parsing [%s]", node.GetName().c_str());
-	wxString toadd, spaces(' ', n);
+	wxLogDebug(wxT("ParseNode - parsing [%s]"), node.GetName().c_str());
+	wxString toadd, spaces(wxT(' '), n);
 
 	// concatenate the name of this node
 	toadd = node.GetName();
@@ -352,9 +354,9 @@ void ParseNode(const wxXml2Node &node, wxString &str, int n)
 		// in this cases, just show "[null]"
 		wxString tmp = content.Trim();
 		if (tmp.IsEmpty())
-			toadd += "node: [null]";
+			toadd += wxT("node: [null]");
 		else 
-			toadd += "node: " + content;
+			toadd += wxT("node: ") + content;
 
 
 	} else {		// if it's not a text node, then add the properties...
@@ -362,7 +364,7 @@ void ParseNode(const wxXml2Node &node, wxString &str, int n)
 		wxXml2Property prop(node.GetProperties());
 		while (prop != wxXml2EmptyProperty) {
 
-			toadd += " " + prop.GetName() + "=";
+			toadd += wxT(" ") + prop.GetName() + wxT("=");
 			toadd += prop.GetValue();
 
 			prop = prop.GetNext();
@@ -379,11 +381,11 @@ void ParseNode(const wxXml2Node &node, wxString &str, int n)
 #else
 
 	// text nodes with newlines won't be shown at all
-	if (toadd != "textnode: [null]") str += toadd;
+	if (toadd != wxT("textnode: [null]")) str += toadd;
 #endif
 
 	// go one line down
-	str += "\n";
+	str += wxT("\n");
 
 	// do we must add the close tag ?
 	bool bClose = FALSE;
@@ -399,7 +401,7 @@ void ParseNode(const wxXml2Node &node, wxString &str, int n)
 		bClose = TRUE;
 	}
 
-	if (bClose) str += wxString(' ', n) + "/" + node.GetName() + "\n";
+	if (bClose) str += wxString(wxT(' '), n) + wxT("/") + node.GetName() + wxT("\n");
 }
 
 // another helper function
@@ -423,7 +425,8 @@ void MyFrame::LoadXML(const wxString &filename)
 
 	// parse the file
 	if (!doc.Load(filename, &err)) {
-		wxMessageBox(wxString::Format("Couldn't parse the file you chose:\n%s", err.c_str()), "Error");
+		wxMessageBox(wxString::Format(
+			wxT("Couldn't parse the file you chose:\n%s"), err.c_str()), wxT("Error"));
 		return;
 	}
 
@@ -436,14 +439,14 @@ void MyFrame::LoadXML(const wxString &filename)
 	// show the DTD declaration, if present
 	wxXml2DTD dtd(doc.GetDTD());
 	if (dtd != wxXml2EmptyDTD) {
-		tree += "DTD name=" + dtd.GetName();
+		tree += wxT("DTD name=") + dtd.GetName();
 
 		if (dtd.IsPublicSubset()) 
-			tree +=	" PUBLIC externalID=" + dtd.GetExternalID() +
-				" externalURI=" + dtd.GetExternalURI() + "\n\n";
+			tree +=	wxT(" PUBLIC externalID=") + dtd.GetExternalID() +
+				wxT(" externalURI=") + dtd.GetExternalURI() + wxT("\n\n");
 
 		if (dtd.IsSystemSubset()) 
-			tree +=	" SYSTEM systemID=" + dtd.GetSystemID() + "\n\n";
+			tree +=	wxT(" SYSTEM systemID=") + dtd.GetSystemID() + wxT("\n\n");
 	}
 
 	// get a string with the tree structure...
@@ -465,12 +468,12 @@ void MyFrame::LoadDTD(const wxString &filename)
 
 	// parse the file
 	if (!doc.Load(filename, &err)) {
-		wxMessageBox(wxString::Format("Couldn't parse the file you chose:\n%s", err.c_str()), "Error");
+		wxMessageBox(wxString::Format(
+			wxT("Couldn't parse the file you chose:\n%s"), err.c_str()), wxT("Error"));
 		return;
 	}
 
 	// show the wxXml2DTD tree in a simple format...
-#if 0
 	wxMemoryOutputStream stream;
 	wxString str;
 
@@ -482,9 +485,9 @@ void MyFrame::LoadDTD(const wxString &filename)
 	
 	// copy the stream into a wxString and change the text shown to the user...
 	stream.CopyTo(str.GetWriteBuf(size), size);
-	str.SetChar(size, '\0');
+	str.UngetWriteBuf();
+	str.SetChar(size, '\0');	
 	m_text->SetValue(str);
-#endif
 
 	doc.DestroyIfUnlinked();
 }
@@ -492,8 +495,8 @@ void MyFrame::LoadDTD(const wxString &filename)
 void MyFrame::OnLoadXML(wxCommandEvent& WXUNUSED(event))
 {
 	// ask the user which file we must load...
-	wxFileDialog fd(this, "Choose the XML file to load", "", "", 
-		"XML and HTML files|*.xml;*.html;*.xhtml|All files|*.*", wxOPEN);
+	wxFileDialog fd(this, wxT("Choose the XML file to load"), wxT(""), wxT(""), 
+		wxT("XML and HTML files|*.xml;*.html;*.xhtml|All files|*.*"), wxOPEN);
 	if (fd.ShowModal() == wxID_CANCEL)
 		return;
 
@@ -503,8 +506,8 @@ void MyFrame::OnLoadXML(wxCommandEvent& WXUNUSED(event))
 void MyFrame::OnLoadDTD(wxCommandEvent& WXUNUSED(event))
 {
 	// ask the user which file we must load...
-	wxFileDialog fd(this, "Choose the DTD to load", "", "", 
-		"DTD files|*.dtd|All files|*.*", wxOPEN);
+	wxFileDialog fd(this, wxT("Choose the DTD to load"), wxT(""), wxT(""), 
+		wxT("DTD files|*.dtd|All files|*.*"), wxOPEN);
 	if (fd.ShowModal() == wxID_CANCEL)
 		return;
 
@@ -517,8 +520,8 @@ void MyFrame::OnSaveSimple(wxCommandEvent& WXUNUSED(event))
 	wxString err;
 
 	// ask the user where we must save
-	wxFileDialog fd(this, "Save simple HTML example file as...", "", "", 
-		"XML and HTML files|*.xml;*.html;*.xhtml|All files|*.*",
+	wxFileDialog fd(this, wxT("Save simple HTML example file as..."), wxT(""), wxT(""), 
+		wxT("XML and HTML files|*.xml;*.html;*.xhtml|All files|*.*"),
 		wxSAVE | wxOVERWRITE_PROMPT );
 	if (fd.ShowModal() == wxID_CANCEL)
 		return;
@@ -531,7 +534,7 @@ void MyFrame::OnSaveSimple(wxCommandEvent& WXUNUSED(event))
 	html.CreateRoot(doc, wxT("html"));
 
 	// set HTML header:
-	//    <html lang="en">
+	//    <html lang=wxT("en")>
 	//
 	html.AddProperty(wxT("lang"), wxT("en"));
 
@@ -540,7 +543,7 @@ void MyFrame::OnSaveSimple(wxCommandEvent& WXUNUSED(event))
 	//   <BODY></BODY>
 	//
 	html.AddContainerChild(wxT("head"));
-	html.Get(wxT("head")).AddTextChild(wxT("title"), "Hi! I'm a sample HTML file");
+	html.Get(wxT("head")).AddTextChild(wxT("title"), wxT("Hi! I'm a sample HTML file"));
 	wxXml2Node body = html.AddContainerChild(wxT("body"));
 
 	// and a comment:
@@ -550,7 +553,7 @@ void MyFrame::OnSaveSimple(wxCommandEvent& WXUNUSED(event))
 		wxT(" This is a dummy comment "));
 
 	// also add a simple paragraph... <P>text</P>
-	body.AddTextChild("p",
+	body.AddTextChild(wxT("p"),
 		wxT(" HTML exported by wxXml2 wrappers for libxml2 - ") \
 		wxT(" write to frm@users.sourceforge.net if you encounter any ") \
 		wxT(" problem or if you want to give suggestions or advices. "));
@@ -558,15 +561,15 @@ void MyFrame::OnSaveSimple(wxCommandEvent& WXUNUSED(event))
 	// now, save the file where the user choose
 	if (1) {//doc.Save(fd.GetPath())) {
 		
-		int ret = wxMessageBox("File correctly saved. Do you want to load it ?", 
-			"Question", wxYES_NO | wxICON_QUESTION);
+		int ret = wxMessageBox(wxT("File correctly saved. Do you want to load it ?"), 
+			wxT("Question"), wxYES_NO | wxICON_QUESTION);
 		
 		if (ret == wxYES) LoadXML(fd.GetPath());
 
 	} else {
 
-		wxMessageBox("File could not be correctly saved !!!", 
-					"Error", wxOK | wxICON_ERROR);
+		wxMessageBox(wxT("File could not be correctly saved !!!"), 
+					wxT("Error"), wxOK | wxICON_ERROR);
 	}
 
 	html.DestroyIfUnlinked();
@@ -580,8 +583,8 @@ void MyFrame::OnSaveAdv(wxCommandEvent &)
 	wxString err;
 
 	// ask the user where we must save
-	wxFileDialog fd(this, "Save advanced XHTML example file as...", "", "", 
-		"XML and HTML files|*.xml;*.html;*.xhtml|All files|*.*",
+	wxFileDialog fd(this, wxT("Save advanced XHTML example file as..."), wxT(""), wxT(""), 
+		wxT("XML and HTML files|*.xml;*.html;*.xhtml|All files|*.*"),
 		wxSAVE | wxOVERWRITE_PROMPT );
 	if (fd.ShowModal() == wxID_CANCEL)
 		return;
@@ -597,40 +600,42 @@ void MyFrame::OnSaveAdv(wxCommandEvent &)
 	doc.SetMathMLDTD();
 
 	// create a CDATA node	
-	root.AddCDATAChild("my cdata block: this text is not parsed and it can "
-		"contain any special character like <>'\",! except for the characters "
-		"] ] > in sequence without spaces since they mark the end of this node");
+	root.AddCDATAChild(wxT("my cdata block: this text is not parsed and it can ")
+		wxT("contain any special character like <>'\",! except for the characters ")
+		wxT("] ] > in sequence without spaces since they mark the end of this node"));
 	
 	// create a PI node: even if we create it here, it will be automatically
 	// linked at the beginning of the document...
-	root.AddPIChild("xml-stylesheet", 
-		"type=\"text/xsl\" href=\"http://www.w3.org/Math/XSL/mathml.xsl\"");
+	root.AddPIChild(wxT("xml-stylesheet"), 
+		wxT("type=\"text/xsl\" href=\"http://www.w3.org/Math/XSL/mathml.xsl\""));
 
 	// create a node containing a reference to an entity:
 	// if everything works good, it will be recognized and embedded into
 	// a wxXML_REFERENCE_NODE by wxXml2
-	root.AddTextChild("refnode", "&copy;");
+	root.AddTextChild(wxT("refnode"), wxT("&copy;"));
 
 #define CHECK_UNICODE
 #ifdef CHECK_UNICODE
 	// then, do a little check for non-UTF8 characters
 	root.AddCommentChild(
 		wxT(" In the followig text child, some non-UTF8 characters are used "));
-	root.AddTextChild("textchild",	wxT("/u20ac"));
+
+	wxString greekstring = wxT("\x3B1\x3B2\x0");//wxT('03B1') wxT('03B2');
+	root.AddTextChild(wxT("textchild"), greekstring);
 #endif
 
 	// now, save the file where the user choose
 	if (doc.Save(fd.GetPath())) {
 		
-		int ret = wxMessageBox("File correctly saved. Do you want to load it ?", 
-			"Question", wxYES_NO | wxICON_QUESTION);
+		int ret = wxMessageBox(wxT("File correctly saved. Do you want to load it ?"), 
+			wxT("Question"), wxYES_NO | wxICON_QUESTION);
 		
 		if (ret == wxYES) LoadXML(fd.GetPath());
 
 	} else {
 
-		wxMessageBox("File could not be correctly saved !!!", 
-					"Error", wxOK | wxICON_ERROR);
+		wxMessageBox(wxT("File could not be correctly saved !!!"), 
+					wxT("Error"), wxOK | wxICON_ERROR);
 	}
 
 	root.DestroyIfUnlinked();
@@ -643,38 +648,47 @@ void MyFrame::OnSaveDTD(wxCommandEvent &)
 	wxString err;
 
 	// ask the user where we must save
-	wxFileDialog fd(this, "Save DTD example file as...", "", "", 
-		"DTD files|*.dtd|All files|*.*",
+	wxFileDialog fd(this, wxT("Save DTD example file as..."), wxT(""), wxT(""), 
+		wxT("DTD files|*.dtd|All files|*.*"),
 		wxSAVE | wxOVERWRITE_PROMPT );
 	if (fd.ShowModal() == wxID_CANCEL)
 		return;
 
 	// create the DTD document
-	doc.Create(wxXml2EmptyDoc, "mydtd", "none", "none");
+	doc.Create(wxXml2EmptyDoc, wxT("mydtd"), wxT("none"), wxT("none"));
 
 	// create an element declaration and set the root
-	doc.AddElemDecl("myelement", wxXML_ELEMENT_TYPE_ELEMENT, 
-					wxXml2ElemContent("myelement", wxXML_ELEMENT_CONTENT_PCDATA));	
+	wxXml2ElemContent content(wxT("myelement"), wxXML_ELEMENT_CONTENT_PCDATA);
+	doc.AddElemDecl(wxT("myelement"), wxXML_ELEMENT_TYPE_ELEMENT, content);	
+	wxXml2ElemContent content2(wxT("myelement2"), wxXML_ELEMENT_CONTENT_ELEMENT, wxXML_ELEMENT_CONTENT_MULT);
+	doc.AddElemDecl(wxT("myelement2"), wxXML_ELEMENT_TYPE_ELEMENT, content2);
 
-	doc.AddAttrDecl("mydata", "type", wxXml2EmptyNamespace,
+	wxXml2Enumeration values(wxT("text|link"));
+	doc.AddAttrDecl(wxT("mydata"), wxT("type"), wxXml2EmptyNamespace,
 					wxXML_ATTRIBUTE_ENUMERATION, wxXML_ATTRIBUTE_REQUIRED,
-					wxEmptyString, wxXml2Enumeration("text|link"));
+					wxEmptyString, values);
 
-	wxXml2EntityDecl ent(doc, "myentity", wxXML_INTERNAL_GENERAL_ENTITY, "", "", "mycontent");
+	wxXml2Enumeration values2(values);
+	doc.AddAttrDecl(wxT("mydata"), wxT("data"), wxXml2EmptyNamespace,
+					wxXML_ATTRIBUTE_ENUMERATION, wxXML_ATTRIBUTE_REQUIRED,
+					wxEmptyString, values2);
+	
+	doc.AddEntityDecl(wxT("myentity"), wxXML_INTERNAL_GENERAL_ENTITY, 
+						wxT(""), wxT(""), wxT("mycontent"));
 	
 
 	// now, save the file where the user choose
 	if (doc.Save(fd.GetPath())) {
 		
-		int ret = wxMessageBox("File correctly saved. Do you want to load it ?", 
-			"Question", wxYES_NO | wxICON_QUESTION);
+		int ret = wxMessageBox(wxT("File correctly saved. Do you want to load it ?"), 
+			wxT("Question"), wxYES_NO | wxICON_QUESTION);
 		
 		if (ret == wxYES) LoadDTD(fd.GetPath());
 
 	} else {
 
-		wxMessageBox("File could not be correctly saved !!!", 
-					"Error", wxOK | wxICON_ERROR);
+		wxMessageBox(wxT("File could not be correctly saved !!!"), 
+					wxT("Error"), wxOK | wxICON_ERROR);
 	}
 	
 	doc.DestroyIfUnlinked();
@@ -683,8 +697,8 @@ void MyFrame::OnSaveDTD(wxCommandEvent &)
 void MyFrame::OnValid(wxCommandEvent &)
 {
 	// ask the user which file we must load...
-	wxFileDialog fd(this, "Choose the XML file to validate", "", "", 
-		"XML and HTML files|*.xml;*.html;*.xhtml|All files|*.*", wxOPEN);
+	wxFileDialog fd(this, wxT("Choose the XML file to validate"), wxT(""), wxT(""), 
+		wxT("XML and HTML files|*.xml;*.html;*.xhtml|All files|*.*"), wxOPEN);
 	if (fd.ShowModal() == wxID_CANCEL)
 		return;
 	
@@ -694,7 +708,8 @@ void MyFrame::OnValid(wxCommandEvent &)
 
 	// parse the file
 	if (!doc.Load(fd.GetPath(), &err)) {
-		wxMessageBox(wxString::Format("Couldn't parse the file you chose:\n%s", err.c_str()), "Error");
+		wxMessageBox(wxString::Format(
+			wxT("Couldn't parse the file you chose:\n%s"), err.c_str()), wxT("Error"));
 		return;
 	}
 
@@ -702,8 +717,8 @@ void MyFrame::OnValid(wxCommandEvent &)
 	if (dtd == wxXml2EmptyDTD) {	// if it misses a DTD...
 		
 		// ...ask the user which DTD we must load...
-		wxFileDialog dlg(this, "Choose the DTD to use", "", "", 
-			"DTD files|*.dtd|All files|*.*", wxOPEN);
+		wxFileDialog dlg(this, wxT("Choose the DTD to use"), wxT(""), wxT(""), 
+			wxT("DTD files|*.dtd|All files|*.*"), wxOPEN);
 		if (dlg.ShowModal() == wxID_CANCEL)
 			return;
 		
@@ -711,8 +726,8 @@ void MyFrame::OnValid(wxCommandEvent &)
 		wxXml2DTD dtd;
 		if (!dtd.Load(dlg.GetPath(), &err)) {
 
-			wxMessageBox("Couldn't load that DTD:\n" + err, 
-					"Load failed", wxOK | wxICON_ERROR);
+			wxMessageBox(wxT("Couldn't load that DTD:\n") + err, 
+					wxT("Load failed"), wxOK | wxICON_ERROR);
 			return;
 		}
 
@@ -724,8 +739,8 @@ void MyFrame::OnValid(wxCommandEvent &)
 		// load it
 		if (!dtd.LoadFullDTD(&err)) {
 
-			wxMessageBox("Couldn't load that DTD:\n" + err, 
-					"Load failed", wxOK | wxICON_ERROR);
+			wxMessageBox(wxT("Couldn't load that DTD:\n") + err, 
+					wxT("Load failed"), wxOK | wxICON_ERROR);
 			return;
 		}
 
@@ -736,13 +751,13 @@ void MyFrame::OnValid(wxCommandEvent &)
 	
 	// validate the document using the DTD it now has embedded
 	if (!doc.IsDTDValid(&err, TRUE)) {
-		wxMessageBox("The document is not valid for the given DTD:\n\n" + err, 
-			"Validation failed", wxOK | wxICON_ERROR);
+		wxMessageBox(wxT("The document is not valid for the given DTD:\n\n") + err, 
+			wxT("Validation failed"), wxOK | wxICON_ERROR);
 		return;
 	}
 
-	wxMessageBox("The document is valid for the given DTD !!", 
-		"Validation successful", wxOK | wxICON_EXCLAMATION);
+	wxMessageBox(wxT("The document is valid for the given DTD !!"), 
+		wxT("Validation successful"), wxOK | wxICON_EXCLAMATION);
 	doc.DestroyIfUnlinked();
 }
 
