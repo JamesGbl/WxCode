@@ -12,12 +12,9 @@ MySpellInterface::MySpellInterface(wxSpellCheckUserInterface* pDlg /* = NULL */)
   m_pSpellUserInterface = pDlg;
 
   if (m_pSpellUserInterface != NULL)
-
     m_pSpellUserInterface->SetSpellCheckEngine(this);
 
-  
   m_pMySpell = NULL;
-  
 
   SetDefaultOptions();
 
@@ -26,14 +23,29 @@ MySpellInterface::MySpellInterface(wxSpellCheckUserInterface* pDlg /* = NULL */)
 
 
 MySpellInterface::~MySpellInterface()
-
 {
+  if (m_pMySpell != NULL)
+  {
+    delete m_pMySpell;
+    m_pMySpell = NULL;
+  }
+
+  if (m_pSpellUserInterface != NULL)
+  {
+    delete m_pSpellUserInterface;
+    m_pSpellUserInterface = NULL;
+  }
 }
 
 
 int MySpellInterface::InitializeSpellCheckEngine()
-
 {
+  if (m_pMySpell != NULL)
+  {
+    delete m_pMySpell;
+    m_pMySpell = NULL;
+  }
+  
   m_pMySpell= new MySpell(m_strAffixFile.c_str(), m_strDictionaryFile.c_str());
   
   return (m_pMySpell != NULL);
@@ -41,7 +53,6 @@ int MySpellInterface::InitializeSpellCheckEngine()
 
 
 int MySpellInterface::UninitializeSpellCheckEngine()
-
 {
   if (m_pMySpell)
   {
