@@ -4,7 +4,7 @@
 %% Author:      Otto Wyss
 %% Modified by:
 %% Created:     25.4.2004
-%% RCS-ID:      $Id: treelistctrl.tex,v 1.8 2004-11-03 18:34:28 wyo Exp $
+%% RCS-ID:      $Id: treelistctrl.tex,v 1.9 2004-11-04 17:08:25 wyo Exp $
 %% Copyright:   (c) wxCode
 %% License:     wxWindows license
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -247,17 +247,11 @@ Creates the tree list control. See \helpref{wxTreeListCtrl::wxTreeListCtrl}{wxtr
 
 \func{void}{Delete}{\param{const wxTreeItemId\&}{ item}}
 
-Deletes the specified item. A {\tt EVT\_TREE\_DELETE\_ITEM} event will be
-generated.
+Deletes the specified item (except the root). A {\tt EVT\_TREE\_DELETE\_ITEM} event 
+will be generated.
 
-This function may cause a subsequent call to GetNextChild to fail.
-
-\membersection{wxTreeListCtrl::DeleteAllItems}\label{wxtreelistctrldeleteallitems}
-
-\func{void}{DeleteAllItems}{\void}
-
-Deletes all the items in the control. Note that this will {\bf not} generate
-any events unlike \helpref{Delete}{wxtreelistctrldelete} method.
+This function make the cookie parameter involid therefore may cause a subsequent call 
+to GetNextChild to fail.
 
 \membersection{wxTreeListCtrl::DeleteChildren}\label{wxtreelistctrldeletechildren}
 
@@ -270,6 +264,12 @@ this will {\bf not} generate any events unlike
 If you have called \helpref{wxTreeListCtrl::SetItemHasChildren}{wxtreelistctrlsetitemhaschildren}, you
 may need to call it again since {\it DeleteChildren} does not automatically
 clear the setting.
+
+\membersection{wxTreeListCtrl::DeleteRoot}\label{wxtreelistctrldeleteroot}
+
+\func{void}{DeleteRoot}{\void}
+
+Deletes the root node of the tree and all its children.
 
 \membersection{wxTreeListCtrl::Edit}\label{wxtreelistctrledit}
 

@@ -414,8 +414,8 @@ to a newer version: see
 <A HREF="#wxtreelistctrlcollapseandreset">wxTreeListCtrl::CollapseAndReset</A><BR>
 <A HREF="#wxtreelistctrlcreate">wxTreeListCtrl::Create</A><BR>
 <A HREF="#wxtreelistctrldelete">wxTreeListCtrl::Delete</A><BR>
-<A HREF="#wxtreelistctrldeleteallitems">wxTreeListCtrl::DeleteAllItems</A><BR>
 <A HREF="#wxtreelistctrldeletechildren">wxTreeListCtrl::DeleteChildren</A><BR>
+<A HREF="#wxtreelistctrldeleteroot">wxTreeListCtrl::DeleteRoot</A><BR>
 <A HREF="#wxtreelistctrledit">wxTreeListCtrl::Edit</A><BR>
 <A HREF="#wxtreelistctrleditlabel">wxTreeListCtrl::EditLabel</A><BR>
 <A HREF="#wxtreelistctrlensurevisible">wxTreeListCtrl::EnsureVisible</A><BR>
@@ -642,17 +642,9 @@ Creates the tree list control. See <A HREF="manual_wxtreelistctrl.html#wxtreelis
 <H3>wxTreeListCtrl::Delete</H3>
 <P>
 <B>void</B> <B>Delete</B>(<B>const wxTreeItemId&amp;</B><I> item</I>)<P>
-Deletes the specified item. A <TT>EVT_TREE_DELETE_ITEM</TT> event will be
-generated.<P>
+Deletes the specified item (except the root). A <TT>EVT_TREE_DELETE_ITEM</TT> event 
+will be generated.<P>
 This function may cause a subsequent call to GetNextChild to fail.<P>
-
-<HR>
-<A NAME="wxtreelistctrldeleteallitems"></A>
-<H3>wxTreeListCtrl::DeleteAllItems</H3>
-<P>
-<B>void</B> <B>DeleteAllItems</B>()<P>
-Deletes all the items in the control. Note that this will <B>not</B> generate
-any events unlike <A HREF="manual_wxtreelistctrl.html#wxtreelistctrldelete">Delete</A> method.<P>
 
 <HR>
 <A NAME="wxtreelistctrldeletechildren"></A>
@@ -665,6 +657,13 @@ this will <B>not</B> generate any events unlike
 If you have called <A HREF="manual_wxtreelistctrl.html#wxtreelistctrlsetitemhaschildren">wxTreeListCtrl::SetItemHasChildren</A>, you
 may need to call it again since <I>DeleteChildren</I> does not automatically
 clear the setting.<P>
+
+<HR>
+<A NAME="wxtreelistctrldeleteroot"></A>
+<H3>wxTreeListCtrl::DeleteRoot</H3>
+<P>
+<B>void</B> <B>DeleteAllRoot</B>()<P>
+Deletes the root node of the tree and all its children.<P>
 
 <HR>
 <A NAME="wxtreelistctrledit"></A>
@@ -834,6 +833,13 @@ enumeration on one and the same object simultaneously). The cookie passed to
 GetFirstChild and GetNextChild should be the same variable.<P>
 Returns an invalid tree item if there are no further children.<P>
 <B>See also</B><P>
+
+<HR>
+<A NAME="wxtreelistctrlgetfirstexpandeditem"></A>
+<H3>wxTreeListCtrl::GetFirstExpandedItem</H3>
+<P>
+<B>wxTreeItemId</B> <B>GetFirstExpandedItem</B>() <B>const</B><P>
+Returns the first expanded item.<P>
 
 <HR>
 <A NAME="wxtreelistctrlgetfirstvisibleitem"></A>
@@ -1041,6 +1047,13 @@ Returns an invalid tree item if there are no further siblings.<P>
 <A HREF="manual_wxtreelistctrl.html#wxtreelistctrlgetprevsibling">wxTreeListCtrl::GetPrevSibling</A><P>
 
 <HR>
+<A NAME="wxtreelistctrlgetnextexpanded"></A>
+<H3>wxTreeListCtrl::GetNextExpanded</H3>
+<P>
+<B>wxTreeItemId</B> <B>GetNextExpanded</B>(<B>const wxTreeItemId&amp;</B><I> item</I>) <B>const</B><P>
+Returns the next expanded item.<P>
+
+<HR>
 <A NAME="wxtreelistctrlgetnextvisible"></A>
 <H3>wxTreeListCtrl::GetNextVisible</H3>
 <P>
@@ -1076,6 +1089,13 @@ Returns the previous sibling of the specified item; call <A HREF="manual_wxtreel
 Returns an invalid tree item if there are no further children.<P>
 <B>See also</B><P>
 <A HREF="manual_wxtreelistctrl.html#wxtreelistctrlgetnextsibling">wxTreeListCtrl::GetNextSibling</A><P>
+
+<HR>
+<A NAME="wxtreelistctrlgetprevexpanded"></A>
+<H3>wxTreeListCtrl::GetPrevExpanded</H3>
+<P>
+<B>wxTreeItemId</B> <B>GetPrevExpanded</B>(<B>const wxTreeItemId&amp;</B><I> item</I>) <B>const</B><P>
+Returns the previous expanded item.<P>
 
 <HR>
 <A NAME="wxtreelistctrlgetprevvisible"></A>
@@ -1383,7 +1403,7 @@ Parameter???<P>
 <A NAME="wxtreelistctrlsetdragitem"></A>
 <H3>wxTreeListCtrl::SetDragItem</H3>
 <P>
-<B>void</B> <B>SetDragItem</B>(<B>const wxTreeItemId&amp;</B><I> item=(wxTreeItemId*)NULL}</I>)<P>
+<B>void</B> <B>SetDragItem</B>(<B>const wxTreeItemId&amp;</B><I> item = (wxTreeItemId*)NULL}</I>)<P>
 Marks the item where the dragged item will be dropped if the drag is currently ended.<P>
 
 <HR>
@@ -1425,8 +1445,9 @@ Scrolls the specified item into view.<P>
 <A NAME="wxtreelistctrlselectitem"></A>
 <H3>wxTreeListCtrl::SelectItem</H3>
 <P>
-<B>bool</B> <B>SelectItem</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>bool</B><I> unselect_others=TRUE</I>,
- <B>bool</B><I> extended_select=FALSE</I>)<P>
+<B>bool</B> <B>SelectItem</B>(<B>const wxTreeItemId&amp;</B><I> item</I>,
+ <B>const wxTreeItemId&amp;</B><I> last = (wxTreeItemId*)NULL</I>,
+ <B>bool</B><I> unselect_others = true</I>)<P>
 Selects the given item.<P>
 Parameter???<P>
 

@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.44 2004-11-03 18:38:29 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.45 2004-11-04 17:04:59 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -432,9 +432,9 @@ public:
     // ----------
 
     // add the root node to the tree
-    wxTreeItemId AddRoot(const wxString& text,
-                         int image = -1, int selectedImage = -1,
-                         wxTreeItemData *data = NULL);
+    wxTreeItemId AddRoot (const wxString& text,
+                          int image = -1, int selectedImage = -1,
+                          wxTreeItemData *data = NULL);
 
     // insert a new item in as the first child of the parent
     wxTreeItemId PrependItem(const wxTreeItemId& parent,
@@ -467,9 +467,9 @@ public:
     // delete all children (but don't delete the item itself)
     // NB: this won't send wxEVT_COMMAND_TREE_ITEM_DELETED events
     void DeleteChildren(const wxTreeItemId& item);
-    // delete all items from the tree
+    // delete the root and all its children from the tree
     // NB: this won't send wxEVT_COMMAND_TREE_ITEM_DELETED events
-    void DeleteAllItems();
+    void DeleteRoot();
 
     // expand this item
     void Expand(const wxTreeItemId& item);
@@ -488,7 +488,7 @@ public:
     // select this item
     void SelectItem(const wxTreeItemId& item, const wxTreeItemId& prev = (wxTreeItemId*)NULL,
                     bool unselect_others = true);
-    void SelectAll(bool extended_select = false);
+    void SelectAll();
     // make sure this item is visible (expanding the parent item and/or
     // scrolling to this item if necessary)
     void EnsureVisible(const wxTreeItemId& item);
@@ -1899,12 +1899,7 @@ wxTreeListMainWindow::~wxTreeListMainWindow()
     if (m_ownsImageListState) delete m_imageListState;
     if (m_ownsImageListButtons) delete m_imageListButtons;
 
-    DeleteAllItems();
-    // DeleteRoot
-    if (m_rootItem) {
-        delete m_rootItem;
-        m_rootItem = NULL;
-    }
+    DeleteRoot();
 }
 
 
@@ -2342,18 +2337,13 @@ wxTreeItemId wxTreeListMainWindow::GetPrevVisible (const wxTreeItemId& item) con
 // operations
 // ----------------------------------------------------------------------------
 
-wxTreeItemId wxTreeListMainWindow::DoInsertItem(const wxTreeItemId& parentId,
-                                      size_t previous,
-                                      const wxString& text,
-                                      int image, int selImage,
-                                      wxTreeItemData *data)
-{
+wxTreeItemId wxTreeListMainWindow::DoInsertItem (const wxTreeItemId& parentId,
+                                                 size_t previous,
+                                                 const wxString& text,
+                                                 int image, int selImage,
+                                                 wxTreeItemData *data) {
     wxTreeListItem *parent = (wxTreeListItem*) parentId.m_pItem;
-    if ( !parent )
-    {
-        // should we give a warning here?
-        return AddRoot(text, image, selImage, data);
-    }
+    wxCHECK_MSG (parent, wxTreeItemId(), _T("item must have a parent, at least root!") );
 
     m_dirty = true; // do this first so stuff below doesn't cause flicker
 
@@ -2376,10 +2366,9 @@ wxTreeItemId wxTreeListMainWindow::DoInsertItem(const wxTreeItemId& parentId,
     return item;
 }
 
-wxTreeItemId wxTreeListMainWindow::AddRoot(const wxString& text,
-                                 int image, int selImage,
-                                 wxTreeItemData *data)
-{
+wxTreeItemId wxTreeListMainWindow::AddRoot (const wxString& text,
+                                            int image, int selImage,
+                                            wxTreeItemData *data) {
     wxCHECK_MSG(!m_rootItem, wxTreeItemId(), wxT("tree can have only one root"));
     wxCHECK_MSG(GetColumnCount(), wxTreeItemId(), wxT("Add column(s) before adding the root item"));
 
@@ -2402,26 +2391,20 @@ wxTreeItemId wxTreeListMainWindow::AddRoot(const wxString& text,
     return m_rootItem;
 }
 
-wxTreeItemId wxTreeListMainWindow::PrependItem(const wxTreeItemId& parent,
-                                     const wxString& text,
-                                     int image, int selImage,
-                                     wxTreeItemData *data)
-{
+wxTreeItemId wxTreeListMainWindow::PrependItem (const wxTreeItemId& parent,
+                                                const wxString& text,
+                                                int image, int selImage,
+                                                wxTreeItemData *data) {
     return DoInsertItem(parent, 0u, text, image, selImage, data);
 }
 
-wxTreeItemId wxTreeListMainWindow::InsertItem(const wxTreeItemId& parentId,
-                                    const wxTreeItemId& idPrevious,
-                                    const wxString& text,
-                                    int image, int selImage,
-                                    wxTreeItemData *data)
-{
+wxTreeItemId wxTreeListMainWindow::InsertItem (const wxTreeItemId& parentId,
+                                               const wxTreeItemId& idPrevious,
+                                               const wxString& text,
+                                               int image, int selImage,
+                                               wxTreeItemData *data) {
     wxTreeListItem *parent = (wxTreeListItem*) parentId.m_pItem;
-    if ( !parent )
-    {
-        // should we give a warning here?
-        return AddRoot(text, image, selImage, data);
-    }
+    wxCHECK_MSG (parent, wxTreeItemId(), _T("item must have a parent, at least root!") );
 
     int index = parent->GetChildren().Index((wxTreeListItem*) idPrevious.m_pItem);
     wxASSERT_MSG( index != wxNOT_FOUND,
@@ -2430,36 +2413,25 @@ wxTreeItemId wxTreeListMainWindow::InsertItem(const wxTreeItemId& parentId,
     return DoInsertItem(parentId, (size_t)++index, text, image, selImage, data);
 }
 
-wxTreeItemId wxTreeListMainWindow::InsertItem(const wxTreeItemId& parentId,
-                                    size_t before,
-                                    const wxString& text,
-                                    int image, int selImage,
-                                    wxTreeItemData *data)
-{
+wxTreeItemId wxTreeListMainWindow::InsertItem (const wxTreeItemId& parentId,
+                                               size_t before,
+                                               const wxString& text,
+                                               int image, int selImage,
+                                               wxTreeItemData *data) {
     wxTreeListItem *parent = (wxTreeListItem*) parentId.m_pItem;
-    if ( !parent )
-    {
-        // should we give a warning here?
-        return AddRoot(text, image, selImage, data);
-    }
+    wxCHECK_MSG (parent, wxTreeItemId(), _T("item must have a parent, at least root!") );
 
     return DoInsertItem(parentId, before, text, image, selImage, data);
 }
 
-wxTreeItemId wxTreeListMainWindow::AppendItem(const wxTreeItemId& parentId,
-                                    const wxString& text,
-                                    int image, int selImage,
-                                    wxTreeItemData *data)
-{
+wxTreeItemId wxTreeListMainWindow::AppendItem (const wxTreeItemId& parentId,
+                                               const wxString& text,
+                                               int image, int selImage,
+                                               wxTreeItemData *data) {
     wxTreeListItem *parent = (wxTreeListItem*) parentId.m_pItem;
-    if ( !parent )
-    {
-        // should we give a warning here?
-        return AddRoot(text, image, selImage, data);
-    }
+    wxCHECK_MSG (parent, wxTreeItemId(), _T("item must have a parent, at least root!") );
 
-    return DoInsertItem( parent, parent->GetChildren().Count(), text,
-                         image, selImage, data);
+    return DoInsertItem (parent, parent->GetChildren().Count(), text, image, selImage, data);
 }
 
 void wxTreeListMainWindow::SendDeleteEvent(wxTreeListItem *item) {
@@ -2512,10 +2484,12 @@ void wxTreeListMainWindow::Delete (const wxTreeItemId& itemId) {
     delete item;
 }
 
-void wxTreeListMainWindow::DeleteAllItems() {
+void wxTreeListMainWindow::DeleteRoot() {
     if (m_rootItem) {
         m_dirty = true;
         m_rootItem->DeleteChildren(this);
+        delete m_rootItem;
+        m_rootItem = NULL;
     }
 }
 
@@ -2740,7 +2714,7 @@ void wxTreeListMainWindow::SelectItem(const wxTreeItemId& itemId,
     m_owner->GetEventHandler()->ProcessEvent (event);
 }
 
-void wxTreeListMainWindow::SelectAll(bool extended_select) {
+void wxTreeListMainWindow::SelectAll() {
     wxCHECK_RET (HasFlag(wxTR_MULTIPLE), wxT("invalid tree style") );
 
     // send event to user code
@@ -4516,9 +4490,9 @@ wxTreeItemId wxTreeListCtrl::GetNextVisible(const wxTreeItemId& item) const
 wxTreeItemId wxTreeListCtrl::GetPrevVisible(const wxTreeItemId& item) const
 { return m_main_win->GetPrevVisible(item); }
 
-wxTreeItemId wxTreeListCtrl::AddRoot(const wxString& text, int image,
-                                     int selectedImage, wxTreeItemData* data)
-{ return m_main_win->AddRoot(text, image, selectedImage, data); }
+wxTreeItemId wxTreeListCtrl::AddRoot (const wxString& text, int image,
+                                      int selectedImage, wxTreeItemData* data)
+{ return m_main_win->AddRoot (text, image, selectedImage, data); }
 
 wxTreeItemId wxTreeListCtrl::PrependItem(const wxTreeItemId& parent,
                                          const wxString& text, int image,
@@ -4558,8 +4532,8 @@ void wxTreeListCtrl::Delete(const wxTreeItemId& item)
 void wxTreeListCtrl::DeleteChildren(const wxTreeItemId& item)
 { m_main_win->DeleteChildren(item); }
 
-void wxTreeListCtrl::DeleteAllItems()
-{ m_main_win->DeleteAllItems(); }
+void wxTreeListCtrl::DeleteRoot()
+{ m_main_win->DeleteRoot(); }
 
 void wxTreeListCtrl::Expand(const wxTreeItemId& item)
 { m_main_win->Expand(item); }
@@ -4586,8 +4560,8 @@ void wxTreeListCtrl::SelectItem(const wxTreeItemId& item, const wxTreeItemId& la
                                 bool unselect_others)
 { m_main_win->SelectItem (item, last, unselect_others); }
 
-void wxTreeListCtrl::SelectAll(bool extended_select)
-{ m_main_win->SelectAll(extended_select); }
+void wxTreeListCtrl::SelectAll()
+{ m_main_win->SelectAll(); }
 
 void wxTreeListCtrl::EnsureVisible(const wxTreeItemId& item)
 { m_main_win->EnsureVisible(item); }

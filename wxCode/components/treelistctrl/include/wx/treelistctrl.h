@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Modified by: Alberto Griggio, 2002
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.20 2004-11-03 18:34:46 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.21 2004-11-04 17:09:19 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows license
@@ -449,14 +449,14 @@ public:
                             int image = -1, int selectedImage = -1,
                             wxTreeItemData *data = NULL);
 
-    // delete this item and associated data if any
+    // delete this item (except root) and associated data if any
     void Delete(const wxTreeItemId& item);
     // delete all children (but don't delete the item itself)
     // NB: this won't send wxEVT_COMMAND_TREE_ITEM_DELETED events
     void DeleteChildren(const wxTreeItemId& item);
-    // delete all items from the tree
+    // delete the root and all its children from the tree
     // NB: this won't send wxEVT_COMMAND_TREE_ITEM_DELETED events
-    void DeleteAllItems();
+    void DeleteRoot();
 
     // expand this item
     void Expand(const wxTreeItemId& item);
@@ -475,7 +475,7 @@ public:
     // select this item
     void SelectItem(const wxTreeItemId& item, const wxTreeItemId& last = (wxTreeItemId*)NULL, 
                     bool unselect_others = true);
-    void SelectAll(bool extended_select = false);
+    void SelectAll();
     // make sure this item is visible (expanding the parent item and/or
     // scrolling to this item if necessary)
     void EnsureVisible(const wxTreeItemId& item);
