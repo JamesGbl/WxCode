@@ -3,7 +3,7 @@
 ## Purpose:     treelisttest
 ## Maintainer:  Otto Wyss
 ## Created:     2004-03-22
-## RCS-ID:      $Id: Makefile,v 1.3 2004-07-24 14:30:54 wyo Exp $
+## RCS-ID:      $Id: Makefile,v 1.4 2004-10-30 18:20:13 wyo Exp $
 ## Copyright:   (c) wyoDesktop
 ## Licence:     wxWidgets licence
 ##############################################################################
@@ -25,32 +25,50 @@ INC = -I$(WXCODE)/treelistctrl/include
 # implementation, change only if other settings or other targets are needed
 
 ifneq ($(WXDEVEL),)
-  WXDEVEL_Release = $(WXDEVEL)/Release/
   WXDEVEL_Debug = $(WXDEVEL)/Debug/
   WXDEVEL_Univ = $(WXDEVEL)/Univ/
 endif
 
 ifeq ($(MAKECMDGOALS),)
-  WXCONFIG=wxgtk-2.4-config --prefix=/usr
+  WXCONFIG=wx-config
+  GTKCONFIG=gtk-config
+endif
+ifeq ($(MAKECMDGOALS),release)
+  WXCONFIG=wx-config
+  GTKCONFIG=gtk-config
 endif
 ifeq ($(MAKECMDGOALS),debug)
-  WXCONFIG=wxgtkd-2.4-config --prefix=/usr
+  WXCONFIG=wxgtkd-2.4-config
+  GTKCONFIG=gtk-config
+endif
+ifeq ($(MAKECMDGOALS),develdebug)
+  WXCONFIG=$(WXDEVEL_Debug)wx-config --inplace
+  GTKCONFIG=pkg-config gtk+-2.0
 endif
 ifeq ($(MAKECMDGOALS),univdebug)
-  WXCONFIG=$(WXDEVEL_Debug)wx-config --inplace
+  WXCONFIG=$(WXDEVEL_Univ)wx-config --inplace
+  GTKCONFIG=pkg-config gtk+-2.0
 endif
 
 OBJ = $(SRC:.cpp=.o)
 
 .cpp.o:
-	g++ -c $(INC) `$(WXCONFIG) --cxxflags` `gtk-config --cflags` -g -o $@ $<
+	g++ -c $(INC) `$(WXCONFIG) --cxxflags` `$(GTKCONFIG) --cflags` -g -o $@ $<
 
 all:	$(PRG)
 $(PRG):	$(OBJ)
+	g++ -o $@ $^ `$(WXCONFIG) --libs`
+
+release:	$(PRG)r
+$(PRG)r:	$(OBJ)
 	g++ -o $@ $^ `$(WXCONFIG) --static --libs`
 
 debug:	$(PRG)d
 $(PRG)d:	$(OBJ)
+	g++ -o $@ $^ `$(WXCONFIG) --libs`
+
+develdebug:	$(PRG)dd
+$(PRG)dd:	$(OBJ)
 	g++ -o $@ $^ `$(WXCONFIG) --libs`
 
 univdebug:	$(PRG)ud
