@@ -41,7 +41,8 @@ void SpellCheckerOptionsDialog::CreateControls()
     PopulateOptionsSizer(item3);
     item2->Add(item3, 1, wxGROW|wxALL, 5);
 
-    wxStaticLine* item4 = new wxStaticLine( item1, wxID_STATIC, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+    // Use this wxStaticLine to set the dialog minimum width to ~400)
+    wxStaticLine* item4 = new wxStaticLine( item1, wxID_STATIC, wxDefaultPosition, wxSize(400, -1), wxLI_HORIZONTAL );
     item2->Add(item4, 0, wxGROW|wxALL, 5);
 
     wxBoxSizer* item5 = new wxBoxSizer(wxHORIZONTAL);
