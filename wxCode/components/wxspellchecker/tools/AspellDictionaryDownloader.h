@@ -15,8 +15,11 @@ public:
   // Given the filename (downloaded under the hard drive), install the dictionary
   virtual bool InstallDictionary(wxString& strFileName);
   
-  // Parse the dictionary language name from the server FTP directory name
-  virtual wxString DictionaryNameFromDirectoryName(wxString& strDirectoryName);
+  // Determine which file to download from an array of filenames
+  virtual wxString SelectDictionaryToDownload(wxArrayString& FileArray);
+  
+  // Return the wildcard for the dictionaries on the FTP server
+  virtual wxString GetDictionaryFileMask() { return _("*.bz2"); }
 };
 
 #endif  // __ASPELL_DICTIONARY_DOWNLOADER__

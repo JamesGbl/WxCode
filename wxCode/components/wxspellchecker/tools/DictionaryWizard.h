@@ -87,12 +87,15 @@ public:
     
     void SetEngineDownloader(EngineDictionaryDownloader* pDownloader) { m_pDownloader = pDownloader; }
     EngineDictionaryDownloader* GetEngineDownloader() { return m_pDownloader; }
+    wxArrayString* GetDictionariesToDownload() { return &m_DictionariesToDownload; }
+    void PopulateDictionariesToDownload();
 
 ////@begin DictionaryWizard member variables
 ////@end DictionaryWizard member variables
 
 private:
     EngineDictionaryDownloader* m_pDownloader;
+    wxArrayString m_DictionariesToDownload;
 };
 
 /*!

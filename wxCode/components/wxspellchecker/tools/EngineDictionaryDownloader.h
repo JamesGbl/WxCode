@@ -32,7 +32,16 @@ public:
   virtual bool InstallDictionary(wxString& strFileName) = 0;
   
   // Parse the dictionary language name from the server FTP directory name
-  virtual wxString DictionaryNameFromDirectoryName(wxString& strDirectoryName) = 0;
+  virtual wxString DictionaryNameFromDirectoryName(wxString& strDirectoryName) { return strDirectoryName; }
+  
+  // Parse the dictionary language name from the server FTP directory name
+  virtual wxString DirectoryNameFromDictionaryName(wxString& strDictionaryName) { return strDictionaryName; }
+  
+  // Determine which file to download from an array of filenames
+  virtual wxString SelectDictionaryToDownload(wxArrayString& FileArray) = 0;
+  
+  // Return the wildcard for the dictionaries on the FTP server
+  virtual wxString GetDictionaryFileMask() { return _(""); }
 };
 
 #endif  // __ENGINE_DICTIONARY_DOWNLOADER__
