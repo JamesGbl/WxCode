@@ -1,0 +1,86 @@
+This is the first test release of the wxPlot package. 
+The original code was taken from the PLplot library 
+(http://emma.la.asu.edu/plplot/) and was modified for using it 
+with wxWindows. 
+
+This is the list of plplot files and corresponding wxPlot files 
+(taken from plplot-990122.tar.gz:
+
+plplot-file			wxPlot
+---------------------------------------
+include/drivers.h		drivers.h           
+include/metadefs.h		metadefs.h          
+include/pdf.h			pdf.h               
+include/plcore.h		plcore.h            
+include/pldebug.h		pldebug.h           
+include/plstrm.h		plstrm.h            
+include/plplot.h		plplot.h            
+include/plplotP.h		plplotP.h           
+
+cf/plConfig.h.in		plConfig.h          
+cf/plDevs.h.in			plDevs.h            
+
+bindings/c++/plstream.h		wxPlot.h            
+bindings/c++/plstream.cc      	wxPlot.cpp          
+                                        
+src/pdfutils.c        		pdfutils.cpp        
+src/plargs.c          		plargs.cpp          
+src/plbox.c           		plbox.cpp           
+src/plcont.c          		plcont.cpp          
+src/plcore.c          		plcore.cpp          
+src/plctrl.c          		plctrl.cpp          
+src/plcvt.c           		plcvt.cpp           
+src/pldtik.c          		pldtik.cpp          
+src/plfill.c          		plfill.cpp          
+src/plhist.c          		plhist.cpp          
+src/plline.c          		plline.cpp          
+src/plmap.c           		plmap.cpp           
+src/plot3d.c          		plot3d.cpp          
+src/plpage.c          		plpage.cpp          
+src/plsdef.c          		plsdef.cpp          
+src/plshade.c         		plshade.cpp         
+src/plstripc.c        		plstripc.cpp        
+src/plsym.c           		plsym.cpp           
+src/pltick.c          		pltick.cpp          
+src/plvpor.c          		plvpor.cpp          
+src/plwind.c          		plwind.cpp          
+drivers/null.c            	wxwin.cpp          
+drivers/plbuf.c           	plbuf.cpp           
+
+
+
+The port of PLplot to wxWindows was made by adding two files:
+wxwin.cpp (the device driver) and wxPlot.cpp (the wxWindows interface
+class). The device driver does the main work: drawing lines,
+polygons,... via wxDC class functions. Because only a PLStream
+structure is passed to the device driver by the internal PLplot
+functions, a pointer to the wxDC class is included in the PLStream
+structure in plstrm.h.
+
+The main changes for the device driver were:
+wxwin.cpp:
+	all device dependant functions have to be added here
+drivers.h:
+	adding the declarations for the device driver	
+plcore.h:
+	adding the device dependant functions to the dispatch table
+plDevs.h:
+	undefining all device drivers except the wxwin one
+
+The wxPlot class is derived from plstream.cc. 
+wxPlot.cpp,
+wxPlot.h:
+	added the constructor
+	wxPlot::wxPlot(wxDC *dc, int w, int h)
+	and renaming plstream to wxPlot.
+
+other changes necessary to be able to compile the code:
+plConfig.h:
+	set some macro definitions.
+plplot.h:
+	comment out Alloc2dGrid and Free2dGrid so that a call to 
+	Alloc2dGrid does not reference itself.	
+plargs.cpp, 
+plstripc.cpp:
+	comment out 
+	char *strdup();
