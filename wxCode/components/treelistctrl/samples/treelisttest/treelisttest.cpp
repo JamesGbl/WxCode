@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by: Otto Wyss
 // Created:     04/01/98
-// RCS-ID:      $Id: treelisttest.cpp,v 1.7 2004-10-30 18:19:33 wyo Exp $
+// RCS-ID:      $Id: treelisttest.cpp,v 1.8 2004-11-04 17:10:27 wyo Exp $
 // Copyright:   (c) wxCode
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -233,7 +233,6 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h)
     tree_menu->AppendSeparator();
     tree_menu->Append(TreeListTest_IncIndent, wxT("Add 5 points to indentation\tAlt-I"));
     tree_menu->Append(TreeListTest_DecIndent, wxT("Reduce indentation by 5 points\tAlt-R"));
-    tree_menu->AppendSeparator();
 
     item_menu->Append(TreeListTest_Dump, wxT("&Dump item children"));
     item_menu->Append(TreeListTest_Rename, wxT("&Rename item..."));
@@ -528,7 +527,7 @@ void MyFrame::OnDeleteChildren(wxCommandEvent& WXUNUSED(event))
 
 void MyFrame::OnDeleteAll(wxCommandEvent& WXUNUSED(event))
 {
-    m_treeListCtrl->DeleteAllItems();
+    m_treeListCtrl->DeleteChildren (m_treeListCtrl->GetRootItem());
 }
 
 void MyFrame::OnRecreate(wxCommandEvent& event)
