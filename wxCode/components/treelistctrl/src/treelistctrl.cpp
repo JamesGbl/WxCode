@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.63 2004-12-16 19:13:35 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.64 2004-12-19 10:17:50 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -3792,9 +3792,10 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
     if (event.LeftDown() || event.RightDown()) SetFocus();
 
     // determine event
-    wxPoint p = CalcUnscrolledPosition (wxPoint (event.GetX(), event.GetY()));
+    wxPoint p = wxPoint (event.GetX(), event.GetY());
     int flags = 0;
-    wxTreeListItem *item = m_rootItem->HitTest (p, this, flags, m_curColumn, 0);
+    wxTreeListItem *item = m_rootItem->HitTest (CalcUnscrolledPosition (p),
+													  this, flags, m_curColumn, 0);
 
     // we only process dragging here
     if (event.Dragging()){
