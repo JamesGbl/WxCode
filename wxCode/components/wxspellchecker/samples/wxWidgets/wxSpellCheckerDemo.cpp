@@ -265,7 +265,7 @@ void MyFrame::OnSpellCheckXmlUI(wxCommandEvent& event)
   wxSpellCheckEngineInterface* pSpellChecker = ReturnSelectedSpellCheckEngine();
   if (pSpellChecker)
   {
-    pSpellChecker->SetSpellCheckUserInterface(new XmlSpellCheckDialog(NULL, _T("abiword.xrc"), _T("ID_DIALOG"), _T("ID_DIALOG")));
+    pSpellChecker->SetSpellCheckUserInterface(new XmlSpellCheckDialog(NULL, _T("resource.xrc"), _T("SpellChecker"), _T("PersonalDictionary")));
     SpellCheck(pSpellChecker);
   }
 }
