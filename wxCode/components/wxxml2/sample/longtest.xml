@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- This test file is used to test load/save functions of wxXml2Document
+with 'long' files: in particular this is useful to test the native newlines
+filter I've made -->
+
+<myrootnode>
+
+	<myclient>
+		<name>Name1</name>
+		<phone>000111222333</phone>
+		<mydata type="text">http://unknown.com</mydata>
+	</myclient>
+	
+	<myclient>
+		<name>Name2</name>
+		<phone>000111222333</phone>
+		<mydata type="text">http://unknown.com</mydata>
+	</myclient>
+
+	<myclient>
+		<name>Name3</name>
+		<phone>000111222333</phone>
+		<mydata type="text">http://unknown.com</mydata>
+	</myclient>
+	
+	<myclient>
+		<name>Name4</name>
+		<phone>000111222333</phone>
+		<mydata type="text">http://unknown.com</mydata>
+	</myclient>
+
+	<myclient>
+		<name>Name5</name>
+		<phone>000111222333</phone>
+		<mydata type="text">http://unknown.com</mydata>
+	</myclient>
+	
+	<myclient>
+		<name>Name6</name>
+		<phone>000111222333</phone>
+		<mydata type="text">http://unknown.com</mydata>
+	</myclient>
+
+	<myclient>
+		<name>Name7</name>
+		<phone>000111222333</phone>
+		<mydata type="text">http://unknown.com</mydata>
+	</myclient>
+	
+	<myclient>
+		<name>Name8</name>
+		<phone>000111222333</phone>
+		<mydata type="text">http://unknown.com</mydata>
+	</myclient>
+
+	<myclient>
+		<name>Name9</name>
+		<phone>000111222333</phone>
+		<mydata type="text">http://unknown.com</mydata>
+	</myclient>
+	
+	<myclient>
+		<name>Name10</name>
+		<phone>000111222333</phone>
+		<mydata type="text">http://unknown.com</mydata>
+	</myclient>
+
+	<myclient>
+		<name>Name11</name>
+		<phone>000111222333</phone>
+		<mydata type="text">http://unknown.com</mydata>
+	</myclient>
+	
+	<myclient>
+		<name>Name12</name>
+		<phone>000111222333</phone>
+		<mydata type="text">http://unknown.com</mydata>
+	</myclient>
+
+	<myclient>
+		<name>Name13</name>
+		<phone>000111222333</phone>
+		<mydata type="text">http://unknown.com</mydata>
+	</myclient>
+	
+	<myclient>
+		<name>Name14</name>
+		<phone>000111222333</phone>
+		<mydata type="text">http://unknown.com</mydata>
+	</myclient>
+
+	<myclient>
+		<name>Name15</name>
+		<phone>000111222333</phone>
+		<mydata type="text">http://unknown.com</mydata>
+	</myclient>
+	
+	<myclient>
+		<name>Name16</name>
+		<phone>000111222333</phone>
+		<mydata type="text">http://unknown.com</mydata>
+	</myclient>
+
+	<myclient>
+		<name>Name17</name>
+		<phone>000111222333</phone>
+		<mydata type="text">http://unknown.com</mydata>
+	</myclient>
+	
+	<myclient>
+		<name>Name18</name>
+		<phone>000111222333</phone>
+		<mydata type="text">http://unknown.com</mydata>
+	</myclient>
+
+	<myclient>
+		<name>Name19</name>
+		<phone>000111222333</phone>
+		<mydata type="text">http://unknown.com</mydata>
+	</myclient>
+	
+	<myclient>
+		<name>Name20</name>
+		<phone>000111222333</phone>
+		<mydata type="text">http://unknown.com</mydata>
+	</myclient>
+</myrootnode>
