@@ -1073,7 +1073,7 @@ get bool GetVScrollBar=2281(,)
 # Append a string to the end of the document without changing the selection.
 fun void AppendText=2282(int length, string text)
 
-# Is drawing done in two phases with backgrounds drawn before faoregrounds?
+# Is drawing done in two phases with backgrounds drawn before foregrounds?
 get bool GetTwoPhaseDraw=2283(,)
 
 # In twoPhaseDraw mode, drawing is performed in two phases, first the background
@@ -1495,6 +1495,7 @@ fun void CopyRange=2419(position start, position end)
 # Copy argument text to the clipboard.
 fun void CopyText=2420(int length, string text)
 
+# Selection modes
 enu SelectionMode=SC_SEL_
 val SC_SEL_STREAM=0
 val SC_SEL_RECTANGLE=1

@@ -11,6 +11,10 @@
 #ifndef SCINTILLA_H
 #define SCINTILLA_H
 
+#if LCCWIN
+typedef BOOL bool;
+#endif
+
 #if PLAT_WIN
 // Return false on failure:
 bool Scintilla_RegisterClasses(void *hInstance);
@@ -386,6 +390,7 @@ typedef sptr_t (*SciFnDirect)(sptr_t ptr, unsigned int iMessage, uptr_t wParam, 
 #define SCI_WORDENDPOSITION 2267
 #define SC_WRAP_NONE 0
 #define SC_WRAP_WORD 1
+#define SC_WRAP_CHAR 2
 #define SCI_SETWRAPMODE 2268
 #define SCI_GETWRAPMODE 2269
 #define SC_WRAPVISUALFLAG_NONE 0x0000
