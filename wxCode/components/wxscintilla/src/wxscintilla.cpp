@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.5 2004-11-29 18:19:08 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.6 2004-11-30 20:12:50 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -2796,7 +2796,12 @@ static void SetEventText(wxStyledTextEvent& evt, const char* text,
     // The unicode conversion MUST have a null byte to terminate the
     // string so move it into a buffer first and give it one.
     wxMemoryBuffer buf(length+1);
-    buf.AppendData((void*)text, length);
+
+    // text contains chars with attributes; copy chars only
+    while (length-- > 0) {
+        buf.AppendByte (*text);
+        text += 2;
+    }
     buf.AppendByte(0);
     evt.SetText(stc2wx(buf));
 }
