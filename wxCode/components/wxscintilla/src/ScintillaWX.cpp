@@ -9,7 +9,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: ScintillaWX.cpp,v 1.11 2005-03-02 20:37:22 wyo Exp $
+// RCS-ID:      $Id: ScintillaWX.cpp,v 1.12 2005-04-04 16:03:17 wyo Exp $
 // Copyright:   (c) 2000 by Total Control Software
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -460,7 +460,7 @@ void ScintillaWX::Paste() {
 void ScintillaWX::CopyToClipboard(const SelectionText& st) {
     if (wxTheClipboard->Open()) {
         wxTheClipboard->UsePrimarySelection(false);
-        wxString text = wxTextBuffer::Translate(sci2wx(st.s, st.len));
+        wxString text = wxTextBuffer::Translate(sci2wx(st.s, st.len-1));
         wxTheClipboard->SetData(new wxTextDataObject(text));
         wxTheClipboard->Close();
     }
