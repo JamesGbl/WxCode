@@ -6,4 +6,38 @@ More infos:
 wxWidgets:  2.5.1
  
 Description:
-An interface for reading and writing archive formats, with implementations for zip and tar.
+An interface for reading and writing archive formats, with
+implementations for zip and tar.
+
+Currently there is an example program samples/arc.cpp, and the
+generic wxArchive classes. I haven't uploaded the zip and tar
+classes yet (soon), and it won't do anything useful without
+them of course.
+
+To try it out, check out the component, e.g.:
+
+$ cvs -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/wxcode login 
+$ cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/wxcode co wxCode/components/wxarchive
+
+then move it to wxWidgets/contrib, e.g:
+
+$ mv wxCode/components wxWidgets/contrib
+
+Makefiles can be generated using wxWidgets' bakefiles
+(a temporary measure). Bakefile can be obtained from
+(http://bakefile.sourceforge.net). Create (or add to)
+Bakefiles.local.bkgen in your wxWidgets/build/bakefiles directory:
+
+<?xml version="1.0" ?>
+<bakefile-gen>
+    <input>
+        ../../contrib/components/*/*.bkl
+        ../../contrib/components/*/*/*.bkl
+        ../../contrib/components/*/*/*/*.bkl
+    </input>
+</bakefile-gen>
+
+Then run bakefile_gen (from inside the wxWidgets/build/bakefiles dir):
+
+    bakefile_gen -b '../../contrib/components/wxarchive/*/*.bkl'
+

@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<!-- $Id: arc.bkl,v 1.1 2004-06-25 23:21:08 chiclero Exp $ -->
+
+<makefile>
+
+    <include file="../../../../build/bakefiles/common_samples.bkl"/>
+
+    <exe id="arc" template="wx_sample_console" template_append="wx_append">
+        <include>$(SRCDIR)/../include</include>
+        <sources>arc.cpp</sources>
+        <sources>../src/archive.cpp</sources>
+        <!--
+        <sources>../src/zipstrm2.cpp</sources>
+        <sources>../src/tarstrm.cpp</sources>
+        -->
+
+        <wx-lib>base</wx-lib>
+        <!--
+        <sys-lib>$(wxwin.libToLink("archive"))</sys-lib>
+
+        <if cond="IS_MSVC_PRJ=='1' and MONOLITHIC=='0'">
+            <depends-on-dsp>archive:..\src\archive.dsp</depends-on-dsp>
+        </if>
+        -->
+    </exe>
+
+</makefile>
