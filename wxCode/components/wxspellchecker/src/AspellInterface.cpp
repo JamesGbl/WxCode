@@ -85,6 +85,8 @@ AspellInterface::~AspellInterface()
 
 int AspellInterface::InitializeSpellCheckEngine()
 {
+  m_PersonalDictionary.LoadPersonalDictionary();
+  
   if (!m_AspellWrapper.LoadFunctions())
     return FALSE;
   
