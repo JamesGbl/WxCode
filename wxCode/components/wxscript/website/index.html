@@ -27,12 +27,12 @@
  These classes are easily extensible and they support Unicode as well.</p>
 
 <br/><h3>wxScript usage sample</h3>
-<p>This little snippet shows how to use the wxScript classes to load a LUA script file
-and then execute the first function found inside it:</p>
+<p>This little snippet shows how to use the wxScript classes to load a script file
+and then execute the &quot;main&quot; function found inside it:</p>
 <table width="100%" bgcolor="#EEEEEE">
 <tr><td><tt>
 // load the script<br/>
-wxString filename(basepath + wxT("math.script"));<br/>
+wxString filename(basepath + wxT("myscript"));<br/>
 wxScriptFile *pf = wxScriptInterpreter::Load(filename, wxRECOGNIZE_FROM_EXTENSION);<br/>
 if (pf == NULL) {<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;wxPrintf(wxT(">Failed to load '%s'.\n"), filename.c_str());<br/>
