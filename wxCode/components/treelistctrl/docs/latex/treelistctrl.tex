@@ -4,7 +4,7 @@
 %% Author:      Otto Wyss
 %% Modified by:
 %% Created:     25.4.2004
-%% RCS-ID:      $Id: treelistctrl.tex,v 1.14 2004-11-22 18:38:50 wyo Exp $
+%% RCS-ID:      $Id: treelistctrl.tex,v 1.15 2004-12-20 19:27:57 wyo Exp $
 %% Copyright:   (c) 2004 wxCode
 %% License:     wxWindows
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -247,10 +247,10 @@ Creates the tree list control. See \helpref{wxTreeListCtrl::wxTreeListCtrl}{wxtr
 
 \func{void}{Delete}{\param{const wxTreeItemId\&}{ item}}
 
-Deletes the specified item (except the root). A {\tt EVT\_TREE\_DELETE\_ITEM} event 
+Deletes the specified item (except the root). A {\tt EVT\_TREE\_DELETE\_ITEM} event
 will be generated.
 
-This function make the cookie parameter involid therefore may cause a subsequent call 
+This function make the cookie parameter involid therefore may cause a subsequent call
 to GetNextChild to fail.
 
 \membersection{wxTreeListCtrl::DeleteChildren}\label{wxtreelistctrldeletechildren}
@@ -316,9 +316,9 @@ Expands the given item and all subitems recursively.
 \func{wxTreeItemId}{FindItem}{\param{const wxTreeItemId\&}{ item}, \param{const wxString\&}{ str},
  \param{int}{flags=0}}
 
-Returns the next visible item in the tree which matches the entered string, starting from 
-the currently selected item. If no item is selected the find starts a the beginning of the 
-tree.
+Returns the next visible item in the tree which matches the entered string, starting from
+the entered item. If no item the find starts a the beginning of the tree. If no item found
+an empty item (NULL) is returned.
 
 The flags have the following meaning:
 
@@ -334,7 +334,7 @@ The flags have the following meaning:
 \twocolitem{wxTL\_MODE\_FIND\_PARTIAL}{Matches only partial up to the submitted text length.}
 \twocolitem{wxTL\_MODE\_FIND\_NOCASE}{Matches case insensitive.}
 \end{twocollist}
-   
+
 \membersection{wxTreeListCtrl::GetBoundingRect}\label{wxtreelistctrlgetitemrect}
 
 \constfunc{bool}{GetBoundingRect}{\param{const wxTreeItemId\&}{ item}, \param{wxRect\& }{rect}, \param{bool }{textOnly = false}}
