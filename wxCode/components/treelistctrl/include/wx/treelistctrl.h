@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Modified by: Alberto Griggio, 2002
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.11 2004-04-28 17:20:59 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.12 2004-05-05 16:06:03 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows license
@@ -124,6 +124,13 @@ private:
 //----------------------------------------------------------------------------
 // wxTreeListCtrl - the multicolumn tree control
 //----------------------------------------------------------------------------
+
+// flags for FindItem
+const int wxTL_SEARCH_VISIBLE = 0x0000;
+const int wxTL_SEARCH_LEVEL   = 0x0001;
+const int wxTL_SEARCH_FULL    = 0x0002;
+const int wxTL_SEARCH_PARTIAL = 0x0010;
+const int wxTL_SEARCH_NOCASE  = 0x0020;
 
 // additional flag for HitTest
 const int wxTREE_HITTEST_ONITEMCOLUMN = 0x2000;
@@ -507,8 +514,7 @@ public:
     void SortChildren(const wxTreeItemId& item);
 
     // searching
-    wxTreeItemId FindItem (const wxTreeItemId& item, const wxString& str,
-                           bool partial=false, bool nocase=false);
+    wxTreeItemId FindItem (const wxTreeItemId& item, const wxString& str, int flags = 0);
 
     // overridden base class virtuals
     virtual bool SetBackgroundColour(const wxColour& colour);

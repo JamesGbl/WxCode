@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.12 2004-05-03 17:10:13 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.13 2004-05-05 16:06:27 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -526,8 +526,7 @@ public:
     void SortChildren(const wxTreeItemId& item);
 
     // searching
-    wxTreeItemId FindItem (const wxTreeItemId& item, const wxString& str,
-                           bool partial=false, bool nocase=false);
+    wxTreeItemId FindItem (const wxTreeItemId& item, const wxString& str, int flags = 0);
 
     // deprecated functions: use Set/GetItemImage directly
     // get the selected item image
@@ -3054,37 +3053,50 @@ void wxTreeListMainWindow::SortChildren(const wxTreeItemId& itemId)
     //else: don't make the tree dirty as nothing changed
 }
 
-wxTreeItemId wxTreeListMainWindow::FindItem (const wxTreeItemId& item, const wxString& str,
-                                             bool partial, bool nocase) {
+wxTreeItemId wxTreeListMainWindow::FindItem (const wxTreeItemId& item, const wxString& str, int flags) {
+#if !wxCHECK_VERSION(2, 5, 0)
+    long cookie = 0;
+#else
+    wxTreeItemIdValue cookie = 0;
+#endif
     wxTreeItemId next = item;
     if (!next.IsOk()) next = GetSelection();
     if (!next.IsOk()) {
         if (HasFlag(wxTR_HIDE_ROOT)) {
-#if !wxCHECK_VERSION(2, 5, 0)
-            long cookie = 0;
-#else
-            wxTreeItemIdValue cookie = 0;
-#endif
             next = (wxTreeListItem*)GetFirstChild (GetRootItem().m_pItem, cookie).m_pItem;
         } else {
             next = (wxTreeListItem*)GetRootItem().m_pItem;
         }
     }
     if (!next.IsOk()) return item;
-    next = GetNextVisible (next);
+
+    // start checking the next items
     wxString itemText;
     while (next.IsOk()) {
-        if (!partial) {
-            itemText = GetItemText (next);
-        }else{
+        itemText = GetItemText (next);
+        if (flags & wxTL_SEARCH_LEVEL) {
+            next = GetNextSibling (next);
+        }else if (flags & wxTL_SEARCH_FULL) {
+            wxTreeItemId n = GetFirstChild (next, cookie);
+            if (!n.IsOk())
+                n = GetNextSibling (next);
+            if (!n.IsOk())
+                n = GetNextSibling (GetItemParent (next));
+            next = n;
+        }else{ // wxTL_SEARCH_VISIBLE
+            next = GetNextVisible (next);
+        }
+        if (!next.IsOk()) break; // done
+        if (flags & wxTL_SEARCH_PARTIAL) {
             itemText = GetItemText (next).Mid (0, str.Length());
-        }
-        if (!nocase) {
-            if (itemText.Cmp (str) == 0) return next;
         }else{
-            if (itemText.CmpNoCase (str) == 0) return next;
+            itemText = GetItemText (next);
         }
-        next = GetNextVisible (next);
+        if (flags & wxTL_SEARCH_NOCASE) {
+            if (itemText.CmpNoCase (str) == 0) return next;
+        }else{
+            if (itemText.Cmp (str) == 0) return next;
+        }
     }
     return item;
 }
@@ -3976,8 +3988,13 @@ void wxTreeListMainWindow::OnChar( wxKeyEvent &event )
                 m_findStr.Append (event.m_keyCode);
                 m_findTimer->Start (500, wxTIMER_ONE_SHOT);
                 wxTreeItemId dummy = (wxTreeItemId*)NULL;
-                wxTreeItemId item = FindItem (dummy, m_findStr, true, true);
-                if (item.IsOk()) SelectItem (item);
+                wxTreeItemId item = FindItem (dummy, m_findStr, wxTL_SEARCH_VISIBLE |
+                                                                wxTL_SEARCH_PARTIAL |
+                                                                wxTL_SEARCH_NOCASE);
+                if (item.IsOk()) {
+                    EnsureVisible (item);
+                    SelectItem (item);
+                }
             }
             event.Skip();
     }
@@ -4904,9 +4921,8 @@ int wxTreeListCtrl::OnCompareItems(const wxTreeItemId& item1,
 void wxTreeListCtrl::SortChildren(const wxTreeItemId& item)
 { m_main_win->SortChildren(item); }
 
-wxTreeItemId wxTreeListCtrl::FindItem (const wxTreeItemId& item, const wxString& str,
-                                       bool partial, bool nocase)
-{ return m_main_win->FindItem (item, str, partial, nocase); }
+wxTreeItemId wxTreeListCtrl::FindItem (const wxTreeItemId& item, const wxString& str, int flags)
+{ return m_main_win->FindItem (item, str, flags); }
 
 bool wxTreeListCtrl::SetBackgroundColour(const wxColour& colour)
 { return m_main_win->SetBackgroundColour(colour); }

@@ -4,7 +4,7 @@
 %% Author:      Otto Wyss
 %% Modified by:
 %% Created:     25.4.2004
-%% RCS-ID:      $Id: treelistctrl.tex,v 1.5 2004-04-26 19:05:08 wyo Exp $
+%% RCS-ID:      $Id: treelistctrl.tex,v 1.6 2004-05-05 16:05:47 wyo Exp $
 %% Copyright:   (c) wxCode
 %% License:     wxWindows license
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -314,12 +314,22 @@ Expands the given item and all subitems recursively.
 \membersection{wxTreeListCtrl::FindItem}\label{wxtreelistctrlfinditem}
 
 \func{wxTreeItemId}{FindItem}{\param{const wxTreeItemId\&}{ item}, \param{const wxString\&}{ str},
- \param{bool}{partial=false}, \param{bool}{nocase=false}}
+ \param{int}{flags=0}}
 
-Returns the next visible item in the tree which matches exactly the entered string, starting 
-from the currently selected item. If partial=true is specified only the first characters 
-up to the length of the entered string are matched. If nocase=true the matching is done case 
-insensitive. If no item is selected the find starts a the beginning of the tree.
+Returns the next visible item in the tree which matches the entered string, starting from 
+the currently selected item. If no item is selected the find starts a the beginning of the 
+tree.
+
+The flags have the following meaning:
+
+\twocolwidtha{5cm}
+\begin{twocollist}\itemsep=0pt
+\twocolitem{wxTL\_SEARCH\_LEVEL}{Searches within only the current level.}
+\twocolitem{wxTL\_SEARCH\_VISIBLE}{Searches within all visible items.}
+\twocolitem{wxTL\_SEARCH\_FULL}{Searches within the full tree.}
+\twocolitem{wxTL\_SEARCH\_PARTIAL}{Matches only partial up to the submitted text length.}
+\twocolitem{wxTL\_SEARCH\_NOCASE}{Matches case insensitive.}
+\end{twocollist}
 
 \membersection{wxTreeListCtrl::GetBoundingRect}\label{wxtreelistctrlgetitemrect}
 
