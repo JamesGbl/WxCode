@@ -12,7 +12,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.h,v 1.4 2004-11-25 18:03:28 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.h,v 1.5 2004-11-29 18:18:38 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -1457,7 +1457,7 @@ public:
                      const wxSize& size = wxDefaultSize, long style = 0,
                      const wxString& name = wxPySTCNameStr);
     %name(PreStyledTextCtrl) wxScintilla();
-    
+
 #else
     wxScintilla(wxWindow *parent, wxWindowID id=wxID_ANY,
                      const wxPoint& pos = wxDefaultPosition,
@@ -1465,7 +1465,7 @@ public:
                      const wxString& name = wxSTCNameStr);
     wxScintilla() { m_swx = NULL; }
     ~wxScintilla();
-    
+
 #endif
 
     void Create(wxWindow *parent, wxWindowID id=wxID_ANY,
@@ -1970,7 +1970,7 @@ public:
                int    startPos,
                int    endPos,
                wxDC*  draw,
-               wxDC*  target, 
+               wxDC*  target,
                wxRect renderRect,
                wxRect pageRect);
 
@@ -2851,10 +2851,17 @@ public:
 
 #ifdef STC_USE_DND
     // Allow for simulating a DnD DragOver
-    wxDragResult DoDragOver(wxCoord x, wxCoord y, wxDragResult def); 
+    wxDragResult DoDragOver (wxCoord x, wxCoord y, wxDragResult def);
 
     // Allow for simulating a DnD DropText
     bool DoDropText(long x, long y, const wxString& data);
+
+    // Allow for simulating a DnD DragEnter
+    wxDragResult DoDragEnter (wxCoord x, wxCoord y, wxDragResult def);
+
+    // Allow for simulating a DnD DragEnter
+    void DoDragLeave ();
+
 #endif
 
     // Specify whether anti-aliased fonts should be used.  Will have no effect
@@ -2864,7 +2871,7 @@ public:
 
     // Returns the current UseAntiAliasing setting.
     bool GetUseAntiAliasing();
-    
+
 
 //----------------------------------------------------------------------
 
@@ -2892,7 +2899,7 @@ private:
     void OnMenu(wxCommandEvent& evt);
     void OnListBox(wxCommandEvent& evt);
     void OnIdle(wxIdleEvent& evt);
-    
+
     virtual wxSize DoGetBestSize() const;
 
     // Turn notifications from Scintilla into events

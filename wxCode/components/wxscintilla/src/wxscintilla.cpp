@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.4 2004-11-25 18:04:24 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.5 2004-11-29 18:19:08 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -2579,14 +2579,21 @@ bool wxScintilla::LoadFile(const wxString& filename)
 }
 
 
-#if wxUSE_DRAG_AND_DROP
-wxDragResult wxScintilla::DoDragOver(wxCoord x, wxCoord y, wxDragResult def) {
-        return m_swx->DoDragOver(x, y, def);
+#if STC_USE_DND
+wxDragResult wxScintilla::DoDragOver (wxCoord x, wxCoord y, wxDragResult def) {
+    return m_swx->DoDragOver (x, y, def);
 }
 
+bool wxScintilla::DoDropText (long x, long y, const wxString& data) {
+    return m_swx->DoDropText (x, y, data);
+}
 
-bool wxScintilla::DoDropText(long x, long y, const wxString& data) {
-    return m_swx->DoDropText(x, y, data);
+wxDragResult wxScintilla::DoDragEnter (wxCoord x, wxCoord y, wxDragResult def) {
+    return m_swx->DoDragOver (x, y, def);
+}
+
+void wxScintilla::DoDragLeave () {
+    m_swx->DoDragLeave ();
 }
 #endif
 
