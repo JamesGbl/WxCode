@@ -1,0 +1,253 @@
+/////////////////////////////////////////////////////////////////////////////
+// Name:        keybinder.h
+// Purpose:     Classes for binding keypresses to commands.
+// Author:      Francesco Montorsi
+// Modified by: 
+// Created:     2004/02/19
+// RCS-ID:      $Id: menuutils.h,v 1.0
+// Copyright:   (c) Aleksandras Gluchovas
+// Licence:     wxWidgets licence
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+
+#ifndef __WX_MENUUTILS_H__
+#define __WX_MENUUTILS_H__
+
+#ifdef __GNUG__
+#pragma interface "keybinder.h"
+#endif
+
+// includes
+#include "wx/panel.h"
+#include "wx/dialog.h"
+#include "wx/listbox.h"
+#include "wx/treectrl.h"
+#include "wx/keybinder.h"
+
+
+// Returns the ID of the first menu item with the given name which
+// is found inside the given menu bar.
+int wxFindMenuItem(wxMenuBar *, const wxString &strMenuItemName);
+
+
+// some useful macros
+#define wxSAFE_DELETE(x)					{ if (x) delete x; x = NULL; }
+#define wxSAFE_DELETE_ARRAY(x)				{ if (x) delete [] x; x = NULL; }
+
+
+
+// Represents a wxCmd which just generates a wxEVT_COMMAND_MENU_SELECTED
+// when it is executed.
+//
+class wxMenuCmd : public wxCmd
+{
+	// The menuitem which is connected to this command
+	wxMenuItem *m_pItem;
+
+public:
+
+	wxMenuCmd(wxMenuItem *p, 
+		const wxKeyBind &first, 
+		const wxString &name = wxEmptyString,
+		const wxString &desc = wxEmptyString) :
+		 wxCmd(first, p->GetId(), name, desc), m_pItem(p) {}
+
+	wxMenuCmd(wxMenuItem *p = NULL, 
+		const wxString &name = wxEmptyString,
+		const wxString &desc = wxEmptyString) {
+		m_pItem = p;
+		m_strDescription = desc;
+		m_strName = name;
+
+		if (m_pItem)
+			m_nId = m_pItem->GetId();
+	}
+
+	virtual void DeepCopy(const wxCmd *p) {
+		wxMenuCmd *m = (wxMenuCmd *)p;
+		m_pItem = m->m_pItem;
+		wxCmd::DeepCopy(p);
+	}
+
+	virtual wxCmd *Clone() const {
+		wxCmd *ret = new wxMenuCmd();
+		ret->DeepCopy(this);
+		return ret;
+	}
+
+	virtual ~wxMenuCmd() {}
+
+
+protected:
+
+	// Generates the wxEVT_COMMAND_MENU_SELECTED and sends it to the
+	// client event handler which is given as client.	
+	void Exec(wxObject *origin, wxEvtHandler *client);
+
+	// Updates the associated menu item; in particularly, adds,
+	// removes or changes the first shortcut which is shown
+	// next to the menuitem label.
+	// The 2nd, 3rd, 4th... shortcuts cannot be shown in the
+	// menuitem label and they are thus not considered...
+	// (but they do still work !!!)
+	void Update();
+};
+
+
+
+// The base class for a generic tree-walker algorithm.
+// To perform your task, provide the implementation of the #OnMenuWalk 
+// and #OnMenuItemWalk functions.
+class wxMenuWalker
+{
+public:
+	wxMenuWalker() {}
+	virtual ~wxMenuWalker() {}
+
+protected:		// the core functions
+
+	// Starts to climb the tree  :-)
+	// This is the main function to be called when everything is
+	// ready to begin.
+	// For an explanation of the 'data' argument, see below.
+	void Walk(wxMenuBar *p, void *data);
+	
+	void WalkMenu(wxMenuBar *p, wxMenu *, void *);
+	void WalkMenuItem(wxMenuBar *p, wxMenuItem *, void *);
+
+
+	// Called when a wxMenu is found in the menu bar passed to #Walk(),
+	// or when a submenu is found by #WalkMenuItem().
+	// - The "p" argument is the pointer given to #Walk()
+	// - The "m" argument is the menu which has been found
+	// - The "data" argument is a pointer to something which was 
+	//   given to #Walk() as 'data' argument (if the given menu is 
+	//   a top level menu) or the pointer to something which was 
+	//   returned by #OnMenuItemWalk, if this function is being 
+	//   called by #WalkMenuItem.
+	// The returned value is passed to the #OnMenuItemWalk function
+	// for all the items in the contained menu and then it's deleted
+	// through #DeleteData().
+	virtual void *OnMenuWalk(wxMenuBar *p, wxMenu *m, void *data) = 0;
+
+	// Called when a wxMenuItem is found inside a wxMenu.
+	// This works like #OnMenuWalk() but "data" is something which was
+	// given to the #WalkMenuItem (which is always the caller of this
+	// function).
+	// If the current menu item contains a submenu, the returned value 
+	// is passed to #OnMenuWalk() or it's directly deleted...
+	virtual void *OnMenuItemWalk(wxMenuBar *p, wxMenuItem *m, void *data) = 0;
+
+	// Deletes the given 'data'.
+	// The derived class should pass to the OnMenuWalk/OnMenuWalkItem
+	// functions always the same type of structure/class in 'data'
+	// and in this function it should just cast the given pointer to
+	// that type and delete it.
+	virtual void DeleteData(void *data) = 0;
+};
+
+
+
+// The data associated to each node of a tree used by 
+// - wxMenuTreeWalker
+// - wxKeyConfigPanel
+//
+// This is a simple class which just contains an additional field,
+// which can be used to store the ID of the menu item associated
+// with this tree item.
+// The ID should be unique among all the commands contained in the
+// same command collection so it should be enough to identify a wxCmd...
+class wxExTreeItemData : public wxTreeItemData
+{
+protected:
+	int m_nMenuId;
+
+public:
+	wxExTreeItemData(int id = wxID_INVALID) : m_nMenuId(id) {}
+	virtual ~wxExTreeItemData() {}
+
+	void SetMenuItemId(int n) {
+		m_nMenuId = n;
+	}
+
+	int GetMenuItemId() {
+		return m_nMenuId;
+	}
+};
+
+
+
+// A wxMenuWalker-derived class which uses the recursive capabilities
+// of the tree-walker algorithm to populate a wxTreeCtrl with a
+// structure identic to the given menubar.
+//
+// Each node of the wxTreeCtrl is associated with a wxExTreeItemData
+// object which contains the ID of the menuitem it represents
+// (for items representing the top level menus, wxID_INVALID is
+// contained).
+class wxMenuTreeWalker : public wxMenuWalker
+{
+	wxTreeCtrl *m_pTreeCtrl;
+	wxTreeItemId m_root;
+
+public:
+	wxMenuTreeWalker() {}
+	virtual ~wxMenuTreeWalker() {}
+
+
+	// Attaches the tree structure of the menubar in the given tree control
+	// using the given tree item as root.
+	void FillTreeBranch(wxMenuBar *p, wxTreeCtrl *ctrl, wxTreeItemId branch);
+
+	// Works like #FillTreeBranch but this function also removes all the tree
+	// items (before starting) and then builds the root with the given label.
+	void FillTreeCtrl(wxMenuBar *p, wxTreeCtrl *ctrl, 
+		const wxString &rootname = "root") {
+		ctrl->DeleteAllItems();
+		FillTreeBranch(p, ctrl, ctrl->AddRoot(rootname));
+	}
+
+protected:
+
+	void *OnMenuWalk(wxMenuBar *p, wxMenu *, void *);
+	void *OnMenuItemWalk(wxMenuBar *p, wxMenuItem *, void *);
+	void DeleteData(void *data);
+};
+
+
+
+// An helper class which is used by wxKeyBinder to import the
+// wxMenuCmd associated to a menu bar.
+// This function uses the wxMenuWalker algorithm to create a 
+// plain list of wxMenuCmd (without any hierarchical structure) 
+// in the given array of wxCmd*.
+class wxMenuShortcutWalker : public wxMenuWalker
+{
+	wxCmdArray *m_pArr;
+
+public:
+	wxMenuShortcutWalker() {}
+	virtual ~wxMenuShortcutWalker() {}
+
+
+	// Starts the process.
+	void ImportMenuBarCmd(wxMenuBar *p, wxCmdArray *arr) {
+		m_pArr = arr;
+		Walk(p, NULL);
+	}
+
+
+protected:
+
+	void *OnMenuWalk(wxMenuBar *, wxMenu *, void *) { return NULL; }
+	void *OnMenuItemWalk(wxMenuBar *p, wxMenuItem *, void *);
+	void DeleteData(void *data);
+};
+
+
+
+#endif		// __WX_MENUUTILS_H__
+
+
