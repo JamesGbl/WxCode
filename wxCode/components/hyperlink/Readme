@@ -1,11 +1,11 @@
-Maintainer: Otto Wyss (wyo)
 Component:  wxHyperLink
+Release:    2004-04-30
+Documents:  http://wxcode.sourceforge.net/components/hyperlink/index.html
+wxWidgets:  2.4.x, 2.5.x
+Maintainer: Otto Wyss (wyo)
 Subdir:     hyperlink
-Parts:      D
-More infos: -
-wxWidgets:  2.4.2, 2.5.1
 
 Description:
-This class contains a static text element which links to an URL. Clicking on
+wxHyperLink contains a static text element which links to an URL. Clicking on
 the URL activates the standard browser (via mimetype) and opens the URL. No 
 checks on the URL is done.
