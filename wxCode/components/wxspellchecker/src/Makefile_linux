@@ -19,7 +19,7 @@ ifeq ($(CFG),Debug)
   TARGET = libwx_spellcheckd.a
   C_INCLUDE_DIRS = -I"../include" -I".." 
   C_PREPROC = 
-  CFLAGS = -pipe `${WXSTABLE}/bin/wxgtkd-2.4-config --cxxflags` -Wall -g2 -O0 -frtti -fexceptions 
+  CFLAGS = -pipe `wx-config --cxxflags` -Wall -g2 -O0 -frtti -fexceptions 
   ARFLAGS =  rcs
 endif
 
@@ -29,7 +29,7 @@ ifeq ($(CFG),Release)
   TARGET = libwx_spellcheck.a
   C_INCLUDE_DIRS = -I"../include" -I".." 
   C_PREPROC = 
-  CFLAGS = -pipe `${WXSTABLE}/bin/wxgtk-2.4-config --cxxflags` -Wall -g0 -O2 -frtti -fexceptions 
+  CFLAGS = -pipe `wx-config --cxxflags` -Wall -g0 -O2 -frtti -fexceptions 
   ARFLAGS =  rcs
 endif
 
