@@ -1,3 +1,4 @@
+
   wxScript component info
  -------------------------
 
@@ -9,14 +10,16 @@
  Subdir:     wxscript
  
  Description:
- A set of abstract classes to add a script-interpreter to your wxWidgets
+ A set of abstract classes to add a script-interpreter support to your wxWidgets
  applications/libraries.
+ The implementation of these interfaces for the Lua, Python, UnderC and CINT interpreters
+ (these two are C/C++ intepreters) are provided.
+ The advantage of a single basic interface makes extremely easy for the programmer
+ not only to add scripting support to its program but also to give the user
+ multi-scripting languages support, learning how to use a single set of powerful classes:
+ wxPython, wxLua, wxUnderC and wxCINT.
+ These classes are easily extensible and they support Unicode as well.
 
- The implementation of these interfaces for the Lua, UnderC and CINT interpreters are given.
- The advantage of a single base interface allows the programmer who wants to use this
- component to learn how to use a single set of powerful classes: wxLua, wxUnderC and wxCINT
- all exposes the same functions adding to the program Lua & C++ script-interpreting
- capabilities.
 
 
   What is wxScript ?

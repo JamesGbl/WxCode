@@ -34,22 +34,10 @@
 // and wxWidgets libraries
 //
 //
-// If you want to disable one or more of these dependencies you can compile
-// the wxscript.lib library defining one of the following symbols:
-//
-//   wxSCRIPT_NO_LUA
-//   wxSCRIPT_NO_CINT
-//   wxSCRIPT_NO_UNDERC
-//   wxSCRIPT_NO_PYTHON
-//
-// If you disable one or more of the interpreters, then you will need
-// to rebuilt this test program without one or more of the following
-// defines:
+// If you want to disable one or more of these dependencies you can use
+// the USE_XXXXX options when compiling the sample using the makefiles
+// of the BUILD folder.
 
-#define TEST_LUA
-//#define TEST_CINT		// currently disabled because it does not compile on my RH9
-//#define TEST_UNDERC	// some implementation problems...
-//#define TEST_PYTHON
 
 
 // ----------------------------------------------------------------------------
@@ -129,119 +117,6 @@
 // entry point
 // ----------------------------------------------------------------------------
 
-void CallFnc1(const wxScriptFunctionArray &arr)
-{
-	// try to exec func1 with both CINT & UnderC
-	// func1 should be defined as:
-	//
-	//          int xxxx_func1(char *str, int n)
-	//
-	wxScriptFunction *fcint = arr.Get(wxT("cint_func1"));
-	wxScriptFunction *fuc = arr.Get(wxT("uc_func1"));
-	wxScriptFunction *flua = arr.Get(wxT("lua_func1"));
-
-	wxScriptVar result;
-	wxScriptVar args[3];
-
-	args[0] = wxScriptVar(wxT("char*"), wxT("try"));
-	args[1] = wxScriptVar(wxT("int"), wxT("3"));
-	args[2] = wxScriptVar();		// close the list with an empty variable
-
-	if (fcint) {
-
-		// check this is the function we think
-		if (fcint->Match(wxScriptTypeINT, 2, wxScriptTypePCHAR, wxScriptTypeINT)) {
-			
-			// ok, it's our function...
-			fcint->Exec(result, args);
-			wxPrintf(wxT(">%s('try', 3) returned %s\n"), fcint->GetName().c_str(),
-				result.GetContentString().c_str());
-		}
-	}
-
-	if (fuc) {
-
-		// check this is the function we think
-		if (fuc->Match(wxScriptTypeINT, 2, wxScriptTypePCHAR, wxScriptTypeINT)) {
-			
-			// ok, it's our function...
-			fuc->Exec(result, args);
-			wxPrintf(wxT(">%s('try', 3) returned %s\n"), fuc->GetName().c_str(), 
-				result.GetContentString().c_str());
-		}
-	}
-
-	if (flua) {
-
-		// we cannot check if this is our function...
-		if (!flua->Exec(result, args)) {
-			
-			wxPrintf(wxT("Execution failed: %s"), wxScriptInterpreter::GetLastErr().c_str());
-			
-		} else {
-			
-			wxPrintf(wxT(">%s('try', 3) returned %s\n"), flua->GetName().c_str(), 
-				result.GetContentString().c_str());
-		}
-	}
-}
-
-void CallFnc2(const wxScriptFunctionArray &arr)
-{
-	// try to exec func1 with both CINT & UnderC
-	// func1 should be defined as:
-	//
-	//          bool xxxx_func2(bool input)
-	//
-	wxScriptFunction *fcint = arr.Get(wxT("cint_func2"));
-	wxScriptFunction *fuc = arr.Get(wxT("uc_func2"));
-	wxScriptFunction *flua = arr.Get(wxT("lua_func2"));
-
-	wxScriptVar result;
-	wxScriptVar args[2];
-
-	args[0] = wxScriptVar(wxT("bool"), wxT("true"));
-	args[1] = wxScriptVar();
-
-	if (fcint) {
-
-		// check this is the function we think
-		if (fcint->Match(wxScriptTypeBOOL, 1, wxScriptTypeBOOL)) {
-			
-			// ok, it's our function...
-			fcint->Exec(result, args);
-			wxPrintf(wxT(">%s('true') returned %s\n"), fcint->GetName().c_str(),
-				result.GetContentString().c_str());
-		}
-	}
-
-	if (fuc) {
-
-		// check this is the function we think
-		if (fcint->Match(wxScriptTypeBOOL, 1, wxScriptTypeBOOL)) {
-			
-			// ok, it's our function...
-			fuc->Exec(result, args);
-			wxPrintf(wxT(">%s('true') returned %s\n"), fuc->GetName().c_str(),
-				result.GetContentString().c_str());
-		}
-	}
-
-	if (flua) {
-
-		// we cannot check if this is our function...
-		if (!flua->Exec(result, args)) {
-			
-			wxPrintf(wxT("Execution failed: %s"), wxScriptInterpreter::GetLastErr().c_str());
-			
-		} else {
-			
-			wxPrintf(wxT(">%s('true') returned %s\n"), flua->GetName().c_str(),
-				result.GetContentString().c_str());
-		}		
-	}
-}
-
 void MainTestSet()
 {
 	wxString basepath = wxGetCwd();
@@ -257,70 +132,44 @@ void MainTestSet()
 	
 	wxPrintf(wxT(">Base path is: '%s'\n"), basepath.c_str());
 
-	// init
-	wxScriptInterpreter::Init(TRUE, TRUE, TRUE);
-	wxPrintf(wxT(">I'm initializing the script interpreter...\n"));
-	if (!wxScriptInterpreter::areAllReady()) {
-		wxPrintf(wxT("Initialization failed."));
-		wxScriptInterpreter::Cleanup();
+	// load the script
+	wxString filename(basepath + wxT("math.script"));
+	wxScriptFile *pf = wxScriptInterpreter::Load(filename, wxRECOGNIZE_FROM_COMMENT);
+	if (pf == NULL) {
+		wxPrintf(wxT(">Failed to load '%s'.\n"), filename.c_str());
 		return;
 	}
 
-#ifdef TEST_CINT
-	// load a CINT script file
-	wxPrintf(wxT(">Loading the 'script1.cxx'...\n"));
-	wxScriptFile *file1 = wxScriptInterpreter::Load(basepath + wxT("script1.cxx"));
-	if (!file1) {
-		wxPrintf(wxT("Load failed."));
-		wxScriptInterpreter::Cleanup();
-		return;
-	}
-
-	delete file1;
-#endif
-
-#ifdef TEST_UNDERC
-	// load an UnderC script file
-	wxPrintf(wxT(">Loading the 'script2.uc'...\n"));
-	wxScriptFile *file2 = wxScriptInterpreter::Load(basepath + wxT("script2.uc"));
-	if (!file2) {
-		wxPrintf(wxT("Load failed."));
-		wxScriptInterpreter::Cleanup();
-		return;
-	}
-
-	delete file2;
-#endif
-
-#ifdef TEST_LUA
-	// load a Lua script file
-	wxPrintf(wxT(">Loading the 'script3.lua'...\n"));
-	wxScriptFile *file3 = wxScriptInterpreter::Load(basepath + wxT("script3.lua"));
-	if (!file3) {
-		wxPrintf(wxT("\nLoad failed: %s"), wxScriptInterpreter::GetLastErr().c_str());
-		wxScriptInterpreter::Cleanup();
-		return;
-	}
-
-	delete file3;
-#endif
-
-	// get function list
+	// now, try to calculate all the functions loaded at some fixed values....
 	wxScriptFunctionArray arr;
 	wxScriptInterpreter::GetTotalFunctionList(arr);
-	wxPrintf(wxT(">Loaded %d functions:\n"), arr.GetCount());
-	for (int i=0; i < arr.GetCount(); i++)
-		wxPrintf(wxT("%s\n"), arr.GetName(i).c_str());
+	wxScriptVar result;
+	wxScriptVar args[2];
 
-	// do some function calls with a lot of tests to be sure everything is okay
-	CallFnc1(arr);
-	CallFnc2(arr);
+	for (int i=0; i<arr.GetCount(); i++) {
 
-	// leave some space
-	wxPrintf(wxT(">Test completed.\n\n\n"));
+		wxScriptFunction *func = arr.Get(i);
+		for (int j=0; j<10; j++) {
+			args[0].Set(wxSTG_INT, (long)(j));
+
+			// lets call the i-th function
+			if (!func->Exec(result, args)) {
+				wxPrintf(wxT(">Failed to run the '%s' function.\n"), 
+						func->GetName().c_str());
+				wxPrintf(wxT("Error description: %s\n"), 
+					wxScriptInterpreter::GetLastErr().c_str());
+				return;
+			}
+
+			wxPrintf(wxT(">Calling %s(%d); result is: %s\n"), 
+				func->GetName().c_str(), j, result.GetContentString().c_str());
+		}
+
+		wxPrintf(wxT("\n"));
+	}
 
 	// do not leave memory leaks
-	wxScriptInterpreter::Cleanup();
+	delete pf;
 }
 
 int main(int, char **)
@@ -338,11 +187,36 @@ int main(int, char **)
 	wxPrintf(wxT("\n\n"));
 	wxPrintf(wxT(" wxScript test program\n"));
 	wxPrintf(wxT(" -------------------------\n\n"));
-	wxPrintf(wxT(" This is a little test program which runs some didactive tests \n"));
-	wxPrintf(wxT(" about the wxScript and wxScript-related classes.\n\n"));
-    
+	wxPrintf(wxT(" I will now run a customizable script ('%s') which I\n\n"));
+  
+	// init
+	wxScriptInterpreter::Init();		// use default interpreters
+	wxPrintf(wxT(">I'm initializing the script interpreters...\n"));
+	if (!wxScriptInterpreter::areAllReady()) {
+		wxPrintf(wxT("Initialization failed."));
+		wxScriptInterpreter::Cleanup();
+		return 0;
+	}
+
+	wxPrintf(wxT(">For our tests, we are using:\n"));
+#ifdef TEST_LUA
+	wxPrintf(wxLua::Get()->GetVersionInfo() + wxT("\n"));
+#endif
+#ifdef TEST_PYTHON
+	wxPrintf(wxPython::Get()->GetVersionInfo() + wxT("\n"));
+#endif
+#ifdef TEST_CINT
+	wxPrintf(wxCINT::Get()->GetVersionInfo() + wxT("\n"));
+#endif
+#ifdef TEST_UNDERC
+	wxPrintf(wxUnderC::Get()->GetVersionInfo() + wxT("\n"));
+#endif
+
 	// run some tests
 	MainTestSet();
+
+	wxPrintf(wxT(">Closing the script interpreter...\n"));
+	wxScriptInterpreter::Cleanup();
 
 	// wait for user keypress
 	wxPrintf(wxT("Press a key to continue...\n"));

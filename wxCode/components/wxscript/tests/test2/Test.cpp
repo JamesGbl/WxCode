@@ -548,7 +548,7 @@ int main(int, char **)
 
 	// init
 	wxScriptInterpreter::Init(cint, underc, lua, python);
-	wxPrintf(wxT(">I'm initializing the script interpreter...\n"));
+	wxPrintf(wxT(">I'm initializing the script interpreters...\n"));
 	if (!wxScriptInterpreter::areAllReady()) {
 		wxPrintf(wxT("Initialization failed."));
 		wxScriptInterpreter::Cleanup();

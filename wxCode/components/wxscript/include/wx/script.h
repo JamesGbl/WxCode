@@ -434,7 +434,13 @@ public:
 //! The types of the script files recognized by wxScriptFile
 enum wxScriptFileType {
 
-	wxRECOGNIZE_SCRIPTFILE = -1,
+	//! The extension of the script file will be used to recognize it.
+	wxRECOGNIZE_FROM_EXTENSION = -2,
+
+	//! The first non-whitespace characters found will be compared
+	//! to the various types of comments in the different scripting
+	//! languages supported to recognize the script file type.
+	wxRECOGNIZE_FROM_COMMENT = -1,
 
 	wxCINT_SCRIPTFILE = 0,		// extension = "cxx"
 	wxUNDERC_SCRIPTFILE = 1,	// extension = "uc"
@@ -540,7 +546,7 @@ public:		// static functions
 	//! Load the given scriptfile and then returns an instance to the
 	//! scriptfile wrapper, or NULL if the file couldn't be loaded.
 	static wxScriptFile *Load(const wxString &filename, 
-			wxScriptFileType type = wxRECOGNIZE_SCRIPTFILE);
+			wxScriptFileType type = wxRECOGNIZE_FROM_EXTENSION);
 
 public:		// virtual functions
 

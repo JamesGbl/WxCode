@@ -2,34 +2,68 @@
 <html>
 <head>
   <meta content="text/html; charset=iso-8859-1"
- http-equiv="content-type">
-  <meta content="Collection of sample code snippets for wxWidgets"
- name="description">
-  <meta content="sample, code, snippets, wxWidgets" name="keywords">
-  <meta content="noindex, follow" name="robots">
-  <meta content="mailto:frm@users.sourceforge.net" name="made">
-  <meta content="en" name="language">
-  <meta content="wxCode" name="generator">
+ http-equiv="content-type"/>
+  <meta content="Collection of sample code snippets for wxWidgets" name="description"/>
+  <meta content="sample, code, snippets, wxWidgets" name="keywords"/>
+  <meta content="noindex, follow" name="robots"/>
+  <meta content="mailto:frm@users.sourceforge.net" name="made"/>
+  <meta content="en" name="language"/>
+  <meta content="wxCode" name="generator"/>
   <style type="text/css"> /* <![CDATA[ */ @import url(default.css); /* ]]> */ </style>
   <title>wxScript</title>
 </head>
+
 <body>
 <h2>wxScript</h2>
 <h3>Synopsis</h3>
-<p>A set of abstract classes to add a script-interpreter to your
-wxWidgets applications/libraries. The implementation of these
-interfaces for the Lua, UnderC and CINT interpreters are given. The
-advantage of a single base interface allows the programmer who wants to
-use this component to learn how to use a single set of powerful
-classes: wxLua, wxUnderC and wxCINT all exposes the same functions,
-adding to the program Lua &amp; C++ script-interpreting capabilities.</p>
-<br>
-<h3>Documentation</h3>
+<p>A set of abstract classes to add a script-interpreter support to your wxWidgets
+ applications/libraries.
+ The implementation of these interfaces for the Lua, Python, UnderC and CINT interpreters
+ (these two are C/C++ intepreters) are provided.
+ The advantage of a single basic interface makes extremely easy for the programmer
+ not only to add scripting support to its program but also to give the user
+ multi-scripting languages support, learning how to use a single set of powerful classes:
+ wxPython, wxLua, wxUnderC and wxCINT.
+ These classes are easily extensible and they support Unicode as well.</p>
+
+<br/><h3>wxScript usage sample</h3>
+<p>This little snippet shows how to use the wxScript classes to load a LUA script file
+and then execute the first function found inside it:</p>
+<table width="100%" bgcolor="#EEEEEE">
+<tr><td><tt>
+// load the script<br/>
+wxString filename(basepath + wxT("math.script"));<br/>
+wxScriptFile *pf = wxScriptInterpreter::Load(filename, wxRECOGNIZE_FROM_EXTENSION);<br/>
+if (pf == NULL) {<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;wxPrintf(wxT(">Failed to load '%s'.\n"), filename.c_str());<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;return;<br/>
+}<br/>
+<br/>
+// get the list of the functions<br/>
+wxScriptFunctionArray arr;<br/>
+wxScriptInterpreter::GetTotalFunctionList(arr);<br/>
+<br/>
+// now, check for the presence of the "main" function...<br/>
+wxScriptFunction *func = arr.Get(wxT("main"));<br/>
+if (func == NULL) return;		// no such function is present ?<br/>
+<br/>
+// ...and run it with a string as argument<br/>
+wxScriptVar result;<br/>
+wxScriptVar args[2];<br/>
+args[0].Set(wxT("char*"), wxT("my string"));<br/>
+if (!func->Exec(result, args)) return;<br/>
+<br/>
+// last, get the result...<br/>
+wxString str(result.GetContentString());<br/>
+</tt></td></tr>
+</table>
+
+<br/><h3>Documentation</h3>
 <p>The wxScript docs are generated through <a href="www.doxygen.org">doxygen</a>;
-you can access HTML version clicking <a href="docs/index.html">here</a>.</p>
-<br>
-<h3>Future enhancements</h3>
-None?
-</p>
+you can access the HTML version clicking <a href="docs/index.html">here</a>.</p>
+
+<br/><h3>Future enhancements</h3>
+<p>None?</p>
+
 </body>
 </html>

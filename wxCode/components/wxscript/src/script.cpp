@@ -13,6 +13,7 @@
 // includes
 #include "wx/script.h"
 #include <wx/filename.h>
+#include <wx/file.h>
 
 // now, we can include specific interpreter wrappers
 #ifdef wxSCRIPT_USE_CINT
@@ -239,10 +240,10 @@ wxScriptFile *wxScriptInterpreter::Load(const wxString &file, wxScriptFileType t
 	}
 
 	// assign an invalid value just to avoid warnings
-	wxScriptFileType t = wxRECOGNIZE_SCRIPTFILE;
+	wxScriptFileType t = wxRECOGNIZE_FROM_EXTENSION;
 
 	// try to recognize the type of scriptfile
-	if (type == wxRECOGNIZE_SCRIPTFILE) {
+	if (type == wxRECOGNIZE_FROM_EXTENSION) {
 		wxString ext = file.AfterLast(wxT('.'));
 
 		for (int i=0; i < wxSCRIPT_SUPPORTED_FORMATS; i++) {
@@ -251,6 +252,42 @@ wxScriptFile *wxScriptInterpreter::Load(const wxString &file, wxScriptFileType t
 			if (ext.IsSameAs(wxScriptFile::m_strFileExt[i], FALSE))
 				t = (wxScriptFileType)i;
 		}
+
+	} else if (type == wxRECOGNIZE_FROM_COMMENT) {
+
+		// we have to read the first chunk of the file...
+		wxFile file(file, wxFile::read);
+		int chunksize = 256;
+
+		if (file.Length() < chunksize)
+			chunksize = file.Length();
+		if (chunksize < 2) {
+			wxScriptInterpreter::m_strLastErr = wxT("The file is too short.\n");
+			return FALSE;
+		}
+
+		// read an arbitrary long (256 should be enough) piece of file 
+		char *buf = new char[chunksize+10];
+		if ((int)file.Read(buf, chunksize) != chunksize) {
+			wxScriptInterpreter::m_strLastErr = wxT("Couldn't read the file.\n");
+			return FALSE;
+		}
+
+		// now, try to recognize the type of the code interpreting the
+		// first non-whitespace characters as a comment declaration...
+		buf[chunksize] = '\0';
+		wxString tmp(buf, wxConvUTF8);
+		delete [] buf;
+		tmp.Trim(FALSE);
+
+		// -- is used for lua comments...
+		if (tmp[0] == wxT('-') && tmp[1] == wxT('-'))
+			t = wxLUA_SCRIPTFILE;
+		else if (tmp[0] == wxT('#'))		// # is used by python
+			t = wxPYTHON_SCRIPTFILE;
+		else if ((tmp[0] == wxT('/') && tmp[1] == wxT('/')) ||
+					(tmp[0] == wxT('/') && tmp[1] == wxT('*')))
+			t = wxCINT_SCRIPTFILE;
 	}
 
 	// the result
@@ -281,7 +318,6 @@ wxScriptFile *wxScriptInterpreter::Load(const wxString &file, wxScriptFileType t
 #endif
 		break;
 
-	case wxRECOGNIZE_SCRIPTFILE:		// just to avoid warnings
 	default:
 	    wxScriptInterpreter::m_strLastErr = wxT("Interpreter unavailable.\n");
 		break;

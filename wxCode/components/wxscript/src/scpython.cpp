@@ -114,17 +114,46 @@ void wxPython::GetFunctionList(wxScriptFunctionArray &arr) const
 
 void wxPython::OnException()
 {
+	wxASSERT(PyErr_Occurred() != NULL);
 	wxString err;
 
-	wxASSERT(PyErr_Occurred() != NULL);
-	//PyErr_Print();
+#define pyEXC_HANDLE(x)								\
+	else if (PyErr_ExceptionMatches(PyExc_##x))		\
+		err = wxString(wxT(#x)) + wxT("\n");
 
+#if 1
+
+	// a generic exception description
 	if (PyErr_ExceptionMatches(PyExc_AssertionError))
 		err = wxT("Assertion error\n");
-	else if (PyErr_ExceptionMatches(PyExc_AttributeError))
-		err = wxT("Attribute error\n");
+	pyEXC_HANDLE(AttributeError)
+	pyEXC_HANDLE(EOFError)
+	pyEXC_HANDLE(FloatingPointError)
+	pyEXC_HANDLE(IOError)
+	pyEXC_HANDLE(ImportError)
+	pyEXC_HANDLE(IndexError)
+	pyEXC_HANDLE(KeyError)
+	pyEXC_HANDLE(KeyboardInterrupt)
+	pyEXC_HANDLE(MemoryError)
+	pyEXC_HANDLE(NameError)
+	pyEXC_HANDLE(NotImplementedError)
+	pyEXC_HANDLE(OSError)
+	pyEXC_HANDLE(OverflowError)
+	pyEXC_HANDLE(RuntimeError)
+	pyEXC_HANDLE(SyntaxError)
+	pyEXC_HANDLE(SystemError)
+	pyEXC_HANDLE(SystemExit)
+	pyEXC_HANDLE(TypeError)
+	pyEXC_HANDLE(ValueError)
+	pyEXC_HANDLE(ZeroDivisionError)
 	else
 		err = wxT("Unknown error\n");
+#else
+
+	// for more detailed output (fix on stderr)
+	PyErr_Print();
+
+#endif
 
 	wxScriptInterpreter::m_strLastErr = err;
 	PyErr_Clear();

@@ -1,0 +1,14 @@
+# The TEST1 program will use the first character of this
+# line to recognize the type of this script file (python).
+
+import math
+
+def f2(x):
+	return x*x
+
+def f3(x):
+	return x*x*x
+
+def g(x):
+	return x*x - math.sin(x)
+
