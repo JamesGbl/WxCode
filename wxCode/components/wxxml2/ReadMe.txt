@@ -31,14 +31,19 @@
  Installation
  ------------
 
- -> on Win32 with wxMSW:
-    use the MSVC++ project file to compile the sample (you must put the "wxlibxml" folder
-    in the [wxWidgets main folder]\samples to allow MSVC++ to correctly load the project).
+ The wxXml2 wrappers are packed in a single source file (src/xml2.cpp) and
+ a single header file (include/wx/xml2.h), so I think the best way for a
+ programmer to use them is to build xml2.cpp together with the sources of
+ its app; thus, you won't find makefiles/IDE files for lib output.
+ The makefiles/IDE files are just used for the sample.
 
- -> on Linux with wxGTK:
+ -> on Win32:
+    use the MSVC++ project file to compile the sample
+
+ -> on Linux:
     Use the command
     
-          make -fmakefile.unx
+          make
 
     to compile the sample.
 

@@ -403,7 +403,7 @@ public:
 //!
 class WXXMLDLLEXPORT wxXml2NodeRefData : public wxObjectRefData
 {
-    friend class WXDLLEXPORT wxXml2Node;
+    friend class WXXMLDLLEXPORT wxXml2Node;
 
 public:
     wxXml2NodeRefData(xmlNode *p = NULL) {
