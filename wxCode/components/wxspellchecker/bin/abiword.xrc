@@ -39,7 +39,7 @@
                 <option>1</option>
                 <object class="wxTextCtrl" name="TextContext">
                     <size>400,100</size>
-                    <style>wxTE_MULTILINE|wxTE_READONLY</style>
+                    <style>wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH2</style>
                     <value></value>
                 </object>
             </object>
