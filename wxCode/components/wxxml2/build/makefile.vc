@@ -61,8 +61,7 @@ MINIMAL_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
 	/I$(LIBXML2_DIR)\include /I$(ICONV_DIR)\include $(__DEBUG_DEFINE_p) \
 	/D__WXMSW__ /GR /GX $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
-	msvc\minimal_minimal.obj \
-	msvc\minimal_stackwalker.obj
+	msvc\minimal_minimal.obj
 
 ### Conditionally set variables: ###
 
@@ -140,16 +139,17 @@ clean:
 	-if exist ..\sample\minimal.pdb del ..\sample\minimal.pdb
 
 tarball: 
-	( cd .. && tar -cvzf wxxml2.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
+	( cd .. && tar -cvzf ..\wxxml2.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
 
 zip: 
-	( cd .. && zip -r9 wxxml2.zip *  -x *.pdb -x *.log -x *.o* )
+	( cd .. && zip -r9 ..\wxxml2.zip *  -x *.pdb -x *.log -x *.o* )
 
 cleanbuilddirs: 
 	-if exist msvc rmdir /S /Q msvc
 	-if exist watcom rmdir /S /Q watcom
 	-if exist borland rmdir /S /Q borland
 	-if exist mingw rmdir /S /Q mingw
+	-if exist msvc6prj rmdir /S /Q msvc6prj
 
 cleanall: clean cleanbuilddirs
 	del /S /Q ..\*.log >NUL
@@ -170,7 +170,7 @@ cleandocs:
 <<
 
 ..\sample\minimal.exe: $(MINIMAL_OBJECTS) ..\lib\wxxml2$(WXLIBPOSTFIX).lib
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_13) /LIBPATH:..\lib /LIBPATH:$(WXWIN)\lib\vc_lib /SUBSYSTEM:WINDOWS /LIBPATH:$(LIBXML2_DIR)\lib /LIBPATH:$(ICONV_DIR)\lib /NODEFAULTLIB:msvcrt.lib /NODEFAULTLIB:libcd.lib @<<
+	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_13) /LIBPATH:..\lib /LIBPATH:$(WXWIN)\lib\vc_lib /SUBSYSTEM:WINDOWS /LIBPATH:$(LIBXML2_DIR)\lib /LIBPATH:$(ICONV_DIR)\lib @<<
 	$(MINIMAL_OBJECTS)  ..\lib\wxxml2$(WXLIBPOSTFIX).lib libxml2.lib iconv.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxmsw25$(WXLIBPOSTFIX)_html.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
 
@@ -181,8 +181,5 @@ msvc\wxxml2_dtd.obj: .\..\src\dtd.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(WXXML2_CXXFLAGS) $**
 
 msvc\minimal_minimal.obj: .\..\sample\minimal.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(MINIMAL_CXXFLAGS) $**
-
-msvc\minimal_stackwalker.obj: .\..\sample\stackwalker.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(MINIMAL_CXXFLAGS) $**
 

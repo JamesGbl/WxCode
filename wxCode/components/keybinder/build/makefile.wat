@@ -148,16 +148,17 @@ clean : .SYMBOLIC
 	-if exist ..\sample\minimal.exe del ..\sample\minimal.exe
 
 tarball :  
-	( cd .. && tar -cvzf keybinder.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
+	( cd .. && tar -cvzf ..\keybinder.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
 
 zip :  
-	( cd .. && zip -r9 keybinder.zip *  -x *.pdb -x *.log -x *.o* )
+	( cd .. && zip -r9 ..\keybinder.zip *  -x *.pdb -x *.log -x *.o* )
 
 cleanbuilddirs :  
 	-if exist msvc rmdir /S /Q msvc
 	-if exist watcom rmdir /S /Q watcom
 	-if exist borland rmdir /S /Q borland
 	-if exist mingw rmdir /S /Q mingw
+	-if exist msvc6prj rmdir /S /Q msvc6prj
 
 cleanall :  clean cleanbuilddirs
 	del /S /Q ..\*.log >NUL

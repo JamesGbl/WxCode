@@ -77,16 +77,17 @@ distclean: clean
 	rm -f config.cache config.log config.status bk-deps bk-make-pch shared-ld-sh Makefile
 
 tarball: 
-	( cd .. && tar -cvzf wxxml2.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
+	( cd .. && tar -cvzf ../wxxml2.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
 
 zip: 
-	( cd .. && zip -r9 wxxml2.zip *  -x *.pdb -x *.log -x *.o* )
+	( cd .. && zip -r9 ../wxxml2.zip *  -x *.pdb -x *.log -x *.o* )
 
 cleanbuilddirs: 
 	rm -rf msvc
 	rm -rf watcom
 	rm -rf borland
 	rm -rf mingw
+	rm -rf msvc6prj
 
 cleanall: clean cleanbuilddirs
 	rm -r ..\*.log

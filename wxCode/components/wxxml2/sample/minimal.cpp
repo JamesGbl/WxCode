@@ -148,9 +148,10 @@ IMPLEMENT_APP(MyApp)
 // ============================================================================
 
 // first of all, decide if we can use the system...
-#if defined(__VISUALC__) && defined(__WXDEBUG__)
+#if defined(__VISUALC__)
 	#define mcDETECT_MEMORY_LEAKS
 #endif
+
 
 #ifdef mcDETECT_MEMORY_LEAKS
 
@@ -163,15 +164,11 @@ IMPLEMENT_APP(MyApp)
 	// test program. Anyway,  you can find it also online at:
 	//     http://www.codeproject.com/tools/leakfinder.asp
 	#include <crtdbg.h>
-	#include "stackwalker.h"
 
 	// define some useful macros
-	#define new			new(_NORMAL_BLOCK, THIS_FILE, __LINE__)
+	#define new                 new(_NORMAL_BLOCK, THIS_FILE, __LINE__)
+	#define mcDUMP_ON_EXIT		{ _CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF); }
 
-	#define mcDUMP_ON_EXIT				{ _CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF); }
-	#define mcSTART_DETECTION			{ InitAllocCheck(ACOutput_Simple, FALSE, 1); }
-	#define mcEND_DETECTION				{ DeInitAllocCheck(); }
-	#define mcEND_DETECTION_AND_DUMP	{ DeInitAllocCheck(); _CrtDumpMemoryLeaks(); }
 	
 	#undef THIS_FILE
 	static char THIS_FILE[] = __FILE__;
@@ -182,8 +179,8 @@ IMPLEMENT_APP(MyApp)
 	class mcLeakDetector {
 
 	public:
-		mcLeakDetector() { mcSTART_DETECTION; mcDUMP_ON_EXIT; }
-		~mcLeakDetector() { mcEND_DETECTION; }
+		mcLeakDetector() { mcDUMP_ON_EXIT; }
+		~mcLeakDetector() {}
 	};
 
 	// ...infact, instancing a STATIC mcLeakDetector class, we
@@ -195,37 +192,7 @@ IMPLEMENT_APP(MyApp)
 	// the framework removes the static variables).
 	static mcLeakDetector detector;
 
-
-	// this little class instead is used to generate a 'memdiff'
-	// of the heap state from its creation to its destruction.
-	class mcFindMemoryLeaks
-	{
-		  _CrtMemState m_checkpoint;
-
-	public:
-
-		  mcFindMemoryLeaks()
-		  {
-				_CrtMemCheckpoint(&m_checkpoint);
-		  };
-
-		  ~mcFindMemoryLeaks()
-		  {
-				_CrtMemState checkpoint;
-				_CrtMemCheckpoint(&checkpoint);
-
-				_CrtMemState diff;
-				_CrtMemDifference(&diff, &m_checkpoint, &checkpoint);
-
-				_CrtMemDumpStatistics(&diff);
-				_CrtMemDumpAllObjectsSince(&diff);
-		  };
-	};
-
 #endif
-
-
-
 
 
 

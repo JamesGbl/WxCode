@@ -53,8 +53,8 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 ..\lib\wxxml2u.lib libxml2.lib iconv.lib wxmsw25u_core.lib wxmsw25u_html.lib wxbase25u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\minimal.exe" /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib" /subsystem:windows /libpath:"c:\libxml2\lib" /libpath:"c:\iconv\lib" /NODEFAULTLIB:msvcrt.lib /NODEFAULTLIB:libcd.lib
-# ADD LINK32 ..\lib\wxxml2u.lib libxml2.lib iconv.lib wxmsw25u_core.lib wxmsw25u_html.lib wxbase25u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\minimal.exe" /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib" /subsystem:windows /libpath:"c:\libxml2\lib" /libpath:"c:\iconv\lib" /NODEFAULTLIB:msvcrt.lib /NODEFAULTLIB:libcd.lib
+# ADD BASE LINK32 ..\lib\wxxml2u.lib libxml2.lib iconv.lib wxmsw25u_core.lib wxmsw25u_html.lib wxbase25u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\minimal.exe" /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib" /subsystem:windows /libpath:"c:\libxml2\lib" /libpath:"c:\iconv\lib"
+# ADD LINK32 ..\lib\wxxml2u.lib libxml2.lib iconv.lib wxmsw25u_core.lib wxmsw25u_html.lib wxbase25u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\minimal.exe" /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib" /subsystem:windows /libpath:"c:\libxml2\lib" /libpath:"c:\iconv\lib"
 
 !ELSEIF  "$(CFG)" == "minimal - Win32 Unicode Debug"
 
@@ -78,8 +78,8 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 ..\lib\wxxml2ud.lib libxml2.lib iconv.lib wxmsw25ud_core.lib wxmsw25ud_html.lib wxbase25ud.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexud.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\minimal.exe" /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib" /subsystem:windows /debug /libpath:"c:\libxml2\lib" /libpath:"c:\iconv\lib" /NODEFAULTLIB:msvcrt.lib /NODEFAULTLIB:libcd.lib
-# ADD LINK32 ..\lib\wxxml2ud.lib libxml2.lib iconv.lib wxmsw25ud_core.lib wxmsw25ud_html.lib wxbase25ud.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexud.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\minimal.exe" /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib" /subsystem:windows /debug /libpath:"c:\libxml2\lib" /libpath:"c:\iconv\lib" /NODEFAULTLIB:msvcrt.lib /NODEFAULTLIB:libcd.lib
+# ADD BASE LINK32 ..\lib\wxxml2ud.lib libxml2.lib iconv.lib wxmsw25ud_core.lib wxmsw25ud_html.lib wxbase25ud.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexud.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\minimal.exe" /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib" /subsystem:windows /debug /libpath:"c:\libxml2\lib" /libpath:"c:\iconv\lib"
+# ADD LINK32 ..\lib\wxxml2ud.lib libxml2.lib iconv.lib wxmsw25ud_core.lib wxmsw25ud_html.lib wxbase25ud.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexud.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\minimal.exe" /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib" /subsystem:windows /debug /libpath:"c:\libxml2\lib" /libpath:"c:\iconv\lib"
 
 !ELSEIF  "$(CFG)" == "minimal - Win32 Release"
 
@@ -103,8 +103,8 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 ..\lib\wxxml2.lib libxml2.lib iconv.lib wxmsw25_core.lib wxmsw25_html.lib wxbase25.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\minimal.exe" /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib" /subsystem:windows /libpath:"c:\libxml2\lib" /libpath:"c:\iconv\lib" /NODEFAULTLIB:msvcrt.lib /NODEFAULTLIB:libcd.lib
-# ADD LINK32 ..\lib\wxxml2.lib libxml2.lib iconv.lib wxmsw25_core.lib wxmsw25_html.lib wxbase25.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\minimal.exe" /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib" /subsystem:windows /libpath:"c:\libxml2\lib" /libpath:"c:\iconv\lib" /NODEFAULTLIB:msvcrt.lib /NODEFAULTLIB:libcd.lib
+# ADD BASE LINK32 ..\lib\wxxml2.lib libxml2.lib iconv.lib wxmsw25_core.lib wxmsw25_html.lib wxbase25.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\minimal.exe" /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib" /subsystem:windows /libpath:"c:\libxml2\lib" /libpath:"c:\iconv\lib"
+# ADD LINK32 ..\lib\wxxml2.lib libxml2.lib iconv.lib wxmsw25_core.lib wxmsw25_html.lib wxbase25.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\minimal.exe" /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib" /subsystem:windows /libpath:"c:\libxml2\lib" /libpath:"c:\iconv\lib"
 
 !ELSEIF  "$(CFG)" == "minimal - Win32 Debug"
 
@@ -128,8 +128,8 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 ..\lib\wxxml2d.lib libxml2.lib iconv.lib wxmsw25d_core.lib wxmsw25d_html.lib wxbase25d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\minimal.exe" /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib" /subsystem:windows /debug /libpath:"c:\libxml2\lib" /libpath:"c:\iconv\lib" /NODEFAULTLIB:msvcrt.lib /NODEFAULTLIB:libcd.lib
-# ADD LINK32 ..\lib\wxxml2d.lib libxml2.lib iconv.lib wxmsw25d_core.lib wxmsw25d_html.lib wxbase25d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\minimal.exe" /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib" /subsystem:windows /debug /libpath:"c:\libxml2\lib" /libpath:"c:\iconv\lib" /NODEFAULTLIB:msvcrt.lib /NODEFAULTLIB:libcd.lib
+# ADD BASE LINK32 ..\lib\wxxml2d.lib libxml2.lib iconv.lib wxmsw25d_core.lib wxmsw25d_html.lib wxbase25d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\minimal.exe" /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib" /subsystem:windows /debug /libpath:"c:\libxml2\lib" /libpath:"c:\iconv\lib"
+# ADD LINK32 ..\lib\wxxml2d.lib libxml2.lib iconv.lib wxmsw25d_core.lib wxmsw25d_html.lib wxbase25d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\minimal.exe" /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib" /subsystem:windows /debug /libpath:"c:\libxml2\lib" /libpath:"c:\iconv\lib"
 
 !ENDIF
 
@@ -145,10 +145,6 @@ LINK32=link.exe
 # Begin Source File
 
 SOURCE=.\..\sample\minimal.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\..\sample\stackwalker.cpp
 # End Source File
 # End Group
 # End Target
