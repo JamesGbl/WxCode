@@ -4,7 +4,7 @@
 // Author:      Vadim Zeitlin
 // Modified by:
 // Created:     15.08.99
-// RCS-ID:      $Id: wizard.cpp,v 1.1 2004-05-14 03:59:34 jblough Exp $
+// RCS-ID:      $Id: wizard.cpp,v 1.2 2004-05-15 03:05:23 jblough Exp $
 // Copyright:   (c) Vadim Zeitlin
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -35,7 +35,7 @@
     #include "wx/wx.h"
 #endif
 
-#include "AspellInterface.h"
+#include "AspellDictionaryDownloader.h"
 #include "DictionaryWizard.h"
 
 // ----------------------------------------------------------------------------
@@ -144,17 +144,16 @@ void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 
 void MyFrame::OnRunWizard(wxCommandEvent& WXUNUSED(event))
 {
-  wxSpellCheckEngineInterface* pEngine = new AspellInterface();
-  if (pEngine)
+  EngineDictionaryDownloader* pDownloader = new AspellDictionaryDownloader();
+  if (pDownloader)
   {
-    pEngine->InitializeSpellCheckEngine();
-  
     DictionaryWizard* pWizard = new DictionaryWizard(this);
-    pWizard->SetEngine(pEngine);
+    pWizard->SetEngineDownloader(pDownloader);
     pWizard->Run();
+    pWizard->SetEngineDownloader(NULL);
     pWizard->Destroy();
   
-    delete pEngine;
+    delete pDownloader;
   }
 }
 

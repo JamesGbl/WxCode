@@ -23,7 +23,7 @@
 ////@begin includes
 ////@end includes
 #include "DictionaryWizard.h"
-#include "SpellCheckEngineInterface.h"
+#include "EngineDictionaryDownloader.h"
 #include <wx/protocol/ftp.h>
 
 ////@begin XPM images
@@ -54,12 +54,12 @@ END_EVENT_TABLE()
 
 DictionaryWizard::DictionaryWizard( )
 {
-  m_pEngine = NULL;
+  m_pDownloader = NULL;
 }
 
 DictionaryWizard::DictionaryWizard( wxWindow* parent, wxWindowID id, const wxPoint& pos )
 {
-    m_pEngine = NULL;
+    m_pDownloader = NULL;
     Create(parent, id, pos);
 }
 
@@ -92,13 +92,11 @@ void DictionaryWizard::CreateControls()
 
     wxWizard* item1 = this;
 
-    WizardPage* item2 = new WizardPage( item1 );
-    item1->FitToPage(item2);
     WizardPage1* item5 = new WizardPage1( item1 );
     item1->FitToPage(item5);
     WizardPage2* item15 = new WizardPage2( item1 );
     item1->FitToPage(item15);
-    wxWizardPageSimple::Chain(item2, item5);
+    //wxWizardPageSimple::Chain(item2, item5);
     wxWizardPageSimple::Chain(item5, item15);
 ////@end DictionaryWizard content construction
 }
@@ -122,84 +120,6 @@ bool DictionaryWizard::Run()
  */
 
 bool DictionaryWizard::ShowToolTips()
-{
-    return TRUE;
-}
-
-/*!
- * WizardPage type definition
- */
-
-IMPLEMENT_DYNAMIC_CLASS( WizardPage, wxWizardPageSimple )
-
-/*!
- * WizardPage event table definition
- */
-
-BEGIN_EVENT_TABLE( WizardPage, wxWizardPageSimple )
-
-////@begin WizardPage event table entries
-////@end WizardPage event table entries
-
-END_EVENT_TABLE()
-
-/*!
- * WizardPage constructors
- */
-
-WizardPage::WizardPage( )
-{
-}
-
-WizardPage::WizardPage( wxWizard* parent )
-{
-    Create( parent );
-}
-
-/*!
- * WizardPage creator
- */
-
-bool WizardPage::Create( wxWizard* parent )
-{
-////@begin WizardPage member initialisation
-////@end WizardPage member initialisation
-
-////@begin WizardPage creation
-    wxBitmap wizardBitmap;
-    wxWizardPageSimple::Create( parent, NULL, NULL, wizardBitmap );
-
-    CreateControls();
-    GetSizer()->Fit(this);
-////@end WizardPage creation
-    return TRUE;
-}
-
-/*!
- * Control creation for WizardPage
- */
-
-void WizardPage::CreateControls()
-{    
-////@begin WizardPage content construction
-
-    WizardPage* item2 = this;
-
-    wxBoxSizer* item3 = new wxBoxSizer(wxVERTICAL);
-    item2->SetSizer(item3);
-    item2->SetAutoLayout(TRUE);
-
-    wxStaticText* item4 = new wxStaticText( item2, wxID_STATIC, _("A list of available dictionaries must be downloaded.  \n\nPlease click \"Next\" if this is acceptable or \"Cancel\" to abort."), wxDefaultPosition, wxDefaultSize, 0 );
-    item3->Add(item4, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 5);
-
-////@end WizardPage content construction
-}
-
-/*!
- * Should we show tooltips?
- */
-
-bool WizardPage::ShowToolTips()
 {
     return TRUE;
 }
@@ -268,6 +188,9 @@ void WizardPage1::CreateControls()
     item5->SetSizer(item6);
     item5->SetAutoLayout(TRUE);
 
+    wxStaticText* item4 = new wxStaticText( item5, wxID_STATIC, _("A list of available dictionaries must be downloaded."), wxDefaultPosition, wxDefaultSize, 0 );
+    item6->Add(item4, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 5);
+
     wxBoxSizer* item7 = new wxBoxSizer(wxHORIZONTAL);
     item6->Add(item7, 0, wxGROW|wxRIGHT|wxTOP|wxBOTTOM, 5);
 
@@ -308,8 +231,8 @@ void WizardPage1::OnButtonDownloadListClick( wxCommandEvent& event )
 {
   if (GetParent())
   {
-    wxSpellCheckEngineInterface* pEngine = ((DictionaryWizard*)GetParent())->GetEngine();
-    if (pEngine)
+    EngineDictionaryDownloader* pDownloader = ((DictionaryWizard*)GetParent())->GetEngineDownloader();
+    if (pDownloader)
     {
       wxCheckListBox* pCheckListBox = (wxCheckListBox*)FindWindow(CheckListBoxDictionaries);
       if (pCheckListBox == NULL)
@@ -322,20 +245,26 @@ void WizardPage1::OnButtonDownloadListClick( wxCommandEvent& event )
 
       wxFTP ftp;
   
-      if ( !ftp.Connect("ftp.gnu.org") )
+      if ( !ftp.Connect(pDownloader->GetServer()) )
       {
           wxLogError("Couldn't connect");
           return;
       }
   
-      ftp.ChDir("/gnu/aspell/dict");
+      ftp.ChDir(pDownloader->GetServerDirectory());
       wxArrayString FtpListing;
       if (ftp.GetFilesList(FtpListing))
       {
         int FileCount = FtpListing.Count();
         for (int i=0; i<FileCount; i++)
         {
-          pCheckListBox->Append(FtpListing[i]);
+          // Here we let the dictionary downloader interpret the directory name
+          //  and (if desireable) give back more descriptive text.  Also, the
+          //  downloader can return an empty string if we don't want this
+          //  dictionary in the list.
+          wxString DictionaryListEntry = pDownloader->DictionaryNameFromDirectoryName(FtpListing[i]);
+          if (DictionaryListEntry != "")
+            pCheckListBox->Append(DictionaryListEntry);
         }
 //        FindWindow(wxID_BACKWARD)->Enable();
 //        FindWindow(wxID_FORWARD)->Enable();

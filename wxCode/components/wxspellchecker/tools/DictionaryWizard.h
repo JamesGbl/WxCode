@@ -26,7 +26,7 @@ class WizardPage;
 class WizardPage1;
 class WizardPage2;
 ////@end forward declarations
-class wxSpellCheckEngineInterface;
+class EngineDictionaryDownloader;
 
 /*!
  * Control identifiers
@@ -34,7 +34,6 @@ class wxSpellCheckEngineInterface;
 
 ////@begin control identifiers
 #define DictionaryDownloadWizard 10000
-#define WelcomeWizardPage 10001
 #define DownloadListWizardPage 10002
 #define ButtonDownloadList 10011
 #define GaugeDownloadList 10003
@@ -86,48 +85,14 @@ public:
     /// Should we show tooltips?
     static bool ShowToolTips();
     
-    void SetEngine(wxSpellCheckEngineInterface* pEngine) { m_pEngine = pEngine; }
-    wxSpellCheckEngineInterface* GetEngine() { return m_pEngine; }
+    void SetEngineDownloader(EngineDictionaryDownloader* pDownloader) { m_pDownloader = pDownloader; }
+    EngineDictionaryDownloader* GetEngineDownloader() { return m_pDownloader; }
 
 ////@begin DictionaryWizard member variables
 ////@end DictionaryWizard member variables
 
 private:
-    wxSpellCheckEngineInterface* m_pEngine;
-};
-
-/*!
- * WizardPage class declaration
- */
-
-class WizardPage: public wxWizardPageSimple
-{    
-    DECLARE_DYNAMIC_CLASS( WizardPage )
-    DECLARE_EVENT_TABLE()
-
-public:
-    /// Constructors
-    WizardPage( );
-
-    WizardPage( wxWizard* parent );
-
-    /// Creation
-    bool Create( wxWizard* parent );
-
-    /// Creates the controls and sizers
-    void CreateControls();
-
-////@begin WizardPage event handler declarations
-////@end WizardPage event handler declarations
-
-////@begin WizardPage member function declarations
-////@end WizardPage member function declarations
-
-    /// Should we show tooltips?
-    static bool ShowToolTips();
-
-////@begin WizardPage member variables
-////@end WizardPage member variables
+    EngineDictionaryDownloader* m_pDownloader;
 };
 
 /*!
