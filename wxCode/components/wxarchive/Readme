@@ -3,7 +3,7 @@ Component:  wxArchive
 Subdir:     wxarchive
 Parts:      S
 More infos: 
-wxWidgets:  2.5.3+
+wxWidgets:  2.5.4+
  
 Description:
 Tar/Pax streams for wxWidgets. This is beta software.
