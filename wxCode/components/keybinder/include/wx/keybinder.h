@@ -29,6 +29,7 @@
 #include "wx/stattext.h"
 #include "wx/textctrl.h"
 #include "wx/combobox.h"
+#include "wx/app.h"
 
 
 // The maximum number of shortcuts associated with each wxCmd.
@@ -496,6 +497,12 @@ private:
 #endif
 
 
+//! A special wxApp. Doesn't work yet on wxGTK.
+//! This should be another way to use wxKeyBinder: the usual way is to
+//! call wxKeyBinder::Attach to define the windows whose events will be
+//! filtered for the hotkeys...
+//! wxBinderApp should avoid all calls to wxKeyBinderAttach filtering
+//! the events using the wxApp::FilterEvent() function.
 class wxBinderApp : public wxApp
 {
 	wxKeyBinder *m_pGlobalBinder;
@@ -530,6 +537,7 @@ public:		// accessors
 	wxEvtHandler *GetGlobalHandler() const
 		{ return m_pGlobalHdl ; }
 };
+
 
 
 //! This is the real keybinder. This object is an event handler which
@@ -876,6 +884,12 @@ public:
 	void DetachAll() {
 		for (int i=0; i<GetCount(); i++)
 			Item(i)->DetachAll();
+	}
+	
+	//! Updates all the wxCmds contained.
+	void UpdateAllCmd() {
+		for (int i=0; i<GetCount(); i++)
+			Item(i)->UpdateCmd();
 	}
 
 	//! Stores the wxKeyProfiles into the given wxConfig object.
@@ -1231,8 +1245,13 @@ protected:		// the subwindows of this dialog
 	wxComboBox *m_pKeyProfiles;
 	wxSizer *m_pKeyProfilesSizer;
 
-	//wxTextCtrl  *m_pDescLabel;	// we won't allow description editing !!
+#ifdef __WXGTK__
+	// on wxGTK wxStaticText does not implement line wrapping
+	// (which is required !!) so we will use a wxTextCtrl (on wxGTK)
+	wxTextCtrl  *m_pDescLabel;
+#else
 	wxStaticText *m_pDescLabel;
+#endif
 	wxStaticText *m_pCurrCmdField;
 
 private:

@@ -341,7 +341,6 @@ protected:
 };
 
 
-
 #endif		// __WX_MENUUTILS_H__
 
 

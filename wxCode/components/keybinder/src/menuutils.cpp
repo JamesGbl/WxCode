@@ -79,6 +79,8 @@ void wxMenuCmd::Update()
 #endif
 
 	if (m_nShortcuts <= 0) {
+	
+		wxLogDebug("wxMenuCmd::Update - no shortcuts defined for [%s]", str.c_str());
 
 		// no more shortcuts for this menuitem: SetText()
 		// will delete the hotkeys associated...
@@ -86,15 +88,18 @@ void wxMenuCmd::Update()
 		return;
 	}
 
-#ifdef __WXMSW__
+	wxString newtext = str+"\t"+GetShortcut(0)->GetStr();
+	wxLogDebug("wxMenuCmd::Update - setting the new text to [%s]", newtext.c_str());
+	
+#if defined( __WXMSW__ )
 
 		// change the accelerator...
-	   m_pItem->SetText(str+"\t"+GetShortcut(0)->GetStr());
+	   m_pItem->SetText(newtext);
 
-#elif __WXGTK__
+#elif defined( __WXGTK__ )
 
-	   // on GTK, the SetAccel() function doesn't have any effect...
-	   m_pItem->SetText(str+"\t"+GetShortcut(0)->GetStr());
+	   // on GTK, the SetAccel() function doesn't have any effect...	   
+	   m_pItem->SetText(newtext);
 #endif
 }
 

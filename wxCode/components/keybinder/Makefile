@@ -35,7 +35,7 @@ SAMPLE_OBJECTS = sample/$(SAMPLE).o
 
 all:    $(LIB).a $(SAMPLE)
 
-$(SAMPLE):	$(SAMPLE_OBJECTS)
+$(SAMPLE):	$(SAMPLE_OBJECTS) $(LIB).a
 	$(CXX) -o $(SAMPLE) $(SAMPLE_OBJECTS) `wx-config --libs` -lkeybinder -L./lib $(EXTRALIBS)
 
 $(LIB).a:	$(LIB_OBJECTS)

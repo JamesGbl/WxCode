@@ -23,6 +23,8 @@
 
 
 #define wxUSE_KEYBINDER		1
+
+// this mode does not work completely on wxGTK
 //#define wxUSE_BINDERAPP		1
 
 
@@ -225,7 +227,6 @@ bool MyApp::OnInit()
 	SetGlobalBinder(frame->arr.Item(0));
 #endif
 
-
     // success: wxApp::OnRun() will be called which will enter the main message
     // loop and the application will run. If we returned false here, the
     // application would exit immediately.
@@ -368,8 +369,11 @@ void MyFrame::UpdateArr(wxKeyProfileArray &r, int nenabled)
 
 #ifndef wxUSE_BINDERAPP
 	// VERY IMPORTANT: we should not use this function when we
-	//                 have temporary children...
+	//                 have temporary children... they would
+	//                 added to the binder and when they will be
+	//                 deleted, the binder will reference invalid memory...
 	r.Item(nenabled)->AttachRecursively(this);
+	r.UpdateAllCmd();
 #endif
 }
 
@@ -415,7 +419,13 @@ void MyFrame::OnKeybindings(wxCommandEvent &)
 	if (bprofileedit) mode |= wxKEYBINDER_ENABLE_PROFILE_EDITING;
 
 	int exitcode, sel;
-	{
+	{	// we need to destroy MyDialog *before* the call to UpdateArr:()
+		// otherwise the call to wxKeyBinder::AttachRecursively() which
+		// is done inside UpdateArr() would attach to the binder all
+		// MyDialog subwindows which are children of the main frame.
+		// then, when the dialog is destroyed, wxKeyBinder holds
+		// invalid pointers which will provoke a crash !!
+	
 		MyDialog dlg(this, "Keybindings", mode | wxKEYBINDER_SHOW_APPLYBUTTON);
 
 		// does the user wants to enable key profiles ?
@@ -432,9 +442,11 @@ void MyFrame::OnKeybindings(wxCommandEvent &)
 	
 	if (exitcode == wxID_OK) {
 
-
 		// select the right keyprofile
 		UpdateArr(MyFrame::arr, sel);
+		
+		wxMessageBox(wxString::Format("Selected the %d-th profile (named '%s').",
+					sel+1, MyFrame::arr.Item(sel)->GetName().c_str()), "Profile selected");
 	}
 }
 
@@ -472,7 +484,11 @@ void MyFrame::OnSave(wxCommandEvent &)
 	wxConfig *cfg = new wxConfig("KeyBinder sample");
 	if (arr.Save(cfg)) {
 
-		wxMessageBox("All the keyprofiles have been correctly saved.", "Success");
+		int total = 0;
+		for (int i=0; i<arr.GetCount(); i++)
+			total += arr.Item(i)->GetCmdCount();
+					
+		wxMessageBox(wxString::Format("All the [%d] keyprofiles have been correctly saved.", total), "Success");
 
 	} else {
 

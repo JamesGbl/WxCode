@@ -600,10 +600,14 @@ int wxBinderApp::FilterEvent(wxEvent &ev)
 	wxASSERT(client);
 	wxEventType t = ev.GetEventType();
 	if (t == wxEVT_KEY_DOWN) {
-		
+			
 		if (focused != NULL && focused != client && 
-			GetTopLevelParent(focused) != client)
+			GetTopLevelParent(focused) != client) {
+			
+			wxLogDebug("wxBinderApp::FilterEvent - discarding this keypress because our "
+					"main frame does not have the focus...");
 			return -1;
+		}
 
 		// pass this event to our keybinder
 		m_pGlobalBinder->OnChar((wxKeyEvent &)ev, client);
@@ -980,7 +984,6 @@ void wxKeyMonitorTextCtrl::OnKey(wxKeyEvent &event)
 
 
 
-
 // ----------------------------------------------------------------------------
 // wxKeyConfigPanel - BUILD functions
 // ----------------------------------------------------------------------------
@@ -1043,14 +1046,18 @@ void wxKeyConfigPanel::BuildCtrls()
     m_pRemoveBtn = new wxButton(this, wxKEYBINDER_REMOVE_KEY_ID, "&Remove");
     m_pRemoveAllBtn = new wxButton(this, wxKEYBINDER_REMOVEALL_KEY_ID, "Remove all");
 	
-	m_pDescLabel = new wxStaticText(this, -1, "", wxDefaultPosition, 
-		wxSize(-1, 40), wxSIMPLE_BORDER | wxST_NO_AUTORESIZE);
-    //m_pDescLabel = new wxTextCtrl(this, -1, "", wxDefaultPosition, 
-	// wxDefaultSize, wxTE_READONLY);
 	m_pCurrCmdField = new wxStaticText(this, -1, "", wxDefaultPosition, 
 		wxSize(-1, 20), wxSUNKEN_BORDER | wxST_NO_AUTORESIZE | wxALIGN_CENTRE);
-	m_pCurrCmdField->SetBackgroundColour(wxColour(255, 255, 255));
+	m_pCurrCmdField->SetBackgroundColour(wxColour(255, 255, 255));	
+	
+#ifdef __WXGTK__
+    m_pDescLabel = new wxTextCtrl(this, -1, "", wxDefaultPosition, 
+								 wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE);
+#else
+	m_pDescLabel = new wxStaticText(this, -1, "", wxDefaultPosition, 
+		wxSize(-1, 40), wxSIMPLE_BORDER | wxST_NO_AUTORESIZE);
 	m_pDescLabel->SetBackgroundColour(wxColour(255, 255, 255));
+#endif
 
 	// KEY PROFILES
 	// create the key profiles combobox & panel
@@ -1146,8 +1153,12 @@ wxSizer *wxKeyConfigPanel::BuildMain(wxSizer *column1, wxSizer *column2, bool bA
 	
 	// key description
 	main->Add(new wxStaticText(this, -1, "Description:"), 0, wxGROW | wxALL, 5);
+#ifdef __WXGTK__
+	main->Add(m_pDescLabel, 0, wxGROW | wxLEFT | wxRIGHT | wxBOTTOM, 5);
+#else
     main->Add(m_pDescLabel, 1, wxGROW | wxLEFT | wxRIGHT | wxBOTTOM, 5);
-		
+#endif
+	
 	// if required, add Apply and Cancel buttons
 	if (bApplyBtn) {
 
@@ -1304,7 +1315,11 @@ void wxKeyConfigPanel::Reset()
 	}
 
 	m_pBindings->Clear();
-	m_pDescLabel->SetLabel("");//Clear();
+#ifdef __WXGTK__
+	m_pDescLabel->Clear();
+#else
+	m_pDescLabel->SetLabel("");
+#endif
 	m_pKeyField->Clear();
 }
 
@@ -1453,8 +1468,11 @@ void wxKeyConfigPanel::UpdateDesc()
 	if (p != NULL) {
 		
 		// and then update the description
+#ifdef __WXGTK__
+		m_pDescLabel->SetValue(p->GetDescription());
+#else
 		m_pDescLabel->SetLabel(p->GetDescription());
-
+#endif
 	} else {
 
 		// an invalid command is selected ? clear this field...
@@ -1676,11 +1694,21 @@ void wxKeyConfigPanel::OnAssignKey(wxCommandEvent &)
 	// the new key combination should be valid because only when
 	// it's valid this button is enabled...	
 	wxASSERT(m_pKeyField->IsValidKeyComb());	
+	wxCmd *sel = GetSelCmd();
 
+	if (sel->GetShortcutCount() >= wxCMD_MAX_SHORTCUTS) {
+		
+		// sorry...
+		wxMessageBox(wxString::Format("Cannot add more than %d shortcuts "
+					"to a single command...", wxCMD_MAX_SHORTCUTS),
+					"Cannot add another shortcut");
+		return;
+	}
+	
 	// actually add the new shortcut key
 	// (if there are already the max. number of shortcuts for 
 	// this command, the shortcut won't be added).
-	GetSelCmd()->AddShortcut(m_pKeyField->GetValue());
+	sel->AddShortcut(m_pKeyField->GetValue());
 
 	// if the just added key bind was owned by another command,
 	// remove it from the old command...
