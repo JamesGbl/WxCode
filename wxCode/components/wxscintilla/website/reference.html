@@ -114,18 +114,22 @@ Functions with names of the form <code>Set...</code> often have a companion <cod
 <hr 1>
 <h3 id="TextRetrievalAndModification">Text retrieval and modification</h3>
 
-<p>Each character in a Scintilla document is followed by an associated byte of styling information. The combination of a character byte and a style byte is called a cell. Style bytes are interpreted as a style index in the low 5 bits and as 3 individual bits of <a class="jump" href="#Indicators">indicators</a>. This allows 32 fundamental styles, which is enough for most languages, and three independent indicators. For example, syntax errors, deprecated names and bad indentation could all be displayed at once. The number of bits used for styles can be altered with <a class="message" href="#SetStyleBits"><code>SetStyleBits</code></a> up to a maximum of 7 bits (some languages require more bits, e.g. HTML=7 bits). The remaining bits can be used for indicators.</p>
-
-<p>Positions within the Scintilla document refer to a character or the gap before that character. The first character in a document is 0, the second 1 and so on. If a document contains <code>nLen</code> characters, the last character is numbered <code>nLen</code>-1. The caret exists between character positions and can be located from before the first character (0) to after the last character (<code>nLen</code>).</p>
-
-<p>There are places where the caret can not go where two character bytes make up one character. This occurs when a DBCS character from a language like Japanese is included in the document or when line ends are marked with the CP/M standard of a carriage return followed by a line feed. The <code>wxSCI_INVALID_POSITION</code> constant (-1) represents an invalid position within the document.</p>
-
-<p>All lines of text in Scintilla are the same height, and this height is calculated from the largest font in any current style. This restriction is for performance; if lines differed in height then calculations involving positioning of text would require the text to be styled first.</p>
+<p>
+Each character in a Scintilla document is followed by an associated byte of styling information. The combination of a character byte and a style byte is called a cell. Style bytes are interpreted as a style index in the low 5 bits and as 3 individual bits of <a class="jump" href="#Indicators">indicators</a>. This allows 32 fundamental styles, which is enough for most languages, and three independent indicators. For example, syntax errors, deprecated names and bad indentation could all be displayed at once. The number of bits used for styles can be altered with <a class="message" href="#SetStyleBits"><code>SetStyleBits</code></a> up to a maximum of 7 bits (some languages require more bits, e.g. HTML=7 bits). The remaining bits can be used for indicators.
+</p>
+<p>
+Positions within the Scintilla document refer to a character or the gap before that character. The first character in a document is 0, the second 1 and so on. If a document contains <code>nLen</code> characters, the last character is numbered <code>nLen</code>-1. The caret exists between character positions and can be located from before the first character (0) to after the last character (<code>nLen</code>).
+</p>
+<p>
+There are places where the caret can not go where two character bytes make up one character. This occurs when a DBCS character from a language like Japanese is included in the document or when line ends are marked with the CP/M standard of a carriage return followed by a line feed. The <code>wxSCI_INVALID_POSITION</code> constant (-1) represents an invalid position within the document.
+</p>
+<p>
+All lines of text in Scintilla are the same height, and this height is calculated from the largest font in any current style. This restriction is for performance; if lines differed in height then calculations involving positioning of text would require the text to be styled first.
+</p>
 
 <p><code>
  <a class="message" href="#GetText">wxString GetText()</a><br />
  <a class="message" href="#SetText">void SetText (const wxString& text)</a><br />
- <a class="message" href="#SetSavePoint">void SetSavePoint()</a><br />
  <a class="message" href="#GetLine">wxString GetLine (int line)</a><br />
  <a class="message" href="#ReplaceSelection">void ReplaceSelection (const wxString& text)</a><br />
  <a class="message" href="#SetReadOnly">void SetReadOnly (bool readOnly)</a><br />
@@ -155,20 +159,12 @@ See also: <code><a class="message" href="#GetSelectedText">GetSelectedText</a>, 
 
 <p>
 <b id="SetText">void SetText (const wxString& text)</b><br />
-Replaces all the text in the document with the zero terminated text string you pass in. Any previous text is deleted.
-</p>
-
-<p>
-<b id="SetSavePoint">void SetSavePoint()</b><br />
-Sets the current state of the document to unmodified. This is usually done when the file is saved or loaded, hence the name "save point". As wxScintilla performs undo and redo operations, it notifies the container that it has entered or left the save point with <code><a class="message" href="#wxEVT_SCI_SAVEPOINTREACHED">wxEVT_SCI_SAVEPOINTREACHED</a></code> and <code><a class="message" href="#wxEVT_SCI_SAVEPOINTLEFT">wxEVT_SCI_SAVEPOINTLEFT</a></code> <a class="jump" href="#Notifications">notification messages</a>, allowing the container to know if the file should be considered dirty or not.
-</p>
-<p>
-See also: <code><a class="message" href="#EmptyUndoBuffer">EmptyUndoBuffer</a>, <a class="message" href="#GetModify">GetModify</a></code>
+Replaces all the text in the document with the text string you pass in. Any previous existing text is deleted.
 </p>
 
 <p>
 <b id="GetLine">wxString GetLine (int line)</b><br />
-Returns a string with the contents of the nominated line (lines start at 0).
+Returns a string with the contents of the nominated line (line numbers start at 0).
 </p>
 <p>
 See also: <code><a class="message" href="#GetCurLine">GetCurLine</a>, <a class="message" href="#GetSelectedText">GetSelectedText</a>, <a class="message" href="#GetTextRange">GetTextRange</a>, <a class="message" href="#GetStyledText">GetStyledText</a>, <a class="message" href="#GetText">GetText</a></code>
@@ -176,7 +172,7 @@ See also: <code><a class="message" href="#GetCurLine">GetCurLine</a>, <a class="
 
 <p>
 <b id="ReplaceSelection">void ReplaceSelection (const wxString& text)</b><br />
-The currently selected text between the <a class="jump" href="#SelectionAndInformation">anchor and the current position</a> is replaced by the text string. If the anchor and current position are the same, the text is inserted at the caret position. The caret is positioned after the inserted text and the caret is scrolled into view.
+The currently selected text between the <a class="jump" href="#SelectionAndInformation">anchor and the current position</a> is replaced by the text string. If the anchor and current position are the same (meaning no selection), the text is inserted at the caret position. The caret is positioned after the inserted text and the caret is scrolled into view.
 </p>
 
 <p>
@@ -187,7 +183,7 @@ Set and get the read-only flag of the document. If you mark a document as read o
 
 <p>
 <b id="GetTextRange">wxString GetTextRange (int startPos, int endPos)</b><br />
-Returns the text between the positions <code>startPos</code> and <code>endPos</code>. If <code>endPos</code> is -1, text is returned to the end of the document.
+Returns the text between the positions <code>startPos</code> and <code>endPos</code>. If <code>endPos</code> is wxSCI_INVALID_POSITION, text is returned to the end of the document.
 </p>
 <p>
 See also: <code><a class="message" href="#GetSelectedText">GetSelectedText</a>, <a class="message" href="#GetLine">GetLine</a>, <a class="message" href="#GetCurLine">GetCurLine</a>, <a class="message" href="#GetStyledText">GetStyledText</a>, <a class="message" href="#GetText">GetText</a></code>
@@ -206,13 +202,13 @@ See also: <code><a class="message" href="#GetSelectedText">GetSelectedText</a>, 
 Allocate a document buffer large enough to store a given number of bytes.  The document will not be made smaller than its current contents.
 </p>
 <p>
-Do not use this function if you don't know what you exactly do.
+<b>Note:</b> Do not use this function if you don't know what you exactly do.
 </p>
 
 <p>
 <b id="AddText">void AddText (const wxString& text)</b><br />
 <b             >void AddText (const int length, const wxString& text)</b><br />
-Inserts the string at the current position. The current position is set at the end of the inserted text, but it is not scrolled into view. If you want to add strings with binary values (e.g.) use the form with the <code>length</code> parameter.
+Inserts the string at the current position. The current position is set at the end of the inserted text, but it is not scrolled into view. If you need to add strings with binary values (e.g. Unicode characters), use the form with the <code>length</code> parameter.
 </p>
 
 <p>
@@ -221,50 +217,57 @@ This behaves just like <code>AddText</code>, but inserts styled text.
 </p>
 
 <p>
-<b id="AppendText">void AppendText (int length, const wxString& text)</b><br />
-This adds the first <code>length</code> characters from the string <code>s</code> to the end of the document. This will include any 0's in the string that you might have expected to stop the operation. The current selection is not changed and the new text is not scrolled into view.
+<b id="AppendText">void AppendText (const wxString& text)</b><br />
+<b                >void AppendText (int length, const wxString& text)</b><br />
+Appends the string at the last position in the document. The current selection is not changed and the new text is not scrolled into view. If you need to add strings with binary values (e.g. Unicode characters), use the form with the <code>length</code> parameter.
 </p>
 
 <p>
 <b id="InsertText">void InsertText (int pos, const wxString& text)</b><br />
-Inserts the string at position <code>pos</code> or at the current position if <code>pos</code> is -1. The current position is set at the end of the inserted text, but it is not scrolled into view.
+Inserts the string at position <code>pos</code> or at the current position if <code>pos</code> is wxSCI_INVALID_POSITION. The current position is set at the end of the inserted text, but it is not scrolled into view.
 </p>
 
 <p>
 <b id="ClearAll">void ClearAll()</b><br />
-Unless the document is read-only, this deletes all the text.
+Deletes all the text (unless the document is read-only).
 </p>
 
 <p>
 <b id="ClearDocumentStyle">void ClearDocumentStyle()</b><br />
 When wanting to completely restyle the document, for example after choosing a lexer, the <code>ClearDocumentStyle</code> can be used to clear all styling information and reset the folding state.
 </p>
+<p>
+See also: <code><a class="message" href="#Colourise">Colourise</a></code>
+</p>
 
 <p>
 <b id="GetCharAt">int GetCharAt (int pos)</b><br />
-This returns the character at <code>pos</code> in the document or 0 if <code>pos</code> is negative or past the end of the document.
+Returns the character at <code>pos</code> in the document. If <code>pos</code> is negative or past the end of the document, returns 0.
 </p>
 
 <p>
 <b id="GetStyleAt">int GetStyleAt (int pos)</b><br />
-This returns the style at <code>pos</code> in the document, or 0 if <code>pos</code> is negative or past the end of the document.
+Returns the style at <code>pos</code> in the document. If <code>pos</code> is negative or past the end of the document, returns 0.
 </p>
 
 <p>
 <b id="SetStyleBits">void SetStyleBits (int bits)</b><br />
 <b id="GetStyleBits">int GetStyleBits</b><br />
-This pair of routines sets and reads back the number of bits in each cell to use for styling, to a maximum of 7 style bits. The remaining bits can be used as indicators. The standard setting is <code>SetStyleBits (5)</code>.
+Sets and reads back the number of bits in each cell to use for styling, to a maximum of 7 style bits. The remaining bits can be used as indicators. The default setting is <code>5</code> style bits.
 </p>
 
 <hr 1>
 <h3 id="Searching">Searching</h3>
+
+<p>
+See also: <a class="jump" href="#SearchAndReplaceUsingTheTarget">Search and replace using the target</a>
+</p>
 
 <p><code>
  <a class="message" href="#FindText">int FindText (int minPos, int maxPos, const wxString& text, int flags=0)</a><br />
  <a class="message" href="#SearchAnchor">void SearchAnchor()</a><br />
  <a class="message" href="#SearchNext">int SearchNext (int flags, const wxString& text)</a><br />
  <a class="message" href="#SearchPrev">int SearchPrev (int flags, const wxString& text)</a><br />
- <a class="jump" href="#SearchAndReplaceUsingTheTarget">Search and replace using the target</a><br />
 </code></p>
 
 <p>
@@ -274,19 +277,19 @@ Several of the search routines use flag options, which include a simple regular 
 <table border="0" summary="Search flags"><tbody>
 <tr>
   <td><code>wxSCI_FIND_MATCHCASE</code></td>
-  <td>A match only occurs with text that matches the case of the search string.</td>
+  <td>A match only occurs with text that matches the <code>case</code> of the search string.</td>
 </tr><tr>
   <td><code>wxSCI_FIND_WHOLEWORD</code></td>
-  <td>A match only occurs if the characters before and after are not word characters.</td>
+  <td>A match only occurs if the characters before and after are <code>not word characters</code>.</td>
 </tr><tr>
   <td><code>wxSCI_FIND_WORDSTART</code></td>
-  <td>A match only occurs if the character before is not a word character.</td>
+  <td>A match only occurs if the character before is <code>not a word character</code>.</td>
 </tr><tr>
   <td><code>wxSCI_FIND_REGEXP</code></td>
-  <td>The search string should be interpreted as a regular expression.</td>
+  <td>The search string should be interpreted as a <code>regular expression</code>.</td>
 </tr><tr>
   <td><code>wxSCI_FIND_POSIX</code></td>
-  <td>Treat regular expression in a more POSIX compatible manner by interpreting bare (and) for tagged sections rather than \( and \).</td>
+  <td>Treat regular expression in a more <code>POSIX compatible</code> manner by interpreting bare (and) for tagged sections rather than \( and \).</td>
 </tr>
 </tbody></table>
 <p>
@@ -341,7 +344,7 @@ In a regular expression, special characters interpreted are:
 
 <p>
 <b id="FindText">int FindText (int minPos, int maxPos, const wxString& text, int flags=0)</b><br />
-FindText performs a straightforward text search through the entire document. The <code>minPos</code> and <code>maxPos</code> integer arguments specify the range within the Document to search.  No surprise, the <code>text</code> argument is a string object containing the string to search for. The <code>flags</code> argument controls the search. You can set <code>maxPos</code> less than <code>minPos</code> to search in reverse. Returns the start position of the found text, or -1 if it isn't found.
+FindText performs a straightforward text search through the entire document. The <code>minPos</code> and <code>maxPos</code> arguments specify the range within the Document to search.  No surprise, the <code>text</code> argument is a string object containing the string to search for. The <code>flags</code> argument controls the search. You can set <code>maxPos</code> less than <code>minPos</code> to search in reverse. Returns the start position of the found text, or wxSCI_INVALID_POSITION if it isn't found.
 </p>
 <p>
 See also: <code><a class="message" href="#SearchInTarget">SearchInTarget</a></code>
@@ -357,23 +360,23 @@ These provide relocatable search support. This allows multiple incremental inter
 <code>SearchAnchor</code> sets the search start point used by <code>SearchNext</code> and <code>SearchPrev</code> to the start of the current selection, that is, the end of the selection that is nearer to the start of the document. You should always call this before calling either of <code>SearchNext</code> or <code>SearchPrev</code>.
 </p>
 <p>
-<code>SearchNext</code> and <code>SearchPrev</code> search for the next and previous occurrence of the zero terminated search string pointed at by text. The search is modified by the <a class="jump" href="#searchFlags"><code>searchFlags</code></a>. If you request a regular expression, <code>SearchPrev</code> finds the first occurrence of the search string in the document, not the previous one before the anchor point.
+<code>SearchNext</code> and <code>SearchPrev</code> search for the next and previous occurrence of the search string pointed at by text. The search is modified by the <a class="jump" href="#searchFlags"><code>searchFlags</code></a>. If you request a regular expression, <code>SearchPrev</code> finds the first occurrence of the search string in the document, not the previous one before the anchor point.
 </p>
 <p>
-The return value is -1 if nothing is found, otherwise the return value is the start position of the matching text. The selection is updated to show the matched text, but is not scrolled into view.
+Return value is the start position of the matching text, otherwise wxSCI_INVALID_POSITION if nothing is found. The selection is updated to show the matched text, but is not scrolled into view.
 </p>
 <p>
-See also: <a class="message" href="#SearchInTarget"><code>SearchInTarget</code></a>, <a class="message" href="#FindText"><code>FindText</code></a>
+See also: <code><a class="message" href="#SearchInTarget">SearchInTarget</code></a>
 </p>
 
 <hr 1>
 <h3 id="SearchAndReplaceUsingTheTarget">Search and replace using the target</h4>
 
 <p>
-Using <a class="message" href="#ReplaceSelection"><code>ReplaceSelection</code></a>, modifications cause scrolling and other visible changes, which may take some time and cause unwanted display updates. If performing many changes, such as a replace all command, the target can be used instead. First, set the target, i.e. the range to be replaced. Then call <code>ReplaceTarget</code> or <code>ReplaceTargetRE</code>.
+Searching can be performed within the target range with <code>SearchInTarget</code>, which uses a counted string to allow searching for null characters. It returns the length of range or wxSCI_INVALID_POSITION if not found, in which case the target is not moved. The flags used by <code>SearchInTarget</code> such as <code>wxSCI_FIND_MATCHCASE</code>, <code>wxSCI_FIND_WHOLEWORD</code>, <code>wxSCI_FIND_WORDSTART</code>, and <code>wxSCI_FIND_REGEXP</code> can be set with <code>SetSearchFlags</code>. <code>SearchInTarget</code> may be simpler for some clients to use than <a class="message" href="#FindText"><code>FindText</code></a>.
 </p>
 <p>
-Searching can be performed within the target range with <code>SearchInTarget</code>, which uses a counted string to allow searching for null characters. It returns the length of range or -1 for failure, in which case the target is not moved. The flags used by <code>SearchInTarget</code> such as <code>wxSCI_FIND_MATCHCASE</code>, <code>wxSCI_FIND_WHOLEWORD</code>, <code>wxSCI_FIND_WORDSTART</code>, and <code>wxSCI_FIND_REGEXP</code> can be set with <code>SetSearchFlags</code>. <code>SearchInTarget</code> may be simpler for some clients to use than <a class="message" href="#FindText"><code>FindText</code></a>.
+Using <a class="message" href="#ReplaceSelection"><code>ReplaceSelection</code></a>, modifications cause scrolling and other visible changes, which may take some time and cause unwanted display updates. If performing many changes, such as a replace all command, the target can be used instead. First, set the target, i.e. the range to be replaced. Then call <code>ReplaceTarget</code> or <code>ReplaceTargetRE</code>.
 </p>
 
 <p><code>
@@ -394,36 +397,32 @@ Searching can be performed within the target range with <code>SearchInTarget</co
 <b id="GetTargetStart">int GetTargetStart()</b><br />
 <b id="SetTargetEnd">void SetTargetEnd (int pos)</b><br />
 <b id="GetTargetEnd">int GetTargetEnd()</b><br />
-These functions set and return the start and end of the target. When searching in non-regular expression mode, you can set start greater than end to find the last matching text in the target rather than the first matching text. The target is also set by a successful <code>SearchInTarget</code>.
+Set and return the start and end of the target. When searching in non-regular expression mode, you can set start position greater than end position to find the last matching text in the target rather than the first matching text. The target is also set by a successful <code>SearchInTarget</code>.
 </p>
 
 <p>
 <b id="TargetFromSelection">void TargetFromSelection()</b><br />
-Set the target start and end to the start and end positions of the selection.
+Set the target start and end to the start and end positions of the current selection.
 </p>
 <p>
 <b id="SetSearchFlags">void SetSearchFlags (int flags)</b><br />
 <b id="GetSearchFlags">int GetSearchFlags()</b><br />
-These get and set the <a class="jump" href="#searchFlags"><code>searchFlags</code></a> used by <code>SearchInTarget</code>. There are several option flags including a simple regular expression search.
+Set and get the <a class="jump" href="#searchFlags"><code>searchFlags</code></a> used by <code>SearchInTarget</code>. There are several option flags including a simple regular expression search.
 </p>
 
 <p>
 <b id="SearchInTarget">int SearchInTarget (const wxString& text)</b><br />
-This searches for the first occurrence of a text string in the target defined by <code>SetTargetStart</code> and <code>SetTargetEnd</code>. The text string is not zero terminated; the size is set by <code>length</code>. The search is modified by the search flags set by <code>SetSearchFlags</code>. If the search succeeds, the target is set to the found text and the return value is the position of the start of the matching text. If the search fails, the result is -1.
+This searches for the first occurrence of a text string in the target defined by <code>SetTargetStart</code> and <code>SetTargetEnd</code>. The text string is not zero terminated; the size is set by <code>length</code>. The search is modified by the search flags set by <code>SetSearchFlags</code>. If the search succeeds, the target is set to the found text and the return value is the position of the start of the matching text. If the search fails, the result is wxSCI_INVALID_POSITION.
 </p>
 
 <p>
 <b id="ReplaceTarget">int ReplaceTarget (const wxString& text)</b><br />
-The return value is the length of the replacement string.<br />
-Note that the recommended way to delete text in the document is to set the target to the ext to be removed, and to perform a replace target with an empty string.
+The return value is the length of the replacement string.
 </p>
 
 <p>
 <b id="ReplaceTargetRE">int ReplaceTargetRE (const wxString& text)</b><br />
-This replaces the target using regular expressions. If <code>length</code> is -1, <code>text</code> is a zero terminated string, otherwise <code>length</code> is the number of characters to use. The replacement string is formed from the text string with any sequences of <code>\1</code> through <code>\9</code> replaced by tagged matches from the most recent regular expression search. The return value is the length of the replacement string.
-</p>
-<p>
-See also: <a class="message" href="#FindText"><code>FindText</code></a>
+This replaces the target using regular expressions. The replacement string is formed from the text string with any sequences of <code>\1</code> through <code>\9</code> replaced by tagged matches from the most recent regular expression search. The return value is the length of the replacement string.
 </p>
 
 <hr 1>
@@ -432,7 +431,7 @@ See also: <a class="message" href="#FindText"><code>FindText</code></a>
 <p>
 <b id="SetOvertype">void SetOvertype (bool overtype)</b><br />
 <b id="GetOvertype">bool GetOvertype()</b><br />
-When overtype is enabled, each typed character replaces the character to the right of the text caret. When overtype is disabled, characters are inserted at the caret. <code>GetOvertype</code> returns <code>true</code> (1) if overtyping is active, otherwise <code>false</code> will be returned. Use <code>SetOvertype</code> to set the overtype mode.
+When overtype is enabled, each typed character replaces the character to the right of the text caret. When overtype is disabled, characters are inserted at the caret. <code>GetOvertype</code> returns <code>true</code> if overtyping is active, otherwise <code>false</code>. Use <code>SetOvertype (true)</code> to set the overtype mode.
 </p>
 
 <hr 1>
@@ -454,7 +453,7 @@ When overtype is enabled, each typed character replaces the character to the rig
 <b id="Paste">void Paste()</b><br />
 <b id="Clear">void Clear()</b><br />
 <b id="CanPaste">bool CanPaste()</b><br />
-These commands perform the standard tasks of cutting and copying data to the clipboard, pasting from the clipboard into the document, and clearing the document. <code>CanPaste</code> returns true if the document isn't read-only and if the selection doesn't contain protected text. If you need a "can copy" or "can cut", use <code>GetSelectionStart()-GetSelectionEnd()</code>, which will be non-zero if you can copy or cut to the clipboard.
+Perform the standard commands of cutting and copying data to the clipboard, pasting from the clipboard into the document, and clearing the document. <code>CanPaste</code> returns true if the document isn't read-only and if the selection doesn't contain protected text. If you need a "can copy" or "can cut", use <code>GetSelectionStart()-GetSelectionEnd()</code>, which will be non-zero if you can copy or cut to the clipboard.
 </p>
 <p>
 GTK+ does not really support <code>CanPaste</code> and always returns <code>true</code> unless the document is read-only.
@@ -485,13 +484,15 @@ Scintilla has multiple level undo and redo. It will continue to collect undoable
 <p><code>
  <a class="message" href="#Undo">void Undo()</a><br />
  <a class="message" href="#CanUndo">bool CanUndo()</a><br />
- <a class="message" href="#EmptyUndoBuffer">void EmptyUndoBuffer()</a><br />
  <a class="message" href="#Redo">void Redo()</a><br />
  <a class="message" href="#CanRedo">bool CanRedo()</a><br />
+ <a class="message" href="#EmptyUndoBuffer">void EmptyUndoBuffer()</a><br />
+ <a class="message" href="#SetSavePoint">void SetSavePoint()</a><br />
  <a class="message" href="#SetUndoCollection">void SetUndoCollection (bool collectUndo)</a><br />
  <a class="message" href="#GetUndoCollection">bool GetUndoCollection()</a><br />
  <a class="message" href="#BeginUndoAction">void BeginUndoAction()</a><br />
  <a class="message" href="#EndUndoAction">void EndUndoAction()</a><br />
+ <a class="message" href="#GetModify">bool GetModify()</a><br />
 </code></p>
 
 <p>
@@ -515,10 +516,13 @@ Scintilla has multiple level undo and redo. It will continue to collect undoable
 
 <p>
 <b id="EmptyUndoBuffer">void EmptyUndoBuffer()</b><br />
-This command tells Scintilla to forget any saved undo or redo history. It also sets the save point to the start of the undo buffer, so the document will appear to be unmodified. This does not cause the <code><a class="message" href="#wxEVT_SCI_SAVEPOINTREACHED"> CN_SAVEPOINTREACHED</a></code> notification to be sent to the container.
+This command tells Scintilla to forget any saved undo or redo history. It also sets the save point to the start of the undo buffer, so the document will appear to be unmodified. This does not cause the <code><a class="message" href="#wxEVT_SCI_SAVEPOINTREACHED"> CN_SAVEPOINTREACHED</a></code> notification to be sent to the container as
+<a class="message" href="#SetSavePoint"><code>SetSavePoint</code></a> does.
 </p>
+
 <p>
-See also: <a class="message" href="#SetSavePoint"><code>SetSavePoint</code></a>
+<b id="SetSavePoint">void SetSavePoint()</b><br />
+Sets the current state of the document to unmodified. This is usually done when the file is saved or loaded, hence the name "save point". As Scintilla performs undo and redo operations, it notifies the container that it has entered or left the save point with <code><a class="message" href="#wxEVT_SCI_SAVEPOINTREACHED">wxEVT_SCI_SAVEPOINTREACHED</a></code> and <code><a class="message" href="#wxEVT_SCI_SAVEPOINTLEFT">wxEVT_SCI_SAVEPOINTLEFT</a></code> <a class="jump" href="#Notifications">notification messages</a>, allowing the container to know if the file should be considered dirty or not.
 </p>
 
 <p>
@@ -527,13 +531,21 @@ See also: <a class="message" href="#SetSavePoint"><code>SetSavePoint</code></a>
 You can control whether Scintilla collects undo information with <code>SetUndoCollection</code>. Pass in <code>true</code> to collect information and <code>false</code> to stop collecting. If you stop collection, you should also use <code>EmptyUndoBuffer</code> to avoid the undo buffer being unsynchronized with the data in the buffer.
 </p>
 <p>
-You might wish to turn off saving undo information if you use the Scintilla to store text generated by a program (a Log view) or in a display window where text is often deleted and regenerated.
+You might wish to turn off saving undo information if you use the Scintilla to store text generated by a program (a Log view) or in a display window where text is often deleted and regenerated. This can be done with <code>SetUndoCollection (false)</code>.
 </p>
 
 <p>
 <b id="BeginUndoAction">void BeginUndoAction()</b><br />
 <b id="EndUndoAction">void EndUndoAction()</b><br />
 Mark the beginning and end of a set of operations that you want to undo all as one operation but that you have to generate as several operations. Alternatively, you can use these to mark a set of operations that you do not want to have combined with the preceding or following operations if they are undone.
+</p>
+
+<p>
+<b id="GetModify">bool GetModify()</b><br />
+Returns true if the document is modified and false if it is unmodified. The modified status of a document is determined by the undo position relative to the save point. The save point is set by <a class="message" href="#SetSavePoint"><code>SetSavePoint</code></a>, usually when you have saved data to a file.
+</p>
+<p>
+If you need to be notified when the document becomes modified, Scintilla notifies the container that it has entered or left the save point with the <a class="message" href="#wxEVT_SCI_SAVEPOINTREACHED"><code>wxEVT_SCI_SAVEPOINTREACHED</code></a> and <a class="message" href="#wxEVT_SCI_SAVEPOINTLEFT"><code>wxEVT_SCI_SAVEPOINTLEFT</code></a> <a class="jump" href="#Notifications">notification messages</a>.
 </p>
 
 <hr 1>
@@ -544,13 +556,12 @@ Scintilla maintains a selection that stretches between two points, the anchor an
 </p>
 
 <p><code>
- <a class="message" href="#GetTextLength">int GetTextLength()</a><br />
  <a class="message" href="#GetLength">int GetLength()</a><br />
+ <a class="message" href="#GetTextLength">int GetTextLength()</a><br />
  <a class="message" href="#GetLineCount">int GetLineCount()</a><br />
  <a class="message" href="#GetFirstVisibleLine">int GetFirstVisibleLine()</a><br />
  <a class="message" href="#LinesOnScreen">int LinesOnScreen()</a><br />
- <a class="message" href="#GetModify">bool GetModify()</a><br />
- <a class="message" href="#SetSelection">void SetSelection (int start, int end)</a><br />
+ <a class="message" href="#SetSelection">void SetSelection (int startPos, int endPos)</a><br />
  <a class="message" href="#GotoPos">void GotoPos (int pos)</a><br />
  <a class="message" href="#GotoLine">void GotoLine (int line)</a><br />
  <a class="message" href="#SetCurrentPos">void SetCurrentPos (int pos)</a><br />
@@ -570,8 +581,8 @@ Scintilla maintains a selection that stretches between two points, the anchor an
  <a class="message" href="#FindColumn">int FindColumn (int line, int column)</a><br />
  <a class="message" href="#PositionFromPoint">int PositionFromPoint (wxPoint pt)</a><br />
  <a class="message" href="#PositionFromPointClose">int PositionFromPointClose (int x, int y)</a><br />
- <a class="message" href="#PointXFromPosition">Warning, not implemented: PointXFromPosition</a><br />
- <a class="message" href="#PointYFromPosition">Warning, not implemented: PointYFromPosition</a><br />
+ <a class="message" href="#PointXFromPosition">PointXFromPosition: Currently not implemented!</a><br />
+ <a class="message" href="#PointYFromPosition">PointYFromPosition: Currently not implemented!</a><br />
  <a class="message" href="#HideSelection">void HideSelection (bool hide)</a><br />
  <a class="message" href="#GetSelectedText">wxString GetSelectedText()</a><br />
  <a class="message" href="#GetCurLine">wxString GetCurLine (int* linePos=NULL)</a><br />
@@ -591,52 +602,44 @@ Scintilla maintains a selection that stretches between two points, the anchor an
 </code></p>
 
 <p>
-<b id="GetTextLength">int GetTextLength()</b><br />
 <b id="GetLength">int GetLength()</b><br />
-Return the length of the document in characters. Prefer to use GetLength.
+<b id="GetTextLength">int GetTextLength()</b><br />
+Return the length of the document in characters. The use of GetLength is prefered.
 </p>
 
 <p>
 <b id="GetLineCount">int GetLineCount()</b><br />
-This returns the number of lines in the document. An empty document contains 1 line. A document holding only an end of line sequence has 2 lines.
+Returns the number of lines in the document. An empty document contains 1 line. A document holding only an end of line sequence has 2 lines.
 </p>
 
 <p>
 <b id="GetFirstVisibleLine">int GetFirstVisibleLine()</b><br />
-This returns the line number of the first visible line in the Scintilla view. The first line in the document is numbered 0.
+Returns the line number of the first visible line in the Scintilla view. The first line in the document is numbered 0.
 </p>
 
 <p>
 <b id="LinesOnScreen">int LinesOnScreen()</b><br />
-This returns the number of complete lines visible on the screen. With a constant line height, this is the vertical space available divided by the line separation. Unless you arrange to size your window to an integral number of lines, there may be a partial line visible at the bottom of the view.
-</p>
-
-<p>
-<b id="GetModify">bool GetModify()</b><br />
-Returns true if the document is modified and false if it is unmodified. The modified status of a document is determined by the undo position relative to the save point. The save point is set by <a class="message" href="#SetSavePoint"><code>SetSavePoint</code></a>, usually when you have saved data to a file.
-</p>
-<p>
-If you need to be notified when the document becomes modified, Scintilla notifies the container that it has entered or left the save point with the <a class="message" href="#wxEVT_SCI_SAVEPOINTREACHED"><code>wxEVT_SCI_SAVEPOINTREACHED</code></a> and <a class="message" href="#wxEVT_SCI_SAVEPOINTLEFT"><code>wxEVT_SCI_SAVEPOINTLEFT</code></a> <a class="jump" href="#Notifications">notification messages</a>.
+Returns the number of complete lines visible on the screen. With a constant line height, this is the vertical space available divided by the line separation. Unless you arrange to size your window to an integral number of lines, there may be a partial line visible at the bottom of the view.
 </p>
 
 <p>
 <b id="SetSelection">void SetSelection (int startPos, int endPos)</b><br />
-Sets both the anchor (<code>startPos</code>) and the current position (<code>endPos</code>). If <code>endPos</code> is negative, it means the end of the document. If <code>startPos</code> is negative, it means remove any selection (i.e. set the anchor to the same position as <code>currentPos</code>). The caret is scrolled into view after this operation.
+Sets both the anchor (<code>startPos</code>) and the current position (<code>endPos</code>) and selects the text. If <code>endPos</code> is negative, it means the end of the document. If <code>startPos</code> is negative, it means remove any selection (i.e. set the anchor to the same position as <code>currentPos</code>). The caret is scrolled into view after this operation.
 </p>
 
 <p>
 <b id="GotoPos">void GotoPos (int pos)</b><br />
-This removes any selection, sets the caret at <code>pos</code> and scrolls the view to make the caret visible, if necessary. It is equivalent to <code>SetSelection (pos, pos)</code>. The anchor position is set the same as the current position.
+Sets the caret at <code>pos</code>, removes any selection and scrolls the view to make the caret visible, if necessary. It is equivalent to <code>SetSelection (pos, pos)</code>. The anchor position is set the same as the current position.
 </p>
 
 <p>
 <b id="GotoLine">void GotoLine (int line)</b><br />
-This removes any selection and sets the caret at the start of line number <code>line</code> and scrolls the view (if needed) to make it visible. The anchor position is set the same as the current position. If <code>line</code> is outside the lines in the document (first line is 0), the line set is the first or last.
+Sets the caret at the start of line number <code>line</code>, removes any selection and scrolls the view (if needed) to make it visible. The anchor position is set the same as the current position. If <code>line</code> is outside the lines in the document (first line is 0), the line set is the first or last.
 </p>
 
 <p>
 <b id="SetCurrentPos">void SetCurrentPos (int pos)</b><br />
-This sets the current position and creates a selection between the anchor and the current position. The caret is not scrolled into view.
+Sets the current position and creates a selection between the anchor and the current position. The caret is not scrolled into view.
 </p>
 <p>
 See also: <a class="message" href="#EnsureCaretVisible"><code>EnsureCaretVisible</code></a>
@@ -703,12 +706,12 @@ Returns the line that contains the position <code>pos</code> in the document. Th
 
 <p>
 <b id="PositionFromLine">int PositionFromLine (int line)</b><br />
-Returns the document position that corresponds with the start of the line. If <code>line</code> is negative, the position of the line holding the start of the selection is returned. If <code>line</code> is greater than the lines in the document, the return value is -1. If <code>line</code> is equal to the number of lines in the document (i.e. 1 line past the last line), the return value is the end of the document.
+Returns the document position that corresponds with the start of the line. If <code>line</code> is negative, the position of the line holding the start of the selection is returned. If <code>line</code> is greater than the lines in the document, the return value is wxSCI_INVALID_POSITION. If <code>line</code> is equal to the number of lines in the document (i.e. 1 line past the last line), the return value is the end of the document.
 </p>
 
 <p>
 <b id="GetLineEndPosition">int GetLineEndPosition (int line)</b><br />
-Returns the position at the end of the line, before any line end characters. If <code>line</code> is negative, the result is 0. If <code>line</code> is the last line in the document, (which does not have any end of line characters), the result is the size of the document. If <code>line</code> is negative, the result is -1. If <code>line</code> is &gt;= <code>GetLineCount()</code>, the result is currently <code>GetLength()-1</code>... (undefined?).
+Returns the position at the end of the line, before any line end characters. If <code>line</code> is negative, the result is 0. If <code>line</code> is the last line in the document, (which does not have any end of line characters), the result is the size of the document. If <code>line</code> is negative, the result is wxSCI_INVALID_POSITION. If <code>line</code> is &gt;= <code>GetLineCount()</code>, the result is currently <code>GetLength()-1</code>.
 </p>
 
 <p>
@@ -740,7 +743,7 @@ Returns true if the current selection is in rectangle mode, false if not.
 <p>
 <b id="SetSelectionMode">void SetSelectionMode (int mode)</b><br />
 <b id="GetSelectionMode">int GetSelectionMode()</b><br />
-Set and get the selection mode, which can be stream (<code>wxSCI_SEL_STREAM</code>=1) or rectangular (<code>wxSCI_SEL_RECTANGLE</code>=2) or by lines (<code>wxSCI_SEL_LINES</code>=3). When set in these modes, regular caret moves will extend or reduce the selection, until the mode is cancelled by a call with same value or with <code>Cancel</code>. The get function returns the current mode even if the selection was made by mouse or with regular extended moves.
+Set and get the selection mode, which can be stream (<code>wxSCI_SEL_STREAM</code>=1, default) or rectangular (<code>wxSCI_SEL_RECTANGLE</code>=2) or by lines (<code>wxSCI_SEL_LINES</code>=3). When set in these modes, regular caret moves will extend or reduce the selection, until the mode is cancelled by a call with same value or with <code>Cancel</code>. The get function returns the current mode even if the selection was made by mouse or with regular extended moves.
 </p>
 
 <p>
@@ -804,7 +807,7 @@ If "w" represents word characters and "." represents non-word characters and "|"
 <p>
 <b id="PositionBefore">int PositionBefore (int pos)</b><br />
 <b id="PositionAfter">int PositionAfter (int pos)</b><br />
-return the position before and after another position  in the document taking into account the current code page. The minimum position returned is 0 and the maximum is the last position in the document. If called with a position within a multi byte character will return the position of the start/end of that character.
+Returns the position before and after another position  in the document taking into account the current code page. The minimum position returned is 0 and the maximum is the last position in the document. If called with a position within a multi byte character will return the position of the start/end of that character.
 </p>
 
 <p>
@@ -819,7 +822,7 @@ Returns the height in pixels of a particular line. Currently all lines are the s
 
 <p>
 <b id="GetColumn">int GetColumn (int pos)</b><br />
-Returns the column number of a position <code>pos</code> within the document taking the width of tabs into account. This returns the column number of the last tab on the line before <code>pos</code>, plus the number of characters between the last tab and <code>pos</code>. If there are no tab characters on the line, the return value is the number of characters up to the position on the line. In both cases, double byte characters count as a single character. This is probably only useful with monospaced fonts.
+Returns the column number of a position <code>pos</code> within the document taking the width of tabs into account. This returns the column number of the last TAB on the line before <code>pos</code>, plus the number of characters between the last TAB and <code>pos</code>. If there are no TAB characters on the line, the return value is the number of characters up to the position on the line. In both cases, double byte characters count as a single character. This is probably only useful with monospaced fonts.
 </p>
 
 <p>
@@ -830,7 +833,7 @@ Returns the position of a <code>column</code> on a <code>line</code> taking the 
 <p>
 <b id="PositionFromPoint">int PositionFromPoint (wxPoint pt)</b><br />
 <b id="PositionFromPointClose">int PositionFromPointClose (int x, int y)</b><br />
-<code>PositionFromPoint</code> finds the closest character position to a point and <code>PositionFromPointClose</code> is similar but returns -1 if the point is outside the window or not close to any characters.
+<code>PositionFromPoint</code> finds the closest character position to a point and <code>PositionFromPointClose</code> is similar but returns wxSCI_INVALID_POSITION if the point is outside the window or not close to any characters.
 </p>
 
 <p>
@@ -872,7 +875,7 @@ Attempts to scroll the display by the number of columns and lines that you speci
 The column measure is the width of a space in the default style. Positive values increase the column at the left edge of the view (i.e. they move the text leftwards as far as the user is concerned). Negative values do the reverse.
 </p>
 <p>
-See also: <a class="message" href="#SetXOffset"><code>SetXOffset</code></a>
+See also: <code><a class="message" href="#SetXOffset"><code>SetXOffset</code></a>
 </p>
 
 <p>
@@ -1018,7 +1021,7 @@ Determines how the vertical positioning is determined when <a class="message" hr
 The horizontal scroll bar is only displayed if it is needed for the assumed width. If you never wish to see it, call <code>SetUseHorizontalScrollBar (false)</code>. Use <code> SetUseHorizontalScrollBar (true)</code> to enable it again. <code>GetUseHorizontalScrollBar</code> returns the current state. The default state is to  display it when needed.
 </p>
 <p>
-See also: <a class="message" href="#SetScrollWidth">SetScrollWidth</a>.
+See also: <code><a class="message" href="#SetScrollWidth">SetScrollWidth</a></code>.
 </p>
 
 <p>
@@ -1039,7 +1042,7 @@ See also: <a class="message" href="#LineScroll"><code>LineScroll</code></a>
 <p>
 <b id="SetScrollWidth">void SetScrollWidth (int pixels)</b><br />
 <b id="GetScrollWidth">int GetScrollWidth()</b><br />
-For performance, Scintilla does not measure the width of the document to determine  the properties of the horizontal scroll bar. Instead, an assumed width (2000 pixels) is used. Set and get the document width in pixels so Scintilla adjust the horizontal scroll bar accordingly.
+For performance, Scintilla does not measure the width of the document to determine  the properties of the horizontal scroll bar. Instead, an assumed width (2000 pixels) is used. Set and get the document width in pixels so Scintilla can adjust the horizontal scroll bar accordingly.
 </p>
 
 <p>
@@ -1061,7 +1064,7 @@ For performance, Scintilla does not measure the width of the document to determi
 <p>
 <b id="SetViewWhiteSpace">void SetViewWhiteSpace (int viewWS)</b><br />
 <b id="GetViewWhiteSpace">int GetViewWhiteSpace()</b><br />
-White space can be made visible which may useful for languages in which white space is significant, such as Python. Space characters appear as small centered dots and tab characters as light arrows pointing to the right. There are also ways to control the display of <a class="jump" href="#LineEndings">end of line characters</a>. Set and get the white space display mode. The <code>viewWS</code> argument can be one of:
+White space can be made visible which may useful for languages in which white space is significant, such as Python. Space characters appear as small centered dots and TAB characters as light arrows pointing to the right. There are also ways to control the display of <a class="jump" href="#LineEndings">end of line characters</a>. Set and get the white space display mode. The <code>viewWS</code> argument can be one of:
 </p>
 <table cellpadding="1" cellspacing="2" border="0" summary="White space policy"><tbody valign="top">
 <tr>
@@ -1302,7 +1305,7 @@ Text is drawn in the foreground colour. The space in each character cell that is
 
 <p>
 <b id="StyleSetEOLFilled">void StyleSetEOLFilled (int style, bool filled)</b><br />
-If the last character in the line has a style with this attribute set, the remainder of the line up to the right edge of the window is filled with the background colour set for the last character. This is useful when a document contains embedded sections in another language such as HTML pages with embedded JavaScript. By setting <code>eolFilled</code> to <code>true</code> and a consistent background colour (different from the background colour set for the HTML styles) to all JavaScript styles then JavaScript sections will be easily distinguished from HTML.
+If the last character in the line has a style with this attribute set, the remainder of the line up to the right edge of the window is filled with the background colour set for the last character. This is useful when a document contains embedded sections in another language such as HTML pages with embedded JavaScript. By setting <code>filled</code> to <code>true</code> and a consistent background colour (different from the background colour set for the HTML styles) to all JavaScript styles then JavaScript sections will be easily distinguished from HTML.
 </p>
 
 <p>
@@ -1357,6 +1360,9 @@ This is an experimental and incompletely implemented style attribute. The defaul
 <p>
 <b id="StyleSetHotSpot">void StyleSetHotSpot (int style, bool hotspot)</b><br />
 This style is used to mark ranges of text that can detect mouse clicks. The cursor changes to a hand over hotspots, and the foreground, and background colours may change and an underline appear to indicate that these areas are sensitive to clicking. This may be used to allow hyperlinks to other documents.
+</p>
+<p>
+See also: <code><a class="message" href="#SetHotspotActiveForeground">SetHotspotActiveForeground</a>, <a class="message" href="#SetHotspotActiveBackground">SetHotspotActiveBackground</a></code>
 </p>
 
 <hr 1>
@@ -1425,6 +1431,9 @@ The width of the caret can be set with <code>SetCaretWidth</code> to a value of 
 <b id="SetHotspotActiveUnderline">void SetHotspotActiveUnderline (bool underline)</b><br />
 <b id="SetHotspotSingleLine">void SetHotspotSingleLine (bool singleLine)</b><br />
 While the cursor hovers over text in a style with the hotspot attribute set, the default colouring can be modified and an underline drawn with these settings. Single line mode stops a hotspot from wrapping onto next line.
+</p>
+<p>
+See also: <code><a class="message" href="#StyleSetHotSpot">StyleSetHotSpot</a></code>
 </p>
 
 <p>
@@ -1511,8 +1520,8 @@ Allow changing the colour of the fold margin and fold margin highlight. On Windo
 <h3 id="OtherSettings">Other settings</h3>
 
 <p><code>
- <a class="message" href="#SetUsePalette">Warning, not implemented: SetUsePalette</a><br />
- <a class="message" href="#GetUsePalette">Warning, not implemented: GetUsePalette</a><br />
+ <a class="message" href="#SetUsePalette">SetUsePalette: Currently not implemented!</a><br />
+ <a class="message" href="#GetUsePalette">GetUsePalette: Currently not implemented!</a><br />
  <a class="message" href="#SetBufferedDraw">void SetBufferedDraw (bool buffered)</a><br />
  <a class="message" href="#GetBufferedDraw">bool GetBufferedDraw()</a><br />
  <a class="message" href="#SetTwoPhaseDraw">void SetTwoPhaseDraw (bool twoPhase)</a><br />
@@ -1522,7 +1531,7 @@ Allow changing the colour of the fold margin and fold margin highlight. On Windo
  <a class="message" href="#SetWordChars">void SetWordChars (const wxString& characters)</a><br />
  <a class="message" href="#SetWhitespaceChars">void SetWhitespaceChars (const wxString& characters)</a><br />
  <a class="message" href="#SetCharsDefault">void SetCharsDefault()</a><br />
- <a class="message" href="#GrabSCIFocus">Warning, not implemented: GrabSCIFocus</a><br />
+ <a class="message" href="#GrabSCIFocus">GrabSCIFocus: Currently not implemented!</a><br />
  <a class="message" href="#SetSCIFocus">void SetSCIFocus (bool focus)</a><br />
  <a class="message" href="#GetSCIFocus">bool GetSCIFocus()</a><br />
 </code></p>
@@ -1578,7 +1587,7 @@ Similar to <code>SetWordChars</code>, allows the user to define which chars Scin
 
 <p>
 <b id="SetCharsDefault">void SetCharsDefault()</b><br />
-Use the default sets of word and whitespace characters. This sets whitespace to space, tab and other characters with codes less than 0x20, with word characters set to alphanumeric and '_'.
+Use the default sets of word and whitespace characters. This sets whitespace to space, TAB and other characters with codes less than 0x20, with word characters set to alphanumeric and '_'.
 </p>
 
 <p>
@@ -1620,10 +1629,10 @@ It's important to realize that this method does <b>NOT</b> do any highlighting, 
 <h3 id="TabsAndIndentationGuides">Tabs and Indentation Guides</h3>
 
 <p>
-Indentation (the white space at the start of a line) is often used by programmers to clarify program structure and in some languages, for example Python, it may be part of the language syntax. Tabs are normally used in editors to insert a tab character or to pad text with spaces up to the next tab.
+Indentation (the white space at the start of a line) is often used by programmers to clarify program structure and in some languages, for example Python, it may be part of the language syntax. Tabs are normally used in editors to insert a TAB character or to pad text with spaces up to the next TAB.
 </p>
 <p>
-Scintilla can be set to treat tab and backspace in the white space at the start of a line in a special way: inserting a tab indents the line to the next indent position rather than just inserting a tab at the current character position and backspace unindents the line rather than deleting a character. Scintilla can also display indentation guides (vertical lines) to help you to generate code.
+Scintilla can be set to treat TAB and backspace in the white space at the start of a line in a special way: inserting a TAB indents the line to the next indent position rather than just inserting a TAB at the current character position and backspace unindents the line rather than deleting a character. Scintilla can also display indentation guides (vertical lines) to help you to generate code.
 </p>
 
 <p><code>
@@ -1649,19 +1658,19 @@ Scintilla can be set to treat tab and backspace in the white space at the start 
 <p>
 <b id="SetTabWidth">void SetTabWidth (int tabWidth)</b><br />
 <b id="GetTabWidth">int GetTabWidth()</b><br />
-<code>SetTabWidth</code> sets the size of a tab as a multiple of the size of a space character in <code>wxSCI_STYLE_DEFAULT</code>. The default tab width is 8 characters. There are no limits on tab sizes, but values less than 1 or large values may have undesirable effects.
+<code>SetTabWidth</code> sets the size of a TAB as a multiple of the size of a space character in <code>wxSCI_STYLE_DEFAULT</code>. The default TAB width is 8 characters. There are no limits on TAB sizes, but values less than 1 or large values may have undesirable effects.
 </p>
 
 <p>
 <b id="SetUseTabs">void SetUseTabs (bool useTabs)</b><br />
 <b id="GetUseTabs">bool GetUseTabs()</b><br />
-<code>SetUseTabs</code> determines whether indentation should be created out of a mixture of tabs and spaces or be based purely on spaces. Set <code>useTabs</code> to <code>false</code> to create all tabs and indents out of spaces. The default is <code>true</code>. You can use <a class="message" href="#GetColumn"><code>GetColumn</code></a> to get the column of a position taking the width of a tab into account.
+<code>SetUseTabs</code> determines whether indentation should be created out of a mixture of tabs and spaces or be based purely on spaces. Set <code>useTabs</code> to <code>false</code> to create all tabs and indents out of spaces. The default is <code>true</code>. You can use <a class="message" href="#GetColumn"><code>GetColumn</code></a> to get the column of a position taking the width of a TAB into account.
 </p>
 
 <p>
 <b id="SetIndent">void SetIndent (int indentSize)</b><br />
 <b id="GetIndent">int GetIndent()</b><br />
-<code>SetIndent</code> sets the size of indentation in terms of the width of a space in <a class="message" href="#StyleDefinition"><code>wxSCI_STYLE_DEFAULT</code></a>. If you set a width of 0, the indent size is the same as the tab size. There are no limits on indent sizes, but values less than 0 or large values may have undesirable effects.
+<code>SetIndent</code> sets the size of indentation in terms of the width of a space in <a class="message" href="#StyleDefinition"><code>wxSCI_STYLE_DEFAULT</code></a>. If you set a width of 0, the indent size is the same as the TAB size. There are no limits on indent sizes, but values less than 0 or large values may have undesirable effects.
 </p>
 
 <p>
@@ -1669,7 +1678,7 @@ Scintilla can be set to treat tab and backspace in the white space at the start 
 <b id="GetTabIndents">bool GetTabIndents()</b><br />
 <b id="SetBackSpaceUnIndents">void SetBackSpaceUnIndents (bool bsUnIndents)</b><br />
 <b id="GetBackSpaceUnIndents">bool GetBackSpaceUnIndents()</b><br />
-Inside indentation white space, the tab and backspace keys can be made to indent and unindent rather than insert a tab character or delete a character with the <code>SetTabIndents</code> and <code>SetBackSpaceUnIndents</code> functions.
+Inside indentation white space, the TAB and backspace keys can be made to indent and unindent rather than insert a TAB character or delete a character with the <code>SetTabIndents</code> and <code>SetBackSpaceUnIndents</code> functions.
 </p>
 
 <p>
@@ -1810,7 +1819,7 @@ This table shows which <code>wxSCI_MARK_</code>* symbols should be assigned to w
 <p>
 <b id="MarkerSetForeground">void MarkerSetForeground (int markerNumber, const wxColour& fore)</b><br />
 <b id="MarkerSetBackground">void MarkerSetBackground (int markerNumber, const wxColour& back)</b><br />
-Set the foreground and background colour of a marker number. Default colours for foreground is <code>black</code>, for background is <code>white</code>. Keep in mind that the background colour is used as a fill colour.
+Set the foreground and background colour of a marker number. Default colours for foreground is <code>black</code>, for background is <code>white</code>.
 </p>
 
 <p>
@@ -1841,7 +1850,7 @@ Search efficiently for lines that include a given set of markers. The search sta
 
 <p>
 <b id="MarkerLineFromHandle">int MarkerLineFromHandle (int handle)</b><br />
-The <code>handle</code> argument is an identifier for a marker returned by <a class="message" href="#MarkerAdd"><code>MarkerAdd</code></a>. This function searches the document for the marker with this handle and returns the line number that contains it or -1 if it is not found.
+The <code>handle</code> argument is an identifier for a marker returned by <a class="message" href="#MarkerAdd"><code>MarkerAdd</code></a>. This function searches the document for the marker with this handle and returns the line number that contains it or wxSCI_INVALID_POSITION if it is not found.
 </p>
 
 <p>
@@ -1936,7 +1945,7 @@ Set and get the colour used to draw an indicator. The default indicator colours 
 <h3 id="Autocompletion">Autocompletion</h3>
 
 <p>
-Autocompletion displays a list box showing likely identifiers based upon the users typing. The user chooses the currently selected item by pressing the tab character or another character that is a member of the fillup character set defined with <code>AutoCompSetFillUps</code>. Autocompletion is triggered by your application. For example, in C if you detect that the user has just typed <code>fred.</code> you could look up <code>fred</code>, and if it has a known list of members, you could offer them in an autocompletion list. Alternatively, you could monitor the user's typing and offer a list of likely items once their typing has narrowed down the choice to a reasonable list. As yet another alternative, you could define a key code to activate the list.
+Autocompletion displays a list box showing likely identifiers based upon the users typing. The user chooses the currently selected item by pressing the TAB character or another character that is a member of the fillup character set defined with <code>AutoCompSetFillUps</code>. Autocompletion is triggered by your application. For example, in C if you detect that the user has just typed <code>fred.</code> you could look up <code>fred</code>, and if it has a known list of members, you could offer them in an autocompletion list. Alternatively, you could monitor the user's typing and offer a list of likely items once their typing has narrowed down the choice to a reasonable list. As yet another alternative, you could define a key code to activate the list.
 </p>
 <p>
 To make use of autocompletion you must monitor each character added to the document. See <code>SciTEBase::CharAdded()</code> in SciTEBase.cxx for an example of autocompletion.
@@ -2027,7 +2036,7 @@ If a fillup character is typed with an autocompletion list active, the currently
 </p>
 
 <p>
-<b id="AutoCompSetChooseSingle">void AutoCompSetChooseSingle (bool chooseSingle)</b><br />
+<b id="AutoCompSetChooseSingle">void AutoCompSetChooseSingle (bool chooseSingle)/b><br />
 <b id="AutoCompGetChooseSingle">bool AutoCompGetChooseSingle()</b><br />
 If you use <code>AutoCompSetChooseSingle(1)</code> and a list has only one item, it is automatically added and no list is displayed. The default is to display the list even if there is only a single item.
 </p>
@@ -2264,22 +2273,22 @@ To allow the container application to perform any of the actions available to th
 </tr>
 </tbody></table>
 <p>
-The <code>wxSCI_CMD_*EXTEND</code> extend the selection.
+The <code>wxSCI_CMD_...EXTEND</code> extend the selection.
 </p>
 <p>
-The <code>wxSCI_CMD_*RECTEXTEND</code> extend the rectangular selection (and convert regular selection to rectangular one, if any).
+The <code>wxSCI_CMD_...RECTEXTEND</code> extend the rectangular selection (and convert regular selection to rectangular one, if any).
 </p>
 <p>
-The <code>wxSCI_CMD_WORDPART*</code> commands are used to move between word segments marked by capitalisation (aCamelCaseIdentifier) or underscores (an_under_bar_ident).
+The <code>wxSCI_CMD_WORDPART...</code> commands are used to move between word segments marked by capitalisation (aCamelCaseIdentifier) or underscores (an_under_bar_ident).
 </p>
 <p>
-The <code>wxSCI_CMD_HOME*</code> commands move the caret to the start of the line, while the <code>wxSCI_CMD_VCHOME*</code>commands move the caret to the first non-blank character of the line (ie. just after the indentation) unless it is already there; in this case, it acts as wxSCI_CMD_HOME*.
+The <code>wxSCI_CMD_HOME...</code> commands move the caret to the start of the line, while the <code>wxSCI_CMD_VCHOME...</code>commands move the caret to the first non-blank character of the line (ie. just after the indentation) unless it is already there; in this case, it acts as wxSCI_CMD_HOME....
 </p>
 <p>
-The <code>wxSCI_CMD_[HOME|LINEEND]DISPLAY*</code> commands are used when in line wrap mode to allow movement to the start or end of display lines as opposed to the normal <code>wxSCI_CMD_[HOME|LINEEND]</code> commands which move to the start or end of document lines.
+The <code>wxSCI_CMD_[HOME|LINEEND]DISPLAY...</code> commands are used when in line wrap mode to allow movement to the start or end of display lines as opposed to the normal <code>wxSCI_CMD_[HOME|LINEEND]</code> commands which move to the start or end of document lines.
 </p>
 <p>
-The <code>wxSCI_CMD_[[VC]HOME|LINEEND]WRAP*</code> commands are like their namesakes <code>wxSCI_CMD_[[VC]HOME|LINEEND]*</code> except they behave differently when word-wrap is enabled:  They go first to the start / end of the display line, like <code>wxSCI_CMD_[HOME|LINEEND]DISPLAY*</code>,  but if the cursor is already at the point, it goes on to the start or end of the document line,  as appropriate for <code>wxSCI_CMD_[[VC]HOME|LINEEND]*</code>.
+The <code>wxSCI_CMD_[[VC]HOME|LINEEND]WRAP...</code> commands are like their namesakes <code>wxSCI_CMD_[[VC]HOME|LINEEND]...</code> except they behave differently when word-wrap is enabled:  They go first to the start / end of the display line, like <code>wxSCI_CMD_[HOME|LINEEND]DISPLAY...</code>,  but if the cursor is already at the point, it goes on to the start or end of the document line,  as appropriate for <code>wxSCI_CMD_[[VC]HOME|LINEEND]...</code>.
  </p>
 
 <hr 1>
@@ -2615,7 +2624,7 @@ A line may be hidden because more than one of its parent lines is contracted. Bo
 </code></p>
 
 <p>
-By default, Scintilla does not wrap lines of text. If you enable line wrapping, lines wider than the window width are continued on the following lines. Lines are broken after space or tab characters or between runs of different styles. If this is not possible because a word in one style is wider than the window then the break occurs after the last character that completely fits on the line. The horizontal scroll bar does not appear when wrap mode is on.
+By default, Scintilla does not wrap lines of text. If you enable line wrapping, lines wider than the window width are continued on the following lines. Lines are broken after space or TAB characters or between runs of different styles. If this is not possible because a word in one style is wider than the window then the break occurs after the last character that completely fits on the line. The horizontal scroll bar does not appear when wrap mode is on.
 </p>
 <p>
 For wrapped lines Scintilla can draw visual flags (little arrows) at end of a a subline of a wrapped line and at begin of the next subline. These can be enabled individually, but if Scintilla draws the visual flag at begin of the next subline this subline will be indented by one char. Independent from drawing a visual flag at the begin the subline can have an indention.
@@ -2830,7 +2839,7 @@ Scintilla also supports external lexers. These are DLLs (on Windows) or .so modu
  <a class="message" href="#SetLexer">void SetLexer (int lexer)</a><br />
  <a class="message" href="#GetLexer">int GetLexer()</a><br />
  <a class="message" href="#SetLexerLanguage">void SetLexerLanguage (const wxString& language)</a><br />
- <a class="message" href="#LoadLexerLibrary">Warning, not implemented: LoadLexerLibrary</a><br />
+ <a class="message" href="#LoadLexerLibrary">LoadLexerLibrary: Currently not implemented!</a><br />
  <a class="message" href="#Colourise">void Colourise (int start, int end)</a><br />
  <a class="message" href="#SetProperty">void SetProperty (const wxString& key, const wxString& value)</a><br />
  <a class="message" href="#SetKeyWords">void SetKeyWords (int keywordSet, const wxString& keyWords)</a><br />
@@ -2853,7 +2862,7 @@ To test if your lexer assignment worked, use <a class="message" href="#GetLexer"
 
 <p>
 <b id="Colourise">void Colourise (int startPos, int endPos)</b><br />
-This forces the current lexer or the container (if the lexer is set to <code>wxSCI_LEX_CONTAINER</code>) to style the document between <code>startPos</code> and <code>endPos</code>. If <code>endPos</code> is -1, the document is styled from <code>startPos</code> to the end. If the <code>"fold"</code> property is set to <code>"1"</code> and your lexer or container supports folding, fold levels are also set. Causes a redraw.
+This forces the current lexer or the container (if the lexer is set to <code>wxSCI_LEX_CONTAINER</code>) to style the document between <code>startPos</code> and <code>endPos</code>. If <code>endPos</code> is wxSCI_INVALID_POSITION, the document is styled from <code>startPos</code> to the end. If the <code>"fold"</code> property is set to <code>"1"</code> and your lexer or container supports folding, fold levels are also set. Causes a redraw.
 </p>
 
 <p>
@@ -2863,7 +2872,7 @@ You can communicate settings to lexers with keyword:value string pairs. There is
 <p>The <code>value</code> string can refer to other keywords. For example, <code>SetProperty ("foldTimes10", "$(fold)0")</code> stores the string <code>"$(fold)0"</code>, but when this is accessed, the <code>$(fold)</code> is replaced by the value of the <code>"fold"</code> keyword (or by nothing if this keyword does not exist).
 </p>
 <p>
-Currently the "fold" property is defined for most of the lexers to set the fold structure if set to "1". <code>wxSCI_LEX_PYTHON</code> understands <code>"tab.timmy.whinge.level"</code> as a setting that determines how to indicate bad indentation. Most keywords have values that are interpreted as integers. Search the lexer sources for <code>GetPropertyInt</code> to see how properties are used.
+Currently the "fold" property is defined for most of the lexers to set the fold structure if set to "1". <code>wxSCI_LEX_PYTHON</code> understands <code>"TAB.timmy.whinge.level"</code> as a setting that determines how to indicate bad indentation. Most keywords have values that are interpreted as integers. Search the lexer sources for <code>GetPropertyInt</code> to see how properties are used.
 </p>
 
 <p>
@@ -2947,7 +2956,7 @@ This is sent when the user types an ordinary text character (as opposed to a com
 Sent to the container when the save point is entered or left, allowing the container to display a "document dirty" indicator and change its menus.
 </p>
 <p>
-See also: <a class="message" href="#SetSavePoint"><code>SetSavePoint</code></a>, <a class="message" href="#GetModify"><code>GetModify</code></a>
+See also: <code><a class="message" href="#SetSavePoint">SetSavePoint</a>, <a class="message" href="#GetModify"><code>GetModify</code></a>
 </p>
 
 <p>
