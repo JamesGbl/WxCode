@@ -2,7 +2,7 @@
 // Name:        archive.cpp
 // Purpose:     Streams for archive formats
 // Author:      Mike Wetherell
-// RCS-ID:      $Id: archive.cpp,v 1.1 2004-06-25 23:21:08 chiclero Exp $
+// RCS-ID:      $Id: archive.cpp,v 1.2 2004-06-28 11:25:16 chiclero Exp $
 // Copyright:   (c) Mike Wetherell
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -26,25 +26,14 @@
 
 
 IMPLEMENT_ABSTRACT_CLASS(wxArchiveEntry, wxObject)
-IMPLEMENT_ABSTRACT_CLASS(wxArchiveCatalog, wxObject)
 IMPLEMENT_ABSTRACT_CLASS(wxArchiveClassFactory, wxObject)
-
-
-/////////////////////////////////////////////////////////////////////////////
-// Archive catalog
-
-wxArchiveCatalog::wxArchiveCatalog(wxMBConv& conv /*=wxConvFile*/)
-  : m_conv(conv)
-{
-}
-
 
 
 /////////////////////////////////////////////////////////////////////////////
 // wxArchiveInputStream
 
 wxArchiveInputStream::wxArchiveInputStream(wxInputStream& stream,
-                                           wxMBConv& conv /*=wxConvFile*/)
+                                           wxMBConv& conv)
   : wxFilterInputStream(stream),
     m_conv(conv)
 {
@@ -55,7 +44,7 @@ wxArchiveInputStream::wxArchiveInputStream(wxInputStream& stream,
 // wxArchiveOutputStream
 
 wxArchiveOutputStream::wxArchiveOutputStream(wxOutputStream& stream,
-                                             wxMBConv& conv /*=wxConvFile*/)
+                                             wxMBConv& conv)
   : wxFilterOutputStream(stream),
     m_conv(conv)
 {
