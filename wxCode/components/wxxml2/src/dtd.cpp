@@ -371,6 +371,11 @@ static int XMLDTDRead(void *ctx, char *buffer, int len)
 
 bool wxXml2DTD::Load(wxInputStream &stream, wxString *pErr)
 {
+	if (stream.GetSize() <= 0) {
+		if (pErr) *pErr = "Invalid size";
+		return FALSE;
+	}
+
 	// are we attached to a wxXml2Document ?
 	xmlDoc *doc = (m_dtd ? m_dtd->parent : NULL);
 	if (doc) xmlUnlinkNode((xmlNode *)m_dtd);

@@ -19,7 +19,7 @@ CXX = $(shell wx-config --cxx)
 
 PROGRAM = minimal
 
-OBJECTS = src/xml2.o sample/$(PROGRAM).o
+OBJECTS = src/xml2.o src/dtd.o sample/$(PROGRAM).o
 
 # implementation
 

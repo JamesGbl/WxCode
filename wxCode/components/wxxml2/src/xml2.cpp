@@ -902,6 +902,11 @@ static void XMLDocumentMsg(void *ctx, const char *pszFormat, ...)
 bool wxXml2Document::Load(wxInputStream &stream, wxString *pErr)
 {
 	long l = stream.GetSize();
+	if (l <= 0) {
+		if (pErr) *pErr = "Invalid size";
+		return FALSE;
+	}
+		
 	wxString buf;
 
     // load everything in a buffer
@@ -1221,7 +1226,7 @@ size_t wxNativeNewlinesFilterStream::OnSysWrite(const void *buffer, size_t bufsi
 	// do not slow everything if we are on systems
 	// which use the same line ending which is used directly by libxml2
 	if (strcmp(wxXML2_NEWLINE, newline) == 0)
-		return wxFilterOutputStream::OnSysWrite(buffer, bufsize);
+		return GetFilterOutputStream()->Write(buffer, bufsize).LastWrite();
 
 	// we need to scan all the buffer replacing wxXML2_NEWLINEs...
 	const char *buf = (const char *)buffer;

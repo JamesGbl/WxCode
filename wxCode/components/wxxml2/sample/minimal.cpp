@@ -334,6 +334,7 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 // MyFrame::LoadDTD DOES TO SHOW TO THE USER THE STRUCTURE OF AN XML DTD.
 void ParseNode(const wxXml2Node &node, wxString &str, int n)
 {
+	if (node == wxXml2EmptyNode) return;
 	wxLogDebug(wxT("ParseNode - parsing [%s]"), node.GetName().c_str());
 	wxString toadd, spaces(wxT(' '), n);
 
@@ -657,24 +658,27 @@ void MyFrame::OnSaveDTD(wxCommandEvent &)
 	doc.Create(wxXml2EmptyDoc, wxT("mydtd"), wxT("none"), wxT("none"));
 
 	// create an element declaration and set the root
+	// some errors have been experienced with some libxml2 versions previous to 2.6.16
+	// (which is the one I use): unfortunately I haven't time to dig into these ones...
 	wxXml2ElemContent content(wxT("myelement"), wxXML_ELEMENT_CONTENT_PCDATA);
 	doc.AddElemDecl(wxT("myelement"), wxXML_ELEMENT_TYPE_ELEMENT, content);	
+
 	wxXml2ElemContent content2(wxT("myelement2"), wxXML_ELEMENT_CONTENT_ELEMENT, wxXML_ELEMENT_CONTENT_MULT);
 	doc.AddElemDecl(wxT("myelement2"), wxXML_ELEMENT_TYPE_ELEMENT, content2);
 
 	wxXml2Enumeration values(wxT("text|link"));
 	doc.AddAttrDecl(wxT("mydata"), wxT("type"), wxXml2EmptyNamespace,
 					wxXML_ATTRIBUTE_ENUMERATION, wxXML_ATTRIBUTE_REQUIRED,
-					wxEmptyString, values);
+					"default", values);
 
 	wxXml2Enumeration values2(values);
 	doc.AddAttrDecl(wxT("mydata"), wxT("data"), wxXml2EmptyNamespace,
 					wxXML_ATTRIBUTE_ENUMERATION, wxXML_ATTRIBUTE_REQUIRED,
-					wxEmptyString, values2);
+					"default", values2);
 	
 	doc.AddEntityDecl(wxT("myentity"), wxXML_INTERNAL_GENERAL_ENTITY, 
 						wxT(""), wxT(""), wxT("mycontent"));
-	
+
 
 	// now, save the file where the user choose
 	if (doc.Save(fd.GetPath())) {
