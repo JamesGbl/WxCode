@@ -3,7 +3,7 @@
 // Purpose:     wxScintilla test module
 // Maintainer:  Otto Wyss
 // Created:     2003-09-01
-// RCS-ID:      $Id: edit.cpp,v 1.4 2005-02-03 17:01:25 wyo Exp $
+// RCS-ID:      $Id: edit.cpp,v 1.5 2005-03-02 20:28:22 wyo Exp $
 // Copyright:   (c) 2004wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -111,17 +111,19 @@ Edit::Edit (wxWindow *parent, wxWindowID id,
     : wxScintilla (parent, id, pos, size, style) {
 
     m_filename = _T("");
+    m_language = NULL;
 
     m_LineNrID = 0;
-    m_DividerID = 1;
-    m_FoldingID = 2;
-
-    // initialize language
-    m_language = NULL;
+    m_LineNrMargin = TextWidth (wxSCI_STYLE_LINENUMBER, _T("_999999"));
+    m_FoldingID = 1;
+    m_FoldingMargin = 16;
+    m_DividerID = 2;
 
     // default font for all styles
     SetViewEOL (g_CommonPrefs.displayEOLEnable);
     SetIndentationGuides (g_CommonPrefs.indentGuideEnable);
+    SetMarginWidth (m_LineNrID,
+                    g_CommonPrefs.lineNumberEnable? m_LineNrMargin: 0);
     SetEdgeMode (g_CommonPrefs.longLineOnEnable?
                  wxSCI_EDGE_LINE: wxSCI_EDGE_NONE);
     SetViewWhiteSpace (g_CommonPrefs.whiteSpaceEnable?
@@ -130,7 +132,7 @@ Edit::Edit (wxWindow *parent, wxWindowID id,
     SetReadOnly (g_CommonPrefs.readOnlyInitial);
     SetWrapMode (g_CommonPrefs.wrapModeInitial?
                  wxSCI_WRAP_WORD: wxSCI_WRAP_NONE);
-    wxFont font (10, wxMODERN, wxNORMAL, wxNORMAL);
+    wxFont font (10, wxTELETYPE, wxNORMAL, wxNORMAL);
     StyleSetFont (wxSCI_STYLE_DEFAULT, font);
     StyleSetForeground (wxSCI_STYLE_DEFAULT, wxColour (_T("BLACK")));
     StyleSetBackground (wxSCI_STYLE_DEFAULT, wxColour (_T("WHITE")));
@@ -157,13 +159,37 @@ Edit::Edit (wxWindow *parent, wxWindowID id,
     MarkerDefine (wxSCI_MARKNUM_FOLDERMIDTAIL, wxSCI_MARK_EMPTY);
     MarkerDefine (wxSCI_MARKNUM_FOLDERTAIL, wxSCI_MARK_EMPTY);
 
+    // clear wrong default keys
+#if !defined(__WXGTK__)
+    CmdKeyClear (wxSCI_KEY_TAB, 0);
+    CmdKeyClear (wxSCI_KEY_TAB, wxSCI_SCMOD_SHIFT);
+#endif
+    CmdKeyClear ('A', wxSCI_SCMOD_CTRL);
+#if !defined(__WXGTK__)
+    CmdKeyClear ('C', wxSCI_SCMOD_CTRL);
+#endif
+    CmdKeyClear ('D', wxSCI_SCMOD_CTRL);
+    CmdKeyClear ('D', wxSCI_SCMOD_SHIFT | wxSCI_SCMOD_CTRL);
+    CmdKeyClear ('F', wxSCI_SCMOD_ALT | wxSCI_SCMOD_CTRL);
+    CmdKeyClear ('L', wxSCI_SCMOD_CTRL);
+    CmdKeyClear ('L', wxSCI_SCMOD_SHIFT | wxSCI_SCMOD_CTRL);
+    CmdKeyClear ('T', wxSCI_SCMOD_CTRL);
+    CmdKeyClear ('T', wxSCI_SCMOD_SHIFT | wxSCI_SCMOD_CTRL);
+    CmdKeyClear ('U', wxSCI_SCMOD_CTRL);
+    CmdKeyClear ('U', wxSCI_SCMOD_SHIFT | wxSCI_SCMOD_CTRL);
+#if !defined(__WXGTK__)
+    CmdKeyClear ('V', wxSCI_SCMOD_CTRL);
+    CmdKeyClear ('X', wxSCI_SCMOD_CTRL);
+#endif
+    CmdKeyClear ('Y', wxSCI_SCMOD_CTRL);
+#if !defined(__WXGTK__)
+    CmdKeyClear ('Z', wxSCI_SCMOD_CTRL);
+#endif
+
     // miscelaneous
-    m_LineNrMargin = TextWidth (wxSCI_STYLE_LINENUMBER, _T("_999999"));
-    m_FoldingMargin = 16;
-    SetMarginWidth (m_LineNrID,
-                    g_CommonPrefs.lineNumberEnable? m_LineNrMargin: 0);
-    CmdKeyClear (wxSCI_KEY_TAB, 0); // this is done by the menu accelerator key
+    UsePopUp (0);
     SetLayoutCache (wxSCI_CACHE_PAGE);
+    SetBufferedDraw (1);
 
 }
 
@@ -245,7 +271,7 @@ void Edit::OnEditIndentRed (wxCommandEvent &WXUNUSED(event)) {
 }
 
 void Edit::OnEditSelectAll (wxCommandEvent &WXUNUSED(event)) {
-    SetSelection (0, GetTextLength ());
+    SetSelection (0, GetLength());
 }
 
 void Edit::OnEditSelectLine (wxCommandEvent &WXUNUSED(event)) {
@@ -415,13 +441,6 @@ bool Edit::InitializePrefs (const wxString &name) {
     SetMarginWidth (m_LineNrID,
                     g_CommonPrefs.lineNumberEnable? m_LineNrMargin: 0);
 
-    // default fonts for all styles!
-    int Nr;
-    for (Nr = 0; Nr < wxSCI_STYLE_LASTPREDEFINED; Nr++) {
-        wxFont font (10, wxMODERN, wxNORMAL, wxNORMAL);
-        StyleSetFont (Nr, font);
-    }
-
     // set common styles
     StyleSetForeground (wxSCI_STYLE_DEFAULT, wxColour (_T("DARK GREY")));
     StyleSetForeground (wxSCI_STYLE_INDENTGUIDE, wxColour (_T("DARK GREY")));
@@ -429,10 +448,11 @@ bool Edit::InitializePrefs (const wxString &name) {
     // initialize settings
     if (g_CommonPrefs.syntaxEnable) {
         int keywordnr = 0;
+        int Nr;
         for (Nr = 0; Nr < STYLE_TYPES_COUNT; Nr++) {
             if (curInfo->styles[Nr].type == -1) continue;
             const StyleInfo &curType = g_StylePrefs [curInfo->styles[Nr].type];
-            wxFont font (curType.fontsize, wxMODERN, wxNORMAL, wxNORMAL, false,
+            wxFont font (curType.fontsize, wxTELETYPE, wxNORMAL, wxNORMAL, false,
                          curType.fontname);
             StyleSetFont (Nr, font);
             if (curType.foreground) {
@@ -456,7 +476,7 @@ bool Edit::InitializePrefs (const wxString &name) {
 
     // set margin as unused
     SetMarginType (m_DividerID, wxSCI_MARGIN_SYMBOL);
-    SetMarginWidth (m_DividerID, 0);
+    SetMarginWidth (m_DividerID, 8);
     SetMarginSensitive (m_DividerID, false);
 
     // folding
@@ -527,10 +547,7 @@ bool Edit::LoadFile (const wxString &filename) {
 
     // load file in edit and clear undo
     if (!filename.IsEmpty()) m_filename = filename;
-    ClearAll ();
-    wxScintilla::LoadFile(m_filename);
-
-    EmptyUndoBuffer();
+    if (!wxScintilla::LoadFile (m_filename)) return false;
 
     // determine lexer language
     wxFileName fname (m_filename);

@@ -3,7 +3,7 @@
 // Purpose:     wxScintilla test application
 // Maintainer:  Otto Wyss
 // Created:     2003-09-01
-// RCS-ID:      $Id: test.cpp,v 1.3 2004-11-25 18:05:09 wyo Exp $
+// RCS-ID:      $Id: test.cpp,v 1.4 2005-03-02 20:28:22 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows licence
 //////////////////////////////////////////////////////////////////////////////
@@ -309,7 +309,6 @@ AppFrame::AppFrame (const wxString &title)
     m_edit = new Edit (this, -1);
     m_edit->SetFocus();
 
-    FileOpen (_T("edit.cpp"));
 }
 
 AppFrame::~AppFrame () {
