@@ -1,8 +1,8 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Name:        tests/archive/tartest.cpp
+// Name:        tests/tartest.cpp
 // Purpose:     Test the tar classes
 // Author:      Mike Wetherell
-// RCS-ID:      $Id: tartest.cpp,v 1.1 2004-11-27 23:55:10 chiclero Exp $
+// RCS-ID:      $Id: tartest.cpp,v 1.2 2005-04-02 11:26:55 chiclero Exp $
 // Copyright:   (c) 2004 Mike Wetherell
 // Licence:     wxWindows licence
 ///////////////////////////////////////////////////////////////////////////////
