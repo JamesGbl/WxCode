@@ -168,8 +168,15 @@ MyFrame::MyFrame(const wxString& title)
     m_pAspellInterface = new AspellInterface();
     m_pMySpellInterface = new MySpellInterface();
 
-    m_pAspellInterface->InitializeSpellCheckEngine();
-    m_pMySpellInterface->InitializeSpellCheckEngine();
+    if (m_pMySpellInterface->InitializeSpellCheckEngine() == false)
+    {
+      m_pMySpellInterface = NULL;
+    }
+    if (m_pAspellInterface->InitializeSpellCheckEngine() == false)
+    {
+      m_pAspellInterface = NULL;
+      m_nSelectedSpellCheckEngine = MyFrame::USE_MYSPELL;
+    }
 }
 
 
@@ -197,6 +204,7 @@ void MyFrame::OnUseAspell(wxCommandEvent& event)
 
 void MyFrame::OnUpdateUseAspell(wxUpdateUIEvent& event)
 {
+  event.Enable(m_pAspellInterface != NULL);
   event.Check(m_nSelectedSpellCheckEngine == MyFrame::USE_ASPELL);
 }
 
@@ -207,6 +215,7 @@ void MyFrame::OnUseMySpell(wxCommandEvent& event)
 
 void MyFrame::OnUpdateUseMySpell(wxUpdateUIEvent& event)
 {
+  event.Enable(m_pMySpellInterface != NULL);
   event.Check(m_nSelectedSpellCheckEngine == MyFrame::USE_MYSPELL);
 }
 
