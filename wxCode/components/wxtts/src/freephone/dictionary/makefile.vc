@@ -1,0 +1,31 @@
+#
+# Makefile for mkdict.exe, VC++
+# fpdict.exe makes these files:
+#
+# dict.idx      // Index file
+# dict.key      // Keyword file
+# dict.dct      // Data file
+
+all:    mkdict.exe engdict
+
+DICT=..\..\..\dictionary\english.dct
+engdict: $(DICT)
+
+OBJECTS=Creadict.obj MFDict.obj
+
+mkdict.exe: $(OBJECTS)
+	link -out:mkdict.exe $(OBJECTS)
+
+$(DICT): english.dat mkdict.exe
+    -mkdict english.dat
+    copy english.dct ..\..\..\dictionary
+    copy english.idx ..\..\..\dictionary
+    copy english.key ..\..\..\dictionary
+
+clean:
+    -erase *.exe
+    -erase *.obj
+    -erase *.idx
+    -erase *.key
+    -erase *.dct
+

@@ -1,0 +1,87 @@
+#
+# File:		makefile.vc
+# Author:	Julian Smart
+# Created:	1998
+# Updated:	
+# Copyright:	(c) 1998
+#
+# "%W% %G%"
+#
+# Makefile : Builds Mbrola TTS sample using VC++
+
+USE_MFC=1
+USE_WXWIN=0
+DEBUG=1
+
+FRAMEWORK=
+EXTRACPPFLAGS=
+EXTRALINKLIBS=
+
+!if "$(USE_MFC)" == "1"
+FRAMEWORK=_mfc
+EXTRACPPFLAGS=/D_AFXDLL
+!endif
+
+!if "$(USE_WXWIN)" == "1"
+FRAMEWORK=_wx
+EXTRACPPFLAGS=/D__WXMSW__ /I$(WXWIN)\include
+!if "$(DEBUG)" == "0"
+EXTRAFRAMEWORKLIBS=$(WXWIN)\lib\wx.lib $(WXWIN)\lib\png.lib $(WXWIN)\lib\zlib.lib $(WXWIN)\lib\jpeg.lib $(WXWIN)\lib\tiff.lib $(WXWIN)\lib\xpm.lib
+!else
+EXTRAFRAMERWORKLIBS=$(WXWIN)\lib\wxd.lib $(WXWIN)\lib\pngd.lib $(WXWIN)\lib\zlibd.lib $(WXWIN)\lib\jpegd.lib $(WXWIN)\lib\tiffd.lib $(WXWIN)\lib\xpmd.lib
+!endif
+!endif
+
+!if "$(DEBUG)" == "0"
+EXTRALIBS=..\..\..\lib\wxmbrola$(FRAMEWORK).lib ..\..\..\lib\freephone$(FRAMEWORK).lib ..\..\..\lib\mbrplay.lib $(EXTRAFRAMEWORKLIBS)
+DEBUGFLAGS=/MD
+LINKDEBUG=
+!else
+EXTRALIBS=..\..\..\lib\wxmbrola$(FRAMEWORK)_d.lib ..\..\..\lib\freephone$(FRAMEWORK)_d.lib ..\..\..\lib\mbrplay.lib $(EXTRAFRAMEWORKLIBS)
+DEBUGFLAGS=/MDd /Zi /GX
+LINKDEBUG=/debug
+!endif
+
+# Change these as required
+THISDIR = .
+
+!if "$(DEBUG)" == "0"
+CPPFLAGS=/nologo /W3 $(DEBUGFLAGS) /O1 /I "..\..\..\include" /D "WIN32" /D "_WINDOWS" $(MTFLAGS) /FD $(OPTFLAGS) $(EXTRACPPFLAGS) /c
+LINKFLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib version.lib\
+ $(EXTRALIBS) $(LINKDEBUG) /nologo /subsystem:windows /machine:I386 /out:mbrola.exe /pdbtype:sept
+!else
+CPPFLAGS=/nologo /W3 /Gm $(DEBUGFLAGS) /Od /I "..\..\..\include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" $(MTFLAGS) /FD $(OPTFLAGS) $(EXTRACPPFLAGS) /c
+LINKFLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib version.lib\
+ $(EXTRALIBS) $(LINKDEBUG) /nologo /subsystem:windows /machine:I386 /out:mbrola.exe /pdbtype:sept
+!endif
+
+OBJECTS = mbroli.obj mbrolidlg.obj apiext.obj opendialog.obj version.obj
+
+.cpp.obj:
+    cl $(CPPFLAGS) $<
+
+.c.obj:
+    cl $(CPPFLAGS) $<
+
+all:    mbrola.exe
+
+mbrola.obj:    mbrola.cpp mbrola.h
+
+mbroladlg.obj:    mbroladlg.cpp mbroladlg.h
+
+mbrola.exe: $(OBJECTS) mbrola.res
+ link @<<
+ $(LINKFLAGS) $(OBJECTS) mbrola.res
+<<
+
+mbrola.res :      mbrola.rc
+    rc  -r -fo$@ mbrola.rc
+
+clean:
+        -erase *.obj
+        -erase *.exe
+        -erase *.res
+        -erase *.map
+        -erase *.rws
+        -erase *.pdb
+        -erase *.sbr

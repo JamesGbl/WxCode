@@ -1,0 +1,47 @@
+#
+# File:		makefile.nt
+# Author:	Julian Smart
+# Created:	1998
+#
+# "%W% %G%"
+#
+# Makefile : Builds wxTTS documentation
+#
+
+DOCDIR=.
+LOCALDOCDIR=latex
+
+DOCSOURCES=$(LOCALDOCDIR)\wxtts.tex $(LOCALDOCDIR)\body.tex $(LOCALDOCDIR)\classes.tex $(LOCALDOCDIR)\topics.tex
+
+all: hlp html htmlhelp
+
+hlp: winhelp\wxtts.hlp
+rtf: winhelp\wxtts.rtf
+html: html\wxtts.htm
+htmlhelp: htmlhelp\wxtts.chm
+
+winhelp\wxtts.hlp:         winhelp\wxtts.rtf winhelp\wxtts.hpj
+        cd winhelp
+        -erase wxtts.ph
+        hc wxtts
+        cd ..
+
+winhelp\wxtts.rtf: $(DOCSOURCES)
+        cd latex
+        -start /w tex2rtf wxtts.tex ..\winhelp\wxtts.rtf -twice -winhelp
+        cd ..
+
+html\wxtts.htm: $(DOCSOURCES)
+        cd latex
+        -start /w tex2rtf wxtts.tex ..\html\wxtts.htm -twice -html
+        -erase ..\html\*.con
+        -erase ..\html\*.ref
+        cd ..
+
+htmlhelp\wxtts.chm: html\wxtts.htm html\wxtts.hhp
+	cd html
+	-hhc wxtts.hhp
+    -mkdir ..\htmlhelp
+    move wxtts.chm ..\htmlhelp
+	cd ..
+

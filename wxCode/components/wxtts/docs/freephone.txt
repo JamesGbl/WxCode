@@ -1,0 +1,99 @@
+Analysis of FreePhone code
+--------------------------
+
+Incomplete!
+
+audio.cpp
+
+    void output_open(CONFIG* config)
+    void output_close(CONFIG* config)
+        Does file open & close
+
+broad_cats.cpp
+    KEY broad_cats[]
+        Array of categories
+
+conv1.cpp
+    void conv1(CONFIG *config, LING_LIST *ling_list, SENT *sent)
+        Does what?
+
+conv2.cpp
+    void conv2(CONFIG *config, SENT *sent, SPROSOD_LIST *spl)
+        Does what?
+
+durations.cpp
+    void durations(CONFIG *config, SPN *ps, ACOUSTIC *as)
+
+durpros.cpp
+
+durs.cpp
+
+edin2sampa.cpp
+
+english.cpp
+
+freephone.cpp
+
+fw.cpp
+
+go.cpp
+
+grammar.cpp
+
+interface.cpp
+
+load_diphs.cpp
+
+make_wave.cpp
+
+MFDict.cpp
+
+MFDict.h
+
+nrl_edin.cpp
+
+phoneme.cpp
+
+phon_rules.cpp
+
+pitch.cpp
+
+prosody.cpp
+
+prototypes.h
+
+read_rules.cpp
+
+regerror.cpp
+
+regexp.cpp
+
+regexp.h
+
+regmagic.h
+
+regsub.cpp
+
+rule_engine.cpp
+
+rule_engine.h
+
+saynum.cpp
+
+space.cpp
+
+spellwor.cpp
+
+spnio.cpp
+
+syllab.cpp
+
+t2s.cpp
+
+t2s.h
+
+tags.cpp
+
+transcribe.cpp
+
+utils.cpp

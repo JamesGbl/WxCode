@@ -1,0 +1,87 @@
+#
+# File:		makefile.nt
+# Author:	Julian Smart
+# Created:	1998
+# Updated:	
+# Copyright:	(c) 1998
+#
+# "%W% %G%"
+#
+# Makefile : Builds FreePhone library
+# Use FINAL=1 argument to nmake to build final version with no debugging
+# info
+
+!include <ntwin32.mak>
+
+USE_MFC=0
+USE_WXWIN=0
+DEBUG=1
+
+FRAMEWORK=
+EXTRACPPFLAGS=
+
+LIBDIR=../../lib
+
+!if "$(USE_MFC)" == "1"
+FRAMEWORK=_mfc
+EXTRACPPFLAGS=/D_AFXDLL
+!endif
+
+!if "$(USE_WXWIN)" == "1"
+FRAMEWORK=_wx
+EXTRACPPFLAGS=/D__WXMSW__ /I$(WXWIN)\include
+!endif
+
+!if "$(DEBUG)" == "0"
+LIBTARGET=$(LIBDIR)\freephone$(FRAMEWORK).lib
+LINKDEBUG=
+MTFLAGS=/MD
+DEBUGFLAGS=
+OPTFLAGS=/O1
+!else
+LIBTARGET=$(LIBDIR)\freephone$(FRAMEWORK)_d.lib
+LINKDEBUG=$(ldebug)
+MTFLAGS=/MDd /GX
+DEBUGFLAGS=/D_DEBUG
+OPTFLAGS=/Od
+!endif
+
+extralibs=$(LIBTARGET) shell32.lib
+extraflags=/W3 -I../../include /I. /DOSPWIN /Dintel /DLITTLE_ENDIAN /D_WINDOWS $(DEBUGFLAGS) $(OPTFLAGS) $(MTFLAGS) $(OPTFLAGS) $(EXTRACPPFLAGS)
+
+.cpp.obj:
+    $(cc) $(cflags) $(cvars) $(extraflags) $(extrainc) $<
+
+.c.obj:
+    $(cc) $(cflags) $(cvars) $(extraflags) $(extrainc) $<
+
+all:    $(LIBTARGET)
+
+objects = buffer.obj go.obj t2s.obj space.obj tags.obj grammar.obj \
+	interface.obj transcribe.obj conv1.obj conv2.obj durpros.obj prosody.obj \
+	syllab.obj utils.obj \
+	fw.obj broad_cats.obj durs.obj load_diphs.obj make_wave.obj spnio.obj \
+	durations.obj pitch.obj audio.obj nrl_edin.obj spellword.obj\
+    saynum.obj phoneme.obj english.obj\
+	phon_rules.obj edin2sampa.obj freephone.obj regexp.obj regerror.obj rule_engine.obj\
+    MFDict.obj tsstring.obj
+
+# Make the library
+$(LIBTARGET): $(objects)
+    $(implib) -machine:$(CPU)     \
+    $(objects)    \
+    -out:$(LIBTARGET)
+
+
+freephone.obj:  freephone.cpp ..\..\include\tts\freephone.h t2s.h
+
+clean:
+        -erase $(LIBTARGET)
+        -erase *.obj
+        -erase *.exe
+        -erase *.res
+        -erase *.map
+        -erase *.rws
+        -erase *.pdb
+        -erase *.sbr
+

@@ -1,0 +1,74 @@
+:Base wxtts.hlp
+1 Introduction
+2 Introduction=introduction
+2 Acknowledgements=topic0
+2 General limitations=topic1
+2 wxTTS bugs, problems and omissions=topic2
+1 Installation
+2 Installation=installation
+2 Compiling the wxTTS libraries and dictionary=topic3
+2 Compiling the wxTTS samples=topic4
+1 wxTTS Samples
+2 wxTTS Samples=samples
+1 wxFreePhone Discussion
+2 wxFreePhone Discussion=freephone
+1 wxMbrola Discussion
+2 wxMbrola Discussion=mbrola
+1 Alphabetical class reference
+2 Alphabetical class reference=classref
+2 wxFreePhone
+3 wxFreePhone=wxfreephone
+3 wxFreePhone::wxFreePhone=topic5
+3 wxFreePhone::CleanUp=wxfreephonecleanup
+3 wxFreePhone::Init=wxfreephoneinit
+3 wxFreePhone::TextToPhoneme=wxfreephonetexttophoneme
+3 wxFreePhone::TextToPhonemeFile=wxfreephonetexttophonemefile
+2 wxMbrola
+3 wxMbrola=wxmbrola
+3 wxMbrola::wxMbrola=topic6
+3 wxMbrola::Init=wxmbrolainit
+3 wxMbrola::GetCurrentDatabase=wxmbrolagetcurrentdatabase
+3 wxMbrola::GetDatabaseAllInfo=wxmbrolagetdatabaseallinfo
+3 wxMbrola::GetDatabaseId=wxmbrolagetdatabaseid
+3 wxMbrola::GetDatabaseCount=wxmbrolagetdatabasecount
+3 wxMbrola::GetDefaultDatabase=wxmbrolagetdefaultdatabase
+3 wxMbrola::GetDefaultFreq=wxmbrolagetdefaultfreq
+3 wxMbrola::GetDefaultPath=wxmbrolagetdefaultpath
+3 wxMbrola::GetDuration=wxmbrolagetduration
+3 wxMbrola::GetFreq=wxmbrolagetfreq
+3 wxMbrola::GetLastError=wxmbrolagetlasterror
+3 wxMbrola::GetMaxPitch=wxmbrolagetmaxpitch
+3 wxMbrola::GetMinPitch=wxmbrolagetminpitch
+3 wxMbrola::GetMaxDuration=wxmbrolagetmaxduration
+3 wxMbrola::GetMinDuration=wxmbrolagetminduration
+3 wxMbrola::GetMaxFreq=wxmbrolagetmaxfreq
+3 wxMbrola::GetMinFreq=wxmbrolagetminfreq
+3 wxMbrola::GetPitch=wxmbrolagetpitch
+3 wxMbrola::GetVersion=wxmbrolagetversion
+3 wxMbrola::OnRead=wxmbrolaonread
+3 wxMbrola::OnStart=wxmbrolaonstart
+3 wxMbrola::OnStop=wxmbrolaonstop
+3 wxMbrola::OnWait=wxmbrolaonwait
+3 wxMbrola::OnWrite=wxmbrolaonwrite
+3 wxMbrola::Play=wxmbrolaplay
+3 wxMbrola::PlayFromFile=wxmbrolaplayfromfile
+3 wxMbrola::PlayToFile=wxmbrolaplaytofile
+3 wxMbrola::SetCurrentDatabase=wxmbrolasetcurrentdatabase
+3 wxMbrola::SetDefaultDatabase=wxmbrolasetdefaultdatabase
+3 wxMbrola::SetDefaultPath=wxmbrolasetdefaultpath
+3 wxMbrola::SetDuration=wxmbrolasetduration
+3 wxMbrola::SetFreq=wxmbrolasetfreq
+3 wxMbrola::SetMaxPitch=wxmbrolasetmaxpitch
+3 wxMbrola::SetMinPitch=wxmbrolasetminpitch
+3 wxMbrola::SetMaxDuration=wxmbrolasetmaxduration
+3 wxMbrola::SetMinDuration=wxmbrolasetminduration
+3 wxMbrola::SetMaxFreq=wxmbrolasetmaxfreq
+3 wxMbrola::SetMinFreq=wxmbrolasetminfreq
+3 wxMbrola::SetPitch=wxmbrolasetpitch
+3 wxMbrola::Stop=wxmbrolastop
+3 wxMbrola::WaitForEnd=wxmbrolawaitforend
+1 Topics
+2 Topics=topics
+2 wxTTS overview=ttsoverview
+1 Change log
+2 Change log=changes

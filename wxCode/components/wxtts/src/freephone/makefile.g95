@@ -1,0 +1,33 @@
+#
+# File:		makefile.unx
+# Author:	Julian Smart
+# Updated:
+#
+#
+
+EXTRAINC=-I../include
+
+include makeg95.env
+
+LIBTARGET=../lib/libfreephone.a
+
+OBJECTS = buffer.o go.o t2s.o space.o tags.o grammar.o \
+	interface.o transcribe.o conv1.o conv2.o durpros.o prosody.o \
+	syllab.o utils.o \
+	fw.o broad_cats.o durs.o load_diphs.o make_wave.o spnio.o \
+	durations.o pitch.o audio.o nrl_edin.o spellword.o\
+    saynum.o phoneme.o english.o\
+	phon_rules.o edin2sampa.o freephone.o regexp.o regerror.o rule_engine.o\
+    MFDict.o tsstring.o
+
+all:    $(OBJECTS) $(LIBTARGET)
+
+$(LIBTARGET): $(OBJECTS)
+	ar $(AROPTIONS) $@ $(OBJECTS)
+	$(RANLIB) $@
+
+clean:
+	rm -f $(OBJECTS) $(LIBTARGET)
+
+cleanall: clean
+

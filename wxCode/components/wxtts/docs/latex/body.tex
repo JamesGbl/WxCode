@@ -1,0 +1,349 @@
+\chapter{Introduction}\label{introduction}
+\pagenumbering{arabic}%
+\setheader{{\it CHAPTER \thechapter}}{}{}{}{}{{\it CHAPTER \thechapter}}%
+\setfooter{\thepage}{}{}{}{}{\thepage}%
+
+This manual describes a small set of classes for text-to-speech generation, currently
+under Windows.
+The text-to-phoneme part is supplied by modified FreePhone code, mainly written by
+Alistair Conkie, Centre for Speech Technology, University of Edinburgh. The
+phoneme-to-speech part is performed by Mbrola, a project by Alain Ruelle, Thierry Dutoit and
+others at the TCTS Laboratory, Faculte Polytechnique de Mons, Belgium. I am
+very grateful to these organisations and individuals for supplying
+such useful pieces of software for use by others.
+
+What wxTTS supplies is some C++ wrapper classes and samples to make it relatively easy for
+the programmer to use text-to-speech in his or her application. FreePhone
+has previously been compiled only under Unix. Mirko Buffoni has contributed
+code to replace the Unix-specific phoneme database, enabling me to get FreePhone
+running under Windows.
+
+{\it Disclaimer:} Note that I am not a speech specialist, I am merely using my
+C++ programming experience to try to get text-to-speech
+working under Windows. So I'm likely to be ignorant as anyone about, say, FreePhone internals.
+I will probably also make terminological and other blunders. But I would like
+to participate in bridging the gap between the excellent research work that's available, and
+the reality for Windows programmers. I would also like to cooperate with Unix programmers
+in making these classes portable.
+
+For more information, please see below and \helpref{wxTTS classes overview}{ttsoverview}.
+
+This documentation (available in WinHelp, HTML, Word RTF and PDF forms) was generated from Latex
+source using Tex2RTF.
+
+\section{Acknowledgements}
+
+FreePhone was mainly written by Alistair Conkie, Centre for Speech Technology, University of Edinburgh.
+
+Mbrola is a project by Alain Ruelle, Thierry Dutoit and others at the TCTS Laboratory,
+Faculte Polytechnique de Mons, Belgium. See \urlref{http://tcts.fpms.ac.be/synthesis/mbrola.html}{http://tcts.fpms.ac.be/synthesis/mbrola.html}.
+
+Mirko Buffoni wrote the dictionary code for wxFreePhone.
+
+wxTTS can be downloaded from Julian Smart's Web page at \urlref{http://www.anthemion.co.uk}{http://www.anthemion.co.uk}
+ ('Code Cupboard').
+
+\section{General limitations}
+
+Only Windows is supported at present, but this is not a necessary limitation
+since Mbrola and FreePhone both work on Unix. Only Visual C++ makefiles (and some project
+files) are supplied.
+
+Only English is supported by these classes, since FreePhone is for English only.
+
+FreePhone is not as good at prosody and other aspects as (for example) the Festival
+project from the same people, but FreePhone has the advantage of being much smaller
+and more easily compiled.
+
+Some words are not pronounced correctly by Mbrola, but Mbrola is being continually improved.
+
+Mbrola puts up a dialog every time it starts, which makes it hard for Mbrola or wxTTS to be used
+by blind people for example, but the Mbrola team are considering removing the dialog.
+
+wxFreePhone reads the whole word dictionary into memory (can be around 2MB), which
+should not be a restriction for most modern environments.
+
+\section{wxTTS bugs, problems and omissions}
+
+The following work is still needed or can be considered:
+
+\begin{itemize}\itemsep=0pt
+\item wxFreePhone needs further testing and debugging for memory problems in cleanup;
+\item more error checking and reporting required;
+\item (wx)FreePhone code could use rewriting for clarity, perhaps using a string class;
+\item need control over how numbers, dates etc. are pronounced;
+\item further samples would be useful, for example for reading large texts (which will
+need to break text into chunks and wait for a chunk to be read before reading the
+next one);
+\item custom voices could be maintained in wxMbrola, with a mapping between voice name
+and voice parameters;
+\item a wxTTS class could be created to unify wxFreePhone and wxMbrola;
+\item some SAPI compatibility could be attempted;
+\item need to produce standard dialogs that can be invoked to adjust parameters;
+\item could have a second (customisable) dictionary, perhaps with a dialog to allow addition of
+words in a friendly manner (e.g. you have a selection of phonemes which you can
+put together, with a preview - maybe even a soundex-like algorithm to make an initial
+guess of what the phonemes should be);
+\item need to write further makefiles, e.g. for Gnu-Win32, BC++;
+\item need ports to other platforms.
+\end{itemize}
+
+See also \helpref{wxFreePhone Discussion}{freephone}, \helpref{wxMbrola Discussion}{mbrola}.
+
+\chapter{Installation}\label{installation}
+\setheader{{\it CHAPTER \thechapter}}{}{}{}{}{{\it CHAPTER \thechapter}}%
+\setfooter{\thepage}{}{}{}{}{\thepage}%
+
+You will need the Mbrola for Windows installation and the English dictionary, available from
+ \urlref{http://tcts.fpms.ac.be/synthesis/mbrola.html}{http://tcts.fpms.ac.be/synthesis/mbrola.html}.
+
+wxTTS can be downloaded from Julian Smart's Web page at \urlref{http://www.anthemion.co.uk}{http://www.anthemion.co.uk}
+ ('Code Cupboard').
+
+The wxTTS zip file contains all source code. Unzip into a suitable directory,
+taking care to preserve pathnames. The structure is as follows:
+
+{\small\begin{verbatim}
+docs/latex/                         ; Latex source for manual
+docs/winhelp/                       ; WinHelp version of manual
+docs/html/                          ; HTML version of manual
+docs/htmlhelp/                      ; Windows HTML Help version of manual
+src/freephone/                      ; [wx]FreePhone source
+src/freephone/dictionary/           ; Source for dictionary generator, plus english.dat
+src/wxmbrola/                       ; Source for wxMbrola
+include/tts                         ; Public include files
+samples/                            ; Samples
+samples/mfc/simple/                 ; Simple MFC demo of wxFreePhone/wxMbrola
+samples/mfc/mbrola/                 ; Test of wxMbrola, adapted from the Mbroli utility
+samples/win/simple/                 ; Simple plain WIN32 demo of wxFreePhone/wxMbrola
+samples/win/freephone/              ; Simple plain WIN32 demo of wxFreePhone only
+samples/wxwin/simple/               ; Simple wxWindows demo of wxFreePhone/wxMbrola
+lib/                                ; Destination for libraries
+lib/mbrplay.lib                     ; Required for all wxTTS apps
+dictionary/                         ; Destination of generated FreePhone dictionary files
+distrib/                            ; Files for helping to distribute wxTTS
+\end{verbatim}
+}
+
+Currently, wxTTS only works with VC++ 6.0, but other compilers will be supported at some point.
+
+All libraries and samples may be compiled with the VC++ makefiles (.vc), and some
+of the samples may be compiled with supplied project files (.dsp).
+
+The VC++ makefiles can be used to compile three kinds of library, each with Debug and Release
+variants. The three kinds are plain WIN32, MFC, and \urlref{wxWindows}{http://www.wxwindows.org}. To use wxTTS with wxWindows
+you have to have wxWindows installed and the WXWIN environment variable correctly set.
+
+The following libraries are created and/or used by wxTTS:
+
+{\small\begin{verbatim}
+lib/mbrplay.lib                     ; Mbrola import library
+lib/wxmbrola.lib                    ; wxMbrola library (WIN32 release)
+lib/wxmbrola_d.lib                  ; wxMbrola library (WIN32 debug)
+lib/wxmbrola_mfc.lib                ; wxMbrola library (MFC release)
+lib/wxmbrola_mfc_d.lib              ; wxMbrola library (MFC debug)
+lib/wxmbrola_wx.lib                 ; wxMbrola library (wxWindows release)
+lib/wxmbrola_wx_d.lib               ; wxMbrola library (wxWindows debug)
+lib/freephone.lib                   ; wxFreePhone library (WIN32 release)
+lib/freephone_d.lib                 ; wxFreePhone library (WIN32 debug)
+lib/freephone_mfc.lib               ; wxFreePhone library (MFC release)
+lib/freephone_mfc_d.lib             ; wxFreePhone library (MFC debug)
+lib/freephone_wx.lib                ; wxFreePhone library (wxWindows release)
+lib/freephone_wx_d.lib              ; wxFreePhone library (wxWindows debug)
+\end{verbatim}
+}
+
+wxTTS also generates the following binary dictionary files from english.dat:
+
+{\small\begin{verbatim}
+dictionary/english.dct              ; Binary data file
+dictionary/english.idx              ; Index file
+dictionary/english.key              ; Keywords file
+\end{verbatim}
+}
+
+These files need to be distributed by any application using wxFreePhone.
+
+\section{Compiling the wxTTS libraries and dictionary}
+
+To compile all the library files, and the dictionary used by wxFreePhone, you can
+type this in a DOS box:
+
+{\small\begin{verbatim}
+cd src
+nmake -f makefile.vc all
+\end{verbatim}
+}
+
+However, you may wish to only compile some of the libraries, in which case you can use
+one or more of these targets:
+
+\begin{itemize}\itemsep=0pt
+\item just\_win32: Make WIN32 libraries, debug and release
+\item just\_wxwin: Make wxWin libraries, debug and release
+\item just\_mfc: Make MFC libraries, debug and release
+\item dictionary: Make the dictionary
+\end{itemize}
+
+You can also compile the wxMbrola and wxFreePhone libraries individually using the makefile.vc
+files provided in each directory under {\tt src}.
+
+Note that all makefiles have a 'clean' target to remove target and intermediate files.
+
+\section{Compiling the wxTTS samples}
+
+To compile all the samples in release mode, you can
+type this in a DOS box:
+
+{\small\begin{verbatim}
+cd samples
+nmake -f makefile.vc all
+\end{verbatim}
+}
+
+However, you may wish to only compile some of the samples, in which case you can use
+one or more of these targets:
+
+\begin{itemize}\itemsep=0pt
+\item samples\_win32: Make WIN32 executables, release only
+\item samples\_wxwin: Make wxWindows executables, release only
+\item samples\_mfc: Make MFC executables, release only
+\end{itemize}
+
+You can also compile the samples individually using the makefile.vc
+files provided in each directory under {\tt samples}. You can alternatively use the
+provided project files if you wish.
+
+Note that all makefiles have a 'clean' target to remove target and intermediate files.
+
+See \helpref{wxTTS Samples}{samples} for a brief description of the samples.
+
+\chapter{wxTTS Samples}\label{samples}
+\pagenumbering{arabic}%
+\setheader{{\it CHAPTER \thechapter}}{}{}{}{}{{\it CHAPTER \thechapter}}%
+\setfooter{\thepage}{}{}{}{}{\thepage}%
+
+\wxheading{WIN32 samples}
+
+{\bf samples/win/simple} shows a dialog that allows you to enter text
+and speak it or write it to a phoneme file (test.pho) or a wave file (test.wav).
+
+{\bf samples/win/freephone} only uses wxFreePhone, and allows you to translate text to
+a phoneme file (test.pho).
+
+\wxheading{MFC samples}
+
+{\bf samples/win/simple} shows a dialog that allows you to enter text
+and speak it or write it to a phoneme file (test.pho) or a wave file (test.wav).
+
+{\bf samples/win/mbrola} is an adaptation of code supplied by the authors of Mbrola,
+and allows setting of various Mbrola parameters.
+
+\wxheading{wxWindows samples}
+
+{\bf samples/win/simple} shows a dialog that allows you to enter text
+and play it to the sound card or a wave file. You can also play a phoneme file.
+
+\chapter{wxFreePhone Discussion}\label{freephone}
+\setheader{{\it CHAPTER \thechapter}}{}{}{}{}{{\it CHAPTER \thechapter}}%
+\setfooter{\thepage}{}{}{}{}{\thepage}%
+
+Here are some random observations about (wx)FreePhone. Note that this hasn't been updated
+for a long time (since June 1998) and therefore improvements to Mbrola may make some of the comments
+redundant.
+
+\wxheading{Implementation}
+
+I have taken the Unix FreePhone code, renamed the .c files to .cpp, and made miscellaneous
+changes to make it compile using Visual C++ 5.0. freephone.h, freephone.cpp adds a class
+wrapper around the main driving bits of the code. The major stumbling block
+was the dictionary database, which uses a library not available under Windows.
+Mirko Buffoni has come to the rescue with his MFDict.h, MFDict.cpp code which
+implements a simple Dictionary class for searching prepared files. There is also
+MkDict.exe which generates these files from the Edinburgh phoneme database file. The output
+files are: a keyword file (.key), and index file (.idx), and a data file (.dct).
+Mirko's code reads the data into memory which may be a constraint for some people, but
+these days megabytes are abundant. Although the code does some linear searching, it seems quite fast,
+which can be verified by writing out .pho files using samples/win/simple/simple.exe.
+A message box indicates when the process is complete, and this is normally pretty instant
+(at least it is on my PII 300MHz).
+
+\wxheading{Dictionary files}
+
+The English dictionary source file is in freephone/dictionary. The output files,
+with extension key, idx and dct, are put into the top-level dictionary directory
+in the wxTTS installation. These are used by the samples, which specify where these
+files are in the wxFreePhone constructor. If the files are not found, the accuracy
+of the speech will be severely degraded as FreePhone guesses the pronunciations.
+
+\wxheading{Bad phonemes}
+
+If it does not find a word in its dictionary (and sometimes even when it does), FreePhone sometimes phonemes
+which cannot be processed by Mbrola. Perhaps we need a program to run through the dictionary pronouncing all the words, so
+we can get an idea about how much of it works, and what the problem areas are.
+
+\wxheading{Memory bugs}
+
+There are memory bugs in FreePhone, which may or may not be due to things I have
+done. Sometimes the bugs are fatal, sometimes they just cause warnings in Developer
+Studio.
+
+\wxheading{Rewriting (wx)FreePhone}
+
+It will be tricky to rewrite FreePhone, but I think we probably need to
+do this, so that we can debug and extend it. A written analysis of FreePhone is required.
+Anyone know any good C analysis/documentation tools?
+
+Some suggestions for the rewrite are as follows:
+
+\begin{itemize}\itemsep=0pt
+\item Have a ttsString class which we use extensively, instead of char*. This
+string class can be taken from the wxWindows 2.0 wxString class, and optionally #defined
+to be CString or wxString if MFC or wxWindows is available.
+\item Implement most of FreePhone with a FreePhone class, which is used by wxFreePhone.
+The separation means that we don't have to include all implementation functions and data
+into wxFreePhone.
+\item Gradually replace the C code with C++ code, starting from the top level and working
+towards the lower-level functions.
+\end{itemize}
+
+\wxheading{Porting}
+
+It should be quite straightforward to get my version of FreePhone compiled on Unix.
+Either the original database access routines can be used, or Mirko Buffoni's MFDict.cpp.
+It probably makes sense to stick with MFDict.cpp on all platforms for simplicity, and
+its performance seems quite adequate.
+
+\chapter{wxMbrola Discussion}\label{mbrola}
+\setheader{{\it CHAPTER \thechapter}}{}{}{}{}{{\it CHAPTER \thechapter}}%
+\setfooter{\thepage}{}{}{}{}{\thepage}%
+
+\wxheading{mbrola.ini file format}
+
+wxMbrola tries to find an mbrola.ini file in the current directory or Windows directory.
+This file allows the application to specify useful values, which don't affect wxMbrola
+directly but can be used in an application to tailor the voice parameters, etc. This
+facility might be considered too application-specific to be in wxMbrola and could be
+removed in the future.
+
+\begin{verbatim}
+[GENERAL]
+Path=<string> ; Specifies a path (what for?)
+
+[PITCH]
+Min=<float>   ; E.g. 0.2
+Max=<float>   ; E.g. 8.0
+
+[TIME]
+Min=<float>   ; E.g. 0.2
+Max=<float>   ; E.g. 8.0
+
+[VOICE] ; Frequency. What about having default freq. (16000)?
+Min=<float>   ; E.g. 8000
+Max=<float>   ; E.g. 32000
+
+[DATABASE]
+Default=<string>
+
+\end{verbatim}
+

@@ -1,0 +1,442 @@
+<HTML>
+<head><title>wxMbrola</title></head>
+
+<BODY BGCOLOR=#FFFFFF>
+<A NAME="wxmbrola"></A><CENTER>
+<A HREF="wxtts.htm"><img align=center src="contents.gif" BORDER=0 ALT="Contents"></A> <A HREF="wxtts11.htm#classref"><img align=center src="up.gif" BORDER=0 ALT="Up"></A> <A HREF="wxtts12.htm#wxfreephone"><img align=center src="back.gif" BORDER=0 ALT="Previous"></A> <A HREF="wxtts14.htm#topics"><img align=center src="forward.gif" BORDER=0 ALT="Next"></A> </CENTER><HR>
+
+<H2>wxMbrola</H2>
+<P>
+The wxMbrola class controls Mbrola, a high-quality speech synthesizer.
+It takes strings or files of phonemes, which are supplied by wxFreePhone.<P>
+Note that in this class reference, member functions involving strings are documented
+with several forms, since CString, wxString or char* are used depending on how the
+library is compiled (MFC, wxWindows or neither). These functions are mutually exclusive
+per build.<P>
+<B><FONT COLOR="#FF0000">Derived from</FONT></B><P>
+Nothing<P>
+<B><FONT COLOR="#FF0000">See also</FONT></B><P>
+
+<img src="books.gif"></A><A HREF="wxtts15.htm#ttsoverview">wxTTS overview</A><P>
+<B><FONT COLOR="#FF0000">Members</FONT></B><P>
+<A HREF="#topic6">wxMbrola::wxMbrola</A><BR>
+<A HREF="#wxmbrolainit">wxMbrola::Init</A><BR>
+<A HREF="#wxmbrolagetcurrentdatabase">wxMbrola::GetCurrentDatabase</A><BR>
+<A HREF="#wxmbrolagetdatabaseallinfo">wxMbrola::GetDatabaseAllInfo</A><BR>
+<A HREF="#wxmbrolagetdatabaseid">wxMbrola::GetDatabaseId</A><BR>
+<A HREF="#wxmbrolagetdatabasecount">wxMbrola::GetDatabaseCount</A><BR>
+<A HREF="#wxmbrolagetdefaultdatabase">wxMbrola::GetDefaultDatabase</A><BR>
+<A HREF="#wxmbrolagetdefaultfreq">wxMbrola::GetDefaultFreq</A><BR>
+<A HREF="#wxmbrolagetdefaultpath">wxMbrola::GetDefaultPath</A><BR>
+<A HREF="#wxmbrolagetduration">wxMbrola::GetDuration</A><BR>
+<A HREF="#wxmbrolagetfreq">wxMbrola::GetFreq</A><BR>
+<A HREF="#wxmbrolagetlasterror">wxMbrola::GetLastError</A><BR>
+<A HREF="#wxmbrolagetmaxpitch">wxMbrola::GetMaxPitch</A><BR>
+<A HREF="#wxmbrolagetminpitch">wxMbrola::GetMinPitch</A><BR>
+<A HREF="#wxmbrolagetmaxduration">wxMbrola::GetMaxDuration</A><BR>
+<A HREF="#wxmbrolagetminduration">wxMbrola::GetMinDuration</A><BR>
+<A HREF="#wxmbrolagetmaxfreq">wxMbrola::GetMaxFreq</A><BR>
+<A HREF="#wxmbrolagetminfreq">wxMbrola::GetMinFreq</A><BR>
+<A HREF="#wxmbrolagetpitch">wxMbrola::GetPitch</A><BR>
+<A HREF="#wxmbrolagetversion">wxMbrola::GetVersion</A><BR>
+<A HREF="#wxmbrolaonread">wxMbrola::OnRead</A><BR>
+<A HREF="#wxmbrolaonstart">wxMbrola::OnStart</A><BR>
+<A HREF="#wxmbrolaonstop">wxMbrola::OnStop</A><BR>
+<A HREF="#wxmbrolaonwait">wxMbrola::OnWait</A><BR>
+<A HREF="#wxmbrolaonwrite">wxMbrola::OnWrite</A><BR>
+<A HREF="#wxmbrolaplay">wxMbrola::Play</A><BR>
+<A HREF="#wxmbrolaplayfromfile">wxMbrola::PlayFromFile</A><BR>
+<A HREF="#wxmbrolaplaytofile">wxMbrola::PlayToFile</A><BR>
+<A HREF="#wxmbrolasetcurrentdatabase">wxMbrola::SetCurrentDatabase</A><BR>
+<A HREF="#wxmbrolasetdefaultdatabase">wxMbrola::SetDefaultDatabase</A><BR>
+<A HREF="#wxmbrolasetdefaultpath">wxMbrola::SetDefaultPath</A><BR>
+<A HREF="#wxmbrolasetduration">wxMbrola::SetDuration</A><BR>
+<A HREF="#wxmbrolasetfreq">wxMbrola::SetFreq</A><BR>
+<A HREF="#wxmbrolasetmaxpitch">wxMbrola::SetMaxPitch</A><BR>
+<A HREF="#wxmbrolasetminpitch">wxMbrola::SetMinPitch</A><BR>
+<A HREF="#wxmbrolasetmaxduration">wxMbrola::SetMaxDuration</A><BR>
+<A HREF="#wxmbrolasetminduration">wxMbrola::SetMinDuration</A><BR>
+<A HREF="#wxmbrolasetmaxfreq">wxMbrola::SetMaxFreq</A><BR>
+<A HREF="#wxmbrolasetminfreq">wxMbrola::SetMinFreq</A><BR>
+<A HREF="#wxmbrolasetpitch">wxMbrola::SetPitch</A><BR>
+<A HREF="#wxmbrolastop">wxMbrola::Stop</A><BR>
+<A HREF="#wxmbrolawaitforend">wxMbrola::WaitForEnd</A><BR>
+<P>
+
+<HR>
+<A NAME="topic6"></A>
+<H3>wxMbrola::wxMbrola</H3>
+<P>
+<B></B> <B>wxMbrola</B>()<P>
+Constructor.<P>
+Note that before performing phoneme generation, you must call <A HREF="wxtts13.htm#wxmbrolainit">wxMbrola::Init</A> to
+initialise the speech synthesizer.<P>
+
+<HR>
+<A NAME="wxmbrolainit"></A>
+<H3>wxMbrola::Init</H3>
+<P>
+<B>Bool</B> <B>Init</B>()<P>
+Initializes the speech synthesizer.<P>
+
+<HR>
+<A NAME="wxmbrolagetcurrentdatabase"></A>
+<H3>wxMbrola::GetCurrentDatabase</H3>
+<P>
+<B>Bool</B> <B>GetCurrentDatabase</B>(<B>CString&amp;</B><I> db</I>) <B>const</B><P>
+<B>Bool</B> <B>GetCurrentDatabase</B>(<B>wxString&amp;</B><I> db</I>) <B>const</B><P>
+<B>Bool</B> <B>GetCurrentDatabase</B>(<B>char*</B><I> db</I>) <B>const</B><P>
+Gets the current diphone database used by Mbrola. The name <I>db</I> is a short label such as "en1".<P>
+
+<HR>
+<A NAME="wxmbrolagetdatabaseallinfo"></A>
+<H3>wxMbrola::GetDatabaseAllInfo</H3>
+<P>
+<B>CString</B> <B>GetDatabaseAllInfo</B>() <B>const</B><P>
+<B>wxString</B> <B>GetDatabaseAllInfo</B>() <B>const</B><P>
+<B>char*</B> <B>GetDatabaseAllInfo</B>() <B>const</B><P>
+Returns information about the current database. The third form returns a pointer to a newly allocated
+character array, which should be deleted by the application.<P>
+
+<HR>
+<A NAME="wxmbrolagetdatabaseid"></A>
+<H3>wxMbrola::GetDatabaseId</H3>
+<P>
+<B>Bool</B> <B>GetDatabaseId</B>(<B>int</B><I> n</I>, <B>CString&amp;</B><I> id</I>) <B>const</B><P>
+<B>Bool</B> <B>GetDatabaseId</B>(<B>int</B><I> n</I>, <B>wxString&amp;</B><I> id</I>) <B>const</B><P>
+<B>Bool</B> <B>GetDatabaseId</B>(<B>int</B><I> n</I>, <B>char*</B><I> id</I>) <B>const</B><P>
+Gets the nth diphone database name known to wxMbrola. Use <A HREF="wxtts13.htm#wxmbrolagetdatabasecount">wxMbrola::GetDatabaseCount</A> to
+find out how many diphone databases there are. Note that these are Mbrola-specific diphone databases, nothing to do with
+the wxFreePhone dictionary.<P>
+The char* form of GetDatabaseId expects a character buffer to be passed,
+into which the database id will be copied.<P>
+
+<HR>
+<A NAME="wxmbrolagetdatabasecount"></A>
+<H3>wxMbrola::GetDatabaseCount</H3>
+<P>
+<B>int</B> <B>GetDatabaseCount</B>(<B>int</B><I> n</I>) <B>const</B><P>
+Returns the number of phoneme databases known to wxMbrola.<P>
+See also <A HREF="wxtts13.htm#wxmbrolagetdatabaseid">wxMbrola::GetDatabaseId</A>.<P>
+
+<HR>
+<A NAME="wxmbrolagetdefaultdatabase"></A>
+<H3>wxMbrola::GetDefaultDatabase</H3>
+<P>
+<B>CString</B> <B>GetDefaultDatabase</B>() <B>const</B><P>
+<B>wxString</B> <B>GetDefaultDatabase</B>() <B>const</B><P>
+<B>char*</B> <B>GetDefaultDatabase</B>() <B>const</B><P>
+Returns the default database. This is not the current database used for synthesis, but the default which
+is specified by an optional mbrola.ini file, as a hint.<P>
+
+<HR>
+<A NAME="wxmbrolagetdefaultfreq"></A>
+<H3>wxMbrola::GetDefaultFreq</H3>
+<P>
+<B>long</B> <B>GetDefaultFreq</B>() <B>const</B><P>
+Returns the default frequency for the current voice.<P>
+
+<HR>
+<A NAME="wxmbrolagetdefaultpath"></A>
+<H3>wxMbrola::GetDefaultPath</H3>
+<P>
+<B>CString</B> <B>GetDefaultPath</B>() <B>const</B><P>
+<B>wxString</B> <B>GetDefaultPath</B>() <B>const</B><P>
+<B>char*</B> <B>GetDefaultPath</B>() <B>const</B><P>
+Returns the default path, as specified in mbrola.ini. Not currently used.<P>
+
+<HR>
+<A NAME="wxmbrolagetduration"></A>
+<H3>wxMbrola::GetDuration</H3>
+<P>
+<B>float</B> <B>GetDuration</B>() <B>const</B><P>
+Gets the current duration of the voice, between around 0 and 10 (a value of 0.2 is reasonable).<P>
+
+<HR>
+<A NAME="wxmbrolagetfreq"></A>
+<H3>wxMbrola::GetFreq</H3>
+<P>
+<B>float</B> <B>GetFreq</B>() <B>const</B><P>
+Sets the current frequency of the voice, between around 8000 and 32000. A value of 16000 would be reasonable.<P>
+
+<HR>
+<A NAME="wxmbrolagetlasterror"></A>
+<H3>wxMbrola::GetLastError</H3>
+<P>
+<B>CString</B> <B>GetLastError</B>() <B>const</B><P>
+<B>wxString</B> <B>GetLastError</B>() <B>const</B><P>
+<B>char*</B> <B>GetLastError</B>() <B>const</B><P>
+Returns a string describing the last error. In the third form, returns a pointer to
+a static character array, so do not deallocate it.<P>
+
+<HR>
+<A NAME="wxmbrolagetmaxpitch"></A>
+<H3>wxMbrola::GetMaxPitch</H3>
+<P>
+<B>float</B> <B>GetMaxPitch</B>() <B>const</B><P>
+Gets the maximum pitch that an application allows the user to have. This value doesn't
+affect Mbrola directly, it is up to the application to make use of it. The maximum
+pitch is read from the mbrola.ini file if it exists. A reasonable maximum pitch value might be 8.0.<P>
+
+<HR>
+<A NAME="wxmbrolagetminpitch"></A>
+<H3>wxMbrola::GetMinPitch</H3>
+<P>
+<B>float</B> <B>GetMinPitch</B>() <B>const</B><P>
+Gets the minimum pitch that an application allows the user to have. This value doesn't
+affect Mbrola directly, it is up to the application to make use of it. The minimum
+pitch is read from the mbrola.ini file if it exists. A reasonable minimum pitch value might be 0.2.<P>
+
+<HR>
+<A NAME="wxmbrolagetmaxduration"></A>
+<H3>wxMbrola::GetMaxDuration</H3>
+<P>
+<B>float</B> <B>GetMaxDuration</B>() <B>const</B><P>
+Gets the maximum duration that an application allows the user to have. This value doesn't
+affect Mbrola directly, it is up to the application to make use of it. The maximum
+duration is read from the mbrola.ini file if it exists. A reasonable maximum duration value might be 8.0.<P>
+
+<HR>
+<A NAME="wxmbrolagetminduration"></A>
+<H3>wxMbrola::GetMinDuration</H3>
+<P>
+<B>float</B> <B>GetMinDuration</B>() <B>const</B><P>
+Gets the minimum duration that an application allows the user to have. This value doesn't
+affect Mbrola directly, it is up to the application to make use of it. The minimum
+duration is read from the mbrola.ini file if it exists. A reasonable minimum duration value might be 0.2.<P>
+
+<HR>
+<A NAME="wxmbrolagetmaxfreq"></A>
+<H3>wxMbrola::GetMaxFreq</H3>
+<P>
+<B>long</B> <B>GetMaxFreq</B>() <B>const</B><P>
+Gets the maximum freq that an application allows the user to have. This value doesn't
+affect Mbrola directly, it is up to the application to make use of it. The maximum
+freq is read from the mbrola.ini file if it exists. A reasonable maximum freq value might be 32000.<P>
+
+<HR>
+<A NAME="wxmbrolagetminfreq"></A>
+<H3>wxMbrola::GetMinFreq</H3>
+<P>
+<B>long</B> <B>GetMinFreq</B>() <B>const</B><P>
+Gets the minimum freq that an application allows the user to have. This value doesn't
+affect Mbrola directly, it is up to the application to make use of it. The minimum
+freq is read from the mbrola.ini file if it exists. A reasonable minimum freq value might be 8000.<P>
+
+<HR>
+<A NAME="wxmbrolagetpitch"></A>
+<H3>wxMbrola::GetPitch</H3>
+<P>
+<B>float</B> <B>GetPitch</B>() <B>const</B><P>
+Gets the current pitch of the voice, between around 0 and 10 (a value of 0.2 is reasonable).<P>
+
+<HR>
+<A NAME="wxmbrolagetversion"></A>
+<H3>wxMbrola::GetVersion</H3>
+<P>
+<B>static CString</B> <B>GetVersion</B>()<P>
+<B>static wxString</B> <B>GetVersion</B>()<P>
+<B>static char*</B> <B>GetVersion</B>()<P>
+Returns an Mbrola version string. The third form returns a pointer to a static character
+array, which should not be deallocated by the application.<P>
+
+<HR>
+<A NAME="wxmbrolaonread"></A>
+<H3>wxMbrola::OnRead</H3>
+<P>
+<B>virtual void</B> <B>OnRead</B>()<P>
+Override this function to receive notification when a read operation occurs.<P>
+
+<HR>
+<A NAME="wxmbrolaonstart"></A>
+<H3>wxMbrola::OnStart</H3>
+<P>
+<B>virtual void</B> <B>OnStart</B>()<P>
+Override this function to receive notification when the sound starts playing.<P>
+
+<HR>
+<A NAME="wxmbrolaonstop"></A>
+<H3>wxMbrola::OnStop</H3>
+<P>
+<B>virtual void</B> <B>OnStop</B>()<P>
+Override this function to receive notification when the sound stops playing.<P>
+
+<HR>
+<A NAME="wxmbrolaonwait"></A>
+<H3>wxMbrola::OnWait</H3>
+<P>
+<B>virtual void</B> <B>OnWait</B>()<P>
+Override this function to receive notification when a wait event occurs (don't
+know what this actually means).<P>
+
+<HR>
+<A NAME="wxmbrolaonwrite"></A>
+<H3>wxMbrola::OnWrite</H3>
+<P>
+<B>virtual void</B> <B>OnWrite</B>()<P>
+Override this function to receive notification when a write operation occurs.<P>
+
+<HR>
+<A NAME="wxmbrolaplay"></A>
+<H3>wxMbrola::Play</H3>
+<P>
+<B>int</B> <B>Play</B>(<B>const CString&amp;</B><I> text</I>, <B>Bool</B><I>sync</I>)<P>
+<B>int</B> <B>Play</B>(<B>const wxString&amp;</B><I> text</I>, <B>Bool</B><I>sync</I>)<P>
+<B>int</B> <B>Play</B>(<B>const char*</B><I> text</I>, <B>Bool</B><I>sync</I>)<P>
+Plays the given phoneme string, synchronously or asynchronously.
+The return value is one of the following.<P>
+<UL>
+
+<LI> wxMBRERR_NOMBROLADLL
+<LI> wxMBRERR_NOREGISTRY
+<LI> wxMBRERR_NORESOURCE
+<LI> wxMBRERR_NOTHREAD
+<LI> wxMBRERR_DATABASENOTVALID
+<LI> wxMBRERR_CANTOPENDEVICEOUT
+<LI> wxMBRERR_BADCOMMAND
+<LI> wxMBRERR_CANTOPENFILE
+<LI> wxMBRERR_WRITEERROR
+<LI> wxMBRERR_MBROLAERROR
+<LI> wxMBRERR_CANCELLEDBYUSER
+<LI> wxMBRERR_NOERROR
+</UL>
+<P>
+
+<HR>
+<A NAME="wxmbrolaplayfromfile"></A>
+<H3>wxMbrola::PlayFromFile</H3>
+<P>
+<B>int</B> <B>PlayFromFile</B>(<B>const CString&amp;</B><I> filename</I>, <B>Bool</B><I>sync</I>)<P>
+<B>int</B> <B>PlayFromFile</B>(<B>const wxString&amp;</B><I> filename</I>, <B>Bool</B><I>sync</I>)<P>
+<B>int</B> <B>PlayFromFile</B>(<B>const char*</B><I> filename</I>, <B>Bool</B><I>sync</I>)<P>
+Plays the given phoneme file, synchronously or asynchronously.<P>
+Please see <A HREF="wxtts13.htm#wxmbrolaplay">wxMbrola::Play</A> for a description of the return value.<P>
+
+<HR>
+<A NAME="wxmbrolaplaytofile"></A>
+<H3>wxMbrola::PlayToFile</H3>
+<P>
+<B>int</B> <B>PlayToFile</B>(<B>const CString&amp;</B><I> text</I>, <B>const CString&amp;</B><I> filename</I>, <B>Bool</B><I>sync</I>)<P>
+<B>int</B> <B>PlayToFile</B>(<B>const wxString&amp;</B><I> text</I>, <B>const wxString&amp;</B><I> filename</I>, <B>Bool</B><I>sync</I>)<P>
+<B>int</B> <B>PlayToFile</B>(<B>const char*</B><I> text</I>, <B>const char*</B><I> filename</I>, <B>Bool</B><I>sync</I>)<P>
+Plays the given phoneme string to a Windows WAV file, synchronously or asynchronously.<P>
+Please see <A HREF="wxtts13.htm#wxmbrolaplay">wxMbrola::Play</A> for a description of the return value.<P>
+
+<HR>
+<A NAME="wxmbrolasetcurrentdatabase"></A>
+<H3>wxMbrola::SetCurrentDatabase</H3>
+<P>
+<B>Bool</B> <B>SetCurrentDatabase</B>(<B>const CString&amp;</B><I> db</I>)<P>
+<B>Bool</B> <B>SetCurrentDatabase</B>(<B>const wxString&amp;</B><I> db</I>)<P>
+<B>Bool</B> <B>SetCurrentDatabase</B>(<B>const char*</B><I> db</I>)<P>
+Sets the current diphone database to be used by Mbrola. The name <I>db</I> is a short label such as "en1".<P>
+
+<HR>
+<A NAME="wxmbrolasetdefaultdatabase"></A>
+<H3>wxMbrola::SetDefaultDatabase</H3>
+<P>
+<B>void</B> <B>SetDefaultDatabase</B>(<B>const CString&amp;</B><I> db</I>)<P>
+<B>void</B> <B>SetDefaultDatabase</B>(<B>const wxString&amp;</B><I> db</I>)<P>
+<B>void</B> <B>SetDefaultDatabase</B>(<B>const char*</B><I> db</I>)<P>
+Sets the default database. This is not the current database used for synthesis, but the default which
+is specified by an optional mbrola.ini file, as a hint.<P>
+
+<HR>
+<A NAME="wxmbrolasetdefaultpath"></A>
+<H3>wxMbrola::SetDefaultPath</H3>
+<P>
+<B>void</B> <B>SetDefaultPath</B>(<B>const CString&amp;</B><I> path</I>)<P>
+<B>void</B> <B>SetDefaultPath</B>(<B>const wxString&amp;</B><I> path</I>)<P>
+<B>void</B> <B>SetDefaultPath</B>(<B>const char*</B><I> path</I>)<P>
+Sets the default path, as specified in mbrola.ini. Not currently used.<P>
+
+<HR>
+<A NAME="wxmbrolasetduration"></A>
+<H3>wxMbrola::SetDuration</H3>
+<P>
+<B>Bool</B> <B>SetDuration</B>(<B>float</B><I> duration</I>)<P>
+Sets the duration of the voice, between around 0 and 10 (a value of 0.2 is reasonable).<P>
+
+<HR>
+<A NAME="wxmbrolasetfreq"></A>
+<H3>wxMbrola::SetFreq</H3>
+<P>
+<B>Bool</B> <B>SetFreq</B>(<B>long</B><I> freq</I>)<P>
+Sets the frequency of the voice, between around 8000 and 32000. A value of 16000 would be reasonable.<P>
+
+<HR>
+<A NAME="wxmbrolasetmaxpitch"></A>
+<H3>wxMbrola::SetMaxPitch</H3>
+<P>
+<B>void</B> <B>SetMaxPitch</B>(<B>float</B><I> maxPitch</I>)<P>
+Sets the maximum pitch that an application allows the user to have. This value doesn't
+affect Mbrola directly, it is up to the application to make use of it. The maximum
+pitch is read from the mbrola.ini file if it exists. A reasonable maximum pitch value might be 8.0.<P>
+
+<HR>
+<A NAME="wxmbrolasetminpitch"></A>
+<H3>wxMbrola::SetMinPitch</H3>
+<P>
+<B>void</B> <B>SetMinPitch</B>(<B>float</B><I> minPitch</I>)<P>
+Sets the minimum pitch that an application allows the user to have. This value doesn't
+affect Mbrola directly, it is up to the application to make use of it. The minimum
+pitch is read from the mbrola.ini file if it exists. A reasonable minimum pitch value might be 0.2.<P>
+
+<HR>
+<A NAME="wxmbrolasetmaxduration"></A>
+<H3>wxMbrola::SetMaxDuration</H3>
+<P>
+<B>void</B> <B>SetMaxDuration</B>(<B>float</B><I> maxDuration</I>)<P>
+Sets the maximum duration that an application allows the user to have. This value doesn't
+affect Mbrola directly, it is up to the application to make use of it. The maximum
+duration is read from the mbrola.ini file if it exists. A reasonable maximum duration value might be 8.0.<P>
+
+<HR>
+<A NAME="wxmbrolasetminduration"></A>
+<H3>wxMbrola::SetMinDuration</H3>
+<P>
+<B>void</B> <B>SetMinDuration</B>(<B>float</B><I> minDuration</I>)<P>
+Sets the minimum duration that an application allows the user to have. This value doesn't
+affect Mbrola directly, it is up to the application to make use of it. The minimum
+duration is read from the mbrola.ini file if it exists. A reasonable minimum duration value might be 0.2.<P>
+
+<HR>
+<A NAME="wxmbrolasetmaxfreq"></A>
+<H3>wxMbrola::SetMaxFreq</H3>
+<P>
+<B>void</B> <B>SetMaxFreq</B>(<B>long</B><I> maxFreq</I>)<P>
+Sets the maximum freq that an application allows the user to have. This value doesn't
+affect Mbrola directly, it is up to the application to make use of it. The maximum
+freq is read from the mbrola.ini file if it exists. A reasonable maximum freq value might be 32000.<P>
+
+<HR>
+<A NAME="wxmbrolasetminfreq"></A>
+<H3>wxMbrola::SetMinFreq</H3>
+<P>
+<B>void</B> <B>SetMinFreq</B>(<B>long</B><I> minFreq</I>)<P>
+Sets the minimum freq that an application allows the user to have. This value doesn't
+affect Mbrola directly, it is up to the application to make use of it. The minimum
+freq is read from the mbrola.ini file if it exists. A reasonable minimum freq value might be 8000.<P>
+
+<HR>
+<A NAME="wxmbrolasetpitch"></A>
+<H3>wxMbrola::SetPitch</H3>
+<P>
+<B>Bool</B> <B>SetPitch</B>(<B>float</B><I> pitch</I>)<P>
+Sets the pitch of the voice, between around 0 and 10 (a value of 0.2 is reasonable).<P>
+
+<HR>
+<A NAME="wxmbrolastop"></A>
+<H3>wxMbrola::Stop</H3>
+<P>
+<B>Bool</B> <B>Stop</B>()<P>
+Stops the sound currently playing.<P>
+
+<HR>
+<A NAME="wxmbrolawaitforend"></A>
+<H3>wxMbrola::WaitForEnd</H3>
+<P>
+<B>Bool</B> <B>WaitForEnd</B>()<P>
+Returns only after the sound has finished playing.<P>
+
+</BODY></HTML>

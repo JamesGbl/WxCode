@@ -1,0 +1,33 @@
+#
+# File:		makefile.g95
+# Author:	Julian Smart
+# Created:	1998
+# Updated:	
+#
+# "%W% %G%"
+#
+# Makefile for freephone example: Unix
+
+EXTRALIBS=
+
+# All common UNIX compiler flags and options are now in
+# this central makefile.
+include ../makeunix.env
+
+OBJECTS = Creadict.o MFDict.o
+DICT=../../dictionary/english.dct
+engdict: $(DICT)
+
+all:    mkdict $(DICT)
+
+mkdict:	$(OBJECTS)
+	$(CC) $(LDFLAGS) -o mkdict $(OBJECTS) $(LDLIBS)
+
+$(DICT): english.dat mkdict
+	mkdict english.dat
+	cp english.dct ../../dictionary
+	cp english.idx ../../dictionary
+	cp english.key ../../dictionary
+
+clean:
+	rm -f $(OBJECTS) mkdict core

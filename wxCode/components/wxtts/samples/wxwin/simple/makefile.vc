@@ -1,0 +1,21 @@
+# Purpose: makefile for simple example (VC++ 32bit)
+# Created: 2000-03-15
+
+# Set WXDIR for your system
+WXDIR = $(WXWIN)
+
+FINAL=0
+
+!if "$(FINAL)" == "0"
+EXTRALIBS=..\..\..\lib\wxmbrola_wx_d.lib ..\..\..\lib\freephone_wx_d.lib ..\..\..\lib\mbrplay.lib
+!else
+EXTRALIBS=..\..\..\lib\wxmbrola_wx_r.lib ..\..\..\lib\freephone_wx_r.lib ..\..\..\lib\mbrplay.lib
+!endif
+
+EXTRAFLAGS=/I..\..\..\include
+
+PROGRAM=simple
+OBJECTS = $(PROGRAM).obj
+
+!include $(WXDIR)\src\makeprog.vc
+

@@ -1,0 +1,28 @@
+#
+# File:		makefile.g95
+# Author:	Julian Smart
+# Created:	1998
+# Updated:	
+#
+# "%W% %G%"
+#
+# Makefile for freephone example: Unix
+
+EXTRALIBS=-lfreephone
+
+# All common UNIX compiler flags and options are now in
+# this central makefile.
+include ../../../freephone/makeunix.env
+
+OBJECTS = freephone1.o
+
+all:    freephone1
+
+freephone1:	$(OBJECTS)
+	$(CC) $(LDFLAGS) -o freephone1 $(OBJECTS) $(LDLIBS)
+
+freephone1.o:	freephone1.cpp
+	$(CC) -c $(CPPFLAGS) -o $@ freephone1.cpp
+
+clean:
+	rm -f $(OBJECTS) freephone1 core

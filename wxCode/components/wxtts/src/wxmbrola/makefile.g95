@@ -1,0 +1,26 @@
+#
+# File:		makefile.unx
+# Author:	Julian Smart
+# Updated:
+#
+#
+
+EXTRAINC=-I../../include
+
+include ../freephone/makeg95.env
+
+LIBTARGET=../../lib/libwxmbrola.a
+
+OBJECTS = wxmbrola.o
+
+all:    $(OBJECTS) $(LIBTARGET)
+
+$(LIBTARGET): $(OBJECTS)
+	ar $(AROPTIONS) $@ $(OBJECTS)
+	$(RANLIB) $@
+
+clean:
+	rm -f $(OBJECTS) $(LIBTARGET)
+
+cleanall: clean
+

@@ -1,0 +1,48 @@
+# makefile.vc
+# Invokes makefiles in subdirectories, to build some of
+# the wxTTS samples.
+#
+# Useful targets:
+# all               Make all release executables (WIN32, MFC, wxWindows)
+# samples_win32     Make WIN32 executables, release only
+# samples_wxwin     Make wxWin executables, release only
+# samples_mfc       Make MFC executables, release only
+
+all: samples_win32 samples_mfc samples_wx
+
+samples_win32:
+    cd win/simple
+    nmake -f makefile.vc clean
+    nmake -f makefile.vc DEBUG=0
+    cd ../freephone
+    nmake -f makefile.vc clean
+    nmake -f makefile.vc DEBUG=0
+    cd ../..
+
+samples_mfc:
+    cd mfc/simple
+    nmake -f makefile.vc clean
+    nmake -f makefile.vc DEBUG=0
+    cd ../mbrola
+    nmake -f makefile.vc clean
+    nmake -f makefile.vc DEBUG=0
+    cd ../..
+
+samples_wx:
+    cd wxwin/simple
+    nmake -f makefile.vc clean
+    nmake -f makefile.vc DEBUG=0
+    cd ../..
+
+clean:
+    cd win/simple
+    nmake -f makefile.vc clean
+    cd ../freephone
+    nmake -f makefile.vc clean
+    cd ../../mfc/simple
+    nmake -f makefile.vc clean
+    cd ../mbrola
+    nmake -f makefile.vc clean
+    cd ../../wxwin/simple
+    nmake -f makefile.vc clean
+    cd ../..

@@ -1,0 +1,81 @@
+#
+# File:		makefile.vc
+# Author:	Julian Smart
+# Created:	1997
+# Updated:	
+# Copyright:	(c) 1997
+#
+# "%W% %G%"
+#
+# Makefile : Builds wxmbrola[_R/D].lib
+# Use FINAL=1 argument to nmake to build final version with no debugging
+# info
+
+!include <ntwin32.mak>
+
+USE_MFC=0
+USE_WXWIN=0
+DEBUG=1
+
+FRAMEWORK=
+EXTRACPPFLAGS=
+
+LIBDIR = ..\..\lib
+
+!if "$(USE_MFC)" == "1"
+FRAMEWORK=_mfc
+EXTRACPPFLAGS=/D_AFXDLL
+!endif
+
+!if "$(USE_WXWIN)" == "1"
+FRAMEWORK=_wx
+EXTRACPPFLAGS=/D__WXMSW__ /I$(WXWIN)\include
+!endif
+
+!if "$(DEBUG)" == "0"
+LINKDEBUG=
+LIBTARGET=$(LIBDIR)\wxmbrola$(FRAMEWORK).lib
+MTFLAGS=/MD
+OPTFLAGS=/O1
+DEBUGFLAGS=
+!else
+LINKDEBUG=$(ldebug)
+LIBTARGET=$(LIBDIR)\wxmbrola$(FRAMEWORK)_d.lib
+MTFLAGS=/MDd /GX
+OPTFLAGS=/Od
+DEBUGFLAGS=/D_DEBUG
+!endif
+
+# Change these as required
+THISDIR = .
+
+extralibs=$(LIBTARGET) shell32.lib
+extraflags=-I$(THISDIR) /I. /I../../include /DOSPWIN /Dintel /DLITTLE_ENDIAN /D_WINDOWS $(MTFLAGS) $(OPTFLAGS) $(DEBUGFLAGS) $(EXTRACPPFLAGS)
+
+.cpp.obj:
+    $(cc) $(cflags) $(cvars) $(extraflags) $(extrainc) $<
+
+.c.obj:
+    $(cc) $(cflags) $(cvars) $(extraflags) $(extrainc) $<
+
+all:    $(LIBTARGET)
+
+objects = wxmbrola.obj
+
+# Make the library
+$(LIBTARGET): $(objects)
+    $(implib) -machine:$(CPU)     \
+    $(objects)    \
+    -out:$(LIBTARGET)
+
+wxmbrola.obj:   			wxmbrola.cpp ..\..\include\tts\wxmbrola.h
+
+clean:
+        -erase $(LIBTARGET)
+        -erase *.obj
+        -erase *.exe
+        -erase *.res
+        -erase *.map
+        -erase *.rws
+        -erase *.pdb
+        -erase *.sbr

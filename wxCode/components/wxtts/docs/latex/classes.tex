@@ -1,0 +1,468 @@
+\chapter{Alphabetical class reference}\label{classref}
+
+\setheader{{\it CHAPTER \thechapter}}{}{}{}{}{{\it CHAPTER \thechapter}}%
+\setfooter{\thepage}{}{}{}{}{\thepage}%
+
+\section{\class{wxFreePhone}}\label{wxfreephone}
+
+The wxFreePhone class allows generation of Mbrola-compatible phoneme
+strings or files from textual input.
+
+Note that in this class reference, member functions involving strings are documented
+with several forms, since CString, wxString or char* are used depending on how the
+library is compiled (MFC, wxWindows or plain WIN32 or Unix). These functions are mutually exclusive
+per build.
+
+\wxheading{Derived from}
+
+Nothing
+
+\wxheading{See also}
+
+\overview{wxTTS overview}{ttsoverview}
+
+\latexignore{\rtfignore{\wxheading{Members}}}
+
+\membersection{wxFreePhone::wxFreePhone}
+
+\func{}{wxFreePhone}{\param{const CString\&}{ dictionaryPath = ""}}
+
+\func{}{wxFreePhone}{\param{const wxString\&}{ dictionaryPath = ""}}
+
+\func{}{wxFreePhone}{\param{const char*}{ dictionaryPath = ""}}
+
+Constructor. {\it dictionaryPath} is an optional path and filename (but with no extension)
+indicating where the word-to-phoneme dictionary is stored. For example:
+
+\begin{verbatim}
+  wxFreePhone freePhone("d:\\wxtts\\dictionary\\english");
+\end{verbatim}
+
+allows wxFreePhone to find the files {\tt english.dct}, {\tt english.key} and {\tt english.idx} which are
+all required to produce high-quality speech.
+
+Note that before performing phoneme generation, you must call \helpref{wxFreePhone::Init}{wxfreephoneinit} to
+actually load the dictionary.
+
+\membersection{wxFreePhone::CleanUp}\label{wxfreephonecleanup}
+
+\func{Bool}{CleanUp}{\void}
+
+Closes the dictionary and frees memory. Called automatically from the wxFreePhone destructor.
+
+\membersection{wxFreePhone::Init}\label{wxfreephoneinit}
+
+\func{Bool}{Init}{\void}
+
+Loads the dictionary which was specified in the constructor, if any. It is necessary
+to call this before any phoneme generation is performed.
+
+\membersection{wxFreePhone::TextToPhoneme}\label{wxfreephonetexttophoneme}
+
+\func{Bool}{TextToPhoneme}{\param{const CString\&}{ text}, \param{CString\&}{ phonemes}}
+
+\func{Bool}{TextToPhoneme}{\param{const wxString\&}{ text}, \param{wxString\&}{ phonemes}}
+
+\func{Bool}{TextToPhoneme}{\param{const char*}{ text}, \param{char**}{ phonemes}}
+
+Converts a text string to a phoneme string, in Mbrola format.
+
+The result is returned in the second argument. In the case of a pure Windows build,
+new character arrary memory is allocated and returned, and should be deleted (using the array
+deletion operator) by the calling application, if the function returned TRUE.
+
+\membersection{wxFreePhone::TextToPhonemeFile}\label{wxfreephonetexttophonemefile}
+
+\func{Bool}{TextToPhonemeFile}{\param{const CString\&}{ text}, \param{const CString\&}{ phonemeFile}}
+
+\func{Bool}{TextToPhonemeFile}{\param{const wxString\&}{ text}, \param{const wxString\&}{ phonemeFile}}
+
+\func{Bool}{TextToPhonemeFile}{\param{const char*}{ text}, \param{const char*}{ phonemeFile}}
+
+Converts a text string to a file of phonemes, in Mbrola format.
+
+
+\section{\class{wxMbrola}}\label{wxmbrola}
+
+The wxMbrola class controls Mbrola, a high-quality speech synthesizer.
+It takes strings or files of phonemes, which are supplied by wxFreePhone.
+
+Note that in this class reference, member functions involving strings are documented
+with several forms, since CString, wxString or char* are used depending on how the
+library is compiled (MFC, wxWindows or neither). These functions are mutually exclusive
+per build.
+
+\wxheading{Derived from}
+
+Nothing
+
+\wxheading{See also}
+
+\overview{wxTTS overview}{ttsoverview}
+
+\latexignore{\rtfignore{\wxheading{Members}}}
+
+\membersection{wxMbrola::wxMbrola}
+
+\func{}{wxMbrola}{\void}
+
+Constructor.
+
+Note that before performing phoneme generation, you must call \helpref{wxMbrola::Init}{wxmbrolainit} to
+initialise the speech synthesizer.
+
+\membersection{wxMbrola::Init}\label{wxmbrolainit}
+
+\func{Bool}{Init}{\void}
+
+Initializes the speech synthesizer.
+
+\membersection{wxMbrola::GetCurrentDatabase}\label{wxmbrolagetcurrentdatabase}
+
+\constfunc{Bool}{GetCurrentDatabase}{\param{CString\&}{ db}}
+
+\constfunc{Bool}{GetCurrentDatabase}{\param{wxString\&}{ db}}
+
+\constfunc{Bool}{GetCurrentDatabase}{\param{char*}{ db}}
+
+Gets the current diphone database used by Mbrola. The name {\it db} is a short label such as "en1".
+
+\membersection{wxMbrola::GetDatabaseAllInfo}\label{wxmbrolagetdatabaseallinfo}
+
+\constfunc{CString}{GetDatabaseAllInfo}{\void}
+
+\constfunc{wxString}{GetDatabaseAllInfo}{\void}
+
+\constfunc{char*}{GetDatabaseAllInfo}{\void}
+
+Returns information about the current database. The third form returns a pointer to a newly allocated
+character array, which should be deleted by the application.
+
+\membersection{wxMbrola::GetDatabaseId}\label{wxmbrolagetdatabaseid}
+
+\constfunc{Bool}{GetDatabaseId}{\param{int}{ n}, \param{CString\&}{ id}}
+
+\constfunc{Bool}{GetDatabaseId}{\param{int}{ n}, \param{wxString\&}{ id}}
+
+\constfunc{Bool}{GetDatabaseId}{\param{int}{ n}, \param{char*}{ id}}
+
+Gets the nth diphone database name known to wxMbrola. Use \helpref{wxMbrola::GetDatabaseCount}{wxmbrolagetdatabasecount} to
+find out how many diphone databases there are. Note that these are Mbrola-specific diphone databases, nothing to do with
+the wxFreePhone dictionary.
+
+The char* form of GetDatabaseId expects a character buffer to be passed,
+into which the database id will be copied.
+
+\membersection{wxMbrola::GetDatabaseCount}\label{wxmbrolagetdatabasecount}
+
+\constfunc{int}{GetDatabaseCount}{\param{int}{ n}}
+
+Returns the number of phoneme databases known to wxMbrola.
+
+See also \helpref{wxMbrola::GetDatabaseId}{wxmbrolagetdatabaseid}.
+
+\membersection{wxMbrola::GetDefaultDatabase}\label{wxmbrolagetdefaultdatabase}
+
+\constfunc{CString}{GetDefaultDatabase}{\void}
+
+\constfunc{wxString}{GetDefaultDatabase}{\void}
+
+\constfunc{char*}{GetDefaultDatabase}{\void}
+
+Returns the default database. This is not the current database used for synthesis, but the default which
+is specified by an optional mbrola.ini file, as a hint.
+
+\membersection{wxMbrola::GetDefaultFreq}\label{wxmbrolagetdefaultfreq}
+
+\constfunc{long}{GetDefaultFreq}{\void}
+
+Returns the default frequency for the current voice.
+
+\membersection{wxMbrola::GetDefaultPath}\label{wxmbrolagetdefaultpath}
+
+\constfunc{CString}{GetDefaultPath}{\void}
+
+\constfunc{wxString}{GetDefaultPath}{\void}
+
+\constfunc{char*}{GetDefaultPath}{\void}
+
+Returns the default path, as specified in mbrola.ini. Not currently used.
+
+\membersection{wxMbrola::GetDuration}\label{wxmbrolagetduration}
+
+\constfunc{float}{GetDuration}{\void}
+
+Gets the current duration of the voice, between around 0 and 10 (a value of 0.2 is reasonable).
+
+\membersection{wxMbrola::GetFreq}\label{wxmbrolagetfreq}
+
+\constfunc{float}{GetFreq}{\void}
+
+Sets the current frequency of the voice, between around 8000 and 32000. A value of 16000 would be reasonable.
+
+\membersection{wxMbrola::GetLastError}\label{wxmbrolagetlasterror}
+
+\constfunc{CString}{GetLastError}{\void}
+
+\constfunc{wxString}{GetLastError}{\void}
+
+\constfunc{char*}{GetLastError}{\void}
+
+Returns a string describing the last error. In the third form, returns a pointer to
+a static character array, so do not deallocate it.
+
+\membersection{wxMbrola::GetMaxPitch}\label{wxmbrolagetmaxpitch}
+
+\constfunc{float}{GetMaxPitch}{\void}
+
+Gets the maximum pitch that an application allows the user to have. This value doesn't
+affect Mbrola directly, it is up to the application to make use of it. The maximum
+pitch is read from the mbrola.ini file if it exists. A reasonable maximum pitch value might be 8.0.
+
+\membersection{wxMbrola::GetMinPitch}\label{wxmbrolagetminpitch}
+
+\constfunc{float}{GetMinPitch}{\void}
+
+Gets the minimum pitch that an application allows the user to have. This value doesn't
+affect Mbrola directly, it is up to the application to make use of it. The minimum
+pitch is read from the mbrola.ini file if it exists. A reasonable minimum pitch value might be 0.2.
+
+\membersection{wxMbrola::GetMaxDuration}\label{wxmbrolagetmaxduration}
+
+\constfunc{float}{GetMaxDuration}{\void}
+
+Gets the maximum duration that an application allows the user to have. This value doesn't
+affect Mbrola directly, it is up to the application to make use of it. The maximum
+duration is read from the mbrola.ini file if it exists. A reasonable maximum duration value might be 8.0.
+
+\membersection{wxMbrola::GetMinDuration}\label{wxmbrolagetminduration}
+
+\constfunc{float}{GetMinDuration}{\void}
+
+Gets the minimum duration that an application allows the user to have. This value doesn't
+affect Mbrola directly, it is up to the application to make use of it. The minimum
+duration is read from the mbrola.ini file if it exists. A reasonable minimum duration value might be 0.2.
+
+\membersection{wxMbrola::GetMaxFreq}\label{wxmbrolagetmaxfreq}
+
+\constfunc{long}{GetMaxFreq}{\void}
+
+Gets the maximum freq that an application allows the user to have. This value doesn't
+affect Mbrola directly, it is up to the application to make use of it. The maximum
+freq is read from the mbrola.ini file if it exists. A reasonable maximum freq value might be 32000.
+
+\membersection{wxMbrola::GetMinFreq}\label{wxmbrolagetminfreq}
+
+\constfunc{long}{GetMinFreq}{\void}
+
+Gets the minimum freq that an application allows the user to have. This value doesn't
+affect Mbrola directly, it is up to the application to make use of it. The minimum
+freq is read from the mbrola.ini file if it exists. A reasonable minimum freq value might be 8000.
+
+\membersection{wxMbrola::GetPitch}\label{wxmbrolagetpitch}
+
+\constfunc{float}{GetPitch}{\void}
+
+Gets the current pitch of the voice, between around 0 and 10 (a value of 0.2 is reasonable).
+
+\membersection{wxMbrola::GetVersion}\label{wxmbrolagetversion}
+
+\func{static CString}{GetVersion}{\void}
+
+\func{static wxString}{GetVersion}{\void}
+
+\func{static char*}{GetVersion}{\void}
+
+Returns an Mbrola version string. The third form returns a pointer to a static character
+array, which should not be deallocated by the application.
+
+\membersection{wxMbrola::OnRead}\label{wxmbrolaonread}
+
+\func{virtual void}{OnRead}{\void}
+
+Override this function to receive notification when a read operation occurs.
+
+\membersection{wxMbrola::OnStart}\label{wxmbrolaonstart}
+
+\func{virtual void}{OnStart}{\void}
+
+Override this function to receive notification when the sound starts playing.
+
+\membersection{wxMbrola::OnStop}\label{wxmbrolaonstop}
+
+\func{virtual void}{OnStop}{\void}
+
+Override this function to receive notification when the sound stops playing.
+
+\membersection{wxMbrola::OnWait}\label{wxmbrolaonwait}
+
+\func{virtual void}{OnWait}{\void}
+
+Override this function to receive notification when a wait event occurs (don't
+know what this actually means).
+
+\membersection{wxMbrola::OnWrite}\label{wxmbrolaonwrite}
+
+\func{virtual void}{OnWrite}{\void}
+
+Override this function to receive notification when a write operation occurs.
+
+\membersection{wxMbrola::Play}\label{wxmbrolaplay}
+
+\func{int}{Play}{\param{const CString\&}{ text}, \param{Bool}{sync}}
+
+\func{int}{Play}{\param{const wxString\&}{ text}, \param{Bool}{sync}}
+
+\func{int}{Play}{\param{const char*}{ text}, \param{Bool}{sync}}
+
+Plays the given phoneme string, synchronously or asynchronously.
+The return value is one of the following.
+
+\begin{itemize}\itemsep=0pt
+\item wxMBRERR\_NOMBROLADLL
+\item wxMBRERR\_NOREGISTRY
+\item wxMBRERR\_NORESOURCE
+\item wxMBRERR\_NOTHREAD
+\item wxMBRERR\_DATABASENOTVALID
+\item wxMBRERR\_CANTOPENDEVICEOUT
+\item wxMBRERR\_BADCOMMAND
+\item wxMBRERR\_CANTOPENFILE
+\item wxMBRERR\_WRITEERROR
+\item wxMBRERR\_MBROLAERROR
+\item wxMBRERR\_CANCELLEDBYUSER
+\item wxMBRERR\_NOERROR
+\end{itemize}
+
+\membersection{wxMbrola::PlayFromFile}\label{wxmbrolaplayfromfile}
+
+\func{int}{PlayFromFile}{\param{const CString\&}{ filename}, \param{Bool}{sync}}
+
+\func{int}{PlayFromFile}{\param{const wxString\&}{ filename}, \param{Bool}{sync}}
+
+\func{int}{PlayFromFile}{\param{const char*}{ filename}, \param{Bool}{sync}}
+
+Plays the given phoneme file, synchronously or asynchronously.
+
+Please see \helpref{wxMbrola::Play}{wxmbrolaplay} for a description of the return value.
+
+\membersection{wxMbrola::PlayToFile}\label{wxmbrolaplaytofile}
+
+\func{int}{PlayToFile}{\param{const CString\&}{ text}, \param{const CString\&}{ filename}, \param{Bool}{sync}}
+
+\func{int}{PlayToFile}{\param{const wxString\&}{ text}, \param{const wxString\&}{ filename}, \param{Bool}{sync}}
+
+\func{int}{PlayToFile}{\param{const char*}{ text}, \param{const char*}{ filename}, \param{Bool}{sync}}
+
+Plays the given phoneme string to a Windows WAV file, synchronously or asynchronously.
+
+Please see \helpref{wxMbrola::Play}{wxmbrolaplay} for a description of the return value.
+
+\membersection{wxMbrola::SetCurrentDatabase}\label{wxmbrolasetcurrentdatabase}
+
+\func{Bool}{SetCurrentDatabase}{\param{const CString\&}{ db}}
+
+\func{Bool}{SetCurrentDatabase}{\param{const wxString\&}{ db}}
+
+\func{Bool}{SetCurrentDatabase}{\param{const char*}{ db}}
+
+Sets the current diphone database to be used by Mbrola. The name {\it db} is a short label such as "en1".
+
+\membersection{wxMbrola::SetDefaultDatabase}\label{wxmbrolasetdefaultdatabase}
+
+\func{void}{SetDefaultDatabase}{\param{const CString\&}{ db}}
+
+\func{void}{SetDefaultDatabase}{\param{const wxString\&}{ db}}
+
+\func{void}{SetDefaultDatabase}{\param{const char*}{ db}}
+
+Sets the default database. This is not the current database used for synthesis, but the default which
+is specified by an optional mbrola.ini file, as a hint.
+
+\membersection{wxMbrola::SetDefaultPath}\label{wxmbrolasetdefaultpath}
+
+\func{void}{SetDefaultPath}{\param{const CString\&}{ path}}
+
+\func{void}{SetDefaultPath}{\param{const wxString\&}{ path}}
+
+\func{void}{SetDefaultPath}{\param{const char*}{ path}}
+
+Sets the default path, as specified in mbrola.ini. Not currently used.
+
+\membersection{wxMbrola::SetDuration}\label{wxmbrolasetduration}
+
+\func{Bool}{SetDuration}{\param{float}{ duration}}
+
+Sets the duration of the voice, between around 0 and 10 (a value of 0.2 is reasonable).
+
+\membersection{wxMbrola::SetFreq}\label{wxmbrolasetfreq}
+
+\func{Bool}{SetFreq}{\param{long}{ freq}}
+
+Sets the frequency of the voice, between around 8000 and 32000. A value of 16000 would be reasonable.
+
+\membersection{wxMbrola::SetMaxPitch}\label{wxmbrolasetmaxpitch}
+
+\func{void}{SetMaxPitch}{\param{float}{ maxPitch}}
+
+Sets the maximum pitch that an application allows the user to have. This value doesn't
+affect Mbrola directly, it is up to the application to make use of it. The maximum
+pitch is read from the mbrola.ini file if it exists. A reasonable maximum pitch value might be 8.0.
+
+\membersection{wxMbrola::SetMinPitch}\label{wxmbrolasetminpitch}
+
+\func{void}{SetMinPitch}{\param{float}{ minPitch}}
+
+Sets the minimum pitch that an application allows the user to have. This value doesn't
+affect Mbrola directly, it is up to the application to make use of it. The minimum
+pitch is read from the mbrola.ini file if it exists. A reasonable minimum pitch value might be 0.2.
+
+\membersection{wxMbrola::SetMaxDuration}\label{wxmbrolasetmaxduration}
+
+\func{void}{SetMaxDuration}{\param{float}{ maxDuration}}
+
+Sets the maximum duration that an application allows the user to have. This value doesn't
+affect Mbrola directly, it is up to the application to make use of it. The maximum
+duration is read from the mbrola.ini file if it exists. A reasonable maximum duration value might be 8.0.
+
+\membersection{wxMbrola::SetMinDuration}\label{wxmbrolasetminduration}
+
+\func{void}{SetMinDuration}{\param{float}{ minDuration}}
+
+Sets the minimum duration that an application allows the user to have. This value doesn't
+affect Mbrola directly, it is up to the application to make use of it. The minimum
+duration is read from the mbrola.ini file if it exists. A reasonable minimum duration value might be 0.2.
+
+\membersection{wxMbrola::SetMaxFreq}\label{wxmbrolasetmaxfreq}
+
+\func{void}{SetMaxFreq}{\param{long}{ maxFreq}}
+
+Sets the maximum freq that an application allows the user to have. This value doesn't
+affect Mbrola directly, it is up to the application to make use of it. The maximum
+freq is read from the mbrola.ini file if it exists. A reasonable maximum freq value might be 32000.
+
+\membersection{wxMbrola::SetMinFreq}\label{wxmbrolasetminfreq}
+
+\func{void}{SetMinFreq}{\param{long}{ minFreq}}
+
+Sets the minimum freq that an application allows the user to have. This value doesn't
+affect Mbrola directly, it is up to the application to make use of it. The minimum
+freq is read from the mbrola.ini file if it exists. A reasonable minimum freq value might be 8000.
+
+\membersection{wxMbrola::SetPitch}\label{wxmbrolasetpitch}
+
+\func{Bool}{SetPitch}{\param{float}{ pitch}}
+
+Sets the pitch of the voice, between around 0 and 10 (a value of 0.2 is reasonable).
+
+\membersection{wxMbrola::Stop}\label{wxmbrolastop}
+
+\func{Bool}{Stop}{\void}
+
+Stops the sound currently playing.
+
+\membersection{wxMbrola::WaitForEnd}\label{wxmbrolawaitforend}
+
+\func{Bool}{WaitForEnd}{\void}
+
+Returns only after the sound has finished playing.
+

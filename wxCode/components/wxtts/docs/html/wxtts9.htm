@@ -1,0 +1,64 @@
+<HTML>
+<head><title>wxFreePhone Discussion</title></head>
+
+<BODY BGCOLOR=#FFFFFF>
+<A NAME="freephone"></A><CENTER>
+<A HREF="wxtts.htm"><img align=center src="contents.gif" BORDER=0 ALT="Contents"></A> <A HREF="wxtts.htm"><img align=center src="up.gif" BORDER=0 ALT="Up"></A> <A HREF="wxtts8.htm#samples"><img align=center src="back.gif" BORDER=0 ALT="Previous"></A> <A HREF="wxtts10.htm#mbrola"><img align=center src="forward.gif" BORDER=0 ALT="Next"></A> </CENTER><HR>
+
+<H2>wxFreePhone Discussion</H2>
+
+Here are some random observations about (wx)FreePhone. Note that this hasn't been updated
+for a long time (since June 1998) and therefore improvements to Mbrola may make some of the comments
+redundant.<P>
+<B><FONT COLOR="#FF0000">Implementation</FONT></B><P>
+I have taken the Unix FreePhone code, renamed the .c files to .cpp, and made miscellaneous
+changes to make it compile using Visual C++ 5.0. freephone.h, freephone.cpp adds a class
+wrapper around the main driving bits of the code. The major stumbling block
+was the dictionary database, which uses a library not available under Windows.
+Mirko Buffoni has come to the rescue with his MFDict.h, MFDict.cpp code which
+implements a simple Dictionary class for searching prepared files. There is also
+MkDict.exe which generates these files from the Edinburgh phoneme database file. The output
+files are: a keyword file (.key), and index file (.idx), and a data file (.dct).
+Mirko's code reads the data into memory which may be a constraint for some people, but
+these days megabytes are abundant. Although the code does some linear searching, it seems quite fast,
+which can be verified by writing out .pho files using samples/win/simple/simple.exe.
+A message box indicates when the process is complete, and this is normally pretty instant
+(at least it is on my PII 300MHz).<P>
+<B><FONT COLOR="#FF0000">Dictionary files</FONT></B><P>
+The English dictionary source file is in freephone/dictionary. The output files,
+with extension key, idx and dct, are put into the top-level dictionary directory
+in the wxTTS installation. These are used by the samples, which specify where these
+files are in the wxFreePhone constructor. If the files are not found, the accuracy
+of the speech will be severely degraded as FreePhone guesses the pronunciations.<P>
+<B><FONT COLOR="#FF0000">Bad phonemes</FONT></B><P>
+If it does not find a word in its dictionary (and sometimes even when it does), FreePhone sometimes phonemes
+which cannot be processed by Mbrola. Perhaps we need a program to run through the dictionary pronouncing all the words, so
+we can get an idea about how much of it works, and what the problem areas are.<P>
+<B><FONT COLOR="#FF0000">Memory bugs</FONT></B><P>
+There are memory bugs in FreePhone, which may or may not be due to things I have
+done. Sometimes the bugs are fatal, sometimes they just cause warnings in Developer
+Studio.<P>
+<B><FONT COLOR="#FF0000">Rewriting (wx)FreePhone</FONT></B><P>
+It will be tricky to rewrite FreePhone, but I think we probably need to
+do this, so that we can debug and extend it. A written analysis of FreePhone is required.
+Anyone know any good C analysis/documentation tools?<P>
+Some suggestions for the rewrite are as follows:<P>
+<UL>
+
+<LI> Have a ttsString class which we use extensively, instead of char*. This
+string class can be taken from the wxWindows 2.0 wxString class, and optionally defined
+to be CString or wxString if MFC or wxWindows is available.
+<LI> Implement most of FreePhone with a FreePhone class, which is used by wxFreePhone.
+The separation means that we don't have to include all implementation functions and data
+into wxFreePhone.
+<LI> Gradually replace the C code with C++ code, starting from the top level and working
+towards the lower-level functions.
+</UL>
+<P>
+<B><FONT COLOR="#FF0000">Porting</FONT></B><P>
+It should be quite straightforward to get my version of FreePhone compiled on Unix.
+Either the original database access routines can be used, or Mirko Buffoni's MFDict.cpp.
+It probably makes sense to stick with MFDict.cpp on all platforms for simplicity, and
+its performance seems quite adequate.<P>
+
+</BODY></HTML>

@@ -1,0 +1,101 @@
+# makefile.vc
+# Invokes makefiles in subdirectories, to build
+# the various wxTTS libraries.
+#
+# Useful targets:
+# all           Make all libraries (WIN32, MFC, wxWindows), debug and release
+# just_win32    Make WIN32 libraries, debug and release
+# just_wxwin    Make wxWin libraries, debug and release
+# just_mfc      Make MFC libraries, debug and release
+
+all:    clean_libs all_libs dictionary
+
+just_win32: clean_libs libs_debug_win32 libs_release_win32
+
+just_wxwin: clean_libs libs_debug_wx libs_release_wx
+
+just_mfc: clean_libs libs_debug_mfc libs_release_mfc
+
+all_libs: libs_debug libs_release
+
+libs_debug: libs_debug_win32 libs_debug_wx libs_debug_mfc
+
+libs_release: libs_release_win32 libs_release_wx libs_release_mfc
+
+libs_debug_win32:
+    cd wxmbrola
+    -erase *.obj
+    nmake -f makefile.vc DEBUG=1
+    cd ../freephone
+    -erase *.obj
+    nmake -f makefile.vc DEBUG=1
+    cd ..
+
+libs_release_win32:
+    cd wxmbrola
+    -erase *.obj
+    nmake -f makefile.vc DEBUG=0
+    cd ../freephone
+    -erase *.obj
+    nmake -f makefile.vc DEBUG=0
+    cd ..
+
+libs_debug_wx:
+    cd wxmbrola
+    -erase *.obj
+    nmake -f makefile.vc DEBUG=1 USE_WXWIN=1
+    cd ../freephone
+    -erase *.obj
+    nmake -f makefile.vc DEBUG=1 USE_WXWIN=1
+    cd ..
+
+libs_release_wx:
+    cd wxmbrola
+    -erase *.obj
+    nmake -f makefile.vc DEBUG=0 USE_WXWIN=1
+    cd ../freephone
+    -erase *.obj
+    nmake -f makefile.vc DEBUG=0 USE_WXWIN=1
+    cd ..
+
+libs_debug_mfc:
+    cd wxmbrola
+    -erase *.obj
+    nmake -f makefile.vc DEBUG=1 USE_MFC=1
+    cd ../freephone
+    -erase *.obj
+    nmake -f makefile.vc DEBUG=1 USE_MFC=1
+    cd ..
+
+libs_release_mfc:
+    cd wxmbrola
+    -erase *.obj
+    nmake -f makefile.vc DEBUG=0 USE_MFC=1
+    cd ../freephone
+    -erase *.obj
+    nmake -f makefile.vc DEBUG=0 USE_MFC=1
+    cd ..
+
+clean_libs:
+    cd ../lib
+    -erase /Y wxmbrola.lib 
+    -erase /Y wxmbrola_d.lib 
+    -erase /Y wxmbrola_wx.lib 
+    -erase /Y wxmbrola_wx_d.lib 
+    -erase /Y wxmbrola_mfc.lib 
+    -erase /Y wxmbrola_mfc_d.lib 
+    -erase /Y freephone.lib 
+    -erase /Y freephone_d.lib 
+    -erase /Y freephone_wx.lib 
+    -erase /Y freephone_wx_d.lib 
+    -erase /Y freephone_mfc.lib 
+    -erase /Y freephone_mfc_d.lib 
+    cd ../src
+
+# Makes dictionary/english.dct,idx,key
+dictionary:
+    cd freephone/dictionary
+    nmake -f makefile.vc all
+    cd ../..
+
+clean: clean_libs

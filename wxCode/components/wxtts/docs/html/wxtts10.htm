@@ -1,0 +1,37 @@
+<HTML>
+<head><title>wxMbrola Discussion</title></head>
+
+<BODY BGCOLOR=#FFFFFF>
+<A NAME="mbrola"></A><CENTER>
+<A HREF="wxtts.htm"><img align=center src="contents.gif" BORDER=0 ALT="Contents"></A> <A HREF="wxtts.htm"><img align=center src="up.gif" BORDER=0 ALT="Up"></A> <A HREF="wxtts9.htm#freephone"><img align=center src="back.gif" BORDER=0 ALT="Previous"></A> <A HREF="wxtts11.htm#classref"><img align=center src="forward.gif" BORDER=0 ALT="Next"></A> </CENTER><HR>
+
+<H2>wxMbrola Discussion</H2>
+
+<B><FONT COLOR="#FF0000">mbrola.ini file format</FONT></B><P>
+wxMbrola tries to find an mbrola.ini file in the current directory or Windows directory.
+This file allows the application to specify useful values, which don't affect wxMbrola
+directly but can be used in an application to tailor the voice parameters, etc. This
+facility might be considered too application-specific to be in wxMbrola and could be
+removed in the future.<P>
+<PRE>
+[GENERAL]
+Path=&lt;string&gt; ; Specifies a path (what for?)
+
+[PITCH]
+Min=&lt;float&gt;   ; E.g. 0.2
+Max=&lt;float&gt;   ; E.g. 8.0
+
+[TIME]
+Min=&lt;float&gt;   ; E.g. 0.2
+Max=&lt;float&gt;   ; E.g. 8.0
+
+[VOICE] ; Frequency. What about having default freq. (16000)?
+Min=&lt;float&gt;   ; E.g. 8000
+Max=&lt;float&gt;   ; E.g. 32000
+
+[DATABASE]
+Default=&lt;string&gt;
+
+</PRE>
+
+</BODY></HTML>

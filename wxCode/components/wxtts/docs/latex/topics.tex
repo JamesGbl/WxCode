@@ -1,0 +1,65 @@
+\chapter{Topics}\label{topics}
+\setheader{{\it CHAPTER \thechapter}}{}{}{}{}{{\it CHAPTER \thechapter}}%
+\setfooter{\thepage}{}{}{}{}{\thepage}%
+
+\section{wxTTS overview}\label{ttsoverview}
+
+wxMbrola is a wrapper around Mbrola functionality under Windows, taking
+phoneme files or strings and producing audio output. wxFreePhone is a wrapper
+around the augmented FreePhone package, taking text and generating Mbrola-compatible
+phoneme strings or files. By using both these classes in a program, it is straightforward
+to produce talking English applications.
+
+\wxheading{Using the classes under Windows}
+
+You need to include {\tt tts/wxmbrola.h} and {\tt tts/freephone.h}, and link with
+ {\tt freephoneX.lib}, {\tt wxmbrolaX.lib} and {\tt mbrplay.lib} where X differs
+according to whether you are using debug, release, MFC, wxWindows or plain WIN32:
+
+{\small\begin{verbatim}
+lib/wxmbrola.lib                    ; wxMbrola library (WIN32 release)
+lib/wxmbrola_d.lib                  ; wxMbrola library (WIN32 debug)
+lib/wxmbrola_mfc.lib                ; wxMbrola library (MFC release)
+lib/wxmbrola_mfc_d.lib              ; wxMbrola library (MFC debug)
+lib/wxmbrola_wx.lib                 ; wxMbrola library (wxWindows release)
+lib/wxmbrola_wx_d.lib               ; wxMbrola library (wxWindows debug)
+lib/freephone.lib                   ; wxFreePhone library (WIN32 release)
+lib/freephone_d.lib                 ; wxFreePhone library (WIN32 debug)
+lib/freephone_mfc.lib               ; wxFreePhone library (MFC release)
+lib/freephone_mfc_d.lib             ; wxFreePhone library (MFC debug)
+lib/freephone_wx.lib                ; wxFreePhone library (wxWindows release)
+lib/freephone_wx_d.lib              ; wxFreePhone library (wxWindows debug)
+\end{verbatim}
+}
+
+Each class (wxMbrola and wxFreePhone) requires Init() to be called after the object
+is constructed. You can then use methods to produce phonemes and speech. Normally
+these objects would last the lifetime of the application (to avoid the overhead of
+multiple initialisation) but the following example uses stack objects:
+
+{\small\begin{verbatim}
+    wxFreePhone freephone("english"); // Use english.key/idx/dct files
+	freephone.Init();
+
+    wxMbrola mbrola;
+    mbrola.Init();
+    mbrola.SetCurrentDatabase("en1");
+
+    char* phonemes;
+    if (freephone.TextToPhoneme("This is a test.", &phonemes))
+        mbrola.Play(phonemes, TRUE);
+\end{verbatim}
+}
+
+\wxheading{Using MFC, native Windows, or wxWindows}
+
+You can change settings in {\tt wxmbrola.h} and {\tt freephone.h} to specify
+which framework to use, or simply use the way that the supplied VC++ makefiles use
+to specify the kind of build required:
+
+\begin{itemize}\itemsep=0pt
+\item To use plain WIN32, do nothing special.
+\item To use MFC, define _AFXDLL.
+\item To use wxWindows, define __WXMSW__.
+\end{itemize}
+

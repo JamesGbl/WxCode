@@ -1,0 +1,79 @@
+<HTML>
+<head><title>Installation</title></head>
+
+<BODY BGCOLOR=#FFFFFF>
+<A NAME="installation"></A><CENTER>
+<A HREF="wxtts.htm"><img align=center src="contents.gif" BORDER=0 ALT="Contents"></A> <A HREF="wxtts.htm"><img align=center src="up.gif" BORDER=0 ALT="Up"></A> <A HREF="wxtts4.htm#topic2"><img align=center src="back.gif" BORDER=0 ALT="Previous"></A> <A HREF="wxtts6.htm#topic3"><img align=center src="forward.gif" BORDER=0 ALT="Next"></A> </CENTER><HR>
+
+<H2>Installation</H2>
+
+You will need the Mbrola for Windows installation and the English dictionary, available from
+ <A HREF="http://tcts.fpms.ac.be/synthesis/mbrola.html">http://tcts.fpms.ac.be/synthesis/mbrola.html</A>.<P>
+wxTTS can be downloaded from Julian Smart's Web page at <A HREF="http://www.anthemion.co.uk">http://www.anthemion.co.uk</A>
+ ('Code Cupboard').<P>
+The wxTTS zip file contains all source code. Unzip into a suitable directory,
+taking care to preserve pathnames. The structure is as follows:<P>
+<FONT SIZE=2><PRE>
+
+docs/latex/                         ; Latex source for manual
+docs/winhelp/                       ; WinHelp version of manual
+docs/html/                          ; HTML version of manual
+docs/htmlhelp/                      ; Windows HTML Help version of manual
+src/freephone/                      ; [wx]FreePhone source
+src/freephone/dictionary/           ; Source for dictionary generator, plus english.dat
+src/wxmbrola/                       ; Source for wxMbrola
+include/tts                         ; Public include files
+samples/                            ; Samples
+samples/mfc/simple/                 ; Simple MFC demo of wxFreePhone/wxMbrola
+samples/mfc/mbrola/                 ; Test of wxMbrola, adapted from the Mbroli utility
+samples/win/simple/                 ; Simple plain WIN32 demo of wxFreePhone/wxMbrola
+samples/win/freephone/              ; Simple plain WIN32 demo of wxFreePhone only
+samples/wxwin/simple/               ; Simple wxWindows demo of wxFreePhone/wxMbrola
+lib/                                ; Destination for libraries
+lib/mbrplay.lib                     ; Required for all wxTTS apps
+dictionary/                         ; Destination of generated FreePhone dictionary files
+distrib/                            ; Files for helping to distribute wxTTS
+</PRE>
+
+</FONT><P>
+Currently, wxTTS only works with VC++ 6.0, but other compilers will be supported at some point.<P>
+All libraries and samples may be compiled with the VC++ makefiles (.vc), and some
+of the samples may be compiled with supplied project files (.dsp).<P>
+The VC++ makefiles can be used to compile three kinds of library, each with Debug and Release
+variants. The three kinds are plain WIN32, MFC, and <A HREF="http://www.wxwindows.org">wxWindows</A>. To use wxTTS with wxWindows
+you have to have wxWindows installed and the WXWIN environment variable correctly set.<P>
+The following libraries are created and/or used by wxTTS:<P>
+<FONT SIZE=2><PRE>
+
+lib/mbrplay.lib                     ; Mbrola import library
+lib/wxmbrola.lib                    ; wxMbrola library (WIN32 release)
+lib/wxmbrola_d.lib                  ; wxMbrola library (WIN32 debug)
+lib/wxmbrola_mfc.lib                ; wxMbrola library (MFC release)
+lib/wxmbrola_mfc_d.lib              ; wxMbrola library (MFC debug)
+lib/wxmbrola_wx.lib                 ; wxMbrola library (wxWindows release)
+lib/wxmbrola_wx_d.lib               ; wxMbrola library (wxWindows debug)
+lib/freephone.lib                   ; wxFreePhone library (WIN32 release)
+lib/freephone_d.lib                 ; wxFreePhone library (WIN32 debug)
+lib/freephone_mfc.lib               ; wxFreePhone library (MFC release)
+lib/freephone_mfc_d.lib             ; wxFreePhone library (MFC debug)
+lib/freephone_wx.lib                ; wxFreePhone library (wxWindows release)
+lib/freephone_wx_d.lib              ; wxFreePhone library (wxWindows debug)
+</PRE>
+
+</FONT><P>
+wxTTS also generates the following binary dictionary files from english.dat:<P>
+<FONT SIZE=2><PRE>
+
+dictionary/english.dct              ; Binary data file
+dictionary/english.idx              ; Index file
+dictionary/english.key              ; Keywords file
+</PRE>
+
+</FONT><P>
+These files need to be distributed by any application using wxFreePhone.<P>
+
+<A HREF="wxtts6.htm#topic3"><B>Compiling the wxTTS libraries and dictionary</B></A><BR>
+
+<A HREF="wxtts7.htm#topic4"><B>Compiling the wxTTS samples</B></A><BR>
+
+</BODY></HTML>

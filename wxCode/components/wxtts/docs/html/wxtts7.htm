@@ -1,0 +1,34 @@
+<HTML>
+<head><title>Compiling the wxTTS samples</title></head>
+
+<BODY BGCOLOR=#FFFFFF>
+<A NAME="topic4"></A><CENTER>
+<A HREF="wxtts.htm"><img align=center src="contents.gif" BORDER=0 ALT="Contents"></A> <A HREF="wxtts5.htm#installation"><img align=center src="up.gif" BORDER=0 ALT="Up"></A> <A HREF="wxtts6.htm#topic3"><img align=center src="back.gif" BORDER=0 ALT="Previous"></A> <A HREF="wxtts8.htm#samples"><img align=center src="forward.gif" BORDER=0 ALT="Next"></A> </CENTER><HR>
+
+<H2>Compiling the wxTTS samples</H2>
+<P>
+To compile all the samples in release mode, you can
+type this in a DOS box:<P>
+<FONT SIZE=2><PRE>
+
+cd samples
+nmake -f makefile.vc all
+</PRE>
+
+</FONT><P>
+However, you may wish to only compile some of the samples, in which case you can use
+one or more of these targets:<P>
+<UL>
+
+<LI> samples_win32: Make WIN32 executables, release only
+<LI> samples_wxwin: Make wxWindows executables, release only
+<LI> samples_mfc: Make MFC executables, release only
+</UL>
+<P>
+You can also compile the samples individually using the makefile.vc
+files provided in each directory under <TT>samples</TT>. You can alternatively use the
+provided project files if you wish.<P>
+Note that all makefiles have a 'clean' target to remove target and intermediate files.<P>
+See <A HREF="wxtts8.htm#samples">wxTTS Samples</A> for a brief description of the samples.<P>
+
+</BODY></HTML>

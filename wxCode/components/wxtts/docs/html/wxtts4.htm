@@ -1,0 +1,35 @@
+<HTML>
+<head><title>wxTTS bugs, problems and omissions</title></head>
+
+<BODY BGCOLOR=#FFFFFF>
+<A NAME="topic2"></A><CENTER>
+<A HREF="wxtts.htm"><img align=center src="contents.gif" BORDER=0 ALT="Contents"></A> <A HREF="wxtts1.htm#introduction"><img align=center src="up.gif" BORDER=0 ALT="Up"></A> <A HREF="wxtts3.htm#topic1"><img align=center src="back.gif" BORDER=0 ALT="Previous"></A> <A HREF="wxtts5.htm#installation"><img align=center src="forward.gif" BORDER=0 ALT="Next"></A> </CENTER><HR>
+
+<H2>wxTTS bugs, problems and omissions</H2>
+<P>
+The following work is still needed or can be considered:<P>
+<UL>
+
+<LI> wxFreePhone needs further testing and debugging for memory problems in cleanup;
+<LI> more error checking and reporting required;
+<LI> (wx)FreePhone code could use rewriting for clarity, perhaps using a string class;
+<LI> need control over how numbers, dates etc. are pronounced;
+<LI> further samples would be useful, for example for reading large texts (which will
+need to break text into chunks and wait for a chunk to be read before reading the
+next one);
+<LI> custom voices could be maintained in wxMbrola, with a mapping between voice name
+and voice parameters;
+<LI> a wxTTS class could be created to unify wxFreePhone and wxMbrola;
+<LI> some SAPI compatibility could be attempted;
+<LI> need to produce standard dialogs that can be invoked to adjust parameters;
+<LI> could have a second (customisable) dictionary, perhaps with a dialog to allow addition of
+words in a friendly manner (e.g. you have a selection of phonemes which you can
+put together, with a preview - maybe even a soundex-like algorithm to make an initial
+guess of what the phonemes should be);
+<LI> need to write further makefiles, e.g. for Gnu-Win32, BC++;
+<LI> need ports to other platforms.
+</UL>
+<P>
+See also <A HREF="wxtts9.htm#freephone">wxFreePhone Discussion</A>, <A HREF="wxtts10.htm#mbrola">wxMbrola Discussion</A>.<P>
+
+</BODY></HTML>

@@ -1,0 +1,33 @@
+<HTML>
+<head><title>Compiling the wxTTS libraries and dictionary</title></head>
+
+<BODY BGCOLOR=#FFFFFF>
+<A NAME="topic3"></A><CENTER>
+<A HREF="wxtts.htm"><img align=center src="contents.gif" BORDER=0 ALT="Contents"></A> <A HREF="wxtts5.htm#installation"><img align=center src="up.gif" BORDER=0 ALT="Up"></A> <A HREF="wxtts5.htm#installation"><img align=center src="back.gif" BORDER=0 ALT="Previous"></A> <A HREF="wxtts7.htm#topic4"><img align=center src="forward.gif" BORDER=0 ALT="Next"></A> </CENTER><HR>
+
+<H2>Compiling the wxTTS libraries and dictionary</H2>
+<P>
+To compile all the library files, and the dictionary used by wxFreePhone, you can
+type this in a DOS box:<P>
+<FONT SIZE=2><PRE>
+
+cd src
+nmake -f makefile.vc all
+</PRE>
+
+</FONT><P>
+However, you may wish to only compile some of the libraries, in which case you can use
+one or more of these targets:<P>
+<UL>
+
+<LI> just_win32: Make WIN32 libraries, debug and release
+<LI> just_wxwin: Make wxWin libraries, debug and release
+<LI> just_mfc: Make MFC libraries, debug and release
+<LI> dictionary: Make the dictionary
+</UL>
+<P>
+You can also compile the wxMbrola and wxFreePhone libraries individually using the makefile.vc
+files provided in each directory under <TT>src</TT>.<P>
+Note that all makefiles have a 'clean' target to remove target and intermediate files.<P>
+
+</BODY></HTML>

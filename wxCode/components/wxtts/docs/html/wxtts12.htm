@@ -1,0 +1,83 @@
+<HTML>
+<head><title>wxFreePhone</title></head>
+
+<BODY BGCOLOR=#FFFFFF>
+<A NAME="wxfreephone"></A><CENTER>
+<A HREF="wxtts.htm"><img align=center src="contents.gif" BORDER=0 ALT="Contents"></A> <A HREF="wxtts11.htm#classref"><img align=center src="up.gif" BORDER=0 ALT="Up"></A> <A HREF="wxtts11.htm#classref"><img align=center src="back.gif" BORDER=0 ALT="Previous"></A> <A HREF="wxtts13.htm#wxmbrola"><img align=center src="forward.gif" BORDER=0 ALT="Next"></A> </CENTER><HR>
+
+<H2>wxFreePhone</H2>
+<P>
+The wxFreePhone class allows generation of Mbrola-compatible phoneme
+strings or files from textual input.<P>
+Note that in this class reference, member functions involving strings are documented
+with several forms, since CString, wxString or char* are used depending on how the
+library is compiled (MFC, wxWindows or plain WIN32 or Unix). These functions are mutually exclusive
+per build.<P>
+<B><FONT COLOR="#FF0000">Derived from</FONT></B><P>
+Nothing<P>
+<B><FONT COLOR="#FF0000">See also</FONT></B><P>
+
+<img src="books.gif"></A><A HREF="wxtts15.htm#ttsoverview">wxTTS overview</A><P>
+<B><FONT COLOR="#FF0000">Members</FONT></B><P>
+<A HREF="#topic5">wxFreePhone::wxFreePhone</A><BR>
+<A HREF="#wxfreephonecleanup">wxFreePhone::CleanUp</A><BR>
+<A HREF="#wxfreephoneinit">wxFreePhone::Init</A><BR>
+<A HREF="#wxfreephonetexttophoneme">wxFreePhone::TextToPhoneme</A><BR>
+<A HREF="#wxfreephonetexttophonemefile">wxFreePhone::TextToPhonemeFile</A><BR>
+<P>
+
+<HR>
+<A NAME="topic5"></A>
+<H3>wxFreePhone::wxFreePhone</H3>
+<P>
+<B></B> <B>wxFreePhone</B>(<B>const CString&amp;</B><I> dictionaryPath = ""</I>)<P>
+<B></B> <B>wxFreePhone</B>(<B>const wxString&amp;</B><I> dictionaryPath = ""</I>)<P>
+<B></B> <B>wxFreePhone</B>(<B>const char*</B><I> dictionaryPath = ""</I>)<P>
+Constructor. <I>dictionaryPath</I> is an optional path and filename (but with no extension)
+indicating where the word-to-phoneme dictionary is stored. For example:<P>
+<PRE>
+  wxFreePhone freePhone("d:\\wxtts\\dictionary\\english");
+</PRE>
+allows wxFreePhone to find the files <TT>english.dct</TT>, <TT>english.key</TT> and <TT>english.idx</TT> which are
+all required to produce high-quality speech.<P>
+Note that before performing phoneme generation, you must call <A HREF="wxtts12.htm#wxfreephoneinit">wxFreePhone::Init</A> to
+actually load the dictionary.<P>
+
+<HR>
+<A NAME="wxfreephonecleanup"></A>
+<H3>wxFreePhone::CleanUp</H3>
+<P>
+<B>Bool</B> <B>CleanUp</B>()<P>
+Closes the dictionary and frees memory. Called automatically from the wxFreePhone destructor.<P>
+
+<HR>
+<A NAME="wxfreephoneinit"></A>
+<H3>wxFreePhone::Init</H3>
+<P>
+<B>Bool</B> <B>Init</B>()<P>
+Loads the dictionary which was specified in the constructor, if any. It is necessary
+to call this before any phoneme generation is performed.<P>
+
+<HR>
+<A NAME="wxfreephonetexttophoneme"></A>
+<H3>wxFreePhone::TextToPhoneme</H3>
+<P>
+<B>Bool</B> <B>TextToPhoneme</B>(<B>const CString&amp;</B><I> text</I>, <B>CString&amp;</B><I> phonemes</I>)<P>
+<B>Bool</B> <B>TextToPhoneme</B>(<B>const wxString&amp;</B><I> text</I>, <B>wxString&amp;</B><I> phonemes</I>)<P>
+<B>Bool</B> <B>TextToPhoneme</B>(<B>const char*</B><I> text</I>, <B>char**</B><I> phonemes</I>)<P>
+Converts a text string to a phoneme string, in Mbrola format.<P>
+The result is returned in the second argument. In the case of a pure Windows build,
+new character arrary memory is allocated and returned, and should be deleted (using the array
+deletion operator) by the calling application, if the function returned TRUE.<P>
+
+<HR>
+<A NAME="wxfreephonetexttophonemefile"></A>
+<H3>wxFreePhone::TextToPhonemeFile</H3>
+<P>
+<B>Bool</B> <B>TextToPhonemeFile</B>(<B>const CString&amp;</B><I> text</I>, <B>const CString&amp;</B><I> phonemeFile</I>)<P>
+<B>Bool</B> <B>TextToPhonemeFile</B>(<B>const wxString&amp;</B><I> text</I>, <B>const wxString&amp;</B><I> phonemeFile</I>)<P>
+<B>Bool</B> <B>TextToPhonemeFile</B>(<B>const char*</B><I> text</I>, <B>const char*</B><I> phonemeFile</I>)<P>
+Converts a text string to a file of phonemes, in Mbrola format.<P>
+
+
+</BODY></HTML>
