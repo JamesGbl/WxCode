@@ -3,7 +3,7 @@
 ## Purpose:     wxScintilla
 ## Maintainer:  Otto Wyss
 ## Created:     2004-09-19
-## RCS-ID:      $Id: Makefile,v 1.3 2004-11-14 09:54:30 wyo Exp $
+## RCS-ID:      $Id: Makefile,v 1.4 2004-11-14 10:17:01 wyo Exp $
 ## Copyright:   (c) wxCode
 ## Licence:     wxWidgets licence
 ##############################################################################
@@ -81,13 +81,13 @@ SRC = PlatWX.cpp \
       XPM.cxx
 
 # source directories
-vpath %.cpp $(WXCODE)/wxscintilla/src
-vpath %.cxx $(WXCODE)/wxscintilla/src/scintilla/src
+vpath %.cpp ../src
+vpath %.cxx ../src/scintilla/src
 
 # additional header directories
-INC = -I$(WXCODE)/wxscintilla/include/ \
-      -I$(WXCODE)/wxscintilla/src/scintilla/include/ \
-      -I$(WXCODE)/wxscintilla/src/scintilla/src/
+INC = -I../include/ \
+      -I../src/scintilla/include/ \
+      -I../src/scintilla/src/
 
 DEF = -D__WX__=1 -DSCI_LEXER -DLINK_LEXERS
 
