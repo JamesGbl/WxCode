@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.27 2004-09-30 18:29:19 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.28 2004-09-30 19:00:36 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -3342,10 +3342,6 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
         int text_x = x + image_w;
         if (i == GetMainColumn()) item->SetTextX (text_x);
 
-    if (m_isDragging) {
-        int i = 0;
-    }
-
         wxDCClipper clipper (dc, x_colstart, item->GetY(), col_w, total_h); // only within column
         if (!HasFlag (wxTR_FULL_ROW_HIGHLIGHT) && (i == GetMainColumn())) {
             if (item == m_dropItem) {
@@ -3610,10 +3606,6 @@ void wxTreeListMainWindow::OnPaint( wxPaintEvent &WXUNUSED(event) )
     // set default values
     dc.SetFont( m_normalFont );
     dc.SetPen( m_dottedPen );
-
-    if (m_isDragging) {
-        int i = 0;
-    }
 
     // calculate column start and paint
     int x_maincol = 0;
