@@ -3,9 +3,9 @@
 // Purpose:     wxHyperLink control
 // Maintainer:  Wyo
 // Created:     2003-04-07
-// RCS-ID:      $Id: hyperlink.h,v 1.1 2004-04-30 18:13:34 wyo Exp $
-// Copyright:   (c) wxGuide
-// Licence:     wxWidgets licence
+// RCS-ID:      $Id: hyperlink.h,v 1.2 2004-11-22 18:34:04 wyo Exp $
+// Copyright:   (c) 2004 wxCode
+// Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
 
 #ifndef _MY_HYPERLINK_H_
