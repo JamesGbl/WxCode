@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
     <object class="wxDialog" name="ID_DIALOG">
-        <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX</style>
-        <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
+        <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU</style>
         <size>400,300</size>
         <title>Spell Checker</title>
         <centered>1</centered>
