@@ -3,9 +3,9 @@
 ## Purpose:     crashtest
 ## Maintainer:  Otto Wyss
 ## Created:     2004-10-01
-## RCS-ID:      $Id: Makefile,v 1.5 2004-10-30 18:25:52 wyo Exp $
-## Copyright:   (c) wxCode
-## Licence:     wxWidgets licence
+## RCS-ID:      $Id: Makefile,v 1.6 2004-11-22 18:27:11 wyo Exp $
+## Copyright:   (c) 2004 wxCode
+## Licence:     wxWindows
 ##############################################################################
 
 # list of source files

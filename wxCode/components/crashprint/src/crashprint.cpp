@@ -3,9 +3,9 @@
 // Purpose:     wxCrashPrint
 // Maintainer:  Wyo
 // Created:     2004-09-28
-// RCS-ID:      $Id: crashprint.cpp,v 1.8 2004-10-25 18:55:45 wyo Exp $
-// Copyright:   (c) wxCode
-// Licence:     wxWidgets licence
+// RCS-ID:      $Id: crashprint.cpp,v 1.9 2004-11-22 18:27:11 wyo Exp $
+// Copyright:   (c) 2004 wxCode
+// Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
 
 //----------------------------------------------------------------------------

@@ -3,9 +3,9 @@
 // Purpose:     CrashTest application
 // Maintainer:  Otto Wyss
 // Created:     2004-10-01
-// RCS-ID:      $Id: crashtest.cpp,v 1.3 2004-10-27 17:32:44 wyo Exp $
-// Copyright:   (c) wxCode
-// Licence:     wxWindows licence
+// RCS-ID:      $Id: crashtest.cpp,v 1.4 2004-11-22 18:27:11 wyo Exp $
+// Copyright:   (c) 2004 wxCode
+// Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
 
 //----------------------------------------------------------------------------
