@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.13 2004-05-05 16:06:27 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.14 2004-05-19 16:02:27 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -3451,20 +3451,20 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
 
                 if (item->IsExpanded())
                 {
-                    button[0].x = x - m_btnWidth2;
-                    button[0].y = y_mid - (m_btnHeight/3-1);
-                    button[1].x = button[0].x + m_btnWidth;
+                    button[0].x = x - (m_btnWidth2+1);
+                    button[0].y = y_mid - (m_btnHeight/3);
+                    button[1].x = x + (m_btnWidth2+1);
                     button[1].y = button[0].y;
                     button[2].x = x;
-                    button[2].y = y_mid + (m_btnHeight/3);
+                    button[2].y = button[0].y + (m_btnHeight2+1);
                 }
                 else
                 {
-                    button[0].x = x - (m_btnWidth/3-1);
-                    button[0].y = y_mid-m_btnHeight2;
+                    button[0].x = x - (m_btnWidth/3);
+                    button[0].y = y_mid - (m_btnHeight2+1);
                     button[1].x = button[0].x;
-                    button[1].y = button[0].y + m_btnHeight;
-                    button[2].x = button[0].x + (m_btnWidth/3);
+                    button[1].y = y_mid + (m_btnHeight2+1);
+                    button[2].x = button[0].x + (m_btnWidth2+1);
                     button[2].y = y_mid;
                 }
                 dc.DrawPolygon(3, button);
@@ -3505,7 +3505,7 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
             // draw the horizontal line here
             if (!(level == 0) && !((level == 1) && HasFlag(wxTR_HIDE_ROOT))) {
                 int x2 = x;
-                if (!HasFlag(wxTR_HAS_BUTTONS)) x2 = x - m_indent;
+                if (!HasButtons()) x2 = x - m_indent;
                 if (m_imgWidth > 0) {
                     dc.DrawLine(x2, y_mid, x2+m_indent-m_imgWidth2, y_mid);
                 }else{
