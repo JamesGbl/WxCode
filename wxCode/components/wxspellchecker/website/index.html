@@ -1,23 +1,89 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
- "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
-  <meta name="description" content="Collection of sample code snippets for wxWidgets">
-  <meta name="keywords" content="sample, code, snippets, wxWidgets">
-  <meta name="robots" content="noindex, follow">
-  <meta name="made" content="mailto:???@users.sourceforge.net">
-  <meta name="language" content="en">
-  <meta name="generator" content="wxCode">
-  <style type="text/css"> /* <![CDATA[ */ @import url(default.css); /* ]]> */ </style>
-  <title>Component ???</title>
+    <title>wxSpellChecker</title>
 </head>
 <body>
-
-<h2>Component ???</h2>
-<p>
-This is a place holder for the website of this component. If you see this, no additional information is provided by the maintainer.
-</p>
-
-</body>
+    If anyone needs a spell checker, hopefully this can be of help.<p>
+    It was written using <a href="http://wxwindows.org/">wxWindows</a>
+so that it could be useful to developer's across different platforms.
+However, it's only been developed and tested on my part under Linux and
+Windows. It has also only been tested with the aspell spell checker
+library.</p><p>
+    Theoretically, you should be able to implement any spell check engine (<a href="http://aspell.net/">aspell</a>, <a href="http://pspell.sourceforge.net/">pspell</a>, <a href="http://fmg-www.cs.ucla.edu/fmg-members/geoff/ispell.html">ispell</a>, <a href="http://lingucomponent.openoffice.org/dictionary.html">MySpell</a>).
+However, a class derived from wxSpellCheckEngineInterface must be
+written for wxSpellChecker to be able to use the spell check engine.
+Various spell check interfaces have been written to mimic to look of
+the spell check dialogs used by <a href="http://www.wintertree-software.com/">Wintertree Sentry spell checker</a>, <a href="http://spellchecker.mozdev.org/">Mozilla spell checker</a>,
+and the Outlook97 spell checker. A basic command-line interface was
+also created. However, this command-line interface only works under
+Linux when linked to the wxWindows library. On Windows it needs to link
+to the wxBase library to be able to write output to the command line.</p><p>
+Custom interfaces should be easy to create. They should be derived from
+wxSpellCheckUserInterface though. For dialog-based interfaces, deriving
+from wxSpellCheckDialogInterface would be more appropriate.</p><p>
+    </p>
+    <u>ScreenShots</u>
+    <table border="1" width="100%">
+      <th>Operating System</th><th>Mozilla-like</th><th>Wintertree Sentry-like</th><th>Outlook-like</th><th>Abiword</th>
+      <tr align="center">
+        <td align="center">Linux</td>
+        <td><a href="images/mozilla_linux.png" alt="Mozilla-like"><img src="images/mozilla_linux_thumb.jpg"></a></td>
+        <td><a href="images/wintertree_linux.png" alt="Wintertree Sentry-like"><img src="images/wintertree_linux_thumb.jpg"></a></td>
+        <td><a href="images/outlook_linux.png" alt="Outlook-like"><img src="images/outlook_linux_thumb.jpg"></a></td>
+        <td><a href="images/abiword_linux.png" alt="Abiword-like"><img src="images/abiword_linux_thumb.jpg"></a></td>
+      </tr>
+      <tr align="center">
+        <td align="center">Win32</td>
+        <td><a href="images/mozilla_win32.png" alt="Mozilla-like"><img src="images/mozilla_win32_thumb.jpg"></a></td>
+        <td><a href="images/wintertree_win32.png" alt="Wintertree Sentry-like"><img src="images/wintertree_win32_thumb.jpg"></a></td>
+        <td><a href="images/outlook_win32.png" alt="Outlook-like"><img src="images/outlook_win32_thumb.jpg"></a></td>
+        <td><a href="images/abiword_win32.png" alt="Abiword-like"><img src="images/abiword_win32_thumb.jpg"></a></td>
+      </tr>
+    </table>
+    <p>
+    <u>C++ Usage:</u><br>
+     To use the spell checker in a C++ program, you should be able to create a new spell checker with the following code:</p><p>
+    <code>
+      wxSpellCheckEngineInterface* pSpellChecker = new AspellInterface(new MySpellingDialog(NULL));
+    </code></p><p>
+    Here is the code to spell check the text:<br>
+    <code><br>
+      pSpellChecker-&gt;InitializeSpellCheckEngine();<br>
+      wxString strCorrectedText = pSpellChecker-&gt;CheckSpelling(strTextToSpellCheck);<br>
+      pSpellChecker-&gt;UninitializeSpellCheckEngine();
+    </code><br>
+    </p><p>
+    <u>C/VB Usage:</u><br>
+The external 'C' interface to the library hasn't yet been written.
+However, when completed, the API should be similar to the following: </p><ul>
+      <li><code>char** wxSpellChecker_GetSuggestions(const char*)</code></li>
+      <li><code>char* wxSpellChecker_SpellCheck(const char*)</code></li>
+      <li><code>int wxSpellChecker_IsValidWord(const char*)</code></li>
+      <li><code>void wxSpellChecker_AddWordToDictionary(const char*)</code></li>
+      <li><code>void wxSpellChecker_SetOption(const char*, const char*)</code></li>
+      <li><code>char* wxSpellChecker_GetOption(const char*)</code></li>
+    </ul>
+    <p>
+    <u>News</u><br>
+    </p><ul>
+      <li>2004-04-16: wxSpellChecker development has been moved to <a href="http://wxcode.sourceforge.net/">http://wxCode.sourceforge.net</a> and is accessible in the following ways:</li><br>
+      <ul>
+        <li>ViewCVS: <a href="http://cvs.sf.net/viewcvs.py/wxcode/wxCode/components/wxspellchecker/">http://cvs.sf.net/viewcvs.py/wxcode/wxCode/components/wxspellchecker/</a></li>
+        <li>Win32 Demo Binary: <a href="http://webpages.charter.net/tblough/spellchecker/wxSpellCheckerDemoWin32.zip">http://webpages.charter.net/tblough/spellchecker/wxSpellCheckerDemoWin32.zip</a></li>
+        <li>Linux Demo Binary: <a href="http://webpages.charter.net/tblough/spellchecker/wxSpellCheckerDemo.tar.gz">http://webpages.charter.net/tblough/spellchecker/wxSpellCheckerDemo.tar.gz</a></li>
+      </ul>
+    </ul>
+    <p>
+    <u>TODO</u><br>
+    </p><ul>
+      <li>Add a dictionary download wizard to present the user with a list of available dictionaries for the spell check engine</li>
+      <li>Create generic Makefiles (possibly a wxCode Makefile generator would be helpful?)</li>
+      <li>Create the shared library version of wxSpellChecker complete with exported C API
+      <li>See
+if it's possible to zip up spell check engine dictionaries and point
+the spell check engines to them via the wxZipFSHandler - different
+spell check engines have varying numbers of dictionary files, and the
+idea of packaging them up into one smaller file has some appeal to it</li>
+    </ul>
+  </body>
 </html>
