@@ -2,7 +2,7 @@
 // Name:        arc.cpp
 // Purpose:     Examples for archive classes
 // Author:      Mike Wetherell
-// RCS-ID:      $Id: arc.cpp,v 1.7 2004-11-27 23:49:32 chiclero Exp $
+// RCS-ID:      $Id: arc.cpp,v 1.8 2005-04-02 11:24:43 chiclero Exp $
 // Copyright:   (c) Mike Wetherell
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -43,8 +43,8 @@ std::ostream& operator<<(std::ostream& o, __int64 i) { return o << (long)i; }
 #endif
 
 // some smart pointers
-wxDEFINE_SCOPED_PTR_TYPE(wxFFileInputStream);
-wxDEFINE_SCOPED_PTR_TYPE(wxFFileOutputStream);
+wxDEFINE_SCOPED_PTR_TYPE(wxInputStream);
+wxDEFINE_SCOPED_PTR_TYPE(wxOutputStream);
 wxDEFINE_SCOPED_PTR_TYPE(wxArchiveInputStream);
 wxDEFINE_SCOPED_PTR_TYPE(wxArchiveOutputStream);
 wxDEFINE_SCOPED_PTR_TYPE(wxArchiveEntry);
@@ -79,32 +79,25 @@ public:
     bool MakeFactory();
 
     // make m_files the list of files to process (for 'create' or 'add')
-    void MakeFileList(NameMap& files,
-                      const wxString& exclude1,
-                      const wxString& exclude2);
+    void MakeFileList(NameMap& files);
 
-    // commit or rollback changes
-    bool Commit(bool commit);
+    // construct the input/output stream
+    wxOutputStream *MakeOutputStream();
+    wxInputStream *MakeInputStream();
 
     // data members used by the examples
-    wxString m_archive;                 // the archive file name
-    wxString m_output;                  // the output archive file name
     wxArrayString m_args;               // any additional command line args
     wxArchiveClassFactoryPtr m_factory; // the class factory
-    wxFFileInputStreamPtr m_in;         // the input stream
-    wxFFileOutputStreamPtr m_out;       // the output stream
     std::ostream *m_info;               // where to send progress info
-    bool m_filter;                      // filter stdin to stdout?
 
 private:
-    enum InputOutput { I = 1, O = 2, IO = I | O };
-
     // command line processing...
     bool IsCmd(const wxString& cmd,
-               InputOutput inputOutput,
                const wxString& params,
                const wxChar *description);
 
+    wxString m_archive;     // the archive file name
+    bool m_filter;          // filter stdin to stdout?
     wxString m_cmd;         // the command
     wxString m_availCmds;   // usage of all the commands
     bool m_validCmd;        // true a valid command was given
@@ -121,12 +114,15 @@ IMPLEMENT_APP_CONSOLE(ArcApp)
 
 bool ArcApp::Create()
 {
-    wxArchiveOutputStreamPtr arc(m_factory->NewStream(*m_out));
-
     // turn m_args into a list of files, i.e. expand wildcards, recurse
     // directories and remove duplicates
     NameMap files;
-    MakeFileList(files, m_filter ? wxString() : m_archive, m_output);
+    MakeFileList(files);
+
+    wxOutputStreamPtr out(MakeOutputStream());
+    if (!out.get()) return false;
+
+    wxArchiveOutputStreamPtr arc(m_factory->NewStream(*out));
 
     for (NameMap::iterator it = files.begin(); it != files.end(); ++it) {
         wxString name = it->second;
@@ -149,7 +145,7 @@ bool ArcApp::Create()
         }
     }
 
-    return arc->Close();
+    return arc->Close() && out->Close();
 }
 
 
@@ -161,7 +157,10 @@ bool ArcApp::Create()
 
 bool ArcApp::Extract()
 {
-    wxArchiveInputStreamPtr arc(m_factory->NewStream(*m_in));
+    wxInputStreamPtr in(MakeInputStream());
+    if (!in.get()) return false;
+
+    wxArchiveInputStreamPtr arc(m_factory->NewStream(*in));
     wxArchiveEntryPtr       entry;
 
     while (entry.reset(arc->GetNextEntry()), entry.get() != NULL) {
@@ -200,7 +199,10 @@ bool ArcApp::Extract()
 
 bool ArcApp::List()
 {
-    wxArchiveInputStreamPtr arc(m_factory->NewStream(*m_in));
+    wxInputStreamPtr in(MakeInputStream());
+    if (!in.get()) return false;
+
+    wxArchiveInputStreamPtr arc(m_factory->NewStream(*in));
     wxArchiveEntryPtr       entry;
 
     while (entry.reset(arc->GetNextEntry()), entry.get() && arc->CloseEntry())
@@ -224,8 +226,13 @@ bool ArcApp::Remove()
 {
     wxString pattern = m_args[0];
 
-    wxArchiveInputStreamPtr  arc(m_factory->NewStream(*m_in));
-    wxArchiveOutputStreamPtr outarc(m_factory->NewStream(*m_out));
+    wxInputStreamPtr in(MakeInputStream());
+    if (!in.get()) return false;
+    wxOutputStreamPtr out(MakeOutputStream());
+    if (!out.get()) return false;
+
+    wxArchiveInputStreamPtr  arc(m_factory->NewStream(*in));
+    wxArchiveOutputStreamPtr outarc(m_factory->NewStream(*out));
     wxArchiveEntryPtr        entry;
 
     outarc->CopyArchiveMetaData(*arc);
@@ -237,7 +244,8 @@ bool ArcApp::Remove()
             if (!outarc->CopyEntry(entry.release(), *arc))
                 return false;
 
-    return arc->Eof() && outarc->Close();
+    in.reset();
+    return arc->Eof() && outarc->Close() && out->Close();
 }
 
 
@@ -253,8 +261,13 @@ bool ArcApp::Rename()
     wxString from = m_args[0];
     wxString to = m_args[1];
 
-    wxArchiveInputStreamPtr  arc(m_factory->NewStream(*m_in));
-    wxArchiveOutputStreamPtr outarc(m_factory->NewStream(*m_out));
+    wxInputStreamPtr in(MakeInputStream());
+    if (!in.get()) return false;
+    wxOutputStreamPtr out(MakeOutputStream());
+    if (!out.get()) return false;
+
+    wxArchiveInputStreamPtr  arc(m_factory->NewStream(*in));
+    wxArchiveOutputStreamPtr outarc(m_factory->NewStream(*out));
     wxArchiveEntryPtr        entry;
 
     outarc->CopyArchiveMetaData(*arc);
@@ -270,7 +283,8 @@ bool ArcApp::Rename()
             return false;
     }
 
-    return arc->Eof() && outarc->Close();
+    in.reset();
+    return arc->Eof() && outarc->Close() && out->Close();
 }
 
 
@@ -284,10 +298,15 @@ bool ArcApp::Add()
     // turn m_args into a list of files, i.e. expand wildcards, recurse
     // directories and remove duplicates
     NameMap files;
-    MakeFileList(files, m_filter ? wxString() : m_archive, m_output);
+    MakeFileList(files);
 
-    wxArchiveInputStreamPtr  arc(m_factory->NewStream(*m_in));
-    wxArchiveOutputStreamPtr outarc(m_factory->NewStream(*m_out));
+    wxInputStreamPtr in(MakeInputStream());
+    if (!in.get()) return false;
+    wxOutputStreamPtr out(MakeOutputStream());
+    if (!out.get()) return false;
+
+    wxArchiveInputStreamPtr  arc(m_factory->NewStream(*in));
+    wxArchiveOutputStreamPtr outarc(m_factory->NewStream(*out));
     wxArchiveEntryPtr        entry(arc->GetNextEntry());
 
     outarc->CopyArchiveMetaData(*arc);
@@ -338,7 +357,8 @@ bool ArcApp::Add()
             entry.reset(arc->GetNextEntry());
     }
 
-    return arc->Eof() && outarc->Close();
+    in.reset();
+    return arc->Eof() && outarc->Close() && out->Close();
 }
 
 
@@ -348,14 +368,9 @@ bool ArcApp::Add()
 class DirTraverser : public wxDirTraverser
 {
 public:
-    DirTraverser(NameMap& files,
-                 wxArchiveClassFactory& factory,
-                 const wxString& exclude1,
-                 const wxString& exclude2)
+    DirTraverser(NameMap& files, wxArchiveClassFactory& factory)
     :   m_files(files),
-        m_factory(factory),
-        m_exclude1(factory.GetInternalName(exclude1)),
-        m_exclude2(factory.GetInternalName(exclude2))
+        m_factory(factory)
     { }
 
     virtual ~DirTraverser() { }
@@ -364,9 +379,9 @@ public:
     {
         wxString key = m_factory.GetInternalName(name);
 
-        // exclude the files given in m_exclude# plus any files who's name
-        // would degenerate to "" in the archive e.g. "/" or "." for zip or tar
-        if (!key.empty() && key != m_exclude1 && key != m_exclude2) {
+        // exclude any files who's name would degenerate to "" in the archive
+        // e.g. "/" or "." for zip or tar
+        if (!key.empty()) {
             NameMap::iterator it = m_files.lower_bound(key);
 
             if (it != m_files.end() && it->first == key)
@@ -392,8 +407,6 @@ public:
 private:
     NameMap& m_files;
     wxArchiveClassFactory& m_factory;
-    wxString m_exclude1;
-    wxString m_exclude2;
 };
 
 
@@ -405,12 +418,9 @@ private:
 //  - recurses directories
 //  - removes duplicates
 
-void ArcApp::MakeFileList(
-    NameMap& files,
-    const wxString& exclude1,
-    const wxString& exclude2)
+void ArcApp::MakeFileList(NameMap& files)
 {
-    DirTraverser traverser(files, *m_factory, exclude1, exclude2);
+    DirTraverser traverser(files, *m_factory);
 
     for (size_t i = 0; i < m_args.size(); ++i) {
 #ifndef __WXMSW__
@@ -468,86 +478,6 @@ bool ArcApp::MakeFactory()
 
 
 /////////////////////////////////////////////////////////////////////////////
-// Commit or rollback changes
-
-bool ArcApp::Commit(bool commit)
-{
-    if (!m_output.empty()) {
-        bool exists = wxFileExists(m_archive);
-
-        if (commit) {
-            if (exists) {
-                *m_info << "commiting changes\n";
-                wxRemove(m_archive);
-            }
-            if (wxRename(m_output, m_archive) == -1) {
-                wxLogSysError(_T("can't commit '%s'"), m_archive.c_str());
-                return false;
-            }
-        } else {
-            if (exists)
-                *m_info << "rolling back changes\n";
-            wxRemove(m_output);
-        }
-    }
-
-    return commit;
-}
-
-
-/////////////////////////////////////////////////////////////////////////////
-// Windows workaround, seeking returns success on pipes but doesn't work
-
-#ifdef __WXMSW__
-bool IsPipe(FILE *fp) {
-    return fp != NULL &&
-        GetFileType((HANDLE)_get_osfhandle(fileno(fp))) == FILE_TYPE_PIPE;
-}
-
-class FFileOutputStream : public wxFFileOutputStream
-{
-public:
-    FFileOutputStream(const wxString& name) :
-        wxFFileOutputStream(name) { m_pipe = IsPipe(m_file->fp()); }
-    FFileOutputStream(FILE *fp) :
-        wxFFileOutputStream(fp), m_pipe(IsPipe(fp)) { }
-
-    wxFileOffset SeekO(wxFileOffset pos, wxSeekMode mode = wxFromStart) {
-        return m_pipe ? wxInvalidOffset : wxFFileOutputStream::SeekO(pos, mode);
-    }
-    wxFileOffset TellO() const {
-        return m_pipe ? wxInvalidOffset : wxFFileOutputStream::TellO();
-    }
-
-private:
-    bool m_pipe;
-};
-
-class FFileInputStream : public wxFFileInputStream
-{
-public:
-    FFileInputStream(const wxString& name) :
-        wxFFileInputStream(name) { m_pipe = IsPipe(m_file->fp()); }
-    FFileInputStream(FILE *fp) :
-        wxFFileInputStream(fp), m_pipe(IsPipe(fp)) { }
-
-    wxFileOffset SeekI(wxFileOffset pos, wxSeekMode mode = wxFromStart) {
-        return m_pipe ? wxInvalidOffset : wxFFileInputStream::SeekI(pos, mode);
-    }
-    wxFileOffset TellI() const {
-        return m_pipe ? wxInvalidOffset : wxFFileInputStream::TellI();
-    }
-
-private:
-    bool m_pipe;
-};
-#else
-typedef wxFFileOutputStream FFileOutputStream;
-typedef wxFFileInputStream FFileInputStream;
-#endif
-
-
-/////////////////////////////////////////////////////////////////////////////
 // The rest is just plumbing
 
 int ArcApp::OnRun()
@@ -597,24 +527,19 @@ int ArcApp::OnRun()
     m_filter = m_archive.find(_T('.')) == wxString::npos;
 
     // dispatch the command, and build up help information
-    if (IsCmd(_T("add"),    IO, _T("FILES..."),  _T("add files to an archive")))
+    if (IsCmd(_T("add"),    _T("FILES..."),  _T("add files to an archive")))
         ok = Add();
-    if (IsCmd(_T("create"),  O, _T("FILES..."),  _T("create an archive")))
+    if (IsCmd(_T("create"), _T("FILES..."),  _T("create an archive")))
         ok = Create();
-    if (IsCmd(_T("extract"), I, _T("[PATTERN]"), _T("extract entries")))
+    if (IsCmd(_T("extract"),_T("[PATTERN]"), _T("extract entries")))
         ok = Extract();
-    if (IsCmd(_T("list"),    I, _T("[PATTERN]"), _T("list contents")))
+    if (IsCmd(_T("list"),   _T("[PATTERN]"), _T("list contents")))
         ok = List();
-    if (IsCmd(_T("remove"), IO, _T("PATTERN"),   _T("delete entries")))
+    if (IsCmd(_T("remove"), _T("PATTERN"),   _T("delete entries")))
         ok = Remove();
-    if (IsCmd(_T("rename"), IO, _T("FROM TO"),   _T("rename an entry")))
+    if (IsCmd(_T("rename"), _T("FROM TO"),   _T("rename an entry")))
         ok = Rename();
 
-    m_in.reset();
-    m_out.reset();
-
-    ok = Commit(ok);
-        
     // IsCmd populates m_availCmds, now use it to make a usage string
     wxString usage = _T("Usage: ") + progname +
         _T(" [-h|--help|/?] [COMMAND ARCHIVE [ARGUMENTS...]]\n") +
@@ -661,10 +586,56 @@ void Reopen(const char *mode, FILE *stream)
 
 
 /////////////////////////////////////////////////////////////////////////////
+// Make an output stream
+
+wxOutputStream *ArcApp::MakeOutputStream()
+{
+    if (m_filter) {
+        m_info = &std::cerr;
+        Reopen("wb", stdout);
+        wxFFileOutputStream *strm = new wxFFileOutputStream(stdout);
+        if (strm->Ok())
+            return strm;
+        delete strm;
+        return NULL;
+    }
+    else {
+        wxOutputStream *strm = new wxTempFileOutputStream(m_archive);
+        if (strm->IsOk())
+            return strm;
+        delete strm;
+        return NULL;
+    }
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Make an input stream
+
+wxInputStream *ArcApp::MakeInputStream()
+{
+    wxFFileInputStream *strm;
+
+    if (m_filter) {
+        Reopen("rb", stdin);
+        strm = new wxFFileInputStream(stdin);
+    }
+    else {
+        strm = new wxFFileInputStream(m_archive);
+    }
+
+    if (strm->Ok())
+        return strm;
+
+    delete strm;
+    return NULL;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
 // tests if m_cmd is the given command
 
 bool ArcApp::IsCmd(const wxString& cmd,
-                   InputOutput inputOutput,
                    const wxString& params,
                    const wxChar *description)
 {
@@ -693,37 +664,6 @@ bool ArcApp::IsCmd(const wxString& cmd,
         m_errMsg = _T("wrong number of arguments for '") + cmd + _T("'");
         return false;
     }
-
-    // open the input file
-    if (inputOutput & I) {
-        if (m_filter) {
-            Reopen("rb", stdin);
-            m_in.reset(new FFileInputStream(stdin));
-        }
-        else {
-            m_in.reset(new FFileInputStream(m_archive));
-            if (!m_in->Ok())
-                return false;
-        }
-    }
-
-    // open the output file
-    if (inputOutput & O) {
-        if (m_filter) {
-            m_info = &std::cerr;
-            Reopen("wb", stdout);
-            m_out.reset(new FFileOutputStream(stdout));
-        }
-        else {
-            wxString output = m_archive + _T(".tmp");
-            m_out.reset(new FFileOutputStream(output));
-            if (!m_out->Ok())
-                return false;
-            m_output = output;
-        }
-    }
-
-    *m_info << cmd.mb_str() << " " << m_archive.mb_str() << std::endl;
 
     return true;
 }
