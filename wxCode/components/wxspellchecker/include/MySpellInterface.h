@@ -42,6 +42,7 @@ public:
 
 	virtual bool IsWordInDictionary(const wxString& strWord);
   virtual int AddWordToDictionary(const wxString& strWord);
+  virtual int RemoveWordFromDictionary(const wxString& strWord);
   virtual wxArrayString GetWordListAsArray();
 
 private:  

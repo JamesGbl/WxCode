@@ -66,6 +66,7 @@ public:
   // Spell Checker Dictionary Manipulation functions (the above functions work on a read-only dictionary
   //  but these functions require write-access or usage of a personal dictionary
   virtual int AddWordToDictionary(const wxString& strWord) = 0;
+  virtual int RemoveWordFromDictionary(const wxString& strWord) = 0;
   virtual wxArrayString GetWordListAsArray() = 0;
 	virtual void PresentOptions();
   virtual int GetUserCorrection(const wxString& strMisspelling);

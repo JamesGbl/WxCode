@@ -29,6 +29,7 @@ public:
 	virtual wxString CheckSpelling(wxString strText);
   virtual wxArrayString GetSuggestions(const wxString& strMisspelledWord);
   virtual int AddWordToDictionary(const wxString& strWord);
+  virtual int RemoveWordFromDictionary(const wxString& strWord);
   virtual wxArrayString GetWordListAsArray();
 	virtual void PresentOptions();
 

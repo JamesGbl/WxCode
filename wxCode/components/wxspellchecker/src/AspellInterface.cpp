@@ -27,6 +27,7 @@ AspellInterface::AspellInterface(wxSpellCheckUserInterface* pDlg /* = NULL */)
   m_AspellConfig = NULL;
   m_AspellSpeller = NULL;
   m_AspellChecker = NULL;
+  m_bPersonalDictionaryModified = false;
 
   m_pSpellUserInterface = pDlg;
   if (m_pSpellUserInterface != NULL)
@@ -188,7 +189,7 @@ wxString AspellInterface::CheckSpelling(wxString strText)
 			// Let the spell checker know what the correct replacement was
 			m_AspellWrapper.AspellSpellerStoreReplacement(m_AspellSpeller, strBadWord, token.len,
 																strReplacementText, strReplacementText.Length());
-			m_bPersonalDictionaryModified = TRUE;	// Storing this information modifies the dictionary
+			m_bPersonalDictionaryModified = true;	// Storing this information modifies the dictionary
 	    // Replace the misspelled word with the replacement */
 			strText.replace(token.offset, token.len, strReplacementText);
 		}
@@ -230,8 +231,14 @@ int AspellInterface::AddWordToDictionary(const wxString& strWord)
   *  -1 if there was an error adding the word to the dictionary
   */
 	int nReturn = m_AspellWrapper.AspellSpellerAddToPersonal(m_AspellSpeller, strWord, strWord.Length());
-	m_bPersonalDictionaryModified = TRUE;
+	m_bPersonalDictionaryModified = true;
   return (nReturn != -1);
+}
+
+int AspellInterface::RemoveWordFromDictionary(const wxString& strWord)
+{
+  ::wxMessageBox(_T("Sorry, removing words from the personal dictionary is not available with this spell checker."));
+  return true;
 }
 
 wxArrayString AspellInterface::GetWordListAsArray()

@@ -15,15 +15,24 @@ MySpellInterface::MySpellInterface(wxSpellCheckUserInterface* pDlg /* = NULL */)
     m_pSpellUserInterface->SetSpellCheckEngine(this);
 
   m_pMySpell = NULL;
+  m_bPersonalDictionaryModified = false;
 
   SetDefaultOptions();
 
+  LoadPersonalDictionary();
+  
   InitializeSpellCheckEngine();
 }
 
 
 MySpellInterface::~MySpellInterface()
 {
+  if (m_bPersonalDictionaryModified)
+  {
+    if (wxYES == ::wxMessageBox("Would you like to save any of your changes to your personal dictionary?", "Save Changes", wxYES_NO | wxICON_QUESTION))
+      SavePersonalDictionary();
+  }
+  
   UninitializeSpellCheckEngine();
 
   if (m_pSpellUserInterface != NULL)
@@ -154,7 +163,6 @@ wxString MySpellInterface::CheckSpelling(wxString strText)
         wxString strReplacementText = (bReplaceFromMap) ? (*WordFinder).second : m_pSpellUserInterface->GetReplacementText();
         // Increase/Decreate the character difference so that the next loop is on track
         nDiff += strReplacementText.Length() - token.Length();
-        m_bPersonalDictionaryModified = TRUE;	// Storing this information modifies the dictionary
         // Replace the misspelled word with the replacement */
         strText.replace(TokenStart, token.Length(), strReplacementText);
       }
@@ -211,9 +219,16 @@ int MySpellInterface::AddWordToDictionary(const wxString& strWord)
 {
   m_PersonalDictionary.Add(strWord);
   m_PersonalDictionary.Sort();
+  m_bPersonalDictionaryModified = true;
   return true;
 }
 
+int MySpellInterface::RemoveWordFromDictionary(const wxString& strWord)
+{
+  m_PersonalDictionary.Remove(strWord);
+  m_bPersonalDictionaryModified = true;
+  return true;
+}
 
 wxArrayString MySpellInterface::GetWordListAsArray()
 {
@@ -241,26 +256,26 @@ bool MySpellInterface::LoadPersonalDictionary()
   }
 
   m_PersonalDictionary.Clear();
-  wxString strWord;
-  for ( strWord = DictFile.GetFirstLine(); !DictFile.Eof(); strWord = DictFile.GetNextLine() )
+  if (DictFile.GetLineCount() > 0)
   {
+    wxString strWord;
+    for ( strWord = DictFile.GetFirstLine(); !DictFile.Eof(); strWord = DictFile.GetNextLine() )
+    {
+      strWord.Trim(FALSE); // Trim on the left
+      strWord.Trim(TRUE);  // Trim on the right
+      if (strWord.IsEmpty() || strWord == _T(";"))
+        continue;
+  
+      m_PersonalDictionary.Add(strWord);
+    }
+    // Handle the last line
     strWord.Trim(FALSE); // Trim on the left
     strWord.Trim(TRUE);  // Trim on the right
-    if (strWord.Right(1) == ";") strWord.RemoveLast();
-
-    if (strWord.IsEmpty())
-      continue;
-
-    m_PersonalDictionary.Add(strWord);
+  
+    if (!(strWord.IsEmpty()) && (strWord != _T(";")))
+      m_PersonalDictionary.Add(strWord);
   }
-  // Handle the last line
-  strWord.Trim(FALSE); // Trim on the left
-  strWord.Trim(TRUE);  // Trim on the right
-  if (strWord.Right(1) == ";") strWord.RemoveLast();
-
-  if (!(strWord.IsEmpty()))
-    m_PersonalDictionary.Add(strWord);
-   
+  
   DictFile.Close();
   return true;
 }
@@ -277,7 +292,7 @@ bool MySpellInterface::SavePersonalDictionary()
   if (DictFile.Exists())
     ::wxRemoveFile(sPath.GetFullPath());
   
-  if (!DictFile.Open())
+  if (!DictFile.Create())
   {
     wxMessageBox("Unable to open personal dictionary file");
     return false;
@@ -287,7 +302,9 @@ bool MySpellInterface::SavePersonalDictionary()
   for (unsigned int i=0; i<m_PersonalDictionary.GetCount(); i++)
   {
     DictFile.AddLine(m_PersonalDictionary[i]);
+    wxPrintf(m_PersonalDictionary[i]);
   }
+  DictFile.Write();
   DictFile.Close();
   return true;
 }
