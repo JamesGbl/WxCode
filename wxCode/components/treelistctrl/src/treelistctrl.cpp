@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.11 2004-04-29 18:51:33 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.12 2004-05-03 17:10:13 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -3225,13 +3225,26 @@ int wxTreeListMainWindow::GetLineHeight(wxTreeListItem *item) const
 
 void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
 {
-    // TODO implement "state" icon on items
-
     wxTreeItemAttr *attr = item->GetAttributes();
-    if ( attr && attr->HasFont() )
+    if (attr && attr->HasFont()) {
         dc.SetFont(attr->GetFont());
-    else if (item->IsBold())
+    }else if (item->IsBold()) {
         dc.SetFont(m_boldFont);
+    }
+    wxColour colText;
+    if (attr && attr->HasTextColour()) {
+        colText = attr->GetTextColour();
+    }else{
+        colText = GetForegroundColour();
+    }
+
+    wxPen *pen =
+#ifndef __WXMAC__
+        // don't draw rect outline if we already have the
+        // background color under Mac
+        (item->IsSelected() && m_hasFocus) ? wxBLACK_PEN :
+#endif // !__WXMAC__
+         wxTRANSPARENT_PEN;
 
     long text_w = 0, text_h = 0;
 
@@ -3239,20 +3252,19 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
 
     int total_h = GetLineHeight(item);
 
-    if ( item->IsSelected() )
-    {
+    if (item->IsSelected() && HasFlag (wxTR_FULL_ROW_HIGHLIGHT)) {
         dc.SetBrush(*(m_hasFocus ? m_hilightBrush : m_hilightUnfocusedBrush));
         int offset = HasFlag(wxTR_ROW_LINES) ? 1 : 0;
         dc.DrawRectangle (0, item->GetY() + offset,
                           m_owner->GetHeaderWindow()->GetWidth(), total_h-offset);
-    }
-    else
-    {
+        colText = wxSystemSettings::GetSystemColour(wxSYS_COLOUR_HIGHLIGHTTEXT);
+    }else{
         wxColour colBg;
-        if ( attr && attr->HasBackgroundColour() )
+        if (attr && attr->HasBackgroundColour()) {
             colBg = attr->GetBackgroundColour();
-        else
+        }else{
             colBg = m_backgroundColour;
+        }
         dc.SetBrush(wxBrush(colBg, wxTRANSPARENT));
     }
 
@@ -3298,6 +3310,19 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
             break;
         }
         int text_x = image_x + image_w;
+
+        if (item->IsSelected() && (i==GetMainColumn()) && !HasFlag (wxTR_FULL_ROW_HIGHLIGHT))
+        {
+            dc.SetBrush(*(m_hasFocus ? m_hilightBrush : m_hilightUnfocusedBrush));
+            int offset = HasFlag (wxTR_ROW_LINES) ? 1 : 0;
+            dc.DrawRectangle (text_x, item->GetY() + offset, text_w, total_h-offset);
+            dc.SetBackgroundMode(wxTRANSPARENT);
+            dc.SetTextForeground(wxSystemSettings::GetSystemColour(wxSYS_COLOUR_HIGHLIGHTTEXT));
+        }else{
+            dc.SetTextForeground(colText);
+        }
+
+        dc.SetPen(*pen);
 
         wxDCClipper clipper (dc, x_colstart, item->GetY(), colwidth, total_h);
         if (image != NO_IMAGE)
@@ -3375,7 +3400,6 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
         // restore DC objects
         dc.SetBrush(*wxWHITE_BRUSH);
         dc.SetPen(m_dottedPen);
-        dc.SetTextForeground(*wxBLACK);
 
         if (((level == 0) || ((level == 1) && HasFlag(wxTR_HIDE_ROOT))) &&
             HasFlag(wxTR_LINES_AT_ROOT) && !HasFlag(wxTR_NO_LINES)) {
@@ -3478,34 +3502,7 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
             }
         }
 
-        wxPen *pen =
-#ifndef __WXMAC__
-            // don't draw rect outline if we already have the
-            // background color under Mac
-            (item->IsSelected() && m_hasFocus) ? wxBLACK_PEN :
-#endif // !__WXMAC__
-            wxTRANSPARENT_PEN;
-
-        wxColour colText;
-        if ( item->IsSelected() )
-        {
-            colText = wxSystemSettings::GetSystemColour(wxSYS_COLOUR_HIGHLIGHTTEXT);
-        }
-        else
-        {
-            wxTreeItemAttr *attr = item->GetAttributes();
-            if (attr && attr->HasTextColour())
-                colText = attr->GetTextColour();
-            else
-                //colText = wxSystemSettings::GetSystemColour(wxSYS_COLOUR_WINDOWTEXT);
-                colText = GetForegroundColour();
-        }
-
-        // prepare to draw
-        dc.SetTextForeground(colText);
-        dc.SetPen(*pen);
-
-        // draw
+        // draw item
         PaintItem(item, dc);
     }
 
