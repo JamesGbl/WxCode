@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.55 2004-11-19 18:29:03 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.56 2004-11-19 18:33:11 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -2431,15 +2431,6 @@ void wxTreeListMainWindow::SendDeleteEvent(wxTreeListItem *item) {
     if (m_curItem == item) m_curItem = (wxTreeListItem *) NULL; //? TODO why here???
 }
 
-void wxTreeListMainWindow::DeleteChildren(const wxTreeItemId& itemId) {
-
-    wxTreeListItem *item = (wxTreeListItem*) itemId.m_pItem;
-    wxCHECK_RET (item != m_rootItem, _T("invalid item, root may not be deleted this way!"));
-
-    m_dirty = true; // do this first so stuff below doesn't cause flicker
-    item->DeleteChildren (this);
-}
-
 void wxTreeListMainWindow::Delete (const wxTreeItemId& itemId) {
 
     wxTreeListItem *item = (wxTreeListItem*) itemId.m_pItem;
@@ -2466,6 +2457,14 @@ void wxTreeListMainWindow::Delete (const wxTreeItemId& itemId) {
     item->DeleteChildren(this);
     SendDeleteEvent(item);
     delete item;
+}
+
+void wxTreeListMainWindow::DeleteChildren(const wxTreeItemId& itemId) {
+
+    wxTreeListItem *item = (wxTreeListItem*) itemId.m_pItem;
+
+    m_dirty = true; // do this first so stuff below doesn't cause flicker
+    item->DeleteChildren (this);
 }
 
 void wxTreeListMainWindow::DeleteRoot() {
