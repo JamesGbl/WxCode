@@ -105,7 +105,7 @@ void SpellCheckerOptionsDialog::PopulateOptionsSizer(wxSizer* pSizer)
           
           // Add the wxFocusEvent for this item to update the list of possible values
           Connect(pCombo->GetId(),  wxEVT_SET_FOCUS,
-            (wxObjectEventFunction) (wxEventFunction) (wxCommandEventFunction) &SpellCheckerOptionsDialog::UpdateControlPossibleValues);
+            (wxObjectEventFunction) (wxEventFunction) (wxFocusEventFunction) &SpellCheckerOptionsDialog::UpdateControlPossibleValues);
         }
         else
         {
@@ -170,7 +170,7 @@ void SpellCheckerOptionsDialog::PopulateOptionsSizer(wxSizer* pSizer)
     if (pControl)
     {
       Connect(pControl->GetId(),  wxEVT_UPDATE_UI,
-        (wxObjectEventFunction) (wxEventFunction) (wxCommandEventFunction) &SpellCheckerOptionsDialog::UpdateControlPossibleValues);
+        (wxObjectEventFunction) (wxEventFunction) (wxFocusEventFunction) &SpellCheckerOptionsDialog::UpdateControlPossibleValues);
     }
   }
 }
