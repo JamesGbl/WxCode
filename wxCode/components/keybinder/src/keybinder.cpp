@@ -110,6 +110,13 @@ BEGIN_EVENT_TABLE(wxKeyConfigPanel, wxPanel)
 END_EVENT_TABLE()
 
 
+#if !wxCHECK_VERSION(2, 5, 1)
+
+	// with wx previous to 2.5 we need to use wxWindow::Node* instead
+	// of wxWindow::compatibility_iterator (thanks to Sebastien Berthet for this)
+	#define compatibility_iterator			Node*
+#endif
+
 
 // some statics
 int wxCmd::m_nCmdTypes = 0;
@@ -1535,12 +1542,16 @@ void wxKeyConfigPanel::ShowSizer(wxSizer *toshow, bool show)
 	if (show)
 		main->Prepend(toshow, 0, wxGROW);
 	else
+#if wxCHECK_VERSION(2, 5, 1)
 		main->Detach(toshow);
+#else
+		main->Remove(toshow);
+#endif
 
 
 	// THIS PIECE OF CODE HAS BEEN COPIED & PASTED
-	// FROM THE wxLogDialog::OnDetails OF THE 
-	// wxWidgets/src/generic/logg.cpp FILE
+	// FROM THE wxLogDialog::OnDetails FUNCTION OF  
+	// THE wxWidgets/src/generic/logg.cpp FILE
 	// -------------------------------------------
 	m_minHeight = m_maxHeight = -1;
 	
@@ -1561,7 +1572,11 @@ void wxKeyConfigPanel::ShowSizer(wxSizer *toshow, bool show)
     SetSizeHints(size.x, size.y, m_maxWidth, m_maxHeight);
 
     // don't change the width when expanding/collapsing
+#if wxCHECK_VERSION(2, 5, 1)
     SetSize(wxDefaultCoord, size.y);
+#else
+    SetSize(-1, size.y);
+#endif
 
 #ifdef __WXGTK__
     // VS: this is neccessary in order to force frame redraw under

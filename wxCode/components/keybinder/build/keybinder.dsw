@@ -2,7 +2,8 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 # WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
 
 ###############################################################################
-Project: "keybinder_keybinder"=keybinder_keybinder.dsp - Package Owner=<4>
+
+Project: "keybinder"=.\keybinder_keybinder.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -14,7 +15,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "keybinder_minimal"=keybinder_minimal.dsp - Package Owner=<4>
+Project: "minimal"=.\keybinder_minimal.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -22,9 +23,21 @@ Package=<5>
 
 Package=<4>
 {{{
-Begin Project Dependency
-Project_Dep_Name keybinder
-End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name keybinder
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+}}}
+
+Package=<3>
+{{{
 }}}
 
 ###############################################################################
