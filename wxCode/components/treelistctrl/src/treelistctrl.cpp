@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.42 2004-11-01 17:08:14 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.43 2004-11-01 19:58:50 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -2760,7 +2760,6 @@ void wxTreeListMainWindow::SelectItem(const wxTreeItemId& itemId,
         UnselectAll();
 
         // select item range according Y-position
-        wxTreeListItem *first=NULL, *last=NULL;
         if (prev->GetY() < item->GetY()) {
             if (TagAllChildrenUntilLast (prev, item, true)) return;
             TagNextChildren (prev, item, true);
