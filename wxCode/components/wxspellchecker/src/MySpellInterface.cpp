@@ -101,104 +101,64 @@ int MySpellInterface::SetOption(SpellCheckEngineOption& Option)
 
 
 wxString MySpellInterface::CheckSpelling(wxString strText)
-
 {
   if (m_pMySpell == NULL)
-
     return "";
 
-
   int nDiff = 0;
-
-  
 
   wxStringTokenizer tkz(strText);
   while ( tkz.HasMoreTokens() )
   {
     wxString token = tkz.GetNextToken();
-  
+    int TokenStart = tkz.GetPosition() - token.Length() - 1;
+    TokenStart += nDiff;  // Take into account any changes to the size of the strText
+    
     // process token here
     if  (!(m_pMySpell->spell(token)))
     {
       // If this word is in the always ignore list, then just move on
-
       if (m_AlwaysIgnoreList.Index(token) != wxNOT_FOUND)
-
         continue;
-
 
       // If this word is in the always ignore list, then just move on
-
       if (m_PersonalDictionary.Index(token) != wxNOT_FOUND)
-
         continue;
-
       
-
       bool bReplaceFromMap = FALSE;
-
       StringToStringMap::iterator WordFinder = m_AlwaysReplaceMap.find(token);
-
       if (WordFinder != m_AlwaysReplaceMap.end())
-
         bReplaceFromMap = TRUE;
-
-      
 
       int nUserReturnValue = 0;
 
       if (!bReplaceFromMap)
-
       {
-
         // Define the context of the word
-
-        DefineContext(strText, tkz.GetPosition(), token.Length());
-
-  
+        DefineContext(strText, TokenStart, token.Length());
 
         // Print out the misspelling and get a replasment from the user 
-
         // Present the dialog so the user can tell us what to do with this word
-
         nUserReturnValue = GetUserCorrection(token);  //Show function will show the dialog and not return until the user makes a decision
-
       }
-
-      
 
       if (nUserReturnValue == wxSpellCheckUserInterface::ACTION_CLOSE)
-
       {
-
         break;
-
       }
-
       else if ((nUserReturnValue == wxSpellCheckUserInterface::ACTION_REPLACE) || bReplaceFromMap)
-
       {
-
         wxString strReplacementText = (bReplaceFromMap) ? (*WordFinder).second : m_pSpellUserInterface->GetReplacementText();
-
         // Increase/Decreate the character difference so that the next loop is on track
-
         nDiff += strReplacementText.Length() - token.Length();
-
         m_bPersonalDictionaryModified = TRUE;	// Storing this information modifies the dictionary
-
         // Replace the misspelled word with the replacement */
-
-        strText.replace(tkz.GetPosition(), token.Length(), strReplacementText);
-
+        strText.replace(TokenStart, token.Length(), strReplacementText);
       }
-
     }
   }
-	
 
   return strText;
-
 }
 
 
