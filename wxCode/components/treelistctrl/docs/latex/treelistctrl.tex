@@ -4,7 +4,7 @@
 %% Author:      Otto Wyss
 %% Modified by:
 %% Created:     25.4.2004
-%% RCS-ID:      $Id: treelistctrl.tex,v 1.6 2004-05-05 16:05:47 wyo Exp $
+%% RCS-ID:      $Id: treelistctrl.tex,v 1.7 2004-09-30 19:30:30 wyo Exp $
 %% Copyright:   (c) wxCode
 %% License:     wxWindows license
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -794,6 +794,12 @@ Parameter???
 \func{void}{SetBackgroundColour}{\param{const wxColour\&}{ colour}}
 
 ???
+
+\membersection{wxTreeListCtrl::SetDragItem}\label{wxtreelistctrlsetdragitem}
+
+\func{void}{SetDragItem}{\param{const wxTreeItemId\&}{ item=(wxTreeItemId*)NULL}}
+
+Marks the item where the dragged item will be dropped if the drag is currently ended.
 
 \membersection{wxTreeListCtrl::SetFocus}\label{wxtreelistctrlsetfocus}
 
