@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.50 2004-11-11 19:17:02 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.51 2004-11-11 19:26:46 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -1640,17 +1640,17 @@ wxTreeListItem *wxTreeListItem::HitTest (const wxPoint& point,
                 }
             }
 
-            // check for indent hit after button and image hit
-            if (point.x < m_x) {
-                flags |= wxTREE_HITTEST_ONITEMINDENT;
-                column = maincol;
-                return this;
-            }
-
             // check for label hit
             if ((point.x >= m_text_x) && (point.x <= (m_text_x + m_width))) {
                 flags |= wxTREE_HITTEST_ONITEMLABEL;
                 column = maincol;
+                return this;
+            }
+
+            // check for indent hit after button and image hit
+            if (point.x < m_x) {
+                flags |= wxTREE_HITTEST_ONITEMINDENT;
+                column = -1; // considered not belonging to main column
                 return this;
             }
 
@@ -1659,7 +1659,7 @@ wxTreeListItem *wxTreeListItem::HitTest (const wxPoint& point,
             for (int i = 0; i <= maincol; ++i) end += header_win->GetColumnWidth (i);
             if ((point.x > (m_text_x + m_width)) && (point.x <= end)) {
                 flags |= wxTREE_HITTEST_ONITEMRIGHT;
-                column = maincol;
+                column = -1; // considered not belonging to main column
                 return this;
             }
 
