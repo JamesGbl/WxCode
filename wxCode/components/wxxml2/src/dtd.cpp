@@ -392,7 +392,7 @@ bool wxXml2DTD::Load(wxInputStream &stream, wxString *pErr)
 
 	// xmlSAXHandler::fatalError is unused (in LibXML2 2.5.x),
 	// however, we set it anyway to support future versions...
-	h.fatalError = XMLDTDMsg;
+	h.fatalError = XMLDTDMsg;	
 
 	// setup our input buffer
 	xmlParserInputBuffer *myparserbuf = xmlAllocParserInputBuffer(XML_CHAR_ENCODING_NONE);
@@ -400,7 +400,6 @@ bool wxXml2DTD::Load(wxInputStream &stream, wxString *pErr)
 	myparserbuf->context = &stream;
 
 	// parse from buffer
-	wxString error;
 	UnwrappingOld();
 	m_dtd = xmlIOParseDTD(&h, myparserbuf, XML_CHAR_ENCODING_NONE);
 	JustWrappedNew();		// don't forget this
@@ -469,12 +468,15 @@ static int XMLDTDWrite(void *context, const char *buffer, int len)
 
 	// the last write in the stream could report a number of bytes written
 	// different from the buffer lenght we gave to the wxOutputStream:
-	// see wxNativeNewlinesFilterStream::OnSysWrite for example.
-	// Anyway, if the stream did not report any error, this is okay and
+	// see wxNativeNewlinesFilterStream::OnSysWrite for example...
+	
+	// ...so, we check if everything is okay in the stream...
+	if (!stream->IsOk())
+		return -1;
+		
+	// ...if the stream did not report any error, this is okay and
 	// we will return the "written+len" value which is what libxml2 expects....
-	if ((int)stream->LastWrite() != len && stream->IsOk())
-		return written+len;
-	return -1;
+	return written+len;
 }
 
 int wxXml2DTD::Save(wxOutputStream &stream, long flags) const

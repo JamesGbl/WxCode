@@ -1280,7 +1280,7 @@ size_t wxNativeNewlinesFilterStream::OnSysWrite(const void *buffer, size_t bufsi
 	}
 
 	// BE CAREFUL: "written" could be smaller or bigger than "bufsize"...
-	return written;
+	return bufsize;//written;
 }
 
 

@@ -101,9 +101,7 @@ TEST2_OBJECTS =  \
 ### Conditionally set variables: ###
 
 ifeq ($(BUILD),debug)
-ifeq ($(UNICODE),0)
 WXSUBLIBPOSTFIX = d
-endif
 endif
 ifeq ($(PYTHON_VER),2_2)
 PYTHON_MAJVER = 2

@@ -99,8 +99,10 @@
  Known bugs
  ----------
 
- None
-
+ --> when using PYTHON, there is a memory leak; I'm sure this happens with MSVC6 in DEBUG mode
+     but it could happen also with other compilers and even in release mode
+     (I think this is a python lib bug not a wxscript one...);
+     if you don't want to use python and you don't want to have that leak use USE_PYTHON=0 option
 
 
 

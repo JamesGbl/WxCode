@@ -65,7 +65,7 @@ MINIMAL_OBJECTS =  \
 
 ### Conditionally set variables: ###
 
-!if "$(BUILD)" == "debug" && "$(UNICODE)" == "0"
+!if "$(BUILD)" == "debug"
 WXSUBLIBPOSTFIX = d
 !endif
 !if "$(BUILD)" == "debug"

@@ -56,9 +56,7 @@ WATCOM_CWD = $+ $(%cdrive):$(%cwd) $-
 
 WXSUBLIBPOSTFIX =
 !ifeq BUILD debug
-!ifeq UNICODE 0
 WXSUBLIBPOSTFIX = d
-!endif
 !endif
 __DEBUGINFO_7 =
 !ifeq BUILD debug

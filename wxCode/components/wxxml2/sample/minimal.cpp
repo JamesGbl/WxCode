@@ -218,8 +218,8 @@ bool MyApp::OnInit()
     frame->Show(true);
 #endif
 
-
-	//wxXml2::Init();
+	// init libxml2 library
+	wxXml2::Init();
 
 
     // success: wxApp::OnRun() will be called which will enter the main message
@@ -231,7 +231,9 @@ bool MyApp::OnInit()
 
 int MyApp::OnExit()
 {
-	//wxXml2::Cleanup();
+	// cleanup libxml2 statics
+	wxXml2::Cleanup();
+
 	return 0;
 }
 
@@ -495,7 +497,16 @@ void MyFrame::OnLoadXML(wxCommandEvent& WXUNUSED(event))
 	if (fd.ShowModal() == wxID_CANCEL)
 		return;
 
-	LoadXML(fd.GetPath());
+	//LoadXML(fd.GetPath());
+	// ask the user which file we must load...
+	wxFileDialog fd2(this, wxT("Choose the XML file to save on"), wxT(""), wxT(""), 
+		wxT("XML and HTML files|*.xml;*.html;*.xhtml|All files|*.*"), wxSAVE);
+	if (fd2.ShowModal() == wxID_CANCEL)
+		return;
+
+	wxXml2Document tmpDoc;
+	tmpDoc.Load(fd.GetPath());
+	tmpDoc.Save(fd2.GetPath());//, wxT("UTF-8"), 0);
 }
 
 void MyFrame::OnLoadDTD(wxCommandEvent& WXUNUSED(event))

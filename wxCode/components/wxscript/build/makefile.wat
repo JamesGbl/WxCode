@@ -86,9 +86,7 @@ WATCOM_CWD = $+ $(%cdrive):$(%cwd) $-
 
 WXSUBLIBPOSTFIX =
 !ifeq BUILD debug
-!ifeq UNICODE 0
 WXSUBLIBPOSTFIX = d
-!endif
 !endif
 PYTHON_MAJVER =
 !ifeq PYTHON_VER 2_2

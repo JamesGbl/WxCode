@@ -64,9 +64,7 @@ MINIMAL_OBJECTS =  \
 ### Conditionally set variables: ###
 
 ifeq ($(BUILD),debug)
-ifeq ($(UNICODE),0)
 WXSUBLIBPOSTFIX = d
-endif
 endif
 ifeq ($(BUILD),debug)
 __DEBUG_DEFINE_p = -D__WXDEBUG__
