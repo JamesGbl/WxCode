@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.31 2004-10-04 17:50:26 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.32 2004-10-06 16:07:16 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -3109,8 +3109,10 @@ wxTreeItemId wxTreeListMainWindow::FindItem (const wxTreeItemId& item, const wxS
 }
 
 void wxTreeListMainWindow::SetDragItem (const wxTreeItemId& item) {
+    wxTreeListItem *prevItem = m_dragItem;
     m_dragItem = (wxTreeListItem*) item.m_pItem;
-    RefreshLine (m_dragItem);
+    if (prevItem) RefreshLine (prevItem);
+    if (m_dragItem) RefreshLine (m_dragItem);
 }
 
 wxImageList *wxTreeListMainWindow::GetImageList() const
