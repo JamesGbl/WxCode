@@ -4,7 +4,7 @@
 %% Author:      Otto Wyss
 %% Modified by:
 %% Created:     25.4.2004
-%% RCS-ID:      $Id: treelistctrl.tex,v 1.11 2004-11-09 21:59:49 wyo Exp $
+%% RCS-ID:      $Id: treelistctrl.tex,v 1.12 2004-11-11 19:16:01 wyo Exp $
 %% Copyright:   (c) wxCode
 %% License:     wxWindows license
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -337,7 +337,7 @@ The flags have the following meaning:
    
 \membersection{wxTreeListCtrl::GetBoundingRect}\label{wxtreelistctrlgetitemrect}
 
-\constfunc{bool}{GetBoundingRect}{\param{const wxTreeItemId\&}{ item}, \param{wxRect\& }{rect}, \param{bool }{textOnly = FALSE}}
+\constfunc{bool}{GetBoundingRect}{\param{const wxTreeItemId\&}{ item}, \param{wxRect\& }{rect}, \param{bool }{textOnly = false}}
 
 Retrieves the rectangle bounding the {\it item}. If {\it textOnly} is TRUE,
 only the rectangle around the item's label will be returned, otherwise the
@@ -364,7 +364,7 @@ This function is only available in the generic version.
 
 \membersection{wxTreeListCtrl::GetChildrenCount}\label{wxtreelistctrlgetchildrencount}
 
-\constfunc{long}{GetChildrenCount}{\param{const wxTreeItemId\&}{ item}, \param{bool}{ recursively = TRUE}}
+\constfunc{long}{GetChildrenCount}{\param{const wxTreeItemId\&}{ item}, \param{bool}{ recursively = true}}
 
 Returns the number of items in the branch. If {\it recursively} is TRUE, returns the total number
 of descendants, otherwise only one level of children is counted.
@@ -896,7 +896,7 @@ Sets the colour of the item's background.
 
 \membersection{wxTreeListCtrl::SetItemBold}\label{wxtreelistctrlsetitembold}
 
-\func{void}{SetItemBold}{\param{const wxTreeItemId\& }{item}, \param{bool}{ bold = TRUE}}
+\func{void}{SetItemBold}{\param{const wxTreeItemId\& }{item}, \param{bool}{ bold = true}}
 
 Makes item appear in bold font if {\it bold} parameter is TRUE or resets it to
 the normal state.
@@ -939,7 +939,7 @@ although font attributes may vary.
 
 \membersection{wxTreeListCtrl::SetItemHasChildren}\label{wxtreelistctrlsetitemhaschildren}
 
-\func{void}{SetItemHasChildren}{\param{const wxTreeItemId\&}{ item}, \param{bool}{ has = TRUE}}
+\func{void}{SetItemHasChildren}{\param{const wxTreeItemId\&}{ item}, \param{bool}{ has = true}}
 
 Force appearance of the button next to the item. This is useful to
 allow the user to expand the items which don't have any children now,
@@ -1037,7 +1037,7 @@ all items if it does have this style.
 
 \func{void}{AddColumn}{\param{const wxString\&}{ text}}
 
-\func{void}{AddColumn}{\param{const wxString\&}{ text}, \param{int}{ width}, \param{wxTreeListColumnAlign}{ alignment = wxTL_ALIGN_LEFT}}
+\func{void}{AddColumn}{\param{const wxString\&}{ text}, \param{int}{ width}, \param{int}{ flag = wxALIGN_LEFT}}
 
 \func{void}{AddColumn}{\param{const wxTreeListColumnInfo\&}{ col}}
 
@@ -1053,7 +1053,7 @@ Returns the infos of the columns.
 
 \membersection{wxTreeListCtrl::GetColumnAlignment}\label{wxtreelistctrlgetcolumnalignment}
 
-\constfunc{wxTreeListColumnAlign}{GetColumnAlignment}{\param{int}{ column}}
+\constfunc{int}{GetColumnAlignment}{\param{int}{ column}}
 
 Returns the alignment of the columns.
 
@@ -1092,7 +1092,7 @@ Returns the number of the main column.
 \func{void}{InsertColumn}{\param{int}{ before}, \param{const wxString\&}{ text}}
 
 \func{void}{InsertColumn}{\param{int}{ before}, \param{const wxString\&}{ text}, \param{int}{ width},
- \param{wxTreeListColumnAlign}{ alignment = wxTL_ALIGN_LEFT}}
+ \param{int}{ flag = wxALIGN_LEFT}}
 
 Inserts a column before(???) the entered column.
 
@@ -1122,15 +1122,27 @@ Sets the infos of the column.
 
 \membersection{wxTreeListCtrl::SetColumnAlignment}\label{wxtreelistctrlsetcolumnalignment}
 
-\func{void}{SetColumnAlignment}{\param{int}{ column}, \param{const wxTreeListColumnAlign}{ align}}
+\func{void}{SetColumnAlignment}{\param{int}{ column}, \param{int}{ flag}}
 
 Sets the alignment of the column.
+
+\membersection{wxTreeListCtrl::SetColumnEditable}\label{wxtreelistctrlsetcolumneditable}
+
+\func{void}{SetColumnEditable}{\param{int}{ column}, \param{bool}{ shown = true}}
+
+Sets if the column is editable.
 
 \membersection{wxTreeListCtrl::SetColumnImage}\label{wxtreelistctrlsetcolumnimage}
 
 \func{void}{SetColumnImage}{\param{int}{ column}, \param{int}{ image}}
 
 Sets the image of the column.
+
+\membersection{wxTreeListCtrl::SetColumnShown}\label{wxtreelistctrlsetcolumnshown}
+
+\func{void}{SetColumnShown}{\param{int}{ column}, \param{bool}{ shown = true}}
+
+Shows/hides the column.
 
 \membersection{wxTreeListCtrl::SetColumnText}\label{wxtreelistctrlsetcolumntext}
 
@@ -1149,12 +1161,6 @@ Sets the width of the column.
 \func{void}{SetMainColumn}{\param{int}{ column}}
 
 Set the main column.
-
-\membersection{wxTreeListCtrl::ShowColumn}\label{wxtreelistctrlshowcolumn}
-
-\func{void}{ShowColumn}{\param{int}{ column}, \param{bool}{ shown}}
-
-Shows/hides the column.
 
 \latexignore{\rtfignore{\wxheading{Members (item specific}}}
 

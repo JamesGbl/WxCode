@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Modified by: Alberto Griggio, 2002
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.23 2004-11-09 22:00:30 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.24 2004-11-11 19:14:56 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows license
@@ -41,13 +41,6 @@ typedef void *wxTreeItemIdValue;
 // wxTreeListColumnAttrs
 //-----------------------------------------------------------------------------
 
-enum wxTreeListColumnAlign {
-    wxTL_ALIGN_LEFT,
-    wxTL_ALIGN_RIGHT,
-    wxTL_ALIGN_CENTER
-};
-
-
 enum {
     DEFAULT_COL_WIDTH = 100
 };
@@ -57,13 +50,13 @@ class WXDLLEXPORT wxTreeListColumnInfo: public wxObject {
 public:
     wxTreeListColumnInfo (const wxString &text = wxT(""),
                           int width = DEFAULT_COL_WIDTH,
-                          wxTreeListColumnAlign alignment = wxTL_ALIGN_LEFT,
+                          int flag = wxALIGN_LEFT,
                           int image = -1,
                           bool shown = true,
                           bool edit = false) {
         m_text = text;
         m_width = width;
-        m_alignment = alignment;
+        m_flag = flag;
         m_image = image;
         m_selected_image = -1;
         m_shown = shown;
@@ -73,7 +66,7 @@ public:
     wxTreeListColumnInfo (const wxTreeListColumnInfo& other) {
         m_text = other.m_text;
         m_width = other.m_width;
-        m_alignment = other.m_alignment;
+        m_flag = other.m_flag;
         m_image = other.m_image;
         m_selected_image = other.m_selected_image;
         m_shown = other.m_shown;
@@ -84,37 +77,31 @@ public:
 
     // get/set
     wxString GetText() const { return m_text; }
-    wxTreeListColumnInfo& SetText (const wxString& text)
-      { m_text = text; return *this; }
+    wxTreeListColumnInfo& SetText (const wxString& text) { m_text = text; return *this; }
 
     int GetWidth() const { return m_width; }
-    wxTreeListColumnInfo& SetWidth (int width)
-        { m_width = width; return *this; }
+    wxTreeListColumnInfo& SetWidth (int width) { m_width = width; return *this; }
 
-    wxTreeListColumnAlign GetAlignment() const { return m_alignment; }
-    wxTreeListColumnInfo& SetAlignment (wxTreeListColumnAlign alignment)
-        { m_alignment = alignment; return *this; }
+    int GetAlignment() const { return m_flag; }
+    wxTreeListColumnInfo& SetAlignment (int flag) { m_flag = flag; return *this; }
 
     int GetImage() const { return m_image; }
-    wxTreeListColumnInfo& SetImage (int image)
-        { m_image = image; return *this; }
+    wxTreeListColumnInfo& SetImage (int image) { m_image = image; return *this; }
 
     int GetSelectedImage() const { return m_selected_image; }
-    wxTreeListColumnInfo& SetSelectedImage (int image)
-        { m_selected_image = image; return *this; }
+    wxTreeListColumnInfo& SetSelectedImage (int image) { m_selected_image = image; return *this; }
 
-    bool GetShown() const { return m_shown; }
-    wxTreeListColumnInfo& SetShown(bool shown)
-        { m_shown = shown; return *this; }
-
-    bool GetEdit() const { return m_edit; }
-    wxTreeListColumnInfo& SetEdit(bool edit)
+    bool IsEditable() const { return m_edit; }
+    wxTreeListColumnInfo& SetEditable (bool edit)
         { m_edit = edit; return *this; }
+
+    bool IsShown() const { return m_shown; }
+    wxTreeListColumnInfo& SetShown(bool shown) { m_shown = shown; return *this; }
 
 private:
     wxString m_text;
     int m_width;
-    wxTreeListColumnAlign m_alignment;
+    int m_flag;
     int m_image;
     int m_selected_image;
     bool m_shown;
@@ -217,11 +204,11 @@ public:
     // adds a column
     void AddColumn (const wxString& text,
                     int width = DEFAULT_COL_WIDTH,
-                    wxTreeListColumnAlign alignment = wxTL_ALIGN_LEFT,
+                    int flag = wxALIGN_LEFT,
                     int image = -1,
                     bool shown = true,
                     bool edit = false) {
-        AddColumn (wxTreeListColumnInfo (text, width, alignment, image, shown, edit));
+        AddColumn (wxTreeListColumnInfo (text, width, flag, image, shown, edit));
     }
     void AddColumn (const wxTreeListColumnInfo& col);
 
@@ -229,12 +216,12 @@ public:
     void InsertColumn (int before,
                        const wxString& text,
                        int width = DEFAULT_COL_WIDTH,
-                       wxTreeListColumnAlign alignment = wxTL_ALIGN_LEFT,
+                       int flag = wxALIGN_LEFT,
                        int image = -1,
                        bool shown = true,
                        bool edit = false) {
         InsertColumn (before, 
-                      wxTreeListColumnInfo (text, width, alignment, image, shown, edit));
+                      wxTreeListColumnInfo (text, width, flag, image, shown, edit));
     }
     void InsertColumn (int before, const wxTreeListColumnInfo& col);
 
@@ -258,16 +245,16 @@ public:
     void SetColumnWidth (int column, int width);
     int GetColumnWidth (int column) const;
 
-    void SetColumnAlignment (int column, wxTreeListColumnAlign align);
-    wxTreeListColumnAlign GetColumnAlignment (int column) const;
+    void SetColumnAlignment (int column, int flag);
+    int GetColumnAlignment (int column) const;
 
     void SetColumnImage (int column, int image);
     int GetColumnImage (int column) const;
 
-    void ShowColumn (int column, bool shown);
+    void SetColumnShown (int column, bool shown = true);
     bool IsColumnShown (int column) const;
 
-    void EditableColumn (int column, bool edit);
+    void SetColumnEditable (int column, bool edit = true);
     bool IsColumnEditable (int column) const;
 
     // Functions to work with items.
@@ -318,10 +305,10 @@ public:
     // allow the user to expand the items which don't have any children now
     // - but instead add them only when needed, thus minimizing memory
     // usage and loading time.
-    void SetItemHasChildren(const wxTreeItemId& item, bool has = TRUE);
+    void SetItemHasChildren(const wxTreeItemId& item, bool has = true);
 
     // the item will be shown in bold
-    void SetItemBold (const wxTreeItemId& item, bool bold = TRUE);
+    void SetItemBold (const wxTreeItemId& item, bool bold = true);
 
     // set the item's text colour
     void SetItemTextColour (const wxTreeItemId& item, const wxColour& colour);
@@ -360,7 +347,7 @@ public:
 
     // if 'recursively' is FALSE, only immediate children count, otherwise
     // the returned number is the number of all items in this branch
-    long GetChildrenCount (const wxTreeItemId& item, bool recursively = TRUE);
+    long GetChildrenCount (const wxTreeItemId& item, bool recursively = true);
 
     // navigation
     // ----------
@@ -496,7 +483,7 @@ public:
 
     // get the bounding rectangle of the item (or of its label only)
     bool GetBoundingRect (const wxTreeItemId& item, wxRect& rect,
-                          bool textOnly = FALSE) const;
+                          bool textOnly = false) const;
 
     // Start editing the item label: this (temporarily) replaces the item
     // with a one line edit control. The item will be selected if it hadn't
@@ -538,8 +525,9 @@ public:
 protected:
     // header window, responsible for column visualization and manipulation
     wxTreeListHeaderWindow* m_header_win;
+
     // main window, the "true" tree ctrl
-    wxTreeListMainWindow*   m_main_win;
+    wxTreeListMainWindow* m_main_win;
 
     void OnSize(wxSizeEvent& event);
     void CalculateAndSetHeaderHeight();
