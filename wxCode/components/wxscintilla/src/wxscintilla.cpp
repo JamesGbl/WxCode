@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.13 2005-01-22 08:27:39 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.14 2005-02-04 20:19:55 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -2784,36 +2784,41 @@ void wxScintilla::OnChar(wxKeyEvent& evt) {
 #endif
     bool skip = ((ctrl || alt) && ! (ctrl && alt));
 
-    int key = evt.GetKeyCode();
+    if (!m_lastKeyDownConsumed && !skip) {
+#if wxUSE_UNICODE
+        int key = evt.GetUnicodeKey();
+        bool keyOk = true;
 
-//     printf("OnChar key:%d  consumed:%d  ctrl:%d  alt:%d  skip:%d\n",
-//            key, m_lastKeyDownConsumed, ctrl, alt, skip);
-
-#if !wxCHECK_VERSION(2, 5, 0)
-    if ( (key <= WXK_START || key > WXK_NUMPAD_DIVIDE) &&
+        // if the unicode key code is not really a unicode character (it may
+        // be a function key or etc., the platforms appear to always give us a
+        // small value in this case) then fallback to the ascii key code but
+        // don't do anything for function keys or etc.
+        if (key <= 255) {
+            key = evt.GetKeyCode();
+            keyOk = (key <= 255);
+        }
+        if (keyOk) {
+            m_swx->DoAddChar(key);
+            return;
+        }
 #else
-    if ( (key <= WXK_START || key > WXK_COMMAND) &&
+        int key = evt.GetKeyCode();
+#if !wxCHECK_VERSION(2, 5, 0)
+        if ( (key <= WXK_START || key > WXK_NUMPAD_DIVIDE)) {
+#else
+        if ( (key <= WXK_START || key > WXK_COMMAND)) {
 #endif
-         !m_lastKeyDownConsumed && !skip) {
-        m_swx->DoAddChar(key);
-        return;
+            m_swx->DoAddChar(key);
+            return;
+        }
+#endif
     }
     evt.Skip();
 }
 
 
 void wxScintilla::OnKeyDown(wxKeyEvent& evt) {
-    int key = evt.GetKeyCode();
-    bool shift = evt.ShiftDown(),
-         ctrl  = evt.ControlDown(),
-         alt   = evt.AltDown(),
-         meta  = evt.MetaDown();
-
-    int processed = m_swx->DoKeyDown(key, shift, ctrl, alt, meta, &m_lastKeyDownConsumed);
-
-//     printf("KeyDn  key:%d  shift:%d  ctrl:%d  alt:%d  processed:%d  consumed:%d\n",
-//            key, shift, ctrl, alt, processed, m_lastKeyDownConsumed);
-
+    int processed = m_swx->DoKeyDown(evt, &m_lastKeyDownConsumed);
     if (!processed && !m_lastKeyDownConsumed)
         evt.Skip();
 }

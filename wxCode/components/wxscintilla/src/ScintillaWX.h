@@ -9,7 +9,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: ScintillaWX.h,v 1.3 2004-12-02 18:33:10 wyo Exp $
+// RCS-ID:      $Id: ScintillaWX.h,v 1.4 2005-02-04 20:19:55 wyo Exp $
 // Copyright:   (c) 2000 by Total Control Software
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -141,7 +141,7 @@ public:
     void DoMiddleButtonUp(Point pt);
     void DoMouseWheel(int rotation, int delta, int linesPerAction, int ctrlDown, bool isPageScroll);
     void DoAddChar(int key);
-    int  DoKeyDown(int key, bool shift, bool ctrl, bool alt, bool meta, bool* consumed);
+    int  DoKeyDown(const wxKeyEvent& event, bool* consumed);
     void DoTick() { Tick(); }
     void DoOnIdle(wxIdleEvent& evt);
 
