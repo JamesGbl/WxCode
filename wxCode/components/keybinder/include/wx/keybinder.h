@@ -19,11 +19,15 @@
 #pragma interface "keybinder.h"
 #endif
 
-// includes
+// required includes
 #include "wx/panel.h"
 #include "wx/dialog.h"
 #include "wx/listbox.h"
 #include "wx/treectrl.h"
+#include "wx/menu.h"
+#include "wx/button.h"
+#include "wx/stattext.h"
+
 
 
 // The maximum number of shortcuts associated with each wxCmd.
