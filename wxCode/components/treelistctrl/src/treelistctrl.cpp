@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.15 2004-05-27 19:35:21 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.16 2004-06-21 19:30:53 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -2525,6 +2525,7 @@ void wxTreeListMainWindow::SendDeleteEvent(wxTreeListItem *item)
     event.SetItem((long) item);
     event.SetEventObject( /*this*/m_owner );
     m_owner->ProcessEvent( event );
+    if (m_current == item) m_current = (wxTreeListItem *) NULL;
 }
 
 void wxTreeListMainWindow::DeleteChildren(const wxTreeItemId& itemId)
