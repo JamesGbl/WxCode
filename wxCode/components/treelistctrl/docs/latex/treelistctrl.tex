@@ -4,7 +4,7 @@
 %% Author:      Otto Wyss
 %% Modified by:
 %% Created:     25.4.2004
-%% RCS-ID:      $Id: treelistctrl.tex,v 1.10 2004-11-08 18:47:30 wyo Exp $
+%% RCS-ID:      $Id: treelistctrl.tex,v 1.11 2004-11-09 21:59:49 wyo Exp $
 %% Copyright:   (c) wxCode
 %% License:     wxWindows license
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -271,11 +271,11 @@ clear the setting.
 
 Deletes the root node of the tree and all its children.
 
-\membersection{wxTreeListCtrl::Edit}\label{wxtreelistctrledit}
+\membersection{wxTreeListCtrl::EditableColumn}\label{wxtreelistctrleditablecolumn}
 
-\func{void}{Edit}{\param{const wxTreeItemId\&}{ item}}
+\func{void}{EditableColumn}{\param{int}{ column}, \param{bool}{ edit}}
 
-The same as \helpref{EditLabel}{wxtreelistctrleditlabel}.
+Allows/restricts editing the column.
 
 \membersection{wxTreeListCtrl::EditLabel}\label{wxtreelistctrleditlabel}
 
@@ -364,14 +364,14 @@ This function is only available in the generic version.
 
 \membersection{wxTreeListCtrl::GetChildrenCount}\label{wxtreelistctrlgetchildrencount}
 
-\constfunc{size\_t}{GetChildrenCount}{\param{const wxTreeItemId\&}{ item}, \param{bool}{ recursively = TRUE}}
+\constfunc{long}{GetChildrenCount}{\param{const wxTreeItemId\&}{ item}, \param{bool}{ recursively = TRUE}}
 
 Returns the number of items in the branch. If {\it recursively} is TRUE, returns the total number
 of descendants, otherwise only one level of children is counted.
 
 \membersection{wxTreeListCtrl::GetCount}\label{wxtreelistctrlgetcount}
 
-\constfunc{int}{GetCount}{\void}
+\constfunc{long}{GetCount}{\void}
 
 Returns the number of items in the control.
 
@@ -467,7 +467,7 @@ Returns the font of the item label.
 
 Gets the specified item image of the main column.
 
-\constfunc{int}{GetItemImage}{\param{const wxTreeItemId\&}{ item}, \param{size_t}{ column},
+\constfunc{int}{GetItemImage}{\param{const wxTreeItemId\&}{ item}, \param{int}{ column},
  \param{wxTreeItemIcon}{ which = wxTreeItemIcon_Normal}}
 
 Gets the specified item image of the entered column.
@@ -497,7 +497,7 @@ Returns the item's parent.
 
 Returns the item text of the main column.
 
-\constfunc{wxString}{GetItemText}{\param{const wxTreeItemId\&}{ item}, \param{size_t}{ column}}
+\constfunc{wxString}{GetItemText}{\param{const wxTreeItemId\&}{ item}, \param{int}{ column}}
 
 Returns the item text of the entered column.
 
@@ -655,7 +655,7 @@ this style.
 
 \membersection{wxTreeListCtrl::GetSelections}\label{wxtreelistctrlgetselections}
 
-\constfunc{size\_t}{GetSelections}{\param{wxArrayTreeItemIds\& }{selection}}
+\constfunc{long}{GetSelections}{\param{wxArrayTreeItemIds\& }{selection}}
 
 Fills the array of tree items passed in with the currently selected items. This
 function can be called only if the control has the wxTR\_MULTIPLE style.
@@ -690,7 +690,7 @@ Returns the state image list (from which application-defined state images are ta
 
 \constfunc{bool}{HasChildren}{\param{const wxTreeItemId\&}{ item}}
 
-Returns TRUE if the item has children.???
+Returns TRUE if the item has children.
 
 \membersection{wxTreeListCtrl::HitTest}\label{wxtreelistctrlhittest}
 
@@ -730,7 +730,7 @@ returned as a tuple.}
 \func{wxTreeItemId}{InsertItem}{\param{const wxTreeItemId\& }{parent}, \param{const wxTreeItemId\& }{previous}, \param{const wxString\&}{ text},
  \param{int}{ image = -1}, \param{int}{ selImage = -1}, \param{wxTreeItemData*}{ data = NULL}}
 
-\func{wxTreeItemId}{InsertItem}{\param{const wxTreeItemId\& }{parent}, \param{size\_t}{ before}, \param{const wxString\&}{ text},
+\func{wxTreeItemId}{InsertItem}{\param{const wxTreeItemId\& }{parent}, \param{long}{ before}, \param{const wxString\&}{ text},
  \param{int}{ image = -1}, \param{int}{ selImage = -1}, \param{wxTreeItemData*}{ data = NULL}}
 
 Inserts an item after a given one ({\it previous}) or before one identified by its position ({\it before}).
@@ -770,12 +770,6 @@ Returns TRUE if the item is selected.
 \constfunc{bool}{IsVisible}{\param{const wxTreeItemId\&}{ item}}
 
 Returns TRUE if the item is visible (it might be outside the view, or not expanded).
-
-\membersection{wxTreeListCtrl::ItemHasChildren}\label{wxtreelistctrlitemhaschildren}
-
-\constfunc{bool}{ItemHasChildren}{\param{const wxTreeItemId\&}{ item}}
-
-Returns TRUE if the item has children.
 
 \membersection{wxTreeListCtrl::OnCompareItems}\label{wxtreelistctrloncompareitems}
 
@@ -960,7 +954,7 @@ usage and loading time.
 Sets the specified item image of the main column. See \helpref{GetItemImage}{wxtreelistctrlgetitemimage}
 for the description of the {\it which} parameter.
 
-\func{void}{SetItemImage}{\param{const wxTreeItemId\&}{ item}, \param{size_t}{ column}, \param{int}{ image},
+\func{void}{SetItemImage}{\param{const wxTreeItemId\&}{ item}, \param{int}{ column}, \param{int}{ image},
  \param{wxTreeItemIcon}{ which = wxTreeItemIcon_Normal}}
 
 Sets the specified item image of the entered column. See \helpref{GetItemImage}{wxtreelistctrlgetitemimage}
@@ -972,7 +966,7 @@ for the description of the {\it which} parameter.
 
 Sets the item text of the main column.
 
-\func{void}{SetItemText}{\param{const wxTreeItemId\&}{ item}, \param{size_t}{ column}, \param{const wxString\&}{ text}}
+\func{void}{SetItemText}{\param{const wxTreeItemId\&}{ item}, \param{int}{ column}, \param{const wxString\&}{ text}}
 
 Sets the item text of the entered column.
 
@@ -1043,7 +1037,7 @@ all items if it does have this style.
 
 \func{void}{AddColumn}{\param{const wxString\&}{ text}}
 
-\func{void}{AddColumn}{\param{const wxString\&}{ text}, \param{size_t}{ width}, \param{wxTreeListColumnAlign}{ alignment = wxTL_ALIGN_LEFT}}
+\func{void}{AddColumn}{\param{const wxString\&}{ text}, \param{int}{ width}, \param{wxTreeListColumnAlign}{ alignment = wxTL_ALIGN_LEFT}}
 
 \func{void}{AddColumn}{\param{const wxTreeListColumnInfo\&}{ col}}
 
@@ -1051,108 +1045,114 @@ Adds a column.
 
 \membersection{wxTreeListCtrl::GetColumn}\label{wxtreelistctrlgetcolumn}
 
-\func{wxTreeListColumnInfo\&}{GetColumn}{\param{size_t}{ column}}
+\func{wxTreeListColumnInfo\&}{GetColumn}{\param{int}{ column}}
 
-\constfunc{wxTreeListColumnInfo\&}{GetColumn}{\param{size_t}{ column}}
+\constfunc{wxTreeListColumnInfo\&}{GetColumn}{\param{int}{ column}}
 
 Returns the infos of the columns.
 
 \membersection{wxTreeListCtrl::GetColumnAlignment}\label{wxtreelistctrlgetcolumnalignment}
 
-\constfunc{wxTreeListColumnAlign}{GetColumnAlignment}{\param{size_t}{ column}}
+\constfunc{wxTreeListColumnAlign}{GetColumnAlignment}{\param{int}{ column}}
 
 Returns the alignment of the columns.
 
 \membersection{wxTreeListCtrl::GetColumnCount}\label{wxtreelistctrlgetcolumncount}
 
-\constfunc{size_t}{GetColumnCount}{\void}
+\constfunc{int}{GetColumnCount}{\void}
 
 Returns the number of columns.
 
 \membersection{wxTreeListCtrl::GetColumnImage}\label{wxtreelistctrlgetcolumnimage}
 
-\constfunc{int}{GetColumnImage}{\param{size_t}{ column}}
+\constfunc{int}{GetColumnImage}{\param{int}{ column}}
 
 Returns the image of the columns.
 
 \membersection{wxTreeListCtrl::GetColumnText}\label{wxtreelistctrlgetcolumntext}
 
-\constfunc{wxString}{GetColumnText}{\param{size_t}{ column}}
+\constfunc{wxString}{GetColumnText}{\param{int}{ column}}
 
 Returns the text of the columns.
 
 \membersection{wxTreeListCtrl::GetColumnWidth}\label{wxtreelistctrlgetcolumnwidth}
 
-\constfunc{size_t}{GetColumnWidth}{\param{size_t}{ column}}
+\constfunc{int}{GetColumnWidth}{\param{int}{ column}}
 
 Returns the width of the columns.
 
 \membersection{wxTreeListCtrl::GetMainColumn}\label{wxtreelistctrlgetmaincolumn}
 
-\constfunc{size_t}{GetMainColumn}{\void}
+\constfunc{int}{GetMainColumn}{\void}
 
 Returns the number of the main column.
 
 \membersection{wxTreeListCtrl::InsertColumn}\label{wxtreelistctrlinsertcolumn}
 
-\func{void}{InsertColumn}{\param{size_t}{ before}, \param{const wxString\&}{ text}}
+\func{void}{InsertColumn}{\param{int}{ before}, \param{const wxString\&}{ text}}
 
-\func{void}{InsertColumn}{\param{size_t}{ before}, \param{const wxString\&}{ text}, \param{size_t}{ width},
+\func{void}{InsertColumn}{\param{int}{ before}, \param{const wxString\&}{ text}, \param{int}{ width},
  \param{wxTreeListColumnAlign}{ alignment = wxTL_ALIGN_LEFT}}
 
 Inserts a column before(???) the entered column.
 
+\membersection{wxTreeListCtrl::IsColumnEditable}\label{wxtreelistctrliscolumneditable}
+
+\constfunc{bool}{IsColumnEditable}{\param{int}{ column}}
+
+Returns if the columns is editable.
+
 \membersection{wxTreeListCtrl::IsColumnShown}\label{wxtreelistctrliscolumnshown}
 
-\constfunc{bool}{IsColumnShown}{\param{size_t}{ column}}
+\constfunc{bool}{IsColumnShown}{\param{int}{ column}}
 
 Returns if the columns is shown.
 
 \membersection{wxTreeListCtrl::RemoveColumn}\label{wxtreelistctrlremovecolumn}
 
-\func{void}{RemoveColumn}{\param{size_t}{ column}}
+\func{void}{RemoveColumn}{\param{int}{ column}}
 
 Removes the entered column.
 
 \membersection{wxTreeListCtrl::SetColumn}\label{wxtreelistctrlsetcolumn}
 
-\func{void}{SetColumn}{\param{size_t}{ column}, \param{const wxTreeListColumnInfo\&}{ info}}
+\func{void}{SetColumn}{\param{int}{ column}, \param{const wxTreeListColumnInfo\&}{ info}}
 
 Sets the infos of the column.
 
 \membersection{wxTreeListCtrl::SetColumnAlignment}\label{wxtreelistctrlsetcolumnalignment}
 
-\func{void}{SetColumnAlignment}{\param{size_t}{ column}, \param{const wxTreeListColumnAlign}{ align}}
+\func{void}{SetColumnAlignment}{\param{int}{ column}, \param{const wxTreeListColumnAlign}{ align}}
 
 Sets the alignment of the column.
 
 \membersection{wxTreeListCtrl::SetColumnImage}\label{wxtreelistctrlsetcolumnimage}
 
-\func{void}{SetColumnImage}{\param{size_t}{ column}, \param{int}{ image}}
+\func{void}{SetColumnImage}{\param{int}{ column}, \param{int}{ image}}
 
 Sets the image of the column.
 
 \membersection{wxTreeListCtrl::SetColumnText}\label{wxtreelistctrlsetcolumntext}
 
-\func{void}{SetColumnText}{\param{size_t}{ column}, \param{const wxString\&}{ text}}
+\func{void}{SetColumnText}{\param{int}{ column}, \param{const wxString\&}{ text}}
 
 Sets the text of the column.
 
 \membersection{wxTreeListCtrl::SetColumnWidth}\label{wxtreelistctrlsetcolumnwidth}
 
-\func{void}{SetColumnWidth}{\param{size_t}{ column}, \param{size_t}{ width}}
+\func{void}{SetColumnWidth}{\param{int}{ column}, \param{int}{ width}}
 
 Sets the width of the column.
 
 \membersection{wxTreeListCtrl::SetMainColumn}\label{wxtreelistctrlsetmaincolumn}
 
-\func{void}{SetMainColumn}{\param{size_t}{ column}}
+\func{void}{SetMainColumn}{\param{int}{ column}}
 
 Set the main column.
 
 \membersection{wxTreeListCtrl::ShowColumn}\label{wxtreelistctrlshowcolumn}
 
-\func{void}{ShowColumn}{\param{size_t}{ column}, \param{bool}{ shown}}
+\func{void}{ShowColumn}{\param{int}{ column}, \param{bool}{ shown}}
 
 Shows/hides the column.
 
