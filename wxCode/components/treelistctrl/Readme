@@ -1,4 +1,7 @@
 Maintainer: Otto Wyss (wyo)
+Component: wxTreeListCtrl
+Subdir: treelistctrl
+wxWidgets: 2.4.2, 2.5.1
 
 Description:
 A tree list control presents information as a hierarchy, with items that may be expanded
