@@ -9,7 +9,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: ScintillaWX.h,v 1.5 2005-02-12 14:24:35 wyo Exp $
+// RCS-ID:      $Id: ScintillaWX.h,v 1.6 2005-02-12 14:42:29 wyo Exp $
 // Copyright:   (c) 2000 by Total Control Software
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -185,10 +185,7 @@ private:
     bool CreateSystemCaret();
     bool DestroySystemCaret();
 #ifdef __WXMSW__
-#if !wxCHECK_VERSION(2, 5, 0)
-    int sysCaretWidth;
-    int sysCaretHeight;
-#else
+#if wxCHECK_VERSION(2, 5, 0)
     HBITMAP sysCaretBitmap;
     int sysCaretWidth;
     int sysCaretHeight;
