@@ -119,11 +119,11 @@ void SpellCheckerOptionsDialog::PopulateOptionsSizer(wxSizer* pSizer)
         pSizer->Add(item13, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
     
         wxTextCtrl* item14 = new wxTextCtrl( this, -1, pCurrentOption->GetValueAsString(), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, strName);
-        item13->Add(item14, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+        item13->Add(item14, 1, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxRIGHT, 5);
     
         wxBitmap OpenBitmap(open_xpm);
         wxBitmapButton* item15 = new wxBitmapButton( this, -1, OpenBitmap, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, strName + _T("-browse"));
-        item13->Add(item15, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+        item13->Add(item15, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxRIGHT, 5);
         
         // Add an event handler so that the button presents a wxFileDialog or wxDirDialog is presented
         if (nOptionType == SpellCheckEngineOption::DIR)
