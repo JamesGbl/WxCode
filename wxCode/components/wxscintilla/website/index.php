@@ -25,6 +25,8 @@ A wxWidgets implementation of the Scintilla editing control.
 <p>
 wxScintilla implements the <a href="http://scintilla.sourceforge.net/" target=_top>Scintilla</a> editing control with the wxWidgets API. It's derived from wxStyledTextCtrl (see wxWidgets/contrib) and has the same functionality and a similar API. The almost singular difference (beside naming) is it has a much faster release cycle.
 </p>
+
+<h4>Documentation</h4>
 <p>
 The <a href="reference.html" target=_top>API reference</a> can be read online here.
 </p>
