@@ -27,8 +27,8 @@
 // linker
 libraryPath=..\lib
 outputFilename=../bin/DownloadDictionariesD.exe
-libraries=wx_spellcheckd, wxxrcd, wxmswd, regexd, pngd, jpegd, zlibd, tiffd, stdc++, gcc, odbc32, wsock32, winspool, winmm, shell32, comctl32, ctl3d32, odbc32, advapi32, odbc32, wsock32, opengl32, glu32, ole32, oleaut32, uuid
-extraLinkerOptions=
+libraries=wxxrcd, wxmswd, regexd, pngd, jpegd, zlibd, tiffd, stdc++, gcc, odbc32, wsock32, winspool, winmm, shell32, comctl32, ctl3d32, odbc32, advapi32, odbc32, wsock32, opengl32, glu32, ole32, oleaut32, uuid
+extraLinkerOptions=./lib_bzipstreamd.a
 ignoreStartupFile=0
 ignoreDefaultLibs=0
 stripExecutableFile=0
@@ -65,8 +65,8 @@
 // linker
 libraryPath=..\lib
 outputFilename=../bin/DownloadDictionaries.exe
-libraries=wx_spellcheck, wxxrc, wxmsw, regex, png, jpeg, zlib, tiff, stdc++, gcc, odbc32, wsock32, winspool, winmm, shell32, comctl32, ctl3d32, odbc32, advapi32, odbc32, wsock32, opengl32, glu32, ole32, oleaut32, uuid
-extraLinkerOptions=
+libraries=wxxrc, wxmsw, regex, png, jpeg, zlib, tiff, stdc++, gcc, odbc32, wsock32, winspool, winmm, shell32, comctl32, ctl3d32, odbc32, advapi32, odbc32, wsock32, opengl32, glu32, ole32, oleaut32, uuid
+extraLinkerOptions=./lib_bzipstream.a
 ignoreStartupFile=0
 ignoreDefaultLibs=0
 stripExecutableFile=1
