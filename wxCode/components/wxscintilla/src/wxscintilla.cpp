@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.16 2005-03-02 20:37:22 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.17 2005-03-03 17:00:24 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -2797,9 +2797,9 @@ void wxScintilla::OnChar(wxKeyEvent& evt) {
         // be a function key or etc., the platforms appear to always give us a
         // small value in this case) then fallback to the ascii key code but
         // don't do anything for function keys or etc.
-        if (key <= 255) {
+        if (key <= 127) {
             key = evt.GetKeyCode();
-            keyOk = (key <= 255);
+            keyOk = (key <= 127);
         }
         if (keyOk) {
             m_swx->DoAddChar(key);
