@@ -23,6 +23,8 @@
 ////@begin includes
 ////@end includes
 #include "DictionaryWizard.h"
+#include "SpellCheckEngineInterface.h"
+#include <wx/protocol/ftp.h>
 
 ////@begin XPM images
 
@@ -52,10 +54,12 @@ END_EVENT_TABLE()
 
 DictionaryWizard::DictionaryWizard( )
 {
+  m_pEngine = NULL;
 }
 
 DictionaryWizard::DictionaryWizard( wxWindow* parent, wxWindowID id, const wxPoint& pos )
 {
+    m_pEngine = NULL;
     Create(parent, id, pos);
 }
 
@@ -302,7 +306,50 @@ bool WizardPage1::ShowToolTips()
 
 void WizardPage1::OnButtonDownloadListClick( wxCommandEvent& event )
 {
-  ::wxMessageBox("Downloading Dictionary List");
+  if (GetParent())
+  {
+    wxSpellCheckEngineInterface* pEngine = ((DictionaryWizard*)GetParent())->GetEngine();
+    if (pEngine)
+    {
+      wxCheckListBox* pCheckListBox = (wxCheckListBox*)FindWindow(CheckListBoxDictionaries);
+      if (pCheckListBox == NULL)
+      {
+        ::wxMessageBox("Unable to find available dictionary checklistbox");
+        return;
+      }
+//      FindWindow(wxID_BACKWARD)->Disable();
+//      FindWindow(wxID_FORWARD)->Disable();
+
+      wxFTP ftp;
+  
+      if ( !ftp.Connect("ftp.gnu.org") )
+      {
+          wxLogError("Couldn't connect");
+          return;
+      }
+  
+      ftp.ChDir("/gnu/aspell/dict");
+      wxArrayString FtpListing;
+      if (ftp.GetFilesList(FtpListing))
+      {
+        int FileCount = FtpListing.Count();
+        for (int i=0; i<FileCount; i++)
+        {
+          pCheckListBox->Append(FtpListing[i]);
+        }
+//        FindWindow(wxID_BACKWARD)->Enable();
+//        FindWindow(wxID_FORWARD)->Enable();
+      }
+      else
+      {
+//        FindWindow(wxID_BACKWARD)->Enable();
+//        FindWindow(wxID_FORWARD)->Enable();
+
+        ::wxMessageBox("Unable to retrieve listing of available dictionaries");
+        return;
+      }
+    }
+  }
 }
 
 /*!
@@ -319,6 +366,7 @@ BEGIN_EVENT_TABLE( WizardPage2, wxWizardPageSimple )
 
 ////@begin WizardPage2 event table entries
 ////@end WizardPage2 event table entries
+  EVT_WIZARD_PAGE_CHANGED(-1, WizardPage2::OnPageChanged )
   EVT_BUTTON( ButtonDownload, WizardPage2::OnButtonDownloadClick )
 END_EVENT_TABLE()
 
@@ -371,7 +419,7 @@ void WizardPage2::CreateControls()
     wxStaticText* item17 = new wxStaticText( item15, wxID_STATIC, _("The following dictionaries will be downloaded and installed."), wxDefaultPosition, wxDefaultSize, 0 );
     item16->Add(item17, 0, wxALIGN_CENTER_HORIZONTAL|wxALL|wxADJUST_MINSIZE, 5);
 
-    wxTextCtrl* item18 = new wxTextCtrl( item15, TextCtrlSummary, _T(""), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY );
+    wxTextCtrl* item18 = new wxTextCtrl( item15, TextCtrlSummary, _(""), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY );
     item16->Add(item18, 1, wxGROW|wxALL, 5);
 
     item16->Add(5, 5, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
@@ -410,7 +458,38 @@ bool WizardPage2::ShowToolTips()
     return TRUE;
 }
 
+void WizardPage2::OnPageChanged(wxWizardEvent& event)
+{
+  wxTextCtrl* pSummary = (wxTextCtrl*)FindWindow(TextCtrlSummary);
+  if (pSummary)
+    pSummary->SetValue(GenerateDictionarySummary());
+}
+
 void WizardPage2::OnButtonDownloadClick( wxCommandEvent& event )
 {
   ::wxMessageBox("Downloading Dictionaries");
+}
+
+wxString WizardPage2::GenerateDictionarySummary()
+{
+  wxString strReturn = "";
+  if (GetPrev())
+  {
+    wxCheckListBox* pCheckListBox = (wxCheckListBox*)(GetPrev()->FindWindow(CheckListBoxDictionaries));
+    if (pCheckListBox == NULL)
+    {
+      ::wxMessageBox("Unable to find available dictionary checklistbox");
+    }
+    else
+    {
+      // Iterate through the items in wxCheckListBox and add the checked ones to the list
+      int nItemCount = pCheckListBox->GetCount();
+      for (int i=0; i<nItemCount; i++)
+      {
+        if (pCheckListBox->IsChecked(i))
+          strReturn += pCheckListBox->GetString(i) + "\n";
+      }
+    }
+  }
+  return strReturn;
 }

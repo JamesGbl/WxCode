@@ -26,6 +26,7 @@ class WizardPage;
 class WizardPage1;
 class WizardPage2;
 ////@end forward declarations
+class wxSpellCheckEngineInterface;
 
 /*!
  * Control identifiers
@@ -84,9 +85,15 @@ public:
 
     /// Should we show tooltips?
     static bool ShowToolTips();
+    
+    void SetEngine(wxSpellCheckEngineInterface* pEngine) { m_pEngine = pEngine; }
+    wxSpellCheckEngineInterface* GetEngine() { return m_pEngine; }
 
 ////@begin DictionaryWizard member variables
 ////@end DictionaryWizard member variables
+
+private:
+    wxSpellCheckEngineInterface* m_pEngine;
 };
 
 /*!
@@ -181,6 +188,7 @@ public:
 
 ////@begin WizardPage2 event handler declarations
 ////@end WizardPage2 event handler declarations
+    void OnPageChanged(wxWizardEvent& event);
     void OnButtonDownloadClick( wxCommandEvent& event );
     
 ////@begin WizardPage2 member function declarations
@@ -188,7 +196,8 @@ public:
 
     /// Should we show tooltips?
     static bool ShowToolTips();
-
+    wxString GenerateDictionarySummary();
+    
 ////@begin WizardPage2 member variables
 ////@end WizardPage2 member variables
 };
