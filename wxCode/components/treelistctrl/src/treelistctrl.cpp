@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.60 2004-12-03 18:00:44 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.61 2004-12-14 18:33:22 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -3782,7 +3782,7 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
           event.LeftDClick() ||
           event.Dragging()/*? TODO ||
           event.Moving()?*/)) {
-        event.Skip();
+        m_owner->GetEventHandler()->ProcessEvent (event);
         return;
     }
 
@@ -3855,8 +3855,8 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
 
     // we process only the messages which happen on tree items
     if (item == NULL) {
-        event.Skip();
-        return; // nothing to do
+        m_owner->GetEventHandler()->ProcessEvent (event);
+        return;
     }
 
     // remember item at shift down
