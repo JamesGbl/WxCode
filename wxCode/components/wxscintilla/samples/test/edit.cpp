@@ -3,7 +3,7 @@
 // Purpose:     wxScintilla test module
 // Maintainer:  Otto Wyss
 // Created:     2003-09-01
-// RCS-ID:      $Id: edit.cpp,v 1.3 2005-01-20 19:27:39 wyo Exp $
+// RCS-ID:      $Id: edit.cpp,v 1.4 2005-02-03 17:01:25 wyo Exp $
 // Copyright:   (c) 2004wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -762,6 +762,7 @@ void EditPrint::GetPageInfo (int *minPage, int *maxPage, int *selPageFrom, int *
     if (*maxPage > 0) *minPage = 1;
     *selPageFrom = *minPage;
     *selPageTo = *maxPage;
+    m_printed = 0;
 }
 
 bool EditPrint::HasPage (int WXUNUSED(page)) {
