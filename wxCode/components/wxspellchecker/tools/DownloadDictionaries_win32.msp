@@ -82,8 +82,12 @@
 [Source]
 1=DictionaryWizard.cpp
 2=wizard.cpp
+3=AspellDictionaryDownloader.cpp
 [Header]
 1=DictionaryWizard.h
+2=AspellDictionaryDownloader.h
+3=EngineDictionaryDownloader.h
+4=MySpellDictionaryDownloader.h
 [Resource]
 [Other]
 1=wiztest.xpm
