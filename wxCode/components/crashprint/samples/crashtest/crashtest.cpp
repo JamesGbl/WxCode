@@ -3,7 +3,7 @@
 // Purpose:     CrashTest application
 // Maintainer:  Otto Wyss
 // Created:     2004-10-01
-// RCS-ID:      $Id: crashtest.cpp,v 1.2 2004-10-25 18:56:46 wyo Exp $
+// RCS-ID:      $Id: crashtest.cpp,v 1.3 2004-10-27 17:32:44 wyo Exp $
 // Copyright:   (c) wxCode
 // Licence:     wxWindows licence
 //////////////////////////////////////////////////////////////////////////////
@@ -26,12 +26,15 @@
 #endif
 
 //! wxWidgets headers
-#include <wx/dynload.h>    // dynamic dll loader support
+#include <wx/dynlib.h>   // dynamic library support
 
 //! wxCode headers
 #if defined(__linux__)
 #include "wx/crashprint.h" // crashprint support
 #endif
+
+// detecting memory leaks on Windows with _CrtSetBreakAlloc (<memory_number>)
+// #include <crtdbg.h>
 
 //----------------------------------------------------------------------------
 // resources
@@ -57,7 +60,7 @@ const wxString APP_VENDOR = _T("wxCode");
 const wxString APP_COPYRIGTH = _T("(C) 2004 wxCode");
 const wxString APP_LICENCE = _T("wxWindows");
 
-const wxString APP_VERSION = _T("0.2.beta");
+const wxString APP_VERSION = _T("0.2.1");
 const wxString APP_BUILD = _T(__DATE__);
 
 const wxString APP_WEBSITE = _T("http://wxcode.sourceforge.net");
@@ -83,8 +86,6 @@ wxCrashPrint g_crashprint;
 class App: public wxApp {
 
 public:
-    App();
-
     // standard overrides
     bool OnInit();
 
@@ -98,8 +99,8 @@ public:
 
 private:
 #if defined(__WINDOWS__)
-    // BlackBox dll (crash handling in Windows)
-    wxDllType m_blackboxDll;
+    //! BlackBox dll (crash handling)
+    wxDynamicLibrary  m_blackboxDll;
 #endif
 
 };
@@ -115,15 +116,16 @@ IMPLEMENT_APP (App)
 // App
 //----------------------------------------------------------------------------
 
-App::App () {
-}
-
 bool App::OnInit () {
 
+    // detecting memory leaks on Windows with _CrtSetBreakAlloc (<memory_number>)
+    //_CrtSetBreakAlloc (<memory_number>);
+
 #if defined(__WINDOWS__)
-    // load BlackBox dll
-    m_blackboxDll = wxDllLoader::LoadLibrary ("BlackBox.dll");
+    // BlackBox dll (crash handling)
+    m_blackboxDll.Load ("BlackBox.dll");
 #endif
+
 #if defined(__linux__)
     // fatal exceptions handling
     wxHandleFatalExceptions (true);
@@ -139,7 +141,7 @@ bool App::OnInit () {
     printf (_T("%s\n\n"), APP_DESCR.c_str());
 
     // force crash
-    wxWindow *w; w->Show();
+    wxWindow *w = NULL; w->Show();
 
     return false;
 }
@@ -147,8 +149,9 @@ bool App::OnInit () {
 int App::OnExit () {
 #if defined(__WINDOWS__)
     // unload BlackBox dll
-    if (m_blackboxDll) wxDllLoader::UnloadLibrary (m_blackboxDll);
+    if (m_blackboxDll.IsLoaded()) m_blackboxDll.Unload ();
 #endif
+
     return 0;
 }
 
