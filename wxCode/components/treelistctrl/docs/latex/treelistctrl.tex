@@ -4,7 +4,7 @@
 %% Author:      Otto Wyss
 %% Modified by:
 %% Created:     25.4.2004
-%% RCS-ID:      $Id: treelistctrl.tex,v 1.7 2004-09-30 19:30:30 wyo Exp $
+%% RCS-ID:      $Id: treelistctrl.tex,v 1.8 2004-11-03 18:34:28 wyo Exp $
 %% Copyright:   (c) wxCode
 %% License:     wxWindows license
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -324,13 +324,17 @@ The flags have the following meaning:
 
 \twocolwidtha{5cm}
 \begin{twocollist}\itemsep=0pt
-\twocolitem{wxTL\_SEARCH\_LEVEL}{Searches within only the current level.}
-\twocolitem{wxTL\_SEARCH\_VISIBLE}{Searches within all visible items.}
-\twocolitem{wxTL\_SEARCH\_FULL}{Searches within the full tree.}
-\twocolitem{wxTL\_SEARCH\_PARTIAL}{Matches only partial up to the submitted text length.}
-\twocolitem{wxTL\_SEARCH\_NOCASE}{Matches case insensitive.}
+\twocolitem{wxTL\_MODE\_NAV\_FULLTREE}{Searches within the full tree (default).}
+\twocolitem{wxTL\_MODE\_NAV\_EXPANDED}{Searches within the expanded tree.}
+\twocolitem{wxTL\_MODE\_NAV\_VISIBLE}{Searches within all visible items.}
+\twocolitem{wxTL\_MODE\_NAV\_LEVEL}{Searches within only the current level.}
 \end{twocollist}
-
+\twocolwidtha{5cm}
+\twocolitem{wxTL\_MODE\_FIND\_EXACT}{Matches exact up to the submitted text length (default).}
+\twocolitem{wxTL\_MODE\_FIND\_PARTIAL}{Matches only partial up to the submitted text length.}
+\twocolitem{wxTL\_MODE\_FIND\_NOCASE}{Matches case insensitive.}
+\end{twocollist}
+   
 \membersection{wxTreeListCtrl::GetBoundingRect}\label{wxtreelistctrlgetitemrect}
 
 \constfunc{bool}{GetBoundingRect}{\param{const wxTreeItemId\&}{ item}, \param{wxRect\& }{rect}, \param{bool }{textOnly = FALSE}}
@@ -386,6 +390,12 @@ GetFirstChild and GetNextChild should be the same variable.
 Returns an invalid tree item if there are no further children.
 
 \wxheading{See also}
+
+\membersection{wxTreeListCtrl::GetFirstExpandedItem}\label{wxtreelistctrlgetfirstexpandeditem}
+
+\constfunc{wxTreeItemId}{GetFirstExpandedItem}{\void}
+
+Returns the first expanded item.
 
 \membersection{wxTreeListCtrl::GetFirstVisibleItem}\label{wxtreelistctrlgetfirstvisibleitem}
 
@@ -567,6 +577,12 @@ Returns an invalid tree item if there are no further siblings.
 
 \helpref{wxTreeListCtrl::GetPrevSibling}{wxtreelistctrlgetprevsibling}
 
+\membersection{wxTreeListCtrl::GetNextExpanded}\label{wxtreelistctrlgetnextexpanded}
+
+\constfunc{wxTreeItemId}{GetNextExpanded}{\param{const wxTreeItemId\&}{ item}}
+
+Returns the next expanded item.
+
 \membersection{wxTreeListCtrl::GetNextVisible}\label{wxtreelistctrlgetnextvisible}
 
 \constfunc{wxTreeItemId}{GetNextVisible}{\param{const wxTreeItemId\&}{ item}}
@@ -609,6 +625,12 @@ Returns an invalid tree item if there are no further children.
 \wxheading{See also}
 
 \helpref{wxTreeListCtrl::GetNextSibling}{wxtreelistctrlgetnextsibling}
+
+\membersection{wxTreeListCtrl::GetPrevExpanded}\label{wxtreelistctrlgetprevexpanded}
+
+\constfunc{wxTreeItemId}{GetPrevExpanded}{\param{const wxTreeItemId\&}{ item}}
+
+Returns the previous expanded item.
 
 \membersection{wxTreeListCtrl::GetPrevVisible}\label{wxtreelistctrlgetprevvisible}
 
@@ -797,7 +819,7 @@ Parameter???
 
 \membersection{wxTreeListCtrl::SetDragItem}\label{wxtreelistctrlsetdragitem}
 
-\func{void}{SetDragItem}{\param{const wxTreeItemId\&}{ item=(wxTreeItemId*)NULL}}
+\func{void}{SetDragItem}{\param{const wxTreeItemId\&}{ item = (wxTreeItemId*)NULL}}
 
 Marks the item where the dragged item will be dropped if the drag is currently ended.
 
@@ -833,10 +855,11 @@ Scrolls the specified item into view.
 
 \membersection{wxTreeListCtrl::SelectItem}\label{wxtreelistctrlselectitem}
 
-\func{bool}{SelectItem}{\param{const wxTreeItemId\&}{ item}, \param{bool}{ unselect_others=TRUE},
- \param{bool}{ extended_select=FALSE}}
+\func{bool}{SelectItem}{\param{const wxTreeItemId\&}{ item},
+ \param{const wxTreeItemId\&}{ last} = (wxTreeItemId*)NULL,
+ \param{bool}{ unselect_others = true}}
 
-Selects the given item.
+Selects the given item or if parameter prev given the item range.
 
 Parameter???
 

@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Modified by: Alberto Griggio, 2002
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.19 2004-11-01 17:09:09 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.20 2004-11-03 18:34:46 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows license
@@ -473,7 +473,7 @@ public:
     void Unselect();
     void UnselectAll();
     // select this item
-    void SelectItem(const wxTreeItemId& item, const wxTreeItemId& prev = (wxTreeItemId*)NULL, 
+    void SelectItem(const wxTreeItemId& item, const wxTreeItemId& last = (wxTreeItemId*)NULL, 
                     bool unselect_others = true);
     void SelectAll(bool extended_select = false);
     // make sure this item is visible (expanding the parent item and/or
