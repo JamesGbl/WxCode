@@ -22,26 +22,20 @@ class EngineDictionaryDownloader
 {
 public:  
   
+  // Populate DictionaryArray with a list of the available dictionaries
+  virtual bool RetrieveDictionaryList(wxArrayString& DictionaryArray) = 0;
+
+  // Download the given dictionary and return the local file name
+  virtual wxString DownloadDictionary(wxString& strDictionary) = 0;
+  
+  // Given the filename (downloaded under the hard drive), install the dictionary
+  virtual bool InstallDictionary(wxString& strFileName, bool bDeleteFileAfterInstall = false) = 0;
+  
   // Return the FTP server to connect to for the dictionaries
   virtual wxString GetServer() = 0;
   
   // Return the FTP server path were to find the dictionaries
   virtual wxString GetServerDirectory() = 0;
-  
-  // Given the filename (downloaded under the hard drive), install the dictionary
-  virtual bool InstallDictionary(wxString& strFileName) = 0;
-  
-  // Parse the dictionary language name from the server FTP directory name
-  virtual wxString DictionaryNameFromDirectoryName(wxString& strDirectoryName) { return strDirectoryName; }
-  
-  // Parse the dictionary language name from the server FTP directory name
-  virtual wxString DirectoryNameFromDictionaryName(wxString& strDictionaryName) { return strDictionaryName; }
-  
-  // Determine which file to download from an array of filenames
-  virtual wxString SelectDictionaryToDownload(wxArrayString& FileArray) = 0;
-  
-  // Return the wildcard for the dictionaries on the FTP server
-  virtual wxString GetDictionaryFileMask() { return _(""); }
 };
 
 #endif  // __ENGINE_DICTIONARY_DOWNLOADER__

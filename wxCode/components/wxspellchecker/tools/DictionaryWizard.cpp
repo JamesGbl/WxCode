@@ -255,6 +255,10 @@ bool WizardPage1::ShowToolTips()
 
 void WizardPage1::OnButtonDownloadListClick( wxCommandEvent& event )
 {
+  // Try to give some feedback that we're doing something
+  wxWindowDisabler Disabler;
+  wxBusyCursor Busy;
+  
   if (GetParent())
   {
     EngineDictionaryDownloader* pDownloader = ((DictionaryWizard*)GetParent())->GetEngineDownloader();
@@ -266,41 +270,13 @@ void WizardPage1::OnButtonDownloadListClick( wxCommandEvent& event )
         ::wxMessageBox("Unable to find available dictionary checklistbox");
         return;
       }
-//      FindWindow(wxID_BACKWARD)->Disable();
-//      FindWindow(wxID_FORWARD)->Disable();
-
-      wxFTP ftp;
-      if ( !ftp.Connect(pDownloader->GetServer()) )
+      wxArrayString DictionaryArray;
+      pDownloader->RetrieveDictionaryList(DictionaryArray);
+      for (unsigned int i=0; i<DictionaryArray.GetCount(); i++)
       {
-          wxLogError("Couldn't connect");
-          return;
-      }
-  
-      ftp.ChDir(pDownloader->GetServerDirectory());
-      wxArrayString FtpListing;
-      if (ftp.GetFilesList(FtpListing))
-      {
-        int FileCount = FtpListing.Count();
-        for (int i=0; i<FileCount; i++)
-        {
-          // Here we let the dictionary downloader interpret the directory name
-          //  and (if desireable) give back more descriptive text.  Also, the
-          //  downloader can return an empty string if we don't want this
-          //  dictionary in the list.
-          wxString DictionaryListEntry = pDownloader->DictionaryNameFromDirectoryName(FtpListing[i]);
-          if (DictionaryListEntry != "")
-            pCheckListBox->Append(DictionaryListEntry);
-        }
-//        FindWindow(wxID_BACKWARD)->Enable();
-//        FindWindow(wxID_FORWARD)->Enable();
-      }
-      else
-      {
-//        FindWindow(wxID_BACKWARD)->Enable();
-//        FindWindow(wxID_FORWARD)->Enable();
-
-        ::wxMessageBox("Unable to retrieve listing of available dictionaries");
-        return;
+        wxString DictionaryListEntry = DictionaryArray[i];
+        if (DictionaryListEntry != "")
+          pCheckListBox->Append(DictionaryListEntry);
       }
     }
   }
@@ -422,6 +398,10 @@ void WizardPage2::OnPageChanged(wxWizardEvent& event)
 
 void WizardPage2::OnButtonDownloadClick( wxCommandEvent& event )
 {
+  // Try to give some feedback that we're doing something
+  wxWindowDisabler Disabler;
+  wxBusyCursor Busy;
+
   // Loop through all the dictionaries selected for download
   // Get a directory list for that dictionaries FTP directory
   // Put a list of the files in that directory into a wxArrayString
@@ -435,43 +415,13 @@ void WizardPage2::OnButtonDownloadClick( wxCommandEvent& event )
     EngineDictionaryDownloader* pDownloader = pWizard->GetEngineDownloader();
     if (pDictionaryArray)
     {
-      wxFTP ftp;
-      if ( !ftp.Connect(pDownloader->GetServer()) )
-      {
-          wxLogError("Couldn't connect");
-          return;
-      }
       for (unsigned int i=0; i<pDictionaryArray->GetCount(); i++)
       {
         wxString strCurrentDictionary = pDictionaryArray->Item(i);
-        ftp.ChDir(pDownloader->GetServerDirectory());
-        ftp.ChDir(pDownloader->DirectoryNameFromDictionaryName(strCurrentDictionary));
-        wxArrayString DictionaryFileList;
-        if (ftp.GetFilesList(DictionaryFileList, pDownloader->GetDictionaryFileMask()))
+        wxString strDownloadedFileName = pDownloader->DownloadDictionary(strCurrentDictionary);
+        if (strDownloadedFileName != wxEmptyString)
         {
-          wxString strDictionaryToDownload = pDownloader->SelectDictionaryToDownload(DictionaryFileList);
-          wxInputStream *in = ftp.GetInputStream(strDictionaryToDownload);
-
-          wxString strTempFile = wxFileName::CreateTempFileName(_("dict"));
-          wxFileOutputStream TempFileStream(strTempFile);
-          wxBufferedOutputStream TempBufferedStream(TempFileStream);
-          // It might be better to switch to reading into a buffer so that we can provide
-          //  progress indicator feedback.  For now, just one time it though.
-          in->Read(TempBufferedStream);
-          TempBufferedStream.Sync();
-          int nServerSideSize = in->GetSize();
-          int nDownloadedFileSize = wxFile(strTempFile).Length();
-          if (nServerSideSize != nDownloadedFileSize)
-            ::wxMessageBox("Error downloading dictionary " + strCurrentDictionary);
-          else
-          {
-            pDownloader->InstallDictionary(strTempFile);
-          }
-        }
-        else
-        {
-          ::wxMessageBox("Unable to retrieve listing of available dictionary files for " + strCurrentDictionary);
-          return;
+          pDownloader->InstallDictionary(strDownloadedFileName);
         }
       }
     }
