@@ -80,7 +80,7 @@ How can we solve this problem ? One solution could be not only to check if the n
                     <span class="comment">// way the order used by the compiler to call the destructors</span>
                     <span class="comment">// of the nodes does not care...</span>
                 } 
-</pre></div> So, as general rule, when using wxXml2Wrapper-derived classes, you <b>must always call the wxXmlWrapper::DestroyIfUnlinked functions in the right order: first the DestroyIfUnlinked functions of all children and then, as last, the DestroyIfUnlinked function of the node containing all the others.</b> <hr size="1"><address style="align: right;"><small>Generated on Sat Feb 5 14:06:00 2005 for wxXml2 by&nbsp;
+</pre></div> So, as general rule, when using wxXml2Wrapper-derived classes, you <b>must always call the wxXmlWrapper::DestroyIfUnlinked functions in the right order: first the DestroyIfUnlinked functions of all children and then, as last, the DestroyIfUnlinked function of the node containing all the others.</b> <hr size="1"><address style="align: right;"><small>Generated on Sun Feb 6 17:51:49 2005 for wxXml2 by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.1 </small></address>
 </body>
