@@ -91,6 +91,8 @@
 8=MySpellInterface.cpp
 9=SpellCheckEngineOption.cpp
 10=SpellCheckerOptionsDialog.cpp
+11=PersonalDictionary.cpp
+12=XmlPersonalDictionaryDialog.cpp
 [Header]
 1=..\include\AspellInterface.h
 2=..\include\AspellWrapper.h
@@ -102,6 +104,8 @@
 8=..\include\SpellCheckUserInterface.h
 9=..\include\SpellCheckerOptionsDialog.h
 10=..\include\XmlSpellCheckDialog.h
+11=..\include\PersonalDictionary.h
+12=..\include\XmlPersonalDictionaryDialog.h
 [Resource]
 [Other]
 [History]

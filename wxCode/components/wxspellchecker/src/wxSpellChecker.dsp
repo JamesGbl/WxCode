@@ -97,6 +97,10 @@ SOURCE=.\MySpellInterface.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\PersonalDictionary.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\SpellCheckCmdLineInterface.cpp
 # End Source File
 # Begin Source File
@@ -121,6 +125,10 @@ SOURCE=.\SpellCheckUserInterface.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\XmlPersonalDictionaryDialog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\XmlSpellCheckDialog.cpp
 # End Source File
 # End Group
@@ -138,6 +146,10 @@ SOURCE=..\include\AspellWrapper.h
 # Begin Source File
 
 SOURCE=..\include\MySpellInterface.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\PersonalDictionary.h
 # End Source File
 # Begin Source File
 
@@ -162,6 +174,10 @@ SOURCE=..\include\SpellCheckerOptionsDialog.h
 # Begin Source File
 
 SOURCE=..\include\SpellCheckUserInterface.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\XmlPersonalDictionaryDialog.h
 # End Source File
 # Begin Source File
 
