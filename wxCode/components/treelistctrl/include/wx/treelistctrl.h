@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Modified by: Alberto Griggio, 2002
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.21 2004-11-04 17:09:19 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.22 2004-11-08 18:48:00 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows license
@@ -390,12 +390,13 @@ public:
     wxTreeItemId GetFirstChild(const wxTreeItemId& item, long& cookie) const;
     wxTreeItemId GetNextChild(const wxTreeItemId& item, long& cookie) const;
     wxTreeItemId GetPrevChild(const wxTreeItemId& item, long& cookie) const;
+    wxTreeItemId GetLastChild(const wxTreeItemId& item, long& cookie) const;
 #else
     wxTreeItemId GetFirstChild(const wxTreeItemId& item, wxTreeItemIdValue& cookie) const;
     wxTreeItemId GetNextChild(const wxTreeItemId& item, wxTreeItemIdValue& cookie) const;
     wxTreeItemId GetPrevChild(const wxTreeItemId& item, wxTreeItemIdValue& cookie) const;
+    wxTreeItemId GetLastChild(const wxTreeItemId& item, wxTreeItemIdValue& cookie) const;
 #endif
-    wxTreeItemId GetLastChild(const wxTreeItemId& item) const;
 
     // get sibling of this item
     wxTreeItemId GetNextSibling(const wxTreeItemId& item) const;

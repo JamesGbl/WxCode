@@ -4,7 +4,7 @@
 %% Author:      Otto Wyss
 %% Modified by:
 %% Created:     25.4.2004
-%% RCS-ID:      $Id: treelistctrl.tex,v 1.9 2004-11-04 17:08:25 wyo Exp $
+%% RCS-ID:      $Id: treelistctrl.tex,v 1.10 2004-11-08 18:47:30 wyo Exp $
 %% Copyright:   (c) wxCode
 %% License:     wxWindows license
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -507,9 +507,9 @@ Returns the item text of the entered column.
 
 Returns the colour of the item label.
 
-\membersection{wxTreeListCtrl::GetLastChild}\label{wxtreelistctrlgetlastchild}
+\membersection{wxTreeListCtrl::GetLastChild}\label{wxtreelistctrlgetfirstchild}
 
-\constfunc{wxTreeItemId}{GetLastChild}{\param{const wxTreeItemId\&}{ item}}
+\constfunc{wxTreeItemId}{GetLastChild}{\param{const wxTreeItemId\&}{ item}, \param{long\& }{cookie}}
 
 Returns the last child of the item (or an invalid tree item if this item has no children).
 
