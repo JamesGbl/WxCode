@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.1 2004-03-17 18:47:50 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.2 2004-03-21 08:28:27 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -512,7 +512,8 @@ public:
     void SortChildren(const wxTreeItemId& item);
 
     // searching
-    wxTreeItemId FindItem (const wxTreeItemId& item, const wxString& str, bool partial);
+    wxTreeItemId FindItem (const wxTreeItemId& item, const wxString& str,
+                           bool partial=false);
 
     // deprecated functions: use Set/GetItemImage directly
         // get the selected item image
@@ -608,6 +609,10 @@ protected:
 
     wxTimer             *m_renameTimer;
     wxString             m_renameRes;
+
+    // char navigation
+    wxTimer             *m_findTimer;
+    wxString             m_findStr;
 
     // the common part of all ctors
     void Init();
@@ -1825,6 +1830,8 @@ void wxTreeListMainWindow::Init()
     m_renameTimer = new wxTreeListRenameTimer( this );
     m_lastOnSame = FALSE;
 
+    m_findTimer = new wxTimer (this, -1);
+
     m_normalFont = wxSystemSettings::GetSystemFont( wxSYS_DEFAULT_GUI_FONT );
     m_boldFont = wxFont( m_normalFont.GetPointSize(),
                          m_normalFont.GetFamily(),
@@ -1903,6 +1910,7 @@ wxTreeListMainWindow::~wxTreeListMainWindow()
     DeleteAllItems();
 
     delete m_renameTimer;
+    delete m_findTimer;
     if (m_ownsImageListNormal) delete m_imageListNormal;
     if (m_ownsImageListState) delete m_imageListState;
     if (m_ownsImageListButtons) delete m_imageListButtons;
@@ -3028,24 +3036,25 @@ void wxTreeListMainWindow::SortChildren(const wxTreeItemId& itemId)
 }
 
 wxTreeItemId wxTreeListMainWindow::FindItem (const wxTreeItemId& item, const wxString& str, bool partial) {
-    if (!item.IsOk()) item = GetSelection();
-    if (!item.IsOk()) {
+    wxTreeItemId next = item;
+    if (!next.IsOk()) next = GetSelection();
+    if (!next.IsOk()) {
         if (HasFlag(wxTR_HIDE_ROOT)) {
             wxTreeItemIdValue cookie = 0;
-            item = (wxTreeListItem*)GetFirstChild (GetRootItem().m_pItem, cookie).m_pItem;
+            next = (wxTreeListItem*)GetFirstChild (GetRootItem().m_pItem, cookie).m_pItem;
         } else {
-            item = (wxTreeListItem*)GetRootItem().m_pItem;
+            next = (wxTreeListItem*)GetRootItem().m_pItem;
         }
     }
-    if (!item.IsOk()) return item;
-    item = GetNextVisible (item);
-    while (item.IsOk()) {
+    if (!next.IsOk()) return item;
+    next = GetNextVisible (next);
+    while (next.IsOk()) {
         if (!partial) {
-            if (GetItemText (item).IsSameAs (str)) return item;
+            if (GetItemText (next).IsSameAs (str)) return next;
         }else{
-            if (GetItemText (item).Index (str) == 0) return item;
+            if (GetItemText (next).Index (str) == 0) return next;
         }
-        item = GetNextVisible (item);
+        next = GetNextVisible (next);
     }
     return item;
 }
@@ -3881,6 +3890,14 @@ void wxTreeListMainWindow::OnChar( wxKeyEvent &event )
             break;
 
         default:
+            if (event.m_keyCode >= (int)' ') {
+                if (!m_findTimer->IsRunning()) m_findStr.Clear();
+                m_findStr.Append (event.m_keyCode);
+                m_findTimer->Start (500, wxTIMER_ONE_SHOT);
+                wxTreeItemId dummy = (wxTreeItemId*)NULL;
+                wxTreeItemId item = FindItem (dummy, m_findStr, true);
+                if (item.IsOk()) SelectItem (item);
+            }
             event.Skip();
     }
 }
@@ -4789,7 +4806,7 @@ void wxTreeListCtrl::SortChildren(const wxTreeItemId& item)
 { m_main_win->SortChildren(item); }
 
 wxTreeItemId wxTreeListCtrl::FindItem (const wxTreeItemId& item, const wxString& str, bool partial)
-{ m_main_win->FindItem (item, str, partial); }
+{ return m_main_win->FindItem (item, str, partial); }
 
 bool wxTreeListCtrl::SetBackgroundColour(const wxColour& colour)
 { return m_main_win->SetBackgroundColour(colour); }
