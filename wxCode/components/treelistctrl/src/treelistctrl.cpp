@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.36 2004-10-25 17:19:04 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.37 2004-10-27 17:35:29 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -4144,6 +4144,18 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
                 m_renameTimer->Start (RENAME_TIMER_TICKS, wxTIMER_ONE_SHOT);
             }
             m_lastOnSame = FALSE;
+        }
+
+        if (((flags & wxTREE_HITTEST_ONITEMBUTTON) ||
+             (flags & wxTREE_HITTEST_ONITEMICON)) &&
+            HasButtons() && item->HasPlus()) {
+
+            // only toggle the item for a single click, double click on
+            // the button doesn't do anything (it toggles the item twice)
+            if (event.LeftDown()) Toggle (item);
+
+            // don't select the item if the button was clicked
+            return;
         }
 
         // determine the selection if not done by left down
