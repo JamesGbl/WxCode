@@ -368,10 +368,10 @@ void MyPersonalDictionaryDialog::AddWordToPersonalDictionary(wxCommandEvent& eve
   if (m_pSpellCheckEngine != NULL)
   {
     TransferDataFromWindow();
-    wxWindow* pText = FindWindow(IDC_TEXT_NEW_PERSONAL_WORD);
+    wxTextCtrl* pText = (wxTextCtrl*)FindWindow(IDC_TEXT_NEW_PERSONAL_WORD);
     if (pText != NULL)
     {
-      wxString strNewWord = pText->GetLabel();
+      wxString strNewWord = pText->GetValue();
       if (!strNewWord.Trim().IsEmpty())
       {
         if (!(m_pSpellCheckEngine->AddWordToDictionary(strNewWord)))
