@@ -3,7 +3,7 @@
 # Name:        arctest.sh
 # Purpose:     Test script for wxArchive classes
 # Author:      Mike Wetherell
-# RCS-ID:      $Id: arctest.sh,v 1.3 2004-11-27 23:48:04 chiclero Exp $
+# RCS-ID:      $Id: arctest.sh,v 1.4 2005-04-02 11:22:38 chiclero Exp $
 # Copyright:   (c) 2004 Mike Wetherell
 # Licence:     wxWindows licence
 #############################################################################
@@ -159,7 +159,7 @@ domodify() {
     oldname=`entryname 'script|SCRIPT'`
     newname=`echo $oldname | sed 's/script/newname/;s/SCRIPT/NEWNAME/'`
     runarc rename $archive $oldname $newname
-    oldname=`find $testdir -iname script`
+    oldname=`find $testdir -name script -o -name SCRIPT`
     newname=`echo $oldname | sed 's/script/newname/;s/SCRIPT/NEWNAME/'`
     mv $oldname $newname || exit
     echo
@@ -167,7 +167,7 @@ domodify() {
     # remove an entry
     removename=`entryname 'bin4|BIN4'`
     runarc remove $archive $removename
-    rm `find $testdir -iname bin4` || exit
+    rm `find $testdir -name bin4 -o -name BIN4` || exit
     echo
 
     # write a test file and try adding that
@@ -250,7 +250,7 @@ appendedziptest() {
 # check if an external archiver/unarchiver is in the path
 #
 have() {
-    which $1 > /dev/null && starttest $*
+    LOCATION=`which $1` && test -x "$LOCATION" && starttest $*
 }
 
 
