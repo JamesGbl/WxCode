@@ -30,6 +30,9 @@ bool wxUnderC::Init()
 	// init UnderC
 	m_bInit = (uc_init(NULL, TRUE) == 0);
 
+	// add our extension to the list of the available for loading extensions:
+	wxScriptFile::m_strFileExt[wxUNDERC_SCRIPTFILE] = "UC";
+
 	// fill the std array
 	GetFunctionListComplete(m_arrStd);
 

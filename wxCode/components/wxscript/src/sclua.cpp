@@ -54,6 +54,9 @@ bool wxLua::Init()
 		// ignore any result given by the library load function.		
 		lua_settop(m_state, 0);
 	}
+
+	// add our extension to the list of the available for loading extensions:
+	wxScriptFile::m_strFileExt[wxLUA_SCRIPTFILE] = "LUA";
 	
 	// fill the std array
 	GetFunctionListComplete(m_arrStd);

@@ -95,18 +95,6 @@
         <sources>../src/script.cpp ../src/scbasic.cpp 
                  ../src/sccint.cpp ../src/scunderc.cpp
                  ../src/sclua.cpp</sources>
-
-        <if cond="FORMAT=='msvc'">
-            <postlink-command>
-                    lib /out:$(BUILDDIR)\wxscriptall.lib /LIBPATH:$(LUA_DIR)\lib /LIBPATH:$(TOLUA_DIR)\lib /LIBPATH:$(CINT_DIR) /LIBPATH:$(UCC_DIR)\lib  $(MSVC_LIBS) $(BUILDDIR)\wxscript.lib
-            </postlink-command>
-        </if>
-        <if cond="FORMAT=='borland'">
-            <postlink-command>
-                    tlib $(BUILDDIR)\wxscriptall.lib   $(BORLAND_LIBS) +$(BUILDDIR)\wxscript.lib
-            </postlink-command>
-        </if>
-
     </lib>
 
     <exe id="test1" template="scriptbase">

@@ -54,7 +54,7 @@ UCC_DIR = c:\ucc
 WXSCRIPT_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
 	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	/Fd..\lib\wxscript.pdb $(____DEBUGRUNTIME) /I$(WXWIN)\include /I..\include \
-	/I..\src\ /I$(LUA_DIR)\include /I$(TOLUA_DIR)\include /I$(CINT_DIR) \
+	/I..\src /I$(LUA_DIR)\include /I$(TOLUA_DIR)\include /I$(CINT_DIR) \
 	/I$(UCC_DIR)\include /I$(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) \
 	/DwxSCRIPT_NO_CINT /DwxSCRIPT_NO_UNDERC /GR /GX $(CPPFLAGS) $(CXXFLAGS)
 WXSCRIPT_OBJECTS =  \
@@ -65,7 +65,7 @@ WXSCRIPT_OBJECTS =  \
 	..\lib\wxscript_sclua.obj
 TEST1_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
 	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) /Fd..\lib\test1.pdb \
-	$(____DEBUGRUNTIME) /I$(WXWIN)\include /I..\include /I..\src\ \
+	$(____DEBUGRUNTIME) /I$(WXWIN)\include /I..\include /I..\src \
 	/I$(LUA_DIR)\include /I$(TOLUA_DIR)\include /I$(CINT_DIR) \
 	/I$(UCC_DIR)\include /I$(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) \
 	/DwxSCRIPT_NO_CINT /DwxSCRIPT_NO_UNDERC $(__DEBUG_DEFINE_p) /D__WXMSW__ /GR \
@@ -152,11 +152,10 @@ clean:
 	lib /NOLOGO /OUT:$@ @<<
 	$(WXSCRIPT_OBJECTS)
 <<
-	lib /out:..\lib\wxscriptall.lib /LIBPATH:$(LUA_DIR)\lib /LIBPATH:$(TOLUA_DIR)\lib /LIBPATH:$(CINT_DIR) /LIBPATH:$(UCC_DIR)\lib  lua.lib lualib.lib tolua.lib ..\lib\wxscript.lib
 
 ..\lib\test1.exe: $(TEST1_OBJECTS) ..\lib\wxscript.lib
 	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_13) /LIBPATH:$(LUA_DIR)\lib /LIBPATH:$(TOLUA_DIR)\lib /LIBPATH:$(CINT_DIR)\lib /LIBPATH:$(UCC_DIR)\lib /LIBPATH:$(WXWIN)\lib\vc_lib @<<
-	$(TEST1_OBJECTS)  lua.lib lualib.lib tolua.lib ..\lib\wxscript.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
+	$(TEST1_OBJECTS)  ..\lib\wxscript.lib lua.lib lualib.lib tolua.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
 
 ..\lib\wxscript_script.obj: .\..\src\script.cpp

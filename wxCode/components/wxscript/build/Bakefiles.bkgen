@@ -2,8 +2,8 @@
 
 <bakefile-gen>
 
-    <disable-formats>autoconf,dmars,dmars_smake,cbx_unix,cbuilderx,msevc4prj</disable-formats>
-    <input>lua.bkl</input>
+    <disable-formats>autoconf,dmars,dmars_smake,cbx_unix,cbuilderx,msevc4prj,msvc6prj</disable-formats>
+    <input>wxscript.bkl</input>
 
     <!-- List of output formats to generate: -->
     <add-formats>

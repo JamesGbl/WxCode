@@ -25,6 +25,10 @@
 bool wxCINT::Init()
 {
 	m_bInit = (G__init_cint("cint") != G__INIT_CINT_FAILURE);
+
+	// add our extension to the list of the available for loading extensions:
+	wxScriptFile::m_strFileExt[wxCINT_SCRIPTFILE] = "CXX";
+
 	return m_bInit;
 }
 

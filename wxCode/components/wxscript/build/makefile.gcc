@@ -20,7 +20,7 @@ CXXFLAGS =
 CPPFLAGS = 
 
 # Standard linker flags 
-LDFLAGS = -Lc:\libs\mingw
+LDFLAGS = 
 
 # Compile Unicode build of wxWindows? [0,1]
 UNICODE = 0
@@ -32,16 +32,16 @@ WXWIN = c:\wxWidgets
 BUILD = debug
 
 # The LUA library main folder 
-LUA_DIR =
+LUA_DIR = c:\lua
 
 # The TOLUA library main folder 
-TOLUA_DIR =
+TOLUA_DIR = c:\tolua
 
 # The CINT library main folder 
-CINT_DIR =
+CINT_DIR = c:\cint
 
 # The UnderC library main folder 
-UCC_DIR =
+UCC_DIR = c:\ucc
 
 
 
@@ -132,7 +132,7 @@ clean:
 	ranlib $@
 
 ..\lib\test1.exe: $(TEST1_OBJECTS) ..\lib\libwxscript.a
-	$(CXX) -o $@ $(TEST1_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -L$(LUA_DIR)\lib -L$(TOLUA_DIR)\lib -L$(CINT_DIR)\lib -L$(UCC_DIR)\lib -L$(WXWIN)\lib\gcc_lib ..\lib\libwxscript.a  -llua -llualib -ltolua -lwxmsw25$(WXLIBPOSTFIX)_core -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXSUBLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+	$(CXX) -o $@ $(TEST1_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -L$(LUA_DIR)\lib -L$(TOLUA_DIR)\lib -L$(CINT_DIR)\lib -L$(UCC_DIR)\lib -L$(WXWIN)\lib\gcc_lib  ..\lib\libwxscript.a -llua -llualib -ltolua -lwxmsw25$(WXLIBPOSTFIX)_core -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXSUBLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
 ..\lib\wxscript_script.o: ./../src/script.cpp
 	$(CXX) -c -o $@ $(WXSCRIPT_CXXFLAGS) $<

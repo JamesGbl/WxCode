@@ -83,7 +83,7 @@ UCC_DIR = c:\ucc
 ### Variables: ###
 
 WXSCRIPT_CXXFLAGS = -I$(BCCDIR)\include $(__UNICODE_DEFINE_p) \
-	$(__OPTIMIZEFLAG) $(__DEBUGINFO) -I$(WXWIN)\include -I..\include -I..\src\ \
+	$(__OPTIMIZEFLAG) $(__DEBUGINFO) -I$(WXWIN)\include -I..\include -I..\src \
 	-I$(LUA_DIR)\include -I$(TOLUA_DIR)\include -I$(CINT_DIR) \
 	-I$(UCC_DIR)\include -I$(WXWIN)\lib\bcc_lib\msw$(WXLIBPOSTFIX) \
 	-DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC $(CPPFLAGS) $(CXXFLAGS)
@@ -94,11 +94,10 @@ WXSCRIPT_OBJECTS =  \
 	..\lib\wxscript_scunderc.obj \
 	..\lib\wxscript_sclua.obj
 TEST1_CXXFLAGS = -I$(BCCDIR)\include $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
-	$(__DEBUGINFO) -I$(WXWIN)\include -I..\include -I..\src\ \
-	-I$(LUA_DIR)\include -I$(TOLUA_DIR)\include -I$(CINT_DIR) \
-	-I$(UCC_DIR)\include -I$(WXWIN)\lib\bcc_lib\msw$(WXLIBPOSTFIX) \
-	-DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC $(__DEBUG_DEFINE_p) -D__WXMSW__ \
-	$(CPPFLAGS) $(CXXFLAGS)
+	$(__DEBUGINFO) -I$(WXWIN)\include -I..\include -I..\src -I$(LUA_DIR)\include \
+	-I$(TOLUA_DIR)\include -I$(CINT_DIR) -I$(UCC_DIR)\include \
+	-I$(WXWIN)\lib\bcc_lib\msw$(WXLIBPOSTFIX) -DwxSCRIPT_NO_CINT \
+	-DwxSCRIPT_NO_UNDERC $(__DEBUG_DEFINE_p) -D__WXMSW__ $(CPPFLAGS) $(CXXFLAGS)
 TEST1_OBJECTS =  \
 	..\lib\test1_Test.obj
 
@@ -160,11 +159,10 @@ clean:
 	tlib /a /p4096 $@ @&&|
 	$(WXSCRIPT_OBJECTS)
 |
-	tlib ..\lib\wxscriptall.lib   +lua.lib +lualib.lib +tolua.lib +..\lib\wxscript.lib
 
 ..\lib\test1.exe: $(TEST1_OBJECTS) ..\lib\wxscript.lib
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(LUA_DIR)\lib -L$(TOLUA_DIR)\lib -L$(CINT_DIR)\lib -L$(UCC_DIR)\lib -L$(WXWIN)\lib\bcc_lib @&&|
-	c0x32.obj $(TEST1_OBJECTS),$@,, lua.lib lualib.lib tolua.lib ..\lib\wxscript.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32.lib,,
+	c0x32.obj $(TEST1_OBJECTS),$@,, ..\lib\wxscript.lib lua.lib lualib.lib tolua.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32.lib,,
 |
 
 ..\lib\wxscript_script.obj: .\..\src\script.cpp

@@ -32,7 +32,7 @@
 
 
 // setup static
-wxString wxScriptFile::m_strFileExt[] = { "cxx", "uc", "lua" };
+wxString wxScriptFile::m_strFileExt[];
 wxCINT *wxScriptInterpreter::m_pCINT = NULL;
 wxUnderC *wxScriptInterpreter::m_pUnderC = NULL;
 wxLua *wxScriptInterpreter::m_pLua = NULL;
@@ -274,7 +274,9 @@ wxString wxScriptFile::GetAllowedExtString()
 	wxString ret;
 
 	for (int i=0; i < wxSCRIPT_SUPPORTED_FORMATS; i++)
-		ret += wxScriptFile::m_strFileExt[i].MakeUpper() + ";";
+		if (!wxScriptFile::m_strFileExt[i].IsEmpty())
+			ret += wxScriptFile::m_strFileExt[i].MakeUpper() + ";";
+	ret.RemoveLast();
 
 	return ret;
 }
@@ -284,7 +286,8 @@ wxArrayString wxScriptFile::GetAllowedExt()
 	wxArrayString ret;
 
 	for (int i=0; i < wxSCRIPT_SUPPORTED_FORMATS; i++)
-		ret.Add(wxScriptFile::m_strFileExt[i].MakeUpper());
+		if (!wxScriptFile::m_strFileExt[i].IsEmpty())
+			ret.Add(wxScriptFile::m_strFileExt[i].MakeUpper());
 
 	return ret;
 }

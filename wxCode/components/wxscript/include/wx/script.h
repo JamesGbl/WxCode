@@ -415,7 +415,7 @@ enum wxScriptFileType {
 	wxUNDERC_SCRIPTFILE = 1,	// extension = "uc"
 	wxLUA_SCRIPTFILE = 2,		// extension = "lua"
 
-	wxSCRIPT_SUPPORTED_FORMATS = 3
+	wxSCRIPT_SUPPORTED_FORMATS = 3		// this must be the last
 };
 
 
