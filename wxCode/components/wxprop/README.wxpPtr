@@ -1,0 +1,39 @@
+*** SMALL DOCUMENTATION
+
+The class acts as java-like automatic pointer (allocation/deallocation)
+
+To declare a pointer of e.g. `int', use "wxPtr<int> variable;" declaration.
+
+Assumes, that all assigned objects are used via wxPtr-s only, and are
+allocated dynamically. Do not assign temporary pointer-counters to this
+class!
+
+By default, pointer is NULL.
+
+When you are trying to access NULL data, a new object of baseclass is 
+allocated.
+
+If you are not using simply pointers, but wxPtr-s only, your objects would
+be deallocated automatically. If you want to force deallocation, just 
+assign the wxPtr to NULL instead of doing delete.
+
+If you need the real pointer, you can use either &*ptr. However, this
+could be done only, if you are sure, that your pointer is not NULL. If not,
+then use ptr->get() instead. This feature is necessary, when you pass it as a 
+parameter to functions likescanf(), with `...' in parameter list. However, 
+other functions, which have exact parameter types, typically do not need 
+such feature.
+
+There is a global object reference counter, so you can be sure, that
+your object won't be deleted, while deallocating wxPtr, if another 
+wxPtr is referring to it.
+
+You can keep object actually, but remove it from wxPtr's reference table, by
+using release() method, which returns usual pointer. After release(), wxPtr
+will have NULL value.
+
+
+Developer's note:
+Possibly, some `in-use' flag should be added to prevent access to ptr data
+simultaneously, from different threads. Anyhow, while done as-is, I haven't
+expected any troubles.

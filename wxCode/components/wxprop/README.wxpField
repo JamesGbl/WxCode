@@ -1,0 +1,164 @@
+*** SMALL DOCUMENTATION
+
+The template class wxpField acts like Borland-type properties. 
+
+The main benefits of creating wxpFields are:
+1. Ability to overload "read" and "write" methods
+2. Ability to bind fields to each other (presented by DWCS)
+
+Short description:
+
+1. Ability to overload "read" and "write" methods
+This ability allows you to create metafields, mapped, e.g., to
+hardware device, or to a visual property, such as "X_Size", to allow
+dynamic update.
+
+2. Ability to bind fields to each other 
+The concept is developed within DWCS Library, but I doubt, if it worth
+to continue developing it. Although, the concept is excellent.
+For example, if you have 100 pushbuttons with "Hello" caption, you can
+bind all their Caption properties to a global string "Hello". The same
+thing with system colors - instead of allocating a constant to identify
+a link to system default color (like Borland does - clRed, clPushButton),
+we can simply link Color property to global, e.g., pPushButtonColor.
+
+
+*** HOW TO USE?
+
+--- 1. Creating wxpFields...
+
+To declare a property simply put 
+
+   wxpField<oftype> propName;
+
+To bind field to another one, do:
+
+   fldName.bindto(diffField);
+or
+   diffField.bind(propName);
+   
+To unbind it, use:
+
+   fldName.unbind();
+or
+   diffField.unbind(fldName);
+(Those two "unbinds" are different kind, so do not mix them up)
+
+If you want to assign one field to another, use:
+
+   destField = srcField;
+   
+If you do not want to have value just copied, but inherit the whole
+wxpField with link info, use:
+
+   destField.inherit(srcField);
+   
+If you do not want the wxpFields assignments to affect parent 
+wxpField (to which this one is linked), set:
+
+   fldName.writelocal = false;
+   
+wxpFields have  most of standard pointer operations overloaded, so to 
+access exactly the property pointer instead of value pointer, use:
+
+   fldName.ptr()
+   
+Check property link with:
+
+   fldName.isbound()
+or
+   fldName.isbound(whereExactly)
+   
+When passing by-value to such functions, as printf, use "*&field":
+
+   printf( format, *&field1, *&field2, ... )
+   
+Sometimes it is not acceptable, so you can use field.get() instead, e.g.:
+
+   field1.get().
+      memberIsAlsowxpField.get().
+        memberIsNormalValue
+
+--- 2. Overloading functions
+
+
+To implement property access, e.g., to implement access to device, you
+should overload the following methods:
+
+        virtual const basetype &read()
+            { return data; };
+        
+        virtual const basetype &write(const basetype &what) 
+            { return (data = what); }
+	    
+Sometimes, it is necessary to do some post-process to parent's value, when
+linked. E.g., to get Width and Height properties of visual object, basing
+on existing values of Left,Top,Right and Bottom. 
+b_read  - extract data from token (e.g., token*2)
+b_write - put data back (e.g. token/2) 
+Those features work for bound wxpFields only.
+        
+        virtual const basetype &b_read(const basetype &token)
+            { return token; };
+        
+        virtual const basetype &b_write(const basetype &token)
+            { return token; };
+        
+Another methods:
+update()        - is called, when wxpField is written (incl., parent wxpField
+                  write)
+boundupdate()   - is called after wxpField is bound
+unboundupdate() - is called after wxpField is unbound (incl., when parent
+                  object is deleted)
+request()       - is called before wxpField is read; may be used, e.g., for 
+                  first-time initialization purposes.
+
+        virtual void update()
+            { }
+              
+        virtual void boundupdate()
+            { }
+        
+        virtual void unboundupdate()
+            { }
+        
+        virtual void request()
+	    { }
+
+--- 3. KNOWN BUGS:
+
+1.
+When linking a project of multiple modules under GNU/EGCS C++, Linker 
+emits these warnings for each basic type, used with wxpField:
+
+/tmp/mod1.o: warning: multiple common of `wxpField<sometype> type_info node'
+/tmp/mod2.o: warning: previous common is here
+
+If someone knows, how to avoid this thing (as I know, STL goes OK with that, 
+but how?)
+
+Of course, you can apply -fno-rtti flag to GNU C++ compiler, however, that
+could be accepted as temporary solution only. 
+
+2.
+The class is tested with GNU/EGCS C++ only, and may require some additional
+features (?or features reduction?) to get working under different compiler.
+
+3.
+The class uses STL, so it will fail with earlier pre-STL implementations 
+of C++.
+
+
+
+/*===========================================================================*\
+    Code extracted from DWCS Library pre-release
+    Copyright (C)1998,2000 by George Yohng <yohng@dosware.8m.com>
+    
+    Permission to use, copy, modify, distribute and sell this software
+    for any purpose is hereby granted without fee, provided that the
+    above copyright notice appear in all copies and that both that
+    copyright notice and this permission notice appear in supporting
+    documentation. The author makes no representations about the suitability
+    of this software for any purpose.  It is provided "as is" without express
+    or implied warranty.        
+\*===========================================================================*/

@@ -1,0 +1,1 @@
+g++ -I../.. -o demo1 demo1.cpp ../../wxpptr.cpp ../../wxpfield.cpp
