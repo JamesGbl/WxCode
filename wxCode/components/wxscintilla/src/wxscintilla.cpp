@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.1 2004-11-12 18:49:40 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.2 2004-11-13 10:38:25 wyo Exp $
 // Copyright:   (c) 2000 by Total Control Software
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -91,35 +91,35 @@ DEFINE_EVENT_TYPE( wxEVT_STC_CALLTIP_CLICK )
 
 
 
-BEGIN_EVENT_TABLE(wxStyledTextCtrl, wxControl)
-    EVT_PAINT                   (wxStyledTextCtrl::OnPaint)
-    EVT_SCROLLWIN               (wxStyledTextCtrl::OnScrollWin)
-    EVT_SCROLL                  (wxStyledTextCtrl::OnScroll)
-    EVT_SIZE                    (wxStyledTextCtrl::OnSize)
-    EVT_LEFT_DOWN               (wxStyledTextCtrl::OnMouseLeftDown)
+BEGIN_EVENT_TABLE(wxScintilla, wxControl)
+    EVT_PAINT                   (wxScintilla::OnPaint)
+    EVT_SCROLLWIN               (wxScintilla::OnScrollWin)
+    EVT_SCROLL                  (wxScintilla::OnScroll)
+    EVT_SIZE                    (wxScintilla::OnSize)
+    EVT_LEFT_DOWN               (wxScintilla::OnMouseLeftDown)
     // Let Scintilla see the double click as a second click
-    EVT_LEFT_DCLICK             (wxStyledTextCtrl::OnMouseLeftDown)
-    EVT_MOTION                  (wxStyledTextCtrl::OnMouseMove)
-    EVT_LEFT_UP                 (wxStyledTextCtrl::OnMouseLeftUp)
+    EVT_LEFT_DCLICK             (wxScintilla::OnMouseLeftDown)
+    EVT_MOTION                  (wxScintilla::OnMouseMove)
+    EVT_LEFT_UP                 (wxScintilla::OnMouseLeftUp)
 #if defined(__WXGTK__) || defined(__WXMAC__)
-    EVT_RIGHT_UP                (wxStyledTextCtrl::OnMouseRightUp)
+    EVT_RIGHT_UP                (wxScintilla::OnMouseRightUp)
 #else
-    EVT_CONTEXT_MENU            (wxStyledTextCtrl::OnContextMenu)
+    EVT_CONTEXT_MENU            (wxScintilla::OnContextMenu)
 #endif
-    EVT_MOUSEWHEEL              (wxStyledTextCtrl::OnMouseWheel)
-    EVT_MIDDLE_UP               (wxStyledTextCtrl::OnMouseMiddleUp)
-    EVT_CHAR                    (wxStyledTextCtrl::OnChar)
-    EVT_KEY_DOWN                (wxStyledTextCtrl::OnKeyDown)
-    EVT_KILL_FOCUS              (wxStyledTextCtrl::OnLoseFocus)
-    EVT_SET_FOCUS               (wxStyledTextCtrl::OnGainFocus)
-    EVT_SYS_COLOUR_CHANGED      (wxStyledTextCtrl::OnSysColourChanged)
-    EVT_ERASE_BACKGROUND        (wxStyledTextCtrl::OnEraseBackground)
-    EVT_MENU_RANGE              (10, 16, wxStyledTextCtrl::OnMenu)
-    EVT_LISTBOX_DCLICK          (-1, wxStyledTextCtrl::OnListBox)
+    EVT_MOUSEWHEEL              (wxScintilla::OnMouseWheel)
+    EVT_MIDDLE_UP               (wxScintilla::OnMouseMiddleUp)
+    EVT_CHAR                    (wxScintilla::OnChar)
+    EVT_KEY_DOWN                (wxScintilla::OnKeyDown)
+    EVT_KILL_FOCUS              (wxScintilla::OnLoseFocus)
+    EVT_SET_FOCUS               (wxScintilla::OnGainFocus)
+    EVT_SYS_COLOUR_CHANGED      (wxScintilla::OnSysColourChanged)
+    EVT_ERASE_BACKGROUND        (wxScintilla::OnEraseBackground)
+    EVT_MENU_RANGE              (10, 16, wxScintilla::OnMenu)
+    EVT_LISTBOX_DCLICK          (-1, wxScintilla::OnListBox)
 END_EVENT_TABLE()
 
 
-IMPLEMENT_CLASS(wxStyledTextCtrl, wxControl)
+IMPLEMENT_CLASS(wxScintilla, wxControl)
 IMPLEMENT_DYNAMIC_CLASS(wxStyledTextEvent, wxCommandEvent)
 
 #ifdef LINK_LEXERS
@@ -130,7 +130,7 @@ int Scintilla_LinkLexers();
 //----------------------------------------------------------------------
 // Constructor and Destructor
 
-wxStyledTextCtrl::wxStyledTextCtrl(wxWindow *parent,
+wxScintilla::wxScintilla(wxWindow *parent,
                                    wxWindowID id,
                                    const wxPoint& pos,
                                    const wxSize& size,
@@ -142,7 +142,7 @@ wxStyledTextCtrl::wxStyledTextCtrl(wxWindow *parent,
 }
 
 
-void wxStyledTextCtrl::Create(wxWindow *parent,
+void wxScintilla::Create(wxWindow *parent,
                                    wxWindowID id,
                                    const wxPoint& pos,
                                    const wxSize& size,
@@ -171,14 +171,14 @@ void wxStyledTextCtrl::Create(wxWindow *parent,
 }
 
 
-wxStyledTextCtrl::~wxStyledTextCtrl() {
+wxScintilla::~wxScintilla() {
     delete m_swx;
 }
 
 
 //----------------------------------------------------------------------
 
-long wxStyledTextCtrl::SendMsg(int msg, long wp, long lp) {
+long wxScintilla::SendMsg(int msg, long wp, long lp) {
 
     return m_swx->WndProc(msg, wp, lp);
 }
@@ -192,80 +192,80 @@ long wxStyledTextCtrl::SendMsg(int msg, long wp, long lp) {
 
 
 // Add text to the document.
-void wxStyledTextCtrl::AddText(const wxString& text) {
+void wxScintilla::AddText(const wxString& text) {
                     wxWX2MBbuf buf = (wxWX2MBbuf)wx2stc(text);
                     SendMsg(2001, strlen(buf), (long)(const char*)buf);
 }
 
 // Add array of cells to document.
-void wxStyledTextCtrl::AddStyledText(const wxMemoryBuffer& data) {
+void wxScintilla::AddStyledText(const wxMemoryBuffer& data) {
                           SendMsg(2002, data.GetDataLen(), (long)data.GetData());
 }
 
 // Insert string at a position.
-void wxStyledTextCtrl::InsertText(int pos, const wxString& text) {
+void wxScintilla::InsertText(int pos, const wxString& text) {
     SendMsg(2003, pos, (long)(const char*)wx2stc(text));
 }
 
 // Delete all text in the document.
-void wxStyledTextCtrl::ClearAll() {
+void wxScintilla::ClearAll() {
     SendMsg(2004, 0, 0);
 }
 
 // Set all style bytes to 0, remove all folding information.
-void wxStyledTextCtrl::ClearDocumentStyle() {
+void wxScintilla::ClearDocumentStyle() {
     SendMsg(2005, 0, 0);
 }
 
 // The number of characters in the document.
-int wxStyledTextCtrl::GetLength() {
+int wxScintilla::GetLength() {
     return SendMsg(2006, 0, 0);
 }
 
 // Returns the character byte at the position.
-int wxStyledTextCtrl::GetCharAt(int pos) {
+int wxScintilla::GetCharAt(int pos) {
          return (unsigned char)SendMsg(2007, pos, 0);
 }
 
 // Returns the position of the caret.
-int wxStyledTextCtrl::GetCurrentPos() {
+int wxScintilla::GetCurrentPos() {
     return SendMsg(2008, 0, 0);
 }
 
 // Returns the position of the opposite end of the selection to the caret.
-int wxStyledTextCtrl::GetAnchor() {
+int wxScintilla::GetAnchor() {
     return SendMsg(2009, 0, 0);
 }
 
 // Returns the style byte at the position.
-int wxStyledTextCtrl::GetStyleAt(int pos) {
+int wxScintilla::GetStyleAt(int pos) {
          return (unsigned char)SendMsg(2010, pos, 0);
 }
 
 // Redoes the next action on the undo history.
-void wxStyledTextCtrl::Redo() {
+void wxScintilla::Redo() {
     SendMsg(2011, 0, 0);
 }
 
 // Choose between collecting actions into the undo
 // history and discarding them.
-void wxStyledTextCtrl::SetUndoCollection(bool collectUndo) {
+void wxScintilla::SetUndoCollection(bool collectUndo) {
     SendMsg(2012, collectUndo, 0);
 }
 
 // Select all the text in the document.
-void wxStyledTextCtrl::SelectAll() {
+void wxScintilla::SelectAll() {
     SendMsg(2013, 0, 0);
 }
 
 // Remember the current position in the undo history as the position
 // at which the document was saved.
-void wxStyledTextCtrl::SetSavePoint() {
+void wxScintilla::SetSavePoint() {
     SendMsg(2014, 0, 0);
 }
 
 // Retrieve a buffer of cells.
-wxMemoryBuffer wxStyledTextCtrl::GetStyledText(int startPos, int endPos) {
+wxMemoryBuffer wxScintilla::GetStyledText(int startPos, int endPos) {
         wxMemoryBuffer buf;
         if (endPos < startPos) {
             int temp = startPos;
@@ -284,66 +284,66 @@ wxMemoryBuffer wxStyledTextCtrl::GetStyledText(int startPos, int endPos) {
 }
 
 // Are there any redoable actions in the undo history?
-bool wxStyledTextCtrl::CanRedo() {
+bool wxScintilla::CanRedo() {
     return SendMsg(2016, 0, 0) != 0;
 }
 
 // Retrieve the line number at which a particular marker is located.
-int wxStyledTextCtrl::MarkerLineFromHandle(int handle) {
+int wxScintilla::MarkerLineFromHandle(int handle) {
     return SendMsg(2017, handle, 0);
 }
 
 // Delete a marker.
-void wxStyledTextCtrl::MarkerDeleteHandle(int handle) {
+void wxScintilla::MarkerDeleteHandle(int handle) {
     SendMsg(2018, handle, 0);
 }
 
 // Is undo history being collected?
-bool wxStyledTextCtrl::GetUndoCollection() {
+bool wxScintilla::GetUndoCollection() {
     return SendMsg(2019, 0, 0) != 0;
 }
 
 // Are white space characters currently visible?
 // Returns one of SCWS_* constants.
-int wxStyledTextCtrl::GetViewWhiteSpace() {
+int wxScintilla::GetViewWhiteSpace() {
     return SendMsg(2020, 0, 0);
 }
 
 // Make white space characters invisible, always visible or visible outside indentation.
-void wxStyledTextCtrl::SetViewWhiteSpace(int viewWS) {
+void wxScintilla::SetViewWhiteSpace(int viewWS) {
     SendMsg(2021, viewWS, 0);
 }
 
 // Find the position from a point within the window.
-int wxStyledTextCtrl::PositionFromPoint(wxPoint pt) {
+int wxScintilla::PositionFromPoint(wxPoint pt) {
         return SendMsg(2022, pt.x, pt.y);
 }
 
 // Find the position from a point within the window but return
 // INVALID_POSITION if not close to text.
-int wxStyledTextCtrl::PositionFromPointClose(int x, int y) {
+int wxScintilla::PositionFromPointClose(int x, int y) {
     return SendMsg(2023, x, y);
 }
 
 // Set caret to start of a line and ensure it is visible.
-void wxStyledTextCtrl::GotoLine(int line) {
+void wxScintilla::GotoLine(int line) {
     SendMsg(2024, line, 0);
 }
 
 // Set caret to a position and ensure it is visible.
-void wxStyledTextCtrl::GotoPos(int pos) {
+void wxScintilla::GotoPos(int pos) {
     SendMsg(2025, pos, 0);
 }
 
 // Set the selection anchor to a position. The anchor is the opposite
 // end of the selection from the caret.
-void wxStyledTextCtrl::SetAnchor(int posAnchor) {
+void wxScintilla::SetAnchor(int posAnchor) {
     SendMsg(2026, posAnchor, 0);
 }
 
 // Retrieve the text of the line containing the caret.
 // Returns the index of the caret on the line.
-wxString wxStyledTextCtrl::GetCurLine(int* linePos) {
+wxString wxScintilla::GetCurLine(int* linePos) {
         int len = LineLength(GetCurrentLine());
         if (!len) {
             if (linePos)  *linePos = 0;
@@ -361,60 +361,60 @@ wxString wxStyledTextCtrl::GetCurLine(int* linePos) {
 }
 
 // Retrieve the position of the last correctly styled character.
-int wxStyledTextCtrl::GetEndStyled() {
+int wxScintilla::GetEndStyled() {
     return SendMsg(2028, 0, 0);
 }
 
 // Convert all line endings in the document to one mode.
-void wxStyledTextCtrl::ConvertEOLs(int eolMode) {
+void wxScintilla::ConvertEOLs(int eolMode) {
     SendMsg(2029, eolMode, 0);
 }
 
 // Retrieve the current end of line mode - one of CRLF, CR, or LF.
-int wxStyledTextCtrl::GetEOLMode() {
+int wxScintilla::GetEOLMode() {
     return SendMsg(2030, 0, 0);
 }
 
 // Set the current end of line mode.
-void wxStyledTextCtrl::SetEOLMode(int eolMode) {
+void wxScintilla::SetEOLMode(int eolMode) {
     SendMsg(2031, eolMode, 0);
 }
 
 // Set the current styling position to pos and the styling mask to mask.
 // The styling mask can be used to protect some bits in each styling byte from modification.
-void wxStyledTextCtrl::StartStyling(int pos, int mask) {
+void wxScintilla::StartStyling(int pos, int mask) {
     SendMsg(2032, pos, mask);
 }
 
 // Change style from current styling position for length characters to a style
 // and move the current styling position to after this newly styled segment.
-void wxStyledTextCtrl::SetStyling(int length, int style) {
+void wxScintilla::SetStyling(int length, int style) {
     SendMsg(2033, length, style);
 }
 
 // Is drawing done first into a buffer or direct to the screen?
-bool wxStyledTextCtrl::GetBufferedDraw() {
+bool wxScintilla::GetBufferedDraw() {
     return SendMsg(2034, 0, 0) != 0;
 }
 
 // If drawing is buffered then each line of text is drawn into a bitmap buffer
 // before drawing it to the screen to avoid flicker.
-void wxStyledTextCtrl::SetBufferedDraw(bool buffered) {
+void wxScintilla::SetBufferedDraw(bool buffered) {
     SendMsg(2035, buffered, 0);
 }
 
 // Change the visible size of a tab to be a multiple of the width of a space character.
-void wxStyledTextCtrl::SetTabWidth(int tabWidth) {
+void wxScintilla::SetTabWidth(int tabWidth) {
     SendMsg(2036, tabWidth, 0);
 }
 
 // Retrieve the visible size of a tab.
-int wxStyledTextCtrl::GetTabWidth() {
+int wxScintilla::GetTabWidth() {
     return SendMsg(2121, 0, 0);
 }
 
 // Set the code page used to interpret the bytes of the document as characters.
-void wxStyledTextCtrl::SetCodePage(int codePage) {
+void wxScintilla::SetCodePage(int codePage) {
 #if wxUSE_UNICODE
     wxASSERT_MSG(codePage == wxSTC_CP_UTF8,
                  wxT("Only wxSTC_CP_UTF8 may be used when wxUSE_UNICODE is on."));
@@ -427,7 +427,7 @@ void wxStyledTextCtrl::SetCodePage(int codePage) {
 
 // Set the symbol used for a particular marker number,
 // and optionally the fore and background colours.
-void wxStyledTextCtrl::MarkerDefine(int markerNumber, int markerSymbol,
+void wxScintilla::MarkerDefine(int markerNumber, int markerSymbol,
                 const wxColour& foreground,
                 const wxColour& background) {
 
@@ -439,47 +439,47 @@ void wxStyledTextCtrl::MarkerDefine(int markerNumber, int markerSymbol,
 }
 
 // Set the foreground colour used for a particular marker number.
-void wxStyledTextCtrl::MarkerSetForeground(int markerNumber, const wxColour& fore) {
+void wxScintilla::MarkerSetForeground(int markerNumber, const wxColour& fore) {
     SendMsg(2041, markerNumber, wxColourAsLong(fore));
 }
 
 // Set the background colour used for a particular marker number.
-void wxStyledTextCtrl::MarkerSetBackground(int markerNumber, const wxColour& back) {
+void wxScintilla::MarkerSetBackground(int markerNumber, const wxColour& back) {
     SendMsg(2042, markerNumber, wxColourAsLong(back));
 }
 
 // Add a marker to a line, returning an ID which can be used to find or delete the marker.
-int wxStyledTextCtrl::MarkerAdd(int line, int markerNumber) {
+int wxScintilla::MarkerAdd(int line, int markerNumber) {
     return SendMsg(2043, line, markerNumber);
 }
 
 // Delete a marker from a line.
-void wxStyledTextCtrl::MarkerDelete(int line, int markerNumber) {
+void wxScintilla::MarkerDelete(int line, int markerNumber) {
     SendMsg(2044, line, markerNumber);
 }
 
 // Delete all markers with a particular number from all lines.
-void wxStyledTextCtrl::MarkerDeleteAll(int markerNumber) {
+void wxScintilla::MarkerDeleteAll(int markerNumber) {
     SendMsg(2045, markerNumber, 0);
 }
 
 // Get a bit mask of all the markers set on a line.
-int wxStyledTextCtrl::MarkerGet(int line) {
+int wxScintilla::MarkerGet(int line) {
     return SendMsg(2046, line, 0);
 }
 
 // Find the next line after lineStart that includes a marker in mask.
-int wxStyledTextCtrl::MarkerNext(int lineStart, int markerMask) {
+int wxScintilla::MarkerNext(int lineStart, int markerMask) {
     return SendMsg(2047, lineStart, markerMask);
 }
 
 // Find the previous line before lineStart that includes a marker in mask.
-int wxStyledTextCtrl::MarkerPrevious(int lineStart, int markerMask) {
+int wxScintilla::MarkerPrevious(int lineStart, int markerMask) {
     return SendMsg(2048, lineStart, markerMask);
 }
 
 // Define a marker from a bitmap
-void wxStyledTextCtrl::MarkerDefineBitmap(int markerNumber, const wxBitmap& bmp) {
+void wxScintilla::MarkerDefineBitmap(int markerNumber, const wxBitmap& bmp) {
         // convert bmp to a xpm in a string
         wxMemoryOutputStream strm;
         wxImage img = bmp.ConvertToImage();
@@ -494,376 +494,376 @@ void wxStyledTextCtrl::MarkerDefineBitmap(int markerNumber, const wxBitmap& bmp)
 }
 
 // Set a margin to be either numeric or symbolic.
-void wxStyledTextCtrl::SetMarginType(int margin, int marginType) {
+void wxScintilla::SetMarginType(int margin, int marginType) {
     SendMsg(2240, margin, marginType);
 }
 
 // Retrieve the type of a margin.
-int wxStyledTextCtrl::GetMarginType(int margin) {
+int wxScintilla::GetMarginType(int margin) {
     return SendMsg(2241, margin, 0);
 }
 
 // Set the width of a margin to a width expressed in pixels.
-void wxStyledTextCtrl::SetMarginWidth(int margin, int pixelWidth) {
+void wxScintilla::SetMarginWidth(int margin, int pixelWidth) {
     SendMsg(2242, margin, pixelWidth);
 }
 
 // Retrieve the width of a margin in pixels.
-int wxStyledTextCtrl::GetMarginWidth(int margin) {
+int wxScintilla::GetMarginWidth(int margin) {
     return SendMsg(2243, margin, 0);
 }
 
 // Set a mask that determines which markers are displayed in a margin.
-void wxStyledTextCtrl::SetMarginMask(int margin, int mask) {
+void wxScintilla::SetMarginMask(int margin, int mask) {
     SendMsg(2244, margin, mask);
 }
 
 // Retrieve the marker mask of a margin.
-int wxStyledTextCtrl::GetMarginMask(int margin) {
+int wxScintilla::GetMarginMask(int margin) {
     return SendMsg(2245, margin, 0);
 }
 
 // Make a margin sensitive or insensitive to mouse clicks.
-void wxStyledTextCtrl::SetMarginSensitive(int margin, bool sensitive) {
+void wxScintilla::SetMarginSensitive(int margin, bool sensitive) {
     SendMsg(2246, margin, sensitive);
 }
 
 // Retrieve the mouse click sensitivity of a margin.
-bool wxStyledTextCtrl::GetMarginSensitive(int margin) {
+bool wxScintilla::GetMarginSensitive(int margin) {
     return SendMsg(2247, margin, 0) != 0;
 }
 
 // Clear all the styles and make equivalent to the global default style.
-void wxStyledTextCtrl::StyleClearAll() {
+void wxScintilla::StyleClearAll() {
     SendMsg(2050, 0, 0);
 }
 
 // Set the foreground colour of a style.
-void wxStyledTextCtrl::StyleSetForeground(int style, const wxColour& fore) {
+void wxScintilla::StyleSetForeground(int style, const wxColour& fore) {
     SendMsg(2051, style, wxColourAsLong(fore));
 }
 
 // Set the background colour of a style.
-void wxStyledTextCtrl::StyleSetBackground(int style, const wxColour& back) {
+void wxScintilla::StyleSetBackground(int style, const wxColour& back) {
     SendMsg(2052, style, wxColourAsLong(back));
 }
 
 // Set a style to be bold or not.
-void wxStyledTextCtrl::StyleSetBold(int style, bool bold) {
+void wxScintilla::StyleSetBold(int style, bool bold) {
     SendMsg(2053, style, bold);
 }
 
 // Set a style to be italic or not.
-void wxStyledTextCtrl::StyleSetItalic(int style, bool italic) {
+void wxScintilla::StyleSetItalic(int style, bool italic) {
     SendMsg(2054, style, italic);
 }
 
 // Set the size of characters of a style.
-void wxStyledTextCtrl::StyleSetSize(int style, int sizePoints) {
+void wxScintilla::StyleSetSize(int style, int sizePoints) {
     SendMsg(2055, style, sizePoints);
 }
 
 // Set the font of a style.
-void wxStyledTextCtrl::StyleSetFaceName(int style, const wxString& fontName) {
+void wxScintilla::StyleSetFaceName(int style, const wxString& fontName) {
     SendMsg(2056, style, (long)(const char*)wx2stc(fontName));
 }
 
 // Set a style to have its end of line filled or not.
-void wxStyledTextCtrl::StyleSetEOLFilled(int style, bool filled) {
+void wxScintilla::StyleSetEOLFilled(int style, bool filled) {
     SendMsg(2057, style, filled);
 }
 
 // Reset the default style to its state at startup
-void wxStyledTextCtrl::StyleResetDefault() {
+void wxScintilla::StyleResetDefault() {
     SendMsg(2058, 0, 0);
 }
 
 // Set a style to be underlined or not.
-void wxStyledTextCtrl::StyleSetUnderline(int style, bool underline) {
+void wxScintilla::StyleSetUnderline(int style, bool underline) {
     SendMsg(2059, style, underline);
 }
 
 // Set a style to be mixed case, or to force upper or lower case.
-void wxStyledTextCtrl::StyleSetCase(int style, int caseForce) {
+void wxScintilla::StyleSetCase(int style, int caseForce) {
     SendMsg(2060, style, caseForce);
 }
 
 // Set the character set of the font in a style.
-void wxStyledTextCtrl::StyleSetCharacterSet(int style, int characterSet) {
+void wxScintilla::StyleSetCharacterSet(int style, int characterSet) {
     SendMsg(2066, style, characterSet);
 }
 
 // Set a style to be a hotspot or not.
-void wxStyledTextCtrl::StyleSetHotSpot(int style, bool hotspot) {
+void wxScintilla::StyleSetHotSpot(int style, bool hotspot) {
     SendMsg(2409, style, hotspot);
 }
 
 // Set the foreground colour of the selection and whether to use this setting.
-void wxStyledTextCtrl::SetSelForeground(bool useSetting, const wxColour& fore) {
+void wxScintilla::SetSelForeground(bool useSetting, const wxColour& fore) {
     SendMsg(2067, useSetting, wxColourAsLong(fore));
 }
 
 // Set the background colour of the selection and whether to use this setting.
-void wxStyledTextCtrl::SetSelBackground(bool useSetting, const wxColour& back) {
+void wxScintilla::SetSelBackground(bool useSetting, const wxColour& back) {
     SendMsg(2068, useSetting, wxColourAsLong(back));
 }
 
 // Set the foreground colour of the caret.
-void wxStyledTextCtrl::SetCaretForeground(const wxColour& fore) {
+void wxScintilla::SetCaretForeground(const wxColour& fore) {
     SendMsg(2069, wxColourAsLong(fore), 0);
 }
 
 // When key+modifier combination km is pressed perform msg.
-void wxStyledTextCtrl::CmdKeyAssign(int key, int modifiers, int cmd) {
+void wxScintilla::CmdKeyAssign(int key, int modifiers, int cmd) {
          SendMsg(2070, MAKELONG(key, modifiers), cmd);
 }
 
 // When key+modifier combination km is pressed do nothing.
-void wxStyledTextCtrl::CmdKeyClear(int key, int modifiers) {
+void wxScintilla::CmdKeyClear(int key, int modifiers) {
          SendMsg(2071, MAKELONG(key, modifiers));
 }
 
 // Drop all key mappings.
-void wxStyledTextCtrl::CmdKeyClearAll() {
+void wxScintilla::CmdKeyClearAll() {
     SendMsg(2072, 0, 0);
 }
 
 // Set the styles for a segment of the document.
-void wxStyledTextCtrl::SetStyleBytes(int length, char* styleBytes) {
+void wxScintilla::SetStyleBytes(int length, char* styleBytes) {
         SendMsg(2073, length, (long)styleBytes);
 }
 
 // Set a style to be visible or not.
-void wxStyledTextCtrl::StyleSetVisible(int style, bool visible) {
+void wxScintilla::StyleSetVisible(int style, bool visible) {
     SendMsg(2074, style, visible);
 }
 
 // Get the time in milliseconds that the caret is on and off.
-int wxStyledTextCtrl::GetCaretPeriod() {
+int wxScintilla::GetCaretPeriod() {
     return SendMsg(2075, 0, 0);
 }
 
 // Get the time in milliseconds that the caret is on and off. 0 = steady on.
-void wxStyledTextCtrl::SetCaretPeriod(int periodMilliseconds) {
+void wxScintilla::SetCaretPeriod(int periodMilliseconds) {
     SendMsg(2076, periodMilliseconds, 0);
 }
 
 // Set the set of characters making up words for when moving or selecting by word.
 // First sets deaults like SetCharsDefault.
-void wxStyledTextCtrl::SetWordChars(const wxString& characters) {
+void wxScintilla::SetWordChars(const wxString& characters) {
     SendMsg(2077, 0, (long)(const char*)wx2stc(characters));
 }
 
 // Start a sequence of actions that is undone and redone as a unit.
 // May be nested.
-void wxStyledTextCtrl::BeginUndoAction() {
+void wxScintilla::BeginUndoAction() {
     SendMsg(2078, 0, 0);
 }
 
 // End a sequence of actions that is undone and redone as a unit.
-void wxStyledTextCtrl::EndUndoAction() {
+void wxScintilla::EndUndoAction() {
     SendMsg(2079, 0, 0);
 }
 
 // Set an indicator to plain, squiggle or TT.
-void wxStyledTextCtrl::IndicatorSetStyle(int indic, int style) {
+void wxScintilla::IndicatorSetStyle(int indic, int style) {
     SendMsg(2080, indic, style);
 }
 
 // Retrieve the style of an indicator.
-int wxStyledTextCtrl::IndicatorGetStyle(int indic) {
+int wxScintilla::IndicatorGetStyle(int indic) {
     return SendMsg(2081, indic, 0);
 }
 
 // Set the foreground colour of an indicator.
-void wxStyledTextCtrl::IndicatorSetForeground(int indic, const wxColour& fore) {
+void wxScintilla::IndicatorSetForeground(int indic, const wxColour& fore) {
     SendMsg(2082, indic, wxColourAsLong(fore));
 }
 
 // Retrieve the foreground colour of an indicator.
-wxColour wxStyledTextCtrl::IndicatorGetForeground(int indic) {
+wxColour wxScintilla::IndicatorGetForeground(int indic) {
     long c = SendMsg(2083, indic, 0);
     return wxColourFromLong(c);
 }
 
 // Set the foreground colour of all whitespace and whether to use this setting.
-void wxStyledTextCtrl::SetWhitespaceForeground(bool useSetting, const wxColour& fore) {
+void wxScintilla::SetWhitespaceForeground(bool useSetting, const wxColour& fore) {
     SendMsg(2084, useSetting, wxColourAsLong(fore));
 }
 
 // Set the background colour of all whitespace and whether to use this setting.
-void wxStyledTextCtrl::SetWhitespaceBackground(bool useSetting, const wxColour& back) {
+void wxScintilla::SetWhitespaceBackground(bool useSetting, const wxColour& back) {
     SendMsg(2085, useSetting, wxColourAsLong(back));
 }
 
 // Divide each styling byte into lexical class bits (default: 5) and indicator
 // bits (default: 3). If a lexer requires more than 32 lexical states, then this
 // is used to expand the possible states.
-void wxStyledTextCtrl::SetStyleBits(int bits) {
+void wxScintilla::SetStyleBits(int bits) {
     SendMsg(2090, bits, 0);
 }
 
 // Retrieve number of bits in style bytes used to hold the lexical state.
-int wxStyledTextCtrl::GetStyleBits() {
+int wxScintilla::GetStyleBits() {
     return SendMsg(2091, 0, 0);
 }
 
 // Used to hold extra styling information for each line.
-void wxStyledTextCtrl::SetLineState(int line, int state) {
+void wxScintilla::SetLineState(int line, int state) {
     SendMsg(2092, line, state);
 }
 
 // Retrieve the extra styling information for a line.
-int wxStyledTextCtrl::GetLineState(int line) {
+int wxScintilla::GetLineState(int line) {
     return SendMsg(2093, line, 0);
 }
 
 // Retrieve the last line number that has line state.
-int wxStyledTextCtrl::GetMaxLineState() {
+int wxScintilla::GetMaxLineState() {
     return SendMsg(2094, 0, 0);
 }
 
 // Is the background of the line containing the caret in a different colour?
-bool wxStyledTextCtrl::GetCaretLineVisible() {
+bool wxScintilla::GetCaretLineVisible() {
     return SendMsg(2095, 0, 0) != 0;
 }
 
 // Display the background of the line containing the caret in a different colour.
-void wxStyledTextCtrl::SetCaretLineVisible(bool show) {
+void wxScintilla::SetCaretLineVisible(bool show) {
     SendMsg(2096, show, 0);
 }
 
 // Get the colour of the background of the line containing the caret.
-wxColour wxStyledTextCtrl::GetCaretLineBack() {
+wxColour wxScintilla::GetCaretLineBack() {
     long c = SendMsg(2097, 0, 0);
     return wxColourFromLong(c);
 }
 
 // Set the colour of the background of the line containing the caret.
-void wxStyledTextCtrl::SetCaretLineBack(const wxColour& back) {
+void wxScintilla::SetCaretLineBack(const wxColour& back) {
     SendMsg(2098, wxColourAsLong(back), 0);
 }
 
 // Set a style to be changeable or not (read only).
 // Experimental feature, currently buggy.
-void wxStyledTextCtrl::StyleSetChangeable(int style, bool changeable) {
+void wxScintilla::StyleSetChangeable(int style, bool changeable) {
     SendMsg(2099, style, changeable);
 }
 
 // Display a auto-completion list.
 // The lenEntered parameter indicates how many characters before
 // the caret should be used to provide context.
-void wxStyledTextCtrl::AutoCompShow(int lenEntered, const wxString& itemList) {
+void wxScintilla::AutoCompShow(int lenEntered, const wxString& itemList) {
     SendMsg(2100, lenEntered, (long)(const char*)wx2stc(itemList));
 }
 
 // Remove the auto-completion list from the screen.
-void wxStyledTextCtrl::AutoCompCancel() {
+void wxScintilla::AutoCompCancel() {
     SendMsg(2101, 0, 0);
 }
 
 // Is there an auto-completion list visible?
-bool wxStyledTextCtrl::AutoCompActive() {
+bool wxScintilla::AutoCompActive() {
     return SendMsg(2102, 0, 0) != 0;
 }
 
 // Retrieve the position of the caret when the auto-completion list was displayed.
-int wxStyledTextCtrl::AutoCompPosStart() {
+int wxScintilla::AutoCompPosStart() {
     return SendMsg(2103, 0, 0);
 }
 
 // User has selected an item so remove the list and insert the selection.
-void wxStyledTextCtrl::AutoCompComplete() {
+void wxScintilla::AutoCompComplete() {
     SendMsg(2104, 0, 0);
 }
 
 // Define a set of character that when typed cancel the auto-completion list.
-void wxStyledTextCtrl::AutoCompStops(const wxString& characterSet) {
+void wxScintilla::AutoCompStops(const wxString& characterSet) {
     SendMsg(2105, 0, (long)(const char*)wx2stc(characterSet));
 }
 
 // Change the separator character in the string setting up an auto-completion list.
 // Default is space but can be changed if items contain space.
-void wxStyledTextCtrl::AutoCompSetSeparator(int separatorCharacter) {
+void wxScintilla::AutoCompSetSeparator(int separatorCharacter) {
     SendMsg(2106, separatorCharacter, 0);
 }
 
 // Retrieve the auto-completion list separator character.
-int wxStyledTextCtrl::AutoCompGetSeparator() {
+int wxScintilla::AutoCompGetSeparator() {
     return SendMsg(2107, 0, 0);
 }
 
 // Select the item in the auto-completion list that starts with a string.
-void wxStyledTextCtrl::AutoCompSelect(const wxString& text) {
+void wxScintilla::AutoCompSelect(const wxString& text) {
     SendMsg(2108, 0, (long)(const char*)wx2stc(text));
 }
 
 // Should the auto-completion list be cancelled if the user backspaces to a
 // position before where the box was created.
-void wxStyledTextCtrl::AutoCompSetCancelAtStart(bool cancel) {
+void wxScintilla::AutoCompSetCancelAtStart(bool cancel) {
     SendMsg(2110, cancel, 0);
 }
 
 // Retrieve whether auto-completion cancelled by backspacing before start.
-bool wxStyledTextCtrl::AutoCompGetCancelAtStart() {
+bool wxScintilla::AutoCompGetCancelAtStart() {
     return SendMsg(2111, 0, 0) != 0;
 }
 
 // Define a set of characters that when typed will cause the autocompletion to
 // choose the selected item.
-void wxStyledTextCtrl::AutoCompSetFillUps(const wxString& characterSet) {
+void wxScintilla::AutoCompSetFillUps(const wxString& characterSet) {
     SendMsg(2112, 0, (long)(const char*)wx2stc(characterSet));
 }
 
 // Should a single item auto-completion list automatically choose the item.
-void wxStyledTextCtrl::AutoCompSetChooseSingle(bool chooseSingle) {
+void wxScintilla::AutoCompSetChooseSingle(bool chooseSingle) {
     SendMsg(2113, chooseSingle, 0);
 }
 
 // Retrieve whether a single item auto-completion list automatically choose the item.
-bool wxStyledTextCtrl::AutoCompGetChooseSingle() {
+bool wxScintilla::AutoCompGetChooseSingle() {
     return SendMsg(2114, 0, 0) != 0;
 }
 
 // Set whether case is significant when performing auto-completion searches.
-void wxStyledTextCtrl::AutoCompSetIgnoreCase(bool ignoreCase) {
+void wxScintilla::AutoCompSetIgnoreCase(bool ignoreCase) {
     SendMsg(2115, ignoreCase, 0);
 }
 
 // Retrieve state of ignore case flag.
-bool wxStyledTextCtrl::AutoCompGetIgnoreCase() {
+bool wxScintilla::AutoCompGetIgnoreCase() {
     return SendMsg(2116, 0, 0) != 0;
 }
 
 // Display a list of strings and send notification when user chooses one.
-void wxStyledTextCtrl::UserListShow(int listType, const wxString& itemList) {
+void wxScintilla::UserListShow(int listType, const wxString& itemList) {
     SendMsg(2117, listType, (long)(const char*)wx2stc(itemList));
 }
 
 // Set whether or not autocompletion is hidden automatically when nothing matches.
-void wxStyledTextCtrl::AutoCompSetAutoHide(bool autoHide) {
+void wxScintilla::AutoCompSetAutoHide(bool autoHide) {
     SendMsg(2118, autoHide, 0);
 }
 
 // Retrieve whether or not autocompletion is hidden automatically when nothing matches.
-bool wxStyledTextCtrl::AutoCompGetAutoHide() {
+bool wxScintilla::AutoCompGetAutoHide() {
     return SendMsg(2119, 0, 0) != 0;
 }
 
 // Set whether or not autocompletion deletes any word characters
 // after the inserted text upon completion.
-void wxStyledTextCtrl::AutoCompSetDropRestOfWord(bool dropRestOfWord) {
+void wxScintilla::AutoCompSetDropRestOfWord(bool dropRestOfWord) {
     SendMsg(2270, dropRestOfWord, 0);
 }
 
 // Retrieve whether or not autocompletion deletes any word characters
 // after the inserted text upon completion.
-bool wxStyledTextCtrl::AutoCompGetDropRestOfWord() {
+bool wxScintilla::AutoCompGetDropRestOfWord() {
     return SendMsg(2271, 0, 0) != 0;
 }
 
 // Register an image for use in autocompletion lists.
-void wxStyledTextCtrl::RegisterImage(int type, const wxBitmap& bmp) {
+void wxScintilla::RegisterImage(int type, const wxBitmap& bmp) {
         // convert bmp to a xpm in a string
         wxMemoryOutputStream strm;
         wxImage img = bmp.ConvertToImage();
@@ -878,161 +878,161 @@ void wxStyledTextCtrl::RegisterImage(int type, const wxBitmap& bmp) {
 }
 
 // Clear all the registered images.
-void wxStyledTextCtrl::ClearRegisteredImages() {
+void wxScintilla::ClearRegisteredImages() {
     SendMsg(2408, 0, 0);
 }
 
 // Retrieve the auto-completion list type-separator character.
-int wxStyledTextCtrl::AutoCompGetTypeSeparator() {
+int wxScintilla::AutoCompGetTypeSeparator() {
     return SendMsg(2285, 0, 0);
 }
 
 // Change the type-separator character in the string setting up an auto-completion list.
 // Default is '?' but can be changed if items contain '?'.
-void wxStyledTextCtrl::AutoCompSetTypeSeparator(int separatorCharacter) {
+void wxScintilla::AutoCompSetTypeSeparator(int separatorCharacter) {
     SendMsg(2286, separatorCharacter, 0);
 }
 
 // Set the number of spaces used for one level of indentation.
-void wxStyledTextCtrl::SetIndent(int indentSize) {
+void wxScintilla::SetIndent(int indentSize) {
     SendMsg(2122, indentSize, 0);
 }
 
 // Retrieve indentation size.
-int wxStyledTextCtrl::GetIndent() {
+int wxScintilla::GetIndent() {
     return SendMsg(2123, 0, 0);
 }
 
 // Indentation will only use space characters if useTabs is false, otherwise
 // it will use a combination of tabs and spaces.
-void wxStyledTextCtrl::SetUseTabs(bool useTabs) {
+void wxScintilla::SetUseTabs(bool useTabs) {
     SendMsg(2124, useTabs, 0);
 }
 
 // Retrieve whether tabs will be used in indentation.
-bool wxStyledTextCtrl::GetUseTabs() {
+bool wxScintilla::GetUseTabs() {
     return SendMsg(2125, 0, 0) != 0;
 }
 
 // Change the indentation of a line to a number of columns.
-void wxStyledTextCtrl::SetLineIndentation(int line, int indentSize) {
+void wxScintilla::SetLineIndentation(int line, int indentSize) {
     SendMsg(2126, line, indentSize);
 }
 
 // Retrieve the number of columns that a line is indented.
-int wxStyledTextCtrl::GetLineIndentation(int line) {
+int wxScintilla::GetLineIndentation(int line) {
     return SendMsg(2127, line, 0);
 }
 
 // Retrieve the position before the first non indentation character on a line.
-int wxStyledTextCtrl::GetLineIndentPosition(int line) {
+int wxScintilla::GetLineIndentPosition(int line) {
     return SendMsg(2128, line, 0);
 }
 
 // Retrieve the column number of a position, taking tab width into account.
-int wxStyledTextCtrl::GetColumn(int pos) {
+int wxScintilla::GetColumn(int pos) {
     return SendMsg(2129, pos, 0);
 }
 
 // Show or hide the horizontal scroll bar.
-void wxStyledTextCtrl::SetUseHorizontalScrollBar(bool show) {
+void wxScintilla::SetUseHorizontalScrollBar(bool show) {
     SendMsg(2130, show, 0);
 }
 
 // Is the horizontal scroll bar visible?
-bool wxStyledTextCtrl::GetUseHorizontalScrollBar() {
+bool wxScintilla::GetUseHorizontalScrollBar() {
     return SendMsg(2131, 0, 0) != 0;
 }
 
 // Show or hide indentation guides.
-void wxStyledTextCtrl::SetIndentationGuides(bool show) {
+void wxScintilla::SetIndentationGuides(bool show) {
     SendMsg(2132, show, 0);
 }
 
 // Are the indentation guides visible?
-bool wxStyledTextCtrl::GetIndentationGuides() {
+bool wxScintilla::GetIndentationGuides() {
     return SendMsg(2133, 0, 0) != 0;
 }
 
 // Set the highlighted indentation guide column.
 // 0 = no highlighted guide.
-void wxStyledTextCtrl::SetHighlightGuide(int column) {
+void wxScintilla::SetHighlightGuide(int column) {
     SendMsg(2134, column, 0);
 }
 
 // Get the highlighted indentation guide column.
-int wxStyledTextCtrl::GetHighlightGuide() {
+int wxScintilla::GetHighlightGuide() {
     return SendMsg(2135, 0, 0);
 }
 
 // Get the position after the last visible characters on a line.
-int wxStyledTextCtrl::GetLineEndPosition(int line) {
+int wxScintilla::GetLineEndPosition(int line) {
     return SendMsg(2136, line, 0);
 }
 
 // Get the code page used to interpret the bytes of the document as characters.
-int wxStyledTextCtrl::GetCodePage() {
+int wxScintilla::GetCodePage() {
     return SendMsg(2137, 0, 0);
 }
 
 // Get the foreground colour of the caret.
-wxColour wxStyledTextCtrl::GetCaretForeground() {
+wxColour wxScintilla::GetCaretForeground() {
     long c = SendMsg(2138, 0, 0);
     return wxColourFromLong(c);
 }
 
 // In read-only mode?
-bool wxStyledTextCtrl::GetReadOnly() {
+bool wxScintilla::GetReadOnly() {
     return SendMsg(2140, 0, 0) != 0;
 }
 
 // Sets the position of the caret.
-void wxStyledTextCtrl::SetCurrentPos(int pos) {
+void wxScintilla::SetCurrentPos(int pos) {
     SendMsg(2141, pos, 0);
 }
 
 // Sets the position that starts the selection - this becomes the anchor.
-void wxStyledTextCtrl::SetSelectionStart(int pos) {
+void wxScintilla::SetSelectionStart(int pos) {
     SendMsg(2142, pos, 0);
 }
 
 // Returns the position at the start of the selection.
-int wxStyledTextCtrl::GetSelectionStart() {
+int wxScintilla::GetSelectionStart() {
     return SendMsg(2143, 0, 0);
 }
 
 // Sets the position that ends the selection - this becomes the currentPosition.
-void wxStyledTextCtrl::SetSelectionEnd(int pos) {
+void wxScintilla::SetSelectionEnd(int pos) {
     SendMsg(2144, pos, 0);
 }
 
 // Returns the position at the end of the selection.
-int wxStyledTextCtrl::GetSelectionEnd() {
+int wxScintilla::GetSelectionEnd() {
     return SendMsg(2145, 0, 0);
 }
 
 // Sets the print magnification added to the point size of each style for printing.
-void wxStyledTextCtrl::SetPrintMagnification(int magnification) {
+void wxScintilla::SetPrintMagnification(int magnification) {
     SendMsg(2146, magnification, 0);
 }
 
 // Returns the print magnification.
-int wxStyledTextCtrl::GetPrintMagnification() {
+int wxScintilla::GetPrintMagnification() {
     return SendMsg(2147, 0, 0);
 }
 
 // Modify colours when printing for clearer printed text.
-void wxStyledTextCtrl::SetPrintColourMode(int mode) {
+void wxScintilla::SetPrintColourMode(int mode) {
     SendMsg(2148, mode, 0);
 }
 
 // Returns the print colour mode.
-int wxStyledTextCtrl::GetPrintColourMode() {
+int wxScintilla::GetPrintColourMode() {
     return SendMsg(2149, 0, 0);
 }
 
 // Find some text in the document.
-int wxStyledTextCtrl::FindText(int minPos, int maxPos,
+int wxScintilla::FindText(int minPos, int maxPos,
                const wxString& text,
                int flags) {
             TextToFind  ft;
@@ -1045,7 +1045,7 @@ int wxStyledTextCtrl::FindText(int minPos, int maxPos,
 }
 
 // On Windows, will draw the document into a display context such as a printer.
- int wxStyledTextCtrl::FormatRange(bool   doDraw,
+ int wxScintilla::FormatRange(bool   doDraw,
                 int    startPos,
                 int    endPos,
                 wxDC*  draw,
@@ -1076,12 +1076,12 @@ int wxStyledTextCtrl::FindText(int minPos, int maxPos,
 }
 
 // Retrieve the display line at the top of the display.
-int wxStyledTextCtrl::GetFirstVisibleLine() {
+int wxScintilla::GetFirstVisibleLine() {
     return SendMsg(2152, 0, 0);
 }
 
 // Retrieve the contents of a line.
-wxString wxStyledTextCtrl::GetLine(int line) {
+wxString wxScintilla::GetLine(int line) {
          int len = LineLength(line);
          if (!len) return wxEmptyString;
 
@@ -1094,42 +1094,42 @@ wxString wxStyledTextCtrl::GetLine(int line) {
 }
 
 // Returns the number of lines in the document. There is always at least one.
-int wxStyledTextCtrl::GetLineCount() {
+int wxScintilla::GetLineCount() {
     return SendMsg(2154, 0, 0);
 }
 
 // Sets the size in pixels of the left margin.
-void wxStyledTextCtrl::SetMarginLeft(int pixelWidth) {
+void wxScintilla::SetMarginLeft(int pixelWidth) {
     SendMsg(2155, 0, pixelWidth);
 }
 
 // Returns the size in pixels of the left margin.
-int wxStyledTextCtrl::GetMarginLeft() {
+int wxScintilla::GetMarginLeft() {
     return SendMsg(2156, 0, 0);
 }
 
 // Sets the size in pixels of the right margin.
-void wxStyledTextCtrl::SetMarginRight(int pixelWidth) {
+void wxScintilla::SetMarginRight(int pixelWidth) {
     SendMsg(2157, 0, pixelWidth);
 }
 
 // Returns the size in pixels of the right margin.
-int wxStyledTextCtrl::GetMarginRight() {
+int wxScintilla::GetMarginRight() {
     return SendMsg(2158, 0, 0);
 }
 
 // Is the document different from when it was last saved?
-bool wxStyledTextCtrl::GetModify() {
+bool wxScintilla::GetModify() {
     return SendMsg(2159, 0, 0) != 0;
 }
 
 // Select a range of text.
-void wxStyledTextCtrl::SetSelection(int start, int end) {
+void wxScintilla::SetSelection(int start, int end) {
     SendMsg(2160, start, end);
 }
 
 // Retrieve the selected text.
-wxString wxStyledTextCtrl::GetSelectedText() {
+wxString wxScintilla::GetSelectedText() {
          int   start;
          int   end;
 
@@ -1146,7 +1146,7 @@ wxString wxStyledTextCtrl::GetSelectedText() {
 }
 
 // Retrieve a range of text.
-wxString wxStyledTextCtrl::GetTextRange(int startPos, int endPos) {
+wxString wxScintilla::GetTextRange(int startPos, int endPos) {
          if (endPos < startPos) {
              int temp = startPos;
              startPos = endPos;
@@ -1167,87 +1167,87 @@ wxString wxStyledTextCtrl::GetTextRange(int startPos, int endPos) {
 }
 
 // Draw the selection in normal style or with selection highlighted.
-void wxStyledTextCtrl::HideSelection(bool normal) {
+void wxScintilla::HideSelection(bool normal) {
     SendMsg(2163, normal, 0);
 }
 
 // Retrieve the line containing a position.
-int wxStyledTextCtrl::LineFromPosition(int pos) {
+int wxScintilla::LineFromPosition(int pos) {
     return SendMsg(2166, pos, 0);
 }
 
 // Retrieve the position at the start of a line.
-int wxStyledTextCtrl::PositionFromLine(int line) {
+int wxScintilla::PositionFromLine(int line) {
     return SendMsg(2167, line, 0);
 }
 
 // Scroll horizontally and vertically.
-void wxStyledTextCtrl::LineScroll(int columns, int lines) {
+void wxScintilla::LineScroll(int columns, int lines) {
     SendMsg(2168, columns, lines);
 }
 
 // Ensure the caret is visible.
-void wxStyledTextCtrl::EnsureCaretVisible() {
+void wxScintilla::EnsureCaretVisible() {
     SendMsg(2169, 0, 0);
 }
 
 // Replace the selected text with the argument text.
-void wxStyledTextCtrl::ReplaceSelection(const wxString& text) {
+void wxScintilla::ReplaceSelection(const wxString& text) {
     SendMsg(2170, 0, (long)(const char*)wx2stc(text));
 }
 
 // Set to read only or read write.
-void wxStyledTextCtrl::SetReadOnly(bool readOnly) {
+void wxScintilla::SetReadOnly(bool readOnly) {
     SendMsg(2171, readOnly, 0);
 }
 
 // Will a paste succeed?
-bool wxStyledTextCtrl::CanPaste() {
+bool wxScintilla::CanPaste() {
     return SendMsg(2173, 0, 0) != 0;
 }
 
 // Are there any undoable actions in the undo history?
-bool wxStyledTextCtrl::CanUndo() {
+bool wxScintilla::CanUndo() {
     return SendMsg(2174, 0, 0) != 0;
 }
 
 // Delete the undo history.
-void wxStyledTextCtrl::EmptyUndoBuffer() {
+void wxScintilla::EmptyUndoBuffer() {
     SendMsg(2175, 0, 0);
 }
 
 // Undo one action in the undo history.
-void wxStyledTextCtrl::Undo() {
+void wxScintilla::Undo() {
     SendMsg(2176, 0, 0);
 }
 
 // Cut the selection to the clipboard.
-void wxStyledTextCtrl::Cut() {
+void wxScintilla::Cut() {
     SendMsg(2177, 0, 0);
 }
 
 // Copy the selection to the clipboard.
-void wxStyledTextCtrl::Copy() {
+void wxScintilla::Copy() {
     SendMsg(2178, 0, 0);
 }
 
 // Paste the contents of the clipboard into the document replacing the selection.
-void wxStyledTextCtrl::Paste() {
+void wxScintilla::Paste() {
     SendMsg(2179, 0, 0);
 }
 
 // Clear the selection.
-void wxStyledTextCtrl::Clear() {
+void wxScintilla::Clear() {
     SendMsg(2180, 0, 0);
 }
 
 // Replace the contents of the document with the argument text.
-void wxStyledTextCtrl::SetText(const wxString& text) {
+void wxScintilla::SetText(const wxString& text) {
     SendMsg(2181, 0, (long)(const char*)wx2stc(text));
 }
 
 // Retrieve all the text in the document.
-wxString wxStyledTextCtrl::GetText() {
+wxString wxScintilla::GetText() {
          int len  = GetTextLength();
          wxMemoryBuffer mbuf(len+1);   // leave room for the null...
          char* buf = (char*)mbuf.GetWriteBuf(len+1);
@@ -1258,49 +1258,49 @@ wxString wxStyledTextCtrl::GetText() {
 }
 
 // Retrieve the number of characters in the document.
-int wxStyledTextCtrl::GetTextLength() {
+int wxScintilla::GetTextLength() {
     return SendMsg(2183, 0, 0);
 }
 
 // Set to overtype (true) or insert mode.
-void wxStyledTextCtrl::SetOvertype(bool overtype) {
+void wxScintilla::SetOvertype(bool overtype) {
     SendMsg(2186, overtype, 0);
 }
 
 // Returns true if overtype mode is active otherwise false is returned.
-bool wxStyledTextCtrl::GetOvertype() {
+bool wxScintilla::GetOvertype() {
     return SendMsg(2187, 0, 0) != 0;
 }
 
 // Set the width of the insert mode caret.
-void wxStyledTextCtrl::SetCaretWidth(int pixelWidth) {
+void wxScintilla::SetCaretWidth(int pixelWidth) {
     SendMsg(2188, pixelWidth, 0);
 }
 
 // Returns the width of the insert mode caret.
-int wxStyledTextCtrl::GetCaretWidth() {
+int wxScintilla::GetCaretWidth() {
     return SendMsg(2189, 0, 0);
 }
 
 // Sets the position that starts the target which is used for updating the
 // document without affecting the scroll position.
-void wxStyledTextCtrl::SetTargetStart(int pos) {
+void wxScintilla::SetTargetStart(int pos) {
     SendMsg(2190, pos, 0);
 }
 
 // Get the position that starts the target.
-int wxStyledTextCtrl::GetTargetStart() {
+int wxScintilla::GetTargetStart() {
     return SendMsg(2191, 0, 0);
 }
 
 // Sets the position that ends the target which is used for updating the
 // document without affecting the scroll position.
-void wxStyledTextCtrl::SetTargetEnd(int pos) {
+void wxScintilla::SetTargetEnd(int pos) {
     SendMsg(2192, pos, 0);
 }
 
 // Get the position that ends the target.
-int wxStyledTextCtrl::GetTargetEnd() {
+int wxScintilla::GetTargetEnd() {
     return SendMsg(2193, 0, 0);
 }
 
@@ -1308,7 +1308,7 @@ int wxStyledTextCtrl::GetTargetEnd() {
 // Text is counted so it can contain NULs.
 // Returns the length of the replacement text.
 
-     int wxStyledTextCtrl::ReplaceTarget(const wxString& text) {
+     int wxScintilla::ReplaceTarget(const wxString& text) {
          wxWX2MBbuf buf = (wxWX2MBbuf)wx2stc(text);
          return SendMsg(2194, strlen(buf), (long)(const char*)buf);
 }
@@ -1320,7 +1320,7 @@ int wxStyledTextCtrl::GetTargetEnd() {
 // Returns the length of the replacement text including any change
 // caused by processing the \d patterns.
 
-     int wxStyledTextCtrl::ReplaceTargetRE(const wxString& text) {
+     int wxScintilla::ReplaceTargetRE(const wxString& text) {
          wxWX2MBbuf buf = (wxWX2MBbuf)wx2stc(text);
          return SendMsg(2195, strlen(buf), (long)(const char*)buf);
 }
@@ -1329,536 +1329,536 @@ int wxStyledTextCtrl::GetTargetEnd() {
 // range. Text is counted so it can contain NULs.
 // Returns length of range or -1 for failure in which case target is not moved.
 
-     int wxStyledTextCtrl::SearchInTarget(const wxString& text) {
+     int wxScintilla::SearchInTarget(const wxString& text) {
          wxWX2MBbuf buf = (wxWX2MBbuf)wx2stc(text);
          return SendMsg(2197, strlen(buf), (long)(const char*)buf);
 }
 
 // Set the search flags used by SearchInTarget.
-void wxStyledTextCtrl::SetSearchFlags(int flags) {
+void wxScintilla::SetSearchFlags(int flags) {
     SendMsg(2198, flags, 0);
 }
 
 // Get the search flags used by SearchInTarget.
-int wxStyledTextCtrl::GetSearchFlags() {
+int wxScintilla::GetSearchFlags() {
     return SendMsg(2199, 0, 0);
 }
 
 // Show a call tip containing a definition near position pos.
-void wxStyledTextCtrl::CallTipShow(int pos, const wxString& definition) {
+void wxScintilla::CallTipShow(int pos, const wxString& definition) {
     SendMsg(2200, pos, (long)(const char*)wx2stc(definition));
 }
 
 // Remove the call tip from the screen.
-void wxStyledTextCtrl::CallTipCancel() {
+void wxScintilla::CallTipCancel() {
     SendMsg(2201, 0, 0);
 }
 
 // Is there an active call tip?
-bool wxStyledTextCtrl::CallTipActive() {
+bool wxScintilla::CallTipActive() {
     return SendMsg(2202, 0, 0) != 0;
 }
 
 // Retrieve the position where the caret was before displaying the call tip.
-int wxStyledTextCtrl::CallTipPosAtStart() {
+int wxScintilla::CallTipPosAtStart() {
     return SendMsg(2203, 0, 0);
 }
 
 // Highlight a segment of the definition.
-void wxStyledTextCtrl::CallTipSetHighlight(int start, int end) {
+void wxScintilla::CallTipSetHighlight(int start, int end) {
     SendMsg(2204, start, end);
 }
 
 // Set the background colour for the call tip.
-void wxStyledTextCtrl::CallTipSetBackground(const wxColour& back) {
+void wxScintilla::CallTipSetBackground(const wxColour& back) {
     SendMsg(2205, wxColourAsLong(back), 0);
 }
 
 // Set the foreground colour for the call tip.
-void wxStyledTextCtrl::CallTipSetForeground(const wxColour& fore) {
+void wxScintilla::CallTipSetForeground(const wxColour& fore) {
     SendMsg(2206, wxColourAsLong(fore), 0);
 }
 
 // Set the foreground colour for the highlighted part of the call tip.
-void wxStyledTextCtrl::CallTipSetForegroundHighlight(const wxColour& fore) {
+void wxScintilla::CallTipSetForegroundHighlight(const wxColour& fore) {
     SendMsg(2207, wxColourAsLong(fore), 0);
 }
 
 // Find the display line of a document line taking hidden lines into account.
-int wxStyledTextCtrl::VisibleFromDocLine(int line) {
+int wxScintilla::VisibleFromDocLine(int line) {
     return SendMsg(2220, line, 0);
 }
 
 // Find the document line of a display line taking hidden lines into account.
-int wxStyledTextCtrl::DocLineFromVisible(int lineDisplay) {
+int wxScintilla::DocLineFromVisible(int lineDisplay) {
     return SendMsg(2221, lineDisplay, 0);
 }
 
 // Set the fold level of a line.
 // This encodes an integer level along with flags indicating whether the
 // line is a header and whether it is effectively white space.
-void wxStyledTextCtrl::SetFoldLevel(int line, int level) {
+void wxScintilla::SetFoldLevel(int line, int level) {
     SendMsg(2222, line, level);
 }
 
 // Retrieve the fold level of a line.
-int wxStyledTextCtrl::GetFoldLevel(int line) {
+int wxScintilla::GetFoldLevel(int line) {
     return SendMsg(2223, line, 0);
 }
 
 // Find the last child line of a header line.
-int wxStyledTextCtrl::GetLastChild(int line, int level) {
+int wxScintilla::GetLastChild(int line, int level) {
     return SendMsg(2224, line, level);
 }
 
 // Find the parent line of a child line.
-int wxStyledTextCtrl::GetFoldParent(int line) {
+int wxScintilla::GetFoldParent(int line) {
     return SendMsg(2225, line, 0);
 }
 
 // Make a range of lines visible.
-void wxStyledTextCtrl::ShowLines(int lineStart, int lineEnd) {
+void wxScintilla::ShowLines(int lineStart, int lineEnd) {
     SendMsg(2226, lineStart, lineEnd);
 }
 
 // Make a range of lines invisible.
-void wxStyledTextCtrl::HideLines(int lineStart, int lineEnd) {
+void wxScintilla::HideLines(int lineStart, int lineEnd) {
     SendMsg(2227, lineStart, lineEnd);
 }
 
 // Is a line visible?
-bool wxStyledTextCtrl::GetLineVisible(int line) {
+bool wxScintilla::GetLineVisible(int line) {
     return SendMsg(2228, line, 0) != 0;
 }
 
 // Show the children of a header line.
-void wxStyledTextCtrl::SetFoldExpanded(int line, bool expanded) {
+void wxScintilla::SetFoldExpanded(int line, bool expanded) {
     SendMsg(2229, line, expanded);
 }
 
 // Is a header line expanded?
-bool wxStyledTextCtrl::GetFoldExpanded(int line) {
+bool wxScintilla::GetFoldExpanded(int line) {
     return SendMsg(2230, line, 0) != 0;
 }
 
 // Switch a header line between expanded and contracted.
-void wxStyledTextCtrl::ToggleFold(int line) {
+void wxScintilla::ToggleFold(int line) {
     SendMsg(2231, line, 0);
 }
 
 // Ensure a particular line is visible by expanding any header line hiding it.
-void wxStyledTextCtrl::EnsureVisible(int line) {
+void wxScintilla::EnsureVisible(int line) {
     SendMsg(2232, line, 0);
 }
 
 // Set some style options for folding.
-void wxStyledTextCtrl::SetFoldFlags(int flags) {
+void wxScintilla::SetFoldFlags(int flags) {
     SendMsg(2233, flags, 0);
 }
 
 // Ensure a particular line is visible by expanding any header line hiding it.
 // Use the currently set visibility policy to determine which range to display.
-void wxStyledTextCtrl::EnsureVisibleEnforcePolicy(int line) {
+void wxScintilla::EnsureVisibleEnforcePolicy(int line) {
     SendMsg(2234, line, 0);
 }
 
 // Sets whether a tab pressed when caret is within indentation indents.
-void wxStyledTextCtrl::SetTabIndents(bool tabIndents) {
+void wxScintilla::SetTabIndents(bool tabIndents) {
     SendMsg(2260, tabIndents, 0);
 }
 
 // Does a tab pressed when caret is within indentation indent?
-bool wxStyledTextCtrl::GetTabIndents() {
+bool wxScintilla::GetTabIndents() {
     return SendMsg(2261, 0, 0) != 0;
 }
 
 // Sets whether a backspace pressed when caret is within indentation unindents.
-void wxStyledTextCtrl::SetBackSpaceUnIndents(bool bsUnIndents) {
+void wxScintilla::SetBackSpaceUnIndents(bool bsUnIndents) {
     SendMsg(2262, bsUnIndents, 0);
 }
 
 // Does a backspace pressed when caret is within indentation unindent?
-bool wxStyledTextCtrl::GetBackSpaceUnIndents() {
+bool wxScintilla::GetBackSpaceUnIndents() {
     return SendMsg(2263, 0, 0) != 0;
 }
 
 // Sets the time the mouse must sit still to generate a mouse dwell event.
-void wxStyledTextCtrl::SetMouseDwellTime(int periodMilliseconds) {
+void wxScintilla::SetMouseDwellTime(int periodMilliseconds) {
     SendMsg(2264, periodMilliseconds, 0);
 }
 
 // Retrieve the time the mouse must sit still to generate a mouse dwell event.
-int wxStyledTextCtrl::GetMouseDwellTime() {
+int wxScintilla::GetMouseDwellTime() {
     return SendMsg(2265, 0, 0);
 }
 
 // Get position of start of word.
-int wxStyledTextCtrl::WordStartPosition(int pos, bool onlyWordCharacters) {
+int wxScintilla::WordStartPosition(int pos, bool onlyWordCharacters) {
     return SendMsg(2266, pos, onlyWordCharacters);
 }
 
 // Get position of end of word.
-int wxStyledTextCtrl::WordEndPosition(int pos, bool onlyWordCharacters) {
+int wxScintilla::WordEndPosition(int pos, bool onlyWordCharacters) {
     return SendMsg(2267, pos, onlyWordCharacters);
 }
 
 // Sets whether text is word wrapped.
-void wxStyledTextCtrl::SetWrapMode(int mode) {
+void wxScintilla::SetWrapMode(int mode) {
     SendMsg(2268, mode, 0);
 }
 
 // Retrieve whether text is word wrapped.
-int wxStyledTextCtrl::GetWrapMode() {
+int wxScintilla::GetWrapMode() {
     return SendMsg(2269, 0, 0);
 }
 
 // Sets the degree of caching of layout information.
-void wxStyledTextCtrl::SetLayoutCache(int mode) {
+void wxScintilla::SetLayoutCache(int mode) {
     SendMsg(2272, mode, 0);
 }
 
 // Retrieve the degree of caching of layout information.
-int wxStyledTextCtrl::GetLayoutCache() {
+int wxScintilla::GetLayoutCache() {
     return SendMsg(2273, 0, 0);
 }
 
 // Sets the document width assumed for scrolling.
-void wxStyledTextCtrl::SetScrollWidth(int pixelWidth) {
+void wxScintilla::SetScrollWidth(int pixelWidth) {
     SendMsg(2274, pixelWidth, 0);
 }
 
 // Retrieve the document width assumed for scrolling.
-int wxStyledTextCtrl::GetScrollWidth() {
+int wxScintilla::GetScrollWidth() {
     return SendMsg(2275, 0, 0);
 }
 
 // Measure the pixel width of some text in a particular style.
 // NUL terminated text argument.
 // Does not handle tab or control characters.
-int wxStyledTextCtrl::TextWidth(int style, const wxString& text) {
+int wxScintilla::TextWidth(int style, const wxString& text) {
     return SendMsg(2276, style, (long)(const char*)wx2stc(text));
 }
 
 // Sets the scroll range so that maximum scroll position has
 // the last line at the bottom of the view (default).
 // Setting this to false allows scrolling one page below the last line.
-void wxStyledTextCtrl::SetEndAtLastLine(bool endAtLastLine) {
+void wxScintilla::SetEndAtLastLine(bool endAtLastLine) {
     SendMsg(2277, endAtLastLine, 0);
 }
 
 // Retrieve whether the maximum scroll position has the last
 // line at the bottom of the view.
-int wxStyledTextCtrl::GetEndAtLastLine() {
+int wxScintilla::GetEndAtLastLine() {
     return SendMsg(2278, 0, 0);
 }
 
 // Retrieve the height of a particular line of text in pixels.
-int wxStyledTextCtrl::TextHeight(int line) {
+int wxScintilla::TextHeight(int line) {
     return SendMsg(2279, line, 0);
 }
 
 // Show or hide the vertical scroll bar.
-void wxStyledTextCtrl::SetUseVerticalScrollBar(bool show) {
+void wxScintilla::SetUseVerticalScrollBar(bool show) {
     SendMsg(2280, show, 0);
 }
 
 // Is the vertical scroll bar visible?
-bool wxStyledTextCtrl::GetUseVerticalScrollBar() {
+bool wxScintilla::GetUseVerticalScrollBar() {
     return SendMsg(2281, 0, 0) != 0;
 }
 
 // Append a string to the end of the document without changing the selection.
-void wxStyledTextCtrl::AppendText(int length, const wxString& text) {
+void wxScintilla::AppendText(int length, const wxString& text) {
     SendMsg(2282, length, (long)(const char*)wx2stc(text));
 }
 
 // Is drawing done in two phases with backgrounds drawn before foregrounds?
-bool wxStyledTextCtrl::GetTwoPhaseDraw() {
+bool wxScintilla::GetTwoPhaseDraw() {
     return SendMsg(2283, 0, 0) != 0;
 }
 
 // In twoPhaseDraw mode, drawing is performed in two phases, first the background
 // and then the foreground. This avoids chopping off characters that overlap the next run.
-void wxStyledTextCtrl::SetTwoPhaseDraw(bool twoPhase) {
+void wxScintilla::SetTwoPhaseDraw(bool twoPhase) {
     SendMsg(2284, twoPhase, 0);
 }
 
 // Make the target range start and end be the same as the selection range start and end.
-void wxStyledTextCtrl::TargetFromSelection() {
+void wxScintilla::TargetFromSelection() {
     SendMsg(2287, 0, 0);
 }
 
 // Join the lines in the target.
-void wxStyledTextCtrl::LinesJoin() {
+void wxScintilla::LinesJoin() {
     SendMsg(2288, 0, 0);
 }
 
 // Split the lines in the target into lines that are less wide than pixelWidth
 // where possible.
-void wxStyledTextCtrl::LinesSplit(int pixelWidth) {
+void wxScintilla::LinesSplit(int pixelWidth) {
     SendMsg(2289, pixelWidth, 0);
 }
 
 // Set the colours used as a chequerboard pattern in the fold margin
-void wxStyledTextCtrl::SetFoldMarginColour(bool useSetting, const wxColour& back) {
+void wxScintilla::SetFoldMarginColour(bool useSetting, const wxColour& back) {
     SendMsg(2290, useSetting, wxColourAsLong(back));
 }
-void wxStyledTextCtrl::SetFoldMarginHiColour(bool useSetting, const wxColour& fore) {
+void wxScintilla::SetFoldMarginHiColour(bool useSetting, const wxColour& fore) {
     SendMsg(2291, useSetting, wxColourAsLong(fore));
 }
 
 // Move caret down one line.
-void wxStyledTextCtrl::LineDown() {
+void wxScintilla::LineDown() {
     SendMsg(2300, 0, 0);
 }
 
 // Move caret down one line extending selection to new caret position.
-void wxStyledTextCtrl::LineDownExtend() {
+void wxScintilla::LineDownExtend() {
     SendMsg(2301, 0, 0);
 }
 
 // Move caret up one line.
-void wxStyledTextCtrl::LineUp() {
+void wxScintilla::LineUp() {
     SendMsg(2302, 0, 0);
 }
 
 // Move caret up one line extending selection to new caret position.
-void wxStyledTextCtrl::LineUpExtend() {
+void wxScintilla::LineUpExtend() {
     SendMsg(2303, 0, 0);
 }
 
 // Move caret left one character.
-void wxStyledTextCtrl::CharLeft() {
+void wxScintilla::CharLeft() {
     SendMsg(2304, 0, 0);
 }
 
 // Move caret left one character extending selection to new caret position.
-void wxStyledTextCtrl::CharLeftExtend() {
+void wxScintilla::CharLeftExtend() {
     SendMsg(2305, 0, 0);
 }
 
 // Move caret right one character.
-void wxStyledTextCtrl::CharRight() {
+void wxScintilla::CharRight() {
     SendMsg(2306, 0, 0);
 }
 
 // Move caret right one character extending selection to new caret position.
-void wxStyledTextCtrl::CharRightExtend() {
+void wxScintilla::CharRightExtend() {
     SendMsg(2307, 0, 0);
 }
 
 // Move caret left one word.
-void wxStyledTextCtrl::WordLeft() {
+void wxScintilla::WordLeft() {
     SendMsg(2308, 0, 0);
 }
 
 // Move caret left one word extending selection to new caret position.
-void wxStyledTextCtrl::WordLeftExtend() {
+void wxScintilla::WordLeftExtend() {
     SendMsg(2309, 0, 0);
 }
 
 // Move caret right one word.
-void wxStyledTextCtrl::WordRight() {
+void wxScintilla::WordRight() {
     SendMsg(2310, 0, 0);
 }
 
 // Move caret right one word extending selection to new caret position.
-void wxStyledTextCtrl::WordRightExtend() {
+void wxScintilla::WordRightExtend() {
     SendMsg(2311, 0, 0);
 }
 
 // Move caret to first position on line.
-void wxStyledTextCtrl::Home() {
+void wxScintilla::Home() {
     SendMsg(2312, 0, 0);
 }
 
 // Move caret to first position on line extending selection to new caret position.
-void wxStyledTextCtrl::HomeExtend() {
+void wxScintilla::HomeExtend() {
     SendMsg(2313, 0, 0);
 }
 
 // Move caret to last position on line.
-void wxStyledTextCtrl::LineEnd() {
+void wxScintilla::LineEnd() {
     SendMsg(2314, 0, 0);
 }
 
 // Move caret to last position on line extending selection to new caret position.
-void wxStyledTextCtrl::LineEndExtend() {
+void wxScintilla::LineEndExtend() {
     SendMsg(2315, 0, 0);
 }
 
 // Move caret to first position in document.
-void wxStyledTextCtrl::DocumentStart() {
+void wxScintilla::DocumentStart() {
     SendMsg(2316, 0, 0);
 }
 
 // Move caret to first position in document extending selection to new caret position.
-void wxStyledTextCtrl::DocumentStartExtend() {
+void wxScintilla::DocumentStartExtend() {
     SendMsg(2317, 0, 0);
 }
 
 // Move caret to last position in document.
-void wxStyledTextCtrl::DocumentEnd() {
+void wxScintilla::DocumentEnd() {
     SendMsg(2318, 0, 0);
 }
 
 // Move caret to last position in document extending selection to new caret position.
-void wxStyledTextCtrl::DocumentEndExtend() {
+void wxScintilla::DocumentEndExtend() {
     SendMsg(2319, 0, 0);
 }
 
 // Move caret one page up.
-void wxStyledTextCtrl::PageUp() {
+void wxScintilla::PageUp() {
     SendMsg(2320, 0, 0);
 }
 
 // Move caret one page up extending selection to new caret position.
-void wxStyledTextCtrl::PageUpExtend() {
+void wxScintilla::PageUpExtend() {
     SendMsg(2321, 0, 0);
 }
 
 // Move caret one page down.
-void wxStyledTextCtrl::PageDown() {
+void wxScintilla::PageDown() {
     SendMsg(2322, 0, 0);
 }
 
 // Move caret one page down extending selection to new caret position.
-void wxStyledTextCtrl::PageDownExtend() {
+void wxScintilla::PageDownExtend() {
     SendMsg(2323, 0, 0);
 }
 
 // Switch from insert to overtype mode or the reverse.
-void wxStyledTextCtrl::EditToggleOvertype() {
+void wxScintilla::EditToggleOvertype() {
     SendMsg(2324, 0, 0);
 }
 
 // Cancel any modes such as call tip or auto-completion list display.
-void wxStyledTextCtrl::Cancel() {
+void wxScintilla::Cancel() {
     SendMsg(2325, 0, 0);
 }
 
 // Delete the selection or if no selection, the character before the caret.
-void wxStyledTextCtrl::DeleteBack() {
+void wxScintilla::DeleteBack() {
     SendMsg(2326, 0, 0);
 }
 
 // If selection is empty or all on one line replace the selection with a tab character.
 // If more than one line selected, indent the lines.
-void wxStyledTextCtrl::Tab() {
+void wxScintilla::Tab() {
     SendMsg(2327, 0, 0);
 }
 
 // Dedent the selected lines.
-void wxStyledTextCtrl::BackTab() {
+void wxScintilla::BackTab() {
     SendMsg(2328, 0, 0);
 }
 
 // Insert a new line, may use a CRLF, CR or LF depending on EOL mode.
-void wxStyledTextCtrl::NewLine() {
+void wxScintilla::NewLine() {
     SendMsg(2329, 0, 0);
 }
 
 // Insert a Form Feed character.
-void wxStyledTextCtrl::FormFeed() {
+void wxScintilla::FormFeed() {
     SendMsg(2330, 0, 0);
 }
 
 // Move caret to before first visible character on line.
 // If already there move to first character on line.
-void wxStyledTextCtrl::VCHome() {
+void wxScintilla::VCHome() {
     SendMsg(2331, 0, 0);
 }
 
 // Like VCHome but extending selection to new caret position.
-void wxStyledTextCtrl::VCHomeExtend() {
+void wxScintilla::VCHomeExtend() {
     SendMsg(2332, 0, 0);
 }
 
 // Magnify the displayed text by increasing the sizes by 1 point.
-void wxStyledTextCtrl::ZoomIn() {
+void wxScintilla::ZoomIn() {
     SendMsg(2333, 0, 0);
 }
 
 // Make the displayed text smaller by decreasing the sizes by 1 point.
-void wxStyledTextCtrl::ZoomOut() {
+void wxScintilla::ZoomOut() {
     SendMsg(2334, 0, 0);
 }
 
 // Delete the word to the left of the caret.
-void wxStyledTextCtrl::DelWordLeft() {
+void wxScintilla::DelWordLeft() {
     SendMsg(2335, 0, 0);
 }
 
 // Delete the word to the right of the caret.
-void wxStyledTextCtrl::DelWordRight() {
+void wxScintilla::DelWordRight() {
     SendMsg(2336, 0, 0);
 }
 
 // Cut the line containing the caret.
-void wxStyledTextCtrl::LineCut() {
+void wxScintilla::LineCut() {
     SendMsg(2337, 0, 0);
 }
 
 // Delete the line containing the caret.
-void wxStyledTextCtrl::LineDelete() {
+void wxScintilla::LineDelete() {
     SendMsg(2338, 0, 0);
 }
 
 // Switch the current line with the previous.
-void wxStyledTextCtrl::LineTranspose() {
+void wxScintilla::LineTranspose() {
     SendMsg(2339, 0, 0);
 }
 
 // Duplicate the current line.
-void wxStyledTextCtrl::LineDuplicate() {
+void wxScintilla::LineDuplicate() {
     SendMsg(2404, 0, 0);
 }
 
 // Transform the selection to lower case.
-void wxStyledTextCtrl::LowerCase() {
+void wxScintilla::LowerCase() {
     SendMsg(2340, 0, 0);
 }
 
 // Transform the selection to upper case.
-void wxStyledTextCtrl::UpperCase() {
+void wxScintilla::UpperCase() {
     SendMsg(2341, 0, 0);
 }
 
 // Scroll the document down, keeping the caret visible.
-void wxStyledTextCtrl::LineScrollDown() {
+void wxScintilla::LineScrollDown() {
     SendMsg(2342, 0, 0);
 }
 
 // Scroll the document up, keeping the caret visible.
-void wxStyledTextCtrl::LineScrollUp() {
+void wxScintilla::LineScrollUp() {
     SendMsg(2343, 0, 0);
 }
 
 // Delete the selection or if no selection, the character before the caret.
 // Will not delete the character before at the start of a line.
-void wxStyledTextCtrl::DeleteBackNotLine() {
+void wxScintilla::DeleteBackNotLine() {
     SendMsg(2344, 0, 0);
 }
 
 // Move caret to first position on display line.
-void wxStyledTextCtrl::HomeDisplay() {
+void wxScintilla::HomeDisplay() {
     SendMsg(2345, 0, 0);
 }
 
 // Move caret to first position on display line extending selection to
 // new caret position.
-void wxStyledTextCtrl::HomeDisplayExtend() {
+void wxScintilla::HomeDisplayExtend() {
     SendMsg(2346, 0, 0);
 }
 
 // Move caret to last position on display line.
-void wxStyledTextCtrl::LineEndDisplay() {
+void wxScintilla::LineEndDisplay() {
     SendMsg(2347, 0, 0);
 }
 
 // Move caret to last position on display line extending selection to new
 // caret position.
-void wxStyledTextCtrl::LineEndDisplayExtend() {
+void wxScintilla::LineEndDisplayExtend() {
     SendMsg(2348, 0, 0);
 }
 
@@ -1867,519 +1867,519 @@ void wxStyledTextCtrl::LineEndDisplayExtend() {
 // They go first to the start / end of the display line, like (Home|LineEnd)Display
 // The difference is that, the cursor is already at the point, it goes on to the start
 // or end of the document line, as appropriate for (Home|LineEnd|VCHome)(Extend)?.
-void wxStyledTextCtrl::HomeWrap() {
+void wxScintilla::HomeWrap() {
     SendMsg(2349, 0, 0);
 }
-void wxStyledTextCtrl::HomeWrapExtend() {
+void wxScintilla::HomeWrapExtend() {
     SendMsg(2450, 0, 0);
 }
-void wxStyledTextCtrl::LineEndWrap() {
+void wxScintilla::LineEndWrap() {
     SendMsg(2451, 0, 0);
 }
-void wxStyledTextCtrl::LineEndWrapExtend() {
+void wxScintilla::LineEndWrapExtend() {
     SendMsg(2452, 0, 0);
 }
-void wxStyledTextCtrl::VCHomeWrap() {
+void wxScintilla::VCHomeWrap() {
     SendMsg(2453, 0, 0);
 }
-void wxStyledTextCtrl::VCHomeWrapExtend() {
+void wxScintilla::VCHomeWrapExtend() {
     SendMsg(2454, 0, 0);
 }
 
 // Copy the line containing the caret.
-void wxStyledTextCtrl::LineCopy() {
+void wxScintilla::LineCopy() {
     SendMsg(2455, 0, 0);
 }
 
 // Move the caret inside current view if it's not there already.
-void wxStyledTextCtrl::MoveCaretInsideView() {
+void wxScintilla::MoveCaretInsideView() {
     SendMsg(2401, 0, 0);
 }
 
 // How many characters are on a line, not including end of line characters?
-int wxStyledTextCtrl::LineLength(int line) {
+int wxScintilla::LineLength(int line) {
     return SendMsg(2350, line, 0);
 }
 
 // Highlight the characters at two positions.
-void wxStyledTextCtrl::BraceHighlight(int pos1, int pos2) {
+void wxScintilla::BraceHighlight(int pos1, int pos2) {
     SendMsg(2351, pos1, pos2);
 }
 
 // Highlight the character at a position indicating there is no matching brace.
-void wxStyledTextCtrl::BraceBadLight(int pos) {
+void wxScintilla::BraceBadLight(int pos) {
     SendMsg(2352, pos, 0);
 }
 
 // Find the position of a matching brace or INVALID_POSITION if no match.
-int wxStyledTextCtrl::BraceMatch(int pos) {
+int wxScintilla::BraceMatch(int pos) {
     return SendMsg(2353, pos, 0);
 }
 
 // Are the end of line characters visible?
-bool wxStyledTextCtrl::GetViewEOL() {
+bool wxScintilla::GetViewEOL() {
     return SendMsg(2355, 0, 0) != 0;
 }
 
 // Make the end of line characters visible or invisible.
-void wxStyledTextCtrl::SetViewEOL(bool visible) {
+void wxScintilla::SetViewEOL(bool visible) {
     SendMsg(2356, visible, 0);
 }
 
 // Retrieve a pointer to the document object.
-void* wxStyledTextCtrl::GetDocPointer() {
+void* wxScintilla::GetDocPointer() {
          return (void*)SendMsg(2357);
 }
 
 // Change the document object used.
-void wxStyledTextCtrl::SetDocPointer(void* docPointer) {
+void wxScintilla::SetDocPointer(void* docPointer) {
          SendMsg(2358, 0, (long)docPointer);
 }
 
 // Set which document modification events are sent to the container.
-void wxStyledTextCtrl::SetModEventMask(int mask) {
+void wxScintilla::SetModEventMask(int mask) {
     SendMsg(2359, mask, 0);
 }
 
 // Retrieve the column number which text should be kept within.
-int wxStyledTextCtrl::GetEdgeColumn() {
+int wxScintilla::GetEdgeColumn() {
     return SendMsg(2360, 0, 0);
 }
 
 // Set the column number of the edge.
 // If text goes past the edge then it is highlighted.
-void wxStyledTextCtrl::SetEdgeColumn(int column) {
+void wxScintilla::SetEdgeColumn(int column) {
     SendMsg(2361, column, 0);
 }
 
 // Retrieve the edge highlight mode.
-int wxStyledTextCtrl::GetEdgeMode() {
+int wxScintilla::GetEdgeMode() {
     return SendMsg(2362, 0, 0);
 }
 
 // The edge may be displayed by a line (EDGE_LINE) or by highlighting text that
 // goes beyond it (EDGE_BACKGROUND) or not displayed at all (EDGE_NONE).
-void wxStyledTextCtrl::SetEdgeMode(int mode) {
+void wxScintilla::SetEdgeMode(int mode) {
     SendMsg(2363, mode, 0);
 }
 
 // Retrieve the colour used in edge indication.
-wxColour wxStyledTextCtrl::GetEdgeColour() {
+wxColour wxScintilla::GetEdgeColour() {
     long c = SendMsg(2364, 0, 0);
     return wxColourFromLong(c);
 }
 
 // Change the colour used in edge indication.
-void wxStyledTextCtrl::SetEdgeColour(const wxColour& edgeColour) {
+void wxScintilla::SetEdgeColour(const wxColour& edgeColour) {
     SendMsg(2365, wxColourAsLong(edgeColour), 0);
 }
 
 // Sets the current caret position to be the search anchor.
-void wxStyledTextCtrl::SearchAnchor() {
+void wxScintilla::SearchAnchor() {
     SendMsg(2366, 0, 0);
 }
 
 // Find some text starting at the search anchor.
 // Does not ensure the selection is visible.
-int wxStyledTextCtrl::SearchNext(int flags, const wxString& text) {
+int wxScintilla::SearchNext(int flags, const wxString& text) {
     return SendMsg(2367, flags, (long)(const char*)wx2stc(text));
 }
 
 // Find some text starting at the search anchor and moving backwards.
 // Does not ensure the selection is visible.
-int wxStyledTextCtrl::SearchPrev(int flags, const wxString& text) {
+int wxScintilla::SearchPrev(int flags, const wxString& text) {
     return SendMsg(2368, flags, (long)(const char*)wx2stc(text));
 }
 
 // Retrieves the number of lines completely visible.
-int wxStyledTextCtrl::LinesOnScreen() {
+int wxScintilla::LinesOnScreen() {
     return SendMsg(2370, 0, 0);
 }
 
 // Set whether a pop up menu is displayed automatically when the user presses
 // the wrong mouse button.
-void wxStyledTextCtrl::UsePopUp(bool allowPopUp) {
+void wxScintilla::UsePopUp(bool allowPopUp) {
     SendMsg(2371, allowPopUp, 0);
 }
 
 // Is the selection rectangular? The alternative is the more common stream selection.
-bool wxStyledTextCtrl::SelectionIsRectangle() {
+bool wxScintilla::SelectionIsRectangle() {
     return SendMsg(2372, 0, 0) != 0;
 }
 
 // Set the zoom level. This number of points is added to the size of all fonts.
 // It may be positive to magnify or negative to reduce.
-void wxStyledTextCtrl::SetZoom(int zoom) {
+void wxScintilla::SetZoom(int zoom) {
     SendMsg(2373, zoom, 0);
 }
 
 // Retrieve the zoom level.
-int wxStyledTextCtrl::GetZoom() {
+int wxScintilla::GetZoom() {
     return SendMsg(2374, 0, 0);
 }
 
 // Create a new document object.
 // Starts with reference count of 1 and not selected into editor.
-void* wxStyledTextCtrl::CreateDocument() {
+void* wxScintilla::CreateDocument() {
          return (void*)SendMsg(2375);
 }
 
 // Extend life of document.
-void wxStyledTextCtrl::AddRefDocument(void* docPointer) {
+void wxScintilla::AddRefDocument(void* docPointer) {
          SendMsg(2376, 0, (long)docPointer);
 }
 
 // Release a reference to the document, deleting document if it fades to black.
-void wxStyledTextCtrl::ReleaseDocument(void* docPointer) {
+void wxScintilla::ReleaseDocument(void* docPointer) {
          SendMsg(2377, 0, (long)docPointer);
 }
 
 // Get which document modification events are sent to the container.
-int wxStyledTextCtrl::GetModEventMask() {
+int wxScintilla::GetModEventMask() {
     return SendMsg(2378, 0, 0);
 }
 
 // Change internal focus flag.
-void wxStyledTextCtrl::SetSTCFocus(bool focus) {
+void wxScintilla::SetSTCFocus(bool focus) {
     SendMsg(2380, focus, 0);
 }
 
 // Get internal focus flag.
-bool wxStyledTextCtrl::GetSTCFocus() {
+bool wxScintilla::GetSTCFocus() {
     return SendMsg(2381, 0, 0) != 0;
 }
 
 // Change error status - 0 = OK.
-void wxStyledTextCtrl::SetStatus(int statusCode) {
+void wxScintilla::SetStatus(int statusCode) {
     SendMsg(2382, statusCode, 0);
 }
 
 // Get error status.
-int wxStyledTextCtrl::GetStatus() {
+int wxScintilla::GetStatus() {
     return SendMsg(2383, 0, 0);
 }
 
 // Set whether the mouse is captured when its button is pressed.
-void wxStyledTextCtrl::SetMouseDownCaptures(bool captures) {
+void wxScintilla::SetMouseDownCaptures(bool captures) {
     SendMsg(2384, captures, 0);
 }
 
 // Get whether mouse gets captured.
-bool wxStyledTextCtrl::GetMouseDownCaptures() {
+bool wxScintilla::GetMouseDownCaptures() {
     return SendMsg(2385, 0, 0) != 0;
 }
 
 // Sets the cursor to one of the SC_CURSOR* values.
-void wxStyledTextCtrl::SetSTCCursor(int cursorType) {
+void wxScintilla::SetSTCCursor(int cursorType) {
     SendMsg(2386, cursorType, 0);
 }
 
 // Get cursor type.
-int wxStyledTextCtrl::GetSTCCursor() {
+int wxScintilla::GetSTCCursor() {
     return SendMsg(2387, 0, 0);
 }
 
 // Change the way control characters are displayed:
 // If symbol is < 32, keep the drawn way, else, use the given character.
-void wxStyledTextCtrl::SetControlCharSymbol(int symbol) {
+void wxScintilla::SetControlCharSymbol(int symbol) {
     SendMsg(2388, symbol, 0);
 }
 
 // Get the way control characters are displayed.
-int wxStyledTextCtrl::GetControlCharSymbol() {
+int wxScintilla::GetControlCharSymbol() {
     return SendMsg(2389, 0, 0);
 }
 
 // Move to the previous change in capitalisation.
-void wxStyledTextCtrl::WordPartLeft() {
+void wxScintilla::WordPartLeft() {
     SendMsg(2390, 0, 0);
 }
 
 // Move to the previous change in capitalisation extending selection
 // to new caret position.
-void wxStyledTextCtrl::WordPartLeftExtend() {
+void wxScintilla::WordPartLeftExtend() {
     SendMsg(2391, 0, 0);
 }
 
 // Move to the change next in capitalisation.
-void wxStyledTextCtrl::WordPartRight() {
+void wxScintilla::WordPartRight() {
     SendMsg(2392, 0, 0);
 }
 
 // Move to the next change in capitalisation extending selection
 // to new caret position.
-void wxStyledTextCtrl::WordPartRightExtend() {
+void wxScintilla::WordPartRightExtend() {
     SendMsg(2393, 0, 0);
 }
 
 // Set the way the display area is determined when a particular line
 // is to be moved to by Find, FindNext, GotoLine, etc.
-void wxStyledTextCtrl::SetVisiblePolicy(int visiblePolicy, int visibleSlop) {
+void wxScintilla::SetVisiblePolicy(int visiblePolicy, int visibleSlop) {
     SendMsg(2394, visiblePolicy, visibleSlop);
 }
 
 // Delete back from the current position to the start of the line.
-void wxStyledTextCtrl::DelLineLeft() {
+void wxScintilla::DelLineLeft() {
     SendMsg(2395, 0, 0);
 }
 
 // Delete forwards from the current position to the end of the line.
-void wxStyledTextCtrl::DelLineRight() {
+void wxScintilla::DelLineRight() {
     SendMsg(2396, 0, 0);
 }
 
 // Get and Set the xOffset (ie, horizonal scroll position).
-void wxStyledTextCtrl::SetXOffset(int newOffset) {
+void wxScintilla::SetXOffset(int newOffset) {
     SendMsg(2397, newOffset, 0);
 }
-int wxStyledTextCtrl::GetXOffset() {
+int wxScintilla::GetXOffset() {
     return SendMsg(2398, 0, 0);
 }
 
 // Set the last x chosen value to be the caret x position.
-void wxStyledTextCtrl::ChooseCaretX() {
+void wxScintilla::ChooseCaretX() {
     SendMsg(2399, 0, 0);
 }
 
 // Set the way the caret is kept visible when going sideway.
 // The exclusion zone is given in pixels.
-void wxStyledTextCtrl::SetXCaretPolicy(int caretPolicy, int caretSlop) {
+void wxScintilla::SetXCaretPolicy(int caretPolicy, int caretSlop) {
     SendMsg(2402, caretPolicy, caretSlop);
 }
 
 // Set the way the line the caret is on is kept visible.
 // The exclusion zone is given in lines.
-void wxStyledTextCtrl::SetYCaretPolicy(int caretPolicy, int caretSlop) {
+void wxScintilla::SetYCaretPolicy(int caretPolicy, int caretSlop) {
     SendMsg(2403, caretPolicy, caretSlop);
 }
 
 // Set printing to line wrapped (SC_WRAP_WORD) or not line wrapped (SC_WRAP_NONE).
-void wxStyledTextCtrl::SetPrintWrapMode(int mode) {
+void wxScintilla::SetPrintWrapMode(int mode) {
     SendMsg(2406, mode, 0);
 }
 
 // Is printing line wrapped?
-int wxStyledTextCtrl::GetPrintWrapMode() {
+int wxScintilla::GetPrintWrapMode() {
     return SendMsg(2407, 0, 0);
 }
 
 // Set a fore colour for active hotspots.
-void wxStyledTextCtrl::SetHotspotActiveForeground(bool useSetting, const wxColour& fore) {
+void wxScintilla::SetHotspotActiveForeground(bool useSetting, const wxColour& fore) {
     SendMsg(2410, useSetting, wxColourAsLong(fore));
 }
 
 // Set a back colour for active hotspots.
-void wxStyledTextCtrl::SetHotspotActiveBackground(bool useSetting, const wxColour& back) {
+void wxScintilla::SetHotspotActiveBackground(bool useSetting, const wxColour& back) {
     SendMsg(2411, useSetting, wxColourAsLong(back));
 }
 
 // Enable / Disable underlining active hotspots.
-void wxStyledTextCtrl::SetHotspotActiveUnderline(bool underline) {
+void wxScintilla::SetHotspotActiveUnderline(bool underline) {
     SendMsg(2412, underline, 0);
 }
 
 // Limit hotspots to single line so hotspots on two lines don't merge.
-void wxStyledTextCtrl::SetHotspotSingleLine(bool singleLine) {
+void wxScintilla::SetHotspotSingleLine(bool singleLine) {
     SendMsg(2421, singleLine, 0);
 }
 
 // Move caret between paragraphs (delimited by empty lines).
-void wxStyledTextCtrl::ParaDown() {
+void wxScintilla::ParaDown() {
     SendMsg(2413, 0, 0);
 }
-void wxStyledTextCtrl::ParaDownExtend() {
+void wxScintilla::ParaDownExtend() {
     SendMsg(2414, 0, 0);
 }
-void wxStyledTextCtrl::ParaUp() {
+void wxScintilla::ParaUp() {
     SendMsg(2415, 0, 0);
 }
-void wxStyledTextCtrl::ParaUpExtend() {
+void wxScintilla::ParaUpExtend() {
     SendMsg(2416, 0, 0);
 }
 
 // Given a valid document position, return the previous position taking code
 // page into account. Returns 0 if passed 0.
-int wxStyledTextCtrl::PositionBefore(int pos) {
+int wxScintilla::PositionBefore(int pos) {
     return SendMsg(2417, pos, 0);
 }
 
 // Given a valid document position, return the next position taking code
 // page into account. Maximum value returned is the last position in the document.
-int wxStyledTextCtrl::PositionAfter(int pos) {
+int wxScintilla::PositionAfter(int pos) {
     return SendMsg(2418, pos, 0);
 }
 
 // Copy a range of text to the clipboard. Positions are clipped into the document.
-void wxStyledTextCtrl::CopyRange(int start, int end) {
+void wxScintilla::CopyRange(int start, int end) {
     SendMsg(2419, start, end);
 }
 
 // Copy argument text to the clipboard.
-void wxStyledTextCtrl::CopyText(int length, const wxString& text) {
+void wxScintilla::CopyText(int length, const wxString& text) {
     SendMsg(2420, length, (long)(const char*)wx2stc(text));
 }
 
 // Set the selection mode to stream (SC_SEL_STREAM) or rectangular (SC_SEL_RECTANGLE) or
 // by lines (SC_SEL_LINES).
-void wxStyledTextCtrl::SetSelectionMode(int mode) {
+void wxScintilla::SetSelectionMode(int mode) {
     SendMsg(2422, mode, 0);
 }
 
 // Get the mode of the current selection.
-int wxStyledTextCtrl::GetSelectionMode() {
+int wxScintilla::GetSelectionMode() {
     return SendMsg(2423, 0, 0);
 }
 
 // Retrieve the position of the start of the selection at the given line (INVALID_POSITION if no selection on this line).
-int wxStyledTextCtrl::GetLineSelStartPosition(int line) {
+int wxScintilla::GetLineSelStartPosition(int line) {
     return SendMsg(2424, line, 0);
 }
 
 // Retrieve the position of the end of the selection at the given line (INVALID_POSITION if no selection on this line).
-int wxStyledTextCtrl::GetLineSelEndPosition(int line) {
+int wxScintilla::GetLineSelEndPosition(int line) {
     return SendMsg(2425, line, 0);
 }
 
 // Move caret down one line, extending rectangular selection to new caret position.
-void wxStyledTextCtrl::LineDownRectExtend() {
+void wxScintilla::LineDownRectExtend() {
     SendMsg(2426, 0, 0);
 }
 
 // Move caret up one line, extending rectangular selection to new caret position.
-void wxStyledTextCtrl::LineUpRectExtend() {
+void wxScintilla::LineUpRectExtend() {
     SendMsg(2427, 0, 0);
 }
 
 // Move caret left one character, extending rectangular selection to new caret position.
-void wxStyledTextCtrl::CharLeftRectExtend() {
+void wxScintilla::CharLeftRectExtend() {
     SendMsg(2428, 0, 0);
 }
 
 // Move caret right one character, extending rectangular selection to new caret position.
-void wxStyledTextCtrl::CharRightRectExtend() {
+void wxScintilla::CharRightRectExtend() {
     SendMsg(2429, 0, 0);
 }
 
 // Move caret to first position on line, extending rectangular selection to new caret position.
-void wxStyledTextCtrl::HomeRectExtend() {
+void wxScintilla::HomeRectExtend() {
     SendMsg(2430, 0, 0);
 }
 
 // Move caret to before first visible character on line.
 // If already there move to first character on line.
 // In either case, extend rectangular selection to new caret position.
-void wxStyledTextCtrl::VCHomeRectExtend() {
+void wxScintilla::VCHomeRectExtend() {
     SendMsg(2431, 0, 0);
 }
 
 // Move caret to last position on line, extending rectangular selection to new caret position.
-void wxStyledTextCtrl::LineEndRectExtend() {
+void wxScintilla::LineEndRectExtend() {
     SendMsg(2432, 0, 0);
 }
 
 // Move caret one page up, extending rectangular selection to new caret position.
-void wxStyledTextCtrl::PageUpRectExtend() {
+void wxScintilla::PageUpRectExtend() {
     SendMsg(2433, 0, 0);
 }
 
 // Move caret one page down, extending rectangular selection to new caret position.
-void wxStyledTextCtrl::PageDownRectExtend() {
+void wxScintilla::PageDownRectExtend() {
     SendMsg(2434, 0, 0);
 }
 
 // Move caret to top of page, or one page up if already at top of page.
-void wxStyledTextCtrl::StutteredPageUp() {
+void wxScintilla::StutteredPageUp() {
     SendMsg(2435, 0, 0);
 }
 
 // Move caret to top of page, or one page up if already at top of page, extending selection to new caret position.
-void wxStyledTextCtrl::StutteredPageUpExtend() {
+void wxScintilla::StutteredPageUpExtend() {
     SendMsg(2436, 0, 0);
 }
 
 // Move caret to bottom of page, or one page down if already at bottom of page.
-void wxStyledTextCtrl::StutteredPageDown() {
+void wxScintilla::StutteredPageDown() {
     SendMsg(2437, 0, 0);
 }
 
 // Move caret to bottom of page, or one page down if already at bottom of page, extending selection to new caret position.
-void wxStyledTextCtrl::StutteredPageDownExtend() {
+void wxScintilla::StutteredPageDownExtend() {
     SendMsg(2438, 0, 0);
 }
 
 // Move caret left one word, position cursor at end of word.
-void wxStyledTextCtrl::WordLeftEnd() {
+void wxScintilla::WordLeftEnd() {
     SendMsg(2439, 0, 0);
 }
 
 // Move caret left one word, position cursor at end of word, extending selection to new caret position.
-void wxStyledTextCtrl::WordLeftEndExtend() {
+void wxScintilla::WordLeftEndExtend() {
     SendMsg(2440, 0, 0);
 }
 
 // Move caret right one word, position cursor at end of word.
-void wxStyledTextCtrl::WordRightEnd() {
+void wxScintilla::WordRightEnd() {
     SendMsg(2441, 0, 0);
 }
 
 // Move caret right one word, position cursor at end of word, extending selection to new caret position.
-void wxStyledTextCtrl::WordRightEndExtend() {
+void wxScintilla::WordRightEndExtend() {
     SendMsg(2442, 0, 0);
 }
 
 // Set the set of characters making up whitespace for when moving or selecting by word.
 // Should be called after SetWordChars.
-void wxStyledTextCtrl::SetWhitespaceChars(const wxString& characters) {
+void wxScintilla::SetWhitespaceChars(const wxString& characters) {
     SendMsg(2443, 0, (long)(const char*)wx2stc(characters));
 }
 
 // Reset the set of characters for whitespace and word characters to the defaults.
-void wxStyledTextCtrl::SetCharsDefault() {
+void wxScintilla::SetCharsDefault() {
     SendMsg(2444, 0, 0);
 }
 
 // Get currently selected item position in the auto-completion list
-int wxStyledTextCtrl::AutoCompGetCurrent() {
+int wxScintilla::AutoCompGetCurrent() {
     return SendMsg(2445, 0, 0);
 }
 
 // Start notifying the container of all key presses and commands.
-void wxStyledTextCtrl::StartRecord() {
+void wxScintilla::StartRecord() {
     SendMsg(3001, 0, 0);
 }
 
 // Stop notifying the container of all key presses and commands.
-void wxStyledTextCtrl::StopRecord() {
+void wxScintilla::StopRecord() {
     SendMsg(3002, 0, 0);
 }
 
 // Set the lexing language of the document.
-void wxStyledTextCtrl::SetLexer(int lexer) {
+void wxScintilla::SetLexer(int lexer) {
     SendMsg(4001, lexer, 0);
 }
 
 // Retrieve the lexing language of the document.
-int wxStyledTextCtrl::GetLexer() {
+int wxScintilla::GetLexer() {
     return SendMsg(4002, 0, 0);
 }
 
 // Colourise a segment of the document using the current lexing language.
-void wxStyledTextCtrl::Colourise(int start, int end) {
+void wxScintilla::Colourise(int start, int end) {
     SendMsg(4003, start, end);
 }
 
 // Set up a value that may be used by a lexer for some optional feature.
-void wxStyledTextCtrl::SetProperty(const wxString& key, const wxString& value) {
+void wxScintilla::SetProperty(const wxString& key, const wxString& value) {
     SendMsg(4004, (long)(const char*)wx2stc(key), (long)(const char*)wx2stc(value));
 }
 
 // Set up the key words used by the lexer.
-void wxStyledTextCtrl::SetKeyWords(int keywordSet, const wxString& keyWords) {
+void wxScintilla::SetKeyWords(int keywordSet, const wxString& keyWords) {
     SendMsg(4005, keywordSet, (long)(const char*)wx2stc(keyWords));
 }
 
 // Set the lexing language of the document based on string name.
-void wxStyledTextCtrl::SetLexerLanguage(const wxString& language) {
+void wxScintilla::SetLexerLanguage(const wxString& language) {
     SendMsg(4006, 0, (long)(const char*)wx2stc(language));
 }
 
@@ -2388,7 +2388,7 @@ void wxStyledTextCtrl::SetLexerLanguage(const wxString& language) {
 
 
 // Returns the line number of the line with the caret.
-int wxStyledTextCtrl::GetCurrentLine() {
+int wxScintilla::GetCurrentLine() {
     int line = LineFromPosition(GetCurrentPos());
     return line;
 }
@@ -2406,7 +2406,7 @@ int wxStyledTextCtrl::GetCurrentLine() {
 //      eol                     turns on eol filling
 //      underline               turns on underlining
 //
-void wxStyledTextCtrl::StyleSetSpec(int styleNum, const wxString& spec) {
+void wxScintilla::StyleSetSpec(int styleNum, const wxString& spec) {
 
     wxStringTokenizer tkz(spec, wxT(","));
     while (tkz.HasMoreTokens()) {
@@ -2447,7 +2447,7 @@ void wxStyledTextCtrl::StyleSetSpec(int styleNum, const wxString& spec) {
 
 // Set style size, face, bold, italic, and underline attributes from
 // a wxFont's attributes.
-void wxStyledTextCtrl::StyleSetFont(int styleNum, wxFont& font) {
+void wxScintilla::StyleSetFont(int styleNum, wxFont& font) {
 #ifdef __WXGTK__
     // Ensure that the native font is initialized
     int x, y;
@@ -2464,7 +2464,7 @@ void wxStyledTextCtrl::StyleSetFont(int styleNum, wxFont& font) {
 }
 
 // Set all font style attributes at once.
-void wxStyledTextCtrl::StyleSetFontAttr(int styleNum, int size,
+void wxScintilla::StyleSetFontAttr(int styleNum, int size,
                                         const wxString& faceName,
                                         bool bold, bool italic,
                                         bool underline) {
@@ -2479,20 +2479,20 @@ void wxStyledTextCtrl::StyleSetFontAttr(int styleNum, int size,
 
 
 // Perform one of the operations defined by the wxSTC_CMD_* constants.
-void wxStyledTextCtrl::CmdKeyExecute(int cmd) {
+void wxScintilla::CmdKeyExecute(int cmd) {
     SendMsg(cmd);
 }
 
 
 // Set the left and right margin in the edit area, measured in pixels.
-void wxStyledTextCtrl::SetMargins(int left, int right) {
+void wxScintilla::SetMargins(int left, int right) {
     SetMarginLeft(left);
     SetMarginRight(right);
 }
 
 
 // Retrieve the start and end positions of the current selection.
-void wxStyledTextCtrl::GetSelection(int* startPos, int* endPos) {
+void wxScintilla::GetSelection(int* startPos, int* endPos) {
     if (startPos != NULL)
         *startPos = SendMsg(SCI_GETSELECTIONSTART);
     if (endPos != NULL)
@@ -2501,25 +2501,25 @@ void wxStyledTextCtrl::GetSelection(int* startPos, int* endPos) {
 
 
 // Retrieve the point in the window where a position is displayed.
-wxPoint wxStyledTextCtrl::PointFromPosition(int pos) {
+wxPoint wxScintilla::PointFromPosition(int pos) {
     int x = SendMsg(SCI_POINTXFROMPOSITION, 0, pos);
     int y = SendMsg(SCI_POINTYFROMPOSITION, 0, pos);
     return wxPoint(x, y);
 }
 
 // Scroll enough to make the given line visible
-void wxStyledTextCtrl::ScrollToLine(int line) {
+void wxScintilla::ScrollToLine(int line) {
     m_swx->DoScrollToLine(line);
 }
 
 
 // Scroll enough to make the given column visible
-void wxStyledTextCtrl::ScrollToColumn(int column) {
+void wxScintilla::ScrollToColumn(int column) {
     m_swx->DoScrollToColumn(column);
 }
 
 
-bool wxStyledTextCtrl::SaveFile(const wxString& filename)
+bool wxScintilla::SaveFile(const wxString& filename)
 {
     wxFile file(filename, wxFile::write);
 
@@ -2534,7 +2534,7 @@ bool wxStyledTextCtrl::SaveFile(const wxString& filename)
     return success;
 }
 
-bool wxStyledTextCtrl::LoadFile(const wxString& filename)
+bool wxScintilla::LoadFile(const wxString& filename)
 {
     bool success = false;
     wxFile file(filename, wxFile::read);
@@ -2574,41 +2574,41 @@ bool wxStyledTextCtrl::LoadFile(const wxString& filename)
 
 
 #if wxUSE_DRAG_AND_DROP
-wxDragResult wxStyledTextCtrl::DoDragOver(wxCoord x, wxCoord y, wxDragResult def) {
+wxDragResult wxScintilla::DoDragOver(wxCoord x, wxCoord y, wxDragResult def) {
         return m_swx->DoDragOver(x, y, def);
 }
 
 
-bool wxStyledTextCtrl::DoDropText(long x, long y, const wxString& data) {
+bool wxScintilla::DoDropText(long x, long y, const wxString& data) {
     return m_swx->DoDropText(x, y, data);
 }
 #endif
 
 
-void wxStyledTextCtrl::SetUseAntiAliasing(bool useAA) {
+void wxScintilla::SetUseAntiAliasing(bool useAA) {
     m_swx->SetUseAntiAliasing(useAA);
 }
 
-bool wxStyledTextCtrl::GetUseAntiAliasing() {
+bool wxScintilla::GetUseAntiAliasing() {
     return m_swx->GetUseAntiAliasing();
 }
 
 //----------------------------------------------------------------------
 // Event handlers
 
-void wxStyledTextCtrl::OnPaint(wxPaintEvent& WXUNUSED(evt)) {
+void wxScintilla::OnPaint(wxPaintEvent& WXUNUSED(evt)) {
     wxPaintDC dc(this);
     m_swx->DoPaint(&dc, GetUpdateRegion().GetBox());
 }
 
-void wxStyledTextCtrl::OnScrollWin(wxScrollWinEvent& evt) {
+void wxScintilla::OnScrollWin(wxScrollWinEvent& evt) {
     if (evt.GetOrientation() == wxHORIZONTAL)
         m_swx->DoHScroll(evt.GetEventType(), evt.GetPosition());
     else
         m_swx->DoVScroll(evt.GetEventType(), evt.GetPosition());
 }
 
-void wxStyledTextCtrl::OnScroll(wxScrollEvent& evt) {
+void wxScintilla::OnScroll(wxScrollEvent& evt) {
     wxScrollBar* sb = wxDynamicCast(evt.GetEventObject(), wxScrollBar);
     if (sb) {
         if (sb->IsVertical())
@@ -2618,44 +2618,44 @@ void wxStyledTextCtrl::OnScroll(wxScrollEvent& evt) {
     }
 }
 
-void wxStyledTextCtrl::OnSize(wxSizeEvent& WXUNUSED(evt)) {
+void wxScintilla::OnSize(wxSizeEvent& WXUNUSED(evt)) {
     if (m_swx) {
         wxSize sz = GetClientSize();
         m_swx->DoSize(sz.x, sz.y);
     }
 }
 
-void wxStyledTextCtrl::OnMouseLeftDown(wxMouseEvent& evt) {
+void wxScintilla::OnMouseLeftDown(wxMouseEvent& evt) {
     SetFocus();
     wxPoint pt = evt.GetPosition();
     m_swx->DoLeftButtonDown(Point(pt.x, pt.y), m_stopWatch.Time(),
                       evt.ShiftDown(), evt.ControlDown(), evt.AltDown());
 }
 
-void wxStyledTextCtrl::OnMouseMove(wxMouseEvent& evt) {
+void wxScintilla::OnMouseMove(wxMouseEvent& evt) {
     wxPoint pt = evt.GetPosition();
     m_swx->DoLeftButtonMove(Point(pt.x, pt.y));
 }
 
-void wxStyledTextCtrl::OnMouseLeftUp(wxMouseEvent& evt) {
+void wxScintilla::OnMouseLeftUp(wxMouseEvent& evt) {
     wxPoint pt = evt.GetPosition();
     m_swx->DoLeftButtonUp(Point(pt.x, pt.y), m_stopWatch.Time(),
                       evt.ControlDown());
 }
 
 
-void wxStyledTextCtrl::OnMouseRightUp(wxMouseEvent& evt) {
+void wxScintilla::OnMouseRightUp(wxMouseEvent& evt) {
     wxPoint pt = evt.GetPosition();
     m_swx->DoContextMenu(Point(pt.x, pt.y));
 }
 
 
-void wxStyledTextCtrl::OnMouseMiddleUp(wxMouseEvent& evt) {
+void wxScintilla::OnMouseMiddleUp(wxMouseEvent& evt) {
     wxPoint pt = evt.GetPosition();
     m_swx->DoMiddleButtonUp(Point(pt.x, pt.y));
 }
 
-void wxStyledTextCtrl::OnContextMenu(wxContextMenuEvent& evt) {
+void wxScintilla::OnContextMenu(wxContextMenuEvent& evt) {
     wxPoint pt = evt.GetPosition();
     ScreenToClient(&pt.x, &pt.y);
     /*
@@ -2670,7 +2670,7 @@ void wxStyledTextCtrl::OnContextMenu(wxContextMenuEvent& evt) {
 }
 
 
-void wxStyledTextCtrl::OnMouseWheel(wxMouseEvent& evt) {
+void wxScintilla::OnMouseWheel(wxMouseEvent& evt) {
     m_swx->DoMouseWheel(evt.GetWheelRotation(),
                         evt.GetWheelDelta(),
                         evt.GetLinesPerAction(),
@@ -2679,7 +2679,7 @@ void wxStyledTextCtrl::OnMouseWheel(wxMouseEvent& evt) {
 }
 
 
-void wxStyledTextCtrl::OnChar(wxKeyEvent& evt) {
+void wxScintilla::OnChar(wxKeyEvent& evt) {
     // On (some?) non-US keyboards the AltGr key is required to enter some
     // common characters.  It comes to us as both Alt and Ctrl down so we need
     // to let the char through in that case, otherwise if only ctrl or only
@@ -2702,7 +2702,7 @@ void wxStyledTextCtrl::OnChar(wxKeyEvent& evt) {
 }
 
 
-void wxStyledTextCtrl::OnKeyDown(wxKeyEvent& evt) {
+void wxScintilla::OnKeyDown(wxKeyEvent& evt) {
     int key = evt.GetKeyCode();
     bool shift = evt.ShiftDown(),
          ctrl  = evt.ControlDown(),
@@ -2719,45 +2719,45 @@ void wxStyledTextCtrl::OnKeyDown(wxKeyEvent& evt) {
 }
 
 
-void wxStyledTextCtrl::OnLoseFocus(wxFocusEvent& evt) {
+void wxScintilla::OnLoseFocus(wxFocusEvent& evt) {
     m_swx->DoLoseFocus();
     evt.Skip();
 }
 
 
-void wxStyledTextCtrl::OnGainFocus(wxFocusEvent& evt) {
+void wxScintilla::OnGainFocus(wxFocusEvent& evt) {
     m_swx->DoGainFocus();
     evt.Skip();
 }
 
 
-void wxStyledTextCtrl::OnSysColourChanged(wxSysColourChangedEvent& WXUNUSED(evt)) {
+void wxScintilla::OnSysColourChanged(wxSysColourChangedEvent& WXUNUSED(evt)) {
     m_swx->DoSysColourChange();
 }
 
 
-void wxStyledTextCtrl::OnEraseBackground(wxEraseEvent& WXUNUSED(evt)) {
+void wxScintilla::OnEraseBackground(wxEraseEvent& WXUNUSED(evt)) {
     // do nothing to help avoid flashing
 }
 
 
 
-void wxStyledTextCtrl::OnMenu(wxCommandEvent& evt) {
+void wxScintilla::OnMenu(wxCommandEvent& evt) {
     m_swx->DoCommand(evt.GetId());
 }
 
 
-void wxStyledTextCtrl::OnListBox(wxCommandEvent& WXUNUSED(evt)) {
+void wxScintilla::OnListBox(wxCommandEvent& WXUNUSED(evt)) {
     m_swx->DoOnListBox();
 }
 
 
-void wxStyledTextCtrl::OnIdle(wxIdleEvent& evt) {
+void wxScintilla::OnIdle(wxIdleEvent& evt) {
     m_swx->DoOnIdle(evt);
 }
 
 
-wxSize wxStyledTextCtrl::DoGetBestSize() const
+wxSize wxScintilla::DoGetBestSize() const
 {
     // What would be the best size for a wxSTC?
     // Just give a reasonable minimum until something else can be figured out.
@@ -2769,7 +2769,7 @@ wxSize wxStyledTextCtrl::DoGetBestSize() const
 // Turn notifications from Scintilla into events
 
 
-void wxStyledTextCtrl::NotifyChange() {
+void wxScintilla::NotifyChange() {
     wxStyledTextEvent evt(wxEVT_STC_CHANGE, GetId());
     evt.SetEventObject(this);
     GetEventHandler()->ProcessEvent(evt);
@@ -2789,7 +2789,7 @@ static void SetEventText(wxStyledTextEvent& evt, const char* text,
 }
 
 
-void wxStyledTextCtrl::NotifyParent(SCNotification* _scn) {
+void wxScintilla::NotifyParent(SCNotification* _scn) {
     SCNotification& scn = *_scn;
     wxStyledTextEvent evt(0, GetId());
 

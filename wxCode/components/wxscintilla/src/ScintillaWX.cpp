@@ -4,12 +4,12 @@
 //              from ScintillaBase that uses the "wx platform" defined in
 //              PlatformWX.cxx  This class is one end of a bridge between
 //              the wx world and the Scintilla world.  It needs a peer
-//              object of type wxStyledTextCtrl to function.
+//              object of type wxScintilla to function.
 //
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: ScintillaWX.cpp,v 1.1 2004-11-12 18:49:40 wyo Exp $
+// RCS-ID:      $Id: ScintillaWX.cpp,v 1.2 2004-11-13 10:38:25 wyo Exp $
 // Copyright:   (c) 2000 by Total Control Software
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -174,7 +174,7 @@ static wxTextFileType wxConvertEOLMode(int scintillaMode)
 // Constructor/Destructor
 
 
-ScintillaWX::ScintillaWX(wxStyledTextCtrl* win) {
+ScintillaWX::ScintillaWX(wxScintilla* win) {
     capturedMouse = false;
     focusEvent = false;
     wMain = win;
@@ -250,10 +250,10 @@ bool ScintillaWX::SetIdle(bool on) {
         // connect or disconnect the EVT_IDLE handler
         if (on)
             stc->Connect(wxID_ANY, wxEVT_IDLE,
-                         (wxObjectEventFunction) (wxEventFunction) (wxIdleEventFunction) &wxStyledTextCtrl::OnIdle);
+                         (wxObjectEventFunction) (wxEventFunction) (wxIdleEventFunction) &wxScintilla::OnIdle);
         else
             stc->Disconnect(wxID_ANY, wxEVT_IDLE,
-                            (wxObjectEventFunction) (wxEventFunction) (wxIdleEventFunction) &wxStyledTextCtrl::OnIdle);
+                            (wxObjectEventFunction) (wxEventFunction) (wxIdleEventFunction) &wxScintilla::OnIdle);
         idler.state = on;
     }
     return idler.state;

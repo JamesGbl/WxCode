@@ -12,7 +12,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.h,v 1.1 2004-11-12 18:49:40 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.h,v 1.2 2004-11-13 10:37:07 wyo Exp $
 // Copyright:   (c) 2000 by Total Control Software
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -1439,32 +1439,32 @@ struct SCNotification;
 
 #ifndef SWIG
 extern WXDLLIMPEXP_STC const wxChar* wxSTCNameStr;
-class  WXDLLIMPEXP_STC wxStyledTextCtrl;
+class  WXDLLIMPEXP_STC wxScintilla;
 class  WXDLLIMPEXP_STC wxStyledTextEvent;
 #endif
 
 //----------------------------------------------------------------------
 
-class WXDLLIMPEXP_STC wxStyledTextCtrl : public wxControl {
+class WXDLLIMPEXP_STC wxScintilla : public wxControl {
 public:
 
 #ifdef SWIG
-    %pythonAppend wxStyledTextCtrl   "self._setOORInfo(self)"
-    %pythonAppend wxStyledTextCtrl() ""
+    %pythonAppend wxScintilla   "self._setOORInfo(self)"
+    %pythonAppend wxScintilla() ""
 
-    wxStyledTextCtrl(wxWindow *parent, wxWindowID id=wxID_ANY,
+    wxScintilla(wxWindow *parent, wxWindowID id=wxID_ANY,
                      const wxPoint& pos = wxDefaultPosition,
                      const wxSize& size = wxDefaultSize, long style = 0,
                      const wxString& name = wxPySTCNameStr);
-    %name(PreStyledTextCtrl) wxStyledTextCtrl();
+    %name(PreStyledTextCtrl) wxScintilla();
     
 #else
-    wxStyledTextCtrl(wxWindow *parent, wxWindowID id=wxID_ANY,
+    wxScintilla(wxWindow *parent, wxWindowID id=wxID_ANY,
                      const wxPoint& pos = wxDefaultPosition,
                      const wxSize& size = wxDefaultSize, long style = 0,
                      const wxString& name = wxSTCNameStr);
-    wxStyledTextCtrl() { m_swx = NULL; }
-    ~wxStyledTextCtrl();
+    wxScintilla() { m_swx = NULL; }
+    ~wxScintilla();
     
 #endif
 
@@ -2899,7 +2899,7 @@ private:
     void NotifyParent(SCNotification* scn);
 
     DECLARE_EVENT_TABLE()
-    DECLARE_DYNAMIC_CLASS(wxStyledTextCtrl)
+    DECLARE_DYNAMIC_CLASS(wxScintilla)
 
 protected:
 
