@@ -114,7 +114,8 @@ wxString MySpellInterface::CheckSpelling(wxString strText)
 
   int nDiff = 0;
 
-  wxStringTokenizer tkz(strText);
+  wxString strDelimiters = _T(" \t\r\n.,?!@#$%^&*()-=_+[]{}\\|;:\"<>/~0123456789");
+  wxStringTokenizer tkz(strText, strDelimiters);
   while ( tkz.HasMoreTokens() )
   {
     wxString token = tkz.GetNextToken();
