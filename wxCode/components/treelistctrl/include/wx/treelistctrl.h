@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Modified by: Alberto Griggio, 2002
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.17 2004-10-03 18:45:34 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.18 2004-10-30 13:26:31 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows license
@@ -118,12 +118,16 @@ private:
 // wxTreeListCtrl - the multicolumn tree control
 //----------------------------------------------------------------------------
 
+// modes for navigation
+const int wxTL_MODE_NAV_FULLTREE = 0x0000; // default
+const int wxTL_MODE_NAV_EXPANDED = 0x0001;
+const int wxTL_MODE_NAV_VISIBLE  = 0x0002;
+const int wxTL_MODE_NAV_LEVEL    = 0x0004;
+
 // flags for FindItem
-const int wxTL_SEARCH_VISIBLE = 0x0000;
-const int wxTL_SEARCH_LEVEL   = 0x0001;
-const int wxTL_SEARCH_FULL    = 0x0002;
-const int wxTL_SEARCH_PARTIAL = 0x0010;
-const int wxTL_SEARCH_NOCASE  = 0x0020;
+const int wxTL_MODE_FIND_EXACT   = 0x0000; // default
+const int wxTL_MODE_FIND_PARTIAL = 0x0010;
+const int wxTL_MODE_FIND_NOCASE  = 0x0020;
 
 // additional flag for HitTest
 const int wxTREE_HITTEST_ONITEMCOLUMN = 0x2000;
@@ -381,42 +385,35 @@ public:
     // the "cookie" passed to GetFirstChild() and GetNextChild() should be
     // the same!
 
-    // get the first child of this item
+    // get child of this item
 #if !wxCHECK_VERSION(2, 5, 0)
     wxTreeItemId GetFirstChild(const wxTreeItemId& item, long& cookie) const;
-#else
-    wxTreeItemId GetFirstChild(const wxTreeItemId& item, wxTreeItemIdValue& cookie) const;
-#endif
-    // get the next child
-#if !wxCHECK_VERSION(2, 5, 0)
     wxTreeItemId GetNextChild(const wxTreeItemId& item, long& cookie) const;
-#else
-    wxTreeItemId GetNextChild(const wxTreeItemId& item, wxTreeItemIdValue& cookie) const;
-#endif
-    // get the prev child
-#if !wxCHECK_VERSION(2, 5, 0)
     wxTreeItemId GetPrevChild(const wxTreeItemId& item, long& cookie) const;
 #else
+    wxTreeItemId GetFirstChild(const wxTreeItemId& item, wxTreeItemIdValue& cookie) const;
+    wxTreeItemId GetNextChild(const wxTreeItemId& item, wxTreeItemIdValue& cookie) const;
     wxTreeItemId GetPrevChild(const wxTreeItemId& item, wxTreeItemIdValue& cookie) const;
 #endif
-    // get the last child of this item - this method doesn't use cookies
     wxTreeItemId GetLastChild(const wxTreeItemId& item) const;
 
-    // get the next sibling of this item
+    // get sibling of this item
     wxTreeItemId GetNextSibling(const wxTreeItemId& item) const;
-    // get the previous sibling
     wxTreeItemId GetPrevSibling(const wxTreeItemId& item) const;
 
-    // get first visible item
-    wxTreeItemId GetFirstVisibleItem() const;
-    // get the next visible item: item must be visible itself!
-    // see IsVisible() and wxTreeCtrl::GetFirstVisibleItem()
-    wxTreeItemId GetNextVisible(const wxTreeItemId& item) const;
-    // get the previous visible item: item must be visible itself!
-    wxTreeItemId GetPrevVisible(const wxTreeItemId& item) const;
+    // get item in the full tree (currently only for internal use)
+    wxTreeItemId GetNext(const wxTreeItemId& item, bool expanded = false) const;
+    wxTreeItemId GetPrev(const wxTreeItemId& item, bool expanded = false) const;
 
-    // Only for internal use right now, but should probably be public
-    wxTreeItemId GetNext(const wxTreeItemId& item) const;
+    // get expanded item, see IsExpanded()
+    wxTreeItemId GetFirstExpandedItem() const;
+    wxTreeItemId GetNextExpanded(const wxTreeItemId& item) const;
+    wxTreeItemId GetPrevExpanded(const wxTreeItemId& item) const;
+
+    // get visible item, see IsVisible()
+    wxTreeItemId GetFirstVisibleItem() const;
+    wxTreeItemId GetNextVisible(const wxTreeItemId& item) const;
+    wxTreeItemId GetPrevVisible(const wxTreeItemId& item) const;
 
     // operations
     // ----------
