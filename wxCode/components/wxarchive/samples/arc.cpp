@@ -2,7 +2,7 @@
 // Name:        arc.cpp
 // Purpose:     Examples for archive classes
 // Author:      Mike Wetherell
-// RCS-ID:      $Id: arc.cpp,v 1.6 2004-09-09 15:53:52 chiclero Exp $
+// RCS-ID:      $Id: arc.cpp,v 1.7 2004-11-27 23:49:32 chiclero Exp $
 // Copyright:   (c) Mike Wetherell
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -35,6 +35,11 @@
     (!defined __STDC_VERSION__ || __STDC_VERSION__ < 199901L)
 #   include <fcntl.h>
 #   include <io.h>
+#endif
+
+// VC++ 5 doesn't have a stream inserter for __int64
+#if defined _MSC_VER && _MSC_VER < 1200
+std::ostream& operator<<(std::ostream& o, __int64 i) { return o << (long)i; }
 #endif
 
 // some smart pointers
@@ -217,15 +222,13 @@ bool ArcApp::List()
 
 bool ArcApp::Remove()
 {
-    system("if [ \"$D\" ]; then konsole -e gdb -p $PPID & sleep 5; fi");
-
     wxString pattern = m_args[0];
 
     wxArchiveInputStreamPtr  arc(m_factory->NewStream(*m_in));
     wxArchiveOutputStreamPtr outarc(m_factory->NewStream(*m_out));
     wxArchiveEntryPtr        entry;
 
-    outarc->SetExtra(arc->GetExtra());
+    outarc->CopyArchiveMetaData(*arc);
 
     while (entry.reset(arc->GetNextEntry()), entry.get() != NULL)
         if (entry->GetName().Matches(pattern))
@@ -254,7 +257,7 @@ bool ArcApp::Rename()
     wxArchiveOutputStreamPtr outarc(m_factory->NewStream(*m_out));
     wxArchiveEntryPtr        entry;
 
-    outarc->SetExtra(arc->GetExtra());
+    outarc->CopyArchiveMetaData(*arc);
 
     while (entry.reset(arc->GetNextEntry()), entry.get() != NULL) {
         if (entry->GetName() == from) {
@@ -287,7 +290,7 @@ bool ArcApp::Add()
     wxArchiveOutputStreamPtr outarc(m_factory->NewStream(*m_out));
     wxArchiveEntryPtr        entry(arc->GetNextEntry());
 
-    outarc->SetExtra(arc->GetExtra());
+    outarc->CopyArchiveMetaData(*arc);
 
     for (;;) {
         bool keep;
@@ -509,10 +512,10 @@ public:
     FFileOutputStream(FILE *fp) :
         wxFFileOutputStream(fp), m_pipe(IsPipe(fp)) { }
 
-    off_t SeekO(off_t pos, wxSeekMode mode = wxFromStart) {
+    wxFileOffset SeekO(wxFileOffset pos, wxSeekMode mode = wxFromStart) {
         return m_pipe ? wxInvalidOffset : wxFFileOutputStream::SeekO(pos, mode);
     }
-    off_t TellO() const {
+    wxFileOffset TellO() const {
         return m_pipe ? wxInvalidOffset : wxFFileOutputStream::TellO();
     }
 
@@ -528,10 +531,10 @@ public:
     FFileInputStream(FILE *fp) :
         wxFFileInputStream(fp), m_pipe(IsPipe(fp)) { }
 
-    off_t SeekI(off_t pos, wxSeekMode mode = wxFromStart) {
+    wxFileOffset SeekI(wxFileOffset pos, wxSeekMode mode = wxFromStart) {
         return m_pipe ? wxInvalidOffset : wxFFileInputStream::SeekI(pos, mode);
     }
-    off_t TellI() const {
+    wxFileOffset TellI() const {
         return m_pipe ? wxInvalidOffset : wxFFileInputStream::TellI();
     }
 
