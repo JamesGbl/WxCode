@@ -6,7 +6,8 @@
 <makefile>
 
 	<!-- Some defaults for the variables used by wxCode bakefiles -->
-	<include file="../../../build/defaults.bkl"/>
+	<set var="WXCODE_BAKEFILEDIR">../../../build/bakefiles</set>
+	<include file="$(WXCODE_BAKEFILEDIR)/defaults.bkl"/>
 	
 
 	<!-- Settings for this component -->
@@ -20,7 +21,7 @@
 
 
 	<!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->
-	<include file="../../../build/wxcode.bkl"/>
+	<include file="$(WXCODE_BAKEFILEDIR)/wxcode.bkl"/>
 
 	<!-- The real target: wxcode.bkl does not declare a real target but a template called
 	     "complib". In this way modifications are allowed to the basic template. -->
@@ -34,8 +35,8 @@
 		<res-include>..$(DIRSEP)sample</res-include>
 		<win32-res>..$(DIRSEP)sample$(DIRSEP)minimal.rc</win32-res>
 		<library>keybinder</library>
-		<wxlibs/>
-		<syslibs/>
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib>
 	</exe>
 	
 	<if cond="FORMAT=='autoconf'">

@@ -22,14 +22,20 @@ CPPFLAGS =
 # Standard linker flags 
 LDFLAGS = 
 
-# Should UNICODE be enabled ? [0,1]
-UNICODE = 0
+# The directory where wxWidgets library is installed 
+WX_DIR = $(WXWIN)
 
-# Type of compiled binaries [debug,release]
-BUILD = debug
+# Use DLL build of wx library to use? [0,1]
+WX_SHARED = 0
 
-# The wxWidgets library main folder 
-WXWIN = c:\wxWidgets
+# Compile Unicode build of wxWidgets? [0,1]
+WX_UNICODE = 0
+
+# Use debug build of wxWidgets (define __WXDEBUG__)? [0,1]
+WX_DEBUG = 1
+
+# Version of the wx library to build against. 
+WX_VERSION = 25
 
 
 
@@ -39,87 +45,50 @@ WXWIN = c:\wxWidgets
 
 ### Variables: ###
 
-KEYBINDER_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
-	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
-	/Fd..\lib\keybinder$(WXLIBPOSTFIX).pdb $(____DEBUGRUNTIME) \
-	/I$(WXWIN)\include /I$(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) /I..\include \
-	/GR /GX $(CPPFLAGS) $(CXXFLAGS)
+KEYBINDER_CXXFLAGS = /MD /DWIN32 $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
+	/D__WXMSW__ /I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
+	/I$(WX_DIR)\include /I..\include /GR /GX $(CPPFLAGS) $(CXXFLAGS)
 KEYBINDER_OBJECTS =  \
 	msvc\keybinder_keybinder.obj \
 	msvc\keybinder_menuutils.obj
-MINIMAL_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
-	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
-	/Fd..\sample\minimal.pdb $(____DEBUGRUNTIME) /I..\include \
-	/I$(WXWIN)\include /I$(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) /D_WINDOWS \
-	$(__DEBUG_DEFINE_p) /D__WXMSW__ /GR /GX $(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_CXXFLAGS = /MD /DWIN32 $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
+	/D__WXMSW__ /I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
+	/I$(WX_DIR)\include /I..\include /D_WINDOWS /GR /GX $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	msvc\minimal_minimal.obj \
 	msvc\minimal_minimal.res
 
 ### Conditionally set variables: ###
 
-!if "$(BUILD)" == "debug"
-WXSUBLIBPOSTFIX = d
+!if "$(WX_DEBUG)" == "1"
+WX3RDPARTLIBPOSTFIX = d
 !endif
-!if "$(UNICODE)" == "1"
-__UNICODE_DEFINE_p_2 = /d _UNICODE
+!if "$(WX_UNICODE)" == "1"
+__WXUNICODE_DEFINE_p_2 = /d _UNICODE
 !endif
-!if "$(BUILD)" == "debug"
-__DEBUGINFO_13 = /DEBUG
+!if "$(WX_DEBUG)" == "1"
+__WXDEBUG_DEFINE_p_2 = /d __WXDEBUG__
 !endif
-!if "$(BUILD)" == "release"
-__DEBUGINFO_13 = 
+!if "$(WX_UNICODE)" == "1"
+__WXUNICODE_DEFINE_p = /D_UNICODE
 !endif
-!if "$(BUILD)" == "debug"
-____DEBUGRUNTIME_14_p_1 = /d _DEBUG
+!if "$(WX_DEBUG)" == "1"
+__WXDEBUG_DEFINE_p = /D__WXDEBUG__
 !endif
-!if "$(BUILD)" == "release"
-____DEBUGRUNTIME_14_p_1 = 
+!if "$(WX_DEBUG)" == "0" && "$(WX_UNICODE)" == "1"
+WXLIBPOSTFIX = u
 !endif
-!if "$(BUILD)" == "debug"
-__DEBUG_DEFINE_p = /D__WXDEBUG__
-!endif
-!if "$(BUILD)" == "debug"
-__WARNINGS = /W4
-!endif
-!if "$(BUILD)" == "release"
-__WARNINGS = /w
-!endif
-!if "$(UNICODE)" == "1"
-__UNICODE_DEFINE_p = /D_UNICODE
-!endif
-!if "$(BUILD)" == "debug"
-__OPTIMIZEFLAG = /Od
-!endif
-!if "$(BUILD)" == "release"
-__OPTIMIZEFLAG = /O2
-!endif
-!if "$(BUILD)" == "debug"
-__DEBUGINFO = /Zi
-!endif
-!if "$(BUILD)" == "release"
-__DEBUGINFO = 
-!endif
-!if "$(BUILD)" == "debug"
-____DEBUGRUNTIME = /D_DEBUG
-!endif
-!if "$(BUILD)" == "release"
-____DEBUGRUNTIME = 
-!endif
-!if "$(BUILD)" == "debug"
-__DEBUGRUNTIME = d
-!endif
-!if "$(BUILD)" == "release"
-__DEBUGRUNTIME = 
-!endif
-!if "$(BUILD)" == "debug" && "$(UNICODE)" == "0"
+!if "$(WX_DEBUG)" == "1" && "$(WX_UNICODE)" == "0"
 WXLIBPOSTFIX = d
 !endif
-!if "$(BUILD)" == "debug" && "$(UNICODE)" == "1"
+!if "$(WX_DEBUG)" == "1" && "$(WX_UNICODE)" == "1"
 WXLIBPOSTFIX = ud
 !endif
-!if "$(BUILD)" == "release" && "$(UNICODE)" == "1"
-WXLIBPOSTFIX = u
+!if "$(WX_SHARED)" == "0"
+__WXLIBPATH_FILENAMES = \lib\vc_lib
+!endif
+!if "$(WX_SHARED)" == "1"
+__WXLIBPATH_FILENAMES = \lib\vc_dll
 !endif
 
 
@@ -172,8 +141,8 @@ cleandocs:
 <<
 
 ..\sample\minimal.exe: $(MINIMAL_OBJECTS) msvc\minimal_minimal.res ..\lib\keybinder$(WXLIBPOSTFIX).lib
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_13) /LIBPATH:..\lib /LIBPATH:$(WXWIN)\lib\vc_lib /SUBSYSTEM:WINDOWS @<<
-	$(MINIMAL_OBJECTS)  ..\lib\keybinder$(WXLIBPOSTFIX).lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxmsw25$(WXLIBPOSTFIX)_html.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
+	link /NOLOGO /OUT:$@ $(LDFLAGS) /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES) /LIBPATH:..\lib /SUBSYSTEM:WINDOWS @<<
+	$(MINIMAL_OBJECTS)  wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib ..\lib\keybinder$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib
 <<
 
 msvc\keybinder_keybinder.obj: .\..\src\keybinder.cpp
@@ -186,5 +155,5 @@ msvc\minimal_minimal.obj: .\..\sample\minimal.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(MINIMAL_CXXFLAGS) $**
 
 msvc\minimal_minimal.res: .\..\sample\minimal.rc
-	rc /fo$@  /d WIN32 $(__UNICODE_DEFINE_p_2) $(____DEBUGRUNTIME_14_p_1) /i ..\include /i $(WXWIN)\include /i $(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) /d _WINDOWS /i ..\sample $**
+	rc /fo$@  /d WIN32 $(__WXUNICODE_DEFINE_p_2) $(__WXDEBUG_DEFINE_p_2) /d __WXMSW__ /i $(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include /i ..\include /d _WINDOWS /i ..\sample $**
 

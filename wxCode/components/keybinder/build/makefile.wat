@@ -22,14 +22,20 @@ CPPFLAGS =
 # Standard linker flags 
 LDFLAGS = 
 
-# Should UNICODE be enabled ? [0,1]
-UNICODE = 0
+# The directory where wxWidgets library is installed 
+WX_DIR = $(WXWIN)
 
-# Type of compiled binaries [debug,release]
-BUILD = debug
+# Use DLL build of wx library to use? [0,1]
+WX_SHARED = 0
 
-# The wxWidgets library main folder 
-WXWIN = c:\wxWidgets
+# Compile Unicode build of wxWidgets? [0,1]
+WX_UNICODE = 0
+
+# Use debug build of wxWidgets (define __WXDEBUG__)? [0,1]
+WX_DEBUG = 1
+
+# Version of the wx library to build against. 
+WX_VERSION = 25
 
 
 
@@ -54,76 +60,53 @@ WATCOM_CWD = $+ $(%cdrive):$(%cwd) $-
 
 ### Conditionally set variables: ###
 
-WXSUBLIBPOSTFIX =
-!ifeq BUILD debug
-WXSUBLIBPOSTFIX = d
+WX3RDPARTLIBPOSTFIX =
+!ifeq WX_DEBUG 1
+WX3RDPARTLIBPOSTFIX = d
 !endif
-__DEBUGINFO_7 =
-!ifeq BUILD debug
-__DEBUGINFO_7 = debug all
+__WXUNICODE_DEFINE_p =
+!ifeq WX_UNICODE 1
+__WXUNICODE_DEFINE_p = -d_UNICODE
 !endif
-!ifeq BUILD release
-__DEBUGINFO_7 = 
-!endif
-__DEBUG_DEFINE_p =
-!ifeq BUILD debug
-__DEBUG_DEFINE_p = -d__WXDEBUG__
-!endif
-__WARNINGS =
-!ifeq BUILD debug
-__WARNINGS = -wx
-!endif
-!ifeq BUILD release
-__WARNINGS = 
-!endif
-__OPTIMIZEFLAG =
-!ifeq BUILD debug
-__OPTIMIZEFLAG = -od
-!endif
-!ifeq BUILD release
-__OPTIMIZEFLAG = -ot -ox
-!endif
-__DEBUGINFO =
-!ifeq BUILD debug
-__DEBUGINFO = -d2
-!endif
-!ifeq BUILD release
-__DEBUGINFO = -d0
-!endif
-__UNICODE_DEFINE_p =
-!ifeq UNICODE 1
-__UNICODE_DEFINE_p = -d_UNICODE
+__WXDEBUG_DEFINE_p =
+!ifeq WX_DEBUG 1
+__WXDEBUG_DEFINE_p = -d__WXDEBUG__
 !endif
 WXLIBPOSTFIX =
-!ifeq BUILD debug
-!ifeq UNICODE 0
+!ifeq WX_DEBUG 0
+!ifeq WX_UNICODE 1
+WXLIBPOSTFIX = u
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_UNICODE 0
 WXLIBPOSTFIX = d
 !endif
 !endif
-!ifeq BUILD debug
-!ifeq UNICODE 1
+!ifeq WX_DEBUG 1
+!ifeq WX_UNICODE 1
 WXLIBPOSTFIX = ud
 !endif
 !endif
-!ifeq BUILD release
-!ifeq UNICODE 1
-WXLIBPOSTFIX = u
+__WXLIBPATH_FILENAMES =
+!ifeq WX_SHARED 0
+__WXLIBPATH_FILENAMES = \lib\wat_lib
 !endif
+!ifeq WX_SHARED 1
+__WXLIBPATH_FILENAMES = \lib\wat_dll
 !endif
 
 ### Variables: ###
 
-KEYBINDER_CXXFLAGS = $(__WARNINGS) $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) &
-	$(__DEBUGINFO) -i=$(WXWIN)\include &
-	-i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) -i=..\include $(CPPFLAGS) &
-	$(CXXFLAGS)
+KEYBINDER_CXXFLAGS = $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
+	-i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
+	-i=$(WX_DIR)\include -i=..\include $(CPPFLAGS) $(CXXFLAGS)
 KEYBINDER_OBJECTS =  &
 	watcom\keybinder_keybinder.obj &
 	watcom\keybinder_menuutils.obj
-MINIMAL_CXXFLAGS = $(__WARNINGS) $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) &
-	$(__DEBUGINFO) -i=..\include -i=$(WXWIN)\include &
-	-i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) $(__DEBUG_DEFINE_p) -d__WXMSW__ &
-	$(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_CXXFLAGS = $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
+	-i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
+	-i=$(WX_DIR)\include -i=..\include $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  &
 	watcom\minimal_minimal.obj
 
@@ -180,9 +163,9 @@ cleandocs :
 	@%append watcom\minimal.lbc option quiet
 	@%append watcom\minimal.lbc name $^@
 	@%append watcom\minimal.lbc option caseexact
-	@%append watcom\minimal.lbc $(LDFLAGS) $(__DEBUGINFO_7) libpath ..\lib libpath $(WXWIN)\lib\wat_lib system nt_win ref '_WinMain@16'
+	@%append watcom\minimal.lbc $(LDFLAGS) libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib system nt_win ref '_WinMain@16'
 	@for %i in ($(MINIMAL_OBJECTS)) do @%append watcom\minimal.lbc file %i
-	@for %i in ( ..\lib\keybinder$(WXLIBPOSTFIX).lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxmsw25$(WXLIBPOSTFIX)_html.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\minimal.lbc library %i
+	@for %i in ( wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib ..\lib\keybinder$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib) do @%append watcom\minimal.lbc library %i
 	@%append watcom\minimal.lbc option resource=watcom\minimal_minimal.res
 	wlink @watcom\minimal.lbc
 
@@ -196,5 +179,5 @@ watcom\minimal_minimal.obj :  .AUTODEPEND .\..\sample\minimal.cpp
 	$(CXX) -zq -fo=$^@ $(MINIMAL_CXXFLAGS) $<
 
 watcom\minimal_minimal.res :  .AUTODEPEND .\..\sample\minimal.rc
-	wrc -q -ad -bt=nt -r -fo=$^@ $(__UNICODE_DEFINE_p) -i=..\include -i=$(WXWIN)\include -i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) -i=..\sample $<
+	wrc -q -ad -bt=nt -r -fo=$^@ $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\sample $<
 
