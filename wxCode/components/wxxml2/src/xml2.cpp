@@ -54,6 +54,44 @@ wxXml2Namespace wxXml2EmptyNamespace(NULL, wxXml2EmptyNode);
 wxXml2BaseNode wxXml2EmptyBaseNode(NULL);
 
 
+// statics
+int wxXml2::m_nOld;
+char wxXml2::m_strIndent[];
+const char *wxXml2::m_strOld;
+
+
+
+
+
+//-----------------------------------------------------------------------------
+//  wxXml2
+//-----------------------------------------------------------------------------
+
+void wxXml2::SetIndentMode(bool benable, int indentstep)
+{
+	// we need to call xmlKeepBlanksDefault with FALSE if we want
+	// to _enable_ the indentation when saving...
+	m_nOld = xmlKeepBlanksDefault(!benable);
+	
+	// save current indentation string and replace it with our	
+	if (benable && indentstep > 0 && indentstep < 32) {
+	
+		memset(m_strIndent, ' ', indentstep);
+		m_strIndent[indentstep] = '\0';
+	
+		m_strOld = xmlTreeIndentString;
+		xmlTreeIndentString = m_strIndent;
+	}
+}
+
+void wxXml2::RestoreLastIndentMode()
+{
+	xmlKeepBlanksDefault(m_nOld);
+	xmlTreeIndentString = m_strOld;
+}
+
+
+
 
 
 //-----------------------------------------------------------------------------
@@ -837,6 +875,16 @@ bool wxXml2Document::Create(const wxString &version)
 	return IsOk();
 }
 
+bool wxXml2Document::operator==(const wxXml2Document &doc) const
+{
+	// check for null pointers
+	if ((int)doc.GetObj() ^ (int)GetObj())
+		return FALSE;
+	if (GetRoot() == doc.GetRoot())
+		return TRUE;
+	return FALSE;
+}
+
 // helper function for wxXml2Document::Load
 static void XMLDocumentMsg(void *ctx, const char *pszFormat, ...)
 {
@@ -850,24 +898,6 @@ static void XMLDocumentMsg(void *ctx, const char *pszFormat, ...)
 	xmlParserCtxt *p = (xmlParserCtxt *)ctx;
 	wxString *err = (wxString *)p->_private;
 	if (err != NULL) *err += str;
-}
-
-// helper function for wxXml2Document::Save
-static int XMLDocumentWrite(void *context, const char *buffer, int len)
-{
-	wxOutputStream *stream = (wxOutputStream *)context;
-	stream->Write(buffer, len);
-	return stream->LastWrite();
-}
-
-bool wxXml2Document::operator==(const wxXml2Document &doc) const
-{
-	// check for null pointers
-	if ((int)doc.GetObj() ^ (int)GetObj())
-		return FALSE;
-	if (GetRoot() == doc.GetRoot())
-		return TRUE;
-	return FALSE;
 }
 
 bool wxXml2Document::Load(wxInputStream &stream, wxString *pErr)
@@ -890,11 +920,14 @@ bool wxXml2Document::Load(wxInputStream &stream, wxString *pErr)
 	// however, we set it anyway to support future versions...
 	h.fatalError = XMLDocumentMsg;
 
+	const char *buf2 = (const char *)buf.GetWriteBuf(l);
+
 	// parse from buffer
 	wxString error;
 	UnwrappingOld();
-	m_doc = xmlSAXParseMemoryWithData(&h, (const char *)WX2XML(buf), l, 1, &error);	
+	m_doc = xmlSAXParseMemoryWithData(&h, (const char *)buf2, l, 1, &error);	
 	JustWrappedNew();
+	buf.UngetWriteBuf();
 
 	// copy error string
 	if (pErr) *pErr = error;
@@ -902,31 +935,51 @@ bool wxXml2Document::Load(wxInputStream &stream, wxString *pErr)
 	return IsOk();
 }
 
-int wxXml2Document::Save(wxOutputStream &stream,
-						 const wxString &encoding, int /*indentstep*/) const
+// helper function for wxXml2Document::Save
+static int XMLDocumentWrite(void *context, const char *buffer, int len)
+{
+	wxOutputStream *stream = (wxOutputStream *)context;
+	
+
+	stream->Write(buffer, len);
+	return stream->LastWrite();
+}
+
+int wxXml2Document::Save(wxOutputStream &stream, const wxString &encoding, 
+						 long flags, int indentstep) const
 {
 	xmlCharEncodingHandler *encoder = NULL;
+	wxNativeNewlinesFilterStream *filter = NULL;		// created only if required
+	wxOutputStream *mystream = &stream;
 
 	// use one of the libxml2 encoders if required...
 	if (!encoding.IsEmpty())
 		encoder = xmlFindCharEncodingHandler((const char *)WX2XML(encoding));
 
+	// will we use the native newline mode ?
+	if (flags & wxXML2DOC_USE_NATIVE_NEWLINES) {
+
+		// use a filter stream to change libxml2 newlines to native newlines
+		filter = new wxNativeNewlinesFilterStream(stream);
+		mystream = filter;
+	}
+
+	// create an ouput buffer
 	xmlOutputBuffer *ob = xmlOutputBufferCreateIO(XMLDocumentWrite, NULL,
-								(void *)(&stream), encoder);
+								(void *)(mystream), encoder);
 
-	// set up output options
-	xmlKeepBlanksDefault(0);
-
-	// save old indentation string
-	//wxString old = xmlTreeIndentString;
-	//xmlTreeIndentString = wxString(' ', indentstep);
+	// set up indentation mode
+	wxXml2::SetIndentMode((flags & wxXML2DOC_USE_INDENTATION) != 0, indentstep);
 
 	// save file & return (the output buffer will be deleted by libxml2)
 	xmlSubstituteEntitiesDefault(0);
 	int res = xmlSaveFormatFileTo(ob, m_doc, (const char *)WX2XML(encoding), 1);
 
-	// restore old indentation string
-	//xmlTreeIndentString = old;
+	// restore old indentation mode
+	wxXml2::RestoreLastIndentMode();
+
+	// eventually cleanup the filter
+	if (filter) delete filter;
 
 	return res;
 }
@@ -1068,11 +1121,12 @@ bool wxXml2Document::Load(const wxString &filename, wxString *pErr)
 	return Load(stream, pErr);
 }
 	
-bool wxXml2Document::Save(const wxString &filename, const wxString &encoding, int indentstep) const
+bool wxXml2Document::Save(const wxString &filename, const wxString &encoding, 
+						  long flags, int indentstep) const
 {
 	wxFileOutputStream stream(filename);
 	if (!stream.IsOk()) return FALSE;
-	return (Save(stream, encoding, indentstep) != -1);
+	return (Save(stream, encoding, flags, indentstep) != -1);
 }	
 
 // helper function for wxXml2Document::IsDTDValid
@@ -1129,4 +1183,77 @@ bool wxXml2Document::IsDTDValid(wxString *err, int bUseInternal) const
 	return ret;
 }
 
+
+
+
+
+//-----------------------------------------------------------------------------
+//  wxNativeNewlinesFilterStream
+//-----------------------------------------------------------------------------
+
+// DO NOT USE THE wxT MACRO IN THE DEFINES BELOW !!!
+// THIS IS UNICODE-SAFE EVEN WITHOUT IT
+
+#define wxXML2_NEWLINE			"\n"
+
+#define wxDOS_NEWLINE			"\r\n"
+#define wxUNIX_NEWLINE			"\n"
+#define wxMAC_NEWLINE			"\r"
+#define wxOS2_NEWLINE			"\r\n"
+
+
+size_t wxNativeNewlinesFilterStream::OnSysWrite(const void *buffer, size_t bufsize)
+{
+	const char *newline = NULL;
+
+#if defined(__WINDOWS__)
+	newline = wxDOS_NEWLINE;
+#elif defined(__APPLE__)
+	newline = wxMAC_NEWLINE;
+#elif defined(__OS2__)
+	newline = wxOS2_NEWLINE;
+#elif defined(__UNIX__)
+	newline = wxUNIX_NEWLINE;
+#endif
+
+	wxASSERT_MSG(newline != NULL, wxT("Cannot recognize this OS newline endings..."));
+	int newlinelenght = strlen(newline);
+
+	// do not slow everything if we are on systems
+	// which use the same line ending which is used directly by libxml2
+	if (strcmp(wxXML2_NEWLINE, newline) == 0)
+		return wxFilterOutputStream::OnSysWrite(buffer, bufsize);
+
+	// we need to scan all the buffer replacing wxXML2_NEWLINEs...
+	const char *buf = (const char *)buffer;
+	size_t written = 0;
+
+	for (unsigned int i=0; i<bufsize; i++) {
+		if (buf[i] == wxXML2_NEWLINE[0])
+			GetFilterOutputStream()->Write(newline, newlinelenght);
+		else
+			GetFilterOutputStream()->Write(&buf[i], 1);
+
+		written += GetFilterOutputStream()->LastWrite();
+	}
+
+	return written;
+}
+
+
+
+
+//-----------------------------------------------------------------------------
+//  wxStringOutputStream
+//-----------------------------------------------------------------------------
+
+size_t wxStringOutputStream::OnSysWrite(const void *buffer, size_t bufsize)
+{
+	// we will append the given buffer to our wxString,
+	// assuming it is encoded in UTF8 format
+	// (the wxString constructor we use will call the wxConvUTF8.MB2WC
+	//  function to do the encode conversion).
+	m_str += wxString((const char *)buffer, wxConvUTF8, bufsize);
+	return bufsize;
+}
 

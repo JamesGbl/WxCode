@@ -37,6 +37,7 @@
 #include "wx/dtd.h"
 
 
+
 // implementation of dynamic classes
 IMPLEMENT_DYNAMIC_CLASS(wxXml2ElemDecl, wxXml2BaseNode)
 IMPLEMENT_DYNAMIC_CLASS(wxXml2AttrDecl, wxXml2BaseNode)
@@ -325,11 +326,11 @@ bool wxXml2DTD::Load(const wxString &filename, wxString *pErr)
 	return Load(stream, pErr);
 }
 	
-bool wxXml2DTD::Save(const wxString &filename) const
+bool wxXml2DTD::Save(const wxString &filename, long flags) const
 {
 	wxFileOutputStream stream(filename);
 	if (!stream.IsOk()) return FALSE;
-	return (Save(stream) != -1);
+	return (Save(stream, flags) != -1);
 }
 
 // helper function for wxXml2DTD::Load
@@ -404,6 +405,7 @@ bool wxXml2DTD::Load(wxInputStream &stream, wxString *pErr)
 static int XMLDTDWrite(void *context, const char *buffer, int len)
 {
 	wxOutputStream *stream = (wxOutputStream *)context;
+	wxASSERT_MSG(stream && stream->IsOk(), wxT("Invalid stream"));
 	int written = 0;
 
 	// even if our m_dtd->doc pointer is NULL, xmlNodeDumpOutput
@@ -450,14 +452,25 @@ static int XMLDTDWrite(void *context, const char *buffer, int len)
 	return written;
 }
 
-int wxXml2DTD::Save(wxOutputStream &stream) const
+int wxXml2DTD::Save(wxOutputStream &stream, long flags) const
 {
+	wxNativeNewlinesFilterStream *filter = NULL;		// created only if required
+	wxOutputStream *mystream = &stream;
+
+	// will we use the native newline mode ?
+	if (flags & wxXML2DOC_USE_NATIVE_NEWLINES) {
+
+		// use a filter stream to change libxml2 newlines to native newlines
+		filter = new wxNativeNewlinesFilterStream(stream);
+		mystream = filter;
+	}
+
 	int originalsize = stream.GetSize();
 
 	// setup the output buffer
 	xmlOutputBuffer *buf = xmlAllocOutputBuffer(NULL);
-	buf->context = &stream;
-	buf->writecallback = XMLDTDWrite;	
+	buf->context = &mystream;
+	buf->writecallback = XMLDTDWrite;
 
 	// dump this DTD node
 	xmlNodeDumpOutput(buf, NULL, (xmlNode *)m_dtd, 1, 0, NULL);
@@ -465,6 +478,9 @@ int wxXml2DTD::Save(wxOutputStream &stream) const
 
 	// free the output buffer
     xmlOutputBufferClose(buf);
+
+	// free our filter if required
+	if (filter) delete filter;
 
 	// we won't return buf->written because our XMLDTDWrite()
 	// function could have tweaked that number to cheat libxml2:

@@ -594,10 +594,11 @@ public:		// miscellaneous
 	bool Load(const wxString &filename, wxString *pErr = NULL);
 
 	//! Saves the DTD into the given wxOutputStream.
-	int Save(wxOutputStream &) const;
+	//! Only the wxXML2DOC_USE_NATIVE_NEWLINES flag is currently supported.
+	int Save(wxOutputStream &, long flags = wxXML2DOC_USE_NATIVE_NEWLINES) const;
 
 	//! A specialized version of the generic #Save function for files.
-	bool Save(const wxString &filename) const;
+	bool Save(const wxString &filename, long flags = wxXML2DOC_USE_NATIVE_NEWLINES) const;
 
 	//! Loads the DTD specified by current SystemID or ExternalID+ExternalURI.
 	//! Returns FALSE if this is not a reference to an external DTD or if

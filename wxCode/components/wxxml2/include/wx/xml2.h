@@ -22,6 +22,9 @@
 #include "wx/string.h"
 #include "wx/object.h"
 
+
+
+
 class wxInputStream;
 class wxOutputStream;
 
@@ -39,36 +42,77 @@ class wxOutputStream;
 #include <libxml/parser.h>
 
 
+
+// -------------------------------
+// Miscellaneous defines/macros
+// -------------------------------
+
 #ifdef WXXMLISDLL
-// if building DLL, then WX*XML*DLLEXPORT=WXDLLEXPORT...
-#define WXXMLDLLEXPORT		WXDLLEXPORT
+	// if building DLL, then WX*XML*DLLEXPORT=WXDLLEXPORT...
+	#define WXXMLDLLEXPORT		WXDLLEXPORT
 #else
-// ...otherwise 
-#define WXXMLDLLEXPORT
+	// ...otherwise 
+	#define WXXMLDLLEXPORT		/* expand to nothing */
 #endif
 
-// these are required because the compiler must know about their existence
-class WXXMLDLLEXPORT wxXml2BaseNode;
-class WXXMLDLLEXPORT wxXml2Node;
-class WXXMLDLLEXPORT wxXml2Property;
-class WXXMLDLLEXPORT wxXml2Namespace;
-class WXXMLDLLEXPORT wxXml2Document;
-class WXXMLDLLEXPORT wxXml2DTD;			// defined in "dtd.h"
 
+//! A macro used in the overloaded operator==; this is the return table:
+//!
+//!         x            y          returns
+//!       NULL          NULL          TRUE		(they are equal)
+//!       NULL        non-NULL        FALSE		(they are different)
+//!     non-NULL        NULL          FALSE		(they are different)
+//!     non-NULL      non-NULL      nothing: no 'return' statement is executed:
+//!                                 x and y could be equal but they could also
+//!                                 be different. The code following the macro
+//!                                 must care about this possibility
+//!
+#define wxCHECK_NULL_POINTERS(x, y)		\
+	if (x == NULL && y == NULL)			\
+		return TRUE;					\
+	if ((x == NULL && y != NULL) ||		\
+		(x != NULL && y == NULL))		\
+		return FALSE;
 
 //! Converts from wxStrings to xmlChars.
 //! Libxml2 takes sequences of xmlChar (which is defined to be *always* unsigned char)
 //! which are asupposed to be always in UTF8: thus WX2XML converts wxStrings to UTF8.
-#ifdef wxUSE_UNICODE
+#if wxUSE_UNICODE
+
+	// we must use the data() function of the wxCharBuffer which is returned
+	// by wxString::mb_str
 	#define WX2XML(str)		((xmlChar *)(str.mb_str(wxConvUTF8).data()))
 #else
+
+	// wxString::mb_str will return an array of char*
 	#define WX2XML(str)		((xmlChar *)(str.mb_str(wxConvUTF8)))
 #endif
 
-//! Converts from xmlChars to wxStrings.
-//! 
-#define XML2WX(str)		(wxString((const wxChar *)str, wxConvUTF8))
 
+//! Converts from xmlChars to wxStrings.
+//! Libxml2 always outputs a sequence of xmlChar which are encoded in UTF8:
+//! this macro creates a wxString which converts the given string from UTF8
+//! to the format internally used by wxString (whatever it is).
+#define XML2WX(str)		(wxString((const char *)str, wxConvUTF8))
+
+
+//! A wxXml2Document::Save flag.
+//! Tells wxXml2Document to save the document using the native newline
+//! format; if not specified all newlines will be encoded in unix format
+//! (that is, as simple '\n').
+#define	wxXML2DOC_USE_NATIVE_NEWLINES		1
+
+//! A wxXml2Document::Save flag.
+//! Tells wxXml2Document to save the document using an indentation step.
+#define wxXML2DOC_USE_INDENTATION			2
+
+
+
+
+
+// -----------------------------
+// Basic types (enums, structs)
+// -----------------------------
 
 //! Represents an XML node type. LibXML2 allows a lot of different element types,
 //! but the following are the types you can use with the wxXml2 wrappers...
@@ -114,30 +158,30 @@ enum wxXml2NodeType
 	//! Creates a comment node: <!-- content -->.	
     wxXML_COMMENT_NODE =		8,
 
-
 	//! The value of the "type" member of an xmlDoc structure.
 	//! This value is used to identify a node as a wxXml2Document.
 	//! Never use it directly: use wxXml2Document instead.
     wxXML_DOCUMENT_NODE =		9,
     wxXML_HTML_DOCUMENT_NODE =	13,		//!< Like #wxXML_DOCUMENT_NODE.
 
+
 	//! The value of the "type" member of an xmlDtd structure.
 	//! This value is used to identify a node as a wxXml2DTD.
 	//! Never use it directly: use wxXml2DTD instead.
 	wxXML_DTD_NODE =			14,
 
-
-// these three element still needs to be wrapped:
-
 	//! A DTD node which declares an element.
+	//! This value is used to identify a node as a wxXml2ElemDecl.
 	//! Looks like:     <!ELEMENT mynode (#PCDATA)>
     wxXML_ELEMENT_DECL = 15,
 
 	//! A DTD node which declares an attribute.
+	//! This value is used to identify a node as a wxXml2AttrDecl.
 	//! Looks like:     <!ATTLIST myattr type #PCDATA "defaultvalue">
     wxXML_ATTRIBUTE_DECL = 16,
 
 	//! A DTD node which declares an entity.
+	//! This value is used to identify a node as a wxXml2EntityDecl.
 	//! Looks like:     <!ENTITY myentity "entity's replacement">
     wxXML_ENTITY_DECL = 17,
 
@@ -170,26 +214,13 @@ typedef struct tagXml2BaseNode {
 
 } wxXml2BaseNodeObj;
 
-
-// a macro used in the overloaded operator==; this is the return table:
-//
-//         x            y          returns
-//       NULL          NULL          TRUE		(they are equal)
-//       NULL        non-NULL        FALSE		(they are different)
-//     non-NULL        NULL          FALSE		(they are different)
-//     non-NULL      non-NULL      nothing: no 'return' statement is executed:
-//                                 x and y could be equal but they could also
-//                                 be different. The code following the macro
-//                                 must care about this possibility
-//
-#define wxCHECK_NULL_POINTERS(x, y)		\
-	if (x == NULL && y == NULL)			\
-		return TRUE;					\
-	if ((x == NULL && y != NULL) ||		\
-		(x != NULL && y == NULL))		\
-		return FALSE;
-
-
+// these are required because the compiler must know about their existence
+class WXXMLDLLEXPORT wxXml2BaseNode;
+class WXXMLDLLEXPORT wxXml2Node;
+class WXXMLDLLEXPORT wxXml2Property;
+class WXXMLDLLEXPORT wxXml2Namespace;
+class WXXMLDLLEXPORT wxXml2Document;
+class WXXMLDLLEXPORT wxXml2DTD;			// defined in "dtd.h"
 
 // global instances of empty objects
 extern wxXml2Node wxXml2EmptyNode;
@@ -199,12 +230,22 @@ extern wxXml2Document wxXml2EmptyDoc;
 extern wxXml2BaseNode wxXml2EmptyBaseNode;
 
 
+
+
+// --------------
+// Classes
+// --------------
+
 //! A wrapper for some libxml2 static functions regarding the entire
 //! parser. In particular, you should call the #Init() function before
 //! using any of the wxXml2Wrapper and you should call the #Cleanup()
 //! function before exiting to avoid memory leaks.
 class WXXMLDLLEXPORT wxXml2 : public wxObject
 {
+	static char m_strIndent[32];		// 32 = max indentation level.
+	static const char *m_strOld;
+	static int m_nOld;
+
 public:
 	wxXml2() {}
 	virtual ~wxXml2() {}
@@ -229,6 +270,18 @@ public:
 	//! If something is wrong, a warning or a fatal error is generated.
 	static void TestLibxml2Version()
 		{ LIBXML_TEST_VERSION; }
+
+	//! Returns the global state of the libxml2 library.
+	static xmlGlobalState *GetGlobalState()
+		{ return xmlGetGlobalState(); }
+
+	//! Enables/disable the indentation mode for the libxml2 library.
+	//! The \c indentstep is the number of spaces used when indenting.
+	static void SetIndentMode(bool benable = TRUE, int indentstep = 4);
+
+	//! Restores the indentation mode which was used before last
+	//! call to #SetIndentMode() function.
+	static void RestoreLastIndentMode();
 };
 
 
@@ -638,11 +691,7 @@ public:
 
 	//! Loads the given filename and parse it.
     wxXml2Document(const wxString &filename) 
-#ifdef wxUSE_UNICODE
 		{ m_doc = xmlParseFile((const char *)WX2XML(filename)); JustWrappedNew(); }
-#else
-		{ m_doc = xmlParseFile((const char *)filename); JustWrappedNew(); }
-#endif
 
 	//! Wraps the given libxml2 structure.
 	wxXml2Document(xmlDoc *doc) : m_doc(doc) 
@@ -682,12 +731,12 @@ public:		// create, load & save
     //! Saves the XML data in the given stream with the given encoding.
 	//! Returns the number of bytes written: -1 if there were errors.
     int Save(wxOutputStream &stream, const wxString &encoding = wxT("UTF-8"), 
-		int indentstep = 1) const;
+				long flags = wxXML2DOC_USE_NATIVE_NEWLINES, int indentstep = 4) const;
 
     //! Saves the document as XML or XHTML file in the given encoding format.
 	//! Returns TRUE on success.
     bool Save(const wxString &filename, const wxString &encoding = wxT("UTF-8"), 
-		int indentstep = 1) const;
+				long flags = wxXML2DOC_USE_NATIVE_NEWLINES, int indentstep = 4) const;
 
 
 public:		// miscellaneous
@@ -1215,6 +1264,58 @@ public:		// miscellaneous
 	void Encapsulate(const wxString &nodename);
 	
 	//@}
+};
+
+
+
+
+// ----------------
+// Utility classes
+// ----------------
+
+//! A little helper class used by wxXml2Document::Save and
+//! wxXml2DTD::Save to convert \n to the native format of newlines.
+class wxNativeNewlinesFilterStream : public wxFilterOutputStream
+{
+public:
+	wxNativeNewlinesFilterStream(wxOutputStream &tofilter)
+		: wxFilterOutputStream(tofilter) {}
+	virtual ~wxNativeNewlinesFilterStream() {}
+
+
+protected:
+
+	//! Our overridden function. It replaces the libxml2 newlines
+	//! with the native newlines for this system.
+    virtual size_t OnSysWrite(const void *buffer, size_t bufsize);
+};
+
+
+//! A simple wxOutputStream which outputs everything into a wxString.
+//! The final output can be read using the #GetStr() function.
+//! This class is typically used as an easy way to save a wxXml2Document
+//! or a wxXml2DTD into a wxString.
+//!
+//! VERY IMPORTANT: the Write() method of this output stream assumes
+//!                 the given data to be a valid UTF8-encoded string.
+//!                 No checks will be done to ensure this.
+class wxStringOutputStream : public wxOutputStream
+{
+	wxString m_str;
+
+public:
+	wxStringOutputStream() {}
+	virtual ~wxStringOutputStream() {}
+
+	//! Returns the internal string used to store the result.
+	wxString GetStr() const
+		{ return m_str; }
+
+protected:
+    
+	//! Our overridden function. It writes the given UTF8 buffer into
+	//! our internal wxString.
+	virtual size_t OnSysWrite(const void *buffer, size_t bufsize);
 };
 
 #endif // _WX_XML2_H_

@@ -474,20 +474,13 @@ void MyFrame::LoadDTD(const wxString &filename)
 	}
 
 	// show the wxXml2DTD tree in a simple format...
-	wxMemoryOutputStream stream;
-	wxString str;
+	wxStringOutputStream stream;
 
 	// we won't use the ParseNodeAndSiblings because it requires
 	// wxXml2Nodes to parse: here we have instead wxXml2ElemDecl,
 	// wxXml2AttrDecl... node types.
-	str.Alloc(1024);
 	int size = doc.Save(stream);
-	
-	// copy the stream into a wxString and change the text shown to the user...
-	stream.CopyTo(str.GetWriteBuf(size), size);
-	str.UngetWriteBuf();
-	str.SetChar(size, '\0');	
-	m_text->SetValue(str);
+	m_text->SetValue(stream.GetStr());
 
 	doc.DestroyIfUnlinked();
 }
@@ -559,7 +552,7 @@ void MyFrame::OnSaveSimple(wxCommandEvent& WXUNUSED(event))
 		wxT(" problem or if you want to give suggestions or advices. "));
 
 	// now, save the file where the user choose
-	if (1) {//doc.Save(fd.GetPath())) {
+	if (doc.Save(fd.GetPath())) {
 		
 		int ret = wxMessageBox(wxT("File correctly saved. Do you want to load it ?"), 
 			wxT("Question"), wxYES_NO | wxICON_QUESTION);
@@ -614,18 +607,19 @@ void MyFrame::OnSaveAdv(wxCommandEvent &)
 	// a wxXML_REFERENCE_NODE by wxXml2
 	root.AddTextChild(wxT("refnode"), wxT("&copy;"));
 
-#define CHECK_UNICODE
-#ifdef CHECK_UNICODE
-	// then, do a little check for non-UTF8 characters
+#if wxUSE_UNICODE
+	// then, do a little check for Unicode
 	root.AddCommentChild(
-		wxT(" In the followig text child, some non-UTF8 characters are used "));
+		wxT("In the followig text child, some non-ANSI (i.e. Unicode) characters are used; ")
+		wxT("If you see a greek ALPHA, BETA and GAMMA characters, it means that you are ")
+		wxT("using a viewer which supports the Unicode standard."));
 
-	wxString greekstring = wxT("\x3B1\x3B2\x0");//wxT('03B1') wxT('03B2');
+	wxString greekstring = wxT("\x3B1\x3B2\x3B3");
 	root.AddTextChild(wxT("textchild"), greekstring);
 #endif
 
 	// now, save the file where the user choose
-	if (doc.Save(fd.GetPath())) {
+	if (doc.Save(fd.GetPath(), wxT("utf8"), 0/*wxXML2DOC_USE_INDENTATION*/)) {
 		
 		int ret = wxMessageBox(wxT("File correctly saved. Do you want to load it ?"), 
 			wxT("Question"), wxYES_NO | wxICON_QUESTION);
