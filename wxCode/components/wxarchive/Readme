@@ -1,0 +1,9 @@
+Maintainer: Michael Wetherell (chiclero)
+Component:  wxArchive
+Subdir:     wxarchive
+Parts:      S
+More infos: 
+wxWidgets:  2.5.1
+ 
+Description:
+An interface for reading and writing archive formats, with implementations for zip and tar.
