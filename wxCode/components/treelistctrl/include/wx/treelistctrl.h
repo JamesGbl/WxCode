@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Modified by: Alberto Griggio, 2002
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.16 2004-09-30 19:31:17 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.17 2004-10-03 18:45:34 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows license
@@ -135,7 +135,9 @@ class WXDLLEXPORT wxTreeListCtrl : public wxControl
 public:
     // creation
     // --------
-    wxTreeListCtrl() {}
+    wxTreeListCtrl()
+        : m_header_win(0), m_main_win(0), m_headerHeight(0)
+    {}
 
     wxTreeListCtrl(wxWindow *parent, wxWindowID id = -1,
                const wxPoint& pos = wxDefaultPosition,
@@ -143,7 +145,7 @@ public:
                long style = wxTR_DEFAULT_STYLE,
                const wxValidator &validator = wxDefaultValidator,
                const wxString& name = wxTreeListCtrlNameStr )
-        : m_header_win(0), m_main_win(0)
+        : m_header_win(0), m_main_win(0), m_headerHeight(0)
     {
         Create(parent, id, pos, size, style, validator, name);
     }
@@ -532,6 +534,8 @@ public:
     wxTreeListMainWindow* GetMainWindow() const
     { return m_main_win; }
 
+    virtual wxSize DoGetBestSize() const;
+    
 protected:
     // header window, responsible for column visualization and manipulation
     wxTreeListHeaderWindow* m_header_win;
@@ -543,9 +547,12 @@ protected:
 
     void OnSize(wxSizeEvent& event);
 
+    void CalculateAndSetHeaderHeight();
+
 
 private:
     size_t fill_column;
+    size_t m_headerHeight;
 
     DECLARE_EVENT_TABLE()
     DECLARE_DYNAMIC_CLASS(wxTreeListCtrl)
