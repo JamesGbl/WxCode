@@ -31,8 +31,6 @@
 #include "wxSpellCheckerDemo.h"
 
 #include "MySpellCheckDialog.h"
-#include "SentryLikeDialog.h"
-#include "Outlook97LikeDialog.h"
 #include "XmlSpellCheckDialog.h"
 #include "XmlPersonalDictionaryDialog.h"
 #include "AspellInterface.h"
