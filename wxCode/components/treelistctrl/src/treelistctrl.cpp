@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.28 2004-09-30 19:00:36 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.29 2004-09-30 19:31:41 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -543,7 +543,7 @@ public:
     virtual bool SetForegroundColour(const wxColour& colour);
 
     // drop over item
-    void SetDropItem (const wxTreeItemId& item = (wxTreeItemId*)NULL);
+    void SetDragItem (const wxTreeItemId& item = (wxTreeItemId*)NULL);
 
     // callbacks
     void OnPaint( wxPaintEvent &event );
@@ -622,7 +622,7 @@ protected:
     int                  m_dragCount;
     wxPoint              m_dragStart;
     wxTimer             *m_dragTimer;
-    wxTreeListItem      *m_dropItem;
+    wxTreeListItem      *m_dragItem;
 
     wxTimer             *m_renameTimer;
     wxString             m_renameRes;
@@ -1823,7 +1823,7 @@ void wxTreeListMainWindow::Init()
     m_dragCount = 0;
     m_isDragging = FALSE;
     m_dragTimer = new wxTimer (this, -1);
-    m_dropItem = (wxTreeListItem*)NULL;
+    m_dragItem = (wxTreeListItem*)NULL;
 
     m_renameTimer = new wxTreeListRenameTimer( this );
     m_lastOnSame = FALSE;
@@ -3097,8 +3097,8 @@ wxTreeItemId wxTreeListMainWindow::FindItem (const wxTreeItemId& item, const wxS
     return item;
 }
 
-void wxTreeListMainWindow::SetDropItem (const wxTreeItemId& item) {
-    m_dropItem = (wxTreeListItem*) item.m_pItem;
+void wxTreeListMainWindow::SetDragItem (const wxTreeItemId& item) {
+    m_dragItem = (wxTreeListItem*) item.m_pItem;
 }
 
 wxImageList *wxTreeListMainWindow::GetImageList() const
@@ -3272,10 +3272,10 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
     dc.SetBrush (wxBrush (colBg, wxSOLID));
     dc.SetPen (*wxTRANSPARENT_PEN);
     if (HasFlag (wxTR_FULL_ROW_HIGHLIGHT)) {
-        if (item == m_dropItem) {
+        if (item == m_dragItem) {
             dc.SetBrush (*m_hilightBrush);
 #ifndef __WXMAC__ // don't draw rect outline if we already have the background color
-            dc.SetPen ((item == m_dropItem)? *wxBLACK_PEN: *wxTRANSPARENT_PEN);
+            dc.SetPen ((item == m_dragItem)? *wxBLACK_PEN: *wxTRANSPARENT_PEN);
 #endif // !__WXMAC__
             dc.SetTextForeground (colTextHilight);
         }else if (item->IsSelected()) {
@@ -3344,10 +3344,10 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
 
         wxDCClipper clipper (dc, x_colstart, item->GetY(), col_w, total_h); // only within column
         if (!HasFlag (wxTR_FULL_ROW_HIGHLIGHT) && (i == GetMainColumn())) {
-            if (item == m_dropItem) {
+            if (item == m_dragItem) {
                 dc.SetBrush (*m_hilightBrush);
 #ifndef __WXMAC__ // don't draw rect outline if we already have the background color
-                dc.SetPen ((item == m_dropItem)? *wxBLACK_PEN: *wxTRANSPARENT_PEN);
+                dc.SetPen ((item == m_dragItem)? *wxBLACK_PEN: *wxTRANSPARENT_PEN);
 #endif // !__WXMAC__
                 dc.SetTextForeground (colTextHilight);
                 dc.DrawRectangle (text_x, item->GetY() + off_h, text_w, total_h - off_h);
@@ -4804,8 +4804,8 @@ void wxTreeListCtrl::SortChildren(const wxTreeItemId& item)
 wxTreeItemId wxTreeListCtrl::FindItem (const wxTreeItemId& item, const wxString& str, int flags)
 { return m_main_win->FindItem (item, str, flags); }
 
-void wxTreeListCtrl::SetDropItem (const wxTreeItemId& item)
-{ m_main_win->SetDropItem (item); }
+void wxTreeListCtrl::SetDragItem (const wxTreeItemId& item)
+{ m_main_win->SetDragItem (item); }
 
 bool wxTreeListCtrl::SetBackgroundColour(const wxColour& colour)
 { return m_main_win->SetBackgroundColour(colour); }
