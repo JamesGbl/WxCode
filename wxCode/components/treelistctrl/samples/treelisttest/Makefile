@@ -3,22 +3,23 @@
 ## Purpose:     treelisttest
 ## Maintainer:  Otto Wyss
 ## Created:     2004-03-22
-## RCS-ID:      $Id: Makefile,v 1.1 2004-07-19 18:47:41 wyo Exp $
+## RCS-ID:      $Id: Makefile,v 1.2 2004-07-19 19:42:25 wyo Exp $
 ## Copyright:   (c) wyoDesktop
 ## Licence:     wxWidgets licence
 ##############################################################################
 
 # list of source files
-SRC = treelisttest.cpp
-
-# source directories
-vpath %.cpp $(WXCODE)/treelistctrl/src
+SRC = treelisttest.cpp \
+      treelistctrl.cpp
 
 # executable name
 PRG = treelisttest
 
+# source directories
+vpath %.cpp $(WXCODE)/treelistctrl/src
+
 # additional header directories
-INC =
+INC = -I$(WXCODE)/treelistctrl/include
 
 ##############################################################################
 # implementation, change only if other settings or other targets are needed
@@ -42,7 +43,7 @@ endif
 OBJ = $(SRC:.cpp=.o)
 
 .cpp.o:
-	g++ -c $(INC) `$(WXCONFIG) --cxxflags` -g -o $@ $<
+	g++ -c $(INC) `$(WXCONFIG) --cxxflags` `gtk-config --cflags` -g -o $@ $<
 
 all:	$(PRG)
 $(PRG):	$(OBJ)
