@@ -830,6 +830,7 @@ protected:		// utilities
 	//! Returns the selected command.
 	wxCmd *GetSelCmd();
 
+	virtual void ShowSizer(wxSizer *toshow, bool show);
 
 protected:		// members
 

@@ -375,6 +375,10 @@ MyDialog::MyDialog(wxWindow *parent, const wxString &title) :
 	main->Add(m_p, 1, wxGROW);
 	SetSizer(main);
 	main->SetSizeHints(this);
+
+	// this is a little modification to make dlg look nicer
+	wxSize sz(GetSizer()->GetMinSize());
+	SetSize(-1, -1, sz.GetWidth()*1.5, sz.GetHeight());
 }
 
 MyDialog::~MyDialog()

@@ -564,7 +564,7 @@ wxKeyConfigPanel::wxKeyConfigPanel(wxWindow* parent,
 		wxEmptyString, wxDefaultPosition, wxDefaultSize, 
 		0, NULL, wxCB_READONLY | wxCB_SORT);
 
-	m_pKeyProfilesSizer = new wxPanel((wxVERTICAL);
+	m_pKeyProfilesSizer = new wxBoxSizer(wxVERTICAL);//wxPanel(this, -1, , );
 	m_pKeyProfilesSizer->Add(new wxStaticText(this, -1, "Key profile:"), 0, wxGROW | wxALL, 5);
 	m_pKeyProfilesSizer->Add(m_pKeyProfiles, 0, wxGROW | wxLEFT | wxRIGHT, 5);
 	m_pKeyProfilesSizer->Add(new wxStaticLine(this, -1), 0, wxGROW | wxALL, 5);
@@ -836,11 +836,69 @@ void wxKeyConfigPanel::ApplyChanges()
 
 void wxKeyConfigPanel::EnableKeyProfiles(bool bEnable)
 {
-	m_bEnableKeyProfiles = bEnable; 
+	m_bEnableKeyProfiles = bEnable;
 
-	// we must hide the keyprofile combobox	
-	m_pKeyProfilesSizer->Show((size_t)0, m_bEnableKeyProfiles);
+	// we must hide the keyprofile combobox		
+	ShowSizer(m_pKeyProfilesSizer, m_bEnableKeyProfiles);
 }
+
+void wxKeyConfigPanel::ShowSizer(wxSizer *toshow, bool show)
+{
+	// first of all, update the items of the sizer
+	toshow->ShowItems(m_bEnableKeyProfiles);
+
+	// then, since the size has been changed...
+	wxSizer *main = GetSizer();
+
+	// check the old show state...
+	// VERY IMPORTANT: this is not only an optimization
+	//                 the code below expect a size change and
+	//                 if the size change did not happen it will
+	//                 set some vars to wrong values
+	bool oldshow = main->IsShown(toshow);
+	if ((show && oldshow) || (!show && !oldshow))
+		return;
+
+	// add or detach the given sizer
+	if (show)
+		main->Prepend(toshow, 0, wxGROW);
+	else
+		main->Detach(toshow);
+
+
+	// THIS PIECE OF CODE HAS BEEN COPIED & PASTED
+	// FROM THE wxLogDialog::OnDetails OF THE 
+	// wxWidgets/src/generic/logg.cpp FILE
+	// -------------------------------------------
+	m_minHeight = m_maxHeight = -1;
+	
+   // wxSizer::FitSize() is private, otherwise we might use it directly...
+    wxSize sizeTotal = GetSize(),
+           sizeClient = GetClientSize();
+
+    wxSize size = main->GetMinSize();
+    size.x += sizeTotal.x - sizeClient.x;
+    size.y += sizeTotal.y - sizeClient.y;
+
+    // we don't want to allow expanding the dialog in vertical direction as
+    // this would show the "hidden" details but we can resize the dialog
+    // vertically while the details are shown
+    if ( !show )
+        m_maxHeight = size.y;
+
+    SetSizeHints(size.x, size.y, m_maxWidth, m_maxHeight);
+
+    // don't change the width when expanding/collapsing
+    SetSize(wxDefaultCoord, size.y);
+
+#ifdef __WXGTK__
+    // VS: this is neccessary in order to force frame redraw under
+    // WindowMaker or fvwm2 (and probably other broken WMs).
+    // Otherwise, detailed list wouldn't be displayed.
+    Show();
+#endif // wxGTK
+}
+
 
 
 

@@ -8,12 +8,11 @@ Subdir:     keybinder
 Description:
 A generic system to bind one or more keyshortcuts to the commands you want
 (menu commands or whatever you like).
-A pre-built panel and a complete system for viewing/remove/add/edit command
-shortcuts is included.
+A pre-built panel and a complete system to view/remove/add/edit command
+shortcuts is included. Also key profiles are supported.
 Integrates with your applications with few modifications and allows the
 users to customize all the commands he wants, bypassing the limitation of a
 single keybind to each command.
-
 
 
 
