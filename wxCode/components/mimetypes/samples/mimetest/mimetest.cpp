@@ -3,7 +3,7 @@
 // Purpose:     mimetest application
 // Maintainer:  Otto Wyss
 // Created:     2005-03-07
-// RCS-ID:      $Id: mimetest.cpp,v 1.1 2005-03-08 16:58:13 wyo Exp $
+// RCS-ID:      $Id: mimetest.cpp,v 1.2 2005-03-08 18:54:03 wyo Exp $
 // Copyright:   (c) 2005 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -219,7 +219,7 @@ AppAbout::AppAbout (wxWindow *parent,
 
     // about icontitle//info
     wxBoxSizer *aboutpane = new wxBoxSizer (wxHORIZONTAL);
-    wxBitmap bitmap = wxBitmap(wxICON (app));
+    wxBitmap bitmap = wxBitmap(wxICON (mimetest));
     aboutpane->Add (new wxStaticBitmap (this, -1, bitmap),
                     0, wxALIGN_CENTER | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT, 40);
     aboutpane->Add (aboutinfo, 1, wxEXPAND);
@@ -282,7 +282,7 @@ AppFrame::AppFrame (const wxString &title)
                     wxDEFAULT_FRAME_STYLE | wxNO_FULL_REPAINT_ON_RESIZE) {
 
     // set icon and background
-    SetIcon (wxICON (app));
+    SetIcon (wxICON (mimetest));
 
     // about box shown for 5 seconds
 //?    AppAbout (this, 5000);
@@ -296,7 +296,7 @@ AppFrame::AppFrame (const wxString &title)
     data.extension = _T("htb");
     data.description = _T("Das ist ein Test");
     data.appname = wxGetApp().argv[0];
-    data.icon = wxICON (app);
+    data.icon = wxICON (mimetest);
 
     // check mim type
     if (m_mime->Match (&data)) {
@@ -316,7 +316,9 @@ AppFrame::AppFrame (const wxString &title)
     bool ok = m_mime->GetData (&result);
     if (ok) {
         text = wxString::Format (_T("Extension: %s\nDescription: %s\nAppname: %s\n"),
-                                 result.extension, result.description, result.appname);
+                                 result.extension.c_str(), 
+                                 result.description.c_str(), 
+                                 result.appname.c_str());
     }
     m_data = new wxTextCtrl (this, -1, text, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE);
 
