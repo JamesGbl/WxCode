@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.18 2004-06-30 17:33:35 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.19 2004-07-07 20:27:11 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -372,7 +372,7 @@ public:
     wxTreeItemId GetRootItem() const { return m_anchor; }
 
     // get the item currently selected (may return NULL if no selection)
-    wxTreeItemId GetSelection() const { return m_current; }
+    wxTreeItemId GetSelection() const;
 
     // get the items currently selected, return the number of such item
     size_t GetSelections(wxArrayTreeItemIds&) const;
@@ -2927,6 +2927,14 @@ void wxTreeListMainWindow::FillArray(wxTreeListItem *item,
         size_t count = children.GetCount();
         for ( size_t n = 0; n < count; ++n )
             FillArray(children[n], array);
+    }
+}
+
+wxTreeItemId wxTreeListMainWindow::GetSelection () const {
+    if (m_current && m_current->IsSelected()) {
+        return m_current;
+    }else{
+        return (wxTreeItemId *)NULL;
     }
 }
 
