@@ -9,10 +9,10 @@ Description:
 An interface for reading and writing archive formats, with
 implementations for zip and tar.
 
-Currently there is an example program samples/arc.cpp, and the
-generic wxArchive classes. I haven't uploaded the zip and tar
-classes yet (soon), and it won't do anything useful without
-them of course.
+Currently there is an example program (samples/arc.cpp), the
+generic wxArchive classes (include/wx/archive.h) and the zip
+classes (include/wx/zipstrm2.h). The tar classes will follow
+shortly.
 
 To try it out, check out the component, e.g.:
 
@@ -23,9 +23,10 @@ then move it to wxWidgets/contrib, e.g:
 
 $ mv wxCode/components wxWidgets/contrib
 
-Makefiles can be generated using wxWidgets' bakefiles
-(a temporary measure). Bakefile can be obtained from
-(http://bakefile.sourceforge.net). Create (or add to)
+Makefiles can be generated using wxWidgets' bakefiles, a temporary
+arrangement (i.e. hijacking wxWidgets' files is a temporary
+measure, I'll keep on using bakefile of course). Bakefile can be
+obtained from (http://bakefile.sourceforge.net). Create (or add to)
 Bakefiles.local.bkgen in your wxWidgets/build/bakefiles directory:
 
 <?xml version="1.0" ?>

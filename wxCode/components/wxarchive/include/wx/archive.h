@@ -2,7 +2,7 @@
 // Name:        archive.h
 // Purpose:     Streams for archive formats
 // Author:      Mike Wetherell
-// RCS-ID:      $Id: archive.h,v 1.2 2004-06-28 11:25:16 chiclero Exp $
+// RCS-ID:      $Id: archive.h,v 1.3 2004-07-08 05:36:46 chiclero Exp $
 // Copyright:   (c) 2004 Mike Wetherell
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -23,11 +23,24 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
+// wxArchiveNotifier
+
+class wxArchiveNotifier
+{
+public:
+    virtual ~wxArchiveNotifier() { }
+
+    virtual void OnEntryChanged(class wxArchiveEntry& entry) = 0;
+};
+
+
+/////////////////////////////////////////////////////////////////////////////
 // Archive entry - holds an entry's meta data
 
 class wxArchiveEntry : public wxObject
 {
 public:
+    wxArchiveEntry() : m_notifier(NULL) { }
     virtual ~wxArchiveEntry() { }
 
     virtual wxDateTime GetDateTime() const = 0;
@@ -39,17 +52,57 @@ public:
 
     virtual void SetDateTime(const wxDateTime& dt) = 0;
     virtual void SetSize(off_t size) = 0;
-    virtual void SetOffset(off_t offset) = 0;
     virtual void SetIsDir(bool isDir = true) = 0;
-    virtual void SetName(const wxString& name, wxPathFormat format = wxPATH_NATIVE) = 0;
+    virtual void SetName(const wxString& name,
+                         wxPathFormat format = wxPATH_NATIVE) = 0;
     
     wxArchiveEntry *Clone() const { return DoClone(); }
 
+    inline void SetNotifier(wxArchiveNotifier& notifier);
+    virtual void UnsetNotifier() { m_notifier = NULL; }
+
 protected:
+    virtual void SetOffset(off_t offset) = 0;
     virtual wxArchiveEntry* DoClone() const = 0;
 
+    wxArchiveNotifier *GetNotifier() const { return m_notifier; }
+    inline wxArchiveEntry& operator=(const wxArchiveEntry& entry);
+
+private:
+    wxArchiveNotifier *m_notifier;
+
     DECLARE_ABSTRACT_CLASS(wxArchiveEntry)
-    DECLARE_NO_ASSIGN_CLASS(wxArchiveEntry)
+};
+
+// inline
+void wxArchiveEntry::SetNotifier(wxArchiveNotifier& notifier)
+{
+    UnsetNotifier();
+    m_notifier = &notifier;
+    m_notifier->OnEntryChanged(*this);
+}
+
+// inline
+wxArchiveEntry& wxArchiveEntry::operator=(const wxArchiveEntry& entry)
+{
+    m_notifier = entry.m_notifier;
+    return *this;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// wxArchiveExtra
+
+class wxArchiveExtra : public wxObject
+{
+public:
+    virtual ~wxArchiveExtra() { }
+
+protected:
+    wxArchiveExtra& operator=(const wxArchiveExtra& WXUNUSED(extra))
+        { return *this; }
+
+    DECLARE_ABSTRACT_CLASS(wxArchiveExtra)
 };
 
 
@@ -63,8 +116,6 @@ public:
 
     virtual ~wxArchiveInputStream() { }
     
-    virtual bool Open() = 0;
-
     // Open a particular entry from the archive's catalog
     virtual bool Open(wxArchiveEntry& entry) = 0;
 
@@ -75,22 +126,22 @@ public:
     virtual bool OpenRaw(wxArchiveEntry& entry) = 0;
 
     virtual bool Close() = 0;
-    virtual bool IsOpened() const = 0;
 
-    wxArchiveEntry *GetEntry() { return DoGetEntry(); }
+    wxArchiveEntry *GetEntry()  { return DoGetEntry(); }
+    wxArchiveExtra *GetExtra()  { return DoGetExtra(); }
 
-    virtual char Peek()        { return wxInputStream::Peek(); }
-
+    virtual char Peek()         { return wxInputStream::Peek(); }
+    
 protected:
     wxArchiveInputStream(wxInputStream& stream, wxMBConv& conv);
 
     virtual wxArchiveEntry *DoGetEntry() = 0;
-    wxMBConv& GetConv() const { return m_conv; }
+    virtual wxArchiveExtra *DoGetExtra() = 0;
+
+    wxMBConv& GetConv() const   { return m_conv; }
 
 private:
     wxMBConv& m_conv;
-
-    DECLARE_NO_ASSIGN_CLASS(wxArchiveInputStream)
 };
 
 
@@ -115,7 +166,8 @@ public:
 
     virtual bool Close() = 0;
     virtual bool CloseArchive() = 0;
-    virtual bool IsOpened() const = 0;
+
+    virtual void SetExtra(wxArchiveExtra *extra) = 0;
 
 protected:
     wxArchiveOutputStream(wxOutputStream& stream, wxMBConv& conv);
@@ -124,8 +176,6 @@ protected:
 
 private:
     wxMBConv& m_conv;
-
-    DECLARE_NO_ASSIGN_CLASS(wxArchiveOutputStream)
 };
 
 
@@ -151,12 +201,13 @@ protected:
     virtual wxArchiveOutputStream *DoNewStream(wxOutputStream& stream) = 0;
 
     wxArchiveClassFactory() : m_pConv(&wxConvFile) { }
+    wxArchiveClassFactory& operator=(const wxArchiveClassFactory& WXUNUSED(f))
+        { return *this; }
 
 private:
     wxMBConv *m_pConv;
 
     DECLARE_ABSTRACT_CLASS(wxArchiveClassFactory)
-    DECLARE_NO_ASSIGN_CLASS(wxArchiveOutputStream)
 };
 
 
@@ -167,11 +218,11 @@ private:
 #include <iterator>
 
 template <class X, class Y>
-void wxSetArchiveIteratorValue(X& val, Y entry) {
+void _wxSetArchiveIteratorValue(X& val, Y entry) {
     val = X(entry);
 }
 template <class X, class Y, class Z>
-void wxSetArchiveIteratorValue(std::pair<X, Y>& val, Z entry) {
+void _wxSetArchiveIteratorValue(std::pair<X, Y>& val, Z entry) {
     val = std::make_pair(X(entry->GetInternalName()), Y(entry));
 }
 
@@ -205,11 +256,11 @@ public:
     }
 
     wxArchiveIterator& operator =(const wxArchiveIterator& it) {
+        if (it.m_rep)
+            it.m_rep.AddRef();
         if (m_rep)
             m_rep.UnRef();
         m_rep = it.m_rep;
-        if (m_rep)
-            m_rep.AddRef();
         return *this;
     }
 
@@ -274,7 +325,7 @@ private:
 
         const T& GetValue() {
             if (m_entry) {
-                wxSetArchiveIteratorValue(m_value, m_entry);
+                _wxSetArchiveIteratorValue(m_value, m_entry);
                 m_entry = NULL;
             }
             return m_value;

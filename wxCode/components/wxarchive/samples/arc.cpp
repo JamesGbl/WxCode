@@ -2,7 +2,7 @@
 // Name:        arc.cpp
 // Purpose:     Examples for archive classes
 // Author:      Mike Wetherell
-// RCS-ID:      $Id: arc.cpp,v 1.2 2004-06-28 11:25:17 chiclero Exp $
+// RCS-ID:      $Id: arc.cpp,v 1.3 2004-07-08 05:36:46 chiclero Exp $
 // Copyright:   (c) Mike Wetherell
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -123,8 +123,10 @@ bool ArcApp::Create()
 {
     wxArchiveOutputStreamPtr arc(m_factory->NewStream(*m_out));
 
+    // turn m_args into a list of files, i.e. expand wildcards, recurse
+    // directories and remove duplicates
     NameMap files;
-    MakeFileList(files, m_filter ? _T("") : m_archive.c_str());
+    MakeFileList(files, m_filter ? _T("") : m_archive.c_str(), m_output);
 
     for (NameMap::iterator it = files.begin(); it != files.end(); ++it) {
         wxString name = it->second;
@@ -167,6 +169,7 @@ bool ArcApp::Extract()
         if (m_args.size() > 0 && !entry->GetName().Matches(m_args[0]))
             continue;
         *m_info << "extracting " << entry->GetName().mb_str() << std::endl;
+
         wxFileName fn(entry->GetName());
 
         if (entry->IsDir()) {
@@ -175,7 +178,7 @@ bool ArcApp::Extract()
             wxFileName::Mkdir(fn.GetPath(), 0777, wxPATH_MKDIR_FULL);
 
             wxFFileOutputStream out(entry->GetName());
-            if (!out || !arc->Open() || !out.Write(*arc) || !arc->Eof())
+            if (!out || !out.Write(*arc) || !arc->Eof())
                 return false;
         }
 
@@ -201,27 +204,12 @@ bool ArcApp::List()
     wxArchiveInputStreamPtr arc(m_factory->NewStream(*m_in));
     wxArchiveEntryPtr       entry(arc->GetEntry());
 
-    for (; entry.get(); entry.reset(arc->GetEntry())) {
-        if (!m_args.empty() || entry->GetName().Matches(m_args[0])) {
-            off_t size = entry->GetSize();
-
-            if (size == wxInvalidOffset) {
-                if (!arc->Open())
-                    return false;
-                char buf[1024];
-                while (arc->IsOk())
-                    arc->Read(buf, sizeof(buf));
-                if (!arc->Eof())
-                    return false;
-                size = arc->TellI();
-            }
-
+    for (; entry.get() && arc->Close(); entry.reset(arc->GetEntry()))
+        if (m_args.empty() || entry->GetName().Matches(m_args[0]))
             *m_info
-                << std::setw(9) << size << " "
+                << std::setw(9) << entry->GetSize() << " "
                 << entry->GetDateTime().Format(_T("%x %X")).mb_str() << " "
                 << entry->GetName().mb_str() << std::endl;
-        }
-    }
 
     return arc->Eof();
 }
@@ -240,6 +228,8 @@ bool ArcApp::Remove()
     wxArchiveInputStreamPtr  arc(m_factory->NewStream(*m_in));
     wxArchiveOutputStreamPtr outarc(m_factory->NewStream(*m_out));
     wxArchiveEntryPtr        entry(arc->GetEntry());
+
+    outarc->SetExtra(arc->GetExtra());
 
     for (; entry.get(); entry.reset(arc->GetEntry()))
         if (entry->GetName().Matches(pattern))
@@ -269,6 +259,8 @@ bool ArcApp::Rename()
     wxArchiveOutputStreamPtr outarc(m_factory->NewStream(*m_out));
     wxArchiveEntryPtr        entry(arc->GetEntry());
 
+    outarc->SetExtra(arc->GetExtra());
+
     for (; entry.get(); entry.reset(arc->GetEntry())) {
         if (entry->GetName() == from) {
             *m_info << "renaming '" << from.mb_str()
@@ -276,7 +268,7 @@ bool ArcApp::Rename()
             entry->SetName(to);
         }
 
-        if (!arc->OpenRaw(*entry) || !outarc->CreateRaw(entry.release()) ||
+        if (!arc->OpenRaw() || !outarc->CreateRaw(entry.release()) ||
                 !outarc->Write(*arc) || !arc->Eof())
             return false;
     }
@@ -301,6 +293,8 @@ bool ArcApp::Add()
     wxArchiveOutputStreamPtr outarc(m_factory->NewStream(*m_out));
     wxArchiveEntryPtr        entry(arc->GetEntry());
 
+    outarc->SetExtra(arc->GetExtra());
+
     for (;;) {
         bool keep;
         NameMap::iterator it;
@@ -320,6 +314,7 @@ bool ArcApp::Add()
             files.erase(it);
 
             if (wxDirExists(name)) {
+                *m_info << "adding " << name.mb_str() << std::endl;
                 wxDateTime dt = wxFileName(name, _T("")).GetModificationTime();
                 if (!outarc->CreateDir(name, dt))
                     return false;
@@ -328,6 +323,7 @@ bool ArcApp::Add()
                 wxFFileInputStream file(name);
 
                 if (file.Ok()) {
+                    *m_info << "adding " << name.mb_str() << std::endl;
                     wxDateTime dt = wxFileName(name).GetModificationTime();
                     if (!outarc->Create(name, dt, file.GetSize()) ||
                             !outarc->Write(file) || !file.Eof())
@@ -338,11 +334,11 @@ bool ArcApp::Add()
         }
 
         if (keep)
-            if (!arc->OpenRaw(*entry) || !outarc->CreateRaw(entry.release()) ||
+            if (!arc->OpenRaw() || !outarc->CreateRaw(entry.release()) ||
                     !outarc->Write(*arc) || !arc->Eof())
                 return false;
 
-        if (entry.get())
+        if (entry.get() || keep)
             entry.reset(arc->GetEntry());
     }
 
@@ -490,7 +486,8 @@ void ArcApp::Commit(bool commit)
                 *m_info << "commiting changes\n";
                 wxRemove(m_archive);
             }
-            wxRename(m_output, m_archive);
+            if (wxRename(m_output, m_archive) == -1)
+                wxLogSysError(_T("can't commit '%s'"), m_archive.c_str());
         } else {
             if (exists)
                 *m_info << "rolling back changes\n";
@@ -564,6 +561,9 @@ int ArcApp::OnRun()
     if (IsCmd(_T("rename"), IO, _T("FROM TO"),   _T("rename an entry")))
         ok = Rename();
 
+    m_in.reset();
+    m_out.reset();
+
     Commit(ok);
         
     // IsCmd populates m_availCmds, now use it to make a usage string
@@ -597,7 +597,7 @@ int ArcApp::OnRun()
 /////////////////////////////////////////////////////////////////////////////
 // Helper to put a stream in bin-mode
 
-void Reopen(const wxChar *mode, FILE *stream)
+void Reopen(const char *mode, FILE *stream)
 {
 #if defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L
     freopen(NULL, mode, stream);

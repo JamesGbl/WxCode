@@ -2,7 +2,7 @@
 // Name:        archive.cpp
 // Purpose:     Streams for archive formats
 // Author:      Mike Wetherell
-// RCS-ID:      $Id: archive.cpp,v 1.2 2004-06-28 11:25:16 chiclero Exp $
+// RCS-ID:      $Id: archive.cpp,v 1.3 2004-07-08 05:36:46 chiclero Exp $
 // Copyright:   (c) Mike Wetherell
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -26,6 +26,7 @@
 
 
 IMPLEMENT_ABSTRACT_CLASS(wxArchiveEntry, wxObject)
+IMPLEMENT_ABSTRACT_CLASS(wxArchiveExtra, wxObject)
 IMPLEMENT_ABSTRACT_CLASS(wxArchiveClassFactory, wxObject)
 
 

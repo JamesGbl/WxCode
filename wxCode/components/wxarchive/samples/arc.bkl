@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!-- $Id: arc.bkl,v 1.1 2004-06-25 23:21:08 chiclero Exp $ -->
+<!-- $Id: arc.bkl,v 1.2 2004-07-08 05:36:46 chiclero Exp $ -->
 
 <makefile>
 
@@ -9,8 +9,8 @@
         <include>$(SRCDIR)/../include</include>
         <sources>arc.cpp</sources>
         <sources>../src/archive.cpp</sources>
-        <!--
         <sources>../src/zipstrm2.cpp</sources>
+        <!--
         <sources>../src/tarstrm.cpp</sources>
         -->
 
