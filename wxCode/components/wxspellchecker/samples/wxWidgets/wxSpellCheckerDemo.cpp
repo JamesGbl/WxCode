@@ -163,6 +163,9 @@ MyFrame::MyFrame(const wxString& title)
 
     m_pAspellInterface = new AspellInterface();
     m_pMySpellInterface = new MySpellInterface();
+
+    m_pAspellInterface->InitializeSpellCheckEngine();
+    m_pMySpellInterface->InitializeSpellCheckEngine();
 }
 
 
@@ -170,10 +173,16 @@ MyFrame::MyFrame(const wxString& title)
 MyFrame::~MyFrame()
 {
     if (m_pAspellInterface)
+    {
       delete m_pAspellInterface;
+      m_pAspellInterface = NULL;
+    }
     
     if (m_pMySpellInterface)
+    {
       delete m_pMySpellInterface;
+      m_pMySpellInterface = NULL;
+    }
 }
 
 // event handlers
@@ -293,7 +302,6 @@ void MyFrame::SpellCheck(wxSpellCheckEngineInterface* pSpellChecker)
     strText = textCtrl->GetValue();
   }
   
-  pSpellChecker->InitializeSpellCheckEngine();
   wxString strNewText = pSpellChecker->CheckSpelling(strText);
 
   if (!strNewText.empty())  // If the new text string is empty, then assume that the user cancelled
