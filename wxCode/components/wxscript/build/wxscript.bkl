@@ -45,7 +45,8 @@
 	<set var="COMP_SRC">../src/script.cpp ../src/scbasic.cpp 
                  		../src/sccint.cpp ../src/scunderc.cpp
                  		../src/sclua.cpp</set>
-	<set var="COMP_SAMPLE_SRC">../tests/test1/Test.cpp</set>
+	<set var="COMP_HDR">../include/wx/script.h ../include/wx/sclua.h</set>
+   	<set var="COMP_SAMPLE_SRC">../tests/test1/Test.cpp</set>
 	<set var="COMP_SAMPLE_DIR">../tests/test1</set>
 
 

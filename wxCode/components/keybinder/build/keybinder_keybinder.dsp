@@ -1,4 +1,4 @@
-# Microsoft Developer Studio Project File - Name="keybinder" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="keybinder_keybinder" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
@@ -42,8 +42,8 @@ RSC=rc.exe
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\keybinder"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MD /w /W0 /GR /GX /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /I "..\include" /D "WIN32" /D "_LIB" /D "__WXMSW__" /D "_UNICODE" /Fd"..\lib\keybinderu.pdb" /FD /c
-# ADD CPP /nologo /MD /w /W0 /GR /GX /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /I "..\include" /D "WIN32" /D "_LIB" /D "__WXMSW__" /D "_UNICODE" /Fd"..\lib\keybinderu.pdb" /FD /c
+# ADD BASE CPP /nologo /FD /MD /GR /GX /w /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /I "..\include" /Fd..\lib\keybinderu.pdb /D "WIN32" /D "_LIB" /D "__WXMSW__" /D "_UNICODE" /c
+# ADD CPP /nologo /FD /MD /GR /GX /w /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /I "..\include" /Fd..\lib\keybinderu.pdb /D "WIN32" /D "_LIB" /D "__WXMSW__" /D "_UNICODE" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -65,8 +65,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\keybinder"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswud" /I "..\include" /D "WIN32" /D "_LIB" /D "__WXDEBUG__" /D "__WXMSW__" /D "_UNICODE" /D "_DEBUG" /Fd"..\lib\keybinderud.pdb" /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswud" /I "..\include" /D "WIN32" /D "_LIB" /D "__WXDEBUG__" /D "__WXMSW__" /D "_UNICODE" /D "_DEBUG" /Fd"..\lib\keybinderud.pdb" /FD /GZ /c
+# ADD BASE CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswud" /I "..\include" /Zi /Gm /GZ /Fd..\lib\keybinderud.pdb /D "WIN32" /D "_LIB" /D "__WXDEBUG__" /D "__WXMSW__" /D "_UNICODE" /D "_DEBUG" /c
+# ADD CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswud" /I "..\include" /Zi /Gm /GZ /Fd..\lib\keybinderud.pdb /D "WIN32" /D "_LIB" /D "__WXDEBUG__" /D "__WXMSW__" /D "_UNICODE" /D "_DEBUG" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -88,8 +88,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\keybinder"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MD /w /W0 /GR /GX /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /I "..\include" /D "WIN32" /D "_LIB" /D "__WXMSW__" /Fd"..\lib\keybinder.pdb" /FD /c
-# ADD CPP /nologo /MD /w /W0 /GR /GX /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /I "..\include" /D "WIN32" /D "_LIB" /D "__WXMSW__" /Fd"..\lib\keybinder.pdb" /FD /c
+# ADD BASE CPP /nologo /FD /MD /GR /GX /w /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /I "..\include" /Fd..\lib\keybinder.pdb /D "WIN32" /D "_LIB" /D "__WXMSW__" /c
+# ADD CPP /nologo /FD /MD /GR /GX /w /O1 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /I "..\include" /Fd..\lib\keybinder.pdb /D "WIN32" /D "_LIB" /D "__WXMSW__" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -111,8 +111,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\keybinder"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswd" /I "..\include" /D "WIN32" /D "_LIB" /D "__WXDEBUG__" /D "__WXMSW__" /D "_DEBUG" /Fd"..\lib\keybinderd.pdb" /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswd" /I "..\include" /D "WIN32" /D "_LIB" /D "__WXDEBUG__" /D "__WXMSW__" /D "_DEBUG" /Fd"..\lib\keybinderd.pdb" /FD /GZ /c
+# ADD BASE CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswd" /I "..\include" /Zi /Gm /GZ /Fd..\lib\keybinderd.pdb /D "WIN32" /D "_LIB" /D "__WXDEBUG__" /D "__WXMSW__" /D "_DEBUG" /c
+# ADD CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswd" /I "..\include" /Zi /Gm /GZ /Fd..\lib\keybinderd.pdb /D "WIN32" /D "_LIB" /D "__WXDEBUG__" /D "__WXMSW__" /D "_DEBUG" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -122,7 +122,7 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo /out:"..\lib\keybinderd.lib"
 # ADD LIB32 /nologo /out:"..\lib\keybinderd.lib"
 
-!ENDIF 
+!ENDIF
 
 # Begin Target
 
@@ -142,13 +142,18 @@ SOURCE=.\..\src\keybinder.cpp
 SOURCE=.\..\src\menuutils.cpp
 # End Source File
 # End Group
+# Begin Group "Header Files"
+
+# PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\include\wx\keybinder.h
+SOURCE=.\..\include\wx\keybinder.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\wx\menuutils.h
+SOURCE=.\..\include\wx\menuutils.h
 # End Source File
+# End Group
 # End Target
 # End Project
+

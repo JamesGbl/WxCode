@@ -14,8 +14,12 @@ LIBEXT = @LIBEXT@
 LIBPREFIX = @LIBPREFIX@
 EXEEXT = @EXEEXT@
 SETFILE = @SETFILE@
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_DIR = @INSTALL_DIR@
 srcdir = @srcdir@
 top_builddir = @top_builddir@
+libdir = @libdir@
+includedir = @includedir@
 AR = @AR@
 RANLIB = @RANLIB@
 CXX = @CXX@
@@ -33,21 +37,16 @@ WXSCRIPT_CXXFLAGS = -I../include -I$(LUA_DIR)/include -I$(TOLUA_DIR)/include \
 	-I$(UCC_DIR)/include -DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC `wx-config \
 	--cxxflags` -Wall $(CPPFLAGS) $(CXXFLAGS)
 WXSCRIPT_OBJECTS =  \
-	autoconf/wxscript_script.o \
-	autoconf/wxscript_scbasic.o \
-	autoconf/wxscript_sccint.o \
-	autoconf/wxscript_scunderc.o \
-	autoconf/wxscript_sclua.o
+	wxscript_script.o \
+	wxscript_scbasic.o \
+	wxscript_sccint.o \
+	wxscript_scunderc.o \
+	wxscript_sclua.o
 MINIMAL_CXXFLAGS = -I../include -I$(LUA_DIR)/include -I$(TOLUA_DIR)/include \
 	-I$(UCC_DIR)/include -DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC `wx-config \
 	--cxxflags` -Wall $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
-	autoconf/minimal_script.o \
-	autoconf/minimal_scbasic.o \
-	autoconf/minimal_sccint.o \
-	autoconf/minimal_scunderc.o \
-	autoconf/minimal_sclua.o \
-	autoconf/minimal_Test.o
+	minimal_Test.o
 
 ### Conditionally set variables: ###
 
@@ -64,15 +63,15 @@ MINIMAL_OBJECTS =  \
 
 all: ../lib/$(LIBPREFIX)wxscript$(WXLIBPOSTFIX)$(LIBEXT) ../tests/test1/minimal$(EXEEXT)
 
-install: all
+install: all install-wxheaders install-lib
 
 uninstall: 
 
 install-strip: install
 
 clean: 
-	rm -rf autoconf/.deps autoconf/.pch
-	rm -f autoconf/*.o
+	rm -rf ./.deps ./.pch
+	rm -f ./*.o
 	rm -f ../lib/$(LIBPREFIX)wxscript$(WXLIBPOSTFIX)$(LIBEXT)
 	rm -f ../tests/test1/minimal$(EXEEXT)
 
@@ -103,6 +102,14 @@ docs:
 cleandocs: 
 	rm -rf ../docs/html
 
+install-wxheaders: 
+	$(INSTALL_DIR) $(DESTDIR)$(includedir)/wx
+	(cd $(srcdir) ; $(INSTALL_DATA)  ../include/wx/*.h $(DESTDIR)$(includedir)/wx)
+
+install-lib: 
+	$(INSTALL_DIR) $(DESTDIR)$(libdir)
+	(cd $(srcdir) ; $(INSTALL_DATA)  ../lib/*.a $(DESTDIR)$(libdir))
+
 ../lib/$(LIBPREFIX)wxscript$(WXLIBPOSTFIX)$(LIBEXT): $(WXSCRIPT_OBJECTS)
 	rm -f $@
 	$(AR) rcu $@ $(WXSCRIPT_OBJECTS)
@@ -113,37 +120,22 @@ cleandocs:
 	
 	$(__minimal___mac_setfilecmd)
 
-autoconf/wxscript_script.o: $(srcdir)/../src/script.cpp
+wxscript_script.o: $(srcdir)/../src/script.cpp
 	$(CXXC) -c -o $@ $(WXSCRIPT_CXXFLAGS) $<
 
-autoconf/wxscript_scbasic.o: $(srcdir)/../src/scbasic.cpp
+wxscript_scbasic.o: $(srcdir)/../src/scbasic.cpp
 	$(CXXC) -c -o $@ $(WXSCRIPT_CXXFLAGS) $<
 
-autoconf/wxscript_sccint.o: $(srcdir)/../src/sccint.cpp
+wxscript_sccint.o: $(srcdir)/../src/sccint.cpp
 	$(CXXC) -c -o $@ $(WXSCRIPT_CXXFLAGS) $<
 
-autoconf/wxscript_scunderc.o: $(srcdir)/../src/scunderc.cpp
+wxscript_scunderc.o: $(srcdir)/../src/scunderc.cpp
 	$(CXXC) -c -o $@ $(WXSCRIPT_CXXFLAGS) $<
 
-autoconf/wxscript_sclua.o: $(srcdir)/../src/sclua.cpp
+wxscript_sclua.o: $(srcdir)/../src/sclua.cpp
 	$(CXXC) -c -o $@ $(WXSCRIPT_CXXFLAGS) $<
 
-autoconf/minimal_script.o: $(srcdir)/../src/script.cpp
-	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $<
-
-autoconf/minimal_scbasic.o: $(srcdir)/../src/scbasic.cpp
-	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $<
-
-autoconf/minimal_sccint.o: $(srcdir)/../src/sccint.cpp
-	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $<
-
-autoconf/minimal_scunderc.o: $(srcdir)/../src/scunderc.cpp
-	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $<
-
-autoconf/minimal_sclua.o: $(srcdir)/../src/sclua.cpp
-	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $<
-
-autoconf/minimal_Test.o: $(srcdir)/../tests/test1/Test.cpp
+minimal_Test.o: $(srcdir)/../tests/test1/Test.cpp
 	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $<
 
 

@@ -48,9 +48,9 @@ WXWIN = c:\wxWidgets
 
 ### Variables: ###
 
-WXSCRIPT_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
-	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
-	/Fd..\lib\wxscript$(WXLIBPOSTFIX).pdb $(____DEBUGRUNTIME) \
+WXSCRIPT_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__DEBUG_DEFINE_p) \
+	/D__WXMSW__ $(__WARNINGS) $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
+	$(__DEBUGINFO) /Fd..\lib\wxscript$(WXLIBPOSTFIX).pdb $(____DEBUGRUNTIME) \
 	/I$(WXWIN)\include /I$(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) /I..\include \
 	/I$(LUA_DIR)\include /I$(TOLUA_DIR)\include /I$(UCC_DIR)\include \
 	/DwxSCRIPT_NO_CINT /DwxSCRIPT_NO_UNDERC /GR /GX $(CPPFLAGS) $(CXXFLAGS)
@@ -60,19 +60,14 @@ WXSCRIPT_OBJECTS =  \
 	msvc\wxscript_sccint.obj \
 	msvc\wxscript_scunderc.obj \
 	msvc\wxscript_sclua.obj
-MINIMAL_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
-	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
-	/Fd..\tests\test1\minimal.pdb $(____DEBUGRUNTIME) /I$(WXWIN)\include \
-	/I$(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) /I..\include /I$(LUA_DIR)\include \
-	/I$(TOLUA_DIR)\include /I$(UCC_DIR)\include /DwxSCRIPT_NO_CINT \
-	/DwxSCRIPT_NO_UNDERC /D_CONSOLE $(__DEBUG_DEFINE_p) /D__WXMSW__ /GR /GX \
-	$(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__DEBUG_DEFINE_p) /D__WXMSW__ \
+	$(__WARNINGS) $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
+	/Fd..\tests\test1\minimal.pdb $(____DEBUGRUNTIME) /I..\include \
+	/I$(WXWIN)\include /I$(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) \
+	/I$(LUA_DIR)\include /I$(TOLUA_DIR)\include /I$(UCC_DIR)\include \
+	/DwxSCRIPT_NO_CINT /DwxSCRIPT_NO_UNDERC /D_CONSOLE /GR /GX $(CPPFLAGS) \
+	$(CXXFLAGS)
 MINIMAL_OBJECTS =  \
-	msvc\minimal_script.obj \
-	msvc\minimal_scbasic.obj \
-	msvc\minimal_sccint.obj \
-	msvc\minimal_scunderc.obj \
-	msvc\minimal_sclua.obj \
 	msvc\minimal_Test.obj
 
 ### Conditionally set variables: ###
@@ -181,7 +176,7 @@ cleandocs:
 <<
 
 ..\tests\test1\minimal.exe: $(MINIMAL_OBJECTS) ..\lib\wxscript$(WXLIBPOSTFIX).lib
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_13) /LIBPATH:$(WXWIN)\lib\vc_lib /LIBPATH:..\lib /LIBPATH:$(LUA_DIR)\lib /LIBPATH:$(TOLUA_DIR)\lib /LIBPATH:$(UCC_DIR)\lib /SUBSYSTEM:CONSOLE @<<
+	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_13) /LIBPATH:..\lib /LIBPATH:$(WXWIN)\lib\vc_lib /LIBPATH:$(LUA_DIR)\lib /LIBPATH:$(TOLUA_DIR)\lib /LIBPATH:$(UCC_DIR)\lib /SUBSYSTEM:CONSOLE @<<
 	$(MINIMAL_OBJECTS)  ..\lib\wxscript$(WXLIBPOSTFIX).lib lua.lib lualib.lib tolua.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
 
@@ -199,21 +194,6 @@ msvc\wxscript_scunderc.obj: .\..\src\scunderc.cpp
 
 msvc\wxscript_sclua.obj: .\..\src\sclua.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(WXSCRIPT_CXXFLAGS) $**
-
-msvc\minimal_script.obj: .\..\src\script.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(MINIMAL_CXXFLAGS) $**
-
-msvc\minimal_scbasic.obj: .\..\src\scbasic.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(MINIMAL_CXXFLAGS) $**
-
-msvc\minimal_sccint.obj: .\..\src\sccint.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(MINIMAL_CXXFLAGS) $**
-
-msvc\minimal_scunderc.obj: .\..\src\scunderc.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(MINIMAL_CXXFLAGS) $**
-
-msvc\minimal_sclua.obj: .\..\src\sclua.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(MINIMAL_CXXFLAGS) $**
 
 msvc\minimal_Test.obj: .\..\tests\test1\Test.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(MINIMAL_CXXFLAGS) $**

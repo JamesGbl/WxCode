@@ -16,8 +16,12 @@ EXEEXT = @EXEEXT@
 RESCOMP = @RESCOMP@
 SETFILE = @SETFILE@
 NM = @NM@
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_DIR = @INSTALL_DIR@
 srcdir = @srcdir@
 top_builddir = @top_builddir@
+libdir = @libdir@
+includedir = @includedir@
 LDFLAGS_GUI = @LDFLAGS_GUI@
 AR = @AR@
 RANLIB = @RANLIB@
@@ -32,12 +36,12 @@ DESTDIR =
 KEYBINDER_CXXFLAGS = -I../include `wx-config --cxxflags` -Wall $(CPPFLAGS) \
 	$(CXXFLAGS)
 KEYBINDER_OBJECTS =  \
-	autoconf/keybinder_keybinder.o \
-	autoconf/keybinder_menuutils.o
+	keybinder_keybinder.o \
+	keybinder_menuutils.o
 MINIMAL_CXXFLAGS = -I../include `wx-config --cxxflags` -Wall $(CPPFLAGS) \
 	$(CXXFLAGS)
 MINIMAL_OBJECTS =  \
-	autoconf/minimal_minimal.o \
+	minimal_minimal.o \
 	$(__minimal___win32rc)
 
 ### Conditionally set variables: ###
@@ -49,26 +53,27 @@ MINIMAL_OBJECTS =  \
 @COND_BUILD_RELEASE_UNICODE_1@WXLIBPOSTFIX = u
 @COND_PLATFORM_MAC_1@__minimal___mac_setfilecmd = \
 @COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL minimal$(EXEEXT)
-COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd = $(NM) \
-	autoconf/minimal$(EXEEXT) | if grep -q pmwin.763 ; then emxbind -ep \
-	autoconf/minimal$(EXEEXT) ; fi
+COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd = $(NM) minimal$(EXEEXT) | if \
+	grep -q pmwin.763 ; then emxbind -ep minimal$(EXEEXT) ; fi
 @COND_PLATFORM_OS2_1@__minimal___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd)
-@COND_PLATFORM_WIN32_1@__minimal___win32rc = autoconf/minimal_minimal_rc.o
+@COND_PLATFORM_WIN32_1@__minimal___win32rc = minimal_minimal_rc.o
 
 
 ### Targets: ###
 
 all: ../lib/$(LIBPREFIX)keybinder$(WXLIBPOSTFIX)$(LIBEXT) ../sample/minimal$(EXEEXT)
 
-install: all
+install: all install-wxheaders install-lib
 
 uninstall: 
+	rm -f $(includedir)/wx/keybinder.h $(includedir)/wx/menuutils.h
+	rm -f $(libdir)/libkeybinder*.a
 
 install-strip: install
 
 clean: 
-	rm -rf autoconf/.deps autoconf/.pch
-	rm -f autoconf/*.o
+	rm -rf ./.deps ./.pch
+	rm -f ./*.o
 	rm -f ../lib/$(LIBPREFIX)keybinder$(WXLIBPOSTFIX)$(LIBEXT)
 	rm -f ../sample/minimal$(EXEEXT)
 
@@ -99,6 +104,14 @@ docs:
 cleandocs: 
 	rm -rf ../docs/html
 
+install-wxheaders: 
+	$(INSTALL_DIR) $(DESTDIR)$(includedir)/wx
+	(cd $(srcdir) ; $(INSTALL_DATA)  ../include/wx/*.h $(DESTDIR)$(includedir)/wx)
+
+install-lib: 
+	$(INSTALL_DIR) $(DESTDIR)$(libdir)
+	(cd $(srcdir) ; $(INSTALL_DATA)  ../lib/*.a $(DESTDIR)$(libdir))
+
 ../lib/$(LIBPREFIX)keybinder$(WXLIBPOSTFIX)$(LIBEXT): $(KEYBINDER_OBJECTS)
 	rm -f $@
 	$(AR) rcu $@ $(KEYBINDER_OBJECTS)
@@ -110,16 +123,16 @@ cleandocs:
 	$(__minimal___mac_setfilecmd)
 	$(__minimal___os2_emxbindcmd)
 
-autoconf/keybinder_keybinder.o: $(srcdir)/../src/keybinder.cpp
+keybinder_keybinder.o: $(srcdir)/../src/keybinder.cpp
 	$(CXXC) -c -o $@ $(KEYBINDER_CXXFLAGS) $<
 
-autoconf/keybinder_menuutils.o: $(srcdir)/../src/menuutils.cpp
+keybinder_menuutils.o: $(srcdir)/../src/menuutils.cpp
 	$(CXXC) -c -o $@ $(KEYBINDER_CXXFLAGS) $<
 
-autoconf/minimal_minimal.o: $(srcdir)/../sample/minimal.cpp
+minimal_minimal.o: $(srcdir)/../sample/minimal.cpp
 	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $<
 
-autoconf/minimal_minimal_rc.o: $(srcdir)/../sample/minimal.rc
+minimal_minimal_rc.o: $(srcdir)/../sample/minimal.rc
 	$(RESCOMP) -i$< -o$@  --include-dir ../include --include-dir ../sample
 
 

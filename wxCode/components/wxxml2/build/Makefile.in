@@ -15,8 +15,12 @@ LIBPREFIX = @LIBPREFIX@
 EXEEXT = @EXEEXT@
 SETFILE = @SETFILE@
 NM = @NM@
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_DIR = @INSTALL_DIR@
 srcdir = @srcdir@
 top_builddir = @top_builddir@
+libdir = @libdir@
+includedir = @includedir@
 LDFLAGS_GUI = @LDFLAGS_GUI@
 AR = @AR@
 RANLIB = @RANLIB@
@@ -30,15 +34,15 @@ ICONV_DIR = @ICONV_DIR@
 ### Variables: ###
 
 DESTDIR = 
-MINIMAL_CXXFLAGS = -I../include -I$(LIBXML2_DIR)/include \
-	-I$(ICONV_DIR)/include `wx-config --cxxflags` -Wall $(CPPFLAGS) $(CXXFLAGS)
-MINIMAL_OBJECTS =  \
-	autoconf/minimal_minimal.o
 WXXML2_CXXFLAGS = -I../include -I$(LIBXML2_DIR)/include -I$(ICONV_DIR)/include \
 	`wx-config --cxxflags` -Wall $(CPPFLAGS) $(CXXFLAGS)
 WXXML2_OBJECTS =  \
-	autoconf/wxxml2_xml2.o \
-	autoconf/wxxml2_dtd.o
+	wxxml2_xml2.o \
+	wxxml2_dtd.o
+MINIMAL_CXXFLAGS = -I../include -I$(LIBXML2_DIR)/include \
+	-I$(ICONV_DIR)/include `wx-config --cxxflags` -Wall $(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_OBJECTS =  \
+	minimal_minimal.o
 
 ### Conditionally set variables: ###
 
@@ -49,27 +53,28 @@ WXXML2_OBJECTS =  \
 @COND_BUILD_RELEASE_UNICODE_1@WXLIBPOSTFIX = u
 @COND_PLATFORM_MAC_1@__minimal___mac_setfilecmd = \
 @COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL minimal$(EXEEXT)
-COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd = $(NM) \
-	autoconf/minimal$(EXEEXT) | if grep -q pmwin.763 ; then emxbind -ep \
-	autoconf/minimal$(EXEEXT) ; fi
+COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd = $(NM) minimal$(EXEEXT) | if \
+	grep -q pmwin.763 ; then emxbind -ep minimal$(EXEEXT) ; fi
 @COND_PLATFORM_OS2_1@__minimal___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd)
 
 
 ### Targets: ###
 
-all: ../sample/minimal$(EXEEXT) ../lib/$(LIBPREFIX)wxxml2$(WXLIBPOSTFIX)$(LIBEXT)
+all: ../lib/$(LIBPREFIX)wxxml2$(WXLIBPOSTFIX)$(LIBEXT) ../sample/minimal$(EXEEXT)
 
-install: all
+install: all install-wxheaders install-lib
 
 uninstall: 
+	rm -f $(includedir)/wx/wxxml2.h $(includedir)/wx/dtd.h
+	rm -f $(libdir)/libwxxml2*.a
 
 install-strip: install
 
 clean: 
-	rm -rf autoconf/.deps autoconf/.pch
-	rm -f autoconf/*.o
-	rm -f ../sample/minimal$(EXEEXT)
+	rm -rf ./.deps ./.pch
+	rm -f ./*.o
 	rm -f ../lib/$(LIBPREFIX)wxxml2$(WXLIBPOSTFIX)$(LIBEXT)
+	rm -f ../sample/minimal$(EXEEXT)
 
 distclean: clean
 	rm -f config.cache config.log config.status bk-deps bk-make-pch shared-ld-sh Makefile
@@ -98,25 +103,33 @@ docs:
 cleandocs: 
 	rm -rf ../docs/html
 
-../sample/minimal$(EXEEXT): $(MINIMAL_OBJECTS) ../lib/$(LIBPREFIX)wxxml2$(WXLIBPOSTFIX)$(LIBEXT) ../lib/$(LIBPREFIX)wxxml2$(WXLIBPOSTFIX)$(LIBEXT)
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS)  $(LDFLAGS_GUI) -L../lib -L$(LIBXML2_DIR)/lib -L$(ICONV_DIR)/lib `wx-config --libs`  ../lib/$(LIBPREFIX)wxxml2$(WXLIBPOSTFIX)$(LIBEXT) -lxml2 -liconv
-	
-	$(__minimal___mac_setfilecmd)
-	$(__minimal___os2_emxbindcmd)
+install-wxheaders: 
+	$(INSTALL_DIR) $(DESTDIR)$(includedir)/wx
+	(cd $(srcdir) ; $(INSTALL_DATA)  ../include/wx/*.h $(DESTDIR)$(includedir)/wx)
+
+install-lib: 
+	$(INSTALL_DIR) $(DESTDIR)$(libdir)
+	(cd $(srcdir) ; $(INSTALL_DATA)  ../lib/*.a $(DESTDIR)$(libdir))
 
 ../lib/$(LIBPREFIX)wxxml2$(WXLIBPOSTFIX)$(LIBEXT): $(WXXML2_OBJECTS)
 	rm -f $@
 	$(AR) rcu $@ $(WXXML2_OBJECTS)
 	$(RANLIB) $@
 
-autoconf/minimal_minimal.o: $(srcdir)/../sample/minimal.cpp
+../sample/minimal$(EXEEXT): $(MINIMAL_OBJECTS) ../lib/$(LIBPREFIX)wxxml2$(WXLIBPOSTFIX)$(LIBEXT)
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS)  $(LDFLAGS_GUI) -L../lib -L$(LIBXML2_DIR)/lib -L$(ICONV_DIR)/lib `wx-config --libs`  ../lib/$(LIBPREFIX)wxxml2$(WXLIBPOSTFIX)$(LIBEXT) -lxml2 -liconv
+	
+	$(__minimal___mac_setfilecmd)
+	$(__minimal___os2_emxbindcmd)
+
+wxxml2_xml2.o: $(srcdir)/../src/xml2.cpp
+	$(CXXC) -c -o $@ $(WXXML2_CXXFLAGS) $<
+
+wxxml2_dtd.o: $(srcdir)/../src/dtd.cpp
+	$(CXXC) -c -o $@ $(WXXML2_CXXFLAGS) $<
+
+minimal_minimal.o: $(srcdir)/../sample/minimal.cpp
 	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $<
-
-autoconf/wxxml2_xml2.o: $(srcdir)/../src/xml2.cpp
-	$(CXXC) -c -o $@ $(WXXML2_CXXFLAGS) $<
-
-autoconf/wxxml2_dtd.o: $(srcdir)/../src/dtd.cpp
-	$(CXXC) -c -o $@ $(WXXML2_CXXFLAGS) $<
 
 
 # Include dependency info, if present:

@@ -14,6 +14,7 @@
 
 	<set var="COMP_NAME">keybinder</set>
 	<set var="COMP_SRC">../src/keybinder.cpp ../src/menuutils.cpp</set>
+	<set var="COMP_HDR">../include/wx/keybinder.h ../include/wx/menuutils.h</set>	
 	<set var="COMP_SAMPLE_SRC">../sample/minimal.cpp</set>
 
 
@@ -37,5 +38,12 @@
 		<syslibs/>
 	</exe>
 	
+	<if cond="FORMAT=='autoconf'">
+		<modify-target target="uninstall">
+	        <rmfile>$(INCLUDEDIR)/wx/keybinder.h $(INCLUDEDIR)/wx/menuutils.h</rmfile>
+    	    <rmfile>$(LIBDIR)/libkeybinder*.a</rmfile>
+	    </modify-target>
+    </if>
+    	
 </makefile>
 

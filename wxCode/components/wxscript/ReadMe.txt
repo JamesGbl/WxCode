@@ -51,7 +51,7 @@
 
 
   Why wxScript supports different interpreters instead of 
-  focusing on the powerful feature of a specific one ?
+  focusing on the powerful features of a specific one ?
  ---------------------------------------------------------
 
   There are various answer to this question:

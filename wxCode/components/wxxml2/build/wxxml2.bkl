@@ -58,5 +58,12 @@
 		<wxlibs/>
 		<syslibs/>
 	</exe>
-		
+	
+	<if cond="FORMAT=='autoconf'">
+		<modify-target target="uninstall">
+	        <rmfile>$(INCLUDEDIR)/wx/wxxml2.h $(INCLUDEDIR)/wx/dtd.h</rmfile>
+    	    <rmfile>$(LIBDIR)/libwxxml2*.a</rmfile>
+	    </modify-target>
+    </if>
+    
 </makefile>

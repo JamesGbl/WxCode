@@ -124,10 +124,10 @@ zip:
 	( cd .. && zip -r9 keybinder.zip *  -x *.pdb -x *.log -x *.o* )
 
 cleanbuilddirs: 
-	-if exist msvc rmdir /S /Q msvc
-	-if exist watcom rmdir /S /Q watcom
-	-if exist borland rmdir /S /Q borland
-	-if exist mingw rmdir /S /Q mingw
+	-if exist msvc then rmdir /S /Q msvc
+	-if exist watcom then rmdir /S /Q watcom
+	-if exist borland then rmdir /S /Q borland
+	-if exist mingw then rmdir /S /Q mingw
 
 cleanall: clean cleanbuilddirs
 	del /S /Q ..\*.log >NUL
@@ -139,7 +139,7 @@ docs:
 	( cd ..\docs && doxygen )
 
 cleandocs: 
-	-if exist ..\docs\html rmdir /S /Q ..\docs\html
+	-if exist ..\docs\html then rmdir /S /Q ..\docs\html
 
 ..\lib\libkeybinder$(WXLIBPOSTFIX).a: $(KEYBINDER_OBJECTS)
 	if exist $@ del $@

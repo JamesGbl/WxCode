@@ -48,8 +48,8 @@ WXWIN = c:\wxWidgets
 
 ### Variables: ###
 
-WXSCRIPT_CXXFLAGS = -DHAVE_W32API_H $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
-	$(__DEBUGINFO) -I$(WXWIN)\include \
+WXSCRIPT_CXXFLAGS = -DHAVE_W32API_H $(__DEBUG_DEFINE_p) -D__WXMSW__ \
+	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -I$(WXWIN)\include \
 	-I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) -I..\include \
 	-I$(LUA_DIR)\include -I$(TOLUA_DIR)\include -I$(UCC_DIR)\include \
 	-DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC -Wall $(CPPFLAGS) $(CXXFLAGS)
@@ -59,18 +59,12 @@ WXSCRIPT_OBJECTS =  \
 	mingw\wxscript_sccint.o \
 	mingw\wxscript_scunderc.o \
 	mingw\wxscript_sclua.o
-MINIMAL_CXXFLAGS = -DHAVE_W32API_H $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
-	$(__DEBUGINFO) -I$(WXWIN)\include \
-	-I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) -I..\include \
+MINIMAL_CXXFLAGS = -DHAVE_W32API_H $(__DEBUG_DEFINE_p) -D__WXMSW__ \
+	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -I..\include \
+	-I$(WXWIN)\include -I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) \
 	-I$(LUA_DIR)\include -I$(TOLUA_DIR)\include -I$(UCC_DIR)\include \
-	-DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC $(__DEBUG_DEFINE_p) -D__WXMSW__ \
-	-Wall $(CPPFLAGS) $(CXXFLAGS)
+	-DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC -Wall $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
-	mingw\minimal_script.o \
-	mingw\minimal_scbasic.o \
-	mingw\minimal_sccint.o \
-	mingw\minimal_scunderc.o \
-	mingw\minimal_sclua.o \
 	mingw\minimal_Test.o
 
 ### Conditionally set variables: ###
@@ -137,10 +131,10 @@ zip:
 	( cd .. && zip -r9 wxscript.zip *  -x *.pdb -x *.log -x *.o* )
 
 cleanbuilddirs: 
-	-if exist msvc rmdir /S /Q msvc
-	-if exist watcom rmdir /S /Q watcom
-	-if exist borland rmdir /S /Q borland
-	-if exist mingw rmdir /S /Q mingw
+	-if exist msvc then rmdir /S /Q msvc
+	-if exist watcom then rmdir /S /Q watcom
+	-if exist borland then rmdir /S /Q borland
+	-if exist mingw then rmdir /S /Q mingw
 
 cleanall: clean cleanbuilddirs
 	del /S /Q ..\*.log >NUL
@@ -152,7 +146,7 @@ docs:
 	( cd ..\docs && doxygen )
 
 cleandocs: 
-	-if exist ..\docs\html rmdir /S /Q ..\docs\html
+	-if exist ..\docs\html then rmdir /S /Q ..\docs\html
 
 ..\lib\libwxscript$(WXLIBPOSTFIX).a: $(WXSCRIPT_OBJECTS)
 	if exist $@ del $@
@@ -160,7 +154,7 @@ cleandocs:
 	ranlib $@
 
 ..\tests\test1\minimal.exe: $(MINIMAL_OBJECTS) ..\lib\libwxscript$(WXLIBPOSTFIX).a
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -L$(WXWIN)\lib\gcc_lib -L..\lib -L$(LUA_DIR)\lib -L$(TOLUA_DIR)\lib -L$(UCC_DIR)\lib   ..\lib\libwxscript$(WXLIBPOSTFIX).a -llua -llualib -ltolua -lwxmsw25$(WXLIBPOSTFIX)_core -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXSUBLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -L..\lib -L$(WXWIN)\lib\gcc_lib -L$(LUA_DIR)\lib -L$(TOLUA_DIR)\lib -L$(UCC_DIR)\lib   ..\lib\libwxscript$(WXLIBPOSTFIX).a -llua -llualib -ltolua -lwxmsw25$(WXLIBPOSTFIX)_core -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXSUBLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
 mingw\wxscript_script.o: ./../src/script.cpp
 	$(CXX) -c -o $@ $(WXSCRIPT_CXXFLAGS) $<
@@ -176,21 +170,6 @@ mingw\wxscript_scunderc.o: ./../src/scunderc.cpp
 
 mingw\wxscript_sclua.o: ./../src/sclua.cpp
 	$(CXX) -c -o $@ $(WXSCRIPT_CXXFLAGS) $<
-
-mingw\minimal_script.o: ./../src/script.cpp
-	$(CXX) -c -o $@ $(MINIMAL_CXXFLAGS) $<
-
-mingw\minimal_scbasic.o: ./../src/scbasic.cpp
-	$(CXX) -c -o $@ $(MINIMAL_CXXFLAGS) $<
-
-mingw\minimal_sccint.o: ./../src/sccint.cpp
-	$(CXX) -c -o $@ $(MINIMAL_CXXFLAGS) $<
-
-mingw\minimal_scunderc.o: ./../src/scunderc.cpp
-	$(CXX) -c -o $@ $(MINIMAL_CXXFLAGS) $<
-
-mingw\minimal_sclua.o: ./../src/sclua.cpp
-	$(CXX) -c -o $@ $(MINIMAL_CXXFLAGS) $<
 
 mingw\minimal_Test.o: ./../tests/test1/Test.cpp
 	$(CXX) -c -o $@ $(MINIMAL_CXXFLAGS) $<

@@ -72,12 +72,6 @@ WXWIN = c:\wxWidgets
 
 ### Variables: ###
 
-MINIMAL_CXXFLAGS = -I$(BCCDIR)\include $(__DEBUG_DEFINE_p) -D__WXMSW__ \
-	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -I..\include \
-	-I$(WXWIN)\include -I$(WXWIN)\lib\bcc_lib\msw$(WXLIBPOSTFIX) \
-	-I$(LIBXML2_DIR)\include -I$(ICONV_DIR)\include $(CPPFLAGS) $(CXXFLAGS)
-MINIMAL_OBJECTS =  \
-	borland\minimal_minimal.obj
 WXXML2_CXXFLAGS = -I$(BCCDIR)\include $(__DEBUG_DEFINE_p) -D__WXMSW__ \
 	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -I$(WXWIN)\include \
 	-I$(WXWIN)\lib\bcc_lib\msw$(WXLIBPOSTFIX) -I..\include \
@@ -85,6 +79,12 @@ WXXML2_CXXFLAGS = -I$(BCCDIR)\include $(__DEBUG_DEFINE_p) -D__WXMSW__ \
 WXXML2_OBJECTS =  \
 	borland\wxxml2_xml2.obj \
 	borland\wxxml2_dtd.obj
+MINIMAL_CXXFLAGS = -I$(BCCDIR)\include $(__DEBUG_DEFINE_p) -D__WXMSW__ \
+	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -I..\include \
+	-I$(WXWIN)\include -I$(WXWIN)\lib\bcc_lib\msw$(WXLIBPOSTFIX) \
+	-I$(LIBXML2_DIR)\include -I$(ICONV_DIR)\include $(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_OBJECTS =  \
+	borland\minimal_minimal.obj
 
 ### Conditionally set variables: ###
 
@@ -103,12 +103,6 @@ __OPTIMIZEFLAG = -Od
 !if "$(BUILD)" == "release"
 __OPTIMIZEFLAG = -O2
 !endif
-!if "$(BUILD)" == "debug"
-__DEBUGINFO = -v
-!endif
-!if "$(BUILD)" == "release"
-__DEBUGINFO = -v-
-!endif
 !if "$(BUILD)" == "debug" && "$(UNICODE)" == "0"
 WXLIBPOSTFIX = d
 !endif
@@ -117,6 +111,12 @@ WXLIBPOSTFIX = ud
 !endif
 !if "$(BUILD)" == "release" && "$(UNICODE)" == "1"
 WXLIBPOSTFIX = u
+!endif
+!if "$(BUILD)" == "debug"
+__DEBUGINFO = -v
+!endif
+!if "$(BUILD)" == "release"
+__DEBUGINFO = -v-
 !endif
 
 
@@ -127,18 +127,18 @@ borland:
 
 ### Targets: ###
 
-all: ..\sample\minimal.exe ..\lib\wxxml2$(WXLIBPOSTFIX).lib
+all: ..\lib\wxxml2$(WXLIBPOSTFIX).lib ..\sample\minimal.exe
 
 clean: 
 	-if exist borland\*.obj del borland\*.obj
 	-if exist borland\*.res del borland\*.res
+	-if exist ..\lib\wxxml2$(WXLIBPOSTFIX).lib del ..\lib\wxxml2$(WXLIBPOSTFIX).lib
 	-if exist ..\sample\minimal.exe del ..\sample\minimal.exe
 	-if exist ..\sample\minimal.tds del ..\sample\minimal.tds
 	-if exist ..\sample\minimal.ilc del ..\sample\minimal.ilc
 	-if exist ..\sample\minimal.ild del ..\sample\minimal.ild
 	-if exist ..\sample\minimal.ilf del ..\sample\minimal.ilf
 	-if exist ..\sample\minimal.ils del ..\sample\minimal.ils
-	-if exist ..\lib\wxxml2$(WXLIBPOSTFIX).lib del ..\lib\wxxml2$(WXLIBPOSTFIX).lib
 
 tarball: 
 	( cd .. && tar -cvzf wxxml2.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
@@ -164,23 +164,23 @@ docs:
 cleandocs: 
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
-..\sample\minimal.exe: $(MINIMAL_OBJECTS) ..\lib\wxxml2$(WXLIBPOSTFIX).lib ..\lib\wxxml2$(WXLIBPOSTFIX).lib
-	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -aa -L..\lib -L$(WXWIN)\lib\bcc_lib -L$(LIBXML2_DIR)\lib -L$(ICONV_DIR)\lib @&&|
-	c0w32.obj $(MINIMAL_OBJECTS),$@,, ..\lib\wxxml2$(WXLIBPOSTFIX).lib libxml2.lib iconv.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32.lib,,
-|
-
 ..\lib\wxxml2$(WXLIBPOSTFIX).lib: $(WXXML2_OBJECTS)
 	if exist $@ del $@
 	tlib /a /p4096 $@ @&&|
 	$(WXXML2_OBJECTS)
 |
 
-borland\minimal_minimal.obj: .\..\sample\minimal.cpp
-	$(CXX) -q -c -P -o$@ $(MINIMAL_CXXFLAGS) $**
+..\sample\minimal.exe: $(MINIMAL_OBJECTS) ..\lib\wxxml2$(WXLIBPOSTFIX).lib
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -aa -L..\lib -L$(WXWIN)\lib\bcc_lib -L$(LIBXML2_DIR)\lib -L$(ICONV_DIR)\lib @&&|
+	c0w32.obj $(MINIMAL_OBJECTS),$@,, ..\lib\wxxml2$(WXLIBPOSTFIX).lib libxml2.lib iconv.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32.lib,,
+|
 
 borland\wxxml2_xml2.obj: .\..\src\xml2.cpp
 	$(CXX) -q -c -P -o$@ $(WXXML2_CXXFLAGS) $**
 
 borland\wxxml2_dtd.obj: .\..\src\dtd.cpp
 	$(CXX) -q -c -P -o$@ $(WXXML2_CXXFLAGS) $**
+
+borland\minimal_minimal.obj: .\..\sample\minimal.cpp
+	$(CXX) -q -c -P -o$@ $(MINIMAL_CXXFLAGS) $**
 

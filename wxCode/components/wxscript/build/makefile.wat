@@ -117,28 +117,23 @@ WXLIBPOSTFIX = u
 
 ### Variables: ###
 
-WXSCRIPT_CXXFLAGS = $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) &
-	-i=$(WXWIN)\include -i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) &
-	-i=..\include -i=$(LUA_DIR)\include -i=$(TOLUA_DIR)\include &
-	-i=$(UCC_DIR)\include -dwxSCRIPT_NO_CINT -dwxSCRIPT_NO_UNDERC $(CPPFLAGS) &
-	$(CXXFLAGS)
+WXSCRIPT_CXXFLAGS = $(__DEBUG_DEFINE_p) -d__WXMSW__ $(__UNICODE_DEFINE_p) &
+	$(__OPTIMIZEFLAG) $(__DEBUGINFO) -i=$(WXWIN)\include &
+	-i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) -i=..\include &
+	-i=$(LUA_DIR)\include -i=$(TOLUA_DIR)\include -i=$(UCC_DIR)\include &
+	-dwxSCRIPT_NO_CINT -dwxSCRIPT_NO_UNDERC $(CPPFLAGS) $(CXXFLAGS)
 WXSCRIPT_OBJECTS =  &
 	watcom\wxscript_script.obj &
 	watcom\wxscript_scbasic.obj &
 	watcom\wxscript_sccint.obj &
 	watcom\wxscript_scunderc.obj &
 	watcom\wxscript_sclua.obj
-MINIMAL_CXXFLAGS = $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) &
-	-i=$(WXWIN)\include -i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) &
-	-i=..\include -i=$(LUA_DIR)\include -i=$(TOLUA_DIR)\include &
-	-i=$(UCC_DIR)\include -dwxSCRIPT_NO_CINT -dwxSCRIPT_NO_UNDERC &
-	$(__DEBUG_DEFINE_p) -d__WXMSW__ $(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_CXXFLAGS = $(__DEBUG_DEFINE_p) -d__WXMSW__ $(__UNICODE_DEFINE_p) &
+	$(__OPTIMIZEFLAG) $(__DEBUGINFO) -i=..\include -i=$(WXWIN)\include &
+	-i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) -i=$(LUA_DIR)\include &
+	-i=$(TOLUA_DIR)\include -i=$(UCC_DIR)\include -dwxSCRIPT_NO_CINT &
+	-dwxSCRIPT_NO_UNDERC $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  &
-	watcom\minimal_script.obj &
-	watcom\minimal_scbasic.obj &
-	watcom\minimal_sccint.obj &
-	watcom\minimal_scunderc.obj &
-	watcom\minimal_sclua.obj &
 	watcom\minimal_Test.obj
 
 
@@ -193,7 +188,7 @@ cleandocs :
 	@%append watcom\minimal.lbc option quiet
 	@%append watcom\minimal.lbc name $^@
 	@%append watcom\minimal.lbc option caseexact
-	@%append watcom\minimal.lbc $(LDFLAGS) $(__DEBUGINFO_7) libpath $(WXWIN)\lib\wat_lib libpath ..\lib libpath $(LUA_DIR)\lib libpath $(TOLUA_DIR)\lib libpath $(UCC_DIR)\lib system nt ref 'main_'
+	@%append watcom\minimal.lbc $(LDFLAGS) $(__DEBUGINFO_7) libpath ..\lib libpath $(WXWIN)\lib\wat_lib libpath $(LUA_DIR)\lib libpath $(TOLUA_DIR)\lib libpath $(UCC_DIR)\lib system nt ref 'main_'
 	@for %i in ($(MINIMAL_OBJECTS)) do @%append watcom\minimal.lbc file %i
 	@for %i in ( ..\lib\wxscript$(WXLIBPOSTFIX).lib lua.lib lualib.lib tolua.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\minimal.lbc library %i
 	@%append watcom\minimal.lbc
@@ -213,21 +208,6 @@ watcom\wxscript_scunderc.obj :  .AUTODEPEND .\..\src\scunderc.cpp
 
 watcom\wxscript_sclua.obj :  .AUTODEPEND .\..\src\sclua.cpp
 	$(CXX) -zq -fo=$^@ $(WXSCRIPT_CXXFLAGS) $<
-
-watcom\minimal_script.obj :  .AUTODEPEND .\..\src\script.cpp
-	$(CXX) -zq -fo=$^@ $(MINIMAL_CXXFLAGS) $<
-
-watcom\minimal_scbasic.obj :  .AUTODEPEND .\..\src\scbasic.cpp
-	$(CXX) -zq -fo=$^@ $(MINIMAL_CXXFLAGS) $<
-
-watcom\minimal_sccint.obj :  .AUTODEPEND .\..\src\sccint.cpp
-	$(CXX) -zq -fo=$^@ $(MINIMAL_CXXFLAGS) $<
-
-watcom\minimal_scunderc.obj :  .AUTODEPEND .\..\src\scunderc.cpp
-	$(CXX) -zq -fo=$^@ $(MINIMAL_CXXFLAGS) $<
-
-watcom\minimal_sclua.obj :  .AUTODEPEND .\..\src\sclua.cpp
-	$(CXX) -zq -fo=$^@ $(MINIMAL_CXXFLAGS) $<
 
 watcom\minimal_Test.obj :  .AUTODEPEND .\..\tests\test1\Test.cpp
 	$(CXX) -zq -fo=$^@ $(MINIMAL_CXXFLAGS) $<
