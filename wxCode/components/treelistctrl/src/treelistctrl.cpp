@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.59 2004-11-27 18:47:30 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.60 2004-12-03 18:00:44 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -1441,7 +1441,6 @@ void wxTreeListHeaderWindow::AddColumn(const wxTreeListColumnInfo& col)
     m_total_col_width += col.GetWidth();
     m_owner->AdjustMyScrollbars();
     m_owner->m_dirty = true;
-    Refresh();
 }
 
 void wxTreeListHeaderWindow::SetColumnWidth (int column, int width)
@@ -1452,7 +1451,6 @@ void wxTreeListHeaderWindow::SetColumnWidth (int column, int width)
         m_total_col_width += width;
         m_owner->AdjustMyScrollbars();
         m_owner->m_dirty = true;
-        Refresh();
     }
 }
 
@@ -1464,7 +1462,6 @@ void wxTreeListHeaderWindow::InsertColumn (int before, const wxTreeListColumnInf
     m_total_col_width += col.GetWidth();
     m_owner->AdjustMyScrollbars();
     m_owner->m_dirty = true;
-    Refresh();
 }
 
 void wxTreeListHeaderWindow::RemoveColumn (int column)
@@ -1474,7 +1471,6 @@ void wxTreeListHeaderWindow::RemoveColumn (int column)
     m_columns.RemoveAt(column);
     m_owner->AdjustMyScrollbars();
     m_owner->m_dirty = true;
-    Refresh();
 }
 
 void wxTreeListHeaderWindow::SetColumn (int column, const wxTreeListColumnInfo& info)
@@ -1485,9 +1481,8 @@ void wxTreeListHeaderWindow::SetColumn (int column, const wxTreeListColumnInfo& 
     if (w != info.GetWidth()) {
         m_total_col_width += info.GetWidth() - w;
         m_owner->AdjustMyScrollbars();
-        m_owner->m_dirty = true;
     }
-    Refresh();
+    m_owner->m_dirty = true;
 }
 
 // ---------------------------------------------------------------------------
@@ -3791,14 +3786,18 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
         return;
     }
 
-    wxPoint p = CalcUnscrolledPosition (wxPoint (event.GetX(), event.GetY()));
+    // set focus if window clicked
+    if (event.LeftDown() || event.RightDown()) SetFocus();
 
+    // determine event
+    wxPoint p = CalcUnscrolledPosition (wxPoint (event.GetX(), event.GetY()));
     int flags = 0;
     wxTreeListItem *item = m_rootItem->HitTest (p, this, flags, m_curColumn, 0);
 
     // we only process dragging here
     if (event.Dragging()){
         if (m_isDragging) return; // nothing to do, already done
+        if (item == NULL) return; // we need an item to dragging
 
         // determine drag start
         if (m_dragCount == 0) {
@@ -3852,10 +3851,6 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
         // end dragging
         m_dragCount = 0;
 
-    }
-
-    if (event.LeftDown() || event.RightDown()) {
-        SetFocus();
     }
 
     // we process only the messages which happen on tree items
