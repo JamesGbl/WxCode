@@ -1,0 +1,16 @@
+#
+# File:         makefile.g95
+# Author:       Aleksandras Gluchovas
+# Created:      1999
+# Updated:
+# Copyright:    (c) Aleksandras Gluchovas, 1999
+#
+# Makefile for wxWindows sample (Cygwin/Mingw32).
+
+WXDIR = ../..
+
+TARGET=awtlayouts
+OBJECTS = awt_emul.o cardlayout.o boxlayout.o flowlayout.o borderlayout.o gridlayout.o absolutelayout.o gridbaglayout.o layout_test.o
+
+include $(WXDIR)/src/makeprog.g95
+

@@ -1,0 +1,45 @@
+To: wxwin-developers@wx.dent.med.uni-muenchen.de
+
+Subject: AWT layouts (contrib)
+
+Hello all,
+
+Sorry for bothering you with another contrib, as the release
+is drawing closer, but here it came..
+
+Uploaded source, makefiles, shot and win32-binary demo for 
+this strange contrib. to:
+
+http://soften.ktu.lt/~alex/awtlayouts/
+
+the source contains C++ functional-equivalents for:
+
+java.awt.BorderLayout
+java.awt.FlowLayout
+java.awt.CardLayout
+java.awt.GridLayout
+java.awt.GridBagLayout
+javax.swing.BoxLayout    (a bit similar to wxBoxSizer)
+AbsoluteLayout
+
+(http://soften.ktu.lt/~alex/awtlayouts/overview.txt has more info)
+
+The contrib i've written with a hope that it may appear useful/interesting
+to users of wxWindows who are familiar with layouting system of AWT.
+
+But the primary reason was - that i'm in a great need for a fast and *OSS-based*
+GUI designer which generates layout-aware source for Java(TM). I'd have immediate
+use of it at my job... therefor i'm thinking to rewrite my unfinished res-editor
+(~alex/tmp1.gif) to use these wx-based C++ classes for visual editing of 
+entirely layout-based dialogs/panels and generating Java source code for them.
+
+
+Regards.
+Aleksandras
+
+PS: tip: If you'd suddenly felt like having half a day of truly intense 
+    brainstorming (without writing a single line of code!), here's a great 
+    recipe i found: get JDK docs, learn user-level description of 
+    "java.awt.GridBagLayout" and "java.awt.GridBagConstraings" classes. 
+    Then try to come up with reasonable (even not perfectly correct) alg. 
+    for implementing the described requirements..... lots of fun!
