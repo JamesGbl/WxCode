@@ -1,10 +1,9 @@
-Maintainer: Otto Wyss (wyo)
 Component:  wxCrashPrint
-Version:    2004-10-25
-Subdir:     crashprint
-Parts:
-More infos: -
+Release:    2004-10-25
+Documents:  http://wxcode.sourceforge.net/components/crashprint/index.html
 wxWidgets:  2.4.x, 2.5.x
+Maintainer: Otto Wyss (wyo)
+Subdir:     crashprint
 
 Description:
 This class formats and prints a report in case the application crashes on
