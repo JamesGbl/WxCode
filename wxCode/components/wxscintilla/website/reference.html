@@ -116,7 +116,7 @@ Functions with names of the form <code>Set...</code> often have a companion <cod
 <h3 id="TextRetrievalAndModification">Text retrieval and modification</h3>
 
 <p>
-Each character in a Scintilla document is followed by an associated byte of styling information. The combination of a character byte and a style byte is called a cell. Style bytes are interpreted as a style index in the low 5 bits and as 3 individual bits of <a class="jump" href="#Indicators">indicators</a>. This allows 32 fundamental styles, which is enough for most languages, and three independent indicators. For example, syntax errors, deprecated names and bad indentation could all be displayed at once. The number of bits used for styles can be altered with <a class="message" href="#SetStyleBits"><code>SetStyleBits</code></a> up to a maximum of 7 bits (some languages require more bits, e.g. HTML=7 bits). The remaining bits can be used for indicators.
+Each character in a Scintilla document is followed by an associated byte of styling information. The combination of a character byte and a style byte is called a cell. Style bytes are interpreted as a style index in the low 5 bits and as 3 individual bits of <a class="jump" href="#Indicators">indicators</a>. This allows 32 fundamental styles, which is enough for most languages, and three in dependent indicators. For example, syntax errors, deprecated names and bad indentation could all be displayed at once. The number of bits used for styles can be altered with <a class="message" href="#SetStyleBits"><code>SetStyleBits</code></a> up to a maximum of 7 bits (some languages require more bits, e.g. HTML=7 bits). The remaining bits can be used for indicators.
 </p>
 <p>
 Positions within the Scintilla document refer to a character or the gap before that character. The first character in a document is 0, the second 1 and so on. If a document contains <code>nLen</code> characters, the last character is numbered <code>nLen</code>-1. The caret exists between character positions and can be located from before the first character (0) to after the last character (<code>nLen</code>).
@@ -1720,7 +1720,7 @@ Scintilla has several functions that operate on words, which are defined to be c
 <div class="divider2"></div>
 <h4><a name="SetWhitespaceChars">void SetWhitespaceChars (const wxString& characters)</a></h4>
 <p>
-Similar to <code>SetWordChars</code>, allows the user to define which chars Scintilla considers as whitespace.  Setting the whitespace chars allows the user to fine-tune Scintilla's behaviour doing such things as moving the cursor to the start or end of a word; for example, by defining punctuation chars as whitespace, they will be skipped over when the user presses ctrl+left or ctrl+right. This function should be called after <code>SetWordChars</code> as it will reset the whitespace characters to the default set.
+Similar to <code>SetWordChars</code>, allows the user to define which chars Scintilla considers as whitespace.  Setting the whitespace chars allows the user to fine-tune Scintilla's behavior doing such things as moving the cursor to the start or end of a word; for example, by defining punctuation chars as whitespace, they will be skipped over when the user presses ctrl+left or ctrl+right. This function should be called after <code>SetWordChars</code> as it will reset the whitespace characters to the default set.
 </p>
 
 <div class="divider2"></div>
@@ -2051,7 +2051,7 @@ The <code>handle</code> argument is an identifier for a marker returned by <a cl
 <h3 id="Indicators">Indicators</h3>
 
 <p>
-By default, Scintilla organizes the style byte associated with each text byte as 5 bits of style information (for 32 styles) and 3 bits of indicator information for 3 independent indicators so that, for example, syntax errors, deprecated names and bad indentation could all be displayed at once. Indicators may be displayed as simple underlines, squiggly underlines, a line of small 'T' shapes, a line of diagonal hatching, a strike-out or a rectangle around the text.
+By default, Scintilla organizes the style byte associated with each text byte as 5 bits of style information (for 32 styles) and 3 bits of indicator information for 3 in dependent indicators so that, for example, syntax errors, deprecated names and bad indentation could all be displayed at once. Indicators may be displayed as simple underlines, squiggly underlines, a line of small 'T' shapes, a line of diagonal hatching, a strike-out or a rectangle around the text.
 </p>
 <p>
 The indicators are set using <a class="message" href="#StartStyling"><code>StartStyling</code></a> with a <code>wxSCI_INDICS_MASK</code> mask and <a class="message" href="#SetStyling"><code>SetStyling</code></a> with the values <code>INDIC0_MASK</code>, <code>INDIC1_MASK</code> and <code>INDIC2_MASK</code>.
@@ -3285,7 +3285,7 @@ You can set wether the visual flags to indicate a line is wrapped are drawn near
 <h4><a name="SetWrapStartIndent">void SetWrapStartIndent (int indent)</a><br />
     <a name="GetWrapStartIndent">int GetWrapStartIndent()</a></h4>
 <p>
-<code>SetWrapStartIndent</code> sets the size of indentation of sublines for wrapped lines in terms of the width of a space in <a class="message" href="#StyleDefinition"><code>wxSCI_STYLE_DEFAULT</code></a>. There are no limits on indent sizes, but values less than 0 or large values may have undesirable effects. The indention of sublines is independent of visual flags, but if <code>wxSCI_WRAPVISUALFLAG_START</code> is set an indent of at least 1 is used.
+<code>SetWrapStartIndent</code> sets the size of indentation of sublines for wrapped lines in terms of the width of a space in <a class="message" href="#StyleDefinition"><code>wxSCI_STYLE_DEFAULT</code></a>. There are no limits on indent sizes, but values less than 0 or large values may have undesirable effects. The indention of sublines is in dependent of visual flags, but if <code>wxSCI_WRAPVISUALFLAG_START</code> is set an indent of at least 1 is used.
 </p>
 
 <div class="divider2"></div>
