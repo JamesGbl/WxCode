@@ -274,7 +274,7 @@ void MyFrame::OnEditOptions(wxCommandEvent& event)
 {
   // Create a really basic dialog that gets dynamically populated
   // with controls based on the m_pSpellCheckEngine->GetOptions();
-  SpellCheckerOptionsDialog OptionsDialog(this, "Options", ReturnSelectedSpellCheckEngine()->GetOptions());
+  SpellCheckerOptionsDialog OptionsDialog(this, "Options", ReturnSelectedSpellCheckEngine());
   if (OptionsDialog.ShowModal() == wxID_OK)
   {
     // Set the modified options

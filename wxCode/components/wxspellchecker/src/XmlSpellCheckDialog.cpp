@@ -397,7 +397,7 @@ void XmlSpellCheckDialog::OnOptions(wxCommandEvent& event)
   m_pSpellCheckEngine->PresentOptions();
   // Create a really basic dialog with a scrolled panel that gets dynamically populated
   // with controls based on the m_pSpellCheckEngine->GetOptions();
-  SpellCheckerOptionsDialog OptionsDialog(this, "Options", m_pSpellCheckEngine->GetOptions());
+  SpellCheckerOptionsDialog OptionsDialog(this, "Options", m_pSpellCheckEngine);
   if (OptionsDialog.ShowModal() == wxID_OK)
   {
     // Set the modified options

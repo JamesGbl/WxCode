@@ -212,6 +212,10 @@ public:
   aspell_error_message_type AspellErrorMessage;
   aspell_speller_store_replacement_type AspellSpellerStoreReplacement;
   aspell_config_retrieve_type AspellConfigRetrieve;
+  get_aspell_dict_info_list_type GetAspellDictInfoList;
+  aspell_dict_info_list_elements_type AspellDictInfoListElements;
+  aspell_dict_info_enumeration_next_type AspellDictInfoEnumerationNext;
+  delete_aspell_dict_info_enumeration_type DeleteAspellDictInfoEnumeration;
   
   void SetLibraryPath(wxString& strPath) { m_strLibraryPath = strPath; }
   wxString GetLibraryPath() { return m_strLibraryPath; }

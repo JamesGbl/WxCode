@@ -54,9 +54,10 @@ public:
 	virtual int UninitializeSpellCheckEngine() = 0;
 	virtual int SetDefaultOptions() = 0;
   virtual int SetOption(SpellCheckEngineOption& Option) = 0;
-  virtual bool AddOptionToMap(SpellCheckEngineOption& option);
+  virtual bool AddOptionToMap(SpellCheckEngineOption& Option);
   virtual void ApplyOptions();  // Go through all the options in the options map and apply them to the spell check engine
   OptionsMap* GetOptions() { return &m_Options; }
+  virtual void UpdatePossibleValues(SpellCheckEngineOption& OptionDependency, SpellCheckEngineOption& OptionToUpdate) { wxASSERT(false); }
 
   // Spell Checker Search/Suggestion functions
 	virtual bool IsWordInDictionary(const wxString& strWord) = 0;

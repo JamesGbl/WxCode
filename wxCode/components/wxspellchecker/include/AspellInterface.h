@@ -25,6 +25,7 @@ public:
 	virtual int UninitializeSpellCheckEngine();
 	virtual int SetDefaultOptions();
   virtual int SetOption(SpellCheckEngineOption& Option);
+  virtual void UpdatePossibleValues(SpellCheckEngineOption& OptionDependency, SpellCheckEngineOption& OptionToUpdate);
 	virtual bool IsWordInDictionary(const wxString& strWord);
 	virtual wxString CheckSpelling(wxString strText);
   virtual wxArrayString GetSuggestions(const wxString& strMisspelledWord);

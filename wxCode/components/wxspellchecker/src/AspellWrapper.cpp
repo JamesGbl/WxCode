@@ -62,6 +62,10 @@ bool AspellWrapper::LoadFunctions()
     AspellErrorMessage = (aspell_error_message_type)m_AspellLibrary.GetSymbol(_("aspell_error_message"));
     AspellSpellerStoreReplacement = (aspell_speller_store_replacement_type)m_AspellLibrary.GetSymbol(_("aspell_speller_store_replacement"));
     AspellConfigRetrieve = (aspell_config_retrieve_type)m_AspellLibrary.GetSymbol(_("aspell_config_retrieve"));
+    GetAspellDictInfoList = (get_aspell_dict_info_list_type)m_AspellLibrary.GetSymbol(_("get_aspell_dict_info_list"));
+    AspellDictInfoListElements = (aspell_dict_info_list_elements_type)m_AspellLibrary.GetSymbol(_("aspell_dict_info_list_elements"));
+    AspellDictInfoEnumerationNext = (aspell_dict_info_enumeration_next_type)m_AspellLibrary.GetSymbol(_("aspell_dict_info_enumeration_next"));
+    DeleteAspellDictInfoEnumeration = (delete_aspell_dict_info_enumeration_type)m_AspellLibrary.GetSymbol(_("delete_aspell_dict_info_enumeration"));
 
     return true;
   }

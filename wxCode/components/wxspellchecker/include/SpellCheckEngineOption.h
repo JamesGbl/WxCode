@@ -50,11 +50,14 @@ public:
   void SetValue(long nValue);
   void SetValue(double dblValue);
   void SetValue(bool bValue);
+  void SetDependency(wxString strOptionName) { m_strDependency = strOptionName; }
+  wxString GetDependency() { return m_strDependency; }
   
 private:
   wxString m_strOptionName; // Option name as the spell check engine knows it
   wxString m_strDialogText; // Option name suitable for the options dialog
   VariantArray m_PossibleValuesArray; // This can be used to populate choice boxes on the options dialog
+  wxString m_strDependency; // This is the name of the option on which this option depends
   wxVariant m_OptionValue;
   int m_nOptionType;  // Since we want to keep track of where this is a file or directory, we can't always use wxVariant.GetType()
   bool m_bShowOption; // When presenting the options to the user, show this option on the dialog

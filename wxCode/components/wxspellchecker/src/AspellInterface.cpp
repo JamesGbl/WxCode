@@ -123,6 +123,39 @@ int AspellInterface::SetOption(SpellCheckEngineOption& Option)
 	return TRUE;
 }
 
+void AspellInterface::UpdatePossibleValues(SpellCheckEngineOption& OptionDependency, SpellCheckEngineOption& OptionToUpdate)
+{
+  if ((OptionDependency.GetName().IsSameAs(_T("dict-dir"))) && (OptionToUpdate.GetName().IsSameAs(_T("lang"))))
+  {
+    AspellConfig* config = m_AspellWrapper.NewAspellConfig();
+    AspellDictInfoList* dlist;
+    AspellDictInfoEnumeration* dels;
+    const AspellDictInfo* entry;
+  
+    m_AspellWrapper.AspellConfigReplace(config, OptionDependency.GetName(), OptionDependency.GetValueAsString());
+    
+    // The returned pointer should _not_ need to be deleted
+    dlist = m_AspellWrapper.GetAspellDictInfoList(config);
+  
+    // The Config is no longer needed
+    m_AspellWrapper.DeleteAspellConfig(config);
+  
+    dels = m_AspellWrapper.AspellDictInfoListElements(dlist);
+  
+    OptionToUpdate.GetPossibleValuesArray()->Clear();
+    while ( (entry = m_AspellWrapper.AspellDictInfoEnumerationNext(dels)) != 0) 
+    {
+      OptionToUpdate.AddPossibleValue(wxString(entry->name));
+    }
+  
+    m_AspellWrapper.DeleteAspellDictInfoEnumeration(dels);
+  }
+  else
+  {
+    ::wxMessageBox(wxString::Format(_T("Unsure how to update the possible values for %s based on the value of %s"), OptionDependency.GetText().c_str(), OptionToUpdate.GetText().c_str()));
+  }
+}
+
 bool AspellInterface::IsWordInDictionary(const wxString& strWord)
 {
   if (m_AspellSpeller == NULL)
@@ -304,6 +337,7 @@ int AspellInterface::SetDefaultOptions()
   wxString strLanguage = _T("en_US");
 
   SpellCheckEngineOption LanguageOption(_T("lang"), _T("Language Code"), strLanguage); // A list of possible values would be good here
+  LanguageOption.SetDependency(_T("dict-dir"));
   AddOptionToMap(LanguageOption);
   SpellCheckEngineOption DataDirOption(_T("data-dir"), _T("Language Data File Directory"), strDataDir, SpellCheckEngineOption::DIR);
   AddOptionToMap(DataDirOption);

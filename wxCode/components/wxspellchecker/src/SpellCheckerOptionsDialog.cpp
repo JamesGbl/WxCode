@@ -8,14 +8,18 @@
 BEGIN_EVENT_TABLE(SpellCheckerOptionsDialog, wxDialog)
 END_EVENT_TABLE()
 
-SpellCheckerOptionsDialog::SpellCheckerOptionsDialog(wxWindow* pParent, const wxString& strCaption, OptionsMap* pOptionsMap)
+SpellCheckerOptionsDialog::SpellCheckerOptionsDialog(wxWindow* pParent, const wxString& strCaption, wxSpellCheckEngineInterface* pEngineInterface)
   : wxDialog(pParent, -1, strCaption, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
+  m_pEngineInterface = pEngineInterface;
+  
   // Put each option in the member options map
   m_ModifiedOptions.clear();
+  OptionsMap* pOptionsMap = pEngineInterface->GetOptions();
   for (OptionsMap::iterator it = pOptionsMap->begin(); it != pOptionsMap->end(); it++)
     m_ModifiedOptions[it->first] = it->second;
-  
+
+  m_OptionDependenciesMap.clear();
   CreateControls();
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
@@ -55,10 +59,11 @@ void SpellCheckerOptionsDialog::CreateControls()
 
 void SpellCheckerOptionsDialog::PopulateOptionsSizer(wxSizer* pSizer)
 {
+  // Loop through all the options in the map and add the controls
   for (OptionsMap::iterator it = m_ModifiedOptions.begin(); it != m_ModifiedOptions.end(); it++)
   {
     SpellCheckEngineOption* pCurrentOption = &(it->second);
-        // Add the options to the sizer label first, then the value
+    // Add the options to the sizer label first, then the value
     // It would be great to add validators and file browser buttons
     // for the options (all wrapped with the value in a horizontal box sizer)
     //  but don't worry about that for now
@@ -66,6 +71,16 @@ void SpellCheckerOptionsDialog::PopulateOptionsSizer(wxSizer* pSizer)
     {
       int nOptionType = pCurrentOption->GetOptionType();
       wxString strName = pCurrentOption->GetName();
+      wxString strDependency = pCurrentOption->GetDependency();
+      if (!strDependency.IsEmpty())
+      {
+        m_pEngineInterface->UpdatePossibleValues(m_ModifiedOptions[strDependency], *pCurrentOption);
+        DependencyStruct NewDependency;
+        NewDependency.strDependency = strDependency;
+        NewDependency.strLastValue = m_ModifiedOptions[strDependency].GetValueAsString();
+        m_OptionDependenciesMap[strName] = NewDependency;
+      }
+      
       // Label
       if (nOptionType != SpellCheckEngineOption::BOOLEAN)
         pSizer->Add(new wxStaticText(this, -1, pCurrentOption->GetText() + _T(":")), 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -75,20 +90,21 @@ void SpellCheckerOptionsDialog::PopulateOptionsSizer(wxSizer* pSizer)
       // Value
       if (nOptionType == SpellCheckEngineOption::STRING)
       {
-        // If pCurrentOption->GetPossibleValuesArray()->GetCount() > 0, we should probably display a wxChoice control
+        // If pCurrentOption->GetPossibleValuesArray()->GetCount() > 0, we should probably display a wxComboBox control
         // rather than an edit field, populate the choices from the array contents and default to pCurrentOption->GetValueAsString()
-        if (pCurrentOption->GetPossibleValuesArray()->GetCount() > 0)
+        if ((pCurrentOption->GetPossibleValuesArray()->GetCount() > 0) || (!strDependency.IsEmpty()))
         {
-          wxString* ChoiceStrings = NULL;
-          wxChoice* pChoice = new wxChoice( this, -1, wxDefaultPosition, wxDefaultSize, 0, ChoiceStrings, 0, wxDefaultValidator, strName);
+          wxString* ComboStrings = NULL;
+          wxComboBox* pCombo = new wxComboBox( this, -1, pCurrentOption->GetValueAsString(), wxDefaultPosition, wxDefaultSize, 0, ComboStrings, 0, wxDefaultValidator, strName);
           VariantArray* pArray = pCurrentOption->GetPossibleValuesArray();
           for (unsigned int i=0; i<pArray->GetCount(); i++)
-            pChoice->Append(pArray->Item(i));
-          //Set the default item IF it's in the wxChoice
-          if (pChoice->FindString(pCurrentOption->GetValueAsString()) != -1)
-            pChoice->SetStringSelection(pCurrentOption->GetValueAsString());
-          // Finally add this wxChoice control to the dialog
-          pSizer->Add(pChoice, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+            pCombo->Append(pArray->Item(i));
+          // Add this wxComboBox control to the dialog
+          pSizer->Add(pCombo, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+          
+          // Add the wxFocusEvent for this item to update the list of possible values
+          Connect(pCombo->GetId(),  wxEVT_SET_FOCUS,
+            (wxObjectEventFunction) (wxEventFunction) (wxCommandEventFunction) &SpellCheckerOptionsDialog::UpdateControlPossibleValues);
         }
         else
         {
@@ -142,6 +158,18 @@ void SpellCheckerOptionsDialog::PopulateOptionsSizer(wxSizer* pSizer)
         wxTextCtrl* item5 = new wxTextCtrl( this, -1, pCurrentOption->GetValueAsString(), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, strName);
         pSizer->Add(item5, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
       };
+    }
+  }
+  // Now go through the option dependencies and add UpdateUI event handlers
+  //  to make sure that the possible values are updated when needed
+  for (StringToDependencyMap::iterator StringIt = m_OptionDependenciesMap.begin(); StringIt != m_OptionDependenciesMap.end(); StringIt++)
+  {
+    // Make sure that we have the window ID for this control
+    wxWindow* pControl = wxWindow::FindWindowByName(StringIt->first, this);
+    if (pControl)
+    {
+      Connect(pControl->GetId(),  wxEVT_UPDATE_UI,
+        (wxObjectEventFunction) (wxEventFunction) (wxCommandEventFunction) &SpellCheckerOptionsDialog::UpdateControlPossibleValues);
     }
   }
 }
@@ -207,8 +235,8 @@ bool SpellCheckerOptionsDialog::TransferDataFromWindow()
         switch (pCurrentOption->GetOptionType())
         {
         case SpellCheckEngineOption::STRING:
-          if (pCurrentOption->GetPossibleValuesArray()->GetCount() > 0)
-            pCurrentOption->SetValue(((wxChoice*)pControl)->GetStringSelection());
+          if ((pCurrentOption->GetPossibleValuesArray()->GetCount() > 0) || (!(pCurrentOption->GetDependency().IsEmpty())))
+            pCurrentOption->SetValue(((wxComboBox*)pControl)->GetStringSelection());
           else
             pCurrentOption->SetValue(((wxTextCtrl*)pControl)->GetValue());
           break;
@@ -252,8 +280,8 @@ bool SpellCheckerOptionsDialog::TransferDataToWindow()
         switch (pCurrentOption->GetOptionType())
         {
         case SpellCheckEngineOption::STRING:
-          if (pCurrentOption->GetPossibleValuesArray()->GetCount() > 0)
-            ((wxChoice*)pControl)->SetStringSelection(pCurrentOption->GetValueAsString());
+          if ((pCurrentOption->GetPossibleValuesArray()->GetCount() > 0) || (!(pCurrentOption->GetDependency().IsEmpty())))
+            ((wxComboBox*)pControl)->SetStringSelection(pCurrentOption->GetValueAsString());
           else
             ((wxTextCtrl*)pControl)->SetValue(pCurrentOption->GetValueAsString());
           break;
@@ -278,4 +306,35 @@ bool SpellCheckerOptionsDialog::TransferDataToWindow()
     }
   }
   return true;
+}
+
+void SpellCheckerOptionsDialog::UpdateControlPossibleValues(wxFocusEvent& event)
+{
+  TransferDataFromWindow();
+  
+  // Get the control that got the focus event
+  wxComboBox* pCombo = (wxComboBox*)(event.GetEventObject());
+  if (pCombo)
+  {
+    SpellCheckEngineOption& Option = m_ModifiedOptions[pCombo->GetName()];
+    DependencyStruct OptionDependencyStruct = m_OptionDependenciesMap[pCombo->GetName()];
+    SpellCheckEngineOption& DependencyOption = m_ModifiedOptions[OptionDependencyStruct.strDependency];
+    if (DependencyOption.GetValueAsString() != OptionDependencyStruct.strLastValue)
+    {
+      m_pEngineInterface->UpdatePossibleValues(DependencyOption, Option);
+      
+      // Now repopulate the combo box contents
+      pCombo->Clear();
+      VariantArray* pArray = Option.GetPossibleValuesArray();
+      for (unsigned int i=0; i<pArray->GetCount(); i++)
+      {
+        pCombo->Append(pArray->Item(i));
+      }
+      pCombo->SetValue(Option.GetValueAsString());
+      
+      // Update the dependency struct so that we don't unnecessarily update this list again
+      OptionDependencyStruct.strLastValue = DependencyOption.GetValueAsString();
+      m_OptionDependenciesMap[pCombo->GetName()] = OptionDependencyStruct;
+    }
+  }
 }
