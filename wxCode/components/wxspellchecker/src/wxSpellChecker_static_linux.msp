@@ -68,9 +68,9 @@ libraryPath=
 outputFilename=../lib/libwx_spellcheck.a
 libraries=
 extraLinkerOptions=
-ignoreStartupFile=80
-ignoreDefaultLibs=8
-stripExecutableFile=69
+ignoreStartupFile=1
+ignoreDefaultLibs=1
+stripExecutableFile=1
 
 // archive
 extraArchiveOptions=
@@ -82,20 +82,26 @@ extraResourceOptions=
 
 [Source]
 1=AspellInterface.cpp
-2=MySpellCheckDialog.cpp
-3=Outlook97LikeDialog.cpp
-4=SentryLikeDialog.cpp
-5=SpellCheckCmdLineInterface.cpp
-6=SpellCheckDialogInterface.cpp
-7=SpellCheckEngineInterface.cpp
-8=SpellCheckUserInterface.cpp
-9=AspellWrapper.cpp
-10=XmlSpellCheckDialog.cpp
-11=MySpellInterface.cpp
-12=SpellCheckEngineOption.cpp
-13=SpellCheckerOptionsDialog.cpp
+2=SpellCheckCmdLineInterface.cpp
+3=SpellCheckDialogInterface.cpp
+4=SpellCheckEngineInterface.cpp
+5=SpellCheckUserInterface.cpp
+6=AspellWrapper.cpp
+7=XmlSpellCheckDialog.cpp
+8=MySpellInterface.cpp
+9=SpellCheckEngineOption.cpp
+10=SpellCheckerOptionsDialog.cpp
 [Header]
 1=../include/SpellCheckerOptionsDialog.h
+2=../include/AspellInterface.h
+3=../include/AspellWrapper.h
+4=../include/MySpellInterface.h
+5=../include/SpellCheckCmdLineInterface.h
+6=../include/SpellCheckDialogInterface.h
+7=../include/SpellCheckEngineInterface.h
+8=../include/SpellCheckEngineOption.h
+9=../include/SpellCheckUserInterface.h
+10=../include/XmlSpellCheckDialog.h
 [Resource]
 [Other]
 [History]
