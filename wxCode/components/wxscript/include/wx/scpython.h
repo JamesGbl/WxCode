@@ -23,7 +23,6 @@
 
 
 
-
 // String conversions (all python functions uses always chars)
 // ---------------------------------------------------------
 
@@ -56,10 +55,14 @@ protected:
 protected:
 
 	//! Converts the given wxScriptVar into a PyObject.
+	//! Returns a "borrowed reference" (see python docs).
 	PyObject *CreatePyObjFromScriptVar(const wxScriptVar &toconvert) const;
 
 	//! Converts the given PyObject into a wxScriptVar.
 	wxScriptVar CreateScriptVarFromPyObj(PyObject *toconvert) const;
+
+	//! Decreases the refcount of the python objects currently holded.
+	void ReleaseOldObj();
 
 public:
 
@@ -67,6 +70,8 @@ public:
 	//! arguments are required since wxPython does not store them.
 	wxScriptFunctionPython(const wxString &name = wxEmptyString,
 						PyObject *dictionary = NULL, PyObject *func = NULL);
+	virtual ~wxScriptFunctionPython();
+
 
 	virtual wxScriptFunction *Clone() const {
 		wxScriptFunction *newf = new wxScriptFunctionPython();
@@ -74,14 +79,8 @@ public:
 		return newf;
 	}
 
-	virtual void DeepCopy(const wxScriptFunction *tocopy) {
-		wxScriptFunctionPython *pf = (wxScriptFunctionPython *)tocopy;
-		m_pDict = pf->m_pDict;
-		m_pFunc = pf->m_pFunc;
-		wxScriptFunction::DeepCopy(tocopy);
-	}
-
-	void Set(const wxString &name, PyObject *dictionary, PyObject *function);
+	virtual void DeepCopy(const wxScriptFunction *tocopy);
+	virtual void Set(const wxString &name, PyObject *dictionary, PyObject *function);
 	virtual bool Exec(wxScriptVar &ret, wxScriptVar *arg) const;
 };
 
@@ -95,7 +94,7 @@ public:
 	wxScriptFilePython(const wxString &toload = wxEmptyString) {		
 		m_tScriptFile = wxPYTHON_SCRIPTFILE;
 		if (!toload.IsEmpty())
-			Load(toload);
+			Load(toload);		
 	}
 
 	virtual bool Load(const wxString &filename);
@@ -109,18 +108,15 @@ class wxPython : public wxScriptInterpreter
 {
 public:
 
-	//! The Python global objects.
-	PyObject *m_pModule, *m_pDict, *m_pLocals, *m_pGlobals;
+	//! The current python module.
+	PyObject *m_pModule;
 
-protected:
+	//! The current dictionaries being used.
+	PyObject *m_pLocals, *m_pGlobals;
 
-	//! The array of the standard functions of python.
-	wxScriptFunctionArray m_arrStd;
-
-	//! Returns the array containing ALL currently interpreted functions.
-	//! This functions is different from #GetFunctionList() because
-	//! it doesn't exclude functions loaded by default by UnderC.
-	virtual void GetFunctionListComplete(wxScriptFunctionArray &) const;
+	//! Recognizes the given type of python exception and sets
+	//! the wxScriptInterpreter::m_strLastErr variable accordingly.
+	void OnException();
 
 public:
 	wxPython() {}//: m_bInit(FALSE) {}

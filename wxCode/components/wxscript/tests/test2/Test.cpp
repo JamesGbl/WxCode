@@ -511,9 +511,6 @@ void MainTestSet()
 
 	// leave some space
 	wxPrintf(wxT(">All tests completed.\n\n\n"));
-
-	// do not leave memory leaks
-	wxScriptInterpreter::Cleanup();
 }
 
 int main(int, char **)
@@ -574,6 +571,9 @@ int main(int, char **)
     
 	// run some tests
 	MainTestSet();
+
+	// don't leak memory
+	wxScriptInterpreter::Cleanup();
 
 	// wait for user keypress
 	wxPrintf(wxT("Press a key to continue...\n"));

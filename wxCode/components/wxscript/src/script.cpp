@@ -202,6 +202,9 @@ void wxScriptInterpreter::GetTotalFunctionList(wxScriptFunctionArray &arr)
 {
 	wxScriptFunctionArray arrcint, arruc, arrlua, arrpy;
 
+	// even if the wxSCRIPT_USE_XXX symbol is defined,
+	// we must still check if that particular interpreter has been
+	// created & initialized before calling #GetFunctionList().
 #ifdef wxSCRIPT_USE_CINT
 	if (m_pCINT && m_pCINT->isReady()) m_pCINT->GetFunctionList(arrcint);
 #endif
@@ -230,7 +233,8 @@ wxScriptFile *wxScriptInterpreter::Load(const wxString &file, wxScriptFileType t
 	// first of all, check that the file exist...
 	if (!wxFileName::FileExists(file)) {
 
-		wxScriptInterpreter::m_strLastErr = wxT("The file [") + file + wxT("] does not exist.");
+		wxScriptInterpreter::m_strLastErr = wxT("The file [") + 
+							file + wxT("] does not exist.\n");
 		return FALSE;
 	}
 
@@ -279,7 +283,7 @@ wxScriptFile *wxScriptInterpreter::Load(const wxString &file, wxScriptFileType t
 
 	case wxRECOGNIZE_SCRIPTFILE:		// just to avoid warnings
 	default:
-	    wxScriptInterpreter::m_strLastErr = wxT("Interpreter unavailable.");
+	    wxScriptInterpreter::m_strLastErr = wxT("Interpreter unavailable.\n");
 		break;
 	}
 	
