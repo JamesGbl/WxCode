@@ -93,23 +93,7 @@ SOURCE=.\AspellWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\exports.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\MySpellCheckDialog.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\MySpellInterface.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\Outlook97LikeDialog.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\SentryLikeDialog.cpp
 # End Source File
 # Begin Source File
 
@@ -143,6 +127,46 @@ SOURCE=.\XmlSpellCheckDialog.cpp
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=..\include\AspellInterface.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\AspellWrapper.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\MySpellInterface.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\SpellCheckCmdLineInterface.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\SpellCheckDialogInterface.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\SpellCheckEngineInterface.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\SpellCheckEngineOption.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\SpellCheckerOptionsDialog.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\SpellCheckUserInterface.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\XmlSpellCheckDialog.h
+# End Source File
 # End Group
 # End Target
 # End Project
