@@ -3,18 +3,27 @@ Component:  wxArchive
 Subdir:     wxarchive
 Parts:      S
 More infos: 
-wxWidgets:  2.5.1
+wxWidgets:  2.5.3+
  
 Description:
-An interface for reading and writing archive formats, with
-implementations for zip and tar.
+Tar streams for wxWidgets. This is beta software.
 
-Currently there is an example program (samples/arc.cpp),
-a test script (samples/arctest.sh), the generic wxArchive
-classes (include/wx/archive.h) and the zip classes
-(include/wx/zipstrm2.h). The tar classes will follow shortly.
+The tar streams are in src/tarstrm.cpp and include/wx/tarstrm.h.
+You can include these in your own project (there's no makefile to
+build them into a lib).
 
-To try it out, check out the component, e.g.:
+Currently there is no tar specific docs, however see the docs
+about archive classes in general:
+http://www.lpthe.jussieu.fr/~zeitlin/wxWindows/docs/wxwin_wxarc.html
+
+There is an example program in 'samples/arc.cpp', and a cppunit
+test suite in the 'tests' directory.
+
+You can generate makefiles for the tests and sample as follows
+(makefiles will be included in the tarball when this is
+released):
+
+check out the component, e.g.:
 
 $ cvs -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/wxcode login 
 $ cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/wxcode co wxCode/components/wxarchive
@@ -25,9 +34,10 @@ $ mv wxCode/components/wxarchive wxWidgets/contrib
 
 (so you should have a directory 'wxWidgets/contrib/wxarchive').
 
-Makefiles can be generated using wxWidgets' bakefiles. Bakefile can be
-obtained from (http://bakefile.sourceforge.net). Create (or add to)
-Bakefiles.local.bkgen in your wxWidgets/build/bakefiles directory:
+Makefiles can be generated using wxWidgets' bakefiles. Bakefile
+can be obtained from (http://bakefile.sourceforge.net). Create
+(or add to) Bakefiles.local.bkgen in your
+wxWidgets/build/bakefiles directory:
 
 <?xml version="1.0" ?>
 <bakefile-gen>
@@ -40,8 +50,12 @@ Then run bakefile_gen (from inside the wxWidgets/build/bakefiles dir):
 
     bakefile_gen -b '../../contrib/wxarchive/*/*.bkl'
 
-The test script (a Bourne shell script) tests the arc sample
-program against itself, and will also test it against zip/unzip
-and pkzip/pkunzip if they are in the path. By default it looks for
-'arc' in the current directory (so 'cd' to wherever 'arc' is then run
-the script). The script can be run on Windows using MSYS or Cygwin.
+As well as the tests in the 'tests' directory there is also a
+test script 'samples/arctest.sh' which tests the sample program
+against zip, pkzip, tar and pax if they are in the path.  By
+default it looks for 'arc' in the current directory (so 'cd' to
+wherever 'arc' is then run the script).
+
+The script is a Bourne shell script, it can also be run on
+Windows using MSYS or Cygwin.
+
