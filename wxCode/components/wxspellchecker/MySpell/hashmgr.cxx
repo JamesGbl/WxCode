@@ -1,10 +1,13 @@
 #include "license.readme"
 
-#include <unistd.h>
+#ifndef __VISUALC__
+  #include <unistd.h>
+#endif
 #include <cstdlib>
 #include <cstring>
 #include <fcntl.h>
 #include <cstdio>
+#include <vector>
 
 #include "hashmgr.hxx"
 

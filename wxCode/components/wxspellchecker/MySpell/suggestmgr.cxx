@@ -5,6 +5,7 @@
 #include <cctype>
 #include <cstring>
 #include <cstdio>
+#include <vector>
 
 #include "suggestmgr.hxx"
 

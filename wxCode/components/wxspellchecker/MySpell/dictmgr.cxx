@@ -3,6 +3,7 @@
 #include <cstring>
 #include <cctype>
 #include <cstdio>
+#include <vector>
 
 #include "dictmgr.hxx"
 

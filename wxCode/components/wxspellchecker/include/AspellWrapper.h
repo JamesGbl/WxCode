@@ -21,7 +21,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
+#ifndef __VISUALC__
+  #include <unistd.h>
+#endif
 
 #include "aspell.h"
 
@@ -187,7 +189,8 @@ public:
   delete_aspell_document_checker_type DeleteAspellDocumentChecker;
   delete_aspell_config_type DeleteAspellConfig;
   delete_aspell_speller_type DeleteAspellSpeller;
-  delete_aspell_can_have_error_type DeleteAspellCanHaveError;  to_aspell_speller_type ToAspellSpeller;
+  delete_aspell_can_have_error_type DeleteAspellCanHaveError;
+  to_aspell_speller_type ToAspellSpeller;
   new_aspell_config_type NewAspellConfig;
   aspell_config_replace_type AspellConfigReplace;
   aspell_speller_check_type AspellSpellerCheck;
@@ -196,7 +199,8 @@ public:
   to_aspell_document_checker_type ToAspellDocumentChecker;
   aspell_document_checker_process_type AspellDocumentCheckerProcess;
   aspell_document_checker_next_misspelling_type AspellDocumentCheckerNextMisspelling;
-  aspell_speller_suggest_type AspellSpellerSuggest;  aspell_word_list_elements_type AspellWordListElements;
+  aspell_speller_suggest_type AspellSpellerSuggest;
+  aspell_word_list_elements_type AspellWordListElements;
   aspell_string_enumeration_next_type AspellStringEnumerationNext;
   delete_aspell_string_enumeration_type DeleteAspellStringEnumeration;
   aspell_speller_add_to_personal_type AspellSpellerAddToPersonal;

@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <cstdio>
+#include <vector>
 #include "csutil.hxx"
 
 using namespace std;

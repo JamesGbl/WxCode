@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <cstdio>
+#include <vector>
 
 #include "affixmgr.hxx"
 #include "affentry.hxx"
