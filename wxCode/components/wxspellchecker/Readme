@@ -1,7 +1,9 @@
 Maintainer: Joe Blough (jblough)
-Component: wxSpellChecker
-Subdir: wxspellchecker
-wxWidgets: 2.4.2
+Component:  wxSpellChecker
+Subdir:     wxspellchecker
+Parts:      ???
+More infos: -
+wxWidgets:  2.4.2
 
 Description:
 wxSpellChecker is an library that provides an API to use various spell checker
