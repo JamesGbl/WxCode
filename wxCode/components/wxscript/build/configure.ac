@@ -17,7 +17,9 @@ AC_PROG_MAKE_SET
 # (and sets the AC_CANONICAL_BUILD, AC_CANONICAL_HOST and
 # AC_CANONICAL_TARGET variables)
 AC_CANONICAL_SYSTEM
-
+	
+# This adds some standard wxWidgets options to the configure script
+AM_OPTIONS_WXCONFIG
 
 # Two little custom macros which define the ENABLE/WITH configure arguments.
 # Macro arguments:
@@ -62,7 +64,19 @@ else
    UNICODE=0
    AC_MSG_RESULT([Checking for the UNICODE option... no])
 fi
-
+	
+# check for wxWin version & presence
+AM_PATH_WXCONFIG([2.4.2], [wxWin=1], [wxWin=0])
+if test "$wxWin" != 1; then
+    AC_MSG_ERROR([
+               wxWindows must be installed on your system
+               but wx-config script couldn't be found.
+               Please check that wx-config is in path, the directory
+               where wxWindows libraries are installed (returned by
+               'wx-config - -libs' command) is in LD_LIBRARY_PATH or
+               equivalent variable and wxWindows version is 2.3.4 or above.
+       ])
+fi
 
 
 
@@ -87,6 +101,19 @@ fi
 if test "$with_lua" = "yes"; then
    USE_LUA=1
    AC_MSG_RESULT([Checking for the LUA option... yes])
+
+   AC_MSG_RESULT([Checking for the LUA & TOLUA presence... ])   
+   AC_CHECK_HEADER([lua.h], [hasLUA=1], [hasLUA=0])
+   AC_CHECK_HEADER([tolua.h], [hasTOLUA=1], [hasTOLUA=0])
+   if test "$hasLUA" != 1; then
+       AC_MSG_ERROR([Could not found LUA headers in system path; please 
+                     install latest version from www.lua.org or specify
+                     the --without-lua option])
+   elif test "$hasTOLUA" != 1; then
+       AC_MSG_ERROR([Could not found TOLUA headers in system path; please 
+                     install latest version from www.lua.org or specify
+                     the --without-lua option])
+   fi
 else
    USE_LUA=0
    AC_MSG_RESULT([Checking for the LUA option... no])
@@ -123,8 +150,6 @@ else
 fi
 AC_MSG_RESULT([Checking for the Python version to use... $PYTHON_VER])
 
-#AM_INIT_AUTOMAKE(1.6)
-#AM_MAINTAINER_MODE
 #AM_PATH_PYTHON(2.2.2)
 
 

@@ -27,6 +27,10 @@
 // this mode does not work completely on wxGTK
 //#define wxUSE_BINDERAPP		1
 
+// this activates some samples of incorrect usage of wxKeyBinder
+//#define wxINCORRECT_USAGE
+
+
 
 #ifdef __BORLANDC__
     #pragma hdrstop
@@ -104,12 +108,16 @@ enum
 	Minimal_ShowAddRemoveProfile,
 
 	Minimal_Load,
-	Minimal_Save
+	Minimal_Save,
+
+	Minimal_Dummy
 };
 
 // Define a new frame type: this is going to be our main frame
 class MyFrame : public wxFrame
 {
+	wxTextCtrl *text;
+
 protected:
 	wxADD_KEYBINDER_SUPPORT();
 
@@ -134,6 +142,8 @@ public:
 
 	void OnLoad(wxCommandEvent &);
 	void OnSave(wxCommandEvent &);
+
+	void OnDummy(wxCommandEvent &);
 
 	// an utility function
 	void UpdateArr(wxKeyProfileArray &r, int nenabled = 0);
@@ -160,6 +170,25 @@ private:
     DECLARE_EVENT_TABLE()
 };
 
+class MyTextCtrl : public wxTextCtrl
+{
+public:
+    // ctor(s)
+    MyTextCtrl(wxWindow *parent, wxWindowID id, const wxString& value,
+		const wxPoint &pos, const wxSize &size, long style)
+		: wxTextCtrl(parent, id, value, pos, size, style) {}
+	~MyTextCtrl() {}
+
+	void OnCharEvent( wxKeyEvent &ev );
+
+private:
+    // any class wishing to process wxWindows events must use this macro
+    DECLARE_EVENT_TABLE()
+};
+
+
+
+
 // ----------------------------------------------------------------------------
 // event tables and other macros for wxWindows
 // ----------------------------------------------------------------------------
@@ -181,12 +210,18 @@ BEGIN_EVENT_TABLE(MyFrame, wxFrame)
 
     EVT_MENU(Minimal_Load, MyFrame::OnLoad)
     EVT_MENU(Minimal_Save, MyFrame::OnSave)
+    EVT_MENU(Minimal_Dummy, MyFrame::OnDummy)
 
 END_EVENT_TABLE()
 
 
 BEGIN_EVENT_TABLE(MyDialog, wxDialog)
 	EVT_BUTTON(wxID_APPLY, MyDialog::OnApply)
+END_EVENT_TABLE()
+
+
+BEGIN_EVENT_TABLE(MyTextCtrl, wxTextCtrl)
+	EVT_CHAR(MyTextCtrl::OnCharEvent)
 END_EVENT_TABLE()
 
 
@@ -200,6 +235,13 @@ IMPLEMENT_APP(MyApp)
 // ============================================================================
 // implementation
 // ============================================================================
+
+void MyTextCtrl::OnCharEvent(wxKeyEvent &ev)
+{
+	// just for debugging purpose
+	wxLogDebug(wxT("MyTextCtrl::OnCharEvent - received [%d]"), ev.GetKeyCode());
+	ev.Skip();
+}
 
 
 // ----------------------------------------------------------------------------
@@ -263,7 +305,7 @@ MyFrame::MyFrame(const wxString& title)
 			wxT("Enjoy this sample !")), 0, wxALL, 5);
 	
 	// and a text control
-	wxTextCtrl *text = new wxTextCtrl(panel, -1, 
+	text = new MyTextCtrl(panel, -1, 
 			wxT("This text control is used to show that a wxKeyBinder requires to be ")
 			wxT("attached to all the child windows if you want to be sure to intercept ")
 			wxT("all hotkeys..."), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE);
@@ -292,15 +334,15 @@ MyFrame::MyFrame(const wxString& title)
 	
 	menuFile->Append(-1, wxT("Shortcuts"), sub);
 	menuFile->AppendSeparator();
-	menuFile->Append(Minimal_Keybindings, _T("Keybindings\tF8"), _T(""));
+	menuFile->Append(Minimal_Keybindings, _T("Keybindings...\tF8"), _T("Pop up a wxKeyConfigPanel..."));
 	menuFile->AppendCheckItem(Minimal_ShowKeyProfiles, _T("Show profiles"), str2);
 	menuFile->AppendCheckItem(Minimal_ShowAddRemoveProfile, _T("Show add/remove profile buttons"), str2);
 	menuFile->AppendCheckItem(Minimal_UseTreeCtrl, _T("Use a tree ctrl"), str2);
 	menuFile->AppendCheckItem(Minimal_EnableProfileEdit, _T("Enable profile editing"), str2);
 	menuFile->AppendSeparator();
 	
-	menuFile->Append(Minimal_Save, _T("Save the keybindings...\tCtrl+S"), _T(""));
-	menuFile->Append(Minimal_Load, _T("Load last keybindings...\tCtrl+L"), _T(""));
+	menuFile->Append(Minimal_Save, _T("Save the keybindings...\tCtrl+S"), _T("Saves the current keybindings using wxConfig"));
+	menuFile->Append(Minimal_Load, _T("Load last keybindings...\tCtrl+L"), _T("Loads the current keybindings using wxConfig"));
 	menuFile->AppendSeparator();
 
 	menuFile->Check(Minimal_ShowKeyProfiles, TRUE);
@@ -308,6 +350,10 @@ MyFrame::MyFrame(const wxString& title)
 	menuFile->Check(Minimal_UseTreeCtrl, FALSE);
 	menuFile->Check(Minimal_EnableProfileEdit, TRUE);
 	menuFile->Append(Minimal_Quit, _T("E&xit\tAlt-X"), _T("Quit this program"));	
+
+#ifdef wxINCORRECT_USAGE
+	menuFile->Append(Minimal_Dummy, wxT("Dummy menu item\tENTER"), wxT(""));
+#endif
 	
     // now append the freshly created menu to the menu bar...
     wxMenuBar *menuBar = new wxMenuBar();
@@ -381,6 +427,16 @@ void MyFrame::UpdateArr(wxKeyProfileArray &r, int nenabled)
 
 
 // event handlers
+
+void MyFrame::OnDummy(wxCommandEvent &)
+{ 
+	wxChar c = wxT('a');
+	text->AppendText(wxString(c, 1));
+	/*wxKeyEvent ev(wxEVT_CHAR);
+	ev.m_keyCode = (wxT('j'));
+	text->ProcessEvent(ev);*/
+}
+
 
 void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 {

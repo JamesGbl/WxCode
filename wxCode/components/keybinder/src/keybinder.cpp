@@ -50,8 +50,15 @@ BEGIN_EVENT_TABLE(wxBinderEvtHandler, wxEvtHandler)
 	// a command must be immediately executed when one of its shortcuts
 	// is sent to the window.
 	EVT_KEY_DOWN(wxBinderEvtHandler::OnChar)
+
+	// if we intercept also these events, then we would have some problems
+	// with the ENTER keypresses: the wxBinderEvtHandler would be called
+	// three times with three different events which would then generate
+	// three command executions
+#if 0		
 	EVT_KEY_UP(wxBinderEvtHandler::OnChar)
 	EVT_CHAR(wxBinderEvtHandler::OnChar)
+#endif
 
 #if defined( __WXMSW__	)		// supported only on Win32
 #if wxCHECK_VERSION(2, 5, 1)	// and from wxWidgets 2.5.1
@@ -769,15 +776,28 @@ void wxKeyBinder::OnChar(wxKeyEvent &event, wxEvtHandler *next)
 	// which is really difficult to spot... better leave it...
 	if (p && p->IsBindTo(wxKeyBind(wxT("Alt+F4")))) {
 	
-		wxLogDebug(wxT("wxKeyBinder::OnChar - ignoring an Alt+F4 event [%d]"), event.GetKeyCode());
+		wxLogDebug(wxT("wxKeyBinder::OnChar - ignoring an Alt+F4 event [%d]"), 
+					event.GetKeyCode());
 		event.Skip();
 		return;
 	}
 
+#if 0
+	// for some reason we need to avoid processing also of the ENTER keypresses...
+	if (p && p->IsBindTo(wxKeyBind(wxT("ENTER")))) {
+	
+		wxLogDebug(wxT("wxKeyBinder::OnChar - ignoring an ENTER event [%d]"), 
+					event.GetKeyCode());
+		event.Skip();
+		return;
+	}
+#endif
+
 	// if the given event is not a shortcut key...
 	if (p == NULL) {
 	
-		wxLogDebug(wxT("wxKeyBinder::OnChar - ignoring this keyevent [%d]"), event.GetKeyCode());
+		wxLogDebug(wxT("wxKeyBinder::OnChar - ignoring this keyevent [%d]"), 
+					event.GetKeyCode());
 		event.Skip();		// ... skip it
 		
 	} else {
@@ -799,7 +819,9 @@ void wxKeyBinder::OnChar(wxKeyEvent &event, wxEvtHandler *next)
 			return;
 		}
 
-		wxLogDebug(wxT("wxKeyBinder::OnChar - calling the Exec() function of a wxCmd on [%d]"), event.GetKeyCode());
+		wxLogDebug(wxT("wxKeyBinder::OnChar - calling the Exec() function of the [%s] ")
+				wxT("wxCmd on the keycode [%d] (event timestamp: %d)"), 
+				p->GetName().c_str(), event.GetKeyCode(), event.m_timeStamp);
 		p->Exec(event.GetEventObject(),		// otherwise, tell wxCmd to send the
 				client);	// associated wxEvent to the next handler in the chain
 	}

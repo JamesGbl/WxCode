@@ -101,6 +101,7 @@ void wxMenuCmd::Update()
 
 		// change the accelerator...
 	   m_pItem->SetText(newtext);
+	   m_pItem->GetMenu()->UpdateAccel(m_pItem);
 
 #elif defined( __WXGTK__ )
 

@@ -3,7 +3,7 @@
 # ======================================================
 
 AC_PREREQ(2.57)
-AC_INIT(wxxml2, 1.0, [frm@sourceforge.net])
+AC_INIT(wxxml2, 2.0, [frm@sourceforge.net])
 
 
 # Some standard checks are required...
@@ -18,7 +18,7 @@ AC_PROG_MAKE_SET
 # (and sets the AC_CANONICAL_BUILD, AC_CANONICAL_HOST and
 # AC_CANONICAL_TARGET variables)
 AC_CANONICAL_SYSTEM
-
+AM_OPTIONS_WXCONFIG
 
 # Two little custom macros which define the ENABLE/WITH configure arguments.
 # Macro arguments:
@@ -63,6 +63,34 @@ else
    UNICODE=0
    AC_MSG_RESULT([Checking for the UNICODE option... no])
 fi
+
+
+# check for the libxml2 library
+# AM_PATH_XML([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]]])
+# Test for XML, and define XML_CPPFLAGS and XML_LIBS
+AM_PATH_XML2([2.6.1], [],
+	[AC_MSG_ERROR([Cannot found the libxml2 library right version (> 2.6.1); download it from http://xmlsoft.org])])
+
+AM_PATH_WXCONFIG(2.3.4, wxWin=1)
+if test "$wxWin" != 1; then
+    AC_MSG_ERROR([
+       wxWindows must be installed on your system
+       but wx-config script couldn't be found.
+
+       Please check that wx-config is in path, the directory
+       where wxWindows libraries are installed (returned by
+       'wx-config --libs' command) is in LD_LIBRARY_PATH or
+        equivalent variable and wxWindows version is 2.3.4 or above.
+    ])
+fi
+
+# we won't use the WX_CXXFLAGS and WX_CFLAGS variables here because
+# as written in the wxbase.bkl template, we are going to use wx-config
+# to retrieve all flags
+CXXFLAGS="$CXXFLAGS $XML_CPPFLAGS"
+CFLAGS="$CFLAGS $XML_CPPFLAGS"
+LDFLAGS="$LDFLAGS $WX_LIBS $XML_LIBS"
+
 
 # The final lines of the configure script
 AC_BAKEFILE
