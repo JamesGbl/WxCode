@@ -1,4 +1,5 @@
 #include "SentryLikeDialog.h"
+#include "SpellCheckerOptionsDialog.h"
 
 #include "resource.h"
 
@@ -250,7 +251,19 @@ void SentryLikeDialog::SetMispelledWord(const wxString& strMispelling)
 
 void SentryLikeDialog::OnClickOptions(wxCommandEvent& event)
 {
-  m_pSpellCheckEngine->PresentOptions();
+  // Create a really basic dialog that gets dynamically populated
+  // with controls based on the m_pSpellCheckEngine->GetOptions();
+  SpellCheckerOptionsDialog OptionsDialog(this, "Options", m_pSpellCheckEngine->GetOptions());
+  if (OptionsDialog.ShowModal() == wxID_OK)
+  {
+    // Set the modified options
+    OptionsMap* pOptionsMap = OptionsDialog.GetModifiedOptions();
+    if (pOptionsMap)
+    {
+      for (OptionsMap::iterator it = pOptionsMap->begin(); it != pOptionsMap->end(); it++)
+        m_pSpellCheckEngine->AddOptionToMap(it->second);
+    }
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////

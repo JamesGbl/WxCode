@@ -81,8 +81,15 @@ extraResourceOptions=
 
 [Source]
 1=wxSpellCheckerDemo.cpp
+2=MySpellCheckDialog.cpp
+3=Outlook97LikeDialog.cpp
+4=SentryLikeDialog.cpp
 [Header]
 1=wxSpellCheckerDemo.h
+2=MySpellCheckDialog.h
+3=Outlook97LikeDialog.h
+4=SentryLikeDialog.h
+5=resource.h
 [Resource]
 [Other]
 [History]

@@ -230,7 +230,6 @@ void Outlook97LikeDialog::SetMispelledWord(const wxString& strMispelling)
 
 void Outlook97LikeDialog::OnClickOptions(wxCommandEvent& event)
 {
-//  m_pSpellCheckEngine->PresentOptions();
   // Create a really basic dialog that gets dynamically populated
   // with controls based on the m_pSpellCheckEngine->GetOptions();
   SpellCheckerOptionsDialog OptionsDialog(this, "Options", m_pSpellCheckEngine->GetOptions());
