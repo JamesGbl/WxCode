@@ -1,23 +1,54 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
- "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
-  <meta name="description" content="Collection of sample code snippets for wxWidgets">
-  <meta name="keywords" content="sample, code, snippets, wxWidgets">
-  <meta name="robots" content="noindex, follow">
-  <meta name="made" content="mailto:???@users.sourceforge.net">
-  <meta name="language" content="en">
-  <meta name="generator" content="wxCode">
-  <style type="text/css"> /* <![CDATA[ */ @import url(default.css); /* ]]> */ </style>
-  <title>Component ???</title>
+&nbsp;<title>ShortcutPanel</title>
 </head>
 <body>
+The ShortcutPanel component was donated to wxCode by Jonatan Magnusson of Phoenix Data.  It provides a control similar to the one in MS Outlook.
 
-<h2>Component ???</h2>
+<h4>Screenshots:</h4>
+Linux<br><img src="images/sample_linux.png" alt="Screenshot under Linux">
 <p>
-This is a place holder for the website of this component. If you see this, no additional information is provided by the maintainer.
+<h4>Usage:</h4>
+<ol>
+<li>Create a ShortcutPanel</li>
+<li>Add groups to the panel with the function ShortcutPanel::AddGroup</li>
+<li>Add shortcuts to the group with the function ShortcutBar::AddShortcut</li>
+</ol>
+Here is a code snippet from the sample to illustrate
+<p>
+<code>
+&nbsp;ShortcutPanel* pShortCutBar = new ShortcutPanel(pSplitter, -1, wxDefaultPosition, wxSize(100, 400));<br>
+&nbsp;pSplitter-&gt;SplitVertically(pShortCutBar, pPanel, 150);<br>
+&nbsp;<br>
+&nbsp;pShortCutBar-&gt;AddGroup(_("First"));<br>
+&nbsp;pShortCutBar-&gt;AddGroup(_("Second"));<br>
+&nbsp;pShortCutBar-&gt;AddGroup(_("Third"));<br>
+&nbsp;<br>
+&nbsp;int FirstGroupId = pShortCutBar-&gt;FindGroup(_("First"));<br>
+&nbsp;int SecondGroupId = pShortCutBar-&gt;FindGroup(_("Second"));<br>
+&nbsp;int ThirdGroupId = pShortCutBar-&gt;FindGroup(_("Third"));<br>
+&nbsp;<br>
+&nbsp;wxBitmap* pBitmapOne = new wxBitmap(one_xpm);<br>
+&nbsp;wxBitmap* pBitmapTwo = new wxBitmap(exit_xpm);<br>
+&nbsp;wxBitmap* pBitmapThree = new wxBitmap(three_xpm);<br>
+&nbsp;wxBitmap* pBitmapFour = new wxBitmap(four_xpm);<br>
+&nbsp;<br>
+&nbsp;pShortCutBar-&gt;AddShortcut(FirstGroupId, new Shortcut(ID_CMD_ONE, wxString(_("One")), *pBitmapOne));<br>
+&nbsp;pShortCutBar-&gt;AddShortcut(FirstGroupId, new Shortcut(wxID_EXIT, wxString(_("Exit")), *pBitmapTwo));<br>
+&nbsp;pShortCutBar-&gt;AddShortcut(FirstGroupId, new Shortcut(ID_CMD_THREE, wxString(_("Three")), *pBitmapThree));<br>
+&nbsp;pShortCutBar-&gt;AddShortcut(SecondGroupId, new Shortcut(ID_CMD_FOUR, wxString(_("Four")), *pBitmapFour));<br>
+&nbsp;<br>
+&nbsp;delete pBitmapOne;<br>
+&nbsp;delete pBitmapTwo;<br>
+&nbsp;delete pBitmapThree;<br>
+&nbsp;delete pBitmapFour;<br>
+</code>
 </p>
-
+<h4>Limitation</h4>
+<ul>
+<li>On Linux, the ShortcutPanel group header buttons don't look good under GTK2, but everything works fine under GTK 1.x</li>
+<li>Limited to 16 groups</li>
+<li>Limited to 16 shortcuts per group</li>
+<li>Only the visible shortcuts are accessible (If there are 6 items in the group and only 5 are visible, the user can't get to the 6th shortcut)</li>
+</ul>
 </body>
-</html>
