@@ -24,6 +24,7 @@
  Installation
  ------------
 
+ When building on win32, you can use the makefiles in the BUILD folder.
  In particular, when building wxscript on an autoconf-based system (like Linux/GNU-based systems),
  you have to create the makefile doing:
 

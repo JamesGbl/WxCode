@@ -73,6 +73,8 @@ MY_ARG_WITH([python], [Builds with Python support], [yes])
 MY_ARG_WITH([lua], [Builds with LUA support], [yes])
 MY_ARG_WITH([cint], [Builds with CINT support], [no])
 MY_ARG_WITH([underc], [Builds with UnderC support], [no])
+MY_ARG_WITH([pythonver], [The Python version to use], [2_4])
+
 
 if test "$with_python" = "yes"; then
    USE_PYTHON=1
@@ -106,7 +108,24 @@ else
    AC_MSG_RESULT([Checking for the CINT option... no])
 fi
 
+if test "$with_pythonver" = "2_2"; then
+   PYTHON_VER=2_2
+elif test "$with_pythonver" = "2_3"; then
+   PYTHON_VER=2_3
+elif test "$with_pythonver" = "2_4"; then
+   PYTHON_VER=2_4
+elif test "$with_pythonver" = "2_5"; then
+   PYTHON_VER=2_3
+elif test "$with_pythonver" = "2_6"; then
+   PYTHON_VER=2_3
+else
+   PYTHON_VER=2_4
+fi
+AC_MSG_RESULT([Checking for the Python version to use... $PYTHON_VER])
 
+#AM_INIT_AUTOMAKE(1.6)
+#AM_MAINTAINER_MODE
+#AM_PATH_PYTHON(2.2.2)
 
 
 # The final lines of the configure script

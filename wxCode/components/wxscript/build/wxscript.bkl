@@ -43,10 +43,10 @@
 		<default-value>c:\Python</default-value>
 		<description>The Python library main folder</description>
 	</option>
-	<option name="PYTHON_MINVER">
-		<values>2,3,4,5</values>
-		<default-value>4</default-value>
-		<description>The Python library minor version (2=2.2, 3=2.3, 4=2.4 ...)</description>
+	<option name="PYTHON_VER">
+		<values>2_2,2_3,2_4,2_5,2_6</values>
+		<default-value>2_4</default-value>
+		<description>The Python library version (2.2, 2.3, 2.4 ...)</description>
 	</option>
 	<option name="LUA_DIR" category="path">
 		<default-value>c:\lua</default-value>
@@ -100,13 +100,28 @@
 	<if cond="FORMAT!='msvc6prj'"><set var="LIBPATH_SWITCH">$(__LIBDIR_ARG)</set></if>
 	<if cond="FORMAT!='msvc6prj'"><set var="DEFINE_SWITCH">$(__DEFINE_ARG)</set></if>
 	
-	<set var="PYTHON_MAJVER">2</set>
+	<set var="PYTHON_MAJVER">
+		<if cond="PYTHON_VER=='2_2'">2</if>
+		<if cond="PYTHON_VER=='2_3'">2</if>
+		<if cond="PYTHON_VER=='2_4'">2</if>
+		<if cond="PYTHON_VER=='2_5'">2</if>
+		<if cond="PYTHON_VER=='2_6'">2</if>
+	</set>
+	
+	<set var="PYTHON_MINVER">
+		<if cond="PYTHON_VER=='2_2'">2</if>
+		<if cond="PYTHON_VER=='2_3'">3</if>
+		<if cond="PYTHON_VER=='2_4'">4</if>
+		<if cond="PYTHON_VER=='2_5'">5</if>
+		<if cond="PYTHON_VER=='2_6'">6</if>
+	</set>
+
 	<set var="PYTHONLIB_POSTFIX"><if cond="BUILD=='debug'">_d</if></set>
 	<set var="PYTHONLIB_NAME">python$(PYTHON_MAJVER)$(PYTHON_MINVER)$(PYTHONLIB_POSTFIX)</set>
 
 	<if cond="FORMAT!='msvc6prj'">
 		<if cond="FORMAT=='autoconf'">
-			<set var="SCRIPTINCLUDE"><if cond="USE_PYTHON=='1'">/usr/include/python$(PYTHON_MAJVER).$(PYTHON_MINVER)</if></set>
+			<set var="SCRIPTINCLUDE"><if cond="USE_PYTHON=='1'">$(INCLUDE_SWITCH)/usr/include/python$(PYTHON_MAJVER).$(PYTHON_MINVER)</if></set>
 		</if>
 		<if cond="FORMAT!='autoconf'">
 			<set var="SCRIPTINCLUDE1"><if cond="USE_PYTHON=='1'">$(INCLUDE_SWITCH)$(PYTHON_DIR)$(DIRSEP)include</if></set>
@@ -149,7 +164,11 @@
 	<!-- ================================== -->
 	
 	<template id="twxscript">
-		<if cond="FORMAT!='msvc6prj'">
+		<if cond="FORMAT!='msvc6prj' and FORMAT!='autoconf'">
+			<cppflags>$(SCRIPTDEFINE) $(SCRIPTINCLUDE)</cppflags>
+			<ldflags>$(SCRIPTLIBPATH)</ldflags>
+		</if>
+		<if cond="FORMAT=='autoconf'">
 			<cppflags>$(SCRIPTDEFINE) $(SCRIPTINCLUDE)</cppflags>
 			<ldflags>$(SCRIPTLIBPATH)</ldflags>
 		</if>
@@ -226,6 +245,17 @@
 		<wxlibs/>
 		<syslibs/>
 	</exe>
+
+	<if cond="FORMAT=='autoconf'">
+		<modify-target target="uninstall">
+		        <rmfile>$(INCLUDEDIR)/wx/script.h</rmfile>
+			<rmfile>$(INCLUDEDIR)/wx/scpython.h</rmfile>
+			<rmfile>$(INCLUDEDIR)/wx/sccint.h</rmfile>
+			<rmfile>$(INCLUDEDIR)/wx/scunderc.h</rmfile>
+			<rmfile>$(INCLUDEDIR)/wx/sclua.h</rmfile>
+			<rmfile>$(LIBDIR)/libwxscript*.a</rmfile>
+		</modify-target>
+	</if>
 		
 </makefile>
 

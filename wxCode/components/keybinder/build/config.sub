@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 # Configuration validation subroutine script, version 1.1.
 #   Copyright (C) 1991, 92-97, 1998, 1999 Free Software Foundation, Inc.
 # This file is (in principle) common to ALL GNU software.

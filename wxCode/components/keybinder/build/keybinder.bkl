@@ -41,9 +41,9 @@
 	<if cond="FORMAT=='autoconf'">
 		<modify-target target="uninstall">
 	        <rmfile>$(INCLUDEDIR)/wx/keybinder.h $(INCLUDEDIR)/wx/menuutils.h</rmfile>
-    	    <rmfile>$(LIBDIR)/libkeybinder*.a</rmfile>
-	    </modify-target>
-    </if>
+		<rmfile>$(LIBDIR)/libkeybinder*.a</rmfile>
+		</modify-target>
+	</if>
     	
 </makefile>
 

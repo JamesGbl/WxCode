@@ -2,7 +2,7 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 # WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
 
 ###############################################################################
-Project: "wxxml2_wxxml2"=wxxml2_wxxml2.dsp - Package Owner=<4>
+Project: "wxxml2"=wxxml2_wxxml2.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -14,7 +14,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "wxxml2_minimal"=wxxml2_minimal.dsp - Package Owner=<4>
+Project: "minimal"=wxxml2_minimal.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -23,7 +23,7 @@ Package=<5>
 Package=<4>
 {{{
 Begin Project Dependency
-Project_Dep_Name wxxml2_wxxml2
+Project_Dep_Name wxxml2
 End Project Dependency
 }}}
 

@@ -21,7 +21,11 @@
 #include "wx/scpython.h"
 #include <math.h>
 
-
+// Since I don't know any way to check the python version, I'll use this
+// simple trick to know if we have BOOL support
+#ifdef Py_BOOLOBJECT_H
+	#define wxPYTHON_HAS_BOOL
+#endif
 
 
 // -----------------
@@ -117,7 +121,7 @@ void wxPython::OnException()
 	wxASSERT(PyErr_Occurred() != NULL);
 	wxString err;
 
-#define pyEXC_HANDLE(x)								\
+#define pyEXC_HANDLE(x)						\
 	else if (PyErr_ExceptionMatches(PyExc_##x))		\
 		err = wxString(wxT(#x)) + wxT("\n");
 
@@ -290,7 +294,11 @@ PyObject *wxScriptFunctionPython::CreatePyObjFromScriptVar(const wxScriptVar &to
 
 	} else if (t.Match(*wxScriptTypeBOOL)) {
 
+#ifdef wxPYTHON_HAS_BOOL
 		res = PyBool_FromLong(toconvert.GetContentLong());
+#else
+		res = PyInt_FromLong(toconvert.GetContentLong());
+#endif
 
 	} else if (t.isPointer()) {
 
@@ -310,6 +318,7 @@ wxScriptVar wxScriptFunctionPython::CreateScriptVarFromPyObj(PyObject *toconvert
 	wxScriptVar ret;
 
 	// the order is important (a PyBool is a subtype of a PyInt) !!
+#ifdef wxPYTHON_HAS_BOOL
 	if (PyBool_Check(toconvert)) {
 
 		// compare this boolean object to the Py_True object
@@ -326,7 +335,9 @@ wxScriptVar wxScriptFunctionPython::CreateScriptVarFromPyObj(PyObject *toconvert
 		else
 			ret.Set(wxSTG_BOOL, (bool)TRUE);
 
-	} else if (PyInt_Check(toconvert)) {
+	} else 
+#endif
+	if (PyInt_Check(toconvert)) {
 
 		ret.Set(wxSTG_INT, (long)PyInt_AsLong(toconvert));
 
@@ -391,7 +402,7 @@ bool wxScriptFilePython::Load(const wxString &filename)
 
 		// run the file; this will parse all the functions
 		// it contains and add it to the global dictionary
-		PyRun_SimpleFile(f, WX2PY(filename));
+		PyRun_SimpleFile(f, (char *)WX2PY(filename));
 
 		// everything is okay...
 		fclose(f);

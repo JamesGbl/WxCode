@@ -57,13 +57,19 @@
 		<if cond="FORMAT!='autoconf'"><sys-lib>iconv</sys-lib></if>
 		<wxlibs/>
 		<syslibs/>
+
+        <!-- If we're using MSVC, compile also the stackwalker.cpp file -->
+        <if cond="FORMAT=='msvc' or FORMAT=='msvc6prj'">
+            <ldflags>/NODEFAULTLIB:msvcrt.lib /NODEFAULTLIB:libcd.lib</ldflags>
+            <sources>../sample/stackwalker.cpp</sources>
+        </if>
 	</exe>
 	
 	<if cond="FORMAT=='autoconf'">
 		<modify-target target="uninstall">
-	        <rmfile>$(INCLUDEDIR)/wx/wxxml2.h $(INCLUDEDIR)/wx/dtd.h</rmfile>
-    	    <rmfile>$(LIBDIR)/libwxxml2*.a</rmfile>
-	    </modify-target>
-    </if>
+			<rmfile>$(INCLUDEDIR)/wx/wxxml2.h $(INCLUDEDIR)/wx/dtd.h</rmfile>
+			<rmfile>$(LIBDIR)/libwxxml2*.a</rmfile>
+		</modify-target>
+	</if>
     
 </makefile>
