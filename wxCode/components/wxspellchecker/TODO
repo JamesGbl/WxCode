@@ -4,4 +4,6 @@ Populating the "Lanuage" combo box via the available options (or remove the comb
 
 Add the C interface and create a shared wxSpellChecker DLL
 
+Add #ifdef USE_MYSPELL and #ifdef USE_ASPELL wrappers to conditionally compile in the spell check engines.  This could be used to reduce the size of the library (and the executable that statically links to it)
+
 Use something like valgrind to remove any memory leaks
