@@ -557,14 +557,14 @@ wxKeyConfigPanel::wxKeyConfigPanel(wxWindow* parent,
 
 
 	// KEY PROFILES
-	// by default, create the key profiles combobox
+	// create the key profiles combobox & panel
 	m_bEnableKeyProfiles = TRUE;
 
 	m_pKeyProfiles = new wxComboBox(this, KEYBINDER_KEYPROFILES_ID,
 		wxEmptyString, wxDefaultPosition, wxDefaultSize, 
 		0, NULL, wxCB_READONLY | wxCB_SORT);
 
-	m_pKeyProfilesSizer = new wxBoxSizer(wxVERTICAL);
+	m_pKeyProfilesSizer = new wxPanel((wxVERTICAL);
 	m_pKeyProfilesSizer->Add(new wxStaticText(this, -1, "Key profile:"), 0, wxGROW | wxALL, 5);
 	m_pKeyProfilesSizer->Add(m_pKeyProfiles, 0, wxGROW | wxLEFT | wxRIGHT, 5);
 	m_pKeyProfilesSizer->Add(new wxStaticLine(this, -1), 0, wxGROW | wxALL, 5);
