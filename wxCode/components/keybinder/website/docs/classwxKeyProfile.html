@@ -20,16 +20,26 @@
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyProfile.html#a0">wxKeyProfile</a> (const wxString &amp;name=wxEmptyString, const wxString &amp;desc=wxEmptyString)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyProfile.html#a1">~wxKeyProfile</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyProfile.html#a1">wxKeyProfile</a> (const <a class="el" href="classwxKeyProfile.html">wxKeyProfile</a> &amp;tocopy)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyProfile.html#a2">SetName</a> (const wxString &amp;name)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyProfile.html#a2">~wxKeyProfile</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyProfile.html#a3">SetDesc</a> (const wxString &amp;str)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyProfile.html#a3">DeepCopy</a> (const <a class="el" href="classwxKeyProfile.html">wxKeyProfile</a> *p)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">wxString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyProfile.html#a4">GetName</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyProfile.html#a4">SetName</a> (const wxString &amp;name)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">wxString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyProfile.html#a5">GetDesc</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyProfile.html#a5">SetDesc</a> (const wxString &amp;str)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">wxString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyProfile.html#a6">GetName</a> () const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">wxString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyProfile.html#a7">GetDesc</a> () const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyProfile.html#a8">Save</a> (wxConfigBase *p, const wxString &amp;key=wxEmptyString) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Saves the array of keybindings into the given wxConfig object.  <a href="#a8"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyProfile.html#a9">Load</a> (wxConfigBase *p, const wxString &amp;key=wxEmptyString)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Loads from the given wxConfig object a set of keybindings.  <a href="#a9"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Protected Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">wxString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyProfile.html#p0">m_strName</a></td></tr>
 
@@ -81,7 +91,35 @@ wxKeyProfile adds a NAME and a DESCRIPTION to the <a class="el" href="classwxKey
     </td>
   </tr>
 </table>
-<a class="anchor" name="a1" doxytag="wxKeyProfile::~wxKeyProfile"></a><p>
+<a class="anchor" name="a1" doxytag="wxKeyProfile::wxKeyProfile"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">wxKeyProfile::wxKeyProfile           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">const <a class="el" href="classwxKeyProfile.html">wxKeyProfile</a> &amp;&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>tocopy</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap><code> [inline]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="a2" doxytag="wxKeyProfile::~wxKeyProfile"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -109,7 +147,35 @@ wxKeyProfile adds a NAME and a DESCRIPTION to the <a class="el" href="classwxKey
   </tr>
 </table>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="a5" doxytag="wxKeyProfile::GetDesc"></a><p>
+<a class="anchor" name="a3" doxytag="wxKeyProfile::DeepCopy"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">void wxKeyProfile::DeepCopy           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">const <a class="el" href="classwxKeyProfile.html">wxKeyProfile</a> *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>p</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap><code> [inline]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="a7" doxytag="wxKeyProfile::GetDesc"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -136,7 +202,7 @@ wxKeyProfile adds a NAME and a DESCRIPTION to the <a class="el" href="classwxKey
     </td>
   </tr>
 </table>
-<a class="anchor" name="a4" doxytag="wxKeyProfile::GetName"></a><p>
+<a class="anchor" name="a6" doxytag="wxKeyProfile::GetName"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -163,7 +229,89 @@ wxKeyProfile adds a NAME and a DESCRIPTION to the <a class="el" href="classwxKey
     </td>
   </tr>
 </table>
-<a class="anchor" name="a3" doxytag="wxKeyProfile::SetDesc"></a><p>
+<a class="anchor" name="a9" doxytag="wxKeyProfile::Load"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">bool wxKeyProfile::Load           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">wxConfigBase *&nbsp;</td>
+          <td class="mdname" nowrap> <em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap>const wxString &amp;&nbsp;</td>
+          <td class="mdname" nowrap> <em>key</em> = <code>wxEmptyString</code></td>
+        </tr>
+        <tr>
+          <td class="md"></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Loads from the given wxConfig object a set of keybindings. 
+<p>
+
+<p>
+Reimplemented from <a class="el" href="classwxKeyBinder.html#a16">wxKeyBinder</a>.    </td>
+  </tr>
+</table>
+<a class="anchor" name="a8" doxytag="wxKeyProfile::Save"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">bool wxKeyProfile::Save           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">wxConfigBase *&nbsp;</td>
+          <td class="mdname" nowrap> <em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap>const wxString &amp;&nbsp;</td>
+          <td class="mdname" nowrap> <em>key</em> = <code>wxEmptyString</code></td>
+        </tr>
+        <tr>
+          <td class="md"></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"> const</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Saves the array of keybindings into the given wxConfig object. 
+<p>
+All the keybindings will be saved into subkeys of the given key. 
+<p>
+Reimplemented from <a class="el" href="classwxKeyBinder.html#a15">wxKeyBinder</a>.    </td>
+  </tr>
+</table>
+<a class="anchor" name="a5" doxytag="wxKeyProfile::SetDesc"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -191,7 +339,7 @@ wxKeyProfile adds a NAME and a DESCRIPTION to the <a class="el" href="classwxKey
     </td>
   </tr>
 </table>
-<a class="anchor" name="a2" doxytag="wxKeyProfile::SetName"></a><p>
+<a class="anchor" name="a4" doxytag="wxKeyProfile::SetName"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -270,9 +418,9 @@ The name of this profile.
     </td>
   </tr>
 </table>
-<hr>The documentation for this class was generated from the following file:<ul>
-<li><a class="el" href="keybinder_8h-source.html">keybinder.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon Dec 27 19:27:56 2004 for Keybinder by&nbsp;
+<hr>The documentation for this class was generated from the following files:<ul>
+<li><a class="el" href="keybinder_8h-source.html">keybinder.h</a><li><a class="el" href="keybinder_8cpp.html">keybinder.cpp</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Dec 30 19:49:33 2004 for Keybinder by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.3.9.1 </small></address>
 </body>

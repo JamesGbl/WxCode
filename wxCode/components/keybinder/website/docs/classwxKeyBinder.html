@@ -22,80 +22,105 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a1">~wxKeyBinder</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a2">DeepCopy</a> (const <a class="el" href="classwxKeyBinder.html">wxKeyBinder</a> *p)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a2">OnChar</a> (wxKeyEvent &amp;event, wxEvtHandler *next)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Deep copies the given object.  <a href="#a2"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a3">Reset</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The event handler for wxKeyEvents.  <a href="#a2"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a3">DeepCopy</a> (const <a class="el" href="classwxKeyBinder.html">wxKeyBinder</a> *p)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Resets everything associated with this class.  <a href="#a3"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a4">UpdateCmd</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Deep copies the given object.  <a href="#a3"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a4">Reset</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Updates all the commands contained.  <a href="#a4"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a5">Attach</a> (wxWindow *p)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Resets everything associated with this class.  <a href="#a4"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a5">UpdateCmd</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Attaches this class to the given window.  <a href="#a5"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a6">Detach</a> (wxWindow *p)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Updates all the commands contained.  <a href="#a5"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a6">Enable</a> (bool bEnable=TRUE)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Detaches this event handler from the given window.  <a href="#a6"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a7">DetachAll</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Enables/disables all the <a class="el" href="classwxBinderEvtHandler.html">wxBinderEvtHandler</a> associated with the windows we've been attached to.  <a href="#a6"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a7">Attach</a> (wxWindow *p)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Detaches this event handler from all the window it's attached to.  <a href="#a7"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a8">ImportMenuBarCmd</a> (wxMenuBar *p)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Attaches this class to the given window.  <a href="#a7"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a8">AttachRecursively</a> (wxWindow *p)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Imports the <a class="el" href="classwxMenuCmd.html">wxMenuCmd</a> created importing them from the given menu bar.  <a href="#a8"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a9">AddCmd</a> (<a class="el" href="classwxCmd.html">wxCmd</a> *p)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Attaches this keybinder to the given window and recursively to all its children so that all hotkeys will be surely intercepted.  <a href="#a8"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a9">Detach</a> (wxWindow *p)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a10">AddShortcut</a> (int id, const wxString &amp;key)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Detaches this event handler from the given window.  <a href="#a9"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a10">DetachAll</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a11">AddShortcut</a> (int id, const <a class="el" href="classwxKeyBind.html">wxKeyBind</a> &amp;key)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Detaches this event handler from all the window it's attached to.  <a href="#a10"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a11">IsAttachedTo</a> (wxWindow *p) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxCmdArray.html">wxCmdArray</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a12">GetArray</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns TRUE if the given window is attached to this keybinder.  <a href="#a11"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a12">FindHandlerIdxFor</a> (wxWindow *p) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classwxCmdArray.html">wxCmdArray</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a13">GetArray</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the index of the handler for the given window.  <a href="#a12"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxBinderEvtHandler.html">wxBinderEvtHandler</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a13">FindHandlerFor</a> (wxWindow *p) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxCmd.html">wxCmd</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a14">GetMatchingCmd</a> (const wxKeyEvent &amp;key) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the <a class="el" href="classwxBinderEvtHandler.html">wxBinderEvtHandler</a> for the given window.  <a href="#a13"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a14">ImportMenuBarCmd</a> (wxMenuBar *p)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxCmd.html">wxCmd</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a15">GetCmd</a> (int id) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Imports the <a class="el" href="classwxMenuCmd.html">wxMenuCmd</a> created importing them from the given menu bar.  <a href="#a14"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a15">Save</a> (wxConfigBase *p, const wxString &amp;key=wxEmptyString) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxCmd.html">wxCmd</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a16">GetCmdBindTo</a> (const wxString &amp;key, int *n=NULL) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Saves the array of keybindings into the given wxConfig object.  <a href="#a15"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a16">Load</a> (wxConfigBase *p, const wxString &amp;key=wxEmptyString)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxKeyBind.html">wxKeyBind</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a17">GetShortcut</a> (int id, int n) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Loads from the given wxConfig object a set of keybindings.  <a href="#a16"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a17">AddCmd</a> (<a class="el" href="classwxCmd.html">wxCmd</a> *p)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">wxString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a18">GetShortcutStr</a> (int id, int n) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a18">AddShortcut</a> (int id, const wxString &amp;key)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">wxArrayString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a19">GetShortcutsList</a> (int id) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a19">AddShortcut</a> (int id, const <a class="el" href="classwxKeyBind.html">wxKeyBind</a> &amp;key)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">wxArrayPtrVoid *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a20">GetAttachedWndArr</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a20">GetCmdCount</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const wxArrayPtrVoid *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a21">GetAttachedWndArr</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a21">GetAttachedWndCount</a> () const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">wxWindow *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a22">GetWindow</a> (int n) const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxCmd.html">wxCmd</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a23">GetMatchingCmd</a> (const wxKeyEvent &amp;key) const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxCmd.html">wxCmd</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a24">GetCmd</a> (int id) const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxCmd.html">wxCmd</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a25">GetCmdBindTo</a> (const wxString &amp;key, int *n=NULL) const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxKeyBind.html">wxKeyBind</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a26">GetShortcut</a> (int id, int n) const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">wxString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a27">GetShortcutStr</a> (int id, int n) const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">wxArrayString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a28">GetShortcutsList</a> (int id) const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">wxArrayPtrVoid *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a29">GetHandlersArr</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxCmdArray.html">wxCmdArray</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a30">GetArray</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classwxCmdArray.html">wxCmdArray</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#a31">GetArray</a> () const </td></tr>
 
 <tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#b0">OnChar</a> (wxKeyEvent &amp;event)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#b0">FindCmd</a> (int id) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The event handler for wxKeyEvents.  <a href="#b0"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#b1">FindCmd</a> (int id) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the index of the first command with the given ID.  <a href="#b0"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#b1">FindCmdBindTo</a> (const <a class="el" href="classwxKeyBind.html">wxKeyBind</a> &amp;key, int *n=NULL) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the index of the first command with the given ID.  <a href="#b1"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#b2">FindCmdBindTo</a> (const <a class="el" href="classwxKeyBind.html">wxKeyBind</a> &amp;key, int *n=NULL) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the index of the first command that contains the given key binding.  <a href="#b1"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#b2">FindMatchingCmd</a> (const wxKeyEvent &amp;key) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the index of the first command that contains the given key binding.  <a href="#b2"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#b3">FindMatchingCmd</a> (const wxKeyEvent &amp;key) const </td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the index of the first command which matches the given key event.  <a href="#b3"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the index of the first command which matches the given key event.  <a href="#b2"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Protected Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxCmdArray.html">wxCmdArray</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#p0">m_arrCmd</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The array of wxCmd-derived classes.  <a href="#p0"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">wxArrayPtrVoid&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#p1">m_arrAttachedWnd</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">wxArrayPtrVoid&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxKeyBinder.html#p1">m_arrHandlers</a></td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The array of windows attached to this keybinder.  <a href="#p1"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The array of <a class="el" href="classwxBinderEvtHandler.html">wxBinderEvtHandler</a> which is hold by this keybinder.  <a href="#p1"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 This is the real keybinder. 
 <p>
-This object is an event handler which can be <a class="el" href="classwxKeyBinder.html#a5">Attach()</a>ed to any wxWindow to intercept the keypresses that window receives and then to (if they match a shortcut key associated with one of the <a class="el" href="classwxCmd.html">wxCmd</a> contained) translate them in events (the type of the event which is generated depends from the type <a class="el" href="classwxCmd.html">wxCmd</a> which is triggered; see <a class="el" href="classwxCmd.html#b1">wxCmd::Exec</a>) which are sent to the window which is <a class="el" href="classwxKeyBinder.html#a5">Attach()</a>ed to this key binder.<p>
+This object is an event handler which can be <a class="el" href="classwxKeyBinder.html#a7">Attach()</a>ed to any wxWindow to intercept the keypresses that window receives and then to (if they match a shortcut key associated with one of the <a class="el" href="classwxCmd.html">wxCmd</a> contained) translate them in events (the type of the event which is generated depends from the type <a class="el" href="classwxCmd.html">wxCmd</a> which is triggered; see <a class="el" href="classwxCmd.html#b1">wxCmd::Exec</a>) which are sent to the window which is <a class="el" href="classwxKeyBinder.html#a7">Attach()</a>ed to this key binder.<p>
 This class contains an array of <a class="el" href="classwxCmd.html">wxCmd</a> and exposes some utilities to add/remove/edit them and their <a class="el" href="classwxKeyBind.html">wxKeyBind</a>.<p>
-VERY IMPORTANT: to allow the wxKeyBinder class to intercept *all* the keypresses which are sent to the <a class="el" href="classwxKeyBinder.html#a5">Attach()</a>ed window, also hotkeys, you must use the wxADD_KEYBINDER_SUPPORT macro inside the declaration of that window. 
+VERY IMPORTANT: to allow the wxKeyBinder class to intercept *all* the keypresses which are sent to the <a class="el" href="classwxKeyBinder.html#a7">Attach()</a>ed window, also hotkeys, you must use the wxADD_KEYBINDER_SUPPORT macro inside the declaration of that window. 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" name="a0" doxytag="wxKeyBinder::wxKeyBinder"></a><p>
@@ -153,7 +178,7 @@ VERY IMPORTANT: to allow the wxKeyBinder class to intercept *all* the keypresses
   </tr>
 </table>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="a9" doxytag="wxKeyBinder::AddCmd"></a><p>
+<a class="anchor" name="a17" doxytag="wxKeyBinder::AddCmd"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -181,7 +206,7 @@ VERY IMPORTANT: to allow the wxKeyBinder class to intercept *all* the keypresses
     </td>
   </tr>
 </table>
-<a class="anchor" name="a11" doxytag="wxKeyBinder::AddShortcut"></a><p>
+<a class="anchor" name="a19" doxytag="wxKeyBinder::AddShortcut"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -218,7 +243,7 @@ VERY IMPORTANT: to allow the wxKeyBinder class to intercept *all* the keypresses
     </td>
   </tr>
 </table>
-<a class="anchor" name="a10" doxytag="wxKeyBinder::AddShortcut"></a><p>
+<a class="anchor" name="a18" doxytag="wxKeyBinder::AddShortcut"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -255,7 +280,7 @@ VERY IMPORTANT: to allow the wxKeyBinder class to intercept *all* the keypresses
     </td>
   </tr>
 </table>
-<a class="anchor" name="a5" doxytag="wxKeyBinder::Attach"></a><p>
+<a class="anchor" name="a7" doxytag="wxKeyBinder::Attach"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -266,7 +291,7 @@ VERY IMPORTANT: to allow the wxKeyBinder class to intercept *all* the keypresses
           <td class="md" nowrap valign="top">wxWindow *&nbsp;</td>
           <td class="mdname1" valign="top" nowrap> <em>p</em>          </td>
           <td class="md" valign="top">&nbsp;)&nbsp;</td>
-          <td class="md" nowrap><code> [inline]</code></td>
+          <td class="md" nowrap></td>
         </tr>
       </table>
     </td>
@@ -285,7 +310,37 @@ Attaches this class to the given window.
     </td>
   </tr>
 </table>
-<a class="anchor" name="a2" doxytag="wxKeyBinder::DeepCopy"></a><p>
+<a class="anchor" name="a8" doxytag="wxKeyBinder::AttachRecursively"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">void wxKeyBinder::AttachRecursively           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">wxWindow *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>p</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Attaches this keybinder to the given window and recursively to all its children so that all hotkeys will be surely intercepted. 
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="a3" doxytag="wxKeyBinder::DeepCopy"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -315,7 +370,7 @@ Deep copies the given object.
     </td>
   </tr>
 </table>
-<a class="anchor" name="a6" doxytag="wxKeyBinder::Detach"></a><p>
+<a class="anchor" name="a9" doxytag="wxKeyBinder::Detach"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -326,7 +381,7 @@ Deep copies the given object.
           <td class="md" nowrap valign="top">wxWindow *&nbsp;</td>
           <td class="mdname1" valign="top" nowrap> <em>p</em>          </td>
           <td class="md" valign="top">&nbsp;)&nbsp;</td>
-          <td class="md" nowrap><code> [inline]</code></td>
+          <td class="md" nowrap></td>
         </tr>
       </table>
     </td>
@@ -345,7 +400,7 @@ Detaches this event handler from the given window.
     </td>
   </tr>
 </table>
-<a class="anchor" name="a7" doxytag="wxKeyBinder::DetachAll"></a><p>
+<a class="anchor" name="a10" doxytag="wxKeyBinder::DetachAll"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -355,7 +410,7 @@ Detaches this event handler from the given window.
           <td class="md" valign="top">(&nbsp;</td>
           <td class="mdname1" valign="top" nowrap>          </td>
           <td class="md" valign="top">&nbsp;)&nbsp;</td>
-          <td class="md" nowrap><code> [inline]</code></td>
+          <td class="md" nowrap></td>
         </tr>
       </table>
     </td>
@@ -374,7 +429,37 @@ Detaches this event handler from all the window it's attached to.
     </td>
   </tr>
 </table>
-<a class="anchor" name="b1" doxytag="wxKeyBinder::FindCmd"></a><p>
+<a class="anchor" name="a6" doxytag="wxKeyBinder::Enable"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">void wxKeyBinder::Enable           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">bool&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>bEnable</em> = <code>TRUE</code>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap><code> [inline]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Enables/disables all the <a class="el" href="classwxBinderEvtHandler.html">wxBinderEvtHandler</a> associated with the windows we've been attached to. 
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="b0" doxytag="wxKeyBinder::FindCmd"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -404,7 +489,7 @@ Returns the index of the first command with the given ID.
     </td>
   </tr>
 </table>
-<a class="anchor" name="b2" doxytag="wxKeyBinder::FindCmdBindTo"></a><p>
+<a class="anchor" name="b1" doxytag="wxKeyBinder::FindCmdBindTo"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -443,7 +528,67 @@ Returns the index of the first command that contains the given key binding.
     </td>
   </tr>
 </table>
-<a class="anchor" name="b3" doxytag="wxKeyBinder::FindMatchingCmd"></a><p>
+<a class="anchor" name="a13" doxytag="wxKeyBinder::FindHandlerFor"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"><a class="el" href="classwxBinderEvtHandler.html">wxBinderEvtHandler</a> * wxKeyBinder::FindHandlerFor           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">wxWindow *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>p</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap> const</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Returns the <a class="el" href="classwxBinderEvtHandler.html">wxBinderEvtHandler</a> for the given window. 
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="a12" doxytag="wxKeyBinder::FindHandlerIdxFor"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">int wxKeyBinder::FindHandlerIdxFor           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">wxWindow *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>p</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap> const</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Returns the index of the handler for the given window. 
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="b2" doxytag="wxKeyBinder::FindMatchingCmd"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -473,7 +618,7 @@ Returns the index of the first command which matches the given key event.
     </td>
   </tr>
 </table>
-<a class="anchor" name="a13" doxytag="wxKeyBinder::GetArray"></a><p>
+<a class="anchor" name="a31" doxytag="wxKeyBinder::GetArray"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -500,7 +645,7 @@ Returns the index of the first command which matches the given key event.
     </td>
   </tr>
 </table>
-<a class="anchor" name="a12" doxytag="wxKeyBinder::GetArray"></a><p>
+<a class="anchor" name="a30" doxytag="wxKeyBinder::GetArray"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -527,13 +672,13 @@ Returns the index of the first command which matches the given key event.
     </td>
   </tr>
 </table>
-<a class="anchor" name="a21" doxytag="wxKeyBinder::GetAttachedWndArr"></a><p>
+<a class="anchor" name="a21" doxytag="wxKeyBinder::GetAttachedWndCount"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
       <table cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td class="md" nowrap valign="top">const wxArrayPtrVoid* wxKeyBinder::GetAttachedWndArr           </td>
+          <td class="md" nowrap valign="top">int wxKeyBinder::GetAttachedWndCount           </td>
           <td class="md" valign="top">(&nbsp;</td>
           <td class="mdname1" valign="top" nowrap>          </td>
           <td class="md" valign="top">&nbsp;)&nbsp;</td>
@@ -554,34 +699,7 @@ Returns the index of the first command which matches the given key event.
     </td>
   </tr>
 </table>
-<a class="anchor" name="a20" doxytag="wxKeyBinder::GetAttachedWndArr"></a><p>
-<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
-  <tr>
-    <td class="mdRow">
-      <table cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td class="md" nowrap valign="top">wxArrayPtrVoid* wxKeyBinder::GetAttachedWndArr           </td>
-          <td class="md" valign="top">(&nbsp;</td>
-          <td class="mdname1" valign="top" nowrap>          </td>
-          <td class="md" valign="top">&nbsp;)&nbsp;</td>
-          <td class="md" nowrap><code> [inline]</code></td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
-<table cellspacing="5" cellpadding="0" border="0">
-  <tr>
-    <td>
-      &nbsp;
-    </td>
-    <td>
-
-<p>
-    </td>
-  </tr>
-</table>
-<a class="anchor" name="a15" doxytag="wxKeyBinder::GetCmd"></a><p>
+<a class="anchor" name="a24" doxytag="wxKeyBinder::GetCmd"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -609,7 +727,7 @@ Returns the index of the first command which matches the given key event.
     </td>
   </tr>
 </table>
-<a class="anchor" name="a16" doxytag="wxKeyBinder::GetCmdBindTo"></a><p>
+<a class="anchor" name="a25" doxytag="wxKeyBinder::GetCmdBindTo"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -646,7 +764,61 @@ Returns the index of the first command which matches the given key event.
     </td>
   </tr>
 </table>
-<a class="anchor" name="a14" doxytag="wxKeyBinder::GetMatchingCmd"></a><p>
+<a class="anchor" name="a20" doxytag="wxKeyBinder::GetCmdCount"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">int wxKeyBinder::GetCmdCount           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap> const<code> [inline]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="a29" doxytag="wxKeyBinder::GetHandlersArr"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">wxArrayPtrVoid* wxKeyBinder::GetHandlersArr           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap><code> [inline]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="a23" doxytag="wxKeyBinder::GetMatchingCmd"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -674,7 +846,7 @@ Returns the index of the first command which matches the given key event.
     </td>
   </tr>
 </table>
-<a class="anchor" name="a17" doxytag="wxKeyBinder::GetShortcut"></a><p>
+<a class="anchor" name="a26" doxytag="wxKeyBinder::GetShortcut"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -711,7 +883,7 @@ Returns the index of the first command which matches the given key event.
     </td>
   </tr>
 </table>
-<a class="anchor" name="a19" doxytag="wxKeyBinder::GetShortcutsList"></a><p>
+<a class="anchor" name="a28" doxytag="wxKeyBinder::GetShortcutsList"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -739,7 +911,7 @@ Returns the index of the first command which matches the given key event.
     </td>
   </tr>
 </table>
-<a class="anchor" name="a18" doxytag="wxKeyBinder::GetShortcutStr"></a><p>
+<a class="anchor" name="a27" doxytag="wxKeyBinder::GetShortcutStr"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -776,7 +948,35 @@ Returns the index of the first command which matches the given key event.
     </td>
   </tr>
 </table>
-<a class="anchor" name="a8" doxytag="wxKeyBinder::ImportMenuBarCmd"></a><p>
+<a class="anchor" name="a22" doxytag="wxKeyBinder::GetWindow"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">wxWindow* wxKeyBinder::GetWindow           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">int&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>n</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap> const<code> [inline]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="a14" doxytag="wxKeyBinder::ImportMenuBarCmd"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -806,7 +1006,78 @@ Imports the <a class="el" href="classwxMenuCmd.html">wxMenuCmd</a> created impor
     </td>
   </tr>
 </table>
-<a class="anchor" name="b0" doxytag="wxKeyBinder::OnChar"></a><p>
+<a class="anchor" name="a11" doxytag="wxKeyBinder::IsAttachedTo"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">bool wxKeyBinder::IsAttachedTo           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">wxWindow *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>p</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap> const<code> [inline]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Returns TRUE if the given window is attached to this keybinder. 
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="a16" doxytag="wxKeyBinder::Load"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">bool wxKeyBinder::Load           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">wxConfigBase *&nbsp;</td>
+          <td class="mdname" nowrap> <em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap>const wxString &amp;&nbsp;</td>
+          <td class="mdname" nowrap> <em>key</em> = <code>wxEmptyString</code></td>
+        </tr>
+        <tr>
+          <td class="md"></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Loads from the given wxConfig object a set of keybindings. 
+<p>
+
+<p>
+Reimplemented in <a class="el" href="classwxKeyProfile.html#a9">wxKeyProfile</a>.    </td>
+  </tr>
+</table>
+<a class="anchor" name="a2" doxytag="wxKeyBinder::OnChar"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -815,9 +1086,18 @@ Imports the <a class="el" href="classwxMenuCmd.html">wxMenuCmd</a> created impor
           <td class="md" nowrap valign="top">void wxKeyBinder::OnChar           </td>
           <td class="md" valign="top">(&nbsp;</td>
           <td class="md" nowrap valign="top">wxKeyEvent &amp;&nbsp;</td>
-          <td class="mdname1" valign="top" nowrap> <em>event</em>          </td>
-          <td class="md" valign="top">&nbsp;)&nbsp;</td>
-          <td class="md" nowrap><code> [protected]</code></td>
+          <td class="mdname" nowrap> <em>event</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap>wxEvtHandler *&nbsp;</td>
+          <td class="mdname" nowrap> <em>next</em></td>
+        </tr>
+        <tr>
+          <td class="md"></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
         </tr>
       </table>
     </td>
@@ -836,7 +1116,7 @@ The event handler for wxKeyEvents.
     </td>
   </tr>
 </table>
-<a class="anchor" name="a3" doxytag="wxKeyBinder::Reset"></a><p>
+<a class="anchor" name="a4" doxytag="wxKeyBinder::Reset"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -865,7 +1145,48 @@ Resets everything associated with this class.
     </td>
   </tr>
 </table>
-<a class="anchor" name="a4" doxytag="wxKeyBinder::UpdateCmd"></a><p>
+<a class="anchor" name="a15" doxytag="wxKeyBinder::Save"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">bool wxKeyBinder::Save           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">wxConfigBase *&nbsp;</td>
+          <td class="mdname" nowrap> <em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap>const wxString &amp;&nbsp;</td>
+          <td class="mdname" nowrap> <em>key</em> = <code>wxEmptyString</code></td>
+        </tr>
+        <tr>
+          <td class="md"></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"> const</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Saves the array of keybindings into the given wxConfig object. 
+<p>
+All the keybindings will be saved into subkeys of the given key. 
+<p>
+Reimplemented in <a class="el" href="classwxKeyProfile.html#a8">wxKeyProfile</a>.    </td>
+  </tr>
+</table>
+<a class="anchor" name="a5" doxytag="wxKeyBinder::UpdateCmd"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -895,31 +1216,6 @@ Updates all the commands contained.
   </tr>
 </table>
 <hr><h2>Member Data Documentation</h2>
-<a class="anchor" name="p1" doxytag="wxKeyBinder::m_arrAttachedWnd"></a><p>
-<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
-  <tr>
-    <td class="mdRow">
-      <table cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td class="md" nowrap valign="top">wxArrayPtrVoid <a class="el" href="classwxKeyBinder.html#p1">wxKeyBinder::m_arrAttachedWnd</a><code> [protected]</code>          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
-<table cellspacing="5" cellpadding="0" border="0">
-  <tr>
-    <td>
-      &nbsp;
-    </td>
-    <td>
-
-<p>
-The array of windows attached to this keybinder. 
-<p>
-These info are very important when deleting the keybinder (which can automatically <a class="el" href="classwxKeyBinder.html#a6">Detach()</a> himself). Besides, with this array, something interesting could be done in future (like global shortcuts: command events sent to all attached windows even if the command shortcut comes from one of the attached windows only)...     </td>
-  </tr>
-</table>
 <a class="anchor" name="p0" doxytag="wxKeyBinder::m_arrCmd"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
@@ -945,9 +1241,34 @@ The array of wxCmd-derived classes.
     </td>
   </tr>
 </table>
+<a class="anchor" name="p1" doxytag="wxKeyBinder::m_arrHandlers"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">wxArrayPtrVoid <a class="el" href="classwxKeyBinder.html#p1">wxKeyBinder::m_arrHandlers</a><code> [protected]</code>          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+The array of <a class="el" href="classwxBinderEvtHandler.html">wxBinderEvtHandler</a> which is hold by this keybinder. 
+<p>
+These info are very important when deleting the keybinder (which can automatically <a class="el" href="classwxKeyBinder.html#a9">Detach()</a> himself). Besides, with this array, something interesting could be done in future (like global shortcuts: command events sent to all attached windows even if the command shortcut comes from one of the attached windows only)...     </td>
+  </tr>
+</table>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="keybinder_8h-source.html">keybinder.h</a><li><a class="el" href="keybinder_8cpp.html">keybinder.cpp</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon Dec 27 19:27:56 2004 for Keybinder by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Dec 30 19:49:32 2004 for Keybinder by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.3.9.1 </small></address>
 </body>

@@ -22,12 +22,29 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxMenuCmd.html#a1">wxMenuCmd</a> (wxMenuItem *p=NULL, const wxString &amp;name=wxEmptyString, const wxString &amp;desc=wxEmptyString)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxMenuCmd.html#a2">DeepCopy</a> (const <a class="el" href="classwxCmd.html">wxCmd</a> *p)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxMenuCmd.html#a2">~wxMenuCmd</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classwxCmd.html">wxCmd</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxMenuCmd.html#a3">Clone</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxMenuCmd.html#a3">DeepCopy</a> (const <a class="el" href="classwxCmd.html">wxCmd</a> *p)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxMenuCmd.html#a4">~wxMenuCmd</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classwxCmd.html">wxCmd</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxMenuCmd.html#a4">Clone</a> () const </td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxMenuCmd.html#a5">GetType</a> () const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the type ID for this wxCmd-derived class.  <a href="#a5"></a><br></td></tr>
+<tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxMenuCmd.html#e0">SetMenuBar</a> (wxMenuBar *p)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets the menubar which will be used to search the menu items with the IDs given to the <a class="el" href="classwxMenuCmd.html#e2">CreateNew</a> function.  <a href="#e0"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxMenuCmd.html#e1">Register</a> (wxMenuBar *p)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Register this type of command into <a class="el" href="classwxCmd.html">wxCmd</a> static array.  <a href="#e1"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxCmd.html">wxCmd</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxMenuCmd.html#e2">CreateNew</a> (int id)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a new wxMenuCmd with the given ID.  <a href="#e2"></a><br></td></tr>
+<tr><td colspan="2"><br><h2>Static Public Attributes</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">wxMenuBar *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxMenuCmd.html#s0">m_pMenuBar</a> = NULL</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The menubar used by <a class="el" href="classwxMenuCmd.html#e2">CreateNew</a>.  <a href="#s0"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxMenuCmd.html#b0">Exec</a> (wxObject *origin, wxEvtHandler *client)</td></tr>
 
@@ -136,7 +153,7 @@ Represents a <a class="el" href="classwxCmd.html">wxCmd</a> which just generates
     </td>
   </tr>
 </table>
-<a class="anchor" name="a4" doxytag="wxMenuCmd::~wxMenuCmd"></a><p>
+<a class="anchor" name="a2" doxytag="wxMenuCmd::~wxMenuCmd"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -164,7 +181,7 @@ Represents a <a class="el" href="classwxCmd.html">wxCmd</a> which just generates
   </tr>
 </table>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="a3" doxytag="wxMenuCmd::Clone"></a><p>
+<a class="anchor" name="a4" doxytag="wxMenuCmd::Clone"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -193,7 +210,37 @@ Represents a <a class="el" href="classwxCmd.html">wxCmd</a> which just generates
 Implements <a class="el" href="classwxCmd.html#a3">wxCmd</a>.    </td>
   </tr>
 </table>
-<a class="anchor" name="a2" doxytag="wxMenuCmd::DeepCopy"></a><p>
+<a class="anchor" name="e2" doxytag="wxMenuCmd::CreateNew"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"><a class="el" href="classwxCmd.html">wxCmd</a> * wxMenuCmd::CreateNew           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">int&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>id</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap><code> [static]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Creates a new wxMenuCmd with the given ID. 
+<p>
+Automatically searches into the <a class="el" href="classwxMenuCmd.html#s0">m_pMenuBar</a> variable the.     </td>
+  </tr>
+</table>
+<a class="anchor" name="a3" doxytag="wxMenuCmd::DeepCopy"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -264,6 +311,97 @@ Generates the wxEVT_COMMAND_MENU_SELECTED and sends it to the client event handl
 Implements <a class="el" href="classwxCmd.html#b1">wxCmd</a>.    </td>
   </tr>
 </table>
+<a class="anchor" name="a5" doxytag="wxMenuCmd::GetType"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">virtual int wxMenuCmd::GetType           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap> const<code> [inline, virtual]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Returns the type ID for this wxCmd-derived class. 
+<p>
+
+<p>
+Implements <a class="el" href="classwxCmd.html#a22">wxCmd</a>.    </td>
+  </tr>
+</table>
+<a class="anchor" name="e1" doxytag="wxMenuCmd::Register"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">void wxMenuCmd::Register           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">wxMenuBar *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>p</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap><code> [inline, static]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Register this type of command into <a class="el" href="classwxCmd.html">wxCmd</a> static array. 
+<p>
+Also calls the <a class="el" href="classwxMenuCmd.html#e0">SetMenuBar</a> function with the given pointer.     </td>
+  </tr>
+</table>
+<a class="anchor" name="e0" doxytag="wxMenuCmd::SetMenuBar"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">void wxMenuCmd::SetMenuBar           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">wxMenuBar *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>p</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap><code> [inline, static]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Sets the menubar which will be used to search the menu items with the IDs given to the <a class="el" href="classwxMenuCmd.html#e2">CreateNew</a> function. 
+<p>
+    </td>
+  </tr>
+</table>
 <a class="anchor" name="b1" doxytag="wxMenuCmd::Update"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
@@ -321,9 +459,34 @@ The menuitem which is connected to this command.
     </td>
   </tr>
 </table>
+<a class="anchor" name="s0" doxytag="wxMenuCmd::m_pMenuBar"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">wxMenuBar * <a class="el" href="classwxMenuCmd.html#s0">wxMenuCmd::m_pMenuBar</a> = NULL<code> [static]</code>          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+The menubar used by <a class="el" href="classwxMenuCmd.html#e2">CreateNew</a>. 
+<p>
+    </td>
+  </tr>
+</table>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="menuutils_8h-source.html">menuutils.h</a><li><a class="el" href="menuutils_8cpp.html">menuutils.cpp</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon Dec 27 19:27:56 2004 for Keybinder by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Dec 30 19:49:33 2004 for Keybinder by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.3.9.1 </small></address>
 </body>

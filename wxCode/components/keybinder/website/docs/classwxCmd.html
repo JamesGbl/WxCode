@@ -40,28 +40,54 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#a8">RemoveShortcut</a> (int n)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Removes the n-th key shortcut associated to this command.  <a href="#a8"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#a9">MatchKey</a> (const wxKeyEvent &amp;ev) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#a9">RemoveAllShortcuts</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns TRUE if at least one of the key bindings matches the given key event.  <a href="#a9"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#a10">IsBindTo</a> (const <a class="el" href="classwxKeyBind.html">wxKeyBind</a> &amp;key, int *n=NULL) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Removes all the shortcuts associates to this command.  <a href="#a9"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#a10">MatchKey</a> (const wxKeyEvent &amp;ev) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns TRUE if this command is bind to a <a class="el" href="classwxKeyBind.html">wxKeyBind</a> object identic to the given one.  <a href="#a10"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxKeyBind.html">wxKeyBind</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#a11">GetShortcut</a> (int n)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns TRUE if at least one of the key bindings matches the given key event.  <a href="#a10"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#a11">IsBindTo</a> (const <a class="el" href="classwxKeyBind.html">wxKeyBind</a> &amp;key, int *n=NULL) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classwxKeyBind.html">wxKeyBind</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#a12">GetShortcut</a> (int n) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns TRUE if this command is bind to a <a class="el" href="classwxKeyBind.html">wxKeyBind</a> object identic to the given one.  <a href="#a11"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#a12">Save</a> (wxConfigBase *p, const wxString &amp;key=wxEmptyString) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">wxAcceleratorEntry&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#a13">GetAccelerator</a> (int n) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Saves the command into the given wxConfig object in the given key entry.  <a href="#a12"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#a13">Load</a> (wxConfigBase *p, const wxString &amp;key=wxEmptyString)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#a14">GetId</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Loads from the given wxConfig's key a command.  <a href="#a13"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxKeyBind.html">wxKeyBind</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#a14">GetShortcut</a> (int n)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#a15">GetShortcutCount</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classwxKeyBind.html">wxKeyBind</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#a15">GetShortcut</a> (int n) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">wxString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#a16">GetDescription</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">wxAcceleratorEntry&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#a16">GetAccelerator</a> (int n) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">wxString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#a17">GetName</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#a17">GetId</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">wxArrayString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#a18">GetShortcutsList</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#a18">GetShortcutCount</a> () const </td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">wxString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#a19">GetDescription</a> () const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">wxString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#a20">GetName</a> () const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">wxArrayString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#a21">GetShortcutsList</a> () const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#a22">GetType</a> () const =0</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the type ID for this wxCmd-derived class.  <a href="#a22"></a><br></td></tr>
+<tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxCmd.html">wxCmd</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#e0">CreateNew</a> (int type, int id)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a new command of the given type with the given ID.  <a href="#e0"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#e1">AddCmdType</a> (int type, <a class="el" href="classwxCmd.html#x0">wxCmdCreationFnc</a> fnc)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Adds a new command type to our static list.  <a href="#e1"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="structwxCmd_1_1wxCmdType.html">wxCmdType</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#e2">FindCmdType</a> (int type)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the <a class="el" href="structwxCmd_1_1wxCmdType.html">wxCmdType</a> associated with the given type ID.  <a href="#e2"></a><br></td></tr>
+<tr><td colspan="2"><br><h2>Protected Types</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="classwxCmd.html">wxCmd</a> *(*&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#x0">wxCmdCreationFnc</a> )(int id)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The wxCmd-derived class creation function.  <a href="#x0"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#b0">Update</a> ()</td></tr>
 
@@ -75,15 +101,23 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The shortcuts.  <a href="#p0"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#p1">m_nShortcuts</a></td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The numner of valid entries of m_keyShortcut.  <a href="#p1"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">wxString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#p2">m_strName</a></td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The num of valid entries of m_keyShortcut. The name of this command. This should be a short string.  <a href="#p2"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The name of this command. This should be a short string.  <a href="#p2"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">wxString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#p3">m_strDescription</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The description associated with this command.  <a href="#p3"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#p4">m_nId</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The ID which identifies this command.  <a href="#p4"></a><br></td></tr>
+<tr><td colspan="2"><br><h2>Static Protected Attributes</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="structwxCmd_1_1wxCmdType.html">wxCmdType</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#t0">m_arrCmdType</a> [wxCMD_MAX_TYPES]</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The array of registered command types.  <a href="#t0"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#t1">m_nCmdTypes</a> = 0</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The number of registered command types.  <a href="#t1"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Friends</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxCmd.html#n0">wxKeyBinder</a></td></tr>
 
@@ -94,6 +128,32 @@ Represents one of the commands which are handled by a <a class="el" href="classw
 This is an abstract class so it cannot be allocated directly: it is used instead as base class for specific type of wxCmd.<p>
 The command has up to wxCMD_MAX_SHORTCUTS associated key shortcuts. Besides, the command has three other properties: a description string, a name string and an ID which should be unique for each <a class="el" href="classwxKeyBinder.html">wxKeyBinder</a>. 
 <p>
+<hr><h2>Member Typedef Documentation</h2>
+<a class="anchor" name="x0" doxytag="wxCmd::wxCmdCreationFnc"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">typedef <a class="el" href="classwxCmd.html">wxCmd</a>*(* <a class="el" href="classwxCmd.html#x0">wxCmd::wxCmdCreationFnc</a>)(int id)<code> [protected]</code>          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+The wxCmd-derived class creation function. 
+<p>
+Such a function is required into <a class="el" href="classwxCmd.html#a13">wxCmd::Load</a>.     </td>
+  </tr>
+</table>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" name="a0" doxytag="wxCmd::wxCmd"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
@@ -215,6 +275,45 @@ The command has up to wxCMD_MAX_SHORTCUTS associated key shortcuts. Besides, the
   </tr>
 </table>
 <hr><h2>Member Function Documentation</h2>
+<a class="anchor" name="e1" doxytag="wxCmd::AddCmdType"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">void wxCmd::AddCmdType           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">int&nbsp;</td>
+          <td class="mdname" nowrap> <em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap><a class="el" href="classwxCmd.html#x0">wxCmdCreationFnc</a>&nbsp;</td>
+          <td class="mdname" nowrap> <em>fnc</em></td>
+        </tr>
+        <tr>
+          <td class="md"></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"><code> [static]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Adds a new command type to our static list. 
+<p>
+    </td>
+  </tr>
+</table>
 <a class="anchor" name="a7" doxytag="wxCmd::AddShortcut"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
@@ -340,7 +439,46 @@ Adds the given key binding to this command.
 <p>
 
 <p>
-Implemented in <a class="el" href="classwxMenuCmd.html#a3">wxMenuCmd</a>.    </td>
+Implemented in <a class="el" href="classwxMenuCmd.html#a4">wxMenuCmd</a>.    </td>
+  </tr>
+</table>
+<a class="anchor" name="e0" doxytag="wxCmd::CreateNew"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"><a class="el" href="classwxCmd.html">wxCmd</a> * wxCmd::CreateNew           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">int&nbsp;</td>
+          <td class="mdname" nowrap> <em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap>int&nbsp;</td>
+          <td class="mdname" nowrap> <em>id</em></td>
+        </tr>
+        <tr>
+          <td class="md"></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"><code> [static]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Creates a new command of the given type with the given ID. 
+<p>
+This function is used mainly in <a class="el" href="classwxCmd.html#a13">wxCmd::Load</a>.     </td>
   </tr>
 </table>
 <a class="anchor" name="a2" doxytag="wxCmd::DeepCopy"></a><p>
@@ -370,7 +508,7 @@ Implemented in <a class="el" href="classwxMenuCmd.html#a3">wxMenuCmd</a>.    </t
 <p>
 
 <p>
-Reimplemented in <a class="el" href="classwxMenuCmd.html#a2">wxMenuCmd</a>.    </td>
+Reimplemented in <a class="el" href="classwxMenuCmd.html#a3">wxMenuCmd</a>.    </td>
   </tr>
 </table>
 <a class="anchor" name="b1" doxytag="wxCmd::Exec"></a><p>
@@ -416,7 +554,37 @@ Executes the command.
 Implemented in <a class="el" href="classwxMenuCmd.html#b0">wxMenuCmd</a>.    </td>
   </tr>
 </table>
-<a class="anchor" name="a13" doxytag="wxCmd::GetAccelerator"></a><p>
+<a class="anchor" name="e2" doxytag="wxCmd::FindCmdType"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"><a class="el" href="structwxCmd_1_1wxCmdType.html">wxCmd::wxCmdType</a> * wxCmd::FindCmdType           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">int&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>type</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap><code> [static]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Returns the <a class="el" href="structwxCmd_1_1wxCmdType.html">wxCmdType</a> associated with the given type ID. 
+<p>
+Returns NULL if no such type of wxCmd is registered.     </td>
+  </tr>
+</table>
+<a class="anchor" name="a16" doxytag="wxCmd::GetAccelerator"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -444,7 +612,7 @@ Implemented in <a class="el" href="classwxMenuCmd.html#b0">wxMenuCmd</a>.    </t
     </td>
   </tr>
 </table>
-<a class="anchor" name="a16" doxytag="wxCmd::GetDescription"></a><p>
+<a class="anchor" name="a19" doxytag="wxCmd::GetDescription"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -471,7 +639,7 @@ Implemented in <a class="el" href="classwxMenuCmd.html#b0">wxMenuCmd</a>.    </t
     </td>
   </tr>
 </table>
-<a class="anchor" name="a14" doxytag="wxCmd::GetId"></a><p>
+<a class="anchor" name="a17" doxytag="wxCmd::GetId"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -498,7 +666,7 @@ Implemented in <a class="el" href="classwxMenuCmd.html#b0">wxMenuCmd</a>.    </t
     </td>
   </tr>
 </table>
-<a class="anchor" name="a17" doxytag="wxCmd::GetName"></a><p>
+<a class="anchor" name="a20" doxytag="wxCmd::GetName"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -525,7 +693,7 @@ Implemented in <a class="el" href="classwxMenuCmd.html#b0">wxMenuCmd</a>.    </t
     </td>
   </tr>
 </table>
-<a class="anchor" name="a12" doxytag="wxCmd::GetShortcut"></a><p>
+<a class="anchor" name="a15" doxytag="wxCmd::GetShortcut"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -553,7 +721,7 @@ Implemented in <a class="el" href="classwxMenuCmd.html#b0">wxMenuCmd</a>.    </t
     </td>
   </tr>
 </table>
-<a class="anchor" name="a11" doxytag="wxCmd::GetShortcut"></a><p>
+<a class="anchor" name="a14" doxytag="wxCmd::GetShortcut"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -581,7 +749,7 @@ Implemented in <a class="el" href="classwxMenuCmd.html#b0">wxMenuCmd</a>.    </t
     </td>
   </tr>
 </table>
-<a class="anchor" name="a15" doxytag="wxCmd::GetShortcutCount"></a><p>
+<a class="anchor" name="a18" doxytag="wxCmd::GetShortcutCount"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -608,7 +776,7 @@ Implemented in <a class="el" href="classwxMenuCmd.html#b0">wxMenuCmd</a>.    </t
     </td>
   </tr>
 </table>
-<a class="anchor" name="a18" doxytag="wxCmd::GetShortcutsList"></a><p>
+<a class="anchor" name="a21" doxytag="wxCmd::GetShortcutsList"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -635,7 +803,38 @@ Implemented in <a class="el" href="classwxMenuCmd.html#b0">wxMenuCmd</a>.    </t
     </td>
   </tr>
 </table>
-<a class="anchor" name="a10" doxytag="wxCmd::IsBindTo"></a><p>
+<a class="anchor" name="a22" doxytag="wxCmd::GetType"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">virtual int wxCmd::GetType           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap> const<code> [pure virtual]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Returns the type ID for this wxCmd-derived class. 
+<p>
+
+<p>
+Implemented in <a class="el" href="classwxMenuCmd.html#a5">wxMenuCmd</a>.    </td>
+  </tr>
+</table>
+<a class="anchor" name="a11" doxytag="wxCmd::IsBindTo"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -674,7 +873,46 @@ Returns TRUE if this command is bind to a <a class="el" href="classwxKeyBind.htm
 If "n" is not NULL, it is set to the index of the entry which contains the given shortcut key (if there is such a shortcut registered in this class); otherwise it is left untouched.     </td>
   </tr>
 </table>
-<a class="anchor" name="a9" doxytag="wxCmd::MatchKey"></a><p>
+<a class="anchor" name="a13" doxytag="wxCmd::Load"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">bool wxCmd::Load           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">wxConfigBase *&nbsp;</td>
+          <td class="mdname" nowrap> <em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap>const wxString &amp;&nbsp;</td>
+          <td class="mdname" nowrap> <em>key</em> = <code>wxEmptyString</code></td>
+        </tr>
+        <tr>
+          <td class="md"></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Loads from the given wxConfig's key a command. 
+<p>
+Returns FALSE if the given key does not contain info about this command's type.     </td>
+  </tr>
+</table>
+<a class="anchor" name="a10" doxytag="wxCmd::MatchKey"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -700,6 +938,35 @@ If "n" is not NULL, it is set to the index of the entry which contains the given
 
 <p>
 Returns TRUE if at least one of the key bindings matches the given key event. 
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="a9" doxytag="wxCmd::RemoveAllShortcuts"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">void wxCmd::RemoveAllShortcuts           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap><code> [inline]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Removes all the shortcuts associates to this command. 
 <p>
     </td>
   </tr>
@@ -730,6 +997,45 @@ Returns TRUE if at least one of the key bindings matches the given key event.
 
 <p>
 Removes the n-th key shortcut associated to this command. 
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="a12" doxytag="wxCmd::Save"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">bool wxCmd::Save           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">wxConfigBase *&nbsp;</td>
+          <td class="mdname" nowrap> <em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td class="md"></td>
+          <td class="md" nowrap>const wxString &amp;&nbsp;</td>
+          <td class="mdname" nowrap> <em>key</em> = <code>wxEmptyString</code></td>
+        </tr>
+        <tr>
+          <td class="md"></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"> const</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Saves the command into the given wxConfig object in the given key entry. 
 <p>
     </td>
   </tr>
@@ -790,6 +1096,31 @@ Reimplemented in <a class="el" href="classwxMenuCmd.html#b1">wxMenuCmd</a>.    <
   </tr>
 </table>
 <hr><h2>Member Data Documentation</h2>
+<a class="anchor" name="t0" doxytag="wxCmd::m_arrCmdType"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"><a class="el" href="structwxCmd_1_1wxCmdType.html">wxCmd::wxCmdType</a> <a class="el" href="classwxCmd.html#t0">wxCmd::m_arrCmdType</a><code> [static, protected]</code>          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+The array of registered command types. 
+<p>
+    </td>
+  </tr>
+</table>
 <a class="anchor" name="p0" doxytag="wxCmd::m_keyShortcut"></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
@@ -811,6 +1142,31 @@ Reimplemented in <a class="el" href="classwxMenuCmd.html#b1">wxMenuCmd</a>.    <
 
 <p>
 The shortcuts. 
+<p>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="t1" doxytag="wxCmd::m_nCmdTypes"></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">wxKeyConfigPanel::OnTreeCommandSelected int <a class="el" href="classwxCmd.html#t1">wxCmd::m_nCmdTypes</a> = 0<code> [static, protected]</code>          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+The number of registered command types. 
 <p>
     </td>
   </tr>
@@ -860,6 +1216,8 @@ The ID which identifies this command.
     <td>
 
 <p>
+The numner of valid entries of m_keyShortcut. 
+<p>
     </td>
   </tr>
 </table>
@@ -908,14 +1266,14 @@ The description associated with this command.
     <td>
 
 <p>
-The num of valid entries of m_keyShortcut. The name of this command. This should be a short string. 
+The name of this command. This should be a short string. 
 <p>
     </td>
   </tr>
 </table>
-<hr>The documentation for this class was generated from the following file:<ul>
-<li><a class="el" href="keybinder_8h-source.html">keybinder.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Mon Dec 27 19:27:56 2004 for Keybinder by&nbsp;
+<hr>The documentation for this class was generated from the following files:<ul>
+<li><a class="el" href="keybinder_8h-source.html">keybinder.h</a><li><a class="el" href="keybinder_8cpp.html">keybinder.cpp</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Dec 30 19:49:32 2004 for Keybinder by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.3.9.1 </small></address>
 </body>

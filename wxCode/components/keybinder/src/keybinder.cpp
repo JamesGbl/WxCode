@@ -40,21 +40,25 @@ IMPLEMENT_CLASS(wxKeyProfile, wxKeyBinder)
 
 
 // event table for wxKeyBinder
-IMPLEMENT_CLASS(wxKeyBinder, wxEvtHandler)
-BEGIN_EVENT_TABLE(wxKeyBinder, wxEvtHandler)
+IMPLEMENT_CLASS(wxKeyBinder, wxObject)//EvtHandler)
+IMPLEMENT_CLASS(wxBinderEvtHandler, wxEvtHandler)
+
+BEGIN_EVENT_TABLE(wxBinderEvtHandler, wxEvtHandler)
 
 	// this is obviously the most important event handler; we don't
 	// want to intercept wxEVT_KEY_UP because we don't need them:
-	// a command must be immediately executed when one of its shourtcuts is
-	// sent to the window.
-	EVT_KEY_DOWN(wxKeyBinder::OnChar)
+	// a command must be immediately executed when one of its shortcuts
+	// is sent to the window.
+	EVT_KEY_DOWN(wxBinderEvtHandler::OnChar)
+	EVT_KEY_UP(wxBinderEvtHandler::OnChar)
+	EVT_CHAR(wxBinderEvtHandler::OnChar)
 
 #if defined( __WXMSW__	)		// supported only on Win32
 #if wxCHECK_VERSION(2, 5, 1)	// and from wxWidgets 2.5.1
 
 	// I don't think this is needed because wxEVT_HOTKEY are generated
 	// only in some special cases...
-	EVT_HOTKEY(wxID_ANY, wxKeyBinder::OnChar)
+	EVT_HOTKEY(wxID_ANY, wxBinderEvtHandler::OnChar)
 #endif
 #endif
 
@@ -563,8 +567,175 @@ void wxCmdArray::Clear()
 
 
 // ----------------------------------------------------------------------------
+// wxBinderEvtHandler
+// ----------------------------------------------------------------------------
+
+void wxBinderEvtHandler::OnChar(wxKeyEvent &p)
+{
+	// we'll just call the wxKeyBinder OnChar function telling it
+	// to execute the command on the next handler in the chain...
+	// we do this because only wxKeyBinder holds the array of
+	// commands & command-shortcuts...
+	m_pBinder->OnChar(p, GetNextHandler());
+}
+
+
+
+
+
+// ----------------------------------------------------------------------------
+// wxBinderApp
+// ----------------------------------------------------------------------------
+
+int wxBinderApp::FilterEvent(wxEvent &ev)
+{
+	wxEvtHandler *client = m_pGlobalHdl;
+	wxEvtHandler *top = GetTopWindow();
+
+	wxWindow *focused = wxWindow::FindFocus();
+
+	if (!client) client=top;
+	if (client != top) return -1;
+	
+	wxASSERT(client);
+	wxEventType t = ev.GetEventType();
+	if (t == wxEVT_KEY_DOWN) {
+		
+		if (focused != NULL && focused != client && 
+			GetTopLevelParent(focused) != client)
+			return -1;
+
+		// pass this event to our keybinder
+		m_pGlobalBinder->OnChar((wxKeyEvent &)ev, client);
+		return ev.m_skipped;
+	}
+	
+	return -1;
+}
+
+// static
+wxWindow *wxBinderApp::GetTopLevelParent(wxWindow *wnd)
+{
+	if (wnd->IsTopLevel())
+		return wnd;
+	if (wnd->GetParent())
+		return GetTopLevelParent(wnd->GetParent());
+
+	return FALSE;
+}
+
+// static
+bool wxBinderApp::IsChildOf(wxWindow *parent, wxWindow *child)
+{
+	if (parent == child)
+		return TRUE;
+
+	for (wxWindowList::compatibility_iterator node = parent->GetChildren().GetFirst();
+		node;
+		node = node->GetNext())
+	{
+		// recursively check each child
+		wxWindow *win = (wxWindow *)node->GetData();
+		
+		if (win && IsChildOf(win, child))
+			return TRUE;
+	}
+
+	return FALSE;
+}
+
+
+
+
+
+// ----------------------------------------------------------------------------
 // wxKeyBinder
 // ----------------------------------------------------------------------------
+
+wxBinderEvtHandler *wxKeyBinder::FindHandlerFor(wxWindow *p) const
+{
+	int idx = FindHandlerIdxFor(p);
+	if (idx == wxNOT_FOUND) return NULL;
+
+	return (wxBinderEvtHandler *)m_arrHandlers.Item(idx);
+}
+
+int wxKeyBinder::FindHandlerIdxFor(wxWindow *p) const
+{
+	for (int i=0; i<(int)m_arrHandlers.GetCount(); i++)
+		if (((wxBinderEvtHandler *)m_arrHandlers.Item(i))->IsAttachedTo(p))
+			return i;
+
+	return wxNOT_FOUND;
+}
+
+void wxKeyBinder::Attach(wxWindow *p)
+{
+	if (!p || IsAttachedTo(p))
+		return;		// already attached !!!
+
+	if (p->GetExtraStyle() & wxWS_EX_TRANSIENT)
+		return;		// do not attach ourselves to temporary windows !!
+	
+	wxLogDebug("wxKeyBinder::Attach - attaching to [%s]", p->GetName().c_str());
+
+	// create a new event handler for this window
+	wxEvtHandler *h = new wxBinderEvtHandler(this, p);
+
+	// add the handler to our lists
+	m_arrHandlers.Add((void*)h);
+
+	// we need to update our commands...
+	UpdateCmd();
+}
+
+void wxKeyBinder::AttachRecursively(wxWindow *p)
+{
+	if (!p)
+		return;
+	Attach(p);
+	
+	// this is the standard way wxWidgets uses to iterate through children...
+	for (wxWindowList::compatibility_iterator node = p->GetChildren().GetFirst();
+		node;
+		node = node->GetNext())
+	{
+		// recursively attach each child
+		wxWindow *win = (wxWindow *)node->GetData();
+		
+		if (win)
+			AttachRecursively(win);
+	}
+}
+
+void wxKeyBinder::Detach(wxWindow *p)
+{
+	if (!p || !IsAttachedTo(p))
+		return;		// this is not attached...
+	
+	wxLogDebug("wxKeyBinder::Detach - detaching from [%s]", p->GetName().c_str());
+	
+	// remove the event handler
+	int idx = FindHandlerIdxFor(p);
+	wxBinderEvtHandler *toremove = (wxBinderEvtHandler*)m_arrHandlers.Item(idx);
+	m_arrHandlers.RemoveAt(idx, 1);
+
+	// the wxBinderEvtHandler will remove itself from p's event handlers
+	delete toremove;
+}
+
+void wxKeyBinder::DetachAll()
+{
+	wxLogDebug("wxKeyBinder::DetachAll - detaching from all my [%d] targets", GetAttachedWndCount());
+
+	// delete all handlers (they will automatically remove themselves from
+	// event handler chains)
+	for (int i=0; i < (int)m_arrHandlers.GetCount(); i++)
+		delete (wxBinderEvtHandler*)m_arrHandlers.Item(i);
+
+	// and clear the array
+	m_arrHandlers.Clear();
+}
 
 void wxKeyBinder::ImportMenuBarCmd(wxMenuBar *p)
 {
@@ -574,7 +745,7 @@ void wxKeyBinder::ImportMenuBarCmd(wxMenuBar *p)
 	wlkr.ImportMenuBarCmd(p, &m_arrCmd);
 }
 
-void wxKeyBinder::OnChar(wxKeyEvent &event)
+void wxKeyBinder::OnChar(wxKeyEvent &event, wxEvtHandler *next)
 {
 	// this is the first function which is called when the user presses
 	// a key in the window Attach()ed to this key binder: we have to
@@ -585,20 +756,47 @@ void wxKeyBinder::OnChar(wxKeyEvent &event)
 	// AVOID TO INTERCEPT Alt+F4 KEYPRESSES !!!
 	// For some reasons on wxMSW 2.5.2 (at least) this provokes a crash
 	// which is really difficult to spot... better leave it...
-	if (p && p->IsBindTo(wxKeyBind("Alt+F4")))
+	if (p && p->IsBindTo(wxKeyBind("Alt+F4"))) {
+	
+		wxLogDebug("wxKeyBinder::OnChar - ignoring an Alt+F4 event [%d]", event.GetKeyCode());
+		event.Skip();
 		return;
+	}
 
 	// if the given event is not a shortcut key...
-	if (p == NULL)
-		event.Skip();		// ... skip it		
-	else
+	if (p == NULL) {
+	
+		wxLogDebug("wxKeyBinder::OnChar - ignoring this keyevent [%d]", event.GetKeyCode());
+		event.Skip();		// ... skip it
+		
+	} else {
+	
+		wxEvtHandler *client = next;//this->GetNextHandler();
+		/*if (client == NULL) {
+
+			//int found = -1;
+			for (int i=0; i < (int)m_arrAttachedWnd.GetCount(); i++)
+				if (((wxWindow*)m_arrAttachedWnd.Item(i)) == event.GetEventObject())//->GetId() == event.GetId())
+					client = (wxWindow*)m_arrAttachedWnd.Item(i);
+		}*/
+
+		if (client == NULL) {
+
+			wxLogDebug("wxKeyBinder::OnChar - ignoring this keyevent [%d] because I'm not "
+				"attached to the window which generated the keypress...", event.GetKeyCode());
+			event.Skip();		// ... skip it
+			return;
+		}
+
+		wxLogDebug("wxKeyBinder::OnChar - calling the Exec() function of a wxCmd on [%d]", event.GetKeyCode());
 		p->Exec(event.GetEventObject(),		// otherwise, tell wxCmd to send the
-				this->GetNextHandler());	// associated wxEvent to the next handler in the chain
+				client);	// associated wxEvent to the next handler in the chain
+	}
 }
 
 bool wxKeyBinder::Save(wxConfigBase *cfg, const wxString &key) const
 {
-	wxString basekey = (key.IsEmpty() ? wxEmptyString : key + "/");
+	wxString basekey = (key.IsEmpty() ? wxString("") : wxString(key + "/"));
 	bool b = TRUE;
 	
 	for (int i=0; i < m_arrCmd.GetCount(); i++) {
@@ -641,7 +839,7 @@ bool wxKeyBinder::Load(wxConfigBase *p, const wxString &key)
 
 			// is this a valid entry ?
 			if (id.IsNumber() && type.IsNumber() &&
-				p->GetEntryType(str) == wxConfigBase::EntryType::Type_String) {
+				p->GetEntryType(str) == wxConfigBase::Type_String) {
 
 				// we will interpret this group as a command ID
 				int nid = atoi(id);
@@ -795,6 +993,13 @@ wxKeyConfigPanel::wxKeyConfigPanel(wxWindow* parent,
 				: wxPanel(parent, id, pos, size, style, name)
 {
 	m_nBuildMode = buildMode;
+
+	wxASSERT_MSG((m_nBuildMode & wxKEYBINDER_USE_LISTBOX) ||
+				(m_nBuildMode & wxKEYBINDER_USE_TREECTRL),
+				"You must specify one of the two !!");
+	wxASSERT_MSG(!((m_nBuildMode & wxKEYBINDER_USE_LISTBOX) &&
+				 (m_nBuildMode & wxKEYBINDER_USE_TREECTRL)),
+				"You cannot specify them both !!");
 
 	// build everything
 	BuildCtrls();
@@ -1164,7 +1369,7 @@ wxTreeItemId wxKeyConfigPanel::GetSelCmdId() const
 wxControl *wxKeyConfigPanel::GetMainCtrl() const
 {
 	if (m_nBuildMode & wxKEYBINDER_USE_TREECTRL)
-		return m_pCommandsTree;
+		return (wxControl*)m_pCommandsTree;
 	return m_pCommandsList;
 }
 

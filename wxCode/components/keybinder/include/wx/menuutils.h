@@ -16,7 +16,7 @@
 #define __WX_MENUUTILS_H__
 
 #ifdef __GNUG__
-#pragma interface "keybinder.h"
+#pragma interface "menuutils.h"
 #endif
 
 // includes
@@ -53,18 +53,20 @@ public:		// static
 	//! The menubar used by #CreateNew.
 	static wxMenuBar *m_pMenuBar;
 
-	//! Register this type of command into wxCmd static array.
-	static void Register()
-		{ wxCmd::AddCmdType(wxMENUCMD_TYPE, wxMenuCmd::CreateNew); }
-
-	//! Creates a new wxMenuCmd with the given ID.
-	//! Automatically searches into the #m_pMenuBar variable the.
-	static wxCmd *CreateNew(int id);
-
 	//! Sets the menubar which will be used to search the menu items
 	//! with the IDs given to the #CreateNew function.
 	static void SetMenuBar(wxMenuBar *p)
 		{ m_pMenuBar = p; }
+
+	//! Register this type of command into wxCmd static array.
+	//! Also calls the #SetMenuBar function with the given pointer.
+	static void Register(wxMenuBar *p)
+		{ wxCmd::AddCmdType(wxMENUCMD_TYPE, wxMenuCmd::CreateNew); 
+			wxMenuCmd::SetMenuBar(p); }
+
+	//! Creates a new wxMenuCmd with the given ID.
+	//! Automatically searches into the #m_pMenuBar variable the.
+	static wxCmd *CreateNew(int id);
 
 public:
 
@@ -172,7 +174,8 @@ protected:		// the core functions
 	//! is passed to #OnMenuWalk() or it's directly deleted...
 	virtual void *OnMenuItemWalk(wxMenuBar *p, wxMenuItem *m, void *data) = 0;
 
-	//! Called when the 
+	//! Called when a wxMenu has been exausted and the nest level is going
+	//! to be decreased. Default implementation does nothing.
 	virtual void OnMenuExit(wxMenuBar *, wxMenu *, void *) {}
 
 	//! Deletes the given 'data'.
@@ -256,6 +259,8 @@ protected:
 
 //! The data associated with each entry of the combobox given
 //! to the wxMenuComboListWalker class.
+//! Contains the array of labels of the menu items contained
+//! into a wxMenu and their IDs.
 class wxExComboItemData : public wxClientData
 {
 protected:
@@ -278,7 +283,13 @@ public:
 };
 
 
-//! A wxMenuWalker-derived class.
+//! A wxMenuWalker-derived class which fills the given wxComboBox
+//! with items associated with wxExComboItemData classes.
+//! The labels of the items of the wxComboBox are the titles of
+//! the wxMenus (nested & non-nested) contained in the wxMenuBar
+//! which is "walked".
+//! The wxExComboItemData associated with these items contains the
+//! list of the wxMenuItem contained into the relative wxMenu.
 class wxMenuComboListWalker : public wxMenuWalker
 {
 	wxComboBox *m_pCategories;

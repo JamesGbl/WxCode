@@ -50,646 +50,901 @@
 00042 <span class="preprocessor"></span>
 00043 
 00044 
-00045 
-<a name="l00056"></a><a class="code" href="classwxKeyBind.html">00056</a> <span class="keyword">class </span><a class="code" href="classwxKeyBind.html">wxKeyBind</a>
-00057 {
-00058 <span class="keyword">protected</span>:
-00059 
-<a name="l00061"></a><a class="code" href="classwxKeyBind.html#p0">00061</a>       <span class="keywordtype">int</span> m_nFlags;
-00062 
-<a name="l00064"></a><a class="code" href="classwxKeyBind.html#p1">00064</a>       <span class="keywordtype">int</span> m_nKeyCode;
-00065 
-00066 <span class="keyword">public</span>:
-00067 
-<a name="l00068"></a><a class="code" href="classwxKeyBind.html#a0">00068</a>       <a class="code" href="classwxKeyBind.html">wxKeyBind</a>() {
-00069             m_nKeyCode = m_nFlags = -1;
-00070       }
+00045 <span class="comment">// defined later...</span>
+00046 <span class="keyword">class </span>wxConfigBase;
+00047 
+00048 
+00049 
+<a name="l00060"></a><a class="code" href="classwxKeyBind.html">00060</a> <span class="keyword">class </span><a class="code" href="classwxKeyBind.html">wxKeyBind</a>
+00061 {
+00062 <span class="keyword">protected</span>:
+00063 
+<a name="l00065"></a><a class="code" href="classwxKeyBind.html#p0">00065</a>       <span class="keywordtype">int</span> m_nFlags;
+00066 
+<a name="l00068"></a><a class="code" href="classwxKeyBind.html#p1">00068</a>       <span class="keywordtype">int</span> m_nKeyCode;
+00069 
+00070 <span class="keyword">public</span>:
 00071 
-<a name="l00072"></a><a class="code" href="classwxKeyBind.html#a1">00072</a>       <a class="code" href="classwxKeyBind.html">wxKeyBind</a>(<span class="keywordtype">int</span> flags, <span class="keywordtype">int</span> keycode) {
-00073             Set(flags, keycode);
+<a name="l00072"></a><a class="code" href="classwxKeyBind.html#a0">00072</a>       <a class="code" href="classwxKeyBind.html">wxKeyBind</a>() {
+00073             m_nKeyCode = m_nFlags = -1;
 00074       }
 00075 
-<a name="l00076"></a><a class="code" href="classwxKeyBind.html#a2">00076</a>       <a class="code" href="classwxKeyBind.html">wxKeyBind</a>(<span class="keyword">const</span> wxString &amp;key) {
-00077             m_nFlags = StringToKeyModifier(key);
-00078             m_nKeyCode = StringToKeyCode(key.AfterLast(<span class="charliteral">'+'</span>).AfterLast(<span class="charliteral">'-'</span>));
-00079       }
-00080 
-<a name="l00081"></a><a class="code" href="classwxKeyBind.html#a3">00081</a>       <span class="keyword">virtual</span> <span class="keywordtype">void</span> DeepCopy(<span class="keyword">const</span> <a class="code" href="classwxKeyBind.html">wxKeyBind</a> *p) {
-00082             m_nFlags = p-&gt;<a class="code" href="classwxKeyBind.html#p0">m_nFlags</a>;
-00083             m_nKeyCode = p-&gt;<a class="code" href="classwxKeyBind.html#p1">m_nKeyCode</a>;
-00084       }
-00085 
-<a name="l00086"></a><a class="code" href="classwxKeyBind.html#a4">00086</a>       <span class="keyword">virtual</span> ~<a class="code" href="classwxKeyBind.html">wxKeyBind</a>() {}
-00087 
-00088 
+<a name="l00076"></a><a class="code" href="classwxKeyBind.html#a1">00076</a>       <a class="code" href="classwxKeyBind.html">wxKeyBind</a>(<span class="keywordtype">int</span> flags, <span class="keywordtype">int</span> keycode) {
+00077             Set(flags, keycode);
+00078       }
+00079 
+<a name="l00080"></a><a class="code" href="classwxKeyBind.html#a2">00080</a>       <a class="code" href="classwxKeyBind.html">wxKeyBind</a>(<span class="keyword">const</span> wxString &amp;key) {
+00081             m_nFlags = StringToKeyModifier(key);
+00082             m_nKeyCode = StringToKeyCode(key.AfterLast(<span class="charliteral">'+'</span>).AfterLast(<span class="charliteral">'-'</span>));
+00083       }
+00084 
+<a name="l00085"></a><a class="code" href="classwxKeyBind.html#a3">00085</a>       <span class="keyword">virtual</span> <span class="keywordtype">void</span> DeepCopy(<span class="keyword">const</span> <a class="code" href="classwxKeyBind.html">wxKeyBind</a> *p) {
+00086             m_nFlags = p-&gt;<a class="code" href="classwxKeyBind.html#p0">m_nFlags</a>;
+00087             m_nKeyCode = p-&gt;<a class="code" href="classwxKeyBind.html#p1">m_nKeyCode</a>;
+00088       }
 00089 
-00090 <span class="keyword">public</span>:
+<a name="l00090"></a><a class="code" href="classwxKeyBind.html#a4">00090</a>       <span class="keyword">virtual</span> ~<a class="code" href="classwxKeyBind.html">wxKeyBind</a>() {}
 00091 
-<a name="l00093"></a><a class="code" href="classwxKeyBind.html#a5">00093</a>       <span class="keywordtype">void</span> Set(<span class="keywordtype">int</span> flags, <span class="keywordtype">int</span> keycode) {
-00094             m_nFlags = flags;
-00095             m_nKeyCode = keycode;
-00096       }
-00097 
-<a name="l00102"></a><a class="code" href="classwxKeyBind.html#a6">00102</a>       <span class="keywordtype">void</span> Set(<span class="keyword">const</span> <a class="code" href="classwxKeyBind.html">wxKeyBind</a> &amp;key) {
-00103             m_nFlags = key.<a class="code" href="classwxKeyBind.html#p0">m_nFlags</a>;
-00104             m_nKeyCode = key.<a class="code" href="classwxKeyBind.html#p1">m_nKeyCode</a>;
-00105       }
-00106 
-00108       <span class="keywordtype">bool</span> MatchKey(<span class="keyword">const</span> wxKeyEvent &amp;key) <span class="keyword">const</span>;
-00109 
-<a name="l00111"></a><a class="code" href="classwxKeyBind.html#a8">00111</a>       <span class="keywordtype">bool</span> Match(<span class="keyword">const</span> <a class="code" href="classwxKeyBind.html">wxKeyBind</a> &amp;key)<span class="keyword"> const </span>{
-00112             <span class="keywordflow">if</span> (m_nFlags == key.<a class="code" href="classwxKeyBind.html#p0">m_nFlags</a> &amp;&amp; m_nKeyCode == key.<a class="code" href="classwxKeyBind.html#p1">m_nKeyCode</a>)
-00113                   <span class="keywordflow">return</span> TRUE;
-00114             <span class="keywordflow">return</span> FALSE;
-00115       }
-00116 
-00117 
-00118 
-00119       <span class="comment">// Getters</span>
-00120       <span class="comment">// ------------------</span>
+00092 
+00093 
+00094 <span class="keyword">public</span>:
+00095 
+<a name="l00097"></a><a class="code" href="classwxKeyBind.html#a5">00097</a>       <span class="keywordtype">void</span> Set(<span class="keywordtype">int</span> flags, <span class="keywordtype">int</span> keycode) {
+00098             m_nFlags = flags;
+00099             m_nKeyCode = keycode;
+00100       }
+00101 
+<a name="l00106"></a><a class="code" href="classwxKeyBind.html#a6">00106</a>       <span class="keywordtype">void</span> Set(<span class="keyword">const</span> <a class="code" href="classwxKeyBind.html">wxKeyBind</a> &amp;key) {
+00107             m_nFlags = key.<a class="code" href="classwxKeyBind.html#p0">m_nFlags</a>;
+00108             m_nKeyCode = key.<a class="code" href="classwxKeyBind.html#p1">m_nKeyCode</a>;
+00109       }
+00110 
+00112       <span class="keywordtype">bool</span> MatchKey(<span class="keyword">const</span> wxKeyEvent &amp;key) <span class="keyword">const</span>;
+00113 
+<a name="l00115"></a><a class="code" href="classwxKeyBind.html#a8">00115</a>       <span class="keywordtype">bool</span> Match(<span class="keyword">const</span> <a class="code" href="classwxKeyBind.html">wxKeyBind</a> &amp;key)<span class="keyword"> const </span>{
+00116             <span class="keywordflow">if</span> (m_nFlags == key.<a class="code" href="classwxKeyBind.html#p0">m_nFlags</a> &amp;&amp; m_nKeyCode == key.<a class="code" href="classwxKeyBind.html#p1">m_nKeyCode</a>)
+00117                   <span class="keywordflow">return</span> TRUE;
+00118             <span class="keywordflow">return</span> FALSE;
+00119       }
+00120 
 00121 
-<a name="l00122"></a><a class="code" href="classwxKeyBind.html#a9">00122</a>       <span class="keywordtype">int</span> GetKeyCode()<span class="keyword"> const </span>{
-00123             <span class="keywordflow">return</span> m_nKeyCode;
-00124       }
+00122 
+00123       <span class="comment">// Getters</span>
+00124       <span class="comment">// ------------------</span>
 00125 
-<a name="l00126"></a><a class="code" href="classwxKeyBind.html#a10">00126</a>       <span class="keywordtype">int</span> GetModifiers()<span class="keyword"> const </span>{
-00127             <span class="keywordflow">return</span> m_nFlags;
+<a name="l00126"></a><a class="code" href="classwxKeyBind.html#a9">00126</a>       <span class="keywordtype">int</span> GetKeyCode()<span class="keyword"> const </span>{
+00127             <span class="keywordflow">return</span> m_nKeyCode;
 00128       }
 00129 
-00130       <span class="comment">// Returns the string which describes this key combination.</span>
-<a name="l00131"></a><a class="code" href="classwxKeyBind.html#a11">00131</a>       wxString GetStr()<span class="keyword"> const </span>{
-00132             <span class="keywordflow">return</span> KeyModifierToString(m_nFlags) + 
-00133                   KeyCodeToString(m_nKeyCode);
-00134       }
-00135 
-00136 
-00137 <span class="keyword">public</span>:           <span class="comment">// static utilities</span>
-00138 
-00139       <span class="keyword">static</span> wxString NumpadKeyCodeToString(<span class="keywordtype">int</span> keyCode);
-00140       <span class="keyword">static</span> wxString KeyCodeToString(<span class="keywordtype">int</span> keyCode);
-00141       <span class="keyword">static</span> wxString KeyModifierToString(<span class="keywordtype">int</span> keyModifier);
+<a name="l00130"></a><a class="code" href="classwxKeyBind.html#a10">00130</a>       <span class="keywordtype">int</span> GetModifiers()<span class="keyword"> const </span>{
+00131             <span class="keywordflow">return</span> m_nFlags;
+00132       }
+00133 
+00134       <span class="comment">// Returns the string which describes this key combination.</span>
+<a name="l00135"></a><a class="code" href="classwxKeyBind.html#a11">00135</a>       wxString GetStr()<span class="keyword"> const </span>{
+00136             <span class="keywordflow">return</span> KeyModifierToString(m_nFlags) + 
+00137                   KeyCodeToString(m_nKeyCode);
+00138       }
+00139 
+00140 
+00141 <span class="keyword">public</span>:           <span class="comment">// static utilities</span>
 00142 
-00143       <span class="keyword">static</span> <span class="keywordtype">int</span> StringToKeyCode(<span class="keyword">const</span> wxString &amp;keyName);
-00144       <span class="keyword">static</span> <span class="keywordtype">int</span> StringToKeyModifier(<span class="keyword">const</span> wxString &amp;keyModifier);
-00145 
-00146       <span class="keyword">static</span> <span class="keywordtype">int</span> GetKeyModifier(wxKeyEvent &amp;event);
-00147       <span class="keyword">static</span> wxString GetKeyStrokeString(wxKeyEvent &amp;event);
-00148 };
+00143       <span class="keyword">static</span> wxString NumpadKeyCodeToString(<span class="keywordtype">int</span> keyCode);
+00144       <span class="keyword">static</span> wxString KeyCodeToString(<span class="keywordtype">int</span> keyCode);
+00145       <span class="keyword">static</span> wxString KeyModifierToString(<span class="keywordtype">int</span> keyModifier);
+00146 
+00147       <span class="keyword">static</span> <span class="keywordtype">int</span> StringToKeyCode(<span class="keyword">const</span> wxString &amp;keyName);
+00148       <span class="keyword">static</span> <span class="keywordtype">int</span> StringToKeyModifier(<span class="keyword">const</span> wxString &amp;keyModifier);
 00149 
-00150 
-00151 
-00152 
-<a name="l00162"></a><a class="code" href="classwxCmd.html">00162</a> <span class="keyword">class </span><a class="code" href="classwxCmd.html">wxCmd</a>
-00163 {
-00164       <span class="comment">// wxKeyBinder must be allowed to call #Exec()</span>
-<a name="l00165"></a><a class="code" href="classwxCmd.html#n0">00165</a>       <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classwxKeyBinder.html">wxKeyBinder</a>;
-00166 
-00167 <span class="keyword">protected</span>:
-00168 
-<a name="l00170"></a><a class="code" href="classwxCmd.html#p0">00170</a>       <a class="code" href="classwxKeyBind.html">wxKeyBind</a> m_keyShortcut[wxCMD_MAX_SHORTCUTS];
-<a name="l00171"></a><a class="code" href="classwxCmd.html#p1">00171</a>       <span class="keywordtype">int</span> m_nShortcuts;       
+00150       <span class="keyword">static</span> <span class="keywordtype">int</span> GetKeyModifier(wxKeyEvent &amp;event);
+00151       <span class="keyword">static</span> wxString GetKeyStrokeString(wxKeyEvent &amp;event);
+00152 };
+00153 
+00154 
+<a name="l00156"></a><a class="code" href="keybinder_8h.html#a2">00156</a> <span class="preprocessor">#define wxCMD_MAX_TYPES             16</span>
+00157 <span class="preprocessor"></span>
+00158 
+<a name="l00168"></a><a class="code" href="classwxCmd.html">00168</a> <span class="keyword">class </span><a class="code" href="classwxCmd.html">wxCmd</a>
+00169 {
+00170       <span class="comment">// wxKeyBinder must be allowed to call #Exec()</span>
+<a name="l00171"></a><a class="code" href="classwxCmd.html#n0">00171</a>       <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classwxKeyBinder.html">wxKeyBinder</a>;
 00172 
-<a name="l00174"></a><a class="code" href="classwxCmd.html#p2">00174</a>       wxString m_strName;
-00175 
-<a name="l00177"></a><a class="code" href="classwxCmd.html#p3">00177</a>       wxString m_strDescription;
+00173 <span class="keyword">protected</span>:
+00174 
+<a name="l00176"></a><a class="code" href="classwxCmd.html#p0">00176</a>       <a class="code" href="classwxKeyBind.html">wxKeyBind</a> m_keyShortcut[wxCMD_MAX_SHORTCUTS];
+<a name="l00177"></a><a class="code" href="classwxCmd.html#p1">00177</a>       <span class="keywordtype">int</span> m_nShortcuts;       
 00178 
-<a name="l00180"></a><a class="code" href="classwxCmd.html#p4">00180</a>       <span class="keywordtype">int</span> m_nId;
+<a name="l00180"></a><a class="code" href="classwxCmd.html#p2">00180</a>       wxString m_strName;
 00181 
-00182 <span class="keyword">public</span>:
-00183 
-<a name="l00184"></a><a class="code" href="classwxCmd.html#a0">00184</a>       <a class="code" href="classwxCmd.html">wxCmd</a>(<span class="keyword">const</span> <a class="code" href="classwxKeyBind.html">wxKeyBind</a> &amp;first, <span class="keywordtype">int</span> <span class="keywordtype">id</span>, 
-00185             <span class="keyword">const</span> wxString &amp;name = wxEmptyString,
-00186             <span class="keyword">const</span> wxString &amp;desc = wxEmptyString) {
-00187             m_strName = name;
-00188             m_strDescription = desc;
-00189             m_nShortcuts = 1;
-00190             m_keyShortcut[0] = first;
-00191             m_nId = id;
-00192       }
+<a name="l00183"></a><a class="code" href="classwxCmd.html#p3">00183</a>       wxString m_strDescription;
+00184 
+<a name="l00186"></a><a class="code" href="classwxCmd.html#p4">00186</a>       <span class="keywordtype">int</span> m_nId;
+00187 
+00188 <span class="keyword">protected</span>:        <span class="comment">// static</span>
+00189 
+<a name="l00192"></a><a class="code" href="classwxCmd.html#x0">00192</a>       <span class="keyword">typedef</span> <a class="code" href="classwxCmd.html">wxCmd</a> *(*wxCmdCreationFnc)(<span class="keywordtype">int</span> id);
 00193 
-<a name="l00194"></a><a class="code" href="classwxCmd.html#a1">00194</a>       <a class="code" href="classwxCmd.html">wxCmd</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span> = wxID_INVALID, 
-00195             <span class="keyword">const</span> wxString &amp;name = wxEmptyString,
-00196             <span class="keyword">const</span> wxString &amp;desc = wxEmptyString) {
-00197             m_strName = name;
-00198             m_strDescription = desc;
-00199             m_nId = id;
-00200             m_nShortcuts = 0;
-00201       }
+<a name="l00195"></a><a class="code" href="structwxCmd_1_1wxCmdType.html">00195</a>       <span class="keyword">typedef</span> <span class="keyword">struct </span>{
+<a name="l00196"></a><a class="code" href="structwxCmd_1_1wxCmdType.html#o0">00196</a>             <span class="keywordtype">int</span> type;
+<a name="l00197"></a><a class="code" href="structwxCmd_1_1wxCmdType.html#o1">00197</a>             wxCmdCreationFnc cmdCreateFnc;
+00198       } <a class="code" href="structwxCmd_1_1wxCmdType.html">wxCmdType</a>;
+00199 
+00201       <span class="keyword">static</span> <a class="code" href="structwxCmd_1_1wxCmdType.html">wxCmdType</a> m_arrCmdType[wxCMD_MAX_TYPES];
 00202 
-<a name="l00203"></a><a class="code" href="classwxCmd.html#a2">00203</a>       <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classwxKeyBinder.html#a2">DeepCopy</a>(<span class="keyword">const</span> <a class="code" href="classwxCmd.html">wxCmd</a> *cmd) {
-00204             m_strName = cmd-&gt;<a class="code" href="classwxCmd.html#p2">m_strName</a>;
-00205             m_strDescription = cmd-&gt;<a class="code" href="classwxCmd.html#p3">m_strDescription</a>;
-00206             m_nId = cmd-&gt;<a class="code" href="classwxCmd.html#p4">m_nId</a>;
-00207             m_nShortcuts = cmd-&gt;<a class="code" href="classwxCmd.html#p1">m_nShortcuts</a>;
+00204       <span class="keyword">static</span> <span class="keywordtype">int</span> m_nCmdTypes;
+00205 
+00206 
+00207 <span class="keyword">public</span>:           <span class="comment">// static</span>
 00208 
-00209             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i &lt; m_nShortcuts; i++)
-00210                   m_keyShortcut[i].<a class="code" href="classwxKeyBind.html#a3">DeepCopy</a>(&amp;cmd-&gt;<a class="code" href="classwxCmd.html#p0">m_keyShortcut</a>[i]);
-00211       }
+00211       <span class="keyword">static</span> <a class="code" href="classwxCmd.html">wxCmd</a> *CreateNew(<span class="keywordtype">int</span> type, <span class="keywordtype">int</span> <span class="keywordtype">id</span>);
 00212 
-00213       <span class="keyword">virtual</span> <a class="code" href="classwxCmd.html">wxCmd</a> *Clone() <span class="keyword">const </span>= 0;
-00214 
-00215       <span class="comment">// Destructor</span>
-<a name="l00216"></a><a class="code" href="classwxCmd.html#a4">00216</a>       <span class="keyword">virtual</span> ~<a class="code" href="classwxCmd.html">wxCmd</a>() {}
-00217 
-00218 
-00219 <span class="keyword">public</span>:
-00220 
-00221       <span class="comment">// Add/Remove functions</span>
-00222       <span class="comment">// ----------------------------</span>
-00223 
-<a name="l00225"></a><a class="code" href="classwxCmd.html#a5">00225</a>       <span class="keywordtype">void</span> <a class="code" href="classwxKeyBinder.html#a10">AddShortcut</a>(<span class="keyword">const</span> <a class="code" href="classwxKeyBind.html">wxKeyBind</a> &amp;key) {
-00226             <span class="keywordflow">if</span> (m_nShortcuts &gt;= wxCMD_MAX_SHORTCUTS) <span class="keywordflow">return</span>;
-00227             m_keyShortcut[m_nShortcuts++] = key;
-00228             Update();
-00229       }
-00230 
-<a name="l00232"></a><a class="code" href="classwxCmd.html#a6">00232</a>       <span class="keywordtype">void</span> <a class="code" href="classwxKeyBinder.html#a10">AddShortcut</a>(<span class="keywordtype">int</span> flags, <span class="keywordtype">int</span> keycode) {
-00233             <span class="keywordflow">if</span> (m_nShortcuts &gt;= wxCMD_MAX_SHORTCUTS) <span class="keywordflow">return</span>;
-00234             <a class="code" href="classwxKeyBind.html">wxKeyBind</a> key(flags, keycode);
-00235             <a class="code" href="classwxKeyBinder.html#a10">AddShortcut</a>(key);
-00236             <span class="comment">// update is called by the previous call</span>
-00237       }
-00238 
-<a name="l00241"></a><a class="code" href="classwxCmd.html#a7">00241</a>       <span class="keywordtype">void</span> <a class="code" href="classwxKeyBinder.html#a10">AddShortcut</a>(<span class="keyword">const</span> wxString &amp;key) {
-00242             <span class="keywordflow">if</span> (m_nShortcuts &gt;= wxCMD_MAX_SHORTCUTS) <span class="keywordflow">return</span>;
-00243             m_keyShortcut[m_nShortcuts++] = <a class="code" href="classwxKeyBind.html">wxKeyBind</a>(key);
-00244             Update();
-00245       }
+00214       <span class="keyword">static</span> <span class="keywordtype">void</span> AddCmdType(<span class="keywordtype">int</span> type, wxCmdCreationFnc fnc);
+00215 
+00218       <span class="keyword">static</span> <a class="code" href="structwxCmd_1_1wxCmdType.html">wxCmdType</a> *FindCmdType(<span class="keywordtype">int</span> type);
+00219 
+00220 <span class="keyword">public</span>:
+00221 
+<a name="l00222"></a><a class="code" href="classwxCmd.html#a0">00222</a>       <a class="code" href="classwxCmd.html">wxCmd</a>(<span class="keyword">const</span> <a class="code" href="classwxKeyBind.html">wxKeyBind</a> &amp;first, <span class="keywordtype">int</span> <span class="keywordtype">id</span>, 
+00223             <span class="keyword">const</span> wxString &amp;name = wxEmptyString,
+00224             <span class="keyword">const</span> wxString &amp;desc = wxEmptyString) {
+00225             m_strName = name;
+00226             m_strDescription = desc;
+00227             m_nShortcuts = 1;
+00228             m_keyShortcut[0] = first;
+00229             m_nId = id;
+00230       }
+00231 
+<a name="l00232"></a><a class="code" href="classwxCmd.html#a1">00232</a>       <a class="code" href="classwxCmd.html">wxCmd</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span> = wxID_INVALID, 
+00233             <span class="keyword">const</span> wxString &amp;name = wxEmptyString,
+00234             <span class="keyword">const</span> wxString &amp;desc = wxEmptyString) {
+00235             m_strName = name;
+00236             m_strDescription = desc;
+00237             m_nId = id;
+00238             m_nShortcuts = 0;
+00239       }
+00240 
+<a name="l00241"></a><a class="code" href="classwxCmd.html#a2">00241</a>       <span class="keyword">virtual</span> <span class="keywordtype">void</span> DeepCopy(<span class="keyword">const</span> <a class="code" href="classwxCmd.html">wxCmd</a> *cmd) {
+00242             m_strName = cmd-&gt;<a class="code" href="classwxCmd.html#p2">m_strName</a>;
+00243             m_strDescription = cmd-&gt;<a class="code" href="classwxCmd.html#p3">m_strDescription</a>;
+00244             m_nId = cmd-&gt;<a class="code" href="classwxCmd.html#p4">m_nId</a>;
+00245             m_nShortcuts = cmd-&gt;<a class="code" href="classwxCmd.html#p1">m_nShortcuts</a>;
 00246 
-<a name="l00248"></a><a class="code" href="classwxCmd.html#a8">00248</a>       <span class="keywordtype">void</span> RemoveShortcut(<span class="keywordtype">int</span> n) {
-00249             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=n; i &lt; m_nShortcuts; i++)      <span class="comment">// shift array left</span>
-00250                   m_keyShortcut[i] = m_keyShortcut[i+1];
-00251             m_nShortcuts--;
-00252             Update();
-00253       }
-00254 
+00247             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i &lt; m_nShortcuts; i++)
+00248                   m_keyShortcut[i].<a class="code" href="classwxKeyBind.html#a3">DeepCopy</a>(&amp;cmd-&gt;<a class="code" href="classwxCmd.html#p0">m_keyShortcut</a>[i]);
+00249       }
+00250 
+00251       <span class="keyword">virtual</span> <a class="code" href="classwxCmd.html">wxCmd</a> *Clone() <span class="keyword">const </span>= 0;
+00252 
+00253       <span class="comment">// Destructor</span>
+<a name="l00254"></a><a class="code" href="classwxCmd.html#a4">00254</a>       <span class="keyword">virtual</span> ~<a class="code" href="classwxCmd.html">wxCmd</a>() {}
 00255 
 00256 
-00257       <span class="comment">// Miscellaneous</span>
-00258       <span class="comment">// ---------------------</span>
-00259 
-<a name="l00262"></a><a class="code" href="classwxCmd.html#a9">00262</a>       <span class="keywordtype">bool</span> MatchKey(<span class="keyword">const</span> wxKeyEvent &amp;ev)<span class="keyword"> const </span>{
-00263             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i &lt; m_nShortcuts; i++)
-00264                   <span class="keywordflow">if</span> (m_keyShortcut[i].<a class="code" href="classwxKeyBind.html#a7">MatchKey</a>(ev))
-00265                         <span class="keywordflow">return</span> TRUE;
-00266             <span class="keywordflow">return</span> FALSE;
+00257 <span class="keyword">public</span>:
+00258 
+00259       <span class="comment">// Add/Remove functions</span>
+00260       <span class="comment">// ----------------------------</span>
+00261 
+<a name="l00263"></a><a class="code" href="classwxCmd.html#a5">00263</a>       <span class="keywordtype">void</span> AddShortcut(<span class="keyword">const</span> <a class="code" href="classwxKeyBind.html">wxKeyBind</a> &amp;key) {
+00264             <span class="keywordflow">if</span> (m_nShortcuts &gt;= wxCMD_MAX_SHORTCUTS) <span class="keywordflow">return</span>;
+00265             m_keyShortcut[m_nShortcuts++] = key;
+00266             Update();
 00267       }
 00268 
-<a name="l00275"></a><a class="code" href="classwxCmd.html#a10">00275</a>       <span class="keywordtype">bool</span> IsBindTo(<span class="keyword">const</span> <a class="code" href="classwxKeyBind.html">wxKeyBind</a> &amp;key, <span class="keywordtype">int</span> *n = NULL)<span class="keyword"> const </span>{
-00276             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i &lt; m_nShortcuts; i++) {
-00277                   <span class="keywordflow">if</span> (m_keyShortcut[i].<a class="code" href="classwxKeyBind.html#a8">Match</a>(key)) {
-00278                         <span class="keywordflow">if</span> (n) *n = i;
-00279                         <span class="keywordflow">return</span> TRUE;
-00280                   }
-00281             }
-00282             <span class="keywordflow">return</span> FALSE;
-00283       }
-00284 
+<a name="l00270"></a><a class="code" href="classwxCmd.html#a6">00270</a>       <span class="keywordtype">void</span> AddShortcut(<span class="keywordtype">int</span> flags, <span class="keywordtype">int</span> keycode) {
+00271             <span class="keywordflow">if</span> (m_nShortcuts &gt;= wxCMD_MAX_SHORTCUTS) <span class="keywordflow">return</span>;
+00272             <a class="code" href="classwxKeyBind.html">wxKeyBind</a> key(flags, keycode);
+00273             AddShortcut(key);
+00274             <span class="comment">// update is called by the previous call</span>
+00275       }
+00276 
+<a name="l00279"></a><a class="code" href="classwxCmd.html#a7">00279</a>       <span class="keywordtype">void</span> AddShortcut(<span class="keyword">const</span> wxString &amp;key) {
+00280             <span class="keywordflow">if</span> (m_nShortcuts &gt;= wxCMD_MAX_SHORTCUTS) <span class="keywordflow">return</span>;
+00281             <span class="keywordflow">if</span> (key.IsEmpty()) <span class="keywordflow">return</span>;
+00282             m_keyShortcut[m_nShortcuts++] = <a class="code" href="classwxKeyBind.html">wxKeyBind</a>(key);
+00283             Update();
+00284       }
 00285 
-00286 
-00287       <span class="comment">// Getters</span>
-00288       <span class="comment">// ---------------------</span>
-00289 
-<a name="l00290"></a><a class="code" href="classwxCmd.html#a11">00290</a>       <a class="code" href="classwxKeyBind.html">wxKeyBind</a> *<a class="code" href="classwxKeyBinder.html#a17">GetShortcut</a>(<span class="keywordtype">int</span> n)                    { <span class="keywordflow">return</span> &amp;m_keyShortcut[n]; }
-<a name="l00291"></a><a class="code" href="classwxCmd.html#a12">00291</a>       <span class="keyword">const</span> <a class="code" href="classwxKeyBind.html">wxKeyBind</a> *<a class="code" href="classwxKeyBinder.html#a17">GetShortcut</a>(<span class="keywordtype">int</span> n)<span class="keyword"> const  </span>{ <span class="keywordflow">return</span> &amp;m_keyShortcut[n]; }
-00292 
-<a name="l00293"></a><a class="code" href="classwxCmd.html#a13">00293</a>       wxAcceleratorEntry GetAccelerator(<span class="keywordtype">int</span> n)<span class="keyword"> const </span>{
-00294             <span class="keywordflow">return</span> wxAcceleratorEntry(<a class="code" href="classwxKeyBinder.html#a17">GetShortcut</a>(n)-&gt;GetModifiers(),
-00295                   <a class="code" href="classwxKeyBinder.html#a17">GetShortcut</a>(n)-&gt;GetKeyCode(), m_nId);
-00296       }
-00297 
-<a name="l00298"></a><a class="code" href="classwxCmd.html#a14">00298</a>       <span class="keywordtype">int</span> GetId()<span class="keyword"> const </span>{
-00299             <span class="keywordflow">return</span> m_nId;
-00300       }
+<a name="l00287"></a><a class="code" href="classwxCmd.html#a8">00287</a>       <span class="keywordtype">void</span> RemoveShortcut(<span class="keywordtype">int</span> n) {
+00288             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=n; i &lt; m_nShortcuts; i++)      <span class="comment">// shift array left</span>
+00289                   m_keyShortcut[i] = m_keyShortcut[i+1];
+00290             m_nShortcuts--;
+00291             Update();
+00292       }
+00293       
+<a name="l00295"></a><a class="code" href="classwxCmd.html#a9">00295</a>       <span class="keywordtype">void</span> RemoveAllShortcuts() {
+00296           m_nShortcuts=0;
+00297           Update();
+00298       }
+00299 
+00300 
 00301 
-<a name="l00302"></a><a class="code" href="classwxCmd.html#a15">00302</a>       <span class="keywordtype">int</span> GetShortcutCount()<span class="keyword"> const </span>{
-00303             <span class="keywordflow">return</span> m_nShortcuts;
-00304       }
-00305 
-<a name="l00306"></a><a class="code" href="classwxCmd.html#a16">00306</a>       wxString GetDescription()<span class="keyword"> const </span>{
-00307             <span class="keywordflow">return</span> m_strDescription;
-00308       }
-00309 
-<a name="l00310"></a><a class="code" href="classwxCmd.html#a17">00310</a>       wxString GetName()<span class="keyword"> const </span>{
-00311             <span class="keywordflow">return</span> m_strName;
+00302       <span class="comment">// Miscellaneous</span>
+00303       <span class="comment">// ---------------------</span>
+00304 
+<a name="l00307"></a><a class="code" href="classwxCmd.html#a10">00307</a>       <span class="keywordtype">bool</span> MatchKey(<span class="keyword">const</span> wxKeyEvent &amp;ev)<span class="keyword"> const </span>{
+00308             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i &lt; m_nShortcuts; i++)
+00309                   <span class="keywordflow">if</span> (m_keyShortcut[i].<a class="code" href="classwxKeyBind.html#a7">MatchKey</a>(ev))
+00310                         <span class="keywordflow">return</span> TRUE;
+00311             <span class="keywordflow">return</span> FALSE;
 00312       }
 00313 
-<a name="l00314"></a><a class="code" href="classwxCmd.html#a18">00314</a>       wxArrayString <a class="code" href="classwxKeyBinder.html#a19">GetShortcutsList</a>()<span class="keyword"> const </span>{
-00315             wxArrayString arr;
-00316             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i &lt; m_nShortcuts; i++)
-00317                   arr.Add(m_keyShortcut[i].GetStr());
-00318             <span class="keywordflow">return</span> arr;
-00319       }
-00320 
-00321 <span class="keyword">protected</span>:
-00322 
-<a name="l00325"></a><a class="code" href="classwxCmd.html#b0">00325</a>       <span class="keyword">virtual</span> <span class="keywordtype">void</span> Update() {}
-00326 
-00332       <span class="keyword">virtual</span> <span class="keywordtype">void</span> Exec(wxObject *obj, wxEvtHandler *client) = 0;
-00333 };
-00334 
-00335 
-00336 
-00337 
-<a name="l00342"></a><a class="code" href="classwxCmdArray.html">00342</a> <span class="keyword">class </span><a class="code" href="classwxCmdArray.html">wxCmdArray</a>
-00343 {
-<a name="l00344"></a><a class="code" href="classwxCmdArray.html#r0">00344</a>       wxArrayPtrVoid m_arr;
-00345 
-00346 <span class="keyword">public</span>:
-<a name="l00347"></a><a class="code" href="classwxCmdArray.html#a0">00347</a>       <a class="code" href="classwxCmdArray.html">wxCmdArray</a>() {}
-<a name="l00348"></a><a class="code" href="classwxCmdArray.html#a1">00348</a>       <span class="keyword">virtual</span> ~<a class="code" href="classwxCmdArray.html">wxCmdArray</a>() { Clear(); }
-00349 
-<a name="l00350"></a><a class="code" href="classwxCmdArray.html#a2">00350</a>       <span class="keywordtype">void</span> DeepCopy(<span class="keyword">const</span> <a class="code" href="classwxCmdArray.html">wxCmdArray</a> &amp;arr) {
-00351             Clear();
-00352             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i &lt; arr.<a class="code" href="classwxCmdArray.html#a6">GetCount</a>(); i++)
-00353                   Add(arr.<a class="code" href="classwxCmdArray.html#a7">Item</a>(i)-&gt;<a class="code" href="classwxCmd.html#a3">Clone</a>());
-00354       }
-00355 
-<a name="l00356"></a><a class="code" href="classwxCmdArray.html#a3">00356</a>       <span class="keywordtype">void</span> Add(<a class="code" href="classwxCmd.html">wxCmd</a> *p)                  { m_arr.Add(p); }
-00357       <span class="keywordtype">void</span> Remove(<span class="keywordtype">int</span> n);
-00358       <span class="keywordtype">void</span> Clear();
-00359 
-<a name="l00360"></a><a class="code" href="classwxCmdArray.html#a6">00360</a>       <span class="keywordtype">int</span> GetCount()<span class="keyword"> const          </span>{ <span class="keywordflow">return</span> m_arr.GetCount(); }
-<a name="l00361"></a><a class="code" href="classwxCmdArray.html#a7">00361</a>       <a class="code" href="classwxCmd.html">wxCmd</a> *Item(<span class="keywordtype">int</span> n)<span class="keyword"> const      </span>{ <span class="keywordflow">return</span> (<a class="code" href="classwxCmd.html">wxCmd</a> *)m_arr.Item(n); }
-00362 };
-00363 
+<a name="l00320"></a><a class="code" href="classwxCmd.html#a11">00320</a>       <span class="keywordtype">bool</span> IsBindTo(<span class="keyword">const</span> <a class="code" href="classwxKeyBind.html">wxKeyBind</a> &amp;key, <span class="keywordtype">int</span> *n = NULL)<span class="keyword"> const </span>{
+00321             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i &lt; m_nShortcuts; i++) {
+00322                   <span class="keywordflow">if</span> (m_keyShortcut[i].<a class="code" href="classwxKeyBind.html#a8">Match</a>(key)) {
+00323                         <span class="keywordflow">if</span> (n) *n = i;
+00324                         <span class="keywordflow">return</span> TRUE;
+00325                   }
+00326             }
+00327             <span class="keywordflow">return</span> FALSE;
+00328       }
+00329 
+00332       <span class="keywordtype">bool</span> Save(wxConfigBase *p, <span class="keyword">const</span> wxString &amp;key = wxEmptyString) <span class="keyword">const</span>;
+00333 
+00337       <span class="keywordtype">bool</span> Load(wxConfigBase *p, <span class="keyword">const</span> wxString &amp;key = wxEmptyString);
+00338 
+00339 
+00340 
+00341 
+00342       <span class="comment">// Getters</span>
+00343       <span class="comment">// ---------------------</span>
+00344 
+<a name="l00345"></a><a class="code" href="classwxCmd.html#a14">00345</a>       <a class="code" href="classwxKeyBind.html">wxKeyBind</a> *GetShortcut(<span class="keywordtype">int</span> n)                    { <span class="keywordflow">return</span> &amp;m_keyShortcut[n]; }
+<a name="l00346"></a><a class="code" href="classwxCmd.html#a15">00346</a>       <span class="keyword">const</span> <a class="code" href="classwxKeyBind.html">wxKeyBind</a> *GetShortcut(<span class="keywordtype">int</span> n)<span class="keyword"> const  </span>{ <span class="keywordflow">return</span> &amp;m_keyShortcut[n]; }
+00347 
+<a name="l00348"></a><a class="code" href="classwxCmd.html#a16">00348</a>       wxAcceleratorEntry GetAccelerator(<span class="keywordtype">int</span> n)<span class="keyword"> const </span>{
+00349             <span class="keywordflow">return</span> wxAcceleratorEntry(GetShortcut(n)-&gt;GetModifiers(),
+00350                   GetShortcut(n)-&gt;GetKeyCode(), m_nId);
+00351       }
+00352 
+<a name="l00353"></a><a class="code" href="classwxCmd.html#a17">00353</a>       <span class="keywordtype">int</span> GetId()<span class="keyword"> const </span>{
+00354             <span class="keywordflow">return</span> m_nId;
+00355       }
+00356 
+<a name="l00357"></a><a class="code" href="classwxCmd.html#a18">00357</a>       <span class="keywordtype">int</span> GetShortcutCount()<span class="keyword"> const </span>{
+00358             <span class="keywordflow">return</span> m_nShortcuts;
+00359       }
+00360 
+<a name="l00361"></a><a class="code" href="classwxCmd.html#a19">00361</a>       wxString GetDescription()<span class="keyword"> const </span>{
+00362             <span class="keywordflow">return</span> m_strDescription;
+00363       }
 00364 
-00365 
-00366 
-00367 
-00368 <span class="comment">// Define the wxADD_KEYBINDER_SUPPORT: you should use it inside a protected</span>
-00369 <span class="comment">// block of the windows which want to use the wxKeyBinder facilities</span>
-00370 <span class="preprocessor">#ifdef __WXMSW__</span>
-00371 <span class="preprocessor"></span>
-00372       <span class="comment">// This is a virtual function used in wxMSW which can be used to allow</span>
-00373       <span class="comment">// or disable the message preprocessing and thus the preprocessing of</span>
-00374       <span class="comment">// keyshortcuts; to add keybinder support, the preprocessing must be</span>
-00375       <span class="comment">// disabled: wxKeyBinder will care of checking the keypresses for</span>
-00376       <span class="comment">// eventual hotkeys...</span>
-00377 <span class="preprocessor">      #define wxADD_KEYBINDER_SUPPORT()                                                         \</span>
-00378 <span class="preprocessor">            virtual bool MSWShouldPreProcessMessage(WXMSG*) { return FALSE; }</span>
-00379 <span class="preprocessor"></span>
-00380 <span class="preprocessor">#else</span>
-00381 <span class="preprocessor"></span>
-00382       <span class="comment">// the other ports doesn't use MSWShouldPreProcessMessage...</span>
-<a name="l00383"></a><a class="code" href="keybinder_8h.html#a2">00383</a> <span class="preprocessor">      #define wxADD_KEYBINDER_SUPPORT()               </span><span class="comment">/* expand to nothing */</span>
-00384 
-00385 <span class="preprocessor">#endif</span>
-00386 <span class="preprocessor"></span>
-00387 
-<a name="l00405"></a><a class="code" href="classwxKeyBinder.html">00405</a> <span class="keyword">class </span><a class="code" href="classwxKeyBinder.html">wxKeyBinder</a> : <span class="keyword">public</span> wxEvtHandler
-00406 {
-00407 <span class="keyword">protected</span>:
+<a name="l00365"></a><a class="code" href="classwxCmd.html#a20">00365</a>       wxString GetName()<span class="keyword"> const </span>{
+00366             <span class="keywordflow">return</span> m_strName;
+00367       }
+00368 
+<a name="l00369"></a><a class="code" href="classwxCmd.html#a21">00369</a>       wxArrayString GetShortcutsList()<span class="keyword"> const </span>{
+00370             wxArrayString arr;
+00371             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i &lt; m_nShortcuts; i++)
+00372                   arr.Add(m_keyShortcut[i].GetStr());
+00373             <span class="keywordflow">return</span> arr;
+00374       }
+00375 
+00377       <span class="keyword">virtual</span> <span class="keywordtype">int</span> GetType() <span class="keyword">const </span>= 0;
+00378 
+00379 
+00380 <span class="keyword">protected</span>:
+00381 
+<a name="l00384"></a><a class="code" href="classwxCmd.html#b0">00384</a>       <span class="keyword">virtual</span> <span class="keywordtype">void</span> Update() {}
+00385 
+00391       <span class="keyword">virtual</span> <span class="keywordtype">void</span> Exec(wxObject *obj, wxEvtHandler *client) = 0;
+00392 };
+00393 
+00394 
+00395 
+00396 
+<a name="l00401"></a><a class="code" href="classwxCmdArray.html">00401</a> <span class="keyword">class </span><a class="code" href="classwxCmdArray.html">wxCmdArray</a>
+00402 {
+<a name="l00403"></a><a class="code" href="classwxCmdArray.html#r0">00403</a>       wxArrayPtrVoid m_arr;
+00404 
+00405 <span class="keyword">public</span>:
+<a name="l00406"></a><a class="code" href="classwxCmdArray.html#a0">00406</a>       <a class="code" href="classwxCmdArray.html">wxCmdArray</a>() {}
+<a name="l00407"></a><a class="code" href="classwxCmdArray.html#a1">00407</a>       <span class="keyword">virtual</span> ~<a class="code" href="classwxCmdArray.html">wxCmdArray</a>() { Clear(); }
 00408 
-<a name="l00410"></a><a class="code" href="classwxKeyBinder.html#p0">00410</a>       <a class="code" href="classwxCmdArray.html">wxCmdArray</a> m_arrCmd;
-00411 
-<a name="l00419"></a><a class="code" href="classwxKeyBinder.html#p1">00419</a>       wxArrayPtrVoid m_arrAttachedWnd;
-00420       <span class="comment">//wxWindowList m_lstAttachedWnd;          // I don't like wxList...</span>
-00421 
-00422 <span class="keyword">protected</span>:
+<a name="l00409"></a><a class="code" href="classwxCmdArray.html#a2">00409</a>       <span class="keywordtype">void</span> DeepCopy(<span class="keyword">const</span> <a class="code" href="classwxCmdArray.html">wxCmdArray</a> &amp;arr) {
+00410             Clear();
+00411             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i &lt; arr.<a class="code" href="classwxCmdArray.html#a6">GetCount</a>(); i++)
+00412                   Add(arr.<a class="code" href="classwxCmdArray.html#a7">Item</a>(i)-&gt;<a class="code" href="classwxCmd.html#a3">Clone</a>());
+00413       }
+00414 
+<a name="l00415"></a><a class="code" href="classwxCmdArray.html#a3">00415</a>       <span class="keywordtype">void</span> Add(<a class="code" href="classwxCmd.html">wxCmd</a> *p)                  { m_arr.Add(p); }
+00416       <span class="keywordtype">void</span> Remove(<span class="keywordtype">int</span> n);
+00417       <span class="keywordtype">void</span> Clear();
+00418 
+<a name="l00419"></a><a class="code" href="classwxCmdArray.html#a6">00419</a>       <span class="keywordtype">int</span> GetCount()<span class="keyword"> const          </span>{ <span class="keywordflow">return</span> m_arr.GetCount(); }
+<a name="l00420"></a><a class="code" href="classwxCmdArray.html#a7">00420</a>       <a class="code" href="classwxCmd.html">wxCmd</a> *Item(<span class="keywordtype">int</span> n)<span class="keyword"> const      </span>{ <span class="keywordflow">return</span> (<a class="code" href="classwxCmd.html">wxCmd</a> *)m_arr.Item(n); }
+00421 };
+00422 
 00423 
-00425       <span class="keywordtype">void</span> <a class="code" href="classwxKeyBinder.html#b0">OnChar</a>(wxKeyEvent &amp;event);     
-00426 
-00427 
-<a name="l00429"></a><a class="code" href="classwxKeyBinder.html#b1">00429</a>       <span class="keywordtype">int</span> <a class="code" href="classwxKeyBinder.html#b1">FindCmd</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>)<span class="keyword"> const </span>{
-00430             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i &lt; (int)<a class="code" href="classwxKeyBinder.html#p0">m_arrCmd</a>.<a class="code" href="classwxCmdArray.html#a6">GetCount</a>(); i++)
-00431                   <span class="keywordflow">if</span> (<span class="keywordtype">id</span> == <a class="code" href="classwxKeyBinder.html#p0">m_arrCmd</a>.<a class="code" href="classwxCmdArray.html#a7">Item</a>(i)-&gt;<a class="code" href="classwxCmd.html#a14">GetId</a>())
-00432                         <span class="keywordflow">return</span> i;
-00433             <span class="keywordflow">return</span> -1;
-00434       }
-00435 
-<a name="l00438"></a><a class="code" href="classwxKeyBinder.html#b2">00438</a>       <span class="keywordtype">int</span> <a class="code" href="classwxKeyBinder.html#b2">FindCmdBindTo</a>(<span class="keyword">const</span> <a class="code" href="classwxKeyBind.html">wxKeyBind</a> &amp;key, <span class="keywordtype">int</span> *n = NULL)<span class="keyword"> const </span>{
-00439             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i &lt; (int)<a class="code" href="classwxKeyBinder.html#p0">m_arrCmd</a>.<a class="code" href="classwxCmdArray.html#a6">GetCount</a>(); i++)
-00440                   <span class="keywordflow">if</span> (<a class="code" href="classwxKeyBinder.html#p0">m_arrCmd</a>.<a class="code" href="classwxCmdArray.html#a7">Item</a>(i)-&gt;<a class="code" href="classwxCmd.html#a10">IsBindTo</a>(key, n))
-00441                         <span class="keywordflow">return</span> i;
-00442             <span class="keywordflow">return</span> -1;
-00443       }
-00444 
-<a name="l00447"></a><a class="code" href="classwxKeyBinder.html#b3">00447</a>       <span class="keywordtype">int</span> <a class="code" href="classwxKeyBinder.html#b3">FindMatchingCmd</a>(<span class="keyword">const</span> wxKeyEvent &amp;key)<span class="keyword"> const </span>{
-00448             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i &lt; (int)<a class="code" href="classwxKeyBinder.html#p0">m_arrCmd</a>.<a class="code" href="classwxCmdArray.html#a6">GetCount</a>(); i++)
-00449                   <span class="keywordflow">if</span> (<a class="code" href="classwxKeyBinder.html#p0">m_arrCmd</a>.<a class="code" href="classwxCmdArray.html#a7">Item</a>(i)-&gt;<a class="code" href="classwxCmd.html#a9">MatchKey</a>(key))
-00450                         <span class="keywordflow">return</span> i;
-00451             <span class="keywordflow">return</span> -1;
-00452       }
+00424 
+00425 
+<a name="l00433"></a><a class="code" href="classwxBinderEvtHandler.html">00433</a> <span class="keyword">class </span><a class="code" href="classwxBinderEvtHandler.html">wxBinderEvtHandler</a> : <span class="keyword">public</span> wxEvtHandler
+00434 {
+<a name="l00436"></a><a class="code" href="classwxBinderEvtHandler.html#r0">00436</a>       <a class="code" href="classwxKeyBinder.html">wxKeyBinder</a> *m_pBinder;
+00437 
+<a name="l00440"></a><a class="code" href="classwxBinderEvtHandler.html#r1">00440</a>       wxWindow *m_pTarget;
+00441 
+00442 <span class="keyword">protected</span>:
+00443 
+00445       <span class="keywordtype">void</span> <a class="code" href="classwxBinderEvtHandler.html#b0">OnChar</a>(wxKeyEvent &amp;event);     
+00446 
+00447 <span class="keyword">public</span>:
+00448 
+<a name="l00451"></a><a class="code" href="classwxBinderEvtHandler.html#a0">00451</a>       <a class="code" href="classwxBinderEvtHandler.html#a0">wxBinderEvtHandler</a>(<a class="code" href="classwxKeyBinder.html">wxKeyBinder</a> *p, wxWindow *tg) 
+00452             : <a class="code" href="classwxBinderEvtHandler.html#r0">m_pBinder</a>(p), <a class="code" href="classwxBinderEvtHandler.html#r1">m_pTarget</a>(tg) { <a class="code" href="classwxBinderEvtHandler.html#r1">m_pTarget</a>-&gt;PushEventHandler(<span class="keyword">this</span>); }
 00453 
-00454 
-00455 <span class="keyword">public</span>:
-00456 
-<a name="l00457"></a><a class="code" href="classwxKeyBinder.html#a0">00457</a>       <a class="code" href="classwxKeyBinder.html#a0">wxKeyBinder</a>() {}
-<a name="l00458"></a><a class="code" href="classwxKeyBinder.html#a1">00458</a>       <span class="keyword">virtual</span> <a class="code" href="classwxKeyBinder.html#a1">~wxKeyBinder</a>() { <a class="code" href="classwxKeyBinder.html#a7">DetachAll</a>(); }
+<a name="l00456"></a><a class="code" href="classwxBinderEvtHandler.html#a1">00456</a>       <span class="keyword">virtual</span> <a class="code" href="classwxBinderEvtHandler.html#a1">~wxBinderEvtHandler</a>()
+00457             { <a class="code" href="classwxBinderEvtHandler.html#r1">m_pTarget</a>-&gt;RemoveEventHandler(<span class="keyword">this</span>); }
+00458 
 00459 
-00460 
-00461 <span class="keyword">public</span>:           <span class="comment">// miscellaneous</span>
-00462 
-<a name="l00464"></a><a class="code" href="classwxKeyBinder.html#a2">00464</a>       <span class="keywordtype">void</span> <a class="code" href="classwxKeyBinder.html#a2">DeepCopy</a>(<span class="keyword">const</span> <a class="code" href="classwxKeyBinder.html">wxKeyBinder</a> *p) {
-00465             <a class="code" href="classwxKeyBinder.html#p0">m_arrCmd</a>.<a class="code" href="classwxCmdArray.html#a2">DeepCopy</a>(p-&gt;<a class="code" href="classwxKeyBinder.html#p0">m_arrCmd</a>);
-00466       }
+<a name="l00461"></a><a class="code" href="classwxBinderEvtHandler.html#a2">00461</a>       <span class="keywordtype">bool</span> <a class="code" href="classwxBinderEvtHandler.html#a2">IsAttachedTo</a>(wxWindow *p)
+00462             { <span class="keywordflow">return</span> p == m_pTarget; }
+00463 
+<a name="l00465"></a><a class="code" href="classwxBinderEvtHandler.html#a3">00465</a>       <a class="code" href="classwxKeyBinder.html">wxKeyBinder</a> *<a class="code" href="classwxBinderEvtHandler.html#a3">GetBinder</a>()<span class="keyword"> const</span>
+00466 <span class="keyword">            </span>{ <span class="keywordflow">return</span> m_pBinder; }
 00467 
-<a name="l00469"></a><a class="code" href="classwxKeyBinder.html#a3">00469</a>       <span class="keywordtype">void</span> <a class="code" href="classwxKeyBinder.html#a3">Reset</a>() {
-00470             <a class="code" href="classwxKeyBinder.html#p0">m_arrCmd</a>.<a class="code" href="classwxCmdArray.html#a5">Clear</a>();
-00471       }
-00472 
-<a name="l00474"></a><a class="code" href="classwxKeyBinder.html#a4">00474</a>       <span class="keywordtype">void</span> <a class="code" href="classwxKeyBinder.html#a4">UpdateCmd</a>() {
-00475             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i &lt; (int)<a class="code" href="classwxKeyBinder.html#p0">m_arrCmd</a>.<a class="code" href="classwxCmdArray.html#a6">GetCount</a>(); i++)
-00476                   <a class="code" href="classwxKeyBinder.html#p0">m_arrCmd</a>.<a class="code" href="classwxCmdArray.html#a7">Item</a>(i)-&gt;<a class="code" href="classwxCmd.html#b0">Update</a>();
-00477       }
+<a name="l00469"></a><a class="code" href="classwxBinderEvtHandler.html#a4">00469</a>       wxWindow *<a class="code" href="classwxBinderEvtHandler.html#a4">GetTargetWnd</a>()<span class="keyword"> const</span>
+00470 <span class="keyword">            </span>{ <span class="keywordflow">return</span> m_pTarget; }
+00471 
+00472 <span class="keyword">private</span>:
+00473       DECLARE_CLASS(<a class="code" href="classwxBinderEvtHandler.html">wxBinderEvtHandler</a>)
+00474       DECLARE_EVENT_TABLE()
+00475 };
+00476 
+00477 
 00478 
 00479 
-<a name="l00481"></a><a class="code" href="classwxKeyBinder.html#a5">00481</a>       <span class="keywordtype">void</span> <a class="code" href="classwxKeyBinder.html#a5">Attach</a>(wxWindow *p) {
-00482             <span class="keywordflow">if</span> (<a class="code" href="classwxKeyBinder.html#p1">m_arrAttachedWnd</a>.Index((<span class="keywordtype">void</span> *)p) != wxNOT_FOUND)
-00483                   <span class="keywordflow">return</span>;           <span class="comment">// already attached !!!</span>
-00484             p-&gt;PushEventHandler(<span class="keyword">this</span>);
-00485             <a class="code" href="classwxKeyBinder.html#p1">m_arrAttachedWnd</a>.Add((<span class="keywordtype">void</span>*)p);
-00486             <a class="code" href="classwxKeyBinder.html#a4">UpdateCmd</a>();
-00487       }
-00488 
-<a name="l00490"></a><a class="code" href="classwxKeyBinder.html#a6">00490</a>       <span class="keywordtype">void</span> <a class="code" href="classwxKeyBinder.html#a6">Detach</a>(wxWindow *p) {
-00491             <span class="keywordflow">if</span> (<a class="code" href="classwxKeyBinder.html#p1">m_arrAttachedWnd</a>.Index((<span class="keywordtype">void</span> *)p) == wxNOT_FOUND)
-00492                   <span class="keywordflow">return</span>;           <span class="comment">// this is not attached...</span>
-00493             p-&gt;RemoveEventHandler(<span class="keyword">this</span>);
-00494             <a class="code" href="classwxKeyBinder.html#p1">m_arrAttachedWnd</a>.Remove((<span class="keywordtype">void</span>*)p);
-00495       }
-00496 
-<a name="l00498"></a><a class="code" href="classwxKeyBinder.html#a7">00498</a>       <span class="keywordtype">void</span> <a class="code" href="classwxKeyBinder.html#a7">DetachAll</a>() {
-00499             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i &lt; (int)<a class="code" href="classwxKeyBinder.html#p1">m_arrAttachedWnd</a>.GetCount(); i++)
-00500                   ((wxWindow *)<a class="code" href="classwxKeyBinder.html#p1">m_arrAttachedWnd</a>.Item(i))-&gt;RemoveEventHandler(<span class="keyword">this</span>);
-00501             <a class="code" href="classwxKeyBinder.html#p1">m_arrAttachedWnd</a>.Clear();
-00502       }
+00480 <span class="comment">// Define the wxADD_KEYBINDER_SUPPORT: you should use it inside a protected</span>
+00481 <span class="comment">// block of the windows which want to use the wxKeyBinder facilities</span>
+00482 #ifdef __WXMSW__
+00483 
+00484       <span class="comment">// This is a virtual function used in wxMSW which can be used to allow</span>
+00485       <span class="comment">// or disable the message preprocessing and thus the preprocessing of</span>
+00486       <span class="comment">// keyshortcuts; to add keybinder support, the preprocessing must be</span>
+00487       <span class="comment">// disabled: wxKeyBinder will care of checking the keypresses for</span>
+00488       <span class="comment">// eventual hotkeys...</span>
+00489       #define wxADD_KEYBINDER_SUPPORT()                                                         \
+00490             virtual <span class="keywordtype">bool</span> MSWShouldPreProcessMessage(WXMSG*) { <span class="keywordflow">return</span> FALSE; }
+00491 <span class="preprocessor">#else</span>
+00492 <span class="preprocessor"></span>
+00493       <span class="comment">// the other ports doesn't use MSWShouldPreProcessMessage...</span>
+<a name="l00494"></a><a class="code" href="keybinder_8h.html#a3">00494</a> <span class="preprocessor">      #define wxADD_KEYBINDER_SUPPORT()               </span><span class="comment">/* expand to nothing */</span>
+00495 
+00496 <span class="preprocessor">#endif</span>
+00497 <span class="preprocessor"></span>
+00498 
+<a name="l00499"></a><a class="code" href="classwxBinderApp.html">00499</a> <span class="keyword">class </span><a class="code" href="classwxBinderApp.html">wxBinderApp</a> : <span class="keyword">public</span> wxApp
+00500 {
+<a name="l00501"></a><a class="code" href="classwxBinderApp.html#r0">00501</a>       <a class="code" href="classwxKeyBinder.html">wxKeyBinder</a> *m_pGlobalBinder;
+<a name="l00502"></a><a class="code" href="classwxBinderApp.html#r1">00502</a>       wxEvtHandler *m_pGlobalHdl;
 00503 
-00506       <span class="keywordtype">void</span> <a class="code" href="classwxKeyBinder.html#a8">ImportMenuBarCmd</a>(wxMenuBar *p);
+00504 <span class="keyword">public</span>:
+<a name="l00505"></a><a class="code" href="classwxBinderApp.html#a0">00505</a>       <a class="code" href="classwxBinderApp.html">wxBinderApp</a>() { m_pGlobalHdl = NULL; m_pGlobalBinder = NULL; }
+<a name="l00506"></a><a class="code" href="classwxBinderApp.html#a1">00506</a>       <span class="keyword">virtual</span> ~<a class="code" href="classwxBinderApp.html">wxBinderApp</a>() {}
 00507 
 00508 
-00509 
-00510 
-00511       <span class="comment">// Add functions</span>
-00512       <span class="comment">// -------------------</span>
-00513 
-<a name="l00514"></a><a class="code" href="classwxKeyBinder.html#a9">00514</a>       <span class="keywordtype">void</span> <a class="code" href="classwxKeyBinder.html#a9">AddCmd</a>(<a class="code" href="classwxCmd.html">wxCmd</a> *p) {
-00515             <a class="code" href="classwxKeyBinder.html#p0">m_arrCmd</a>.<a class="code" href="classwxCmdArray.html#a3">Add</a>(p);
-00516       }
-00517 
-<a name="l00518"></a><a class="code" href="classwxKeyBinder.html#a10">00518</a>       <span class="keywordtype">void</span> <a class="code" href="classwxKeyBinder.html#a10">AddShortcut</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keyword">const</span> wxString &amp;key) {
-00519             <a class="code" href="classwxCmd.html">wxCmd</a> *p = <a class="code" href="classwxKeyBinder.html#a15">GetCmd</a>(<span class="keywordtype">id</span>);
-00520             <span class="keywordflow">if</span> (p) p-&gt;<a class="code" href="classwxCmd.html#a5">AddShortcut</a>(key);
-00521       }
+00510       <span class="keywordtype">int</span> FilterEvent(wxEvent &amp;ev);
+00511 
+00514       <span class="keyword">static</span> <span class="keywordtype">bool</span> IsChildOf(wxWindow *parent, wxWindow *child);
+00515 
+00518       <span class="keyword">static</span> wxWindow *GetTopLevelParent(wxWindow *wnd);
+00519 
+00520 
+00521 <span class="keyword">public</span>:           <span class="comment">// accessors</span>
 00522 
-<a name="l00523"></a><a class="code" href="classwxKeyBinder.html#a11">00523</a>       <span class="keywordtype">void</span> <a class="code" href="classwxKeyBinder.html#a10">AddShortcut</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keyword">const</span> <a class="code" href="classwxKeyBind.html">wxKeyBind</a> &amp;key) {
-00524             <a class="code" href="classwxCmd.html">wxCmd</a> *p = <a class="code" href="classwxKeyBinder.html#a15">GetCmd</a>(<span class="keywordtype">id</span>);
-00525             <span class="keywordflow">if</span> (p) p-&gt;<a class="code" href="classwxCmd.html#a5">AddShortcut</a>(key);
-00526       }
+<a name="l00523"></a><a class="code" href="classwxBinderApp.html#a3">00523</a>       <span class="keywordtype">void</span> SetGlobalBinder(<a class="code" href="classwxKeyBinder.html">wxKeyBinder</a> *p)
+00524             { m_pGlobalBinder = p; }
+<a name="l00525"></a><a class="code" href="classwxBinderApp.html#a4">00525</a>       <span class="keywordtype">void</span> SetGlobalHandler(wxEvtHandler *p)
+00526             { m_pGlobalHdl = p; }
 00527 
-00528 
-00529 
-00530       <span class="comment">// Getters</span>
-00531       <span class="comment">// -------------------</span>
-00532 
-<a name="l00533"></a><a class="code" href="classwxKeyBinder.html#a12">00533</a>       <a class="code" href="classwxCmdArray.html">wxCmdArray</a> *<a class="code" href="classwxKeyBinder.html#a12">GetArray</a>()                          { <span class="keywordflow">return</span> &amp;m_arrCmd;     }
-<a name="l00534"></a><a class="code" href="classwxKeyBinder.html#a13">00534</a>       <span class="keyword">const</span> <a class="code" href="classwxCmdArray.html">wxCmdArray</a> *<a class="code" href="classwxKeyBinder.html#a12">GetArray</a>()<span class="keyword"> const        </span>{ <span class="keywordflow">return</span> &amp;m_arrCmd; }
-00535 
-<a name="l00536"></a><a class="code" href="classwxKeyBinder.html#a14">00536</a>       <a class="code" href="classwxCmd.html">wxCmd</a> *<a class="code" href="classwxKeyBinder.html#a14">GetMatchingCmd</a>(<span class="keyword">const</span> wxKeyEvent &amp;key)<span class="keyword"> const </span>{
-00537             <span class="keywordtype">int</span> i = <a class="code" href="classwxKeyBinder.html#b3">FindMatchingCmd</a>(key);
-00538             <span class="keywordflow">if</span> (i != -1)
-00539                   <span class="keywordflow">return</span> <a class="code" href="classwxKeyBinder.html#p0">m_arrCmd</a>.<a class="code" href="classwxCmdArray.html#a7">Item</a>(i);
-00540             <span class="keywordflow">return</span> NULL;
-00541       }
-00542 
-<a name="l00543"></a><a class="code" href="classwxKeyBinder.html#a15">00543</a>       <a class="code" href="classwxCmd.html">wxCmd</a> *<a class="code" href="classwxKeyBinder.html#a15">GetCmd</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>)<span class="keyword"> const </span>{
-00544             <span class="keywordtype">int</span> i = <a class="code" href="classwxKeyBinder.html#b1">FindCmd</a>(<span class="keywordtype">id</span>);
-00545             <span class="keywordflow">if</span> (i != -1)
-00546                   <span class="keywordflow">return</span> <a class="code" href="classwxKeyBinder.html#p0">m_arrCmd</a>.<a class="code" href="classwxCmdArray.html#a7">Item</a>(i);
-00547             <span class="keywordflow">return</span> NULL;
-00548       }
-00549 
-<a name="l00550"></a><a class="code" href="classwxKeyBinder.html#a16">00550</a>       <a class="code" href="classwxCmd.html">wxCmd</a> *<a class="code" href="classwxKeyBinder.html#a16">GetCmdBindTo</a>(<span class="keyword">const</span> wxString &amp;key, <span class="keywordtype">int</span> *n = NULL)<span class="keyword"> const </span>{
-00551             <span class="keywordtype">int</span> i = <a class="code" href="classwxKeyBinder.html#b2">FindCmdBindTo</a>(<a class="code" href="classwxKeyBind.html">wxKeyBind</a>(key), n);
-00552             <span class="keywordflow">if</span> (i != -1)
-00553                   <span class="keywordflow">return</span> <a class="code" href="classwxKeyBinder.html#p0">m_arrCmd</a>.<a class="code" href="classwxCmdArray.html#a7">Item</a>(i);
-00554             <span class="keywordflow">return</span> NULL;
-00555       }
-00556 
-<a name="l00557"></a><a class="code" href="classwxKeyBinder.html#a17">00557</a>       <a class="code" href="classwxKeyBind.html">wxKeyBind</a> *<a class="code" href="classwxKeyBinder.html#a17">GetShortcut</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keywordtype">int</span> n)<span class="keyword"> const </span>{
-00558             <a class="code" href="classwxCmd.html">wxCmd</a> *p = <a class="code" href="classwxKeyBinder.html#a15">GetCmd</a>(<span class="keywordtype">id</span>);
-00559             <span class="keywordflow">if</span> (p) <span class="keywordflow">return</span> p-&gt;<a class="code" href="classwxCmd.html#a11">GetShortcut</a>(n);
-00560             <span class="keywordflow">return</span> NULL;
-00561       }
-00562 
-<a name="l00563"></a><a class="code" href="classwxKeyBinder.html#a18">00563</a>       wxString <a class="code" href="classwxKeyBinder.html#a18">GetShortcutStr</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keywordtype">int</span> n)<span class="keyword"> const </span>{
-00564             <a class="code" href="classwxKeyBind.html">wxKeyBind</a> *p = <a class="code" href="classwxKeyBinder.html#a17">GetShortcut</a>(<span class="keywordtype">id</span>, n);
-00565             <span class="keywordflow">if</span> (p) <span class="keywordflow">return</span> p-&gt;<a class="code" href="classwxKeyBind.html#a11">GetStr</a>();
-00566             <span class="keywordflow">return</span> wxEmptyString;
-00567       }
+<a name="l00528"></a><a class="code" href="classwxBinderApp.html#a5">00528</a>       <a class="code" href="classwxKeyBinder.html">wxKeyBinder</a> *GetGlobalBinder()<span class="keyword"> const</span>
+00529 <span class="keyword">            </span>{ <span class="keywordflow">return</span> m_pGlobalBinder; }
+<a name="l00530"></a><a class="code" href="classwxBinderApp.html#a6">00530</a>       wxEvtHandler *GetGlobalHandler()<span class="keyword"> const</span>
+00531 <span class="keyword">            </span>{ <span class="keywordflow">return</span> m_pGlobalHdl ; }
+00532 };
+00533 
+00534 
+<a name="l00552"></a><a class="code" href="classwxKeyBinder.html">00552</a> <span class="keyword">class </span><a class="code" href="classwxKeyBinder.html">wxKeyBinder</a> : <span class="keyword">public</span> wxObject
+00553 {
+00554 <span class="keyword">protected</span>:
+00555 
+<a name="l00557"></a><a class="code" href="classwxKeyBinder.html#p0">00557</a>       <a class="code" href="classwxCmdArray.html">wxCmdArray</a> m_arrCmd;
+00558 
+00566       <span class="comment">//wxArrayPtrVoid m_arrAttachedWnd;</span>
+00567       <span class="comment">//wxWindowList m_lstAttachedWnd;          // I don't like wxList...</span>
 00568 
-<a name="l00569"></a><a class="code" href="classwxKeyBinder.html#a19">00569</a>       wxArrayString <a class="code" href="classwxKeyBinder.html#a19">GetShortcutsList</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>)<span class="keyword"> const </span>{
-00570             <a class="code" href="classwxCmd.html">wxCmd</a> *p = <a class="code" href="classwxKeyBinder.html#a15">GetCmd</a>(<span class="keywordtype">id</span>);
-00571             <span class="keywordflow">if</span> (p) <span class="keywordflow">return</span> p-&gt;<a class="code" href="classwxCmd.html#a18">GetShortcutsList</a>();
-00572             <span class="keywordflow">return</span> wxArrayString();
-00573       }
+<a name="l00570"></a><a class="code" href="classwxKeyBinder.html#p1">00570</a>       wxArrayPtrVoid m_arrHandlers;
+00571 
+00572 <span class="keyword">protected</span>:
+00573 
 00574 
-<a name="l00575"></a><a class="code" href="classwxKeyBinder.html#a20">00575</a>       wxArrayPtrVoid *<a class="code" href="classwxKeyBinder.html#a20">GetAttachedWndArr</a>()                         { <span class="keywordflow">return</span> &amp;m_arrAttachedWnd;   }
-<a name="l00576"></a><a class="code" href="classwxKeyBinder.html#a21">00576</a>       <span class="keyword">const</span> wxArrayPtrVoid *<a class="code" href="classwxKeyBinder.html#a20">GetAttachedWndArr</a>()<span class="keyword"> const       </span>{ <span class="keywordflow">return</span> &amp;m_arrAttachedWnd;   }
-00577 
-00578 
-00579 <span class="keyword">private</span>:
-00580       DECLARE_CLASS(<a class="code" href="classwxKeyBinder.html">wxKeyBinder</a>)
-00581       DECLARE_EVENT_TABLE()
-00582 };
-00583 
-00584 
-00585 
-00586 
-00587 
-<a name="l00590"></a><a class="code" href="classwxKeyProfile.html">00590</a> class <a class="code" href="classwxKeyProfile.html">wxKeyProfile</a> : public <a class="code" href="classwxKeyBinder.html">wxKeyBinder</a>
-00591 {
-00592 <span class="keyword">protected</span>:
-00593       
-<a name="l00595"></a><a class="code" href="classwxKeyProfile.html#p0">00595</a>       wxString m_strName;
-00596 
-<a name="l00598"></a><a class="code" href="classwxKeyProfile.html#p1">00598</a>       wxString m_strDescription;
-00599 
-00600 <span class="keyword">public</span>:
-<a name="l00601"></a><a class="code" href="classwxKeyProfile.html#a0">00601</a>       <a class="code" href="classwxKeyProfile.html">wxKeyProfile</a>(<span class="keyword">const</span> wxString &amp;name = wxEmptyString, 
-00602                         <span class="keyword">const</span> wxString &amp;desc = wxEmptyString) 
-00603             : m_strName(name), m_strDescription(desc) {}
-<a name="l00604"></a><a class="code" href="classwxKeyProfile.html#a1">00604</a>       <span class="keyword">virtual</span> ~<a class="code" href="classwxKeyProfile.html">wxKeyProfile</a>() {}
-00605 
+<a name="l00576"></a><a class="code" href="classwxKeyBinder.html#b0">00576</a>       <span class="keywordtype">int</span> FindCmd(<span class="keywordtype">int</span> <span class="keywordtype">id</span>)<span class="keyword"> const </span>{
+00577             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i &lt; (int)m_arrCmd.GetCount(); i++)
+00578                   <span class="keywordflow">if</span> (<span class="keywordtype">id</span> == m_arrCmd.Item(i)-&gt;GetId())
+00579                         <span class="keywordflow">return</span> i;
+00580             <span class="keywordflow">return</span> -1;
+00581       }
+00582 
+<a name="l00585"></a><a class="code" href="classwxKeyBinder.html#b1">00585</a>       <span class="keywordtype">int</span> FindCmdBindTo(<span class="keyword">const</span> <a class="code" href="classwxKeyBind.html">wxKeyBind</a> &amp;key, <span class="keywordtype">int</span> *n = NULL)<span class="keyword"> const </span>{
+00586             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i &lt; (int)m_arrCmd.GetCount(); i++)
+00587                   <span class="keywordflow">if</span> (m_arrCmd.Item(i)-&gt;IsBindTo(key, n))
+00588                         <span class="keywordflow">return</span> i;
+00589             <span class="keywordflow">return</span> -1;
+00590       }
+00591 
+<a name="l00594"></a><a class="code" href="classwxKeyBinder.html#b2">00594</a>       <span class="keywordtype">int</span> FindMatchingCmd(<span class="keyword">const</span> wxKeyEvent &amp;key)<span class="keyword"> const </span>{
+00595             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i &lt; (int)m_arrCmd.GetCount(); i++)
+00596                   <span class="keywordflow">if</span> (m_arrCmd.Item(i)-&gt;MatchKey(key))
+00597                         <span class="keywordflow">return</span> i;
+00598             <span class="keywordflow">return</span> -1;
+00599       }
+00600 
+00601 
+00602 <span class="keyword">public</span>:
+00603 
+<a name="l00604"></a><a class="code" href="classwxKeyBinder.html#a0">00604</a>       <a class="code" href="classwxKeyBinder.html">wxKeyBinder</a>() {}
+<a name="l00605"></a><a class="code" href="classwxKeyBinder.html#a1">00605</a>       <span class="keyword">virtual</span> ~<a class="code" href="classwxKeyBinder.html">wxKeyBinder</a>() { DetachAll(); }
 00606 
-<a name="l00607"></a><a class="code" href="classwxKeyProfile.html#a2">00607</a>       <span class="keywordtype">void</span> SetName(<span class="keyword">const</span> wxString &amp;name) { m_strName=name; }
-<a name="l00608"></a><a class="code" href="classwxKeyProfile.html#a3">00608</a>       <span class="keywordtype">void</span> SetDesc(<span class="keyword">const</span> wxString &amp;str)  { m_strDescription=str; }
-00609 
-<a name="l00610"></a><a class="code" href="classwxKeyProfile.html#a4">00610</a>       wxString GetName()<span class="keyword"> const            </span>{ <span class="keywordflow">return</span> m_strName; }
-<a name="l00611"></a><a class="code" href="classwxKeyProfile.html#a5">00611</a>       wxString GetDesc()<span class="keyword"> const            </span>{ <span class="keywordflow">return</span> m_strDescription; }
-00612 };
+00607 
+00608 
+00609 <span class="keyword">public</span>:           <span class="comment">// miscellaneous</span>
+00610 
+00612       <span class="keywordtype">void</span> <a class="code" href="classwxBinderEvtHandler.html#b0">OnChar</a>(wxKeyEvent &amp;event, wxEvtHandler *next);   
 00613 
-00614 
-00615 
-00616 
-00617 
-<a name="l00627"></a><a class="code" href="classwxKeyMonitorTextCtrl.html">00627</a> <span class="keyword">class </span><a class="code" href="classwxKeyMonitorTextCtrl.html">wxKeyMonitorTextCtrl</a> : <span class="keyword">public</span> wxTextCtrl
-00628 {
-00629 <span class="keyword">public</span>:
-<a name="l00630"></a><a class="code" href="classwxKeyMonitorTextCtrl.html#a0">00630</a>       <a class="code" href="classwxKeyMonitorTextCtrl.html">wxKeyMonitorTextCtrl</a>(
-00631             wxWindow* parent,
-00632             wxWindowID <span class="keywordtype">id</span>,
-00633             <span class="keyword">const</span> wxString&amp; value = <span class="stringliteral">""</span>,
-00634             <span class="keyword">const</span> wxPoint&amp; pos = wxDefaultPosition,
-00635             <span class="keyword">const</span> wxSize&amp; size = wxDefaultSize,
-00636             <span class="keywordtype">long</span> style = wxTE_PROCESS_ENTER,
-00637             <span class="keyword">const</span> wxValidator&amp; validator = wxDefaultValidator,
-00638             <span class="keyword">const</span> wxString&amp; name = wxTextCtrlNameStr) :
-00639             wxTextCtrl(parent, id, value, pos, size, style, validator, name) {}
+<a name="l00615"></a><a class="code" href="classwxKeyBinder.html#a3">00615</a>       <span class="keywordtype">void</span> DeepCopy(<span class="keyword">const</span> <a class="code" href="classwxKeyBinder.html">wxKeyBinder</a> *p) {
+00616             m_arrCmd.<a class="code" href="classwxKeyBinder.html#a3">DeepCopy</a>(p-&gt;<a class="code" href="classwxKeyBinder.html#p0">m_arrCmd</a>);
+00617             
+00618             <span class="comment">// NEVER COPY THE ARRAY OF THE ATTACHED WINDOWs:</span>
+00619             <span class="comment">// WE ARE NOT ATTACHED TO THE WINDOWS OF THE GIVEN BINDER !!</span>
+00620             <span class="comment">// m_arrAttachedWnd = p-&gt;m_arrAttachedWnd;</span>
+00621       }
+00622 
+<a name="l00624"></a><a class="code" href="classwxKeyBinder.html#a4">00624</a>       <span class="keywordtype">void</span> Reset() {
+00625             m_arrCmd.Clear();
+00626       }
+00627 
+<a name="l00629"></a><a class="code" href="classwxKeyBinder.html#a5">00629</a>       <span class="keywordtype">void</span> UpdateCmd() {
+00630             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i &lt; (int)m_arrCmd.GetCount(); i++)
+00631                   m_arrCmd.Item(i)-&gt;Update();
+00632       }
+00633 
+<a name="l00636"></a><a class="code" href="classwxKeyBinder.html#a6">00636</a>       <span class="keywordtype">void</span> Enable(<span class="keywordtype">bool</span> bEnable = TRUE) {
+00637             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i &lt; (int)m_arrHandlers.GetCount(); i++)
+00638                   ((<a class="code" href="classwxBinderEvtHandler.html">wxBinderEvtHandler</a>*)m_arrHandlers.Item(i))-&gt;SetEvtHandlerEnabled(bEnable);
+00639       }
 00640 
-<a name="l00641"></a><a class="code" href="classwxKeyMonitorTextCtrl.html#a1">00641</a>       <span class="keyword">virtual</span> ~<a class="code" href="classwxKeyMonitorTextCtrl.html">wxKeyMonitorTextCtrl</a>() {}
-00642 
-00643 <span class="keyword">public</span>:
-00644 
-00647       <span class="keywordtype">void</span> OnKey(wxKeyEvent &amp;);
-00648 
-<a name="l00650"></a><a class="code" href="classwxKeyMonitorTextCtrl.html#a3">00650</a>       <span class="keywordtype">bool</span> IsValidKeyComb()<span class="keyword"> const </span>{
-00651             <span class="keywordflow">return</span> !GetValue().IsEmpty() &amp;&amp; GetValue().Last() != <span class="charliteral">'+'</span>;
-00652       }
+00642       <span class="keywordtype">void</span> Attach(wxWindow *p);
+00643 
+00646       <span class="keywordtype">void</span> AttachRecursively(wxWindow *p);
+00647 
+00649       <span class="keywordtype">void</span> Detach(wxWindow *p);
+00650 
+00652       <span class="keywordtype">void</span> DetachAll();
 00653 
-00654 <span class="keyword">private</span>:
-00655       DECLARE_CLASS(<a class="code" href="classwxKeyMonitorTextCtrl.html">wxKeyMonitorTextCtrl</a>)
-00656       DECLARE_EVENT_TABLE()
-00657 };
-00658 
-00659 
+<a name="l00655"></a><a class="code" href="classwxKeyBinder.html#a11">00655</a>       <span class="keywordtype">bool</span> <a class="code" href="classwxBinderEvtHandler.html#a2">IsAttachedTo</a>(wxWindow *p)<span class="keyword"> const</span>
+00656 <span class="keyword">            </span>{ <span class="keywordflow">return</span> FindHandlerIdxFor(p) != wxNOT_FOUND; }
+00657 
+00659       <span class="keywordtype">int</span> FindHandlerIdxFor(wxWindow *p) <span class="keyword">const</span>;
 00660 
-00661 
-00662 
+00662       <a class="code" href="classwxBinderEvtHandler.html">wxBinderEvtHandler</a> *FindHandlerFor(wxWindow *p) <span class="keyword">const</span>;
 00663 
-00664 <span class="comment">// IDs used by wxKeyConfigPanel</span>
-<a name="l00665"></a><a class="code" href="keybinder_8h.html#a3">00665</a> #define KEYBINDER_BASEID                              30000       <span class="comment">// start from this value</span>
-00666 
-<a name="l00667"></a><a class="code" href="keybinder_8h.html#a4">00667</a> #define KEYBINDER_COMMANDS_BOX_ID               KEYBINDER_BASEID+1
-<a name="l00668"></a><a class="code" href="keybinder_8h.html#a5">00668</a> #define KEYBINDER_BINDINGS_BOX_ID               KEYBINDER_BASEID+2
-<a name="l00669"></a><a class="code" href="keybinder_8h.html#a6">00669</a> #define KEYBINDER_KEY_FIELD_ID                        KEYBINDER_BASEID+3
-<a name="l00670"></a><a class="code" href="keybinder_8h.html#a7">00670</a> #define KEYBINDER_ASSIGN_KEY_ID                       KEYBINDER_BASEID+4
-<a name="l00671"></a><a class="code" href="keybinder_8h.html#a8">00671</a> #define KEYBINDER_REMOVE_KEY_ID                       KEYBINDER_BASEID+5
-<a name="l00672"></a><a class="code" href="keybinder_8h.html#a9">00672</a> #define KEYBINDER_KEYPROFILES_ID                KEYBINDER_BASEID+6
-00673 
-<a name="l00674"></a><a class="code" href="keybinder_8h.html#a10">00674</a> #define KEYBINDER_MAX_KEYPROFILES               16
+00666       <span class="keywordtype">void</span> ImportMenuBarCmd(wxMenuBar *p);
+00667 
+00670       <span class="keywordtype">bool</span> Save(wxConfigBase *p, <span class="keyword">const</span> wxString &amp;key = wxEmptyString) <span class="keyword">const</span>;
+00671 
+00673       <span class="keywordtype">bool</span> Load(wxConfigBase *p, <span class="keyword">const</span> wxString &amp;key = wxEmptyString);
+00674 
 00675 
 00676 
-00677 
-<a name="l00709"></a><a class="code" href="classwxKeyConfigPanel.html">00709</a> class <a class="code" href="classwxKeyConfigPanel.html">wxKeyConfigPanel</a> : public wxPanel
-00710 {
-00711 <span class="keyword">public</span>:
-00712 
-00714       <a class="code" href="classwxKeyConfigPanel.html">wxKeyConfigPanel</a>(wxWindow* parent,
-00715             <a class="code" href="classwxKeyProfile.html">wxKeyProfile</a> *pBinder,              <span class="comment">// the key binder to edit (can be NULL)</span>
-00716             <span class="keywordtype">bool</span> showApplyBtn = FALSE,
-00717             wxWindowID <span class="keywordtype">id</span> = -1, 
-00718             <span class="keyword">const</span> wxPoint&amp; pos = wxDefaultPosition,
-00719             <span class="keyword">const</span> wxSize&amp; size = wxDefaultSize, 
-00720             <span class="keywordtype">long</span> style = wxTAB_TRAVERSAL,
-00721             <span class="keyword">const</span> wxString&amp; name = <span class="stringliteral">"wxKeyConfigPanel"</span>);
-00722 
-<a name="l00723"></a><a class="code" href="classwxKeyConfigPanel.html#a1">00723</a>       <span class="keyword">virtual</span> ~<a class="code" href="classwxKeyConfigPanel.html">wxKeyConfigPanel</a>() {}
+00677       <span class="comment">// Add functions</span>
+00678       <span class="comment">// -------------------</span>
+00679 
+<a name="l00680"></a><a class="code" href="classwxKeyBinder.html#a17">00680</a>       <span class="keywordtype">void</span> AddCmd(<a class="code" href="classwxCmd.html">wxCmd</a> *p) {
+00681             m_arrCmd.Add(p);
+00682       }
+00683 
+<a name="l00684"></a><a class="code" href="classwxKeyBinder.html#a18">00684</a>       <span class="keywordtype">void</span> AddShortcut(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keyword">const</span> wxString &amp;key) {
+00685             <a class="code" href="classwxCmd.html">wxCmd</a> *p = GetCmd(<span class="keywordtype">id</span>);
+00686             <span class="keywordflow">if</span> (p) p-&gt;<a class="code" href="classwxCmd.html#a5">AddShortcut</a>(key);
+00687       }
+00688 
+<a name="l00689"></a><a class="code" href="classwxKeyBinder.html#a19">00689</a>       <span class="keywordtype">void</span> AddShortcut(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keyword">const</span> <a class="code" href="classwxKeyBind.html">wxKeyBind</a> &amp;key) {
+00690             <a class="code" href="classwxCmd.html">wxCmd</a> *p = GetCmd(<span class="keywordtype">id</span>);
+00691             <span class="keywordflow">if</span> (p) p-&gt;<a class="code" href="classwxCmd.html#a5">AddShortcut</a>(key);
+00692       }
+00693 
+00694 
+00695 
+00696       <span class="comment">// Getters</span>
+00697       <span class="comment">// -------------------</span>
+00698 
+<a name="l00699"></a><a class="code" href="classwxKeyBinder.html#a20">00699</a>       <span class="keywordtype">int</span> GetCmdCount()<span class="keyword"> const </span>{
+00700             <span class="keywordflow">return</span> m_arrCmd.GetCount();
+00701       }
+00702 
+<a name="l00703"></a><a class="code" href="classwxKeyBinder.html#a21">00703</a>       <span class="keywordtype">int</span> GetAttachedWndCount()<span class="keyword"> const </span>{
+00704             <span class="keywordflow">return</span> m_arrHandlers.GetCount();
+00705       }     
+00706 
+<a name="l00707"></a><a class="code" href="classwxKeyBinder.html#a22">00707</a>       wxWindow *GetWindow(<span class="keywordtype">int</span> n)<span class="keyword"> const </span>{
+00708             <span class="keywordflow">return</span> ((<a class="code" href="classwxBinderEvtHandler.html">wxBinderEvtHandler</a>*)m_arrHandlers.Item(n))-&gt;GetTargetWnd();
+00709       }
+00710 
+<a name="l00711"></a><a class="code" href="classwxKeyBinder.html#a23">00711</a>       <a class="code" href="classwxCmd.html">wxCmd</a> *GetMatchingCmd(<span class="keyword">const</span> wxKeyEvent &amp;key)<span class="keyword"> const </span>{
+00712             <span class="keywordtype">int</span> i = FindMatchingCmd(key);
+00713             <span class="keywordflow">if</span> (i != -1)
+00714                   <span class="keywordflow">return</span> m_arrCmd.Item(i);
+00715             <span class="keywordflow">return</span> NULL;
+00716       }
+00717 
+<a name="l00718"></a><a class="code" href="classwxKeyBinder.html#a24">00718</a>       <a class="code" href="classwxCmd.html">wxCmd</a> *GetCmd(<span class="keywordtype">int</span> <span class="keywordtype">id</span>)<span class="keyword"> const </span>{
+00719             <span class="keywordtype">int</span> i = FindCmd(<span class="keywordtype">id</span>);
+00720             <span class="keywordflow">if</span> (i != -1)
+00721                   <span class="keywordflow">return</span> m_arrCmd.Item(i);
+00722             <span class="keywordflow">return</span> NULL;
+00723       }
 00724 
-00725 
-00726 <span class="keyword">public</span>:           <span class="comment">// import commands</span>
-00727 
-00734       <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classwxKeyBinder.html#a8">ImportMenuBarCmd</a>(wxMenuBar *, 
-00735                                                 <span class="keyword">const</span> wxString &amp;rootname = <span class="stringliteral">"Menu bar"</span>);
-00736 
-00743       <span class="keyword">virtual</span> <span class="keywordtype">void</span> ImportKeyProfileCmd(<span class="keywordtype">int</span> n, <span class="keyword">const</span> wxString &amp;rootname = <span class="stringliteral">"Commands"</span>);
-00744 
-00745 
-00746 <span class="keyword">public</span>:           <span class="comment">// keyprofile utilities</span>
-00747 
-00755       <span class="keyword">virtual</span> <span class="keywordtype">void</span> AddProfile(<a class="code" href="classwxKeyProfile.html">wxKeyProfile</a> *p, <span class="keywordtype">bool</span> bImport = FALSE, 
-00756                                           <span class="keyword">const</span> wxString &amp;rootname = <span class="stringliteral">"Commands"</span>);
-00757 
-<a name="l00760"></a><a class="code" href="classwxKeyConfigPanel.html#a5">00760</a>       <a class="code" href="classwxKeyProfile.html">wxKeyProfile</a> *GetProfile(<span class="keywordtype">int</span> n)<span class="keyword"> const</span>
-00761 <span class="keyword">            </span>{ wxASSERT(m_pKeyProfiles); <span class="keywordflow">return</span> (<a class="code" href="classwxKeyProfile.html">wxKeyProfile</a> *)m_pKeyProfiles-&gt;GetClientData(n); }
+<a name="l00725"></a><a class="code" href="classwxKeyBinder.html#a25">00725</a>       <a class="code" href="classwxCmd.html">wxCmd</a> *GetCmdBindTo(<span class="keyword">const</span> wxString &amp;key, <span class="keywordtype">int</span> *n = NULL)<span class="keyword"> const </span>{
+00726             <span class="keywordtype">int</span> i = FindCmdBindTo(<a class="code" href="classwxKeyBind.html">wxKeyBind</a>(key), n);
+00727             <span class="keywordflow">if</span> (i != -1)
+00728                   <span class="keywordflow">return</span> m_arrCmd.Item(i);
+00729             <span class="keywordflow">return</span> NULL;
+00730       }
+00731 
+<a name="l00732"></a><a class="code" href="classwxKeyBinder.html#a26">00732</a>       <a class="code" href="classwxKeyBind.html">wxKeyBind</a> *GetShortcut(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keywordtype">int</span> n)<span class="keyword"> const </span>{
+00733             <a class="code" href="classwxCmd.html">wxCmd</a> *p = GetCmd(<span class="keywordtype">id</span>);
+00734             <span class="keywordflow">if</span> (p) <span class="keywordflow">return</span> p-&gt;<a class="code" href="classwxCmd.html#a14">GetShortcut</a>(n);
+00735             <span class="keywordflow">return</span> NULL;
+00736       }
+00737 
+<a name="l00738"></a><a class="code" href="classwxKeyBinder.html#a27">00738</a>       wxString GetShortcutStr(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keywordtype">int</span> n)<span class="keyword"> const </span>{
+00739             <a class="code" href="classwxKeyBind.html">wxKeyBind</a> *p = GetShortcut(<span class="keywordtype">id</span>, n);
+00740             <span class="keywordflow">if</span> (p) <span class="keywordflow">return</span> p-&gt;<a class="code" href="classwxKeyBind.html#a11">GetStr</a>();
+00741             <span class="keywordflow">return</span> wxEmptyString;
+00742       }
+00743 
+<a name="l00744"></a><a class="code" href="classwxKeyBinder.html#a28">00744</a>       wxArrayString GetShortcutsList(<span class="keywordtype">int</span> <span class="keywordtype">id</span>)<span class="keyword"> const </span>{
+00745             <a class="code" href="classwxCmd.html">wxCmd</a> *p = GetCmd(<span class="keywordtype">id</span>);
+00746             <span class="keywordflow">if</span> (p) <span class="keywordflow">return</span> p-&gt;<a class="code" href="classwxCmd.html#a21">GetShortcutsList</a>();
+00747             <span class="keywordflow">return</span> wxArrayString();
+00748       }
+00749 
+<a name="l00750"></a><a class="code" href="classwxKeyBinder.html#a29">00750</a>       wxArrayPtrVoid *GetHandlersArr()          { <span class="keywordflow">return</span> &amp;m_arrHandlers; }    
+00751 
+<a name="l00752"></a><a class="code" href="classwxKeyBinder.html#a30">00752</a>       <a class="code" href="classwxCmdArray.html">wxCmdArray</a> *GetArray()                          { <span class="keywordflow">return</span> &amp;m_arrCmd;     }
+<a name="l00753"></a><a class="code" href="classwxKeyBinder.html#a31">00753</a>       <span class="keyword">const</span> <a class="code" href="classwxCmdArray.html">wxCmdArray</a> *GetArray()<span class="keyword"> const        </span>{ <span class="keywordflow">return</span> &amp;m_arrCmd; }
+00754 
+00755 
+00756 <span class="keyword">private</span>:
+00757       DECLARE_CLASS(<a class="code" href="classwxKeyBinder.html">wxKeyBinder</a>)    
+00758 };
+00759 
+00760 
+00761 
 00762 
-<a name="l00764"></a><a class="code" href="classwxKeyConfigPanel.html#a6">00764</a>       <a class="code" href="classwxKeyProfile.html">wxKeyProfile</a> *GetSelProfile()<span class="keyword"> const</span>
-00765 <span class="keyword">            </span>{ <span class="keywordtype">int</span> n=GetSelProfileIdx(); <span class="keywordflow">return</span> (n &gt;= 0 ? GetProfile(n) : NULL); }
-00766 
-<a name="l00771"></a><a class="code" href="classwxKeyConfigPanel.html#a7">00771</a>       <span class="keywordtype">int</span> GetSelProfileIdx()<span class="keyword"> const</span>
-00772 <span class="keyword">            </span>{ wxASSERT(m_pKeyProfiles); <span class="keywordflow">return</span> m_pKeyProfiles-&gt;GetSelection(); }
-00773 
-<a name="l00776"></a><a class="code" href="classwxKeyConfigPanel.html#a8">00776</a>       wxComboBox *GetProfiles()<span class="keyword"> const</span>
-00777 <span class="keyword">            </span>{ <span class="keywordflow">return</span> m_pKeyProfiles; }
-00778 
-00779 
-00780 <span class="keyword">public</span>:           <span class="comment">// miscellaneous</span>
-00781 
-00785       <span class="keyword">virtual</span> <span class="keywordtype">void</span> ApplyChanges();
-00786 
-00790       <span class="keywordtype">void</span> EnableKeyProfiles(<span class="keywordtype">bool</span> bEnable = TRUE);
+00763 
+<a name="l00766"></a><a class="code" href="classwxKeyProfile.html">00766</a> <span class="keyword">class </span><a class="code" href="classwxKeyProfile.html">wxKeyProfile</a> : <span class="keyword">public</span> <a class="code" href="classwxKeyBinder.html">wxKeyBinder</a>
+00767 {
+00768 <span class="keyword">protected</span>:
+00769       
+<a name="l00771"></a><a class="code" href="classwxKeyProfile.html#p0">00771</a>       wxString m_strName;
+00772 
+<a name="l00774"></a><a class="code" href="classwxKeyProfile.html#p1">00774</a>       wxString m_strDescription;
+00775 
+00776 <span class="keyword">public</span>:
+<a name="l00777"></a><a class="code" href="classwxKeyProfile.html#a0">00777</a>       <a class="code" href="classwxKeyProfile.html">wxKeyProfile</a>(<span class="keyword">const</span> wxString &amp;name = wxEmptyString, 
+00778                         <span class="keyword">const</span> wxString &amp;desc = wxEmptyString) 
+00779             : m_strName(name), m_strDescription(desc) {}
+00780             
+<a name="l00781"></a><a class="code" href="classwxKeyProfile.html#a1">00781</a>       <a class="code" href="classwxKeyProfile.html">wxKeyProfile</a>(<span class="keyword">const</span> <a class="code" href="classwxKeyProfile.html">wxKeyProfile</a> &amp;tocopy)
+00782             { DeepCopy(&amp;tocopy); }
+00783       
+<a name="l00784"></a><a class="code" href="classwxKeyProfile.html#a2">00784</a>       <span class="keyword">virtual</span> ~<a class="code" href="classwxKeyProfile.html">wxKeyProfile</a>() {}
+00785 
+<a name="l00786"></a><a class="code" href="classwxKeyProfile.html#a3">00786</a>       <span class="keywordtype">void</span> DeepCopy(<span class="keyword">const</span> <a class="code" href="classwxKeyProfile.html">wxKeyProfile</a> *p) {
+00787             <a class="code" href="classwxKeyBinder.html#a3">wxKeyBinder::DeepCopy</a>(p);
+00788             m_strName = p-&gt;<a class="code" href="classwxKeyProfile.html#p0">m_strName</a>;
+00789             m_strDescription = p-&gt;<a class="code" href="classwxKeyProfile.html#p1">m_strDescription</a>;
+00790       }
 00791 
-<a name="l00794"></a><a class="code" href="classwxKeyConfigPanel.html#a11">00794</a>       <span class="keywordtype">void</span> DisableKeyProfiles()
-00795             { EnableKeyProfiles(FALSE); }
+00792 <span class="keyword">public</span>:           <span class="comment">// miscellaneous</span>
+00793       
+<a name="l00794"></a><a class="code" href="classwxKeyProfile.html#a4">00794</a>       <span class="keywordtype">void</span> SetName(<span class="keyword">const</span> wxString &amp;name) { m_strName=name; }
+<a name="l00795"></a><a class="code" href="classwxKeyProfile.html#a5">00795</a>       <span class="keywordtype">void</span> SetDesc(<span class="keyword">const</span> wxString &amp;str)  { m_strDescription=str; }
 00796 
-00797 
-00798 <span class="keyword">protected</span>:        <span class="comment">// event handlers</span>
+<a name="l00797"></a><a class="code" href="classwxKeyProfile.html#a6">00797</a>       wxString GetName()<span class="keyword"> const            </span>{ <span class="keywordflow">return</span> m_strName; }
+<a name="l00798"></a><a class="code" href="classwxKeyProfile.html#a7">00798</a>       wxString GetDesc()<span class="keyword"> const            </span>{ <span class="keywordflow">return</span> m_strDescription; }
 00799 
-00801       <span class="keywordtype">void</span> OnIdle(wxIdleEvent &amp;event);
+00800       <span class="keywordtype">bool</span> Save(wxConfigBase *p, <span class="keyword">const</span> wxString &amp;key = wxEmptyString) <span class="keyword">const</span>;
+00801       <span class="keywordtype">bool</span> Load(wxConfigBase *p, <span class="keyword">const</span> wxString &amp;key = wxEmptyString);
 00802 
-00803       <span class="keywordtype">void</span> OnCommandSelected(wxTreeEvent &amp;event);
-00804       <span class="keywordtype">void</span> OnBindingSelected(wxCommandEvent &amp;event);
-00805       <span class="keywordtype">void</span> OnProfileSelected(wxCommandEvent &amp;event);
-00806 
-00807       <span class="keywordtype">void</span> OnApplyChanges(wxCommandEvent &amp;event);
-00808       <span class="keywordtype">void</span> OnAssignKey(wxCommandEvent &amp;event);
-00809       <span class="keywordtype">void</span> OnRemoveKey(wxCommandEvent &amp;event);
-00810 
-00812       <span class="keywordtype">void</span> OnKeyPressed(wxCommandEvent &amp;event);
-00813 
-00814 
-00815 <span class="keyword">protected</span>:        <span class="comment">// utilities</span>
-00816 
-00817       <span class="keyword">virtual</span> <span class="keywordtype">void</span> UpdateButtons();
-00818       <span class="keyword">virtual</span> <span class="keywordtype">void</span> UpdateDesc();    
-00819       <span class="keyword">virtual</span> <span class="keywordtype">void</span> FillInBindings();
-00820       <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classwxKeyBinder.html#a3">Reset</a>();
-00821       <span class="keyword">virtual</span> <span class="keywordtype">void</span> AddRootIfMissing(<span class="keyword">const</span> wxString &amp;rootname);
-00822 
-00823 
-00825       wxTreeItemId GetSelCmdId();
-00826 
-00828       wxString GetSelCmdStr();
-00829 
-00831       <a class="code" href="classwxCmd.html">wxCmd</a> *GetSelCmd();
-00832 
-00833 
-00834 <span class="keyword">protected</span>:        <span class="comment">// members</span>
-00835 
-<a name="l00837"></a><a class="code" href="classwxKeyConfigPanel.html#p0">00837</a>       <a class="code" href="classwxKeyMonitorTextCtrl.html">wxKeyMonitorTextCtrl</a> *m_pKeyField;
-00838 
-<a name="l00841"></a><a class="code" href="classwxKeyConfigPanel.html#p1">00841</a>       <span class="keywordtype">bool</span> m_bEnableKeyProfiles;
-00842 
-<a name="l00844"></a><a class="code" href="classwxKeyConfigPanel.html#p2">00844</a>       <a class="code" href="classwxCmd.html">wxCmd</a> *m_pCurrCmd;
-00845 
-<a name="l00848"></a><a class="code" href="classwxKeyConfigPanel.html#p3">00848</a>       <a class="code" href="classwxKeyBinder.html">wxKeyBinder</a> m_kBinder;
-00849 
-00850 <span class="keyword">protected</span>:        <span class="comment">// the subwindows of this dialog</span>
-00851 
-<a name="l00852"></a><a class="code" href="classwxKeyConfigPanel.html#p4">00852</a>       wxButton *m_pAssignBtn;
-<a name="l00853"></a><a class="code" href="classwxKeyConfigPanel.html#p5">00853</a>       wxButton *m_pRemoveBtn;
-00854 
-<a name="l00855"></a><a class="code" href="classwxKeyConfigPanel.html#p6">00855</a>       wxTreeCtrl *m_pCommands;
-<a name="l00856"></a><a class="code" href="classwxKeyConfigPanel.html#p7">00856</a>       wxListBox  *m_pBindings;
-00857 
-<a name="l00858"></a><a class="code" href="classwxKeyConfigPanel.html#p8">00858</a>       wxComboBox *m_pKeyProfiles;
-<a name="l00859"></a><a class="code" href="classwxKeyConfigPanel.html#p9">00859</a>       wxSizer *m_pKeyProfilesSizer;
-00860 
-00861       <span class="comment">//wxTextCtrl  *m_pDescLabel;  // we won't allow description editing !!</span>
-<a name="l00862"></a><a class="code" href="classwxKeyConfigPanel.html#p10">00862</a>       wxStaticText *m_pDescLabel;
-<a name="l00863"></a><a class="code" href="classwxKeyConfigPanel.html#p11">00863</a>       wxStaticText *m_pCurrCmdField;
-00864 
-00865 <span class="keyword">private</span>:
-00866       DECLARE_CLASS(<a class="code" href="classwxKeyConfigPanel.html">wxKeyConfigPanel</a>)
-00867       DECLARE_EVENT_TABLE()
-00868 };
-00869 
-00870 
-00871 
-00872 #endif <span class="comment">// __KEYBINDER_G__</span>
-00873 
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Mon Dec 27 19:27:55 2004 for Keybinder by&nbsp;
+00803 
+00804 <span class="keyword">private</span>:
+00805       DECLARE_CLASS(<a class="code" href="classwxKeyProfile.html">wxKeyProfile</a>)   
+00806 };
+00807 
+00808 
+00809 
+<a name="l00814"></a><a class="code" href="classwxKeyProfileArray.html">00814</a> <span class="keyword">class </span><a class="code" href="classwxKeyProfileArray.html">wxKeyProfileArray</a>
+00815 {
+<a name="l00819"></a><a class="code" href="classwxKeyProfileArray.html#r0">00819</a>       wxArrayPtrVoid m_arr;
+00820 
+00821 <span class="keyword">public</span>:
+<a name="l00822"></a><a class="code" href="classwxKeyProfileArray.html#a0">00822</a>       <a class="code" href="classwxKeyProfileArray.html">wxKeyProfileArray</a>() {}
+<a name="l00823"></a><a class="code" href="classwxKeyProfileArray.html#a1">00823</a>       <span class="keyword">virtual</span> ~<a class="code" href="classwxKeyProfileArray.html">wxKeyProfileArray</a>() {}
+00824       
+00825       
+00830       
+<a name="l00831"></a><a class="code" href="classwxKeyProfileArray.html#z1_0">00831</a>       <span class="keywordtype">int</span> GetCount()<span class="keyword"> const                </span>{ <span class="keywordflow">return</span> m_arr.GetCount(); }
+<a name="l00832"></a><a class="code" href="classwxKeyProfileArray.html#z1_1">00832</a>       <span class="keywordtype">void</span> Add(<a class="code" href="classwxKeyProfile.html">wxKeyProfile</a> *p)           { m_arr.Add(p); }
+<a name="l00833"></a><a class="code" href="classwxKeyProfileArray.html#z1_2">00833</a>       <a class="code" href="classwxKeyProfile.html">wxKeyProfile</a> *Item(<span class="keywordtype">int</span> n)           { <span class="keywordflow">return</span> (<a class="code" href="classwxKeyProfile.html">wxKeyProfile</a>*)m_arr.Item(n); }
+<a name="l00834"></a><a class="code" href="classwxKeyProfileArray.html#z1_3">00834</a>       <span class="keywordtype">void</span> Clear()                              { m_arr.Clear(); }
+<a name="l00835"></a><a class="code" href="classwxKeyProfileArray.html#z1_4">00835</a>       <span class="keywordtype">void</span> Remove(<a class="code" href="classwxKeyProfile.html">wxKeyProfile</a> *p)  { m_arr.Remove(p); }
+<a name="l00836"></a><a class="code" href="classwxKeyProfileArray.html#z1_5">00836</a>       <span class="keywordtype">bool</span> IsEmpty()<span class="keyword"> const                </span>{ <span class="keywordflow">return</span> m_arr.IsEmpty(); }
+00837 
+<a name="l00838"></a><a class="code" href="classwxKeyProfileArray.html#z1_6">00838</a>       <span class="keyword">const</span> <a class="code" href="classwxKeyProfile.html">wxKeyProfile</a> *Item(<span class="keywordtype">int</span> n)<span class="keyword"> const                 </span>{ <span class="keywordflow">return</span> (<a class="code" href="classwxKeyProfile.html">wxKeyProfile</a>*)m_arr.Item(n); }
+<a name="l00839"></a><a class="code" href="classwxKeyProfileArray.html#z1_7">00839</a>       <span class="keywordtype">void</span> RemoveAt(size_t i, size_t count = 1)       { m_arr.RemoveAt(i, count); }
+<a name="l00840"></a><a class="code" href="classwxKeyProfileArray.html#z1_8">00840</a>       <span class="keywordtype">void</span> Insert(<a class="code" href="classwxKeyProfile.html">wxKeyProfile</a> *p, <span class="keywordtype">int</span> n)                   { m_arr.Insert(p, n); }
+00841       
+00843       
+00844       
+<a name="l00848"></a><a class="code" href="classwxKeyProfileArray.html#a2">00848</a>       <span class="keywordtype">void</span> Cleanup() {
+00849             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i &lt; GetCount(); i++)
+00850                   <span class="keyword">delete</span> Item(i);
+00851             Clear();
+00852       }
+00853 
+<a name="l00858"></a><a class="code" href="classwxKeyProfileArray.html#a3">00858</a>       <span class="keywordtype">void</span> AttachAllTo(wxWindow *w) {
+00859             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i&lt;GetCount(); i++)
+00860                   Item(i)-&gt;<a class="code" href="classwxKeyBinder.html#a7">Attach</a>(w);
+00861       }
+00862 
+<a name="l00864"></a><a class="code" href="classwxKeyProfileArray.html#a4">00864</a>       <span class="keywordtype">void</span> EnableAll(<span class="keywordtype">bool</span> bEnable = TRUE) {
+00865             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i&lt;GetCount(); i++)
+00866                   Item(i)-&gt;<a class="code" href="classwxKeyBinder.html#a6">Enable</a>(bEnable);
+00867       }
+00868 
+<a name="l00870"></a><a class="code" href="classwxKeyProfileArray.html#a5">00870</a>       <span class="keywordtype">void</span> DetachAllFrom(wxWindow *w) {
+00871             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i&lt;GetCount(); i++)
+00872                   Item(i)-&gt;<a class="code" href="classwxKeyBinder.html#a9">Detach</a>(w);
+00873       }
+00874 
+<a name="l00876"></a><a class="code" href="classwxKeyProfileArray.html#a6">00876</a>       <span class="keywordtype">void</span> DetachAll() {
+00877             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i&lt;GetCount(); i++)
+00878                   Item(i)-&gt;<a class="code" href="classwxKeyBinder.html#a10">DetachAll</a>();
+00879       }
+00880 
+00882       <span class="keywordtype">bool</span> Save(wxConfigBase *p, <span class="keyword">const</span> wxString &amp;key = wxEmptyString) <span class="keyword">const</span>;
+00883       
+00884       <span class="comment">// Loads from the given wxConfig object an array of wxKeyProfiles.</span>
+00885       <span class="keywordtype">bool</span> Load(wxConfigBase *p, <span class="keyword">const</span> wxString &amp;key = wxEmptyString);
+00886 };
+00887 
+00888 
+00889 
+00890 
+00891 
+00892 
+<a name="l00902"></a><a class="code" href="classwxKeyMonitorTextCtrl.html">00902</a> <span class="keyword">class </span><a class="code" href="classwxKeyMonitorTextCtrl.html">wxKeyMonitorTextCtrl</a> : <span class="keyword">public</span> wxTextCtrl
+00903 {
+00904 <span class="keyword">public</span>:
+<a name="l00905"></a><a class="code" href="classwxKeyMonitorTextCtrl.html#a0">00905</a>       <a class="code" href="classwxKeyMonitorTextCtrl.html">wxKeyMonitorTextCtrl</a>(
+00906             wxWindow* parent,
+00907             wxWindowID <span class="keywordtype">id</span>,
+00908             <span class="keyword">const</span> wxString&amp; value = <span class="stringliteral">""</span>,
+00909             <span class="keyword">const</span> wxPoint&amp; pos = wxDefaultPosition,
+00910             <span class="keyword">const</span> wxSize&amp; size = wxDefaultSize,
+00911             <span class="keywordtype">long</span> style = wxTE_PROCESS_ENTER,
+00912             <span class="keyword">const</span> wxValidator&amp; validator = wxDefaultValidator,
+00913             <span class="keyword">const</span> wxString&amp; name = wxTextCtrlNameStr) :
+00914             wxTextCtrl(parent, id, value, pos, size, style, validator, name) {}
+00915 
+<a name="l00916"></a><a class="code" href="classwxKeyMonitorTextCtrl.html#a1">00916</a>       <span class="keyword">virtual</span> ~<a class="code" href="classwxKeyMonitorTextCtrl.html">wxKeyMonitorTextCtrl</a>() {}
+00917 
+00918 <span class="keyword">public</span>:
+00919 
+00922       <span class="keywordtype">void</span> OnKey(wxKeyEvent &amp;);
+00923 
+<a name="l00925"></a><a class="code" href="classwxKeyMonitorTextCtrl.html#a3">00925</a>       <span class="keywordtype">bool</span> IsValidKeyComb()<span class="keyword"> const </span>{
+00926             <span class="keywordflow">return</span> !GetValue().IsEmpty() &amp;&amp; GetValue().Last() != <span class="charliteral">'+'</span>;
+00927       }
+00928 
+00929 <span class="keyword">private</span>:
+00930       DECLARE_CLASS(<a class="code" href="classwxKeyMonitorTextCtrl.html">wxKeyMonitorTextCtrl</a>)
+00931       DECLARE_EVENT_TABLE()
+00932 };
+00933 
+00934 
+00935 
+00936 
+00937 
+00938 
+00939 <span class="comment">// IDs used by wxKeyConfigPanel</span>
+<a name="l00940"></a><a class="code" href="keybinder_8h.html#a4">00940</a> #define wxKEYBINDER_BASEID                            30000       <span class="comment">// start from this value</span>
+00941 
+<a name="l00942"></a><a class="code" href="keybinder_8h.html#a5">00942</a> #define wxKEYBINDER_COMMANDS_BOX_ID             wxKEYBINDER_BASEID+1
+<a name="l00943"></a><a class="code" href="keybinder_8h.html#a6">00943</a> #define wxKEYBINDER_BINDINGS_BOX_ID             wxKEYBINDER_BASEID+2
+<a name="l00944"></a><a class="code" href="keybinder_8h.html#a7">00944</a> #define wxKEYBINDER_KEY_FIELD_ID                wxKEYBINDER_BASEID+3
+<a name="l00945"></a><a class="code" href="keybinder_8h.html#a8">00945</a> #define wxKEYBINDER_ASSIGN_KEY_ID               wxKEYBINDER_BASEID+4
+<a name="l00946"></a><a class="code" href="keybinder_8h.html#a9">00946</a> #define wxKEYBINDER_REMOVE_KEY_ID               wxKEYBINDER_BASEID+5
+<a name="l00947"></a><a class="code" href="keybinder_8h.html#a10">00947</a> #define wxKEYBINDER_REMOVEALL_KEY_ID        wxKEYBINDER_BASEID+6
+<a name="l00948"></a><a class="code" href="keybinder_8h.html#a11">00948</a> #define wxKEYBINDER_KEYPROFILES_ID              wxKEYBINDER_BASEID+7
+<a name="l00949"></a><a class="code" href="keybinder_8h.html#a12">00949</a> #define wxKEYBINDER_CATEGORIES_ID               wxKEYBINDER_BASEID+8
+<a name="l00950"></a><a class="code" href="keybinder_8h.html#a13">00950</a> #define wxKEYBINDER_ADD_PROFILEBTN_ID           wxKEYBINDER_BASEID+9
+<a name="l00951"></a><a class="code" href="keybinder_8h.html#a14">00951</a> #define wxKEYBINDER_REMOVE_PROFILEBTN_ID  wxKEYBINDER_BASEID+10
+00952 
+00953 
+00957 
+<a name="l00962"></a><a class="code" href="keybinder_8h.html#a15">00962</a> #define wxKEYBINDER_USE_TREECTRL                      2
+00963 
+<a name="l00968"></a><a class="code" href="keybinder_8h.html#a16">00968</a> #define wxKEYBINDER_USE_LISTBOX                             4
+00969 
+<a name="l00972"></a><a class="code" href="keybinder_8h.html#a17">00972</a> #define wxKEYBINDER_SHOW_APPLYBUTTON                  8
+00973 
+<a name="l00976"></a><a class="code" href="keybinder_8h.html#a18">00976</a> #define wxKEYBINDER_SHOW_ADDREMOVE_PROFILE            16
+00977 
+<a name="l00980"></a><a class="code" href="keybinder_8h.html#a19">00980</a> #define wxKEYBINDER_ENABLE_PROFILE_EDITING            32
+00981 
+<a name="l00983"></a><a class="code" href="keybinder_8h.html#a20">00983</a> #define wxKEYBINDER_DEFAULT_BUILDMODE                 wxKEYBINDER_SHOW_APPLYBUTTON |                  \
+00984                                                                         wxKEYBINDER_USE_TREECTRL |                      \
+00985                                                                         wxKEYBINDER_SHOW_ADDREMOVE_PROFILE |      \
+00986                                                                         wxKEYBINDER_ENABLE_PROFILE_EDITING
+00987 
+00989 
+00990 
+<a name="l01034"></a><a class="code" href="classwxKeyConfigPanel.html">01034</a> class <a class="code" href="classwxKeyConfigPanel.html">wxKeyConfigPanel</a> : public wxPanel
+01035 {
+01036 <span class="keyword">public</span>:
+01037 
+01039       <a class="code" href="classwxKeyConfigPanel.html">wxKeyConfigPanel</a>(wxWindow* parent,
+01040             <a class="code" href="classwxKeyProfile.html">wxKeyProfile</a> *pBinder,              <span class="comment">// the key binder to edit (can be NULL)</span>
+01041             <span class="keywordtype">int</span> buildMode = <a class="code" href="keybinder_8h.html#a20">wxKEYBINDER_DEFAULT_BUILDMODE</a>,
+01042             wxWindowID <span class="keywordtype">id</span> = -1, 
+01043             <span class="keyword">const</span> wxPoint&amp; pos = wxDefaultPosition,
+01044             <span class="keyword">const</span> wxSize&amp; size = wxDefaultSize, 
+01045             <span class="keywordtype">long</span> style = wxTAB_TRAVERSAL,
+01046             <span class="keyword">const</span> wxString&amp; name = <span class="stringliteral">"wxKeyConfigPanel"</span>);
+01047 
+<a name="l01048"></a><a class="code" href="classwxKeyConfigPanel.html#a1">01048</a>       <span class="keyword">virtual</span> ~<a class="code" href="classwxKeyConfigPanel.html">wxKeyConfigPanel</a>() {}
+01049 
+01050 
+01051 <span class="keyword">public</span>:           <span class="comment">// import commands</span>
+01052 
+01059       <span class="keyword">virtual</span> <span class="keywordtype">void</span> ImportMenuBarCmd(wxMenuBar *, 
+01060                                                 <span class="keyword">const</span> wxString &amp;rootname = <span class="stringliteral">"Menu bar"</span>);
+01061 
+01068       <span class="keyword">virtual</span> <span class="keywordtype">void</span> ImportKeyProfileCmd(<span class="keywordtype">int</span> n, <span class="keyword">const</span> wxString &amp;rootname = <span class="stringliteral">"Commands"</span>);
+01069 
+01070 
+01071 <span class="keyword">public</span>:           <span class="comment">// keyprofile utilities</span>
+01072 
+01080       <span class="keyword">virtual</span> <span class="keywordtype">void</span> AddProfile(<a class="code" href="classwxKeyProfile.html">wxKeyProfile</a> *p, <span class="keywordtype">bool</span> bImport = FALSE, 
+01081                                           <span class="keyword">const</span> wxString &amp;rootname = <span class="stringliteral">"Commands"</span>);
+01082                                           
+01084       <span class="keyword">virtual</span> <span class="keywordtype">void</span> AddProfiles(<a class="code" href="classwxKeyProfileArray.html">wxKeyProfileArray</a> &amp;arr);
+01085 
+<a name="l01088"></a><a class="code" href="classwxKeyConfigPanel.html#a6">01088</a>       <a class="code" href="classwxKeyProfile.html">wxKeyProfile</a> *GetProfile(<span class="keywordtype">int</span> n)<span class="keyword"> const</span>
+01089 <span class="keyword">            </span>{ wxASSERT(m_pKeyProfiles); <span class="keywordflow">return</span> (<a class="code" href="classwxKeyProfile.html">wxKeyProfile</a> *)m_pKeyProfiles-&gt;GetClientData(n); }
+01090 
+<a name="l01092"></a><a class="code" href="classwxKeyConfigPanel.html#a7">01092</a>       <a class="code" href="classwxKeyProfile.html">wxKeyProfile</a> *GetSelProfile()<span class="keyword"> const</span>
+01093 <span class="keyword">            </span>{ <span class="keywordtype">int</span> n=GetSelProfileIdx(); <span class="keywordflow">return</span> (n &gt;= 0 ? GetProfile(n) : NULL); }
+01094 
+<a name="l01102"></a><a class="code" href="classwxKeyConfigPanel.html#a8">01102</a>       <span class="keywordtype">int</span> GetSelProfileIdx()<span class="keyword"> const</span>
+01103 <span class="keyword">            </span>{ wxASSERT(m_pKeyProfiles); <span class="keywordflow">return</span> m_nCurrentProf; }
+01104             
+01107       <a class="code" href="classwxKeyProfileArray.html">wxKeyProfileArray</a> GetProfiles() <span class="keyword">const</span>;
+01108 
+01109 
+01110 <span class="keyword">public</span>:           <span class="comment">// miscellaneous</span>
+01111 
+01115       <span class="keyword">virtual</span> <span class="keywordtype">void</span> ApplyChanges();
+01116 
+01120       <span class="keywordtype">void</span> EnableKeyProfiles(<span class="keywordtype">bool</span> bEnable = TRUE);
+01121 
+<a name="l01124"></a><a class="code" href="classwxKeyConfigPanel.html#a12">01124</a>       <span class="keywordtype">void</span> DisableKeyProfiles()
+01125             { EnableKeyProfiles(FALSE); }
+01126 
+01127 
+01128 <span class="keyword">protected</span>:        <span class="comment">// event handlers</span>
+01129 
+01131       <span class="keywordtype">void</span> OnIdle(wxIdleEvent &amp;event);
+01132 
+01133       <span class="keywordtype">void</span> OnTreeCommandSelected(wxTreeEvent &amp;event);
+01134       <span class="keywordtype">void</span> OnListCommandSelected(wxCommandEvent &amp;event);
+01135       
+01136       <span class="keywordtype">void</span> OnBindingSelected(wxCommandEvent &amp;event);
+01137       <span class="keywordtype">void</span> OnProfileSelected(wxCommandEvent &amp;event);
+01138       <span class="keywordtype">void</span> OnCategorySelected(wxCommandEvent &amp;event);
+01139 
+01140       <span class="keywordtype">void</span> OnProfileEditing(wxCommandEvent &amp;event);   
+01141       <span class="keywordtype">void</span> OnApplyChanges(wxCommandEvent &amp;event);
+01142       <span class="keywordtype">void</span> OnAssignKey(wxCommandEvent &amp;event);
+01143       <span class="keywordtype">void</span> OnRemoveKey(wxCommandEvent &amp;event);
+01144       <span class="keywordtype">void</span> OnRemoveAllKey(wxCommandEvent &amp;event);     
+01145       <span class="keywordtype">void</span> OnAddProfile(wxCommandEvent &amp;event);
+01146       <span class="keywordtype">void</span> OnRemoveProfile(wxCommandEvent &amp;event);
+01147 
+01149       <span class="keywordtype">void</span> OnKeyPressed(wxCommandEvent &amp;event);
+01150 
+01151 
+01152 <span class="keyword">protected</span>:        <span class="comment">// build functions; these ones can be overridden to</span>
+01153                         <span class="comment">// customize wxKeyConfigPanel appearances</span>
+01154 
+01155       <span class="keyword">virtual</span> <span class="keywordtype">void</span> BuildCtrls();
+01156       <span class="keyword">virtual</span> wxSizer *BuildColumn1();
+01157       <span class="keyword">virtual</span> wxSizer *BuildColumn2();    
+01158       <span class="keyword">virtual</span> wxSizer *BuildMain(wxSizer *, wxSizer *, <span class="keywordtype">bool</span>);     
+01159 
+01160 
+01161 <span class="keyword">protected</span>:        <span class="comment">// utilities</span>
+01162 
+01163       <span class="keyword">virtual</span> <span class="keywordtype">void</span> UpdateButtons();
+01164       <span class="keyword">virtual</span> <span class="keywordtype">void</span> UpdateDesc();    
+01165       <span class="keyword">virtual</span> <span class="keywordtype">void</span> FillInBindings();
+01166       <span class="keyword">virtual</span> <span class="keywordtype">void</span> Reset();
+01167       <span class="keyword">virtual</span> <span class="keywordtype">void</span> AddRootIfMissing(<span class="keyword">const</span> wxString &amp;rootname);
+01168 
+01169 
+01171       wxTreeItemId GetSelCmdId() <span class="keyword">const</span>;
+01172       
+01174       wxControl *GetMainCtrl() <span class="keyword">const</span>;
+01175       
+<a name="l01178"></a><a class="code" href="classwxKeyConfigPanel.html#b25">01178</a>       <span class="keywordtype">bool</span> IsUsingTreeCtrl()<span class="keyword"> const</span>
+01179 <span class="keyword">            </span>{ <span class="keywordflow">return</span> (m_nBuildMode &amp; wxKEYBINDER_USE_TREECTRL) != 0; }
+01180             
+01182       <span class="keywordtype">bool</span> IsSelectedValidCmd() <span class="keyword">const</span>;
+01183 
+01185       wxString GetSelCmdStr() <span class="keyword">const</span>;
+01186 
+01188       <a class="code" href="classwxCmd.html">wxCmd</a> *GetSelCmd() <span class="keyword">const</span>;
+01189 
+01192       <span class="keyword">virtual</span> <span class="keywordtype">void</span> ShowSizer(wxSizer *toshow, <span class="keywordtype">bool</span> show);
+01193 
+01194 
+01195 <span class="keyword">protected</span>:        <span class="comment">// members</span>
+01196 
+<a name="l01198"></a><a class="code" href="classwxKeyConfigPanel.html#p0">01198</a>       <span class="keywordtype">int</span> m_nBuildMode;
+01199 
+<a name="l01202"></a><a class="code" href="classwxKeyConfigPanel.html#p1">01202</a>       <span class="keywordtype">bool</span> m_bEnableKeyProfiles;
+01203 
+<a name="l01205"></a><a class="code" href="classwxKeyConfigPanel.html#p2">01205</a>       <a class="code" href="classwxCmd.html">wxCmd</a> *m_pCurrCmd;
+01206 
+<a name="l01209"></a><a class="code" href="classwxKeyConfigPanel.html#p3">01209</a>       <a class="code" href="classwxKeyBinder.html">wxKeyBinder</a> m_kBinder;
+01210       
+<a name="l01212"></a><a class="code" href="classwxKeyConfigPanel.html#p4">01212</a>       <span class="keywordtype">int</span> m_nCurrentProf;
+01213 
+01214 <span class="keyword">protected</span>:        <span class="comment">// the subwindows of this dialog</span>
+01215 
+<a name="l01217"></a><a class="code" href="classwxKeyConfigPanel.html#p5">01217</a>       <a class="code" href="classwxKeyMonitorTextCtrl.html">wxKeyMonitorTextCtrl</a> *m_pKeyField;
+01218 
+<a name="l01219"></a><a class="code" href="classwxKeyConfigPanel.html#p6">01219</a>       wxButton *m_pAssignBtn;
+<a name="l01220"></a><a class="code" href="classwxKeyConfigPanel.html#p7">01220</a>       wxButton *m_pRemoveBtn;
+<a name="l01221"></a><a class="code" href="classwxKeyConfigPanel.html#p8">01221</a>       wxButton *m_pRemoveAllBtn;
+01222 
+01223       <span class="comment">// used when wxKEYBINDER_USE_TREECTRL is in the build flags</span>
+<a name="l01224"></a><a class="code" href="classwxKeyConfigPanel.html#p9">01224</a>       wxTreeCtrl *m_pCommandsTree;
+01225 
+01226       <span class="comment">// used when wxKEYBINDER_USE_LISTBOX is in the build flags</span>
+<a name="l01227"></a><a class="code" href="classwxKeyConfigPanel.html#p10">01227</a>       wxComboBox *m_pCategories;
+<a name="l01228"></a><a class="code" href="classwxKeyConfigPanel.html#p11">01228</a>       wxListBox *m_pCommandsList;
+01229 
+<a name="l01230"></a><a class="code" href="classwxKeyConfigPanel.html#p12">01230</a>       wxListBox *m_pBindings;
+<a name="l01231"></a><a class="code" href="classwxKeyConfigPanel.html#p13">01231</a>       wxComboBox *m_pKeyProfiles;
+<a name="l01232"></a><a class="code" href="classwxKeyConfigPanel.html#p14">01232</a>       wxSizer *m_pKeyProfilesSizer;
+01233 
+01234       <span class="comment">//wxTextCtrl  *m_pDescLabel;  // we won't allow description editing !!</span>
+<a name="l01235"></a><a class="code" href="classwxKeyConfigPanel.html#p15">01235</a>       wxStaticText *m_pDescLabel;
+<a name="l01236"></a><a class="code" href="classwxKeyConfigPanel.html#p16">01236</a>       wxStaticText *m_pCurrCmdField;
+01237 
+01238 <span class="keyword">private</span>:
+01239       DECLARE_CLASS(<a class="code" href="classwxKeyConfigPanel.html">wxKeyConfigPanel</a>)
+01240       DECLARE_EVENT_TABLE()
+01241 };
+01242 
+01243 
+01244 
+01245 #endif <span class="comment">// __KEYBINDER_G__</span>
+01246 
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Thu Dec 30 19:49:32 2004 for Keybinder by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.3.9.1 </small></address>
 </body>

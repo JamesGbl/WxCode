@@ -70,7 +70,7 @@ void wxMenuCmd::Update()
 #ifdef __WXGTK__
 	// on GTK, an optimization in wxMenu::SetText checks
 	// if the new label is identic to the old and in this
-	// case, it returns without doing nothing...
+	// case, it returns without doing nothing... :-(
 	// to solve the problem, a space is added or removed 
 	// from the label.
 	str.Trim();
@@ -90,8 +90,6 @@ void wxMenuCmd::Update()
 
 		// change the accelerator...
 	   m_pItem->SetText(str+"\t"+GetShortcut(0)->GetStr());
-	   //wxAcceleratorEntry acc = GetAccelerator(0);
-	   //m_pItem->SetAccel(&acc);
 
 #elif __WXGTK__
 
@@ -103,6 +101,7 @@ void wxMenuCmd::Update()
 void wxMenuCmd::Exec(wxObject *origin, wxEvtHandler *client)
 {
 	wxCommandEvent menuEvent(wxEVT_COMMAND_MENU_SELECTED, GetId()); 
+	wxASSERT_MSG(client, "An empty client handler ?!?");
 
 	// set up the event and process it...
 	menuEvent.SetEventObject(origin);
@@ -131,14 +130,14 @@ wxCmd *wxMenuCmd::CreateNew(int id)
 void wxMenuWalker::WalkMenuItem(wxMenuBar *p, wxMenuItem *m, void *data)
 {
 	wxLogDebug("wxMenuWalker::WalkMenuItem - walking on [%s] at level [%d]", 
-				m->GetLabel(), m_nLevel);
+				m->GetLabel().c_str(), m_nLevel);
 	void *tmp = OnMenuItemWalk(p, m, data);
 
 	if (m->GetSubMenu()) {
 
 		// if this item contains a sub menu, add recursively the menu items
 		// of that sub menu... using the cookie from OnMenuItemWalk.
-		wxLogDebug("wxMenuWalker::WalkMenuItem - recursing on [%s]", m->GetLabel());
+		wxLogDebug("wxMenuWalker::WalkMenuItem - recursing on [%s]", m->GetLabel().c_str());
 		m_nLevel++;
 		WalkMenu(p, m->GetSubMenu(), tmp);
 		OnMenuExit(p, m->GetSubMenu(), tmp);
@@ -152,7 +151,7 @@ void wxMenuWalker::WalkMenuItem(wxMenuBar *p, wxMenuItem *m, void *data)
 void wxMenuWalker::WalkMenu(wxMenuBar *p, wxMenu *m, void *data)
 {
 	wxLogDebug("wxMenuWalker::WalkMenu - walking on [%s] at level [%d]", 
-				m->GetTitle(), m_nLevel);
+				m->GetTitle().c_str(), m_nLevel);
 	for (int i=0; i < (int)m->GetMenuItemCount(); i++) {
 
 		wxMenuItem *pitem = m->GetMenuItems().Item(i)->GetData();
@@ -185,7 +184,7 @@ void wxMenuWalker::Walk(wxMenuBar *p, void *data)
 
 		m_nLevel++;
 		wxLogDebug("wxMenuWalker::Walk - walking on [%s] at level [%d]", 
-					p->GetLabelTop(i), m_nLevel);
+					p->GetLabelTop(i).c_str(), m_nLevel);
 		void *tmp = OnMenuWalk(p, m, data);
 
 		// and fill it...
@@ -297,13 +296,14 @@ void wxMenuComboListWalker::FillComboListCtrl(wxMenuBar *p, wxComboBox *combo)
 
 void *wxMenuComboListWalker::OnMenuWalk(wxMenuBar *p, wxMenu *m, void *)
 {
-	wxLogDebug("wxMenuWalker::OnMenuWalk - walking on [%s]", m->GetTitle());
+	wxLogDebug("wxMenuWalker::OnMenuWalk - walking on [%s]", m->GetTitle().c_str());
 	wxString toadd;
 
 	// find the index of the given menu
 	if (m_strAcc.IsEmpty()) {
 
-		for (int i=0; i < (int)p->GetMenuCount(); i++)
+		int i;
+		for (i=0; i < (int)p->GetMenuCount(); i++)
 			if (p->GetMenu(i) == m)
 				break;
 		wxASSERT(i != (int)p->GetMenuCount());
@@ -328,14 +328,14 @@ void *wxMenuComboListWalker::OnMenuWalk(wxMenuBar *p, wxMenu *m, void *)
 	wxClientData *cd = new wxExComboItemData();	
 
 	// and create a new element in our combbox
-	wxLogDebug("wxMenuWalker::OnMenuWalk - appending [%s]", toadd);
+	wxLogDebug("wxMenuWalker::OnMenuWalk - appending [%s]", toadd.c_str());
 	m_pCategories->Append(toadd, cd);
 	return cd;
 }
 
 void *wxMenuComboListWalker::OnMenuItemWalk(wxMenuBar *, wxMenuItem *m, void *data)
 {
-	wxLogDebug("wxMenuWalker::OnMenuItemWalk - walking on [%s]", m->GetLabel());
+	wxLogDebug("wxMenuWalker::OnMenuItemWalk - walking on [%s]", m->GetLabel().c_str());
 	//int last = m_pCategories->GetCount()-1;
 	wxExComboItemData *p = (wxExComboItemData *)data;//m_pCategories->GetClientObject(last);
 
@@ -351,7 +351,7 @@ void *wxMenuComboListWalker::OnMenuItemWalk(wxMenuBar *, wxMenuItem *m, void *da
 
 void wxMenuComboListWalker::OnMenuExit(wxMenuBar *, wxMenu *m, void *)
 {
-	wxLogDebug("wxMenuWalker::OnMenuExit - walking on [%s]", m->GetTitle());
+	wxLogDebug("wxMenuWalker::OnMenuExit - walking on [%s]", m->GetTitle().c_str());
 
 	if (!m_strAcc.IsEmpty()){// && m_strAcc.Right() == str) {
 
