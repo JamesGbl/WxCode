@@ -76,6 +76,7 @@ bool wxXml2Property::operator==(const wxXml2Property &p)
 {
 	CHECK_NULL_POINTERS(p.GetObj(), GetObj());
 
+	// the same name and same value are required
 	if (GetName().CmpNoCase(p.GetName()) == 0 &&
 		GetValue() == p.GetValue())
 		return TRUE;
@@ -181,16 +182,16 @@ bool wxXml2Namespace::operator==(const wxXml2Namespace &ns)
 void wxXml2Namespace::Create(const wxString &prefix,
 						   const wxString &uri,
 						   wxXml2Node &owner) {
-	// if this namespace was already build, first destroy it
+	// if this namespace was already built, first destroy it
 	Destroy();
 
 	// create the property; if the owner is an empty node, the property
 	// will be created unlinked from the main tree.
-	wxASSERT_MSG(owner != wxXml2EmptyNode, "If I create an unlinked namespace, its "
-							"memory will never be freed...");
+	wxASSERT_MSG(owner != wxXml2EmptyNode, 
+              "If I create an unlinked namespace, its "
+			  "memory will never be freed...");
 	m_ns = xmlNewNs(owner.GetObj(), WX2XML(uri), WX2XML(prefix));
 	m_owner = &owner;
-
 
 	// just to avoid to be forced to copy-and-paste the checks done in
 	// wxXml2Namespace::SetPrefix, make a dummy call to that function
@@ -469,6 +470,9 @@ void wxXml2Node::AddPrevious(wxXml2Node node)
 	xmlAddPrevSibling(GetObj(), node.GetObj());
 }
 
+
+
+
 //-----------------------------------------------------------------------------
 //  wxXml2Node - set functions
 //-----------------------------------------------------------------------------
@@ -487,12 +491,7 @@ void wxXml2Node::SetChildren(const wxXml2Node &)
 
 }
 
-bool wxXml2Node::operator==(const wxXml2Node &node)
-{
-	return Cmp(node);
-}
-
-bool wxXml2Node::Cmp(const wxXml2Node &node)
+bool wxXml2Node::Cmp(const wxXml2Node &node) const
 {
 	// check contained data
 	if (CmpNoNs(node)) {
@@ -500,8 +499,9 @@ bool wxXml2Node::Cmp(const wxXml2Node &node)
 
 		// also check namespace
 		if (GetNamespace() == node.GetNamespace()) {
-			// everything was identic (but we didn't check parents & children
-			// nor properties)
+		
+			// everything was identic (but we didn't check on purpose
+			//  parents & children nor properties)
 			return TRUE;
 		}
 	}
@@ -509,7 +509,7 @@ bool wxXml2Node::Cmp(const wxXml2Node &node)
 	return FALSE;
 }
 
-bool wxXml2Node::CmpNoNs(const wxXml2Node &node)
+bool wxXml2Node::CmpNoNs(const wxXml2Node &node) const
 {
 	CHECK_NULL_POINTERS(node.GetObj(), GetObj());
 
@@ -531,8 +531,9 @@ bool wxXml2Node::HasProp(const wxString &propName) const
     wxXml2Property prop = GetProperties();
 
     while (prop != wxXml2EmptyProperty) {
-	if (prop.GetName() == propName) return TRUE;
-	prop = prop.GetNext();
+    	if (prop.GetName() == propName) 
+    	     return TRUE;
+    	prop = prop.GetNext();
     }
 
     return FALSE;
@@ -605,14 +606,14 @@ void wxXml2Node::MakeLower()
 	}
 }
 
-wxXml2Node wxXml2Node::Find(const wxString &name, const wxString &content, int occ, bool bNS)
+wxXml2Node wxXml2Node::Find(const wxString &name, const wxString &content, int occ, bool bNS) const
 {
-	wxXml2Node tmp;
+	wxXml2Node tmp;    // this will be automatically removed
 	tmp.CreateTemp(wxXML_ELEMENT_NODE, GetDoc(), name, content);
 	return Find(tmp, occ, bNS);
 }
 
-wxXml2Node wxXml2Node::Find(wxXml2Node &tofind, int occ, bool bNS)
+wxXml2Node wxXml2Node::Find(const wxXml2Node &tofind, int occ, bool bNS) const
 {
 	// check pointer is okay
 	wxASSERT_MSG(tofind != NULL, "Invalid pointer");
@@ -664,6 +665,22 @@ void wxXml2Node::Encapsulate(const wxString &nodename)
 	this->AddChild(copy);
 }
 
+wxXml2Node &wxXml2Node::operator=(const wxXml2Node &n)
+{ 
+    // these two nodes point to the same data ?
+    if (this->Node() == n.Node()) 
+        return (*this);        // in this case don't ref() !!!
+        
+    // just increment the reference count of the given node
+    Ref(n); 
+    return *this; 
+}
+
+bool wxXml2Node::operator==(const wxXml2Node &node)
+{
+    // just use the case-sensitive comparison function
+	return Cmp(node);
+}
 
 
 
