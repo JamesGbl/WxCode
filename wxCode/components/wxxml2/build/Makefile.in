@@ -57,7 +57,6 @@ COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd = $(NM) minimal$(EXEEXT) | if \
 	grep -q pmwin.763 ; then emxbind -ep minimal$(EXEEXT) ; fi
 @COND_PLATFORM_OS2_1@__minimal___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd)
 
-
 ### Targets: ###
 
 all: ../lib/$(LIBPREFIX)wxxml2$(WXLIBPOSTFIX)$(LIBEXT) ../sample/minimal$(EXEEXT)
@@ -117,7 +116,7 @@ install-lib:
 	$(RANLIB) $@
 
 ../sample/minimal$(EXEEXT): $(MINIMAL_OBJECTS) ../lib/$(LIBPREFIX)wxxml2$(WXLIBPOSTFIX)$(LIBEXT)
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS)  $(LDFLAGS_GUI) -L../lib -L$(LIBXML2_DIR)/lib -L$(ICONV_DIR)/lib `wx-config --libs`  ../lib/$(LIBPREFIX)wxxml2$(WXLIBPOSTFIX)$(LIBEXT) -lxml2 -liconv
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS)  -L../lib $(LDFLAGS_GUI) -L$(LIBXML2_DIR)/lib -L$(ICONV_DIR)/lib `wx-config --libs`  ../lib/$(LIBPREFIX)wxxml2$(WXLIBPOSTFIX)$(LIBEXT) -lxml2 -liconv
 	
 	$(__minimal___mac_setfilecmd)
 	$(__minimal___os2_emxbindcmd)

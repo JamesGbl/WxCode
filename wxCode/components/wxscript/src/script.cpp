@@ -256,11 +256,11 @@ wxScriptFile *wxScriptInterpreter::Load(const wxString &file, wxScriptFileType t
 	} else if (type == wxRECOGNIZE_FROM_COMMENT) {
 
 		// we have to read the first chunk of the file...
-		wxFile file(file, wxFile::read);
+		wxFile scriptfile(file, wxFile::read);
 		int chunksize = 256;
 
-		if (file.Length() < chunksize)
-			chunksize = file.Length();
+		if (scriptfile.Length() < chunksize)
+			chunksize = scriptfile.Length();
 		if (chunksize < 2) {
 			wxScriptInterpreter::m_strLastErr = wxT("The file is too short.\n");
 			return FALSE;
@@ -268,7 +268,7 @@ wxScriptFile *wxScriptInterpreter::Load(const wxString &file, wxScriptFileType t
 
 		// read an arbitrary long (256 should be enough) piece of file 
 		char *buf = new char[chunksize+10];
-		if ((int)file.Read(buf, chunksize) != chunksize) {
+		if ((int)scriptfile.Read(buf, chunksize) != chunksize) {
 			wxScriptInterpreter::m_strLastErr = wxT("Couldn't read the file.\n");
 			return FALSE;
 		}
@@ -281,12 +281,12 @@ wxScriptFile *wxScriptInterpreter::Load(const wxString &file, wxScriptFileType t
 		tmp.Trim(FALSE);
 
 		// -- is used for lua comments...
-		if (tmp[0] == wxT('-') && tmp[1] == wxT('-'))
+		if (tmp.GetChar(0) == wxT('-') && tmp.GetChar(1) == wxT('-'))
 			t = wxLUA_SCRIPTFILE;
-		else if (tmp[0] == wxT('#'))		// # is used by python
+		else if (tmp.GetChar(0) == wxT('#'))		// # is used by python
 			t = wxPYTHON_SCRIPTFILE;
-		else if ((tmp[0] == wxT('/') && tmp[1] == wxT('/')) ||
-					(tmp[0] == wxT('/') && tmp[1] == wxT('*')))
+		else if ((tmp.GetChar(0) == wxT('/') && tmp.GetChar(1) == wxT('/')) ||
+					(tmp.GetChar(0) == wxT('/') && tmp.GetChar(1) == wxT('*')))
 			t = wxCINT_SCRIPTFILE;
 	}
 

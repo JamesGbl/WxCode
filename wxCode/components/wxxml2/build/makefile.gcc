@@ -28,9 +28,6 @@ LIBXML2_DIR = c:\libxml2
 # The iconv library main folder 
 ICONV_DIR = c:\iconv
 
-# What type of library to build? [0,1]
-SHARED = 0
-
 # Compile Unicode build of wxWindows? [0,1]
 UNICODE = 0
 
@@ -48,19 +45,19 @@ WXWIN = c:\wxWidgets
 
 ### Variables: ###
 
-WXXML2_CXXFLAGS = -DHAVE_W32API_H $(__DEBUG_DEFINE_p) -D__WXMSW__ \
-	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -I$(WXWIN)\include \
+WXXML2_CXXFLAGS = -DHAVE_W32API_H $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
+	$(__DEBUGINFO) -I$(WXWIN)\include \
 	-I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) -I..\include \
-	-I$(LIBXML2_DIR)\include -I$(ICONV_DIR)\include $(__STATIC_DEF_p) -Wall \
-	$(CPPFLAGS) $(CXXFLAGS)
+	-I$(LIBXML2_DIR)\include -I$(ICONV_DIR)\include -Wall $(CPPFLAGS) \
+	$(CXXFLAGS)
 WXXML2_OBJECTS =  \
 	mingw\wxxml2_xml2.o \
 	mingw\wxxml2_dtd.o
-MINIMAL_CXXFLAGS = -DHAVE_W32API_H $(__DEBUG_DEFINE_p) -D__WXMSW__ \
-	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -I..\include \
-	-I$(WXWIN)\include -I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) \
-	-I$(LIBXML2_DIR)\include -I$(ICONV_DIR)\include $(__STATIC_DEF_p) -Wall \
-	$(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_CXXFLAGS = -DHAVE_W32API_H $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
+	$(__DEBUGINFO) -I..\include -I$(WXWIN)\include \
+	-I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) -I$(LIBXML2_DIR)\include \
+	-I$(ICONV_DIR)\include $(__DEBUG_DEFINE_p) -D__WXMSW__ -Wall $(CPPFLAGS) \
+	$(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	mingw\minimal_minimal.o
 
@@ -98,9 +95,6 @@ ifeq ($(UNICODE),1)
 WXLIBPOSTFIX = u
 endif
 endif
-ifeq ($(SHARED),0)
-__STATIC_DEF_p = -DLIBXML_STATIC
-endif
 ifeq ($(BUILD),debug)
 __DEBUGINFO = -g
 endif
@@ -109,11 +103,9 @@ __DEBUGINFO =
 endif
 
 
-
 all: mingw
 mingw:
 	-if not exist mingw mkdir mingw
-
 
 ### Targets: ###
 
@@ -154,7 +146,7 @@ cleandocs:
 	ranlib $@
 
 ..\sample\minimal.exe: $(MINIMAL_OBJECTS) ..\lib\libwxxml2$(WXLIBPOSTFIX).a
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -Wl,--subsystem,windows -mwindows -L..\lib -L$(WXWIN)\lib\gcc_lib -L$(LIBXML2_DIR)\lib -L$(ICONV_DIR)\lib  ..\lib\libwxxml2$(WXLIBPOSTFIX).a -lxml2 -liconv -lwxmsw25$(WXLIBPOSTFIX)_core -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXSUBLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -L..\lib -L$(WXWIN)\lib\gcc_lib -Wl,--subsystem,windows -mwindows -L$(LIBXML2_DIR)\lib -L$(ICONV_DIR)\lib  ..\lib\libwxxml2$(WXLIBPOSTFIX).a -lxml2 -liconv -lwxmsw25$(WXLIBPOSTFIX)_core -lwxmsw25$(WXLIBPOSTFIX)_html -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
 mingw\wxxml2_xml2.o: ./../src/xml2.cpp
 	$(CXX) -c -o $@ $(WXXML2_CXXFLAGS) $<

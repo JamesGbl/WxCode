@@ -33,7 +33,7 @@
 	<!-- Be sure to include this line in your projects which use the
 	libxml2 library: otherwise you'll get "undefined references to __xmlFree"
 	when compiling wxxml2 with MINGW compiler -->
-	<set var="STATIC_DEF"><if cond="SHARED=='0' and FORMAT=='mingw'">LIBXML_STATIC</if></set>
+<!--	<set var="STATIC_DEF"><if cond="SHARED=='0' and FORMAT=='mingw'">LIBXML_STATIC</if></set>  -->
 
 
 	<!-- The real target: not declared in wxcode_end.bkl because
@@ -41,7 +41,7 @@
 	<lib id="wxxml2" template="complib">
 		<stdlib>$(LIBXML2_DIR)</stdlib>
 		<stdlib>$(ICONV_DIR)</stdlib>
-		<define>$(STATIC_DEF)</define>
+	<!--	<define>$(STATIC_DEF)</define>  -->
 		<libname>$(COMP_NAME)$(WXLIBPOSTFIX)</libname>
 	</lib>
 	
@@ -49,7 +49,7 @@
 	<exe id="minimal" template="compsample">
 		<stdlib>$(LIBXML2_DIR)</stdlib>
 		<stdlib>$(ICONV_DIR)</stdlib>
-		<define>$(STATIC_DEF)</define>
+	<!--		<define>$(STATIC_DEF)</define>  -->
 
 		<library>wxxml2</library>
 		<if cond="FORMAT=='mingw' or FORMAT=='autoconf'"><sys-lib>xml2</sys-lib></if>

@@ -76,21 +76,8 @@
   How can I compile wxScript and its samples ?
  ----------------------------------------------
 
-  If you want to use wxScript system in your program, you must compile it with all the
-  CPP files placed in the main folder of this package (that is, the folder containing
-  this ReadMe file). To compile, the class needs to be able to find its header files
-  in a "wx" folder placed in a standard include path: wxScript files uses the
-  following convention
-   
-      #include <wx/script.h>     
-
-  thus, you have to move the header files in your wxWidgets' include folder.
-
-  Note: all the CPP and H files of this package, begins with the "sc" prefix to 
-       avoid conflicts with the CINT, UnderC and Lua libraries.
-
-  
-  If you want to compile the samples, you can use MSVC++ or you can use the makefiles
-  placed in the main package directory.
+  If you want to use wxScript system in your program, you can compile it together with all the
+  CPP files placed in the main folder of this package, or you can compile wxscript as a small
+  library, using the makefiles of the BUILD folder, and then link your program against it.
 
  

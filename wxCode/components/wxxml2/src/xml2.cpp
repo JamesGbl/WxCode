@@ -941,7 +941,7 @@ bool wxXml2Document::Load(wxInputStream &stream, wxString *pErr)
 {
 	long l = stream.GetSize();
 	if (l <= 0) {
-		if (pErr) *pErr = "Invalid size";
+		if (pErr) *pErr = wxT("Invalid size");
 		return FALSE;
 	}
 		

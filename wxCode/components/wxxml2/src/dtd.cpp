@@ -372,7 +372,7 @@ static int XMLDTDRead(void *ctx, char *buffer, int len)
 bool wxXml2DTD::Load(wxInputStream &stream, wxString *pErr)
 {
 	if (stream.GetSize() <= 0) {
-		if (pErr) *pErr = "Invalid size";
+		if (pErr) *pErr = wxT("Invalid size");
 		return FALSE;
 	}
 

@@ -72,17 +72,18 @@ WXWIN = c:\wxWidgets
 
 ### Variables: ###
 
-WXXML2_CXXFLAGS = -I$(BCCDIR)\include $(__DEBUG_DEFINE_p) -D__WXMSW__ \
-	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -I$(WXWIN)\include \
+WXXML2_CXXFLAGS = -I$(BCCDIR)\include $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
+	$(__DEBUGINFO) -I$(WXWIN)\include \
 	-I$(WXWIN)\lib\bcc_lib\msw$(WXLIBPOSTFIX) -I..\include \
 	-I$(LIBXML2_DIR)\include -I$(ICONV_DIR)\include $(CPPFLAGS) $(CXXFLAGS)
 WXXML2_OBJECTS =  \
 	borland\wxxml2_xml2.obj \
 	borland\wxxml2_dtd.obj
-MINIMAL_CXXFLAGS = -I$(BCCDIR)\include $(__DEBUG_DEFINE_p) -D__WXMSW__ \
-	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -I..\include \
-	-I$(WXWIN)\include -I$(WXWIN)\lib\bcc_lib\msw$(WXLIBPOSTFIX) \
-	-I$(LIBXML2_DIR)\include -I$(ICONV_DIR)\include $(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_CXXFLAGS = -I$(BCCDIR)\include $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
+	$(__DEBUGINFO) -I..\include -I$(WXWIN)\include \
+	-I$(WXWIN)\lib\bcc_lib\msw$(WXLIBPOSTFIX) -I$(LIBXML2_DIR)\include \
+	-I$(ICONV_DIR)\include $(__DEBUG_DEFINE_p) -D__WXMSW__ $(CPPFLAGS) \
+	$(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	borland\minimal_minimal.obj
 
@@ -118,7 +119,6 @@ __DEBUGINFO = -v
 !if "$(BUILD)" == "release"
 __DEBUGINFO = -v-
 !endif
-
 
 
 all: borland
@@ -171,8 +171,8 @@ cleandocs:
 |
 
 ..\sample\minimal.exe: $(MINIMAL_OBJECTS) ..\lib\wxxml2$(WXLIBPOSTFIX).lib
-	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -aa -L..\lib -L$(WXWIN)\lib\bcc_lib -L$(LIBXML2_DIR)\lib -L$(ICONV_DIR)\lib @&&|
-	c0w32.obj $(MINIMAL_OBJECTS),$@,, ..\lib\wxxml2$(WXLIBPOSTFIX).lib libxml2.lib iconv.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32.lib,,
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L..\lib -L$(WXWIN)\lib\bcc_lib -aa -L$(LIBXML2_DIR)\lib -L$(ICONV_DIR)\lib @&&|
+	c0w32.obj $(MINIMAL_OBJECTS),$@,, ..\lib\wxxml2$(WXLIBPOSTFIX).lib libxml2.lib iconv.lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxmsw25$(WXLIBPOSTFIX)_html.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32.lib,,
 |
 
 borland\wxxml2_xml2.obj: .\..\src\xml2.cpp

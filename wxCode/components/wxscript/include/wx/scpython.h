@@ -19,6 +19,10 @@
 #include "wx/script.h"		// base classes
 
 // Python includes
+#ifdef HAVE_WCHAR_H
+#undef HAVE_WCHAR_H		// Python.h will redefine this when we are in Unicode mode
+#endif
+
 #include <Python.h>
 
 

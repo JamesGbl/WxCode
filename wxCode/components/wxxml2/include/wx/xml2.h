@@ -24,6 +24,12 @@
 #include "wx/wfstream.h"
 
 
+// When using mingw, we must define the LIBXML_STATIC symbol, otherwise
+// we will have problems when linking about the "xmlFree" function.
+#if defined(__GNUG__) && defined(__WXMSW__)
+	#define LIBXML_STATIC
+#endif
+
 // Libxml2 headers: these classes wraps only libxml2 elements. You cannot
 // use them without libxml2 !!!!!
 //

@@ -200,7 +200,7 @@ IMPLEMENT_APP(MyApp)
 // the application class
 // ----------------------------------------------------------------------------
 
-// 'Main program' equivalent: the program execution "starts" here
+// wxT('Main program') equivalent: the program execution "starts" here
 bool MyApp::OnInit()
 {
     // create the main application window
@@ -347,8 +347,8 @@ void ParseNode(const wxXml2Node &node, wxString &str, int n)
 		node.GetType() == wxXML_CDATA_SECTION_NODE) {
 
 		wxString content = node.GetContent();
-		if (content.Last() == '\n') content.RemoveLast();
-		if (content.GetChar(0) == '\n') content.Remove(0, 1);
+		if (content.Last() == wxT('\n')) content.RemoveLast();
+		if (content.GetChar(0) == wxT('\n')) content.Remove(0, 1);
 
 		// a little exception: libxml2 when loading a document creates a
 		// lot of text nodes containing just a simple \n;
@@ -528,7 +528,7 @@ void MyFrame::OnSaveSimple(wxCommandEvent& WXUNUSED(event))
 	html.CreateRoot(doc, wxT("html"));
 
 	// set HTML header:
-	//    <html lang=wxT("en")>
+	//    <html lang="en">
 	//
 	html.AddProperty(wxT("lang"), wxT("en"));
 
@@ -622,13 +622,13 @@ void MyFrame::OnSaveAdv(wxCommandEvent &)
 	// create some simple nodes just to highlight the indentation feature used below...
 	root.AddContainerChild(wxT("mydata"));
 	root.Get(wxT("mydata")).AddContainerChild(wxT("mysubdata"));
-	root.Get(wxT("mydata")).Get(wxT("mysubdata")).AddTextChild("subdata1", "mytext");
-	root.Get(wxT("mydata")).Get(wxT("mysubdata")).AddTextChild("subdata2", "mytext");
+	root.Get(wxT("mydata")).Get(wxT("mysubdata")).AddTextChild(wxT("subdata1"), wxT("mytext"));
+	root.Get(wxT("mydata")).Get(wxT("mysubdata")).AddTextChild(wxT("subdata2"), wxT("mytext"));
 
 	// let's test the Encapsulate function
 	root.Get(wxT("mydata")).AddContainerChild(wxT("mysubdata3"));
 	root.Get(wxT("mydata")).Get(wxT("mysubdata3")).Encapsulate(wxT("mysubdata2"));
-	root.Get(wxT("mydata")).Get(wxT("mysubdata2")).Get(wxT("mysubdata3")).AddTextChild("subdata2", "mytext");
+	root.Get(wxT("mydata")).Get(wxT("mysubdata2")).Get(wxT("mysubdata3")).AddTextChild(wxT("subdata2"), wxT("mytext"));
 
 	// now, save the file where the user choose
 	if (doc.Save(fd.GetPath(), wxT("utf8"), 
@@ -681,12 +681,12 @@ void MyFrame::OnSaveDTD(wxCommandEvent &)
 	wxXml2Enumeration values(wxT("text|link"));
 	doc.AddAttrDecl(wxT("mydata"), wxT("type"), wxXml2EmptyNamespace,
 					wxXML_ATTRIBUTE_ENUMERATION, wxXML_ATTRIBUTE_REQUIRED,
-					"default", values);
+					wxT("default"), values);
 
 	wxXml2Enumeration values2(values);
 	doc.AddAttrDecl(wxT("mydata"), wxT("data"), wxXml2EmptyNamespace,
 					wxXML_ATTRIBUTE_ENUMERATION, wxXML_ATTRIBUTE_REQUIRED,
-					"default", values2);
+					wxT("default"), values2);
 	
 	doc.AddEntityDecl(wxT("myentity"), wxXML_INTERNAL_GENERAL_ENTITY, 
 						wxT(""), wxT(""), wxT("mycontent"));
