@@ -1,0 +1,13 @@
+Maintainer: Francesco Montorsi (frm)
+Component:  wxxml2
+Subdir:     wxxml2
+Parts:      DS
+More infos: 
+wxWidgets:  2.4.x,2.5.x
+ 
+Description:
+A simple set of classes (wxXml2Namespace, wxXml2NodeProperty, wxXml2Node and
+wxXml2Document) that interface wxWidgets and libxml2.
+ 
+With this component you can add load/save/edit XML support to your wxWidgets application
+using all the power of a well-known library like libxml2.

@@ -7,3 +7,9 @@ wxWidgets:  2.4.x,2.5.x
 Description:
 A set of abstract classes to add a script-interpreter to your wxWidgets
 applications/libraries.
+
+The implementation of these interfaces for the Lua, UnderC and CINT interpreters are given.
+The advantage of a single base interface allows the programmer who wants to use this
+component to learn how to use a single set of powerful classes: wxLua, wxUnderC and wxCINT
+all exposes the same functions adding to the program Lua & C++ script-interpreting
+capabilities.
