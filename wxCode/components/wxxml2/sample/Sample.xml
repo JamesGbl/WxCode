@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<myrootnode>
+
+	<myclient1>
+		<name>Bill Gates</name>
+		<phone>123456789</phone>
+		<mydata type="text">Micro$oft</mydata>
+	</myclient1>
+	
+	<myclient2 stupidity="max">
+		<name>Mr. X</name>
+		<phone>123456789</phone>
+		<mydata type="link">http://www.stupid.com</mydata>
+	</myclient1>
+
+</myrootnode>

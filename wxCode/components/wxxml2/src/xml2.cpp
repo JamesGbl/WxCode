@@ -9,7 +9,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef __GNUG__
-#pragma implementation "xml.cpp"
+#pragma implementation "xml2.cpp"
 #endif
 
 // For compilers that support precompilation, includes "wx.h".

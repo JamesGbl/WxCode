@@ -14,7 +14,7 @@
 
 // optimization for GCC
 #if defined(__GNUG__) && !defined(__APPLE__)
-#pragma interface "xml.h"
+#pragma interface "xml2.h"
 #endif
 
 // wxWidgets headers
@@ -149,7 +149,7 @@ public:
 	}
 
 	// destructor
-	~wxXml2Property() {
+	virtual ~wxXml2Property() {
 		if (IsUnlinked()) {
 			// if we do not free this property's memory here, nothing
 			// will never do...
@@ -259,7 +259,7 @@ public:
 
 	// destroys this namespace if it is completely unlinked from a greater
 	// XML tree.
-    //~wxXml2Namespace();
+    virtual ~wxXml2Namespace() {}
 
 	bool operator==(const wxXml2Namespace &ns);
 	bool operator!=(const wxXml2Namespace &p) {
@@ -316,7 +316,7 @@ public:
 	}
 
 	// destructor
-    ~wxXml2Document() {
+    virtual ~wxXml2Document() {
 		// WARNING: this function does nothing !!!!
 		// If you want to delete the tree associated with
 		// this document you must use Destroy()
@@ -515,6 +515,10 @@ public:
 	wxXml2Node(const wxXml2Node &node) { 
 		Ref(node);
 	}
+
+	virtual ~wxXml2Node() {}
+
+
 
 	// operators overloading
 	inline wxXml2Node &operator=(const wxXml2Node &n)		{ if (this->Node() == n.Node()) return (*this); Ref(n); return *this; }

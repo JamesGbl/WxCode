@@ -238,8 +238,10 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 
 void ParseNode(const wxXml2Node &node, wxString &str, int n)
 {
+	wxString toadd, spaces(' ', n);
+
 	// concatenate the name of this node
-	str += wxString(' ', n) + node.GetName();
+	toadd = node.GetName();
 		
 	// if this is a text node, then add also the contents...
 	if (node.GetType() == wxXML_TEXT_NODE) {
@@ -253,10 +255,35 @@ void ParseNode(const wxXml2Node &node, wxString &str, int n)
 		// in this cases, just show "[null]"
 		wxString tmp = content.Trim();
 		if (tmp.IsEmpty())
-			str += " - [null]";
+			toadd += "node: [null]";
 		else 
-			str += " - " + content;
+			toadd += "node: " + content;
+
+
+	} else {		// if it's not a text node, then add the properties...
+
+		wxXml2Property prop = node.GetProperties();
+		while (prop != wxXml2EmptyProperty) {
+
+			toadd += " " + prop.GetName() + "=";
+			toadd += prop.GetValue();
+
+			prop = prop.GetNext();
+		}
 	}
+		
+	str += spaces;
+
+//#define SHOW_ANNOYING_NEWLINES
+#ifdef SHOW_ANNOYING_NEWLINES	
+
+	// text nodes with newlines and/or spaces will be shown as [null]
+	str += toadd;
+#else
+
+	// text nodes with newlines won't be shown at all
+	if (toadd != "textnode: [null]") str += toadd;
+#endif
 
 	// go one line down
 	str += "\n";

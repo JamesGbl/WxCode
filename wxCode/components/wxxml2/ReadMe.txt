@@ -11,7 +11,7 @@
  
  Description:
  A simple set of classes (wxXml2Namespace, wxXml2NodeProperty, wxXml2Node and
- wxXml2Document) that interface wxWidgets and libxml2.
+ wxXml2Document) that interface wxWidgets with libxml2.
  With this component you can add load/save/edit XML support to your wxWidgets application
  using all the power of a well-known library like libxml2.
 
