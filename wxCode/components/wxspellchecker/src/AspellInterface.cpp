@@ -39,25 +39,39 @@ AspellInterface::AspellInterface(wxSpellCheckUserInterface* pDlg /* = NULL */)
 
 AspellInterface::~AspellInterface()
 {
-	if (m_bPersonalDictionaryModified)
-	{
-	  if (wxYES == ::wxMessageBox("Would you like to save any of your changes to your personal dictionary?", "Save Changes", wxYES_NO | wxICON_QUESTION))
-      m_AspellWrapper.AspellSpellerSaveAllWordLists(m_AspellSpeller);
-	}
-
-  if (m_AspellChecker != NULL)
-    m_AspellWrapper.DeleteAspellDocumentChecker(m_AspellChecker);
-
-  if (m_AspellConfig != NULL)
-    m_AspellWrapper.DeleteAspellConfig(m_AspellConfig);
-
-  if (m_AspellSpeller != NULL)
-    m_AspellWrapper.DeleteAspellSpeller(m_AspellSpeller);
-
-  if (m_pSpellUserInterface != NULL)
+  wxASSERT_MSG(m_AspellWrapper.IsLoaded(), _T("Aspell library wrapper isn't loaded and Aspell interface can't be properly cleaned up"));
+  
+  if (m_AspellWrapper.IsLoaded())  // If the Aspell library wrapper isn't loaded then we can't properly clean up
   {
-    delete m_pSpellUserInterface;
-    m_pSpellUserInterface = NULL;
+    if (m_bPersonalDictionaryModified)
+    {
+      if (wxYES == ::wxMessageBox("Would you like to save any of your changes to your personal dictionary?", "Save Changes", wxYES_NO | wxICON_QUESTION))
+        m_AspellWrapper.AspellSpellerSaveAllWordLists(m_AspellSpeller);
+    }
+  
+    if (m_AspellChecker != NULL)
+    {
+      m_AspellWrapper.DeleteAspellDocumentChecker(m_AspellChecker);
+      m_AspellChecker = NULL;
+    }
+  
+    if (m_AspellConfig != NULL)
+    {
+      m_AspellWrapper.DeleteAspellConfig(m_AspellConfig);
+      m_AspellConfig = NULL;
+    }
+  
+    if (m_AspellSpeller != NULL)
+    {
+      m_AspellWrapper.DeleteAspellSpeller(m_AspellSpeller);
+      m_AspellSpeller = NULL;
+    }
+  
+    if (m_pSpellUserInterface != NULL)
+    {
+      delete m_pSpellUserInterface;
+      m_pSpellUserInterface = NULL;
+    }
   }
   
   m_AspellWrapper.Unload();
@@ -84,8 +98,6 @@ int AspellInterface::InitializeSpellCheckEngine()
     return FALSE;
   }
   m_AspellSpeller = m_AspellWrapper.ToAspellSpeller(ret);
-  
-  ApplyOptions(); // Not really sure where the best place to do this is...
   
 	return TRUE;
 }
@@ -211,9 +223,15 @@ wxArrayString AspellInterface::GetSuggestions(const wxString& strMisspelledWord)
 
 int AspellInterface::AddWordToDictionary(const wxString& strWord)
 {
-	m_AspellWrapper.AspellSpellerAddToPersonal(m_AspellSpeller, strWord, strWord.Length());
+  /*
+  * AspellSpellerAddToPersonal returns
+  *  0 if the word was added to the dictionary
+  *  1 if the word was already in the dictionary
+  *  -1 if there was an error adding the word to the dictionary
+  */
+	int nReturn = m_AspellWrapper.AspellSpellerAddToPersonal(m_AspellSpeller, strWord, strWord.Length());
 	m_bPersonalDictionaryModified = TRUE;
-  return TRUE;
+  return (nReturn != -1);
 }
 
 wxArrayString AspellInterface::GetWordListAsArray()
