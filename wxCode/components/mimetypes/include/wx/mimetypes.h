@@ -3,7 +3,7 @@
 // Purpose:     wxMimeType control
 // Maintainer:  Wyo
 // Created:     2005-03-08
-// RCS-ID:      $Id: mimetypes.h,v 1.2 2005-03-08 16:55:00 wyo Exp $
+// RCS-ID:      $Id: mimetypes.h,v 1.3 2005-03-10 18:37:23 wyo Exp $
 // Copyright:   (c) 2005 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -62,7 +62,7 @@ public:
     bool IsStandard (wxMimeTypeData* data); // and is the standard application
 
     // get data of mime type
-    bool GetData (wxMimeTypeData* data) const;
+    bool GetData (wxMimeTypeData* data);
     wxString GetMimeType (wxMimeTypeData* data);
 
 private:

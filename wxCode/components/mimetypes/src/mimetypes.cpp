@@ -3,7 +3,7 @@
 // Purpose:     wxMimeType control
 // Maintainer:  Wyo
 // Created:     2005-03-08
-// RCS-ID:      $Id: mimetypes.cpp,v 1.3 2005-03-08 18:53:30 wyo Exp $
+// RCS-ID:      $Id: mimetypes.cpp,v 1.4 2005-03-10 18:37:57 wyo Exp $
 // Copyright:   (c) 2005 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -63,7 +63,7 @@ wxMimeType::wxMimeType () {
 
 bool wxMimeType::Add (const wxString& mimetype, wxMimeTypeData* data, bool standard) {
 
-    wxFileTypeInfo info (mimetype, data->appname, wxEmptyString, 
+    wxFileTypeInfo info (mimetype, data->appname, wxEmptyString,
                          data->description.c_str(), data->extension.c_str(), NULL);
     wxString shortDesc = _T("Test ") + data->extension + _T(" file");
     info.SetShortDesc (shortDesc);
@@ -115,7 +115,7 @@ bool wxMimeType::IsStandard (wxMimeTypeData* data) {
 
 }
 
-bool wxMimeType::GetData (wxMimeTypeData* data) const {
+bool wxMimeType::GetData (wxMimeTypeData* data) {
 
     wxFileType *filetype;
     filetype = wxTheMimeTypesManager->GetFileTypeFromExtension (data->extension);
