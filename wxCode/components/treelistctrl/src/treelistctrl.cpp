@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.32 2004-10-06 16:07:16 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.33 2004-10-07 18:26:13 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -4100,7 +4100,11 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
         nevent.Veto(); // dragging must be explicit allowed!
         m_owner->GetEventHandler()->ProcessEvent (nevent);
 
+        CaptureMouse();
+
     }else if (m_isDragging) { // any other event but not event.Dragging()
+
+        ReleaseMouse();
 
         // end dragging
         m_dragCount = 0;
