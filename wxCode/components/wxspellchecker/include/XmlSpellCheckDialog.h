@@ -14,7 +14,7 @@
 class XmlSpellCheckDialog : public wxDialog, public wxSpellCheckUserInterface
 {
 public:
-    XmlSpellCheckDialog(wxWindow *parent, wxString strDialogResource, wxString strWordListResource, wxSpellCheckEngineInterface* SpellChecker = NULL);
+    XmlSpellCheckDialog(wxWindow *parent, wxString strResourceFile, wxString strDialogResource, wxString strWordListResource, wxSpellCheckEngineInterface* SpellChecker = NULL);
 		~XmlSpellCheckDialog();
 
 		// Code handling the interface
@@ -40,6 +40,7 @@ public:
 private:
     DECLARE_EVENT_TABLE()
 
+    wxString m_strResourceFile;
     wxString m_strDialogResource;
     wxString m_strWordListResource;
 };
@@ -47,7 +48,7 @@ private:
 class XmlPersonalDictionaryDialog : public wxDialog
 {
 public:
-  XmlPersonalDictionaryDialog(wxWindow* parent, wxString strResource, wxSpellCheckEngineInterface* pEngine);
+  XmlPersonalDictionaryDialog(wxWindow* parent, wxString strResourceFile, wxString strResource, wxSpellCheckEngineInterface* pEngine);
   ~XmlPersonalDictionaryDialog();
 
   void CreateDialog(wxWindow* pParent);
@@ -59,6 +60,7 @@ public:
 
 protected:
   wxSpellCheckEngineInterface* m_pSpellCheckEngine;
+  wxString m_strResourceFile;
   wxString m_strDialogResource;
 
 private:

@@ -254,7 +254,7 @@ void SentryLikeDialog::OnClickOptions(wxCommandEvent& event)
 {
   // Create a really basic dialog that gets dynamically populated
   // with controls based on the m_pSpellCheckEngine->GetOptions();
-  SpellCheckerOptionsDialog OptionsDialog(this, "Options", m_pSpellCheckEngine);
+  SpellCheckerOptionsDialog OptionsDialog(this, m_pSpellCheckEngine->GetSpellCheckEngineName() + _T(" Options"), m_pSpellCheckEngine);
   if (OptionsDialog.ShowModal() == wxID_OK)
   {
     // Set the modified options
@@ -380,6 +380,21 @@ void MyPersonalSentryLikeDictionaryDialog::ReplaceInPersonalDictionary(wxCommand
 
 void MyPersonalSentryLikeDictionaryDialog::RemoveFromPersonalDictionary(wxCommandEvent& event)
 {
+  if (m_pSpellCheckEngine != NULL)
+  {
+    TransferDataFromWindow();
+    wxListBox* pListBox = (wxListBox*)FindWindow(IDC_LIST_PERSONAL_WORDS);
+    if (pListBox)
+    {
+      wxString strNewWord = pListBox->GetStringSelection();
+      if (!strNewWord.Trim().IsEmpty())
+      {
+        if (!(m_pSpellCheckEngine->RemoveWordFromDictionary(strNewWord)))
+          ::wxMessageBox(_T("There was an error removing \"" + strNewWord + "\" to the personal dictionary"));
+      }
+    }
+    PopulatePersonalWordListBox();
+  }
 }
 
 void MyPersonalSentryLikeDictionaryDialog::OnClose(wxCommandEvent& event)

@@ -35,12 +35,13 @@
 BEGIN_EVENT_TABLE(XmlSpellCheckDialog, wxDialog)
 END_EVENT_TABLE()
 
-XmlSpellCheckDialog::XmlSpellCheckDialog(wxWindow *parent, wxString strDialogResource, wxString strWordListResource, wxSpellCheckEngineInterface* pSpellChecker)
+XmlSpellCheckDialog::XmlSpellCheckDialog(wxWindow *parent, wxString strResourceFile, wxString strDialogResource, wxString strWordListResource, wxSpellCheckEngineInterface* pSpellChecker)
   : wxSpellCheckUserInterface(pSpellChecker) // DON'T call wxDialog constructor
 {
 	m_strReplaceWithText = "";
 
   m_strDialogResource = strDialogResource;
+  m_strResourceFile = strResourceFile;
   m_strWordListResource = strWordListResource;
 
 	CreateDialog(parent);
@@ -71,7 +72,7 @@ void XmlSpellCheckDialog::CreateDialog(wxWindow* pParent)
 {
   // Load the XML resource
   wxXmlResource::Get()->InitAllHandlers();
-  if (wxXmlResource::Get()->Load(_T("abiword.xrc")) == false)
+  if (wxXmlResource::Get()->Load(m_strResourceFile) == false)
     return;
   
   if (wxXmlResource::Get()->LoadDialog(this, pParent, m_strDialogResource) == false)
@@ -286,7 +287,7 @@ void XmlSpellCheckDialog::OnAddWordToCustomDictionary(wxCommandEvent& event)
 void XmlSpellCheckDialog::OnEditCustomDictionary(wxCommandEvent& event)
 {
 	// Bring up the "Edit Custom Dictionary" dialog
-  XmlPersonalDictionaryDialog* pCustomDictionaryDlg = new XmlPersonalDictionaryDialog(this, m_strWordListResource, m_pSpellCheckEngine);
+  XmlPersonalDictionaryDialog* pCustomDictionaryDlg = new XmlPersonalDictionaryDialog(this, m_strResourceFile, m_strWordListResource, m_pSpellCheckEngine);
   pCustomDictionaryDlg->ShowModal();
   delete pCustomDictionaryDlg;
 }
@@ -397,7 +398,7 @@ void XmlSpellCheckDialog::OnOptions(wxCommandEvent& event)
   m_pSpellCheckEngine->PresentOptions();
   // Create a really basic dialog with a scrolled panel that gets dynamically populated
   // with controls based on the m_pSpellCheckEngine->GetOptions();
-  SpellCheckerOptionsDialog OptionsDialog(this, "Options", m_pSpellCheckEngine);
+  SpellCheckerOptionsDialog OptionsDialog(this, m_pSpellCheckEngine->GetSpellCheckEngineName() + _T(" Options"), m_pSpellCheckEngine);
   if (OptionsDialog.ShowModal() == wxID_OK)
   {
     // Set the modified options
@@ -425,9 +426,10 @@ BEGIN_EVENT_TABLE(XmlPersonalDictionaryDialog, wxDialog)
   EVT_BUTTON(XRCID("ButtonClose"), XmlPersonalDictionaryDialog::OnClose)
 END_EVENT_TABLE()
 
-XmlPersonalDictionaryDialog::XmlPersonalDictionaryDialog(wxWindow* parent, wxString strResource, wxSpellCheckEngineInterface* pEngine)
+XmlPersonalDictionaryDialog::XmlPersonalDictionaryDialog(wxWindow* parent, wxString strResourceFile, wxString strResource, wxSpellCheckEngineInterface* pEngine)
 {
   m_pSpellCheckEngine = pEngine;
+  m_strResourceFile = strResourceFile;
   m_strDialogResource = strResource;
 
   CreateDialog(parent);
@@ -499,6 +501,21 @@ void XmlPersonalDictionaryDialog::ReplaceInPersonalDictionary(wxCommandEvent& ev
 
 void XmlPersonalDictionaryDialog::RemoveFromPersonalDictionary(wxCommandEvent& event)
 {
+  if (m_pSpellCheckEngine != NULL)
+  {
+    TransferDataFromWindow();
+    wxListBox* pListBox = XRCCTRL(*this, "ListPersonalWords", wxListBox);
+    if (pListBox)
+    {
+      wxString strNewWord = pListBox->GetStringSelection();
+      if (!strNewWord.Trim().IsEmpty())
+      {
+        if (!(m_pSpellCheckEngine->RemoveWordFromDictionary(strNewWord)))
+          ::wxMessageBox(_T("There was an error removing \"" + strNewWord + "\" to the personal dictionary"));
+      }
+    }
+    PopulatePersonalWordListBox();
+  }
 }
 
 

@@ -3,7 +3,7 @@
 #include <wx/filename.h>
 #include <wx/tokenzr.h>
 #include <wx/textfile.h>
-
+#include <wx/config.h>
 
 const wxString MySpellInterface::Personal_Dictionary_Filename = _T(".MySpellPersonalDictionary");
 
@@ -24,9 +24,10 @@ MySpellInterface::MySpellInterface(wxSpellCheckUserInterface* pDlg /* = NULL */)
   InitializeSpellCheckEngine();
 }
 
-
 MySpellInterface::~MySpellInterface()
 {
+  SaveUserOptions();
+
   if (m_bPersonalDictionaryModified)
   {
     if (wxYES == ::wxMessageBox("Would you like to save any of your changes to your personal dictionary?", "Save Changes", wxYES_NO | wxICON_QUESTION))
@@ -42,7 +43,6 @@ MySpellInterface::~MySpellInterface()
   }
 }
 
-
 int MySpellInterface::InitializeSpellCheckEngine()
 {
   UninitializeSpellCheckEngine();
@@ -51,7 +51,6 @@ int MySpellInterface::InitializeSpellCheckEngine()
   
   return (m_pMySpell != NULL);
 }
-
 
 int MySpellInterface::UninitializeSpellCheckEngine()
 {
@@ -63,13 +62,15 @@ int MySpellInterface::UninitializeSpellCheckEngine()
   return TRUE;
 }
 
-
 int MySpellInterface::SetDefaultOptions()
-
 {
-	m_strAffixFile = wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("en_US.aff"));
+  wxConfigBase* pConfig = wxConfigBase::Get();
 
-	m_strDictionaryFile = wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("en_US.dic"));
+  wxString strPath = _T("/wxSpellChecker-") + GetSpellCheckEngineName();
+  pConfig->SetPath(strPath);
+
+	m_strAffixFile = pConfig->Read(_T("affix-file"), wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("en_US.aff")));
+	m_strDictionaryFile = pConfig->Read(_T("dict-file"), wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("en_US.dic")));
   
   SpellCheckEngineOption AffixFileOption(_T("affix-file"), _T("Affix File"), m_strAffixFile, SpellCheckEngineOption::FILE);
   AddOptionToMap(AffixFileOption);
@@ -77,12 +78,9 @@ int MySpellInterface::SetDefaultOptions()
   AddOptionToMap(DictFileOption);
 
   return TRUE;
-
 }
 
-
 int MySpellInterface::SetOption(SpellCheckEngineOption& Option)
-
 {
   // MySpell doesn't really have any options that I know of other than the affix and
   // dictionary files.  To change those, a new MySpell instance must be created though
@@ -110,7 +108,6 @@ int MySpellInterface::SetOption(SpellCheckEngineOption& Option)
   return InitializeSpellCheckEngine();
 
 }
-
 
 wxString MySpellInterface::CheckSpelling(wxString strText)
 {
@@ -172,50 +169,36 @@ wxString MySpellInterface::CheckSpelling(wxString strText)
   return strText;
 }
 
-
 wxArrayString MySpellInterface::GetSuggestions(const wxString& strMisspelledWord)
-
 {
   wxArrayString wxReturnArray;
-
   wxReturnArray.Empty();
-
 
   if (m_pMySpell)
   {
     char **wlst;
 
-
     int ns = m_pMySpell->suggest(&wlst,strMisspelledWord.c_str());
     for (int i=0; i < ns; i++)
     {
       wxReturnArray.Add(wlst[i]);
-
       free(wlst[i]);
     }
     free(wlst);
   }
   
   return wxReturnArray;
-
 }
 
 bool MySpellInterface::IsWordInDictionary(const wxString& strWord)
-
 {
   if (m_pMySpell == NULL)
-
     return false;
 
-
-
   return (m_pMySpell->spell(strWord) == 1);
-
 }
 
-
 int MySpellInterface::AddWordToDictionary(const wxString& strWord)
-
 {
   m_PersonalDictionary.Add(strWord);
   m_PersonalDictionary.Sort();
@@ -308,5 +291,4 @@ bool MySpellInterface::SavePersonalDictionary()
   DictFile.Close();
   return true;
 }
-
 

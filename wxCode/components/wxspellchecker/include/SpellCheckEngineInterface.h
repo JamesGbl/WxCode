@@ -50,6 +50,7 @@ public:
 	// Spell Checker functions
 
   // Spell Checker Engine Administration functions
+  virtual wxString GetSpellCheckEngineName() = 0;
 	virtual int InitializeSpellCheckEngine() = 0;
 	virtual int UninitializeSpellCheckEngine() = 0;
 	virtual int SetDefaultOptions() = 0;
@@ -58,6 +59,7 @@ public:
   virtual void ApplyOptions();  // Go through all the options in the options map and apply them to the spell check engine
   OptionsMap* GetOptions() { return &m_Options; }
   virtual void UpdatePossibleValues(SpellCheckEngineOption& OptionDependency, SpellCheckEngineOption& OptionToUpdate) { wxASSERT(false); }
+  virtual void SaveUserOptions();
 
   // Spell Checker Search/Suggestion functions
 	virtual bool IsWordInDictionary(const wxString& strWord) = 0;

@@ -33,10 +33,11 @@ public:
   ~MySpellInterface();
 
 	// Spell Checker functions
-	int InitializeSpellCheckEngine();
-	int UninitializeSpellCheckEngine();
-	int SetDefaultOptions();
-  int SetOption(SpellCheckEngineOption& Option);
+  virtual wxString GetSpellCheckEngineName() { return _T("MySpell"); }
+	virtual int InitializeSpellCheckEngine();
+	virtual int UninitializeSpellCheckEngine();
+	virtual int SetDefaultOptions();
+  virtual int SetOption(SpellCheckEngineOption& Option);
 	virtual wxString CheckSpelling(wxString strText);
   wxArrayString GetSuggestions(const wxString& strMisspelledWord);
 

@@ -265,7 +265,7 @@ void MyFrame::OnSpellCheckXmlUI(wxCommandEvent& event)
   wxSpellCheckEngineInterface* pSpellChecker = ReturnSelectedSpellCheckEngine();
   if (pSpellChecker)
   {
-    pSpellChecker->SetSpellCheckUserInterface(new XmlSpellCheckDialog(NULL, "ID_DIALOG", "ID_DIALOG"));
+    pSpellChecker->SetSpellCheckUserInterface(new XmlSpellCheckDialog(NULL, _T("abiword.xrc"), _T("ID_DIALOG"), _T("ID_DIALOG")));
     SpellCheck(pSpellChecker);
   }
 }
@@ -274,7 +274,7 @@ void MyFrame::OnEditOptions(wxCommandEvent& event)
 {
   // Create a really basic dialog that gets dynamically populated
   // with controls based on the m_pSpellCheckEngine->GetOptions();
-  SpellCheckerOptionsDialog OptionsDialog(this, "Options", ReturnSelectedSpellCheckEngine());
+  SpellCheckerOptionsDialog OptionsDialog(this, ReturnSelectedSpellCheckEngine()->GetSpellCheckEngineName() + _T(" Options"), ReturnSelectedSpellCheckEngine());
   if (OptionsDialog.ShowModal() == wxID_OK)
   {
     // Set the modified options

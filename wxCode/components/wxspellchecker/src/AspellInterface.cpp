@@ -1,6 +1,8 @@
 #include "AspellInterface.h"
 #include "SpellCheckUserInterface.h"
 
+#include <wx/config.h>
+
 // ----------------------------------------------------------------------------
 // headers
 // ----------------------------------------------------------------------------
@@ -41,6 +43,8 @@ AspellInterface::AspellInterface(wxSpellCheckUserInterface* pDlg /* = NULL */)
 AspellInterface::~AspellInterface()
 {
   wxASSERT_MSG(m_AspellWrapper.IsLoaded(), _T("Aspell library wrapper isn't loaded and Aspell interface can't be properly cleaned up"));
+  
+  SaveUserOptions();
   
   if (m_AspellWrapper.IsLoaded())  // If the Aspell library wrapper isn't loaded then we can't properly clean up
   {
@@ -117,8 +121,13 @@ int AspellInterface::SetOption(SpellCheckEngineOption& Option)
 
 	if (m_AspellConfig == NULL)
 		return FALSE;
-		
-	m_AspellWrapper.AspellConfigReplace(m_AspellConfig, Option.GetName(), Option.GetValueAsString());
+	
+  wxString strValue = Option.GetValueAsString();
+  // wxVariant returns booleans as "0" or "1", and Aspell expects "true" or "false"
+  if (Option.GetOptionType() == SpellCheckEngineOption::BOOLEAN)
+    strValue = (strValue == _T("0")) ? _T("false") : _T("true");
+    
+	m_AspellWrapper.AspellConfigReplace(m_AspellConfig, Option.GetName(), strValue);
 
 	return TRUE;
 }
@@ -332,9 +341,14 @@ void AspellInterface::PresentOptions()
 //	extra-dicts -> extra dictionaries to use
 int AspellInterface::SetDefaultOptions()
 {
-	wxString strDataDir = wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("data"));
-	wxString strDictDir = wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("dict"));
-  wxString strLanguage = _T("en_US");
+  wxConfigBase* pConfig = wxConfigBase::Get();
+
+  wxString strPath = _T("/wxSpellChecker-") + GetSpellCheckEngineName();
+  pConfig->SetPath(strPath);
+  
+	wxString strDataDir = pConfig->Read(_T("data-dir"), wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("data")));
+	wxString strDictDir = pConfig->Read(_T("dict-dir"), wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("dict")));
+  wxString strLanguage = pConfig->Read(_T("lang"), _T("en_US"));
 
   SpellCheckEngineOption LanguageOption(_T("lang"), _T("Language Code"), strLanguage); // A list of possible values would be good here
   LanguageOption.SetDependency(_T("dict-dir"));
@@ -344,14 +358,14 @@ int AspellInterface::SetDefaultOptions()
   SpellCheckEngineOption DictDirOption(_T("dict-dir"), _T("Language Word List Directory"), strDictDir, SpellCheckEngineOption::DIR);
   AddOptionToMap(DictDirOption);
   
-  SpellCheckEngineOption SuggestionModeOption(_T("sug-mode"), _T("Suggestion Mode"), wxString(_T("normal")));
+  SpellCheckEngineOption SuggestionModeOption(_T("sug-mode"), _T("Suggestion Mode"), pConfig->Read(_T("sug-mode"), _T("normal")));
   SuggestionModeOption.AddPossibleValue(wxString(_T("ultra")));
   SuggestionModeOption.AddPossibleValue(wxString(_T("fast")));
   SuggestionModeOption.AddPossibleValue(wxString(_T("normal")));
   SuggestionModeOption.AddPossibleValue(wxString(_T("bad-spellers")));
   AddOptionToMap(SuggestionModeOption);
 
-  SpellCheckEngineOption FilterModeOption(_T("mode"), _T("Filter Mode"), wxString(_T("url")));
+  SpellCheckEngineOption FilterModeOption(_T("mode"), _T("Filter Mode"), pConfig->Read(_T("mode"), _T("url")));
   FilterModeOption.AddPossibleValue(wxString(_T("none")));
   FilterModeOption.AddPossibleValue(wxString(_T("url")));
   FilterModeOption.AddPossibleValue(wxString(_T("email")));
@@ -359,7 +373,9 @@ int AspellInterface::SetDefaultOptions()
   FilterModeOption.AddPossibleValue(wxString(_T("tex")));
   AddOptionToMap(FilterModeOption);
 
-  SpellCheckEngineOption IgnoreCaseOption(_T("ignore-case"), _T("Ignore Case"), false);
+  bool bIgnoreCase = false;
+  pConfig->Read(_T("ignore-care"), &bIgnoreCase, false);
+  SpellCheckEngineOption IgnoreCaseOption(_T("ignore-case"), _T("Ignore Case"), bIgnoreCase);
   AddOptionToMap(IgnoreCaseOption);
 
   

@@ -21,6 +21,7 @@ public:
   ~AspellInterface();
 
 	// Spell Checker functions
+  virtual wxString GetSpellCheckEngineName() { return _T("Aspell"); }
 	virtual int InitializeSpellCheckEngine();
 	virtual int UninitializeSpellCheckEngine();
 	virtual int SetDefaultOptions();

@@ -388,6 +388,21 @@ void MyPersonalDictionaryDialog::ReplaceInPersonalDictionary(wxCommandEvent& eve
 
 void MyPersonalDictionaryDialog::RemoveFromPersonalDictionary(wxCommandEvent& event)
 {
+  if (m_pSpellCheckEngine != NULL)
+  {
+    TransferDataFromWindow();
+    wxListBox* pListBox = (wxListBox*)FindWindow(IDC_LIST_PERSONAL_WORDS);
+    if (pListBox)
+    {
+      wxString strNewWord = pListBox->GetStringSelection();
+      if (!strNewWord.Trim().IsEmpty())
+      {
+        if (!(m_pSpellCheckEngine->RemoveWordFromDictionary(strNewWord)))
+          ::wxMessageBox(_T("There was an error removing \"" + strNewWord + "\" to the personal dictionary"));
+      }
+    }
+    PopulatePersonalWordListBox();
+  }
 }
 
 void MyPersonalDictionaryDialog::OnClose(wxCommandEvent& event)
