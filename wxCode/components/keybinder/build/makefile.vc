@@ -39,19 +39,19 @@ WXWIN = c:\wxWidgets
 
 ### Variables: ###
 
-KEYBINDER_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__DEBUG_DEFINE_p) \
-	/D__WXMSW__ $(__WARNINGS) $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
-	$(__DEBUGINFO) /Fd..\lib\keybinder$(WXLIBPOSTFIX).pdb $(____DEBUGRUNTIME) \
+KEYBINDER_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
+	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
+	/Fd..\lib\keybinder$(WXLIBPOSTFIX).pdb $(____DEBUGRUNTIME) \
 	/I$(WXWIN)\include /I$(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) /I..\include \
 	/GR /GX $(CPPFLAGS) $(CXXFLAGS)
 KEYBINDER_OBJECTS =  \
 	msvc\keybinder_keybinder.obj \
 	msvc\keybinder_menuutils.obj
-MINIMAL_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__DEBUG_DEFINE_p) /D__WXMSW__ \
-	$(__WARNINGS) $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
-	/Fd..\sample\minimal.pdb $(____DEBUGRUNTIME) /D_WINDOWS /I..\include \
-	/I$(WXWIN)\include /I$(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) /GR /GX \
-	$(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
+	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
+	/Fd..\sample\minimal.pdb $(____DEBUGRUNTIME) /I..\include \
+	/I$(WXWIN)\include /I$(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) /D_WINDOWS \
+	$(__DEBUG_DEFINE_p) /D__WXMSW__ /GR /GX $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	msvc\minimal_minimal.obj \
 	msvc\minimal_minimal.res
@@ -60,9 +60,6 @@ MINIMAL_OBJECTS =  \
 
 !if "$(BUILD)" == "debug" && "$(UNICODE)" == "0"
 WXSUBLIBPOSTFIX = d
-!endif
-!if "$(BUILD)" == "debug"
-__DEBUG_DEFINE_p_2 = /d __WXDEBUG__
 !endif
 !if "$(UNICODE)" == "1"
 __UNICODE_DEFINE_p_2 = /d _UNICODE
@@ -126,7 +123,6 @@ WXLIBPOSTFIX = u
 !endif
 
 
-
 all: msvc
 msvc:
 	-if not exist msvc mkdir msvc
@@ -138,6 +134,7 @@ all: ..\lib\keybinder$(WXLIBPOSTFIX).lib ..\sample\minimal.exe
 clean: 
 	-if exist msvc\*.obj del msvc\*.obj
 	-if exist msvc\*.res del msvc\*.res
+	-if exist msvc\*.pch del msvc\*.pch
 	-if exist ..\lib\keybinder$(WXLIBPOSTFIX).lib del ..\lib\keybinder$(WXLIBPOSTFIX).lib
 	-if exist ..\sample\minimal.exe del ..\sample\minimal.exe
 	-if exist ..\sample\minimal.ilk del ..\sample\minimal.ilk
@@ -174,8 +171,8 @@ cleandocs:
 <<
 
 ..\sample\minimal.exe: $(MINIMAL_OBJECTS) msvc\minimal_minimal.res ..\lib\keybinder$(WXLIBPOSTFIX).lib
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_13) /SUBSYSTEM:WINDOWS /LIBPATH:..\lib /LIBPATH:$(WXWIN)\lib\vc_lib @<<
-	$(MINIMAL_OBJECTS)  ..\lib\keybinder$(WXLIBPOSTFIX).lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
+	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_13) /LIBPATH:..\lib /LIBPATH:$(WXWIN)\lib\vc_lib /SUBSYSTEM:WINDOWS @<<
+	$(MINIMAL_OBJECTS)  ..\lib\keybinder$(WXLIBPOSTFIX).lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxmsw25$(WXLIBPOSTFIX)_html.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
 
 msvc\keybinder_keybinder.obj: .\..\src\keybinder.cpp
@@ -188,5 +185,5 @@ msvc\minimal_minimal.obj: .\..\sample\minimal.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(MINIMAL_CXXFLAGS) $**
 
 msvc\minimal_minimal.res: .\..\sample\minimal.rc
-	rc /fo$@  /d WIN32 $(__DEBUG_DEFINE_p_2) /d __WXMSW__ $(__UNICODE_DEFINE_p_2) $(____DEBUGRUNTIME_14_p_1) /d _WINDOWS /i ..\include /i $(WXWIN)\include /i $(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) /i ..\sample $**
+	rc /fo$@  /d WIN32 $(__UNICODE_DEFINE_p_2) $(____DEBUGRUNTIME_14_p_1) /i ..\include /i $(WXWIN)\include /i $(WXWIN)\lib\vc_lib\msw$(WXLIBPOSTFIX) /d _WINDOWS /i ..\sample $**
 

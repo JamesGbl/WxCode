@@ -39,17 +39,17 @@ WXWIN = c:\wxWidgets
 
 ### Variables: ###
 
-KEYBINDER_CXXFLAGS = -DHAVE_W32API_H $(__DEBUG_DEFINE_p) -D__WXMSW__ \
-	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -I$(WXWIN)\include \
+KEYBINDER_CXXFLAGS = -DHAVE_W32API_H $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
+	$(__DEBUGINFO) -I$(WXWIN)\include \
 	-I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) -I..\include -Wall $(CPPFLAGS) \
 	$(CXXFLAGS)
 KEYBINDER_OBJECTS =  \
 	mingw\keybinder_keybinder.o \
 	mingw\keybinder_menuutils.o
-MINIMAL_CXXFLAGS = -DHAVE_W32API_H $(__DEBUG_DEFINE_p) -D__WXMSW__ \
-	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -I..\include \
-	-I$(WXWIN)\include -I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) -Wall \
-	$(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_CXXFLAGS = -DHAVE_W32API_H $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
+	$(__DEBUGINFO) -I..\include -I$(WXWIN)\include \
+	-I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) $(__DEBUG_DEFINE_p) -D__WXMSW__ \
+	-Wall $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	mingw\minimal_minimal.o \
 	mingw\minimal_minimal_rc.o
@@ -60,9 +60,6 @@ ifeq ($(BUILD),debug)
 ifeq ($(UNICODE),0)
 WXSUBLIBPOSTFIX = d
 endif
-endif
-ifeq ($(BUILD),debug)
-__DEBUG_DEFINE_p_2 = --define __WXDEBUG__
 endif
 ifeq ($(UNICODE),1)
 __UNICODE_DEFINE_p_2 = --define _UNICODE
@@ -102,11 +99,9 @@ __DEBUGINFO =
 endif
 
 
-
 all: mingw
 mingw:
 	-if not exist mingw mkdir mingw
-
 
 ### Targets: ###
 
@@ -147,7 +142,7 @@ cleandocs:
 	ranlib $@
 
 ..\sample\minimal.exe: $(MINIMAL_OBJECTS) mingw\minimal_minimal_rc.o ..\lib\libkeybinder$(WXLIBPOSTFIX).a
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -Wl,--subsystem,windows -mwindows -L..\lib -L$(WXWIN)\lib\gcc_lib  ..\lib\libkeybinder$(WXLIBPOSTFIX).a -lwxmsw25$(WXLIBPOSTFIX)_core -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXSUBLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -L..\lib -L$(WXWIN)\lib\gcc_lib -Wl,--subsystem,windows -mwindows  ..\lib\libkeybinder$(WXLIBPOSTFIX).a -lwxmsw25$(WXLIBPOSTFIX)_core -lwxmsw25$(WXLIBPOSTFIX)_html -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
 mingw\keybinder_keybinder.o: ./../src/keybinder.cpp
 	$(CXX) -c -o $@ $(KEYBINDER_CXXFLAGS) $<
@@ -159,7 +154,7 @@ mingw\minimal_minimal.o: ./../sample/minimal.cpp
 	$(CXX) -c -o $@ $(MINIMAL_CXXFLAGS) $<
 
 mingw\minimal_minimal_rc.o: ./../sample/minimal.rc
-	windres --use-temp-file -i$< -o$@ --define HAVE_W32API_H $(__DEBUG_DEFINE_p_2) --define __WXMSW__ $(__UNICODE_DEFINE_p_2) --include-dir ..\include --include-dir $(WXWIN)\include --include-dir $(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) --include-dir ..\sample
+	windres --use-temp-file -i$< -o$@ --define HAVE_W32API_H $(__UNICODE_DEFINE_p_2) --include-dir ..\include --include-dir $(WXWIN)\include --include-dir $(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) --include-dir ..\sample
 
 .PHONY: all clean
 

@@ -67,6 +67,17 @@ __DEBUGINFO_7 = debug all
 !ifeq BUILD release
 __DEBUGINFO_7 = 
 !endif
+__DEBUG_DEFINE_p =
+!ifeq BUILD debug
+__DEBUG_DEFINE_p = -d__WXDEBUG__
+!endif
+__WARNINGS =
+!ifeq BUILD debug
+__WARNINGS = -wx
+!endif
+!ifeq BUILD release
+__WARNINGS = 
+!endif
 __OPTIMIZEFLAG =
 !ifeq BUILD debug
 __OPTIMIZEFLAG = -od
@@ -80,10 +91,6 @@ __DEBUGINFO = -d2
 !endif
 !ifeq BUILD release
 __DEBUGINFO = -d0
-!endif
-__DEBUG_DEFINE_p =
-!ifeq BUILD debug
-__DEBUG_DEFINE_p = -d__WXDEBUG__
 !endif
 __UNICODE_DEFINE_p =
 !ifeq UNICODE 1
@@ -108,23 +115,23 @@ WXLIBPOSTFIX = u
 
 ### Variables: ###
 
-KEYBINDER_CXXFLAGS = $(__DEBUG_DEFINE_p) -d__WXMSW__ $(__UNICODE_DEFINE_p) &
-	$(__OPTIMIZEFLAG) $(__DEBUGINFO) -i=$(WXWIN)\include &
+KEYBINDER_CXXFLAGS = $(__WARNINGS) $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) &
+	$(__DEBUGINFO) -i=$(WXWIN)\include &
 	-i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) -i=..\include $(CPPFLAGS) &
 	$(CXXFLAGS)
 KEYBINDER_OBJECTS =  &
 	watcom\keybinder_keybinder.obj &
 	watcom\keybinder_menuutils.obj
-MINIMAL_CXXFLAGS = $(__DEBUG_DEFINE_p) -d__WXMSW__ $(__UNICODE_DEFINE_p) &
-	$(__OPTIMIZEFLAG) $(__DEBUGINFO) -i=..\include -i=$(WXWIN)\include &
-	-i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) $(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_CXXFLAGS = $(__WARNINGS) $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) &
+	$(__DEBUGINFO) -i=..\include -i=$(WXWIN)\include &
+	-i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) $(__DEBUG_DEFINE_p) -d__WXMSW__ &
+	$(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  &
 	watcom\minimal_minimal.obj
 
 
-
-all: watcom
-watcom:
+all : watcom
+watcom :
 	-if not exist watcom mkdir watcom
 
 ### Targets: ###
@@ -136,6 +143,7 @@ clean : .SYMBOLIC
 	-if exist watcom\*.res del watcom\*.res
 	-if exist watcom\*.lbc del watcom\*.lbc
 	-if exist watcom\*.ilk del watcom\*.ilk
+	-if exist watcom\*.pch del watcom\*.pch
 	-if exist ..\lib\keybinder$(WXLIBPOSTFIX).lib del ..\lib\keybinder$(WXLIBPOSTFIX).lib
 	-if exist ..\sample\minimal.exe del ..\sample\minimal.exe
 
@@ -173,9 +181,9 @@ cleandocs :
 	@%append watcom\minimal.lbc option quiet
 	@%append watcom\minimal.lbc name $^@
 	@%append watcom\minimal.lbc option caseexact
-	@%append watcom\minimal.lbc $(LDFLAGS) $(__DEBUGINFO_7) system nt_win ref '_WinMain@16' libpath ..\lib libpath $(WXWIN)\lib\wat_lib
+	@%append watcom\minimal.lbc $(LDFLAGS) $(__DEBUGINFO_7) libpath ..\lib libpath $(WXWIN)\lib\wat_lib system nt_win ref '_WinMain@16'
 	@for %i in ($(MINIMAL_OBJECTS)) do @%append watcom\minimal.lbc file %i
-	@for %i in ( ..\lib\keybinder$(WXLIBPOSTFIX).lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXSUBLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\minimal.lbc library %i
+	@for %i in ( ..\lib\keybinder$(WXLIBPOSTFIX).lib wxmsw25$(WXLIBPOSTFIX)_core.lib wxmsw25$(WXLIBPOSTFIX)_html.lib wxbase25$(WXLIBPOSTFIX).lib wxtiff$(WXSUBLIBPOSTFIX).lib wxjpeg$(WXSUBLIBPOSTFIX).lib wxpng$(WXSUBLIBPOSTFIX).lib wxzlib$(WXSUBLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WXSUBLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\minimal.lbc library %i
 	@%append watcom\minimal.lbc option resource=watcom\minimal_minimal.res
 	wlink @watcom\minimal.lbc
 
@@ -189,5 +197,5 @@ watcom\minimal_minimal.obj :  .AUTODEPEND .\..\sample\minimal.cpp
 	$(CXX) -zq -fo=$^@ $(MINIMAL_CXXFLAGS) $<
 
 watcom\minimal_minimal.res :  .AUTODEPEND .\..\sample\minimal.rc
-	wrc -q -ad -bt=nt -r -fo=$^@ $(__DEBUG_DEFINE_p) -d__WXMSW__ $(__UNICODE_DEFINE_p) -i=..\include -i=$(WXWIN)\include -i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) -i=..\sample $<
+	wrc -q -ad -bt=nt -r -fo=$^@ $(__UNICODE_DEFINE_p) -i=..\include -i=$(WXWIN)\include -i=$(WXWIN)\lib\wat_lib\msw$(WXLIBPOSTFIX) -i=..\sample $<
 

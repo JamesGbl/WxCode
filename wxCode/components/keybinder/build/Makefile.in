@@ -22,13 +22,11 @@ srcdir = @srcdir@
 top_builddir = @top_builddir@
 libdir = @libdir@
 includedir = @includedir@
-LDFLAGS_GUI = @LDFLAGS_GUI@
 AR = @AR@
 RANLIB = @RANLIB@
 CXX = @CXX@
 CXXFLAGS = @CXXFLAGS@
 CPPFLAGS = @CPPFLAGS@
-LDFLAGS = @LDFLAGS@
 
 ### Variables: ###
 
@@ -57,7 +55,6 @@ COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd = $(NM) minimal$(EXEEXT) | if \
 	grep -q pmwin.763 ; then emxbind -ep minimal$(EXEEXT) ; fi
 @COND_PLATFORM_OS2_1@__minimal___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd)
 @COND_PLATFORM_WIN32_1@__minimal___win32rc = minimal_minimal_rc.o
-
 
 ### Targets: ###
 
@@ -118,19 +115,19 @@ install-lib:
 	$(RANLIB) $@
 
 ../sample/minimal$(EXEEXT): $(MINIMAL_OBJECTS) $(__minimal___win32rc) ../lib/$(LIBPREFIX)keybinder$(WXLIBPOSTFIX)$(LIBEXT)
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS)  $(LDFLAGS_GUI) -L../lib `wx-config --libs`  ../lib/$(LIBPREFIX)keybinder$(WXLIBPOSTFIX)$(LIBEXT)
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) -L../lib -L../lib `wx-config --libs`  -lkeybinder$(WXLIBPOSTFIX)
 	
 	$(__minimal___mac_setfilecmd)
 	$(__minimal___os2_emxbindcmd)
 
 keybinder_keybinder.o: $(srcdir)/../src/keybinder.cpp
-	$(CXXC) -c -o $@ $(KEYBINDER_CXXFLAGS) $<
+	$(CXXC) -c -o $@ $(KEYBINDER_CXXFLAGS) $(srcdir)/../src/keybinder.cpp
 
 keybinder_menuutils.o: $(srcdir)/../src/menuutils.cpp
-	$(CXXC) -c -o $@ $(KEYBINDER_CXXFLAGS) $<
+	$(CXXC) -c -o $@ $(KEYBINDER_CXXFLAGS) $(srcdir)/../src/menuutils.cpp
 
 minimal_minimal.o: $(srcdir)/../sample/minimal.cpp
-	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $<
+	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/../sample/minimal.cpp
 
 minimal_minimal_rc.o: $(srcdir)/../sample/minimal.rc
 	$(RESCOMP) -i$< -o$@  --include-dir ../include --include-dir ../sample
