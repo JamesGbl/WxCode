@@ -2,7 +2,7 @@
 // Name:        tarstrm.cpp
 // Purpose:     Streams for Tar files
 // Author:      Mike Wetherell
-// RCS-ID:      $Id: tarstrm.cpp,v 1.3 2004-12-04 13:56:16 chiclero Exp $
+// RCS-ID:      $Id: tarstrm.cpp,v 1.4 2005-04-02 11:21:51 chiclero Exp $
 // Copyright:   (c) 2004 Mike Wetherell
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -275,7 +275,7 @@ bool wxTarHeaderBlock::SetPath(const wxString& name, wxMBConv& conv)
     (void)conv;
 #endif
 
-    bool fits = false;
+    bool fits;
     bool notGoingToFit = false;
     size_t len = strlen(mbName);
     size_t maxname = Len(TAR_NAME);
@@ -614,8 +614,9 @@ bool wxTarInputStream::OpenEntry(wxTarEntry& entry)
 {
     wxFileOffset offset = entry.GetOffset();
 
-    if (GetLastError() != wxSTREAM_READ_ERROR &&
-            m_parent_i_stream->SeekI(offset) == offset)
+    if (GetLastError() != wxSTREAM_READ_ERROR
+            && m_parent_i_stream->IsSeekable()
+            && m_parent_i_stream->SeekI(offset) == offset)
     {
         m_offset = offset;
         m_size = GetDataSize(entry);
@@ -644,7 +645,7 @@ bool wxTarInputStream::CloseEntry()
     wxFileOffset size = RoundUpSize(m_size);
     wxFileOffset remainder = size - m_pos;
 
-    if (remainder) {
+    if (remainder && m_parent_i_stream->IsSeekable()) {
         wxLogNull nolog;
         if (m_parent_i_stream->SeekI(remainder, wxFromCurrent)
                 != wxInvalidOffset)
@@ -841,7 +842,7 @@ bool wxTarInputStream::ReadExtendedHeader(wxTarHeaderRecords*& recs)
         // validity checks
         if (recPos + recSize > len)
             break;
-        if (recSize < p - pRec + 3u || *p != ' '
+        if (recSize < p - pRec + (size_t)3 || *p != ' '
                 || pRec[recSize - 1] != '\012') {
             ok = false;
             continue;
@@ -1050,6 +1051,7 @@ bool wxTarOutputStream::CloseEntry()
         return true;
 
     if (m_pos < m_maxpos) {
+        wxASSERT(m_parent_o_stream->IsSeekable());
         m_parent_o_stream->SeekO(m_datapos + m_maxpos);
         m_lasterror = m_parent_o_stream->GetLastError();
         m_pos = m_maxpos;
@@ -1228,7 +1230,9 @@ bool wxTarOutputStream::ModifyHeader()
     wxFileOffset originalPos = wxInvalidOffset;
     wxFileOffset sizePos = wxInvalidOffset;
 
-    if (!m_large && m_headpos != wxInvalidOffset) {
+    if (!m_large && m_headpos != wxInvalidOffset
+            && m_parent_o_stream->IsSeekable())
+    {
         wxLogNull nolog;
         originalPos = m_parent_o_stream->TellO();
         if (originalPos != wxInvalidOffset)
@@ -1309,15 +1313,15 @@ void wxTarOutputStream::SetExtendedHeader(const wxString& key,
         // a small buffer to format the length field in
         char buf[32];
         // length of "99<space><key>=<value>\n"
-        size_t length = strlen(utf_value) + strlen(utf_key) + 5;
-        sprintf(buf, "%d", length);
+        unsigned long length = strlen(utf_value) + strlen(utf_key) + 5;
+        sprintf(buf, "%lu", length);
         // the length includes itself
         size_t lenlen = strlen(buf);
         if (lenlen != 2) {
             length += lenlen - 2;
-            sprintf(buf, "%d", length);
+            sprintf(buf, "%lu", length);
             if (strlen(buf) > lenlen)
-                sprintf(buf, "%d", ++length);
+                sprintf(buf, "%lu", ++length);
         }
 
         // reallocate m_extendedHdr if it's not big enough

@@ -2,7 +2,7 @@
 // Name:        tarstrm.h
 // Purpose:     Streams for Tar files
 // Author:      Mike Wetherell
-// RCS-ID:      $Id: tarstrm.h,v 1.3 2004-12-04 13:56:16 chiclero Exp $
+// RCS-ID:      $Id: tarstrm.h,v 1.4 2005-04-02 11:21:51 chiclero Exp $
 // Copyright:   (c) 2004 Mike Wetherell
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -168,6 +168,7 @@ public:
     wxTarEntry *GetNextEntry();
 
     wxFileOffset GetLength() const      { return m_size; }
+    bool IsSeekable() const { return m_parent_i_stream->IsSeekable(); }
 
 protected:
     size_t OnSysRead(void *buffer, size_t size);
@@ -228,6 +229,8 @@ public:
     void Sync();
     bool CloseEntry();
     bool Close();
+
+    bool IsSeekable() const { return m_parent_o_stream->IsSeekable(); }
 
     void SetBlockingFactor(int factor)  { m_BlockingFactor = factor; }
     int GetBlockingFactor() const       { return m_BlockingFactor; }
