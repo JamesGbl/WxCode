@@ -1,0 +1,10 @@
+Component:  wxMimeTypes
+Release:    2004-11-14
+Documents:  http://wxcode.sourceforge.net/components/mimetypes/index.html
+wxWidgets:  2.4.x
+Maintainer: Otto Wyss (wyo)
+Subdir:     mimetypes
+
+Description:
+wxMimeTypes gives to access (retrieve, read and write) any mime type information
+of a file.
