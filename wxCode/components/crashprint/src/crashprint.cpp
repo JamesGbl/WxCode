@@ -3,7 +3,7 @@
 // Purpose:     wxCrashPrint
 // Maintainer:  Wyo
 // Created:     2004-09-28
-// RCS-ID:      $Id: crashprint.cpp,v 1.7 2004-10-08 16:04:17 wyo Exp $
+// RCS-ID:      $Id: crashprint.cpp,v 1.8 2004-10-25 18:55:45 wyo Exp $
 // Copyright:   (c) wxCode
 // Licence:     wxWidgets licence
 //////////////////////////////////////////////////////////////////////////////
@@ -132,6 +132,5 @@ void wxCrashPrint::Report () {
             printf ("%s\n", lines[i].c_str());
         }
     }
-    printf ("\n");
 
 }
