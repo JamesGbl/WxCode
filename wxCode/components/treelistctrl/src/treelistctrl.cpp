@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.38 2004-10-30 08:11:22 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.39 2004-10-30 09:18:46 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -2209,7 +2209,7 @@ wxTreeItemId wxTreeListMainWindow::GetNextChild(const wxTreeItemId& item,
     wxArrayTreeListItems& children = ((wxTreeListItem*) item.m_pItem)->GetChildren();
 
     // it's ok to cast cookie to size_t, we never have indices which overflow "void*"
-    long *pIndex = &cookie;
+    long *pIndex = (long*)&cookie;
     return (*pIndex < (long)children.Count()-1)? children.Item((*pIndex)++): wxTreeItemId();
 }
 
@@ -2225,7 +2225,7 @@ wxTreeItemId wxTreeListMainWindow::GetPrevChild(const wxTreeItemId& item,
     wxArrayTreeListItems& children = ((wxTreeListItem*) item.m_pItem)->GetChildren();
 
     // it's ok to cast cookie to size_t, we never have indices which overflow "void*"
-    long *pIndex = &cookie;
+    long *pIndex = (long*)&cookie;
     return (*pIndex > 0)? children.Item(--(*pIndex)): wxTreeItemId();
 }
 
