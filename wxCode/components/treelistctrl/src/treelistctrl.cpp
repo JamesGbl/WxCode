@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.64 2004-12-19 10:17:50 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.65 2004-12-19 20:16:35 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -3612,16 +3612,15 @@ void wxTreeListMainWindow::OnChar (wxKeyEvent &event) {
         }break;
 
         // any char: go to the next matching string
-//? TODO shift/alt??? key expands the tree before
         default:
             if (event.m_keyCode >= (int)' ') {
                 if (!m_findTimer->IsRunning()) m_findStr.Clear();
                 m_findStr.Append (event.m_keyCode);
                 m_findTimer->Start (FIND_TIMER_TICKS, wxTIMER_ONE_SHOT);
-                wxTreeItemId dummy = (wxTreeItemId*)NULL;
-                newItem = FindItem (dummy, m_findStr, wxTL_MODE_NAV_EXPANDED |
-                                                      wxTL_MODE_FIND_PARTIAL |
-                                                      wxTL_MODE_FIND_NOCASE);
+                wxTreeItemId prev = m_curItem? (wxTreeItemId*)m_curItem: (wxTreeItemId*)NULL;
+                newItem = FindItem (prev, m_findStr, wxTL_MODE_NAV_EXPANDED |
+                                                     wxTL_MODE_FIND_PARTIAL |
+                                                     wxTL_MODE_FIND_NOCASE);
             }
             event.Skip();
 
@@ -3795,7 +3794,7 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
     wxPoint p = wxPoint (event.GetX(), event.GetY());
     int flags = 0;
     wxTreeListItem *item = m_rootItem->HitTest (CalcUnscrolledPosition (p),
-													  this, flags, m_curColumn, 0);
+                                                      this, flags, m_curColumn, 0);
 
     // we only process dragging here
     if (event.Dragging()){
