@@ -27,7 +27,7 @@ OBJECTS = ../src/Shortcut.o ../src/ShortcutGroup.o ../src/ShortcutPanel.o $(PROG
 .SUFFIXES:	.o .cpp
 
 .cpp.o :
-	$(CXX) -c -g `$(WX_CONFIG) --cxxflags` -I../include -o $@ $<
+	$(CXX) -c `$(WX_CONFIG) --cxxflags` -I../include -o $@ $<
 
 all:    $(PROGRAM)
 
