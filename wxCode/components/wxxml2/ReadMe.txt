@@ -3,7 +3,7 @@
  ---------------------
  
  Component:  wxxml2
- Release:    2004-12-22
+ Release:    2005-1-4
  Documents:  http://wxcode.sourceforge.net/components/wxscript/index.html
  wxWidgets:  2.4.x, 2.5.x
  Maintainer: Francesco Montorsi (frm)
