@@ -3,7 +3,7 @@
 // Purpose:     CrashTest application
 // Maintainer:  Otto Wyss
 // Created:     2004-10-01
-// RCS-ID:      $Id: app.cpp,v 1.4 2004-10-05 20:33:46 wyo Exp $
+// RCS-ID:      $Id: app.cpp,v 1.5 2004-10-08 16:05:15 wyo Exp $
 // Copyright:   (c) wxCode
 // Licence:     wxWindows licence
 //////////////////////////////////////////////////////////////////////////////
@@ -31,7 +31,9 @@
 
 //! wxWidgets headers
 
+#if defined(__linux__)
 #include "wx/crashprint.h"
+#endif
 
 //----------------------------------------------------------------------------
 // resources
@@ -73,8 +75,10 @@ const wxString APP_INFOS = _(
 //! global application name
 wxString g_appname;
 
+#if defined(__linux__)
 //! crashprint
 wxCrashPrint g_crashprint;
+#endif
 
 //----------------------------------------------------------------------------
 //! application
@@ -85,6 +89,9 @@ public:
 
     // standard overrides
     bool OnInit();
+
+    //! fatal exeption handling
+    void OnFatalException();
 
 private:
 
@@ -116,7 +123,15 @@ bool App::OnInit () {
     printf (_T("%s\n\n"), APP_DESCR.c_str());
 
     // simulate crash
+#if defined(__linux__)
     g_crashprint.Report();
+#endif
 
     return false;
+}
+
+void App::OnFatalException () {
+#if defined(__linux__)
+    g_crashprint.Report();
+#endif
 }
