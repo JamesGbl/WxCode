@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!-- $Id: arc.bkl,v 1.3 2004-09-09 15:53:52 chiclero Exp $ -->
+<!-- $Id: arc.bkl,v 1.4 2004-11-27 23:50:46 chiclero Exp $ -->
 
 <makefile>
 
@@ -7,22 +7,9 @@
 
     <exe id="arc" template="wx_sample_console" template_append="wx_append">
         <include>$(SRCDIR)/../include</include>
-        <include cond="FORMAT=='dmars'">c:\dm\stlport\stlport</include>
         <sources>arc.cpp</sources>
-        <sources>../src/archive.cpp</sources>
-        <sources>../src/zipstrm2.cpp</sources>
-        <!--
         <sources>../src/tarstrm.cpp</sources>
-        -->
-
         <wx-lib>base</wx-lib>
-        <!--
-        <sys-lib>$(wxwin.libToLink("archive"))</sys-lib>
-
-        <if cond="IS_MSVC_PRJ=='1' and MONOLITHIC=='0'">
-            <depends-on-dsp>archive:..\src\archive.dsp</depends-on-dsp>
-        </if>
-        -->
     </exe>
 
 </makefile>
