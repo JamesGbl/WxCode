@@ -1511,6 +1511,9 @@ The selection is shown by changing the foreground and/or background colours. If 
 <li><a class="message" href="#SetHotspotSingleLine">void SetHotspotSingleLine (bool singleLine)</a></li>
 <li><a class="message" href="#SetControlCharSymbol">void SetControlCharSymbol (int symbol)</a></li>
 <li><a class="message" href="#GetControlCharSymbol">int GetControlCharSymbol()</a></li>
+<li><a class="message" href="#SetCaretSticky">void SetCaretSticky (bool useCaretStickyBehaviour)</a></li>
+<li><a class="message" href="#GetCaretSticky">bool GetCaretSticky ()</a></li>
+<li><a class="message" href="#ToggleCaretSticky">void ToggleCaretSticky ()</a></li>
 </ul>
 
 <div class="divider2"></div>
@@ -1570,6 +1573,14 @@ By default, Scintilla displays control characters (characters with codes less th
 </p>
 <p>
 You can choose to replace these mnemonics by a nominated symbol with an ASCII code in the range 32 to 255. If you set a symbol value less than 32, all control characters are displayed as mnemonics. The symbol you set is rendered in the font of the style set for the character. You can read back the current symbol with the <code>GetControlCharSymbol</code>. The default symbol value is 0.
+</p>
+
+<div class="divider2"></div>
+<h4><a name="SetCaretSticky">void SetCaretSticky (bool useCaretStickyBehaviour)</a><br />
+    <a name="GetCaretSticky">bool GetCaretSticky ()</a><br />
+    <a name="ToggleCaretSticky">void ToggleCaretSticky ()</a></h4>
+<p>
+These messages set, get or toggle the caretSticky flag which controls when the last position of the caret on the line is saved. When set to true, the position is not saved when you type a character, a tab, paste the clipboard content or press backspace.
 </p>
 
 <div class="divider1"></div>
@@ -2168,6 +2179,10 @@ To make use of autocompletion you must monitor each character added to the docum
 <li><a class="message" href="#ClearRegisteredImages">void ClearRegisteredImages()</a></li>
 <li><a class="message" href="#AutoCompSetTypeSeparator">void AutoCompSetTypeSeparator (int separatorCharacter)</a></li>
 <li><a class="message" href="#AutoCompGetTypeSeparator">int AutoCompGetTypeSeparator()</a></li>
+<li><a class="message" href="#AutoCompSetMaxWidth">void AutoCompSetMaxWidth (int characterCount)</a></li>
+<li><a class="message" href="#AutoCompGetMaxWidth">int AutoCompGetMaxWidth()</a></li>
+<li><a class="message" href="#AutoCompSetMaxHeight">void AutoCompSetMaxHeight (int rowCount)</a></li>
+<li><a class="message" href="#AutoCompGetMaxHeight">int AutoCompGetMaxHeight()</a></li>
 </ul>
 
 <div class="divider2"></div>
@@ -2271,6 +2286,20 @@ When an item is selected, any word characters following the caret are first eras
     <a name="AutoCompGetTypeSeparator">int AutoCompGetTypeSeparator()</a></h4>
 <p>
 Autocompletion list items may display an image as well as text. Each image is first registered with an integer type. Then this integer is included in the text of the list separated by a '?' from the text. For example, "fclose?2 fopen" displays image 2 before the string "fclose" and no image before "fopen". The images are in XPM format as is described for <a class="message" href="#MarkerDefineBitmap"><code>MarkerDefineBitmap</code></a> The set of registered images can be cleared with <code>ClearRegisteredImages</code> and the '?' separator changed with <code>AutoCompSetTypeSeparator</code>.
+</p>
+
+<div class="divider2"></div>
+<h4><a name="AutoCompSetMaxWidth">void AutoCompSetMaxWidth (int characterCount)</a><br />
+    <a name="AutoCompGetMaxWidth">int AutoCompGetMaxWidth()</a></h4>
+<p>
+Get or set the maximum number of rows that will be visible in an autocompletion list. If there are more rows in the list, then a vertical scrollbar is shown. The default is 5.
+</p>
+
+<div class="divider2"></div>
+<h4><a name="AutoCompSetMaxHeight">void AutoCompSetMaxHeight (int rowCount)</a><br />
+    <a name="AutoCompGetMaxHeight">int AutoCompGetMaxHeight()</a></h4>
+<p>
+Get or set the maximum width of an autocompletion list expressed as the number of characters in the longest item that will be totally visible. If zero (the default) then the list's width is calculated to fit the item with the most characters. Any items that cannot be fully displayed within the available width are indicated by the presence of ellipsis.
 </p>
 
 <div class="divider1"></div>
@@ -3203,6 +3232,7 @@ A line may be hidden because more than one of its parent lines is contracted. Bo
 <li><a class="message" href="#GetLayoutCache">int GetLayoutCache()</a></li>
 <li><a class="message" href="#LinesSplit">void LinesSplit (int pixels)</a></li>
 <li><a class="message" href="#LinesJoin">void LinesJoin()</a></li>
+<li><a class="message" href="#WrapCount">int WrapCount (int line)</a></li>
 </ul>
 
 <p>
@@ -3330,6 +3360,12 @@ Split a range of lines indicated by the target into lines that are at most pixel
 <h4><a name="LinesJoin">void LinesJoin()</a></h4>
 <p>
 Join a range of lines indicated by the target into one line by removing line end characters. Where this would lead to no space between words, an extra space is inserted.
+</p>
+
+<div class="divider2"></div>
+<h4><a name="WrapCount">int WrapCount (int line)</a></h4>
+<p>
+Document lines can occupy more than one display line if they wrap and this returns the number of display lines needed to wrap a document line.
 </p>
 
 <div class="divider1"></div>

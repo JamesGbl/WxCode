@@ -12,7 +12,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.h,v 1.15 2005-02-12 14:21:55 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.h,v 1.16 2005-04-05 18:54:02 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -206,6 +206,7 @@
 #define wxSCI_TIME_FOREVER 10000000
 #define wxSCI_WRAP_NONE 0
 #define wxSCI_WRAP_WORD 1
+#define wxSCI_WRAP_CHAR 2
 #define wxSCI_WRAPVISUALFLAG_NONE 0x0000
 #define wxSCI_WRAPVISUALFLAG_END 0x0001
 #define wxSCI_WRAPVISUALFLAG_START 0x0002
@@ -332,8 +333,6 @@
 #define wxSCI_LEX_NNCRONTAB 26
 #define wxSCI_LEX_BULLANT 27
 #define wxSCI_LEX_VBSCRIPT 28
-#define wxSCI_LEX_ASP 29
-#define wxSCI_LEX_PHP 30
 #define wxSCI_LEX_BAAN 31
 #define wxSCI_LEX_MATLAB 32
 #define wxSCI_LEX_SCRIPTOL 33
@@ -368,6 +367,11 @@
 #define wxSCI_LEX_BASH 62
 #define wxSCI_LEX_ASN1 63
 #define wxSCI_LEX_VHDL 64
+#define wxSCI_LEX_CAML 65
+#define wxSCI_LEX_BLITZBASIC 66
+#define wxSCI_LEX_PUREBASIC 67
+#define wxSCI_LEX_HASKELL 68
+#define wxSCI_LEX_PHPSCRIPT 69
 
 // When a lexer specifies its language as SCLEX_AUTOMATIC it receives a
 // value assigned in sequence from SCLEX_AUTOMATIC+1.
@@ -596,6 +600,10 @@
 #define wxSCI_B_KEYWORD4 12
 #define wxSCI_B_CONSTANT 13
 #define wxSCI_B_ASM 14
+#define wxSCI_B_LABEL 15
+#define wxSCI_B_ERROR 16
+#define wxSCI_B_HEXNUMBER 17
+#define wxSCI_B_BINNUMBER 18
 
 // Lexical states for SCLEX_PROPERTIES
 #define wxSCI_PROPS_DEFAULT 0
@@ -870,6 +878,7 @@
 #define wxSCI_CSS_DOUBLESTRING 13
 #define wxSCI_CSS_SINGLESTRING 14
 #define wxSCI_CSS_IDENTIFIER2 15
+#define wxSCI_CSS_ATTRIBUTE 16
 
 // Lexical states for SCLEX_POV
 #define wxSCI_POV_DEFAULT 0
@@ -951,6 +960,10 @@
 #define wxSCI_NSIS_MACRODEF 12
 #define wxSCI_NSIS_STRINGVAR 13
 #define wxSCI_NSIS_NUMBER 14
+#define wxSCI_NSIS_SECTIONGROUP 15
+#define wxSCI_NSIS_PAGEEX 16
+#define wxSCI_NSIS_FUNCTIONDEF 17
+#define wxSCI_NSIS_COMMENTBOX 18
 
 // Lexical states for SCLEX_MMIXAL
 #define wxSCI_MMIXAL_LEADWS 0
@@ -983,11 +996,12 @@
 #define wxSCI_CLW_PICTURE_STRING 7
 #define wxSCI_CLW_KEYWORD 8
 #define wxSCI_CLW_COMPILER_DIRECTIVE 9
-#define wxSCI_CLW_BUILTIN_PROCEDURES_FUNCTION 10
-#define wxSCI_CLW_STRUCTURE_DATA_TYPE 11
-#define wxSCI_CLW_ATTRIBUTE 12
-#define wxSCI_CLW_STANDARD_EQUATE 13
-#define wxSCI_CLW_ERROR 14
+#define wxSCI_CLW_RUNTIME_EXPRESSIONS 10
+#define wxSCI_CLW_BUILTIN_PROCEDURES_FUNCTION 11
+#define wxSCI_CLW_STRUCTURE_DATA_TYPE 12
+#define wxSCI_CLW_ATTRIBUTE 13
+#define wxSCI_CLW_STANDARD_EQUATE 14
+#define wxSCI_CLW_ERROR 15
 
 // Lexical states for SCLEX_LOT
 #define wxSCI_LOT_DEFAULT 0
@@ -1134,6 +1148,7 @@
 #define wxSCI_AU3_SENT 10
 #define wxSCI_AU3_PREPROCESSOR 11
 #define wxSCI_AU3_SPECIAL 12
+#define wxSCI_AU3_EXPAND 13
 
 // Lexical states for SCLEX_APDL
 #define wxSCI_APDL_DEFAULT 0
@@ -1195,6 +1210,41 @@
 #define wxSCI_VHDL_STDPACKAGE 12
 #define wxSCI_VHDL_STDTYPE 13
 #define wxSCI_VHDL_USERWORD 14
+
+// Lexical states for SCLEX_CAML
+#define wxSCI_CAML_DEFAULT 0
+#define wxSCI_CAML_IDENTIFIER 1
+#define wxSCI_CAML_TAGNAME 2
+#define wxSCI_CAML_KEYWORD 3
+#define wxSCI_CAML_KEYWORD2 4
+#define wxSCI_CAML_LINENUM 5
+#define wxSCI_CAML_OPERATOR 6
+#define wxSCI_CAML_NUMBER 7
+#define wxSCI_CAML_CHAR 8
+#define wxSCI_CAML_STRING 9
+#define wxSCI_CAML_COMMENT 10
+#define wxSCI_CAML_COMMENT1 11
+#define wxSCI_CAML_COMMENT2 12
+#define wxSCI_CAML_COMMENT3 13
+
+// Lexical states for SCLEX_HA
+#define wxSCI_HA_DEFAULT 0
+#define wxSCI_HA_IDENTIFIER 1
+#define wxSCI_HA_KEYWORD 2
+#define wxSCI_HA_NUMBER 3
+#define wxSCI_HA_STRING 4
+#define wxSCI_HA_CHARACTER 5
+#define wxSCI_HA_CLASS 6
+#define wxSCI_HA_MODULE 7
+#define wxSCI_HA_CAPITAL 8
+#define wxSCI_HA_DATA 9
+#define wxSCI_HA_IMPORT 10
+#define wxSCI_HA_OPERATOR 11
+#define wxSCI_HA_INSTANCE 12
+#define wxSCI_HA_COMMENTLINE 13
+#define wxSCI_HA_COMMENTBLOCK 14
+#define wxSCI_HA_COMMENTBLOCK2 15
+#define wxSCI_HA_COMMENTBLOCK3 16
 
 
 //-----------------------------------------
@@ -1918,6 +1968,20 @@ public:
     // Default is '?' but can be changed if items contain '?'.
     void AutoCompSetTypeSeparator (int separatorCharacter);
 
+    // Set the maximum width, in characters, of auto-completion and user lists.
+    // Set to 0 to autosize to fit longest item, which is the default.
+    void AutoCompSetMaxWidth (int characterCount);
+
+    // Get the maximum width, in characters, of auto-completion and user lists.
+    int AutoCompGetMaxWidth();
+
+    // Set the maximum height, in rows, of auto-completion and user lists.
+    // The default is 5 rows.
+    void AutoCompSetMaxHeight (int rowCount);
+
+    // Set the maximum height, in rows, of auto-completion and user lists.
+    int AutoCompGetMaxHeight();
+
     // Set the number of spaces used for one level of indentation.
     void SetIndent (int indentSize);
 
@@ -1946,6 +2010,15 @@ public:
     // Returns the position of a column (max. end of line position if beyond)
     // on a line taking the width of tabs into account.
     int FindColumn (int line, int column);
+
+    // Can the caret preferred x position only be changed by explicit movement commands?
+    bool GetCaretSticky ();
+
+    // Stop the caret preferred x position changing when the user types.
+    void SetCaretSticky (bool useCaretStickyBehaviour);
+
+    // Switch between sticky and non-sticky: meant to be bound to a key.
+    void ToggleCaretSticky ();
 
     // Show or hide the horizontal scroll bar.
     void SetUseHorizontalScrollBar (bool show);
@@ -2177,6 +2250,9 @@ public:
 
     // Find the document line of a display line taking hidden lines into account.
     int DocLineFromVisible (int lineDisplay);
+
+    // The number of display lines needed to wrap a document line
+    int WrapCount (int line);
 
     // Set the fold level of a line.
     // This encodes an integer level along with flags indicating whether the

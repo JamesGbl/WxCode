@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.18 2005-03-30 20:08:23 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.19 2005-04-05 18:54:02 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -262,7 +262,7 @@ int wxScintilla::GetLength() {
 
 // Returns the character byte at the position.
 int wxScintilla::GetCharAt(int pos) {
-         return (unsigned char)SendMsg(2007, pos, 0);
+    return (unsigned char)SendMsg(2007, pos, 0);
 }
 
 // Returns the position of the caret.
@@ -277,7 +277,7 @@ int wxScintilla::GetAnchor() {
 
 // Returns the style byte at the position.
 int wxScintilla::GetStyleAt(int pos) {
-         return (unsigned char)SendMsg(2010, pos, 0);
+    return (unsigned char)SendMsg(2010, pos, 0);
 }
 
 // Redoes the next action on the undo history.
@@ -924,6 +924,28 @@ void wxScintilla::AutoCompSetTypeSeparator(int separatorCharacter) {
     SendMsg(2286, separatorCharacter, 0);
 }
 
+// Set the maximum width, in characters, of auto-completion and user lists.
+// Set to 0 to autosize to fit longest item, which is the default.
+void wxScintilla::AutoCompSetMaxWidth (int characterCount) {
+    SendMsg(2208, characterCount, 0);
+}
+
+// Get the maximum width, in characters, of auto-completion and user lists.
+int wxScintilla::AutoCompGetMaxWidth() {
+    return SendMsg(2209, 0, 0);
+}
+
+// Set the maximum height, in rows, of auto-completion and user lists.
+// The default is 5 rows.
+void wxScintilla::AutoCompSetMaxHeight (int rowCount) {
+    SendMsg(2210, rowCount, 0);
+}
+
+// Set the maximum height, in rows, of auto-completion and user lists.
+int wxScintilla::AutoCompGetMaxHeight() {
+    return SendMsg(2211, 0, 0);
+}
+
 // Set the number of spaces used for one level of indentation.
 void wxScintilla::SetIndent(int indentSize) {
     SendMsg(2122, indentSize, 0);
@@ -1423,6 +1445,11 @@ int wxScintilla::VisibleFromDocLine(int line) {
 // Find the document line of a display line taking hidden lines into account.
 int wxScintilla::DocLineFromVisible(int lineDisplay) {
     return SendMsg(2221, lineDisplay, 0);
+}
+
+// The number of display lines needed to wrap a document line
+int wxScintilla::WrapCount (int line) {
+    return SendMsg(2235, line, 0);
 }
 
 // Set the fold level of a line.
@@ -2417,6 +2444,21 @@ void wxScintilla::Allocate(int bytes) {
 // Returns the position of a column on a line taking the width of tabs into account.
 int wxScintilla::FindColumn (int line, int column) {
     return SendMsg(2456, line, column);
+}
+
+// Can the caret preferred x position only be changed by explicit movement commands?
+bool wxScintilla::GetCaretSticky () {
+    return SendMsg(2457, 0, 0) != 0;
+}
+
+// Stop the caret preferred x position changing when the user types.
+void wxScintilla::SetCaretSticky (bool useCaretStickyBehaviour) {
+    SendMsg(2458, useCaretStickyBehaviour, 0);
+}
+
+// Switch between sticky and non-sticky: meant to be bound to a key.
+void wxScintilla::ToggleCaretSticky () {
+    SendMsg(2459, 0, 0);
 }
 
 // Start notifying the container of all key presses and commands.

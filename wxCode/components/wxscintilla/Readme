@@ -1,6 +1,6 @@
 Component:  wxScintilla
-Release:    1.62.5
-Documents:  http://www.yellowbrain.com/stc/index.html
+Release:    1.63.a
+Documents:  http://wxcode.sourceforge.net/components/wxscintilla/index.php
 wxWidgets:  2.4.x, 2.5.x
 Maintainer: Otto Wyss (wyo)
 Subdir:     wxscintilla

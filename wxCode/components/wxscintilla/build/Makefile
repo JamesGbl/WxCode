@@ -3,7 +3,7 @@
 ## Purpose:     wxScintilla
 ## Maintainer:  Otto Wyss
 ## Created:     2004-09-19
-## RCS-ID:      $Id: Makefile,v 1.6 2005-03-01 17:26:17 wyo Exp $
+## RCS-ID:      $Id: Makefile,v 1.7 2005-04-05 18:54:01 wyo Exp $
 ## Copyright:   (c) 2004 wxCode
 ## Licence:     wxWindows
 ##############################################################################
@@ -30,7 +30,9 @@ SRC = PlatWX.cpp \
       LexAVE.cxx \
       LexBaan.cxx \
       LexBash.cxx \
+      LexBasic.cxx \
       LexBullant.cxx \
+      LexCaml.cxx \
       LexCLW.cxx \
       LexConf.cxx \
       LexCPP.cxx \
@@ -42,6 +44,7 @@ SRC = PlatWX.cpp \
       LexForth.cxx \
       LexFortran.cxx \
       LexGui4Cli.cxx \
+      LexHaskell.cxx \
       LexHTML.cxx \
       LexKix.cxx \
       LexLisp.cxx \
@@ -128,31 +131,31 @@ ifeq ($(MAKECMDGOALS),univdebug)
   GTKCONFIG=pkg-config gtk+-2.0
 endif
 
-%.o:	%.cpp
-	g++ -fpic -c $(DEF) $(INC) `$(WXCONFIG) --cxxflags` -g -o $@ $<
+%.o:    %.cpp
+    g++ -fpic -c $(DEF) $(INC) `$(WXCONFIG) --cxxflags` -g -o $@ $<
 
-%.o:	%.cxx
-	g++ -fpic -c $(DEF) $(INC) `$(WXCONFIG) --cxxflags` -g -o $@ $<
+%.o:    %.cxx
+    g++ -fpic -c $(DEF) $(INC) `$(WXCONFIG) --cxxflags` -g -o $@ $<
 
-all:	$(LIB).so
-$(LIB).so:	$(OBJ)
-	g++ -fpic --share -o ../lib/$@ $^ `$(WXCONFIG) --libs`
+all:    $(LIB).so
+$(LIB).so:  $(OBJ)
+    g++ -fpic --share -o ../lib/$@ $^ `$(WXCONFIG) --libs`
 
-release:	$(LIB).a
-$(LIB).a:	$(OBJ)
-	ar crs ../lib/$@ $^
+release:    $(LIB).a
+$(LIB).a:   $(OBJ)
+    ar crs ../lib/$@ $^
 
-debug:	$(LIB).so.d
-$(LIB).so.d:	$(OBJ)
-	g++ -fpic --share -o ../lib/$@ $^ `$(WXCONFIG) --libs`
+debug:  $(LIB).so.d
+$(LIB).so.d:    $(OBJ)
+    g++ -fpic --share -o ../lib/$@ $^ `$(WXCONFIG) --libs`
 
-develdebug:	$(LIB).so.dd
-$(LIB).so.dd:	$(OBJ)
-	g++ -fpic --share -o ../lib/$@ $^ `$(WXCONFIG) --libs`
+develdebug: $(LIB).so.dd
+$(LIB).so.dd:   $(OBJ)
+    g++ -fpic --share -o ../lib/$@ $^ `$(WXCONFIG) --libs`
 
-univdebug:	$(LIB).so.ud
-$(LIB).so.ud:	$(OBJ)
-	g++ -fpic --share -o ../lib/$@ $^ `$(WXCONFIG) --libs`
+univdebug:  $(LIB).so.ud
+$(LIB).so.ud:   $(OBJ)
+    g++ -fpic --share -o ../lib/$@ $^ `$(WXCONFIG) --libs`
 
 clean:
-	rm -f *.o
+    rm -f *.o

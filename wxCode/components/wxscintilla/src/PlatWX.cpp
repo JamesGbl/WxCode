@@ -844,7 +844,7 @@ public:
         return rv;
     }
 #endif
-    
+
     void OnActivate(wxListEvent& WXUNUSED(event)) {
         doubleClickAction(doubleClickActionData);
     }
@@ -889,9 +889,10 @@ public:
     ~ListBoxImpl();
 
     virtual void SetFont(Font &font);
-    virtual void Create(Window &parent, int ctrlID, int lineHeight_, bool unicodeMode_);
+    virtual void Create(Window &parent, int ctrlID, Point location, int lineHeight_, bool unicodeMode_);
     virtual void SetAverageCharWidth(int width);
     virtual void SetVisibleRows(int rows);
+    virtual int GetVisibleRows() const;
     virtual PRectangle GetDesiredRect();
     virtual int CaretFromEdge();
     virtual void Clear();
@@ -904,6 +905,7 @@ public:
     virtual void RegisterImage(int type, const char *xpm_data);
     virtual void ClearRegisteredImages();
     virtual void SetDoubleClickAction(CallBackAction, void *);
+    virtual void SetList(const char* list, char separator, char typesep);
 
 };
 
@@ -932,7 +934,7 @@ void ListBoxImpl::SetFont(Font &font) {
 }
 
 
-void ListBoxImpl::Create(Window &parent, int ctrlID, int lineHeight_, bool unicodeMode_) {
+void ListBoxImpl::Create(Window &parent, int ctrlID, Point location, int lineHeight_, bool unicodeMode_) {
     lineHeight =  lineHeight_;
     unicodeMode = unicodeMode_;
     maxStrWidth = 0;
@@ -949,6 +951,11 @@ void ListBoxImpl::SetAverageCharWidth(int width) {
 
 void ListBoxImpl::SetVisibleRows(int rows) {
     desiredVisibleRows = rows;
+}
+
+
+int ListBoxImpl::GetVisibleRows() const {
+    return desiredVisibleRows;
 }
 
 
@@ -1094,6 +1101,8 @@ void ListBoxImpl::SetDoubleClickAction(CallBackAction action, void *data) {
     GETLBW(id)->SetDoubleClickAction(action, data);
 }
 
+void ListBoxImpl::SetList(const char* list, char separator, char typesep) {
+}
 
 
 ListBox::ListBox() {
