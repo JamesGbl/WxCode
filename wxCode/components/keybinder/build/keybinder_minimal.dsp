@@ -1,4 +1,4 @@
-# Microsoft Developer Studio Project File - Name="keybinder_minimal" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="minimal" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
@@ -43,18 +43,18 @@ RSC=rc.exe
 # PROP Output_Dir "..\sample"
 # PROP Intermediate_Dir "msvc6prj\minimal"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /GR /GX /w /O1 /I "..\include" /Fd..\sample\minimal.pdb /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /D "WIN32" /D "__WXMSW__" /D "_UNICODE" /D "_WINDOWS" /c
-# ADD CPP /nologo /FD /MD /GR /GX /w /O1 /I "..\include" /Fd..\sample\minimal.pdb /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /D "WIN32" /D "__WXMSW__" /D "_UNICODE" /D "_WINDOWS" /c
+# ADD BASE CPP /nologo /MD /w /W0 /GR /GX /O1 /I "..\include" /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /D "WIN32" /D "__WXMSW__" /D "_UNICODE" /D "_WINDOWS" /Fd"..\sample\minimal.pdb" /FD /c
+# ADD CPP /nologo /MD /w /W0 /GR /GX /O1 /I "..\include" /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /D "WIN32" /D "__WXMSW__" /D "_UNICODE" /D "_WINDOWS" /Fd"..\sample\minimal.pdb" /FD /c
 # ADD BASE MTL /nologo /D "WIN32" /D "__WXMSW__" /D "_UNICODE" /D "_WINDOWS" /mktyplib203 /win32
 # ADD MTL /nologo /D "WIN32" /D "__WXMSW__" /D "_UNICODE" /D "_WINDOWS" /mktyplib203 /win32
-# ADD BASE RSC /l 0x409 /d "__WXMSW__" /d "_UNICODE" /d "_WINDOWS" /i "..\include" /i "c:\wxWidgets\include" /i "c:\wxWidgets\lib\vc_lib\mswu" /i ..\sample
-# ADD RSC /l 0x409 /d "__WXMSW__" /d "_UNICODE" /d "_WINDOWS" /i "..\include" /i "c:\wxWidgets\include" /i "c:\wxWidgets\lib\vc_lib\mswu" /i ..\sample
+# ADD BASE RSC /l 0x409 /i "..\include" /i "c:\wxWidgets\include" /i "c:\wxWidgets\lib\vc_lib\mswu" /i "..\sample" /d "__WXMSW__" /d "_UNICODE" /d "_WINDOWS"
+# ADD RSC /l 0x409 /i "..\include" /i "c:\wxWidgets\include" /i "c:\wxWidgets\lib\vc_lib\mswu" /i "..\sample" /d "__WXMSW__" /d "_UNICODE" /d "_WINDOWS"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 ..\lib\keybinderu.lib wxmsw25u_core.lib wxbase25u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\minimal.exe" /subsystem:windows /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib"
-# ADD LINK32 ..\lib\keybinderu.lib wxmsw25u_core.lib wxbase25u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\minimal.exe" /subsystem:windows /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib"
+# ADD BASE LINK32 ..\lib\keybinderu.lib wxmsw25u_core.lib wxbase25u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /subsystem:windows /machine:I386 /out:"..\sample\minimal.exe" /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib"
+# ADD LINK32 ..\lib\keybinderu.lib wxmsw25u_core.lib wxbase25u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /subsystem:windows /machine:I386 /out:"..\sample\minimal.exe" /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib"
 
 !ELSEIF  "$(CFG)" == "minimal - Win32 Unicode Debug"
 
@@ -68,18 +68,18 @@ LINK32=link.exe
 # PROP Output_Dir "..\sample"
 # PROP Intermediate_Dir "msvc6prj\minimal"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "..\include" /Zi /Gm /GZ /Fd..\sample\minimal.pdb /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswud" /D "WIN32" /D "__WXDEBUG__" /D "__WXMSW__" /D "_UNICODE" /D "_DEBUG" /D "_WINDOWS" /c
-# ADD CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "..\include" /Zi /Gm /GZ /Fd..\sample\minimal.pdb /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswud" /D "WIN32" /D "__WXDEBUG__" /D "__WXMSW__" /D "_UNICODE" /D "_DEBUG" /D "_WINDOWS" /c
+# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "..\include" /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswud" /D "WIN32" /D "__WXDEBUG__" /D "__WXMSW__" /D "_UNICODE" /D "_DEBUG" /D "_WINDOWS" /Fd"..\sample\minimal.pdb" /FD /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "..\include" /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswud" /D "WIN32" /D "__WXDEBUG__" /D "__WXMSW__" /D "_UNICODE" /D "_DEBUG" /D "_WINDOWS" /Fd"..\sample\minimal.pdb" /FD /GZ /c
 # ADD BASE MTL /nologo /D "WIN32" /D "__WXDEBUG__" /D "__WXMSW__" /D "_UNICODE" /D "_DEBUG" /D "_WINDOWS" /mktyplib203 /win32
 # ADD MTL /nologo /D "WIN32" /D "__WXDEBUG__" /D "__WXMSW__" /D "_UNICODE" /D "_DEBUG" /D "_WINDOWS" /mktyplib203 /win32
-# ADD BASE RSC /l 0x409 /d "__WXDEBUG__" /d "__WXMSW__" /d "_UNICODE" /d "_DEBUG" /d "_WINDOWS" /i "..\include" /i "c:\wxWidgets\include" /i "c:\wxWidgets\lib\vc_lib\mswud" /i ..\sample
-# ADD RSC /l 0x409 /d "__WXDEBUG__" /d "__WXMSW__" /d "_UNICODE" /d "_DEBUG" /d "_WINDOWS" /i "..\include" /i "c:\wxWidgets\include" /i "c:\wxWidgets\lib\vc_lib\mswud" /i ..\sample
+# ADD BASE RSC /l 0x409 /i "..\include" /i "c:\wxWidgets\include" /i "c:\wxWidgets\lib\vc_lib\mswud" /i "..\sample" /d "__WXDEBUG__" /d "__WXMSW__" /d "_UNICODE" /d "_DEBUG" /d "_WINDOWS"
+# ADD RSC /l 0x409 /i "..\include" /i "c:\wxWidgets\include" /i "c:\wxWidgets\lib\vc_lib\mswud" /i "..\sample" /d "__WXDEBUG__" /d "__WXMSW__" /d "_UNICODE" /d "_DEBUG" /d "_WINDOWS"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 ..\lib\keybinderud.lib wxmsw25ud_core.lib wxbase25ud.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\minimal.exe" /subsystem:windows /libpath:"..\lib" /debug /libpath:"c:\wxWidgets\lib\vc_lib"
-# ADD LINK32 ..\lib\keybinderud.lib wxmsw25ud_core.lib wxbase25ud.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\minimal.exe" /subsystem:windows /libpath:"..\lib" /debug /libpath:"c:\wxWidgets\lib\vc_lib"
+# ADD BASE LINK32 ..\lib\keybinderud.lib wxmsw25ud_core.lib wxbase25ud.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /subsystem:windows /debug /machine:I386 /out:"..\sample\minimal.exe" /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib"
+# ADD LINK32 ..\lib\keybinderud.lib wxmsw25ud_core.lib wxbase25ud.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /subsystem:windows /debug /machine:I386 /out:"..\sample\minimal.exe" /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib"
 
 !ELSEIF  "$(CFG)" == "minimal - Win32 Release"
 
@@ -93,18 +93,18 @@ LINK32=link.exe
 # PROP Output_Dir "..\sample"
 # PROP Intermediate_Dir "msvc6prj\minimal"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /GR /GX /w /O1 /I "..\include" /Fd..\sample\minimal.pdb /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /D "WIN32" /D "__WXMSW__" /D "_WINDOWS" /c
-# ADD CPP /nologo /FD /MD /GR /GX /w /O1 /I "..\include" /Fd..\sample\minimal.pdb /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /D "WIN32" /D "__WXMSW__" /D "_WINDOWS" /c
+# ADD BASE CPP /nologo /MD /w /W0 /GR /GX /O1 /I "..\include" /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /D "WIN32" /D "__WXMSW__" /D "_WINDOWS" /Fd"..\sample\minimal.pdb" /FD /c
+# ADD CPP /nologo /MD /w /W0 /GR /GX /O1 /I "..\include" /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /D "WIN32" /D "__WXMSW__" /D "_WINDOWS" /Fd"..\sample\minimal.pdb" /FD /c
 # ADD BASE MTL /nologo /D "WIN32" /D "__WXMSW__" /D "_WINDOWS" /mktyplib203 /win32
 # ADD MTL /nologo /D "WIN32" /D "__WXMSW__" /D "_WINDOWS" /mktyplib203 /win32
-# ADD BASE RSC /l 0x409 /d "__WXMSW__" /d "_WINDOWS" /i "..\include" /i "c:\wxWidgets\include" /i "c:\wxWidgets\lib\vc_lib\msw" /i ..\sample
-# ADD RSC /l 0x409 /d "__WXMSW__" /d "_WINDOWS" /i "..\include" /i "c:\wxWidgets\include" /i "c:\wxWidgets\lib\vc_lib\msw" /i ..\sample
+# ADD BASE RSC /l 0x409 /i "..\include" /i "c:\wxWidgets\include" /i "c:\wxWidgets\lib\vc_lib\msw" /i "..\sample" /d "__WXMSW__" /d "_WINDOWS"
+# ADD RSC /l 0x409 /i "..\include" /i "c:\wxWidgets\include" /i "c:\wxWidgets\lib\vc_lib\msw" /i "..\sample" /d "__WXMSW__" /d "_WINDOWS"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 ..\lib\keybinder.lib wxmsw25_core.lib wxbase25.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\minimal.exe" /subsystem:windows /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib"
-# ADD LINK32 ..\lib\keybinder.lib wxmsw25_core.lib wxbase25.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\minimal.exe" /subsystem:windows /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib"
+# ADD BASE LINK32 ..\lib\keybinder.lib wxmsw25_core.lib wxbase25.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /subsystem:windows /machine:I386 /out:"..\sample\minimal.exe" /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib"
+# ADD LINK32 ..\lib\keybinder.lib wxmsw25_core.lib wxbase25.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /subsystem:windows /machine:I386 /out:"..\sample\minimal.exe" /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib"
 
 !ELSEIF  "$(CFG)" == "minimal - Win32 Debug"
 
@@ -117,21 +117,22 @@ LINK32=link.exe
 # PROP Use_Debug_Libraries 1
 # PROP Output_Dir "..\sample"
 # PROP Intermediate_Dir "msvc6prj\minimal"
+# PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "..\include" /Zi /Gm /GZ /Fd..\sample\minimal.pdb /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswd" /D "WIN32" /D "__WXDEBUG__" /D "__WXMSW__" /D "_DEBUG" /D "_WINDOWS" /c
-# ADD CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "..\include" /Zi /Gm /GZ /Fd..\sample\minimal.pdb /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswd" /D "WIN32" /D "__WXDEBUG__" /D "__WXMSW__" /D "_DEBUG" /D "_WINDOWS" /c
+# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "..\include" /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswd" /D "WIN32" /D "__WXDEBUG__" /D "__WXMSW__" /D "_DEBUG" /D "_WINDOWS" /Fd"..\sample\minimal.pdb" /FD /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "..\include" /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswd" /D "WIN32" /D "__WXDEBUG__" /D "__WXMSW__" /D "_DEBUG" /D "_WINDOWS" /Fd"..\sample\minimal.pdb" /FD /GZ /c
 # ADD BASE MTL /nologo /D "WIN32" /D "__WXDEBUG__" /D "__WXMSW__" /D "_DEBUG" /D "_WINDOWS" /mktyplib203 /win32
 # ADD MTL /nologo /D "WIN32" /D "__WXDEBUG__" /D "__WXMSW__" /D "_DEBUG" /D "_WINDOWS" /mktyplib203 /win32
-# ADD BASE RSC /l 0x409 /d "__WXDEBUG__" /d "__WXMSW__" /d "_DEBUG" /d "_WINDOWS" /i "..\include" /i "c:\wxWidgets\include" /i "c:\wxWidgets\lib\vc_lib\mswd" /i ..\sample
-# ADD RSC /l 0x409 /d "__WXDEBUG__" /d "__WXMSW__" /d "_DEBUG" /d "_WINDOWS" /i "..\include" /i "c:\wxWidgets\include" /i "c:\wxWidgets\lib\vc_lib\mswd" /i ..\sample
+# ADD BASE RSC /l 0x409 /i "..\include" /i "c:\wxWidgets\include" /i "c:\wxWidgets\lib\vc_lib\mswd" /i "..\sample" /d "__WXDEBUG__" /d "__WXMSW__" /d "_DEBUG" /d "_WINDOWS"
+# ADD RSC /l 0x409 /i "..\include" /i "c:\wxWidgets\include" /i "c:\wxWidgets\lib\vc_lib\mswd" /i "..\sample" /d "__WXDEBUG__" /d "__WXMSW__" /d "_DEBUG" /d "_WINDOWS"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 ..\lib\keybinderd.lib wxmsw25d_core.lib wxbase25d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\minimal.exe" /subsystem:windows /libpath:"..\lib" /debug /libpath:"c:\wxWidgets\lib\vc_lib"
-# ADD LINK32 ..\lib\keybinderd.lib wxmsw25d_core.lib wxbase25d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\minimal.exe" /subsystem:windows /libpath:"..\lib" /debug /libpath:"c:\wxWidgets\lib\vc_lib"
+# ADD BASE LINK32 ..\lib\keybinderd.lib wxmsw25d_core.lib wxbase25d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /subsystem:windows /debug /machine:I386 /out:"..\sample\minimal.exe" /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib"
+# ADD LINK32 ..\lib\keybinderd.lib wxmsw25d_core.lib wxbase25d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /subsystem:windows /debug /machine:I386 /out:"..\sample\minimal.exe" /libpath:"..\lib" /libpath:"c:\wxWidgets\lib\vc_lib"
 
-!ENDIF
+!ENDIF 
 
 # Begin Target
 
@@ -153,4 +154,3 @@ SOURCE=.\..\sample\minimal.rc
 # End Group
 # End Target
 # End Project
-

@@ -37,6 +37,9 @@ int wxFindMenuItem(wxMenuBar *, const wxString &strMenuItemName);
 #define wxSAFE_DELETE_ARRAY(x)				{ if (x) delete [] x; x = NULL; }
 
 
+//! The command type identifier for a wxMenuCmd.
+#define wxMENUCMD_TYPE						0x1234
+
 
 //! Represents a wxCmd which just generates a wxEVT_COMMAND_MENU_SELECTED
 //! when is executed.
@@ -44,6 +47,24 @@ class wxMenuCmd : public wxCmd
 {
 	//! The menuitem which is connected to this command
 	wxMenuItem *m_pItem;
+
+public:		// static
+
+	//! The menubar used by #CreateNew.
+	static wxMenuBar *m_pMenuBar;
+
+	//! Register this type of command into wxCmd static array.
+	static void Register()
+		{ wxCmd::AddCmdType(wxMENUCMD_TYPE, wxMenuCmd::CreateNew); }
+
+	//! Creates a new wxMenuCmd with the given ID.
+	//! Automatically searches into the #m_pMenuBar variable the.
+	static wxCmd *CreateNew(int id);
+
+	//! Sets the menubar which will be used to search the menu items
+	//! with the IDs given to the #CreateNew function.
+	static void SetMenuBar(wxMenuBar *p)
+		{ m_pMenuBar = p; }
 
 public:
 
@@ -64,6 +85,10 @@ public:
 			m_nId = m_pItem->GetId();
 	}
 
+	virtual ~wxMenuCmd() {}
+
+public:
+
 	virtual void DeepCopy(const wxCmd *p) {
 		wxMenuCmd *m = (wxMenuCmd *)p;
 		m_pItem = m->m_pItem;
@@ -76,7 +101,10 @@ public:
 		return ret;
 	}
 
-	virtual ~wxMenuCmd() {}
+	virtual int GetType() const {
+		return wxMENUCMD_TYPE;
+	}
+
 
 
 protected:
@@ -101,8 +129,13 @@ protected:
 //! and #OnMenuItemWalk functions.
 class wxMenuWalker
 {
+protected:
+
+	//! The nest level.
+	int m_nLevel;
+
 public:
-	wxMenuWalker() {}
+	wxMenuWalker() { m_nLevel=0; }
 	virtual ~wxMenuWalker() {}
 
 protected:		// the core functions
@@ -138,6 +171,9 @@ protected:		// the core functions
 	//! If the current menu item contains a submenu, the returned value 
 	//! is passed to #OnMenuWalk() or it's directly deleted...
 	virtual void *OnMenuItemWalk(wxMenuBar *p, wxMenuItem *m, void *data) = 0;
+
+	//! Called when the 
+	virtual void OnMenuExit(wxMenuBar *, wxMenu *, void *) {}
 
 	//! Deletes the given 'data'.
 	//! The derived class should pass to the OnMenuWalk/OnMenuWalkItem
@@ -177,7 +213,6 @@ public:
 };
 
 
-
 //! A wxMenuWalker-derived class which uses the recursive capabilities
 //! of the tree-walker algorithm to populate a wxTreeCtrl with a
 //! structure identic to the given menubar.
@@ -213,6 +248,55 @@ protected:
 	void *OnMenuWalk(wxMenuBar *p, wxMenu *, void *);
 	void *OnMenuItemWalk(wxMenuBar *p, wxMenuItem *, void *);
 	void DeleteData(void *data);
+};
+
+
+
+
+
+//! The data associated with each entry of the combobox given
+//! to the wxMenuComboListWalker class.
+class wxExComboItemData : public wxClientData
+{
+protected:
+	wxArrayString m_arrStr;
+	wxArrayLong m_arrID;
+
+public:
+	wxExComboItemData() {}
+	virtual ~wxExComboItemData() {}
+	
+	int GetID(int n) const
+ 		{ return m_arrID[n]; }
+	wxArrayString &GetCmdNameArr()
+		{ return m_arrStr; }
+		
+	void Append(const wxString &name, int id)
+		{ m_arrStr.Add(name); m_arrID.Add(id); }
+	void SetID(int n, int id)
+		{ m_arrID[n] = id; }
+};
+
+
+//! A wxMenuWalker-derived class.
+class wxMenuComboListWalker : public wxMenuWalker
+{
+	wxComboBox *m_pCategories;
+	wxString m_strAcc;
+
+public:
+	wxMenuComboListWalker() {}
+	virtual ~wxMenuComboListWalker() {}
+	
+	//! Inserts into the given combobox all the menus
+	void FillComboListCtrl(wxMenuBar *p, wxComboBox *combo);
+
+protected:
+
+	void *OnMenuWalk(wxMenuBar *p, wxMenu *, void *);
+	void *OnMenuItemWalk(wxMenuBar *p, wxMenuItem *, void *);
+	void OnMenuExit(wxMenuBar *p, wxMenu *m, void *data);
+ 	void DeleteData(void *data);
 };
 
 

@@ -31,7 +31,12 @@
 #include "wx/statline.h"
 #include "wx/keybinder.h"
 #include "wx/menuutils.h"
+#include "wx/config.h"
+#include "wx/tokenzr.h"
 
+
+// class definition for wxKeyProfile
+IMPLEMENT_CLASS(wxKeyProfile, wxKeyBinder)
 
 
 // event table for wxKeyBinder
@@ -74,15 +79,26 @@ IMPLEMENT_CLASS(wxKeyConfigPanel, wxPanel)
 BEGIN_EVENT_TABLE(wxKeyConfigPanel, wxPanel)
 
 	// miscellaneous
-	EVT_TREE_SEL_CHANGED(KEYBINDER_COMMANDS_BOX_ID, wxKeyConfigPanel::OnCommandSelected)
-	EVT_TEXT(KEYBINDER_KEY_FIELD_ID, wxKeyConfigPanel::OnKeyPressed)
-    EVT_LISTBOX(KEYBINDER_BINDINGS_BOX_ID, wxKeyConfigPanel::OnBindingSelected)
-	EVT_COMBOBOX(KEYBINDER_KEYPROFILES_ID, wxKeyConfigPanel::OnProfileSelected)
+	EVT_TEXT(wxKEYBINDER_KEY_FIELD_ID, wxKeyConfigPanel::OnKeyPressed)
+	EVT_TEXT(wxKEYBINDER_KEYPROFILES_ID, wxKeyConfigPanel::OnProfileEditing)
+	EVT_COMBOBOX(wxKEYBINDER_KEYPROFILES_ID, wxKeyConfigPanel::OnProfileSelected)
+	EVT_LISTBOX(wxKEYBINDER_BINDINGS_BOX_ID, wxKeyConfigPanel::OnBindingSelected)
+
+	// used when the treectrl is used
+	EVT_TREE_SEL_CHANGED(wxKEYBINDER_COMMANDS_BOX_ID, 
+						wxKeyConfigPanel::OnTreeCommandSelected)
+    
+	// used when the listbox+combobox is used
+	EVT_COMBOBOX(wxKEYBINDER_CATEGORIES_ID, wxKeyConfigPanel::OnCategorySelected)
+	EVT_LISTBOX(wxKEYBINDER_COMMANDS_BOX_ID, wxKeyConfigPanel::OnListCommandSelected)
 
 	// buttons
 	EVT_BUTTON(wxID_APPLY, wxKeyConfigPanel::OnApplyChanges)
-    EVT_BUTTON(KEYBINDER_ASSIGN_KEY_ID, wxKeyConfigPanel::OnAssignKey)
-    EVT_BUTTON(KEYBINDER_REMOVE_KEY_ID, wxKeyConfigPanel::OnRemoveKey)
+    EVT_BUTTON(wxKEYBINDER_ASSIGN_KEY_ID, wxKeyConfigPanel::OnAssignKey)
+    EVT_BUTTON(wxKEYBINDER_REMOVE_KEY_ID, wxKeyConfigPanel::OnRemoveKey)
+    EVT_BUTTON(wxKEYBINDER_REMOVEALL_KEY_ID, wxKeyConfigPanel::OnRemoveAllKey)
+    EVT_BUTTON(wxKEYBINDER_ADD_PROFILEBTN_ID, wxKeyConfigPanel::OnAddProfile)
+    EVT_BUTTON(wxKEYBINDER_REMOVE_PROFILEBTN_ID, wxKeyConfigPanel::OnRemoveProfile)
 
 	// during idle cycles, wxKeyConfigPanel checks if the wxKeyMonitorTextCtrl
 	// associated must be cleared...	
@@ -90,6 +106,10 @@ BEGIN_EVENT_TABLE(wxKeyConfigPanel, wxPanel)
 END_EVENT_TABLE()
 
 
+
+// some statics
+int wxCmd::m_nCmdTypes = 0;
+wxCmd::wxCmdType wxCmd::m_arrCmdType[];
 
 
 
@@ -427,6 +447,91 @@ bool wxKeyBind::MatchKey(const wxKeyEvent &key) const
 
 
 
+// --------------------
+// wxCmd
+// --------------------
+
+// static
+wxCmd::wxCmdType *wxCmd::FindCmdType(int type)
+{
+	int found = -1;
+	for (int i=0; i < m_nCmdTypes; i++)
+		if (m_arrCmdType[i].type == type)
+			found = i;
+	
+	if (found == -1) 
+		return NULL;
+	return &m_arrCmdType[found];
+}
+
+// static
+wxCmd *wxCmd::CreateNew(int type, int id)
+{
+	wxCmdType *found = FindCmdType(type);
+	if (!found) return NULL;
+
+	// get the creation function address
+	wxCmdCreationFnc fnc = found->cmdCreateFnc;
+	wxASSERT(fnc);
+
+	// create the wxCmd-derived class & init it
+	wxCmd *ret = fnc(id);
+	ret->Update();
+
+	return ret;
+}
+
+// static
+void wxCmd::AddCmdType(int type, wxCmdCreationFnc f)
+{
+	if (FindCmdType(type) != NULL)
+		return;		// already registered
+
+	m_arrCmdType[m_nCmdTypes].type = type;
+	m_arrCmdType[m_nCmdTypes].cmdCreateFnc = f;
+	m_nCmdTypes++;
+}
+
+bool wxCmd::Save(wxConfigBase *p, const wxString &key) const
+{
+	// build the shortcut string separing each one with a "|"
+	wxString shortcuts;
+	for (int j=0; j < GetShortcutCount(); j++)
+		shortcuts += GetShortcut(j)->GetStr() + "|";
+	
+	// write the entry in the format NAME|DESC|SHORTCUT1|SHORTCUT2...|SHORTCUTn
+	wxString value = wxString::Format("%s|%s|%s", 									
+									GetName().c_str(),
+									GetDescription().c_str(), 
+									shortcuts.c_str());
+	return p->Write(key, value);
+}
+
+bool wxCmd::Load(wxConfigBase *p, const wxString &key)
+{
+	wxString fmt;
+	if (!p->Read(key, &fmt, "|"))
+		return FALSE;
+			
+	// extract name & desc
+	wxStringTokenizer tknzr(fmt, "|");	
+	wxString name = tknzr.GetNextToken();
+	wxString desc = tknzr.GetNextToken();
+	if (name.IsEmpty())
+		return FALSE;	// this is an invalid entry...
+
+	// extract the keybindings...
+	while (tknzr.HasMoreTokens())
+		AddShortcut(tknzr.GetNextToken());
+
+	Update();
+	return TRUE;
+}
+
+
+
+
+
 
 // --------------------
 // wxCmdArray
@@ -491,7 +596,157 @@ void wxKeyBinder::OnChar(wxKeyEvent &event)
 				this->GetNextHandler());	// associated wxEvent to the next handler in the chain
 }
 
+bool wxKeyBinder::Save(wxConfigBase *cfg, const wxString &key) const
+{
+	wxString basekey = (key.IsEmpty() ? wxEmptyString : key + "/");
+	bool b = TRUE;
+	
+	for (int i=0; i < m_arrCmd.GetCount(); i++) {
+		
+		wxCmd *curr = m_arrCmd.Item(i);
 
+		// write the key in the format: bindID-typeID
+		wxString keyname = wxString::Format("%sbind%d-type%d", 
+			basekey.c_str(), curr->GetId(), curr->GetType());
+
+		// save this wxCmd...
+		b &= curr->Save(cfg, keyname);
+	}
+
+	return b;
+}
+
+bool wxKeyBinder::Load(wxConfigBase *p, const wxString &key)
+{
+	wxString str;
+	bool cont;
+	bool b = TRUE;
+	int total = 0;
+	long idx;
+
+	// before starting...
+	p->SetPath(key);
+	m_arrCmd.Clear();
+
+	cont = p->GetFirstEntry(str, idx);
+	while (cont) {
+
+		// try to decode this entry
+		if (str.StartsWith("bind")) {
+
+			wxString id(str.BeforeFirst('-'));
+			wxString type(str.AfterFirst('-'));
+			id = id.Right(id.Len()-wxString("bind").Len());	
+			type = type.Right(type.Len()-wxString("type").Len());	
+
+			// is this a valid entry ?
+			if (id.IsNumber() && type.IsNumber() &&
+				p->GetEntryType(str) == wxConfigBase::EntryType::Type_String) {
+
+				// we will interpret this group as a command ID
+				int nid = atoi(id);
+				int ntype = atoi(type);
+
+				// create & load this command
+				wxCmd *cmd = wxCmd::CreateNew(ntype, nid);
+				if (!cmd->Load(p, str)) {
+					cont = FALSE;
+					break;
+				}
+
+				m_arrCmd.Add(cmd);		// add to the array
+				total++;
+			}
+		}
+
+		// proceed with next entry (if it does exist)
+		cont &= p->GetNextEntry(str, idx);
+	}
+
+	return (b && total > 0);
+}
+
+
+
+
+
+// ----------------------------------------------------------------------------
+// wxKeyProfile
+// ----------------------------------------------------------------------------
+
+bool wxKeyProfile::Save(wxConfigBase *cfg, const wxString &key) const
+{
+	wxString basekey = (key.IsEmpty() ? "" : "/") + wxString("keyprof-") + GetName();	
+
+	if (!cfg->Write(basekey + "/desc", GetDesc()))
+		return FALSE;
+
+	// tell wxKeyBinder to save all keybindings into a group with our name
+	return wxKeyBinder::Save(cfg, basekey);
+}
+
+bool wxKeyProfile::Load(wxConfigBase *p, const wxString &key)
+{
+	wxString str;
+	bool cont;
+	long idx;
+
+	// before starting...
+	p->SetPath(key);
+
+	cont = p->GetFirstGroup(str, idx);
+	while (cont) {
+
+		// try to decode this group name
+		if (str.StartsWith("keyprof-")) {
+
+			wxString name(str.AfterFirst('-'));
+			wxString desc;
+			p->SetPath(str);		// enter into this group
+
+			// is this a valid entry ?
+			if (p->HasEntry("desc")) {
+
+				if (!p->Read("desc", &desc))
+					return FALSE;
+
+				SetName(name);
+				SetDesc(desc);
+				return wxKeyBinder::Load(p, key + "/" + str);	// load from this path
+			}
+		}
+
+		// proceed with next entry (if it does exist)
+		cont &= p->GetNextGroup(str, idx);
+	}
+
+	return FALSE;		// could not find a valid group to load !
+}
+
+
+
+
+// ----------------------------------------------------------------------------
+// wxKeyProfileArray
+// ----------------------------------------------------------------------------
+
+bool wxKeyProfileArray::Save(wxConfigBase *cfg, const wxString &key) const
+{
+	bool b = TRUE;
+	for (int i=0; i<GetCount(); i++)
+		b &= Item(i)->Save(cfg, key);
+
+	return b;
+}
+
+bool wxKeyProfileArray::Load(wxConfigBase *cfg, const wxString &key)
+{
+	bool b = TRUE;
+	for (int i=0; i<GetCount(); i++)
+		b &= Item(i)->Load(cfg, key);
+
+	return b;
+}
 
 
 
@@ -529,108 +784,24 @@ void wxKeyMonitorTextCtrl::OnKey(wxKeyEvent &event)
 
 
 // ----------------------------------------------------------------------------
-// wxKeyConfigPanel - general functions
+// wxKeyConfigPanel - BUILD functions
 // ----------------------------------------------------------------------------
 
 wxKeyConfigPanel::wxKeyConfigPanel(wxWindow* parent, 
 				wxKeyProfile *pBinder,	// can be NULL
-				bool showApplyBtn, wxWindowID id, 
+				int buildMode, wxWindowID id, 
 				const wxPoint& pos, const wxSize& size, 
 				long style, const wxString& name)
 				: wxPanel(parent, id, pos, size, style, name)
 {
-    // creating wx controls
-    m_pCommands = new wxTreeCtrl(this, KEYBINDER_COMMANDS_BOX_ID, wxDefaultPosition, 
-		wxDefaultSize, wxTR_HAS_BUTTONS | wxSUNKEN_BORDER);//wxListBox(this, GROUPS_BOX_ID);    
-    m_pKeyField = new wxKeyMonitorTextCtrl(this, KEYBINDER_KEY_FIELD_ID);
-    m_pBindings = new wxListBox(this, KEYBINDER_BINDINGS_BOX_ID);
+	m_nBuildMode = buildMode;
 
-    m_pAssignBtn = new wxButton(this, KEYBINDER_ASSIGN_KEY_ID, "&Add");
-    m_pRemoveBtn = new wxButton(this, KEYBINDER_REMOVE_KEY_ID, "&Remove");
-	
-	m_pDescLabel = new wxStaticText(this, -1, "", wxDefaultPosition, 
-		wxSize(-1, 40), wxSUNKEN_BORDER | wxST_NO_AUTORESIZE);
-    //m_pDescLabel = new wxTextCtrl(this, -1, "", wxDefaultPosition, 
-	// wxDefaultSize, wxTE_READONLY);
-	m_pCurrCmdField = new wxStaticText(this, -1, "", wxDefaultPosition, 
-		wxSize(-1, 20), wxSUNKEN_BORDER | wxST_NO_AUTORESIZE | wxALIGN_CENTRE);
-
-
-	// KEY PROFILES
-	// create the key profiles combobox & panel
-	m_bEnableKeyProfiles = TRUE;
-
-	m_pKeyProfiles = new wxComboBox(this, KEYBINDER_KEYPROFILES_ID,
-		wxEmptyString, wxDefaultPosition, wxDefaultSize, 
-		0, NULL, wxCB_READONLY | wxCB_SORT);
-
-	m_pKeyProfilesSizer = new wxBoxSizer(wxVERTICAL);//wxPanel(this, -1, , );
-	m_pKeyProfilesSizer->Add(new wxStaticText(this, -1, "Key profile:"), 0, wxGROW | wxALL, 5);
-	m_pKeyProfilesSizer->Add(m_pKeyProfiles, 0, wxGROW | wxLEFT | wxRIGHT, 5);
-	m_pKeyProfilesSizer->Add(new wxStaticLine(this, -1), 0, wxGROW | wxALL, 5);
-
-
-	// FIRST COLUMN:
-	// "Groups"
-	wxBoxSizer *column1 = new wxBoxSizer(wxVERTICAL);
-    column1->Add(new wxStaticText(this, -1, "Commands:"), 0, wxGROW | wxALL, 5);
-	column1->Add(m_pCommands, 1, wxGROW | wxRIGHT | wxLEFT | wxBOTTOM, 5);
-
-
-	// SECOND COLUMN:
-	// "Current keys" + "Press new shortcut key"
-	wxBoxSizer *column2 = new wxBoxSizer(wxVERTICAL);
-    column2->Add(new wxStaticText(this, -1, "Current shortcuts:"), 0, wxGROW | wxALL, 5);
-    column2->Add(m_pBindings, 2, wxGROW | wxRIGHT | wxLEFT, 5);
-    column2->Add(m_pRemoveBtn, 1, wxGROW | wxALL, 5);
-
-	column2->Add(new wxStaticLine(this, -1), 0, wxGROW | wxALL, 10);
-	
-	column2->Add(new wxStaticText(this, -1, "New shortcut:"), 0, wxGROW | wxALL, 5);
-    column2->Add(m_pKeyField, 0, wxGROW | wxLEFT | wxRIGHT, 5);
-
-	column2->Add(new wxStaticText(this, -1, "Currently assigned to:"), 0, wxGROW | wxALL, 5);
-	column2->Add(m_pCurrCmdField, 0, wxGROW | wxLEFT | wxRIGHT, 5);
-
-    column2->Add(m_pAssignBtn, 1, wxGROW | wxALL, 5);
-
-
-
-	// set up the column container
-	wxBoxSizer *cont = new wxBoxSizer(wxHORIZONTAL);
-	cont->Add(column1, 5, wxGROW);
-	cont->Add(10, 1, 0, wxGROW);
-	cont->Add(column2, 4, wxGROW);
-
-	// create the main sizer
-	wxBoxSizer *main = new wxBoxSizer(wxVERTICAL);
-	main->Add(m_pKeyProfilesSizer, 0, wxGROW);
-	main->Add(cont, 5, wxGROW);
-	main->Add(new wxStaticLine(this, -1), 0, wxGROW | wxALL, 5);
-
-	// key description
-	main->Add(new wxStaticText(this, -1, "Description:"), 0, wxGROW | wxALL, 5);
-    main->Add(m_pDescLabel, 0, wxGROW | wxLEFT | wxRIGHT | wxBOTTOM, 5);
-
-
-	// if required, add Apply and Cancel buttons
-	if (showApplyBtn)
-    {
-	    wxBoxSizer *btn = new wxBoxSizer(wxHORIZONTAL);
-
-        wxButton *applyBtn = new wxButton(this, wxID_APPLY,  "A&pply");
-        wxButton *cancelBtn = new wxButton(this, wxID_CANCEL, "C&ancel");
-
-		// create the button panel with some interleaved spacer
-		btn->Add(1, 1, 1, wxGROW);
-        btn->Add(applyBtn, 4, wxGROW | wxALL, 5);
-		btn->Add(1, 1, 1, wxGROW);
-        btn->Add(cancelBtn, 4, wxGROW | wxALL, 5);
-		btn->Add(1, 1, 1, wxGROW);
- 	
-		main->Add(1, 1, 0, wxGROW);
-		main->Add(btn, 1, wxGROW | wxALL, 5);
-   }
+	// build everything
+	BuildCtrls();
+	wxSizer *column1 = BuildColumn1();
+	wxSizer *column2 = BuildColumn2();
+	wxSizer *main = BuildMain(column1, column2, 
+		(m_nBuildMode & wxKEYBINDER_SHOW_APPLYBUTTON) != 0);
 
 	// set the final sizer as window's sizer
 	SetSizer(main);
@@ -639,56 +810,255 @@ wxKeyConfigPanel::wxKeyConfigPanel(wxWindow* parent,
 	// set up the controls: the user of the panel must call one of the
 	// ImportXXXX() functions to enanble the use of the panel !!!!
 	AddProfile(pBinder);
-    m_pCommands->SetFocus();
+    GetMainCtrl()->SetFocus();
     UpdateButtons();
 }
 
+void wxKeyConfigPanel::BuildCtrls()
+{
+    if (m_nBuildMode & wxKEYBINDER_USE_TREECTRL) {
+    
+		// use a wxTreeCtrl to show the commands hierarchy
+		m_pCommandsTree = new wxTreeCtrl(this, wxKEYBINDER_COMMANDS_BOX_ID, wxDefaultPosition, 
+									wxDefaultSize, wxTR_HAS_BUTTONS | wxSUNKEN_BORDER);
+	} else {
 
+		// use a combobox + a listbox
+		m_pCommandsList = new wxListBox(this, wxKEYBINDER_COMMANDS_BOX_ID, wxDefaultPosition,
+									wxDefaultSize, 0, NULL);
+		m_pCategories = new wxComboBox(this, wxKEYBINDER_CATEGORIES_ID,
+								wxEmptyString, wxDefaultPosition, wxDefaultSize, 
+								0, NULL, wxCB_READONLY);
+	}
+
+    m_pKeyField = new wxKeyMonitorTextCtrl(this, wxKEYBINDER_KEY_FIELD_ID);
+    m_pBindings = new wxListBox(this, wxKEYBINDER_BINDINGS_BOX_ID);
+
+    m_pAssignBtn = new wxButton(this, wxKEYBINDER_ASSIGN_KEY_ID, "&Add");
+    m_pRemoveBtn = new wxButton(this, wxKEYBINDER_REMOVE_KEY_ID, "&Remove");
+    m_pRemoveAllBtn = new wxButton(this, wxKEYBINDER_REMOVEALL_KEY_ID, "Remove all");
+	
+	m_pDescLabel = new wxStaticText(this, -1, "", wxDefaultPosition, 
+		wxSize(-1, 40), wxSIMPLE_BORDER | wxST_NO_AUTORESIZE);
+    //m_pDescLabel = new wxTextCtrl(this, -1, "", wxDefaultPosition, 
+	// wxDefaultSize, wxTE_READONLY);
+	m_pCurrCmdField = new wxStaticText(this, -1, "", wxDefaultPosition, 
+		wxSize(-1, 20), wxSUNKEN_BORDER | wxST_NO_AUTORESIZE | wxALIGN_CENTRE);
+	m_pCurrCmdField->SetBackgroundColour(wxColour(255, 255, 255));
+	m_pDescLabel->SetBackgroundColour(wxColour(255, 255, 255));
+
+	// KEY PROFILES
+	// create the key profiles combobox & panel
+	m_bEnableKeyProfiles = TRUE;
+
+	// the style of a combobox must be set at the beginning:
+	// you cannot change the wxCB_READONLY flag presence later...
+	// VERY IMPORTANT: *NEVER* ADD THE CB_SORT STYLE:
+	// IT WOULD GIVE US GREAT PROBLEMS WHEN EDITING THE KEYPROFILE...
+	long style = (m_nBuildMode & wxKEYBINDER_ENABLE_PROFILE_EDITING) ? 0 : wxCB_READONLY;
+	m_pKeyProfiles = new wxComboBox(this, wxKEYBINDER_KEYPROFILES_ID,
+								wxEmptyString, wxDefaultPosition, wxDefaultSize,
+								0, NULL, style);
+
+	wxSizer *sizer = new wxBoxSizer(wxHORIZONTAL);
+	sizer->Add(m_pKeyProfiles, 6, wxGROW);
+
+	if (m_nBuildMode & wxKEYBINDER_SHOW_ADDREMOVE_PROFILE) {
+
+		// create the Add & remove profile buttons
+		sizer->Add(new wxButton(this, wxKEYBINDER_ADD_PROFILEBTN_ID, "Add new"), 0, 
+							wxGROW | wxLEFT | wxRIGHT | wxBOTTOM, 5);
+		sizer->Add(new wxButton(this, wxKEYBINDER_REMOVE_PROFILEBTN_ID, "Remove"), 0, 
+							wxGROW | wxLEFT | wxRIGHT | wxBOTTOM, 5);
+	}
+
+	m_pKeyProfilesSizer = new wxBoxSizer(wxVERTICAL);
+	m_pKeyProfilesSizer->Add(new wxStaticText(this, -1, "Key profile:"), 0, wxGROW | wxALL, 5);
+	m_pKeyProfilesSizer->Add(sizer, 0, wxGROW | wxLEFT | wxRIGHT, 5);
+	m_pKeyProfilesSizer->Add(new wxStaticLine(this, -1), 0, wxGROW | wxALL, 5);
+}
+
+wxSizer *wxKeyConfigPanel::BuildColumn1()
+{
+	// FIRST COLUMN: "Groups"
+	wxBoxSizer *column1 = new wxBoxSizer(wxVERTICAL);
+
+	if (m_nBuildMode & wxKEYBINDER_USE_TREECTRL) {
+
+		// add the treectrl
+		column1->Add(new wxStaticText(this, -1, "Commands:"), 0, wxGROW | wxALL, 5);
+		column1->Add(m_pCommandsTree, 1, wxGROW | wxRIGHT | wxLEFT | wxBOTTOM, 5);
+
+	} else {
+
+		// add a combobox + listbox
+		column1->Add(new wxStaticText(this, -1, "Categories:"), 0, wxGROW | wxALL, 5);
+		column1->Add(m_pCategories, 1, wxGROW | wxRIGHT | wxLEFT | wxBOTTOM, 5);
+
+		column1->Add(new wxStaticText(this, -1, "Commands:"), 0, 
+									wxGROW | wxRIGHT | wxLEFT | wxBOTTOM, 5);
+		column1->Add(m_pCommandsList, 5, wxGROW | wxRIGHT | wxLEFT | wxBOTTOM, 5);
+	}
+
+	return column1;
+}
+
+wxSizer *wxKeyConfigPanel::BuildColumn2()
+{
+	// SECOND COLUMN: "Current keys" + "Press new shortcut key"
+	wxBoxSizer *column2 = new wxBoxSizer(wxVERTICAL);
+    column2->Add(new wxStaticText(this, -1, "Current shortcuts:"), 0, wxGROW | wxALL, 5);
+    column2->Add(m_pBindings, 2, wxGROW | wxRIGHT | wxLEFT, 5);
+
+	wxBoxSizer *removebtns = new wxBoxSizer(wxHORIZONTAL);
+    removebtns->Add(m_pRemoveBtn, 1, wxGROW | wxALL, 5);
+    removebtns->Add(m_pRemoveAllBtn, 1, wxGROW | wxALL, 5);
+
+	column2->Add(removebtns, 0, wxGROW);
+	//column2->Add(new wxStaticLine(this, -1), 0, wxGROW | wxALL, 10);
+	column2->Add(new wxStaticText(this, -1, "New shortcut:"), 0, wxGROW | wxALL, 5);
+    column2->Add(m_pKeyField, 0, wxGROW | wxLEFT | wxRIGHT, 5);
+	column2->Add(new wxStaticText(this, -1, "Currently assigned to:"), 0, wxGROW | wxALL, 5);
+	column2->Add(m_pCurrCmdField, 0, wxGROW | wxLEFT | wxRIGHT, 5);
+    column2->Add(m_pAssignBtn, 0, wxGROW | wxALL, 5);
+
+	return column2;
+}
+
+wxSizer *wxKeyConfigPanel::BuildMain(wxSizer *column1, wxSizer *column2, bool bApplyBtn)
+{
+	// set up the column container
+	wxBoxSizer *cont = new wxBoxSizer(wxHORIZONTAL);
+	cont->Add(column1, 4, wxGROW);
+	cont->Add(1, 1, 0, wxGROW);
+	cont->Add(column2, 4, wxGROW);
+	
+	// create the main sizer
+	wxBoxSizer *main = new wxBoxSizer(wxVERTICAL);
+	main->Add(m_pKeyProfilesSizer, 0, wxGROW);
+	main->Add(cont, 5, wxGROW);
+	main->Add(new wxStaticLine(this, -1), 0, wxGROW | wxALL, 5);
+	
+	// key description
+	main->Add(new wxStaticText(this, -1, "Description:"), 0, wxGROW | wxALL, 5);
+    main->Add(m_pDescLabel, 1, wxGROW | wxLEFT | wxRIGHT | wxBOTTOM, 5);
+		
+	// if required, add Apply and Cancel buttons
+	if (bApplyBtn) {
+
+		wxBoxSizer *btn = new wxBoxSizer(wxHORIZONTAL);
+        wxButton *applyBtn = new wxButton(this, wxID_APPLY,  "A&pply");
+        wxButton *cancelBtn = new wxButton(this, wxID_CANCEL, "C&ancel");
+		
+		// create the button panel with some interleaved spacer
+		btn->Add(1, 1, 1, wxGROW);
+        btn->Add(applyBtn, 4, wxGROW | wxALL, 5);
+		btn->Add(1, 1, 1, wxGROW);
+        btn->Add(cancelBtn, 4, wxGROW | wxALL, 5);
+		btn->Add(1, 1, 1, wxGROW);
+		
+		main->Add(1, 1, 0, wxGROW);
+		main->Add(btn, 1, wxGROW | wxALL, 5);
+	}
+	
+	return main;
+}
+
+
+
+
+// ----------------------------------------------------------------------------
+// wxKeyConfigPanel - IMPORT functions
+// ----------------------------------------------------------------------------
 
 void wxKeyConfigPanel::ImportMenuBarCmd(wxMenuBar *p, const wxString &rootname)
 {
 	// do some std things...
 	Reset();
-	AddRootIfMissing(rootname);
 
 	// the wxKeyBinder class can easily generate a tree structure...
-	wxMenuTreeWalker wlkr;
-	wlkr.FillTreeCtrl(p, m_pCommands, rootname);
+	if (IsUsingTreeCtrl()) {
+	
+		AddRootIfMissing(rootname);
 
-	// expand the root (just for aesthetic/comfort reasons)...
-	m_pCommands->Expand(m_pCommands->GetRootItem());
+		wxMenuTreeWalker wlkr;
+		wlkr.FillTreeCtrl(p, m_pCommandsTree, rootname);
+
+		// expand the root (just for aesthetic/comfort reasons)...
+		m_pCommandsTree->Expand(m_pCommandsTree->GetRootItem());
+
+	} else {
+
+		wxMenuComboListWalker wlkr;
+		wlkr.FillComboListCtrl(p, m_pCategories);
+
+		// select the first item (just for aesthetic/comfort reasons)...
+		m_pCategories->SetSelection(0);
+
+		wxCommandEvent fake;
+		OnCategorySelected(fake);
+	}
 }
 
 void wxKeyConfigPanel::ImportKeyProfileCmd(int n, const wxString &rootname)
 {
 	// do some std things...
 	Reset();
-	AddRootIfMissing(rootname);
-	wxTreeItemId rootid = m_pCommands->GetRootItem();
 
-	// scan all the commands of the key binder...
-	wxCmdArray *arr = GetProfile(n)->GetArray();
-	for (int i=0; i < (int)arr->GetCount(); i++) {
+	if (IsUsingTreeCtrl()) {
 
-		// to each tree branch attach a wxTreeItemData containing 
-		// the ID of the menuitem which it represents...
-		wxExTreeItemData *treedata = new wxExTreeItemData(arr->Item(i)->GetId());
+		AddRootIfMissing(rootname);
+		wxTreeItemId rootid = m_pCommandsTree->GetRootItem();
 
-		// create the new item in the tree ctrl
-		m_pCommands->AppendItem(rootid, arr->Item(i)->GetName(), -1, -1, treedata);
+		// scan all the commands of the key binder...
+		wxCmdArray *arr = GetProfile(n)->GetArray();
+		for (int i=0; i < (int)arr->GetCount(); i++) {
+
+			// to each tree branch attach a wxTreeItemData containing 
+			// the ID of the menuitem which it represents...
+			wxExTreeItemData *treedata = new wxExTreeItemData(arr->Item(i)->GetId());
+
+			// create the new item in the tree ctrl
+			m_pCommandsTree->AppendItem(rootid, arr->Item(i)->GetName(), -1, -1, treedata);
+		}
+
+		// expand the root (just for aesthetic/comfort reasons)...
+		m_pCommandsTree->Expand(m_pCommandsTree->GetRootItem());
+
+	} else {
+
+		wxCmdArray *arr = GetProfile(n)->GetArray();
+		for (int i=0; i < (int)arr->GetCount(); i++) {
+
+			// create a list of items containing as untyped client data
+			// (void*) the INT which is their ID...
+			m_pCommandsList->Append(arr->Item(i)->GetName(), 
+									(void*)(arr->Item(i)->GetId()));
+		}
+
+		// in the categories combobox just add a generic title
+		m_pCategories->Append("Generic");
 	}
-
-	// expand the root (just for aesthetic/comfort reasons)...
-	m_pCommands->Expand(m_pCommands->GetRootItem());
 }
+
+
+
+
+
+// ----------------------------------------------------------------------------
+// wxKeyConfigPanel - MISCELLANEOUS functions
+// ----------------------------------------------------------------------------
 
 void wxKeyConfigPanel::AddProfile(wxKeyProfile *p, bool bImport, const wxString &rootname)
 {	
+	if (p == NULL) return;
+
 	// add a new profile to the array	
 	m_pKeyProfiles->Append(p->GetName(), (void *)p);
 	
-	if (GetProfiles()->GetCount() == 1) {
+	if (m_pKeyProfiles->GetCount() == 1) {
 		m_pKeyProfiles->SetSelection(0);
+		m_nCurrentProf = 0;
 
 		// generate a fake event: SetSelection does not generate it
 		wxCommandEvent ev;
@@ -700,9 +1070,34 @@ void wxKeyConfigPanel::AddProfile(wxKeyProfile *p, bool bImport, const wxString 
 		ImportKeyProfileCmd(GetSelProfileIdx(), rootname);
 }
 
+void wxKeyConfigPanel::AddProfiles(wxKeyProfileArray &arr)
+{
+	int old = m_pKeyProfiles->GetCount();
+	for (int i=0; i < arr.GetCount(); i++)
+		m_pKeyProfiles->Append(arr.Item(i)->GetName(), (void *)arr.Item(i));
+	
+	if (old == 0) {
+		m_pKeyProfiles->SetSelection(0);
+		m_nCurrentProf = 0;
+
+		// generate a fake event: SetSelection does not generate it
+		wxCommandEvent ev;
+		OnProfileSelected(ev);
+	}
+}
+
 void wxKeyConfigPanel::Reset()
 {
-	m_pCommands->DeleteAllItems();
+	if (IsUsingTreeCtrl()) {
+
+		m_pCommandsTree->DeleteAllItems();
+
+	} else {
+
+		m_pCommandsList->Clear();
+		m_pCategories->Clear();
+	}
+
 	m_pBindings->Clear();
 	m_pDescLabel->SetLabel("");//Clear();
 	m_pKeyField->Clear();
@@ -710,47 +1105,70 @@ void wxKeyConfigPanel::Reset()
 
 void wxKeyConfigPanel::AddRootIfMissing(const wxString &rootname)
 {
-	if (!m_pCommands->GetRootItem().IsOk()) {
+	wxASSERT(IsUsingTreeCtrl());	// this function is treectrl-specific
+
+	if (!m_pCommandsTree->GetRootItem().IsOk()) {
 
 		// I don't know what happens if we try to create the root
 		// of the control while there are still some items in the
 		// control... even if I don't think some items maybe
 		// present in the control if the root is not okay....
-		m_pCommands->DeleteAllItems();
+		m_pCommandsTree->DeleteAllItems();
 
-		m_pCommands->AddRoot(rootname);
+		m_pCommandsTree->AddRoot(rootname);
 	}
 }
 
-wxCmd *wxKeyConfigPanel::GetSelCmd()
+wxCmd *wxKeyConfigPanel::GetSelCmd() const
 {
-	wxTreeItemId treeid = GetSelCmdId();
-	if (!treeid.IsOk())
-		return NULL;
+	int id;
+	
+	if (IsUsingTreeCtrl()) {
 
-	// each tree item has a wxMenuTreeItemData associated which contains
-	// the ID of the menu item which is attached...
-	int id  = ((wxExTreeItemData *)m_pCommands->GetItemData(treeid))->GetMenuItemId();
+		wxTreeItemId treeid = GetSelCmdId();
+		if (!treeid.IsOk())
+			return NULL;
+
+		// each tree item has a wxMenuTreeItemData associated which contains
+		// the ID of the menu item which is attached...
+		id  = ((wxExTreeItemData *)m_pCommandsTree->GetItemData(treeid))->GetMenuItemId();
+
+	} else {
+
+		int sel = m_pCommandsList->GetSelection();
+		if (sel < 0)
+			return NULL;
+
+		id = (int)m_pCommandsList->GetClientData(sel);
+	}
+
 	return m_kBinder.GetCmd(id);
 }
 
-wxTreeItemId wxKeyConfigPanel::GetSelCmdId()
+wxTreeItemId wxKeyConfigPanel::GetSelCmdId() const
 {
-    wxTreeItemId selection = m_pCommands->GetSelection();
+    wxTreeItemId selection = m_pCommandsTree->GetSelection();
 
 	// selection must be valid...
     if (!selection.IsOk())
 		return selection;
 
 	// ...and the just selected must be a valid menu item...
-	wxTreeItemData *p = m_pCommands->GetItemData(selection);
+	wxTreeItemData *p = m_pCommandsTree->GetItemData(selection);
 	if (p == NULL)
 		return wxTreeItemId();		// an empty wxTreeItemId is always invalid...
 
 	return selection;
 }
 
-wxString wxKeyConfigPanel::GetSelCmdStr()
+wxControl *wxKeyConfigPanel::GetMainCtrl() const
+{
+	if (m_nBuildMode & wxKEYBINDER_USE_TREECTRL)
+		return m_pCommandsTree;
+	return m_pCommandsList;
+}
+
+wxString wxKeyConfigPanel::GetSelCmdStr() const
 {
 	wxTreeItemId id = GetSelCmdId();
 
@@ -758,8 +1176,36 @@ wxString wxKeyConfigPanel::GetSelCmdStr()
 	if (!id.IsOk())
 		return wxEmptyString;
 
-	return m_pCommands->GetItemText(id);
+	return m_pCommandsTree->GetItemText(id);
 }
+
+bool wxKeyConfigPanel::IsSelectedValidCmd() const
+{
+	if (IsUsingTreeCtrl())
+		return GetSelCmdId().IsOk();
+	else
+		return m_pCommandsList->GetSelection() >= 0;
+}
+
+wxKeyProfileArray wxKeyConfigPanel::GetProfiles() const
+{
+	wxKeyProfileArray arr;
+
+	// just copy the combobox item's client data (which are wxKeyProfiles)
+	// into our array...
+	for (int i=0; i<m_pKeyProfiles->GetCount(); i++)		
+		arr.Add(GetProfile(i));
+	return arr;
+}
+
+
+
+
+
+
+// ----------------------------------------------------------------------------
+// wxKeyConfigPanel - UPDATE functions
+// ----------------------------------------------------------------------------
 
 void wxKeyConfigPanel::UpdateButtons()
 {
@@ -768,9 +1214,10 @@ void wxKeyConfigPanel::UpdateButtons()
 
 	// is the remove button to be enabled ?
     m_pRemoveBtn->Enable(m_pBindings->GetSelection() >= 0);
+    m_pRemoveAllBtn->Enable(m_pBindings->GetCount() > 0);
 
 	// is the assign button to be enabled ?
-	bool b = GetSelCmdId().IsOk() && m_pKeyField->IsValidKeyComb();
+	bool b = IsSelectedValidCmd() && m_pKeyField->IsValidKeyComb();
     m_pAssignBtn->Enable(b);
 
 	// must the "Currently assigned to" field be updated ?
@@ -827,11 +1274,13 @@ void wxKeyConfigPanel::FillInBindings()
 void wxKeyConfigPanel::ApplyChanges()
 {
 	wxLogDebug("wxKeyConfigPanel::ApplyChanges");
+	wxKeyProfile *prof = GetSelProfile();
+	wxASSERT(prof);
 
 	// just copy the internal key binder used to allow a sort of
 	// "undo" feature into the original binder set through the
 	// #SetBinder function.
-    GetSelProfile()->DeepCopy(&m_kBinder);
+    prof->wxKeyBinder::DeepCopy(&m_kBinder);
 }
 
 void wxKeyConfigPanel::EnableKeyProfiles(bool bEnable)
@@ -913,9 +1362,17 @@ void wxKeyConfigPanel::OnApplyChanges(wxCommandEvent &event)
 	event.Skip();		// let parent know that changes were applied
 }
 
-void wxKeyConfigPanel::OnCommandSelected(wxTreeEvent &)
+void wxKeyConfigPanel::OnProfileEditing(wxCommandEvent &ev)
 {
-	wxLogDebug("wxKeyConfigPanel::OnCommandSelected");
+	wxASSERT(m_nCurrentProf != -1);
+
+	// change the name of the current profile
+	GetProfile(m_nCurrentProf)->SetName(ev.GetString());	
+}
+
+void wxKeyConfigPanel::OnTreeCommandSelected(wxTreeEvent &)
+{
+	wxLogDebug("wxKeyConfigPanel::OnTreeCommandSelected");
 
 	// one of the group in the tree ctrl has been selected:
 	// the listbox with the keybindings must be synchronized...
@@ -929,6 +1386,16 @@ void wxKeyConfigPanel::OnCommandSelected(wxTreeEvent &)
 	UpdateDesc();
 }
 
+void wxKeyConfigPanel::OnListCommandSelected(wxCommandEvent &)
+{
+	wxLogDebug("wxKeyConfigPanel::OnListCommandSelected");
+
+	// like OnTreeCommandSelected
+    FillInBindings();
+    UpdateButtons();
+	UpdateDesc();
+}
+
 void wxKeyConfigPanel::OnBindingSelected(wxCommandEvent &)
 {
 	wxLogDebug("wxKeyConfigPanel::OnBindingSelected");
@@ -938,11 +1405,46 @@ void wxKeyConfigPanel::OnBindingSelected(wxCommandEvent &)
 	UpdateButtons();
 }
 
+void wxKeyConfigPanel::OnCategorySelected(wxCommandEvent &ev)
+{
+	wxLogDebug("wxKeyConfigPanel::OnCategorySelected");
+
+	// update selection
+	int sel = m_pCategories->GetSelection();
+	if (sel == -1) return;
+
+	wxExComboItemData *data = (wxExComboItemData*)m_pCategories->GetClientObject(sel);
+	wxArrayString &arr = data->GetCmdNameArr();
+
+	// clear the old elements & insert the news
+	m_pCommandsList->Clear();
+	for (int i=0; i < (int)arr.GetCount(); i++)
+		m_pCommandsList->Append(arr.Item(i), (void *)data->GetID(i));
+
+	// select the first
+	m_pCommandsList->Select(0);
+	OnListCommandSelected(ev);
+}
+
 void wxKeyConfigPanel::OnProfileSelected(wxCommandEvent &)
 {
 	wxLogDebug("wxKeyConfigPanel::OnProfileSelected");
 
-	wxKeyProfile *sel = GetSelProfile();
+	int selidx = m_pKeyProfiles->GetSelection();
+	wxKeyProfile *sel = NULL;
+
+	if (selidx != -1) {
+
+		// update the current selected profile index
+		m_nCurrentProf = selidx;
+		sel = GetProfile(m_nCurrentProf);
+
+	} else {
+
+		// GetSelProfile() will use our current m_nCurrentProf element...
+		sel = GetSelProfile();
+	}
+
 	if (!sel) return;
 
 	// copy original bindings to the temporary binder, 
@@ -952,8 +1454,16 @@ void wxKeyConfigPanel::OnProfileSelected(wxCommandEvent &)
 	m_kBinder.DeepCopy(sel);
 	
 	// call other event handlers
-	wxTreeEvent ev;
-	OnCommandSelected(ev);
+	if (IsUsingTreeCtrl()) {
+	
+		wxTreeEvent ev;
+		OnTreeCommandSelected(ev);
+
+	} else {
+	
+		wxCommandEvent ev;
+		OnListCommandSelected(ev);
+	}
 }
 
 void wxKeyConfigPanel::OnAssignKey(wxCommandEvent &)
@@ -990,6 +1500,59 @@ void wxKeyConfigPanel::OnRemoveKey(wxCommandEvent &)
 	// and update the list of the key bindings
 	FillInBindings();
 	UpdateButtons();
+}
+
+void wxKeyConfigPanel::OnRemoveAllKey(wxCommandEvent &)
+{
+	// remove the selected shortcut
+	GetSelCmd()->RemoveAllShortcuts();
+
+	// and update the list of the key bindings
+	FillInBindings();
+	UpdateButtons();
+}
+
+void wxKeyConfigPanel::OnAddProfile(wxCommandEvent &)
+{
+	wxKeyProfile *sel = GetProfile(m_nCurrentProf);//GetSelProfile();
+	if (!sel) return;
+
+	wxTextEntryDialog dlg(this, 
+		"Input the name of the new profile.\n"
+		"The new profile will be initially set to a copy of the last selected profile.",
+		"Add new profile");
+	dlg.SetValue(sel->GetName());
+
+	if (dlg.ShowModal() == wxID_CANCEL)
+		return;
+
+	wxKeyProfile *newprof = new wxKeyProfile(*sel);
+	newprof->SetName(dlg.GetValue());
+	AddProfile(newprof);
+
+	m_nCurrentProf = m_pKeyProfiles->GetCount()-1;
+	m_pKeyProfiles->SetSelection(m_nCurrentProf);
+}
+
+void wxKeyConfigPanel::OnRemoveProfile(wxCommandEvent &)
+{
+	wxASSERT(m_nCurrentProf != -1);
+
+	if (m_pKeyProfiles->GetCount() == 1) {
+
+		wxMessageBox("Cannot delete this profile. It's the only profile available.");
+		return;
+	}
+
+	m_pKeyProfiles->Delete(m_nCurrentProf);	
+
+	// update the currently selected profile
+	m_nCurrentProf--;
+	if (m_nCurrentProf < 0) m_nCurrentProf=0;
+	wxASSERT(m_nCurrentProf < m_pKeyProfiles->GetCount());
+
+	// keep sync m_nCurrentProf with the currently really selected item
+	m_pKeyProfiles->Select(m_nCurrentProf);
 }
 
 void wxKeyConfigPanel::OnKeyPressed(wxCommandEvent &)

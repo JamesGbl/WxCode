@@ -19,6 +19,7 @@
 #include "wx/wxprec.h"
 #include "wx/keybinder.h"
 #include "wx/menuutils.h"
+#include "wx/config.h"
 
 #define wxUSE_KEYBINDER		1
 
@@ -39,6 +40,57 @@
 // ============================================================================
 
 
+// first of all, decide if we can use the system...
+#if defined(__VISUALC__) 
+	#define mcDETECT_MEMORY_LEAKS
+#endif
+
+#ifdef mcDETECT_MEMORY_LEAKS
+
+	// "crtdbg.h" is included only with MSVC++ and Borland, I think...
+	// "stackwalker.h" instead, contains a set of stack walker functions
+	// created by Jochen Kalmbach (thanks !!!) which allow to read the
+	// intercept unhandled exceptions and memory-leaks. 
+	// To be used, the file must be part of the project; this is why
+	// it's contained (with its CPP counterpart) in the folder of this
+	// test program. Anyway,  you can find it also online at:
+	//     http://www.codeproject.com/tools/leakfinder.asp
+	#include <crtdbg.h>
+	//#include <windows.h>
+	#include "stackwalker.h"
+
+	// define some useful macros
+	#define new			new(_NORMAL_BLOCK, THIS_FILE, __LINE__)
+
+	#define mcDUMP_ON_EXIT				{ _CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF); }
+	#define mcSTART_DETECTION			{ InitAllocCheck(ACOutput_Advanced, FALSE, FALSE); }
+	#define mcEND_DETECTION				{ DeInitAllocCheck(); }
+	#define mcEND_DETECTION_AND_DUMP	{ DeInitAllocCheck(); _CrtDumpMemoryLeaks(); }
+	
+	#undef THIS_FILE
+	static char THIS_FILE[] = __FILE__;
+
+
+	// this little class is used to access Stackwalker functions
+	// without changing a line of code...
+	class mcLeakDetector {
+
+	public:
+		mcLeakDetector() { mcSTART_DETECTION; mcDUMP_ON_EXIT; }
+		~mcLeakDetector() { mcEND_DETECTION; }
+	};
+
+	// ...infact, instancing a STATIC mcLeakDetector class, we
+	// can start memory-leak detection at the very beginning of
+	// the program (when the main() or winmain() has not been
+	// called yet, that is, when the framework is creating the
+	// static variables of the program) and end it at the very
+	// end of the program (when, after the main() or winmain(),
+	// the framework removes the static variables).
+	static mcLeakDetector detector;
+
+
+#endif
 
 // ----------------------------------------------------------------------------
 // resources
@@ -86,7 +138,13 @@ enum
 	Minimal_Shortcut2,
 	Minimal_Shortcut3,
 	Minimal_Keybindings,
-	Minimal_ShowKeyProfiles
+	Minimal_ShowKeyProfiles,
+	Minimal_UseTreeCtrl,
+	Minimal_EnableProfileEdit,
+	Minimal_ShowAddRemoveProfile,
+
+	Minimal_Load,
+	Minimal_Save
 };
 
 // Define a new frame type: this is going to be our main frame
@@ -98,12 +156,7 @@ protected:
 public:
 
 	// THE KEYPROFILES DO NOT NEED TO BE STATIC (EVEN IF THESE ONES ARE)	
-
-	// our default keyprofile
-	static wxKeyProfile *pPrimary;
-
-	// our secondary keyprofile
-	static wxKeyProfile *pSecondary;
+	static wxKeyProfileArray arr;
 
 public:
     // ctor(s)
@@ -119,6 +172,9 @@ public:
 	void OnShortcut3(wxCommandEvent &);
 	void OnKeybindings(wxCommandEvent &);
 
+	void OnLoad(wxCommandEvent &);
+	void OnSave(wxCommandEvent &);
+
 private:
     // any class wishing to process wxWindows events must use this macro
     DECLARE_EVENT_TABLE()
@@ -131,7 +187,7 @@ public:
 
 public:
     // ctor(s)
-    MyDialog(wxWindow *parent, const wxString& title);
+    MyDialog(wxWindow *parent, const wxString& title, int);
 	~MyDialog();
 
     // event handlers (these functions should _not_ be virtual)
@@ -160,6 +216,9 @@ BEGIN_EVENT_TABLE(MyFrame, wxFrame)
     EVT_MENU(Minimal_Shortcut1, MyFrame::OnShortcut1)
     EVT_MENU(Minimal_Shortcut2, MyFrame::OnShortcut2)
     EVT_MENU(Minimal_Shortcut3, MyFrame::OnShortcut3)
+
+    EVT_MENU(Minimal_Load, MyFrame::OnLoad)
+    EVT_MENU(Minimal_Save, MyFrame::OnSave)
 
 END_EVENT_TABLE()
 
@@ -213,8 +272,7 @@ bool MyApp::OnInit()
 // main frame
 // ----------------------------------------------------------------------------
 
-wxKeyProfile *MyFrame::pPrimary = NULL;
-wxKeyProfile *MyFrame::pSecondary = NULL;
+wxKeyProfileArray MyFrame::arr;
 
 
 // frame constructor
@@ -240,47 +298,64 @@ MyFrame::MyFrame(const wxString& title)
 #if wxUSE_MENUS
     // create a menu bar
     wxMenu *menuFile = new wxMenu;
-
+	
     // the "About" item should be in the help menu
     wxMenu *helpMenu = new wxMenu;
     helpMenu->Append(Minimal_About, _T("&About...\tF1"), _T("Show about dialog"));
-
+	
 	wxString str = "A dummy shortcut description; "
-					"add/delete/edit all the shortcuts you want to this test command.";
-	menuFile->Append(Minimal_Shortcut1, _T("Shortcut #1\tCtrl+1"), _T(str));
-	menuFile->Append(Minimal_Shortcut2, _T("Shortcut #2\tCtrl+2"), _T(str));
-	menuFile->Append(Minimal_Shortcut3, _T("Shortcut #3\tCtrl+3"), _T(str));
+		"add/delete/edit all the shortcuts you want to this test command.";
+	
+	wxMenu *sub = new wxMenu;
+	sub->Append(Minimal_Shortcut1, _T("Shortcut #1\tCtrl+1"), _T(str));
+	sub->Append(Minimal_Shortcut2, _T("Shortcut #2\tCtrl+2"), _T(str));
+	sub->Append(Minimal_Shortcut3, _T("Shortcut #3\tCtrl+3"), _T(str));
+	
+	menuFile->Append(-1, "Shortcuts", sub);
 	menuFile->AppendSeparator();
 	menuFile->Append(Minimal_Keybindings, _T("Keybindings\tF8"), _T(""));
 	menuFile->AppendCheckItem(Minimal_ShowKeyProfiles, _T("Show profiles"), _T(""));
-	menuFile->Check(Minimal_ShowKeyProfiles, TRUE);
+	menuFile->AppendCheckItem(Minimal_ShowAddRemoveProfile, _T("Show add/remove profile buttons"), _T(""));
+	menuFile->AppendCheckItem(Minimal_UseTreeCtrl, _T("Use a tree ctrl"), _T(""));
+	menuFile->AppendCheckItem(Minimal_EnableProfileEdit, _T("Enable profile editing"), _T(""));
+	menuFile->AppendSeparator();
+	
+	menuFile->Append(Minimal_Save, _T("Save the keybindings...\tCtrl+S"), _T(""));
+	menuFile->Append(Minimal_Load, _T("Load last keybindings...\tCtrl+L"), _T(""));
 	menuFile->AppendSeparator();
 
-    menuFile->Append(Minimal_Quit, _T("E&xit\tAlt-X"), _T("Quit this program"));	
-
+	menuFile->Check(Minimal_ShowKeyProfiles, TRUE);
+	menuFile->Check(Minimal_ShowAddRemoveProfile, TRUE);
+	menuFile->Check(Minimal_UseTreeCtrl, FALSE);
+	menuFile->Check(Minimal_EnableProfileEdit, TRUE);
+	menuFile->Append(Minimal_Quit, _T("E&xit\tAlt-X"), _T("Quit this program"));	
+	
     // now append the freshly created menu to the menu bar...
     wxMenuBar *menuBar = new wxMenuBar();
     menuBar->Append(menuFile, _T("&File"));
     menuBar->Append(helpMenu, _T("&Help"));
-
+	
     // ... and attach this menu bar to the frame
     SetMenuBar(menuBar);
 #endif // wxUSE_MENUS
-
+	
 #if wxUSE_STATUSBAR
     // create a status bar just for fun (by default with 1 pane only)
     CreateStatusBar(2);
     SetStatusText(_T("Welcome to wxWindows!"));
 #endif // wxUSE_STATUSBAR
-
-
+	
+	
 	// init the keybinder
 #if wxUSE_KEYBINDER
+	wxKeyProfile *pPrimary, *pSecondary;
+
 	pPrimary = new wxKeyProfile("Primary", "Our primary keyprofile");
-	pSecondary = new wxKeyProfile("Secondary", "Our secondary keyprofile");
-	
 	pPrimary->ImportMenuBarCmd(menuBar);
-	pSecondary->DeepCopy(pPrimary);
+
+	pSecondary = new wxKeyProfile(*pPrimary);
+	pSecondary->SetName("Secondary");
+	pSecondary->SetDesc("Our secondary keyprofile");
 
 	// just to show some features....
 	pPrimary->AddShortcut(Minimal_Shortcut1, wxKeyBind("CTRL+SHIFT+E"));
@@ -291,16 +366,17 @@ MyFrame::MyFrame(const wxString& title)
 	// by now, attach to this window the primary keybinder
 	pPrimary->Attach(this);	
 
+	// put both keyprofiles into our array
+	arr.Add(pPrimary);
+	arr.Add(pSecondary);
+
 #endif
 }
 
 
 MyFrame::~MyFrame()
-{
-#if wxUSE_KEYBINDER
-	wxSAFE_DELETE(pPrimary);
-	wxSAFE_DELETE(pSecondary);
-#endif
+{	
+	arr.Cleanup();
 }
 
 
@@ -333,13 +409,64 @@ void MyFrame::OnShortcut3(wxCommandEvent &)
 
 void MyFrame::OnKeybindings(wxCommandEvent &)
 {
-	MyDialog dlg(this, "Keybindings");
+	bool btree = GetMenuBar()->IsChecked(Minimal_UseTreeCtrl);
+	bool baddprofile = GetMenuBar()->IsChecked(Minimal_ShowAddRemoveProfile);
+	bool bprofiles = GetMenuBar()->IsChecked(Minimal_ShowKeyProfiles);
+	bool bprofileedit = GetMenuBar()->IsChecked(Minimal_EnableProfileEdit);
+
+	// setup build flags
+	int mode = btree ? wxKEYBINDER_USE_TREECTRL : wxKEYBINDER_USE_LISTBOX;
+	if (baddprofile) mode |= wxKEYBINDER_SHOW_ADDREMOVE_PROFILE;
+	if (bprofileedit) mode |= wxKEYBINDER_ENABLE_PROFILE_EDITING;
+
+	MyDialog dlg(this, "Keybindings", mode | wxKEYBINDER_SHOW_APPLYBUTTON);
 
 	// does the user wants to enable key profiles ?
-	dlg.m_p->EnableKeyProfiles(GetMenuBar()->IsChecked(Minimal_ShowKeyProfiles));
+	dlg.m_p->EnableKeyProfiles(bprofiles);
 	dlg.ShowModal();
 }
 
+
+void MyFrame::OnLoad(wxCommandEvent &)
+{
+	wxMenuCmd::SetMenuBar(GetMenuBar());
+	wxMenuCmd::Register();
+
+	wxConfig *cfg = new wxConfig("KeyBinder sample");
+	if (arr.Load(cfg)) {
+
+		int total = 0;
+		for (int i=0; i<arr.GetCount(); i++)
+			total += arr.Item(i)->GetCmdCount();
+		wxMessageBox(wxString::Format(
+					"All the keyprofiles have been correctly loaded (%d keybindings in total).\n"
+					"The first selecteed profile will be applied.", total),
+					"Success");
+		arr.DetachAll(this);
+		arr.Item(0)->Attach(this);
+
+	} else {
+
+		wxMessageBox("Something wrong while loading !", "Error", wxOK | wxICON_ERROR);
+	}
+
+	delete cfg;
+}
+
+void MyFrame::OnSave(wxCommandEvent &)
+{
+	wxConfig *cfg = new wxConfig("KeyBinder sample");
+	if (arr.Save(cfg)) {
+
+		wxMessageBox("All the keyprofiles have been correctly saved.", "Success");
+
+	} else {
+
+		wxMessageBox("Something wrong while saving !", "Error", wxOK | wxICON_ERROR);
+	}
+
+	delete cfg;
+}
 
 
 
@@ -348,7 +475,7 @@ void MyFrame::OnKeybindings(wxCommandEvent &)
 // keybindings dialog: a super-simple wrapper for wxKeyConfigPanel
 // ----------------------------------------------------------------------------
 
-MyDialog::MyDialog(wxWindow *parent, const wxString &title) :
+MyDialog::MyDialog(wxWindow *parent, const wxString &title, int mode) :
 	wxDialog(parent, -1, title, wxDefaultPosition, wxDefaultSize, 
 		wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)	
 {
@@ -364,8 +491,8 @@ MyDialog::MyDialog(wxWindow *parent, const wxString &title) :
 
 
 	// create a simple wxKeyConfigPanel
-	m_p = new wxKeyConfigPanel(this, MyFrame::pPrimary, TRUE);
-	m_p->AddProfile(MyFrame::pSecondary);
+	m_p = new wxKeyConfigPanel(this, NULL, mode);
+	m_p->AddProfiles(MyFrame::arr);
 
 	// with this command we populate the wxTreeCtrl widget of the panel
 	m_p->ImportMenuBarCmd(((wxFrame*)parent)->GetMenuBar());
@@ -378,7 +505,7 @@ MyDialog::MyDialog(wxWindow *parent, const wxString &title) :
 
 	// this is a little modification to make dlg look nicer
 	wxSize sz(GetSizer()->GetMinSize());
-	SetSize(-1, -1, sz.GetWidth()*1.5, sz.GetHeight());
+	SetSize(-1, -1, sz.GetWidth()*1.1, sz.GetHeight());
 }
 
 MyDialog::~MyDialog()
@@ -392,9 +519,11 @@ void MyDialog::OnApply( wxCommandEvent & )
 	m_p->ApplyChanges();
 
 	// and attach the right keybinder to our parent
-	MyFrame::pPrimary->Detach(GetParent());
-	MyFrame::pSecondary->Detach(GetParent());
-	m_p->GetSelProfile()->Attach(GetParent());
+	wxKeyProfile *newprof = m_p->GetSelProfile();
+
+	MyFrame::arr = m_p->GetProfiles();
+	MyFrame::arr.DetachAll(GetParent());
+	newprof->Attach(GetParent());
 
 	// if we don't catch this buttonpress, wxKeyConfigPanel would just
 	// apply changes without exiting...

@@ -31,6 +31,9 @@
 #include "wx/menuutils.h"
 
 
+// static
+wxMenuBar *wxMenuCmd::m_pMenuBar = NULL;
+
 
 
 
@@ -97,7 +100,6 @@ void wxMenuCmd::Update()
 #endif
 }
 
-
 void wxMenuCmd::Exec(wxObject *origin, wxEvtHandler *client)
 {
 	wxCommandEvent menuEvent(wxEVT_COMMAND_MENU_SELECTED, GetId()); 
@@ -105,6 +107,18 @@ void wxMenuCmd::Exec(wxObject *origin, wxEvtHandler *client)
 	// set up the event and process it...
 	menuEvent.SetEventObject(origin);
 	client->AddPendingEvent(menuEvent);//ProcessEvent(menuEvent);
+}
+
+wxCmd *wxMenuCmd::CreateNew(int id)
+{
+	if (!m_pMenuBar) return NULL;
+
+	// search the menuitem which is tied to the given ID
+	wxMenuItem *p = m_pMenuBar->FindItem(id);
+
+	if (!p) return NULL;
+	wxASSERT(id == p->GetId());
+	return new wxMenuCmd(p);
 }
 
 
@@ -116,13 +130,19 @@ void wxMenuCmd::Exec(wxObject *origin, wxEvtHandler *client)
 
 void wxMenuWalker::WalkMenuItem(wxMenuBar *p, wxMenuItem *m, void *data)
 {
+	wxLogDebug("wxMenuWalker::WalkMenuItem - walking on [%s] at level [%d]", 
+				m->GetLabel(), m_nLevel);
 	void *tmp = OnMenuItemWalk(p, m, data);
 
 	if (m->GetSubMenu()) {
 
 		// if this item contains a sub menu, add recursively the menu items
 		// of that sub menu... using the cookie from OnMenuItemWalk.
+		wxLogDebug("wxMenuWalker::WalkMenuItem - recursing on [%s]", m->GetLabel());
+		m_nLevel++;
 		WalkMenu(p, m->GetSubMenu(), tmp);
+		OnMenuExit(p, m->GetSubMenu(), tmp);
+		m_nLevel--;
 	}
 
 	// we can delete the cookie we got form OnMenuItemWalk
@@ -131,6 +151,8 @@ void wxMenuWalker::WalkMenuItem(wxMenuBar *p, wxMenuItem *m, void *data)
 
 void wxMenuWalker::WalkMenu(wxMenuBar *p, wxMenu *m, void *data)
 {
+	wxLogDebug("wxMenuWalker::WalkMenu - walking on [%s] at level [%d]", 
+				m->GetTitle(), m_nLevel);
 	for (int i=0; i < (int)m->GetMenuItemCount(); i++) {
 
 		wxMenuItem *pitem = m->GetMenuItems().Item(i)->GetData();
@@ -145,9 +167,11 @@ void wxMenuWalker::WalkMenu(wxMenuBar *p, wxMenu *m, void *data)
 			pitem->GetLabel() != wxEmptyString)
 			WalkMenuItem(p, pitem, tmp);
 
-		// the cookie we gave to WalkMenuItem is not useful anymore
+		// the cookie we gave to WalkMenuItem is not useful anymore		
 		DeleteData(tmp);
 	}
+
+	OnMenuExit(p, m, data);
 }
 
 void wxMenuWalker::Walk(wxMenuBar *p, void *data)
@@ -158,10 +182,16 @@ void wxMenuWalker::Walk(wxMenuBar *p, void *data)
 
 		// create a new tree branch for the i-th menu of this menubar
 		wxMenu *m = p->GetMenu(i);
+
+		m_nLevel++;
+		wxLogDebug("wxMenuWalker::Walk - walking on [%s] at level [%d]", 
+					p->GetLabelTop(i), m_nLevel);
 		void *tmp = OnMenuWalk(p, m, data);
 
 		// and fill it...
 		WalkMenu(p, m, tmp);
+		m_nLevel--;
+
 		DeleteData(tmp);
 	}
 }
@@ -244,6 +274,100 @@ void wxMenuTreeWalker::DeleteData(void *data)
 	wxTreeItemId *p = (wxTreeItemId *)data;
 	wxSAFE_DELETE(p);
 }
+
+
+
+
+
+// ----------------------------------------------------------------------------
+// wxMenuComboListWalker
+// ----------------------------------------------------------------------------
+
+void wxMenuComboListWalker::FillComboListCtrl(wxMenuBar *p, wxComboBox *combo)
+{
+	// these will be used in the recursive functions...
+	m_pCategories = combo;
+	
+	// be sure that the given tree item is empty...
+	m_pCategories->Clear();
+
+	// ...start !!!
+	Walk(p, NULL);
+}
+
+void *wxMenuComboListWalker::OnMenuWalk(wxMenuBar *p, wxMenu *m, void *)
+{
+	wxLogDebug("wxMenuWalker::OnMenuWalk - walking on [%s]", m->GetTitle());
+	wxString toadd;
+
+	// find the index of the given menu
+	if (m_strAcc.IsEmpty()) {
+
+		for (int i=0; i < (int)p->GetMenuCount(); i++)
+			if (p->GetMenu(i) == m)
+				break;
+		wxASSERT(i != (int)p->GetMenuCount());
+		toadd = wxMenuItem::GetLabelFromText(p->GetLabelTop(i));
+
+		m_strAcc = toadd;
+
+	} else {
+
+		//toadd = m->GetTitle();
+		toadd = m_strAcc;
+		//wxString str((wxString)()acc);
+		//m_strAcc += str;
+	}
+
+	//int last = m_pCategories->GetCount()-1;
+	int found;
+	if ((found=m_pCategories->FindString(toadd)) != wxNOT_FOUND)
+		return m_pCategories->GetClientObject(found);
+	
+	// create the clientdata that our new combobox item will contain
+	wxClientData *cd = new wxExComboItemData();	
+
+	// and create a new element in our combbox
+	wxLogDebug("wxMenuWalker::OnMenuWalk - appending [%s]", toadd);
+	m_pCategories->Append(toadd, cd);
+	return cd;
+}
+
+void *wxMenuComboListWalker::OnMenuItemWalk(wxMenuBar *, wxMenuItem *m, void *data)
+{
+	wxLogDebug("wxMenuWalker::OnMenuItemWalk - walking on [%s]", m->GetLabel());
+	//int last = m_pCategories->GetCount()-1;
+	wxExComboItemData *p = (wxExComboItemData *)data;//m_pCategories->GetClientObject(last);
+
+	// append a new item
+	if (m->GetSubMenu() == NULL)
+		p->Append(m->GetLabel(), m->GetId());
+	else
+		m_strAcc += " | " + m->GetLabel();
+
+	// no info to give to wxMenuComboListWalker::OnMenuWalk
+	return NULL;//(void *)str;
+}
+
+void wxMenuComboListWalker::OnMenuExit(wxMenuBar *, wxMenu *m, void *)
+{
+	wxLogDebug("wxMenuWalker::OnMenuExit - walking on [%s]", m->GetTitle());
+
+	if (!m_strAcc.IsEmpty()){// && m_strAcc.Right() == str) {
+
+		int diff = m_strAcc.Find('|', TRUE);
+
+		if (diff == wxNOT_FOUND)
+			m_strAcc = wxEmptyString;
+		else 
+			m_strAcc = m_strAcc.Left(diff);
+		m_strAcc.Trim();
+	}
+}
+
+void wxMenuComboListWalker::DeleteData(void *)
+{ /* we need NOT TO DELETE the given pointer !! */ }
+
 
 
 
