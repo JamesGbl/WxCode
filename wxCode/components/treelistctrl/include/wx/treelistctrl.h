@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Modified by: Alberto Griggio, 2002
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.5 2004-03-25 20:03:23 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.6 2004-04-11 20:31:59 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows license
@@ -36,7 +36,11 @@ class GIZMODLLEXPORT wxTreeListMainWindow;
 
 // Using this typedef removes an ambiguity when calling Remove()
 #ifdef __WXMSW__
+#if !wxCHECK_VERSION(2, 5, 0)
+typedef long wxTreeItemIdValue;
+#else
 typedef void *wxTreeItemIdValue;
+#endif
 #endif
 
 //-----------------------------------------------------------------------------
@@ -366,9 +370,17 @@ public:
     // the same!
 
     // get the first child of this item
+#if !wxCHECK_VERSION(2, 5, 0)
+    wxTreeItemId GetFirstChild(const wxTreeItemId& item, long& cookie) const;
+#else
     wxTreeItemId GetFirstChild(const wxTreeItemId& item, wxTreeItemIdValue& cookie) const;
+#endif
     // get the next child
+#if !wxCHECK_VERSION(2, 5, 0)
+    wxTreeItemId GetNextChild(const wxTreeItemId& item, long& cookie) const;
+#else
     wxTreeItemId GetNextChild(const wxTreeItemId& item, wxTreeItemIdValue& cookie) const;
+#endif
     // get the last child of this item - this method doesn't use cookies
     wxTreeItemId GetLastChild(const wxTreeItemId& item) const;
 

@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.5 2004-04-10 17:59:49 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.6 2004-04-11 20:31:20 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -388,9 +388,17 @@ public:
         // the same!
 
         // get the first child of this item
+#if !wxCHECK_VERSION(2, 5, 0)
+    wxTreeItemId GetFirstChild(const wxTreeItemId& item, long& cookie) const;
+#else
     wxTreeItemId GetFirstChild(const wxTreeItemId& item, wxTreeItemIdValue& cookie) const;
+#endif
         // get the next child
+#if !wxCHECK_VERSION(2, 5, 0)
+    wxTreeItemId GetNextChild(const wxTreeItemId& item, long& cookie) const;
+#else
     wxTreeItemId GetNextChild(const wxTreeItemId& item, wxTreeItemIdValue& cookie) const;
+#endif
         // get the last child of this item - this method doesn't use cookies
     wxTreeItemId GetLastChild(const wxTreeItemId& item) const;
 
@@ -2206,8 +2214,13 @@ wxTreeItemId wxTreeListMainWindow::GetItemParent(const wxTreeItemId& item) const
 }
 
 inline
+#if !wxCHECK_VERSION(2, 5, 0)
+wxTreeItemId wxTreeListMainWindow::GetFirstChild(const wxTreeItemId& item,
+                                                 long& cookie) const
+#else
 wxTreeItemId wxTreeListMainWindow::GetFirstChild(const wxTreeItemId& item,
                                                  wxTreeItemIdValue& cookie) const
+#endif
 {
     wxCHECK_MSG( item.IsOk(), wxTreeItemId(), wxT("invalid tree item") );
 
@@ -2216,8 +2229,13 @@ wxTreeItemId wxTreeListMainWindow::GetFirstChild(const wxTreeItemId& item,
 }
 
 inline
+#if !wxCHECK_VERSION(2, 5, 0)
+wxTreeItemId wxTreeListMainWindow::GetNextChild(const wxTreeItemId& item,
+                                                long& cookie) const
+#else
 wxTreeItemId wxTreeListMainWindow::GetNextChild(const wxTreeItemId& item,
                                                 wxTreeItemIdValue& cookie) const
+#endif
 {
     wxCHECK_MSG( item.IsOk(), wxTreeItemId(), wxT("invalid tree item") );
 
@@ -2612,7 +2630,11 @@ void wxTreeListMainWindow::ExpandAll(const wxTreeItemId& item)
     Expand(item);
     if ( IsExpanded(item) )
     {
+#if !wxCHECK_VERSION(2, 5, 0)
+        long cookie;
+#else
         wxTreeItemIdValue cookie;
+#endif
         wxTreeItemId child = GetFirstChild(item, cookie);
         while ( child.IsOk() )
         {
@@ -2885,7 +2907,11 @@ void wxTreeListMainWindow::SelectAll(bool extended_select)
     {
 
     }
+#if !wxCHECK_VERSION(2, 5, 0)
+    long cookie = 0;
+#else
     wxTreeItemIdValue cookie = 0;
+#endif
     wxTreeItemId root = GetRootItem();
     wxTreeListItem *first = (wxTreeListItem *)GetFirstChild (root, cookie).m_pItem;
     wxTreeListItem *last = (wxTreeListItem *)GetLastChild (GetRootItem()).m_pItem;
@@ -3041,7 +3067,11 @@ wxTreeItemId wxTreeListMainWindow::FindItem (const wxTreeItemId& item, const wxS
     if (!next.IsOk()) next = GetSelection();
     if (!next.IsOk()) {
         if (HasFlag(wxTR_HIDE_ROOT)) {
+#if !wxCHECK_VERSION(2, 5, 0)
+            long cookie = 0;
+#else
             wxTreeItemIdValue cookie = 0;
+#endif
             next = (wxTreeListItem*)GetFirstChild (GetRootItem().m_pItem, cookie).m_pItem;
         } else {
             next = (wxTreeListItem*)GetRootItem().m_pItem;
@@ -3670,7 +3700,11 @@ void wxTreeListMainWindow::OnChar( wxKeyEvent &event )
     if ( !m_current )
     {
         if (HasFlag(wxTR_HIDE_ROOT)) {
+#if !wxCHECK_VERSION(2, 5, 0)
+            long cookie = 0;
+#else
             wxTreeItemIdValue cookie = 0;
+#endif
             m_current = m_key_current = (wxTreeListItem*)GetFirstChild (GetRootItem().m_pItem, cookie).m_pItem;
         }
         else
@@ -3743,7 +3777,11 @@ void wxTreeListMainWindow::OnChar( wxKeyEvent &event )
         case WXK_BACK:
             {
                 wxTreeItemId prev = GetItemParent( m_current );
+#if !wxCHECK_VERSION(2, 5, 0)
+                if ((m_current == (wxTreeListItem*)GetRootItem().m_pItem) ||
+#else
                 if ((m_current == GetRootItem()) ||
+#endif
                     (prev == GetRootItem()) && HasFlag(wxTR_HIDE_ROOT))
                 {
                     wxTreeEvent event( wxEVT_COMMAND_TREE_ITEM_ACTIVATED,
@@ -3774,7 +3812,11 @@ void wxTreeListMainWindow::OnChar( wxKeyEvent &event )
                     }
                     if (prev)
                     {
+#if !wxCHECK_VERSION(2, 5, 0)
+                        long cookie = 0;
+#else
                         wxTreeItemIdValue cookie = 0;
+#endif
                         wxTreeItemId current = m_key_current;
                         // TODO: Huh?  If we get here, we'd better be the first child of our parent.  How else could it be?
                         if (current == GetFirstChild( prev, cookie ))
@@ -3846,7 +3888,11 @@ void wxTreeListMainWindow::OnChar( wxKeyEvent &event )
             {
                 if (IsExpanded(m_key_current) && HasChildren(m_key_current))
                 {
+#if !wxCHECK_VERSION(2, 5, 0)
+                    long cookie = 0;
+#else
                     wxTreeItemIdValue cookie = 0;
+#endif
                     wxTreeItemId child = GetFirstChild( m_key_current, cookie );
                     if (child) {
                         SelectItem( child, unselect_others, extended_select );
@@ -3907,7 +3953,11 @@ void wxTreeListMainWindow::OnChar( wxKeyEvent &event )
                 if (!prev) break;
                 if (HasFlag(wxTR_HIDE_ROOT))
                 {
-                    wxTreeItemIdValue cookie;
+#if !wxCHECK_VERSION(2, 5, 0)
+                    long cookie = 0;
+#else
+                    wxTreeItemIdValue cookie = 0;
+#endif
                     prev = GetFirstChild(prev, cookie);
                     if (!prev) break;
                 }
@@ -4698,12 +4748,22 @@ size_t wxTreeListCtrl::GetSelections(wxArrayTreeItemIds& arr) const
 wxTreeItemId wxTreeListCtrl::GetItemParent(const wxTreeItemId& item) const
 { return m_main_win->GetItemParent(item); }
 
+#if !wxCHECK_VERSION(2, 5, 0)
+wxTreeItemId wxTreeListCtrl::GetFirstChild(const wxTreeItemId& item,
+                                           long& cookie) const
+#else
 wxTreeItemId wxTreeListCtrl::GetFirstChild(const wxTreeItemId& item,
                                            wxTreeItemIdValue& cookie) const
+#endif
 { return m_main_win->GetFirstChild(item, cookie); }
 
+#if !wxCHECK_VERSION(2, 5, 0)
+wxTreeItemId wxTreeListCtrl::GetNextChild(const wxTreeItemId& item,
+                                          long& cookie) const
+#else
 wxTreeItemId wxTreeListCtrl::GetNextChild(const wxTreeItemId& item,
                                           wxTreeItemIdValue& cookie) const
+#endif
 { return m_main_win->GetNextChild(item, cookie); }
 
 wxTreeItemId wxTreeListCtrl::GetLastChild(const wxTreeItemId& item) const
