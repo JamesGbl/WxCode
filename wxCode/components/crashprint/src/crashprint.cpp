@@ -3,7 +3,7 @@
 // Purpose:     wxCrashPrint
 // Maintainer:  Wyo
 // Created:     2004-09-28
-// RCS-ID:      $Id: crashprint.cpp,v 1.6 2004-10-06 19:26:27 wyo Exp $
+// RCS-ID:      $Id: crashprint.cpp,v 1.7 2004-10-08 16:04:17 wyo Exp $
 // Copyright:   (c) wxCode
 // Licence:     wxWidgets licence
 //////////////////////////////////////////////////////////////////////////////
@@ -90,7 +90,7 @@ void wxCrashPrint::Report () {
     }
 
     // print backtrace announcement
-    printf (_T("\n*** %s crashed ***, see backtrace!\n"), appname.c_str());
+    printf (_T("\n*** %s (%s) crashed ***, see backtrace!\n"), appname.c_str(), wxVERSION_STRING);
 
     // format backtrace lines
     int status;
