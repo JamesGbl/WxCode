@@ -3,7 +3,7 @@
 ## Purpose:     wxScintilla
 ## Maintainer:  Otto Wyss
 ## Created:     2004-09-19
-## RCS-ID:      $Id: Makefile,v 1.1 2004-11-12 18:49:39 wyo Exp $
+## RCS-ID:      $Id: Makefile,v 1.2 2004-11-13 10:56:06 wyo Exp $
 ## Copyright:   (c) wxCode
 ## Licence:     wxWidgets licence
 ##############################################################################
@@ -136,23 +136,23 @@ endif
 
 all:	$(LIB)
 $(LIB):	$(OBJ)
-	g++ -fpic --share -o $@ $^ `$(WXCONFIG) --libs`
+	g++ -fpic --share -o ../lib/$@ $^ `$(WXCONFIG) --libs`
 
 release:	$(LIB)r
 $(LIB)r:	$(OBJ)
-	g++ -fpic --share -o $@ $^ `$(WXCONFIG) --static --libs`
+	g++ -fpic --share -o ../lib/$@ $^ `$(WXCONFIG) --static --libs`
 
 debug:	$(LIB)d
 $(LIB)d:	$(OBJ)
-	g++ -fpic --share -o $@ $^ `$(WXCONFIG) --libs`
+	g++ -fpic --share -o ../lib/$@ $^ `$(WXCONFIG) --libs`
 
 develdebug:	$(LIB)dd
 $(LIB)dd:	$(OBJ)
-	g++ -fpic --share -o $@ $^ `$(WXCONFIG) --libs`
+	g++ -fpic --share -o ../lib/$@ $^ `$(WXCONFIG) --libs`
 
 univdebug:	$(LIB)ud
 $(LIB)ud:	$(OBJ)
-	g++ -fpic --share -o $@ $^ `$(WXCONFIG) --libs`
+	g++ -fpic --share -o ../lib/$@ $^ `$(WXCONFIG) --libs`
 
 clean:
 	rm -f *.o
