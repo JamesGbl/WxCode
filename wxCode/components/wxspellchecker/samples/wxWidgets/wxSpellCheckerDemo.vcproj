@@ -19,7 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\wxWidgets-Contrib\wxspellchecker&quot;;&quot;C:\wxWidgets-Contrib\aspell-0.60\interfaces\cc&quot;;&quot;C:\wxWidgets-Contrib\wxspellchecker\include&quot;"
+				AdditionalIncludeDirectories="..\..\include;..\.."
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -70,7 +70,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;C:\wxWidgets-Contrib\aspell-0.60\interfaces\cc&quot;;&quot;C:\wxWidgets-Contrib\wxspellchecker&quot;;&quot;C:\wxWidgets-Contrib\wxspellchecker\include&quot;"
+				AdditionalIncludeDirectories="..\..\include;..\.."
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -119,10 +119,34 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
-				RelativePath="..\samples\wxWidgets\MySpellCheckDialog.cpp">
+				RelativePath=".\MySpellCheckDialog.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\samples\wxWidgets\wxSpellCheckerDemo.cpp">
+				RelativePath=".\wxSpellCheckerDemo.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -130,13 +154,13 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
-				RelativePath="..\samples\wxWidgets\MySpellCheckDialog.h">
+				RelativePath=".\MySpellCheckDialog.h">
 			</File>
 			<File
-				RelativePath="..\samples\wxWidgets\resource.h">
+				RelativePath=".\resource.h">
 			</File>
 			<File
-				RelativePath="..\samples\wxWidgets\wxSpellCheckerDemo.h">
+				RelativePath=".\wxSpellCheckerDemo.h">
 			</File>
 		</Filter>
 		<Filter
