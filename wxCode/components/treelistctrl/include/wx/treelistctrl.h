@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Modified by: Alberto Griggio, 2002
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.8 2004-04-19 20:25:50 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.9 2004-04-20 20:11:07 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows license
@@ -381,6 +381,12 @@ public:
     wxTreeItemId GetNextChild(const wxTreeItemId& item, long& cookie) const;
 #else
     wxTreeItemId GetNextChild(const wxTreeItemId& item, wxTreeItemIdValue& cookie) const;
+#endif
+    // get the prev child
+#if !wxCHECK_VERSION(2, 5, 0)
+    wxTreeItemId GetPrevChild(const wxTreeItemId& item, long& cookie) const;
+#else
+    wxTreeItemId GetPrevChild(const wxTreeItemId& item, wxTreeItemIdValue& cookie) const;
 #endif
     // get the last child of this item - this method doesn't use cookies
     wxTreeItemId GetLastChild(const wxTreeItemId& item) const;

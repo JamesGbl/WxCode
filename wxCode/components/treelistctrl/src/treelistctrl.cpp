@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.8 2004-04-19 20:25:10 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.9 2004-04-20 20:11:37 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -398,6 +398,12 @@ public:
     wxTreeItemId GetNextChild(const wxTreeItemId& item, long& cookie) const;
 #else
     wxTreeItemId GetNextChild(const wxTreeItemId& item, wxTreeItemIdValue& cookie) const;
+#endif
+        // get the prev child
+#if !wxCHECK_VERSION(2, 5, 0)
+    wxTreeItemId GetPrevChild(const wxTreeItemId& item, long& cookie) const;
+#else
+    wxTreeItemId GetPrevChild(const wxTreeItemId& item, wxTreeItemIdValue& cookie) const;
 #endif
         // get the last child of this item - this method doesn't use cookies
     wxTreeItemId GetLastChild(const wxTreeItemId& item) const;
@@ -2258,6 +2264,32 @@ wxTreeItemId wxTreeListMainWindow::GetNextChild(const wxTreeItemId& item,
     }
 }
 
+#if !wxCHECK_VERSION(2, 5, 0)
+wxTreeItemId wxTreeListMainWindow::GetPrevChild(const wxTreeItemId& item,
+                                                long& cookie) const
+#else
+wxTreeItemId wxTreeListMainWindow::GetPrevChild(const wxTreeItemId& item,
+                                                wxTreeItemIdValue& cookie) const
+#endif
+{
+    wxCHECK_MSG( item.IsOk(), wxTreeItemId(), wxT("invalid tree item") );
+
+    wxArrayTreeListItems& children = ((wxTreeListItem*) item.m_pItem)->GetChildren();
+
+    // it's ok to cast cookie to size_t, we never have indices big enough to
+    // overflow "void *"
+    size_t *pIndex = (size_t *)&cookie;
+    if ( *pIndex > 0 )
+    {
+        return children.Item(--(*pIndex));
+    }
+    else
+    {
+        // there are no more of them
+        return wxTreeItemId();
+    }
+}
+
 inline
 wxTreeItemId wxTreeListMainWindow::GetLastChild(const wxTreeItemId& item) const
 {
@@ -4052,7 +4084,7 @@ void wxTreeListMainWindow::Edit( const wxTreeItemId& item )
     wxString s = m_currentEdit->GetText(/*ALB*/m_main_column);
     int x = m_currentEdit->GetX() + m_imgWidth2;
     int y = m_currentEdit->GetY();
-    int w = wxMin (m_currentEdit->GetWidth(), 
+    int w = wxMin (m_currentEdit->GetWidth(),
                    m_owner->GetHeaderWindow()->GetWidth()) - m_imgWidth2;
     int h = m_currentEdit->GetHeight() + 2;
     wxClientDC dc(this);
@@ -4759,6 +4791,15 @@ wxTreeItemId wxTreeListCtrl::GetNextChild(const wxTreeItemId& item,
                                           wxTreeItemIdValue& cookie) const
 #endif
 { return m_main_win->GetNextChild(item, cookie); }
+
+#if !wxCHECK_VERSION(2, 5, 0)
+wxTreeItemId wxTreeListCtrl::GetPrevChild(const wxTreeItemId& item,
+                                          long& cookie) const
+#else
+wxTreeItemId wxTreeListCtrl::GetPrevChild(const wxTreeItemId& item,
+                                          wxTreeItemIdValue& cookie) const
+#endif
+{ return m_main_win->GetPrevChild(item, cookie); }
 
 wxTreeItemId wxTreeListCtrl::GetLastChild(const wxTreeItemId& item) const
 { return m_main_win->GetLastChild(item); }

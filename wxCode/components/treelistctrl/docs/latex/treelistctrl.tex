@@ -520,6 +520,7 @@ Returns an invalid tree item if there are no further children.
 \wxheading{See also}
 
 \helpref{wxTreeListCtrl::GetFirstChild}{wxtreelistctrlgetfirstchild}
+\helpref{wxTreeListCtrl::GetPrevChild}{wxtreelistctrlgetprevchild}
 
 \pythonnote{In wxPython the returned wxTreeItemId and the new cookie
 value are both returned as a tuple containing the two values.}
@@ -550,6 +551,31 @@ Returns the next visible item.
 \constfunc{wxTreeItemId}{GetItemParent}{\param{const wxTreeItemId\&}{ item}}
 
 Returns the item's parent.
+
+\membersection{wxTreeListCtrl::GetPrevChild}\label{wxtreelistctrlgetprevchild}
+
+\constfunc{wxTreeItemId}{GetPrevChild}{\param{const wxTreeItemId\&}{ item}, \param{long\& }{cookie}}
+
+Returns the previous child.
+
+For this enumeration function you must pass in a `cookie' parameter
+which is opaque for the application but is necessary for the library
+to make these functions reentrant (i.e. allow more than one
+enumeration on one and the same object simultaneously). The cookie passed to
+GetFirstChild,GetNextChild and GetPrevChild should be the same.
+
+Returns an invalid tree item if there are no further children.
+
+\wxheading{See also}
+
+\helpref{wxTreeListCtrl::GetFirstChild}{wxtreelistctrlgetfirstchild}
+\helpref{wxTreeListCtrl::GetNextChild}{wxtreelistctrlgetnextchild}
+
+\pythonnote{In wxPython the returned wxTreeItemId and the new cookie
+value are both returned as a tuple containing the two values.}
+
+\perlnote{In wxPerl this method returns a 2-element list
+  {\tt ( item, cookie )}, instead of modifying its parameters.}
 
 \membersection{wxTreeListCtrl::GetPrevSibling}\label{wxtreelistctrlgetprevsibling}
 
