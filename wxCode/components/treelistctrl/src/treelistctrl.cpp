@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.30 2004-10-03 18:46:37 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.31 2004-10-04 17:50:26 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -587,9 +587,9 @@ public:
     void SetFocus();
 
 protected:
-    wxTreeListCtrl* m_owner; // ALB
+    wxTreeListCtrl* m_owner;
 
-    size_t m_main_column; // ALB
+    size_t m_main_column;
 
     friend class wxTreeListItem;
     friend class wxTreeListRenameTimer;
@@ -627,7 +627,6 @@ protected:
                         *m_imageListButtons;
 
     int                  m_dragCount;
-    wxPoint              m_dragStart;
     wxTimer             *m_dragTimer;
     wxTreeListItem      *m_dragItem;
 
@@ -1649,8 +1648,8 @@ wxTreeListItem *wxTreeListItem::HitTest(const wxPoint& point,
             if (HasPlus() && theCtrl->HasButtons()) {
                 int bntX = m_x - theCtrl->m_btnWidth2;
                 int bntY = y_mid - theCtrl->m_btnHeight2;
-                if ((point.x > bntX) && (point.x < (bntX + theCtrl->m_btnWidth)) &&
-                    (point.y > bntY) && (point.y < (bntY + theCtrl->m_btnHeight))) {
+                if ((point.x >= bntX) && (point.x <= (bntX + theCtrl->m_btnWidth)) &&
+                    (point.y >= bntY) && (point.y <= (bntY + theCtrl->m_btnHeight))) {
                     flags |= wxTREE_HITTEST_ONITEMBUTTON;
                     return this;
                 }
@@ -1706,7 +1705,6 @@ wxTreeListItem *wxTreeListItem::HitTest(const wxPoint& point,
     return (wxTreeListItem*) NULL;
 }
 
-// ALB
 wxTreeListItem *wxTreeListItem::HitTest(const wxPoint& point,
                                         const wxTreeListMainWindow *theCtrl,
                                         int &flags, int& column, int level)
@@ -3632,9 +3630,7 @@ void wxTreeListMainWindow::OnSetFocus( wxFocusEvent &event )
 {
     m_hasFocus = TRUE;
 //?    SetWindowStyle (GetWindowStyle() | wxRAISED_BORDER);
-
     RefreshSelected();
-
     event.Skip();
 }
 
@@ -3642,9 +3638,7 @@ void wxTreeListMainWindow::OnKillFocus( wxFocusEvent &event )
 {
     m_hasFocus = FALSE;
 //?    SetWindowStyle (GetWindowStyle() & ~wxRAISED_BORDER);
-
     RefreshSelected();
-
     event.Skip();
 }
 
@@ -3957,10 +3951,10 @@ wxTreeItemId wxTreeListMainWindow::HitTest(const wxPoint& point, int& flags,
         return wxTreeItemId();
     }
 
-    wxClientDC dc(this);
-    PrepareDC(dc);
-    wxCoord x = dc.DeviceToLogicalX( point.x );
-    wxCoord y = dc.DeviceToLogicalY( point.y );
+//?    wxClientDC dc(this);
+//?    PrepareDC(dc);
+//?    wxCoord x = dc.DeviceToLogicalX( point.x );
+//?    wxCoord y = dc.DeviceToLogicalY( point.y );
     wxTreeListItem *hit = m_anchor->HitTest (CalcUnscrolledPosition(point),
                                              this, flags, column, 0);
     if (hit == NULL)
@@ -4065,22 +4059,17 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
           event.RightUp() ||
           event.LeftDClick() ||
           event.Dragging() ||
-          (event.Moving() && m_isDragging))) {
+          event.Moving())) {
         event.Skip();
         return;
     }
 
     if (event.LeftDown() || event.RightDown()) SetFocus();
 
-//?    wxClientDC dc(this);
-//?    PrepareDC(dc);
-//?    wxCoord x = dc.DeviceToLogicalX( event.GetX() );
-//?    wxCoord y = dc.DeviceToLogicalY( event.GetY() );
-    wxCoord x = event.GetX();
-    wxCoord y = event.GetY();
+    wxPoint p = CalcUnscrolledPosition (wxPoint (event.GetX(), event.GetY()));
 
     int flags = 0;
-    wxTreeListItem *item = m_anchor->HitTest(wxPoint(x,y), this, flags, 0);
+    wxTreeListItem *item = m_anchor->HitTest (p, this, flags, 0);
 
     // we only process dragging here
     if (event.Dragging()){
@@ -4088,17 +4077,16 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
 
         // determine drag start
         if (m_dragCount == 0) {
-            m_dragStart = wxPoint(x,y);
             m_dragTimer->Start (250, wxTIMER_ONE_SHOT); // minimum drag 250ms
         }
         m_dragCount++;
         if (m_dragCount < 3) return; // minimum drag 3 pixel
         if (m_dragTimer->IsRunning()) return;
 
-        // we're going to drag this item
+        // we're going to drag
         m_dragCount = 0;
         m_isDragging = true;
-        Refresh();
+        RefreshSelected();
 
         // send drag start event
         wxEventType command = event.LeftIsDown()
@@ -4107,33 +4095,41 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
         wxTreeEvent nevent (command, m_owner->GetId());
         nevent.SetItem ((long) m_current);
         nevent.SetEventObject (m_owner);
+        nevent.Veto(); // dragging must be explicit allowed!
         m_owner->GetEventHandler()->ProcessEvent (nevent);
 
-    }else if (m_isDragging) { // any other event but event.Dragging()
+    }else if (m_isDragging) { // any other event but not event.Dragging()
 
         // end dragging
         m_dragCount = 0;
         m_isDragging = false;
+        RefreshSelected();
 
         // send drag end event event
         wxTreeEvent event (wxEVT_COMMAND_TREE_END_DRAG, m_owner->GetId());
-        event.SetItem ((long) item);
-        event.SetPoint (wxPoint(x, y));
+        event.SetItem ((long)item); // FIXME what means item here? 
+        event.SetPoint (p);
         event.SetEventObject (m_owner);
         m_owner->GetEventHandler()->ProcessEvent(event);
+
+    }else if (m_dragCount > 0) { // just in case dragging is initiated
+
+        // end dragging
+        m_dragCount = 0;
 
     }
 
     // we process only the messages which happen on tree items
-    if (item == NULL) return; // nothing to do
+    if (item == NULL) {
+        event.Skip();
+        return; // nothing to do
+    }
 
     if (event.RightDown()) {
         SetFocus();
         wxTreeEvent nevent (wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, m_owner->GetId());
-        nevent.SetItem ((long) item);
-        int nx, ny;
-        CalcScrolledPosition (x, y, &nx, &ny);
-        nevent.SetPoint (wxPoint(nx, ny));
+        nevent.SetItem ((long)item);
+        nevent.SetPoint (p);
         nevent.SetEventObject (m_owner);
         m_owner->GetEventHandler()->ProcessEvent(nevent);
 
@@ -4201,11 +4197,9 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
             // send activate event first
             wxTreeEvent nevent( wxEVT_COMMAND_TREE_ITEM_ACTIVATED,
                                 m_owner->GetId() );
-            nevent.SetItem( (long) item );
-            int nx, ny;
-            CalcScrolledPosition(x, y, &nx, &ny);
-            nevent.SetPoint( wxPoint(nx, ny) );
-            nevent.SetEventObject( /*this*/m_owner );
+            nevent.SetItem ((long)item);
+            nevent.SetPoint (p);
+            nevent.SetEventObject (m_owner);
             if (!m_owner->GetEventHandler()->ProcessEvent (nevent)) {
 
                 // if the user code didn't process the activate event,
@@ -4806,7 +4800,8 @@ void wxTreeListCtrl::ScrollTo(const wxTreeItemId& item)
 
 wxTreeItemId wxTreeListCtrl::HitTest(const wxPoint& pos, int& flags, int& column)
 {
-    return m_main_win->HitTest(pos, flags, column);
+    wxPoint p = m_main_win->ScreenToClient (ClientToScreen (pos));
+    return m_main_win->HitTest (p, flags, column);
 }
 
 bool wxTreeListCtrl::GetBoundingRect(const wxTreeItemId& item, wxRect& rect,
