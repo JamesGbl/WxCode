@@ -3,7 +3,7 @@
 // Purpose:     wxScintilla test application
 // Maintainer:  Otto Wyss
 // Created:     2003-09-01
-// RCS-ID:      $Id: test.cpp,v 1.1 2004-11-19 18:35:49 wyo Exp $
+// RCS-ID:      $Id: test.cpp,v 1.2 2004-11-24 21:44:29 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows licence
 //////////////////////////////////////////////////////////////////////////////
@@ -61,7 +61,7 @@
 #define APP_COPYRIGTH _T("(C) 2003 Otto Wyss")
 #define APP_LICENCE _T("wxWindows")
 
-#define APP_VERSION _T("1.62.0")
+#define APP_VERSION _T("1.0.0")
 #define APP_BUILD __DATE__
 
 #define APP_WEBSITE _T("http://wxcode.sourceforge.net/components/wxscintilla/index.html")

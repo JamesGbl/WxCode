@@ -3,72 +3,48 @@
 ## Purpose:     Installation info
 ## Maintainer:  Otto Wyss
 ## Created:     2004-11-14
-## RCS-ID:      $Id: BuildInfo.txt,v 1.1 2004-11-14 10:16:23 wyo Exp $
+## RCS-ID:      $Id: BuildInfo.txt,v 1.2 2004-11-24 21:43:44 wyo Exp $
 ## Copyright:   (c) 2004 wxCode
 ## Licence:     wxWindows
 ##############################################################################
 
 Requirements
 ============
-To build successfully you need at least wxWidgets 2.4.2. Either get it 
-via a package system (e.g. Debian) or build it according their instructions.
-
-To improve the functionality the following optional patches for wxWidgets
-may be applied (see download "Patches.zip" or get them from wxWidgets site).
-Before you patch decide first which you want and then apply them in
-increasing patch number order.
-
-
-wxGTK
------
-Essential: 865500
-Important: 863847,888042
-Nice to have: 781346, 766424
-
-
-wxMSW
------
-Essential: -
-Important: 769552
-Nice to have: 748469, 766424, 781346, 830049
-
-
-wxUniv
-------
-Essential: 681893, 830050
-Important: 749749, 888042
-Nice to have: 748469, 766424, 781346
+To build successfully you need at least wxWidgets 2.4.2.
 
 
 Generel building rules
 ======================
-If got wxWidgets from a package or if you built it into the standard 
-location, everything is fine. Otherwise you _have_ to set the $WXSTABLE 
-environment variable to point to the base directory of wxWidgets 
-(i.e. "/usr/src/wxWidgets" then "WXSTABLE=/usr/src/wxWidgets").
+1. Build or get the wxWidgets libraries however this is done on your platform
+(e.g. packages wxGTK2.4 from Debian/sarge). If the libraries are installed, 
+nothing additional has to be done. Otherwise you have to set the $WXSTABLE 
+environment variable to point to the base directory of wxWidgets (e.g. 
+"/usr/src/wxWidgets" then "WXSTABLE=/usr/src/wxWidgets").
 
-If you want to build any development target don't forget to set the 
-environment variable WXDEVEL (i.e. "C:\Devel\wxWidgetsDev" then
+2. Extract the sources into a working directory.
+
+3. Now follow the platform specific instructions.
+
+If you want to build any development target don't forget to set the environment
+variable WXDEVEL (e.g. "C:\Devel\wxWidgetsDev" then
 "WXDEVEL=C:\Devel\wxWidgetsDev").
 
 
 Linux (wxGTK, wxUniv/GTK)
 -------------------------
-Use "make" for the release version, "make debug" for the debug version.
-For wxUniv use make "make univdebug" and don't forget variable WXDEVEL.
-
+Use "make" for the release version, "make debug" for the debug version. For 
+wxUniv need to make "make univdebug" and variable WXDEVEL has to be set.
 
 MacOS (wxMAC)
 -------------
-???
-
+??? Try the Linux build rules.
 
 Windows (wxMSW, wxUniv/MSW)
 ---------------------------
-There is a VC++ project file which requires the environment variable 
-WXSTABLE pointing to the correct locations (i.e. "C:\Devel\wxWidgets" then
-"WXSTABLE=C:\Devel\wxWidgets").
-
+There is a VC++ project file which _requires_ the environment variables 
+WXSTABLE pointing to the base directory of wxWidgets (e.g. "C:\Devel\wxWidgets"
+then  "WXSTABLE=C:\Devel\wxWidgets". Build the "wxscintilla - Win32 Release" 
+target.
 
 Building on other ports
 -----------------------
@@ -76,49 +52,10 @@ There is currently no support to build on other ports. If you are able to deduct
 how to build on your platform it would be nice if you submit them to the project.
 
 
-Patch desctiptions
-==================
-[ 681893 ] Combobox in toolbar (only for wxUniv and other universal ports)
-Comboboxes within toolbars aren't supported under wxUniv. This patch adds it.
+Generel installation rules
+==========================
 
-[ 748469 ] wxNotebook::HitTest for wxMSW and wxUniv
-Right clicking on a notebook tab brings up a context menu when this patch is
-applied, otherwise nothing happens. If this patch is applied to make it
-usable the define NOTEBOOK_HITTEST in setup.h has to be set to 1 (Only usable
-on wxMSW and wxUniv).
-
-[ 749749 ] wxFileConfig doesn't allow for no appName (only for wxUniv and
-other universal ports)
-On wxUniv wxFileConfig requires a config parameter. The define
-APPNAME_FILECONFIG in setup.h does a workaround, therefore this patch isn't
-very important.
-
-[ 766424 ] Index search with keyword
-Index search is much faster than the content search. If this patch is applied
-to make it usable the define HELP_INDEX_KEYWORD in setup.h has to be set to 1.
-
-[ 769552 ] SetFocus sets now lastFocused
-This patch fixes the SetFocus function so it does work. Simply apply this
-patch.
-
-[ 781346 ] Printing backport from head
-The printing in wxWidgets 2.4.2 is not usable so to be able to print this
-patch has to be applied. Simply apply it.
-
-[ 830049 ] RegKey DevelValue produces unnecessary log message
-Remove an unnecessary wxLog message when deleting a nonexistent value (only
-on wxMSW)
-
-[ 830050 ] Clipboard support in wxUniv
-Clipboard is available but disabled in wxUniv (only wxUniv)
-
-[ 863847 ] Uses correct font in GTK
-On wxGTK always a proportional font is used without this patch (only wxGTK)
-
-[ 865500 ] wxNotebook: No correct current page after DeletePage
-On wxGTK after deleting a page which is before the current page always the
-wrong current page is returned (only wxGTK)
-
-[ 888042 ] Access to menu keys under wxGTK
-Predefined shortcut keys under wxGTK aren't accessable by the menu even if
-they are disabled.
+There is currently no installation mostly because I don't know how in each case. 
+Simply do it as it is usual on your platform, e.g. on Linux it's probably moving
+the library into /usr/lib. On Windows follow the rules of the application which 
+wants to link with.
