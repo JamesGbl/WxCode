@@ -3,7 +3,7 @@
 // Purpose:     wxScintilla test module
 // Maintainer:  Otto Wyss
 // Created:     2003-09-01
-// RCS-ID:      $Id: edit.h,v 1.1 2004-11-19 18:35:49 wyo Exp $
+// RCS-ID:      $Id: edit.h,v 1.2 2004-12-02 18:33:10 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -91,8 +91,8 @@ public:
     void OnChangeCase (wxCommandEvent &event);
     void OnConvertEOL (wxCommandEvent &event);
     // styled text
-    void OnMarginClick (wxStyledTextEvent &event);
-    void OnCharAdded  (wxStyledTextEvent &event);
+    void OnMarginClick (wxScintillaEvent &event);
+    void OnCharAdded  (wxScintillaEvent &event);
 
     //! language/lexer
     wxString DeterminePrefs (const wxString &filename);

@@ -106,76 +106,76 @@ void Font::Create(const char *faceName, int characterSet, int size, bool bold, b
 
     switch (characterSet) {
         default:
-        case wxSTC_CHARSET_ANSI:
-        case wxSTC_CHARSET_DEFAULT:
+        case wxSCI_CHARSET_ANSI:
+        case wxSCI_CHARSET_DEFAULT:
             encoding = wxFONTENCODING_DEFAULT;
             break;
 
-        case wxSTC_CHARSET_BALTIC:
+        case wxSCI_CHARSET_BALTIC:
             encoding = wxFONTENCODING_ISO8859_13;
             break;
 
-        case wxSTC_CHARSET_CHINESEBIG5:
+        case wxSCI_CHARSET_CHINESEBIG5:
             encoding = wxFONTENCODING_CP950;
             break;
 
-        case wxSTC_CHARSET_EASTEUROPE:
+        case wxSCI_CHARSET_EASTEUROPE:
             encoding = wxFONTENCODING_ISO8859_2;
             break;
 
-        case wxSTC_CHARSET_GB2312:
+        case wxSCI_CHARSET_GB2312:
             encoding = wxFONTENCODING_CP936;
             break;
 
-        case wxSTC_CHARSET_GREEK:
+        case wxSCI_CHARSET_GREEK:
             encoding = wxFONTENCODING_ISO8859_7;
             break;
 
-        case wxSTC_CHARSET_HANGUL:
+        case wxSCI_CHARSET_HANGUL:
             encoding = wxFONTENCODING_CP949;
             break;
 
-        case wxSTC_CHARSET_MAC:
+        case wxSCI_CHARSET_MAC:
             encoding = wxFONTENCODING_DEFAULT;
             break;
 
-        case wxSTC_CHARSET_OEM:
+        case wxSCI_CHARSET_OEM:
             encoding = wxFONTENCODING_DEFAULT;
             break;
 
-        case wxSTC_CHARSET_RUSSIAN:
+        case wxSCI_CHARSET_RUSSIAN:
             encoding = wxFONTENCODING_KOI8;
             break;
 
-        case wxSTC_CHARSET_SHIFTJIS:
+        case wxSCI_CHARSET_SHIFTJIS:
             encoding = wxFONTENCODING_CP932;
             break;
 
-        case wxSTC_CHARSET_SYMBOL:
+        case wxSCI_CHARSET_SYMBOL:
             encoding = wxFONTENCODING_DEFAULT;
             break;
 
-        case wxSTC_CHARSET_TURKISH:
+        case wxSCI_CHARSET_TURKISH:
             encoding = wxFONTENCODING_ISO8859_9;
             break;
 
-        case wxSTC_CHARSET_JOHAB:
+        case wxSCI_CHARSET_JOHAB:
             encoding = wxFONTENCODING_DEFAULT;
             break;
 
-        case wxSTC_CHARSET_HEBREW:
+        case wxSCI_CHARSET_HEBREW:
             encoding = wxFONTENCODING_ISO8859_8;
             break;
 
-        case wxSTC_CHARSET_ARABIC:
+        case wxSCI_CHARSET_ARABIC:
             encoding = wxFONTENCODING_ISO8859_6;
             break;
 
-        case wxSTC_CHARSET_VIETNAMESE:
+        case wxSCI_CHARSET_VIETNAMESE:
             encoding = wxFONTENCODING_DEFAULT;
             break;
 
-        case wxSTC_CHARSET_THAI:
+        case wxSCI_CHARSET_THAI:
             encoding = wxFONTENCODING_ISO8859_11;
             break;
     }
@@ -189,7 +189,7 @@ void Font::Create(const char *faceName, int characterSet, int size, bool bold, b
                     italic ? wxITALIC :  wxNORMAL,
                     bold ? wxBOLD : wxNORMAL,
                     false,
-                    stc2wx(faceName),
+                    sci2wx(faceName),
                     encoding);
     font->SetNoAntiAliasing(!extraFontFlag);
     id = font;
@@ -410,7 +410,7 @@ void SurfaceImpl::DrawTextNoClip(PRectangle rc, Font &font, int ybase,
 
     // ybase is where the baseline should be, but wxWin uses the upper left
     // corner, so I need to calculate the real position for the text...
-    hdc->DrawText(stc2wx(s, len), rc.left, ybase - font.ascent);
+    hdc->DrawText(sci2wx(s, len), rc.left, ybase - font.ascent);
 }
 
 void SurfaceImpl::DrawTextClipped(PRectangle rc, Font &font, int ybase,
@@ -423,7 +423,7 @@ void SurfaceImpl::DrawTextClipped(PRectangle rc, Font &font, int ybase,
     hdc->SetClippingRegion(wxRectFromPRectangle(rc));
 
     // see comments above
-    hdc->DrawText(stc2wx(s, len), rc.left, ybase - font.ascent);
+    hdc->DrawText(sci2wx(s, len), rc.left, ybase - font.ascent);
     hdc->DestroyClippingRegion();
 }
 
@@ -438,7 +438,7 @@ void SurfaceImpl::DrawTextTransparent(PRectangle rc, Font &font, int ybase,
 
     // ybase is where the baseline should be, but wxWin uses the upper left
     // corner, so I need to calculate the real position for the text...
-    hdc->DrawText(stc2wx(s, len), rc.left, ybase - font.ascent);
+    hdc->DrawText(sci2wx(s, len), rc.left, ybase - font.ascent);
 
     hdc->SetBackgroundMode(wxSOLID);
 }
@@ -446,7 +446,7 @@ void SurfaceImpl::DrawTextTransparent(PRectangle rc, Font &font, int ybase,
 
 void SurfaceImpl::MeasureWidths(Font &font, const char *s, int len, int *positions) {
 
-    wxString str = stc2wx(s, len);
+    wxString str = sci2wx(s, len);
     SetFont(font);
 
 #ifndef __WXMAC__
@@ -511,7 +511,7 @@ int SurfaceImpl::WidthText(Font &font, const char *s, int len) {
     int w;
     int h;
 
-    hdc->GetTextExtent(stc2wx(s, len), &w, &h);
+    hdc->GetTextExtent(sci2wx(s, len), &w, &h);
     return w;
 }
 
@@ -522,7 +522,7 @@ int SurfaceImpl::WidthChar(Font &font, char ch) {
     int h;
     char s[2] = { ch, 0 };
 
-    hdc->GetTextExtent(stc2wx(s, 1), &w, &h);
+    hdc->GetTextExtent(sci2wx(s, 1), &w, &h);
     return w;
 }
 
@@ -691,7 +691,7 @@ void Window::SetCursor(Cursor curs) {
 
 
 void Window::SetTitle(const char *s) {
-    GETWIN(id)->SetTitle(stc2wx(s));
+    GETWIN(id)->SetTitle(sci2wx(s));
 }
 
 
@@ -701,9 +701,9 @@ void Window::SetTitle(const char *s) {
 
 // This is a simple subclass of wxListView that just resets focus to the
 // parent when it gets it.
-class wxSTCListBox : public wxListView {
+class wxSCIListBox : public wxListView {
 public:
-    wxSTCListBox(wxWindow* parent, wxWindowID id,
+    wxSCIListBox(wxWindow* parent, wxWindowID id,
                  const wxPoint& pos, const wxSize& size,
                  long style)
         : wxListView(parent, id, pos, size, style)
@@ -722,7 +722,7 @@ public:
 #ifdef __WXMAC__
     // For some reason I don't understand yet the focus doesn't really leave
     // the listbox like it should, so if we get any events feed them back to
-    // the wxSTC
+    // the wxSintilla
     void OnKeyDown(wxKeyEvent& event) {
         GetGrandParent()->GetEventHandler()->ProcessEvent(event);
     }
@@ -731,7 +731,7 @@ public:
     }
 
     // And we need to force the focus back when being destroyed
-    ~wxSTCListBox() {
+    ~wxSCIListBox() {
         GetGrandParent()->SetFocus();
     }
 #endif
@@ -740,30 +740,30 @@ private:
     DECLARE_EVENT_TABLE()
 };
 
-BEGIN_EVENT_TABLE(wxSTCListBox, wxListView)
-    EVT_SET_FOCUS( wxSTCListBox::OnFocus)
-    EVT_KILL_FOCUS(wxSTCListBox::OnKillFocus)
+BEGIN_EVENT_TABLE(wxSCIListBox, wxListView)
+    EVT_SET_FOCUS( wxSCIListBox::OnFocus)
+    EVT_KILL_FOCUS(wxSCIListBox::OnKillFocus)
 #ifdef __WXMAC__
-    EVT_KEY_DOWN(  wxSTCListBox::OnKeyDown)
-    EVT_CHAR(      wxSTCListBox::OnChar)
+    EVT_KEY_DOWN(  wxSCIListBox::OnKeyDown)
+    EVT_CHAR(      wxSCIListBox::OnChar)
 #endif
 END_EVENT_TABLE()
 
 
 
 
-// A window to place the wxSTCListBox upon
-class wxSTCListBoxWin : public wxWindow {
+// A window to place the wxSCIListBox upon
+class wxSCIListBoxWin : public wxWindow {
 private:
     wxListView*         lv;
     CallBackAction      doubleClickAction;
     void*               doubleClickActionData;
 public:
-    wxSTCListBoxWin(wxWindow* parent, wxWindowID id) :
+    wxSCIListBoxWin(wxWindow* parent, wxWindowID id) :
         wxWindow(parent, id, wxDefaultPosition, wxSize(0,0), wxSIMPLE_BORDER )
     {
 
-        lv = new wxSTCListBox(this, id, wxDefaultPosition, wxDefaultSize,
+        lv = new wxSCIListBox(this, id, wxDefaultPosition, wxDefaultSize,
                               wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_NO_HEADER | wxNO_BORDER);
         lv->SetCursor(wxCursor(wxCURSOR_ARROW));
         lv->InsertColumn(0, wxEmptyString);
@@ -840,16 +840,16 @@ private:
 };
 
 
-BEGIN_EVENT_TABLE(wxSTCListBoxWin, wxWindow)
-    EVT_SET_FOCUS          (          wxSTCListBoxWin::OnFocus)
-    EVT_SIZE               (          wxSTCListBoxWin::OnSize)
-    EVT_LIST_ITEM_ACTIVATED(wxID_ANY, wxSTCListBoxWin::OnActivate)
+BEGIN_EVENT_TABLE(wxSCIListBoxWin, wxWindow)
+    EVT_SET_FOCUS          (          wxSCIListBoxWin::OnFocus)
+    EVT_SIZE               (          wxSCIListBoxWin::OnSize)
+    EVT_LIST_ITEM_ACTIVATED(wxID_ANY, wxSCIListBoxWin::OnActivate)
 END_EVENT_TABLE()
 
 
 
-inline wxSTCListBoxWin* GETLBW(WindowID win) {
-    return ((wxSTCListBoxWin*)win);
+inline wxSCIListBoxWin* GETLBW(WindowID win) {
+    return ((wxSCIListBoxWin*)win);
 }
 
 inline wxListView* GETLB(WindowID win) {
@@ -920,7 +920,7 @@ void ListBoxImpl::Create(Window &parent, int ctrlID, int lineHeight_, bool unico
     lineHeight =  lineHeight_;
     unicodeMode = unicodeMode_;
     maxStrWidth = 0;
-    id = new wxSTCListBoxWin(GETWIN(parent.GetID()), ctrlID);
+    id = new wxSCIListBoxWin(GETWIN(parent.GetID()), ctrlID);
     if (imgList != NULL)
         GETLB(id)->SetImageList(imgList, wxIMAGE_LIST_SMALL);
 }
@@ -985,7 +985,7 @@ void ListBoxImpl::Clear() {
 
 
 void ListBoxImpl::Append(char *s, int type) {
-    wxString text = stc2wx(s);
+    wxString text = sci2wx(s);
     long count  = GETLB(id)->GetItemCount();
     long itemID  = GETLB(id)->InsertItem(count, wxEmptyString);
     GETLB(id)->SetItem(itemID, 1, text);
@@ -1033,7 +1033,7 @@ void ListBoxImpl::GetValue(int n, char *value, int len) {
     item.SetColumn(1);
     item.SetMask(wxLIST_MASK_TEXT);
     GETLB(id)->GetItem(item);
-    strncpy(value, wx2stc(item.GetText()), len);
+    strncpy(value, wx2sci(item.GetText()), len);
     value[len-1] = '\0';
 }
 
@@ -1149,7 +1149,7 @@ bool Platform::MouseButtonBounce() {
     return FALSE;
 }
 void Platform::DebugDisplay(const char *s) {
-    wxLogDebug(stc2wx(s));
+    wxLogDebug(sci2wx(s));
 }
 
 bool Platform::IsKeyDown(int WXUNUSED(key)) {
@@ -1161,8 +1161,8 @@ long Platform::SendScintilla(WindowID w,
                              unsigned long wParam,
                              long lParam) {
 
-    wxScintilla* stc = (wxScintilla*)w;
-    return stc->SendMsg(msg, wParam, lParam);
+    wxScintilla* sci = (wxScintilla*)w;
+    return sci->SendMsg(msg, wParam, lParam);
 }
 
 long Platform::SendScintillaPointer(WindowID w,
@@ -1170,8 +1170,8 @@ long Platform::SendScintillaPointer(WindowID w,
                                     unsigned long wParam,
                                     void *lParam) {
 
-    wxScintilla* stc = (wxScintilla*)w;
-    return stc->SendMsg(msg, wParam, (long)lParam);
+    wxScintilla* sci = (wxScintilla*)w;
+    return sci->SendMsg(msg, wParam, (long)lParam);
 }
 
 
@@ -1218,7 +1218,7 @@ void Platform::Assert(const char *c, const char *file, int line) {
     sprintf(buffer, "Assertion [%s] failed at %s %d", c, file, line);
     if (assertionPopUps) {
             /*int idButton = */
-            wxMessageBox(stc2wx(buffer),
+            wxMessageBox(sci2wx(buffer),
                          wxT("Assertion failure"),
                          wxICON_HAND | wxOK);
 //          if (idButton == IDRETRY) {
@@ -1274,7 +1274,7 @@ double ElapsedTime::Duration(bool reset) {
 //----------------------------------------------------------------------
 
 #if wxUSE_UNICODE
-wxString stc2wx(const char* str, size_t len)
+wxString sci2wx(const char* str, size_t len)
 {
     // note: we assume that str is of length len not including the terminating null.
 

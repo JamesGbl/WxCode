@@ -3,7 +3,7 @@
 // Purpose:     wxScintilla test preferences
 // Maintainer:  Otto Wyss
 // Created:     2003-09-01
-// RCS-ID:      $Id: prefs.cpp,v 1.1 2004-11-19 18:35:49 wyo Exp $
+// RCS-ID:      $Id: prefs.cpp,v 1.2 2004-12-02 18:33:10 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -103,7 +103,7 @@ const LanguageInfo g_LanguagePrefs [] = {
     // C++
     {_T("C++"),
      _T("*.c;*.cc;*.cpp;*.cxx;*.cs;*.h;*.hh;*.hpp;*.hxx;*.sma"),
-     wxSTC_LEX_CPP,
+     wxSCI_LEX_CPP,
      {{TOKEN_DEFAULT, NULL},
       {TOKEN_COMMENT, NULL},
       {TOKEN_COMMENT_LINE, NULL},
@@ -140,7 +140,7 @@ const LanguageInfo g_LanguagePrefs [] = {
     // Python
     {_T("Python"),
      _T("*.py;*.pyw"),
-     wxSTC_LEX_PYTHON,
+     wxSCI_LEX_PYTHON,
      {{TOKEN_DEFAULT, NULL},
       {TOKEN_COMMENT_LINE, NULL},
       {TOKEN_NUMBER, NULL},
@@ -177,7 +177,7 @@ const LanguageInfo g_LanguagePrefs [] = {
     // * (any)
     {(wxChar *)DEFAULT_LANGUAGE,
      _T("*.*"),
-     wxSTC_LEX_PROPERTIES,
+     wxSCI_LEX_PROPERTIES,
      {{TOKEN_DEFAULT, NULL},
       {TOKEN_DEFAULT, NULL},
       {TOKEN_DEFAULT, NULL},

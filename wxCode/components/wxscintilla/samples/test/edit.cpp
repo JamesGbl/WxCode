@@ -3,7 +3,7 @@
 // Purpose:     wxScintilla test module
 // Maintainer:  Otto Wyss
 // Created:     2003-09-01
-// RCS-ID:      $Id: edit.cpp,v 1.1 2004-11-19 18:35:49 wyo Exp $
+// RCS-ID:      $Id: edit.cpp,v 1.2 2004-12-02 18:33:10 wyo Exp $
 // Copyright:   (c) 2004wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -99,9 +99,9 @@ BEGIN_EVENT_TABLE (Edit, wxScintilla)
     EVT_MENU (myID_CONVERTCR,          Edit::OnConvertEOL)
     EVT_MENU (myID_CONVERTCRLF,        Edit::OnConvertEOL)
     EVT_MENU (myID_CONVERTLF,          Edit::OnConvertEOL)
-    // stc
-    EVT_STC_MARGINCLICK (-1,           Edit::OnMarginClick)
-    EVT_STC_CHARADDED (-1,             Edit::OnCharAdded)
+    // scintilla
+    EVT_SCI_MARGINCLICK (-1,           Edit::OnMarginClick)
+    EVT_SCI_CHARADDED (-1,             Edit::OnCharAdded)
 END_EVENT_TABLE()
 
 Edit::Edit (wxWindow *parent, wxWindowID id,
@@ -123,43 +123,43 @@ Edit::Edit (wxWindow *parent, wxWindowID id,
     SetViewEOL (g_CommonPrefs.displayEOLEnable);
     SetIndentationGuides (g_CommonPrefs.indentGuideEnable);
     SetEdgeMode (g_CommonPrefs.longLineOnEnable?
-                 wxSTC_EDGE_LINE: wxSTC_EDGE_NONE);
+                 wxSCI_EDGE_LINE: wxSCI_EDGE_NONE);
     SetViewWhiteSpace (g_CommonPrefs.whiteSpaceEnable?
-                       wxSTC_WS_VISIBLEALWAYS: wxSTC_WS_INVISIBLE);
+                       wxSCI_WS_VISIBLEALWAYS: wxSCI_WS_INVISIBLE);
     SetOvertype (g_CommonPrefs.overTypeInitial);
     SetReadOnly (g_CommonPrefs.readOnlyInitial);
     SetWrapMode (g_CommonPrefs.wrapModeInitial?
-                 wxSTC_WRAP_WORD: wxSTC_WRAP_NONE);
+                 wxSCI_WRAP_WORD: wxSCI_WRAP_NONE);
     wxFont font (10, wxMODERN, wxNORMAL, wxNORMAL);
-    StyleSetFont (wxSTC_STYLE_DEFAULT, font);
-    StyleSetForeground (wxSTC_STYLE_DEFAULT, wxColour (_T("BLACK")));
-    StyleSetBackground (wxSTC_STYLE_DEFAULT, wxColour (_T("WHITE")));
-    StyleSetForeground (wxSTC_STYLE_LINENUMBER, wxColour (_T("DARK GREY")));
-    StyleSetBackground (wxSTC_STYLE_LINENUMBER, wxColour (_T("WHITE")));
-    StyleSetForeground(wxSTC_STYLE_INDENTGUIDE, wxColour (_T("DARK GREY")));
+    StyleSetFont (wxSCI_STYLE_DEFAULT, font);
+    StyleSetForeground (wxSCI_STYLE_DEFAULT, wxColour (_T("BLACK")));
+    StyleSetBackground (wxSCI_STYLE_DEFAULT, wxColour (_T("WHITE")));
+    StyleSetForeground (wxSCI_STYLE_LINENUMBER, wxColour (_T("DARK GREY")));
+    StyleSetBackground (wxSCI_STYLE_LINENUMBER, wxColour (_T("WHITE")));
+    StyleSetForeground(wxSCI_STYLE_INDENTGUIDE, wxColour (_T("DARK GREY")));
     InitializePrefs (DEFAULT_LANGUAGE);
 
     // set visibility
-    SetVisiblePolicy (wxSTC_VISIBLE_STRICT|wxSTC_VISIBLE_SLOP, 1);
-    SetXCaretPolicy (wxSTC_CARET_EVEN|wxSTC_VISIBLE_STRICT|wxSTC_CARET_SLOP, 1);
-    SetYCaretPolicy (wxSTC_CARET_EVEN|wxSTC_VISIBLE_STRICT|wxSTC_CARET_SLOP, 1);
+    SetVisiblePolicy (wxSCI_VISIBLE_STRICT|wxSCI_VISIBLE_SLOP, 1);
+    SetXCaretPolicy (wxSCI_CARET_EVEN|wxSCI_VISIBLE_STRICT|wxSCI_CARET_SLOP, 1);
+    SetYCaretPolicy (wxSCI_CARET_EVEN|wxSCI_VISIBLE_STRICT|wxSCI_CARET_SLOP, 1);
 
     // markers
-    MarkerDefine (wxSTC_MARKNUM_FOLDER,        wxSTC_MARK_DOTDOTDOT, _T("BLACK"), _T("BLACK"));
-    MarkerDefine (wxSTC_MARKNUM_FOLDEROPEN,    wxSTC_MARK_ARROWDOWN, _T("BLACK"), _T("BLACK"));
-    MarkerDefine (wxSTC_MARKNUM_FOLDERSUB,     wxSTC_MARK_EMPTY,     _T("BLACK"), _T("BLACK"));
-    MarkerDefine (wxSTC_MARKNUM_FOLDEREND,     wxSTC_MARK_DOTDOTDOT, _T("BLACK"), _T("WHITE"));
-    MarkerDefine (wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_ARROWDOWN, _T("BLACK"), _T("WHITE"));
-    MarkerDefine (wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_EMPTY,     _T("BLACK"), _T("BLACK"));
-    MarkerDefine (wxSTC_MARKNUM_FOLDERTAIL,    wxSTC_MARK_EMPTY,     _T("BLACK"), _T("BLACK"));
+    MarkerDefine (wxSCI_MARKNUM_FOLDER,        wxSCI_MARK_DOTDOTDOT, _T("BLACK"), _T("BLACK"));
+    MarkerDefine (wxSCI_MARKNUM_FOLDEROPEN,    wxSCI_MARK_ARROWDOWN, _T("BLACK"), _T("BLACK"));
+    MarkerDefine (wxSCI_MARKNUM_FOLDERSUB,     wxSCI_MARK_EMPTY,     _T("BLACK"), _T("BLACK"));
+    MarkerDefine (wxSCI_MARKNUM_FOLDEREND,     wxSCI_MARK_DOTDOTDOT, _T("BLACK"), _T("WHITE"));
+    MarkerDefine (wxSCI_MARKNUM_FOLDEROPENMID, wxSCI_MARK_ARROWDOWN, _T("BLACK"), _T("WHITE"));
+    MarkerDefine (wxSCI_MARKNUM_FOLDERMIDTAIL, wxSCI_MARK_EMPTY,     _T("BLACK"), _T("BLACK"));
+    MarkerDefine (wxSCI_MARKNUM_FOLDERTAIL,    wxSCI_MARK_EMPTY,     _T("BLACK"), _T("BLACK"));
 
     // miscelaneous
-    m_LineNrMargin = TextWidth (wxSTC_STYLE_LINENUMBER, _T("_999999"));
+    m_LineNrMargin = TextWidth (wxSCI_STYLE_LINENUMBER, _T("_999999"));
     m_FoldingMargin = 16;
     SetMarginWidth (m_LineNrID,
                     g_CommonPrefs.lineNumberEnable? m_LineNrMargin: 0);
-    CmdKeyClear (wxSTC_KEY_TAB, 0); // this is done by the menu accelerator key
-    SetLayoutCache (wxSTC_CACHE_PAGE);
+    CmdKeyClear (wxSCI_KEY_TAB, 0); // this is done by the menu accelerator key
+    SetLayoutCache (wxSCI_CACHE_PAGE);
 
 }
 
@@ -233,11 +233,11 @@ void Edit::OnGoto (wxCommandEvent &WXUNUSED(event)) {
 }
 
 void Edit::OnEditIndentInc (wxCommandEvent &WXUNUSED(event)) {
-    CmdKeyExecute (wxSTC_CMD_TAB);
+    CmdKeyExecute (wxSCI_CMD_TAB);
 }
 
 void Edit::OnEditIndentRed (wxCommandEvent &WXUNUSED(event)) {
-    CmdKeyExecute (wxSTC_CMD_DELETEBACK);
+    CmdKeyExecute (wxSCI_CMD_DELETEBACK);
 }
 
 void Edit::OnEditSelectAll (wxCommandEvent &WXUNUSED(event)) {
@@ -268,12 +268,12 @@ void Edit::OnLineNumber (wxCommandEvent &WXUNUSED(event)) {
 }
 
 void Edit::OnLongLineOn (wxCommandEvent &WXUNUSED(event)) {
-    SetEdgeMode (GetEdgeMode() == 0? wxSTC_EDGE_LINE: wxSTC_EDGE_NONE);
+    SetEdgeMode (GetEdgeMode() == 0? wxSCI_EDGE_LINE: wxSCI_EDGE_NONE);
 }
 
 void Edit::OnWhiteSpace (wxCommandEvent &WXUNUSED(event)) {
     SetViewWhiteSpace (GetViewWhiteSpace() == 0?
-                       wxSTC_WS_VISIBLEALWAYS: wxSTC_WS_INVISIBLE);
+                       wxSCI_WS_VISIBLEALWAYS: wxSCI_WS_INVISIBLE);
 }
 
 void Edit::OnFoldToggle (wxCommandEvent &WXUNUSED(event)) {
@@ -289,17 +289,17 @@ void Edit::OnSetReadOnly (wxCommandEvent &WXUNUSED(event)) {
 }
 
 void Edit::OnWrapmodeOn (wxCommandEvent &WXUNUSED(event)) {
-    SetWrapMode (GetWrapMode() == 0? wxSTC_WRAP_WORD: wxSTC_WRAP_NONE);
+    SetWrapMode (GetWrapMode() == 0? wxSCI_WRAP_WORD: wxSCI_WRAP_NONE);
 }
 
 void Edit::OnUseCharset (wxCommandEvent &event) {
     int Nr;
     int charset = GetCodePage();
     switch (event.GetId()) {
-        case myID_CHARSETANSI: {charset = wxSTC_CHARSET_ANSI; break;}
-        case myID_CHARSETMAC: {charset = wxSTC_CHARSET_ANSI; break;}
+        case myID_CHARSETANSI: {charset = wxSCI_CHARSET_ANSI; break;}
+        case myID_CHARSETMAC: {charset = wxSCI_CHARSET_ANSI; break;}
     }
-    for (Nr = 0; Nr < wxSTC_STYLE_LASTPREDEFINED; Nr++) {
+    for (Nr = 0; Nr < wxSCI_STYLE_LASTPREDEFINED; Nr++) {
         StyleSetCharacterSet (Nr, charset);
     }
     SetCodePage (charset);
@@ -308,11 +308,11 @@ void Edit::OnUseCharset (wxCommandEvent &event) {
 void Edit::OnChangeCase (wxCommandEvent &event) {
     switch (event.GetId()) {
         case myID_CHANGELOWER: {
-            CmdKeyExecute (wxSTC_CMD_LOWERCASE);
+            CmdKeyExecute (wxSCI_CMD_LOWERCASE);
             break;
         }
         case myID_CHANGEUPPER: {
-            CmdKeyExecute (wxSTC_CMD_UPPERCASE);
+            CmdKeyExecute (wxSCI_CMD_UPPERCASE);
             break;
         }
     }
@@ -321,26 +321,26 @@ void Edit::OnChangeCase (wxCommandEvent &event) {
 void Edit::OnConvertEOL (wxCommandEvent &event) {
     int eolMode = GetEOLMode();
     switch (event.GetId()) {
-        case myID_CONVERTCR: { eolMode = wxSTC_EOL_CR; break;}
-        case myID_CONVERTCRLF: { eolMode = wxSTC_EOL_CRLF; break;}
-        case myID_CONVERTLF: { eolMode = wxSTC_EOL_LF; break;}
+        case myID_CONVERTCR: { eolMode = wxSCI_EOL_CR; break;}
+        case myID_CONVERTCRLF: { eolMode = wxSCI_EOL_CRLF; break;}
+        case myID_CONVERTLF: { eolMode = wxSCI_EOL_LF; break;}
     }
     ConvertEOLs (eolMode);
     SetEOLMode (eolMode);
 }
 
 //! misc
-void Edit::OnMarginClick (wxStyledTextEvent &event) {
+void Edit::OnMarginClick (wxScintillaEvent &event) {
     if (event.GetMargin() == 2) {
         int lineClick = LineFromPosition (event.GetPosition());
         int levelClick = GetFoldLevel (lineClick);
-        if ((levelClick & wxSTC_FOLDLEVELHEADERFLAG) > 0) {
+        if ((levelClick & wxSCI_FOLDLEVELHEADERFLAG) > 0) {
             ToggleFold (lineClick);
         }
     }
 }
 
-void Edit::OnCharAdded (wxStyledTextEvent &event) {
+void Edit::OnCharAdded (wxScintillaEvent &event) {
     char chr = event.GetKey();
     int currentLine = GetCurrentLine();
     // Change this if support for mac files with \r is needed
@@ -405,22 +405,22 @@ bool Edit::InitializePrefs (const wxString &name) {
     m_language = curInfo;
 
     // set margin for line numbers
-    SetMarginType (m_LineNrID, wxSTC_MARGIN_NUMBER);
-    StyleSetForeground (wxSTC_STYLE_LINENUMBER, wxColour (_T("DARK GREY")));
-    StyleSetBackground (wxSTC_STYLE_LINENUMBER, wxColour (_T("WHITE")));
+    SetMarginType (m_LineNrID, wxSCI_MARGIN_NUMBER);
+    StyleSetForeground (wxSCI_STYLE_LINENUMBER, wxColour (_T("DARK GREY")));
+    StyleSetBackground (wxSCI_STYLE_LINENUMBER, wxColour (_T("WHITE")));
     SetMarginWidth (m_LineNrID,
                     g_CommonPrefs.lineNumberEnable? m_LineNrMargin: 0);
 
     // default fonts for all styles!
     int Nr;
-    for (Nr = 0; Nr < wxSTC_STYLE_LASTPREDEFINED; Nr++) {
+    for (Nr = 0; Nr < wxSCI_STYLE_LASTPREDEFINED; Nr++) {
         wxFont font (10, wxMODERN, wxNORMAL, wxNORMAL);
         StyleSetFont (Nr, font);
     }
 
     // set common styles
-    StyleSetForeground (wxSTC_STYLE_DEFAULT, wxColour (_T("DARK GREY")));
-    StyleSetForeground (wxSTC_STYLE_INDENTGUIDE, wxColour (_T("DARK GREY")));
+    StyleSetForeground (wxSCI_STYLE_DEFAULT, wxColour (_T("DARK GREY")));
+    StyleSetForeground (wxSCI_STYLE_INDENTGUIDE, wxColour (_T("DARK GREY")));
 
     // initialize settings
     if (g_CommonPrefs.syntaxEnable) {
@@ -451,13 +451,13 @@ bool Edit::InitializePrefs (const wxString &name) {
     }
 
     // set margin as unused
-    SetMarginType (m_DividerID, wxSTC_MARGIN_SYMBOL);
+    SetMarginType (m_DividerID, wxSCI_MARGIN_SYMBOL);
     SetMarginWidth (m_DividerID, 0);
     SetMarginSensitive (m_DividerID, false);
 
     // folding
-    SetMarginType (m_FoldingID, wxSTC_MARGIN_SYMBOL);
-    SetMarginMask (m_FoldingID, wxSTC_MASK_FOLDERS);
+    SetMarginType (m_FoldingID, wxSCI_MARGIN_SYMBOL);
+    SetMarginMask (m_FoldingID, wxSCI_MASK_FOLDERS);
     StyleSetBackground (m_FoldingID, wxColour (_T("WHITE")));
     SetMarginWidth (m_FoldingID, 0);
     SetMarginSensitive (m_FoldingID, false);
@@ -480,8 +480,8 @@ bool Edit::InitializePrefs (const wxString &name) {
         SetProperty (_T("fold.quotes.python"),
                      (curInfo->folds & FOLD_TYPE_QUOTESPY) > 0? _T("1"): _T("0"));
     }
-    SetFoldFlags (wxSTC_FOLDFLAG_LINEBEFORE_CONTRACTED |
-                  wxSTC_FOLDFLAG_LINEAFTER_CONTRACTED);
+    SetFoldFlags (wxSCI_FOLDFLAG_LINEBEFORE_CONTRACTED |
+                  wxSCI_FOLDFLAG_LINEAFTER_CONTRACTED);
 
     // set spaces and indention
     SetTabWidth (4);
@@ -494,13 +494,13 @@ bool Edit::InitializePrefs (const wxString &name) {
     SetViewEOL (g_CommonPrefs.displayEOLEnable);
     SetIndentationGuides (g_CommonPrefs.indentGuideEnable);
     SetEdgeColumn (80);
-    SetEdgeMode (g_CommonPrefs.longLineOnEnable? wxSTC_EDGE_LINE: wxSTC_EDGE_NONE);
+    SetEdgeMode (g_CommonPrefs.longLineOnEnable? wxSCI_EDGE_LINE: wxSCI_EDGE_NONE);
     SetViewWhiteSpace (g_CommonPrefs.whiteSpaceEnable?
-                       wxSTC_WS_VISIBLEALWAYS: wxSTC_WS_INVISIBLE);
+                       wxSCI_WS_VISIBLEALWAYS: wxSCI_WS_INVISIBLE);
     SetOvertype (g_CommonPrefs.overTypeInitial);
     SetReadOnly (g_CommonPrefs.readOnlyInitial);
     SetWrapMode (g_CommonPrefs.wrapModeInitial?
-                 wxSTC_WRAP_WORD: wxSTC_WRAP_NONE);
+                 wxSCI_WRAP_WORD: wxSCI_WRAP_NONE);
 
     return true;
 }
@@ -525,7 +525,7 @@ bool Edit::LoadFile (const wxString &filename) {
     if (!filename.IsEmpty()) m_filename = filename;
     ClearAll ();
     wxScintilla::LoadFile(m_filename);
-    
+
     EmptyUndoBuffer();
 
     // determine lexer language
@@ -558,7 +558,7 @@ bool Edit::SaveFile (const wxString &filename) {
     if (!Modified()) return true;
 
     return wxScintilla::SaveFile(filename);
-    
+
 }
 
 bool Edit::Modified () {
@@ -605,9 +605,9 @@ EditProperties::EditProperties (Edit *edit,
                    0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxRIGHT, 4);
     wxString EOLtype = _T("");
     switch (edit->GetEOLMode()) {
-        case wxSTC_EOL_CR: {EOLtype = _T("CR (Unix)"); break; }
-        case wxSTC_EOL_CRLF: {EOLtype = _T("CRLF (Windows)"); break; }
-        case wxSTC_EOL_LF: {EOLtype = _T("CR (Macintosh)"); break; }
+        case wxSCI_EOL_CR: {EOLtype = _T("CR (Unix)"); break; }
+        case wxSCI_EOL_CRLF: {EOLtype = _T("CRLF (Windows)"); break; }
+        case wxSCI_EOL_LF: {EOLtype = _T("CR (Macintosh)"); break; }
     }
     textinfo->Add (new wxStaticText (this, -1, _("Line endings"),
                                      wxDefaultPosition, wxSize(80, -1)),

@@ -9,7 +9,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: ScintillaWX.h,v 1.2 2004-11-13 10:38:25 wyo Exp $
+// RCS-ID:      $Id: ScintillaWX.h,v 1.3 2004-12-02 18:33:10 wyo Exp $
 // Copyright:   (c) 2000 by Total Control Software
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -55,15 +55,15 @@
 
 //----------------------------------------------------------------------
 
-#ifdef WXMAKINGDLL_STC
-    #define WXDLLIMPEXP_STC WXEXPORT
+#ifdef WXMAKINGDLL_SCI
+    #define WXDLLIMPEXP_SCI WXEXPORT
 #elif defined(WXUSINGDLL)
-    #define WXDLLIMPEXP_STC WXIMPORT
+    #define WXDLLIMPEXP_SCI WXIMPORT
 #else // not making nor using DLL
-    #define WXDLLIMPEXP_STC
+    #define WXDLLIMPEXP_SCI
 #endif
 
-class WXDLLIMPEXP_STC wxScintilla;           // forward
+class WXDLLIMPEXP_SCI wxScintilla;           // forward
 class ScintillaWX;
 
 
@@ -71,7 +71,7 @@ class ScintillaWX;
 // Helper classes
 
 #if wxUSE_DRAG_AND_DROP
-class wxSTCDropTarget : public wxTextDropTarget {
+class wxSCIDropTarget : public wxTextDropTarget {
 public:
     void SetScintilla(ScintillaWX* swx) {
         this->swx = swx;
@@ -144,7 +144,7 @@ public:
     int  DoKeyDown(int key, bool shift, bool ctrl, bool alt, bool meta, bool* consumed);
     void DoTick() { Tick(); }
     void DoOnIdle(wxIdleEvent& evt);
-    
+
 #if wxUSE_DRAG_AND_DROP
     bool DoDropText(long x, long y, const wxString& data);
     wxDragResult DoDragEnter(wxCoord x, wxCoord y, wxDragResult def);
@@ -170,16 +170,16 @@ public:
 private:
     bool                capturedMouse;
     bool                focusEvent;
-    wxScintilla*   stc;
+    wxScintilla*   sci;
 
 #if wxUSE_DRAG_AND_DROP
-    wxSTCDropTarget*    dropTarget;
+    wxSCIDropTarget*    dropTarget;
     wxDragResult        dragResult;
 #endif
     int                 wheelRotation;
 
 
-    friend class wxSTCCallTip;
+    friend class wxSCICallTip;
 };
 
 //----------------------------------------------------------------------
