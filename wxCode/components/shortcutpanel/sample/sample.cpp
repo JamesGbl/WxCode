@@ -7,12 +7,11 @@
 #include "ShortcutGroup.h"
 #include "ShortcutPanel.h"
 #include "one.xpm"
-#include "two.xpm"
+#include "exit.xpm"
 #include "three.xpm"
 #include "four.xpm"
 
 #define ID_CMD_ONE   10000
-#define ID_CMD_TWO   10001
 #define ID_CMD_THREE 10002
 #define ID_CMD_FOUR  10003
 
@@ -31,7 +30,7 @@ public:
   ShortcutPanelFrame(const wxString& strTitle);
   
   void OnOne(wxCommandEvent& event);
-  void OnTwo(wxCommandEvent& event);
+  void OnExit(wxCommandEvent& event);
   void OnThree(wxCommandEvent& event);
   void OnFour(wxCommandEvent& event);
 
@@ -44,7 +43,7 @@ IMPLEMENT_APP(ShortcutPanelApp)
 
 BEGIN_EVENT_TABLE(ShortcutPanelFrame, wxFrame)
   EVT_MENU(ID_CMD_ONE, ShortcutPanelFrame::OnOne)
-  EVT_MENU(ID_CMD_TWO, ShortcutPanelFrame::OnTwo)
+  EVT_MENU(wxID_EXIT, ShortcutPanelFrame::OnExit)
   EVT_MENU(ID_CMD_THREE, ShortcutPanelFrame::OnThree)
   EVT_MENU(ID_CMD_FOUR, ShortcutPanelFrame::OnFour)
 END_EVENT_TABLE()
@@ -75,12 +74,12 @@ ShortcutPanelFrame::ShortcutPanelFrame(const wxString& strTitle)
   int ThirdGroupId = pShortCutBar->FindGroup(_("Third"));
   
   wxBitmap* pBitmapOne = new wxBitmap(one_xpm);
-  wxBitmap* pBitmapTwo = new wxBitmap(two_xpm);
+  wxBitmap* pBitmapTwo = new wxBitmap(exit_xpm);
   wxBitmap* pBitmapThree = new wxBitmap(three_xpm);
   wxBitmap* pBitmapFour = new wxBitmap(four_xpm);
   
   pShortCutBar->AddShortcut(FirstGroupId, new Shortcut(ID_CMD_ONE, wxString(_("One")), *pBitmapOne));
-  pShortCutBar->AddShortcut(FirstGroupId, new Shortcut(ID_CMD_TWO, wxString(_("Exit")), *pBitmapTwo));
+  pShortCutBar->AddShortcut(FirstGroupId, new Shortcut(wxID_EXIT, wxString(_("Exit")), *pBitmapTwo));
   pShortCutBar->AddShortcut(FirstGroupId, new Shortcut(ID_CMD_THREE, wxString(_("Three")), *pBitmapThree));
   pShortCutBar->AddShortcut(SecondGroupId, new Shortcut(ID_CMD_FOUR, wxString(_("Four")), *pBitmapFour));
 
@@ -97,7 +96,7 @@ void ShortcutPanelFrame::OnOne(wxCommandEvent& event)
   ::wxMessageBox("One");
 }
 
-void ShortcutPanelFrame::OnTwo(wxCommandEvent& event)
+void ShortcutPanelFrame::OnExit(wxCommandEvent& event)
 {
   Close(true);
 }
