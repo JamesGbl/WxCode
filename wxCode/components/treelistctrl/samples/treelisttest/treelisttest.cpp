@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by: Otto Wyss
 // Created:     04/01/98
-// RCS-ID:      $Id: treelisttest.cpp,v 1.10 2004-11-09 22:29:02 wyo Exp $
+// RCS-ID:      $Id: treelisttest.cpp,v 1.11 2004-11-11 19:15:31 wyo Exp $
 // Copyright:   (c) wxCode
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -782,8 +782,11 @@ void MyTreeListCtrl::AddTestItemsToTree(size_t numChildren,
 {
     int image = wxGetApp().ShowImages() ? MyTreeListCtrl::TreeListCtrlIcon_Folder : -1;
     AddColumn (_("Main"), 200);
- 	AddColumn (_("Col1"), 80, wxTL_ALIGN_LEFT);
- 	AddColumn (_("Col2"), 80, wxTL_ALIGN_RIGHT);
+    SetColumnEditable (0, true);
+    AddColumn (_("Col1"), 80, wxALIGN_LEFT);
+    SetColumnEditable (1, true);
+    AddColumn (_("Col2"), 80, wxALIGN_RIGHT);
+    SetColumnEditable (2, true);
     wxTreeItemId rootId = AddRoot(wxT("Root"),
                                   image, image,
                                   new MyTreeItemData(wxT("Root item")));
@@ -1096,12 +1099,9 @@ void MyTreeListCtrl::OnItemActivated(wxTreeEvent& event)
     wxTreeItemId itemId = event.GetItem();
     MyTreeItemData *item = (MyTreeItemData *)GetItemData(itemId);
 
-    if ( item != NULL )
-    {
-        item->ShowInfo(this);
-    }
-
-    wxLogMessage(wxT("OnItemActivated"));
+    if (item) item->ShowInfo(this);
+    wxLogMessage(wxString::Format ("OnItemActivated, column=%d", event.GetInt()));
+    event.Skip();
 }
 
 void MyTreeListCtrl::OnItemRightClick(wxTreeEvent& event)
