@@ -1,0 +1,15 @@
+The spellchecker engine options dialog should provide an easy way for the user to change spellchecker options.  So far though, this dialog only presents the option data and does not change it.  This can still be changed in the code though, but then you lose the benefit of your application being spell check engine independent if you have to code for a specific spell check engines options
+
+Compiling under MSVC is successful, but the resulting executable has some access violation issues
+
+Makefiles need to be generated for Linux (and possibly Win32?)
+
+The hack to simulate personal dictionary support for MySpell needs more testing
+
+Populating the "Lanuage" combo box via the available options (or remove the combo) on the Mozilla-like dialog
+
+Possibly move the Mozilla, Outlook, and Sentry dialogs to separate XML resources and load them as XmlSpellCheckDialogs.  Then move those dialog classes themselves into the sample application as examples of creating custom dialogs derived from SpellCheckDialogInterface.  This will help reduce the size of the wxSpellChecker library itself.
+
+Add the C interface and create a shared wxSpellChecker DLL
+
+Get rid of the "Unknown style flag wxWS_EX_BLOCK_EVENTS" error message box that XmlSpellCheckDialog throws
