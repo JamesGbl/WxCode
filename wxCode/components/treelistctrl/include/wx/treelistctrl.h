@@ -4,15 +4,15 @@
 // Author:      Robert Roebling
 // Modified by: Alberto Griggio, 2002
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.9 2004-04-20 20:11:07 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.10 2004-04-26 19:05:59 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
 
 
-#ifndef TREELISTCTRL_H
-#define TREELISTCTRL_H
+#ifndef _WX_TREELISTCTRL_H
+#define _WX_TREELISTCTRL_H
 
 #if defined(__GNUG__) && !defined(__APPLE__)
     #pragma interface "treelistctrl.h"
@@ -540,5 +540,5 @@ private:
     DECLARE_DYNAMIC_CLASS(wxTreeListCtrl)
 };
 
-#endif // TREELISTCTRL_H
+#endif // _WX_TREELISTCTRL_H
 
