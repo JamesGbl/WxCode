@@ -24,10 +24,10 @@
 
 bool wxCINT::Init()
 {
-	m_bInit = (G__init_cint("cint") != G__INIT_CINT_FAILURE);
+	m_bInit = (G__init_cint(wxT("cint")) != G__INIT_CINT_FAILURE);
 
 	// add our extension to the list of the available for loading extensions:
-	wxScriptFile::m_strFileExt[wxCINT_SCRIPTFILE] = "CXX";
+	wxScriptFile::m_strFileExt[wxCINT_SCRIPTFILE] = wxT("CXX");
 
 	return m_bInit;
 }
@@ -80,7 +80,7 @@ bool wxScriptFunctionCINT::Exec(wxScriptVar &ret, wxScriptVar *arg) const
 		m_tReturn.GetGenericType() == wxSTG_DOUBLE) {
 		
 		ret.Set(m_tReturn.GetGenericType(), 
-			wxString::Format("%f", G__double(returnvalue)));
+			wxString::Format(wxT("%f"), G__double(returnvalue)));
 		return TRUE;
 	}
 
@@ -110,7 +110,7 @@ bool wxScriptFileCINT::Load(const wxString &file)
 
 		// get a sort of error description
 		wxScriptInterpreter::m_strLastErr = 
-			wxString::Format("%s [%s]", G__lasterror_filename(), G__lasterror_linenum());
+			wxString::Format(wxT("%s [%s]"), G__lasterror_filename(), G__lasterror_linenum());
 
 		return FALSE;
 	}

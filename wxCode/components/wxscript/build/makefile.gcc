@@ -22,14 +22,14 @@ CPPFLAGS =
 # Standard linker flags 
 LDFLAGS = 
 
+# The Python library main folder 
+PYTHON_DIR = c:\Python
+
 # The LUA library main folder 
 LUA_DIR = c:\lua
 
 # The TOLUA library main folder 
 TOLUA_DIR = c:\tolua
-
-# The UnderC library main folder 
-UCC_DIR = c:\ucc
 
 # Compile Unicode build of wxWindows? [0,1]
 UNICODE = 0
@@ -48,24 +48,34 @@ WXWIN = c:\wxWidgets
 
 ### Variables: ###
 
-WXSCRIPT_CXXFLAGS = -DHAVE_W32API_H $(__DEBUG_DEFINE_p) -D__WXMSW__ \
-	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -I$(WXWIN)\include \
+WXSCRIPT_CXXFLAGS = -DHAVE_W32API_H $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
+	$(__DEBUGINFO) -I$(WXWIN)\include \
 	-I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) -I..\include \
-	-I$(LUA_DIR)\include -I$(TOLUA_DIR)\include -I$(UCC_DIR)\include \
-	-DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC -Wall $(CPPFLAGS) $(CXXFLAGS)
+	-I$(PYTHON_DIR)\include -I$(LUA_DIR)\include -I$(TOLUA_DIR)\include \
+	-DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC -DwxSCRIPT_NO_PYTHON -Wall \
+	$(CPPFLAGS) $(CXXFLAGS)
 WXSCRIPT_OBJECTS =  \
 	mingw\wxscript_script.o \
-	mingw\wxscript_scbasic.o \
+	mingw\wxscript_scpython.o \
 	mingw\wxscript_sccint.o \
 	mingw\wxscript_scunderc.o \
 	mingw\wxscript_sclua.o
-MINIMAL_CXXFLAGS = -DHAVE_W32API_H $(__DEBUG_DEFINE_p) -D__WXMSW__ \
-	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -I..\include \
-	-I$(WXWIN)\include -I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) \
-	-I$(LUA_DIR)\include -I$(TOLUA_DIR)\include -I$(UCC_DIR)\include \
-	-DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC -Wall $(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_CXXFLAGS = -DHAVE_W32API_H $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
+	$(__DEBUGINFO) -I..\include -I$(WXWIN)\include \
+	-I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) -I$(PYTHON_DIR)\include \
+	-I$(LUA_DIR)\include -I$(TOLUA_DIR)\include -DwxSCRIPT_NO_CINT \
+	-DwxSCRIPT_NO_UNDERC -DwxSCRIPT_NO_PYTHON $(__DEBUG_DEFINE_p) -D__WXMSW__ \
+	-Wall $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	mingw\minimal_Test.o
+MINIMAL2_CXXFLAGS = -DHAVE_W32API_H $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
+	$(__DEBUGINFO) -I..\include -I$(WXWIN)\include \
+	-I$(WXWIN)\lib\gcc_lib\msw$(WXLIBPOSTFIX) -I$(PYTHON_DIR)\include \
+	-I$(LUA_DIR)\include -I$(TOLUA_DIR)\include -DwxSCRIPT_NO_CINT \
+	-DwxSCRIPT_NO_UNDERC -DwxSCRIPT_NO_PYTHON $(__DEBUG_DEFINE_p) -D__WXMSW__ \
+	-Wall $(CPPFLAGS) $(CXXFLAGS)
+MINIMAL2_OBJECTS =  \
+	mingw\minimal2_Test.o
 
 ### Conditionally set variables: ###
 
@@ -73,9 +83,6 @@ ifeq ($(BUILD),debug)
 ifeq ($(UNICODE),0)
 WXSUBLIBPOSTFIX = d
 endif
-endif
-ifeq ($(BUILD),debug)
-__DEBUG_DEFINE_p = -D__WXDEBUG__
 endif
 ifeq ($(UNICODE),1)
 __UNICODE_DEFINE_p = -D_UNICODE
@@ -102,6 +109,9 @@ WXLIBPOSTFIX = u
 endif
 endif
 ifeq ($(BUILD),debug)
+__DEBUG_DEFINE_p = -D__WXDEBUG__
+endif
+ifeq ($(BUILD),debug)
 __DEBUGINFO = -g
 endif
 ifeq ($(BUILD),release)
@@ -109,20 +119,19 @@ __DEBUGINFO =
 endif
 
 
-
 all: mingw
 mingw:
 	-if not exist mingw mkdir mingw
 
-
 ### Targets: ###
 
-all: ..\lib\libwxscript$(WXLIBPOSTFIX).a ..\tests\test1\minimal.exe
+all: ..\lib\libwxscript$(WXLIBPOSTFIX).a ..\tests\test1\minimal.exe ..\tests\test2\minimal2.exe
 
 clean: 
 	-if exist mingw\*.o del mingw\*.o
 	-if exist ..\lib\libwxscript$(WXLIBPOSTFIX).a del ..\lib\libwxscript$(WXLIBPOSTFIX).a
 	-if exist ..\tests\test1\minimal.exe del ..\tests\test1\minimal.exe
+	-if exist ..\tests\test2\minimal2.exe del ..\tests\test2\minimal2.exe
 
 tarball: 
 	( cd .. && tar -cvzf wxscript.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
@@ -154,12 +163,15 @@ cleandocs:
 	ranlib $@
 
 ..\tests\test1\minimal.exe: $(MINIMAL_OBJECTS) ..\lib\libwxscript$(WXLIBPOSTFIX).a
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -L..\lib -L$(WXWIN)\lib\gcc_lib -L$(LUA_DIR)\lib -L$(TOLUA_DIR)\lib -L$(UCC_DIR)\lib   ..\lib\libwxscript$(WXLIBPOSTFIX).a -llua -llualib -ltolua -lwxmsw25$(WXLIBPOSTFIX)_core -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXSUBLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -L..\lib -L$(WXWIN)\lib\gcc_lib -L$(PYTHON_DIR)\lib -L$(LUA_DIR)\lib -L$(TOLUA_DIR)\lib   ..\lib\libwxscript$(WXLIBPOSTFIX).a -llua -llualib -ltolua -lwxmsw25$(WXLIBPOSTFIX)_core -lwxmsw25$(WXLIBPOSTFIX)_html -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+
+..\tests\test2\minimal2.exe: $(MINIMAL2_OBJECTS) ..\lib\libwxscript$(WXLIBPOSTFIX).a
+	$(CXX) -o $@ $(MINIMAL2_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -L..\lib -L$(WXWIN)\lib\gcc_lib -L$(PYTHON_DIR)\lib -L$(LUA_DIR)\lib -L$(TOLUA_DIR)\lib   ..\lib\libwxscript$(WXLIBPOSTFIX).a -llua -llualib -ltolua -lwxmsw25$(WXLIBPOSTFIX)_core -lwxmsw25$(WXLIBPOSTFIX)_html -lwxbase25$(WXLIBPOSTFIX) -lwxtiff$(WXSUBLIBPOSTFIX) -lwxjpeg$(WXSUBLIBPOSTFIX) -lwxpng$(WXSUBLIBPOSTFIX) -lwxzlib$(WXSUBLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WXSUBLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
 mingw\wxscript_script.o: ./../src/script.cpp
 	$(CXX) -c -o $@ $(WXSCRIPT_CXXFLAGS) $<
 
-mingw\wxscript_scbasic.o: ./../src/scbasic.cpp
+mingw\wxscript_scpython.o: ./../src/scpython.cpp
 	$(CXX) -c -o $@ $(WXSCRIPT_CXXFLAGS) $<
 
 mingw\wxscript_sccint.o: ./../src/sccint.cpp
@@ -173,6 +185,9 @@ mingw\wxscript_sclua.o: ./../src/sclua.cpp
 
 mingw\minimal_Test.o: ./../tests/test1/Test.cpp
 	$(CXX) -c -o $@ $(MINIMAL_CXXFLAGS) $<
+
+mingw\minimal2_Test.o: ./../tests/test2/Test.cpp
+	$(CXX) -c -o $@ $(MINIMAL2_CXXFLAGS) $<
 
 .PHONY: all clean
 

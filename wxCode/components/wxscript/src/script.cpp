@@ -27,8 +27,8 @@
 #include "wx/sclua.h"
 #endif
 
-#ifdef wxSCRIPT_USE_BASIC
-#include "wx/scbasic.h"
+#ifdef wxSCRIPT_USE_PYTHON
+#include "wx/scpython.h"
 #endif
 
 
@@ -114,21 +114,21 @@ bool wxScriptInterpreter::Init(bool bCINT, bool bUnderC, bool bLua)
 	wxUnusedVar(bCINT);
 
 	// create global objects
-	wxScriptTypeVOID = new wxScriptTypeInfo("void");
-	wxScriptTypeINT = new wxScriptTypeInfo("int");
-	wxScriptTypeCHAR = new wxScriptTypeInfo("char");
-	wxScriptTypeLONG = new wxScriptTypeInfo("long");
-	wxScriptTypeFLOAT = new wxScriptTypeInfo("float");
-	wxScriptTypeDOUBLE = new wxScriptTypeInfo("double");
-	wxScriptTypeBOOL = new wxScriptTypeInfo("bool");
+	wxScriptTypeVOID = new wxScriptTypeInfo(wxT("void"));
+	wxScriptTypeINT = new wxScriptTypeInfo(wxT("int"));
+	wxScriptTypeCHAR = new wxScriptTypeInfo(wxT("char"));
+	wxScriptTypeLONG = new wxScriptTypeInfo(wxT("long"));
+	wxScriptTypeFLOAT = new wxScriptTypeInfo(wxT("float"));
+	wxScriptTypeDOUBLE = new wxScriptTypeInfo(wxT("double"));
+	wxScriptTypeBOOL = new wxScriptTypeInfo(wxT("bool"));
 
-	wxScriptTypePVOID = new wxScriptTypeInfo("void*");
-	wxScriptTypePINT = new wxScriptTypeInfo("int*");
-	wxScriptTypePCHAR = new wxScriptTypeInfo("char*");
-	wxScriptTypePLONG = new wxScriptTypeInfo("long*");
-	wxScriptTypePFLOAT = new wxScriptTypeInfo("float*");
-	wxScriptTypePDOUBLE = new wxScriptTypeInfo("double*");
-	wxScriptTypePBOOL = new wxScriptTypeInfo("bool*");
+	wxScriptTypePVOID = new wxScriptTypeInfo(wxT("void*"));
+	wxScriptTypePINT = new wxScriptTypeInfo(wxT("int*"));
+	wxScriptTypePCHAR = new wxScriptTypeInfo(wxT("char*"));
+	wxScriptTypePLONG = new wxScriptTypeInfo(wxT("long*"));
+	wxScriptTypePFLOAT = new wxScriptTypeInfo(wxT("float*"));
+	wxScriptTypePDOUBLE = new wxScriptTypeInfo(wxT("double*"));
+	wxScriptTypePBOOL = new wxScriptTypeInfo(wxT("bool*"));
 
 	return areAllReady();
 }
@@ -210,7 +210,7 @@ wxScriptFile *wxScriptInterpreter::Load(const wxString &file, wxScriptFileType t
 	// first of all, check that the file exist...
 	if (!wxFileName::FileExists(file)) {
 
-		wxScriptInterpreter::m_strLastErr = "The file [" + file + "] does not exist.";
+		wxScriptInterpreter::m_strLastErr = wxT("The file [") + file + wxT("] does not exist.");
 		return FALSE;
 	}
 
@@ -219,7 +219,7 @@ wxScriptFile *wxScriptInterpreter::Load(const wxString &file, wxScriptFileType t
 
 	// try to recognize the type of scriptfile
 	if (type == wxRECOGNIZE_SCRIPTFILE) {
-		wxString ext = file.AfterLast('.');
+		wxString ext = file.AfterLast(wxT('.'));
 
 		for (int i=0; i < wxSCRIPT_SUPPORTED_FORMATS; i++) {
 
@@ -253,7 +253,7 @@ wxScriptFile *wxScriptInterpreter::Load(const wxString &file, wxScriptFileType t
 
 	case wxRECOGNIZE_SCRIPTFILE:		// just to avoid warnings
 	default:
-	    wxScriptInterpreter::m_strLastErr = "Interpreter unavailable.";
+	    wxScriptInterpreter::m_strLastErr = wxT("Interpreter unavailable.");
 		break;
 	}
 	
@@ -283,7 +283,7 @@ wxString wxScriptFile::GetAllowedExtString()
 
 	for (int i=0; i < wxSCRIPT_SUPPORTED_FORMATS; i++)
 		if (!wxScriptFile::m_strFileExt[i].IsEmpty())
-			ret += wxScriptFile::m_strFileExt[i].MakeUpper() + ";";
+			ret += wxScriptFile::m_strFileExt[i].MakeUpper() + wxT(";");
 	ret.RemoveLast();
 
 	return ret;
@@ -321,30 +321,30 @@ void wxScriptTypeInfo::Set(const wxString &str)
 	
 	// cannot make lower the name of this variable with:
 	//       m_strName = m_strName.MakeLower();
-	// this would work with simple types like "char", "int"...
+	// this would work with simple types like wxT("char"), "int"...
 	// but it would destroy the case-sensitivity of the C/C++
 	// language for user-types !!!!!!!!!!!!!!!
 
 	// remove the CONST and VOLATILE keywords
-	m_strName.Replace("const", "");
-	m_strName.Replace("volatile", "");
+	m_strName.Replace(wxT("const"), wxT(""));
+	m_strName.Replace(wxT("volatile"), wxT(""));
 	m_strName.Trim(TRUE); 
 	m_strName.Trim(FALSE);
 
 	// remove spaces before the "*" symbol
-	m_strName.Replace(" *", "*");
-	m_strName.Replace(" &", "&");
+	m_strName.Replace(wxT(" *"), wxT("*"));
+	m_strName.Replace(wxT(" &"), wxT("&"));
 
 	// remove everything after the type
-	if (m_strName.Contains(' '))
-		m_strName = m_strName.BeforeLast(' ');
+	if (m_strName.Contains(wxT(' ')))
+		m_strName = m_strName.BeforeLast(wxT(' '));
 }
 
 bool wxScriptTypeInfo::isPointer() const
 {
 	if (m_strName.IsEmpty())
 		return FALSE;
-	if (m_strName.Last() != '*')
+	if (m_strName.Last() != wxT('*'))
 		return FALSE;
 	return TRUE;
 }
@@ -353,7 +353,7 @@ bool wxScriptTypeInfo::isReference() const
 {
 	if (m_strName.IsEmpty())
 		return FALSE;
-	if (m_strName.Last() != '&')
+	if (m_strName.Last() != wxT('&'))
 		return FALSE;
 	return TRUE;
 }
@@ -393,25 +393,25 @@ void wxScriptTypeInfo::SetGenericType(wxScriptTypeGeneric t)
 {
 	switch (t) {
 	case wxSTG_INT:
-		m_strName = "int";
+		m_strName = wxT("int");
 		break;
 	case wxSTG_LONG:
-		m_strName = "long";
+		m_strName = wxT("long");
 		break;
 	case wxSTG_CHAR:
-		m_strName = "char";
+		m_strName = wxT("char");
 		break;
 	case wxSTG_FLOAT:
-		m_strName = "float";
+		m_strName = wxT("float");
 		break;
 	case wxSTG_DOUBLE:
-		m_strName = "double";
+		m_strName = wxT("double");
 		break;
 	case wxSTG_BOOL:
-		m_strName = "bool";
+		m_strName = wxT("bool");
 		break;
 	case wxSTG_VOID:
-		m_strName = "void";
+		m_strName = wxT("void");
 		break;
 
 	case wxSTG_POINTER:
@@ -469,9 +469,9 @@ void wxScriptVar::SetContent(const wxString &str)
 		// an exception is for char*
 		if (m_tType.GetPointerType().GetGenericType() == wxSTG_CHAR) {
 
-			// create a memory buffer
+			// create a memory buffer encoded in ANSI standard
 			char *pmem = new char[str.Len()];
-			strcpy(pmem, str);
+			strcpy(pmem, WX2LUA(str));
 
 			// and then set that memory address as the content of this var
 			m_content = (long)pmem;
@@ -500,17 +500,17 @@ wxString wxScriptVar::GetContentString() const
 	case wxSTG_INT:
 	case wxSTG_LONG:
 	case wxSTG_VOID:
-		return wxString::Format("%d", (int)m_content);
+		return wxString::Format(wxT("%d"), (int)m_content);
 
 	case wxSTG_CHAR:
 		return wxString((wxChar)m_content, 1);
 
 	case wxSTG_FLOAT:
 	case wxSTG_DOUBLE:
-		return wxString::Format("%g", m_floatcontent);
+		return wxString::Format(wxT("%g"), m_floatcontent);
 
 	case wxSTG_BOOL:
-		return (m_content ? "true" : "false");
+		return (m_content ? wxT("true") : wxT("false"));
 
 	case wxSTG_POINTER:
 
@@ -518,19 +518,19 @@ wxString wxScriptVar::GetContentString() const
 		if (m_tType.GetPointerType().GetGenericType() == wxSTG_CHAR) {
 			
 			char *pmem = (char *)m_content;
-			return wxString("\"" + wxString(pmem) + "\"");
+			return wxString(wxT("\"") + LUA2WX(pmem) + wxT("\""));
 
 		} else {
 
 			// the pointer address should be expressed in hexadecimal form
-			return wxString::Format("%X", (unsigned int)m_content);
+			return wxString::Format(wxT("%X"), (unsigned int)m_content);
 		}
 	
 	case wxSTG_REFERENCE:
 	case wxSTG_USERDEFINED:
 	case wxSTG_UNDEFINED:
 		// FIXME: what can we do here ?
-		return wxString::Format("%d", (int)m_content);
+		return wxString::Format(wxT("%d"), (int)m_content);
 	}
 
 	return res;
@@ -545,15 +545,15 @@ wxString wxScriptVar::GetContentString() const
 
 wxString wxScriptFunction::GetCallString(wxScriptVar *arg) const
 {
-	wxString cmd = m_strName + "(";
+	wxString cmd = m_strName + wxT("(");
 
 	// create the string with the arguments...
 	for (int i=0; i < m_nArgCount; i++) {
-		if (i != 0) cmd += ", ";
+		if (i != 0) cmd += wxT(", ");
 		cmd += arg[i].GetContentString();
 	}
 	
-	cmd += ")";
+	cmd += wxT(")");
 	return cmd;
 }
 

@@ -31,7 +31,7 @@ bool wxUnderC::Init()
 	m_bInit = (uc_init(NULL, TRUE) == 0);
 
 	// add our extension to the list of the available for loading extensions:
-	wxScriptFile::m_strFileExt[wxUNDERC_SCRIPTFILE] = "UC";
+	wxScriptFile::m_strFileExt[wxUNDERC_SCRIPTFILE] = wxT("UC");
 
 	// fill the std array
 	GetFunctionListComplete(m_arrStd);
@@ -80,7 +80,7 @@ void wxUnderC::GetFunctionListComplete(wxScriptFunctionArray &arr) const
 	// get the function list from UnderC
 	// DO NOT USE uc_eval() BECAUSE IT WOULD STRIP THE '\n'...
 	char buff[16384];	
-	uc_exec("#funs");
+	uc_exec(wxT("#funs"));
 	uc_result(buff, 16384);
 
 	wxStringTokenizer tknzr(buff);
@@ -101,7 +101,7 @@ void wxUnderC::GetFunctionListComplete(wxScriptFunctionArray &arr) const
 		//     name = the name of the function
 		//     args = the argument lists (only types separed by commas)
 		// 
-		uc_exec(wxStringBuffer(name + ";"));
+		uc_exec(wxStringBuffer(name + wxT(";")));
 		uc_result(buff, 16384);
 		wxString tmp = wxString(buff);
 
@@ -110,7 +110,7 @@ void wxUnderC::GetFunctionListComplete(wxScriptFunctionArray &arr) const
 		if (tmp.IsEmpty())
 			continue;
 		
-		int total = tmp.Freq('\n')+1;
+		int total = tmp.Freq(wxT('\n'))+1;
 		int overload = 0;
 
 		// parse each overload
@@ -118,20 +118,20 @@ void wxUnderC::GetFunctionListComplete(wxScriptFunctionArray &arr) const
 			
 			// choose right overload
 			wxString toparse = tmp;
-			if (toparse.Contains('\n')) {
+			if (toparse.Contains(wxT('\n'))) {
 				
 				// remove useless lines
 				for (int i=0; i < overload; i++)
-					toparse = toparse.AfterFirst('\n');
+					toparse = toparse.AfterFirst(wxT('\n'));
 				for (int j=0, max=total-overload-1; j < max; j++)
-					toparse = toparse.BeforeLast('\n');
+					toparse = toparse.BeforeLast(wxT('\n'));
 			}
 			
-			toparse = toparse.AfterFirst(' ');		// remove overload ID
+			toparse = toparse.AfterFirst(wxT(' '));		// remove overload ID
 			
 			// get return type
-			wxString ret = toparse.BeforeFirst('(');
-			ret = ret.BeforeLast(' ');
+			wxString ret = toparse.BeforeFirst(wxT('('));
+			ret = ret.BeforeLast(wxT(' '));
 
 			// remove return type (cannot use AfterFirst(' ') because 
 			// rettype may contain spaces)
@@ -140,15 +140,15 @@ void wxUnderC::GetFunctionListComplete(wxScriptFunctionArray &arr) const
 			toparse.Trim(TRUE);
 			
 			// prepare everything for arg parsing
-			wxASSERT(toparse.BeforeFirst('(') == name);
-			toparse = toparse.AfterFirst('(');		// remove func name
-			toparse = toparse.BeforeLast(')');
+			wxASSERT(toparse.BeforeFirst(wxT('(')) == name);
+			toparse = toparse.AfterFirst(wxT('('));		// remove func name
+			toparse = toparse.BeforeLast(wxT(')'));
 			
 			wxScriptTypeInfo arg[wxSCRIPTFNC_MAX_ARGS];
 			int narg = 0;
 			
 			// parse arg list
-			wxStringTokenizer argtknzr(toparse, ",");
+			wxStringTokenizer argtknzr(toparse, wxT(","));
 			while (argtknzr.HasMoreTokens())
 				arg[narg++] = wxScriptTypeInfo(argtknzr.GetNextToken());
 			
@@ -213,25 +213,25 @@ bool wxScriptFunctionUnderC::Exec(wxScriptVar &ret, wxScriptVar *arg) const
 	
 #ifdef __WXDEBUG__
 	// and parse it
-	wxString type = str.BeforeLast(')');
+	wxString type = str.BeforeLast(wxT(')'));
 	type.Trim(FALSE);
 	type.Trim(TRUE);
 	
 	// remove the begin & end parentheses: type should be like "(rettype)"
-	wxASSERT(type.GetChar(0) == '(');
-	wxASSERT(type.Last() == ')');
+	wxASSERT(type.GetChar(0) == wxT('('));
+	wxASSERT(type.Last() == wxT(')'));
 	type.Remove(0, 1);
 	type.RemoveLast();
 	
 	// now make a integrity check
 	wxScriptTypeInfo info(type);
 	wxASSERT_MSG(info == m_tReturn, 
-        "The return type does not match the function's return type");
+        wxT("The return type does not match the function's return type"));
 	
 #endif
 
     // convert from string to m_tReturn...
-    str = str.AfterLast(')');
+    str = str.AfterLast(wxT(')'));
     ret.SetContent(str);
 
 	return TRUE;

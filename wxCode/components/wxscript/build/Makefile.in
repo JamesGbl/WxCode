@@ -26,27 +26,32 @@ CXX = @CXX@
 CXXFLAGS = @CXXFLAGS@
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
+PYTHON_DIR = @PYTHON_DIR@
 LUA_DIR = @LUA_DIR@
 TOLUA_DIR = @TOLUA_DIR@
-UCC_DIR = @UCC_DIR@
 
 ### Variables: ###
 
 DESTDIR = 
-WXSCRIPT_CXXFLAGS = -I../include -I$(LUA_DIR)/include -I$(TOLUA_DIR)/include \
-	-I$(UCC_DIR)/include -DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC `wx-config \
-	--cxxflags` -Wall $(CPPFLAGS) $(CXXFLAGS)
+WXSCRIPT_CXXFLAGS = -I../include -I$(PYTHON_DIR)/include -I$(LUA_DIR)/include \
+	-I$(TOLUA_DIR)/include -DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC \
+	-DwxSCRIPT_NO_PYTHON `wx-config --cxxflags` -Wall $(CPPFLAGS) $(CXXFLAGS)
 WXSCRIPT_OBJECTS =  \
 	wxscript_script.o \
-	wxscript_scbasic.o \
+	wxscript_scpython.o \
 	wxscript_sccint.o \
 	wxscript_scunderc.o \
 	wxscript_sclua.o
-MINIMAL_CXXFLAGS = -I../include -I$(LUA_DIR)/include -I$(TOLUA_DIR)/include \
-	-I$(UCC_DIR)/include -DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC `wx-config \
-	--cxxflags` -Wall $(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_CXXFLAGS = -I../include -I$(PYTHON_DIR)/include -I$(LUA_DIR)/include \
+	-I$(TOLUA_DIR)/include -DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC \
+	-DwxSCRIPT_NO_PYTHON `wx-config --cxxflags` -Wall $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	minimal_Test.o
+MINIMAL2_CXXFLAGS = -I../include -I$(PYTHON_DIR)/include -I$(LUA_DIR)/include \
+	-I$(TOLUA_DIR)/include -DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC \
+	-DwxSCRIPT_NO_PYTHON `wx-config --cxxflags` -Wall $(CPPFLAGS) $(CXXFLAGS)
+MINIMAL2_OBJECTS =  \
+	minimal2_Test.o
 
 ### Conditionally set variables: ###
 
@@ -57,11 +62,12 @@ MINIMAL_OBJECTS =  \
 @COND_BUILD_RELEASE_UNICODE_1@WXLIBPOSTFIX = u
 @COND_PLATFORM_MAC_1@__minimal___mac_setfilecmd = \
 @COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL minimal$(EXEEXT)
-
+@COND_PLATFORM_MAC_1@__minimal2___mac_setfilecmd = \
+@COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL minimal2$(EXEEXT)
 
 ### Targets: ###
 
-all: ../lib/$(LIBPREFIX)wxscript$(WXLIBPOSTFIX)$(LIBEXT) ../tests/test1/minimal$(EXEEXT)
+all: ../lib/$(LIBPREFIX)wxscript$(WXLIBPOSTFIX)$(LIBEXT) ../tests/test1/minimal$(EXEEXT) ../tests/test2/minimal2$(EXEEXT)
 
 install: all install-wxheaders install-lib
 
@@ -74,6 +80,7 @@ clean:
 	rm -f ./*.o
 	rm -f ../lib/$(LIBPREFIX)wxscript$(WXLIBPOSTFIX)$(LIBEXT)
 	rm -f ../tests/test1/minimal$(EXEEXT)
+	rm -f ../tests/test2/minimal2$(EXEEXT)
 
 distclean: clean
 	rm -f config.cache config.log config.status bk-deps bk-make-pch shared-ld-sh Makefile
@@ -116,14 +123,19 @@ install-lib:
 	$(RANLIB) $@
 
 ../tests/test1/minimal$(EXEEXT): $(MINIMAL_OBJECTS) ../lib/$(LIBPREFIX)wxscript$(WXLIBPOSTFIX)$(LIBEXT)
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS)  -L../lib -L$(LUA_DIR)/lib -L$(TOLUA_DIR)/lib -L$(UCC_DIR)/lib  `wx-config --libs`  ../lib/$(LIBPREFIX)wxscript$(WXLIBPOSTFIX)$(LIBEXT) -llua -llualib -ltolua
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS)  -L../lib -L$(PYTHON_DIR)/lib -L$(LUA_DIR)/lib -L$(TOLUA_DIR)/lib  `wx-config --libs`  ../lib/$(LIBPREFIX)wxscript$(WXLIBPOSTFIX)$(LIBEXT) -llua -llualib -ltolua
 	
 	$(__minimal___mac_setfilecmd)
+
+../tests/test2/minimal2$(EXEEXT): $(MINIMAL2_OBJECTS) ../lib/$(LIBPREFIX)wxscript$(WXLIBPOSTFIX)$(LIBEXT)
+	$(CXX) -o $@ $(MINIMAL2_OBJECTS) $(LDFLAGS)  -L../lib -L$(PYTHON_DIR)/lib -L$(LUA_DIR)/lib -L$(TOLUA_DIR)/lib  `wx-config --libs`  ../lib/$(LIBPREFIX)wxscript$(WXLIBPOSTFIX)$(LIBEXT) -llua -llualib -ltolua
+	
+	$(__minimal2___mac_setfilecmd)
 
 wxscript_script.o: $(srcdir)/../src/script.cpp
 	$(CXXC) -c -o $@ $(WXSCRIPT_CXXFLAGS) $<
 
-wxscript_scbasic.o: $(srcdir)/../src/scbasic.cpp
+wxscript_scpython.o: $(srcdir)/../src/scpython.cpp
 	$(CXXC) -c -o $@ $(WXSCRIPT_CXXFLAGS) $<
 
 wxscript_sccint.o: $(srcdir)/../src/sccint.cpp
@@ -137,6 +149,9 @@ wxscript_sclua.o: $(srcdir)/../src/sclua.cpp
 
 minimal_Test.o: $(srcdir)/../tests/test1/Test.cpp
 	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $<
+
+minimal2_Test.o: $(srcdir)/../tests/test2/Test.cpp
+	$(CXXC) -c -o $@ $(MINIMAL2_CXXFLAGS) $<
 
 
 # Include dependency info, if present:

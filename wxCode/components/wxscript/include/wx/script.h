@@ -41,8 +41,8 @@
 #define wxSCRIPT_USE_LUA
 #endif
 
-#ifndef wxSCRIPT_NO_BASIC
-#define wxSCRIPT_USE_BASIC
+#ifndef wxSCRIPT_NO_PYTHON
+#define wxSCRIPT_USE_PYTHON
 #endif
 
 
@@ -152,8 +152,8 @@ public:
 	// setters
 	virtual void Set(const wxString &str);
 	virtual void SetGenericType(wxScriptTypeGeneric t);
-	virtual void SetAsPointer()			{ Set(GetName() + "*"); }
-	virtual void SetAsReference()		{ Set(GetName() + "&"); }
+	virtual void SetAsPointer()			{ Set(GetName() + wxT("*")); }
+	virtual void SetAsReference()		{ Set(GetName() + wxT("&")); }
 	
 	// getters
 	wxString GetPointerTypeName() const;
@@ -219,13 +219,13 @@ public:
 
 	//! Sets the contents of this variable.
 	virtual void SetContent(const wxString &);
-	virtual void SetContent(const char *str) { SetContent(wxString(str)); }
-	virtual void SetContent(char *str) { SetContent(wxString(str)); }
-	virtual void SetContent(long l) { m_content = l; }
-	virtual void SetContent(double l) { m_floatcontent = l; }
-	virtual void SetContent(bool l) { m_content = (l != 0); }
-	virtual void SetContent(void *l) { m_content = (long)l; }
-	virtual void SetContent(const void *l) { m_content = (long)l; }
+	virtual void SetContent(const wxChar *str)		{ SetContent(wxString(str)); }
+	virtual void SetContent(wxChar *str)			{ SetContent(wxString(str)); }
+	virtual void SetContent(long l)					{ m_content = l; }
+	virtual void SetContent(double l)				{ m_floatcontent = l; }
+	virtual void SetContent(bool l)					{ m_content = (l != 0); }
+	virtual void SetContent(void *l)				{ m_content = (long)l; }
+	virtual void SetContent(const void *l)			{ m_content = (long)l; }
 
 	//! Changes both type & content of this variable.
 	void Set(const wxString &type, const wxString &content)		{ SetType(type); SetContent(content); }
@@ -287,7 +287,7 @@ protected:
 protected:
 
 	//! Returns the "call string"; that is, the string containing
-	//! function name + "(" + arg[n]->GetContentString() + ")".
+	//! function name + wxT("(") + arg[n]->GetContentString() + ")".
 	wxString GetCallString(wxScriptVar *arr) const;
 
 public:

@@ -56,7 +56,7 @@ bool wxLua::Init()
 	}
 
 	// add our extension to the list of the available for loading extensions:
-	wxScriptFile::m_strFileExt[wxLUA_SCRIPTFILE] = "LUA";
+	wxScriptFile::m_strFileExt[wxLUA_SCRIPTFILE] = wxT("LUA");
 	
 	// fill the std array
 	GetFunctionListComplete(m_arrStd);
@@ -74,7 +74,7 @@ void wxLua::Cleanup()
 bool wxLua::SetErrAndReturn(lua_State *L)
 {
 	// the error description should have been placed in the stack
-	wxString err(lua_tostring(L, -1));
+	wxString err(LUA2WX(lua_tostring(L, -1)));
 	wxScriptInterpreter::m_strLastErr = err;
 
 	// this is a simple way to allow the caller to return immediately
@@ -95,18 +95,20 @@ void wxLua::GetFunctionListComplete(wxScriptFunctionArray &arr) const
 	//
 	lua_pushnil(m_state);			// first key must be nil
 	
-	char str[256];
+	wxChar str[256];
+	str[0] = '\0';
 
-	str[0] = 0;
 	while (lua_next(m_state, LUA_GLOBALSINDEX) != 0) {
 	
 		int idx = -2;
 
 		// we are interested only to functions
 		if (lua_isfunction(m_state, -1)) {
-
-			if (lua_isstring(m_state, idx))
-				strcpy(str, lua_tostring(m_state, idx));
+			
+			if (lua_isstring(m_state, idx)) {
+				
+				wxStrcpy(str, LUA2WX(lua_tostring(m_state, idx)));
+			}
 			
 			// finally, create this new function entry
 			arr.Append(new wxScriptFunctionLua(str));
@@ -149,7 +151,7 @@ bool wxScriptFunctionLua::Exec(wxScriptVar &ret, wxScriptVar *arg) const
 	lua_State *L = wxLua::Get()->m_state;
 
 	// first of all, push the name of the function in the Lua stack
-	lua_pushstring(L, GetName());
+	lua_pushstring(L, WX2LUA(GetName()));
 	lua_gettable(L, LUA_GLOBALSINDEX);
 
 	// then, push in direct order (as first the first argument) the arguments
@@ -184,7 +186,7 @@ bool wxScriptFunctionLua::Exec(wxScriptVar &ret, wxScriptVar *arg) const
 			// to something else ?
 			else
 				tolua_pushusertype(L, (void*)arg[n].GetPointer(), 
-							arg[n].GetType().GetPointerTypeName());
+							WX2LUA(arg[n].GetType().GetPointerTypeName()));
 				//lua_pushlightuserdata(L, arg[n].GetPointer());
 		}
 
@@ -208,8 +210,8 @@ bool wxScriptFunctionLua::Exec(wxScriptVar &ret, wxScriptVar *arg) const
 
 	case LUA_TNIL:
 		lua_pop(L, 1);
-		ret.SetType("int");
-		ret.SetContent("0");
+		ret.SetType(wxT("int"));
+		ret.SetContent(wxT("0"));
 		break;
 
 	case LUA_TNUMBER:
@@ -218,35 +220,35 @@ bool wxScriptFunctionLua::Exec(wxScriptVar &ret, wxScriptVar *arg) const
 			ceil(res) == res) {		// this is my personal check for "integerness"
 
 			// this is an integer...
-			ret.SetType("long");
+			ret.SetType(wxT("long"));
 			ret.SetContent((long)res);
 
 		} else {
 
 			// this is a floating point number...
-			ret.SetType("double");
+			ret.SetType(wxT("double"));
 			ret.SetContent(res);
 		}
 		break;
 
 	case LUA_TBOOLEAN:
-		ret.SetType("bool");
+		ret.SetType(wxT("bool"));
 		ret.SetContent(tolua_toboolean(L, -1, 0) != 0);
 		break;
 
 	case LUA_TSTRING:
-		ret.SetType("char*");
-		ret.SetContent(tolua_tostring(L, -1, ""));
+		ret.SetType(wxT("char*"));
+		ret.SetContent(LUA2WX(tolua_tostring(L, -1, "")));
 		break;
 
 	case LUA_TLIGHTUSERDATA:
-		ret.SetType("void*");
+		ret.SetType(wxT("void*"));
 		ret.SetContent(tolua_touserdata(L, -1, NULL));
 		break;
 
 	case LUA_TUSERDATA:
 	case LUA_TFUNCTION:
-		ret.SetType("void*");
+		ret.SetType(wxT("void*"));
 		ret.SetContent(tolua_tousertype(L, -1, NULL));
 		break;
 	}
@@ -268,7 +270,7 @@ bool wxScriptFileLua::Load(const wxString &file)
 	lua_State *L = wxLua::Get()->m_state;
 
 	// load it	
-	int status = luaL_loadfile(L, file);
+	int status = luaL_loadfile(L, WX2LUA(file));
 	if (status != 0) return wxLua::SetErrAndReturn(L);
 
 	// execute the script: in this way, we'll force Lua to parse

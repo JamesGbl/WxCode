@@ -6,7 +6,6 @@ dnl Do not modify, all changes will be overwritten!
 
 BAKEFILE_AUTOCONF_INC_M4_VERSION="0.1.4"
 
-
 dnl ### begin block 20_COND_BUILD_DEBUG ###
     COND_BUILD_DEBUG="#"
     if test "x$BUILD" = "xdebug" ; then
