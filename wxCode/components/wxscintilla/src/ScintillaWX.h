@@ -9,7 +9,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: ScintillaWX.h,v 1.4 2005-02-04 20:19:55 wyo Exp $
+// RCS-ID:      $Id: ScintillaWX.h,v 1.5 2005-02-12 14:24:35 wyo Exp $
 // Copyright:   (c) 2000 by Total Control Software
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -127,6 +127,8 @@ public:
 
     virtual void CancelModes();
 
+    virtual void UpdateSystemCaret();
+
     // Event delegates
     void DoPaint(wxDC* dc, wxRect rect);
     void DoHScroll(int type, int pos);
@@ -178,7 +180,21 @@ private:
 #endif
     int                 wheelRotation;
 
-
+    // For use in creating a system caret
+    bool HasCaretSizeChanged();
+    bool CreateSystemCaret();
+    bool DestroySystemCaret();
+#ifdef __WXMSW__
+#if !wxCHECK_VERSION(2, 5, 0)
+    int sysCaretWidth;
+    int sysCaretHeight;
+#else
+    HBITMAP sysCaretBitmap;
+    int sysCaretWidth;
+    int sysCaretHeight;
+#endif
+#endif
+    
     friend class wxSCICallTip;
 };
 

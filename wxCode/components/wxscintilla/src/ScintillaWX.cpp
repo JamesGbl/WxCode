@@ -9,7 +9,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: ScintillaWX.cpp,v 1.6 2005-02-04 20:19:55 wyo Exp $
+// RCS-ID:      $Id: ScintillaWX.cpp,v 1.7 2005-02-12 14:24:35 wyo Exp $
 // Copyright:   (c) 2000 by Total Control Software
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -181,6 +181,13 @@ ScintillaWX::ScintillaWX(wxScintilla* win) {
     sci   = win;
     wheelRotation = 0;
     Initialise();
+#ifdef __WXMSW__
+#if wxCHECK_VERSION(2, 5, 0)
+    sysCaretBitmap = 0;
+    sysCaretWidth = 0;
+    sysCaretHeight = 0;
+#endif
+#endif
 }
 
 
@@ -211,6 +218,7 @@ void ScintillaWX::Finalise() {
     ScintillaBase::Finalise();
     SetTicking(false);
     SetIdle(false);
+    DestroySystemCaret();
 }
 
 
@@ -520,6 +528,83 @@ void ScintillaWX::ClaimSelection() {
 }
 
 
+void ScintillaWX::UpdateSystemCaret() {
+#ifdef __WXMSW__
+    if (hasFocus) {
+        if (HasCaretSizeChanged()) {
+            DestroySystemCaret();
+            CreateSystemCaret();
+        }
+        Point pos = LocationFromPosition(currentPos);
+#if wxCHECK_VERSION(2, 5, 0)
+        ::SetCaretPos(pos.x, pos.y);
+#endif
+    }
+#endif
+}
+
+
+bool ScintillaWX::HasCaretSizeChanged() {
+#ifdef __WXMSW__
+#if !wxCHECK_VERSION(2, 5, 0)
+    return false;
+#else
+    if (( (0 != vs.caretWidth) && (sysCaretWidth != vs.caretWidth) )
+        || (0 != vs.lineHeight) && (sysCaretHeight != vs.lineHeight)) {
+        return true;
+    }
+#endif
+#endif
+    return false;
+}
+
+bool ScintillaWX::CreateSystemCaret() {
+#ifdef __WXMSW__
+#if !wxCHECK_VERSION(2, 5, 0)
+    return false;
+#else
+    sysCaretWidth = vs.caretWidth;
+    if (0 == sysCaretWidth) {
+        sysCaretWidth = 1;
+    }
+    sysCaretHeight = vs.lineHeight;
+    int bitmapSize = (((sysCaretWidth + 15) & ~15) >> 3) * sysCaretHeight;
+    char *bits = new char[bitmapSize];
+    memset(bits, 0, bitmapSize);
+    sysCaretBitmap = ::CreateBitmap(sysCaretWidth, sysCaretHeight, 1,
+                                    1, reinterpret_cast<BYTE *>(bits));
+    delete [] bits;
+    BOOL retval = ::CreateCaret(GetHwndOf(sci), sysCaretBitmap,
+                                sysCaretWidth, sysCaretHeight);
+    ::ShowCaret(GetHwndOf(sci));
+    return retval != 0;
+#endif
+#else
+    return false;
+#endif
+}
+
+bool ScintillaWX::DestroySystemCaret() {
+#ifdef __WXMSW__
+#if !wxCHECK_VERSION(2, 5, 0)
+    return false;
+#else
+    ::HideCaret(GetHwndOf(sci));
+    BOOL retval = ::DestroyCaret();
+    if (sysCaretBitmap) {
+        ::DeleteObject(sysCaretBitmap);
+        sysCaretBitmap = 0;
+    }
+    return retval != 0;
+#endif
+#else
+    return false;
+#endif
+}
+
+
+//----------------------------------------------------------------------
+
 long ScintillaWX::DefWndProc(unsigned int /*iMessage*/, unsigned long /*wParam*/, long /*lParam*/) {
     return 0;
 }
@@ -539,7 +624,7 @@ long ScintillaWX::WndProc(unsigned int iMessage, unsigned long wParam, long lPar
                                           defn,
                                           vs.styles[STYLE_DEFAULT].fontName,
                                           vs.styles[STYLE_DEFAULT].sizeZoomed,
-                                          IsUnicodeMode(),
+                                          CodePage(),
                                           vs.styles[STYLE_DEFAULT].characterSet,
                                           wMain);
           // If the call-tip window would be out of the client
@@ -687,12 +772,15 @@ void ScintillaWX::DoLoseFocus(){
     focusEvent = true;
     SetFocusState(false);
     focusEvent = false;
+    DestroySystemCaret();
 }
 
 void ScintillaWX::DoGainFocus(){
     focusEvent = true;
     SetFocusState(true);
     focusEvent = false;
+    DestroySystemCaret();
+    CreateSystemCaret();
 }
 
 void ScintillaWX::DoSysColourChange() {
