@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.17 2005-03-03 17:00:24 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.18 2005-03-30 20:08:23 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -177,6 +177,8 @@ void wxScintilla::Create(wxWindow *parent,
 #endif
 
 #if wxCHECK_VERSION(2, 5, 0)
+    // Reduces flicker on GTK+/X11
+    SetBackgroundStyle(wxBG_STYLE_CUSTOM);
     SetBestFittingSize(size);
 #endif
 }
