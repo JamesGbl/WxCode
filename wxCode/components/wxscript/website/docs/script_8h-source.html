@@ -111,22 +111,22 @@
 00104 <span class="keyword">extern</span> <a class="code" href="classwxScriptTypeInfo.html">wxScriptTypeInfo</a> *<a class="code" href="script_8cpp.html#a13">wxScriptTypePBOOL</a>;
 00105 
 00106 
-<a name="l00108"></a><a class="code" href="script_8h.html#a40">00108</a> <span class="keyword">enum</span> <a class="code" href="script_8h.html#a40">wxScriptTypeGeneric</a> {
+<a name="l00108"></a><a class="code" href="script_8h.html#a41">00108</a> <span class="keyword">enum</span> <a class="code" href="script_8h.html#a41">wxScriptTypeGeneric</a> {
 00109 
-00110         <a class="code" href="script_8h.html#a40a23">wxSTG_UNDEFINED</a> = -1,           
+00110         <a class="code" href="script_8h.html#a41a23">wxSTG_UNDEFINED</a> = -1,           
 00111 
-00112         <a class="code" href="script_8h.html#a40a24">wxSTG_VOID</a>,                     
-00113         <a class="code" href="script_8h.html#a40a25">wxSTG_INT</a>,
-00114         <a class="code" href="script_8h.html#a40a26">wxSTG_LONG</a>,
-00115         <a class="code" href="script_8h.html#a40a27">wxSTG_CHAR</a>,
-00116         <a class="code" href="script_8h.html#a40a28">wxSTG_FLOAT</a>,
-00117         <a class="code" href="script_8h.html#a40a29">wxSTG_DOUBLE</a>,
-00118         <a class="code" href="script_8h.html#a40a30">wxSTG_BOOL</a>,
+00112         <a class="code" href="script_8h.html#a41a24">wxSTG_VOID</a>,                     
+00113         <a class="code" href="script_8h.html#a41a25">wxSTG_INT</a>,
+00114         <a class="code" href="script_8h.html#a41a26">wxSTG_LONG</a>,
+00115         <a class="code" href="script_8h.html#a41a27">wxSTG_CHAR</a>,
+00116         <a class="code" href="script_8h.html#a41a28">wxSTG_FLOAT</a>,
+00117         <a class="code" href="script_8h.html#a41a29">wxSTG_DOUBLE</a>,
+00118         <a class="code" href="script_8h.html#a41a30">wxSTG_BOOL</a>,
 00119 
-00120         <a class="code" href="script_8h.html#a40a31">wxSTG_USERDEFINED</a>,      
+00120         <a class="code" href="script_8h.html#a41a31">wxSTG_USERDEFINED</a>,      
 00121 
-00122         <a class="code" href="script_8h.html#a40a32">wxSTG_POINTER</a>,          
-00123         <a class="code" href="script_8h.html#a40a33">wxSTG_REFERENCE</a>         
+00122         <a class="code" href="script_8h.html#a41a32">wxSTG_POINTER</a>,          
+00123         <a class="code" href="script_8h.html#a41a33">wxSTG_REFERENCE</a>         
 00124 };
 00125 
 00126 
@@ -159,7 +159,7 @@
 00159         wxString <a class="code" href="classwxScriptTypeInfo.html#a10">GetPointerTypeName</a>() <span class="keyword">const</span>;
 <a name="l00160"></a><a class="code" href="classwxScriptTypeInfo.html#a11">00160</a>         wxString <a class="code" href="classwxScriptTypeInfo.html#a11">GetName</a>()<span class="keyword"> const                                                </span>{ <span class="keywordflow">return</span> <a class="code" href="classwxScriptTypeInfo.html#p0">m_strName</a>; }
 <a name="l00161"></a><a class="code" href="classwxScriptTypeInfo.html#a12">00161</a>         <a class="code" href="classwxScriptTypeInfo.html">wxScriptTypeInfo</a> <a class="code" href="classwxScriptTypeInfo.html#a12">GetPointerType</a>()<span class="keyword"> const                 </span>{ <span class="keywordflow">return</span> <a class="code" href="classwxScriptTypeInfo.html#a0">wxScriptTypeInfo</a>(<a class="code" href="classwxScriptTypeInfo.html#a10">GetPointerTypeName</a>()); }
-00162         <a class="code" href="script_8h.html#a40">wxScriptTypeGeneric</a> <a class="code" href="classwxScriptTypeInfo.html#a13">GetGenericType</a>() <span class="keyword">const</span>;
+00162         <a class="code" href="script_8h.html#a41">wxScriptTypeGeneric</a> <a class="code" href="classwxScriptTypeInfo.html#a13">GetGenericType</a>() <span class="keyword">const</span>;
 00163 
 00164         <span class="comment">// checkers</span>
 00165         <span class="keywordtype">bool</span> <a class="code" href="classwxScriptTypeInfo.html#a14">isPointer</a>() <span class="keyword">const</span>;
@@ -240,7 +240,7 @@
 00273 
 <a name="l00275"></a><a class="code" href="classwxScriptVar.html#z1_1">00275</a>         <span class="keywordtype">long</span> <a class="code" href="classwxScriptVar.html#z1_1">GetContentLong</a>()<span class="keyword"> const                     </span>{ <span class="keywordflow">return</span> <a class="code" href="classwxScriptVar.html#p1">m_content</a>; }
 00276 
-<a name="l00278"></a><a class="code" href="classwxScriptVar.html#z1_2">00278</a>         <span class="keywordtype">double</span> <a class="code" href="classwxScriptVar.html#z1_2">GetContentDouble</a>()<span class="keyword"> const         </span>{ <span class="keywordflow">return</span> (<a class="code" href="classwxScriptVar.html#p0">m_tType</a> == <a class="code" href="script_8h.html#a40a25">wxSTG_INT</a> || <a class="code" href="classwxScriptVar.html#p0">m_tType</a> == <a class="code" href="script_8h.html#a40a26">wxSTG_LONG</a>) ? <a class="code" href="classwxScriptVar.html#p1">m_content</a> : <a class="code" href="classwxScriptVar.html#p2">m_floatcontent</a>; }
+<a name="l00278"></a><a class="code" href="classwxScriptVar.html#z1_2">00278</a>         <span class="keywordtype">double</span> <a class="code" href="classwxScriptVar.html#z1_2">GetContentDouble</a>()<span class="keyword"> const         </span>{ <span class="keywordflow">return</span> (<a class="code" href="classwxScriptVar.html#p0">m_tType</a> == <a class="code" href="script_8h.html#a41a25">wxSTG_INT</a> || <a class="code" href="classwxScriptVar.html#p0">m_tType</a> == <a class="code" href="script_8h.html#a41a26">wxSTG_LONG</a>) ? <a class="code" href="classwxScriptVar.html#p1">m_content</a> : <a class="code" href="classwxScriptVar.html#p2">m_floatcontent</a>; }
 00279 
 00284         <span class="keyword">virtual</span> wxString <a class="code" href="classwxScriptVar.html#z1_3">GetContentString</a>() <span class="keyword">const</span>;      
 00285 
@@ -356,110 +356,113 @@
 00431 
 00432 
 00433 
-<a name="l00435"></a><a class="code" href="script_8h.html#a41">00435</a> <span class="keyword">enum</span> <a class="code" href="script_8h.html#a41">wxScriptFileType</a> {
+<a name="l00435"></a><a class="code" href="script_8h.html#a42">00435</a> <span class="keyword">enum</span> <a class="code" href="script_8h.html#a42">wxScriptFileType</a> {
 00436 
-00437         <a class="code" href="script_8h.html#a41a34">wxRECOGNIZE_SCRIPTFILE</a> = -1,
-00438 
-00439         <a class="code" href="script_8h.html#a41a35">wxCINT_SCRIPTFILE</a> = 0,          <span class="comment">// extension = "cxx"</span>
-00440         <a class="code" href="script_8h.html#a41a36">wxUNDERC_SCRIPTFILE</a> = 1,        <span class="comment">// extension = "uc"</span>
-00441         <a class="code" href="script_8h.html#a41a37">wxLUA_SCRIPTFILE</a> = 2,           <span class="comment">// extension = "lua"</span>
-00442         <a class="code" href="script_8h.html#a41a38">wxPYTHON_SCRIPTFILE</a> = 3,        <span class="comment">// extension = "py"</span>
-00443 
-00444         <a class="code" href="script_8h.html#a41a39">wxSCRIPT_SUPPORTED_FORMATS</a> = 4          <span class="comment">// this must be the last</span>
-00445 };
-00446 
-00447 
-00448 
-<a name="l00450"></a><a class="code" href="classwxScriptFile.html">00450</a> <span class="keyword">class </span><a class="code" href="classwxScriptFile.html">wxScriptFile</a>
-00451 {
-00452 <span class="keyword">protected</span>:
+00438         <a class="code" href="script_8h.html#a42a34">wxRECOGNIZE_FROM_EXTENSION</a> = -2,
+00439 
+00443         <a class="code" href="script_8h.html#a42a35">wxRECOGNIZE_FROM_COMMENT</a> = -1,
+00444 
+00445         <a class="code" href="script_8h.html#a42a36">wxCINT_SCRIPTFILE</a> = 0,          <span class="comment">// extension = "cxx"</span>
+00446         <a class="code" href="script_8h.html#a42a37">wxUNDERC_SCRIPTFILE</a> = 1,        <span class="comment">// extension = "uc"</span>
+00447         <a class="code" href="script_8h.html#a42a38">wxLUA_SCRIPTFILE</a> = 2,           <span class="comment">// extension = "lua"</span>
+00448         <a class="code" href="script_8h.html#a42a39">wxPYTHON_SCRIPTFILE</a> = 3,        <span class="comment">// extension = "py"</span>
+00449 
+00450         <a class="code" href="script_8h.html#a42a40">wxSCRIPT_SUPPORTED_FORMATS</a> = 4          <span class="comment">// this must be the last</span>
+00451 };
+00452 
 00453 
-<a name="l00455"></a><a class="code" href="classwxScriptFile.html#p0">00455</a>         wxString <a class="code" href="classwxScriptFile.html#p0">m_strFileName</a>;
-00456 
-<a name="l00458"></a><a class="code" href="classwxScriptFile.html#p1">00458</a>         <a class="code" href="script_8h.html#a41">wxScriptFileType</a> <a class="code" href="classwxScriptFile.html#p1">m_tScriptFile</a>;
+00454 
+<a name="l00456"></a><a class="code" href="classwxScriptFile.html">00456</a> <span class="keyword">class </span><a class="code" href="classwxScriptFile.html">wxScriptFile</a>
+00457 {
+00458 <span class="keyword">protected</span>:
 00459 
-00460 <span class="keyword">public</span>:
-00461 
-00468         <span class="keyword">static</span> wxString <a class="code" href="classwxScriptFile.html#s0">m_strFileExt</a>[<a class="code" href="script_8h.html#a41a39">wxSCRIPT_SUPPORTED_FORMATS</a>];
-00469 
-00475         <span class="keyword">static</span> wxString <a class="code" href="classwxScriptFile.html#e0">GetAllowedExtString</a>();
-00476         <span class="keyword">static</span> wxArrayString <a class="code" href="classwxScriptFile.html#e1">GetAllowedExt</a>();
-00477 
-00478 <span class="keyword">public</span>:
-<a name="l00479"></a><a class="code" href="classwxScriptFile.html#a0">00479</a>         <a class="code" href="classwxScriptFile.html#a0">wxScriptFile</a>() {}
-<a name="l00480"></a><a class="code" href="classwxScriptFile.html#a1">00480</a>         <span class="keyword">virtual</span> <a class="code" href="classwxScriptFile.html#a1">~wxScriptFile</a>() {}
-00481         
-00482         <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classwxScriptFile.html#a2">Load</a>(<span class="keyword">const</span> wxString &amp;file) = 0;
-<a name="l00483"></a><a class="code" href="classwxScriptFile.html#a3">00483</a>         <a class="code" href="script_8h.html#a41">wxScriptFileType</a> <a class="code" href="classwxScriptFile.html#a3">GetScriptFileType</a>()<span class="keyword"> const                      </span>{ <span class="keywordflow">return</span> <a class="code" href="classwxScriptFile.html#p1">m_tScriptFile</a>; }       
-00484 };
-00485 
-00486 
-00487 
-00488 
-00489 <span class="comment">// these will be, eventually, defined later</span>
-00490 <span class="keyword">class </span>wxCINT;
-00491 <span class="keyword">class </span>wxUnderC;
-00492 <span class="keyword">class </span>wxLua;
-00493 <span class="keyword">class </span>wxPython;
+<a name="l00461"></a><a class="code" href="classwxScriptFile.html#p0">00461</a>         wxString <a class="code" href="classwxScriptFile.html#p0">m_strFileName</a>;
+00462 
+<a name="l00464"></a><a class="code" href="classwxScriptFile.html#p1">00464</a>         <a class="code" href="script_8h.html#a42">wxScriptFileType</a> <a class="code" href="classwxScriptFile.html#p1">m_tScriptFile</a>;
+00465 
+00466 <span class="keyword">public</span>:
+00467 
+00474         <span class="keyword">static</span> wxString <a class="code" href="classwxScriptFile.html#s0">m_strFileExt</a>[<a class="code" href="script_8h.html#a42a40">wxSCRIPT_SUPPORTED_FORMATS</a>];
+00475 
+00481         <span class="keyword">static</span> wxString <a class="code" href="classwxScriptFile.html#e0">GetAllowedExtString</a>();
+00482         <span class="keyword">static</span> wxArrayString <a class="code" href="classwxScriptFile.html#e1">GetAllowedExt</a>();
+00483 
+00484 <span class="keyword">public</span>:
+<a name="l00485"></a><a class="code" href="classwxScriptFile.html#a0">00485</a>         <a class="code" href="classwxScriptFile.html#a0">wxScriptFile</a>() {}
+<a name="l00486"></a><a class="code" href="classwxScriptFile.html#a1">00486</a>         <span class="keyword">virtual</span> <a class="code" href="classwxScriptFile.html#a1">~wxScriptFile</a>() {}
+00487         
+00488         <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classwxScriptFile.html#a2">Load</a>(<span class="keyword">const</span> wxString &amp;file) = 0;
+<a name="l00489"></a><a class="code" href="classwxScriptFile.html#a3">00489</a>         <a class="code" href="script_8h.html#a42">wxScriptFileType</a> <a class="code" href="classwxScriptFile.html#a3">GetScriptFileType</a>()<span class="keyword"> const                      </span>{ <span class="keywordflow">return</span> <a class="code" href="classwxScriptFile.html#p1">m_tScriptFile</a>; }       
+00490 };
+00491 
+00492 
+00493 
 00494 
-<a name="l00496"></a><a class="code" href="classwxScriptInterpreter.html">00496</a> <span class="keyword">class </span><a class="code" href="classwxScriptInterpreter.html">wxScriptInterpreter</a>
-00497 {
-00498 <span class="keyword">protected</span>:              <span class="comment">// use wxCINT::Get(), wxUnderC::Get() or wxLua::Get() to</span>
-00499                                 <span class="comment">// access them...</span>
+00495 <span class="comment">// these will be, eventually, defined later</span>
+00496 <span class="keyword">class </span>wxCINT;
+00497 <span class="keyword">class </span>wxUnderC;
+00498 <span class="keyword">class </span>wxLua;
+00499 <span class="keyword">class </span>wxPython;
 00500 
-00502         <span class="keyword">static</span> wxCINT *<a class="code" href="classwxScriptInterpreter.html#t0">m_pCINT</a>;
-00503         <span class="keyword">static</span> wxUnderC *<a class="code" href="classwxScriptInterpreter.html#t1">m_pUnderC</a>;
-00504         <span class="keyword">static</span> wxLua *<a class="code" href="classwxScriptInterpreter.html#t2">m_pLua</a>;
-00505         <span class="keyword">static</span> wxPython *<a class="code" href="classwxScriptInterpreter.html#t3">m_pPython</a>;
+<a name="l00502"></a><a class="code" href="classwxScriptInterpreter.html">00502</a> <span class="keyword">class </span><a class="code" href="classwxScriptInterpreter.html">wxScriptInterpreter</a>
+00503 {
+00504 <span class="keyword">protected</span>:              <span class="comment">// use wxCINT::Get(), wxUnderC::Get() or wxLua::Get() to</span>
+00505                                 <span class="comment">// access them...</span>
 00506 
-00507 <span class="keyword">public</span>:         <span class="comment">// ctor &amp; dtor</span>
-00508 
-00509         <a class="code" href="classwxScriptInterpreter.html#a0">wxScriptInterpreter</a>();
-00510         <span class="keyword">virtual</span> <a class="code" href="classwxScriptInterpreter.html#a1">~wxScriptInterpreter</a>();
-00511 
-00513         <span class="keyword">static</span> wxString <a class="code" href="classwxScriptInterpreter.html#s0">m_strLastErr</a>;
+00508         <span class="keyword">static</span> wxCINT *<a class="code" href="classwxScriptInterpreter.html#t0">m_pCINT</a>;
+00509         <span class="keyword">static</span> wxUnderC *<a class="code" href="classwxScriptInterpreter.html#t1">m_pUnderC</a>;
+00510         <span class="keyword">static</span> wxLua *<a class="code" href="classwxScriptInterpreter.html#t2">m_pLua</a>;
+00511         <span class="keyword">static</span> wxPython *<a class="code" href="classwxScriptInterpreter.html#t3">m_pPython</a>;
+00512 
+00513 <span class="keyword">public</span>:         <span class="comment">// ctor &amp; dtor</span>
 00514 
-00515 <span class="keyword">public</span>:         <span class="comment">// static functions</span>
-00516 
-00517         <span class="comment">// A STATIC function which returns the global instance of this class</span>
-00518         <span class="comment">// cannot exist because wxScriptInterpreter is an abstract class</span>
-00519         <span class="comment">// and thus, only derived classes (wxCINT, wxUnderC and wxLua) can</span>
-00520         <span class="comment">// be instantiated; you can access them using their static Get()</span>
-00521         <span class="comment">// functions: wxCINT::Get(), wxUnderC::Get() ....       </span>
+00515         <a class="code" href="classwxScriptInterpreter.html#a0">wxScriptInterpreter</a>();
+00516         <span class="keyword">virtual</span> <a class="code" href="classwxScriptInterpreter.html#a1">~wxScriptInterpreter</a>();
+00517 
+00519         <span class="keyword">static</span> wxString <a class="code" href="classwxScriptInterpreter.html#s0">m_strLastErr</a>;
+00520 
+00521 <span class="keyword">public</span>:         <span class="comment">// static functions</span>
 00522 
-00524         <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="classwxScriptInterpreter.html#e0">Init</a>(<span class="keywordtype">bool</span> bCINT = TRUE, <span class="keywordtype">bool</span> bUnderC = TRUE, 
-00525                                                 <span class="keywordtype">bool</span> bLua = TRUE, <span class="keywordtype">bool</span> bPython = TRUE);
-00526 
-00528         <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classwxScriptInterpreter.html#e1">Cleanup</a>();
-00529 
-00531         <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="classwxScriptInterpreter.html#e2">areAllReady</a>();
+00523         <span class="comment">// A STATIC function which returns the global instance of this class</span>
+00524         <span class="comment">// cannot exist because wxScriptInterpreter is an abstract class</span>
+00525         <span class="comment">// and thus, only derived classes (wxCINT, wxUnderC and wxLua) can</span>
+00526         <span class="comment">// be instantiated; you can access them using their static Get()</span>
+00527         <span class="comment">// functions: wxCINT::Get(), wxUnderC::Get() ....       </span>
+00528 
+00530         <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="classwxScriptInterpreter.html#e0">Init</a>(<span class="keywordtype">bool</span> bCINT = TRUE, <span class="keywordtype">bool</span> bUnderC = TRUE, 
+00531                                                 <span class="keywordtype">bool</span> bLua = TRUE, <span class="keywordtype">bool</span> bPython = TRUE);
 00532 
-<a name="l00535"></a><a class="code" href="classwxScriptInterpreter.html#e3">00535</a>         <span class="keyword">static</span> wxString <a class="code" href="classwxScriptInterpreter.html#e3">GetLastErr</a>()    { <span class="keywordflow">return</span> <a class="code" href="classwxScriptInterpreter.html#s0">m_strLastErr</a>; }
-00536 
-00538         <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classwxScriptInterpreter.html#e4">GetTotalFunctionList</a>(<a class="code" href="classwxScriptFunctionArray.html">wxScriptFunctionArray</a> &amp;);
-00539 
-00542         <span class="keyword">static</span> <a class="code" href="classwxScriptFile.html">wxScriptFile</a> *<a class="code" href="classwxScriptInterpreter.html#e5">Load</a>(<span class="keyword">const</span> wxString &amp;filename, 
-00543                         wxScriptFileType type = wxRECOGNIZE_SCRIPTFILE);
-00544 
-00545 <span class="keyword">public</span>:         <span class="comment">// virtual functions</span>
-00546 
-00548         <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classwxScriptInterpreter.html#a2">isReady</a>() <span class="keyword">const </span>= 0;
-00549 
-00551         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classwxScriptInterpreter.html#a3">GetFunctionList</a>(<a class="code" href="classwxScriptFunctionArray.html">wxScriptFunctionArray</a> &amp;) <span class="keyword">const </span>= 0;
+00534         <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classwxScriptInterpreter.html#e1">Cleanup</a>();
+00535 
+00537         <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="classwxScriptInterpreter.html#e2">areAllReady</a>();
+00538 
+<a name="l00541"></a><a class="code" href="classwxScriptInterpreter.html#e3">00541</a>         <span class="keyword">static</span> wxString <a class="code" href="classwxScriptInterpreter.html#e3">GetLastErr</a>()    { <span class="keywordflow">return</span> <a class="code" href="classwxScriptInterpreter.html#s0">m_strLastErr</a>; }
+00542 
+00544         <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classwxScriptInterpreter.html#e4">GetTotalFunctionList</a>(<a class="code" href="classwxScriptFunctionArray.html">wxScriptFunctionArray</a> &amp;);
+00545 
+00548         <span class="keyword">static</span> <a class="code" href="classwxScriptFile.html">wxScriptFile</a> *<a class="code" href="classwxScriptInterpreter.html#e5">Load</a>(<span class="keyword">const</span> wxString &amp;filename, 
+00549                         wxScriptFileType type = wxRECOGNIZE_FROM_EXTENSION);
+00550 
+00551 <span class="keyword">public</span>:         <span class="comment">// virtual functions</span>
 00552 
-00554 };
+00554         <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classwxScriptInterpreter.html#a2">isReady</a>() <span class="keyword">const </span>= 0;
 00555 
-00556 
-00557 <span class="comment">// to avoid a lot of repetitions</span>
-<a name="l00558"></a><a class="code" href="script_8h.html#a8">00558</a> <span class="preprocessor">#define wxSCRIPTFNC_IMPLEMENT_CLONE(x)            \</span>
-00559 <span class="preprocessor">        virtual wxScriptFunction *Clone() const {     \</span>
-00560 <span class="preprocessor">                wxScriptFunction *newf = new x();         \</span>
-00561 <span class="preprocessor">                newf-&gt;DeepCopy(this);                     \</span>
-00562 <span class="preprocessor">                return newf; }    </span>
-00563 <span class="preprocessor"></span>
-00564 <span class="preprocessor">#endif          // SCRIPT_H</span>
-00565 <span class="preprocessor"></span>
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Sat Jan 15 11:57:22 2005 for wxScript by&nbsp;
+00557         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classwxScriptInterpreter.html#a3">GetFunctionList</a>(<a class="code" href="classwxScriptFunctionArray.html">wxScriptFunctionArray</a> &amp;) <span class="keyword">const </span>= 0;
+00558 
+00563         <span class="keyword">virtual</span> wxString <a class="code" href="classwxScriptInterpreter.html#a4">GetVersionInfo</a>() <span class="keyword">const </span>= 0;
+00564 };
+00565 
+00566 
+00567 <span class="comment">// to avoid a lot of repetitions</span>
+<a name="l00568"></a><a class="code" href="script_8h.html#a8">00568</a> <span class="preprocessor">#define wxSCRIPTFNC_IMPLEMENT_CLONE(x)            \</span>
+00569 <span class="preprocessor">        virtual wxScriptFunction *Clone() const {     \</span>
+00570 <span class="preprocessor">                wxScriptFunction *newf = new x();         \</span>
+00571 <span class="preprocessor">                newf-&gt;DeepCopy(this);                     \</span>
+00572 <span class="preprocessor">                return newf; }    </span>
+00573 <span class="preprocessor"></span>
+00574 <span class="preprocessor">#endif          // SCRIPT_H</span>
+00575 <span class="preprocessor"></span>
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Sat Feb 5 14:05:52 2005 for wxScript by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.1 </small></address>
 </body>

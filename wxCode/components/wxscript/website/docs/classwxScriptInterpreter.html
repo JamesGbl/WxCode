@@ -23,6 +23,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxScriptInterpreter.html#a3">GetFunctionList</a> (<a class="el" href="classwxScriptFunctionArray.html">wxScriptFunctionArray</a> &amp;) const =0</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the list of the functions currently recognized by the interpreter.  <a href="#a3"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual wxString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxScriptInterpreter.html#a4">GetVersionInfo</a> () const =0</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns version info about this interpreter or a wxEmptyString if this interpreter does not supply any version info.  <a href="#a4"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxScriptInterpreter.html#e0">Init</a> (bool bCINT=TRUE, bool bUnderC=TRUE, bool bLua=TRUE, bool bPython=TRUE)</td></tr>
 
@@ -39,7 +42,7 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxScriptInterpreter.html#e4">GetTotalFunctionList</a> (<a class="el" href="classwxScriptFunctionArray.html">wxScriptFunctionArray</a> &amp;)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the list of the functions currently recognized by the interpreter.  <a href="#e4"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classwxScriptFile.html">wxScriptFile</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxScriptInterpreter.html#e5">Load</a> (const wxString &amp;filename, <a class="el" href="script_8h.html#a41">wxScriptFileType</a> type=wxRECOGNIZE_SCRIPTFILE)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classwxScriptFile.html">wxScriptFile</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxScriptInterpreter.html#e5">Load</a> (const wxString &amp;filename, <a class="el" href="script_8h.html#a42">wxScriptFileType</a> type=wxRECOGNIZE_FROM_EXTENSION)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Load the given scriptfile and then returns an instance to the scriptfile wrapper, or NULL if the file couldn't be loaded.  <a href="#e5"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Attributes</h2></td></tr>
@@ -263,6 +266,35 @@ Returns the list of the functions currently recognized by the interpreter.
     </td>
   </tr>
 </table>
+<a class="anchor" name="a4" doxytag="wxScriptInterpreter::GetVersionInfo"></a><p>
+<table class="mdTable" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top">virtual wxString wxScriptInterpreter::GetVersionInfo           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap> const<code> [pure virtual]</code></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing="5" cellpadding="0" border="0">
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Returns version info about this interpreter or a wxEmptyString if this interpreter does not supply any version info. 
+<p>
+The exact form of the string returned is interpreter-dependent, but it is usually given as "INTERPRETER_NAME VERSION_STRING".     </td>
+  </tr>
+</table>
 <a class="anchor" name="e0" doxytag="wxScriptInterpreter::Init"></a><p>
 <table class="mdTable" cellpadding="2" cellspacing="0">
   <tr>
@@ -357,8 +389,8 @@ Returns TRUE if this script interpreter is ready to work.
         <tr>
           <td class="md" nowrap align="right"></td>
           <td class="md"></td>
-          <td class="md" nowrap><a class="el" href="script_8h.html#a41">wxScriptFileType</a>&nbsp;</td>
-          <td class="mdname" nowrap> <em>type</em> = <code>wxRECOGNIZE_SCRIPTFILE</code></td>
+          <td class="md" nowrap><a class="el" href="script_8h.html#a42">wxScriptFileType</a>&nbsp;</td>
+          <td class="mdname" nowrap> <em>type</em> = <code>wxRECOGNIZE_FROM_EXTENSION</code></td>
         </tr>
         <tr>
           <td class="md"></td>
@@ -504,7 +536,7 @@ The description of the last error.
 </table>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="script_8h-source.html">script.h</a><li><a class="el" href="script_8cpp.html">script.cpp</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Sat Jan 15 11:57:22 2005 for wxScript by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Sat Feb 5 14:05:52 2005 for wxScript by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.1 </small></address>
 </body>

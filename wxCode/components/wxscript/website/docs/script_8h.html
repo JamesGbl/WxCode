@@ -33,36 +33,37 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="script_8h.html#a8">wxSCRIPTFNC_IMPLEMENT_CLONE</a>(x)</td></tr>
 
 <tr><td colspan="2"><br><h2>Enumerations</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">enum &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="script_8h.html#a40">wxScriptTypeGeneric</a> { <br>
-&nbsp;&nbsp;<a class="el" href="script_8h.html#a40a23">wxSTG_UNDEFINED</a> =  -1, 
-<a class="el" href="script_8h.html#a40a24">wxSTG_VOID</a>, 
-<a class="el" href="script_8h.html#a40a25">wxSTG_INT</a>, 
-<a class="el" href="script_8h.html#a40a26">wxSTG_LONG</a>, 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">enum &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="script_8h.html#a41">wxScriptTypeGeneric</a> { <br>
+&nbsp;&nbsp;<a class="el" href="script_8h.html#a41a23">wxSTG_UNDEFINED</a> =  -1, 
+<a class="el" href="script_8h.html#a41a24">wxSTG_VOID</a>, 
+<a class="el" href="script_8h.html#a41a25">wxSTG_INT</a>, 
+<a class="el" href="script_8h.html#a41a26">wxSTG_LONG</a>, 
 <br>
-&nbsp;&nbsp;<a class="el" href="script_8h.html#a40a27">wxSTG_CHAR</a>, 
-<a class="el" href="script_8h.html#a40a28">wxSTG_FLOAT</a>, 
-<a class="el" href="script_8h.html#a40a29">wxSTG_DOUBLE</a>, 
-<a class="el" href="script_8h.html#a40a30">wxSTG_BOOL</a>, 
+&nbsp;&nbsp;<a class="el" href="script_8h.html#a41a27">wxSTG_CHAR</a>, 
+<a class="el" href="script_8h.html#a41a28">wxSTG_FLOAT</a>, 
+<a class="el" href="script_8h.html#a41a29">wxSTG_DOUBLE</a>, 
+<a class="el" href="script_8h.html#a41a30">wxSTG_BOOL</a>, 
 <br>
-&nbsp;&nbsp;<a class="el" href="script_8h.html#a40a31">wxSTG_USERDEFINED</a>, 
-<a class="el" href="script_8h.html#a40a32">wxSTG_POINTER</a>, 
-<a class="el" href="script_8h.html#a40a33">wxSTG_REFERENCE</a>
-<br>
- }</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A classification of the types of a <a class="el" href="classwxScriptVar.html">wxScriptVar</a>.  <a href="script_8h.html#a40">More...</a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">enum &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="script_8h.html#a41">wxScriptFileType</a> { <br>
-&nbsp;&nbsp;<a class="el" href="script_8h.html#a41a34">wxRECOGNIZE_SCRIPTFILE</a> =  -1, 
-<a class="el" href="script_8h.html#a41a35">wxCINT_SCRIPTFILE</a> =  0, 
-<a class="el" href="script_8h.html#a41a36">wxUNDERC_SCRIPTFILE</a> =  1, 
-<a class="el" href="script_8h.html#a41a37">wxLUA_SCRIPTFILE</a> =  2, 
-<br>
-&nbsp;&nbsp;<a class="el" href="script_8h.html#a41a38">wxPYTHON_SCRIPTFILE</a> =  3, 
-<a class="el" href="script_8h.html#a41a39">wxSCRIPT_SUPPORTED_FORMATS</a> =  4
+&nbsp;&nbsp;<a class="el" href="script_8h.html#a41a31">wxSTG_USERDEFINED</a>, 
+<a class="el" href="script_8h.html#a41a32">wxSTG_POINTER</a>, 
+<a class="el" href="script_8h.html#a41a33">wxSTG_REFERENCE</a>
 <br>
  }</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The types of the script files recognized by <a class="el" href="classwxScriptFile.html">wxScriptFile</a>.  <a href="script_8h.html#a41">More...</a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A classification of the types of a <a class="el" href="classwxScriptVar.html">wxScriptVar</a>.  <a href="script_8h.html#a41">More...</a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">enum &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="script_8h.html#a42">wxScriptFileType</a> { <br>
+&nbsp;&nbsp;<a class="el" href="script_8h.html#a42a34">wxRECOGNIZE_FROM_EXTENSION</a> =  -2, 
+<a class="el" href="script_8h.html#a42a35">wxRECOGNIZE_FROM_COMMENT</a> =  -1, 
+<a class="el" href="script_8h.html#a42a36">wxCINT_SCRIPTFILE</a> =  0, 
+<a class="el" href="script_8h.html#a42a37">wxUNDERC_SCRIPTFILE</a> =  1, 
+<br>
+&nbsp;&nbsp;<a class="el" href="script_8h.html#a42a38">wxLUA_SCRIPTFILE</a> =  2, 
+<a class="el" href="script_8h.html#a42a39">wxPYTHON_SCRIPTFILE</a> =  3, 
+<a class="el" href="script_8h.html#a42a40">wxSCRIPT_SUPPORTED_FORMATS</a> =  4
+<br>
+ }</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The types of the script files recognized by <a class="el" href="classwxScriptFile.html">wxScriptFile</a>.  <a href="script_8h.html#a42">More...</a><br></td></tr>
 <tr><td colspan="2"><br><h2>Variables</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classwxScriptTypeInfo.html">wxScriptTypeInfo</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="script_8h.html#a9">wxScriptTypeVOID</a></td></tr>
 
@@ -323,13 +324,13 @@ The maximum number of arguments for a single function.
   </tr>
 </table>
 <hr><h2>Enumeration Type Documentation</h2>
-<a class="anchor" name="a41" doxytag="script.h::wxScriptFileType"></a><p>
+<a class="anchor" name="a42" doxytag="script.h::wxScriptFileType"></a><p>
 <table class="mdTable" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
       <table cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td class="md" nowrap valign="top">enum <a class="el" href="script_8h.html#a41">wxScriptFileType</a>          </td>
+          <td class="md" nowrap valign="top">enum <a class="el" href="script_8h.html#a42">wxScriptFileType</a>          </td>
         </tr>
       </table>
     </td>
@@ -347,30 +348,32 @@ The types of the script files recognized by <a class="el" href="classwxScriptFil
 <p>
 <dl compact><dt><b>Enumeration values: </b></dt><dd>
 <table border="0" cellspacing="2" cellpadding="0">
-<tr><td valign="top"><em><a class="anchor" name="a41a34" doxytag="wxRECOGNIZE_SCRIPTFILE"></a>wxRECOGNIZE_SCRIPTFILE</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="a42a34" doxytag="wxRECOGNIZE_FROM_EXTENSION"></a>wxRECOGNIZE_FROM_EXTENSION</em>&nbsp;</td><td>
+The extension of the script file will be used to recognize it. </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="a42a35" doxytag="wxRECOGNIZE_FROM_COMMENT"></a>wxRECOGNIZE_FROM_COMMENT</em>&nbsp;</td><td>
+The first non-whitespace characters found will be compared to the various types of comments in the different scripting languages supported to recognize the script file type. </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="a42a36" doxytag="wxCINT_SCRIPTFILE"></a>wxCINT_SCRIPTFILE</em>&nbsp;</td><td>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a41a35" doxytag="wxCINT_SCRIPTFILE"></a>wxCINT_SCRIPTFILE</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="a42a37" doxytag="wxUNDERC_SCRIPTFILE"></a>wxUNDERC_SCRIPTFILE</em>&nbsp;</td><td>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a41a36" doxytag="wxUNDERC_SCRIPTFILE"></a>wxUNDERC_SCRIPTFILE</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="a42a38" doxytag="wxLUA_SCRIPTFILE"></a>wxLUA_SCRIPTFILE</em>&nbsp;</td><td>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a41a37" doxytag="wxLUA_SCRIPTFILE"></a>wxLUA_SCRIPTFILE</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="a42a39" doxytag="wxPYTHON_SCRIPTFILE"></a>wxPYTHON_SCRIPTFILE</em>&nbsp;</td><td>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a41a38" doxytag="wxPYTHON_SCRIPTFILE"></a>wxPYTHON_SCRIPTFILE</em>&nbsp;</td><td>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a41a39" doxytag="wxSCRIPT_SUPPORTED_FORMATS"></a>wxSCRIPT_SUPPORTED_FORMATS</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="a42a40" doxytag="wxSCRIPT_SUPPORTED_FORMATS"></a>wxSCRIPT_SUPPORTED_FORMATS</em>&nbsp;</td><td>
 </td></tr>
 </table>
 </dl>
     </td>
   </tr>
 </table>
-<a class="anchor" name="a40" doxytag="script.h::wxScriptTypeGeneric"></a><p>
+<a class="anchor" name="a41" doxytag="script.h::wxScriptTypeGeneric"></a><p>
 <table class="mdTable" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
       <table cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td class="md" nowrap valign="top">enum <a class="el" href="script_8h.html#a40">wxScriptTypeGeneric</a>          </td>
+          <td class="md" nowrap valign="top">enum <a class="el" href="script_8h.html#a41">wxScriptTypeGeneric</a>          </td>
         </tr>
       </table>
     </td>
@@ -388,27 +391,27 @@ A classification of the types of a <a class="el" href="classwxScriptVar.html">wx
 <p>
 <dl compact><dt><b>Enumeration values: </b></dt><dd>
 <table border="0" cellspacing="2" cellpadding="0">
-<tr><td valign="top"><em><a class="anchor" name="a40a23" doxytag="wxSTG_UNDEFINED"></a>wxSTG_UNDEFINED</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="a41a23" doxytag="wxSTG_UNDEFINED"></a>wxSTG_UNDEFINED</em>&nbsp;</td><td>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a40a24" doxytag="wxSTG_VOID"></a>wxSTG_VOID</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="a41a24" doxytag="wxSTG_VOID"></a>wxSTG_VOID</em>&nbsp;</td><td>
 Something wrong. </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a40a25" doxytag="wxSTG_INT"></a>wxSTG_INT</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="a41a25" doxytag="wxSTG_INT"></a>wxSTG_INT</em>&nbsp;</td><td>
 Basic C++ types. </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a40a26" doxytag="wxSTG_LONG"></a>wxSTG_LONG</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="a41a26" doxytag="wxSTG_LONG"></a>wxSTG_LONG</em>&nbsp;</td><td>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a40a27" doxytag="wxSTG_CHAR"></a>wxSTG_CHAR</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="a41a27" doxytag="wxSTG_CHAR"></a>wxSTG_CHAR</em>&nbsp;</td><td>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a40a28" doxytag="wxSTG_FLOAT"></a>wxSTG_FLOAT</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="a41a28" doxytag="wxSTG_FLOAT"></a>wxSTG_FLOAT</em>&nbsp;</td><td>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a40a29" doxytag="wxSTG_DOUBLE"></a>wxSTG_DOUBLE</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="a41a29" doxytag="wxSTG_DOUBLE"></a>wxSTG_DOUBLE</em>&nbsp;</td><td>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a40a30" doxytag="wxSTG_BOOL"></a>wxSTG_BOOL</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="a41a30" doxytag="wxSTG_BOOL"></a>wxSTG_BOOL</em>&nbsp;</td><td>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a40a31" doxytag="wxSTG_USERDEFINED"></a>wxSTG_USERDEFINED</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="a41a31" doxytag="wxSTG_USERDEFINED"></a>wxSTG_USERDEFINED</em>&nbsp;</td><td>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a40a32" doxytag="wxSTG_POINTER"></a>wxSTG_POINTER</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="a41a32" doxytag="wxSTG_POINTER"></a>wxSTG_POINTER</em>&nbsp;</td><td>
 A C++ user-defined type (a class, structure, union or enum). </td></tr>
-<tr><td valign="top"><em><a class="anchor" name="a40a33" doxytag="wxSTG_REFERENCE"></a>wxSTG_REFERENCE</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" name="a41a33" doxytag="wxSTG_REFERENCE"></a>wxSTG_REFERENCE</em>&nbsp;</td><td>
 A reference to something. </td></tr>
 </table>
 </dl>
@@ -738,7 +741,7 @@ A reference to something. </td></tr>
     </td>
   </tr>
 </table>
-<hr size="1"><address style="align: right;"><small>Generated on Sat Jan 15 11:57:22 2005 for wxScript by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Sat Feb 5 14:05:52 2005 for wxScript by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.1 </small></address>
 </body>
