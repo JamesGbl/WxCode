@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<!-- $Id: Bakefiles.bkgen,v 1.1 2005-04-02 11:43:14 chiclero Exp $ -->
+
+<bakefile-gen>
+
+    <!-- Formats currently disabled: -->
+    <disable-formats>dmars,dmars_smake,cbx_unix,cbuilderx,msevc4prj</disable-formats>
+
+    <!-- The bakefiles: -->
+    <input>
+        samples/arc.bkl
+        tests/test.bkl
+    </input>
+
+    <!-- List of output formats to generate: -->
+    <add-formats>
+        autoconf,borland,dmars_smake,dmars,mingw,msvc,msvc6prj,msevc4prj,watcom,cbuilderx,cbx_unix
+    </add-formats>
+    
+    <!-- Common settings -->
+    <add-flags>
+        -I$WXWIN/build/bakefiles/wxpresets
+    </add-flags>
+    
+    <!-- Format specific settings: -->
+    <add-flags formats="autoconf">
+        -DAUTOCONF_MACROS_FILE=autoconf_inc.m4
+    </add-flags>
+
+    <!-- Personal customizations (not in CVS): -->
+    <include file="Bakefiles.local.bkgen" ignore_missing="1"/>
+
+</bakefile-gen>
