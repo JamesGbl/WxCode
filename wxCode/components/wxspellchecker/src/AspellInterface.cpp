@@ -50,8 +50,9 @@ AspellInterface::~AspellInterface()
   {
     if (m_bPersonalDictionaryModified)
     {
-      if (wxYES == ::wxMessageBox("Would you like to save any of your changes to your personal dictionary?", "Save Changes", wxYES_NO | wxICON_QUESTION))
-        m_AspellWrapper.AspellSpellerSaveAllWordLists(m_AspellSpeller);
+      //if (wxYES == ::wxMessageBox("Would you like to save any of your changes to your personal dictionary?", "Save Changes", wxYES_NO | wxICON_QUESTION))
+        //m_AspellWrapper.AspellSpellerSaveAllWordLists(m_AspellSpeller);
+      m_PersonalDictionary.SavePersonalDictionary();
     }
   
     if (m_AspellChecker != NULL)
@@ -170,7 +171,7 @@ bool AspellInterface::IsWordInDictionary(const wxString& strWord)
   if (m_AspellSpeller == NULL)
     return false;
 
-  return (m_AspellWrapper.AspellSpellerCheck(m_AspellSpeller, strWord, strWord.Length()) == 1);
+  return ((m_AspellWrapper.AspellSpellerCheck(m_AspellSpeller, strWord, strWord.Length()) == 1) || (m_PersonalDictionary.IsWordInDictionary(strWord)));
 }
 
 // This function loops through the document and check each word.
@@ -203,6 +204,10 @@ wxString AspellInterface::CheckSpelling(wxString strText)
 		if (m_AlwaysIgnoreList.Index(strBadWord) != wxNOT_FOUND)
 			continue;
 
+    // Use the generic PersonalDictionary until Aspell adds API to remove words from the personal dictionary
+    if (m_PersonalDictionary.IsWordInDictionary(strBadWord))
+      continue;
+    
 		bool bReplaceFromMap = FALSE;
 		StringToStringMap::iterator WordFinder = m_AlwaysReplaceMap.find(strBadWord);
 		if (WordFinder != m_AlwaysReplaceMap.end())
@@ -272,19 +277,30 @@ int AspellInterface::AddWordToDictionary(const wxString& strWord)
   *  1 if the word was already in the dictionary
   *  -1 if there was an error adding the word to the dictionary
   */
+/*
 	int nReturn = m_AspellWrapper.AspellSpellerAddToPersonal(m_AspellSpeller, strWord, strWord.Length());
+
 	m_bPersonalDictionaryModified = true;
   return (nReturn != -1);
+*/
+  
+  // Use the generic PersonalDictionary until Aspell adds API to remove words from the personal dictionary
+  m_PersonalDictionary.AddWord(strWord);
+  m_bPersonalDictionaryModified = true;
+  return true;
 }
 
 int AspellInterface::RemoveWordFromDictionary(const wxString& strWord)
 {
-  ::wxMessageBox(_T("Sorry, removing words from the personal dictionary is not available with this spell checker."));
+  // Use the generic PersonalDictionary until Aspell adds API to remove words from the personal dictionary
+  m_PersonalDictionary.RemoveWord(strWord);
+  m_bPersonalDictionaryModified = true;
   return true;
 }
 
 wxArrayString AspellInterface::GetWordListAsArray()
 {
+/*  
   wxArrayString wxReturnArray;
   const AspellWordList* PersonalWordList = m_AspellWrapper.AspellSpellerPersonalWordList(m_AspellSpeller);
 
@@ -300,6 +316,10 @@ wxArrayString AspellInterface::GetWordListAsArray()
   m_AspellWrapper.DeleteAspellStringEnumeration(elements); 
 
   return wxReturnArray;
+*/  
+  
+  // Use the generic PersonalDictionary until Aspell adds API to remove words from the personal dictionary
+  return m_PersonalDictionary.GetWordListAsArray();
 }
 
 void AspellInterface::PresentOptions()
