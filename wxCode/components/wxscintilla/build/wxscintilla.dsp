@@ -21,6 +21,8 @@ CFG=wxscintilla - Win32 Debug
 !MESSAGE "wxscintilla - Win32 ReleaseUniv" (based on "Win32 (x86) Static Library")
 !MESSAGE "wxscintilla - Win32 DebugDev" (based on "Win32 (x86) Static Library")
 !MESSAGE "wxscintilla - Win32 ReleaseDev" (based on "Win32 (x86) Static Library")
+!MESSAGE "wxscintilla - Win32 DebugUnicode" (based on "Win32 (x86) Static Library")
+!MESSAGE "wxscintilla - Win32 ReleaseUnicode" (based on "Win32 (x86) Static Library")
 !MESSAGE "wxscintilla - Win32 Debug" (based on "Win32 (x86) Static Library")
 !MESSAGE "wxscintilla - Win32 Release" (based on "Win32 (x86) Static Library")
 !MESSAGE
@@ -53,8 +55,8 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
-# ADD BASE LIB32 /nologo /out:"..\lib\wxscintillaunivd.lib"
-# ADD LIB32 /nologo /out:"..\lib\wxscintillaunivd.lib"
+# ADD BASE LIB32 /nologo /out:"..\lib\wxscintillad_univ.lib"
+# ADD LIB32 /nologo /out:"..\lib\wxscintillad_univ.lib"
 
 !ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
 
@@ -76,8 +78,8 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
-# ADD BASE LIB32 /nologo /out:"..\lib\wxscintillauniv.lib"
-# ADD LIB32 /nologo /out:"..\lib\wxscintillauniv.lib"
+# ADD BASE LIB32 /nologo /out:"..\lib\wxscintilla_univ.lib"
+# ADD LIB32 /nologo /out:"..\lib\wxscintilla_univ.lib"
 
 !ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
 
@@ -99,8 +101,8 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
-# ADD BASE LIB32 /nologo /out:"..\lib\wxscintilladevd.lib"
-# ADD LIB32 /nologo /out:"..\lib\wxscintilladevd.lib"
+# ADD BASE LIB32 /nologo /out:"..\lib\wxscintillad_dev.lib"
+# ADD LIB32 /nologo /out:"..\lib\wxscintillad_dev.lib"
 
 !ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
 
@@ -122,8 +124,56 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
-# ADD BASE LIB32 /nologo /out:"..\lib\wxscintilladev.lib"
-# ADD LIB32 /nologo /out:"..\lib\wxscintilladev.lib"
+# ADD BASE LIB32 /nologo /out:"..\lib\wxscintilla_dev.lib"
+# ADD LIB32 /nologo /out:"..\lib\wxscintilla_dev.lib"
+
+!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugUnicode"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 1
+# PROP BASE Output_Dir "DebugUnicode"
+# PROP BASE Intermediate_Dir "DebugUnicode"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 1
+# PROP Output_Dir "DebugUnicode"
+# PROP Intermediate_Dir "DebugUnicode"
+# PROP Target_Dir ""
+LINK32=link.exe
+# ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
+# ADD CPP /nologo /MDd /W3 /GX /Zi /Od /I "$(WXSTABLE)\include" /I "..\include" /I "$(WXSTABLE)\lib\mswd" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "__WINDOWS__" /D "__WXMSW__" /D DEBUG=1 /D "__WXDEBUG__" /D "__WIN95__" /D "__WIN32__" /D WINVER=0x0400 /D "STRICT" /D "_UNICODE" /D "UNICODE" /D "SCI_LEXER" /D "LINK_LEXERS" /D "__WX__" /YX /FD /c
+# ADD BASE RSC /l 0x809
+# ADD RSC /l 0x809
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LIB32=link.exe -lib
+# ADD BASE LIB32 /nologo /out:"..\lib\wxscintillad_unicode.lib"
+# ADD LIB32 /nologo /out:"..\lib\wxscintillad_unicode.lib"
+
+!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUnicode"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "ReleaseUnicode"
+# PROP BASE Intermediate_Dir "ReleaseUnicode"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "ReleaseUnicode"
+# PROP Intermediate_Dir "ReleaseUnicode"
+# PROP Target_Dir ""
+LINK32=link.exe
+# ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GX /O1 /Ob2 /I "$(WXSTABLE)\include" /I "..\include" /I "$(WXSTABLE)\lib\msw" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_WINDOWS" /D "__WINDOWS__" /D "__WXMSW__" /D "__HACK_MY_MSDEV40__" /D "__WIN95__" /D "__WIN32__" /D WINVER=0x0400 /D "STRICT" /D "_UNICODE" /D "UNICODE" /D "SCI_LEXER" /D "LINK_LEXERS" /D "__WX__" /YX /FD /c
+# ADD BASE RSC /l 0x809
+# ADD RSC /l 0x809
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LIB32=link.exe -lib
+# ADD BASE LIB32 /nologo /out:"..\lib\wxscintilla_unicode.lib"
+# ADD LIB32 /nologo /out:"..\lib\wxscintilla_unicode.lib"
 
 !ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
 
@@ -181,6 +231,8 @@ LIB32=link.exe -lib
 # Name "wxscintilla - Win32 ReleaseUniv"
 # Name "wxscintilla - Win32 DebugDev"
 # Name "wxscintilla - Win32 ReleaseDev"
+# Name "wxscintilla - Win32 DebugUnicode"
+# Name "wxscintilla - Win32 ReleaseUnicode"
 # Name "wxscintilla - Win32 Debug"
 # Name "wxscintilla - Win32 Release"
 # Begin Group "wxScintilla Src"
@@ -189,59 +241,14 @@ LIB32=link.exe -lib
 # Begin Source File
 
 SOURCE=..\src\PlatWX.cpp
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\ScintillaWX.cpp
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\wxscintilla.cpp
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # End Group
 # Begin Group "wxScintilla Headers"
@@ -270,21 +277,6 @@ SOURCE=..\src\scintilla\include\Accessor.h
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\AutoComplete.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
@@ -293,21 +285,6 @@ SOURCE=..\src\scintilla\src\AutoComplete.h
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\CallTip.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
@@ -316,21 +293,6 @@ SOURCE=..\src\scintilla\src\CallTip.h
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\CellBuffer.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
@@ -339,21 +301,6 @@ SOURCE=..\src\scintilla\src\CellBuffer.h
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\ContractionState.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
@@ -362,21 +309,6 @@ SOURCE=..\src\scintilla\src\ContractionState.h
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\Document.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
@@ -385,21 +317,6 @@ SOURCE=..\src\scintilla\src\Document.h
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\DocumentAccessor.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
@@ -408,21 +325,6 @@ SOURCE=..\src\scintilla\src\DocumentAccessor.h
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\Editor.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
@@ -431,21 +333,6 @@ SOURCE=..\src\scintilla\src\Editor.h
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\Indicator.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
@@ -454,21 +341,6 @@ SOURCE=..\src\scintilla\src\Indicator.h
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\KeyMap.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
@@ -477,21 +349,6 @@ SOURCE=..\src\scintilla\src\KeyMap.h
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\KeyWords.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
@@ -500,914 +357,194 @@ SOURCE=..\src\scintilla\include\KeyWords.h
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexAda.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexAPDL.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexAsm.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexAsn1.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexAU3.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexAVE.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexBaan.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexBash.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexBullant.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexCLW.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexConf.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexCPP.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexCrontab.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexCSS.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexEiffel.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexErlang.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexEScript.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexForth.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexFortran.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexGui4Cli.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexHTML.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexKix.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexLisp.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexLout.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexLua.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexMatlab.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexMetapost.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexMMIXAL.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexMPT.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexMSSQL.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexNsis.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexOthers.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexPascal.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexPB.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexPerl.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexPOV.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexPS.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexPython.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexRuby.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexScriptol.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexSpecman.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexSQL.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexTex.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexVB.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexVerilog.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexVHDL.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexYAML.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LineMarker.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
@@ -1420,21 +557,6 @@ SOURCE=..\src\scintilla\include\Platform.h
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\PropSet.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
@@ -1443,21 +565,6 @@ SOURCE=..\src\scintilla\include\PropSet.h
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\RESearch.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
@@ -1474,21 +581,6 @@ SOURCE=..\src\scintilla\include\Scintilla.h
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\ScintillaBase.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
@@ -1505,21 +597,6 @@ SOURCE=..\src\scintilla\include\SString.h
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\Style.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
@@ -1528,21 +605,6 @@ SOURCE=..\src\scintilla\src\Style.h
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\StyleContext.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
@@ -1555,21 +617,6 @@ SOURCE=..\src\scintilla\src\SVector.h
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\UniConversion.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
@@ -1578,21 +625,6 @@ SOURCE=..\src\scintilla\src\UniConversion.h
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\ViewStyle.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
@@ -1601,21 +633,6 @@ SOURCE=..\src\scintilla\src\ViewStyle.h
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\WindowAccessor.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
@@ -1624,21 +641,6 @@ SOURCE=..\src\scintilla\include\WindowAccessor.h
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\XPM.cxx
-
-!IF  "$(CFG)" == "wxscintilla - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "wxscintilla - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
