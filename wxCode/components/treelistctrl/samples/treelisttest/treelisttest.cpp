@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by: Otto Wyss
 // Created:     04/01/98
-// RCS-ID:      $Id: treelisttest.cpp,v 1.9 2004-11-08 18:56:58 wyo Exp $
+// RCS-ID:      $Id: treelisttest.cpp,v 1.10 2004-11-09 22:29:02 wyo Exp $
 // Copyright:   (c) wxCode
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -823,7 +823,7 @@ void MyTreeListCtrl::GetItemsRecursively(const wxTreeItemId& idParent,
     wxString text = GetItemText(id);
     wxLogMessage(text);
 
-    if (ItemHasChildren(id))
+    if (HasChildren(id))
         GetItemsRecursively(id);
 
     GetItemsRecursively(idParent, cookie);
@@ -1021,7 +1021,7 @@ void MyTreeListCtrl::OnEndDrag(wxTreeEvent& event)
     m_draggedItem = (wxTreeItemId)0l;
 
     // where to copy the item?
-    if ( itemDst.IsOk() && !ItemHasChildren(itemDst) )
+    if ( itemDst.IsOk() && !HasChildren(itemDst) )
     {
         // copy to the parent then
         itemDst = GetItemParent(itemDst);
