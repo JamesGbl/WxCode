@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.3 2004-11-22 19:47:39 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.4 2004-11-25 18:04:24 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -195,6 +195,12 @@ long wxScintilla::SendMsg(int msg, long wp, long lp) {
 void wxScintilla::AddText(const wxString& text) {
                     wxWX2MBbuf buf = (wxWX2MBbuf)wx2stc(text);
                     SendMsg(2001, strlen(buf), (long)(const char*)buf);
+}
+
+// Add text to the document w/length parameter, this allows for binary data to be added.
+void wxScintilla::AddText(const int length, const wxString& text) {
+                    wxWX2MBbuf buf = (wxWX2MBbuf)wx2stc(text);
+                    SendMsg(2001, length, (long)(const char*)buf);
 }
 
 // Add array of cells to document.

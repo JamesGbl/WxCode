@@ -12,7 +12,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.h,v 1.3 2004-11-22 19:47:39 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.h,v 1.4 2004-11-25 18:03:28 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -1482,6 +1482,7 @@ public:
 
     // Add text to the document.
     void AddText(const wxString& text);
+    void AddText(const int length, const wxString& text);
 
     // Add array of cells to document.
     void AddStyledText(const wxMemoryBuffer& data);
