@@ -97,14 +97,6 @@ SOURCE=.\MySpellCheckDialog.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Outlook97LikeDialog.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\SentryLikeDialog.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\wxSpellCheckerDemo.cpp
 # End Source File
 # End Group
@@ -117,15 +109,7 @@ SOURCE=.\MySpellCheckDialog.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\Outlook97LikeDialog.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\resource.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\SentryLikeDialog.h
 # End Source File
 # Begin Source File
 
