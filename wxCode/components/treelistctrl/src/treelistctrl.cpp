@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.2 2004-03-21 08:28:27 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.3 2004-03-24 18:32:59 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -40,7 +40,7 @@
 #include <wx/dcscreen.h>
 #include <wx/scrolwin.h>
 
-#include "treelistctrl.h"
+#include "wx/treelistctrl.h"
 
 #ifdef __WXGTK__
     #include <gtk/gtk.h>
