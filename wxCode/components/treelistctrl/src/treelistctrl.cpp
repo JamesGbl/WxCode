@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.46 2004-11-05 19:43:23 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.47 2004-11-08 18:54:37 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -382,7 +382,7 @@ public:
     // get the root tree item
     wxTreeItemId GetRootItem() const { return m_rootItem; }
 
-    // get the item currently selected, only is a single one is selected
+    // get the item currently selected, only if a single item is selected
     wxTreeItemId GetSelection() const { return m_selectItem; }
 
     // get all the items currently selected, return count of items
@@ -403,12 +403,13 @@ public:
     wxTreeItemId GetFirstChild(const wxTreeItemId& item, long& cookie) const;
     wxTreeItemId GetNextChild(const wxTreeItemId& item, long& cookie) const;
     wxTreeItemId GetPrevChild(const wxTreeItemId& item, long& cookie) const;
+    wxTreeItemId GetLastChild(const wxTreeItemId& item, long& cookie) const;
 #else
     wxTreeItemId GetFirstChild(const wxTreeItemId& item, wxTreeItemIdValue& cookie) const;
     wxTreeItemId GetNextChild(const wxTreeItemId& item, wxTreeItemIdValue& cookie) const;
     wxTreeItemId GetPrevChild(const wxTreeItemId& item, wxTreeItemIdValue& cookie) const;
+    wxTreeItemId GetLastChild(const wxTreeItemId& item, wxTreeItemIdValue& cookie) const;
 #endif
-    wxTreeItemId GetLastChild(const wxTreeItemId& item) const;
 
     // get sibling of this item
     wxTreeItemId GetNextSibling(const wxTreeItemId& item) const;
@@ -672,11 +673,9 @@ protected:
     void OnRenameAccept();
 
     void FillArray(wxTreeListItem*, wxArrayTreeItemIds&) const;
-    bool TagAllChildrenUntilLast(wxTreeListItem *crt_item,
-                                 wxTreeListItem *last_item, bool select);
-    bool TagNextChildren(wxTreeListItem *crt_item, wxTreeListItem *last_item,
-                         bool select);
-    void UnselectAllChildren( wxTreeListItem *item );
+    bool TagAllChildrenUntilLast (wxTreeListItem *crt_item, wxTreeListItem *last_item);
+    bool TagNextChildren (wxTreeListItem *crt_item, wxTreeListItem *last_item);
+    void UnselectAllChildren (wxTreeListItem *item );
 
 private:
     DECLARE_EVENT_TABLE()
@@ -2165,11 +2164,11 @@ wxTreeItemId wxTreeListMainWindow::GetItemParent (const wxTreeItemId& item) cons
 }
 
 #if !wxCHECK_VERSION(2, 5, 0)
-wxTreeItemId wxTreeListMainWindow::GetFirstChild(const wxTreeItemId& item,
-                                                 long& cookie) const {
+wxTreeItemId wxTreeListMainWindow::GetFirstChild (const wxTreeItemId& item,
+                                                  long& cookie) const {
 #else
-wxTreeItemId wxTreeListMainWindow::GetFirstChild(const wxTreeItemId& item,
-                                                 wxTreeItemIdValue& cookie) const {
+wxTreeItemId wxTreeListMainWindow::GetFirstChild (const wxTreeItemId& item,
+                                                  wxTreeItemIdValue& cookie) const {
 #endif
     wxCHECK_MSG (item.IsOk(), wxTreeItemId(), wxT("invalid tree item"));
 
@@ -2179,40 +2178,48 @@ wxTreeItemId wxTreeListMainWindow::GetFirstChild(const wxTreeItemId& item,
 }
 
 #if !wxCHECK_VERSION(2, 5, 0)
-wxTreeItemId wxTreeListMainWindow::GetNextChild(const wxTreeItemId& item,
-                                                long& cookie) const {
+wxTreeItemId wxTreeListMainWindow::GetNextChild (const wxTreeItemId& item,
+                                                 long& cookie) const {
 #else
-wxTreeItemId wxTreeListMainWindow::GetNextChild(const wxTreeItemId& item,
-                                                wxTreeItemIdValue& cookie) const {
+wxTreeItemId wxTreeListMainWindow::GetNextChild (const wxTreeItemId& item,
+                                                 wxTreeItemIdValue& cookie) const {
 #endif
     wxCHECK_MSG (item.IsOk(), wxTreeItemId(), wxT("invalid tree item"));
 
     wxArrayTreeListItems& children = ((wxTreeListItem*) item.m_pItem)->GetChildren();
-    // it's ok to cast cookie to size_t, we never have indices which overflow "void*"
+    // it's ok to cast cookie to long, we never have indices which overflow "void*"
     long *pIndex = ((long*)&cookie);
     return ((*pIndex)+1 < (long)children.Count())? children.Item(++(*pIndex)): wxTreeItemId();
 }
 
 #if !wxCHECK_VERSION(2, 5, 0)
-wxTreeItemId wxTreeListMainWindow::GetPrevChild(const wxTreeItemId& item,
-                                                long& cookie) const {
+wxTreeItemId wxTreeListMainWindow::GetPrevChild (const wxTreeItemId& item,
+                                                 long& cookie) const {
 #else
-wxTreeItemId wxTreeListMainWindow::GetPrevChild(const wxTreeItemId& item,
-                                                wxTreeItemIdValue& cookie) const {
+wxTreeItemId wxTreeListMainWindow::GetPrevChild (const wxTreeItemId& item,
+                                                 wxTreeItemIdValue& cookie) const {
 #endif
     wxCHECK_MSG (item.IsOk(), wxTreeItemId(), wxT("invalid tree item"));
 
     wxArrayTreeListItems& children = ((wxTreeListItem*) item.m_pItem)->GetChildren();
-    // it's ok to cast cookie to size_t, we never have indices which overflow "void*"
+    // it's ok to cast cookie to long, we never have indices which overflow "void*"
     long *pIndex = (long*)&cookie;
     return ((*pIndex)-1 >= 0)? children.Item(--(*pIndex)): wxTreeItemId();
 }
 
-wxTreeItemId wxTreeListMainWindow::GetLastChild(const wxTreeItemId& item) const {
+#if !wxCHECK_VERSION(2, 5, 0)
+wxTreeItemId wxTreeListMainWindow::GetLastChild (const wxTreeItemId& item,
+                                                 long& cookie) const {
+#else
+wxTreeItemId wxTreeListMainWindow::GetLastChild (const wxTreeItemId& item,
+                                                 wxTreeItemIdValue& cookie) const {
+#endif
     wxCHECK_MSG (item.IsOk(), wxTreeItemId(), wxT("invalid tree item"));
 
     wxArrayTreeListItems& children = ((wxTreeListItem*) item.m_pItem)->GetChildren();
-
+    // it's ok to cast cookie to long, we never have indices which overflow "void*"
+    long *pIndex = ((long*)&cookie);
+    (*pIndex) = children.Count();
     return (!children.IsEmpty())? wxTreeItemId(children.Last()): wxTreeItemId();
 }
 
@@ -2609,38 +2616,40 @@ void wxTreeListMainWindow::UnselectAll() {
 // Tag all next children, when no more children,
 // Move to parent (not to tag)
 // Keep going... if we found last_item, we stop.
-bool wxTreeListMainWindow::TagNextChildren(wxTreeListItem *crt_item, 
-                                           wxTreeListItem *last_item, bool select) {
+bool wxTreeListMainWindow::TagNextChildren (wxTreeListItem *crt_item, 
+                                            wxTreeListItem *last_item) {
     wxTreeListItem *parent = crt_item->GetItemParent();
 
     if (!parent) {// This is root item
-        return TagAllChildrenUntilLast(crt_item, last_item, select);
+        return TagAllChildrenUntilLast (crt_item, last_item);
     }
 
     wxArrayTreeListItems& children = parent->GetChildren();
     int index = children.Index(crt_item);
-    wxASSERT( index != wxNOT_FOUND ); // I'm not a child of my parent?
+    wxASSERT (index != wxNOT_FOUND); // I'm not a child of my parent?
 
-    long count = children.Count();
-    for (long n = (long)(index+1); n < count; ++n) {
-        if (TagAllChildrenUntilLast (children[n], last_item, select)) return true;
+    if (parent->HasChildren() && parent->IsExpanded()) {
+        long count = children.Count();
+        for (long n = (long)(index+1); n < count; ++n) {
+            if (TagAllChildrenUntilLast (children[n], last_item)) return true;
+        }
     }
 
-    return TagNextChildren(parent, last_item, select);
+    return TagNextChildren (parent, last_item);
 }
 
-bool wxTreeListMainWindow::TagAllChildrenUntilLast(wxTreeListItem *crt_item, 
-                                                   wxTreeListItem *last_item, bool select) {
-    crt_item->SetHilight(select);
+bool wxTreeListMainWindow::TagAllChildrenUntilLast (wxTreeListItem *crt_item, 
+                                                    wxTreeListItem *last_item) {
+    crt_item->SetHilight (true);
     RefreshLine(crt_item);
 
     if (crt_item==last_item) return true;
 
-    if (crt_item->HasChildren()) {
+    if (crt_item->HasChildren() && crt_item->IsExpanded()) {
         wxArrayTreeListItems& children = crt_item->GetChildren();
         long count = children.Count();
         for (long n = 0; n < count; ++n) {
-            if (TagAllChildrenUntilLast (children[n], last_item, select)) return true;
+            if (TagAllChildrenUntilLast (children[n], last_item)) return true;
         }
     }
 
@@ -2689,12 +2698,12 @@ void wxTreeListMainWindow::SelectItem(const wxTreeItemId& itemId,
 
         // select item range according Y-position
         if (last->GetY() < item->GetY()) {
-            if (!TagAllChildrenUntilLast (last, item, true)) {
-                TagNextChildren (last, item, true);
+            if (!TagAllChildrenUntilLast (last, item)) {
+                TagNextChildren (last, item);
             }
         }else{
-            if (!TagAllChildrenUntilLast (item, last, true)) {
-                TagNextChildren (item, last, true);
+            if (!TagAllChildrenUntilLast (item, last)) {
+                TagNextChildren (item, last);
             }
         }
     
@@ -2735,9 +2744,9 @@ void wxTreeListMainWindow::SelectAll() {
 #endif
     wxTreeItemId root = GetRootItem();
     wxTreeListItem *first = (wxTreeListItem *)GetFirstChild (root, cookie).m_pItem;
-    wxTreeListItem *last = (wxTreeListItem *)GetLastChild (GetRootItem()).m_pItem;
-    if (!TagAllChildrenUntilLast (first, last, true)) {
-        TagNextChildren (first, last, true);
+    wxTreeListItem *last = (wxTreeListItem *)GetLastChild (root, cookie).m_pItem;
+    if (!TagAllChildrenUntilLast (first, last)) {
+        TagNextChildren (first, last);
     }
 
     // send event to user code
@@ -3542,8 +3551,13 @@ void wxTreeListMainWindow::OnChar (wxKeyEvent &event) {
 //?  TODO          if (!event.ControlDown() && !IsSelected (m_curItem)) newItem = m_curItem;
             newItem = GetPrevSibling (m_curItem);
             if (newItem) {
+#if !wxCHECK_VERSION(2, 5, 0)
+                long cookie = 0;
+#else
+                wxTreeItemIdValue cookie = 0;
+#endif
                 while (IsExpanded (newItem) && HasChildren (newItem)) {
-                    newItem = GetLastChild (newItem);
+                    newItem = GetLastChild (newItem, cookie);
                 }
             }else {
                 newItem = GetItemParent (m_curItem);
@@ -3602,7 +3616,12 @@ void wxTreeListMainWindow::OnChar (wxKeyEvent &event) {
 
         // <END>: go to last item of the root
         case WXK_END: {
-            newItem = GetLastChild (GetRootItem());
+#if !wxCHECK_VERSION(2, 5, 0)
+            long cookie = 0;
+#else
+            wxTreeItemIdValue cookie = 0;
+#endif
+            newItem = GetLastChild (GetRootItem(), cookie);
         }break;
 
         // <HOME>: go to root
@@ -4431,34 +4450,41 @@ wxTreeItemId wxTreeListCtrl::GetItemParent(const wxTreeItemId& item) const
 { return m_main_win->GetItemParent(item); }
 
 #if !wxCHECK_VERSION(2, 5, 0)
-wxTreeItemId wxTreeListCtrl::GetFirstChild(const wxTreeItemId& item,
-                                           long& cookie) const
+wxTreeItemId wxTreeListCtrl::GetFirstChild (const wxTreeItemId& item,
+                                            long& cookie) const
 #else
-wxTreeItemId wxTreeListCtrl::GetFirstChild(const wxTreeItemId& item,
-                                           wxTreeItemIdValue& cookie) const
+wxTreeItemId wxTreeListCtrl::GetFirstChild (const wxTreeItemId& item,
+                                            wxTreeItemIdValue& cookie) const
 #endif
 { return m_main_win->GetFirstChild(item, cookie); }
 
 #if !wxCHECK_VERSION(2, 5, 0)
-wxTreeItemId wxTreeListCtrl::GetNextChild(const wxTreeItemId& item,
-                                          long& cookie) const
+wxTreeItemId wxTreeListCtrl::GetNextChild (const wxTreeItemId& item,
+                                           long& cookie) const
 #else
-wxTreeItemId wxTreeListCtrl::GetNextChild(const wxTreeItemId& item,
-                                          wxTreeItemIdValue& cookie) const
+wxTreeItemId wxTreeListCtrl::GetNextChild (const wxTreeItemId& item,
+                                           wxTreeItemIdValue& cookie) const
 #endif
 { return m_main_win->GetNextChild(item, cookie); }
 
 #if !wxCHECK_VERSION(2, 5, 0)
-wxTreeItemId wxTreeListCtrl::GetPrevChild(const wxTreeItemId& item,
-                                          long& cookie) const
+wxTreeItemId wxTreeListCtrl::GetPrevChild (const wxTreeItemId& item,
+                                           long& cookie) const
 #else
-wxTreeItemId wxTreeListCtrl::GetPrevChild(const wxTreeItemId& item,
-                                          wxTreeItemIdValue& cookie) const
+wxTreeItemId wxTreeListCtrl::GetPrevChild (const wxTreeItemId& item,
+                                           wxTreeItemIdValue& cookie) const
 #endif
 { return m_main_win->GetPrevChild(item, cookie); }
 
-wxTreeItemId wxTreeListCtrl::GetLastChild(const wxTreeItemId& item) const
-{ return m_main_win->GetLastChild(item); }
+#if !wxCHECK_VERSION(2, 5, 0)
+wxTreeItemId wxTreeListCtrl::GetLastChild (const wxTreeItemId& item,
+                                           long& cookie) const
+#else
+wxTreeItemId wxTreeListCtrl::GetLastChild (const wxTreeItemId& item,
+                                           wxTreeItemIdValue& cookie) const
+#endif
+{ return m_main_win->GetLastChild(item, cookie); }
+
 
 wxTreeItemId wxTreeListCtrl::GetNextSibling(const wxTreeItemId& item) const
 { return m_main_win->GetNextSibling(item); }
