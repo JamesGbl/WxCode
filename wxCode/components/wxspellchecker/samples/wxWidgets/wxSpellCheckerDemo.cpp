@@ -34,6 +34,7 @@
 #include "SentryLikeDialog.h"
 #include "Outlook97LikeDialog.h"
 #include "XmlSpellCheckDialog.h"
+#include "XmlPersonalDictionaryDialog.h"
 #include "AspellInterface.h"
 #include "MySpellInterface.h"
 #include "SpellCheckerOptionsDialog.h"
@@ -48,15 +49,16 @@ enum
     // menu items
     FileNew = wxID_NEW,
     FileOpen = wxID_OPEN,
+    FileSave = wxID_SAVE,
     FileQuit = wxID_EXIT,
     FileSpellCheckMozillaUI = 10000,
     FileSpellCheckOutlookUI = 10001,
     FileSpellCheckSentryUI = 10002,
-    FileSpellCheckXmlUI = 10003,
-    FileSpellCheckRightClick = 10004,
-    FileUseAspell = 10005,
-    FileUseMySpell = 10006,
-    EditOptions = 10007
+    FileSpellCheckAbiwordUI = 10003,
+    FileUseAspell = 10004,
+    FileUseMySpell = 10005,
+    EditOptions = 10006,
+    EditPersonalDictionary = 10007,
 };
 
 // ----------------------------------------------------------------------------
@@ -69,6 +71,7 @@ enum
 BEGIN_EVENT_TABLE(MyFrame, wxFrame)
     EVT_MENU(FileNew, MyFrame::OnNew)
     EVT_MENU(FileOpen, MyFrame::OnOpen)
+    EVT_MENU(FileSave, MyFrame::OnSave)
     EVT_MENU(FileQuit,  MyFrame::OnQuit)
     EVT_MENU(FileUseAspell, MyFrame::OnUseAspell)
     EVT_UPDATE_UI(FileUseAspell, MyFrame::OnUpdateUseAspell)
@@ -77,8 +80,9 @@ BEGIN_EVENT_TABLE(MyFrame, wxFrame)
     EVT_MENU(FileSpellCheckMozillaUI, MyFrame::OnSpellCheckMozillaUI)
     EVT_MENU(FileSpellCheckOutlookUI, MyFrame::OnSpellCheckOutlookUI)
     EVT_MENU(FileSpellCheckSentryUI, MyFrame::OnSpellCheckSentryUI)
-    EVT_MENU(FileSpellCheckXmlUI, MyFrame::OnSpellCheckXmlUI)
+    EVT_MENU(FileSpellCheckAbiwordUI, MyFrame::OnSpellCheckAbiwordUI)
     EVT_MENU(EditOptions, MyFrame::OnEditOptions)
+    EVT_MENU(EditPersonalDictionary, MyFrame::OnEditPersonalDictionary)
 END_EVENT_TABLE()
 
 // Create a new application object: this macro will allow wxWindows to create
@@ -133,6 +137,7 @@ MyFrame::MyFrame(const wxString& title)
 
     menuFile->Append(FileNew, _T("New\tCtrl+N"), _T("Clear out the existing text"));
     menuFile->Append(FileOpen, _T("Open\tCtrl+O"), _T("Open an existing document"));
+    menuFile->Append(FileSave, _T("Save\tCtrl+S"), _T("Save the cuurent document"));
     menuFile->AppendSeparator();
     menuFile->AppendCheckItem(FileUseAspell, _T("Use Aspell"), _T("Spell check using the Aspell engine"));
     menuFile->AppendCheckItem(FileUseMySpell, _T("Use MySpell"), _T("Spell check using the MySpell engine"));
@@ -140,12 +145,13 @@ MyFrame::MyFrame(const wxString& title)
     menuFile->Append(FileSpellCheckMozillaUI, _T("SpellCheck Mozilla-style\tF5"), _T("SpellCheck the current document using the Mozilla spellchecker look-and-feel"));
     menuFile->Append(FileSpellCheckOutlookUI, _T("SpellCheck Outlook-style\tF6"), _T("SpellCheck the current document using the Outlook 97 spellchecker look-and-feel"));
     menuFile->Append(FileSpellCheckSentryUI, _T("SpellCheck Sentry-style\tF7"), _T("SpellCheck the current document using the Wintertree Sentry spellchecker look-and-feel"));
-    menuFile->Append(FileSpellCheckXmlUI, _T("SpellCheck XML-style\tF8"), _T("SpellCheck the current document using the XML dialog interface"));
+    menuFile->Append(FileSpellCheckAbiwordUI, _T("SpellCheck Abiword-style\tF8"), _T("SpellCheck the current document using the Abiword dialog interface"));
     menuFile->AppendSeparator();
     menuFile->Append(FileQuit, _T("E&xit\tCtrl+Q"), _T("Quit this program"));
     
     wxMenu* menuEdit = new wxMenu;
     menuEdit->Append(EditOptions, _T("&Options"), _T("Edit the options for the currently selected spell checking engine"));
+    menuEdit->Append(EditPersonalDictionary, _T("Personal Dictionary\tCtrl+P"), _T("Edit the personal dictionary for the selected spell check engine"));
 
     // now append the freshly created menu to the menu bar...
     wxMenuBar *menuBar = new wxMenuBar();
@@ -222,6 +228,16 @@ void MyFrame::OnOpen(wxCommandEvent& WXUNUSED(event))
   }
 }
 
+void MyFrame::OnSave(wxCommandEvent& WXUNUSED(event))
+{
+  wxString filename = ::wxFileSelector(_T("Please select a filename to save as"), _T(""), _T(""), _T(""), _T("*.*"), wxSAVE|wxOVERWRITE_PROMPT);
+  if (!filename.empty())
+  {
+    if (textCtrl)
+      textCtrl->SaveFile(filename);
+  }
+}
+
 void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 {
     // true is to force the frame to close
@@ -240,34 +256,17 @@ void MyFrame::OnSpellCheckMozillaUI(wxCommandEvent& event)
 
 void MyFrame::OnSpellCheckOutlookUI(wxCommandEvent& event)
 {
-  wxSpellCheckEngineInterface* pSpellChecker = ReturnSelectedSpellCheckEngine();
-  if (pSpellChecker)
-  {
-    pSpellChecker->SetSpellCheckUserInterface(new Outlook97LikeDialog(NULL));
-    SpellCheck(pSpellChecker);
-  }
+  XmlSpellCheck(_T("OutlookLike"));
 }
 
 void MyFrame::OnSpellCheckSentryUI(wxCommandEvent& event)
 {
-  wxSpellCheckEngineInterface* pSpellChecker = ReturnSelectedSpellCheckEngine();
-  if (pSpellChecker)
-  {
-    pSpellChecker->SetSpellCheckUserInterface(new SentryLikeDialog(NULL));
-    SpellCheck(pSpellChecker);
-  }
+  XmlSpellCheck(_T("SentryLike"));
 }
 
-void MyFrame::OnSpellCheckXmlUI(wxCommandEvent& event)
+void MyFrame::OnSpellCheckAbiwordUI(wxCommandEvent& event)
 {
-  //::wxMessageBox(_T("XML Spell Checking interface not implemented yet"));
-
-  wxSpellCheckEngineInterface* pSpellChecker = ReturnSelectedSpellCheckEngine();
-  if (pSpellChecker)
-  {
-    pSpellChecker->SetSpellCheckUserInterface(new XmlSpellCheckDialog(NULL, _T("resource.xrc"), _T("SpellChecker"), _T("PersonalDictionary")));
-    SpellCheck(pSpellChecker);
-  }
+  XmlSpellCheck(_T("AbiwordLike"));
 }
 
 void MyFrame::OnEditOptions(wxCommandEvent& event)
@@ -285,6 +284,12 @@ void MyFrame::OnEditOptions(wxCommandEvent& event)
         ReturnSelectedSpellCheckEngine()->AddOptionToMap(it->second);
     }
   }
+}
+
+void MyFrame::OnEditPersonalDictionary(wxCommandEvent& event)
+{
+  XmlPersonalDictionaryDialog PersonalDictionaryDialog(NULL, _T("resource.xrc"), _T("PersonalDictionary"), ReturnSelectedSpellCheckEngine());
+  PersonalDictionaryDialog.ShowModal();
 }
 
 void MyFrame::SpellCheck(wxSpellCheckEngineInterface* pSpellChecker)
@@ -327,4 +332,14 @@ wxSpellCheckEngineInterface* MyFrame::ReturnSelectedSpellCheckEngine()
     pEngine = m_pMySpellInterface;
 
   return pEngine;
+}
+
+void MyFrame::XmlSpellCheck(wxString strDialogResource)
+{
+  wxSpellCheckEngineInterface* pSpellChecker = ReturnSelectedSpellCheckEngine();
+  if (pSpellChecker)
+  {
+    pSpellChecker->SetSpellCheckUserInterface(new XmlSpellCheckDialog(NULL, _T("resource.xrc"), strDialogResource, _T("PersonalDictionary")));
+    SpellCheck(pSpellChecker);
+  }
 }

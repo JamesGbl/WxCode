@@ -31,6 +31,7 @@ public:
     // event handlers (these functions should _not_ be virtual)
     void OnNew(wxCommandEvent& event);
     void OnOpen(wxCommandEvent& event);
+    void OnSave(wxCommandEvent& event);
     void OnQuit(wxCommandEvent& event);
     void OnUseAspell(wxCommandEvent& event);
     void OnUpdateUseAspell(wxUpdateUIEvent& event);
@@ -39,10 +40,12 @@ public:
     void OnSpellCheckMozillaUI(wxCommandEvent& event);
     void OnSpellCheckOutlookUI(wxCommandEvent& event);
     void OnSpellCheckSentryUI(wxCommandEvent& event);
-    void OnSpellCheckXmlUI(wxCommandEvent& event);
+    void OnSpellCheckAbiwordUI(wxCommandEvent& event);
     void OnEditOptions(wxCommandEvent& event);
+    void OnEditPersonalDictionary(wxCommandEvent& event);
     void SpellCheck(wxSpellCheckEngineInterface* pSpellChecker);
     wxSpellCheckEngineInterface* ReturnSelectedSpellCheckEngine();
+    void XmlSpellCheck(wxString strDialogResource);
     
 private:
     wxTextCtrl* textCtrl;
