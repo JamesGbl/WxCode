@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.58 2004-11-25 18:01:49 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.59 2004-11-27 18:47:30 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -3791,8 +3791,6 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
         return;
     }
 
-    if (event.LeftDown() || event.RightDown()) SetFocus();
-
     wxPoint p = CalcUnscrolledPosition (wxPoint (event.GetX(), event.GetY()));
 
     int flags = 0;
@@ -3832,7 +3830,6 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
 
     }else if (m_isDragging) { // any other event but not event.Dragging()
 
-
         // end dragging
         m_dragCount = 0;
         m_isDragging = false;
@@ -3857,6 +3854,10 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
 
     }
 
+    if (event.LeftDown() || event.RightDown()) {
+        SetFocus();
+    }
+
     // we process only the messages which happen on tree items
     if (item == NULL) {
         event.Skip();
@@ -3870,7 +3871,7 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
         m_shiftItem = (wxTreeListItem*)NULL;
     }
 
-    if (event.RightDown()) {
+    if (event.RightUp()) {
 
         SetFocus();
         wxTreeEvent nevent (wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, m_owner->GetId());
@@ -3918,9 +3919,9 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
             m_left_down_selection = false;
         }
 
-    }else if (event.LeftDown() || event.LeftDClick()) {
+    }else if (event.LeftDown() || event.RightDown() || event.LeftDClick()) {
 
-        if (event.LeftDown()) {
+        if (event.LeftDown() || event.RightDown()) {
             SetFocus();
             m_lastOnSame = item == m_curItem;
         }
