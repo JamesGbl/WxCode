@@ -55,14 +55,14 @@ int wxFindMenuItem(wxMenuBar *p, const wxString &str)
 	return id;
 }
 
-
+/*
 #ifdef __WXGTK__
 
 	#include "wx/gtk/private.h"
 	#include <gdk/gdkkeysyms.h>
 
 #endif
-
+*/
 
 
 // ----------------------------------------------------------------------------
@@ -109,7 +109,7 @@ void wxMenuCmd::Update()
 
 #ifdef __WXGTK20__
 
-	   gtk_menu_item_set_accel_path(GTK_MENU_ITEM(m_pItem), wxGTK_CONV(newtext));
+	//   gtk_menu_item_set_accel_path(GTK_MENU_ITEM(m_pItem), wxGTK_CONV(newtext));
 
 #endif
 #endif
