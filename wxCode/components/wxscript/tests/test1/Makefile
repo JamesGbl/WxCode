@@ -17,21 +17,22 @@
 
 CXX = $(shell wx-config --cxx)
 
-PROGRAM = minimal
+PROGRAM = test
+TOLUADIR = /home/fre/prog/tolua-5.0
 
-OBJECTS = src/xml2.o sample/$(PROGRAM).o
+OBJECTS = Test.o ../../src/sccint.o ../../src/scbasic.o ../../src/sclua.o ../../src/scunderc.o ../../src/script.o
 
 # implementation
 
 .SUFFIXES:	.o .cpp
 
 .cpp.o :
-	$(CXX) -c -g `wx-config --cxxflags` -I./include -I/usr/local/include/libxml2 -o $@ $<
+	$(CXX) -c -g `wx-config --cxxflags` -DwxSCRIPT_NO_CINT -DwxSCRIPT_NO_UNDERC -I../../include -I$(TOLUADIR)/include -I/usr/local/include -o $@ $<
 
 all:    $(PROGRAM)
 
 $(PROGRAM):	$(OBJECTS)
-	$(CXX) -o $(PROGRAM) $(OBJECTS) -L/usr/local/lib/ -lxml2 `wx-config --libs`
+	$(CXX) -o $(PROGRAM) $(OBJECTS) -L/usr/local/lib/ -L$(TOLUADIR)/lib -llua -llualib -ltolua `wx-config --libs`
 
 clean: 
 	rm -f sample/*.o

@@ -8,8 +8,9 @@
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 
+
 #ifdef __GNUG__
-#pragma implementation "xml2.cpp"
+#pragma implementation "xml2.h"
 #endif
 
 // For compilers that support precompilation, includes "wx.h".
@@ -19,15 +20,17 @@
 #pragma hdrstop
 #endif
 
-
 // includes
-#include "wx/wfstream.h"
-#include "wx/datstrm.h"
-#include "wx/zstream.h"
-#include "wx/log.h"
-#include "wx/intl.h"
-#include "wx/strconv.h"
+#ifndef WX_PRECOMP
+	#include "wx/datstrm.h"
+	#include "wx/zstream.h"
+	#include "wx/log.h"
+	#include "wx/intl.h"
+	#include "wx/strconv.h"
+#endif
 
+#include "wx/wfstream.h"		// not included by wxprec.h
+#include "wx/filename.h"
 #include "wx/xml2.h"
 
 
@@ -72,7 +75,7 @@ wxXml2Namespace wxXml2EmptyNamespace(NULL, wxXml2EmptyNode);
 //  wxXml2Property
 //-----------------------------------------------------------------------------
 
-bool wxXml2Property::operator==(const wxXml2Property &p)
+bool wxXml2Property::operator==(const wxXml2Property &p) const
 {
 	CHECK_NULL_POINTERS(p.GetObj(), GetObj());
 
@@ -169,7 +172,7 @@ wxXml2Namespace::~wxXml2Namespace()
 		Destroy();
 }*/
 
-bool wxXml2Namespace::operator==(const wxXml2Namespace &ns)
+bool wxXml2Namespace::operator==(const wxXml2Namespace &ns) const
 {
 	CHECK_NULL_POINTERS(ns.GetObj(), GetObj());
 
@@ -676,11 +679,12 @@ wxXml2Node &wxXml2Node::operator=(const wxXml2Node &n)
     return *this; 
 }
 
-bool wxXml2Node::operator==(const wxXml2Node &node)
+bool wxXml2Node::operator==(const wxXml2Node &node) const
 {
     // just use the case-sensitive comparison function
 	return Cmp(node);
 }
+
 
 
 
@@ -712,7 +716,7 @@ static int WriteXMLInStream(void *context, const char *buffer, int len)
 	return stream->LastWrite();
 }
 
-bool wxXml2Document::operator==(const wxXml2Document &doc)
+bool wxXml2Document::operator==(const wxXml2Document &doc) const
 {
 	// check for null pointers
 	if ((int)doc.GetObj() ^ (int)GetObj())
@@ -753,7 +757,8 @@ bool wxXml2Document::Load(wxInputStream &stream, wxString *pErr)
 	m_doc = xmlSAXParseMemoryWithData(&h, buf, l, 1, &error);
 
 	// copy error string
-	*pErr = error;
+	if (pErr) *pErr = error;
+
 	return IsOk();
 }
 
@@ -779,4 +784,25 @@ bool wxXml2Document::Save(wxOutputStream &stream,
 
 	return res;
 }
+
+void wxXml2Document::SetRoot(wxXml2Node &node)	// not const because its object is modified...
+{
+	// and the old root should be deleted or it is automatically
+	// deleted by libxml2 ?
+	xmlDocSetRootElement(m_doc, node.GetObj()); 
+}
+
+bool wxXml2Document::Load(const wxString &filename, wxString *pErr)
+{
+	wxFileInputStream stream(filename);	
+	if (!stream.IsOk() || !wxFileName::FileExists(filename)) return FALSE;		
+	return Load(stream, pErr);
+}
+	
+bool wxXml2Document::Save(const wxString &filename, const wxString &encoding, int indentstep) const
+{
+	wxFileOutputStream stream(filename);
+	if (!stream.IsOk()) return FALSE;
+	return Save(stream, encoding, indentstep);
+}	
 

@@ -312,7 +312,7 @@ void MyFrame::Load(const wxString &filename)
 
 	// parse the file
 	if (!doc.Load(filename, &err)) {
-		wxMessageBox(wxString::Format("Couldn't parse the file you chose:\n%s", err), "Error");
+		wxMessageBox(wxString::Format("Couldn't parse the file you chose:\n%s", err.c_str()), "Error");
 		return;
 	}
 

@@ -49,6 +49,7 @@
 #include <wx/app.h>
 #include <wx/log.h>
 #include <wx/cmdline.h>
+#include <wx/filename.h>
 
 #include <stdio.h>			// miscellaneous includes
 #include <tolua.h>
@@ -60,7 +61,7 @@
 #ifdef wxSCRIPT_USE_LUA
 
 	// for advanced testing
-	TOLUA_API int tolua_toexport_open(lua_State *);
+	//TOLUA_API int tolua_toexport_open(lua_State *);
 #endif
 
 
@@ -259,7 +260,16 @@ void CallAdvanced(const wxScriptFunctionArray &arr)
 
 void MainTestSet()
 {
-	wxString basepath = wxGetCwd() + "\\testscripts";
+	wxString basepath = wxGetCwd();
+	 
+	if (basepath.Right(5).IsSameAs("test1", FALSE))
+		basepath = basepath.Left(basepath.Len()-6);
+		
+	basepath +=	wxFileName::GetPathSeparator();
+	basepath += "testscripts";
+	basepath += wxFileName::GetPathSeparator();
+	
+	wxPrintf(">Base path is: '%s'\n", basepath.c_str());
 
 	// init
 	wxScriptInterpreter::Init(TRUE, FALSE, TRUE);
@@ -272,7 +282,7 @@ void MainTestSet()
 #ifdef wxSCRIPT_USE_CINT
 	// load a CINT script file
 	wxPrintf(">Loading the 'script1.cxx'...\n");
-	wxScriptFile *file1 = wxScriptInterpreter::Load(basepath + "\\script1.cxx");
+	wxScriptFile *file1 = wxScriptInterpreter::Load(basepath + "script1.cxx");
 	if (!file1) {
 		wxPrintf("Load failed.");
 		return;
@@ -282,7 +292,7 @@ void MainTestSet()
 #ifdef wxSCRIPT_USE_UNDERC
 	// load an UnderC script file
 	wxPrintf(">Loading the 'script2.uc'...\n");
-	wxScriptFile *file2 = wxScriptInterpreter::Load(basepath + "\\script2.uc");
+	wxScriptFile *file2 = wxScriptInterpreter::Load(basepath + "script2.uc");
 	if (!file2) {
 		wxPrintf("Load failed.");
 		return;
@@ -291,15 +301,16 @@ void MainTestSet()
 
 
 #ifdef wxSCRIPT_USE_LUA
+#if 0
 	// before loading a Lua script file, open the ToExport package
 	// created through the TOLUA program
 	tolua_toexport_open(wxLua::Get()->m_state);
-
+#endif
 	// load a Lua script file
 	wxPrintf(">Loading the 'script3.lua'...\n");
-	wxScriptFile *file3 = wxScriptInterpreter::Load(basepath + "\\script3.lua");
+	wxScriptFile *file3 = wxScriptInterpreter::Load(basepath + "script3.lua");
 	if (!file3) {
-		wxPrintf("Load failed: %s", wxScriptInterpreter::GetLastErr().c_str());
+		wxPrintf("\nLoad failed: %s", wxScriptInterpreter::GetLastErr().c_str());
 		return;
 	}
 #endif
@@ -314,11 +325,10 @@ void MainTestSet()
 	// do some function calls with a lot of tests to be sure everything is okay
 	CallFnc1(arr);
 	CallFnc2(arr);
-	CallAdvanced(arr);
+	//CallAdvanced(arr);
 
 	// leave some space
-	wxPrintf("\n\n");
-
+	wxPrintf(">Test completed.\n\n\n");
 
 	// do not leave memory leaks
 	wxScriptInterpreter::Cleanup();
@@ -326,6 +336,7 @@ void MainTestSet()
 
 int main(int argc, char **argv)
 {
+#ifdef __WXMSW__
 	// first of all, do some checks
     wxApp::CheckBuildOptions(WX_BUILD_OPTIONS_SIGNATURE, "Test");
     wxInitializer initializer;
@@ -333,7 +344,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "Failed to initialize the wxWindows library, aborting.");
         return -1;
     }
-
+#endif
 	// now, type some help info...
 	wxPrintf("\n\n");
 	wxPrintf(" wxScript test program\n");

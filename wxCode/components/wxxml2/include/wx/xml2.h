@@ -19,8 +19,10 @@
 
 // wxWidgets headers
 #include "wx/string.h"
-#include "wx/wfstream.h"
-#include "wx/filename.h"
+#include "wx/object.h"
+
+class wxInputStream;
+class wxOutputStream;
 
 
 // Libxml2 headers: these classes wraps only libxml2 elements. You cannot
@@ -162,10 +164,10 @@ public:
 
 	//! Returns TRUE if the two wxXml2Properties have the same name (case insensitive
 	//! comparison is performed) and same values (case sensitive comparison).
-	bool operator==(const wxXml2Property &p);
+	bool operator==(const wxXml2Property &p) const;
 	
 	//! Returns NOT operator==.
-	bool operator!=(const wxXml2Property &p) { return !(*this == p); }
+	bool operator!=(const wxXml2Property &p) const		{ return !(*this == p); }
 
 	//! builds this XML property
 	void Create(const wxString &name, 
@@ -272,8 +274,8 @@ public:
 	//! XML tree.
     virtual ~wxXml2Namespace() {}
 
-	bool operator==(const wxXml2Namespace &ns);
-	bool operator!=(const wxXml2Namespace &p) { return !(*this == p); }
+	bool operator==(const wxXml2Namespace &ns) const;
+	bool operator!=(const wxXml2Namespace &p) const		{ return !(*this == p); }
 
 	//! creates a new namespace and eventually attach it to the given node.
 	void Create(const wxString &prefix, const wxString &uri,
@@ -326,7 +328,7 @@ public:
 
 	//! loads the given filename and parse it
     wxXml2Document(const wxString &filename) {
-		m_doc = xmlParseFile(filename);		//! WX2XML is not needed
+		m_doc = xmlParseFile(filename);		// WX2XML is not needed
 	}
 
 	//! wraps the given libxml2 structure
@@ -348,35 +350,26 @@ public:
 	}
 
 	//! allows you to use == and != on this class.
-	bool operator==(const wxXml2Document &doc);
-	bool operator!=(const wxXml2Document &doc) {
-		return !(*this == doc);
-	}
+	bool operator==(const wxXml2Document &doc) const;
+	bool operator!=(const wxXml2Document &doc) const 	{ return !(*this == doc); }
 
-	//! Parses the data from the given wxInputStream. See #Load().
-	bool Load(wxInputStream& stream, wxString *pErr = NULL);
+
+    //! Parses the data from the given wxInputStream. See #Load().
+    bool Load(wxInputStream& stream, wxString *pErr = NULL);
 
     //! Parses XML & XHTML file and loads data. Returns TRUE on success. 
     //! Returns FALSE otherwise & provide an error description if the given  
 	//! pointer is not NULL.    
-    bool Load(const wxString &filename, wxString *pErr = NULL) {
-		wxFileInputStream stream(filename);	
-		if (!stream.IsOk() || !wxFileName::FileExists(filename)) return FALSE;		
-		return Load(stream, pErr);
-	}
+    bool Load(const wxString &filename, wxString *pErr = NULL);
     
     //! Saves the XML data in the given stream.
-    bool Save(wxOutputStream& stream, const wxString &encoding = wxT("UTF-8"), 
+    bool Save(wxOutputStream& stream, const wxString &encoding = "UTF-8", 
 		int indentstep = 1) const;
 
     //! Saves the document as XML or XHTML file in the given encoding format.
 	//! Returns TRUE on success.
-	bool Save(const wxString &filename, const wxString &encoding = wxT("UTF-8"), 
-	    		int indentstep = 1) const {
-		wxFileOutputStream stream(filename);
-		if (!stream.IsOk()) return FALSE;
-		return Save(stream, encoding, indentstep);
-	}
+    bool Save(const wxString &filename, const wxString &encoding = wxT("UTF-8"), 
+		int indentstep = 1) const;
 
 	//! Returns TRUE if everything is okay in the XML tree structure.
     bool IsOk() const { return xmlDocGetRootElement(m_doc) != NULL; }
@@ -393,7 +386,7 @@ public:
     wxString GetFileEncoding() const { return m_doc->encoding; }
 
     //! Changes the root of the document (deleting old one).
-    void SetRoot(wxXml2Node &node) { xmlDocSetRootElement(m_doc, node.GetObj()); }
+    void SetRoot(wxXml2Node &node);
 
 	//! Returns the libxml2 underlying object.
 	xmlDoc *GetObj() const { return m_doc; }
@@ -547,8 +540,8 @@ public:
 
 	// overloaded operators
 	wxXml2Node &operator=(const wxXml2Node &n);
-	bool operator==(const wxXml2Node &node);
-	bool operator!=(const wxXml2Node &p)					{ return !(*this == p); }
+	bool operator==(const wxXml2Node &node) const;
+	bool operator!=(const wxXml2Node &p) const				{ return !(*this == p); }
 	
 
 	///////////////////////////////////////////////////////////////////////////////////////////////
@@ -702,7 +695,7 @@ public:
 
 	//! Searches the occ-th occurence of a node with the given name & content, 
 	//! among the children of this node. If bNS == TRUE, this function also checks
-	//! the namespace, otherwise the namespace won't be irrelevant:
+	//! the namespace, otherwise the namespace will be irrelevant:
 	//!
 	//!      <myns:mynode>[...]</myns:mynode>      and    <mynode>[...]</mynode>
 	//!
@@ -711,13 +704,13 @@ public:
 	//!      Find("mynode", wxEmptyString, 0, FALSE);
 	//!
 	//! This function does not check neither properties, children (except for
-	//! the first text child which is tested if content != wxEmptyString),
-	//! siblings.
+	//! the first text child which is tested if content != wxEmptyString)
+	//! nor siblings.
 	wxXml2Node Find(const wxString &name, 
 					const wxString &content = wxEmptyString,
 					int occ = 0, bool bNS = TRUE) const;
 
-	//! searches the occ-th occurrence of a node like the given one among 
+	//! Searches the occ-th occurrence of a node like the given one among 
 	//! all the children of this object. Also checks namespace if bNS == TRUE.
 	wxXml2Node Find(const wxXml2Node &tofind, int occ = 0, bool bNS = TRUE) const;
 
