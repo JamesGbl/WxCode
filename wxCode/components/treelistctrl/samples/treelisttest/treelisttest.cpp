@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by: Otto Wyss
 // Created:     04/01/98
-// RCS-ID:      $Id: treelisttest.cpp,v 1.4 2004-09-27 17:45:21 wyo Exp $
+// RCS-ID:      $Id: treelisttest.cpp,v 1.5 2004-10-16 17:53:01 wyo Exp $
 // Copyright:   (c) wxCode
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -741,10 +741,10 @@ int MyTreeListCtrl::OnCompareItems(const wxTreeItemId& item1,
     }
 }
 
-void MyTreeListCtrl::AddItemsRecursively(const wxTreeItemId& idParent,
-                                     size_t numChildren,
-                                     size_t depth,
-                                     size_t folder)
+void MyTreeListCtrl::AddItemsRecursively (const wxTreeItemId& idParent,
+                                          size_t numChildren,
+                                          size_t depth,
+                                          size_t folder)
 {
     if ( depth > 0 )
     {
@@ -771,8 +771,11 @@ void MyTreeListCtrl::AddItemsRecursively(const wxTreeItemId& idParent,
             {
                 image = imageSel = -1;
             }
-            wxTreeItemId id = AppendItem(idParent, str, image, imageSel,
+            wxTreeItemId id = AppendItem (idParent, str, image, imageSel,
                                          new MyTreeItemData(str));
+            str.Printf (_("Item%d"), n + 1);
+            SetItemText (id, 1, _("Col1, ") + str);
+            SetItemText (id, 2, _("Col2, ") + str);
 
             // and now we also set the expanded one (only for the folders)
             if ( hasChildren && wxGetApp().ShowImages() )
@@ -797,7 +800,9 @@ void MyTreeListCtrl::AddTestItemsToTree(size_t numChildren,
                                     size_t depth)
 {
     int image = wxGetApp().ShowImages() ? MyTreeListCtrl::TreeListCtrlIcon_Folder : -1;
-    AddColumn (_T("Main"), 250);
+    AddColumn (_("Main"), 200);
+ 	AddColumn (_("Col1"), 80, wxTL_ALIGN_LEFT);
+ 	AddColumn (_("Col2"), 80, wxTL_ALIGN_RIGHT);
     wxTreeItemId rootId = AddRoot(wxT("Root"),
                                   image, image,
                                   new MyTreeItemData(wxT("Root item")));
