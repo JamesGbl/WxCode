@@ -94,61 +94,61 @@ void XmlSpellCheckDialog::CreateDialog(wxWindow* pParent)
   XRCID("TextContext")
 */
 		//EVT_BUTTON(XRCID("ButtonRecheckPage"), XmlSpellCheckDialog::OnRecheckPage)
-    if (XRCCTRL(*this,"ButtonRecheckPage",wxButton))
+    if (this->FindWindow(XRCID("ButtonRecheckPage")))
     {
       Connect(XRCID("ButtonRecheckPage"),  wxEVT_COMMAND_BUTTON_CLICKED,
           (wxObjectEventFunction) (wxEventFunction) (wxCommandEventFunction) &XmlSpellCheckDialog::OnRecheckPage);
     }
 		//EVT_BUTTON(XRCID("ButtonCheckWord"), XmlSpellCheckDialog::OnCheckWord)
-    if (XRCCTRL(*this,"ButtonCheckWord",wxButton))
+    if (this->FindWindow(XRCID("ButtonCheckWord")))
     {
       Connect(XRCID("ButtonCheckWord"),  wxEVT_COMMAND_BUTTON_CLICKED,
           (wxObjectEventFunction) (wxEventFunction) (wxCommandEventFunction) &XmlSpellCheckDialog::OnCheckWord);
     }
     
 		//EVT_BUTTON(XRCID("ButtonReplaceWord"), XmlSpellCheckDialog::OnReplaceWord)
-    if (XRCCTRL(*this,"ButtonReplaceWord",wxButton))
+    if (this->FindWindow(XRCID("ButtonReplaceWord")))
     {
       Connect(XRCID("ButtonReplaceWord"),  wxEVT_COMMAND_BUTTON_CLICKED,
           (wxObjectEventFunction) (wxEventFunction) (wxCommandEventFunction) &XmlSpellCheckDialog::OnReplaceWord);
     }
     
 		//EVT_BUTTON(XRCID("ButtonIgnoreWord"), XmlSpellCheckDialog::OnIgnoreWord)
-    if (XRCCTRL(*this,"ButtonIgnoreWord",wxButton))
+    if (this->FindWindow(XRCID("ButtonIgnoreWord")))
     {
       Connect(XRCID("ButtonIgnoreWord"),  wxEVT_COMMAND_BUTTON_CLICKED,
           (wxObjectEventFunction) (wxEventFunction) (wxCommandEventFunction) &XmlSpellCheckDialog::OnIgnoreWord);
     }
     
 		//EVT_BUTTON(XRCID("ButtonReplaceAll"), XmlSpellCheckDialog::OnReplaceAll)
-    if (XRCCTRL(*this,"ButtonReplaceAll",wxButton))
+    if (this->FindWindow(XRCID("ButtonReplaceAll")))
     {
       Connect(XRCID("ButtonReplaceAll"),  wxEVT_COMMAND_BUTTON_CLICKED,
           (wxObjectEventFunction) (wxEventFunction) (wxCommandEventFunction) &XmlSpellCheckDialog::OnReplaceAll);
     }
     
 		//EVT_BUTTON(XRCID("ButtonIgnoreAll"), XmlSpellCheckDialog::OnIgnoreAll)
-    if (XRCCTRL(*this,"ButtonIgnoreAll",wxButton))
+    if (this->FindWindow(XRCID("ButtonIgnoreAll")))
     {
       Connect(XRCID("ButtonIgnoreAll"),  wxEVT_COMMAND_BUTTON_CLICKED,
           (wxObjectEventFunction) (wxEventFunction) (wxCommandEventFunction) &XmlSpellCheckDialog::OnIgnoreAll);
     }
     
 		//EVT_BUTTON(XRCID("ButtonAddWord"), XmlSpellCheckDialog::OnAddWordToCustomDictionary)
-    if (XRCCTRL(*this,"ButtonAddWord",wxButton))
+    if (this->FindWindow(XRCID("ButtonAddWord")))
     {
       Connect(XRCID("ButtonAddWord"),  wxEVT_COMMAND_BUTTON_CLICKED,
           (wxObjectEventFunction) (wxEventFunction) (wxCommandEventFunction) &XmlSpellCheckDialog::OnAddWordToCustomDictionary);
     }
     
 		//EVT_BUTTON(XRCID("ButtonEditCustomDist"), XmlSpellCheckDialog::OnEditCustomDictionary)
-    if (XRCCTRL(*this,"ButtonEditCustomDist",wxButton))
+    if (this->FindWindow(XRCID("ButtonEditCustomDist")))
     {
       Connect(XRCID("ButtonEditCustomDist"),  wxEVT_COMMAND_BUTTON_CLICKED,
           (wxObjectEventFunction) (wxEventFunction) (wxCommandEventFunction) &XmlSpellCheckDialog::OnEditCustomDictionary);
     }
     
-    if (XRCCTRL(*this,"ButtonOptions",wxButton))
+    if (this->FindWindow(XRCID("ButtonOptions")))
     {
       Connect(XRCID("ButtonOptions"),  wxEVT_COMMAND_BUTTON_CLICKED,
           (wxObjectEventFunction) (wxEventFunction) (wxCommandEventFunction) &XmlSpellCheckDialog::OnOptions);
@@ -156,7 +156,7 @@ void XmlSpellCheckDialog::CreateDialog(wxWindow* pParent)
 
     //EVT_LISTBOX(XRCID("ListBoxSuggestions"), XmlSpellCheckDialog::OnChangeSuggestionSelection) 
     //EVT_LISTBOX_DCLICK(XRCID("ListBoxSuggestions"), XmlSpellCheckDialog::OnDblClkSuggestionSelection)
-    if (XRCCTRL(*this,"ListBoxSuggestions",wxListBox))
+    if (this->FindWindow(XRCID("ListBoxSuggestions")))
     {
       Connect(XRCID("ListBoxSuggestions"),  wxEVT_COMMAND_LISTBOX_SELECTED,
           (wxObjectEventFunction) (wxEventFunction) (wxCommandEventFunction) &XmlSpellCheckDialog::OnChangeSuggestionSelection);
@@ -165,25 +165,25 @@ void XmlSpellCheckDialog::CreateDialog(wxWindow* pParent)
     }
     
     //EVT_BUTTON(XRCID("ButtonClose"), XmlSpellCheckDialog::OnClose)
-    if (XRCCTRL(*this,"ButtonClose",wxButton))
+    if (this->FindWindow(XRCID("ButtonClose")))
     {
       Connect(XRCID("ButtonClose"),  wxEVT_COMMAND_BUTTON_CLICKED,
           (wxObjectEventFunction) (wxEventFunction) (wxCommandEventFunction) &XmlSpellCheckDialog::OnClose);
     }
 
     // Add data transfer validators
-    if (XRCCTRL(*this,"TextMisspelledWord",wxTextCtrl))
+    if (this->FindWindow(XRCID("TextMisspelledWord")))
     {
       wxGenericValidator MisspellingValidator(&m_strMisspelledWord);
       XRCCTRL(*this,"TextMisspelledWord",wxTextCtrl)->SetValidator(MisspellingValidator);
     }
-    else if (XRCCTRL(*this,"StaticMisspelledWord",wxStaticText))
+    else if (this->FindWindow(XRCID("StaticMisspelledWord")))
     {
       wxGenericValidator MisspellingValidator(&m_strMisspelledWord);
       XRCCTRL(*this,"StaticMisspelledWord",wxStaticText)->SetValidator(MisspellingValidator);
     }
 
-    if (XRCCTRL(*this,"TextReplaceWith",wxTextCtrl))
+    if (this->FindWindow(XRCID("TextReplaceWith")))
     {
       wxGenericValidator ReplaceWithValidator(&m_strReplaceWithText);
       XRCCTRL(*this,"TextReplaceWith",wxTextCtrl)->SetValidator(ReplaceWithValidator);
@@ -362,31 +362,34 @@ void XmlSpellCheckDialog::SetMisspelledWord(const wxString& strMisspelling)
       }
     }
 
-    wxTextCtrl* pContextText = XRCCTRL(*this, "TextContext", wxTextCtrl);
-
-    if (pContextText)
+    if (this->FindWindow(XRCID("TextContext")))
     {
-      wxSpellCheckEngineInterface::MisspellingContext Context = m_pSpellCheckEngine->GetCurrentMisspellingContext();
-
-      pContextText->SetEditable(FALSE);
-
-      pContextText->Clear();
-      
-      #if wxCHECK_VERSION(2, 5, 0)
-        // This code works in the 2.5.x branch
-        wxString strContext = Context.GetContext();
-        pContextText->SetValue(strContext.Left(Context.GetOffset()));
-        wxColour originalTextColour = pContextText->GetDefaultStyle().GetTextColour();
-        pContextText->SetDefaultStyle(wxTextAttr(*wxRED));
-        pContextText->AppendText(strContext.Mid(Context.GetOffset(), Context.GetLength()));
-        pContextText->SetDefaultStyle(wxTextAttr(originalTextColour));
-        pContextText->AppendText(strContext.Right(strContext.Length() - (Context.GetOffset() + Context.GetLength())));
-      #else  
-        // This code works in the 2.4.x branch
-        pContextText->SetValue(Context.GetContext());
-        pContextText->SetSelection(Context.GetOffset(), Context.GetOffset() + Context.GetLength());
-        pContextText->SetStyle(Context.GetOffset(), Context.GetOffset() + Context.GetLength(), wxTextAttr(*wxRED, *wxLIGHT_GREY));
-      #endif
+      wxTextCtrl* pContextText = XRCCTRL(*this, "TextContext", wxTextCtrl);
+  
+      if (pContextText)
+      {
+        wxSpellCheckEngineInterface::MisspellingContext Context = m_pSpellCheckEngine->GetCurrentMisspellingContext();
+  
+        pContextText->SetEditable(FALSE);
+  
+        pContextText->Clear();
+        
+        #if wxCHECK_VERSION(2, 5, 0)
+          // This code works in the 2.5.x branch
+          wxString strContext = Context.GetContext();
+          pContextText->SetValue(strContext.Left(Context.GetOffset()));
+          wxColour originalTextColour = pContextText->GetDefaultStyle().GetTextColour();
+          pContextText->SetDefaultStyle(wxTextAttr(*wxRED));
+          pContextText->AppendText(strContext.Mid(Context.GetOffset(), Context.GetLength()));
+          pContextText->SetDefaultStyle(wxTextAttr(originalTextColour));
+          pContextText->AppendText(strContext.Right(strContext.Length() - (Context.GetOffset() + Context.GetLength())));
+        #else  
+          // This code works in the 2.4.x branch
+          pContextText->SetValue(Context.GetContext());
+          pContextText->SetSelection(Context.GetOffset(), Context.GetOffset() + Context.GetLength());
+          pContextText->SetStyle(Context.GetOffset(), Context.GetOffset() + Context.GetLength(), wxTextAttr(*wxRED, *wxLIGHT_GREY));
+        #endif
+      }
     }
   }
 
