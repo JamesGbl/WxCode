@@ -10,6 +10,7 @@ SpellCheckEngineOption::SpellCheckEngineOption()
   m_PossibleValuesArray.Clear();
   m_nOptionType = SpellCheckEngineOption::UNDEFINED;
   m_bShowOption = true;
+  m_strDependency = _T("");
 }
 
 SpellCheckEngineOption::SpellCheckEngineOption(wxString strName)
@@ -19,6 +20,7 @@ SpellCheckEngineOption::SpellCheckEngineOption(wxString strName)
   m_PossibleValuesArray.Clear();
   m_nOptionType = SpellCheckEngineOption::UNDEFINED;
   m_bShowOption = true;
+  m_strDependency = _T("");
 }
 
 SpellCheckEngineOption::SpellCheckEngineOption(wxString strName, wxString strText)
@@ -28,6 +30,7 @@ SpellCheckEngineOption::SpellCheckEngineOption(wxString strName, wxString strTex
   m_PossibleValuesArray.Clear();
   m_nOptionType = SpellCheckEngineOption::UNDEFINED;
   m_bShowOption = true;
+  m_strDependency = _T("");
 }
 
 SpellCheckEngineOption::SpellCheckEngineOption(wxString strName, wxString strText, wxString strValue, int nType/* = SpellCheckEngineOption::STRING*/)
@@ -39,6 +42,7 @@ SpellCheckEngineOption::SpellCheckEngineOption(wxString strName, wxString strTex
   m_OptionValue = OptionValue;
   m_nOptionType = nType;
   m_bShowOption = true;
+  m_strDependency = _T("");
 }
 
 SpellCheckEngineOption::SpellCheckEngineOption(wxString strName, wxString strText, long nValue)
@@ -50,6 +54,7 @@ SpellCheckEngineOption::SpellCheckEngineOption(wxString strName, wxString strTex
   m_OptionValue = OptionValue;
   m_nOptionType = SpellCheckEngineOption::LONG;
   m_bShowOption = true;
+  m_strDependency = _T("");
 }
 
 SpellCheckEngineOption::SpellCheckEngineOption(wxString strName, wxString strText, double dblValue)
@@ -61,6 +66,7 @@ SpellCheckEngineOption::SpellCheckEngineOption(wxString strName, wxString strTex
   m_OptionValue = OptionValue;
   m_nOptionType = SpellCheckEngineOption::DOUBLE;
   m_bShowOption = true;
+  m_strDependency = _T("");
 }
 
 SpellCheckEngineOption::SpellCheckEngineOption(wxString strName, wxString strText, bool bValue)
@@ -72,6 +78,7 @@ SpellCheckEngineOption::SpellCheckEngineOption(wxString strName, wxString strTex
   m_OptionValue = OptionValue;
   m_nOptionType = SpellCheckEngineOption::BOOLEAN;
   m_bShowOption = true;
+  m_strDependency = _T("");
 }
 
 void SpellCheckEngineOption::AddPossibleValue(wxString strValue)
@@ -87,6 +94,7 @@ void SpellCheckEngineOption::AddPossibleValue(wxString strValue)
   else
   {
     // Do an assert or something?
+    wxASSERT_MSG(false, _T("An attempt was made to add a possible option value of type wxString but this option is not a wxString"));
   }
 }
 
@@ -103,6 +111,7 @@ void SpellCheckEngineOption::AddPossibleValue(long nValue)
   else
   {
     // Do an assert or something?
+    wxASSERT_MSG(false, _T("An attempt was made to add a possible option value of type long but this option is not a long"));
   }
 }
 
@@ -119,6 +128,7 @@ void SpellCheckEngineOption::AddPossibleValue(double dblValue)
   else
   {
     // Do an assert or something?
+    wxASSERT_MSG(false, _T("An attempt was made to add a possible option value of type double but this option is not a double"));
   }
 }
 
@@ -135,6 +145,7 @@ void SpellCheckEngineOption::AddPossibleValue(bool bValue)
   else
   {
     // Do an assert or something?
+    wxASSERT_MSG(false, _T("An attempt was made to add a possible option value of type boolean but this option is not a boolean"));
   }
 }
 
