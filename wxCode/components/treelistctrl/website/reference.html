@@ -1,0 +1,1771 @@
+<HTML>
+<head><title>wxTreeListCtrl</title></head>
+
+<BODY BGCOLOR=#FFFFFF>
+<FONT FACE="Arial, Lucida, Helvetica">
+<A NAME="wxtreelistctrl"></A>
+
+<H2>wxTreeListCtrl</H2>
+<P>
+A tree list control presents information as a hierarchy, with items that may be expanded
+to show further items. Items in a tree list control are referenced by wxTreeItemId handles,
+which may be tested for validity by calling wxTreeItemId::IsOk.<P>
+To intercept events from a tree list control, use the event table macros described in wxTreeEvent.<P>
+<B>Derived from</B><P>
+wxControl<BR>
+
+wxListCtrl<BR>
+
+wxTreeCtrl<BR>
+
+wxWindow<BR>
+
+wxEvtHandler<BR>
+
+wxObject<P>
+<B>Include files</B><P>
+&lt;wx/treelistctrl.h&gt;<P>
+<B>Window styles</B><P>
+
+
+<TABLE>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>wxTR_EDIT_LABELS</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Use this style
+if you wish the user to be able to edit labels in the tree list control.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>wxTR_NO_BUTTONS</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+For convenience
+to document that no buttons are to be drawn.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>wxTR_HAS_BUTTONS</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Use this style
+to show + and - buttons to the left of parent items.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>wxTR_TWIST_BUTTONS</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Use this style
+to show Mac-style twister buttons to the left of parent items.
+If both wxTR_HAS_BUTTONS and wxTR_TWIST_BUTTONS are given,
+twister buttons are generated.  Generic only.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>wxTR_NO_LINES</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Use this style
+to hide vertical level connectors.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>wxTR_FULL_ROW_HIGHLIGHT</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Use this style to have the background
+colour and the selection highlight extend over the entire horizontal
+row of the tree list control window. (This flag is ignored under Windows unless you
+specify wxTR_NO_LINES as well.) 
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>wxTR_LINES_AT_ROOT</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Use this style
+to show lines between root nodes.
+Only applicable if wxTR_HIDE_ROOT is set and wxTR_NO_LINES is not set.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>wxTR_HIDE_ROOT</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Use this style
+to suppress the display of the root node,
+effectively causing the first-level nodes
+to appear as a series of root nodes.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>wxTR_ROW_LINES</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Use this style
+to draw a contrasting border between displayed rows.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>wxTR_HAS_VARIABLE_ROW_HEIGHT</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Use this style
+to cause row heights to be just big enough to fit the content.
+If not set, all rows use the largest row height.
+The default is that this flag is unset.
+Generic only.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>wxTR_SINGLE</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+For convenience
+to document that only one item may be selected at a time.
+Selecting another item causes the current selection, if any,
+to be deselected.  This is the default.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>wxTR_MULTIPLE</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Use this style
+to allow a range of items to be selected.
+If a second range is selected, the current range, if any, is deselected.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>wxTR_EXTENDED</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Use this style
+to allow disjoint items to be selected.  (Only partially implemented; may not work in all cases.)
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>wxTR_DEFAULT_STYLE</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+The set of flags that are
+closest to the defaults for the native control for a particular toolkit.
+</FONT></TD></TR>
+
+
+</TABLE>
+<P>
+See also window styles overview.<P>
+<B>Event handling</B><P>
+To process input from a tree list control, use these event handler macros to direct input to member
+functions that take a wxTreeEvent argument.<P>
+
+
+<TABLE>
+
+
+<TR><TD VALIGN=TOP WIDTH=277>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>EVT_TREE_BEGIN_DRAG(id, func)</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Begin dragging with the left mouse button.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=277>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>EVT_TREE_BEGIN_RDRAG(id, func)</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Begin dragging with the right mouse button.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=277>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>EVT_TREE_BEGIN_LABEL_EDIT(id, func)</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Begin editing a label. This can be prevented by calling Veto().
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=277>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>EVT_TREE_END_LABEL_EDIT(id, func)</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Finish editing a label. This can be prevented by calling Veto().
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=277>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>EVT_TREE_DELETE_ITEM(id, func)</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Delete an item.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=277>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>EVT_TREE_GET_INFO(id, func)</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Request information from the application.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=277>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>EVT_TREE_SET_INFO(id, func)</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Information is being supplied.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=277>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>EVT_TREE_ITEM_ACTIVATED(id, func)</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+The item has been activated, i.e. chosen by double clicking it with mouse or from keyboard
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=277>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>EVT_TREE_ITEM_COLLAPSED(id, func)</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+The item has been collapsed.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=277>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>EVT_TREE_ITEM_COLLAPSING(id, func)</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+The item is being collapsed. This can be prevented by calling Veto().
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=277>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>EVT_TREE_ITEM_EXPANDED(id, func)</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+The item has been expanded.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=277>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>EVT_TREE_ITEM_EXPANDING(id, func)</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+The item is being expanded. This can be prevented by calling Veto().
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=277>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>EVT_TREE_SEL_CHANGED(id, func)</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Selection has changed.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=277>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>EVT_TREE_SEL_CHANGING(id, func)</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Selection is changing. This can be prevented by calling Veto().
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=277>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>EVT_TREE_KEY_DOWN(id, func)</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+A key has been pressed.
+</FONT></TD></TR>
+
+
+</TABLE>
+<P>
+<B>See also</B><P>
+wxTreeItemData, wxListBox, wxListCtrl,
+wxImageList, wxTreeEvent<P>
+<B>Win32 notes</B><P>
+wxTreeListCtrl class uses the standard common treeview control under Win32
+implemented in the system library <TT>comctl32.dll</TT>. Some versions of this
+library are known to have bugs with handling the tree list control colours: the
+usual symptom is that the expanded items leave black (or otherwise incorrectly
+coloured) background behind them, especially for the controls using non
+default background colour. The recommended solution is to upgrade the <TT>comctl32.dll</TT>
+to a newer version: see
+<A HREF="http://www.microsoft.com/msdownload/ieplatform/ie/comctrlx86.asp">http://www.microsoft.com/msdownload/ieplatform/ie/comctrlx86.asp</A>.<P>
+<B>Members (tree specific</B><P>
+<A HREF="#wxtreelistctrlconstr">wxTreeListCtrl::wxTreeListCtrl</A><BR>
+<A HREF="#topic2">wxTreeListCtrl::~wxTreeListCtrl</A><BR>
+<A HREF="#wxtreelistctrladdroot">wxTreeListCtrl::AddRoot</A><BR>
+<A HREF="#wxtreelistctrlappenditem">wxTreeListCtrl::AppendItem</A><BR>
+<A HREF="#wxtreelistctrlassignbuttonsimagelist">wxTreeListCtrl::AssignButtonsImageList</A><BR>
+<A HREF="#wxtreelistctrlassignimagelist">wxTreeListCtrl::AssignImageList</A><BR>
+<A HREF="#wxtreelistctrlassignstateimagelist">wxTreeListCtrl::AssignStateImageList</A><BR>
+<A HREF="#wxtreelistctrlcollapse">wxTreeListCtrl::Collapse</A><BR>
+<A HREF="#wxtreelistctrlcollapseandreset">wxTreeListCtrl::CollapseAndReset</A><BR>
+<A HREF="#wxtreelistctrlcreate">wxTreeListCtrl::Create</A><BR>
+<A HREF="#wxtreelistctrldelete">wxTreeListCtrl::Delete</A><BR>
+<A HREF="#wxtreelistctrldeleteallitems">wxTreeListCtrl::DeleteAllItems</A><BR>
+<A HREF="#wxtreelistctrldeletechildren">wxTreeListCtrl::DeleteChildren</A><BR>
+<A HREF="#wxtreelistctrledit">wxTreeListCtrl::Edit</A><BR>
+<A HREF="#wxtreelistctrleditlabel">wxTreeListCtrl::EditLabel</A><BR>
+<A HREF="#wxtreelistctrlensurevisible">wxTreeListCtrl::EnsureVisible</A><BR>
+<A HREF="#wxtreelistctrlexpand">wxTreeListCtrl::Expand</A><BR>
+<A HREF="#wxtreelistctrlexpandall">wxTreeListCtrl::ExpandAll</A><BR>
+<A HREF="#wxtreelistctrlfinditem">wxTreeListCtrl::FindItem</A><BR>
+<A HREF="#wxtreelistctrlgetitemrect">wxTreeListCtrl::GetBoundingRect</A><BR>
+<A HREF="#wxtreelistctrlgetbuttonsimagelist">wxTreeListCtrl::GetButtonsImageList</A><BR>
+<A HREF="#wxtreelistctrlgetchildrencount">wxTreeListCtrl::GetChildrenCount</A><BR>
+<A HREF="#wxtreelistctrlgetcount">wxTreeListCtrl::GetCount</A><BR>
+<A HREF="#wxtreelistctrlgetfirstchild">wxTreeListCtrl::GetFirstChild</A><BR>
+<A HREF="#wxtreelistctrlgetfirstvisibleitem">wxTreeListCtrl::GetFirstVisibleItem</A><BR>
+<A HREF="#wxtreelistctrlgetheaderwindow">wxTreeListCtrl::GetHeaderWindow</A><BR>
+<A HREF="#wxtreelistctrlgetimagelist">wxTreeListCtrl::GetImageList</A><BR>
+<A HREF="#wxtreelistctrlgetindent">wxTreeListCtrl::GetIndent</A><BR>
+<A HREF="#wxtreelistctrlgetitembackgroundcolour">wxTreeListCtrl::GetItemBackgroundColour</A><BR>
+<A HREF="#wxtreelistctrlgetitemdata">wxTreeListCtrl::GetItemData</A><BR>
+<A HREF="#wxtreelistctrlgetitemfont">wxTreeListCtrl::GetItemFont</A><BR>
+<A HREF="#wxtreelistctrlgetitemimage">wxTreeListCtrl::GetItemImage</A><BR>
+<A HREF="#wxtreelistctrlgetitemparent">wxTreeListCtrl::GetItemParent</A><BR>
+<A HREF="#wxtreelistctrlgetitemtext">wxTreeListCtrl::GetItemText</A><BR>
+<A HREF="#wxtreelistctrlgetitemtextcolour">wxTreeListCtrl::GetItemTextColour</A><BR>
+<A HREF="#wxtreelistctrlgetlastchild">wxTreeListCtrl::GetLastChild</A><BR>
+<A HREF="#wxtreelistctrlgetlinespacing">wxTreeListCtrl::GetLineSpacing</A><BR>
+<A HREF="#wxtreelistctrlgetmainwindow">wxTreeListCtrl::GetMainWindow</A><BR>
+<A HREF="#wxtreelistctrlgetnextchild">wxTreeListCtrl::GetNextChild</A><BR>
+<A HREF="#wxtreelistctrlgetnextsibling">wxTreeListCtrl::GetNextSibling</A><BR>
+<A HREF="#wxtreelistctrlgetnextvisible">wxTreeListCtrl::GetNextVisible</A><BR>
+<A HREF="#wxtreelistctrlgetprevchild">wxTreeListCtrl::GetPrevChild</A><BR>
+<A HREF="#wxtreelistctrlgetprevsibling">wxTreeListCtrl::GetPrevSibling</A><BR>
+<A HREF="#wxtreelistctrlgetprevvisible">wxTreeListCtrl::GetPrevVisible</A><BR>
+<A HREF="#wxtreelistctrlgetrootitem">wxTreeListCtrl::GetRootItem</A><BR>
+<A HREF="#wxtreelistctrlgetselection">wxTreeListCtrl::GetSelection</A><BR>
+<A HREF="#wxtreelistctrlgetselections">wxTreeListCtrl::GetSelections</A><BR>
+<A HREF="#wxtreelistctrlgetstateimagelist">wxTreeListCtrl::GetStateImageList</A><BR>
+<A HREF="#wxtreelistctrlgetwindowstyle">wxTreeListCtrl::GetWindowStyle</A><BR>
+<A HREF="#wxtreelistctrlgetwindowstyleflag">wxTreeListCtrl::GetWindowStyleFlag</A><BR>
+<A HREF="#wxtreelistctrlhaschildren">wxTreeListCtrl::HasChildren</A><BR>
+<A HREF="#wxtreelistctrlhittest">wxTreeListCtrl::HitTest</A><BR>
+<A HREF="#wxtreelistctrlinsertitem">wxTreeListCtrl::InsertItem</A><BR>
+<A HREF="#wxtreelistctrlisbold">wxTreeListCtrl::IsBold</A><BR>
+<A HREF="#wxtreelistctrlisexpanded">wxTreeListCtrl::IsExpanded</A><BR>
+<A HREF="#wxtreelistctrlisselected">wxTreeListCtrl::IsSelected</A><BR>
+<A HREF="#wxtreelistctrlisvisible">wxTreeListCtrl::IsVisible</A><BR>
+<A HREF="#wxtreelistctrlitemhaschildren">wxTreeListCtrl::ItemHasChildren</A><BR>
+<A HREF="#wxtreelistctrloncompareitems">wxTreeListCtrl::OnCompareItems</A><BR>
+<A HREF="#wxtreelistctrlprependitem">wxTreeListCtrl::PrependItem</A><BR>
+<A HREF="#wxtreelistctrlrefresh">wxTreeListCtrl::Refresh</A><BR>
+<A HREF="#wxtreelistctrlsetbackgroundcolour">wxTreeListCtrl::SetBackgroundColour</A><BR>
+<A HREF="#wxtreelistctrlsetfocus">wxTreeListCtrl::SetFocus</A><BR>
+<A HREF="#wxtreelistctrlsetfont">wxTreeListCtrl::SetFont</A><BR>
+<A HREF="#wxtreelistctrlsetforegroundcolour">wxTreeListCtrl::SetForegroundColour</A><BR>
+<A HREF="#wxtreelistctrlsetwindowstyle">wxTreeListCtrl::SetWindowStyle</A><BR>
+<A HREF="#wxtreelistctrlscrollto">wxTreeListCtrl::ScrollTo</A><BR>
+<A HREF="#wxtreelistctrlselectitem">wxTreeListCtrl::SelectItem</A><BR>
+<A HREF="#wxtreelistctrlsetbuttonsimagelist">wxTreeListCtrl::SetButtonsImageList</A><BR>
+<A HREF="#wxtreelistctrlsetimagelist">wxTreeListCtrl::SetImageList</A><BR>
+<A HREF="#wxtreelistctrlsetindent">wxTreeListCtrl::SetIndent</A><BR>
+<A HREF="#wxtreelistctrlsetitembackgroundcolour">wxTreeListCtrl::SetItemBackgroundColour</A><BR>
+<A HREF="#wxtreelistctrlsetitembold">wxTreeListCtrl::SetItemBold</A><BR>
+<A HREF="#wxtreelistctrlsetitemdata">wxTreeListCtrl::SetItemData</A><BR>
+<A HREF="#wxtreelistctrlsetitemfont">wxTreeListCtrl::SetItemFont</A><BR>
+<A HREF="#wxtreelistctrlsetitemhaschildren">wxTreeListCtrl::SetItemHasChildren</A><BR>
+<A HREF="#wxtreelistctrlsetitemimage">wxTreeListCtrl::SetItemImage</A><BR>
+<A HREF="#wxtreelistctrlsetitemtext">wxTreeListCtrl::SetItemText</A><BR>
+<A HREF="#wxtreelistctrlsetitemtextcolour">wxTreeListCtrl::SetItemTextColour</A><BR>
+<A HREF="#wxtreelistctrlsetindent">wxTreeListCtrl::SetLineSpacing</A><BR>
+<A HREF="#wxtreelistctrlsetstateimagelist">wxTreeListCtrl::SetStateImageList</A><BR>
+<A HREF="#wxtreelistctrlsortchildren">wxTreeListCtrl::SortChildren</A><BR>
+<A HREF="#wxtreelistctrltoggle">wxTreeListCtrl::Toggle</A><BR>
+<A HREF="#wxtreelistctrlunselect">wxTreeListCtrl::Unselect</A><BR>
+<A HREF="#wxtreelistctrlunselectall">wxTreeListCtrl::UnselectAll</A><BR>
+<A HREF="#wxtreelistctrladdcolumn">wxTreeListCtrl::AddColumn</A><BR>
+<A HREF="#wxtreelistctrlgetcolumn">wxTreeListCtrl::GetColumn</A><BR>
+<A HREF="#wxtreelistctrlgetcolumnalignment">wxTreeListCtrl::GetColumnAlignment</A><BR>
+<A HREF="#wxtreelistctrlgetcolumncount">wxTreeListCtrl::GetColumnCount</A><BR>
+<A HREF="#wxtreelistctrlgetcolumnimage">wxTreeListCtrl::GetColumnImage</A><BR>
+<A HREF="#wxtreelistctrlgetcolumntext">wxTreeListCtrl::GetColumnText</A><BR>
+<A HREF="#wxtreelistctrlgetcolumnwidth">wxTreeListCtrl::GetColumnWidth</A><BR>
+<A HREF="#wxtreelistctrlgetmaincolumn">wxTreeListCtrl::GetMainColumn</A><BR>
+<A HREF="#wxtreelistctrlinsertcolumn">wxTreeListCtrl::InsertColumn</A><BR>
+<A HREF="#wxtreelistctrliscolumnshown">wxTreeListCtrl::IsColumnShown</A><BR>
+<A HREF="#wxtreelistctrlremovecolumn">wxTreeListCtrl::RemoveColumn</A><BR>
+<A HREF="#wxtreelistctrlsetcolumn">wxTreeListCtrl::SetColumn</A><BR>
+<A HREF="#wxtreelistctrlsetcolumnalignment">wxTreeListCtrl::SetColumnAlignment</A><BR>
+<A HREF="#wxtreelistctrlsetcolumnimage">wxTreeListCtrl::SetColumnImage</A><BR>
+<A HREF="#wxtreelistctrlsetcolumntext">wxTreeListCtrl::SetColumnText</A><BR>
+<A HREF="#wxtreelistctrlsetcolumnwidth">wxTreeListCtrl::SetColumnWidth</A><BR>
+<A HREF="#wxtreelistctrlsetmaincolumn">wxTreeListCtrl::SetMainColumn</A><BR>
+<A HREF="#wxtreelistctrlshowcolumn">wxTreeListCtrl::ShowColumn</A><BR>
+<A HREF="#wxtreelistctrlgetitembold">wxTreeListCtrl::GetItemBold</A><BR>
+<P>
+
+<HR>
+<A NAME="wxtreelistctrlconstr"></A>
+<H3>wxTreeListCtrl::wxTreeListCtrl</H3>
+<P>
+<B></B> <B>wxTreeListCtrl</B>()<P>
+Default constructor.<P>
+<B></B> <B>wxTreeListCtrl</B>(<B>wxWindow*</B><I> parent</I>, <B>wxWindowID</B><I> id = -1</I>,
+<B>const wxPoint&amp;</B><I> pos = wxDefaultPosition</I>, <B>const wxSize&amp;</B><I> size = wxDefaultSize</I>,
+<B>long</B><I> style = wxTR_DEFAULT_STYLE</I>, <B>const wxValidator&amp; </B><I>validator = wxDefaultValidator</I>, <B>const wxString&amp; </B><I>name = "treelistctrl"</I>)<P>
+Constructor, creating and showing a tree list control.<P>
+<B>Parameters</B><P>
+<I>parent</I><UL><UL>
+Parent window. Must not be NULL.</UL></UL>
+<P>
+<I>id</I><UL><UL>
+Window identifier. A value of -1 indicates a default value.</UL></UL>
+<P>
+<I>pos</I><UL><UL>
+Window position.</UL></UL>
+<P>
+<I>size</I><UL><UL>
+Window size. If the default size (-1, -1) is specified then the window is sized
+appropriately.</UL></UL>
+<P>
+<I>style</I><UL><UL>
+Window style. See <A HREF="manual_wxtreelistctrl.html#wxtreelistctrl">wxTreeListCtrl</A>.</UL></UL>
+<P>
+<I>validator</I><UL><UL>
+Window validator.</UL></UL>
+<P>
+<I>name</I><UL><UL>
+Window name.</UL></UL>
+<P>
+<B>See also</B><P>
+<A HREF="manual_wxtreelistctrl.html#wxtreelistctrlcreate">wxTreeListCtrl::Create</A>, wxValidator<P>
+
+<HR>
+<A NAME="topic2"></A>
+<H3>wxTreeListCtrl::~wxTreeListCtrl</H3>
+<P>
+<B>void</B> <B>~wxTreeListCtrl</B>()<P>
+Destructor, destroying the list control.<P>
+
+<HR>
+<A NAME="wxtreelistctrladdroot"></A>
+<H3>wxTreeListCtrl::AddRoot</H3>
+<P>
+<B>wxTreeItemId</B> <B>AddRoot</B>(<B>const wxString&amp;</B><I> text</I>,
+ <B>int</B><I> image = -1</I>, <B>int</B><I> selImage = -1</I>, <B>wxTreeItemData*</B><I> data = NULL</I>)<P>
+Adds the root node to the tree, returning the new item.<P>
+The <I>image</I> and <I>selImage</I> parameters are an index within
+the normal image list specifying the image to use for unselected and
+selected items, respectively.
+If <I>image</I> &gt; -1 and <I>selImage</I> is -1, the same image is used for
+both selected and unselected items.<P>
+
+<HR>
+<A NAME="wxtreelistctrlappenditem"></A>
+<H3>wxTreeListCtrl::AppendItem</H3>
+<P>
+<B>wxTreeItemId</B> <B>AppendItem</B>(<B>const wxTreeItemId&amp; </B><I>parent</I>, <B>const wxString&amp;</B><I> text</I>,
+ <B>int</B><I> image = -1</I>, <B>int</B><I> selImage = -1</I>, <B>wxTreeItemData*</B><I> data = NULL</I>)<P>
+Appends an item to the end of the branch identified by <I>parent</I>, return a new item id.<P>
+The <I>image</I> and <I>selImage</I> parameters are an index within
+the normal image list specifying the image to use for unselected and
+selected items, respectively.
+If <I>image</I> &gt; -1 and <I>selImage</I> is -1, the same image is used for
+both selected and unselected items.<P>
+
+<HR>
+<A NAME="wxtreelistctrlassignbuttonsimagelist"></A>
+<H3>wxTreeListCtrl::AssignButtonsImageList</H3>
+<P>
+<B>void</B> <B>AssignButtonsImageList</B>(<B>wxImageList*</B><I> imageList</I>)<P>
+Sets the buttons image list. The button images assigned with this method will
+be automatically deleted by wxTreeListCtrl as appropriate
+(i.e. it takes ownership of the list).<P>
+Setting or assigning the button image list enables the display of image buttons.
+Once enabled, the only way to disable the display of button images is to set
+the button image list to NULL.<P>
+This function is only available in the generic version.<P>
+See also <A HREF="manual_wxtreelistctrl.html#wxtreelistctrlsetbuttonsimagelist">SetButtonsImageList</A>.<P>
+
+<HR>
+<A NAME="wxtreelistctrlassignimagelist"></A>
+<H3>wxTreeListCtrl::AssignImageList</H3>
+<P>
+<B>void</B> <B>AssignImageList</B>(<B>wxImageList*</B><I> imageList</I>)<P>
+Sets the normal image list. Image list assigned with this method will
+be automatically deleted by wxTreeListCtrl as appropriate
+(i.e. it takes ownership of the list).<P>
+See also <A HREF="manual_wxtreelistctrl.html#wxtreelistctrlsetimagelist">SetImageList</A>.<P>
+
+<HR>
+<A NAME="wxtreelistctrlassignstateimagelist"></A>
+<H3>wxTreeListCtrl::AssignStateImageList</H3>
+<P>
+<B>void</B> <B>AssignStateImageList</B>(<B>wxImageList*</B><I> imageList</I>)<P>
+Sets the state image list. Image list assigned with this method will
+be automatically deleted by wxTreeListCtrl as appropriate
+(i.e. it takes ownership of the list).<P>
+See also <A HREF="manual_wxtreelistctrl.html#wxtreelistctrlsetstateimagelist">SetStateImageList</A>.<P>
+
+
+<HR>
+<A NAME="wxtreelistctrlcollapse"></A>
+<H3>wxTreeListCtrl::Collapse</H3>
+<P>
+<B>void</B> <B>Collapse</B>(<B>const wxTreeItemId&amp;</B><I> item</I>)<P>
+Collapses the given item.<P>
+
+<HR>
+<A NAME="wxtreelistctrlcollapseandreset"></A>
+<H3>wxTreeListCtrl::CollapseAndReset</H3>
+<P>
+<B>void</B> <B>CollapseAndReset</B>(<B>const wxTreeItemId&amp;</B><I> item</I>)<P>
+Collapses the given item and removes all children.<P>
+
+<HR>
+<A NAME="wxtreelistctrlcreate"></A>
+<H3>wxTreeListCtrl::Create</H3>
+<P>
+<B>bool</B> <B>wxTreeListCtrl</B>(<B>wxWindow*</B><I> parent</I>, <B>wxWindowID</B><I> id = -1</I>,
+<B>const wxPoint&amp;</B><I> pos = wxDefaultPosition</I>, <B>const wxSize&amp;</B><I> size = wxDefaultSize</I>,
+<B>long</B><I> style = wxTR_DEFAULT_STYLE</I>, <B>const wxValidator&amp; </B><I>validator = wxDefaultValidator</I>, <B>const wxString&amp; </B><I>name = "listCtrl"</I>)<P>
+Creates the tree list control. See <A HREF="manual_wxtreelistctrl.html#wxtreelistctrlconstr">wxTreeListCtrl::wxTreeListCtrl</A> for further details.<P>
+
+<HR>
+<A NAME="wxtreelistctrldelete"></A>
+<H3>wxTreeListCtrl::Delete</H3>
+<P>
+<B>void</B> <B>Delete</B>(<B>const wxTreeItemId&amp;</B><I> item</I>)<P>
+Deletes the specified item. A <TT>EVT_TREE_DELETE_ITEM</TT> event will be
+generated.<P>
+This function may cause a subsequent call to GetNextChild to fail.<P>
+
+<HR>
+<A NAME="wxtreelistctrldeleteallitems"></A>
+<H3>wxTreeListCtrl::DeleteAllItems</H3>
+<P>
+<B>void</B> <B>DeleteAllItems</B>()<P>
+Deletes all the items in the control. Note that this will <B>not</B> generate
+any events unlike <A HREF="manual_wxtreelistctrl.html#wxtreelistctrldelete">Delete</A> method.<P>
+
+<HR>
+<A NAME="wxtreelistctrldeletechildren"></A>
+<H3>wxTreeListCtrl::DeleteChildren</H3>
+<P>
+<B>void</B> <B>DeleteChildren</B>(<B>const wxTreeItemId&amp; </B><I>item</I>)<P>
+Deletes all children of the given item (but not the item itself). Note that
+this will <B>not</B> generate any events unlike
+<A HREF="manual_wxtreelistctrl.html#wxtreelistctrldelete">Delete</A> method.<P>
+If you have called <A HREF="manual_wxtreelistctrl.html#wxtreelistctrlsetitemhaschildren">wxTreeListCtrl::SetItemHasChildren</A>, you
+may need to call it again since <I>DeleteChildren</I> does not automatically
+clear the setting.<P>
+
+<HR>
+<A NAME="wxtreelistctrledit"></A>
+<H3>wxTreeListCtrl::Edit</H3>
+<P>
+<B>void</B> <B>Edit</B>(<B>const wxTreeItemId&amp;</B><I> item</I>)<P>
+The same as <A HREF="manual_wxtreelistctrl.html#wxtreelistctrleditlabel">EditLabel</A>.<P>
+
+<HR>
+<A NAME="wxtreelistctrleditlabel"></A>
+<H3>wxTreeListCtrl::EditLabel</H3>
+<P>
+<B>void</B> <B>EditLabel</B>(<B>const wxTreeItemId&amp;</B><I> item</I>)<P>
+Starts editing the label of the given item. This function generates a
+EVT_TREE_BEGIN_LABEL_EDIT event which can be vetoed so that no
+text control will appear for in-place editing.<P>
+If the user changed the label, i.e. s/he does not press ESC or leave
+the text control without changes, a EVT_TREE_END_LABEL_EDIT event
+will be sent which can be vetoed as well.<P>
+<B>See also</B><P>
+wxTreeEvent<P>
+
+<HR>
+<A NAME="wxtreelistctrlensurevisible"></A>
+<H3>wxTreeListCtrl::EnsureVisible</H3>
+<P>
+<B>void</B> <B>EnsureVisible</B>(<B>const wxTreeItemId&amp;</B><I> item</I>)<P>
+Scrolls and/or expands items to ensure that the given item is visible.<P>
+
+<HR>
+<A NAME="wxtreelistctrlexpand"></A>
+<H3>wxTreeListCtrl::Expand</H3>
+<P>
+<B>void</B> <B>Expand</B>(<B>const wxTreeItemId&amp;</B><I> item</I>)<P>
+Expands the given item.<P>
+
+<HR>
+<A NAME="wxtreelistctrlexpandall"></A>
+<H3>wxTreeListCtrl::ExpandAll</H3>
+<P>
+<B>void</B> <B>ExpandAll</B>(<B>const wxTreeItemId&amp;</B><I> item</I>)<P>
+Expands the given item and all subitems recursively.<P>
+
+<HR>
+<A NAME="wxtreelistctrlfinditem"></A>
+<H3>wxTreeListCtrl::FindItem</H3>
+<P>
+<B>wxTreeItemId</B> <B>FindItem</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>const wxString&amp;</B><I> str</I>,
+ <B>int</B><I>flags=0</I>)<P>
+Returns the next visible item in the tree which matches the entered string, starting from 
+the currently selected item. If no item is selected the find starts a the beginning of the 
+tree.<P>
+The flags have the following meaning:<P>
+
+
+<TABLE>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxTL_SEARCH_LEVEL
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Searches within only the current level.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxTL_SEARCH_VISIBLE
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Searches within all visible items.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxTL_SEARCH_FULL
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Searches within the full tree.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxTL_SEARCH_PARTIAL
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Matches only partial up to the submitted text length.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxTL_SEARCH_NOCASE
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Matches case insensitive.
+</FONT></TD></TR>
+
+
+</TABLE>
+<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetitemrect"></A>
+<H3>wxTreeListCtrl::GetBoundingRect</H3>
+<P>
+<B>bool</B> <B>GetBoundingRect</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>wxRect&amp; </B><I>rect</I>, <B>bool </B><I>textOnly = FALSE</I>) <B>const</B><P>
+Retrieves the rectangle bounding the <I>item</I>. If <I>textOnly</I> is TRUE,
+only the rectangle around the item's label will be returned, otherwise the
+item's image is also taken into account.<P>
+The return value is TRUE if the rectangle was successfully retrieved or FALSE
+if it was not (in this case <I>rect</I> is not changed) - for example, if the
+item is currently invisible.<P>
+<B><FONT COLOR="#0000C8">wxPython note:</FONT></B> The wxPython version of this method requires only the
+<TT>item</TT> and <TT>textOnly</TT> parameters.  The return value is either a
+<TT>wxRect</TT> object or <TT>None</TT>.<P>
+<B><FONT COLOR="#0000C8">wxPerl note:</FONT></B> In wxPerl this method only takes the parameters <TT>item</TT> and
+  <TT>textOnly</TT>, and returns a Wx::Rect ( or undef ).<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetbuttonsimagelist"></A>
+<H3>wxTreeListCtrl::GetButtonsImageList</H3>
+<P>
+<B>wxImageList*</B> <B>GetButtonsImageList</B>() <B>const</B><P>
+Returns the buttons image list (from which application-defined button images are taken).<P>
+This function is only available in the generic version.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetchildrencount"></A>
+<H3>wxTreeListCtrl::GetChildrenCount</H3>
+<P>
+<B>size_t</B> <B>GetChildrenCount</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>bool</B><I> recursively = TRUE</I>) <B>const</B><P>
+Returns the number of items in the branch. If <I>recursively</I> is TRUE, returns the total number
+of descendants, otherwise only one level of children is counted.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetcount"></A>
+<H3>wxTreeListCtrl::GetCount</H3>
+<P>
+<B>int</B> <B>GetCount</B>() <B>const</B><P>
+Returns the number of items in the control.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetfirstchild"></A>
+<H3>wxTreeListCtrl::GetFirstChild</H3>
+<P>
+<B>wxTreeItemId</B> <B>GetFirstChild</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>long&amp; </B><I>cookie</I>) <B>const</B><P>
+Returns the first child; call <A HREF="manual_wxtreelistctrl.html#wxtreelistctrlgetnextchild">wxTreeListCtrl::GetNextChild</A> for the next child.<P>
+For this enumeration function you must pass in a 'cookie' parameter
+which is opaque for the application but is necessary for the library
+to make these functions reentrant (i.e. allow more than one
+enumeration on one and the same object simultaneously). The cookie passed to
+GetFirstChild and GetNextChild should be the same variable.<P>
+Returns an invalid tree item if there are no further children.<P>
+<B>See also</B><P>
+
+<HR>
+<A NAME="wxtreelistctrlgetfirstvisibleitem"></A>
+<H3>wxTreeListCtrl::GetFirstVisibleItem</H3>
+<P>
+<B>wxTreeItemId</B> <B>GetFirstVisibleItem</B>() <B>const</B><P>
+Returns the first visible item.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetheaderwindow"></A>
+<H3>wxTreeListCtrl::GetHeaderWindow</H3>
+<P>
+<B>wxTreeListHeaderWindow*</B> <B>GetHeaderWindow</B>() <B>const</B><P>
+Returns the pointer to the header window.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetimagelist"></A>
+<H3>wxTreeListCtrl::GetImageList</H3>
+<P>
+<B>wxImageList*</B> <B>GetImageList</B>() <B>const</B><P>
+Returns the normal image list.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetindent"></A>
+<H3>wxTreeListCtrl::GetIndent</H3>
+<P>
+<B>int</B> <B>GetIndent</B>() <B>const</B><P>
+Returns the current tree list control indentation.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetitembackgroundcolour"></A>
+<H3>wxTreeListCtrl::GetItemBackgroundColour</H3>
+<P>
+<B>wxColour</B> <B>GetItemBackgroundColour</B>(<B>const wxTreeItemId&amp;</B><I> item</I>) <B>const</B><P>
+Returns the background colour of the item.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetitemdata"></A>
+<H3>wxTreeListCtrl::GetItemData</H3>
+<P>
+<B>wxTreeItemData*</B> <B>GetItemData</B>(<B>const wxTreeItemId&amp;</B><I> item</I>) <B>const</B><P>
+Returns the tree item data associated with the item.<P>
+<B>See also</B><P>
+wxTreeItemData<P>
+<B><FONT COLOR="#0000C8">wxPython note:</FONT></B> wxPython provides the following shortcut method:<P>
+<UL><UL>
+
+<TABLE>
+
+
+<TR><TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>GetPyData(item)</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Returns the Python Object
+associated with the wxTreeItemData for the given item Id.
+</FONT></TD></TR>
+
+
+</TABLE>
+</UL></UL>
+
+<P>
+<B><FONT COLOR="#0000C8">wxPerl note:</FONT></B> wxPerl provides the following shortcut method:
+<UL><UL>
+
+
+<TABLE>
+
+
+<TR><TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>GetPlData( item )</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Returns the Perl data
+associated with the Wx::TreeItemData ( it is just the same as
+tree-&gt;GetItemData( item )-&gt;GetData(); ).
+</FONT></TD></TR>
+
+
+</TABLE>
+</UL></UL>
+
+<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetitemfont"></A>
+<H3>wxTreeListCtrl::GetItemFont</H3>
+<P>
+<B>wxFont</B> <B>GetItemFont</B>(<B>const wxTreeItemId&amp;</B><I> item</I>) <B>const</B><P>
+Returns the font of the item label.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetitemimage"></A>
+<H3>wxTreeListCtrl::GetItemImage</H3>
+<P>
+<B>int</B> <B>GetItemImage</B>(<B>const wxTreeItemId&amp;</B><I> item</I>,
+ <B>wxTreeItemIcon</B><I> which = wxTreeItemIcon_Normal</I>) <B>const</B><P>
+Gets the specified item image of the main column.<P>
+<B>int</B> <B>GetItemImage</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>size_t</B><I> column</I>,
+ <B>wxTreeItemIcon</B><I> which = wxTreeItemIcon_Normal</I>) <B>const</B><P>
+Gets the specified item image of the entered column.<P>
+The value of <I>which</I> may be:<P>
+<UL>
+
+<LI>wxTreeItemIcon_Normal to get the normal item image
+<LI>wxTreeItemIcon_Selected to get the selected item image (i.e. the image
+which is shown when the item is currently selected)
+<LI>wxTreeItemIcon_Expanded to get the expanded image (this only
+makes sense for items which have children - then this image is shown when the
+item is expanded and the normal image is shown when it is collapsed)
+<LI>wxTreeItemIcon_SelectedExpanded to get the selected expanded image
+(which is shown when an expanded item is currently selected)
+</UL>
+<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetitemparent"></A>
+<H3>wxTreeListCtrl::GetItemParent</H3>
+<P>
+<B>wxTreeItemId</B> <B>GetItemParent</B>(<B>const wxTreeItemId&amp;</B><I> item</I>) <B>const</B><P>
+Returns the item's parent.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetitemtext"></A>
+<H3>wxTreeListCtrl::GetItemText</H3>
+<P>
+<B>wxString</B> <B>GetItemText</B>(<B>const wxTreeItemId&amp;</B><I> item</I>) <B>const</B><P>
+Returns the item text of the main column.<P>
+<B>wxString</B> <B>GetItemText</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>size_t</B><I> column</I>) <B>const</B><P>
+Returns the item text of the entered column.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetitemtextcolour"></A>
+<H3>wxTreeListCtrl::GetItemTextColour</H3>
+<P>
+<B>wxColour</B> <B>GetItemTextColour</B>(<B>const wxTreeItemId&amp;</B><I> item</I>) <B>const</B><P>
+Returns the colour of the item label.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetlastchild"></A>
+<H3>wxTreeListCtrl::GetLastChild</H3>
+<P>
+<B>wxTreeItemId</B> <B>GetLastChild</B>(<B>const wxTreeItemId&amp;</B><I> item</I>) <B>const</B><P>
+Returns the last child of the item (or an invalid tree item if this item has no children).<P>
+<B>See also</B><P>
+<A HREF="manual_wxtreelistctrl.html#wxtreelistctrlgetfirstchild">GetFirstChild</A>,
+<A HREF="manual_wxtreelistctrl.html#wxtreelistctrlgetnextsibling">wxTreeListCtrl::GetNextSibling</A>,
+<A HREF="manual_wxtreelistctrl.html#wxtreelistctrlgetlastchild">GetLastChild</A><P>
+
+<HR>
+<A NAME="wxtreelistctrlgetlinespacing"></A>
+<H3>wxTreeListCtrl::GetLineSpacing</H3>
+<P>
+<B>int</B> <B>GetLineSpacing</B>() <B>const</B><P>
+Returns the space above and below the text on each line.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetmainwindow"></A>
+<H3>wxTreeListCtrl::GetMainWindow</H3>
+<P>
+<B>wxTreeListMainWindow*</B> <B>GetMainWindow</B>() <B>const</B><P>
+Returns the pointer to the main window.<P>
+<A HREF="manual_wxtreelistctrl.html#wxtreelistctrlgetnextchild">wxTreeListCtrl::GetNextChild</A>,
+<A HREF="manual_wxtreelistctrl.html#wxtreelistctrlgetnextsibling">wxTreeListCtrl::GetNextSibling</A><P>
+<B><FONT COLOR="#0000C8">wxPython note:</FONT></B> In wxPython the returned wxTreeItemId and the new cookie
+value are both returned as a tuple containing the two values.<P>
+<B><FONT COLOR="#0000C8">wxPerl note:</FONT></B> In wxPerl this method only takes the <TT>item</TT> parameter, and
+  returns a 2-element list <TT>( item, cookie )</TT>.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetnextchild"></A>
+<H3>wxTreeListCtrl::GetNextChild</H3>
+<P>
+<B>wxTreeItemId</B> <B>GetNextChild</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>long&amp; </B><I>cookie</I>) <B>const</B><P>
+Returns the next child; call <A HREF="manual_wxtreelistctrl.html#wxtreelistctrlgetfirstchild">wxTreeListCtrl::GetFirstChild</A> for the first child.<P>
+For this enumeration function you must pass in a 'cookie' parameter
+which is opaque for the application but is necessary for the library
+to make these functions reentrant (i.e. allow more than one
+enumeration on one and the same object simultaneously). The cookie passed to
+GetFirstChild and GetNextChild should be the same.<P>
+Returns an invalid tree item if there are no further children.<P>
+<B>See also</B><P>
+<A HREF="manual_wxtreelistctrl.html#wxtreelistctrlgetfirstchild">wxTreeListCtrl::GetFirstChild</A>
+<A HREF="manual_wxtreelistctrl.html#wxtreelistctrlgetprevchild">wxTreeListCtrl::GetPrevChild</A><P>
+<B><FONT COLOR="#0000C8">wxPython note:</FONT></B> In wxPython the returned wxTreeItemId and the new cookie
+value are both returned as a tuple containing the two values.<P>
+<B><FONT COLOR="#0000C8">wxPerl note:</FONT></B> In wxPerl this method returns a 2-element list
+  <TT>( item, cookie )</TT>, instead of modifying its parameters.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetnextsibling"></A>
+<H3>wxTreeListCtrl::GetNextSibling</H3>
+<P>
+<B>wxTreeItemId</B> <B>GetNextSibling</B>(<B>const wxTreeItemId&amp;</B><I> item</I>) <B>const</B><P>
+Returns the next sibling of the specified item; call <A HREF="manual_wxtreelistctrl.html#wxtreelistctrlgetprevsibling">wxTreeListCtrl::GetPrevSibling</A> for the previous sibling.<P>
+Returns an invalid tree item if there are no further siblings.<P>
+<B>See also</B><P>
+<A HREF="manual_wxtreelistctrl.html#wxtreelistctrlgetprevsibling">wxTreeListCtrl::GetPrevSibling</A><P>
+
+<HR>
+<A NAME="wxtreelistctrlgetnextvisible"></A>
+<H3>wxTreeListCtrl::GetNextVisible</H3>
+<P>
+<B>wxTreeItemId</B> <B>GetNextVisible</B>(<B>const wxTreeItemId&amp;</B><I> item</I>) <B>const</B><P>
+Returns the next visible item.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetprevchild"></A>
+<H3>wxTreeListCtrl::GetPrevChild</H3>
+<P>
+<B>wxTreeItemId</B> <B>GetPrevChild</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>long&amp; </B><I>cookie</I>) <B>const</B><P>
+Returns the previous child.<P>
+For this enumeration function you must pass in a 'cookie' parameter
+which is opaque for the application but is necessary for the library
+to make these functions reentrant (i.e. allow more than one
+enumeration on one and the same object simultaneously). The cookie passed to
+GetFirstChild,GetNextChild and GetPrevChild should be the same.<P>
+Returns an invalid tree item if there are no further children.<P>
+<B>See also</B><P>
+<A HREF="manual_wxtreelistctrl.html#wxtreelistctrlgetfirstchild">wxTreeListCtrl::GetFirstChild</A>
+<A HREF="manual_wxtreelistctrl.html#wxtreelistctrlgetnextchild">wxTreeListCtrl::GetNextChild</A><P>
+<B><FONT COLOR="#0000C8">wxPython note:</FONT></B> In wxPython the returned wxTreeItemId and the new cookie
+value are both returned as a tuple containing the two values.<P>
+<B><FONT COLOR="#0000C8">wxPerl note:</FONT></B> In wxPerl this method returns a 2-element list
+  <TT>( item, cookie )</TT>, instead of modifying its parameters.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetprevsibling"></A>
+<H3>wxTreeListCtrl::GetPrevSibling</H3>
+<P>
+<B>wxTreeItemId</B> <B>GetPrevSibling</B>(<B>const wxTreeItemId&amp;</B><I> item</I>) <B>const</B><P>
+Returns the previous sibling of the specified item; call <A HREF="manual_wxtreelistctrl.html#wxtreelistctrlgetnextsibling">wxTreeListCtrl::GetNextSibling</A> for the next sibling.<P>
+Returns an invalid tree item if there are no further children.<P>
+<B>See also</B><P>
+<A HREF="manual_wxtreelistctrl.html#wxtreelistctrlgetnextsibling">wxTreeListCtrl::GetNextSibling</A><P>
+
+<HR>
+<A NAME="wxtreelistctrlgetprevvisible"></A>
+<H3>wxTreeListCtrl::GetPrevVisible</H3>
+<P>
+<B>wxTreeItemId</B> <B>GetPrevVisible</B>(<B>const wxTreeItemId&amp;</B><I> item</I>) <B>const</B><P>
+Returns the previous visible item.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetrootitem"></A>
+<H3>wxTreeListCtrl::GetRootItem</H3>
+<P>
+<B>wxTreeItemId</B> <B>GetRootItem</B>() <B>const</B><P>
+Returns the root item for the tree list control.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetselection"></A>
+<H3>wxTreeListCtrl::GetSelection</H3>
+<P>
+<B>wxTreeItemId</B> <B>GetSelection</B>() <B>const</B><P>
+Returns the selection, or an invalid item if there is no selection.
+This function only works with the controls without wxTR_MULTIPLE style, use
+<A HREF="manual_wxtreelistctrl.html#wxtreelistctrlgetselections">GetSelections</A> for the controls which do have
+this style.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetselections"></A>
+<H3>wxTreeListCtrl::GetSelections</H3>
+<P>
+<B>size_t</B> <B>GetSelections</B>(<B>wxArrayTreeItemIds&amp; </B><I>selection</I>) <B>const</B><P>
+Fills the array of tree items passed in with the currently selected items. This
+function can be called only if the control has the wxTR_MULTIPLE style.<P>
+Returns the number of selected items.<P>
+<B><FONT COLOR="#0000C8">wxPython note:</FONT></B> The wxPython version of this method accepts no parameters
+and returns a Python list of <TT>wxTreeItemId</TT>s.<P>
+<B><FONT COLOR="#0000C8">wxPerl note:</FONT></B> In wxPerl this method takes no parameters and returns a list of
+ <TT>Wx::TreeItemId</TT>s.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetstateimagelist"></A>
+<H3>wxTreeListCtrl::GetStateImageList</H3>
+<P>
+<B>wxImageList*</B> <B>GetStateImageList</B>() <B>const</B><P>
+Returns the state image list (from which application-defined state images are taken).<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetwindowstyle"></A>
+<H3>wxTreeListCtrl::GetWindowStyle</H3>
+<P>
+<B>long</B> <B>GetWindowStyle</B>() <B>const</B><P>
+???<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetwindowstyleflag"></A>
+<H3>wxTreeListCtrl::GetWindowStyleFlag</H3>
+<P>
+<B>long</B> <B>GetWindowStyleFlag</B>() <B>const</B><P>
+???<P>
+
+<HR>
+<A NAME="wxtreelistctrlhaschildren"></A>
+<H3>wxTreeListCtrl::HasChildren</H3>
+<P>
+<B>bool</B> <B>HasChildren</B>(<B>const wxTreeItemId&amp;</B><I> item</I>) <B>const</B><P>
+Returns TRUE if the item has children.???<P>
+
+<HR>
+<A NAME="wxtreelistctrlhittest"></A>
+<H3>wxTreeListCtrl::HitTest</H3>
+<P>
+<B>wxTreeItemId</B> <B>HitTest</B>(<B>const wxPoint&amp; </B><I>point</I>)<P>
+<B>wxTreeItemId</B> <B>HitTest</B>(<B>const wxPoint&amp; </B><I>point</I>, <B>int&amp; </B><I>flags</I>)<P>
+<B>wxTreeItemId</B> <B>HitTest</B>(<B>const wxPoint&amp; </B><I>point</I>, <B>int&amp; </B><I>flags</I>,
+ <B>int&amp; </B><I>column</I>)<P>
+Calculates which (if any) item is under the given point, returning the tree item
+id at this point plus extra information <I>flags</I>. <I>flags</I> is a bitlist of the following:<P>
+
+
+<TABLE>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxTREE_HITTEST_ABOVE
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Above the client area.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxTREE_HITTEST_BELOW
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Below the client area.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxTREE_HITTEST_NOWHERE
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+In the client area but below the last item.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxTREE_HITTEST_ONITEMBUTTON
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+On the button associated with an item.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxTREE_HITTEST_ONITEMICON
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+On the bitmap associated with an item.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxTREE_HITTEST_ONITEMINDENT
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+In the indentation associated with an item.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxTREE_HITTEST_ONITEMLABEL
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+On the label (string) associated with an item.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxTREE_HITTEST_ONITEMRIGHT
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+In the area to the right of an item.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxTREE_HITTEST_ONITEMSTATEICON
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+On the state icon for a tree view item that is in a user-defined state.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxTREE_HITTEST_TOLEFT
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+To the right of the client area.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxTREE_HITTEST_TORIGHT
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+To the left of the client area.
+</FONT></TD></TR>
+
+
+</TABLE>
+<P>
+<B><FONT COLOR="#0000C8">wxPython note:</FONT></B> in wxPython both the wxTreeItemId and the flags are
+returned as a tuple.<P>
+<B><FONT COLOR="#0000C8">wxPerl note:</FONT></B> In wxPerl this method only takes the <TT>point</TT> parameter
+  and returns a 2-element list <TT>( item, flags )</TT>.<P>
+
+<HR>
+<A NAME="wxtreelistctrlinsertitem"></A>
+<H3>wxTreeListCtrl::InsertItem</H3>
+<P>
+<B>wxTreeItemId</B> <B>InsertItem</B>(<B>const wxTreeItemId&amp; </B><I>parent</I>, <B>const wxTreeItemId&amp; </B><I>previous</I>, <B>const wxString&amp;</B><I> text</I>,
+ <B>int</B><I> image = -1</I>, <B>int</B><I> selImage = -1</I>, <B>wxTreeItemData*</B><I> data = NULL</I>)<P>
+<B>wxTreeItemId</B> <B>InsertItem</B>(<B>const wxTreeItemId&amp; </B><I>parent</I>, <B>size_t</B><I> before</I>, <B>const wxString&amp;</B><I> text</I>,
+ <B>int</B><I> image = -1</I>, <B>int</B><I> selImage = -1</I>, <B>wxTreeItemData*</B><I> data = NULL</I>)<P>
+Inserts an item after a given one (<I>previous</I>) or before one identified by its position (<I>before</I>).
+<I>before</I> must be less than the number of children.<P>
+The <I>image</I> and <I>selImage</I> parameters are an index within
+the normal image list specifying the image to use for unselected and
+selected items, respectively.
+If <I>image</I> &gt; -1 and <I>selImage</I> is -1, the same image is used for
+both selected and unselected items.<P>
+<B><FONT COLOR="#0000C8">wxPython note:</FONT></B> The second form of this method is called
+<TT>InsertItemBefore</TT> in wxPython.<P>
+
+<HR>
+<A NAME="wxtreelistctrlisbold"></A>
+<H3>wxTreeListCtrl::IsBold</H3>
+<P>
+<B>bool</B> <B>IsBold</B>(<B>const wxTreeItemId&amp; </B><I>item</I>) <B>const</B><P>
+Returns TRUE if the given item is in bold state.<P>
+See also: <A HREF="manual_wxtreelistctrl.html#wxtreelistctrlsetitembold">SetItemBold</A><P>
+
+<HR>
+<A NAME="wxtreelistctrlisexpanded"></A>
+<H3>wxTreeListCtrl::IsExpanded</H3>
+<P>
+<B>bool</B> <B>IsExpanded</B>(<B>const wxTreeItemId&amp;</B><I> item</I>) <B>const</B><P>
+Returns TRUE if the item is expanded (only makes sense if it has children).<P>
+
+<HR>
+<A NAME="wxtreelistctrlisselected"></A>
+<H3>wxTreeListCtrl::IsSelected</H3>
+<P>
+<B>bool</B> <B>IsSelected</B>(<B>const wxTreeItemId&amp;</B><I> item</I>) <B>const</B><P>
+Returns TRUE if the item is selected.<P>
+
+<HR>
+<A NAME="wxtreelistctrlisvisible"></A>
+<H3>wxTreeListCtrl::IsVisible</H3>
+<P>
+<B>bool</B> <B>IsVisible</B>(<B>const wxTreeItemId&amp;</B><I> item</I>) <B>const</B><P>
+Returns TRUE if the item is visible (it might be outside the view, or not expanded).<P>
+
+<HR>
+<A NAME="wxtreelistctrlitemhaschildren"></A>
+<H3>wxTreeListCtrl::ItemHasChildren</H3>
+<P>
+<B>bool</B> <B>ItemHasChildren</B>(<B>const wxTreeItemId&amp;</B><I> item</I>) <B>const</B><P>
+Returns TRUE if the item has children.<P>
+
+<HR>
+<A NAME="wxtreelistctrloncompareitems"></A>
+<H3>wxTreeListCtrl::OnCompareItems</H3>
+<P>
+<B>int</B> <B>OnCompareItems</B>(<B>const wxTreeItemId&amp; </B><I>item1</I>, <B>const wxTreeItemId&amp; </B><I>item2</I>)<P>
+Override this function in the derived class to change the sort order of the
+items in the tree list control. The function should return a negative, zero or
+positive value if the first item is less than, equal to or greater than the
+second one.<P>
+The base class version compares items alphabetically.<P>
+See also: <A HREF="manual_wxtreelistctrl.html#wxtreelistctrlsortchildren">SortChildren</A><P>
+
+<HR>
+<A NAME="wxtreelistctrlprependitem"></A>
+<H3>wxTreeListCtrl::PrependItem</H3>
+<P>
+<B>wxTreeItemId</B> <B>PrependItem</B>(<B>const wxTreeItemId&amp; </B><I>parent</I>, <B>const wxString&amp;</B><I> text</I>,
+ <B>int</B><I> image = -1</I>, <B>int</B><I> selImage = -1</I>, <B>wxTreeItemData*</B><I> data = NULL</I>)<P>
+Appends an item as the first child of <I>parent</I>, return a new item id.<P>
+The <I>image</I> and <I>selImage</I> parameters are an index within
+the normal image list specifying the image to use for unselected and
+selected items, respectively.
+If <I>image</I> &gt; -1 and <I>selImage</I> is -1, the same image is used for
+both selected and unselected items.<P>
+
+<HR>
+<A NAME="wxtreelistctrlrefresh"></A>
+<H3>wxTreeListCtrl::Refresh</H3>
+<P>
+<B>bool</B> <B>Refresh</B>(<B>bool</B><I> erase=TRUE</I>, <B>wxRect*</B><I> rect=NULL</I>)<P>
+Description???<P>
+Parameter???<P>
+
+<HR>
+<A NAME="wxtreelistctrlsetbackgroundcolour"></A>
+<H3>wxTreeListCtrl::SetBackgroundColour</H3>
+<P>
+<B>void</B> <B>SetBackgroundColour</B>(<B>const wxColour&amp;</B><I> colour</I>)<P>
+???<P>
+
+<HR>
+<A NAME="wxtreelistctrlsetfocus"></A>
+<H3>wxTreeListCtrl::SetFocus</H3>
+<P>
+<B>void</B> <B>SetFocus</B>()<P>
+???<P>
+
+<HR>
+<A NAME="wxtreelistctrlsetfont"></A>
+<H3>wxTreeListCtrl::SetFont</H3>
+<P>
+<B>void</B> <B>SetFont</B>(<B>const wxFont&amp;</B><I> font</I>)<P>
+???<P>
+
+<HR>
+<A NAME="wxtreelistctrlsetforegroundcolour"></A>
+<H3>wxTreeListCtrl::SetForegroundColour</H3>
+<P>
+<B>void</B> <B>SetForegroundColour</B>(<B>const wxColour&amp;</B><I> colour</I>)<P>
+???<P>
+
+<HR>
+<A NAME="wxtreelistctrlsetwindowstyle"></A>
+<H3>wxTreeListCtrl::SetWindowStyle</H3>
+<P>
+<B>void</B> <B>SetWindowStyle</B>(<B>const long</B><I> styles</I>)<P>
+???<P>
+
+<HR>
+<A NAME="wxtreelistctrlscrollto"></A>
+<H3>wxTreeListCtrl::ScrollTo</H3>
+<P>
+<B>void</B> <B>ScrollTo</B>(<B>const wxTreeItemId&amp;</B><I> item</I>)<P>
+Scrolls the specified item into view.<P>
+
+<HR>
+<A NAME="wxtreelistctrlselectitem"></A>
+<H3>wxTreeListCtrl::SelectItem</H3>
+<P>
+<B>bool</B> <B>SelectItem</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>bool</B><I> unselect_others=TRUE</I>,
+ <B>bool</B><I> extended_select=FALSE</I>)<P>
+Selects the given item.<P>
+Parameter???<P>
+
+<HR>
+<A NAME="wxtreelistctrlsetbuttonsimagelist"></A>
+<H3>wxTreeListCtrl::SetButtonsImageList</H3>
+<P>
+<B>void</B> <B>SetButtonsImageList</B>(<B>wxImageList*</B><I> imageList</I>)<P>
+Sets the buttons image list (from which application-defined button images are taken).
+The button images assigned with this method will
+<B>not</B> be deleted by wxTreeListCtrl's destructor, you must delete it yourself.<P>
+Setting or assigning the button image list enables the display of image buttons.
+Once enabled, the only way to disable the display of button images is to set
+the button image list to NULL.<P>
+This function is only available in the generic version.<P>
+See also <A HREF="manual_wxtreelistctrl.html#wxtreelistctrlassignbuttonsimagelist">AssignButtonsImageList</A>.<P>
+
+<HR>
+<A NAME="wxtreelistctrlsetimagelist"></A>
+<H3>wxTreeListCtrl::SetImageList</H3>
+<P>
+<B>void</B> <B>SetImageList</B>(<B>wxImageList*</B><I> imageList</I>)<P>
+Sets the normal image list. Image list assigned with this method will
+<B>not</B> be deleted by wxTreeListCtrl's destructor, you must delete it yourself.<P>
+See also <A HREF="manual_wxtreelistctrl.html#wxtreelistctrlassignimagelist">AssignImageList</A>.<P>
+
+<HR>
+<A NAME="wxtreelistctrlsetindent"></A>
+<H3>wxTreeListCtrl::SetIndent</H3>
+<P>
+<B>void</B> <B>SetIndent</B>(<B>int</B><I> indent</I>)<P>
+Sets the indentation for the tree list control.<P>
+
+<HR>
+<A NAME="wxtreelistctrlsetitembackgroundcolour"></A>
+<H3>wxTreeListCtrl::SetItemBackgroundColour</H3>
+<P>
+<B>void</B> <B>SetItemBackgroundColour</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>const wxColour&amp; </B><I>colour</I>)<P>
+Sets the colour of the item's background.<P>
+
+<HR>
+<A NAME="wxtreelistctrlsetitembold"></A>
+<H3>wxTreeListCtrl::SetItemBold</H3>
+<P>
+<B>void</B> <B>SetItemBold</B>(<B>const wxTreeItemId&amp; </B><I>item</I>, <B>bool</B><I> bold = TRUE</I>)<P>
+Makes item appear in bold font if <I>bold</I> parameter is TRUE or resets it to
+the normal state.<P>
+See also: <A HREF="manual_wxtreelistctrl.html#wxtreelistctrlisbold">IsBold</A><P>
+
+<HR>
+<A NAME="wxtreelistctrlsetitemdata"></A>
+<H3>wxTreeListCtrl::SetItemData</H3>
+<P>
+<B>void</B> <B>SetItemData</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>wxTreeItemData* </B><I>data</I>)<P>
+Sets the item client data.<P>
+<B><FONT COLOR="#0000C8">wxPython note:</FONT></B> wxPython provides the following shortcut method:<P>
+
+<UL><UL>
+
+<TABLE>
+
+
+<TR><TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>SetPyData(item, obj)</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Associate the given Python
+Object with the wxTreeItemData for the given item Id.
+</FONT></TD></TR>
+
+
+</TABLE>
+</UL></UL>
+
+<P>
+<B><FONT COLOR="#0000C8">wxPerl note:</FONT></B> wxPerl provides the following shortcut method:
+<UL><UL>
+
+
+<TABLE>
+
+
+<TR><TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>SetPlData( item, data )</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Sets the Perl data
+associated with the Wx::TreeItemData ( it is just the same as
+tree-&gt;GetItemData( item )-&gt;SetData( data ); ).
+</FONT></TD></TR>
+
+
+</TABLE>
+</UL></UL>
+
+<P>
+
+<HR>
+<A NAME="wxtreelistctrlsetitemfont"></A>
+<H3>wxTreeListCtrl::SetItemFont</H3>
+<P>
+<B>void</B> <B>SetItemFont</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>const wxFont&amp; </B><I>font</I>)<P>
+Sets the item's font. All items in the tree should have the same height to avoid
+text clipping, so the fonts height should be the same for all of them,
+although font attributes may vary.<P>
+<B>See also</B><P>
+<A HREF="manual_wxtreelistctrl.html#wxtreelistctrlsetitembold">SetItemBold</A><P>
+
+<HR>
+<A NAME="wxtreelistctrlsetitemhaschildren"></A>
+<H3>wxTreeListCtrl::SetItemHasChildren</H3>
+<P>
+<B>void</B> <B>SetItemHasChildren</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>bool</B><I> has = TRUE</I>)<P>
+Force appearance of the button next to the item. This is useful to
+allow the user to expand the items which don't have any children now,
+but instead adding them only when needed, thus minimizing memory
+usage and loading time.<P>
+
+<HR>
+<A NAME="wxtreelistctrlsetitemimage"></A>
+<H3>wxTreeListCtrl::SetItemImage</H3>
+<P>
+<B>void</B> <B>SetItemImage</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>int</B><I> image</I>,
+ <B>wxTreeItemIcon</B><I> which = wxTreeItemIcon_Normal</I>)<P>
+Sets the specified item image of the main column. See <A HREF="manual_wxtreelistctrl.html#wxtreelistctrlgetitemimage">GetItemImage</A>
+for the description of the <I>which</I> parameter.<P>
+<B>void</B> <B>SetItemImage</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>size_t</B><I> column</I>, <B>int</B><I> image</I>,
+ <B>wxTreeItemIcon</B><I> which = wxTreeItemIcon_Normal</I>)<P>
+Sets the specified item image of the entered column. See <A HREF="manual_wxtreelistctrl.html#wxtreelistctrlgetitemimage">GetItemImage</A>
+for the description of the <I>which</I> parameter.<P>
+
+<HR>
+<A NAME="wxtreelistctrlsetitemtext"></A>
+<H3>wxTreeListCtrl::SetItemText</H3>
+<P>
+<B>void</B> <B>SetItemText</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>const wxString&amp;</B><I> text</I>)<P>
+Sets the item text of the main column.<P>
+<B>void</B> <B>SetItemText</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>size_t</B><I> column</I>, <B>const wxString&amp;</B><I> text</I>)<P>
+Sets the item text of the entered column.<P>
+
+<HR>
+<A NAME="wxtreelistctrlsetitemtextcolour"></A>
+<H3>wxTreeListCtrl::SetItemTextColour</H3>
+<P>
+<B>void</B> <B>SetItemTextColour</B>(<B>const wxTreeItemId&amp;</B><I> item</I>, <B>const wxColour&amp;</B><I> colour</I>)<P>
+Sets the colour of the item's text.<P>
+
+<HR>
+<A NAME="wxtreelistctrlsetindent"></A>
+<H3>wxTreeListCtrl::SetLineSpacing</H3>
+<P>
+<B>void</B> <B>SetLineSpacing</B>(<B>unsigned int</B><I> spacing</I>)<P>
+Sets the space above and below the text on each line.<P>
+
+<HR>
+<A NAME="wxtreelistctrlsetstateimagelist"></A>
+<H3>wxTreeListCtrl::SetStateImageList</H3>
+<P>
+<B>void</B> <B>SetStateImageList</B>(<B>wxImageList*</B><I> imageList</I>)<P>
+Sets the state image list (from which application-defined state images are taken).
+Image list assigned with this method will
+<B>not</B> be deleted by wxTreeListCtrl's destructor, you must delete it yourself.<P>
+See also <A HREF="manual_wxtreelistctrl.html#wxtreelistctrlassignstateimagelist">AssignStateImageList</A>.<P>
+<B>void</B> <B>SetWindowStyle</B>(<B>long</B><I>styles</I>)<P>
+Sets the mode flags associated with the display of the tree list control.
+The new mode takes effect immediately.
+(Generic only; MSW ignores changes.)<P>
+
+<HR>
+<A NAME="wxtreelistctrlsortchildren"></A>
+<H3>wxTreeListCtrl::SortChildren</H3>
+<P>
+<B>void</B> <B>SortChildren</B>(<B>const wxTreeItemId&amp;</B><I> item</I>)<P>
+Sorts the children of the given item using
+<A HREF="manual_wxtreelistctrl.html#wxtreelistctrloncompareitems">OnCompareItems</A> method of wxTreeListCtrl. You
+should override that method to change the sort order (the default is ascending
+case-sensitive alphabetical order).<P>
+<B>See also</B><P>
+wxTreeItemData, <A HREF="manual_wxtreelistctrl.html#wxtreelistctrloncompareitems">OnCompareItems</A><P>
+
+<HR>
+<A NAME="wxtreelistctrltoggle"></A>
+<H3>wxTreeListCtrl::Toggle</H3>
+<P>
+<B>void</B> <B>Toggle</B>(<B>const wxTreeItemId&amp;</B><I> item</I>)<P>
+Toggles the given item between collapsed and expanded states.<P>
+
+<HR>
+<A NAME="wxtreelistctrlunselect"></A>
+<H3>wxTreeListCtrl::Unselect</H3>
+<P>
+<B>void</B> <B>Unselect</B>()<P>
+Removes the selection from the currently selected item (if any).<P>
+
+<HR>
+<A NAME="wxtreelistctrlunselectall"></A>
+<H3>wxTreeListCtrl::UnselectAll</H3>
+<P>
+<B>void</B> <B>UnselectAll</B>()<P>
+This function either behaves the same as <A HREF="manual_wxtreelistctrl.html#wxtreelistctrlunselect">Unselect</A>
+if the control doesn't have wxTR_MULTIPLE style, or removes the selection from
+all items if it does have this style.<P>
+<B>Members (column specific</B><P>
+
+<HR>
+<A NAME="wxtreelistctrladdcolumn"></A>
+<H3>wxTreeListCtrl::AddColumn</H3>
+<P>
+<B>void</B> <B>AddColumn</B>(<B>const wxString&amp;</B><I> text</I>)<P>
+<B>void</B> <B>AddColumn</B>(<B>const wxString&amp;</B><I> text</I>, <B>size_t</B><I> width</I>, <B>wxTreeListColumnAlign</B><I> alignment = wxTL_ALIGN_LEFT</I>)<P>
+<B>void</B> <B>AddColumn</B>(<B>const wxTreeListColumnInfo&amp;</B><I> col</I>)<P>
+Adds a column.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetcolumn"></A>
+<H3>wxTreeListCtrl::GetColumn</H3>
+<P>
+<B>wxTreeListColumnInfo&amp;</B> <B>GetColumn</B>(<B>size_t</B><I> column</I>)<P>
+<B>wxTreeListColumnInfo&amp;</B> <B>GetColumn</B>(<B>size_t</B><I> column</I>) <B>const</B><P>
+Returns the infos of the columns.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetcolumnalignment"></A>
+<H3>wxTreeListCtrl::GetColumnAlignment</H3>
+<P>
+<B>wxTreeListColumnAlign</B> <B>GetColumnAlignment</B>(<B>size_t</B><I> column</I>) <B>const</B><P>
+Returns the alignment of the columns.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetcolumncount"></A>
+<H3>wxTreeListCtrl::GetColumnCount</H3>
+<P>
+<B>size_t</B> <B>GetColumnCount</B>() <B>const</B><P>
+Returns the number of columns.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetcolumnimage"></A>
+<H3>wxTreeListCtrl::GetColumnImage</H3>
+<P>
+<B>int</B> <B>GetColumnImage</B>(<B>size_t</B><I> column</I>) <B>const</B><P>
+Returns the image of the columns.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetcolumntext"></A>
+<H3>wxTreeListCtrl::GetColumnText</H3>
+<P>
+<B>wxString</B> <B>GetColumnText</B>(<B>size_t</B><I> column</I>) <B>const</B><P>
+Returns the text of the columns.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetcolumnwidth"></A>
+<H3>wxTreeListCtrl::GetColumnWidth</H3>
+<P>
+<B>size_t</B> <B>GetColumnWidth</B>(<B>size_t</B><I> column</I>) <B>const</B><P>
+Returns the width of the columns.<P>
+
+<HR>
+<A NAME="wxtreelistctrlgetmaincolumn"></A>
+<H3>wxTreeListCtrl::GetMainColumn</H3>
+<P>
+<B>size_t</B> <B>GetMainColumn</B>() <B>const</B><P>
+Returns the number of the main column.<P>
+
+<HR>
+<A NAME="wxtreelistctrlinsertcolumn"></A>
+<H3>wxTreeListCtrl::InsertColumn</H3>
+<P>
+<B>void</B> <B>InsertColumn</B>(<B>size_t</B><I> before</I>, <B>const wxString&amp;</B><I> text</I>)<P>
+<B>void</B> <B>InsertColumn</B>(<B>size_t</B><I> before</I>, <B>const wxString&amp;</B><I> text</I>, <B>size_t</B><I> width</I>,
+ <B>wxTreeListColumnAlign</B><I> alignment = wxTL_ALIGN_LEFT</I>)<P>
+Inserts a column before(???) the entered column.<P>
+
+<HR>
+<A NAME="wxtreelistctrliscolumnshown"></A>
+<H3>wxTreeListCtrl::IsColumnShown</H3>
+<P>
+<B>bool</B> <B>IsColumnShown</B>(<B>size_t</B><I> column</I>) <B>const</B><P>
+Returns if the columns is shown.<P>
+
+<HR>
+<A NAME="wxtreelistctrlremovecolumn"></A>
+<H3>wxTreeListCtrl::RemoveColumn</H3>
+<P>
+<B>void</B> <B>RemoveColumn</B>(<B>size_t</B><I> column</I>)<P>
+Removes the entered column.<P>
+
+<HR>
+<A NAME="wxtreelistctrlsetcolumn"></A>
+<H3>wxTreeListCtrl::SetColumn</H3>
+<P>
+<B>void</B> <B>SetColumn</B>(<B>size_t</B><I> column</I>, <B>const wxTreeListColumnInfo&amp;</B><I> info</I>)<P>
+Sets the infos of the column.<P>
+
+<HR>
+<A NAME="wxtreelistctrlsetcolumnalignment"></A>
+<H3>wxTreeListCtrl::SetColumnAlignment</H3>
+<P>
+<B>void</B> <B>SetColumnAlignment</B>(<B>size_t</B><I> column</I>, <B>const wxTreeListColumnAlign</B><I> align</I>)<P>
+Sets the alignment of the column.<P>
+
+<HR>
+<A NAME="wxtreelistctrlsetcolumnimage"></A>
+<H3>wxTreeListCtrl::SetColumnImage</H3>
+<P>
+<B>void</B> <B>SetColumnImage</B>(<B>size_t</B><I> column</I>, <B>int</B><I> image</I>)<P>
+Sets the image of the column.<P>
+
+<HR>
+<A NAME="wxtreelistctrlsetcolumntext"></A>
+<H3>wxTreeListCtrl::SetColumnText</H3>
+<P>
+<B>void</B> <B>SetColumnText</B>(<B>size_t</B><I> column</I>, <B>const wxString&amp;</B><I> text</I>)<P>
+Sets the text of the column.<P>
+
+<HR>
+<A NAME="wxtreelistctrlsetcolumnwidth"></A>
+<H3>wxTreeListCtrl::SetColumnWidth</H3>
+<P>
+<B>void</B> <B>SetColumnWidth</B>(<B>size_t</B><I> column</I>, <B>size_t</B><I> width</I>)<P>
+Sets the width of the column.<P>
+
+<HR>
+<A NAME="wxtreelistctrlsetmaincolumn"></A>
+<H3>wxTreeListCtrl::SetMainColumn</H3>
+<P>
+<B>void</B> <B>SetMainColumn</B>(<B>size_t</B><I> column</I>)<P>
+Set the main column.<P>
+
+<HR>
+<A NAME="wxtreelistctrlshowcolumn"></A>
+<H3>wxTreeListCtrl::ShowColumn</H3>
+<P>
+<B>void</B> <B>ShowColumn</B>(<B>size_t</B><I> column</I>, <B>bool</B><I> shown</I>)<P>
+Shows/hides the column.<P>
+<B>Members (item specific</B><P>
+
+<HR>
+<A NAME="wxtreelistctrlgetitembold"></A>
+<H3>wxTreeListCtrl::GetItemBold</H3>
+<P>
+<B>bool</B> <B>GetItemBold</B>(<B>const wxTreeItemId&amp;</B><I> item</I>) <B>const</B><P>
+Returns the item bold status.<P>
+
+</FONT></BODY></HTML>
