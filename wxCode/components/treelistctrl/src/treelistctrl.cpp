@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.68 2005-01-24 19:40:46 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.69 2005-04-03 09:36:05 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -41,10 +41,6 @@
 
 #include "wx/treelistctrl.h"
 
-#ifdef __WXGTK__
-    #include <gtk/gtk.h>
-    #include <wx/gtk/win_gtk.h>
-#endif
 #ifdef __WXMAC__
     #include "wx/mac/private.h"
 #endif
@@ -1103,17 +1099,7 @@ void wxTreeListHeaderWindow::DoDrawRect( wxDC *dc, int x, int y, int w, int h )
     wxPen pen (wxSystemSettings::GetColour (wxSYS_COLOUR_BTNSHADOW ), 1, wxSOLID);
 #endif
 
-#ifdef __WXGTK__
-    GtkStateType state = m_parent->IsEnabled() ? GTK_STATE_NORMAL
-                                               : GTK_STATE_INSENSITIVE;
-
-    x = dc->XLOG2DEV( x );
-
-    gtk_paint_box (m_wxwindow->style, GTK_PIZZA(m_wxwindow)->bin_window,
-                   state, GTK_SHADOW_OUT,
-                   (GdkRectangle*) NULL, m_wxwindow, "button",
-                   x-1, y-1, w+2, h+2);
-#elif defined( __WXMAC__  )
+#if defined( __WXMAC__  )
     const int m_corner = 1;
 
     dc->SetBrush( *wxTRANSPARENT_BRUSH );

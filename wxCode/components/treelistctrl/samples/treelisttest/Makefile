@@ -3,7 +3,7 @@
 ## Purpose:     treelisttest
 ## Maintainer:  Otto Wyss
 ## Created:     2004-03-22
-## RCS-ID:      $Id: Makefile,v 1.6 2004-11-24 22:20:16 wyo Exp $
+## RCS-ID:      $Id: Makefile,v 1.7 2005-04-03 09:36:28 wyo Exp $
 ## Copyright:   (c) wyoDesktop
 ## Licence:     wxWidgets licence
 ##############################################################################
@@ -31,29 +31,24 @@ endif
 
 ifeq ($(MAKECMDGOALS),)
   WXCONFIG=wx-config
-  GTKCONFIG=gtk-config
 endif
 ifeq ($(MAKECMDGOALS),release)
   WXCONFIG=wx-config
-  GTKCONFIG=gtk-config
 endif
 ifeq ($(MAKECMDGOALS),debug)
   WXCONFIG=wxgtkd-2.4-config
-  GTKCONFIG=gtk-config
 endif
 ifeq ($(MAKECMDGOALS),develdebug)
   WXCONFIG=$(WXDEVEL_Debug)wx-config --inplace
-  GTKCONFIG=pkg-config gtk+-2.0
 endif
 ifeq ($(MAKECMDGOALS),univdebug)
   WXCONFIG=$(WXDEVEL_Univ)wx-config --inplace
-  GTKCONFIG=pkg-config gtk+-2.0
 endif
 
 OBJ = $(SRC:.cpp=.o)
 
 .cpp.o:
-	g++ -c $(INC) `$(WXCONFIG) --cxxflags` `$(GTKCONFIG) --cflags` -g -o $@ $<
+	g++ -c $(INC) `$(WXCONFIG) --cxxflags` -g -o $@ $<
 
 all:	$(PRG)
 $(PRG):	$(OBJ)
