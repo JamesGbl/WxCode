@@ -30,7 +30,6 @@
 	#include "wx/strconv.h"
 #endif
 
-#include "wx/wfstream.h"		// not included by wxprec.h
 #include "wx/filename.h"
 #include "wx/xml2.h"
 #include "wx/dtd.h"
@@ -1237,6 +1236,7 @@ size_t wxNativeNewlinesFilterStream::OnSysWrite(const void *buffer, size_t bufsi
 		written += GetFilterOutputStream()->LastWrite();
 	}
 
+	// BE CAREFUL: "written" could be smaller or bigger than "bufsize"...
 	return written;
 }
 

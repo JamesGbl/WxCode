@@ -21,12 +21,7 @@
 // wxWidgets headers
 #include "wx/string.h"
 #include "wx/object.h"
-
-
-
-
-class wxInputStream;
-class wxOutputStream;
+#include "wx/wfstream.h"
 
 
 // Libxml2 headers: these classes wraps only libxml2 elements. You cannot
@@ -286,7 +281,12 @@ public:
 
 
 
-//! Provides some standard method for all wxXml2 wrappers.
+//! Provides some standard methods for all wxXml2 wrappers.
+//! This class is used as base for all those classes which wrap libxml2
+//! structure with a "_private" member which can be used to hold the
+//! reference count.
+//! For more info, please read the specific \link wxxml2 page on this topic
+//! \endlink (VERY IMPORTANT !).
 class WXXMLDLLEXPORT wxXml2Wrapper : public wxObject
 {
 	DECLARE_ABSTRACT_CLASS(wxXml2Wrapper)
@@ -316,7 +316,8 @@ protected:		// reference counting utilities
 	//! \page wxxml2 wxXml2Wrappers and reference counting.
 	//! wxXml2Wrapper-derived classes does not use a full Copy-On-Write
 	//! technique: when copying a wxXml2Wrapper you just create a new
-	//! wxXml2Wrapper (which requires few bytes) which wraps the same
+	//! wxXml2Wrapper (which requires few bytes and thus this is a very
+	//! fast operation) which wraps the same
 	//! libxml2 structure of the original wxXml2Wrapper.
 	//! Consider the following code:
 	//! \code
@@ -336,44 +337,131 @@ protected:		// reference counting utilities
 	//! in wxString's COW system where the string is shared until a non-const
 	//! function is called.
 	//! The libxml2 structures are always shared with wxXml2Wrapper.
+	//! This is required since the wrappers around libxml2 structures are
+	//! created on the fly by the wrapper's getters: this is why you'll see
+	//! only functions returning objects and not references to objects.
 	//! 
-	//! However, a reference count is still required to avoid things like:
+	//! Since the underlying libxml2 structures are always shared, 
+	//! a reference count system is required to \b avoid things like:
 	//! \code
 	//!     wxXml2Node mynode;
 	//!     mynode.Create(...);
 	//!     {
+	//!         // copy and mynode are now sharing the same libxml2 structure
 	//!         wxXml2Node copy(mynode);
 	//!         [...]
-	//!     } // "copy" is destroyed
+	//!     } // "copy" is destroyed: it destroys the libxml2 structure
+	//!
+	//!     // mynode references an invalid memory address: CRASH !
 	//!     mynode.AddChild(...);
 	//! \endcode
-	//! Without reference counting, in fact, the code above would create
-	//! the "copy" node which would destroy its libxml2 node when being destroyed.
-	//! This must be avoided because "mynode" is still wrapping that memory
-	//! address: with reference counting, this is avoided.
-	//! The reference count must be stored in the wrapped structure.
+	//! Without reference counting, the destructor of an xml2 wrapper cannot
+	//! know if other instances of xml wrappers are sharing the same structure.
+	//! Performing a deep-copy in the copy constructor would be a problem:
+	//! XML nodes are all linked together and unlinking a node and then inserting
+	//! a new one is not so easy (especially for all types of nodes).
+	//! 
+	//! The only solution is to use a reference count; but
+	//! the reference count must be stored in the wrapped structure.
 	//! How wxXml2Wrapper handle this problem ? Well, all libxml2 structure has
 	//! a VOID* field called "_private" which can be safely used by external
 	//! functions to hold user contents. The #GetPrivate() function casts that
 	//! pointer to a reference to a integer so that it can be used as an int
 	//! instead of a pointer to void.
 	//!
-	//! One last note about libxml2 structure destruction: if you read the
-	//! wxXml2Wrapper::DestroyIfUnlinked function's sources, you'll notice
-	//! that the wrapped libxml2 structure is not destroyed when the
-	//! reference count reaches zero but the #IsUnlinked() function returns
-	//! FALSE; why ? Because libxml2 implements "recursive destruction":
-	//! when a node is destroyed, all its children are too.
+	//! With reference counting the destructor of a wxXml2Wrapper knows if it
+	//! is the only instance of that structure (and in this case it should
+	//! free the structure) or if other wxXml2Wrappers still own that structure
+	//! (and in this case it only decreases the refcount):
+	//! \code
+	//!     wxXml2Node mynode;
+	//!     mynode.Create(...);
+	//!     {
+	//!         // copy and mynode are now sharing the same libxml2 structure
+	//!         // and the structure's refcount is set to 2
+	//!         wxXml2Node copy(mynode);
+	//!         [...]
+	//!     } // "copy" is destroyed: it decreases the refcount
+	//!
+	//!     // mynode references a valid structure (with refcount = 1)
+	//!     mynode.AddChild(...);
+	//! \endcode
+	//!
+	//! Anyway there is another thing to consider: libxml2 implements 
+	//! "recursive destruction".
+	//! When a node is destroyed, all its children are too.
 	//! This means that we must also be careful not to break libxml2 memory
 	//! representation destroying a node's child when it's still linked
-	//! to its parent. To be exact, when a node (but also a property, a dtd,
+	//! to its parent. Precisely, when a node (but also a property, a dtd,
 	//! a namespace...) is part of a wider XML tree, we must *never* delete
-	//! it when the relative wxXml2Wrapper is destroyed.
-	//! This is because the wxXml2Wrappers are built on the fly by the getters
-	//! of another wxXml2Wrapper: a libxml2 node does not have automatically
-	//! associated a wxXml2Node and thus a tree composed of wxXml2Nodes does
-	//! not exist in memory. If we would delete a libxml2 node in the wxXml2Node's
-	//! destructor when it's still linked to a wider tree we would destroy
+	//! the node when the relative wxXml2Wrapper is destroyed.
+	//! This is why all wxXml2Wrappers must implement the #IsUnlinked()
+	//! function: the #DestroyIfUnlinked() function uses it to find when
+	//! nodes are unlinked from a wider tree and thus must be destroyed by
+	//! xml2 wrapper.
+	//! However, this rises another problem !
+	//! Consider the example below:
+	//! \code
+	//!     // we'll now build an XML tree
+	//!     {
+	//!         wxXml2Node root;
+	//!         root.Create(...);
+	//!
+	//!         // we are going to create a child of the "root" element...
+	//!         wxXml2Node child(root, ...);
+	//! 
+	//!     } // which one of the "root" and "child" element will be destroyed
+	//!       // first ? If the "child" destructor is called before the "root"'s one
+	//!       // then there are no problems: child::IsUnlinked() will return FALSE
+	//!       // and "child" destructor will do nothing. Then the "root" destructor
+	//!       // will delete everything.
+	//!
+	//!       // What happens if the "root" destructor is called first ?
+	//!       // the root::IsUnlinked() function will return TRUE, root::refcount
+	//!       // is set to one; the "root" destructor will destroy the structure
+	//!       // and libxml2 will free the memory of all its children too.
+	//!       // then, "child" destructor is called and it references an invalid
+	//!       // memory address: CRASH !
+	//! \endcode
+	//!
+	//! How can we solve this problem ?
+	//! One solution could be not only to check if the node is unlinked but also
+	//! to check if all children refcounts are set to zero, in each node destructor.
+	//! However, I did not implement this solution because it can make all 
+	//! wxxml2 wrappers very slow: wxXml2Nodes are continuosly created & destroyed.
+	//! The solution I adopted is simply to force the user (you!) to call the
+	//! wxXml2Wrapper::DestroyIfUnlinked() function in the right order.
+	//! This approach is not more restrictive of the approach used, for example,
+	//! by libxml++ which uses pointers and thus require the DELETE calls to be
+	//! in the right order.
+	//! The example above must thus be rewritten as:
+	//! \code
+	//!     // we'll now build an XML tree
+	//!     {
+	//!         wxXml2Node root;
+	//!         root.Create(...);
+	//!
+	//!         // we are going to create a child of the "root" element...
+	//!         wxXml2Node child(root, ...);
+	//! 
+	//!         // destroy the nodes in the right order:
+	//!         // first children and then the root element
+	//!         // (which will be the only element to do a real call
+	//!         //  to the xmlFreeXXXX function)
+	//!         child.DestroyIfUnlinked();	// this sets "child" as empty
+	//!         root.DestroyIfUnlinked();	// this destroys the tree
+	//! 
+	//!         // if we try to access the "child" or "root" element
+	//!         // we'll find that they are set to empty elements: in this
+	//!         // way the order used by the compiler to call the destructors
+	//!         // of the nodes does not care...
+	//!     } 
+	//! \endcode
+	//! So, as general rule, when using wxXml2Wrapper-derived classes, you
+	//! <B>must always call the wxXmlWrapper::DestroyIfUnlinked functions
+	//! in the right order: first the DestroyIfUnlinked functions of all
+	//! children and then, as last, the DestroyIfUnlinked function of the
+	//! node containing all the others.</B>
 
 	void ResetRefCount()
 		{ if (IsNonEmpty()) GetPrivate() = 0; }
@@ -936,8 +1024,6 @@ public:		// setters
 //! element with name="title" and with irrelevant content and one child 
 //! (of type=wxXML_TEXT_NODE with content="hi").
 //!
-//! \todo Add better Unicode support.
-//!
 class WXXMLDLLEXPORT wxXml2Node : public wxXml2BaseNode
 {
 	DECLARE_DYNAMIC_CLASS(wxXml2Node)
@@ -1301,7 +1387,7 @@ protected:
 //!                 No checks will be done to ensure this.
 class wxStringOutputStream : public wxOutputStream
 {
-	wxString m_str;
+	wxString m_str;	
 
 public:
 	wxStringOutputStream() {}

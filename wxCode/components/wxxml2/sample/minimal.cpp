@@ -479,7 +479,7 @@ void MyFrame::LoadDTD(const wxString &filename)
 	// we won't use the ParseNodeAndSiblings because it requires
 	// wxXml2Nodes to parse: here we have instead wxXml2ElemDecl,
 	// wxXml2AttrDecl... node types.
-	int size = doc.Save(stream);
+	doc.Save(stream);
 	m_text->SetValue(stream.GetStr());
 
 	doc.DestroyIfUnlinked();
@@ -619,7 +619,7 @@ void MyFrame::OnSaveAdv(wxCommandEvent &)
 #endif
 
 	// now, save the file where the user choose
-	if (doc.Save(fd.GetPath(), wxT("utf8"), 0/*wxXML2DOC_USE_INDENTATION*/)) {
+	if (doc.Save(fd.GetPath(), wxT("utf8"), wxXML2DOC_USE_NATIVE_NEWLINES | wxXML2DOC_USE_INDENTATION)) {
 		
 		int ret = wxMessageBox(wxT("File correctly saved. Do you want to load it ?"), 
 			wxT("Question"), wxYES_NO | wxICON_QUESTION);
@@ -648,7 +648,12 @@ void MyFrame::OnSaveDTD(wxCommandEvent &)
 	if (fd.ShowModal() == wxID_CANCEL)
 		return;
 
-	// create the DTD document
+	// create the DTD document:
+	// NOTE: THE WXXML2 APIs FOR DTD CREATION ARE NOT VERY EXTENDED:
+	//       THIS IS BECAUSE USUALLY DTD ARE NOT CREATED FROM A PROGRAM:
+	//       USUALLY THEY ARE WRITTEN BY HAND AND THE PROGRAMS USE THEM
+	//       TO VALIDATE XML DOCUMENTS.
+	//       IF YOU NEED AN EXTENSION OF THESE FUNCTIONS, PLEASE CONTACT ME...
 	doc.Create(wxXml2EmptyDoc, wxT("mydtd"), wxT("none"), wxT("none"));
 
 	// create an element declaration and set the root

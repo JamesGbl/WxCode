@@ -16,6 +16,7 @@
  using all the power of a well-known library like libxml2.
  The full support for DTDs allows you to easily check your XML documents & thus to
  produce well-formed XML files.
+ Unicode is completely supported as well.
 
  By now, these classes wrap only the most important libxml2 features but they are
  perfectly integrated with wxWidgets and easily extensible since they provide good
@@ -36,11 +37,15 @@
  Installation
  ------------
 
- The wxXml2 wrappers are packed in a single source file (src/xml2.cpp) and
- a single header file (include/wx/xml2.h), so I think the best way for a
- programmer to use them is to build xml2.cpp together with the sources of
- its app. Nonetheless, someone may find a library more portable and thus
- you can use the makefiles in the BUILD folder to create a little lib.
+ The wxXml2 wrappers are packed in a few source files and few header files,
+ so you could think the best way to use them is to build the source files
+ together with the sources of your app: in this case you should just add
+ the source & header files to your project and compile them with the
+ standard wxWidgets flags.
+
+ Anyway, others may find a library more portable.
+ To build a library, you can use the makefiles in the BUILD folder.
+ They support all common flags (BUILD=release/debug, UNICODE=1/0 and so on...).
 
  Obviously these wrappers require the presence of the LIBXML2 library
  and, only on win32, of the ICONV library. These two libraries are cross-platform
@@ -49,11 +54,11 @@
  of the MathStudio project (http://sourceforge.net/projects/mathstudio) which
  contains these two libraries compiled with MSVC, BORLAND and MINGW compilers.
 
- The most important thing you should do if you've never used these classes
- before is to build the sample and read its source file.
+ The most important thing you should do, specially if you've never used these classes
+ before, is to build the sample and read its source file.
+ The doxygen docs are a useful and detailed reference manual to use after you learnt
+ how wxxml2 wrappers must be used.
 
- -> on Win32:
-    use the MSVC++ project file to compile the sample
 
  -> on Linux:
     Use the command

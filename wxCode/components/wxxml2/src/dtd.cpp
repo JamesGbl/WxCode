@@ -60,6 +60,30 @@ wxXml2ElemContent wxXml2EmptyElemContent(NULL);
 
 
 
+
+//-----------------------------------------------------------------------------
+//  wxXml2HelpWrapper
+//-----------------------------------------------------------------------------
+
+void wxXml2HelpWrapper::DestroyIfUnlinked()
+{
+	if (!m_bLinked) {
+
+		Destroy();
+		wxLogDebug(wxT("%s::DestroyIfUnlinked - destroyed"), 
+			GetClassInfo()->GetClassName());
+
+	} else {
+
+		wxLogDebug(wxT("%s::DestroyIfUnlinked - NOT destroyed (because linked)"),
+			GetClassInfo()->GetClassName());
+	}
+}
+
+
+
+
+
 //-----------------------------------------------------------------------------
 //  wxXml2ElemDecl
 //-----------------------------------------------------------------------------
@@ -93,6 +117,12 @@ bool wxXml2ElemDecl::operator==(const wxXml2ElemDecl &n) const
 		return TRUE;
 	return FALSE;
 }
+
+wxXml2AttrDecl wxXml2ElemDecl::GetAttributes() const
+{ if (GetObj()) return wxXml2AttrDecl(GetObj()->attributes); return wxXml2EmptyAttrDecl; }	
+
+wxXml2DTD wxXml2ElemDecl::GetParent() const
+{ if (GetObj()) return wxXml2DTD(GetObj()->parent); return wxXml2EmptyDTD; }	
 
 
 
@@ -140,27 +170,8 @@ bool wxXml2AttrDecl::operator==(const wxXml2AttrDecl &n) const
 	return FALSE;
 }
 
-
-
-
-//-----------------------------------------------------------------------------
-//  wxXml2HelpWrapper
-//-----------------------------------------------------------------------------
-
-void wxXml2HelpWrapper::DestroyIfUnlinked()
-{
-	if (!m_bLinked) {
-
-		Destroy();
-		wxLogDebug(wxT("%s::DestroyIfUnlinked - destroyed"), 
-			GetClassInfo()->GetClassName());
-
-	} else {
-
-		wxLogDebug(wxT("%s::DestroyIfUnlinked - NOT destroyed (because linked)"),
-			GetClassInfo()->GetClassName());
-	}
-}
+wxXml2DTD wxXml2AttrDecl::GetParent() const
+{ if (GetObj()) return wxXml2DTD(GetObj()->parent); return wxXml2EmptyDTD; }	
 
 
 
@@ -196,6 +207,9 @@ bool wxXml2EntityDecl::operator==(const wxXml2EntityDecl &n) const
 		return TRUE;
 	return FALSE;
 }
+
+wxXml2DTD wxXml2EntityDecl::GetParent() const
+{ if (GetObj()) return wxXml2DTD(GetObj()->parent); return wxXml2EmptyDTD; }	
 
 
 
@@ -447,9 +461,15 @@ static int XMLDTDWrite(void *context, const char *buffer, int len)
 
 	// write
 	stream->Write(towrite, len);
-	written += stream->LastWrite();	
 
-	return written;
+	// the last write in the stream could report a number of bytes written
+	// different from the buffer lenght we gave to the wxOutputStream:
+	// see wxNativeNewlinesFilterStream::OnSysWrite for example.
+	// Anyway, if the stream did not report any error, this is okay and
+	// we will return the "written+len" value which is what libxml2 expects....
+	if ((int)stream->LastWrite() != len && stream->IsOk())
+		return written+len;
+	return -1;
 }
 
 int wxXml2DTD::Save(wxOutputStream &stream, long flags) const
@@ -469,7 +489,7 @@ int wxXml2DTD::Save(wxOutputStream &stream, long flags) const
 
 	// setup the output buffer
 	xmlOutputBuffer *buf = xmlAllocOutputBuffer(NULL);
-	buf->context = &mystream;
+	buf->context = mystream;
 	buf->writecallback = XMLDTDWrite;
 
 	// dump this DTD node

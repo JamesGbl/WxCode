@@ -216,6 +216,23 @@ public:		// miscellaneous
 
 	xmlElementContent *GetObj() const
 		{ return m_cont; }
+
+	wxXml2ElementContentType GetType() const
+		{ return (wxXml2ElementContentType)GetObj()->type; }
+	wxXml2ElementContentOccur GetOccurrence() const
+		{ return (wxXml2ElementContentOccur)GetObj()->ocur; }
+
+	wxString GetName() const
+		{ if (GetObj()) return XML2WX(GetObj()->name); return wxEmptyString; }
+	wxXml2Namespace GetNamespace() const
+		{ if (GetObj()) return wxXml2Namespace(XML2WX(GetObj()->prefix), wxEmptyString); return wxXml2EmptyNamespace; }
+
+	wxXml2ElemContent GetFirstChild() const
+		{ if (GetObj()) return wxXml2ElemContent(GetObj()->c1); return wxXml2EmptyElemContent; }
+	wxXml2ElemContent GetSecondChild() const
+		{ if (GetObj()) return wxXml2ElemContent(GetObj()->c2); return wxXml2EmptyElemContent; }
+	wxXml2ElemContent GetParent() const
+		{ if (GetObj()) return wxXml2ElemContent(GetObj()->parent); return wxXml2EmptyElemContent; }
 };
 
 
@@ -287,6 +304,11 @@ public:		// miscellaneous
 
 	xmlEnumeration *GetObj() const
 		{ return m_enum; }
+
+	wxXml2Enumeration GetNext() const
+		{ if (GetObj()) return wxXml2Enumeration(GetObj()->next); return wxXml2EmptyEnumeration; }	
+	wxString GetName() const
+		{ if (GetObj()) return XML2WX(GetObj()->name); return wxEmptyString; }	
 };
 
 
@@ -296,7 +318,8 @@ public:		// miscellaneous
 //! This type of node is used only inside an inlined/external DTD.
 //! Looks like:
 //!                  <!ELEMENT name .... >
-//!                                 ------------- wxXml2ElemContent
+//!                                 ----
+//!                                   ^--- wxXml2ElemContent
 //!
 //! wxXml2ElemDecl handles also the cases:
 //!
@@ -345,6 +368,17 @@ public:		// miscellaneous
 				wxXml2ElementTypeVal val, wxXml2ElemContent &content);
 	xmlElement *GetObj() const
 		{ return (xmlElement *)m_obj; }
+
+	// cannot be inlined...
+	wxXml2DTD GetParent() const;
+	wxXml2AttrDecl GetAttributes() const;
+
+	wxXml2ElementTypeVal GetType() const
+		{ return (wxXml2ElementTypeVal)GetObj()->etype; }	
+	wxXml2ElemContent GetContent() const
+		{ if (GetObj()) return wxXml2ElemContent(GetObj()->content); return wxXml2EmptyElemContent; }	
+	wxXml2Namespace GetNamespace() const
+		{ if (GetObj()) return wxXml2Namespace(XML2WX(GetObj()->prefix), wxEmptyString); return wxXml2EmptyNamespace; }
 };
 
 
@@ -412,6 +446,24 @@ public:		// miscellaneous
 
 	xmlAttribute *GetObj() const
 		{ return (xmlAttribute*)m_obj; }
+
+	// cannot be inlined...
+	wxXml2DTD GetParent() const;
+
+	wxXml2AttributeType GetType() const
+		{ return (wxXml2AttributeType)GetObj()->atype; }
+	wxXml2AttributeDefault GetDefault() const
+		{ return (wxXml2AttributeDefault)GetObj()->def; }
+	wxXml2Enumeration GetEnum() const
+		{ if (GetObj()) return wxXml2Enumeration(GetObj()->tree); return wxXml2EmptyEnumeration; }
+	wxXml2Namespace GetNamespace() const
+		{ if (GetObj()) return wxXml2Namespace(XML2WX(GetObj()->prefix), wxEmptyString); return wxXml2EmptyNamespace; }
+	wxString GetDefaultVal() const
+		{ if (GetObj()) return XML2WX(GetObj()->defaultValue); return wxEmptyString; }
+	wxString GetElementName() const
+		{ if (GetObj()) return XML2WX(GetObj()->elem); return wxEmptyString; }
+	wxString GetName() const
+		{ if (GetObj()) return XML2WX(GetObj()->name); return wxEmptyString; }
 };
 
 
@@ -472,6 +524,20 @@ public:		// miscellaneous
 
 	xmlEntity *GetObj() const
 		{ return (xmlEntity *)m_obj; }
+
+	// cannot be inlined...
+	wxXml2DTD GetParent() const;
+
+	wxXml2EntityType GetType() const
+		{ return (wxXml2EntityType)GetObj()->etype; }
+	wxString GetName() const
+		{ if (GetObj()) return XML2WX(GetObj()->name); return wxEmptyString; }
+	wxString GetContent() const
+		{ if (GetObj()) return XML2WX(GetObj()->content); return wxEmptyString; }
+	wxString GetExternalID() const
+		{ if (GetObj()) return XML2WX(GetObj()->ExternalID); return wxEmptyString; }
+	wxString GetSystemID() const
+		{ if (GetObj()) return XML2WX(GetObj()->SystemID); return wxEmptyString; }
 };
 
 
@@ -537,7 +603,11 @@ protected:
 	int &GetPrivate() const
 		{ return (int &)(m_dtd->_private); }
 
-	//! This function is not public because FIXME
+	//! This function is not public because it is too generic:
+	//! with this function the user could set as root of a DTD also
+	//! a wxXml2Node, wxXml2Property or a wxXml2Namespace since they
+	//! are classes derived from wxXml2BaseNode.
+	//! The overloaded versions of #SetRoot will ensure this won't happen.
 	void SetRoot(wxXml2BaseNode &node);
 
 public:

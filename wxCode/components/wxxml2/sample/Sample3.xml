@@ -1,13 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf8"?>
+<?xml-stylesheet type="text/xsl" href="http://www.w3.org/Math/XSL/mathml.xsl"?>
 <!DOCTYPE math PUBLIC "-//W3C//DTD MathML 2.0//EN" "http://www.w3.org/TR/MathML2/dtd/mathml2.dtd">
-<html lang="en">
-  <head>
-    <title>Hi! I'm a sample HTML file</title>
-  </head>
-  <body>
-<!-- This is a dummy comment -->
-    <p> HTML exported by wxXml2 wrappers for libxml2 -  write to frm@users.sourceforge.net if you encounter any  problem or if you want to give suggestions or advices. </p>
-<!-- In the followig text child, some non-UTF8 characters are used -->
-    <p>/u20ac</p>
-  </body>
-</html>
+<advanced_sample><![CDATA[my cdata block: this text is not parsed and it can contain any special character like <>'",! except for the characters ] ] > in sequence without spaces since they mark the end of this node]]><refnode>&copy;</refnode><!--In the followig text child, some non-ANSI (i.e. Unicode) characters are used; If you see a greek ALPHA, BETA and GAMMA characters, it means that you are using a viewer which supports the Unicode standard.--><textchild>αβγ</textchild></advanced_sample>
