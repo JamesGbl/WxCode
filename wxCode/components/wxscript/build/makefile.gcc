@@ -37,6 +37,9 @@ USE_UNDERC = 0
 # The Python library main folder 
 PYTHON_DIR = c:\Python
 
+# The Python library minor version (2=2.2, 3=2.3, 4=2.4 ...) [2,3,4,5]
+PYTHON_MINVER = 4
+
 # The LUA library main folder 
 LUA_DIR = c:\lua
 
@@ -166,7 +169,7 @@ WXLIBPOSTFIX = u
 endif
 endif
 ifeq ($(USE_PYTHON),1)
-__SCRIPTLIB1_p = -lpython24$(PYTHONLIB_POSTFIX)
+__SCRIPTLIB1_p = -lpython2$(PYTHON_MINVER)$(PYTHONLIB_POSTFIX)
 endif
 ifeq ($(USE_LUA),1)
 __SCRIPTLIB2A_p = -llua

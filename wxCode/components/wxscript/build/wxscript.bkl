@@ -100,13 +100,13 @@
 	<if cond="FORMAT!='msvc6prj'"><set var="LIBPATH_SWITCH">$(__LIBDIR_ARG)</set></if>
 	<if cond="FORMAT!='msvc6prj'"><set var="DEFINE_SWITCH">$(__DEFINE_ARG)</set></if>
 	
-	<set var="PYTHONLIB_POSTFIX">
-		<if cond="BUILD=='debug'">_d</if>
-	</set>
+	<set var="PYTHON_MAJVER">2</set>
+	<set var="PYTHONLIB_POSTFIX"><if cond="BUILD=='debug'">_d</if></set>
+	<set var="PYTHONLIB_NAME">python$(PYTHON_MAJVER)$(PYTHON_MINVER)$(PYTHONLIB_POSTFIX)</set>
 
 	<if cond="FORMAT!='msvc6prj'">
 		<if cond="FORMAT=='autoconf'">
-			<set var="SCRIPTINCLUDE"><if cond="USE_PYTHON=='1'">/usr/include/python2.$(PYTHON_MINVER)</if></set>
+			<set var="SCRIPTINCLUDE"><if cond="USE_PYTHON=='1'">/usr/include/python$(PYTHON_MAJVER).$(PYTHON_MINVER)</if></set>
 		</if>
 		<if cond="FORMAT!='autoconf'">
 			<set var="SCRIPTINCLUDE1"><if cond="USE_PYTHON=='1'">$(INCLUDE_SWITCH)$(PYTHON_DIR)$(DIRSEP)include</if></set>
@@ -134,7 +134,7 @@
 	</if>
 
 	<if cond="FORMAT!='msvc6prj'">
-		<set var="SCRIPTLIB1"><if cond="USE_PYTHON=='1'">python24$(PYTHONLIB_POSTFIX)</if></set>
+		<set var="SCRIPTLIB1"><if cond="USE_PYTHON=='1'">$(PYTHONLIB_NAME)</if></set>
 		<set var="SCRIPTLIB2A"><if cond="USE_LUA=='1'">lua</if></set>
 		<set var="SCRIPTLIB2B"><if cond="USE_LUA=='1'">lualib</if></set>
 		<set var="SCRIPTLIB2C"><if cond="USE_LUA=='1'">tolua</if></set>
@@ -149,7 +149,7 @@
 	<!-- ================================== -->
 	
 	<template id="twxscript">
-		<if cond="FORMAT!='msvc6prj' and FORMAT!='autoconf'">
+		<if cond="FORMAT!='msvc6prj'">
 			<cppflags>$(SCRIPTDEFINE) $(SCRIPTINCLUDE)</cppflags>
 			<ldflags>$(SCRIPTLIBPATH)</ldflags>
 		</if>
@@ -171,7 +171,7 @@
 		</if>
 	</template>
 
-   <define-tag name="scriptlibs" rules="exe,dll,lib">
+	<define-tag name="scriptlibs" rules="exe,dll,lib">
 		<if cond="FORMAT!='msvc6prj'">
 			<sys-lib>$(SCRIPTLIB1)</sys-lib>
 			<sys-lib>$(SCRIPTLIB2A)</sys-lib>
@@ -181,7 +181,7 @@
 			<sys-lib>$(SCRIPTLIB4)</sys-lib>
 		</if>
 		<if cond="FORMAT=='msvc6prj'">
-			<sys-lib>python24$(PYTHONLIB_POSTFIX)</sys-lib>
+			<sys-lib>$(PYTHONLIB_NAME)</sys-lib>
 			<sys-lib>lua</sys-lib>
 			<sys-lib>lualib</sys-lib>
 			<sys-lib>tolua</sys-lib>

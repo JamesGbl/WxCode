@@ -59,13 +59,19 @@
  The doxygen docs are a useful and detailed reference manual to use after you learnt
  how wxxml2 wrappers must be used.
 
+ In particular, when building wxscript on an autoconf-based system (like Linux/GNU-based systems),
+ you have to create the makefile doing:
 
- -> on Linux:
-    Use the command
-    
-          make
-
-    to compile the sample.
+  cd build
+  aclocal
+  autoconf
+  ./configure [here you should use the same flags you used to configure wxWin]
+  make
+ 
+ Type "./configure --help" for more info.
+ The autoconf-based systems also support a "make install" target which builds the library and then
+ copies the headers of the component to /usr/local/include and the lib to /usr/local/lib.
+ For any problem, feel free to contact frm@users.sourceforge.net
 
 
 

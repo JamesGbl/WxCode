@@ -53,7 +53,9 @@
 #include <wx/filename.h>
 
 #include <stdio.h>			// miscellaneous includes
+#ifdef __VISUALC__
 #include <conio.h>			// miscellaneous includes
+#endif
 #include <tolua.h>
 
 #include <wx/script.h>		// our interpreter...
@@ -428,7 +430,7 @@ void MainTestSet()
 {
 	wxString basepath = wxGetCwd();
 	 
-	if (basepath.Right(5).IsSameAs(wxT("test1"), FALSE))
+	if (basepath.Right(5).IsSameAs(wxT("test2"), FALSE))
 		basepath = basepath.Left(basepath.Len()-6);
 	if (basepath.Right(5).IsSameAs(wxT("build"), FALSE))
 		basepath = basepath.Left(basepath.Len()-6) + wxFileName::GetPathSeparator() + wxT("tests");
