@@ -93,6 +93,7 @@ extraResourceOptions=
 10=SpellCheckerOptionsDialog.cpp
 11=PersonalDictionary.cpp
 12=XmlPersonalDictionaryDialog.cpp
+13=DictionaryWizard.cpp
 [Header]
 1=../include/SpellCheckerOptionsDialog.h
 2=../include/AspellInterface.h
@@ -106,6 +107,7 @@ extraResourceOptions=
 10=../include/XmlSpellCheckDialog.h
 11=../include/PersonalDictionary.h
 12=../include/XmlPersonalDictionaryDialog.h
+13=../include/DictionaryWizard.h
 [Resource]
 [Other]
 [History]
