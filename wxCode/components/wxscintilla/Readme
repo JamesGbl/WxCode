@@ -1,7 +1,7 @@
 Component:  wxScintilla
-Release:    1.62.4
+Release:    1.62.5
 Documents:  http://www.yellowbrain.com/stc/index.html
-wxWidgets:  2.4.x
+wxWidgets:  2.4.x, 2.5.x
 Maintainer: Otto Wyss (wyo)
 Subdir:     wxscintilla
 
