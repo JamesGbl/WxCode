@@ -149,110 +149,110 @@ All lines of text in Scintilla are the same height, and this height is calculate
  <a class="message" href="#GetStyleBits">int GetStyleBits</a><br />
 </code></p>
 
+<h4 id="GetText">wxString GetText()</h4>
 <p>
-<b id="GetText">wxString GetText ()</b><br />
 Returns all the characters of text from the start of the document. If you then save the text, you should use <code>SetSavePoint</code> to mark the text as unmodified.
 </p>
 <p>
 See also: <code><a class="message" href="#GetSelectedText">GetSelectedText</a>, <a class="message" href="#GetCurLine">GetCurLine</a>, <a class="message" href="#GetLine">GetLine</a>, <a class="message" href="#GetStyledText">GetStyledText</a>, <a class="message" href="#GetTextRange">GetTextRange</a></code>
 </p>
 
+<h4 id="SetText">void SetText (const wxString& text)</h4>
 <p>
-<b id="SetText">void SetText (const wxString& text)</b><br />
 Replaces all the text in the document with the text string you pass in. Any previous existing text is deleted.
 </p>
 
+<h4 id="GetLine">wxString GetLine (int line)</h4>
 <p>
-<b id="GetLine">wxString GetLine (int line)</b><br />
 Returns a string with the contents of the nominated line (line numbers start at 0).
 </p>
 <p>
 See also: <code><a class="message" href="#GetCurLine">GetCurLine</a>, <a class="message" href="#GetSelectedText">GetSelectedText</a>, <a class="message" href="#GetTextRange">GetTextRange</a>, <a class="message" href="#GetStyledText">GetStyledText</a>, <a class="message" href="#GetText">GetText</a></code>
 </p>
 
+<h4 id="ReplaceSelection">void ReplaceSelection (const wxString& text)</h4>
 <p>
-<b id="ReplaceSelection">void ReplaceSelection (const wxString& text)</b><br />
 The currently selected text between the <a class="jump" href="#SelectionAndInformation">anchor and the current position</a> is replaced by the text string. If the anchor and current position are the same (meaning no selection), the text is inserted at the caret position. The caret is positioned after the inserted text and the caret is scrolled into view.
 </p>
 
+<h4 id="SetReadOnly">void SetReadOnly (bool readOnly)</h4>
+<h4 id="GetReadOnly">bool GetReadOnly()</h4>
 <p>
-<b id="SetReadOnly">void SetReadOnly (bool readOnly)</b><br />
-<b id="GetReadOnly">bool GetReadOnly()</b><br />
 Set and get the read-only flag of the document. If you mark a document as read only, attempts to modify the text will fail and cause the <a class="message" href="#wxEVT_SCI_MODIFYATTEMPTRO"><code>wxEVT_SCI_MODIFYATTEMPTRO</code></a> notification.
 </p>
 
+<h4 id="GetTextRange">wxString GetTextRange (int startPos, int endPos)</h4>
 <p>
-<b id="GetTextRange">wxString GetTextRange (int startPos, int endPos)</b><br />
 Returns the text between the positions <code>startPos</code> and <code>endPos</code>. If <code>endPos</code> is wxSCI_INVALID_POSITION, text is returned to the end of the document.
 </p>
 <p>
 See also: <code><a class="message" href="#GetSelectedText">GetSelectedText</a>, <a class="message" href="#GetLine">GetLine</a>, <a class="message" href="#GetCurLine">GetCurLine</a>, <a class="message" href="#GetStyledText">GetStyledText</a>, <a class="message" href="#GetText">GetText</a></code>
 </p>
 
+<h4 id="GetStyledText">wxMemoryBuffer GetStyledText (int startPos, int endPos)</h4>
 <p>
-<b id="GetStyledText">wxMemoryBuffer GetStyledText (int startPos, int endPos)</b><br />
 Returns the styled text into a buffer using two bytes for each cell, with the character at the lower address of each pair and the style byte at the upper address. Characters between the positions <code>startPos</code> and <code>endPos</code> are copied.
 </p>
 <p>
 See also: <code><a class="message" href="#GetSelectedText">GetSelectedText</a>, <a class="message" href="#GetLine">GetLine</a>, <a class="message" href="#GetCurLine">GetCurLine</a>, <a class="message" href="#GetTextRange">GetTextRange</a>, <a class="message" href="#GetText">GetText</a></code>
 </p>
 
+<h4 id="Allocate">void Allocate (int bytes)</h4>
 <p>
-<b id="Allocate">void Allocate (int bytes)</b><br />
 Allocate a document buffer large enough to store a given number of bytes.  The document will not be made smaller than its current contents.
 </p>
 <p>
 <b>Note:</b> Do not use this function if you don't know what you exactly do.
 </p>
 
+<h4 id="AddText">void AddText (const wxString& text)</h4>
+<h4             >void AddText (const int length, const wxString& text)</h4>
 <p>
-<b id="AddText">void AddText (const wxString& text)</b><br />
-<b             >void AddText (const int length, const wxString& text)</b><br />
 Inserts the string at the current position. The current position is set at the end of the inserted text, but it is not scrolled into view. If you need to add strings with binary values (e.g. Unicode characters), use the form with the <code>length</code> parameter.
 </p>
 
+<h4 id="AddStyledText">void AddStyledText (const wxMemoryBuffer& data)</h4>
 <p>
-<b id="AddStyledText">void AddStyledText (const wxMemoryBuffer& data)</b><br />
 This behaves just like <code>AddText</code>, but inserts styled text.
 </p>
 
+<h4 id="AppendText">void AppendText (const wxString& text)</h4>
+<h4                >void AppendText (int length, const wxString& text)</h4>
 <p>
-<b id="AppendText">void AppendText (const wxString& text)</b><br />
-<b                >void AppendText (int length, const wxString& text)</b><br />
 Appends the string at the last position in the document. The current selection is not changed and the new text is not scrolled into view. If you need to add strings with binary values (e.g. Unicode characters), use the form with the <code>length</code> parameter.
 </p>
 
+<h4 id="InsertText">void InsertText (int pos, const wxString& text)</h4>
 <p>
-<b id="InsertText">void InsertText (int pos, const wxString& text)</b><br />
 Inserts the string at position <code>pos</code> or at the current position if <code>pos</code> is wxSCI_INVALID_POSITION. The current position is set at the end of the inserted text, but it is not scrolled into view.
 </p>
 
+<h4 id="ClearAll">void ClearAll()</h4>
 <p>
-<b id="ClearAll">void ClearAll()</b><br />
 Deletes all the text (unless the document is read-only).
 </p>
 
+<h4 id="ClearDocumentStyle">void ClearDocumentStyle()</h4>
 <p>
-<b id="ClearDocumentStyle">void ClearDocumentStyle()</b><br />
 When wanting to completely restyle the document, for example after choosing a lexer, the <code>ClearDocumentStyle</code> can be used to clear all styling information and reset the folding state.
 </p>
 <p>
 See also: <code><a class="message" href="#Colourise">Colourise</a></code>
 </p>
 
+<h4 id="GetCharAt">int GetCharAt (int pos)</h4>
 <p>
-<b id="GetCharAt">int GetCharAt (int pos)</b><br />
 Returns the character at <code>pos</code> in the document. If <code>pos</code> is negative or past the end of the document, returns 0.
 </p>
 
+<h4 id="GetStyleAt">int GetStyleAt (int pos)</h4>
 <p>
-<b id="GetStyleAt">int GetStyleAt (int pos)</b><br />
 Returns the style at <code>pos</code> in the document. If <code>pos</code> is negative or past the end of the document, returns 0.
 </p>
 
+<h4 id="SetStyleBits">void SetStyleBits (int bits)</h4>
+<h4 id="GetStyleBits">int GetStyleBits</h4>
 <p>
-<b id="SetStyleBits">void SetStyleBits (int bits)</b><br />
-<b id="GetStyleBits">int GetStyleBits</b><br />
 Sets and reads back the number of bits in each cell to use for styling, to a maximum of 7 style bits. The remaining bits can be used as indicators. The default setting is <code>5</code> style bits.
 </p>
 
@@ -270,8 +270,8 @@ See also: <a class="jump" href="#SearchAndReplaceUsingTheTarget">Search and repl
  <a class="message" href="#SearchPrev">int SearchPrev (int flags, const wxString& text)</a><br />
 </code></p>
 
+<h4 id="searchFlags"><code>searchFlags</code></h4>
 <p>
-<b id="searchFlags"><code>searchFlags</code></b><br />
 Several of the search routines use flag options, which include a simple regular expression search. Combine the flag options by adding them:
 </p>
 <table border="0" summary="Search flags"><tbody>
@@ -342,18 +342,18 @@ In a regular expression, special characters interpreted are:
 </tr>
 </tbody></table>
 
+<h4 id="FindText">int FindText (int minPos, int maxPos, const wxString& text, int flags=0)</h4>
 <p>
-<b id="FindText">int FindText (int minPos, int maxPos, const wxString& text, int flags=0)</b><br />
 FindText performs a straightforward text search through the entire document. The <code>minPos</code> and <code>maxPos</code> arguments specify the range within the Document to search.  No surprise, the <code>text</code> argument is a string object containing the string to search for. The <code>flags</code> argument controls the search. You can set <code>maxPos</code> less than <code>minPos</code> to search in reverse. Returns the start position of the found text, or wxSCI_INVALID_POSITION if it isn't found.
 </p>
 <p>
 See also: <code><a class="message" href="#SearchInTarget">SearchInTarget</a></code>
 </p>
 
+<h4 id="SearchAnchor">void SearchAnchor()</h4>
+<h4 id="SearchNext">int SearchNext (int flags, const wxString& text)</h4>
+<h4 id="SearchPrev">int SearchPrev (int flags, const wxString& text)</h4>
 <p>
-<b id="SearchAnchor">void SearchAnchor()</b><br />
-<b id="SearchNext">int SearchNext (int flags, const wxString& text)</b><br />
-<b id="SearchPrev">int SearchPrev (int flags, const wxString& text)</b><br />
 These provide relocatable search support. This allows multiple incremental interactive searches to be macro recorded while still setting the selection to found text so the find/select operation is self-contained. They send <a class="message" href="#wxEVT_SCI_MACRORECORD"><code>wxEVT_SCI_MACRORECORD</code></a> <a class="jump" href="#Notifications">notifications</a> if macro recording is enabled.
 </p>
 <p>
@@ -392,45 +392,45 @@ Using <a class="message" href="#ReplaceSelection"><code>ReplaceSelection</code><
  <a class="message" href="#ReplaceTargetRE">int ReplaceTargetRE (const wxString& text)</a><br />
 </code></p>
 
+<h4 id="SetTargetStart">void SetTargetStart (int pos)</h4>
+<h4 id="GetTargetStart">int GetTargetStart()</h4>
+<h4 id="SetTargetEnd">void SetTargetEnd (int pos)</h4>
+<h4 id="GetTargetEnd">int GetTargetEnd()</h4>
 <p>
-<b id="SetTargetStart">void SetTargetStart (int pos)</b><br />
-<b id="GetTargetStart">int GetTargetStart()</b><br />
-<b id="SetTargetEnd">void SetTargetEnd (int pos)</b><br />
-<b id="GetTargetEnd">int GetTargetEnd()</b><br />
 Set and return the start and end of the target. When searching in non-regular expression mode, you can set start position greater than end position to find the last matching text in the target rather than the first matching text. The target is also set by a successful <code>SearchInTarget</code>.
 </p>
 
+<h4 id="TargetFromSelection">void TargetFromSelection()</h4>
 <p>
-<b id="TargetFromSelection">void TargetFromSelection()</b><br />
 Set the target start and end to the start and end positions of the current selection.
 </p>
 <p>
-<b id="SetSearchFlags">void SetSearchFlags (int flags)</b><br />
-<b id="GetSearchFlags">int GetSearchFlags()</b><br />
+<h4 id="SetSearchFlags">void SetSearchFlags (int flags)</h4>
+<h4 id="GetSearchFlags">int GetSearchFlags()</h4>
 Set and get the <a class="jump" href="#searchFlags"><code>searchFlags</code></a> used by <code>SearchInTarget</code>. There are several option flags including a simple regular expression search.
 </p>
 
+<h4 id="SearchInTarget">int SearchInTarget (const wxString& text)</h4>
 <p>
-<b id="SearchInTarget">int SearchInTarget (const wxString& text)</b><br />
 This searches for the first occurrence of a text string in the target defined by <code>SetTargetStart</code> and <code>SetTargetEnd</code>. The text string is not zero terminated; the size is set by <code>length</code>. The search is modified by the search flags set by <code>SetSearchFlags</code>. If the search succeeds, the target is set to the found text and the return value is the position of the start of the matching text. If the search fails, the result is wxSCI_INVALID_POSITION.
 </p>
 
+<h4 id="ReplaceTarget">int ReplaceTarget (const wxString& text)</h4>
 <p>
-<b id="ReplaceTarget">int ReplaceTarget (const wxString& text)</b><br />
 The return value is the length of the replacement string.
 </p>
 
+<h4 id="ReplaceTargetRE">int ReplaceTargetRE (const wxString& text)</h4>
 <p>
-<b id="ReplaceTargetRE">int ReplaceTargetRE (const wxString& text)</b><br />
 This replaces the target using regular expressions. The replacement string is formed from the text string with any sequences of <code>\1</code> through <code>\9</code> replaced by tagged matches from the most recent regular expression search. The return value is the length of the replacement string.
 </p>
 
 <hr 1>
 <h3 id="Overtype">Overtype</h3>
 
+<h4 id="SetOvertype">void SetOvertype (bool overtype)</h4>
+<h4 id="GetOvertype">bool GetOvertype()</h4>
 <p>
-<b id="SetOvertype">void SetOvertype (bool overtype)</b><br />
-<b id="GetOvertype">bool GetOvertype()</b><br />
 When overtype is enabled, each typed character replaces the character to the right of the text caret. When overtype is disabled, characters are inserted at the caret. <code>GetOvertype</code> returns <code>true</code> if overtyping is active, otherwise <code>false</code>. Use <code>SetOvertype (true)</code> to set the overtype mode.
 </p>
 
@@ -447,30 +447,30 @@ When overtype is enabled, each typed character replaces the character to the rig
  <a class="message" href="#CopyText">void CopyText (int length, const wxString& text)</a><br />
 </code></p>
 
+<h4 id="Cut">void Cut()</h4>
+<h4 id="Copy">void Copy()</h4>
+<h4 id="Paste">void Paste()</h4>
+<h4 id="Clear">void Clear()</h4>
+<h4 id="CanPaste">bool CanPaste()</h4>
 <p>
-<b id="Cut">void Cut()</b><br />
-<b id="Copy">void Copy()</b><br />
-<b id="Paste">void Paste()</b><br />
-<b id="Clear">void Clear()</b><br />
-<b id="CanPaste">bool CanPaste()</b><br />
 Perform the standard commands of cutting and copying data to the clipboard, pasting from the clipboard into the document, and clearing the document. <code>CanPaste</code> returns true if the document isn't read-only and if the selection doesn't contain protected text. If you need a "can copy" or "can cut", use <code>GetSelectionStart()-GetSelectionEnd()</code>, which will be non-zero if you can copy or cut to the clipboard.
 </p>
 <p>
 GTK+ does not really support <code>CanPaste</code> and always returns <code>true</code> unless the document is read-only.
 </p>
 
+<h4 id="CopyRange">void CopyRange (int startPos, int endPos)</h4>
+<h4 id="CopyText">void CopyText (int length, const wxString& text)</h4>
 <p>
-<b id="CopyRange">void CopyRange (int startPos, int endPos)</b><br />
-<b id="CopyText">void CopyText (int length, const wxString& text)</b><br />
 <code>CopyRange</code> copies a range of text from the document to the system clipboard and <code>CopyText</code> copies a supplied piece of text to the system clipboard.
 </p>
 
 <hr 1>
 <h3 id="ErrorHandling">Error handling</h3>
 
+<h4 id="SetStatus">void SetStatus (int status)</h4>
+<h4 id="GetStatus">int GetStatus()</h4>
 <p>
-<b id="SetStatus">void SetStatus (int status)</b><br />
-<b id="GetStatus">int GetStatus()</b><br />
 If an error occurs, Scintilla may set an internal error number that can be retrieved with <code>GetStatus</code>. Not currently used but will be in the future. To clear the error status call <code>SetStatus (0)</code>.
 </p>
 
@@ -495,53 +495,54 @@ Scintilla has multiple level undo and redo. It will continue to collect undoable
  <a class="message" href="#GetModify">bool GetModify()</a><br />
 </code></p>
 
+<h4 id="Undo">void Undo()</h4>
 <p>
-<b id="Undo">void Undo()</b><br />
 <code>Undo</code> undoes one action, or if the undo buffer has reached a <code>EndUndoAction</code> point, all the actions back to the corresponding <code>BeginUndoAction</code>.
 </p>
+
+<h4 id="CanUndo">bool CanUndo()</h4>
 <p>
-<b id="CanUndo">bool CanUndo()</b><br />
 <code>CanUndo</code> returns true if there is nothing to undo, otherwise false. You would typically use the result to enable/disable the Edit menu Undo command.
 </p>
 
+<h4 id="Redo">void Redo()</h4>
 <p>
-<b id="Redo">void Redo()</b><br />
 <code>Redo</code> undoes the effect of the last <code>Undo</code> operation.
 </p>
 
+<h4 id="CanRedo">bool CanRedo()</h4>
 <p>
-<b id="CanRedo">bool CanRedo()</b><br />
 <code>CanRedo</code> returns true if there is no action to redo, otherwise false. You could typically use the result to enable/disable the Edit menu Redo command.
 </p>
 
+<h4 id="EmptyUndoBuffer">void EmptyUndoBuffer()</h4>
 <p>
-<b id="EmptyUndoBuffer">void EmptyUndoBuffer()</b><br />
 This command tells Scintilla to forget any saved undo or redo history. It also sets the save point to the start of the undo buffer, so the document will appear to be unmodified. This does not cause the <code><a class="message" href="#wxEVT_SCI_SAVEPOINTREACHED"> CN_SAVEPOINTREACHED</a></code> notification to be sent to the container as
 <a class="message" href="#SetSavePoint"><code>SetSavePoint</code></a> does.
 </p>
 
+<h4 id="SetSavePoint">void SetSavePoint()</h4>
 <p>
-<b id="SetSavePoint">void SetSavePoint()</b><br />
 Sets the current state of the document to unmodified. This is usually done when the file is saved or loaded, hence the name "save point". As Scintilla performs undo and redo operations, it notifies the container that it has entered or left the save point with <code><a class="message" href="#wxEVT_SCI_SAVEPOINTREACHED">wxEVT_SCI_SAVEPOINTREACHED</a></code> and <code><a class="message" href="#wxEVT_SCI_SAVEPOINTLEFT">wxEVT_SCI_SAVEPOINTLEFT</a></code> <a class="jump" href="#Notifications">notification messages</a>, allowing the container to know if the file should be considered dirty or not.
 </p>
 
+<h4 id="SetUndoCollection">void SetUndoCollection (bool collectUndo)</h4>
+<h4 id="GetUndoCollection">bool GetUndoCollection()</h4>
 <p>
-<b id="SetUndoCollection">void SetUndoCollection (bool collectUndo)</b><br />
-<b id="GetUndoCollection">bool GetUndoCollection()</b><br />
 You can control whether Scintilla collects undo information with <code>SetUndoCollection</code>. Pass in <code>true</code> to collect information and <code>false</code> to stop collecting. If you stop collection, you should also use <code>EmptyUndoBuffer</code> to avoid the undo buffer being unsynchronized with the data in the buffer.
 </p>
 <p>
 You might wish to turn off saving undo information if you use the Scintilla to store text generated by a program (a Log view) or in a display window where text is often deleted and regenerated. This can be done with <code>SetUndoCollection (false)</code>.
 </p>
 
+<h4 id="BeginUndoAction">void BeginUndoAction()</h4>
+<h4 id="EndUndoAction">void EndUndoAction()</h4>
 <p>
-<b id="BeginUndoAction">void BeginUndoAction()</b><br />
-<b id="EndUndoAction">void EndUndoAction()</b><br />
 Mark the beginning and end of a set of operations that you want to undo all as one operation but that you have to generate as several operations. Alternatively, you can use these to mark a set of operations that you do not want to have combined with the preceding or following operations if they are undone.
 </p>
 
+<h4 id="GetModify">bool GetModify()</h4>
 <p>
-<b id="GetModify">bool GetModify()</b><br />
 Returns true if the document is modified and false if it is unmodified. The modified status of a document is determined by the undo position relative to the save point. The save point is set by <a class="message" href="#SetSavePoint"><code>SetSavePoint</code></a>, usually when you have saved data to a file.
 </p>
 <p>
@@ -601,71 +602,71 @@ Scintilla maintains a selection that stretches between two points, the anchor an
  <a class="message" href="#ChooseCaretX">void ChooseCaretX()</a><br />
 </code></p>
 
+<h4 id="GetLength">int GetLength()</h4>
+<h4 id="GetTextLength">int GetTextLength()</h4>
 <p>
-<b id="GetLength">int GetLength()</b><br />
-<b id="GetTextLength">int GetTextLength()</b><br />
 Return the length of the document in characters. The use of GetLength is prefered.
 </p>
 
+<h4 id="GetLineCount">int GetLineCount()</h4>
 <p>
-<b id="GetLineCount">int GetLineCount()</b><br />
 Returns the number of lines in the document. An empty document contains 1 line. A document holding only an end of line sequence has 2 lines.
 </p>
 
+<h4 id="GetFirstVisibleLine">int GetFirstVisibleLine()</h4>
 <p>
-<b id="GetFirstVisibleLine">int GetFirstVisibleLine()</b><br />
 Returns the line number of the first visible line in the Scintilla view. The first line in the document is numbered 0.
 </p>
 
+<h4 id="LinesOnScreen">int LinesOnScreen()</h4>
 <p>
-<b id="LinesOnScreen">int LinesOnScreen()</b><br />
 Returns the number of complete lines visible on the screen. With a constant line height, this is the vertical space available divided by the line separation. Unless you arrange to size your window to an integral number of lines, there may be a partial line visible at the bottom of the view.
 </p>
 
+<h4 id="SetSelection">void SetSelection (int startPos, int endPos)</h4>
 <p>
-<b id="SetSelection">void SetSelection (int startPos, int endPos)</b><br />
 Sets both the anchor (<code>startPos</code>) and the current position (<code>endPos</code>) and selects the text. If <code>endPos</code> is negative, it means the end of the document. If <code>startPos</code> is negative, it means remove any selection (i.e. set the anchor to the same position as <code>currentPos</code>). The caret is scrolled into view after this operation.
 </p>
 
+<h4 id="GotoPos">void GotoPos (int pos)</h4>
 <p>
-<b id="GotoPos">void GotoPos (int pos)</b><br />
 Sets the caret at <code>pos</code>, removes any selection and scrolls the view to make the caret visible, if necessary. It is equivalent to <code>SetSelection (pos, pos)</code>. The anchor position is set the same as the current position.
 </p>
 
+<h4 id="GotoLine">void GotoLine (int line)</h4>
 <p>
-<b id="GotoLine">void GotoLine (int line)</b><br />
 Sets the caret at the start of line number <code>line</code>, removes any selection and scrolls the view (if needed) to make it visible. The anchor position is set the same as the current position. If <code>line</code> is outside the lines in the document (first line is 0), the line set is the first or last.
 </p>
 
+<h4 id="SetCurrentPos">void SetCurrentPos (int pos)</h4>
 <p>
-<b id="SetCurrentPos">void SetCurrentPos (int pos)</b><br />
 Sets the current position and creates a selection between the anchor and the current position. The caret is not scrolled into view.
 </p>
 <p>
 See also: <a class="message" href="#EnsureCaretVisible"><code>EnsureCaretVisible</code></a>
 </p>
 
+<h4 id="GetCurrentPos">int GetCurrentPos()</h4>
 <p>
-<b id="GetCurrentPos">int GetCurrentPos()</b><br />
 This returns the current position.
 </p>
 
+<h4 id="SetAnchor">void SetAnchor (int posAnchor)</h4>
 <p>
-<b id="SetAnchor">void SetAnchor (int posAnchor)</b><br />
 This sets the anchor position and creates a selection between the anchor position and the current position. The caret is not scrolled into view.
 </p>
 <p>
 See also: <a class="message" href="#EnsureCaretVisible"><code>EnsureCaretVisible</code></a>
 </p>
 
+<h4 id="GetAnchor">int GetAnchor()</h4>
 <p>
-<b id="GetAnchor">int GetAnchor()</b><br />
 Returns the current anchor position.
 </p>
 
+<h4 id="SetSelectionStart">void SetSelectionStart (int pos)</h4>
+<h4 id="SetSelectionEnd">void SetSelectionEnd (int pos)</h4>
 <p>
-<b id="SetSelectionStart">void SetSelectionStart (int pos)</b><br />
-<b id="SetSelectionEnd">void SetSelectionEnd (int pos)</b><br />
 Set the selection based on the assumption that the anchor position is less than the current position. They do not make the caret visible. The table shows the positions of the anchor and the current position after using either.
 </p>
 <table cellpadding="3" cellspacing="0" border="1" summary="SetSelection caret positioning">   <thead align="center">
@@ -688,78 +689,78 @@ Set the selection based on the assumption that the anchor position is less than 
 See also: <a class="message" href="#EnsureCaretVisible"><code>EnsureCaretVisible</code></a>
 </p>
 
+<h4 id="GetSelectionStart">int GetSelectionStart()</h4>
+<h4 id="GetSelectionEnd">int GetSelectionEnd()</h4>
 <p>
-<b id="GetSelectionStart">int GetSelectionStart()</b><br />
-<b id="GetSelectionEnd">int GetSelectionEnd()</b><br />
 Return the start and end of the selection without regard to which end is the current position and which is the anchor. <code>GetSelectionStart</code> returns the smaller of the current position or the anchor position. <code>GetSelectionEnd</code> returns the larger of the two values.
 </p>
 
+<h4 id="SelectAll">void SelectAll()</h4>
 <p>
-<b id="SelectAll">void SelectAll()</b><br />
 This selects all the text in the document. The current position is not scrolled into view.
 </p>
 
+<h4 id="LineFromPosition">int LineFromPosition (int pos)</h4>
 <p>
-<b id="LineFromPosition">int LineFromPosition (int pos)</b><br />
 Returns the line that contains the position <code>pos</code> in the document. The return value is 0 if <code>pos</code> &lt;= 0. The return value is the last line if <code>pos</code> is beyond the end of the document.
 </p>
 
+<h4 id="PositionFromLine">int PositionFromLine (int line)</h4>
 <p>
-<b id="PositionFromLine">int PositionFromLine (int line)</b><br />
 Returns the document position that corresponds with the start of the line. If <code>line</code> is negative, the position of the line holding the start of the selection is returned. If <code>line</code> is greater than the lines in the document, the return value is wxSCI_INVALID_POSITION. If <code>line</code> is equal to the number of lines in the document (i.e. 1 line past the last line), the return value is the end of the document.
 </p>
 
+<h4 id="GetLineEndPosition">int GetLineEndPosition (int line)</h4>
 <p>
-<b id="GetLineEndPosition">int GetLineEndPosition (int line)</b><br />
 Returns the position at the end of the line, before any line end characters. If <code>line</code> is negative, the result is 0. If <code>line</code> is the last line in the document, (which does not have any end of line characters), the result is the size of the document. If <code>line</code> is negative, the result is wxSCI_INVALID_POSITION. If <code>line</code> is &gt;= <code>GetLineCount()</code>, the result is currently <code>GetLength()-1</code>.
 </p>
 
+<h4 id="LineLength">int LineLength (int line)</h4>
 <p>
-<b id="LineLength">int LineLength (int line)</b><br />
 Returns the length of the line, including any line end characters. If <code>line</code> is negative or beyond the last line in the document, the result is 0. If you want the length of the line not including any end of line characters, use <a class="message" href="#GetLineEndPosition"><code>GetLineEndPosition(line)</code></a> - <a class="message" href="#PositionFromLine"><code>PositionFromLine(line)</code></a>.
 </p>
 
+<h4 id="GetSelectedText">wxString GetSelectedText()</h4>
 <p>
-<b id="GetSelectedText">wxString GetSelectedText()</b><br />
 Returns the currently selected text.
 </p>
 <p>
 See also: <code><a class="message" href="#GetCurLine">GetCurLine</a>, <a class="message" href="#GetLine">GetLine</a>, <a class="message" href="#GetText">GetText</a>, <a class="message" href="#GetStyledText">GetStyledText</a>, <a class="message" href="#GetTextRange">GetTextRange</a></code>
 </p>
 
+<h4 id="GetCurLine">wxString GetCurLine (int* linePos=NULL)</h4>
 <p>
-<b id="GetCurLine">wxString GetCurLine (int* linePos=NULL)</b><br />
 Retrieves the text of the line containing the caret and returns the position within the line of the caret.
 </p>
 <p>
 See also: <code><a class="message" href="#GetSelectedText">GetSelectedText</a>, <a class="message" href="#GetLine">GetLine</a>, <a class="message" href="#GetText">GetText</a>, <a class="message" href="#GetStyledText">GetStyledText</a>, <a class="message" href="#GetTextRange">GetTextRange</a></code>
 </p>
 
+<h4 id="SelectionIsRectangle">bool SelectionIsRectangle()</h4>
 <p>
-<b id="SelectionIsRectangle">bool SelectionIsRectangle()</b><br />
 Returns true if the current selection is in rectangle mode, false if not.
 </p>
 
+<h4 id="SetSelectionMode">void SetSelectionMode (int mode)</h4>
 <p>
-<b id="SetSelectionMode">void SetSelectionMode (int mode)</b><br />
-<b id="GetSelectionMode">int GetSelectionMode()</b><br />
+<h4 id="GetSelectionMode">int GetSelectionMode()</h4>
 Set and get the selection mode, which can be stream (<code>wxSCI_SEL_STREAM</code>=1, default) or rectangular (<code>wxSCI_SEL_RECTANGLE</code>=2) or by lines (<code>wxSCI_SEL_LINES</code>=3). When set in these modes, regular caret moves will extend or reduce the selection, until the mode is cancelled by a call with same value or with <code>Cancel</code>. The get function returns the current mode even if the selection was made by mouse or with regular extended moves.
 </p>
 
+<h4 id="GetLineSelStartPosition">int GetLineSelStartPosition (int line)</h4>
+<h4 id="GetLineSelEndPosition">int GetLineSelEndPosition (int line)</h4>
 <p>
-<b id="GetLineSelStartPosition">int GetLineSelStartPosition (int line)</b><br />
-<b id="GetLineSelEndPosition">int GetLineSelEndPosition (int line)</b><br />
 Retrieve the position of the start and end of the selection at the given line with wxSCI_INVALID_POSITION returned if no selection on this line.
 </p>
 
+<h4 id="MoveCaretInsideView">void MoveCaretInsideView()</h4>
 <p>
-<b id="MoveCaretInsideView">void MoveCaretInsideView()</b><br />
 If the caret is off the top or bottom of the view, it is moved to the nearest line that is visible to its current position. Any selection is lost.
 </p>
 
+<h4 id="WordStartPosition">int WordStartPosition (int pos, bool onlyWordCharacters)</h4>
+<h4 id="WordEndPosition">int WordEndPosition (int pos, bool onlyWordCharacters)</h4>
 <p>
-<b id="WordStartPosition">int WordStartPosition (int pos, bool onlyWordCharacters)</b><br />
-<b id="WordEndPosition">int WordEndPosition (int pos, bool onlyWordCharacters)</b><br />
 Return the start and end of words using the same definition of words as used internally within Scintilla. You can set your own list of characters that count as words with <a class="message" href="#SetWordChars"><code>SetWordChars</code></a>. The position sets the start or the search, which is forwards when searching for the end and backwards when searching for the start.
 </p>
 <p>
@@ -804,45 +805,45 @@ If "w" represents word characters and "." represents non-word characters and "|"
 </tr>
 </tbody></table>
 
+<h4 id="PositionBefore">int PositionBefore (int pos)</h4>
+<h4 id="PositionAfter">int PositionAfter (int pos)</h4>
 <p>
-<b id="PositionBefore">int PositionBefore (int pos)</b><br />
-<b id="PositionAfter">int PositionAfter (int pos)</b><br />
 Returns the position before and after another position  in the document taking into account the current code page. The minimum position returned is 0 and the maximum is the last position in the document. If called with a position within a multi byte character will return the position of the start/end of that character.
 </p>
 
+<h4 id="TextWidth">int TextWidth (int style, const wxString& text)</h4>
 <p>
-<b id="TextWidth">int TextWidth (int style, const wxString& text)</b><br />
 Returns the pixel width of a string drawn in the given <code>styleNumber</code> which can be used, for example, to decide how wide to make the line number margin in order to display a given number of numerals.
 </p>
 
+<h4 id="TextHeight">int TextHeight (int line)</h4>
 <p>
-<b id="TextHeight">int TextHeight (int line)</b><br />
 Returns the height in pixels of a particular line. Currently all lines are the same height.
 </p>
 
+<h4 id="GetColumn">int GetColumn (int pos)</h4>
 <p>
-<b id="GetColumn">int GetColumn (int pos)</b><br />
 Returns the column number of a position <code>pos</code> within the document taking the width of tabs into account. This returns the column number of the last TAB on the line before <code>pos</code>, plus the number of characters between the last TAB and <code>pos</code>. If there are no TAB characters on the line, the return value is the number of characters up to the position on the line. In both cases, double byte characters count as a single character. This is probably only useful with monospaced fonts.
 </p>
 
+<h4 id="FindColumn">int FindColumn (int line, int column)</h4>
 <p>
-<b id="FindColumn">int FindColumn (int line, int column)</b><br />
 Returns the position of a <code>column</code> on a <code>line</code> taking the width of tabs into account. It treats a multi-byte character as a single column. Column numbers, like lines start at 0.
 </p>
 
+<h4 id="PositionFromPoint">int PositionFromPoint (wxPoint pt)</h4>
+<h4 id="PositionFromPointClose">int PositionFromPointClose (int x, int y)</h4>
 <p>
-<b id="PositionFromPoint">int PositionFromPoint (wxPoint pt)</b><br />
-<b id="PositionFromPointClose">int PositionFromPointClose (int x, int y)</b><br />
 <code>PositionFromPoint</code> finds the closest character position to a point and <code>PositionFromPointClose</code> is similar but returns wxSCI_INVALID_POSITION if the point is outside the window or not close to any characters.
 </p>
 
+<h4 id="HideSelection">void HideSelection (bool hide)</h4>
 <p>
-<b id="HideSelection">void HideSelection (bool hide)</b><br />
 The normal state is to make the selection visible by drawing it as set by <a class="message" href="#SetSelForeground"><code>SetSelForeground</code></a> and <a class="message" href="#SetSelBackground"><code>SetSelBackground</code></a>. However, if you hide the selection, it is drawn as normal text.
 </p>
 
+<h4 id="ChooseCaretX">void ChooseCaretX()</h4>
 <p>
-<b id="ChooseCaretX">void ChooseCaretX()</b><br />
 Scintilla remembers the x value of the last position horizontally moved to explicitly by the user and this value is then used when moving vertically such as by using the up and down keys. Sets the current x position of the caret as the remembered value.
 </p>
 
@@ -867,8 +868,8 @@ Scintilla remembers the x value of the last position horizontally moved to expli
  <a class="message" href="#GetEndAtLastLine">int GetEndAtLastLine()</a><br />
 </code></p>
 
+<h4 id="LineScroll">void LineScroll (int columns, int lines)</h4>
 <p>
-<b id="LineScroll">void LineScroll (int columns, int lines)</b><br />
 Attempts to scroll the display by the number of columns and lines that you specify. Positive line values increase the line number at the top of the screen (i.e. they move the text upwards as far as the user is concerned), Negative line values do the reverse.
 </p>
 <p>
@@ -878,14 +879,14 @@ The column measure is the width of a space in the default style. Positive values
 See also: <code><a class="message" href="#SetXOffset"><code>SetXOffset</code></a>
 </p>
 
+<h4 id="EnsureCaretVisible">void EnsureCaretVisible()</h4>
 <p>
-<b id="EnsureCaretVisible">void EnsureCaretVisible()</b><br />
 If the current position (this is the caret if there is no selection) is not visible, the view is scrolled to make it visible according to the current caret policy.
 </p>
 
+<h4 id="SetXCaretPolicy">void SetXCaretPolicy (int caretPolicy, int caretSlop)</h4>
+<h4 id="SetYCaretPolicy">void SetYCaretPolicy (int caretPolicy, int caretSlop)</h4>
 <p>
-<b id="SetXCaretPolicy">void SetXCaretPolicy (int caretPolicy, int caretSlop)</b><br />
-<b id="SetYCaretPolicy">void SetYCaretPolicy (int caretPolicy, int caretSlop)</b><br />
 Set the caret policy. The value of <code>caretPolicy</code> is a combination of <code>wxSCI_CARET_SLOP</code>, <code>wxSCI_CARET_STRICT</code>, <code>wxSCI_CARET_JUMPS</code> and <code>wxSCI_CARET_EVEN</code>.
 </p>
 <table cellpadding="1" cellspacing="2" border="0" summary="Caret policy"> <tbody valign="top">
@@ -1010,44 +1011,44 @@ Set the caret policy. The value of <code>caretPolicy</code> is a combination of 
 </tr>
 </tbody></table>
 
+<h4 id="SetVisiblePolicy">void SetVisiblePolicy (int visiblePolicy, int visibleSlop)</h4>
 <p>
-<b id="SetVisiblePolicy">void SetVisiblePolicy (int visiblePolicy, int visibleSlop)</b><br />
 Determines how the vertical positioning is determined when <a class="message" href="#EnsureVisibleEnforcePolicy"><code>EnsureVisibleEnforcePolicy</code></a> is called. It takes <code>wxSCI_VISIBLE_SLOP</code> and <code>wxSCI_VISIBLE_STRICT</code> flags for the policy parameter. It is similar in operation to <a class="message" href="#SetYCaretPolicy"><code>SetYCaretPolicy(int caretPolicy, int caretSlop)</code></a>.
 </p>
 
+<h4 id="SetUseHorizontalScrollBar">void SetUseHorizontalScrollBar (bool show)</h4>
+<h4 id="GetUseHorizontalScrollBar">bool GetUseHorizontalScrollBar()</h4>
 <p>
-<b id="SetUseHorizontalScrollBar">void SetUseHorizontalScrollBar (bool show)</b><br />
-<b id="GetUseHorizontalScrollBar">bool GetUseHorizontalScrollBar()</b><br />
 The horizontal scroll bar is only displayed if it is needed for the assumed width. If you never wish to see it, call <code>SetUseHorizontalScrollBar (false)</code>. Use <code> SetUseHorizontalScrollBar (true)</code> to enable it again. <code>GetUseHorizontalScrollBar</code> returns the current state. The default state is to  display it when needed.
 </p>
 <p>
 See also: <code><a class="message" href="#SetScrollWidth">SetScrollWidth</a></code>.
 </p>
 
+<h4 id="SetUseVerticalScrollBar">void SetUseVerticalScrollBar (bool show)</h4>
+<h4 id="GetUseVerticalScrollBar">bool GetUseVerticalScrollBar()</h4>
 <p>
-<b id="SetUseVerticalScrollBar">void SetUseVerticalScrollBar (bool show)</b><br />
-<b id="GetUseVerticalScrollBar">bool GetUseVerticalScrollBar()</b><br />
 By default, the vertical scroll bar is always displayed when required. You can choose to hide or show it with <code>SetUseVerticalScrollBar</code> and get the current state with <code>GetUseVerticalScrollBar</code>.
 </p>
 
+<h4 id="SetXOffset">void SetXOffset (int newOffset)</h4>
+<h4 id="GetXOffset">int GetXOffset()</h4>
 <p>
-<b id="SetXOffset">void SetXOffset (int newOffset)</b><br />
-<b id="GetXOffset">int GetXOffset()</b><br />
 The <code>newOffset</code> is the horizontal scroll position in pixels of the start of the text view. A value of 0 is the normal position with the first text column visible at the left of the view.
 </p>
 <p>
 See also: <a class="message" href="#LineScroll"><code>LineScroll</code></a>
 </p>
 
+<h4 id="SetScrollWidth">void SetScrollWidth (int pixels)</h4>
+<h4 id="GetScrollWidth">int GetScrollWidth()</h4>
 <p>
-<b id="SetScrollWidth">void SetScrollWidth (int pixels)</b><br />
-<b id="GetScrollWidth">int GetScrollWidth()</b><br />
 For performance, Scintilla does not measure the width of the document to determine  the properties of the horizontal scroll bar. Instead, an assumed width (2000 pixels) is used. Set and get the document width in pixels so Scintilla can adjust the horizontal scroll bar accordingly.
 </p>
 
+<h4 id="SetEndAtLastLine">void SetEndAtLastLine (bool endAtLastLine)</h4>
+<h4 id="GetEndAtLastLine">int GetEndAtLastLine()</h4>
 <p>
-<b id="SetEndAtLastLine">void SetEndAtLastLine (bool endAtLastLine)</b><br />
-<b id="GetEndAtLastLine">int GetEndAtLastLine()</b><br />
 <code>SetEndAtLastLine</code> sets the scroll range so that maximum scroll position has the last line at the bottom of the view (default). Setting this to <code>false</code> allows scrolling one page below the last line.
 </p>
 
@@ -1061,9 +1062,9 @@ For performance, Scintilla does not measure the width of the document to determi
  <a class="message" href="#SetWhitespaceBackground">void SetWhitespaceBackground (bool useSetting, const wxColour& back)</a><br />
 </code></p>
 
+<h4 id="SetViewWhiteSpace">void SetViewWhiteSpace (int viewWS)</h4>
+<h4 id="GetViewWhiteSpace">int GetViewWhiteSpace()</h4>
 <p>
-<b id="SetViewWhiteSpace">void SetViewWhiteSpace (int viewWS)</b><br />
-<b id="GetViewWhiteSpace">int GetViewWhiteSpace()</b><br />
 White space can be made visible which may useful for languages in which white space is significant, such as Python. Space characters appear as small centered dots and TAB characters as light arrows pointing to the right. There are also ways to control the display of <a class="jump" href="#LineEndings">end of line characters</a>. Set and get the white space display mode. The <code>viewWS</code> argument can be one of:
 </p>
 <table cellpadding="1" cellspacing="2" border="0" summary="White space policy"><tbody valign="top">
@@ -1085,18 +1086,18 @@ White space can be made visible which may useful for languages in which white sp
 The effect of using any other <code>wsMode</code> value is undefined.
 </p>
 
+<h4 id="SetWhitespaceForeground">void SetWhitespaceForeground (bool useSetting, const wxColour& fore)</a>)</h4>
+<h4 id="SetWhitespaceBackground">void SetWhitespaceBackground (bool useSetting, const wxColour& back)</a>)</h4>
 <p>
-<b id="SetWhitespaceForeground">void SetWhitespaceForeground (bool useSetting, const wxColour& fore)</a>)</b><br />
-<b id="SetWhitespaceBackground">void SetWhitespaceBackground (bool useSetting, const wxColour& back)</a>)</b><br />
 By default, the colour of visible white space is determined by the lexer in use. The foreground and/or background colour of all visible white space can be set globally, overriding the lexer's colours with <code>SetWhitespaceForeground</code> and <code>SetWhitespaceBackground</code>.
 </p>
 
 <hr 1>
 <h3 id="Cursor">Cursor</h3>
 
+<h4 id="SetCursorType">void SetCursorType (int cursorType)</h4>
+<h4 id="GetCursorType">int GetCursorType()</h4>
 <p>
-<b id="SetCursorType">void SetCursorType (int cursorType)</b><br />
-<b id="GetCursorType">int GetCursorType()</b><br />
 The cursor is normally chosen in a context sensitive way, so it will be different over the margin than when over the text. When performing a slow action, you may wish to change to a wait cursor. You set the cursor type with <code>SetCursorType</code>. The <code>curType</code> argument can be:
 </p>
 <table cellpadding="1" cellspacing="2" border="0" summary="Mouse cursors"><tbody valign="top">
@@ -1117,9 +1118,9 @@ Cursor values 1 through 7 have defined cursors, but only <code>wxSCI_CURSORWAIT<
 <hr 1>
 <h3 id="MouseCapture">Mouse capture</h3>
 
+<h4 id="SetMouseDownCaptures">void SetMouseDownCaptures (bool captures)</h4>
+<h4 id="GetMouseDownCaptures">bool GetMouseDownCaptures()</h4>
 <p>
-<b id="SetMouseDownCaptures">void SetMouseDownCaptures (bool captures)</b><br />
-<b id="GetMouseDownCaptures">bool GetMouseDownCaptures()</b><br />
 When the mouse is pressed inside Scintilla, it is captured so future mouse movement events are sent to Scintilla. This behavior may be turned off with <code>SetMouseDownCaptures (false)</code>.
 </p>
 
@@ -1138,20 +1139,20 @@ Scintilla can interpret any of the three major line end conventions, Macintosh (
  <a class="message" href="#GetViewEOL">bool GetViewEOL()</a><br />
 </code></p>
 
+<h4 id="SetEOLMode">void SetEOLMode (int eolMode)</h4>
+<h4 id="GetEOLMode">int GetEOLMode()</h4>
 <p>
-<b id="SetEOLMode">void SetEOLMode (int eolMode)</b><br />
-<b id="GetEOLMode">int GetEOLMode()</b><br />
 <code>SetEOLMode</code> sets the characters that are added into the document when the user presses the Enter key. You can set <code>eolMode</code> to one of <code>wxSCI_EOL_CRLF</code> (0), <code>wxSCI_EOL_CR</code> (1), or <code>wxSCI_EOL_LF</code> (2). The <code>GetEOLMode</code> retrieves the current state.
 </p>
 
+<h4 id="ConvertEOLs">void ConvertEOLs (int eolMode)</h4>
 <p>
-<b id="ConvertEOLs">void ConvertEOLs (int eolMode)</b><br />
 Changes all the end of line characters in the document to match <code>eolMode</code>. Valid values are: <code>wxSCI_EOL_CRLF</code> (0), <code>wxSCI_EOL_CR</code> (1), or <code>wxSCI_EOL_LF</code> (2).
 </p>
 
+<h4 id="SetViewEOL">void SetViewEOL (bool visible)</h4>
+<h4 id="GetViewEOL">bool GetViewEOL()</h4>
 <p>
-<b id="SetViewEOL">void SetViewEOL (bool visible)</b><br />
-<b id="GetViewEOL">bool GetViewEOL()</b><br />
 Normally, the end of line characters are hidden, but <code>SetViewEOL</code> allows you to display (or hide) them by setting <code>visible</code> <code>true</code> (or <code>false</code>). The visible rendering of the end of line characters is similar to <code>(CR)</code>, <code>(LF)</code>, or <code>(CR)(LF)</code>. <code>GetViewEOL</code> returns the current state.
 </p>
 
@@ -1172,35 +1173,35 @@ The styling allow you to assign styles to text. The standard Scintilla settings 
  <a class="message" href="#GetMaxLineState">int GetMaxLineState()</a><br />
 </code></p>
 
+<h4 id="GetEndStyled">int GetEndStyled()</h4>
 <p>
-<b id="GetEndStyled">int GetEndStyled()</b><br />
 Scintilla keeps a record of the last character that is likely to be styled correctly. This is moved forwards when characters after it are styled and moved backwards if changes are made to the text of the document before it. Before drawing text, this position is checked to see if any styling is needed and, if so, a <code><a class="message" href="#wxEVT_SCI_STYLENEEDED">wxEVT_SCI_STYLENEEDED</a></code> notification message is sent to the container. The container can send <code>GetEndStyled</code> to work out where it needs to start styling. Scintilla will always ask to style whole lines.
 </p>
 
+<h4 id="StartStyling">void StartStyling (int pos, int mask)</h4>
 <p>
-<b id="StartStyling">void StartStyling (int pos, int mask)</b><br />
 This prepares for styling by setting the styling position <code>pos</code> to start at and a <code>mask</code> indicating which bits of the style bytes can be set. The mask allows styling to occur over several passes, with, for example, basic styling done on an initial pass to ensure that the text of the code is seen quickly and correctly, and then a second slower pass, detecting syntax errors and using indicators to show where these are. For example, with the standard settings of 5 style bits and 3 indicator bits, you would use a <code>mask</code> value of 31 (0x1f) if you were setting text styles and did not want to change the indicators. After <code>StartStyling</code>, send multiple <code>SetStyling</code> for each lexical entity to style.
 </p>
 
 <p>
-<b id="SetStyling">void SetStyling (int length, int style)</b><br />
+<h4 id="SetStyling">void SetStyling (int length, int style)</h4>
 Sets the style of <code>length</code> characters starting at the styling position and then increases the styling position by <code>length</code>, ready for the next call. If <code>sCell</code> is the style byte, the operation is:<br />
 <code>if ((sCell &amp; mask) != style) sCell = (sCell &amp; ~mask) | (style &amp; mask);</code><br />
 </p>
 
+<h4 id="SetStyleBytes">void SetStyleBytes (int length, char* styleBytes)</h4>
 <p>
-<b id="SetStyleBytes">void SetStyleBytes (int length, char* styleBytes)</b><br />
 As an alternative to <code>SetStyling</code>, which applies the same style to each byte, you can use this which specifies the styles for each of <code>length</code> bytes from the styling position and then increases the styling position by <code>length</code>, ready for the next call. The <code>length</code> styling bytes pointed at by <code>styles</code> should not contain any bits not set in mask.
 </p>
 
+<h4 id="SetLineState">void SetLineState (int line, int state)</h4>
+<h4 id="GetLineState">int GetLineState (int line)</h4>
 <p>
-<b id="SetLineState">void SetLineState (int line, int state)</b><br />
-<b id="GetLineState">int GetLineState (int line)</b><br />
 As well as the 8 bits of lexical state stored for each character there is also an integer stored for each line. This can be used for longer lived parse states such as what the current scripting language is in an ASP page. Use <code>SetLineState</code> to set the integer value and <code>GetLineState</code> to get the value.
 </p>
 
+<h4 id="GetMaxLineState">int GetMaxLineState()</h4>
 <p>
-<b id="GetMaxLineState">int GetMaxLineState()</b><br />
 Returns the last line that has any line state.
 </p>
 
@@ -1271,45 +1272,45 @@ It is entirely up to you how you use styles. If you want to use syntax colouring
  <a class="message" href="#StyleSetHotSpot">void StyleSetHotSpot (int style, bool hotspot)</a><br />
 </code></p>
 
+<h4 id="StyleResetDefault">void StyleResetDefault()</h4>
 <p>
-<b id="StyleResetDefault">void StyleResetDefault()</b><br />
 Resets <code>wxSCI_STYLE_DEFAULT</code> to its state when Scintilla was initialised.
 </p>
 
+<h4 id="StyleClearAll">void StyleClearAll()</h4>
 <p>
-<b id="StyleClearAll">void StyleClearAll()</b><br />
 Sets all styles to have the same attributes as <code>wxSCI_STYLE_DEFAULT</code>. If you are setting up Scintilla for syntax colouring, it is likely that the lexical styles you set will be very similar. One way to set the styles is to:<br />
 1. Set <code>wxSCI_STYLE_DEFAULT</code> to the common features of all styles.<br />
 2. Use <code>StyleClearAll</code> to copy this to all styles.<br />
 3. Set the style attributes that make your lexical styles different.
 </p>
 
+<h4 id="StyleSetFont">void StyleSetFont (int styleNum, wxFont& font)</h4>
+<h4 id="StyleSetSize">void StyleSetSize (int style, int sizePoints)</h4>
+<h4 id="StyleSetBold">void StyleSetBold (int style, bool bold)</h4>
+<h4 id="StyleSetItalic">void StyleSetItalic (int style, bool italic)</h4>
 <p>
-<b id="StyleSetFont">void StyleSetFont (int styleNum, wxFont& font)</b><br />
-<b id="StyleSetSize">void StyleSetSize (int style, int sizePoints)</b><br />
-<b id="StyleSetBold">void StyleSetBold (int style, bool bold)</b><br />
-<b id="StyleSetItalic">void StyleSetItalic (int style, bool italic)</b><br />
 These (plus <a class="message" href="#StyleSetCharacterSet"><code>StyleSetCharacterSet</code></a>) set the font attributes that are used to match the fonts you request to those available. The <code>fontName</code> is a zero terminated string holding the name of a font. Under Windows, only the first 32 characters of the name are used and the name is not case sensitive. For internal caching, Scintilla tracks fonts by name and does care about the casing of font names, so please be consistent. On GTK+ 2.x, either GDK or Pango can be used to display text. Pango antialiases text and works well with Unicode but GDK is faster. Prepend a '!' character to the font name to use Pango.
 </p>
 
+<h4 id="StyleSetUnderline">void StyleSetUnderline (int style, bool underline)</h4>
 <p>
-<b id="StyleSetUnderline">void StyleSetUnderline (int style, bool underline)</b><br />
 You can set a style to be underlined. The underline is drawn in the foreground colour. All characters with a style that includes the underline attribute are underlined, even if they are white space.
 </p>
 
+<h4 id="StyleSetForeground">void StyleSetForeground (int style, const wxColour& fore)</a>)</h4>
+<h4 id="StyleSetBackground">void StyleSetBackground (int style, const wxColour& back)</a>)</h4>
 <p>
-<b id="StyleSetForeground">void StyleSetForeground (int style, const wxColour& fore)</a>)</b><br />
-<b id="StyleSetBackground">void StyleSetBackground (int style, const wxColour& back)</a>)</b><br />
 Text is drawn in the foreground colour. The space in each character cell that is not occupied by the character is drawn in the background colour.
 </p>
 
+<h4 id="StyleSetEOLFilled">void StyleSetEOLFilled (int style, bool filled)</h4>
 <p>
-<b id="StyleSetEOLFilled">void StyleSetEOLFilled (int style, bool filled)</b><br />
 If the last character in the line has a style with this attribute set, the remainder of the line up to the right edge of the window is filled with the background colour set for the last character. This is useful when a document contains embedded sections in another language such as HTML pages with embedded JavaScript. By setting <code>filled</code> to <code>true</code> and a consistent background colour (different from the background colour set for the HTML styles) to all JavaScript styles then JavaScript sections will be easily distinguished from HTML.
 </p>
 
+<h4 id="StyleSetCharacterSet">void StyleSetCharacterSet (int style, int characterSet)</h4>
 <p>
-<b id="StyleSetCharacterSet">void StyleSetCharacterSet (int style, int characterSet)</b><br />
 You can set a style to use a different character set than the default. The places where such characters sets are likely to be useful are comments and literal strings. For example, <code>StyleSetCharacterSet(SCE_C_STRING, wxwxSCI_CMD_CHARSET_RUSSIAN)</code> would ensure that strings in Russian would display correctly in C and C++ (<code>SCE_C_STRING</code> is the style number used by the C and C++ lexer to display literal strings; it has the value 6). This feature currently only works fully on Windows.
 </p>
 <p>
@@ -1342,23 +1343,23 @@ The character sets supported on GTK+ are:<br />
 <code>wxwxSCI_CMD_CHARSET_SHIFTJIS</code>.
 </p>
 
+<h4 id="StyleSetCase">void StyleSetCase (int style, int caseMode)</h4>
 <p>
-<b id="StyleSetCase">void StyleSetCase (int style, int caseMode)</b><br />
 The value of caseMode determines how text is displayed. You can set upper case (<code>wxSCI_CASE_UPPER</code>, 1) or lower case (<code>wxSCI_CASE_LOWER</code>, 2) or display normally (<code>wxSCI_CASE_MIXED</code>, 0). This does not change the stored text, only how it is displayed.
 </p>
 
+<h4 id="StyleSetVisible">void StyleSetVisible (int style, bool visible)</h4>
 <p>
-<b id="StyleSetVisible">void StyleSetVisible (int style, bool visible)</b><br />
 Text is normally visible. However, you can completely hide it by giving it a style with the <code>visible</code> set to false. This could be used to hide embedded formatting instructions or hypertext keywords in HTML or XML.
 </p>
 
+<h4 id="StyleSetChangeable">void StyleSetChangeable (int style, bool changeable)</h4>
 <p>
-<b id="StyleSetChangeable">void StyleSetChangeable (int style, bool changeable)</b><br />
 This is an experimental and incompletely implemented style attribute. The default setting is <code>changeable</code> set <code>true</code> but when set <code>false</code> it makes text read-only. Currently it only stops the caret from being within not-changeable text and does not yet stop deleting a range that contains not-changeable text.
 </p>
 
+<h4 id="StyleSetHotSpot">void StyleSetHotSpot (int style, bool hotspot)</h4>
 <p>
-<b id="StyleSetHotSpot">void StyleSetHotSpot (int style, bool hotspot)</b><br />
 This style is used to mark ranges of text that can detect mouse clicks. The cursor changes to a hand over hotspots, and the foreground, and background colours may change and an underline appear to indicate that these areas are sensitive to clicking. This may be used to allow hyperlinks to other documents.
 </p>
 <p>
@@ -1393,52 +1394,52 @@ The selection is shown by changing the foreground and/or background colours. If 
  <a class="message" href="#GetControlCharSymbol">int GetControlCharSymbol()</a><br />
 </code></p>
 
+<h4 id="SetSelForeground">void SetSelForeground (bool useSetting, const wxColour& fore)</h4>
+<h4 id="SetSelBackground">void SetSelBackground (bool useSetting, const wxColour& back)</h4>
 <p>
-<b id="SetSelForeground">void SetSelForeground (bool useSetting, const wxColour& fore)</b><br />
-<b id="SetSelBackground">void SetSelBackground (bool useSetting, const wxColour& back)</b><br />
 You can choose to override the default selection colouring with these two functions. The colour you provide is used if you set <code>useSetting</code> to <code>true</code>. If it is set to <code>false</code>, the default colour colouring is used and the <code>colour</code> argument has no effect.
 </p>
 
+<h4 id="SetCaretForeground">void SetCaretForeground (const wxColour& fore)</h4>
+<h4 id="GetCaretForeground">wxColour GetCaretForeground()</h4>
 <p>
-<b id="SetCaretForeground">void SetCaretForeground (const wxColour& fore)</b><br />
-<b id="GetCaretForeground">wxColour GetCaretForeground()</b><br />
 The colour of the caret can be set with <code>SetCaretForeground</code> and retrieved with <code>GetCaretForeground</code>.
 </p>
 
+<h4 id="SetCaretLineVisible">void SetCaretLineVisible (bool show)</h4>
+<h4 id="GetCaretLineVisible">bool GetCaretLineVisible()</h4>
+<h4 id="SetCaretLineBackground">void SetCaretLineBackground (const wxColour& back)</h4>
+<h4 id="GetCaretLineBackground">wxColour GetCaretLineBackground()</h4>
 <p>
-<b id="SetCaretLineVisible">void SetCaretLineVisible (bool show)</b><br />
-<b id="GetCaretLineVisible">bool GetCaretLineVisible()</b><br />
-<b id="SetCaretLineBackground">void SetCaretLineBackground (const wxColour& back)</b><br />
-<b id="GetCaretLineBackground">wxColour GetCaretLineBackground()</b><br />
 You can choose to make the background colour of the line containing the caret different. To do this, set the desired background colour with <code>SetCaretLineBackground</code>, then use <code>SetCaretLineVisible (true)</code> to enable the effect. You can cancel the effect with <code>SetCaretLineVisible (false)</code>. The two <code>GetCaret...</code> functions return the state and the colour. This form of background colouring has highest priority when a line has markers that would otherwise change the background colour.
 </p>
 
+<h4 id="SetCaretPeriod">void SetCaretPeriod (int milliseconds)</h4>
+<h4 id="GetCaretPeriod">int GetCaretPeriod()</h4>
 <p>
-<b id="SetCaretPeriod">void SetCaretPeriod (int milliseconds)</b><br />
-<b id="GetCaretPeriod">int GetCaretPeriod()</b><br />
 The rate at which the caret blinks can be set with <code>SetCaretPeriod</code> which determines the time in milliseconds that the caret is visible or invisible before changing state. Setting the period to 0 stops the caret blinking. The default value is 500  milliseconds. <code>GetCaretPeriod</code> returns the current setting.
 </p>
 
+<h4 id="SetCaretWidth">void SetCaretWidth (int pixels)</h4>
+<h4 id="GetCaretWidth">int GetCaretWidth()</h4>
 <p>
-<b id="SetCaretWidth">void SetCaretWidth (int pixels)</b><br />
-<b id="GetCaretWidth">int GetCaretWidth()</b><br />
 The width of the caret can be set with <code>SetCaretWidth</code> to a value of 0, 1, 2 or 3 pixels. The default width is 1 pixel. You can read back the current width with <code>GetCaretWidth</code>. A width of 0 makes the caret invisible.
 </p>
 
+<h4 id="SetHotspotActiveForeground">void SetHotspotActiveForeground (bool useSetting, const wxColour& fore)</h4>
+<h4 id="SetHotspotActiveBackground">void SetHotspotActiveBackground (bool useSetting, const wxColour& back)</h4>
+<h4 id="SetHotspotActiveUnderline">void SetHotspotActiveUnderline (bool underline)</h4>
+<h4 id="SetHotspotSingleLine">void SetHotspotSingleLine (bool singleLine)</h4>
 <p>
-<b id="SetHotspotActiveForeground">void SetHotspotActiveForeground (bool useSetting, const wxColour& fore)</b><br />
-<b id="SetHotspotActiveBackground">void SetHotspotActiveBackground (bool useSetting, const wxColour& back)</b><br />
-<b id="SetHotspotActiveUnderline">void SetHotspotActiveUnderline (bool underline)</b><br />
-<b id="SetHotspotSingleLine">void SetHotspotSingleLine (bool singleLine)</b><br />
 While the cursor hovers over text in a style with the hotspot attribute set, the default colouring can be modified and an underline drawn with these settings. Single line mode stops a hotspot from wrapping onto next line.
 </p>
 <p>
 See also: <code><a class="message" href="#StyleSetHotSpot">StyleSetHotSpot</a></code>
 </p>
 
+<h4 id="SetControlCharSymbol">void SetControlCharSymbol (int symbol)</h4>
+<h4 id="GetControlCharSymbol">int GetControlCharSymbol()</h4>
 <p>
-<b id="SetControlCharSymbol">void SetControlCharSymbol (int symbol)</b><br />
-<b id="GetControlCharSymbol">int GetControlCharSymbol()</b><br />
 By default, Scintilla displays control characters (characters with codes less than 32) in a rounded rectangle as ASCII mnemonics: "NUL", "SOH", "STX", "ETX", "EOT", "ENQ", "ACK",  "BEL", "BS", "HT", "LF", "VT", "FF", "CR", "SO", "SI", "DLE", "DC1", "DC2", "DC3", "DC4", "NAK", "SYN", "ETB", "CAN", "EM", "SUB", "ESC", "FS", "GS", "RS", "US". These mnemonics come from the early days of signaling, though some are still used (LF = Line Feed, BS = Back Space, CR = Carriage Return, for example).
 </p>
 <p>
@@ -1472,21 +1473,21 @@ The margins are numbered 0 to 2. Using a margin number outside the valid range h
  <a class="message" href="#SetFoldMarginHiColour">void SetFoldMarginHiColour (bool useSetting, const wxColour& fore)</a><br />
 </code></p>
 
+<h4 id="SetMarginType">void SetMarginType (int margin, int marginType)</h4>
+<h4 id="GetMarginType">int GetMarginType (int margin)</h4>
 <p>
-<b id="SetMarginType">void SetMarginType (int margin, int marginType)</b><br />
-<b id="GetMarginType">int GetMarginType (int margin)</b><br />
 These two routines set and get the type of a margin. The margin argument should be 0, 1 or 2. You can use the predefined constants <code>wxSCI_MARGIN_SYMBOL</code> (0) and <code>wxSCI_MARGIN_NUMBER</code> (1) to set a margin as either a line number or a symbol margin. By convention, margin 0 is used for line numbers and the other two are used for symbols.
 </p>
 
+<h4 id="SetMarginWidth">void SetMarginWidth (int margin, int pixels)</h4>
+<h4 id="GetMarginWidth">int GetMarginWidth (int margin)</h4>
 <p>
-<b id="SetMarginWidth">void SetMarginWidth (int margin, int pixels)</b><br />
-<b id="GetMarginWidth">int GetMarginWidth (int margin)</b><br />
 These routines set and get the width of a margin in pixels. A margin with zero width is invisible. By default, Scintilla sets margin 1 for symbols with a width of 16 pixels, so this is a reasonable guess if you are not sure what would be appropriate. Line number margins widths should take into account the number of lines in the document and the line number style. You could use something like <a class="message" href="#TextWidth"><code>TextWidth (wxSCI_STYLE_LINENUMBER, "_99999")</code></a> to get a suitable width.
 </p>
 
+<h4 id="SetMarginMask">void SetMarginMask (int margin, int mask)</h4>
+<h4 id="GetMarginMask">int GetMarginMask (int margin)</h4>
 <p>
-<b id="SetMarginMask">void SetMarginMask (int margin, int mask)</b><br />
-<b id="GetMarginMask">int GetMarginMask (int margin)</b><br />
 The mask is a 32-bit value. Each bit corresponds to one of 32 logical symbols that can be displayed in a margin that is enabled for symbols. There is a useful constant, <code>wxSCI_MASK_FOLDERS</code> (0xFE000000), that is a mask for the 7 logical symbols used to denote folding. You can assign a wide range of symbols and colours to each of the 32 logical symbols, see <a href="#Markers">Markers</a> for more information. If <code>(mask &amp; wxSCI_MASK_FOLDERS)==0</code>, the margin background colour is controlled by style 33 (<a class="message" href="#StyleDefinition"><code>wxSCI_STYLE_LINENUMBER</code></a>).
 </p>
 <p>
@@ -1496,24 +1497,24 @@ You add logical markers to a line with <a class="message" href="#MarkerAdd"><cod
 To set a non-folding margin 1 use <code>SetMarginMask (1, ~wxSCI_MASK_FOLDERS)</code>; to set a folding margin 2 use <code>SetMarginMask(2, wxSCI_MASK_FOLDERS)</code>. This is the default set by Scintilla. <code>~wxSCI_MASK_FOLDERS</code> is 0x1FFFFFF in hexadecimal. Of course, you may need to display all 32 symbols in a margin, in which case use <code>SetMarginMask (margin, -1)</code>.
 </p>
 
-<p>
-<b id="SetMarginSensitive">void SetMarginSensitive (int margin, bool sensitive)</b><br />
-<b id="GetMarginSensitive">bool GetMarginSensitive (int margin)</b><br />
+<h4 id="SetMarginSensitive">void SetMarginSensitive (int margin, bool sensitive)</h4>
+<h4 id="GetMarginSensitive">bool GetMarginSensitive (int margin)</h4>
 Each of the three margins can be set sensitive or insensitive to mouse clicks. A click in a sensitive margin sends a <a class="message" href="#wxEVT_SCI_MARGINCLICK"><code>wxEVT_SCI_MARGINCLICK </code></a> <a class="jump" href="#Notifications">notification</a> to the container. Margins that are not sensitive act as selection margins which make it easy to select ranges of lines. By default, all margins are insensitive.
+<p>
 </p>
 
+<h4 id="SetMarginLeft">void SetMarginLeft (int pixels)</h4>
+<h4 id="GetMarginLeft">int GetMarginLeft()</h4>
+<h4 id="SetMarginRight">void SetMarginRight (int pixels)</h4>
+<h4 id="GetMarginRight">int GetMarginRight()</h4>
 <p>
-<b id="SetMarginLeft">void SetMarginLeft (int pixels)</b><br />
-<b id="GetMarginLeft">int GetMarginLeft()</b><br />
-<b id="SetMarginRight">void SetMarginRight (int pixels)</b><br />
-<b id="GetMarginRight">int GetMarginRight()</b><br />
 Set and get the width of the blank margin on both sides of the text in pixels. The default is to one pixel on each side.
 </p>
 
-<p>
-<b id="SetFoldMarginColour">void SetFoldMarginColour (bool useSetting, const wxColour& back)</b><br />
-<b id="SetFoldMarginHiColour">void SetFoldMarginHiColour (bool useSetting, const wxColour& fore)</b><br />
+<h4 id="SetFoldMarginColour">void SetFoldMarginColour (bool useSetting, const wxColour& back)</h4>
+<h4 id="SetFoldMarginHiColour">void SetFoldMarginHiColour (bool useSetting, const wxColour& fore)</h4>
 Allow changing the colour of the fold margin and fold margin highlight. On Windows the fold margin colour defaults to ::GetSysColor(COLOR_3DFACE) and the fold margin highlight colour to ::GetSysColor(COLOR_3DHIGHLIGHT).
+<p>
 </p>
 
 <hr 1>
@@ -1536,21 +1537,21 @@ Allow changing the colour of the fold margin and fold margin highlight. On Windo
  <a class="message" href="#GetSCIFocus">bool GetSCIFocus()</a><br />
 </code></p>
 
+<h4 id="SetBufferedDraw">void SetBufferedDraw (bool buffered)</h4>
+<h4 id="GetBufferedDraw">bool GetBufferedDraw()</h4>
 <p>
-<b id="SetBufferedDraw">void SetBufferedDraw (bool buffered)</b><br />
-<b id="GetBufferedDraw">bool GetBufferedDraw()</b><br />
 Turn buffered drawing on or off and report the buffered drawing state. Buffered drawing draws each line into a bitmap rather than directly to the screen and then copies the bitmap to the screen. This avoids flickering although it does take longer. The default is for drawing to be buffered.
 </p>
 
+<h4 id="SetTwoPhaseDraw">void SetTwoPhaseDraw (bool twoPhase)</h4>
+<h4 id="GetTwoPhaseDraw">bool GetTwoPhaseDraw()</h4>
 <p>
-<b id="SetTwoPhaseDraw">void SetTwoPhaseDraw (bool twoPhase)</b><br />
-<b id="GetTwoPhaseDraw">bool GetTwoPhaseDraw()</b><br />
 Two phase drawing is a better but slower way of drawing text. In single phase drawing each run of characters in one style is drawn along with its background. If a character overhangs the end of a run, such as in "<i>V</i>_" where the "<i>V</i>" is in a different style from the "_", then this can cause the right hand side of the "<i>V</i>" to be overdrawn by the background of the "_" which cuts it off. Two phase drawing fixes this by drawing all the backgrounds first and then drawing the text in transparent mode. Two phase drawing may flicker more than single phase unless buffered drawing is on. The default is for drawing to be two phase.
 </p>
 
+<h4 id="SetCodePage">void SetCodePage (int codePage)</h4>
+<h4 id="GetCodePage">int GetCodePage()</h4>
 <p>
-<b id="SetCodePage">void SetCodePage (int codePage)</b><br />
-<b id="GetCodePage">int GetCodePage()</b><br />
 Scintilla has some support for Japanese, Chinese and Korean DBCS. Use this with <code>codePage</code> set to the code page number to set Scintilla to use code page information to ensure double byte characters are treated as one character rather than two. This also stops the caret from moving between the two bytes in a double byte character. Call with <code>codePage</code> set to zero to disable DBCS support. The default is <code>SetCodePage (0)</code>.
 </p>
 <p>
@@ -1574,24 +1575,24 @@ An example is <code>"misc-fixed-iso10646-1,*"</code>.
 Setting <code>codePage</code> to a non-zero value that is not <code>wxSCI_CP_UTF8</code> is operating system dependent.
 </p>
 
+<h4 id="SetWordChars">void SetWordChars (const wxString& characters)</h4>
 <p>
-<b id="SetWordChars">void SetWordChars (const wxString& characters)</b><br />
 Scintilla has several functions that operate on words, which are defined to be contiguous sequences of characters from a particular set of characters. Defines which characters are members of that set. The character sets are set to default values before processing this function. For example, if you don't allow '_' in your set of characters use:<br />
 <code>SetWordChars (0, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")</code>;
 </p>
 
+<h4 id="SetWhitespaceChars">void SetWhitespaceChars (const wxString& characters)</h4>
 <p>
-<b id="SetWhitespaceChars">void SetWhitespaceChars (const wxString& characters)</b><br />
 Similar to <code>SetWordChars</code>, allows the user to define which chars Scintilla considers as whitespace.  Setting the whitespace chars allows the user to fine-tune Scintilla's behaviour doing such things as moving the cursor to the start or end of a word; for example, by defining punctuation chars as whitespace, they will be skipped over when the user presses ctrl+left or ctrl+right. This function should be called after <code>SetWordChars</code> as it will reset the whitespace characters to the default set.
 </p>
 
+<h4 id="SetCharsDefault">void SetCharsDefault()</h4>
 <p>
-<b id="SetCharsDefault">void SetCharsDefault()</b><br />
 Use the default sets of word and whitespace characters. This sets whitespace to space, TAB and other characters with codes less than 0x20, with word characters set to alphanumeric and '_'.
 </p>
 
+<h4 id="SetSCIFocus">void SetSCIFocus()</h4>
 <p>
-<b id="SetSCIFocus">void SetSCIFocus()</b><br />
 The internal focus flag can be set with <code>SetSCIFocus</code>. This is used by clients that have complex focus requirements such as having their own window that gets the real focus but with the need to indicate that Scintilla has the logical focus.
 </p>
 
@@ -1604,18 +1605,18 @@ The internal focus flag can be set with <code>SetSCIFocus</code>. This is used b
  <a class="message" href="#BraceMatch">int BraceMatch (int pos)</a><br />
 </code></p>
 
+<h4 id="BraceHighlight">void BraceHighlight (int pos1, int pos2)</h4>
 <p>
-<b id="BraceHighlight">void BraceHighlight (int pos1, int pos2)</b><br />
 Up to two characters can be highlighted in a 'brace highlighting style', which is defined as style number <a class="message" href="#StyleDefinition"><code>wxSCI_STYLE_BRACELIGHT</code></a> (34). Use pos1 = pos2 = wxSTC_INVALID_POSITION to remove the highlighting. If you have enabled indent guides, you may also wish to highlight the indent that corresponds with the brace. You can locate the column with <a class="message" href="#GetColumn"><code>GetColumn</code></a> and highlight the indent with <a class="message" href="#SetHighlightGuide"><code>SetHighlightGuide</code></a>.
 </p>
 
+<h4 id="BraceBadLight">void BraceBadLight (int pos)</h4>
 <p>
-<b id="BraceBadLight">void BraceBadLight (int pos)</b><br />
 If there is no matching brace then the <a class="jump" href="#StyleDefinition">brace badlighting style</a>, style <code>wxSCI_STYLE_BRACEBAD</code> (35), can be used to show the brace that is unmatched. Using a position of <code>wxSCI_INVALID_POSITION</code> removes the highlight.
 </p>
 
+<h4 id="BraceMatch">int BraceMatch (int pos)</h4>
 <p>
-<b id="BraceMatch">int BraceMatch (int pos)</b><br />
 <code>BraceMatch</code> finds a corresponding matching brace given <code>pos</code>, the position of one brace. The brace characters handled are '(', ')', '[', ']', '{', '}', '&lt;', and '&gt;'. The search is forwards from an opening brace and backwards from a closing brace. If the character at position is not a brace character, or a matching brace cannot be found, the return value is <code>wxSCI_INVALID_POSITION</code>. Otherwise, the return value is the position of the matching brace.
 </p>
 <p>
@@ -1655,52 +1656,52 @@ Scintilla can be set to treat TAB and backspace in the white space at the start 
  <a class="message" href="#GetHighlightGuide">int GetHighlightGuide()</a><br />
 </code></p>
 
+<h4 id="SetTabWidth">void SetTabWidth (int tabWidth)</h4>
+<h4 id="GetTabWidth">int GetTabWidth()</h4>
 <p>
-<b id="SetTabWidth">void SetTabWidth (int tabWidth)</b><br />
-<b id="GetTabWidth">int GetTabWidth()</b><br />
 <code>SetTabWidth</code> sets the size of a TAB as a multiple of the size of a space character in <code>wxSCI_STYLE_DEFAULT</code>. The default TAB width is 8 characters. There are no limits on TAB sizes, but values less than 1 or large values may have undesirable effects.
 </p>
 
+<h4 id="SetUseTabs">void SetUseTabs (bool useTabs)</h4>
+<h4 id="GetUseTabs">bool GetUseTabs()</h4>
 <p>
-<b id="SetUseTabs">void SetUseTabs (bool useTabs)</b><br />
-<b id="GetUseTabs">bool GetUseTabs()</b><br />
 <code>SetUseTabs</code> determines whether indentation should be created out of a mixture of tabs and spaces or be based purely on spaces. Set <code>useTabs</code> to <code>false</code> to create all tabs and indents out of spaces. The default is <code>true</code>. You can use <a class="message" href="#GetColumn"><code>GetColumn</code></a> to get the column of a position taking the width of a TAB into account.
 </p>
 
+<h4 id="SetIndent">void SetIndent (int indentSize)</h4>
+<h4 id="GetIndent">int GetIndent()</h4>
 <p>
-<b id="SetIndent">void SetIndent (int indentSize)</b><br />
-<b id="GetIndent">int GetIndent()</b><br />
 <code>SetIndent</code> sets the size of indentation in terms of the width of a space in <a class="message" href="#StyleDefinition"><code>wxSCI_STYLE_DEFAULT</code></a>. If you set a width of 0, the indent size is the same as the TAB size. There are no limits on indent sizes, but values less than 0 or large values may have undesirable effects.
 </p>
 
+<h4 id="SetTabIndents">void SetTabIndents (bool tabIndents)</h4>
+<h4 id="GetTabIndents">bool GetTabIndents()</h4>
+<h4 id="SetBackSpaceUnIndents">void SetBackSpaceUnIndents (bool bsUnIndents)</h4>
+<h4 id="GetBackSpaceUnIndents">bool GetBackSpaceUnIndents()</h4>
 <p>
-<b id="SetTabIndents">void SetTabIndents (bool tabIndents)</b><br />
-<b id="GetTabIndents">bool GetTabIndents()</b><br />
-<b id="SetBackSpaceUnIndents">void SetBackSpaceUnIndents (bool bsUnIndents)</b><br />
-<b id="GetBackSpaceUnIndents">bool GetBackSpaceUnIndents()</b><br />
 Inside indentation white space, the TAB and backspace keys can be made to indent and unindent rather than insert a TAB character or delete a character with the <code>SetTabIndents</code> and <code>SetBackSpaceUnIndents</code> functions.
 </p>
 
+<h4 id="SetLineIndentation">void SetLineIndentation (int line, int indentSize)</h4>
+<h4 id="GetLineIndentation">int GetLineIndentation (int line)</h4>
 <p>
-<b id="SetLineIndentation">void SetLineIndentation (int line, int indentSize)</b><br />
-<b id="GetLineIndentation">int GetLineIndentation (int line)</b><br />
 The amount of indentation on a line can be discovered and set with <code>GetLineIndentation</code> and <code>SetLineIndentation</code>. The indentation is measured in character columns, which correspond to the width of space characters.
 </p>
 
+<h4 id="GetLineIndentPosition">int GetLineIndentPosition (int line)</h4>
 <p>
-<b id="GetLineIndentPosition">int GetLineIndentPosition (int line)</b><br />
 This returns the position at the end of indentation of a line.
 </p>
 
+<h4 id="SetIndentationGuides">void SetIndentationGuides (bool show)</h4>
+<h4 id="GetIndentationGuides">bool GetIndentationGuides()</h4>
 <p>
-<b id="SetIndentationGuides">void SetIndentationGuides (bool show)</b><br />
-<b id="GetIndentationGuides">bool GetIndentationGuides()</b><br />
 Indentation guides are dotted vertical lines that appear within indentation white space every indent size columns. They make it easy to see which constructs line up especially when they extend over multiple pages. Style <a class="message" href="#StyleDefinition"><code>wxSCI_STYLE_INDENTGUIDE</code></a> (37) is used to specify the foreground and background colour of the indentation guides.
 </p>
 
+<h4 id="SetHighlightGuide">void SetHighlightGuide (int column)</h4>
+<h4 id="GetHighlightGuide">int GetHighlightGuide()</h4>
 <p>
-<b id="SetHighlightGuide">void SetHighlightGuide (int column)</b><br />
-<b id="GetHighlightGuide">int GetHighlightGuide()</b><br />
 When brace highlighting occurs, the indentation guide corresponding to the braces may be highlighted with the brace highlighting style, <a class="message" href="#StyleDefinition"><code>wxSCI_STYLE_BRACELIGHT</code></a> (34). Set <code>column</code> to 0 to cancel this highlight.
 </p>
 
@@ -1735,13 +1736,13 @@ The markers are drawn in the order of their numbers, so higher numbered markers 
  <a class="message" href="#MarkerDeleteHandle">void MarkerDeleteHandle (int handle)</a><br />
 </code></p>
 
+<h4 id="MarkerDefine">void MarkerDefine (int markerNumber, int markerSymbol)</h4>
 <p>
-<b id="MarkerDefine">void MarkerDefine (int markerNumber, int markerSymbol)</b><br />
 Associates a marker number in the range 0 to 31 with one of the marker symbols or an ASCII character. The general-purpose marker symbols currently available are:<br />  <code>wxSCI_MARK_CIRCLE</code>, <code>wxSCI_MARK_ROUNDRECT</code>, <code>wxSCI_MARK_ARROW</code>, <code>wxSCI_MARK_SMALLRECT</code>, <code>wxSCI_MARK_SHORTARROW</code>, <code>wxSCI_MARK_EMPTY</code>, <code>wxSCI_MARK_ARROWDOWN</code>, <code>wxSCI_MARK_MINUS</code>, <code>wxSCI_MARK_PLUS</code>, <code>wxSCI_MARK_ARROWS</code>, <code>wxSCI_MARK_DOTDOTDOT</code>, <code>wxSCI_MARK_EMPTY</code> and <code>wxSCI_MARK_BACKGROUND</code>.
 </p>
 
+<h4 id="MarkerDefineBitmap">void MarkerDefineBitmap (int markerNumber, const wxBitmap& bmp)</h4>
 <p>
-<b id="MarkerDefineBitmap">void MarkerDefineBitmap (int markerNumber, const wxBitmap& bmp)</b><br />
 Markers can be set to pixmaps. Pixmaps use the <code>wxSCI_MARK_PIXMAP</code> marker symbol.
 </p>
 <p>
@@ -1816,45 +1817,45 @@ This table shows which <code>wxSCI_MARK_</code>* symbols should be assigned to w
 </tr>
 </tbody></table>
 
+<h4 id="MarkerSetForeground">void MarkerSetForeground (int markerNumber, const wxColour& fore)</h4>
+<h4 id="MarkerSetBackground">void MarkerSetBackground (int markerNumber, const wxColour& back)</h4>
 <p>
-<b id="MarkerSetForeground">void MarkerSetForeground (int markerNumber, const wxColour& fore)</b><br />
-<b id="MarkerSetBackground">void MarkerSetBackground (int markerNumber, const wxColour& back)</b><br />
 Set the foreground and background colour of a marker number. Default colours for foreground is <code>black</code>, for background is <code>white</code>.
 </p>
 
+<h4 id="MarkerAdd">int MarkerAdd (int line, int markerNumber)</h4>
 <p>
-<b id="MarkerAdd">int MarkerAdd (int line, int markerNumber)</b><br />
 Adds marker number <code>markerNumber</code> to a line. It returns -1 if this fails (illegal line number, out of memory) or it returns a marker handle number that identifies the added marker. You can use this returned handle with <a class="message" href="#MarkerLineFromHandle"><code>MarkerLineFromHandle</code></a> to find where a marker is after moving or combining lines and with <a class="message" href="#MarkerDeleteHandle"><code>MarkerDeleteHandle</code></a> to delete the marker based on its handle. It does not check the value of markerNumber, nor does it check if the line already contains the marker.
 </p>
 
+<h4 id="MarkerDelete">void MarkerDelete (int line, int markerNumber)</h4>
 <p>
-<b id="MarkerDelete">void MarkerDelete (int line, int markerNumber)</b><br />
 This searches the given line number for the given marker number and deletes it if it is present. If you added the same marker more than once to the line, this will delete one copy each time it is used. If you pass in a marker number of -1, all markers are deleted from the line.
 </p>
 
+<h4 id="MarkerDeleteAll">void MarkerDeleteAll (int markerNumber)</h4>
 <p>
-<b id="MarkerDeleteAll">void MarkerDeleteAll (int markerNumber)</b><br />
 This removes markers of the given number from all lines. If markerNumber is -1, it deletes all markers from all lines.
 </p>
 
+<h4 id="MarkerGet">int MarkerGet (int line)</h4>
 <p>
-<b id="MarkerGet">int MarkerGet (int line)</b><br />
 This returns a 32-bit integer that indicates which markers were present on the line. Bit 0 is set if marker 0 is present, bit 1 for marker 1 and so on.
 </p>
 
+<h4 id="MarkerNext">int MarkerNext (int lineStart, int markerMask)</h4>
+<h4 id="MarkerPrevious">int MarkerPrevious (int lineStart, int markerMask)</h4>
 <p>
-<b id="MarkerNext">int MarkerNext (int lineStart, int markerMask)</b><br />
-<b id="MarkerPrevious">int MarkerPrevious (int lineStart, int markerMask)</b><br />
 Search efficiently for lines that include a given set of markers. The search starts at line number <code>lineStart</code> and continues forwards to the end of the file (<code>MarkerNext</code>) or backwards to the start of the file (<code>MarkerPrevious</code>). The <code>markerMask</code> argument should have one bit set for each marker you wish to find. Set bit 0 to find marker 0, bit 1 for marker 1 and so on. Returns the line number of the first line that contains one of the markers in <code>markerMask</code> or -1 if no marker is found.
 </p>
 
+<h4 id="MarkerLineFromHandle">int MarkerLineFromHandle (int handle)</h4>
 <p>
-<b id="MarkerLineFromHandle">int MarkerLineFromHandle (int handle)</b><br />
 The <code>handle</code> argument is an identifier for a marker returned by <a class="message" href="#MarkerAdd"><code>MarkerAdd</code></a>. This function searches the document for the marker with this handle and returns the line number that contains it or wxSCI_INVALID_POSITION if it is not found.
 </p>
 
+<h4 id="MarkerDeleteHandle">void MarkerDeleteHandle (int handle)</h4>
 <p>
-<b id="MarkerDeleteHandle">void MarkerDeleteHandle (int handle)</b><br />
 The <code>handle</code> argument is an identifier for a marker returned by <a class="message" href="#MarkerAdd"><code>MarkerAdd</code></a>. This function searches the document for the marker with this handle and deletes the marker if it is found.
 </p>
 
@@ -1882,9 +1883,9 @@ The <code>Indicator...</code> allow you to get and set the visual appearance of 
  <a class="message" href="#IndicatorGetForeground">wxColour IndicatorGetForeground (int indic)</a><br />
 </code></p>
 
+<h4 id="IndicatorSetStyle">void IndicatorSetStyle (int indic, int style)</h4>
+<h4 id="IndicatorGetStyle">int IndicatorGetStyle (int indic)</h4>
 <p>
-<b id="IndicatorSetStyle">void IndicatorSetStyle (int indic, int style)</b><br />
-<b id="IndicatorGetStyle">int IndicatorGetStyle (int indic)</b><br />
 Set and get the style for a particular indicator. The indicator styles currently available are:
 </p>
 <table cellpadding="1" cellspacing="2" border="0" summary="Indicators"><thead>
@@ -1932,9 +1933,9 @@ The default indicator styles are equivalent to:<br />
 <code>IndicatorSetStyle (2, INDIC_PLAIN);</code>
 </p>
 
+<h4 id="IndicatorSetForeground">void IndicatorSetForeground (int indic, const wxColour& fore)</h4>
+<h4 id="IndicatorGetForeground">wxColour IndicatorGetForeground (int indic)</h4>
 <p>
-<b id="IndicatorSetForeground">void IndicatorSetForeground (int indic, const wxColour& fore)</b><br />
-<b id="IndicatorGetForeground">wxColour IndicatorGetForeground (int indic)</b><br />
 Set and get the colour used to draw an indicator. The default indicator colours are equivalent to:<br />
 <code>IndicatorSetForeground (0, 0x007f00);</code> (dark green)<br />
 <code>IndicatorSetForeground (1, 0xff0000);</code> (light blue)<br />
@@ -1979,91 +1980,91 @@ To make use of autocompletion you must monitor each character added to the docum
  <a class="message" href="#AutoCompGetTypeSeparator">int AutoCompGetTypeSeparator()</a><br />
 </code></p>
 
+<h4 id="AutoCompShow">void AutoCompShow (int lenEntered, const wxString& itemList)</h4>
 <p>
-<b id="AutoCompShow">void AutoCompShow (int lenEntered, const wxString& itemList)</b><br />
 Causes a list to be displayed. <code>lenEntered</code> is the number of characters of the word already entered and <code>list</code> is the list of words separated by separator characters. The initial separator character is a space but this can be set or got with <a class="message" href="#AutoCompSetSeparator"><code>AutoCompSetSeparator</code></a> and <a class="message" href="#AutoCompGetSeparator"><code>AutoCompGetSeparator</code></a>.
 </p>
 <p>
 The list of words should be in sorted order. If set to ignore case mode with <a class="message" href="#AutoCompSetIgnoreCase"><code>AutoCompSetIgnoreCase</code></a>, then strings are matched after being converted to upper case. One result of this is that the list should be sorted with the punctuation characters '[', '\', ']', '^', '_', and '`' sorted after letters.
 </p>
 
+<h4 id="AutoCompCancel">void AutoCompCancel()</h4>
 <p>
-<b id="AutoCompCancel">void AutoCompCancel()</b><br />
 Cancels any displayed autocompletion list. When in autocompletion mode, the list should disappear when the user types a character that can not be part of the autocompletion, such as '.', '(' or '[' when typing an identifier. A set of characters that will cancel autocompletion can be specified with <a class="message" href="#AutoCompStops"><code>AutoCompStops</code></a>.
 </p>
 
+<h4 id="AutoCompActive">bool AutoCompActive()</h4>
 <p>
-<b id="AutoCompActive">bool AutoCompActive()</b><br />
 Returns true if there is an active autocompletion list, otherwise false.
 </p>
 
+<h4 id="AutoCompPosStart">int AutoCompPosStart()</h4>
 <p>
-<b id="AutoCompPosStart">int AutoCompPosStart()</b><br />
 Returns the value of the current position when <code>AutoCompShow</code> started display of the list.
 </p>
 
+<h4 id="AutoCompComplete">void AutoCompComplete()</h4>
 <p>
-<b id="AutoCompComplete">void AutoCompComplete()</b><br />
 Completes an autocompletion operation. Internally, this is caused by clicking TAB, ENTER key;, or one of the characters specified by <a class="message" href="#AutoCompSetFillUps"><code>AutoCompSetFillUps</code></a>. AutoCompComplete allows you to complete the operation programmatically.
 </p>
 
+<h4 id="AutoCompStops">void AutoCompStops (const wxString& characterSet)</h4>
 <p>
-<b id="AutoCompStops">void AutoCompStops (const wxString& characterSet)</b><br />
 The <code>characterSet</code> argument is a string containing a list of characters that will automatically cancel the autocompletion list. When you start the editor, this list is empty.
 </p>
 
+<h4 id="AutoCompSetSeparator">void AutoCompSetSeparator (int separatorCharacter)</h4>
+<h4 id="AutoCompGetSeparator">int AutoCompGetSeparator()</h4>
 <p>
-<b id="AutoCompSetSeparator">void AutoCompSetSeparator (int separatorCharacter)</b><br />
-<b id="AutoCompGetSeparator">int AutoCompGetSeparator()</b><br />
 These set and get the separator character used to separate words in the <code>AutoCompShow</code> list. The default is the space character.
 </p>
 
+<h4 id="AutoCompSelect">void AutoCompSelect (const wxString& text)</h4>
+<h4 id="AutoCompGetCurrent">AutoCompGetCurrent</h4>
 <p>
-<b id="AutoCompSelect">void AutoCompSelect (const wxString& text)</b><br />
-<b id="AutoCompGetCurrent">AutoCompGetCurrent</b><br />
 Selects an item in the autocompletion list. It searches the list of words for the first that matches <code>select</code>. By default, comparisons are case sensitive, but you can change this with <a class="message" href="#AutoCompSetIgnoreCase"><code>AutoCompSetIgnoreCase</code></a>. The match is character by character for the length of the <code>select</code> string. That is, if select is "Fred" it will match "Frederick" if this is the first item in the list that begins with "Fred". If an item is found, it is selected. If the item is not found, the autocompletion list closes if auto-hide is true (see <a class="message" href="#AutoCompSetAutoHide"><code>AutoCompSetAutoHide</code></a>). The current selection can be retrieved with <code>AutoCompGetCurrent</code>.
 </p>
 
+<h4 id="AutoCompSetCancelAtStart">void AutoCompSetCancelAtStart (bool cancel)</h4>
+<h4 id="AutoCompGetCancelAtStart">bool AutoCompGetCancelAtStart()</h4>
 <p>
-<b id="AutoCompSetCancelAtStart">void AutoCompSetCancelAtStart (bool cancel)</b><br />
-<b id="AutoCompGetCancelAtStart">bool AutoCompGetCancelAtStart()</b><br />
 The default behavior is for the list to be cancelled if the caret moves before the location it was at when the list was displayed. By calling with a <code>false</code> argument, the list is not cancelled until the caret moves before the first character of the word being completed.
 </p>
 
+<h4 id="AutoCompSetFillUps">void AutoCompSetFillUps (const wxString& characterSet)</h4>
 <p>
-<b id="AutoCompSetFillUps">void AutoCompSetFillUps (const wxString& characterSet)</b><br />
 If a fillup character is typed with an autocompletion list active, the currently selected item in the list is added into the document, then the fillup character is added. Common fillup characters are '(', '[' and '.' but others are possible depending on the language. By default, no fillup characters are set.
 </p>
 
+<h4 id="AutoCompSetChooseSingle">void AutoCompSetChooseSingle (bool chooseSingle)/b><br />
+<h4 id="AutoCompGetChooseSingle">bool AutoCompGetChooseSingle()</h4>
 <p>
-<b id="AutoCompSetChooseSingle">void AutoCompSetChooseSingle (bool chooseSingle)/b><br />
-<b id="AutoCompGetChooseSingle">bool AutoCompGetChooseSingle()</b><br />
 If you use <code>AutoCompSetChooseSingle(1)</code> and a list has only one item, it is automatically added and no list is displayed. The default is to display the list even if there is only a single item.
 </p>
 
+<h4 id="AutoCompSetIgnoreCase">void AutoCompSetIgnoreCase (bool ignoreCase)</h4>
+<h4 id="AutoCompGetIgnoreCase">bool AutoCompGetIgnoreCase()</h4>
 <p>
-<b id="AutoCompSetIgnoreCase">void AutoCompSetIgnoreCase (bool ignoreCase)</b><br />
-<b id="AutoCompGetIgnoreCase">bool AutoCompGetIgnoreCase()</b><br />
 By default, matching of characters to list members is case sensitive. Let you set and get case sensitivity.
 </p>
 
+<h4 id="AutoCompSetAutoHide">void AutoCompSetAutoHide (bool autoHide)</h4>
+<h4 id="AutoCompGetAutoHide">bool AutoCompGetAutoHide()</h4>
 <p>
-<b id="AutoCompSetAutoHide">void AutoCompSetAutoHide (bool autoHide)</b><br />
-<b id="AutoCompGetAutoHide">bool AutoCompGetAutoHide()</b><br />
 By default, the list is cancelled if there are no viable matches (the user has typed characters that no longer match a list entry). If you want to keep displaying the original list, set <code>autoHide</code> to <code>false</code>. This also effects <a class="message" href="#AutoCompSelect"><code>AutoCompSelect</code></a>.
 </p>
 
+<h4 id="AutoCompSetDropRestOfWord">void AutoCompSetDropRestOfWord (bool dropRestOfWord)</h4>
+<h4 id="AutoCompGetDropRestOfWord">bool AutoCompGetDropRestOfWord()</h4>
 <p>
-<b id="AutoCompSetDropRestOfWord">void AutoCompSetDropRestOfWord (bool dropRestOfWord)</b><br />
-<b id="AutoCompGetDropRestOfWord">bool AutoCompGetDropRestOfWord()</b><br />
 When an item is selected, any word characters following the caret are first erased if <code>dropRestOfWord</code> is set <code>true</code>. The default is <code>false</code>.
 </p>
 
+<h4 id="RegisterImage">void RegisterImage (int type, const wxBitmap& bmp)</h4>
+<h4 id="ClearRegisteredImages">void ClearRegisteredImages()</h4>
+<h4 id="AutoCompSetTypeSeparator">void AutoCompSetTypeSeparator (int separatorCharacter)</h4>
+<h4 id="AutoCompGetTypeSeparator">int AutoCompGetTypeSeparator()</h4>
 <p>
-<b id="RegisterImage">void RegisterImage (int type, const wxBitmap& bmp)</b><br />
-<b id="ClearRegisteredImages">void ClearRegisteredImages()</b><br />
-<b id="AutoCompSetTypeSeparator">void AutoCompSetTypeSeparator (int separatorCharacter)</b><br />
-<b id="AutoCompGetTypeSeparator">int AutoCompGetTypeSeparator()</b><br />
 Autocompletion list items may display an image as well as text. Each image is first registered with an integer type. Then this integer is included in the text of the list separated by a '?' from the text. For example, "fclose?2 fopen" displays image 2 before the string "fclose" and no image before "fopen". The images are in XPM format as is described for <a class="message" href="#MarkerDefineBitmap"><code>MarkerDefineBitmap</code></a> The set of registered images can be cleared with <code>ClearRegisteredImages</code> and the '?' separator changed with <code>AutoCompSetTypeSeparator</code>.
 </p>
 
@@ -2080,8 +2081,8 @@ o When the user makes a selection you are sent a <code><a class="message" href="
 BEWARE: if you have set fillup characters or stop characters, these will still be active with the user list, and may result in items being selected or the user list cancelled due to the user typing into the editor.
 </p>
 
+<h4 id="UserListShow">void UserListShow (int listType, const wxString& itemList)</h4>
 <p>
-<b id="UserListShow">void UserListShow (int listType, const wxString& itemList)</b><br />
 The <code>listType</code> parameter is returned to the container as the <code>wParam</code> field of the <a class="message" href="#SCNotification"><code>SCNotification</code></a> structure. It must be greater than 0 as this is how Scintilla tells the difference between an autocompletion list and a user list. If you have different types of list, for example a list of buffers and a list of macros, you can use <code>listType</code> to tell which one has returned a selection.
 </p>
 
@@ -2112,48 +2113,48 @@ Alternatively, call tips can be displayed when you leave the mouse pointer for a
  <a class="message" href="#CallTipSetForegroundHighlight">void CallTipSetForegroundHighlight (const wxColour& fore)</a><br />
 </code></p>
 
+<h4 id="CallTipShow">void CallTipShow (int pos, const wxString& definition)</h4>
 <p>
-<b id="CallTipShow">void CallTipShow (int pos, const wxString& definition)</b><br />
 Starts the process by displaying the call tip window. If a call tip is already active, this has no effect.<br />
 <code>posStart</code> is the position in the document at which to align the call tip. The call tip text is aligned to start 1 line below this character.<br />
 <code>definition</code> is the call tip text. This can contain multiple lines separated by '\n' (Line Feed, ASCII code 10) characters.
 </p>
 
+<h4 id="CallTipCancel">void CallTipCancel()</h4>
 <p>
-<b id="CallTipCancel">void CallTipCancel()</b><br />
 Cancels any displayed call tip. Scintilla will also cancel call tips for you if you use any keyboard commands that are not compatible with editing the argument list of a function.
 </p>
 
+<h4 id="CallTipActive">bool CallTipActive()</h4>
 <p>
-<b id="CallTipActive">bool CallTipActive()</b><br />
 This returns true if a call tip is active, otherwise false.
 </p>
 
+<h4 id="CallTipPosAtStart">int CallTipPosAtStart()</h4>
 <p>
-<b id="CallTipPosAtStart">int CallTipPosAtStart()</b><br />
 Returns the value of the current position when <code>CallTipShow</code> started to display the tip.
 </p>
 
+<h4 id="CallTipSetHighlight">void CallTipSetHighlight (int startPos, int endPos)</h4>
 <p>
-<b id="CallTipSetHighlight">void CallTipSetHighlight (int startPos, int endPos)</b><br />
 This sets the region of the call tips text to display in a highlighted style. <code>startPos</code> is the zero-based index into the string of the first character to highlight and <code>endPos</code> is the index of the first character after the highlight. <code>endPos</code> must be greater than <code>startPos</code>; <code>endPos-startPos</code> is the number of characters to highlight. Highlights can extend over line ends if this is required.
 </p>
 <p>
 Unhighlighted text is drawn in a mid gray. Selected text is drawn in a dark blue. The background is white. These can be changed with <code>CallTipSetBackground</code>, <code>CallTipSetForeground</code>, and <code>CallTipSetForegroundHighlight</code>.
 </p>
 
+<h4 id="CallTipSetBackground">void CallTipSetBackground (const wxColour& back)</h4>
 <p>
-<b id="CallTipSetBackground">void CallTipSetBackground (const wxColour& back)</b><br />
 The background colour of call tips can be set; the default colour is white. It is not a good idea to set a dark colour as the background as the unselected text is drawn in mid gray and the selected text in a dark blue.
 </p>
 
+<h4 id="CallTipSetForeground">void CallTipSetForeground (const wxColour& fore)</h4>
 <p>
-<b id="CallTipSetForeground">void CallTipSetForeground (const wxColour& fore)</b><br />
 The colour of call tip text can be set; the default colour is mid gray.
 </p>
 
+<h4 id="CallTipSetForegroundHighlight">void CallTipSetForegroundHighlight (const wxColour& fore)</h4>
 <p>
-<b id="CallTipSetForegroundHighlight">void CallTipSetForegroundHighlight (const wxColour& fore)</b><br />
 The colour of highlighted call tip text can be set; the default colour is dark blue.
 </p>
 
@@ -2304,8 +2305,8 @@ There is a default binding of keys to commands that is defined in the Scintilla 
  <a class="message" href="#CmdKeyClearAll">void CmdKeyClearAll()</a><br />
 </code></p>
 
+<h4 id="keyDefinition">keyDefinition</h4>
 <p>
-<b id="keyDefinition">keyDefinition</b><br />
 A key definition contains the key code in the low 16-bits and the key modifiers in the high 16-bits. To combine <code>keyCode</code> and <code>keyMod</code> set:<br />
 <code>keyDefinition = keyCode + (keyMod &lt;&lt; 16)</code>
 </p>
@@ -2317,26 +2318,26 @@ The key code is a visible or control character or a key from the <code>wxSCI_KEY
 The modifiers are a combination of zero or more of <code>wxSCI_SCMOD_ALT</code>, <code>wxSCI_SCMOD_CTRL</code>, and <code>wxSCI_SCMOD_SHIFT</code>. If you are building a table, you might want to use <code>wxSCI_SCMOD_NORM</code>, which has the value 0, to mean no modifiers.
 </p>
 
+<h4 id="CmdKeyAssign">void CmdKeyAssign (int key, int modifiers, int cmd)</h4>
 <p>
-<b id="CmdKeyAssign">void CmdKeyAssign (int key, int modifiers, int cmd)</b><br />
 Assigns the given key definition to a Scintilla command identified by <code>cmd</code>. <code>cmd</code> can be any <code>wxSCI_...</code> command that has no arguments.
 </p>
 
+<h4 id="CmdKeyClear">void CmdKeyClear (int key, int modifiers)</h4>
 <p>
-<b id="CmdKeyClear">void CmdKeyClear (int key, int modifiers)</b><br />
 Makes the given key definition do nothing by assigning the action <code>wxSCI_SCMOD_NULL</code> to it.
 </p>
 
+<h4 id="CmdKeyClearAll">void CmdKeyClearAll()</h4>
 <p>
-<b id="CmdKeyClearAll">void CmdKeyClearAll()</b><br />
 This command removes all keyboard command mapping by setting an empty mapping table.
 </p>
 
 <hr 1>
 <h3 id="PopupEditMenu">Popup edit menu</h3>
 
+<h4 id="UsePopUp">void UsePopUp (bool allowPopUp)</h4>
 <p>
-<b id="UsePopUp">void UsePopUp (bool allowPopUp)</b><br />
 Clicking the right button on the mouse pops up a short default editing menu. This may be turned off with <code>UsePopUp (false)</code>. If you turn it off, context menu commands will not be handled by Scintilla, so the parent of the Scintilla window will have the opportunity to handle it.
 </p>
 
@@ -2347,9 +2348,9 @@ Clicking the right button on the mouse pops up a short default editing menu. Thi
 Start and stop macro recording mode. In macro recording mode, actions are reported to the container through <code><a class="message" href="#wxEVT_SCI_MACRORECORD">wxEVT_SCI_MACRORECORD</a></code> <a class="jump" href="#Notifications">notifications</a>. It is then up to the container to record these actions for future replay.
 </p>
 
+<h4 id="StartRecord">void StartRecord()</h4>
+<h4 id="StopRecord">void StopRecord()</h4>
 <p>
-<b id="StartRecord">void StartRecord()</b><br />
-<b id="StopRecord">void StopRecord()</b><br />
 Turn macro recording on and off.
 </p>
 
@@ -2369,8 +2370,8 @@ On Windows <code>FormatRange</code> can be used to draw the text onto a display 
  <a class="message" href="#GetPrintWrapMode">int GetPrintWrapMode()</a><br />
 </code></p>
 
+<h4 id="FormatRange">int FormatRange (bool doDraw, int startPos, int endPos, wxDC* draw, wxDC* target, wxRect renderRect, wxRect pageRect)</h4>
 <p>
-<b id="FormatRange">int FormatRange (bool doDraw, int startPos, int endPos, wxDC* draw, wxDC* target, wxRect renderRect, wxRect pageRect)</b><br />
 This call allows Windows users to render a range of text into a device context. If you use this for printing, you will probably want to arrange a page header and footer; Scintilla does not do this for you. Renders a range of text into a rectangular area and returns the position in the document of the next character to print.
 </p>
 <p>
@@ -2386,15 +2387,15 @@ This call allows Windows users to render a range of text into a device context. 
 When printing, the most tedious part is always working out what the margins should be to allow for the non-printable area of the paper and printing a header and footer. If you look at the printing code in SciTE, you will find that most of it is taken up with this. The loop that causes Scintilla to render text is quite simple if you strip out all the margin, non-printable area, header and footer code.
 </p>
 
+<h4 id="SetPrintMagnification">void SetPrintMagnification (int magnification)</h4>
+<h4 id="GetPrintMagnification">int GetPrintMagnification()</h4>
 <p>
-<b id="SetPrintMagnification">void SetPrintMagnification (int magnification)</b><br />
-<b id="GetPrintMagnification">int GetPrintMagnification()</b><br />
 <code>GetPrintMagnification</code> lets you to print at a different size than the screen font. <code>magnification</code> is the number of points to add to the size of each screen font. A value of -3 or -4 gives reasonably small print. You can get this value with <code>GetPrintMagnification</code>.
 </p>
 
+<h4 id="SetPrintColourMode">void SetPrintColourMode (int mode)</h4>
+<h4 id="GetPrintColourMode">int GetPrintColourMode()</h4>
 <p>
-<b id="SetPrintColourMode">void SetPrintColourMode (int mode)</b><br />
-<b id="GetPrintColourMode">int GetPrintColourMode()</b><br />
 Set and get the method used to render coloured text on a printer that is probably using white paper. It is especially important to consider the treatment of colour if you use a dark or black screen background. Printing white on black uses up toner and ink very many times faster than the other way around. You can set the mode to one of:
 </p>
 <table cellpadding="1" cellspacing="2" border="0" summary="Colour printing modes"><tbody>
@@ -2427,9 +2428,9 @@ Set and get the method used to render coloured text on a printer that is probabl
 </tr>
 </tbody></table>
 
-<p><
-b id="SetPrintWrapMode">void SetPrintWrapMode (int mode)</b><br />
-<b id="GetPrintWrapMode">int GetPrintWrapMode()</b><br />
+<h4 id="SetPrintWrapMode">void SetPrintWrapMode (int mode)</h4>
+<h4 id="GetPrintWrapMode">int GetPrintWrapMode()</h4>
+<p>
 These two functions get and set the printer wrap mode. <code>mode</code> can be  set to <code>wxSCI_WRAP_NONE</code> (0) or <code>wxSCI_WRAP_WORD</code> (1). The default is <code>wxSCI_WRAP_WORD</code>, which wraps printed output so that all characters fit into the print rectangle. If you set <code>wxSCI_WRAP_NONE</code>, each line of text generates one line of output and the line is truncated if it is too long to fit into the print area.
 </p>
 
@@ -2451,13 +2452,13 @@ Although these use <code>document *pDoc</code>, to ensure compatibility with fut
  <a class="message" href="#ReleaseDocument">void ReleaseDocument (void* docPointer)</a><br />
 </code></p>
 
+<h4 id="GetDocPointer">void* GetDocPointer()</h4>
 <p>
-<b id="GetDocPointer">void* GetDocPointer()</b><br />
 This returns a pointer to the document currently in use by the window. It has no other effect.
 </p>
 
+<h4 id="SetDocPointer">void SetDocPointer (void* docPointer)</h4>
 <p>
-<b id="SetDocPointer">void SetDocPointer (void* docPointer)</b><br />
 Does the following:<br />
 1. It removes the current window from the list held by the current document.<br />
 2. It reduces the reference count of the current document by 1.<br />
@@ -2466,21 +2467,21 @@ Does the following:<br />
 5. If <code>pDoc</code> was 0, a new, empty document is created and attached to the window.
 </p>
 
+<h4 id="CreateDocument">void* CreateDocument()</h4>
 <p>
-<b id="CreateDocument">void* CreateDocument()</b><br />
 Creates a new, empty document and returns a pointer to it. This document is not selected into the editor and starts with a reference count of 1. This means that you have ownership of it and must either reduce its reference count by 1 after using <code>SetDocPointer</code> so that the Scintilla window owns it or you must make sure that you reduce the reference count by 1 with <code>ReleaseDocument</code> before you close the application to avoid memory leaks.
 </p>
 
+<h4 id="AddRefDocument">void AddRefDocument (void* docPointer)</h4>
 <p>
-<b id="AddRefDocument">void AddRefDocument (void* docPointer)</b><br />
 This increases the reference count of a document by 1. If you want to replace the current document in the Scintilla window and take ownership of the current document, for example if you are editing many documents in one window, do the following:<br />
 1. Use <code>GetDocPointer()</code> to get a pointer to the document, <code>pDoc</code>.<br />
 2. Use <code>AddRefDocument (pDoc)</code> to increment the reference count.<br />
 3. Use <code>SetDocPointer (pNewDoc)</code> to set a different document or <code>SetDocPointer (0)</code> to set a new, empty document.
 </p>
 
+<h4 id="ReleaseDocument">void ReleaseDocument (void* docPointer)</h4>
 <p>
-<b id="ReleaseDocument">void ReleaseDocument (void* docPointer)</b><br />
 Reduces the reference count of the document identified by <code>pDoc</code>. pDoc must be the result of <code>GetDocPointer</code> or <code>CreateDocument</code> and must point at a document that still exists. If you call this on a document with a reference count of 1 that is still attached to a Scintilla window, bad things will happen. To keep the world spinning in its orbit you must balance each call to <code>CreateDocument</code> or <code>AddRefDocument</code> with a call to <code>ReleaseDocument</code>.
 </p>
 
@@ -2512,26 +2513,26 @@ It is up to your code to set the connection between user actions and folding and
  <a class="message" href="#EnsureVisibleEnforcePolicy">void EnsureVisibleEnforcePolicy (int line)</a><br />
 </code></p>
 
+<h4 id="VisibleFromDocLine">int VisibleFromDocLine (int line)</h4>
 <p>
-<b id="VisibleFromDocLine">int VisibleFromDocLine (int line)</b><br />
 When some lines are folded, then a particular line in the document may be displayed at a different position to its document position. If no lines are folded, it returns <code>docLine</code>. Otherwise, this returns the display line (counting the very first visible line as 0). The display line of an invisible line is the same as the previous visible line. The display line number of the first line in the document is 0. If there is folding and <code>docLine</code> is outside the range of lines in the document, the return value is -1. Lines can occupy more than one display line if they wrap.
 </p>
 
+<h4 id="DocLineFromVisible">int DocLineFromVisible (int lineDisplay)</h4>
 <p>
-<b id="DocLineFromVisible">int DocLineFromVisible (int lineDisplay)</b><br />
 When some lines are hidden, then a particular line in the document may be displayed at a different position to its document position. Returns the document line number that corresponds to a display line (counting the display line of the first line in the document as 0). If <code>displayLine</code> is less than or equal to 0, the result is 0. If <code>displayLine</code> is greater than or equal to the number of displayed lines, the result is the number of lines in the document.
 </p>
 
+<h4 id="ShowLines">void ShowLines (int lineStart, int lineEnd)</h4>
+<h4 id="HideLines">void HideLines (int lineStart, int lineEnd)</h4>
+<h4 id="GetLineVisible">bool GetLineVisible (int line)</h4>
 <p>
-<b id="ShowLines">void ShowLines (int lineStart, int lineEnd)</b><br />
-<b id="HideLines">void HideLines (int lineStart, int lineEnd)</b><br />
-<b id="GetLineVisible">bool GetLineVisible (int line)</b><br />
 The first two mark a range of lines as visible or invisible and then redraw the display. The third reports on the visible state of a line and returns true if it is visible, otherwise false. These have no effect on fold levels or fold flags.
 </p>
 
+<h4 id="SetFoldLevel">void SetFoldLevel (int line, int level)</h4>
+<h4 id="GetFoldLevel">int GetFoldLevel (int line)</h4>
 <p>
-<b id="SetFoldLevel">void SetFoldLevel (int line, int level)</b><br />
-<b id="GetFoldLevel">int GetFoldLevel (int line)</b><br />
 Set and get a 32-bit value that contains the fold level of a line and some flags associated with folding. The fold level is a number in the range 0 to <code>wxSCI_FOLDLEVELNUMBERMASK</code> (4095). However, the initial fold level is set to <code>wxSCI_FOLDLEVELBASE</code> (1024) to allow unsigned arithmetic on folding levels. There are two addition flag bits. <code>wxSCI_FOLDLEVELWHITEFLAG</code> indicates that the line is blank and allows it to be treated slightly different then its level may indicate. For example, blank lines should generally not be fold points. <code>wxSCI_FOLDLEVELHEADERFLAG</code> indicates that the line is a header (fold point).
 </p>
 <p>
@@ -2541,8 +2542,8 @@ Use <code>GetFoldLevel(line) &amp; wxSCI_FOLDLEVELNUMBERMASK</code> to get the f
 If you use a lexer, you should not need to use <code>SetFoldLevel</code> as this is far better handled by the lexer. You will need to use <code>GetFoldLevel</code> to decide how to handle user folding requests. If you do change the fold levels, the folding margin will update to match your changes.
 </p>
 
+<h4 id="SetFoldFlags">void SetFoldFlags (int flags)</h4>
 <p>
-<b id="SetFoldFlags">void SetFoldFlags (int flags)</b><br />
 In addition to showing markers in the folding margin, you can indicate folds to the user by drawing lines in the text area. The lines are drawn in the foreground colour set for <a class="message" href="#StyleDefinition"><code>wxSCI_STYLE_DEFAULT</code></a>. Bits set in <code>flags</code> determine where folding lines are drawn:
 </p>
 <table cellpadding="1" cellspacing="2" border="0" summary="Fold flags"><thead>
@@ -2575,33 +2576,33 @@ In addition to showing markers in the folding margin, you can indicate folds to 
 Causes the display to redraw.
 </p>
 
+<h4 id="GetLastChild">int GetLastChild (int line, int level)</h4>
 <p>
-<b id="GetLastChild">int GetLastChild (int line, int level)</b><br />
 Searches for the next line after <code>line</code>, that has a folding level that is less than or equal to <code>level</code> and then returns the previous line number. If you set <code>level</code> to -1, <code>level</code> is set to the folding level of line <code>line</code>. If <code>line</code> is a fold point, <code>GetLastChild(from, -1)</code> returns the last line that would be in made visible or hidden by toggling the fold state.
 </p>
 
+<h4 id="GetFoldParent">int GetFoldParent (int line)</h4>
 <p>
-<b id="GetFoldParent">int GetFoldParent (int line)</b><br />
 Returns the line number of the first line before <code>line</code> that is marked as a fold point with <code>wxSCI_FOLDLEVELHEADERFLAG</code> and has a fold level less than the <code>line</code>. If no line is found, or if the header flags and fold levels are inconsistent, the return value is -1.
 </p>
 
+<h4 id="ToggleFold">void ToggleFold (int line)</h4>
 <p>
-<b id="ToggleFold">void ToggleFold (int line)</b><br />
 Each fold point may be either expanded, displaying all its child lines, or contracted, hiding all the child lines. Toggles the folding state of the given line as long as it has the <code>wxSCI_FOLDLEVELHEADERFLAG</code> set. Takes care of folding or expanding all the lines that depend on the line. The display updates afterwards.
 </p>
 
+<h4 id="SetFoldExpanded">void SetFoldExpanded (int line, bool expanded)</h4>
+<h4 id="GetFoldExpanded">bool GetFoldExpanded (int line)</h4>
 <p>
-<b id="SetFoldExpanded">void SetFoldExpanded (int line, bool expanded)</b><br />
-<b id="GetFoldExpanded">bool GetFoldExpanded (int line)</b><br />
 Set and get the expanded state of a single line. The set has no effect on the visible state of the line or any lines that depend on it. It does change the markers in the folding margin. If you ask for the expansion state of a line that is outside the document, the result is <code>false</code>.
 </p>
 <p>
 If you just want to toggle the fold state of one line and handle all the lines that are dependent on it, it is much easier to use <code>ToggleFold</code>. You would use the <code>SetFoldExpanded</code> to process many folds without updating the display until you had finished.
 </p>
 
+<h4 id="EnsureVisible">EnsureVisible(int line)</h4>
+<h4 id="EnsureVisibleEnforcePolicy">void EnsureVisibleEnforcePolicy (int line)</h4>
 <p>
-<b id="EnsureVisible">EnsureVisible(int line)</b><br />
-<b id="EnsureVisibleEnforcePolicy">void EnsureVisibleEnforcePolicy (int line)</b><br />
 A line may be hidden because more than one of its parent lines is contracted. Both travels up the fold hierarchy, expanding any contracted folds until they reach the top level. The line will then be visible. If you use <code>EnsureVisibleEnforcePolicy</code>, the vertical caret policy set by <a class="message" href="#SetVisiblePolicy"><code>SetVisiblePolicy</code></a> is then applied.
 </p>
 
@@ -2636,15 +2637,15 @@ Much of the time used by Scintilla is spent on laying out and drawing text. The 
 Wrapping is not performed immediately there is a change but is delayed until the display is redrawn. This delay improves peformance by allowing a set of changes to be performed and then wrapped and displayed once. Because of this, some operations may not occur as expected. If a file is read and the scroll position moved to a particular line in the text, such as occurs when a container tries to restore a previous editing session, then the scroll position will have been determined before wrapping so an unexpected range of text will be displayed. To scroll to the position correctly, delay the scroll until the wrapping has been performed by waiting for an initial <a class="message" href="#wxEVT_SCI_PAINTED">wxEVT_SCI_PAINTED</a> notification.
 </p>
 
+<h4 id="SetWrapMode">void SetWrapMode (int mode)</h4>
+<h4 id="GetWrapMode">int GetWrapMode()</h4>
 <p>
-<b id="SetWrapMode">void SetWrapMode (int mode)</b><br />
-<b id="GetWrapMode">int GetWrapMode()</b><br />
 Set wrapMode to <code>wxSCI_WRAP_WORD</code> (1) to enable line wrapping and to <code>wxSCI_WRAP_NONE</code> to disable line wrapping.
 </p>
 
+<h4 id="SetWrapVisualFlags">void SetWrapVisualFlags (int wrapVisualFlags)</h4>
+<h4 id="GetWrapVisualFlags">int GetWrapVisualFlags()</h4>
 <p>
-<b id="SetWrapVisualFlags">void SetWrapVisualFlags (int wrapVisualFlags)</b><br />
-<b id="GetWrapVisualFlags">int GetWrapVisualFlags()</b><br />
 You can enable the drawing of visual flags to indicate a line is wrapped. Bits set in wrapVisualFlags determine which visual flags are drawn.
 </p>
 <table cellpadding="1" cellspacing="2" border="0" summary="Wrap visual flags"><tbody>
@@ -2669,9 +2670,9 @@ You can enable the drawing of visual flags to indicate a line is wrapped. Bits s
 </tr>
 </tbody></table>
 
+<h4 id="SetWrapVisualFlagsLocation">SetWrapVisualFlagsLocation(int wrapVisualFlagsLocation)</h4>
+<h4 id="GetWrapVisualFlagsLocation">int GetWrapVisualFlagsLocation()</h4>
 <p>
-<b id="SetWrapVisualFlagsLocation">SetWrapVisualFlagsLocation(int wrapVisualFlagsLocation)</b><br />
-<b id="GetWrapVisualFlagsLocation">int GetWrapVisualFlagsLocation()</b><br />
 You can set wether the visual flags to indicate a line is wrapped are drawn near the border or near the text. Bits set in wrapVisualFlagsLocation set the location to near the text for the corresponding visual flag.
 </p>
 <table cellpadding="1" cellspacing="2" border="0" summary="Wrap visual flags locations">  <tbody>
@@ -2696,15 +2697,15 @@ You can set wether the visual flags to indicate a line is wrapped are drawn near
 </tr>
 </tbody></table>
 
+<h4 id="SetWrapStartIndent">void SetWrapStartIndent (int indent)</h4>
+<h4 id="GetWrapStartIndent">int GetWrapStartIndent()</h4>
 <p>
-<b id="SetWrapStartIndent">void SetWrapStartIndent (int indent)</b><br />
-<b id="GetWrapStartIndent">int GetWrapStartIndent()</b><br />
 <code>SetWrapStartIndent</code> sets the size of indentation of sublines for wrapped lines in terms of the width of a space in <a class="message" href="#StyleDefinition"><code>wxSCI_STYLE_DEFAULT</code></a>. There are no limits on indent sizes, but values less than 0 or large values may have undesirable effects. The indention of sublines is independent of visual flags, but if <code>wxSCI_WRAPVISUALFLAG_START</code> is set an indent of at least 1 is used.
 </p>
 
+<h4 id="SetLayoutCache">void SetLayoutCache (int mode)</h4>
+<h4 id="GetLayoutCache">int GetLayoutCache()</h4>
 <p>
-<b id="SetLayoutCache">void SetLayoutCache (int mode)</b><br />
-<b id="GetLayoutCache">int GetLayoutCache()</b><br />
 You can set <code>cacheMode</code> to one of the symbols in the table:
 </p>
 <table cellpadding="1" cellspacing="2" border="0" summary="Line caching styles"><tbody>
@@ -2733,13 +2734,13 @@ You can set <code>cacheMode</code> to one of the symbols in the table:
 </tr>
 </tbody></table>
 
+<h4 id="LinesSplit">void LinesSplit (int pixels)</h4>
 <p>
-<b id="LinesSplit">void LinesSplit (int pixels)</b><br />
 Split a range of lines indicated by the target into lines that are at most pixels wide. Splitting occurs on word boundaries wherever possible in a similar manner to line wrapping. When <code>pixels</code> is 0 then the width of the window is used.
 </p>
 
+<h4 id="LinesJoin">void LinesJoin()</h4>
 <p>
-<b id="LinesJoin">void LinesJoin()</b><br />
 Join a range of lines indicated by the target into one line by removing line end characters. Where this would lead to no space between words, an extra space is inserted.
 </p>
 
@@ -2757,15 +2758,15 @@ Scintilla incorporates a "zoom factor" that lets you make all the text in the do
  <a class="message" href="#GetZoom">int GetZoom()</a><br />
 </code></p>
 
+<h4 id="ZoomIn">void ZoomIn()</h4>
+<h4 id="ZoomOut">void ZoomOut()</h4>
 <p>
-<b id="ZoomIn">void ZoomIn()</b><br />
-<b id="ZoomOut">void ZoomOut()</b><br />
 <code>ZoomIn</code> increases the zoom factor by one point if the current zoom factor is less than 20 points. <code>ZoomOut</code> decreases the zoom factor by one point if the current zoom factor is greater than -10 points.
 </p>
 
+<h4 id="SetZoom">void SetZoom (int zoom)</h4>
+<h4 id="GetZoom">int GetZoom()</h4>
 <p>
-<b id="SetZoom">void SetZoom (int zoom)</b><br />
-<b id="GetZoom">int GetZoom()</b><br />
 Set and get the zoom factor directly. There is no limit set on the factors you can set, so limiting yourself to -10 to +20 to match the incremental zoom functions is a good idea.
 </p>
 
@@ -2785,9 +2786,9 @@ You can choose to mark lines that exceed a given length by drawing a vertical li
  <a class="message" href="#GetEdgeColour">wxColour GetEdgeColour()</a><br />
 </code></p>
 
+<h4 id="SetEdgeMode">void SetEdgeMode (int mode)</h4>
+<h4 id="GetEdgeMode">int GetEdgeMode()</h4>
 <p>
-<b id="SetEdgeMode">void SetEdgeMode (int mode)</b><br />
-<b id="GetEdgeMode">int GetEdgeMode()</b><br />
 Set and get the mode used to display long lines. You can set one of the values in the table:
 </p>
 <table cellpadding="1" cellspacing="2" border="0" summary="Long line styles"><tbody>
@@ -2813,15 +2814,15 @@ Set and get the mode used to display long lines. You can set one of the values i
 </tr>
 </tbody></table>
 
+<h4 id="SetEdgeColumn">void SetEdgeColumn (int column)</h4>
+<h4 id="GetEdgeColumn">int GetEdgeColumn()</h4>
 <p>
-<b id="SetEdgeColumn">void SetEdgeColumn (int column)</b><br />
-<b id="GetEdgeColumn">int GetEdgeColumn()</b><br />
 Set and get the column number at which to display the long line marker. When drawing lines, the column sets a position in units of the width of a space character in <code>wxSCI_STYLE_DEFAULT</code>. When setting the background colour, the column is a character count (allowing for tabs) into the line.
 </p>
 
+<h4 id="SetEdgeColour">void SetEdgeColour (const wxColour& colour)</h4>
+<h4 id="GetEdgeColour">wxColour GetEdgeColour()</h4>
 <p>
-<b id="SetEdgeColour">void SetEdgeColour (const wxColour& colour)</b><br />
-<b id="GetEdgeColour">wxColour GetEdgeColour()</b><br />
 Set and get the colour of the marker used to show that a line has exceeded the length set by <code>SetEdgeColumn</code>.
 </p>
 
@@ -2845,28 +2846,28 @@ Scintilla also supports external lexers. These are DLLs (on Windows) or .so modu
  <a class="message" href="#SetKeyWords">void SetKeyWords (int keywordSet, const wxString& keyWords)</a><br />
 </code></p>
 
+<h4 id="SetLexer">void SetLexer (int lexer)</h4>
+<h4 id="GetLexer">int GetLexer()</h4>
 <p>
-<b id="SetLexer">void SetLexer (int lexer)</b><br />
-<b id="GetLexer">int GetLexer()</b><br />
 You can select the lexer to use with an integer code from the <code>wxSCI_LEX_*</code> enumeration in <code>Scintilla.h</code>. There are two codes in this sequence that do not use lexers:<br />
 <code>wxSCI_LEX_NULL</code> to select no lexing action and <code>wxSCI_LEX_CONTAINER</code> which sends the <code><a class="message" href="#wxEVT_SCI_STYLENEEDED">wxEVT_SCI_STYLENEEDED</a></code> notification to the container whenever a range of text needs to be styled. You cannot use the <code>wxSCI_LEX_AUTOMATIC</code> value; this identifies additional external lexers that Scintilla assigns unused lexer numbers to.
 </p>
 
+<h4 id="SetLexerLanguage">void SetLexerLanguage (const wxString& language)</h4>
 <p>
-<b id="SetLexerLanguage">void SetLexerLanguage (const wxString& language)</b><br />
 Lets you select a lexer by name, and is the only method if you are using an external lexer or if you have written a lexer module for a language of your own and do not wish to assign it an explicit lexer number. To select an existing lexer, set <code>name</code> to match the (case sensitive) name given to the module, for example "ada" or "python", not "Ada" or "Python". To locate the name for the built-in lexers, open the relevant <code>Lex*.cxx</code> file and search for <code>LexerModule</code>. The third argument in the <code>LexerModule</code> constructor is the name to use.
 </p>
 <p>
 To test if your lexer assignment worked, use <a class="message" href="#GetLexer"><code>GetLexer</code></a> before and after setting the new lexer to see if the lexer number changed.
 </p>
 
+<h4 id="Colourise">void Colourise (int startPos, int endPos)</h4>
 <p>
-<b id="Colourise">void Colourise (int startPos, int endPos)</b><br />
 This forces the current lexer or the container (if the lexer is set to <code>wxSCI_LEX_CONTAINER</code>) to style the document between <code>startPos</code> and <code>endPos</code>. If <code>endPos</code> is wxSCI_INVALID_POSITION, the document is styled from <code>startPos</code> to the end. If the <code>"fold"</code> property is set to <code>"1"</code> and your lexer or container supports folding, fold levels are also set. Causes a redraw.
 </p>
 
+<h4 id="SetProperty">void SetProperty (const wxString& key, const wxString& value)</h4>
 <p>
-<b id="SetProperty">void SetProperty (const wxString& key, const wxString& value)</b><br />
 You can communicate settings to lexers with keyword:value string pairs. There is no limit to the number of keyword pairs you can set, other than available memory. <code>key</code> is a case sensitive keyword, <code>value</code> is a string that is associated with the keyword. If there is already a value string associated with the keyword, it is replaced. If you pass a zero length string, nothing is done. Both <code>key</code> and <code>value</code> are used without modification; extra spaces at the beginning or end of <code>key</code> are significant.
 </p>
 <p>The <code>value</code> string can refer to other keywords. For example, <code>SetProperty ("foldTimes10", "$(fold)0")</code> stores the string <code>"$(fold)0"</code>, but when this is accessed, the <code>$(fold)</code> is replaced by the value of the <code>"fold"</code> keyword (or by nothing if this keyword does not exist).
@@ -2875,8 +2876,8 @@ You can communicate settings to lexers with keyword:value string pairs. There is
 Currently the "fold" property is defined for most of the lexers to set the fold structure if set to "1". <code>wxSCI_LEX_PYTHON</code> understands <code>"TAB.timmy.whinge.level"</code> as a setting that determines how to indicate bad indentation. Most keywords have values that are interpreted as integers. Search the lexer sources for <code>GetPropertyInt</code> to see how properties are used.
 </p>
 
+<h4 id="SetKeyWords">void SetKeyWords (int keywordSet, const wxString& keyWords)</h4>
 <p>
-<b id="SetKeyWords">void SetKeyWords (int keywordSet, const wxString& keyWords)</b><br />
 You can set up to 9 lists of keywords for use by the current lexer. <code>keyWordSet</code> can be 0 to 8 (actually 0 to <code>wxSCI_KEYWORDSET_MAX</code>) and selects which keyword list to replace. <code>keyWordList</code> is a list of keywords separated by spaces, tabs, <code>"\n"</code> or <code>"\r"</code> or any combination of these. It is expected that the keywords will be composed of standard ASCII printing characters, but there is nothing to stop you using any non-separator character codes from 1 to 255 (except common sense).
 </p>
 <p>
@@ -2934,8 +2935,8 @@ The following additional notifications are sent using the <code>WM_COMMAND</code
  <a class="message" href="#wxEVT_SCI_CHANGE">wxEVT_SCI_CHANGE</a><br />
 </code>
 
+<h4 id="wxEVT_SCI_STYLENEEDED">wxEVT_SCI_STYLENEEDED</h4>
 <p>
-<b id="wxEVT_SCI_STYLENEEDED">wxEVT_SCI_STYLENEEDED</b><br />
 If you used <code><a class="message" href="#SetLexer">SetLexer</a>(wxSCI_LEX_CONTAINER)</code> to make the container act as the lexer, you will receive this notification when Scintilla is about to display or print text that requires styling. You are required to style the text from the line that contains the position returned by <a class="message" href="#GetEndStyled"><code>GetEndStyled</code></a> up to the position passed in <code>SCNotification.position</code>. Symbolically, you need code of the form:
 </p>
 <pre>
@@ -2945,43 +2946,43 @@ If you used <code><a class="message" href="#SetLexer">SetLexer</a>(wxSCI_LEX_CON
   MyStyleRoutine(startPos, SCNotification.position);
 </pre>
 
+<h4 id="wxEVT_SCI_CHARADDED">wxEVT_SCI_CHARADDED</h4>
 <p>
-<b id="wxEVT_SCI_CHARADDED">wxEVT_SCI_CHARADDED</b><br />
 This is sent when the user types an ordinary text character (as opposed to a command character) that is entered into the text. The container can use this to decide to display a <a class="jump" href="#CallTips">call tip</a> or an <a class="jump" href="#Autocompletion">auto completion list</a>. The character is in <code>SCNotification.ch</code>.
 </p>
 
+<h4 id="wxEVT_SCI_SAVEPOINTREACHED">wxEVT_SCI_SAVEPOINTREACHED</h4>
+<h4 id="wxEVT_SCI_SAVEPOINTLEFT">wxEVT_SCI_SAVEPOINTLEFT</h4>
 <p>
-<b id="wxEVT_SCI_SAVEPOINTREACHED">wxEVT_SCI_SAVEPOINTREACHED</b><br />
-<b id="wxEVT_SCI_SAVEPOINTLEFT">wxEVT_SCI_SAVEPOINTLEFT</b><br />
 Sent to the container when the save point is entered or left, allowing the container to display a "document dirty" indicator and change its menus.
 </p>
 <p>
 See also: <code><a class="message" href="#SetSavePoint">SetSavePoint</a>, <a class="message" href="#GetModify"><code>GetModify</code></a>
 </p>
 
+<h4 id="wxEVT_SCI_MODIFYATTEMPTRO">wxEVT_SCI_MODIFYATTEMPTRO</h4>
 <p>
-<b id="wxEVT_SCI_MODIFYATTEMPTRO">wxEVT_SCI_MODIFYATTEMPTRO</b><br />
 When in read-only mode, this notification is sent to the container if the user tries to change the text. This can be used to check the document out of a version control system. You can set the read-only state of a document with <code><a class="message" href="#SetReadOnly">SetReadOnly</a></code>.
 </p>
 
+<h4 id="wxEVT_SCI_KEY">wxEVT_SCI_KEY</h4>
 <p>
-<b id="wxEVT_SCI_KEY">wxEVT_SCI_KEY</b><br />
 Reports all keys pressed. Used on GTK+ because of some problems with keyboard focus and is not sent by the Windows version. <code>SCNotification.ch</code> holds the key code and
 <code>SCNotification.modifiers</code> holds the modifiers. This notification is sent if the modifiers include <code>SCMOD_ALT</code> or <code>SCMOD_CTRL</code> and the key code is less than 256.
 </p>
 
+<h4 id="wxEVT_SCI_DOUBLECLICK">wxEVT_SCI_DOUBLECLICK</h4>
 <p>
-<b id="wxEVT_SCI_DOUBLECLICK">wxEVT_SCI_DOUBLECLICK</b><br />
 The mouse button was double clicked in editor. There is no additional information.
 </p>
 
+<h4 id="wxEVT_SCI_UPDATEUI">wxEVT_SCI_UPDATEUI</h4>
 <p>
-<b id="wxEVT_SCI_UPDATEUI">wxEVT_SCI_UPDATEUI</b><br />
 Either the text or styling of the document has changed or the selection range has changed. Now would be a good time to update any container UI elements that depend on document or view state. This was previously called <code><a class="message" href="#wxEVT_SCI_CHECKBRACE">wxEVT_SCI_CHECKBRACE</a></code> because a common use is to check whether the caret is next to a brace and set highlights on this brace and its corresponding matching brace. This also replaces <a class="message" href="#wxEVT_SCI_POSCHANGED"><code>wxEVT_SCI_POSCHANGED</code></a>, which is now deprecated.
 </p>
 
+<h4 id="wxEVT_SCI_MODIFIED">wxEVT_SCI_MODIFIED</h4>
 <p>
-<b id="wxEVT_SCI_MODIFIED">wxEVT_SCI_MODIFIED</b><br />
 This notification is sent when the text or styling of the document changes or is about to change. You can set a mask for the notifications that are sent to the container with <a class="message" href="#SetModEventMask"><code>SetModEventMask</code></a>. The notification structure contains information about what changed, how the change occurred and whether this changed the number of lines in the document. No modifications may be performed while in a <code>wxEVT_SCI_MODIFIED</code> event. The <code>SCNotification</code> fields used are:
 </p>
 <table cellpadding="1" cellspacing="2" border="0" summary="Modify notification types"><tbody>
@@ -3091,22 +3092,22 @@ The <code>SCNotification.modificationType</code> field has bits set to tell you 
 </tr>
 </tbody></table>
 
+<h4 id="wxEVT_SCI_CHANGE">wxEVT_SCI_CHANGE</h4>
 <p>
-<b id="wxEVT_SCI_CHANGE">wxEVT_SCI_CHANGE</b><br />
 <code>wxEVT_SCI_CHANGE</code> (768) is fired when the text (not the style) of the document changes. This notification is sent using the <code>WM_COMMAND</code> message on Windows and the "Command" signal on GTK+ as this is the behavior of the standard Edit control (<code>wxEVT_SCI_CHANGE</code> has the same value as the Windows Edit control <code>EN_CHANGE</code>). No other information is sent. If you need more detailed information use <a class="message" href="#wxEVT_SCI_MODIFIED"><code>wxEVT_SCI_MODIFIED</code></a>. You can filter the types of changes you are notified about with <a class="message" href="#SetModEventMask"><code>SetModEventMask</code></a>.
 </p>
 
+<h4 id="SetModEventMask">void SetModEventMask (int mask)</h4>
+<h4 id="GetModEventMask">int GetModEventMask()</h4>
 <p>
-<b id="SetModEventMask">void SetModEventMask (int mask)</b><br />
-<b id="GetModEventMask">int GetModEventMask()</b><br />
 Set and get an event mask that determines which document change events are notified to the container with <a class="message" href="#wxEVT_SCI_MODIFIED"><code>wxEVT_SCI_MODIFIED</code></a> and <a class="message" href="#wxEVT_SCI_CHANGE"><code>wxEVT_SCI_CHANGE</code></a>. For example, a container may decide to see only notifications about changes to text and not styling changes by calling <code>SetModEventMask(wxSCI_MOD_INSERTTEXT|wxSCI_MOD_DELETETEXT)</code>.
 </p>
 <p>
 The possible notification types are the same as the <code>modificationType</code> bit flags used by <code>wxEVT_SCI_MODIFIED</code>: <code>wxSCI_MOD_INSERTTEXT</code>, <code>wxSCI_MOD_DELETETEXT</code>, <code>wxSCI_MOD_CHANGESTYLE</code>, <code>wxSCI_MOD_CHANGEFOLD</code>, <code>wxSCI_PERFORMED_USER</code>, <code>wxSCI_PERFORMED_UNDO</code>, <code>wxSCI_PERFORMED_REDO</code>, <code>wxSCI_LASTSTEPINUNDOREDO</code>, <code>wxSCI_MOD_CHANGEMARKER</code>, <code>wxSCI_MOD_BEFOREINSERT</code>, <code>wxSCI_MOD_BEFOREDELETE</code>, and <code>wxSCI_MODEVENTMASKALL</code>.
 </p>
 
+<h4 id="wxEVT_SCI_MACRORECORD">wxEVT_SCI_MACRORECORD</h4>
 <p>
-<b id="wxEVT_SCI_MACRORECORD">wxEVT_SCI_MACRORECORD</b><br />
 The <code><a class="message" href="#StartRecord">StartRecord</a></code> and <a class="message" href="#StopRecord"><code>StopRecord</code></a> enable and disable macro recording. When enabled, each time a recordable change occurs, the <code>wxEVT_SCI_MACRORECORD</code> notification is sent to the container. It is up to the container to record the action. To see the complete list that are recordable, search the Scintilla source <code>Editor.cxx</code> for <code>Editor::NotifyMacroRecord</code>. The fields of <code>SCNotification</code> set in this notification are:
 </p>
 <table cellpadding="1" cellspacing="2" border="0" summary="Macro record notification data">   <tbody>
@@ -3127,8 +3128,8 @@ The <code><a class="message" href="#StartRecord">StartRecord</a></code> and <a c
 </tr>
 </tbody></table>
 
+<h4 id="wxEVT_SCI_MARGINCLICK">wxEVT_SCI_MARGINCLICK</h4>
 <p>
-<b id="wxEVT_SCI_MARGINCLICK">wxEVT_SCI_MARGINCLICK</b><br />
 This notification tells the container that the mouse was clicked inside a <a class="jump" href="#Margins">margin</a> that was marked as sensitive (see <a class="message" href="#SetMarginSensitive"><code>SetMarginSensitive</code></a>). This can be used to perform folding or to place breakpoints. The following <code>SCNotification</code> fields are used:
 </p>
 <table cellpadding="1" cellspacing="2" border="0" summary="Margin click notification"> <tbody>
@@ -3150,8 +3151,8 @@ This notification tells the container that the mouse was clicked inside a <a cla
 </tr>
 </tbody></table>
 
+<h4 id="wxEVT_SCI_NEEDSHOWN">wxEVT_SCI_NEEDSHOWN</h4>
 <p>
-<b id="wxEVT_SCI_NEEDSHOWN">wxEVT_SCI_NEEDSHOWN</b><br />
 Scintilla has determined that a range of lines that is currently invisible should be made visible. An example of where this may be needed is if the end of line of a contracted fold point is deleted. This message is sent to the container in case it wants to make the line visible in some unusual way such as making the whole document visible. Most containers will just ensure each line in the range is visible by calling <a class="message" href="#EnsureVisible"><code>EnsureVisible</code></a>. The <code>position</code> and <code>length</code> fields of <code>SCNotification</code> indicate the range of the document that should be made visible. The container code will be similar to the following code skeleton:
 </p>
 <pre>
@@ -3160,13 +3161,13 @@ Scintilla has determined that a range of lines that is currently invisible shoul
     for line = lineStart to lineEnd do EnsureVisible (line) next
 </pre>
 
+<h4 id="wxEVT_SCI_PAINTED">wxEVT_SCI_PAINTED</h4>
 <p>
-<b id="wxEVT_SCI_PAINTED">wxEVT_SCI_PAINTED</b><br />
 Painting has just been done. Useful when you want to update some other widgets based on a change in Scintilla, but want to have the paint occur first to appear more responsive. There is no other information in <code>SCNotification</code>.
 </p>
 
+<h4 id="wxEVT_SCI_USERLISTSELECTION">wxEVT_SCI_USERLISTSELECTION</h4>
 <p>
-<b id="wxEVT_SCI_USERLISTSELECTION">wxEVT_SCI_USERLISTSELECTION</b><br />
 The user has selected an item in a <a class="jump" href="#UserLists">user list</a>. The <code>SCNotification</code> fields used are:
 </p>
 <table cellpadding="1" cellspacing="2" border="0" summary="User list notification"><tbody>
@@ -3184,14 +3185,14 @@ The user has selected an item in a <a class="jump" href="#UserLists">user list</
 </tr>
 </tbody></table>
 
+<h4 id="wxEVT_SCI_URIDROPPED">wxEVT_SCI_URIDROPPED</h4>
 <p>
-<b id="wxEVT_SCI_URIDROPPED">wxEVT_SCI_URIDROPPED</b><br />
 Only on the GTK+ version. Indicates that the user has dragged a URI such as a file name or Web address onto Scintilla. The container could interpret this as a request to open the file. The <code>text</code> field of <code>SCNotification</code> points at the URI text.
 </p>
 
+<h4 id="wxEVT_SCI_DWELLSTART">wxEVT_SCI_DWELLSTART</h4>
+<h4 id="wxEVT_SCI_DWELLEND">wxEVT_SCI_DWELLEND</h4>
 <p>
-<b id="wxEVT_SCI_DWELLSTART">wxEVT_SCI_DWELLSTART</b><br />
-<b id="wxEVT_SCI_DWELLEND">wxEVT_SCI_DWELLEND</b><br />
 <code>wxEVT_SCI_DWELLSTART</code> is generated when the user keeps the mouse in one position for the dwell period (see <code><a class="message" href="#SetMouseDwellTime">SetMouseDwellTime</a></code>). <code>wxEVT_SCI_DWELLEND</code> is generated after a <code>wxEVT_SCI_DWELLSTART</code> and the mouse is moved or other activity such as key press indicates the dwell is over. Both notifications set the same fields in <code>SCNotification</code>:
 </p>
 <table cellpadding="1" cellspacing="2" border="0" summary="Mouse dwell notification"><tbody>
@@ -3209,25 +3210,25 @@ Only on the GTK+ version. Indicates that the user has dragged a URI such as a fi
 </tr>
 </tbody></table>
 
+<h4 id="SetMouseDwellTime">void SetMouseDwellTime (int periodMilliseconds)</h4>
+<h4 id="GetMouseDwellTime">int GetMouseDwellTime()</h4>
 <p>
-<b id="SetMouseDwellTime">void SetMouseDwellTime (int periodMilliseconds)</b><br />
-<b id="GetMouseDwellTime">int GetMouseDwellTime()</b><br />
 Set and get the time the mouse must sit still, in milliseconds, to generate a <code><a class="message" href="#wxEVT_SCI_DWELLSTART">wxEVT_SCI_DWELLSTART</a></code> notification. If set to <code>wxSCI_TIME_FOREVER</code>, the default, no dwell events are generated.
 </p>
 
+<h4 id="wxEVT_SCI_ZOOM">wxEVT_SCI_ZOOM</h4>
 <p>
-<b id="wxEVT_SCI_ZOOM">wxEVT_SCI_ZOOM</b><br />
 This notification is generated when the user zooms the display using the keyboard or the <code><a class="message" href="#SetZoom">SetZoom</a></code> method is called. This notification can be used to recalculate positions, such as the width of the line number margin to maintain sizes in terms of characters rather than pixels. <code>SCNotification</code> has no additional information.
 </p>
 
+<h4 id="wxEVT_SCI_HOTSPOTCLICK">wxEVT_SCI_HOTSPOTCLICK</h4>
+<h4 id="wxEVT_SCI_HOTSPOTDOUBLECLICK">wxEVT_SCI_HOTSPOTDOUBLECLICK</h4>
 <p>
-<b id="wxEVT_SCI_HOTSPOTCLICK">wxEVT_SCI_HOTSPOTCLICK</b><br />
-<b id="wxEVT_SCI_HOTSPOTDOUBLECLICK">wxEVT_SCI_HOTSPOTDOUBLECLICK</b><br />
 These notifications are generated when the user clicks or double clicks on  text that is in a style with the hotspot attribute set. This notification can be used to link to variable definitions or web pages. The <code>position</code> field is set the text position of the click or double click and the <code>modifiers</code> field set to the key modifiers held down in a similar manner to <a class="message" href="#wxEVT_SCI_KEY">wxEVT_SCI_KEY</a>.
 </p>
 
+<h4 id="wxEVT_SCI_CALLTIPCLICK">wxEVT_SCI_CALLTIPCLICK</h4>
 <p>
-<b id="wxEVT_SCI_CALLTIPCLICK">wxEVT_SCI_CALLTIPCLICK</b><br />
 This notification is generated when the user clicks on a calltip. This notification can be used to display the next function prototype when a function name is overloaded with different arguments. The <code>position</code> field is set to 1 if the click is in an up arrow, 2 if in a down arrow, and 0 if elsewhere.
 </p>
 
