@@ -2,7 +2,7 @@
 // Name:        archive.h
 // Purpose:     Streams for archive formats
 // Author:      Mike Wetherell
-// RCS-ID:      $Id: archive.h,v 1.3 2004-07-08 05:36:46 chiclero Exp $
+// RCS-ID:      $Id: archive.h,v 1.4 2004-07-14 18:24:21 chiclero Exp $
 // Copyright:   (c) 2004 Mike Wetherell
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -35,7 +35,9 @@ public:
 
 
 /////////////////////////////////////////////////////////////////////////////
-// Archive entry - holds an entry's meta data
+// wxArchiveEntry
+//
+// Holds an entry's meta data, such as filename and timestamp.
 
 class wxArchiveEntry : public wxObject
 {
@@ -74,7 +76,6 @@ private:
     DECLARE_ABSTRACT_CLASS(wxArchiveEntry)
 };
 
-// inline
 void wxArchiveEntry::SetNotifier(wxArchiveNotifier& notifier)
 {
     UnsetNotifier();
@@ -82,7 +83,6 @@ void wxArchiveEntry::SetNotifier(wxArchiveNotifier& notifier)
     m_notifier->OnEntryChanged(*this);
 }
 
-// inline
 wxArchiveEntry& wxArchiveEntry::operator=(const wxArchiveEntry& entry)
 {
     m_notifier = entry.m_notifier;
@@ -92,13 +92,25 @@ wxArchiveEntry& wxArchiveEntry::operator=(const wxArchiveEntry& entry)
 
 /////////////////////////////////////////////////////////////////////////////
 // wxArchiveExtra
+//
+// This holds any additional meta-data associated with the archive as a
+// whole. For example, for zips it can hold a comment for the entire zip.
+//
+// Since not all archive formats have such data, there isn't much that
+// can be done with it without knowing what type of archive is being used.
+// However when making a modified copy of an existing archive, it is useful
+// to be able to choose whether or not to transfer this extra information.
 
 class wxArchiveExtra : public wxObject
 {
 public:
     virtual ~wxArchiveExtra() { }
 
+    wxArchiveExtra *Clone() const { return DoClone(); }
+
 protected:
+    virtual wxArchiveExtra* DoClone() const = 0;
+
     wxArchiveExtra& operator=(const wxArchiveExtra& WXUNUSED(extra))
         { return *this; }
 
@@ -108,6 +120,51 @@ protected:
 
 /////////////////////////////////////////////////////////////////////////////
 // wxArchiveInputStream
+//
+// GetNextEntry() returns an wxArchiveEntry object (and gives away ownership)
+// containing the meta-data for the next entry in the archive. Reading from
+// the wxArchiveInputStream then returns the entry's data. Eof() becomes
+// true after an attempt has been made to read past the end of the entry's
+// data.
+//
+// When there are no more entries, GetNextEntry() returns NULL and sets Eof().
+//
+//    wxDEFINE_SCOPED_PTR_TYPE(wxArchiveEntry);
+//    wxArchiveEntryPtr entry;
+//
+//    while (entry.reset(arc.GetNextEntry()), entry.get() != NULL)
+//    {
+//        wxString name = entry->GetName();     // access meta-data
+//        arc->Read(buffer, sizeof(buffer))     // access data
+//        ...
+//    }
+//
+// To access several entries randomly, the entire catalog of entries can
+// be transfered to a container, such as a std::map or a wxHashMap (see
+// wxArchiveIterator), then entries looked up by name can be opened using
+// the OpenEntry() method.
+//
+// To open more than one entry simultaneously you need more than one
+// underlying stream on the same archive:
+//
+//    // load the zip catalog
+//    wxFFileInputStream in(filename);
+//    wxZipInputStream2 zip(in);
+//    typedef std::map<wxString, wxZipEntry*> ZipCatalog;
+//    ZipCatalog cat((wxZipPairIter)zip, wxZipPairIter());
+//
+//    // open an entry by name
+//    ZipCatalog::iterator it;
+//    if ((it = cat.find(name)) != cat.end())
+//        zip.OpenEntry(*it->second);
+//
+//    // opening another entry without closing the first requires another
+//    // input stream for the same file
+//    wxFFileInputStream in2(filename);
+//    wxZipInputStream2 zip2(in2);
+//    if ((it = cat.find(name2)) != cat.end())
+//        zip2.OpenEntry(*it->second);
+//
 
 class wxArchiveInputStream : public wxFilterInputStream
 {
@@ -116,29 +173,21 @@ public:
 
     virtual ~wxArchiveInputStream() { }
     
-    // Open a particular entry from the archive's catalog
-    virtual bool Open(wxArchiveEntry& entry) = 0;
+    virtual bool OpenEntry(wxArchiveEntry& entry) = 0;
+    virtual bool CloseEntry() = 0;
 
-    // If the archive contains compressed entries, then OpenRaw allows
-    // them to be read still compressed. Allows for efficient copying
-    // to an output archive.
-    virtual bool OpenRaw() = 0;
-    virtual bool OpenRaw(wxArchiveEntry& entry) = 0;
+    wxArchiveEntry *GetNextEntry()  { return DoGetNextEntry(); }
+    wxArchiveExtra *GetExtra()      { return DoGetExtra(); }
 
-    virtual bool Close() = 0;
-
-    wxArchiveEntry *GetEntry()  { return DoGetEntry(); }
-    wxArchiveExtra *GetExtra()  { return DoGetExtra(); }
-
-    virtual char Peek()         { return wxInputStream::Peek(); }
+    virtual char Peek()             { return wxInputStream::Peek(); }
     
 protected:
     wxArchiveInputStream(wxInputStream& stream, wxMBConv& conv);
 
-    virtual wxArchiveEntry *DoGetEntry() = 0;
+    virtual wxArchiveEntry *DoGetNextEntry() = 0;
     virtual wxArchiveExtra *DoGetExtra() = 0;
 
-    wxMBConv& GetConv() const   { return m_conv; }
+    wxMBConv& GetConv() const       { return m_conv; }
 
 private:
     wxMBConv& m_conv;
@@ -147,25 +196,47 @@ private:
 
 /////////////////////////////////////////////////////////////////////////////
 // wxArchiveOutputStream
+//
+// PutNextEntry is used to create a new entry in the output archive, then
+// the entry's data is written to the wxArchiveOutputStream.
+//
+// Only one entry can be open for output at a time; another call to
+// PutNextEntry closes the current entry and begins the next.
+// 
+// The overload 'bool PutNextEntry(wxArchiveEntry *entry)' takes ownership
+// of the entry object.
+//
+// To modify an existing archive, write a new copy of the archive to a new
+// file, making any necessary changes along the way and transferring any
+// unchanged entries using CopyEntry. For archive types which compress entry
+// data, CopyEntry is likely to be much more efficient than transferring the
+// data using Read and Write since it will copy them without decompressing
+// and recompressing them.
+//
+// In general modifications aren't possible without rewriting the archive,
+// though it may be possible in some limited cases. Even then, rewriting
+// the archive is usually a better choice, since a failure can be handled
+// without losing the whole archive.
 
 class wxArchiveOutputStream : public wxFilterOutputStream
 {
 public:
     virtual ~wxArchiveOutputStream() { }
 
-    // Open a new entry for writing
-    virtual bool Create(wxArchiveEntry *entry) = 0;
-    virtual bool CreateRaw(wxArchiveEntry *entry) = 0;
+    virtual bool PutNextEntry(wxArchiveEntry *entry) = 0;
 
-    virtual bool Create(const wxString& name,
-                        const wxDateTime& dt = wxDateTime::Now(),
-                        off_t size = wxInvalidOffset) = 0;
+    virtual bool PutNextEntry(const wxString& name,
+                              const wxDateTime& dt = wxDateTime::Now(),
+                              off_t size = wxInvalidOffset) = 0;
 
-    virtual bool CreateDir(const wxString& name,
-                           const wxDateTime& dt = wxDateTime::Now()) = 0;
+    virtual bool PutNextDirEntry(const wxString& name,
+                                 const wxDateTime& dt = wxDateTime::Now()) = 0;
 
+    virtual bool CopyEntry(wxArchiveEntry *entry,
+                           wxArchiveInputStream& stream) = 0;
+
+    virtual bool CloseEntry() = 0;
     virtual bool Close() = 0;
-    virtual bool CloseArchive() = 0;
 
     virtual void SetExtra(wxArchiveExtra *extra) = 0;
 
@@ -181,6 +252,9 @@ private:
 
 /////////////////////////////////////////////////////////////////////////////
 // wxArchiveClassFactory
+//
+// A wxArchiveClassFactory instance for a particular archive type allows
+// the creation of the other classes that may be needed.
 
 class wxArchiveClassFactory : public wxObject
 {
@@ -213,27 +287,89 @@ private:
 
 /////////////////////////////////////////////////////////////////////////////
 // wxArchiveIterator
+//
+// This is an input iterator that can be used to transfer an archive's
+// catalog to a container. For example, given a wxArchiveInputStream 'arc':
+//
+//    typedef std::vector<wxArchiveEntry*> ArchiveCatalog;
+//    ArchiveCatalog cat((wxArchiveIter)arc, wxArchiveIter());
+//
+// When the iterator is dereferenced, it gives away ownership of an entry
+// object. So in the above example, when you have finished with 'cat'
+// you must delete the pointers it contains.
+//
+// If you have smart pointers with normal copy semantics (i.e. not auto_ptr
+// or wxScopedPtr), then you can create an iterator which uses them instead.
+// For example, with a smart pointer class for zip entries 'ZipEntryPtr':
+//
+//    typedef std::vector<ZipEntryPtr> ZipCatalog;
+//    typedef wxArchiveIterator<wxZipInputStream2, ZipEntryPtr> ZipIter;
+//    ZipCatalog cat((ZipIter)zip, ZipIter());
+//
+// Iterators can also be constructed to return std::pair objects, which can be
+// used to populate a std::map, to allow entries to be looked up by name, e.g:
+//
+//    typedef std::map<wxString, wxZipEntry*> ZipCatalog;
+//    ZipCatalog cat((wxZipPairIter)zip, wxZipPairIter());
+// 
+// Or a pair containing a smart pointer (again ZipEntryPtr):
+//      
+//    typedef std::map<wxString, ZipEntryPtr> ZipCatalog;
+//    typedef wxArchiveIterator<wxZipInputStream2,
+//                std::pair<wxString, ZipEntryPtr> > ZipPairIter;
+//    ZipCatalog cat((ZipPairIter)zip, ZipPairIter());
+//
+// The examples given so far require the compiler to support member templates.
+// If your compiler does not, you could do the following instead:
+//
+//    typedef std::vector<wxZipEntry*> ZipCatalog;
+//    ZipCatalog cat;
+//    for (wxZipIter i(zip); i != wxZipIter(); ++i)
+//        cat.push_back(*i);
+//
+// And if your compiler doesn't support that either, then you can do without
+// the iterators altogether:
+//
+//    WX_DEFINE_ARRAY_PTR(wxZipEntry*, ZipCatalog);
+//    ZipCatalog cat;
+//    wxZipEntry *entry;
+//    while ((entry = zip.GetNextEntry()) != NULL)
+//        cat.push_back(entry);
+//
 
 #if wxUSE_STL
 #include <iterator>
+#include <utility>
 
 template <class X, class Y>
-void _wxSetArchiveIteratorValue(X& val, Y entry) {
+void _wxSetArchiveIteratorValue(X& val, Y entry, void *WXUNUSED(d)) {
     val = X(entry);
 }
 template <class X, class Y, class Z>
-void _wxSetArchiveIteratorValue(std::pair<X, Y>& val, Z entry) {
+void _wxSetArchiveIteratorValue(std::pair<X, Y>& val, Z entry, Z WXUNUSED(d)) {
     val = std::make_pair(X(entry->GetInternalName()), Y(entry));
 }
 
+// Older versions of VC++ don't allow typename here but some compilers
+// require it
+#if defined _MSC_VER && _MSC_VER < 1300
+template <class Arc, class T = Arc::entry_type*>
+#else
 template <class Arc, class T = typename Arc::entry_type*>
-class wxArchiveIterator : public std::iterator<std::input_iterator_tag, T>
+#endif
+class wxArchiveIterator
 {
 public:
+    typedef std::input_iterator_tag iterator_category;
+    typedef T value_type;
+    typedef ptrdiff_t difference_type;
+    typedef T* pointer;
+    typedef T& reference;
+
     wxArchiveIterator() : m_rep(NULL) { }
 
     wxArchiveIterator(Arc& arc) {
-        typename Arc::entry_type* entry = arc.GetEntry();
+        typename Arc::entry_type* entry = arc.GetNextEntry();
         m_rep = entry ? new Rep(arc, entry) : NULL;
     }
 
@@ -308,7 +444,7 @@ private:
         }
 
         Rep *Next() {
-            typename Arc::entry_type* entry = m_arc.GetEntry();
+            typename Arc::entry_type* entry = m_arc.GetNextEntry();
             if (!entry) {
                 UnRef();
                 return NULL;
@@ -325,7 +461,7 @@ private:
 
         const T& GetValue() {
             if (m_entry) {
-                _wxSetArchiveIteratorValue(m_value, m_entry);
+                _wxSetArchiveIteratorValue(m_value, m_entry, m_entry);
                 m_entry = NULL;
             }
             return m_value;

@@ -2,20 +2,10 @@
 // Name:        arc.cpp
 // Purpose:     Examples for archive classes
 // Author:      Mike Wetherell
-// RCS-ID:      $Id: arc.cpp,v 1.3 2004-07-08 05:36:46 chiclero Exp $
+// RCS-ID:      $Id: arc.cpp,v 1.4 2004-07-14 18:24:21 chiclero Exp $
 // Copyright:   (c) Mike Wetherell
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
-
-//
-// There are example functions for the following: Create, Extract, List,
-// Remove, Rename and Add. I've tried to make each one pretty much self
-// contained and short so that they can be looked at individually.
-//
-// I've used std::map here (not in the stream classes which don't use any
-// features not available everywhere). Though even VC++ 5.0 can compile it
-// so I think it's compilable by all but Open Watcom.
-//
 
 #include "wx/wxprec.h"
 
@@ -35,6 +25,7 @@
 #include "wx/ptr_scpd.h"
 #include "wx/dir.h"
 
+#include <locale.h>
 #include <iostream>
 #include <iomanip>
 #include <map>
@@ -64,7 +55,11 @@ typedef std::map<wxString, wxString> NameMap;
 class ArcApp : public wxAppConsole
 {
 public:
-    bool OnInit() { setlocale(LC_ALL, ""); return true; }
+    ArcApp() :
+        m_info(&std::cout), m_filter(false),
+        m_validCmd(false), m_help(false) { } 
+
+    bool OnInit() { /*setlocale(LC_ALL, "");*/ return true; }
     int OnRun();
 
     // the examples
@@ -75,25 +70,26 @@ public:
     bool Rename();
     bool Add();
 
+    // make a class factory
+    bool MakeFactory();
+
+    // make m_files the list of files to process (for 'create' or 'add')
+    void MakeFileList(NameMap& files,
+                      const wxString& exclude1,
+                      const wxString& exclude2);
+
+    // commit or rollback changes
+    void Commit(bool commit);
+
     // data members used by the examples
     wxString m_archive;                 // the archive file name
+    wxString m_output;                  // the output archive file name
     wxArrayString m_args;               // any additional command line args
     wxArchiveClassFactoryPtr m_factory; // the class factory
     wxFFileInputStreamPtr m_in;         // the input stream
     wxFFileOutputStreamPtr m_out;       // the output stream
     std::ostream *m_info;               // where to send progress info
     bool m_filter;                      // filter stdin to stdout?
-
-    // make a class factory
-    bool MakeFactory();
-
-    // make the list of files to process
-    void MakeFileList(NameMap& files,
-                      const wxString& exclude1 = wxEmptyString,
-                      const wxString& exclude2 = wxEmptyString);
-
-    // commit or rollback changes
-    void Commit(bool commit);
 
 private:
     enum InputOutput { I = 1, O = 2, IO = I | O };
@@ -109,7 +105,6 @@ private:
     bool m_validCmd;        // true a valid command was given
     wxString m_errMsg;      // command line error message
     bool m_help;            // must display help and exit
-    wxString m_output;      // the output archive file
 };
 
 
@@ -126,7 +121,7 @@ bool ArcApp::Create()
     // turn m_args into a list of files, i.e. expand wildcards, recurse
     // directories and remove duplicates
     NameMap files;
-    MakeFileList(files, m_filter ? _T("") : m_archive.c_str(), m_output);
+    MakeFileList(files, m_filter ? wxString() : m_archive, m_output);
 
     for (NameMap::iterator it = files.begin(); it != files.end(); ++it) {
         wxString name = it->second;
@@ -135,7 +130,7 @@ bool ArcApp::Create()
 
         if (wxDirExists(name)) {
             wxDateTime dt = wxFileName(name, _T("")).GetModificationTime();
-            if (!arc->CreateDir(name, dt))
+            if (!arc->PutNextDirEntry(name, dt))
                 return false;
         }
         else {
@@ -143,14 +138,14 @@ bool ArcApp::Create()
 
             if (in.Ok()) {
                 wxDateTime dt = wxFileName(name).GetModificationTime();
-                if (!arc->Create(name, dt, in.GetSize()) ||
+                if (!arc->PutNextEntry(name, dt, in.GetSize()) ||
                         !arc->Write(in) || !in.Eof())
                     return false;
             }
         }
     }
 
-    return arc->CloseArchive();
+    return arc->Close();
 }
 
 
@@ -163,10 +158,10 @@ bool ArcApp::Create()
 bool ArcApp::Extract()
 {
     wxArchiveInputStreamPtr arc(m_factory->NewStream(*m_in));
-    wxArchiveEntryPtr       entry(arc->GetEntry());
+    wxArchiveEntryPtr       entry(arc->GetNextEntry());
 
-    for (; entry.get(); entry.reset(arc->GetEntry())) {
-        if (m_args.size() > 0 && !entry->GetName().Matches(m_args[0]))
+    for (; entry.get(); entry.reset(arc->GetNextEntry())) {
+        if (!m_args.empty() && !entry->GetName().Matches(m_args[0]))
             continue;
         *m_info << "extracting " << entry->GetName().mb_str() << std::endl;
 
@@ -202,9 +197,9 @@ bool ArcApp::Extract()
 bool ArcApp::List()
 {
     wxArchiveInputStreamPtr arc(m_factory->NewStream(*m_in));
-    wxArchiveEntryPtr       entry(arc->GetEntry());
+    wxArchiveEntryPtr       entry(arc->GetNextEntry());
 
-    for (; entry.get() && arc->Close(); entry.reset(arc->GetEntry()))
+    for (; entry.get() && arc->CloseEntry(); entry.reset(arc->GetNextEntry()))
         if (m_args.empty() || entry->GetName().Matches(m_args[0]))
             *m_info
                 << std::setw(9) << entry->GetSize() << " "
@@ -227,19 +222,18 @@ bool ArcApp::Remove()
 
     wxArchiveInputStreamPtr  arc(m_factory->NewStream(*m_in));
     wxArchiveOutputStreamPtr outarc(m_factory->NewStream(*m_out));
-    wxArchiveEntryPtr        entry(arc->GetEntry());
+    wxArchiveEntryPtr        entry(arc->GetNextEntry());
 
     outarc->SetExtra(arc->GetExtra());
 
-    for (; entry.get(); entry.reset(arc->GetEntry()))
+    for (; entry.get(); entry.reset(arc->GetNextEntry()))
         if (entry->GetName().Matches(pattern))
             *m_info << "removing " << entry->GetName().mb_str() << std::endl;
         else
-            if (!arc->OpenRaw() || !outarc->CreateRaw(entry.release()) ||
-                    !outarc->Write(*arc) || !arc->Eof())
+            if (!outarc->CopyEntry(entry.release(), *arc))
                 return false;
 
-    return arc->Eof() && outarc->CloseArchive();
+    return arc->Eof() && outarc->Close();
 }
 
 
@@ -252,28 +246,30 @@ bool ArcApp::Remove()
 
 bool ArcApp::Rename()
 {
+#ifdef __UNIX__
+    system("if [ \"$D\" ]; then konsole -e gdb -p $PPID & sleep 10; fi");
+#endif
     wxString from = m_args[0];
     wxString to = m_args[1];
 
     wxArchiveInputStreamPtr  arc(m_factory->NewStream(*m_in));
     wxArchiveOutputStreamPtr outarc(m_factory->NewStream(*m_out));
-    wxArchiveEntryPtr        entry(arc->GetEntry());
+    wxArchiveEntryPtr        entry(arc->GetNextEntry());
 
     outarc->SetExtra(arc->GetExtra());
 
-    for (; entry.get(); entry.reset(arc->GetEntry())) {
+    for (; entry.get(); entry.reset(arc->GetNextEntry())) {
         if (entry->GetName() == from) {
             *m_info << "renaming '" << from.mb_str()
                     << "' to '" << to.mb_str() << "'" << std::endl;
             entry->SetName(to);
         }
 
-        if (!arc->OpenRaw() || !outarc->CreateRaw(entry.release()) ||
-                !outarc->Write(*arc) || !arc->Eof())
+        if (!outarc->CopyEntry(entry.release(), *arc))
             return false;
     }
 
-    return arc->Eof() && outarc->CloseArchive();
+    return arc->Eof() && outarc->Close();
 }
 
 
@@ -287,11 +283,11 @@ bool ArcApp::Add()
     // turn m_args into a list of files, i.e. expand wildcards, recurse
     // directories and remove duplicates
     NameMap files;
-    MakeFileList(files, m_filter ? _T("") : m_archive.c_str(), m_output);
+    MakeFileList(files, m_filter ? wxString() : m_archive, m_output);
 
     wxArchiveInputStreamPtr  arc(m_factory->NewStream(*m_in));
     wxArchiveOutputStreamPtr outarc(m_factory->NewStream(*m_out));
-    wxArchiveEntryPtr        entry(arc->GetEntry());
+    wxArchiveEntryPtr        entry(arc->GetNextEntry());
 
     outarc->SetExtra(arc->GetExtra());
 
@@ -316,7 +312,7 @@ bool ArcApp::Add()
             if (wxDirExists(name)) {
                 *m_info << "adding " << name.mb_str() << std::endl;
                 wxDateTime dt = wxFileName(name, _T("")).GetModificationTime();
-                if (!outarc->CreateDir(name, dt))
+                if (!outarc->PutNextDirEntry(name, dt))
                     return false;
                 keep = false;
             } else {
@@ -325,7 +321,7 @@ bool ArcApp::Add()
                 if (file.Ok()) {
                     *m_info << "adding " << name.mb_str() << std::endl;
                     wxDateTime dt = wxFileName(name).GetModificationTime();
-                    if (!outarc->Create(name, dt, file.GetSize()) ||
+                    if (!outarc->PutNextEntry(name, dt, file.GetSize()) ||
                             !outarc->Write(file) || !file.Eof())
                         return false;
                     keep = false;
@@ -334,15 +330,14 @@ bool ArcApp::Add()
         }
 
         if (keep)
-            if (!arc->OpenRaw() || !outarc->CreateRaw(entry.release()) ||
-                    !outarc->Write(*arc) || !arc->Eof())
+            if (!outarc->CopyEntry(entry.release(), *arc))
                 return false;
 
         if (entry.get() || keep)
-            entry.reset(arc->GetEntry());
+            entry.reset(arc->GetNextEntry());
     }
 
-    return arc->Eof() && outarc->CloseArchive();
+    return arc->Eof() && outarc->Close();
 }
 
 
@@ -412,8 +407,8 @@ private:
 
 void ArcApp::MakeFileList(
     NameMap& files,
-    const wxString& exclude1 /*=wxEmptyString*/,
-    const wxString& exclude2 /*=wxEmptyString*/)
+    const wxString& exclude1,
+    const wxString& exclude2)
 {
     wxArchiveEntryPtr entry(m_factory->NewEntry());
     DirTraverser traverser(files, *entry, exclude1, exclude2);
@@ -545,7 +540,6 @@ int ArcApp::OnRun()
         return EXIT_FAILURE;
 
     m_filter = m_archive.find(_T('.')) == wxString::npos;
-    m_info = m_filter ? &std::cerr : &std::cout;
 
     // dispatch the command, and build up help information
     if (IsCmd(_T("add"),    IO, _T("FILES..."),  _T("add files to an archive")))
@@ -661,6 +655,7 @@ bool ArcApp::IsCmd(const wxString& cmd,
     // open the output file
     if (inputOutput & O) {
         if (m_filter) {
+            m_info = &std::cerr;
             Reopen("wb", stdout);
             m_out.reset(new wxFFileOutputStream(stdout));
         }
@@ -677,4 +672,3 @@ bool ArcApp::IsCmd(const wxString& cmd,
 
     return true;
 }
-

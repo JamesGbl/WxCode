@@ -9,10 +9,10 @@ Description:
 An interface for reading and writing archive formats, with
 implementations for zip and tar.
 
-Currently there is an example program (samples/arc.cpp), the
-generic wxArchive classes (include/wx/archive.h) and the zip
-classes (include/wx/zipstrm2.h). The tar classes will follow
-shortly.
+Currently there is an example program (samples/arc.cpp),
+a test script (samples/arctest.sh), the generic wxArchive
+classes (include/wx/archive.h) and the zip classes
+(include/wx/zipstrm2.h). The tar classes will follow shortly.
 
 To try it out, check out the component, e.g.:
 
@@ -42,3 +42,10 @@ Then run bakefile_gen (from inside the wxWidgets/build/bakefiles dir):
 
     bakefile_gen -b '../../contrib/components/wxarchive/*/*.bkl'
 
+The test script tests the arc sample program against itself, and
+will also test it against zip/unzip and pkzip/pkunzip if they are
+in the path. By default it looks for 'arc' in the current directory
+(so 'cd' to wherever 'arc' is then run the script).
+
+It's a unix shell script (probably not a very good idea), but it
+runs ok on MSYS or Cygwin on Windows.
