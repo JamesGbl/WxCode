@@ -36,6 +36,7 @@ bool wxPython::Init()
 	// add our extension to the list of the available for loading extensions:
 	wxScriptFile::m_strFileExt[wxPYTHON_SCRIPTFILE] = wxT("PY");
 
+	// initialize our "execution frame"
 	m_pModule = PyImport_AddModule("__main__");
 	m_pDict = PyModule_GetDict(m_pModule);
 	m_pGlobals = m_pDict;
@@ -47,58 +48,21 @@ bool wxPython::Init()
 	return isReady();
 }
 
+void wxPython::Cleanup()
+{
+	//Py_DECREF(m_pGlobals);
+	//Py_DECREF(m_pDict);
+	//Py_DECREF(m_pModule);
+
+	Py_Finalize();
+}
+
 bool wxPython::isReady() const
 {
 	// returns !=0 is everything is okay
 	return Py_IsInitialized() != 0;
 }
 
-/*
-bool wxPython::Init()
-{
-	// init Lua
-	m_state = lua_open();
-	m_bInit = (m_state != NULL);
-
-	// now load standard Lua libraries
-	const luaL_reg *lib;
-	
-	for (lib = luaLibs; lib->func != NULL; lib++) {
-		lib->func(m_state);           // Open the library								
-		
-		// Flush the stack, by setting the top to 0, in order to
-		// ignore any result given by the library load function.		
-		lua_settop(m_state, 0);
-	}
-
-	// add our extension to the list of the available for loading extensions:
-	wxScriptFile::m_strFileExt[wxPython_SCRIPTFILE] = wxT("LUA");
-	
-	// fill the std array
-	GetFunctionListComplete(m_arrStd);
-
-	return m_bInit;
-}
-
-void wxPython::Cleanup()
-{
-	// close Lua
-	lua_close(m_state);	
-}
-
-// a useful little function
-bool wxPython::SetErrAndReturn(lua_State *L)
-{
-	// the error description should have been placed in the stack
-	wxString err(LUA2WX(lua_tostring(L, -1)));
-	wxScriptInterpreter::m_strLastErr = err;
-
-	// this is a simple way to allow the caller to return immediately
-	// without writing   if (result != 0) { SetErrAndReturn(L); return FALSE;}
-	// but with a quick  if (result != 0) return SetErrAndReturn(L);
-	return FALSE;
-}
-*/
 void wxPython::GetFunctionListComplete(wxScriptFunctionArray &arr) const
 {
 	// get the list of global variables from Lua:
@@ -109,32 +73,31 @@ void wxPython::GetFunctionListComplete(wxScriptFunctionArray &arr) const
 	//
 	// that is, myf is a global variable...
 	//
-	return;
 
 	try {
 
-	PyObject *dict = PyObject_Dir(NULL);
-	if (!dict || PyDict_Check(dict) == FALSE)
-		return;
-	//PyErr_Occurred() 
-
-
-	PyObject *list = PyDict_Items(dict);
-	for (int i=0,max=PyList_Size(list); i<max; i++) {
-
-		PyObject *elem = PyList_GetItem(list, i);
-		if (PyObject_TypeCheck(elem, &PyCFunction_Type) != 0) {
-
-			// this is a function; add it
-			PyObject *str = PyObject_GetAttrString(elem, "func_name");
-			wxString name(PY2WX(PyString_AsString(str)));
-			arr.Append(new wxScriptFunctionPython(name));
+		// we'll scan the items of the globals dictionary
+		// (which are given to us into a PyList)
+		PyObject *list = PyDict_Values(m_pGlobals);
+		if (!list || PyList_Check(list) == FALSE)
+			return;
+				
+		for (int i=0,max=PyList_Size(list); i<max; i++) {
+			
+			// get the i-th item
+			PyObject *elem = PyList_GetItem(list, i);
+			if (elem && PyCallable_Check(elem) != 0) {
+				
+				// this is a function; add it to the list
+				PyObject *str = PyObject_GetAttrString(elem, "func_name");
+				wxString name(PY2WX(PyString_AsString(str)));
+				arr.Append(new wxScriptFunctionPython(name, m_pGlobals, elem));
+			}
 		}
-	}
-	
+		
 	} catch (...) {
-
-		// if there was an exception, then something gone wrong
+		
+		// if there was an exception, then something went wrong
 		return;
 	}
 }
@@ -167,12 +130,137 @@ void wxPython::GetFunctionList(wxScriptFunctionArray &arr) const
 // wxSCRIPTFUNCTIONPYTHON
 // -------------------------
 
+wxScriptFunctionPython::wxScriptFunctionPython(const wxString &name,
+											   PyObject *dict, PyObject *func)
+{
+//	wxASSERT_MSG(func != NULL && dict != NULL, wxT("Invalid Python objects"));
+
+	// set our name, dict & func pointers
+	Set(name, dict, func);
+}
+
+void wxScriptFunctionPython::Set(const wxString &name, PyObject *dict, PyObject *func)
+{
+	// set name
+	m_strName = name;
+
+	// do we need to proceed ?
+	if (!dict || !func)
+		return;		// don't proceed
+
+	// and our python vars
+	m_pDict = dict;
+	m_pFunc = func;
+
+	// get the number of arguments taken by this function
+	wxASSERT(PyObject_HasAttrString(func, "func_code"));
+	PyObject *code = PyObject_GetAttrString(func, "func_code");
+	wxASSERT(PyObject_HasAttrString(code, "co_argcount"));
+	PyObject *argc = PyObject_GetAttrString(code, "co_argcount");
+	wxASSERT(PyInt_Check(argc));
+
+	// convert the PyInt object to a number & store it
+	m_nArgCount = (int)PyInt_AsLong(argc);
+}
+
 bool wxScriptFunctionPython::Exec(wxScriptVar &ret, wxScriptVar *arg) const
 {
+	if (!m_pFunc) return FALSE;		// this is an invalid function
+
+	// create the ruple with the arguments to give to the function
+	PyObject *t = PyTuple_New(m_nArgCount);
+	for (int i=0; i < m_nArgCount; i++) {
+		if (PyTuple_SetItem(t, i, CreatePyObjFromScriptVar(arg[i])) != 0) {
+
+			wxScriptInterpreter::m_strLastErr = 
+				wxT("Could not create the argument tuple");
+			return FALSE;
+		}
+	}
+
+	// do the function call
+	try {
 	
+		PyObject *res = PyObject_CallObject(m_pFunc, t);
+		if (PyErr_Occurred() != NULL) {
+
+			PyErr_Print();
+			return FALSE;
+		}
+
+		// convert python result object to a wxScriptVar
+		ret = CreateScriptVarFromPyObj(res);
+
+	} catch (...) {
+
+		return FALSE;
+	}	
 
 	// finally we have finished...
 	return TRUE;
+}
+
+PyObject *wxScriptFunctionPython::CreatePyObjFromScriptVar(const wxScriptVar &toconvert) const
+{
+	wxScriptTypeInfo t(toconvert.GetType());
+	PyObject *res = NULL;
+		
+	if (t.Match(*wxScriptTypeINT) ||
+		t.Match(*wxScriptTypeLONG) ||
+		t.Match(*wxScriptTypeCHAR)) {
+
+		res = PyInt_FromLong(toconvert.GetContentLong());
+
+	} else if (t.Match(*wxScriptTypeFLOAT) || 
+				t.Match(*wxScriptTypeDOUBLE)) {
+
+		res = PyFloat_FromDouble(toconvert.GetContentDouble());
+
+	} else if (t.Match(*wxScriptTypeBOOL)) {
+
+		res = PyBool_FromLong(toconvert.GetContentLong());
+
+	} else if (t.isPointer()) {
+
+		wxScriptTypeInfo pt = t.GetPointerType();
+		if (pt.Match(wxScriptTypeCHAR))
+			res = PyString_FromString(WX2PY(toconvert.GetContentString()));
+		else
+			res = PyBuffer_FromMemory(toconvert.GetPointer(), 0);
+
+	}
+
+	return res;
+}
+
+wxScriptVar wxScriptFunctionPython::CreateScriptVarFromPyObj(PyObject *toconvert) const
+{
+	wxScriptVar ret;
+
+	if (PyBool_Check(toconvert)) {
+
+		int res;
+		if (PyObject_Cmp(toconvert, Py_True, &res) == -1) {
+
+			ret.GetType().SetGenericType(wxSTG_UNDEFINED);
+			return ret;
+		}
+
+		if (res == -1)
+			ret.Set(wxSTG_BOOL, (bool)FALSE);
+		else
+			ret.Set(wxSTG_BOOL, (bool)TRUE);
+
+	} else if (PyInt_Check(toconvert)) {
+
+		ret.Set(wxSTG_INT, (long)PyInt_AsLong(toconvert));
+
+	} else if (PyString_Check(toconvert)) {
+
+		ret.Set(wxT("char*"), PY2WX(PyString_AsString(toconvert)));
+	}
+
+	return ret;
 }
 
 
@@ -184,9 +272,16 @@ bool wxScriptFunctionPython::Exec(wxScriptVar &ret, wxScriptVar *arg) const
 
 bool wxScriptFilePython::Load(const wxString &filename)
 {
-//	return TRUE;
-
 	try {
+		FILE *f = fopen(WX2PY(filename),"r");
+		if (!f)
+			return FALSE;
+		PyRun_SimpleFile(f, WX2PY(filename));
+			//return TRUE;
+		//return FALSE;
+		fclose(f);
+		return TRUE;
+
 	
 		// open the file
 		wxFile file(filename, wxFile::read);
@@ -194,7 +289,9 @@ bool wxScriptFilePython::Load(const wxString &filename)
 
 		// create a buffer & fill it with file contents
 		char *data = new char[len+1];
-		if (file.Read(data, len) != len) {
+		if ((int)file.Read(data, len) != len) {
+
+			// read error
 			delete [] data;
 			return FALSE;
 		}
@@ -204,12 +301,19 @@ bool wxScriptFilePython::Load(const wxString &filename)
 		delete [] data;
 
 		// remember the script filename
-		//PyRun_File(, WX2PY(file), Py_file_input, 
-		//		wxPython::Get()->m_pGlobals, wxPython::Get()->m_pLocals);
-		PyObject *ret = PyRun_String(WX2PY(str), 0,
-				wxPython::Get()->m_pGlobals, wxPython::Get()->m_pLocals);
+		PyObject *ret = PyRun_StringFlags(WX2PY(str), Py_file_input,
+			wxPython::Get()->m_pGlobals, wxPython::Get()->m_pLocals, 0);
+		/*PyObject *ret = PyRun_StringFlags("def nothing():\n\treturn 'ciao'\n", 
+				Py_file_input, wxPython::Get()->m_pGlobals, 
+				wxPython::Get()->m_pLocals, 0);*/
+		if (ret) Py_DECREF(ret);
+		if (PyErr_Occurred() != NULL) {
 
-		PyObject_Del(ret);
+			PyErr_Print();
+			return FALSE;
+		}
+
+		return TRUE;		
 
 	} catch (...) {
 

@@ -90,26 +90,25 @@ bool wxScriptInterpreter::Init(bool bCINT, bool bUnderC, bool bLua, bool bPython
 	// 1) remove previous instances, if presents
 	// 2) create new ones
 	// 3) init them
+
+	Cleanup();
+
 #ifdef wxSCRIPT_USE_CINT
-	wxSAFE_DELETE(m_pCINT);
 	if (bCINT) m_pCINT = new wxCINT();
 	if (bCINT) m_pCINT->Init();
 #endif
 
 #ifdef wxSCRIPT_USE_UNDERC
-	wxSAFE_DELETE(m_pUnderC);
 	if (bUnderC) m_pUnderC = new wxUnderC();
 	if (bUnderC) m_pUnderC->Init();
 #endif
 
 #ifdef wxSCRIPT_USE_LUA
-	wxSAFE_DELETE(m_pLua);
 	if (bLua) m_pLua = new wxLua();
 	if (bLua) m_pLua->Init();
 #endif
 
 #ifdef wxSCRIPT_USE_PYTHON
-	wxSAFE_DELETE(m_pPython);
 	if (bPython) m_pPython = new wxPython();
 	if (bPython) m_pPython->Init();
 #endif
@@ -201,28 +200,29 @@ bool wxScriptInterpreter::areAllReady()
 
 void wxScriptInterpreter::GetTotalFunctionList(wxScriptFunctionArray &arr)
 {
-	wxScriptFunctionArray arrcint, arruc, arrlua;
+	wxScriptFunctionArray arrcint, arruc, arrlua, arrpy;
 
 #ifdef wxSCRIPT_USE_CINT
-	wxCINT::Get()->GetFunctionList(arrcint);
+	if (m_pCINT && m_pCINT->isReady()) m_pCINT->GetFunctionList(arrcint);
 #endif
 
 #ifdef wxSCRIPT_USE_UNDERC
-	wxUnderC::Get()->GetFunctionList(arruc);
+	if (m_pUnderC && m_pUnderC->isReady()) m_pUnderC->GetFunctionList(arruc);
 #endif
 	
 #ifdef wxSCRIPT_USE_LUA
-	wxLua::Get()->GetFunctionList(arrlua);
+	if (m_pLua && m_pLua->isReady()) m_pLua->GetFunctionList(arrlua);
 #endif
 	
 #ifdef wxSCRIPT_USE_PYTHON
-	wxPython::Get()->GetFunctionList(arrlua);
+	if (m_pPython && m_pPython->isReady()) m_pPython->GetFunctionList(arrpy);
 #endif
 
 	// append all the functions collected in one single array
 	arr.Append(arrcint);
 	arr.Append(arruc);
 	arr.Append(arrlua);
+	arr.Append(arrpy);
 }
 
 wxScriptFile *wxScriptInterpreter::Load(const wxString &file, wxScriptFileType type)
@@ -464,17 +464,10 @@ void wxScriptVar::Copy(const wxScriptVar &var)
 	// then, copy the type
 	m_tType = var.m_tType;
 
-	// then, copy the content
+	// then, copy the content using strings; as described
+	// in #GetContentString() and #SetContent() functions,
+	// no data loss should happen doing this...
 	wxString content(var.GetContentString());
-
-	if (m_tType.GetGenericType() == wxSTG_POINTER &&
-		m_tType.GetPointerType().GetGenericType() == wxSTG_CHAR) {
-
-		// remove the double quotes
-		content.RemoveLast();
-		content.Remove(0, 1);
-	}
-
 	SetContent(content);
 }
 
@@ -514,7 +507,26 @@ void wxScriptVar::SetContent(const wxString &str)
 		break;
 
 	case wxSTG_BOOL:
-		m_content = (str.GetChar(0) != 0);
+
+		// there are at least two ways to encode a boolean value into
+		// a string: using a number (typically 0 or 1) or using
+		// the "true"/"false" strings...
+		if (str.IsNumber()) {
+
+			// we're using a number
+			str.ToLong(&m_content, 10);
+
+			// normalize content evaluating its truth value
+			m_content = (m_content) ? 1 : 0;
+
+		} else {
+
+			// we are using a string
+			if (str.CmpNoCase(wxT("TRUE")) == 0)
+				m_content = 1;
+			else
+				m_content = 0;
+		}
 		break;
 
 	case wxSTG_POINTER:
@@ -575,7 +587,7 @@ wxString wxScriptVar::GetContentString() const
 		if (m_tType.GetPointerType().GetGenericType() == wxSTG_CHAR) {
 			
 			char *pmem = (char *)m_content;
-			return wxString(wxT("\"") + LUA2WX(pmem) + wxT("\""));
+			return LUA2WX(pmem);
 
 		} else {
 
@@ -607,7 +619,7 @@ wxString wxScriptFunction::GetCallString(wxScriptVar *arg) const
 	// create the string with the arguments...
 	for (int i=0; i < m_nArgCount; i++) {
 		if (i != 0) cmd += wxT(", ");
-		cmd += arg[i].GetContentString();
+		cmd += wxT("\"") + arg[i].GetContentString() + wxT("\"");
 	}
 	
 	cmd += wxT(")");

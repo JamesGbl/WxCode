@@ -52,8 +52,10 @@
 <tr><td colspan="2"><br><h2>Protected Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">wxArrayPtrVoid&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxScriptFunctionArray.html#p0">m_arr</a></td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A simple auto-expanding array containing pointers to the <a class="el" href="classwxScriptFunction.html">wxScriptFunction</a> contained...  <a href="#p0"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">wxString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxScriptFunctionArray.html#p1">m_strToStrip</a></td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">An optional string which is used by <a class="el" href="classwxScriptFunctionArray.html#a6">GetName()</a> to strip off unwanted function prefixes.  <a href="#p1"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 An array of <a class="el" href="classwxScriptFunction.html">wxScriptFunction</a> objects. 
@@ -616,7 +618,9 @@ An array of <a class="el" href="classwxScriptFunction.html">wxScriptFunction</a>
     <td>
 
 <p>
-A simple auto-expanding array containing pointers to the <a class="el" href="classwxScriptFunction.html">wxScriptFunction</a> contained... the object handled by this array are not automatically deleted: <a class="el" href="classwxScriptFunctionArray.html#a17">wxScriptFunctionArray::Clear</a> have to cleanup everything.<p>
+A simple auto-expanding array containing pointers to the <a class="el" href="classwxScriptFunction.html">wxScriptFunction</a> contained... 
+<p>
+the object handled by this array are not automatically deleted: <a class="el" href="classwxScriptFunctionArray.html#a17">wxScriptFunctionArray::Clear</a> have to cleanup everything.<p>
 VERY IMPORTANT: we cannot use the wxObjArray macros because we need to store pointers to abstract classes which cannot be copied (wxObjArray requires non-abstract classes to store).     </td>
   </tr>
 </table>
@@ -640,12 +644,14 @@ VERY IMPORTANT: we cannot use the wxObjArray macros because we need to store poi
     <td>
 
 <p>
-An optional string which is used by <a class="el" href="classwxScriptFunctionArray.html#a6">GetName()</a> to strip off unwanted function prefixes.     </td>
+An optional string which is used by <a class="el" href="classwxScriptFunctionArray.html#a6">GetName()</a> to strip off unwanted function prefixes. 
+<p>
+    </td>
   </tr>
 </table>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="script_8h-source.html">script.h</a><li><a class="el" href="script_8cpp.html">script.cpp</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Wed Jan 12 12:51:29 2005 for wxScript by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Sat Jan 15 11:57:22 2005 for wxScript by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.1 </small></address>
 </body>

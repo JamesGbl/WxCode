@@ -112,10 +112,10 @@ ifeq ($(USE_LUA),1)
 SCRIPTINCLUDE2 = -I$(LUA_DIR)\include -I$(TOLUA_DIR)\include
 endif
 ifeq ($(USE_CINT),1)
-SCRIPTINCLUDE3 = -I$(CINT_DIR)\include
+SCRIPTINCLUDE3 = -I$(CINT_DIR)
 endif
 ifeq ($(USE_UNDERC),1)
-SCRIPTINCLUDE4 = -I$(UNDERC_DIR)\include
+SCRIPTINCLUDE4 = -I$(UNDERC_DIR)
 endif
 ifeq ($(USE_PYTHON),1)
 SCRIPTLIBPATH1 = -L$(PYTHON_DIR)\libs

@@ -151,10 +151,10 @@ SCRIPTINCLUDE1 = -I$(PYTHON_DIR)\include
 SCRIPTINCLUDE2 = -I$(LUA_DIR)\include -I$(TOLUA_DIR)\include
 !endif
 !if "$(USE_CINT)" == "1"
-SCRIPTINCLUDE3 = -I$(CINT_DIR)\include
+SCRIPTINCLUDE3 = -I$(CINT_DIR)
 !endif
 !if "$(USE_UNDERC)" == "1"
-SCRIPTINCLUDE4 = -I$(UNDERC_DIR)\include
+SCRIPTINCLUDE4 = -I$(UNDERC_DIR)
 !endif
 !if "$(USE_PYTHON)" == "1"
 SCRIPTLIBPATH1 = -L$(PYTHON_DIR)\libs

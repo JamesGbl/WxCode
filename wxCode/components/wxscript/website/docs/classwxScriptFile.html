@@ -19,21 +19,23 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxScriptFile.html#a2">Load</a> (const wxString &amp;file)=0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="script_8h.html#a40">wxScriptFileType</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxScriptFile.html#a3">GetScriptFileType</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="script_8h.html#a41">wxScriptFileType</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxScriptFile.html#a3">GetScriptFileType</a> () const </td></tr>
 
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static wxString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxScriptFile.html#e0">GetAllowedExtString</a> ()</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns a string in the form EXT1;EXT2;EXT3;EXT4 .....  <a href="#e0"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static wxArrayString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxScriptFile.html#e1">GetAllowedExt</a> ()</td></tr>
 
 <tr><td colspan="2"><br><h2>Static Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static wxString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxScriptFile.html#s0">m_strFileExt</a> [wxSCRIPT_SUPPORTED_FORMATS]</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The array of the extensions recognized by wxScriptFile.  <a href="#s0"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Protected Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">wxString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxScriptFile.html#p0">m_strFileName</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The name of the file containing the scripted functions.  <a href="#p0"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="script_8h.html#a40">wxScriptFileType</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxScriptFile.html#p1">m_tScriptFile</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="script_8h.html#a41">wxScriptFileType</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxScriptFile.html#p1">m_tScriptFile</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The default script file type.  <a href="#p1"></a><br></td></tr>
 </table>
@@ -147,7 +149,9 @@ A script file.
     <td>
 
 <p>
-Returns a string in the form EXT1;EXT2;EXT3;EXT4 ..... where EXT1, EXT2 ... are the extensions supported by the auto-recognition algorithm of the wxScriptFile class (which uses <a class="el" href="classwxScriptFile.html#s0">wxScriptFile::m_strFileExt</a> to store the extensions associated with each allowed script format).     </td>
+Returns a string in the form EXT1;EXT2;EXT3;EXT4 ..... 
+<p>
+where EXT1, EXT2 ... are the extensions supported by the auto-recognition algorithm of the wxScriptFile class (which uses <a class="el" href="classwxScriptFile.html#s0">wxScriptFile::m_strFileExt</a> to store the extensions associated with each allowed script format).     </td>
   </tr>
 </table>
 <a class="anchor" name="a3" doxytag="wxScriptFile::GetScriptFileType"></a><p>
@@ -156,7 +160,7 @@ Returns a string in the form EXT1;EXT2;EXT3;EXT4 ..... where EXT1, EXT2 ... are 
     <td class="mdRow">
       <table cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td class="md" nowrap valign="top"><a class="el" href="script_8h.html#a40">wxScriptFileType</a> wxScriptFile::GetScriptFileType           </td>
+          <td class="md" nowrap valign="top"><a class="el" href="script_8h.html#a41">wxScriptFileType</a> wxScriptFile::GetScriptFileType           </td>
           <td class="md" valign="top">(&nbsp;</td>
           <td class="mdname1" valign="top" nowrap>          </td>
           <td class="md" valign="top">&nbsp;)&nbsp;</td>
@@ -226,7 +230,9 @@ Returns a string in the form EXT1;EXT2;EXT3;EXT4 ..... where EXT1, EXT2 ... are 
     <td>
 
 <p>
-The array of the extensions recognized by wxScriptFile. You can access this array using the wxScriptFileType enum:<p>
+The array of the extensions recognized by wxScriptFile. 
+<p>
+You can access this array using the wxScriptFileType enum:<p>
 wxString old = <a class="el" href="classwxScriptFile.html#s0">wxScriptFile::m_strFileExt</a>[wxLUA_SCRIPTFILE]; <a class="el" href="classwxScriptFile.html#s0">wxScriptFile::m_strFileExt</a>[wxLUA_SCRIPTFILE] = "myext";    </td>
   </tr>
 </table>
@@ -261,7 +267,7 @@ The name of the file containing the scripted functions.
     <td class="mdRow">
       <table cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td class="md" nowrap valign="top"><a class="el" href="script_8h.html#a40">wxScriptFileType</a> <a class="el" href="classwxScriptFile.html#p1">wxScriptFile::m_tScriptFile</a><code> [protected]</code>          </td>
+          <td class="md" nowrap valign="top"><a class="el" href="script_8h.html#a41">wxScriptFileType</a> <a class="el" href="classwxScriptFile.html#p1">wxScriptFile::m_tScriptFile</a><code> [protected]</code>          </td>
         </tr>
       </table>
     </td>
@@ -282,7 +288,7 @@ The default script file type.
 </table>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="script_8h-source.html">script.h</a><li><a class="el" href="script_8cpp.html">script.cpp</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Wed Jan 12 12:51:29 2005 for wxScript by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Sat Jan 15 11:57:22 2005 for wxScript by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.1 </small></address>
 </body>

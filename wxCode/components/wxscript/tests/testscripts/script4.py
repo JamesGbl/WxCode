@@ -1,10 +1,9 @@
 # Declares some simple test functions
 
 def py_func1(str, n):
-    res=0
-    #for i in range(n):
-    res = res + int(str)  # str[i:(i+1)])
-
+    res = 0
+    for i in range(n):
+        res = res + ord(str[i:i+1])
     return res
 
 

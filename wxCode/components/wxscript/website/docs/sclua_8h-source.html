@@ -33,90 +33,95 @@
 00025 <span class="preprocessor">#include "<a class="code" href="script_8h.html">wx/script.h</a>"</span>          <span class="comment">// base classes</span>
 00026 
 00027 
-00028 <span class="comment">// for string conversions (all LUA functions uses always chars)</span>
-00029 <span class="preprocessor">#if wxUSE_UNICODE</span>
-00030 <span class="preprocessor"></span><span class="preprocessor">        #define WX2LUA(x)               (wxString(x).mb_str(wxConvUTF8).data())</span>
-00031 <span class="preprocessor"></span><span class="preprocessor">#else</span>
-00032 <span class="preprocessor"></span><span class="preprocessor">        #define WX2LUA(x)               (wxString(x).mb_str(wxConvUTF8))</span>
-00033 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
-00034 <span class="preprocessor"></span>
-00035 <span class="preprocessor">#define LUA2WX(x)                       (wxString(x, wxConvUTF8))</span>
-00036 <span class="preprocessor"></span>
-00037 
-00039 <span class="keyword">class </span>wxScriptFunctionLua : <span class="keyword">public</span> <a class="code" href="classwxScriptFunction.html">wxScriptFunction</a>
-00040 {
-00041 <span class="keyword">public</span>:
+00028 
+00029 <span class="comment">// String conversions (all LUA functions uses always chars)</span>
+00030 <span class="comment">// ---------------------------------------------------------</span>
+00031 
+00032 <span class="preprocessor">#if wxUSE_UNICODE</span>
+00033 <span class="preprocessor"></span><span class="preprocessor">        #define WX2LUA(x)               (wxString(x).mb_str(wxConvUTF8).data())</span>
+00034 <span class="preprocessor"></span><span class="preprocessor">#else</span>
+00035 <span class="preprocessor"></span><span class="preprocessor">        #define WX2LUA(x)               (wxString(x).mb_str(wxConvUTF8))</span>
+00036 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
+00037 <span class="preprocessor"></span>
+00038 <span class="preprocessor">#define LUA2WX(x)                       (wxString(x, wxConvUTF8))</span>
+00039 <span class="preprocessor"></span>
+00040 
+00041 
 00042 
-00045         wxScriptFunctionLua(<span class="keyword">const</span> wxString &amp;name = wxEmptyString) { <a class="code" href="classwxScriptFunction.html#a6">Set</a>(name, wxT(<span class="stringliteral">""</span>), NULL, 0); }
-00046         <span class="keyword">virtual</span> ~wxScriptFunctionLua() {}
+00044 <span class="keyword">class </span>wxScriptFunctionLua : <span class="keyword">public</span> <a class="code" href="classwxScriptFunction.html">wxScriptFunction</a>
+00045 {
+00046 <span class="keyword">public</span>:
 00047 
-00048         <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classwxScriptFunction.html#a5">Exec</a>(<a class="code" href="classwxScriptVar.html">wxScriptVar</a> &amp;ret, <a class="code" href="classwxScriptVar.html">wxScriptVar</a> *arg) <span class="keyword">const</span>;
-00049         
-00050         <a class="code" href="script_8h.html#a8">wxSCRIPTFNC_IMPLEMENT_CLONE</a>(wxScriptFunctionLua)
-00051 };
+00050         wxScriptFunctionLua(<span class="keyword">const</span> wxString &amp;name = wxEmptyString) { <a class="code" href="classwxScriptFunction.html#a6">Set</a>(name, wxT(<span class="stringliteral">""</span>), NULL, 0); }
+00051         <span class="keyword">virtual</span> ~wxScriptFunctionLua() {}
 00052 
-00053 
-00054 
-00055 
-00057 <span class="keyword">class </span>wxScriptFileLua : <span class="keyword">public</span> <a class="code" href="classwxScriptFile.html">wxScriptFile</a>
-00058 {
-00059 <span class="keyword">public</span>:
-00060         wxScriptFileLua(<span class="keyword">const</span> wxString &amp;toload = wxEmptyString) { 
-00061                 m_tScriptFile = <a class="code" href="script_8h.html#a40a37">wxLUA_SCRIPTFILE</a>;
-00062                 <span class="keywordflow">if</span> (!toload.IsEmpty())
-00063                         <a class="code" href="classwxScriptFile.html#a2">Load</a>(toload);
-00064         }
-00065         <span class="keyword">virtual</span> ~wxScriptFileLua() {}
-00066 
-00067         <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classwxScriptFile.html#a2">Load</a>(<span class="keyword">const</span> wxString &amp;filename);
-00068 };
-00069 
-00070 
+00053         <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classwxScriptFunction.html#a5">Exec</a>(<a class="code" href="classwxScriptVar.html">wxScriptVar</a> &amp;ret, <a class="code" href="classwxScriptVar.html">wxScriptVar</a> *arg) <span class="keyword">const</span>;
+00054         
+00055         <a class="code" href="script_8h.html#a8">wxSCRIPTFNC_IMPLEMENT_CLONE</a>(wxScriptFunctionLua)
+00056 };
+00057 
+00058 
+00059 
+00060 
+00062 <span class="keyword">class </span>wxScriptFileLua : <span class="keyword">public</span> <a class="code" href="classwxScriptFile.html">wxScriptFile</a>
+00063 {
+00064 <span class="keyword">public</span>:
+00065         wxScriptFileLua(<span class="keyword">const</span> wxString &amp;toload = wxEmptyString) { 
+00066                 m_tScriptFile = <a class="code" href="script_8h.html#a41a37">wxLUA_SCRIPTFILE</a>;
+00067                 <span class="keywordflow">if</span> (!toload.IsEmpty())
+00068                         <a class="code" href="classwxScriptFile.html#a2">Load</a>(toload);
+00069         }
+00070         <span class="keyword">virtual</span> ~wxScriptFileLua() {}
 00071 
-00072 
-00074 <span class="keyword">class </span>wxLua : <span class="keyword">public</span> <a class="code" href="classwxScriptInterpreter.html">wxScriptInterpreter</a>
-00075 {
-00076 <span class="keyword">public</span>:
+00072         <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classwxScriptFile.html#a2">Load</a>(<span class="keyword">const</span> wxString &amp;filename);
+00073 };
+00074 
+00075 
+00076 
 00077 
-00080         lua_State *m_state;
-00081 
-00082 <span class="keyword">protected</span>:
-00083         
-00085         <span class="keywordtype">bool</span> m_bInit;
+00079 <span class="keyword">class </span>wxLua : <span class="keyword">public</span> <a class="code" href="classwxScriptInterpreter.html">wxScriptInterpreter</a>
+00080 {
+00081 <span class="keyword">public</span>:
+00082 
+00085         lua_State *m_state;
 00086 
-00088         <span class="keyword">static</span> luaL_reg luaLibs[16];
-00089 
-00091         <a class="code" href="classwxScriptFunctionArray.html">wxScriptFunctionArray</a> m_arrStd;
-00092 
-00093 
-00094 <span class="keyword">protected</span>:
-00095 
-00099         <span class="keywordtype">void</span> GetFunctionListComplete(<a class="code" href="classwxScriptFunctionArray.html">wxScriptFunctionArray</a> &amp;) <span class="keyword">const</span>;
+00087 <span class="keyword">protected</span>:
+00088         
+00090         <span class="keywordtype">bool</span> m_bInit;
+00091 
+00093         <span class="keyword">static</span> luaL_reg luaLibs[16];
+00094 
+00096         <a class="code" href="classwxScriptFunctionArray.html">wxScriptFunctionArray</a> m_arrStd;
+00097 
+00098 
+00099 <span class="keyword">protected</span>:
 00100 
-00101 
-00102 <span class="keyword">public</span>:
-00103         wxLua() : m_bInit(FALSE) {}
-00104         <span class="keyword">virtual</span> ~wxLua() { <a class="code" href="classwxScriptInterpreter.html#e1">Cleanup</a>(); }
+00104         <span class="keywordtype">void</span> GetFunctionListComplete(<a class="code" href="classwxScriptFunctionArray.html">wxScriptFunctionArray</a> &amp;) <span class="keyword">const</span>;
 00105 
-00107         <span class="keyword">static</span> wxLua *Get() { <span class="keywordflow">return</span> m_pLua; }
-00108 
-00111         <span class="keyword">static</span> <span class="keywordtype">bool</span> SetErrAndReturn(lua_State *L);
-00112 
-00114         <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classwxScriptInterpreter.html#e0">Init</a>();
-00115 
-00117         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classwxScriptInterpreter.html#e1">Cleanup</a>();
-00118 
-00120         <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classwxScriptInterpreter.html#a2">isReady</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_bInit; }
-00121 
-00123         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classwxScriptInterpreter.html#a3">GetFunctionList</a>(<a class="code" href="classwxScriptFunctionArray.html">wxScriptFunctionArray</a> &amp;) <span class="keyword">const</span>;
-00124 };
-00125 
+00106 
+00107 <span class="keyword">public</span>:
+00108         wxLua() : m_bInit(FALSE) {}
+00109         <span class="keyword">virtual</span> ~wxLua() { <a class="code" href="classwxScriptInterpreter.html#e1">Cleanup</a>(); }
+00110 
+00112         <span class="keyword">static</span> wxLua *Get() { <span class="keywordflow">return</span> m_pLua; }
+00113 
+00116         <span class="keyword">static</span> <span class="keywordtype">bool</span> SetErrAndReturn(lua_State *L);
+00117 
+00119         <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classwxScriptInterpreter.html#e0">Init</a>();
+00120 
+00122         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classwxScriptInterpreter.html#e1">Cleanup</a>();
+00123 
+00125         <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classwxScriptInterpreter.html#a2">isReady</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_bInit; }
 00126 
-00127 
-00128 <span class="preprocessor">#endif          // wxSCRIPT_USE_LUA</span>
-00129 <span class="preprocessor"></span>
+00128         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classwxScriptInterpreter.html#a3">GetFunctionList</a>(<a class="code" href="classwxScriptFunctionArray.html">wxScriptFunctionArray</a> &amp;) <span class="keyword">const</span>;
+00129 };
 00130 
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Wed Jan 12 12:51:29 2005 for wxScript by&nbsp;
+00131 
+00132 
+00133 <span class="preprocessor">#endif          // wxSCRIPT_USE_LUA</span>
+00134 <span class="preprocessor"></span>
+00135 
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Sat Jan 15 11:57:22 2005 for wxScript by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.1 </small></address>
 </body>

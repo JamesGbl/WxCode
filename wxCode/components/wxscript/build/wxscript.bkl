@@ -102,8 +102,8 @@
 	<if cond="FORMAT!='msvc6prj'">
 		<set var="SCRIPTINCLUDE1"><if cond="USE_PYTHON=='1'">$(INCLUDE_SWITCH)$(PYTHON_DIR)$(DIRSEP)include</if></set>
 		<set var="SCRIPTINCLUDE2"><if cond="USE_LUA=='1'">$(INCLUDE_SWITCH)$(LUA_DIR)$(DIRSEP)include $(INCLUDE_SWITCH)$(TOLUA_DIR)$(DIRSEP)include</if></set>
-		<set var="SCRIPTINCLUDE3"><if cond="USE_CINT=='1'">$(INCLUDE_SWITCH)$(CINT_DIR)$(DIRSEP)include</if></set>
-		<set var="SCRIPTINCLUDE4"><if cond="USE_UNDERC=='1'">$(INCLUDE_SWITCH)$(UNDERC_DIR)$(DIRSEP)include</if></set>
+		<set var="SCRIPTINCLUDE3"><if cond="USE_CINT=='1'">$(INCLUDE_SWITCH)$(CINT_DIR)</if></set>
+		<set var="SCRIPTINCLUDE4"><if cond="USE_UNDERC=='1'">$(INCLUDE_SWITCH)$(UNDERC_DIR)</if></set>
 		<set var="SCRIPTINCLUDE">$(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) $(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4)</set>
 	</if>
 
@@ -145,11 +145,15 @@
      	<if cond="FORMAT=='msvc6prj'">
      		<include>$(PYTHON_DIR)\include</include>
      		<lib-path>$(PYTHON_DIR)\libs</lib-path>
+     		
      		<stdlib>$(LUA_DIR)</stdlib>
      		<stdlib>$(TOLUA_DIR)</stdlib>
-     		<stdlib>$(CINT_DIR)</stdlib>
-     		<stdlib>$(UNDERC_DIR)</stdlib>
      		
+     		<include>$(CINT_DIR)</include>
+     		<include>$(UNDERC_DIR)</include>
+     		<lib-path>$(CINT_DIR)</lib-path>
+     		<lib-path>$(UNDERC_DIR)</lib-path>
+     		     		
      		<!-- temporary disabled -->
      		<define>wxSCRIPT_NO_UNDERC</define>
      		<define>wxSCRIPT_NO_CINT</define>

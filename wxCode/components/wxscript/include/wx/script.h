@@ -227,8 +227,17 @@ public:
 	//! Sets the type of this variable; wxScriptTypeInfo::Set() is used.
 	virtual void SetType(const wxString &str)		{ m_tType.Set(str); }
 
-	//! Sets the contents of this variable.
+	//! Sets the contents of this variable using the given string.
+	//! The content decoding is done using the current type set.
+	//! This function uses the same decode rules used to encode
+	//! the content by the #GetContentString() function; so, no
+	//! loss of data should happen if you do:
+	//! \code
+	//!     wxScriptVar myvar("bool", "false");
+	//!     myvar.SetContent(myvar.GetContentString());
+	//! \endcode
 	virtual void SetContent(const wxString &);
+
 	virtual void SetContent(const wxChar *str)		{ SetContent(wxString(str)); }
 	virtual void SetContent(wxChar *str)			{ SetContent(wxString(str)); }
 	virtual void SetContent(long l)					{ m_content = l; }
@@ -269,8 +278,9 @@ public:
 	double GetContentDouble() const		{ return (m_tType == wxSTG_INT || m_tType == wxSTG_LONG) ? m_content : m_floatcontent; }
 
 	//! Returns the contents encoded in a string.
-	//! If the content is set to a pointer to CHAR, then the string
-	//! pointed is returned enclosed in double quotes.
+	//! The content encoding is done using the current type set.
+	//! This function uses the same encode rules used to decode
+	//! the content by the #SetContent(const wxString &) function.
 	virtual wxString GetContentString() const;	
 
 	//! Returns the memory address hold by this variable if it is set
@@ -539,6 +549,12 @@ public:		// virtual functions
 
 	//! Returns the list of the functions currently recognized by the interpreter.
 	virtual void GetFunctionList(wxScriptFunctionArray &) const = 0;
+
+	//! Returns version info about this interpreter or a wxEmptyString if
+	//! this interpreter does not supply any version info.
+	//! The exact form of the string returned is interpreter-dependent,
+	//! but it is usually given as "INTERPRETER_NAME VERSION_STRING".
+	virtual wxString GetVersionInfo() const = 0;
 };
 
 

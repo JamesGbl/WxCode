@@ -29,14 +29,15 @@
 // libcint.lib         for the CINT interpreter
 // tolua.lib 
 //  + lua.lib 
-//  + lualib.lib    for the LUA interpreter & TOLUA utility
+//  + lualib.lib       for the LUA interpreter & TOLUA utility
+// pythonXX.lib        for the Python interpreter
 //
 // and wxWidgets libraries
 //
-//
-// If you want to disable one or more of these dependencies you can define
-// the wxSCRIPT_NO_UNDERC or wxSCRIPT_NO_CINT or wxSCRIPT_NO_LUA at compile
-// time using the -D switch of your compiler.
+// If you want to disable one or more of these dependencies you can use
+// the USE_XXXXX options when compiling the sample using the makefiles
+// of the BUILD folder.
+
 
 
 // ----------------------------------------------------------------------------
@@ -56,9 +57,35 @@
 #include <tolua.h>
 
 #include <wx/script.h>		// our interpreter...
+#include <wx/sclua.h>		// our interpreter...
+#include <wx/sccint.h>		// our interpreter...
+#include <wx/scunderc.h>		// our interpreter...
+#include <wx/scpython.h>		// our interpreter...
 #include "Test.h"
 
+
+
+// ----------------------------------------------------------------------------
+// defines
+// ----------------------------------------------------------------------------
+
+// these will be used to perform various types of tests:
 #ifdef wxSCRIPT_USE_LUA
+	#define TEST_LUA
+#endif
+#ifdef wxSCRIPT_USE_PYTHON
+	#define TEST_PYTHON
+#endif
+#ifdef wxSCRIPT_USE_CINT
+	#define TEST_CINT
+#endif
+#ifdef wxSCRIPT_USE_UNDERC
+	#define TEST_UNDERC
+#endif
+
+
+
+#ifdef TEST_LUA
 
 	// for advanced testing
 	//TOLUA_API int tolua_toexport_open(lua_State *);
@@ -119,7 +146,7 @@
 	// static variables of the program) and end it at the very
 	// end of the program (when, after the main() or winmain(),
 	// the framework removes the static variables).
-	static mcLeakDetector detector;
+	//static mcLeakDetector detector;
 
 
 	// this little class instead is used to generate a 'memdiff'
@@ -157,15 +184,23 @@
 
 void CallFnc1(const wxScriptFunctionArray &arr)
 {
-	// try to exec func1 with both CINT & UnderC
+	// try to exec func1 with all the intepreters we are testing;
 	// func1 should be defined as:
 	//
 	//          int xxxx_func1(char *str, int n)
 	//
+#ifdef TEST_CINT
 	wxScriptFunction *fcint = arr.Get(wxT("cint_func1"));
+#endif
+#ifdef TEST_UNDERC
 	wxScriptFunction *fuc = arr.Get(wxT("uc_func1"));
+#endif
+#ifdef TEST_LUA
 	wxScriptFunction *flua = arr.Get(wxT("lua_func1"));
+#endif
+#ifdef TEST_PYTHON
 	wxScriptFunction *fpy = arr.Get(wxT("py_func1"));
+#endif
 
 	wxScriptVar result;
 	wxScriptVar args[3];
@@ -174,6 +209,7 @@ void CallFnc1(const wxScriptFunctionArray &arr)
 	args[1] = wxScriptVar(wxT("int"), wxT("3"));
 	args[2] = wxScriptVar();		// close the list with an empty variable
 
+#ifdef TEST_CINT
 	if (fcint) {
 
 		// check this is the function we think
@@ -185,7 +221,9 @@ void CallFnc1(const wxScriptFunctionArray &arr)
 				result.GetContentString().c_str());
 		}
 	}
+#endif
 
+#ifdef TEST_UNDERC
 	if (fuc) {
 
 		// check this is the function we think
@@ -197,7 +235,9 @@ void CallFnc1(const wxScriptFunctionArray &arr)
 				result.GetContentString().c_str());
 		}
 	}
+#endif
 
+#ifdef TEST_LUA
 	if (flua) {
 
 		// we cannot check if this is our function...
@@ -211,7 +251,9 @@ void CallFnc1(const wxScriptFunctionArray &arr)
 				result.GetContentString().c_str());
 		}
 	}
+#endif
 
+#ifdef TEST_PYTHON
 	if (fpy) {
 
 		// we cannot check if this is our function...
@@ -225,18 +267,27 @@ void CallFnc1(const wxScriptFunctionArray &arr)
 				result.GetContentString().c_str());
 		}
 	}
+#endif
 }
 
 void CallFnc2(const wxScriptFunctionArray &arr)
 {
-	// try to exec func1 with both CINT & UnderC
-	// func1 should be defined as:
+	// func2 should be defined as:
 	//
 	//          bool xxxx_func2(bool input)
 	//
+#ifdef TEST_CINT
 	wxScriptFunction *fcint = arr.Get(wxT("cint_func2"));
+#endif
+#ifdef TEST_UNDERC
 	wxScriptFunction *fuc = arr.Get(wxT("uc_func2"));
+#endif
+#ifdef TEST_LUA
 	wxScriptFunction *flua = arr.Get(wxT("lua_func2"));
+#endif
+#ifdef TEST_PYTHON
+	wxScriptFunction *fpy = arr.Get(wxT("py_func2"));
+#endif
 
 	wxScriptVar result;
 	wxScriptVar args[2];
@@ -244,6 +295,7 @@ void CallFnc2(const wxScriptFunctionArray &arr)
 	args[0] = wxScriptVar(wxT("bool"), wxT("true"));
 	args[1] = wxScriptVar();
 
+#ifdef TEST_CINT
 	if (fcint) {
 
 		// check this is the function we think
@@ -255,7 +307,9 @@ void CallFnc2(const wxScriptFunctionArray &arr)
 				result.GetContentString().c_str());
 		}
 	}
+#endif
 
+#ifdef TEST_UNDERC
 	if (fuc) {
 
 		// check this is the function we think
@@ -267,7 +321,9 @@ void CallFnc2(const wxScriptFunctionArray &arr)
 				result.GetContentString().c_str());
 		}
 	}
+#endif
 
+#ifdef TEST_LUA
 	if (flua) {
 
 		// we cannot check if this is our function...
@@ -281,6 +337,23 @@ void CallFnc2(const wxScriptFunctionArray &arr)
 				result.GetContentString().c_str());
 		}		
 	}
+#endif
+
+#ifdef TEST_PYTHON
+	if (fpy) {
+
+		// we cannot check if this is our function...
+		if (!fpy->Exec(result, args)) {
+			
+			wxPrintf(wxT("Execution failed: %s"), wxScriptInterpreter::GetLastErr().c_str());
+			
+		} else {
+			
+			wxPrintf(wxT(">%s('true') returned %s\n"), fpy->GetName().c_str(),
+				result.GetContentString().c_str());
+		}		
+	}
+#endif
 }
 
 void CallAdvanced(const wxScriptFunctionArray &arr)
@@ -359,23 +432,14 @@ void MainTestSet()
 		basepath = basepath.Left(basepath.Len()-6);
 	if (basepath.Right(5).IsSameAs(wxT("build"), FALSE))
 		basepath = basepath.Left(basepath.Len()-6) + wxFileName::GetPathSeparator() + wxT("tests");
-		
+	
+	// this basepath is used to load the script files
 	basepath +=	wxFileName::GetPathSeparator();
 	basepath += wxT("testscripts");
 	basepath += wxFileName::GetPathSeparator();
-	
 	wxPrintf(wxT(">Base path is: '%s'\n"), basepath.c_str());
 
-	// init
-	wxScriptInterpreter::Init(TRUE, FALSE, TRUE);
-	wxPrintf(wxT(">I'm initializing the script interpreter...\n"));
-	if (!wxScriptInterpreter::areAllReady()) {
-		wxPrintf(wxT("Initialization failed."));
-		wxScriptInterpreter::Cleanup();
-		return;
-	}
-
-#ifdef wxSCRIPT_USE_CINT
+#ifdef TEST_CINT
 	// load a CINT script file
 	wxPrintf(wxT(">Loading the 'script1.cxx'...\n"));
 	wxScriptFile *file1 = wxScriptInterpreter::Load(basepath + wxT("script1.cxx"));
@@ -388,7 +452,7 @@ void MainTestSet()
 	delete file1;
 #endif
 
-#ifdef wxSCRIPT_USE_UNDERC
+#ifdef TEST_UNDERC
 	// load an UnderC script file
 	wxPrintf(wxT(">Loading the 'script2.uc'...\n"));
 	wxScriptFile *file2 = wxScriptInterpreter::Load(basepath + wxT("script2.uc"));
@@ -402,7 +466,7 @@ void MainTestSet()
 #endif
 
 
-#ifdef wxSCRIPT_USE_LUA
+#ifdef TEST_LUA
 #if 0
 	// before loading a Lua script file, open the ToExport package
 	// created through the TOLUA program
@@ -420,8 +484,8 @@ void MainTestSet()
 	delete file3;
 #endif
 
-#ifdef wxSCRIPT_USE_PYTHON
-	// load a Lua script file
+#ifdef TEST_PYTHON
+	// load a python script file
 	wxPrintf(wxT(">Loading the 'script4.py'...\n"));
 	wxScriptFile *file4 = wxScriptInterpreter::Load(basepath + wxT("script4.py"));
 	if (!file4) {
@@ -446,7 +510,7 @@ void MainTestSet()
 	//CallAdvanced(arr);
 
 	// leave some space
-	wxPrintf(wxT(">Test completed.\n\n\n"));
+	wxPrintf(wxT(">All tests completed.\n\n\n"));
 
 	// do not leave memory leaks
 	wxScriptInterpreter::Cleanup();
@@ -469,6 +533,44 @@ int main(int, char **)
 	wxPrintf(wxT(" -------------------------\n\n"));
 	wxPrintf(wxT(" This is a little test program which runs some didactive tests \n"));
 	wxPrintf(wxT(" about the wxScript and wxScript-related classes.\n\n"));
+
+	// which interpreters do we have to test ?
+	bool cint=FALSE, underc=FALSE, lua=FALSE, python=FALSE;
+#ifdef TEST_CINT
+	cint=TRUE;
+#endif
+#ifdef TEST_UNDERC
+	underc=TRUE;
+#endif
+#ifdef TEST_LUA
+	lua=TRUE;
+#endif
+#ifdef TEST_PYTHON
+	python=TRUE;
+#endif
+
+	// init
+	wxScriptInterpreter::Init(cint, underc, lua, python);
+	wxPrintf(wxT(">I'm initializing the script interpreter...\n"));
+	if (!wxScriptInterpreter::areAllReady()) {
+		wxPrintf(wxT("Initialization failed."));
+		wxScriptInterpreter::Cleanup();
+		return 0;
+	}
+
+	wxPrintf(wxT(">For our tests, we are using:\n"));
+#ifdef TEST_LUA
+	wxPrintf(wxLua::Get()->GetVersionInfo() + wxT("\n"));
+#endif
+#ifdef TEST_PYTHON
+	wxPrintf(wxPython::Get()->GetVersionInfo() + wxT("\n"));
+#endif
+#ifdef TEST_CINT
+	wxPrintf(wxCINT::Get()->GetVersionInfo() + wxT("\n"));
+#endif
+#ifdef TEST_UNDERC
+	wxPrintf(wxUnderC::Get()->GetVersionInfo() + wxT("\n"));
+#endif
     
 	// run some tests
 	MainTestSet();

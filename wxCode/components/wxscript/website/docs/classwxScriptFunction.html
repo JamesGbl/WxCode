@@ -23,8 +23,10 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Deep copies the function.  <a href="#a2"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classwxScriptFunction.html">wxScriptFunction</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxScriptFunction.html#a3">Clone</a> () const =0</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns a clone of this object.  <a href="#a3"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxScriptFunction.html#a4">Match</a> (const <a class="el" href="classwxScriptTypeInfo.html">wxScriptTypeInfo</a> *ret, int argc,...)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Checks if this function has the given return type, argument count and argument types.  <a href="#a4"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxScriptFunction.html#a5">Exec</a> (<a class="el" href="classwxScriptVar.html">wxScriptVar</a> &amp;ret, <a class="el" href="classwxScriptVar.html">wxScriptVar</a> *arg) const =0</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Executes the function script.  <a href="#a5"></a><br></td></tr>
@@ -47,6 +49,7 @@
 <tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">wxString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxScriptFunction.html#b0">GetCallString</a> (<a class="el" href="classwxScriptVar.html">wxScriptVar</a> *arr) const </td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the "call string"; that is, the string containing function name + wxT("(") + arg[n]-&gt;GetContentString() + ")".  <a href="#b0"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Protected Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">wxString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwxScriptFunction.html#p0">m_strName</a></td></tr>
 
@@ -168,7 +171,9 @@ Creates &amp; set the properties of the object.
     <td>
 
 <p>
-Returns a clone of this object. The caller must delete the returned object when it's no longer useful.     </td>
+Returns a clone of this object. 
+<p>
+The caller must delete the returned object when it's no longer useful.     </td>
   </tr>
 </table>
 <a class="anchor" name="a2" doxytag="wxScriptFunction::DeepCopy"></a><p>
@@ -324,7 +329,9 @@ Returns the type of the n-th argument required by this function.
     <td>
 
 <p>
-Returns the "call string"; that is, the string containing function name + wxT("(") + arg[n]-&gt;GetContentString() + ")".     </td>
+Returns the "call string"; that is, the string containing function name + wxT("(") + arg[n]-&gt;GetContentString() + ")". 
+<p>
+    </td>
   </tr>
 </table>
 <a class="anchor" name="z2_0" doxytag="wxScriptFunction::GetName"></a><p>
@@ -425,7 +432,9 @@ Returns the type of the return value of this function.
     <td>
 
 <p>
-Checks if this function has the given return type, argument count and argument types.     </td>
+Checks if this function has the given return type, argument count and argument types. 
+<p>
+    </td>
   </tr>
 </table>
 <a class="anchor" name="a6" doxytag="wxScriptFunction::Set"></a><p>
@@ -582,7 +591,7 @@ The return type of the function.
 </table>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="script_8h-source.html">script.h</a><li><a class="el" href="script_8cpp.html">script.cpp</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Wed Jan 12 12:51:29 2005 for wxScript by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Sat Jan 15 11:57:22 2005 for wxScript by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.1 </small></address>
 </body>

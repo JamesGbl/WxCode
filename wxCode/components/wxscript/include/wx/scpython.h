@@ -36,19 +36,37 @@
 #define PY2WX(x)			(wxString(x, wxConvUTF8))
 
 
+#define PYSTRING2WX(x)		(PY2WX(PyString_AsString(x)))
+#define WX2PYSTRING(x)		(PyString_FromString(WX2PY(x))
+
+
 
 
 //! A Python interpreted function.
 class wxScriptFunctionPython : public wxScriptFunction
 {
+protected:
+
+	//! The python dictionary where this function is contained.
+	PyObject *m_pDict;
+
+	//! The Python function.
+	PyObject *m_pFunc;
+
+protected:
+
+	//! Converts the given wxScriptVar into a PyObject.
+	PyObject *CreatePyObjFromScriptVar(const wxScriptVar &toconvert) const;
+
+	//! Converts the given PyObject into a wxScriptVar.
+	wxScriptVar CreateScriptVarFromPyObj(PyObject *toconvert) const;
+
 public:
 
 	//! Creates the object; no info about return value and
 	//! arguments are required since wxPython does not store them.
-	wxScriptFunctionPython(const wxString &name = wxEmptyString) { 
-		Set(name, wxT(""), NULL, 0);
-	}
-
+	wxScriptFunctionPython(const wxString &name = wxEmptyString,
+						PyObject *dictionary = NULL, PyObject *func = NULL);
 
 	virtual wxScriptFunction *Clone() const {
 		wxScriptFunction *newf = new wxScriptFunctionPython();
@@ -56,6 +74,14 @@ public:
 		return newf;
 	}
 
+	virtual void DeepCopy(const wxScriptFunction *tocopy) {
+		wxScriptFunctionPython *pf = (wxScriptFunctionPython *)tocopy;
+		m_pDict = pf->m_pDict;
+		m_pFunc = pf->m_pFunc;
+		wxScriptFunction::DeepCopy(tocopy);
+	}
+
+	void Set(const wxString &name, PyObject *dictionary, PyObject *function);
 	virtual bool Exec(wxScriptVar &ret, wxScriptVar *arg) const;
 };
 
@@ -66,7 +92,7 @@ public:
 class wxScriptFilePython : public wxScriptFile
 {
 public:
-	wxScriptFilePython(const wxString &toload = wxEmptyString) { 
+	wxScriptFilePython(const wxString &toload = wxEmptyString) {		
 		m_tScriptFile = wxPYTHON_SCRIPTFILE;
 		if (!toload.IsEmpty())
 			Load(toload);
@@ -83,6 +109,7 @@ class wxPython : public wxScriptInterpreter
 {
 public:
 
+	//! The Python global objects.
 	PyObject *m_pModule, *m_pDict, *m_pLocals, *m_pGlobals;
 
 protected:
@@ -97,7 +124,7 @@ protected:
 
 public:
 	wxPython() {}//: m_bInit(FALSE) {}
-	virtual ~wxPython() { Py_Finalize(); }
+	virtual ~wxPython() { Cleanup(); }
 
 	//! Returns the global instance of this class.
 	static wxPython *Get() { return m_pPython; }
@@ -105,11 +132,18 @@ public:
 	//! Inits Python interpreter.
 	virtual bool Init();
 
+	//! Undoes what #Init() does.
+	virtual void Cleanup();
+
 	//! Returns TRUE if Python is ready.
 	virtual bool isReady() const;
 
 	//! Returns the list of the functions currently recognized by the interpreter.
 	virtual void GetFunctionList(wxScriptFunctionArray &) const;
+
+	//! Uses the Py_GetVersion function to return a version string.
+	virtual wxString GetVersionInfo() const
+		{ return wxT("Python ") + PY2WX(Py_GetVersion()); }
 };
 
 

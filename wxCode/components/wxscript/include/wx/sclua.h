@@ -45,6 +45,11 @@ class wxScriptFunctionLua : public wxScriptFunction
 {
 public:
 
+	//! Creates a wxScriptVar reading the top value in the lua stack.
+	static wxScriptVar CreateScriptVarFromStack();
+
+public:
+
 	//! Creates the object; no info about return value and
 	//! arguments are required since Lua does not store them.
 	wxScriptFunctionLua(const wxString &name = wxEmptyString) { Set(name, wxT(""), NULL, 0); }
@@ -126,6 +131,9 @@ public:
 
 	//! Returns the list of the functions currently recognized by the interpreter.
 	virtual void GetFunctionList(wxScriptFunctionArray &) const;
+
+	//! Uses the _VERSION global variable to get info about the LUA intepreter.
+	virtual wxString GetVersionInfo() const;
 };
 
 

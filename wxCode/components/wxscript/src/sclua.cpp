@@ -140,6 +140,19 @@ void wxLua::GetFunctionList(wxScriptFunctionArray &arr) const
 	}
 }
 
+wxString wxLua::GetVersionInfo() const
+{
+	// ask the value of the _VERSION global variable
+	lua_pushstring(m_state, "_VERSION");
+    lua_gettable(m_state, LUA_GLOBALSINDEX);
+
+	// lua_gettable put the result into the stack...
+	wxScriptVar tmp(wxScriptFunctionLua::CreateScriptVarFromStack());
+	return tmp.GetContentString();
+}
+
+
+
 
 
 // -------------------------
@@ -203,10 +216,23 @@ bool wxScriptFunctionLua::Exec(wxScriptVar &ret, wxScriptVar *arg) const
 	if (result != 0) return wxLua::SetErrAndReturn(L);
 
 	// get returned value from the stack...
+	ret = CreateScriptVarFromStack();
+
+	// finally we have finished...
+	return TRUE;
+}
+
+// static
+wxScriptVar wxScriptFunctionLua::CreateScriptVarFromStack()
+{
+	lua_State *L = wxLua::Get()->m_state;
+	wxScriptVar ret;
 	lua_Number res;
+
 	switch (lua_type(L, -1)) {		// get the type of the returned value
 	case LUA_TNONE:
-		return FALSE;
+		ret.GetType().SetGenericType(wxSTG_UNDEFINED);
+		break;
 
 	case LUA_TNIL:
 		lua_pop(L, 1);
@@ -253,9 +279,10 @@ bool wxScriptFunctionLua::Exec(wxScriptVar &ret, wxScriptVar *arg) const
 		break;
 	}
 
-	// finally we have finished...
-	return TRUE;
+	return ret;
 }
+
+
 
 
 
