@@ -4,7 +4,7 @@
  
  Component:  wxxml2
  Release:    2005-1-4
- Documents:  http://wxcode.sourceforge.net/components/wxscript/index.html
+ Documents:  http://wxcode.sourceforge.net/components/wxxml2/index.html
  wxWidgets:  2.4.x, 2.5.x
  Maintainer: Francesco Montorsi (frm)
  Subdir:     wxxml2
