@@ -9,7 +9,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: ScintillaWX.cpp,v 1.9 2005-02-27 08:12:44 wyo Exp $
+// RCS-ID:      $Id: ScintillaWX.cpp,v 1.10 2005-02-27 15:49:26 wyo Exp $
 // Copyright:   (c) 2000 by Total Control Software
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -1000,7 +1000,7 @@ void ScintillaWX::DoDragLeave() {
 // Force the whole window to be repainted
 void ScintillaWX::FullPaint() {
 #ifndef __WXMAC__
-    stc->Refresh(false);
+    sci->Refresh(false);
 #endif
     sci->Update();
 }
