@@ -137,34 +137,37 @@ int AspellInterface::SetOption(SpellCheckEngineOption& Option)
 
 void AspellInterface::UpdatePossibleValues(SpellCheckEngineOption& OptionDependency, SpellCheckEngineOption& OptionToUpdate)
 {
-  if ((OptionDependency.GetName().IsSameAs(_T("dict-dir"))) && (OptionToUpdate.GetName().IsSameAs(_T("lang"))))
+  if (m_AspellWrapper.IsLoaded())  // If the Aspell library wrapper isn't loaded then we can't properly clean up
   {
-    AspellConfig* config = m_AspellWrapper.NewAspellConfig();
-    AspellDictInfoList* dlist;
-    AspellDictInfoEnumeration* dels;
-    const AspellDictInfo* entry;
-  
-    m_AspellWrapper.AspellConfigReplace(config, OptionDependency.GetName(), OptionDependency.GetValueAsString());
-    
-    // The returned pointer should _not_ need to be deleted
-    dlist = m_AspellWrapper.GetAspellDictInfoList(config);
-  
-    // The Config is no longer needed
-    m_AspellWrapper.DeleteAspellConfig(config);
-  
-    dels = m_AspellWrapper.AspellDictInfoListElements(dlist);
-  
-    OptionToUpdate.GetPossibleValuesArray()->Clear();
-    while ( (entry = m_AspellWrapper.AspellDictInfoEnumerationNext(dels)) != 0) 
+    if ((OptionDependency.GetName().IsSameAs(_T("dict-dir"))) && (OptionToUpdate.GetName().IsSameAs(_T("lang"))))
     {
-      OptionToUpdate.AddPossibleValue(wxString(entry->name));
+      AspellConfig* config = m_AspellWrapper.NewAspellConfig();
+      AspellDictInfoList* dlist;
+      AspellDictInfoEnumeration* dels;
+      const AspellDictInfo* entry;
+    
+      m_AspellWrapper.AspellConfigReplace(config, OptionDependency.GetName(), OptionDependency.GetValueAsString());
+      
+      // The returned pointer should _not_ need to be deleted
+      dlist = m_AspellWrapper.GetAspellDictInfoList(config);
+    
+      // The Config is no longer needed
+      m_AspellWrapper.DeleteAspellConfig(config);
+    
+      dels = m_AspellWrapper.AspellDictInfoListElements(dlist);
+    
+      OptionToUpdate.GetPossibleValuesArray()->Clear();
+      while ( (entry = m_AspellWrapper.AspellDictInfoEnumerationNext(dels)) != 0) 
+      {
+        OptionToUpdate.AddPossibleValue(wxString(entry->name));
+      }
+    
+      m_AspellWrapper.DeleteAspellDictInfoEnumeration(dels);
     }
-  
-    m_AspellWrapper.DeleteAspellDictInfoEnumeration(dels);
-  }
-  else
-  {
-    ::wxMessageBox(wxString::Format(_T("Unsure how to update the possible values for %s based on the value of %s"), OptionDependency.GetText().c_str(), OptionToUpdate.GetText().c_str()));
+    else
+    {
+      ::wxMessageBox(wxString::Format(_T("Unsure how to update the possible values for %s based on the value of %s"), OptionDependency.GetText().c_str(), OptionToUpdate.GetText().c_str()));
+    }
   }
 }
 
