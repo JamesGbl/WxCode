@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.67 2005-01-08 21:58:17 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.68 2005-01-24 19:40:46 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -1083,7 +1083,11 @@ wxTreeListHeaderWindow::wxTreeListHeaderWindow( wxWindow *win,
     m_owner = owner;
     m_resizeCursor = new wxCursor(wxCURSOR_SIZEWE);
 
+#if !wxCHECK_VERSION(2, 5, 0)
     SetBackgroundColour (wxSystemSettings::GetSystemColour (wxSYS_COLOUR_BTNFACE));
+#else
+    SetBackgroundColour (wxSystemSettings::GetColour (wxSYS_COLOUR_BTNFACE));
+#endif
 }
 
 wxTreeListHeaderWindow::~wxTreeListHeaderWindow()
@@ -1093,6 +1097,12 @@ wxTreeListHeaderWindow::~wxTreeListHeaderWindow()
 
 void wxTreeListHeaderWindow::DoDrawRect( wxDC *dc, int x, int y, int w, int h )
 {
+#if !wxCHECK_VERSION(2, 5, 0)
+    wxPen pen (wxSystemSettings::GetSystemColour (wxSYS_COLOUR_BTNSHADOW ), 1, wxSOLID);
+#else
+    wxPen pen (wxSystemSettings::GetColour (wxSYS_COLOUR_BTNSHADOW ), 1, wxSOLID);
+#endif
+
 #ifdef __WXGTK__
     GtkStateType state = m_parent->IsEnabled() ? GTK_STATE_NORMAL
                                                : GTK_STATE_INSENSITIVE;
@@ -1107,9 +1117,7 @@ void wxTreeListHeaderWindow::DoDrawRect( wxDC *dc, int x, int y, int w, int h )
     const int m_corner = 1;
 
     dc->SetBrush( *wxTRANSPARENT_BRUSH );
-
-    dc->SetPen( wxPen(wxSystemSettings::GetSystemColour(
-                          wxSYS_COLOUR_BTNSHADOW), 1, wxSOLID));
+    dc->SetPen (pen);
     dc->DrawLine( x+w-m_corner+1, y, x+w, y+h );  // right (outer)
     dc->DrawRectangle( x, y+h, w+1, 1 );          // bottom (outer)
 
@@ -1132,9 +1140,6 @@ void wxTreeListHeaderWindow::DoDrawRect( wxDC *dc, int x, int y, int w, int h )
     dc->SetPen( *wxBLACK_PEN );
     dc->DrawLine( x+w-m_corner+1, y, x+w, y+h );  // right (outer)
     dc->DrawRectangle( x, y+h, w+1, 1 );          // bottom (outer)
-
-    wxPen pen(wxSystemSettings::GetSystemColour(
-                  wxSYS_COLOUR_BTNSHADOW ), 1, wxSOLID);
 
     dc->SetPen( pen );
     dc->DrawLine( x+w-m_corner, y, x+w-1, y+h );  // right (inner)
@@ -1187,8 +1192,11 @@ void wxTreeListHeaderWindow::OnPaint( wxPaintEvent &WXUNUSED(event) )
     // do *not* use the listctrl colour for headers - one day we will have a
     // function to set it separately
     //dc.SetTextForeground( *wxBLACK );
-    dc.SetTextForeground(wxSystemSettings::
-                            GetSystemColour( wxSYS_COLOUR_WINDOWTEXT ));
+#if !wxCHECK_VERSION(2, 5, 0)
+    dc.SetTextForeground (wxSystemSettings::GetSystemColour( wxSYS_COLOUR_WINDOWTEXT ));
+#else
+    dc.SetTextForeground (wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT ));
+#endif
 
     int x = HEADER_OFFSET_X;
 
@@ -1761,10 +1769,13 @@ void wxTreeListMainWindow::Init()
     m_indent = MININDENT; // min. indent
     m_linespacing = 4;
 
-    m_hilightBrush = new wxBrush (wxSystemSettings::GetSystemColour (wxSYS_COLOUR_HIGHLIGHT),
-                                  wxSOLID);
-    m_hilightUnfocusedBrush = new wxBrush (wxSystemSettings::GetSystemColour (wxSYS_COLOUR_BTNSHADOW),
-                                           wxSOLID);
+#if !wxCHECK_VERSION(2, 5, 0)
+    m_hilightBrush = new wxBrush (wxSystemSettings::GetSystemColour (wxSYS_COLOUR_HIGHLIGHT), wxSOLID);
+    m_hilightUnfocusedBrush = new wxBrush (wxSystemSettings::GetSystemColour (wxSYS_COLOUR_BTNSHADOW), wxSOLID);
+#else
+    m_hilightBrush = new wxBrush (wxSystemSettings::GetColour (wxSYS_COLOUR_HIGHLIGHT), wxSOLID);
+    m_hilightUnfocusedBrush = new wxBrush (wxSystemSettings::GetColour (wxSYS_COLOUR_BTNSHADOW), wxSOLID);
+#endif
 
     m_imageListNormal = (wxImageList *) NULL;
     m_imageListButtons = (wxImageList *) NULL;
@@ -1830,7 +1841,11 @@ bool wxTreeListMainWindow::Create(wxTreeListCtrl *parent,
     SetValidator( validator );
 #endif
 
-    SetBackgroundColour( wxSystemSettings::GetSystemColour( wxSYS_COLOUR_LISTBOX ) );
+#if !wxCHECK_VERSION(2, 5, 0)
+    SetBackgroundColour (wxSystemSettings::GetSystemColour (wxSYS_COLOUR_LISTBOX));
+#else
+    SetBackgroundColour (wxSystemSettings::GetColour (wxSYS_COLOUR_LISTBOX));
+#endif
 
 #ifdef __WXMSW__
     {
@@ -3067,7 +3082,11 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
     }else{
         colText = GetForegroundColour();
     }
-    wxColour colTextHilight = wxSystemSettings::GetSystemColour(wxSYS_COLOUR_HIGHLIGHTTEXT);
+#if !wxCHECK_VERSION(2, 5, 0)
+    wxColour colTextHilight = wxSystemSettings::GetSystemColour (wxSYS_COLOUR_HIGHLIGHTTEXT);
+#else
+    wxColour colTextHilight = wxSystemSettings::GetColour (wxSYS_COLOUR_HIGHLIGHTTEXT);
+#endif
 
     int total_w = m_owner->GetHeaderWindow()->GetWidth();
     int total_h = GetLineHeight(item);
