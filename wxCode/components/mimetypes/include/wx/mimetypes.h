@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////
 // File:        mimetypes.h
-// Purpose:     wxMimeTypes control
+// Purpose:     wxMimeType control
 // Maintainer:  Wyo
-// Created:     2004-11-22
-// RCS-ID:      $Id: mimetypes.h,v 1.1 2004-11-22 18:41:53 wyo Exp $
-// Copyright:   (c) 2004 wxCode
+// Created:     2005-03-08
+// RCS-ID:      $Id: mimetypes.h,v 1.2 2005-03-08 16:55:00 wyo Exp $
+// Copyright:   (c) 2005 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
 
@@ -12,7 +12,7 @@
 #define _MY_MIMETPYES_H_
 
 #ifdef __GNUG__
-    #pragma implementation "mimetypes.h"
+    #pragma implementation "mimetype.h"
 #endif
 
 //----------------------------------------------------------------------------
@@ -31,35 +31,42 @@
 //============================================================================
 
 //----------------------------------------------------------------------------
-//!
+//! wxMimeTypeData
+struct wxMimeTypeData {
+    wxString filename;
+    wxString extension;
+    wxString magicId;
+    wxString creator;
+    wxString description;
+    wxString appname;
+    wxIcon icon;
+};
 
 
 //----------------------------------------------------------------------------
-//! wxMimeTypes
-class wxMimeTypes {
+//! wxMimeType
+class wxMimeType {
 
 public:
 
     //! constructor
-    wxMimeTypes ();
+    wxMimeType ();
 
-    // get/set settings
-    wxString GetMimeType (const wxString& filename) const
-    wxString GetMimeTypeByContent (const wxString& filename) const
-    wxString GetMimeTypeByFilename (const wxString& filename) const
+    // add/remove mime type
+    bool Add (const wxString& mimetype, wxMimeTypeData* data, bool standard = false);
+    bool Remove (wxMimeTypeData* data);
 
-    wxString GetApplication (const wxString& mimetype) const
-    bool SetApplication (const wxString& mimetype, const wxString& filename)
+    // test mime type
+    bool Exists (wxMimeTypeData* data);
+    bool Match (wxMimeTypeData* data); // matches appname
+    bool IsStandard (wxMimeTypeData* data); // and is the standard application
 
-    wxMimeTypeData* GetData (const wxString& mimetype) const
-    bool SetData (const wxString& mimetype, wxMimeTypeData* data, bool force = false)
-
-    wxIcon GetIcon ( onst wxString& mimetype) const
-    bool SetIcon (const wxString& mimetype, const wxIcon& icon)
+    // get data of mime type
+    bool GetData (wxMimeTypeData* data) const;
+    wxString GetMimeType (wxMimeTypeData* data);
 
 private:
 
-    DECLARE_EVENT_TABLE()
 };
 
 #endif // _MY_MIMETPYES_H_

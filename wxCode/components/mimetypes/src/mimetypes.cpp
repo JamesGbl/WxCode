@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////
 // File:        mimetypes.cpp
-// Purpose:     wxMimeTypes control
+// Purpose:     wxMimeType control
 // Maintainer:  Wyo
-// Created:     2004-11-22
-// RCS-ID:      $Id: mimetypes.cpp,v 1.1 2004-11-22 18:46:59 wyo Exp $
-// Copyright:   (c) 2004 wxCode
+// Created:     2005-03-08
+// RCS-ID:      $Id: mimetypes.cpp,v 1.2 2005-03-08 16:55:00 wyo Exp $
+// Copyright:   (c) 2005 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
 
@@ -31,9 +31,10 @@
 #endif
 
 // wxWidgets headers
+#include "wx/mimetype.h" // wxFileType support
 
-// mimetypes headers
-#include "wx/mimetypes.h" // wxMimeTypes control
+// mimetype headers
+#include "wx/mimetypes.h" // wxMimeType control
 
 
 //----------------------------------------------------------------------------
@@ -51,45 +52,86 @@
 //============================================================================
 
 //----------------------------------------------------------------------------
-// wxMimeTypes
+// wxMimeType
 //----------------------------------------------------------------------------
 
-void wxMimeTypes::wxMimeTypes () {
-
+wxMimeType::wxMimeType () {
 }
-
-//----------------------------------------------------------------------------
-// event handlers
 
 //----------------------------------------------------------------------------
 // settings functions
 
-wxString GetMimeType (const wxString& filename) const {
+bool wxMimeType::Add (const wxString& mimetype, wxMimeTypeData* data, bool standard) {
+
+    wxFileTypeInfo info (mimetype, data->appname, wxEmptyString, data->description, data->extension, NULL);
+    wxString shortDesc = _T("Test ") + data->extension + _T(" file");
+    info.SetShortDesc (shortDesc);
+    info.SetIcon (data->appname);
+    wxFileType *filetype;
+    filetype = wxTheMimeTypesManager->Associate (info);
+    delete filetype;
+
+    return true;
 }
 
-wxString GetMimeTypeByContent (const wxString& filename) const {
+bool wxMimeType::Remove (wxMimeTypeData* data) {
+
+    wxFileType *filetype;
+    filetype = wxTheMimeTypesManager->GetFileTypeFromExtension (data->extension);
+    if (!filetype) return false;
+    filetype->Unassociate();
+    delete filetype;
+
+    return true;
 }
 
-wxString GetMimeTypeByFilename (const wxString& filename) const {
+bool wxMimeType::Exists (wxMimeTypeData* data) {
+
+    wxFileType *filetype;
+    filetype = wxTheMimeTypesManager->GetFileTypeFromExtension (data->extension);
+
+    return (filetype != NULL);
+
 }
 
-wxString GetApplication (const wxString& mimetype) const {
+bool wxMimeType::Match (wxMimeTypeData* data) {
+
+    wxFileType *filetype;
+    filetype = wxTheMimeTypesManager->GetFileTypeFromExtension (data->extension);
+    if (!filetype) return false;
+    wxString appname = filetype->GetOpenCommand (wxEmptyString);
+    delete filetype;
+
+    return (appname.Contains (data->appname));
+
 }
 
-bool SetApplication (const wxString& mimetype, const wxString& filename) {
+bool wxMimeType::IsStandard (wxMimeTypeData* data) {
+
+    // not implemented
+
+    return false;
+
 }
 
-wxMimeTypeData* GetData (const wxString& mimetype) const {
+bool wxMimeType::GetData (wxMimeTypeData* data) const {
+
+    wxFileType *filetype;
+    filetype = wxTheMimeTypesManager->GetFileTypeFromExtension (data->extension);
+    if (!filetype) return false;
+    filetype->GetDescription (&data->description);
+    data->appname = filetype->GetOpenCommand (wxEmptyString);
+    data->appname.Remove (data->appname.Length()-4);
+
+    return true;
 }
 
-bool SetData (const wxString& mimetype, wxMimeTypeData* data, bool force = false)
+wxString wxMimeType::GetMimeType (wxMimeTypeData* data) {
 
-wxIcon GetIcon ( onst wxString& mimetype) const {
+    // not implemented
+
+    return wxEmptyString;
 }
-
-bool SetIcon (const wxString& mimetype, const wxIcon& icon) {
-}
-
 
 //----------------------------------------------------------------------------
 // private functions
