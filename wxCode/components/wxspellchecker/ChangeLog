@@ -1,0 +1,13 @@
+2004-04-11 : (Sample) Removed Outlook-like and Sentry-like dialog classes and made XML resource replacements.  The Mozilla-like dialog class was kept as an example of deriving from wxSpellCheckDialogInterface.
+             Sample now allows directly presenting the personal dictionary dialog
+             Sample now allows for saving the wxTextCtrl contents to a file
+
+2004-04-11 : (Aspell) Aspell engine now uses the generic PersonalDictionary class.  This will probably change to Aspell's internal personal dictionary support if/when Aspell's API includes a way to remove words from the personal dictionary.
+
+2004-04-09 : (MySpell) Added personal dictionary support to MySpell engine
+
+2004-04-04 : (Options) The spell check engine options dialog now retrieves and sets user options
+
+2004-04-01 : (ALL) MSVC project files added
+
+2004-03-30 : (ALL) Added wxSpellChecker to the wxCode repository
