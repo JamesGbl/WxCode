@@ -1,0 +1,43 @@
+#
+# File:		makefile.vc
+# Author:	Julian Smart
+# Created:	1999
+# Updated:	
+# Copyright:	(c) Julian Smart
+#
+# Makefile : Builds sample (VC++, WIN32)
+# Use FINAL=1 argument to nmake to build final version with no debug info.
+
+# Set WXDIR for your system
+WXDIR = $(WXWIN)
+
+PROGRAM=panoviewer
+OBJECTS = $(PROGRAM).obj panoviewextractor.obj printerror.obj panoimage.obj panolib.obj
+
+!include $(WXDIR)\src\makeprog.vc
+
+panoviewer.obj: panoviewer.cpp
+	cl @<<
+$(CPPFLAGS2) /c /Tp panoviewer.cpp
+<<
+
+panoviewextractor.obj: panoviewextractor.cpp
+	cl @<<
+$(CPPFLAGS2) /c /Tp panoviewextractor.cpp
+<<
+
+printerror.obj: printerror.cpp
+	cl @<<
+$(CPPFLAGS2) /c /Tp printerror.cpp
+<<
+
+panoimage.obj: panoimage.cpp
+	cl @<<
+$(CPPFLAGS2) /c /Tp panoimage.cpp
+<<
+
+panolib.obj: panolib.cpp
+	cl @<<
+$(CPPFLAGS2) /c /Tp panolib.cpp
+<<
+
