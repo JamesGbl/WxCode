@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Modified by: Alberto Griggio, 2002
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.14 2004-09-28 18:03:55 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.15 2004-09-30 18:27:45 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows license
@@ -523,7 +523,7 @@ public:
     virtual bool SetForegroundColour(const wxColour& colour);
 
     // drop over item
-    void SetDropItem (wxTreeListItem *item = (wxTreeListItem*)NULL);
+    void SetDropItem (const wxTreeItemId& item = (wxTreeItemId*)NULL);
 
 
     wxTreeListHeaderWindow* GetHeaderWindow() const

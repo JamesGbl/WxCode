@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.26 2004-09-29 18:51:18 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.27 2004-09-30 18:29:19 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -543,7 +543,7 @@ public:
     virtual bool SetForegroundColour(const wxColour& colour);
 
     // drop over item
-    void SetDropItem (wxTreeListItem *item = (wxTreeListItem*)NULL);
+    void SetDropItem (const wxTreeItemId& item = (wxTreeItemId*)NULL);
 
     // callbacks
     void OnPaint( wxPaintEvent &event );
@@ -1097,8 +1097,7 @@ wxTreeListHeaderWindow::wxTreeListHeaderWindow( wxWindow *win,
     m_owner = owner;
     m_resizeCursor = new wxCursor(wxCURSOR_SIZEWE);
 
-    SetBackgroundColour(wxSystemSettings::GetSystemColour(
-                            wxSYS_COLOUR_BTNFACE));
+    SetBackgroundColour (wxSystemSettings::GetSystemColour (wxSYS_COLOUR_BTNFACE));
 }
 
 wxTreeListHeaderWindow::~wxTreeListHeaderWindow()
@@ -1930,7 +1929,7 @@ size_t wxTreeListMainWindow::GetCount() const
 
 void wxTreeListMainWindow::SetIndent(unsigned int indent)
 {
-    m_indent = indent;
+    m_indent = wxMax (MININDENT, indent);
     m_dirty = TRUE;
 }
 
@@ -3098,8 +3097,8 @@ wxTreeItemId wxTreeListMainWindow::FindItem (const wxTreeItemId& item, const wxS
     return item;
 }
 
-void wxTreeListMainWindow::SetDropItem (wxTreeListItem *item) {
-    m_dropItem = item;
+void wxTreeListMainWindow::SetDropItem (const wxTreeItemId& item) {
+    m_dropItem = (wxTreeListItem*) item.m_pItem;
 }
 
 wxImageList *wxTreeListMainWindow::GetImageList() const
@@ -3253,6 +3252,8 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
     }else{
         colText = GetForegroundColour();
     }
+    dc.SetTextForeground (colText);
+    wxColour colTextHilight = wxSystemSettings::GetSystemColour(wxSYS_COLOUR_HIGHLIGHTTEXT);
 
     int total_w = m_owner->GetHeaderWindow()->GetWidth();
     int total_h = GetLineHeight(item);
@@ -3271,22 +3272,25 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
     dc.SetBrush (wxBrush (colBg, wxSOLID));
     dc.SetPen (*wxTRANSPARENT_PEN);
     if (HasFlag (wxTR_FULL_ROW_HIGHLIGHT)) {
-        if (m_dropItem && (m_dropItem == item)) {
-            dc.SetBrush (*(m_hilightBrush));
+        if (item == m_dropItem) {
+            dc.SetBrush (*m_hilightBrush);
 #ifndef __WXMAC__ // don't draw rect outline if we already have the background color
-            dc.SetPen (*wxBLACK_PEN);
+            dc.SetPen ((item == m_dropItem)? *wxBLACK_PEN: *wxTRANSPARENT_PEN);
 #endif // !__WXMAC__
-            dc.SetTextForeground (wxSystemSettings::GetSystemColour(wxSYS_COLOUR_HIGHLIGHTTEXT));
+            dc.SetTextForeground (colTextHilight);
         }else if (item->IsSelected()) {
-            if (!m_isDragging) {
-                dc.SetBrush (*(m_hasFocus? m_hilightBrush: m_hilightUnfocusedBrush));
-            }else{
-                dc.SetBrush (*(m_hilightUnfocusedBrush));
-            }
+            if (!m_isDragging && m_hasFocus) {
+                dc.SetBrush (*m_hilightBrush);
 #ifndef __WXMAC__ // don't draw rect outline if we already have the background color
-            dc.SetPen ((m_hasFocus)? *wxBLACK_PEN: *wxTRANSPARENT_PEN);
+                dc.SetPen (*wxBLACK_PEN);
 #endif // !__WXMAC__
-            dc.SetTextForeground (wxSystemSettings::GetSystemColour(wxSYS_COLOUR_HIGHLIGHTTEXT));
+            }else{
+                dc.SetBrush (*m_hilightUnfocusedBrush);
+#ifndef __WXMAC__ // don't draw rect outline if we already have the background color
+                dc.SetPen (*wxTRANSPARENT_PEN);
+#endif // !__WXMAC__
+            }
+            dc.SetTextForeground (colTextHilight);
         }
     }
     dc.DrawRectangle (0, item->GetY() + off_h, total_w, total_h - off_h);
@@ -3304,7 +3308,10 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
             if (m_imageListNormal) image = item->GetCurrentImage();
             x = item->GetX() + MARGIN;
             if (!HasButtons()) {
-                x += -m_indent/2;
+                x += -m_indent + m_indent/2;
+            }else if (m_imageListButtons) {
+                x += -m_btnWidth2;
+                if (item->HasPlus()) x += m_btnWidth + MARGIN;
             }else if (item->HasPlus()) {
                 x += -m_btnWidth2+m_btnWidth + LINEATROOT;
             }else{
@@ -3335,29 +3342,34 @@ void wxTreeListMainWindow::PaintItem(wxTreeListItem *item, wxDC& dc)
         int text_x = x + image_w;
         if (i == GetMainColumn()) item->SetTextX (text_x);
 
+    if (m_isDragging) {
+        int i = 0;
+    }
+
         wxDCClipper clipper (dc, x_colstart, item->GetY(), col_w, total_h); // only within column
         if (!HasFlag (wxTR_FULL_ROW_HIGHLIGHT) && (i == GetMainColumn())) {
-            if (m_dropItem && (m_dropItem == item)) {
-                dc.SetBrush (*(m_hilightBrush));
+            if (item == m_dropItem) {
+                dc.SetBrush (*m_hilightBrush);
 #ifndef __WXMAC__ // don't draw rect outline if we already have the background color
-                dc.SetPen (*wxBLACK_PEN);
+                dc.SetPen ((item == m_dropItem)? *wxBLACK_PEN: *wxTRANSPARENT_PEN);
 #endif // !__WXMAC__
+                dc.SetTextForeground (colTextHilight);
                 dc.DrawRectangle (text_x, item->GetY() + off_h, text_w, total_h - off_h);
-                dc.SetTextForeground (wxSystemSettings::GetSystemColour(wxSYS_COLOUR_HIGHLIGHTTEXT));
             }else if (item->IsSelected()) {
-                if (!m_isDragging) {
-                    dc.SetBrush (*(m_hasFocus? m_hilightBrush: m_hilightUnfocusedBrush));
-                }else{
-                    dc.SetBrush (*(m_hilightUnfocusedBrush));
-                }
+                if (!m_isDragging && m_hasFocus) {
+                    dc.SetBrush (*m_hilightBrush);
 #ifndef __WXMAC__ // don't draw rect outline if we already have the background color
-                dc.SetPen ((m_hasFocus)? *wxBLACK_PEN: *wxTRANSPARENT_PEN);
+                    dc.SetPen (*wxBLACK_PEN);
 #endif // !__WXMAC__
+                }else{
+                    dc.SetBrush (*m_hilightUnfocusedBrush);
+#ifndef __WXMAC__ // don't draw rect outline if we already have the background color
+                  dc.SetPen (*wxTRANSPARENT_PEN);
+#endif // !__WXMAC__
+                }
                 dc.DrawRectangle (text_x, item->GetY() + off_h, text_w, total_h - off_h);
-                dc.SetTextForeground (wxSystemSettings::GetSystemColour(wxSYS_COLOUR_HIGHLIGHTTEXT));
+                dc.SetTextForeground (colTextHilight);
             }
-        }else{
-            dc.SetTextForeground (colText);
         }
 
         dc.SetBackgroundMode (wxTRANSPARENT);
@@ -3451,13 +3463,13 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
             int x3 = x - m_btnWidth2 + m_btnWidth;
             if (!HasButtons()) {
                 dc.DrawLine (x2, y_mid, x2 + m_indent/2, y_mid);
-            }else if (m_imageListButtons || item->HasPlus()) {
+            }else if (m_imageListButtons) {
                 dc.DrawLine (x2, y_mid, x - m_btnWidth2, y_mid);
-                if (item->HasPlus()) {
-                    dc.DrawLine (x3, y_mid, x3 + LINEATROOT + MARGIN, y_mid);
-                }
+            }else if (item->HasPlus()) {
+                dc.DrawLine (x2, y_mid, x - m_btnWidth2, y_mid);
+                dc.DrawLine (x3, y_mid, x3 + LINEATROOT, y_mid);
             }else{
-                dc.DrawLine (x2, y_mid, x3 -m_indent + LINEATROOT + MARGIN, y_mid);
+                dc.DrawLine (x2, y_mid, x3 -m_indent + LINEATROOT, y_mid);
             }
         }
 
@@ -3469,7 +3481,7 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
                 int image = wxTreeItemIcon_Normal;
                 if (item->IsExpanded()) image = wxTreeItemIcon_Expanded;
                 if (item->IsSelected()) image += wxTreeItemIcon_Selected - wxTreeItemIcon_Normal;
-                int xx = x - m_btnWidth2;
+                int xx = x - m_btnWidth2 + MARGIN;
                 int yy = y_mid - m_btnHeight2;
                 dc.SetClippingRegion(xx, yy, m_btnWidth, m_btnHeight);
                 m_imageListButtons->Draw (image, dc, xx, yy, wxIMAGELIST_DRAW_TRANSPARENT);
@@ -3561,14 +3573,11 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
 
 void wxTreeListMainWindow::OnPaint( wxPaintEvent &WXUNUSED(event) )
 {
-    wxPaintDC dc(this);
+    wxPaintDC dc (this);
+    PrepareDC (dc);
 
-    PrepareDC( dc );
-
-    if(!GetColumnCount()) return; // ALB
-
-    if ( !m_anchor)
-        return;
+    if (!m_anchor) return;
+    if(!GetColumnCount()) return;
 
     // calculate button size
     m_btnWidth = 0, m_btnWidth2 = 0;
@@ -3592,15 +3601,19 @@ void wxTreeListMainWindow::OnPaint( wxPaintEvent &WXUNUSED(event) )
     m_imgHeight2 = m_imgHeight/2;
 
     // calculate indent size
-    m_indent = wxMax (MININDENT, HasButtons()? m_btnWidth + LINEATROOT: 0);
+    if (m_imageListButtons) {
+        m_indent = wxMax (MININDENT, m_btnWidth + MARGIN);
+    }else if (HasButtons()) {
+        m_indent = wxMax (MININDENT, m_btnWidth + LINEATROOT);
+    }
 
     // set default values
     dc.SetFont( m_normalFont );
     dc.SetPen( m_dottedPen );
 
-    // this is now done dynamically
-    //if(GetImageList() == NULL)
-    // m_lineHeight = (int)(dc.GetCharHeight() + 4);
+    if (m_isDragging) {
+        int i = 0;
+    }
 
     // calculate column start and paint
     int x_maincol = 0;
@@ -3926,9 +3939,6 @@ void wxTreeListMainWindow::OnChar( wxKeyEvent &event )
 wxTreeItemId wxTreeListMainWindow::HitTest(const wxPoint& point, int& flags,
                                            int& column)
 {
-    // JACS: removed wxYieldIfNeeded() because it can cause the window
-    // to be deleted from under us if a close window event is pending
-
     int w, h;
     GetSize(&w, &h);
     flags=0;
@@ -4050,15 +4060,15 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
     if (!(event.LeftDown() ||
           event.LeftUp() ||
           event.RightDown() ||
+          event.RightUp() ||
           event.LeftDClick() ||
           event.Dragging() ||
-          event.Moving() || (event.RightUp() && m_isDragging))) {
+          (event.Moving() && m_isDragging))) {
         event.Skip();
         return;
     }
 
     if (event.LeftDown() || event.RightDown()) SetFocus();
-    if (event.LeftUp() || event.RightUp()) m_dragCount = 0; // just in case
 
     wxClientDC dc(this);
     PrepareDC(dc);
@@ -4068,8 +4078,9 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
     int flags = 0;
     wxTreeListItem *item = m_anchor->HitTest(wxPoint(x,y), this, flags, 0);
 
+    // we only process dragging here
     if (event.Dragging()){
-        if (m_isDragging) return; // already done
+        if (m_isDragging) return; // nothing to do, already done
 
         // determine drag start
         if (m_dragCount == 0) {
@@ -4079,9 +4090,9 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
         m_dragCount++;
         if (m_dragCount < 3) return; // minimum drag 3 pixel
         if (m_dragTimer->IsRunning()) return;
-        m_dragCount = 0;
 
         // we're going to drag this item
+        m_dragCount = 0;
         m_isDragging = true;
 
         // send drag start event
@@ -4091,12 +4102,12 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
         wxTreeEvent nevent (command, m_owner->GetId());
         nevent.SetItem ((long) m_current);
         nevent.SetEventObject (m_owner);
-        m_owner->GetEventHandler()->ProcessEvent(nevent);
+        m_owner->GetEventHandler()->ProcessEvent (nevent);
 
-    }else if (event.Moving() || (event.LeftUp() || event.RightUp()) && m_isDragging) {
-        if (!m_isDragging) return; // noting to do
+    }else if (m_isDragging) { // any other event but event.Dragging()
 
         // end dragging
+        m_dragCount = 0;
         m_isDragging = false;
 
         // send drag end event event
@@ -4106,101 +4117,102 @@ void wxTreeListMainWindow::OnMouse( wxMouseEvent &event )
         event.SetEventObject (m_owner);
         m_owner->GetEventHandler()->ProcessEvent(event);
 
-    }else{ // here we process only the messages which happen on tree items
+    }
 
-        if (item == NULL) return; // nothing to do
+    // we process only the messages which happen on tree items
+    if (item == NULL) return; // nothing to do
 
-        if (event.RightDown()) {
+    if (event.RightDown()) {
+        SetFocus();
+        wxTreeEvent nevent (wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, m_owner->GetId());
+        nevent.SetItem ((long) item);
+        int nx, ny;
+        CalcScrolledPosition (x, y, &nx, &ny);
+        nevent.SetPoint (wxPoint(nx, ny));
+        nevent.SetEventObject (m_owner);
+        m_owner->GetEventHandler()->ProcessEvent(nevent);
+
+    }else if (event.LeftUp()) {
+        if (m_lastOnSame) {
+
+            if ((item == m_current) &&
+                (flags & wxTREE_HITTEST_ONITEMLABEL) &&
+                HasFlag (wxTR_EDIT_LABELS)){
+                if (m_renameTimer->IsRunning()) m_renameTimer->Stop();
+                m_renameTimer->Start (100, TRUE);
+            }
+            m_lastOnSame = FALSE;
+
+        }
+
+        // determine the selection if not done by left down
+        if (!m_left_down_selection) {
+            bool is_multiple, extended_select, unselect_others;
+            EventFlagsToSelType (GetWindowStyleFlag(),
+                                 event.ShiftDown(), event.ControlDown(),
+                                 is_multiple, extended_select, unselect_others);
+            SelectItem (item, unselect_others, extended_select);
+        }else{
+            m_left_down_selection = false;
+        }
+
+    }else if (event.LeftDown() || event.LeftDClick()) {
+
+        if (event.LeftDown()) {
             SetFocus();
-            wxTreeEvent nevent (wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, m_owner->GetId());
-            nevent.SetItem ((long) item);
+            m_lastOnSame = item == m_current;
+        }
+
+        if (((flags & wxTREE_HITTEST_ONITEMBUTTON) ||
+             (flags & wxTREE_HITTEST_ONITEMICON)) &&
+            HasButtons() && item->HasPlus()) {
+
+            // only toggle the item for a single click, double click on
+            // the button doesn't do anything (it toggles the item twice)
+            if (event.LeftDown()) Toggle (item);
+
+            // don't select the item if the button was clicked
+            return;
+        }
+
+        // determine the selection if the current item is not selected
+        if (!item->IsSelected()) {
+            bool is_multiple, extended_select, unselect_others;
+            EventFlagsToSelType (GetWindowStyleFlag(),
+                                 event.ShiftDown(), event.ControlDown(),
+                                 is_multiple, extended_select, unselect_others);
+            SelectItem (item, unselect_others, extended_select);
+            m_left_down_selection = true;
+        }
+
+        // For some reason, Windows isn't recognizing a left double-click,
+        // so we need to simulate it here.  Allow 200 milliseconds for now.
+        if (event.LeftDClick()) {
+
+            // double clicking should not start editing the item label
+            m_renameTimer->Stop();
+            m_lastOnSame = FALSE;
+
+            // send activate event first
+            wxTreeEvent nevent( wxEVT_COMMAND_TREE_ITEM_ACTIVATED,
+                                m_owner->GetId() );
+            nevent.SetItem( (long) item );
             int nx, ny;
-            CalcScrolledPosition (x, y, &nx, &ny);
-            nevent.SetPoint (wxPoint(nx, ny));
-            nevent.SetEventObject (m_owner);
-            m_owner->GetEventHandler()->ProcessEvent(nevent);
+            CalcScrolledPosition(x, y, &nx, &ny);
+            nevent.SetPoint( wxPoint(nx, ny) );
+            nevent.SetEventObject( /*this*/m_owner );
+            if (!m_owner->GetEventHandler()->ProcessEvent (nevent)) {
 
-        }else if (event.LeftUp()) {
-            if (m_lastOnSame) {
-
-                if ((item == m_current) &&
-                    (flags & wxTREE_HITTEST_ONITEMLABEL) &&
-                    HasFlag (wxTR_EDIT_LABELS)){
-                    if (m_renameTimer->IsRunning()) m_renameTimer->Stop();
-                    m_renameTimer->Start (100, TRUE);
-                }
-
-                m_lastOnSame = FALSE;
-            }
-
-            // determine the selection if not done by left down
-            if (!m_left_down_selection) {
-                bool is_multiple, extended_select, unselect_others;
-                EventFlagsToSelType (GetWindowStyleFlag(),
-                                     event.ShiftDown(), event.ControlDown(),
-                                     is_multiple, extended_select, unselect_others);
-                SelectItem (item, unselect_others, extended_select);
-            }else{
-                m_left_down_selection = false;
-            }
-
-        }else{ // !RightDown() && !LeftUp() ==> LeftDown() || LeftDClick()
-
-            if (event.LeftDown()) {
-                SetFocus();
-                m_lastOnSame = item == m_current;
-            }
-
-            if (((flags & wxTREE_HITTEST_ONITEMBUTTON) ||
-                 (flags & wxTREE_HITTEST_ONITEMICON)) &&
-                HasButtons() && item->HasPlus())
-            {
-                // only toggle the item for a single click, double click on
-                // the button doesn't do anything (it toggles the item twice)
-                if (event.LeftDown()) Toggle (item);
-
-                // don't select the item if the button was clicked
-                return;
-            }
-
-            // determine the selection if the current item is not selected
-            if (!item->IsSelected()) {
-                bool is_multiple, extended_select, unselect_others;
-                EventFlagsToSelType (GetWindowStyleFlag(),
-                                     event.ShiftDown(), event.ControlDown(),
-                                     is_multiple, extended_select, unselect_others);
-                SelectItem (item, unselect_others, extended_select);
-                m_left_down_selection = true;
-            }
-
-            // For some reason, Windows isn't recognizing a left double-click,
-            // so we need to simulate it here.  Allow 200 milliseconds for now.
-            if ( event.LeftDClick() )
-            {
-                // double clicking should not start editing the item label
-                m_renameTimer->Stop();
-                m_lastOnSame = FALSE;
-
-                // send activate event first
-                wxTreeEvent nevent( wxEVT_COMMAND_TREE_ITEM_ACTIVATED,
-                                    m_owner->GetId() );
-                nevent.SetItem( (long) item );
-                int nx, ny;
-                CalcScrolledPosition(x, y, &nx, &ny);
-                nevent.SetPoint( wxPoint(nx, ny) );
-                nevent.SetEventObject( /*this*/m_owner );
-                if ( !m_owner->GetEventHandler()->ProcessEvent( nevent ) )
-                {
-                    // if the user code didn't process the activate event,
-                    // handle it ourselves by toggling the item when it is
-                    // double clicked
-                    if ( item->HasPlus() )
-                    {
-                        Toggle(item);
-                    }
-                }
+                // if the user code didn't process the activate event,
+                // handle it ourselves by toggling the item when it is
+                // double clicked
+                if (item->HasPlus()) Toggle(item);
             }
         }
+    }else{ // any other event skip just in case
+
+        event.Skip();
+
     }
 }
 
@@ -4800,7 +4812,7 @@ void wxTreeListCtrl::SortChildren(const wxTreeItemId& item)
 wxTreeItemId wxTreeListCtrl::FindItem (const wxTreeItemId& item, const wxString& str, int flags)
 { return m_main_win->FindItem (item, str, flags); }
 
-void wxTreeListCtrl::SetDropItem (wxTreeListItem *item)
+void wxTreeListCtrl::SetDropItem (const wxTreeItemId& item)
 { m_main_win->SetDropItem (item); }
 
 bool wxTreeListCtrl::SetBackgroundColour(const wxColour& colour)
