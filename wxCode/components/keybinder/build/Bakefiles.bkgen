@@ -9,7 +9,7 @@
     <input>keybinder.bkl</input>
 
 
-    <disable-formats>dmars,dmars_smake,cbx_unix,cbuilderx,msevc4prj,msvc6prj</disable-formats>
-    <add-formats>autoconf,borland,dmars_smake,dmars,mingw,msvc,msvc6prj,msevc4prj,watcom,cbuilderx,cbx_unix</add-formats>
+    <disable-formats>dmars,dmars_smake,cbx_unix,cbuilderx,msevc4prj</disable-formats>
+    <add-formats>msvc6prj,autoconf,borland,dmars_smake,dmars,mingw,msvc,msevc4prj,watcom,cbuilderx,cbx_unix</add-formats>
     
 </bakefile-gen>

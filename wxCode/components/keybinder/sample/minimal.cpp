@@ -85,7 +85,8 @@ enum
 	Minimal_Shortcut1,
 	Minimal_Shortcut2,
 	Minimal_Shortcut3,
-	Minimal_Keybindings
+	Minimal_Keybindings,
+	Minimal_ShowKeyProfiles
 };
 
 // Define a new frame type: this is going to be our main frame
@@ -96,8 +97,13 @@ protected:
 
 public:
 
-	// our global keybinder
-	static wxKeyBinder *pBinder;
+	// THE KEYPROFILES DO NOT NEED TO BE STATIC (EVEN IF THESE ONES ARE)	
+
+	// our default keyprofile
+	static wxKeyProfile *pPrimary;
+
+	// our secondary keyprofile
+	static wxKeyProfile *pSecondary;
 
 public:
     // ctor(s)
@@ -120,6 +126,7 @@ private:
 
 class MyDialog : public wxDialog
 {
+public:
 	wxKeyConfigPanel *m_p;
 
 public:
@@ -206,12 +213,13 @@ bool MyApp::OnInit()
 // main frame
 // ----------------------------------------------------------------------------
 
-wxKeyBinder *MyFrame::pBinder = NULL;
+wxKeyProfile *MyFrame::pPrimary = NULL;
+wxKeyProfile *MyFrame::pSecondary = NULL;
 
 
 // frame constructor
 MyFrame::MyFrame(const wxString& title)
-       : wxFrame(NULL, wxID_ANY, title, wxPoint(50, 50), wxSize(400, 300))
+       : wxFrame(NULL, wxID_ANY, title, wxPoint(50, 50), wxSize(500, 300))
 {
     // set the frame icon
     SetIcon(wxICON(mondrian));
@@ -221,10 +229,11 @@ MyFrame::MyFrame(const wxString& title)
 	wxPanel *panel = new wxPanel(this);
 	wxBoxSizer *box = new wxBoxSizer(wxVERTICAL);
 	box->Add(new wxStaticText(panel, -1, 
-			"This is the keybinder sample program."), 0, wxALL, 5);
-	/*wxTextCtrl *main = new wxTextCtrl(panel, -1, "", wxDefaultPosition, 
-		wxDefaultSize, wxTE_MULTILINE);
-	box->Add(main, 1, wxALL | wxGROW, 5);*/
+			"This is the keybinder sample program.\n\n"
+			"This little sample supports two key profiles that "
+			"you can edit through the 'File|KeyBindings' command.\n"
+			"In particular, they differ for the shortcuts to the 'Shortcut #1'.\n"
+			"Enjoy this sample !"), 0, wxALL, 5);
 	panel->SetSizer(box);
 #endif
 
@@ -243,6 +252,8 @@ MyFrame::MyFrame(const wxString& title)
 	menuFile->Append(Minimal_Shortcut3, _T("Shortcut #3\tCtrl+3"), _T(str));
 	menuFile->AppendSeparator();
 	menuFile->Append(Minimal_Keybindings, _T("Keybindings\tF8"), _T(""));
+	menuFile->AppendCheckItem(Minimal_ShowKeyProfiles, _T("Show profiles"), _T(""));
+	menuFile->Check(Minimal_ShowKeyProfiles, TRUE);
 	menuFile->AppendSeparator();
 
     menuFile->Append(Minimal_Quit, _T("E&xit\tAlt-X"), _T("Quit this program"));	
@@ -265,9 +276,21 @@ MyFrame::MyFrame(const wxString& title)
 
 	// init the keybinder
 #if wxUSE_KEYBINDER
-	pBinder = new wxKeyBinder();
-	pBinder->Attach(this);
-	pBinder->ImportMenuBarCmd(menuBar);
+	pPrimary = new wxKeyProfile("Primary", "Our primary keyprofile");
+	pSecondary = new wxKeyProfile("Secondary", "Our secondary keyprofile");
+	
+	pPrimary->ImportMenuBarCmd(menuBar);
+	pSecondary->DeepCopy(pPrimary);
+
+	// just to show some features....
+	pPrimary->AddShortcut(Minimal_Shortcut1, wxKeyBind("CTRL+SHIFT+E"));
+
+	// and to make some differences between the two key profiles
+	pSecondary->GetCmd(Minimal_Shortcut1)->GetShortcut(0)->Set(wxKeyBind("ALT+F10"));
+
+	// by now, attach to this window the primary keybinder
+	pPrimary->Attach(this);	
+
 #endif
 }
 
@@ -275,8 +298,8 @@ MyFrame::MyFrame(const wxString& title)
 MyFrame::~MyFrame()
 {
 #if wxUSE_KEYBINDER
-	if (pBinder) delete pBinder;		// don't leak
-	pBinder = NULL;
+	wxSAFE_DELETE(pPrimary);
+	wxSAFE_DELETE(pSecondary);
 #endif
 }
 
@@ -311,8 +334,13 @@ void MyFrame::OnShortcut3(wxCommandEvent &)
 void MyFrame::OnKeybindings(wxCommandEvent &)
 {
 	MyDialog dlg(this, "Keybindings");
+
+	// does the user wants to enable key profiles ?
+	dlg.m_p->EnableKeyProfiles(GetMenuBar()->IsChecked(Minimal_ShowKeyProfiles));
 	dlg.ShowModal();
 }
+
+
 
 
 
@@ -331,12 +359,13 @@ MyDialog::MyDialog(wxWindow *parent, const wxString &title) :
 
 	// Note also that if we create the wxKeyConfigPanel without the 
 	// binder (using NULL), setting it later with
-	//           m_p->SetBinder(MyFrame::pBinder, TRUE);
+	//           m_p->SetBinder(MyFrame::pPrimary, TRUE);
 	// we would use implicitly the wxKeyConfigPanel::ImportKeyBinderCmd	
 
 
 	// create a simple wxKeyConfigPanel
-	m_p = new wxKeyConfigPanel(this, MyFrame::pBinder, TRUE);
+	m_p = new wxKeyConfigPanel(this, MyFrame::pPrimary, TRUE);
+	m_p->AddProfile(MyFrame::pSecondary);
 
 	// with this command we populate the wxTreeCtrl widget of the panel
 	m_p->ImportMenuBarCmd(((wxFrame*)parent)->GetMenuBar());
@@ -357,6 +386,11 @@ void MyDialog::OnApply( wxCommandEvent & )
 	// wxKeyConfigPanel keeps user modifications in a temporary buffer:
 	// now copy that buffer to our keybinder
 	m_p->ApplyChanges();
+
+	// and attach the right keybinder to our parent
+	MyFrame::pPrimary->Detach(GetParent());
+	MyFrame::pSecondary->Detach(GetParent());
+	m_p->GetSelProfile()->Attach(GetParent());
 
 	// if we don't catch this buttonpress, wxKeyConfigPanel would just
 	// apply changes without exiting...

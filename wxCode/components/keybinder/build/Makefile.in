@@ -37,8 +37,6 @@ KEYBINDER_OBJECTS =  \
 MINIMAL_CXXFLAGS = -I../include `wx-config --cxxflags` -Wall $(CPPFLAGS) \
 	$(CXXFLAGS)
 MINIMAL_OBJECTS =  \
-	autoconf/minimal_keybinder.o \
-	autoconf/minimal_menuutils.o \
 	autoconf/minimal_minimal.o \
 	$(__minimal___win32rc)
 
@@ -118,17 +116,11 @@ autoconf/keybinder_keybinder.o: $(srcdir)/../src/keybinder.cpp
 autoconf/keybinder_menuutils.o: $(srcdir)/../src/menuutils.cpp
 	$(CXXC) -c -o $@ $(KEYBINDER_CXXFLAGS) $<
 
-autoconf/minimal_keybinder.o: $(srcdir)/../src/keybinder.cpp
-	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $<
-
-autoconf/minimal_menuutils.o: $(srcdir)/../src/menuutils.cpp
-	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $<
-
 autoconf/minimal_minimal.o: $(srcdir)/../sample/minimal.cpp
 	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $<
 
 autoconf/minimal_minimal_rc.o: $(srcdir)/../sample/minimal.rc
-	$(RESCOMP) -i$< -o$@  --include-dir ../include
+	$(RESCOMP) -i$< -o$@  --include-dir ../include --include-dir ../sample
 
 
 # Include dependency info, if present:
