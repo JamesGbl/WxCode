@@ -3,7 +3,7 @@
 ## Purpose:     wxScintilla
 ## Maintainer:  Otto Wyss
 ## Created:     2004-09-19
-## RCS-ID:      $Id: Makefile,v 1.2 2004-11-13 10:56:06 wyo Exp $
+## RCS-ID:      $Id: Makefile,v 1.3 2004-11-14 09:54:30 wyo Exp $
 ## Copyright:   (c) wxCode
 ## Licence:     wxWidgets licence
 ##############################################################################
@@ -11,7 +11,7 @@
 # list of source files
 SRC = PlatWX.cpp \
       ScintillaWX.cpp \
-      stc.cpp \
+      wxscintilla.cpp \
       AutoComplete.cxx \
       CallTip.cxx \
       CellBuffer.cxx \
@@ -81,13 +81,13 @@ SRC = PlatWX.cpp \
       XPM.cxx
 
 # source directories
-vpath %.cpp $(WXCODE)/styledtextctrl/src
-vpath %.cxx $(WXCODE)/styledtextctrl/src/scintilla/src
+vpath %.cpp $(WXCODE)/wxscintilla/src
+vpath %.cxx $(WXCODE)/wxscintilla/src/scintilla/src
 
 # additional header directories
-INC = -I$(WXCODE)/styledtextctrl/src/scintilla/include/ \
-      -I$(WXCODE)/styledtextctrl/include/ \
-      -I$(WXCODE)/styledtextctrl/src/scintilla/src/
+INC = -I$(WXCODE)/wxscintilla/include/ \
+      -I$(WXCODE)/wxscintilla/src/scintilla/include/ \
+      -I$(WXCODE)/wxscintilla/src/scintilla/src/
 
 DEF = -D__WX__=1 -DSCI_LEXER -DLINK_LEXERS
 
@@ -134,24 +134,24 @@ endif
 %.o:	%.cxx
 	g++ -fpic -c $(DEF) $(INC) `$(WXCONFIG) --cxxflags` `$(GTKCONFIG) --cflags` -g -o $@ $<
 
-all:	$(LIB)
-$(LIB):	$(OBJ)
+all:	$(LIB).so
+$(LIB).so:	$(OBJ)
 	g++ -fpic --share -o ../lib/$@ $^ `$(WXCONFIG) --libs`
 
-release:	$(LIB)r
-$(LIB)r:	$(OBJ)
-	g++ -fpic --share -o ../lib/$@ $^ `$(WXCONFIG) --static --libs`
+release:	$(LIB).a
+$(LIB).a:	$(OBJ)
+	ar crs ../lib/$@ $^
 
-debug:	$(LIB)d
-$(LIB)d:	$(OBJ)
+debug:	$(LIB).so.d
+$(LIB).so.d:	$(OBJ)
 	g++ -fpic --share -o ../lib/$@ $^ `$(WXCONFIG) --libs`
 
-develdebug:	$(LIB)dd
-$(LIB)dd:	$(OBJ)
+develdebug:	$(LIB).so.dd
+$(LIB).so.dd:	$(OBJ)
 	g++ -fpic --share -o ../lib/$@ $^ `$(WXCONFIG) --libs`
 
-univdebug:	$(LIB)ud
-$(LIB)ud:	$(OBJ)
+univdebug:	$(LIB).so.ud
+$(LIB).so.ud:	$(OBJ)
 	g++ -fpic --share -o ../lib/$@ $^ `$(WXCONFIG) --libs`
 
 clean:
