@@ -488,7 +488,7 @@ void SurfaceImpl::MeasureWidths(Font &font, const char *s, int len, int *positio
     // Map the widths for UCS-2 characters back to the UTF-8 input string
     // NOTE:  I don't think this is right for when sizeof(wxChar) > 2, ie wxGTK2
     // so figure it out and fix it!
-    i = 0;
+    int i = 0;
     size_t ui = 0;
     while ((int)i < len) {
         unsigned char uch = (unsigned char)s[i];
@@ -1306,14 +1306,6 @@ wxString sci2wx(const char* str, size_t len)
     return wxString(buffer.data(), actualLen);
 }
 
-
-
-wxString sci2wx(const char* str)
-{
-    return stc2wx(str, strlen(str));
-}
-
-
 const wxWX2MBbuf wx2stc(const wxString& str)
 {
     const wchar_t* wcstr = str.c_str();
@@ -1329,9 +1321,3 @@ const wxWX2MBbuf wx2stc(const wxString& str)
 }
 
 #endif
-
-
-
-
-
-
