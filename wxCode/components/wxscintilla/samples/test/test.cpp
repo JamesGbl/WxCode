@@ -3,7 +3,7 @@
 // Purpose:     wxScintilla test application
 // Maintainer:  Otto Wyss
 // Created:     2003-09-01
-// RCS-ID:      $Id: test.cpp,v 1.4 2005-03-02 20:28:22 wyo Exp $
+// RCS-ID:      $Id: test.cpp,v 1.5 2005-03-03 17:01:43 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows licence
 //////////////////////////////////////////////////////////////////////////////
@@ -501,15 +501,21 @@ void AppFrame::CreateMenu () {
     wxMenu *menuView = new wxMenu;
     menuView->Append (myID_HILIGHTLANG, _("&Hilight language .."), menuHilight);
     menuView->AppendSeparator();
-    menuView->AppendCheckItem (myID_FOLDTOGGLE, _("&Toggle current fold\tCtrl+T"));
     menuView->AppendCheckItem (myID_OVERTYPE, _("&Overwrite mode\tIns"));
+    menuView->Check (myID_OVERTYPE, g_CommonPrefs.overTypeInitial);
     menuView->AppendCheckItem (myID_WRAPMODEON, _("&Wrap mode\tCtrl+U"));
+    menuView->Check (myID_WRAPMODEON, g_CommonPrefs.wrapModeInitial);
     menuView->AppendSeparator();
     menuView->AppendCheckItem (myID_DISPLAYEOL, _("Show line &endings"));
+    menuView->Check (myID_DISPLAYEOL, g_CommonPrefs.displayEOLEnable);
     menuView->AppendCheckItem (myID_INDENTGUIDE, _("Show &indent guides"));
+    menuView->Check (myID_INDENTGUIDE, g_CommonPrefs.indentGuideEnable);
     menuView->AppendCheckItem (myID_LINENUMBER, _("Show line &numbers"));
+    menuView->Check (myID_LINENUMBER, g_CommonPrefs.lineNumberEnable);
     menuView->AppendCheckItem (myID_LONGLINEON, _("Show &long line marker"));
+    menuView->Check (myID_LONGLINEON, g_CommonPrefs.longLineOnEnable);
     menuView->AppendCheckItem (myID_WHITESPACE, _("Show white&space"));
+    menuView->Check (myID_WHITESPACE, g_CommonPrefs.whiteSpaceEnable);
     menuView->AppendSeparator();
     menuView->Append (myID_USECHARSET, _("Use &code page of .."), menuCharset);
 
@@ -527,6 +533,7 @@ void AppFrame::CreateMenu () {
     // Extra menu
     wxMenu *menuExtra = new wxMenu;
     menuExtra->AppendCheckItem (myID_READONLY, _("&Readonly mode"));
+    menuExtra->Check (myID_READONLY, g_CommonPrefs.readOnlyInitial);
     menuExtra->AppendSeparator();
     menuExtra->Append (myID_CHANGECASE, _("Change &case to .."), menuChangeCase);
     menuExtra->AppendSeparator();
