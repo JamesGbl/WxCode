@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Modified by: Alberto Griggio, 2002
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.6 2004-04-11 20:31:59 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.7 2004-04-14 20:45:54 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows license
@@ -33,6 +33,7 @@
 class GIZMODLLEXPORT wxTreeListItem;
 class GIZMODLLEXPORT wxTreeListHeaderWindow;
 class GIZMODLLEXPORT wxTreeListMainWindow;
+
 
 // Using this typedef removes an ambiguity when calling Remove()
 #ifdef __WXMSW__
@@ -500,7 +501,7 @@ public:
     void SortChildren(const wxTreeItemId& item);
 
     // searching
-    wxTreeItemId FindItem (const wxTreeItemId& item, const wxString& str, 
+    wxTreeItemId FindItem (const wxTreeItemId& item, const wxString& str,
                            bool partial=false, bool nocase=false);
 
     // overridden base class virtuals
