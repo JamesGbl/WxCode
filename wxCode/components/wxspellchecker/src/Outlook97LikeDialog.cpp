@@ -241,7 +241,7 @@ void Outlook97LikeDialog::OnClickOptions(wxCommandEvent& event)
     if (pOptionsMap)
     {
       for (OptionsMap::iterator it = pOptionsMap->begin(); it != pOptionsMap->end(); it++)
-        m_pSpellCheckEngine->SetOption(it->second);
+        m_pSpellCheckEngine->AddOptionToMap(it->second);
     }
   }
 }

@@ -273,7 +273,7 @@ void MyFrame::OnEditOptions(wxCommandEvent& event)
     if (pOptionsMap)
     {
       for (OptionsMap::iterator it = pOptionsMap->begin(); it != pOptionsMap->end(); it++)
-        ReturnSelectedSpellCheckEngine()->SetOption(it->second);
+        ReturnSelectedSpellCheckEngine()->AddOptionToMap(it->second);
     }
   }
 }
