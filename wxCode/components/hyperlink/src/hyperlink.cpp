@@ -3,7 +3,7 @@
 // Purpose:     wxHyperLink control
 // Maintainer:  Wyo
 // Created:     2003-04-07
-// RCS-ID:      $Id: hyperlink.cpp,v 1.3 2004-11-25 21:58:01 wyo Exp $
+// RCS-ID:      $Id: hyperlink.cpp,v 1.4 2005-02-10 16:05:07 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -81,9 +81,9 @@ bool wxHyperLink::Create (wxWindow *parent,
     m_URL = wxEmptyString;
     m_Marked = false;
     m_Visited = false;
-    m_MarkedColour = wxColour ("DARK GREY");
-    m_NormalColour = wxColour ("BLUE");
-    m_VisitedColour = wxColour ("PURPLE");
+    m_MarkedColour = wxColour (_T("DARK GREY"));
+    m_NormalColour = wxColour (_T("BLUE"));
+    m_VisitedColour = wxColour (_T("PURPLE"));
     m_HoverCursor = wxCursor (wxCURSOR_HAND);
 
     // set foreground colour
