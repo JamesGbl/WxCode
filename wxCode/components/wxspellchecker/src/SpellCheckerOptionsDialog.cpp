@@ -12,6 +12,7 @@ SpellCheckerOptionsDialog::SpellCheckerOptionsDialog(wxWindow* pParent, const wx
   : wxDialog(pParent, -1, strCaption, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
   // Put each option in the member options map
+  m_ModifiedOptions.clear();
   for (OptionsMap::iterator it = pOptionsMap->begin(); it != pOptionsMap->end(); it++)
     m_ModifiedOptions[it->first] = it->second;
   
@@ -206,6 +207,11 @@ bool SpellCheckerOptionsDialog::TransferDataFromWindow()
         switch (pCurrentOption->GetOptionType())
         {
         case SpellCheckEngineOption::STRING:
+          if (pCurrentOption->GetPossibleValuesArray()->GetCount() > 0)
+            pCurrentOption->SetValue(((wxChoice*)pControl)->GetStringSelection());
+          else
+            pCurrentOption->SetValue(((wxTextCtrl*)pControl)->GetValue());
+          break;
         case SpellCheckEngineOption::DIR:
         case SpellCheckEngineOption::FILE:
           pCurrentOption->SetValue(((wxTextCtrl*)pControl)->GetValue());
@@ -246,6 +252,11 @@ bool SpellCheckerOptionsDialog::TransferDataToWindow()
         switch (pCurrentOption->GetOptionType())
         {
         case SpellCheckEngineOption::STRING:
+          if (pCurrentOption->GetPossibleValuesArray()->GetCount() > 0)
+            ((wxChoice*)pControl)->SetStringSelection(pCurrentOption->GetValueAsString());
+          else
+            ((wxTextCtrl*)pControl)->SetValue(pCurrentOption->GetValueAsString());
+          break;
         case SpellCheckEngineOption::DIR:
         case SpellCheckEngineOption::FILE:
           ((wxTextCtrl*)pControl)->SetValue(pCurrentOption->GetValueAsString());
