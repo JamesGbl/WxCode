@@ -1,0 +1,20 @@
+/////////////////////////////////////////////////////////////////////////
+// This is a simple header-like file used as "package file" for the
+// TOLUA program.
+//
+
+$#include "Test.h"
+
+// ----------------------------------------------------------------------------
+// the test class
+// ----------------------------------------------------------------------------
+
+class /*wxSCRIPT_EXPORT*/ myClass
+{
+	myClass();
+	virtual ~myClass();
+
+	void set(bool value);
+	bool get();
+};
+
