@@ -3,6 +3,8 @@
 
 #include "EngineDictionaryDownloader.h"
 
+#include "wx/filesys.h"
+
 class AspellDictionaryDownloader : public EngineDictionaryDownloader
 {
 public:
@@ -24,6 +26,22 @@ public:
 
   // Determine which file to download from an array of filenames
   wxString SelectDictionaryToDownload(wxArrayString& FileArray);
+  
+  // The Win32 dictionaries should work on any x86 byte order system
+  inline bool UseWin32Dictionaries() { return (wxINT32_SWAP_ALWAYS(128) == wxINT32_SWAP_ON_LE(128)); }
+  
+  wxString GetDictionaryNameFromFileName(wxString& strFileName);
+  
+  bool RetrieveDictionaryListFromStandardAspell(wxArrayString& DictionaryArray);
+  wxString DownloadDictionaryFromStandardAspell(wxString& strDictionary);
+  bool RetrieveDictionaryListFromWin32Aspell(wxArrayString& DictionaryArray);
+  wxString DownloadDictionaryFromWin32Aspell(wxString& strDictionary);
+  bool RetrieveDictionaryList(wxString strServerPath, wxString strFileMask, wxArrayString& DictionaryArray);
+  wxString DownloadDictionary(wxString strServerPath, wxString strFileMask);
+
+  bool InstallDictionaryFromStandardAspell(wxString& strFileName);
+  bool InstallDictionaryFromWin32Aspell(wxString& strFileName);
+  bool CopyFromZipFile(wxFileSystem& fs, wxString& strFileInZip, wxString& strDestDir);
 };
 
 #endif  // __ASPELL_DICTIONARY_DOWNLOADER__
