@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Modified by: Alberto Griggio, 2002
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.12 2004-05-05 16:06:03 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.13 2004-06-08 18:37:46 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows license
@@ -223,7 +223,16 @@ public:
 
     // inserts a column before the given one
     void InsertColumn(size_t before, const wxString& text)
-    { InsertColumn(before, wxTreeListColumnInfo(text)); }
+        { InsertColumn(before, wxTreeListColumnInfo(text)); }
+    void InsertColumn(size_t before,
+                      const wxString& text,
+                      size_t width,
+                      wxTreeListColumnAlign alignment = wxTL_ALIGN_LEFT)
+        { InsertColumn(before, wxTreeListColumnInfo(text,
+                                                    -1,
+                                                    width,
+                                                    true,
+                                                    alignment)); }
     void InsertColumn(size_t before, const wxTreeListColumnInfo& col);
 
     // deletes the given column - does not delete the corresponding column
