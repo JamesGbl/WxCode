@@ -349,7 +349,7 @@ int AspellInterface::SetDefaultOptions()
   
 	wxString strDataDir = pConfig->Read(_T("data-dir"), wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("data")));
 	wxString strDictDir = pConfig->Read(_T("dict-dir"), wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("dict")));
-  wxString strLanguage = pConfig->Read(_T("lang"), _T("en_US"));
+  wxString strLanguage = pConfig->Read(_T("lang"), _T("en"));
 
   SpellCheckEngineOption LanguageOption(_T("lang"), _T("Language Code"), strLanguage); // A list of possible values would be good here
   LanguageOption.SetDependency(_T("dict-dir"));
@@ -366,13 +366,15 @@ int AspellInterface::SetDefaultOptions()
   SuggestionModeOption.AddPossibleValue(wxString(_T("bad-spellers")));
   AddOptionToMap(SuggestionModeOption);
 
-  SpellCheckEngineOption FilterModeOption(_T("mode"), _T("Filter Mode"), pConfig->Read(_T("mode"), _T("url")));
+  /* - Not compatible with Aspell 0.60 library
+  SpellCheckEngineOption FilterModeOption(_T("mode"), _T("Filter Mode"), pConfig->Read(_T("mode"), _T("none")));
   FilterModeOption.AddPossibleValue(wxString(_T("none")));
   FilterModeOption.AddPossibleValue(wxString(_T("url")));
   FilterModeOption.AddPossibleValue(wxString(_T("email")));
   FilterModeOption.AddPossibleValue(wxString(_T("sgml")));
   FilterModeOption.AddPossibleValue(wxString(_T("tex")));
   AddOptionToMap(FilterModeOption);
+  */
 
   bool bIgnoreCase = false;
   pConfig->Read(_T("ignore-care"), &bIgnoreCase, false);
