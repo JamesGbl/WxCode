@@ -215,6 +215,7 @@ public:
   
   void SetLibraryPath(wxString& strPath) { m_strLibraryPath = strPath; }
   wxString GetLibraryPath() { return m_strLibraryPath; }
+  bool IsLoaded();
   
 private:
   wxDynamicLibrary m_AspellLibrary;

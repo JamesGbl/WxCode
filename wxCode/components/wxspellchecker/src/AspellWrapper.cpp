@@ -79,4 +79,7 @@ void AspellWrapper::Unload()
   }
 }
 
-
+bool AspellWrapper::IsLoaded()
+{
+  return m_AspellLibrary.IsLoaded();
+}
