@@ -3,7 +3,7 @@
 // Purpose:     wxScintilla test application
 // Maintainer:  Otto Wyss
 // Created:     2003-09-01
-// RCS-ID:      $Id: test.cpp,v 1.2 2004-11-24 21:44:29 wyo Exp $
+// RCS-ID:      $Id: test.cpp,v 1.3 2004-11-25 18:05:09 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows licence
 //////////////////////////////////////////////////////////////////////////////
@@ -533,11 +533,6 @@ void AppFrame::CreateMenu () {
     menuExtra->AppendSeparator();
     menuExtra->Append (myID_CONVERTEOL, _("Convert line &endings to .."), menuConvertEOL);
 
-    // Window menu
-    wxMenu *menuWindow = new wxMenu;
-    menuWindow->Append (myID_PAGEPREV, _("&Previous\tCtrl+Shift+Tab"));
-    menuWindow->Append (myID_PAGENEXT, _("&Next\tCtrl+Tab"));
-
     // Help menu
     wxMenu *menuHelp = new wxMenu;
     menuHelp->Append (wxID_ABOUT, _("&About ..\tShift+F1"));
@@ -547,7 +542,6 @@ void AppFrame::CreateMenu () {
     m_menuBar->Append (menuEdit, _("&Edit"));
     m_menuBar->Append (menuView, _("&View"));
     m_menuBar->Append (menuExtra, _("E&xtra"));
-    m_menuBar->Append (menuWindow, _("&Window"));
     m_menuBar->Append (menuHelp, _("&Help"));
     SetMenuBar (m_menuBar);
 
