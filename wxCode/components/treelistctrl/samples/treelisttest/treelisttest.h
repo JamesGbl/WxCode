@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by:
 // Created:     04/01/98
-// RCS-ID:      $Id: treelisttest.h,v 1.1 2004-03-17 18:47:15 wyo Exp $
+// RCS-ID:      $Id: treelisttest.h,v 1.2 2004-07-19 18:47:07 wyo Exp $
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -13,7 +13,7 @@
 #define _TREELISTTEST_H_
 
 #include "wx/wx.h"
-#include "wx/components/treelistctrl.h"
+#include "wx/treelistctrl.h"
 
 // Define a new application type
 class MyApp : public wxApp
