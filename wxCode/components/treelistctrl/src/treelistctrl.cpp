@@ -5,7 +5,7 @@
 // Created:     01/02/97
 // Modified:    Alberto Griggio, 2002
 //              22/10/98 - almost total rewrite, simpler interface (VZ)
-// Id:          $Id: treelistctrl.cpp,v 1.4 2004-03-25 20:02:14 wyo Exp $
+// Id:          $Id: treelistctrl.cpp,v 1.5 2004-04-10 17:59:49 wyo Exp $
 // Copyright:   (c) Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows licence
@@ -3739,6 +3739,27 @@ void wxTreeListMainWindow::OnChar( wxKeyEvent &event )
             }
             break;
 
+            // backspace goes to the parent, sends "root" activation
+        case WXK_BACK:
+            {
+                wxTreeItemId prev = GetItemParent( m_current );
+                if ((m_current == GetRootItem()) ||
+                    (prev == GetRootItem()) && HasFlag(wxTR_HIDE_ROOT))
+                {
+                    wxTreeEvent event( wxEVT_COMMAND_TREE_ITEM_ACTIVATED,
+                                       m_owner->GetId() );
+                    event.SetItem(-1);
+                    event.SetEventObject( /*this*/m_owner );
+                    m_owner->GetEventHandler()->ProcessEvent( event );
+                }
+                if (prev)
+                {
+                    SelectItem( prev, unselect_others, extended_select );
+                    EnsureVisible( prev );
+                }
+            }
+            break;
+
             // up goes to the previous sibling or to the last
             // of its children if it's expanded
         case WXK_UP:
@@ -3771,10 +3792,11 @@ void wxTreeListMainWindow::OnChar( wxKeyEvent &event )
                     while ( IsExpanded(prev) && HasChildren(prev) )
                     {
                         wxTreeItemId child = GetLastChild(prev);
-                        if ( child )
+                        if ( !child )
                         {
-                            prev = child;
+                            break;
                         }
+                        prev = child;
                     }
 
                     SelectItem( prev, unselect_others, extended_select );
@@ -3786,13 +3808,11 @@ void wxTreeListMainWindow::OnChar( wxKeyEvent &event )
 
             // left arrow goes to the parent
         case WXK_LEFT:
-#if defined(__WXMSW__) // mimic the standard win32 tree ctrl
             if (IsExpanded(m_current))
             {
                 Collapse(m_current);
             }
             else
-#endif // __WXMSW__
             {
                 wxTreeItemId prev = GetItemParent( m_current );
                 if ((prev == GetRootItem()) && HasFlag(wxTR_HIDE_ROOT))
@@ -3802,8 +3822,8 @@ void wxTreeListMainWindow::OnChar( wxKeyEvent &event )
                 }
                 if (prev)
                 {
-                    EnsureVisible( prev );
                     SelectItem( prev, unselect_others, extended_select );
+                    EnsureVisible( prev );
                 }
             }
             break;
@@ -3828,28 +3848,28 @@ void wxTreeListMainWindow::OnChar( wxKeyEvent &event )
                 {
                     wxTreeItemIdValue cookie = 0;
                     wxTreeItemId child = GetFirstChild( m_key_current, cookie );
-                    SelectItem( child, unselect_others, extended_select );
-                    m_key_current=(wxTreeListItem*) child.m_pItem;
-                    EnsureVisible( child );
+                    if (child) {
+                        SelectItem( child, unselect_others, extended_select );
+                        m_key_current=(wxTreeListItem*) child.m_pItem;
+                        EnsureVisible( child );
+                        break;
+                    }
                 }
-                else
+                wxTreeItemId next = GetNextSibling( m_key_current );
+                if (!next)
                 {
-                    wxTreeItemId next = GetNextSibling( m_key_current );
-                    if (!next)
+                    wxTreeItemId current = m_key_current;
+                    while (current && !next)
                     {
-                        wxTreeItemId current = m_key_current;
-                        while (current && !next)
-                        {
-                            current = GetItemParent( current );
-                            if (current) next = GetNextSibling( current );
-                        }
+                        current = GetItemParent( current );
+                        if (current) next = GetNextSibling( current );
                     }
-                    if (next)
-                    {
-                        SelectItem( next, unselect_others, extended_select );
-                        m_key_current=(wxTreeListItem*) next.m_pItem;
-                        EnsureVisible( next );
-                    }
+                }
+                if (next)
+                {
+                    SelectItem( next, unselect_others, extended_select );
+                    m_key_current=(wxTreeListItem*) next.m_pItem;
+                    EnsureVisible( next );
                 }
             }
             break;
@@ -3874,8 +3894,8 @@ void wxTreeListMainWindow::OnChar( wxKeyEvent &event )
 
                 if ( last.IsOk() )
                 {
-                    EnsureVisible( last );
                     SelectItem( last, unselect_others, extended_select );
+                    EnsureVisible( last );
                 }
             }
             break;
@@ -3891,8 +3911,8 @@ void wxTreeListMainWindow::OnChar( wxKeyEvent &event )
                     prev = GetFirstChild(prev, cookie);
                     if (!prev) break;
                 }
-                EnsureVisible( prev );
                 SelectItem( prev, unselect_others, extended_select );
+                EnsureVisible( prev );
             }
             break;
 
