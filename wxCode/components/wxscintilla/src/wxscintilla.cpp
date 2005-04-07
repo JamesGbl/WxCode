@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.19 2005-04-05 18:54:02 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.20 2005-04-07 20:24:11 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -2637,62 +2637,46 @@ void wxScintilla::ScrollToColumn(int column) {
 }
 
 
-bool wxScintilla::SaveFile(const wxString& filename)
-{
+bool wxScintilla::SaveFile(const wxString& filename) {
     wxFile file(filename, wxFile::write);
+    if (!file.IsOpened()) return false;
 
-    if (!file.IsOpened())
-        return FALSE;
-
-    bool success = file.Write(GetText(), *wxConvCurrent);
-
-    if (success)
-        SetSavePoint();
-
-    return success;
+    return file.Write (GetText(), *wxConvCurrent);
 }
 
-bool wxScintilla::LoadFile(const wxString& filename)
-{
+bool wxScintilla::LoadFile(const wxString& filename) {
+    wxFile file (filename, wxFile::read);
+    if (!file.IsOpened()) return false;
+
+    // get the file size (assume it is not huge file...)
+    size_t len = file.Length();
+
     bool success = false;
-    wxFile file(filename, wxFile::read);
-
-    if (file.IsOpened())
-    {
-        wxString contents;
-        // get the file size (assume it is not huge file...)
-        size_t len = file.Length();
-
-        if (len > 0)
-        {
+    if (len > 0) {
 #if wxUSE_UNICODE
-            wxMemoryBuffer buffer(len+1);
-            success = (file.Read(buffer.GetData(), len) == (int)len);
-            if (success) {
-                ((char*)buffer.GetData())[len] = 0;
-                contents = wxString(buffer, *wxConvCurrent, len);
-            }
+        wxMemoryBuffer buffer (len+1);
+        success = (file.Read (buffer.GetData(), len) == (int)len);
+        if (success) {
+            ((char*)buffer.GetData())[len] = 0;
+            SetText (wxString (buffer, *wxConvCurrent, len));
+        }
 #else
-            wxString buffer;
-            success = (file.Read(wxStringBuffer(buffer, len), len) == (int)len);
-            contents = buffer;
+        wxString buffer;
+        success = (file.Read (wxStringBuffer (buffer, len), len) == (int)len);
+        if (success) {
+            SetText (buffer);
+        }
 #endif
-        }
-        else
-        {
-            if (len == 0)
-                success = true;     // empty file is ok
-            else
-                success = false; // len == wxInvalidOffset
-        }
+    }else if (len == 0) {
+        success = true; // empty file is ok
+        SetText (wxEmptyString);
+    }else{
+        success = false; // len == wxInvalidOffset
+    }
 
-
-        if (success)
-        {
-            SetText(contents);
-            EmptyUndoBuffer();
-            SetSavePoint();
-        }
+    if (success) {
+        EmptyUndoBuffer();
+        SetSavePoint();
     }
 
     return success;
