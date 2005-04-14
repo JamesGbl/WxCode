@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.20 2005-04-07 20:24:11 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.21 2005-04-14 15:31:52 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -2641,7 +2641,12 @@ bool wxScintilla::SaveFile(const wxString& filename) {
     wxFile file(filename, wxFile::write);
     if (!file.IsOpened()) return false;
 
-    return file.Write (GetText(), *wxConvCurrent);
+    bool success = file.Write (GetText(), *wxConvCurrent);
+    if (success) {
+        SetSavePoint();
+    }
+
+    return success;
 }
 
 bool wxScintilla::LoadFile(const wxString& filename) {
