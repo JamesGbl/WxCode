@@ -3,7 +3,7 @@
 // Purpose:     wxCrashPrint
 // Maintainer:  Wyo
 // Created:     2004-09-28
-// RCS-ID:      $Id: crashprint.cpp,v 1.10 2005-02-09 16:48:09 wyo Exp $
+// RCS-ID:      $Id: crashprint.cpp,v 1.11 2005-04-14 19:41:33 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -98,26 +98,30 @@ void wxCrashPrint::Report () {
     wxArrayString lines;
     int pos1, pos2;
     for (int i = 0; i < btCount; ++i) {
-        cur = m_btStrings[i];
+        cur = wxString::FromAscii  (m_btStrings[i]);
         pos1 = cur.rfind ('[');
         pos2 = cur.rfind (']');
         if ((pos1 != wxString::npos) && (pos2 != wxString::npos)) {
             addr = cur.substr (pos1 + 1, pos2 - pos1 - 1);
             addrs.Append (addr + _T(" "));
         }
-        pos1 = cur.rfind ("(_Z");
+        pos1 = cur.rfind (_T("_Z"));
         pos2 = cur.rfind ('+');
-        if (pos2 != wxString::npos) {
+        if (pos2 == wxString::npos) pos2 = cur.rfind (')');
+        if (pos1 != wxString::npos) {
+            func = cur.substr (pos1, pos2 - pos1);
+            func = wxString::FromAscii (abi::__cxa_demangle (func.mb_str(), 0, 0, &status));
+        }else{
+            pos1 = cur.rfind ('(');
             if (pos1 != wxString::npos) {
                 func = cur.substr (pos1 + 1, pos2 - pos1 - 1);
-                func = abi::__cxa_demangle (func.c_str(), 0, 0, &status);
             }else{
-                pos1 = cur.rfind ('(');
-                func = cur.substr (pos1 + 1, pos2 - pos1 - 1);
+                pos2 = cur.rfind ('[');
+                func = cur.substr (0, pos2 - 1);
             }
         }
         lines.Add (addr + _T(" in ") + func);
-        if (func == "main") break;
+        if (func == _T("main")) break;
     }
 
     // determine line from address

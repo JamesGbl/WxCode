@@ -3,7 +3,7 @@
 // Purpose:     CrashTest application
 // Maintainer:  Otto Wyss
 // Created:     2004-10-01
-// RCS-ID:      $Id: crashtest.cpp,v 1.6 2005-02-09 16:48:09 wyo Exp $
+// RCS-ID:      $Id: crashtest.cpp,v 1.7 2005-04-14 19:41:52 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -61,7 +61,6 @@ const wxString APP_COPYRIGTH = _T("(C) 2004 wxCode");
 const wxString APP_LICENCE = _T("wxWindows");
 
 const wxString APP_VERSION = _T("0.2.1");
-const wxString APP_BUILD = _T(__DATE__);
 
 const wxString APP_WEBSITE = _T("http://wxcode.sourceforge.net");
 const wxString APP_MAIL = _T("http://wxcode.sourceforge.net/feedback.php");
