@@ -12,7 +12,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.h,v 1.17 2005-04-09 14:12:10 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.h,v 1.18 2005-04-16 09:23:23 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -1544,26 +1544,26 @@ public:
     %pythonAppend wxScintilla   "self._setOORInfo(self)"
     %pythonAppend wxScintilla() ""
 
-    wxScintilla(wxWindow *parent, wxWindowID id=wxID_ANY,
-                     const wxPoint& pos = wxDefaultPosition,
-                     const wxSize& size = wxDefaultSize, long style = 0,
-                     const wxString& name = wxSCINameStr);
+    wxScintilla (wxWindow *parent, wxWindowID id=wxID_ANY,
+                 const wxPoint& pos = wxDefaultPosition,
+                 const wxSize& size = wxDefaultSize, long style = 0,
+                 const wxString& name = wxSCINameStr);
     %name(PreScintilla) wxScintilla();
 
 #else
-    wxScintilla(wxWindow *parent, wxWindowID id=wxID_ANY,
-                     const wxPoint& pos = wxDefaultPosition,
-                     const wxSize& size = wxDefaultSize, long style = 0,
-                     const wxString& name = wxSCINameStr);
+    wxScintilla (wxWindow *parent, wxWindowID id=wxID_ANY,
+                 const wxPoint& pos = wxDefaultPosition,
+                 const wxSize& size = wxDefaultSize, long style = 0,
+                 const wxString& name = wxSCINameStr);
     wxScintilla() { m_swx = NULL; }
     ~wxScintilla();
 
 #endif
 
-    void Create(wxWindow *parent, wxWindowID id=wxID_ANY,
-                     const wxPoint& pos = wxDefaultPosition,
-                     const wxSize& size = wxDefaultSize, long style = 0,
-                     const wxString& name = wxSCINameStr);
+    bool Create (wxWindow *parent, wxWindowID id=wxID_ANY,
+                 const wxPoint& pos = wxDefaultPosition,
+                 const wxSize& size = wxDefaultSize, long style = 0,
+                 const wxString& name = wxSCINameStr);
 
 
 //----------------------------------------------------------------------
@@ -2976,6 +2976,46 @@ public:
 
     // Returns the current UseAntiAliasing setting.
     bool GetUseAntiAliasing();
+
+#if wxCHECK_VERSION(2, 5, 0)
+    // The following methods are nearly equivallent to their similarly named
+    // cousins above.  The difference is that these methods bypass wxString
+    // and always use a char* even if used in a unicode build of wxWidgets.
+    // In that case the character data will be utf-8 encoded since that is
+    // what is used internally by Scintilla in unicode builds.
+    
+    // Add text to the document at current position.
+    void AddTextRaw(const char* text);
+
+    // Insert string at a position.
+    void InsertTextRaw(int pos, const char* text);
+
+    // Retrieve the text of the line containing the caret.
+    // Returns the index of the caret on the line.
+#ifdef SWIG
+    wxCharBuffer GetCurLineRaw(int* OUTPUT);
+#else
+    wxCharBuffer GetCurLineRaw(int* linePos=NULL);
+#endif
+
+    // Retrieve the contents of a line.
+    wxCharBuffer GetLineRaw(int line);
+
+    // Retrieve the selected text.
+    wxCharBuffer GetSelectedTextRaw();
+
+    // Retrieve a range of text.
+    wxCharBuffer GetTextRangeRaw(int startPos, int endPos);
+
+    // Replace the contents of the document with the argument text.
+    void SetTextRaw(const char* text);
+
+    // Retrieve all the text in the document.
+    wxCharBuffer GetTextRaw();
+
+    // Append a string to the end of the document without changing the selection.
+    void AppendTextRaw(const char* text);
+#endif
 
 
 //----------------------------------------------------------------------

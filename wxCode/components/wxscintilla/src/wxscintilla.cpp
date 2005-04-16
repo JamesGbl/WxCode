@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.21 2005-04-14 15:31:52 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.22 2005-04-16 09:24:32 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -149,19 +149,21 @@ wxScintilla::wxScintilla(wxWindow *parent,
 }
 
 
-void wxScintilla::Create(wxWindow *parent,
-                                   wxWindowID id,
-                                   const wxPoint& pos,
-                                   const wxSize& size,
-                                   long style,
-                                   const wxString& name)
+bool wxScintilla::Create (wxWindow *parent,
+                          wxWindowID id,
+                          const wxPoint& pos,
+                          const wxSize& size,
+                          long style,
+                          const wxString& name)
 {
 #ifdef __WXMAC__
     style |= wxVSCROLL | wxHSCROLL;
 #endif
-    wxControl::Create(parent, id, pos, size,
-              style | wxWANTS_CHARS | wxCLIP_CHILDREN,
-              wxDefaultValidator, name);
+    if (!wxControl::Create (parent, id, pos, size,
+                            style | wxWANTS_CHARS | wxCLIP_CHILDREN,
+                            wxDefaultValidator, name)) {
+        return false;
+    }
 
 #ifdef LINK_LEXERS
     Scintilla_LinkLexers();
@@ -181,6 +183,7 @@ void wxScintilla::Create(wxWindow *parent,
     SetBackgroundStyle(wxBG_STYLE_CUSTOM);
     SetBestFittingSize(size);
 #endif
+    return false;
 }
 
 
@@ -2714,6 +2717,105 @@ void wxScintilla::SetUseAntiAliasing(bool useAA) {
 bool wxScintilla::GetUseAntiAliasing() {
     return m_swx->GetUseAntiAliasing();
 }
+
+#if wxCHECK_VERSION(2, 5, 0)
+// Raw text handling for UTF-8
+void wxScintilla::AddTextRaw(const char* text)
+{
+    SendMsg(SCI_ADDTEXT, strlen(text), (long)text);
+}
+
+void wxScintilla::InsertTextRaw(int pos, const char* text)
+{
+    SendMsg(SCI_INSERTTEXT, pos, (long)text);
+}
+
+wxCharBuffer wxScintilla::GetCurLineRaw(int* linePos)
+{
+    int len = LineLength(GetCurrentLine());
+    if (!len) {
+        if (linePos)  *linePos = 0;
+        wxCharBuffer empty;
+        return empty;
+    }
+
+    wxCharBuffer buf(len);
+    int pos = SendMsg(SCI_GETCURLINE, len, (long)buf.data());
+    if (linePos)  *linePos = pos;
+    return buf;
+}
+
+wxCharBuffer wxScintilla::GetLineRaw(int line)
+{
+    int len = LineLength(line);
+    if (!len) {
+        wxCharBuffer empty;
+        return empty;
+    }
+
+    wxCharBuffer buf(len);
+    SendMsg(SCI_GETLINE, line, (long)buf.data());
+    return buf;
+}
+
+wxCharBuffer wxScintilla::GetSelectedTextRaw()
+{
+    int   start;
+    int   end;
+
+    GetSelection(&start, &end);
+    int   len  = end - start;
+    if (!len) {
+        wxCharBuffer empty;
+        return empty;
+    }        
+
+    wxCharBuffer buf(len);
+    SendMsg(SCI_GETSELTEXT, 0, (long)buf.data());
+    return buf;
+}
+
+wxCharBuffer wxScintilla::GetTextRangeRaw(int startPos, int endPos)
+{
+    if (endPos < startPos) {
+        int temp = startPos;
+        startPos = endPos;
+        endPos = temp;
+    }
+    int len  = endPos - startPos;
+    if (!len) {
+        wxCharBuffer empty;
+        return empty;
+    }        
+
+    wxCharBuffer buf(len);
+    TextRange tr;
+    tr.lpstrText = buf.data();
+    tr.chrg.cpMin = startPos;
+    tr.chrg.cpMax = endPos;
+    SendMsg(SCI_GETTEXTRANGE, 0, (long)&tr);
+    return buf;
+}
+
+void wxScintilla::SetTextRaw(const char* text)
+{
+    SendMsg(SCI_SETTEXT, 0, (long)text);
+}
+
+wxCharBuffer wxScintilla::GetTextRaw()
+{
+    int len  = GetTextLength();
+    wxCharBuffer buf(len);
+    SendMsg(SCI_GETTEXT, len, (long)buf.data());
+    return buf;
+}
+
+void wxScintilla::AppendTextRaw(const char* text)
+{
+    SendMsg(SCI_APPENDTEXT, strlen(text), (long)text);
+}
+#endif
+
 
 //----------------------------------------------------------------------
 // Event handlers
