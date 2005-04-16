@@ -9,7 +9,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: ScintillaWX.cpp,v 1.12 2005-04-04 16:03:17 wyo Exp $
+// RCS-ID:      $Id: ScintillaWX.cpp,v 1.13 2005-04-16 09:26:02 wyo Exp $
 // Copyright:   (c) 2000 by Total Control Software
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -1019,6 +1019,8 @@ void ScintillaWX::DoScrollToColumn(int column) {
 
 #ifdef __WXGTK__
 void ScintillaWX::ClipChildren(wxDC& dc, PRectangle rect) {
+// wxGTK > 2.5 doesn't appear to need this explicit clipping code any longer
+#if !wxCHECK_VERSION(2, 5, 0)
     wxRegion rgn(wxRectFromPRectangle(rect));
     if (ac.Active()) {
         wxRect childRect = ((wxWindow*)ac.lb->GetID())->GetRect();
@@ -1035,6 +1037,7 @@ void ScintillaWX::ClipChildren(wxDC& dc, PRectangle rect) {
 
     dc.SetClippingRegion(rgn);
 }
+#endif
 #else
 void ScintillaWX::ClipChildren(wxDC& WXUNUSED(dc), PRectangle WXUNUSED(rect)) {
 }

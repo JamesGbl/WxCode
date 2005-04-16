@@ -711,12 +711,14 @@ void Window::SetTitle(const char *s) {
 // parent when it gets it.
 class wxSCIListBox : public wxListView {
 public:
-    wxSCIListBox(wxWindow* parent, wxWindowID id,
-                 const wxPoint& pos, const wxSize& size,
-                 long style)
-        : wxListView(parent, id, pos, size, style)
-    {}
-
+    wxSCIListBox (wxWindow* parent, wxWindowID id,
+                  const wxPoint& pos, const wxSize& size,
+                  long style) : wxListView() {
+#ifdef __WXMSW__
+        Hide(); // don't flicker as we move it around...
+#endif
+        Create(parent, id, pos, size, style);
+    }
 
     void OnFocus(wxFocusEvent& event) {
         GetParent()->SetFocus();
@@ -758,9 +760,141 @@ BEGIN_EVENT_TABLE(wxSCIListBox, wxListView)
 END_EVENT_TABLE()
 
 
+#if wxUSE_POPUPWIN //-----------------------------------   
+#include <wx/popupwin.h>
+
+// TODO: Refactor these two classes to have a common base (or a mix-in) to get
+// rid of the code duplication.  (Either that or convince somebody to
+// implement wxPopupWindow for the Mac!!)
+//
+// In the meantime, be careful to duplicate any changes as needed...
+    
+// A popup window to place the wxSCIListBox upon    
+class wxSCIListBoxWin : public wxPopupWindow
+{
+private:
+    wxListView*         lv;
+    CallBackAction      doubleClickAction;
+    void*               doubleClickActionData;
+public:
+    wxSCIListBoxWin(wxWindow* parent, wxWindowID id) :
+        wxPopupWindow(parent, wxBORDER_NONE)
+    {
+        SetBackgroundColour(*wxBLACK);  // for our simple border
+
+        lv = new wxSCIListBox(parent, id, wxDefaultPosition, wxDefaultSize,
+                              wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_NO_HEADER | wxBORDER_NONE);
+        lv->SetCursor(wxCursor(wxCURSOR_ARROW));
+        lv->InsertColumn(0, wxEmptyString);
+        lv->InsertColumn(1, wxEmptyString);
+
+        // NOTE: We need to fool the wxListView into thinking that it has the
+        // focus so it will use the normal selection colour and will look
+        // "right" to the user.  But since the wxPopupWindow or its children
+        // can't receive focus then we have to pull a fast one and temporarily
+        // parent the listctrl on the STC window and then call SetFocus and
+        // then reparent it back to the popup. 
+        lv->SetFocus();
+        lv->Reparent(this);
+#ifdef __WXMSW__
+        lv->Show();
+#endif
+    }
 
 
-// A window to place the wxSCIListBox upon
+    // Set position in client coords
+    virtual void DoSetSize(int x, int y,
+                           int width, int height,
+                           int sizeFlags = wxSIZE_AUTO) {
+#if !wxCHECK_VERSION(2, 5, 0)
+        if (x != -1) {
+#else
+        if (x != wxDefaultCoord) {
+#endif
+            GetParent()->ClientToScreen(&x, NULL);
+        }
+#if !wxCHECK_VERSION(2, 5, 0)
+        if (y != -1) {
+#else
+        if (y != wxDefaultCoord) {
+#endif
+            GetParent()->ClientToScreen(NULL, &y);
+        }
+        wxPopupWindow::DoSetSize(x, y, width, height, sizeFlags);
+    }
+
+    // return position as if it were in client coords
+    virtual void DoGetPosition( int *x, int *y ) const {
+        int sx, sy;
+        wxPopupWindow::DoGetPosition(&sx, &sy);
+        GetParent()->ScreenToClient(&sx, &sy);
+        if (x) *x = sx;
+        if (y) *y = sy;
+    }
+
+
+    bool Destroy() {
+        if ( !wxPendingDelete.Member(this) )
+            wxPendingDelete.Append(this);
+        return true;
+    }
+
+
+    int IconWidth() {
+        wxImageList* il = lv->GetImageList(wxIMAGE_LIST_SMALL);
+        if (il != NULL) {
+            int w, h;
+            il->GetSize(0, w, h);
+            return w;
+        }
+        return 0;
+    }
+
+
+    void SetDoubleClickAction(CallBackAction action, void *data) {
+        doubleClickAction = action;
+        doubleClickActionData = data;
+    }
+
+
+    void OnFocus(wxFocusEvent& event) {
+        GetParent()->SetFocus();
+        event.Skip();
+    }
+
+    void OnSize(wxSizeEvent& event) {
+        // resize the child
+        wxSize sz = GetSize();
+        sz.x -= 2;
+        sz.y -= 2;
+        lv->SetSize(1, 1, sz.x, sz.y);
+        // reset the column widths
+        lv->SetColumnWidth(0, IconWidth()+4);
+        lv->SetColumnWidth(1, sz.x - 2 - lv->GetColumnWidth(0) -
+                           wxSystemSettings::GetMetric(wxSYS_VSCROLL_X));
+        event.Skip();
+    }
+
+    void OnActivate(wxListEvent& WXUNUSED(event)) {
+        doubleClickAction(doubleClickActionData);
+    }
+
+    wxListView* GetLB() { return lv; }
+
+private:
+    DECLARE_EVENT_TABLE()
+
+};
+
+BEGIN_EVENT_TABLE(wxSCIListBoxWin, wxPopupWindow)
+    EVT_SET_FOCUS          (          wxSCIListBoxWin::OnFocus)
+    EVT_SIZE               (          wxSCIListBoxWin::OnSize)
+    EVT_LIST_ITEM_ACTIVATED(wxID_ANY, wxSCIListBoxWin::OnActivate)
+END_EVENT_TABLE()
+
+#else // wxUSE_POPUPWIN -----------------------------------
+
+// A normal window to place the wxSCIListBox upon.
 class wxSCIListBoxWin : public wxWindow {
 private:
     wxListView*         lv;
@@ -862,7 +996,7 @@ BEGIN_EVENT_TABLE(wxSCIListBoxWin, wxWindow)
     EVT_LIST_ITEM_ACTIVATED(wxID_ANY, wxSCIListBoxWin::OnActivate)
 END_EVENT_TABLE()
 
-
+#endif // wxUSE_POPUPWIN -----------------------------------
 
 inline wxSCIListBoxWin* GETLBW(WindowID win) {
     return ((wxSCIListBoxWin*)win);
