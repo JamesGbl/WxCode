@@ -12,7 +12,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.h,v 1.18 2005-04-16 09:23:23 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.h,v 1.19 2005-04-18 14:45:56 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -3015,6 +3015,10 @@ public:
 
     // Append a string to the end of the document without changing the selection.
     void AppendTextRaw(const char* text);
+
+#ifdef SWIG
+    %pythoncode "_stc_utf8_methods.py"
+#endif
 #endif
 
 
