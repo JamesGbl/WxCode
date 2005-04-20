@@ -96,99 +96,26 @@ Font::Font() {
 Font::~Font() {
 }
 
-void Font::Create(const char *faceName, int characterSet, int size, bool bold, bool italic, bool extraFontFlag) {
-    wxFontEncoding encoding;
-
+void Font::Create (const char *faceName, int characterSet, int size,
+                   bool bold, bool italic, bool extraFontFlag) {
     Release();
 
-    switch (characterSet) {
-        default:
-        case wxSCI_CHARSET_ANSI:
-        case wxSCI_CHARSET_DEFAULT:
-            encoding = wxFONTENCODING_DEFAULT;
-            break;
-
-        case wxSCI_CHARSET_BALTIC:
-            encoding = wxFONTENCODING_ISO8859_13;
-            break;
-
-        case wxSCI_CHARSET_CHINESEBIG5:
-            encoding = wxFONTENCODING_CP950;
-            break;
-
-        case wxSCI_CHARSET_EASTEUROPE:
-            encoding = wxFONTENCODING_ISO8859_2;
-            break;
-
-        case wxSCI_CHARSET_GB2312:
-            encoding = wxFONTENCODING_CP936;
-            break;
-
-        case wxSCI_CHARSET_GREEK:
-            encoding = wxFONTENCODING_ISO8859_7;
-            break;
-
-        case wxSCI_CHARSET_HANGUL:
-            encoding = wxFONTENCODING_CP949;
-            break;
-
-        case wxSCI_CHARSET_MAC:
-            encoding = wxFONTENCODING_DEFAULT;
-            break;
-
-        case wxSCI_CHARSET_OEM:
-            encoding = wxFONTENCODING_DEFAULT;
-            break;
-
-        case wxSCI_CHARSET_RUSSIAN:
-            encoding = wxFONTENCODING_KOI8;
-            break;
-
-        case wxSCI_CHARSET_SHIFTJIS:
-            encoding = wxFONTENCODING_CP932;
-            break;
-
-        case wxSCI_CHARSET_SYMBOL:
-            encoding = wxFONTENCODING_DEFAULT;
-            break;
-
-        case wxSCI_CHARSET_TURKISH:
-            encoding = wxFONTENCODING_ISO8859_9;
-            break;
-
-        case wxSCI_CHARSET_JOHAB:
-            encoding = wxFONTENCODING_DEFAULT;
-            break;
-
-        case wxSCI_CHARSET_HEBREW:
-            encoding = wxFONTENCODING_ISO8859_8;
-            break;
-
-        case wxSCI_CHARSET_ARABIC:
-            encoding = wxFONTENCODING_ISO8859_6;
-            break;
-
-        case wxSCI_CHARSET_VIETNAMESE:
-            encoding = wxFONTENCODING_DEFAULT;
-            break;
-
-        case wxSCI_CHARSET_THAI:
-            encoding = wxFONTENCODING_ISO8859_11;
-            break;
-    }
+    // The minus one is done because since Scintilla uses SC_SHARSET_DEFAULT
+    // internally and we need to have wxFONENCODING_DEFAULT == SC_SHARSET_DEFAULT
+    // so we adjust the encoding before passing it to Scintilla.  See also
+    // wxScintilla::StyleSetCharacterSet
+    wxFontEncoding encoding = (wxFontEncoding)(characterSet-1);
 
     wxFontEncodingArray ea = wxEncodingConverter::GetPlatformEquivalents(encoding);
-    if (ea.GetCount())
-        encoding = ea[0];
+    if (ea.GetCount()) encoding = ea[0];
 
-    wxFont* font = new wxFont(size,
-                    wxDEFAULT,
-                    italic ? wxITALIC :  wxNORMAL,
-                    bold ? wxBOLD : wxNORMAL,
-                    false,
-                    sci2wx(faceName),
-                    encoding);
-    font->SetNoAntiAliasing(!extraFontFlag);
+    wxFont* font = new wxFont (size, wxDEFAULT,
+                               italic ? wxITALIC :  wxNORMAL,
+                               bold ? wxBOLD : wxNORMAL,
+                               false,
+                               sci2wx(faceName),
+                               encoding);
+    font->SetNoAntiAliasing (!extraFontFlag);
     id = font;
 }
 
@@ -760,7 +687,7 @@ BEGIN_EVENT_TABLE(wxSCIListBox, wxListView)
 END_EVENT_TABLE()
 
 
-#if wxUSE_POPUPWIN //-----------------------------------   
+#if wxUSE_POPUPWIN //-----------------------------------
 #include <wx/popupwin.h>
 
 // TODO: Refactor these two classes to have a common base (or a mix-in) to get
@@ -768,8 +695,8 @@ END_EVENT_TABLE()
 // implement wxPopupWindow for the Mac!!)
 //
 // In the meantime, be careful to duplicate any changes as needed...
-    
-// A popup window to place the wxSCIListBox upon    
+
+// A popup window to place the wxSCIListBox upon
 class wxSCIListBoxWin : public wxPopupWindow
 {
 private:
@@ -793,7 +720,7 @@ public:
         // "right" to the user.  But since the wxPopupWindow or its children
         // can't receive focus then we have to pull a fast one and temporarily
         // parent the listctrl on the STC window and then call SetFocus and
-        // then reparent it back to the popup. 
+        // then reparent it back to the popup.
         lv->SetFocus();
         lv->Reparent(this);
 #ifdef __WXMSW__
@@ -1068,13 +995,13 @@ void ListBoxImpl::SetFont(Font &font) {
 }
 
 
-void ListBoxImpl::Create(Window &parent, int ctrlID, Point location, int lineHeight_, bool unicodeMode_) {
+void ListBoxImpl::Create (Window &parent, int ctrlID, Point WXUNUSED(location),
+                          int lineHeight_, bool unicodeMode_) {
     lineHeight =  lineHeight_;
     unicodeMode = unicodeMode_;
     maxStrWidth = 0;
-    id = new wxSCIListBoxWin(GETWIN(parent.GetID()), ctrlID);
-    if (imgList != NULL)
-        GETLB(id)->SetImageList(imgList, wxIMAGE_LIST_SMALL);
+    id = new wxSCIListBoxWin (GETWIN(parent.GetID()), ctrlID);
+    if (imgList != NULL) GETLB(id)->SetImageList (imgList, wxIMAGE_LIST_SMALL);
 }
 
 
@@ -1226,8 +1153,7 @@ void ListBoxImpl::ClearRegisteredImages() {
         delete imgTypeMap;
         imgTypeMap = NULL;
     }
-    if (id)
-        GETLB(id)->SetImageList(NULL, wxIMAGE_LIST_SMALL);
+    if (id) GETLB(id)->SetImageList(NULL, wxIMAGE_LIST_SMALL);
 }
 
 
@@ -1235,7 +1161,9 @@ void ListBoxImpl::SetDoubleClickAction(CallBackAction action, void *data) {
     GETLBW(id)->SetDoubleClickAction(action, data);
 }
 
-void ListBoxImpl::SetList(const char* list, char separator, char typesep) {
+void ListBoxImpl::SetList(const char* WXUNUSED(list), char WXUNUSED(separator), char WXUNUSED(typesep)) {
+    wxMessageBox (_T("ListBoxImpl::SetList is not implemented!"), _T("PlatWX implementation!"),
+                  wxICON_EXCLAMATION | wxOK);
 }
 
 
