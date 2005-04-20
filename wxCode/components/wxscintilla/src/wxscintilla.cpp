@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.23 2005-04-19 18:31:55 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.24 2005-04-20 15:57:39 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -613,11 +613,6 @@ void wxScintilla::StyleSetUnderline (int style, bool underline) {
 // Set a style to be mixed case, or to force upper or lower case.
 void wxScintilla::StyleSetCase (int style, int caseMode) {
     SendMsg (SCI_STYLESETCASE, style, caseMode);
-}
-
-// Set the character set of the font in a style.
-void wxScintilla::StyleSetCharacterSet (int style, int characterSet) {
-    SendMsg (SCI_STYLESETCHARACTERSET, style, characterSet);
 }
 
 // Set a style to be a hotspot or not.
@@ -2567,30 +2562,104 @@ void wxScintilla::StyleSetFont (int styleNum, wxFont& font) {
     int x, y;
     GetTextExtent (_T("X"), &x, &y, NULL, NULL, &font);
 #endif
-    int      size     = font.GetPointSize();
-    wxString faceName = font.GetFaceName();
-    bool     bold     = font.GetWeight() == wxBOLD;
-    bool     italic   = font.GetStyle() != wxNORMAL;
-    bool     under    = font.GetUnderlined();
+    int            size     = font.GetPointSize();
+    wxString       faceName = font.GetFaceName();
+    bool           bold     = font.GetWeight() == wxBOLD;
+    bool           italic   = font.GetStyle() == wxITALIC;
+    bool           under    = font.GetUnderlined();
+    wxFontEncoding encoding = font.GetDefaultEncoding();
 
-    // TODO: add encoding/charset mapping
-    StyleSetFontAttr (styleNum, size, faceName, bold, italic, under);
+    StyleSetFontAttr (styleNum, size, faceName, bold, italic, under, encoding);
 }
 
 // Set all font style attributes at once.
-void wxScintilla::StyleSetFontAttr (int styleNum, int size,
-                                    const wxString& faceName,
-                                    bool bold, bool italic,
-                                    bool underline) {
+void wxScintilla::StyleSetFontAttr (int styleNum, int size, const wxString& faceName,
+                                    bool bold, bool italic, bool underline,
+                                    wxFontEncoding encoding) {
     StyleSetSize (styleNum, size);
     StyleSetFaceName (styleNum, faceName);
     StyleSetBold (styleNum, bold);
     StyleSetItalic (styleNum, italic);
     StyleSetUnderline (styleNum, underline);
-
-    // TODO: add encoding/charset mapping
+    StyleSetFontEncoding (styleNum, encoding);
 }
 
+// Set the character set of the font in a style.
+void wxScintilla::StyleSetCharacterSet (int style, int characterSet) {
+    wxFontEncoding encoding;
+
+    // Translate the Scintilla characterSet to a wxFontEncoding
+    switch (characterSet) {
+        default:
+        case wxSCI_CHARSET_ANSI:
+        case wxSCI_CHARSET_DEFAULT:
+            encoding = wxFONTENCODING_DEFAULT;
+            break;
+        case wxSCI_CHARSET_BALTIC:
+            encoding = wxFONTENCODING_ISO8859_13;
+            break;
+        case wxSCI_CHARSET_CHINESEBIG5:
+            encoding = wxFONTENCODING_CP950;
+            break;
+        case wxSCI_CHARSET_EASTEUROPE:
+            encoding = wxFONTENCODING_ISO8859_2;
+            break;
+        case wxSCI_CHARSET_GB2312:
+            encoding = wxFONTENCODING_CP936;
+            break;
+        case wxSCI_CHARSET_GREEK:
+            encoding = wxFONTENCODING_ISO8859_7;
+            break;
+        case wxSCI_CHARSET_HANGUL:
+            encoding = wxFONTENCODING_CP949;
+            break;
+        case wxSCI_CHARSET_MAC:
+            encoding = wxFONTENCODING_DEFAULT;
+            break;
+        case wxSCI_CHARSET_OEM:
+            encoding = wxFONTENCODING_DEFAULT;
+            break;
+        case wxSCI_CHARSET_RUSSIAN:
+            encoding = wxFONTENCODING_KOI8;
+            break;
+        case wxSCI_CHARSET_SHIFTJIS:
+            encoding = wxFONTENCODING_CP932;
+            break;
+        case wxSCI_CHARSET_SYMBOL:
+            encoding = wxFONTENCODING_DEFAULT;
+            break;
+        case wxSCI_CHARSET_TURKISH:
+            encoding = wxFONTENCODING_ISO8859_9;
+            break;
+        case wxSCI_CHARSET_JOHAB:
+            encoding = wxFONTENCODING_DEFAULT;
+            break;
+        case wxSCI_CHARSET_HEBREW:
+            encoding = wxFONTENCODING_ISO8859_8;
+            break;
+        case wxSCI_CHARSET_ARABIC:
+            encoding = wxFONTENCODING_ISO8859_6;
+            break;
+        case wxSCI_CHARSET_VIETNAMESE:
+            encoding = wxFONTENCODING_DEFAULT;
+            break;
+        case wxSCI_CHARSET_THAI:
+            encoding = wxFONTENCODING_ISO8859_11;
+            break;
+    }
+
+    // We just have Scintilla track the wxFontEncoding for us.  It gets used
+    // in Font::Create in PlatWX.cpp.  We add one to the value so that the
+    // effective wxFONENCODING_DEFAULT == SC_SHARSET_DEFAULT and so when
+    // Scintilla internally uses SC_CHARSET_DEFAULT we will translate it back
+    // to wxFONENCODING_DEFAULT in Font::Create.
+    SendMsg (SCI_STYLESETCHARACTERSET, style, encoding+1);
+}
+
+// Set the font encoding to be used by a style.
+void wxScintilla::StyleSetFontEncoding(int style, wxFontEncoding encoding) {
+    SendMsg (SCI_STYLESETCHARACTERSET, style, encoding+1);
+}
 
 // Perform one of the operations defined by the wxSCI_CMD_* constants.
 void wxScintilla::CmdKeyExecute (int cmd) {

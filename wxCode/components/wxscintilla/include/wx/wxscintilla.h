@@ -12,7 +12,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.h,v 1.19 2005-04-18 14:45:56 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.h,v 1.20 2005-04-20 15:56:21 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -20,7 +20,7 @@
 #ifndef __WXSCINTILLA_H__
 #define __WXSCINTILLA_H__
 
-#define wxSCINTILLA_VERSION   _T("1.63.0")
+#define wxSCINTILLA_VERSION _T("1.63.0")
 
 #include <wx/wx.h>
 #include <wx/dnd.h>
@@ -1773,7 +1773,7 @@ public:
     void StyleSetSize (int style, int sizePoints);
 
     // Set the font of a style.
-    void StyleSetFaceName(int style, const wxString& fontName);
+    void StyleSetFaceName (int style, const wxString& fontName);
 
     // Set a style to have its end of line filled or not.
     void StyleSetEOLFilled (int style, bool filled);
@@ -1786,9 +1786,6 @@ public:
 
     // Set a style to be mixed case, or to force upper or lower case.
     void StyleSetCase (int style, int caseMode);
-
-    // Set the character set of the font in a style.
-    void StyleSetCharacterSet (int style, int characterSet);
 
     // Set a style to be a hotspot or not.
     void StyleSetHotSpot (int style, bool hotspot);
@@ -1858,7 +1855,7 @@ public:
     void SetStyleBits (int bits);
 
     // Retrieve number of bits in style bytes used to hold the lexical state.
-    int GetStyleBits ();
+    int GetStyleBits();
 
     // Used to hold extra styling information for each line.
     void SetLineState (int line, int state);
@@ -2896,70 +2893,71 @@ public:
     //      eol                     turns on eol filling
     //      underline               turns on underlining
     //
-    void StyleSetSpec(int styleNum, const wxString& spec);
-
-
+    void StyleSetSpec (int styleNum, const wxString& spec);
 
     // Set style size, face, bold, italic, and underline attributes from
     // a wxFont's attributes.
     void StyleSetFont (int styleNum, wxFont& font);
 
     // Set all font style attributes at once.
-    void StyleSetFontAttr(int styleNum, int size,const wxString& faceName, bool bold, bool italic, bool underline);
+    void StyleSetFontAttr (int styleNum, int size,const wxString& faceName,
+                           bool bold, bool italic, bool underline,
+                           wxFontEncoding encoding = wxFONTENCODING_DEFAULT);
+
+    // Set the character set of the font in a style.
+    void StyleSetCharacterSet (int style, int characterSet);
+
+    // Set the font encoding to be used by a style.
+    void StyleSetFontEncoding (int style, wxFontEncoding encoding);
 
     // Perform one of the operations defined by the wxSCI_CMD_* constants.
-    void CmdKeyExecute(int cmd);
+    void CmdKeyExecute (int cmd);
 
     // Set the left and right margin in the edit area, measured in pixels.
-    void SetMargins(int left, int right);
-
+    void SetMargins (int left, int right);
 
     // Retrieve the start and end positions of the current selection.
 #ifdef SWIG
-    void GetSelection(int* OUTPUT, int* OUTPUT);
+    void GetSelection (int* OUTPUT, int* OUTPUT);
 #else
-    void GetSelection(int* startPos, int* endPos);
+    void GetSelection (int* startPos, int* endPos);
 #endif
 
     // Retrieve the point in the window where a position is displayed.
-    wxPoint PointFromPosition(int pos);
-
+    wxPoint PointFromPosition (int pos);
 
     // Scroll enough to make the given line visible
-    void ScrollToLine(int line);
-
+    void ScrollToLine (int line);
 
     // Scroll enough to make the given column visible
-    void ScrollToColumn(int column);
-
+    void ScrollToColumn (int column);
 
     // Send a message to Scintilla
-    long SendMsg(int msg, long wp=0, long lp=0);
+    long SendMsg (int msg, long wp=0, long lp=0);
 
 
     // Set the vertical scrollbar to use instead of the ont that's built-in.
     void SetVScrollBar (wxScrollBar* bar);
-
 
     // Set the horizontal scrollbar to use instead of the ont that's built-in.
     void SetHScrollBar (wxScrollBar* bar);
 
     // Can be used to prevent the EVT_CHAR handler from adding the char
     bool GetLastKeydownProcessed() { return m_lastKeyDownConsumed; }
-    void SetLastKeydownProcessed(bool val) { m_lastKeyDownConsumed = val; }
+    void SetLastKeydownProcessed (bool val) { m_lastKeyDownConsumed = val; }
 
     // Write the contents of the editor to filename
-    bool SaveFile(const wxString& filename);
+    bool SaveFile (const wxString& filename);
 
     // Load the contents of filename into the editor
-    bool LoadFile(const wxString& filename);
+    bool LoadFile (const wxString& filename);
 
 #ifdef SCI_USE_DND
     // Allow for simulating a DnD DragOver
     wxDragResult DoDragOver (wxCoord x, wxCoord y, wxDragResult def);
 
     // Allow for simulating a DnD DropText
-    bool DoDropText(long x, long y, const wxString& data);
+    bool DoDropText (long x, long y, const wxString& data);
 
     // Allow for simulating a DnD DragEnter
     wxDragResult DoDragEnter (wxCoord x, wxCoord y, wxDragResult def);
@@ -2972,7 +2970,7 @@ public:
     // Specify whether anti-aliased fonts should be used.  Will have no effect
     // on some platforms, but on some (wxMac for example) can greatly improve
     // performance.
-    void SetUseAntiAliasing(bool useAA);
+    void SetUseAntiAliasing (bool useAA);
 
     // Returns the current UseAntiAliasing setting.
     bool GetUseAntiAliasing();
@@ -2983,38 +2981,38 @@ public:
     // and always use a char* even if used in a unicode build of wxWidgets.
     // In that case the character data will be utf-8 encoded since that is
     // what is used internally by Scintilla in unicode builds.
-    
+
     // Add text to the document at current position.
-    void AddTextRaw(const char* text);
+    void AddTextRaw (const char* text);
 
     // Insert string at a position.
-    void InsertTextRaw(int pos, const char* text);
+    void InsertTextRaw (int pos, const char* text);
 
     // Retrieve the text of the line containing the caret.
     // Returns the index of the caret on the line.
 #ifdef SWIG
-    wxCharBuffer GetCurLineRaw(int* OUTPUT);
+    wxCharBuffer GetCurLineRaw (int* OUTPUT);
 #else
-    wxCharBuffer GetCurLineRaw(int* linePos=NULL);
+    wxCharBuffer GetCurLineRaw (int* linePos=NULL);
 #endif
 
     // Retrieve the contents of a line.
-    wxCharBuffer GetLineRaw(int line);
+    wxCharBuffer GetLineRaw (int line);
 
     // Retrieve the selected text.
     wxCharBuffer GetSelectedTextRaw();
 
     // Retrieve a range of text.
-    wxCharBuffer GetTextRangeRaw(int startPos, int endPos);
+    wxCharBuffer GetTextRangeRaw (int startPos, int endPos);
 
     // Replace the contents of the document with the argument text.
-    void SetTextRaw(const char* text);
+    void SetTextRaw (const char* text);
 
     // Retrieve all the text in the document.
     wxCharBuffer GetTextRaw();
 
     // Append a string to the end of the document without changing the selection.
-    void AppendTextRaw(const char* text);
+    void AppendTextRaw (const char* text);
 
 #ifdef SWIG
     %pythoncode "_stc_utf8_methods.py"
@@ -3024,51 +3022,48 @@ public:
 
 //----------------------------------------------------------------------
 
-
 #ifndef SWIG
-private:
+protected:
     // Event handlers
-    void OnPaint(wxPaintEvent& evt);
-    void OnScrollWin(wxScrollWinEvent& evt);
-    void OnScroll(wxScrollEvent& evt);
-    void OnSize(wxSizeEvent& evt);
-    void OnMouseLeftDown(wxMouseEvent& evt);
-    void OnMouseMove(wxMouseEvent& evt);
-    void OnMouseLeftUp(wxMouseEvent& evt);
-    void OnMouseRightUp(wxMouseEvent& evt);
-    void OnMouseMiddleUp(wxMouseEvent& evt);
-    void OnContextMenu(wxContextMenuEvent& evt);
-    void OnMouseWheel(wxMouseEvent& evt);
-    void OnChar(wxKeyEvent& evt);
-    void OnKeyDown(wxKeyEvent& evt);
-    void OnLoseFocus(wxFocusEvent& evt);
-    void OnGainFocus(wxFocusEvent& evt);
-    void OnSysColourChanged(wxSysColourChangedEvent& evt);
-    void OnEraseBackground(wxEraseEvent& evt);
-    void OnMenu(wxCommandEvent& evt);
-    void OnListBox(wxCommandEvent& evt);
-    void OnIdle(wxIdleEvent& evt);
+    void OnPaint (wxPaintEvent& evt);
+    void OnScrollWin (wxScrollWinEvent& evt);
+    void OnScroll (wxScrollEvent& evt);
+    void OnSize (wxSizeEvent& evt);
+    void OnMouseLeftDown (wxMouseEvent& evt);
+    void OnMouseMove (wxMouseEvent& evt);
+    void OnMouseLeftUp (wxMouseEvent& evt);
+    void OnMouseRightUp (wxMouseEvent& evt);
+    void OnMouseMiddleUp (wxMouseEvent& evt);
+    void OnContextMenu (wxContextMenuEvent& evt);
+    void OnMouseWheel (wxMouseEvent& evt);
+    void OnChar (wxKeyEvent& evt);
+    void OnKeyDown (wxKeyEvent& evt);
+    void OnLoseFocus (wxFocusEvent& evt);
+    void OnGainFocus (wxFocusEvent& evt);
+    void OnSysColourChanged (wxSysColourChangedEvent& evt);
+    void OnEraseBackground (wxEraseEvent& evt);
+    void OnMenu (wxCommandEvent& evt);
+    void OnListBox (wxCommandEvent& evt);
+    void OnIdle (wxIdleEvent& evt);
 
     virtual wxSize DoGetBestSize() const;
 
     // Turn notifications from Scintilla into events
     void NotifyChange();
-    void NotifyParent(SCNotification* scn);
+    void NotifyParent (SCNotification* scn);
 
-    DECLARE_EVENT_TABLE()
-    DECLARE_DYNAMIC_CLASS(wxScintilla)
-
-protected:
-
-    ScintillaWX*        m_swx;
-    wxStopWatch         m_stopWatch;
-    wxScrollBar*        m_vScrollBar;
-    wxScrollBar*        m_hScrollBar;
-
-    bool                m_lastKeyDownConsumed;
+    ScintillaWX* m_swx;
+    wxStopWatch m_stopWatch;
+    wxScrollBar* m_vScrollBar;
+    wxScrollBar* m_hScrollBar;
+    bool m_lastKeyDownConsumed;
 
     friend class ScintillaWX;
     friend class Platform;
+
+private:
+    DECLARE_EVENT_TABLE()
+    DECLARE_DYNAMIC_CLASS(wxScintilla)
 #endif
 };
 
@@ -3076,33 +3071,33 @@ protected:
 
 class WXDLLIMPEXP_SCI wxScintillaEvent : public wxCommandEvent {
 public:
-    wxScintillaEvent(wxEventType commandType=0, int id=0);
+    wxScintillaEvent (wxEventType commandType=0, int id=0);
 #ifndef SWIG
-    wxScintillaEvent(const wxScintillaEvent& event);
+    wxScintillaEvent (const wxScintillaEvent& event);
 #endif
     ~wxScintillaEvent() {}
 
-    void SetPosition(int pos)             { m_position = pos; }
-    void SetKey(int k)                    { m_key = k; }
-    void SetModifiers(int m)              { m_modifiers = m; }
-    void SetModificationType(int t)       { m_modificationType = t; }
-    void SetText(const wxString& t)       { m_text = t; }
-    void SetLength(int len)               { m_length = len; }
-    void SetLinesAdded(int num)           { m_linesAdded = num; }
-    void SetLine(int val)                 { m_line = val; }
-    void SetFoldLevelNow(int val)         { m_foldLevelNow = val; }
-    void SetFoldLevelPrev(int val)        { m_foldLevelPrev = val; }
-    void SetMargin(int val)               { m_margin = val; }
-    void SetMessage(int val)              { m_message = val; }
-    void SetWParam(int val)               { m_wParam = val; }
-    void SetLParam(int val)               { m_lParam = val; }
-    void SetListType(int val)             { m_listType = val; }
-    void SetX(int val)                    { m_x = val; }
-    void SetY(int val)                    { m_y = val; }
-    void SetDragText(const wxString& val) { m_dragText = val; }
-    void SetDragAllowMove(bool val)       { m_dragAllowMove = val; }
+    void SetPosition (int pos)             { m_position = pos; }
+    void SetKey (int k)                    { m_key = k; }
+    void SetModifiers (int m)              { m_modifiers = m; }
+    void SetModificationType (int t)       { m_modificationType = t; }
+    void SetText (const wxString& t)       { m_text = t; }
+    void SetLength (int len)               { m_length = len; }
+    void SetLinesAdded (int num)           { m_linesAdded = num; }
+    void SetLine (int val)                 { m_line = val; }
+    void SetFoldLevelNow (int val)         { m_foldLevelNow = val; }
+    void SetFoldLevelPrev (int val)        { m_foldLevelPrev = val; }
+    void SetMargin (int val)               { m_margin = val; }
+    void SetMessage (int val)              { m_message = val; }
+    void SetWParam (int val)               { m_wParam = val; }
+    void SetLParam (int val)               { m_lParam = val; }
+    void SetListType (int val)             { m_listType = val; }
+    void SetX (int val)                    { m_x = val; }
+    void SetY (int val)                    { m_y = val; }
+    void SetDragText (const wxString& val) { m_dragText = val; }
+    void SetDragAllowMove (bool val)       { m_dragAllowMove = val; }
 #ifdef  SCI_USE_DND
-    void SetDragResult(wxDragResult val)  { m_dragResult = val; }
+    void SetDragResult (wxDragResult val)  { m_dragResult = val; }
 #endif
 
     int  GetPosition() const         { return m_position; }
@@ -3132,7 +3127,7 @@ public:
     bool GetControl() const;
     bool GetAlt() const;
 
-    virtual wxEvent* Clone() const { return new wxScintillaEvent(*this); }
+    virtual wxEvent* Clone() const { return new wxScintillaEvent (*this); }
 
 #ifndef SWIG
 private:
@@ -3325,29 +3320,29 @@ typedef void (wxEvtHandler::*wxScintillaEventFunction)(wxScintillaEvent&);
 
 #ifndef SWIG
 
-inline wxString sci2wx(const char* str) {
+inline wxString sci2wx (const char* str) {
 #if wxUSE_UNICODE
-    return wxString(str, wxConvUTF8);
+    return wxString (str, wxConvUTF8);
 #else
-    return wxString(str);
+    return wxString (str);
 #endif
 }
 
 #if wxUSE_UNICODE
-wxString sci2wx(const char* str, size_t len);
+wxString sci2wx (const char* str, size_t len);
 #else
-inline wxString sci2wx(const char* str, size_t len) {
-    return wxString(str, len);
+inline wxString sci2wx (const char* str, size_t len) {
+    return wxString (str, len);
 }
 #endif
 
 
 #if wxUSE_UNICODE
-inline const wxWX2MBbuf wx2sci(const wxString& str) {
-    return str.mb_str(wxConvUTF8);
+inline const wxWX2MBbuf wx2sci (const wxString& str) {
+    return str.mb_str (wxConvUTF8);
 }
 #else
-inline const wxWX2MBbuf wx2sci(const wxString& str) {
+inline const wxWX2MBbuf wx2sci (const wxString& str) {
     return str.mbc_str();
 }
 #endif
