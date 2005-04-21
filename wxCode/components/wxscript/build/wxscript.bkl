@@ -6,7 +6,8 @@
 <makefile>
 
 	<!-- Some defaults for the variables used by wxCode bakefiles -->
-	<include file="../../../build/defaults.bkl"/>
+	<set var="WXCODE_BAKEFILEDIR">../../../build/bakefiles</set>
+	<include file="$(WXCODE_BAKEFILEDIR)/defaults.bkl"/>
 	
 
 
@@ -15,7 +16,7 @@
 
 	<option name="USE_PYTHON">
 		<values>0,1</values>
-		<default-value>1</default-value>
+		<default-value>0</default-value>
 		<description>If 0 Python won't be used</description>
 	</option>
 	<option name="USE_LUA">
@@ -81,6 +82,7 @@
 	<set var="COMP_SAMPLE_DIR">../tests/test1</set>
 	<set var="COMP_SAMPLE2_SRC">../tests/test2/Test.cpp</set>
 	<set var="COMP_SAMPLE2_DIR">../tests/test2</set>
+	<set var="WX_UNICODE_DEFAULT">1</set>
 
 	<!-- Additional source file -->
 	<if cond="FORMAT=='msvc' or FORMAT=='msvc6prj'">
@@ -88,7 +90,7 @@
 	</if>
 	
 	<!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->
-	<include file="../../../build/wxcode.bkl"/>
+	<include file="$(WXCODE_BAKEFILEDIR)/wxcode.bkl"/>
 
 	
 		
@@ -116,7 +118,11 @@
 		<if cond="PYTHON_VER=='2_6'">6</if>
 	</set>
 
-	<set var="PYTHONLIB_POSTFIX"><if cond="BUILD=='debug'">_d</if></set>
+	<set var="PYTHONLIB_POSTFIX">
+		<if cond="FORMAT!='autoconf' and FORMAT!='gnu'">
+			<if cond="WX_DEBUG=='1'">_d</if>
+		</if>
+	</set>
 	<set var="PYTHONLIB_NAME">python$(PYTHON_MAJVER)$(PYTHON_MINVER)$(PYTHONLIB_POSTFIX)</set>
 
 	<if cond="FORMAT!='msvc6prj'">
@@ -229,8 +235,8 @@
 
 		<library>wxscript</library>
 		<scriptlibs/>
-		<wxlibs/>
-		<syslibs/>
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib>
 	</exe>
 
 	<!-- The second sample of the component: as for the LIB target, this exe derives from a 
@@ -242,8 +248,8 @@
 
 		<library>wxscript</library>
 		<scriptlibs/>
-		<wxlibs/>
-		<syslibs/>
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib>
 	</exe>
 
 	<if cond="FORMAT=='autoconf'">

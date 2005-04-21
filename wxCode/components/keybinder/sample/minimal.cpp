@@ -10,6 +10,15 @@
 /////////////////////////////////////////////////////////////////////////////
 
 
+// IMPORTANT NOTE FOR KEYBINDER USERS: 
+// This sample application is used not only as a sample to teach the basics of
+// keybinder but also as a test application.
+// So, you'll find some references to wxBinderApp below; this aspect of wxKeyBinder
+// is still under "construction" so please ignore all references to it...
+// (also note that wxBinderApp is a "plug-in" and the fact it still does not work
+//  does not mean that keybinder doesn't work too... keybinder works perfectly
+//  as it is even without binderapp)
+
 
 // ----------------------------------------------------------------------------
 // headers
@@ -22,7 +31,8 @@
 #include "wx/config.h"
 
 
-#define wxUSE_KEYBINDER		1
+// you can compile this application as a minimal app undefining the following line
+#define wxUSE_KEYBINDER			1
 
 // this mode does not work completely on wxGTK
 //#define wxUSE_BINDERAPP		1
@@ -123,8 +133,8 @@ protected:
 
 public:
 
-	// THE KEYPROFILES DO NOT NEED TO BE STATIC (EVEN IF THESE ONES ARE)	
-	static wxKeyProfileArray arr;
+	// the array of key profiles used by this sample app
+	wxKeyProfileArray arr;
 
 public:
     // ctor(s)
@@ -146,7 +156,7 @@ public:
 	void OnDummy(wxCommandEvent &);
 
 	// an utility function
-	void UpdateArr(wxKeyProfileArray &r, int nenabled = 0);
+	void UpdateArr(wxKeyProfileArray &r);
 
 private:
     // any class wishing to process wxWindows events must use this macro
@@ -160,7 +170,7 @@ public:
 
 public:
     // ctor(s)
-    MyDialog(wxWindow *parent, const wxString& title, int);
+    MyDialog(wxKeyProfileArray &arr, wxWindow *parent, const wxString& title, int);
 	~MyDialog();
 
 	void OnApply( wxCommandEvent &ev );
@@ -248,17 +258,20 @@ void MyTextCtrl::OnCharEvent(wxKeyEvent &ev)
 // the application class
 // ----------------------------------------------------------------------------
 
-// wxT('Main program') equivalent: the program execution "starts" here
+// 'Main program' equivalent: the program execution "starts" here
 bool MyApp::OnInit()
 {
+	SetAppName(wxT("Keybinder sample"));
+
     // create the main application window
     MyFrame *frame = new MyFrame(wxT("Minimal wxWindows App"));
 
-
+#ifdef __WXDEBUG__
 	// create an useful log window
 	wxLogWindow *pwindow = new wxLogWindow(frame, wxT("log"));
 	pwindow->GetFrame()->Move(50, 50+350);
 	pwindow->GetFrame()->SetSize(800, 300);
+#endif
 
     // and show it (the frames, unlike simple controls, are not shown when
     // created initially)
@@ -280,9 +293,6 @@ bool MyApp::OnInit()
 // ----------------------------------------------------------------------------
 // main frame
 // ----------------------------------------------------------------------------
-
-wxKeyProfileArray MyFrame::arr;
-
 
 // frame constructor
 MyFrame::MyFrame(const wxString& title)
@@ -387,38 +397,40 @@ MyFrame::MyFrame(const wxString& title)
 
 	// and to make some differences between the two key profiles
 	pSecondary->GetCmd(Minimal_Shortcut1)->GetShortcut(0)->Set(wxKeyBind(wxT("ALT+F10")));
+	pSecondary->GetCmd(Minimal_Shortcut2)->GetShortcut(0)->Set(wxKeyBind(wxT("ALT+F11")));
+	pSecondary->GetCmd(Minimal_Shortcut3)->GetShortcut(0)->Set(wxKeyBind(wxT("ALT+F12")));
 
 	// put both keyprofiles into our array
 	arr.Add(pPrimary);
 	arr.Add(pSecondary);
 
 	// by now, attach to this window the primary keybinder
+	arr.SetSelProfile(0);
 	UpdateArr(arr);
-
 #endif
 }
 
 
 MyFrame::~MyFrame()
 {
-	arr.Cleanup();
+	// wxKeyProfileArray clean up itself when being destroyed...
 }
 
 
-void MyFrame::UpdateArr(wxKeyProfileArray &r, int nenabled)
+void MyFrame::UpdateArr(wxKeyProfileArray &r)
 {
 	// detach all
 	r.DetachAll();	
 	
 	// enable & attach to this window only one
-	r.Item(nenabled)->Enable(TRUE);
+	r.GetSelProfile()->Enable(TRUE);
 
 #ifndef wxUSE_BINDERAPP
 	// VERY IMPORTANT: we should not use this function when we
 	//                 have temporary children... they would
 	//                 added to the binder and when they will be
 	//                 deleted, the binder will reference invalid memory...
-	r.Item(nenabled)->AttachRecursively(this);
+	r.GetSelProfile()->AttachRecursively(this);
 	r.UpdateAllCmd();
 #endif
 }
@@ -428,7 +440,7 @@ void MyFrame::UpdateArr(wxKeyProfileArray &r, int nenabled)
 
 // event handlers
 
-void MyFrame::OnDummy(wxCommandEvent &)
+void MyFrame::OnDummy(wxCommandEvent &)		// used to test wxBinderApp
 { 
 	wxChar c = wxT('a');
 	text->AppendText(wxString(c, 1));
@@ -462,6 +474,9 @@ void MyFrame::OnShortcut2(wxCommandEvent &)
 void MyFrame::OnShortcut3(wxCommandEvent &)
 { wxMessageBox(wxT("Hi !!\nThis is shortcut #3."), wxT("Dummy msg"), wxOK, this); }
 
+
+#if wxUSE_KEYBINDER
+
 void MyFrame::OnKeybindings(wxCommandEvent &)
 {
 	bool btree = GetMenuBar()->IsChecked(Minimal_UseTreeCtrl);
@@ -482,16 +497,14 @@ void MyFrame::OnKeybindings(wxCommandEvent &)
 		// then, when the dialog is destroyed, wxKeyBinder holds
 		// invalid pointers which will provoke a crash !!
 	
-		MyDialog dlg(this, wxT("Keybindings"), mode | wxKEYBINDER_SHOW_APPLYBUTTON);
+		MyDialog dlg(arr, this, wxT("Keybindings"), mode | wxKEYBINDER_SHOW_APPLYBUTTON);
 
 		// does the user wants to enable key profiles ?
 		dlg.m_p->EnableKeyProfiles(bprofiles);
-		exitcode = dlg.ShowModal();
-		sel = dlg.m_p->GetSelProfileIdx();
 
-		if (exitcode == wxID_OK) {
+		if ((exitcode=dlg.ShowModal()) == wxID_OK) {
 
-			// update myframe's profile array
+			// update our array (we gave a copy of it to MyDialog)
 			MyFrame::arr = dlg.m_p->GetProfiles();
 		}
 	}
@@ -499,13 +512,14 @@ void MyFrame::OnKeybindings(wxCommandEvent &)
 	if (exitcode == wxID_OK) {
 
 		// select the right keyprofile
-		UpdateArr(MyFrame::arr, sel);
+		UpdateArr(MyFrame::arr);
 		
+		sel = MyFrame::arr.GetSelProfileIdx();
 		wxMessageBox(wxString::Format(wxT("Selected the %d-th profile (named '%s')."),
-					sel+1, MyFrame::arr.Item(sel)->GetName().c_str()), wxT("Profile selected"));
+			sel+1, MyFrame::arr.Item(sel)->GetName().c_str()), 
+			wxT("Profile selected"));
 	}
 }
-
 
 void MyFrame::OnLoad(wxCommandEvent &)
 {
@@ -513,23 +527,44 @@ void MyFrame::OnLoad(wxCommandEvent &)
 	// of commands we want wxCmd::Load to be able to recognize...	
 	wxMenuCmd::Register(GetMenuBar());
 
-	wxConfig *cfg = new wxConfig(wxT("KeyBinder sample"));
+	// clear our old array
+	arr.Cleanup();
+
+	wxConfig *cfg = new wxConfig(wxGetApp().GetAppName());
 	if (arr.Load(cfg)) {
 
+		// get the cmd count
 		int total = 0;
 		for (int i=0; i<arr.GetCount(); i++)
 			total += arr.Item(i)->GetCmdCount();
-		wxMessageBox(wxString::Format(
-					wxT("All the keyprofiles have been correctly loaded (%d keybindings in total).\n")
-					wxT("The first selecteed profile will be applied."), total),
-					wxT("Success"));
 
-		// make sure to attach the first loaded keybinder
-		UpdateArr(MyFrame::arr, 0);
+		if (total == 0) {
+
+			wxMessageBox(wxString::Format(
+					wxT("No keyprofiles have been found...\n")
+					wxT("A default keyprofile will be set.")));
+			wxKeyProfile *p = new wxKeyProfile(wxT("Default"));
+			p->ImportMenuBarCmd(GetMenuBar());
+			arr.Add(p);
+
+		} else {
+		
+			wxMessageBox(wxString::Format(
+					wxT("All the [%d] keyprofiles have been correctly loaded ")
+					wxT("(%d commands in total).\n")
+					wxT("The %d-th loaded profile ('%s') will be applied."), 
+					arr.GetCount(), total, arr.GetSelProfileIdx()+1, 
+					arr.GetSelProfile()->GetName().c_str()),
+						wxT("Success"));
+		}
+
+		// reattach this frame to the loaded keybinder
+		UpdateArr(MyFrame::arr);
 
 	} else {
 
-		wxMessageBox(wxT("Something wrong while loading !"), wxT("Error"), wxOK | wxICON_ERROR);
+		wxMessageBox(wxT("Something wrong while loading !"), 
+			wxT("Error"), wxOK | wxICON_ERROR);
 	}
 
 	delete cfg;
@@ -537,22 +572,34 @@ void MyFrame::OnLoad(wxCommandEvent &)
 
 void MyFrame::OnSave(wxCommandEvent &)
 {
-	wxConfig *cfg = new wxConfig(wxT("KeyBinder sample"));
-	if (arr.Save(cfg)) {
+	wxConfig *cfg = new wxConfig(wxGetApp().GetAppName());
+	if (arr.Save(cfg, wxEmptyString, TRUE)) {
 
+		// get the cmd count
 		int total = 0;
 		for (int i=0; i<arr.GetCount(); i++)
 			total += arr.Item(i)->GetCmdCount();
 					
-		wxMessageBox(wxString::Format(wxT("All the [%d] keyprofiles have been correctly saved."), total), wxT("Success"));
+		wxMessageBox(wxString::Format(wxT("All the [%d] keyprofiles ([%d] commands ")
+			wxT("in total) have been correctly saved."), arr.GetCount(), total), 
+			wxT("Success"));
 
 	} else {
 
-		wxMessageBox(wxT("Something wrong while saving !"), wxT("Error"), wxOK | wxICON_ERROR);
+		wxMessageBox(wxT("Something wrong while saving !"), wxT("Error"), 
+			wxOK | wxICON_ERROR);
 	}
 
 	delete cfg;
 }
+
+#else
+
+void MyFrame::OnKeybindings(wxCommandEvent &) {}
+void MyFrame::OnLoad(wxCommandEvent &) {}
+void MyFrame::OnSave(wxCommandEvent &) {}
+
+#endif
 
 
 
@@ -561,7 +608,8 @@ void MyFrame::OnSave(wxCommandEvent &)
 // keybindings dialog: a super-simple wrapper for wxKeyConfigPanel
 // ----------------------------------------------------------------------------
 
-MyDialog::MyDialog(wxWindow *parent, const wxString &title, int mode) :
+MyDialog::MyDialog(wxKeyProfileArray &prof, 
+				   wxWindow *parent, const wxString &title, int mode) :
 	wxDialog(parent, -1, title, wxDefaultPosition, wxDefaultSize, 
 		wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)	
 {
@@ -570,19 +618,13 @@ MyDialog::MyDialog(wxWindow *parent, const wxString &title, int mode) :
 	//    better appearances (for me, at least, :-))
 	// 2) we can use wxKeyConfigPanel::ImportKeyBinderCmd
 
-	// Note also that if we create the wxKeyConfigPanel without the 
-	// binder (using NULL), setting it later with
-	//           m_p->SetBinder(MyFrame::pPrimary, TRUE);
-	// we would use implicitly the wxKeyConfigPanel::ImportKeyBinderCmd	
-
-
 	// STEP #1: create a simple wxKeyConfigPanel
-	m_p = new wxKeyConfigPanel(this, NULL, mode);
+	m_p = new wxKeyConfigPanel(this, mode);
 
 	// STEP #2: add a profile array to the wxKeyConfigPanel
-	m_p->AddProfiles(MyFrame::arr);
+	m_p->AddProfiles(prof);
 
-	// STEP #3: with this command we populate the wxTreeCtrl widget of the panel
+	// STEP #3: populate the wxTreeCtrl widget of the panel
 	m_p->ImportMenuBarCmd(((wxFrame*)parent)->GetMenuBar());
 
 	// and embed it in a little sizer

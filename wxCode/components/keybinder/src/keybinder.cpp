@@ -490,10 +490,13 @@ wxCmd *wxCmd::CreateNew(int type, int id)
 
 	// get the creation function address
 	wxCmdCreationFnc fnc = found->cmdCreateFnc;
-	wxASSERT(fnc);
+	wxASSERT(fnc);			// for debug builds
+	if (!fnc) return NULL;	// for release builds
 
 	// create the wxCmd-derived class & init it
 	wxCmd *ret = fnc(id);
+	wxASSERT(ret);			// for debug builds
+	if (!ret) return NULL;	// for release builds
 	ret->Update();
 
 	return ret;
@@ -510,7 +513,7 @@ void wxCmd::AddCmdType(int type, wxCmdCreationFnc f)
 	m_nCmdTypes++;
 }
 
-bool wxCmd::Save(wxConfigBase *p, const wxString &key) const
+bool wxCmd::Save(wxConfigBase *p, const wxString &key, bool bCleanOld) const
 {
 	// build the shortcut string separing each one with a "|"
 	wxString shortcuts;
@@ -522,6 +525,11 @@ bool wxCmd::Save(wxConfigBase *p, const wxString &key) const
 									GetName().c_str(),
 									GetDescription().c_str(), 
 									shortcuts.c_str());
+
+	// does the given key already exists ?
+	if (bCleanOld && p->Exists(key))
+		p->DeleteEntry(key);		// delete old stuff...
+
 	return p->Write(key, value);
 }
 
@@ -533,10 +541,15 @@ bool wxCmd::Load(wxConfigBase *p, const wxString &key)
 			
 	// extract name & desc
 	wxStringTokenizer tknzr(fmt, wxT("|"));	
-	wxString name = tknzr.GetNextToken();
-	wxString desc = tknzr.GetNextToken();
-	if (name.IsEmpty())
+	m_strName = tknzr.GetNextToken();
+	m_strDescription = tknzr.GetNextToken();
+	if (m_strName.IsEmpty())
 		return FALSE;	// this is an invalid entry...
+
+	// the ID of this command should have been already set by the caller
+	// which created us...
+	wxASSERT_MSG(m_nId != wxID_INVALID, 
+		wxT("ID must be set while creating of this wxCmd"));
 
 	// extract the keybindings...
 	while (tknzr.HasMoreTokens())
@@ -827,18 +840,22 @@ void wxKeyBinder::OnChar(wxKeyEvent &event, wxEvtHandler *next)
 	}
 }
 
-bool wxKeyBinder::Save(wxConfigBase *cfg, const wxString &key) const
+bool wxKeyBinder::Save(wxConfigBase *cfg, const wxString &key, bool bCleanOld) const
 {
 	wxString basekey = (key.IsEmpty() ? wxString(wxT("")) : wxString(key + wxT("/")));
 	bool b = TRUE;
+
+	// does the given key already exists ?
+	if (bCleanOld && cfg->Exists(basekey))
+		cfg->DeleteGroup(basekey);		// delete old stuff...
 	
 	for (int i=0; i < m_arrCmd.GetCount(); i++) {
 		
 		wxCmd *curr = m_arrCmd.Item(i);
 
 		// write the key in the format: bindID-typeID
-		wxString keyname = wxString::Format(wxT("%sbind%d-type%d"), 
-			basekey.c_str(), curr->GetId(), curr->GetType());
+		wxString keyname = wxString::Format(wxT("%s%s%d-type%d"), 
+			basekey.c_str(), wxCMD_CONFIG_PREFIX, curr->GetId(), curr->GetType());
 
 		// save this wxCmd...
 		b &= curr->Save(cfg, keyname);
@@ -863,11 +880,11 @@ bool wxKeyBinder::Load(wxConfigBase *p, const wxString &key)
 	while (cont) {
 
 		// try to decode this entry
-		if (str.StartsWith(wxT("bind"))) {
+		if (str.StartsWith(wxCMD_CONFIG_PREFIX)) {
 
 			wxString id(str.BeforeFirst(wxT('-')));
 			wxString type(str.AfterFirst(wxT('-')));
-			id = id.Right(id.Len()-wxString(wxT("bind")).Len());	
+			id = id.Right(id.Len()-wxString(wxCMD_CONFIG_PREFIX).Len());	
 			type = type.Right(type.Len()-wxString(wxT("type")).Len());	
 
 			// is this a valid entry ?
@@ -880,7 +897,7 @@ bool wxKeyBinder::Load(wxConfigBase *p, const wxString &key)
 
 				// create & load this command
 				wxCmd *cmd = wxCmd::CreateNew(ntype, nid);
-				if (!cmd->Load(p, str)) {
+				if (!cmd || !cmd->Load(p, str)) {
 					cont = FALSE;
 					break;
 				}
@@ -905,53 +922,54 @@ bool wxKeyBinder::Load(wxConfigBase *p, const wxString &key)
 // wxKeyProfile
 // ----------------------------------------------------------------------------
 
-bool wxKeyProfile::Save(wxConfigBase *cfg, const wxString &key) const
+bool wxKeyProfile::Save(wxConfigBase *cfg, const wxString &key, bool bCleanOld) const
 {
-	wxString basekey = (key.IsEmpty() ? wxT("") : wxT("/")) + wxString(wxT("keyprof-")) + GetName();	
+	// we will encode our name into the key used to group all this profile
+	wxString basekey = key.IsEmpty() ? wxString(wxT("")) : wxString(key + wxT("/"));	
 
+	// does the given key already exists ?
+	if (bCleanOld && cfg->Exists(basekey))
+		cfg->DeleteGroup(basekey);		// delete old stuff...
+
+	// write our name & description into a specific key
 	if (!cfg->Write(basekey + wxT("/desc"), GetDesc()))
+		return FALSE;
+	if (!cfg->Write(basekey + wxT("/name"), GetName()))
 		return FALSE;
 
 	// tell wxKeyBinder to save all keybindings into a group with our name
-	return wxKeyBinder::Save(cfg, basekey);
+	// and also tell it NOT to delete the given key if it already exists
+	// because it ALWAYS exists since we've just created it...
+	return wxKeyBinder::Save(cfg, basekey, FALSE);
 }
 
 bool wxKeyProfile::Load(wxConfigBase *p, const wxString &key)
 {
-	wxString str;
-	bool cont;
-	long idx;
+	p->SetPath(key);		// enter into this group
+	
+	wxString name;
+	wxString desc;
+	
+	// do we have valid DESC & NAME entries ?
+	if (p->HasEntry(wxT("desc")) && p->HasEntry(wxT("name"))) {
+		
+		if (!p->Read(wxT("desc"), &desc))
+			return FALSE;
+		if (!p->Read(wxT("name"), &name))
+			return FALSE;
+	
+		// check for valid name & desc
+		if (name.IsEmpty())
+			return FALSE;
 
-	// before starting...
-	p->SetPath(key);
+		SetName(name);
+		SetDesc(desc);
 
-	cont = p->GetFirstGroup(str, idx);
-	while (cont) {
-
-		// try to decode this group name
-		if (str.StartsWith(wxT("keyprof-"))) {
-
-			wxString name(str.AfterFirst(wxT('-')));
-			wxString desc;
-			p->SetPath(str);		// enter into this group
-
-			// is this a valid entry ?
-			if (p->HasEntry(wxT("desc"))) {
-
-				if (!p->Read(wxT("desc"), &desc))
-					return FALSE;
-
-				SetName(name);
-				SetDesc(desc);
-				return wxKeyBinder::Load(p, key + wxT("/") + str);	// load from this path
-			}
-		}
-
-		// proceed with next entry (if it does exist)
-		cont &= p->GetNextGroup(str, idx);
+		// load from current path (we cannot use '.')
+		return wxKeyBinder::Load(p, wxT("../") + key);
 	}
 
-	return FALSE;		// could not find a valid group to load !
+	return FALSE;	// no valid DESC/NAME entry...
 }
 
 
@@ -961,22 +979,93 @@ bool wxKeyProfile::Load(wxConfigBase *p, const wxString &key)
 // wxKeyProfileArray
 // ----------------------------------------------------------------------------
 
-bool wxKeyProfileArray::Save(wxConfigBase *cfg, const wxString &key) const
+bool wxKeyProfileArray::Save(wxConfigBase *cfg, const wxString &key, bool bCleanOld) const
 {
+	wxString basekey = (key.IsEmpty()) ? wxString(wxT("")) : wxString(key + wxT("/"));
 	bool b = TRUE;
+
+	cfg->SetPath(key);
+	if (!cfg->Write(basekey + wxT("nSelProfile"), m_nSelected))
+		return FALSE;
+
 	for (int i=0; i<GetCount(); i++)
-		b &= Item(i)->Save(cfg, key);
+
+		// save all our elements into a subkey of the given key
+		b &= Item(i)->Save(cfg, basekey + wxKEYPROFILE_CONFIG_PREFIX + 
+									wxString::Format(wxT("%d"), i), bCleanOld);
+
+	// if required, remove any previously stored key profile...
+	if (bCleanOld) {
+
+		// the Save() calls could have changed our current path...
+		cfg->SetPath(key);
+
+		// enumerate all groups
+		wxString str;
+		long n, idx;
+
+		bool cont = cfg->GetFirstGroup(str, idx);
+		while (cont) {			
+			if (str.StartsWith(wxKEYPROFILE_CONFIG_PREFIX)) {
+
+				// extract the id of this group...
+				wxString id=str.Right(str.Len()-wxString(wxKEYPROFILE_CONFIG_PREFIX).Len());
+				id.ToLong(&n);
+
+				if (n >= GetCount()) {
+
+					// this is a profile which was saved in a previous session
+					// but which has now been removed by the user... remove it
+					// from our config settings...
+					cfg->DeleteGroup(str);
+
+					// re-start our enumeration; otherwise GetNextGroup() won't work...
+					cont = cfg->GetFirstGroup(str, idx);
+					if (!cont) break;
+				}
+			}
+
+			// proceed with next one...
+			cont &= cfg->GetNextGroup(str, idx);
+		}
+	}
 
 	return b;
 }
 
-bool wxKeyProfileArray::Load(wxConfigBase *cfg, const wxString &key)
+bool wxKeyProfileArray::Load(wxConfigBase *p, const wxString &key)
 {
-	bool b = TRUE;
-	for (int i=0; i<GetCount(); i++)
-		b &= Item(i)->Load(cfg, key);
+	wxKeyProfile tmp;
+	wxString str;
+	bool cont;
+	long idx;
 
-	return b;
+	// before starting...
+	p->SetPath(key);
+	if (!p->Read(wxT("nSelProfile"), &m_nSelected))
+		return FALSE;
+
+	cont = p->GetFirstGroup(str, idx);
+	while (cont) {
+
+		// try to decode this group name
+		if (str.StartsWith(wxKEYPROFILE_CONFIG_PREFIX)) {
+
+			// is this a valid entry ?
+			if (!tmp.Load(p, str))
+				return FALSE;
+			
+			Add(new wxKeyProfile(tmp));		// yes, it is; add it to the array
+		}
+
+		// set the path again (it could have been changed...)
+		p->SetPath(key);
+
+		// proceed with next entry (if it does exist)
+		cont &= p->GetNextGroup(str, idx);
+	}
+
+	return TRUE;
 }
 
 
@@ -1018,13 +1107,13 @@ void wxKeyMonitorTextCtrl::OnKey(wxKeyEvent &event)
 // ----------------------------------------------------------------------------
 
 wxKeyConfigPanel::wxKeyConfigPanel(wxWindow* parent, 
-				wxKeyProfile *pBinder,	// can be NULL
 				int buildMode, wxWindowID id, 
 				const wxPoint& pos, const wxSize& size, 
 				long style, const wxString& name)
 				: wxPanel(parent, id, pos, size, style, name)
 {
 	m_nBuildMode = buildMode;
+	m_bProfileHasBeenModified = FALSE;
 
 	wxASSERT_MSG((m_nBuildMode & wxKEYBINDER_USE_LISTBOX) ||
 				(m_nBuildMode & wxKEYBINDER_USE_TREECTRL),
@@ -1045,10 +1134,22 @@ wxKeyConfigPanel::wxKeyConfigPanel(wxWindow* parent,
 	main->SetSizeHints(this);
 
 	// set up the controls: the user of the panel must call one of the
-	// ImportXXXX() functions to enanble the use of the panel !!!!
-	AddProfile(pBinder);
+	// ImportXXXX() functions to enable the use of the panel !!!!
     GetMainCtrl()->SetFocus();
     UpdateButtons();
+}
+
+wxKeyConfigPanel::~wxKeyConfigPanel()
+{
+	// with the AddXXXXX functions we created wxKeyProfiles which we
+	// then added into the m_pKeyProfiles combobox... we now must delete them.
+	for (int i=0; i < m_pKeyProfiles->GetCount(); i++) {
+		wxKeyProfile *data = (wxKeyProfile *)m_pKeyProfiles->GetClientData(i);
+
+		// we can delete the client data safely because wxComboBox will leave
+		// the client data field untouched...
+		if (data) delete data;		
+	}
 }
 
 void wxKeyConfigPanel::BuildCtrls()
@@ -1076,8 +1177,11 @@ void wxKeyConfigPanel::BuildCtrls()
     m_pRemoveAllBtn = new wxButton(this, wxKEYBINDER_REMOVEALL_KEY_ID, wxT("Remove all"));
 	
 	m_pCurrCmdField = new wxStaticText(this, -1, wxT(""), wxDefaultPosition, 
-		wxSize(-1, 20), wxSUNKEN_BORDER | wxST_NO_AUTORESIZE | wxALIGN_CENTRE);
-	m_pCurrCmdField->SetBackgroundColour(wxColour(255, 255, 255));	
+		wxSize(-1, 20), wxSIMPLE_BORDER | wxST_NO_AUTORESIZE | wxALIGN_CENTRE);
+
+	// we won't make it white because it must be clear to the user that this
+	// is not a text control...
+	m_pCurrCmdField->SetBackgroundColour(wxColour(200, 200, 200));	
 	
 #ifdef __WXGTK__
     m_pDescLabel = new wxTextCtrl(this, -1, wxT(""), wxDefaultPosition, 
@@ -1245,7 +1349,8 @@ void wxKeyConfigPanel::ImportMenuBarCmd(wxMenuBar *p, const wxString &rootname)
 	}
 }
 
-void wxKeyConfigPanel::ImportKeyProfileCmd(int n, const wxString &rootname)
+void wxKeyConfigPanel::ImportKeyProfileCmd(const wxKeyProfile &toimport, 
+										   const wxString &rootname)
 {
 	// do some std things...
 	Reset();
@@ -1256,7 +1361,7 @@ void wxKeyConfigPanel::ImportKeyProfileCmd(int n, const wxString &rootname)
 		wxTreeItemId rootid = m_pCommandsTree->GetRootItem();
 
 		// scan all the commands of the key binder...
-		wxCmdArray *arr = GetProfile(n)->GetArray();
+		const wxCmdArray *arr = toimport.GetArray();
 		for (int i=0; i < (int)arr->GetCount(); i++) {
 
 			// to each tree branch attach a wxTreeItemData containing 
@@ -1272,7 +1377,7 @@ void wxKeyConfigPanel::ImportKeyProfileCmd(int n, const wxString &rootname)
 
 	} else {
 
-		wxCmdArray *arr = GetProfile(n)->GetArray();
+		const wxCmdArray *arr = toimport.GetArray();
 		for (int i=0; i < (int)arr->GetCount(); i++) {
 
 			// create a list of items containing as untyped client data
@@ -1294,41 +1399,38 @@ void wxKeyConfigPanel::ImportKeyProfileCmd(int n, const wxString &rootname)
 // wxKeyConfigPanel - MISCELLANEOUS functions
 // ----------------------------------------------------------------------------
 
-void wxKeyConfigPanel::AddProfile(wxKeyProfile *p, bool bImport, const wxString &rootname)
+void wxKeyConfigPanel::AddProfile(const wxKeyProfile &p)
 {	
-	if (p == NULL) return;
-
 	// add a new profile to the array	
-	m_pKeyProfiles->Append(p->GetName(), (void *)p);
+	m_pKeyProfiles->Append(p.GetName(), (void *)(new wxKeyProfile(p)));
 	
-	if (m_pKeyProfiles->GetCount() == 1) {
-		m_pKeyProfiles->SetSelection(0);
-		m_nCurrentProf = 0;
+	if (m_pKeyProfiles->GetCount() == 1)
 
-		// generate a fake event: SetSelection does not generate it
-		wxCommandEvent ev;
-		OnProfileSelected(ev);
-	}
-
-	// eventually import the commands contained in the given keyprofile
-	if (bImport)
-		ImportKeyProfileCmd(GetSelProfileIdx(), rootname);
+		// the profile we added is the only one present... select it
+		SetSelProfile(0);
 }
 
-void wxKeyConfigPanel::AddProfiles(wxKeyProfileArray &arr)
+void wxKeyConfigPanel::AddProfiles(const wxKeyProfileArray &arr)
 {
-	int old = m_pKeyProfiles->GetCount();
-	for (int i=0; i < arr.GetCount(); i++)
-		m_pKeyProfiles->Append(arr.Item(i)->GetName(), (void *)arr.Item(i));
-	
-	if (old == 0) {
-		m_pKeyProfiles->SetSelection(0);
-		m_nCurrentProf = 0;
-
-		// generate a fake event: SetSelection does not generate it
-		wxCommandEvent ev;
-		OnProfileSelected(ev);
+	// copy the given profiles into the listbox data list
+	for (int i=0; i < arr.GetCount(); i++) {
+		wxKeyProfile *copy = new wxKeyProfile(*arr.Item(i));
+		m_pKeyProfiles->Append(arr.Item(i)->GetName(), (void *)copy);
 	}
+
+	SetSelProfile(arr.GetSelProfileIdx() >= 0 ? arr.GetSelProfileIdx() : 0);	
+}
+
+void wxKeyConfigPanel::SetSelProfile(int n)
+{
+	wxASSERT(m_pKeyProfiles && n >= 0 && n < m_pKeyProfiles->GetCount());
+
+	m_pKeyProfiles->SetSelection(n);
+	m_nCurrentProf = n;
+	
+	// generate a fake event: SetSelection does not generate it
+	wxCommandEvent ev;
+	OnProfileSelected(ev);
 }
 
 void wxKeyConfigPanel::Reset()
@@ -1442,8 +1544,13 @@ wxKeyProfileArray wxKeyConfigPanel::GetProfiles() const
 
 	// just copy the combobox item's client data (which are wxKeyProfiles)
 	// into our array...
+	// NB: it's very important to *copy* the profiles into the new array
+	//     since the ddestructor of wxKeyConfigPanel expect the m_pKeyProfiles
+	//     control to contain always valid pointers NOT shared with anyone else
 	for (int i=0; i<m_pKeyProfiles->GetCount(); i++)		
-		arr.Add(GetProfile(i));
+		arr.Add(new wxKeyProfile(*GetProfile(i)));
+	arr.SetSelProfile(GetSelProfileIdx());
+
 	return arr;
 }
 
@@ -1521,6 +1628,10 @@ void wxKeyConfigPanel::FillInBindings()
 
 	// update the listbox with the shortcuts for the selected menuitem
     m_pBindings->Append(p->GetShortcutsList());
+
+	// select the first shortcut...
+	if (m_pBindings->GetCount() > 0)
+		m_pBindings->SetSelection(0);
 }
 
 void wxKeyConfigPanel::ApplyChanges()
@@ -1530,9 +1641,12 @@ void wxKeyConfigPanel::ApplyChanges()
 	wxASSERT(prof);
 
 	// just copy the internal key binder used to allow a sort of
-	// "undo" feature into the original binder set through the
-	// #SetBinder function.
-    prof->wxKeyBinder::DeepCopy(&m_kBinder);
+	// "undo" feature into the currently selected profile
+    prof->DeepCopy(m_kBinder);
+
+	// and update the label of the m_pKeyProfiles control
+	// (the name of the profile could have been changed)
+	m_pKeyProfiles->SetString(GetSelProfileIdx(), m_kBinder.GetName());
 }
 
 void wxKeyConfigPanel::EnableKeyProfiles(bool bEnable)
@@ -1622,12 +1736,27 @@ void wxKeyConfigPanel::OnApplyChanges(wxCommandEvent &event)
 	event.Skip();		// let parent know that changes were applied
 }
 
-void wxKeyConfigPanel::OnProfileEditing(wxCommandEvent &ev)
+void wxKeyConfigPanel::OnProfileEditing(wxCommandEvent &)
 {
 	wxASSERT(m_nCurrentProf != -1);
 
+	wxString oldname = m_kBinder.GetName();
+	wxString newname = m_pKeyProfiles->GetValue();//ev.GetString();
+	if (newname == oldname)
+		return;
+
+	// now the profile has been changed...
+	m_bProfileHasBeenModified = TRUE;
+
 	// change the name of the current profile
-	GetProfile(m_nCurrentProf)->SetName(ev.GetString());	
+	m_kBinder.SetName(newname);
+
+#if 0
+	// and the string of the combobox...
+	int n = m_pKeyProfiles->FindString(oldname);
+	if (n != wxNOT_FOUND) 
+		m_pKeyProfiles->SetString(n, newname);
+#endif
 }
 
 void wxKeyConfigPanel::OnTreeCommandSelected(wxTreeEvent &)
@@ -1676,7 +1805,7 @@ void wxKeyConfigPanel::OnCategorySelected(wxCommandEvent &ev)
 	wxExComboItemData *data = (wxExComboItemData*)m_pCategories->GetClientObject(sel);
 	wxArrayString &arr = data->GetCmdNameArr();
 
-	// clear the old elements & insert the news
+	// clear the old elements & insert the new ones
 	m_pCommandsList->Clear();
 	for (int i=0; i < (int)arr.GetCount(); i++)
 		m_pCommandsList->Append(arr.Item(i), (void *)data->GetID(i));
@@ -1691,9 +1820,45 @@ void wxKeyConfigPanel::OnProfileSelected(wxCommandEvent &)
 	wxLogDebug(wxT("wxKeyConfigPanel::OnProfileSelected"));
 
 	int selidx = m_pKeyProfiles->GetSelection();
-	wxKeyProfile *sel = NULL;
+	wxKeyProfile *sel;
 
 	if (selidx != -1) {
+
+		// did the user modiy the old profile ?
+		if (m_bProfileHasBeenModified) {
+
+			// NB: m_nCurrentProf now retains the old profile index
+			int choice = wxMessageBox(
+				wxString::Format(wxT("The previous profile (named \"%s\") has been modified.\n")
+						wxT("Do you want to save the changes to that profile ?"), 
+						GetProfile(m_nCurrentProf)->GetName()),
+				wxT("Warning"), wxYES_NO | wxICON_QUESTION);
+
+			if (choice == wxYES) {
+
+				ApplyChanges();
+
+			} else if (choice == wxCANCEL) {
+
+				// WARNING: the wxCANCEL flag has been removed from the wxMessageBox
+				// above because the call to m_pKeyProfiles->SetSelection below
+				// provokes (even if wx docs says no) with wxMSW 2.5.4 another event
+
+				// re select the old profile... without generating another event
+				m_pKeyProfiles->SetSelection(m_nCurrentProf);
+				return;		// and abort this call
+
+			} else if (choice == wxNO) {
+
+				// just restore the original label of the old profile
+				// into the wxcombobox...
+				// NB: the original label is stored in the client data associated
+				// with the previously selected combo item; the user-edited
+				// label has been set only in the m_kBinder profile.
+				m_pKeyProfiles->SetString(m_nCurrentProf, 
+							GetProfile(m_nCurrentProf)->GetName());
+			}
+		}
 
 		// update the current selected profile index
 		m_nCurrentProf = selidx;
@@ -1711,7 +1876,8 @@ void wxKeyConfigPanel::OnProfileSelected(wxCommandEvent &)
 	// which is the one which the user edits (and which
 	// will be copied in the original one if the 
 	// #ApplyChanges function is called...)
-	m_kBinder.DeepCopy(sel);
+	m_kBinder.DeepCopy(*sel);
+	m_bProfileHasBeenModified = FALSE;
 	
 	// call other event handlers
 	if (IsUsingTreeCtrl()) {
@@ -1747,13 +1913,20 @@ void wxKeyConfigPanel::OnAssignKey(wxCommandEvent &)
 	// this command, the shortcut won't be added).
 	sel->AddShortcut(m_pKeyField->GetValue());
 
+	// now the user has modified the currently selected profile...
+	m_bProfileHasBeenModified = TRUE;
+
 	// if the just added key bind was owned by another command,
 	// remove it from the old command...
 	if (m_pCurrCmd) {
 		wxKeyBind tmp(m_pKeyField->GetValue());
 		int n;
+	
+#ifdef __WXDEBUG__
+		bool bind = m_pCurrCmd->IsBindTo(tmp, &n);
+		wxASSERT_MSG(bind, wxT("the m_pCurrCmd variable should be NULL then..."));
+#endif		// to avoid warnings in release mode
 
-		wxASSERT(m_pCurrCmd->IsBindTo(tmp, &n));
 		m_pCurrCmd->RemoveShortcut(n);
 	}
 
@@ -1764,6 +1937,9 @@ void wxKeyConfigPanel::OnAssignKey(wxCommandEvent &)
 
 void wxKeyConfigPanel::OnRemoveKey(wxCommandEvent &)
 {
+	// now the user has modified the currently selected profile...
+	m_bProfileHasBeenModified = TRUE;
+
 	// remove the selected shortcut
 	GetSelCmd()->RemoveShortcut(m_pBindings->GetSelection());
 
@@ -1774,6 +1950,9 @@ void wxKeyConfigPanel::OnRemoveKey(wxCommandEvent &)
 
 void wxKeyConfigPanel::OnRemoveAllKey(wxCommandEvent &)
 {
+	// now the user has modified the currently selected profile...
+	m_bProfileHasBeenModified = TRUE;
+
 	// remove the selected shortcut
 	GetSelCmd()->RemoveAllShortcuts();
 
@@ -1784,24 +1963,42 @@ void wxKeyConfigPanel::OnRemoveAllKey(wxCommandEvent &)
 
 void wxKeyConfigPanel::OnAddProfile(wxCommandEvent &)
 {
-	wxKeyProfile *sel = GetProfile(m_nCurrentProf);//GetSelProfile();
+	wxKeyProfile *sel = GetSelProfile();
 	if (!sel) return;
 
+	// we'll use one of wx common dialogs
 	wxTextEntryDialog dlg(this, 
 		wxT("Input the name of the new profile.\n")
 		wxT("The new profile will be initially set to a copy of the last selected profile."),
 		wxT("Add new profile"));
 	dlg.SetValue(sel->GetName());
 
-	if (dlg.ShowModal() == wxID_CANCEL)
-		return;
+	bool valid = FALSE;
+	while (!valid) {
+	
+		if (dlg.ShowModal() == wxID_CANCEL)
+			return;
 
+		// if the name is the same of one of the existing profiles, we have to abort...
+		valid = TRUE;
+		for (int j=0; j < m_pKeyProfiles->GetCount(); j++)
+			valid &= (GetProfile(j)->GetName() != dlg.GetValue());
+
+		if (!valid) {
+
+			wxMessageBox(wxT("The given profile name is already in use.\n")
+						wxT("Enter another name."));
+		}
+	}
+
+	// create the new profile copying the last selected one
 	wxKeyProfile *newprof = new wxKeyProfile(*sel);
-	newprof->SetName(dlg.GetValue());
-	AddProfile(newprof);
+	newprof->SetName(dlg.GetValue());		// just change its name
+	AddProfile(*newprof);
+	delete newprof;
 
-	m_nCurrentProf = m_pKeyProfiles->GetCount()-1;
-	m_pKeyProfiles->SetSelection(m_nCurrentProf);
+	// set the new profile as selected (the new profile is the last one)
+	SetSelProfile(m_pKeyProfiles->GetCount()-1);
 }
 
 void wxKeyConfigPanel::OnRemoveProfile(wxCommandEvent &)
@@ -1810,19 +2007,22 @@ void wxKeyConfigPanel::OnRemoveProfile(wxCommandEvent &)
 
 	if (m_pKeyProfiles->GetCount() == 1) {
 
-		wxMessageBox(wxT("Cannot delete this profile. It's the only profile available."));
+		wxMessageBox(wxT("Cannot delete this profile. It's the only available profile."),
+					wxT("Warning"));
 		return;
 	}
 
+	// delete the keyprofile associated with that item...
+	delete ((wxKeyProfile*)m_pKeyProfiles->GetClientData(m_nCurrentProf));
 	m_pKeyProfiles->Delete(m_nCurrentProf);	
 
 	// update the currently selected profile
-	m_nCurrentProf--;
-	if (m_nCurrentProf < 0) m_nCurrentProf=0;
-	wxASSERT(m_nCurrentProf < m_pKeyProfiles->GetCount());
+	int newsel = m_nCurrentProf-1;
+	if (newsel < 0) newsel=0;
+	wxASSERT(newsel < m_pKeyProfiles->GetCount());
 
 	// keep sync m_nCurrentProf with the currently really selected item
-	m_pKeyProfiles->Select(m_nCurrentProf);
+	SetSelProfile(newsel);
 }
 
 void wxKeyConfigPanel::OnKeyPressed(wxCommandEvent &)

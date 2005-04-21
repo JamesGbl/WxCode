@@ -78,14 +78,18 @@ public:
 		Set(flags, keycode);
 	}
 
+	wxKeyBind(const wxKeyBind &tocopy) {
+		DeepCopy(tocopy);
+	}
+
 	wxKeyBind(const wxString &key) {
 		m_nFlags = StringToKeyModifier(key);
 		m_nKeyCode = StringToKeyCode(key.AfterLast('+').AfterLast('-'));
 	}
 
-	virtual void DeepCopy(const wxKeyBind *p) {
-		m_nFlags = p->m_nFlags;
-		m_nKeyCode = p->m_nKeyCode;
+	virtual void DeepCopy(const wxKeyBind &p) {
+		m_nFlags = p.m_nFlags;
+		m_nKeyCode = p.m_nKeyCode;
 	}
 
 	virtual ~wxKeyBind() {}
@@ -153,8 +157,14 @@ public:		// static utilities
 };
 
 
+
+
 //! The maximum number of wxCmd-derived classes.
-#define wxCMD_MAX_TYPES			16
+#define wxCMD_MAX_TYPES				16
+
+//! This is a string used by wxCmd::Load/Save to read/write
+//! wxCmds into wxConfig objects.
+#define wxCMD_CONFIG_PREFIX			wxT("bind")
 
 
 //! Represents one of the commands which are handled by a wxKeyBinder.
@@ -246,7 +256,7 @@ public:
 		m_nShortcuts = cmd->m_nShortcuts;
 
 		for (int i=0; i < m_nShortcuts; i++)
-			m_keyShortcut[i].DeepCopy(&cmd->m_keyShortcut[i]);
+			m_keyShortcut[i].DeepCopy(cmd->m_keyShortcut[i]);
 	}
 
 	virtual wxCmd *Clone() const = 0;
@@ -330,7 +340,9 @@ public:
 
 	//! Saves the command into the given wxConfig object
 	//! in the given key entry.
-	bool Save(wxConfigBase *p, const wxString &key = wxEmptyString) const;
+	//! \param bCleanOld If TRUE, this function will erase the given key
+	//!        before writing into it.
+	bool Save(wxConfigBase *p, const wxString &key = wxEmptyString, bool bCleanOld = FALSE) const;
 
 	//! Loads from the given wxConfig's key a command.
 	//! Returns FALSE if the given key does not contain info about
@@ -405,12 +417,18 @@ class wxCmdArray
 
 public:
 	wxCmdArray() {}
+	wxCmdArray(const wxCmdArray &tocopy) { DeepCopy(tocopy); }
 	virtual ~wxCmdArray() { Clear(); }
 
 	void DeepCopy(const wxCmdArray &arr) {
 		Clear();
 		for (int i=0; i < arr.GetCount(); i++)
 			Add(arr.Item(i)->Clone());
+	}
+
+	wxCmdArray &operator=(const wxCmdArray &tocopy) {
+		DeepCopy(tocopy);
+		return *this;
 	}
 
 	void Add(wxCmd *p)			{ m_arr.Add(p); }
@@ -610,6 +628,7 @@ protected:
 public:
 
 	wxKeyBinder() {}
+	wxKeyBinder(const wxKeyBinder &tocopy) { DeepCopy(tocopy); }
 	virtual ~wxKeyBinder() { DetachAll(); }
 
 
@@ -620,12 +639,17 @@ public:		// miscellaneous
 	void OnChar(wxKeyEvent &event, wxEvtHandler *next);	
 
 	//! Deep copies the given object.
-	void DeepCopy(const wxKeyBinder *p) {
-		m_arrCmd.DeepCopy(p->m_arrCmd);
+	void DeepCopy(const wxKeyBinder &p) {
+		m_arrCmd.DeepCopy(p.m_arrCmd);
 		
 		// NEVER COPY THE ARRAY OF THE ATTACHED WINDOWs:
 		// WE ARE NOT ATTACHED TO THE WINDOWS OF THE GIVEN BINDER !!
 		// m_arrAttachedWnd = p->m_arrAttachedWnd;
+	}
+
+	wxKeyBinder &operator=(const wxKeyBinder &tocopy) {
+		DeepCopy(tocopy);
+		return *this;
 	}
 
 	//! Resets everything associated with this class.
@@ -675,7 +699,9 @@ public:		// miscellaneous
 
 	//! Saves the array of keybindings into the given wxConfig object.
 	//! All the keybindings will be saved into subkeys of the given key.
-	bool Save(wxConfigBase *p, const wxString &key = wxEmptyString) const;
+	//! \param bCleanOld If TRUE, this function will erase the given key
+	//!        before writing into it.
+	bool Save(wxConfigBase *p, const wxString &key = wxEmptyString, bool bCleanOld = FALSE) const;
 
 	//! Loads from the given wxConfig object a set of keybindings.
 	bool Load(wxConfigBase *p, const wxString &key = wxEmptyString);
@@ -767,10 +793,11 @@ private:
 
 
 
-
-
 //! A little extension of the wxKeyBinder class.
-//! wxKeyProfile adds a NAME and a DESCRIPTION to the wxKeyBinder class.
+//! wxKeyProfile adds a NAME and a DESCRIPTION to the wxKeyBinder class;
+//! these are useful when you want to support more than one wxKeyBinder in
+//! your application to give to the user the possibility to choose among
+//! different keymapping schemes...
 class wxKeyProfile : public wxKeyBinder
 {
 protected:
@@ -787,14 +814,20 @@ public:
 		: m_strName(name), m_strDescription(desc) {}
 		
 	wxKeyProfile(const wxKeyProfile &tocopy)
-		{ DeepCopy(&tocopy); }
+		{ DeepCopy(tocopy); }
 	
 	virtual ~wxKeyProfile() {}
 
-	void DeepCopy(const wxKeyProfile *p) {
+
+	void DeepCopy(const wxKeyProfile &p) {
 		wxKeyBinder::DeepCopy(p);
-		m_strName = p->m_strName;
-		m_strDescription = p->m_strDescription;
+		m_strName = p.m_strName;
+		m_strDescription = p.m_strDescription;
+	}
+
+	wxKeyProfile &operator=(const wxKeyProfile &tocopy) {
+		DeepCopy(tocopy);
+		return *this;
 	}
 
 public:		// miscellaneous
@@ -805,7 +838,7 @@ public:		// miscellaneous
 	wxString GetName() const		{ return m_strName; }
 	wxString GetDesc() const		{ return m_strDescription; }
 
-	bool Save(wxConfigBase *p, const wxString &key = wxEmptyString) const;
+	bool Save(wxConfigBase *p, const wxString &key = wxEmptyString, bool bCleanOld = FALSE) const;
 	bool Load(wxConfigBase *p, const wxString &key = wxEmptyString);
 
 
@@ -815,20 +848,40 @@ private:
 
 
 
+
+//! This is a string used by wxKeyProfileArray::Load/Save to read/write
+//! wxKeyProfileArrays into wxConfig objects.
+#define wxKEYPROFILE_CONFIG_PREFIX			wxT("keyprof")
+
+
 //! An array of wxKeyProfiles.
 //! This is an handy way to hold a set of pointers to wxKeyProfiles
 //! and to retrieve the profiles from a wxKeyConfigPanel after they
 //! have been added/removed/edited by the user.
+//!
+//! This class also holds a variable (#m_nSelected) which makes easier for
+//! the owner of the array to manage more than one key profile
+//! (this variables has sense only assuming that only one key profile at
+//!  time is selected into app's windows...).
+//! Without this additional field, you would have to declare another variable
+//! to use together with wxKeyProfileArray.
+//! However, please note that this variable is *not* updated in any way by
+//! wxKeyProfileArray itself: this is still owner's task which can use the
+//! #SetSelProfile and #GetSelProfile functions to access this variable.
 class wxKeyProfileArray
 {
 	//! The array of pointers to the wxKeyProfiles.
 	//! Since this array hold pointers, instances of classes derived
-	//! from wxKeyProfile can be used as well.
+	//! from wxKeyProfile can be used as well with wxKeyProfileArray.
 	wxArrayPtrVoid m_arr;
 
+	//! The index of the currently selected profile.
+	int m_nSelected;
+
 public:
-	wxKeyProfileArray() {}
-	virtual ~wxKeyProfileArray() {}
+	wxKeyProfileArray() { m_nSelected=-1; }
+	wxKeyProfileArray(const wxKeyProfileArray &tocopy) { DeepCopy(tocopy); }
+	virtual ~wxKeyProfileArray() { Cleanup(); }
 	
 	
 	//! \name wxArray-like functions.
@@ -837,18 +890,35 @@ public:
 	//! wxArray functions... @{
 	
 	int GetCount() const			{ return m_arr.GetCount(); }
-	void Add(wxKeyProfile *p)		{ m_arr.Add(p); }
+	int GetSelProfileIdx() const	{ return m_nSelected; }
 	wxKeyProfile *Item(int n)		{ return (wxKeyProfile*)m_arr.Item(n); }
+	wxKeyProfile *GetSelProfile()	{ wxASSERT(m_nSelected >= 0 && m_nSelected < GetCount()); return Item(m_nSelected); }
+	void Add(wxKeyProfile *p)		{ m_arr.Add(p); }
 	void Clear() 					{ m_arr.Clear(); }
 	void Remove(wxKeyProfile *p)	{ m_arr.Remove(p); }
+	void SetSelProfile(int n)		{ wxASSERT(n < GetCount()); m_nSelected = n; }
 	bool IsEmpty() const 			{ return m_arr.IsEmpty(); }
 
  	const wxKeyProfile *Item(int n) const			{ return (wxKeyProfile*)m_arr.Item(n); }
+ 	const wxKeyProfile *GetSelProfile() const		{ return Item(m_nSelected); }
 	void RemoveAt(size_t i, size_t count = 1)		{ m_arr.RemoveAt(i, count); }
 	void Insert(wxKeyProfile *p, int n) 			{ m_arr.Insert(p, n); }
 	
 	//@}
 	
+
+	//! Copies the given array.
+	void DeepCopy(const wxKeyProfileArray &p) {
+		Cleanup();
+		for (int i=0; i < p.GetCount(); i++)
+			Add(new wxKeyProfile(*p.Item(i)));
+		m_nSelected = p.m_nSelected;
+	}
+
+	wxKeyProfileArray &operator=(const wxKeyProfileArray &tocopy) {
+		DeepCopy(tocopy);
+		return *this;
+	}
 	
 	//! Deletes all the objects of the array.
 	//! Unlike #Clear() this function also deletes the objects and
@@ -893,9 +963,14 @@ public:
 	}
 
 	//! Stores the wxKeyProfiles into the given wxConfig object.
-	bool Save(wxConfigBase *p, const wxString &key = wxEmptyString) const;
+	//! \param bCleanOld If TRUE, this function will save all the mcStyleArrays
+	//!        it contains and then will delete any other group which starts with
+	//!        the mgSTYLES_CONFIG_PREFIX string.
+	bool Save(wxConfigBase *p, const wxString &key = wxEmptyString, bool bCleanOld = FALSE) const;
 	
-	// Loads from the given wxConfig object an array of wxKeyProfiles.
+	//! Loads from the given wxConfig object all the wxKeyProfiles found.
+	//! The keyprofiles entries are detected using the wxKEYPROFILE_CONFIG_PREFIX
+	//! prefix string.
 	bool Load(wxConfigBase *p, const wxString &key = wxEmptyString);
 };
 
@@ -965,6 +1040,9 @@ private:
 #define wxKEYBINDER_REMOVE_PROFILEBTN_ID	wxKEYBINDER_BASEID+10
 
 
+#define wxKEYBINDER_SELECTED_POSTFIX		wxT(" (selected)")
+
+
 //! \name wxKeyConfigPanel BUILD flags
 //! These flags affect the way a wxKeyConfigPanel is created.
 //! See wxKeyConfigPanel::wxKeyConfigPanel. @{
@@ -1005,7 +1083,7 @@ private:
 //! A powerful keybinding editing panel.
 //! This is a flexible panel since it can be configured through the
 //! "build flags" and thus can be built in various different ways and
-//! because it is conceived to be used eventually as a base class of 
+//! because it is conceived to be eventually used as a base class of 
 //! another panel which can modify its behaviour just overloading one of
 //! its various functions.
 //! The panel contains 4 main controls:
@@ -1015,7 +1093,10 @@ private:
 //!   can be added through the #ImportXXXXXX() functions.
 //!   If the wxKEYBINDER_USE_TREECTRL build flag is not used 
 //!   (and wxKEYBINDER_USE_LISTBOX must be set in this case), a
-//!   combobox and a list box will be used instead.
+//!   combobox and a list box will be used instead of a wxTreeCtrl.
+//!   The command hierarchy is still retained also using
+//!   wxKEYBINDER_USE_LISTBOX even if a wxTreeCtrl looks better if
+//!   you have deep-nested menu items.
 //!
 //! - The listbox with all the key combinations associated with the
 //!   selected command
@@ -1030,20 +1111,28 @@ private:
 //!
 //! 1) create it as all other wxPanels.
 //!
-//! 2) if you don't want to pass it directly while constructing the panel,
-//!    if you want to use more than a single wxKeyProfile or if you want to
-//!    use a wxKeyProfileArray, you can use the #AddProfiles() function
-//!    to fill the commands tree/combobox with the key binds 
-//!    which will be shown as user-editable in this panel.
+//! 2) use the #AddProfiles() or the #AddProfile() functions to init the
+//!    panel with the original keybindings.
 //!
-//! 3) call one of the ImportXXXX() functions in order to create a nice
+//! 3) call one of the ImportXXXX() functions in order to create the
 //!    tree control which will be used by the user to edit the key bindings.
+//!    This is a step different from step #2 because wxKeyProfile does not
+//!    contain hierarchical informations about the commands; also, you can
+//!    fill the tree control of the panel with only some of the commands
+//!    contained in the profiles you added with step #2: that way the user
+//!    will be able to modify the keybindings only of the commands shown
+//!    in the tree control which can thus be used as a "command filter".
+//!    However, if you just want to make user-editable all the commands of
+//!    a wxKeyProfile (and you don't care about hierarchical disposition),
+//!    you can just use the #ImportKeyProfileCmd function.
 //!
 //! 4) when the user has finished to edit the key bindings, the
 //!    #ApplyChanges() function is called by wxKeyConfigPanel and the
-//!    temporary contents of the wxKeyBinder edited by the user is applied
-//!    on the original wxKeyProfile.
-//!    
+//!    temporary contents of the wxKeyBinder edited by the user are copied
+//!    in the original wxKeyProfile.
+//!    You can then retrieve the new array of wxKeyProfile (the user could
+//!    have added/removed profiles) using #GetProfiles(). The last selected
+//!    profile can be obtained using #GetSelProfile().
 //!    
 class wxKeyConfigPanel : public wxPanel
 {
@@ -1051,7 +1140,6 @@ public:
 
 	//! Constructs this panel and links it with the given key binder.
 	wxKeyConfigPanel(wxWindow* parent,
-		wxKeyProfile *pBinder,			// the key binder to edit (can be NULL)
 		int buildMode = wxKEYBINDER_DEFAULT_BUILDMODE,
 		wxWindowID id = -1, 
 		const wxPoint& pos = wxDefaultPosition,
@@ -1059,10 +1147,11 @@ public:
 		long style = wxTAB_TRAVERSAL,
 		const wxString& name = wxT("wxKeyConfigPanel"));
 
-	virtual ~wxKeyConfigPanel() {}
+	virtual ~wxKeyConfigPanel();
 
 
-public:		// import commands
+public:		// import commands (to call BEFORE ShowModal):
+			// they affect the tree control only
 
 	//! Adds to the tree of user-editable commands, the menuitems 
 	//! contained in the given menubar.
@@ -1070,7 +1159,7 @@ public:		// import commands
 	//! If the root of the tree control doesn't exist (because none
 	//! of the ImportXXXX functions have been called yet), this
 	//! function creates it with the "rootname" label.
-	virtual void ImportMenuBarCmd(wxMenuBar *, 
+	virtual void ImportMenuBarCmd(wxMenuBar *menuitems, 
 								const wxString &rootname = wxT("Menu bar"));
 
 	//! Adds to the tree of user-editable commands, the raw list of
@@ -1079,37 +1168,45 @@ public:		// import commands
 	//! #ImportMenuBarCmd), this function creates a raw list of the
 	//! commands contained in the key binder since a wxKeyBinder does 
 	//! not contain hierarchical info about the keybindings.
-	virtual void ImportKeyProfileCmd(int n, const wxString &rootname = wxT("Commands"));
+	virtual void ImportKeyProfileCmd(const wxKeyProfile &toimport, 
+								const wxString &rootname = wxT("Commands"));
 
 
-public:		// keyprofile utilities
+public:		// keyprofile utilities (to call BEFORE ShowModal):
+			// they affect the keybindings only
 
-	//! Adds a new keyprofile to the given one, eventually
-	//! using it to populate the tree control (if \c bImport is TRUE).
-	//! setting the root name to \c rootname.
+	//! Adds a new keyprofile to the keyprofile combo box.
 	//! \note This function does not select the given keyprofile
 	//!       (except in the case it's the first keyprofile added).
 	//!       To force the selection of a profile, you should use the
-	//!       GetProfiles()->SetSelection() function.
-	virtual void AddProfile(wxKeyProfile *p, bool bImport = FALSE, 
-							const wxString &rootname = wxT("Commands"));
+	//!       SetSelProfile() function.
+	virtual void AddProfile(const wxKeyProfile &p);
 							
-	//! Adds all the profiles stored in the given array.
-	virtual void AddProfiles(wxKeyProfileArray &arr);
+	//! Adds all the profiles stored in the given array to the keyprofile
+	//! combo box copying them into the panel for user modifications.
+	//! \note The profile which is marked as selected into the given
+	//!       wxKeyProfileArray is selected (see wxKeyProfileArray::m_nSelected).
+	virtual void AddProfiles(const wxKeyProfileArray &arr);
 
-	//! Returns the currently associated key profile (which is left untouched
-	//! until the #ApplyChanges function is called).
+	//! Forces the panel to select the n-th profile in the keyprofile combo box.
+	virtual void SetSelProfile(int n);		
+
+
+public:		// output-access utilities (to call AFTER ShowModal)
+
+	//! Returns the n-th key profile of the profile combo box.
 	wxKeyProfile *GetProfile(int n) const
 		{ wxASSERT(m_pKeyProfiles); return (wxKeyProfile *)m_pKeyProfiles->GetClientData(n); }
 
 	//! Returns the currently selected key profile using #GetSelProfileIdx().
+	//! This is the profile owned by the profile combo box.
 	wxKeyProfile *GetSelProfile() const
 		{ int n=GetSelProfileIdx(); return (n >= 0 ? GetProfile(n) : NULL); }
 
 	//! Returns the index of the currently selected key profile.
 	//! The currently selected key profile is the profile which is currently
 	//! displayed by the keyprofile combobox; thus, this function needs the
-	//! #m_pKeyProfiles combobox created to work.
+	//! #m_pKeyProfiles combobox created (and initialized) to work.
 	//! \note This function won't use wxComboBox::GetSelection() because
 	//!       when the label of the key profile has been edited, the function
 	//!       returns always -1... we will use the #m_nCurrentProf variable.
@@ -1117,7 +1214,13 @@ public:		// keyprofile utilities
 		{ wxASSERT(m_pKeyProfiles); return m_nCurrentProf; }
 		
 	//! Returns an array containing the pointers to the keyprofiles edited
-	//! by this dialog.
+	//! by this dialog. This function is typically used after the ShowModal()
+	//! function has been called to retrieve the user-edited keyprofiles 
+	//! in case the user chose OK (and not cancel).
+	//! \note The returned array has a valid profile selected which coincide
+	//!       with the last keyprofile selected in the combobox; i.e. you can
+	//!       use the wxKeyProfileArray::GetSelProfile function to retrieve
+	//!       the profile the user has chosen to select.
 	wxKeyProfileArray GetProfiles() const;
 
 
@@ -1219,11 +1322,18 @@ protected:		// members
 	wxCmd *m_pCurrCmd;
 
 	//! The temporary keybinder used while interactively editing shortcuts 
-	//! to allow to eventually discard the changes.
-	wxKeyBinder m_kBinder;
+	//! to allow to eventually discard the changes. See #m_bProfileHasBeenModified.
+	wxKeyProfile m_kBinder;
 	
 	//! The index of the currently selected profile.
 	int m_nCurrentProf;
+
+	//! TRUE if the current profile has been modified by the user.
+	//! This is used to detect changes when the user choose to edit
+	//! another profile using the m_pKeyProfiles control: if the current
+	//! profile has been modified, a dialog will ask to the user if he wants
+	//! to save its changes or not...
+	bool m_bProfileHasBeenModified;
 
 protected:		// the subwindows of this dialog
 

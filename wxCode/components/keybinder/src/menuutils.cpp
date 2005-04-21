@@ -289,7 +289,7 @@ void *wxMenuTreeWalker::OnMenuItemWalk(wxMenuBar *, wxMenuItem *m, void *data)
 void wxMenuTreeWalker::DeleteData(void *data)
 {
 	wxTreeItemId *p = (wxTreeItemId *)data;
-	wxSAFE_DELETE(p);
+	if (p) delete p;
 }
 
 
@@ -412,15 +412,17 @@ void *wxMenuShortcutWalker::OnMenuItemWalk(wxMenuBar *, wxMenuItem *m, void *)
 	}
 
 	// cleanup
-	wxSAFE_DELETE(a);
-
+	if (a) delete a;
 	return NULL;
 }
 
-void wxMenuShortcutWalker::DeleteData(void *data)
+void wxMenuShortcutWalker::DeleteData(void *
+#ifdef __WXDEBUG__
+									  data
+#endif	// to avoid warnings about unused arg
+									  )
 {
 	wxASSERT_MSG(data == NULL, 
-		wxT("wxMenuShortcutWalker does not use the 'data' parameter"));
-	data = data;	// to avoid warnings about unused arg
+		wxT("wxMenuShortcutWalker does not use the 'data' parameter"));	
 }
 

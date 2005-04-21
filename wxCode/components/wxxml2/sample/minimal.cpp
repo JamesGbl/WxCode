@@ -148,7 +148,7 @@ IMPLEMENT_APP(MyApp)
 // ============================================================================
 
 // first of all, decide if we can use the system...
-#if defined(__VISUALC__)
+#if defined(__VISUALC__) && defined(__WXDEBUG__)
 	#define mcDETECT_MEMORY_LEAKS
 #endif
 
@@ -166,7 +166,6 @@ IMPLEMENT_APP(MyApp)
 	#include <crtdbg.h>
 
 	// define some useful macros
-	#define new                 new(_NORMAL_BLOCK, THIS_FILE, __LINE__)
 	#define mcDUMP_ON_EXIT		{ _CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF); }
 
 	

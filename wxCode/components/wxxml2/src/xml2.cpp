@@ -1280,6 +1280,8 @@ size_t wxNativeNewlinesFilterStream::OnSysWrite(const void *buffer, size_t bufsi
 	}
 
 	// BE CAREFUL: "written" could be smaller or bigger than "bufsize"...
+	//             but we need to return "bufsize" since otherwise libxml2
+	//             could think that we missed to write something...
 	return bufsize;//written;
 }
 

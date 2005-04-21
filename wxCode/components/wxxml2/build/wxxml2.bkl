@@ -3,7 +3,8 @@
 
 
 	<!-- Some defaults for the variables used by wxCode bakefiles -->
-	<include file="../../../build/defaults.bkl"/>
+	<set var="WXCODE_BAKEFILEDIR">../../../build/bakefiles</set>
+	<include file="$(WXCODE_BAKEFILEDIR)/defaults.bkl"/>
 	
 
 	<!-- The wxXml2 settings -->
@@ -23,10 +24,11 @@
 	<set var="COMP_SRC">../src/xml2.cpp ../src/dtd.cpp</set>
 	<set var="COMP_HDR">../include/wx/xml2.h ../include/wx/dtd.h</set>	
 	<set var="COMP_SAMPLE_SRC">../sample/minimal.cpp</set>
-
+	<set var="WX_UNICODE_DEFAULT">1</set>
+	
 
 	<!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->
-	<include file="../../../build/wxcode.bkl"/>
+	<include file="$(WXCODE_BAKEFILEDIR)/wxcode.bkl"/>
 
 
 
@@ -55,8 +57,8 @@
 		<if cond="FORMAT=='mingw' or FORMAT=='autoconf'"><sys-lib>xml2</sys-lib></if>
 		<if cond="FORMAT!='mingw' and FORMAT!='autoconf'"><sys-lib>libxml2</sys-lib></if>
 		<if cond="FORMAT!='autoconf'"><sys-lib>iconv</sys-lib></if>
-		<wxlibs/>
-		<syslibs/>
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib>
 	</exe>
 	
 	<if cond="FORMAT=='autoconf'">

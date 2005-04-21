@@ -4,7 +4,7 @@
 
 # TARGTYPE "Win32 (x86) Static Library" 0x0104
 
-CFG=wxxml2 - Win32 Debug
+CFG=wxxml2 - Win32 Default
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
@@ -13,14 +13,18 @@ CFG=wxxml2 - Win32 Debug
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "wxxml2_wxxml2.mak" CFG="wxxml2 - Win32 Debug"
+!MESSAGE NMAKE /f "wxxml2_wxxml2.mak" CFG="wxxml2 - Win32 Default"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "wxxml2 - Win32 Unicode Release" (based on "Win32 (x86) Static Library")
+!MESSAGE "wxxml2 - Win32 DLL Unicode Debug" (based on "Win32 (x86) Static Library")
+!MESSAGE "wxxml2 - Win32 DLL Unicode" (based on "Win32 (x86) Static Library")
+!MESSAGE "wxxml2 - Win32 DLL Debug" (based on "Win32 (x86) Static Library")
+!MESSAGE "wxxml2 - Win32 DLL" (based on "Win32 (x86) Static Library")
 !MESSAGE "wxxml2 - Win32 Unicode Debug" (based on "Win32 (x86) Static Library")
-!MESSAGE "wxxml2 - Win32 Release" (based on "Win32 (x86) Static Library")
+!MESSAGE "wxxml2 - Win32 Unicode" (based on "Win32 (x86) Static Library")
 !MESSAGE "wxxml2 - Win32 Debug" (based on "Win32 (x86) Static Library")
+!MESSAGE "wxxml2 - Win32 Default" (based on "Win32 (x86) Static Library")
 !MESSAGE 
 
 # Begin Project
@@ -30,7 +34,30 @@ CFG=wxxml2 - Win32 Debug
 CPP=cl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "wxxml2 - Win32 Unicode Release"
+!IF  "$(CFG)" == "wxxml2 - Win32 DLL Unicode Debug"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 1
+# PROP BASE Output_Dir "..\lib"
+# PROP BASE Intermediate_Dir "msvc6prj\wxxml2"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 1
+# PROP Output_Dir "..\lib"
+# PROP Intermediate_Dir "msvc6prj\wxxml2"
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "$(WXWIN)\lib\vc_dll\mswud" /I "$(WXWIN)\include" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\wxxml2ud.pdb /D "WIN32" /D "_LIB" /D "_DEBUG" /D "_UNICODE" /D "__WXDEBUG__" /D "__WXMSW__" /c
+# ADD CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "$(WXWIN)\lib\vc_dll\mswud" /I "$(WXWIN)\include" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\wxxml2ud.pdb /D "WIN32" /D "_LIB" /D "_DEBUG" /D "_UNICODE" /D "__WXDEBUG__" /D "__WXMSW__" /c
+# ADD BASE RSC /l 0x409
+# ADD RSC /l 0x409
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LIB32=link.exe -lib
+# ADD BASE LIB32 /nologo /out:"..\lib\wxxml2ud.lib"
+# ADD LIB32 /nologo /out:"..\lib\wxxml2ud.lib"
+
+!ELSEIF  "$(CFG)" == "wxxml2 - Win32 DLL Unicode"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -42,8 +69,8 @@ RSC=rc.exe
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\wxxml2"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /GR /GX /w /O2 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2u.pdb /D "WIN32" /D "_LIB" /D "_UNICODE" /c
-# ADD CPP /nologo /FD /MD /GR /GX /w /O2 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswu" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2u.pdb /D "WIN32" /D "_LIB" /D "_UNICODE" /c
+# ADD BASE CPP /nologo /FD /MD /GR /EHsc /w /O2 /I "$(WXWIN)\lib\vc_dll\mswu" /I "$(WXWIN)\include" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2u.pdb /D "WIN32" /D "_LIB" /D "_UNICODE" /D "__WXMSW__" /c
+# ADD CPP /nologo /FD /MD /GR /EHsc /w /O2 /I "$(WXWIN)\lib\vc_dll\mswu" /I "$(WXWIN)\include" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2u.pdb /D "WIN32" /D "_LIB" /D "_UNICODE" /D "__WXMSW__" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -52,6 +79,52 @@ BSC32=bscmake.exe
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo /out:"..\lib\wxxml2u.lib"
 # ADD LIB32 /nologo /out:"..\lib\wxxml2u.lib"
+
+!ELSEIF  "$(CFG)" == "wxxml2 - Win32 DLL Debug"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 1
+# PROP BASE Output_Dir "..\lib"
+# PROP BASE Intermediate_Dir "msvc6prj\wxxml2"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 1
+# PROP Output_Dir "..\lib"
+# PROP Intermediate_Dir "msvc6prj\wxxml2"
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "$(WXWIN)\lib\vc_dll\mswd" /I "$(WXWIN)\include" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\wxxml2d.pdb /D "WIN32" /D "_LIB" /D "_DEBUG" /D "__WXDEBUG__" /D "__WXMSW__" /c
+# ADD CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "$(WXWIN)\lib\vc_dll\mswd" /I "$(WXWIN)\include" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\wxxml2d.pdb /D "WIN32" /D "_LIB" /D "_DEBUG" /D "__WXDEBUG__" /D "__WXMSW__" /c
+# ADD BASE RSC /l 0x409
+# ADD RSC /l 0x409
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LIB32=link.exe -lib
+# ADD BASE LIB32 /nologo /out:"..\lib\wxxml2d.lib"
+# ADD LIB32 /nologo /out:"..\lib\wxxml2d.lib"
+
+!ELSEIF  "$(CFG)" == "wxxml2 - Win32 DLL"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "..\lib"
+# PROP BASE Intermediate_Dir "msvc6prj\wxxml2"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "..\lib"
+# PROP Intermediate_Dir "msvc6prj\wxxml2"
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /FD /MD /GR /EHsc /w /O2 /I "$(WXWIN)\lib\vc_dll\msw" /I "$(WXWIN)\include" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2.pdb /D "WIN32" /D "_LIB" /D "__WXMSW__" /c
+# ADD CPP /nologo /FD /MD /GR /EHsc /w /O2 /I "$(WXWIN)\lib\vc_dll\msw" /I "$(WXWIN)\include" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2.pdb /D "WIN32" /D "_LIB" /D "__WXMSW__" /c
+# ADD BASE RSC /l 0x409
+# ADD RSC /l 0x409
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LIB32=link.exe -lib
+# ADD BASE LIB32 /nologo /out:"..\lib\wxxml2.lib"
+# ADD LIB32 /nologo /out:"..\lib\wxxml2.lib"
 
 !ELSEIF  "$(CFG)" == "wxxml2 - Win32 Unicode Debug"
 
@@ -65,8 +138,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\wxxml2"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswud" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\wxxml2ud.pdb /D "WIN32" /D "_LIB" /D "_UNICODE" /D "_DEBUG" /c
-# ADD CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswud" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\wxxml2ud.pdb /D "WIN32" /D "_LIB" /D "_UNICODE" /D "_DEBUG" /c
+# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "$(WXWIN)\lib\vc_lib\mswud" /I "$(WXWIN)\include" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\wxxml2ud.pdb /D "WIN32" /D "_LIB" /D "_DEBUG" /D "_UNICODE" /D "__WXDEBUG__" /D "__WXMSW__" /c
+# ADD CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "$(WXWIN)\lib\vc_lib\mswud" /I "$(WXWIN)\include" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\wxxml2ud.pdb /D "WIN32" /D "_LIB" /D "_DEBUG" /D "_UNICODE" /D "__WXDEBUG__" /D "__WXMSW__" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -76,7 +149,7 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo /out:"..\lib\wxxml2ud.lib"
 # ADD LIB32 /nologo /out:"..\lib\wxxml2ud.lib"
 
-!ELSEIF  "$(CFG)" == "wxxml2 - Win32 Release"
+!ELSEIF  "$(CFG)" == "wxxml2 - Win32 Unicode"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -88,16 +161,16 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\wxxml2"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /GR /GX /w /O2 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2.pdb /D "WIN32" /D "_LIB" /c
-# ADD CPP /nologo /FD /MD /GR /GX /w /O2 /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\msw" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2.pdb /D "WIN32" /D "_LIB" /c
+# ADD BASE CPP /nologo /FD /MD /GR /EHsc /w /O2 /I "$(WXWIN)\lib\vc_lib\mswu" /I "$(WXWIN)\include" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2u.pdb /D "WIN32" /D "_LIB" /D "_UNICODE" /D "__WXMSW__" /c
+# ADD CPP /nologo /FD /MD /GR /EHsc /w /O2 /I "$(WXWIN)\lib\vc_lib\mswu" /I "$(WXWIN)\include" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2u.pdb /D "WIN32" /D "_LIB" /D "_UNICODE" /D "__WXMSW__" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
-# ADD BASE LIB32 /nologo /out:"..\lib\wxxml2.lib"
-# ADD LIB32 /nologo /out:"..\lib\wxxml2.lib"
+# ADD BASE LIB32 /nologo /out:"..\lib\wxxml2u.lib"
+# ADD LIB32 /nologo /out:"..\lib\wxxml2u.lib"
 
 !ELSEIF  "$(CFG)" == "wxxml2 - Win32 Debug"
 
@@ -111,8 +184,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\wxxml2"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswd" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\wxxml2d.pdb /D "WIN32" /D "_LIB" /D "_DEBUG" /c
-# ADD CPP /nologo /FD /MDd /GR /GX /W4 /Od /I "c:\wxWidgets\include" /I "c:\wxWidgets\lib\vc_lib\mswd" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\wxxml2d.pdb /D "WIN32" /D "_LIB" /D "_DEBUG" /c
+# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "$(WXWIN)\lib\vc_lib\mswd" /I "$(WXWIN)\include" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\wxxml2d.pdb /D "WIN32" /D "_LIB" /D "_DEBUG" /D "__WXDEBUG__" /D "__WXMSW__" /c
+# ADD CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "$(WXWIN)\lib\vc_lib\mswd" /I "$(WXWIN)\include" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\wxxml2d.pdb /D "WIN32" /D "_LIB" /D "_DEBUG" /D "__WXDEBUG__" /D "__WXMSW__" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -122,14 +195,41 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo /out:"..\lib\wxxml2d.lib"
 # ADD LIB32 /nologo /out:"..\lib\wxxml2d.lib"
 
+!ELSEIF  "$(CFG)" == "wxxml2 - Win32 Default"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "..\lib"
+# PROP BASE Intermediate_Dir "msvc6prj\wxxml2"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "..\lib"
+# PROP Intermediate_Dir "msvc6prj\wxxml2"
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /FD /MD /GR /EHsc /w /O2 /I "$(WXWIN)\lib\vc_lib\msw" /I "$(WXWIN)\include" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2.pdb /D "WIN32" /D "_LIB" /D "__WXMSW__" /c
+# ADD CPP /nologo /FD /MD /GR /EHsc /w /O2 /I "$(WXWIN)\lib\vc_lib\msw" /I "$(WXWIN)\include" /I "..\include" /I "c:\libxml2\include" /I "c:\iconv\include" /Fd..\lib\wxxml2.pdb /D "WIN32" /D "_LIB" /D "__WXMSW__" /c
+# ADD BASE RSC /l 0x409
+# ADD RSC /l 0x409
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LIB32=link.exe -lib
+# ADD BASE LIB32 /nologo /out:"..\lib\wxxml2.lib"
+# ADD LIB32 /nologo /out:"..\lib\wxxml2.lib"
+
 !ENDIF
 
 # Begin Target
 
-# Name "wxxml2 - Win32 Unicode Release"
+# Name "wxxml2 - Win32 DLL Unicode Debug"
+# Name "wxxml2 - Win32 DLL Unicode"
+# Name "wxxml2 - Win32 DLL Debug"
+# Name "wxxml2 - Win32 DLL"
 # Name "wxxml2 - Win32 Unicode Debug"
-# Name "wxxml2 - Win32 Release"
+# Name "wxxml2 - Win32 Unicode"
 # Name "wxxml2 - Win32 Debug"
+# Name "wxxml2 - Win32 Default"
 # Begin Group "Source Files"
 
 # PROP Default_Filter ""
