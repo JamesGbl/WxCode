@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.24 2005-04-20 15:57:39 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.25 2005-04-22 17:38:48 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -2567,7 +2567,7 @@ void wxScintilla::StyleSetFont (int styleNum, wxFont& font) {
     bool           bold     = font.GetWeight() == wxBOLD;
     bool           italic   = font.GetStyle() == wxITALIC;
     bool           under    = font.GetUnderlined();
-    wxFontEncoding encoding = font.GetDefaultEncoding();
+    wxFontEncoding encoding = font.GetEncoding();
 
     StyleSetFontAttr (styleNum, size, faceName, bold, italic, under, encoding);
 }
