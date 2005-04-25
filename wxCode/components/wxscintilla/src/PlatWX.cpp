@@ -431,7 +431,11 @@ void SurfaceImpl::MeasureWidths(Font &font, const char *s, int len, int *positio
 #if !wxCHECK_VERSION(2, 5, 0)
     memcpy(positions, tpos, len * sizeof(*tpos));
 #else
+#if wxUSE_STL
+    std::copy(tpos.begin(), tpos.end(), positions);
+#else
     memcpy(positions, tpos.begin(), len * sizeof(int));
+#endif
 #endif
 #endif
 
