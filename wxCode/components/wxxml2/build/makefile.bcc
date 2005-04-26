@@ -71,7 +71,7 @@ WX_DEBUG = 1
 
 # Version of the wx library to build against. 
 !ifndef WX_VERSION
-WX_VERSION = 25
+WX_VERSION = 26
 !endif
 
 

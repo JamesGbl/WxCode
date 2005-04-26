@@ -65,7 +65,7 @@ WX_UNICODE = 1
 WX_DEBUG = 1
 
 # Version of the wx library to build against. 
-WX_VERSION = 25
+WX_VERSION = 26
 
 
 

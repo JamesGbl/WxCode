@@ -11,5 +11,8 @@
 
     <disable-formats>dmars,dmars_smake,cbx_unix,cbuilderx,msevc4prj</disable-formats>
     <add-formats>msvc6prj,autoconf,borland,dmars_smake,dmars,mingw,msvc,msevc4prj,watcom,cbuilderx,cbx_unix</add-formats>
+
+    <!-- required since wxCode uses wx presets stored in wxWidgets subfolders... -->
+    <add-flags>-I%WXWIN%\build\bakefiles\wxpresets</add-flags>
     
 </bakefile-gen>

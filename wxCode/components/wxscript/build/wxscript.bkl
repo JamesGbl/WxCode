@@ -83,6 +83,8 @@
 	<set var="COMP_SAMPLE2_SRC">../tests/test2/Test.cpp</set>
 	<set var="COMP_SAMPLE2_DIR">../tests/test2</set>
 	<set var="WX_UNICODE_DEFAULT">1</set>
+	<set var="WX_VERSION_DEFAULT">26</set>
+
 
 	<!-- Additional source file -->
 	<if cond="FORMAT=='msvc' or FORMAT=='msvc6prj'">

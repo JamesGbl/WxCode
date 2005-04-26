@@ -25,7 +25,7 @@
 	<set var="COMP_HDR">../include/wx/xml2.h ../include/wx/dtd.h</set>	
 	<set var="COMP_SAMPLE_SRC">../sample/minimal.cpp</set>
 	<set var="WX_UNICODE_DEFAULT">1</set>
-	
+	<set var="WX_VERSION_DEFAULT">26</set>
 
 	<!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->
 	<include file="$(WXCODE_BAKEFILEDIR)/wxcode.bkl"/>
