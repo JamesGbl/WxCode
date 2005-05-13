@@ -7,6 +7,9 @@
 
 <h2>wxMimeType</h2>
 <p>
+This is currently just a prove of concept, so don't expect too much.
+</p>
+<p>
 wxMimeType allows to retrieve and to set all the mime type information of file:
 </p>
 <ul>
@@ -57,7 +60,7 @@ Constructor.
 <b>bool</b> <b>Add</b> (<b>const wxString&amp;</b> <I>mimetype</I>, <b>wxMimeTypeData*</b> <I>data</I>, <b>bool</b> <I>standard</I> = false)
 </p>
 <p>
-Adds an association of a file type to a mime type. It's not tested what happens if multiple associations are added. Returns true if successful.
+Adds an association of a file type to a mime type. Returns true if successful.
 </p>
 <p>
 Currently works only under Windows and only with file extension.
@@ -70,7 +73,7 @@ Currently works only under Windows and only with file extension.
 <b>bool</b> <b>Remove</b> (<b>wxMimeTypeData*</b> <I>data</I>)
 </p>
 <p>
-Removes an association of a file type to a mime type. It's not tested what happens if multiple associations are removed. Returns true if successful.
+Removes an association of a file type to a mime type. Returns true if successful.
 </p>
 <p>
 Currently works only under Windows and only with file extension.
@@ -125,7 +128,7 @@ Currently not implemented.
 Returns all mime type data of an association. Returns true if successful.
 </p>
 <p>
-Currently works only under Windows and only with file extension.
+Currently not implemented.
 <p>
 
 <hr>
