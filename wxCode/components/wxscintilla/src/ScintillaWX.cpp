@@ -9,7 +9,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: ScintillaWX.cpp,v 1.13 2005-04-16 09:26:02 wyo Exp $
+// RCS-ID:      $Id: ScintillaWX.cpp,v 1.14 2005-05-13 17:23:06 wyo Exp $
 // Copyright:   (c) 2000 by Total Control Software
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -857,9 +857,9 @@ int  ScintillaWX::DoKeyDown(const wxKeyEvent& evt, bool* consumed)
     bool shift = evt.ShiftDown(),
          ctrl  = evt.ControlDown(),
          alt   = evt.AltDown();
-    if (ctrl && key >= 1 && key <= 26)
-        key += 'A' - 1;
 
+    if (ctrl && key >= 1 && key <= 26 && key != WXK_BACK)
+        key += 'A' - 1;
 
     switch (key) {
     case WXK_DOWN:              key = SCK_DOWN;     break;
