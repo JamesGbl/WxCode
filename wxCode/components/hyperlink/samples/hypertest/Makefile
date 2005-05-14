@@ -3,7 +3,7 @@
 ## Purpose:     hypertest
 ## Maintainer:  Otto Wyss
 ## Created:     2005-05-12
-## RCS-ID:      $Id: Makefile,v 1.1 2005-05-13 17:34:22 wyo Exp $
+## RCS-ID:      $Id: Makefile,v 1.2 2005-05-14 19:27:38 wyo Exp $
 ## Copyright:   (c) 2005 wxCode
 ## Licence:     wxWindows
 ##############################################################################
@@ -48,27 +48,27 @@ endif
 OBJ = $(SRC:.cpp=.o)
 
 .cpp.o:
-    g++ -c $(INC) `$(WXCONFIG) --cxxflags` -g -o $@ $<
+	g++ -c $(INC) `$(WXCONFIG) --cxxflags` -g -o $@ $<
 
-all:    $(PRG)
-$(PRG): $(OBJ)
-    g++ -o $@ $^ `$(WXCONFIG) --libs`
+all:	$(PRG)
+$(PRG):	$(OBJ)
+	g++ -o $@ $^ `$(WXCONFIG) --libs`
 
-release:    $(PRG)r
-$(PRG)r:    $(OBJ)
-    g++ -o $@ $^ `$(WXCONFIG) --static --libs`
+release:	$(PRG)r
+$(PRG)r:	$(OBJ)
+	g++ -o $@ $^ `$(WXCONFIG) --static --libs`
 
-debug:  $(PRG)d
-$(PRG)d:    $(OBJ)
-    g++ -o $@ $^ `$(WXCONFIG) --libs`
+debug:	$(PRG)d
+$(PRG)d:	$(OBJ)
+	g++ -o $@ $^ `$(WXCONFIG) --libs`
 
-develdebug: $(PRG)dd
-$(PRG)dd:   $(OBJ)
-    g++ -o $@ $^ `$(WXCONFIG) --libs`
+develdebug:	 $(PRG)dd
+$(PRG)dd:	$(OBJ)
+	g++ -o $@ $^ `$(WXCONFIG) --libs`
 
-univdebug:  $(PRG)ud
-$(PRG)ud:   $(OBJ)
-    g++ -o $@ $^ `$(WXCONFIG) --libs`
+univdebug:	$(PRG)ud
+$(PRG)ud:	$(OBJ)
+	g++ -o $@ $^ `$(WXCONFIG) --libs`
 
 clean:
-    rm -f *.o
+	rm -f *.o
