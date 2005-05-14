@@ -3,7 +3,7 @@
 // Purpose:     hypertest application
 // Maintainer:  Otto Wyss
 // Created:     2005-05-12
-// RCS-ID:      $Id: hypertest.cpp,v 1.1 2005-05-13 17:34:22 wyo Exp $
+// RCS-ID:      $Id: hypertest.cpp,v 1.2 2005-05-14 19:27:04 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -218,7 +218,7 @@ AppAbout::AppAbout (wxWindow *parent,
 
     // about icontitle//info
     wxBoxSizer *aboutpane = new wxBoxSizer (wxHORIZONTAL);
-    wxBitmap bitmap = wxBitmap(wxICON (app));
+    wxBitmap bitmap = wxBitmap(wxICON (hypertest));
     aboutpane->Add (new wxStaticBitmap (this, -1, bitmap),
                     0, wxALIGN_CENTER | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT, 40);
     aboutpane->Add (aboutinfo, 1, wxEXPAND);
@@ -281,7 +281,7 @@ AppFrame::AppFrame (const wxString &title)
                     wxDEFAULT_FRAME_STYLE | wxNO_FULL_REPAINT_ON_RESIZE) {
 
     // set icon and background
-    SetIcon (wxICON (app));
+    SetIcon (wxICON (hypertest));
 
     // about box shown for 5 seconds
 //?    AppAbout (this, 5000);
