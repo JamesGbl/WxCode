@@ -7,16 +7,16 @@
 CFG=wxscintilla - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
-!MESSAGE
+!MESSAGE 
 !MESSAGE NMAKE /f "wxscintilla.mak".
-!MESSAGE
+!MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
-!MESSAGE
+!MESSAGE 
 !MESSAGE NMAKE /f "wxscintilla.mak" CFG="wxscintilla - Win32 Debug"
-!MESSAGE
+!MESSAGE 
 !MESSAGE Possible choices for configuration are:
-!MESSAGE
+!MESSAGE 
 !MESSAGE "wxscintilla - Win32 DebugUniv" (based on "Win32 (x86) Static Library")
 !MESSAGE "wxscintilla - Win32 ReleaseUniv" (based on "Win32 (x86) Static Library")
 !MESSAGE "wxscintilla - Win32 DebugDev" (based on "Win32 (x86) Static Library")
@@ -25,7 +25,7 @@ CFG=wxscintilla - Win32 Debug
 !MESSAGE "wxscintilla - Win32 ReleaseUnicode" (based on "Win32 (x86) Static Library")
 !MESSAGE "wxscintilla - Win32 Debug" (based on "Win32 (x86) Static Library")
 !MESSAGE "wxscintilla - Win32 Release" (based on "Win32 (x86) Static Library")
-!MESSAGE
+!MESSAGE 
 
 # Begin Project
 # PROP AllowPerConfigDependencies 0
@@ -48,9 +48,9 @@ RSC=rc.exe
 # PROP Target_Dir ""
 LINK32=link.exe
 # ADD BASE CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "$(WXDEVEL)\include" /I "..\include" /I "$(WXDEVEL)\lib\vc_lib\mswunivd" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_LIB" /D "_DEBUG" /D "__WXMSW__" /D "__WXUNIVERSAL__" /D "__WXDEBUG__" /D "__WX__" /D "SCI_LEXER" /D "LINK_LEXERS" /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "$(WXDEVEL)\include" /I "..\include" /I "$(WXDEVEL)\lib\vc_lib\mswunivd" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_LIB" /D "_DEBUG" /D "__WXMSW__" /D "__WXUNIVERSAL__" /D "__WXDEBUG__" /D "__WX__" /D "SCI_LEXER" /D "LINK_LEXERS" /FD /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /Gi /GR /GX /Zi /Od /I "$(WXDEVEL)\include" /I "..\include" /I "$(WXDEVEL)\lib\vc_lib\mswunivd" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_LIB" /D "_DEBUG" /D "__WXMSW__" /D "__WXUNIVERSAL__" /D "__WXDEBUG__" /D "__WX__" /D "SCI_LEXER" /D "LINK_LEXERS" /FD /GZ /c
 # ADD BASE RSC /l 0x405
-# ADD RSC /l 0x405
+# ADD RSC /l 0x807
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -70,10 +70,11 @@ LIB32=link.exe -lib
 # PROP Output_Dir "ReleaseUniv"
 # PROP Intermediate_Dir "ReleaseUniv"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /O1 /GR /GX /I "$(WXDEVEL)\include" /I "..\include" /I "$(WXDEVEL)\lib\vc_lib\mswuniv" /W4 /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_LIB" /D "__WXMSW__" /D "__WXUNIVERSAL__" /D "__WX__" /D "SCI_LEXER" /D "LINK_LEXERS" /c
-# ADD CPP /nologo /FD /MD /O1 /GR /GX /I "$(WXDEVEL)\include" /I "..\include" /I "$(WXDEVEL)\lib\vc_lib\mswuniv" /W4 /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_LIB" /D "__WXMSW__" /D "__WXUNIVERSAL__" /D "__WX__" /D "SCI_LEXER" /D "LINK_LEXERS" /c
+LINK32=link.exe
+# ADD BASE CPP /nologo /MD /W4 /GR /GX /O1 /I "$(WXDEVEL)\include" /I "..\include" /I "$(WXDEVEL)\lib\vc_lib\mswuniv" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_LIB" /D "__WXMSW__" /D "__WXUNIVERSAL__" /D "__WX__" /D "SCI_LEXER" /D "LINK_LEXERS" /FD /c
+# ADD CPP /nologo /MD /W3 /Gi /GR /GX /O2 /I "$(WXDEVEL)\include" /I "..\include" /I "$(WXDEVEL)\lib\vc_lib\mswuniv" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_LIB" /D "__WXMSW__" /D "__WXUNIVERSAL__" /D "__WX__" /D "SCI_LEXER" /D "LINK_LEXERS" /FD /c
 # ADD BASE RSC /l 0x405
-# ADD RSC /l 0x405
+# ADD RSC /l 0x807
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -93,10 +94,11 @@ LIB32=link.exe -lib
 # PROP Output_Dir "DebugDev"
 # PROP Intermediate_Dir "DebugDev"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /Od /GR /GX /I "$(WXDEVEL)\include" /I "..\include" /I "$(WXDEVEL)\lib\vc_lib\mswd" /W4 /Zi /Gm /GZ /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_LIB" /D "_DEBUG" /D "__WXMSW__" /D "__WXDEBUG__" /D "__WX__" /D "SCI_LEXER" /D "LINK_LEXERS" /c
-# ADD CPP /nologo /FD /MDd /Od /GR /GX /I "$(WXDEVEL)\include" /I "..\include" /I "$(WXDEVEL)\lib\vc_lib\mswd" /W4 /Zi /Gm /GZ /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_LIB" /D "_DEBUG" /D "__WXMSW__" /D "__WXDEBUG__" /D "__WX__" /D "SCI_LEXER" /D "LINK_LEXERS" /c
+LINK32=link.exe
+# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "$(WXDEVEL)\include" /I "..\include" /I "$(WXDEVEL)\lib\vc_lib\mswd" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_LIB" /D "_DEBUG" /D "__WXMSW__" /D "__WXDEBUG__" /D "__WX__" /D "SCI_LEXER" /D "LINK_LEXERS" /FD /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /Gi /GR /GX /Zi /Od /I "$(WXDEVEL)\include" /I "..\include" /I "$(WXDEVEL)\lib\vc_lib\mswd" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_LIB" /D "_DEBUG" /D "__WXMSW__" /D "__WXDEBUG__" /D "__WX__" /D "SCI_LEXER" /D "LINK_LEXERS" /FD /GZ /c
 # ADD BASE RSC /l 0x405
-# ADD RSC /l 0x405
+# ADD RSC /l 0x807
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -116,10 +118,11 @@ LIB32=link.exe -lib
 # PROP Output_Dir "ReleaseDev"
 # PROP Intermediate_Dir "ReleaseDev"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /O1 /GR /GX /I "$(WXDEVEL)\include" /I "..\include" /I "$(WXDEVEL)\lib\vc_lib\msw" /W4 /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_LIB" /D "__WXMSW__" /D "__WX__" /D "SCI_LEXER" /D "LINK_LEXERS" /c
-# ADD CPP /nologo /FD /MD /O1 /GR /GX /I "$(WXDEVEL)\include" /I "..\include" /I "$(WXDEVEL)\lib\vc_lib\msw" /W4 /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_LIB" /D "__WXMSW__" /D "__WX__" /D "SCI_LEXER" /D "LINK_LEXERS" /c
+LINK32=link.exe
+# ADD BASE CPP /nologo /MD /W4 /GR /GX /O1 /I "$(WXDEVEL)\include" /I "..\include" /I "$(WXDEVEL)\lib\vc_lib\msw" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_LIB" /D "__WXMSW__" /D "__WX__" /D "SCI_LEXER" /D "LINK_LEXERS" /FD /c
+# ADD CPP /nologo /MD /W3 /Gi /GR /GX /O2 /I "$(WXDEVEL)\include" /I "..\include" /I "$(WXDEVEL)\lib\vc_lib\msw" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_LIB" /D "__WXMSW__" /D "__WX__" /D "SCI_LEXER" /D "LINK_LEXERS" /FD /c
 # ADD BASE RSC /l 0x405
-# ADD RSC /l 0x405
+# ADD RSC /l 0x807
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -139,10 +142,11 @@ LIB32=link.exe -lib
 # PROP Output_Dir "DebugUnicode"
 # PROP Intermediate_Dir "DebugDDebugUnicodeev"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /Od /GR /GX /I "$(WXDEVEL)\include" /I "..\include" /I "$(WXDEVEL)\lib\vc_lib\mswud" /W4 /Zi /Gm /GZ /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_LIB" /D "_DEBUG" /D "__WXMSW__" /D "__WXDEBUG__" /D "_UNICODE" /D "__WX__" /D "SCI_LEXER" /D "LINK_LEXERS" /c
-# ADD CPP /nologo /FD /MDd /Od /GR /GX /I "$(WXDEVEL)\include" /I "..\include" /I "$(WXDEVEL)\lib\vc_lib\mswud" /W4 /Zi /Gm /GZ /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_LIB" /D "_DEBUG" /D "__WXMSW__" /D "__WXDEBUG__" /D "_UNICODE" /D "__WX__" /D "SCI_LEXER" /D "LINK_LEXERS" /c
+LINK32=link.exe
+# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "$(WXDEVEL)\include" /I "..\include" /I "$(WXDEVEL)\lib\vc_lib\mswud" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_LIB" /D "_DEBUG" /D "__WXMSW__" /D "__WXDEBUG__" /D "_UNICODE" /D "__WX__" /D "SCI_LEXER" /D "LINK_LEXERS" /FD /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /Gi /GR /GX /Zi /Od /I "$(WXDEVEL)\include" /I "..\include" /I "$(WXDEVEL)\lib\vc_lib\mswud" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_LIB" /D "_DEBUG" /D "__WXMSW__" /D "__WXDEBUG__" /D "_UNICODE" /D "__WX__" /D "SCI_LEXER" /D "LINK_LEXERS" /FD /GZ /c
 # ADD BASE RSC /l 0x405
-# ADD RSC /l 0x405
+# ADD RSC /l 0x807
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -162,10 +166,11 @@ LIB32=link.exe -lib
 # PROP Output_Dir "ReleaseUnicode"
 # PROP Intermediate_Dir "ReleaseUnicode"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /O1 /GR /GX /I "$(WXDEVEL)\include" /I "..\include" /I "$(WXDEVEL)\lib\vc_lib\mswu" /W4 /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_LIB" /D "__WXMSW__" /D "_UNICODE" /D "__WX__" /D "SCI_LEXER" /D "LINK_LEXERS" /c
-# ADD CPP /nologo /FD /MD /O1 /GR /GX /I "$(WXDEVEL)\include" /I "..\include" /I "$(WXDEVEL)\lib\vc_lib\mswu" /W4 /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_LIB" /D "__WXMSW__" /D "_UNICODE" /D "__WX__" /D "SCI_LEXER" /D "LINK_LEXERS" /c
+LINK32=link.exe
+# ADD BASE CPP /nologo /MD /W4 /GR /GX /O1 /I "$(WXDEVEL)\include" /I "..\include" /I "$(WXDEVEL)\lib\vc_lib\mswu" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_LIB" /D "__WXMSW__" /D "_UNICODE" /D "__WX__" /D "SCI_LEXER" /D "LINK_LEXERS" /FD /c
+# ADD CPP /nologo /MD /W3 /Gi /GR /GX /O2 /I "$(WXDEVEL)\include" /I "..\include" /I "$(WXDEVEL)\lib\vc_lib\mswu" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_LIB" /D "__WXMSW__" /D "_UNICODE" /D "__WX__" /D "SCI_LEXER" /D "LINK_LEXERS" /FD /c
 # ADD BASE RSC /l 0x405
-# ADD RSC /l 0x405
+# ADD RSC /l 0x807
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -187,9 +192,10 @@ LIB32=link.exe -lib
 # PROP Target_Dir ""
 LINK32=link.exe
 # ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MDd /W3 /GX /Zi /Od /I "$(WXSTABLE)\include" /I "..\include" /I "$(WXSTABLE)\lib\mswd" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "__WINDOWS__" /D "__WXMSW__" /D DEBUG=1 /D "__WXDEBUG__" /D "__WIN95__" /D "__WIN32__" /D WINVER=0x0400 /D "STRICT" /D "SCI_LEXER" /D "LINK_LEXERS" /D "__WX__" /YX /FD /c
+# ADD CPP /nologo /MDd /W4 /Gm /Gi /GR /GX /Zi /Od /I "$(WXSTABLE)\include" /I "..\include" /I "$(WXSTABLE)\lib\mswd" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "__WINDOWS__" /D "__WXMSW__" /D DEBUG=1 /D "__WXDEBUG__" /D "__WIN95__" /D "__WIN32__" /D WINVER=0x0400 /D "STRICT" /D "SCI_LEXER" /D "LINK_LEXERS" /D "__WX__" /FD /c
+# SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x809
-# ADD RSC /l 0x809
+# ADD RSC /l 0x807
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -211,9 +217,10 @@ LIB32=link.exe -lib
 # PROP Target_Dir ""
 LINK32=link.exe
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GX /O1 /Ob2 /I "$(WXSTABLE)\include" /I "..\include" /I "$(WXSTABLE)\lib\msw" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_WINDOWS" /D "__WINDOWS__" /D "__WXMSW__" /D "__HACK_MY_MSDEV40__" /D "__WIN95__" /D "__WIN32__" /D WINVER=0x0400 /D "STRICT" /D "SCI_LEXER" /D "LINK_LEXERS" /D "__WX__" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /Gi /GR /GX /O2 /Ob2 /I "$(WXSTABLE)\include" /I "..\include" /I "$(WXSTABLE)\lib\msw" /I "..\src\scintilla\include" /I "..\src\scintilla\src" /D "WIN32" /D "_WINDOWS" /D "__WINDOWS__" /D "__WXMSW__" /D "__HACK_MY_MSDEV40__" /D "__WIN95__" /D "__WIN32__" /D WINVER=0x0400 /D "STRICT" /D "SCI_LEXER" /D "LINK_LEXERS" /D "__WX__" /FD /c
+# SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x809
-# ADD RSC /l 0x809
+# ADD RSC /l 0x807
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -221,7 +228,7 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo /out:"..\lib\wxscintilla.lib"
 # ADD LIB32 /nologo /out:"..\lib\wxscintilla.lib"
 
-!ENDIF
+!ENDIF 
 
 # Begin Target
 
