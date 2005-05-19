@@ -3,7 +3,7 @@
 // Purpose:     hypertest application
 // Maintainer:  Otto Wyss
 // Created:     2005-05-12
-// RCS-ID:      $Id: hypertest.cpp,v 1.2 2005-05-14 19:27:04 wyo Exp $
+// RCS-ID:      $Id: hypertest.cpp,v 1.3 2005-05-19 17:34:19 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -305,7 +305,7 @@ AppFrame::~AppFrame () {
 }
 
 // common event handlers
-void AppFrame::OnClose (wxCloseEvent &event) {
+void AppFrame::OnClose (wxCloseEvent &WXUNUSED(event)) {
     Destroy();
 }
 
