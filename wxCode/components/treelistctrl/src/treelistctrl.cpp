@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.70 2005-04-30 19:59:55 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.71 2005-05-21 08:41:13 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -2634,11 +2634,11 @@ void wxTreeListMainWindow::ScrollTo (const wxTreeItemId &item) {
 
     if (item_y < start_y+3) {
         // going down, item should appear at top
-        SetScrollbars (xUnit, yUnit, x/xUnit, y/yUnit, x_pos, item_y/yUnit);
+        SetScrollbars (xUnit, yUnit, xUnit ? x/xUnit : 0, yUnit ? y/yUnit : 0, x_pos, yUnit ? item_y/yUnit : 0);
     }else if (item_y+GetLineHeight(gitem) > start_y+client_h) {
         // going up, item should appear at bottom
         item_y += yUnit + 2;
-        SetScrollbars (xUnit, yUnit, x/xUnit, y/yUnit, x_pos, (item_y+GetLineHeight(gitem)-client_h)/yUnit );
+        SetScrollbars (xUnit, yUnit, xUnit ? x/xUnit : 0, yUnit ? y/yUnit : 0, x_pos, yUnit ? (item_y+GetLineHeight(gitem)-client_h)/yUnit : 0 );
     }
 }
 
@@ -2915,6 +2915,8 @@ void wxTreeListMainWindow::PaintItem (wxTreeListItem *item, wxDC& dc) {
             dc.SetTextForeground (colTextHilight);
         }else if (item == m_curItem) {
             dc.SetPen (m_hasFocus? *wxBLACK_PEN: *wxTRANSPARENT_PEN);
+        }else{
+            dc.SetTextForeground (colText);
         }
         dc.DrawRectangle (0, item->GetY() + off_h, total_w, total_h - off_h);
     }else{
@@ -2994,6 +2996,8 @@ void wxTreeListMainWindow::PaintItem (wxTreeListItem *item, wxDC& dc) {
                     dc.SetTextForeground (colTextHilight);
                 }else if (item == m_curItem) {
                     dc.SetPen (m_hasFocus? *wxBLACK_PEN: *wxTRANSPARENT_PEN);
+                }else{
+                    dc.SetTextForeground (colText);
                 }
                 dc.DrawRectangle (text_x, item->GetY() + off_h, text_w, total_h - off_h);
             }else{
