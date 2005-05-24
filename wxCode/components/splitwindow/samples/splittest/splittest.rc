@@ -1,0 +1,2 @@
+app ICON "splittest.ico"
+#include "wx/msw/wx.rc"
