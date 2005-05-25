@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.71 2005-05-21 08:41:13 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.72 2005-05-25 21:06:13 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -578,6 +578,9 @@ public:
                       wxTreeItemIcon which = wxTreeItemIcon_Normal);
     int GetItemImage(const wxTreeItemId& item, int column,
                      wxTreeItemIcon which = wxTreeItemIcon_Normal) const;
+
+    int GetBestColumnWidth (int column, wxTreeItemId parent = wxTreeItemId());
+    int GetItemWidth (int column, wxTreeListItem *item);
 
     void SetFocus();
 
@@ -1337,7 +1340,11 @@ void wxTreeListHeaderWindow::OnMouse (wxMouseEvent &event) {
                                                     wxEVT_COMMAND_LIST_COL_RIGHT_CLICK;
                 SendListEvent (evt, event.GetPosition());
             }
-        } else if (event.Moving()) {
+        }else if (event.LeftDClick() && hit_border) {
+            SetColumnWidth (m_column, m_owner->GetBestColumnWidth (m_column));
+            Refresh();
+
+        }else if (event.Moving()) {
             bool setCursor;
             if (hit_border) {
                 setCursor = m_currentCursor == wxSTANDARD_CURSOR;
@@ -4023,6 +4030,73 @@ void wxTreeListMainWindow::SetFocus() {
     wxWindow::SetFocus();
 }
 
+int wxTreeListMainWindow::GetItemWidth (int column, wxTreeListItem *item) {
+    if (!item) return 0;
+
+    // count indent level
+    int level = 0;
+    wxTreeListItem *parent = item->GetItemParent();
+    wxTreeListItem *root = (wxTreeListItem*)GetRootItem().m_pItem;
+    while (parent && (!HasFlag(wxTR_HIDE_ROOT) || (parent != root))) {
+        level++;
+        parent = parent->GetItemParent();
+    }
+
+    // determine item width
+    int w = 0, h = 0;  
+    wxFont font = item->Attr().GetFont();
+    GetTextExtent (item->GetText(column), &w, &h, NULL, NULL, font.Ok()? &font: NULL);
+    w += 2*MARGIN;
+
+    // calculate width
+    int width = w + 2*MARGIN;
+    if (column == GetMainColumn()) {
+        width += MARGIN;
+        if (HasFlag(wxTR_LINES_AT_ROOT)) width += LINEATROOT;
+        if (HasButtons() && item->HasPlus()) width += m_btnWidth + MARGIN;
+        if (item->GetCurrentImage() != NO_IMAGE) width += m_imgWidth;
+        if (level) width += level * GetIndent();
+    }
+
+    return width;
+}
+
+int wxTreeListMainWindow::GetBestColumnWidth (int column, wxTreeItemId parent) {
+    int maxWidth, h;
+    GetClientSize (&maxWidth, &h);
+    int width = 0;
+
+    // get root if on item
+    if (!parent.IsOk()) parent = GetRootItem();
+
+    // add root width
+    if (!HasFlag(wxTR_HIDE_ROOT)) {
+        int w = GetItemWidth (column, (wxTreeListItem*)parent.m_pItem);
+        if (width < w) width = w;
+        if (width > maxWidth) return maxWidth; 
+    }
+
+    wxTreeItemIdValue cookie = 0;
+    wxTreeItemId item = GetFirstChild (parent, cookie);
+    while (item.IsOk()) {
+        int w = GetItemWidth (column, (wxTreeListItem*)item.m_pItem);
+        if (width < w) width = w;
+        if (width > maxWidth) return maxWidth; 
+
+        // check the children of this item
+        if (((wxTreeListItem*)item.m_pItem)->IsExpanded()) {
+            int w = GetBestColumnWidth (column, item);
+            if (width < w) width = w;
+            if (width > maxWidth) return maxWidth; 
+        }
+            
+        // next sibling
+        item = GetNextChild (parent, cookie);
+    }
+
+    return width;
+}
+
 
 //-----------------------------------------------------------------------------
 //  wxTreeListCtrl
@@ -4078,10 +4152,13 @@ void wxTreeListCtrl::DoHeaderLayout()
 {
     int w, h;
     GetClientSize(&w, &h);
-    if (m_header_win)
+    if (m_header_win) {
         m_header_win->SetSize(0, 0, w, m_headerHeight);
-    if (m_main_win)
+        m_header_win->Refresh();
+    }
+    if (m_main_win) {
         m_main_win->SetSize(0, m_headerHeight + 1, w, h - m_headerHeight - 1);
+    }
 }
 
 void wxTreeListCtrl::OnSize(wxSizeEvent& WXUNUSED(event))
