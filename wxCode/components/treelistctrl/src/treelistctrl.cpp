@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.72 2005-05-25 21:06:13 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.73 2005-05-26 15:55:57 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -1300,7 +1300,7 @@ void wxTreeListHeaderWindow::OnMouse (wxMouseEvent &event) {
         }
 
     }else{ // not dragging
-    
+
         m_minX = 0;
         bool hit_border = false;
 
@@ -1820,7 +1820,7 @@ void wxTreeListMainWindow::SetLineSpacing (unsigned int spacing) {
     CalculateLineHeight();
 }
 
-size_t wxTreeListMainWindow::GetChildrenCount (const wxTreeItemId& item, 
+size_t wxTreeListMainWindow::GetChildrenCount (const wxTreeItemId& item,
                                                bool recursively) {
     wxCHECK_MSG (item.IsOk(), 0u, _T("invalid tree item"));
     return ((wxTreeListItem*)item.m_pItem)->GetChildrenCount (recursively);
@@ -4043,7 +4043,7 @@ int wxTreeListMainWindow::GetItemWidth (int column, wxTreeListItem *item) {
     }
 
     // determine item width
-    int w = 0, h = 0;  
+    int w = 0, h = 0;
     wxFont font = item->Attr().GetFont();
     GetTextExtent (item->GetText(column), &w, &h, NULL, NULL, font.Ok()? &font: NULL);
     w += 2*MARGIN;
@@ -4073,7 +4073,7 @@ int wxTreeListMainWindow::GetBestColumnWidth (int column, wxTreeItemId parent) {
     if (!HasFlag(wxTR_HIDE_ROOT)) {
         int w = GetItemWidth (column, (wxTreeListItem*)parent.m_pItem);
         if (width < w) width = w;
-        if (width > maxWidth) return maxWidth; 
+        if (width > maxWidth) return maxWidth;
     }
 
     wxTreeItemIdValue cookie = 0;
@@ -4081,15 +4081,15 @@ int wxTreeListMainWindow::GetBestColumnWidth (int column, wxTreeItemId parent) {
     while (item.IsOk()) {
         int w = GetItemWidth (column, (wxTreeListItem*)item.m_pItem);
         if (width < w) width = w;
-        if (width > maxWidth) return maxWidth; 
+        if (width > maxWidth) return maxWidth;
 
         // check the children of this item
         if (((wxTreeListItem*)item.m_pItem)->IsExpanded()) {
             int w = GetBestColumnWidth (column, item);
             if (width < w) width = w;
-            if (width > maxWidth) return maxWidth; 
+            if (width > maxWidth) return maxWidth;
         }
-            
+
         // next sibling
         item = GetNextChild (parent, cookie);
     }
@@ -4121,29 +4121,28 @@ bool wxTreeListCtrl::Create(wxWindow *parent, wxWindowID id,
     if (!wxControl::Create(parent, id, pos, size, ctrl_style, validator, name)) {
        return false;
     }
-    m_main_win = new wxTreeListMainWindow(this, -1, wxPoint(0, 0), size,
-                                          main_style, validator);
-    m_header_win = new wxTreeListHeaderWindow(this, -1, m_main_win,
-                                              wxPoint(0, 0), wxDefaultSize,
-                                              wxTAB_TRAVERSAL);
+    m_main_win = new wxTreeListMainWindow (this, -1, wxPoint(0, 0), size,
+                                           main_style, validator);
+    m_header_win = new wxTreeListHeaderWindow (this, -1, m_main_win,
+                                               wxPoint(0, 0), wxDefaultSize,
+                                               wxTAB_TRAVERSAL);
     CalculateAndSetHeaderHeight();
     return true;
 }
 
 void wxTreeListCtrl::CalculateAndSetHeaderHeight()
 {
-    if ( m_header_win )
-    {
+    if (m_header_win) {
+
         // we use 'g' to get the descent, too
         int w, h, d;
         m_header_win->GetTextExtent(_T("Hg"), &w, &h, &d);
         h += d + 2 * HEADER_OFFSET_Y + EXTRA_HEIGHT;
 
         // only update if changed
-        if ( h != m_headerHeight )
-        {
+        if (h != m_headerHeight) {
             m_headerHeight = h;
-            m_header_win->SetSize(m_header_win->GetSize().x, m_headerHeight);
+            m_header_win->SetSize (m_header_win->GetSize().x, m_headerHeight);
         }
     }
 }
@@ -4153,11 +4152,11 @@ void wxTreeListCtrl::DoHeaderLayout()
     int w, h;
     GetClientSize(&w, &h);
     if (m_header_win) {
-        m_header_win->SetSize(0, 0, w, m_headerHeight);
+        m_header_win->SetSize (0, 0, w, m_headerHeight);
         m_header_win->Refresh();
     }
     if (m_main_win) {
-        m_main_win->SetSize(0, m_headerHeight + 1, w, h - m_headerHeight - 1);
+        m_main_win->SetSize (0, m_headerHeight + 1, w, h - m_headerHeight - 1);
     }
 }
 
@@ -4266,15 +4265,16 @@ void wxTreeListCtrl::SetItemFont(const wxTreeItemId& item,
 
 bool wxTreeListCtrl::SetFont(const wxFont& font)
 {
-    if(m_header_win) m_header_win->SetFont(font);
-    if (m_header_win)
-    {
+    if (m_header_win) {
         m_header_win->SetFont(font);
         CalculateAndSetHeaderHeight();
+        m_header_win->Refresh();
     }
-    if(m_main_win)
+    if (m_main_win) {
         return m_main_win->SetFont(font);
-    else return false;
+    }else{
+        return false;
+    }
 }
 
 void wxTreeListCtrl::SetWindowStyle(const long style)
@@ -4515,7 +4515,10 @@ int wxTreeListCtrl::GetColumnCount() const
 { return m_main_win->GetColumnCount(); }
 
 void wxTreeListCtrl::SetColumnWidth(int column, int width)
-{ m_header_win->SetColumnWidth(column, width); }
+{
+    m_header_win->SetColumnWidth (column, width);
+    m_header_win->Refresh();
+}
 
 int wxTreeListCtrl::GetColumnWidth(int column) const
 { return m_header_win->GetColumnWidth(column); }
@@ -4528,7 +4531,7 @@ int wxTreeListCtrl::GetMainColumn() const
 
 void wxTreeListCtrl::SetColumnText(int column, const wxString& text)
 {
-    m_header_win->SetColumnText(column, text);
+    m_header_win->SetColumnText (column, text);
     m_header_win->Refresh();
 }
 
@@ -4537,19 +4540,28 @@ wxString wxTreeListCtrl::GetColumnText(int column) const
 
 void wxTreeListCtrl::AddColumn(const wxTreeListColumnInfo& col)
 {
-    m_header_win->AddColumn(col);
+    m_header_win->AddColumn (col);
     DoHeaderLayout();
 }
 
 void wxTreeListCtrl::InsertColumn(int before,
                                   const wxTreeListColumnInfo& col)
-{ m_header_win->InsertColumn(before, col); }
+{
+    m_header_win->InsertColumn (before, col);
+    m_header_win->Refresh();
+}
 
 void wxTreeListCtrl::RemoveColumn(int column)
-{ m_header_win->RemoveColumn(column); }
+{
+    m_header_win->RemoveColumn (column);
+    m_header_win->Refresh();
+}
 
 void wxTreeListCtrl::SetColumn(int column, const wxTreeListColumnInfo& col)
-{ m_header_win->SetColumn(column, col); }
+{
+    m_header_win->SetColumn (column, col);
+    m_header_win->Refresh();
+}
 
 const wxTreeListColumnInfo& wxTreeListCtrl::GetColumn(int column) const
 { return m_header_win->GetColumn(column); }
@@ -4559,7 +4571,8 @@ wxTreeListColumnInfo& wxTreeListCtrl::GetColumn(int column)
 
 void wxTreeListCtrl::SetColumnImage(int column, int image)
 {
-    m_header_win->SetColumn(column, GetColumn(column).SetImage(image));
+    m_header_win->SetColumn (column, GetColumn(column).SetImage(image));
+    m_header_win->Refresh();
 }
 
 int wxTreeListCtrl::GetColumnImage(int column) const
@@ -4569,13 +4582,14 @@ int wxTreeListCtrl::GetColumnImage(int column) const
 
 void wxTreeListCtrl::SetColumnEditable(int column, bool shown)
 {
-    m_header_win->SetColumn(column, GetColumn(column).SetEditable(shown));
+    m_header_win->SetColumn (column, GetColumn(column).SetEditable(shown));
 }
 
 void wxTreeListCtrl::SetColumnShown(int column, bool shown)
 {
     wxASSERT_MSG (column != GetMainColumn(), _T("The main column may not be hidden") );
-    m_header_win->SetColumn(column, GetColumn(column).SetShown(GetMainColumn()? true: shown));
+    m_header_win->SetColumn (column, GetColumn(column).SetShown(GetMainColumn()? true: shown));
+    m_header_win->Refresh();
 }
 
 bool wxTreeListCtrl::IsColumnEditable(int column) const
@@ -4591,6 +4605,7 @@ bool wxTreeListCtrl::IsColumnShown(int column) const
 void wxTreeListCtrl::SetColumnAlignment (int column, int flag)
 {
     m_header_win->SetColumn(column, GetColumn(column).SetAlignment(flag));
+    m_header_win->Refresh();
 }
 
 int wxTreeListCtrl::GetColumnAlignment(int column) const
@@ -4600,8 +4615,8 @@ int wxTreeListCtrl::GetColumnAlignment(int column) const
 
 void wxTreeListCtrl::Refresh(bool erase, const wxRect* rect)
 {
-    m_main_win->Refresh(erase, rect);
-    m_header_win->Refresh(erase, rect);
+    m_main_win->Refresh (erase, rect);
+    m_header_win->Refresh (erase, rect);
 }
 
 void wxTreeListCtrl::SetFocus()
