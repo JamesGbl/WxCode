@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.25 2005-04-22 17:38:48 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.26 2005-05-27 18:01:08 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -511,6 +511,9 @@ void wxScintilla::MarkerDefineBitmap (int markerNumber, const wxBitmap& bmp) {
     // convert bmp to a xpm in a string
     wxMemoryOutputStream strm;
     wxImage img = bmp.ConvertToImage();
+#if wxCHECK_VERSION(2, 5, 0)
+    if (img.HasAlpha()) img.ConvertAlphaToMask();
+#endif
     img.SaveFile(strm, wxBITMAP_TYPE_XPM);
     size_t len = strm.GetSize();
     char* buff = new char[len+1];
@@ -889,6 +892,9 @@ void wxScintilla::RegisterImage (int type, const wxBitmap& bmp) {
     // convert bmp to a xpm in a string
     wxMemoryOutputStream strm;
     wxImage img = bmp.ConvertToImage();
+#if wxCHECK_VERSION(2, 5, 0)
+    if (img.HasAlpha()) img.ConvertAlphaToMask();
+#endif
     img.SaveFile(strm, wxBITMAP_TYPE_XPM);
     size_t len = strm.GetSize();
     char* buff = new char[len+1];
