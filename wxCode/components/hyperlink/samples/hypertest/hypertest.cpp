@@ -3,7 +3,7 @@
 // Purpose:     hypertest application
 // Maintainer:  Otto Wyss
 // Created:     2005-05-12
-// RCS-ID:      $Id: hypertest.cpp,v 1.3 2005-05-19 17:34:19 wyo Exp $
+// RCS-ID:      $Id: hypertest.cpp,v 1.4 2005-05-30 19:51:12 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -277,7 +277,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
 END_EVENT_TABLE ()
 
 AppFrame::AppFrame (const wxString &title)
-        : wxFrame ((wxFrame *)NULL, -1, title, wxDefaultPosition, wxSize(200,100),
+        : wxFrame ((wxFrame *)NULL, -1, title, wxDefaultPosition, wxSize(240,200),
                     wxDEFAULT_FRAME_STYLE | wxNO_FULL_REPAINT_ON_RESIZE) {
 
     // set icon and background
@@ -294,7 +294,7 @@ AppFrame::AppFrame (const wxString &title)
                           wxTAB_TRAVERSAL|wxCLIP_CHILDREN|wxNO_BORDER);
     wxBoxSizer *testpane = new wxBoxSizer (wxVERTICAL);
     wxHyperLink *website = new wxHyperLink (m_test, -1, APP_WEBSITE);
-    testpane->Add (website, 0, wxALIGN_CENTER | wxALL, 10);
+    testpane->Add (website, 0, wxALIGN_CENTER | wxALL, 20);
 
     m_test->SetSizerAndFit (testpane);
 
