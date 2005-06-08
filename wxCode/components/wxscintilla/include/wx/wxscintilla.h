@@ -12,7 +12,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.h,v 1.20 2005-04-20 15:56:21 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.h,v 1.21 2005-06-08 19:49:18 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -108,6 +108,7 @@
 #define wxSCI_MARK_DOTDOTDOT 23
 #define wxSCI_MARK_ARROWS 24
 #define wxSCI_MARK_PIXMAP 25
+#define wxSCI_MARK_FULLRECT 26
 #define wxSCI_MARK_CHARACTER 10000
 
 // Markers used for outlining column.
@@ -154,6 +155,7 @@
 #define wxSCI_CHARSET_ARABIC 178
 #define wxSCI_CHARSET_VIETNAMESE 163
 #define wxSCI_CHARSET_THAI 222
+#define wxSCI_CHARSET_8859_15 1000
 #define wxSCI_CASE_MIXED 0
 #define wxSCI_CASE_UPPER 1
 #define wxSCI_CASE_LOWER 2
@@ -272,11 +274,13 @@
 #define wxSCI_PERFORMED_USER 0x10
 #define wxSCI_PERFORMED_UNDO 0x20
 #define wxSCI_PERFORMED_REDO 0x40
+#define wxSCI_MULTISTEPUNDOREDO 0x80
 #define wxSCI_LASTSTEPINUNDOREDO 0x100
 #define wxSCI_MOD_CHANGEMARKER 0x200
 #define wxSCI_MOD_BEFOREINSERT 0x400
 #define wxSCI_MOD_BEFOREDELETE 0x800
-#define wxSCI_MODEVENTMASKALL 0xF77
+#define wxSCI_MULTILINEUNDOREDO 0x1000
+#define wxSCI_MODEVENTMASKALL 0x1FFF
 
 // Symbolic key codes and modifier flags.
 // ASCII and other printable characters below 256.
@@ -372,6 +376,11 @@
 #define wxSCI_LEX_PUREBASIC 67
 #define wxSCI_LEX_HASKELL 68
 #define wxSCI_LEX_PHPSCRIPT 69
+#define wxSCI_LEX_TADS3 70
+#define wxSCI_LEX_REBOL 71
+#define wxSCI_LEX_SMALLTALK 72
+#define wxSCI_LEX_FLAGSHIP 73
+#define wxSCI_LEX_CSOUND 74
 
 // When a lexer specifies its language as SCLEX_AUTOMATIC it receives a
 // value assigned in sequence from SCLEX_AUTOMATIC+1.
@@ -583,6 +592,7 @@
 #define wxSCI_PL_STRING_QX 28
 #define wxSCI_PL_STRING_QR 29
 #define wxSCI_PL_STRING_QW 30
+#define wxSCI_PL_POD_VERB 31
 
 // Lexical states for SCLEX_VB, SCLEX_VBSCRIPT, SCLEX_POWERBASIC
 #define wxSCI_B_DEFAULT 0
@@ -1245,6 +1255,157 @@
 #define wxSCI_HA_COMMENTBLOCK 14
 #define wxSCI_HA_COMMENTBLOCK2 15
 #define wxSCI_HA_COMMENTBLOCK3 16
+
+// Lexical states for SCLEX_T3
+#define wxSCI_T3_DEFAULT 0
+#define wxSCI_T3_PREPROCESSOR 1
+#define wxSCI_T3_BLOCK_COMMENT 2
+#define wxSCI_T3_LINE_COMMENT 3
+#define wxSCI_T3_OPERATOR 4
+#define wxSCI_T3_KEYWORD 5
+#define wxSCI_T3_NUMBER 6
+#define wxSCI_T3_BRACKET 7
+#define wxSCI_T3_HTML_TAG 8
+#define wxSCI_T3_HTML_STRING 9
+#define wxSCI_T3_S_STRING 10
+#define wxSCI_T3_S_LIB_DIRECTIVE 11
+#define wxSCI_T3_S_MSG_PARAM 12
+#define wxSCI_T3_S_H_DEFAULT 13
+#define wxSCI_T3_D_STRING 14
+#define wxSCI_T3_D_LIB_DIRECTIVE 15
+#define wxSCI_T3_D_MSG_PARAM 16
+#define wxSCI_T3_D_H_DEFAULT 17
+#define wxSCI_T3_X_DEFAULT 18
+#define wxSCI_T3_X_PREPROCESSOR 19
+#define wxSCI_T3_X_BLOCK_COMMENT 20
+#define wxSCI_T3_X_LINE_COMMENT 21
+#define wxSCI_T3_X_S_STRING 22
+#define wxSCI_T3_X_S_LIB_DIRECTIVE 23
+#define wxSCI_T3_X_S_MSG_PARAM 24
+#define wxSCI_T3_X_S_H_DEFAULT 25
+#define wxSCI_T3_X_D_STRING 26
+#define wxSCI_T3_X_D_LIB_DIRECTIVE 27
+#define wxSCI_T3_X_D_MSG_PARAM 28
+#define wxSCI_T3_X_D_H_DEFAULT 29
+#define wxSCI_T3_USER1 30
+#define wxSCI_T3_USER2 31
+
+// Lexical states for SCLEX_REBOL
+#define wxSCI_REBOL_DEFAULT 0
+#define wxSCI_REBOL_COMMENTLINE 1
+#define wxSCI_REBOL_COMMENTBLOCK 2
+#define wxSCI_REBOL_PREFACE 3
+#define wxSCI_REBOL_OPERATOR 4
+#define wxSCI_REBOL_CHARACTER 5
+#define wxSCI_REBOL_QUOTEDSTRING 6
+#define wxSCI_REBOL_BRACEDSTRING 7
+#define wxSCI_REBOL_NUMBER 8
+#define wxSCI_REBOL_PAIR 9
+#define wxSCI_REBOL_TUPLE 10
+#define wxSCI_REBOL_BINARY 11
+#define wxSCI_REBOL_MONEY 12
+#define wxSCI_REBOL_ISSUE 13
+#define wxSCI_REBOL_TAG 14
+#define wxSCI_REBOL_FILE 15
+#define wxSCI_REBOL_EMAIL 16
+#define wxSCI_REBOL_URL 17
+#define wxSCI_REBOL_DATE 18
+#define wxSCI_REBOL_TIME 19
+#define wxSCI_REBOL_IDENTIFIER 20
+#define wxSCI_REBOL_WORD 21
+#define wxSCI_REBOL_WORD2 22
+#define wxSCI_REBOL_WORD3 23
+#define wxSCI_REBOL_WORD4 24
+#define wxSCI_REBOL_WORD5 25
+#define wxSCI_REBOL_WORD6 26
+#define wxSCI_REBOL_WORD7 27
+#define wxSCI_REBOL_WORD8 28
+
+// Lexical states for SCLEX_SQL
+#define wxSCI_SQL_DEFAULT 0
+#define wxSCI_SQL_COMMENT 1
+#define wxSCI_SQL_COMMENTLINE 2
+#define wxSCI_SQL_COMMENTDOC 3
+#define wxSCI_SQL_NUMBER 4
+#define wxSCI_SQL_WORD 5
+#define wxSCI_SQL_STRING 6
+#define wxSCI_SQL_CHARACTER 7
+#define wxSCI_SQL_SQLPLUS 8
+#define wxSCI_SQL_SQLPLUS_PROMPT 9
+#define wxSCI_SQL_OPERATOR 10
+#define wxSCI_SQL_IDENTIFIER 11
+#define wxSCI_SQL_SQLPLUS_COMMENT 13
+#define wxSCI_SQL_COMMENTLINEDOC 15
+#define wxSCI_SQL_WORD2 16
+#define wxSCI_SQL_COMMENTDOCKEYWORD 17
+#define wxSCI_SQL_COMMENTDOCKEYWORDERROR 18
+#define wxSCI_SQL_USER1 19
+#define wxSCI_SQL_USER2 20
+#define wxSCI_SQL_USER3 21
+#define wxSCI_SQL_USER4 22
+
+// Lexical states for SCLEX_ST
+#define wxSCI_ST_DEFAULT 0
+#define wxSCI_ST_STRING 1
+#define wxSCI_ST_NUMBER 2
+#define wxSCI_ST_COMMENT 3
+#define wxSCI_ST_SYMBOL 4
+#define wxSCI_ST_BINARY 5
+#define wxSCI_ST_BOOL 6
+#define wxSCI_ST_SELF 7
+#define wxSCI_ST_SUPER 8
+#define wxSCI_ST_NIL 9
+#define wxSCI_ST_GLOBAL 10
+#define wxSCI_ST_RETURN 11
+#define wxSCI_ST_SPECIAL 12
+#define wxSCI_ST_KWSEND 13
+#define wxSCI_ST_ASSIGN 14
+#define wxSCI_ST_CHARACTER 15
+#define wxSCI_ST_SPEC_SEL 16
+
+// Lexical states for SCLEX_FS
+#define wxSCI_FS_DEFAULT 0
+#define wxSCI_FS_COMMENT 1
+#define wxSCI_FS_COMMENTLINE 2
+#define wxSCI_FS_COMMENTDOC 3
+#define wxSCI_FS_COMMENTLINEDOC 4
+#define wxSCI_FS_COMMENTDOCKEYWORD 5
+#define wxSCI_FS_COMMENTDOCKEYWORDERROR 6
+#define wxSCI_FS_KEYWORD 7
+#define wxSCI_FS_KEYWORD2 8
+#define wxSCI_FS_KEYWORD3 9
+#define wxSCI_FS_KEYWORD4 10
+#define wxSCI_FS_NUMBER 11
+#define wxSCI_FS_STRING 12
+#define wxSCI_FS_PREPROCESSOR 13
+#define wxSCI_FS_OPERATOR 14
+#define wxSCI_FS_IDENTIFIER 15
+#define wxSCI_FS_DATE 16
+#define wxSCI_FS_STRINGEOL 17
+#define wxSCI_FS_CONSTANT 18
+#define wxSCI_FS_ASM 19
+#define wxSCI_FS_LABEL 20
+#define wxSCI_FS_ERROR 21
+#define wxSCI_FS_HEXNUMBER 22
+#define wxSCI_FS_BINNUMBER 23
+
+// Lexical states for SCLEX_CSOUND
+#define wxSCI_CSOUND_DEFAULT 0
+#define wxSCI_CSOUND_COMMENT 1
+#define wxSCI_CSOUND_NUMBER 2
+#define wxSCI_CSOUND_OPERATOR 3
+#define wxSCI_CSOUND_INSTR 4
+#define wxSCI_CSOUND_IDENTIFIER 5
+#define wxSCI_CSOUND_OPCODE 6
+#define wxSCI_CSOUND_HEADERSTMT 7
+#define wxSCI_CSOUND_USERKEYWORD 8
+#define wxSCI_CSOUND_COMMENTBLOCK 9
+#define wxSCI_CSOUND_PARAM 10
+#define wxSCI_CSOUND_ARATE_VAR 11
+#define wxSCI_CSOUND_KRATE_VAR 12
+#define wxSCI_CSOUND_IRATE_VAR 13
+#define wxSCI_CSOUND_GLOBAL_VAR 14
+#define wxSCI_CSOUND_STRINGEOL 15
 
 
 //-----------------------------------------
@@ -2866,6 +3027,11 @@ public:
 
     // Set up a value that may be used by a lexer for some optional feature.
     void SetProperty (const wxString& key, const wxString& value);
+
+    // Retrieve a value that may be used by a lexer for some optional feature.
+    wxString GetProperty (const wxString& key);
+    wxString GetPropertyExpanded (const wxString& key);
+    int GetPropertyInt (const wxString& key);
 
     // Set up the key words used by the lexer.
     void SetKeyWords (int keywordSet, const wxString& keyWords);

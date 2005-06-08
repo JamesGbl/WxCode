@@ -7,16 +7,16 @@
 CFG=wxscintilla - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
-!MESSAGE 
+!MESSAGE
 !MESSAGE NMAKE /f "wxscintilla.mak".
-!MESSAGE 
+!MESSAGE
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
-!MESSAGE 
+!MESSAGE
 !MESSAGE NMAKE /f "wxscintilla.mak" CFG="wxscintilla - Win32 Debug"
-!MESSAGE 
+!MESSAGE
 !MESSAGE Possible choices for configuration are:
-!MESSAGE 
+!MESSAGE
 !MESSAGE "wxscintilla - Win32 DebugUniv" (based on "Win32 (x86) Static Library")
 !MESSAGE "wxscintilla - Win32 ReleaseUniv" (based on "Win32 (x86) Static Library")
 !MESSAGE "wxscintilla - Win32 DebugDev" (based on "Win32 (x86) Static Library")
@@ -25,7 +25,7 @@ CFG=wxscintilla - Win32 Debug
 !MESSAGE "wxscintilla - Win32 ReleaseUnicode" (based on "Win32 (x86) Static Library")
 !MESSAGE "wxscintilla - Win32 Debug" (based on "Win32 (x86) Static Library")
 !MESSAGE "wxscintilla - Win32 Release" (based on "Win32 (x86) Static Library")
-!MESSAGE 
+!MESSAGE
 
 # Begin Project
 # PROP AllowPerConfigDependencies 0
@@ -228,7 +228,7 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo /out:"..\lib\wxscintilla.lib"
 # ADD LIB32 /nologo /out:"..\lib\wxscintilla.lib"
 
-!ENDIF 
+!ENDIF
 
 # Begin Target
 
@@ -421,6 +421,10 @@ SOURCE=..\src\scintilla\src\LexCrontab.cxx
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\scintilla\src\LexCsound.cxx
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\scintilla\src\LexCSS.cxx
 # End Source File
 # Begin Source File
@@ -430,6 +434,10 @@ SOURCE=..\src\scintilla\src\LexEiffel.cxx
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexErlang.cxx
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\scintilla\src\LexFlagship.cxx
 # End Source File
 # Begin Source File
 
@@ -525,6 +533,10 @@ SOURCE=..\src\scintilla\src\LexPython.cxx
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\scintilla\src\LexRebol.cxx
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\scintilla\src\LexRuby.cxx
 # End Source File
 # Begin Source File
@@ -533,11 +545,19 @@ SOURCE=..\src\scintilla\src\LexScriptol.cxx
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\scintilla\src\LexSmalltalk.cxx
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\scintilla\src\LexSpecman.cxx
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexSQL.cxx
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\scintilla\src\LexTads3.cxx
 # End Source File
 # Begin Source File
 

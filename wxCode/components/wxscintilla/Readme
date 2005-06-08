@@ -1,7 +1,7 @@
 Component:  wxScintilla
-Release:    1.63.0
+Release:    1.64.0
 Documents:  http://wxcode.sourceforge.net/components/wxscintilla/index.php
-wxWidgets:  2.4.x, 2.6.x
+wxWidgets:  2.4.2, 2.6.1
 Maintainer: Otto Wyss (wyo)
 Subdir:     wxscintilla
 

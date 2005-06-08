@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.26 2005-05-27 18:01:08 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.27 2005-06-08 19:49:19 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -2488,6 +2488,27 @@ void wxScintilla::SetProperty (const wxString& key, const wxString& value) {
     SendMsg (SCI_SETPROPERTY, (long)(const char*)wx2sci(key), (long)(const char*)wx2sci(value));
 }
 
+// Retrieve a value that may be used by a lexer for some optional feature.
+wxString wxScintilla::GetProperty (const wxString& key) {
+    wxMemoryBuffer mbuf(256); //? TODO: make size 256 variable
+    char* buf = (char*)mbuf.GetWriteBuf(256+1);
+    SendMsg (SCI_GETPROPERTY, (long)(const char*)wx2sci(key), (long)buf);
+    mbuf.UngetWriteBuf(mbuf.GetBufSize());
+    mbuf.AppendByte(0);
+    return sci2wx(buf);
+}
+wxString wxScintilla::GetPropertyExpanded (const wxString& key) {
+    wxMemoryBuffer mbuf(256); //? TODO: make size 256 variable
+    char* buf = (char*)mbuf.GetWriteBuf(256+1);
+    SendMsg (SCI_GETPROPERTYEXPANDED, (long)(const char*)wx2sci(key), (long)buf);
+    mbuf.UngetWriteBuf(mbuf.GetBufSize());
+    mbuf.AppendByte(0);
+    return sci2wx(buf);
+}
+int wxScintilla::GetPropertyInt (const wxString& key) {
+    return SendMsg (SCI_GETPROPERTYINT, (long)(const char*)wx2sci(key), 0);
+}
+
 // Set up the key words used by the lexer.
 void wxScintilla::SetKeyWords (int keywordSet, const wxString& keyWords) {
     SendMsg (SCI_SETKEYWORDS, keywordSet, (long)(const char*)wx2sci(keyWords));
@@ -3253,12 +3274,3 @@ wxScintillaEvent::wxScintillaEvent (const wxScintillaEvent& event)
 
 //----------------------------------------------------------------------
 //----------------------------------------------------------------------
-
-
-
-
-
-
-
-
-

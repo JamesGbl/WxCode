@@ -19,7 +19,7 @@
 <h3>wxScintilla API reference</h3>
 
 <p>
-Derived from the Scintilla documentation (edited 29/May/2004 NH)
+Derived from the Scintilla documentation (edited 3/June/2005 NH)
 </p>
 
 <h3>Introduction</h3>
@@ -1916,6 +1916,7 @@ Associates a marker number in the range 0 to 31 with one of the marker symbols o
 <li><code>wxSCI_MARK_DOTDOTDOT</code></li>
 <li><code>wxSCI_MARK_EMPTY</code></li>
 <li><code>wxSCI_MARK_BACKGROUND</code></li>
+<li><code>wxSCI_MARK_FULLRECT</code></li>
 </ul>
 
 <div class="divider2"></div>
@@ -1924,7 +1925,7 @@ Associates a marker number in the range 0 to 31 with one of the marker symbols o
 Markers can be set to pixmaps. Pixmaps use the <code>wxSCI_MARK_PIXMAP</code> marker symbol.
 </p>
 <p>
-The <code>wxSCI_MARK_BACKGROUND</code> marker changes the background colour of the line only. The <code>wxSCI_MARK_EMPTY</code> symbol is invisible, allowing client code to track the movement of lines. You would also use it if you changed the folding style and wanted one or more of the <code>wxSCI_FOLDERNUM_</code>* markers to have no associated symbol.
+The <code>wxSCI_MARK_BACKGROUND</code> marker changes the background colour of the line only. The <code>wxSCI_MARK_FULLRECT</code> symbol mirrors this, changing only the margin background colour. The <code>wxSCI_MARK_EMPTY</code> symbol is invisible, allowing client code to track the movement of lines. You would also use it if you changed the folding style and wanted one or more of the <code>wxSCI_FOLDERNUM_</code>* markers to have no associated symbol.
 </p>
 <p>
 There are also marker symbols designed for use in the folding margin in a flattened tree style.
@@ -2067,6 +2068,8 @@ By default, Scintilla organizes the style byte associated with each text byte as
 <p>
 The indicators are set using <a class="message" href="#StartStyling"><code>StartStyling</code></a> with a <code>wxSCI_INDICS_MASK</code> mask and <a class="message" href="#SetStyling"><code>SetStyling</code></a> with the values <code>INDIC0_MASK</code>, <code>INDIC1_MASK</code> and <code>INDIC2_MASK</code>.
 </p>
+<p>If you are using indicators in a buffer that has a lexer active (see <a class="message" href="#SetLexer"><code>SetLexer</code></a>), you must save lexing state information before setting any indicators and restore it afterwards. Use <a class="message" href="#GetEndStyled"><code>GetEndStyled</code></a> to retrieve the current "styled to" position and <a class="message" href="#StartStyling"><code>StartStyling</code></a> to reset the styling position and mask (<code>0x1f </code> in the default layout of 5 style bits and 3 indicator bits) when you are done.</p>
+
 <p>
 The number of bits used for styles can be altered with <a class="message" href="#SetStyleBits"><code>SetStyleBits</code></a> from 0 to 7 bits. The remaining bits can be used for indicators, so there can be from 1 to 8 indicators. However, the <code>wxSCI_INDICS_..._MASK</code> constants defined in <code>Scintilla.h</code> all assume 5 bits of styling information and 3 indicators. If you use a different arrangement, you must define your own constants.
 </p>
@@ -3472,6 +3475,9 @@ Scintilla also supports external lexers. These are DLLs (on Windows) or .so modu
 <li><a class="message" href="#LoadLexerLibrary">LoadLexerLibrary: Currently not implemented!</a></li>
 <li><a class="message" href="#Colourise">void Colourise (int start, int end)</a></li>
 <li><a class="message" href="#SetProperty">void SetProperty (const wxString& key, const wxString& value)</a></li>
+<li><a class="message" href="#GetProperty">void GetProperty(const wxString& key, wxString& value)</a></li>
+<li><a class="message" href="#GetPropertyExpanded">void GetPropertyExpanded(const wxString& key, wxString& value)</a></li>
+<li><a class="message" href="#GetProperty">int GetPropertyInt(const wxString& key)</a></li>
 <li><a class="message" href="#SetKeyWords">void SetKeyWords (int keywordSet, const wxString& keyWords)</a></li>
 </ul>
 
@@ -3507,6 +3513,39 @@ You can communicate settings to lexers with keyword:value string pairs. There is
 </p>
 <p>
 Currently the "fold" property is defined for most of the lexers to set the fold structure if set to "1". <code>wxSCI_LEX_PYTHON</code> understands <code>"TAB.timmy.whinge.level"</code> as a setting that determines how to indicate bad indentation. Most keywords have values that are interpreted as integers. Search the lexer sources for <code>GetPropertyInt</code> to see how properties are used.
+</p>
+
+<div class="divider2"></div>
+<h4><a name="GetProperty">void GetProperty (const wxString& key, wxString& value)</a></h4>
+<p>
+Lookup a keyword:value pair using the specified key; if found, copy the value to the user-supplied buffer and return the length (not including the terminating 0).  If not found, copy an empty string to the buffer and return 0.
+</p>
+<p>
+Note that  "keyword replacement" as described in <a class="message" href="#SetProperty"><code>SetProperty</code></a> will not be performed.
+</p>
+<p>
+If the value argument is 0 then the length that should be allocated to store the value is returned; again, the terminating 0 is not included.
+</p>
+
+<div class="divider2"></div>
+<h4><a name="GetPropertyExpanded">void GetPropertyExpanded (const wxString& key, wxString& value)</a></h4>
+<p>
+Lookup a keyword:value pair using the specified key; if found, copy the value to the user-supplied buffer and return the length (not including the terminating 0). If not found, copy an empty string to the buffer and return 0.
+</p>
+<p>
+Note that  "keyword replacement" as described in <a class="message" href="#SetProperty"><code>SetProperty</code></a> will not be performed.
+</p>
+<p>
+If the value argument is 0 then the length that should be allocated to store the value (including any indicated keyword replacement) is returned; again, the terminating 0 is not included.
+</p>
+
+<div class="divider2"></div>
+<h4><a name="GetPropertyInt">int GetPropertyInt (const wxString& key)</a></h4>
+<p>
+Lookup a keyword:value pair using the specified key; if found, interpret the value as an integer and return it. If not found (or the value is not a number) then return 0.
+</p>
+<p>
+Note that  "keyword replacement" as described in <a class="message" href="#SetProperty"><code>SetProperty</code></a> will not be performed.
 </p>
 
 <div class="divider2"></div>
@@ -3709,9 +3748,14 @@ The <code>SCNotification.modificationType</code> field has bits set to tell you 
   <td>Information: this was the result of a Redo.</td>
   <td>None</td>
 </tr><tr>
+  <td align="left"><code>wxSCI_MULTISTEPUNDOREDO</code></td>
+  <td align="center">0x80</td>
+  <td>This is part of a multi-step Undo or Redo.</td>
+  <td>None</td>
+</tr><tr>
   <td align="left"><code>wxSCI_LASTSTEPINUNDOREDO</code></td>
   <td align="center">0x100</td>
-  <td>This is the final step in an Undo or Redo that has several sections.</td>
+  <td>This is the final step in an Undo or Redo.</td>
   <td>None</td>
 </tr><tr>
   <td align="left"><code>wxSCI_MOD_CHANGEMARKER</code></td>
@@ -3729,8 +3773,13 @@ The <code>SCNotification.modificationType</code> field has bits set to tell you 
   <td>Text is about to be deleted from the document.</td>
   <td><code>position, length</code></td>
 </tr><tr>
+  <td align="left"><code>wxSCI_LASTLINEUNDOREDO</code></td>
+  <td align="center">0x1000</td>
+  <td>This is part of an Undo or Redo with multi-line changes.</td>
+  <td>None</td>
+</tr><tr>
   <td align="left"><code>wxSCI_MODEVENTMASKALL</code></td>
-  <td align="center">0xf77</td>
+  <td align="center">0x1FFF</td>
   <td>This is a mask for all valid flags. This is the default mask state set by <a class="message" href="#SetModEventMask"><code>SetModEventMask</code></a>.</td>
   <td>None</td>
 </tr>
@@ -3749,7 +3798,7 @@ The <code>SCNotification.modificationType</code> field has bits set to tell you 
 Set and get an event mask that determines which document change events are notified to the container with <a class="message" href="#wxEVT_SCI_MODIFIED"><code>wxEVT_SCI_MODIFIED</code></a> and <a class="message" href="#wxEVT_SCI_CHANGE"><code>wxEVT_SCI_CHANGE</code></a>. For example, a container may decide to see only notifications about changes to text and not styling changes by calling <code>SetModEventMask(wxSCI_MOD_INSERTTEXT|wxSCI_MOD_DELETETEXT)</code>.
 </p>
 <p>
-The possible notification types are the same as the <code>modificationType</code> bit flags used by <code>wxEVT_SCI_MODIFIED</code>: <code>wxSCI_MOD_INSERTTEXT</code>, <code>wxSCI_MOD_DELETETEXT</code>, <code>wxSCI_MOD_CHANGESTYLE</code>, <code>wxSCI_MOD_CHANGEFOLD</code>, <code>wxSCI_PERFORMED_USER</code>, <code>wxSCI_PERFORMED_UNDO</code>, <code>wxSCI_PERFORMED_REDO</code>, <code>wxSCI_LASTSTEPINUNDOREDO</code>, <code>wxSCI_MOD_CHANGEMARKER</code>, <code>wxSCI_MOD_BEFOREINSERT</code>, <code>wxSCI_MOD_BEFOREDELETE</code>, and <code>wxSCI_MODEVENTMASKALL</code>.
+The possible notification types are the same as the <code>modificationType</code> bit flags used by <code>wxEVT_SCI_MODIFIED</code>: <code>wxSCI_MOD_INSERTTEXT</code>, <code>wxSCI_MOD_DELETETEXT</code>, <code>wxSCI_MOD_CHANGESTYLE</code>, <code>wxSCI_MOD_CHANGEFOLD</code>, <code>wxSCI_PERFORMED_USER</code>, <code>wxSCI_PERFORMED_UNDO</code>, <code>wxSCI_PERFORMED_REDO</code>, <code>wxSCI_MULTISTEPUNDOREDO</code>, <code>wxSCI_LASTSTEPINUNDOREDO</code>, <code>wxSCI_MOD_CHANGEMARKER</code>, <code>wxSCI_MOD_BEFOREINSERT</code>, <code>wxSCI_MOD_BEFOREDELETE</code>, <code>wxSCI_MULTILINEUNDOREDO</code> and <code>wxSCI_MODEVENTMASKALL</code>.
 </p>
 
 <div class="divider2"></div>
