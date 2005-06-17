@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.28 2005-02-09 16:48:45 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.29 2005-06-17 17:21:29 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -210,7 +210,7 @@ public:
                     bool edit = false) {
         AddColumn (wxTreeListColumnInfo (text, width, flag, image, shown, edit));
     }
-    void AddColumn (const wxTreeListColumnInfo& col);
+    void AddColumn (const wxTreeListColumnInfo& colInfo);
 
     // inserts a column before the given one
     void InsertColumn (int before,
@@ -223,7 +223,7 @@ public:
         InsertColumn (before,
                       wxTreeListColumnInfo (text, width, flag, image, shown, edit));
     }
-    void InsertColumn (int before, const wxTreeListColumnInfo& col);
+    void InsertColumn (int before, const wxTreeListColumnInfo& colInfo);
 
     // deletes the given column - does not delete the corresponding column
     void RemoveColumn (int column);
@@ -235,7 +235,7 @@ public:
     void SetMainColumn (int column);
     int GetMainColumn() const;
 
-    void SetColumn (int column, const wxTreeListColumnInfo& info);
+    void SetColumn (int column, const wxTreeListColumnInfo& colInfo);
     wxTreeListColumnInfo& GetColumn (int column);
     const wxTreeListColumnInfo& GetColumn (int column) const;
 
@@ -476,9 +476,9 @@ public:
     // The first function is more portable (because easier to implement
     // on other platforms), but the second one returns some extra info.
     wxTreeItemId HitTest (const wxPoint& point)
-        { int flags; int col; return HitTest (point, flags, col); }
+        { int flags; int column; return HitTest (point, flags, column); }
     wxTreeItemId HitTest (const wxPoint& point, int& flags)
-        { int col; return HitTest (point, flags, col); }
+        { int column; return HitTest (point, flags, column); }
     wxTreeItemId HitTest (const wxPoint& point, int& flags, int& column);
 
     // get the bounding rectangle of the item (or of its label only)
