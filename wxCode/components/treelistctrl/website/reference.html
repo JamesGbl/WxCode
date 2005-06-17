@@ -1664,7 +1664,7 @@ all items if it does have this style.<P>
 <P>
 <B>void</B> <B>AddColumn</B>(<B>const wxString&amp;</B><I> text</I>)<P>
 <B>void</B> <B>AddColumn</B>(<B>const wxString&amp;</B><I> text</I>, <B>int</B><I> width</I>, <B>wxTreeListColumnAlign</B><I> alignment = wxTL_ALIGN_LEFT</I>)<P>
-<B>void</B> <B>AddColumn</B>(<B>const wxTreeListColumnInfo&amp;</B><I> col</I>)<P>
+<B>void</B> <B>AddColumn</B>(<B>const wxTreeListColumnInfo&amp;</B><I> colInfo</I>)<P>
 Adds a column.<P>
 
 <HR>
@@ -1724,7 +1724,8 @@ Returns the number of the main column.<P>
 <B>void</B> <B>InsertColumn</B>(<B>int</B><I> before</I>, <B>const wxString&amp;</B><I> text</I>)<P>
 <B>void</B> <B>InsertColumn</B>(<B>int</B><I> before</I>, <B>const wxString&amp;</B><I> text</I>, <B>int</B><I> width</I>,
  <B>wxTreeListColumnAlign</B><I> alignment = wxTL_ALIGN_LEFT</I>)<P>
-Inserts a column before(???) the entered column.<P>
+<B>void</B> <B>InsertColumn</B>(<B>int</B><I> before</I>, <B>const wxTreeListColumnInfo&amp;</B><I> colInfo</I>)<P>
+Inserts a column before the entered column.<P>
 
 <HR>
 <A NAME="wxtreelistctrliscolumnshown"></A>

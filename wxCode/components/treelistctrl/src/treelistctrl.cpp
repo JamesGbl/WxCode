@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.73 2005-05-26 15:55:57 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.74 2005-06-17 17:23:21 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -152,9 +152,9 @@ public:
     // column manipulation
     int GetColumnCount() const { return m_columns.GetCount(); }
 
-    void AddColumn (const wxTreeListColumnInfo& col);
+    void AddColumn (const wxTreeListColumnInfo& colInfo);
 
-    void InsertColumn (int before, const wxTreeListColumnInfo& col);
+    void InsertColumn (int before, const wxTreeListColumnInfo& colInfo);
 
     void RemoveColumn (int column);
 
@@ -299,12 +299,16 @@ public:
     // ---------
 
     // retrieve item's label
-    wxString GetItemText(const wxTreeItemId& item) const
-    { return GetItemText(item, GetMainColumn()); }
+    wxString GetItemText (const wxTreeItemId& item) const
+    { return GetItemText (item, GetMainColumn()); }
+    wxString GetItemText (const wxTreeItemId& item, int column) const;
+
     // get one of the images associated with the item (normal by default)
-    int GetItemImage(const wxTreeItemId& item,
-                     wxTreeItemIcon which = wxTreeItemIcon_Normal) const
-    { return GetItemImage(item, GetMainColumn(), which); }
+    int GetItemImage (const wxTreeItemId& item,
+                      wxTreeItemIcon which = wxTreeItemIcon_Normal) const
+    { return GetItemImage (item, GetMainColumn(), which); }
+    int GetItemImage (const wxTreeItemId& item, int column,
+                      wxTreeItemIcon which = wxTreeItemIcon_Normal) const;
 
     // get the data associated with the item
     wxTreeItemData *GetItemData(const wxTreeItemId& item) const;
@@ -318,13 +322,16 @@ public:
     // ---------
 
     // set item's label
-    void SetItemText(const wxTreeItemId& item, const wxString& text)
-    { SetItemText(item, GetMainColumn(), text); }
+    void SetItemText (const wxTreeItemId& item, const wxString& text)
+    { SetItemText (item, GetMainColumn(), text); }
+    void SetItemText (const wxTreeItemId& item, int column, const wxString& text);
 
     // get one of the images associated with the item (normal by default)
-    void SetItemImage(const wxTreeItemId& item, int image,
-                      wxTreeItemIcon which = wxTreeItemIcon_Normal)
-    { SetItemImage(item, GetMainColumn(), image, which); }
+    void SetItemImage (const wxTreeItemId& item, int image,
+                       wxTreeItemIcon which = wxTreeItemIcon_Normal)
+    { SetItemImage (item, GetMainColumn(), image, which); }
+    void SetItemImage (const wxTreeItemId& item, int column, int image,
+                       wxTreeItemIcon which = wxTreeItemIcon_Normal);
 
     // associate some data with the item
     void SetItemData(const wxTreeItemId& item, wxTreeItemData *data);
@@ -502,9 +509,9 @@ public:
     // The first function is more portable (because easier to implement
     // on other platforms), but the second one returns some extra info.
     wxTreeItemId HitTest (const wxPoint& point)
-        { int flags; int col; return HitTest (point, flags, col); }
+        { int flags; int column; return HitTest (point, flags, column); }
     wxTreeItemId HitTest (const wxPoint& point, int& flags)
-        { int col; return HitTest (point, flags, col); }
+        { int column; return HitTest (point, flags, column); }
     wxTreeItemId HitTest (const wxPoint& point, int& flags, int& column);
 
 
@@ -532,14 +539,6 @@ public:
 
     // searching
     wxTreeItemId FindItem (const wxTreeItemId& item, const wxString& str, int mode = 0);
-
-    // deprecated functions: use Set/GetItemImage directly
-    // get the selected item image
-    int GetItemSelectedImage(const wxTreeItemId& item) const
-        { return GetItemImage(item, wxTreeItemIcon_Selected); }
-    // set the selected item image
-    void SetItemSelectedImage(const wxTreeItemId& item, int image)
-        { SetItemImage(item, image, wxTreeItemIcon_Selected); }
 
     // implementation only from now on
 
@@ -569,15 +568,6 @@ public:
     { if ((column >= 0) && (column < GetColumnCount())) m_main_column = column; }
 
     int GetMainColumn() const { return m_main_column; }
-
-    void SetItemText(const wxTreeItemId& item, int column,
-                     const wxString& text);
-    wxString GetItemText(const wxTreeItemId& item, int column) const;
-
-    void SetItemImage(const wxTreeItemId& item, int column, int image,
-                      wxTreeItemIcon which = wxTreeItemIcon_Normal);
-    int GetItemImage(const wxTreeItemId& item, int column,
-                     wxTreeItemIcon which = wxTreeItemIcon_Normal) const;
 
     int GetBestColumnWidth (int column, wxTreeItemId parent = wxTreeItemId());
     int GetItemWidth (int column, wxTreeListItem *item);
@@ -754,19 +744,21 @@ public:
         if(m_text.GetCount() > 0) return m_text[0];
         return wxEmptyString;
     }
-    const wxString GetText (int col) const
+    const wxString GetText (int column) const
     {
-        if (col < (int)m_text.GetCount()) return m_text[col];
+        if (column < (int)m_text.GetCount()) return m_text[column];
         return wxEmptyString;
     }
-    int GetImage(wxTreeItemIcon which = wxTreeItemIcon_Normal) const
+
+    int GetImage (wxTreeItemIcon which = wxTreeItemIcon_Normal) const
         { return m_images[which]; }
-    int GetImage(int col, wxTreeItemIcon which=wxTreeItemIcon_Normal) const
+    int GetImage (int column, wxTreeItemIcon which=wxTreeItemIcon_Normal) const
     {
-        if(col == m_owner->GetMainColumn()) return m_images[which];
-        if(col < (int)m_col_images.GetCount()) return m_col_images[col];
+        if(column == m_owner->GetMainColumn()) return m_images[which];
+        if(column < (int)m_col_images.GetCount()) return m_col_images[column];
         return NO_IMAGE;
     }
+
     wxTreeItemData *GetData() const { return m_data; }
 
     // returns the current image for the item (depending on its
@@ -774,28 +766,27 @@ public:
     int GetCurrentImage() const;
 
     void SetText (const wxString &text );
-    void SetText (int col, const wxString& text)
+    void SetText (int column, const wxString& text)
     {
-        if(col < (int)m_text.GetCount())
-            m_text[col] = text;
-        else if(col < m_owner->GetColumnCount()) {
+        if (column < (int)m_text.GetCount()) {
+            m_text[column] = text;
+        }else if (column < m_owner->GetColumnCount()) {
             int howmany = m_owner->GetColumnCount();
-            for(int i = m_text.GetCount(); i < howmany; ++i)
-                m_text.Add(wxEmptyString);
-            m_text[col] = text;
+            for (int i = m_text.GetCount(); i < howmany; ++i) m_text.Add (wxEmptyString);
+            m_text[column] = text;
         }
     }
     void SetImage (int image, wxTreeItemIcon which) { m_images[which] = image; }
-    void SetImage (int col, int image, wxTreeItemIcon which)
+    void SetImage (int column, int image, wxTreeItemIcon which)
     {
-        if(col == m_owner->GetMainColumn()) m_images[which] = image;
-        else if(col < (int)m_col_images.GetCount())
-            m_col_images[col] = image;
-        else if(col < m_owner->GetColumnCount()) {
+        if (column == m_owner->GetMainColumn()) {
+            m_images[which] = image;
+        }else if (column < (int)m_col_images.GetCount()) {
+            m_col_images[column] = image;
+        }else if (column < m_owner->GetColumnCount()) {
             int howmany = m_owner->GetColumnCount();
-            for(int i = m_col_images.GetCount(); i < howmany; ++i)
-                m_col_images.Add(NO_IMAGE);
-            m_col_images[col] = image;
+            for (int i = m_col_images.GetCount(); i < howmany; ++i) m_col_images.Add (NO_IMAGE);
+            m_col_images[column] = image;
         }
     }
 
@@ -1309,11 +1300,11 @@ void wxTreeListHeaderWindow::OnMouse (wxMouseEvent &event) {
 
         // find the column where this event occured
         int countCol = GetColumnCount();
-        for (int col = 0; col < countCol; col++) {
-            if (!IsColumnShown (col)) continue; // do next if not shown
+        for (int column = 0; column < countCol; column++) {
+            if (!IsColumnShown (column)) continue; // do next if not shown
 
-            xpos += GetColumnWidth (col);
-            m_column = col;
+            xpos += GetColumnWidth (column);
+            m_column = column;
             if ((abs (x-xpos) < 3) && (y < 22)) {
                 // near the column border
                 hit_border = true;
@@ -1378,9 +1369,9 @@ void wxTreeListHeaderWindow::SendListEvent (wxEventType type, wxPoint pos) {
     parent->GetEventHandler()->ProcessEvent (le);
 }
 
-void wxTreeListHeaderWindow::AddColumn (const wxTreeListColumnInfo& col) {
-    m_columns.Add (col);
-    m_total_col_width += col.GetWidth();
+void wxTreeListHeaderWindow::AddColumn (const wxTreeListColumnInfo& colInfo) {
+    m_columns.Add (colInfo);
+    m_total_col_width += colInfo.GetWidth();
     m_owner->AdjustMyScrollbars();
     m_owner->m_dirty = true;
 }
@@ -1394,10 +1385,10 @@ void wxTreeListHeaderWindow::SetColumnWidth (int column, int width) {
     m_owner->m_dirty = true;
 }
 
-void wxTreeListHeaderWindow::InsertColumn (int before, const wxTreeListColumnInfo& col) {
+void wxTreeListHeaderWindow::InsertColumn (int before, const wxTreeListColumnInfo& colInfo) {
     wxCHECK_RET ((before >= 0) && (before < GetColumnCount()), _T("Invalid column"));
-    m_columns.Insert (col, before);
-    m_total_col_width += col.GetWidth();
+    m_columns.Insert (colInfo, before);
+    m_total_col_width += colInfo.GetWidth();
     m_owner->AdjustMyScrollbars();
     m_owner->m_dirty = true;
 }
@@ -1906,18 +1897,18 @@ void wxTreeListMainWindow::SetItemBold (const wxTreeItemId& item, bool bold) {
 }
 
 void wxTreeListMainWindow::SetItemTextColour (const wxTreeItemId& item,
-                                              const wxColour& col) {
+                                              const wxColour& colour) {
     wxCHECK_RET (item.IsOk(), _T("invalid tree item"));
     wxTreeListItem *pItem = (wxTreeListItem*) item.m_pItem;
-    pItem->Attr().SetTextColour (col);
+    pItem->Attr().SetTextColour (colour);
     RefreshLine (pItem);
 }
 
 void wxTreeListMainWindow::SetItemBackgroundColour (const wxTreeItemId& item,
-                                                    const wxColour& col) {
+                                                    const wxColour& colour) {
     wxCHECK_RET (item.IsOk(), _T("invalid tree item"));
     wxTreeListItem *pItem = (wxTreeListItem*) item.m_pItem;
-    pItem->Attr().SetBackgroundColour (col);
+    pItem->Attr().SetBackgroundColour (colour);
     RefreshLine (pItem);
 }
 
@@ -2663,9 +2654,7 @@ static int LINKAGEMODE tree_ctrl_compare_func(wxTreeListItem **item1,
 int wxTreeListMainWindow::OnCompareItems(const wxTreeItemId& item1,
                                const wxTreeItemId& item2)
 {
-    // delegate to m_owner, to let the user overrride the comparison
-    //return wxStrcmp(GetItemText(item1), GetItemText(item2));
-    return m_owner->OnCompareItems(item1, item2);
+    return m_owner->OnCompareItems (item1, item2);
 }
 
 void wxTreeListMainWindow::SortChildren (const wxTreeItemId& itemId) {
@@ -3600,7 +3589,7 @@ void wxTreeListMainWindow::OnRenameAccept() {
 
     if (!le.IsAllowed()) return;
 
-    SetItemText( m_editItem, m_renameRes );
+    SetItemText (m_editItem, m_curColumn, m_renameRes);
 }
 
 void wxTreeListMainWindow::OnMouse (wxMouseEvent &event) {
@@ -3627,7 +3616,7 @@ void wxTreeListMainWindow::OnMouse (wxMouseEvent &event) {
     wxPoint p = wxPoint (event.GetX(), event.GetY());
     int flags = 0;
     wxTreeListItem *item = m_rootItem->HitTest (CalcUnscrolledPosition (p),
-                                                      this, flags, m_curColumn, 0);
+                                                this, flags, m_curColumn, 0);
 
     // we only process dragging here
     if (event.Dragging()){
@@ -4206,9 +4195,8 @@ void wxTreeListCtrl::AssignStateImageList(wxImageList* imageList)
 void wxTreeListCtrl::AssignButtonsImageList(wxImageList* imageList)
 { m_main_win->AssignButtonsImageList(imageList); }
 
-wxString wxTreeListCtrl::GetItemText(const wxTreeItemId& item, int column)
-    const
-{ return m_main_win->GetItemText(item, column); }
+wxString wxTreeListCtrl::GetItemText(const wxTreeItemId& item, int column) const
+{ return m_main_win->GetItemText (item, column); }
 
 int wxTreeListCtrl::GetItemImage(const wxTreeItemId& item, int column,
                                  wxTreeItemIcon which) const
@@ -4233,7 +4221,7 @@ wxFont wxTreeListCtrl::GetItemFont(const wxTreeItemId& item) const
 
 void wxTreeListCtrl::SetItemText(const wxTreeItemId& item, int column,
                                  const wxString& text)
-{ m_main_win->SetItemText(item, column, text); }
+{ m_main_win->SetItemText (item, column, text); }
 
 void wxTreeListCtrl::SetItemImage(const wxTreeItemId& item,
                                   int column,
@@ -4252,12 +4240,12 @@ void wxTreeListCtrl::SetItemBold(const wxTreeItemId& item, bool bold)
 { m_main_win->SetItemBold(item, bold); }
 
 void wxTreeListCtrl::SetItemTextColour(const wxTreeItemId& item,
-                                       const wxColour& col)
-{ m_main_win->SetItemTextColour(item, col); }
+                                       const wxColour& colour)
+{ m_main_win->SetItemTextColour(item, colour); }
 
 void wxTreeListCtrl::SetItemBackgroundColour(const wxTreeItemId& item,
-                                             const wxColour& col)
-{ m_main_win->SetItemBackgroundColour(item, col); }
+                                             const wxColour& colour)
+{ m_main_win->SetItemBackgroundColour(item, colour); }
 
 void wxTreeListCtrl::SetItemFont(const wxTreeItemId& item,
                                  const wxFont& font)
@@ -4538,16 +4526,15 @@ void wxTreeListCtrl::SetColumnText(int column, const wxString& text)
 wxString wxTreeListCtrl::GetColumnText(int column) const
 { return m_header_win->GetColumnText(column); }
 
-void wxTreeListCtrl::AddColumn(const wxTreeListColumnInfo& col)
+void wxTreeListCtrl::AddColumn(const wxTreeListColumnInfo& colInfo)
 {
-    m_header_win->AddColumn (col);
+    m_header_win->AddColumn (colInfo);
     DoHeaderLayout();
 }
 
-void wxTreeListCtrl::InsertColumn(int before,
-                                  const wxTreeListColumnInfo& col)
+void wxTreeListCtrl::InsertColumn(int before, const wxTreeListColumnInfo& colInfo)
 {
-    m_header_win->InsertColumn (before, col);
+    m_header_win->InsertColumn (before, colInfo);
     m_header_win->Refresh();
 }
 
@@ -4557,9 +4544,9 @@ void wxTreeListCtrl::RemoveColumn(int column)
     m_header_win->Refresh();
 }
 
-void wxTreeListCtrl::SetColumn(int column, const wxTreeListColumnInfo& col)
+void wxTreeListCtrl::SetColumn(int column, const wxTreeListColumnInfo& colInfo)
 {
-    m_header_win->SetColumn (column, col);
+    m_header_win->SetColumn (column, colInfo);
     m_header_win->Refresh();
 }
 
