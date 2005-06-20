@@ -1,0 +1,9 @@
+Component:  wxLed
+Release:    2005-06-20
+wxWidgets:  2.4.x, 2.5.x
+Maintainer: Thomas Monjalon
+Subdir:     led
+
+Description:
+A LED (Light Emitting Diode) widget. Colour is chosen in RGB form.
+There is also a specified colour used when disabled.
