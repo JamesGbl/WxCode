@@ -3,7 +3,6 @@
 // Purpose:     wxXml2Document - XML parser & data holder class
 // Author:      Francesco Montorsi (based on Vaclav Slavik's design)
 // Created:     2003/09/05
-// Last modify: 2004/12/18
 // RCS-ID:      $Id$
 // Copyright:   (c) 2000 Vaclav Slavik and (c) 2003 Francesco Montorsi
 // Licence:     wxWidgets licence

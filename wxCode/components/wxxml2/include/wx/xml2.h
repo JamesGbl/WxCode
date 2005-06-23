@@ -3,8 +3,7 @@
 // Purpose:     libxml2 wrappers
 // Author:      Francesco Montorsi (original design based on EXPAT by Vaclav Slavik)
 // Created:     2000/03/05
-// Last modify: 2004/12/18
-// RCS-ID:      
+// RCS-ID:      $Id$
 // Copyright:   (c) 2000 Vaclav Slavik and (c) 2003 Francesco Montorsi
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////

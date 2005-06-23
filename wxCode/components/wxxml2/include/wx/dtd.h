@@ -3,9 +3,8 @@
 // Purpose:     wxXml2DTD and various DTD nodes wrappers
 // Author:      Francesco Montorsi
 // Created:     2005/1/1
-// Last modify: 
-// RCS-ID:      
-// Copyright:   2005 Francesco Montorsi
+// RCS-ID:      $Id$
+// Copyright:   (c) 2005 Francesco Montorsi
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 
