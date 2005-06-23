@@ -3,9 +3,8 @@
 // Purpose:     wxMenuCmd, wxMenuWalker, wxMenuTreeWalker, 
 //              wxMenuShortcutWalker...
 // Author:      Francesco Montorsi
-// Modified by:
 // Created:     2004/02/19
-// RCS-ID:      $Id: menuutils.cpp,v 1.0
+// RCS-ID:      $Id$
 // Copyright:   (c) Francesco Montorsi
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////

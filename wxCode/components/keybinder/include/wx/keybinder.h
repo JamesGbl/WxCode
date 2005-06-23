@@ -4,8 +4,8 @@
 // Author:      Aleksandras Gluchovas
 // Modified by: Francesco Montorsi (6/1/2004)
 // Created:     2000/02/10
-// RCS-ID:      $Id: keybinder.h,v 2.0
-// Copyright:   (c) Aleksandras Gluchovas
+// RCS-ID:      $Id$
+// Copyright:   (c) Aleksandras Gluchovas and (c) Francesco Montorsi
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 

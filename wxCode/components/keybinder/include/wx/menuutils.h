@@ -2,10 +2,9 @@
 // Name:        keybinder.h
 // Purpose:     Classes for binding keypresses to commands.
 // Author:      Francesco Montorsi
-// Modified by: 
 // Created:     2004/02/19
-// RCS-ID:      $Id: menuutils.h,v 1.0
-// Copyright:   (c) Aleksandras Gluchovas
+// RCS-ID:      $Id$
+// Copyright:   (c) Aleksandras Gluchovas and (c) Francesco Montorsi
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 
