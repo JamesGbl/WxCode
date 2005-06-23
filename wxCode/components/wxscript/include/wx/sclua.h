@@ -2,9 +2,8 @@
 // Name:        sclua.h
 // Purpose:     wxScriptFunctionLua, wxScriptFileLua, wxLua
 // Author:      Francesco Montorsi
-// Modified by: 
 // Created:     2004/6/5
-// RCS-ID:      
+// RCS-ID:      $Id$
 // Copyright:   (c) Francesco Montorsi
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////

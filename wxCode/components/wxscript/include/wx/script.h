@@ -3,9 +3,8 @@
 // Purpose:     wxScriptInterpreter, wxScriptTypeInfo, wxScriptVar, 
 //              wxScriptFunction, wxScriptFunctionArray, wxScriptFile
 // Author:      Francesco Montorsi
-// Modified by: 
 // Created:     2004/29/4
-// RCS-ID:      
+// RCS-ID:      $Id$
 // Copyright:   (c) Francesco Montorsi
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
