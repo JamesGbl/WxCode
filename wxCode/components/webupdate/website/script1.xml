@@ -1,0 +1,15 @@
+	 <?xml version="1.0"?>
+	 <webupdate>
+	    <requires></requires>
+	 
+		<package id="myapp">
+			<latest-version importance="high">2.0.3</latest-version>
+			<latest-download platform="msw">http://myapp.com/download/myapp.exe</latest-download>
+			<latest-download platform="gtk">http://myapp.com/download/myapp.rpm</latest-download>
+
+			<msg-update-available>The new $(id) $(latest-version) is available for download;
+								it has several bugfixes and security improvements !</msg-update-available>
+			<msg-update-notavailable>You have the most updated version of $(id)...</msg-update-notavailable>
+
+		</package>
+	 </webupdate>
