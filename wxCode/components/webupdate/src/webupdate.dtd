@@ -1,0 +1,119 @@
+<!-- 
+// Name:        webupdate.dtd
+// Purpose:     a simple DTD to validate update script
+// Author:      Francesco Montorsi
+// Created:     2005/06/24
+// RCS-ID:      $Id$
+// Copyright:   (c) 2005 Francesco Montorsi
+// Licence:     wxWidgets licence
+
+   This Document Type Definition (DTD) is for the update scripts that you put
+   in your webserver. This file should make easier to check validity of the
+   scripts you write and also as a simple reference guide for the update script
+   format.
+-->
+
+<!-- 
+     A minimal example of a simple update script files:
+	 
+	 <?xml version="1.0"?>
+	 <webupdate>
+		<package id="myapp">
+			<latest-version>2.0.3</latest-version>
+			<latest-download platform="msw">http://myapp.com/download/myapp.exe</latest-download>
+			<latest-download platform="gtk">http://myapp.com/download/myapp.rpm</latest-download>
+		</package>
+	 </webupdate>
+
+	 
+	 
+	 A sample showing _all_ the available tags in action:
+	 
+	 <?xml version="1.0"?>
+	 <webupdate>
+	    <requires></requires>
+	 
+		<package id="myapp">
+			<latest-version importance="high">2.0.3</latest-version>
+			<latest-download platform="msw">http://myapp.com/download/myapp.exe</latest-download>
+			<latest-download platform="gtk">http://myapp.com/download/myapp.rpm</latest-download>
+
+			<msg-update-available>The new $(id) $(latest-version) is available for download;
+								it has several bugfixes and security improvements !</msg-update-available>
+			<msg-update-notavailable>You have the most updated version of $(id)...</msg-update-notavailable>
+
+		</package>
+	 </webupdate>
+	 
+-->
+
+
+<!-- WEBUPDATE tag: this is the root of the script file.
+                    It can contain:
+	                - 1/0 occurrences of the REQUIRES tag
+					- 0 or more occurrences of the PACKAGE tag
+-->
+<!ELEMENT webupdate (requires?, package*)>
+
+
+
+
+<!--                                                                                -->
+<!--                        CHILDREN TAGS OF 'WEBUPDATE'                            -->
+<!--                                                                                -->
+
+
+<!-- REQUIRES tag: contains the version string of the minimal webupdate component
+                   which can correctly handle the update process.
+				   E.g. if you need that 
+-->
+<!ELEMENT requires (#PCDATA)>
+
+
+<!-- PACKAGE tag: this begins a new package section where
+                  are provided all the info about new updates
+				  about it. Requires an "id" attribute (unique)
+				  and the 
+				  - latest-version
+				  - latest-download
+				  tags
+-->
+<!ELEMENT package (latest-version, latest-download*, msg-update-available?, msg-update-noavailable?)>
+<!ATTLIST package id CDATA #REQUIRED>
+
+
+
+
+
+<!--                                                                                -->
+<!--                        CHILDREN TAGS OF 'PACKAGE'                              -->
+<!--                                                                                -->
+
+<!-- LATEST-VERSION tag: contains the version string of the most updated version
+                         available in the webserver.
+						 You can use the 'importance' attribute to define how much
+						 important is this update...
+-->
+<!ELEMENT latest-version (#PCDATA)>
+<!ATTLIST latest-version importance (low|normal|high) "normal">
+
+
+<!-- LATEST-DOWNLOAD tag: contains the download location of the most updated version
+                          available in the webserver. Requires a "platform" attribute
+						  which specifies 
+-->
+<!ELEMENT latest-download (#PCDATA)>
+<!ATTLIST latest-download platform (msw|gtk|mac|x11|motif|mgl|os2) #REQUIRED>
+
+
+<!-- MSG-UPDATE-AVAILABLE tag: contains a text message which is displayed to the user in case
+                               a new version of the package is available for its platform. 
+							   Keyword substitution is performed in the text.
+-->
+<!ELEMENT msg-update-available (#PCDATA)>
+
+<!-- MSG-UPDATE-NOTAVAILABLE tag: contains a text message which is displayed to the user in case
+                                 a new version of the package is NOT available for its platform. 
+							     Keyword substitution is performed in the text.
+-->
+<!ELEMENT msg-update-notavailable (#PCDATA)>

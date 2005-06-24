@@ -1,8 +1,6 @@
  
  wxXml2 library and required libraries
- ---------------------------------------
+ -------------------------------------------
 
- This is the directory set as the output of the wxscript library 
- ("wxscript.lib" or "libwxscript.a").
-
+ Here goes the wxXml2 library when using bakefile-based build system
  

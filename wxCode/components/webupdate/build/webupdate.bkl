@@ -1,0 +1,54 @@
+<?xml version="1.0" ?>
+<makefile>
+
+
+	<!-- Some defaults for the variables used by wxCode bakefiles -->
+	<set var="WXCODE_BAKEFILEDIR">../../../build/bakefiles</set>
+	<include file="$(WXCODE_BAKEFILEDIR)/defaults.bkl"/>
+	
+
+	<!-- The wxXml2 settings -->
+	<!-- =================== -->
+
+	<set var="COMP_NAME">webupdate</set>
+	<set var="COMP_SRC">../src/webupdate.cpp</set>
+	<set var="COMP_HDR">../include/wx/webupdate.h</set>	
+	<set var="COMP_SAMPLE_SRC">../sample/minimal.cpp</set>
+	<set var="WX_UNICODE_DEFAULT">1</set>
+	<set var="WX_VERSION_DEFAULT">26</set>
+
+	<!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->
+	<include file="$(WXCODE_BAKEFILEDIR)/wxcode.bkl"/>
+
+	<template id="xmlbase">
+		<include>..$(DIRSEP)..$(DIRSEP)wxxml2$(DIRSEP)include</include>
+		<lib-path>..$(DIRSEP)..$(DIRSEP)wxxml2$(DIRSEP)lib</lib-path>
+	</template>
+
+	<!-- The real target: wxcode.bkl does not declare a real target but a template called
+	     "complib". In this way modifications are allowed to the basic template. -->
+	<lib id="webupdate" template="complib,xmlbase">
+		<libname>$(COMP_NAME)$(WXLIBPOSTFIX)</libname>		
+	</lib>
+
+	<!-- The sample of the component: as for the LIB target, this exe derives from a 
+	     template contained in wxcode.bkl which can be modified here -->
+	<exe id="minimal" template="compsample,xmlbase">
+		<res-include>..$(DIRSEP)sample</res-include>
+		<win32-res>..$(DIRSEP)sample$(DIRSEP)minimal.rc</win32-res>
+		<library>webupdate</library>
+		<sys-lib>wxxml2</sys-lib>
+		<sys-lib>libxml2</sys-lib>
+		<sys-lib>iconv</sys-lib>
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib>
+	</exe>
+	
+	<if cond="FORMAT=='autoconf'">
+		<modify-target target="uninstall">
+	        <rmfile>$(INCLUDEDIR)/wx/webupdate.h</rmfile>
+	    	<rmfile>$(LIBDIR)/libwebupdate*.a</rmfile>
+		</modify-target>
+	</if>
+    
+</makefile>
