@@ -78,7 +78,7 @@
 				  - latest-download
 				  tags
 -->
-<!ELEMENT package (latest-version, latest-download*, msg-update-available?, msg-update-noavailable?)>
+<!ELEMENT package (latest-version, latest-download*, msg-update-available?, msg-update-notavailable?)>
 <!ATTLIST package id CDATA #REQUIRED>
 
 

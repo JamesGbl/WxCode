@@ -13,17 +13,20 @@
 // declarations
 // ============================================================================
 
+
+#define VERSION			wxT("1.0.0")
+
+
+
+
+
 // ----------------------------------------------------------------------------
 // headers
 // ----------------------------------------------------------------------------
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
-#include "wx/xml2.h"				// include libxml2 wrapper definitions
-#include "wx/dtd.h"				// include libxml2 wrapper definitions
-
-#include <wx/mstream.h>
-
+#include "wx/webupdate.h"
 
 #ifdef __BORLANDC__
     #pragma hdrstop
@@ -173,18 +176,20 @@ MyFrame::MyFrame(const wxString& title)
 
 #if 1
     
+	wxPanel *panel = new wxPanel(this, -1);
     wxSizer *sz = new wxBoxSizer(wxVERTICAL);
 
 	// create the wxTextCtrl where the file structure is shown
-	sz->Add(new wxStaticText(this, -1, wxT("Program version: ") + m_strVersion), 1);
-    sz->Add(new wxTextCtrl(this, -1, 
+	sz->Add(new wxStaticText(panel, -1, 
+		wxString(wxT("Program version: ")) + VERSION), 0, wxGROW | wxALL, 5);
+    sz->Add(new wxTextCtrl(panel, -1, 
 		wxT("This program provides an example of wxUpdateCheck features:\n")
 		wxT("\t- wxUpdateCheck: downloads a simple text file from your web server and")
 		wxT("parses it to retrieve info about new updates.\n")
-		wxT("\t- wxWebUpdateDlg: a dialog with all advanced update options.\n")
-		wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE), 1);
-    SetMainSizer(sz);
-    sz->SetSizeHints(this);
+		wxT("\t- wxWebUpdateDlg: a dialog with all advanced update options.\n"),
+		wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE), 1, wxGROW);
+    panel->SetSizer(sz);
+    sz->SetSizeHints(panel);
 #endif
 
 #if wxUSE_MENUS
@@ -239,7 +244,13 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 
 void MyFrame::OnUpdateCheck(wxCommandEvent &)
 {
-	
+	// we want to open the script file I've put on wxCode server
+	wxWebUpdateXMLScript script(wxT("http://wxcode.sourceforge.net/components/webupdate/script1.xml"));
+
+	wxWebUpdatePackage *update = script.GetPackage(wxT("myapp"));
+	if (!update) return;
+	wxWebUpdateDownload download = update->GetDownloadPackage();
+	if (!download.IsOkForThisPlatform()) return;
 }
 
 

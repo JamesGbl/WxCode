@@ -573,7 +573,7 @@ public:		// operators
 	//! Returns NOT operator==.
 	bool operator!=(const wxXml2Property &p) const		{ return !(*this == p); }
 
-	//! Assignement operator.
+	//! Assignment operator.
 	wxXml2Property &operator=(const wxXml2Property &p)
 		{ Copy(p); return *this; }
 

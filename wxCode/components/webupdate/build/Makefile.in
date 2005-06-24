@@ -114,7 +114,7 @@ install-lib:
 	$(RANLIB) $@
 
 ../sample/minimal$(EXEEXT): $(MINIMAL_OBJECTS) $(__minimal___win32rc) ../lib/$(LIBPREFIX)webupdate$(LIBEXT)
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) -L../lib $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS) -lwebupdate -lwxxml2 -llibxml2 -liconv
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) -L../lib $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS) -lwebupdate
 	
 	$(__minimal___mac_setfilecmd)
 	$(__minimal___os2_emxbindcmd)

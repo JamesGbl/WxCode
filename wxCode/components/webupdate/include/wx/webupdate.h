@@ -18,9 +18,11 @@
 #endif
 
 // wxWidgets headers
-#include "wx/xml.h"
+#include "wx/xml/xml.h"
+#include "wx/url.h"
 
-
+//! The possible values of the "platform" attribute of the
+//! LATEST-DOWNLOAD tag supported by wxWebUpdateXMLScript.
 enum wxWebUpdatePlatform {
     wxWUP_INVALID = -1,
     wxWUP_MSW,
@@ -28,7 +30,8 @@ enum wxWebUpdatePlatform {
     wxWUP_OS2,
     wxWUP_MAC,
     wxWUP_MOTIF,
-    wxWUP_X11
+    wxWUP_X11,
+	wxWUP_MGL
 };
 
 
@@ -42,15 +45,18 @@ protected:
      
 public:
     wxWebUpdateDownload(const wxString &url, const wxString &plat = wxEmptyString)
-         : m_platform(wxWUP_INVALID) { SetURL(url); SetPlatform(plat); }
+         : m_platform(wxWUP_INVALID), m_urlDownload(url) { SetPlatform(plat); }
     virtual ~wxWebUpdateDownload() {}
     
     bool IsOk() const
-        { return m_urlDownload.GetError() != wxURL_NOERR && m_platform != wxWUP_INVALID; }
-    bool IsOkForThisPort() const
-        { return m_platform == GetThisPlatform(); }
+        { return m_urlDownload.GetError() == wxURL_NOERR && m_platform != wxWUP_INVALID; }
+    bool IsOkForThisPlatform() const
+        { return IsOk() && m_platform == GetThisPlatform(); }
     
+public:		// static platform utilities
+
     static wxWebUpdatePlatform GetThisPlatform();
+	static wxWebUpdatePlatform GetPlatformCode(const wxString &platname);
         
         
 public:     // setters
@@ -59,14 +65,9 @@ public:     // setters
         { wxURL u(url); if (u.GetError() != wxURL_NOERR) return FALSE; }
         
     bool SetPlatform(const wxString &plat) {
-        m_platform = wxWUP_INVALID;
-        if (plat == wxT("msw")) m_platform = wxWUP_MSW;
-        if (plat == wxT("gtk")) m_platform = wxWUP_GTK;
-        if (plat == wxT("os2")) m_platform = wxWUP_OS2;
-        if (plat == wxT("mac")) m_platform = wxWUP_MAC;
-        if (plat == wxT("motif")) m_platform = wxWUP_MOTIF;
-        if (plat == wxT("x11")) m_platform = wxWUP_X11;
-        if (m_platform == wxWUP_INVALID) return FALSE;
+        m_platform = GetPlatformCode(plat);
+        if (m_platform == wxWUP_INVALID) 
+			return FALSE;
         return TRUE;
     }
     
@@ -79,32 +80,52 @@ public:     // getters
         { return m_platform; }
 };
 
+
+
+
+WX_DECLARE_OBJARRAY(wxWebUpdateDownload, wxWebUpdateDownloadArray);
+
+
 //! Contains the info about a package update.
 class wxWebUpdatePackage
 {
+	friend class wxWebUpdateXMLScript;
+
 protected:
     
     wxString m_strID;
     wxString m_strLatestVersion;
     wxString m_strUpdateAvailableMsg;
     wxString m_strUpdateNotAvailableMsg;
+
+	wxWebUpdateDownloadArray m_arrWebUpdates;
     
 public:
-    wxWebUpdatePackage() {}
+    wxWebUpdatePackage(const wxString &id = wxEmptyString) : m_strID(id) {}
     virtual ~wxWebUpdatePackage() {}
     
-    virtual bool ParsePackage(const wxXmlNode *p); 
+	virtual void AddDownloadPackage(const wxWebUpdateDownload &toadd)
+		{ m_arrWebUpdates.Add(toadd); }
+	
+	virtual wxWebUpdateDownload GetDownloadPackage(const wxString &platform) const
+		{ return GetDownloadPackage(wxWebUpdateDownload::GetPlatformCode(platform)); }
+	
+	virtual wxWebUpdateDownload GetDownloadPackage(wxWebUpdatePlatform code = wxWUP_INVALID) const {
+		if (code == wxWUP_INVALID) code = wxWebUpdateDownload::GetThisPlatform();
+		for (int i=0; i<(int)m_arrWebUpdates.GetCount(); i++)
+			if (m_arrWebUpdates.Item(i).GetPlatform() == code)
+				return m_arrWebUpdates.Item(i);
+		return wxWebUpdateDownload(wxT("invalid"));
+	}
 };
 
 //! This is a possible result from wxUpdateCheck::Check function.
-enum wxUpdateCheckFlag {
+enum wxWebUpdateCheckFlag {
     
-    wxUCF_UPDATED,      //!< Your program is still up-to-date.
-    wxUCF_OUTOFDATE     //!< The web server holds an updated version.
+    wxWUCF_UPDATED,      //!< Your program is still up-to-date.
+    wxWUCF_OUTOFDATE     //!< The web server holds an updated version.
 };
 
-
-WX_DEFINE_ARRAY(wxWebUpdatePackage*, wxWebUpdatePackageArray);
 
 
 //! This is the class which performs all transactions with the server.
@@ -115,26 +136,27 @@ protected:
     
     //! The array containing the packages which are listed in
     //! the web server update script.
-    wxWebUpdatePackageArray m_arrPackages;
+    //wxWebUpdatePackageArray m_arrPackages;
     
 public:
-	wxWebUpdateXMLScript(const wxString &strURL) {}
+	wxWebUpdateXMLScript(const wxString &strURL) { Load(strURL); }
 	virtual ~wxWebUpdateXMLScript() {}
 
     //! Couldn't connect to the given URL for some reason.
-    virtual bool Load();
+    virtual bool Load(const wxString &url);
+
+	//! Returns the wxWebUpdatePackage stored in this document for
+	//! the given package. Returns NULL if the package you asked for
+	//! is not present in this XML document.
+	virtual wxWebUpdatePackage *GetPackage(const wxString &packagename) const;
 
     //! Checks if the webserver holds a more recent version of the given package.
     //! \param strURL The URL of the XML file stored in the web server which holds 
     //!        the informations to parse.
     //! \param version The string version of the package which is being tested.
     //! \param packagename The name of the package whose version must be tested.
-	virtual wxUpdateCheckFlag Check(const wxString &version,
+	virtual wxWebUpdateCheckFlag Check(const wxString &version,
                                     const wxString &packagename) const;
-
-protected:
-    
-
 
 private:
 	DECLARE_CLASS(wxWebUpdateXMLScript)

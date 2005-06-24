@@ -161,7 +161,7 @@ cleandocs:
 	ranlib $@
 
 ..\sample\minimal.exe: $(MINIMAL_OBJECTS) mingw\minimal_minimal_rc.o ..\lib\libwebupdate$(WXLIBPOSTFIX).a
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -Wl,--subsystem,windows -mwindows  ..\lib\libwebupdate$(WXLIBPOSTFIX).a -lwxxml2 -llibxml2 -liconv -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTLIBPOSTFIX) -lwxjpeg$(WX3RDPARTLIBPOSTFIX) -lwxpng$(WX3RDPARTLIBPOSTFIX) -lwxzlib$(WX3RDPARTLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -Wl,--subsystem,windows -mwindows  ..\lib\libwebupdate$(WXLIBPOSTFIX).a -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTLIBPOSTFIX) -lwxjpeg$(WX3RDPARTLIBPOSTFIX) -lwxpng$(WX3RDPARTLIBPOSTFIX) -lwxzlib$(WX3RDPARTLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
 mingw\webupdate_webupdate.o: ./../src/webupdate.cpp
 	$(CXX) -c -o $@ $(WEBUPDATE_CXXFLAGS) $<
