@@ -37,49 +37,54 @@ IMPLEMENT_CLASS(wxWebUpdateXMLScript, wxXmlDocument)
 WX_DEFINE_OBJARRAY(wxWebUpdateDownloadArray);
 
 
+// global objects
+wxWebUpdateDownload wxEmptyWebUpdateDownload(wxT("invalid"));
+
+
+
 
 // ---------------------
 // wxWEBUPDATEDOWNLOAD
 // ---------------------
 
-wxWebUpdatePlatform wxWebUpdateDownload::GetThisPlatform()
+wxWebUpdatePlatform wxWebUpdateDownload::GetThisPlatformCode()
 {
-       switch ( wxGetOsVersion() )
-        {
-            case wxMOTIF_X:
-                return wxWUP_MOTIF;
-                
-            case wxMAC:
-            case wxMAC_DARWIN:
-                return wxWUP_MAC;
-                
-            case wxGTK:
-            case wxGTK_WIN32:
-            case wxGTK_OS2:
-            case wxGTK_BEOS:
-                return wxWUP_GTK;
-                
-            case wxWINDOWS:
-            case wxPENWINDOWS:
-            case wxWINDOWS_NT:
-            case wxWIN32S:
-            case wxWIN95:
-            case wxWIN386:
-                return wxWUP_MSW;
-                
-            case wxMGL_UNIX:
-            case wxMGL_X:
-            case wxMGL_WIN32:
-            case wxMGL_OS2:
-                return wxWUP_MGL;
-                
-            case wxWINDOWS_OS2:
-            case wxOS2_PM:
-                return wxWUP_OS2;
-                
-            default:
-                return wxWUP_INVALID;    
-        }
+	switch ( wxGetOsVersion() )
+	{
+	case wxMOTIF_X:
+		return wxWUP_MOTIF;
+		
+	case wxMAC:
+	case wxMAC_DARWIN:
+		return wxWUP_MAC;
+		
+	case wxGTK:
+	case wxGTK_WIN32:
+	case wxGTK_OS2:
+	case wxGTK_BEOS:
+		return wxWUP_GTK;
+		
+	case wxWINDOWS:
+	case wxPENWINDOWS:
+	case wxWINDOWS_NT:
+	case wxWIN32S:
+	case wxWIN95:
+	case wxWIN386:
+		return wxWUP_MSW;
+		
+	case wxMGL_UNIX:
+	case wxMGL_X:
+	case wxMGL_WIN32:
+	case wxMGL_OS2:
+		return wxWUP_MGL;
+		
+	case wxWINDOWS_OS2:
+	case wxOS2_PM:
+		return wxWUP_OS2;
+		
+	default:
+		return wxWUP_INVALID;    
+	}
 }
 
 wxWebUpdatePlatform wxWebUpdateDownload::GetPlatformCode(const wxString &plat)
@@ -94,64 +99,57 @@ wxWebUpdatePlatform wxWebUpdateDownload::GetPlatformCode(const wxString &plat)
 	return ret;
 }
 
-
-// ---------------
-// wxWebUpdateXMLScript
-// ---------------
-/*
-CUpdateCheck::wxWebUpdateXMLScript()
+wxString wxWebUpdateDownload::GetPlatformString(wxWebUpdatePlatform code)
 {
+	wxString ret;
+    switch (code) {
+	case wxWUP_MSW:
+		ret = wxT("msw");
+		break;
+	case wxWUP_GTK:
+		ret = wxT("gtk");
+		break;
+	case wxWUP_OS2:
+		ret = wxT("os2");
+		break;
+	case wxWUP_MAC:
+		ret = wxT("mac");
+		break;
+	case wxWUP_MOTIF:
+		ret = wxT("motif");
+		break;
+	case wxWUP_X11:
+		ret = wxT("x11");
+		break;
+	default:
+		return wxEmptyString;
+	}
 
+	return ret;
 }
 
-wxWebUpdateXMLScript::~wxWebUpdateXMLScript()
+
+
+
+// ---------------------
+// wxWEBUPDATEPACKAGE
+// ---------------------
+
+wxWebUpdateDownload wxWebUpdatePackage::GetDownloadPackage(wxWebUpdatePlatform code) const
 {
+	if (code == wxWUP_INVALID) code = wxWebUpdateDownload::GetThisPlatformCode();
+	for (int i=0; i<(int)m_arrWebUpdates.GetCount(); i++)
+		if (m_arrWebUpdates.Item(i).GetPlatform() == code)
+			return m_arrWebUpdates.Item(i);
+		return wxEmptyWebUpdateDownload;
 }
 
-BOOL wxWebUpdateXMLScript::GetFileVersion(DWORD &dwMS, DWORD &dwLS)
-{
-	char szModuleFileName[MAX_PATH];
 
-    LPBYTE  lpVersionData; 
 
-	if (GetModuleFileName(AfxGetInstanceHandle(), szModuleFileName, sizeof(szModuleFileName)) == 0) return FALSE;
 
-    DWORD dwHandle;     
-    DWORD dwDataSize = ::GetFileVersionInfoSize(szModuleFileName, &dwHandle); 
-    if ( dwDataSize == 0 ) 
-        return FALSE;
-
-    lpVersionData = new BYTE[dwDataSize]; 
-    if (!::GetFileVersionInfo(szModuleFileName, dwHandle, dwDataSize, (void**)lpVersionData) )
-    {
-		delete [] lpVersionData;
-        return FALSE;
-    }
-
-    ASSERT(lpVersionData != NULL);
-
-    UINT nQuerySize;
-	VS_FIXEDFILEINFO* pVsffi;
-    if ( ::VerQueryValue((void **)lpVersionData, _T("\\"),
-                         (void**)&pVsffi, &nQuerySize) )
-    {
-		dwMS = pVsffi->dwFileVersionMS;
-		dwLS = pVsffi->dwFileVersionLS;
-		delete [] lpVersionData;
-        return TRUE;
-    }
-
-	delete [] lpVersionData;
-    return FALSE;
-
-}
-
-void wxWebUpdateXMLScript::Check(UINT uiURL)
-{
-	CString strURL(MAKEINTRESOURCE(uiURL));
-	Check(strURL);
-}
-*/
+// ----------------------
+// wxWEBUPDATEXMLSCRIPT
+// ----------------------
 
 wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxString &packagename) const
 {
@@ -211,14 +209,23 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxString &packagename
 			}
 
 		} else if (child->GetName() == wxT("msg-update-available")) {
+
+			wxXmlNode *text = child->GetChildren();
+			if (text) 
+				ret->m_strUpdateAvailableMsg = text->GetContent();
+
 		} else if (child->GetName() == wxT("msg-update-notavailable")) {
+
+			wxXmlNode *text = child->GetChildren();
+			if (text) 
+				ret->m_strUpdateNotAvailableMsg = text->GetContent();
 		}
 
 		// proceed
 		child = child->GetNext();
 	}
 
-	return ret;
+	return ret;		// the caller must delete it
 }
 
 wxWebUpdateCheckFlag wxWebUpdateXMLScript::Check(const wxString &version,
@@ -246,96 +253,19 @@ bool wxWebUpdateXMLScript::Load(const wxString &strURL)
 		
         return FALSE;
 	}
-  wxFile fileTest(wxT("test.txt"), wxFile::write);
-  wxFileOutputStream sout(fileTest);
-  if (!sout.Ok())
-  {
-    return FALSE;
-  }
 
-  xml->Read(sout);
-  delete xml;
-  sout.Close();
-
+	wxFile fileTest(wxT("test.txt"), wxFile::write);
+	wxFileOutputStream sout(fileTest);
+	if (!sout.Ok())
+	{
+		return FALSE;
+	}
+	
+	xml->Read(sout);
+	delete xml;
+	sout.Close();
+	
 	wxFileInputStream sin(wxT("test.txt"));
 	return wxXmlDocument::Load(sin);
 }
 
-/*
-HINSTANCE wxWebUpdateXMLScript::GotoURL(LPCTSTR url, int showcmd)
-{
-    TCHAR key[MAX_PATH + MAX_PATH];
-
-    // First try ShellExecute()
-    HINSTANCE result = ShellExecute(NULL, _T("open"), url, NULL,NULL, showcmd);
-
-    // If it failed, get the .htm regkey and lookup the program
-    if ((UINT)result <= HINSTANCE_ERROR) 
-	{
-
-        if (GetRegKey(HKEY_CLASSES_ROOT, _T(".htm"), key) == ERROR_SUCCESS) 
-		{
-            lstrcat(key, _T("\\shell\\open\\command"));
-
-            if (GetRegKey(HKEY_CLASSES_ROOT,key,key) == ERROR_SUCCESS) 
-			{
-                TCHAR *pos;
-                pos = _tcsstr(key, _T("\"%1\""));
-                if (pos == NULL) {                     // No quotes found
-                    pos = _tcsstr(key, _T("%1"));      // Check for %1, without quotes 
-                    if (pos == NULL)                   // No parameter at all...
-                        pos = key+lstrlen(key)-1;
-                    else
-                        *pos = '\0';                   // Remove the parameter
-                }
-                else
-                    *pos = '\0';                       // Remove the parameter
-
-                lstrcat(pos, _T(" "));
-                lstrcat(pos, url);
-
-                result = (HINSTANCE) WinExec(key,showcmd);
-            }
-        }
-    }
-
-    return result;
-}
-
-LONG wxWebUpdateXMLScript::GetRegKey(HKEY key, LPCTSTR subkey, LPTSTR retdata)
-{
-    HKEY hkey;
-    LONG retval = RegOpenKeyEx(key, subkey, 0, KEY_QUERY_VALUE, &hkey);
-
-    if (retval == ERROR_SUCCESS) 
-	{
-        long datasize = MAX_PATH;
-        TCHAR data[MAX_PATH];
-        RegQueryValue(hkey, NULL, data, &datasize);
-        lstrcpy(retdata,data);
-        RegCloseKey(hkey);
-    }
-
-    return retval;
-}
-
-
-void wxWebUpdateXMLScript::MsgUpdateAvailable(DWORD dwMSlocal, DWORD dwLSlocal, DWORD dwMSWeb, DWORD dwLSWeb, const CString& strURL)
-{
-	CString strMessage;
-	strMessage.Format(IDS_UPDATE_AVAILABLE, HIWORD(dwMSlocal), LOWORD(dwMSlocal), HIWORD(dwMSWeb), LOWORD(dwMSWeb));
-
-	if (AfxMessageBox(strMessage, MB_YESNO|MB_ICONINFORMATION) == IDYES)
-		GotoURL(strURL, SW_SHOW);
-}
-
-void wxWebUpdateXMLScript::MsgUpdateNotAvailable(DWORD dwMSlocal, DWORD dwLSlocal)
-{
-	AfxMessageBox(IDS_UPDATE_NO, MB_OK|MB_ICONINFORMATION);
-}
-
-void wxWebUpdateXMLScript::MsgUpdateNoCheck(DWORD dwMSlocal, DWORD dwLSlocal)
-{
-	AfxMessageBox(IDS_UPDATE_NOCHECK, MB_OK|MB_ICONINFORMATION);
-}
-*/

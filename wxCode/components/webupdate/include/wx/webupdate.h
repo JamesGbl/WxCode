@@ -21,26 +21,60 @@
 #include "wx/xml/xml.h"
 #include "wx/url.h"
 
+
+
+// for shared builds
+#ifdef WXMAKINGDLL_WEBUPDATE
+    #define WXDLLIMPEXP_WEBUPDATE				WXEXPORT
+    #define WXDLLIMPEXP_DATA_WEBUPDATE(type)	WXEXPORT type
+#elif defined(WXUSINGDLL)
+    #define WXDLLIMPEXP_WEBUPDATE WXIMPORT
+    #define WXDLLIMPEXP_DATA_NWEBUPDATE(type)	WXIMPORT type
+#else // not making nor using DLL
+    #define WXDLLIMPEXP_WEBUPDATE
+    #define WXDLLIMPEXP_DATA_WEBUPDATE(type)	type
+#endif
+
+
+
+//! A global wxWebUpdateDownload variable which contains empty (and thus invalid)
+//! settings.
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDownload;		// defined later
+extern wxWebUpdateDownload wxEmptyWebUpdateDownload;
+
+
 //! The possible values of the "platform" attribute of the
 //! LATEST-DOWNLOAD tag supported by wxWebUpdateXMLScript.
 enum wxWebUpdatePlatform {
-    wxWUP_INVALID = -1,
-    wxWUP_MSW,
-    wxWUP_GTK,
-    wxWUP_OS2,
-    wxWUP_MAC,
-    wxWUP_MOTIF,
-    wxWUP_X11,
-	wxWUP_MGL
+    wxWUP_INVALID = -1,		//!< Unrecognized platform.
+    wxWUP_MSW,				//!< wxMSW.
+    wxWUP_GTK,				//!< wxGTK.
+    wxWUP_OS2,				//!< wxOS2.
+    wxWUP_MAC,				//!< wxMac.
+    wxWUP_MOTIF,			//!< wxMotif.
+    wxWUP_X11,				//!< wxX11.
+	wxWUP_MGL				//!< wxMGL.
 };
 
 
+//! This is a possible result from wxUpdateCheck::Check function.
+enum wxWebUpdateCheckFlag {
+    
+    wxWUCF_UPDATED,      //!< Your program is still up-to-date.
+    wxWUCF_OUTOFDATE     //!< The web server holds an updated version.
+};
+
+
+
 //! Contains the info about an available download.
-class wxWebUpdateDownload
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDownload
 {
 protected:
     
+	//! The ID code of the platform this download is designed for.
     wxWebUpdatePlatform m_platform;
+
+	//! The URL to the download.
     wxURL m_urlDownload;
      
 public:
@@ -48,16 +82,31 @@ public:
          : m_platform(wxWUP_INVALID), m_urlDownload(url) { SetPlatform(plat); }
     virtual ~wxWebUpdateDownload() {}
     
+	//! Returns TRUE if this package was correctly initialized.
     bool IsOk() const
         { return m_urlDownload.GetError() == wxURL_NOERR && m_platform != wxWUP_INVALID; }
+
+	//! Like #IsOk() but returns TRUE only if this download is designed for
+	//! the platform where the program is currently running on.
     bool IsOkForThisPlatform() const
-        { return IsOk() && m_platform == GetThisPlatform(); }
+        { return IsOk() && m_platform == GetThisPlatformCode(); }
     
 public:		// static platform utilities
 
-    static wxWebUpdatePlatform GetThisPlatform();
+	//! Gets a wxWebUpdatePlatform code for the platform where this program
+	//! is currently running on.
+    static wxWebUpdatePlatform GetThisPlatformCode();
+
+	//! Returns the string associated with this platform code.
+    static wxString GetThisPlatformString() 
+		{ return GetPlatformString(GetThisPlatformCode()); }
+	
+	//! Returns the code for the platform with the given name.
 	static wxWebUpdatePlatform GetPlatformCode(const wxString &platname);
-        
+
+	//! Returns the string for the platform with the given code.
+ 	static wxString GetPlatformString(wxWebUpdatePlatform code);
+       
         
 public:     // setters
 
@@ -78,6 +127,11 @@ public:     // getters
         
     wxWebUpdatePlatform GetPlatform() const
         { return m_platform; }
+
+public:		// operators
+
+	wxWebUpdateDownload &operator=(const wxWebUpdateDownload &tocopy)
+		{ m_platform = tocopy.m_platform; m_urlDownload = tocopy.m_urlDownload; return *this; }
 };
 
 
@@ -87,50 +141,54 @@ WX_DECLARE_OBJARRAY(wxWebUpdateDownload, wxWebUpdateDownloadArray);
 
 
 //! Contains the info about a package update.
-class wxWebUpdatePackage
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdatePackage
 {
 	friend class wxWebUpdateXMLScript;
 
 protected:
     
+	//! The ID/name of this package. This must be unique in each XML webupdate script.
     wxString m_strID;
+	
+	//! The version of the downloads available for this package; i.e. the latest
+	//! version available on the webserver.
     wxString m_strLatestVersion;
+
+	//! The content of the <msg-update-available> tag, if present.
     wxString m_strUpdateAvailableMsg;
+	
+	//! The content of the <msg-update-notavailable> tag, if present.
     wxString m_strUpdateNotAvailableMsg;
 
+	//! The array containing all the webupdate downloads available for this package.
+	//! (Each download is for the same vresion of this package but for a different
+	//! platform).
 	wxWebUpdateDownloadArray m_arrWebUpdates;
     
 public:
     wxWebUpdatePackage(const wxString &id = wxEmptyString) : m_strID(id) {}
     virtual ~wxWebUpdatePackage() {}
     
+	//! Adds the given download package to the array.
 	virtual void AddDownloadPackage(const wxWebUpdateDownload &toadd)
 		{ m_arrWebUpdates.Add(toadd); }
-	
-	virtual wxWebUpdateDownload GetDownloadPackage(const wxString &platform) const
-		{ return GetDownloadPackage(wxWebUpdateDownload::GetPlatformCode(platform)); }
-	
-	virtual wxWebUpdateDownload GetDownloadPackage(wxWebUpdatePlatform code = wxWUP_INVALID) const {
-		if (code == wxWUP_INVALID) code = wxWebUpdateDownload::GetThisPlatform();
-		for (int i=0; i<(int)m_arrWebUpdates.GetCount(); i++)
-			if (m_arrWebUpdates.Item(i).GetPlatform() == code)
-				return m_arrWebUpdates.Item(i);
-		return wxWebUpdateDownload(wxT("invalid"));
-	}
-};
 
-//! This is a possible result from wxUpdateCheck::Check function.
-enum wxWebUpdateCheckFlag {
-    
-    wxWUCF_UPDATED,      //!< Your program is still up-to-date.
-    wxWUCF_OUTOFDATE     //!< The web server holds an updated version.
+	//! Returns a reference to the download package for the given platform string.
+	virtual wxWebUpdateDownload &GetDownloadPackage(const wxString &platform) const
+		{ return GetDownloadPackage(wxWebUpdateDownload::GetPlatformCode(platform)); }	
+	
+	//! Returns a reference to the download package for the given platform code.
+	//! In each package it should exist only a single download for each platform
+	//! so the returned object should be the only item which is designed for the
+	//! given platform.
+	virtual wxWebUpdateDownload &GetDownloadPackage(
+				wxWebUpdatePlatform code = wxWUP_INVALID) const;
 };
-
 
 
 //! This is the class which performs all transactions with the server.
 //! It uses the wxSocket facilities.
-class wxWebUpdateXMLScript : public wxXmlDocument
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateXMLScript : public wxXmlDocument
 {
 protected:
     
@@ -160,7 +218,6 @@ public:
 
 private:
 	DECLARE_CLASS(wxWebUpdateXMLScript)
-	//DECLARE_EVENT_TABLE()
 };
 
 #endif // _WX_WEBUPDATE_H_

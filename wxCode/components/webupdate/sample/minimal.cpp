@@ -16,7 +16,9 @@
 
 #define VERSION			wxT("1.0.0")
 
-
+#include <crtdbg.h>
+#define mcDUMP_ON_EXIT		\
+	{ _CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF); }
 
 
 
@@ -134,6 +136,8 @@ IMPLEMENT_APP(MyApp)
 // wxT('Main program') equivalent: the program execution "starts" here
 bool MyApp::OnInit()
 {
+	mcDUMP_ON_EXIT;
+
     // create the main application window
     MyFrame *frame = new MyFrame(_T("Minimal wxWindows App"));
 
@@ -244,13 +248,37 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 
 void MyFrame::OnUpdateCheck(wxCommandEvent &)
 {
+#define SCRIPT_LOCATION		wxT("http://wxcode.sourceforge.net/components/webupdate/script1.xml")
+
 	// we want to open the script file I've put on wxCode server
-	wxWebUpdateXMLScript script(wxT("http://wxcode.sourceforge.net/components/webupdate/script1.xml"));
+	wxWebUpdateXMLScript script(SCRIPT_LOCATION);
+	if (!script.IsOk()) {
+		wxMessageBox(wxString(wxT("Cannot open the XML update script at: ")) + 
+					SCRIPT_LOCATION, wxT("Error"), wxOK | wxICON_ERROR);
+		return;
+	}
 
 	wxWebUpdatePackage *update = script.GetPackage(wxT("myapp"));
-	if (!update) return;
+	if (!update) {
+		wxMessageBox(wxT("Cannot find the 'myapp' package in the XML update script !"),
+					wxT("Error"), wxOK | wxICON_ERROR);
+		return;
+	}
+
+#if 0
 	wxWebUpdateDownload download = update->GetDownloadPackage();
-	if (!download.IsOkForThisPlatform()) return;
+	if (!download.IsOkForThisPlatform()) {
+		wxMessageBox(wxString(wxT("The XML script does not support this platform (")) +
+					wxWebUpdateDownload::GetThisPlatformString() + wxT(")"),
+					wxT("Error"), wxOK | wxICON_ERROR);
+		return;
+	}
+
+	wxMessageBox(wxT("The webserver holds an updated version of this app;\n") 
+				wxT("do you want to download it (using the wxWebUpdateDlg class) ?"),
+				wxT("Update check successful"), wxOK | wxICON_EXCLAMATION);
+#endif
+	delete update;
 }
 
 
