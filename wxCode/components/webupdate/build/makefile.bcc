@@ -185,7 +185,7 @@ cleandocs:
 
 ..\sample\minimal.exe: $(MINIMAL_OBJECTS)  borland\minimal_minimal.res ..\lib\webupdate$(WXLIBPOSTFIX).lib
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -aa @&&|
-	c0w32.obj $(MINIMAL_OBJECTS),$@,, ..\lib\webupdate$(WXLIBPOSTFIX).lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32.lib,, borland\minimal_minimal.res
+	c0w32.obj $(MINIMAL_OBJECTS),$@,, ..\lib\webupdate$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32.lib,, borland\minimal_minimal.res
 |
 
 borland\webupdate_webupdate.obj: .\..\src\webupdate.cpp

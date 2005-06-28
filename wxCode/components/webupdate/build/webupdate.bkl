@@ -32,6 +32,9 @@
 		<res-include>..$(DIRSEP)sample</res-include>
 		<win32-res>..$(DIRSEP)sample$(DIRSEP)minimal.rc</win32-res>
 		<library>webupdate</library>
+		<wx-lib>html</wx-lib>
+		<wx-lib>adv</wx-lib>
+		<wx-lib>xrc</wx-lib>
 		<wx-lib>xml</wx-lib>
 		<wx-lib>net</wx-lib>
         <wx-lib>core</wx-lib>

@@ -155,7 +155,9 @@ bool MyApp::OnInit()
 #endif
 
 
+
 	wxFileSystem::AddHandler(new wxInternetFSHandler);
+	//InitXmlResource();
 
     // success: wxApp::OnRun() will be called which will enter the main message
     // loop and the application will run. If we returned false here, the
@@ -291,7 +293,7 @@ void MyFrame::OnUpdateCheck(wxCommandEvent &)
 				// - the permission by the user to download the update
 				// - the link for the download of the updated package for this platform
 				// that's all ;-)
-				wxWebUpdateDlg dlg;
+				wxWebUpdateDlg dlg(this);
 				dlg.ShowModal();
 			}
 		}
