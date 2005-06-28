@@ -11,8 +11,8 @@
 	<!-- =================== -->
 
 	<set var="COMP_NAME">webupdate</set>
-	<set var="COMP_SRC">../src/webupdate.cpp</set>
-	<set var="COMP_HDR">../include/wx/webupdate.h</set>	
+	<set var="COMP_SRC">../src/webupdate.cpp ../src/webupdatedlg.cpp</set>
+	<set var="COMP_HDR">../include/wx/webupdate.h ../include/wx/webupdatedlg.h</set>	
 	<set var="COMP_SAMPLE_SRC">../sample/minimal.cpp</set>
 	<set var="WX_UNICODE_DEFAULT">1</set>
 	<set var="WX_VERSION_DEFAULT">26</set>

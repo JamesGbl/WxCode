@@ -131,7 +131,8 @@ WEBUPDATE_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) &
 	-i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
 	-i=$(WX_DIR)\include -i=..\include $(CPPFLAGS) $(CXXFLAGS)
 WEBUPDATE_OBJECTS =  &
-	watcom\webupdate_webupdate.obj
+	watcom\webupdate_webupdate.obj &
+	watcom\webupdate_webupdatedlg.obj
 MINIMAL_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) &
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
@@ -199,6 +200,9 @@ cleandocs :
 	wlink @watcom\minimal.lbc
 
 watcom\webupdate_webupdate.obj :  .AUTODEPEND .\..\src\webupdate.cpp
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_CXXFLAGS) $<
+
+watcom\webupdate_webupdatedlg.obj :  .AUTODEPEND .\..\src\webupdatedlg.cpp
 	$(CXX) -zq -fo=$^@ $(WEBUPDATE_CXXFLAGS) $<
 
 watcom\minimal_minimal.obj :  .AUTODEPEND .\..\sample\minimal.cpp

@@ -51,7 +51,8 @@ WEBUPDATE_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
 	/D__WXMSW__ /I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	/I$(WX_DIR)\include /I..\include /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
 WEBUPDATE_OBJECTS =  \
-	msvc\webupdate_webupdate.obj
+	msvc\webupdate_webupdate.obj \
+	msvc\webupdate_webupdatedlg.obj
 MINIMAL_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) $(__OPTIMIZEFLAG) \
 	$(__DEBUGINFO) /Fd..\sample\minimal.pdb $(____DEBUGRUNTIME) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
@@ -191,6 +192,9 @@ cleandocs:
 <<
 
 msvc\webupdate_webupdate.obj: .\..\src\webupdate.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATE_CXXFLAGS) $**
+
+msvc\webupdate_webupdatedlg.obj: .\..\src\webupdatedlg.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATE_CXXFLAGS) $**
 
 msvc\minimal_minimal.obj: .\..\sample\minimal.cpp

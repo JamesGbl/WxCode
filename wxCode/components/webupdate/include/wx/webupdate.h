@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 // Name:        webupdate.h
-// Purpose:     wxUpdateCheck
+// Purpose:     wxWebUpdateXMLScript, wxWebUpdatePackage, wxWebUpdateDownload
 // Author:      Francesco Montorsi
 // Created:     2005/06/23
 // RCS-ID:      $Id$
@@ -59,7 +59,11 @@ enum wxWebUpdatePlatform {
 
 //! This is a possible result from wxUpdateCheck::Check function.
 enum wxWebUpdateCheckFlag {
-    
+
+	wxWUCF_FAILED,		 //!< Something went wrong while performing the check;
+						 //!< maybe you're not using the version format MAJ.MIN.REL
+						 //!< or that the local version of this program is greater
+						 //!< than the latest available version on the website.
     wxWUCF_UPDATED,      //!< Your program is still up-to-date.
     wxWUCF_OUTOFDATE     //!< The web server holds an updated version.
 };
@@ -75,7 +79,11 @@ protected:
     wxWebUpdatePlatform m_platform;
 
 	//! The URL to the download.
-    wxURL m_urlDownload;
+	//! Note: this info was initially kept in a wxURL variable but since
+	//!       wxURL::GetInputStream() is deprecated in favour of wxFileSystem
+	//!       I use here a wxString which is easier to handle.
+    //wxURL m_urlDownload;
+	wxString m_urlDownload;
      
 public:
     wxWebUpdateDownload(const wxString &url, const wxString &plat = wxEmptyString)
@@ -84,7 +92,8 @@ public:
     
 	//! Returns TRUE if this package was correctly initialized.
     bool IsOk() const
-        { return m_urlDownload.GetError() == wxURL_NOERR && m_platform != wxWUP_INVALID; }
+        { return wxURL(m_urlDownload).GetError() == wxURL_NOERR && 
+									m_platform != wxWUP_INVALID; }
 
 	//! Like #IsOk() but returns TRUE only if this download is designed for
 	//! the platform where the program is currently running on.
@@ -111,7 +120,7 @@ public:		// static platform utilities
 public:     // setters
 
     bool SetURL(const wxString &url)
-        { wxURL u(url); if (u.GetError() != wxURL_NOERR) return FALSE; }
+        { wxURL u(url); if (u.GetError() != wxURL_NOERR) return FALSE; m_urlDownload=url; }
         
     bool SetPlatform(const wxString &plat) {
         m_platform = GetPlatformCode(plat);
@@ -145,13 +154,15 @@ class WXDLLIMPEXP_WEBUPDATE wxWebUpdatePackage
 {
 	friend class wxWebUpdateXMLScript;
 
-protected:
+protected:		// member variables
     
 	//! The ID/name of this package. This must be unique in each XML webupdate script.
     wxString m_strID;
 	
 	//! The version of the downloads available for this package; i.e. the latest
 	//! version available on the webserver.
+	//! This is stored as a string so that it's easy to override the #Check functions
+	//! and use another parser (rather than #ExtractVersionNumbers) to do the check.
     wxString m_strLatestVersion;
 
 	//! The content of the <msg-update-available> tag, if present.
@@ -164,11 +175,18 @@ protected:
 	//! (Each download is for the same vresion of this package but for a different
 	//! platform).
 	wxWebUpdateDownloadArray m_arrWebUpdates;
+
+protected:		// utilities
+
+	//! Returns in the given int* the parsed version numbers of the given string.
+	static bool ExtractVersionNumbers(const wxString &str, int *maj, int *min, int *rel);
     
 public:
     wxWebUpdatePackage(const wxString &id = wxEmptyString) : m_strID(id) {}
-    virtual ~wxWebUpdatePackage() {}
+    virtual ~wxWebUpdatePackage() { m_arrWebUpdates.Clear(); }
     
+public:		// package utilities
+
 	//! Adds the given download package to the array.
 	virtual void AddDownloadPackage(const wxWebUpdateDownload &toadd)
 		{ m_arrWebUpdates.Add(toadd); }
@@ -183,6 +201,30 @@ public:
 	//! given platform.
 	virtual wxWebUpdateDownload &GetDownloadPackage(
 				wxWebUpdatePlatform code = wxWUP_INVALID) const;
+
+public:		// version check
+
+    //! Checks if the webserver holds a more recent version of the given package.
+    //! \param strURL The URL of the XML file stored in the web server which holds 
+    //!        the informations to parse.
+    //! \param version The string version of the package which is being tested.
+    //! \param packagename The name of the package whose version must be tested.
+	virtual wxWebUpdateCheckFlag Check(const wxString &localversion) const;
+	virtual wxWebUpdateCheckFlag Check(int maj, int min, int rel) const;
+
+public:		// getters
+
+	//! Returns the name of this package.
+	wxString GetName() const				{ return m_strID; }
+
+	//! Returns the latest available version for this package.
+	wxString GetLatestVersion() const		{ return m_strLatestVersion; }
+
+	//! Returns the content of the <msg-update-available> tag, if present. 
+	wxString GetUpdateAvailableMsg() const	{ return m_strUpdateAvailableMsg; }
+
+	//! Returns the content of the <msg-update-notavailable> tag, if present. 
+	wxString GetUpdateNotAvailableMsg() const	{ return m_strUpdateNotAvailableMsg; }
 };
 
 
@@ -190,31 +232,23 @@ public:
 //! It uses the wxSocket facilities.
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateXMLScript : public wxXmlDocument
 {
-protected:
-    
-    //! The array containing the packages which are listed in
-    //! the web server update script.
-    //wxWebUpdatePackageArray m_arrPackages;
-    
 public:
 	wxWebUpdateXMLScript(const wxString &strURL) { Load(strURL); }
 	virtual ~wxWebUpdateXMLScript() {}
 
-    //! Couldn't connect to the given URL for some reason.
-    virtual bool Load(const wxString &url);
+    //! Parses the XML script located at the given URI.
+	//! This function can open any resource which can be handled
+	//! by wxFileSystem but it should typically be used to load
+	//! a file stored in a webserver.
+	//! Returns 
+    virtual bool Load(const wxString &uri);
 
 	//! Returns the wxWebUpdatePackage stored in this document for
 	//! the given package. Returns NULL if the package you asked for
 	//! is not present in this XML document.
+	//! You can use #GetLastErr() to get a description of the error
+	//! when this function returns NULL.
 	virtual wxWebUpdatePackage *GetPackage(const wxString &packagename) const;
-
-    //! Checks if the webserver holds a more recent version of the given package.
-    //! \param strURL The URL of the XML file stored in the web server which holds 
-    //!        the informations to parse.
-    //! \param version The string version of the package which is being tested.
-    //! \param packagename The name of the package whose version must be tested.
-	virtual wxWebUpdateCheckFlag Check(const wxString &version,
-                                    const wxString &packagename) const;
 
 private:
 	DECLARE_CLASS(wxWebUpdateXMLScript)

@@ -29,6 +29,7 @@
 #include "wx/webupdate.h"
 #include "wx/file.h"
 #include "wx/wfstream.h"
+#include "wx/filesys.h"
 
 
 IMPLEMENT_CLASS(wxWebUpdateXMLScript, wxXmlDocument)
@@ -135,14 +136,74 @@ wxString wxWebUpdateDownload::GetPlatformString(wxWebUpdatePlatform code)
 // wxWEBUPDATEPACKAGE
 // ---------------------
 
-wxWebUpdateDownload wxWebUpdatePackage::GetDownloadPackage(wxWebUpdatePlatform code) const
+wxWebUpdateDownload &wxWebUpdatePackage::GetDownloadPackage(wxWebUpdatePlatform code) const
 {
 	if (code == wxWUP_INVALID) code = wxWebUpdateDownload::GetThisPlatformCode();
 	for (int i=0; i<(int)m_arrWebUpdates.GetCount(); i++)
 		if (m_arrWebUpdates.Item(i).GetPlatform() == code)
 			return m_arrWebUpdates.Item(i);
-		return wxEmptyWebUpdateDownload;
+		
+	// could not find a download for the given platform....
+	return wxEmptyWebUpdateDownload;
 }
+
+wxWebUpdateCheckFlag wxWebUpdatePackage::Check(const wxString &localversion) const
+{
+	// get the version of the installed (local) program
+	int lmaj, lmin, lrel;
+	if (!ExtractVersionNumbers(localversion, &lmaj, &lmin, &lrel))
+		return wxWUCF_FAILED;
+
+	return Check(lmaj, lmin, lrel);
+}
+
+wxWebUpdateCheckFlag wxWebUpdatePackage::Check(int lmaj, int lmin, int lrel) const
+{
+	// get the version of the package hosted in the webserver
+	int maj, min, rel;
+	if (!ExtractVersionNumbers(m_strLatestVersion, &maj, &min, &rel))
+		return wxWUCF_FAILED;
+	
+	// catch invalid cases
+	// i.e. when local version greater than latest available version
+	if (maj < lmaj) return wxWUCF_FAILED;
+	if (maj == lmaj && min < lmin) return wxWUCF_FAILED;
+	if (maj == lmaj && min == lmin && rel < lrel) return wxWUCF_FAILED;
+
+	// do the check
+	if (maj > lmaj) return wxWUCF_OUTOFDATE;
+	if (maj == lmaj && min > lmin) return wxWUCF_OUTOFDATE;
+	if (maj == lmaj && min == lmin && rel > lrel) return wxWUCF_OUTOFDATE;
+	if (maj == lmaj && min == lmin && rel == lrel) return wxWUCF_UPDATED;
+
+	wxASSERT_MSG(0, wxT("All cases should have been handled... "));
+	return wxWUCF_FAILED;
+}
+
+bool wxWebUpdatePackage::ExtractVersionNumbers(const wxString &str, int *maj, 
+											   int *min, int *rel)
+{
+	unsigned long n;	
+
+	// extract the single version numbers in string format
+	wxString major = str.BeforeFirst(wxT('.'));
+	wxString minor = str.AfterFirst(wxT('.')).BeforeFirst(wxT('.'));
+	wxString release = str.AfterFirst(wxT('.')).AfterFirst(wxT('.'));
+
+	if (major.IsEmpty() || minor.IsEmpty() || release.IsEmpty())
+		return FALSE;
+
+	// then convert them in numbers
+	major.ToULong(&n);
+	if (maj) *maj = (int)n;
+	minor.ToULong(&n);
+	if (min) *min = (int)n;
+	release.ToULong(&n);
+	if (rel) *rel = (int)n;
+
+	return TRUE;
+}
+
 
 
 
@@ -228,44 +289,20 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxString &packagename
 	return ret;		// the caller must delete it
 }
 
-wxWebUpdateCheckFlag wxWebUpdateXMLScript::Check(const wxString &version,
-                                       const wxString &packagename) const
+bool wxWebUpdateXMLScript::Load(const wxString &uri)
 {
-
-
-	return wxWUCF_UPDATED;
-}
-
-bool wxWebUpdateXMLScript::Load(const wxString &strURL)
-{
-	wxLogDebug(wxT("wxWebUpdateXMLScript::Load - loading ") + strURL);
+	wxLogDebug(wxT("wxWebUpdateXMLScript::Load - loading ") + uri);
 
     // refer to "webupdate.dtd" for a definition of the XML webupdate info script
-    // first of all, we need to open a connection to the given url
-    wxURL url(strURL);
-    if (url.GetError() != wxURL_NOERR) {
+    // first of all, we need to open a connection to the given url     
+	wxFileSystem fs;
+	wxFSFile *xml = fs.OpenFile(uri);
+	if (!xml) return FALSE;	
 
-        return FALSE;
-    }
-    
-	wxInputStream *xml = url.GetInputStream();
-	if (!xml) {
-		
-        return FALSE;
-	}
-
-	wxFile fileTest(wxT("test.txt"), wxFile::write);
-	wxFileOutputStream sout(fileTest);
-	if (!sout.Ok())
-	{
-		return FALSE;
-	}
-	
-	xml->Read(sout);
+	// parse the XML file
+	bool success = wxXmlDocument::Load(*xml->GetStream());
 	delete xml;
-	sout.Close();
-	
-	wxFileInputStream sin(wxT("test.txt"));
-	return wxXmlDocument::Load(sin);
+
+	return success;
 }
 

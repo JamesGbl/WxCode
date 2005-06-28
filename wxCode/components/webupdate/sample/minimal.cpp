@@ -28,7 +28,9 @@
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
-#include "wx/webupdate.h"
+#include "wx/webupdatedlg.h"
+#include <wx/filesys.h>
+#include <wx/fs_inet.h>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
@@ -152,6 +154,9 @@ bool MyApp::OnInit()
     frame->Show(true);
 #endif
 
+
+	wxFileSystem::AddHandler(new wxInternetFSHandler);
+
     // success: wxApp::OnRun() will be called which will enter the main message
     // loop and the application will run. If we returned false here, the
     // application would exit immediately.
@@ -265,19 +270,40 @@ void MyFrame::OnUpdateCheck(wxCommandEvent &)
 		return;
 	}
 
-#if 0
-	wxWebUpdateDownload download = update->GetDownloadPackage();
-	if (!download.IsOkForThisPlatform()) {
-		wxMessageBox(wxString(wxT("The XML script does not support this platform (")) +
+	if (update->Check(VERSION) == wxWUCF_OUTOFDATE) {
+		int res = wxMessageBox(wxT("The webserver holds an updated version of this app;\n\n") 
+			wxT("Local version: ") + wxString(VERSION) + wxT("\t\tLatest version: ") + update->GetLatestVersion() +
+			wxT("\n\nDo you want to download it (using the wxWebUpdateDlg class) ?"),
+			wxT("Update check successful"), wxYES_NO | wxICON_EXCLAMATION);
+		
+		if (res == wxYES) {
+
+			wxWebUpdateDownload download = update->GetDownloadPackage();
+			if (!download.IsOkForThisPlatform()) {
+				wxMessageBox(wxString(wxT("The XML script does not support this platform (")) +
 					wxWebUpdateDownload::GetThisPlatformString() + wxT(")"),
 					wxT("Error"), wxOK | wxICON_ERROR);
-		return;
+
+			} else {
+
+				// we now have:
+				// - a valid XML webupdate script
+				// - the permission by the user to download the update
+				// - the link for the download of the updated package for this platform
+				// that's all ;-)
+				wxWebUpdateDlg dlg;
+				dlg.ShowModal();
+			}
+		}
+
+	} else {
+
+		// no updates available
+		wxMessageBox(wxT("This program is up to date ;-)\n"),
+					wxT("Update check successful"));
 	}
 
-	wxMessageBox(wxT("The webserver holds an updated version of this app;\n") 
-				wxT("do you want to download it (using the wxWebUpdateDlg class) ?"),
-				wxT("Update check successful"), wxOK | wxICON_EXCLAMATION);
-#endif
+	// cleanup
 	delete update;
 }
 

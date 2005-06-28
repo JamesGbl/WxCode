@@ -237,6 +237,10 @@ LIB32=link.exe -lib
 
 SOURCE=.\..\src\webupdate.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=.\..\src\webupdatedlg.cpp
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -244,6 +248,10 @@ SOURCE=.\..\src\webupdate.cpp
 # Begin Source File
 
 SOURCE=.\..\include\wx\webupdate.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\..\include\wx\webupdatedlg.h
 # End Source File
 # End Group
 # End Target
