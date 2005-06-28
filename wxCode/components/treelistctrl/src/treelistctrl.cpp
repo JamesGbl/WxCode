@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.74 2005-06-17 17:23:21 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.75 2005-06-28 20:29:04 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -2440,7 +2440,7 @@ bool wxTreeListMainWindow::TagNextChildren (wxTreeListItem *crt_item,
     int index = children.Index(crt_item);
     wxASSERT (index != wxNOT_FOUND); // I'm not a child of my parent?
 
-    if (parent->HasChildren() && parent->IsExpanded()) {
+    if (parent->HasChildren() && parent->IsExpanded() || HasFlag(wxTR_HIDE_ROOT)) {
         size_t count = children.Count();
         for (size_t n = (index+1); n < count; ++n) {
             if (TagAllChildrenUntilLast (children[n], last_item)) return true;
