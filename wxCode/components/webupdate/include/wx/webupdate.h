@@ -155,8 +155,7 @@ private:
 };
 
 
-
-
+// a container of wxWebUpdateDownload used by wxWebUpdatePackage
 WX_DECLARE_OBJARRAY(wxWebUpdateDownload, wxWebUpdateDownloadArray);
 
 
@@ -242,6 +241,10 @@ private:
 };
 
 
+// a container of wxWebUpdatePackage used by wxWebUpdateXMLScript
+WX_DECLARE_OBJARRAY(wxWebUpdatePackage, wxWebUpdatePackageArray);
+
+
 //! This is the class which performs all transactions with the server.
 //! It uses the wxSocket facilities.
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateXMLScript : public wxXmlDocument
@@ -262,6 +265,9 @@ public:
 	//! the given package. Returns NULL if the package you asked for
 	//! is not present in this XML document.
 	virtual wxWebUpdatePackage *GetPackage(const wxString &packagename) const;
+
+	//! Returns all the available packages from this XML document.
+	virtual wxWebUpdatePackageArray GetAllPackages() const;
 
 private:
 	DECLARE_CLASS(wxWebUpdateXMLScript)

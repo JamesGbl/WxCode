@@ -27,7 +27,11 @@
 #include <wx/xrc/xmlres.h>
 #include <wx/xrc/xh_all.h>
 #include <wx/listctrl.h>
+#include <wx/progdlg.h>
 
+
+#define wxWUT_NOTIFICATION			0xABCDEF
+#define wxWUD_TIMETEXT_PREFIX		wxT("Time remaining: ")
 
 //! A simple container of the two basic info which wxWebUpdateDlg needs to know
 //! about user packages: the NAME and the local VERSION.
@@ -52,20 +56,81 @@ private:
 };
 
 
+//! The thread helper which downloads the webupdate script and/or packages.
+class wxWebUpdateThread : public wxThreadHelper
+{
+protected:
+
+	//! This is the result state of the last download.
+	bool m_bSuccess;
+
+public:		// to avoid setters/getters
+
+	//! The wxEvtHandler which will receive our wxWUT_NOTIFICATION events.
+	wxEvtHandler *m_pHandler;
+
+	//! The URI of the resource this thread will download.
+	wxString m_strURI;
+
+	//! The name of the file where the downloaded file will be saved.
+	wxString m_strOutput;
+
+	//! The name of the resource we are downloading.
+	//! This is used by wxWebUpdateDlg only for error messages.
+	wxString m_strResName;
+
+public:
+	wxWebUpdateThread(wxEvtHandler *dlg = NULL, 
+		const wxString &uri = wxEmptyString, 
+		const wxString &outfile = wxEmptyString,
+		const wxString &resname = wxEmptyString)
+		: m_pHandler(dlg), m_strURI(uri), 
+		  m_strOutput(outfile), m_strResName(resname)
+		{ m_bSuccess=FALSE; }
+	virtual ~wxWebUpdateThread() {}
+
+    //! Downloads the file and then sends the wxWUT_NOTIFICATION event
+	//! to the #m_pHandler event handler.
+	//! Also sets the #m_bSuccess flag before exiting.
+    virtual void *Entry();
+
+	//! Returns TRUE if the last download was successful.
+	bool DownloadWasSuccessful() const		{ return m_bSuccess; }
+};
+
 
 //! The dialog which lets the user update this program.
+//! NOTE: it's quite difficult to derive a new class from wxProgressDialog
+//!       (which would be more suited rather than the generic wxDialog as
+//!       base class) so we emulate some of wxProgressDialog features
+//!       even if we are not using it. 
 class wxWebUpdateDlg : public wxDialog 
 {
 protected:		// pointers to our controls
 	
-	wxStaticText *m_pAppNameText;
+	wxStaticText *m_pAppNameText, *m_pTimeText, *m_pDownloadStatusText;
 	wxListCtrl *m_pUpdatesList;
 	wxGauge *m_pGauge;
 	wxTextCtrl *m_pDownloadPathTextCtrl;
 
-	//! The packages we are going to handle with this dialog.
+protected:		// other member variables
+
+	//! The webupdate XML script. This variable becomes valid only once
+	//! the first download has been completed.
+	wxWebUpdateXMLScript m_xmlScript;
+
+	//! This is a little helper which is set to TRUE during the first download;
+	//! that is, it's set to TRUE when we are downloading the XML script.
+	bool m_bDownloadingScript;
+
+	//! The local packages we are going to handle with this dialog.
 	const wxWebUpdateLocalPackage *m_pLocalPackages;
 	int m_nLocalPackages;		//!< The number of entries in #m_pLocalPackages.
+
+	//! The packages we have downloaded from the web.
+	wxWebUpdatePackage *m_pUpdatedPackages;
+	int m_nUpdatedPackages;		//!< The number of entries in #m_pUpdatedPackages.
+								//!< This can be different from #m_nLocalPackages.
 
 	//! The URI of the XML webupdate script.
 	wxString m_strURI;
@@ -74,13 +139,21 @@ protected:		// pointers to our controls
 	//! handled by this dialog. This string should not contain version !
 	wxString m_strAppName;
 
+	//! The threadhelper we use to download the webupdate script & packages.	
+	wxWebUpdateThread m_thread;
+
 protected:
 
 	//! Loads the XRC for this dialog and init the control pointers.
 	void InitWidgetsFromXRC();
 
-	//! 
-	//void ;
+	//! Shows to the user a simple wxMessageBox with the error description
+	//! customized for the current application.
+	void ShowErrorMsg(const wxString &) const;
+
+	//! Called when the XML script file has been downloaded.
+	void OnScriptDownload(const wxString &xmluri);
+
 
 protected:		// event handlers
 
@@ -89,6 +162,7 @@ protected:		// event handlers
 
 	void OnBrowse(wxCommandEvent &);
 	void OnCancel(wxCommandEvent &);
+	void OnDownloadComplete(wxUpdateUIEvent &);
 
 public:
 
@@ -103,11 +177,17 @@ public:
 							const wxString &appname,
 							const wxString &uri, 
 							const wxWebUpdateLocalPackage *arr, 
-							int count)
+							int count)							
 		{ m_parent=parent; m_strAppName=appname; m_strURI=uri; 
-			m_pLocalPackages=arr; m_nLocalPackages=count; InitWidgetsFromXRC(); }
+			m_pLocalPackages=arr; m_nLocalPackages=count; 
+			m_pUpdatedPackages=NULL; m_nUpdatedPackages=0;
+			m_bDownloadingScript=FALSE; InitWidgetsFromXRC(); }
 
 	virtual ~wxWebUpdateDlg() {}
+
+
+	//! Shows the dialog and immediately start the download of the webupdate script.
+	int ShowModal();
 
 private:
 	DECLARE_CLASS(wxWebUpdateDlg)

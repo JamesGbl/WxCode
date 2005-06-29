@@ -5,6 +5,12 @@
 <object class="wxDialog" name="wxWebUpdateDlg">
 	<style>wxRESIZE_BORDER|wxCAPTION|wxCLOSE_BOX|wxSYSTEM_MENU</style>
     <title>Update</title>
+
+    <object class="wxBoxSizer">
+    <orient>wxVERTICAL</orient>
+	<object class="sizeritem">
+	<flag>wxALL|wxGROW</flag>
+	<border>5</border>
 	
 	<!-- the vertical boxsizer which contains everything -->
 	<!-- NOTE: IDWUD stays for IDWebUpdateDlg            -->
@@ -80,7 +86,7 @@
 			<object class="wxStaticText" name="IDWUD_PROGRESS_TEXT">
 				<label>Download status:</label>
 			</object>
-		</object>		
+		</object>
 		
 		<!-- our gauge -->
         <object class="sizeritem">
@@ -92,6 +98,17 @@
                 <value>0</value>
             </object>
         </object>
+
+		<!-- this static text is updated on real-time by wxWebUpdateDlg so
+		     we need to use the wxST_NO_AUTORESIZE flag -->
+		<object class="sizeritem">
+			<flag>wxGROW|wxBOTTOM|wxLEFT|wxRIGHT</flag>
+			<border>5</border>
+			<object class="wxStaticText" name="IDWUD_TIME_TEXT">
+				<style>wxALIGN_RIGHT|wxST_NO_AUTORESIZE</style>
+				<label></label>
+			</object>
+		</object>
 		
         <object class="sizeritem">
             <flag>wxGROW|wxALL</flag>
@@ -163,6 +180,9 @@
             </object>
         </object> 
     </object> 
+	
+	</object> 
+	</object> 
 </object>
 
 </resource>

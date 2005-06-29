@@ -292,6 +292,11 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxString &packagename
 	return ret;		// the caller must delete it
 }
 
+wxWebUpdatePackageArray wxWebUpdateXMLScript::GetAllPackages() const
+{
+
+}
+
 bool wxWebUpdateXMLScript::Load(const wxString &uri)
 {
 	wxLogDebug(wxT("wxWebUpdateXMLScript::Load - loading ") + uri);

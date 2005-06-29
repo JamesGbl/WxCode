@@ -169,6 +169,7 @@ bool MyApp::OnInit()
     frame->Show(true);
 #endif
 
+	wxSocketBase::Initialize() ;
 	wxFileSystem::AddHandler(new wxInternetFSHandler);	
 
     // success: wxApp::OnRun() will be called which will enter the main message
