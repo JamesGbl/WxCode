@@ -40,25 +40,41 @@ WEBUPDATE_OBJECTS =  \
 	webupdate_webupdate.o \
 	webupdate_webupdatedlg.o \
 	webupdate_checkedlistctrl.o
-MINIMAL_CXXFLAGS =  -I../include  $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
-MINIMAL_OBJECTS =  \
-	minimal_minimal.o \
-	$(__minimal___win32rc)
+MINIMAL_1_0_0_CXXFLAGS = -I../include -I../../include $(WX_CXXFLAGS) \
+	$(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_1_0_0_OBJECTS =  \
+	minimal_1_0_0_minimal.o \
+	$(__minimal_1_0_0___win32rc)
+MINIMAL_2_0_3_CXXFLAGS = -I../include -I../../include $(WX_CXXFLAGS) \
+	$(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_2_0_3_OBJECTS =  \
+	minimal_2_0_3_minimal.o \
+	$(__minimal_2_0_3___win32rc)
 
 ### Conditionally set variables: ###
 
 @COND_DEPS_TRACKING_1@CXXC = $(top_builddir)./bk-deps $(CXX)
 @COND_DEPS_TRACKING_0@CXXC = $(CXX)
-@COND_PLATFORM_MAC_1@__minimal___mac_setfilecmd = \
-@COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL minimal$(EXEEXT)
-COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd = $(NM) minimal$(EXEEXT) | if \
-	grep -q pmwin.763 ; then emxbind -ep minimal$(EXEEXT) ; fi
-@COND_PLATFORM_OS2_1@__minimal___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd)
-@COND_PLATFORM_WIN32_1@__minimal___win32rc = minimal_minimal_rc.o
+@COND_PLATFORM_MAC_1@__minimal_1_0_0___mac_setfilecmd \
+@COND_PLATFORM_MAC_1@	= $(SETFILE) -t APPL minimal_1_0_0$(EXEEXT)
+COND_PLATFORM_OS2_1___minimal_1_0_0___os2_emxbindcmd = $(NM) \
+	minimal_1_0_0$(EXEEXT) | if grep -q pmwin.763 ; then emxbind -ep \
+	minimal_1_0_0$(EXEEXT) ; fi
+@COND_PLATFORM_OS2_1@__minimal_1_0_0___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___minimal_1_0_0___os2_emxbindcmd)
+@COND_PLATFORM_WIN32_1@__minimal_1_0_0___win32rc = \
+@COND_PLATFORM_WIN32_1@	minimal_1_0_0_minimal_rc.o
+@COND_PLATFORM_MAC_1@__minimal_2_0_3___mac_setfilecmd \
+@COND_PLATFORM_MAC_1@	= $(SETFILE) -t APPL minimal_2_0_3$(EXEEXT)
+COND_PLATFORM_OS2_1___minimal_2_0_3___os2_emxbindcmd = $(NM) \
+	minimal_2_0_3$(EXEEXT) | if grep -q pmwin.763 ; then emxbind -ep \
+	minimal_2_0_3$(EXEEXT) ; fi
+@COND_PLATFORM_OS2_1@__minimal_2_0_3___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___minimal_2_0_3___os2_emxbindcmd)
+@COND_PLATFORM_WIN32_1@__minimal_2_0_3___win32rc = \
+@COND_PLATFORM_WIN32_1@	minimal_2_0_3_minimal_rc.o
 
 ### Targets: ###
 
-all: ../lib/$(LIBPREFIX)webupdate$(LIBEXT) ../sample/minimal$(EXEEXT)
+all: ../lib/$(LIBPREFIX)webupdate$(LIBEXT) ../sample/v1.0.0/minimal_1_0_0$(EXEEXT) ../sample/v2.0.3/minimal_2_0_3$(EXEEXT)
 
 install: all install-wxheaders install-lib
 
@@ -72,7 +88,8 @@ clean:
 	rm -rf ./.deps ./.pch
 	rm -f ./*.o
 	rm -f ../lib/$(LIBPREFIX)webupdate$(LIBEXT)
-	rm -f ../sample/minimal$(EXEEXT)
+	rm -f ../sample/v1.0.0/minimal_1_0_0$(EXEEXT)
+	rm -f ../sample/v2.0.3/minimal_2_0_3$(EXEEXT)
 
 distclean: clean
 	rm -f config.cache config.log config.status bk-deps bk-make-pch shared-ld-sh Makefile
@@ -115,11 +132,17 @@ install-lib:
 	$(AR) rcu $@ $(WEBUPDATE_OBJECTS)
 	$(RANLIB) $@
 
-../sample/minimal$(EXEEXT): $(MINIMAL_OBJECTS) $(__minimal___win32rc) ../lib/$(LIBPREFIX)webupdate$(LIBEXT)
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) -L../lib $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS) -lwebupdate
+../sample/v1.0.0/minimal_1_0_0$(EXEEXT): $(MINIMAL_1_0_0_OBJECTS) ../lib/$(LIBPREFIX)webupdate$(LIBEXT) $(__minimal_1_0_0___win32rc)
+	$(CXX) -o $@ $(MINIMAL_1_0_0_OBJECTS) -L../lib $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS) -lwebupdate
 	
-	$(__minimal___mac_setfilecmd)
-	$(__minimal___os2_emxbindcmd)
+	$(__minimal_1_0_0___mac_setfilecmd)
+	$(__minimal_1_0_0___os2_emxbindcmd)
+
+../sample/v2.0.3/minimal_2_0_3$(EXEEXT): $(MINIMAL_2_0_3_OBJECTS) ../lib/$(LIBPREFIX)webupdate$(LIBEXT) $(__minimal_2_0_3___win32rc)
+	$(CXX) -o $@ $(MINIMAL_2_0_3_OBJECTS) -L../lib $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS) -lwebupdate
+	
+	$(__minimal_2_0_3___mac_setfilecmd)
+	$(__minimal_2_0_3___os2_emxbindcmd)
 
 webupdate_webupdate.o: $(srcdir)/../src/webupdate.cpp
 	$(CXXC) -c -o $@ $(WEBUPDATE_CXXFLAGS) $(srcdir)/../src/webupdate.cpp
@@ -130,11 +153,17 @@ webupdate_webupdatedlg.o: $(srcdir)/../src/webupdatedlg.cpp
 webupdate_checkedlistctrl.o: $(srcdir)/../src/checkedlistctrl.cpp
 	$(CXXC) -c -o $@ $(WEBUPDATE_CXXFLAGS) $(srcdir)/../src/checkedlistctrl.cpp
 
-minimal_minimal.o: $(srcdir)/../sample/minimal.cpp
-	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/../sample/minimal.cpp
+minimal_1_0_0_minimal.o: $(srcdir)/../sample/v1.0.0/minimal.cpp
+	$(CXXC) -c -o $@ $(MINIMAL_1_0_0_CXXFLAGS) $(srcdir)/../sample/v1.0.0/minimal.cpp
 
-minimal_minimal_rc.o: $(srcdir)/../sample/minimal.rc
-	$(RESCOMP) -i$< -o$@ --include-dir ../include --include-dir ../sample
+minimal_1_0_0_minimal_rc.o: $(srcdir)/../sample/v1.0.0/minimal.rc
+	$(RESCOMP) -i$< -o$@ --include-dir ../include --include-dir ../../include --include-dir ../sample/v1.0.0
+
+minimal_2_0_3_minimal.o: $(srcdir)/../sample/v2.0.3/minimal.cpp
+	$(CXXC) -c -o $@ $(MINIMAL_2_0_3_CXXFLAGS) $(srcdir)/../sample/v2.0.3/minimal.cpp
+
+minimal_2_0_3_minimal_rc.o: $(srcdir)/../sample/v2.0.3/minimal.rc
+	$(RESCOMP) -i$< -o$@ --include-dir ../include --include-dir ../../include --include-dir ../sample/v2.0.3
 
 
 # Include dependency info, if present:

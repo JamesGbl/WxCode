@@ -80,23 +80,23 @@ WEBUPDATE_OBJECTS =  \
 	borland\webupdate_webupdate.obj \
 	borland\webupdate_webupdatedlg.obj \
 	borland\webupdate_checkedlistctrl.obj
-MINIMAL_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
+MINIMAL_1_0_0_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	-I$(WX_DIR)\include -I..\include $(CPPFLAGS) $(CXXFLAGS)
-MINIMAL_OBJECTS =  \
-	borland\minimal_minimal.obj
+	-I$(WX_DIR)\include -I..\include -I..\..\include $(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_1_0_0_OBJECTS =  \
+	borland\minimal_1_0_0_minimal.obj
+MINIMAL_2_0_3_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
+	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+	-I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
+	-I$(WX_DIR)\include -I..\include -I..\..\include $(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_2_0_3_OBJECTS =  \
+	borland\minimal_2_0_3_minimal.obj
 
 ### Conditionally set variables: ###
 
 !if "$(WX_DEBUG)" == "1"
 WX3RDPARTLIBPOSTFIX = d
-!endif
-!if "$(WX_UNICODE)" == "1"
-__WXUNICODE_DEFINE_p_2 = -d_UNICODE
-!endif
-!if "$(WX_DEBUG)" == "1"
-__WXDEBUG_DEFINE_p_2 = -d__WXDEBUG__
 !endif
 !if "$(WX_DEBUG)" == "0"
 __OPTIMIZEFLAG = -O2
@@ -107,8 +107,14 @@ __OPTIMIZEFLAG = -Od
 !if "$(WX_UNICODE)" == "1"
 __WXUNICODE_DEFINE_p = -D_UNICODE
 !endif
+!if "$(WX_UNICODE)" == "1"
+__WXUNICODE_DEFINE_p_0 = -d_UNICODE
+!endif
 !if "$(WX_DEBUG)" == "1"
 __WXDEBUG_DEFINE_p = -D__WXDEBUG__
+!endif
+!if "$(WX_DEBUG)" == "1"
+__WXDEBUG_DEFINE_p_0 = -d__WXDEBUG__
 !endif
 !if "$(WX_DEBUG)" == "0"
 __DEBUGINFO = -v-
@@ -139,19 +145,25 @@ borland:
 
 ### Targets: ###
 
-all: ..\lib\webupdate$(WXLIBPOSTFIX).lib ..\sample\minimal.exe
+all: ..\lib\webupdate$(WXLIBPOSTFIX).lib ..\sample\v1.0.0\minimal_1_0_0.exe ..\sample\v2.0.3\minimal_2_0_3.exe
 
 clean: 
 	-if exist borland\*.obj del borland\*.obj
 	-if exist borland\*.res del borland\*.res
 	-if exist borland\*.csm del borland\*.csm
 	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).lib del ..\lib\webupdate$(WXLIBPOSTFIX).lib
-	-if exist ..\sample\minimal.exe del ..\sample\minimal.exe
-	-if exist ..\sample\minimal.tds del ..\sample\minimal.tds
-	-if exist ..\sample\minimal.ilc del ..\sample\minimal.ilc
-	-if exist ..\sample\minimal.ild del ..\sample\minimal.ild
-	-if exist ..\sample\minimal.ilf del ..\sample\minimal.ilf
-	-if exist ..\sample\minimal.ils del ..\sample\minimal.ils
+	-if exist ..\sample\v1.0.0\minimal_1_0_0.exe del ..\sample\v1.0.0\minimal_1_0_0.exe
+	-if exist ..\sample\v1.0.0\minimal_1_0_0.tds del ..\sample\v1.0.0\minimal_1_0_0.tds
+	-if exist ..\sample\v1.0.0\minimal_1_0_0.ilc del ..\sample\v1.0.0\minimal_1_0_0.ilc
+	-if exist ..\sample\v1.0.0\minimal_1_0_0.ild del ..\sample\v1.0.0\minimal_1_0_0.ild
+	-if exist ..\sample\v1.0.0\minimal_1_0_0.ilf del ..\sample\v1.0.0\minimal_1_0_0.ilf
+	-if exist ..\sample\v1.0.0\minimal_1_0_0.ils del ..\sample\v1.0.0\minimal_1_0_0.ils
+	-if exist ..\sample\v2.0.3\minimal_2_0_3.exe del ..\sample\v2.0.3\minimal_2_0_3.exe
+	-if exist ..\sample\v2.0.3\minimal_2_0_3.tds del ..\sample\v2.0.3\minimal_2_0_3.tds
+	-if exist ..\sample\v2.0.3\minimal_2_0_3.ilc del ..\sample\v2.0.3\minimal_2_0_3.ilc
+	-if exist ..\sample\v2.0.3\minimal_2_0_3.ild del ..\sample\v2.0.3\minimal_2_0_3.ild
+	-if exist ..\sample\v2.0.3\minimal_2_0_3.ilf del ..\sample\v2.0.3\minimal_2_0_3.ilf
+	-if exist ..\sample\v2.0.3\minimal_2_0_3.ils del ..\sample\v2.0.3\minimal_2_0_3.ils
 
 tarball: 
 	( cd .. && tar -cvzf ..\webupdate.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
@@ -184,9 +196,14 @@ cleandocs:
 	$(WEBUPDATE_OBJECTS)
 |
 
-..\sample\minimal.exe: $(MINIMAL_OBJECTS)  borland\minimal_minimal.res ..\lib\webupdate$(WXLIBPOSTFIX).lib
+..\sample\v1.0.0\minimal_1_0_0.exe: $(MINIMAL_1_0_0_OBJECTS) ..\lib\webupdate$(WXLIBPOSTFIX).lib  borland\minimal_1_0_0_minimal.res
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -aa @&&|
-	c0w32.obj $(MINIMAL_OBJECTS),$@,, ..\lib\webupdate$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32.lib,, borland\minimal_minimal.res
+	c0w32.obj $(MINIMAL_1_0_0_OBJECTS),$@,, ..\lib\webupdate$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32.lib,, borland\minimal_1_0_0_minimal.res
+|
+
+..\sample\v2.0.3\minimal_2_0_3.exe: $(MINIMAL_2_0_3_OBJECTS) ..\lib\webupdate$(WXLIBPOSTFIX).lib  borland\minimal_2_0_3_minimal.res
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -aa @&&|
+	c0w32.obj $(MINIMAL_2_0_3_OBJECTS),$@,, ..\lib\webupdate$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32.lib,, borland\minimal_2_0_3_minimal.res
 |
 
 borland\webupdate_webupdate.obj: .\..\src\webupdate.cpp
@@ -198,9 +215,15 @@ borland\webupdate_webupdatedlg.obj: .\..\src\webupdatedlg.cpp
 borland\webupdate_checkedlistctrl.obj: .\..\src\checkedlistctrl.cpp
 	$(CXX) -q -c -P -o$@ $(WEBUPDATE_CXXFLAGS) $**
 
-borland\minimal_minimal.obj: .\..\sample\minimal.cpp
-	$(CXX) -q -c -P -o$@ $(MINIMAL_CXXFLAGS) $**
+borland\minimal_1_0_0_minimal.obj: .\..\sample\v1.0.0\minimal.cpp
+	$(CXX) -q -c -P -o$@ $(MINIMAL_1_0_0_CXXFLAGS) $**
 
-borland\minimal_minimal.res: .\..\sample\minimal.rc
-	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include $(__WXUNICODE_DEFINE_p_2) $(__WXDEBUG_DEFINE_p_2) -d__WXMSW__ -i$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\sample $**
+borland\minimal_1_0_0_minimal.res: .\..\sample\v1.0.0\minimal.rc
+	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include $(__WXUNICODE_DEFINE_p_0) $(__WXDEBUG_DEFINE_p_0) -d__WXMSW__ -i$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\..\include -i..\sample\v1.0.0 $**
+
+borland\minimal_2_0_3_minimal.obj: .\..\sample\v2.0.3\minimal.cpp
+	$(CXX) -q -c -P -o$@ $(MINIMAL_2_0_3_CXXFLAGS) $**
+
+borland\minimal_2_0_3_minimal.res: .\..\sample\v2.0.3\minimal.rc
+	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include $(__WXUNICODE_DEFINE_p_0) $(__WXDEBUG_DEFINE_p_0) -d__WXMSW__ -i$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\..\include -i..\sample\v2.0.3 $**
 

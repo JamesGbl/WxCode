@@ -53,24 +53,25 @@ WEBUPDATE_OBJECTS =  \
 	mingw\webupdate_webupdate.o \
 	mingw\webupdate_webupdatedlg.o \
 	mingw\webupdate_checkedlistctrl.o
-MINIMAL_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
+MINIMAL_1_0_0_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	-DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
-	-I..\include $(CPPFLAGS) $(CXXFLAGS)
-MINIMAL_OBJECTS =  \
-	mingw\minimal_minimal.o \
-	mingw\minimal_minimal_rc.o
+	-I..\include -I..\..\include $(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_1_0_0_OBJECTS =  \
+	mingw\minimal_1_0_0_minimal.o \
+	mingw\minimal_1_0_0_minimal_rc.o
+MINIMAL_2_0_3_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
+	-DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
+	-I..\include -I..\..\include $(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_2_0_3_OBJECTS =  \
+	mingw\minimal_2_0_3_minimal.o \
+	mingw\minimal_2_0_3_minimal_rc.o
 
 ### Conditionally set variables: ###
 
 ifeq ($(WX_DEBUG),1)
 WX3RDPARTLIBPOSTFIX = d
-endif
-ifeq ($(WX_UNICODE),1)
-__WXUNICODE_DEFINE_p_2 = --define _UNICODE
-endif
-ifeq ($(WX_DEBUG),1)
-__WXDEBUG_DEFINE_p_2 = --define __WXDEBUG__
 endif
 ifeq ($(WX_DEBUG),0)
 __WARNINGS = 
@@ -87,8 +88,14 @@ endif
 ifeq ($(WX_UNICODE),1)
 __WXUNICODE_DEFINE_p = -D_UNICODE
 endif
+ifeq ($(WX_UNICODE),1)
+__WXUNICODE_DEFINE_p_0 = --define _UNICODE
+endif
 ifeq ($(WX_DEBUG),1)
 __WXDEBUG_DEFINE_p = -D__WXDEBUG__
+endif
+ifeq ($(WX_DEBUG),1)
+__WXDEBUG_DEFINE_p_0 = --define __WXDEBUG__
 endif
 ifeq ($(WX_DEBUG),0)
 ifeq ($(WX_UNICODE),1)
@@ -125,12 +132,13 @@ mingw:
 
 ### Targets: ###
 
-all: ..\lib\libwebupdate$(WXLIBPOSTFIX).a ..\sample\minimal.exe
+all: ..\lib\libwebupdate$(WXLIBPOSTFIX).a ..\sample\v1.0.0\minimal_1_0_0.exe ..\sample\v2.0.3\minimal_2_0_3.exe
 
 clean: 
 	-if exist mingw\*.o del mingw\*.o
 	-if exist ..\lib\libwebupdate$(WXLIBPOSTFIX).a del ..\lib\libwebupdate$(WXLIBPOSTFIX).a
-	-if exist ..\sample\minimal.exe del ..\sample\minimal.exe
+	-if exist ..\sample\v1.0.0\minimal_1_0_0.exe del ..\sample\v1.0.0\minimal_1_0_0.exe
+	-if exist ..\sample\v2.0.3\minimal_2_0_3.exe del ..\sample\v2.0.3\minimal_2_0_3.exe
 
 tarball: 
 	( cd .. && tar -cvzf ..\webupdate.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
@@ -162,8 +170,11 @@ cleandocs:
 	ar rcu $@ $(WEBUPDATE_OBJECTS)
 	ranlib $@
 
-..\sample\minimal.exe: $(MINIMAL_OBJECTS) mingw\minimal_minimal_rc.o ..\lib\libwebupdate$(WXLIBPOSTFIX).a
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -Wl,--subsystem,windows -mwindows  ..\lib\libwebupdate$(WXLIBPOSTFIX).a -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTLIBPOSTFIX) -lwxjpeg$(WX3RDPARTLIBPOSTFIX) -lwxpng$(WX3RDPARTLIBPOSTFIX) -lwxzlib$(WX3RDPARTLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+..\sample\v1.0.0\minimal_1_0_0.exe: $(MINIMAL_1_0_0_OBJECTS) ..\lib\libwebupdate$(WXLIBPOSTFIX).a mingw\minimal_1_0_0_minimal_rc.o
+	$(CXX) -o $@ $(MINIMAL_1_0_0_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -Wl,--subsystem,windows -mwindows  ..\lib\libwebupdate$(WXLIBPOSTFIX).a -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTLIBPOSTFIX) -lwxjpeg$(WX3RDPARTLIBPOSTFIX) -lwxpng$(WX3RDPARTLIBPOSTFIX) -lwxzlib$(WX3RDPARTLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+
+..\sample\v2.0.3\minimal_2_0_3.exe: $(MINIMAL_2_0_3_OBJECTS) ..\lib\libwebupdate$(WXLIBPOSTFIX).a mingw\minimal_2_0_3_minimal_rc.o
+	$(CXX) -o $@ $(MINIMAL_2_0_3_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -Wl,--subsystem,windows -mwindows  ..\lib\libwebupdate$(WXLIBPOSTFIX).a -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTLIBPOSTFIX) -lwxjpeg$(WX3RDPARTLIBPOSTFIX) -lwxpng$(WX3RDPARTLIBPOSTFIX) -lwxzlib$(WX3RDPARTLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
 mingw\webupdate_webupdate.o: ./../src/webupdate.cpp
 	$(CXX) -c -o $@ $(WEBUPDATE_CXXFLAGS) $<
@@ -174,11 +185,17 @@ mingw\webupdate_webupdatedlg.o: ./../src/webupdatedlg.cpp
 mingw\webupdate_checkedlistctrl.o: ./../src/checkedlistctrl.cpp
 	$(CXX) -c -o $@ $(WEBUPDATE_CXXFLAGS) $<
 
-mingw\minimal_minimal.o: ./../sample/minimal.cpp
-	$(CXX) -c -o $@ $(MINIMAL_CXXFLAGS) $<
+mingw\minimal_1_0_0_minimal.o: ./../sample/v1.0.0/minimal.cpp
+	$(CXX) -c -o $@ $(MINIMAL_1_0_0_CXXFLAGS) $<
 
-mingw\minimal_minimal_rc.o: ./../sample/minimal.rc
-	windres --use-temp-file -i$< -o$@ --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_2) $(__WXDEBUG_DEFINE_p_2) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ..\include --include-dir ..\sample
+mingw\minimal_1_0_0_minimal_rc.o: ./../sample/v1.0.0/minimal.rc
+	windres --use-temp-file -i$< -o$@ --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_0) $(__WXDEBUG_DEFINE_p_0) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ..\include --include-dir ..\..\include --include-dir ..\sample\v1.0.0
+
+mingw\minimal_2_0_3_minimal.o: ./../sample/v2.0.3/minimal.cpp
+	$(CXX) -c -o $@ $(MINIMAL_2_0_3_CXXFLAGS) $<
+
+mingw\minimal_2_0_3_minimal_rc.o: ./../sample/v2.0.3/minimal.rc
+	windres --use-temp-file -i$< -o$@ --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_0) $(__WXDEBUG_DEFINE_p_0) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ..\include --include-dir ..\..\include --include-dir ..\sample\v2.0.3
 
 .PHONY: all clean
 
