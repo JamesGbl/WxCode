@@ -327,6 +327,7 @@ void MyFrame::OnUpdateCheckWithDlg(wxCommandEvent &)
 	g_packageList[0].m_version = VERSION;
 
 	wxWebUpdateDlg dlg(this, APP_NAME, SCRIPT_LOCATION, g_packageList, 1);
+	dlg.CenterOnScreen();
 	dlg.ShowModal();
 }
 

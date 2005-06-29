@@ -52,7 +52,8 @@ WEBUPDATE_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
 	/I$(WX_DIR)\include /I..\include /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
 WEBUPDATE_OBJECTS =  \
 	msvc\webupdate_webupdate.obj \
-	msvc\webupdate_webupdatedlg.obj
+	msvc\webupdate_webupdatedlg.obj \
+	msvc\webupdate_checkedlistctrl.obj
 MINIMAL_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) $(__OPTIMIZEFLAG) \
 	$(__DEBUGINFO) /Fd..\sample\minimal.pdb $(____DEBUGRUNTIME) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
@@ -195,6 +196,9 @@ msvc\webupdate_webupdate.obj: .\..\src\webupdate.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATE_CXXFLAGS) $**
 
 msvc\webupdate_webupdatedlg.obj: .\..\src\webupdatedlg.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATE_CXXFLAGS) $**
+
+msvc\webupdate_checkedlistctrl.obj: .\..\src\checkedlistctrl.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATE_CXXFLAGS) $**
 
 msvc\minimal_minimal.obj: .\..\sample\minimal.cpp

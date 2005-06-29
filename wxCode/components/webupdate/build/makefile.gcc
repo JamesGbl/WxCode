@@ -51,7 +51,8 @@ WEBUPDATE_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	-I..\include $(CPPFLAGS) $(CXXFLAGS)
 WEBUPDATE_OBJECTS =  \
 	mingw\webupdate_webupdate.o \
-	mingw\webupdate_webupdatedlg.o
+	mingw\webupdate_webupdatedlg.o \
+	mingw\webupdate_checkedlistctrl.o
 MINIMAL_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	-DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
@@ -168,6 +169,9 @@ mingw\webupdate_webupdate.o: ./../src/webupdate.cpp
 	$(CXX) -c -o $@ $(WEBUPDATE_CXXFLAGS) $<
 
 mingw\webupdate_webupdatedlg.o: ./../src/webupdatedlg.cpp
+	$(CXX) -c -o $@ $(WEBUPDATE_CXXFLAGS) $<
+
+mingw\webupdate_checkedlistctrl.o: ./../src/checkedlistctrl.cpp
 	$(CXX) -c -o $@ $(WEBUPDATE_CXXFLAGS) $<
 
 mingw\minimal_minimal.o: ./../sample/minimal.cpp

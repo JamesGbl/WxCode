@@ -40,6 +40,9 @@ IMPLEMENT_CLASS(wxWebUpdateDownload, wxObject)
 #include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
 WX_DEFINE_OBJARRAY(wxWebUpdateDownloadArray);
 
+#include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
+WX_DEFINE_OBJARRAY(wxWebUpdatePackageArray);
+
 
 // global objects
 wxWebUpdateDownload wxEmptyWebUpdateDownload(wxT("invalid"));
@@ -215,42 +218,39 @@ bool wxWebUpdatePackage::ExtractVersionNumbers(const wxString &str, int *maj,
 // wxWEBUPDATEXMLSCRIPT
 // ----------------------
 
-wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxString &packagename) const
+wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) const
 {
-	// now it's time to parse the XML file we expect to be in 'xml' input stream    
-    wxXmlNode *webupdate = GetRoot();
-	if (!webupdate || webupdate->GetName() != wxT("webupdate"))
-		return NULL;
-	wxXmlNode *package = webupdate->GetChildren();
-    
-	bool matches = FALSE;
-	while (package && !matches) {
+	if (!package || package->GetName() != wxT("package")) return NULL;
 
-		while (package && package->GetName() != wxT("package"))
-			package = package->GetNext();
-		if (!package) return NULL;		// could not found other PACKAGE tags in this script !
-
-
-		wxXmlProperty *prop = package->GetProperties();
-		while (prop && prop->GetName() != wxT("id"))
-			prop = prop->GetNext();
-		matches = prop->GetValue() == packagename;
-	}
-
-	if (!package) return NULL;	// could not found the required package
-
-
+	wxString packagename;
+	wxXmlProperty *prop = package->GetProperties();
+	while (prop && prop->GetName() != wxT("id"))
+		prop = prop->GetNext();
+	if (prop) packagename = prop->GetValue();
+	
 	// init the return value
 	wxWebUpdatePackage *ret = new wxWebUpdatePackage(packagename);	
-
+	
 	// parse this package
 	wxXmlNode *child = package->GetChildren();
 	while (child) {
 		if (child->GetName() == wxT("latest-version")) {
 
 			wxXmlNode *text = child->GetChildren();
-			if (text) 
+			if (text) {
 				ret->m_strLatestVersion = text->GetContent();
+				ret->m_importance = wxWUPI_NORMAL;		// by default
+			}
+
+			wxXmlProperty *prop = child->GetProperties();
+			while (prop && prop->GetName() != wxT("importance"))
+				prop = prop->GetNext();
+			if (prop) {
+				wxString imp = prop->GetValue();
+				if (imp == wxT("high")) ret->m_importance = wxWUPI_HIGH;
+				if (imp == wxT("normal")) ret->m_importance = wxWUPI_NORMAL;
+				if (imp == wxT("low")) ret->m_importance = wxWUPI_LOW;
+			}
 
 		} else if (child->GetName() == wxT("latest-download")) {
 
@@ -292,9 +292,51 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxString &packagename
 	return ret;		// the caller must delete it
 }
 
+wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxString &packagename) const
+{
+	// now it's time to parse the XML file we expect to be in 'xml' input stream    
+    wxXmlNode *webupdate = GetRoot();
+	if (!webupdate || webupdate->GetName() != wxT("webupdate"))
+		return NULL;
+	wxXmlNode *package = webupdate->GetChildren();
+    
+	bool matches = FALSE;
+	while (package && !matches) {
+
+		while (package && package->GetName() != wxT("package"))
+			package = package->GetNext();
+		if (!package) return NULL;		// could not found other PACKAGE tags in this script !
+
+		wxXmlProperty *prop = package->GetProperties();
+		while (prop && prop->GetName() != wxT("id"))
+			prop = prop->GetNext();
+		matches = prop->GetValue() == packagename;
+	}
+
+	if (!package) 
+		return NULL;	// could not found the required package
+	return GetPackage(package);
+}
+
 wxWebUpdatePackageArray wxWebUpdateXMLScript::GetAllPackages() const
 {
+	wxWebUpdatePackageArray ret;
 
+	// now it's time to parse the XML file we expect to be in 'xml' input stream    
+    wxXmlNode *webupdate = GetRoot();
+	if (!webupdate || webupdate->GetName() != wxT("webupdate"))
+		return ret;		// empty array = error
+	wxXmlNode *package = webupdate->GetChildren();
+
+	while (package) {
+		wxWebUpdatePackage *toadd = GetPackage(package);
+		package = package->GetNext();
+		if (toadd == NULL) continue;		// skip this
+
+		ret.Add(toadd);
+	}
+
+	return ret;
 }
 
 bool wxWebUpdateXMLScript::Load(const wxString &uri)

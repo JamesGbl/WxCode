@@ -38,7 +38,8 @@ DESTDIR =
 WEBUPDATE_CXXFLAGS =  -I../include  $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 WEBUPDATE_OBJECTS =  \
 	webupdate_webupdate.o \
-	webupdate_webupdatedlg.o
+	webupdate_webupdatedlg.o \
+	webupdate_checkedlistctrl.o
 MINIMAL_CXXFLAGS =  -I../include  $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	minimal_minimal.o \
@@ -125,6 +126,9 @@ webupdate_webupdate.o: $(srcdir)/../src/webupdate.cpp
 
 webupdate_webupdatedlg.o: $(srcdir)/../src/webupdatedlg.cpp
 	$(CXXC) -c -o $@ $(WEBUPDATE_CXXFLAGS) $(srcdir)/../src/webupdatedlg.cpp
+
+webupdate_checkedlistctrl.o: $(srcdir)/../src/checkedlistctrl.cpp
+	$(CXXC) -c -o $@ $(WEBUPDATE_CXXFLAGS) $(srcdir)/../src/checkedlistctrl.cpp
 
 minimal_minimal.o: $(srcdir)/../sample/minimal.cpp
 	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/../sample/minimal.cpp

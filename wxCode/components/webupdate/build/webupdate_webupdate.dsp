@@ -235,6 +235,10 @@ LIB32=link.exe -lib
 # PROP Default_Filter ""
 # Begin Source File
 
+SOURCE=.\..\src\checkedlistctrl.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\..\src\webupdate.cpp
 # End Source File
 # Begin Source File
@@ -245,6 +249,10 @@ SOURCE=.\..\src\webupdatedlg.cpp
 # Begin Group "Header Files"
 
 # PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\..\include\wx\checkedlistctrl.h
+# End Source File
 # Begin Source File
 
 SOURCE=.\..\include\wx\webupdate.h

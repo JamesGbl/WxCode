@@ -22,6 +22,11 @@
 #include "wx/url.h"
 
 
+// Conditional compilation
+// -----------------------
+
+#define wxWU_USE_CHECKEDLISTCTRL		0
+
 
 // for shared builds
 #ifdef WXMAKINGDLL_WEBUPDATE
@@ -66,6 +71,16 @@ enum wxWebUpdateCheckFlag {
 						 //!< than the latest available version on the website.
     wxWUCF_UPDATED,      //!< Your program is still up-to-date.
     wxWUCF_OUTOFDATE     //!< The web server holds an updated version.
+};
+
+
+//! The possible values of the "IMPORTANCE" attribute of the <LATEST-VERSION>
+//! tag of a wxWebUpdatePackage XML script.
+enum wxWebUpdatePackageImportance {
+
+	wxWUPI_HIGH,		//!< This update should be installed !
+	wxWUPI_NORMAL,		//!< Normal importance.
+	wxWUPI_LOW,			//!< Do not download it if you have a slow connection !
 };
 
 
@@ -181,6 +196,9 @@ protected:		// member variables
 	//! The content of the <msg-update-notavailable> tag, if present.
     wxString m_strUpdateNotAvailableMsg;
 
+	//! The importance level of this package.
+	wxWebUpdatePackageImportance m_importance;
+
 	//! The array containing all the webupdate downloads available for this package.
 	//! (Each download is for the same vresion of this package but for a different
 	//! platform).
@@ -236,6 +254,10 @@ public:		// getters
 	//! Returns the content of the <msg-update-notavailable> tag, if present. 
 	wxString GetUpdateNotAvailableMsg() const	{ return m_strUpdateNotAvailableMsg; }
 
+	//! Returns the importance level of the updates contained for this package.
+	wxWebUpdatePackageImportance GetImportance() const
+		{ return m_importance; }
+
 private:
 	DECLARE_CLASS(wxWebUpdatePackage)
 };
@@ -249,6 +271,12 @@ WX_DECLARE_OBJARRAY(wxWebUpdatePackage, wxWebUpdatePackageArray);
 //! It uses the wxSocket facilities.
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateXMLScript : public wxXmlDocument
 {
+protected:
+
+	//! Creates a wxWebUpdatePackage from the given XML node.
+	//! The caller must delete the returned pointer.
+	wxWebUpdatePackage *GetPackage(const wxXmlNode *package) const;
+
 public:
 	wxWebUpdateXMLScript(const wxString &strURL = wxEmptyString) 
 		{ if (!strURL.IsEmpty()) Load(strURL); }

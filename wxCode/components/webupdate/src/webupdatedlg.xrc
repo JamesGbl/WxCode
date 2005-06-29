@@ -11,6 +11,7 @@
 	<object class="sizeritem">
 	<flag>wxALL|wxGROW</flag>
 	<border>5</border>
+	<option>1</option>
 	
 	<!-- the vertical boxsizer which contains everything -->
 	<!-- NOTE: IDWUD stays for IDWebUpdateDlg            -->
@@ -61,17 +62,34 @@
 				
 				<!-- and the listctrl on the left -->
 				<object class="sizeritem">
-					<flag>wxGROW|wxBOTTOM</flag>
-					<border>5</border>
-					<option>1</option>
-					<object class="wxListCtrl" name="IDWUD_LISTCTRL">						
-						<style>wxLC_REPORT|wxSUNKEN_BORDER</style>
+					<flag>wxGROW</flag>					
+					<option>9</option>
+					<object class="wxBoxSizer">
+						<orient>wxVERTICAL</orient>
+
+						<object class="sizeritem">
+							<flag>wxGROW|wxBOTTOM</flag>
+							<border>5</border>
+							<option>1</option>
+							<object class="unknown" name="IDWUD_LISTCTRL">						
+								
+							</object>
+						</object>
+						<object class="sizeritem">
+							<flag>wxGROW|wxBOTTOM</flag>
+							<border>5</border>
+							<option>0</option>
+							<object class="wxCheckBox" name="IDWUD_SHOWFILTER">
+								<label>Show only items out of date</label>								
+							</object>
+						</object>
 					</object>
 				</object>
 				
 				<!-- the image on the right -->
                 <object class="sizeritem">
                     <flag>wxALIGN_CENTER_VERTICAL|wxRIGHT|wxBOTTOM</flag>
+					<option>4</option>
                     <border>5</border>
                     <object class="wxStaticBitmap" name="IDWUD_IMAGE">
                         <bitmap>www.png</bitmap>
@@ -79,7 +97,15 @@
                 </object>
             </object>
         </object>
-
+		
+        <object class="sizeritem">
+            <flag>wxALIGN_CENTER|wxALL|wxGROW</flag>
+            <border>5</border>
+            <object class="wxStaticLine" name="IDWUD_LINE2">                
+                <style>wxLI_HORIZONTAL</style>
+            </object>
+        </object>
+		
 		<object class="sizeritem">
 			<flag>wxALIGN_LEFT|wxBOTTOM|wxLEFT|wxRIGHT</flag>
 			<border>5</border>

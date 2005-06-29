@@ -19,6 +19,7 @@
 
 // wxWidgets headers
 #include "wx/webupdate.h"
+#include "wx/checkedlistctrl.h"
 #include <wx/stattext.h>
 #include <wx/gauge.h>
 #include <wx/image.h>
@@ -109,7 +110,11 @@ class wxWebUpdateDlg : public wxDialog
 protected:		// pointers to our controls
 	
 	wxStaticText *m_pAppNameText, *m_pTimeText, *m_pDownloadStatusText;
+#if wxWU_USE_CHECKEDLISTCTRL
+	wxCheckedListCtrl *m_pUpdatesList;
+#else
 	wxListCtrl *m_pUpdatesList;
+#endif
 	wxGauge *m_pGauge;
 	wxTextCtrl *m_pDownloadPathTextCtrl;
 
@@ -128,9 +133,7 @@ protected:		// other member variables
 	int m_nLocalPackages;		//!< The number of entries in #m_pLocalPackages.
 
 	//! The packages we have downloaded from the web.
-	wxWebUpdatePackage *m_pUpdatedPackages;
-	int m_nUpdatedPackages;		//!< The number of entries in #m_pUpdatedPackages.
-								//!< This can be different from #m_nLocalPackages.
+	wxWebUpdatePackageArray m_arrUpdatedPackages;
 
 	//! The URI of the XML webupdate script.
 	wxString m_strURI;
@@ -157,11 +160,10 @@ protected:
 
 protected:		// event handlers
 
-	//! Handles clicks on the download button.
 	void OnDownload(wxCommandEvent &);
-
 	void OnBrowse(wxCommandEvent &);
 	void OnCancel(wxCommandEvent &);
+	void OnShowFilter(wxCommandEvent &);
 	void OnDownloadComplete(wxUpdateUIEvent &);
 
 public:
@@ -179,8 +181,7 @@ public:
 							const wxWebUpdateLocalPackage *arr, 
 							int count)							
 		{ m_parent=parent; m_strAppName=appname; m_strURI=uri; 
-			m_pLocalPackages=arr; m_nLocalPackages=count; 
-			m_pUpdatedPackages=NULL; m_nUpdatedPackages=0;
+			m_pLocalPackages=arr; m_nLocalPackages=count; 			
 			m_bDownloadingScript=FALSE; InitWidgetsFromXRC(); }
 
 	virtual ~wxWebUpdateDlg() {}

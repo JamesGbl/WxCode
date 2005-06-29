@@ -78,7 +78,8 @@ WEBUPDATE_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	-I$(WX_DIR)\include -I..\include $(CPPFLAGS) $(CXXFLAGS)
 WEBUPDATE_OBJECTS =  \
 	borland\webupdate_webupdate.obj \
-	borland\webupdate_webupdatedlg.obj
+	borland\webupdate_webupdatedlg.obj \
+	borland\webupdate_checkedlistctrl.obj
 MINIMAL_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
@@ -192,6 +193,9 @@ borland\webupdate_webupdate.obj: .\..\src\webupdate.cpp
 	$(CXX) -q -c -P -o$@ $(WEBUPDATE_CXXFLAGS) $**
 
 borland\webupdate_webupdatedlg.obj: .\..\src\webupdatedlg.cpp
+	$(CXX) -q -c -P -o$@ $(WEBUPDATE_CXXFLAGS) $**
+
+borland\webupdate_checkedlistctrl.obj: .\..\src\checkedlistctrl.cpp
 	$(CXX) -q -c -P -o$@ $(WEBUPDATE_CXXFLAGS) $**
 
 borland\minimal_minimal.obj: .\..\sample\minimal.cpp
