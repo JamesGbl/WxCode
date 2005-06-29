@@ -16,6 +16,7 @@
 #include "wx/webupdatedlg.h"
 #include <wx/filesys.h>
 #include <wx/fs_inet.h>
+#include <wx/wfstream.h>
 
 // these are the info required by wxWebUpdate classes about the 
 // application to update...
@@ -285,38 +286,69 @@ void MyFrame::OnUpdateCheckSimple(wxCommandEvent &)
 		return;
 	}
 
-	if (update->Check(VERSION) == wxWUCF_OUTOFDATE) {
-		int res = wxMessageBox(wxT("The webserver holds an updated version of this app;\n\n") 
-			wxT("Local version: ") + wxString(VERSION) + wxT("\t\tLatest version: ") + update->GetLatestVersion() +
-			wxT("\n\nDo you want to download it (using the wxWebUpdateDlg class) ?"),
-			wxT("Update check successful"), wxYES_NO | wxICON_EXCLAMATION);
+	if (update->Check(VERSION) == wxWUCF_UPDATED) {
 		
-		if (res == wxYES) {
-
-			wxWebUpdateDownload download = update->GetDownloadPackage();
-			if (!download.IsOkForThisPlatform()) {
-				wxMessageBox(wxString(wxT("The XML script does not support this platform (")) +
-					wxWebUpdateDownload::GetThisPlatformString() + wxT(")"),
-					wxT("Error"), wxOK | wxICON_ERROR);
-
-			} else {
-
-				// we now have:
-				// - a valid XML webupdate script
-				// - the permission by the user to download the update
-				// - the link for the download of the updated package for this platform
-				// that's all ;-)
-			}
-		}
-
-	} else {
-
 		// no updates available
 		wxMessageBox(wxT("This program is up to date ;-)\n"),
 					wxT("Update check successful"));
+		delete update;
+		return;
 	}
-
+	
+	int res = wxMessageBox(wxT("The webserver holds an updated version of this app;\n\n") 
+		wxT("Local version: ") + wxString(VERSION) + wxT("\t\tLatest version: ") + 
+		update->GetLatestVersion() +
+		wxT("\n\nDo you want to download it ?"),
+		wxT("Update check successful"), wxYES_NO | wxICON_EXCLAMATION);
+	
+	if (res == wxNO) {
+		delete update;
+		return;
+	}
+	
+	wxWebUpdateDownload download = update->GetDownloadPackage();
+	if (!download.IsOkForThisPlatform()) {
+		wxMessageBox(wxString(wxT("The XML script does not support this platform (")) +
+			wxWebUpdateDownload::GetThisPlatformString() + wxT(")"),
+			wxT("Error"), wxOK | wxICON_ERROR);
+		delete update;
+		return;	
+	} 
+	
+	
+	// we now have:
+	// - a valid XML webupdate script
+	// - the permission by the user to download the update
+	// - the link for the download of the updated package for this platform
+	// that's all ;-)
+	wxFileSystem fs;
+	wxFSFile *updatefile = fs.OpenFile(download.GetDownloadString());
+	if (!updatefile){
+		wxMessageBox(wxT("Cannot download the update file from:\n\n") +
+			download.GetDownloadString(), wxT("Error"), wxOK | wxICON_ERROR);
+		return;
+	}
+	
+	wxInputStream *stream = updatefile->GetStream();
+	if (!stream){
+		wxMessageBox(wxT("Cannot download the update file from:\n\n") +
+			download.GetDownloadString(), wxT("Error"), wxOK | wxICON_ERROR);
+		return;
+	}
+	
+	wxFileOutputStream out(wxFileName::CreateTempFileName(APP_NAME));
+	out.Write(*stream);
+	if (!out.IsOk()){
+		wxMessageBox(wxT("Cannot download the update file from:\n\n") +
+			download.GetDownloadString(), wxT("Error"), wxOK | wxICON_ERROR);
+		return;
+	}
+	
+	wxMessageBox(wxT("Download was successful; now I'm going to install the update..."), 
+		wxT("Success"), wxOK | wxICON_QUESTION);
+	
 	// cleanup
+	delete updatefile;
 	delete update;
 }
 

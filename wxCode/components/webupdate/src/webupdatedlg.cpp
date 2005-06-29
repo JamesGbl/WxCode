@@ -117,11 +117,6 @@ void *wxWebUpdateThread::Entry()
 	m_pHandler->AddPendingEvent(updatevent);
 	return (void*)FALSE;
 }
-/*
-void wxWebUpdateThread::OnExit()
-{
-}
-*/
 
 
 

@@ -4,8 +4,8 @@
 	 
    <package id="myapp">
       <latest-version importance="high">2.0.3</latest-version>
-      <latest-download platform="msw">http://myapp.com/download/myapp.exe</latest-download>
-      <latest-download platform="gtk">http://myapp.com/download/myapp.rpm</latest-download>
+      <latest-download platform="msw">http://wxcode.sourceforge.net/components/webupdate/myapp.msi</latest-download>
+      <latest-download platform="gtk">http://wxcode.sourceforge.net/components/webupdate/myapp.tar.gz</latest-download>
 
       <msg-update-available>The new $(id) $(latest-version) is available for download;
 			it has several bugfixes and security improvements !</msg-update-available>

@@ -159,7 +159,10 @@ public:     // getters
 
     wxURL GetDownloadURL() const
         { return m_urlDownload; } 
-        
+  
+    wxString GetDownloadString() const
+        { return m_urlDownload; } 
+      
     wxWebUpdatePlatform GetPlatform() const
         { return m_platform; }
 
