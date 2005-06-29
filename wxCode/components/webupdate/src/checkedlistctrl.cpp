@@ -49,8 +49,8 @@ wxCheckedListCtrl::wxCheckedListCtrl(wxWindow* parent, wxWindowID id, const wxPo
 {
     SetImageList(&m_imageList, wxIMAGE_LIST_SMALL);
 
-    m_imageList.Add(wxICON(unchecked_xpm));
-    m_imageList.Add(wxICON(checked_xpm));
+    m_imageList.Add(wxIcon(unchecked_xpm));
+    m_imageList.Add(wxIcon(checked_xpm));
 }
 
 void wxCheckedListCtrl::OnMouseEvent(wxMouseEvent& event)

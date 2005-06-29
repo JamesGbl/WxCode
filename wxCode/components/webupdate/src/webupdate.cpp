@@ -135,6 +135,20 @@ wxString wxWebUpdateDownload::GetPlatformString(wxWebUpdatePlatform code)
 	return ret;
 }
 
+unsigned long wxWebUpdateDownload::GetDownloadSize() const
+{
+	wxURL u(m_urlDownload);
+	if (u.GetError() != wxURL_NOERR) return 0;
+
+	wxInputStream *is = u.GetInputStream();
+	if (is == NULL) return 0;
+
+	unsigned long ret = (unsigned long)is->GetSize();
+	delete is;
+
+	return ret;
+}
+
 
 
 

@@ -31,12 +31,21 @@
 #include <wx/progdlg.h>
 
 
+//! The ID of the wxUpdateUI events sent by wxWebUpdateThread.
 #define wxWUT_NOTIFICATION			0xABCDEF
+
+//! The prefix of the static text control which shows the remaining time.
 #define wxWUD_TIMETEXT_PREFIX		wxT("Time remaining: ")
+
+
+//! Returns a string with a short size description for the given number of bytes.
+static WXDLLIMPEXP_WEBUPDATE wxString wxGetSizeStr(unsigned long bytesize);
+
+
 
 //! A simple container of the two basic info which wxWebUpdateDlg needs to know
 //! about user packages: the NAME and the local VERSION.
-class wxWebUpdateLocalPackage : public wxObject
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateLocalPackage : public wxObject
 {
 public:		// to avoid setters/getters
 
@@ -58,7 +67,7 @@ private:
 
 
 //! The thread helper which downloads the webupdate script and/or packages.
-class wxWebUpdateThread : public wxThreadHelper
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateThread : public wxThreadHelper
 {
 protected:
 
@@ -105,7 +114,7 @@ public:
 //!       (which would be more suited rather than the generic wxDialog as
 //!       base class) so we emulate some of wxProgressDialog features
 //!       even if we are not using it. 
-class wxWebUpdateDlg : public wxDialog 
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDlg : public wxDialog 
 {
 protected:		// pointers to our controls
 	

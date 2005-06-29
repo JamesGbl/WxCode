@@ -63,7 +63,7 @@
 				<!-- and the listctrl on the left -->
 				<object class="sizeritem">
 					<flag>wxGROW</flag>					
-					<option>9</option>
+					<option>10</option>
 					<object class="wxBoxSizer">
 						<orient>wxVERTICAL</orient>
 
@@ -71,9 +71,11 @@
 							<flag>wxGROW|wxBOTTOM</flag>
 							<border>5</border>
 							<option>1</option>
-							<object class="unknown" name="IDWUD_LISTCTRL">						
-								
-							</object>
+							
+							<!-- we use an uknown class so that we can use wxCheckedListCtrl 
+							     (which is not part of wx official XRC support) instead of a
+								 simple wxListCtrl on those platform which support it -->
+							<object class="unknown" name="IDWUD_LISTCTRL"/>
 						</object>
 						<object class="sizeritem">
 							<flag>wxGROW|wxBOTTOM</flag>

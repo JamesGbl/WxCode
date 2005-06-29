@@ -47,6 +47,34 @@ END_EVENT_TABLE()
 
 
 
+
+
+// ---------------------
+// GLOBALS
+// ---------------------
+
+wxString wxGetSizeStr(unsigned long bytesize)
+{
+	wxString sz;
+	if (bytesize < 1024) 
+		sz = wxString::Format(wxT("%d B"), bytesize);
+	else if (bytesize < 1024*1024) 
+		sz = wxString::Format(wxT("%d kB"), bytesize/1024);
+	else if (bytesize < 1024*1024*1024) 
+		sz = wxString::Format(wxT("%d MB"), bytesize/(1024*1024));
+	else 
+		// petabytes are not handled because they require a division
+		// for a number of the order 2^40 which exceed the 32 bits
+		// of most of the today machines...
+		sz = wxString::Format(wxT("%d TB"), bytesize/(1024*1024*1024));
+
+	return sz;
+}
+
+
+
+
+
 // ---------------------
 // wxWEBUPDATETHREAD
 // ---------------------
@@ -163,9 +191,16 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 	m_pUpdatesList->InsertColumn(4, wxT("Importance"));
 	m_pUpdatesList->SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
 	m_pUpdatesList->SetColumnWidth(1, wxLIST_AUTOSIZE_USEHEADER);
-	m_pUpdatesList->SetColumnWidth(2, wxLIST_AUTOSIZE_USEHEADER);
-	m_pUpdatesList->SetColumnWidth(3, wxLIST_AUTOSIZE_USEHEADER);
+	m_pUpdatesList->SetColumnWidth(2, wxLIST_AUTOSIZE_USEHEADER);	
 	m_pUpdatesList->SetColumnWidth(4, wxLIST_AUTOSIZE_USEHEADER);
+
+	// size is the smallest column but it usually needs some space...
+	int colwidth = m_pUpdatesList->GetColumnWidth(0) +
+					m_pUpdatesList->GetColumnWidth(1) +
+					m_pUpdatesList->GetColumnWidth(2) +
+					m_pUpdatesList->GetColumnWidth(4);
+	int size = m_pUpdatesList->GetClientSize().GetWidth()-colwidth;	
+	m_pUpdatesList->SetColumnWidth(3, size > 50 ? size : 50);
 
 
 
@@ -234,23 +269,22 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
 
 	for (int i=0; i < (int)m_arrUpdatedPackages.GetCount(); i++) {
 
-		wxWebUpdatePackage &curr = m_arrUpdatedPackages.Item(i);
-		wxListItem li;
-		li.SetId(i);
+		wxWebUpdatePackage &curr = m_arrUpdatedPackages.Item(i);		
 
 		// set the properties for the first column (NAME)
-		li.SetText(curr.GetName());
-		li.SetColumn(0);
-		m_pUpdatesList->InsertItem(li);
+		// ----------------------------------------------
+		m_pUpdatesList->InsertItem(i, curr.GetName());
+		
 
 		// set the properties for the second column (LATEST VERSION)
-		li.SetText(curr.GetLatestVersion());
-		li.SetColumn(1);
-		m_pUpdatesList->SetItem(li);
+		// ---------------------------------------------------------
+		m_pUpdatesList->SetItem(i, 1, curr.GetLatestVersion());
+
 
 		// set the properties for the third column (LOCAL VERSION)
 		// here we need some further work to find if this package
 		// is already installed...
+		// -------------------------------------------------------
 		const wxWebUpdateLocalPackage *local = NULL;
 		for (int j=0; j < m_nLocalPackages; j++)
 			if (m_pLocalPackages[j].m_strName == curr.GetName())
@@ -258,42 +292,54 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
 
 		// did we find a local matching package ?
 		if (local) {
-			li.SetText(local->m_version);
+			m_pUpdatesList->SetItem(i, 2, local->m_version);
 
 			// compare versions
-			/*if (curr.Check(local->m_version) == wxWUCF_OUTOFDATE) {
-				wxFont font(li.GetFont());
+			if (curr.Check(local->m_version) == wxWUCF_OUTOFDATE) {
+
+				// build a bold font
+				wxFont font(m_pUpdatesList->GetFont());
 				font.SetWeight(wxFONTWEIGHT_BOLD);
+
+				// and set it for this item
+				wxListItem li;
+				li.SetId(i);
 				li.SetFont(font);
-			}*/
+				li.SetBackgroundColour(*wxWHITE);
+				li.SetTextColour(*wxBLACK);
+				m_pUpdatesList->SetItem(li);
+			}
 
 		} else {
 
 			// a matching local package does not exist...
-			li.SetText(wxT("not installed"));
+			m_pUpdatesList->SetItem(i, 2, wxT("not installed"));
 		}
 
-		li.SetColumn(2);
-		m_pUpdatesList->SetItem(li);
 
 		// set the properties for the fourth column (SIZE)
+		// -----------------------------------------------
+
+		unsigned long bytesize = curr.GetDownloadPackage().GetDownloadSize();
+		m_pUpdatesList->SetItem(i, 3, wxGetSizeStr(bytesize));
+
+
 
 		// set the properties for the fifth column (IMPORTANCE)
+		// ----------------------------------------------------
 		switch (curr.GetImportance()) {
 		case wxWUPI_HIGH:
-			li.SetText(wxT("high!"));
+			m_pUpdatesList->SetItem(i, 4, wxT("high!"));
 			break;
 		case wxWUPI_NORMAL:
-			li.SetText(wxT("normal"));
+			m_pUpdatesList->SetItem(i, 4, wxT("normal"));
 			break;
 		case wxWUPI_LOW:
-			li.SetText(wxT("low"));
+			m_pUpdatesList->SetItem(i, 4, wxT("low"));
 			break;
 		default:
 			wxASSERT_MSG(0, wxT("Invalid package !"));
 		}
-		li.SetColumn(4);
-		m_pUpdatesList->SetItem(li);
 	}
 }
 

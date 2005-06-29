@@ -25,7 +25,7 @@
 // Conditional compilation
 // -----------------------
 
-#define wxWU_USE_CHECKEDLISTCTRL		0
+#define wxWU_USE_CHECKEDLISTCTRL		1
 
 
 // for shared builds
@@ -123,6 +123,9 @@ public:
 	//! the platform where the program is currently running on.
     bool IsOkForThisPlatform() const
         { return IsOk() && m_platform == GetThisPlatformCode(); }
+
+	//! Returns the size (in bytes) of the update asking it to the webserver.
+	virtual unsigned long GetDownloadSize() const;
     
 public:		// static platform utilities
 
