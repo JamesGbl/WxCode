@@ -32,7 +32,10 @@
 #include "wx/filesys.h"
 
 
+// wxWidgets RTTI
 IMPLEMENT_CLASS(wxWebUpdateXMLScript, wxXmlDocument)
+IMPLEMENT_CLASS(wxWebUpdatePackage, wxObject)
+IMPLEMENT_CLASS(wxWebUpdateDownload, wxObject)
 
 #include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
 WX_DEFINE_OBJARRAY(wxWebUpdateDownloadArray);

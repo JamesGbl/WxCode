@@ -13,8 +13,22 @@
 // declarations
 // ============================================================================
 
+#include "wx/webupdatedlg.h"
+#include <wx/filesys.h>
+#include <wx/fs_inet.h>
 
-#define VERSION			wxT("1.0.0")
+// these are the info required by wxWebUpdate classes about the 
+// application to update...
+#define VERSION				wxT("1.0.0")
+#define APP_NAME			wxT("wxWebUpdate sample")
+#define PACKAGE_NUM			1
+#define PACKAGE_NAME		wxT("myapp")	// just to show this can be different from APP_NAME
+#define SCRIPT_LOCATION		wxT("http://wxcode.sourceforge.net/components/webupdate/script1.xml")
+
+// our list of local packages; used only by wxWebUpdateDlg.
+wxWebUpdateLocalPackage g_packageList[PACKAGE_NUM];
+
+
 
 #include <crtdbg.h>
 #define mcDUMP_ON_EXIT		\
@@ -28,9 +42,6 @@
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
-#include "wx/webupdatedlg.h"
-#include <wx/filesys.h>
-#include <wx/fs_inet.h>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
@@ -86,7 +97,9 @@ enum
     // (where it is special and put into the "Apple" menu)
     Minimal_About = wxID_ABOUT,
 
-	Minimal_UpdateCheck,			// these were added by me
+				// these were added by me
+	Minimal_UpdateCheckSimple,
+	Minimal_UpdateCheckWithDlg,
 };
 
 // Define a new frame type: this is going to be our main frame
@@ -101,7 +114,8 @@ public:
     void OnQuit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
 
-	void OnUpdateCheck(wxCommandEvent& event);
+	void OnUpdateCheckSimple(wxCommandEvent& event);
+	void OnUpdateCheckWithDlg(wxCommandEvent& event);
 
 private:
     // any class wishing to process wxWindows events must use this macro
@@ -119,7 +133,8 @@ BEGIN_EVENT_TABLE(MyFrame, wxFrame)
     EVT_MENU(Minimal_Quit,  MyFrame::OnQuit)
     EVT_MENU(Minimal_About, MyFrame::OnAbout)
 
-    EVT_MENU(Minimal_UpdateCheck, MyFrame::OnUpdateCheck)
+    EVT_MENU(Minimal_UpdateCheckSimple, MyFrame::OnUpdateCheckSimple)
+    EVT_MENU(Minimal_UpdateCheckWithDlg, MyFrame::OnUpdateCheckWithDlg)
 END_EVENT_TABLE()
 
 // Create a new application object: this macro will allow wxWindows to create
@@ -141,7 +156,7 @@ bool MyApp::OnInit()
 	mcDUMP_ON_EXIT;
 
     // create the main application window
-    MyFrame *frame = new MyFrame(_T("Minimal wxWindows App"));
+    MyFrame *frame = new MyFrame(APP_NAME);
 
 #if __WXDEBUG__
 	// create an useful log window
@@ -154,10 +169,7 @@ bool MyApp::OnInit()
     frame->Show(true);
 #endif
 
-
-
-	wxFileSystem::AddHandler(new wxInternetFSHandler);
-	//InitXmlResource();
+	wxFileSystem::AddHandler(new wxInternetFSHandler);	
 
     // success: wxApp::OnRun() will be called which will enter the main message
     // loop and the application will run. If we returned false here, the
@@ -206,7 +218,9 @@ MyFrame::MyFrame(const wxString& title)
 #if wxUSE_MENUS
     // create a menu bar
     wxMenu *menuFile = new wxMenu;
-    menuFile->Append(Minimal_UpdateCheck, _T("Check for updates"), 
+    menuFile->Append(Minimal_UpdateCheckSimple, _T("Check for updates (simple)"), 
+            _T("Checks for updates and eventually downloads the update version..."));	
+    menuFile->Append(Minimal_UpdateCheckWithDlg, _T("Check for updates (advanced)"), 
             _T("Checks for updates and eventually downloads the update version..."));	
     menuFile->Append(Minimal_Quit, _T("E&xit\tAlt-X"), _T("Quit this program"));	
     
@@ -250,13 +264,11 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
     msg.Printf( wxT("This is a demonstration of wxUpdateCheck & wxWebUpdate program.\n\n")
 				wxT("This sample program ..."));
 
-    wxMessageBox(msg, _T("About Minimal"), wxOK | wxICON_INFORMATION, this);
+    wxMessageBox(msg, wxT("About ") + wxString(APP_NAME), wxOK | wxICON_INFORMATION, this);
 }
 
-void MyFrame::OnUpdateCheck(wxCommandEvent &)
+void MyFrame::OnUpdateCheckSimple(wxCommandEvent &)
 {
-#define SCRIPT_LOCATION		wxT("http://wxcode.sourceforge.net/components/webupdate/script1.xml")
-
 	// we want to open the script file I've put on wxCode server
 	wxWebUpdateXMLScript script(SCRIPT_LOCATION);
 	if (!script.IsOk()) {
@@ -265,7 +277,7 @@ void MyFrame::OnUpdateCheck(wxCommandEvent &)
 		return;
 	}
 
-	wxWebUpdatePackage *update = script.GetPackage(wxT("myapp"));
+	wxWebUpdatePackage *update = script.GetPackage(PACKAGE_NAME);
 	if (!update) {
 		wxMessageBox(wxT("Cannot find the 'myapp' package in the XML update script !"),
 					wxT("Error"), wxOK | wxICON_ERROR);
@@ -293,8 +305,6 @@ void MyFrame::OnUpdateCheck(wxCommandEvent &)
 				// - the permission by the user to download the update
 				// - the link for the download of the updated package for this platform
 				// that's all ;-)
-				wxWebUpdateDlg dlg(this);
-				dlg.ShowModal();
 			}
 		}
 
@@ -309,4 +319,13 @@ void MyFrame::OnUpdateCheck(wxCommandEvent &)
 	delete update;
 }
 
+void MyFrame::OnUpdateCheckWithDlg(wxCommandEvent &)
+{
+	// this sample has only one package to handle
+	g_packageList[0].m_strName = PACKAGE_NAME;
+	g_packageList[0].m_version = VERSION;
+
+	wxWebUpdateDlg dlg(this, APP_NAME, SCRIPT_LOCATION, g_packageList, 1);
+	dlg.ShowModal();
+}
 

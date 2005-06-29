@@ -22,24 +22,21 @@
 #endif
 
 // includes
-#ifndef WX_PRECOMP
-#endif
-
 #include "wx/webupdatedlg.h"
 
 
+IMPLEMENT_CLASS(wxWebUpdateLocalPackage, wxObject)
 IMPLEMENT_CLASS(wxWebUpdateDlg, wxDialog)
 BEGIN_EVENT_TABLE(wxWebUpdateDlg, wxDialog)
-    /*EVT_MENU(XRCID("exit_tool_or_menuitem"),  MyFrame::OnExitToolOrMenuCommand)
-    EVT_MENU(XRCID("non_derived_dialog_tool_or_menuitem"), MyFrame::OnNonDerivedDialogToolOrMenuCommand)
-    EVT_MENU(XRCID("derived_tool_or_menuitem"), MyFrame::OnDerivedDialogToolOrMenuCommand)
-    EVT_MENU(XRCID("controls_tool_or_menuitem"), MyFrame::OnControlsToolOrMenuCommand)
-    EVT_MENU(XRCID("uncentered_tool_or_menuitem"), MyFrame::OnUncenteredToolOrMenuCommand)
-    EVT_MENU(XRCID("custom_class_tool_or_menuitem"), MyFrame::OnCustomClassToolOrMenuCommand)
-    EVT_MENU(XRCID("platform_property_tool_or_menuitem"), MyFrame::OnPlatformPropertyToolOrMenuCommand)
-    EVT_MENU(XRCID("art_provider_tool_or_menuitem"), MyFrame::OnArtProviderToolOrMenuCommand)
-    EVT_MENU(XRCID("variable_expansion_tool_or_menuitem"), MyFrame::OnVariableExpansionToolOrMenuCommand)
-    EVT_MENU(XRCID("about_tool_or_menuitem"), MyFrame::OnAboutToolOrMenuCommand)*/
+
+	// buttons
+    EVT_BUTTON(XRCID("IDWUD_DOWNLOAD"), wxWebUpdateDlg::OnDownload)
+    EVT_BUTTON(XRCID("IDWUD_BROWSE"), wxWebUpdateDlg::OnBrowse)
+    EVT_BUTTON(XRCID("IDWUD_CANCEL"), wxWebUpdateDlg::OnCancel)
+
+	// listctrl
+
+
 END_EVENT_TABLE()
 
 
@@ -59,23 +56,36 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 
 	// and build our dialog window
 	wxXmlResource::Get()->LoadDialog(this, GetParent(), wxT("wxWebUpdateDlg"));	
-	
-	// init control pointers
-	IDWUD_IMAGE = XRCCTRL(*this,"IDWUD_IMAGE",wxStaticBitmap);
-	IDWUD_INTRO_TEXT = XRCCTRL(*this,"IDWUD_INTRO_TEXT",wxStaticText);
-	IDWUD_LOCAL_VERSION = XRCCTRL(*this,"IDWUD_LOCAL_VERSION",wxStaticText);
-	IDWUD_WEB_VERSION = XRCCTRL(*this,"IDWUD_WEB_VERSION",wxStaticText);
-	IDWUD_PROGRESS_TEXT = XRCCTRL(*this,"IDWUD_PROGRESS_TEXT",wxStaticText);
-	IDWUD_GAUGE = XRCCTRL(*this,"IDWUD_GAUGE",wxGauge);
-	IDWUD_TEXT1 = XRCCTRL(*this,"IDWUD_TEXT1",wxStaticText);
-	IDWUD_DOWNLOAD_PATH = XRCCTRL(*this,"IDWUD_DOWNLOAD_PATH",wxTextCtrl);
-	IDWUD_BROWSE = XRCCTRL(*this,"IDWUD_BROWSE",wxButton);
-	IDWUD_CANCEL = XRCCTRL(*this,"IDWUD_CANCEL",wxButton);
-	IDWUD_OK = XRCCTRL(*this,"IDWUD_OK",wxButton);
+
+	// init control pointers	
+	m_pAppNameText = XRCCTRL(*this,"IDWUD_APPNAME_TEXT",wxStaticText);
+	m_pUpdatesList = XRCCTRL(*this,"IDWUD_LISTCTRL",wxListCtrl);
+	m_pGauge = XRCCTRL(*this,"IDWUD_GAUGE",wxGauge);
+	m_pDownloadPathTextCtrl = XRCCTRL(*this,"IDWUD_DOWNLOAD_PATH",wxTextCtrl);
+
+	// init control data
+	m_pAppNameText->SetLabel(m_strAppName);
+
+	// we have changed the appname statictext control so maybe we need
+	// to expand our dialog... force a layout recalculation
+	GetSizer()->RecalcSizes();
+	GetSizer()->Fit(this);
 }
+
+
+// event handlers
 
 void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 {
+}
+
+void wxWebUpdateDlg::OnBrowse(wxCommandEvent &)
+{
+}
+
+void wxWebUpdateDlg::OnCancel(wxCommandEvent &)
+{
+	EndModal(wxCANCEL);
 }
 
 

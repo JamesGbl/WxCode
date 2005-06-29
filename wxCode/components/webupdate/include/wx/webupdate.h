@@ -69,9 +69,19 @@ enum wxWebUpdateCheckFlag {
 };
 
 
+//! This is the most generic way to handle the 'version' of something.
+//! Currently wxWebUpdate classes support only the version format
+//! MAJOR.MINOR.RELEASE (in each field only numbers are allowed); 
+//! if you need to support some other version format (maybe 1.23.4.4a 
+//! or 1.2b or v4.3 ...) then you need to overload the following functions:
+//! - wxWebUpdate
+typedef wxString		wxVersion;
+#define wxEmptyVersion  wxEmptyString
+
+
 
 //! Contains the info about an available download.
-class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDownload
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDownload : public wxObject
 {
 protected:
     
@@ -81,8 +91,7 @@ protected:
 	//! The URL to the download.
 	//! Note: this info was initially kept in a wxURL variable but since
 	//!       wxURL::GetInputStream() is deprecated in favour of wxFileSystem
-	//!       I use here a wxString which is easier to handle.
-    //wxURL m_urlDownload;
+	//!       I use here a wxString which is easier to handle.    
 	wxString m_urlDownload;
      
 public:
@@ -114,8 +123,7 @@ public:		// static platform utilities
 	static wxWebUpdatePlatform GetPlatformCode(const wxString &platname);
 
 	//! Returns the string for the platform with the given code.
- 	static wxString GetPlatformString(wxWebUpdatePlatform code);
-       
+ 	static wxString GetPlatformString(wxWebUpdatePlatform code);   
         
 public:     // setters
 
@@ -141,6 +149,9 @@ public:		// operators
 
 	wxWebUpdateDownload &operator=(const wxWebUpdateDownload &tocopy)
 		{ m_platform = tocopy.m_platform; m_urlDownload = tocopy.m_urlDownload; return *this; }
+
+private:
+	DECLARE_CLASS(wxWebUpdateDownload)
 };
 
 
@@ -150,7 +161,7 @@ WX_DECLARE_OBJARRAY(wxWebUpdateDownload, wxWebUpdateDownloadArray);
 
 
 //! Contains the info about a package update.
-class WXDLLIMPEXP_WEBUPDATE wxWebUpdatePackage
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdatePackage : public wxObject
 {
 	friend class wxWebUpdateXMLScript;
 
@@ -161,9 +172,9 @@ protected:		// member variables
 	
 	//! The version of the downloads available for this package; i.e. the latest
 	//! version available on the webserver.
-	//! This is stored as a string so that it's easy to override the #Check functions
+	//! This is stored as a wxVersion so that it's easy to override the #Check functions
 	//! and use another parser (rather than #ExtractVersionNumbers) to do the check.
-    wxString m_strLatestVersion;
+    wxVersion m_strLatestVersion;
 
 	//! The content of the <msg-update-available> tag, if present.
     wxString m_strUpdateAvailableMsg;
@@ -178,8 +189,8 @@ protected:		// member variables
 
 protected:		// utilities
 
-	//! Returns in the given int* the parsed version numbers of the given string.
-	static bool ExtractVersionNumbers(const wxString &str, int *maj, int *min, int *rel);
+	//! Returns in the given int* the parsed version numbers of the given wxVersion.
+	static bool ExtractVersionNumbers(const wxVersion &str, int *maj, int *min, int *rel);
     
 public:
     wxWebUpdatePackage(const wxString &id = wxEmptyString) : m_strID(id) {}
@@ -209,22 +220,25 @@ public:		// version check
     //!        the informations to parse.
     //! \param version The string version of the package which is being tested.
     //! \param packagename The name of the package whose version must be tested.
-	virtual wxWebUpdateCheckFlag Check(const wxString &localversion) const;
+	virtual wxWebUpdateCheckFlag Check(const wxVersion &localversion) const;
 	virtual wxWebUpdateCheckFlag Check(int maj, int min, int rel) const;
 
 public:		// getters
 
 	//! Returns the name of this package.
-	wxString GetName() const				{ return m_strID; }
+	wxString GetName() const					{ return m_strID; }
 
 	//! Returns the latest available version for this package.
-	wxString GetLatestVersion() const		{ return m_strLatestVersion; }
+	wxString GetLatestVersion() const			{ return m_strLatestVersion; }
 
 	//! Returns the content of the <msg-update-available> tag, if present. 
-	wxString GetUpdateAvailableMsg() const	{ return m_strUpdateAvailableMsg; }
+	wxString GetUpdateAvailableMsg() const		{ return m_strUpdateAvailableMsg; }
 
 	//! Returns the content of the <msg-update-notavailable> tag, if present. 
 	wxString GetUpdateNotAvailableMsg() const	{ return m_strUpdateNotAvailableMsg; }
+
+private:
+	DECLARE_CLASS(wxWebUpdatePackage)
 };
 
 
@@ -233,21 +247,20 @@ public:		// getters
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateXMLScript : public wxXmlDocument
 {
 public:
-	wxWebUpdateXMLScript(const wxString &strURL) { Load(strURL); }
+	wxWebUpdateXMLScript(const wxString &strURL = wxEmptyString) 
+		{ if (!strURL.IsEmpty()) Load(strURL); }
 	virtual ~wxWebUpdateXMLScript() {}
 
     //! Parses the XML script located at the given URI.
 	//! This function can open any resource which can be handled
 	//! by wxFileSystem but it should typically be used to load
 	//! a file stored in a webserver.
-	//! Returns 
+	//! Returns TRUE if the document was successfully parsed.
     virtual bool Load(const wxString &uri);
 
 	//! Returns the wxWebUpdatePackage stored in this document for
 	//! the given package. Returns NULL if the package you asked for
 	//! is not present in this XML document.
-	//! You can use #GetLastErr() to get a description of the error
-	//! when this function returns NULL.
 	virtual wxWebUpdatePackage *GetPackage(const wxString &packagename) const;
 
 private:

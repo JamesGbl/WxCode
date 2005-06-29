@@ -3,118 +3,166 @@
 <!-- $Id$ -->
 <resource>
 <object class="wxDialog" name="wxWebUpdateDlg">
+	<style>wxRESIZE_BORDER|wxCAPTION|wxCLOSE_BOX|wxSYSTEM_MENU</style>
     <title>Update</title>
+	
+	<!-- the vertical boxsizer which contains everything -->
+	<!-- NOTE: IDWUD stays for IDWebUpdateDlg            -->
     <object class="wxBoxSizer">
         <orient>wxVERTICAL</orient>
+		
+		<object class="sizeritem">
+            <flag>wxALL</flag>
+            <border>0</border>
+            <object class="wxBoxSizer">
+                <orient>wxHORIZONTAL</orient>
+
+				<object class="sizeritem">
+					<flag>wxALIGN_LEFT|wxLEFT|wxTOP|wxBOTTOM</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="IDWUD_INTRO_TEXT">
+						<label>This dialog allows you to update one or more packages for</label>
+					</object>
+				</object>
+				
+				<object class="sizeritem">
+					<flag>wxALIGN_LEFT|wxALL</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="IDWUD_APPNAME_TEXT">
+						<font>
+							<weight>bold</weight>
+						</font>					
+						<label>APPNAME</label>
+					</object>
+				</object>
+            </object>
+        </object>
+			
+		<object class="sizeritem">
+			<flag>wxALIGN_LEFT|wxALL</flag>
+			<border>5</border>
+			<object class="wxStaticText" name="IDWUD_LISTCTRL_TEXT">
+				<label>The available package updates are:</label>
+			</object>
+		</object>
+		
         <object class="sizeritem">
             <flag>wxALL|wxGROW</flag>
             <border>5</border>
+			<option>3</option>
             <object class="wxBoxSizer">
                 <orient>wxHORIZONTAL</orient>
+				
+				<!-- and the listctrl on the left -->
+				<object class="sizeritem">
+					<flag>wxGROW|wxBOTTOM</flag>
+					<border>5</border>
+					<option>1</option>
+					<object class="wxListCtrl" name="IDWUD_LISTCTRL">						
+						<style>wxLC_REPORT|wxSUNKEN_BORDER</style>
+					</object>
+				</object>
+				
+				<!-- the image on the right -->
                 <object class="sizeritem">
-                    <flag>wxGROW|wxALL</flag>
+                    <flag>wxALIGN_CENTER_VERTICAL|wxRIGHT|wxBOTTOM</flag>
                     <border>5</border>
                     <object class="wxStaticBitmap" name="IDWUD_IMAGE">
                         <bitmap>www.png</bitmap>
                     </object>
                 </object>
-                <object class="sizeritem">
-                    <flag>wxALIGN_CENTER|wxALL</flag>
-                    <border>5</border>
-                    <object class="wxBoxSizer">
-                        <orient>wxVERTICAL</orient>
-                        <object class="sizeritem">
-                            <flag>wxALIGN_CENTER|wxALL</flag>
-                            <border>5</border>
-                            <object class="wxStaticText" name="IDWUD_INTRO_TEXT">
-                                <label>text</label>
-                            </object>
-                        </object>
-                        <object class="sizeritem">
-                            <flag>wxALIGN_CENTER|wxALL</flag>
-                            <border>5</border>
-                            <object class="wxStaticText" name="IDWUD_LOCAL_VERSION">
-                                <label>text</label>
-                            </object>
-                        </object>
-                        <object class="sizeritem">
-                            <flag>wxALIGN_CENTER|wxALL</flag>
-                            <border>5</border>
-                            <object class="wxStaticText" name="IDWUD_WEB_VERSION">
-                                <label>text</label>
-                            </object>
-                        </object>
-                    </object>
-                </object>
             </object>
         </object>
+
+		<object class="sizeritem">
+			<flag>wxALIGN_LEFT|wxBOTTOM|wxLEFT|wxRIGHT</flag>
+			<border>5</border>
+			<object class="wxStaticText" name="IDWUD_PROGRESS_TEXT">
+				<label>Download status:</label>
+			</object>
+		</object>		
+		
+		<!-- our gauge -->
         <object class="sizeritem">
-            <flag>wxALIGN_CENTER|wxALL</flag>
+            <flag>wxGROW|wxBOTTOM|wxLEFT|wxRIGHT</flag>
             <border>5</border>
-            <object class="wxStaticText" name="IDWUD_PROGRESS_TEXT">
-                <label>text</label>
-            </object>
-        </object>
-        <object class="sizeritem">
-            <flag>wxALIGN_CENTER|wxALL</flag>
-            <border>5</border>
-            <object class="wxGauge" name="IDWUD_GAUGE">
-                <size>100,-1</size>
+			<option>0</option>
+            <object class="wxGauge" name="IDWUD_GAUGE">                 
                 <max>100</max>
                 <value>0</value>
             </object>
         </object>
+		
         <object class="sizeritem">
-            <flag>wxALIGN_CENTER|wxALL</flag>
+            <flag>wxGROW|wxALL</flag>
             <border>5</border>
             <object class="wxBoxSizer">
                 <orient>wxHORIZONTAL</orient>
                 <object class="sizeritem">
-                    <flag>wxALIGN_CENTER|wxALL</flag>
+                    <flag>wxALIGN_CENTER_VERTICAL|wxRIGHT|wxBOTTOM</flag>
                     <border>5</border>
                     <object class="wxStaticText" name="IDWUD_TEXT1">
                         <label>The downloaded files will be saved in:</label>
                     </object>
+					<option>0</option>
                 </object>
                 <object class="sizeritem">
-                    <flag>wxALIGN_CENTER|wxALL</flag>
+                    <flag>wxALIGN_CENTER_VERTICAL|wxGROW|wxRIGHT|wxBOTTOM</flag>
                     <border>5</border>
                     <object class="wxTextCtrl" name="IDWUD_DOWNLOAD_PATH">
-                        <size>80,-1</size>
-                        <value></value>
+                        <value>c:\\temp</value>
                     </object>
+					<option>5</option>
                 </object>
                 <object class="sizeritem">
-                    <flag>wxALIGN_CENTER|wxALL</flag>
+                    <flag>wxALIGN_CENTER_VERTICAL|wxBOTTOM</flag>
                     <border>5</border>
                     <object class="wxButton" name="IDWUD_BROWSE">
                         <label>Browse</label>
                     </object>
+					<option>0</option>
                 </object>
             </object>
         </object>
+
         <object class="sizeritem">
-            <flag>wxALIGN_CENTER|wxALL</flag>
+            <flag>wxALIGN_CENTER|wxALL|wxGROW</flag>
             <border>5</border>
+            <object class="wxStaticLine" name="IDWUD_LINE1">                
+                <style>wxLI_HORIZONTAL</style>
+            </object>
+        </object>
+		
+        <object class="sizeritem">
+            <flag>wxGROW|wxALL</flag>
+            <border>5</border>
+			<option>1</option>
             <object class="wxBoxSizer">
                 <orient>wxHORIZONTAL</orient>
+				<object class="spacer">
+					<flag>wxGROW|wxALL</flag>
+					<border>5</border>
+					<option>3</option>
+				</object>
                 <object class="sizeritem">
-                    <flag>wxALIGN_CENTER|wxALL</flag>
+                    <flag>wxGROW|wxRIGHT</flag>
                     <border>5</border>
+					<option>2</option>
                     <object class="wxButton" name="IDWUD_CANCEL">
                         <label>Cancel</label>
                     </object>
                 </object>
                 <object class="sizeritem">
-                    <flag>wxALIGN_CENTER|wxALL</flag>
+                    <flag>wxGROW</flag>
                     <border>5</border>
+					<option>2</option>
                     <object class="wxButton" name="IDWUD_OK">
                         <label>Download</label>
                     </object>
                 </object>
             </object>
-        </object>
-    </object>
+        </object> 
+    </object> 
 </object>
 
 </resource>
