@@ -39,6 +39,7 @@ BEGIN_EVENT_TABLE(wxWebUpdateDlg, wxDialog)
 	EVT_CHECKBOX(XRCID("IDWUD_SHOWFILTER"), wxWebUpdateDlg::OnShowFilter)
 
 	// listctrl
+	EVT_UPDATE_UI(-1, wxWebUpdateDlg::OnUpdateUI)
 
 	// download thread
 	EVT_UPDATE_UI(wxWUT_NOTIFICATION, wxWebUpdateDlg::OnDownloadComplete)
@@ -142,7 +143,7 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
     // Make an instance of our new custom class.
 #if wxWU_USE_CHECKEDLISTCTRL
     m_pUpdatesList = new wxCheckedListCtrl(this, -1, wxDefaultPosition,
-						wxDefaultSize, wxLC_REPORT|wxSUNKEN_BORDER);
+						wxDefaultSize, wxLC_REPORT|wxSUNKEN_BORDER|wxCLC_CHECK_WHEN_SELECTING);
 #else
     m_pUpdatesList = new wxListCtrl(this, -1, wxDefaultPosition,
 						wxDefaultSize, wxLC_REPORT|wxSUNKEN_BORDER);
@@ -246,6 +247,7 @@ int wxWebUpdateDlg::ShowModal()
 
 void wxWebUpdateDlg::ShowErrorMsg(const wxString &str) const
 {
+	wxLogDebug(str);
 	wxMessageBox(str + wxT("\nContact the support team of ") + m_strAppName +
 					wxT(" for help."), wxT("Error"), wxOK | wxICON_ERROR);
 }
@@ -260,13 +262,32 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
 	}
 	
 	// now load all the packages we need in local cache
-	m_arrUpdatedPackages = m_xmlScript.GetAllPackages();	
+	m_arrUpdatedPackages = m_xmlScript.GetAllPackages();
+	for (int i=0; i < (int)m_arrUpdatedPackages.GetCount(); i++)
+		m_arrUpdatedPackages[i].CacheDownloadSizes();
+	RebuildPackageList();
+
+	// handle the case that there are no packages in the listctrl
+	if (m_pUpdatesList->GetItemCount() == 0) {
+
+		wxMessageBox(wxT("Could not found any valid package for ") + m_strAppName
+					+ wxT("... exiting the update dialog."), wxT("Warning"),
+					wxOK | wxICON_EXCLAMATION);
+		EndModal(wxCANCEL);
+	}
+}
+
+void wxWebUpdateDlg::RebuildPackageList()
+{
+	m_pUpdatesList->DeleteAllItems();
 
 	int idx = 0;		// could go out of synch with 'i' because
 						// some packages could not be added to the list....
 	for (int i=0; i < (int)m_arrUpdatedPackages.GetCount(); i++, idx++) {
 
 		wxWebUpdatePackage &curr = m_arrUpdatedPackages.Item(i);		
+		wxLogDebug(wxT("Adding the '") + curr.GetName() + wxT("' package"));
+
 
 		// set the properties for the first column (NAME)
 		// ----------------------------------------------
@@ -309,8 +330,21 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
 
 			} else if (f == wxWUCF_UPDATED) {
 
-				// we already have the latest version...
+				// we already have the latest version... check if the
+				// filter is enabled or disabled
+				// (OFD stays for: out of date)
+				wxCheckBox *box = XRCCTRL(*this, "IDWUD_SHOWFILTER", wxCheckBox);
+				bool onlyOFD = FALSE;
+				if (box) onlyOFD = box->GetValue();
+
+				if (onlyOFD) {
+					m_pUpdatesList->DeleteItem(idx);
+					idx--;
+					continue;		// continue with next package
+				}
+
 #if wxWU_USE_CHECKEDLISTCTRL
+				// at least disable this item...
 				m_pUpdatesList->Enable(idx, FALSE);
 #endif
 			} else if (f == wxWUCF_FAILED) {
@@ -353,17 +387,7 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
 			wxASSERT_MSG(0, wxT("Invalid package !"));
 		}
 	}
-
-	// handle the case that there are no packages in the listctrl
-	if (m_pUpdatesList->GetItemCount() == 0) {
-
-		wxMessageBox(wxT("Could not found any valid package for ") + m_strAppName
-					+ wxT("... exiting the update dialog."), wxT("Warning"),
-					wxOK | wxICON_EXCLAMATION);
-		EndModal(wxCANCEL);
-	}
 }
-
 
 
 // event handlers
@@ -382,6 +406,7 @@ void wxWebUpdateDlg::OnBrowse(wxCommandEvent &)
 	if (dlg.ShowModal() == wxID_OK) {
 
 		m_pDownloadPathTextCtrl->SetValue(dlg.GetPath());
+		wxLogDebug(wxT("New output path is ") + dlg.GetPath());
 		
 	} else {
 
@@ -396,13 +421,18 @@ void wxWebUpdateDlg::OnCancel(wxCommandEvent &)
 
 void wxWebUpdateDlg::OnShowFilter(wxCommandEvent &)
 {
-	// OFD: out of date
-	wxCheckBox *box = XRCCTRL(*this, "IDWUD_SHOWFILTER", wxCheckBox);
-	bool onlyOFD = FALSE;
-	if (box) onlyOFD = box->GetValue();
-
 	// hide/show items in the listctrl
+	RebuildPackageList();
+}
 
+void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &ev)
+{
+	unsigned long now = GetTickCount();
+	static unsigned long begin = GetTickCount();
+	m_pGauge->SetValue((now-begin)/1000);
+
+	if (ev.GetId() == wxWUT_NOTIFICATION)
+		OnDownloadComplete(ev);
 }
 
 void wxWebUpdateDlg::OnDownloadComplete(wxUpdateUIEvent &)
@@ -413,6 +443,7 @@ void wxWebUpdateDlg::OnDownloadComplete(wxUpdateUIEvent &)
 		ShowErrorMsg(wxT("Could not download the ") + m_thread.m_strResName + 
 					wxT(" from\n\n") + m_thread.m_strURI + wxT("\n\nURL... "));
 		
+		wxLogDebug(wxT("Download status: failed !"));
 		m_pDownloadStatusText->SetLabel(wxT("Download status: failed !"));
 		m_pTimeText->SetLabel(wxT("No downloads running..."));
 
@@ -423,6 +454,7 @@ void wxWebUpdateDlg::OnDownloadComplete(wxUpdateUIEvent &)
 
 	} else {
 
+		wxLogDebug(wxT("Download status: successfully completed"));
 		m_pDownloadStatusText->SetLabel(wxT("Download status: successfully completed"));
 		m_pTimeText->SetLabel(wxT("No downloads running..."));
 
@@ -430,7 +462,6 @@ void wxWebUpdateDlg::OnDownloadComplete(wxUpdateUIEvent &)
 
 			// handle the XML parsing & control update 
 			OnScriptDownload(m_thread.m_strOutput);
-			m_bDownloadingScript = FALSE;
 
 		} else {
 
@@ -438,4 +469,14 @@ void wxWebUpdateDlg::OnDownloadComplete(wxUpdateUIEvent &)
 
 		}
 	}
+
+	// remove the temporary files...
+	bool donotremove = FALSE;
+	if (m_bDownloadingScript || !donotremove) {		// XML webupdate script is always removed
+		wxLogDebug(wxT("Removing the downloaded file: ") + m_thread.m_strOutput);
+		wxRemoveFile(m_thread.m_strOutput);
+	}
+
+	// reset flag
+	if (m_bDownloadingScript) m_bDownloadingScript = FALSE;
 }

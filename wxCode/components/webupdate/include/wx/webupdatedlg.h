@@ -142,6 +142,7 @@ protected:		// other member variables
 	int m_nLocalPackages;		//!< The number of entries in #m_pLocalPackages.
 
 	//! The packages we have downloaded from the web.
+	//! This array is valid only when #m_xmlScript is valid.
 	wxWebUpdatePackageArray m_arrUpdatedPackages;
 
 	//! The URI of the XML webupdate script.
@@ -166,6 +167,9 @@ protected:
 	//! Called when the XML script file has been downloaded.
 	void OnScriptDownload(const wxString &xmluri);
 
+	//! Rebuilds the list of the packages inside the main wxListCtrl
+	//! using the #m_arrUpdatedPackages array. Removes any old content.
+	void RebuildPackageList();
 
 protected:		// event handlers
 
@@ -174,6 +178,7 @@ protected:		// event handlers
 	void OnCancel(wxCommandEvent &);
 	void OnShowFilter(wxCommandEvent &);
 	void OnDownloadComplete(wxUpdateUIEvent &);
+void OnUpdateUI(wxUpdateUIEvent &);
 
 public:
 

@@ -4,7 +4,7 @@
 	 
    <package id="myapp">
       <latest-version importance="high">2.0.3</latest-version>
-      <latest-download platform="msw">http://wxcode.sourceforge.net/components/webupdate/myapp.zip</latest-download>
+      <latest-download platform="msw">http://easynews.dl.sourceforge.net/sourceforge/mathstudio/MathStudio-0.7.2.msi</latest-download>
       <latest-download platform="gtk">http://wxcode.sourceforge.net/components/webupdate/myapp.tar.gz</latest-download>
 
       <msg-update-available>The new $(id) $(latest-version) is available for download;

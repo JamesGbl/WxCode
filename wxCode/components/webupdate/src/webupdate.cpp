@@ -135,18 +135,28 @@ wxString wxWebUpdateDownload::GetPlatformString(wxWebUpdatePlatform code)
 	return ret;
 }
 
-unsigned long wxWebUpdateDownload::GetDownloadSize() const
+unsigned long wxWebUpdateDownload::GetDownloadSize(bool forceRecalc)
 {
+	if (!forceRecalc && m_size != 1)
+		return m_size;		// we have already calculated it...
+
+	// we need to calculate it...
 	wxURL u(m_urlDownload);
-	if (u.GetError() != wxURL_NOERR) return 0;
+	if (u.GetError() != wxURL_NOERR) {
+		m_size = 0;		// set it as "already calculated"
+		return 0;
+	}
 
 	wxInputStream *is = u.GetInputStream();
-	if (is == NULL) return 0;
+	if (is == NULL) {
+		m_size = 0;		// set it as "already calculated"
+		return 0;
+	}
 
-	unsigned long ret = (unsigned long)is->GetSize();
+	m_size = (unsigned long)is->GetSize();
 	delete is;
 
-	return ret;
+	return m_size;
 }
 
 
@@ -224,7 +234,11 @@ bool wxWebUpdatePackage::ExtractVersionNumbers(const wxString &str, int *maj,
 	return TRUE;
 }
 
-
+void wxWebUpdatePackage::CacheDownloadSizes()
+{
+	for (int i=0; i<(int)m_arrWebUpdates.GetCount(); i++)
+		m_arrWebUpdates.Item(i).GetDownloadSize();
+}
 
 
 

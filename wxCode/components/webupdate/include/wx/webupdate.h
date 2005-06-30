@@ -108,10 +108,26 @@ protected:
 	//!       wxURL::GetInputStream() is deprecated in favour of wxFileSystem
 	//!       I use here a wxString which is easier to handle.    
 	wxString m_urlDownload;
+
+	//! The (rough) size of the resource pointed by #m_urlDownload.
+	//! Use the #GetDownloadSize() function to get this info.
+	//! Note: since it can take some time (from 0.1 to ~1 sec) to get
+	//!       this info, this variable is not set directly when constructing
+	//!       this object but only the first time that #GetDownloadSize is
+	//!       called...
+	//! Note #2: it's best to use an unsigned long for this field since big
+	//!          updates could require all the available bits of this var...
+	//! Note #3: when this variable has not been cached it is set to the value
+	//!          '1' (since it's unsigned -1 cannot be used and 0 can be useful
+	//!          to indicate not-reachable files !) which thus means
+	//!          "uninitialized"; this also means that you cannot use update
+	//!          packages sized 1 byte only since they would force continuous
+	//!          recalculations of this var !
+	unsigned long m_size;
      
 public:
     wxWebUpdateDownload(const wxString &url, const wxString &plat = wxEmptyString)
-         : m_platform(wxWUP_INVALID), m_urlDownload(url) { SetPlatform(plat); }
+         : m_platform(wxWUP_INVALID), m_urlDownload(url) { SetPlatform(plat); m_size=1; }
     virtual ~wxWebUpdateDownload() {}
     
 	//! Returns TRUE if this package was correctly initialized.
@@ -125,7 +141,12 @@ public:
         { return IsOk() && m_platform == GetThisPlatformCode(); }
 
 	//! Returns the size (in bytes) of the update asking it to the webserver.
-	virtual unsigned long GetDownloadSize() const;
+	//! The first time this function is called, it caches this value so that
+	//! following calls do not take time.
+	//! If something fails (e.g. cannot connect to the file or the file does
+	//! not exists), the function returns 0.
+	//! NOTE: the first call is quite slow !
+	virtual unsigned long GetDownloadSize(bool forceRecalc = FALSE);
     
 public:		// static platform utilities
 
@@ -235,6 +256,9 @@ public:		// package utilities
 	//! given platform.
 	virtual wxWebUpdateDownload &GetDownloadPackage(
 				wxWebUpdatePlatform code = wxWUP_INVALID) const;
+
+	//! Caches the download sizes of all contained packages.
+	virtual void CacheDownloadSizes();
 
 public:		// version check
 
