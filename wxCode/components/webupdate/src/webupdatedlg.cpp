@@ -262,18 +262,20 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
 	// now load all the packages we need in local cache
 	m_arrUpdatedPackages = m_xmlScript.GetAllPackages();	
 
-	for (int i=0; i < (int)m_arrUpdatedPackages.GetCount(); i++) {
+	int idx = 0;		// could go out of synch with 'i' because
+						// some packages could not be added to the list....
+	for (int i=0; i < (int)m_arrUpdatedPackages.GetCount(); i++, idx++) {
 
 		wxWebUpdatePackage &curr = m_arrUpdatedPackages.Item(i);		
 
 		// set the properties for the first column (NAME)
 		// ----------------------------------------------
-		m_pUpdatesList->InsertItem(i, curr.GetName());
+		m_pUpdatesList->InsertItem(idx, curr.GetName());
 		
 
 		// set the properties for the second column (LATEST VERSION)
 		// ---------------------------------------------------------
-		m_pUpdatesList->SetItem(i, 1, curr.GetLatestVersion());
+		m_pUpdatesList->SetItem(idx, 1, curr.GetLatestVersion());
 
 
 		// set the properties for the third column (LOCAL VERSION)
@@ -287,10 +289,11 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
 
 		// did we find a local matching package ?
 		if (local) {
-			m_pUpdatesList->SetItem(i, 2, local->m_version);
+			m_pUpdatesList->SetItem(idx, 2, local->m_version);
 
 			// compare versions
-			if (curr.Check(local->m_version) == wxWUCF_OUTOFDATE) {
+			wxWebUpdateCheckFlag f = curr.Check(local->m_version);
+			if (f == wxWUCF_OUTOFDATE) {
 
 				// build a bold font
 				wxFont font(m_pUpdatesList->GetFont());
@@ -298,17 +301,31 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
 
 				// and set it for this item
 				wxListItem li;
-				li.SetId(i);
+				li.SetId(idx);
 				li.SetFont(font);
 				li.SetBackgroundColour(*wxWHITE);
 				li.SetTextColour(*wxBLACK);
 				m_pUpdatesList->SetItem(li);
+
+			} else if (f == wxWUCF_UPDATED) {
+
+				// we already have the latest version...
+#if wxWU_USE_CHECKEDLISTCTRL
+				m_pUpdatesList->Enable(idx, FALSE);
+#endif
+			} else if (f == wxWUCF_FAILED) {
+
+				// error !
+				m_pUpdatesList->DeleteItem(idx);
+				idx--;
+
+				continue;		// continue with next package
 			}
 
 		} else {
 
 			// a matching local package does not exist...
-			m_pUpdatesList->SetItem(i, 2, wxT("not installed"));
+			m_pUpdatesList->SetItem(idx, 2, wxT("not installed"));
 		}
 
 
@@ -316,7 +333,7 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
 		// -----------------------------------------------
 
 		unsigned long bytesize = curr.GetDownloadPackage().GetDownloadSize();
-		m_pUpdatesList->SetItem(i, 3, wxGetSizeStr(bytesize));
+		m_pUpdatesList->SetItem(idx, 3, wxGetSizeStr(bytesize));
 
 
 
@@ -324,17 +341,26 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
 		// ----------------------------------------------------
 		switch (curr.GetImportance()) {
 		case wxWUPI_HIGH:
-			m_pUpdatesList->SetItem(i, 4, wxT("high!"));
+			m_pUpdatesList->SetItem(idx, 4, wxT("high!"));
 			break;
 		case wxWUPI_NORMAL:
-			m_pUpdatesList->SetItem(i, 4, wxT("normal"));
+			m_pUpdatesList->SetItem(idx, 4, wxT("normal"));
 			break;
 		case wxWUPI_LOW:
-			m_pUpdatesList->SetItem(i, 4, wxT("low"));
+			m_pUpdatesList->SetItem(idx, 4, wxT("low"));
 			break;
 		default:
 			wxASSERT_MSG(0, wxT("Invalid package !"));
 		}
+	}
+
+	// handle the case that there are no packages in the listctrl
+	if (m_pUpdatesList->GetItemCount() == 0) {
+
+		wxMessageBox(wxT("Could not found any valid package for ") + m_strAppName
+					+ wxT("... exiting the update dialog."), wxT("Warning"),
+					wxOK | wxICON_EXCLAMATION);
+		EndModal(wxCANCEL);
 	}
 }
 
