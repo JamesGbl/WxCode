@@ -31,7 +31,7 @@ IMPLEMENT_CLASS(wxWebUpdateDlg, wxDialog)
 BEGIN_EVENT_TABLE(wxWebUpdateDlg, wxDialog)
 
 	// buttons
-    EVT_BUTTON(XRCID("IDWUD_DOWNLOAD"), wxWebUpdateDlg::OnDownload)
+    EVT_BUTTON(XRCID("IDWUD_OK"), wxWebUpdateDlg::OnDownload)
     EVT_BUTTON(XRCID("IDWUD_BROWSE"), wxWebUpdateDlg::OnBrowse)
     EVT_BUTTON(XRCID("IDWUD_CANCEL"), wxWebUpdateDlg::OnCancel)
 
@@ -83,6 +83,15 @@ wxString wxGetSizeStr(unsigned long bytesize)
 void *wxWebUpdateThread::Entry()
 {
 	wxUpdateUIEvent updatevent(wxWUT_NOTIFICATION);
+
+	while (!TestDestroy()) {
+
+		if (m_strURI.IsEmpty()) {
+			//wxLogDebug(wxT("wxWebUpdateThread::Entry - sleeping "));
+			wxThread::Sleep(1000);
+			continue;
+		}
+
 	wxLogDebug(wxT("wxWebUpdateThread::Entry - downloading ") + m_strURI);
 
     // with wxFileSystem a file-download is very easy !
@@ -110,12 +119,19 @@ void *wxWebUpdateThread::Entry()
 
 	if (out.IsOk()) {
 		m_bSuccess = TRUE;
-		m_pHandler->AddPendingEvent(updatevent);
-		return (void*)TRUE;
+		//m_pHandler->AddPendingEvent(updatevent);
+		wxPostEvent(m_pHandler, updatevent);
+		//return (void*)TRUE;
+		m_strURI = wxEmptyString;
+		continue;
 	}
 
 	m_bSuccess = FALSE;
-	m_pHandler->AddPendingEvent(updatevent);
+	//m_pHandler->AddPendingEvent(updatevent);
+	wxPostEvent(m_pHandler, updatevent);
+	m_strURI = wxEmptyString;
+	}
+
 	return (void*)FALSE;
 }
 
@@ -203,7 +219,8 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 	// init other stuff
 	// ----------------
 
-	m_thread.m_pHandler = this;
+	m_thread = new wxWebUpdateThread();
+	m_thread->m_pHandler = this;
 
 
 
@@ -220,17 +237,17 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 int wxWebUpdateDlg::ShowModal()
 {
 	// set our thread helper as a downloader for the XML update scriptf
-	m_thread.m_strURI = m_strURI;
-	m_thread.m_strResName = wxT("XML WebUpdate script");
-	m_thread.m_strOutput = wxFileName::CreateTempFileName(wxT("webupdate"));
+	m_thread->m_strURI = m_strURI;
+	m_thread->m_strResName = wxT("XML WebUpdate script");
+	m_thread->m_strOutput = wxFileName::CreateTempFileName(wxT("webupdate"));
 	m_pTimeText->SetLabel(wxWUD_TIMETEXT_PREFIX wxT("60 s"));
 
 	// this special flag makes easier the #OnDownloadComplete handler
 	m_bDownloadingScript = TRUE;
 
 	// launch a separate thread for the webupdate script download
-	if (m_thread.Create() != wxTHREAD_NO_ERROR ||
-		m_thread.GetThread()->Run() != wxTHREAD_NO_ERROR) {
+	if (m_thread->Create() != wxTHREAD_NO_ERROR ||
+		m_thread->Run() != wxTHREAD_NO_ERROR) {
 		wxMessageBox(wxString(wxT("Cannot download the script file from\n")) + 
 					m_strURI + wxT("\nbecause of the low resources..."), 
 					wxT("Error"), wxOK | wxICON_ERROR);
@@ -257,7 +274,7 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
 	// ok, we can now parse the XML doc
 	if (!m_xmlScript.Load(xmluri)) {
 		ShowErrorMsg(wxT("Cannot parse the XML update script downloaded as: ") + 
-						m_thread.m_strOutput);
+						m_thread->m_strOutput);
 		EndModal(wxCANCEL);		// this is a unrecoverable error !
 	}
 	
@@ -286,7 +303,8 @@ void wxWebUpdateDlg::RebuildPackageList()
 	for (int i=0; i < (int)m_arrUpdatedPackages.GetCount(); i++, idx++) {
 
 		wxWebUpdatePackage &curr = m_arrUpdatedPackages.Item(i);		
-		wxLogDebug(wxT("Adding the '") + curr.GetName() + wxT("' package"));
+		wxLogDebug(wxT("wxWebUpdateDlg::RebuildPackageList - Adding the '") + 
+			curr.GetName() + wxT("' package to the wxListCtrl"));
 
 
 		// set the properties for the first column (NAME)
@@ -394,7 +412,24 @@ void wxWebUpdateDlg::RebuildPackageList()
 
 void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 {
-	EndModal(wxOK);
+	// launch the download of the selected packages
+	for (int i=0; i<m_pUpdatesList->GetItemCount(); i++) {
+		if (m_pUpdatesList->IsChecked(i)) {
+
+			wxWebUpdateDownload dl = m_arrUpdatedPackages[i].GetDownloadPackage();
+			wxString name = m_pUpdatesList->GetItemText(i);
+			
+			m_thread->m_strOutput = m_pDownloadPathTextCtrl->GetValue() + dl.GetFileName();
+			m_thread->m_strURI = dl.GetDownloadString();
+			m_thread->m_strResName = name + wxT(" package");
+
+			wxLogDebug(wxT("wxWebUpdateDlg::OnDownload - launching download of ") + m_thread->m_strURI);
+			wxThreadError err = m_thread->Resume();
+			break;
+		}
+	}
+
+	//EndModal(wxOK);
 }
 
 void wxWebUpdateDlg::OnBrowse(wxCommandEvent &)
@@ -406,7 +441,7 @@ void wxWebUpdateDlg::OnBrowse(wxCommandEvent &)
 	if (dlg.ShowModal() == wxID_OK) {
 
 		m_pDownloadPathTextCtrl->SetValue(dlg.GetPath());
-		wxLogDebug(wxT("New output path is ") + dlg.GetPath());
+		wxLogDebug(wxT("wxWebUpdateDlg::OnBrowse - New output path is ") + dlg.GetPath());
 		
 	} else {
 
@@ -416,6 +451,8 @@ void wxWebUpdateDlg::OnBrowse(wxCommandEvent &)
 
 void wxWebUpdateDlg::OnCancel(wxCommandEvent &)
 {
+	m_thread->Delete();
+
 	EndModal(wxCANCEL);
 }
 
@@ -427,6 +464,11 @@ void wxWebUpdateDlg::OnShowFilter(wxCommandEvent &)
 
 void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &ev)
 {
+	if (!m_thread->IsRunning()) {
+		m_pGauge->SetValue(0);
+		return;
+	}
+
 	unsigned long now = GetTickCount();
 	static unsigned long begin = GetTickCount();
 	m_pGauge->SetValue((now-begin)/1000);
@@ -437,13 +479,15 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &ev)
 
 void wxWebUpdateDlg::OnDownloadComplete(wxUpdateUIEvent &)
 {
-	// first of all, we need to know if download was successful
-	if (!m_thread.DownloadWasSuccessful()) {
+	//m_thread->Pause();
 
-		ShowErrorMsg(wxT("Could not download the ") + m_thread.m_strResName + 
-					wxT(" from\n\n") + m_thread.m_strURI + wxT("\n\nURL... "));
+	// first of all, we need to know if download was successful
+	if (!m_thread->DownloadWasSuccessful()) {
+
+		ShowErrorMsg(wxT("Could not download the ") + m_thread->m_strResName + 
+					wxT(" from\n\n") + m_thread->m_strURI + wxT("\n\nURL... "));
 		
-		wxLogDebug(wxT("Download status: failed !"));
+		wxLogDebug(wxT("wxWebUpdateDlg::OnDownloadComplete - Download status: failed !"));
 		m_pDownloadStatusText->SetLabel(wxT("Download status: failed !"));
 		m_pTimeText->SetLabel(wxT("No downloads running..."));
 
@@ -454,27 +498,28 @@ void wxWebUpdateDlg::OnDownloadComplete(wxUpdateUIEvent &)
 
 	} else {
 
-		wxLogDebug(wxT("Download status: successfully completed"));
+		wxLogDebug(wxT("wxWebUpdateDlg::OnDownloadComplete - Download status: successfully completed"));
 		m_pDownloadStatusText->SetLabel(wxT("Download status: successfully completed"));
 		m_pTimeText->SetLabel(wxT("No downloads running..."));
 
 		if (m_bDownloadingScript) {
 
 			// handle the XML parsing & control update 
-			OnScriptDownload(m_thread.m_strOutput);
+			OnScriptDownload(m_thread->m_strOutput);
 
 		} else {
 
 			// handle the installation of this package
-
+return;
 		}
 	}
 
 	// remove the temporary files...
 	bool donotremove = FALSE;
 	if (m_bDownloadingScript || !donotremove) {		// XML webupdate script is always removed
-		wxLogDebug(wxT("Removing the downloaded file: ") + m_thread.m_strOutput);
-		wxRemoveFile(m_thread.m_strOutput);
+		wxLogDebug(wxT("wxWebUpdateDlg::OnDownloadComplete - ")
+			wxT("Removing the downloaded file: ") + m_thread->m_strOutput);
+		wxRemoveFile(m_thread->m_strOutput);
 	}
 
 	// reset flag

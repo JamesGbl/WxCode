@@ -147,6 +147,9 @@ public:
 	//! not exists), the function returns 0.
 	//! NOTE: the first call is quite slow !
 	virtual unsigned long GetDownloadSize(bool forceRecalc = FALSE);
+
+	//! Returns the filename for this update (it is extracted from the download URL).
+	virtual wxString GetFileName() const;
     
 public:		// static platform utilities
 

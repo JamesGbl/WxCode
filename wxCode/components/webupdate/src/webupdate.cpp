@@ -159,6 +159,11 @@ unsigned long wxWebUpdateDownload::GetDownloadSize(bool forceRecalc)
 	return m_size;
 }
 
+wxString wxWebUpdateDownload::GetFileName() const
+{
+	// FIXME: how can we do it better ?
+	return m_urlDownload.AfterLast('/');
+}
 
 
 

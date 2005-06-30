@@ -67,7 +67,7 @@ private:
 
 
 //! The thread helper which downloads the webupdate script and/or packages.
-class WXDLLIMPEXP_WEBUPDATE wxWebUpdateThread : public wxThreadHelper
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateThread : public wxThread		//Helper
 {
 protected:
 
@@ -94,7 +94,7 @@ public:
 		const wxString &uri = wxEmptyString, 
 		const wxString &outfile = wxEmptyString,
 		const wxString &resname = wxEmptyString)
-		: m_pHandler(dlg), m_strURI(uri), 
+		: wxThread(wxTHREAD_JOINABLE), m_pHandler(dlg), m_strURI(uri), 
 		  m_strOutput(outfile), m_strResName(resname)
 		{ m_bSuccess=FALSE; }
 	virtual ~wxWebUpdateThread() {}
@@ -153,7 +153,7 @@ protected:		// other member variables
 	wxString m_strAppName;
 
 	//! The threadhelper we use to download the webupdate script & packages.	
-	wxWebUpdateThread m_thread;
+	wxWebUpdateThread *m_thread;
 
 protected:
 
@@ -178,7 +178,7 @@ protected:		// event handlers
 	void OnCancel(wxCommandEvent &);
 	void OnShowFilter(wxCommandEvent &);
 	void OnDownloadComplete(wxUpdateUIEvent &);
-void OnUpdateUI(wxUpdateUIEvent &);
+	void OnUpdateUI(wxUpdateUIEvent &);
 
 public:
 
@@ -198,7 +198,8 @@ public:
 			m_pLocalPackages=arr; m_nLocalPackages=count; 			
 			m_bDownloadingScript=FALSE; InitWidgetsFromXRC(); }
 
-	virtual ~wxWebUpdateDlg() {}
+	virtual ~wxWebUpdateDlg() 
+		{ if (m_thread) delete m_thread; }
 
 
 	//! Shows the dialog and immediately start the download of the webupdate script.
