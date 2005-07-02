@@ -67,54 +67,63 @@ void wxSpellCheckEngineInterface::DefineContext(const wxString& strText, long nO
   // Likewise for less than 50 characters following the misspelled word.
   // Special allowances should be made to not have newline characters (\r or \n) in the context.
 
-  wxString strLocalText = strText;
-  strLocalText.Replace("\r", " ");
-  strLocalText.Replace("\n", " ");
-	
-  long nStartPosition = 0;
-  bool bTrimFront = FALSE;
-  long nOffsetTrimmed = nOffset;
-  if (nOffset > 50)
+  if (strText.Length() < 50)
   {
-    nStartPosition = nOffset - 50;
-    nOffsetTrimmed = 50;
-    bTrimFront = TRUE;
+    m_Context.SetContext(strText);
+    m_Context.SetOffset(nOffset);
+    m_Context.SetLength(nLength);
   }
-
-  bool bTrimEnd = FALSE;
-  long nEndPosition = wxSTRING_MAXLEN;
-  if ((unsigned)(nStartPosition + nLength + 50) < strLocalText.Length())
+  else
   {
-    nEndPosition = (nLength + 50);
-    bTrimEnd = TRUE;
-  }
-
-	nEndPosition += nOffset - nStartPosition;  // Without this, we're only grabbing the number of characters for starting at the misspelled word
-	wxString strContext;
-	if ((unsigned)nEndPosition == wxSTRING_MAXLEN)
-	  strContext = strLocalText.Mid(nStartPosition);
-	else
-	  strContext = strLocalText.Mid(nStartPosition, nEndPosition);
-  // Remove characters before the first space character
-  if (bTrimFront)
-  {
-    if (strContext.Contains(" "))
+    wxString strLocalText = strText;
+    strLocalText.Replace("\r", " ");
+    strLocalText.Replace("\n", " ");
+	  
+    long nStartPosition = 0;
+    bool bTrimFront = FALSE;
+    long nOffsetTrimmed = nOffset;
+    if (nOffset > 50)
     {
-      nOffsetTrimmed -= strContext.Find(' ') + 1; // Figure out how much of the offset was trimmed off by remove the characters before the first space
-      strContext = strContext.AfterFirst(' ');
+      nStartPosition = nOffset - 50;
+      nOffsetTrimmed = 50;
+      bTrimFront = TRUE;
     }
+  
+    bool bTrimEnd = FALSE;
+    long nEndPosition = wxSTRING_MAXLEN;
+    if ((unsigned)(nStartPosition + nLength + 50) < strLocalText.Length())
+    {
+      nEndPosition = (nLength + 50);
+      bTrimEnd = TRUE;
+    }
+    
+	  nEndPosition += nOffset - nStartPosition;  // Without this, we're only grabbing the number of characters for starting at the misspelled word
+	  wxString strContext;
+  	if ((unsigned)nEndPosition == wxSTRING_MAXLEN)
+	    strContext = strLocalText.Mid(nStartPosition);
+  	else
+	    strContext = strLocalText.Mid(nStartPosition, nEndPosition);
+    // Remove characters before the first space character
+    if (bTrimFront)
+    {
+      if (strContext.Contains(" "))
+      {
+        nOffsetTrimmed -= strContext.Find(' ') + 1; // Figure out how much of the offset was trimmed off by remove the characters before the first space
+        strContext = strContext.AfterFirst(' ');
+      }
+    }
+  
+    // Remove characters before the first space character
+    if (bTrimEnd)
+    {
+      if (strContext.Contains(" "))
+        strContext = strContext.BeforeLast(' ');
+    }
+  
+    m_Context.SetContext(strContext);
+    m_Context.SetOffset(nOffsetTrimmed);
+    m_Context.SetLength(nLength);
   }
-
-  // Remove characters before the first space character
-  if (bTrimEnd)
-  {
-    if (strContext.Contains(" "))
-      strContext = strContext.BeforeLast(' ');
-  }
-
-  m_Context.SetContext(strContext);
-  m_Context.SetOffset(nOffsetTrimmed);
-  m_Context.SetLength(nLength);
 }
 
 bool wxSpellCheckEngineInterface::AddOptionToMap(SpellCheckEngineOption& option)
