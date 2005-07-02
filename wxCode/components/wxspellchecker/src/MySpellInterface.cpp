@@ -69,6 +69,12 @@ int MySpellInterface::SetDefaultOptions()
 
 	m_strAffixFile = pConfig->Read(_T("affix-file"), wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("en_US.aff")));
 	m_strDictionaryFile = pConfig->Read(_T("dict-file"), wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("en_US.dic")));
+
+  // Make sure that the table is initially empty
+  if (wxFileName::FileExists(m_strAffixFile) == false)
+	  m_strAffixFile = wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("en_US.aff"));
+  if (wxFileName::FileExists(m_strDictionaryFile) == false)
+	m_strDictionaryFile = wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("en_US.dic"));
   
   SpellCheckEngineOption AffixFileOption(_T("affix-file"), _T("Affix File"), m_strAffixFile, SpellCheckEngineOption::FILE);
   AddOptionToMap(AffixFileOption);

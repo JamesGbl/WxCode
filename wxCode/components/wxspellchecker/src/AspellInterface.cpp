@@ -354,6 +354,12 @@ int AspellInterface::SetDefaultOptions()
 	wxString strDictDir = pConfig->Read(_T("dict-dir"), wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("dict")));
   wxString strLanguage = pConfig->Read(_T("lang"), _T("en"));
 
+  // Double check that the directory exists.  Otherwise we might have bad settings from a previous installation
+  if (wxFileName::DirExists(strDataDir) == false)
+    strDataDir = wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("data"));
+  if (wxFileName::DirExists(strDictDir) == false)
+    strDictDir = wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("dict"));
+
   SpellCheckEngineOption LanguageOption(_T("lang"), _T("Language Code"), strLanguage); // A list of possible values would be good here
   LanguageOption.SetDependency(_T("dict-dir"));
   AddOptionToMap(LanguageOption);
