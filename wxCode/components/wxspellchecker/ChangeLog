@@ -1,3 +1,7 @@
+2005-07-01 : Verified that wxSpellChecker compiles with wxWidget 2.6.1 and Aspell 0.60.3
+             Aspell and MySpell engines now verify that library directories exist at startup
+             Fixed highlighted context for text less than 50 characters
+
 2005-03-20 : Changed makefiles to use the first wx-config in the path.
              (Aspell) Upgraded Aspell library to 0.60.2
              (wxWidgets) Upgraded to wxWidgets 2.5.4
