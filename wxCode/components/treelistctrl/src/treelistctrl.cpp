@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.76 2005-06-29 16:48:49 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.77 2005-07-07 17:50:19 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -2016,7 +2016,7 @@ wxTreeItemId wxTreeListMainWindow::GetNextChild (const wxTreeItemId& item,
     wxArrayTreeListItems& children = ((wxTreeListItem*) item.m_pItem)->GetChildren();
     // it's ok to cast cookie to long, we never have indices which overflow "void*"
     long *pIndex = ((long*)&cookie);
-    return ((*pIndex)+1 < (long)children.Count())? children.Item(++(*pIndex)): wxTreeItemId();
+    return ((*pIndex)+1 < (long)children.Count())? wxTreeItemId(children.Item(++(*pIndex))): wxTreeItemId();
 }
 
 #if !wxCHECK_VERSION(2, 5, 0)
@@ -2030,7 +2030,7 @@ wxTreeItemId wxTreeListMainWindow::GetPrevChild (const wxTreeItemId& item,
     wxArrayTreeListItems& children = ((wxTreeListItem*) item.m_pItem)->GetChildren();
     // it's ok to cast cookie to long, we never have indices which overflow "void*"
     long *pIndex = (long*)&cookie;
-    return ((*pIndex)-1 >= 0)? children.Item(--(*pIndex)): wxTreeItemId();
+    return ((*pIndex)-1 >= 0)? wxTreeItemId(children.Item(--(*pIndex))): wxTreeItemId();
 }
 
 #if !wxCHECK_VERSION(2, 5, 0)
