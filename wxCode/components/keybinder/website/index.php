@@ -11,9 +11,9 @@
        $filename="index";
        $filelocation="components/keybinder";
 	   $pagetitle="KeyBinder";
-	   require("../../globals.inc.php");
+	   require("globals.inc.php");
        $menuentry=writeMenuEntry("complist", "Components");
-       require("../../header.inc.php");
+       require("header.inc.php");
     ?>
 
 	<!-- Note on the write_h1() php function:
@@ -26,7 +26,7 @@
 	<?php
         $compname = "KeyBinder";
         write_h1($compname, "", FALSE);
-        require("../../dbquery.inc.php");
+        require("dbquery.inc.php");
         db_output_comp($compname);
     ?>
 
@@ -59,5 +59,5 @@
     <p>None. To submit a feature request please look at <a href="../../faq.php">wxCode FAQ</a>.</p>
     
 
-	<br/><?php require("../../footer.inc.php"); ?>
+	<br/><?php require("footer.inc.php"); ?>
 </html>
