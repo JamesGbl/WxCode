@@ -7,12 +7,12 @@
 -->
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-AU">
-	<?php
-       require("../../globals.inc.php");
+	<?php       
        $filename="index";
        $filelocation="components/keybinder";
+	   $pagetitle="KeyBinder";
+	   require("../../globals.inc.php");
        $menuentry=writeMenuEntry("complist", "Components");
-       $pagetitle="KeyBinder";
        require("../../header.inc.php");
     ?>
 
