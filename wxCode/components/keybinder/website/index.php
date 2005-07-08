@@ -36,14 +36,14 @@
 	refer to the sample application included with this module which shows the usage
 	of the keybinder classes.<br/>The following screenshots have been taken on a
 	Windows XP system using different build flags:</p><br>
-	<img class="imgcenter" alt="The keybinder sample running with wxMSW 2.5.3" src="../../screenshots/win1.png"/>
+	<img class="imgcenter" alt="The keybinder sample running with wxMSW 2.5.3" src="../../screenshots/keybinder/win1.png"/>
 	&nbsp;&nbsp;&nbsp;&nbsp;
-	<img class="imgcenter" alt="The keybinder sample running with wxMSW 2.5.3" src="../../screenshots/win2.png"/>	
+	<img class="imgcenter" alt="The keybinder sample running with wxMSW 2.5.3" src="../../screenshots/keybinder/win2.png"/>	
 	
 	<p>The following ones instead have been taken on Red Hat Linux 9.0:</p>
-	<img class="imgcenter" alt="The keybinder sample running with wxGTK 2.5.3" src="../../screenshots/gtk3.png"/>
+	<img class="imgcenter" alt="The keybinder sample running with wxGTK 2.5.3" src="../../screenshots/keybinder/gtk3.png"/>
 	&nbsp;&nbsp;&nbsp;&nbsp;
-	<img class="imgcenter" alt="The keybinder sample running with wxGTK 2.5.3" src="../../screenshots/gtk4.png"/>
+	<img class="imgcenter" alt="The keybinder sample running with wxGTK 2.5.3" src="../../screenshots/keybinder/gtk4.png"/>
 
 
     <br/><?php write_h1("Documentation"); ?>
