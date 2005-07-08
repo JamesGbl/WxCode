@@ -14,8 +14,6 @@
        $menuentry=writeMenuEntry("complist", "Components");
        $pagetitle="KeyBinder";
        require("../../header.inc.php");
-       require("../../dbconnection.inc.php");
-       require("../../dbquery.inc.php");
     ?>
 
 	<!-- Note on the write_h1() php function:
@@ -28,25 +26,37 @@
 	<?php
         $compname = "KeyBinder";
         write_h1($compname, "", FALSE);
+        require("../../dbquery.inc.php");
         db_output_comp($compname);
     ?>
 
 	<!-- HERE STARTS THE CONTENT OF THIS PAGE THAT YOU (COMPONENT ADMIN) SHOULD EDIT -->
 	<br/><?php write_h1("Screenshots"); ?>
-	<p>Screenshot description:
-    <img src="../../screenshots/keybinder/myshot1.png" alt="My Screenshot"/></p>
+	<p>Obviously, since keybinder is not an application, the following screenshots
+	refer to the sample application included with this module which shows the usage
+	of the keybinder classes.<br/>The following screenshots have been taken on a
+	Windows XP system using different build flags:</p><br>
+	<img class="imgcenter" alt="The keybinder sample running with wxMSW 2.5.3" src="../../screenshots/win1.png"/>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<img class="imgcenter" alt="The keybinder sample running with wxMSW 2.5.3" src="../../screenshots/win2.png"/>	
+	
+	<p>The following ones instead have been taken on Red Hat Linux 9.0:</p>
+	<img class="imgcenter" alt="The keybinder sample running with wxGTK 2.5.3" src="../../screenshots/gtk3.png"/>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<img class="imgcenter" alt="The keybinder sample running with wxGTK 2.5.3" src="../../screenshots/gtk4.png"/>
+
 
     <br/><?php write_h1("Documentation"); ?>
     <p>The doxygen-generated documentation for this component is available online
-    <a href="../../docs/keybinder/">here</a>...</p>
+    <a href="../../docs/keybinder/">here</a>. Please let me know if you think something is missing.</p>
     
 
 	<br/><?php write_h1("Known bugs"); ?>
-    <p>None. To submit a bug report...</p>
+    <p>None. To submit a bug report please look at <a href="../../faq.php">wxCode FAQ</a>.</p>
 
     
 	<br/><?php write_h1("Future enhancements"); ?>
-    <p>None. To submit a feature request...</p>
+    <p>None. To submit a feature request please look at <a href="../../faq.php">wxCode FAQ</a>.</p>
     
 
 	<br/><?php require("../../footer.inc.php"); ?>
