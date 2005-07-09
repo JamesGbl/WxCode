@@ -19,12 +19,12 @@
 
 
   <br/><?php write_h1("wxScript usage sample"); ?>
-  <?php writeSnippet(<<<EOD
+  <?php writeSnippet('
 // load the script
 wxString filename(basepath + wxT("myscript"));
 wxScriptFile *pf = wxScriptInterpreter::Load(filename, wxRECOGNIZE_FROM_EXTENSION);
 if (pf == NULL) {
-    wxPrintf(wxT(">Failed to load '%s'.\\n"), filename.c_str());
+    wxPrintf(wxT(">Failed to load \'%s\'.\n"), filename.c_str());
     return;
 }
 
@@ -44,7 +44,7 @@ if (!func->Exec(result, args)) return;
 
 // last, get the result...
 wxString str(result.GetContentString());
-EOD); ?>
+'); ?>
 
 
   <br/><?php write_h1("Documentation"); ?>
