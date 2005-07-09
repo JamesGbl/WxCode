@@ -1,20 +1,17 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<!--
+<?php
   Author: Francesco Montorsi
   Creation date: 7/7/2005
   RCS-ID: $Id$
   Notes: the index page of the website of this component
--->
+?>
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-AU">
 	<?php       
-       $filename="index";
-       $filelocation="components/keybinder";
-	     $pagetitle="KeyBinder";
-	     require("globals.inc.php");
-       $menuentry=writeMenuEntry("complist", "Components");
-       require("header.inc.php");
-    ?>
+      $compname = "KeyBinder";
+      $subdir = "keybinder";
+      require("compwebsite.inc.php");
+  ?>
 
 	<!-- Note on the write_h1() php function:
          - first arg: the label of the h1 tag
@@ -24,10 +21,7 @@
          not have the TOP link...
     -->
 	<?php
-        $compname = "KeyBinder";
-        write_h1($compname, "", FALSE);
-        require("dbquery.inc.php");
-        db_output_comp($compname);
+
     ?>
 
 	<!-- HERE STARTS THE CONTENT OF THIS PAGE THAT YOU (COMPONENT ADMIN) SHOULD EDIT -->
@@ -36,8 +30,7 @@
 	refer to the sample application included with this module which shows the usage
 	of the keybinder classes.<br/>The following screenshots have been taken on a
 	Windows XP system using different build flags:</p><br>
-	<img class="imgcenter" alt="The keybinder sample running with wxMSW 2.5.3"
-      src="../../phpTumb/phpThumb.php?src=../screenshots/keybinder/win1.png&w=100"/>
+	<?php writeScreenshotLink("win1.png", "imgcenter", "The keybinder sample running with wxMSW 2.5.3"); ?>
 	&nbsp;&nbsp;&nbsp;&nbsp;
 	<img class="imgcenter" alt="The keybinder sample running with wxMSW 2.5.3" src="../../screenshots/keybinder/win2.png"/>	
 	
