@@ -19,7 +19,7 @@
 
 
   <br/><?php write_h1("wxScript usage sample"); ?>
-<?php
+<p><?php
 global $BEAUT_PATH;
 $BEAUT_PATH= "/home/groups/w/wx/wxcode/htdocs/wiki/cookbook/beautifier/php";
 require_once("cookbook/beautifier/php/Beautifier/Init.php");
@@ -28,18 +28,18 @@ require_once "$BEAUT_PATH/Output/Output_css.php";
 $highlighter = new Core(new HFile_cpp(), new Output_css());
 
 $str = <<<EOD
-// load the script
-wxString filename(basepath + wxT("myscript"));
-wxScriptFile *pf = wxScriptInterpreter::Load(filename, wxRECOGNIZE_FROM_EXTENSION);
-if (pf == NULL) {
-    wxPrintf(wxT(">Failed to load '%s'.\n"), filename.c_str());
-    return;
-}
-
-// get the list of the functions
-wxScriptFunctionArray arr;
-wxScriptInterpreter::GetTotalFunctionList(arr);
-
+// load the script\n
+wxString filename(basepath + wxT("myscript"));\n
+wxScriptFile *pf = wxScriptInterpreter::Load(filename, wxRECOGNIZE_FROM_EXTENSION);\n
+if (pf == NULL) {\n
+    wxPrintf(wxT(">Failed to load '%s'.\n"), filename.c_str());\n
+    return;\n
+}\n
+\n
+// get the list of the functions\n
+wxScriptFunctionArray arr;\n
+wxScriptInterpreter::GetTotalFunctionList(arr);\n
+\n
 // now, check for the presence of the "main" function...
 wxScriptFunction *func = arr.Get(wxT("main"));
 if (func == NULL) return; // no such function is present ?
@@ -55,7 +55,7 @@ wxString str(result.GetContentString());
 EOD;
 
 print $highlighter->highlight_text($str);
-?>
+?></p>
 
 
   <br/><?php write_h1("Documentation"); ?>
