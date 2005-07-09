@@ -26,8 +26,9 @@ require_once("cookbook/beautifier/php/Beautifier/Init.php");
 require_once "$BEAUT_PATH/HFile/HFile_cpp.php";
 require_once "$BEAUT_PATH/Output/Output_HTML.php";
 $highlighter = new Core(new HFile_cpp(), new Output_HTML());
-print $highlighter->highlight_text(
-<<<EOD
+
+
+$str = <<<EOD
 // load the script
 wxString filename(basepath + wxT("myscript"));
 wxScriptFile *pf = wxScriptInterpreter::Load(filename, wxRECOGNIZE_FROM_EXTENSION);
@@ -53,7 +54,8 @@ if (!func->Exec(result, args)) return;
 // last, get the result...
 wxString str(result.GetContentString());
 EOD;
-);
+
+print $highlighter->highlight_text($str);
 ?>
 
 
