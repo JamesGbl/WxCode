@@ -32,7 +32,7 @@ $str = <<<EOD
 wxString filename(basepath + wxT("myscript"));
 wxScriptFile *pf = wxScriptInterpreter::Load(filename, wxRECOGNIZE_FROM_EXTENSION);
 if (pf == NULL) {
-    wxPrintf(wxT(">Failed to load '%s'.\n"), filename.c_str());
+    wxPrintf(wxT(">Failed to load '%s'.\\n"), filename.c_str());
     return;
 }
 
