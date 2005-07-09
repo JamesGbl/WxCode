@@ -27,6 +27,16 @@
  These classes are easily extensible and they support Unicode as well.</p>
 
 <br/><h3>wxScript usage sample</h3>
+
+<?php
+require_once "/home/mike/php/Beautifier/Init.php";
+global $BEAUT_PATH;
+require_once "$BEAUT_PATH/HFile/HFile_php3.php";
+require_once "$BEAUT_PATH/Output/Output_HTML.php";
+$highlighter = new Core(new HFile_php3(), new Output_HTML());
+print $highlighter->highlight_text("<? print 'Hello World!'; ?>");
+?>
+
 <p>This little snippet shows how to use the wxScript classes to load a script file
 and then execute the &quot;main&quot; function found inside it:</p>
 <table width="100%" bgcolor="#EEEEEE">

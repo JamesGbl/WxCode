@@ -10,30 +10,50 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-AU">
 	<?php       
-      $compname = "KeyBinder";
-      $subdir = "keybinder";
+      $compname = "wxScript";
+      $subdir = "wxscript";
       require("compwebsite.inc.php");
   ?>
 
-	<br/><?php write_h1("Screenshots"); ?>
-	<p>Obviously, since keybinder is not an application, the following screenshots
-	refer to the sample application included with this module which shows the usage
-	of the keybinder classes.<br/>The following screenshots have been taken on a
-	Windows XP system using different build flags:</p>
-	
-	<div class="center">
-	<?php writeScreenshotLink("win1.png", "The keybinder sample running with wxMSW 2.5.3"); ?>
-	&nbsp;&nbsp;&nbsp;&nbsp;
-	<?php writeScreenshotLink("win2.png", "The keybinder sample running with wxMSW 2.5.3"); ?>
-	</div>
-	
-	<p>The following ones instead have been taken on Red Hat Linux 9.0:</p>
 
-	<div class="center">
-	<?php writeScreenshotLink("gtk3.png", "The keybinder sample running with wxGTK 2.5.3"); ?>
-	&nbsp;&nbsp;&nbsp;&nbsp;
-	<?php writeScreenshotLink("gtk4.png", "The keybinder sample running with wxGTK 2.5.3"); ?>
-  </div>
+
+<br/><h3>wxScript usage sample</h3>
+
+<?php
+require_once("cookbook/beautifier/php/Beautifier/Init.php");
+global $BEAUT_PATH;
+require_once "$BEAUT_PATH/HFile/HFile_php3.php";
+require_once "$BEAUT_PATH/Output/Output_HTML.php";
+$highlighter = new Core(new HFile_cpp(), new Output_cpp());
+print $highlighter->highlight_text(
+'
+// load the script
+wxString filename(basepath + wxT("myscript"));
+wxScriptFile *pf = wxScriptInterpreter::Load(filename, wxRECOGNIZE_FROM_EXTENSION);
+if (pf == NULL) {
+    wxPrintf(wxT(">Failed to load \'%s\'.\n"), filename.c_str());
+    return;
+}
+
+// get the list of the functions
+wxScriptFunctionArray arr;
+wxScriptInterpreter::GetTotalFunctionList(arr);
+
+// now, check for the presence of the "main" function...
+wxScriptFunction *func = arr.Get(wxT("main"));
+if (func == NULL) return; // no such function is present ?
+
+// ...and run it with a string as argument
+wxScriptVar result;
+wxScriptVar args[2];
+args[0].Set(wxT("char*"), wxT("my string"));
+if (!func->Exec(result, args)) return;
+
+// last, get the result...
+wxString str(result.GetContentString());
+'
+);
+?>
 
 
   <br/><?php write_h1("Documentation"); ?>
