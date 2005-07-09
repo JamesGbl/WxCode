@@ -17,8 +17,8 @@
 
 
 
-<br/><h3>wxScript usage sample</h3>
 
+  <br/><?php write_h1("wxScript usage sample"); ?>
 <?php
 global $BEAUT_PATH;
 $BEAUT_PATH= "/home/groups/w/wx/wxcode/htdocs/wiki/cookbook/beautifier/php";
@@ -27,12 +27,12 @@ require_once "$BEAUT_PATH/HFile/HFile_cpp.php";
 require_once "$BEAUT_PATH/Output/Output_HTML.php";
 $highlighter = new Core(new HFile_cpp(), new Output_HTML());
 print $highlighter->highlight_text(
-'
+<<<EOD
 // load the script
 wxString filename(basepath + wxT("myscript"));
 wxScriptFile *pf = wxScriptInterpreter::Load(filename, wxRECOGNIZE_FROM_EXTENSION);
 if (pf == NULL) {
-    wxPrintf(wxT(">Failed to load \'%s\'.\n"), filename.c_str());
+    wxPrintf(wxT(">Failed to load '%s'.\n"), filename.c_str());
     return;
 }
 
@@ -52,7 +52,7 @@ if (!func->Exec(result, args)) return;
 
 // last, get the result...
 wxString str(result.GetContentString());
-'
+EOD;
 );
 ?>
 
