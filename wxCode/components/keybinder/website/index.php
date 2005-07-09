@@ -40,7 +40,7 @@
 	<?php writeScreenshotLink("gtk4.png", "imgcenter", "The keybinder sample running with wxGTK 2.5.3"); ?>
 
 
-  <br/><?php write_h1("Documentation"); ?>
+  <br/><br/><?php write_h1("Documentation"); ?>
   <p>The doxygen-generated documentation for this component is available online
   <a href="../../docs/keybinder/">here</a>. Please let me know if you think something is missing.</p>
   
