@@ -10,8 +10,8 @@
 	<?php       
        $filename="index";
        $filelocation="components/keybinder";
-	   $pagetitle="KeyBinder";
-	   require("globals.inc.php");
+	     $pagetitle="KeyBinder";
+	     require("globals.inc.php");
        $menuentry=writeMenuEntry("complist", "Components");
        require("header.inc.php");
     ?>
@@ -36,7 +36,8 @@
 	refer to the sample application included with this module which shows the usage
 	of the keybinder classes.<br/>The following screenshots have been taken on a
 	Windows XP system using different build flags:</p><br>
-	<img class="imgcenter" alt="The keybinder sample running with wxMSW 2.5.3" src="../../screenshots/keybinder/win1.png"/>
+	<img class="imgcenter" alt="The keybinder sample running with wxMSW 2.5.3"
+      src="phpThumb.php?src=../../screenshots/keybinder/win1.png&w=100"/>
 	&nbsp;&nbsp;&nbsp;&nbsp;
 	<img class="imgcenter" alt="The keybinder sample running with wxMSW 2.5.3" src="../../screenshots/keybinder/win2.png"/>	
 	
@@ -57,6 +58,8 @@
     
 	<br/><?php write_h1("Future enhancements"); ?>
     <p>None. To submit a feature request please look at <a href="../../faq.php">wxCode FAQ</a>.</p>
+    
+
     
 
 	<br/><?php require("footer.inc.php"); ?>
