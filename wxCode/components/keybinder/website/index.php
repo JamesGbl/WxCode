@@ -29,18 +29,19 @@
 	<p>Obviously, since keybinder is not an application, the following screenshots
 	refer to the sample application included with this module which shows the usage
 	of the keybinder classes.<br/>The following screenshots have been taken on a
-	Windows XP system using different build flags:</p><br>
+	Windows XP system using different build flags:</p>
+	
+	<div class="imgcenter">
 	<?php writeScreenshotLink("win1.png", "imgcenter", "The keybinder sample running with wxMSW 2.5.3"); ?>
 	&nbsp;&nbsp;&nbsp;&nbsp;
 	<?php writeScreenshotLink("win2.png", "imgcenter", "The keybinder sample running with wxMSW 2.5.3"); ?>
-	
 	<p>The following ones instead have been taken on Red Hat Linux 9.0:</p>
 	<?php writeScreenshotLink("gtk3.png", "imgcenter", "The keybinder sample running with wxGTK 2.5.3"); ?>
 	&nbsp;&nbsp;&nbsp;&nbsp;
 	<?php writeScreenshotLink("gtk4.png", "imgcenter", "The keybinder sample running with wxGTK 2.5.3"); ?>
+  </div>
 
-
-  <br/><br/><?php write_h1("Documentation"); ?>
+  <br/><?php write_h1("Documentation"); ?>
   <p>The doxygen-generated documentation for this component is available online
   <a href="../../docs/keybinder/">here</a>. Please let me know if you think something is missing.</p>
   
