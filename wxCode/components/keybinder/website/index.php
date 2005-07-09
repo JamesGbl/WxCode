@@ -37,7 +37,7 @@
 	of the keybinder classes.<br/>The following screenshots have been taken on a
 	Windows XP system using different build flags:</p><br>
 	<img class="imgcenter" alt="The keybinder sample running with wxMSW 2.5.3"
-      src="phpThumb.php?src=../../screenshots/keybinder/win1.png&w=100"/>
+      src="../../phpTumb/phpThumb.php?src=../../screenshots/keybinder/win1.png&w=100"/>
 	&nbsp;&nbsp;&nbsp;&nbsp;
 	<img class="imgcenter" alt="The keybinder sample running with wxMSW 2.5.3" src="../../screenshots/keybinder/win2.png"/>	
 	
