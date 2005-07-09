@@ -23,14 +23,8 @@
   how much easy is to get the tree structure of an XML doc through wxXml2 classes:</p><br>
   <div align="center">
   <?php writeScreenshotLink("screenshot.png", "The wxXml2 sample running on Windows XP"); ?>
-  </div><br/>
-  <div align="center">
   <?php writeScreenshotLink("screenshot2.png", "The wxXml2 sample running on Red Hat 9"); ?>
   </div>
-
-
-  <br/><?php write_h1("wxXml2 usage sample"); ?>
-  <?php writeSnippet("if (stl::string > 0)"); ?>
 
 
   <br/><?php write_h1("Documentation"); ?>
