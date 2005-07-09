@@ -21,7 +21,9 @@
 
 <?php
 require_once("cookbook/beautifier/php/Beautifier/Init.php");
+
 global $BEAUT_PATH;
+$BEAUT_PATH= "/home/groups/w/wx/wxcode/htdocs/wiki/cookbook/beautifier/php/");
 require_once "$BEAUT_PATH/HFile/HFile_php3.php";
 require_once "$BEAUT_PATH/Output/Output_HTML.php";
 $highlighter = new Core(new HFile_cpp(), new Output_cpp());
