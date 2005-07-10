@@ -12,7 +12,7 @@
 
 	<set var="COMP_NAME">webupdate</set>
 	<set var="COMP_SRC">../src/webupdate.cpp ../src/webupdatedlg.cpp ../src/checkedlistctrl.cpp</set>
-	<set var="COMP_HDR">../include/wx/webupdate.h ../include/wx/webupdatedlg.h ../include/wx/checkedlistctrl.h</set>	
+	<set var="COMP_HDR">../include/wx/webupdatedef.h ../include/wx/webupdate.h ../include/wx/webupdatedlg.h ../include/wx/checkedlistctrl.h</set>	
 	<set var="COMP_SAMPLE_SRC"/>
 	<set var="COMP_SAMPLE1_SRC">../sample/v1.0.0/minimal.cpp</set>
 	<set var="COMP_SAMPLE1_UPDATED_SRC">../sample/v2.0.3/minimal.cpp</set>
@@ -27,14 +27,22 @@
 
 	<!-- The real target: wxcode.bkl does not declare a real target but a template called
 	     "complib". In this way modifications are allowed to the basic template. -->
-	<lib id="webupdate" template="complib">
-		<libname>$(COMP_NAME)$(WXLIBPOSTFIX)</libname>		
-	</lib>
+	<lib id="webupdate_lib" template="complib" cond="WX_SHARED=='0'"/>
+	<dll id="webupdate_dll" template="compdll" cond="WX_SHARED=='1'">
+		<wx-lib>html</wx-lib>
+		<wx-lib>adv</wx-lib>
+		<wx-lib>xrc</wx-lib>
+		<wx-lib>xml</wx-lib>
+		<wx-lib>net</wx-lib>
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib>
+	</dll>
+	<set var="MSVC6PRJ_MERGED_TARGETS">webupdate=webupdate_lib+webupdate_dll</set>
 	
 	<template id="webupdatecompsample" template="compsamplebasic">
 		<include>..$(DIRSEP)..$(DIRSEP)include</include>
 		<app-type>gui</app-type>
-		<library>webupdate</library>
+		<library>webupdate_lib</library>
 		<wx-lib>html</wx-lib>
 		<wx-lib>adv</wx-lib>
 		<wx-lib>xrc</wx-lib>
@@ -58,12 +66,5 @@
 		<res-include>..$(DIRSEP)sample$(DIRSEP)v2.0.3</res-include>
 		<win32-res>..$(DIRSEP)sample$(DIRSEP)v2.0.3$(DIRSEP)minimal.rc</win32-res>
 	</exe>
-	
-	<if cond="FORMAT=='autoconf'">
-		<modify-target target="uninstall">
-	        <rmfile>$(INCLUDEDIR)/wx/webupdate.h</rmfile>
-	    	<rmfile>$(LIBDIR)/libwebupdate*.a</rmfile>
-		</modify-target>
-	</if>
     
 </makefile>

@@ -64,6 +64,14 @@ WX3RDPARTLIBPOSTFIX =
 !ifeq WX_DEBUG 1
 WX3RDPARTLIBPOSTFIX = d
 !endif
+__webupdate_lib___depname =
+!ifeq WX_SHARED 0
+__webupdate_lib___depname = ..\lib\webupdate$(WXLIBPOSTFIX).lib
+!endif
+__webupdate_dll___depname =
+!ifeq WX_SHARED 1
+__webupdate_dll___depname = ..\lib\webupdate$(WXLIBPOSTFIX).dll
+!endif
 __WARNINGS =
 !ifeq WX_DEBUG 0
 __WARNINGS = 
@@ -91,6 +99,10 @@ __DEBUGINFO_0 =
 !endif
 !ifeq WX_DEBUG 1
 __DEBUGINFO_0 = debug all
+!endif
+__WX_SHAREDDEFINE_p =
+!ifeq WX_SHARED 1
+__WX_SHAREDDEFINE_p = -dWXUSINGDLL
 !endif
 __WXUNICODE_DEFINE_p =
 !ifeq WX_UNICODE 1
@@ -126,23 +138,32 @@ __WXLIBPATH_FILENAMES = \lib\wat_dll
 
 ### Variables: ###
 
-WEBUPDATE_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) &
-	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
-	-i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
+WEBUPDATE_LIB_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
+	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
+	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
 	-i=$(WX_DIR)\include -i=..\include $(CPPFLAGS) $(CXXFLAGS)
-WEBUPDATE_OBJECTS =  &
-	watcom\webupdate_webupdate.obj &
-	watcom\webupdate_webupdatedlg.obj &
-	watcom\webupdate_checkedlistctrl.obj
-MINIMAL_1_0_0_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) &
-	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
-	-i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
+WEBUPDATE_LIB_OBJECTS =  &
+	watcom\webupdate_lib_webupdate.obj &
+	watcom\webupdate_lib_webupdatedlg.obj &
+	watcom\webupdate_lib_checkedlistctrl.obj
+WEBUPDATE_DLL_CXXFLAGS = -bd $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
+	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
+	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
+	-i=$(WX_DIR)\include -i=..\include -dWXMAKINGDLL_WEBUPDATE $(CPPFLAGS) &
+	$(CXXFLAGS)
+WEBUPDATE_DLL_OBJECTS =  &
+	watcom\webupdate_dll_webupdate.obj &
+	watcom\webupdate_dll_webupdatedlg.obj &
+	watcom\webupdate_dll_checkedlistctrl.obj
+MINIMAL_1_0_0_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
+	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
+	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
 	-i=$(WX_DIR)\include -i=..\include -i=..\..\include $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_1_0_0_OBJECTS =  &
 	watcom\minimal_1_0_0_minimal.obj
-MINIMAL_2_0_3_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) &
-	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
-	-i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
+MINIMAL_2_0_3_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
+	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
+	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
 	-i=$(WX_DIR)\include -i=..\include -i=..\..\include $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_2_0_3_OBJECTS =  &
 	watcom\minimal_2_0_3_minimal.obj
@@ -154,7 +175,7 @@ watcom :
 
 ### Targets: ###
 
-all : .SYMBOLIC ..\lib\webupdate$(WXLIBPOSTFIX).lib ..\sample\v1.0.0\minimal_1_0_0.exe ..\sample\v2.0.3\minimal_2_0_3.exe
+all : .SYMBOLIC $(__webupdate_lib___depname) $(__webupdate_dll___depname) ..\sample\v1.0.0\minimal_1_0_0.exe ..\sample\v2.0.3\minimal_2_0_3.exe
 
 clean : .SYMBOLIC 
 	-if exist watcom\*.obj del watcom\*.obj
@@ -163,14 +184,18 @@ clean : .SYMBOLIC
 	-if exist watcom\*.ilk del watcom\*.ilk
 	-if exist watcom\*.pch del watcom\*.pch
 	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).lib del ..\lib\webupdate$(WXLIBPOSTFIX).lib
+	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).dll del ..\lib\webupdate$(WXLIBPOSTFIX).dll
+	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).lib del ..\lib\webupdate$(WXLIBPOSTFIX).lib
 	-if exist ..\sample\v1.0.0\minimal_1_0_0.exe del ..\sample\v1.0.0\minimal_1_0_0.exe
 	-if exist ..\sample\v2.0.3\minimal_2_0_3.exe del ..\sample\v2.0.3\minimal_2_0_3.exe
 
 tarball :  
-	( cd .. && tar -cvzf ..\webupdate.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
+	-cd ..
+	-tar -cvzf ..\webupdate.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* *
 
 zip :  
-	( cd .. && zip -r9 ..\webupdate.zip *  -x *.pdb -x *.log -x *.o* )
+	-cd ..
+	-zip -r9 ..\webupdate.zip *  -x *.pdb -x *.log -x *.o*
 
 cleanbuilddirs :  
 	-if exist msvc rmdir /S /Q msvc
@@ -186,56 +211,83 @@ cleanall :  clean cleanbuilddirs
 	del /S /Q ..\*.exe >NUL
 
 docs :  
-	( cd ..\docs && doxygen )
+	-cd ..\docs
+	-doxygen
 
 cleandocs :  
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
-..\lib\webupdate$(WXLIBPOSTFIX).lib :  $(WEBUPDATE_OBJECTS)
-	@%create watcom\webupdate.lbc
-	@for %i in ($(WEBUPDATE_OBJECTS)) do @%append watcom\webupdate.lbc +%i
-	wlib -q -p4096 -n -b $^@ @watcom\webupdate.lbc
+!ifeq WX_SHARED 0
+..\lib\webupdate$(WXLIBPOSTFIX).lib :  $(WEBUPDATE_LIB_OBJECTS)
+	@%create watcom\webupdate_lib.lbc
+	@for %i in ($(WEBUPDATE_LIB_OBJECTS)) do @%append watcom\webupdate_lib.lbc +%i
+	wlib -q -p4096 -n -b $^@ @watcom\webupdate_lib.lbc
+!endif
 
-..\sample\v1.0.0\minimal_1_0_0.exe :  $(MINIMAL_1_0_0_OBJECTS) ..\lib\webupdate$(WXLIBPOSTFIX).lib watcom\minimal_1_0_0_minimal.res
+!ifeq WX_SHARED 1
+..\lib\webupdate$(WXLIBPOSTFIX).dll :  $(WEBUPDATE_DLL_OBJECTS)
+	@%create watcom\webupdate_dll.lbc
+	@%append watcom\webupdate_dll.lbc option quiet
+	@%append watcom\webupdate_dll.lbc name $^@
+	@%append watcom\webupdate_dll.lbc option caseexact
+	@%append watcom\webupdate_dll.lbc $(LDFLAGS) $(__DEBUGINFO_0)  libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib
+	@for %i in ($(WEBUPDATE_DLL_OBJECTS)) do @%append watcom\webupdate_dll.lbc file %i
+	@for %i in ( wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\webupdate_dll.lbc library %i
+	@%append watcom\webupdate_dll.lbc
+	@%append watcom\webupdate_dll.lbc system nt_dll
+	wlink @watcom\webupdate_dll.lbc
+	wlib -q -n -b ..\lib\webupdate$(WXLIBPOSTFIX).lib +$^@
+!endif
+
+..\sample\v1.0.0\minimal_1_0_0.exe :  $(MINIMAL_1_0_0_OBJECTS) $(__webupdate_lib___depname) watcom\minimal_1_0_0_minimal.res
 	@%create watcom\minimal_1_0_0.lbc
 	@%append watcom\minimal_1_0_0.lbc option quiet
 	@%append watcom\minimal_1_0_0.lbc name $^@
 	@%append watcom\minimal_1_0_0.lbc option caseexact
-	@%append watcom\minimal_1_0_0.lbc $(LDFLAGS) $(__DEBUGINFO_0) libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib system nt_win ref '_WinMain@16'
+	@%append watcom\minimal_1_0_0.lbc $(LDFLAGS) $(__DEBUGINFO_0)  libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib system nt_win ref '_WinMain@16'
 	@for %i in ($(MINIMAL_1_0_0_OBJECTS)) do @%append watcom\minimal_1_0_0.lbc file %i
 	@for %i in ( ..\lib\webupdate$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\minimal_1_0_0.lbc library %i
 	@%append watcom\minimal_1_0_0.lbc option resource=watcom\minimal_1_0_0_minimal.res
 	wlink @watcom\minimal_1_0_0.lbc
 
-..\sample\v2.0.3\minimal_2_0_3.exe :  $(MINIMAL_2_0_3_OBJECTS) ..\lib\webupdate$(WXLIBPOSTFIX).lib watcom\minimal_2_0_3_minimal.res
+..\sample\v2.0.3\minimal_2_0_3.exe :  $(MINIMAL_2_0_3_OBJECTS) $(__webupdate_lib___depname) watcom\minimal_2_0_3_minimal.res
 	@%create watcom\minimal_2_0_3.lbc
 	@%append watcom\minimal_2_0_3.lbc option quiet
 	@%append watcom\minimal_2_0_3.lbc name $^@
 	@%append watcom\minimal_2_0_3.lbc option caseexact
-	@%append watcom\minimal_2_0_3.lbc $(LDFLAGS) $(__DEBUGINFO_0) libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib system nt_win ref '_WinMain@16'
+	@%append watcom\minimal_2_0_3.lbc $(LDFLAGS) $(__DEBUGINFO_0)  libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib system nt_win ref '_WinMain@16'
 	@for %i in ($(MINIMAL_2_0_3_OBJECTS)) do @%append watcom\minimal_2_0_3.lbc file %i
 	@for %i in ( ..\lib\webupdate$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\minimal_2_0_3.lbc library %i
 	@%append watcom\minimal_2_0_3.lbc option resource=watcom\minimal_2_0_3_minimal.res
 	wlink @watcom\minimal_2_0_3.lbc
 
-watcom\webupdate_webupdate.obj :  .AUTODEPEND .\..\src\webupdate.cpp
-	$(CXX) -zq -fo=$^@ $(WEBUPDATE_CXXFLAGS) $<
+watcom\webupdate_lib_webupdate.obj :  .AUTODEPEND .\..\src\webupdate.cpp
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
 
-watcom\webupdate_webupdatedlg.obj :  .AUTODEPEND .\..\src\webupdatedlg.cpp
-	$(CXX) -zq -fo=$^@ $(WEBUPDATE_CXXFLAGS) $<
+watcom\webupdate_lib_webupdatedlg.obj :  .AUTODEPEND .\..\src\webupdatedlg.cpp
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
 
-watcom\webupdate_checkedlistctrl.obj :  .AUTODEPEND .\..\src\checkedlistctrl.cpp
-	$(CXX) -zq -fo=$^@ $(WEBUPDATE_CXXFLAGS) $<
+watcom\webupdate_lib_checkedlistctrl.obj :  .AUTODEPEND .\..\src\checkedlistctrl.cpp
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
+
+watcom\webupdate_dll_webupdate.obj :  .AUTODEPEND .\..\src\webupdate.cpp
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
+
+watcom\webupdate_dll_webupdatedlg.obj :  .AUTODEPEND .\..\src\webupdatedlg.cpp
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
+
+watcom\webupdate_dll_checkedlistctrl.obj :  .AUTODEPEND .\..\src\checkedlistctrl.cpp
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
 
 watcom\minimal_1_0_0_minimal.obj :  .AUTODEPEND .\..\sample\v1.0.0\minimal.cpp
 	$(CXX) -zq -fo=$^@ $(MINIMAL_1_0_0_CXXFLAGS) $<
 
 watcom\minimal_1_0_0_minimal.res :  .AUTODEPEND .\..\sample\v1.0.0\minimal.rc
-	wrc -q -ad -bt=nt -r -fo=$^@ $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\..\include -i=..\sample\v1.0.0 $<
+	wrc -q -ad -bt=nt -r -fo=$^@ $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\..\include -i=..\sample\v1.0.0 $<
 
 watcom\minimal_2_0_3_minimal.obj :  .AUTODEPEND .\..\sample\v2.0.3\minimal.cpp
 	$(CXX) -zq -fo=$^@ $(MINIMAL_2_0_3_CXXFLAGS) $<
 
 watcom\minimal_2_0_3_minimal.res :  .AUTODEPEND .\..\sample\v2.0.3\minimal.rc
-	wrc -q -ad -bt=nt -r -fo=$^@ $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\..\include -i=..\sample\v2.0.3 $<
+	wrc -q -ad -bt=nt -r -fo=$^@ $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\..\include -i=..\sample\v2.0.3 $<
 

@@ -18,6 +18,7 @@
 #endif
 
 // wxWidgets headers
+#include "wx/webupdatedef.h"
 #include "wx/xml/xml.h"
 #include "wx/url.h"
 
@@ -26,19 +27,6 @@
 // -----------------------
 
 #define wxWU_USE_CHECKEDLISTCTRL		1
-
-
-// for shared builds
-#ifdef WXMAKINGDLL_WEBUPDATE
-    #define WXDLLIMPEXP_WEBUPDATE				WXEXPORT
-    #define WXDLLIMPEXP_DATA_WEBUPDATE(type)	WXEXPORT type
-#elif defined(WXUSINGDLL)
-    #define WXDLLIMPEXP_WEBUPDATE WXIMPORT
-    #define WXDLLIMPEXP_DATA_NWEBUPDATE(type)	WXIMPORT type
-#else // not making nor using DLL
-    #define WXDLLIMPEXP_WEBUPDATE
-    #define WXDLLIMPEXP_DATA_WEBUPDATE(type)	type
-#endif
 
 
 
@@ -170,7 +158,7 @@ public:		// static platform utilities
 public:     // setters
 
     bool SetURL(const wxString &url)
-        { wxURL u(url); if (u.GetError() != wxURL_NOERR) return FALSE; m_urlDownload=url; }
+        { wxURL u(url); if (u.GetError() != wxURL_NOERR) return FALSE; m_urlDownload=url; return TRUE; }
         
     bool SetPlatform(const wxString &plat) {
         m_platform = GetPlatformCode(plat);
@@ -201,7 +189,7 @@ private:
 
 
 // a container of wxWebUpdateDownload used by wxWebUpdatePackage
-WX_DECLARE_OBJARRAY(wxWebUpdateDownload, wxWebUpdateDownloadArray);
+WX_DECLARE_USER_EXPORTED_OBJARRAY(wxWebUpdateDownload, wxWebUpdateDownloadArray, WXDLLIMPEXP_WEBUPDATE);
 
 
 //! Contains the info about a package update.
@@ -297,7 +285,7 @@ private:
 
 
 // a container of wxWebUpdatePackage used by wxWebUpdateXMLScript
-WX_DECLARE_OBJARRAY(wxWebUpdatePackage, wxWebUpdatePackageArray);
+WX_DECLARE_USER_EXPORTED_OBJARRAY(wxWebUpdatePackage, wxWebUpdatePackageArray, WXDLLIMPEXP_WEBUPDATE);
 
 
 //! This is the class which performs all transactions with the server.

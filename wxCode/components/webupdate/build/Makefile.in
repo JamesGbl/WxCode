@@ -10,11 +10,17 @@
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 INSTALL = @INSTALL@
+SHARED_LD_CXX = @SHARED_LD_CXX@
 LIBEXT = @LIBEXT@
 LIBPREFIX = @LIBPREFIX@
+SO_SUFFIX = @SO_SUFFIX@
+DLLIMP_SUFFIX = @DLLIMP_SUFFIX@
 EXEEXT = @EXEEXT@
+LN_S = @LN_S@
 RESCOMP = @RESCOMP@
 SETFILE = @SETFILE@
+PIC_FLAG = @PIC_FLAG@
+SONAME_FLAG = @SONAME_FLAG@
 NM = @NM@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_DIR = @INSTALL_DIR@
@@ -22,6 +28,7 @@ srcdir = @srcdir@
 top_builddir = @top_builddir@
 libdir = @libdir@
 includedir = @includedir@
+DLLPREFIX = @DLLPREFIX@
 LDFLAGS_GUI = @LDFLAGS_GUI@
 AR = @AR@
 RANLIB = @RANLIB@
@@ -35,11 +42,17 @@ WX_LIBS = @WX_LIBS@
 ### Variables: ###
 
 DESTDIR = 
-WEBUPDATE_CXXFLAGS =  -I../include  $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
-WEBUPDATE_OBJECTS =  \
-	webupdate_webupdate.o \
-	webupdate_webupdatedlg.o \
-	webupdate_checkedlistctrl.o
+WEBUPDATE_LIB_CXXFLAGS = -I../include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+WEBUPDATE_LIB_OBJECTS =  \
+	webupdate_lib_webupdate.o \
+	webupdate_lib_webupdatedlg.o \
+	webupdate_lib_checkedlistctrl.o
+WEBUPDATE_DLL_CXXFLAGS = -I../include -DWXMAKINGDLL_WEBUPDATE $(PIC_FLAG) \
+	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+WEBUPDATE_DLL_OBJECTS =  \
+	webupdate_dll_webupdate.o \
+	webupdate_dll_webupdatedlg.o \
+	webupdate_dll_checkedlistctrl.o
 MINIMAL_1_0_0_CXXFLAGS = -I../include -I../../include $(WX_CXXFLAGS) \
 	$(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_1_0_0_OBJECTS =  \
@@ -53,8 +66,43 @@ MINIMAL_2_0_3_OBJECTS =  \
 
 ### Conditionally set variables: ###
 
-@COND_DEPS_TRACKING_1@CXXC = $(top_builddir)./bk-deps $(CXX)
 @COND_DEPS_TRACKING_0@CXXC = $(CXX)
+@COND_DEPS_TRACKING_1@CXXC = $(top_builddir)./bk-deps $(CXX)
+@COND_WX_SHARED_0@__webupdate_lib___depname = \
+@COND_WX_SHARED_0@	../lib/$(LIBPREFIX)webupdate$(LIBEXT)
+@COND_WX_SHARED_1@__webupdate_dll___depname = \
+@COND_WX_SHARED_1@	../lib/$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf3)
+@COND_PLATFORM_OS2_1@__webupdate_dll___importlib = \
+@COND_PLATFORM_OS2_1@	-import \
+@COND_PLATFORM_OS2_1@	../lib/$(LIBPREFIX)webupdate.$(DLLIMP_SUFFIX)
+@COND_PLATFORM_WIN32_1@__webupdate_dll___importlib = \
+@COND_PLATFORM_WIN32_1@	-Wl,--out-implib,../lib/$(LIBPREFIX)webupdate.$(DLLIMP_SUFFIX)
+@COND_PLATFORM_MACOSX_0_USE_SOVERSION_1@__webupdate_dll___targetsuf2 \
+@COND_PLATFORM_MACOSX_0_USE_SOVERSION_1@	= .$(SO_SUFFIX).0
+@COND_PLATFORM_MACOSX_1_USE_SOVERSION_1@__webupdate_dll___targetsuf2 \
+@COND_PLATFORM_MACOSX_1_USE_SOVERSION_1@	= .0.$(SO_SUFFIX)
+@COND_USE_SOVERSION_0@__webupdate_dll___targetsuf2 = .$(SO_SUFFIX)
+@COND_PLATFORM_MACOSX_0_USE_SOVERSION_1@__webupdate_dll___targetsuf3 \
+@COND_PLATFORM_MACOSX_0_USE_SOVERSION_1@	= .$(SO_SUFFIX).0.0.0
+@COND_PLATFORM_MACOSX_1_USE_SOVERSION_1@__webupdate_dll___targetsuf3 \
+@COND_PLATFORM_MACOSX_1_USE_SOVERSION_1@	= .0.0.0.$(SO_SUFFIX)
+@COND_USE_SOVERSION_0@__webupdate_dll___targetsuf3 = .$(SO_SUFFIX)
+@COND_USE_SOVERLINUX_1@__webupdate_dll___soname_flags \
+@COND_USE_SOVERLINUX_1@	= \
+@COND_USE_SOVERLINUX_1@	$(SONAME_FLAG)$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf2)
+@COND_USE_SOVERSOLARIS_1@__webupdate_dll___soname_flags \
+@COND_USE_SOVERSOLARIS_1@	= \
+@COND_USE_SOVERSOLARIS_1@	$(SONAME_FLAG)$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf3)
+COND_USE_SOSYMLINKS_1___webupdate_dll___so_symlinks_cmd = (cd ../lib/; rm -f \
+	$(LIBPREFIX)webupdate.$(DLLIMP_SUFFIX) \
+	$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf2); $(LN_S) \
+	$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf3) \
+	$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf2); $(LN_S) \
+	$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf2) \
+	$(LIBPREFIX)webupdate.$(DLLIMP_SUFFIX))
+@COND_USE_SOSYMLINKS_1@__webupdate_dll___so_symlinks_cmd = $(COND_USE_SOSYMLINKS_1___webupdate_dll___so_symlinks_cmd)
+@COND_PLATFORM_MACOSX_1@__webupdate_dll___macver = \
+@COND_PLATFORM_MACOSX_1@	-compatibility_version 0 -current_version 0
 @COND_PLATFORM_MAC_1@__minimal_1_0_0___mac_setfilecmd \
 @COND_PLATFORM_MAC_1@	= $(SETFILE) -t APPL minimal_1_0_0$(EXEEXT)
 COND_PLATFORM_OS2_1___minimal_1_0_0___os2_emxbindcmd = $(NM) \
@@ -74,13 +122,16 @@ COND_PLATFORM_OS2_1___minimal_2_0_3___os2_emxbindcmd = $(NM) \
 
 ### Targets: ###
 
-all: ../lib/$(LIBPREFIX)webupdate$(LIBEXT) ../sample/v1.0.0/minimal_1_0_0$(EXEEXT) ../sample/v2.0.3/minimal_2_0_3$(EXEEXT)
+all: $(__webupdate_lib___depname) $(__webupdate_dll___depname) ../sample/v1.0.0/minimal_1_0_0$(EXEEXT) ../sample/v2.0.3/minimal_2_0_3$(EXEEXT)
 
 install: all install-wxheaders install-lib
 
 uninstall: 
-	rm -f $(includedir)/wx/webupdate.h
-	rm -f $(libdir)/libwebupdate*.a
+	rm -f  $(DESTDIR)$(includedir)/wx/webupdatedef.h\
+	wx/webupdate.h\
+	wx/webupdatedlg.h\
+	wx/checkedlistctrl.h
+	rm -f $(libdir)/*webupdate*
 
 install-strip: install
 
@@ -88,6 +139,9 @@ clean:
 	rm -rf ./.deps ./.pch
 	rm -f ./*.o
 	rm -f ../lib/$(LIBPREFIX)webupdate$(LIBEXT)
+	rm -f ../lib/$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf3)
+	rm -f ../lib/$(LIBPREFIX)webupdate.$(DLLIMP_SUFFIX)
+	rm -f ../lib/$(LIBPREFIX)webupdate.$(DLLIMP_SUFFIX) ../lib/$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf2)
 	rm -f ../sample/v1.0.0/minimal_1_0_0$(EXEEXT)
 	rm -f ../sample/v2.0.3/minimal_2_0_3$(EXEEXT)
 
@@ -125,45 +179,59 @@ install-wxheaders:
 
 install-lib: 
 	$(INSTALL_DIR) $(DESTDIR)$(libdir)
-	(cd $(srcdir) ; $(INSTALL_DATA)  ../lib/*.a $(DESTDIR)$(libdir))
+	(cd $(srcdir) ; $(INSTALL_DATA)  ../lib/*webupdate* $(DESTDIR)$(libdir))
 
-../lib/$(LIBPREFIX)webupdate$(LIBEXT): $(WEBUPDATE_OBJECTS)
-	rm -f $@
-	$(AR) rcu $@ $(WEBUPDATE_OBJECTS)
-	$(RANLIB) $@
+@COND_WX_SHARED_0@../lib/$(LIBPREFIX)webupdate$(LIBEXT): $(WEBUPDATE_LIB_OBJECTS)
+@COND_WX_SHARED_0@	rm -f $@
+@COND_WX_SHARED_0@	$(AR) rcu $@ $(WEBUPDATE_LIB_OBJECTS)
+@COND_WX_SHARED_0@	$(RANLIB) $@
 
-../sample/v1.0.0/minimal_1_0_0$(EXEEXT): $(MINIMAL_1_0_0_OBJECTS) ../lib/$(LIBPREFIX)webupdate$(LIBEXT) $(__minimal_1_0_0___win32rc)
+@COND_WX_SHARED_1@../lib/$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf3): $(WEBUPDATE_DLL_OBJECTS)
+@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(WEBUPDATE_DLL_OBJECTS) $(LDFLAGS) -L../lib $(__webupdate_dll___importlib) $(__webupdate_dll___soname_flags) $(__webupdate_dll___macver)  $(WX_LIBS)
+@COND_WX_SHARED_1@	
+@COND_WX_SHARED_1@	$(__webupdate_dll___so_symlinks_cmd)
+
+../sample/v1.0.0/minimal_1_0_0$(EXEEXT): $(MINIMAL_1_0_0_OBJECTS) $(__webupdate_lib___depname) $(__minimal_1_0_0___win32rc)
 	$(CXX) -o $@ $(MINIMAL_1_0_0_OBJECTS) -L../lib $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS) -lwebupdate
 	
 	$(__minimal_1_0_0___mac_setfilecmd)
 	$(__minimal_1_0_0___os2_emxbindcmd)
 
-../sample/v2.0.3/minimal_2_0_3$(EXEEXT): $(MINIMAL_2_0_3_OBJECTS) ../lib/$(LIBPREFIX)webupdate$(LIBEXT) $(__minimal_2_0_3___win32rc)
+../sample/v2.0.3/minimal_2_0_3$(EXEEXT): $(MINIMAL_2_0_3_OBJECTS) $(__webupdate_lib___depname) $(__minimal_2_0_3___win32rc)
 	$(CXX) -o $@ $(MINIMAL_2_0_3_OBJECTS) -L../lib $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS) -lwebupdate
 	
 	$(__minimal_2_0_3___mac_setfilecmd)
 	$(__minimal_2_0_3___os2_emxbindcmd)
 
-webupdate_webupdate.o: $(srcdir)/../src/webupdate.cpp
-	$(CXXC) -c -o $@ $(WEBUPDATE_CXXFLAGS) $(srcdir)/../src/webupdate.cpp
+webupdate_lib_webupdate.o: $(srcdir)/../src/webupdate.cpp
+	$(CXXC) -c -o $@ $(WEBUPDATE_LIB_CXXFLAGS) $(srcdir)/../src/webupdate.cpp
 
-webupdate_webupdatedlg.o: $(srcdir)/../src/webupdatedlg.cpp
-	$(CXXC) -c -o $@ $(WEBUPDATE_CXXFLAGS) $(srcdir)/../src/webupdatedlg.cpp
+webupdate_lib_webupdatedlg.o: $(srcdir)/../src/webupdatedlg.cpp
+	$(CXXC) -c -o $@ $(WEBUPDATE_LIB_CXXFLAGS) $(srcdir)/../src/webupdatedlg.cpp
 
-webupdate_checkedlistctrl.o: $(srcdir)/../src/checkedlistctrl.cpp
-	$(CXXC) -c -o $@ $(WEBUPDATE_CXXFLAGS) $(srcdir)/../src/checkedlistctrl.cpp
+webupdate_lib_checkedlistctrl.o: $(srcdir)/../src/checkedlistctrl.cpp
+	$(CXXC) -c -o $@ $(WEBUPDATE_LIB_CXXFLAGS) $(srcdir)/../src/checkedlistctrl.cpp
+
+webupdate_dll_webupdate.o: $(srcdir)/../src/webupdate.cpp
+	$(CXXC) -c -o $@ $(WEBUPDATE_DLL_CXXFLAGS) $(srcdir)/../src/webupdate.cpp
+
+webupdate_dll_webupdatedlg.o: $(srcdir)/../src/webupdatedlg.cpp
+	$(CXXC) -c -o $@ $(WEBUPDATE_DLL_CXXFLAGS) $(srcdir)/../src/webupdatedlg.cpp
+
+webupdate_dll_checkedlistctrl.o: $(srcdir)/../src/checkedlistctrl.cpp
+	$(CXXC) -c -o $@ $(WEBUPDATE_DLL_CXXFLAGS) $(srcdir)/../src/checkedlistctrl.cpp
 
 minimal_1_0_0_minimal.o: $(srcdir)/../sample/v1.0.0/minimal.cpp
 	$(CXXC) -c -o $@ $(MINIMAL_1_0_0_CXXFLAGS) $(srcdir)/../sample/v1.0.0/minimal.cpp
 
 minimal_1_0_0_minimal_rc.o: $(srcdir)/../sample/v1.0.0/minimal.rc
-	$(RESCOMP) -i$< -o$@ --include-dir ../include --include-dir ../../include --include-dir ../sample/v1.0.0
+	$(RESCOMP) -i$< -o$@  --include-dir ../include --include-dir ../../include --include-dir ../sample/v1.0.0
 
 minimal_2_0_3_minimal.o: $(srcdir)/../sample/v2.0.3/minimal.cpp
 	$(CXXC) -c -o $@ $(MINIMAL_2_0_3_CXXFLAGS) $(srcdir)/../sample/v2.0.3/minimal.cpp
 
 minimal_2_0_3_minimal_rc.o: $(srcdir)/../sample/v2.0.3/minimal.rc
-	$(RESCOMP) -i$< -o$@ --include-dir ../include --include-dir ../../include --include-dir ../sample/v2.0.3
+	$(RESCOMP) -i$< -o$@  --include-dir ../include --include-dir ../../include --include-dir ../sample/v2.0.3
 
 
 # Include dependency info, if present:

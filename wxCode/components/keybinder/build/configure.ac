@@ -1,9 +1,9 @@
-# ======================================================
+# ==============================================================
 # A basic "configure.ac" using a WX-based bakefile
 #
 # Author: Francesco Montorsi
 # RCS-ID: $Id$
-# ======================================================
+# ==============================================================
 
 AC_PREREQ(2.59)
 AC_INIT(keybinder, 1.0, [frm@sourceforge.net])
@@ -12,9 +12,6 @@ AC_INIT(keybinder, 1.0, [frm@sourceforge.net])
 # (and sets the AC_CANONICAL_BUILD, AC_CANONICAL_HOST and
 # AC_CANONICAL_TARGET variables)
 AC_CANONICAL_SYSTEM
-
-# This adds some standard wxWidgets options to the configure script
-AM_OPTIONS_WXCONFIG
 
 # Checks for programs.
 AC_PROG_AWK

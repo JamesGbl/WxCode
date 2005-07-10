@@ -16,7 +16,7 @@
 
 	<set var="COMP_NAME">keybinder</set>
 	<set var="COMP_SRC">../src/keybinder.cpp ../src/menuutils.cpp</set>
-	<set var="COMP_HDR">../include/wx/keybinder.h ../include/wx/menuutils.h</set>	
+	<set var="COMP_HDR">../include/wx/keybinderdef.h ../include/wx/keybinder.h ../include/wx/menuutils.h</set>	
 	<set var="COMP_SAMPLE_SRC">../sample/minimal.cpp</set>
 	<set var="WX_UNICODE_DEFAULT">1</set>
 	<set var="WX_VERSION_DEFAULT">26</set>
@@ -29,7 +29,10 @@
 	<!-- The real target: wxcode.bkl does not declare a real target but a template called
 	     "complib". In this way modifications are allowed to the basic template. -->
 	<lib id="keybinder_lib" template="complib" cond="WX_SHARED=='0'"/>
-	<dll id="keybinder_dll" template="compdll" cond="WX_SHARED=='1'"/>
+	<dll id="keybinder_dll" template="compdll" cond="WX_SHARED=='1'">
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib>
+	</dll>
 	<set var="MSVC6PRJ_MERGED_TARGETS">keybinder=keybinder_lib+keybinder_dll</set>
 	
 	

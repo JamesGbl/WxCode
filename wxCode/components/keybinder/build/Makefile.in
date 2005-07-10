@@ -109,7 +109,8 @@ all: $(__keybinder_lib___depname) $(__keybinder_dll___depname) ../sample/minimal
 install: all install-wxheaders install-lib
 
 uninstall: 
-	rm -f  $(DESTDIR)$(includedir)/wx/keybinder.h\
+	rm -f  $(DESTDIR)$(includedir)/wx/keybinderdef.h\
+	wx/keybinder.h\
 	wx/menuutils.h
 	rm -f $(libdir)/*keybinder*
 

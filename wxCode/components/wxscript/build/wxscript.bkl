@@ -77,7 +77,7 @@
 						../src/sclua.cpp</set>
 	<set var="COMP_HDR">../include/wx/script.h ../include/wx/scpython.h
 						../include/wx/sccint.h ../include/wx/scunderc.h
-						../include/wx/sclua.h</set>
+						../include/wx/sclua.h ../include/wx/scdef.h</set>
 	<set var="COMP_SAMPLE_SRC">../tests/test1/Test.cpp</set>
 	<set var="COMP_SAMPLE_DIR">../tests/test1</set>
 	<set var="COMP_SAMPLE2_SRC">../tests/test2/Test.cpp</set>

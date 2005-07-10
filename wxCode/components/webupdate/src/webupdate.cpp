@@ -38,10 +38,10 @@ IMPLEMENT_CLASS(wxWebUpdatePackage, wxObject)
 IMPLEMENT_CLASS(wxWebUpdateDownload, wxObject)
 
 #include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
-WX_DEFINE_OBJARRAY(wxWebUpdateDownloadArray);
+WX_DEFINE_USER_EXPORTED_OBJARRAY(wxWebUpdateDownloadArray);
 
 #include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
-WX_DEFINE_OBJARRAY(wxWebUpdatePackageArray);
+WX_DEFINE_USER_EXPORTED_OBJARRAY(wxWebUpdatePackageArray);
 
 
 // global objects

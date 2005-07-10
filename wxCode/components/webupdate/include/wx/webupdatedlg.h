@@ -39,7 +39,7 @@
 
 
 //! Returns a string with a short size description for the given number of bytes.
-static WXDLLIMPEXP_WEBUPDATE wxString wxGetSizeStr(unsigned long bytesize);
+WXDLLIMPEXP_WEBUPDATE wxString wxGetSizeStr(unsigned long bytesize);
 
 
 

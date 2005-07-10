@@ -18,6 +18,24 @@ dnl ### begin block 20_COND_DEPS_TRACKING_1[webupdate.bkl,wxxml2.bkl] ###
         COND_DEPS_TRACKING_1=""
     fi
     AC_SUBST(COND_DEPS_TRACKING_1)
+dnl ### begin block 20_COND_PLATFORM_MACOSX_0_USE_SOVERSION_1[webupdate.bkl] ###
+    COND_PLATFORM_MACOSX_0_USE_SOVERSION_1="#"
+    if test "x$PLATFORM_MACOSX" = "x0" -a "x$USE_SOVERSION" = "x1" ; then
+        COND_PLATFORM_MACOSX_0_USE_SOVERSION_1=""
+    fi
+    AC_SUBST(COND_PLATFORM_MACOSX_0_USE_SOVERSION_1)
+dnl ### begin block 20_COND_PLATFORM_MACOSX_1[webupdate.bkl] ###
+    COND_PLATFORM_MACOSX_1="#"
+    if test "x$PLATFORM_MACOSX" = "x1" ; then
+        COND_PLATFORM_MACOSX_1=""
+    fi
+    AC_SUBST(COND_PLATFORM_MACOSX_1)
+dnl ### begin block 20_COND_PLATFORM_MACOSX_1_USE_SOVERSION_1[webupdate.bkl] ###
+    COND_PLATFORM_MACOSX_1_USE_SOVERSION_1="#"
+    if test "x$PLATFORM_MACOSX" = "x1" -a "x$USE_SOVERSION" = "x1" ; then
+        COND_PLATFORM_MACOSX_1_USE_SOVERSION_1=""
+    fi
+    AC_SUBST(COND_PLATFORM_MACOSX_1_USE_SOVERSION_1)
 dnl ### begin block 20_COND_PLATFORM_MAC_1[webupdate.bkl,wxxml2.bkl] ###
     COND_PLATFORM_MAC_1="#"
     if test "x$PLATFORM_MAC" = "x1" ; then
@@ -36,3 +54,39 @@ dnl ### begin block 20_COND_PLATFORM_WIN32_1[webupdate.bkl] ###
         COND_PLATFORM_WIN32_1=""
     fi
     AC_SUBST(COND_PLATFORM_WIN32_1)
+dnl ### begin block 20_COND_USE_SOSYMLINKS_1[webupdate.bkl] ###
+    COND_USE_SOSYMLINKS_1="#"
+    if test "x$USE_SOSYMLINKS" = "x1" ; then
+        COND_USE_SOSYMLINKS_1=""
+    fi
+    AC_SUBST(COND_USE_SOSYMLINKS_1)
+dnl ### begin block 20_COND_USE_SOVERLINUX_1[webupdate.bkl] ###
+    COND_USE_SOVERLINUX_1="#"
+    if test "x$USE_SOVERLINUX" = "x1" ; then
+        COND_USE_SOVERLINUX_1=""
+    fi
+    AC_SUBST(COND_USE_SOVERLINUX_1)
+dnl ### begin block 20_COND_USE_SOVERSION_0[webupdate.bkl] ###
+    COND_USE_SOVERSION_0="#"
+    if test "x$USE_SOVERSION" = "x0" ; then
+        COND_USE_SOVERSION_0=""
+    fi
+    AC_SUBST(COND_USE_SOVERSION_0)
+dnl ### begin block 20_COND_USE_SOVERSOLARIS_1[webupdate.bkl] ###
+    COND_USE_SOVERSOLARIS_1="#"
+    if test "x$USE_SOVERSOLARIS" = "x1" ; then
+        COND_USE_SOVERSOLARIS_1=""
+    fi
+    AC_SUBST(COND_USE_SOVERSOLARIS_1)
+dnl ### begin block 20_COND_WX_SHARED_0[webupdate.bkl] ###
+    COND_WX_SHARED_0="#"
+    if test "x$WX_SHARED" = "x0" ; then
+        COND_WX_SHARED_0=""
+    fi
+    AC_SUBST(COND_WX_SHARED_0)
+dnl ### begin block 20_COND_WX_SHARED_1[webupdate.bkl] ###
+    COND_WX_SHARED_1="#"
+    if test "x$WX_SHARED" = "x1" ; then
+        COND_WX_SHARED_1=""
+    fi
+    AC_SUBST(COND_WX_SHARED_1)

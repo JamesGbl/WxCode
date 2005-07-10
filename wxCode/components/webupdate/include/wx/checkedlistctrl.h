@@ -71,7 +71,7 @@ public:			// utilities
 		{ m_stateList.Clear(); return wxListCtrl::DeleteAllItems(); }
 
 	bool SortItems(wxListCtrlCompare, long)
-		{ wxASSERT_MSG(0, wxT("Not implemented yet ! sorry... ")); }
+		{ wxASSERT_MSG(0, wxT("Not implemented yet ! sorry... ")); return FALSE; }
 	
 	// shortcuts to the SetItemState function
 	void Check(long item, bool checked);
@@ -93,7 +93,7 @@ public:			// utilities
 	// the image associated with an element is already in used by wxCheckedListCtrl
 	// itself to show the checkbox and it cannot be handled by the user !
 	bool SetItemImage(long, int)
-		{ wxASSERT_MSG(0, wxT("This function cannot be used with wxCheckedListCtrl !")); }
+		{ wxASSERT_MSG(0, wxT("This function cannot be used with wxCheckedListCtrl !")); return FALSE; }
 
 protected:		// event handlers
 

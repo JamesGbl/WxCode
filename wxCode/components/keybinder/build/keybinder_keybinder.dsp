@@ -260,6 +260,10 @@ SOURCE=.\..\include\wx\keybinder.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\..\include\wx\keybinderdef.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\..\include\wx\menuutils.h
 # End Source File
 # End Group
