@@ -10,11 +10,17 @@
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 INSTALL = @INSTALL@
+SHARED_LD_CXX = @SHARED_LD_CXX@
 LIBEXT = @LIBEXT@
 LIBPREFIX = @LIBPREFIX@
+SO_SUFFIX = @SO_SUFFIX@
+DLLIMP_SUFFIX = @DLLIMP_SUFFIX@
 EXEEXT = @EXEEXT@
+LN_S = @LN_S@
 RESCOMP = @RESCOMP@
 SETFILE = @SETFILE@
+PIC_FLAG = @PIC_FLAG@
+SONAME_FLAG = @SONAME_FLAG@
 NM = @NM@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_DIR = @INSTALL_DIR@
@@ -22,6 +28,7 @@ srcdir = @srcdir@
 top_builddir = @top_builddir@
 libdir = @libdir@
 includedir = @includedir@
+DLLPREFIX = @DLLPREFIX@
 LDFLAGS_GUI = @LDFLAGS_GUI@
 AR = @AR@
 RANLIB = @RANLIB@
@@ -35,19 +42,59 @@ WX_LIBS = @WX_LIBS@
 ### Variables: ###
 
 DESTDIR = 
-KEYBINDER_CXXFLAGS =  -I../include  $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
-KEYBINDER_OBJECTS =  \
-	keybinder_keybinder.o \
-	keybinder_menuutils.o
-MINIMAL_CXXFLAGS =  -I../include  $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+KEYBINDER_LIB_CXXFLAGS = -I../include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+KEYBINDER_LIB_OBJECTS =  \
+	keybinder_lib_keybinder.o \
+	keybinder_lib_menuutils.o
+KEYBINDER_DLL_CXXFLAGS = -I../include -DWXMAKINGDLL_KEYBINDER $(PIC_FLAG) \
+	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+KEYBINDER_DLL_OBJECTS =  \
+	keybinder_dll_keybinder.o \
+	keybinder_dll_menuutils.o
+MINIMAL_CXXFLAGS =   -I../include  $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	minimal_minimal.o \
 	$(__minimal___win32rc)
 
 ### Conditionally set variables: ###
 
-@COND_DEPS_TRACKING_1@CXXC = $(top_builddir)./bk-deps $(CXX)
 @COND_DEPS_TRACKING_0@CXXC = $(CXX)
+@COND_DEPS_TRACKING_1@CXXC = $(top_builddir)./bk-deps $(CXX)
+@COND_WX_SHARED_0@__keybinder_lib___depname = \
+@COND_WX_SHARED_0@	../lib/$(LIBPREFIX)keybinder$(LIBEXT)
+@COND_WX_SHARED_1@__keybinder_dll___depname = \
+@COND_WX_SHARED_1@	../lib/$(DLLPREFIX)keybinder$(__keybinder_dll___targetsuf3)
+@COND_PLATFORM_OS2_1@__keybinder_dll___importlib = \
+@COND_PLATFORM_OS2_1@	-import \
+@COND_PLATFORM_OS2_1@	../lib/$(LIBPREFIX)keybinder.$(DLLIMP_SUFFIX)
+@COND_PLATFORM_WIN32_1@__keybinder_dll___importlib = \
+@COND_PLATFORM_WIN32_1@	-Wl,--out-implib,../lib/$(LIBPREFIX)keybinder.$(DLLIMP_SUFFIX)
+@COND_PLATFORM_MACOSX_0_USE_SOVERSION_1@__keybinder_dll___targetsuf2 \
+@COND_PLATFORM_MACOSX_0_USE_SOVERSION_1@	= .$(SO_SUFFIX).0
+@COND_PLATFORM_MACOSX_1_USE_SOVERSION_1@__keybinder_dll___targetsuf2 \
+@COND_PLATFORM_MACOSX_1_USE_SOVERSION_1@	= .0.$(SO_SUFFIX)
+@COND_USE_SOVERSION_0@__keybinder_dll___targetsuf2 = .$(SO_SUFFIX)
+@COND_PLATFORM_MACOSX_0_USE_SOVERSION_1@__keybinder_dll___targetsuf3 \
+@COND_PLATFORM_MACOSX_0_USE_SOVERSION_1@	= .$(SO_SUFFIX).0.0.0
+@COND_PLATFORM_MACOSX_1_USE_SOVERSION_1@__keybinder_dll___targetsuf3 \
+@COND_PLATFORM_MACOSX_1_USE_SOVERSION_1@	= .0.0.0.$(SO_SUFFIX)
+@COND_USE_SOVERSION_0@__keybinder_dll___targetsuf3 = .$(SO_SUFFIX)
+@COND_USE_SOVERLINUX_1@__keybinder_dll___soname_flags \
+@COND_USE_SOVERLINUX_1@	= \
+@COND_USE_SOVERLINUX_1@	$(SONAME_FLAG)$(DLLPREFIX)keybinder$(__keybinder_dll___targetsuf2)
+@COND_USE_SOVERSOLARIS_1@__keybinder_dll___soname_flags \
+@COND_USE_SOVERSOLARIS_1@	= \
+@COND_USE_SOVERSOLARIS_1@	$(SONAME_FLAG)$(DLLPREFIX)keybinder$(__keybinder_dll___targetsuf3)
+COND_USE_SOSYMLINKS_1___keybinder_dll___so_symlinks_cmd = (cd ../lib/; rm -f \
+	$(LIBPREFIX)keybinder.$(DLLIMP_SUFFIX) \
+	$(DLLPREFIX)keybinder$(__keybinder_dll___targetsuf2); $(LN_S) \
+	$(DLLPREFIX)keybinder$(__keybinder_dll___targetsuf3) \
+	$(DLLPREFIX)keybinder$(__keybinder_dll___targetsuf2); $(LN_S) \
+	$(DLLPREFIX)keybinder$(__keybinder_dll___targetsuf2) \
+	$(LIBPREFIX)keybinder.$(DLLIMP_SUFFIX))
+@COND_USE_SOSYMLINKS_1@__keybinder_dll___so_symlinks_cmd = $(COND_USE_SOSYMLINKS_1___keybinder_dll___so_symlinks_cmd)
+@COND_PLATFORM_MACOSX_1@__keybinder_dll___macver = \
+@COND_PLATFORM_MACOSX_1@	-compatibility_version 0 -current_version 0
 @COND_PLATFORM_MAC_1@__minimal___mac_setfilecmd = \
 @COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL minimal$(EXEEXT)
 COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd = $(NM) minimal$(EXEEXT) | if \
@@ -57,13 +104,14 @@ COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd = $(NM) minimal$(EXEEXT) | if \
 
 ### Targets: ###
 
-all: ../lib/$(LIBPREFIX)keybinder$(LIBEXT) ../sample/minimal$(EXEEXT)
+all: $(__keybinder_lib___depname) $(__keybinder_dll___depname) ../sample/minimal$(EXEEXT)
 
 install: all install-wxheaders install-lib
 
 uninstall: 
-	rm -f $(includedir)/wx/keybinder.h $(includedir)/wx/menuutils.h
-	rm -f $(libdir)/libkeybinder*.a
+	rm -f  $(DESTDIR)$(includedir)/wx/keybinder.h\
+	wx/menuutils.h
+	rm -f $(libdir)/*keybinder*
 
 install-strip: install
 
@@ -71,6 +119,9 @@ clean:
 	rm -rf ./.deps ./.pch
 	rm -f ./*.o
 	rm -f ../lib/$(LIBPREFIX)keybinder$(LIBEXT)
+	rm -f ../lib/$(DLLPREFIX)keybinder$(__keybinder_dll___targetsuf3)
+	rm -f ../lib/$(LIBPREFIX)keybinder.$(DLLIMP_SUFFIX)
+	rm -f ../lib/$(LIBPREFIX)keybinder.$(DLLIMP_SUFFIX) ../lib/$(DLLPREFIX)keybinder$(__keybinder_dll___targetsuf2)
 	rm -f ../sample/minimal$(EXEEXT)
 
 distclean: clean
@@ -107,30 +158,41 @@ install-wxheaders:
 
 install-lib: 
 	$(INSTALL_DIR) $(DESTDIR)$(libdir)
-	(cd $(srcdir) ; $(INSTALL_DATA)  ../lib/*.a $(DESTDIR)$(libdir))
+	(cd $(srcdir) ; $(INSTALL_DATA)  ../lib/*keybinder* $(DESTDIR)$(libdir))
 
-../lib/$(LIBPREFIX)keybinder$(LIBEXT): $(KEYBINDER_OBJECTS)
-	rm -f $@
-	$(AR) rcu $@ $(KEYBINDER_OBJECTS)
-	$(RANLIB) $@
+@COND_WX_SHARED_0@../lib/$(LIBPREFIX)keybinder$(LIBEXT): $(KEYBINDER_LIB_OBJECTS)
+@COND_WX_SHARED_0@	rm -f $@
+@COND_WX_SHARED_0@	$(AR) rcu $@ $(KEYBINDER_LIB_OBJECTS)
+@COND_WX_SHARED_0@	$(RANLIB) $@
 
-../sample/minimal$(EXEEXT): $(MINIMAL_OBJECTS) $(__minimal___win32rc) ../lib/$(LIBPREFIX)keybinder$(LIBEXT)
+@COND_WX_SHARED_1@../lib/$(DLLPREFIX)keybinder$(__keybinder_dll___targetsuf3): $(KEYBINDER_DLL_OBJECTS)
+@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(KEYBINDER_DLL_OBJECTS) $(LDFLAGS) -L../lib $(__keybinder_dll___importlib) $(__keybinder_dll___soname_flags) $(__keybinder_dll___macver)  $(WX_LIBS)
+@COND_WX_SHARED_1@	
+@COND_WX_SHARED_1@	$(__keybinder_dll___so_symlinks_cmd)
+
+../sample/minimal$(EXEEXT): $(MINIMAL_OBJECTS) $(__minimal___win32rc) $(__keybinder_lib___depname)
 	$(CXX) -o $@ $(MINIMAL_OBJECTS) -L../lib $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS) -lkeybinder
 	
 	$(__minimal___mac_setfilecmd)
 	$(__minimal___os2_emxbindcmd)
 
-keybinder_keybinder.o: $(srcdir)/../src/keybinder.cpp
-	$(CXXC) -c -o $@ $(KEYBINDER_CXXFLAGS) $(srcdir)/../src/keybinder.cpp
+keybinder_lib_keybinder.o: $(srcdir)/../src/keybinder.cpp
+	$(CXXC) -c -o $@ $(KEYBINDER_LIB_CXXFLAGS) $(srcdir)/../src/keybinder.cpp
 
-keybinder_menuutils.o: $(srcdir)/../src/menuutils.cpp
-	$(CXXC) -c -o $@ $(KEYBINDER_CXXFLAGS) $(srcdir)/../src/menuutils.cpp
+keybinder_lib_menuutils.o: $(srcdir)/../src/menuutils.cpp
+	$(CXXC) -c -o $@ $(KEYBINDER_LIB_CXXFLAGS) $(srcdir)/../src/menuutils.cpp
+
+keybinder_dll_keybinder.o: $(srcdir)/../src/keybinder.cpp
+	$(CXXC) -c -o $@ $(KEYBINDER_DLL_CXXFLAGS) $(srcdir)/../src/keybinder.cpp
+
+keybinder_dll_menuutils.o: $(srcdir)/../src/menuutils.cpp
+	$(CXXC) -c -o $@ $(KEYBINDER_DLL_CXXFLAGS) $(srcdir)/../src/menuutils.cpp
 
 minimal_minimal.o: $(srcdir)/../sample/minimal.cpp
 	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/../sample/minimal.cpp
 
 minimal_minimal_rc.o: $(srcdir)/../sample/minimal.rc
-	$(RESCOMP) -i$< -o$@ --include-dir ../include --include-dir ../sample
+	$(RESCOMP) -i$< -o$@  --include-dir ../include --include-dir ../sample
 
 
 # Include dependency info, if present:

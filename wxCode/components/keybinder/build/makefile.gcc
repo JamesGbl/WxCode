@@ -45,15 +45,25 @@ WX_VERSION = 26
 
 ### Variables: ###
 
-KEYBINDER_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
-	-DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+KEYBINDER_LIB_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
+	-mthreads $(__WX_SHAREDDEFINE_p) -DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) \
+	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
 	-I..\include $(CPPFLAGS) $(CXXFLAGS)
-KEYBINDER_OBJECTS =  \
-	mingw\keybinder_keybinder.o \
-	mingw\keybinder_menuutils.o
-MINIMAL_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
-	-DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+KEYBINDER_LIB_OBJECTS =  \
+	mingw\keybinder_lib_keybinder.o \
+	mingw\keybinder_lib_menuutils.o
+KEYBINDER_DLL_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
+	-mthreads $(__WX_SHAREDDEFINE_p) -DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) \
+	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
+	-I..\include -DWXMAKINGDLL_KEYBINDER $(CPPFLAGS) $(CXXFLAGS)
+KEYBINDER_DLL_OBJECTS =  \
+	mingw\keybinder_dll_keybinder.o \
+	mingw\keybinder_dll_menuutils.o
+MINIMAL_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -mthreads \
+	$(__WX_SHAREDDEFINE_p) -DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) \
+	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
 	-I..\include $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
@@ -65,11 +75,20 @@ MINIMAL_OBJECTS =  \
 ifeq ($(WX_DEBUG),1)
 WX3RDPARTLIBPOSTFIX = d
 endif
+ifeq ($(WX_SHARED),0)
+__keybinder_lib___depname = ..\lib\libkeybinder$(WXLIBPOSTFIX).a
+endif
+ifeq ($(WX_SHARED),1)
+__keybinder_dll___depname = ..\lib\keybinder$(WXLIBPOSTFIX).dll
+endif
+ifeq ($(WX_SHARED),1)
+__WX_SHAREDDEFINE_p_4 = --define WXUSINGDLL
+endif
 ifeq ($(WX_UNICODE),1)
-__WXUNICODE_DEFINE_p_2 = --define _UNICODE
+__WXUNICODE_DEFINE_p_4 = --define _UNICODE
 endif
 ifeq ($(WX_DEBUG),1)
-__WXDEBUG_DEFINE_p_2 = --define __WXDEBUG__
+__WXDEBUG_DEFINE_p_4 = --define __WXDEBUG__
 endif
 ifeq ($(WX_DEBUG),0)
 __WARNINGS = 
@@ -82,6 +101,9 @@ __OPTIMIZEFLAG = -O2
 endif
 ifeq ($(WX_DEBUG),1)
 __OPTIMIZEFLAG = -O0
+endif
+ifeq ($(WX_SHARED),1)
+__WX_SHAREDDEFINE_p = -DWXUSINGDLL
 endif
 ifeq ($(WX_UNICODE),1)
 __WXUNICODE_DEFINE_p = -D_UNICODE
@@ -124,10 +146,12 @@ mingw:
 
 ### Targets: ###
 
-all: ..\lib\libkeybinder$(WXLIBPOSTFIX).a ..\sample\minimal.exe
+all: $(__keybinder_lib___depname) $(__keybinder_dll___depname) ..\sample\minimal.exe
 
 clean: 
 	-if exist mingw\*.o del mingw\*.o
+	-if exist ..\lib\libkeybinder$(WXLIBPOSTFIX).a del ..\lib\libkeybinder$(WXLIBPOSTFIX).a
+	-if exist ..\lib\keybinder$(WXLIBPOSTFIX).dll del ..\lib\keybinder$(WXLIBPOSTFIX).dll
 	-if exist ..\lib\libkeybinder$(WXLIBPOSTFIX).a del ..\lib\libkeybinder$(WXLIBPOSTFIX).a
 	-if exist ..\sample\minimal.exe del ..\sample\minimal.exe
 
@@ -156,25 +180,38 @@ docs:
 cleandocs: 
 	-if exist ..\docs\html then rmdir /S /Q ..\docs\html
 
-..\lib\libkeybinder$(WXLIBPOSTFIX).a: $(KEYBINDER_OBJECTS)
+ifeq ($(WX_SHARED),0)
+..\lib\libkeybinder$(WXLIBPOSTFIX).a: $(KEYBINDER_LIB_OBJECTS)
 	if exist $@ del $@
-	ar rcu $@ $(KEYBINDER_OBJECTS)
+	ar rcu $@ $(KEYBINDER_LIB_OBJECTS)
 	ranlib $@
+endif
 
-..\sample\minimal.exe: $(MINIMAL_OBJECTS) mingw\minimal_minimal_rc.o ..\lib\libkeybinder$(WXLIBPOSTFIX).a
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -Wl,--subsystem,windows -mwindows  ..\lib\libkeybinder$(WXLIBPOSTFIX).a -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTLIBPOSTFIX) -lwxjpeg$(WX3RDPARTLIBPOSTFIX) -lwxpng$(WX3RDPARTLIBPOSTFIX) -lwxzlib$(WX3RDPARTLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+ifeq ($(WX_SHARED),1)
+..\lib\keybinder$(WXLIBPOSTFIX).dll: $(KEYBINDER_DLL_OBJECTS)
+	$(CXX) -shared -fPIC -o $@ $(KEYBINDER_DLL_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -Wl,--out-implib,..\lib\libkeybinder$(WXLIBPOSTFIX).a  -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTLIBPOSTFIX) -lwxjpeg$(WX3RDPARTLIBPOSTFIX) -lwxpng$(WX3RDPARTLIBPOSTFIX) -lwxzlib$(WX3RDPARTLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+endif
 
-mingw\keybinder_keybinder.o: ./../src/keybinder.cpp
-	$(CXX) -c -o $@ $(KEYBINDER_CXXFLAGS) $<
+..\sample\minimal.exe: $(MINIMAL_OBJECTS) mingw\minimal_minimal_rc.o $(__keybinder_lib___depname)
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -Wl,--subsystem,windows -mwindows  ..\lib\libkeybinder$(WXLIBPOSTFIX).a -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTLIBPOSTFIX) -lwxjpeg$(WX3RDPARTLIBPOSTFIX) -lwxpng$(WX3RDPARTLIBPOSTFIX) -lwxzlib$(WX3RDPARTLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
-mingw\keybinder_menuutils.o: ./../src/menuutils.cpp
-	$(CXX) -c -o $@ $(KEYBINDER_CXXFLAGS) $<
+mingw\keybinder_lib_keybinder.o: ./../src/keybinder.cpp
+	$(CXX) -c -o $@ $(KEYBINDER_LIB_CXXFLAGS) $<
+
+mingw\keybinder_lib_menuutils.o: ./../src/menuutils.cpp
+	$(CXX) -c -o $@ $(KEYBINDER_LIB_CXXFLAGS) $<
+
+mingw\keybinder_dll_keybinder.o: ./../src/keybinder.cpp
+	$(CXX) -c -o $@ $(KEYBINDER_DLL_CXXFLAGS) $<
+
+mingw\keybinder_dll_menuutils.o: ./../src/menuutils.cpp
+	$(CXX) -c -o $@ $(KEYBINDER_DLL_CXXFLAGS) $<
 
 mingw\minimal_minimal.o: ./../sample/minimal.cpp
 	$(CXX) -c -o $@ $(MINIMAL_CXXFLAGS) $<
 
 mingw\minimal_minimal_rc.o: ./../sample/minimal.rc
-	windres --use-temp-file -i$< -o$@ --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_2) $(__WXDEBUG_DEFINE_p_2) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ..\include --include-dir ..\sample
+	windres --use-temp-file -i$< -o$@ $(__WX_SHAREDDEFINE_p_4) --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_4) $(__WXDEBUG_DEFINE_p_4) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ..\include --include-dir ..\sample
 
 .PHONY: all clean
 

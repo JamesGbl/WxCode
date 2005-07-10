@@ -72,16 +72,26 @@ WX_VERSION = 26
 
 ### Variables: ###
 
-KEYBINDER_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
-	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+KEYBINDER_LIB_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG_1) \
+	$(__DEBUGINFO) -tWM $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) \
+	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	-I$(WX_DIR)\include -I..\include $(CPPFLAGS) $(CXXFLAGS)
-KEYBINDER_OBJECTS =  \
-	borland\keybinder_keybinder.obj \
-	borland\keybinder_menuutils.obj
-MINIMAL_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
-	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+KEYBINDER_LIB_OBJECTS =  \
+	borland\keybinder_lib_keybinder.obj \
+	borland\keybinder_lib_menuutils.obj
+KEYBINDER_DLL_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG_1) \
+	$(__DEBUGINFO) -tWM $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) \
+	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
+	-I$(WX_DIR)\include -I..\include -DWXMAKINGDLL_KEYBINDER $(CPPFLAGS) \
+	$(CXXFLAGS)
+KEYBINDER_DLL_OBJECTS =  \
+	borland\keybinder_dll_keybinder.obj \
+	borland\keybinder_dll_menuutils.obj
+MINIMAL_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG_1) $(__DEBUGINFO) -tWM \
+	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
+	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	-I$(WX_DIR)\include -I..\include $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	borland\minimal_minimal.obj
@@ -91,17 +101,29 @@ MINIMAL_OBJECTS =  \
 !if "$(WX_DEBUG)" == "1"
 WX3RDPARTLIBPOSTFIX = d
 !endif
+!if "$(WX_SHARED)" == "0"
+__keybinder_lib___depname = ..\lib\keybinder$(WXLIBPOSTFIX).lib
+!endif
+!if "$(WX_SHARED)" == "1"
+__keybinder_dll___depname = ..\lib\keybinder$(WXLIBPOSTFIX).dll
+!endif
+!if "$(WX_SHARED)" == "1"
+__WX_SHAREDDEFINE_p_4 = -dWXUSINGDLL
+!endif
 !if "$(WX_UNICODE)" == "1"
-__WXUNICODE_DEFINE_p_2 = -d_UNICODE
+__WXUNICODE_DEFINE_p_4 = -d_UNICODE
 !endif
 !if "$(WX_DEBUG)" == "1"
-__WXDEBUG_DEFINE_p_2 = -d__WXDEBUG__
+__WXDEBUG_DEFINE_p_4 = -d__WXDEBUG__
 !endif
 !if "$(WX_DEBUG)" == "0"
-__OPTIMIZEFLAG = -O2
+__OPTIMIZEFLAG_1 = -O2
 !endif
 !if "$(WX_DEBUG)" == "1"
-__OPTIMIZEFLAG = -Od
+__OPTIMIZEFLAG_1 = -Od
+!endif
+!if "$(WX_SHARED)" == "1"
+__WX_SHAREDDEFINE_p = -DWXUSINGDLL
 !endif
 !if "$(WX_UNICODE)" == "1"
 __WXUNICODE_DEFINE_p = -D_UNICODE
@@ -138,12 +160,19 @@ borland:
 
 ### Targets: ###
 
-all: ..\lib\keybinder$(WXLIBPOSTFIX).lib ..\sample\minimal.exe
+all: $(__keybinder_lib___depname) $(__keybinder_dll___depname) ..\sample\minimal.exe
 
 clean: 
 	-if exist borland\*.obj del borland\*.obj
 	-if exist borland\*.res del borland\*.res
 	-if exist borland\*.csm del borland\*.csm
+	-if exist ..\lib\keybinder$(WXLIBPOSTFIX).lib del ..\lib\keybinder$(WXLIBPOSTFIX).lib
+	-if exist ..\lib\keybinder$(WXLIBPOSTFIX).dll del ..\lib\keybinder$(WXLIBPOSTFIX).dll
+	-if exist ..\lib\keybinder$(WXLIBPOSTFIX).tds del ..\lib\keybinder$(WXLIBPOSTFIX).tds
+	-if exist ..\lib\keybinder$(WXLIBPOSTFIX).ilc del ..\lib\keybinder$(WXLIBPOSTFIX).ilc
+	-if exist ..\lib\keybinder$(WXLIBPOSTFIX).ild del ..\lib\keybinder$(WXLIBPOSTFIX).ild
+	-if exist ..\lib\keybinder$(WXLIBPOSTFIX).ilf del ..\lib\keybinder$(WXLIBPOSTFIX).ilf
+	-if exist ..\lib\keybinder$(WXLIBPOSTFIX).ils del ..\lib\keybinder$(WXLIBPOSTFIX).ils
 	-if exist ..\lib\keybinder$(WXLIBPOSTFIX).lib del ..\lib\keybinder$(WXLIBPOSTFIX).lib
 	-if exist ..\sample\minimal.exe del ..\sample\minimal.exe
 	-if exist ..\sample\minimal.tds del ..\sample\minimal.tds
@@ -153,10 +182,12 @@ clean:
 	-if exist ..\sample\minimal.ils del ..\sample\minimal.ils
 
 tarball: 
-	( cd .. && tar -cvzf ..\keybinder.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
+	-cd ..
+	-tar -cvzf ..\keybinder.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* *
 
 zip: 
-	( cd .. && zip -r9 ..\keybinder.zip *  -x *.pdb -x *.log -x *.o* )
+	-cd ..
+	-zip -r9 ..\keybinder.zip *  -x *.pdb -x *.log -x *.o*
 
 cleanbuilddirs: 
 	-if exist msvc rmdir /S /Q msvc
@@ -172,31 +203,48 @@ cleanall: clean cleanbuilddirs
 	del /S /Q ..\*.exe >NUL
 
 docs: 
-	( cd ..\docs && doxygen )
+	-cd ..\docs
+	-doxygen
 
 cleandocs: 
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
-..\lib\keybinder$(WXLIBPOSTFIX).lib: $(KEYBINDER_OBJECTS)
+!if "$(WX_SHARED)" == "0"
+..\lib\keybinder$(WXLIBPOSTFIX).lib: $(KEYBINDER_LIB_OBJECTS)
 	if exist $@ del $@
 	tlib /a /p4096 $@ @&&|
-	$(KEYBINDER_OBJECTS)
+	$(KEYBINDER_LIB_OBJECTS)
+|
+!endif
+
+!if "$(WX_SHARED)" == "1"
+..\lib\keybinder$(WXLIBPOSTFIX).dll: $(KEYBINDER_DLL_OBJECTS)
+	ilink32 -Tpd -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib @&&|
+	c0d32.obj $(KEYBINDER_DLL_OBJECTS),$@,, wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
+|
+	implib -f ..\lib\keybinder$(WXLIBPOSTFIX) $@
+!endif
+
+..\sample\minimal.exe: $(MINIMAL_OBJECTS)  borland\minimal_minimal.res $(__keybinder_lib___depname)
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -aa @&&|
+	c0w32.obj $(MINIMAL_OBJECTS),$@,, ..\lib\keybinder$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,, borland\minimal_minimal.res
 |
 
-..\sample\minimal.exe: $(MINIMAL_OBJECTS)  borland\minimal_minimal.res ..\lib\keybinder$(WXLIBPOSTFIX).lib
-	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -aa @&&|
-	c0w32.obj $(MINIMAL_OBJECTS),$@,, ..\lib\keybinder$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32.lib,, borland\minimal_minimal.res
-|
+borland\keybinder_lib_keybinder.obj: .\..\src\keybinder.cpp
+	$(CXX) -q -c -P -o$@ $(KEYBINDER_LIB_CXXFLAGS) $**
 
-borland\keybinder_keybinder.obj: .\..\src\keybinder.cpp
-	$(CXX) -q -c -P -o$@ $(KEYBINDER_CXXFLAGS) $**
+borland\keybinder_lib_menuutils.obj: .\..\src\menuutils.cpp
+	$(CXX) -q -c -P -o$@ $(KEYBINDER_LIB_CXXFLAGS) $**
 
-borland\keybinder_menuutils.obj: .\..\src\menuutils.cpp
-	$(CXX) -q -c -P -o$@ $(KEYBINDER_CXXFLAGS) $**
+borland\keybinder_dll_keybinder.obj: .\..\src\keybinder.cpp
+	$(CXX) -q -c -P -o$@ $(KEYBINDER_DLL_CXXFLAGS) $**
+
+borland\keybinder_dll_menuutils.obj: .\..\src\menuutils.cpp
+	$(CXX) -q -c -P -o$@ $(KEYBINDER_DLL_CXXFLAGS) $**
 
 borland\minimal_minimal.obj: .\..\sample\minimal.cpp
 	$(CXX) -q -c -P -o$@ $(MINIMAL_CXXFLAGS) $**
 
 borland\minimal_minimal.res: .\..\sample\minimal.rc
-	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include $(__WXUNICODE_DEFINE_p_2) $(__WXDEBUG_DEFINE_p_2) -d__WXMSW__ -i$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\sample $**
+	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include $(__WX_SHAREDDEFINE_p_4) $(__WXUNICODE_DEFINE_p_4) $(__WXDEBUG_DEFINE_p_4) -d__WXMSW__ -i$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\sample $**
 
