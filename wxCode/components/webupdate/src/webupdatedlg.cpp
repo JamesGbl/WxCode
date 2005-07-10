@@ -22,6 +22,16 @@
 #endif
 
 // includes
+#ifndef WX_PRECOMP
+#include <wx/log.h>
+#include <wx/textctrl.h>
+#include <wx/checkbox.h>
+#include <wx/msgdlg.h>
+#include <wx/dirdlg.h>
+#include <wx/generic/dirdlgg.h>
+#endif
+
+// includes
 #include "wx/webupdatedlg.h"
 #include <wx/wfstream.h>
 
@@ -251,7 +261,7 @@ int wxWebUpdateDlg::ShowModal()
 		wxMessageBox(wxString(wxT("Cannot download the script file from\n")) + 
 					m_strURI + wxT("\nbecause of the low resources..."), 
 					wxT("Error"), wxOK | wxICON_ERROR);
-		return NULL;
+		return wxCANCEL;
 	}
 
 	// as soon as the wxWebUpdateThread has completed its work we'll receive
@@ -469,9 +479,11 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &ev)
 		return;
 	}
 
+#ifdef __WXMSW__
 	unsigned long now = GetTickCount();
 	static unsigned long begin = GetTickCount();
 	m_pGauge->SetValue((now-begin)/1000);
+#endif
 
 	if (ev.GetId() == wxWUT_NOTIFICATION)
 		OnDownloadComplete(ev);

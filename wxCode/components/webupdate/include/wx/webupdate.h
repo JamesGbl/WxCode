@@ -23,13 +23,6 @@
 #include "wx/url.h"
 
 
-// Conditional compilation
-// -----------------------
-
-#define wxWU_USE_CHECKEDLISTCTRL		1
-
-
-
 //! A global wxWebUpdateDownload variable which contains empty (and thus invalid)
 //! settings.
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDownload;		// defined later

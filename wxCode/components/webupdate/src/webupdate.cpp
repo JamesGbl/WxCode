@@ -23,6 +23,7 @@
 
 // includes
 #ifndef WX_PRECOMP
+#include "wx/log.h"
 #endif
 
 #include "wx/url.h"

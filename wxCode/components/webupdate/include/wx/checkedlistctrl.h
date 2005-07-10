@@ -14,11 +14,11 @@
 
 // optimization for GCC
 #if defined(__GNUG__) && !defined(__APPLE__)
-#pragma interface "webupdate.h"
+#pragma interface "checkedlistctrl.h"
 #endif
 
 // wxWidgets headers
-#include "wx/webupdate.h"		// for the WXDLLIMPEXP_WEBUPDATE macro
+#include "wx/webupdatedef.h"		// for the WXDLLIMPEXP_WEBUPDATE macro
 #include <wx/listctrl.h>
 #include <wx/imaglist.h>
 

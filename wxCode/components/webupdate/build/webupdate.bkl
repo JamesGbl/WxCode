@@ -18,7 +18,8 @@
 	<set var="COMP_SAMPLE1_UPDATED_SRC">../sample/v2.0.3/minimal.cpp</set>
 	<set var="COMP_SAMPLE1_DIR">../sample/v1.0.0</set>
 	<set var="COMP_SAMPLE1_UPDATED_DIR">../sample/v2.0.3</set>
-
+	
+	<set var="COMP_WANT_INSTALL_TARGET">0</set>
 	<set var="WX_UNICODE_DEFAULT">1</set>
 	<set var="WX_VERSION_DEFAULT">26</set>
 
@@ -27,8 +28,11 @@
 
 	<!-- The real target: wxcode.bkl does not declare a real target but a template called
 	     "complib". In this way modifications are allowed to the basic template. -->
-	<lib id="webupdate_lib" template="complib" cond="WX_SHARED=='0'"/>
+	<lib id="webupdate_lib" template="complib" cond="WX_SHARED=='0'">
+		<install-to>$(LIBDIR)</install-to>
+	</lib>
 	<dll id="webupdate_dll" template="compdll" cond="WX_SHARED=='1'">
+		<install-to>$(LIBDIR)</install-to>
 		<wx-lib>html</wx-lib>
 		<wx-lib>adv</wx-lib>
 		<wx-lib>xrc</wx-lib>

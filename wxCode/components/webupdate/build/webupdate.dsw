@@ -2,7 +2,19 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 # WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
 
 ###############################################################################
-Project: "webupdate"=webupdate_webupdate.dsp - Package Owner=<4>
+Project: "webupdate_lib"=webupdate_webupdate_lib.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "webupdate_dll"=webupdate_webupdate_dll.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -23,7 +35,7 @@ Package=<5>
 Package=<4>
 {{{
 Begin Project Dependency
-Project_Dep_Name webupdate
+Project_Dep_Name webupdate_lib
 End Project Dependency
 }}}
 
@@ -38,7 +50,7 @@ Package=<5>
 Package=<4>
 {{{
 Begin Project Dependency
-Project_Dep_Name webupdate
+Project_Dep_Name webupdate_lib
 End Project Dependency
 }}}
 

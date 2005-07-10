@@ -105,8 +105,8 @@ AC_OUTPUT
 # Just a little msg for GNU AUTOtools newbies (like me)
 echo
 echo " ------------------------------------------------------"
-echo "  Successfully configured wxDockIt ${PACKAGE_VERSION}:"
-echo "  wxDockIt will be built using the same configuration "
+echo "  Successfully configured ${PACKAGE_NAME} ${PACKAGE_VERSION}:"
+echo "  ${PACKAGE_NAME} will be built using the same configuration "
 echo "  used to build wxWidgets:"
 if [[ "$WX_DEBUG" = "1" ]]; then
 	echo "  - DEBUG build"

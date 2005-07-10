@@ -22,6 +22,7 @@
 #include "wx/checkedlistctrl.h"
 #include <wx/stattext.h>
 #include <wx/gauge.h>
+#include <wx/textctrl.h>
 #include <wx/image.h>
 #include <wx/filesys.h>
 #include <wx/fs_mem.h>

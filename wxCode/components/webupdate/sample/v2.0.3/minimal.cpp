@@ -31,10 +31,11 @@ wxWebUpdateLocalPackage g_packageList[PACKAGE_NUM];
 
 
 
+#ifdef __WXMSW__
 #include <crtdbg.h>
 #define mcDUMP_ON_EXIT		\
 	{ _CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF); }
-
+#endif
 
 
 // ----------------------------------------------------------------------------
@@ -154,7 +155,9 @@ IMPLEMENT_APP(MyApp)
 // wxT('Main program') equivalent: the program execution "starts" here
 bool MyApp::OnInit()
 {
-	mcDUMP_ON_EXIT;
+#ifdef __WXMSW__
+	mcDUMP_ON_EXIT;			// for debugging only
+#endif
 
     // create the main application window
     MyFrame *frame = new MyFrame(APP_NAME);

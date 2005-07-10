@@ -12,6 +12,15 @@
 #ifndef _WX_WEBUPDATE_DEFS_H_
 #define _WX_WEBUPDATE_DEFS_H_
 
+
+// Conditional compilation
+// -----------------------
+
+//! If this define is set to 1, then the wxCheckedListCtrl will be used
+//! instead of a simple wxListCtrl.
+#define wxWU_USE_CHECKEDLISTCTRL				1
+
+
 // for shared builds
 #ifdef WXMAKINGDLL_WEBUPDATE
     #define WXDLLIMPEXP_WEBUPDATE				WXEXPORT

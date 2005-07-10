@@ -1831,7 +1831,7 @@ void wxKeyConfigPanel::OnProfileSelected(wxCommandEvent &)
 			int choice = wxMessageBox(
 				wxString::Format(wxT("The previous profile (named \"%s\") has been modified.\n")
 						wxT("Do you want to save the changes to that profile ?"), 
-						GetProfile(m_nCurrentProf)->GetName()),
+						GetProfile(m_nCurrentProf)->GetName().c_str()),
 				wxT("Warning"), wxYES_NO | wxICON_QUESTION);
 
 			if (choice == wxYES) {
