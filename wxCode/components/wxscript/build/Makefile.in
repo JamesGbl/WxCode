@@ -10,16 +10,21 @@
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 INSTALL = @INSTALL@
+SHARED_LD_CXX = @SHARED_LD_CXX@
 LIBEXT = @LIBEXT@
 LIBPREFIX = @LIBPREFIX@
+SO_SUFFIX = @SO_SUFFIX@
+DLLIMP_SUFFIX = @DLLIMP_SUFFIX@
 EXEEXT = @EXEEXT@
 SETFILE = @SETFILE@
+PIC_FLAG = @PIC_FLAG@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_DIR = @INSTALL_DIR@
 srcdir = @srcdir@
 top_builddir = @top_builddir@
 libdir = @libdir@
 includedir = @includedir@
+DLLPREFIX = @DLLPREFIX@
 AR = @AR@
 RANLIB = @RANLIB@
 CXX = @CXX@
@@ -37,15 +42,24 @@ WX_LIBS = @WX_LIBS@
 ### Variables: ###
 
 DESTDIR = 
-WXSCRIPT_CXXFLAGS = -I../include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) \
+WXSCRIPT_LIB_CXXFLAGS = -I../include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) \
 	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE) $(WX_CXXFLAGS) \
 	$(CPPFLAGS) $(CXXFLAGS)
-WXSCRIPT_OBJECTS =  \
-	wxscript_script.o \
-	wxscript_scpython.o \
-	wxscript_sccint.o \
-	wxscript_scunderc.o \
-	wxscript_sclua.o
+WXSCRIPT_LIB_OBJECTS =  \
+	wxscript_lib_script.o \
+	wxscript_lib_scpython.o \
+	wxscript_lib_sccint.o \
+	wxscript_lib_scunderc.o \
+	wxscript_lib_sclua.o
+WXSCRIPT_DLL_CXXFLAGS = -I../include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) \
+	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE) $(PIC_FLAG) \
+	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+WXSCRIPT_DLL_OBJECTS =  \
+	wxscript_dll_script.o \
+	wxscript_dll_scpython.o \
+	wxscript_dll_sccint.o \
+	wxscript_dll_scunderc.o \
+	wxscript_dll_sclua.o
 TEST1_CXXFLAGS = -I../include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) \
 	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE) $(WX_CXXFLAGS) \
 	$(CPPFLAGS) $(CXXFLAGS)
@@ -59,8 +73,8 @@ TEST2_OBJECTS =  \
 
 ### Conditionally set variables: ###
 
-@COND_DEPS_TRACKING_1@CXXC = $(top_builddir)./bk-deps $(CXX)
 @COND_DEPS_TRACKING_0@CXXC = $(CXX)
+@COND_DEPS_TRACKING_1@CXXC = $(top_builddir)./bk-deps $(CXX)
 @COND_PYTHON_VER_2_2@PYTHON_MAJVER = 2
 @COND_PYTHON_VER_2_3@PYTHON_MAJVER = 2
 @COND_PYTHON_VER_2_4@PYTHON_MAJVER = 2
@@ -81,6 +95,14 @@ TEST2_OBJECTS =  \
 @COND_USE_LUA_0@SCRIPTDEFINE2 = -DwxSCRIPT_NO_LUA
 @COND_USE_CINT_0@SCRIPTDEFINE3 = -DwxSCRIPT_NO_CINT
 @COND_USE_UNDERC_0@SCRIPTDEFINE4 = -DwxSCRIPT_NO_UNDERC
+@COND_WX_SHARED_0@__wxscript_lib___depname = \
+@COND_WX_SHARED_0@	../lib/$(LIBPREFIX)wxscript$(LIBEXT)
+@COND_WX_SHARED_1@__wxscript_dll___depname = \
+@COND_WX_SHARED_1@	../lib/$(DLLPREFIX)wxscript_dll.$(SO_SUFFIX)
+@COND_PLATFORM_OS2_1@__wxscript_dll___importlib = \
+@COND_PLATFORM_OS2_1@	-import ../lib/$(LIBPREFIX)wxscript.$(DLLIMP_SUFFIX)
+@COND_PLATFORM_WIN32_1@__wxscript_dll___importlib = \
+@COND_PLATFORM_WIN32_1@	-Wl,--out-implib,../lib/$(LIBPREFIX)wxscript.$(DLLIMP_SUFFIX)
 @COND_PLATFORM_MAC_1@__test1___mac_setfilecmd = \
 @COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL test1$(EXEEXT)
 @COND_PLATFORM_MAC_1@__test2___mac_setfilecmd = \
@@ -95,17 +117,18 @@ TEST2_OBJECTS =  \
 
 ### Targets: ###
 
-all: ../lib/$(LIBPREFIX)wxscript$(LIBEXT) ../tests/test1/test1$(EXEEXT) ../tests/test2/test2$(EXEEXT)
+all: $(__wxscript_lib___depname) $(__wxscript_dll___depname) ../tests/test1/test1$(EXEEXT) ../tests/test2/test2$(EXEEXT)
 
 install: all install-wxheaders install-lib
 
 uninstall: 
-	rm -f $(includedir)/wx/script.h
-	rm -f $(includedir)/wx/scpython.h
-	rm -f $(includedir)/wx/sccint.h
-	rm -f $(includedir)/wx/scunderc.h
-	rm -f $(includedir)/wx/sclua.h
-	rm -f $(libdir)/libwxscript*.a
+	rm -f  $(DESTDIR)$(includedir)/wx/script.h\
+	wx/scpython.h\
+	wx/sccint.h\
+	wx/scunderc.h\
+	wx/sclua.h\
+	wx/scdef.h
+	rm -f $(libdir)/*wxscript*
 
 install-strip: install
 
@@ -113,6 +136,8 @@ clean:
 	rm -rf ./.deps ./.pch
 	rm -f ./*.o
 	rm -f ../lib/$(LIBPREFIX)wxscript$(LIBEXT)
+	rm -f ../lib/$(DLLPREFIX)wxscript_dll.$(SO_SUFFIX)
+	rm -f ../lib/$(LIBPREFIX)wxscript.$(DLLIMP_SUFFIX)
 	rm -f ../tests/test1/test1$(EXEEXT)
 	rm -f ../tests/test2/test2$(EXEEXT)
 
@@ -150,37 +175,55 @@ install-wxheaders:
 
 install-lib: 
 	$(INSTALL_DIR) $(DESTDIR)$(libdir)
-	(cd $(srcdir) ; $(INSTALL_DATA)  ../lib/*.a $(DESTDIR)$(libdir))
+	(cd $(srcdir) ; $(INSTALL_DATA)  ../lib/*wxscript* $(DESTDIR)$(libdir))
 
-../lib/$(LIBPREFIX)wxscript$(LIBEXT): $(WXSCRIPT_OBJECTS)
-	rm -f $@
-	$(AR) rcu $@ $(WXSCRIPT_OBJECTS)
-	$(RANLIB) $@
+@COND_WX_SHARED_0@../lib/$(LIBPREFIX)wxscript$(LIBEXT): $(WXSCRIPT_LIB_OBJECTS)
+@COND_WX_SHARED_0@	rm -f $@
+@COND_WX_SHARED_0@	$(AR) rcu $@ $(WXSCRIPT_LIB_OBJECTS)
+@COND_WX_SHARED_0@	$(RANLIB) $@
 
-../tests/test1/test1$(EXEEXT): $(TEST1_OBJECTS) ../lib/$(LIBPREFIX)wxscript$(LIBEXT)
+@COND_WX_SHARED_1@../lib/$(DLLPREFIX)wxscript_dll.$(SO_SUFFIX): $(WXSCRIPT_DLL_OBJECTS)
+@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(WXSCRIPT_DLL_OBJECTS) $(LDFLAGS) -L../lib $(__wxscript_dll___importlib) $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4)
+
+../tests/test1/test1$(EXEEXT): $(TEST1_OBJECTS) $(__wxscript_lib___depname)
 	$(CXX) -o $@ $(TEST1_OBJECTS) -L../lib $(LDFLAGS) -L../lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4)   $(WX_LIBS) -lwxscript $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p)
 	
 	$(__test1___mac_setfilecmd)
 
-../tests/test2/test2$(EXEEXT): $(TEST2_OBJECTS) ../lib/$(LIBPREFIX)wxscript$(LIBEXT)
+../tests/test2/test2$(EXEEXT): $(TEST2_OBJECTS) $(__wxscript_lib___depname)
 	$(CXX) -o $@ $(TEST2_OBJECTS) -L../lib $(LDFLAGS) -L../lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4)   $(WX_LIBS) -lwxscript $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p)
 	
 	$(__test2___mac_setfilecmd)
 
-wxscript_script.o: $(srcdir)/../src/script.cpp
-	$(CXXC) -c -o $@ $(WXSCRIPT_CXXFLAGS) $(srcdir)/../src/script.cpp
+wxscript_lib_script.o: $(srcdir)/../src/script.cpp
+	$(CXXC) -c -o $@ $(WXSCRIPT_LIB_CXXFLAGS) $(srcdir)/../src/script.cpp
 
-wxscript_scpython.o: $(srcdir)/../src/scpython.cpp
-	$(CXXC) -c -o $@ $(WXSCRIPT_CXXFLAGS) $(srcdir)/../src/scpython.cpp
+wxscript_lib_scpython.o: $(srcdir)/../src/scpython.cpp
+	$(CXXC) -c -o $@ $(WXSCRIPT_LIB_CXXFLAGS) $(srcdir)/../src/scpython.cpp
 
-wxscript_sccint.o: $(srcdir)/../src/sccint.cpp
-	$(CXXC) -c -o $@ $(WXSCRIPT_CXXFLAGS) $(srcdir)/../src/sccint.cpp
+wxscript_lib_sccint.o: $(srcdir)/../src/sccint.cpp
+	$(CXXC) -c -o $@ $(WXSCRIPT_LIB_CXXFLAGS) $(srcdir)/../src/sccint.cpp
 
-wxscript_scunderc.o: $(srcdir)/../src/scunderc.cpp
-	$(CXXC) -c -o $@ $(WXSCRIPT_CXXFLAGS) $(srcdir)/../src/scunderc.cpp
+wxscript_lib_scunderc.o: $(srcdir)/../src/scunderc.cpp
+	$(CXXC) -c -o $@ $(WXSCRIPT_LIB_CXXFLAGS) $(srcdir)/../src/scunderc.cpp
 
-wxscript_sclua.o: $(srcdir)/../src/sclua.cpp
-	$(CXXC) -c -o $@ $(WXSCRIPT_CXXFLAGS) $(srcdir)/../src/sclua.cpp
+wxscript_lib_sclua.o: $(srcdir)/../src/sclua.cpp
+	$(CXXC) -c -o $@ $(WXSCRIPT_LIB_CXXFLAGS) $(srcdir)/../src/sclua.cpp
+
+wxscript_dll_script.o: $(srcdir)/../src/script.cpp
+	$(CXXC) -c -o $@ $(WXSCRIPT_DLL_CXXFLAGS) $(srcdir)/../src/script.cpp
+
+wxscript_dll_scpython.o: $(srcdir)/../src/scpython.cpp
+	$(CXXC) -c -o $@ $(WXSCRIPT_DLL_CXXFLAGS) $(srcdir)/../src/scpython.cpp
+
+wxscript_dll_sccint.o: $(srcdir)/../src/sccint.cpp
+	$(CXXC) -c -o $@ $(WXSCRIPT_DLL_CXXFLAGS) $(srcdir)/../src/sccint.cpp
+
+wxscript_dll_scunderc.o: $(srcdir)/../src/scunderc.cpp
+	$(CXXC) -c -o $@ $(WXSCRIPT_DLL_CXXFLAGS) $(srcdir)/../src/scunderc.cpp
+
+wxscript_dll_sclua.o: $(srcdir)/../src/sclua.cpp
+	$(CXXC) -c -o $@ $(WXSCRIPT_DLL_CXXFLAGS) $(srcdir)/../src/sclua.cpp
 
 test1_Test.o: $(srcdir)/../tests/test1/Test.cpp
 	$(CXXC) -c -o $@ $(TEST1_CXXFLAGS) $(srcdir)/../tests/test1/Test.cpp

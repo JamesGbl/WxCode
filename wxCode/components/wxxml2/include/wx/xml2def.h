@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-// Name:        mycomp.h
+// Name:        WXXML2.h
 // Purpose:     shared build defines
 // Author:      Your Name
 // Created:     someyear/somemonth/someday
@@ -9,33 +9,33 @@
 /////////////////////////////////////////////////////////////////////////////
 
 
-#ifndef _WX_MYCOMP_DEFS_H_
-#define _WX_MYCOMP_DEFS_H_
+#ifndef _WX_WXXML2_DEFS_H_
+#define _WX_WXXML2_DEFS_H_
 
 // Defines for shared builds.
 // Simple reference for using these macros and for writin components
 // which support shared builds:
 //
-// 1) use the WXDLLIMPEXP_MYCOMP in each class declaration:
-//          class WXDLLIMPEXP_MYCOMP myCompClass {   [...]   };
+// 1) use the WXDLLIMPEXP_WXXML2 in each class declaration:
+//          class WXDLLIMPEXP_WXXML2 WXXML2Class {   [...]   };
 //
-// 2) use the WXDLLIMPEXP_MYCOMP in the declaration of each global function:
-//          WXDLLIMPEXP_MYCOMP int myGlobalFunc();
+// 2) use the WXDLLIMPEXP_WXXML2 in the declaration of each global function:
+//          WXDLLIMPEXP_WXXML2 int myGlobalFunc();
 //
-// 3) use the WXDLLIMPEXP_DATA_MYCOMP() in the declaration of each global
+// 3) use the WXDLLIMPEXP_DATA_WXXML2() in the declaration of each global
 //    variable:
-//          WXDLLIMPEXP_DATA_MYCOMP(int) myGlobalIntVar;
+//          WXDLLIMPEXP_DATA_WXXML2(int) myGlobalIntVar;
 //
-#ifdef WXMAKINGDLL_MYCOMP
-    #define WXDLLIMPEXP_MYCOMP                  WXEXPORT
-    #define WXDLLIMPEXP_DATA_MYCOMP(type)       WXEXPORT type
+#ifdef WXMAKINGDLL_WXXML2
+    #define WXDLLIMPEXP_WXXML2                  WXEXPORT
+    #define WXDLLIMPEXP_DATA_WXXML2(type)       WXEXPORT type
 #elif defined(WXUSINGDLL)
-    #define WXDLLIMPEXP_MYCOMP                  WXIMPORT
-    #define WXDLLIMPEXP_DATA_MYCOMP(type)       WXIMPORT type
+    #define WXDLLIMPEXP_WXXML2                  WXIMPORT
+    #define WXDLLIMPEXP_DATA_WXXML2(type)       WXIMPORT type
 #else // not making nor using DLL
-    #define WXDLLIMPEXP_MYCOMP
-    #define WXDLLIMPEXP_DATA_MYCOMP(type)	    type
+    #define WXDLLIMPEXP_WXXML2
+    #define WXDLLIMPEXP_DATA_WXXML2(type)	    type
 #endif
 
-#endif // _WX_MYCOMP_DEFS_H_
+#endif // _WX_WXXML2_DEFS_H_
 

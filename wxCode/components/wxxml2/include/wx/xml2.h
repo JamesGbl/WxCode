@@ -22,6 +22,8 @@
 #include "wx/object.h"
 #include "wx/wfstream.h"
 
+// for shared builds
+#include "wx/xml2def.h"
 
 // When using mingw, we must define the LIBXML_STATIC symbol, otherwise
 // we will have problems when linking about the "xmlFree" function.
@@ -46,15 +48,6 @@
 // -------------------------------
 // Miscellaneous defines/macros
 // -------------------------------
-
-#ifdef WXXMLISDLL
-	// if building DLL, then WX*XML*DLLEXPORT=WXDLLEXPORT...
-	#define WXXMLDLLEXPORT		WXDLLEXPORT
-#else
-	// ...otherwise 
-	#define WXXMLDLLEXPORT		/* expand to nothing */
-#endif
-
 
 //! A macro used in the overloaded operator==; this is the return table:
 //!
@@ -215,12 +208,12 @@ typedef struct tagXml2BaseNode {
 } wxXml2BaseNodeObj;
 
 // these are required because the compiler must know about their existence
-class WXXMLDLLEXPORT wxXml2BaseNode;
-class WXXMLDLLEXPORT wxXml2Node;
-class WXXMLDLLEXPORT wxXml2Property;
-class WXXMLDLLEXPORT wxXml2Namespace;
-class WXXMLDLLEXPORT wxXml2Document;
-class WXXMLDLLEXPORT wxXml2DTD;			// defined in "dtd.h"
+class WXDLLIMPEXP_WXXML2 wxXml2BaseNode;
+class WXDLLIMPEXP_WXXML2 wxXml2Node;
+class WXDLLIMPEXP_WXXML2 wxXml2Property;
+class WXDLLIMPEXP_WXXML2 wxXml2Namespace;
+class WXDLLIMPEXP_WXXML2 wxXml2Document;
+class WXDLLIMPEXP_WXXML2 wxXml2DTD;			// defined in "dtd.h"
 
 // global instances of empty objects
 extern wxXml2Node wxXml2EmptyNode;
@@ -240,7 +233,7 @@ extern wxXml2BaseNode wxXml2EmptyBaseNode;
 //! parser. In particular, you should call the #Init() function before
 //! using any of the wxXml2Wrapper and you should call the #Cleanup()
 //! function before exiting to avoid memory leaks.
-class WXXMLDLLEXPORT wxXml2 : public wxObject
+class WXDLLIMPEXP_WXXML2 wxXml2 : public wxObject
 {
 	static char m_strIndent[32];		// 32 = max indentation level.
 	static const char *m_strOld;
@@ -292,7 +285,7 @@ public:
 //! reference count.
 //! For more info, please read the specific \link wxxml2 page on this topic
 //! \endlink (VERY IMPORTANT !).
-class WXXMLDLLEXPORT wxXml2Wrapper : public wxObject
+class WXDLLIMPEXP_WXXML2 wxXml2Wrapper : public wxObject
 {
 	DECLARE_ABSTRACT_CLASS(wxXml2Wrapper)
 
@@ -518,7 +511,7 @@ public:
 //! Example: in 
 //!                    <img src="hello.gif" id="3"/>
 //! "src" is property with value "hello.gif" and "id" is a property with value "3".
-class WXXMLDLLEXPORT wxXml2Property : public wxXml2Wrapper
+class WXDLLIMPEXP_WXXML2 wxXml2Property : public wxXml2Wrapper
 {
 	DECLARE_DYNAMIC_CLASS(wxXml2Property)
 
@@ -640,7 +633,7 @@ public:		// setters
 //! which has href==http://!www.w3.org/1999/xhtml.
 //! The namespace of 'root' is then overridden by namespace 'e' in element
 //! 'child' and all its subelements.
-class WXXMLDLLEXPORT wxXml2Namespace : public wxXml2Wrapper
+class WXDLLIMPEXP_WXXML2 wxXml2Namespace : public wxXml2Wrapper
 {
 	DECLARE_DYNAMIC_CLASS(wxXml2Namespace)
 
@@ -746,7 +739,7 @@ public:		// setters
 //! Use #Load and #Save to perform IO on wxStream or on wxFile objects.
 //! Use the #GetRoot() function to edit the contents of the XML
 //! document through wxXml2Node functions.
-class WXXMLDLLEXPORT wxXml2Document : public wxXml2Wrapper
+class WXDLLIMPEXP_WXXML2 wxXml2Document : public wxXml2Wrapper
 {
 	DECLARE_DYNAMIC_CLASS(wxXml2Document)
 
@@ -926,7 +919,7 @@ public:		// some common DTDs
 //! libxml2. So, when you have an XML node, you can always cast it,
 //! regardless of its specific type, to a wxXml2BaseNodeObj and then
 //! change its NEXT, PREVIOUS, CHILDREN, PARENT pointers...
-class WXXMLDLLEXPORT wxXml2BaseNode : public wxXml2Wrapper
+class WXDLLIMPEXP_WXXML2 wxXml2BaseNode : public wxXml2Wrapper
 {
 	DECLARE_DYNAMIC_CLASS(wxXml2BaseNode)
 
@@ -1029,7 +1022,7 @@ public:		// setters
 //! element with name="title" and with irrelevant content and one child 
 //! (of type=wxXML_TEXT_NODE with content="hi").
 //!
-class WXXMLDLLEXPORT wxXml2Node : public wxXml2BaseNode
+class WXDLLIMPEXP_WXXML2 wxXml2Node : public wxXml2BaseNode
 {
 	DECLARE_DYNAMIC_CLASS(wxXml2Node)
 
@@ -1371,7 +1364,7 @@ public:		// miscellaneous
 
 //! A little helper class used by wxXml2Document::Save and
 //! wxXml2DTD::Save to convert \n to the native format of newlines.
-class wxNativeNewlinesFilterStream : public wxFilterOutputStream
+class WXDLLIMPEXP_WXXML2 wxNativeNewlinesFilterStream : public wxFilterOutputStream
 {
 public:
 	wxNativeNewlinesFilterStream(wxOutputStream &tofilter)
@@ -1395,7 +1388,7 @@ protected:
 //! VERY IMPORTANT: the Write() method of this output stream assumes
 //!                 the given data to be a valid UTF8-encoded string.
 //!                 No checks will be done to ensure this.
-class wxStringOutputStream : public wxOutputStream
+class WXDLLIMPEXP_WXXML2 wxStringOutputStream : public wxOutputStream
 {
 	wxString m_str;	
 

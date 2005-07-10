@@ -75,23 +75,38 @@ WX_VERSION = 26
 
 ### Variables: ###
 
-WXSCRIPT_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
+WXSCRIPT_LIB_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
 	$(__OPTIMIZEFLAG) $(__DEBUGINFO) /Fd..\lib\wxscript$(WXLIBPOSTFIX).pdb \
-	$(____DEBUGRUNTIME) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
-	/D__WXMSW__ /I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
+	$(____DEBUGRUNTIME) $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) \
+	$(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
+	/I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	/I$(WX_DIR)\include /I..\include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) \
 	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) \
 	$(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
-WXSCRIPT_OBJECTS =  \
-	msvc\wxscript_script.obj \
-	msvc\wxscript_scpython.obj \
-	msvc\wxscript_sccint.obj \
-	msvc\wxscript_scunderc.obj \
-	msvc\wxscript_sclua.obj
+WXSCRIPT_LIB_OBJECTS =  \
+	msvc\wxscript_lib_script.obj \
+	msvc\wxscript_lib_scpython.obj \
+	msvc\wxscript_lib_sccint.obj \
+	msvc\wxscript_lib_scunderc.obj \
+	msvc\wxscript_lib_sclua.obj
+WXSCRIPT_DLL_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
+	$(__OPTIMIZEFLAG) $(__DEBUGINFO) /Fd..\lib\wxscript_dll.pdb \
+	$(____DEBUGRUNTIME) $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) \
+	$(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
+	/I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
+	/I$(WX_DIR)\include /I..\include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) \
+	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) \
+	$(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
+WXSCRIPT_DLL_OBJECTS =  \
+	msvc\wxscript_dll_script.obj \
+	msvc\wxscript_dll_scpython.obj \
+	msvc\wxscript_dll_sccint.obj \
+	msvc\wxscript_dll_scunderc.obj \
+	msvc\wxscript_dll_sclua.obj
 TEST1_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) $(__OPTIMIZEFLAG) \
 	$(__DEBUGINFO) /Fd..\tests\test1\test1.pdb $(____DEBUGRUNTIME) \
-	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
-	/I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
+	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
+	/D__WXMSW__ /I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	/I$(WX_DIR)\include /I..\include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) \
 	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) \
 	$(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) /D_CONSOLE /GR /EHsc $(CPPFLAGS) \
@@ -100,8 +115,8 @@ TEST1_OBJECTS =  \
 	msvc\test1_Test.obj
 TEST2_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) $(__OPTIMIZEFLAG) \
 	$(__DEBUGINFO) /Fd..\tests\test2\test2.pdb $(____DEBUGRUNTIME) \
-	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
-	/I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
+	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
+	/D__WXMSW__ /I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	/I$(WX_DIR)\include /I..\include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) \
 	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) \
 	$(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) /D_CONSOLE /GR /EHsc $(CPPFLAGS) \
@@ -181,6 +196,12 @@ SCRIPTDEFINE3 = /DwxSCRIPT_NO_CINT
 !if "$(USE_UNDERC)" == "0"
 SCRIPTDEFINE4 = /DwxSCRIPT_NO_UNDERC
 !endif
+!if "$(WX_SHARED)" == "0"
+__wxscript_lib___depname = ..\lib\wxscript$(WXLIBPOSTFIX).lib
+!endif
+!if "$(WX_SHARED)" == "1"
+__wxscript_dll___depname = ..\lib\wxscript_dll.dll
+!endif
 !if "$(WX_DEBUG)" == "0"
 __WARNINGS = /w
 !endif
@@ -200,10 +221,10 @@ __DEBUGINFO =
 __DEBUGINFO = /Zi
 !endif
 !if "$(WX_DEBUG)" == "0"
-__DEBUGINFO_0 = 
+__DEBUGINFO_1 = 
 !endif
 !if "$(WX_DEBUG)" == "1"
-__DEBUGINFO_0 = /DEBUG
+__DEBUGINFO_1 = /DEBUG
 !endif
 !if "$(WX_DEBUG)" == "0"
 ____DEBUGRUNTIME = 
@@ -216,6 +237,9 @@ __DEBUGRUNTIME =
 !endif
 !if "$(WX_DEBUG)" == "1"
 __DEBUGRUNTIME = d
+!endif
+!if "$(WX_SHARED)" == "1"
+__WX_SHAREDDEFINE_p = /DWXUSINGDLL
 !endif
 !if "$(WX_UNICODE)" == "1"
 __WXUNICODE_DEFINE_p = /D_UNICODE
@@ -264,12 +288,16 @@ msvc:
 
 ### Targets: ###
 
-all: ..\lib\wxscript$(WXLIBPOSTFIX).lib ..\tests\test1\test1.exe ..\tests\test2\test2.exe
+all: $(__wxscript_lib___depname) $(__wxscript_dll___depname) ..\tests\test1\test1.exe ..\tests\test2\test2.exe
 
 clean: 
 	-if exist msvc\*.obj del msvc\*.obj
 	-if exist msvc\*.res del msvc\*.res
 	-if exist msvc\*.pch del msvc\*.pch
+	-if exist ..\lib\wxscript$(WXLIBPOSTFIX).lib del ..\lib\wxscript$(WXLIBPOSTFIX).lib
+	-if exist ..\lib\wxscript_dll.dll del ..\lib\wxscript_dll.dll
+	-if exist ..\lib\wxscript_dll.ilk del ..\lib\wxscript_dll.ilk
+	-if exist ..\lib\wxscript_dll.pdb del ..\lib\wxscript_dll.pdb
 	-if exist ..\lib\wxscript$(WXLIBPOSTFIX).lib del ..\lib\wxscript$(WXLIBPOSTFIX).lib
 	-if exist ..\tests\test1\test1.exe del ..\tests\test1\test1.exe
 	-if exist ..\tests\test1\test1.ilk del ..\tests\test1\test1.ilk
@@ -303,36 +331,60 @@ docs:
 cleandocs: 
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
-..\lib\wxscript$(WXLIBPOSTFIX).lib: $(WXSCRIPT_OBJECTS)
+!if "$(WX_SHARED)" == "0"
+..\lib\wxscript$(WXLIBPOSTFIX).lib: $(WXSCRIPT_LIB_OBJECTS)
 	if exist $@ del $@
 	lib /NOLOGO /OUT:$@ @<<
-	$(WXSCRIPT_OBJECTS)
+	$(WXSCRIPT_LIB_OBJECTS)
 <<
+!endif
 
-..\tests\test1\test1.exe: $(TEST1_OBJECTS) ..\lib\wxscript$(WXLIBPOSTFIX).lib
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_0) /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES) /LIBPATH:..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) /SUBSYSTEM:CONSOLE @<<
+!if "$(WX_SHARED)" == "1"
+..\lib\wxscript_dll.dll: $(WXSCRIPT_DLL_OBJECTS)
+	link /DLL /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1)  /LIBPATH:..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) @<<
+	$(WXSCRIPT_DLL_OBJECTS)  wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib /IMPLIB:..\lib\wxscript$(WXLIBPOSTFIX).lib
+<<
+!endif
+
+..\tests\test1\test1.exe: $(TEST1_OBJECTS) $(__wxscript_lib___depname)
+	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1)  /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES) /LIBPATH:..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) /SUBSYSTEM:CONSOLE @<<
 	$(TEST1_OBJECTS)  ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
 
-..\tests\test2\test2.exe: $(TEST2_OBJECTS) ..\lib\wxscript$(WXLIBPOSTFIX).lib
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_0) /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES) /LIBPATH:..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) /SUBSYSTEM:CONSOLE @<<
+..\tests\test2\test2.exe: $(TEST2_OBJECTS) $(__wxscript_lib___depname)
+	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1)  /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES) /LIBPATH:..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) /SUBSYSTEM:CONSOLE @<<
 	$(TEST2_OBJECTS)  ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
 
-msvc\wxscript_script.obj: .\..\src\script.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXSCRIPT_CXXFLAGS) $**
+msvc\wxscript_lib_script.obj: .\..\src\script.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(WXSCRIPT_LIB_CXXFLAGS) $**
 
-msvc\wxscript_scpython.obj: .\..\src\scpython.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXSCRIPT_CXXFLAGS) $**
+msvc\wxscript_lib_scpython.obj: .\..\src\scpython.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(WXSCRIPT_LIB_CXXFLAGS) $**
 
-msvc\wxscript_sccint.obj: .\..\src\sccint.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXSCRIPT_CXXFLAGS) $**
+msvc\wxscript_lib_sccint.obj: .\..\src\sccint.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(WXSCRIPT_LIB_CXXFLAGS) $**
 
-msvc\wxscript_scunderc.obj: .\..\src\scunderc.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXSCRIPT_CXXFLAGS) $**
+msvc\wxscript_lib_scunderc.obj: .\..\src\scunderc.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(WXSCRIPT_LIB_CXXFLAGS) $**
 
-msvc\wxscript_sclua.obj: .\..\src\sclua.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXSCRIPT_CXXFLAGS) $**
+msvc\wxscript_lib_sclua.obj: .\..\src\sclua.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(WXSCRIPT_LIB_CXXFLAGS) $**
+
+msvc\wxscript_dll_script.obj: .\..\src\script.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(WXSCRIPT_DLL_CXXFLAGS) $**
+
+msvc\wxscript_dll_scpython.obj: .\..\src\scpython.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(WXSCRIPT_DLL_CXXFLAGS) $**
+
+msvc\wxscript_dll_sccint.obj: .\..\src\sccint.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(WXSCRIPT_DLL_CXXFLAGS) $**
+
+msvc\wxscript_dll_scunderc.obj: .\..\src\scunderc.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(WXSCRIPT_DLL_CXXFLAGS) $**
+
+msvc\wxscript_dll_sclua.obj: .\..\src\sclua.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(WXSCRIPT_DLL_CXXFLAGS) $**
 
 msvc\test1_Test.obj: .\..\tests\test1\Test.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(TEST1_CXXFLAGS) $**

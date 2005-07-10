@@ -174,6 +174,14 @@ SCRIPTDEFINE4 =
 !ifeq USE_UNDERC 0
 SCRIPTDEFINE4 = -dwxSCRIPT_NO_UNDERC
 !endif
+__wxscript_lib___depname =
+!ifeq WX_SHARED 0
+__wxscript_lib___depname = ..\lib\wxscript$(WXLIBPOSTFIX).lib
+!endif
+__wxscript_dll___depname =
+!ifeq WX_SHARED 1
+__wxscript_dll___depname = ..\lib\wxscript_dll.dll
+!endif
 __WARNINGS =
 !ifeq WX_DEBUG 0
 __WARNINGS = 
@@ -201,6 +209,10 @@ __DEBUGINFO_0 =
 !endif
 !ifeq WX_DEBUG 1
 __DEBUGINFO_0 = debug all
+!endif
+__WX_SHAREDDEFINE_p =
+!ifeq WX_SHARED 1
+__WX_SHAREDDEFINE_p = -dWXUSINGDLL
 !endif
 __WXUNICODE_DEFINE_p =
 !ifeq WX_UNICODE 1
@@ -260,29 +272,41 @@ __WXLIBPATH_FILENAMES = \lib\wat_dll
 
 ### Variables: ###
 
-WXSCRIPT_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) &
-	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
-	-i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
+WXSCRIPT_LIB_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
+	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
+	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
 	-i=$(WX_DIR)\include -i=..\include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) &
 	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) &
 	$(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(CPPFLAGS) $(CXXFLAGS)
-WXSCRIPT_OBJECTS =  &
-	watcom\wxscript_script.obj &
-	watcom\wxscript_scpython.obj &
-	watcom\wxscript_sccint.obj &
-	watcom\wxscript_scunderc.obj &
-	watcom\wxscript_sclua.obj
-TEST1_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) &
-	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
-	-i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
+WXSCRIPT_LIB_OBJECTS =  &
+	watcom\wxscript_lib_script.obj &
+	watcom\wxscript_lib_scpython.obj &
+	watcom\wxscript_lib_sccint.obj &
+	watcom\wxscript_lib_scunderc.obj &
+	watcom\wxscript_lib_sclua.obj
+WXSCRIPT_DLL_CXXFLAGS = -bd $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
+	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
+	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
+	-i=$(WX_DIR)\include -i=..\include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) &
+	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) &
+	$(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(CPPFLAGS) $(CXXFLAGS)
+WXSCRIPT_DLL_OBJECTS =  &
+	watcom\wxscript_dll_script.obj &
+	watcom\wxscript_dll_scpython.obj &
+	watcom\wxscript_dll_sccint.obj &
+	watcom\wxscript_dll_scunderc.obj &
+	watcom\wxscript_dll_sclua.obj
+TEST1_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
+	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
+	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
 	-i=$(WX_DIR)\include -i=..\include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) &
 	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) &
 	$(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(CPPFLAGS) $(CXXFLAGS)
 TEST1_OBJECTS =  &
 	watcom\test1_Test.obj
-TEST2_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) &
-	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
-	-i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
+TEST2_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
+	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
+	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
 	-i=$(WX_DIR)\include -i=..\include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) &
 	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) &
 	$(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(CPPFLAGS) $(CXXFLAGS)
@@ -296,7 +320,7 @@ watcom :
 
 ### Targets: ###
 
-all : .SYMBOLIC ..\lib\wxscript$(WXLIBPOSTFIX).lib ..\tests\test1\test1.exe ..\tests\test2\test2.exe
+all : .SYMBOLIC $(__wxscript_lib___depname) $(__wxscript_dll___depname) ..\tests\test1\test1.exe ..\tests\test2\test2.exe
 
 clean : .SYMBOLIC 
 	-if exist watcom\*.obj del watcom\*.obj
@@ -305,14 +329,18 @@ clean : .SYMBOLIC
 	-if exist watcom\*.ilk del watcom\*.ilk
 	-if exist watcom\*.pch del watcom\*.pch
 	-if exist ..\lib\wxscript$(WXLIBPOSTFIX).lib del ..\lib\wxscript$(WXLIBPOSTFIX).lib
+	-if exist ..\lib\wxscript_dll.dll del ..\lib\wxscript_dll.dll
+	-if exist ..\lib\wxscript$(WXLIBPOSTFIX).lib del ..\lib\wxscript$(WXLIBPOSTFIX).lib
 	-if exist ..\tests\test1\test1.exe del ..\tests\test1\test1.exe
 	-if exist ..\tests\test2\test2.exe del ..\tests\test2\test2.exe
 
 tarball :  
-	( cd .. && tar -cvzf ..\wxscript.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
+	-cd ..
+	-tar -cvzf ..\wxscript.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* *
 
 zip :  
-	( cd .. && zip -r9 ..\wxscript.zip *  -x *.pdb -x *.log -x *.o* )
+	-cd ..
+	-zip -r9 ..\wxscript.zip *  -x *.pdb -x *.log -x *.o*
 
 cleanbuilddirs :  
 	-if exist msvc rmdir /S /Q msvc
@@ -328,52 +356,85 @@ cleanall :  clean cleanbuilddirs
 	del /S /Q ..\*.exe >NUL
 
 docs :  
-	( cd ..\docs && doxygen )
+	-cd ..\docs
+	-doxygen
 
 cleandocs :  
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
-..\lib\wxscript$(WXLIBPOSTFIX).lib :  $(WXSCRIPT_OBJECTS)
-	@%create watcom\wxscript.lbc
-	@for %i in ($(WXSCRIPT_OBJECTS)) do @%append watcom\wxscript.lbc +%i
-	wlib -q -p4096 -n -b $^@ @watcom\wxscript.lbc
+!ifeq WX_SHARED 0
+..\lib\wxscript$(WXLIBPOSTFIX).lib :  $(WXSCRIPT_LIB_OBJECTS)
+	@%create watcom\wxscript_lib.lbc
+	@for %i in ($(WXSCRIPT_LIB_OBJECTS)) do @%append watcom\wxscript_lib.lbc +%i
+	wlib -q -p4096 -n -b $^@ @watcom\wxscript_lib.lbc
+!endif
 
-..\tests\test1\test1.exe :  $(TEST1_OBJECTS) ..\lib\wxscript$(WXLIBPOSTFIX).lib
+!ifeq WX_SHARED 1
+..\lib\wxscript_dll.dll :  $(WXSCRIPT_DLL_OBJECTS)
+	@%create watcom\wxscript_dll.lbc
+	@%append watcom\wxscript_dll.lbc option quiet
+	@%append watcom\wxscript_dll.lbc name $^@
+	@%append watcom\wxscript_dll.lbc option caseexact
+	@%append watcom\wxscript_dll.lbc $(LDFLAGS) $(__DEBUGINFO_0)  libpath ..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4)
+	@for %i in ($(WXSCRIPT_DLL_OBJECTS)) do @%append watcom\wxscript_dll.lbc file %i
+	@for %i in ( wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib) do @%append watcom\wxscript_dll.lbc library %i
+	@%append watcom\wxscript_dll.lbc
+	@%append watcom\wxscript_dll.lbc system nt_dll
+	wlink @watcom\wxscript_dll.lbc
+	wlib -q -n -b ..\lib\wxscript$(WXLIBPOSTFIX).lib +$^@
+!endif
+
+..\tests\test1\test1.exe :  $(TEST1_OBJECTS) $(__wxscript_lib___depname)
 	@%create watcom\test1.lbc
 	@%append watcom\test1.lbc option quiet
 	@%append watcom\test1.lbc name $^@
 	@%append watcom\test1.lbc option caseexact
-	@%append watcom\test1.lbc $(LDFLAGS) $(__DEBUGINFO_0) libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) system nt ref 'main_'
+	@%append watcom\test1.lbc $(LDFLAGS) $(__DEBUGINFO_0)  libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) system nt ref 'main_'
 	@for %i in ($(TEST1_OBJECTS)) do @%append watcom\test1.lbc file %i
 	@for %i in ( ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\test1.lbc library %i
 	@%append watcom\test1.lbc
 	wlink @watcom\test1.lbc
 
-..\tests\test2\test2.exe :  $(TEST2_OBJECTS) ..\lib\wxscript$(WXLIBPOSTFIX).lib
+..\tests\test2\test2.exe :  $(TEST2_OBJECTS) $(__wxscript_lib___depname)
 	@%create watcom\test2.lbc
 	@%append watcom\test2.lbc option quiet
 	@%append watcom\test2.lbc name $^@
 	@%append watcom\test2.lbc option caseexact
-	@%append watcom\test2.lbc $(LDFLAGS) $(__DEBUGINFO_0) libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) system nt ref 'main_'
+	@%append watcom\test2.lbc $(LDFLAGS) $(__DEBUGINFO_0)  libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) system nt ref 'main_'
 	@for %i in ($(TEST2_OBJECTS)) do @%append watcom\test2.lbc file %i
 	@for %i in ( ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\test2.lbc library %i
 	@%append watcom\test2.lbc
 	wlink @watcom\test2.lbc
 
-watcom\wxscript_script.obj :  .AUTODEPEND .\..\src\script.cpp
-	$(CXX) -zq -fo=$^@ $(WXSCRIPT_CXXFLAGS) $<
+watcom\wxscript_lib_script.obj :  .AUTODEPEND .\..\src\script.cpp
+	$(CXX) -zq -fo=$^@ $(WXSCRIPT_LIB_CXXFLAGS) $<
 
-watcom\wxscript_scpython.obj :  .AUTODEPEND .\..\src\scpython.cpp
-	$(CXX) -zq -fo=$^@ $(WXSCRIPT_CXXFLAGS) $<
+watcom\wxscript_lib_scpython.obj :  .AUTODEPEND .\..\src\scpython.cpp
+	$(CXX) -zq -fo=$^@ $(WXSCRIPT_LIB_CXXFLAGS) $<
 
-watcom\wxscript_sccint.obj :  .AUTODEPEND .\..\src\sccint.cpp
-	$(CXX) -zq -fo=$^@ $(WXSCRIPT_CXXFLAGS) $<
+watcom\wxscript_lib_sccint.obj :  .AUTODEPEND .\..\src\sccint.cpp
+	$(CXX) -zq -fo=$^@ $(WXSCRIPT_LIB_CXXFLAGS) $<
 
-watcom\wxscript_scunderc.obj :  .AUTODEPEND .\..\src\scunderc.cpp
-	$(CXX) -zq -fo=$^@ $(WXSCRIPT_CXXFLAGS) $<
+watcom\wxscript_lib_scunderc.obj :  .AUTODEPEND .\..\src\scunderc.cpp
+	$(CXX) -zq -fo=$^@ $(WXSCRIPT_LIB_CXXFLAGS) $<
 
-watcom\wxscript_sclua.obj :  .AUTODEPEND .\..\src\sclua.cpp
-	$(CXX) -zq -fo=$^@ $(WXSCRIPT_CXXFLAGS) $<
+watcom\wxscript_lib_sclua.obj :  .AUTODEPEND .\..\src\sclua.cpp
+	$(CXX) -zq -fo=$^@ $(WXSCRIPT_LIB_CXXFLAGS) $<
+
+watcom\wxscript_dll_script.obj :  .AUTODEPEND .\..\src\script.cpp
+	$(CXX) -zq -fo=$^@ $(WXSCRIPT_DLL_CXXFLAGS) $<
+
+watcom\wxscript_dll_scpython.obj :  .AUTODEPEND .\..\src\scpython.cpp
+	$(CXX) -zq -fo=$^@ $(WXSCRIPT_DLL_CXXFLAGS) $<
+
+watcom\wxscript_dll_sccint.obj :  .AUTODEPEND .\..\src\sccint.cpp
+	$(CXX) -zq -fo=$^@ $(WXSCRIPT_DLL_CXXFLAGS) $<
+
+watcom\wxscript_dll_scunderc.obj :  .AUTODEPEND .\..\src\scunderc.cpp
+	$(CXX) -zq -fo=$^@ $(WXSCRIPT_DLL_CXXFLAGS) $<
+
+watcom\wxscript_dll_sclua.obj :  .AUTODEPEND .\..\src\sclua.cpp
+	$(CXX) -zq -fo=$^@ $(WXSCRIPT_DLL_CXXFLAGS) $<
 
 watcom\test1_Test.obj :  .AUTODEPEND .\..\tests\test1\Test.cpp
 	$(CXX) -zq -fo=$^@ $(TEST1_CXXFLAGS) $<

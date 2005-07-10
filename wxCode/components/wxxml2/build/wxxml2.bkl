@@ -22,7 +22,7 @@
 
 	<set var="COMP_NAME">wxxml2</set>
 	<set var="COMP_SRC">../src/xml2.cpp ../src/dtd.cpp</set>
-	<set var="COMP_HDR">../include/wx/xml2.h ../include/wx/dtd.h</set>	
+	<set var="COMP_HDR">../include/wx/xml2def.h ../include/wx/xml2.h ../include/wx/dtd.h</set>	
 	<set var="COMP_SAMPLE_SRC">../sample/minimal.cpp</set>
 	<set var="WX_UNICODE_DEFAULT">1</set>
 	<set var="WX_VERSION_DEFAULT">26</set>
@@ -36,36 +36,26 @@
 	libxml2 library: otherwise you'll get "undefined references to __xmlFree"
 	when compiling wxxml2 with MINGW compiler -->
 <!--	<set var="STATIC_DEF"><if cond="SHARED=='0' and FORMAT=='mingw'">LIBXML_STATIC</if></set>  -->
-
-
-	<!-- The real target: not declared in wxcode_end.bkl because
-	     in this way modifications are allowed to the basic template. -->
-	<lib id="wxxml2" template="complib">
+	<template id="xmlbasic">
 		<stdlib>$(LIBXML2_DIR)</stdlib>
 		<stdlib>$(ICONV_DIR)</stdlib>
 	<!--	<define>$(STATIC_DEF)</define>  -->
-		<libname>$(COMP_NAME)$(WXLIBPOSTFIX)</libname>
-	</lib>
+	</template>
+
+
+	<lib id="wxxml2_lib" template="complib,xmlbasic" cond="WX_SHARED=='0'"/>
+	<dll id="wxxml2_dll" template="complib,xmlbasic" cond="WX_SHARED=='1'"/>
+	<set var="MSVC6PRJ_MERGED_TARGETS">wxxml2=wxxml2_lib+wxxml2_dll</set>
+	
 	
 	<!-- The sample of wxXml2 -->
-	<exe id="minimal" template="compsample">
-		<stdlib>$(LIBXML2_DIR)</stdlib>
-		<stdlib>$(ICONV_DIR)</stdlib>
-	<!--		<define>$(STATIC_DEF)</define>  -->
-
-		<library>wxxml2</library>
+	<exe id="minimal" template="compsample,xmlbasic">
+		<library>wxxml2_lib</library>
 		<if cond="FORMAT=='mingw' or FORMAT=='autoconf'"><sys-lib>xml2</sys-lib></if>
 		<if cond="FORMAT!='mingw' and FORMAT!='autoconf'"><sys-lib>libxml2</sys-lib></if>
 		<if cond="FORMAT!='autoconf'"><sys-lib>iconv</sys-lib></if>
         <wx-lib>core</wx-lib>
         <wx-lib>base</wx-lib>
 	</exe>
-	
-	<if cond="FORMAT=='autoconf'">
-		<modify-target target="uninstall">
-			<rmfile>$(INCLUDEDIR)/wx/wxxml2.h $(INCLUDEDIR)/wx/dtd.h</rmfile>
-			<rmfile>$(LIBDIR)/libwxxml2*.a</rmfile>
-		</modify-target>
-	</if>
     
 </makefile>

@@ -10,10 +10,14 @@
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 INSTALL = @INSTALL@
+SHARED_LD_CXX = @SHARED_LD_CXX@
 LIBEXT = @LIBEXT@
 LIBPREFIX = @LIBPREFIX@
+SO_SUFFIX = @SO_SUFFIX@
+DLLIMP_SUFFIX = @DLLIMP_SUFFIX@
 EXEEXT = @EXEEXT@
 SETFILE = @SETFILE@
+PIC_FLAG = @PIC_FLAG@
 NM = @NM@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_DIR = @INSTALL_DIR@
@@ -21,6 +25,7 @@ srcdir = @srcdir@
 top_builddir = @top_builddir@
 libdir = @libdir@
 includedir = @includedir@
+DLLPREFIX = @DLLPREFIX@
 LDFLAGS_GUI = @LDFLAGS_GUI@
 AR = @AR@
 RANLIB = @RANLIB@
@@ -36,11 +41,16 @@ WX_LIBS = @WX_LIBS@
 ### Variables: ###
 
 DESTDIR = 
-WXXML2_CXXFLAGS = -I../include -I$(LIBXML2_DIR)/include -I$(ICONV_DIR)/include \
-	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
-WXXML2_OBJECTS =  \
-	wxxml2_xml2.o \
-	wxxml2_dtd.o
+WXXML2_LIB_CXXFLAGS = -I../include -I$(LIBXML2_DIR)/include \
+	-I$(ICONV_DIR)/include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+WXXML2_LIB_OBJECTS =  \
+	wxxml2_lib_xml2.o \
+	wxxml2_lib_dtd.o
+WXXML2_DLL_CXXFLAGS = -I../include -I$(LIBXML2_DIR)/include \
+	-I$(ICONV_DIR)/include $(PIC_FLAG) $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+WXXML2_DLL_OBJECTS =  \
+	wxxml2_dll_xml2.o \
+	wxxml2_dll_dtd.o
 MINIMAL_CXXFLAGS = -I../include -I$(LIBXML2_DIR)/include \
 	-I$(ICONV_DIR)/include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
@@ -48,8 +58,16 @@ MINIMAL_OBJECTS =  \
 
 ### Conditionally set variables: ###
 
-@COND_DEPS_TRACKING_1@CXXC = $(top_builddir)./bk-deps $(CXX)
 @COND_DEPS_TRACKING_0@CXXC = $(CXX)
+@COND_DEPS_TRACKING_1@CXXC = $(top_builddir)./bk-deps $(CXX)
+@COND_WX_SHARED_0@__wxxml2_lib___depname = \
+@COND_WX_SHARED_0@	../lib/$(LIBPREFIX)wxxml2$(LIBEXT)
+@COND_WX_SHARED_1@__wxxml2_dll___depname = \
+@COND_WX_SHARED_1@	../lib/$(DLLPREFIX)wxxml2_dll.$(SO_SUFFIX)
+@COND_PLATFORM_OS2_1@__wxxml2_dll___importlib = -import \
+@COND_PLATFORM_OS2_1@	../lib/$(LIBPREFIX)wxxml2.$(DLLIMP_SUFFIX)
+@COND_PLATFORM_WIN32_1@__wxxml2_dll___importlib = \
+@COND_PLATFORM_WIN32_1@	-Wl,--out-implib,../lib/$(LIBPREFIX)wxxml2.$(DLLIMP_SUFFIX)
 @COND_PLATFORM_MAC_1@__minimal___mac_setfilecmd = \
 @COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL minimal$(EXEEXT)
 COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd = $(NM) minimal$(EXEEXT) | if \
@@ -58,13 +76,14 @@ COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd = $(NM) minimal$(EXEEXT) | if \
 
 ### Targets: ###
 
-all: ../lib/$(LIBPREFIX)wxxml2$(LIBEXT) ../sample/minimal$(EXEEXT)
+all: $(__wxxml2_lib___depname) $(__wxxml2_dll___depname) ../sample/minimal$(EXEEXT)
 
 install: all install-wxheaders install-lib
 
 uninstall: 
-	rm -f $(includedir)/wx/wxxml2.h $(includedir)/wx/dtd.h
-	rm -f $(libdir)/libwxxml2*.a
+	rm -f  $(DESTDIR)$(includedir)/wx/xml2def.h\
+	wx/xml2.h $(DESTDIR)$(includedir)/wx/dtd.h
+	rm -f $(libdir)/*wxxml2*
 
 install-strip: install
 
@@ -72,6 +91,8 @@ clean:
 	rm -rf ./.deps ./.pch
 	rm -f ./*.o
 	rm -f ../lib/$(LIBPREFIX)wxxml2$(LIBEXT)
+	rm -f ../lib/$(DLLPREFIX)wxxml2_dll.$(SO_SUFFIX)
+	rm -f ../lib/$(LIBPREFIX)wxxml2.$(DLLIMP_SUFFIX)
 	rm -f ../sample/minimal$(EXEEXT)
 
 distclean: clean
@@ -108,24 +129,33 @@ install-wxheaders:
 
 install-lib: 
 	$(INSTALL_DIR) $(DESTDIR)$(libdir)
-	(cd $(srcdir) ; $(INSTALL_DATA)  ../lib/*.a $(DESTDIR)$(libdir))
+	(cd $(srcdir) ; $(INSTALL_DATA)  ../lib/*wxxml2* $(DESTDIR)$(libdir))
 
-../lib/$(LIBPREFIX)wxxml2$(LIBEXT): $(WXXML2_OBJECTS)
-	rm -f $@
-	$(AR) rcu $@ $(WXXML2_OBJECTS)
-	$(RANLIB) $@
+@COND_WX_SHARED_0@../lib/$(LIBPREFIX)wxxml2$(LIBEXT): $(WXXML2_LIB_OBJECTS)
+@COND_WX_SHARED_0@	rm -f $@
+@COND_WX_SHARED_0@	$(AR) rcu $@ $(WXXML2_LIB_OBJECTS)
+@COND_WX_SHARED_0@	$(RANLIB) $@
 
-../sample/minimal$(EXEEXT): $(MINIMAL_OBJECTS) ../lib/$(LIBPREFIX)wxxml2$(LIBEXT)
+@COND_WX_SHARED_1@../lib/$(DLLPREFIX)wxxml2_dll.$(SO_SUFFIX): $(WXXML2_DLL_OBJECTS)
+@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(WXXML2_DLL_OBJECTS) $(LDFLAGS) -L../lib $(__wxxml2_dll___importlib) -L$(LIBXML2_DIR)/lib -L$(ICONV_DIR)/lib
+
+../sample/minimal$(EXEEXT): $(MINIMAL_OBJECTS) $(__wxxml2_lib___depname)
 	$(CXX) -o $@ $(MINIMAL_OBJECTS) -L../lib $(LDFLAGS) -L../lib $(LDFLAGS_GUI) -L$(LIBXML2_DIR)/lib -L$(ICONV_DIR)/lib  $(WX_LIBS) -lwxxml2 -lxml2
 	
 	$(__minimal___mac_setfilecmd)
 	$(__minimal___os2_emxbindcmd)
 
-wxxml2_xml2.o: $(srcdir)/../src/xml2.cpp
-	$(CXXC) -c -o $@ $(WXXML2_CXXFLAGS) $(srcdir)/../src/xml2.cpp
+wxxml2_lib_xml2.o: $(srcdir)/../src/xml2.cpp
+	$(CXXC) -c -o $@ $(WXXML2_LIB_CXXFLAGS) $(srcdir)/../src/xml2.cpp
 
-wxxml2_dtd.o: $(srcdir)/../src/dtd.cpp
-	$(CXXC) -c -o $@ $(WXXML2_CXXFLAGS) $(srcdir)/../src/dtd.cpp
+wxxml2_lib_dtd.o: $(srcdir)/../src/dtd.cpp
+	$(CXXC) -c -o $@ $(WXXML2_LIB_CXXFLAGS) $(srcdir)/../src/dtd.cpp
+
+wxxml2_dll_xml2.o: $(srcdir)/../src/xml2.cpp
+	$(CXXC) -c -o $@ $(WXXML2_DLL_CXXFLAGS) $(srcdir)/../src/xml2.cpp
+
+wxxml2_dll_dtd.o: $(srcdir)/../src/dtd.cpp
+	$(CXXC) -c -o $@ $(WXXML2_DLL_CXXFLAGS) $(srcdir)/../src/dtd.cpp
 
 minimal_minimal.o: $(srcdir)/../sample/minimal.cpp
 	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/../sample/minimal.cpp

@@ -122,29 +122,41 @@ WX_VERSION = 26
 
 ### Variables: ###
 
-WXSCRIPT_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
-	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
-	-I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
+WXSCRIPT_LIB_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
+	-tWM $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
+	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	-I$(WX_DIR)\include -I..\include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) \
 	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) \
 	$(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(CPPFLAGS) $(CXXFLAGS)
-WXSCRIPT_OBJECTS =  \
-	borland\wxscript_script.obj \
-	borland\wxscript_scpython.obj \
-	borland\wxscript_sccint.obj \
-	borland\wxscript_scunderc.obj \
-	borland\wxscript_sclua.obj
-TEST1_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
-	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
-	-I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
+WXSCRIPT_LIB_OBJECTS =  \
+	borland\wxscript_lib_script.obj \
+	borland\wxscript_lib_scpython.obj \
+	borland\wxscript_lib_sccint.obj \
+	borland\wxscript_lib_scunderc.obj \
+	borland\wxscript_lib_sclua.obj
+WXSCRIPT_DLL_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
+	-tWM $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
+	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
+	-I$(WX_DIR)\include -I..\include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) \
+	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) \
+	$(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(CPPFLAGS) $(CXXFLAGS)
+WXSCRIPT_DLL_OBJECTS =  \
+	borland\wxscript_dll_script.obj \
+	borland\wxscript_dll_scpython.obj \
+	borland\wxscript_dll_sccint.obj \
+	borland\wxscript_dll_scunderc.obj \
+	borland\wxscript_dll_sclua.obj
+TEST1_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) -tWM \
+	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
+	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	-I$(WX_DIR)\include -I..\include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) \
 	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) \
 	$(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(CPPFLAGS) $(CXXFLAGS)
 TEST1_OBJECTS =  \
 	borland\test1_Test.obj
-TEST2_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
-	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
-	-I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
+TEST2_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) -tWM \
+	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
+	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	-I$(WX_DIR)\include -I..\include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) \
 	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) \
 	$(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(CPPFLAGS) $(CXXFLAGS)
@@ -222,11 +234,20 @@ SCRIPTDEFINE3 = -DwxSCRIPT_NO_CINT
 !if "$(USE_UNDERC)" == "0"
 SCRIPTDEFINE4 = -DwxSCRIPT_NO_UNDERC
 !endif
+!if "$(WX_SHARED)" == "0"
+__wxscript_lib___depname = ..\lib\wxscript$(WXLIBPOSTFIX).lib
+!endif
+!if "$(WX_SHARED)" == "1"
+__wxscript_dll___depname = ..\lib\wxscript_dll.dll
+!endif
 !if "$(WX_DEBUG)" == "0"
 __OPTIMIZEFLAG = -O2
 !endif
 !if "$(WX_DEBUG)" == "1"
 __OPTIMIZEFLAG = -Od
+!endif
+!if "$(WX_SHARED)" == "1"
+__WX_SHAREDDEFINE_p = -DWXUSINGDLL
 !endif
 !if "$(WX_UNICODE)" == "1"
 __WXUNICODE_DEFINE_p = -D_UNICODE
@@ -281,12 +302,19 @@ borland:
 
 ### Targets: ###
 
-all: ..\lib\wxscript$(WXLIBPOSTFIX).lib ..\tests\test1\test1.exe ..\tests\test2\test2.exe
+all: $(__wxscript_lib___depname) $(__wxscript_dll___depname) ..\tests\test1\test1.exe ..\tests\test2\test2.exe
 
 clean: 
 	-if exist borland\*.obj del borland\*.obj
 	-if exist borland\*.res del borland\*.res
 	-if exist borland\*.csm del borland\*.csm
+	-if exist ..\lib\wxscript$(WXLIBPOSTFIX).lib del ..\lib\wxscript$(WXLIBPOSTFIX).lib
+	-if exist ..\lib\wxscript_dll.dll del ..\lib\wxscript_dll.dll
+	-if exist ..\lib\wxscript_dll.tds del ..\lib\wxscript_dll.tds
+	-if exist ..\lib\wxscript_dll.ilc del ..\lib\wxscript_dll.ilc
+	-if exist ..\lib\wxscript_dll.ild del ..\lib\wxscript_dll.ild
+	-if exist ..\lib\wxscript_dll.ilf del ..\lib\wxscript_dll.ilf
+	-if exist ..\lib\wxscript_dll.ils del ..\lib\wxscript_dll.ils
 	-if exist ..\lib\wxscript$(WXLIBPOSTFIX).lib del ..\lib\wxscript$(WXLIBPOSTFIX).lib
 	-if exist ..\tests\test1\test1.exe del ..\tests\test1\test1.exe
 	-if exist ..\tests\test1\test1.tds del ..\tests\test1\test1.tds
@@ -302,10 +330,12 @@ clean:
 	-if exist ..\tests\test2\test2.ils del ..\tests\test2\test2.ils
 
 tarball: 
-	( cd .. && tar -cvzf ..\wxscript.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
+	-cd ..
+	-tar -cvzf ..\wxscript.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* *
 
 zip: 
-	( cd .. && zip -r9 ..\wxscript.zip *  -x *.pdb -x *.log -x *.o* )
+	-cd ..
+	-zip -r9 ..\wxscript.zip *  -x *.pdb -x *.log -x *.o*
 
 cleanbuilddirs: 
 	-if exist msvc rmdir /S /Q msvc
@@ -321,41 +351,67 @@ cleanall: clean cleanbuilddirs
 	del /S /Q ..\*.exe >NUL
 
 docs: 
-	( cd ..\docs && doxygen )
+	-cd ..\docs
+	-doxygen
 
 cleandocs: 
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
-..\lib\wxscript$(WXLIBPOSTFIX).lib: $(WXSCRIPT_OBJECTS)
+!if "$(WX_SHARED)" == "0"
+..\lib\wxscript$(WXLIBPOSTFIX).lib: $(WXSCRIPT_LIB_OBJECTS)
 	if exist $@ del $@
 	tlib /a /p4096 $@ @&&|
-	$(WXSCRIPT_OBJECTS)
+	$(WXSCRIPT_LIB_OBJECTS)
+|
+!endif
+
+!if "$(WX_SHARED)" == "1"
+..\lib\wxscript_dll.dll: $(WXSCRIPT_DLL_OBJECTS)
+	ilink32 -Tpd -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) @&&|
+	c0d32.obj $(WXSCRIPT_DLL_OBJECTS),$@,, wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib import32.lib cw32mt.lib,,
+|
+	implib -f ..\lib\wxscript$(WXLIBPOSTFIX) $@
+!endif
+
+..\tests\test1\test1.exe: $(TEST1_OBJECTS) $(__wxscript_lib___depname)
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) -ap @&&|
+	c0x32.obj $(TEST1_OBJECTS),$@,, ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
 |
 
-..\tests\test1\test1.exe: $(TEST1_OBJECTS) ..\lib\wxscript$(WXLIBPOSTFIX).lib
-	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) -ap @&&|
-	c0x32.obj $(TEST1_OBJECTS),$@,, ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32.lib,,
+..\tests\test2\test2.exe: $(TEST2_OBJECTS) $(__wxscript_lib___depname)
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) -ap @&&|
+	c0x32.obj $(TEST2_OBJECTS),$@,, ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
 |
 
-..\tests\test2\test2.exe: $(TEST2_OBJECTS) ..\lib\wxscript$(WXLIBPOSTFIX).lib
-	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) -ap @&&|
-	c0x32.obj $(TEST2_OBJECTS),$@,, ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32.lib,,
-|
+borland\wxscript_lib_script.obj: .\..\src\script.cpp
+	$(CXX) -q -c -P -o$@ $(WXSCRIPT_LIB_CXXFLAGS) $**
 
-borland\wxscript_script.obj: .\..\src\script.cpp
-	$(CXX) -q -c -P -o$@ $(WXSCRIPT_CXXFLAGS) $**
+borland\wxscript_lib_scpython.obj: .\..\src\scpython.cpp
+	$(CXX) -q -c -P -o$@ $(WXSCRIPT_LIB_CXXFLAGS) $**
 
-borland\wxscript_scpython.obj: .\..\src\scpython.cpp
-	$(CXX) -q -c -P -o$@ $(WXSCRIPT_CXXFLAGS) $**
+borland\wxscript_lib_sccint.obj: .\..\src\sccint.cpp
+	$(CXX) -q -c -P -o$@ $(WXSCRIPT_LIB_CXXFLAGS) $**
 
-borland\wxscript_sccint.obj: .\..\src\sccint.cpp
-	$(CXX) -q -c -P -o$@ $(WXSCRIPT_CXXFLAGS) $**
+borland\wxscript_lib_scunderc.obj: .\..\src\scunderc.cpp
+	$(CXX) -q -c -P -o$@ $(WXSCRIPT_LIB_CXXFLAGS) $**
 
-borland\wxscript_scunderc.obj: .\..\src\scunderc.cpp
-	$(CXX) -q -c -P -o$@ $(WXSCRIPT_CXXFLAGS) $**
+borland\wxscript_lib_sclua.obj: .\..\src\sclua.cpp
+	$(CXX) -q -c -P -o$@ $(WXSCRIPT_LIB_CXXFLAGS) $**
 
-borland\wxscript_sclua.obj: .\..\src\sclua.cpp
-	$(CXX) -q -c -P -o$@ $(WXSCRIPT_CXXFLAGS) $**
+borland\wxscript_dll_script.obj: .\..\src\script.cpp
+	$(CXX) -q -c -P -o$@ $(WXSCRIPT_DLL_CXXFLAGS) $**
+
+borland\wxscript_dll_scpython.obj: .\..\src\scpython.cpp
+	$(CXX) -q -c -P -o$@ $(WXSCRIPT_DLL_CXXFLAGS) $**
+
+borland\wxscript_dll_sccint.obj: .\..\src\sccint.cpp
+	$(CXX) -q -c -P -o$@ $(WXSCRIPT_DLL_CXXFLAGS) $**
+
+borland\wxscript_dll_scunderc.obj: .\..\src\scunderc.cpp
+	$(CXX) -q -c -P -o$@ $(WXSCRIPT_DLL_CXXFLAGS) $**
+
+borland\wxscript_dll_sclua.obj: .\..\src\sclua.cpp
+	$(CXX) -q -c -P -o$@ $(WXSCRIPT_DLL_CXXFLAGS) $**
 
 borland\test1_Test.obj: .\..\tests\test1\Test.cpp
 	$(CXX) -q -c -P -o$@ $(TEST1_CXXFLAGS) $**

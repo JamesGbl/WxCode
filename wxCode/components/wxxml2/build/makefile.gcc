@@ -51,16 +51,27 @@ WX_VERSION = 26
 
 ### Variables: ###
 
-WXXML2_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
-	-DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+WXXML2_LIB_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -mthreads \
+	$(__WX_SHAREDDEFINE_p) -DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) \
+	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	-I$(WX_DIR)\include -I..\include -I$(LIBXML2_DIR)\include \
 	-I$(ICONV_DIR)\include $(CPPFLAGS) $(CXXFLAGS)
-WXXML2_OBJECTS =  \
-	mingw\wxxml2_xml2.o \
-	mingw\wxxml2_dtd.o
-MINIMAL_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
-	-DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+WXXML2_LIB_OBJECTS =  \
+	mingw\wxxml2_lib_xml2.o \
+	mingw\wxxml2_lib_dtd.o
+WXXML2_DLL_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -mthreads \
+	$(__WX_SHAREDDEFINE_p) -DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) \
+	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+	-I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
+	-I$(WX_DIR)\include -I..\include -I$(LIBXML2_DIR)\include \
+	-I$(ICONV_DIR)\include $(CPPFLAGS) $(CXXFLAGS)
+WXXML2_DLL_OBJECTS =  \
+	mingw\wxxml2_dll_xml2.o \
+	mingw\wxxml2_dll_dtd.o
+MINIMAL_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -mthreads \
+	$(__WX_SHAREDDEFINE_p) -DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) \
+	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	-I$(WX_DIR)\include -I..\include -I$(LIBXML2_DIR)\include \
 	-I$(ICONV_DIR)\include $(CPPFLAGS) $(CXXFLAGS)
@@ -71,6 +82,12 @@ MINIMAL_OBJECTS =  \
 
 ifeq ($(WX_DEBUG),1)
 WX3RDPARTLIBPOSTFIX = d
+endif
+ifeq ($(WX_SHARED),0)
+__wxxml2_lib___depname = ..\lib\libwxxml2$(WXLIBPOSTFIX).a
+endif
+ifeq ($(WX_SHARED),1)
+__wxxml2_dll___depname = ..\lib\wxxml2_dll.dll
 endif
 ifeq ($(WX_DEBUG),0)
 __WARNINGS = 
@@ -83,6 +100,9 @@ __OPTIMIZEFLAG = -O2
 endif
 ifeq ($(WX_DEBUG),1)
 __OPTIMIZEFLAG = -O0
+endif
+ifeq ($(WX_SHARED),1)
+__WX_SHAREDDEFINE_p = -DWXUSINGDLL
 endif
 ifeq ($(WX_UNICODE),1)
 __WXUNICODE_DEFINE_p = -D_UNICODE
@@ -125,10 +145,12 @@ mingw:
 
 ### Targets: ###
 
-all: ..\lib\libwxxml2$(WXLIBPOSTFIX).a ..\sample\minimal.exe
+all: $(__wxxml2_lib___depname) $(__wxxml2_dll___depname) ..\sample\minimal.exe
 
 clean: 
 	-if exist mingw\*.o del mingw\*.o
+	-if exist ..\lib\libwxxml2$(WXLIBPOSTFIX).a del ..\lib\libwxxml2$(WXLIBPOSTFIX).a
+	-if exist ..\lib\wxxml2_dll.dll del ..\lib\wxxml2_dll.dll
 	-if exist ..\lib\libwxxml2$(WXLIBPOSTFIX).a del ..\lib\libwxxml2$(WXLIBPOSTFIX).a
 	-if exist ..\sample\minimal.exe del ..\sample\minimal.exe
 
@@ -157,19 +179,32 @@ docs:
 cleandocs: 
 	-if exist ..\docs\html then rmdir /S /Q ..\docs\html
 
-..\lib\libwxxml2$(WXLIBPOSTFIX).a: $(WXXML2_OBJECTS)
+ifeq ($(WX_SHARED),0)
+..\lib\libwxxml2$(WXLIBPOSTFIX).a: $(WXXML2_LIB_OBJECTS)
 	if exist $@ del $@
-	ar rcu $@ $(WXXML2_OBJECTS)
+	ar rcu $@ $(WXXML2_LIB_OBJECTS)
 	ranlib $@
+endif
 
-..\sample\minimal.exe: $(MINIMAL_OBJECTS) ..\lib\libwxxml2$(WXLIBPOSTFIX).a
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -Wl,--subsystem,windows -mwindows -L$(LIBXML2_DIR)\lib -L$(ICONV_DIR)\lib  ..\lib\libwxxml2$(WXLIBPOSTFIX).a -lxml2 -liconv -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTLIBPOSTFIX) -lwxjpeg$(WX3RDPARTLIBPOSTFIX) -lwxpng$(WX3RDPARTLIBPOSTFIX) -lwxzlib$(WX3RDPARTLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+ifeq ($(WX_SHARED),1)
+..\lib\wxxml2_dll.dll: $(WXXML2_DLL_OBJECTS)
+	$(CXX) -shared -fPIC -o $@ $(WXXML2_DLL_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L..\lib -Wl,--out-implib,..\lib\libwxxml2$(WXLIBPOSTFIX).a -L$(LIBXML2_DIR)\lib -L$(ICONV_DIR)\lib
+endif
 
-mingw\wxxml2_xml2.o: ./../src/xml2.cpp
-	$(CXX) -c -o $@ $(WXXML2_CXXFLAGS) $<
+..\sample\minimal.exe: $(MINIMAL_OBJECTS) $(__wxxml2_lib___depname)
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -Wl,--subsystem,windows -mwindows -L$(LIBXML2_DIR)\lib -L$(ICONV_DIR)\lib  ..\lib\libwxxml2$(WXLIBPOSTFIX).a -lxml2 -liconv -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTLIBPOSTFIX) -lwxjpeg$(WX3RDPARTLIBPOSTFIX) -lwxpng$(WX3RDPARTLIBPOSTFIX) -lwxzlib$(WX3RDPARTLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
-mingw\wxxml2_dtd.o: ./../src/dtd.cpp
-	$(CXX) -c -o $@ $(WXXML2_CXXFLAGS) $<
+mingw\wxxml2_lib_xml2.o: ./../src/xml2.cpp
+	$(CXX) -c -o $@ $(WXXML2_LIB_CXXFLAGS) $<
+
+mingw\wxxml2_lib_dtd.o: ./../src/dtd.cpp
+	$(CXX) -c -o $@ $(WXXML2_LIB_CXXFLAGS) $<
+
+mingw\wxxml2_dll_xml2.o: ./../src/xml2.cpp
+	$(CXX) -c -o $@ $(WXXML2_DLL_CXXFLAGS) $<
+
+mingw\wxxml2_dll_dtd.o: ./../src/dtd.cpp
+	$(CXX) -c -o $@ $(WXXML2_DLL_CXXFLAGS) $<
 
 mingw\minimal_minimal.o: ./../sample/minimal.cpp
 	$(CXX) -c -o $@ $(MINIMAL_CXXFLAGS) $<

@@ -30,3 +30,21 @@ dnl ### begin block 20_COND_PLATFORM_OS2_1[wxxml2.bkl] ###
         COND_PLATFORM_OS2_1=""
     fi
     AC_SUBST(COND_PLATFORM_OS2_1)
+dnl ### begin block 20_COND_PLATFORM_WIN32_1[wxxml2.bkl] ###
+    COND_PLATFORM_WIN32_1="#"
+    if test "x$PLATFORM_WIN32" = "x1" ; then
+        COND_PLATFORM_WIN32_1=""
+    fi
+    AC_SUBST(COND_PLATFORM_WIN32_1)
+dnl ### begin block 20_COND_WX_SHARED_0[wxxml2.bkl] ###
+    COND_WX_SHARED_0="#"
+    if test "x$WX_SHARED" = "x0" ; then
+        COND_WX_SHARED_0=""
+    fi
+    AC_SUBST(COND_WX_SHARED_0)
+dnl ### begin block 20_COND_WX_SHARED_1[wxxml2.bkl] ###
+    COND_WX_SHARED_1="#"
+    if test "x$WX_SHARED" = "x1" ; then
+        COND_WX_SHARED_1=""
+    fi
+    AC_SUBST(COND_WX_SHARED_1)

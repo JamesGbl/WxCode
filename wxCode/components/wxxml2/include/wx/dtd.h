@@ -23,12 +23,12 @@
 
 
 // defined later
-class WXXMLDLLEXPORT wxXml2DTD;
-class WXXMLDLLEXPORT wxXml2ElemDecl;
-class WXXMLDLLEXPORT wxXml2AttrDecl;
-class WXXMLDLLEXPORT wxXml2EntityDecl;
-class WXXMLDLLEXPORT wxXml2ElemContent;
-class WXXMLDLLEXPORT wxXml2Enumeration;
+class WXDLLIMPEXP_WXXML2 wxXml2DTD;
+class WXDLLIMPEXP_WXXML2 wxXml2ElemDecl;
+class WXDLLIMPEXP_WXXML2 wxXml2AttrDecl;
+class WXDLLIMPEXP_WXXML2 wxXml2EntityDecl;
+class WXDLLIMPEXP_WXXML2 wxXml2ElemContent;
+class WXDLLIMPEXP_WXXML2 wxXml2Enumeration;
 
 
 // global instances of empty objects
@@ -113,7 +113,7 @@ enum wxXml2EntityType {
 //! not have a "_private" member!).
 //! When using the copy constructor of this class, a deep copy will be
 //! performed (instead of a light one as done by wxXml2Wrapper).
-class WXXMLDLLEXPORT wxXml2HelpWrapper : public wxObject
+class WXDLLIMPEXP_WXXML2 wxXml2HelpWrapper : public wxObject
 {
 	DECLARE_ABSTRACT_CLASS(wxXml2HelpWrapper)
 
@@ -160,7 +160,7 @@ public:
 //! See the "Element Type Declarations" in the document
 //! http://www.w3.org/TR/REC-xml for more info.
 //!
-class WXXMLDLLEXPORT wxXml2ElemContent : public wxXml2HelpWrapper
+class WXDLLIMPEXP_WXXML2 wxXml2ElemContent : public wxXml2HelpWrapper
 {
 	friend class wxXml2ElemDecl;
 	DECLARE_DYNAMIC_CLASS(wxXml2ElemContent)
@@ -243,7 +243,7 @@ public:		// miscellaneous
 //!                             ----------------------
 //!                               wxXml2Enumeration 
 //!
-class WXXMLDLLEXPORT wxXml2Enumeration : public wxXml2HelpWrapper
+class WXDLLIMPEXP_WXXML2 wxXml2Enumeration : public wxXml2HelpWrapper
 {
 	friend class wxXml2AttrDecl;
 	DECLARE_DYNAMIC_CLASS(wxXml2Enumeration)
@@ -326,7 +326,7 @@ public:		// miscellaneous
 //! <!ELEMENT name EMPTY>
 //!
 //! setting the appropriate wxXml2ElementTypeVal value.
-class WXXMLDLLEXPORT wxXml2ElemDecl : public wxXml2BaseNode
+class WXDLLIMPEXP_WXXML2 wxXml2ElemDecl : public wxXml2BaseNode
 {
 	DECLARE_DYNAMIC_CLASS(wxXml2ElemDecl)
 
@@ -394,7 +394,7 @@ public:		// miscellaneous
 //!                                  ----------------------
 //!                                     wxXml2Enumeration
 //!
-class WXXMLDLLEXPORT wxXml2AttrDecl : public wxXml2BaseNode
+class WXDLLIMPEXP_WXXML2 wxXml2AttrDecl : public wxXml2BaseNode
 {
 	DECLARE_DYNAMIC_CLASS(wxXml2AttrDecl)
 
@@ -476,7 +476,7 @@ public:		// miscellaneous
 //! or
 //!             <!ENTITY name PUBLIC PubID SystemID>
 //!
-class WXXMLDLLEXPORT wxXml2EntityDecl : public wxXml2BaseNode
+class WXDLLIMPEXP_WXXML2 wxXml2EntityDecl : public wxXml2BaseNode
 {
 	DECLARE_DYNAMIC_CLASS(wxXml2EntityDecl)
 
@@ -576,7 +576,7 @@ public:		// miscellaneous
 //! #Load() or #Save() a DTD in the same way you can do for wxXml2Document.
 //! wxXml2DTD::GetRoot() lets you navigate through the DTD, even if DTD manipulation
 //! using wxXml2Node is not completely supported yet.
-class WXXMLDLLEXPORT wxXml2DTD : public wxXml2Wrapper
+class WXDLLIMPEXP_WXXML2 wxXml2DTD : public wxXml2Wrapper
 {
 	DECLARE_DYNAMIC_CLASS(wxXml2DTD)
 
