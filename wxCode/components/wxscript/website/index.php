@@ -16,8 +16,6 @@
   ?>
 
 
-
-
   <br/><?php write_h1("wxScript usage sample"); ?>
   <?php writeSnippet('
 // load the script
