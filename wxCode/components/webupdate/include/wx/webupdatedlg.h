@@ -33,7 +33,7 @@
 
 
 //! The prefix of the static text control which shows the remaining time.
-#define wxWUD_TIMETEXT_PREFIX		wxT("Time remaining: ")
+#define wxWUD_TIMETEXT_PREFIX			wxT("Time remaining: ")
 
 //! The possible labels of the wxWUD_OK button.
 #define wxWUD_OK_DEFAULT_LABEL			wxT("Download")
@@ -99,6 +99,9 @@ protected:		// these are written by this thread and they must be only read
 
 	//! How much of the file has been currently downloaded.
 	unsigned long m_nCurrentSize;
+
+	//! The size of the download.
+	unsigned long m_nFinalSize;
 
 	//! This is the result state of the last download.
 	bool m_bSuccess;
@@ -168,6 +171,13 @@ public:		// getters
 	bool IsDownloading() const
 		{ return m_bDownloading; }
 
+	//! Returns a string containing the current download speed.
+	//! The speed is calculated using #GetCurrDownloadedBytes and #GetElapsedMSec.
+	virtual wxString GetDownloadSpeed() const;
+
+	//! Returns a string containing the current time left for this download.
+	virtual wxString GetRemainingTime() const;
+
 public:		// miscellaneous
 
 	//! This function must be called only when the thread is not running and 
@@ -234,7 +244,7 @@ class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDlg : public wxDialog
 {
 protected:		// pointers to our controls
 	
-	wxStaticText *m_pAppNameText, *m_pTimeText, *m_pDownloadStatusText;
+	wxStaticText *m_pAppNameText, *m_pTimeText, *m_pSpeedText;
 	wxButton *m_pOk, *m_pCancel;
 
 #if wxWU_USE_CHECKEDLISTCTRL
@@ -254,6 +264,10 @@ protected:		// other member variables
 	//! This is a little helper which is set to TRUE during the first download;
 	//! that is, it's set to TRUE when we are downloading the XML script.
 	bool m_bDownloadingScript;
+
+	//! TRUE if we intentionally called wxWebUpdateThread::AbortDownload
+	//! because user asked us to do so.
+	bool m_bUserAborted;
 
 	//! The local packages we are going to handle with this dialog.
 	const wxWebUpdateLocalPackage *m_pLocalPackages;
@@ -289,6 +303,11 @@ protected:
 	//! using the #m_arrUpdatedPackages array. Removes any old content.
 	void RebuildPackageList();
 
+	//! Call this function instead of EndModal(wxCANCEL) to abort this dialog.
+	//! This function takes care of our wxWebUpdateThread, infact.
+	void AbortDialog();
+
+
 protected:		// event handlers
 
 	void OnDownload(wxCommandEvent &);
@@ -316,7 +335,8 @@ public:
 							int count)							
 		{ m_parent=parent; m_strAppName=appname; m_strURI=uri; 
 			m_pLocalPackages=arr; m_nLocalPackages=count; 			
-			m_bDownloadingScript=FALSE; InitWidgetsFromXRC(); }
+			m_bDownloadingScript=FALSE; m_bUserAborted=FALSE;
+			InitWidgetsFromXRC(); }
 
 	virtual ~wxWebUpdateDlg() 
 		{ if (m_thread) delete m_thread; }

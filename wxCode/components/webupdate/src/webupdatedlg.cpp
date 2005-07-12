@@ -138,6 +138,7 @@ void *wxWebUpdateThread::Entry()
 		wxInputStream *in = u.GetInputStream();
 		if (in == NULL)
 			ABORT_DOWNLOAD();
+		m_nFinalSize = in->GetSize();
 
 		// write the downloaded stuff in the output file
 		// without using the 
@@ -162,17 +163,15 @@ void *wxWebUpdateThread::Entry()
 			// do not send too many log messages; send a log message
 			// each 20 cycles (i.e. each 20*wxWUT_BUF_TEMP_SIZE byte downloaded)
 			if ((m_nCurrentSize % (wxWUT_BUF_TEMP_SIZE*20)) == 0)
-				wxLogDebug(wxT("wxWebUpdateThread::Entry - successfully downloaded %d bytes"),
+				wxLogDebug(wxT("wxWebUpdateThread::Entry - downloaded %d bytes"),
 						m_nCurrentSize);
 #endif
 		}
 		
-		if (!out.IsOk() || out.GetSize() != in->GetSize()) {
-			delete in;
-			ABORT_DOWNLOAD();
-		}
-		
 		delete in;
+		if (!out.IsOk() || out.GetSize() != m_nFinalSize)
+			ABORT_DOWNLOAD();
+		
 		wxLogDebug(wxT("wxWebUpdateThread::Entry - completed download of %d bytes"),
 						m_nCurrentSize);
 
@@ -184,6 +183,46 @@ void *wxWebUpdateThread::Entry()
 
 	return (void*)FALSE;
 }
+
+wxString wxWebUpdateThread::GetDownloadSpeed() const
+{
+	wxASSERT(IsDownloading());
+	wxLongLong msec = GetElapsedMSec();
+	if (msec <= 0)
+		return wxEmptyString;		// avoid division by zero
+
+	wxLongLong nBytesPerMilliSec = wxLongLong(GetCurrDownloadedBytes()) / msec;
+
+	// we don't like bytes per millisecond as measure unit !
+	long nKBPerSec = (nBytesPerMilliSec * 1000/1024).ToLong();		// our conversion factor 
+	return wxString::Format(wxT("%d KB/s"), nKBPerSec);
+}
+
+wxString wxWebUpdateThread::GetRemainingTime() const
+{
+	wxASSERT(IsDownloading());
+	wxLongLong sec = GetElapsedMSec()/1000;
+	if (sec <= 0)
+		return wxEmptyString;		// avoid division by zero	
+
+	// remaining time is the number of bytes we still need to download
+	// divided by our download speed...
+	wxLongLong nBytesPerSec = wxLongLong(GetCurrDownloadedBytes()) / sec;
+	if (nBytesPerSec <= 0)
+		return wxEmptyString;		// avoid division by zero
+	
+	long remsec = (wxLongLong(m_nFinalSize-GetCurrDownloadedBytes())/nBytesPerSec).ToLong();
+	if (remsec < 60)
+		return wxString::Format(wxT("%d sec"), remsec);	
+	else if (remsec < 60*60)
+		return wxString::Format(wxT("%d min, %d sec"), remsec/60, remsec);	
+	else if (remsec < 60*60*24)
+		return wxString::Format(wxT("%d hours, %d min, %d sec"), 
+					remsec/3600, remsec/60, remsec);	
+	else
+		return wxT("not available");
+}
+
 
 
 
@@ -226,7 +265,7 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 	// ---------------------
 
 	m_pAppNameText = XRCCTRL(*this, "IDWUD_APPNAME_TEXT", wxStaticText);
-	m_pDownloadStatusText = XRCCTRL(*this, "IDWUD_PROGRESS_TEXT", wxStaticText);
+	m_pSpeedText = XRCCTRL(*this, "IDWUD_PROGRESS_TEXT", wxStaticText);
 	m_pTimeText = XRCCTRL(*this, "IDWUD_TIME_TEXT", wxStaticText);
 	//m_pUpdatesList = XRCCTRL(*this,"IDWUD_LISTCTRL",wxListCtrl);
 	m_pGauge = XRCCTRL(*this, "IDWUD_GAUGE", wxGauge);
@@ -312,7 +351,7 @@ int wxWebUpdateDlg::ShowModal()
 
 	// as soon as the wxWebUpdateThread has completed its work we'll receive
 	// a notification through the wxWUT_NOTIFICATION events
-	m_pDownloadStatusText->SetLabel(wxT("Downloading update list..."));
+	m_pSpeedText->SetLabel(wxT("Downloading update list..."));
 
 	// proceed with standard processing
 	return wxDialog::ShowModal();
@@ -331,7 +370,8 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
 	if (!m_xmlScript.Load(xmluri)) {
 		ShowErrorMsg(wxT("Cannot parse the XML update script downloaded as: ") + 
 						m_thread->m_strOutput);
-		EndModal(wxCANCEL);		// this is a unrecoverable error !
+		AbortDialog();		// this is a unrecoverable error !
+		return;
 	}
 	
 	// now load all the packages we need in local cache
@@ -346,7 +386,8 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
 		wxMessageBox(wxT("Could not found any valid package for ") + m_strAppName
 					+ wxT("... exiting the update dialog."), wxT("Warning"),
 					wxOK | wxICON_EXCLAMATION);
-		EndModal(wxCANCEL);
+		AbortDialog();
+		return;
 	}
 }
 
@@ -527,10 +568,17 @@ void wxWebUpdateDlg::OnCancel(wxCommandEvent &)
 
 		// we are now labeled as wxWUD_CANCEL_DOWNLOAD...
 		// thus we only stop the download
-		m_thread->AbortDownload();
+		m_bUserAborted = TRUE;
+		m_thread->AbortDownload();		
 		return;
 	}
 
+	AbortDialog();
+}
+
+void wxWebUpdateDlg::AbortDialog()
+{
+	m_thread->Pause();
 	m_thread->Delete();
 	EndModal(wxCANCEL);
 }
@@ -541,70 +589,27 @@ void wxWebUpdateDlg::OnShowFilter(wxCommandEvent &)
 	RebuildPackageList();
 }
 
-void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
-{
-	static bool bLabelRunningMode = FALSE;
-
-	if (!m_thread->IsDownloading()) {
-
-		// reset our gauge control
-		m_pGauge->SetValue(0);
-
-		// re-enable what we disabled when we ran the thread
-		if (!bLabelRunningMode) {			
-			m_pCancel->SetLabel(wxWUD_CANCEL_DEFAULT_LABEL);
-			m_pUpdatesList->Enable();
-			bLabelRunningMode = TRUE;
-		}
-
-		// are there checked items in the package listctrl ?
-		for (int i=0; i<m_pUpdatesList->GetItemCount(); i++)
-			if (m_pUpdatesList->IsChecked(i))
-				break;		// found a checked item !
-		
-		if (i<m_pUpdatesList->GetItemCount())
-			m_pOk->Enable();		// yes, there are
-		else
-			m_pOk->Disable();		// no, there aren't
-
-		return;
-	}
-
-	if (bLabelRunningMode) {
-		m_pOk->Disable();
-		m_pCancel->SetLabel(wxWUD_CANCEL_DOWNLOAD);
-		m_pUpdatesList->Disable();
-		bLabelRunningMode = FALSE;
-	}
-
-	// update our gauge control
-	long value = m_thread->GetCurrDownloadedBytes();	
-	m_pGauge->SetValue(value > 0 ? value : 0);
-}
-
 void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 {
 	// first of all, we need to know if download was successful
 	if (!m_thread->DownloadWasSuccessful()) {
-
-		ShowErrorMsg(wxT("Could not download the ") + m_thread->m_strResName + 
+		if (m_bUserAborted)
+			wxMessageBox(wxT("Download aborted..."), 
+						wxT("Warning"), wxOK | wxICON_EXCLAMATION);
+		else
+			ShowErrorMsg(wxT("Could not download the ") + m_thread->m_strResName + 
 					wxT(" from\n\n") + m_thread->m_strURI + wxT("\n\nURL... "));
 		
 		wxLogDebug(wxT("wxWebUpdateDlg::OnDownloadComplete - Download status: failed !"));
-		m_pDownloadStatusText->SetLabel(wxT("Download status: failed !"));
-		m_pTimeText->SetLabel(wxT("No downloads running..."));
-
 		if (m_bDownloadingScript)
-			EndModal(wxCANCEL);		// this is a unrecoverable error !
+			AbortDialog();		// this is a unrecoverable error !
 
+		m_bUserAborted = FALSE;		// reset flag
 		return;
 
 	} else {
 
 		wxLogDebug(wxT("wxWebUpdateDlg::OnDownloadComplete - Download status: successfully completed"));
-		m_pDownloadStatusText->SetLabel(wxT("Download status: successfully completed"));
-		m_pTimeText->SetLabel(wxT("No downloads running..."));
-
 		if (m_bDownloadingScript) {
 
 			// handle the XML parsing & control update 
@@ -627,4 +632,70 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 
 	// reset flag
 	if (m_bDownloadingScript) m_bDownloadingScript = FALSE;
+}
+
+void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
+{
+	// help us to avoid useless calls to SetLabel() function which
+	// cause flickering
+	static bool bLabelRunningMode = FALSE;
+
+	if (!m_thread->IsDownloading()) {
+
+		// reset our gauge control
+		m_pGauge->SetValue(0);
+
+		// re-enable what we disabled when we ran the thread
+		if (!bLabelRunningMode) {			
+			m_pCancel->SetLabel(wxWUD_CANCEL_DEFAULT_LABEL);
+			m_pUpdatesList->Enable();
+			bLabelRunningMode = TRUE;
+
+			// update our meters
+			if (m_thread->DownloadWasSuccessful())
+				m_pSpeedText->SetLabel(wxT("Download status: successfully completed"));
+			else
+				m_pSpeedText->SetLabel(wxT("Download status: failed !"));
+			m_pTimeText->SetLabel(wxT("No downloads running..."));
+		}
+
+		// are there checked items in the package listctrl ?
+		for (int i=0; i<m_pUpdatesList->GetItemCount(); i++)
+			if (m_pUpdatesList->IsChecked(i))
+				break;		// found a checked item !
+		
+		if (i<m_pUpdatesList->GetItemCount())
+			m_pOk->Enable();		// yes, there are
+		else
+			m_pOk->Disable();		// no, there aren't
+
+	} else {
+
+		// need to change labels ?
+		if (bLabelRunningMode) {
+			m_pOk->Disable();
+			m_pCancel->SetLabel(wxWUD_CANCEL_DOWNLOAD);
+			m_pUpdatesList->Disable();
+			bLabelRunningMode = FALSE;
+		}
+
+		static wxLongLong lastupdate = 0;
+		wxLongLong current = m_thread->GetElapsedMSec();
+		if (current - lastupdate > 1000) {
+
+			lastupdate = current;
+
+			// update our gauge control
+			long value = m_thread->GetCurrDownloadedBytes();	
+			m_pGauge->SetValue(value > 0 ? value : 0);
+
+			// update speed meter
+			m_pSpeedText->SetLabel(wxT("Download status: downloading at ") + 
+								m_thread->GetDownloadSpeed());
+
+			// update time meter
+			m_pTimeText->SetLabel(wxWUD_TIMETEXT_PREFIX + 
+								m_thread->GetRemainingTime());
+		}
+	}
 }
