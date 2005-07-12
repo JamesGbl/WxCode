@@ -94,14 +94,25 @@ protected:		// these are written by this thread and they must be only read
 				// getters for these vars we ensure that we do not need to use
 				// mutexes...
 
-	//! This is the result state of the last download.
-	bool m_bSuccess;
-
 	//! The moment in the time where the download of the current file started.
 	wxDateTime m_dtStart;
 
 	//! How much of the file has been currently downloaded.
 	unsigned long m_nCurrentSize;
+
+	//! This is the result state of the last download.
+	bool m_bSuccess;
+
+protected:		// these are vars protected by mutexes...
+
+	//! TRUE if we are downloading in this moment.
+	//! The value of this variable is independent from the current thread status
+	//! (i.e. when the thread is running this var can be set to FALSE because we
+	//!  have already completed our download)...
+	bool m_bDownloading;
+
+	//! The mutex over the #m_bDownloading var.
+	wxMutex m_mDownloading;
 
 public:		// to avoid setters/getters (these vars are only read by this thread;
 			// they are never written and so they are not protected with mutexes).
@@ -136,8 +147,11 @@ public:
 	//! Also sets the #m_bSuccess flag before exiting.
     virtual void *Entry();
 
+public:		// getters
+
 	//! Returns TRUE if the last download was successful.
-	bool DownloadWasSuccessful() const		{ return m_bSuccess; }
+	bool DownloadWasSuccessful() const		
+		{ return m_bSuccess; }
 
 	//! Returns the number of milliseconds elapsed from the start of the
 	//! current download.
@@ -145,7 +159,30 @@ public:
 		{ wxTimeSpan t = wxDateTime::UNow() - m_dtStart; return t.GetMilliseconds(); }
 
 	//! Returns the number of bytes currently downloaded.
-	
+	unsigned long GetCurrDownloadedBytes() const
+		{ return m_nCurrentSize; }
+
+	//! Returns TRUE if this thread is downloading a file.
+	//! We don't need to use m_mDownloading since we are just reading 
+	//! the #m_bDownloading var...
+	bool IsDownloading() const
+		{ return m_bDownloading; }
+
+public:		// miscellaneous
+
+	//! This function must be called only when the thread is not running and 
+	void BeginNewDownload() {
+		wxASSERT(!IsDownloading());
+		wxMutexLocker lock(m_mDownloading);
+		m_bDownloading = TRUE;
+	}
+
+	//! Aborts the current download.
+	void AbortDownload() {
+		wxASSERT(IsDownloading());
+		wxMutexLocker lock(m_mDownloading);
+		m_bDownloading = FALSE;
+	}
 };
 
 
