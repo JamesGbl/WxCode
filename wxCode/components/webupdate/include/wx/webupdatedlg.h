@@ -32,20 +32,39 @@
 #include <wx/progdlg.h>
 
 
-//! The ID of the wxUpdateUI events sent by wxWebUpdateThread.
-#define wxWUT_NOTIFICATION			0xABCDEF
-
 //! The prefix of the static text control which shows the remaining time.
 #define wxWUD_TIMETEXT_PREFIX		wxT("Time remaining: ")
+
+//! The possible labels of the wxWUD_OK button.
+#define wxWUD_OK_DEFAULT_LABEL			wxT("Download")
+#define wxWUD_OK_INSTALL				wxT("Install")
+
+#define wxWUD_CANCEL_DEFAULT_LABEL		wxT("Cancel")
+#define wxWUD_CANCEL_DOWNLOAD			wxT("Stop download")
+#define wxWUD_CANCEL_INSTALLATION		wxT("Stop installation")
+
+//! Our wxWUD_GAUGE control accepts values from zero to wxWUD_GAUGE_RANGE.
+#define wxWUD_GAUGE_RANGE				1000
+
 
 
 //! Returns a string with a short size description for the given number of bytes.
 WXDLLIMPEXP_WEBUPDATE wxString wxGetSizeStr(unsigned long bytesize);
 
 
+// this is the even sent by a wxWebUpdateThread class to the wxEvtHandler
+// which is given it in its constructor.
+DECLARE_EVENT_TYPE(wxWUT_DOWNLOAD_COMPLETE, -1);
+
+
+#define wxWUT_BUF_TEMP_SIZE				4096
+
+
+
 
 //! A simple container of the two basic info which wxWebUpdateDlg needs to know
-//! about user packages: the NAME and the local VERSION.
+//! about user *local* packages: the NAME and the local VERSION.
+//! This class should not be confused with wxWebUpdatePackage.
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateLocalPackage : public wxObject
 {
 public:		// to avoid setters/getters
@@ -68,17 +87,29 @@ private:
 
 
 //! The thread helper which downloads the webupdate script and/or packages.
-class WXDLLIMPEXP_WEBUPDATE wxWebUpdateThread : public wxThread		//Helper
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateThread : public wxThread
 {
-protected:
+protected:		// these are written by this thread and they must be only read
+				// by other classes; making them protected and exposing only
+				// getters for these vars we ensure that we do not need to use
+				// mutexes...
 
 	//! This is the result state of the last download.
 	bool m_bSuccess;
 
-public:		// to avoid setters/getters
+	//! The moment in the time where the download of the current file started.
+	wxDateTime m_dtStart;
+
+	//! How much of the file has been currently downloaded.
+	unsigned long m_nCurrentSize;
+
+public:		// to avoid setters/getters (these vars are only read by this thread;
+			// they are never written and so they are not protected with mutexes).
 
 	//! The wxEvtHandler which will receive our wxWUT_NOTIFICATION events.
 	wxEvtHandler *m_pHandler;
+
+public:		// related to current download
 
 	//! The URI of the resource this thread will download.
 	wxString m_strURI;
@@ -97,7 +128,7 @@ public:
 		const wxString &resname = wxEmptyString)
 		: wxThread(wxTHREAD_JOINABLE), m_pHandler(dlg), m_strURI(uri), 
 		  m_strOutput(outfile), m_strResName(resname)
-		{ m_bSuccess=FALSE; }
+		{ m_bSuccess=FALSE; m_dtStart = wxDateTime::UNow(); }
 	virtual ~wxWebUpdateThread() {}
 
     //! Downloads the file and then sends the wxWUT_NOTIFICATION event
@@ -107,7 +138,54 @@ public:
 
 	//! Returns TRUE if the last download was successful.
 	bool DownloadWasSuccessful() const		{ return m_bSuccess; }
+
+	//! Returns the number of milliseconds elapsed from the start of the
+	//! current download.
+	wxLongLong GetElapsedMSec() const
+		{ wxTimeSpan t = wxDateTime::UNow() - m_dtStart; return t.GetMilliseconds(); }
+
+	//! Returns the number of bytes currently downloaded.
+	
 };
+
+
+//! The advanced panel of a wxWebUpdateDlg.
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateAdvPanel : public wxPanel 
+{
+protected:		// pointers to our controls
+
+	
+
+protected:
+
+	//! Loads the XRC for this dialog and init the control pointers.
+	void InitWidgetsFromXRC();
+
+
+protected:		// event handlers
+
+
+public:
+
+	//! Constructs a wxWebUpdateAdvPanel.
+	wxWebUpdateAdvPanel::wxWebUpdateAdvPanel(wxWindow *parent)
+		{ m_parent = parent; InitWidgetsFromXRC(); }
+
+	virtual ~wxWebUpdateAdvPanel() 
+		{}
+
+
+	//! Returns the proxy name host.
+	wxString GetProxyHostName() const;
+	wxString GetProxyPostNumber() const;
+	wxString GetDownloadPath() const;
+
+
+private:
+	DECLARE_CLASS(wxWebUpdateAdvPanel)
+	DECLARE_EVENT_TABLE()
+};
+
 
 
 //! The dialog which lets the user update this program.
@@ -120,6 +198,8 @@ class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDlg : public wxDialog
 protected:		// pointers to our controls
 	
 	wxStaticText *m_pAppNameText, *m_pTimeText, *m_pDownloadStatusText;
+	wxButton *m_pOk, *m_pCancel;
+
 #if wxWU_USE_CHECKEDLISTCTRL
 	wxCheckedListCtrl *m_pUpdatesList;
 #else
@@ -177,9 +257,11 @@ protected:		// event handlers
 	void OnDownload(wxCommandEvent &);
 	void OnBrowse(wxCommandEvent &);
 	void OnCancel(wxCommandEvent &);
-	void OnShowFilter(wxCommandEvent &);
-	void OnDownloadComplete(wxUpdateUIEvent &);
+	void OnShowFilter(wxCommandEvent &);	
 	void OnUpdateUI(wxUpdateUIEvent &);
+
+	// called by our wxWebUpdateThread....
+	void OnDownloadComplete(wxCommandEvent &);
 
 public:
 

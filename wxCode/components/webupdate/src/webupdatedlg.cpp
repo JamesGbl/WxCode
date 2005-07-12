@@ -36,8 +36,12 @@
 #include <wx/wfstream.h>
 
 
+// wxWidgets RTTI
 IMPLEMENT_CLASS(wxWebUpdateLocalPackage, wxObject)
 IMPLEMENT_CLASS(wxWebUpdateDlg, wxDialog)
+DEFINE_EVENT_TYPE(wxWUT_DOWNLOAD_COMPLETE);
+
+
 BEGIN_EVENT_TABLE(wxWebUpdateDlg, wxDialog)
 
 	// buttons
@@ -52,7 +56,7 @@ BEGIN_EVENT_TABLE(wxWebUpdateDlg, wxDialog)
 	EVT_UPDATE_UI(-1, wxWebUpdateDlg::OnUpdateUI)
 
 	// download thread
-	EVT_UPDATE_UI(wxWUT_NOTIFICATION, wxWebUpdateDlg::OnDownloadComplete)
+	EVT_COMMAND(-1, wxWUT_DOWNLOAD_COMPLETE, wxWebUpdateDlg::OnDownloadComplete)
 
 END_EVENT_TABLE()
 
@@ -92,7 +96,9 @@ wxString wxGetSizeStr(unsigned long bytesize)
 
 void *wxWebUpdateThread::Entry()
 {
-	wxUpdateUIEvent updatevent(wxWUT_NOTIFICATION);
+	// we'll use wxPostEvent to post this event since this is the
+	// only thread-safe way to post events !
+	wxCommandEvent updatevent(wxWUT_DOWNLOAD_COMPLETE);
 
 	while (!TestDestroy()) {
 
@@ -102,44 +108,64 @@ void *wxWebUpdateThread::Entry()
 			continue;
 		}
 
-	wxLogDebug(wxT("wxWebUpdateThread::Entry - downloading ") + m_strURI);
+		wxLogDebug(wxT("wxWebUpdateThread::Entry - downloading ") + m_strURI);
 
-    // with wxFileSystem a file-download is very easy !
-	wxFileSystem fs;
-	wxFSFile *download = fs.OpenFile(m_strURI);
-	if (!download) {
+		// we are starting the download of a file; update our datetime field
+		m_dtStart = wxDateTime::UNow();
+
+		// ensure we can build a wxURL from the given URI
+		wxURL u(m_strURI);
+		if (u.GetError() != wxURL_NOERR) {
+			m_bSuccess = FALSE;
+			wxPostEvent(m_pHandler, updatevent);
+			m_strURI = wxEmptyString;
+			continue;
+		}
+		
+		// now work on streams; wx docs says that using wxURL::GetInputStream
+		// is deprecated but this is the only way to set advanced info like
+		// proxy, user & password...
+		wxFileOutputStream out(m_strOutput);
+		wxInputStream *in = u.GetStream();
+		if (in == NULL) { 
+			m_bSuccess = FALSE;
+			wxPostEvent(m_pHandler, updatevent);
+			m_strURI = wxEmptyString;
+			continue;
+		}
+
+		// write the downloaded stuff in the output file
+		// without using the 
+		//          out.Write(*in);
+		// command; that would be easier but would not allow
+		// the program to stop this thread while downloading
+		// the file since the TestDestroy() function would not
+		// be called in that way...
+		char buf[wxWUT_BUF_TEMP_SIZE];
+
+    for ( ;; )
+    {
+        size_t bytes_read = Read(buf, WXSIZEOF(buf)).LastRead();
+        if ( !bytes_read )
+            break;
+
+        if ( stream_out.Write(buf, bytes_read).LastWrite() != bytes_read )
+            break;
+    }
+
+		if (out.IsOk()) {
+			m_bSuccess = TRUE;
+			//m_pHandler->AddPendingEvent(updatevent);
+			wxPostEvent(m_pHandler, updatevent);
+			//return (void*)TRUE;
+			m_strURI = wxEmptyString;
+			continue;
+		}
+
 		m_bSuccess = FALSE;
-		m_pHandler->AddPendingEvent(updatevent);
-		return (void*)FALSE;
-	}
-	
-	// now work on streams
-	wxFileOutputStream out(m_strOutput);
-	wxInputStream *in = download->GetStream();
-	if (in == NULL) { 
-		delete download; 
-		m_bSuccess = FALSE;
-		m_pHandler->AddPendingEvent(updatevent);
-		return (void*)FALSE; 
-	}
-
-	// write the downloaded stuff in the output file
-	out.Write(*in);
-	delete download;
-
-	if (out.IsOk()) {
-		m_bSuccess = TRUE;
 		//m_pHandler->AddPendingEvent(updatevent);
 		wxPostEvent(m_pHandler, updatevent);
-		//return (void*)TRUE;
 		m_strURI = wxEmptyString;
-		continue;
-	}
-
-	m_bSuccess = FALSE;
-	//m_pHandler->AddPendingEvent(updatevent);
-	wxPostEvent(m_pHandler, updatevent);
-	m_strURI = wxEmptyString;
 	}
 
 	return (void*)FALSE;
@@ -185,12 +211,15 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 	// init control pointers
 	// ---------------------
 
-	m_pAppNameText = XRCCTRL(*this,"IDWUD_APPNAME_TEXT",wxStaticText);
-	m_pDownloadStatusText = XRCCTRL(*this,"IDWUD_PROGRESS_TEXT",wxStaticText);
-	m_pTimeText = XRCCTRL(*this,"IDWUD_TIME_TEXT",wxStaticText);
+	m_pAppNameText = XRCCTRL(*this, "IDWUD_APPNAME_TEXT", wxStaticText);
+	m_pDownloadStatusText = XRCCTRL(*this, "IDWUD_PROGRESS_TEXT", wxStaticText);
+	m_pTimeText = XRCCTRL(*this, "IDWUD_TIME_TEXT", wxStaticText);
 	//m_pUpdatesList = XRCCTRL(*this,"IDWUD_LISTCTRL",wxListCtrl);
-	m_pGauge = XRCCTRL(*this,"IDWUD_GAUGE",wxGauge);
-	m_pDownloadPathTextCtrl = XRCCTRL(*this,"IDWUD_DOWNLOAD_PATH",wxTextCtrl);
+	m_pGauge = XRCCTRL(*this, "IDWUD_GAUGE", wxGauge);
+	m_pDownloadPathTextCtrl = XRCCTRL(*this, "IDWUD_DOWNLOAD_PATH", wxTextCtrl);
+
+	m_pOk = XRCCTRL(*this,"IDWUD_OK", wxButton);
+	m_pCancel = XRCCTRL(*this,"IDWUD_CANCEL", wxButton);
 
 
 
@@ -263,6 +292,9 @@ int wxWebUpdateDlg::ShowModal()
 					wxT("Error"), wxOK | wxICON_ERROR);
 		return wxCANCEL;
 	}
+
+	UpdateWindowUI();
+
 
 	// as soon as the wxWebUpdateThread has completed its work we'll receive
 	// a notification through the wxWUT_NOTIFICATION events
@@ -353,7 +385,7 @@ void wxWebUpdateDlg::RebuildPackageList()
 				li.SetId(idx);
 				li.SetFont(font);
 				li.SetBackgroundColour(*wxWHITE);
-				li.SetTextColour(*wxBLACK);
+				li.SetTextColour(*wxRED);
 				m_pUpdatesList->SetItem(li);
 
 			} else if (f == wxWUCF_UPDATED) {
@@ -422,24 +454,38 @@ void wxWebUpdateDlg::RebuildPackageList()
 
 void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 {
+	int nDownloads = 0;
+	wxASSERT_MSG(!m_thread->IsRunning(), wxT("The wxWUD_OK button should be disabled !"));
+	
 	// launch the download of the selected packages
 	for (int i=0; i<m_pUpdatesList->GetItemCount(); i++) {
 		if (m_pUpdatesList->IsChecked(i)) {
-
+			
+			// get the download data
 			wxWebUpdateDownload dl = m_arrUpdatedPackages[i].GetDownloadPackage();
 			wxString name = m_pUpdatesList->GetItemText(i);
 			
+			// init thread variables
 			m_thread->m_strOutput = m_pDownloadPathTextCtrl->GetValue() + dl.GetFileName();
 			m_thread->m_strURI = dl.GetDownloadString();
 			m_thread->m_strResName = name + wxT(" package");
 
+			// reset the gauge GUI
+			m_pGauge->SetRange(dl.GetDownloadSize());
+			
+			// launch the download
 			wxLogDebug(wxT("wxWebUpdateDlg::OnDownload - launching download of ") + m_thread->m_strURI);
 			wxThreadError err = m_thread->Resume();
+			if (err != wxTHREAD_NO_ERROR)
+				ShowErrorMsg(wxT("Cannot download ") + m_thread->m_strURI);
+			else
+				nDownloads++;
 			break;
 		}
 	}
 
-	//EndModal(wxOK);
+	wxASSERT_MSG(nDownloads > 0, 
+		wxT("The wxWUD_OK button should be enabled only when one or more packages are checked"));
 }
 
 void wxWebUpdateDlg::OnBrowse(wxCommandEvent &)
@@ -461,8 +507,15 @@ void wxWebUpdateDlg::OnBrowse(wxCommandEvent &)
 
 void wxWebUpdateDlg::OnCancel(wxCommandEvent &)
 {
-	m_thread->Delete();
+	if (m_thread->IsRunning()) {
 
+		// we are now labeled as wxWUD_CANCEL_DOWNLOAD...
+		// thus we only stop the download
+		m_thread->Pause();
+		return;
+	}
+
+	m_thread->Delete();
 	EndModal(wxCANCEL);
 }
 
@@ -474,24 +527,52 @@ void wxWebUpdateDlg::OnShowFilter(wxCommandEvent &)
 
 void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &ev)
 {
+	static bool bLabelRunningMode = FALSE;
+
 	if (!m_thread->IsRunning()) {
+
+		// reset our gauge control
 		m_pGauge->SetValue(0);
+
+		// re-enable what we disabled when we ran the thread
+		if (!bLabelRunningMode) {			
+			m_pCancel->SetLabel(wxWUD_CANCEL_DEFAULT_LABEL);
+			m_pUpdatesList->Enable();
+			bLabelRunningMode = TRUE;
+		}
+
+		// are there checked items in the package listctrl ?
+		for (int i=0; i<m_pUpdatesList->GetItemCount(); i++)
+			if (m_pUpdatesList->IsChecked(i))
+				break;		// found a checked item !
+		
+		if (i<m_pUpdatesList->GetItemCount())
+			m_pOk->Enable();		// yes, there are
+		else
+			m_pOk->Disable();		// no, there aren't
+
 		return;
 	}
 
-#ifdef __WXMSW__
-	unsigned long now = GetTickCount();
-	static unsigned long begin = GetTickCount();
-	m_pGauge->SetValue((now-begin)/1000);
-#endif
+	if (bLabelRunningMode) {
+		m_pOk->Disable();
+		m_pCancel->SetLabel(wxWUD_CANCEL_DOWNLOAD);
+		m_pUpdatesList->Disable();
+		bLabelRunningMode = FALSE;
+	}
 
+	// update our gauge control
+	long value = (m_thread->GetElapsedMSec()/wxWUD_GAUGE_RANGE).ToLong();
+	m_pGauge->SetValue(value > 0 ? value : 0);
+
+	// is the download complete ?
 	if (ev.GetId() == wxWUT_NOTIFICATION)
 		OnDownloadComplete(ev);
 }
 
 void wxWebUpdateDlg::OnDownloadComplete(wxUpdateUIEvent &)
 {
-	//m_thread->Pause();
+	m_thread->Pause();
 
 	// first of all, we need to know if download was successful
 	if (!m_thread->DownloadWasSuccessful()) {
@@ -522,7 +603,7 @@ void wxWebUpdateDlg::OnDownloadComplete(wxUpdateUIEvent &)
 		} else {
 
 			// handle the installation of this package
-return;
+			return;
 		}
 	}
 

@@ -183,14 +183,21 @@ bool wxCheckedListCtrl::SetItem(wxListItem& info)
 		info.m_mask |= wxLIST_MASK_IMAGE;
 		info.m_image = GetItemImageFromAdditionalState(additionalstate);
 
-#ifdef __WXMSW__
 		// since when changing the background color, also the foreground color
 		// and the font of the item are changed, we try to respect the user
 		// choices of such attributes
-		info.SetTextColour(this->GetItemTextColour(info.GetId()));
-		//info.SetFont(this->GetItemTextColour(info.GetId())););		
+		//info.SetTextColour(this->GetItemTextColour(info.GetId()));
 
+#ifdef __PATCHED__
+		wxListItem li;
+		li.m_mask = wxLIST_MASK_DATA;
+		li.SetId(0);
+		wxListCtrl::GetItem(li);
+		//info.SetFont(this->GetItemFont(info.GetId());
+		info.SetFont(li.GetFont());
+		info.SetTextColour(li.GetTextColour());
 #endif
+		
 		// change the background color to respect the enabled/disabled status...
 		info.SetBackgroundColour(GetBgColourFromAdditionalState(additionalstate));
 

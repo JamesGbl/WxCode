@@ -77,6 +77,10 @@ public:			// utilities
 	void Check(long item, bool checked);
 	void Enable(long item, bool enable);
 
+	// this needs to be redeclared otherwise it's hidden by our other Enable() function.
+	virtual bool Enable(bool enable = true)
+		{ return wxListCtrl::Enable(enable); }
+
 	// shortcuts to the GetItemState function
 	bool IsChecked(long item) const
 		{ return GetItemState(item, wxLIST_STATE_CHECKED) != 0; }
@@ -109,6 +113,7 @@ private:
 	DECLARE_CLASS(wxCheckedListCtrl)
 	DECLARE_EVENT_TABLE()
 };
+
 
 #endif	// wxWU_USE_CHECKEDLISTCTRL
 
