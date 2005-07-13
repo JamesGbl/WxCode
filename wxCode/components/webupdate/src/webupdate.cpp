@@ -104,6 +104,7 @@ wxWebUpdatePlatform wxWebUpdateDownload::GetPlatformCode(const wxString &plat)
 	if (plat == wxT("mac")) ret = wxWUP_MAC;
 	if (plat == wxT("motif")) ret = wxWUP_MOTIF;
 	if (plat == wxT("x11")) ret = wxWUP_X11;
+	if (plat == wxT("any")) ret = wxWUP_ANY;
 	return ret;
 }
 
@@ -128,6 +129,9 @@ wxString wxWebUpdateDownload::GetPlatformString(wxWebUpdatePlatform code)
 		break;
 	case wxWUP_X11:
 		ret = wxT("x11");
+		break;
+	case wxWUP_ANY:
+		ret = wxT("any");
 		break;
 	default:
 		return wxEmptyString;
@@ -288,22 +292,31 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) c
 
 		} else if (child->GetName() == wxT("latest-download")) {
 
+			wxString platform, md5;
+
 			// find the platform for which this download is
 			wxXmlProperty *prop = child->GetProperties();
-			while (prop && prop->GetName() != wxT("platform"))
-				prop = prop->GetNext();
+			while (prop) {
+				
+				// is this a well-formed tag ?
+				if (prop->GetName() == wxT("platform"))
+					platform = prop->GetValue();
+				else if (prop->GetName() == wxT("md5"))
+					md5 = prop->GetValue();
 
-			// is this a well-formed tag ?
-			if (prop->GetName() == wxT("platform")) {
+				// parse next property...
+				prop = prop->GetNext();
+			}
+
+			// did we find a valid "platform" property ?
+			if (!platform.IsEmpty()) {
 
 				wxXmlNode *text = child->GetChildren();
-				if (text) {
-					wxWebUpdateDownload update(text->GetContent(), prop->GetValue());
+				wxWebUpdateDownload update(text->GetContent(), platform, md5);
 
-					// last check 
-					if (update.IsOk())
-						ret->AddDownloadPackage(update);
-				}
+				// last check 
+				if (update.IsOk())
+					ret->AddDownloadPackage(update);
 			}
 
 		} else if (child->GetName() == wxT("msg-update-available")) {

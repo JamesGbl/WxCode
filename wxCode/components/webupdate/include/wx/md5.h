@@ -1,3 +1,13 @@
+/////////////////////////////////////////////////////////////////////////////
+// Name:        md5.h
+// Purpose:     MD5 file checksum
+// Author:      Francesco Montorsi
+// Created:     2005/07/13
+// RCS-ID:      $Id$
+// Copyright:   (c) 2005 Francesco Montorsi
+// Licence:     wxWidgets licence + RDS Data Security license
+/////////////////////////////////////////////////////////////////////////////
+
 /*
  **********************************************************************
  ** Copyright (C) 1990, RSA Data Security, Inc. All rights reserved. **
@@ -22,7 +32,25 @@
  **********************************************************************
  */
  
- #define MD5_HASHBYTES 16
+
+#ifndef _WX_MD5_H_
+#define _WX_MD5_H_
+
+// optimization for GCC
+#if defined(__GNUG__) && !defined(__APPLE__)
+#pragma interface "md5.h"
+#endif
+
+// wxWidgets headers
+#include "wx/webupdatedef.h"		// for the WXDLLIMPEXP_WEBUPDATE macro
+
+
+
+// 
+// MD5 from RSA
+// ------------
+
+#define MD5_HASHBYTES 16
 
 typedef struct MD5Context {
         unsigned int buf[4];
@@ -35,6 +63,24 @@ void   MD5Update(MD5_CTX *context, unsigned char const *buf, unsigned len);
 void   MD5Final(unsigned char digest[MD5_HASHBYTES], MD5_CTX *context);
 void   MD5Transform(unsigned int buf[4], unsigned int const in[16]);
 char * MD5End(MD5_CTX *, char *);
-char * MD5File(char *);
-char * MD5String(char *);
 
+
+
+//! A utility class to calculate MD5 checksums from files or strings.
+class wxMD5
+{
+public:
+	wxMD5() {}
+	virtual ~wxMD5() {}
+
+public:
+
+	//! Returns the MD5 checksum for the given file
+	static wxString GetFileMD5(wxInputStream &str);
+	static wxString GetFileMD5(const wxString &filename);
+
+	//! Returns the MD5 for the given string.
+	static wxString GetMD5(const wxString &str);
+};
+
+#endif		// _WX_MD5_H_

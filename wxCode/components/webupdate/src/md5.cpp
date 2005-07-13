@@ -1,3 +1,13 @@
+/////////////////////////////////////////////////////////////////////////////
+// Name:        md5.cpp
+// Purpose:     MD5 file checksum
+// Author:      Francesco Montorsi
+// Created:     2005/07/13
+// RCS-ID:      $Id$
+// Copyright:   (c) 2005 Francesco Montorsi
+// Licence:     wxWidgets licence + RDS Data Security license
+/////////////////////////////////////////////////////////////////////////////
+
 /*
  **********************************************************************
  ** Copyright (C) 1990, RSA Data Security, Inc. All rights reserved. **
@@ -22,13 +32,33 @@
  **********************************************************************
  */
 
+
+#if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
+	#pragma implementation "md5.h"
+#endif
+
+// For compilers that support precompilation, includes "wx.h".
+#include "wx/wxprec.h"
+
+#ifdef __BORLANDC__
+#pragma hdrstop
+#endif
+
+// includes
+#include "wx/md5.h"
+#include "wx/wfstream.h"
+
 #include <sys/types.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../Commoninclude.h"
 
+
+
+// ----------------
+// MD5 by RSA
+// ----------------
 	
 char * MD5End(MD5_CTX *ctx, char *buf)
 {
@@ -275,62 +305,50 @@ void byteReverse(unsigned char *buf, unsigned longs)
 
 
 
-/*
-*
-*	My MD5 Function..
-*
-*
-*/
-char * MD5String(char * string)
+// --------------------------
+// wxMD5 - static functions
+// --------------------------
+
+wxString wxMD5::GetMD5(const wxString &string)
 {
+	int lenght = string.Len();
+	//wxStringBuffer buf(string, lenght);
+
 	MD5_CTX ctx;
-	char *md5 = 0;
+	char tmp[40];		// MD5 are fixed sized to 32 chars
 	
 	MD5Init(&ctx);
-	
-	if(string)
-	{
-		MD5Update(&ctx, string, strlen(string));
-		md5 = MD5End(&ctx, md5);
-		return(md5);
-	} else {
-		return(NULL);
-	}
+	MD5Update(&ctx, (const unsigned char*)string.GetData(), lenght*sizeof(wxChar));
+	MD5End(&ctx, tmp);
+
+	return wxString(tmp, wxConvUTF8);
 }
 
-char * MD5File (char *filename)
+wxString wxMD5::GetFileMD5(wxInputStream &stream)
 {
     unsigned char buffer[102400];
+	char tmp[40];		// MD5 are fixed sized to 32 chars
     MD5_CTX ctx;
-    int i;
-    FILE *f;
-    char * buf = 0;
-    char * tbuff;
-    int reads = 0;
 
-    f = fopen(filename,"r");
-    if(f)
+	if (!stream.IsOk())
+		return wxEmptyString;
+
+   	MD5Init(&ctx);
+
+    do
     {
-    	MD5Init(&ctx);
-    	do
-    	{
-    		i = fread(buffer, 1, sizeof(buffer), f);
-    		if(i > 0)
-    		{
-			reads = 1;
-    	    		MD5Update(&ctx,buffer,i);
-    	    	}
-    	}while(!feof(f));
-    	fclose(f); 
+		if (stream.Read(buffer, sizeof(buffer)).LastRead() <= 0)
+			return wxEmptyString;
 
-    	if (!reads)
-    	{ 
-    		return 0;
-    	} else {
-    		tbuff = MD5End(&ctx, buf);
-    		return tbuff;
-    	}
-    } else {
-    	return(0);
-    }
+    	MD5Update(&ctx, buffer, stream.LastRead());    	    	
+    } while (stream.Eof());
+
+	MD5End(&ctx, tmp);
+    return wxString(tmp, wxConvUTF8);
+}
+
+wxString wxMD5::GetFileMD5(const wxString &filename)
+{ 
+	wxFileInputStream stream(filename); 
+	return GetFileMD5(stream); 
 }

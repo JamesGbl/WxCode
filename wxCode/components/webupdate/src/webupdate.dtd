@@ -35,7 +35,7 @@
 	 
 		<package id="myapp">
 			<latest-version importance="high">2.0.3</latest-version>
-			<latest-download platform="msw">http://myapp.com/download/myapp.exe</latest-download>
+			<latest-download platform="msw" md5="42e898d5f7d5bc1b359c80f02706d01e">http://myapp.com/download/myapp.exe</latest-download>
 			<latest-download platform="gtk">http://myapp.com/download/myapp.rpm</latest-download>
 
 			<msg-update-available>The new $(id) $(latest-version) is available for download;
@@ -100,10 +100,12 @@
 
 <!-- LATEST-DOWNLOAD tag: contains the download location of the most updated version
                           available in the webserver. Requires a "platform" attribute
-						  which specifies 
+						  which specifies the platform targeted by this download.
+						  The "md5" attribute can be used to specify a MD5 checksum.
 -->
 <!ELEMENT latest-download (#PCDATA)>
-<!ATTLIST latest-download platform (msw|gtk|mac|x11|motif|mgl|os2) #REQUIRED>
+<!ATTLIST latest-download platform (msw|gtk|mac|x11|motif|mgl|os2|any) #REQUIRED>
+<!ATTLIST latest-download md5 CDATA #IMPLIED>
 
 
 <!-- MSG-UPDATE-AVAILABLE tag: contains a text message which is displayed to the user in case
@@ -112,8 +114,10 @@
 -->
 <!ELEMENT msg-update-available (#PCDATA)>
 
+
 <!-- MSG-UPDATE-NOTAVAILABLE tag: contains a text message which is displayed to the user in case
                                  a new version of the package is NOT available for its platform. 
 							     Keyword substitution is performed in the text.
 -->
 <!ELEMENT msg-update-notavailable (#PCDATA)>
+

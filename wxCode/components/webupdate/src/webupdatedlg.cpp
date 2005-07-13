@@ -33,6 +33,7 @@
 
 // includes
 #include "wx/webupdatedlg.h"
+#include "wx/md5.h"
 #include <wx/wfstream.h>
 
 
@@ -503,19 +504,19 @@ void wxWebUpdateDlg::RebuildPackageList()
 		switch (curr.GetImportance()) {
 		case wxWUPI_HIGH:
 			m_pUpdatesList->SetItem(idx, 4, wxT("high!"));
-#if wxWU_USE_CHECKEDLISTCTRL342
+#if wxWU_USE_CHECKEDLISTCTRL
 			m_pUpdatesList->Check(idx, tocheck);
 #endif
 			break;
 		case wxWUPI_NORMAL:
 			m_pUpdatesList->SetItem(idx, 4, wxT("normal"));
-#if wxWU_USE_CHECKEDLISTCTRL432
+#if wxWU_USE_CHECKEDLISTCTRL
 			m_pUpdatesList->Check(idx, tocheck);
 #endif
 			break;
 		case wxWUPI_LOW:
 			m_pUpdatesList->SetItem(idx, 4, wxT("low"));
-#if wxWU_USE_CHECKEDLISTCTRL432
+#if wxWU_USE_CHECKEDLISTCTRL
 			m_pUpdatesList->Check(idx, FALSE);
 #endif
 			break;
@@ -544,6 +545,7 @@ void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 			// init thread variables
 			m_thread->m_strOutput = m_pDownloadPathTextCtrl->GetValue() + dl.GetFileName();
 			m_thread->m_strURI = dl.GetDownloadString();
+			m_thread->m_strMD5 = dl.GetMD5Checksum();
 			m_thread->m_strResName = name + wxT(" package");
 
 			// reset the gauge GUI
@@ -553,11 +555,7 @@ void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 			wxLogDebug(wxT("wxWebUpdateDlg::OnDownload - launching download of ") + m_thread->m_strURI);
 
 			m_thread->BeginNewDownload();
-			/*wxThreadError err = m_thread->Resume();
-			if (err != wxTHREAD_NO_ERROR)
-				ShowErrorMsg(wxT("Cannot download ") + m_thread->m_strURI);
-			else*/
-				nDownloads++;
+			nDownloads++;
 			break;
 		}
 	}
@@ -612,8 +610,14 @@ void wxWebUpdateDlg::OnShowFilter(wxCommandEvent &)
 
 void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 {
+	bool forceremove = FALSE;
+
 	// first of all, we need to know if download was successful
 	if (!m_thread->DownloadWasSuccessful()) {
+
+		if (m_bDownloadingScript)
+			forceremove = TRUE;		// always remove the script
+
 		if (m_bUserAborted)
 			wxMessageBox(wxT("Download aborted..."), 
 						wxT("Warning"), wxOK | wxICON_EXCLAMATION);
@@ -635,17 +639,38 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 
 			// handle the XML parsing & control update 
 			OnScriptDownload(m_thread->m_strOutput);
+			forceremove = TRUE;			// always remove the script
 
 		} else {
 
-			// handle the installation of this package
-			return;
+			if (m_thread->m_strMD5.IsEmpty()) {
+
+				// handle the installation of this package
+				return;
+			}
+
+			// verify that the download was successful
+			m_pSpeedText->SetLabel(wxWUD_SPEEDTEXT_PREFIX wxT("computing file hash"));
+			wxString localmd5 = wxMD5::GetFileMD5(m_thread->m_strOutput);
+			if (localmd5 != m_thread->m_strMD5) {
+
+				wxMessageBox(wxT("The downloaded file\n\n") + m_thread->m_strOutput + 
+						wxT("\n\nis corrupt: MD5 checksum is:\n\n") + localmd5 +
+						wxT("\n\ninstead of:\n\n") + m_thread->m_strMD5, 
+						wxT("Error"), wxOK | wxICON_ERROR);
+				//forceremove = TRUE;		// remove this corrupted package
+
+			} else {
+
+				// handle the installation of this package
+				return;
+			}
 		}
 	}
 
 	// remove the temporary files...
 	bool donotremove = FALSE;
-	if (m_bDownloadingScript || !donotremove) {		// XML webupdate script is always removed
+	if (forceremove || !donotremove) {		// XML webupdate script is always removed
 		wxLogDebug(wxT("wxWebUpdateDlg::OnDownloadComplete - ")
 			wxT("Removing the downloaded file: ") + m_thread->m_strOutput);
 		wxRemoveFile(m_thread->m_strOutput);
@@ -676,9 +701,9 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 
 			// update our meters
 			if (m_thread->DownloadWasSuccessful())
-				m_pSpeedText->SetLabel(wxT("Download status: successfully completed"));
+				m_pSpeedText->SetLabel(wxWUD_SPEEDTEXT_PREFIX wxT("successfully completed"));
 			else
-				m_pSpeedText->SetLabel(wxT("Download status: failed !"));
+				m_pSpeedText->SetLabel(wxWUD_SPEEDTEXT_PREFIX wxT("failed !"));
 			m_pTimeText->SetLabel(wxT("No downloads running..."));
 		}
 
@@ -714,7 +739,7 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 			m_pGauge->SetValue(value > 0 ? value : 0);
 
 			// update speed meter
-			m_pSpeedText->SetLabel(wxT("Download status: downloading \"") + 
+			m_pSpeedText->SetLabel(wxWUD_SPEEDTEXT_PREFIX wxT("downloading \"") + 
 								m_thread->m_strResName + wxT("\" at ") + 
 								m_thread->GetDownloadSpeed());
 

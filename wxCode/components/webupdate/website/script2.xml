@@ -4,7 +4,7 @@
    <requires>1.0</requires>
 	 
    <package id="myapp">
-      <latest-version importance="high">2.0.3</latest-version>
+      <latest-version importance="normal">2.0.3</latest-version>
       <latest-download platform="msw" md5="42e898d5f7d5bc1b359c80f02706d01e">http://easynews.dl.sourceforge.net/sourceforge/mathstudio/MathStudio-0.7.2.msi</latest-download>
       <latest-download platform="gtk">http://wxcode.sourceforge.net/components/webupdate/myapp.tar.gz</latest-download>
 

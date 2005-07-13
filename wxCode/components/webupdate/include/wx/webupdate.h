@@ -39,7 +39,8 @@ enum wxWebUpdatePlatform {
     wxWUP_MAC,				//!< wxMac.
     wxWUP_MOTIF,			//!< wxMotif.
     wxWUP_X11,				//!< wxX11.
-	wxWUP_MGL				//!< wxMGL.
+	wxWUP_MGL,				//!< wxMGL.
+	wxWUP_ANY				//!< platform-indepedent.
 };
 
 
@@ -84,6 +85,11 @@ protected:
 	//! The ID code of the platform this download is designed for.
     wxWebUpdatePlatform m_platform;
 
+	//! The MD5 checksum for this download.
+	//! This is the MD5 which is used for comparison with the actual
+	//! downloaded files and is taken from the wxWebUpdateXMLScript.
+	wxString m_strMD5;
+
 	//! The URL to the download.
 	//! Note: this info was initially kept in a wxURL variable but since
 	//!       wxURL::GetInputStream() is deprecated in favour of wxFileSystem
@@ -107,14 +113,18 @@ protected:
 	unsigned long m_size;
      
 public:
-    wxWebUpdateDownload(const wxString &url, const wxString &plat = wxEmptyString)
-         : m_platform(wxWUP_INVALID), m_urlDownload(url) { SetPlatform(plat); m_size=1; }
+    wxWebUpdateDownload(const wxString &url, 
+						const wxString &plat = wxEmptyString,
+						const wxString &md5 = wxEmptyString)
+         : m_platform(wxWUP_INVALID), m_urlDownload(url), m_strMD5(md5)
+		{ SetPlatform(plat); m_size=1; }
+
     virtual ~wxWebUpdateDownload() {}
     
 	//! Returns TRUE if this package was correctly initialized.
     bool IsOk() const
         { return wxURL(m_urlDownload).GetError() == wxURL_NOERR && 
-									m_platform != wxWUP_INVALID; }
+			(m_strMD5.IsEmpty() || m_strMD5.Len() == 32) && m_platform != wxWUP_INVALID; }
 
 	//! Like #IsOk() but returns TRUE only if this download is designed for
 	//! the platform where the program is currently running on.
@@ -150,9 +160,14 @@ public:		// static platform utilities
         
 public:     // setters
 
-    bool SetURL(const wxString &url)
-        { wxURL u(url); if (u.GetError() != wxURL_NOERR) return FALSE; m_urlDownload=url; return TRUE; }
-        
+	//! Sets the URL for this download. Returns FALSE if the given string
+	//! is not a valid URL.
+    bool SetURL(const wxString &url) { 
+		wxURL u(url); if (u.GetError() != wxURL_NOERR) return FALSE; 
+		m_urlDownload=url; return TRUE; 
+	}
+
+	//! Sets the platform targeted by this download.
     bool SetPlatform(const wxString &plat) {
         m_platform = GetPlatformCode(plat);
         if (m_platform == wxWUP_INVALID) 
@@ -171,11 +186,14 @@ public:     // getters
     wxWebUpdatePlatform GetPlatform() const
         { return m_platform; }
 
+	wxString GetMD5Checksum() const
+		{ return m_strMD5; }
+/*
 public:		// operators
 
 	wxWebUpdateDownload &operator=(const wxWebUpdateDownload &tocopy)
 		{ m_platform = tocopy.m_platform; m_urlDownload = tocopy.m_urlDownload; return *this; }
-
+*/
 private:
 	DECLARE_CLASS(wxWebUpdateDownload)
 };

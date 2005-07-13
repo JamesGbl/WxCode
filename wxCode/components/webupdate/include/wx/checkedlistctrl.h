@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // Name:        checkedlistctrl.h
 // Purpose:     wxCheckedListCtrl
-// Author:      Uknown ? (find at http://wiki.wxwidgets.org/wiki.pl?WxListCtrl)
+// Author:      Uknown ? (found at http://wiki.wxwidgets.org/wiki.pl?WxListCtrl)
 // Created:     2005/06/29
 // RCS-ID:      $Id$
 // Copyright:   (c) 2005 Francesco Montorsi

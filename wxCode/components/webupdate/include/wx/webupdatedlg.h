@@ -35,6 +35,9 @@
 //! The prefix of the static text control which shows the remaining time.
 #define wxWUD_TIMETEXT_PREFIX			wxT("Time remaining: ")
 
+//! The prefix of the static text control which shows the current status.
+#define wxWUD_SPEEDTEXT_PREFIX			wxT("Download status: ")
+
 //! The possible labels of the wxWUD_OK button.
 #define wxWUD_OK_DEFAULT_LABEL			wxT("Download")
 #define wxWUD_OK_INSTALL				wxT("Install")
@@ -134,6 +137,10 @@ public:		// related to current download
 	//! The name of the resource we are downloading.
 	//! This is used by wxWebUpdateDlg only for error messages.
 	wxString m_strResName;
+
+	//! The MD5 file checksum.
+	//! This is used by wxWebUpdateDlg only for error messages.
+	wxString m_strMD5;
 
 public:
 	wxWebUpdateThread(wxEvtHandler *dlg = NULL, 
