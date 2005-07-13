@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.77 2005-07-07 17:50:19 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.78 2005-07-13 17:27:03 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -1943,6 +1943,7 @@ bool wxTreeListMainWindow::IsVisible (const wxTreeItemId& item) const {
     wxTreeListItem *pItem = (wxTreeListItem*) item.m_pItem;
     wxTreeListItem* parent = pItem->GetItemParent();
     while (parent) {
+        if (parent == m_rootItem && HasFlag(wxTR_HIDE_ROOT)) break;
         if (!parent->IsExpanded()) return false;
         parent = parent->GetItemParent();
     }
@@ -2440,7 +2441,7 @@ bool wxTreeListMainWindow::TagNextChildren (wxTreeListItem *crt_item,
     int index = children.Index(crt_item);
     wxASSERT (index != wxNOT_FOUND); // I'm not a child of my parent?
 
-    if ((parent->HasChildren() && parent->IsExpanded()) || 
+    if ((parent->HasChildren() && parent->IsExpanded()) ||
         ((parent == (wxTreeListItem*)GetRootItem().m_pItem) && HasFlag(wxTR_HIDE_ROOT))) {
         size_t count = children.Count();
         for (size_t n = (index+1); n < count; ++n) {
@@ -2690,14 +2691,15 @@ wxTreeItemId wxTreeListMainWindow::FindItem (const wxTreeItemId& item, const wxS
             next = GetNext (next);
         }
     }
+
+#if !wxCHECK_VERSION(2, 5, 0)
+    long cookie = 0;
+#else
+    wxTreeItemIdValue cookie = 0;
+#endif
     if (!next.IsOk()) {
         next = (wxTreeListItem*)GetRootItem().m_pItem;
         if (HasFlag(wxTR_HIDE_ROOT)) {
-#if !wxCHECK_VERSION(2, 5, 0)
-            long cookie = 0;
-#else
-            wxTreeItemIdValue cookie = 0;
-#endif
             next = (wxTreeListItem*)GetFirstChild (GetRootItem().m_pItem, cookie).m_pItem;
         }
     }
@@ -2727,12 +2729,7 @@ wxTreeItemId wxTreeListMainWindow::FindItem (const wxTreeItemId& item, const wxS
         if (!next.IsOk() && item.IsOk()) {
             next = (wxTreeListItem*)GetRootItem().m_pItem;
             if (HasFlag(wxTR_HIDE_ROOT)) {
-#if !wxCHECK_VERSION(2, 5, 0)
-                long cookie = 0;
-#else
-                wxTreeItemIdValue cookie = 0;
-#endif
-                next = (wxTreeListItem*)GetFirstChild (GetRootItem().m_pItem, cookie).m_pItem;
+                next = (wxTreeListItem*)GetNextChild (GetRootItem().m_pItem, cookie).m_pItem;
             }
         }
     }
