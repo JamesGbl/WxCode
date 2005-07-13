@@ -654,9 +654,10 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 			wxString localmd5 = wxMD5::GetFileMD5(m_thread->m_strOutput);
 			if (localmd5 != m_thread->m_strMD5) {
 
-				wxMessageBox(wxT("The downloaded file\n\n") + m_thread->m_strOutput + 
-						wxT("\n\nis corrupt: MD5 checksum is:\n\n") + localmd5 +
-						wxT("\n\ninstead of:\n\n") + m_thread->m_strMD5, 
+				wxMessageBox(wxT("The downloaded file \"") + m_thread->m_strOutput + 
+						wxT("\"\nis corrupted. MD5 checksum is:\n\n\t") + localmd5 +
+						wxT("\n\ninstead of:\n\n\t") + m_thread->m_strMD5 +
+						wxT("\n\nPlease retry the download."), 
 						wxT("Error"), wxOK | wxICON_ERROR);
 				//forceremove = TRUE;		// remove this corrupted package
 

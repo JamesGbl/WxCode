@@ -20,11 +20,11 @@
 
 // these are the info required by wxWebUpdate classes about the 
 // application to update...
-#define VERSION				wxT("2.0.3")
+#define VERSION				wxT("1.5.0")
 #define APP_NAME			wxT("wxWebUpdate sample")
 #define PACKAGE_NUM			1
 #define PACKAGE_NAME		wxT("myapp")	// just to show this can be different from APP_NAME
-#define SCRIPT_LOCATION		wxT("http://wxcode.sourceforge.net/components/webupdate/script1.xml")
+#define SCRIPT_LOCATION		wxT("http://wxcode.sourceforge.net/components/webupdate/script2.xml")
 
 // our list of local packages; used only by wxWebUpdateDlg.
 wxWebUpdateLocalPackage g_packageList[PACKAGE_NUM];

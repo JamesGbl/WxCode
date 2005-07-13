@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE webupdate SYSTEM "webupdate.dtd">
-<!-- $Id -->
+<!-- $Id$ -->
 
 <webupdate>
    <requires>1.0</requires>

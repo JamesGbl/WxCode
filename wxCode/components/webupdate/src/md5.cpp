@@ -340,8 +340,8 @@ wxString wxMD5::GetFileMD5(wxInputStream &stream)
 		if (stream.Read(buffer, sizeof(buffer)).LastRead() <= 0)
 			return wxEmptyString;
 
-    	MD5Update(&ctx, buffer, stream.LastRead());    	    	
-    } while (stream.Eof());
+    	MD5Update(&ctx, buffer, stream.LastRead());
+    } while (!stream.Eof());
 
 	MD5End(&ctx, tmp);
     return wxString(tmp, wxConvUTF8);
