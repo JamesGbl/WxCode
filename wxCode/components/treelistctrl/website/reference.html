@@ -718,64 +718,76 @@ the entered item. If no item the find starts a the beginning of the tree. If no 
 an empty item (NULL) is returned.<P>
 The flags have the following meaning:<P>
 
-
+Modes for navigation<BR>
 <TABLE>
 
-
-<TR><TD VALIGN=TOP WIDTH=198>
+<TR><TD VALIGN=TOP WIDTH=240>
 <FONT FACE="Arial, Lucida, Helvetica">
-wxTL_SEARCH_LEVEL
+wxTL_MODE_NAV_FULLTREE
 </FONT></TD>
-
 <TD VALIGN=TOP>
 <FONT FACE="Arial, Lucida, Helvetica">
-Searches within only the current level.
+Searches within the full tree (default).
 </FONT></TD></TR>
 
-
-<TR><TD VALIGN=TOP WIDTH=198>
+<TR><TD VALIGN=TOP WIDTH=240>
 <FONT FACE="Arial, Lucida, Helvetica">
-wxTL_SEARCH_VISIBLE
+wxTL_MODE_NAV_EXPANDED
 </FONT></TD>
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Searches within the expanded tree.
+</FONT></TD></TR>
 
+<TR><TD VALIGN=TOP WIDTH=240>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxTL_MODE_NAV_VISIBLE
+</FONT></TD>
 <TD VALIGN=TOP>
 <FONT FACE="Arial, Lucida, Helvetica">
 Searches within all visible items.
 </FONT></TD></TR>
 
-
-<TR><TD VALIGN=TOP WIDTH=198>
+<TR><TD VALIGN=TOP WIDTH=240>
 <FONT FACE="Arial, Lucida, Helvetica">
-wxTL_SEARCH_FULL
+wxTL_MODE_NAV_LEVEL
 </FONT></TD>
-
 <TD VALIGN=TOP>
 <FONT FACE="Arial, Lucida, Helvetica">
-Searches within the full tree.
+Searches within only the current level.
 </FONT></TD></TR>
 
+</TABLE>
+<P>
+Modes for find match<BR>
+<TABLE>
 
-<TR><TD VALIGN=TOP WIDTH=198>
+<TR><TD VALIGN=TOP WIDTH=240>
 <FONT FACE="Arial, Lucida, Helvetica">
-wxTL_SEARCH_PARTIAL
+wxTL_MODE_FIND_EXACT
 </FONT></TD>
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Matches exact the submitted text (default).
+</FONT></TD></TR>
 
+<TR><TD VALIGN=TOP WIDTH=240>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxTL_MODE_FIND_PARTIAL
+</FONT></TD>
 <TD VALIGN=TOP>
 <FONT FACE="Arial, Lucida, Helvetica">
 Matches only partial up to the submitted text length.
 </FONT></TD></TR>
 
-
-<TR><TD VALIGN=TOP WIDTH=198>
+<TR><TD VALIGN=TOP WIDTH=240>
 <FONT FACE="Arial, Lucida, Helvetica">
-wxTL_SEARCH_NOCASE
+wxTL_MODE_FIND_NOCASE
 </FONT></TD>
-
 <TD VALIGN=TOP>
 <FONT FACE="Arial, Lucida, Helvetica">
 Matches case insensitive.
 </FONT></TD></TR>
-
 
 </TABLE>
 <P>
