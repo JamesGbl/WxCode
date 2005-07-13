@@ -30,6 +30,7 @@
 #include <wx/xrc/xh_all.h>
 #include <wx/listctrl.h>
 #include <wx/progdlg.h>
+#include <wx/checkbox.h>
 
 
 //! The prefix of the static text control which shows the remaining time.
@@ -208,7 +209,10 @@ class WXDLLIMPEXP_WEBUPDATE wxWebUpdateAdvPanel : public wxPanel
 {
 protected:		// pointers to our controls
 
-	
+	wxTextCtrl *m_pProxyHostname, *m_pProxyPortNumber,
+				*m_pUsername, *m_pPassword;
+	wxTextCtrl *m_pDownloadPathTextCtrl;
+	wxCheckBox *m_pRemoveFiles;
 
 protected:
 
@@ -218,6 +222,7 @@ protected:
 
 protected:		// event handlers
 
+	void OnBrowse(wxCommandEvent &);
 
 public:
 
@@ -230,9 +235,17 @@ public:
 
 
 	//! Returns the proxy name host.
-	wxString GetProxyHostName() const;
-	wxString GetProxyPostNumber() const;
-	wxString GetDownloadPath() const;
+	wxString GetProxyHostName() const
+		{ return m_pProxyHostname->GetValue(); } 
+	wxString GetProxyPortNumber() const
+		{ return m_pProxyPortNumber->GetValue(); } 
+
+	wxString GetDownloadPath() const
+		{ return m_pDownloadPathTextCtrl->GetValue(); } 
+
+	//! Returns TRUE if the user has chosen to remove the downloaded files.
+	bool RemoveFiles() const
+		{ wxASSERT(m_pRemoveFiles); return m_pRemoveFiles->GetValue(); }
 
 
 private:
@@ -260,7 +273,11 @@ protected:		// pointers to our controls
 	wxListCtrl *m_pUpdatesList;
 #endif
 	wxGauge *m_pGauge;
-	wxTextCtrl *m_pDownloadPathTextCtrl;
+
+	// we store advanced settings here:
+	wxWebUpdateAdvPanel *m_pAdvPanel;
+
+
 
 protected:		// other member variables
 
@@ -318,7 +335,6 @@ protected:
 protected:		// event handlers
 
 	void OnDownload(wxCommandEvent &);
-	void OnBrowse(wxCommandEvent &);
 	void OnCancel(wxCommandEvent &);
 	void OnShowFilter(wxCommandEvent &);	
 	void OnUpdateUI(wxUpdateUIEvent &);

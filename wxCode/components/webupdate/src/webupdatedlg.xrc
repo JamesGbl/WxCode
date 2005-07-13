@@ -126,49 +126,44 @@
                 <value>0</value>
             </object>
         </object>
-
-		<!-- this static text is updated on real-time by wxWebUpdateDlg so
-		     we need to use the wxST_NO_AUTORESIZE flag -->
-		<object class="sizeritem">
-			<flag>wxGROW|wxBOTTOM|wxLEFT|wxRIGHT</flag>
-			<border>5</border>
-			<object class="wxStaticText" name="IDWUD_TIME_TEXT">
-				<style>wxALIGN_RIGHT|wxST_NO_AUTORESIZE</style>
-				<label></label>
-			</object>
-		</object>
 		
+
         <object class="sizeritem">
             <flag>wxGROW|wxALL</flag>
             <border>5</border>
+			<option>0</option>
             <object class="wxBoxSizer">
                 <orient>wxHORIZONTAL</orient>
-                <object class="sizeritem">
-                    <flag>wxALIGN_CENTER_VERTICAL|wxRIGHT|wxBOTTOM</flag>
-                    <border>5</border>
-                    <object class="wxStaticText" name="IDWUD_TEXT1">
-                        <label>The downloaded files will be saved in:</label>
-                    </object>
-					<option>0</option>
-                </object>
-                <object class="sizeritem">
-                    <flag>wxALIGN_CENTER_VERTICAL|wxGROW|wxRIGHT|wxBOTTOM</flag>
-                    <border>5</border>
-                    <object class="wxTextCtrl" name="IDWUD_DOWNLOAD_PATH">
-                        <value>c:\\temp</value>
-                    </object>
-					<option>5</option>
-                </object>
-                <object class="sizeritem">
-                    <flag>wxALIGN_CENTER_VERTICAL|wxBOTTOM</flag>
-                    <border>5</border>
-                    <object class="wxButton" name="IDWUD_BROWSE">
-                        <label>Browse</label>
-                    </object>
-					<option>0</option>
-                </object>
+
+				<object class="sizeritem">
+					<flag>wxGROW</flag>
+					<border>5</border>
+					<option>1</option>
+					<object class="wxButton" name="IDWUD_SHOWHIDEADV">
+						<label>Show advanced settings >></label>
+					</object>
+				</object>
+				<object class="spacer">
+					<flag>wxGROW</flag>
+					<border>5</border>
+					<option>1</option>
+				</object>
+				
+				<!-- this static text is updated on real-time by wxWebUpdateDlg so
+					 we need to use the wxST_NO_AUTORESIZE flag -->
+				<object class="sizeritem">
+					<flag>wxGROW</flag>
+					<border>5</border>
+					<option>1</option>
+					<object class="wxStaticText" name="IDWUD_TIME_TEXT">
+						<style>wxALIGN_RIGHT|wxST_NO_AUTORESIZE</style>
+						<label></label>
+					</object>
+				</object>
+
             </object>
-        </object>
+        </object> 
+
 
         <object class="sizeritem">
             <flag>wxALIGN_CENTER|wxALL|wxGROW</flag>
@@ -211,6 +206,156 @@
 	
 	</object> 
 	</object> 
+</object>
+
+<object class="wxPanel" name="wxWebUpdateAdvPanel">
+    <object class="wxBoxSizer">
+        <orient>wxVERTICAL</orient>
+		
+        <object class="sizeritem">
+            <flag>wxGROW|wxALL</flag>
+            <border>5</border>
+            <object class="wxBoxSizer">
+                <orient>wxHORIZONTAL</orient>
+                <object class="sizeritem">
+                    <flag>wxALIGN_CENTER_VERTICAL|wxRIGHT|wxBOTTOM</flag>
+                    <border>5</border>
+                    <object class="wxStaticText" name="IDWUD_TEXT1">
+                        <label>The downloaded files will be saved in:</label>
+                    </object>
+					<option>0</option>
+                </object>
+                <object class="sizeritem">
+                    <flag>wxALIGN_CENTER_VERTICAL|wxGROW|wxRIGHT|wxBOTTOM</flag>
+                    <border>5</border>
+                    <object class="wxTextCtrl" name="IDWUD_DOWNLOAD_PATH">
+                        <value>c:\\temp</value>
+                    </object>
+					<option>5</option>
+                </object>
+                <object class="sizeritem">
+                    <flag>wxALIGN_CENTER_VERTICAL|wxBOTTOM</flag>
+                    <border>5</border>
+                    <object class="wxButton" name="IDWUD_BROWSE">
+                        <label>Browse</label>
+                    </object>
+					<option>0</option>
+                </object>
+            </object>
+        </object>
+		
+		
+        <object class="sizeritem">
+            <flag>wxALIGN_CENTER|wxALL</flag>
+            <border>5</border>
+            <object class="wxBoxSizer">
+                <orient>wxHORIZONTAL</orient>
+                <object class="sizeritem">
+                    <flag>wxALIGN_CENTER|wxALL</flag>
+                    <border>5</border>
+                    <object class="wxStaticBoxSizer">
+                        <orient>wxVERTICAL</orient>
+                        <label>Authentication settings</label>
+                        <object class="sizeritem">
+                            <flag>wxALIGN_CENTER|wxALL</flag>
+                            <border>5</border>
+                            <object class="wxGridSizer">
+                                <cols>2</cols>
+                                <rows>0</rows>
+                                <vgap>0</vgap>
+                                <hgap>0</hgap>
+                                <object class="sizeritem">
+                                    <flag>wxALIGN_CENTER|wxALL</flag>
+                                    <border>5</border>
+                                    <object class="wxStaticText" name="ID_TEXT">
+                                        <label>Username:</label>
+                                    </object>
+                                </object>
+                                <object class="sizeritem">
+                                    <flag>wxALIGN_CENTER|wxALL</flag>
+                                    <border>5</border>
+                                    <object class="wxTextCtrl" name="IDWUD_USERNAME">
+                                        <size>80,-1</size>
+                                        <value></value>
+                                    </object>
+                                </object>
+                                <object class="sizeritem">
+                                    <flag>wxALIGN_CENTER|wxALL</flag>
+                                    <border>5</border>
+                                    <object class="wxStaticText" name="ID_TEXT">
+                                        <label>Password:</label>
+                                    </object>
+                                </object>
+                                <object class="sizeritem">
+                                    <flag>wxALIGN_CENTER|wxALL</flag>
+                                    <border>5</border>
+                                    <object class="wxTextCtrl" name="IDWUD_PASSWORD">
+                                        <size>80,-1</size>
+                                        <value></value>
+                                    </object>
+                                </object>
+                            </object>
+                        </object>
+                    </object>
+                </object>
+                <object class="sizeritem">
+                    <flag>wxALIGN_CENTER|wxALL</flag>
+                    <border>5</border>
+                    <object class="wxStaticBoxSizer">
+                        <orient>wxVERTICAL</orient>
+                        <label>Proxy settings</label>
+                        <object class="sizeritem">
+                            <flag>wxALIGN_CENTER|wxALL</flag>
+                            <border>5</border>
+                            <object class="wxGridSizer">
+                                <cols>2</cols>
+                                <rows>0</rows>
+                                <vgap>0</vgap>
+                                <hgap>0</hgap>
+                                <object class="sizeritem">
+                                    <flag>wxALIGN_CENTER|wxALL</flag>
+                                    <border>5</border>
+                                    <object class="wxStaticText" name="ID_TEXT">
+                                        <label>Proxy hostname:</label>
+                                    </object>
+                                </object>
+                                <object class="sizeritem">
+                                    <flag>wxALIGN_CENTER|wxALL</flag>
+                                    <border>5</border>
+                                    <object class="wxTextCtrl" name="IDWUD_HOSTNAME">
+                                        <size>80,-1</size>
+                                        <value></value>
+                                    </object>
+                                </object>
+                                <object class="sizeritem">
+                                    <flag>wxALIGN_CENTER|wxALL</flag>
+                                    <border>5</border>
+                                    <object class="wxStaticText" name="ID_TEXT">
+                                        <label>Port number:</label>
+                                    </object>
+                                </object>
+                                <object class="sizeritem">
+                                    <flag>wxALIGN_CENTER|wxALL</flag>
+                                    <border>5</border>
+                                    <object class="wxTextCtrl" name="IDWUD_PORTNUMBER">
+                                        <size>80,-1</size>
+                                        <value></value>
+                                    </object>
+                                </object>
+                            </object>
+                        </object>
+                    </object>
+                </object>
+            </object>
+        </object>
+        <object class="sizeritem">
+            <flag>wxALIGN_CENTER|wxALL</flag>
+            <border>5</border>
+            <object class="wxCheckBox" name="IDWUD_REMOVE">
+                <label>Remove downloaded files after installation</label>
+            </object>
+        </object>
+    </object>
 </object>
 
 </resource>

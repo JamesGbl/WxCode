@@ -39,6 +39,7 @@
 
 // wxWidgets RTTI
 IMPLEMENT_CLASS(wxWebUpdateLocalPackage, wxObject)
+IMPLEMENT_CLASS(wxWebUpdateAdvPanel, wxPanel)
 IMPLEMENT_CLASS(wxWebUpdateDlg, wxDialog)
 DEFINE_EVENT_TYPE(wxWUT_DOWNLOAD_COMPLETE);
 
@@ -47,7 +48,6 @@ BEGIN_EVENT_TABLE(wxWebUpdateDlg, wxDialog)
 
 	// buttons
     EVT_BUTTON(XRCID("IDWUD_OK"), wxWebUpdateDlg::OnDownload)
-    EVT_BUTTON(XRCID("IDWUD_BROWSE"), wxWebUpdateDlg::OnBrowse)
     EVT_BUTTON(XRCID("IDWUD_CANCEL"), wxWebUpdateDlg::OnCancel)
 
 	// checkbox
@@ -58,6 +58,13 @@ BEGIN_EVENT_TABLE(wxWebUpdateDlg, wxDialog)
 
 	// download thread
 	EVT_COMMAND(-1, wxWUT_DOWNLOAD_COMPLETE, wxWebUpdateDlg::OnDownloadComplete)
+
+END_EVENT_TABLE()
+
+BEGIN_EVENT_TABLE(wxWebUpdateAdvPanel, wxPanel)
+
+	// buttons
+    EVT_BUTTON(XRCID("IDWUD_BROWSE"), wxWebUpdateAdvPanel::OnBrowse)
 
 END_EVENT_TABLE()
 
@@ -277,7 +284,6 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 	m_pTimeText = XRCCTRL(*this, "IDWUD_TIME_TEXT", wxStaticText);
 	//m_pUpdatesList = XRCCTRL(*this,"IDWUD_LISTCTRL",wxListCtrl);
 	m_pGauge = XRCCTRL(*this, "IDWUD_GAUGE", wxGauge);
-	m_pDownloadPathTextCtrl = XRCCTRL(*this, "IDWUD_DOWNLOAD_PATH", wxTextCtrl);
 
 	m_pOk = XRCCTRL(*this,"IDWUD_OK", wxButton);
 	m_pCancel = XRCCTRL(*this,"IDWUD_CANCEL", wxButton);
@@ -290,11 +296,6 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 	// -----------------
 
 	m_pAppNameText->SetLabel(m_strAppName);
-	
-	// get the temporary folder where we put by default the updates
-	wxFileName str(wxFileName::CreateTempFileName(wxEmptyString, NULL));
-	str.SetFullName(wxEmptyString);		// remove the filename and keep only the path
-	m_pDownloadPathTextCtrl->SetValue(str.GetLongPath());
 
 	// init the list control with the column names
 	// (items will be inserted as soon as we load the webupdate script)the user-supplied wxWebUpdateLocalPackages
@@ -543,7 +544,7 @@ void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 			wxString name = m_pUpdatesList->GetItemText(i);
 			
 			// init thread variables
-			m_thread->m_strOutput = m_pDownloadPathTextCtrl->GetValue() + dl.GetFileName();
+			m_thread->m_strOutput = m_pAdvPanel->GetDownloadPath() + dl.GetFileName();
 			m_thread->m_strURI = dl.GetDownloadString();
 			m_thread->m_strMD5 = dl.GetMD5Checksum();
 			m_thread->m_strResName = name + wxT(" package");
@@ -562,23 +563,6 @@ void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 
 	wxASSERT_MSG(nDownloads > 0, 
 		wxT("The wxWUD_OK button should be enabled only when one or more packages are checked"));
-}
-
-void wxWebUpdateDlg::OnBrowse(wxCommandEvent &)
-{
-	// get the current value of the the "download path" from the textctrl
-	wxString path = m_pDownloadPathTextCtrl->GetValue();
-	wxDirDialog dlg(this, wxT("Choose a directory"), 
-					path, wxDD_DEFAULT_STYLE | wxDD_NEW_DIR_BUTTON);
-	if (dlg.ShowModal() == wxID_OK) {
-
-		m_pDownloadPathTextCtrl->SetValue(dlg.GetPath());
-		wxLogDebug(wxT("wxWebUpdateDlg::OnBrowse - New output path is ") + dlg.GetPath());
-		
-	} else {
-
-		// just don't change nothing
-	}
 }
 
 void wxWebUpdateDlg::OnCancel(wxCommandEvent &)
@@ -748,5 +732,85 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 			m_pTimeText->SetLabel(wxWUD_TIMETEXT_PREFIX + 
 								m_thread->GetRemainingTime());
 		}
+	}
+}
+
+
+
+// ---------------------
+// wxWEBUPDATEADVPANEL
+// ---------------------
+
+void wxWebUpdateAdvPanel::InitWidgetsFromXRC()
+{
+	// build the dialog
+	// ----------------
+
+	// we need some handlers before loading resources
+	wxImage::AddHandler(new wxPNGHandler);
+	wxXmlResource::Get()->InitAllHandlers();
+	
+    // load our XRC file
+    wxXmlResource::Get()->Load(wxT("../src/webupdatedlg.xrc"));
+
+	// and build our dialog window
+	wxXmlResource::Get()->LoadPanel(this, GetParent(), wxT("wxWebUpdateAdvPanel"));	
+
+
+
+	// init control pointers
+	// ---------------------
+
+	m_pDownloadPathTextCtrl = XRCCTRL(*this, "IDWUD_DOWNLOAD_PATH", wxTextCtrl);
+	m_pProxyHostname = XRCCTRL(*this, "IDWUD_HOSTNAME", wxTextCtrl);
+	m_pProxyPortNumber = XRCCTRL(*this, "IDWUD_PORTNUMBER", wxTextCtrl);
+	m_pUsername = XRCCTRL(*this, "IDWUD_USERNAME", wxTextCtrl);
+	m_pPassword = XRCCTRL(*this, "IDWUD_PASSWORD", wxTextCtrl);
+	m_pRemoveFiles = XRCCTRL(*this, "IDWUD_REMOVE", wxCheckBox);
+
+
+
+	// init control data
+	// -----------------
+	
+	// get the temporary folder where we put by default the updates
+	wxFileName str(wxFileName::CreateTempFileName(wxEmptyString, NULL));
+	str.SetFullName(wxEmptyString);		// remove the filename and keep only the path
+	m_pDownloadPathTextCtrl->SetValue(str.GetLongPath());
+
+
+
+
+
+	// init other stuff
+	// ----------------
+
+
+
+
+	// relayout
+	// --------
+
+	// we have changed the appname statictext control so maybe we need
+	// to expand our dialog... force a layout recalculation
+	GetSizer()->RecalcSizes();
+	GetSizer()->Fit(this);
+	GetSizer()->SetSizeHints(this);
+}
+
+void wxWebUpdateAdvPanel::OnBrowse(wxCommandEvent &)
+{
+	// get the current value of the the "download path" from the textctrl
+	wxString path = m_pDownloadPathTextCtrl->GetValue();
+	wxDirDialog dlg(this, wxT("Choose a directory"), 
+					path, wxDD_DEFAULT_STYLE | wxDD_NEW_DIR_BUTTON);
+	if (dlg.ShowModal() == wxID_OK) {
+
+		m_pDownloadPathTextCtrl->SetValue(dlg.GetPath());
+		wxLogDebug(wxT("wxWebUpdateDlg::OnBrowse - New output path is ") + dlg.GetPath());
+		
+	} else {
+
+		// just don't change nothing
 	}
 }
