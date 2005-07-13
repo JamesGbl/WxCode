@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.78 2005-07-13 17:27:03 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.79 2005-07-13 17:49:09 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -3601,7 +3601,8 @@ void wxTreeListMainWindow::OnMouse (wxMouseEvent &event) {
           event.RightDown() ||
           event.RightUp() ||
           event.LeftDClick() ||
-          event.Dragging()/*? TODO ||
+          event.Dragging() ||
+          (event.GetWheelRotation() != 0 )/*? TODO ||
           event.Moving()?*/)) {
         m_owner->GetEventHandler()->ProcessEvent (event);
         return;
