@@ -75,10 +75,10 @@ int wxCheckedListCtrl::GetItemImageFromAdditionalState(int addstate)
 	return wxCLC_DISABLED_UNCHECKED_IMGIDX;
 }
 
-/* static */
 wxColour wxCheckedListCtrl::GetBgColourFromAdditionalState(int additionalstate)
 {
-	if (additionalstate & wxLIST_STATE_ENABLED)
+	if ((additionalstate & wxLIST_STATE_ENABLED) &&
+		this->IsEnabled())
 		return *wxWHITE;
 #ifdef __WXMSW__
 	return wxColour(212, 208, 200);
@@ -319,6 +319,18 @@ void wxCheckedListCtrl::Enable(long item, bool enable)
 		SetItemState(item, wxLIST_STATE_ENABLED, wxLIST_STATE_ENABLED);
 	else
 		SetItemState(item, 0, wxLIST_STATE_ENABLED); 
+}
+
+void wxCheckedListCtrl::EnableAll(bool enable)
+{
+	for (int i=0; i < GetItemCount(); i++)
+		Enable(i, enable);
+}
+
+void wxCheckedListCtrl::CheckAll(bool check)
+{
+	for (int i=0; i < GetItemCount(); i++)
+		Check(i, check);
 }
 
 bool wxCheckedListCtrl::DeleteItem(long item)

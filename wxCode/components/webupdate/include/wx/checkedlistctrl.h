@@ -76,8 +76,12 @@ public:			// utilities
 	// shortcuts to the SetItemState function
 	void Check(long item, bool checked);
 	void Enable(long item, bool enable);
+	void CheckAll(bool checked = true);
+	void EnableAll(bool enable = true);
 
 	// this needs to be redeclared otherwise it's hidden by our other Enable() function.
+	// However you should use #EnableAll instead of this function if you want to get
+	// good graphics (try to understand)
 	virtual bool Enable(bool enable = true)
 		{ return wxListCtrl::Enable(enable); }
 
@@ -86,6 +90,10 @@ public:			// utilities
 		{ return GetItemState(item, wxLIST_STATE_CHECKED) != 0; }
 	bool IsEnabled(long item) const
 		{ return GetItemState(item, wxLIST_STATE_ENABLED) != 0; }
+
+	// this needs to be redeclared otherwise it's hidden by our other IsEnabled() function.
+	bool IsEnabled() const
+		{ return wxWindow::IsEnabled(); }
 
 	// we overload these so we are sure they will use our
 	// #GetItem and #SetItem functions...
@@ -107,7 +115,7 @@ protected:		// internal utilities
 
 	static int GetItemImageFromAdditionalState(int addstate);
 	static int GetAndRemoveAdditionalState(long *state, int statemask);
-	static wxColour GetBgColourFromAdditionalState(int additionalstate);
+	wxColour GetBgColourFromAdditionalState(int additionalstate);
 
 private:
 	DECLARE_CLASS(wxCheckedListCtrl)

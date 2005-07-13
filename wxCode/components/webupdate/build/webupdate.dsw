@@ -14,7 +14,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "minimal_1_0_0"=webupdate_minimal_1_0_0.dsp - Package Owner=<4>
+Project: "simple_1_0_0"=webupdate_simple_1_0_0.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -29,7 +29,37 @@ End Project Dependency
 
 ###############################################################################
 
-Project: "minimal_2_0_3"=webupdate_minimal_2_0_3.dsp - Package Owner=<4>
+Project: "simple_2_0_3"=webupdate_simple_2_0_3.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+Begin Project Dependency
+Project_Dep_Name webupdate
+End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "advanced_0_0_1"=webupdate_advanced_0_0_1.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+Begin Project Dependency
+Project_Dep_Name webupdate
+End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "advanced_1_5_0"=webupdate_advanced_1_5_0.dsp - Package Owner=<4>
 
 Package=<5>
 {{{

@@ -121,10 +121,14 @@ void *wxWebUpdateThread::Entry()
 			continue;
 		}
 
-		wxLogDebug(wxT("wxWebUpdateThread::Entry - downloading ") + m_strURI);
+		// reset our variables
+		m_nFinalSize = 0;
+		m_nCurrentSize = 0;
 
 		// we are starting the download of a file; update our datetime field
 		m_dtStart = wxDateTime::UNow();
+
+		wxLogDebug(wxT("wxWebUpdateThread::Entry - downloading ") + m_strURI);
 
 		// ensure we can build a wxURL from the given URI
 		wxURL u(m_strURI);
@@ -189,7 +193,7 @@ wxString wxWebUpdateThread::GetDownloadSpeed() const
 	wxASSERT(IsDownloading());
 	wxLongLong msec = GetElapsedMSec();
 	if (msec <= 0)
-		return wxEmptyString;		// avoid division by zero
+		return wxT("0 KB/s");		// avoid division by zero
 
 	wxLongLong nBytesPerMilliSec = wxLongLong(GetCurrDownloadedBytes()) / msec;
 
@@ -203,15 +207,18 @@ wxString wxWebUpdateThread::GetRemainingTime() const
 	wxASSERT(IsDownloading());
 	wxLongLong sec = GetElapsedMSec()/1000;
 	if (sec <= 0)
-		return wxEmptyString;		// avoid division by zero	
+		return wxT("not available");		// avoid division by zero	
 
 	// remaining time is the number of bytes we still need to download
 	// divided by our download speed...
 	wxLongLong nBytesPerSec = wxLongLong(GetCurrDownloadedBytes()) / sec;
 	if (nBytesPerSec <= 0)
-		return wxEmptyString;		// avoid division by zero
+		return wxT("not available");		// avoid division by zero
 	
 	long remsec = (wxLongLong(m_nFinalSize-GetCurrDownloadedBytes())/nBytesPerSec).ToLong();
+	if (remsec < 0)
+		return wxT("not available");
+
 	if (remsec < 60)
 		return wxString::Format(wxT("%d sec"), remsec);	
 	else if (remsec < 60*60)
@@ -274,6 +281,8 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 	m_pOk = XRCCTRL(*this,"IDWUD_OK", wxButton);
 	m_pCancel = XRCCTRL(*this,"IDWUD_CANCEL", wxButton);
 
+	wxCheckBox *p = XRCCTRL(*this,"IDWUD_SHOWFILTER", wxCheckBox);
+	p->SetValue(TRUE);
 
 
 	// init control data
@@ -384,8 +393,8 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
 	if (m_pUpdatesList->GetItemCount() == 0) {
 
 		wxMessageBox(wxT("Could not found any valid package for ") + m_strAppName
-					+ wxT("... exiting the update dialog."), wxT("Warning"),
-					wxOK | wxICON_EXCLAMATION);
+					+ wxT(" or there are no updates. Exiting the update dialog."), 
+					wxT("Warning"), wxOK | wxICON_INFORMATION);
 		AbortDialog();
 		return;
 	}
@@ -424,6 +433,7 @@ void wxWebUpdateDlg::RebuildPackageList()
 				local = &m_pLocalPackages[j];
 
 		// did we find a local matching package ?
+		bool tocheck = FALSE;
 		if (local) {
 			m_pUpdatesList->SetItem(idx, 2, local->m_version);
 
@@ -442,17 +452,18 @@ void wxWebUpdateDlg::RebuildPackageList()
 				li.SetBackgroundColour(*wxWHITE);
 				li.SetTextColour(*wxRED);
 				m_pUpdatesList->SetItem(li);
+				tocheck = TRUE;
 
 			} else if (f == wxWUCF_UPDATED) {
 
 				// we already have the latest version... check if the
 				// filter is enabled or disabled
-				// (OFD stays for: out of date)
+				// (OOD stays for: out of date)
 				wxCheckBox *box = XRCCTRL(*this, "IDWUD_SHOWFILTER", wxCheckBox);
-				bool onlyOFD = FALSE;
-				if (box) onlyOFD = box->GetValue();
+				bool onlyOOD = FALSE;
+				if (box) onlyOOD = box->GetValue();
 
-				if (onlyOFD) {
+				if (onlyOOD) {
 					m_pUpdatesList->DeleteItem(idx);
 					idx--;
 					continue;		// continue with next package
@@ -475,6 +486,7 @@ void wxWebUpdateDlg::RebuildPackageList()
 
 			// a matching local package does not exist...
 			m_pUpdatesList->SetItem(idx, 2, wxT("not installed"));
+			tocheck = TRUE;
 		}
 
 
@@ -491,12 +503,21 @@ void wxWebUpdateDlg::RebuildPackageList()
 		switch (curr.GetImportance()) {
 		case wxWUPI_HIGH:
 			m_pUpdatesList->SetItem(idx, 4, wxT("high!"));
+#if wxWU_USE_CHECKEDLISTCTRL342
+			m_pUpdatesList->Check(idx, tocheck);
+#endif
 			break;
 		case wxWUPI_NORMAL:
 			m_pUpdatesList->SetItem(idx, 4, wxT("normal"));
+#if wxWU_USE_CHECKEDLISTCTRL432
+			m_pUpdatesList->Check(idx, tocheck);
+#endif
 			break;
 		case wxWUPI_LOW:
 			m_pUpdatesList->SetItem(idx, 4, wxT("low"));
+#if wxWU_USE_CHECKEDLISTCTRL432
+			m_pUpdatesList->Check(idx, FALSE);
+#endif
 			break;
 		default:
 			wxASSERT_MSG(0, wxT("Invalid package !"));
@@ -634,11 +655,13 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 	if (m_bDownloadingScript) m_bDownloadingScript = FALSE;
 }
 
+
 void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 {
 	// help us to avoid useless calls to SetLabel() function which
 	// cause flickering
 	static bool bLabelRunningMode = FALSE;
+	static wxDateTime lastupdate = wxDateTime::UNow();
 
 	if (!m_thread->IsDownloading()) {
 
@@ -648,7 +671,7 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 		// re-enable what we disabled when we ran the thread
 		if (!bLabelRunningMode) {			
 			m_pCancel->SetLabel(wxWUD_CANCEL_DEFAULT_LABEL);
-			m_pUpdatesList->Enable();
+			//m_pUpdatesList->EnableAll();
 			bLabelRunningMode = TRUE;
 
 			// update our meters
@@ -675,14 +698,15 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 		if (bLabelRunningMode) {
 			m_pOk->Disable();
 			m_pCancel->SetLabel(wxWUD_CANCEL_DOWNLOAD);
-			m_pUpdatesList->Disable();
+			//m_pUpdatesList->EnableAll(FALSE);
 			bLabelRunningMode = FALSE;
 		}
 
-		static wxLongLong lastupdate = 0;
-		wxLongLong current = m_thread->GetElapsedMSec();
-		if (current - lastupdate > 1000) {
+		wxDateTime current = wxDateTime::UNow();
+		wxTimeSpan diff = current - lastupdate;
+		if (diff.GetMilliseconds().ToLong() > 500) {
 
+			//wxLogDebug(wxT("wxWebUpdateDlg::OnUpdateUI - updating meters"));
 			lastupdate = current;
 
 			// update our gauge control
@@ -690,7 +714,8 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 			m_pGauge->SetValue(value > 0 ? value : 0);
 
 			// update speed meter
-			m_pSpeedText->SetLabel(wxT("Download status: downloading at ") + 
+			m_pSpeedText->SetLabel(wxT("Download status: downloading \"") + 
+								m_thread->m_strResName + wxT("\" at ") + 
 								m_thread->GetDownloadSpeed());
 
 			// update time meter
