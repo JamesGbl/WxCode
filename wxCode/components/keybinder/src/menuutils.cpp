@@ -77,7 +77,7 @@ void wxMenuCmd::Update()
 	// if the new label is identic to the old and in this
 	// case, it returns without doing nothing... :-(
 	// to solve the problem, a space is added or removed 
-	// from the label.
+	// from the label to ovverride this optimization check
 	str.Trim();
 	if (str == m_pItem->GetLabel())
 		str += wxT(" ");
@@ -98,14 +98,22 @@ void wxMenuCmd::Update()
 	
 #if defined( __WXMSW__ )
 
-		// change the accelerator...
-	   m_pItem->SetText(newtext);
-	   m_pItem->GetMenu()->UpdateAccel(m_pItem);
+	// change the accelerator...
+	m_pItem->SetText(newtext);
+	m_pItem->GetMenu()->UpdateAccel(m_pItem);
+
+	// we could also do that in this way:
+	//    wxAcceleratorEntry acc = GetAccelerator(0);
+	//    m_pItem->SetAccel(&acc);
+	// but this is just slower because wxMenuItem::SetAccel
+	// creates a string from the accelerator entry we give to it
+	// (i.e. it internally builds a string analogue to our 'newtext')
+	// and then calls wxMenuItem::SetText...
 
 #elif defined( __WXGTK__ )
 
-	   // on GTK, the SetAccel() function doesn't have any effect...	   
-	   m_pItem->SetText(newtext);
+	// on GTK, the SetAccel() function doesn't have any effect...	   
+	m_pItem->SetText(newtext);
 
 #ifdef __WXGTK20__
 

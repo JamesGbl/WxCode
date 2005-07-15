@@ -717,7 +717,7 @@ void wxKeyBinder::Attach(wxWindow *p)
 	m_arrHandlers.Add((void*)h);
 
 	// we need to update our commands...
-	UpdateCmd();
+	UpdateAllCmd();
 }
 
 void wxKeyBinder::AttachRecursively(wxWindow *p)

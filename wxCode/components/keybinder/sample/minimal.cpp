@@ -431,7 +431,7 @@ void MyFrame::UpdateArr(wxKeyProfileArray &r)
 	//                 added to the binder and when they will be
 	//                 deleted, the binder will reference invalid memory...
 	r.GetSelProfile()->AttachRecursively(this);
-	r.UpdateAllCmd();
+	//r.UpdateAllCmd();		// not necessary
 #endif
 }
 

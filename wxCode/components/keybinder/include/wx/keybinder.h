@@ -143,6 +143,10 @@ public:
 			KeyCodeToString(m_nKeyCode);
 	}
 
+	wxAcceleratorEntry GetAccelerator(int cmdId) const {
+		return wxAcceleratorEntry(GetModifiers(), GetKeyCode(), cmdId);
+	}
+
 
 public:		// static utilities
 
@@ -360,8 +364,7 @@ public:
 	const wxKeyBind *GetShortcut(int n)	const	 { return &m_keyShortcut[n]; }
 
 	wxAcceleratorEntry GetAccelerator(int n) const {
-		return wxAcceleratorEntry(GetShortcut(n)->GetModifiers(),
-			GetShortcut(n)->GetKeyCode(), m_nId);
+		return GetShortcut(n)->GetAccelerator(m_nId);
 	}
 
 	int GetId() const {
@@ -659,7 +662,10 @@ public:		// miscellaneous
 	}
 
 	//! Updates all the commands contained.
-	void UpdateCmd() {
+	void UpdateAllCmd() {
+		if (m_arrHandlers.GetCount() == 0)
+			return;		// we are not attached to any window... we can skip
+						// this update...
 		for (int i=0; i < (int)m_arrCmd.GetCount(); i++)
 			m_arrCmd.Item(i)->Update();
 	}
@@ -960,7 +966,7 @@ public:
 	//! Updates all the wxCmds contained.
 	void UpdateAllCmd() {
 		for (int i=0; i<GetCount(); i++)
-			Item(i)->UpdateCmd();
+			Item(i)->UpdateAllCmd();
 	}
 
 	//! Stores the wxKeyProfiles into the given wxConfig object.
