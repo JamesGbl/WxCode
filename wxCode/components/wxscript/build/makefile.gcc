@@ -111,7 +111,7 @@ TEST1_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -mthreads \
 	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) \
 	$(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(CPPFLAGS) $(CXXFLAGS)
 TEST1_OBJECTS =  \
-	mingw\test1_Test.o
+	mingw\test1_test.o
 TEST2_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -mthreads \
 	$(__WX_SHAREDDEFINE_p) -DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
@@ -120,7 +120,7 @@ TEST2_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -mthreads \
 	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) \
 	$(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(CPPFLAGS) $(CXXFLAGS)
 TEST2_OBJECTS =  \
-	mingw\test2_Test.o
+	mingw\test2_test.o
 
 ### Conditionally set variables: ###
 
@@ -365,10 +365,10 @@ mingw\wxscript_dll_scunderc.o: ./../src/scunderc.cpp
 mingw\wxscript_dll_sclua.o: ./../src/sclua.cpp
 	$(CXX) -c -o $@ $(WXSCRIPT_DLL_CXXFLAGS) $(CPPDEPS) $<
 
-mingw\test1_Test.o: ./../tests/test1/Test.cpp
+mingw\test1_test.o: ./../tests/test1/test.cpp
 	$(CXX) -c -o $@ $(TEST1_CXXFLAGS) $(CPPDEPS) $<
 
-mingw\test2_Test.o: ./../tests/test2/Test.cpp
+mingw\test2_test.o: ./../tests/test2/test.cpp
 	$(CXX) -c -o $@ $(TEST2_CXXFLAGS) $(CPPDEPS) $<
 
 .PHONY: all clean

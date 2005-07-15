@@ -113,7 +113,7 @@ TEST1_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) $(__OPTIMIZEFLAG) \
 	$(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) /D_CONSOLE /GR /EHsc $(CPPFLAGS) \
 	$(CXXFLAGS)
 TEST1_OBJECTS =  \
-	msvc\test1_Test.obj
+	msvc\test1_test.obj
 TEST2_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) $(__OPTIMIZEFLAG) \
 	$(__DEBUGINFO) /Fd..\tests\test2\test2.pdb $(____DEBUGRUNTIME) \
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
@@ -123,7 +123,7 @@ TEST2_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) $(__OPTIMIZEFLAG) \
 	$(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) /D_CONSOLE /GR /EHsc $(CPPFLAGS) \
 	$(CXXFLAGS)
 TEST2_OBJECTS =  \
-	msvc\test2_Test.obj \
+	msvc\test2_test.obj \
 	msvc\test2_stackwalker.obj
 
 ### Conditionally set variables: ###
@@ -395,10 +395,10 @@ msvc\wxscript_dll_scunderc.obj: .\..\src\scunderc.cpp
 msvc\wxscript_dll_sclua.obj: .\..\src\sclua.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(WXSCRIPT_DLL_CXXFLAGS) $**
 
-msvc\test1_Test.obj: .\..\tests\test1\Test.cpp
+msvc\test1_test.obj: .\..\tests\test1\test.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(TEST1_CXXFLAGS) $**
 
-msvc\test2_Test.obj: .\..\tests\test2\Test.cpp
+msvc\test2_test.obj: .\..\tests\test2\test.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(TEST2_CXXFLAGS) $**
 
 msvc\test2_stackwalker.obj: .\..\tests\test2\stackwalker.cpp

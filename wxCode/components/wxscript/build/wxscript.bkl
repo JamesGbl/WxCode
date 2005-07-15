@@ -92,9 +92,11 @@
 	<set var="COMP_HDR">../include/wx/script.h ../include/wx/scpython.h
 						../include/wx/sccint.h ../include/wx/scunderc.h
 						../include/wx/sclua.h ../include/wx/scdef.h</set>
-	<set var="COMP_SAMPLE_SRC">../tests/test1/test.cpp ../tests/test1/test.h</set>
+	<set var="COMP_SAMPLE_SRC">../tests/test1/test.cpp</set>
+	<set var="COMP_SAMPLE_HDR">../tests/test1/test.h</set>
 	<set var="COMP_SAMPLE_DIR">../tests/test1</set>
-	<set var="COMP_SAMPLE2_SRC">../tests/test2/test.cpp ../tests/test2/test.h</set>
+	<set var="COMP_SAMPLE2_SRC">../tests/test2/test.cpp</set>
+	<set var="COMP_SAMPLE2_HDR">../tests/test2/test.h</set>
 	<set var="COMP_SAMPLE2_DIR">../tests/test2</set>
 	<set var="WX_UNICODE_DEFAULT">1</set>
 	<set var="WX_VERSION_DEFAULT">26</set>
@@ -185,7 +187,7 @@
 	<!--			   TEMPLATES			-->
 	<!-- ================================== -->
 	
-	<template id="wxscript-base">
+	<template id="wxscriptbase">
 		<if cond="FORMAT!='msvc6prj' and FORMAT!='autoconf'">
 			<cppflags>$(SCRIPTDEFINE) $(SCRIPTINCLUDE)</cppflags>
 			<ldflags>$(SCRIPTLIBPATH)</ldflags>
@@ -209,6 +211,7 @@
 			<!-- temporary disabled -->
 			<define>wxSCRIPT_NO_UNDERC</define>
 			<define>wxSCRIPT_NO_CINT</define>
+			<define>wxSCRIPT_NO_PYTHON</define>
 		</if>
 	</template>
 
@@ -222,14 +225,14 @@
 			<sys-lib>$(SCRIPTLIB4)</sys-lib>
 		</if>
 		<if cond="FORMAT=='msvc6prj'">
-			<sys-lib>$(PYTHONLIB_NAME)</sys-lib>
 			<sys-lib>lua</sys-lib>
 			<sys-lib>lualib</sys-lib>
 			<sys-lib>tolua</sys-lib>
 
 			<!-- temporary disabled
 			<sys-lib>cint</sys-lib>
-			<sys-lib>ucc12</sys-lib>  -->
+			<sys-lib>ucc12</sys-lib>
+			<sys-lib>$(PYTHONLIB_NAME)</sys-lib>  -->
 		</if>
 	</define-tag>
 
@@ -240,8 +243,8 @@
 
 	<!-- The real target: wxcode.bkl does not declare a real target but a template called
 		 "complib". In this way modifications are allowed to the basic template. -->
-	<lib id="wxscript_lib" template="complib,wxscript-base" cond="WX_SHARED=='0'"/>
-	<dll id="wxscript_dll" template="compdll,wxscript-base" cond="WX_SHARED=='1'">
+	<lib id="wxscript_lib" template="complib,wxscriptbase" cond="WX_SHARED=='0'"/>
+	<dll id="wxscript_dll" template="compdll,wxscriptbase" cond="WX_SHARED=='1'">
         <wx-lib>core</wx-lib>
         <wx-lib>base</wx-lib>
 	</dll>
@@ -249,8 +252,9 @@
 
 	<!-- The first sample of the component: as for the LIB target, this exe derives from a 
 		 template contained in wxcode.bkl which can be modified here -->
-	<exe id="test1" template="compsample,wxscript-base">
+	<exe id="test1" template="compsample,wxscriptbase">
 		<app-type>console</app-type>
+		<headers>$(COMP_SAMPLE_HDR)</headers>
 
 		<library>wxscript_lib</library>
 		<scriptlibs/>
@@ -260,8 +264,9 @@
 
 	<!-- The second sample of the component: as for the LIB target, this exe derives from a 
 		 template contained in wxcode.bkl which can be modified here -->
-	<exe id="test2" template="compsamplebasic,wxscript-base">
+	<exe id="test2" template="compsamplebasic,wxscriptbase">
 		<sources>$(COMP_SAMPLE2_SRC)</sources>
+		<headers>$(COMP_SAMPLE2_HDR)</headers>
 		<dirname>$(COMP_SAMPLE2_DIR)</dirname>
 		<app-type>console</app-type>
 

@@ -154,7 +154,7 @@ TEST1_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) -tWM \
 	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) \
 	$(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(CPPFLAGS) $(CXXFLAGS)
 TEST1_OBJECTS =  \
-	borland\test1_Test.obj
+	borland\test1_test.obj
 TEST2_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) -tWM \
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
 	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
@@ -162,7 +162,7 @@ TEST2_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) -tWM \
 	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) \
 	$(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(CPPFLAGS) $(CXXFLAGS)
 TEST2_OBJECTS =  \
-	borland\test2_Test.obj
+	borland\test2_test.obj
 
 ### Conditionally set variables: ###
 
@@ -424,9 +424,9 @@ borland\wxscript_dll_scunderc.obj: .\..\src\scunderc.cpp
 borland\wxscript_dll_sclua.obj: .\..\src\sclua.cpp
 	$(CXX) -q -c -P -o$@ $(WXSCRIPT_DLL_CXXFLAGS) $**
 
-borland\test1_Test.obj: .\..\tests\test1\Test.cpp
+borland\test1_test.obj: .\..\tests\test1\test.cpp
 	$(CXX) -q -c -P -o$@ $(TEST1_CXXFLAGS) $**
 
-borland\test2_Test.obj: .\..\tests\test2\Test.cpp
+borland\test2_test.obj: .\..\tests\test2\test.cpp
 	$(CXX) -q -c -P -o$@ $(TEST2_CXXFLAGS) $**
 

@@ -68,12 +68,12 @@ TEST1_CXXFLAGS = -I../include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) \
 	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE) $(WX_CXXFLAGS) \
 	$(CPPFLAGS) $(CXXFLAGS)
 TEST1_OBJECTS =  \
-	test1_Test.o
+	test1_test.o
 TEST2_CXXFLAGS = -I../include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) \
 	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE) $(WX_CXXFLAGS) \
 	$(CPPFLAGS) $(CXXFLAGS)
 TEST2_OBJECTS =  \
-	test2_Test.o
+	test2_test.o
 
 ### Conditionally set variables: ###
 
@@ -304,11 +304,11 @@ wxscript_dll_scunderc.o: $(srcdir)/../src/scunderc.cpp
 wxscript_dll_sclua.o: $(srcdir)/../src/sclua.cpp
 	$(CXXC) -c -o $@ $(WXSCRIPT_DLL_CXXFLAGS) $(srcdir)/../src/sclua.cpp
 
-test1_Test.o: $(srcdir)/../tests/test1/Test.cpp
-	$(CXXC) -c -o $@ $(TEST1_CXXFLAGS) $(srcdir)/../tests/test1/Test.cpp
+test1_test.o: $(srcdir)/../tests/test1/test.cpp
+	$(CXXC) -c -o $@ $(TEST1_CXXFLAGS) $(srcdir)/../tests/test1/test.cpp
 
-test2_Test.o: $(srcdir)/../tests/test2/Test.cpp
-	$(CXXC) -c -o $@ $(TEST2_CXXFLAGS) $(srcdir)/../tests/test2/Test.cpp
+test2_test.o: $(srcdir)/../tests/test2/test.cpp
+	$(CXXC) -c -o $@ $(TEST2_CXXFLAGS) $(srcdir)/../tests/test2/test.cpp
 
 
 # Include dependency info, if present:

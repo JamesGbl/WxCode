@@ -304,7 +304,7 @@ TEST1_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
 	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) &
 	$(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(CPPFLAGS) $(CXXFLAGS)
 TEST1_OBJECTS =  &
-	watcom\test1_Test.obj
+	watcom\test1_test.obj
 TEST2_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
 	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
@@ -312,7 +312,7 @@ TEST2_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
 	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) &
 	$(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(CPPFLAGS) $(CXXFLAGS)
 TEST2_OBJECTS =  &
-	watcom\test2_Test.obj
+	watcom\test2_test.obj
 
 
 all : watcom
@@ -447,9 +447,9 @@ watcom\wxscript_dll_scunderc.obj :  .AUTODEPEND .\..\src\scunderc.cpp
 watcom\wxscript_dll_sclua.obj :  .AUTODEPEND .\..\src\sclua.cpp
 	$(CXX) -zq -fo=$^@ $(WXSCRIPT_DLL_CXXFLAGS) $<
 
-watcom\test1_Test.obj :  .AUTODEPEND .\..\tests\test1\Test.cpp
+watcom\test1_test.obj :  .AUTODEPEND .\..\tests\test1\test.cpp
 	$(CXX) -zq -fo=$^@ $(TEST1_CXXFLAGS) $<
 
-watcom\test2_Test.obj :  .AUTODEPEND .\..\tests\test2\Test.cpp
+watcom\test2_test.obj :  .AUTODEPEND .\..\tests\test2\test.cpp
 	$(CXX) -zq -fo=$^@ $(TEST2_CXXFLAGS) $<
 

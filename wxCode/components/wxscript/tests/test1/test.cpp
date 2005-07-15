@@ -58,6 +58,13 @@
 #endif
 #include <wx/script.h>			// our interpreters...
 
+#include <wx/script.h>		// our interpreter...
+#include <wx/sclua.h>		// our interpreter...
+#include <wx/sccint.h>		// our interpreter...
+#include <wx/scunderc.h>		// our interpreter...
+#include <wx/scpython.h>		// our interpreter...
+
+
 
 // without this pragma, the stupid compiler precompiles #defines below so that
 // changing them doesn't "take place" later!
@@ -114,6 +121,27 @@
 	static mcLeakDetector detector;
 
 #endif
+
+
+
+// ----------------------------------------------------------------------------
+// defines
+// ----------------------------------------------------------------------------
+
+// these will be used to perform various types of tests:
+#ifdef wxSCRIPT_USE_LUA
+	#define TEST_LUA
+#endif
+#ifdef wxSCRIPT_USE_PYTHON
+	#define TEST_PYTHON
+#endif
+#ifdef wxSCRIPT_USE_CINT
+	#define TEST_CINT
+#endif
+#ifdef wxSCRIPT_USE_UNDERC
+	#define TEST_UNDERC
+#endif
+
 
 
 // ----------------------------------------------------------------------------
@@ -205,6 +233,7 @@ int main(int, char **)
 
 #if !defined(TEST_LUA) && !defined(TEST_PYTHON) && !defined(TEST_CINT) && !defined(TEST_UNDERC)
 	wxPrintf(wxT("No script interpreter to test ?\n"));
+	wxScriptInterpreter::Cleanup();
 	return 0;
 #endif
 
