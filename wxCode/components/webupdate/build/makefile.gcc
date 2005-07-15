@@ -55,7 +55,8 @@ WEBUPDATE_LIB_OBJECTS =  \
 	mingw\webupdate_lib_webupdate.o \
 	mingw\webupdate_lib_webupdatedlg.o \
 	mingw\webupdate_lib_checkedlistctrl.o \
-	mingw\webupdate_lib_md5.o
+	mingw\webupdate_lib_md5.o \
+	mingw\webupdate_lib_installer.o
 WEBUPDATE_DLL_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	-mthreads $(__WX_SHAREDDEFINE_p) -DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
@@ -65,7 +66,8 @@ WEBUPDATE_DLL_OBJECTS =  \
 	mingw\webupdate_dll_webupdate.o \
 	mingw\webupdate_dll_webupdatedlg.o \
 	mingw\webupdate_dll_checkedlistctrl.o \
-	mingw\webupdate_dll_md5.o
+	mingw\webupdate_dll_md5.o \
+	mingw\webupdate_dll_installer.o
 SIMPLE_1_0_0_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	-mthreads $(__WX_SHAREDDEFINE_p) -DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
@@ -249,6 +251,9 @@ mingw\webupdate_lib_checkedlistctrl.o: ./../src/checkedlistctrl.cpp
 mingw\webupdate_lib_md5.o: ./../src/md5.cpp
 	$(CXX) -c -o $@ $(WEBUPDATE_LIB_CXXFLAGS) $(CPPDEPS) $<
 
+mingw\webupdate_lib_installer.o: ./../src/installer.cpp
+	$(CXX) -c -o $@ $(WEBUPDATE_LIB_CXXFLAGS) $(CPPDEPS) $<
+
 mingw\webupdate_dll_webupdate.o: ./../src/webupdate.cpp
 	$(CXX) -c -o $@ $(WEBUPDATE_DLL_CXXFLAGS) $(CPPDEPS) $<
 
@@ -259,6 +264,9 @@ mingw\webupdate_dll_checkedlistctrl.o: ./../src/checkedlistctrl.cpp
 	$(CXX) -c -o $@ $(WEBUPDATE_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 mingw\webupdate_dll_md5.o: ./../src/md5.cpp
+	$(CXX) -c -o $@ $(WEBUPDATE_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+mingw\webupdate_dll_installer.o: ./../src/installer.cpp
 	$(CXX) -c -o $@ $(WEBUPDATE_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 mingw\simple_1_0_0_minimal.o: ./../samples/simple/v1.0.0/minimal.cpp

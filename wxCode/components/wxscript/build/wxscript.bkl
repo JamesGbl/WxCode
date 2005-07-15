@@ -8,22 +8,26 @@
 	<!-- Some defaults for the variables used by wxCode bakefiles -->
 	<set var="WXCODE_BAKEFILEDIR">../../../build/bakefiles</set>
 	<include file="$(WXCODE_BAKEFILEDIR)/defaults.bkl"/>
-	
+	<include file="$(WXCODE_BAKEFILEDIR)/tags.bkl"/>
 
 
 	<!-- Enables/disables required libraries -->
 	<!-- =================================== -->
 
-	<option name="USE_PYTHON">
-		<values>0,1</values>
-		<default-value>0</default-value>
-		<description>If 0 Python won't be used</description>
-	</option>
 	<option name="USE_LUA">
 		<values>0,1</values>
 		<default-value>1</default-value>
 		<description>If 0 LUA won't be used</description>
 	</option>
+
+	<!-- currently disabled by default because Python has some ugly memory leaks -->
+	<option name="USE_PYTHON">
+		<values>0,1</values>
+		<default-value>0</default-value>
+		<description>If 0 Python won't be used</description>
+	</option>
+	
+	<!-- these two are disabled because they seems to be died-projects and they don't work very well -->
 	<option name="USE_CINT">
 		<values>0,1</values>
 		<default-value>0</default-value>
@@ -40,23 +44,33 @@
 	<!-- Directories for required libraries -->
 	<!-- ================================== -->
 
+	<!-- lua & tolua have their own bakefiles; just unzip their archives in ..\thirdparty -->
+	<option name="LUA_DIR" category="path">
+		<default-value>..\thirdparty\lua</default-value>
+		<description>The LUA library main folder</description>
+	</option>
+	<option name="TOLUA_DIR" category="path">
+		<default-value>..\thirdparty\tolua</default-value>
+		<description>The TOLUA library main folder</description>
+	</option>
+
+	<!-- these do not have bakefiles in ..\thirdparty... -->
 	<option name="PYTHON_DIR" category="path">
 		<default-value>c:\Python</default-value>
 		<description>The Python library main folder</description>
 	</option>
-	<option name="PYTHON_VER">
-		<values>2_2,2_3,2_4,2_5,2_6</values>
-		<default-value>2_4</default-value>
-		<description>The Python library version (2.2, 2.3, 2.4 ...)</description>
-	</option>
-	<option name="LUA_DIR" category="path">
-		<default-value>c:\lua</default-value>
-		<description>The LUA library main folder</description>
-	</option>
-	<option name="TOLUA_DIR" category="path">
-		<default-value>c:\tolua</default-value>
-		<description>The TOLUA library main folder</description>
-	</option>
+	<if cond="TARGETING_IDE=='0'">
+		<option name="PYTHON_VER">
+			<values>2_2,2_3,2_4,2_5,2_6</values>
+			<default-value>2_4</default-value>
+			<description>The Python library version (2.2, 2.3, 2.4 ...)</description>
+		</option>
+	</if>
+	<if cond="TARGETING_IDE=='1'">
+		<!-- avoid a long list of different configuration which just differ from the python version ! -->
+		<set var="PYTHON_VER">2_4</set>
+	</if>
+
 	<option name="CINT_DIR" category="path">
 		<default-value>c:\cint</default-value>
 		<description>The CINT library main folder</description>
@@ -78,9 +92,9 @@
 	<set var="COMP_HDR">../include/wx/script.h ../include/wx/scpython.h
 						../include/wx/sccint.h ../include/wx/scunderc.h
 						../include/wx/sclua.h ../include/wx/scdef.h</set>
-	<set var="COMP_SAMPLE_SRC">../tests/test1/Test.cpp</set>
+	<set var="COMP_SAMPLE_SRC">../tests/test1/test.cpp ../tests/test1/test.h</set>
 	<set var="COMP_SAMPLE_DIR">../tests/test1</set>
-	<set var="COMP_SAMPLE2_SRC">../tests/test2/Test.cpp</set>
+	<set var="COMP_SAMPLE2_SRC">../tests/test2/test.cpp ../tests/test2/test.h</set>
 	<set var="COMP_SAMPLE2_DIR">../tests/test2</set>
 	<set var="WX_UNICODE_DEFAULT">1</set>
 	<set var="WX_VERSION_DEFAULT">26</set>
@@ -171,7 +185,7 @@
 	<!--			   TEMPLATES			-->
 	<!-- ================================== -->
 	
-	<template id="twxscript">
+	<template id="wxscript-base">
 		<if cond="FORMAT!='msvc6prj' and FORMAT!='autoconf'">
 			<cppflags>$(SCRIPTDEFINE) $(SCRIPTINCLUDE)</cppflags>
 			<ldflags>$(SCRIPTLIBPATH)</ldflags>
@@ -226,8 +240,8 @@
 
 	<!-- The real target: wxcode.bkl does not declare a real target but a template called
 		 "complib". In this way modifications are allowed to the basic template. -->
-	<lib id="wxscript_lib" template="complib,twxscript" cond="WX_SHARED=='0'"/>
-	<dll id="wxscript_dll" template="complib,twxscript" cond="WX_SHARED=='1'">
+	<lib id="wxscript_lib" template="complib,wxscript-base" cond="WX_SHARED=='0'"/>
+	<dll id="wxscript_dll" template="compdll,wxscript-base" cond="WX_SHARED=='1'">
         <wx-lib>core</wx-lib>
         <wx-lib>base</wx-lib>
 	</dll>
@@ -235,7 +249,7 @@
 
 	<!-- The first sample of the component: as for the LIB target, this exe derives from a 
 		 template contained in wxcode.bkl which can be modified here -->
-	<exe id="test1" template="compsample,twxscript">
+	<exe id="test1" template="compsample,wxscript-base">
 		<app-type>console</app-type>
 
 		<library>wxscript_lib</library>
@@ -246,7 +260,7 @@
 
 	<!-- The second sample of the component: as for the LIB target, this exe derives from a 
 		 template contained in wxcode.bkl which can be modified here -->
-	<exe id="test2" template="compsamplebasic,twxscript">
+	<exe id="test2" template="compsamplebasic,wxscript-base">
 		<sources>$(COMP_SAMPLE2_SRC)</sources>
 		<dirname>$(COMP_SAMPLE2_DIR)</dirname>
 		<app-type>console</app-type>

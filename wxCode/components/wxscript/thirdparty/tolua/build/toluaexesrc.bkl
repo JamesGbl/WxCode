@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>     
+<makefile>                 
+<set var="TOLUAEXE_SRC">            
+ 
+../src/bin/tolua.c 
+../src/bin/toluabind.c 
+ 
+</set>                    
+</makefile>               

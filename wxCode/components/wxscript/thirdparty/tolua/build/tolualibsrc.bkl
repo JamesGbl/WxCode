@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>     
+<makefile>                 
+<set var="TOLUALIB_SRC">            
+ 
+../src/lib/tolua_event.c 
+../src/lib/tolua_is.c 
+../src/lib/tolua_map.c 
+../src/lib/tolua_push.c 
+../src/lib/tolua_to.c 
+ 
+</set>                    
+</makefile>               

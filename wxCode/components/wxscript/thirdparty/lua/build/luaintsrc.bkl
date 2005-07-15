@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>     
+<makefile>                 
+<set var="LUAINT_SRC">            
+ 
+../src/lua/lua.c 
+ 
+</set>                    
+</makefile>               

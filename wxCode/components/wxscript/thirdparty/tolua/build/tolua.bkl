@@ -1,0 +1,73 @@
+<?xml version="1.0" ?>
+
+
+<!-- 
+                THE TOLUA BAKEFILE
+
+     You can use this bakefile to generate various
+     makefiles using Bakefile (http://bakefile.sourceforge.net).
+
+
+     Usage:
+         bakefile -ftheformatyoulike lua.bkl
+     then
+         mymake -fmakefile.mymakeext
+
+     To make this clearer, with MSVC you should type:
+         bakefile -fmsvc lua.bkl
+         nmake -fmakefile.vc
+
+     If you want to regenerate the makefiles for all the formats
+     supported, just type:
+
+         bakefile_gen
+-->
+     
+
+<makefile>
+
+    <!-- To update these files, run ListLuaSrc.bat -->
+    <include file="tolualibsrc.bkl"/>
+    <include file="toluaexesrc.bkl"/>
+
+
+    <option name="LUADIR" category="path">
+	<default-value>c:\lua</default-value>
+	<description>The LUA library main folder</description>
+    </option>
+
+
+    <!-- Define some utilities ... -->
+    <template id="toluabase">
+	<include>../include</include>
+        <include>../src/lib</include>
+        <include>../src/bin</include>
+        <include>$(LUADIR)/include</include>
+        <lib-path>$(LUADIR)/lib</lib-path>
+    </template>
+
+
+
+    <!-- The LIB -->
+    <set var="BUILDDIR">..$(DIRSEP)lib</set>
+    <lib id="tolua" libname="tolua" template="toluabase">
+        <sources>$(TOLUALIB_SRC)</sources>
+    </lib>
+
+
+
+    <!-- The EXE -->
+    <exe id="toluaexe" exename="tolua" template="toluabase">
+        <sources>$(TOLUAEXE_SRC)</sources>
+        <library>tolua</library>
+        <sys-lib>lua</sys-lib>
+        <sys-lib>lualib</sys-lib>
+
+        <if cond="PLATFORM_WIN32=='1' and FORMAT!='msvc6prj'">
+            <postlink-command>
+                move $(BUILDDIR)\*.exe ..
+            </postlink-command>
+        </if>
+    </exe>
+
+</makefile>

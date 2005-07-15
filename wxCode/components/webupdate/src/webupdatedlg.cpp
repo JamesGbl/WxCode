@@ -49,6 +49,7 @@ BEGIN_EVENT_TABLE(wxWebUpdateDlg, wxDialog)
 	// buttons
     EVT_BUTTON(XRCID("IDWUD_OK"), wxWebUpdateDlg::OnDownload)
     EVT_BUTTON(XRCID("IDWUD_CANCEL"), wxWebUpdateDlg::OnCancel)
+    EVT_BUTTON(XRCID("IDWUD_SHOWHIDEADV"), wxWebUpdateDlg::OnShowHideAdv)
 
 	// checkbox
 	EVT_CHECKBOX(XRCID("IDWUD_SHOWFILTER"), wxWebUpdateDlg::OnShowFilter)
@@ -58,6 +59,8 @@ BEGIN_EVENT_TABLE(wxWebUpdateDlg, wxDialog)
 
 	// download thread
 	EVT_COMMAND(-1, wxWUT_DOWNLOAD_COMPLETE, wxWebUpdateDlg::OnDownloadComplete)
+
+	EVT_IDLE(wxWebUpdateDlg::OnIdle)
 
 END_EVENT_TABLE()
 
@@ -269,10 +272,21 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 						wxDefaultSize, wxLC_REPORT|wxSUNKEN_BORDER);
 #endif
 
+	m_pAdvPanel = new wxTextCtrl(this, -1, wxT(""), 
+		wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE );//new wxWebUpdateAdvPanel(this);
+	///m_pAdvPanel->Hide();
+	m_pAdvPanel->SetMinSize(wxSize(30, 180));
+	//m_pAdvPanel->SetMinSize(m_pAdvPanel->GetSize());
+	//m_pAdvPanel->GetSizer()->Layout();
+
+
     // "custom_control_placeholder" is the name of the "unknown" tag in the
-    // custctrl.xrc XRC file.
+    // webupdatedlg.xrc XRC file.
     wxXmlResource::Get()->AttachUnknownControl(wxT("IDWUD_LISTCTRL"),
                                                 m_pUpdatesList);
+    
+	wxXmlResource::Get()->AttachUnknownControl(wxT("IDWUD_ADVPANEL"),
+                                                m_pAdvPanel);
 
 
 
@@ -290,6 +304,11 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 
 	wxCheckBox *p = XRCCTRL(*this,"IDWUD_SHOWFILTER", wxCheckBox);
 	p->SetValue(TRUE);
+
+	/*wxWindow *p2 = FindWindowByName(wxT("IDWUD_ADVPANEL_container"), this);
+	p2->GetSizer()->RecalcSizes();
+	p2->GetSizer()->Layout();
+	p2->Layout();*/
 
 
 	// init control data
@@ -333,17 +352,31 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 	// we have changed the appname statictext control so maybe we need
 	// to expand our dialog... force a layout recalculation
 	GetSizer()->RecalcSizes();
+	GetSizer()->Layout();
 	GetSizer()->Fit(this);
 	GetSizer()->SetSizeHints(this);
 }
 
 int wxWebUpdateDlg::ShowModal()
 {
+	// as soon as the wxWebUpdateThread has completed its work we'll receive
+	// a notification through the wxWUT_NOTIFICATION events
+	m_pSpeedText->SetLabel(wxT("Downloading update list..."));
+
+	// proceed with standard processing
+	return wxDialog::ShowModal();
+}
+
+void wxWebUpdateDlg::OnIdle(wxIdleEvent &)
+{
+	if (m_xmlScript.IsOk())
+		return;
+/*
 	// set our thread helper as a downloader for the XML update scriptf
 	m_thread->m_strURI = m_strURI;
 	m_thread->m_strResName = wxT("XML WebUpdate script");
 	m_thread->m_strOutput = wxFileName::CreateTempFileName(wxT("webupdate"));
-	m_pTimeText->SetLabel(wxWUD_TIMETEXT_PREFIX wxT("60 s"));
+	//m_pTimeText->SetLabel(wxWUD_TIMETEXT_PREFIX wxT("60 s"));
 
 	// this special flag makes easier the #OnDownloadComplete handler
 	m_bDownloadingScript = TRUE;
@@ -354,18 +387,11 @@ int wxWebUpdateDlg::ShowModal()
 		wxMessageBox(wxString(wxT("Cannot download the script file from\n")) + 
 					m_strURI + wxT("\nbecause of the low resources..."), 
 					wxT("Error"), wxOK | wxICON_ERROR);
-		return wxCANCEL;
+		//return wxCANCEL;
+		AbortDialog();
 	}
 
-	UpdateWindowUI();
-
-
-	// as soon as the wxWebUpdateThread has completed its work we'll receive
-	// a notification through the wxWUT_NOTIFICATION events
-	m_pSpeedText->SetLabel(wxT("Downloading update list..."));
-
-	// proceed with standard processing
-	return wxDialog::ShowModal();
+	//UpdateWindowUI();*/
 }
 
 void wxWebUpdateDlg::ShowErrorMsg(const wxString &str) const
@@ -544,7 +570,7 @@ void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 			wxString name = m_pUpdatesList->GetItemText(i);
 			
 			// init thread variables
-			m_thread->m_strOutput = m_pAdvPanel->GetDownloadPath() + dl.GetFileName();
+			//m_thread->m_strOutput = m_pAdvPanel->GetDownloadPath() + dl.GetFileName();
 			m_thread->m_strURI = dl.GetDownloadString();
 			m_thread->m_strMD5 = dl.GetMD5Checksum();
 			m_thread->m_strResName = name + wxT(" package");
@@ -581,8 +607,8 @@ void wxWebUpdateDlg::OnCancel(wxCommandEvent &)
 
 void wxWebUpdateDlg::AbortDialog()
 {
-	m_thread->Pause();
-	m_thread->Delete();
+	if (m_thread->IsRunning() || m_thread->IsPaused())
+		m_thread->Delete();
 	EndModal(wxCANCEL);
 }
 
@@ -590,6 +616,81 @@ void wxWebUpdateDlg::OnShowFilter(wxCommandEvent &)
 {
 	// hide/show items in the listctrl
 	RebuildPackageList();
+}
+
+bool m_showingDetails = TRUE;
+
+void wxWebUpdateDlg::OnShowHideAdv(wxCommandEvent &)
+{
+
+	//wxASSERT_MSG(GetSizer()->Show(p, !status, TRUE), wxT("Something wrong"));		
+	//wxBoxSizer *p = wxStaticCast(this->FindWindow(XRCID("IDWUD_ADVSIZER")), wxBoxSizer))
+	//if (!GetSizer()->Show(p, FALSE, TRUE))
+	//	int faild = 0;	
+	//bool m_showingDetails = p->IsShown();
+    wxSizer *sizer = GetSizer();	
+	wxWindow *p = FindWindowByName(wxT("IDWUD_ADVPANEL_container"), this);
+
+    if ( m_showingDetails )
+    {
+        sizer->Detach( p );		
+    }
+    else // show details now
+    {
+        sizer->Add(p, 1, wxEXPAND | (wxALL & ~wxTOP), 5);
+    }
+
+    m_showingDetails = !m_showingDetails;
+
+    // in any case, our size changed - relayout everything and set new hints
+    // ---------------------------------------------------------------------
+
+    // we have to reset min size constraints or Fit() would never reduce the
+    // dialog size when collapsing it and we have to reset max constraint
+    // because it wouldn't expand it otherwise
+
+    m_minHeight =
+    m_maxHeight = -1;
+
+    // wxSizer::FitSize() is private, otherwise we might use it directly...
+    wxSize sizeTotal = GetSize(),
+           sizeClient = GetClientSize();
+
+    wxSize size = GetSizer()->GetMinSize();
+    size.x += sizeTotal.x - sizeClient.x;
+    size.y += sizeTotal.y - sizeClient.y;
+
+    // we don't want to allow expanding the dialog in vertical direction as
+    // this would show the "hidden" details but we can resize the dialog
+    // vertically while the details are shown
+    if ( !m_showingDetails )
+        m_maxHeight = size.y;
+
+    SetSizeHints(size.x, size.y, m_maxWidth, m_maxHeight);
+
+#ifdef __WXWINCE__
+    if (m_showingDetails)
+        m_listctrl->Show();
+#endif
+
+    // don't change the width when expanding/collapsing
+    SetSize(wxDefaultCoord, size.y);
+
+
+	/*p->Hide();
+	p->Layout();
+	p->GetSizer()->RecalcSizes();*/
+/*	p->SetSize(-1, -1, 0, 0);
+	GetSizer()->RecalcSizes();
+	GetSizer()->Layout();
+	GetSizer()->SetSizeHints(this);
+	//this->SetSize(-1, -1, 0, 0);*/
+
+	wxButton *b = XRCCTRL(*this, "IDWUD_SHOWHIDEADV", wxButton);
+	if (m_showingDetails)
+		b->SetLabel(wxWUD_SHOWHIDEADV_SHOW);
+	else
+		b->SetLabel(wxWUD_SHOWHIDEADV_HIDE);
 }
 
 void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
@@ -796,6 +897,8 @@ void wxWebUpdateAdvPanel::InitWidgetsFromXRC()
 	GetSizer()->RecalcSizes();
 	GetSizer()->Fit(this);
 	GetSizer()->SetSizeHints(this);
+
+	wxSize sz = GetSize();
 }
 
 void wxWebUpdateAdvPanel::OnBrowse(wxCommandEvent &)

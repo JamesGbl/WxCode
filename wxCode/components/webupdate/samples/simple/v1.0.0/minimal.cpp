@@ -175,6 +175,10 @@ bool MyApp::OnInit()
 	wxSocketBase::Initialize() ;
 	wxFileSystem::AddHandler(new wxInternetFSHandler);	
 
+
+	
+
+
     // success: wxApp::OnRun() will be called which will enter the main message
     // loop and the application will run. If we returned false here, the
     // application would exit immediately.
@@ -200,6 +204,22 @@ MyFrame::MyFrame(const wxString& title)
 {
     // set the frame icon
     SetIcon(wxICON(mondrian));
+
+
+#if 0
+
+	wxDialog dlg(this, -1, wxT("ciao"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
+	wxBoxSizer *p = new wxBoxSizer(wxVERTICAL);
+	p->Add(new wxWebUpdateAdvPanel(&dlg), 1, wxGROW);
+	dlg.SetSizer(p);
+	p->SetSizeHints(&dlg);
+	/*wxWindow *p = new wxWebUpdateAdvPanel(&dlg);
+	dlg.SetMinSize(p->GetSize());
+	dlg.Layout();*/
+	dlg.ShowModal();
+
+#endif
+
 
 #if 1
     
@@ -361,6 +381,8 @@ void MyFrame::OnUpdateCheckWithDlg(wxCommandEvent &)
 	g_packageList[0].m_version = VERSION;
 
 	wxWebUpdateDlg dlg(this, APP_NAME, SCRIPT_LOCATION, g_packageList, 1);
+
+	dlg.Layout();
 	dlg.CenterOnScreen();
 	dlg.ShowModal();
 }

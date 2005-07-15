@@ -98,15 +98,6 @@
 <!ATTLIST latest-version importance (low|normal|high) "normal">
 
 
-<!-- LATEST-DOWNLOAD tag: contains the download location of the most updated version
-                          available in the webserver. Requires a "platform" attribute
-						  which specifies the platform targeted by this download.
-						  The "md5" attribute can be used to specify a MD5 checksum.
--->
-<!ELEMENT latest-download (#PCDATA)>
-<!ATTLIST latest-download platform (msw|gtk|mac|x11|motif|mgl|os2|any) #REQUIRED>
-<!ATTLIST latest-download md5 CDATA #IMPLIED>
-
 
 <!-- MSG-UPDATE-AVAILABLE tag: contains a text message which is displayed to the user in case
                                a new version of the package is available for its platform. 
@@ -121,3 +112,42 @@
 -->
 <!ELEMENT msg-update-notavailable (#PCDATA)>
 
+
+<!-- LATEST-DOWNLOAD tag: contains the download location of the most updated version
+                          available in the webserver. Requires a "platform" subtag
+						  which specifies the platform targeted by this download.
+						  The "md5" subtag can be used to specify a MD5 checksum.
+-->
+<!ELEMENT latest-download (uri, platform, action?, md5?)>
+
+
+
+
+<!--                                                                                -->
+<!--                     CHILDREN TAGS OF 'LATEST-DOWNLOAD'                         -->
+<!--                                                                                -->
+
+<!-- PLATFORM tag: contains the platform code for the platform which is targeted
+                   by the current download.
+-->
+<!ELEMENT platform (msw|gtk|mac|x11|motif|mgl|os2|any)>
+
+
+<!-- UDRI tag: specified the URI of the current download.
+-->
+<!ELEMENT uri (#PCDATA)>
+
+
+<!-- MD5 tag: allows the webupdate XML script writer to specify a MD5 file checksym for
+              this download.
+-->
+<!ELEMENT md5 (#PCDATA)>
+
+
+<!-- ACTION tag: allows to specify the action to take when the download is complete.
+                 'run' means that the downloaded file will simply be run through the
+				 OS shell.
+				 'install' means that one of the wxBaseInstaller-derived classes will
+				 handle the installation of the package.
+-->
+<!ELEMENT action (run|install)>

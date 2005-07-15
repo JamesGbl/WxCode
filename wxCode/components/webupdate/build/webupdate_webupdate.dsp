@@ -248,6 +248,10 @@ SOURCE=.\..\src\checkedlistctrl.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\..\src\installer.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\..\src\md5.cpp
 # End Source File
 # Begin Source File
@@ -265,6 +269,10 @@ SOURCE=.\..\src\webupdatedlg.cpp
 # Begin Source File
 
 SOURCE=.\..\include\wx\checkedlistctrl.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\..\include\wx\installer.h
 # End Source File
 # Begin Source File
 

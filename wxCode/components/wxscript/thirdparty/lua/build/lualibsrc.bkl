@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>     
+<makefile>                 
+<set var="LUALIB_SRC">            
+ 
+../src/lib/lauxlib.c 
+../src/lib/lbaselib.c 
+../src/lib/ldblib.c 
+../src/lib/liolib.c 
+../src/lib/lmathlib.c 
+../src/lib/loadlib.c 
+../src/lib/lstrlib.c 
+../src/lib/ltablib.c 
+ 
+</set>                    
+</makefile>               

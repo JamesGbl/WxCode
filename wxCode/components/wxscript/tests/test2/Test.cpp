@@ -56,7 +56,10 @@
 #ifdef __VISUALC__
 #include <conio.h>			// miscellaneous includes
 #endif
+
+#ifdef wxSCRIPT_USE_LUA
 #include <tolua.h>
+#endif
 
 #include <wx/script.h>		// our interpreter...
 #include <wx/sclua.h>		// our interpreter...
@@ -556,6 +559,11 @@ int main(int, char **)
 		wxScriptInterpreter::Cleanup();
 		return 0;
 	}
+
+#if !defined(TEST_LUA) && !defined(TEST_PYTHON) && !defined(TEST_CINT) && !defined(TEST_UNDERC)
+	wxPrintf(wxT("No script interpreter to test ?\n"));
+	return 0;
+#endif
 
 	wxPrintf(wxT(">For our tests, we are using:\n"));
 #ifdef TEST_LUA

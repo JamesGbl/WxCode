@@ -47,6 +47,11 @@
 #define wxWUD_CANCEL_DOWNLOAD			wxT("Stop download")
 #define wxWUD_CANCEL_INSTALLATION		wxT("Stop installation")
 
+
+#define wxWUD_SHOWHIDEADV_SHOW			wxT("Show advanced settings >>")
+#define wxWUD_SHOWHIDEADV_HIDE			wxT("Hide advanced settings <<")
+
+
 //! Our wxWUD_GAUGE control accepts values from zero to wxWUD_GAUGE_RANGE.
 #define wxWUD_GAUGE_RANGE				1000
 
@@ -177,7 +182,7 @@ public:		// getters
 	//! We don't need to use m_mDownloading since we are just reading 
 	//! the #m_bDownloading var...
 	bool IsDownloading() const
-		{ return m_bDownloading; }
+		{ return (IsRunning() && m_bDownloading); }
 
 	//! Returns a string containing the current download speed.
 	//! The speed is calculated using #GetCurrDownloadedBytes and #GetElapsedMSec.
@@ -275,7 +280,8 @@ protected:		// pointers to our controls
 	wxGauge *m_pGauge;
 
 	// we store advanced settings here:
-	wxWebUpdateAdvPanel *m_pAdvPanel;
+	//wxWebUpdateAdvPanel *m_pAdvPanel;
+	wxWindow *m_pAdvPanel;
 
 
 
@@ -337,7 +343,9 @@ protected:		// event handlers
 	void OnDownload(wxCommandEvent &);
 	void OnCancel(wxCommandEvent &);
 	void OnShowFilter(wxCommandEvent &);	
+	void OnShowHideAdv(wxCommandEvent &);	
 	void OnUpdateUI(wxUpdateUIEvent &);
+	void OnIdle(wxIdleEvent &);
 
 	// called by our wxWebUpdateThread....
 	void OnDownloadComplete(wxCommandEvent &);

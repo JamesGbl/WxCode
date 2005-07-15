@@ -49,14 +49,16 @@ WEBUPDATE_LIB_OBJECTS =  \
 	webupdate_lib_webupdate.o \
 	webupdate_lib_webupdatedlg.o \
 	webupdate_lib_checkedlistctrl.o \
-	webupdate_lib_md5.o
+	webupdate_lib_md5.o \
+	webupdate_lib_installer.o
 WEBUPDATE_DLL_CXXFLAGS = -I../include -DWXMAKINGDLL_WEBUPDATE $(PIC_FLAG) \
 	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 WEBUPDATE_DLL_OBJECTS =  \
 	webupdate_dll_webupdate.o \
 	webupdate_dll_webupdatedlg.o \
 	webupdate_dll_checkedlistctrl.o \
-	webupdate_dll_md5.o
+	webupdate_dll_md5.o \
+	webupdate_dll_installer.o
 SIMPLE_1_0_0_CXXFLAGS = -I../include -I../../include $(WX_CXXFLAGS) $(CPPFLAGS) \
 	$(CXXFLAGS)
 SIMPLE_1_0_0_OBJECTS =  \
@@ -175,7 +177,8 @@ uninstall:
 	$(DESTDIR)$(includedir)/wx/webupdate.h\
 	$(DESTDIR)$(includedir)/wx/webupdatedlg.h\
 	$(DESTDIR)$(includedir)/wx/checkedlistctrl.h\
-	$(DESTDIR)$(includedir)/wx/md5.h
+	$(DESTDIR)$(includedir)/wx/md5.h\
+	$(DESTDIR)$(includedir)/wx/installer.h
 	rm -f $(libdir)/*webupdate*
 
 install-strip: install
@@ -277,6 +280,9 @@ webupdate_lib_checkedlistctrl.o: $(srcdir)/../src/checkedlistctrl.cpp
 webupdate_lib_md5.o: $(srcdir)/../src/md5.cpp
 	$(CXXC) -c -o $@ $(WEBUPDATE_LIB_CXXFLAGS) $(srcdir)/../src/md5.cpp
 
+webupdate_lib_installer.o: $(srcdir)/../src/installer.cpp
+	$(CXXC) -c -o $@ $(WEBUPDATE_LIB_CXXFLAGS) $(srcdir)/../src/installer.cpp
+
 webupdate_dll_webupdate.o: $(srcdir)/../src/webupdate.cpp
 	$(CXXC) -c -o $@ $(WEBUPDATE_DLL_CXXFLAGS) $(srcdir)/../src/webupdate.cpp
 
@@ -288,6 +294,9 @@ webupdate_dll_checkedlistctrl.o: $(srcdir)/../src/checkedlistctrl.cpp
 
 webupdate_dll_md5.o: $(srcdir)/../src/md5.cpp
 	$(CXXC) -c -o $@ $(WEBUPDATE_DLL_CXXFLAGS) $(srcdir)/../src/md5.cpp
+
+webupdate_dll_installer.o: $(srcdir)/../src/installer.cpp
+	$(CXXC) -c -o $@ $(WEBUPDATE_DLL_CXXFLAGS) $(srcdir)/../src/installer.cpp
 
 simple_1_0_0_minimal.o: $(srcdir)/../samples/simple/v1.0.0/minimal.cpp
 	$(CXXC) -c -o $@ $(SIMPLE_1_0_0_CXXFLAGS) $(srcdir)/../samples/simple/v1.0.0/minimal.cpp

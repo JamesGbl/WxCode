@@ -9,10 +9,12 @@
 
 	<!-- The wxXml2 settings -->
 	<!-- =================== -->
-
+	
 	<set var="COMP_NAME">webupdate</set>
-	<set var="COMP_SRC">../src/webupdate.cpp ../src/webupdatedlg.cpp ../src/checkedlistctrl.cpp ../src/md5.cpp</set>
-	<set var="COMP_HDR">../include/wx/webupdatedef.h ../include/wx/webupdate.h ../include/wx/webupdatedlg.h ../include/wx/checkedlistctrl.h ../include/wx/md5.h</set>	
+	<set var="COMP_SRC">../src/webupdate.cpp ../src/webupdatedlg.cpp ../src/checkedlistctrl.cpp
+					../src/md5.cpp ../src/installer.cpp</set>
+	<set var="COMP_HDR">../include/wx/webupdatedef.h ../include/wx/webupdate.h ../include/wx/webupdatedlg.h 
+					../include/wx/checkedlistctrl.h ../include/wx/md5.h ../include/wx/installer.h</set>	
 	<set var="COMP_SAMPLE_SRC"/>
 	
 	<set var="COMP_SAMPLE1_SRC">../samples/simple/v1.0.0/minimal.cpp</set>
@@ -32,6 +34,7 @@
 
 	<!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->
 	<include file="$(WXCODE_BAKEFILEDIR)/wxcode.bkl"/>
+
 
 	<!-- The real target: wxcode.bkl does not declare a real target but a template called
 	     "complib". In this way modifications are allowed to the basic template. -->

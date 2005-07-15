@@ -146,7 +146,8 @@ WEBUPDATE_LIB_OBJECTS =  &
 	watcom\webupdate_lib_webupdate.obj &
 	watcom\webupdate_lib_webupdatedlg.obj &
 	watcom\webupdate_lib_checkedlistctrl.obj &
-	watcom\webupdate_lib_md5.obj
+	watcom\webupdate_lib_md5.obj &
+	watcom\webupdate_lib_installer.obj
 WEBUPDATE_DLL_CXXFLAGS = -bd $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
 	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
@@ -156,7 +157,8 @@ WEBUPDATE_DLL_OBJECTS =  &
 	watcom\webupdate_dll_webupdate.obj &
 	watcom\webupdate_dll_webupdatedlg.obj &
 	watcom\webupdate_dll_checkedlistctrl.obj &
-	watcom\webupdate_dll_md5.obj
+	watcom\webupdate_dll_md5.obj &
+	watcom\webupdate_dll_installer.obj
 SIMPLE_1_0_0_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
 	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
@@ -311,6 +313,9 @@ watcom\webupdate_lib_checkedlistctrl.obj :  .AUTODEPEND .\..\src\checkedlistctrl
 watcom\webupdate_lib_md5.obj :  .AUTODEPEND .\..\src\md5.cpp
 	$(CXX) -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
 
+watcom\webupdate_lib_installer.obj :  .AUTODEPEND .\..\src\installer.cpp
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
+
 watcom\webupdate_dll_webupdate.obj :  .AUTODEPEND .\..\src\webupdate.cpp
 	$(CXX) -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
 
@@ -321,6 +326,9 @@ watcom\webupdate_dll_checkedlistctrl.obj :  .AUTODEPEND .\..\src\checkedlistctrl
 	$(CXX) -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
 
 watcom\webupdate_dll_md5.obj :  .AUTODEPEND .\..\src\md5.cpp
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
+
+watcom\webupdate_dll_installer.obj :  .AUTODEPEND .\..\src\installer.cpp
 	$(CXX) -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
 
 watcom\simple_1_0_0_minimal.obj :  .AUTODEPEND .\..\samples\simple\v1.0.0\minimal.cpp

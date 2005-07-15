@@ -626,7 +626,7 @@ wxString wxScriptVar::GetContentString() const
 		if (m_tType.GetPointerType().GetGenericType() == wxSTG_CHAR) {
 			
 			char *pmem = (char *)m_content;
-			return LUA2WX(pmem);
+			return wxString(pmem, wxConvUTF8);
 
 		} else {
 

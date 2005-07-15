@@ -1,0 +1,155 @@
+<?xml version="1.0" ?>
+
+
+<!-- 
+                THE LUA BAKEFILE
+
+     You can use this bakefile to generate various
+     makefiles using Bakefile (http://bakefile.sourceforge.net).
+
+
+     Usage:
+         bakefile -ftheformatyoulike lua.bkl
+     then
+         mymake -fmakefile.mymakeext
+
+     To make this clearer, with MSVC you should type:
+         bakefile -fmsvc lua.bkl
+         nmake -fmakefile.vc
+
+     If you want to regenerate the makefiles for all the formats
+     supported, just type:
+
+         bakefile_gen
+-->
+     
+
+<makefile>
+
+    <!-- To update these files, run ListLuaSrc.bat -->
+    <include file="luasrc.bkl"/>
+    <include file="lualibsrc.bkl"/>
+    <include file="luaintsrc.bkl"/>
+    <include file="luacsrc.bkl"/>
+
+
+
+    <!--                                                            -->
+    <!--                        OPTIONS                             -->
+    <!--                                                            -->
+
+    <!-- BUILD determines whether or not we want to build           -->
+    <!-- in release or debug mode.  Note that in practice           -->
+    <!-- this means modifying the optimize tag, which by            -->
+    <!-- default is set to off.  In this case debug means           -->
+    <!-- off (no optimizations), and release means speed            -->
+    <!-- (fast with inlining).  There is also a size option         -->
+    <!-- that is not addressed in this example bakefile.            -->
+    <option name="BUILD">
+        <values>debug,release</values>
+        <values-description>Debug,Release</values-description>
+        <default-value>debug</default-value>
+        <description>
+            Type of compiled binaries
+        </description>
+    </option>
+
+
+
+
+    <!--                                                            -->
+    <!--                        VARIABLES                           -->
+    <!--                                                            -->
+
+    <!--    Value we will use later on for the debug-info           -->
+    <!--    tag inside our templates.                               -->
+    <set var="DEBUGINFO">
+        <if cond="BUILD=='debug'">on</if>
+        <if cond="BUILD=='release'">off</if>
+    </set>
+
+    <!--    Value we will use later on for the debug-runtime        -->
+    <!--    tag inside our templates.                               -->
+    <set var="DEBUGRUNTIME">
+        <if cond="BUILD=='debug'">on</if>
+        <if cond="BUILD=='release'">off</if>
+    </set>
+
+    <!--    Value for optimize tag.                                 -->
+    <set var="OPTIMIZEFLAG">
+        <if cond="BUILD=='debug'">off</if>
+        <if cond="BUILD=='release'">speed</if>
+    </set>
+
+    <!-- Level of warnings.  Here we max it out in debug            -->
+    <!-- mode, and turn them off in release mode.                   -->
+    <set var="WARNINGS">
+        <if cond="BUILD=='debug'">max</if>
+        <if cond="BUILD=='release'">no</if>
+    </set>
+
+
+    <!-- Define some utilities ... -->
+    <template id="luabase">
+	<include>../include</include>
+        <include>../src/</include>
+        <warnings>$(WARNINGS)</warnings>
+        <optimize>$(OPTIMIZEFLAG)</optimize>
+        <debug-info>$(DEBUGINFO)</debug-info>
+        <debug-runtime-libs>$(DEBUGRUNTIME)</debug-runtime-libs>
+    </template>
+
+
+
+
+    <!--                                                            -->
+    <!--                         TARGETS                            -->
+    <!--                                                            -->
+
+    <!-- The two LIBs: the core and the standard libs -->
+    <set var="BUILDDIR">..$(DIRSEP)lib</set>
+    <lib id="lua" template="luabase">
+        <sources>$(LUA_SRC)</sources>
+    </lib>
+    <lib id="lualib" template="luabase">
+        <sources>$(LUALIB_SRC)</sources>
+    </lib>
+
+    <dll id="luadll" template="luabase">
+        <define>LUA_SHARED</define>
+        <sources>$(LUA_SRC)</sources>
+    </dll>
+    <dll id="lualibdll" template="luabase">
+        <define>LUA_SHARED</define>
+        <sources>$(LUALIB_SRC)</sources>
+        <library>lua</library>
+    </dll>
+
+
+
+
+    <!-- The two EXEs: the interpreter and the compiler -->
+    <exe id="luaint" template="luabase">
+        <sources>$(LUAINT_SRC)</sources>
+        <library>lua</library>
+        <library>lualib</library>
+
+        <if cond="PLATFORM_WIN32=='1' and FORMAT!='msvc6prj'">
+            <postlink-command>
+                move $(BUILDDIR)\*.exe ..
+            </postlink-command>
+        </if>
+    </exe>
+    <exe id="luac" template="luabase">
+        <define>LUA_OPNAMES</define>
+        <sources>$(LUA_SRC) $(LUAC_SRC)</sources>
+        <library>lualib</library>
+
+        <if cond="PLATFORM_WIN32=='1' and FORMAT!='msvc6prj'">
+            <postlink-command>
+                move $(BUILDDIR)\*.exe ..
+            </postlink-command>
+        </if>
+    </exe>
+
+</makefile>

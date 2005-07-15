@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>     
+<makefile>                 
+<set var="LUAC_SRC">            
+ 
+../src/luac/luac.c 
+../src/luac/print.c 
+ 
+</set>                    
+</makefile>               

@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+
+<bakefile-gen>
+
+    <disable-formats>autoconf,dmars,dmars_smake,cbx_unix,cbuilderx,msevc4prj</disable-formats>
+    <input>tolua.bkl</input>
+
+    <!-- List of output formats to generate: -->
+    <add-formats>
+        autoconf,borland,dmars_smake,dmars,mingw,msvc,msvc6prj,msevc4prj,watcom,cbuilderx,cbx_unix
+    </add-formats>
+    
+</bakefile-gen>

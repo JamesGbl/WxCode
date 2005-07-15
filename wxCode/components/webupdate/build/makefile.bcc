@@ -80,7 +80,8 @@ WEBUPDATE_LIB_OBJECTS =  \
 	borland\webupdate_lib_webupdate.obj \
 	borland\webupdate_lib_webupdatedlg.obj \
 	borland\webupdate_lib_checkedlistctrl.obj \
-	borland\webupdate_lib_md5.obj
+	borland\webupdate_lib_md5.obj \
+	borland\webupdate_lib_installer.obj
 WEBUPDATE_DLL_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	-tWM $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
 	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
@@ -90,7 +91,8 @@ WEBUPDATE_DLL_OBJECTS =  \
 	borland\webupdate_dll_webupdate.obj \
 	borland\webupdate_dll_webupdatedlg.obj \
 	borland\webupdate_dll_checkedlistctrl.obj \
-	borland\webupdate_dll_md5.obj
+	borland\webupdate_dll_md5.obj \
+	borland\webupdate_dll_installer.obj
 SIMPLE_1_0_0_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	-tWM $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
 	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
@@ -295,6 +297,9 @@ borland\webupdate_lib_checkedlistctrl.obj: .\..\src\checkedlistctrl.cpp
 borland\webupdate_lib_md5.obj: .\..\src\md5.cpp
 	$(CXX) -q -c -P -o$@ $(WEBUPDATE_LIB_CXXFLAGS) $**
 
+borland\webupdate_lib_installer.obj: .\..\src\installer.cpp
+	$(CXX) -q -c -P -o$@ $(WEBUPDATE_LIB_CXXFLAGS) $**
+
 borland\webupdate_dll_webupdate.obj: .\..\src\webupdate.cpp
 	$(CXX) -q -c -P -o$@ $(WEBUPDATE_DLL_CXXFLAGS) $**
 
@@ -305,6 +310,9 @@ borland\webupdate_dll_checkedlistctrl.obj: .\..\src\checkedlistctrl.cpp
 	$(CXX) -q -c -P -o$@ $(WEBUPDATE_DLL_CXXFLAGS) $**
 
 borland\webupdate_dll_md5.obj: .\..\src\md5.cpp
+	$(CXX) -q -c -P -o$@ $(WEBUPDATE_DLL_CXXFLAGS) $**
+
+borland\webupdate_dll_installer.obj: .\..\src\installer.cpp
 	$(CXX) -q -c -P -o$@ $(WEBUPDATE_DLL_CXXFLAGS) $**
 
 borland\simple_1_0_0_minimal.obj: .\..\samples\simple\v1.0.0\minimal.cpp
