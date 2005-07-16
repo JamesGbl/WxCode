@@ -245,6 +245,7 @@
 		 "complib". In this way modifications are allowed to the basic template. -->
 	<lib id="wxscript_lib" template="complib,wxscriptbase" cond="WX_SHARED=='0'"/>
 	<dll id="wxscript_dll" template="compdll,wxscriptbase" cond="WX_SHARED=='1'">
+		<scriptlibs/>
         <wx-lib>core</wx-lib>
         <wx-lib>base</wx-lib>
 	</dll>

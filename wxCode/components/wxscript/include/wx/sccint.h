@@ -21,7 +21,7 @@
 
 
 //! An interpreted function.
-class wxScriptFunctionCINT : public wxScriptFunction
+class WXDLLIMPEXP_WXSCRIPT wxScriptFunctionCINT : public wxScriptFunction
 {
 public:
 
@@ -38,7 +38,7 @@ public:
 
 
 //! A CINT file script.
-class wxScriptFileCINT : public wxScriptFile
+class WXDLLIMPEXP_WXSCRIPT wxScriptFileCINT : public wxScriptFile
 {
 public:
 	wxScriptFileCINT() { m_tScriptFile = wxCINT_SCRIPTFILE; }
@@ -49,7 +49,7 @@ public:
 
 
 //! The CINT interpreter.
-class wxCINT : public wxScriptInterpreter
+class WXDLLIMPEXP_WXSCRIPT wxCINT : public wxScriptInterpreter
 {
 protected:
 

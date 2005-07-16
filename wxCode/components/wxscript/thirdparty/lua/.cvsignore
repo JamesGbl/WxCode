@@ -1,0 +1,17 @@
+bin
+doc
+etc
+include
+lib
+src
+test
+*.exe
+conf*
+COPYRIGHT
+DIFFS
+HISTORY
+INSTALL
+Makefile
+MANIFEST
+README
+UPDATE

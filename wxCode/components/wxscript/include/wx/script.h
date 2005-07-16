@@ -49,7 +49,9 @@
 // Includes
 // ------------------
 
-#include <wx/wx.h>
+#include "wx/string.h"
+#include "wx/dynarray.h"
+#include "wx/scdef.h"
 
 
 
@@ -126,7 +128,7 @@ enum wxScriptTypeGeneric {
 
 //! A sort of extended ENUM containing information and utilities
 //! about a interpreted type which can be chosen at runtime.
-class wxScriptTypeInfo
+class WXDLLIMPEXP_WXSCRIPT wxScriptTypeInfo
 {
 protected:
 
@@ -170,7 +172,7 @@ public:
 
 //! A variable object containing both info about its type
 //! (using wxScriptTypeInfo) and the contents of the variable.
-class wxScriptVar
+class WXDLLIMPEXP_WXSCRIPT wxScriptVar
 {
 protected:
 
@@ -292,7 +294,7 @@ public:
 
 
 //! An interpreted function.
-class wxScriptFunction
+class WXDLLIMPEXP_WXSCRIPT wxScriptFunction
 {
 protected:
 
@@ -374,7 +376,7 @@ public:
 
 
 //! An array of wxScriptFunction objects.
-class wxScriptFunctionArray
+class WXDLLIMPEXP_WXSCRIPT wxScriptFunctionArray
 {
 protected:
 
@@ -452,7 +454,7 @@ enum wxScriptFileType {
 
 
 //! A script file.
-class wxScriptFile
+class WXDLLIMPEXP_WXSCRIPT wxScriptFile
 {
 protected:
 
@@ -498,7 +500,7 @@ class wxLua;
 class wxPython;
 
 //! A singleton class that wraps all the script interpreters supported.
-class wxScriptInterpreter
+class WXDLLIMPEXP_WXSCRIPT wxScriptInterpreter
 {
 protected:		// use wxCINT::Get(), wxUnderC::Get() or wxLua::Get() to
 				// access them...

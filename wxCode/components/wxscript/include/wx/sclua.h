@@ -40,7 +40,7 @@ extern "C" {			// this wrapping is very important: Lua is a C library !!!
 
 
 //! A Lua interpreted function.
-class wxScriptFunctionLua : public wxScriptFunction
+class WXDLLIMPEXP_WXSCRIPT wxScriptFunctionLua : public wxScriptFunction
 {
 public:
 
@@ -63,7 +63,7 @@ public:
 
 
 //! A Lua file script.
-class wxScriptFileLua : public wxScriptFile
+class WXDLLIMPEXP_WXSCRIPT wxScriptFileLua : public wxScriptFile
 {
 public:
 	wxScriptFileLua(const wxString &toload = wxEmptyString) { 
@@ -80,7 +80,7 @@ public:
 
 
 //! The Lua interpreter.
-class wxLua : public wxScriptInterpreter
+class WXDLLIMPEXP_WXSCRIPT wxLua : public wxScriptInterpreter
 {
 public:
 

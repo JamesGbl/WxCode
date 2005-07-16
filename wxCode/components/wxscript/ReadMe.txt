@@ -18,7 +18,7 @@
  not only to add scripting support to its program but also to give the user
  multi-scripting languages support, learning how to use a single set of powerful classes:
  wxPython, wxLua, wxUnderC and wxCINT.
- These classes are easily extensible and they support Unicode as well.
+ These classes are easily extensible and they support Unicode and shared builds as well.
 
 
 
@@ -63,7 +63,7 @@
     UnderC and CINT instead are good for programmers (since they're C++ intepreters)
     that want to extend their application in a OOP way or that just want to use
     a familiar language.
- 2) The user of your program is not forced to learn the scripting language you choice
+ 2) The user of your program is not forced to learn the scripting language you choose
     since with wxScript you can load scripts in different languages getting the same
     results.
  3) When I started to look around for a script intepreter which suited my requirements,

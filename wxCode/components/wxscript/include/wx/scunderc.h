@@ -25,7 +25,7 @@
 
 
 //! An UnderC interpreted function.
-class wxScriptFunctionUnderC : public wxScriptFunction
+class WXDLLIMPEXP_WXSCRIPT wxScriptFunctionUnderC : public wxScriptFunction
 {
 public:
 
@@ -45,7 +45,7 @@ public:
 
 
 //! An UnderC file script.
-class wxScriptFileUnderC : public wxScriptFile
+class WXDLLIMPEXP_WXSCRIPT wxScriptFileUnderC : public wxScriptFile
 {
 public:
 	wxScriptFileUnderC(const wxString &toload = wxEmptyString) { 
@@ -61,7 +61,7 @@ public:
 
 
 //! The UnderC interpreter.
-class wxUnderC : public wxScriptInterpreter
+class WXDLLIMPEXP_WXSCRIPT wxUnderC : public wxScriptInterpreter
 {
 protected:
 	

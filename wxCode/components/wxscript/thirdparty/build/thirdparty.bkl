@@ -1,0 +1,47 @@
+<?xml version="1.0" ?>
+
+<!-- Created by: Francesco Montorsi <frm@users.sourceforge.net> 	-->
+<!-- $Id$          				-->
+
+<makefile>
+
+	<set var="WXCODE_BAKEFILEDIR">../../../../build/bakefiles</set>
+	<include file="$(WXCODE_BAKEFILEDIR)/utils.bkl"/>
+
+		
+	<!--		       TARGETS 		        -->
+	<!-- ================================== -->
+	
+    <option name="BUILD">
+        <values>debug,release</values>
+        <values-description>Debug,Release</values-description>
+        <default-value>debug</default-value>
+        <description>
+            Type of compiled binaries
+        </description>
+    </option>
+    <option name="LUADIR" category="path">
+		<default-value>..$(DIRSEP)..$(DIRSEP)lua</default-value>
+		<description>The LUA library main folder</description>
+    </option>	
+	<force-opt-presence id="BUILD"/>
+	<force-opt-presence id="LUADIR"/>
+
+	<subproject id="lua">
+		<dir>..$(DIRSEP)lua$(DIRSEP)build</dir>
+		<dependency-of>all</dependency-of>
+	</subproject>
+	
+	<subproject id="tolua">
+		<dir>..$(DIRSEP)tolua$(DIRSEP)build</dir>
+		<dependency-of>all</dependency-of>
+	</subproject>
+	
+	<action id="movelibs">
+		<dependency-of>all</dependency-of>
+		<command>move ..$(DIRSEP)lua$(DIRSEP)lib$(DIRSEP)*.lib ..$(DIRSEP)..$(DIRSEP)lib</command>
+		<command>move ..$(DIRSEP)tolua$(DIRSEP)lib$(DIRSEP)*.lib ..$(DIRSEP)..$(DIRSEP)lib</command>
+	</action>
+	
+</makefile>
+

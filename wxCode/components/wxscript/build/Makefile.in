@@ -254,7 +254,7 @@ cleandocs:
 @COND_WX_SHARED_0@	$(INSTALL_DATA) ../lib/$(LIBPREFIX)wxscript$(LIBEXT) $(DESTDIR)$(libdir)
 
 @COND_WX_SHARED_1@../lib/$(DLLPREFIX)wxscript$(__wxscript_dll___targetsuf3): $(WXSCRIPT_DLL_OBJECTS)
-@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(WXSCRIPT_DLL_OBJECTS) $(LDFLAGS) -L../lib $(__wxscript_dll___macinstnamecmd) $(__wxscript_dll___importlib) $(__wxscript_dll___soname_flags) $(__wxscript_dll___macver) $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4)  $(WX_LIBS)
+@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(WXSCRIPT_DLL_OBJECTS) $(LDFLAGS) -L../lib $(__wxscript_dll___macinstnamecmd) $(__wxscript_dll___importlib) $(__wxscript_dll___soname_flags) $(__wxscript_dll___macver) $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4)  $(WX_LIBS) $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p)
 @COND_WX_SHARED_1@	
 @COND_WX_SHARED_1@	$(__wxscript_dll___so_symlinks_cmd)
 

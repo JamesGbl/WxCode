@@ -45,7 +45,7 @@
 
 
 //! A Python interpreted function.
-class wxScriptFunctionPython : public wxScriptFunction
+class WXDLLIMPEXP_WXSCRIPT wxScriptFunctionPython : public wxScriptFunction
 {
 protected:
 
@@ -91,7 +91,7 @@ public:
 
 
 //! A wxPython file script.
-class wxScriptFilePython : public wxScriptFile
+class WXDLLIMPEXP_WXSCRIPT wxScriptFilePython : public wxScriptFile
 {
 public:
 	wxScriptFilePython(const wxString &toload = wxEmptyString) {		
@@ -107,7 +107,7 @@ public:
 
 
 //! The wxPython interpreter.
-class wxPython : public wxScriptInterpreter
+class WXDLLIMPEXP_WXSCRIPT wxPython : public wxScriptInterpreter
 {
 public:
 
