@@ -85,6 +85,7 @@
 							<border>5</border>
 							<option>0</option>
 							<object class="wxCheckBox" name="IDWUD_SHOWFILTER">
+								<checked>1</checked>
 								<label>Show only items out of date</label>								
 							</object>
 						</object>
@@ -310,6 +311,7 @@
                                     <flag>wxGROW|wxALL</flag>
                                     <border>5</border>
                                     <object class="wxTextCtrl" name="IDWUD_PASSWORD">
+										<style>wxTE_PASSWORD</style>
                                         <size>80,-1</size>
                                         <value></value>
                                     </object>
@@ -376,6 +378,7 @@
             <flag>wxALIGN_LEFT|wxALL</flag>
             <border>5</border>
             <object class="wxCheckBox" name="IDWUD_REMOVE">
+				<checked>1</checked>
                 <label>Remove downloaded files after installation</label>
             </object>
         </object>

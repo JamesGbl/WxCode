@@ -28,7 +28,7 @@ class WXDLLIMPEXP_WEBUPDATE wxBaseInstaller : public wxObject
 protected:
 
 public:
-	wxBaseInstaller(const wxString &strURL = wxEmptyString) 
+	wxBaseInstaller() 
 		{  }
 	virtual ~wxBaseInstaller() {}
 

@@ -23,26 +23,33 @@
 
 // includes
 #ifndef WX_PRECOMP
-#include <wx/log.h>
-#include <wx/textctrl.h>
-#include <wx/checkbox.h>
-#include <wx/msgdlg.h>
-#include <wx/dirdlg.h>
-#include <wx/generic/dirdlgg.h>
+	#include <wx/log.h>
+	#include <wx/textctrl.h>
+	#include <wx/checkbox.h>
+	#include <wx/msgdlg.h>
+	#include <wx/dirdlg.h>
+	#include <wx/generic/dirdlgg.h>
+	#include <wx/stattext.h>
+	#include <wx/gauge.h>
+	#include <wx/textctrl.h>
+	#include <wx/listctrl.h>
+	#include <wx/progdlg.h>
+	#include <wx/checkbox.h>
+	#include <wx/xrc/xh_all.h>
 #endif
 
 // includes
 #include "wx/webupdatedlg.h"
 #include "wx/md5.h"
 #include <wx/wfstream.h>
+#include <wx/xrc/xmlres.h>
+#include <wx/image.h>
 
 
 // wxWidgets RTTI
 IMPLEMENT_CLASS(wxWebUpdateLocalPackage, wxObject)
 IMPLEMENT_CLASS(wxWebUpdateAdvPanel, wxPanel)
 IMPLEMENT_CLASS(wxWebUpdateDlg, wxDialog)
-DEFINE_EVENT_TYPE(wxWUT_DOWNLOAD_COMPLETE);
-
 
 BEGIN_EVENT_TABLE(wxWebUpdateDlg, wxDialog)
 
@@ -58,7 +65,7 @@ BEGIN_EVENT_TABLE(wxWebUpdateDlg, wxDialog)
 	EVT_UPDATE_UI(-1, wxWebUpdateDlg::OnUpdateUI)
 
 	// download thread
-	EVT_COMMAND(-1, wxWUT_DOWNLOAD_COMPLETE, wxWebUpdateDlg::OnDownloadComplete)
+	EVT_COMMAND(-1, wxDT_DOWNLOAD_COMPLETE, wxWebUpdateDlg::OnDownloadComplete)
 
 	EVT_IDLE(wxWebUpdateDlg::OnIdle)
 
@@ -99,147 +106,6 @@ wxString wxGetSizeStr(unsigned long bytesize)
 
 
 
-
-
-// ---------------------
-// wxWEBUPDATETHREAD
-// ---------------------
-
-void *wxWebUpdateThread::Entry()
-{
-	// we'll use wxPostEvent to post this event since this is the
-	// only thread-safe way to post events !
-	wxCommandEvent updatevent(wxWUT_DOWNLOAD_COMPLETE);
-
-	// this macro avoid the repetion of a lot of code;
-	// IMPORTANT NOTE: 
-#define ABORT_DOWNLOAD() {								\
-			wxLogDebug(wxT("wxWebUpdateThread::Entry - DOWNLOAD ABORTED !!!"));		\
-			m_bSuccess = FALSE;							\
-			m_bDownloading = FALSE;						\
-			wxPostEvent(m_pHandler, updatevent);		\
-			continue;									\
-	}
-
-	m_bDownloading = TRUE;
-
-	// begin our loop
-	while (!TestDestroy()) {
-
-		if (!m_bDownloading) {
-			//wxLogDebug(wxT("wxWebUpdateThread::Entry - sleeping 1sec"));
-			wxThread::Sleep(100);
-			continue;
-		}
-
-		// reset our variables
-		m_nFinalSize = 0;
-		m_nCurrentSize = 0;
-
-		// we are starting the download of a file; update our datetime field
-		m_dtStart = wxDateTime::UNow();
-
-		wxLogDebug(wxT("wxWebUpdateThread::Entry - downloading ") + m_strURI);
-
-		// ensure we can build a wxURL from the given URI
-		wxURL u(m_strURI);
-		if (u.GetError() != wxURL_NOERR)
-			ABORT_DOWNLOAD();
-		
-		// now work on streams; wx docs says that using wxURL::GetInputStream
-		// is deprecated but this is the only way to set advanced info like
-		// proxy, user & password...
-		wxFileOutputStream out(m_strOutput);
-		wxInputStream *in = u.GetInputStream();
-		if (in == NULL)
-			ABORT_DOWNLOAD();
-		m_nFinalSize = in->GetSize();
-
-		// write the downloaded stuff in the output file
-		// without using the 
-		//          out.Write(*in);
-		// command; that would be easier but would not allow
-		// the program to stop this thread while downloading
-		// the file since the TestDestroy() function would not
-		// be called in that way...
-		char buf[wxWUT_BUF_TEMP_SIZE];
-		while (!TestDestroy() && m_bDownloading) {
-			size_t bytes_read = in->Read(buf, WXSIZEOF(buf)).LastRead();
-			if ( !bytes_read )
-				break;
-
-			if ( out.Write(buf, bytes_read).LastWrite() != bytes_read )
-				break;
-
-			// update our downloaded bytes var
-			m_nCurrentSize = out.GetSize();
-			
-#ifdef __WXDEBUG__
-			// do not send too many log messages; send a log message
-			// each 20 cycles (i.e. each 20*wxWUT_BUF_TEMP_SIZE byte downloaded)
-			if ((m_nCurrentSize % (wxWUT_BUF_TEMP_SIZE*20)) == 0)
-				wxLogDebug(wxT("wxWebUpdateThread::Entry - downloaded %d bytes"),
-						m_nCurrentSize);
-#endif
-		}
-		
-		delete in;
-		if (!out.IsOk() || out.GetSize() != m_nFinalSize)
-			ABORT_DOWNLOAD();
-		
-		wxLogDebug(wxT("wxWebUpdateThread::Entry - completed download of %d bytes"),
-						m_nCurrentSize);
-
-		// we have successfully download the file
-		m_bSuccess = TRUE;
-		m_bDownloading = FALSE;
-		wxPostEvent(m_pHandler, updatevent);
-	}
-
-	return (void*)FALSE;
-}
-
-wxString wxWebUpdateThread::GetDownloadSpeed() const
-{
-	wxASSERT(IsDownloading());
-	wxLongLong msec = GetElapsedMSec();
-	if (msec <= 0)
-		return wxT("0 KB/s");		// avoid division by zero
-
-	wxLongLong nBytesPerMilliSec = wxLongLong(GetCurrDownloadedBytes()) / msec;
-
-	// we don't like bytes per millisecond as measure unit !
-	long nKBPerSec = (nBytesPerMilliSec * 1000/1024).ToLong();		// our conversion factor 
-	return wxString::Format(wxT("%d KB/s"), nKBPerSec);
-}
-
-wxString wxWebUpdateThread::GetRemainingTime() const
-{
-	wxASSERT(IsDownloading());
-	wxLongLong sec = GetElapsedMSec()/1000;
-	if (sec <= 0)
-		return wxT("not available");		// avoid division by zero	
-
-	// remaining time is the number of bytes we still need to download
-	// divided by our download speed...
-	wxLongLong nBytesPerSec = wxLongLong(GetCurrDownloadedBytes()) / sec;
-	if (nBytesPerSec <= 0)
-		return wxT("not available");		// avoid division by zero
-	
-	long remsec = (wxLongLong(m_nFinalSize-GetCurrDownloadedBytes())/nBytesPerSec).ToLong();
-	if (remsec < 0)
-		return wxT("not available");
-
-	if (remsec < 60)
-		return wxString::Format(wxT("%d sec"), remsec);	
-	else if (remsec < 60*60)
-		return wxString::Format(wxT("%d min, %d sec"), remsec/60, remsec);	
-	else if (remsec < 60*60*24)
-		return wxString::Format(wxT("%d hours, %d min, %d sec"), 
-					remsec/3600, remsec/60, remsec);	
-	else
-		return wxT("not available");
-}
 
 
 
@@ -290,15 +156,11 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 	m_pAppNameText = XRCCTRL(*this, "IDWUD_APPNAME_TEXT", wxStaticText);
 	m_pSpeedText = XRCCTRL(*this, "IDWUD_PROGRESS_TEXT", wxStaticText);
 	m_pTimeText = XRCCTRL(*this, "IDWUD_TIME_TEXT", wxStaticText);
-	//m_pUpdatesList = XRCCTRL(*this,"IDWUD_LISTCTRL",wxListCtrl);
 	m_pGauge = XRCCTRL(*this, "IDWUD_GAUGE", wxGauge);
 
 	m_pOkBtn = XRCCTRL(*this,"IDWUD_OK", wxButton);
 	m_pCancelBtn = XRCCTRL(*this,"IDWUD_CANCEL", wxButton);
 	m_pShowHideAdvBtn = XRCCTRL(*this, "IDWUD_SHOWHIDEADV", wxButton);
-
-	wxCheckBox *p = XRCCTRL(*this,"IDWUD_SHOWFILTER", wxCheckBox);
-	p->SetValue(TRUE);
 
 
 
@@ -333,7 +195,7 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 	// init other stuff
 	// ----------------
 
-	m_thread = new wxWebUpdateThread();
+	m_thread = new wxDownloadThread();
 	m_thread->m_pHandler = this;
 
 	wxCommandEvent fake;
@@ -353,8 +215,8 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 
 int wxWebUpdateDlg::ShowModal()
 {
-	// as soon as the wxWebUpdateThread has completed its work we'll receive
-	// a notification through the wxWUT_NOTIFICATION events
+	// as soon as the wxDownloadThread has completed its work we'll receive
+	// a notification through the wxDT_NOTIFICATION events
 	m_pSpeedText->SetLabel(wxT("Downloading update list..."));
 
 	// proceed with standard processing

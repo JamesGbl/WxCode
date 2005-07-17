@@ -19,18 +19,17 @@
 
 // wxWidgets headers
 #include "wx/webupdate.h"
+#include "wx/download.h"
 #include "wx/checkedlistctrl.h"
-#include <wx/stattext.h>
-#include <wx/gauge.h>
-#include <wx/textctrl.h>
-#include <wx/image.h>
-#include <wx/filesys.h>
-#include <wx/fs_mem.h>
-#include <wx/xrc/xmlres.h>
-#include <wx/xrc/xh_all.h>
-#include <wx/listctrl.h>
-#include <wx/progdlg.h>
+#include <wx/dialog.h>
+#include <wx/panel.h>
 #include <wx/checkbox.h>
+
+// defined later
+class wxStaticText;
+class wxButton;
+class wxTextCtrl;
+class wxGauge;
 
 
 //! The prefix of the static text control which shows the remaining time.
@@ -61,15 +60,6 @@
 WXDLLIMPEXP_WEBUPDATE wxString wxGetSizeStr(unsigned long bytesize);
 
 
-// this is the even sent by a wxWebUpdateThread class to the wxEvtHandler
-// which is given it in its constructor.
-DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_WEBUPDATE, wxWUT_DOWNLOAD_COMPLETE, -1);
-
-
-#define wxWUT_BUF_TEMP_SIZE				4096
-
-
-
 
 //! A simple container of the two basic info which wxWebUpdateDlg needs to know
 //! about user *local* packages: the NAME and the local VERSION.
@@ -92,120 +82,6 @@ public:
 
 private:
 	DECLARE_CLASS(wxWebUpdateLocalPackage)
-};
-
-
-//! The thread helper which downloads the webupdate script and/or packages.
-class WXDLLIMPEXP_WEBUPDATE wxWebUpdateThread : public wxThread
-{
-protected:		// these are written by this thread and they must be only read
-				// by other classes; making them protected and exposing only
-				// getters for these vars we ensure that we do not need to use
-				// mutexes...
-
-	//! The moment in the time where the download of the current file started.
-	wxDateTime m_dtStart;
-
-	//! How much of the file has been currently downloaded.
-	unsigned long m_nCurrentSize;
-
-	//! The size of the download.
-	unsigned long m_nFinalSize;
-
-	//! This is the result state of the last download.
-	bool m_bSuccess;
-
-protected:		// these are vars protected by mutexes...
-
-	//! TRUE if we are downloading in this moment.
-	//! The value of this variable is independent from the current thread status
-	//! (i.e. when the thread is running this var can be set to FALSE because we
-	//!  have already completed our download)...
-	bool m_bDownloading;
-
-	//! The mutex over the #m_bDownloading var.
-	wxMutex m_mDownloading;
-
-public:		// to avoid setters/getters (these vars are only read by this thread;
-			// they are never written and so they are not protected with mutexes).
-
-	//! The wxEvtHandler which will receive our wxWUT_NOTIFICATION events.
-	wxEvtHandler *m_pHandler;
-
-public:		// related to current download
-
-	//! The URI of the resource this thread will download.
-	wxString m_strURI;
-
-	//! The name of the file where the downloaded file will be saved.
-	wxString m_strOutput;
-
-	//! The name of the resource we are downloading.
-	//! This is used by wxWebUpdateDlg only for error messages.
-	wxString m_strResName;
-
-	//! The MD5 file checksum.
-	//! This is used by wxWebUpdateDlg only for error messages.
-	wxString m_strMD5;
-
-public:
-	wxWebUpdateThread(wxEvtHandler *dlg = NULL, 
-		const wxString &uri = wxEmptyString, 
-		const wxString &outfile = wxEmptyString,
-		const wxString &resname = wxEmptyString)
-		: wxThread(wxTHREAD_JOINABLE), m_pHandler(dlg), m_strURI(uri), 
-		  m_strOutput(outfile), m_strResName(resname)
-		{ m_bSuccess=FALSE; m_dtStart = wxDateTime::UNow(); }
-	virtual ~wxWebUpdateThread() {}
-
-    //! Downloads the file and then sends the wxWUT_NOTIFICATION event
-	//! to the #m_pHandler event handler.
-	//! Also sets the #m_bSuccess flag before exiting.
-    virtual void *Entry();
-
-public:		// getters
-
-	//! Returns TRUE if the last download was successful.
-	bool DownloadWasSuccessful() const		
-		{ return m_bSuccess; }
-
-	//! Returns the number of milliseconds elapsed from the start of the
-	//! current download.
-	wxLongLong GetElapsedMSec() const
-		{ wxTimeSpan t = wxDateTime::UNow() - m_dtStart; return t.GetMilliseconds(); }
-
-	//! Returns the number of bytes currently downloaded.
-	unsigned long GetCurrDownloadedBytes() const
-		{ return m_nCurrentSize; }
-
-	//! Returns TRUE if this thread is downloading a file.
-	//! We don't need to use m_mDownloading since we are just reading 
-	//! the #m_bDownloading var...
-	bool IsDownloading() const
-		{ return (IsRunning() && m_bDownloading); }
-
-	//! Returns a string containing the current download speed.
-	//! The speed is calculated using #GetCurrDownloadedBytes and #GetElapsedMSec.
-	virtual wxString GetDownloadSpeed() const;
-
-	//! Returns a string containing the current time left for this download.
-	virtual wxString GetRemainingTime() const;
-
-public:		// miscellaneous
-
-	//! This function must be called only when the thread is not running and 
-	void BeginNewDownload() {
-		wxASSERT(!IsDownloading());
-		wxMutexLocker lock(m_mDownloading);
-		m_bDownloading = TRUE;
-	}
-
-	//! Aborts the current download.
-	void AbortDownload() {
-		wxASSERT(IsDownloading());
-		wxMutexLocker lock(m_mDownloading);
-		m_bDownloading = FALSE;
-	}
 };
 
 
@@ -294,7 +170,7 @@ protected:		// other member variables
 	//! that is, it's set to TRUE when we are downloading the XML script.
 	bool m_bDownloadingScript;
 
-	//! TRUE if we intentionally called wxWebUpdateThread::AbortDownload
+	//! TRUE if we intentionally called wxDownloadThread::AbortDownload
 	//! because user asked us to do so.
 	bool m_bUserAborted;
 
@@ -314,7 +190,7 @@ protected:		// other member variables
 	wxString m_strAppName;
 
 	//! The threadhelper we use to download the webupdate script & packages.	
-	wxWebUpdateThread *m_thread;
+	wxDownloadThread *m_thread;
 
 protected:
 
@@ -333,7 +209,7 @@ protected:
 	void RebuildPackageList();
 
 	//! Call this function instead of EndModal(wxCANCEL) to abort this dialog.
-	//! This function takes care of our wxWebUpdateThread, infact.
+	//! This function takes care of our wxDownloadThread, infact.
 	void AbortDialog();
 
 	//! Shows or hides the child window with the given name and then returns
@@ -350,7 +226,7 @@ protected:		// event handlers
 	void OnUpdateUI(wxUpdateUIEvent &);
 	void OnIdle(wxIdleEvent &);
 
-	// called by our wxWebUpdateThread....
+	// called by our wxDownloadThread....
 	void OnDownloadComplete(wxCommandEvent &);
 
 public:
