@@ -36,7 +36,7 @@ DEFINE_EVENT_TYPE(wxDT_DOWNLOAD_COMPLETE);
 
 
 // ---------------------
-// wxDownloadThread
+// wxDOWNLOADTHREAD
 // ---------------------
 
 void *wxDownloadThread::Entry()
@@ -79,6 +79,12 @@ void *wxDownloadThread::Entry()
 		wxURL u(m_strURI);
 		if (u.GetError() != wxURL_NOERR)
 			ABORT_DOWNLOAD();
+
+		// set advanced URL options
+		if (!m_strProxyHostname.IsEmpty() && !m_strProxyPort.IsEmpty())
+			u.SetProxy(m_strProxyHostname + wxT(":") + m_strProxyPort);
+		u.GetProtocol().SetUser(m_strHTTPAuthUsername);
+		u.GetProtocol().SetPassword(m_strHTTPAuthPassword);
 		
 		// now work on streams; wx docs says that using wxURL::GetInputStream
 		// is deprecated but this is the only way to set advanced info like

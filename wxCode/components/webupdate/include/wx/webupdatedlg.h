@@ -115,12 +115,20 @@ public:
 		{}
 
 
-	//! Returns the proxy name host.
+	// proxy stuff
 	wxString GetProxyHostName() const
 		{ return m_pProxyHostname->GetValue(); } 
 	wxString GetProxyPortNumber() const
 		{ return m_pProxyPortNumber->GetValue(); } 
 
+	// HTTP authentication stuff
+	wxString GetUsername() const
+		{ return m_pUsername->GetValue(); } 
+	wxString GetPassword() const
+		{ return m_pPassword->GetValue(); } 
+
+	//! Returns the path chosen by the user for the downloaded file.
+	//! This one is initialized to the temporary folder for the current user.
 	wxString GetDownloadPath() const
 		{ return m_pDownloadPathTextCtrl->GetValue(); } 
 

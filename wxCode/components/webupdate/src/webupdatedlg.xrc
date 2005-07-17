@@ -59,11 +59,11 @@
         <object class="sizeritem">
             <flag>wxALL|wxGROW</flag>
             <border>5</border>
-			<option>3</option>
+			<option>6</option>
             <object class="wxBoxSizer">
                 <orient>wxHORIZONTAL</orient>
 				
-				<!-- and the listctrl on the left -->
+				<!-- the listctrl on the left -->
 				<object class="sizeritem">
 					<flag>wxGROW</flag>					
 					<option>10</option>
@@ -168,10 +168,22 @@
             </object>
         </object> 
 
+
+				<object class="spacer">
+					<flag>wxGROW</flag>
+					<border>5</border>
+					<option>0</option>
+					<size>10,10</size>
+				</object>
+
+
 		<object class="sizeritem">
 			<flag>wxGROW</flag>
-			<border>5</border>
-			<option>4</option>
+			<border>10</border>
+			
+			<!-- this is very important since it determines the portion of the wxWebUpdateAdvPanel which
+				can be shown -->
+			<option>8</option>
 					
 			<!-- OUR SECOND UNKNOWN CONTROL: be careful that this control is inside the first sizer of the
 				 dialog or the "Show/hide adv panel" button won't work !! -->
@@ -189,7 +201,7 @@
         <object class="sizeritem">
             <flag>wxGROW|wxALL</flag>
             <border>5</border>
-			<option>1</option>
+			<option>2</option>
             <object class="wxBoxSizer">
                 <orient>wxHORIZONTAL</orient>
 				<object class="spacer">
@@ -227,7 +239,7 @@
 	<style></style>
     <object class="wxBoxSizer">
         <orient>wxVERTICAL</orient>
-		
+
         <object class="sizeritem">
 			<option>0</option>
             <flag>wxGROW|wxALL</flag>
@@ -237,7 +249,7 @@
                 <object class="sizeritem">
                     <flag>wxALIGN_CENTER_VERTICAL|wxRIGHT|wxBOTTOM</flag>
                     <border>5</border>
-                    <object class="wxStaticText" name="IDWUD_TEXT1">
+                    <object class="wxStaticText" name="IDWUAP_TEXT1">
                         <label>The downloaded files will be saved in:</label>
                     </object>
 					<option>0</option>
@@ -245,7 +257,7 @@
                 <object class="sizeritem">
                     <flag>wxALIGN_CENTER_VERTICAL|wxGROW|wxRIGHT|wxBOTTOM</flag>
                     <border>5</border>
-                    <object class="wxTextCtrl" name="IDWUD_DOWNLOAD_PATH">
+                    <object class="wxTextCtrl" name="IDWUAP_DOWNLOAD_PATH">
                         <value>c:\\temp</value>
                     </object>
 					<option>5</option>
@@ -253,7 +265,7 @@
                 <object class="sizeritem">
                     <flag>wxALIGN_CENTER_VERTICAL|wxBOTTOM</flag>
                     <border>5</border>
-                    <object class="wxButton" name="IDWUD_BROWSE">
+                    <object class="wxButton" name="IDWUAP_BROWSE">
                         <label>Browse</label>
                     </object>
 					<option>0</option>
@@ -277,8 +289,19 @@
                     <object class="wxStaticBoxSizer">
                         <orient>wxVERTICAL</orient>
                         <label>Authentication settings</label>
+
+						<!--
                         <object class="sizeritem">
-                            <flag>wxGROW|wxALL</flag>
+                            <flag>wxALIGN_LEFT|wxALL</flag>
+                            <border>5</border>
+                            <object class="wxStaticText" name="IDWUAP_TEXT2">
+                                <label>Leave empty if not required.</label>
+                            </object>
+                        </object>
+						-->
+
+                        <object class="sizeritem">
+                            <flag>wxALIGN_CENTER|wxGROW</flag>
                             <border>5</border>
                             <object class="wxGridSizer">
                                 <cols>2</cols>
@@ -288,14 +311,14 @@
                                 <object class="sizeritem">
                                     <flag>wxALIGN_CENTER|wxALL</flag>
                                     <border>5</border>
-                                    <object class="wxStaticText" name="ID_TEXT">
+                                    <object class="wxStaticText" name="IDWUAP_TEXT3">
                                         <label>Username:</label>
                                     </object>
                                 </object>
                                 <object class="sizeritem">
                                     <flag>wxGROW|wxALL</flag>
                                     <border>5</border>
-                                    <object class="wxTextCtrl" name="IDWUD_USERNAME">
+                                    <object class="wxTextCtrl" name="IDWUAP_USERNAME">
                                         <size>80,-1</size>
                                         <value></value>
                                     </object>
@@ -303,14 +326,14 @@
                                 <object class="sizeritem">
                                     <flag>wxALIGN_CENTER|wxALL</flag>
                                     <border>5</border>
-                                    <object class="wxStaticText" name="ID_TEXT">
+                                    <object class="wxStaticText" name="IDWUAP_TEXT4">
                                         <label>Password:</label>
                                     </object>
                                 </object>
                                 <object class="sizeritem">
                                     <flag>wxGROW|wxALL</flag>
                                     <border>5</border>
-                                    <object class="wxTextCtrl" name="IDWUD_PASSWORD">
+                                    <object class="wxTextCtrl" name="IDWUAP_PASSWORD">
 										<style>wxTE_PASSWORD</style>
                                         <size>80,-1</size>
                                         <value></value>
@@ -330,9 +353,21 @@
                     <object class="wxStaticBoxSizer">
                         <orient>wxVERTICAL</orient>
                         <label>Proxy settings</label>
-                        <object class="sizeritem">
-                            <flag>wxALIGN_CENTER|wxALL</flag>
+                        
+						<!--
+						<object class="sizeritem">
+                            <flag>wxALIGN_LEFT|wxALL</flag>
                             <border>5</border>
+                            <object class="wxStaticText" name="IDWUAP_TEXT5">
+                                <label>Leave empty if not required.</label>
+                            </object>
+                        </object>
+						-->	
+								
+						<object class="sizeritem">
+                            <flag>wxALIGN_CENTER|wxGROW</flag>
+                            <border>5</border>
+								
                             <object class="wxGridSizer">
                                 <cols>2</cols>
                                 <rows>0</rows>
@@ -341,14 +376,14 @@
                                 <object class="sizeritem">
                                     <flag>wxALIGN_CENTER|wxALL</flag>
                                     <border>5</border>
-                                    <object class="wxStaticText" name="ID_TEXT">
+                                    <object class="wxStaticText" name="IDWUAP_TEXT6">
                                         <label>Proxy hostname:</label>
                                     </object>
                                 </object>
                                 <object class="sizeritem">
                                     <flag>wxGROW|wxALL</flag>
                                     <border>5</border>
-                                    <object class="wxTextCtrl" name="IDWUD_HOSTNAME">
+                                    <object class="wxTextCtrl" name="IDWUAP_HOSTNAME">
                                         <size>80,-1</size>
                                         <value></value>
                                     </object>
@@ -356,14 +391,14 @@
                                 <object class="sizeritem">
                                     <flag>wxALIGN_CENTER|wxALL</flag>
                                     <border>5</border>
-                                    <object class="wxStaticText" name="ID_TEXT">
+                                    <object class="wxStaticText" name="IDWUAP_TEXT7">
                                         <label>Port number:</label>
                                     </object>
                                 </object>
                                 <object class="sizeritem">
                                     <flag>wxGROW|wxALL</flag>
                                     <border>5</border>
-                                    <object class="wxTextCtrl" name="IDWUD_PORTNUMBER">
+                                    <object class="wxTextCtrl" name="IDWUAP_PORTNUMBER">
                                         <size>80,-1</size>
                                         <value></value>
                                     </object>
@@ -377,7 +412,7 @@
         <object class="sizeritem">
             <flag>wxALIGN_LEFT|wxALL</flag>
             <border>5</border>
-            <object class="wxCheckBox" name="IDWUD_REMOVE">
+            <object class="wxCheckBox" name="IDWUAP_REMOVE">
 				<checked>1</checked>
                 <label>Remove downloaded files after installation</label>
             </object>

@@ -225,9 +225,9 @@ int wxWebUpdateDlg::ShowModal()
 
 void wxWebUpdateDlg::OnIdle(wxIdleEvent &)
 {
-	if (m_xmlScript.IsOk())
+	if (m_xmlScript.IsOk() || m_thread->IsRunning())
 		return;
-/*
+
 	// set our thread helper as a downloader for the XML update scriptf
 	m_thread->m_strURI = m_strURI;
 	m_thread->m_strResName = wxT("XML WebUpdate script");
@@ -247,7 +247,7 @@ void wxWebUpdateDlg::OnIdle(wxIdleEvent &)
 		AbortDialog();
 	}
 
-	//UpdateWindowUI();*/
+	//UpdateWindowUI();
 }
 
 void wxWebUpdateDlg::ShowErrorMsg(const wxString &str) const
@@ -409,6 +409,34 @@ void wxWebUpdateDlg::RebuildPackageList()
 	}
 }
 
+void wxWebUpdateDlg::AbortDialog()
+{
+	if (m_thread->IsPaused())
+		m_thread->Run();		// we need the thread running if we want to delete it !
+	if (m_thread->IsRunning())
+		m_thread->Delete();
+	EndModal(wxCANCEL);
+}
+
+wxWindow *wxWebUpdateDlg::ShowHideChild(const wxString &name)
+{
+	wxWindow *p = FindWindowByName(name, this);
+	if (!p) return NULL;
+
+	// now, modify the sizer which contain that window
+	wxSizer *sizer = p->GetContainingSizer();
+	wxSizerItem *item = sizer->GetItem(p);
+	if (!item) return NULL;
+
+	// invert the show state
+    if (p->IsShown())
+		item->Show(FALSE);
+    else
+		item->Show(TRUE);
+	return p;
+}
+
+
 
 // event handlers
 
@@ -426,10 +454,16 @@ void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 			wxString name = m_pUpdatesList->GetItemText(i);
 			
 			// init thread variables
-			//m_thread->m_strOutput = m_pAdvPanel->GetDownloadPath() + dl.GetFileName();
+			m_thread->m_strOutput = m_pAdvPanel->GetDownloadPath() + dl.GetFileName();
 			m_thread->m_strURI = dl.GetDownloadString();
 			m_thread->m_strMD5 = dl.GetMD5Checksum();
 			m_thread->m_strResName = name + wxT(" package");
+
+			// advanced options
+			m_thread->m_strHTTPAuthUsername = m_pAdvPanel->GetUsername();
+			m_thread->m_strHTTPAuthPassword = m_pAdvPanel->GetPassword();
+			m_thread->m_strProxyPort = m_pAdvPanel->GetProxyPortNumber();
+			m_thread->m_strProxyHostname = m_pAdvPanel->GetProxyHostName();
 
 			// reset the gauge GUI
 			m_pGauge->SetRange(dl.GetDownloadSize());
@@ -461,35 +495,10 @@ void wxWebUpdateDlg::OnCancel(wxCommandEvent &)
 	AbortDialog();
 }
 
-void wxWebUpdateDlg::AbortDialog()
-{
-	if (m_thread->IsRunning() || m_thread->IsPaused())
-		m_thread->Delete();
-	EndModal(wxCANCEL);
-}
-
 void wxWebUpdateDlg::OnShowFilter(wxCommandEvent &)
 {
 	// hide/show items in the listctrl
 	RebuildPackageList();
-}
-
-wxWindow *wxWebUpdateDlg::ShowHideChild(const wxString &name)
-{
-	wxWindow *p = FindWindowByName(name, this);
-	if (!p) return NULL;
-
-	// now, modify the sizer which contain that window
-	wxSizer *sizer = p->GetContainingSizer();
-	wxSizerItem *item = sizer->GetItem(p);
-	if (!item) return NULL;
-
-	// invert the show state
-    if (p->IsShown())
-		item->Show(FALSE);
-    else
-		item->Show(TRUE);
-	return p;
 }
 
 void wxWebUpdateDlg::OnShowHideAdv(wxCommandEvent &)
@@ -575,7 +584,7 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 	}
 
 	// remove the temporary files...
-	bool donotremove = FALSE;
+	bool donotremove = m_pAdvPanel->RemoveFiles();
 	if (forceremove || !donotremove) {		// XML webupdate script is always removed
 		wxLogDebug(wxT("wxWebUpdateDlg::OnDownloadComplete - ")
 			wxT("Removing the downloaded file: ") + m_thread->m_strOutput);
@@ -682,12 +691,12 @@ void wxWebUpdateAdvPanel::InitWidgetsFromXRC()
 	// init control pointers
 	// ---------------------
 
-	m_pDownloadPathTextCtrl = XRCCTRL(*this, "IDWUD_DOWNLOAD_PATH", wxTextCtrl);
-	m_pProxyHostname = XRCCTRL(*this, "IDWUD_HOSTNAME", wxTextCtrl);
-	m_pProxyPortNumber = XRCCTRL(*this, "IDWUD_PORTNUMBER", wxTextCtrl);
-	m_pUsername = XRCCTRL(*this, "IDWUD_USERNAME", wxTextCtrl);
-	m_pPassword = XRCCTRL(*this, "IDWUD_PASSWORD", wxTextCtrl);
-	m_pRemoveFiles = XRCCTRL(*this, "IDWUD_REMOVE", wxCheckBox);
+	m_pDownloadPathTextCtrl = XRCCTRL(*this, "IDWUAP_DOWNLOAD_PATH", wxTextCtrl);
+	m_pProxyHostname = XRCCTRL(*this, "IDWUAP_HOSTNAME", wxTextCtrl);
+	m_pProxyPortNumber = XRCCTRL(*this, "IDWUAP_PORTNUMBER", wxTextCtrl);
+	m_pUsername = XRCCTRL(*this, "IDWUAP_USERNAME", wxTextCtrl);
+	m_pPassword = XRCCTRL(*this, "IDWUAP_PASSWORD", wxTextCtrl);
+	m_pRemoveFiles = XRCCTRL(*this, "IDWUAP_REMOVE", wxCheckBox);
 
 
 
@@ -698,8 +707,6 @@ void wxWebUpdateAdvPanel::InitWidgetsFromXRC()
 	wxFileName str(wxFileName::CreateTempFileName(wxEmptyString, NULL));
 	str.SetFullName(wxEmptyString);		// remove the filename and keep only the path
 	m_pDownloadPathTextCtrl->SetValue(str.GetLongPath());
-
-
 
 
 
@@ -714,11 +721,8 @@ void wxWebUpdateAdvPanel::InitWidgetsFromXRC()
 
 	// we have changed the appname statictext control so maybe we need
 	// to expand our dialog... force a layout recalculation
-	GetSizer()->RecalcSizes();
 	GetSizer()->Fit(this);
 	GetSizer()->SetSizeHints(this);
-
-	wxSize sz = GetSize();
 }
 
 void wxWebUpdateAdvPanel::OnBrowse(wxCommandEvent &)

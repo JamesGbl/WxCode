@@ -35,6 +35,11 @@ DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_WEBUPDATE, wxDT_DOWNLOAD_COMPLETE, -1);
 
 
 //! The thread helper which downloads the webupdate script and/or packages.
+//! This class is generic and can be used to download anything you need
+//! from any URL.
+//! It already provides some useful functions like #GetDownloadSpeed() and
+//! #GetRemainingTime() which helps you to create dialogs with progress bars
+//! and/or time indicators.
 class WXDLLIMPEXP_WEBUPDATE wxDownloadThread : public wxThread
 {
 protected:		// these are written by this thread and they must be only read
@@ -86,6 +91,24 @@ public:		// related to current download
 	//! The MD5 file checksum.
 	//! This is used by wxWebUpdateDlg only for error messages.
 	wxString m_strMD5;
+
+public:		// advanced options
+
+	//! The username used to get the current file.
+	//! HTTP Basic authentication is enabled only when this var is not empty.
+	wxString m_strHTTPAuthUsername;
+
+	//! The password used to get the current file.
+	//! HTTP Basic authentication is enabled only when this var is not empty.
+	wxString m_strHTTPAuthPassword;
+
+
+	//! The hostname of the proxy server.
+	wxString m_strProxyHostname;
+
+	//! The port number of the proxy server.
+	wxString m_strProxyPort;
+
 
 public:
 	wxDownloadThread(wxEvtHandler *dlg = NULL, 
