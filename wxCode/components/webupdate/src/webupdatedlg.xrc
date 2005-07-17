@@ -2,6 +2,9 @@
 
 <!-- $Id$ -->
 <resource>
+
+
+<!-- the dialog of the WebUpdate component -->
 <object class="wxDialog" name="wxWebUpdateDlg">
 	<style>wxRESIZE_BORDER|wxCAPTION|wxCLOSE_BOX|wxSYSTEM_MENU</style>
     <title>Update</title>
@@ -164,25 +167,14 @@
             </object>
         </object> 
 
-        <object class="sizeritem">
-            <flag>wxGROW|wxALL</flag>
-            <border>5</border>
-			<option>1</option>
-			
-            <object class="wxBoxSizer" name="IDWUD_ADVSIZER">
-                <orient>wxHORIZONTAL</orient>
-
-				<object class="sizeritem">
-					<flag>wxGROW|wxADJUST_MINSIZE</flag>
-					<border>5</border>
-					<option>1</option>
+		<object class="sizeritem">
+			<flag>wxGROW</flag>
+			<border>5</border>
+			<option>4</option>
 					
-					
-					<!-- OUR SECOND UNKNOWN CONTROL -->
-					<object class="unknown" name="IDWUD_ADVPANEL">						
-					</object>
-				</object>
-			</object>		
+			<!-- OUR SECOND UNKNOWN CONTROL: be careful that this control is inside the first sizer of the
+				 dialog or the "Show/hide adv panel" button won't work !! -->
+			<object class="unknown" name="IDWUD_ADVPANEL"/>
 		</object>
 
         <object class="sizeritem">
@@ -228,6 +220,8 @@
 	</object> 
 </object>
 
+
+<!-- the panel containing the advanced options -->
 <object class="wxPanel" name="wxWebUpdateAdvPanel">
 	<style></style>
     <object class="wxBoxSizer">

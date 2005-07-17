@@ -19,6 +19,7 @@
 
 // wxWidgets headers
 #include "wx/webupdatedef.h"
+#include "wx/installer.h"
 #include "wx/xml/xml.h"
 #include "wx/url.h"
 
@@ -26,7 +27,7 @@
 //! A global wxWebUpdateDownload variable which contains empty (and thus invalid)
 //! settings.
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDownload;		// defined later
-extern wxWebUpdateDownload wxEmptyWebUpdateDownload;
+extern WXDLLIMPEXP_DATA_WEBUPDATE(wxWebUpdateDownload) wxEmptyWebUpdateDownload;
 
 
 //! The possible values of the "platform" attribute of the
@@ -120,6 +121,8 @@ public:
 		{ SetPlatform(plat); m_size=1; }
 
     virtual ~wxWebUpdateDownload() {}
+
+public:		// miscellaneous
     
 	//! Returns TRUE if this package was correctly initialized.
     bool IsOk() const
@@ -139,8 +142,17 @@ public:
 	//! NOTE: the first call is quite slow !
 	virtual unsigned long GetDownloadSize(bool forceRecalc = FALSE);
 
-	//! Returns the filename for this update (it is extracted from the download URL).
+	//! Returns the filename of the resource pointed by the current URL
+	//! (thus the returned name is extracted from the download URL).
 	virtual wxString GetFileName() const;
+
+public:		// main functions
+
+	//! Downloads this package from the embedded URL.
+	//virtual bool Download();
+
+	//! Installs this download using the specified wxBaseInstaller-derived class.
+	//virtual bool Install(wxBaseInstaller &) const;
     
 public:		// static platform utilities
 
@@ -188,12 +200,7 @@ public:     // getters
 
 	wxString GetMD5Checksum() const
 		{ return m_strMD5; }
-/*
-public:		// operators
 
-	wxWebUpdateDownload &operator=(const wxWebUpdateDownload &tocopy)
-		{ m_platform = tocopy.m_platform; m_urlDownload = tocopy.m_urlDownload; return *this; }
-*/
 private:
 	DECLARE_CLASS(wxWebUpdateDownload)
 };

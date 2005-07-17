@@ -4,20 +4,40 @@
 
 <webupdate>
    <requires>1.0</requires>
-	 
+
+
+   <!-- our CORE package: we use this to deliver the sample binaries -->
    <package id="core">
       <latest-version importance="normal">2.0.3</latest-version>
-      <latest-download platform="msw" md5="42e898d5f7d5bc1b359c80f02706d01e">http://easynews.dl.sourceforge.net/sourceforge/mathstudio/MathStudio-0.7.2.msi</latest-download>
-      <latest-download platform="gtk">http://wxcode.sourceforge.net/components/webupdate/myapp.tar.gz</latest-download>
+
+      <latest-download>
+			<platform>msw</platform>
+			<md5>42e898d5f7d5bc1b359c80f02706d01e</md5>
+			<uri>http://easynews.dl.sourceforge.net/sourceforge/mathstudio/MathStudio-0.7.2.msi</uri>
+	  </latest-download>
+      <latest-download>
+			<platform>gtk</platform>			
+			<uri>http://wxcode.sourceforge.net/components/webupdate/myapp.tar.gz</uri>
+	  </latest-download>
+
 
       <msg-update-available>The new $(id) $(latest-version) is available for download;
 			it has several bugfixes and security improvements !</msg-update-available>
       <msg-update-notavailable>You have the most updated version of $(id)...</msg-update-notavailable>
 
    </package>
+   
+   
+   
+   <!-- our ADDON package -->
    <package id="addon">
-      <latest-version importance="low">1.2.3</latest-version>
-      <latest-download platform="any" md5="42e898d5f7d5bc1b359c80f02706d01e">http://easynews.dl.sourceforge.net/sourceforge/mathstudio/MathStudio-0.7.2.msi</latest-download>      
+      <latest-version importance="low">1.2.3</latest-version>      
+
+	  <!-- a single download for all platforms -->
+      <latest-download>
+			<platform>any</platform>			
+			<uri>http://wxcode.sourceforge.net/components/webupdate/myapp.tar.gz</uri>
+	  </latest-download>
    </package>
 
 </webupdate>

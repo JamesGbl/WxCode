@@ -147,7 +147,8 @@ WEBUPDATE_LIB_OBJECTS =  &
 	watcom\webupdate_lib_webupdatedlg.obj &
 	watcom\webupdate_lib_checkedlistctrl.obj &
 	watcom\webupdate_lib_md5.obj &
-	watcom\webupdate_lib_installer.obj
+	watcom\webupdate_lib_installer.obj &
+	watcom\webupdate_lib_download.obj
 WEBUPDATE_DLL_CXXFLAGS = -bd $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
 	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
@@ -158,7 +159,8 @@ WEBUPDATE_DLL_OBJECTS =  &
 	watcom\webupdate_dll_webupdatedlg.obj &
 	watcom\webupdate_dll_checkedlistctrl.obj &
 	watcom\webupdate_dll_md5.obj &
-	watcom\webupdate_dll_installer.obj
+	watcom\webupdate_dll_installer.obj &
+	watcom\webupdate_dll_download.obj
 SIMPLE_1_0_0_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
 	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
@@ -215,18 +217,37 @@ zip :
 	-cd ..
 	-zip -r9 ..\webupdate.zip *  -x *.pdb -x *.log -x *.o*
 
-cleanbuilddirs :  
-	-if exist msvc rmdir /S /Q msvc
-	-if exist watcom rmdir /S /Q watcom
-	-if exist borland rmdir /S /Q borland
-	-if exist mingw rmdir /S /Q mingw
-	-if exist msvc6prj rmdir /S /Q msvc6prj
-
-cleanall :  clean cleanbuilddirs
-	del /S /Q ..\*.log >NUL
-	del /S /Q ..\*.lib >NUL
-	del /S /Q ..\*.a >NUL
-	del /S /Q ..\*.exe >NUL
+deepclean :  
+	-del /S ..\*.a
+	-del /S ..\*.lib
+	-del /S ..\*.pdb
+	-del /S ..\*.dll
+	-del /S ..\*.exp
+	-del /S ..\*.so*
+	-del /S ..\*.exe
+	-del /S ..\*.obj
+	-del /S ..\*.o
+	-del /S ..\*.log
+	-del /S ..\*.manifest*
+	-del /S ..\*.log
+	-del /S ..\.bakefile_gen.state
+	-del /S ..\*.pch
+	-del /S ..\*.ncb
+	-del /S ..\*.plg
+	-del /S ..\*.ncb
+	-del /S ..\*.aps
+	-del /S ..\*.suo
+	-del /S ..\*.user
+	-del /S ..\*.il?
+	-del /S ..\*.tds
+	-del /S ..\*.idb
+	-del /S ..\*.map
+	-if exist ..\autom4te.cache rmdir /S /Q ..\autom4te.cache
+	-if exist ..\.deps rmdir /S /Q ..\.deps
+	-del /S ..\config.status
+	-del /S ..\config.log
+	-del /S ..\Makefile
+	-del /S ..\bk-deps
 
 docs :  
 	-cd ..\docs
@@ -316,6 +337,9 @@ watcom\webupdate_lib_md5.obj :  .AUTODEPEND .\..\src\md5.cpp
 watcom\webupdate_lib_installer.obj :  .AUTODEPEND .\..\src\installer.cpp
 	$(CXX) -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
 
+watcom\webupdate_lib_download.obj :  .AUTODEPEND .\..\src\download.cpp
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
+
 watcom\webupdate_dll_webupdate.obj :  .AUTODEPEND .\..\src\webupdate.cpp
 	$(CXX) -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
 
@@ -329,6 +353,9 @@ watcom\webupdate_dll_md5.obj :  .AUTODEPEND .\..\src\md5.cpp
 	$(CXX) -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
 
 watcom\webupdate_dll_installer.obj :  .AUTODEPEND .\..\src\installer.cpp
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
+
+watcom\webupdate_dll_download.obj :  .AUTODEPEND .\..\src\download.cpp
 	$(CXX) -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
 
 watcom\simple_1_0_0_minimal.obj :  .AUTODEPEND .\..\samples\simple\v1.0.0\minimal.cpp

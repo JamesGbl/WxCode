@@ -63,7 +63,7 @@ WXDLLIMPEXP_WEBUPDATE wxString wxGetSizeStr(unsigned long bytesize);
 
 // this is the even sent by a wxWebUpdateThread class to the wxEvtHandler
 // which is given it in its constructor.
-DECLARE_EVENT_TYPE(wxWUT_DOWNLOAD_COMPLETE, -1);
+DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_WEBUPDATE, wxWUT_DOWNLOAD_COMPLETE, -1);
 
 
 #define wxWUT_BUF_TEMP_SIZE				4096
@@ -270,7 +270,7 @@ class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDlg : public wxDialog
 protected:		// pointers to our controls
 	
 	wxStaticText *m_pAppNameText, *m_pTimeText, *m_pSpeedText;
-	wxButton *m_pOk, *m_pCancel;
+	wxButton *m_pOkBtn, *m_pCancelBtn, *m_pShowHideAdvBtn;
 
 #if wxWU_USE_CHECKEDLISTCTRL
 	wxCheckedListCtrl *m_pUpdatesList;
@@ -280,9 +280,8 @@ protected:		// pointers to our controls
 	wxGauge *m_pGauge;
 
 	// we store advanced settings here:
-	//wxWebUpdateAdvPanel *m_pAdvPanel;
-	wxWindow *m_pAdvPanel;
-
+	wxWebUpdateAdvPanel *m_pAdvPanel;
+	
 
 
 protected:		// other member variables
@@ -336,6 +335,10 @@ protected:
 	//! Call this function instead of EndModal(wxCANCEL) to abort this dialog.
 	//! This function takes care of our wxWebUpdateThread, infact.
 	void AbortDialog();
+
+	//! Shows or hides the child window with the given name and then returns
+	//! a pointer to it.
+	wxWindow *ShowHideChild(const wxString &name);
 
 
 protected:		// event handlers

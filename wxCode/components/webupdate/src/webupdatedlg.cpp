@@ -272,22 +272,16 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 						wxDefaultSize, wxLC_REPORT|wxSUNKEN_BORDER);
 #endif
 
-	m_pAdvPanel = new wxTextCtrl(this, -1, wxT(""), 
-		wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE );//new wxWebUpdateAdvPanel(this);
-	///m_pAdvPanel->Hide();
-	m_pAdvPanel->SetMinSize(wxSize(30, 180));
-	//m_pAdvPanel->SetMinSize(m_pAdvPanel->GetSize());
-	//m_pAdvPanel->GetSizer()->Layout();
+	// create our "Advanced options" panel
+	m_pAdvPanel = new wxWebUpdateAdvPanel(this);
 
 
-    // "custom_control_placeholder" is the name of the "unknown" tag in the
-    // webupdatedlg.xrc XRC file.
-    wxXmlResource::Get()->AttachUnknownControl(wxT("IDWUD_LISTCTRL"),
+    // attach our classes in the XRC placeholders
+	wxXmlResource::Get()->AttachUnknownControl(wxT("IDWUD_LISTCTRL"),
                                                 m_pUpdatesList);
     
 	wxXmlResource::Get()->AttachUnknownControl(wxT("IDWUD_ADVPANEL"),
                                                 m_pAdvPanel);
-
 
 
 	// init control pointers
@@ -299,16 +293,14 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 	//m_pUpdatesList = XRCCTRL(*this,"IDWUD_LISTCTRL",wxListCtrl);
 	m_pGauge = XRCCTRL(*this, "IDWUD_GAUGE", wxGauge);
 
-	m_pOk = XRCCTRL(*this,"IDWUD_OK", wxButton);
-	m_pCancel = XRCCTRL(*this,"IDWUD_CANCEL", wxButton);
+	m_pOkBtn = XRCCTRL(*this,"IDWUD_OK", wxButton);
+	m_pCancelBtn = XRCCTRL(*this,"IDWUD_CANCEL", wxButton);
+	m_pShowHideAdvBtn = XRCCTRL(*this, "IDWUD_SHOWHIDEADV", wxButton);
 
 	wxCheckBox *p = XRCCTRL(*this,"IDWUD_SHOWFILTER", wxCheckBox);
 	p->SetValue(TRUE);
 
-	/*wxWindow *p2 = FindWindowByName(wxT("IDWUD_ADVPANEL_container"), this);
-	p2->GetSizer()->RecalcSizes();
-	p2->GetSizer()->Layout();
-	p2->Layout();*/
+
 
 
 	// init control data
@@ -344,14 +336,16 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 	m_thread = new wxWebUpdateThread();
 	m_thread->m_pHandler = this;
 
+	wxCommandEvent fake;
+	OnShowHideAdv(fake);
+
 
 
 	// relayout
 	// --------
 
 	// we have changed the appname statictext control so maybe we need
-	// to expand our dialog... force a layout recalculation
-	GetSizer()->RecalcSizes();
+	// to expand our dialog... force a layout recalculation	
 	GetSizer()->Layout();
 	GetSizer()->Fit(this);
 	GetSizer()->SetSizeHints(this);
@@ -618,79 +612,43 @@ void wxWebUpdateDlg::OnShowFilter(wxCommandEvent &)
 	RebuildPackageList();
 }
 
-bool m_showingDetails = TRUE;
+wxWindow *wxWebUpdateDlg::ShowHideChild(const wxString &name)
+{
+	wxWindow *p = FindWindowByName(name, this);
+	if (!p) return NULL;
+
+	// now, modify the sizer which contain that window
+	wxSizer *sizer = p->GetContainingSizer();
+	wxSizerItem *item = sizer->GetItem(p);
+	if (!item) return NULL;
+
+	// invert the show state
+    if (p->IsShown())
+		item->Show(FALSE);
+    else
+		item->Show(TRUE);
+	return p;
+}
 
 void wxWebUpdateDlg::OnShowHideAdv(wxCommandEvent &)
 {
+	// since our wxWebUpdateAdvPanel is built using a <unknown> tag
+	// we need to show/hide both the real panel and its container.
+	wxWindow *p = ShowHideChild(wxT("IDWUD_ADVPANEL"));
+	wxASSERT_MSG(p, wxT("Invalid XRC file !"));
+	p = ShowHideChild(wxT("IDWUD_ADVPANEL_container"));
+	wxASSERT_MSG(p, wxT("Invalid XRC file !"));
 
-	//wxASSERT_MSG(GetSizer()->Show(p, !status, TRUE), wxT("Something wrong"));		
-	//wxBoxSizer *p = wxStaticCast(this->FindWindow(XRCID("IDWUD_ADVSIZER")), wxBoxSizer))
-	//if (!GetSizer()->Show(p, FALSE, TRUE))
-	//	int faild = 0;	
-	//bool m_showingDetails = p->IsShown();
-    wxSizer *sizer = GetSizer();	
-	wxWindow *p = FindWindowByName(wxT("IDWUD_ADVPANEL_container"), this);
-
-    if ( m_showingDetails )
-    {
-        sizer->Detach( p );		
-    }
-    else // show details now
-    {
-        sizer->Add(p, 1, wxEXPAND | (wxALL & ~wxTOP), 5);
-    }
-
-    m_showingDetails = !m_showingDetails;
-
-    // in any case, our size changed - relayout everything and set new hints
-    // ---------------------------------------------------------------------
-
-    // we have to reset min size constraints or Fit() would never reduce the
-    // dialog size when collapsing it and we have to reset max constraint
-    // because it wouldn't expand it otherwise
-
-    m_minHeight =
-    m_maxHeight = -1;
-
-    // wxSizer::FitSize() is private, otherwise we might use it directly...
-    wxSize sizeTotal = GetSize(),
-           sizeClient = GetClientSize();
-
-    wxSize size = GetSizer()->GetMinSize();
-    size.x += sizeTotal.x - sizeClient.x;
-    size.y += sizeTotal.y - sizeClient.y;
-
-    // we don't want to allow expanding the dialog in vertical direction as
-    // this would show the "hidden" details but we can resize the dialog
-    // vertically while the details are shown
-    if ( !m_showingDetails )
-        m_maxHeight = size.y;
-
-    SetSizeHints(size.x, size.y, m_maxWidth, m_maxHeight);
-
-#ifdef __WXWINCE__
-    if (m_showingDetails)
-        m_listctrl->Show();
-#endif
-
-    // don't change the width when expanding/collapsing
-    SetSize(wxDefaultCoord, size.y);
-
-
-	/*p->Hide();
-	p->Layout();
-	p->GetSizer()->RecalcSizes();*/
-/*	p->SetSize(-1, -1, 0, 0);
-	GetSizer()->RecalcSizes();
+	// resize this dialog to reflect the change
 	GetSizer()->Layout();
 	GetSizer()->SetSizeHints(this);
-	//this->SetSize(-1, -1, 0, 0);*/
+	this->SetSize(-1, -1, 0, 0);
+	this->CenterOnScreen();
 
-	wxButton *b = XRCCTRL(*this, "IDWUD_SHOWHIDEADV", wxButton);
-	if (m_showingDetails)
-		b->SetLabel(wxWUD_SHOWHIDEADV_SHOW);
+	if (!p->IsShown())
+		m_pShowHideAdvBtn->SetLabel(wxWUD_SHOWHIDEADV_SHOW);
 	else
-		b->SetLabel(wxWUD_SHOWHIDEADV_HIDE);
+		m_pShowHideAdvBtn->SetLabel(wxWUD_SHOWHIDEADV_HIDE);
 }
 
 void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
@@ -781,7 +739,7 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 
 		// re-enable what we disabled when we ran the thread
 		if (!bLabelRunningMode) {			
-			m_pCancel->SetLabel(wxWUD_CANCEL_DEFAULT_LABEL);
+			m_pCancelBtn->SetLabel(wxWUD_CANCEL_DEFAULT_LABEL);
 			//m_pUpdatesList->EnableAll();
 			bLabelRunningMode = TRUE;
 
@@ -799,16 +757,16 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 				break;		// found a checked item !
 		
 		if (i<m_pUpdatesList->GetItemCount())
-			m_pOk->Enable();		// yes, there are
+			m_pOkBtn->Enable();		// yes, there are
 		else
-			m_pOk->Disable();		// no, there aren't
+			m_pOkBtn->Disable();		// no, there aren't
 
 	} else {
 
 		// need to change labels ?
 		if (bLabelRunningMode) {
-			m_pOk->Disable();
-			m_pCancel->SetLabel(wxWUD_CANCEL_DOWNLOAD);
+			m_pOkBtn->Disable();
+			m_pCancelBtn->SetLabel(wxWUD_CANCEL_DOWNLOAD);
 			//m_pUpdatesList->EnableAll(FALSE);
 			bLabelRunningMode = FALSE;
 		}

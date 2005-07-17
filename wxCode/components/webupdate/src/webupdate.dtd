@@ -149,5 +149,6 @@
 				 OS shell.
 				 'install' means that one of the wxBaseInstaller-derived classes will
 				 handle the installation of the package.
+				 If not specified the default action is "run".
 -->
 <!ELEMENT action (run|install)>
