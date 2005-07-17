@@ -119,15 +119,9 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 	// build the dialog
 	// ----------------
 
-	// we need some handlers before loading resources
-	wxImage::AddHandler(new wxPNGHandler);
-	wxXmlResource::Get()->InitAllHandlers();
-	
-    // load our XRC file
-    wxXmlResource::Get()->Load(wxT("../src/webupdatedlg.xrc"));
-
 	// and build our dialog window
-	wxXmlResource::Get()->LoadDialog(this, GetParent(), wxT("wxWebUpdateDlg"));	
+	wxASSERT_MSG(wxXmlResource::Get()->LoadDialog(this, GetParent(), wxT("wxWebUpdateDlg")),
+			wxT("Error while building wxWebUpdateDlg; check you've loaded webupdatedlg.xrc !"));
 
     // Make an instance of our new custom class.
 #if wxWU_USE_CHECKEDLISTCTRL
@@ -676,16 +670,9 @@ void wxWebUpdateAdvPanel::InitWidgetsFromXRC()
 	// build the dialog
 	// ----------------
 
-	// we need some handlers before loading resources
-	wxImage::AddHandler(new wxPNGHandler);
-	wxXmlResource::Get()->InitAllHandlers();
-	
-    // load our XRC file
-    wxXmlResource::Get()->Load(wxT("../src/webupdatedlg.xrc"));
-
 	// and build our dialog window
-	wxXmlResource::Get()->LoadPanel(this, GetParent(), wxT("wxWebUpdateAdvPanel"));	
-
+	wxASSERT_MSG(wxXmlResource::Get()->LoadPanel(this, GetParent(), wxT("wxWebUpdateAdvPanel")),
+			wxT("Error while creating the wxWebUpdateAdvPanel - be sure you loaded webupdatedlg.xrc !"));
 
 
 	// init control pointers
@@ -707,12 +694,6 @@ void wxWebUpdateAdvPanel::InitWidgetsFromXRC()
 	wxFileName str(wxFileName::CreateTempFileName(wxEmptyString, NULL));
 	str.SetFullName(wxEmptyString);		// remove the filename and keep only the path
 	m_pDownloadPathTextCtrl->SetValue(str.GetLongPath());
-
-
-
-	// init other stuff
-	// ----------------
-
 
 
 

@@ -11,13 +11,13 @@
       <latest-version importance="normal">2.0.3</latest-version>
 
       <latest-download>
-			<platform>msw</platform>
-			<md5>42e898d5f7d5bc1b359c80f02706d01e</md5>
 			<uri>http://easynews.dl.sourceforge.net/sourceforge/mathstudio/MathStudio-0.7.2.msi</uri>
+			<platform name="msw"/>
+			<md5>42e898d5f7d5bc1b359c80f02706d01e</md5>			
 	  </latest-download>
       <latest-download>
-			<platform>gtk</platform>			
 			<uri>http://wxcode.sourceforge.net/components/webupdate/myapp.tar.gz</uri>
+			<platform name="gtk"/>
 	  </latest-download>
 
 
@@ -35,8 +35,8 @@
 
 	  <!-- a single download for all platforms -->
       <latest-download>
-			<platform>any</platform>			
 			<uri>http://wxcode.sourceforge.net/components/webupdate/myapp.tar.gz</uri>
+			<platform name="any"/>
 	  </latest-download>
    </package>
 

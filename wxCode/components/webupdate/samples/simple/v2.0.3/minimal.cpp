@@ -14,8 +14,8 @@
 // ============================================================================
 
 #include "wx/webupdatedlg.h"
-#include <wx/filesys.h>
-#include <wx/fs_inet.h>
+#include <wx/xrc/xmlres.h>
+#include <wx/image.h>
 #include <wx/wfstream.h>
 
 // these are the info required by wxWebUpdate classes about the 
@@ -23,7 +23,7 @@
 #define VERSION				wxT("2.0.3")
 #define APP_NAME			wxT("wxWebUpdate sample")
 #define PACKAGE_NUM			1
-#define PACKAGE_NAME		wxT("myapp")	// just to show this can be different from APP_NAME
+#define PACKAGE_NAME		wxT("simple")	// just to show this can be different from APP_NAME
 #define SCRIPT_LOCATION		wxT("http://wxcode.sourceforge.net/components/webupdate/script1.xml")
 
 // our list of local packages; used only by wxWebUpdateDlg.
@@ -173,8 +173,18 @@ bool MyApp::OnInit()
     frame->Show(true);
 #endif
 
+
+	// this is for using wxDownloadThread
 	wxSocketBase::Initialize() ;
-	wxFileSystem::AddHandler(new wxInternetFSHandler);	
+
+	// we need some handlers before loading resources
+	wxImage::AddHandler(new wxPNGHandler);
+	wxXmlResource::Get()->InitAllHandlers();
+	
+    // load our XRC file
+    wxXmlResource::Get()->Load(wxT("../src/webupdatedlg.xrc"));
+
+
 
     // success: wxApp::OnRun() will be called which will enter the main message
     // loop and the application will run. If we returned false here, the
