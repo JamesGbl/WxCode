@@ -325,6 +325,14 @@ void wxWebUpdatePackage::CacheDownloadSizes()
 // wxWEBUPDATEXMLSCRIPT
 // ----------------------
 
+wxWebUpdateXMLScript::wxWebUpdateXMLScript(const wxString &strURI, 
+										   wxWebUpdateInstaller *installer)
+{ 
+	if (!strURI.IsEmpty()) Load(strURI); 
+	if (!installer) installer = wxWebUpdateInstaller::Get(); 
+	m_pInstaller = installer;
+}
+
 // taken from wx/src/xrc/xmlres.cpp, wxXmlResourceHandler::GetNodeContent
 wxString wxWebUpdateXMLScript::GetNodeContent(const wxXmlNode *node) const
 {
@@ -341,6 +349,29 @@ wxString wxWebUpdateXMLScript::GetNodeContent(const wxXmlNode *node) const
     }
 
     return wxEmptyString;
+}
+
+wxString wxWebUpdateXMLScript::DoKeywordSubstitution(const wxString &str) const
+{
+	wxStringStringHashMap &list = m_pInstaller->GetKeywords();
+	wxString text(str);
+
+	// iterate over all the elements in the class
+    wxStringStringHashMap::iterator it;
+    for (it = list.begin(); it != list.end(); ++it) {
+        wxString key = it->first, value = it->second;
+		if (value.IsEmpty()) continue;		// skip empty values
+
+		text.Replace(wxT("$(") + key + wxT(")"), value);
+    }
+
+#ifdef __WXDEBUG__
+	if (text.Contains(wxT("$(")))
+		wxLogDebug(wxT("wxWebUpdateXMLScript::DoKeywordSubstitution - ")
+				wxT("found unknown keywords in the string:\n") + text);
+#endif
+
+	return text;
 }
 
 wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdownload) const
@@ -377,8 +408,11 @@ wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdow
 			wxArrayString names, values;
 			wxXmlProperty *prop = child->GetProperties();
 			while (prop) {
+
 				names.Add(prop->GetName());
-				values.Add(prop->GetValue());
+
+				// the values can contain keywords to substitute
+				values.Add(DoKeywordSubstitution(prop->GetValue()));
 				prop = prop->GetNext();
 			}
 
@@ -410,7 +444,11 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) c
 	
 	// init the return value
 	wxWebUpdatePackage *ret = new wxWebUpdatePackage(packagename);	
-	
+
+	// add to the current keyword list the current ID
+	wxStringStringHashMap &list = m_pInstaller->GetKeywords();
+	list[wxT("id")] = packagename;		// will be removed when exiting
+
 	// parse this package
 	wxXmlNode *child = package->GetChildren();
 	while (child) {
@@ -419,6 +457,9 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) c
 			// get the version string
 			ret->m_strLatestVersion = GetNodeContent(child);
 			ret->m_importance = wxWUPI_NORMAL;		// by default
+
+			// add the "latest-version" keyword
+			list[wxT("latest-version")] = ret->m_strLatestVersion;		// will be removed when exiting
 
 			// and this version's importance (if available)
 			wxXmlProperty *prop = child->GetProperties();
@@ -441,10 +482,10 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) c
 				wxLogDebug(wxT("wxWebUpdateXMLScript::GetPackage - skipping an invalid <latest-download> tag"));
 
 		} else if (child->GetName() == wxT("msg-update-available")) {
-			ret->m_strUpdateAvailableMsg = GetNodeContent(child);
+			ret->m_strUpdateAvailableMsg = DoKeywordSubstitution(GetNodeContent(child));
 
 		} else if (child->GetName() == wxT("msg-update-notavailable")) {
-			ret->m_strUpdateNotAvailableMsg = GetNodeContent(child);
+			ret->m_strUpdateNotAvailableMsg = DoKeywordSubstitution(GetNodeContent(child));
 		}
 
 		// proceed
@@ -462,6 +503,8 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) c
 	}
 #endif
 
+	list[wxT("id")] = wxEmptyString;
+	list[wxT("latest-version")] = wxEmptyString;
 	return ret;		// the caller must delete it
 }
 

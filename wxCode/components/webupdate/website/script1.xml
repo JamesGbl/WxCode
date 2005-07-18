@@ -21,15 +21,15 @@
 			<md5>42e898d5f7d5bc1b359c80f02706d01e</md5>			
 			
 			<action where="$(temp)">extract</action>
-			<action file="$(temp)/replacer.exe" args="pid=$(PID) from=./* to=$(PROGRAMROOT)" flags="ASYNCH">run</action>
+			<action file="$(temp)/replacer.exe" args="pid=$(pid) from=./* to=$(programroot)" flags="ASYNCH">run</action>
 			<action>exit</action>
 			
 	  </latest-download>
 
 	  <!-- our customized messages -->
-      <msg-update-available>The new $(id) $(latest-version) is available for download;
+      <msg-update-available>The new "$(id) $(latest-version)" package is available for download;
 			it has several bugfixes and security improvements !</msg-update-available>
-      <msg-update-notavailable>You have the most updated version of $(id)...</msg-update-notavailable>
+      <msg-update-notavailable>You have the most updated version of the "$(id)" package...</msg-update-notavailable>
 
    </package>
 </webupdate>

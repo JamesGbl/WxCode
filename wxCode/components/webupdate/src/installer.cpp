@@ -40,10 +40,36 @@ IMPLEMENT_CLASS(wxWebUpdateInstaller, wxObject)
 WX_DEFINE_USER_EXPORTED_OBJARRAY(wxWebUpdateActionArray);
 
 
+// global objects
+wxWebUpdateInstaller *wxWebUpdateInstaller::m_pTheInstaller = NULL;
+
+
 
 
 // ---------------------
 // wxWEBUPDATEACTION
 // ---------------------
+
+
+
+
+// ---------------------
+// wxWEBUPDATEINSTALLER
+// ---------------------
+
+void wxWebUpdateInstaller::InitDefaultKeywords()
+{	
+	wxChar sep = wxFileName::GetPathSeparator();
+
+	// a temporary folder
+	m_hashKeywords[wxT("temp")] = 
+		wxFileName::CreateTempFileName(wxT("webupdate")).BeforeFirst(sep);
+
+	// the program root folder
+	m_hashKeywords[wxT("programroot")] = wxGetCwd();
+
+	// the program process ID
+	m_hashKeywords[wxT("pid")] = wxString::Format(wxT("%d"), wxGetProcessId());
+}
 
 

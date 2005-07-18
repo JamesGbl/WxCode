@@ -328,10 +328,18 @@ private:
 WX_DECLARE_USER_EXPORTED_OBJARRAY(wxWebUpdatePackage, wxWebUpdatePackageArray, WXDLLIMPEXP_WEBUPDATE);
 
 
-//! This is the class which performs all transactions with the server.
-//! It uses the wxSocket facilities.
+//! This is the class which performs all the XML parsing of the webupdate script.
+//! It uses the wxFileSystem facilities to download the file (see #Load) thus
+//! you can load both local & remote files.
+//! Use the #GetAllPackages to do the XML parsing of the entire script or
+//! #GetPackage to parse a single package.
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateXMLScript : public wxXmlDocument
 {
+protected:
+
+	//! The installer used to query the keyword substitution hashmap.
+	wxWebUpdateInstaller *m_pInstaller;
+
 protected:
 
 	//! Creates a wxWebUpdatePackage from the given XML node.
@@ -344,10 +352,17 @@ protected:
 	//! Returns the text content of the given node.
 	wxString GetNodeContent(const wxXmlNode *node) const;
 
+	//! Does string substitution using the current keyword hashmap of
+	//! the given wxWebUpdateInstaller.
+	wxString DoKeywordSubstitution(const wxString &str) const;
+
 public:
-	wxWebUpdateXMLScript(const wxString &strURL = wxEmptyString) 
-		{ if (!strURL.IsEmpty()) Load(strURL); }
+
+	wxWebUpdateXMLScript(const wxString &strURI = wxEmptyString,
+						wxWebUpdateInstaller *installer = NULL);
 	virtual ~wxWebUpdateXMLScript() {}
+
+public:		// main functions
 
     //! Parses the XML script located at the given URI.
 	//! This function can open any resource which can be handled
@@ -363,6 +378,13 @@ public:
 
 	//! Returns all the available packages from this XML document.
 	virtual wxWebUpdatePackageArray GetAllPackages() const;
+
+	//! Sets the given wxWebUpdateInstaller as the class used to get the
+	//! keyword hashmap for replacement of the $(key) strings found in the
+	//! XML tags of the webupdate script.
+	//! Returns a pointer to the old wxWebUpdateInstaller in use.
+	virtual const wxWebUpdateInstaller *Set(wxWebUpdateInstaller *p)
+		{ wxWebUpdateInstaller *old = m_pInstaller; m_pInstaller = p; return old; }
 
 private:
 	DECLARE_CLASS(wxWebUpdateXMLScript)

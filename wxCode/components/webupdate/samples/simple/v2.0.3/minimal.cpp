@@ -195,8 +195,7 @@ bool MyApp::OnInit()
 
 int MyApp::OnExit()
 {
-
-
+	delete wxWebUpdateInstaller::Set(NULL);
 	return 0;
 }
 

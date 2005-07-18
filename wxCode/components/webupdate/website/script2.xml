@@ -20,11 +20,6 @@
 			<action>run</action>
 	  </latest-download>
 
-
-      <msg-update-available>The new $(id) $(latest-version) is available for download;
-			it has several bugfixes and security improvements !</msg-update-available>
-      <msg-update-notavailable>You have the most updated version of $(id)...</msg-update-notavailable>
-
    </package>
    
    
@@ -38,6 +33,7 @@
       <latest-download>
 			<uri>http://wxcode.sourceforge.net/components/webupdate/myapp.tar.gz</uri>
 			<platform name="any"/>
+			<action>run</action>
 	  </latest-download>
    </package>
 

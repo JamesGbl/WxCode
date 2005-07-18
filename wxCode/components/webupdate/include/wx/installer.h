@@ -76,6 +76,9 @@ WX_DECLARE_USER_EXPORTED_OBJARRAY(wxWebUpdateAction, wxWebUpdateActionArray, WXD
 // Used by wxWebUpdateInstaller.
 WX_DECLARE_STRING_HASH_MAP(wxWebUpdateAction, wxWebUpdateActionHashMap);
 
+// used by wxWebUpdateInstaller to store the keywords to substitute in the XML webupdate script
+WX_DECLARE_STRING_HASH_MAP(wxString, wxStringStringHashMap);
+
 
 //! A singleton class which contains the hash map with all the 
 //! registered wxWebUpdateAction which are recognized in the webupdate
@@ -90,9 +93,17 @@ protected:
 	//! The hash map with all registered wxWebUpdateActions.
 	wxWebUpdateActionHashMap m_hashActions;
 
+	//! The hash map with all registered keywords to substitute.
+	wxStringStringHashMap m_hashKeywords;
+
 public:
-	wxWebUpdateInstaller() {}
-	virtual ~wxWebUpdateInstaller() {}
+	wxWebUpdateInstaller() 
+		{ InitDefaultKeywords(); }
+	virtual ~wxWebUpdateInstaller() 
+		{ /* user needs to delete the global wxWebUpdateInstaller object !! 
+		     using  
+		             delete wxWebUpdateInstaller::Set(NULL);
+		     code in its wxApp::OnExit() function */ }
 
 public:		// single ton accessors
 
@@ -110,6 +121,11 @@ public:		// action hashmap
 
 	wxWebUpdateActionHashMap &GetHashMap()
 		{ return m_hashActions; }
+
+	wxStringStringHashMap &GetKeywords()
+		{ return m_hashKeywords; }
+
+	void InitDefaultKeywords();
 
 private:
 	DECLARE_CLASS(wxWebUpdateInstaller)
