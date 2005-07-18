@@ -348,24 +348,8 @@ void MyFrame::OnUpdateCheckSimple(wxCommandEvent &)
 	// - the permission by the user to download the update
 	// - the link for the download of the updated package for this platform
 	// that's all ;-)
-	wxFileSystem fs;
-	wxFSFile *updatefile = fs.OpenFile(download.GetDownloadString());
-	if (!updatefile){
-		wxMessageBox(wxT("Cannot download the update file from:\n\n") +
-			download.GetDownloadString(), wxT("Error"), wxOK | wxICON_ERROR);
-		return;
-	}
-	
-	wxInputStream *stream = updatefile->GetStream();
-	if (!stream){
-		wxMessageBox(wxT("Cannot download the update file from:\n\n") +
-			download.GetDownloadString(), wxT("Error"), wxOK | wxICON_ERROR);
-		return;
-	}
-	
-	wxFileOutputStream out(wxFileName::CreateTempFileName(APP_NAME));
-	out.Write(*stream);
-	if (!out.IsOk()){
+	wxString out(wxFileName::CreateTempFileName(APP_NAME));
+	if (!download.DownloadSynch(out)){
 		wxMessageBox(wxT("Cannot download the update file from:\n\n") +
 			download.GetDownloadString(), wxT("Error"), wxOK | wxICON_ERROR);
 		return;
@@ -375,7 +359,6 @@ void MyFrame::OnUpdateCheckSimple(wxCommandEvent &)
 		wxT("Success"), wxOK | wxICON_QUESTION);
 	
 	// cleanup
-	delete updatefile;
 	delete update;
 }
 

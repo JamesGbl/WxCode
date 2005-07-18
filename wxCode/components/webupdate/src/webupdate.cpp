@@ -23,14 +23,15 @@
 
 // includes
 #ifndef WX_PRECOMP
-#include "wx/log.h"
+	#include <wx/log.h>
 #endif
 
-#include "wx/url.h"
+#include <wx/url.h>
+#include <wx/file.h>
+#include <wx/wfstream.h>
+#include <wx/filesys.h>
 #include "wx/webupdate.h"
-#include "wx/file.h"
-#include "wx/wfstream.h"
-#include "wx/filesys.h"
+#include "wx/download.h"
 
 
 // wxWidgets RTTI
@@ -170,6 +171,74 @@ wxString wxWebUpdateDownload::GetFileName() const
 	return m_urlDownload.AfterLast('/');
 }
 
+bool wxWebUpdateDownload::DownloadSynch(const wxString &path, const wxString &proxy,
+								const wxString &user, const wxString &password) 
+{
+	if (path.IsEmpty()) return FALSE;
+	
+	wxURL u(m_urlDownload);
+	if (u.GetError() != wxURL_NOERR)
+		return FALSE;
+	
+	// set advanced URL options
+	if (!proxy.IsEmpty())
+		u.SetProxy(proxy);
+	u.GetProtocol().SetUser(user);
+	u.GetProtocol().SetPassword(password);
+	
+	// now work on streams; wx docs says that using wxURL::GetInputStream
+	// is deprecated but this is the only way to set advanced info like
+	// proxy, user & password...
+	wxFileOutputStream out(path);
+	wxInputStream *in = u.GetInputStream();
+	if (in == NULL || !out.IsOk())
+		return FALSE;
+	
+	out.Write(*in);
+	delete in;
+	if (!out.IsOk() || out.GetSize() != GetDownloadSize())
+		return FALSE;
+	
+	wxLogDebug(wxT("wxWebUpdateDownload::DownloadSynch - completed download of %d bytes"),
+		GetDownloadSize());
+	
+	// we have successfully download the file
+	return TRUE;
+}
+
+wxDownloadThread *wxWebUpdateDownload::DownloadAsynch(const wxString &path, 
+									wxEvtHandler *phandler,	const wxString &proxy,
+									const wxString &user, const wxString &password) 
+{
+	if (path.IsEmpty()) return NULL;
+	wxDownloadThread *thread = new wxDownloadThread();
+
+	// just set the download options
+	thread->m_strHTTPAuthPassword = password;
+	thread->m_strHTTPAuthUsername = user;
+	thread->m_strOutput = path;
+	thread->m_strProxyHostname = proxy.BeforeFirst(wxT(':'));
+	thread->m_strProxyPort = proxy.AfterFirst(wxT(':'));
+	thread->m_pHandler = phandler;
+
+	// launch the download
+	if (thread->Create() != wxTHREAD_NO_ERROR ||
+		thread->Run() != wxTHREAD_NO_ERROR) {
+		delete thread;
+		return NULL;
+	}
+
+	return thread;
+}
+
+bool wxWebUpdateDownload::Install(wxWebUpdateInstaller *touse) const
+{
+	
+
+	return FALSE;
+}
+
+
 
 
 // ---------------------
@@ -256,6 +325,79 @@ void wxWebUpdatePackage::CacheDownloadSizes()
 // wxWEBUPDATEXMLSCRIPT
 // ----------------------
 
+// taken from wx/src/xrc/xmlres.cpp, wxXmlResourceHandler::GetNodeContent
+wxString wxWebUpdateXMLScript::GetNodeContent(const wxXmlNode *node) const
+{
+    const wxXmlNode *n = node;
+    if (n == NULL) return wxEmptyString;
+    n = n->GetChildren();
+
+    while (n)
+    {
+        if (n->GetType() == wxXML_TEXT_NODE ||
+            n->GetType() == wxXML_CDATA_SECTION_NODE)
+            return n->GetContent();
+        n = n->GetNext();
+    }
+
+    return wxEmptyString;
+}
+
+wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdownload) const
+{
+	if (latestdownload->GetName() != wxT("latest-download"))
+		return wxEmptyWebUpdateDownload;
+
+	// the info we need to build a wxWebUpdateDownload...
+	wxString platform, md5, uri;
+	wxWebUpdateActionArray actions;
+
+	// find the platform for which this download is
+	wxXmlNode *child = latestdownload->GetChildren();
+	while (child) {
+		
+		// is this a well-formed tag ?
+		if (child->GetName() == wxT("uri"))
+			uri = GetNodeContent(child);
+		else if (child->GetName() == wxT("md5"))
+			md5 = GetNodeContent(child);
+		else if (child->GetName() == wxT("platform")) {
+
+			// search the "name" property
+			wxXmlProperty *prop = child->GetProperties();
+			while (prop) {
+				if (prop->GetName() == wxT("name"))
+					platform = prop->GetValue();
+				prop = prop->GetNext();
+			}
+
+		} else if (child->GetName() == wxT("action")) {
+
+			// convert to a wxArrayString the properties
+			wxArrayString names, values;
+			wxXmlProperty *prop = child->GetProperties();
+			while (prop) {
+				names.Add(prop->GetName());
+				values.Add(prop->GetValue());
+				prop = prop->GetNext();
+			}
+
+			// add a new action
+			actions.Add(new wxWebUpdateAction(GetNodeContent(child), &names, &values));
+		}
+
+
+		// parse next child...
+		child = child->GetNext();
+	}
+
+	// is this a valid download ?
+	if (platform.IsEmpty() || actions.GetCount() <= 0)
+		return wxEmptyWebUpdateDownload;
+
+	return wxWebUpdateDownload(uri, platform, md5, &actions);	
+}
+
 wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) const
 {
 	if (!package || package->GetName() != wxT("package")) return NULL;
@@ -274,12 +416,11 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) c
 	while (child) {
 		if (child->GetName() == wxT("latest-version")) {
 
-			wxXmlNode *text = child->GetChildren();
-			if (text) {
-				ret->m_strLatestVersion = text->GetContent();
-				ret->m_importance = wxWUPI_NORMAL;		// by default
-			}
+			// get the version string
+			ret->m_strLatestVersion = GetNodeContent(child);
+			ret->m_importance = wxWUPI_NORMAL;		// by default
 
+			// and this version's importance (if available)
 			wxXmlProperty *prop = child->GetProperties();
 			while (prop && prop->GetName() != wxT("importance"))
 				prop = prop->GetNext();
@@ -292,49 +433,34 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) c
 
 		} else if (child->GetName() == wxT("latest-download")) {
 
-			wxString platform, md5;
-
-			// find the platform for which this download is
-			wxXmlProperty *prop = child->GetProperties();
-			while (prop) {
-				
-				// is this a well-formed tag ?
-				if (prop->GetName() == wxT("platform"))
-					platform = prop->GetValue();
-				else if (prop->GetName() == wxT("md5"))
-					md5 = prop->GetValue();
-
-				// parse next property...
-				prop = prop->GetNext();
-			}
-
-			// did we find a valid "platform" property ?
-			if (!platform.IsEmpty()) {
-
-				wxXmlNode *text = child->GetChildren();
-				wxWebUpdateDownload update(text->GetContent(), platform, md5);
-
-				// last check 
-				if (update.IsOk())
-					ret->AddDownloadPackage(update);
-			}
+			// parse this download
+			wxWebUpdateDownload update = GetDownload(child);
+			if (update.IsOk())
+				ret->AddDownloadPackage(update);
+			else
+				wxLogDebug(wxT("wxWebUpdateXMLScript::GetPackage - skipping an invalid <latest-download> tag"));
 
 		} else if (child->GetName() == wxT("msg-update-available")) {
-
-			wxXmlNode *text = child->GetChildren();
-			if (text) 
-				ret->m_strUpdateAvailableMsg = text->GetContent();
+			ret->m_strUpdateAvailableMsg = GetNodeContent(child);
 
 		} else if (child->GetName() == wxT("msg-update-notavailable")) {
-
-			wxXmlNode *text = child->GetChildren();
-			if (text) 
-				ret->m_strUpdateNotAvailableMsg = text->GetContent();
+			ret->m_strUpdateNotAvailableMsg = GetNodeContent(child);
 		}
 
 		// proceed
 		child = child->GetNext();
 	}
+
+	// be sure this package is valid
+#ifdef __WXDEBUG__
+	wxASSERT_MSG(ret->m_arrWebUpdates.GetCount() > 0, 
+			wxT("No downloads defined for this package in the webupdate script ?"));
+#else
+	if (ret->m_arrWebUpdates.GetCount() <= 0) {
+		delete ret;
+		return NULL;
+	}
+#endif
 
 	return ret;		// the caller must delete it
 }

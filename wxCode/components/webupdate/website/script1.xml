@@ -3,7 +3,6 @@
 <!-- $Id$ -->
 
 <webupdate>
-   <requires>1.0</requires>
 	 
    <!-- for an example of XML webupdate script with multiple packages see script2.xml -->
    <package id="simple">
@@ -14,11 +13,17 @@
 			<uri>http://easynews.dl.sourceforge.net/sourceforge/mathstudio/MathStudio-0.7.2.msi</uri>
 			<platform name="msw"/>
 			<md5>42e898d5f7d5bc1b359c80f02706d01e</md5>			
+			<action>run</action>
 	  </latest-download>
       <latest-download>
 			<uri>http://wxcode.sourceforge.net/components/webupdate/myapp.tar.gz</uri>
 			<platform name="gtk"/>
 			<md5>42e898d5f7d5bc1b359c80f02706d01e</md5>			
+			
+			<action where="$(temp)">extract</action>
+			<action file="$(temp)/replacer.exe" args="pid=$(PID) from=./* to=$(PROGRAMROOT)" flags="ASYNCH">run</action>
+			<action>exit</action>
+			
 	  </latest-download>
 
 	  <!-- our customized messages -->

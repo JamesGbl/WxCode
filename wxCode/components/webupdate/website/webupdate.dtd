@@ -49,11 +49,10 @@
 
 
 <!-- WEBUPDATE tag: this is the root of the script file.
-                    It can contain:
-	                - 1/0 occurrences of the REQUIRES tag
+                    It can contain:	                
 					- 0 or more occurrences of the PACKAGE tag
 -->
-<!ELEMENT webupdate (requires?, package*)>
+<!ELEMENT webupdate (package*)>
 
 
 
@@ -61,13 +60,6 @@
 <!--                                                                                -->
 <!--                        CHILDREN TAGS OF 'WEBUPDATE'                            -->
 <!--                                                                                -->
-
-
-<!-- REQUIRES tag: contains the version string of the minimal webupdate component
-                   which can correctly handle the update process.
-				   E.g. if you need that 
--->
-<!ELEMENT requires (#PCDATA)>
 
 
 <!-- PACKAGE tag: this begins a new package section where
@@ -79,7 +71,7 @@
 				  tags
 -->
 <!ELEMENT package (latest-version, requires?, latest-download*, msg-update-available?, msg-update-notavailable?)>
-<!ATTLIST package id CDATA #REQUIRED>
+<!ATTLIST package id ID #REQUIRED>
 
 
 
@@ -121,12 +113,15 @@
 <!ELEMENT msg-update-notavailable (#PCDATA)>
 
 
-<!-- LATEST-DOWNLOAD tag: contains the download location of the most updated version
-                          available in the webserver. Requires a "platform" subtag
+<!-- LATEST-DOWNLOAD tag: must contain the URI tag with the download location of the most updated
+                          file available in the webserver. Requires a "platform" subtag
 						  which specifies the platform targeted by this download.
-						  The "md5" subtag can be used to specify a MD5 checksum.
+						  The "md5" subtag can be optionally used to specify a MD5 checksum.
+						  At least one "action" tag must be present to specify the action to
+						  take at the end of the download.
+						  
 -->
-<!ELEMENT latest-download (uri, platform, md5?, action?)>
+<!ELEMENT latest-download (uri, platform, md5?, action+)>
 
 
 
@@ -154,11 +149,24 @@
 <!ELEMENT md5 (#PCDATA)>
 
 
-<!-- ACTION tag: allows to specify the action to take when the download is complete.
+<!-- ACTION tag: allows to specify an action to take when the download is complete.
+                 There are some built-in action handlers for "run", "extract", "exit"...
+				 
                  'run' means that the downloaded file will simply be run through the
 				 OS shell.
-				 'install' means that one of the wxBaseInstaller-derived classes will
-				 handle the installation of the package.
-				 If not specified the default action is "run".
+				 'extract' means that the downloaded file will be extracted
+				 
+				 
 -->
-<!ELEMENT action (run|install)>
+<!ELEMENT action (#PCDATA)>
+
+
+<!-- for "extract" action tags -->
+<!ATTLIST action where CDATA "$(PROGRAMROOT)">
+
+<!-- for "run" action tags -->
+<!ATTLIST action args CDATA #IMPLIED>
+<!ATTLIST action file CDATA #IMPLIED>
+<!ATTLIST action flags CDATA "ASYNCH">
+
+<!-- add the attributes for you own actions here -->

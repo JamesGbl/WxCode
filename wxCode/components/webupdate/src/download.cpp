@@ -91,7 +91,7 @@ void *wxDownloadThread::Entry()
 		// proxy, user & password...
 		wxFileOutputStream out(m_strOutput);
 		wxInputStream *in = u.GetInputStream();
-		if (in == NULL)
+		if (in == NULL || !out.IsOk())
 			ABORT_DOWNLOAD();
 		m_nFinalSize = in->GetSize();
 

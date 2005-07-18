@@ -32,12 +32,18 @@
 
 
 // wxWidgets RTTI
-IMPLEMENT_CLASS(wxBaseInstaller, wxObject)
+IMPLEMENT_CLASS(wxWebUpdateAction, wxObject)
+IMPLEMENT_CLASS(wxWebUpdateInstaller, wxObject)
+
+
+#include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
+WX_DEFINE_USER_EXPORTED_OBJARRAY(wxWebUpdateActionArray);
+
 
 
 
 // ---------------------
-// wxBASEINSTALLER
+// wxWEBUPDATEACTION
 // ---------------------
 
 

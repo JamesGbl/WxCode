@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 // Name:        installer.h
-// Purpose:     wxBaseInstaller and wxZIPInstaller
+// Purpose:     wxWebUpdateAction and wxWebUpdateInstaller
 // Author:      Francesco Montorsi
 // Created:     2005/07/14
 // RCS-ID:      $Id$
@@ -22,19 +22,97 @@
 #include "wx/url.h"
 
 
-//! .
-class WXDLLIMPEXP_WEBUPDATE wxBaseInstaller : public wxObject
+//! Contains the info about an available download.
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateAction : public wxObject
 {
 protected:
 
-public:
-	wxBaseInstaller() 
-		{  }
-	virtual ~wxBaseInstaller() {}
+	//! The name of this action.
+	wxString m_strName;
 
+	//! The list of properties for this action.
+	wxArrayString m_arrPropName;
+
+	//! The list of the property values for this action.
+	wxArrayString m_arrPropValue;
+
+public:
+    wxWebUpdateAction(const wxString &name = wxEmptyString, 
+					const wxArrayString *propnames = NULL,
+					const wxArrayString *propvalues = NULL)
+         : m_strName(name)
+	{ if (propnames) m_arrPropName=*propnames; 
+		if (propvalues) m_arrPropValue=*propvalues; }
+
+    virtual ~wxWebUpdateAction() {}
+
+public:		// miscellaneous
+    
+	//! Returns TRUE if this action was correctly initialized.
+    bool IsOk() const
+        { return !m_strName.IsEmpty() && 
+			m_arrPropName.GetCount() == m_arrPropValue.GetCount(); }
+
+	//! Returns the value for the given property or wxEmptyString if that
+	//! property has not been set for this object.
+	wxString GetPropValue(const wxString &propname) const
+		{ int n=m_arrPropName.Index(propname); if (n!=wxNOT_FOUND) return m_arrPropValue.Item(n); }
+    
+public:     // getters
+
+    wxString GetName() const
+        { return m_strName; } 
 
 private:
-	DECLARE_CLASS(wxBaseInstaller)
+	DECLARE_CLASS(wxWebUpdateAction)
+};
+
+
+
+// a container of wxWebUpdateAction used by wxWebUpdateDownload
+WX_DECLARE_USER_EXPORTED_OBJARRAY(wxWebUpdateAction, wxWebUpdateActionArray, WXDLLIMPEXP_WEBUPDATE);
+
+// an hash map with wxString as keys and wxWebUpdateAction as values.
+// Used by wxWebUpdateInstaller.
+WX_DECLARE_STRING_HASH_MAP(wxWebUpdateAction, wxWebUpdateActionHashMap);
+
+
+//! A singleton class which contains the hash map with all the 
+//! registered wxWebUpdateAction which are recognized in the webupdate
+//! script in installation stage.
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateInstaller : public wxObject
+{
+protected:
+
+	//! The global instance of this class.
+	static wxWebUpdateInstaller *m_pTheInstaller;
+
+	//! The hash map with all registered wxWebUpdateActions.
+	wxWebUpdateActionHashMap m_hashActions;
+
+public:
+	wxWebUpdateInstaller() {}
+	virtual ~wxWebUpdateInstaller() {}
+
+public:		// single ton accessors
+
+    //! Gets the global wxWebUpdateInstaller object or creates one if none exists.
+    static wxWebUpdateInstaller *Get()
+	{ if (!m_pTheInstaller) m_pTheInstaller = new wxWebUpdateInstaller(); return m_pTheInstaller;}
+
+    //! Sets the global wxWebUpdateInstaller object and returns a pointer to the 
+	//! previous one (may be NULL).
+    static wxWebUpdateInstaller *Set(wxWebUpdateInstaller *res)
+	{ wxWebUpdateInstaller *old = m_pTheInstaller; m_pTheInstaller = res; return old; }
+
+
+public:		// action hashmap
+
+	wxWebUpdateActionHashMap &GetHashMap()
+		{ return m_hashActions; }
+
+private:
+	DECLARE_CLASS(wxWebUpdateInstaller)
 };
 
 #endif // _WX_INSTALLER_H_

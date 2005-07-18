@@ -24,9 +24,12 @@
 #include "wx/url.h"
 
 
+// defined later
+class WXDLLIMPEXP_WEBUPDATE wxDownloadThread;
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDownload;		// defined later
+
 //! A global wxWebUpdateDownload variable which contains empty (and thus invalid)
 //! settings.
-class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDownload;		// defined later
 extern WXDLLIMPEXP_DATA_WEBUPDATE(wxWebUpdateDownload) wxEmptyWebUpdateDownload;
 
 
@@ -77,7 +80,6 @@ typedef wxString		wxVersion;
 #define wxEmptyVersion  wxEmptyString
 
 
-
 //! Contains the info about an available download.
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDownload : public wxObject
 {
@@ -112,13 +114,17 @@ protected:
 	//!          packages sized 1 byte only since they would force continuous
 	//!          recalculations of this var !
 	unsigned long m_size;
+
+	//! The actions to perform after this file has been downloaded.
+	wxWebUpdateActionArray m_arrActions;
      
 public:
     wxWebUpdateDownload(const wxString &url, 
 						const wxString &plat = wxEmptyString,
-						const wxString &md5 = wxEmptyString)
+						const wxString &md5 = wxEmptyString,
+						const wxWebUpdateActionArray *actions = NULL)
          : m_platform(wxWUP_INVALID), m_urlDownload(url), m_strMD5(md5)
-		{ SetPlatform(plat); m_size=1; }
+		{ SetPlatform(plat); m_size=1; if (actions) m_arrActions = *actions; }
 
     virtual ~wxWebUpdateDownload() {}
 
@@ -148,11 +154,27 @@ public:		// miscellaneous
 
 public:		// main functions
 
-	//! Downloads this package from the embedded URL.
-	//virtual bool Download();
+	//! Downloads this package using wxDownloadThread and put it in the given path.
+	//! The given event handler will receive a wxDT_DOWNLOAD_COMPLETE event when
+	//! the download has been completed.
+	//! \param proxy The proxy settings in the form "hostname:portnumber"
+	//! \param user The username for the HTTP authentication (if it's required).
+	//! \param password The password for the HTTP authentication (if it's required).
+	virtual wxDownloadThread *DownloadAsynch(const wxString &path, 
+								wxEvtHandler *handler,
+								const wxString &proxy = wxEmptyString,
+								const wxString &user = wxEmptyString,
+								const wxString &password = wxEmptyString);
 
-	//! Installs this download using the specified wxBaseInstaller-derived class.
-	//virtual bool Install(wxBaseInstaller &) const;
+	//! Downloads this package synchronously and thus when the function returns
+	//! the package has been completely downloaded (if result is TRUE).
+	virtual bool DownloadSynch(const wxString &path,
+								const wxString &proxy = wxEmptyString,
+								const wxString &user = wxEmptyString,
+								const wxString &password = wxEmptyString);
+
+	//! Installs this download using the specified wxWebUpdateInstaller class.
+	virtual bool Install(wxWebUpdateInstaller *) const;
     
 public:		// static platform utilities
 
@@ -315,6 +337,12 @@ protected:
 	//! Creates a wxWebUpdatePackage from the given XML node.
 	//! The caller must delete the returned pointer.
 	wxWebUpdatePackage *GetPackage(const wxXmlNode *package) const;
+
+	//! Creates a wxWebUpdateDownload from the given XML node.
+	wxWebUpdateDownload GetDownload(const wxXmlNode *latestdownload) const;
+
+	//! Returns the text content of the given node.
+	wxString GetNodeContent(const wxXmlNode *node) const;
 
 public:
 	wxWebUpdateXMLScript(const wxString &strURL = wxEmptyString) 

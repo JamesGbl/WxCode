@@ -2,9 +2,7 @@
 <!DOCTYPE webupdate SYSTEM "webupdate.dtd">
 <!-- $Id$ -->
 
-<webupdate>
-   <requires>1.0</requires>
-
+<webupdate>   
 
    <!-- our CORE package: we use this to deliver the sample binaries -->
    <package id="core">
@@ -14,10 +12,12 @@
 			<uri>http://easynews.dl.sourceforge.net/sourceforge/mathstudio/MathStudio-0.7.2.msi</uri>
 			<platform name="msw"/>
 			<md5>42e898d5f7d5bc1b359c80f02706d01e</md5>			
+			<action>run</action>
 	  </latest-download>
       <latest-download>
 			<uri>http://wxcode.sourceforge.net/components/webupdate/myapp.tar.gz</uri>
 			<platform name="gtk"/>
+			<action>run</action>
 	  </latest-download>
 
 
@@ -31,6 +31,7 @@
    
    <!-- our ADDON package -->
    <package id="addon">
+	  <requires>core</requires>
       <latest-version importance="low">1.2.3</latest-version>      
 
 	  <!-- a single download for all platforms -->
