@@ -5,8 +5,8 @@
 <webupdate>
 
    <!-- our customized messages -->
-   <msg-update-available>Some updates for $(appname) are available; don't miss them !</msg-update-available>
-   <msg-update-notavailable>You have the most updated version of $(appname)...</msg-update-notavailable>
+   <msg-update-available>Some updates for "$(framename)" are available; don't miss them !</msg-update-available>
+   <msg-update-notavailable>You have the most updated version of "$(framename)"...</msg-update-notavailable>
 	 
    <!-- for an example of XML webupdate script with multiple packages see script2.xml -->
    <package id="simple">
@@ -33,7 +33,7 @@
 	  </latest-download>
 
 	  <!-- description for this package; don't break lines or you'll get some empty spaces in the final description string -->
-	  <description>The package containing the binaries for the "WebUpdate simple sample program"... if you need to show to the user a link to your changelog, then the right place is this: URLs like http://wxcode.sf.net are automatically highlighted and made clickable...</description>
+	  <description>The package containing the binaries for the "$(framename)"... if you need to show to the user a link to your changelog, then the right place is this: URLs like http://wxcode.sf.net are automatically highlighted and made clickable...</description>
    </package>
 
 </webupdate>
