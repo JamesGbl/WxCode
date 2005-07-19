@@ -55,6 +55,10 @@ class wxGauge;
 #define wxWUD_GAUGE_RANGE				1000
 
 
+//! The ID of the XML webupdate resource script.
+#define wxWUD_XMLSCRIPT_ID				wxT("XMLSCRIPT")
+
+
 
 //! Returns a string with a short size description for the given number of bytes.
 WXDLLIMPEXP_WEBUPDATE wxString wxGetSizeStr(unsigned long bytesize);
@@ -176,7 +180,7 @@ protected:		// other member variables
 
 	//! This is a little helper which is set to TRUE during the first download;
 	//! that is, it's set to TRUE when we are downloading the XML script.
-	bool m_bDownloadingScript;
+	//bool m_bDownloadingScript;
 
 	//! TRUE if we intentionally called wxDownloadThread::AbortDownload
 	//! because user asked us to do so.
@@ -254,7 +258,7 @@ public:
 							int count)							
 		{ m_parent=parent; m_strAppName=appname; m_strURI=uri; 
 			m_pLocalPackages=arr; m_nLocalPackages=count; 			
-			m_bDownloadingScript=FALSE; m_bUserAborted=FALSE;
+			/*m_bDownloadingScript=FALSE;*/ m_bUserAborted=FALSE;
 			InitWidgetsFromXRC(); }
 
 	virtual ~wxWebUpdateDlg() 

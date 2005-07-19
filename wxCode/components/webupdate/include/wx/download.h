@@ -88,6 +88,10 @@ public:		// related to current download
 	//! This is used by wxWebUpdateDlg only for error messages.
 	wxString m_strResName;
 
+	//! The ID of the resource we are downloading.
+	//! This is used by wxWebUpdateDlg only for error messages.
+	wxString m_strID;
+
 	//! The MD5 file checksum.
 	//! This is used by wxWebUpdateDlg only for error messages.
 	wxString m_strMD5;

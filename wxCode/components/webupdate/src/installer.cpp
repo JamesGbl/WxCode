@@ -50,6 +50,10 @@ wxWebUpdateInstaller *wxWebUpdateInstaller::m_pTheInstaller = NULL;
 // wxWEBUPDATEACTION
 // ---------------------
 
+bool wxWebUpdateAction::Run() const
+{
+	return TRUE;
+}
 
 
 

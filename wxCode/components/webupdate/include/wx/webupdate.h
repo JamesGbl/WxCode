@@ -176,7 +176,7 @@ public:		// main functions
 								const wxString &password = wxEmptyString);
 
 	//! Installs this download using the specified wxWebUpdateInstaller class.
-	virtual bool Install(wxWebUpdateInstaller *) const;
+	virtual bool Install(wxWebUpdateInstaller *installer = NULL) const;
     
 public:		// static platform utilities
 

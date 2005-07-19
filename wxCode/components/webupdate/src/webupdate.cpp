@@ -234,10 +234,24 @@ wxDownloadThread *wxWebUpdateDownload::DownloadAsynch(const wxString &path,
 
 bool wxWebUpdateDownload::Install(wxWebUpdateInstaller *touse) const
 {
+	bool unrecognized = FALSE;
+	if (!touse) touse = wxWebUpdateInstaller::Get();
+	wxWebUpdateActionHashMap hashmap = touse->GetActionHashMap();
+
 	// installation means: execute all <action> tags for this download...
+	for (int i=0; i<(int)m_arrActions.GetCount(); i++) {
+		wxString n = m_arrActions[i].GetName();
+		if (hashmap.find(n) == hashmap.end()) {
+			unrecognized = TRUE;
+			wxLogDebug(wxT("wxWebUpdateDownload::Install - unregistered action ") + n);
+			continue;	// skip this unknown action
+		}
 
+		if (!hashmap[n].Run())
+			return FALSE;		// stop here
+	}
 
-	return FALSE;
+	return !unrecognized;
 }
 
 

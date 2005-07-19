@@ -57,6 +57,9 @@ public:		// miscellaneous
 	//! property has not been set for this object.
 	wxString GetPropValue(const wxString &propname) const
 		{ int n=m_arrPropName.Index(propname); if (n!=wxNOT_FOUND) return m_arrPropValue.Item(n); }
+
+	//! Run this action.
+	bool Run() const;
     
 public:     // getters
 
@@ -119,7 +122,7 @@ public:		// single ton accessors
 
 public:		// action hashmap
 
-	wxWebUpdateActionHashMap &GetHashMap()
+	wxWebUpdateActionHashMap &GetActionHashMap()
 		{ return m_hashActions; }
 
 	wxStringStringHashMap &GetKeywords()

@@ -229,10 +229,10 @@ void wxWebUpdateDlg::OnIdle(wxIdleEvent &)
 	m_thread->m_strURI = m_strURI;
 	m_thread->m_strResName = wxT("XML WebUpdate script");
 	m_thread->m_strOutput = wxFileName::CreateTempFileName(wxT("webupdate"));
-	//m_pTimeText->SetLabel(wxWUD_TIMETEXT_PREFIX wxT("60 s"));
+	m_thread->m_strID = wxWUD_XMLSCRIPT_ID;
 
 	// this special flag makes easier the #OnDownloadComplete handler
-	m_bDownloadingScript = TRUE;
+	//m_bDownloadingScript = TRUE;
 
 	// launch a separate thread for the webupdate script download
 	if (m_thread->Create() != wxTHREAD_NO_ERROR ||
@@ -531,6 +531,7 @@ void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 			m_thread->m_strURI = dl.GetDownloadString();
 			m_thread->m_strMD5 = dl.GetMD5Checksum();
 			m_thread->m_strResName = name + wxT(" package");
+			m_thread->m_strID = name;
 
 			// advanced options
 			m_thread->m_strHTTPAuthUsername = m_pAdvPanel->GetUsername();
@@ -539,6 +540,7 @@ void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 			m_thread->m_strProxyHostname = m_pAdvPanel->GetProxyHostName();
 
 			// reset the gauge GUI
+			m_pGauge->SetValue(0);
 			m_pGauge->SetRange(dl.GetDownloadSize());
 			
 			// launch the download
@@ -597,12 +599,12 @@ void wxWebUpdateDlg::OnShowHideAdv(wxCommandEvent &)
 
 void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 {
-	bool forceremove = FALSE;
+	bool forceremove = FALSE, downloadingScript = (m_thread->m_strID == wxWUD_XMLSCRIPT_ID);
 
 	// first of all, we need to know if download was successful
 	if (!m_thread->DownloadWasSuccessful()) {
 
-		if (m_bDownloadingScript)
+		if (downloadingScript)
 			forceremove = TRUE;		// always remove the script
 
 		if (m_bUserAborted)
@@ -613,7 +615,7 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 					wxT(" from\n\n") + m_thread->m_strURI + wxT("\n\nURL... "));
 		
 		wxLogDebug(wxT("wxWebUpdateDlg::OnDownloadComplete - Download status: failed !"));
-		if (m_bDownloadingScript)
+		if (downloadingScript)
 			AbortDialog();		// this is a unrecoverable error !
 
 		m_bUserAborted = FALSE;		// reset flag
@@ -622,7 +624,7 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 	} else {
 
 		wxLogDebug(wxT("wxWebUpdateDlg::OnDownloadComplete - Download status: successfully completed"));
-		if (m_bDownloadingScript) {
+		if (downloadingScript) {
 
 			// handle the XML parsing & control update 
 			OnScriptDownload(m_thread->m_strOutput);
@@ -633,6 +635,9 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 			if (m_thread->m_strMD5.IsEmpty()) {
 
 				// handle the installation of this package
+				wxWebUpdatePackage &pkg = GetRemotePackage(m_thread->m_strID);
+				wxWebUpdateDownload &download = pkg.GetDownloadPackage();
+				download.Install();
 				return;
 			}
 
@@ -665,7 +670,7 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 	}
 
 	// reset flag
-	if (m_bDownloadingScript) m_bDownloadingScript = FALSE;
+	//if (downloadingScript) m_bDownloadingScript = FALSE;
 }
 
 
