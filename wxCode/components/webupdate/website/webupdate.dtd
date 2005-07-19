@@ -1,56 +1,39 @@
 <!-- 
-// Name:        webupdate.dtd
-// Purpose:     a simple DTD to validate update script
-// Author:      Francesco Montorsi
-// Created:     2005/06/24
-// RCS-ID:      $Id$
-// Copyright:   (c) 2005 Francesco Montorsi
-// Licence:     wxWidgets licence
+   Name:        webupdate.dtd
+   Purpose:     a simple DTD to validate update script
+   Author:      Francesco Montorsi
+   Created:     2005/06/24
+   RCS-ID:      $Id$
+   Copyright:   (c) 2005 Francesco Montorsi
+   Licence:     wxWidgets licence
 
    This Document Type Definition (DTD) is for the update scripts that you put
    in your webserver. This file should make easier to check validity of the
-   scripts you write and also as a simple reference guide for the update script
-   format.
+   scripts you write and it should also be as a simple reference guide for the 
+   update script format.
+
+   I suggest you to look at the following files as examples of WebUpdate scripts:
+   
+     http://wxcode.sf.net/components/webupdate/script1.xml
+	 http://wxcode.sf.net/components/webupdate/script2.xml
+	 
+   Also remember to validate your XML files against this DTD before mailing for
+   problems about your scripts: WebUpdate component is not responsible for
+   unwanted behaviours coming from malformed update scripts !
+
+
+   NOTE ABOUT "KEYWORD SUBSTITUTION": in this context, by "keyword substitution" 
+   we mean the process of replacing thos strings in the form $(...) with values
+   defined at compile-time in the program which downloads this script file.
+   Keyword substitution is performed only in the text content of those tags whose  
+   description explicitely state it.
+
 -->
 
-<!-- 
-     A minimal example of a simple update script files:
-	 
-	 <?xml version="1.0"?>
-	 <webupdate>
-		<package id="myapp">
-			<latest-version>2.0.3</latest-version>
-			<latest-download platform="msw">http://myapp.com/download/myapp.exe</latest-download>
-			<latest-download platform="gtk">http://myapp.com/download/myapp.rpm</latest-download>
-		</package>
-	 </webupdate>
 
-	 
-	 
-	 A sample showing _all_ the available tags in action:
-	 
-	 <?xml version="1.0"?>
-	 <webupdate>
-	    <requires></requires>
-	 
-		<package id="myapp">
-			<latest-version importance="high">2.0.3</latest-version>
-			<latest-download platform="msw" md5="42e898d5f7d5bc1b359c80f02706d01e">http://myapp.com/download/myapp.exe</latest-download>
-			<latest-download platform="gtk">http://myapp.com/download/myapp.rpm</latest-download>
-
-			<msg-update-available>The new $(id) $(latest-version) is available for download;
-								it has several bugfixes and security improvements !</msg-update-available>
-			<msg-update-notavailable>You have the most updated version of $(id)...</msg-update-notavailable>
-
-		</package>
-	 </webupdate>
-	 
--->
 
 
 <!-- WEBUPDATE tag: this is the root of the script file.
-                    It can contain:	                
-					- 0 or more occurrences of the PACKAGE tag
 -->
 <!ELEMENT webupdate (msg-update-available?, msg-update-notavailable?, package*)>
 
@@ -63,19 +46,15 @@
 
 
 <!-- PACKAGE tag: this begins a new package section where
-                  are provided all the info about new updates
-				  about it. Requires an "id" attribute (unique)
-				  and the 
-				  - latest-version
-				  - latest-download
-				  tags
+                  are provided all the info about new updates.
+				  Requires an "id" attribute (which must be unique).
 -->
 <!ELEMENT package (requires?, latest-version, latest-download*, description?)>
 <!ATTLIST package id ID #REQUIRED>
 
 
 <!-- MSG-UPDATE-AVAILABLE tag: contains a text message which is displayed to the user in case
-                               a new version of the package is available for its platform. 
+                               a new version of some package is available for its platform. 
 							   Keyword substitution is performed in the text.
 -->
 <!ELEMENT msg-update-available (#PCDATA)>
@@ -114,19 +93,19 @@
 
 
 <!-- LATEST-DOWNLOAD tag: must contain the URI tag with the download location of the most updated
-                          file available in the webserver. Requires a "platform" subtag
+                          file available in the webserver. Requires also a "platform" child tag
 						  which specifies the platform targeted by this download.
 						  The "md5" subtag can be optionally used to specify a MD5 checksum.
-						  At least one "action" tag must be present to specify the action to
-						  take at the end of the download.
-						  
+						  At least one "action" child tag must be present to specify the action to
+						  take at the end of the download.						  
 -->
 <!ELEMENT latest-download (uri, platform, md5?, action+)>
 
 
 <!-- DESCRIPTION tag: the description for this package; contained URLs will be automatically highlighted
                       so that the user can click them to directly visit them.
-                      This is useful to embed a link to the changelog for this package, for example.						  
+                      This is useful to embed a link to the changelog for this package, for example.
+                      Keyword substitution is performed in the text.				  
 -->
 <!ELEMENT description (#PCDATA)>
 
@@ -145,7 +124,17 @@
 
 
 
-<!-- UDRI tag: specified the URI of the current download.
+<!-- URI tag: specifies the URI of the current download.
+              Keyword substitution is performed in the text; this allows you to write
+			  URLs in this way:
+			  
+			  <uri>http://mysite.net/myprog-$(latest-version).zip</uri>
+			  
+			  which is very handy for those projects who follow a strict naming rule.
+			  This allows you to avoid to update the filename each time a new release
+			  is out but don't forget that you will still need to update the tags:
+			  <latest-version>, <md5>, etc ...
+			  
 -->
 <!ELEMENT uri (#PCDATA)>
 

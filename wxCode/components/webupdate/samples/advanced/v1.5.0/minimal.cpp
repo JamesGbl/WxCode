@@ -21,7 +21,7 @@
 // these are the info required by wxWebUpdate classes about the 
 // application to update...
 #define VERSION				wxT("1.5.0")
-#define APP_NAME			wxT("wxWebUpdate sample")
+#define APP_NAME			wxT("wxWebUpdate ADVANCED sample")
 #define PACKAGE_NUM			1
 #define PACKAGE_NAME		wxT("myapp")	// just to show this can be different from APP_NAME
 #define SCRIPT_LOCATION		wxT("http://wxcode.sourceforge.net/components/webupdate/script2.xml")

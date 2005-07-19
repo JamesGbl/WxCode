@@ -1,0 +1,6 @@
+ ======================================================
+ EXAMPLE OF A DATA FILE FOR THE ADVANCED PROGRAM v0.0.1
+ ======================================================
+ 
+ Like the simpledata.txt file of the simple/v1.0.0 program...
+ 

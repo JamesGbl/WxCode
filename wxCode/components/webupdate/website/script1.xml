@@ -14,20 +14,22 @@
 	  
 	  <!-- our downloads (1 per platform) -->
       <latest-download>
-			<uri>http://easynews.dl.sourceforge.net/sourceforge/mathstudio/MathStudio-0.7.2.msi</uri>
-			<platform name="msw"/>
-			<md5>42e898d5f7d5bc1b359c80f02706d01e</md5>			
+	  
+			<!-- use a simple ZIP -->
+			<uri>http://wxcode.sf.net/components/webupdate/simple-$(latest-version).zip</uri>
+			<platform name="msw"/>	
+		
 			<action>run</action>
 	  </latest-download>
       <latest-download>
-			<uri>http://wxcode.sourceforge.net/components/webupdate/myapp.tar.gz</uri>
-			<platform name="gtk"/>
-			<md5>42e898d5f7d5bc1b359c80f02706d01e</md5>			
+	  
+			<!-- on unix-base OS we use .tar.gz archives -->
+			<uri>http://wxcode.sf.net/components/webupdate/simple-$(latest-version).tar.gz</uri>
+			<platform name="gtk"/>			
 			
-			<action where="$(temp)">extract</action>
-			<action file="$(temp)/replacer.exe" args="pid=$(pid) from=./* to=$(programroot)" flags="ASYNCH">run</action>
+			<action where="$(tempdir)">extract</action>
+			<action file="$(tempdir)/replacer.exe" args="pid=$(pid) from=./* to=$(programroot)" flags="ASYNCH">run</action>
 			<action>exit</action>
-			
 	  </latest-download>
 
 	  <!-- description for this package; don't break lines or you'll get some empty spaces in the final description string -->
