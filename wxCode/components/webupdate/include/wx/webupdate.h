@@ -26,11 +26,13 @@
 
 // defined later
 class WXDLLIMPEXP_WEBUPDATE wxDownloadThread;
-class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDownload;		// defined later
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDownload;
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdatePackage;
 
 //! A global wxWebUpdateDownload variable which contains empty (and thus invalid)
 //! settings.
 extern WXDLLIMPEXP_DATA_WEBUPDATE(wxWebUpdateDownload) wxEmptyWebUpdateDownload;
+extern WXDLLIMPEXP_DATA_WEBUPDATE(wxWebUpdatePackage) wxEmptyWebUpdatePackage;
 
 
 //! The possible values of the "platform" attribute of the
@@ -248,19 +250,20 @@ protected:		// member variables
 	//! and use another parser (rather than #ExtractVersionNumbers) to do the check.
     wxVersion m_strLatestVersion;
 
-	//! The content of the <msg-update-available> tag, if present.
-    wxString m_strUpdateAvailableMsg;
-	
-	//! The content of the <msg-update-notavailable> tag, if present.
-    wxString m_strUpdateNotAvailableMsg;
+	//! The description for this package.
+	wxString m_strDescription;
 
 	//! The importance level of this package.
 	wxWebUpdatePackageImportance m_importance;
 
 	//! The array containing all the webupdate downloads available for this package.
-	//! (Each download is for the same vresion of this package but for a different
+	//! (Each download is for the same version of this package but for a different
 	//! platform).
 	wxWebUpdateDownloadArray m_arrWebUpdates;
+
+	//! The comma separed list of prerequisites for this package.
+	//! This list should contain only the IDs of other existing packages.
+	wxString m_strPrerequisites;
 
 protected:		// utilities
 
@@ -309,15 +312,15 @@ public:		// getters
 	//! Returns the latest available version for this package.
 	wxString GetLatestVersion() const			{ return m_strLatestVersion; }
 
-	//! Returns the content of the <msg-update-available> tag, if present. 
-	wxString GetUpdateAvailableMsg() const		{ return m_strUpdateAvailableMsg; }
-
-	//! Returns the content of the <msg-update-notavailable> tag, if present. 
-	wxString GetUpdateNotAvailableMsg() const	{ return m_strUpdateNotAvailableMsg; }
+	//! Returns the description for this package.
+	wxString GetDescription() const				{ return m_strDescription; }
 
 	//! Returns the importance level of the updates contained for this package.
 	wxWebUpdatePackageImportance GetImportance() const
 		{ return m_importance; }
+
+	//! Returns a comma-separed list of the names of the required packages.
+	wxString GetPrerequisites() const			{ return m_strPrerequisites; }
 
 private:
 	DECLARE_CLASS(wxWebUpdatePackage)
@@ -336,6 +339,12 @@ WX_DECLARE_USER_EXPORTED_OBJARRAY(wxWebUpdatePackage, wxWebUpdatePackageArray, W
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateXMLScript : public wxXmlDocument
 {
 protected:
+
+	//! The content of the <msg-update-available> tag, if present.
+    wxString m_strUpdateAvailableMsg;
+	
+	//! The content of the <msg-update-notavailable> tag, if present.
+    wxString m_strUpdateNotAvailableMsg;
 
 	//! The installer used to query the keyword substitution hashmap.
 	wxWebUpdateInstaller *m_pInstaller;
@@ -385,6 +394,12 @@ public:		// main functions
 	//! Returns a pointer to the old wxWebUpdateInstaller in use.
 	virtual const wxWebUpdateInstaller *Set(wxWebUpdateInstaller *p)
 		{ wxWebUpdateInstaller *old = m_pInstaller; m_pInstaller = p; return old; }
+
+	//! Returns the content of the <msg-update-available> tag, if present. 
+	wxString GetUpdateAvailableMsg() const		{ return m_strUpdateAvailableMsg; }
+
+	//! Returns the content of the <msg-update-notavailable> tag, if present. 
+	wxString GetUpdateNotAvailableMsg() const	{ return m_strUpdateNotAvailableMsg; }
 
 private:
 	DECLARE_CLASS(wxWebUpdateXMLScript)

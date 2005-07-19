@@ -3,6 +3,11 @@
 <!-- $Id$ -->
 
 <webupdate>
+
+   <!-- our customized messages -->
+   <msg-update-available>The new "$(id) $(latest-version)" package is available for download;
+     it has several bugfixes and security improvements !</msg-update-available>
+   <msg-update-notavailable>You have the most updated version of the "$(id)" package...</msg-update-notavailable>
 	 
    <!-- for an example of XML webupdate script with multiple packages see script2.xml -->
    <package id="simple">
@@ -26,10 +31,10 @@
 			
 	  </latest-download>
 
-	  <!-- our customized messages -->
-      <msg-update-available>The new "$(id) $(latest-version)" package is available for download;
-			it has several bugfixes and security improvements !</msg-update-available>
-      <msg-update-notavailable>You have the most updated version of the "$(id)" package...</msg-update-notavailable>
+	  <description>The package containing the binaries for the "WebUpdate simple sample program"... if you need
+	  to show to the user a link to your changelog, then the right place is this: URLs like http://wxcode.sf.net are
+	  automatically highlighted and made clickable...</description>
 
    </package>
+
 </webupdate>

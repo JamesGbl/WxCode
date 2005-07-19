@@ -52,7 +52,7 @@
                     It can contain:	                
 					- 0 or more occurrences of the PACKAGE tag
 -->
-<!ELEMENT webupdate (package*)>
+<!ELEMENT webupdate (msg-update-available?, msg-update-notavailable?, package*)>
 
 
 
@@ -70,8 +70,23 @@
 				  - latest-download
 				  tags
 -->
-<!ELEMENT package (latest-version, requires?, latest-download*, msg-update-available?, msg-update-notavailable?)>
+<!ELEMENT package (requires?, latest-version, latest-download*, description?)>
 <!ATTLIST package id ID #REQUIRED>
+
+
+<!-- MSG-UPDATE-AVAILABLE tag: contains a text message which is displayed to the user in case
+                               a new version of the package is available for its platform. 
+							   Keyword substitution is performed in the text.
+-->
+<!ELEMENT msg-update-available (#PCDATA)>
+
+
+<!-- MSG-UPDATE-NOTAVAILABLE tag: contains a text message which is displayed to the user in case
+                                 a new version of the package is NOT available for its platform. 
+							     Keyword substitution is performed in the text.
+-->
+<!ELEMENT msg-update-notavailable (#PCDATA)>
+
 
 
 
@@ -98,21 +113,6 @@
 <!ATTLIST latest-version importance (low|normal|high) "normal">
 
 
-
-<!-- MSG-UPDATE-AVAILABLE tag: contains a text message which is displayed to the user in case
-                               a new version of the package is available for its platform. 
-							   Keyword substitution is performed in the text.
--->
-<!ELEMENT msg-update-available (#PCDATA)>
-
-
-<!-- MSG-UPDATE-NOTAVAILABLE tag: contains a text message which is displayed to the user in case
-                                 a new version of the package is NOT available for its platform. 
-							     Keyword substitution is performed in the text.
--->
-<!ELEMENT msg-update-notavailable (#PCDATA)>
-
-
 <!-- LATEST-DOWNLOAD tag: must contain the URI tag with the download location of the most updated
                           file available in the webserver. Requires a "platform" subtag
 						  which specifies the platform targeted by this download.
@@ -122,6 +122,13 @@
 						  
 -->
 <!ELEMENT latest-download (uri, platform, md5?, action+)>
+
+
+<!-- DESCRIPTION tag: the description for this package; contained URLs will be automatically highlighted
+                      so that the user can click them to directly visit them.
+                      This is useful to embed a link to the changelog for this package, for example.						  
+-->
+<!ELEMENT description (#PCDATA)>
 
 
 

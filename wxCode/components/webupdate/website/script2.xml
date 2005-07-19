@@ -19,7 +19,6 @@
 			<platform name="gtk"/>
 			<action>run</action>
 	  </latest-download>
-
    </package>
    
    

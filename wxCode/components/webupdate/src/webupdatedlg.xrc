@@ -66,7 +66,7 @@
 				<!-- the listctrl on the left -->
 				<object class="sizeritem">
 					<flag>wxGROW</flag>					
-					<option>10</option>
+					<option>11</option>
 					<object class="wxBoxSizer">
 						<orient>wxVERTICAL</orient>
 
@@ -104,6 +104,8 @@
             </object>
         </object>
 		
+		
+		<!-- DESCRIPTION SECTION -->
         <object class="sizeritem">
             <flag>wxALIGN_CENTER|wxALL|wxGROW</flag>
             <border>5</border>
@@ -111,7 +113,30 @@
                 <style>wxLI_HORIZONTAL</style>
             </object>
         </object>
+		<object class="sizeritem">
+			<flag>wxALIGN_LEFT|wxBOTTOM|wxLEFT|wxRIGHT</flag>
+			<border>5</border>
+			<object class="wxStaticText" name="IDWUD_DESCRIPTION_TEXT">
+				<label>Package description:</label>
+			</object>
+		</object>
+		<object class="sizeritem">
+			<flag>wxGROW|wxBOTTOM|wxLEFT|wxRIGHT</flag>
+			<border>5</border>
+			<object class="wxTextCtrl" name="IDWUD_DESCRIPTION">
+				<style>wxTE_READONLY|wxTE_MULTILINE|wxTE_AUTO_URL|wxTE_RICH2</style>
+			</object>
+		</object>
 		
+		
+		<!-- GAUGE SECTION -->
+        <object class="sizeritem">
+            <flag>wxALIGN_CENTER|wxALL|wxGROW</flag>
+            <border>5</border>
+            <object class="wxStaticLine" name="IDWUD_LINE3">                
+                <style>wxLI_HORIZONTAL</style>
+            </object>
+        </object>
 		<object class="sizeritem">
 			<flag>wxALIGN_LEFT|wxBOTTOM|wxLEFT|wxRIGHT</flag>
 			<border>5</border>
@@ -119,8 +144,6 @@
 				<label>Download status:</label>
 			</object>
 		</object>
-		
-		<!-- our gauge -->
         <object class="sizeritem">
             <flag>wxGROW|wxBOTTOM|wxLEFT|wxRIGHT</flag>
             <border>5</border>

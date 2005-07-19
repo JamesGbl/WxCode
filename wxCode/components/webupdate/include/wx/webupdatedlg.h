@@ -155,18 +155,18 @@ protected:		// pointers to our controls
 	
 	wxStaticText *m_pAppNameText, *m_pTimeText, *m_pSpeedText;
 	wxButton *m_pOkBtn, *m_pCancelBtn, *m_pShowHideAdvBtn;
+	wxGauge *m_pGauge;
+	wxTextCtrl *m_pDescription;
 
 #if wxWU_USE_CHECKEDLISTCTRL
 	wxCheckedListCtrl *m_pUpdatesList;
 #else
 	wxListCtrl *m_pUpdatesList;
 #endif
-	wxGauge *m_pGauge;
 
 	// we store advanced settings here:
 	wxWebUpdateAdvPanel *m_pAdvPanel;
 	
-
 
 protected:		// other member variables
 
@@ -260,8 +260,22 @@ public:
 		{ if (m_thread) delete m_thread; }
 
 
+public:		// main functions
+
 	//! Shows the dialog and immediately start the download of the webupdate script.
 	int ShowModal();
+
+	//! Returns a pointer to the local package with the given name or NULL if such
+	//! package could not be found.
+	const wxWebUpdateLocalPackage *GetLocalPackage(const wxString &name) const;
+
+	//! Returns the array of updated packages parsed from the WebUpdate XML Script.
+	wxWebUpdatePackageArray GetRemotePackages() const
+		{ return m_arrUpdatedPackages; }
+
+	//! Returns the remote package with the given name.
+	wxWebUpdatePackage &GetRemotePackage(const wxString &name);
+
 
 private:
 	DECLARE_CLASS(wxWebUpdateDlg)

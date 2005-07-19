@@ -48,6 +48,7 @@ WX_DEFINE_USER_EXPORTED_OBJARRAY(wxWebUpdatePackageArray);
 
 // global objects
 wxWebUpdateDownload wxEmptyWebUpdateDownload(wxT("invalid"));
+wxWebUpdatePackage wxEmptyWebUpdatePackage(wxT("invalid"));
 
 
 
@@ -452,7 +453,13 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) c
 	// parse this package
 	wxXmlNode *child = package->GetChildren();
 	while (child) {
-		if (child->GetName() == wxT("latest-version")) {
+
+		if (child->GetName() == wxT("requires")) {
+
+			// read the list of required packages
+			ret->m_strPrerequisites = GetNodeContent(child);
+
+		} else if (child->GetName() == wxT("latest-version")) {
 
 			// get the version string
 			ret->m_strLatestVersion = GetNodeContent(child);
@@ -481,11 +488,8 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) c
 			else
 				wxLogDebug(wxT("wxWebUpdateXMLScript::GetPackage - skipping an invalid <latest-download> tag"));
 
-		} else if (child->GetName() == wxT("msg-update-available")) {
-			ret->m_strUpdateAvailableMsg = DoKeywordSubstitution(GetNodeContent(child));
-
-		} else if (child->GetName() == wxT("msg-update-notavailable")) {
-			ret->m_strUpdateNotAvailableMsg = DoKeywordSubstitution(GetNodeContent(child));
+		} else if (child->GetName() == wxT("description")) {
+			ret->m_strDescription = DoKeywordSubstitution(GetNodeContent(child));
 		}
 
 		// proceed
@@ -569,6 +573,22 @@ bool wxWebUpdateXMLScript::Load(const wxString &uri)
 	bool success = wxXmlDocument::Load(*xml->GetStream());
 	delete xml;
 
-	return success;
+	// load the use custom messages (if present)
+    wxXmlNode *webupdate = GetRoot();
+	if (!success || !webupdate || webupdate->GetName() != wxT("webupdate"))
+		return FALSE;
+
+    wxXmlNode *child = webupdate->GetChildren();
+	while (child) {
+
+		if (child->GetName() == wxT("msg-update-available"))
+			m_strUpdateAvailableMsg = DoKeywordSubstitution(GetNodeContent(child));
+		else if (child->GetName() == wxT("msg-update-notavailable"))
+			m_strUpdateNotAvailableMsg = DoKeywordSubstitution(GetNodeContent(child));
+
+		child = child->GetNext();
+	}
+
+	return TRUE;
 }
 

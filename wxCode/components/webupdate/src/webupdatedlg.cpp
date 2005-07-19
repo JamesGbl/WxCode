@@ -151,11 +151,11 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 	m_pSpeedText = XRCCTRL(*this, "IDWUD_PROGRESS_TEXT", wxStaticText);
 	m_pTimeText = XRCCTRL(*this, "IDWUD_TIME_TEXT", wxStaticText);
 	m_pGauge = XRCCTRL(*this, "IDWUD_GAUGE", wxGauge);
+	m_pDescription = XRCCTRL(*this, "IDWUD_DESCRIPTION", wxTextCtrl);
 
 	m_pOkBtn = XRCCTRL(*this,"IDWUD_OK", wxButton);
 	m_pCancelBtn = XRCCTRL(*this,"IDWUD_CANCEL", wxButton);
 	m_pShowHideAdvBtn = XRCCTRL(*this, "IDWUD_SHOWHIDEADV", wxButton);
-
 
 
 
@@ -171,16 +171,19 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 	m_pUpdatesList->InsertColumn(2, wxT("Local version"));
 	m_pUpdatesList->InsertColumn(3, wxT("Size"));
 	m_pUpdatesList->InsertColumn(4, wxT("Importance"));
+	m_pUpdatesList->InsertColumn(5, wxT("Requires"));
 	m_pUpdatesList->SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
 	m_pUpdatesList->SetColumnWidth(1, wxLIST_AUTOSIZE_USEHEADER);
 	m_pUpdatesList->SetColumnWidth(2, wxLIST_AUTOSIZE_USEHEADER);	
 	m_pUpdatesList->SetColumnWidth(4, wxLIST_AUTOSIZE_USEHEADER);
+	m_pUpdatesList->SetColumnWidth(5, wxLIST_AUTOSIZE_USEHEADER);
 
 	// size is the smallest column but it usually needs some space...
 	int colwidth = m_pUpdatesList->GetColumnWidth(0) +
 					m_pUpdatesList->GetColumnWidth(1) +
 					m_pUpdatesList->GetColumnWidth(2) +
-					m_pUpdatesList->GetColumnWidth(4);
+					m_pUpdatesList->GetColumnWidth(4) +
+					m_pUpdatesList->GetColumnWidth(5);
 	int size = m_pUpdatesList->GetClientSize().GetWidth()-colwidth;	
 	m_pUpdatesList->SetColumnWidth(3, size > 50 ? size : 50);
 
@@ -265,17 +268,70 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
 	m_arrUpdatedPackages = m_xmlScript.GetAllPackages();
 	for (int i=0; i < (int)m_arrUpdatedPackages.GetCount(); i++)
 		m_arrUpdatedPackages[i].CacheDownloadSizes();
-	RebuildPackageList();
+	
+	// is everything up to date ?
+	bool allupdated = TRUE;
+	for (int j=0; j < (int)m_arrUpdatedPackages.GetCount(); j++) {
 
-	// handle the case that there are no packages in the listctrl
+		// get remote & local package info
+		wxWebUpdatePackage &curr = m_arrUpdatedPackages.Item(j);		
+		const wxWebUpdateLocalPackage *local = GetLocalPackage(curr.GetName());
+
+		// do the version check
+		if (!local || curr.Check(local->m_version) == wxWUCF_OUTOFDATE) {
+			allupdated = FALSE;
+			break;		// not all packages are uptodate
+		}
+	}
+
+	if (allupdated) {
+
+		// show to the user the "update not available" message
+		wxString defaultmsg = wxT("You have the latest version of all packages of ") +
+							m_strAppName + wxT("... exiting the update dialog.");
+		wxString usermsg = m_xmlScript.GetUpdateNotAvailableMsg();
+		wxMessageBox(usermsg.IsEmpty() ? defaultmsg : usermsg, 
+					m_strAppName, wxOK | wxICON_INFORMATION);
+
+		AbortDialog();
+		return;	
+	} else {
+
+		// some updates are available... show the message only if the webupdate
+		// script contains an explicit user-customized message for this evenience
+		wxString usermsg = m_xmlScript.GetUpdateAvailableMsg();
+		if (!usermsg.IsEmpty())
+			wxMessageBox(usermsg, m_strAppName, wxOK | wxICON_INFORMATION);
+	}
+
+	// what if we could not found any valid package in the webupdate script ?
+	RebuildPackageList();
 	if (m_pUpdatesList->GetItemCount() == 0) {
 
 		wxMessageBox(wxT("Could not found any valid package for ") + m_strAppName
-					+ wxT(" or there are no updates. Exiting the update dialog."), 
+					+ wxT(" in the WebUpdate script. Exiting the update dialog."), 
 					wxT("Warning"), wxOK | wxICON_INFORMATION);
 		AbortDialog();
 		return;
 	}
+}
+
+const wxWebUpdateLocalPackage *wxWebUpdateDlg::GetLocalPackage(const wxString &name) const
+{
+	const wxWebUpdateLocalPackage *local = NULL;
+	for (int j=0; j < m_nLocalPackages; j++)
+		if (m_pLocalPackages[j].m_strName == name)
+			local = &m_pLocalPackages[j];
+
+	return local;
+}
+
+wxWebUpdatePackage &wxWebUpdateDlg::GetRemotePackage(const wxString &name)
+{
+	for (int j=0; j<(int)m_arrUpdatedPackages.GetCount(); j++)
+		if (m_arrUpdatedPackages[j].GetName() == name)
+			return m_arrUpdatedPackages[j];
+	return wxEmptyWebUpdatePackage;
 }
 
 void wxWebUpdateDlg::RebuildPackageList()
@@ -305,10 +361,7 @@ void wxWebUpdateDlg::RebuildPackageList()
 		// here we need some further work to find if this package
 		// is already installed...
 		// -------------------------------------------------------
-		const wxWebUpdateLocalPackage *local = NULL;
-		for (int j=0; j < m_nLocalPackages; j++)
-			if (m_pLocalPackages[j].m_strName == curr.GetName())
-				local = &m_pLocalPackages[j];
+		const wxWebUpdateLocalPackage *local = GetLocalPackage(curr.GetName());
 
 		// did we find a local matching package ?
 		bool tocheck = FALSE;
@@ -400,6 +453,13 @@ void wxWebUpdateDlg::RebuildPackageList()
 		default:
 			wxASSERT_MSG(0, wxT("Invalid package !"));
 		}
+
+
+		// set the properties for the sixth column (REQUIRES)
+		// ----------------------------------------------------
+
+		wxString str(curr.GetPrerequisites());
+		m_pUpdatesList->SetItem(idx, 5, str.IsEmpty() ? wxT("none") : str);
 	}
 }
 
@@ -442,10 +502,15 @@ void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 	// launch the download of the selected packages
 	for (int i=0; i<m_pUpdatesList->GetItemCount(); i++) {
 		if (m_pUpdatesList->IsChecked(i)) {
-			
-			// get the download data
-			wxWebUpdateDownload dl = m_arrUpdatedPackages[i].GetDownloadPackage();
+
+			// find this name in our array of packages; this is required
+			// since we can't trust the current index "i" since some view
+			// filter could have been applied on the listctrl and thus 
+			// there maybe some hidden packages which make "i" out of synch
+			// with the i-th package contained into m_arrUpdatedPackages
 			wxString name = m_pUpdatesList->GetItemText(i);
+			wxWebUpdatePackage &pkg = GetRemotePackage(name);
+			wxWebUpdateDownload &dl = pkg.GetDownloadPackage();
 			
 			// init thread variables
 			m_thread->m_strOutput = m_pAdvPanel->GetDownloadPath() + dl.GetFileName();
@@ -596,6 +661,21 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 	// cause flickering
 	static bool bLabelRunningMode = FALSE;
 	static wxDateTime lastupdate = wxDateTime::UNow();
+
+	// change the description label eventually
+	if (m_pUpdatesList->GetSelectedItemCount() > 0) {
+	
+		for (int i=0; i<m_pUpdatesList->GetItemCount(); i++) {
+			if (m_pUpdatesList->GetItemState(i, wxLIST_STATE_SELECTED)) {
+
+				// show the description of the first selected item
+				wxString name = m_pUpdatesList->GetItemText(i);
+				wxWebUpdatePackage &pkg = GetRemotePackage(name);
+				m_pDescription->SetValue(pkg.GetDescription());
+				break;
+			}
+		}
+	}
 
 	if (!m_thread->IsDownloading()) {
 
