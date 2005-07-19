@@ -1,0 +1,6 @@
+ ====================================================
+ EXAMPLE OF A DATA FILE FOR THE SIMPLE PROGRAM v2.0.3
+ ====================================================
+ 
+ This is the example of a generic data file updated for version 2.0.3
+ See the datafile in the simple program v 1.0.0 for more info...

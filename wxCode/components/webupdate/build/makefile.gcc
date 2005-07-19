@@ -179,7 +179,7 @@ mingw:
 
 ### Targets: ###
 
-all: $(__webupdate_lib___depname) $(__webupdate_dll___depname) ..\samples\simple\v1.0.0\simple_1_0_0.exe ..\samples\simple\v2.0.3\simple_2_0_3.exe ..\samples\advanced\v0.0.1\advanced_0_0_1.exe ..\samples\advanced\v1.5.0\advanced_1_5_0.exe
+all: $(__webupdate_lib___depname) $(__webupdate_dll___depname) ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
 
 clean: 
 	-if exist mingw\*.o del mingw\*.o
@@ -187,10 +187,10 @@ clean:
 	-if exist ..\lib\libwebupdate$(WXLIBPOSTFIX).a del ..\lib\libwebupdate$(WXLIBPOSTFIX).a
 	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).dll del ..\lib\webupdate$(WXLIBPOSTFIX).dll
 	-if exist ..\lib\libwebupdate$(WXLIBPOSTFIX).a del ..\lib\libwebupdate$(WXLIBPOSTFIX).a
-	-if exist ..\samples\simple\v1.0.0\simple_1_0_0.exe del ..\samples\simple\v1.0.0\simple_1_0_0.exe
-	-if exist ..\samples\simple\v2.0.3\simple_2_0_3.exe del ..\samples\simple\v2.0.3\simple_2_0_3.exe
-	-if exist ..\samples\advanced\v0.0.1\advanced_0_0_1.exe del ..\samples\advanced\v0.0.1\advanced_0_0_1.exe
-	-if exist ..\samples\advanced\v1.5.0\advanced_1_5_0.exe del ..\samples\advanced\v1.5.0\advanced_1_5_0.exe
+	-if exist ..\samples\simple\v1.0.0\simple.exe del ..\samples\simple\v1.0.0\simple.exe
+	-if exist ..\samples\simple\v2.0.3\simple.exe del ..\samples\simple\v2.0.3\simple.exe
+	-if exist ..\samples\advanced\v0.0.1\advanced.exe del ..\samples\advanced\v0.0.1\advanced.exe
+	-if exist ..\samples\advanced\v1.5.0\advanced.exe del ..\samples\advanced\v1.5.0\advanced.exe
 
 tarball: 
 	( cd .. && tar -cvzf ..\webupdate.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
@@ -219,6 +219,7 @@ deepclean:
 	-del /S ..\*.aps
 	-del /S ..\*.suo
 	-del /S ..\*.user
+	-del /S ..\*.res
 	-del /S ..\*.il?
 	-del /S ..\*.tds
 	-del /S ..\*.idb
@@ -229,6 +230,37 @@ deepclean:
 	-del /S ..\config.log
 	-del /S ..\Makefile
 	-del /S ..\bk-deps
+	-del /S .\*.a
+	-del /S .\*.lib
+	-del /S .\*.pdb
+	-del /S .\*.dll
+	-del /S .\*.exp
+	-del /S .\*.so*
+	-del /S .\*.exe
+	-del /S .\*.obj
+	-del /S .\*.o
+	-del /S .\*.log
+	-del /S .\*.manifest*
+	-del /S .\*.log
+	-del /S .\.bakefile_gen.state
+	-del /S .\*.pch
+	-del /S .\*.ncb
+	-del /S .\*.plg
+	-del /S .\*.ncb
+	-del /S .\*.aps
+	-del /S .\*.suo
+	-del /S .\*.user
+	-del /S .\*.res
+	-del /S .\*.il?
+	-del /S .\*.tds
+	-del /S .\*.idb
+	-del /S .\*.map
+	-if exist .\autom4te.cache then rmdir /S /Q .\autom4te.cache
+	-if exist .\.deps then rmdir /S /Q .\.deps
+	-del /S .\config.status
+	-del /S .\config.log
+	-del /S .\Makefile
+	-del /S .\bk-deps
 
 docs: 
 	( cd ..\docs && doxygen )
@@ -248,16 +280,16 @@ ifeq ($(WX_SHARED),1)
 	$(CXX) -shared -fPIC -o $@ $(WEBUPDATE_DLL_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -Wl,--out-implib,..\lib\libwebupdate$(WXLIBPOSTFIX).a  -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTLIBPOSTFIX) -lwxjpeg$(WX3RDPARTLIBPOSTFIX) -lwxpng$(WX3RDPARTLIBPOSTFIX) -lwxzlib$(WX3RDPARTLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 endif
 
-..\samples\simple\v1.0.0\simple_1_0_0.exe: $(SIMPLE_1_0_0_OBJECTS) $(__webupdate_lib___depname) mingw\simple_1_0_0_minimal_rc.o
+..\samples\simple\v1.0.0\simple.exe: $(SIMPLE_1_0_0_OBJECTS) $(__webupdate_lib___depname) mingw\simple_1_0_0_minimal_rc.o
 	$(CXX) -o $@ $(SIMPLE_1_0_0_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -Wl,--subsystem,windows -mwindows  ..\lib\libwebupdate$(WXLIBPOSTFIX).a -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTLIBPOSTFIX) -lwxjpeg$(WX3RDPARTLIBPOSTFIX) -lwxpng$(WX3RDPARTLIBPOSTFIX) -lwxzlib$(WX3RDPARTLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
-..\samples\simple\v2.0.3\simple_2_0_3.exe: $(SIMPLE_2_0_3_OBJECTS) $(__webupdate_lib___depname) mingw\simple_2_0_3_minimal_rc.o
+..\samples\simple\v2.0.3\simple.exe: $(SIMPLE_2_0_3_OBJECTS) $(__webupdate_lib___depname) mingw\simple_2_0_3_minimal_rc.o
 	$(CXX) -o $@ $(SIMPLE_2_0_3_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -Wl,--subsystem,windows -mwindows  ..\lib\libwebupdate$(WXLIBPOSTFIX).a -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTLIBPOSTFIX) -lwxjpeg$(WX3RDPARTLIBPOSTFIX) -lwxpng$(WX3RDPARTLIBPOSTFIX) -lwxzlib$(WX3RDPARTLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
-..\samples\advanced\v0.0.1\advanced_0_0_1.exe: $(ADVANCED_0_0_1_OBJECTS) $(__webupdate_lib___depname) mingw\advanced_0_0_1_minimal_rc.o
+..\samples\advanced\v0.0.1\advanced.exe: $(ADVANCED_0_0_1_OBJECTS) $(__webupdate_lib___depname) mingw\advanced_0_0_1_minimal_rc.o
 	$(CXX) -o $@ $(ADVANCED_0_0_1_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -Wl,--subsystem,windows -mwindows  ..\lib\libwebupdate$(WXLIBPOSTFIX).a -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTLIBPOSTFIX) -lwxjpeg$(WX3RDPARTLIBPOSTFIX) -lwxpng$(WX3RDPARTLIBPOSTFIX) -lwxzlib$(WX3RDPARTLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
-..\samples\advanced\v1.5.0\advanced_1_5_0.exe: $(ADVANCED_1_5_0_OBJECTS) $(__webupdate_lib___depname) mingw\advanced_1_5_0_minimal_rc.o
+..\samples\advanced\v1.5.0\advanced.exe: $(ADVANCED_1_5_0_OBJECTS) $(__webupdate_lib___depname) mingw\advanced_1_5_0_minimal_rc.o
 	$(CXX) -o $@ $(ADVANCED_1_5_0_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -Wl,--subsystem,windows -mwindows  ..\lib\libwebupdate$(WXLIBPOSTFIX).a -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTLIBPOSTFIX) -lwxjpeg$(WX3RDPARTLIBPOSTFIX) -lwxpng$(WX3RDPARTLIBPOSTFIX) -lwxzlib$(WX3RDPARTLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
 mingw\webupdate_lib_webupdate.o: ./../src/webupdate.cpp

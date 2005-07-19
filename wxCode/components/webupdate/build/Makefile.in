@@ -137,40 +137,24 @@ COND_USE_SOSYMLINKS_1___webupdate_dll___so_symlinks_inst_cmd = rm -f \
 COND_PLATFORM_MACOSX_1___webupdate_dll___macinstnamecmd = -install_name \
 	$(libdir)/$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf2)
 @COND_PLATFORM_MACOSX_1@__webupdate_dll___macinstnamecmd = $(COND_PLATFORM_MACOSX_1___webupdate_dll___macinstnamecmd)
-@COND_PLATFORM_MAC_1@__simple_1_0_0___mac_setfilecmd = \
-@COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL simple_1_0_0$(EXEEXT)
-COND_PLATFORM_OS2_1___simple_1_0_0___os2_emxbindcmd = $(NM) \
-	simple_1_0_0$(EXEEXT) | if grep -q pmwin.763 ; then emxbind -ep \
-	simple_1_0_0$(EXEEXT) ; fi
-@COND_PLATFORM_OS2_1@__simple_1_0_0___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___simple_1_0_0___os2_emxbindcmd)
 @COND_PLATFORM_WIN32_1@__simple_1_0_0___win32rc = simple_1_0_0_minimal_rc.o
-@COND_PLATFORM_MAC_1@__simple_2_0_3___mac_setfilecmd = \
-@COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL simple_2_0_3$(EXEEXT)
-COND_PLATFORM_OS2_1___simple_2_0_3___os2_emxbindcmd = $(NM) \
-	simple_2_0_3$(EXEEXT) | if grep -q pmwin.763 ; then emxbind -ep \
-	simple_2_0_3$(EXEEXT) ; fi
-@COND_PLATFORM_OS2_1@__simple_2_0_3___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___simple_2_0_3___os2_emxbindcmd)
 @COND_PLATFORM_WIN32_1@__simple_2_0_3___win32rc = simple_2_0_3_minimal_rc.o
-@COND_PLATFORM_MAC_1@__advanced_0_0_1___mac_setfilecmd \
-@COND_PLATFORM_MAC_1@	= $(SETFILE) -t APPL advanced_0_0_1$(EXEEXT)
-COND_PLATFORM_OS2_1___advanced_0_0_1___os2_emxbindcmd = $(NM) \
-	advanced_0_0_1$(EXEEXT) | if grep -q pmwin.763 ; then emxbind -ep \
-	advanced_0_0_1$(EXEEXT) ; fi
-@COND_PLATFORM_OS2_1@__advanced_0_0_1___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___advanced_0_0_1___os2_emxbindcmd)
 @COND_PLATFORM_WIN32_1@__advanced_0_0_1___win32rc = \
 @COND_PLATFORM_WIN32_1@	advanced_0_0_1_minimal_rc.o
-@COND_PLATFORM_MAC_1@__advanced_1_5_0___mac_setfilecmd \
-@COND_PLATFORM_MAC_1@	= $(SETFILE) -t APPL advanced_1_5_0$(EXEEXT)
-COND_PLATFORM_OS2_1___advanced_1_5_0___os2_emxbindcmd = $(NM) \
-	advanced_1_5_0$(EXEEXT) | if grep -q pmwin.763 ; then emxbind -ep \
-	advanced_1_5_0$(EXEEXT) ; fi
-@COND_PLATFORM_OS2_1@__advanced_1_5_0___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___advanced_1_5_0___os2_emxbindcmd)
 @COND_PLATFORM_WIN32_1@__advanced_1_5_0___win32rc = \
 @COND_PLATFORM_WIN32_1@	advanced_1_5_0_minimal_rc.o
+@COND_PLATFORM_MAC_1@__simple = $(SETFILE) -t APPL simple$(EXEEXT)
+COND_PLATFORM_OS2_1___simple_0 = $(NM) simple$(EXEEXT) | if grep -q pmwin.763 ; then \
+	emxbind -ep simple$(EXEEXT) ; fi
+@COND_PLATFORM_OS2_1@__simple_0 = $(COND_PLATFORM_OS2_1___simple_0)
+@COND_PLATFORM_MAC_1@__advanced = $(SETFILE) -t APPL advanced$(EXEEXT)
+COND_PLATFORM_OS2_1___advanced_0 = $(NM) advanced$(EXEEXT) | if grep -q pmwin.763 ; \
+	then emxbind -ep advanced$(EXEEXT) ; fi
+@COND_PLATFORM_OS2_1@__advanced_0 = $(COND_PLATFORM_OS2_1___advanced_0)
 
 ### Targets: ###
 
-all: $(__webupdate_lib___depname) $(__webupdate_dll___depname) ../samples/simple/v1.0.0/simple_1_0_0$(EXEEXT) ../samples/simple/v2.0.3/simple_2_0_3$(EXEEXT) ../samples/advanced/v0.0.1/advanced_0_0_1$(EXEEXT) ../samples/advanced/v1.5.0/advanced_1_5_0$(EXEEXT)
+all: $(__webupdate_lib___depname) $(__webupdate_dll___depname) ../samples/simple/v1.0.0/simple$(EXEEXT) ../samples/simple/v2.0.3/simple$(EXEEXT) ../samples/advanced/v0.0.1/advanced$(EXEEXT) ../samples/advanced/v1.5.0/advanced$(EXEEXT)
 
 install: all $(__install_webupdate_lib___depname) $(__install_webupdate_dll___depname)
 
@@ -194,10 +178,10 @@ clean:
 	rm -f ../lib/$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf3)
 	rm -f ../lib/$(LIBPREFIX)webupdate.$(DLLIMP_SUFFIX)
 	rm -f ../lib/$(LIBPREFIX)webupdate.$(DLLIMP_SUFFIX) ../lib/$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf2)
-	rm -f ../samples/simple/v1.0.0/simple_1_0_0$(EXEEXT)
-	rm -f ../samples/simple/v2.0.3/simple_2_0_3$(EXEEXT)
-	rm -f ../samples/advanced/v0.0.1/advanced_0_0_1$(EXEEXT)
-	rm -f ../samples/advanced/v1.5.0/advanced_1_5_0$(EXEEXT)
+	rm -f ../samples/simple/v1.0.0/simple$(EXEEXT)
+	rm -f ../samples/simple/v2.0.3/simple$(EXEEXT)
+	rm -f ../samples/advanced/v0.0.1/advanced$(EXEEXT)
+	rm -f ../samples/advanced/v1.5.0/advanced$(EXEEXT)
 
 distclean: clean
 	rm -f config.cache config.log config.status bk-deps bk-make-pch shared-ld-sh Makefile
@@ -229,6 +213,7 @@ deepclean:
 	rm -f -r ../*.aps
 	rm -f -r ../*.suo
 	rm -f -r ../*.user
+	rm -f -r ../*.res
 	rm -f -r ../*.il?
 	rm -f -r ../*.tds
 	rm -f -r ../*.idb
@@ -239,6 +224,37 @@ deepclean:
 	rm -f -r ../config.log
 	rm -f -r ../Makefile
 	rm -f -r ../bk-deps
+	rm -f -r ./*.a
+	rm -f -r ./*.lib
+	rm -f -r ./*.pdb
+	rm -f -r ./*.dll
+	rm -f -r ./*.exp
+	rm -f -r ./*.so*
+	rm -f -r ./*.exe
+	rm -f -r ./*.obj
+	rm -f -r ./*.o
+	rm -f -r ./*.log
+	rm -f -r ./*.manifest*
+	rm -f -r ./*.log
+	rm -f -r ./.bakefile_gen.state
+	rm -f -r ./*.pch
+	rm -f -r ./*.ncb
+	rm -f -r ./*.plg
+	rm -f -r ./*.ncb
+	rm -f -r ./*.aps
+	rm -f -r ./*.suo
+	rm -f -r ./*.user
+	rm -f -r ./*.res
+	rm -f -r ./*.il?
+	rm -f -r ./*.tds
+	rm -f -r ./*.idb
+	rm -f -r ./*.map
+	rm -rf ./autom4te.cache
+	rm -rf ./.deps
+	rm -f -r ./config.status
+	rm -f -r ./config.log
+	rm -f -r ./Makefile
+	rm -f -r ./bk-deps
 
 docs: 
 	( cd ../docs && doxygen )
@@ -266,29 +282,29 @@ cleandocs:
 @COND_WX_SHARED_1@	$(INSTALL_PROGRAM) ../lib/$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf3) $(DESTDIR)$(libdir)
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__webupdate_dll___so_symlinks_inst_cmd))
 
-../samples/simple/v1.0.0/simple_1_0_0$(EXEEXT): $(SIMPLE_1_0_0_OBJECTS) $(__webupdate_lib___depname) $(__simple_1_0_0___win32rc)
+../samples/simple/v1.0.0/simple$(EXEEXT): $(SIMPLE_1_0_0_OBJECTS) $(__webupdate_lib___depname) $(__simple_1_0_0___win32rc)
 	$(CXX) -o $@ $(SIMPLE_1_0_0_OBJECTS) -L../lib $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS) -lwebupdate
 	
-	$(__simple_1_0_0___mac_setfilecmd)
-	$(__simple_1_0_0___os2_emxbindcmd)
+	$(__simple)
+	$(__simple_0)
 
-../samples/simple/v2.0.3/simple_2_0_3$(EXEEXT): $(SIMPLE_2_0_3_OBJECTS) $(__webupdate_lib___depname) $(__simple_2_0_3___win32rc)
+../samples/simple/v2.0.3/simple$(EXEEXT): $(SIMPLE_2_0_3_OBJECTS) $(__webupdate_lib___depname) $(__simple_2_0_3___win32rc)
 	$(CXX) -o $@ $(SIMPLE_2_0_3_OBJECTS) -L../lib $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS) -lwebupdate
 	
-	$(__simple_2_0_3___mac_setfilecmd)
-	$(__simple_2_0_3___os2_emxbindcmd)
+	$(__simple)
+	$(__simple_0)
 
-../samples/advanced/v0.0.1/advanced_0_0_1$(EXEEXT): $(ADVANCED_0_0_1_OBJECTS) $(__webupdate_lib___depname) $(__advanced_0_0_1___win32rc)
+../samples/advanced/v0.0.1/advanced$(EXEEXT): $(ADVANCED_0_0_1_OBJECTS) $(__webupdate_lib___depname) $(__advanced_0_0_1___win32rc)
 	$(CXX) -o $@ $(ADVANCED_0_0_1_OBJECTS) -L../lib $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS) -lwebupdate
 	
-	$(__advanced_0_0_1___mac_setfilecmd)
-	$(__advanced_0_0_1___os2_emxbindcmd)
+	$(__advanced)
+	$(__advanced_0)
 
-../samples/advanced/v1.5.0/advanced_1_5_0$(EXEEXT): $(ADVANCED_1_5_0_OBJECTS) $(__webupdate_lib___depname) $(__advanced_1_5_0___win32rc)
+../samples/advanced/v1.5.0/advanced$(EXEEXT): $(ADVANCED_1_5_0_OBJECTS) $(__webupdate_lib___depname) $(__advanced_1_5_0___win32rc)
 	$(CXX) -o $@ $(ADVANCED_1_5_0_OBJECTS) -L../lib $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS) -lwebupdate
 	
-	$(__advanced_1_5_0___mac_setfilecmd)
-	$(__advanced_1_5_0___os2_emxbindcmd)
+	$(__advanced)
+	$(__advanced_0)
 
 webupdate_lib_webupdate.o: $(srcdir)/../src/webupdate.cpp
 	$(CXXC) -c -o $@ $(WEBUPDATE_LIB_CXXFLAGS) $(srcdir)/../src/webupdate.cpp

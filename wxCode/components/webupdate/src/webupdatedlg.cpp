@@ -231,20 +231,14 @@ void wxWebUpdateDlg::OnIdle(wxIdleEvent &)
 	m_thread->m_strOutput = wxFileName::CreateTempFileName(wxT("webupdate"));
 	m_thread->m_strID = wxWUD_XMLSCRIPT_ID;
 
-	// this special flag makes easier the #OnDownloadComplete handler
-	//m_bDownloadingScript = TRUE;
-
 	// launch a separate thread for the webupdate script download
 	if (m_thread->Create() != wxTHREAD_NO_ERROR ||
 		m_thread->Run() != wxTHREAD_NO_ERROR) {
 		wxMessageBox(wxString(wxT("Cannot download the script file from\n")) + 
 					m_strURI + wxT("\nbecause of the low resources..."), 
 					wxT("Error"), wxOK | wxICON_ERROR);
-		//return wxCANCEL;
 		AbortDialog();
 	}
-
-	//UpdateWindowUI();
 }
 
 void wxWebUpdateDlg::ShowErrorMsg(const wxString &str) const
@@ -668,9 +662,6 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 			wxT("Removing the downloaded file: ") + m_thread->m_strOutput);
 		wxRemoveFile(m_thread->m_strOutput);
 	}
-
-	// reset flag
-	//if (downloadingScript) m_bDownloadingScript = FALSE;
 }
 
 

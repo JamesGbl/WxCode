@@ -68,24 +68,28 @@
 
 	<!-- use _ instead of '-' or '.' because MSVC6 does not like these chars -->
 	<exe id="simple_1_0_0" template="webupdatecompsample">
+		<exename>simple</exename>
 		<sources>$(COMP_SAMPLE1_SRC)</sources>
 		<dirname>$(COMP_SAMPLE1_DIR)</dirname>
 		<res-include>$(COMP_SAMPLE1_DIR)</res-include>
 		<win32-res>$(COMP_SAMPLE1_DIR)$(DIRSEP)minimal.rc</win32-res>
 	</exe>
 	<exe id="simple_2_0_3" template="webupdatecompsample">
+		<exename>simple</exename>
 		<sources>$(COMP_SAMPLE1_UPDATED_SRC)</sources>
 		<dirname>$(COMP_SAMPLE1_UPDATED_DIR)</dirname>
 		<res-include>$(COMP_SAMPLE1_UPDATED_DIR)</res-include>
 		<win32-res>$(COMP_SAMPLE1_UPDATED_DIR)$(DIRSEP)minimal.rc</win32-res>
 	</exe>
 	<exe id="advanced_0_0_1" template="webupdatecompsample">
+		<exename>advanced</exename>
 		<sources>$(COMP_SAMPLE2_SRC)</sources>
 		<dirname>$(COMP_SAMPLE2_DIR)</dirname>
 		<res-include>$(COMP_SAMPLE2_DIR)</res-include>
 		<win32-res>$(COMP_SAMPLE2_DIR)$(DIRSEP)minimal.rc</win32-res>
 	</exe>
 	<exe id="advanced_1_5_0" template="webupdatecompsample">
+		<exename>advanced</exename>
 		<sources>$(COMP_SAMPLE2_UPDATED_SRC)</sources>
 		<dirname>$(COMP_SAMPLE2_UPDATED_DIR)</dirname>
 		<res-include>$(COMP_SAMPLE2_UPDATED_DIR)</res-include>

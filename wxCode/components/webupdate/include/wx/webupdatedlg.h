@@ -178,10 +178,6 @@ protected:		// other member variables
 	//! the first download has been completed.
 	wxWebUpdateXMLScript m_xmlScript;
 
-	//! This is a little helper which is set to TRUE during the first download;
-	//! that is, it's set to TRUE when we are downloading the XML script.
-	//bool m_bDownloadingScript;
-
 	//! TRUE if we intentionally called wxDownloadThread::AbortDownload
 	//! because user asked us to do so.
 	bool m_bUserAborted;
@@ -258,7 +254,7 @@ public:
 							int count)							
 		{ m_parent=parent; m_strAppName=appname; m_strURI=uri; 
 			m_pLocalPackages=arr; m_nLocalPackages=count; 			
-			/*m_bDownloadingScript=FALSE;*/ m_bUserAborted=FALSE;
+			m_bUserAborted=FALSE;
 			InitWidgetsFromXRC(); }
 
 	virtual ~wxWebUpdateDlg() 

@@ -184,7 +184,7 @@ borland:
 
 ### Targets: ###
 
-all: $(__webupdate_lib___depname) $(__webupdate_dll___depname) ..\samples\simple\v1.0.0\simple_1_0_0.exe ..\samples\simple\v2.0.3\simple_2_0_3.exe ..\samples\advanced\v0.0.1\advanced_0_0_1.exe ..\samples\advanced\v1.5.0\advanced_1_5_0.exe
+all: $(__webupdate_lib___depname) $(__webupdate_dll___depname) ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
 
 clean: 
 	-if exist borland\*.obj del borland\*.obj
@@ -198,30 +198,30 @@ clean:
 	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).ilf del ..\lib\webupdate$(WXLIBPOSTFIX).ilf
 	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).ils del ..\lib\webupdate$(WXLIBPOSTFIX).ils
 	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).lib del ..\lib\webupdate$(WXLIBPOSTFIX).lib
-	-if exist ..\samples\simple\v1.0.0\simple_1_0_0.exe del ..\samples\simple\v1.0.0\simple_1_0_0.exe
-	-if exist ..\samples\simple\v1.0.0\simple_1_0_0.tds del ..\samples\simple\v1.0.0\simple_1_0_0.tds
-	-if exist ..\samples\simple\v1.0.0\simple_1_0_0.ilc del ..\samples\simple\v1.0.0\simple_1_0_0.ilc
-	-if exist ..\samples\simple\v1.0.0\simple_1_0_0.ild del ..\samples\simple\v1.0.0\simple_1_0_0.ild
-	-if exist ..\samples\simple\v1.0.0\simple_1_0_0.ilf del ..\samples\simple\v1.0.0\simple_1_0_0.ilf
-	-if exist ..\samples\simple\v1.0.0\simple_1_0_0.ils del ..\samples\simple\v1.0.0\simple_1_0_0.ils
-	-if exist ..\samples\simple\v2.0.3\simple_2_0_3.exe del ..\samples\simple\v2.0.3\simple_2_0_3.exe
-	-if exist ..\samples\simple\v2.0.3\simple_2_0_3.tds del ..\samples\simple\v2.0.3\simple_2_0_3.tds
-	-if exist ..\samples\simple\v2.0.3\simple_2_0_3.ilc del ..\samples\simple\v2.0.3\simple_2_0_3.ilc
-	-if exist ..\samples\simple\v2.0.3\simple_2_0_3.ild del ..\samples\simple\v2.0.3\simple_2_0_3.ild
-	-if exist ..\samples\simple\v2.0.3\simple_2_0_3.ilf del ..\samples\simple\v2.0.3\simple_2_0_3.ilf
-	-if exist ..\samples\simple\v2.0.3\simple_2_0_3.ils del ..\samples\simple\v2.0.3\simple_2_0_3.ils
-	-if exist ..\samples\advanced\v0.0.1\advanced_0_0_1.exe del ..\samples\advanced\v0.0.1\advanced_0_0_1.exe
-	-if exist ..\samples\advanced\v0.0.1\advanced_0_0_1.tds del ..\samples\advanced\v0.0.1\advanced_0_0_1.tds
-	-if exist ..\samples\advanced\v0.0.1\advanced_0_0_1.ilc del ..\samples\advanced\v0.0.1\advanced_0_0_1.ilc
-	-if exist ..\samples\advanced\v0.0.1\advanced_0_0_1.ild del ..\samples\advanced\v0.0.1\advanced_0_0_1.ild
-	-if exist ..\samples\advanced\v0.0.1\advanced_0_0_1.ilf del ..\samples\advanced\v0.0.1\advanced_0_0_1.ilf
-	-if exist ..\samples\advanced\v0.0.1\advanced_0_0_1.ils del ..\samples\advanced\v0.0.1\advanced_0_0_1.ils
-	-if exist ..\samples\advanced\v1.5.0\advanced_1_5_0.exe del ..\samples\advanced\v1.5.0\advanced_1_5_0.exe
-	-if exist ..\samples\advanced\v1.5.0\advanced_1_5_0.tds del ..\samples\advanced\v1.5.0\advanced_1_5_0.tds
-	-if exist ..\samples\advanced\v1.5.0\advanced_1_5_0.ilc del ..\samples\advanced\v1.5.0\advanced_1_5_0.ilc
-	-if exist ..\samples\advanced\v1.5.0\advanced_1_5_0.ild del ..\samples\advanced\v1.5.0\advanced_1_5_0.ild
-	-if exist ..\samples\advanced\v1.5.0\advanced_1_5_0.ilf del ..\samples\advanced\v1.5.0\advanced_1_5_0.ilf
-	-if exist ..\samples\advanced\v1.5.0\advanced_1_5_0.ils del ..\samples\advanced\v1.5.0\advanced_1_5_0.ils
+	-if exist ..\samples\simple\v1.0.0\simple.exe del ..\samples\simple\v1.0.0\simple.exe
+	-if exist ..\samples\simple\v1.0.0\simple.tds del ..\samples\simple\v1.0.0\simple.tds
+	-if exist ..\samples\simple\v1.0.0\simple.ilc del ..\samples\simple\v1.0.0\simple.ilc
+	-if exist ..\samples\simple\v1.0.0\simple.ild del ..\samples\simple\v1.0.0\simple.ild
+	-if exist ..\samples\simple\v1.0.0\simple.ilf del ..\samples\simple\v1.0.0\simple.ilf
+	-if exist ..\samples\simple\v1.0.0\simple.ils del ..\samples\simple\v1.0.0\simple.ils
+	-if exist ..\samples\simple\v2.0.3\simple.exe del ..\samples\simple\v2.0.3\simple.exe
+	-if exist ..\samples\simple\v2.0.3\simple.tds del ..\samples\simple\v2.0.3\simple.tds
+	-if exist ..\samples\simple\v2.0.3\simple.ilc del ..\samples\simple\v2.0.3\simple.ilc
+	-if exist ..\samples\simple\v2.0.3\simple.ild del ..\samples\simple\v2.0.3\simple.ild
+	-if exist ..\samples\simple\v2.0.3\simple.ilf del ..\samples\simple\v2.0.3\simple.ilf
+	-if exist ..\samples\simple\v2.0.3\simple.ils del ..\samples\simple\v2.0.3\simple.ils
+	-if exist ..\samples\advanced\v0.0.1\advanced.exe del ..\samples\advanced\v0.0.1\advanced.exe
+	-if exist ..\samples\advanced\v0.0.1\advanced.tds del ..\samples\advanced\v0.0.1\advanced.tds
+	-if exist ..\samples\advanced\v0.0.1\advanced.ilc del ..\samples\advanced\v0.0.1\advanced.ilc
+	-if exist ..\samples\advanced\v0.0.1\advanced.ild del ..\samples\advanced\v0.0.1\advanced.ild
+	-if exist ..\samples\advanced\v0.0.1\advanced.ilf del ..\samples\advanced\v0.0.1\advanced.ilf
+	-if exist ..\samples\advanced\v0.0.1\advanced.ils del ..\samples\advanced\v0.0.1\advanced.ils
+	-if exist ..\samples\advanced\v1.5.0\advanced.exe del ..\samples\advanced\v1.5.0\advanced.exe
+	-if exist ..\samples\advanced\v1.5.0\advanced.tds del ..\samples\advanced\v1.5.0\advanced.tds
+	-if exist ..\samples\advanced\v1.5.0\advanced.ilc del ..\samples\advanced\v1.5.0\advanced.ilc
+	-if exist ..\samples\advanced\v1.5.0\advanced.ild del ..\samples\advanced\v1.5.0\advanced.ild
+	-if exist ..\samples\advanced\v1.5.0\advanced.ilf del ..\samples\advanced\v1.5.0\advanced.ilf
+	-if exist ..\samples\advanced\v1.5.0\advanced.ils del ..\samples\advanced\v1.5.0\advanced.ils
 
 tarball: 
 	-cd ..
@@ -252,6 +252,7 @@ deepclean:
 	-del /S ..\*.aps
 	-del /S ..\*.suo
 	-del /S ..\*.user
+	-del /S ..\*.res
 	-del /S ..\*.il?
 	-del /S ..\*.tds
 	-del /S ..\*.idb
@@ -262,6 +263,37 @@ deepclean:
 	-del /S ..\config.log
 	-del /S ..\Makefile
 	-del /S ..\bk-deps
+	-del /S .\*.a
+	-del /S .\*.lib
+	-del /S .\*.pdb
+	-del /S .\*.dll
+	-del /S .\*.exp
+	-del /S .\*.so*
+	-del /S .\*.exe
+	-del /S .\*.obj
+	-del /S .\*.o
+	-del /S .\*.log
+	-del /S .\*.manifest*
+	-del /S .\*.log
+	-del /S .\.bakefile_gen.state
+	-del /S .\*.pch
+	-del /S .\*.ncb
+	-del /S .\*.plg
+	-del /S .\*.ncb
+	-del /S .\*.aps
+	-del /S .\*.suo
+	-del /S .\*.user
+	-del /S .\*.res
+	-del /S .\*.il?
+	-del /S .\*.tds
+	-del /S .\*.idb
+	-del /S .\*.map
+	-if exist .\autom4te.cache rmdir /S /Q .\autom4te.cache
+	-if exist .\.deps rmdir /S /Q .\.deps
+	-del /S .\config.status
+	-del /S .\config.log
+	-del /S .\Makefile
+	-del /S .\bk-deps
 
 docs: 
 	-cd ..\docs
@@ -286,22 +318,22 @@ cleandocs:
 	implib -f ..\lib\webupdate$(WXLIBPOSTFIX) $@
 !endif
 
-..\samples\simple\v1.0.0\simple_1_0_0.exe: $(SIMPLE_1_0_0_OBJECTS) $(__webupdate_lib___depname)  borland\simple_1_0_0_minimal.res
+..\samples\simple\v1.0.0\simple.exe: $(SIMPLE_1_0_0_OBJECTS) $(__webupdate_lib___depname)  borland\simple_1_0_0_minimal.res
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -aa @&&|
 	c0w32.obj $(SIMPLE_1_0_0_OBJECTS),$@,, ..\lib\webupdate$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,, borland\simple_1_0_0_minimal.res
 |
 
-..\samples\simple\v2.0.3\simple_2_0_3.exe: $(SIMPLE_2_0_3_OBJECTS) $(__webupdate_lib___depname)  borland\simple_2_0_3_minimal.res
+..\samples\simple\v2.0.3\simple.exe: $(SIMPLE_2_0_3_OBJECTS) $(__webupdate_lib___depname)  borland\simple_2_0_3_minimal.res
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -aa @&&|
 	c0w32.obj $(SIMPLE_2_0_3_OBJECTS),$@,, ..\lib\webupdate$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,, borland\simple_2_0_3_minimal.res
 |
 
-..\samples\advanced\v0.0.1\advanced_0_0_1.exe: $(ADVANCED_0_0_1_OBJECTS) $(__webupdate_lib___depname)  borland\advanced_0_0_1_minimal.res
+..\samples\advanced\v0.0.1\advanced.exe: $(ADVANCED_0_0_1_OBJECTS) $(__webupdate_lib___depname)  borland\advanced_0_0_1_minimal.res
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -aa @&&|
 	c0w32.obj $(ADVANCED_0_0_1_OBJECTS),$@,, ..\lib\webupdate$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,, borland\advanced_0_0_1_minimal.res
 |
 
-..\samples\advanced\v1.5.0\advanced_1_5_0.exe: $(ADVANCED_1_5_0_OBJECTS) $(__webupdate_lib___depname)  borland\advanced_1_5_0_minimal.res
+..\samples\advanced\v1.5.0\advanced.exe: $(ADVANCED_1_5_0_OBJECTS) $(__webupdate_lib___depname)  borland\advanced_1_5_0_minimal.res
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -aa @&&|
 	c0w32.obj $(ADVANCED_1_5_0_OBJECTS),$@,, ..\lib\webupdate$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,, borland\advanced_1_5_0_minimal.res
 |

@@ -193,7 +193,7 @@ watcom :
 
 ### Targets: ###
 
-all : .SYMBOLIC $(__webupdate_lib___depname) $(__webupdate_dll___depname) ..\samples\simple\v1.0.0\simple_1_0_0.exe ..\samples\simple\v2.0.3\simple_2_0_3.exe ..\samples\advanced\v0.0.1\advanced_0_0_1.exe ..\samples\advanced\v1.5.0\advanced_1_5_0.exe
+all : .SYMBOLIC $(__webupdate_lib___depname) $(__webupdate_dll___depname) ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
 
 clean : .SYMBOLIC 
 	-if exist watcom\*.obj del watcom\*.obj
@@ -204,10 +204,10 @@ clean : .SYMBOLIC
 	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).lib del ..\lib\webupdate$(WXLIBPOSTFIX).lib
 	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).dll del ..\lib\webupdate$(WXLIBPOSTFIX).dll
 	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).lib del ..\lib\webupdate$(WXLIBPOSTFIX).lib
-	-if exist ..\samples\simple\v1.0.0\simple_1_0_0.exe del ..\samples\simple\v1.0.0\simple_1_0_0.exe
-	-if exist ..\samples\simple\v2.0.3\simple_2_0_3.exe del ..\samples\simple\v2.0.3\simple_2_0_3.exe
-	-if exist ..\samples\advanced\v0.0.1\advanced_0_0_1.exe del ..\samples\advanced\v0.0.1\advanced_0_0_1.exe
-	-if exist ..\samples\advanced\v1.5.0\advanced_1_5_0.exe del ..\samples\advanced\v1.5.0\advanced_1_5_0.exe
+	-if exist ..\samples\simple\v1.0.0\simple.exe del ..\samples\simple\v1.0.0\simple.exe
+	-if exist ..\samples\simple\v2.0.3\simple.exe del ..\samples\simple\v2.0.3\simple.exe
+	-if exist ..\samples\advanced\v0.0.1\advanced.exe del ..\samples\advanced\v0.0.1\advanced.exe
+	-if exist ..\samples\advanced\v1.5.0\advanced.exe del ..\samples\advanced\v1.5.0\advanced.exe
 
 tarball :  
 	-cd ..
@@ -238,6 +238,7 @@ deepclean :
 	-del /S ..\*.aps
 	-del /S ..\*.suo
 	-del /S ..\*.user
+	-del /S ..\*.res
 	-del /S ..\*.il?
 	-del /S ..\*.tds
 	-del /S ..\*.idb
@@ -248,6 +249,37 @@ deepclean :
 	-del /S ..\config.log
 	-del /S ..\Makefile
 	-del /S ..\bk-deps
+	-del /S .\*.a
+	-del /S .\*.lib
+	-del /S .\*.pdb
+	-del /S .\*.dll
+	-del /S .\*.exp
+	-del /S .\*.so*
+	-del /S .\*.exe
+	-del /S .\*.obj
+	-del /S .\*.o
+	-del /S .\*.log
+	-del /S .\*.manifest*
+	-del /S .\*.log
+	-del /S .\.bakefile_gen.state
+	-del /S .\*.pch
+	-del /S .\*.ncb
+	-del /S .\*.plg
+	-del /S .\*.ncb
+	-del /S .\*.aps
+	-del /S .\*.suo
+	-del /S .\*.user
+	-del /S .\*.res
+	-del /S .\*.il?
+	-del /S .\*.tds
+	-del /S .\*.idb
+	-del /S .\*.map
+	-if exist .\autom4te.cache rmdir /S /Q .\autom4te.cache
+	-if exist .\.deps rmdir /S /Q .\.deps
+	-del /S .\config.status
+	-del /S .\config.log
+	-del /S .\Makefile
+	-del /S .\bk-deps
 
 docs :  
 	-cd ..\docs
@@ -278,7 +310,7 @@ cleandocs :
 	wlib -q -n -b ..\lib\webupdate$(WXLIBPOSTFIX).lib +$^@
 !endif
 
-..\samples\simple\v1.0.0\simple_1_0_0.exe :  $(SIMPLE_1_0_0_OBJECTS) $(__webupdate_lib___depname) watcom\simple_1_0_0_minimal.res
+..\samples\simple\v1.0.0\simple.exe :  $(SIMPLE_1_0_0_OBJECTS) $(__webupdate_lib___depname) watcom\simple_1_0_0_minimal.res
 	@%create watcom\simple_1_0_0.lbc
 	@%append watcom\simple_1_0_0.lbc option quiet
 	@%append watcom\simple_1_0_0.lbc name $^@
@@ -289,7 +321,7 @@ cleandocs :
 	@%append watcom\simple_1_0_0.lbc option resource=watcom\simple_1_0_0_minimal.res
 	wlink @watcom\simple_1_0_0.lbc
 
-..\samples\simple\v2.0.3\simple_2_0_3.exe :  $(SIMPLE_2_0_3_OBJECTS) $(__webupdate_lib___depname) watcom\simple_2_0_3_minimal.res
+..\samples\simple\v2.0.3\simple.exe :  $(SIMPLE_2_0_3_OBJECTS) $(__webupdate_lib___depname) watcom\simple_2_0_3_minimal.res
 	@%create watcom\simple_2_0_3.lbc
 	@%append watcom\simple_2_0_3.lbc option quiet
 	@%append watcom\simple_2_0_3.lbc name $^@
@@ -300,7 +332,7 @@ cleandocs :
 	@%append watcom\simple_2_0_3.lbc option resource=watcom\simple_2_0_3_minimal.res
 	wlink @watcom\simple_2_0_3.lbc
 
-..\samples\advanced\v0.0.1\advanced_0_0_1.exe :  $(ADVANCED_0_0_1_OBJECTS) $(__webupdate_lib___depname) watcom\advanced_0_0_1_minimal.res
+..\samples\advanced\v0.0.1\advanced.exe :  $(ADVANCED_0_0_1_OBJECTS) $(__webupdate_lib___depname) watcom\advanced_0_0_1_minimal.res
 	@%create watcom\advanced_0_0_1.lbc
 	@%append watcom\advanced_0_0_1.lbc option quiet
 	@%append watcom\advanced_0_0_1.lbc name $^@
@@ -311,7 +343,7 @@ cleandocs :
 	@%append watcom\advanced_0_0_1.lbc option resource=watcom\advanced_0_0_1_minimal.res
 	wlink @watcom\advanced_0_0_1.lbc
 
-..\samples\advanced\v1.5.0\advanced_1_5_0.exe :  $(ADVANCED_1_5_0_OBJECTS) $(__webupdate_lib___depname) watcom\advanced_1_5_0_minimal.res
+..\samples\advanced\v1.5.0\advanced.exe :  $(ADVANCED_1_5_0_OBJECTS) $(__webupdate_lib___depname) watcom\advanced_1_5_0_minimal.res
 	@%create watcom\advanced_1_5_0.lbc
 	@%append watcom\advanced_1_5_0.lbc option quiet
 	@%append watcom\advanced_1_5_0.lbc name $^@
