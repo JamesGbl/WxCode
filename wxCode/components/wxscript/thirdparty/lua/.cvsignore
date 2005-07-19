@@ -1,9 +1,7 @@
 bin
 doc
 etc
-include
 lib
-src
 test
 *.exe
 conf*

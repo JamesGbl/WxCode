@@ -240,7 +240,7 @@
 	
 	<!--		  COMPONENT TARGETS 		-->
 	<!-- ================================== -->
-
+	
 	<!-- The real target: wxcode.bkl does not declare a real target but a template called
 		 "complib". In this way modifications are allowed to the basic template. -->
 	<lib id="wxscript_lib" template="complib,wxscriptbase" cond="WX_SHARED=='0'"/>

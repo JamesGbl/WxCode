@@ -1,0 +1,53 @@
+Only in .: .tolua_event.c.swp
+Only in .: chirstian
+Only in .: out
+diff -B ./tolua_event.c /home/celes/tmp/tolua-5.0/src/lib/tolua_event.c
+25,41c25,41
+< 	/* stack: key value (to be stored) */
+< 	lua_pushstring(L,"tolua_ubox");
+< 	lua_rawget(L,LUA_REGISTRYINDEX);        /* stack: k v ubox */
+< 	lua_pushlightuserdata(L,u);
+< 	lua_rawget(L,-2);                       /* stack: k v ubox ubox[u] */
+< 	if (!lua_istable(L,-1))
+< 	{
+< 		lua_pop(L,1);                          /* stack: k v ubox */
+< 		lua_newtable(L);                       /* stack: k v ubox table */
+< 		lua_pushlightuserdata(L,u);            /* stack: k v ubox table u */
+< 		lua_pushvalue(L,-2);                   /* stack: k v ubox table u table */
+< 		lua_rawset(L,-4);                      /* stack: k v ubox table : ubox[u]=table */
+< 	}
+< 	lua_insert(L,-4);                       /* stack: table k v ubox */
+< 	lua_pop(L,1);                           /* stack: table k v */
+< 	lua_rawset(L,-3);                       /* stack: table: table[k]=v */
+< 	lua_pop(L,1);                           /* pop table */
+---
+> 	 /* stack: key value (to be stored) */
+> 		lua_pushstring(L,"tolua_ubox");
+> 		lua_rawget(L,LUA_REGISTRYINDEX);        /* stack: k v ubox */
+> 		lua_pushlightuserdata(L,u);
+> 		lua_rawget(L,-2);                       /* stack: k v ubox ubox[u] */
+> 		if (!lua_istable(L,-1))
+> 		{
+> 			lua_pop(L,1);                          /* stack: k v ubox */
+> 			lua_newtable(L);                       /* stack: k v ubox table */
+> 			lua_pushlightuserdata(L,lua_touserdata(L,1));
+> 			lua_pushvalue(L,-2);                   /* stack: k v ubox table u table */
+> 			lua_rawset(L,-4);                      /* stack: k v ubox ubox[u]=table */
+> 		}
+> 		lua_insert(L,-4);                       /* put table before k */
+> 		lua_pop(L,1);                           /* pop ubox */
+> 		lua_rawset(L,-3);                       /* store at table */
+> 		lua_pop(L,1);                           /* pop ubox[u] */
+132c132
+< 		lua_pushlightuserdata(L,*(void**)lua_touserdata(L,1));
+---
+> 		lua_pushlightuserdata(L,lua_touserdata(L,1));
+268c268
+< 		storeatubox(L,*(void**)lua_touserdata(L,1));
+---
+> 		storeatubox(L,lua_touserdata(L,1));
+Only in .: tolua_event.o
+Only in .: tolua_is.o
+Only in .: tolua_map.o
+Only in .: tolua_push.o
+Only in .: tolua_to.o
