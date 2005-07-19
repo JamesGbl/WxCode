@@ -30,10 +30,8 @@
 			
 	  </latest-download>
 
-	  <description>The package containing the binaries for the "WebUpdate simple sample program"... if you need
-	  to show to the user a link to your changelog, then the right place is this: URLs like http://wxcode.sf.net are
-	  automatically highlighted and made clickable...</description>
-
+	  <!-- description for this package; don't break lines or you'll get some empty spaces in the final description string -->
+	  <description>The package containing the binaries for the "WebUpdate simple sample program"... if you need to show to the user a link to your changelog, then the right place is this: URLs like http://wxcode.sf.net are automatically highlighted and made clickable...</description>
    </package>
 
 </webupdate>

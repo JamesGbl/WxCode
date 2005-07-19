@@ -64,9 +64,9 @@ BEGIN_EVENT_TABLE(wxWebUpdateDlg, wxDialog)
 	// listctrl
 	EVT_UPDATE_UI(-1, wxWebUpdateDlg::OnUpdateUI)
 
-	// download thread
+	// miscellaneous
 	EVT_COMMAND(-1, wxDT_DOWNLOAD_COMPLETE, wxWebUpdateDlg::OnDownloadComplete)
-
+	EVT_TEXT_URL(XRCID("IDWUD_DESCRIPTION"), wxWebUpdateDlg::OnTextURL)
 	EVT_IDLE(wxWebUpdateDlg::OnIdle)
 
 END_EVENT_TABLE()
@@ -493,6 +493,20 @@ wxWindow *wxWebUpdateDlg::ShowHideChild(const wxString &name)
 
 
 // event handlers
+
+void wxWebUpdateDlg::OnTextURL(wxTextUrlEvent& event)
+{
+    const wxMouseEvent& ev = event.GetMouseEvent();
+
+    // filter out mouse moves, too many of them
+    if ( ev.Moving() )
+        return;
+
+    long start = event.GetURLStart(),
+         end = event.GetURLEnd();
+
+    wxLaunchDefaultBrowser(m_pDescription->GetRange(start, end));
+}
 
 void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 {

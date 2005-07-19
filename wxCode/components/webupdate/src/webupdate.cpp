@@ -234,7 +234,8 @@ wxDownloadThread *wxWebUpdateDownload::DownloadAsynch(const wxString &path,
 
 bool wxWebUpdateDownload::Install(wxWebUpdateInstaller *touse) const
 {
-	
+	// installation means: execute all <action> tags for this download...
+
 
 	return FALSE;
 }

@@ -233,6 +233,7 @@ protected:		// event handlers
 	void OnShowHideAdv(wxCommandEvent &);	
 	void OnUpdateUI(wxUpdateUIEvent &);
 	void OnIdle(wxIdleEvent &);
+	void OnTextURL(wxTextUrlEvent &);
 
 	// called by our wxDownloadThread....
 	void OnDownloadComplete(wxCommandEvent &);

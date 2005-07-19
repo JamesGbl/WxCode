@@ -70,6 +70,9 @@ void wxWebUpdateInstaller::InitDefaultKeywords()
 
 	// the program process ID
 	m_hashKeywords[wxT("pid")] = wxString::Format(wxT("%d"), wxGetProcessId());
+
+	// the program name
+	if (wxTheApp) m_hashKeywords[wxT("appname")] = wxTheApp->GetAppName();
 }
 
 

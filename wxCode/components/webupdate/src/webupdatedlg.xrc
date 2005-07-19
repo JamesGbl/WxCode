@@ -122,6 +122,7 @@
 		</object>
 		<object class="sizeritem">
 			<flag>wxGROW|wxBOTTOM|wxLEFT|wxRIGHT</flag>
+			<option>3</option>
 			<border>5</border>
 			<object class="wxTextCtrl" name="IDWUD_DESCRIPTION">
 				<style>wxTE_READONLY|wxTE_MULTILINE|wxTE_AUTO_URL|wxTE_RICH2</style>
