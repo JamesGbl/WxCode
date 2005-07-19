@@ -5,9 +5,8 @@
 <webupdate>
 
    <!-- our customized messages -->
-   <msg-update-available>The new "$(id) $(latest-version)" package is available for download;
-     it has several bugfixes and security improvements !</msg-update-available>
-   <msg-update-notavailable>You have the most updated version of the "$(id)" package...</msg-update-notavailable>
+   <msg-update-available>Some updates for $(appname) are available; don't miss them !</msg-update-available>
+   <msg-update-notavailable>You have the most updated version of $(appname)...</msg-update-notavailable>
 	 
    <!-- for an example of XML webupdate script with multiple packages see script2.xml -->
    <package id="simple">
