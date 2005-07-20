@@ -64,6 +64,17 @@ class wxGauge;
 WXDLLIMPEXP_WEBUPDATE wxString wxGetSizeStr(unsigned long bytesize);
 
 
+//! The possible values of the wxWebUpdateDlg::m_nStatus variable.
+//! This should be used internally by wxWebUpdateDlg only and user
+//! should not care about it.
+enum wxWebUpdateDlgStatus {
+	wxWUDS_UNDEFINED = -1,
+	wxWUDS_DOWNLOADING,
+	wxWUDS_COMPUTINGMD5,
+	wxWUDS_INSTALLING
+};
+
+
 
 //! A simple container of the two basic info which wxWebUpdateDlg needs to know
 //! about user *local* packages: the NAME and the local VERSION.
@@ -172,19 +183,11 @@ protected:		// pointers to our controls
 	wxWebUpdateAdvPanel *m_pAdvPanel;
 	
 
-protected:		// other member variables
+protected:		// remote-related stuff
 
 	//! The webupdate XML script. This variable becomes valid only once
 	//! the first download has been completed.
 	wxWebUpdateXMLScript m_xmlScript;
-
-	//! TRUE if we intentionally called wxDownloadThread::AbortDownload
-	//! because user asked us to do so.
-	bool m_bUserAborted;
-
-	//! The local packages we are going to handle with this dialog.
-	const wxWebUpdateLocalPackage *m_pLocalPackages;
-	int m_nLocalPackages;		//!< The number of entries in #m_pLocalPackages.
 
 	//! The packages we have downloaded from the web.
 	//! This array is valid only when #m_xmlScript is valid.
@@ -193,12 +196,31 @@ protected:		// other member variables
 	//! The URI of the XML webupdate script.
 	wxString m_strURI;
 
+	//! The threadhelper we use to download the webupdate script & packages.	
+	wxDownloadThread *m_thread;
+
+
+protected:		// wxWebUpdateDlg-internals
+
+	//! TRUE if we intentionally called wxDownloadThread::AbortDownload
+	//! because user asked us to do so.
+	bool m_bUserAborted;
+
+	//! The current status of the dialog. Used by the dialog functions to
+	//! let #OnUpdateUI event handler know which label must be set in the
+	//! various static text controls of the dialog.
+	wxWebUpdateDlgStatus m_nStatus;
+
+
+protected:		// wxWebUpdateDlg-user stuff
+
+	//! The local packages we are going to handle with this dialog.
+	const wxWebUpdateLocalPackage *m_pLocalPackages;
+	int m_nLocalPackages;		//!< The number of entries in #m_pLocalPackages.
+
 	//! The name of the application which holds all the local packages
 	//! handled by this dialog. This string should not contain version !
 	wxString m_strAppName;
-
-	//! The threadhelper we use to download the webupdate script & packages.	
-	wxDownloadThread *m_thread;
 
 protected:
 
@@ -254,7 +276,7 @@ public:
 							int count)							
 		{ m_parent=parent; m_strAppName=appname; m_strURI=uri; 
 			m_pLocalPackages=arr; m_nLocalPackages=count; 			
-			m_bUserAborted=FALSE;
+			m_bUserAborted=FALSE; m_nStatus=wxWUDS_UNDEFINED;
 			InitWidgetsFromXRC(); }
 
 	virtual ~wxWebUpdateDlg() 

@@ -20,6 +20,9 @@
 //! instead of a simple wxListCtrl.
 #define wxWU_USE_CHECKEDLISTCTRL				1
 
+//! If this define is set to 1, then the wxMD5 classes will be used and 
+//! compiled (see md5.cpp for license over MD5 algorithm).
+#define wxDT_USE_MD5							1
 
 // for shared builds
 #ifdef WXMAKINGDLL_WEBUPDATE

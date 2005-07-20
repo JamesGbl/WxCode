@@ -29,6 +29,9 @@
 #include "wx/download.h"
 #include <wx/wfstream.h>
 
+#if wxDT_USE_MD5
+#include "wx/md5.h"
+#endif
 
 // wxWidgets RTTI
 DEFINE_EVENT_TYPE(wxDT_DOWNLOAD_COMPLETE);
@@ -50,17 +53,21 @@ void *wxDownloadThread::Entry()
 #define ABORT_DOWNLOAD() {								\
 			wxLogDebug(wxT("wxDownloadThread::Entry - DOWNLOAD ABORTED !!!"));		\
 			m_bSuccess = FALSE;							\
-			m_bDownloading = FALSE;						\
+			m_mStatus.Lock();							\
+			m_nStatus = wxDTS_WAITING;					\
+			m_mStatus.Unlock();							\
 			wxPostEvent(m_pHandler, updatevent);		\
 			continue;									\
 	}
-
-	m_bDownloading = TRUE;
+	
+	m_mStatus.Lock();
+	m_nStatus = wxDTS_DOWNLOADING;
+	m_mStatus.Unlock();
 
 	// begin our loop
 	while (!TestDestroy()) {
 
-		if (!m_bDownloading) {
+		if (m_nStatus == wxDTS_WAITING) {
 			//wxLogDebug(wxT("wxDownloadThread::Entry - sleeping 1sec"));
 			wxThread::Sleep(100);
 			continue;
@@ -91,9 +98,17 @@ void *wxDownloadThread::Entry()
 		// proxy, user & password...
 		wxFileOutputStream out(m_strOutput);
 		wxInputStream *in = u.GetInputStream();
-		if (in == NULL || !out.IsOk())
+		if (in == NULL)
 			ABORT_DOWNLOAD();
+		if (!in->IsOk() || !out.IsOk()) {
+			delete in;
+			ABORT_DOWNLOAD();
+		}
 		m_nFinalSize = in->GetSize();
+
+		// see wxHTTP docs
+		if (m_nFinalSize == 0xffffffff)
+			m_nFinalSize = 0;
 
 		// write the downloaded stuff in the output file
 		// without using the 
@@ -103,7 +118,7 @@ void *wxDownloadThread::Entry()
 		// the file since the TestDestroy() function would not
 		// be called in that way...
 		char buf[wxDT_BUF_TEMP_SIZE];
-		while (!TestDestroy() && m_bDownloading) {
+		while (!TestDestroy() && m_nStatus == wxDTS_DOWNLOADING) {
 			size_t bytes_read = in->Read(buf, WXSIZEOF(buf)).LastRead();
 			if ( !bytes_read )
 				break;
@@ -123,16 +138,32 @@ void *wxDownloadThread::Entry()
 #endif
 		}
 		
+		// if m_nFinalSize is set to zero, then we cannot trust it;
+		// we must consider the size of the remote file as unavailable
+		// since the wxHTTP protocol does not allow us to get it...
 		delete in;
-		if (!out.IsOk() || out.GetSize() != m_nFinalSize)
+		if (!out.IsOk() || out.GetSize() == 0 ||
+			(out.GetSize() != m_nFinalSize && m_nFinalSize != 0))
 			ABORT_DOWNLOAD();
 		
 		wxLogDebug(wxT("wxDownloadThread::Entry - completed download of %d bytes"),
 						m_nCurrentSize);
 
+		// do we have to compute MD5 ?
+#if wxDT_USE_MD5
+		m_mStatus.Lock();
+		m_nStatus = wxDTS_COMPUTINGMD5;
+		m_mStatus.Unlock();
+
+		// get the md5 checksum for the just downloaded file
+		m_strComputedMD5 = wxMD5::GetFileMD5(m_strOutput);
+#endif
+
 		// we have successfully download the file
 		m_bSuccess = TRUE;
-		m_bDownloading = FALSE;
+		m_mStatus.Lock();
+		m_nStatus = wxDTS_WAITING;
+		m_mStatus.Unlock();
 		wxPostEvent(m_pHandler, updatevent);
 	}
 

@@ -30,8 +30,15 @@ DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_WEBUPDATE, wxDT_DOWNLOAD_COMPLETE, -1);
 
 //! The size of the temporary buffer used by wxDownloadThread to store the
 //! downloaded data.
-#define wxDT_BUF_TEMP_SIZE				4096
+#define wxDT_BUF_TEMP_SIZE				2048
 
+
+//! The possible values of the wxDownloadThread::m_nStatus variable.
+enum wxDownloadThreadStatus {
+	wxDTS_WAITING = -1,
+	wxDTS_DOWNLOADING,
+	wxDTS_COMPUTINGMD5	
+};
 
 
 //! The thread helper which downloads the webupdate script and/or packages.
@@ -44,7 +51,7 @@ class WXDLLIMPEXP_WEBUPDATE wxDownloadThread : public wxThread
 {
 protected:		// these are written by this thread and they must be only read
 				// by other classes; making them protected and exposing only
-				// getters for these vars we ensure that we do not need to use
+				// getters for these vars ensures that we do not need to use
 				// mutexes...
 
 	//! The moment in the time where the download of the current file started.
@@ -59,16 +66,23 @@ protected:		// these are written by this thread and they must be only read
 	//! This is the result state of the last download.
 	bool m_bSuccess;
 
+#if wxDT_USE_MD5
+
+	//! The MD5 checksum for the downloaded file computed when the file has been
+	//! completely downloaded.
+	//! Use #GetComputedMD5() to get this string.
+	wxString m_strComputedMD5;
+
+#endif
+
 protected:		// these are vars protected by mutexes...
 
-	//! TRUE if we are downloading in this moment.
-	//! The value of this variable is independent from the current thread status
-	//! (i.e. when the thread is running this var can be set to FALSE because we
-	//!  have already completed our download)...
-	bool m_bDownloading;
+	//! The value of this variable represents the current thread status;
+	//! see the #wxDownloadThreadStatus enum for more info.
+	wxDownloadThreadStatus m_nStatus;
 
-	//! The mutex over the #m_bDownloading var.
-	wxMutex m_mDownloading;
+	//! The mutex over the #m_nStatus var.
+	wxMutex m_mStatus;
 
 public:		// to avoid setters/getters (these vars are only read by this thread;
 			// they are never written and so they are not protected with mutexes).
@@ -84,6 +98,9 @@ public:		// related to current download
 	//! The name of the file where the downloaded file will be saved.
 	wxString m_strOutput;
 
+	//! The MD5 file checksum.
+	wxString m_strMD5;
+
 	//! The name of the resource we are downloading.
 	//! This is used by wxWebUpdateDlg only for error messages.
 	wxString m_strResName;
@@ -91,10 +108,6 @@ public:		// related to current download
 	//! The ID of the resource we are downloading.
 	//! This is used by wxWebUpdateDlg only for error messages.
 	wxString m_strID;
-
-	//! The MD5 file checksum.
-	//! This is used by wxWebUpdateDlg only for error messages.
-	wxString m_strMD5;
 
 public:		// advanced options
 
@@ -105,7 +118,6 @@ public:		// advanced options
 	//! The password used to get the current file.
 	//! HTTP Basic authentication is enabled only when this var is not empty.
 	wxString m_strHTTPAuthPassword;
-
 
 	//! The hostname of the proxy server.
 	wxString m_strProxyHostname;
@@ -148,7 +160,23 @@ public:		// getters
 	//! We don't need to use m_mDownloading since we are just reading 
 	//! the #m_bDownloading var...
 	bool IsDownloading() const
-		{ return (IsRunning() && m_bDownloading); }
+		{ return (IsRunning() && m_nStatus == wxDTS_DOWNLOADING); }
+
+	//! Returns TRUE if this thread is computing the MD5 file checksum.
+	bool IsComputingMD5() const
+		{ return (IsRunning() && m_nStatus == wxDTS_COMPUTINGMD5); }
+
+	//! Returns TRUE if this thread is running but it's not downloading anything.
+	bool IsWaiting() const 
+		{ return (IsRunning() && m_nStatus == wxDTS_WAITING); }
+
+	//! Returns the current status of the thread.
+	//! please note that this status is completely independent from the
+	//! running/paused status of a simple wxThread.
+	//! The returned status refers only to the action currently performed
+	//! by wxDownloadThread when it's running.
+	wxDownloadThreadStatus GetStatus() const
+		{ return m_nStatus; }
 
 	//! Returns a string containing the current download speed.
 	//! The speed is calculated using #GetCurrDownloadedBytes and #GetElapsedMSec.
@@ -157,20 +185,34 @@ public:		// getters
 	//! Returns a string containing the current time left for this download.
 	virtual wxString GetRemainingTime() const;
 
+#if wxDT_USE_MD5
+	//! Returns the MD5 computed for the last downloaded file.
+	//! This variable is empty if no files have been downloaded yet.
+	wxString GetComputedMD5() const
+		{ return m_strComputedMD5; }
+
+	//! Returns TRUE if the MD5 stored in the #m_strMD5 variable
+	//! (which should have been set by the user to the MD5 precalculated
+	//!  and made available on the website) and the MD5 computed for the
+	//! downloaded file match.	
+	bool IsMD5Ok() const
+		{ return m_strMD5 == m_strComputedMD5; }
+#endif
+
 public:		// miscellaneous
 
 	//! This function must be called only when the thread is not running and 
 	void BeginNewDownload() {
 		wxASSERT(!IsDownloading());
-		wxMutexLocker lock(m_mDownloading);
-		m_bDownloading = TRUE;
+		wxMutexLocker lock(m_mStatus);
+		m_nStatus = wxDTS_DOWNLOADING;
 	}
 
 	//! Aborts the current download.
 	void AbortDownload() {
 		wxASSERT(IsDownloading());
-		wxMutexLocker lock(m_mDownloading);
-		m_bDownloading = FALSE;
+		wxMutexLocker lock(m_mStatus);
+		m_nStatus = wxDTS_WAITING;
 	}
 };
 

@@ -40,7 +40,6 @@
 
 // includes
 #include "wx/webupdatedlg.h"
-#include "wx/md5.h"
 #include <wx/wfstream.h>
 #include <wx/xrc/xmlres.h>
 #include <wx/image.h>
@@ -56,8 +55,11 @@ BEGIN_EVENT_TABLE(wxWebUpdateDlg, wxDialog)
 
 	// buttons
     EVT_BUTTON(XRCID("IDWUD_OK"), wxWebUpdateDlg::OnDownload)
-    EVT_BUTTON(XRCID("IDWUD_CANCEL"), wxWebUpdateDlg::OnCancel)
+    EVT_BUTTON(XRCID("IDWUD_CANCEL"), wxWebUpdateDlg::OnCancel)	
     EVT_BUTTON(XRCID("IDWUD_SHOWHIDEADV"), wxWebUpdateDlg::OnShowHideAdv)
+
+	// we need to intercept also the clicks on the close box in the system menu
+	EVT_BUTTON(wxID_CANCEL, wxWebUpdateDlg::OnCancel)
 
 	// checkbox
 	EVT_CHECKBOX(XRCID("IDWUD_SHOWFILTER"), wxWebUpdateDlg::OnShowFilter)
@@ -215,10 +217,6 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 
 int wxWebUpdateDlg::ShowModal()
 {
-	// as soon as the wxDownloadThread has completed its work we'll receive
-	// a notification through the wxDT_NOTIFICATION events
-	//m_pSpeedText->SetLabel(wxT("Downloading update list..."));
-
 	// are we connected ?
 	wxDialUpManager *mng = wxDialUpManager::Create();
 	if (mng->IsOk()) {
@@ -227,9 +225,12 @@ int wxWebUpdateDlg::ShowModal()
 
 			wxMessageBox(wxT("You are not connected to Internet ! Please connect and then retry..."),
 						wxT("Error"), wxOK | wxICON_ERROR);
+			delete mng;
 			return 0;
 		}
 	}
+
+	delete mng;
 
 	// proceed with standard processing
 	return wxDialog::ShowModal();
@@ -468,7 +469,7 @@ void wxWebUpdateDlg::RebuildPackageList()
 		// ----------------------------------------------------
 
 		wxString str(curr.GetPrerequisites());
-		m_pUpdatesList->SetItem(idx, 5, str.IsEmpty() ? wxT("none") : str);
+		m_pUpdatesList->SetItem(idx, 5, str.IsEmpty() ? wxT("none") : str.c_str());
 	}
 }
 
@@ -567,12 +568,23 @@ void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 
 void wxWebUpdateDlg::OnCancel(wxCommandEvent &)
 {
-	if (m_thread->IsDownloading()) {
+	if (m_thread->IsDownloading() 
+#ifdef wxDT_USE_MD5
+		|| m_thread->IsComputingMD5()
+#endif
+		) {
 
 		// we are now labeled as wxWUD_CANCEL_DOWNLOAD...
 		// thus we only stop the download
 		m_bUserAborted = TRUE;
 		m_thread->AbortDownload();		
+		return;
+
+	} else if (m_nStatus == wxWUDS_INSTALLING) {
+
+		// we are now labeled as wxWUD_CANCEL_INSTALLATION...
+		// thus we only stop the installation
+		// FIXME
 		return;
 	}
 
@@ -641,31 +653,26 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 
 		} else {
 
-			if (m_thread->m_strMD5.IsEmpty()) {
+			if (m_thread->m_strMD5.IsEmpty() || m_thread->IsMD5Ok()) {
 
 				// handle the installation of this package
 				wxWebUpdatePackage &pkg = GetRemotePackage(m_thread->m_strID);
 				wxWebUpdateDownload &download = pkg.GetDownloadPackage();
-				download.Install();
-				return;
-			}
 
-			// verify that the download was successful
-			m_pSpeedText->SetLabel(wxWUD_SPEEDTEXT_PREFIX wxT("computing file hash"));
-			wxString localmd5 = wxMD5::GetFileMD5(m_thread->m_strOutput);
-			if (localmd5 != m_thread->m_strMD5) {
+				m_nStatus = wxWUDS_INSTALLING;
+				//download.Install();
+				//m_nStatus = wxWUDS_UNDEFINED;
+				
+			} else {
 
 				wxMessageBox(wxT("The downloaded file \"") + m_thread->m_strOutput + 
-						wxT("\"\nis corrupted. MD5 checksum is:\n\n\t") + localmd5 +
-						wxT("\n\ninstead of:\n\n\t") + m_thread->m_strMD5 +
+						wxT("\"\nis corrupted. MD5 checksum is:\n\n\t") + 
+						m_thread->GetComputedMD5() +
+						wxT("\n\ninstead of:\n\n\t") + 
+						m_thread->m_strMD5 +
 						wxT("\n\nPlease retry the download."), 
 						wxT("Error"), wxOK | wxICON_ERROR);
 				//forceremove = TRUE;		// remove this corrupted package
-
-			} else {
-
-				// handle the installation of this package
-				return;
 			}
 		}
 	}
@@ -679,12 +686,11 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 	}
 }
 
-
 void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 {
 	// help us to avoid useless calls to SetLabel() function which
 	// cause flickering
-	static bool bLabelRunningMode = FALSE;
+	static int nLabelMode = wxWUDS_UNDEFINED;
 	static wxDateTime lastupdate = wxDateTime::UNow();
 
 	// change the description label eventually
@@ -702,45 +708,43 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 		}
 	}
 
-	if (!m_thread->IsDownloading()) {
+	// update our state var looking at the thread status
+	if (m_thread->IsRunning()) {
 
-		// reset our gauge control
-		m_pGauge->SetValue(0);
-
-		// re-enable what we disabled when we ran the thread
-		if (!bLabelRunningMode) {			
-			m_pCancelBtn->SetLabel(wxWUD_CANCEL_DEFAULT_LABEL);
-			//m_pUpdatesList->EnableAll();
-			bLabelRunningMode = TRUE;
-
-			// update our meters
-			if (m_thread->DownloadWasSuccessful())
-				m_pSpeedText->SetLabel(wxWUD_SPEEDTEXT_PREFIX wxT("successfully completed"));
+		switch (m_thread->GetStatus()) {
+		case wxDTS_DOWNLOADING:
+			m_nStatus = wxWUDS_DOWNLOADING;
+			break;
+		case wxDTS_COMPUTINGMD5:
+			m_nStatus = wxWUDS_COMPUTINGMD5;
+			break;
+		case wxDTS_WAITING:
+			if (m_nStatus == wxWUDS_DOWNLOADING || m_nStatus == wxWUDS_COMPUTINGMD5)
+				m_nStatus = wxWUDS_UNDEFINED;
 			else
-				m_pSpeedText->SetLabel(wxWUD_SPEEDTEXT_PREFIX wxT("failed !"));
-			m_pTimeText->SetLabel(wxT("No downloads running..."));
+				// leave our status var untouched
+				// (i.e. in the wxWUDS_UNDEFINED or wxWUDS_INSTALLING states)
+			break;
 		}
-
-		// are there checked items in the package listctrl ?
-		for (int i=0; i<m_pUpdatesList->GetItemCount(); i++)
-			if (m_pUpdatesList->IsChecked(i))
-				break;		// found a checked item !
-		
-		if (i<m_pUpdatesList->GetItemCount())
-			m_pOkBtn->Enable();		// yes, there are
-		else
-			m_pOkBtn->Disable();		// no, there aren't
-
 	} else {
 
+		wxASSERT_MSG(m_nStatus != wxWUDS_DOWNLOADING &&
+						m_nStatus != wxWUDS_COMPUTINGMD5,
+						wxT("The status var has not been updated properly"));
+	}
+
+	// change UI labels according to the current status
+	if (m_thread->IsDownloading()) {
+
 		// need to change labels ?
-		if (bLabelRunningMode) {
+		if (nLabelMode != wxWUDS_DOWNLOADING) {
 			m_pOkBtn->Disable();
 			m_pCancelBtn->SetLabel(wxWUD_CANCEL_DOWNLOAD);
 			//m_pUpdatesList->EnableAll(FALSE);
-			bLabelRunningMode = FALSE;
+			nLabelMode = wxWUDS_DOWNLOADING;
 		}
 
+		// update the meters each 500 milliseconds to avoid flickering
 		wxDateTime current = wxDateTime::UNow();
 		wxTimeSpan diff = current - lastupdate;
 		if (diff.GetMilliseconds().ToLong() > 500) {
@@ -761,6 +765,52 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 			m_pTimeText->SetLabel(wxWUD_TIMETEXT_PREFIX + 
 								m_thread->GetRemainingTime());
 		}
+
+	} else if (m_thread->IsComputingMD5()) { 
+
+		m_pGauge->SetValue(0);
+		if (nLabelMode != wxWUDS_COMPUTINGMD5) {
+			m_pSpeedText->SetLabel(wxWUD_SPEEDTEXT_PREFIX wxT("computing the file hash"));
+			m_pTimeText->SetLabel(wxT("No downloads running..."));
+			nLabelMode = wxWUDS_COMPUTINGMD5;
+		}
+
+	} else {
+
+		// reset our gauge control
+		m_pGauge->SetValue(0);		
+
+		// re-enable what we disabled when we ran the thread
+		if (nLabelMode != m_nStatus) {
+
+			if (m_nStatus == wxWUDS_INSTALLING)
+				m_pCancelBtn->SetLabel(wxWUD_CANCEL_INSTALLATION);
+			else
+				m_pCancelBtn->SetLabel(wxWUD_CANCEL_DEFAULT_LABEL);
+
+			// update our meters
+			if (m_nStatus == wxWUDS_INSTALLING)
+				m_pSpeedText->SetLabel(wxWUD_SPEEDTEXT_PREFIX wxT("installing ") + m_thread->m_strResName);
+			else if (m_thread->DownloadWasSuccessful())
+				m_pSpeedText->SetLabel(wxWUD_SPEEDTEXT_PREFIX wxT("successfully completed"));
+			else
+				m_pSpeedText->SetLabel(wxWUD_SPEEDTEXT_PREFIX wxT("failed !"));
+			m_pTimeText->SetLabel(wxT("No downloads running..."));
+
+			//m_pUpdatesList->EnableAll();
+			nLabelMode = m_nStatus;
+		}
+
+		// are there checked items in the package listctrl ?
+		int i;
+		for (i=0; i<m_pUpdatesList->GetItemCount(); i++)
+			if (m_pUpdatesList->IsChecked(i))
+				break;		// found a checked item !
+		
+		if (i<m_pUpdatesList->GetItemCount())
+			m_pOkBtn->Enable();		// yes, there are
+		else
+			m_pOkBtn->Disable();		// no, there aren't
 	}
 }
 

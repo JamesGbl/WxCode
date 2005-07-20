@@ -155,14 +155,19 @@ unsigned long wxWebUpdateDownload::GetDownloadSize(bool forceRecalc)
 	}
 
 	wxInputStream *is = u.GetInputStream();	
-	wxProtocol &p = u.GetProtocol();
-	wxHTTP *http = wxDynamicCast(&p, wxHTTP);
 	if (is == NULL || !is->IsOk() || 
-		u.GetProtocol().GetError() != wxPROTO_NOERR ||
-		(http != NULL && http->GetResponse() == 404)) {
+		u.GetProtocol().GetError() != wxPROTO_NOERR) {
 		m_size = 0;		// set it as "already calculated"
 		return 0;
 	}
+
+#ifdef __WXDEBUG__
+	wxProtocol &p = u.GetProtocol();
+	wxHTTP *http = wxDynamicCast(&p, wxHTTP);
+	if (http != NULL && http->GetResponse() == 302)
+		wxLogDebug(wxT("wxWebUpdateDownload::GetDownloadSize - can't get the file size ")
+			wxT("because the request of this download has been redirected... update your URL"));
+#endif
 
 	m_size = (unsigned long)is->GetSize();
 	delete is;
@@ -199,16 +204,21 @@ bool wxWebUpdateDownload::DownloadSynch(const wxString &path, const wxString &pr
 	// proxy, user & password...
 	wxFileOutputStream out(path);
 	wxInputStream *in = u.GetInputStream();
-	if (in == NULL || !out.IsOk())
+	if (in == NULL)
 		return FALSE;
+	if (!out.IsOk()) {
+		delete in;
+		return FALSE;
+	}
 	
 	out.Write(*in);
 	delete in;
-	if (!out.IsOk() || out.GetSize() != GetDownloadSize())
+	if (!out.IsOk() || out.GetSize() == 0 ||
+		(GetDownloadSize() > 0 && out.GetSize() != GetDownloadSize()))
 		return FALSE;
 	
 	wxLogDebug(wxT("wxWebUpdateDownload::DownloadSynch - completed download of %d bytes"),
-		GetDownloadSize());
+		out.GetSize());
 	
 	// we have successfully download the file
 	return TRUE;
@@ -351,9 +361,12 @@ void wxWebUpdatePackage::CacheDownloadSizes()
 wxWebUpdateXMLScript::wxWebUpdateXMLScript(const wxString &strURI, 
 										   wxWebUpdateInstaller *installer)
 { 
-	if (!strURI.IsEmpty()) Load(strURI); 
+	// the installer is the first thing to set since #Load uses it !
 	if (!installer) installer = wxWebUpdateInstaller::Get(); 
 	m_pInstaller = installer;
+
+	// now we can load
+	if (!strURI.IsEmpty()) Load(strURI); 
 }
 
 // taken from wx/src/xrc/xmlres.cpp, wxXmlResourceHandler::GetNodeContent

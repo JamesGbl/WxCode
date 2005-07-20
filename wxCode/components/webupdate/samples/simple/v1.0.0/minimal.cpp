@@ -30,10 +30,12 @@
 wxWebUpdateLocalPackage g_packageList[PACKAGE_NUM];
 
 
-#ifdef __WXMSW__
+#if defined( __WXMSW__ ) && defined( __VISUALC__ )
 #include <crtdbg.h>
 #define mcDUMP_ON_EXIT		\
 	{ _CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF); }
+#else
+#define mcDUMP_ON_EXIT		/* expand to nothing */
 #endif
 
 
@@ -154,14 +156,12 @@ IMPLEMENT_APP(MyApp)
 // wxT('Main program') equivalent: the program execution "starts" here
 bool MyApp::OnInit()
 {
-#ifdef __WXMSW__
-	mcDUMP_ON_EXIT;			// for debugging only
-#endif
+	mcDUMP_ON_EXIT;			// for debugging only	
 
     // create the main application window
     MyFrame *frame = new MyFrame(APP_NAME);
 
-#if __WXDEBUG__
+#ifdef __WXDEBUG__
 	// create an useful log window
 	wxLogWindow *pwindow = new wxLogWindow(frame, wxT("log"));
 	pwindow->GetFrame()->Move(50, 50+350);
@@ -208,21 +208,6 @@ MyFrame::MyFrame(const wxString& title)
 {
     // set the frame icon
     SetIcon(wxICON(mondrian));
-
-
-#if 0
-
-	wxDialog dlg(this, -1, wxT("ciao"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
-	wxBoxSizer *p = new wxBoxSizer(wxVERTICAL);
-	p->Add(new wxWebUpdateAdvPanel(&dlg), 1, wxGROW);
-	dlg.SetSizer(p);
-	p->SetSizeHints(&dlg);
-	/*wxWindow *p = new wxWebUpdateAdvPanel(&dlg);
-	dlg.SetMinSize(p->GetSize());
-	dlg.Layout();*/
-	dlg.ShowModal();
-
-#endif
 
 
 #if 1
@@ -351,12 +336,15 @@ void MyFrame::OnUpdateCheckSimple(wxCommandEvent &)
 	if (!download.DownloadSynch(out)){
 		wxMessageBox(wxT("Cannot download the update file from:\n\n") +
 			download.GetDownloadString(), wxT("Error"), wxOK | wxICON_ERROR);
+		delete update;
 		return;
 	}
 	
 	wxMessageBox(wxT("Download was successful; now I'm going to install the update..."), 
 		wxT("Success"), wxOK | wxICON_QUESTION);
 	
+	// FIXME
+
 	// cleanup
 	delete update;
 }
