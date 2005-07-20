@@ -154,8 +154,12 @@ unsigned long wxWebUpdateDownload::GetDownloadSize(bool forceRecalc)
 		return 0;
 	}
 
-	wxInputStream *is = u.GetInputStream();
-	if (is == NULL) {
+	wxInputStream *is = u.GetInputStream();	
+	wxProtocol &p = u.GetProtocol();
+	wxHTTP *http = wxDynamicCast(&p, wxHTTP);
+	if (is == NULL || !is->IsOk() || 
+		u.GetProtocol().GetError() != wxPROTO_NOERR ||
+		(http != NULL && http->GetResponse() == 404)) {
 		m_size = 0;		// set it as "already calculated"
 		return 0;
 	}
@@ -163,6 +167,9 @@ unsigned long wxWebUpdateDownload::GetDownloadSize(bool forceRecalc)
 	m_size = (unsigned long)is->GetSize();
 	delete is;
 
+	// see wxHTTP::GetInputStream docs
+	if (m_size == 0xffffffff)
+		m_size = 0;
 	return m_size;
 }
 
@@ -405,7 +412,7 @@ wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdow
 		
 		// is this a well-formed tag ?
 		if (child->GetName() == wxT("uri"))
-			uri = GetNodeContent(child);
+			uri = DoKeywordSubstitution(GetNodeContent(child));
 		else if (child->GetName() == wxT("md5"))
 			md5 = GetNodeContent(child);
 		else if (child->GetName() == wxT("platform")) {

@@ -66,7 +66,7 @@ void wxWebUpdateInstaller::InitDefaultKeywords()
 	wxChar sep = wxFileName::GetPathSeparator();
 
 	// a temporary folder
-	m_hashKeywords[wxT("temp")] = 
+	m_hashKeywords[wxT("tempdir")] = 
 		wxFileName::CreateTempFileName(wxT("webupdate")).BeforeFirst(sep);
 
 	// the program root folder
@@ -76,7 +76,20 @@ void wxWebUpdateInstaller::InitDefaultKeywords()
 	m_hashKeywords[wxT("pid")] = wxString::Format(wxT("%d"), wxGetProcessId());
 
 	// the program name
-	if (wxTheApp) m_hashKeywords[wxT("appname")] = wxTheApp->GetAppName();
+	if (wxTheApp) 
+		m_hashKeywords[wxT("appname")] = wxTheApp->GetAppName();	
+#ifdef __WXDEBUG__
+	else
+		wxLogDebug(wxT("wxWebUpdateInstaller::InitDefaultKeywords - wxTheApp is not initialized !"));
+#endif
+
+	// the name of the main frame of the program
+	if (wxTheApp && wxTheApp->GetTopWindow()) 
+		m_hashKeywords[wxT("framename")] = wxTheApp->GetTopWindow()->GetTitle();
+#ifdef __WXDEBUG__
+	else
+		wxLogDebug(wxT("wxWebUpdateInstaller::InitDefaultKeywords - wxTheApp/the top window is not initialized !"));
+#endif
 }
 
 

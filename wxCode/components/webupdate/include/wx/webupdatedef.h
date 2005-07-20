@@ -27,7 +27,7 @@
     #define WXDLLIMPEXP_DATA_WEBUPDATE(type)	WXEXPORT type
 #elif defined(WXUSINGDLL)
     #define WXDLLIMPEXP_WEBUPDATE WXIMPORT
-    #define WXDLLIMPEXP_DATA_NWEBUPDATE(type)	WXIMPORT type
+    #define WXDLLIMPEXP_DATA_WEBUPDATE(type)	WXIMPORT type
 #else // not making nor using DLL
     #define WXDLLIMPEXP_WEBUPDATE
     #define WXDLLIMPEXP_DATA_WEBUPDATE(type)	type

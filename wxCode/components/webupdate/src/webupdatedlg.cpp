@@ -44,6 +44,7 @@
 #include <wx/wfstream.h>
 #include <wx/xrc/xmlres.h>
 #include <wx/image.h>
+#include <wx/dialup.h>
 
 
 // wxWidgets RTTI
@@ -89,7 +90,9 @@ END_EVENT_TABLE()
 wxString wxGetSizeStr(unsigned long bytesize)
 {
 	wxString sz;
-	if (bytesize < 1024) 
+	if (bytesize == 0)
+		sz = wxT("NA");		// not available
+	else if (bytesize < 1024) 
 		sz = wxString::Format(wxT("%d B"), bytesize);
 	else if (bytesize < 1024*1024) 
 		sz = wxString::Format(wxT("%d kB"), bytesize/1024);
@@ -214,7 +217,19 @@ int wxWebUpdateDlg::ShowModal()
 {
 	// as soon as the wxDownloadThread has completed its work we'll receive
 	// a notification through the wxDT_NOTIFICATION events
-	m_pSpeedText->SetLabel(wxT("Downloading update list..."));
+	//m_pSpeedText->SetLabel(wxT("Downloading update list..."));
+
+	// are we connected ?
+	wxDialUpManager *mng = wxDialUpManager::Create();
+	if (mng->IsOk()) {
+
+		if (!mng->IsOnline()) {
+
+			wxMessageBox(wxT("You are not connected to Internet ! Please connect and then retry..."),
+						wxT("Error"), wxOK | wxICON_ERROR);
+			return 0;
+		}
+	}
 
 	// proceed with standard processing
 	return wxDialog::ShowModal();

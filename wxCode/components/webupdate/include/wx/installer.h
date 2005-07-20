@@ -56,7 +56,7 @@ public:		// miscellaneous
 	//! Returns the value for the given property or wxEmptyString if that
 	//! property has not been set for this object.
 	wxString GetPropValue(const wxString &propname) const
-		{ int n=m_arrPropName.Index(propname); if (n!=wxNOT_FOUND) return m_arrPropValue.Item(n); }
+		{ int n=m_arrPropName.Index(propname); if (n!=wxNOT_FOUND) return m_arrPropValue.Item(n); return wxEmptyString; }
 
 	//! Run this action.
 	bool Run() const;
@@ -77,10 +77,10 @@ WX_DECLARE_USER_EXPORTED_OBJARRAY(wxWebUpdateAction, wxWebUpdateActionArray, WXD
 
 // an hash map with wxString as keys and wxWebUpdateAction as values.
 // Used by wxWebUpdateInstaller.
-WX_DECLARE_STRING_HASH_MAP(wxWebUpdateAction, wxWebUpdateActionHashMap);
+WX_DECLARE_STRING_HASH_MAP_WITH_DECL(wxWebUpdateAction, wxWebUpdateActionHashMap, class WXDLLIMPEXP_WEBUPDATE);
 
 // used by wxWebUpdateInstaller to store the keywords to substitute in the XML webupdate script
-WX_DECLARE_STRING_HASH_MAP(wxString, wxStringStringHashMap);
+WX_DECLARE_STRING_HASH_MAP_WITH_DECL(wxString, wxStringStringHashMap, class WXDLLIMPEXP_WEBUPDATE);
 
 
 //! A singleton class which contains the hash map with all the 
