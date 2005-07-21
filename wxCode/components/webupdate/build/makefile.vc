@@ -10,8 +10,14 @@
 # These are configurable options:
 # -------------------------------------------------------------------------
 
+# C compiler 
+CC = cl
+
 # C++ compiler 
 CXX = cl
+
+# Standard flags for CC 
+CFLAGS = 
 
 # Standard flags for C++ 
 CXXFLAGS = 
@@ -72,6 +78,9 @@ WEBUPDATE_DLL_OBJECTS =  \
 	msvc\webupdate_dll_md5.obj \
 	msvc\webupdate_dll_installer.obj \
 	msvc\webupdate_dll_download.obj
+REPLACER_CFLAGS =  /MD /DWIN32 /D_CONSOLE  $(CPPFLAGS) $(CFLAGS)
+REPLACER_OBJECTS =  \
+	msvc\replacer_replacer.obj
 SIMPLE_1_0_0_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
 	$(__OPTIMIZEFLAG) $(__DEBUGINFO) /Fd..\samples\simple\v1.0.0\simple.pdb \
 	$(____DEBUGRUNTIME) $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) \
@@ -207,7 +216,7 @@ msvc:
 
 ### Targets: ###
 
-all: $(__webupdate_lib___depname) $(__webupdate_dll___depname) ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
+all: $(__webupdate_lib___depname) $(__webupdate_dll___depname) .\replacer.exe ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
 
 clean: 
 	-if exist msvc\*.obj del msvc\*.obj
@@ -218,6 +227,9 @@ clean:
 	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).ilk del ..\lib\webupdate$(WXLIBPOSTFIX).ilk
 	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).pdb del ..\lib\webupdate$(WXLIBPOSTFIX).pdb
 	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).lib del ..\lib\webupdate$(WXLIBPOSTFIX).lib
+	-if exist .\replacer.exe del .\replacer.exe
+	-if exist .\replacer.ilk del .\replacer.ilk
+	-if exist .\replacer.pdb del .\replacer.pdb
 	-if exist ..\samples\simple\v1.0.0\simple.exe del ..\samples\simple\v1.0.0\simple.exe
 	-if exist ..\samples\simple\v1.0.0\simple.ilk del ..\samples\simple\v1.0.0\simple.ilk
 	-if exist ..\samples\simple\v1.0.0\simple.pdb del ..\samples\simple\v1.0.0\simple.pdb
@@ -322,6 +334,11 @@ cleandocs:
 <<
 !endif
 
+.\replacer.exe: $(REPLACER_OBJECTS)
+	link /NOLOGO /OUT:$@ $(LDFLAGS) /SUBSYSTEM:CONSOLE @<<
+	$(REPLACER_OBJECTS)
+<<
+
 ..\samples\simple\v1.0.0\simple.exe: $(SIMPLE_1_0_0_OBJECTS) $(__webupdate_lib___depname) msvc\simple_1_0_0_minimal.res
 	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_3)  /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES) /LIBPATH:..\lib /SUBSYSTEM:WINDOWS @<<
 	$(SIMPLE_1_0_0_OBJECTS)  ..\lib\webupdate$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
@@ -377,6 +394,9 @@ msvc\webupdate_dll_installer.obj: .\..\src\installer.cpp
 
 msvc\webupdate_dll_download.obj: .\..\src\download.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATE_DLL_CXXFLAGS) $**
+
+msvc\replacer_replacer.obj: .\..\src\replacer\replacer.c
+	$(CC) /c /nologo /TC /Fo$@ $(REPLACER_CFLAGS) $**
 
 msvc\simple_1_0_0_minimal.obj: .\..\samples\simple\v1.0.0\minimal.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(SIMPLE_1_0_0_CXXFLAGS) $**

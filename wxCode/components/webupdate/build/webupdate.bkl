@@ -7,8 +7,8 @@
 	<include file="$(WXCODE_BAKEFILEDIR)/defaults.bkl"/>
 	
 
-	<!-- The wxXml2 settings -->
-	<!-- =================== -->
+	<!-- The WebUpdate settings -->
+	<!-- ====================== -->
 	
 	<set var="COMP_NAME">webupdate</set>
 	<set var="COMP_SRC">../src/webupdate.cpp ../src/webupdatedlg.cpp ../src/checkedlistctrl.cpp
@@ -65,6 +65,18 @@
         <wx-lib>core</wx-lib>
         <wx-lib>base</wx-lib>
 	</template>
+	
+	
+	<!-- Our REPLACER cross-platform utility -->
+	<!-- =================================== -->
+	
+	<exe id="replacer">
+	    <app-type>console</app-type>
+		<exename>replacer</exename>
+		<sources>../src/replacer/replacer.c</sources>
+		<dirname>.</dirname>
+	</exe>	
+	
 
 	<!-- use _ instead of '-' or '.' because MSVC6 does not like these chars -->
 	<exe id="simple_1_0_0" template="webupdatecompsample">

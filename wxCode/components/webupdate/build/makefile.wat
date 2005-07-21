@@ -10,8 +10,14 @@
 # These are configurable options:
 # -------------------------------------------------------------------------
 
+# C compiler 
+CC = wcc386
+
 # C++ compiler 
 CXX = wpp386
+
+# Standard flags for CC 
+CFLAGS = 
 
 # Standard flags for C++ 
 CXXFLAGS = 
@@ -161,6 +167,9 @@ WEBUPDATE_DLL_OBJECTS =  &
 	watcom\webupdate_dll_md5.obj &
 	watcom\webupdate_dll_installer.obj &
 	watcom\webupdate_dll_download.obj
+REPLACER_CFLAGS =   $(CPPFLAGS) $(CFLAGS)
+REPLACER_OBJECTS =  &
+	watcom\replacer_replacer.obj
 SIMPLE_1_0_0_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
 	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
@@ -193,7 +202,7 @@ watcom :
 
 ### Targets: ###
 
-all : .SYMBOLIC $(__webupdate_lib___depname) $(__webupdate_dll___depname) ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
+all : .SYMBOLIC $(__webupdate_lib___depname) $(__webupdate_dll___depname) .\replacer.exe ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
 
 clean : .SYMBOLIC 
 	-if exist watcom\*.obj del watcom\*.obj
@@ -204,6 +213,7 @@ clean : .SYMBOLIC
 	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).lib del ..\lib\webupdate$(WXLIBPOSTFIX).lib
 	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).dll del ..\lib\webupdate$(WXLIBPOSTFIX).dll
 	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).lib del ..\lib\webupdate$(WXLIBPOSTFIX).lib
+	-if exist .\replacer.exe del .\replacer.exe
 	-if exist ..\samples\simple\v1.0.0\simple.exe del ..\samples\simple\v1.0.0\simple.exe
 	-if exist ..\samples\simple\v2.0.3\simple.exe del ..\samples\simple\v2.0.3\simple.exe
 	-if exist ..\samples\advanced\v0.0.1\advanced.exe del ..\samples\advanced\v0.0.1\advanced.exe
@@ -310,6 +320,17 @@ cleandocs :
 	wlib -q -n -b ..\lib\webupdate$(WXLIBPOSTFIX).lib +$^@
 !endif
 
+.\replacer.exe :  $(REPLACER_OBJECTS)
+	@%create watcom\replacer.lbc
+	@%append watcom\replacer.lbc option quiet
+	@%append watcom\replacer.lbc name $^@
+	@%append watcom\replacer.lbc option caseexact
+	@%append watcom\replacer.lbc $(LDFLAGS) system nt ref 'main_'
+	@for %i in ($(REPLACER_OBJECTS)) do @%append watcom\replacer.lbc file %i
+	@for %i in () do @%append watcom\replacer.lbc library %i
+	@%append watcom\replacer.lbc
+	wlink @watcom\replacer.lbc
+
 ..\samples\simple\v1.0.0\simple.exe :  $(SIMPLE_1_0_0_OBJECTS) $(__webupdate_lib___depname) watcom\simple_1_0_0_minimal.res
 	@%create watcom\simple_1_0_0.lbc
 	@%append watcom\simple_1_0_0.lbc option quiet
@@ -389,6 +410,9 @@ watcom\webupdate_dll_installer.obj :  .AUTODEPEND .\..\src\installer.cpp
 
 watcom\webupdate_dll_download.obj :  .AUTODEPEND .\..\src\download.cpp
 	$(CXX) -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
+
+watcom\replacer_replacer.obj :  .AUTODEPEND .\..\src\replacer\replacer.c
+	$(CC) -zq -fo=$^@ $(REPLACER_CFLAGS) $<
 
 watcom\simple_1_0_0_minimal.obj :  .AUTODEPEND .\..\samples\simple\v1.0.0\minimal.cpp
 	$(CXX) -zq -fo=$^@ $(SIMPLE_1_0_0_CXXFLAGS) $<

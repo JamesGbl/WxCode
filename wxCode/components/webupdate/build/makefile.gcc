@@ -10,8 +10,14 @@
 # These are configurable options:
 # -------------------------------------------------------------------------
 
+# C compiler 
+CC = gcc
+
 # C++ compiler 
 CXX = g++
+
+# Standard flags for CC 
+CFLAGS = 
 
 # Standard flags for C++ 
 CXXFLAGS = 
@@ -70,6 +76,9 @@ WEBUPDATE_DLL_OBJECTS =  \
 	mingw\webupdate_dll_md5.o \
 	mingw\webupdate_dll_installer.o \
 	mingw\webupdate_dll_download.o
+REPLACER_CFLAGS =   $(CPPFLAGS) $(CFLAGS)
+REPLACER_OBJECTS =  \
+	mingw\replacer_replacer.o
 SIMPLE_1_0_0_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	-mthreads $(__WX_SHAREDDEFINE_p) -DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
@@ -179,7 +188,7 @@ mingw:
 
 ### Targets: ###
 
-all: $(__webupdate_lib___depname) $(__webupdate_dll___depname) ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
+all: $(__webupdate_lib___depname) $(__webupdate_dll___depname) .\replacer.exe ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
 
 clean: 
 	-if exist mingw\*.o del mingw\*.o
@@ -187,6 +196,7 @@ clean:
 	-if exist ..\lib\libwebupdate$(WXLIBPOSTFIX).a del ..\lib\libwebupdate$(WXLIBPOSTFIX).a
 	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).dll del ..\lib\webupdate$(WXLIBPOSTFIX).dll
 	-if exist ..\lib\libwebupdate$(WXLIBPOSTFIX).a del ..\lib\libwebupdate$(WXLIBPOSTFIX).a
+	-if exist .\replacer.exe del .\replacer.exe
 	-if exist ..\samples\simple\v1.0.0\simple.exe del ..\samples\simple\v1.0.0\simple.exe
 	-if exist ..\samples\simple\v2.0.3\simple.exe del ..\samples\simple\v2.0.3\simple.exe
 	-if exist ..\samples\advanced\v0.0.1\advanced.exe del ..\samples\advanced\v0.0.1\advanced.exe
@@ -280,6 +290,9 @@ ifeq ($(WX_SHARED),1)
 	$(CXX) -shared -fPIC -o $@ $(WEBUPDATE_DLL_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -Wl,--out-implib,..\lib\libwebupdate$(WXLIBPOSTFIX).a  -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTLIBPOSTFIX) -lwxjpeg$(WX3RDPARTLIBPOSTFIX) -lwxpng$(WX3RDPARTLIBPOSTFIX) -lwxzlib$(WX3RDPARTLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 endif
 
+.\replacer.exe: $(REPLACER_OBJECTS)
+	$(CC) -o $@ $(REPLACER_OBJECTS) $(LDFLAGS)
+
 ..\samples\simple\v1.0.0\simple.exe: $(SIMPLE_1_0_0_OBJECTS) $(__webupdate_lib___depname) mingw\simple_1_0_0_minimal_rc.o
 	$(CXX) -o $@ $(SIMPLE_1_0_0_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -Wl,--subsystem,windows -mwindows  ..\lib\libwebupdate$(WXLIBPOSTFIX).a -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTLIBPOSTFIX) -lwxjpeg$(WX3RDPARTLIBPOSTFIX) -lwxpng$(WX3RDPARTLIBPOSTFIX) -lwxzlib$(WX3RDPARTLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
@@ -327,6 +340,9 @@ mingw\webupdate_dll_installer.o: ./../src/installer.cpp
 
 mingw\webupdate_dll_download.o: ./../src/download.cpp
 	$(CXX) -c -o $@ $(WEBUPDATE_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+mingw\replacer_replacer.o: ./../src/replacer/replacer.c
+	$(CC) -c -o $@ $(REPLACER_CFLAGS) $(CPPDEPS) $<
 
 mingw\simple_1_0_0_minimal.o: ./../samples/simple/v1.0.0/minimal.cpp
 	$(CXX) -c -o $@ $(SIMPLE_1_0_0_CXXFLAGS) $(CPPDEPS) $<
