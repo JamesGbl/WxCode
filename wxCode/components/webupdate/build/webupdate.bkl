@@ -67,6 +67,8 @@
 	</template>
 	
 	
+	
+	
 	<!-- Our REPLACER cross-platform utility -->
 	<!-- =================================== -->
 	
@@ -74,9 +76,36 @@
 	    <app-type>console</app-type>
 		<exename>replacer</exename>
 		<sources>../src/replacer/replacer.c</sources>
-		<dirname>.</dirname>
-	</exe>	
+		<dirname>..</dirname>
+		
+		<define>
+            $(substituteFromDict(WX_DEBUG,{'1':'','0':'NDEBUG'}))
+        </define>
+        <optimize>
+            $(substituteFromDict(WX_DEBUG,{'1':'off','0':'speed'}))
+        </optimize>
+        <debug-info>
+            $(substituteFromDict(WX_DEBUG,{'1':'on','0':'off'}))
+        </debug-info>
+	</exe>
 	
+	<if cond="TARGETING_IDE=='0' and TARGETING_WIN32=='1'">
+		<define-rule name="copyrep" extends="copy-file-to-file">
+			<template>
+				<if cond="TARGETING_WIN32=='1'"><src>../replacer.exe</src></if>
+				<dependency-of>all</dependency-of>				
+			</template>		
+		</define-rule>
+		<copyrep id="rep4_simple100"><dst>../samples/simple/v1.0.0/</dst></copyrep>
+		<copyrep id="rep4_simple203"><dst>../samples/simple/v2.0.3/</dst></copyrep>
+		<copyrep id="rep4_adv001"><dst>../samples/advanced/v0.0.1/</dst></copyrep>
+		<copyrep id="rep4_adv150"><dst>../samples/advanced/v1.5.0/</dst></copyrep>
+	</if>
+	
+	
+	
+	<!--             Our SAMPLES             -->
+	<!-- =================================== -->
 
 	<!-- use _ instead of '-' or '.' because MSVC6 does not like these chars -->
 	<exe id="simple_1_0_0" template="webupdatecompsample">

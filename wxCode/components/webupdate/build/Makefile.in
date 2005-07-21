@@ -163,7 +163,7 @@ COND_PLATFORM_OS2_1___advanced_0 = $(NM) advanced$(EXEEXT) | if grep -q pmwin.76
 
 ### Targets: ###
 
-all: $(__webupdate_lib___depname) $(__webupdate_dll___depname) ./replacer$(EXEEXT) ../samples/simple/v1.0.0/simple$(EXEEXT) ../samples/simple/v2.0.3/simple$(EXEEXT) ../samples/advanced/v0.0.1/advanced$(EXEEXT) ../samples/advanced/v1.5.0/advanced$(EXEEXT)
+all: $(__webupdate_lib___depname) $(__webupdate_dll___depname) ../replacer$(EXEEXT) ../samples/simple/v1.0.0/simple$(EXEEXT) ../samples/simple/v2.0.3/simple$(EXEEXT) ../samples/advanced/v0.0.1/advanced$(EXEEXT) ../samples/advanced/v1.5.0/advanced$(EXEEXT)
 
 install: all $(__install_webupdate_lib___depname) $(__install_webupdate_dll___depname)
 
@@ -187,7 +187,7 @@ clean:
 	rm -f ../lib/$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf3)
 	rm -f ../lib/$(LIBPREFIX)webupdate.$(DLLIMP_SUFFIX)
 	rm -f ../lib/$(LIBPREFIX)webupdate.$(DLLIMP_SUFFIX) ../lib/$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf2)
-	rm -f ./replacer$(EXEEXT)
+	rm -f ../replacer$(EXEEXT)
 	rm -f ../samples/simple/v1.0.0/simple$(EXEEXT)
 	rm -f ../samples/simple/v2.0.3/simple$(EXEEXT)
 	rm -f ../samples/advanced/v0.0.1/advanced$(EXEEXT)
@@ -292,7 +292,7 @@ cleandocs:
 @COND_WX_SHARED_1@	$(INSTALL_PROGRAM) ../lib/$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf3) $(DESTDIR)$(libdir)
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__webupdate_dll___so_symlinks_inst_cmd))
 
-./replacer$(EXEEXT): $(REPLACER_OBJECTS)
+../replacer$(EXEEXT): $(REPLACER_OBJECTS)
 	$(CC) -o $@ $(REPLACER_OBJECTS) $(LDFLAGS)
 	
 	$(__replacer___mac_setfilecmd)

@@ -15,24 +15,24 @@
 
 void PrintUsage(char *thisname)
 {
-	printf("Usage: %s --pid 123  --from c:\\temp  --to c:\\programs\\myprogram", thisname);
-	printf("       The arguments must be in the specified order and must be space-separed.");
-	printf("       See the program source for more info.");
+	printf("Usage: %s --pid 123  --from c:\\temp  --to c:\\programs\\myprogram\n", thisname);
+	printf("       The arguments must be in the specified order and must be space-separed.\n");
+	printf("       See the program source for more info.\n");
 }
 
-int main(char **argv, int argc)
+int main(int argc, char **argv)
 {
 	char cmd[256];
 
 	// ARGUMENT CHECKING
-	if (argc != 6) {
+	if (argc != 7) {
 		PrintUsage(argv[0]);
 		return 1;
 	}
 	
-	if (strcmp(argv[1], "pid") != 0 ||
-		strcmp(argv[1], "from") != 0 ||
-		strcmp(argv[1], "to") != 0) {
+	if (strcmp(argv[1], "--pid") != 0 ||
+		strcmp(argv[3], "--from") != 0 ||
+		strcmp(argv[5], "--to") != 0) {
 		PrintUsage(argv[0]);
 		return 1;
 	}
