@@ -174,25 +174,6 @@ uninstall:
 	$(DESTDIR)$(includedir)/wx/scunderc.h\
 	$(DESTDIR)$(includedir)/wx/sclua.h\
 	$(DESTDIR)$(includedir)/wx/scdef.h
-	rm -f  $(DESTDIR)$(includedir)/wx/script.h\
-	$(DESTDIR)$(includedir)/wx/scpython.h\
-	$(DESTDIR)$(includedir)/wx/sccint.h\
-	$(DESTDIR)$(includedir)/wx/scunderc.h\
-	$(DESTDIR)$(includedir)/wx/sclua.h\
-	$(DESTDIR)$(includedir)/wx/scdef.h
-	rm -f  $(DESTDIR)$(includedir)/wx/script.h\
-	$(DESTDIR)$(includedir)/wx/scpython.h\
-	$(DESTDIR)$(includedir)/wx/sccint.h\
-	$(DESTDIR)$(includedir)/wx/scunderc.h\
-	$(DESTDIR)$(includedir)/wx/sclua.h\
-	$(DESTDIR)$(includedir)/wx/scdef.h
-	rm -f  $(DESTDIR)$(includedir)/wx/script.h\
-	$(DESTDIR)$(includedir)/wx/scpython.h\
-	$(DESTDIR)$(includedir)/wx/sccint.h\
-	$(DESTDIR)$(includedir)/wx/scunderc.h\
-	$(DESTDIR)$(includedir)/wx/sclua.h\
-	$(DESTDIR)$(includedir)/wx/scdef.h
-	rm -f $(libdir)/*wxscript*
 	rm -f $(libdir)/*wxscript*
 
 install-strip: install
@@ -213,267 +194,78 @@ distclean: clean
 
 tarball: 
 	( cd .. && tar -cvzf ../wxscript.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
-	( cd .. && tar -cvzf ../wxscript.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
 
 zip: 
-	( cd .. && zip -r9 ../wxscript.zip *  -x *.pdb -x *.log -x *.o* )
 	( cd .. && zip -r9 ../wxscript.zip *  -x *.pdb -x *.log -x *.o* )
 
 deepclean: 
 	rm -f -r ../*.a
-	rm -f -r ../*.a
-	rm -f -r ../*.lib
 	rm -f -r ../*.lib
 	rm -f -r ../*.pdb
-	rm -f -r ../*.pdb
-	rm -f -r ../*.dll
 	rm -f -r ../*.dll
 	rm -f -r ../*.exp
-	rm -f -r ../*.exp
-	rm -f -r ../*.so*
 	rm -f -r ../*.so*
 	rm -f -r ../*.exe
-	rm -f -r ../*.exe
-	rm -f -r ../*.obj
 	rm -f -r ../*.obj
 	rm -f -r ../*.o
-	rm -f -r ../*.o
-	rm -f -r ../*.log
 	rm -f -r ../*.log
 	rm -f -r ../*.manifest*
-	rm -f -r ../*.manifest*
-	rm -f -r ../*.log
 	rm -f -r ../*.log
 	rm -f -r ../.bakefile_gen.state
-	rm -f -r ../.bakefile_gen.state
-	rm -f -r ../*.pch
 	rm -f -r ../*.pch
 	rm -f -r ../*.ncb
-	rm -f -r ../*.ncb
-	rm -f -r ../*.plg
 	rm -f -r ../*.plg
 	rm -f -r ../*.ncb
-	rm -f -r ../*.ncb
-	rm -f -r ../*.aps
 	rm -f -r ../*.aps
 	rm -f -r ../*.suo
-	rm -f -r ../*.suo
-	rm -f -r ../*.user
 	rm -f -r ../*.user
 	rm -f -r ../*.res
-	rm -f -r ../*.res
-	rm -f -r ../*.il?
 	rm -f -r ../*.il?
 	rm -f -r ../*.tds
-	rm -f -r ../*.tds
-	rm -f -r ../*.idb
 	rm -f -r ../*.idb
 	rm -f -r ../*.map
-	rm -f -r ../*.map
-	rm -rf ../autom4te.cache
 	rm -rf ../autom4te.cache
 	rm -rf ../.deps
-	rm -rf ../.deps
-	rm -f -r ../config.status
 	rm -f -r ../config.status
 	rm -f -r ../config.log
-	rm -f -r ../config.log
-	rm -f -r ../Makefile
 	rm -f -r ../Makefile
 	rm -f -r ../bk-deps
-	rm -f -r ../bk-deps
-	rm -f -r ../*.a
-	rm -f -r ../*.a
-	rm -f -r ../*.lib
-	rm -f -r ../*.lib
-	rm -f -r ../*.pdb
-	rm -f -r ../*.pdb
-	rm -f -r ../*.dll
-	rm -f -r ../*.dll
-	rm -f -r ../*.exp
-	rm -f -r ../*.exp
-	rm -f -r ../*.so*
-	rm -f -r ../*.so*
-	rm -f -r ../*.exe
-	rm -f -r ../*.exe
-	rm -f -r ../*.obj
-	rm -f -r ../*.obj
-	rm -f -r ../*.o
-	rm -f -r ../*.o
-	rm -f -r ../*.log
-	rm -f -r ../*.log
-	rm -f -r ../*.manifest*
-	rm -f -r ../*.manifest*
-	rm -f -r ../*.log
-	rm -f -r ../*.log
-	rm -f -r ../.bakefile_gen.state
-	rm -f -r ../.bakefile_gen.state
-	rm -f -r ../*.pch
-	rm -f -r ../*.pch
-	rm -f -r ../*.ncb
-	rm -f -r ../*.ncb
-	rm -f -r ../*.plg
-	rm -f -r ../*.plg
-	rm -f -r ../*.ncb
-	rm -f -r ../*.ncb
-	rm -f -r ../*.aps
-	rm -f -r ../*.aps
-	rm -f -r ../*.suo
-	rm -f -r ../*.suo
-	rm -f -r ../*.user
-	rm -f -r ../*.user
-	rm -f -r ../*.res
-	rm -f -r ../*.res
-	rm -f -r ../*.il?
-	rm -f -r ../*.il?
-	rm -f -r ../*.tds
-	rm -f -r ../*.tds
-	rm -f -r ../*.idb
-	rm -f -r ../*.idb
-	rm -f -r ../*.map
-	rm -f -r ../*.map
-	rm -rf ../autom4te.cache
-	rm -rf ../autom4te.cache
-	rm -rf ../.deps
-	rm -rf ../.deps
-	rm -f -r ../config.status
-	rm -f -r ../config.status
-	rm -f -r ../config.log
-	rm -f -r ../config.log
-	rm -f -r ../Makefile
-	rm -f -r ../Makefile
-	rm -f -r ../bk-deps
-	rm -f -r ../bk-deps
-	rm -f -r ./*.a
 	rm -f -r ./*.a
 	rm -f -r ./*.lib
-	rm -f -r ./*.lib
-	rm -f -r ./*.pdb
 	rm -f -r ./*.pdb
 	rm -f -r ./*.dll
-	rm -f -r ./*.dll
-	rm -f -r ./*.exp
 	rm -f -r ./*.exp
 	rm -f -r ./*.so*
-	rm -f -r ./*.so*
-	rm -f -r ./*.exe
 	rm -f -r ./*.exe
 	rm -f -r ./*.obj
-	rm -f -r ./*.obj
-	rm -f -r ./*.o
 	rm -f -r ./*.o
 	rm -f -r ./*.log
-	rm -f -r ./*.log
-	rm -f -r ./*.manifest*
 	rm -f -r ./*.manifest*
 	rm -f -r ./*.log
-	rm -f -r ./*.log
-	rm -f -r ./.bakefile_gen.state
 	rm -f -r ./.bakefile_gen.state
 	rm -f -r ./*.pch
-	rm -f -r ./*.pch
-	rm -f -r ./*.ncb
 	rm -f -r ./*.ncb
 	rm -f -r ./*.plg
-	rm -f -r ./*.plg
-	rm -f -r ./*.ncb
 	rm -f -r ./*.ncb
 	rm -f -r ./*.aps
-	rm -f -r ./*.aps
-	rm -f -r ./*.suo
 	rm -f -r ./*.suo
 	rm -f -r ./*.user
-	rm -f -r ./*.user
-	rm -f -r ./*.res
 	rm -f -r ./*.res
 	rm -f -r ./*.il?
-	rm -f -r ./*.il?
-	rm -f -r ./*.tds
 	rm -f -r ./*.tds
 	rm -f -r ./*.idb
-	rm -f -r ./*.idb
-	rm -f -r ./*.map
 	rm -f -r ./*.map
 	rm -rf ./autom4te.cache
-	rm -rf ./autom4te.cache
-	rm -rf ./.deps
 	rm -rf ./.deps
 	rm -f -r ./config.status
-	rm -f -r ./config.status
-	rm -f -r ./config.log
 	rm -f -r ./config.log
 	rm -f -r ./Makefile
-	rm -f -r ./Makefile
-	rm -f -r ./bk-deps
-	rm -f -r ./bk-deps
-	rm -f -r ./*.a
-	rm -f -r ./*.a
-	rm -f -r ./*.lib
-	rm -f -r ./*.lib
-	rm -f -r ./*.pdb
-	rm -f -r ./*.pdb
-	rm -f -r ./*.dll
-	rm -f -r ./*.dll
-	rm -f -r ./*.exp
-	rm -f -r ./*.exp
-	rm -f -r ./*.so*
-	rm -f -r ./*.so*
-	rm -f -r ./*.exe
-	rm -f -r ./*.exe
-	rm -f -r ./*.obj
-	rm -f -r ./*.obj
-	rm -f -r ./*.o
-	rm -f -r ./*.o
-	rm -f -r ./*.log
-	rm -f -r ./*.log
-	rm -f -r ./*.manifest*
-	rm -f -r ./*.manifest*
-	rm -f -r ./*.log
-	rm -f -r ./*.log
-	rm -f -r ./.bakefile_gen.state
-	rm -f -r ./.bakefile_gen.state
-	rm -f -r ./*.pch
-	rm -f -r ./*.pch
-	rm -f -r ./*.ncb
-	rm -f -r ./*.ncb
-	rm -f -r ./*.plg
-	rm -f -r ./*.plg
-	rm -f -r ./*.ncb
-	rm -f -r ./*.ncb
-	rm -f -r ./*.aps
-	rm -f -r ./*.aps
-	rm -f -r ./*.suo
-	rm -f -r ./*.suo
-	rm -f -r ./*.user
-	rm -f -r ./*.user
-	rm -f -r ./*.res
-	rm -f -r ./*.res
-	rm -f -r ./*.il?
-	rm -f -r ./*.il?
-	rm -f -r ./*.tds
-	rm -f -r ./*.tds
-	rm -f -r ./*.idb
-	rm -f -r ./*.idb
-	rm -f -r ./*.map
-	rm -f -r ./*.map
-	rm -rf ./autom4te.cache
-	rm -rf ./autom4te.cache
-	rm -rf ./.deps
-	rm -rf ./.deps
-	rm -f -r ./config.status
-	rm -f -r ./config.status
-	rm -f -r ./config.log
-	rm -f -r ./config.log
-	rm -f -r ./Makefile
-	rm -f -r ./Makefile
-	rm -f -r ./bk-deps
 	rm -f -r ./bk-deps
 
 docs: 
 	( cd ../docs && doxygen )
 
 cleandocs: 
-	rm -rf ../docs/html
 	rm -rf ../docs/html
 
 @COND_WX_SHARED_0@../lib/$(LIBPREFIX)wxscript$(LIBEXT): $(WXSCRIPT_LIB_OBJECTS)

@@ -217,6 +217,7 @@ deepclean :
 	-del /S ..\*.aps
 	-del /S ..\*.suo
 	-del /S ..\*.user
+	-del /S ..\*.res
 	-del /S ..\*.il?
 	-del /S ..\*.tds
 	-del /S ..\*.idb
@@ -227,6 +228,37 @@ deepclean :
 	-del /S ..\config.log
 	-del /S ..\Makefile
 	-del /S ..\bk-deps
+	-del /S .\*.a
+	-del /S .\*.lib
+	-del /S .\*.pdb
+	-del /S .\*.dll
+	-del /S .\*.exp
+	-del /S .\*.so*
+	-del /S .\*.exe
+	-del /S .\*.obj
+	-del /S .\*.o
+	-del /S .\*.log
+	-del /S .\*.manifest*
+	-del /S .\*.log
+	-del /S .\.bakefile_gen.state
+	-del /S .\*.pch
+	-del /S .\*.ncb
+	-del /S .\*.plg
+	-del /S .\*.ncb
+	-del /S .\*.aps
+	-del /S .\*.suo
+	-del /S .\*.user
+	-del /S .\*.res
+	-del /S .\*.il?
+	-del /S .\*.tds
+	-del /S .\*.idb
+	-del /S .\*.map
+	-if exist .\autom4te.cache rmdir /S /Q .\autom4te.cache
+	-if exist .\.deps rmdir /S /Q .\.deps
+	-del /S .\config.status
+	-del /S .\config.log
+	-del /S .\Makefile
+	-del /S .\bk-deps
 
 docs :  
 	-cd ..\docs

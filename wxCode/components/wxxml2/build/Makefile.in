@@ -174,6 +174,7 @@ deepclean:
 	rm -f -r ../*.aps
 	rm -f -r ../*.suo
 	rm -f -r ../*.user
+	rm -f -r ../*.res
 	rm -f -r ../*.il?
 	rm -f -r ../*.tds
 	rm -f -r ../*.idb
@@ -184,6 +185,37 @@ deepclean:
 	rm -f -r ../config.log
 	rm -f -r ../Makefile
 	rm -f -r ../bk-deps
+	rm -f -r ./*.a
+	rm -f -r ./*.lib
+	rm -f -r ./*.pdb
+	rm -f -r ./*.dll
+	rm -f -r ./*.exp
+	rm -f -r ./*.so*
+	rm -f -r ./*.exe
+	rm -f -r ./*.obj
+	rm -f -r ./*.o
+	rm -f -r ./*.log
+	rm -f -r ./*.manifest*
+	rm -f -r ./*.log
+	rm -f -r ./.bakefile_gen.state
+	rm -f -r ./*.pch
+	rm -f -r ./*.ncb
+	rm -f -r ./*.plg
+	rm -f -r ./*.ncb
+	rm -f -r ./*.aps
+	rm -f -r ./*.suo
+	rm -f -r ./*.user
+	rm -f -r ./*.res
+	rm -f -r ./*.il?
+	rm -f -r ./*.tds
+	rm -f -r ./*.idb
+	rm -f -r ./*.map
+	rm -rf ./autom4te.cache
+	rm -rf ./.deps
+	rm -f -r ./config.status
+	rm -f -r ./config.log
+	rm -f -r ./Makefile
+	rm -f -r ./bk-deps
 
 docs: 
 	( cd ../docs && doxygen )
