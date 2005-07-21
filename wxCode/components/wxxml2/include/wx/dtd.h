@@ -32,12 +32,12 @@ class WXDLLIMPEXP_WXXML2 wxXml2Enumeration;
 
 
 // global instances of empty objects
-extern wxXml2DTD wxXml2EmptyDTD;
-extern wxXml2ElemDecl wxXml2EmptyElemDecl;
-extern wxXml2AttrDecl wxXml2EmptyAttrDecl;
-extern wxXml2EntityDecl wxXml2EmptyEntityDecl;
-extern wxXml2Enumeration wxXml2EmptyEnumeration;
-extern wxXml2ElemContent wxXml2EmptyElemContent;
+extern WXDLLIMPEXP_DATA_WXXML2(wxXml2DTD) wxXml2EmptyDTD;
+extern WXDLLIMPEXP_DATA_WXXML2(wxXml2ElemDecl) wxXml2EmptyElemDecl;
+extern WXDLLIMPEXP_DATA_WXXML2(wxXml2AttrDecl) wxXml2EmptyAttrDecl;
+extern WXDLLIMPEXP_DATA_WXXML2(wxXml2EntityDecl) wxXml2EmptyEntityDecl;
+extern WXDLLIMPEXP_DATA_WXXML2(wxXml2Enumeration) wxXml2EmptyEnumeration;
+extern WXDLLIMPEXP_DATA_WXXML2(wxXml2ElemContent) wxXml2EmptyElemContent;
 
 
 

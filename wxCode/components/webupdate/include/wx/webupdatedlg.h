@@ -196,9 +196,11 @@ protected:		// remote-related stuff
 	//! The URI of the XML webupdate script.
 	wxString m_strURI;
 
-	//! The threadhelper we use to download the webupdate script & packages.	
-	wxDownloadThread *m_thread;
+	//! The thread we use to download the webupdate script & packages.	
+	wxDownloadThread *m_dThread;
 
+	//! The thread we use to install the packages.
+	//wxWebUpdateInstallThread *m_iThread;
 
 protected:		// wxWebUpdateDlg-internals
 
@@ -280,7 +282,7 @@ public:
 			InitWidgetsFromXRC(); }
 
 	virtual ~wxWebUpdateDlg() 
-		{ if (m_thread) delete m_thread; }
+		{ if (m_dThread) delete m_dThread; }
 
 
 public:		// main functions

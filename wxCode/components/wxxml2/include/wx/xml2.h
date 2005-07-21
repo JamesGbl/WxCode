@@ -216,11 +216,11 @@ class WXDLLIMPEXP_WXXML2 wxXml2Document;
 class WXDLLIMPEXP_WXXML2 wxXml2DTD;			// defined in "dtd.h"
 
 // global instances of empty objects
-extern wxXml2Node wxXml2EmptyNode;
-extern wxXml2Property wxXml2EmptyProperty;
-extern wxXml2Namespace wxXml2EmptyNamespace;
-extern wxXml2Document wxXml2EmptyDoc;
-extern wxXml2BaseNode wxXml2EmptyBaseNode;
+extern WXDLLIMPEXP_DATA_WXXML2(wxXml2Node) wxXml2EmptyNode;
+extern WXDLLIMPEXP_DATA_WXXML2(wxXml2Property) wxXml2EmptyProperty;
+extern WXDLLIMPEXP_DATA_WXXML2(wxXml2Namespace) wxXml2EmptyNamespace;
+extern WXDLLIMPEXP_DATA_WXXML2(wxXml2Document) wxXml2EmptyDoc;
+extern WXDLLIMPEXP_DATA_WXXML2(wxXml2BaseNode) wxXml2EmptyBaseNode;
 
 
 

@@ -27,6 +27,18 @@
    defined at compile-time in the program which downloads this script file.
    Keyword substitution is performed only in the text content of those tags whose  
    description explicitely state it.
+   The list of keywords which can be used is:
+   
+   $(programroot) = 
+   $(pid) = 
+   $(tempdir) = 
+   $(appname) = 
+   $(framename) = 
+   
+   $(latest-version) = 
+   $(id) = 
+   $(thisfile) =
+   
 
 -->
 
@@ -158,11 +170,13 @@
 
 
 <!-- for "extract" action tags -->
-<!ATTLIST action where CDATA "$(PROGRAMROOT)">
+<!ATTLIST action where CDATA "$(programroot)">
+<!ATTLIST action file CDATA "$(thisfile)">
+<!ATTLIST action type CDATA "zip">
 
 <!-- for "run" action tags -->
 <!ATTLIST action args CDATA #IMPLIED>
 <!ATTLIST action file CDATA #IMPLIED>
-<!ATTLIST action flags CDATA "ASYNCH">
+<!ATTLIST action flags CDATA "ASYNC">
 
 <!-- add the attributes for you own actions here -->

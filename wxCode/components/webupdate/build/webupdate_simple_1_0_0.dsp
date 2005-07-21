@@ -1,4 +1,4 @@
-# Microsoft Developer Studio Project File - Name="webupdate_simple_1_0_0" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="simple_1_0_0" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
@@ -47,18 +47,18 @@ RSC=rc.exe
 # PROP Output_Dir "..\samples\simple\v1.0.0"
 # PROP Intermediate_Dir "msvc6prj\simple_1_0_0"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "$(WXWIN)\lib\vc_dll\mswud" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /Zi /Gm /GZ /Fd..\samples\simple\v1.0.0\simple.pdb /D "WIN32" /D "_DEBUG" /D "WXUSINGDLL" /D "_UNICODE" /D "__WXDEBUG__" /D "__WXMSW__" /D "_WINDOWS" /c
-# ADD CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "$(WXWIN)\lib\vc_dll\mswud" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /Zi /Gm /GZ /Fd..\samples\simple\v1.0.0\simple.pdb /D "WIN32" /D "_DEBUG" /D "WXUSINGDLL" /D "_UNICODE" /D "__WXDEBUG__" /D "__WXMSW__" /D "_WINDOWS" /c
+# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /Zi /Od /I "$(WXWIN)\lib\vc_dll\mswud" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /D "WIN32" /D "_DEBUG" /D "WXUSINGDLL" /D "_UNICODE" /D "__WXDEBUG__" /D "__WXMSW__" /D "_WINDOWS" /Fd"..\samples\simple\v1.0.0\simple.pdb" /FD /EHsc /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /GR /Zi /Od /I "$(WXWIN)\lib\vc_dll\mswud" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /D "WIN32" /D "_DEBUG" /D "WXUSINGDLL" /D "_UNICODE" /D "__WXDEBUG__" /D "__WXMSW__" /D "_WINDOWS" /Fd"..\samples\simple\v1.0.0\simple.pdb" /FD /EHsc /GZ /c
 # ADD BASE MTL /nologo /D "WIN32" /D "_DEBUG" /D "WXUSINGDLL" /D "_UNICODE" /D "__WXDEBUG__" /D "__WXMSW__" /D "_WINDOWS" /mktyplib203 /win32
 # ADD MTL /nologo /D "WIN32" /D "_DEBUG" /D "WXUSINGDLL" /D "_UNICODE" /D "__WXDEBUG__" /D "__WXMSW__" /D "_WINDOWS" /mktyplib203 /win32
-# ADD BASE RSC /l 0x409 /d "_DEBUG" /d "WXUSINGDLL" /d "_UNICODE" /d "__WXDEBUG__" /d "__WXMSW__" /i "$(WXWIN)\lib\vc_dll\mswud" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /d "_WINDOWS" /i ..\samples\simple\v1.0.0
-# ADD RSC /l 0x409 /d "_DEBUG" /d "WXUSINGDLL" /d "_UNICODE" /d "__WXDEBUG__" /d "__WXMSW__" /i "$(WXWIN)\lib\vc_dll\mswud" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /d "_WINDOWS" /i ..\samples\simple\v1.0.0
+# ADD BASE RSC /l 0x409 /i "$(WXWIN)\lib\vc_dll\mswud" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /i "..\samples\simple\v1.0.0" /d "_DEBUG" /d "WXUSINGDLL" /d "_UNICODE" /d "__WXDEBUG__" /d "__WXMSW__" /d "_WINDOWS"
+# ADD RSC /l 0x409 /i "$(WXWIN)\lib\vc_dll\mswud" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /i "..\samples\simple\v1.0.0" /d "_DEBUG" /d "WXUSINGDLL" /d "_UNICODE" /d "__WXDEBUG__" /d "__WXMSW__" /d "_WINDOWS"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 ..\lib\webupdateud.lib wxmsw26ud_html.lib wxmsw26ud_adv.lib wxmsw26ud_xrc.lib wxbase26ud_xml.lib wxbase26ud_net.lib wxmsw26ud_core.lib wxbase26ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib" /subsystem:windows /debug
-# ADD LINK32 ..\lib\webupdateud.lib wxmsw26ud_html.lib wxmsw26ud_adv.lib wxmsw26ud_xrc.lib wxbase26ud_xml.lib wxbase26ud_net.lib wxmsw26ud_core.lib wxbase26ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib" /subsystem:windows /debug
+# ADD BASE LINK32 ..\lib\webupdateud.lib wxmsw26ud_html.lib wxmsw26ud_adv.lib wxmsw26ud_xrc.lib wxbase26ud_xml.lib wxbase26ud_net.lib wxmsw26ud_core.lib wxbase26ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /subsystem:windows /debug /machine:I386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib"
+# ADD LINK32 ..\lib\webupdateud.lib wxmsw26ud_html.lib wxmsw26ud_adv.lib wxmsw26ud_xrc.lib wxbase26ud_xml.lib wxbase26ud_net.lib wxmsw26ud_core.lib wxbase26ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /subsystem:windows /debug /machine:I386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib"
 
 !ELSEIF  "$(CFG)" == "simple_1_0_0 - Win32 DLL Unicode"
 
@@ -72,18 +72,18 @@ LINK32=link.exe
 # PROP Output_Dir "..\samples\simple\v1.0.0"
 # PROP Intermediate_Dir "msvc6prj\simple_1_0_0"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /GR /EHsc /w /O2 /I "$(WXWIN)\lib\vc_dll\mswu" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /Fd..\samples\simple\v1.0.0\simple.pdb /D "WIN32" /D "WXUSINGDLL" /D "_UNICODE" /D "__WXMSW__" /D "_WINDOWS" /c
-# ADD CPP /nologo /FD /MD /GR /EHsc /w /O2 /I "$(WXWIN)\lib\vc_dll\mswu" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /Fd..\samples\simple\v1.0.0\simple.pdb /D "WIN32" /D "WXUSINGDLL" /D "_UNICODE" /D "__WXMSW__" /D "_WINDOWS" /c
+# ADD BASE CPP /nologo /MD /w /W0 /GR /O2 /I "$(WXWIN)\lib\vc_dll\mswu" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /D "WIN32" /D "WXUSINGDLL" /D "_UNICODE" /D "__WXMSW__" /D "_WINDOWS" /Fd"..\samples\simple\v1.0.0\simple.pdb" /FD /EHsc /c
+# ADD CPP /nologo /MD /w /W0 /GR /O2 /I "$(WXWIN)\lib\vc_dll\mswu" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /D "WIN32" /D "WXUSINGDLL" /D "_UNICODE" /D "__WXMSW__" /D "_WINDOWS" /Fd"..\samples\simple\v1.0.0\simple.pdb" /FD /EHsc /c
 # ADD BASE MTL /nologo /D "WIN32" /D "WXUSINGDLL" /D "_UNICODE" /D "__WXMSW__" /D "_WINDOWS" /mktyplib203 /win32
 # ADD MTL /nologo /D "WIN32" /D "WXUSINGDLL" /D "_UNICODE" /D "__WXMSW__" /D "_WINDOWS" /mktyplib203 /win32
-# ADD BASE RSC /l 0x409 /d "WXUSINGDLL" /d "_UNICODE" /d "__WXMSW__" /i "$(WXWIN)\lib\vc_dll\mswu" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /d "_WINDOWS" /i ..\samples\simple\v1.0.0
-# ADD RSC /l 0x409 /d "WXUSINGDLL" /d "_UNICODE" /d "__WXMSW__" /i "$(WXWIN)\lib\vc_dll\mswu" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /d "_WINDOWS" /i ..\samples\simple\v1.0.0
+# ADD BASE RSC /l 0x409 /i "$(WXWIN)\lib\vc_dll\mswu" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /i "..\samples\simple\v1.0.0" /d "WXUSINGDLL" /d "_UNICODE" /d "__WXMSW__" /d "_WINDOWS"
+# ADD RSC /l 0x409 /i "$(WXWIN)\lib\vc_dll\mswu" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /i "..\samples\simple\v1.0.0" /d "WXUSINGDLL" /d "_UNICODE" /d "__WXMSW__" /d "_WINDOWS"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 ..\lib\webupdateu.lib wxmsw26u_html.lib wxmsw26u_adv.lib wxmsw26u_xrc.lib wxbase26u_xml.lib wxbase26u_net.lib wxmsw26u_core.lib wxbase26u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib" /subsystem:windows
-# ADD LINK32 ..\lib\webupdateu.lib wxmsw26u_html.lib wxmsw26u_adv.lib wxmsw26u_xrc.lib wxbase26u_xml.lib wxbase26u_net.lib wxmsw26u_core.lib wxbase26u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib" /subsystem:windows
+# ADD BASE LINK32 ..\lib\webupdateu.lib wxmsw26u_html.lib wxmsw26u_adv.lib wxmsw26u_xrc.lib wxbase26u_xml.lib wxbase26u_net.lib wxmsw26u_core.lib wxbase26u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /subsystem:windows /machine:I386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib"
+# ADD LINK32 ..\lib\webupdateu.lib wxmsw26u_html.lib wxmsw26u_adv.lib wxmsw26u_xrc.lib wxbase26u_xml.lib wxbase26u_net.lib wxmsw26u_core.lib wxbase26u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /subsystem:windows /machine:I386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib"
 
 !ELSEIF  "$(CFG)" == "simple_1_0_0 - Win32 DLL Debug"
 
@@ -97,18 +97,18 @@ LINK32=link.exe
 # PROP Output_Dir "..\samples\simple\v1.0.0"
 # PROP Intermediate_Dir "msvc6prj\simple_1_0_0"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "$(WXWIN)\lib\vc_dll\mswd" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /Zi /Gm /GZ /Fd..\samples\simple\v1.0.0\simple.pdb /D "WIN32" /D "_DEBUG" /D "WXUSINGDLL" /D "__WXDEBUG__" /D "__WXMSW__" /D "_WINDOWS" /c
-# ADD CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "$(WXWIN)\lib\vc_dll\mswd" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /Zi /Gm /GZ /Fd..\samples\simple\v1.0.0\simple.pdb /D "WIN32" /D "_DEBUG" /D "WXUSINGDLL" /D "__WXDEBUG__" /D "__WXMSW__" /D "_WINDOWS" /c
+# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /Zi /Od /I "$(WXWIN)\lib\vc_dll\mswd" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /D "WIN32" /D "_DEBUG" /D "WXUSINGDLL" /D "__WXDEBUG__" /D "__WXMSW__" /D "_WINDOWS" /Fd"..\samples\simple\v1.0.0\simple.pdb" /FD /EHsc /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /GR /Zi /Od /I "$(WXWIN)\lib\vc_dll\mswd" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /D "WIN32" /D "_DEBUG" /D "WXUSINGDLL" /D "__WXDEBUG__" /D "__WXMSW__" /D "_WINDOWS" /Fd"..\samples\simple\v1.0.0\simple.pdb" /FD /EHsc /GZ /c
 # ADD BASE MTL /nologo /D "WIN32" /D "_DEBUG" /D "WXUSINGDLL" /D "__WXDEBUG__" /D "__WXMSW__" /D "_WINDOWS" /mktyplib203 /win32
 # ADD MTL /nologo /D "WIN32" /D "_DEBUG" /D "WXUSINGDLL" /D "__WXDEBUG__" /D "__WXMSW__" /D "_WINDOWS" /mktyplib203 /win32
-# ADD BASE RSC /l 0x409 /d "_DEBUG" /d "WXUSINGDLL" /d "__WXDEBUG__" /d "__WXMSW__" /i "$(WXWIN)\lib\vc_dll\mswd" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /d "_WINDOWS" /i ..\samples\simple\v1.0.0
-# ADD RSC /l 0x409 /d "_DEBUG" /d "WXUSINGDLL" /d "__WXDEBUG__" /d "__WXMSW__" /i "$(WXWIN)\lib\vc_dll\mswd" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /d "_WINDOWS" /i ..\samples\simple\v1.0.0
+# ADD BASE RSC /l 0x409 /i "$(WXWIN)\lib\vc_dll\mswd" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /i "..\samples\simple\v1.0.0" /d "_DEBUG" /d "WXUSINGDLL" /d "__WXDEBUG__" /d "__WXMSW__" /d "_WINDOWS"
+# ADD RSC /l 0x409 /i "$(WXWIN)\lib\vc_dll\mswd" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /i "..\samples\simple\v1.0.0" /d "_DEBUG" /d "WXUSINGDLL" /d "__WXDEBUG__" /d "__WXMSW__" /d "_WINDOWS"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 ..\lib\webupdated.lib wxmsw26d_html.lib wxmsw26d_adv.lib wxmsw26d_xrc.lib wxbase26d_xml.lib wxbase26d_net.lib wxmsw26d_core.lib wxbase26d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib" /subsystem:windows /debug
-# ADD LINK32 ..\lib\webupdated.lib wxmsw26d_html.lib wxmsw26d_adv.lib wxmsw26d_xrc.lib wxbase26d_xml.lib wxbase26d_net.lib wxmsw26d_core.lib wxbase26d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib" /subsystem:windows /debug
+# ADD BASE LINK32 ..\lib\webupdated.lib wxmsw26d_html.lib wxmsw26d_adv.lib wxmsw26d_xrc.lib wxbase26d_xml.lib wxbase26d_net.lib wxmsw26d_core.lib wxbase26d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /subsystem:windows /debug /machine:I386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib"
+# ADD LINK32 ..\lib\webupdated.lib wxmsw26d_html.lib wxmsw26d_adv.lib wxmsw26d_xrc.lib wxbase26d_xml.lib wxbase26d_net.lib wxmsw26d_core.lib wxbase26d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /subsystem:windows /debug /machine:I386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib"
 
 !ELSEIF  "$(CFG)" == "simple_1_0_0 - Win32 DLL"
 
@@ -122,18 +122,18 @@ LINK32=link.exe
 # PROP Output_Dir "..\samples\simple\v1.0.0"
 # PROP Intermediate_Dir "msvc6prj\simple_1_0_0"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /GR /EHsc /w /O2 /I "$(WXWIN)\lib\vc_dll\msw" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /Fd..\samples\simple\v1.0.0\simple.pdb /D "WIN32" /D "WXUSINGDLL" /D "__WXMSW__" /D "_WINDOWS" /c
-# ADD CPP /nologo /FD /MD /GR /EHsc /w /O2 /I "$(WXWIN)\lib\vc_dll\msw" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /Fd..\samples\simple\v1.0.0\simple.pdb /D "WIN32" /D "WXUSINGDLL" /D "__WXMSW__" /D "_WINDOWS" /c
+# ADD BASE CPP /nologo /MD /w /W0 /GR /O2 /I "$(WXWIN)\lib\vc_dll\msw" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /D "WIN32" /D "WXUSINGDLL" /D "__WXMSW__" /D "_WINDOWS" /Fd"..\samples\simple\v1.0.0\simple.pdb" /FD /EHsc /c
+# ADD CPP /nologo /MD /w /W0 /GR /O2 /I "$(WXWIN)\lib\vc_dll\msw" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /D "WIN32" /D "WXUSINGDLL" /D "__WXMSW__" /D "_WINDOWS" /Fd"..\samples\simple\v1.0.0\simple.pdb" /FD /EHsc /c
 # ADD BASE MTL /nologo /D "WIN32" /D "WXUSINGDLL" /D "__WXMSW__" /D "_WINDOWS" /mktyplib203 /win32
 # ADD MTL /nologo /D "WIN32" /D "WXUSINGDLL" /D "__WXMSW__" /D "_WINDOWS" /mktyplib203 /win32
-# ADD BASE RSC /l 0x409 /d "WXUSINGDLL" /d "__WXMSW__" /i "$(WXWIN)\lib\vc_dll\msw" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /d "_WINDOWS" /i ..\samples\simple\v1.0.0
-# ADD RSC /l 0x409 /d "WXUSINGDLL" /d "__WXMSW__" /i "$(WXWIN)\lib\vc_dll\msw" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /d "_WINDOWS" /i ..\samples\simple\v1.0.0
+# ADD BASE RSC /l 0x409 /i "$(WXWIN)\lib\vc_dll\msw" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /i "..\samples\simple\v1.0.0" /d "WXUSINGDLL" /d "__WXMSW__" /d "_WINDOWS"
+# ADD RSC /l 0x409 /i "$(WXWIN)\lib\vc_dll\msw" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /i "..\samples\simple\v1.0.0" /d "WXUSINGDLL" /d "__WXMSW__" /d "_WINDOWS"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 ..\lib\webupdate.lib wxmsw26_html.lib wxmsw26_adv.lib wxmsw26_xrc.lib wxbase26_xml.lib wxbase26_net.lib wxmsw26_core.lib wxbase26.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib" /subsystem:windows
-# ADD LINK32 ..\lib\webupdate.lib wxmsw26_html.lib wxmsw26_adv.lib wxmsw26_xrc.lib wxbase26_xml.lib wxbase26_net.lib wxmsw26_core.lib wxbase26.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib" /subsystem:windows
+# ADD BASE LINK32 ..\lib\webupdate.lib wxmsw26_html.lib wxmsw26_adv.lib wxmsw26_xrc.lib wxbase26_xml.lib wxbase26_net.lib wxmsw26_core.lib wxbase26.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /subsystem:windows /machine:I386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib"
+# ADD LINK32 ..\lib\webupdate.lib wxmsw26_html.lib wxmsw26_adv.lib wxmsw26_xrc.lib wxbase26_xml.lib wxbase26_net.lib wxmsw26_core.lib wxbase26.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /subsystem:windows /machine:I386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib"
 
 !ELSEIF  "$(CFG)" == "simple_1_0_0 - Win32 Unicode Debug"
 
@@ -147,18 +147,18 @@ LINK32=link.exe
 # PROP Output_Dir "..\samples\simple\v1.0.0"
 # PROP Intermediate_Dir "msvc6prj\simple_1_0_0"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "$(WXWIN)\lib\vc_lib\mswud" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /Zi /Gm /GZ /Fd..\samples\simple\v1.0.0\simple.pdb /D "WIN32" /D "_DEBUG" /D "_UNICODE" /D "__WXDEBUG__" /D "__WXMSW__" /D "_WINDOWS" /c
-# ADD CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "$(WXWIN)\lib\vc_lib\mswud" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /Zi /Gm /GZ /Fd..\samples\simple\v1.0.0\simple.pdb /D "WIN32" /D "_DEBUG" /D "_UNICODE" /D "__WXDEBUG__" /D "__WXMSW__" /D "_WINDOWS" /c
+# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /Zi /Od /I "$(WXWIN)\lib\vc_lib\mswud" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /D "WIN32" /D "_DEBUG" /D "_UNICODE" /D "__WXDEBUG__" /D "__WXMSW__" /D "_WINDOWS" /Fd"..\samples\simple\v1.0.0\simple.pdb" /FD /EHsc /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /GR /Zi /Od /I "$(WXWIN)\lib\vc_lib\mswud" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /D "WIN32" /D "_DEBUG" /D "_UNICODE" /D "__WXDEBUG__" /D "__WXMSW__" /D "_WINDOWS" /Fd"..\samples\simple\v1.0.0\simple.pdb" /FD /EHsc /GZ /c
 # ADD BASE MTL /nologo /D "WIN32" /D "_DEBUG" /D "_UNICODE" /D "__WXDEBUG__" /D "__WXMSW__" /D "_WINDOWS" /mktyplib203 /win32
 # ADD MTL /nologo /D "WIN32" /D "_DEBUG" /D "_UNICODE" /D "__WXDEBUG__" /D "__WXMSW__" /D "_WINDOWS" /mktyplib203 /win32
-# ADD BASE RSC /l 0x409 /d "_DEBUG" /d "_UNICODE" /d "__WXDEBUG__" /d "__WXMSW__" /i "$(WXWIN)\lib\vc_lib\mswud" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /d "_WINDOWS" /i ..\samples\simple\v1.0.0
-# ADD RSC /l 0x409 /d "_DEBUG" /d "_UNICODE" /d "__WXDEBUG__" /d "__WXMSW__" /i "$(WXWIN)\lib\vc_lib\mswud" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /d "_WINDOWS" /i ..\samples\simple\v1.0.0
+# ADD BASE RSC /l 0x409 /i "$(WXWIN)\lib\vc_lib\mswud" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /i "..\samples\simple\v1.0.0" /d "_DEBUG" /d "_UNICODE" /d "__WXDEBUG__" /d "__WXMSW__" /d "_WINDOWS"
+# ADD RSC /l 0x409 /i "$(WXWIN)\lib\vc_lib\mswud" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /i "..\samples\simple\v1.0.0" /d "_DEBUG" /d "_UNICODE" /d "__WXDEBUG__" /d "__WXMSW__" /d "_WINDOWS"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 ..\lib\webupdateud.lib wxmsw26ud_html.lib wxmsw26ud_adv.lib wxmsw26ud_xrc.lib wxbase26ud_xml.lib wxbase26ud_net.lib wxmsw26ud_core.lib wxbase26ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\lib" /subsystem:windows /debug
-# ADD LINK32 ..\lib\webupdateud.lib wxmsw26ud_html.lib wxmsw26ud_adv.lib wxmsw26ud_xrc.lib wxbase26ud_xml.lib wxbase26ud_net.lib wxmsw26ud_core.lib wxbase26ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\lib" /subsystem:windows /debug
+# ADD BASE LINK32 ..\lib\webupdateud.lib wxmsw26ud_html.lib wxmsw26ud_adv.lib wxmsw26ud_xrc.lib wxbase26ud_xml.lib wxbase26ud_net.lib wxmsw26ud_core.lib wxbase26ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /subsystem:windows /debug /machine:I386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\lib"
+# ADD LINK32 ..\lib\webupdateud.lib wxmsw26ud_html.lib wxmsw26ud_adv.lib wxmsw26ud_xrc.lib wxbase26ud_xml.lib wxbase26ud_net.lib wxmsw26ud_core.lib wxbase26ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /subsystem:windows /debug /machine:I386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\lib"
 
 !ELSEIF  "$(CFG)" == "simple_1_0_0 - Win32 Unicode"
 
@@ -172,18 +172,18 @@ LINK32=link.exe
 # PROP Output_Dir "..\samples\simple\v1.0.0"
 # PROP Intermediate_Dir "msvc6prj\simple_1_0_0"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /GR /EHsc /w /O2 /I "$(WXWIN)\lib\vc_lib\mswu" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /Fd..\samples\simple\v1.0.0\simple.pdb /D "WIN32" /D "_UNICODE" /D "__WXMSW__" /D "_WINDOWS" /c
-# ADD CPP /nologo /FD /MD /GR /EHsc /w /O2 /I "$(WXWIN)\lib\vc_lib\mswu" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /Fd..\samples\simple\v1.0.0\simple.pdb /D "WIN32" /D "_UNICODE" /D "__WXMSW__" /D "_WINDOWS" /c
+# ADD BASE CPP /nologo /MD /w /W0 /GR /O2 /I "$(WXWIN)\lib\vc_lib\mswu" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /D "WIN32" /D "_UNICODE" /D "__WXMSW__" /D "_WINDOWS" /Fd"..\samples\simple\v1.0.0\simple.pdb" /FD /EHsc /c
+# ADD CPP /nologo /MD /w /W0 /GR /O2 /I "$(WXWIN)\lib\vc_lib\mswu" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /D "WIN32" /D "_UNICODE" /D "__WXMSW__" /D "_WINDOWS" /Fd"..\samples\simple\v1.0.0\simple.pdb" /FD /EHsc /c
 # ADD BASE MTL /nologo /D "WIN32" /D "_UNICODE" /D "__WXMSW__" /D "_WINDOWS" /mktyplib203 /win32
 # ADD MTL /nologo /D "WIN32" /D "_UNICODE" /D "__WXMSW__" /D "_WINDOWS" /mktyplib203 /win32
-# ADD BASE RSC /l 0x409 /d "_UNICODE" /d "__WXMSW__" /i "$(WXWIN)\lib\vc_lib\mswu" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /d "_WINDOWS" /i ..\samples\simple\v1.0.0
-# ADD RSC /l 0x409 /d "_UNICODE" /d "__WXMSW__" /i "$(WXWIN)\lib\vc_lib\mswu" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /d "_WINDOWS" /i ..\samples\simple\v1.0.0
+# ADD BASE RSC /l 0x409 /i "$(WXWIN)\lib\vc_lib\mswu" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /i "..\samples\simple\v1.0.0" /d "_UNICODE" /d "__WXMSW__" /d "_WINDOWS"
+# ADD RSC /l 0x409 /i "$(WXWIN)\lib\vc_lib\mswu" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /i "..\samples\simple\v1.0.0" /d "_UNICODE" /d "__WXMSW__" /d "_WINDOWS"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 ..\lib\webupdateu.lib wxmsw26u_html.lib wxmsw26u_adv.lib wxmsw26u_xrc.lib wxbase26u_xml.lib wxbase26u_net.lib wxmsw26u_core.lib wxbase26u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\lib" /subsystem:windows
-# ADD LINK32 ..\lib\webupdateu.lib wxmsw26u_html.lib wxmsw26u_adv.lib wxmsw26u_xrc.lib wxbase26u_xml.lib wxbase26u_net.lib wxmsw26u_core.lib wxbase26u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\lib" /subsystem:windows
+# ADD BASE LINK32 ..\lib\webupdateu.lib wxmsw26u_html.lib wxmsw26u_adv.lib wxmsw26u_xrc.lib wxbase26u_xml.lib wxbase26u_net.lib wxmsw26u_core.lib wxbase26u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /subsystem:windows /machine:I386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\lib"
+# ADD LINK32 ..\lib\webupdateu.lib wxmsw26u_html.lib wxmsw26u_adv.lib wxmsw26u_xrc.lib wxbase26u_xml.lib wxbase26u_net.lib wxmsw26u_core.lib wxbase26u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /subsystem:windows /machine:I386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\lib"
 
 !ELSEIF  "$(CFG)" == "simple_1_0_0 - Win32 Debug"
 
@@ -197,18 +197,18 @@ LINK32=link.exe
 # PROP Output_Dir "..\samples\simple\v1.0.0"
 # PROP Intermediate_Dir "msvc6prj\simple_1_0_0"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "$(WXWIN)\lib\vc_lib\mswd" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /Zi /Gm /GZ /Fd..\samples\simple\v1.0.0\simple.pdb /D "WIN32" /D "_DEBUG" /D "__WXDEBUG__" /D "__WXMSW__" /D "_WINDOWS" /c
-# ADD CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "$(WXWIN)\lib\vc_lib\mswd" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /Zi /Gm /GZ /Fd..\samples\simple\v1.0.0\simple.pdb /D "WIN32" /D "_DEBUG" /D "__WXDEBUG__" /D "__WXMSW__" /D "_WINDOWS" /c
+# ADD BASE CPP /nologo /MDd /W4 /Gm /GR /Zi /Od /I "$(WXWIN)\lib\vc_lib\mswd" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /D "WIN32" /D "_DEBUG" /D "__WXDEBUG__" /D "__WXMSW__" /D "_WINDOWS" /Fd"..\samples\simple\v1.0.0\simple.pdb" /FD /EHsc /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /GR /Zi /Od /I "$(WXWIN)\lib\vc_lib\mswd" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /D "WIN32" /D "_DEBUG" /D "__WXDEBUG__" /D "__WXMSW__" /D "_WINDOWS" /Fd"..\samples\simple\v1.0.0\simple.pdb" /FD /EHsc /GZ /c
 # ADD BASE MTL /nologo /D "WIN32" /D "_DEBUG" /D "__WXDEBUG__" /D "__WXMSW__" /D "_WINDOWS" /mktyplib203 /win32
 # ADD MTL /nologo /D "WIN32" /D "_DEBUG" /D "__WXDEBUG__" /D "__WXMSW__" /D "_WINDOWS" /mktyplib203 /win32
-# ADD BASE RSC /l 0x409 /d "_DEBUG" /d "__WXDEBUG__" /d "__WXMSW__" /i "$(WXWIN)\lib\vc_lib\mswd" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /d "_WINDOWS" /i ..\samples\simple\v1.0.0
-# ADD RSC /l 0x409 /d "_DEBUG" /d "__WXDEBUG__" /d "__WXMSW__" /i "$(WXWIN)\lib\vc_lib\mswd" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /d "_WINDOWS" /i ..\samples\simple\v1.0.0
+# ADD BASE RSC /l 0x409 /i "$(WXWIN)\lib\vc_lib\mswd" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /i "..\samples\simple\v1.0.0" /d "_DEBUG" /d "__WXDEBUG__" /d "__WXMSW__" /d "_WINDOWS"
+# ADD RSC /l 0x409 /i "$(WXWIN)\lib\vc_lib\mswd" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /i "..\samples\simple\v1.0.0" /d "_DEBUG" /d "__WXDEBUG__" /d "__WXMSW__" /d "_WINDOWS"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 ..\lib\webupdated.lib wxmsw26d_html.lib wxmsw26d_adv.lib wxmsw26d_xrc.lib wxbase26d_xml.lib wxbase26d_net.lib wxmsw26d_core.lib wxbase26d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\lib" /subsystem:windows /debug
-# ADD LINK32 ..\lib\webupdated.lib wxmsw26d_html.lib wxmsw26d_adv.lib wxmsw26d_xrc.lib wxbase26d_xml.lib wxbase26d_net.lib wxmsw26d_core.lib wxbase26d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\lib" /subsystem:windows /debug
+# ADD BASE LINK32 ..\lib\webupdated.lib wxmsw26d_html.lib wxmsw26d_adv.lib wxmsw26d_xrc.lib wxbase26d_xml.lib wxbase26d_net.lib wxmsw26d_core.lib wxbase26d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /subsystem:windows /debug /machine:I386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\lib"
+# ADD LINK32 ..\lib\webupdated.lib wxmsw26d_html.lib wxmsw26d_adv.lib wxmsw26d_xrc.lib wxbase26d_xml.lib wxbase26d_net.lib wxmsw26d_core.lib wxbase26d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /subsystem:windows /debug /machine:I386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\lib"
 
 !ELSEIF  "$(CFG)" == "simple_1_0_0 - Win32 Default"
 
@@ -222,20 +222,20 @@ LINK32=link.exe
 # PROP Output_Dir "..\samples\simple\v1.0.0"
 # PROP Intermediate_Dir "msvc6prj\simple_1_0_0"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /GR /EHsc /w /O2 /I "$(WXWIN)\lib\vc_lib\msw" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /Fd..\samples\simple\v1.0.0\simple.pdb /D "WIN32" /D "__WXMSW__" /D "_WINDOWS" /c
-# ADD CPP /nologo /FD /MD /GR /EHsc /w /O2 /I "$(WXWIN)\lib\vc_lib\msw" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /Fd..\samples\simple\v1.0.0\simple.pdb /D "WIN32" /D "__WXMSW__" /D "_WINDOWS" /c
+# ADD BASE CPP /nologo /MD /w /W0 /GR /O2 /I "$(WXWIN)\lib\vc_lib\msw" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /D "WIN32" /D "__WXMSW__" /D "_WINDOWS" /Fd"..\samples\simple\v1.0.0\simple.pdb" /FD /EHsc /c
+# ADD CPP /nologo /MD /w /W0 /GR /O2 /I "$(WXWIN)\lib\vc_lib\msw" /I "$(WXWIN)\include" /I "..\include" /I "..\..\include" /D "WIN32" /D "__WXMSW__" /D "_WINDOWS" /Fd"..\samples\simple\v1.0.0\simple.pdb" /FD /EHsc /c
 # ADD BASE MTL /nologo /D "WIN32" /D "__WXMSW__" /D "_WINDOWS" /mktyplib203 /win32
 # ADD MTL /nologo /D "WIN32" /D "__WXMSW__" /D "_WINDOWS" /mktyplib203 /win32
-# ADD BASE RSC /l 0x409 /d "__WXMSW__" /i "$(WXWIN)\lib\vc_lib\msw" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /d "_WINDOWS" /i ..\samples\simple\v1.0.0
-# ADD RSC /l 0x409 /d "__WXMSW__" /i "$(WXWIN)\lib\vc_lib\msw" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /d "_WINDOWS" /i ..\samples\simple\v1.0.0
+# ADD BASE RSC /l 0x409 /i "$(WXWIN)\lib\vc_lib\msw" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /i "..\samples\simple\v1.0.0" /d "__WXMSW__" /d "_WINDOWS"
+# ADD RSC /l 0x409 /i "$(WXWIN)\lib\vc_lib\msw" /i "$(WXWIN)\include" /i "..\include" /i "..\..\include" /i "..\samples\simple\v1.0.0" /d "__WXMSW__" /d "_WINDOWS"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 ..\lib\webupdate.lib wxmsw26_html.lib wxmsw26_adv.lib wxmsw26_xrc.lib wxbase26_xml.lib wxbase26_net.lib wxmsw26_core.lib wxbase26.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\lib" /subsystem:windows
-# ADD LINK32 ..\lib\webupdate.lib wxmsw26_html.lib wxmsw26_adv.lib wxmsw26_xrc.lib wxbase26_xml.lib wxbase26_net.lib wxmsw26_core.lib wxbase26.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\lib" /subsystem:windows
+# ADD BASE LINK32 ..\lib\webupdate.lib wxmsw26_html.lib wxmsw26_adv.lib wxmsw26_xrc.lib wxbase26_xml.lib wxbase26_net.lib wxmsw26_core.lib wxbase26.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /subsystem:windows /machine:I386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\lib"
+# ADD LINK32 ..\lib\webupdate.lib wxmsw26_html.lib wxmsw26_adv.lib wxmsw26_xrc.lib wxbase26_xml.lib wxbase26_net.lib wxmsw26_core.lib wxbase26.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /subsystem:windows /machine:I386 /out:"..\samples\simple\v1.0.0\simple.exe" /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\lib"
 
-!ENDIF
+!ENDIF 
 
 # Begin Target
 
@@ -259,6 +259,85 @@ SOURCE=.\..\samples\simple\v1.0.0\minimal.cpp
 SOURCE=.\..\samples\simple\v1.0.0\minimal.rc
 # End Source File
 # End Group
+# Begin Source File
+
+SOURCE=..\samples\simple\v1.0.0\wx\msw\blank.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\samples\simple\v1.0.0\wx\msw\bullseye.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\samples\simple\v1.0.0\wx\msw\cdrom.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\samples\simple\v1.0.0\wx\msw\computer.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\samples\simple\v1.0.0\wx\msw\cross.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\samples\simple\v1.0.0\wx\msw\drive.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\samples\simple\v1.0.0\wx\msw\file1.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\samples\simple\v1.0.0\wx\msw\floppy.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\samples\simple\v1.0.0\wx\msw\folder1.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\samples\simple\v1.0.0\wx\msw\folder2.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\samples\simple\v1.0.0\wx\msw\hand.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\samples\simple\v1.0.0\wx\msw\magnif1.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\samples\simple\v1.0.0\wx\msw\pbrush.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\samples\simple\v1.0.0\wx\msw\pencil.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\samples\simple\v1.0.0\wx\msw\pntleft.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\samples\simple\v1.0.0\wx\msw\pntright.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\samples\simple\v1.0.0\wx\msw\removble.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\samples\simple\v1.0.0\wx\msw\rightarr.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\samples\simple\v1.0.0\wx\msw\roller.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\samples\simple\v1.0.0\sample.ico
+# End Source File
 # End Target
 # End Project
-

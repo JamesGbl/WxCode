@@ -188,18 +188,69 @@ zip :
 	-cd ..
 	-zip -r9 ..\keybinder.zip *  -x *.pdb -x *.log -x *.o*
 
-cleanbuilddirs :  
-	-if exist msvc rmdir /S /Q msvc
-	-if exist watcom rmdir /S /Q watcom
-	-if exist borland rmdir /S /Q borland
-	-if exist mingw rmdir /S /Q mingw
-	-if exist msvc6prj rmdir /S /Q msvc6prj
-
-cleanall :  clean cleanbuilddirs
-	del /S /Q ..\*.log >NUL
-	del /S /Q ..\*.lib >NUL
-	del /S /Q ..\*.a >NUL
-	del /S /Q ..\*.exe >NUL
+deepclean :  
+	-del /S ..\*.a
+	-del /S ..\*.lib
+	-del /S ..\*.pdb
+	-del /S ..\*.dll
+	-del /S ..\*.exp
+	-del /S ..\*.so*
+	-del /S ..\*.exe
+	-del /S ..\*.obj
+	-del /S ..\*.o
+	-del /S ..\*.log
+	-del /S ..\*.manifest*
+	-del /S ..\*.log
+	-del /S ..\.bakefile_gen.state
+	-del /S ..\*.pch
+	-del /S ..\*.ncb
+	-del /S ..\*.plg
+	-del /S ..\*.ncb
+	-del /S ..\*.aps
+	-del /S ..\*.suo
+	-del /S ..\*.user
+	-del /S ..\*.res
+	-del /S ..\*.il?
+	-del /S ..\*.tds
+	-del /S ..\*.idb
+	-del /S ..\*.map
+	-if exist ..\autom4te.cache rmdir /S /Q ..\autom4te.cache
+	-if exist ..\.deps rmdir /S /Q ..\.deps
+	-del /S ..\config.status
+	-del /S ..\config.log
+	-del /S ..\Makefile
+	-del /S ..\bk-deps
+	-del /S .\*.a
+	-del /S .\*.lib
+	-del /S .\*.pdb
+	-del /S .\*.dll
+	-del /S .\*.exp
+	-del /S .\*.so*
+	-del /S .\*.exe
+	-del /S .\*.obj
+	-del /S .\*.o
+	-del /S .\*.log
+	-del /S .\*.manifest*
+	-del /S .\*.log
+	-del /S .\.bakefile_gen.state
+	-del /S .\*.pch
+	-del /S .\*.ncb
+	-del /S .\*.plg
+	-del /S .\*.ncb
+	-del /S .\*.aps
+	-del /S .\*.suo
+	-del /S .\*.user
+	-del /S .\*.res
+	-del /S .\*.il?
+	-del /S .\*.tds
+	-del /S .\*.idb
+	-del /S .\*.map
+	-if exist .\autom4te.cache rmdir /S /Q .\autom4te.cache
+	-if exist .\.deps rmdir /S /Q .\.deps
+	-del /S .\config.status
+	-del /S .\config.log
+	-del /S .\Makefile
+	-del /S .\bk-deps
 
 docs :  
 	-cd ..\docs

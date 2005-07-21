@@ -257,14 +257,14 @@ bool wxWebUpdateDownload::Install(wxWebUpdateInstaller *touse) const
 
 	// installation means: execute all <action> tags for this download...
 	for (int i=0; i<(int)m_arrActions.GetCount(); i++) {
-		wxString n = m_arrActions[i].GetName();
+		wxString n = m_arrActions[i]->GetName();
 		if (hashmap.find(n) == hashmap.end()) {
 			unrecognized = TRUE;
-			wxLogDebug(wxT("wxWebUpdateDownload::Install - unregistered action ") + n);
+			wxLogDebug(wxT("wxWebUpdateDownload::Install - unregistered action: ") + n);
 			continue;	// skip this unknown action
 		}
 
-		if (!hashmap[n].Run())
+		if (!hashmap[n]->Run())
 			return FALSE;		// stop here
 	}
 
@@ -358,14 +358,9 @@ void wxWebUpdatePackage::CacheDownloadSizes()
 // wxWEBUPDATEXMLSCRIPT
 // ----------------------
 
-wxWebUpdateXMLScript::wxWebUpdateXMLScript(const wxString &strURI, 
-										   wxWebUpdateInstaller *installer)
+wxWebUpdateXMLScript::wxWebUpdateXMLScript(const wxString &strURI)
 { 
-	// the installer is the first thing to set since #Load uses it !
-	if (!installer) installer = wxWebUpdateInstaller::Get(); 
-	m_pInstaller = installer;
-
-	// now we can load
+	// we can load
 	if (!strURI.IsEmpty()) Load(strURI); 
 }
 
@@ -389,7 +384,7 @@ wxString wxWebUpdateXMLScript::GetNodeContent(const wxXmlNode *node) const
 
 wxString wxWebUpdateXMLScript::DoKeywordSubstitution(const wxString &str) const
 {
-	wxStringStringHashMap &list = m_pInstaller->GetKeywords();
+	wxStringStringHashMap &list = wxWebUpdateInstaller::Get()->GetKeywords();
 	wxString text(str);
 
 	// iterate over all the elements in the class
@@ -452,8 +447,10 @@ wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdow
 				prop = prop->GetNext();
 			}
 
-			// add a new action
-			actions.Add(new wxWebUpdateAction(GetNodeContent(child), &names, &values));
+			// add a new action			
+			wxWebUpdateAction *a = wxWebUpdateInstaller::Get()->CreateNewAction(
+											GetNodeContent(child), &names, &values);
+			if (a) actions.Add(a);
 		}
 
 
@@ -482,7 +479,7 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) c
 	wxWebUpdatePackage *ret = new wxWebUpdatePackage(packagename);	
 
 	// add to the current keyword list the current ID
-	wxStringStringHashMap &list = m_pInstaller->GetKeywords();
+	wxStringStringHashMap &list = wxWebUpdateInstaller::Get()->GetKeywords();
 	list[wxT("id")] = packagename;		// will be removed when exiting
 
 	// parse this package

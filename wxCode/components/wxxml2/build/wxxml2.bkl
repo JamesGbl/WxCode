@@ -42,18 +42,26 @@
 	<!--	<define>$(STATIC_DEF)</define>  -->
 	</template>
 
+	<define-tag name="xml2libs" rules="lib,dll,exe">
+		<if cond="FORMAT=='mingw' or FORMAT=='autoconf'"><sys-lib>xml2</sys-lib></if>
+		<if cond="FORMAT!='mingw' and FORMAT!='autoconf'"><sys-lib>libxml2</sys-lib></if>
+		<if cond="FORMAT!='autoconf'"><sys-lib>iconv</sys-lib></if>	
+	</define-tag>
+
 
 	<lib id="wxxml2_lib" template="complib,xmlbasic" cond="WX_SHARED=='0'"/>
-	<dll id="wxxml2_dll" template="complib,xmlbasic" cond="WX_SHARED=='1'"/>
+	<dll id="wxxml2_dll" template="compdll,xmlbasic" cond="WX_SHARED=='1'">
+		<xml2libs/>
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib>
+	</dll>
 	<set var="MSVC6PRJ_MERGED_TARGETS">wxxml2=wxxml2_lib+wxxml2_dll</set>
 	
 	
 	<!-- The sample of wxXml2 -->
 	<exe id="minimal" template="compsample,xmlbasic">
 		<library>wxxml2_lib</library>
-		<if cond="FORMAT=='mingw' or FORMAT=='autoconf'"><sys-lib>xml2</sys-lib></if>
-		<if cond="FORMAT!='mingw' and FORMAT!='autoconf'"><sys-lib>libxml2</sys-lib></if>
-		<if cond="FORMAT!='autoconf'"><sys-lib>iconv</sys-lib></if>
+		<xml2libs/>
         <wx-lib>core</wx-lib>
         <wx-lib>base</wx-lib>
 	</exe>

@@ -346,9 +346,6 @@ protected:
 	//! The content of the <msg-update-notavailable> tag, if present.
     wxString m_strUpdateNotAvailableMsg;
 
-	//! The installer used to query the keyword substitution hashmap.
-	wxWebUpdateInstaller *m_pInstaller;
-
 protected:
 
 	//! Creates a wxWebUpdatePackage from the given XML node.
@@ -367,8 +364,7 @@ protected:
 
 public:
 
-	wxWebUpdateXMLScript(const wxString &strURI = wxEmptyString,
-						wxWebUpdateInstaller *installer = NULL);
+	wxWebUpdateXMLScript(const wxString &strURI = wxEmptyString);
 	virtual ~wxWebUpdateXMLScript() {}
 
 public:		// main functions
@@ -387,13 +383,6 @@ public:		// main functions
 
 	//! Returns all the available packages from this XML document.
 	virtual wxWebUpdatePackageArray GetAllPackages() const;
-
-	//! Sets the given wxWebUpdateInstaller as the class used to get the
-	//! keyword hashmap for replacement of the $(key) strings found in the
-	//! XML tags of the webupdate script.
-	//! Returns a pointer to the old wxWebUpdateInstaller in use.
-	virtual const wxWebUpdateInstaller *Set(wxWebUpdateInstaller *p)
-		{ wxWebUpdateInstaller *old = m_pInstaller; m_pInstaller = p; return old; }
 
 	//! Returns the content of the <msg-update-available> tag, if present. 
 	wxString GetUpdateAvailableMsg() const		{ return m_strUpdateAvailableMsg; }
