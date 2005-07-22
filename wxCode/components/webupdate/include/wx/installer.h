@@ -140,6 +140,9 @@ protected:
 	//! The file to extract.
 	wxString m_strFile;
 
+	//! The type of archive.
+	wxString m_strType;
+
 public:
     wxWebUpdateActionExtract()
          : wxWebUpdateAction(wxT("extract")) {}
@@ -265,7 +268,7 @@ public:		// to avoid setters/getters (these vars are only read by this thread;
 	wxString m_strUpdateFile;
 
 	//! The package which contains the wxWebUpdateAction to be executed.
-	const wxWebUpdatePackage *m_pPackage;
+	const wxWebUpdateDownload *m_pDownload;
 
 protected:		// these are vars protected by mutexes...
 
@@ -279,9 +282,9 @@ protected:		// these are vars protected by mutexes...
 public:
 	wxWebUpdateInstallThread(wxEvtHandler *dlg = NULL, 
 							const wxString &updatefile = wxEmptyString, 
-							const wxWebUpdatePackage *toinstall = NULL)
+							const wxWebUpdateDownload *toinstall = NULL)
 		: wxThread(wxTHREAD_JOINABLE), m_pHandler(dlg), m_strUpdateFile(updatefile),
-			m_pPackage(toinstall) {}
+			m_pDownload(toinstall) {}
 
 	virtual ~wxWebUpdateInstallThread() {}
 
@@ -314,6 +317,13 @@ public:		// miscellaneous
 	//! This function must be called only when this thread is not installing anything else.
 	void BeginNewInstall() {
 		wxASSERT(!IsInstalling());
+		wxMutexLocker lock(m_mStatus);
+		m_nStatus = wxWUITS_INSTALLING;
+	}
+
+	//! Aborts the current installation.
+	void AbortInstall() {
+		wxASSERT(IsInstalling());
 		wxMutexLocker lock(m_mStatus);
 		m_nStatus = wxWUITS_WAITING;
 	}

@@ -172,11 +172,11 @@
 <!-- for "extract" action tags -->
 <!ATTLIST action where CDATA "$(programroot)">
 <!ATTLIST action file CDATA "$(thisfile)">
-<!ATTLIST action type CDATA "zip">
+<!ATTLIST action type CDATA "zip">			<!-- the possible values actually are: 'zip' -->
 
 <!-- for "run" action tags -->
-<!ATTLIST action args CDATA #IMPLIED>
-<!ATTLIST action file CDATA #IMPLIED>
 <!ATTLIST action flags CDATA "ASYNC">
+<!ATTLIST action args CDATA "">
+<!ATTLIST action file CDATA #IMPLIED>		<!-- REQUIRED -->
 
 <!-- add the attributes for you own actions here -->

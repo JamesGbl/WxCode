@@ -27,6 +27,7 @@
 #endif
 
 #include "wx/installer.h"
+#include "wx/webupdate.h"
 #include <wx/wfstream.h>
 #include <wx/filesys.h>
 #include <wx/utils.h>
@@ -87,6 +88,7 @@ bool wxWebUpdateActionRun::SetProperties(const wxArrayString &propnames,
 {
 	wxString flags;
 
+	m_strArgs = wxEmptyString;			// the ARGS default value
 	for (int i=0; i < (int)propnames.GetCount(); i++) {
 		if (propnames[i] == wxT("args"))
 			m_strArgs = propvalues[i];
@@ -99,9 +101,9 @@ bool wxWebUpdateActionRun::SetProperties(const wxArrayString &propnames,
 						+ propnames[i]);
 	}
 
-	// set defaults
+	// set defaults	
 	if (flags.IsEmpty())
-		m_nExecFlag = wxEXEC_ASYNC;
+		m_nExecFlag = wxEXEC_ASYNC;		// the FLAGS default value
 	else if (flags == wxT("ASYNC"))
 		m_nExecFlag = wxEXEC_ASYNC;
 	else if (flags == wxT("SYNC"))
@@ -113,7 +115,7 @@ bool wxWebUpdateActionRun::SetProperties(const wxArrayString &propnames,
 	}
 
 	// validate the properties
-	wxFileName f(m_strFile);
+	wxFileName f(m_strFile);			// the FILE property is required !
 
 	// we won't do the wxFileName::FileExists check because the file we need to run
 	// could be a file which does not exist yet (e.g. its in the update package)
@@ -142,8 +144,9 @@ bool wxWebUpdateActionExtract::Run() const
 	}
 
 	// create the archive factory
-	wxArchiveClassFactory *factory = new wxZipClassFactory;
-	
+	wxArchiveClassFactory *factory = NULL;
+	if (m_strType == wxT("zip"))
+		factory = new wxZipClassFactory;	
 
 	// extract the package 
 	wxArchiveEntryPtr entry;
@@ -179,14 +182,20 @@ bool wxWebUpdateActionExtract::SetProperties(const wxArrayString &propnames,
 			m_strWhere = propvalues[i];
 		else if (propnames[i] == wxT("file"))
 			m_strFile = propvalues[i];
+		else if (propnames[i] == wxT("type"))
+			m_strType = propvalues[i];
 		else
 			wxLogDebug(wxT("wxWebUpdateActionExtract::SetProperties - unknown property: ") 
 						+ propnames[i]);
 	}
 
 	// set defaults
-	if (m_strFile.IsEmpty())
+	if (m_strFile.IsEmpty())		// the FILE default value is $(thisfile)
 		m_strFile = wxWebUpdateInstaller::Get()->GetKeywordValue(wxT("thisfile"));
+	if (m_strWhere.IsEmpty())		// the WHERE default value is $(programroot)
+		m_strWhere = wxWebUpdateInstaller::Get()->GetKeywordValue(wxT("programroot"));
+	if (m_strType.IsEmpty())		// the TYPE default value is "zip"
+		m_strType = wxT("zip");
 
 	// validate the properties
 	wxFileName f(m_strWhere), f2(m_strFile);
@@ -310,9 +319,7 @@ void *wxWebUpdateInstallThread::Entry()
 		}
 
 		wxLogDebug(wxT("wxWebUpdateInstallThread::Entry - installing ") + m_strUpdateFile);
-
-
-		
+		m_pDownload->Install();
 		wxLogDebug(wxT("wxWebUpdateInstallThread::Entry - completed installation"));
 
 		// we have successfully download the file

@@ -682,8 +682,7 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 				const wxWebUpdateDownload &download = pkg.GetDownloadPackage();
 
 				m_nStatus = wxWUDS_INSTALLING;
-				
-				m_iThread->m_pPackage = &pkg;
+				m_iThread->m_pDownload = &download;
 				m_iThread->m_strUpdateFile = download.GetFileName();
 				m_iThread->BeginNewInstall();
 				//download.Install();
