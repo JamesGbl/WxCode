@@ -157,6 +157,7 @@ IMPLEMENT_APP(MyApp)
 bool MyApp::OnInit()
 {
 	mcDUMP_ON_EXIT;			// for debugging only	
+	//_CrtSetBreakAlloc(31100);
 
     // create the main application window
     MyFrame *frame = new MyFrame(APP_NAME);

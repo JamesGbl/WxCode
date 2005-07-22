@@ -13,6 +13,13 @@
 #include <string.h>
 #include <stdlib.h>
 
+#if defined( _WIN32 ) || defined( WIN32 )
+#include <windows.h>
+HANDLE hProcess;
+DWORD res;
+#endif
+
+
 void PrintUsage(char *thisname)
 {
 	printf("Usage: %s --pid 123  --from c:\\temp  --to c:\\programs\\myprogram\n", thisname);
@@ -22,7 +29,8 @@ void PrintUsage(char *thisname)
 
 int main(int argc, char **argv)
 {
-	char cmd[256];
+	char from[256], to[256], cmd[1024];
+	long pid;
 
 	// ARGUMENT CHECKING
 	if (argc != 7) {
@@ -36,11 +44,36 @@ int main(int argc, char **argv)
 		PrintUsage(argv[0]);
 		return 1;
 	}
+
+	pid = atoi(argv[2]);
+	strcpy(from, argv[4]);
+	strcpy(to, argv[6]);
 	
 	
 	// WAIT FOR THE PROCESS TO TERMINATE
-	_cwait(NULL, argv[2], NULL);
-	
+#if defined( _WIN32 ) || defined( WIN32 )
+
+    hProcess = OpenProcess(SYNCHRONIZE |
+                                    PROCESS_TERMINATE |
+                                    PROCESS_QUERY_INFORMATION,
+                                    FALSE, // not inheritable
+                                    (DWORD)pid);
+    if (hProcess == NULL)
+        return -1;
+
+	res = WaitForSingleObject(hProcess, 15000);	// we'll wait for max 15 secs
+    CloseHandle(hProcess);
+
+	if (res == WAIT_TIMEOUT) {
+		printf("Error: cannot find such Process ID !\n");
+		return -1;
+	}
+
+#else
+	// we need some kind of wait() function
+	wait(NULL, argv[2], NULL);
+#endif
+
 
 	// PROCEED WITH THE COPY
 #if defined( _WIN32 ) || defined( WIN32 )

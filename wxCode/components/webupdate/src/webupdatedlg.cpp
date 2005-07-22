@@ -40,6 +40,7 @@
 
 // includes
 #include "wx/webupdatedlg.h"
+#include "wx/installer.h"
 #include <wx/wfstream.h>
 #include <wx/xrc/xmlres.h>
 #include <wx/image.h>
@@ -199,9 +200,11 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 
 	m_dThread = new wxDownloadThread();
 	m_dThread->m_pHandler = this;
+	m_iThread = new wxWebUpdateInstallThread();
+	m_iThread->m_pHandler = this;
 
 	wxCommandEvent fake;
-	OnShowHideAdv(fake);
+	OnShowHideAdv(fake);	// begin with adv options hidden
 
 
 
@@ -250,8 +253,17 @@ void wxWebUpdateDlg::OnIdle(wxIdleEvent &)
 	// launch a separate thread for the webupdate script download
 	if (m_dThread->Create() != wxTHREAD_NO_ERROR ||
 		m_dThread->Run() != wxTHREAD_NO_ERROR) {
-		wxMessageBox(wxString(wxT("Cannot download the script file from\n")) + 
-					m_strURI + wxT("\nbecause of the low resources..."), 
+		wxMessageBox(wxT("Low resources; cannot run the WebUpdate dialog...\n")
+					wxT("Close some applications and then retry."), 
+					wxT("Error"), wxOK | wxICON_ERROR);
+		AbortDialog();
+	}
+
+	// init also our installer thread
+	if (m_iThread->Create() != wxTHREAD_NO_ERROR ||
+		m_iThread->Run() != wxTHREAD_NO_ERROR) {
+		wxMessageBox(wxT("Low resources; cannot run the WebUpdate dialog...\n")
+					wxT("Close some applications and then retry."), 
 					wxT("Error"), wxOK | wxICON_ERROR);
 		AbortDialog();
 	}
@@ -483,6 +495,12 @@ void wxWebUpdateDlg::AbortDialog()
 		m_dThread->Run();		// we need the thread running if we want to delete it !
 	if (m_dThread->IsRunning())
 		m_dThread->Delete();
+
+	if (m_iThread->IsPaused())
+		m_iThread->Run();		// we need the thread running if we want to delete it !
+	if (m_iThread->IsRunning())
+		m_iThread->Delete();
+
 	EndModal(wxCANCEL);
 }
 
@@ -660,12 +678,23 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 			if (m_dThread->m_strMD5.IsEmpty() || m_dThread->IsMD5Ok()) {
 
 				// handle the installation of this package
-				wxWebUpdatePackage &pkg = GetRemotePackage(m_dThread->m_strID);
-				wxWebUpdateDownload &download = pkg.GetDownloadPackage();
+				const wxWebUpdatePackage &pkg = GetRemotePackage(m_dThread->m_strID);
+				const wxWebUpdateDownload &download = pkg.GetDownloadPackage();
 
 				m_nStatus = wxWUDS_INSTALLING;
-				download.Install();
-				m_nStatus = wxWUDS_UNDEFINED;
+				
+				m_iThread->m_pPackage = &pkg;
+				m_iThread->m_strUpdateFile = download.GetFileName();
+				m_iThread->BeginNewInstall();
+				//download.Install();
+				//m_nStatus = wxWUDS_UNDEFINED;
+				//this->Close(TRUE);
+				//EndModal(wxOK);
+				//GetParent()->Close(TRUE);
+				//::wxExit();
+				//wxTheApp->Exit();
+				//wxTheApp->CleanUp();
+				//exit(0);
 				
 			} else {
 

@@ -57,6 +57,27 @@ wxWebUpdatePackage wxEmptyWebUpdatePackage(wxT("invalid"));
 // wxWEBUPDATEDOWNLOAD
 // ---------------------
 
+wxWebUpdateDownload::~wxWebUpdateDownload()
+{
+	// clean our array of actions (since it holds pointers it won't
+	// auto-clean itself in the proper way !)
+	for (int i=0; i < (int)m_arrActions.GetCount(); i++)
+		if (m_arrActions.Item(i))
+			delete m_arrActions.Item(i);
+}
+
+void wxWebUpdateDownload::Copy(const wxWebUpdateDownload &tocopy)
+{
+	m_platform = tocopy.m_platform;
+	m_strMD5 = tocopy.m_strMD5;
+	m_urlDownload = tocopy.m_urlDownload;
+	m_size = tocopy.m_size;
+	
+	m_arrActions.Clear();
+	for (int i=0; i < (int)tocopy.m_arrActions.GetCount(); i++)
+		m_arrActions.Add(tocopy.m_arrActions.Item(i)->Clone());
+}
+
 wxWebUpdatePlatform wxWebUpdateDownload::GetThisPlatformCode()
 {
 	switch ( wxGetOsVersion() )
@@ -249,16 +270,16 @@ wxDownloadThread *wxWebUpdateDownload::DownloadAsynch(const wxString &path,
 	return thread;
 }
 
-bool wxWebUpdateDownload::Install(wxWebUpdateInstaller *touse) const
+bool wxWebUpdateDownload::Install() const
 {
 	bool unrecognized = FALSE;
-	if (!touse) touse = wxWebUpdateInstaller::Get();
+	wxWebUpdateInstaller *touse = wxWebUpdateInstaller::Get();
 	wxWebUpdateActionHashMap hashmap = touse->GetActionHashMap();
 
 	// installation means: execute all <action> tags for this download...
 	for (int i=0; i<(int)m_arrActions.GetCount(); i++) {
 		wxString n = m_arrActions[i]->GetName();
-		if (hashmap.find(n) == hashmap.end()) {
+		if (hashmap[n] == NULL) {
 			unrecognized = TRUE;
 			wxLogDebug(wxT("wxWebUpdateDownload::Install - unregistered action: ") + n);
 			continue;	// skip this unknown action
@@ -413,15 +434,23 @@ wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdow
 	// the info we need to build a wxWebUpdateDownload...
 	wxString platform, md5, uri;
 	wxWebUpdateActionArray actions;
+	wxStringStringHashMap &list = wxWebUpdateInstaller::Get()->GetKeywords();
 
 	// find the platform for which this download is
 	wxXmlNode *child = latestdownload->GetChildren();
 	while (child) {
 		
 		// is this a well-formed tag ?
-		if (child->GetName() == wxT("uri"))
+		if (child->GetName() == wxT("uri")) {
+
+			// extract filename for this download
 			uri = DoKeywordSubstitution(GetNodeContent(child));
-		else if (child->GetName() == wxT("md5"))
+
+			// FIXME: how can we do it better ?
+			wxString name(uri.AfterLast('/'));
+			list[wxT("thisfile")] = name;		// will be removed when exiting
+
+		} else if (child->GetName() == wxT("md5"))
 			md5 = GetNodeContent(child);
 		else if (child->GetName() == wxT("platform")) {
 
@@ -457,6 +486,9 @@ wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdow
 		// parse next child...
 		child = child->GetNext();
 	}
+
+	// remove the keywords we added while parsing
+	list[wxT("thisfile")] = wxEmptyString;
 
 	// is this a valid download ?
 	if (platform.IsEmpty() || actions.GetCount() <= 0)
@@ -528,6 +560,10 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) c
 		child = child->GetNext();
 	}
 
+	// remove the keywords we added while parsing
+	list[wxT("id")] = wxEmptyString;
+	list[wxT("latest-version")] = wxEmptyString;
+
 	// be sure this package is valid
 #ifdef __WXDEBUG__
 	wxASSERT_MSG(ret->m_arrWebUpdates.GetCount() > 0, 
@@ -539,8 +575,6 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) c
 	}
 #endif
 
-	list[wxT("id")] = wxEmptyString;
-	list[wxT("latest-version")] = wxEmptyString;
 	return ret;		// the caller must delete it
 }
 

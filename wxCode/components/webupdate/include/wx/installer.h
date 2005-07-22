@@ -22,6 +22,23 @@
 #include "wx/url.h"
 
 
+// defined later
+class WXDLLIMPEXP_WEBUPDATE wxDownloadThread;
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDownload;
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdatePackage;
+
+
+// this is the even sent by a wxDownloadThread class to the wxEvtHandler
+// which is given it in its constructor.
+DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_WEBUPDATE, wxWUIT_INSTALLATION_COMPLETE, -1);
+
+//! The possible values of the wxDownloadThread::m_nStatus variable.
+enum wxWebUpdateInstallThreadStatus {
+	wxWUITS_WAITING = -1,
+	wxWUITS_INSTALLING
+};
+
+
 //! The base abstract class for the handler of an <action> tag of
 //! a webupdate script.
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateAction : public wxObject
@@ -183,7 +200,8 @@ public:
 	wxWebUpdateInstaller() 
 		{ InitDefaultKeywords(); InitDefaultActions(); }
 	virtual ~wxWebUpdateInstaller() 
-		{ /* user needs to delete the global wxWebUpdateInstaller object !! 
+		{ FreeActionHashMap();
+		  /* user needs to delete the global wxWebUpdateInstaller object !! 
 		     using  
 		             delete wxWebUpdateInstaller::Set(NULL);
 		     code in its wxApp::OnExit() function */ }
@@ -217,6 +235,7 @@ public:		// action hashmap
 	wxString GetKeywordValue(const wxString &name)
 		{ return m_hashKeywords[name]; }
 
+	void FreeActionHashMap();
 	void InitDefaultKeywords();
 	void InitDefaultActions();
 
@@ -224,10 +243,18 @@ private:
 	DECLARE_CLASS(wxWebUpdateInstaller)
 };
 
-/*
+
 //! The thread used to install the packages.
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateInstallThread : public wxThread
 {
+protected:		// these are written by this thread and they must be only read
+				// by other classes; making them protected and exposing only
+				// getters for these vars ensures that we do not need to use
+				// mutexes...
+	
+	//! TRUE if the package was installed successfully.
+	bool m_bSuccess;
+
 public:		// to avoid setters/getters (these vars are only read by this thread;
 			// they are never written and so they are not protected with mutexes).
 
@@ -237,26 +264,61 @@ public:		// to avoid setters/getters (these vars are only read by this thread;
 	//! The downloaded file which is our update package.
 	wxString m_strUpdateFile;
 
-	//! TRUE if the package was installed successfully.
+	//! The package which contains the wxWebUpdateAction to be executed.
+	const wxWebUpdatePackage *m_pPackage;
+
+protected:		// these are vars protected by mutexes...
+
+	//! The value of this variable represents the current thread status;
+	//! see the #wxWebUpdateInstallThreadStatus enum for more info.
+	wxWebUpdateInstallThreadStatus m_nStatus;
+
+	//! The mutex over the #m_nStatus var.
+	wxMutex m_mStatus;
 
 public:
-	wxWebUpdateInstallThread(wxEvtHandler *dlg, 
-							const wxString &updatefile, 
-							const wxWebUpdatePackage &toinstall)
-		: wxThread(wxTHREAD_JOINABLE), m_pHandler(dlg), m_strUpdateFile(updatefile)		  
-		{ m_bSuccess=FALSE; m_dtStart = wxDateTime::UNow(); }
+	wxWebUpdateInstallThread(wxEvtHandler *dlg = NULL, 
+							const wxString &updatefile = wxEmptyString, 
+							const wxWebUpdatePackage *toinstall = NULL)
+		: wxThread(wxTHREAD_JOINABLE), m_pHandler(dlg), m_strUpdateFile(updatefile),
+			m_pPackage(toinstall) {}
+
 	virtual ~wxWebUpdateInstallThread() {}
 
-    //! Downloads the file and then sends the wxDT_NOTIFICATION event
-	//! to the #m_pHandler event handler.
-	//! Also sets the #m_bSuccess flag before exiting.
+
+    //! Installs the packages.
     virtual void *Entry();
 
 
-private:
-	DECLARE_CLASS(wxWebUpdateInstallThread)
+public:		// current status
+	
+	//! Returns TRUE if this thread is installing a package.
+	bool IsInstalling() const
+		{ return (IsRunning() && m_nStatus == wxWUITS_INSTALLING); }
+
+	//! Returns TRUE if this thread is running but it's not installing anything.
+	bool IsWaiting() const 
+		{ return (IsRunning() && m_nStatus == wxWUITS_WAITING); }
+
+	//! Returns the current status of the thread.
+	//! please note that this status is completely independent from the
+	//! running/paused status of a simple wxThread.
+	//! The returned status refers only to the action currently performed
+	//! by wxDownloadThread when it's running.
+	wxWebUpdateInstallThreadStatus GetStatus() const
+		{ return m_nStatus; }
+
+public:		// miscellaneous
+
+	//! Starts a new installation.
+	//! This function must be called only when this thread is not installing anything else.
+	void BeginNewInstall() {
+		wxASSERT(!IsInstalling());
+		wxMutexLocker lock(m_mStatus);
+		m_nStatus = wxWUITS_WAITING;
+	}
 };
-*/
+
 
 #endif // _WX_INSTALLER_H_
 

@@ -29,6 +29,7 @@
 			<!-- on unix-base OS we use .tar.gz archives -->
 			<uri>http://wxcode.sourceforge.net/components/webupdate/simple-$(latest-version).tar.gz</uri>
 			<platform name="gtk"/>
+			<action>run</action>
 	  </latest-download>
 
 	  <!-- description for this package; don't break lines or you'll get some empty spaces in the final description string -->

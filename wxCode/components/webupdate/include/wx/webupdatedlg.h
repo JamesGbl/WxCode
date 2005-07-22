@@ -200,7 +200,7 @@ protected:		// remote-related stuff
 	wxDownloadThread *m_dThread;
 
 	//! The thread we use to install the packages.
-	//wxWebUpdateInstallThread *m_iThread;
+	wxWebUpdateInstallThread *m_iThread;
 
 protected:		// wxWebUpdateDlg-internals
 
@@ -282,7 +282,8 @@ public:
 			InitWidgetsFromXRC(); }
 
 	virtual ~wxWebUpdateDlg() 
-		{ if (m_dThread) delete m_dThread; }
+		{ if (m_dThread) delete m_dThread;
+			if (m_iThread) delete m_iThread;}
 
 
 public:		// main functions

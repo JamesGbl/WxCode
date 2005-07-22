@@ -118,6 +118,9 @@ protected:
 	unsigned long m_size;
 
 	//! The actions to perform after this file has been downloaded.
+	//! Since wxWebUpdateAction is an abstract class, this is an array of pointers
+	//! to the actions for this download and needs to be cleaned up manually in the
+	//! destructor.
 	wxWebUpdateActionArray m_arrActions;
      
 public:
@@ -128,7 +131,23 @@ public:
          : m_platform(wxWUP_INVALID), m_urlDownload(url), m_strMD5(md5)
 		{ SetPlatform(plat); m_size=1; if (actions) m_arrActions = *actions; }
 
-    virtual ~wxWebUpdateDownload() {}
+    virtual ~wxWebUpdateDownload();
+
+public:		// handle in the right way the issue of the m_arrActions array
+			// which contains pointers to classes which needs to be copied
+			// in order to avoid double-destruction (and thus invalid memory
+			// accesses) of the same pointers !
+	
+	wxWebUpdateDownload(const wxWebUpdateDownload &tocopy)
+		{ Copy(tocopy); }
+
+	//! Copies the given wxWebUpdateDownload object into this one, duplicating
+	//! in the proper way the action array.
+	void Copy(const wxWebUpdateDownload &tocopy);
+
+	//! The assignment operator
+    wxWebUpdateDownload &operator =(const wxWebUpdateDownload &tocopy) 
+		{ Copy(tocopy); return *this; }
 
 public:		// miscellaneous
     
@@ -175,8 +194,9 @@ public:		// main functions
 								const wxString &user = wxEmptyString,
 								const wxString &password = wxEmptyString);
 
-	//! Installs this download using the specified wxWebUpdateInstaller class.
-	virtual bool Install(wxWebUpdateInstaller *installer = NULL) const;
+	//! Installs this download using the global wxWebUpdateInstaller class
+	//! (see wxWebUpdateInstaller::Get).
+	virtual bool Install() const;
     
 public:		// static platform utilities
 

@@ -37,6 +37,7 @@
 // wxWidgets RTTI
 IMPLEMENT_CLASS(wxWebUpdateAction, wxObject)
 IMPLEMENT_CLASS(wxWebUpdateInstaller, wxObject)
+DEFINE_EVENT_TYPE(wxWUIT_INSTALLATION_COMPLETE);
 
 // default wxWebUpdate actions
 IMPLEMENT_CLASS(wxWebUpdateActionRun, wxWebUpdateAction)
@@ -245,6 +246,15 @@ void wxWebUpdateInstaller::InitDefaultActions()
 	m_hashActions[wxT("extract")] = new wxWebUpdateActionExtract();
 }
 
+void wxWebUpdateInstaller::FreeActionHashMap()
+{
+	wxWebUpdateActionHashMap::iterator it;
+    for ( it = m_hashActions.begin(); it != m_hashActions.end(); ++it ) {
+        wxWebUpdateAction *p = it->second;
+        if (p) delete p;
+    }
+}
+
 wxWebUpdateAction *wxWebUpdateInstaller::CreateNewAction(const wxString &name, 
 						const wxArrayString *names, const wxArrayString *values)
 {
@@ -261,4 +271,57 @@ wxWebUpdateAction *wxWebUpdateInstaller::CreateNewAction(const wxString &name,
 	}
 
 	return NULL;		// unknown action name
+}
+
+
+
+// -------------------------
+// wxWEBUPDATEINSTALLTHREAD
+// -------------------------
+
+void *wxWebUpdateInstallThread::Entry()
+{
+	// we'll use wxPostEvent to post this event since this is the
+	// only thread-safe way to post events !
+	wxCommandEvent updatevent(wxWUIT_INSTALLATION_COMPLETE);
+
+	// this macro avoid the repetion of a lot of code;
+#define ABORT_INSTALL() {								\
+			wxLogDebug(wxT("wxWebUpdateInstallThread::Entry - INSTALLATION ABORTED !!!"));		\
+			m_bSuccess = FALSE;							\
+			m_mStatus.Lock();							\
+			m_nStatus = wxWUITS_WAITING;				\
+			m_mStatus.Unlock();							\
+			wxPostEvent(m_pHandler, updatevent);		\
+			continue;									\
+	}
+	
+	m_mStatus.Lock();
+	m_nStatus = wxWUITS_WAITING;
+	m_mStatus.Unlock();
+
+	// begin our loop
+	while (!TestDestroy()) {
+
+		if (m_nStatus == wxWUITS_WAITING) {
+			//wxLogDebug(wxT("wxWebUpdateInstallThread::Entry - sleeping 1sec"));
+			wxThread::Sleep(100);
+			continue;
+		}
+
+		wxLogDebug(wxT("wxWebUpdateInstallThread::Entry - installing ") + m_strUpdateFile);
+
+
+		
+		wxLogDebug(wxT("wxWebUpdateInstallThread::Entry - completed installation"));
+
+		// we have successfully download the file
+		m_bSuccess = TRUE;
+		m_mStatus.Lock();
+		m_nStatus = wxWUITS_WAITING;
+		m_mStatus.Unlock();
+		wxPostEvent(m_pHandler, updatevent);
+	}
+
+	return (void*)FALSE;
 }

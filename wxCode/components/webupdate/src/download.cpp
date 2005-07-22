@@ -204,10 +204,10 @@ wxString wxDownloadThread::GetRemainingTime() const
 	if (remsec < 60)
 		return wxString::Format(wxT("%d sec"), remsec);	
 	else if (remsec < 60*60)
-		return wxString::Format(wxT("%d min, %d sec"), remsec/60, remsec);	
+		return wxString::Format(wxT("%d min, %d sec"), remsec/60, remsec%60);
 	else if (remsec < 60*60*24)
 		return wxString::Format(wxT("%d hours, %d min, %d sec"), 
-					remsec/3600, remsec/60, remsec);	
+					remsec/3600, (remsec/60)%60, remsec%3600);	
 	else
 		return wxT("not available");
 }

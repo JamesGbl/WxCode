@@ -156,6 +156,29 @@ public:		// getters
 	unsigned long GetCurrDownloadedBytes() const
 		{ return m_nCurrentSize; }
 
+	//! Returns a string containing the current download speed.
+	//! The speed is calculated using #GetCurrDownloadedBytes and #GetElapsedMSec.
+	virtual wxString GetDownloadSpeed() const;
+
+	//! Returns a string containing the current time left for this download.
+	virtual wxString GetRemainingTime() const;
+
+#if wxDT_USE_MD5
+	//! Returns the MD5 computed for the last downloaded file.
+	//! This variable is empty if no files have been downloaded yet.
+	wxString GetComputedMD5() const
+		{ return m_strComputedMD5; }
+
+	//! Returns TRUE if the MD5 stored in the #m_strMD5 variable
+	//! (which should have been set by the user to the MD5 precalculated
+	//!  and made available on the website) and the MD5 computed for the
+	//! downloaded file match.	
+	bool IsMD5Ok() const
+		{ return m_strMD5 == m_strComputedMD5; }
+#endif
+
+public:		// current status
+	
 	//! Returns TRUE if this thread is downloading a file.
 	//! We don't need to use m_mDownloading since we are just reading 
 	//! the #m_bDownloading var...
@@ -178,39 +201,20 @@ public:		// getters
 	wxDownloadThreadStatus GetStatus() const
 		{ return m_nStatus; }
 
-	//! Returns a string containing the current download speed.
-	//! The speed is calculated using #GetCurrDownloadedBytes and #GetElapsedMSec.
-	virtual wxString GetDownloadSpeed() const;
-
-	//! Returns a string containing the current time left for this download.
-	virtual wxString GetRemainingTime() const;
-
-#if wxDT_USE_MD5
-	//! Returns the MD5 computed for the last downloaded file.
-	//! This variable is empty if no files have been downloaded yet.
-	wxString GetComputedMD5() const
-		{ return m_strComputedMD5; }
-
-	//! Returns TRUE if the MD5 stored in the #m_strMD5 variable
-	//! (which should have been set by the user to the MD5 precalculated
-	//!  and made available on the website) and the MD5 computed for the
-	//! downloaded file match.	
-	bool IsMD5Ok() const
-		{ return m_strMD5 == m_strComputedMD5; }
-#endif
-
 public:		// miscellaneous
 
-	//! This function must be called only when the thread is not running and 
+	//! Starts a new download.
+	//! This function must be called only when this thread is not downloading
+	//! nor computing any MD5...
 	void BeginNewDownload() {
-		wxASSERT(!IsDownloading());
+		wxASSERT(!IsDownloading() && !IsComputingMD5());
 		wxMutexLocker lock(m_mStatus);
 		m_nStatus = wxDTS_DOWNLOADING;
 	}
 
 	//! Aborts the current download.
 	void AbortDownload() {
-		wxASSERT(IsDownloading());
+		wxASSERT(IsDownloading() || IsComputingMD5());
 		wxMutexLocker lock(m_mStatus);
 		m_nStatus = wxDTS_WAITING;
 	}
