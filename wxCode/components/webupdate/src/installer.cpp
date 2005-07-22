@@ -39,11 +39,12 @@
 IMPLEMENT_CLASS(wxWebUpdateAction, wxObject)
 IMPLEMENT_CLASS(wxWebUpdateInstaller, wxObject)
 DEFINE_EVENT_TYPE(wxWUIT_INSTALLATION_COMPLETE);
+DEFINE_EVENT_TYPE(wxWUAE_EXIT);
 
 // default wxWebUpdate actions
 IMPLEMENT_CLASS(wxWebUpdateActionRun, wxWebUpdateAction)
 IMPLEMENT_CLASS(wxWebUpdateActionExtract, wxWebUpdateAction)
-
+IMPLEMENT_CLASS(wxWebUpdateActionExit, wxWebUpdateAction)
 
 #include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
 WX_DEFINE_USER_EXPORTED_OBJARRAY(wxWebUpdateActionArray);
@@ -119,7 +120,7 @@ bool wxWebUpdateActionRun::SetProperties(const wxArrayString &propnames,
 
 	// we won't do the wxFileName::FileExists check because the file we need to run
 	// could be a file which does not exist yet (e.g. its in the update package)
-	if (m_strFile.IsEmpty() || !f.IsOk() || f.IsDir()) 
+	if (m_strFile.IsEmpty() || !f.IsOk()) 
 		return FALSE;
 
 	return TRUE;
@@ -134,8 +135,13 @@ bool wxWebUpdateActionRun::SetProperties(const wxArrayString &propnames,
 
 bool wxWebUpdateActionExtract::Run() const
 {
+	// wxFileName wants a path separator at the end of directory names
+	wxString dir(m_strWhere);
+	if (dir.Last() != wxFileName::GetPathSeparator())
+		dir += wxFileName::GetPathSeparator();
+
 	// be sure that the destination directory exists
-	wxFileName f(m_strWhere), f2(m_strFile);
+	wxFileName f(dir), f2(m_strFile);
 	if (!f.DirExists() || !f2.FileExists()) {
 
 		wxLogDebug(wxT("wxWebUpdateActionExtract::Run - the folder \"") + m_strWhere +
@@ -159,7 +165,7 @@ bool wxWebUpdateActionExtract::Run() const
         wxString name = entry->GetName();
 
         // now just dump this entry to a new uncompressed file...
-		wxFileOutputStream out(m_strWhere + name);
+		wxFileOutputStream out(dir + name);
 		if (!out.Write(*in)) {
 
 			wxLogDebug(wxT("wxWebUpdateActionExtract::Run - couldn't decompress ") + name);
@@ -169,7 +175,7 @@ bool wxWebUpdateActionExtract::Run() const
     }
 
 	delete in;
-	return FALSE;
+	return TRUE;
 }
 
 bool wxWebUpdateActionExtract::SetProperties(const wxArrayString &propnames,
@@ -192,8 +198,8 @@ bool wxWebUpdateActionExtract::SetProperties(const wxArrayString &propnames,
 	// set defaults
 	if (m_strFile.IsEmpty())		// the FILE default value is $(thisfile)
 		m_strFile = wxWebUpdateInstaller::Get()->GetKeywordValue(wxT("thisfile"));
-	if (m_strWhere.IsEmpty())		// the WHERE default value is $(programroot)
-		m_strWhere = wxWebUpdateInstaller::Get()->GetKeywordValue(wxT("programroot"));
+	if (m_strWhere.IsEmpty())		// the WHERE default value is $(programdir)
+		m_strWhere = wxWebUpdateInstaller::Get()->GetKeywordValue(wxT("programdir"));
 	if (m_strType.IsEmpty())		// the TYPE default value is "zip"
 		m_strType = wxT("zip");
 
@@ -202,9 +208,80 @@ bool wxWebUpdateActionExtract::SetProperties(const wxArrayString &propnames,
 
 	// we won't do the wxFileName::FileExists check because the file we need to run
 	// could be a file which does not exist yet (e.g. its in the update package)
+	//
+	// NOTE: wxFileName::IsDir() only checks if the given string ends with a path
+	//       separator character (there are no real ways to do a ::IsDir check
+	//       without trying to access that path!) and thus we won't use it
 	if (m_strWhere.IsEmpty() || m_strFile.IsEmpty() || 
-		!f.IsOk() || !f.IsDir() || !f2.IsOk() || f2.IsDir()) 
+		!f.IsOk() || !f2.IsOk()) 
 		return FALSE;
+
+	return TRUE;
+}
+
+
+
+// --------------------------
+// wxWEBUPDATEACTIONEXIT
+// --------------------------
+
+bool wxWebUpdateActionExit::Run() const
+{
+	int flags(m_nFlags);
+	wxString msg = wxT("This programs needs to exit in order to update itself.\n");
+
+	// tell the user that we are going to exit the application
+	if (flags & wxWUAE_NOTIFYUSER) {
+
+		if (flags & wxWUAE_RESTART)
+			msg += wxT("Then it will automatically restart...");
+
+		wxMessageBox(msg, wxWebUpdateInstaller::Get()->GetKeywordValue(wxT("appname")));
+
+	} else if (flags & wxWUAE_ASKUSER) {
+
+		wxASSERT_MSG(m_nFlags & wxWUAE_RESTART, 
+			wxT("If we just need to exit I have nothing to ask to the user"));
+		
+		int res = wxMessageBox(
+			msg + wxT("Do you want to restart it immediately after the update ?"),
+			wxWebUpdateInstaller::Get()->GetKeywordValue(wxT("appname")),
+			wxYES_NO);
+		if (res == wxNO)
+			flags &= ~wxWUAE_RESTART;	// remove the restart flag
+	}
+
+
+	// we need to exit our app	
+	wxCommandEvent exitev(wxWUAE_EXIT);
+	wxTheApp->AddPendingEvent(exitev);
+
+	return TRUE;
+}
+
+bool wxWebUpdateActionExit::SetProperties(const wxArrayString &propnames,
+										const wxArrayString &propvalues)
+{
+	wxString flags;
+
+	for (int i=0; i < (int)propnames.GetCount(); i++) {
+		if (propnames[i] == wxT("flags"))
+			flags = propvalues[i];
+		else
+			wxLogDebug(wxT("wxWebUpdateActionExit::SetProperties - unknown property: ") 
+						+ propnames[i]);
+	}
+
+	// set defaults
+	m_nFlags = 0;
+	if (flags.Contains(wxT("ASKUSER")))
+		m_nFlags |= wxWUAE_ASKUSER;
+	if (flags.Contains(wxT("NOTIFYUSER")))
+		m_nFlags |= wxWUAE_NOTIFYUSER;
+	if (flags.Contains(wxT("RESTART")))
+		m_nFlags |= wxWUAE_RESTART;
+	if (flags.IsEmpty())
+		m_nFlags = wxWUAE_ASKUSER;		// the default value
 
 	return TRUE;
 }
@@ -226,8 +303,11 @@ void wxWebUpdateInstaller::InitDefaultKeywords()
 	m_hashKeywords[wxT("tempdir")] = 
 		wxFileName::CreateTempFileName(wxT("webupdate")).BeforeLast(sep);
 
+	// the folder where we put the downloaded files
+	m_hashKeywords[wxT("downloaddir")] = m_hashKeywords[wxT("tempdir")];		// by default it's the temp folder
+
 	// the program root folder
-	m_hashKeywords[wxT("programroot")] = wxGetCwd();
+	m_hashKeywords[wxT("programdir")] = wxGetCwd();
 
 	// the program process ID
 	m_hashKeywords[wxT("pid")] = wxString::Format(wxT("%d"), wxGetProcessId());
@@ -253,6 +333,7 @@ void wxWebUpdateInstaller::InitDefaultActions()
 {
 	m_hashActions[wxT("run")] = new wxWebUpdateActionRun();
 	m_hashActions[wxT("extract")] = new wxWebUpdateActionExtract();
+	m_hashActions[wxT("exit")] = new wxWebUpdateActionExit();
 }
 
 void wxWebUpdateInstaller::FreeActionHashMap()

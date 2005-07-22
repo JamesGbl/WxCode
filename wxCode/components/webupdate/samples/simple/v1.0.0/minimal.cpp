@@ -81,8 +81,12 @@ public:
     // initialization (doing it here and not in the ctor allows to have an error
     // return: if OnInit() returns false, the application terminates)
     virtual bool OnInit();
-
 	int OnExit();
+	
+	void OnUpdateExit(wxCommandEvent &);
+
+private:
+    DECLARE_EVENT_TABLE()		// this is to process wxWUAE_EXIT events
 };
 
 // ----------------------------------------------------------------------------
@@ -146,6 +150,9 @@ END_EVENT_TABLE()
 // wxGetApp() which will return the reference of the right type (i.e. MyApp and
 // not wxApp)
 IMPLEMENT_APP(MyApp)
+BEGIN_EVENT_TABLE(MyApp, wxApp)
+    EVT_COMMAND(wxID_ANY, wxWUAE_EXIT, MyApp::OnUpdateExit)
+END_EVENT_TABLE()
 
 
 
@@ -197,6 +204,13 @@ int MyApp::OnExit()
 	delete wxWebUpdateInstaller::Set(NULL);
 	return 0;
 }
+
+void MyApp::OnUpdateExit(wxCommandEvent &)
+{
+	GetTopWindow()->Close(true);
+	//wxExit();
+}
+
 
 
 // ----------------------------------------------------------------------------

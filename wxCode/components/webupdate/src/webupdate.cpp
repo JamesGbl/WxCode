@@ -74,8 +74,10 @@ void wxWebUpdateDownload::Copy(const wxWebUpdateDownload &tocopy)
 	m_size = tocopy.m_size;
 	
 	m_arrActions.Clear();
-	for (int i=0; i < (int)tocopy.m_arrActions.GetCount(); i++)
-		m_arrActions.Add(tocopy.m_arrActions.Item(i)->Clone());
+	for (int i=0; i < (int)tocopy.m_arrActions.GetCount(); i++) {
+		wxWebUpdateAction *newact = tocopy.m_arrActions.Item(i)->Clone();
+		m_arrActions.Add(newact);
+	}
 }
 
 wxWebUpdatePlatform wxWebUpdateDownload::GetThisPlatformCode()
@@ -272,24 +274,15 @@ wxDownloadThread *wxWebUpdateDownload::DownloadAsynch(const wxString &path,
 
 bool wxWebUpdateDownload::Install() const
 {
-	bool unrecognized = FALSE;
 	wxWebUpdateInstaller *touse = wxWebUpdateInstaller::Get();
 	wxWebUpdateActionHashMap hashmap = touse->GetActionHashMap();
 
 	// installation means: execute all <action> tags for this download...
-	for (int i=0; i<(int)m_arrActions.GetCount(); i++) {
-		wxString n = m_arrActions[i]->GetName();
-		if (hashmap[n] == NULL) {
-			unrecognized = TRUE;
-			wxLogDebug(wxT("wxWebUpdateDownload::Install - unregistered action: ") + n);
-			continue;	// skip this unknown action
-		}
-
-		if (!hashmap[n]->Run())
+	for (int i=0; i<(int)m_arrActions.GetCount(); i++)
+		if (!m_arrActions[i]->Run())
 			return FALSE;		// stop here
-	}
 
-	return !unrecognized;
+	return TRUE;
 }
 
 
@@ -448,7 +441,8 @@ wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdow
 
 			// FIXME: how can we do it better ?
 			wxString name(uri.AfterLast('/'));
-			list[wxT("thisfile")] = name;		// will be removed when exiting
+			list[wxT("thisfile")] = list[wxT("downloaddir")] +
+				wxFileName::GetPathSeparator() + name;		// will be removed when exiting
 
 		} else if (child->GetName() == wxT("md5"))
 			md5 = GetNodeContent(child);
@@ -476,10 +470,14 @@ wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdow
 				prop = prop->GetNext();
 			}
 
-			// add a new action			
+			// add a new action	
+			wxString actname(GetNodeContent(child));
 			wxWebUpdateAction *a = wxWebUpdateInstaller::Get()->CreateNewAction(
-											GetNodeContent(child), &names, &values);
-			if (a) actions.Add(a);
+											actname, &names, &values);
+			if (a) 
+				actions.Add(a);
+			else
+				wxLogDebug(wxT("wxWebUpdateXMLScript::GetDownload - unknown action: ") + actname);
 		}
 
 

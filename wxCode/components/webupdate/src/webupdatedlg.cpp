@@ -911,6 +911,9 @@ void wxWebUpdateAdvPanel::OnBrowse(wxCommandEvent &)
 
 		m_pDownloadPathTextCtrl->SetValue(dlg.GetPath());
 		wxLogDebug(wxT("wxWebUpdateDlg::OnBrowse - New output path is ") + dlg.GetPath());
+
+		// save it also in our update installer
+		wxWebUpdateInstaller::Get()->SetKeywordValue(wxT("downloaddir"), dlg.GetPath());
 		
 	} else {
 

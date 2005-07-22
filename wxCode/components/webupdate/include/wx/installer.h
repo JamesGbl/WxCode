@@ -38,6 +38,9 @@ enum wxWebUpdateInstallThreadStatus {
 	wxWUITS_INSTALLING
 };
 
+// the message sent to wxApp by wxWebUpdateActionExit
+DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_WEBUPDATE, wxWUAE_EXIT, -1);
+
 
 //! The base abstract class for the handler of an <action> tag of
 //! a webupdate script.
@@ -122,7 +125,7 @@ public:
 
 	//! Returns a copy of this action.
 	virtual wxWebUpdateAction *Clone() const
-		{ return new wxWebUpdateActionRun(); }
+		{ return new wxWebUpdateActionRun(*this); }
 
 private:
 	DECLARE_CLASS(wxWebUpdateActionRun)
@@ -159,10 +162,45 @@ public:
 
 	//! Returns a copy of this action.
 	virtual wxWebUpdateAction *Clone() const
-		{ return new wxWebUpdateActionExtract(); }
+		{ return new wxWebUpdateActionExtract(*this); }
 
 private:
 	DECLARE_CLASS(wxWebUpdateActionExtract)
+};
+
+
+#define wxWUAE_RESTART				1
+#define wxWUAE_ASKUSER				2
+#define	wxWUAE_NOTIFYUSER			4
+
+//! The "exit" action.
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateActionExit : public wxWebUpdateAction
+{
+protected:
+
+	//! One of wxWUAE_RESTART, wxWUAE_ASKUSER, wxWUAE_NOTIFYUSER.
+	int m_nFlags;
+
+public:
+    wxWebUpdateActionExit()
+         : wxWebUpdateAction(wxT("exit")) {}
+    virtual ~wxWebUpdateActionExit() {}
+
+public:
+
+	//! Sets the property names & values for this action.
+	virtual bool SetProperties(const wxArrayString &propnames,
+							const wxArrayString &propvalues);
+
+	//! Run this action.
+	virtual bool Run() const;
+
+	//! Returns a copy of this action.
+	virtual wxWebUpdateAction *Clone() const
+		{ return new wxWebUpdateActionExit(*this); }
+
+private:
+	DECLARE_CLASS(wxWebUpdateActionExit)
 };
 
 
@@ -237,6 +275,9 @@ public:		// action hashmap
 
 	wxString GetKeywordValue(const wxString &name)
 		{ return m_hashKeywords[name]; }
+
+	void SetKeywordValue(const wxString &name, const wxString &val)
+		{ m_hashKeywords[name] = val; }
 
 	void FreeActionHashMap();
 	void InitDefaultKeywords();
