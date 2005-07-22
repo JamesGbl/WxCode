@@ -13,6 +13,10 @@
 #include <string.h>
 #include <stdlib.h>
 
+
+#define THISPROGNAME		"replacer"
+#define TIMEOUT				15000
+
 #if defined( _WIN32 ) || defined( WIN32 )
 #include <windows.h>
 HANDLE hProcess;
@@ -20,9 +24,9 @@ DWORD res;
 #endif
 
 
-void PrintUsage(char *thisname)
+void PrintUsage()
 {
-	printf("Usage: %s --pid 123  --from c:\\temp  --to c:\\programs\\myprogram\n", thisname);
+	printf("Usage: %s --pid 123  --from c:\\temp  --to c:\\programs\\myprogram\n", THISPROGNAME);
 	printf("       The arguments must be in the specified order and must be space-separed.\n");
 	printf("       See the program source for more info.\n");
 }
@@ -34,14 +38,14 @@ int main(int argc, char **argv)
 
 	// ARGUMENT CHECKING
 	if (argc != 7) {
-		PrintUsage(argv[0]);
+		PrintUsage();
 		return 1;
 	}
 	
 	if (strcmp(argv[1], "--pid") != 0 ||
 		strcmp(argv[3], "--from") != 0 ||
 		strcmp(argv[5], "--to") != 0) {
-		PrintUsage(argv[0]);
+		PrintUsage();
 		return 1;
 	}
 
@@ -58,14 +62,16 @@ int main(int argc, char **argv)
                                     PROCESS_QUERY_INFORMATION,
                                     FALSE, // not inheritable
                                     (DWORD)pid);
-    if (hProcess == NULL)
+    if (hProcess == NULL) {
+		printf("Error: cannot find such Process ID !\n");
         return -1;
+	}
 
-	res = WaitForSingleObject(hProcess, 15000);	// we'll wait for max 15 secs
+	res = WaitForSingleObject(hProcess, TIMEOUT);	// we'll wait for max TIMEOUT millisecs
     CloseHandle(hProcess);
 
 	if (res == WAIT_TIMEOUT) {
-		printf("Error: cannot find such Process ID !\n");
+		printf("Error: I waited for %d seconds and that process did not terminate !\n", TIMEOUT/1000);
 		return -1;
 	}
 

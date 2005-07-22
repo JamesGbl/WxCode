@@ -19,9 +19,9 @@
 			<uri>http://wxcode.sourceforge.net/components/webupdate/simple-$(latest-version).zip</uri>
 			<platform name="msw"/>	
 			
-			<action file="$(thisfile)" where="$(tempdir)">extract</action>
+			<action file="$(thisfile)" where="$(newtempdir)">extract</action>
 			<action file="$(programdir)\replacer.exe" 
-					args="--pid $(pid) --from . --to $(programdir)" 
+					args="--pid $(pid) --from $(newtempdir) --to $(programdir)" 
 					flags="ASYNC">run</action>
 			<action flags="RESTART,ASKUSER">exit</action>
 

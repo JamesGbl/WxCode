@@ -306,6 +306,12 @@ void wxWebUpdateInstaller::InitDefaultKeywords()
 	// the folder where we put the downloaded files
 	m_hashKeywords[wxT("downloaddir")] = m_hashKeywords[wxT("tempdir")];		// by default it's the temp folder
 
+	// a new temporary folder
+	wxString newtempdir(m_hashKeywords[wxT("tempdir")] + sep + 
+			wxT("webupdate") + wxDateTime::Now().Format(wxT("%d%H%M%S")));
+	if (wxFileName::Mkdir(newtempdir))
+		m_hashKeywords[wxT("newtempdir")] = newtempdir;
+
 	// the program root folder
 	m_hashKeywords[wxT("programdir")] = wxGetCwd();
 
@@ -327,6 +333,13 @@ void wxWebUpdateInstaller::InitDefaultKeywords()
 	else
 		wxLogDebug(wxT("wxWebUpdateInstaller::InitDefaultKeywords - wxTheApp/the top window is not initialized !"));
 #endif
+}
+
+void wxWebUpdateInstaller::FreeKeywords()
+{
+	// remove the newtempdir we created in #InitDefaultKeywords
+	if (!wxFileName::Rmdir(m_hashKeywords[wxT("newtempdir")]))
+		wxLogDebug(wxT("wxWebUpdateInstaller::FreeKeywords - could not remove the temporary folder I created"));
 }
 
 void wxWebUpdateInstaller::InitDefaultActions()
@@ -355,7 +368,8 @@ wxWebUpdateAction *wxWebUpdateInstaller::CreateNewAction(const wxString &name,
 		if (names && values) 
 			if (!handler->SetProperties(*names, *values))
 				wxLogDebug(wxT("wxWebUpdateInstaller::CreateNewAction - couldn't ")
-						wxT("set correctly the properties for the new action"));
+						wxT("set correctly the properties for the new action ") +
+						name);
 
 		return handler;
 	}

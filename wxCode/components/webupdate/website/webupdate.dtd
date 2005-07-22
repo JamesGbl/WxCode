@@ -32,7 +32,8 @@
    - folders:   
 	 $(programdir) = the folder where the program executable is placed
 	 $(downloaddir) = the folder where the downloaded files are placed
-     $(tempdir) = a temporary folder
+     $(tempdir) = a temporary folder already existing and thus (probably) non-empty
+	 $(newtempdir) = a temporary folder which has been created by the WebUpdate and thus is empty
    
    - names:   
      $(appname) = the name of the application

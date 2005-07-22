@@ -278,10 +278,11 @@ public:		// action hashmap
 
 	void SetKeywordValue(const wxString &name, const wxString &val)
 		{ m_hashKeywords[name] = val; }
-
-	void FreeActionHashMap();
-	void InitDefaultKeywords();
-	void InitDefaultActions();
+	
+	virtual void InitDefaultKeywords();
+	virtual void FreeKeywords();
+	virtual void InitDefaultActions();
+	virtual void FreeActionHashMap();
 
 private:
 	DECLARE_CLASS(wxWebUpdateInstaller)
