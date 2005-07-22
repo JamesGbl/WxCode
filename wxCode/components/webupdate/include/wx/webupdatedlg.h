@@ -36,7 +36,7 @@ class wxGauge;
 #define wxWUD_TIMETEXT_PREFIX			wxT("Time remaining: ")
 
 //! The prefix of the static text control which shows the current status.
-#define wxWUD_SPEEDTEXT_PREFIX			wxT("Download status: ")
+#define wxWUD_SPEEDTEXT_PREFIX			wxT("Status: ")
 
 //! The possible labels of the wxWUD_OK button.
 #define wxWUD_OK_DEFAULT_LABEL			wxT("Download")

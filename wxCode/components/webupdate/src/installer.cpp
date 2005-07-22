@@ -40,6 +40,7 @@ IMPLEMENT_CLASS(wxWebUpdateAction, wxObject)
 IMPLEMENT_CLASS(wxWebUpdateInstaller, wxObject)
 DEFINE_EVENT_TYPE(wxWUIT_INSTALLATION_COMPLETE);
 DEFINE_EVENT_TYPE(wxWUAE_EXIT);
+DEFINE_EVENT_TYPE(wxWUAR_EXECUTE);
 
 // default wxWebUpdate actions
 IMPLEMENT_CLASS(wxWebUpdateActionRun, wxWebUpdateAction)
@@ -75,13 +76,15 @@ bool wxWebUpdateActionRun::Run() const
 		return FALSE;
 	}
 
-	// launch the file
-	long res = wxExecute(m_strFile + wxT(" ") + m_strArgs, m_nExecFlag | wxEXEC_NODISABLE);
-	if ((m_nExecFlag & wxEXEC_SYNC) && res != -1)
-		return TRUE;
-	if ((m_nExecFlag & wxEXEC_ASYNC) && res != 0)
-		return TRUE;
-	return FALSE;
+	// unfortunately we cannot use ::wxExecute from a secondary thread
+	// (and wxWebUpdateAction run from a wxWebUpdateInstallThread) so we
+	// are forced to send a message to wxApp which launches the command for us
+	wxCommandEvent runev(wxWUAR_EXECUTE);
+	runev.SetString(m_strFile + wxT(" ") + m_strArgs);
+	runev.SetInt(m_nExecFlag | wxEXEC_NODISABLE | wxEXEC_NODISABLE);
+	wxTheApp->AddPendingEvent(runev);
+
+	return TRUE;
 }
 
 bool wxWebUpdateActionRun::SetProperties(const wxArrayString &propnames,
@@ -414,15 +417,15 @@ void *wxWebUpdateInstallThread::Entry()
 		}
 
 		wxLogDebug(wxT("wxWebUpdateInstallThread::Entry - installing ") + m_strUpdateFile);
-		m_pDownload->Install();
+		m_bSuccess = m_pDownload->Install();
 		wxLogDebug(wxT("wxWebUpdateInstallThread::Entry - completed installation"));
 
 		// we have successfully download the file
-		m_bSuccess = TRUE;
 		m_mStatus.Lock();
 		m_nStatus = wxWUITS_WAITING;
 		m_mStatus.Unlock();
 		wxPostEvent(m_pHandler, updatevent);
+		m_nInstallationCount++;
 	}
 
 	return (void*)FALSE;

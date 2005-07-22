@@ -75,6 +75,9 @@ protected:		// these are written by this thread and they must be only read
 
 #endif
 
+	//! The number of files downloaded by this thread.
+	int m_nFileCount;
+
 protected:		// these are vars protected by mutexes...
 
 	//! The value of this variable represents the current thread status;
@@ -133,7 +136,7 @@ public:
 		const wxString &resname = wxEmptyString)
 		: wxThread(wxTHREAD_JOINABLE), m_pHandler(dlg), m_strURI(uri), 
 		  m_strOutput(outfile), m_strResName(resname)
-		{ m_bSuccess=FALSE; m_dtStart = wxDateTime::UNow(); }
+		{ m_bSuccess=FALSE; m_dtStart = wxDateTime::UNow(); m_nFileCount=0; }
 	virtual ~wxDownloadThread() {}
 
     //! Downloads the file and then sends the wxDT_NOTIFICATION event
@@ -146,6 +149,10 @@ public:		// getters
 	//! Returns TRUE if the last download was successful.
 	bool DownloadWasSuccessful() const		
 		{ return m_bSuccess; }
+
+	//! Returns the number of files successfully installed by this thread.
+	int GetDownloadCount() const
+		{ return m_nFileCount; }
 
 	//! Returns the number of milliseconds elapsed from the start of the
 	//! current download.

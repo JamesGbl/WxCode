@@ -244,12 +244,6 @@ void wxWebUpdateDlg::OnIdle(wxIdleEvent &)
 	if (m_xmlScript.IsOk() || m_dThread->IsRunning())
 		return;
 
-	// set our thread helper as a downloader for the XML update scriptf
-	m_dThread->m_strURI = m_strURI;
-	m_dThread->m_strResName = wxT("XML WebUpdate script");
-	m_dThread->m_strOutput = wxFileName::CreateTempFileName(wxT("webupdate"));
-	m_dThread->m_strID = wxWUD_XMLSCRIPT_ID;
-
 	// launch a separate thread for the webupdate script download
 	if (m_dThread->Create() != wxTHREAD_NO_ERROR ||
 		m_dThread->Run() != wxTHREAD_NO_ERROR) {
@@ -267,6 +261,13 @@ void wxWebUpdateDlg::OnIdle(wxIdleEvent &)
 					wxT("Error"), wxOK | wxICON_ERROR);
 		AbortDialog();
 	}
+
+	// our first download will be the WebUpdate XML script
+	m_dThread->m_strURI = m_strURI;
+	m_dThread->m_strResName = wxT("XML WebUpdate script");
+	m_dThread->m_strOutput = wxFileName::CreateTempFileName(wxT("webupdate"));
+	m_dThread->m_strID = wxWUD_XMLSCRIPT_ID;
+	m_dThread->BeginNewDownload();
 }
 
 void wxWebUpdateDlg::ShowErrorMsg(const wxString &str) const
@@ -681,7 +682,7 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 				const wxWebUpdatePackage &pkg = GetRemotePackage(m_dThread->m_strID);
 				const wxWebUpdateDownload &download = pkg.GetDownloadPackage();
 
-				m_nStatus = wxWUDS_INSTALLING;
+				//m_nStatus = wxWUDS_INSTALLING;
 				m_iThread->m_pDownload = &download;
 				m_iThread->m_strUpdateFile = download.GetFileName();
 				m_iThread->BeginNewInstall();
@@ -758,11 +759,28 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 				// (i.e. in the wxWUDS_UNDEFINED or wxWUDS_INSTALLING states)
 			break;
 		}
+
 	} else {
 
 		wxASSERT_MSG(m_nStatus != wxWUDS_DOWNLOADING &&
 						m_nStatus != wxWUDS_COMPUTINGMD5,
 						wxT("The status var has not been updated properly"));
+	}
+
+	if (m_iThread->IsRunning()) {
+
+		switch (m_iThread->GetStatus()) {
+		case wxWUITS_INSTALLING:
+			m_nStatus = wxWUDS_INSTALLING;
+			break;
+		case wxWUITS_WAITING:
+			if (m_nStatus == wxWUDS_INSTALLING)
+				m_nStatus = wxWUDS_UNDEFINED;
+			else
+				// leave our status var untouched
+				// (i.e. in the wxWUDS_UNDEFINED or wxWUDS_INSTALLING states)
+			break;
+		}
 	}
 
 	// change UI labels according to the current status
@@ -804,34 +822,52 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 		if (nLabelMode != wxWUDS_COMPUTINGMD5) {
 			m_pSpeedText->SetLabel(wxWUD_SPEEDTEXT_PREFIX wxT("computing the file hash"));
 			m_pTimeText->SetLabel(wxT("No downloads running..."));
+			m_pCancelBtn->SetLabel(wxWUD_CANCEL_DOWNLOAD);
+			m_pOkBtn->Disable();
 			nLabelMode = wxWUDS_COMPUTINGMD5;
 		}
 
-	} else {		// our download thread is waiting
+	} else if (m_iThread->IsInstalling()) {
+
+		m_pGauge->SetValue(0);
+		if (nLabelMode != wxWUDS_INSTALLING) {
+			m_pSpeedText->SetLabel(wxWUD_SPEEDTEXT_PREFIX wxT("installing \"") + m_dThread->m_strResName + wxT("\""));			
+			m_pTimeText->SetLabel(wxT("No downloads running..."));
+			m_pCancelBtn->SetLabel(wxWUD_CANCEL_INSTALLATION);
+			m_pOkBtn->Disable();
+			nLabelMode = wxWUDS_INSTALLING;
+		}
+
+	} else {
 
 		// reset our gauge control
 		m_pGauge->SetValue(0);
 
 		// re-enable what we disabled when we launched the thread
-		wxASSERT(m_nStatus == wxWUDS_INSTALLING || m_nStatus == wxWUDS_UNDEFINED);
+		wxASSERT(m_nStatus == wxWUDS_UNDEFINED);
 		if (nLabelMode != m_nStatus) {
 
-			if (m_nStatus == wxWUDS_INSTALLING)
-				m_pCancelBtn->SetLabel(wxWUD_CANCEL_INSTALLATION);
-			else
-				m_pCancelBtn->SetLabel(wxWUD_CANCEL_DEFAULT_LABEL);
+			m_pCancelBtn->SetLabel(wxWUD_CANCEL_DEFAULT_LABEL);
 
 			// update our meters
-			if (m_nStatus == wxWUDS_INSTALLING)
-				m_pSpeedText->SetLabel(wxWUD_SPEEDTEXT_PREFIX wxT("installing \"") + m_dThread->m_strResName + wxT("\""));
-			else {
+			int d = m_dThread->GetDownloadCount(),
+				i = m_iThread->GetInstallationCount();
 
-				// we could have just completed a download or just completed an installation....
-				if (m_dThread->DownloadWasSuccessful())
-					m_pSpeedText->SetLabel(wxWUD_SPEEDTEXT_PREFIX wxT("successfully completed"));
-				else
-					m_pSpeedText->SetLabel(wxWUD_SPEEDTEXT_PREFIX wxT("failed !"));
-			}
+			// we need to decrement the "d" var since we don't want to take in count
+			// the download of the XML webupdate script
+			bool scriptOk = m_xmlScript.IsOk();
+			d--;
+
+			if (d > 0 && i > 0)
+				m_pSpeedText->SetLabel(
+					wxString::Format(wxWUD_SPEEDTEXT_PREFIX wxT("downloaded %d package(s) and installed %d package(s)"), d, i));
+			else if (d > 0 && i == 0)
+				m_pSpeedText->SetLabel(
+					wxString::Format(wxWUD_SPEEDTEXT_PREFIX wxT("downloaded %d package(s)"), d));
+			else if (d == 0 && scriptOk)
+				m_pSpeedText->SetLabel(wxWUD_SPEEDTEXT_PREFIX wxT("WebUpdate script successfully downloaded"));
+			else
+				m_pSpeedText->SetLabel(wxWUD_SPEEDTEXT_PREFIX wxT("download failed !"));
 
 			// in any case (wxWUDS_INSTALLING/wxWUDS_UNDEFINED) we are not downloading
 			// anything now...

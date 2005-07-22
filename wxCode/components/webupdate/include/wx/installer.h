@@ -41,6 +41,9 @@ enum wxWebUpdateInstallThreadStatus {
 // the message sent to wxApp by wxWebUpdateActionExit
 DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_WEBUPDATE, wxWUAE_EXIT, -1);
 
+// the message sent to wxApp by wxWebUpdateActionRun
+DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_WEBUPDATE, wxWUAR_EXECUTE, -1);
+
 
 //! The base abstract class for the handler of an <action> tag of
 //! a webupdate script.
@@ -300,6 +303,9 @@ protected:		// these are written by this thread and they must be only read
 	//! TRUE if the package was installed successfully.
 	bool m_bSuccess;
 
+	//! The number of packages installed by this thread.
+	int m_nInstallationCount;
+
 public:		// to avoid setters/getters (these vars are only read by this thread;
 			// they are never written and so they are not protected with mutexes).
 
@@ -326,7 +332,8 @@ public:
 							const wxString &updatefile = wxEmptyString, 
 							const wxWebUpdateDownload *toinstall = NULL)
 		: wxThread(wxTHREAD_JOINABLE), m_pHandler(dlg), m_strUpdateFile(updatefile),
-			m_pDownload(toinstall) {}
+		m_pDownload(toinstall) 
+		{ m_bSuccess=TRUE; m_nInstallationCount=0; }
 
 	virtual ~wxWebUpdateInstallThread() {}
 
@@ -369,6 +376,14 @@ public:		// miscellaneous
 		wxMutexLocker lock(m_mStatus);
 		m_nStatus = wxWUITS_WAITING;
 	}
+
+	//! Returns TRUE if the last installation was successful.
+	bool InstallationWasSuccessful() const		
+		{ return m_bSuccess; }
+
+	//! Returns the number of packages successfully installed by this thread.
+	int GetInstallationCount() const
+		{ return m_nInstallationCount; }
 };
 
 

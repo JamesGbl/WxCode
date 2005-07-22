@@ -84,6 +84,7 @@ public:
 	int OnExit();
 	
 	void OnUpdateExit(wxCommandEvent &);
+	void OnUpdateExec(wxCommandEvent &);
 
 private:
     DECLARE_EVENT_TABLE()		// this is to process wxWUAE_EXIT events
@@ -152,6 +153,7 @@ END_EVENT_TABLE()
 IMPLEMENT_APP(MyApp)
 BEGIN_EVENT_TABLE(MyApp, wxApp)
     EVT_COMMAND(wxID_ANY, wxWUAE_EXIT, MyApp::OnUpdateExit)
+    EVT_COMMAND(wxID_ANY, wxWUAR_EXECUTE, MyApp::OnUpdateExec)
 END_EVENT_TABLE()
 
 
@@ -207,10 +209,23 @@ int MyApp::OnExit()
 
 void MyApp::OnUpdateExit(wxCommandEvent &)
 {
-	GetTopWindow()->Close(true);
+	//GetTopWindow()->Close(true);
 	//wxExit();
+	//OnFatalException();
 }
 
+void MyApp::OnUpdateExec(wxCommandEvent &ce)
+{
+	wxString cmd = ce.GetString();
+	int flags = ce.GetInt();
+
+	long res = ::wxExecute(cmd, flags);
+/*	if ((m_nExecFlag & wxEXEC_SYNC) && res != -1)
+		return TRUE;
+	if ((m_nExecFlag & wxEXEC_ASYNC) && res != 0)
+		return TRUE;
+	return FALSE;*/
+}
 
 
 // ----------------------------------------------------------------------------

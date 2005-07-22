@@ -61,7 +61,7 @@ void *wxDownloadThread::Entry()
 	}
 	
 	m_mStatus.Lock();
-	m_nStatus = wxDTS_DOWNLOADING;
+	m_nStatus = wxDTS_WAITING;
 	m_mStatus.Unlock();
 
 	// begin our loop
@@ -165,6 +165,7 @@ void *wxDownloadThread::Entry()
 		m_nStatus = wxDTS_WAITING;
 		m_mStatus.Unlock();
 		wxPostEvent(m_pHandler, updatevent);
+		m_nFileCount++;
 	}
 
 	return (void*)FALSE;
