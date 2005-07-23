@@ -804,7 +804,7 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 
 			// update our gauge control
 			long value = m_dThread->GetCurrDownloadedBytes();	
-			m_pGauge->SetValue(value > 0 ? value : 0);
+			m_pGauge->SetValue(value >= 0 ? value : 0);
 
 			// update speed meter
 			m_pSpeedText->SetLabel(wxWUD_SPEEDTEXT_PREFIX wxT("downloading \"") + 

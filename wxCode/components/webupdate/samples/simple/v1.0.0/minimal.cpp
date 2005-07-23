@@ -86,6 +86,8 @@ public:
 	void OnUpdateExit(wxCommandEvent &);
 	void OnUpdateExec(wxCommandEvent &);
 
+	wxWebUpdateDlg *pWebUpdateDlg;
+
 private:
     DECLARE_EVENT_TABLE()		// this is to process wxWUAE_EXIT events
 };
@@ -209,7 +211,20 @@ int MyApp::OnExit()
 
 void MyApp::OnUpdateExit(wxCommandEvent &)
 {
-	//GetTopWindow()->Close(true);
+ /*   wxWindowList::compatibility_iterator current = GetTopWindow()->GetChildren().GetFirst();
+    while (current)
+    {
+        wxWindow *childWin = current->GetData();
+		childWin->Close(true);
+        current = current->GetNext();
+    }*/
+	if (pWebUpdateDlg) {
+		pWebUpdateDlg->EndModal(wxOK);
+		//wxSleep(300);
+		pWebUpdateDlg->Destroy();
+	}
+
+	GetTopWindow()->Close(true);
 	//wxExit();
 	//OnFatalException();
 }
@@ -384,11 +399,15 @@ void MyFrame::OnUpdateCheckWithDlg(wxCommandEvent &)
 	// this sample has only one package to handle
 	g_packageList[0].m_strName = PACKAGE_NAME;
 	g_packageList[0].m_version = VERSION;
+	
+	wxWebUpdateDlg *dlg = new wxWebUpdateDlg(this, APP_NAME, SCRIPT_LOCATION, g_packageList, 1);
+	wxGetApp().pWebUpdateDlg = dlg;
 
-	wxWebUpdateDlg dlg(this, APP_NAME, SCRIPT_LOCATION, g_packageList, 1);
+	dlg->Layout();
+	dlg->CenterOnScreen();
+	dlg->ShowModal();
+	dlg->Destroy();
 
-	dlg.Layout();
-	dlg.CenterOnScreen();
-	dlg.ShowModal();
+	wxGetApp().pWebUpdateDlg = NULL;
 }
 

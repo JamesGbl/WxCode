@@ -165,7 +165,10 @@ void *wxDownloadThread::Entry()
 		m_nStatus = wxDTS_WAITING;
 		m_mStatus.Unlock();
 		wxPostEvent(m_pHandler, updatevent);
+	
 		m_nFileCount++;
+		m_nCurrentSize = 0;
+		m_nFinalSize = 0;
 	}
 
 	return (void*)FALSE;

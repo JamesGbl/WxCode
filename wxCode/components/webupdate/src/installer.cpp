@@ -161,6 +161,7 @@ bool wxWebUpdateActionExtract::Run() const
 	wxArchiveEntryPtr entry;
 	wxFFileInputStream input(m_strFile);
 	wxArchiveInputStream *in = factory->NewStream(input);
+	delete factory;
 
     while (entry.reset(in->GetNextEntry()), entry.get() != NULL)
     {
