@@ -45,8 +45,8 @@ END_EVENT_TABLE()
 // ------------------
 
 wxCheckedListCtrl::wxCheckedListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
-        const wxSize& sz, long style) :
-        wxListCtrl(parent, id, pt, sz, style), m_imageList(16, 16, TRUE)
+        const wxSize& sz, long style, const wxValidator& validator, const wxString& name) 
+		: wxListCtrl(parent, id, pt, sz, style, validator, name), m_imageList(16, 16, TRUE)
 
 {
     SetImageList(&m_imageList, wxIMAGE_LIST_SMALL);

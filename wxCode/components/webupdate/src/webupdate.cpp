@@ -45,6 +45,9 @@ WX_DEFINE_USER_EXPORTED_OBJARRAY(wxWebUpdateDownloadArray);
 #include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
 WX_DEFINE_USER_EXPORTED_OBJARRAY(wxWebUpdatePackageArray);
 
+#include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
+WX_DEFINE_USER_EXPORTED_OBJARRAY(wxWebUpdateLocalPackageArray);
+
 
 // global objects
 wxWebUpdateDownload wxEmptyWebUpdateDownload(wxT("invalid"));

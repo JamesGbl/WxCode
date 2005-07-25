@@ -82,6 +82,36 @@ typedef wxString		wxVersion;
 #define wxEmptyVersion  wxEmptyString
 
 
+
+//! A simple container of the two basic info which wxWebUpdate classes 
+//! need to know about user *local* packages: the NAME and the local VERSION.
+//! This class should not be confused with wxWebUpdatePackage which instead
+//! contains the info parsed from a wxWebUpdateXMLScript about a package
+//! on the *remote* server.
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateLocalPackage : public wxObject
+{
+public:		// to avoid setters/getters
+
+	//! The name of this package.
+	wxString m_strName;
+
+	//! The version of this package.
+	wxVersion m_version;
+
+public:
+	wxWebUpdateLocalPackage(const wxString &name = wxEmptyString, 
+							const wxVersion &ver = wxEmptyVersion)
+		: m_strName(name), m_version(ver) {}
+	virtual ~wxWebUpdateLocalPackage() {}
+
+private:
+	DECLARE_CLASS(wxWebUpdateLocalPackage)
+};
+
+// a container of wxWebUpdateLocalPackage used by wxWebUpdater
+WX_DECLARE_USER_EXPORTED_OBJARRAY(wxWebUpdateLocalPackage, wxWebUpdateLocalPackageArray, WXDLLIMPEXP_WEBUPDATE);
+
+
 //! Contains the info about an available download.
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDownload : public wxObject
 {

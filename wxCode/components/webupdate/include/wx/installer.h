@@ -26,6 +26,8 @@
 class WXDLLIMPEXP_WEBUPDATE wxDownloadThread;
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDownload;
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdatePackage;
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateLocalPackageArray;
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDlg;
 
 
 // this is the even sent by a wxDownloadThread class to the wxEvtHandler
@@ -220,6 +222,7 @@ WX_DECLARE_STRING_HASH_MAP_WITH_DECL(wxWebUpdateAction*, wxWebUpdateActionHashMa
 WX_DECLARE_STRING_HASH_MAP_WITH_DECL(wxString, wxStringStringHashMap, class WXDLLIMPEXP_WEBUPDATE);
 
 
+
 //! A singleton class which contains the list with all the 
 //! registered wxWebUpdateAction which are recognized in the webupdate
 //! script in installation stage.
@@ -292,6 +295,56 @@ private:
 };
 
 
+
+//! A singleton class which responds to the wxWebUpdateAction events.
+//! This class code will be executed from the main thread.
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdater : public wxEvtHandler
+{
+protected:
+
+	//! The global instance of this class.
+	static wxWebUpdater *m_pTheUpdater;
+
+	//! The instance of the current wxWebUpdateDlg shown to the user.
+	wxWebUpdateDlg *m_pWebUpdateDlg;
+
+public:
+	wxWebUpdater() { m_pWebUpdateDlg = NULL; }
+	virtual ~wxWebUpdater() {}
+
+
+public:		// to be implemented
+
+	//! Returns the list of the currently installed local packages.
+	virtual wxWebUpdateLocalPackageArray GetLocalPackages() const = 0;
+
+public:		// event handlers
+
+	void OnUpdateExit(wxCommandEvent &);
+	void OnUpdateExec(wxCommandEvent &);
+	void OnWebUpdateDlgShow(wxCommandEvent &);
+	void OnWebUpdateDlgDestroy(wxCommandEvent &);
+
+public:		// single ton accessors
+
+    //! Gets the global wxWebUpdateInstaller object or creates one if none exists.
+    static wxWebUpdater *Get()
+	{ wxASSERT_MSG(m_pTheUpdater, 
+		wxT("The wxWebUpdater class should have been created in wxApp::OnInit")); 
+		return m_pTheUpdater;}
+
+    //! Sets the global wxWebUpdateInstaller object and returns a pointer to the 
+	//! previous one (may be NULL).
+    static wxWebUpdater *Set(wxWebUpdater *res)
+	{ wxWebUpdater *old = m_pTheUpdater; m_pTheUpdater = res; return old; }
+
+private:
+	DECLARE_CLASS(wxWebUpdateInstaller)
+	DECLARE_EVENT_TABLE()
+};
+
+
+
 //! The thread used to install the packages.
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateInstallThread : public wxThread
 {
@@ -333,7 +386,7 @@ public:
 							const wxWebUpdateDownload *toinstall = NULL)
 		: wxThread(wxTHREAD_JOINABLE), m_pHandler(dlg), m_strUpdateFile(updatefile),
 		m_pDownload(toinstall) 
-		{ m_bSuccess=TRUE; m_nInstallationCount=0; }
+		{ m_bSuccess=TRUE; m_nInstallationCount=0; m_nStatus = wxWUITS_WAITING; }
 
 	virtual ~wxWebUpdateInstallThread() {}
 

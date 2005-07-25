@@ -56,7 +56,9 @@ public:
 	wxCheckedListCtrl(wxWindow *parent, wxWindowID id = -1, 
 						const wxPoint& pt = wxDefaultPosition,
 						const wxSize& sz = wxDefaultSize, 
-						long style = wxCLC_CHECK_WHEN_SELECTING);
+						long style = wxCLC_CHECK_WHEN_SELECTING,
+						const wxValidator& validator = wxDefaultValidator, 
+						const wxString& name = wxListCtrlNameStr);
 	virtual ~wxCheckedListCtrl() {}
 
 

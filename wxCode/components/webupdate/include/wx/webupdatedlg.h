@@ -64,40 +64,21 @@ class wxGauge;
 WXDLLIMPEXP_WEBUPDATE wxString wxGetSizeStr(unsigned long bytesize);
 
 
+//! The event sent to wxWebUpdater by wxWebUpdateDlg.
+DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_WEBUPDATE, wxWUD_INIT, -1);
+DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_WEBUPDATE, wxWUD_DESTROY, -1);
+
+
 //! The possible values of the wxWebUpdateDlg::m_nStatus variable.
 //! This should be used internally by wxWebUpdateDlg only and user
 //! should not care about it.
 enum wxWebUpdateDlgStatus {
-	wxWUDS_UNDEFINED = -1,
+	wxWUDS_UNDEFINED = -1,	
 	wxWUDS_DOWNLOADING,
-	wxWUDS_COMPUTINGMD5,
+	wxWUDS_COMPUTINGMD5,	
 	wxWUDS_INSTALLING
 };
 
-
-
-//! A simple container of the two basic info which wxWebUpdateDlg needs to know
-//! about user *local* packages: the NAME and the local VERSION.
-//! This class should not be confused with wxWebUpdatePackage.
-class WXDLLIMPEXP_WEBUPDATE wxWebUpdateLocalPackage : public wxObject
-{
-public:		// to avoid setters/getters
-
-	//! The name of this package.
-	wxString m_strName;
-
-	//! The version of this package.
-	wxVersion m_version;
-
-public:
-	wxWebUpdateLocalPackage(const wxString &name = wxEmptyString, 
-							const wxVersion &ver = wxEmptyVersion)
-		: m_strName(name), m_version(ver) {}
-	virtual ~wxWebUpdateLocalPackage() {}
-
-private:
-	DECLARE_CLASS(wxWebUpdateLocalPackage)
-};
 
 
 //! The advanced panel of a wxWebUpdateDlg.
@@ -158,6 +139,78 @@ private:
 };
 
 
+#if wxWU_USE_CHECKEDLISTCTRL
+	#define wxWUDLC_BASECLASS wxCheckedListCtrl
+#else
+	#define wxWUDLC_BASECLASS wxListCtrl
+#endif
+
+//! The wxListCtrl which lists the packages that are shown to the user.
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateListCtrl : public wxWUDLC_BASECLASS
+{
+protected:
+
+	//! The local packages we are going to handle with this dialog.
+	wxWebUpdateLocalPackageArray m_arrLocalPackages;	
+
+	//! The packages we have downloaded from the web.
+	//! This array is valid only when #m_xmlScript is valid.
+	wxWebUpdatePackageArray m_arrUpdatedPackages;
+
+
+protected:		// event handlers
+
+	void OnItemClick(wxCommandEvent &);
+
+public:
+
+	//! Constructs a wxWebUpdateAdvPanel.
+	wxWebUpdateListCtrl::wxWebUpdateListCtrl(wxWindow* parent, wxWindowID id, 
+		const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, 
+		long style = wxLC_ICON, const wxValidator& validator = wxDefaultValidator, 
+		const wxString& name = wxListCtrlNameStr)
+		: wxWUDLC_BASECLASS(parent, id, pos, size, style, validator, name)
+		{ InitLocalPackages(); }
+
+	virtual ~wxWebUpdateListCtrl() 
+		{}
+
+
+	//! Initializes the local packages for this application asking them to
+	//! wxWebUpdater.
+	void InitLocalPackages()
+		{ m_arrLocalPackages = wxWebUpdater::Get()->GetLocalPackages(); }
+
+	//! Rebuilds the list of the packages inside the main wxListCtrl
+	//! using the #m_arrUpdatedPackages array. Removes any old content.
+	void RebuildPackageList();
+
+	//! Returns the array of updated packages parsed from the WebUpdate XML Script.
+	wxWebUpdatePackageArray GetRemotePackages() const
+		{ return m_arrUpdatedPackages; }
+
+	//! Sets the array of remote packages.
+	void SetRemotePackages(const wxWebUpdatePackageArray &arr)
+		{ m_arrUpdatedPackages = arr; }
+
+	//! Returns the array of updated packages taken from the wxWebUpdater.
+	wxWebUpdateLocalPackageArray GetLocalPackages() const
+		{ return m_arrLocalPackages; }
+
+	//! Returns a pointer to the local package with the given name or NULL if such
+	//! package could not be found.
+	const wxWebUpdateLocalPackage *GetLocalPackage(const wxString &name) const;
+
+	//! Returns the remote package with the given name.
+	wxWebUpdatePackage &GetRemotePackage(const wxString &name);
+
+
+private:
+	DECLARE_CLASS(wxWebUpdateListCtrl)
+	DECLARE_EVENT_TABLE()
+};
+
+
 
 //! The dialog which lets the user update this program.
 //! NOTE: it's quite difficult to derive a new class from wxProgressDialog
@@ -173,11 +226,8 @@ protected:		// pointers to our controls
 	wxGauge *m_pGauge;
 	wxTextCtrl *m_pDescription;
 
-#if wxWU_USE_CHECKEDLISTCTRL
-	wxCheckedListCtrl *m_pUpdatesList;
-#else
-	wxListCtrl *m_pUpdatesList;
-#endif
+	// our listctrl
+	wxWebUpdateListCtrl *m_pUpdatesList;
 
 	// we store advanced settings here:
 	wxWebUpdateAdvPanel *m_pAdvPanel;
@@ -188,10 +238,6 @@ protected:		// remote-related stuff
 	//! The webupdate XML script. This variable becomes valid only once
 	//! the first download has been completed.
 	wxWebUpdateXMLScript m_xmlScript;
-
-	//! The packages we have downloaded from the web.
-	//! This array is valid only when #m_xmlScript is valid.
-	wxWebUpdatePackageArray m_arrUpdatedPackages;
 
 	//! The URI of the XML webupdate script.
 	wxString m_strURI;
@@ -216,10 +262,6 @@ protected:		// wxWebUpdateDlg-internals
 
 protected:		// wxWebUpdateDlg-user stuff
 
-	//! The local packages we are going to handle with this dialog.
-	const wxWebUpdateLocalPackage *m_pLocalPackages;
-	int m_nLocalPackages;		//!< The number of entries in #m_pLocalPackages.
-
 	//! The name of the application which holds all the local packages
 	//! handled by this dialog. This string should not contain version !
 	wxString m_strAppName;
@@ -235,14 +277,6 @@ protected:
 
 	//! Called when the XML script file has been downloaded.
 	void OnScriptDownload(const wxString &xmluri);
-
-	//! Rebuilds the list of the packages inside the main wxListCtrl
-	//! using the #m_arrUpdatedPackages array. Removes any old content.
-	void RebuildPackageList();
-
-	//! Call this function instead of EndModal(wxCANCEL) to abort this dialog.
-	//! This function takes care of our wxDownloadThread, infact.
-	void AbortDialog();
 
 	//! Shows or hides the child window with the given name and then returns
 	//! a pointer to it.
@@ -273,11 +307,8 @@ public:
 	//! is not required since we are using XRC system
 	wxWebUpdateDlg::wxWebUpdateDlg(wxWindow *parent, 
 							const wxString &appname,
-							const wxString &uri, 
-							const wxWebUpdateLocalPackage *arr, 
-							int count)							
-		{ m_parent=parent; m_strAppName=appname; m_strURI=uri; 
-			m_pLocalPackages=arr; m_nLocalPackages=count; 			
+							const wxString &uri)							
+		{ m_parent=parent; m_strAppName=appname; m_strURI=uri; 			
 			m_bUserAborted=FALSE; m_nStatus=wxWUDS_UNDEFINED;
 			InitWidgetsFromXRC(); }
 
@@ -291,17 +322,20 @@ public:		// main functions
 	//! Shows the dialog and immediately start the download of the webupdate script.
 	int ShowModal();
 
-	//! Returns a pointer to the local package with the given name or NULL if such
-	//! package could not be found.
-	const wxWebUpdateLocalPackage *GetLocalPackage(const wxString &name) const;
+	//! Destroys the dialog.
+	bool Destroy();
+
+	//! Call this function instead of EndModal(wxCANCEL) to abort this dialog.
+	//! This function takes care of our wxDownloadThread, infact.
+	void AbortDialog();
 
 	//! Returns the array of updated packages parsed from the WebUpdate XML Script.
 	wxWebUpdatePackageArray GetRemotePackages() const
-		{ return m_arrUpdatedPackages; }
+		{ return m_pUpdatesList->GetRemotePackages(); }
 
-	//! Returns the remote package with the given name.
-	wxWebUpdatePackage &GetRemotePackage(const wxString &name);
-
+	//! Returns the array of local packages taken from wxWebUpdater.
+	wxWebUpdateLocalPackageArray GetLocalPackages() const
+		{ return m_pUpdatesList->GetLocalPackages(); }
 
 private:
 	DECLARE_CLASS(wxWebUpdateDlg)

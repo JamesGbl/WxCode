@@ -42,14 +42,7 @@ DEFINE_EVENT_TYPE(wxDT_DOWNLOAD_COMPLETE);
 // wxDOWNLOADTHREAD
 // ---------------------
 
-void *wxDownloadThread::Entry()
-{
-	// we'll use wxPostEvent to post this event since this is the
-	// only thread-safe way to post events !
-	wxCommandEvent updatevent(wxDT_DOWNLOAD_COMPLETE);
-
-	// this macro avoid the repetion of a lot of code;
-	// IMPORTANT NOTE: 
+// this macro avoids the repetion of a lot of code
 #define ABORT_DOWNLOAD() {								\
 			wxLogDebug(wxT("wxDownloadThread::Entry - DOWNLOAD ABORTED !!!"));		\
 			m_bSuccess = FALSE;							\
@@ -59,10 +52,13 @@ void *wxDownloadThread::Entry()
 			wxPostEvent(m_pHandler, updatevent);		\
 			continue;									\
 	}
-	
-	m_mStatus.Lock();
-	m_nStatus = wxDTS_WAITING;
-	m_mStatus.Unlock();
+
+
+void *wxDownloadThread::Entry()
+{
+	// we'll use wxPostEvent to post this event since this is the
+	// only thread-safe way to post events !
+	wxCommandEvent updatevent(wxDT_DOWNLOAD_COMPLETE);
 
 	// begin our loop
 	while (!TestDestroy()) {
@@ -167,6 +163,10 @@ void *wxDownloadThread::Entry()
 		wxPostEvent(m_pHandler, updatevent);
 	
 		m_nFileCount++;
+
+		// we reset our variables here because there is a delay between the
+		// wxDownloadThread::BeginNewDownload() calls and the execution of the
+		// first statements of this thread...
 		m_nCurrentSize = 0;
 		m_nFinalSize = 0;
 	}

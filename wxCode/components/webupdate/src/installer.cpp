@@ -28,6 +28,7 @@
 
 #include "wx/installer.h"
 #include "wx/webupdate.h"
+#include "wx/webupdatedlg.h"
 #include <wx/wfstream.h>
 #include <wx/filesys.h>
 #include <wx/utils.h>
@@ -41,6 +42,15 @@ IMPLEMENT_CLASS(wxWebUpdateInstaller, wxObject)
 DEFINE_EVENT_TYPE(wxWUIT_INSTALLATION_COMPLETE);
 DEFINE_EVENT_TYPE(wxWUAE_EXIT);
 DEFINE_EVENT_TYPE(wxWUAR_EXECUTE);
+
+IMPLEMENT_CLASS(wxWebUpdater, wxEvtHandler)
+BEGIN_EVENT_TABLE(wxWebUpdater, wxEvtHandler)
+    EVT_COMMAND(wxID_ANY, wxWUAE_EXIT, wxWebUpdater::OnUpdateExit)
+    EVT_COMMAND(wxID_ANY, wxWUAR_EXECUTE, wxWebUpdater::OnUpdateExec)
+    EVT_COMMAND(wxID_ANY, wxWUD_INIT, wxWebUpdater::OnWebUpdateDlgShow)
+	EVT_COMMAND(wxID_ANY, wxWUD_DESTROY, wxWebUpdater::OnWebUpdateDlgDestroy)
+END_EVENT_TABLE()
+
 
 // default wxWebUpdate actions
 IMPLEMENT_CLASS(wxWebUpdateActionRun, wxWebUpdateAction)
@@ -57,6 +67,7 @@ wxDEFINE_SCOPED_PTR_TYPE(wxArchiveEntry);
 
 // global objects
 wxWebUpdateInstaller *wxWebUpdateInstaller::m_pTheInstaller = NULL;
+wxWebUpdater *wxWebUpdater::m_pTheUpdater = NULL;
 
 
 
@@ -82,7 +93,7 @@ bool wxWebUpdateActionRun::Run() const
 	wxCommandEvent runev(wxWUAR_EXECUTE);
 	runev.SetString(m_strFile + wxT(" ") + m_strArgs);
 	runev.SetInt(m_nExecFlag | wxEXEC_NODISABLE | wxEXEC_NODISABLE);
-	wxTheApp->AddPendingEvent(runev);
+	wxWebUpdater::Get()->AddPendingEvent(runev);
 
 	return TRUE;
 }
@@ -258,7 +269,7 @@ bool wxWebUpdateActionExit::Run() const
 
 	// we need to exit our app	
 	wxCommandEvent exitev(wxWUAE_EXIT);
-	wxTheApp->AddPendingEvent(exitev);
+	wxWebUpdater::Get()->AddPendingEvent(exitev);
 
 	return TRUE;
 }
@@ -387,13 +398,7 @@ wxWebUpdateAction *wxWebUpdateInstaller::CreateNewAction(const wxString &name,
 // wxWEBUPDATEINSTALLTHREAD
 // -------------------------
 
-void *wxWebUpdateInstallThread::Entry()
-{
-	// we'll use wxPostEvent to post this event since this is the
-	// only thread-safe way to post events !
-	wxCommandEvent updatevent(wxWUIT_INSTALLATION_COMPLETE);
-
-	// this macro avoid the repetion of a lot of code;
+// this macro avoid the repetion of a lot of code;
 #define ABORT_INSTALL() {								\
 			wxLogDebug(wxT("wxWebUpdateInstallThread::Entry - INSTALLATION ABORTED !!!"));		\
 			m_bSuccess = FALSE;							\
@@ -403,10 +408,12 @@ void *wxWebUpdateInstallThread::Entry()
 			wxPostEvent(m_pHandler, updatevent);		\
 			continue;									\
 	}
-	
-	m_mStatus.Lock();
-	m_nStatus = wxWUITS_WAITING;
-	m_mStatus.Unlock();
+
+void *wxWebUpdateInstallThread::Entry()
+{
+	// we'll use wxPostEvent to post this event since this is the
+	// only thread-safe way to post events !
+	wxCommandEvent updatevent(wxWUIT_INSTALLATION_COMPLETE);
 
 	// begin our loop
 	while (!TestDestroy()) {
@@ -431,3 +438,53 @@ void *wxWebUpdateInstallThread::Entry()
 
 	return (void*)FALSE;
 }
+
+
+
+// -------------------------
+// wxWEBUPDATER
+// -------------------------
+
+void wxWebUpdater::OnUpdateExit(wxCommandEvent &)
+{
+ /*   wxWindowList::compatibility_iterator current = GetTopWindow()->GetChildren().GetFirst();
+    while (current)
+    {
+        wxWindow *childWin = current->GetData();
+		childWin->Close(true);
+        current = current->GetNext();
+    }*/
+	if (m_pWebUpdateDlg) {
+		m_pWebUpdateDlg->AbortDialog();
+		//wxSleep(300);
+		m_pWebUpdateDlg->Destroy();
+	}
+
+	wxTheApp->GetTopWindow()->Close(true);
+	//wxExit();
+	//OnFatalException();
+}
+
+void wxWebUpdater::OnUpdateExec(wxCommandEvent &ce)
+{
+	wxString cmd = ce.GetString();
+	int flags = ce.GetInt();
+
+	long res = ::wxExecute(cmd, flags);
+/*	if ((m_nExecFlag & wxEXEC_SYNC) && res != -1)
+		return TRUE;
+	if ((m_nExecFlag & wxEXEC_ASYNC) && res != 0)
+		return TRUE;
+	return FALSE;*/
+}
+
+void wxWebUpdater::OnWebUpdateDlgShow(wxCommandEvent &ce)
+{
+	m_pWebUpdateDlg = (wxWebUpdateDlg *)ce.GetClientData();
+}
+
+void wxWebUpdater::OnWebUpdateDlgDestroy(wxCommandEvent &ce)
+{
+	m_pWebUpdateDlg = NULL;
+}
+

@@ -82,14 +82,12 @@ public:
     // return: if OnInit() returns false, the application terminates)
     virtual bool OnInit();
 	int OnExit();
-	
-	void OnUpdateExit(wxCommandEvent &);
-	void OnUpdateExec(wxCommandEvent &);
+};
 
-	wxWebUpdateDlg *pWebUpdateDlg;
-
-private:
-    DECLARE_EVENT_TABLE()		// this is to process wxWUAE_EXIT events
+class MyWebUpdater : public wxWebUpdater
+{
+public:
+	virtual wxWebUpdateLocalPackageArray GetLocalPackages() const;
 };
 
 // ----------------------------------------------------------------------------
@@ -153,10 +151,6 @@ END_EVENT_TABLE()
 // wxGetApp() which will return the reference of the right type (i.e. MyApp and
 // not wxApp)
 IMPLEMENT_APP(MyApp)
-BEGIN_EVENT_TABLE(MyApp, wxApp)
-    EVT_COMMAND(wxID_ANY, wxWUAE_EXIT, MyApp::OnUpdateExit)
-    EVT_COMMAND(wxID_ANY, wxWUAR_EXECUTE, MyApp::OnUpdateExec)
-END_EVENT_TABLE()
 
 
 
@@ -194,7 +188,8 @@ bool MyApp::OnInit()
     // load our XRC file
     wxXmlResource::Get()->Load(wxT("../src/webupdatedlg.xrc"));
 	
-
+	// init our WebUpdater
+	wxWebUpdater::Set(new MyWebUpdater);
 
     // success: wxApp::OnRun() will be called which will enter the main message
     // loop and the application will run. If we returned false here, the
@@ -202,44 +197,21 @@ bool MyApp::OnInit()
     return true;
 }
 
-
 int MyApp::OnExit()
 {
 	delete wxWebUpdateInstaller::Set(NULL);
+	delete wxWebUpdater::Set(NULL);
 	return 0;
 }
 
-void MyApp::OnUpdateExit(wxCommandEvent &)
+wxWebUpdateLocalPackageArray MyWebUpdater::GetLocalPackages() const
 {
- /*   wxWindowList::compatibility_iterator current = GetTopWindow()->GetChildren().GetFirst();
-    while (current)
-    {
-        wxWindow *childWin = current->GetData();
-		childWin->Close(true);
-        current = current->GetNext();
-    }*/
-	if (pWebUpdateDlg) {
-		pWebUpdateDlg->EndModal(wxOK);
-		//wxSleep(300);
-		pWebUpdateDlg->Destroy();
-	}
+	wxWebUpdateLocalPackageArray ret;
 
-	GetTopWindow()->Close(true);
-	//wxExit();
-	//OnFatalException();
-}
+	// this sample has only one package to handle
+	ret.Add(wxWebUpdateLocalPackage(PACKAGE_NAME, VERSION));
 
-void MyApp::OnUpdateExec(wxCommandEvent &ce)
-{
-	wxString cmd = ce.GetString();
-	int flags = ce.GetInt();
-
-	long res = ::wxExecute(cmd, flags);
-/*	if ((m_nExecFlag & wxEXEC_SYNC) && res != -1)
-		return TRUE;
-	if ((m_nExecFlag & wxEXEC_ASYNC) && res != 0)
-		return TRUE;
-	return FALSE;*/
+	return ret;
 }
 
 
@@ -396,18 +368,10 @@ void MyFrame::OnUpdateCheckSimple(wxCommandEvent &)
 
 void MyFrame::OnUpdateCheckWithDlg(wxCommandEvent &)
 {
-	// this sample has only one package to handle
-	g_packageList[0].m_strName = PACKAGE_NAME;
-	g_packageList[0].m_version = VERSION;
-	
-	wxWebUpdateDlg *dlg = new wxWebUpdateDlg(this, APP_NAME, SCRIPT_LOCATION, g_packageList, 1);
-	wxGetApp().pWebUpdateDlg = dlg;
+	wxWebUpdateDlg *dlg = new wxWebUpdateDlg(this, APP_NAME, SCRIPT_LOCATION);	
 
-	dlg->Layout();
 	dlg->CenterOnScreen();
 	dlg->ShowModal();
 	dlg->Destroy();
-
-	wxGetApp().pWebUpdateDlg = NULL;
 }
 
