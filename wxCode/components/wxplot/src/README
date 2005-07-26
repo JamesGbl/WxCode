@@ -1,0 +1,45 @@
+Please, before to build the libraries edit the current Makefile (in
+this case (.Windows or .Linux), for a custom flags or paths.
+
+I think that is easy to write new Makefiles taken the existing:
+
+make
+
+make lib (to build the library - libplot.a)
+
+make install (to copy the needed files in the wxwindows path)
+
+make clean (to erase the object files)
+----------------------------------------------------------------
+To build the example, go to the demowxplot directory:
+
+make
+
+----------------------------------------------------------------
+SOME NOTES
+
+-The fonts file plxtnd5.fnt has to be inside the directory of the
+application (demo in the first case) (this is a plplot limitation, I think so).
+
+-You have to add the extra word -lplot to the link flags on your programs.
+----------------------------------------------------------------
+
+wxPlot constructor.
+
+- wxPlot(&dc, w, h);
+
+Where dc is a DrawCanvas object and w and h are the vertical and
+horizontal dimensions of the canvas respectively.
+
+- If you use the OnDraw method, don't forgot to delete the wxPlot
+  object at the end.
+
+  delete(wxplot) (for example).
+
+- For more information you can consult the web with links to more useful
+  documentation:
+  
+  http://personales.unican.es/carreracg/web/wxplot.html
+
+  german.carrera@unican.es
+
