@@ -19,11 +19,13 @@
 			<uri>http://wxcode.sourceforge.net/components/webupdate/simple-$(latest-version).zip</uri>
 			<platform name="msw"/>	
 			
-			<action file="$(thisfile)" where="$(newtempdir)">extract</action>
-			<action file="$(programdir)\replacer.exe" 
+			<actions>
+				<extract file="$(thisfile)" where="$(newtempdir)"/>
+				<run file="$(programdir)\replacer.exe" 
 					args="--pid $(pid) --from $(newtempdir) --to $(programdir)" 
-					flags="ASYNC">run</action>
-			<action flags="RESTART,ASKUSER">exit</action>
+					flags="ASYNC"/>
+				<exit flags="RESTART,ASKUSER"/>
+			</actions>
 
 	  </latest-download>
       <latest-download>
@@ -31,7 +33,8 @@
 			<!-- on unix-base OS we use .tar.gz archives -->
 			<uri>http://wxcode.sourceforge.net/components/webupdate/simple-$(latest-version).tar.gz</uri>
 			<platform name="gtk"/>
-			<action>run</action>
+			
+			<actions><run/></actions>
 	  </latest-download>
 
 	  <!-- description for this package; don't break lines or you'll get some empty spaces in the final description string -->

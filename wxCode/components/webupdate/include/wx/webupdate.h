@@ -28,11 +28,13 @@
 class WXDLLIMPEXP_WEBUPDATE wxDownloadThread;
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDownload;
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdatePackage;
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateLocalPackage;
 
 //! A global wxWebUpdateDownload variable which contains empty (and thus invalid)
 //! settings.
 extern WXDLLIMPEXP_DATA_WEBUPDATE(wxWebUpdateDownload) wxEmptyWebUpdateDownload;
 extern WXDLLIMPEXP_DATA_WEBUPDATE(wxWebUpdatePackage) wxEmptyWebUpdatePackage;
+extern WXDLLIMPEXP_DATA_WEBUPDATE(wxWebUpdateLocalPackage) wxEmptyWebUpdateLocalPackage;
 
 
 //! The possible values of the "platform" attribute of the
@@ -103,6 +105,10 @@ public:
 							const wxVersion &ver = wxEmptyVersion)
 		: m_strName(name), m_version(ver) {}
 	virtual ~wxWebUpdateLocalPackage() {}
+
+
+	bool IsOk() const
+		{ return !m_strName.IsEmpty() && !m_version.IsEmpty(); }
 
 private:
 	DECLARE_CLASS(wxWebUpdateLocalPackage)
@@ -397,6 +403,9 @@ protected:
     wxString m_strUpdateNotAvailableMsg;
 
 protected:
+
+	//! Parses the given <actions> node.
+	wxWebUpdateActionArray GetActionArray(const wxXmlNode *actions) const;
 
 	//! Creates a wxWebUpdatePackage from the given XML node.
 	//! The caller must delete the returned pointer.

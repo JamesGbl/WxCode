@@ -30,10 +30,10 @@
    The list of keywords which can be used is:
    
    - folders:   
-	 $(programdir) = the folder where the program executable is placed
-	 $(downloaddir) = the folder where the downloaded files are placed
+     $(programdir) = the folder where the program executable is placed
+     $(downloaddir) = the folder where the downloaded files are placed
      $(tempdir) = a temporary folder already existing and thus (probably) non-empty
-	 $(newtempdir) = a temporary folder which has been created by the WebUpdate and thus is empty
+     $(newtempdir) = a temporary folder which has been created by the WebUpdate and thus is empty
    
    - names:   
      $(appname) = the name of the application
@@ -45,7 +45,7 @@
    - these are available only after the relative tags:
      $(latest-version) = the version of the package (available only after <latest-version>)
      $(thisfile) = the name of the file of this package (available only after <uri>)
-	 $(id) = the ID name of this package (available only after <package id="">)
+     $(id) = the ID name of this package (available only after <package id="">)
 
 -->
 
@@ -118,7 +118,7 @@
 						  At least one "action" child tag must be present to specify the action to
 						  take at the end of the download.						  
 -->
-<!ELEMENT latest-download (uri, platform, md5?, action+)>
+<!ELEMENT latest-download (uri, platform, md5?, actions+)>
 
 
 <!-- DESCRIPTION tag: the description for this package; contained URLs will be automatically highlighted
@@ -167,20 +167,23 @@
 <!-- ACTION tag: allows to specify an action to take when the download is complete.
                  There are some built-in action handlers for "run", "extract", "exit"...				 
 -->
-<!ELEMENT action (#PCDATA)>
+<!ELEMENT actions (run|extract|exit)+>
 
 
 <!-- for "run" action tags -->
-<!ATTLIST action flags CDATA "ASYNC">				<!-- the possible flags are: ASYNC, SYNC -->
-<!ATTLIST action args CDATA "">					<!-- the arguments to give to the file to run -->
-<!ATTLIST action file CDATA #IMPLIED>				<!-- REQUIRED: the path+name of the file to run -->
+<!ELEMENT run EMPTY>
+<!ATTLIST run flags CDATA "ASYNC">				<!-- the possible flags are: ASYNC, SYNC -->
+<!ATTLIST run args CDATA "">					<!-- the arguments to give to the file to run -->
+<!ATTLIST run file CDATA #IMPLIED>				<!-- REQUIRED: the path+name of the file to run -->
 
 <!-- for "extract" action tags -->
-<!ATTLIST action where CDATA "$(programdir)">      <!-- the folder where extracted files will be put -->
-<!ATTLIST action file CDATA "$(thisfile)">         <!-- the file to extract -->
-<!ATTLIST action type CDATA "zip">					<!-- the possible values actually are: 'zip' -->
+<!ELEMENT extract EMPTY>
+<!ATTLIST extract where CDATA "$(programdir)">      <!-- the folder where extracted files will be put -->
+<!ATTLIST extract file CDATA "$(thisfile)">         <!-- the file to extract -->
+<!ATTLIST extract type CDATA "zip">					<!-- the possible values actually are: 'zip' -->
 
 <!-- for "exit" action tags -->
-<!ATTLIST action flags CDATA "ASKUSER">    		<!-- the possible flags are: ASKUSER, NOTIFYUSER, RESTART -->
+<!ELEMENT exit EMPTY>
+<!ATTLIST exit flags CDATA "ASKUSER">    		<!-- the possible flags are: ASKUSER, NOTIFYUSER, RESTART -->
 
 <!-- add the attributes for you own actions here -->

@@ -160,7 +160,7 @@ protected:
 
 protected:		// event handlers
 
-	void OnItemClick(wxCommandEvent &);
+	void OnItemSelect(wxListEvent &ev);
 
 public:
 
@@ -183,15 +183,14 @@ public:
 
 	//! Rebuilds the list of the packages inside the main wxListCtrl
 	//! using the #m_arrUpdatedPackages array. Removes any old content.
-	void RebuildPackageList();
+	void RebuildPackageList(bool bShowOnlyOutOfDate = TRUE);
+
+
+public:		// getters
 
 	//! Returns the array of updated packages parsed from the WebUpdate XML Script.
 	wxWebUpdatePackageArray GetRemotePackages() const
 		{ return m_arrUpdatedPackages; }
-
-	//! Sets the array of remote packages.
-	void SetRemotePackages(const wxWebUpdatePackageArray &arr)
-		{ m_arrUpdatedPackages = arr; }
 
 	//! Returns the array of updated packages taken from the wxWebUpdater.
 	wxWebUpdateLocalPackageArray GetLocalPackages() const
@@ -199,11 +198,20 @@ public:
 
 	//! Returns a pointer to the local package with the given name or NULL if such
 	//! package could not be found.
-	const wxWebUpdateLocalPackage *GetLocalPackage(const wxString &name) const;
+	wxWebUpdateLocalPackage &GetLocalPackage(const wxString &name);
 
 	//! Returns the remote package with the given name.
 	wxWebUpdatePackage &GetRemotePackage(const wxString &name);
 
+	//! Returns the comma-separed list of the required packages for the n-th package.
+	wxString GetRequiredList(int n) const
+		{ return m_arrUpdatedPackages[n].GetPrerequisites(); }
+
+public:		// setters
+
+	//! Sets the array of remote packages.
+	void SetRemotePackages(const wxWebUpdatePackageArray &arr)
+		{ m_arrUpdatedPackages = arr; }
 
 private:
 	DECLARE_CLASS(wxWebUpdateListCtrl)
@@ -225,6 +233,7 @@ protected:		// pointers to our controls
 	wxButton *m_pOkBtn, *m_pCancelBtn, *m_pShowHideAdvBtn;
 	wxGauge *m_pGauge;
 	wxTextCtrl *m_pDescription;
+	wxCheckBox *m_pShowOnlyOOD;
 
 	// our listctrl
 	wxWebUpdateListCtrl *m_pUpdatesList;

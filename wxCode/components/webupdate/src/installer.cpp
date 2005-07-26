@@ -470,7 +470,7 @@ void wxWebUpdater::OnUpdateExec(wxCommandEvent &ce)
 	wxString cmd = ce.GetString();
 	int flags = ce.GetInt();
 
-	long res = ::wxExecute(cmd, flags);
+	/*long res =*/ ::wxExecute(cmd, flags);
 /*	if ((m_nExecFlag & wxEXEC_SYNC) && res != -1)
 		return TRUE;
 	if ((m_nExecFlag & wxEXEC_ASYNC) && res != 0)
@@ -483,7 +483,7 @@ void wxWebUpdater::OnWebUpdateDlgShow(wxCommandEvent &ce)
 	m_pWebUpdateDlg = (wxWebUpdateDlg *)ce.GetClientData();
 }
 
-void wxWebUpdater::OnWebUpdateDlgDestroy(wxCommandEvent &ce)
+void wxWebUpdater::OnWebUpdateDlgDestroy(wxCommandEvent &)
 {
 	m_pWebUpdateDlg = NULL;
 }

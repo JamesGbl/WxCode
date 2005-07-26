@@ -52,7 +52,7 @@ WX_DEFINE_USER_EXPORTED_OBJARRAY(wxWebUpdateLocalPackageArray);
 // global objects
 wxWebUpdateDownload wxEmptyWebUpdateDownload(wxT("invalid"));
 wxWebUpdatePackage wxEmptyWebUpdatePackage(wxT("invalid"));
-
+wxWebUpdateLocalPackage wxEmptyWebUpdateLocalPackage(wxT("invalid"));
 
 
 
@@ -422,6 +422,42 @@ wxString wxWebUpdateXMLScript::DoKeywordSubstitution(const wxString &str) const
 	return text;
 }
 
+wxWebUpdateActionArray wxWebUpdateXMLScript::GetActionArray(const wxXmlNode *actions) const
+{	
+	wxWebUpdateActionArray ret;
+
+	if (actions->GetName() != wxT("actions"))
+		return ret;
+
+	// parse all action tags
+	wxXmlNode *child = actions->GetChildren();
+	while (child) {
+
+		wxString actname(GetNodeContent(child));
+		
+		// convert to a wxArrayString the properties
+		wxArrayString names, values;
+		wxXmlProperty *prop = child->GetProperties();
+		while (prop) {
+			
+			names.Add(prop->GetName());
+			
+			// the values can contain keywords to substitute
+			values.Add(DoKeywordSubstitution(prop->GetValue()));
+			prop = prop->GetNext();
+		}
+		
+		// add a new action			
+		wxWebUpdateAction *a = wxWebUpdateInstaller::Get()->CreateNewAction(actname, &names, &values);
+		if (a) 
+			ret.Add(a);
+		else
+			wxLogDebug(wxT("wxWebUpdateXMLScript::GetActionArray - unknown action: ") + actname);
+	}
+
+	return ret;
+}
+
 wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdownload) const
 {
 	if (latestdownload->GetName() != wxT("latest-download"))
@@ -447,9 +483,12 @@ wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdow
 			list[wxT("thisfile")] = list[wxT("downloaddir")] +
 				wxFileName::GetPathSeparator() + name;		// will be removed when exiting
 
-		} else if (child->GetName() == wxT("md5"))
+		} else if (child->GetName() == wxT("md5")) {
+
+			// this is the precomputed MD5 for this file
 			md5 = GetNodeContent(child);
-		else if (child->GetName() == wxT("platform")) {
+
+		} else if (child->GetName() == wxT("platform")) {
 
 			// search the "name" property
 			wxXmlProperty *prop = child->GetProperties();
@@ -459,28 +498,10 @@ wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdow
 				prop = prop->GetNext();
 			}
 
-		} else if (child->GetName() == wxT("action")) {
+		} else if (child->GetName() == wxT("actions")) {
 
-			// convert to a wxArrayString the properties
-			wxArrayString names, values;
-			wxXmlProperty *prop = child->GetProperties();
-			while (prop) {
-
-				names.Add(prop->GetName());
-
-				// the values can contain keywords to substitute
-				values.Add(DoKeywordSubstitution(prop->GetValue()));
-				prop = prop->GetNext();
-			}
-
-			// add a new action	
-			wxString actname(GetNodeContent(child));
-			wxWebUpdateAction *a = wxWebUpdateInstaller::Get()->CreateNewAction(
-											actname, &names, &values);
-			if (a) 
-				actions.Add(a);
-			else
-				wxLogDebug(wxT("wxWebUpdateXMLScript::GetDownload - unknown action: ") + actname);
+			// get the actions for this download
+			actions = GetActionArray(child);
 		}
 
 
@@ -554,6 +575,8 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) c
 				wxLogDebug(wxT("wxWebUpdateXMLScript::GetPackage - skipping an invalid <latest-download> tag"));
 
 		} else if (child->GetName() == wxT("description")) {
+
+			// do keywords substitution in the description
 			ret->m_strDescription = DoKeywordSubstitution(GetNodeContent(child));
 		}
 
