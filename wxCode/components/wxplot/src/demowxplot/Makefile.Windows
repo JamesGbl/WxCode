@@ -1,0 +1,28 @@
+#Created by Germán Carrera 2005
+#Under the GNU license
+
+#wxwindows path installed
+WXDIR = /c/wxWindows-2.4.2
+
+CPLUS=g++
+
+#flags in a windows system (I will put other examples)
+
+WXCFLAGS = -c  -DWINVER=0x0400 -D__WIN95__ -D__GNUWIN32__ -I$(WXDIR)/lib/mswd -I$(WXDIR)/include -I$(WXDIR)/contrib/include -I$(WXDIR)/src/regex -I$(WXDIR)src/png -I$(WXDIR)src/jpeg -I$(WXDIR)src/zlib -I$(WXDIR)src/tiff     -g     -DSTRICT -DHAVE_W32API_H -D__WXMSW__ -D__WINDOWS__  -Wall -fno-rtti -fno-exceptions 
+
+WXLFLAGS1 = -Wl,--subsystem,windows -mwindows -L$(WXDIR)/lib -L$(WXDIR)/contrib/lib  -o
+
+WXLFLAGS2 = $(WXDIR)/lib/libwxmsw.a -lregex -lpng -ljpeg -lzlib -ltiff -lstdc++ -lgcc -lodbc32 -lwsock32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lctl3d32 -lodbc32 -ladvapi32 -lodbc32 -lwsock32 -lopengl32 -lglu32 -lole32 -loleaut32 -luuid  -mwindows -Wl,--subsystem,windows -mwindows -lwxmsw -lplot
+
+WXCFLAGS3 = --include-dir $(WXDIR)/include  --define __WIN32__ --define __WIN95__ --define __GNUWIN32__
+
+OFILES = demowxplot.o 
+
+demowxplot.exe: demowxplot.o
+	$(CPLUS) $(WXLFLAGS1) demowxplot.exe demowxplot.o $(WXLFLAGS2)
+demowxplot.o: demowxplot.cpp
+	$(CPLUS) $(WXCFLAGS) demowxplot.cpp    
+
+clean:
+	rm -f *.o *.exe
+	

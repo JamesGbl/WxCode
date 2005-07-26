@@ -1,0 +1,23 @@
+#Created by Germán Carrera 2005
+#Under the GNU license
+
+#wxwindows path installed
+WXDIR = /usr/lib/wx/include/gtk-2.4
+
+CPLUS=g++
+
+#flags in a Linux system (I will put other examples)-c 
+
+WXCFLAGS = -c `wx-config --cxxflags`
+
+WXLFLAGS = `wx-config --libs`
+
+OFILES = demowxplot.o 
+
+demowxplot: demowxplot.o
+	$(CPLUS) -o demowxplot demowxplot.o $(WXLFLAGS) -lplot
+demowxplot.o: demowxplot.cpp
+	$(CPLUS) $(WXCFLAGS) demowxplot.cpp    
+
+clean:
+	rm -f *.o demowxplot

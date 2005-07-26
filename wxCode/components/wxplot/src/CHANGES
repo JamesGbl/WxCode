@@ -1,0 +1,65 @@
+/*                                      
+
+CHANGES --- Germán Carrera Corraleche
+
+
+*/
+-New Make file, some errors fixed. (See code)
+
+-In the next files.
+
+---------------------------------
+  plConfig.h 
+---------------------------------
+  Added the last lines.
+  
+  #define VERSION "wxPlot-plplot-5.5.1"
+  #define BUILD_DIR "./"
+---------------------------------
+  plDevs.h
+---------------------------------  
+  Added the line
+  
+  #define PLD_wxwin
+---------------------------------
+  drivers.h
+---------------------------------
+  Added the next declaration
+
+  void plD_dispatch_init_wxwin	( PLDispatchTable *pdt );
+---------------------------------
+  plcore.h
+---------------------------------
+  The entry in the dispatch table without dynamic drivers
+
+  #if defined(PLD_wxwin)
+    plD_dispatch_init_wxwin,
+  #endif
+---------------------------------
+  plstrm.h
+---------------------------------
+  New data inside of the structure.
+  
+  void *dc;
+  
+  A void pointer to link using a cast with the draw canvas (wxDC).
+---------------------------------
+  plctrl.h
+---------------------------------
+  In this case the search path for the fonts is the current directory of the application.
+  
+  I've put this.
+
+  #undef PLPLOT_BIN_ENV         
+  #undef PLPLOT_LIB_ENV          
+  #undef PLPLOT_TCL_ENV          
+  #undef PLPLOT_HOME_ENV 
+
+----------------------------------
+./drivers/wxwin.cpp
+---------------------------------- 
+----------------------------------
+./bindings/wxwindows/wxPlot.cpp
+----------------------------------
+  Based in the code of Frank Huebner and plstream.cc.
+  Added the new functions of plplot version 5.5.1 with some changes and updates (see code and plplot documentation).
