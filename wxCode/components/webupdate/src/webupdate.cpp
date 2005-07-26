@@ -433,7 +433,7 @@ wxWebUpdateActionArray wxWebUpdateXMLScript::GetActionArray(const wxXmlNode *act
 	wxXmlNode *child = actions->GetChildren();
 	while (child) {
 
-		wxString actname(GetNodeContent(child));
+		wxString actname(child->GetName());
 		
 		// convert to a wxArrayString the properties
 		wxArrayString names, values;
@@ -453,6 +453,8 @@ wxWebUpdateActionArray wxWebUpdateXMLScript::GetActionArray(const wxXmlNode *act
 			ret.Add(a);
 		else
 			wxLogDebug(wxT("wxWebUpdateXMLScript::GetActionArray - unknown action: ") + actname);
+
+		child = child->GetNext();
 	}
 
 	return ret;
