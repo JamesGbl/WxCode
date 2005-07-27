@@ -24,6 +24,7 @@
 #include <wx/dialog.h>
 #include <wx/panel.h>
 #include <wx/checkbox.h>
+#include <wx/textctrl.h>
 
 // defined later
 class wxStaticText;

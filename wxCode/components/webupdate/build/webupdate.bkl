@@ -38,11 +38,8 @@
 
 	<!-- The real target: wxcode.bkl does not declare a real target but a template called
 	     "complib". In this way modifications are allowed to the basic template. -->
-	<lib id="webupdate_lib" template="complib" cond="WX_SHARED=='0'">
-		<install-to>$(LIBDIR)</install-to>
-	</lib>
-	<dll id="webupdate_dll" template="compdll" cond="WX_SHARED=='1'">
-		<install-to>$(LIBDIR)</install-to>
+	<lib id="webupdate_lib" template="complib" cond="WX_SHARED=='0'"/>
+	<dll id="webupdate_dll" template="compdll" cond="WX_SHARED=='1'">		
 		<wx-lib>html</wx-lib>
 		<wx-lib>adv</wx-lib>
 		<wx-lib>xrc</wx-lib>
@@ -73,11 +70,20 @@
 	<!-- =================================== -->
 	
 	<exe id="replacer">
-	    <app-type>console</app-type>
+	    <if cond="TARGETING_WIN32=='1'">
+			<app-type>gui</app-type>
+			<sys-lib>user32</sys-lib>		<!-- for the MessageBox() API -->
+			<sys-lib>shell32</sys-lib>		<!-- for the ShellExecute() API -->
+		</if>
+		<if cond="TARGETING_WIN32=='0'">
+			<app-type>console</app-type>
+		</if>
+		
 		<exename>replacer</exename>
 		<sources>../src/replacer/replacer.c</sources>
-		<dirname>..</dirname>
+		<dirname>..</dirname>		
 		
+		<if cond="FORMAT!='autoconf'">
 		<define>
             $(substituteFromDict(WX_DEBUG,{'1':'','0':'NDEBUG'}))
         </define>
@@ -87,6 +93,7 @@
         <debug-info>
             $(substituteFromDict(WX_DEBUG,{'1':'on','0':'off'}))
         </debug-info>
+		</if>
 	</exe>
 	
 	<if cond="TARGETING_IDE=='0' and TARGETING_WIN32=='1'">

@@ -46,8 +46,8 @@
 
 // includes
 #include "wx/md5.h"
-#include "wx/wfstream.h"
 
+// C headers for MD5
 #include <sys/types.h>
 #include <string.h>
 #include <stdio.h>

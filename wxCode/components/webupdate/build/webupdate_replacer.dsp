@@ -2,7 +2,7 @@
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
-# TARGTYPE "Win32 (x86) Console Application" 0x0103
+# TARGTYPE "Win32 (x86) Application" 0x0101
 
 CFG=replacer - Win32 Default
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
@@ -17,14 +17,14 @@ CFG=replacer - Win32 Default
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "replacer - Win32 DLL Unicode Debug" (based on "Win32 (x86) Console Application")
-!MESSAGE "replacer - Win32 DLL Unicode" (based on "Win32 (x86) Console Application")
-!MESSAGE "replacer - Win32 DLL Debug" (based on "Win32 (x86) Console Application")
-!MESSAGE "replacer - Win32 DLL" (based on "Win32 (x86) Console Application")
-!MESSAGE "replacer - Win32 Unicode Debug" (based on "Win32 (x86) Console Application")
-!MESSAGE "replacer - Win32 Unicode" (based on "Win32 (x86) Console Application")
-!MESSAGE "replacer - Win32 Debug" (based on "Win32 (x86) Console Application")
-!MESSAGE "replacer - Win32 Default" (based on "Win32 (x86) Console Application")
+!MESSAGE "replacer - Win32 DLL Unicode Debug" (based on "Win32 (x86) Application")
+!MESSAGE "replacer - Win32 DLL Unicode" (based on "Win32 (x86) Application")
+!MESSAGE "replacer - Win32 DLL Debug" (based on "Win32 (x86) Application")
+!MESSAGE "replacer - Win32 DLL" (based on "Win32 (x86) Application")
+!MESSAGE "replacer - Win32 Unicode Debug" (based on "Win32 (x86) Application")
+!MESSAGE "replacer - Win32 Unicode" (based on "Win32 (x86) Application")
+!MESSAGE "replacer - Win32 Debug" (based on "Win32 (x86) Application")
+!MESSAGE "replacer - Win32 Default" (based on "Win32 (x86) Application")
 !MESSAGE 
 
 # Begin Project
@@ -32,6 +32,7 @@ CFG=replacer - Win32 Default
 # PROP Scc_ProjName ""
 # PROP Scc_LocalPath ""
 CPP=cl.exe
+MTL=midl.exe
 RSC=rc.exe
 
 !IF  "$(CFG)" == "replacer - Win32 DLL Unicode Debug"
@@ -46,16 +47,18 @@ RSC=rc.exe
 # PROP Output_Dir ".."
 # PROP Intermediate_Dir "msvc6prj\replacer"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /Zi /Gm /GZ /Fd..\replacer.pdb /D "WIN32" /D "_CONSOLE" /D "_DEBUG" /c
-# ADD CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /Zi /Gm /GZ /Fd..\replacer.pdb /D "WIN32" /D "_CONSOLE" /D "_DEBUG" /c
-# ADD BASE RSC /l 0x409 /d "_CONSOLE" /d _DEBUG
-# ADD RSC /l 0x409 /d "_CONSOLE" /d _DEBUG
+# ADD BASE CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /Zi /Gm /GZ /Fd..\replacer.pdb /D "WIN32" /D "_WINDOWS" /D "_DEBUG" /c
+# ADD CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /Zi /Gm /GZ /Fd..\replacer.pdb /D "WIN32" /D "_WINDOWS" /D "_DEBUG" /c
+# ADD BASE MTL /nologo /D "WIN32" /D "_WINDOWS" /D "_DEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "WIN32" /D "_WINDOWS" /D "_DEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /d "_WINDOWS" /d _DEBUG
+# ADD RSC /l 0x409 /d "_WINDOWS" /d _DEBUG
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:console /debug
-# ADD LINK32 /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:console /debug
+# ADD BASE LINK32 user32.lib shell32.lib /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:windows /debug
+# ADD LINK32 user32.lib shell32.lib /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:windows /debug
 
 !ELSEIF  "$(CFG)" == "replacer - Win32 DLL Unicode"
 
@@ -69,16 +72,18 @@ LINK32=link.exe
 # PROP Output_Dir ".."
 # PROP Intermediate_Dir "msvc6prj\replacer"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /Fd..\replacer.pdb /D "WIN32" /D "_CONSOLE" /D "NDEBUG" /c
-# ADD CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /Fd..\replacer.pdb /D "WIN32" /D "_CONSOLE" /D "NDEBUG" /c
-# ADD BASE RSC /l 0x409 /d "_CONSOLE" /d NDEBUG
-# ADD RSC /l 0x409 /d "_CONSOLE" /d NDEBUG
+# ADD BASE CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /Fd..\replacer.pdb /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /c
+# ADD CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /Fd..\replacer.pdb /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /c
+# ADD BASE MTL /nologo /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /d "_WINDOWS" /d NDEBUG
+# ADD RSC /l 0x409 /d "_WINDOWS" /d NDEBUG
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:console
-# ADD LINK32 /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:console
+# ADD BASE LINK32 user32.lib shell32.lib /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:windows
+# ADD LINK32 user32.lib shell32.lib /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:windows
 
 !ELSEIF  "$(CFG)" == "replacer - Win32 DLL Debug"
 
@@ -92,16 +97,18 @@ LINK32=link.exe
 # PROP Output_Dir ".."
 # PROP Intermediate_Dir "msvc6prj\replacer"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /Zi /Gm /GZ /Fd..\replacer.pdb /D "WIN32" /D "_CONSOLE" /D "_DEBUG" /c
-# ADD CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /Zi /Gm /GZ /Fd..\replacer.pdb /D "WIN32" /D "_CONSOLE" /D "_DEBUG" /c
-# ADD BASE RSC /l 0x409 /d "_CONSOLE" /d _DEBUG
-# ADD RSC /l 0x409 /d "_CONSOLE" /d _DEBUG
+# ADD BASE CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /Zi /Gm /GZ /Fd..\replacer.pdb /D "WIN32" /D "_WINDOWS" /D "_DEBUG" /c
+# ADD CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /Zi /Gm /GZ /Fd..\replacer.pdb /D "WIN32" /D "_WINDOWS" /D "_DEBUG" /c
+# ADD BASE MTL /nologo /D "WIN32" /D "_WINDOWS" /D "_DEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "WIN32" /D "_WINDOWS" /D "_DEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /d "_WINDOWS" /d _DEBUG
+# ADD RSC /l 0x409 /d "_WINDOWS" /d _DEBUG
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:console /debug
-# ADD LINK32 /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:console /debug
+# ADD BASE LINK32 user32.lib shell32.lib /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:windows /debug
+# ADD LINK32 user32.lib shell32.lib /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:windows /debug
 
 !ELSEIF  "$(CFG)" == "replacer - Win32 DLL"
 
@@ -115,16 +122,18 @@ LINK32=link.exe
 # PROP Output_Dir ".."
 # PROP Intermediate_Dir "msvc6prj\replacer"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /Fd..\replacer.pdb /D "WIN32" /D "_CONSOLE" /D "NDEBUG" /c
-# ADD CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /Fd..\replacer.pdb /D "WIN32" /D "_CONSOLE" /D "NDEBUG" /c
-# ADD BASE RSC /l 0x409 /d "_CONSOLE" /d NDEBUG
-# ADD RSC /l 0x409 /d "_CONSOLE" /d NDEBUG
+# ADD BASE CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /Fd..\replacer.pdb /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /c
+# ADD CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /Fd..\replacer.pdb /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /c
+# ADD BASE MTL /nologo /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /d "_WINDOWS" /d NDEBUG
+# ADD RSC /l 0x409 /d "_WINDOWS" /d NDEBUG
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:console
-# ADD LINK32 /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:console
+# ADD BASE LINK32 user32.lib shell32.lib /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:windows
+# ADD LINK32 user32.lib shell32.lib /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:windows
 
 !ELSEIF  "$(CFG)" == "replacer - Win32 Unicode Debug"
 
@@ -138,16 +147,18 @@ LINK32=link.exe
 # PROP Output_Dir ".."
 # PROP Intermediate_Dir "msvc6prj\replacer"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /Zi /Gm /GZ /Fd..\replacer.pdb /D "WIN32" /D "_CONSOLE" /D "_DEBUG" /c
-# ADD CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /Zi /Gm /GZ /Fd..\replacer.pdb /D "WIN32" /D "_CONSOLE" /D "_DEBUG" /c
-# ADD BASE RSC /l 0x409 /d "_CONSOLE" /d _DEBUG
-# ADD RSC /l 0x409 /d "_CONSOLE" /d _DEBUG
+# ADD BASE CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /Zi /Gm /GZ /Fd..\replacer.pdb /D "WIN32" /D "_WINDOWS" /D "_DEBUG" /c
+# ADD CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /Zi /Gm /GZ /Fd..\replacer.pdb /D "WIN32" /D "_WINDOWS" /D "_DEBUG" /c
+# ADD BASE MTL /nologo /D "WIN32" /D "_WINDOWS" /D "_DEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "WIN32" /D "_WINDOWS" /D "_DEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /d "_WINDOWS" /d _DEBUG
+# ADD RSC /l 0x409 /d "_WINDOWS" /d _DEBUG
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:console /debug
-# ADD LINK32 /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:console /debug
+# ADD BASE LINK32 user32.lib shell32.lib /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:windows /debug
+# ADD LINK32 user32.lib shell32.lib /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:windows /debug
 
 !ELSEIF  "$(CFG)" == "replacer - Win32 Unicode"
 
@@ -161,16 +172,18 @@ LINK32=link.exe
 # PROP Output_Dir ".."
 # PROP Intermediate_Dir "msvc6prj\replacer"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /Fd..\replacer.pdb /D "WIN32" /D "_CONSOLE" /D "NDEBUG" /c
-# ADD CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /Fd..\replacer.pdb /D "WIN32" /D "_CONSOLE" /D "NDEBUG" /c
-# ADD BASE RSC /l 0x409 /d "_CONSOLE" /d NDEBUG
-# ADD RSC /l 0x409 /d "_CONSOLE" /d NDEBUG
+# ADD BASE CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /Fd..\replacer.pdb /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /c
+# ADD CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /Fd..\replacer.pdb /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /c
+# ADD BASE MTL /nologo /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /d "_WINDOWS" /d NDEBUG
+# ADD RSC /l 0x409 /d "_WINDOWS" /d NDEBUG
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:console
-# ADD LINK32 /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:console
+# ADD BASE LINK32 user32.lib shell32.lib /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:windows
+# ADD LINK32 user32.lib shell32.lib /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:windows
 
 !ELSEIF  "$(CFG)" == "replacer - Win32 Debug"
 
@@ -184,16 +197,18 @@ LINK32=link.exe
 # PROP Output_Dir ".."
 # PROP Intermediate_Dir "msvc6prj\replacer"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /Zi /Gm /GZ /Fd..\replacer.pdb /D "WIN32" /D "_CONSOLE" /D "_DEBUG" /c
-# ADD CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /Zi /Gm /GZ /Fd..\replacer.pdb /D "WIN32" /D "_CONSOLE" /D "_DEBUG" /c
-# ADD BASE RSC /l 0x409 /d "_CONSOLE" /d _DEBUG
-# ADD RSC /l 0x409 /d "_CONSOLE" /d _DEBUG
+# ADD BASE CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /Zi /Gm /GZ /Fd..\replacer.pdb /D "WIN32" /D "_WINDOWS" /D "_DEBUG" /c
+# ADD CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /Zi /Gm /GZ /Fd..\replacer.pdb /D "WIN32" /D "_WINDOWS" /D "_DEBUG" /c
+# ADD BASE MTL /nologo /D "WIN32" /D "_WINDOWS" /D "_DEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "WIN32" /D "_WINDOWS" /D "_DEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /d "_WINDOWS" /d _DEBUG
+# ADD RSC /l 0x409 /d "_WINDOWS" /d _DEBUG
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:console /debug
-# ADD LINK32 /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:console /debug
+# ADD BASE LINK32 user32.lib shell32.lib /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:windows /debug
+# ADD LINK32 user32.lib shell32.lib /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:windows /debug
 
 !ELSEIF  "$(CFG)" == "replacer - Win32 Default"
 
@@ -207,16 +222,18 @@ LINK32=link.exe
 # PROP Output_Dir ".."
 # PROP Intermediate_Dir "msvc6prj\replacer"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /Fd..\replacer.pdb /D "WIN32" /D "_CONSOLE" /D "NDEBUG" /c
-# ADD CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /Fd..\replacer.pdb /D "WIN32" /D "_CONSOLE" /D "NDEBUG" /c
-# ADD BASE RSC /l 0x409 /d "_CONSOLE" /d NDEBUG
-# ADD RSC /l 0x409 /d "_CONSOLE" /d NDEBUG
+# ADD BASE CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /Fd..\replacer.pdb /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /c
+# ADD CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /Fd..\replacer.pdb /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /c
+# ADD BASE MTL /nologo /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /d "_WINDOWS" /d NDEBUG
+# ADD RSC /l 0x409 /d "_WINDOWS" /d NDEBUG
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:console
-# ADD LINK32 /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:console
+# ADD BASE LINK32 user32.lib shell32.lib /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:windows
+# ADD LINK32 user32.lib shell32.lib /nologo /machine:i386 /out:"..\replacer.exe" /subsystem:windows
 
 !ENDIF
 

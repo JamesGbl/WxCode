@@ -98,6 +98,10 @@ ADVANCED_1_5_0_OBJECTS =  \
 @COND_WX_SHARED_0@__install_webupdate_lib___depname = install_webupdate_lib
 @COND_WX_SHARED_1@__webupdate_dll___depname = \
 @COND_WX_SHARED_1@	../lib/$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf3)
+@COND_WX_SHARED_1@__install_webupdate_dll___depname = install_webupdate_dll
+COND_PLATFORM_MACOSX_1___webupdate_dll___macinstnamecmd = -install_name \
+	$(libdir)/$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf2)
+@COND_PLATFORM_MACOSX_1@__webupdate_dll___macinstnamecmd = $(COND_PLATFORM_MACOSX_1___webupdate_dll___macinstnamecmd)
 @COND_PLATFORM_OS2_1@__webupdate_dll___importlib = \
 @COND_PLATFORM_OS2_1@	-import \
 @COND_PLATFORM_OS2_1@	../lib/$(LIBPREFIX)webupdate.$(DLLIMP_SUFFIX)
@@ -140,10 +144,6 @@ COND_USE_SOSYMLINKS_1___webupdate_dll___so_symlinks_inst_cmd = rm -f \
 @COND_USE_SOSYMLINKS_1@__webupdate_dll___so_symlinks_inst_cmd = $(COND_USE_SOSYMLINKS_1___webupdate_dll___so_symlinks_inst_cmd)
 @COND_PLATFORM_MACOSX_1@__webupdate_dll___macver = \
 @COND_PLATFORM_MACOSX_1@	-compatibility_version 0 -current_version 0
-@COND_WX_SHARED_1@__install_webupdate_dll___depname = install_webupdate_dll
-COND_PLATFORM_MACOSX_1___webupdate_dll___macinstnamecmd = -install_name \
-	$(libdir)/$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf2)
-@COND_PLATFORM_MACOSX_1@__webupdate_dll___macinstnamecmd = $(COND_PLATFORM_MACOSX_1___webupdate_dll___macinstnamecmd)
 @COND_PLATFORM_MAC_1@__replacer___mac_setfilecmd = \
 @COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL replacer$(EXEEXT)
 @COND_PLATFORM_WIN32_1@__simple_1_0_0___win32rc = simple_1_0_0_minimal_rc.o
@@ -282,7 +282,7 @@ cleandocs:
 @COND_WX_SHARED_0@	$(INSTALL_DATA) ../lib/$(LIBPREFIX)webupdate$(LIBEXT) $(DESTDIR)$(libdir)
 
 @COND_WX_SHARED_1@../lib/$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf3): $(WEBUPDATE_DLL_OBJECTS)
-@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(WEBUPDATE_DLL_OBJECTS) $(LDFLAGS) -L../lib $(__webupdate_dll___importlib) $(__webupdate_dll___soname_flags) $(__webupdate_dll___macver) $(__webupdate_dll___macinstnamecmd)  $(WX_LIBS)
+@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(WEBUPDATE_DLL_OBJECTS) $(LDFLAGS) -L../lib $(__webupdate_dll___macinstnamecmd) $(__webupdate_dll___importlib) $(__webupdate_dll___soname_flags) $(__webupdate_dll___macver)  $(WX_LIBS)
 @COND_WX_SHARED_1@	
 @COND_WX_SHARED_1@	$(__webupdate_dll___so_symlinks_cmd)
 

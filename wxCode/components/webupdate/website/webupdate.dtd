@@ -37,10 +37,11 @@
    
    - names:   
      $(appname) = the name of the application
-     $(framename) = the label of the main frame of the application
+     $(framename) = the label of the main frame of the application     
    
    - miscellaneous:
      $(pid) = the process ID of the application
+     $(program) = the path of the file and the filename of the program executable
 	 
    - these are available only after the relative tags:
      $(latest-version) = the version of the package (available only after <latest-version>)
@@ -184,6 +185,6 @@
 
 <!-- for "exit" action tags -->
 <!ELEMENT exit EMPTY>
-<!ATTLIST exit flags CDATA "ASKUSER">    		<!-- the possible flags are: ASKUSER, NOTIFYUSER, RESTART -->
+<!ATTLIST exit flags CDATA "NOTIFYUSER">    		<!-- the possible flags are:  NOTIFYUSER  -->
 
 <!-- add the attributes for you own actions here -->

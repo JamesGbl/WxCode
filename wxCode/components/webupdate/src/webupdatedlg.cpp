@@ -134,7 +134,7 @@ void wxWebUpdateListCtrl::RebuildPackageList(bool bShowOnlyOutOfDate)
 	for (int i=0; i < (int)m_arrUpdatedPackages.GetCount(); i++, idx++) {
 
 		wxWebUpdatePackage &curr = m_arrUpdatedPackages.Item(i);		
-		wxLogDebug(wxT("wxWebUpdateDlg::RebuildPackageList - Adding the '") + 
+		wxLogDebug(wxT("wxWebUpdateListCtrl::RebuildPackageList - Adding the '") + 
 			curr.GetName() + wxT("' package to the wxListCtrl"));
 
 
@@ -460,11 +460,15 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
 		AbortDialog();		// this is a unrecoverable error !
 		return;
 	}
+
+	wxLogDebug(wxT("wxWebUpdateDlg::OnScriptDownload - XML script loaded successfully"));
 	
 	// now load all the packages we need in local cache
 	wxWebUpdatePackageArray arr = m_xmlScript.GetAllPackages();
+	wxLogDebug(wxT("wxWebUpdateDlg::OnScriptDownload - caching file sizes"));
 	for (int i=0; i < (int)arr.GetCount(); i++)
 		arr[i].CacheDownloadSizes();
+	wxLogDebug(wxT("wxWebUpdateDlg::OnScriptDownload - caching of file sizes completed"));
 	
 	// is everything up to date ?
 	bool allupdated = TRUE;
@@ -518,16 +522,21 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
 
 void wxWebUpdateDlg::AbortDialog()
 {
+	wxLogDebug(wxT("wxWebUpdateDlg::AbortDialog - stopping the download thread"));
 	if (m_dThread->IsPaused())
 		m_dThread->Run();		// we need the thread running if we want to delete it !
 	if (m_dThread->IsRunning())
 		m_dThread->Delete();
+	wxLogDebug(wxT("wxWebUpdateDlg::AbortDialog - stopped & deleted the download thread"));
 
+	wxLogDebug(wxT("wxWebUpdateDlg::AbortDialog - stopping the installer thread"));
 	if (m_iThread->IsPaused())
 		m_iThread->Run();		// we need the thread running if we want to delete it !
 	if (m_iThread->IsRunning())
 		m_iThread->Delete();
+	wxLogDebug(wxT("wxWebUpdateDlg::AbortDialog - stopped & deleted the installer thread"));
 
+	m_nStatus = wxWUDS_UNDEFINED;
 	EndModal(wxCANCEL);
 }
 

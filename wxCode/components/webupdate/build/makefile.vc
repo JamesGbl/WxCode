@@ -76,7 +76,7 @@ WEBUPDATE_DLL_OBJECTS =  \
 	msvc\webupdate_dll_md5.obj \
 	msvc\webupdate_dll_installer.obj \
 	msvc\webupdate_dll_download.obj
-REPLACER_CFLAGS = /MD$(VAR_19) /DWIN32 /D_CONSOLE $(____WX_DEBUG_27_p) $(VAR) \
+REPLACER_CFLAGS = /MD$(VAR_19) /DWIN32 /D_WINDOWS $(____WX_DEBUG_27_p) $(VAR) \
 	$(VAR_16) $(VAR_18) /Fd..\replacer.pdb $(CPPFLAGS) $(CFLAGS)
 REPLACER_OBJECTS =  \
 	msvc\replacer_replacer.obj
@@ -336,8 +336,8 @@ cleandocs:
 !endif
 
 ..\replacer.exe: $(REPLACER_OBJECTS)
-	link /NOLOGO /OUT:$@ $(LDFLAGS) /SUBSYSTEM:CONSOLE $(VAR_17) @<<
-	$(REPLACER_OBJECTS)
+	link /NOLOGO /OUT:$@ $(LDFLAGS) /SUBSYSTEM:WINDOWS $(VAR_17) @<<
+	$(REPLACER_OBJECTS)  user32.lib shell32.lib
 <<
 
 ..\samples\simple\v1.0.0\: ..\replacer.exe

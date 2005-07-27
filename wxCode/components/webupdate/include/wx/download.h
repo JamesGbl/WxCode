@@ -137,7 +137,8 @@ public:
 		: wxThread(wxTHREAD_JOINABLE), m_pHandler(dlg), m_strURI(uri), 
 		  m_strOutput(outfile), m_strResName(resname)
 		{ m_bSuccess=FALSE; m_dtStart = wxDateTime::UNow(); m_nFileCount=0; 
-		  m_nStatus = wxDTS_WAITING; }
+		  m_nStatus = wxDTS_WAITING; m_nFinalSize = 0; m_nCurrentSize = 0; }
+
 	virtual ~wxDownloadThread() {}
 
     //! Downloads the file and then sends the wxDT_NOTIFICATION event

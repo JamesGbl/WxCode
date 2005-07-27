@@ -24,7 +24,11 @@
 #define APP_NAME			wxT("wxWebUpdate SIMPLE sample")
 #define PACKAGE_NUM			1
 #define PACKAGE_NAME		wxT("simple")	// just to show this can be different from APP_NAME
-#define SCRIPT_LOCATION		wxT("http://wxcode.sourceforge.net/components/webupdate/script1.xml")
+#define SCRIPT_LOCATION		wxT("file://localhost/e:/wxcode/components/webupdate/website/script1.xml")
+
+//wxFileSystem::FileNameToURL(wxFileName(wxT("e:\\wxCode\\components\\webupdate\\website\\script1.xml")))
+
+//wxT("file:///e:/wxcode/components/webupdate/website/script1.xml")
 
 // our list of local packages; used only by wxWebUpdateDlg.
 wxWebUpdateLocalPackage g_packageList[PACKAGE_NUM];

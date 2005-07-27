@@ -345,8 +345,8 @@ cleandocs:
 !endif
 
 ..\replacer.exe: $(REPLACER_OBJECTS)
-	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -ap $(VAR_9) @&&|
-	c0x32.obj $(REPLACER_OBJECTS),$@,, import32.lib cw32.lib,,
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -aa $(VAR_9) @&&|
+	c0w32.obj $(REPLACER_OBJECTS),$@,, user32.lib shell32.lib import32.lib cw32.lib,,
 |
 
 ..\samples\simple\v1.0.0\: ..\replacer.exe

@@ -43,6 +43,8 @@
 
 // wxWidgets headers
 #include "wx/webupdatedef.h"		// for the WXDLLIMPEXP_WEBUPDATE macro
+#include "wx/string.h"
+#include "wx/wfstream.h"
 
 
 

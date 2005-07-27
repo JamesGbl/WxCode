@@ -34,6 +34,8 @@
 #include <wx/utils.h>
 #include <wx/archive.h>
 #include <wx/zipstrm.h>
+#include <wx/msgdlg.h>
+#include <wx/app.h>
 
 
 // wxWidgets RTTI
@@ -310,6 +312,109 @@ bool wxWebUpdateActionExit::SetProperties(const wxArrayString &propnames,
 // wxWEBUPDATEINSTALLER
 // ---------------------
 
+#include "wx/filename.h"
+
+wxString GetExecutablePath()
+{
+    static bool found = false;
+    static wxString path;
+
+    if (found)
+        return path;
+    else
+    {
+#ifdef __WXMSW__
+
+        wxChar buf[512];
+        *buf = '\0';
+#if wxUSE_UNICODE
+		GetModuleFileNameW
+#else
+		GetModuleFileNameA
+#endif
+			(NULL, buf, 511);
+        path = buf;
+
+#elif defined(__WXMAC__)
+
+        ProcessInfoRec processinfo;
+        ProcessSerialNumber procno ;
+        FSSpec fsSpec;
+
+        procno.highLongOfPSN = NULL ;
+        procno.lowLongOfPSN = kCurrentProcess ;
+        processinfo.processInfoLength = sizeof(ProcessInfoRec);
+        processinfo.processName = NULL;
+        processinfo.processAppSpec = &fsSpec;
+
+        GetProcessInformation( &procno , &processinfo ) ;
+        path = wxMacFSSpec2MacFilename(&fsSpec);
+#else
+        wxString argv0 = wxTheApp->argv[0];
+
+        if (wxIsAbsolutePath(argv0))
+            path = argv0;
+        else
+        {
+            wxPathList pathlist;
+            pathlist.AddEnvList(wxT("PATH"));
+            path = pathlist.FindAbsoluteValidPath(argv0);
+        }
+
+        wxFileName filename(path);
+        filename.Normalize();
+        path = filename.GetFullPath();
+#endif
+        found = true;
+        return path;
+    }
+}
+
+wxString wxFindAppPath(const wxString& argv0, const wxString& cwd, const wxString& appVariableName)
+{
+    wxString str;
+
+    // Try appVariableName
+    if (!appVariableName.IsEmpty())
+    {
+        str = wxGetenv(appVariableName);
+        if (!str.IsEmpty())
+            return str;
+    }
+
+#if defined(__WXMAC__) && !defined(__DARWIN__)
+    // On Mac, the current directory is the relevant one when
+    // the application starts.
+    return cwd;
+#endif
+
+    if (wxIsAbsolutePath(argv0))
+        return wxPathOnly(argv0);
+    else
+    {
+        // Is it a relative path?
+        wxString currentDir(cwd);
+        if (currentDir.Last() != wxFILE_SEP_PATH)
+            currentDir += wxFILE_SEP_PATH;
+
+        str = currentDir + argv0;
+        if (wxFileExists(str))
+            return wxPathOnly(str);
+    }
+
+    // OK, it's neither an absolute path nor a relative path.
+    // Search PATH.
+
+    wxPathList pathList;
+    pathList.AddEnvList(wxT("PATH"));
+    str = pathList.FindAbsoluteValidPath(argv0);
+    if (!str.IsEmpty())
+        return wxPathOnly(str);
+
+    // Failed
+    return wxEmptyString;
+}
+
 void wxWebUpdateInstaller::InitDefaultKeywords()
 {	
 	wxChar sep = wxFileName::GetPathSeparator();
@@ -329,6 +434,9 @@ void wxWebUpdateInstaller::InitDefaultKeywords()
 
 	// the program root folder
 	m_hashKeywords[wxT("programdir")] = wxGetCwd();
+
+	// the program path & filename
+	m_hashKeywords[wxT("program")] = wxFindAppPath(wxTheApp->argv[0], wxGetCwd(), wxTheApp->GetAppName());
 
 	// the program process ID
 	m_hashKeywords[wxT("pid")] = wxString::Format(wxT("%d"), wxGetProcessId());

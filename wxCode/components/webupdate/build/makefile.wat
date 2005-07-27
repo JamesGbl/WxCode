@@ -332,9 +332,9 @@ cleandocs :
 	@%append watcom\replacer.lbc option quiet
 	@%append watcom\replacer.lbc name $^@
 	@%append watcom\replacer.lbc option caseexact
-	@%append watcom\replacer.lbc $(LDFLAGS) system nt ref 'main_' $(VAR_9)
+	@%append watcom\replacer.lbc $(LDFLAGS) system nt_win ref '_WinMain@16' $(VAR_9)
 	@for %i in ($(REPLACER_OBJECTS)) do @%append watcom\replacer.lbc file %i
-	@for %i in () do @%append watcom\replacer.lbc library %i
+	@for %i in ( user32.lib shell32.lib) do @%append watcom\replacer.lbc library %i
 	@%append watcom\replacer.lbc
 	wlink @watcom\replacer.lbc
 

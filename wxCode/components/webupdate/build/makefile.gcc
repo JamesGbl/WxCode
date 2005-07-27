@@ -297,7 +297,7 @@ ifeq ($(WX_SHARED),1)
 endif
 
 ..\replacer.exe: $(REPLACER_OBJECTS)
-	$(CC) -o $@ $(REPLACER_OBJECTS) $(LDFLAGS)  $(VAR_9)
+	$(CC) -o $@ $(REPLACER_OBJECTS) $(LDFLAGS) -Wl,--subsystem,windows -mwindows $(VAR_9)  -luser32 -lshell32
 
 ..\samples\simple\v1.0.0\: ..\replacer.exe
 	copy ..\replacer.exe ..\samples\simple\v1.0.0\
