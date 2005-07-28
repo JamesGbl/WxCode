@@ -260,10 +260,9 @@ wxDownloadThread *wxWebUpdateDownload::DownloadAsynch(const wxString &path,
 	// just set the download options
 	thread->m_strHTTPAuthPassword = password;
 	thread->m_strHTTPAuthUsername = user;
-	thread->m_strOutput = path;
+	thread->m_pHandler = phandler;
 	thread->m_strProxyHostname = proxy.BeforeFirst(wxT(':'));
 	thread->m_strProxyPort = proxy.AfterFirst(wxT(':'));
-	thread->m_pHandler = phandler;
 
 	// launch the download
 	if (thread->Create() != wxTHREAD_NO_ERROR ||
@@ -271,6 +270,10 @@ wxDownloadThread *wxWebUpdateDownload::DownloadAsynch(const wxString &path,
 		delete thread;
 		return NULL;
 	}
+
+	wxDownloadThreadEntry e;
+	e.m_strOutput = path;
+	thread->QueueNewDownload(e);
 
 	return thread;
 }

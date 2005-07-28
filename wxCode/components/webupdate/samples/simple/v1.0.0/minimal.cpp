@@ -24,14 +24,9 @@
 #define APP_NAME			wxT("wxWebUpdate SIMPLE sample")
 #define PACKAGE_NUM			1
 #define PACKAGE_NAME		wxT("simple")	// just to show this can be different from APP_NAME
-#define SCRIPT_LOCATION		wxT("file://localhost/e:/wxcode/components/webupdate/website/script1.xml")
-
-//wxFileSystem::FileNameToURL(wxFileName(wxT("e:\\wxCode\\components\\webupdate\\website\\script1.xml")))
-
-//wxT("file:///e:/wxcode/components/webupdate/website/script1.xml")
-
-// our list of local packages; used only by wxWebUpdateDlg.
-wxWebUpdateLocalPackage g_packageList[PACKAGE_NUM];
+//#define SCRIPT_LOCATION		wxFileSystem::FileNameToURL(wxFileName(wxT("e:\\wxcode\\components\\webupdate\\website\\script1.xml")))
+#define SCRIPT_LOCATION		wxT("file://e:/wxcode/components/webupdate/website/script3.xml")
+//#define SCRIPT_LOCATION		wxT("http://wxcode.sourceforge.net/components/webupdate/script1.xml")
 
 
 #if defined( __WXMSW__ ) && defined( __VISUALC__ )
@@ -88,11 +83,15 @@ public:
 	int OnExit();
 };
 
+// We need to create a derived class of the singleton wxWebUpdater abstract class.
+// wxWebUpdater contains all the global stuff for updating your app and you need to
+// define its GetLocalPackages() function...
 class MyWebUpdater : public wxWebUpdater
 {
 public:
 	virtual wxWebUpdateLocalPackageArray GetLocalPackages() const;
 };
+
 
 // ----------------------------------------------------------------------------
 // constants	

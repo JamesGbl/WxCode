@@ -436,7 +436,8 @@ void wxWebUpdateInstaller::InitDefaultKeywords()
 	m_hashKeywords[wxT("programdir")] = wxGetCwd();
 
 	// the program path & filename
-	m_hashKeywords[wxT("program")] = wxFindAppPath(wxTheApp->argv[0], wxGetCwd(), wxTheApp->GetAppName());
+	m_hashKeywords[wxT("program")] = wxTheApp->argv[0];
+		//wxFindAppPath(wxTheApp->argv[0], wxGetCwd(), wxTheApp->GetAppName());
 
 	// the program process ID
 	m_hashKeywords[wxT("pid")] = wxString::Format(wxT("%d"), wxGetProcessId());

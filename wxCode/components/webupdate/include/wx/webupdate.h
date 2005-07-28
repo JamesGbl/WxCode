@@ -151,6 +151,7 @@ protected:
 	//!          "uninitialized"; this also means that you cannot use update
 	//!          packages sized 1 byte only since they would force continuous
 	//!          recalculations of this var !
+	//!          See also #IsDownloadSizeCached().
 	unsigned long m_size;
 
 	//! The actions to perform after this file has been downloaded.
@@ -204,6 +205,10 @@ public:		// miscellaneous
 	//! not exists), the function returns 0.
 	//! NOTE: the first call is quite slow !
 	virtual unsigned long GetDownloadSize(bool forceRecalc = FALSE);
+
+	//! Returns TRUE if the download size for this file has been already cached.
+	virtual bool IsDownloadSizeCached() const
+		{ return m_size != 1; }
 
 	//! Returns the filename of the resource pointed by the current URL
 	//! (thus the returned name is extracted from the download URL).

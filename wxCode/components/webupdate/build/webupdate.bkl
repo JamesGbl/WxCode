@@ -10,11 +10,19 @@
 	<!-- The WebUpdate settings -->
 	<!-- ====================== -->
 	
+	<if cond="TARGETING_WIN32=='1'">
+		<option name="HTTPENGINE_DIR" category="path">
+			<default-value>..\..\httpengine</default-value>
+			<description>The path to the wxHTTPBuilder (httpengine) component</description>
+		</option>
+	</if>
+	
 	<set var="COMP_NAME">webupdate</set>
 	<set var="COMP_SRC">../src/webupdate.cpp ../src/webupdatedlg.cpp ../src/checkedlistctrl.cpp
 					../src/md5.cpp ../src/installer.cpp ../src/download.cpp</set>
 	<set var="COMP_HDR">../include/wx/webupdatedef.h ../include/wx/webupdate.h ../include/wx/webupdatedlg.h 
-					../include/wx/checkedlistctrl.h ../include/wx/md5.h ../include/wx/installer.h  ../include/wx/download.h</set>	
+					../include/wx/checkedlistctrl.h ../include/wx/md5.h ../include/wx/installer.h  
+					../include/wx/download.h</set>	
 	<set var="COMP_SAMPLE_SRC"/>
 	
 	<set var="COMP_SAMPLE1_SRC">../samples/simple/v1.0.0/minimal.cpp</set>

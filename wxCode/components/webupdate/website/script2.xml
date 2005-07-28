@@ -6,18 +6,21 @@
 
    <!-- our CORE package: we use this to deliver the sample binaries -->
    <package id="core">
-      <latest-version importance="normal">2.0.3</latest-version>
+      <latest-version importance="normal">1.5.0</latest-version>
 
       <latest-download>
-			<uri>http://easynews.dl.sourceforge.net/sourceforge/mathstudio/MathStudio-0.7.2.msi</uri>
-			<platform name="msw"/>
-			<md5>42e898d5f7d5bc1b359c80f02706d01e</md5>			
-			<action>run</action>
-	  </latest-download>
-      <latest-download>
-			<uri>http://wxcode.sourceforge.net/components/webupdate/myapp.tar.gz</uri>
-			<platform name="gtk"/>
-			<action>run</action>
+	  
+			<!-- use a simple ZIP -->
+			<uri>file://e:/wxcode/components/webupdate/website/advanced-$(latest-version).zip</uri>
+			<platform name="msw"/>	
+			
+			<actions>
+				<extract file="$(thisfile)" where="$(newtempdir)"/>
+				<run file="$(programdir)\replacer.exe" 
+					args="--pid $(pid) --from $(newtempdir) --to $(programdir) --restart $(program)" 
+					flags="ASYNC"/>
+				<exit flags="RESTART,ASKUSER"/>
+			</actions>
 	  </latest-download>
    </package>
    
@@ -26,13 +29,16 @@
    <!-- our ADDON package -->
    <package id="addon">
 	  <requires>core</requires>
-      <latest-version importance="low">1.2.3</latest-version>      
+      <latest-version importance="low">1.5.0</latest-version>      
 
 	  <!-- a single download for all platforms -->
       <latest-download>
-			<uri>http://wxcode.sourceforge.net/components/webupdate/myapp.tar.gz</uri>
-			<platform name="any"/>
-			<action>run</action>
+			<uri>file://e:/wxcode/components/webupdate/website/addon-$(latest-version).zip</uri>
+			<platform name="any"/>	
+			
+			<actions>
+				<extract file="$(thisfile)" where="$(programdir)"/>
+			</actions>
 	  </latest-download>
    </package>
 

@@ -38,6 +38,9 @@ BEGIN_EVENT_TABLE(wxCheckedListCtrl, wxListCtrl)
     EVT_LEFT_DOWN(wxCheckedListCtrl::OnMouseEvent)
 END_EVENT_TABLE()
 
+DEFINE_EVENT_TYPE(wxEVT_COMMAND_LIST_ITEM_CHECKED);
+DEFINE_EVENT_TYPE(wxEVT_COMMAND_LIST_ITEM_UNCHECKED);
+
 
 
 // ------------------
@@ -360,13 +363,32 @@ void wxCheckedListCtrl::OnMouseEvent(wxMouseEvent& event)
 		event.Skip(); 
 		return; 
 	}
-		
+	
 	// user clicked exactly on the checkbox or on the item row ?
 	bool processcheck = (flags & wxLIST_HITTEST_ONITEMICON) || 
 		((GetWindowStyle() & wxCLC_CHECK_WHEN_SELECTING) && 
 		(flags & wxLIST_HITTEST_ONITEM));
-	if (processcheck)
-		Check(item, !IsChecked(item));
+
+	if (processcheck) {
+
+		wxListEvent ev(wxEVT_NULL, GetId());
+		ev.m_itemIndex = item;		
+
+		// send the check event
+		if (IsChecked(item)) {
+
+			ev.SetEventType(wxEVT_COMMAND_LIST_ITEM_UNCHECKED);
+			Check(item, FALSE);
+			AddPendingEvent(ev);
+
+		} else {
+
+			ev.SetEventType(wxEVT_COMMAND_LIST_ITEM_CHECKED);
+			Check(item, TRUE);
+			AddPendingEvent(ev);
+		}
+	}
+
 	event.Skip(); 
 }
 

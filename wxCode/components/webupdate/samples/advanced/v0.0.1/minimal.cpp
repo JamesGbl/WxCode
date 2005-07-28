@@ -24,11 +24,7 @@
 #define APP_NAME			wxT("wxWebUpdate ADVANCED sample")
 #define PACKAGE_NUM			1			// our script in reality contains 2 packages
 #define PACKAGE_NAME		wxT("core")	// just to show this can be different from APP_NAME
-#define SCRIPT_LOCATION		wxT("http://wxcode.sourceforge.net/components/webupdate/script2.xml")
-
-// our list of local packages; used only by wxWebUpdateDlg.
-wxWebUpdateLocalPackage g_packageList[PACKAGE_NUM];
-
+#define SCRIPT_LOCATION		wxT("file://e:/wxcode/components/webupdate/website/script2.xml")
 
 #ifdef __WXMSW__
 #include <crtdbg.h>
@@ -81,6 +77,15 @@ public:
     virtual bool OnInit();
 
 	int OnExit();
+};
+
+// We need to create a derived class of the singleton wxWebUpdater abstract class.
+// wxWebUpdater contains all the global stuff for updating your app and you need to
+// define its GetLocalPackages() function...
+class MyWebUpdater : public wxWebUpdater
+{
+public:
+	virtual wxWebUpdateLocalPackageArray GetLocalPackages() const;
 };
 
 // ----------------------------------------------------------------------------
@@ -182,7 +187,8 @@ bool MyApp::OnInit()
     // load our XRC file
     wxXmlResource::Get()->Load(wxT("../src/webupdatedlg.xrc"));
 	
-
+	// init our WebUpdater
+	wxWebUpdater::Set(new MyWebUpdater);
 
     // success: wxApp::OnRun() will be called which will enter the main message
     // loop and the application will run. If we returned false here, the
@@ -190,11 +196,21 @@ bool MyApp::OnInit()
     return true;
 }
 
-
 int MyApp::OnExit()
 {
 	delete wxWebUpdateInstaller::Set(NULL);
+	delete wxWebUpdater::Set(NULL);
 	return 0;
+}
+
+wxWebUpdateLocalPackageArray MyWebUpdater::GetLocalPackages() const
+{
+	wxWebUpdateLocalPackageArray ret;
+
+	// this sample has only one package to handle
+	ret.Add(wxWebUpdateLocalPackage(PACKAGE_NAME, VERSION));
+
+	return ret;
 }
 
 
@@ -364,12 +380,9 @@ void MyFrame::OnUpdateCheckSimple(wxCommandEvent &)
 
 void MyFrame::OnUpdateCheckWithDlg(wxCommandEvent &)
 {
-	// this sample has only one package to handle
-	g_packageList[0].m_strName = PACKAGE_NAME;
-	g_packageList[0].m_version = VERSION;
+	wxWebUpdateDlg *dlg = new wxWebUpdateDlg(this, APP_NAME, SCRIPT_LOCATION);	
 
-	wxWebUpdateDlg dlg(this, APP_NAME, SCRIPT_LOCATION, g_packageList, 1);
-	dlg.CenterOnScreen();
-	dlg.ShowModal();
+	dlg->CenterOnScreen();
+	dlg->ShowModal();
+	dlg->Destroy();
 }
-

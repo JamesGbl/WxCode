@@ -161,7 +161,8 @@ protected:
 
 protected:		// event handlers
 
-	void OnItemSelect(wxListEvent &ev);
+	void OnItemCheck(wxListEvent &ev);
+	void OnItemUncheck(wxListEvent &ev);
 
 public:
 

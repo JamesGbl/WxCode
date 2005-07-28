@@ -53,8 +53,11 @@ IMPLEMENT_CLASS(wxWebUpdateAdvPanel, wxPanel)
 IMPLEMENT_CLASS(wxWebUpdateDlg, wxDialog)
 IMPLEMENT_CLASS(wxWebUpdateListCtrl, wxWUDLC_BASECLASS)
 
+
+
 BEGIN_EVENT_TABLE(wxWebUpdateListCtrl, wxWUDLC_BASECLASS)
-	EVT_LIST_ITEM_SELECTED(-1, wxWebUpdateListCtrl::OnItemSelect)
+	EVT_LIST_ITEM_CHECKED(-1, wxWebUpdateListCtrl::OnItemCheck)
+	EVT_LIST_ITEM_UNCHECKED(-1, wxWebUpdateListCtrl::OnItemUncheck)
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(wxWebUpdateDlg, wxDialog)
@@ -268,19 +271,37 @@ wxWebUpdatePackage &wxWebUpdateListCtrl::GetRemotePackage(const wxString &name)
 	return wxEmptyWebUpdatePackage;
 }
 
-void wxWebUpdateListCtrl::OnItemSelect(wxListEvent &ev)
+void wxWebUpdateListCtrl::OnItemCheck(wxListEvent &ev)
 {
 	int n = ev.GetIndex();
-	wxWebUpdatePackage &p = m_arrUpdatedPackages[n];
-	wxString str = p.GetName();
+	wxASSERT_MSG(IsChecked(n), wxT("Something broken in wxCheckedListCtrl"));
 
-	if (IsChecked(n)) {
+	// check also all the packages required by the package that the 
+	// user has just checked...
+	wxString required = GetRequiredList(n);
+	for (int i=0; i < GetItemCount(); i++) {
 
-		//if (m_nStyle
-		for (int i=0; i < GetItemCount(); i++)
-			if (IsChecked(i) && GetRequiredList(i).Contains(str))
-				Check(i, FALSE);
+		wxString str = m_arrUpdatedPackages[i].GetName();
+		if (i != n &&							// don't process the just-checked item
+			required.Contains(str))
+			Check(i, TRUE);
 	}
+}
+
+void wxWebUpdateListCtrl::OnItemUncheck(wxListEvent &ev)
+{
+	int n = ev.GetIndex();
+	wxASSERT_MSG(!IsChecked(n), wxT("Something broken in wxCheckedListCtrl"));
+	
+	// collect some info
+	wxString str = m_arrUpdatedPackages[n].GetName();
+
+	// uncheck also all the packages which require the package that the
+	// user has just unchecked...
+	for (int i=0; i < GetItemCount(); i++)
+		if (i != n &&							// don't process the just-unchecked item
+			GetRequiredList(i).Contains(str))
+			Check(i, FALSE);
 }
 
 
@@ -456,7 +477,7 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
 	// ok, we can now parse the XML doc
 	if (!m_xmlScript.Load(xmluri)) {
 		ShowErrorMsg(wxT("Cannot parse the XML update script downloaded as: ") + 
-						m_dThread->m_strOutput);
+						m_dThread->GetCurrent().m_strOutput);
 		AbortDialog();		// this is a unrecoverable error !
 		return;
 	}
@@ -582,14 +603,20 @@ void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 	wxASSERT_MSG(!m_dThread->IsDownloading(), 
 		wxT("The wxWUD_OK button should be disabled !"));
 	
+	// first update the advanced options
+	m_dThread->m_strHTTPAuthUsername = m_pAdvPanel->GetUsername();
+	m_dThread->m_strHTTPAuthPassword = m_pAdvPanel->GetPassword();
+	m_dThread->m_strProxyPort = m_pAdvPanel->GetProxyPortNumber();
+	m_dThread->m_strProxyHostname = m_pAdvPanel->GetProxyHostName();
 
 	// check if we already downloaded the XML webupdate script
 	if (!m_xmlScript.IsOk()) {
-		m_dThread->m_strURI = m_strURI;
-		m_dThread->m_strResName = wxT("XML WebUpdate script");
-		m_dThread->m_strOutput = wxFileName::CreateTempFileName(wxT("webupdate"));
-		m_dThread->m_strID = wxWUD_XMLSCRIPT_ID;
-		m_dThread->BeginNewDownload();
+		wxDownloadThreadEntry e;
+		e.m_strURI = m_strURI;
+		e.m_strResName = wxT("XML WebUpdate script");
+		e.m_strOutput = wxFileName::CreateTempFileName(wxT("webupdate"));
+		e.m_strID = wxWUD_XMLSCRIPT_ID;
+		m_dThread->QueueNewDownload(e);
 		return;
 	}
 
@@ -607,26 +634,22 @@ void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 			wxWebUpdateDownload &dl = pkg.GetDownloadPackage();
 			
 			// init thread variables
-			m_dThread->m_strOutput = m_pAdvPanel->GetDownloadPath() + dl.GetFileName();
-			m_dThread->m_strURI = dl.GetDownloadString();
-			m_dThread->m_strMD5 = dl.GetMD5Checksum();
-			m_dThread->m_strResName = name + wxT(" package");
-			m_dThread->m_strID = name;
-
-			// advanced options
-			m_dThread->m_strHTTPAuthUsername = m_pAdvPanel->GetUsername();
-			m_dThread->m_strHTTPAuthPassword = m_pAdvPanel->GetPassword();
-			m_dThread->m_strProxyPort = m_pAdvPanel->GetProxyPortNumber();
-			m_dThread->m_strProxyHostname = m_pAdvPanel->GetProxyHostName();
+			wxDownloadThreadEntry e;
+			e.m_strOutput = m_pAdvPanel->GetDownloadPath() + dl.GetFileName();
+			e.m_strURI = dl.GetDownloadString();
+			e.m_strMD5 = dl.GetMD5Checksum();
+			e.m_strResName = name + wxT(" package");
+			e.m_strID = name;
 
 			// reset the gauge GUI
 			m_pGauge->SetValue(0);
 			m_pGauge->SetRange(dl.GetDownloadSize());
 			
 			// launch the download
-			wxLogDebug(wxT("wxWebUpdateDlg::OnDownload - launching download of ") + m_dThread->m_strURI);
+			wxLogDebug(wxT("wxWebUpdateDlg::OnDownload - launching download of ") + 
+					m_dThread->GetCurrent().m_strURI);
 
-			m_dThread->BeginNewDownload();
+			m_dThread->QueueNewDownload(e);
 			nDownloads++;
 			break;
 		}
@@ -690,7 +713,8 @@ void wxWebUpdateDlg::OnShowHideAdv(wxCommandEvent &)
 
 void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 {
-	bool forceremove = FALSE, downloadingScript = (m_dThread->m_strID == wxWUD_XMLSCRIPT_ID);
+	bool forceremove = FALSE, 
+		downloadingScript = (m_dThread->GetCurrent().m_strID == wxWUD_XMLSCRIPT_ID);
 
 	// first of all, we need to know if download was successful
 	if (!m_dThread->DownloadWasSuccessful()) {
@@ -702,8 +726,8 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 			wxMessageBox(wxT("Download aborted..."), 
 						wxT("Warning"), wxOK | wxICON_EXCLAMATION);
 		else
-			ShowErrorMsg(wxT("Could not download the ") + m_dThread->m_strResName + 
-					wxT(" from\n\n") + m_dThread->m_strURI + wxT("\n\nURL... "));
+			ShowErrorMsg(wxT("Could not download the ") + m_dThread->GetCurrent().m_strResName + 
+					wxT(" from\n\n") + m_dThread->GetCurrent().m_strURI + wxT("\n\nURL... "));
 		
 		wxLogDebug(wxT("wxWebUpdateDlg::OnDownloadComplete - Download status: failed !"));
 		if (downloadingScript)
@@ -718,15 +742,15 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 		if (downloadingScript) {
 
 			// handle the XML parsing & control update 
-			OnScriptDownload(m_dThread->m_strOutput);
+			OnScriptDownload(m_dThread->GetCurrent().m_strOutput);
 			forceremove = TRUE;			// always remove the script
 
 		} else {
 
-			if (m_dThread->m_strMD5.IsEmpty() || m_dThread->IsMD5Ok()) {
+			if (m_dThread->GetCurrent().m_strMD5.IsEmpty() || m_dThread->IsMD5Ok()) {
 
 				// handle the installation of this package
-				const wxWebUpdatePackage &pkg = m_pUpdatesList->GetRemotePackage(m_dThread->m_strID);
+				const wxWebUpdatePackage &pkg = m_pUpdatesList->GetRemotePackage(m_dThread->GetCurrent().m_strID);
 				const wxWebUpdateDownload &download = pkg.GetDownloadPackage();
 
 				//m_nStatus = wxWUDS_INSTALLING;
@@ -745,11 +769,11 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 				
 			} else {
 
-				wxMessageBox(wxT("The downloaded file \"") + m_dThread->m_strOutput + 
+				wxMessageBox(wxT("The downloaded file \"") + m_dThread->GetCurrent().m_strOutput + 
 						wxT("\"\nis corrupted. MD5 checksum is:\n\n\t") + 
 						m_dThread->GetComputedMD5() +
 						wxT("\n\ninstead of:\n\n\t") + 
-						m_dThread->m_strMD5 +
+						m_dThread->GetCurrent().m_strMD5 +
 						wxT("\n\nPlease retry the download."), 
 						wxT("Error"), wxOK | wxICON_ERROR);
 				//forceremove = TRUE;		// remove this corrupted package
@@ -761,8 +785,8 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 	bool donotremove = m_pAdvPanel->RemoveFiles();
 	if (forceremove || !donotremove) {		// XML webupdate script is always removed
 		wxLogDebug(wxT("wxWebUpdateDlg::OnDownloadComplete - ")
-			wxT("Removing the downloaded file: ") + m_dThread->m_strOutput);
-		wxRemoveFile(m_dThread->m_strOutput);
+			wxT("Removing the downloaded file: ") + m_dThread->GetCurrent().m_strOutput);
+		wxRemoveFile(m_dThread->GetCurrent().m_strOutput);
 	}
 }
 
@@ -856,7 +880,7 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 
 			// update speed meter
 			m_pSpeedText->SetLabel(wxWUD_SPEEDTEXT_PREFIX wxT("downloading \"") + 
-								m_dThread->m_strResName + wxT("\" at ") + 
+								m_dThread->GetCurrent().m_strResName + wxT("\" at ") + 
 								m_dThread->GetDownloadSpeed());
 
 			// update time meter
@@ -879,7 +903,10 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 
 		m_pGauge->SetValue(0);
 		if (nLabelMode != wxWUDS_INSTALLING) {
-			m_pSpeedText->SetLabel(wxWUD_SPEEDTEXT_PREFIX wxT("installing \"") + m_dThread->m_strResName + wxT("\""));			
+
+			// use the "speed" label for installing status
+			m_pSpeedText->SetLabel(wxWUD_SPEEDTEXT_PREFIX wxT("installing \"") + 
+				m_dThread->GetCurrent().m_strResName + wxT("\""));			
 			m_pTimeText->SetLabel(wxT("No downloads running..."));
 			m_pCancelBtn->SetLabel(wxWUD_CANCEL_INSTALLATION);
 			m_pOkBtn->Disable();

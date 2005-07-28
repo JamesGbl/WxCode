@@ -36,6 +36,9 @@
 // wxWidgets RTTI
 DEFINE_EVENT_TYPE(wxDT_DOWNLOAD_COMPLETE);
 
+#include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
+WX_DEFINE_USER_EXPORTED_OBJARRAY(wxDownloadThreadEntryArray);
+
 
 
 // ---------------------
@@ -69,6 +72,9 @@ void *wxDownloadThread::Entry()
 			continue;
 		}
 
+		// start to download the first entry in the queue
+		wxDownloadThreadEntry &dte = m_downloads[0];
+
 		// reset our variables
 		m_nFinalSize = 0;
 		m_nCurrentSize = 0;
@@ -76,10 +82,10 @@ void *wxDownloadThread::Entry()
 		// we are starting the download of a file; update our datetime field
 		m_dtStart = wxDateTime::UNow();
 
-		wxLogDebug(wxT("wxDownloadThread::Entry - downloading ") + m_strURI);
+		wxLogDebug(wxT("wxDownloadThread::Entry - downloading ") + dte.m_strURI);
 
 		// ensure we can build a wxURL from the given URI
-		wxURL u(m_strURI);
+		wxURL u(dte.m_strURI);
 		if (u.GetError() != wxURL_NOERR)
 			ABORT_DOWNLOAD();
 
@@ -92,7 +98,7 @@ void *wxDownloadThread::Entry()
 		// now work on streams; wx docs says that using wxURL::GetInputStream
 		// is deprecated but this is the only way to set advanced info like
 		// proxy, user & password...
-		wxFileOutputStream out(m_strOutput);
+		wxFileOutputStream out(dte.m_strOutput);
 		wxInputStream *in = u.GetInputStream();
 		if (in == NULL)
 			ABORT_DOWNLOAD();
@@ -152,7 +158,7 @@ void *wxDownloadThread::Entry()
 		m_mStatus.Unlock();
 
 		// get the md5 checksum for the just downloaded file
-		m_strComputedMD5 = wxMD5::GetFileMD5(m_strOutput);
+		m_strComputedMD5 = wxMD5::GetFileMD5(dte.m_strOutput);
 #endif
 
 		// we have successfully download the file
@@ -211,7 +217,7 @@ wxString wxDownloadThread::GetRemainingTime() const
 		return wxString::Format(wxT("%d min, %d sec"), remsec/60, remsec%60);
 	else if (remsec < 60*60*24)
 		return wxString::Format(wxT("%d hours, %d min, %d sec"), 
-					remsec/3600, (remsec/60)%60, remsec%3600);	
+					remsec/3600, (remsec/60)%60, (remsec/3600)%60);
 	else
 		return wxT("not available");
 }
