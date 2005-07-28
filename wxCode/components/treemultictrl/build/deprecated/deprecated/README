@@ -1,0 +1,7 @@
+This directory contains all old CMakeLists.txt files, they work 
+with monolithic builds. Somehow the CMake is broken for wx2.6.1
+with seperate libs. It is the FindWxWin.cmake script but I am 
+too fed up with it to find it out. So please use the pre-generated
+projects one dir lower.
+
+- Jorgen
