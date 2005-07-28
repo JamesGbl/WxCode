@@ -307,7 +307,6 @@ void wxWebUpdateListCtrl::OnItemUncheck(wxListEvent &ev)
 
 
 
-
 // ---------------------
 // wxWEBUPDATEDLG
 // ---------------------
