@@ -29,6 +29,7 @@ class WXDLLIMPEXP_WEBUPDATE wxWebUpdatePackage;
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateLocalPackageArray;
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDlg;
 
+extern WXDLLIMPEXP_DATA_WEBUPDATE(wxWebUpdateDownload) wxEmptyWebUpdateDownload;
 
 // this is the even sent by a wxDownloadThread class to the wxEvtHandler
 // which is given it in its constructor.
@@ -345,6 +346,26 @@ private:
 
 
 
+//! An installer entry for wxWebUpdateInstallThread.
+class wxWebUpdateInstallThreadEntry 
+{
+public:		// to avoid setters/getters
+
+	//! The downloaded file which is our update package.
+	wxString m_strUpdateFile;
+
+	//! The package which contains the wxWebUpdateAction to be executed.
+	wxWebUpdateDownload &m_pDownload;
+
+public:
+	wxWebUpdateInstallThreadEntry() : m_pDownload(wxEmptyWebUpdateDownload) {}
+	virtual ~wxWebUpdateInstallThreadEntry() {}
+};
+
+// a container of wxWebUpdateInstallThreadEntry used by wxWebUpdateInstallThread
+WX_DECLARE_USER_EXPORTED_OBJARRAY(wxWebUpdateInstallThreadEntry, wxWebUpdateInstallThreadEntryArray, WXDLLIMPEXP_WEBUPDATE);
+
+
 //! The thread used to install the packages.
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateInstallThread : public wxThread
 {
@@ -365,11 +386,8 @@ public:		// to avoid setters/getters (these vars are only read by this thread;
 	//! The wxEvtHandler which will receive our wxDT_NOTIFICATION events.
 	wxEvtHandler *m_pHandler;
 
-	//! The downloaded file which is our update package.
-	wxString m_strUpdateFile;
-
-	//! The package which contains the wxWebUpdateAction to be executed.
-	const wxWebUpdateDownload *m_pDownload;
+	//! The packages to install.
+	wxWebUpdateInstallThreadEntryArray m_entries;
 
 protected:		// these are vars protected by mutexes...
 
@@ -380,13 +398,14 @@ protected:		// these are vars protected by mutexes...
 	//! The mutex over the #m_nStatus var.
 	wxMutex m_mStatus;
 
+	//! The package which is currently being installed.
+	int m_nCurrentIndex;
+
 public:
-	wxWebUpdateInstallThread(wxEvtHandler *dlg = NULL, 
-							const wxString &updatefile = wxEmptyString, 
-							const wxWebUpdateDownload *toinstall = NULL)
-		: wxThread(wxTHREAD_JOINABLE), m_pHandler(dlg), m_strUpdateFile(updatefile),
-		m_pDownload(toinstall) 
-		{ m_bSuccess=TRUE; m_nInstallationCount=0; m_nStatus = wxWUITS_WAITING; }
+	wxWebUpdateInstallThread(wxEvtHandler *dlg = NULL)
+		: wxThread(wxTHREAD_JOINABLE), m_pHandler(dlg)
+		{ m_bSuccess=TRUE; m_nInstallationCount=0; m_nCurrentIndex=0;
+		  m_nStatus = wxWUITS_WAITING; }
 
 	virtual ~wxWebUpdateInstallThread() {}
 
@@ -417,8 +436,9 @@ public:		// miscellaneous
 
 	//! Starts a new installation.
 	//! This function must be called only when this thread is not installing anything else.
-	void BeginNewInstall() {
-		wxASSERT(!IsInstalling());
+	void QueueNewInstall(wxWebUpdateInstallThreadEntry &install) {
+		//wxASSERT(!IsInstalling());
+		m_entries.Add(install);
 		wxMutexLocker lock(m_mStatus);
 		m_nStatus = wxWUITS_INSTALLING;
 	}
@@ -429,6 +449,14 @@ public:		// miscellaneous
 		wxMutexLocker lock(m_mStatus);
 		m_nStatus = wxWUITS_WAITING;
 	}
+
+	//! Returns the current element which is being downloaded.
+	wxWebUpdateInstallThreadEntry &GetCurrent()
+		{ return m_entries[m_nCurrentIndex]; }
+
+	//! Returns the oldest download in the queue (i.e. the first).
+	wxWebUpdateInstallThreadEntry &GetOldest()
+		{ return m_entries[0]; } 
 
 	//! Returns TRUE if the last installation was successful.
 	bool InstallationWasSuccessful() const		

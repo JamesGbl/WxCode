@@ -237,7 +237,7 @@ public:		// miscellaneous
 	//! This function must be called only when this thread is not downloading
 	//! nor computing any MD5...
 	void QueueNewDownload(wxDownloadThreadEntry &down) {
-		wxASSERT(!IsDownloading() && !IsComputingMD5());
+		//wxASSERT(!IsDownloading() && !IsComputingMD5());
 		m_downloads.Add(down);
 		wxMutexLocker lock(m_mStatus);
 		m_nStatus = wxDTS_DOWNLOADING;		
@@ -253,6 +253,30 @@ public:		// miscellaneous
 	//! Returns the current element which is being downloaded.
 	wxDownloadThreadEntry &GetCurrent()
 		{ return m_downloads[m_nCurrentIndex]; }
+
+	//! Returns the oldest download in the queue (i.e. the first).
+	wxDownloadThreadEntry &GetOldest()
+		{ return m_downloads[0]; } 
+
+	//! Removes the oldest downloaded file from the queue.
+	void RemoveOldestDownload() {
+		//wxASSERT(IsPaused());
+		wxMutexLocker lock(m_mIndex);
+		m_downloads.RemoveAt(0, 1);
+		m_nFileCount--;
+		if (m_nCurrentIndex > 0) 
+			m_nCurrentIndex--;
+	}
+
+	//! Cleans all the download queue.
+	void CleanQueue() {
+		wxASSERT(!IsDownloading() && !IsComputingMD5());
+		m_downloads.Clear();
+		m_nCurrentIndex = 0;
+		wxMutexLocker lock(m_mStatus);
+		m_nStatus = wxDTS_WAITING;
+		m_nFileCount = 0;
+	}
 };
 /*
 //! This threads just retrieve the sizes of the given files and cache

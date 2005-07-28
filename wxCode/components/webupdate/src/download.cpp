@@ -72,8 +72,8 @@ void *wxDownloadThread::Entry()
 			continue;
 		}
 
-		// start to download the first entry in the queue
-		wxDownloadThreadEntry &dte = m_downloads[0];
+		// start to download the first entry in the queue		
+		wxDownloadThreadEntry &dte = m_downloads[m_nCurrentIndex];
 
 		// reset our variables
 		m_nFinalSize = 0;
@@ -162,12 +162,25 @@ void *wxDownloadThread::Entry()
 #endif
 
 		// we have successfully download the file
-		m_bSuccess = TRUE;
-		m_mStatus.Lock();
-		m_nStatus = wxDTS_WAITING;
-		m_mStatus.Unlock();
-		wxPostEvent(m_pHandler, updatevent);
+		m_bSuccess = TRUE;		
 	
+		if (m_nCurrentIndex < (int)m_downloads.GetCount()-1) {
+
+			// proceed with the next download in the queue
+			m_nCurrentIndex++;
+
+			// return to download mode
+			wxMutexLocker locker(m_mStatus);
+			m_nStatus = wxDTS_DOWNLOADING;
+
+		} else {
+
+			// go in wait mode
+			wxMutexLocker locker(m_mStatus);
+			m_nStatus = wxDTS_WAITING;
+		}
+
+		wxPostEvent(m_pHandler, updatevent);
 		m_nFileCount++;
 
 		// we reset our variables here because there is a delay between the

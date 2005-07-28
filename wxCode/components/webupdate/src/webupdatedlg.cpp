@@ -460,8 +460,8 @@ bool wxWebUpdateDlg::Destroy()
 
 void wxWebUpdateDlg::OnIdle(wxIdleEvent &)
 {
-	if (m_iThread->IsRunning() || m_dThread->IsRunning())
-		return;
+	/*if (m_iThread->IsRunning() || m_dThread->IsRunning())
+		return;*/
 }
 
 void wxWebUpdateDlg::ShowErrorMsg(const wxString &str) const
@@ -602,6 +602,9 @@ void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 	wxASSERT_MSG(!m_dThread->IsDownloading(), 
 		wxT("The wxWUD_OK button should be disabled !"));
 	
+	// clean the old download queue
+	m_dThread->CleanQueue();
+
 	// first update the advanced options
 	m_dThread->m_strHTTPAuthUsername = m_pAdvPanel->GetUsername();
 	m_dThread->m_strHTTPAuthPassword = m_pAdvPanel->GetPassword();
@@ -645,12 +648,11 @@ void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 			m_pGauge->SetRange(dl.GetDownloadSize());
 			
 			// launch the download
+			m_dThread->QueueNewDownload(e);
 			wxLogDebug(wxT("wxWebUpdateDlg::OnDownload - launching download of ") + 
 					m_dThread->GetCurrent().m_strURI);
 
-			m_dThread->QueueNewDownload(e);
 			nDownloads++;
-			break;
 		}
 	}
 
@@ -749,22 +751,16 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 			if (m_dThread->GetCurrent().m_strMD5.IsEmpty() || m_dThread->IsMD5Ok()) {
 
 				// handle the installation of this package
-				const wxWebUpdatePackage &pkg = m_pUpdatesList->GetRemotePackage(m_dThread->GetCurrent().m_strID);
+				const wxWebUpdatePackage &pkg = 
+					m_pUpdatesList->GetRemotePackage(m_dThread->GetOldest().m_strID);
 				const wxWebUpdateDownload &download = pkg.GetDownloadPackage();
 
-				//m_nStatus = wxWUDS_INSTALLING;
-				m_iThread->m_pDownload = &download;
-				m_iThread->m_strUpdateFile = download.GetFileName();
-				m_iThread->BeginNewInstall();
-				//download.Install();
-				//m_nStatus = wxWUDS_UNDEFINED;
-				//this->Close(TRUE);
-				//EndModal(wxOK);
-				//GetParent()->Close(TRUE);
-				//::wxExit();
-				//wxTheApp->Exit();
-				//wxTheApp->CleanUp();
-				//exit(0);
+				wxWebUpdateInstallThreadEntry e;
+				e.m_pDownload = (const wxWebUpdateDownload &)download;
+				e.m_strUpdateFile = download.GetFileName();
+				m_iThread->QueueNewInstall(e);
+
+				//m_dThread->RemoveOldestDownload();
 				
 			} else {
 
@@ -930,7 +926,8 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 
 			// we need to decrement the "d" var since we don't want to take in count
 			// the download of the XML webupdate script
-			d--;
+			if (d > 0 && m_dThread->GetOldest().m_strID == wxWUD_XMLSCRIPT_ID)
+				d--;
 
 			if (d > 0 && i > 0)
 				m_pSpeedText->SetLabel(

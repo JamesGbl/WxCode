@@ -162,6 +162,7 @@ bool MyApp::OnInit()
 #ifdef __WXMSW__
 	mcDUMP_ON_EXIT;			// for debugging only
 #endif
+	//_CrtSetBreakAlloc(23800);
 
     // create the main application window
     MyFrame *frame = new MyFrame(APP_NAME);

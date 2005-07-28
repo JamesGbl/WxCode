@@ -62,6 +62,10 @@ IMPLEMENT_CLASS(wxWebUpdateActionExit, wxWebUpdateAction)
 #include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
 WX_DEFINE_USER_EXPORTED_OBJARRAY(wxWebUpdateActionArray);
 
+#include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
+WX_DEFINE_USER_EXPORTED_OBJARRAY(wxWebUpdateInstallThreadEntryArray);
+
+
 #include <wx/ptr_scpd.h>
 wxDEFINE_SCOPED_PTR_TYPE(wxArchiveEntry);
 
@@ -533,14 +537,28 @@ void *wxWebUpdateInstallThread::Entry()
 			continue;
 		}
 
-		wxLogDebug(wxT("wxWebUpdateInstallThread::Entry - installing ") + m_strUpdateFile);
-		m_bSuccess = m_pDownload->Install();
+		wxLogDebug(wxT("wxWebUpdateInstallThread::Entry - installing ") + 
+					GetCurrent().m_strUpdateFile);
+		m_bSuccess = m_entries[m_nCurrentIndex].m_pDownload.Install();
 		wxLogDebug(wxT("wxWebUpdateInstallThread::Entry - completed installation"));
 
-		// we have successfully download the file
-		m_mStatus.Lock();
-		m_nStatus = wxWUITS_WAITING;
-		m_mStatus.Unlock();
+		// we have installed the file... proceed with next ?
+		if (m_nCurrentIndex < (int)m_entries.GetCount()-1) {
+
+			// proceed with the next package in the queue
+			m_nCurrentIndex++;
+
+			// return to install mode
+			wxMutexLocker locker(m_mStatus);
+			m_nStatus = wxWUITS_INSTALLING;
+
+		} else {
+
+			// go in wait mode
+			wxMutexLocker locker(m_mStatus);
+			m_nStatus = wxWUITS_WAITING;
+		}
+
 		wxPostEvent(m_pHandler, updatevent);
 		m_nInstallationCount++;
 	}
@@ -556,22 +574,17 @@ void *wxWebUpdateInstallThread::Entry()
 
 void wxWebUpdater::OnUpdateExit(wxCommandEvent &)
 {
- /*   wxWindowList::compatibility_iterator current = GetTopWindow()->GetChildren().GetFirst();
-    while (current)
-    {
-        wxWindow *childWin = current->GetData();
-		childWin->Close(true);
-        current = current->GetNext();
-    }*/
 	if (m_pWebUpdateDlg) {
+
+		// close any wxWebUpdateDlg(-derived) window which is open
+		wxLogDebug(wxT("wxWebUpdater::OnUpdateExit - closing the WebUpdate dialog"));
 		m_pWebUpdateDlg->AbortDialog();
-		//wxSleep(300);
 		m_pWebUpdateDlg->Destroy();
 	}
 
+	// close the main window => close the app
+	wxLogDebug(wxT("wxWebUpdater::OnUpdateExit - exiting the app"));
 	wxTheApp->GetTopWindow()->Close(true);
-	//wxExit();
-	//OnFatalException();
 }
 
 void wxWebUpdater::OnUpdateExec(wxCommandEvent &ce)
@@ -579,6 +592,8 @@ void wxWebUpdater::OnUpdateExec(wxCommandEvent &ce)
 	wxString cmd = ce.GetString();
 	int flags = ce.GetInt();
 
+	wxLogDebug(wxT("wxWebUpdater::OnUpdateExec - executing the command:\n\n\t\t") +
+				cmd + wxT("\n\n with flags: %d"), flags);
 	/*long res =*/ ::wxExecute(cmd, flags);
 /*	if ((m_nExecFlag & wxEXEC_SYNC) && res != -1)
 		return TRUE;
@@ -589,11 +604,13 @@ void wxWebUpdater::OnUpdateExec(wxCommandEvent &ce)
 
 void wxWebUpdater::OnWebUpdateDlgShow(wxCommandEvent &ce)
 {
+	wxLogDebug(wxT("wxWebUpdater::OnWebUpdateDlgShow - a wxWebUpdate dialog has been shown"));
 	m_pWebUpdateDlg = (wxWebUpdateDlg *)ce.GetClientData();
 }
 
 void wxWebUpdater::OnWebUpdateDlgDestroy(wxCommandEvent &)
 {
+	wxLogDebug(wxT("wxWebUpdater::OnWebUpdateDlgDestroy - a wxWebUpdate dialog has been closed"));
 	m_pWebUpdateDlg = NULL;
 }
 

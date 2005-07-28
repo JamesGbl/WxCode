@@ -181,8 +181,12 @@ unsigned long wxWebUpdateDownload::GetDownloadSize(bool forceRecalc)
 	}
 
 	wxInputStream *is = u.GetInputStream();	
-	if (is == NULL || !is->IsOk() || 
-		u.GetProtocol().GetError() != wxPROTO_NOERR) {
+	if (is == NULL) {
+		m_size = 0;		// set it as "already calculated"
+		return 0;
+	}
+	if (!is->IsOk() || u.GetProtocol().GetError() != wxPROTO_NOERR) {
+		delete is;		// be sure to avoid leaks
 		m_size = 0;		// set it as "already calculated"
 		return 0;
 	}
@@ -300,9 +304,12 @@ bool wxWebUpdateDownload::Install() const
 
 wxWebUpdateDownload &wxWebUpdatePackage::GetDownloadPackage(wxWebUpdatePlatform code) const
 {
-	if (code == wxWUP_INVALID) code = wxWebUpdateDownload::GetThisPlatformCode();
+	if (code == wxWUP_INVALID) 
+		code = wxWebUpdateDownload::GetThisPlatformCode();
+
 	for (int i=0; i<(int)m_arrWebUpdates.GetCount(); i++)
-		if (m_arrWebUpdates.Item(i).GetPlatform() == code)
+		if (m_arrWebUpdates.Item(i).GetPlatform() == code ||
+				m_arrWebUpdates.Item(i).GetPlatform() == wxWUP_ANY)
 			return m_arrWebUpdates.Item(i);
 		
 	// could not find a download for the given platform....
