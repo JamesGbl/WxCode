@@ -13,30 +13,15 @@
 // declarations
 // ============================================================================
 
-#include "wx/webupdatedlg.h"
-#include <wx/xrc/xmlres.h>
-#include <wx/image.h>
-#include <wx/wfstream.h>
-
-// these are the info required by wxWebUpdate classes about the 
-// application to update...
-#define VERSION				wxT("1.0.0")
-#define APP_NAME			wxT("wxWebUpdate SIMPLE sample")
-#define PACKAGE_NUM			1
-#define PACKAGE_NAME		wxT("simple")	// just to show this can be different from APP_NAME
-//#define SCRIPT_LOCATION		wxFileSystem::FileNameToURL(wxFileName(wxT("e:\\wxcode\\components\\webupdate\\website\\script1.xml")))
-#define SCRIPT_LOCATION		wxT("file://e:/wxcode/components/webupdate/website/script3.xml")
-//#define SCRIPT_LOCATION		wxT("http://wxcode.sourceforge.net/components/webupdate/script1.xml")
-
-
-#if defined( __WXMSW__ ) && defined( __VISUALC__ )
-#include <crtdbg.h>
-#define mcDUMP_ON_EXIT		\
-	{ _CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF); }
+#ifdef __WXMSW__
+	#define wxUPDATE_AND_EXIT(uri)					\
+		wxExecute(wxT("webupdater.exe ") uri);		\
+		Close(true);
 #else
-#define mcDUMP_ON_EXIT		/* expand to nothing */
+	#define wxUPDATE_AND_EXIT(uri)					\
+		wxExecute(wxT("./webupdater ") uri);		\
+		Close(true);
 #endif
-
 
 // ----------------------------------------------------------------------------
 // headers
@@ -83,16 +68,6 @@ public:
 	int OnExit();
 };
 
-// We need to create a derived class of the singleton wxWebUpdater abstract class.
-// wxWebUpdater contains all the global stuff for updating your app and you need to
-// define its GetLocalPackages() function...
-class MyWebUpdater : public wxWebUpdater
-{
-public:
-	virtual wxWebUpdateLocalPackageArray GetLocalPackages() const;
-};
-
-
 // ----------------------------------------------------------------------------
 // constants	
 // ----------------------------------------------------------------------------
@@ -126,7 +101,7 @@ public:
     void OnAbout(wxCommandEvent& event);
 
 	void OnUpdateCheckSimple(wxCommandEvent& event);
-	void OnUpdateCheckWithDlg(wxCommandEvent& event);
+	void OnUpdateCheckAdv(wxCommandEvent& event);
 
 private:
     // any class wishing to process wxWindows events must use this macro
@@ -145,7 +120,7 @@ BEGIN_EVENT_TABLE(MyFrame, wxFrame)
     EVT_MENU(Minimal_About, MyFrame::OnAbout)
 
     EVT_MENU(Minimal_UpdateCheckSimple, MyFrame::OnUpdateCheckSimple)
-    EVT_MENU(Minimal_UpdateCheckWithDlg, MyFrame::OnUpdateCheckWithDlg)
+    EVT_MENU(Minimal_UpdateCheckWithDlg, MyFrame::OnUpdateCheckAdv)
 END_EVENT_TABLE()
 
 // Create a new application object: this macro will allow wxWindows to create
@@ -164,36 +139,21 @@ IMPLEMENT_APP(MyApp)
 // wxT('Main program') equivalent: the program execution "starts" here
 bool MyApp::OnInit()
 {
-	mcDUMP_ON_EXIT;			// for debugging only	
-	//_CrtSetBreakAlloc(31100);
-
     // create the main application window
-    MyFrame *frame = new MyFrame(APP_NAME);
+    SetAppName(wxT("wxWebUpdate SIMPLE sample"));
+    MyFrame *frame = new MyFrame(GetAppName());
 
 #ifdef __WXDEBUG__
 	// create an useful log window
 	wxLogWindow *pwindow = new wxLogWindow(frame, wxT("log"));
 	pwindow->GetFrame()->Move(50, 50+350);
 	pwindow->GetFrame()->SetSize(800, 300);
+#endif
 
     // and show it (the frames, unlike simple controls, are not shown when
     // created initially)
     frame->Show(true);
-#endif
-
-	// this is for using wxDownloadThread
-	wxSocketBase::Initialize() ;
-
-	// we need some handlers before loading resources
-	wxImage::AddHandler(new wxPNGHandler);
-	wxXmlResource::Get()->InitAllHandlers();
-	
-    // load our XRC file
-    wxXmlResource::Get()->Load(wxT("../src/webupdatedlg.xrc"));
-	
-	// init our WebUpdater
-	wxWebUpdater::Set(new MyWebUpdater);
-
+    
     // success: wxApp::OnRun() will be called which will enter the main message
     // loop and the application will run. If we returned false here, the
     // application would exit immediately.
@@ -202,19 +162,7 @@ bool MyApp::OnInit()
 
 int MyApp::OnExit()
 {
-	delete wxWebUpdateInstaller::Set(NULL);
-	delete wxWebUpdater::Set(NULL);
 	return 0;
-}
-
-wxWebUpdateLocalPackageArray MyWebUpdater::GetLocalPackages() const
-{
-	wxWebUpdateLocalPackageArray ret;
-
-	// this sample has only one package to handle
-	ret.Add(wxWebUpdateLocalPackage(PACKAGE_NAME, VERSION));
-
-	return ret;
 }
 
 
@@ -229,20 +177,18 @@ MyFrame::MyFrame(const wxString& title)
     // set the frame icon
     SetIcon(wxICON(mondrian));
 
-
-#if 1
-    
+#if 1    
 	wxPanel *panel = new wxPanel(this, -1);
     wxSizer *sz = new wxBoxSizer(wxVERTICAL);
 
 	// create the wxTextCtrl where the file structure is shown
-	sz->Add(new wxStaticText(panel, -1, 
-		wxString(wxT("Program version: ")) + VERSION), 0, wxGROW | wxALL, 5);
+	sz->Add(new wxStaticText(panel, -1, wxT("Program EXE version: 1.0.0")), 0, wxGROW | wxALL, 5);
     sz->Add(new wxTextCtrl(panel, -1, 
-		wxT("This program provides an example of wxUpdateCheck features:\n")
-		wxT("\t- wxUpdateCheck: downloads a simple text file from your web server and")
-		wxT("parses it to retrieve info about new updates.\n")
-		wxT("\t- wxWebUpdateDlg: a dialog with all advanced update options.\n"),
+		wxT("This program provides an example of the WebUpdate component simplest features:\n")
+		wxT(" - all the configuration settings of the webupdater are saved in an XML file.\n")
+		wxT(" - the webupdater is able to replace the program executable since it runs when ")
+  		wxT("the target program, i.e. the program to update, is not running.\n\n")
+    	wxT("For more info look at the WebUpdate documentation."),
 		wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE), 1, wxGROW);
     panel->SetSizer(sz);
     sz->SetSizeHints(panel);
@@ -294,87 +240,20 @@ void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
     wxString msg;
-    msg.Printf( wxT("This is a demonstration of wxUpdateCheck & wxWebUpdate program.\n\n")
-				wxT("This sample program ..."));
+    msg.Printf( wxT("This is a demonstration of wxWebUpdate component.\n\n")
+				wxT("Look at WebUpdate docs for a quick guide to integration of the ")
+    			wxT("WebUpdater application into your program."));
 
-    wxMessageBox(msg, wxT("About ") + wxString(APP_NAME), wxOK | wxICON_INFORMATION, this);
+    wxMessageBox(msg, wxT("About ") + wxGetApp().GetAppName(), wxOK | wxICON_INFORMATION, this);
 }
 
 void MyFrame::OnUpdateCheckSimple(wxCommandEvent &)
 {
-	// we want to open the script file I've put on wxCode server
-	wxWebUpdateXMLScript script(SCRIPT_LOCATION);
-	if (!script.IsOk()) {
-		wxMessageBox(wxString(wxT("Cannot open the XML update script at: ")) + 
-					SCRIPT_LOCATION, wxT("Error"), wxOK | wxICON_ERROR);
-		return;
-	}
-
-	wxWebUpdatePackage *update = script.GetPackage(PACKAGE_NAME);
-	if (!update) {
-		wxMessageBox(wxT("Cannot find the 'myapp' package in the XML update script !"),
-					wxT("Error"), wxOK | wxICON_ERROR);
-		return;
-	}
-
-	if (update->Check(VERSION) == wxWUCF_UPDATED) {
-		
-		// no updates available
-		wxMessageBox(wxT("This program is up to date ;-)\n"),
-					wxT("Update check successful"));
-		delete update;
-		return;
-	}
-	
-	int res = wxMessageBox(wxT("The webserver holds an updated version of this app;\n\n") 
-		wxT("Local version: ") + wxString(VERSION) + wxT("\t\tLatest version: ") + 
-		update->GetLatestVersion() +
-		wxT("\n\nDo you want to download it ?"),
-		wxT("Update check successful"), wxYES_NO | wxICON_EXCLAMATION);
-	
-	if (res == wxNO) {
-		delete update;
-		return;
-	}
-	
-	wxWebUpdateDownload download = update->GetDownloadPackage();
-	if (!download.IsOkForThisPlatform()) {
-		wxMessageBox(wxString(wxT("The XML script does not support this platform (")) +
-			wxWebUpdateDownload::GetThisPlatformString() + wxT(")"),
-			wxT("Error"), wxOK | wxICON_ERROR);
-		delete update;
-		return;	
-	} 
-	
-	
-	// we now have:
-	// - a valid XML webupdate script
-	// - the permission by the user to download the update
-	// - the link for the download of the updated package for this platform
-	// that's all ;-)
-	wxString out(wxFileName::CreateTempFileName(APP_NAME));
-	if (!download.DownloadSynch(out)){
-		wxMessageBox(wxT("Cannot download the update file from:\n\n") +
-			download.GetDownloadString(), wxT("Error"), wxOK | wxICON_ERROR);
-		delete update;
-		return;
-	}
-	
-	wxMessageBox(wxT("Download was successful; now I'm going to install the update..."), 
-		wxT("Success"), wxOK | wxICON_QUESTION);
-	
-	// FIXME
-
-	// cleanup
-	delete update;
+	wxUPDATE_AND_EXIT(wxT("local.xml"));
 }
 
-void MyFrame::OnUpdateCheckWithDlg(wxCommandEvent &)
+void MyFrame::OnUpdateCheckAdv(wxCommandEvent &)
 {
-	wxWebUpdateDlg *dlg = new wxWebUpdateDlg(this, APP_NAME, SCRIPT_LOCATION);	
-
-	dlg->CenterOnScreen();
-	dlg->ShowModal();
-	dlg->Destroy();
+	wxUPDATE_AND_EXIT(wxT("local2.xml"));
 }
 

@@ -2,9 +2,8 @@
  WebUpdate component info
  ------------------------
  
- Component:  webupdate 
- Documents:  http://wxcode.sourceforge.net/components/webupdate/index.html
- Maintainer: Francesco Montorsi (frm) 
+ Website: http://wxcode.sourceforge.net/components/webupdate
+ Version: 1.0
  
  Description:
  A set of classes which allows you to easily insert in your wxWidgets application

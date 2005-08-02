@@ -29,6 +29,7 @@
 #include "wx/installer.h"
 #include "wx/webupdate.h"
 #include "wx/webupdatedlg.h"
+#include "wx/stdactions.h"
 #include <wx/wfstream.h>
 #include <wx/filesys.h>
 #include <wx/utils.h>
@@ -39,275 +40,12 @@
 
 
 // wxWidgets RTTI
-IMPLEMENT_CLASS(wxWebUpdateAction, wxObject)
 IMPLEMENT_CLASS(wxWebUpdateInstaller, wxObject)
-DEFINE_EVENT_TYPE(wxWUIT_INSTALLATION_COMPLETE);
-DEFINE_EVENT_TYPE(wxWUAE_EXIT);
-DEFINE_EVENT_TYPE(wxWUAR_EXECUTE);
-
-IMPLEMENT_CLASS(wxWebUpdater, wxEvtHandler)
-BEGIN_EVENT_TABLE(wxWebUpdater, wxEvtHandler)
-    EVT_COMMAND(wxID_ANY, wxWUAE_EXIT, wxWebUpdater::OnUpdateExit)
-    EVT_COMMAND(wxID_ANY, wxWUAR_EXECUTE, wxWebUpdater::OnUpdateExec)
-    EVT_COMMAND(wxID_ANY, wxWUD_INIT, wxWebUpdater::OnWebUpdateDlgShow)
-	EVT_COMMAND(wxID_ANY, wxWUD_DESTROY, wxWebUpdater::OnWebUpdateDlgDestroy)
-END_EVENT_TABLE()
-
-
-// default wxWebUpdate actions
-IMPLEMENT_CLASS(wxWebUpdateActionRun, wxWebUpdateAction)
-IMPLEMENT_CLASS(wxWebUpdateActionExtract, wxWebUpdateAction)
-IMPLEMENT_CLASS(wxWebUpdateActionExit, wxWebUpdateAction)
-
-#include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
-WX_DEFINE_USER_EXPORTED_OBJARRAY(wxWebUpdateActionArray);
-
-#include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
-WX_DEFINE_USER_EXPORTED_OBJARRAY(wxWebUpdateInstallThreadEntryArray);
-
-
-#include <wx/ptr_scpd.h>
-wxDEFINE_SCOPED_PTR_TYPE(wxArchiveEntry);
-
-
+DEFINE_EVENT_TYPE(wxEVT_COMMAND_INSTALLATION_COMPLETE);
 
 // global objects
 wxWebUpdateInstaller *wxWebUpdateInstaller::m_pTheInstaller = NULL;
-wxWebUpdater *wxWebUpdater::m_pTheUpdater = NULL;
-
-
-
-
-// ---------------------
-// wxWEBUPDATEACTIONRUN
-// ---------------------
-
-bool wxWebUpdateActionRun::Run() const
-{
-	// be sure that the file to run exists
-	wxFileName f(m_strFile);
-	if (!f.FileExists()) {
-
-		wxLogDebug(wxT("wxWebUpdateActionRun::Run - the file \"") + m_strFile +
-				wxT("\" does not exist !"));
-		return FALSE;
-	}
-
-	// unfortunately we cannot use ::wxExecute from a secondary thread
-	// (and wxWebUpdateAction run from a wxWebUpdateInstallThread) so we
-	// are forced to send a message to wxApp which launches the command for us
-	wxCommandEvent runev(wxWUAR_EXECUTE);
-	runev.SetString(m_strFile + wxT(" ") + m_strArgs);
-	runev.SetInt(m_nExecFlag | wxEXEC_NODISABLE | wxEXEC_NODISABLE);
-	wxWebUpdater::Get()->AddPendingEvent(runev);
-
-	return TRUE;
-}
-
-bool wxWebUpdateActionRun::SetProperties(const wxArrayString &propnames,
-										const wxArrayString &propvalues)
-{
-	wxString flags;
-
-	m_strArgs = wxEmptyString;			// the ARGS default value
-	for (int i=0; i < (int)propnames.GetCount(); i++) {
-		if (propnames[i] == wxT("args"))
-			m_strArgs = propvalues[i];
-		else if (propnames[i] == wxT("file"))
-			m_strFile = propvalues[i];
-		else if (propnames[i] == wxT("flags"))
-			flags = propvalues[i];
-		else
-			wxLogDebug(wxT("wxWebUpdateActionRun::SetProperties - unknown property: ") 
-						+ propnames[i]);
-	}
-
-	// set defaults	
-	if (flags.IsEmpty())
-		m_nExecFlag = wxEXEC_ASYNC;		// the FLAGS default value
-	else if (flags == wxT("ASYNC"))
-		m_nExecFlag = wxEXEC_ASYNC;
-	else if (flags == wxT("SYNC"))
-		m_nExecFlag = wxEXEC_SYNC;
-	else {
-		m_nExecFlag = wxEXEC_ASYNC;
-		wxLogDebug(wxT("wxWebUpdateActionRun::SetProperties - unknown exec flag: ") 
-						+ flags);
-	}
-
-	// validate the properties
-	wxFileName f(m_strFile);			// the FILE property is required !
-
-	// we won't do the wxFileName::FileExists check because the file we need to run
-	// could be a file which does not exist yet (e.g. its in the update package)
-	if (m_strFile.IsEmpty() || !f.IsOk()) 
-		return FALSE;
-
-	return TRUE;
-}
-
-
-
-
-// --------------------------
-// wxWEBUPDATEACTIONEXTRACT
-// --------------------------
-
-bool wxWebUpdateActionExtract::Run() const
-{
-	// wxFileName wants a path separator at the end of directory names
-	wxString dir(m_strWhere);
-	if (dir.Last() != wxFileName::GetPathSeparator())
-		dir += wxFileName::GetPathSeparator();
-
-	// be sure that the destination directory exists
-	wxFileName f(dir), f2(m_strFile);
-	if (!f.DirExists() || !f2.FileExists()) {
-
-		wxLogDebug(wxT("wxWebUpdateActionExtract::Run - the folder \"") + m_strWhere +
-				wxT("\" or the file \"") + m_strFile + wxT("\" does not exist !"));
-		return FALSE;
-	}
-
-	// create the archive factory
-	wxArchiveClassFactory *factory = NULL;
-	if (m_strType == wxT("zip"))
-		factory = new wxZipClassFactory;	
-
-	// extract the package 
-	wxArchiveEntryPtr entry;
-	wxFFileInputStream input(m_strFile);
-	wxArchiveInputStream *in = factory->NewStream(input);
-	delete factory;
-
-    while (entry.reset(in->GetNextEntry()), entry.get() != NULL)
-    {
-        // access meta-data
-        wxString name = entry->GetName();
-
-        // now just dump this entry to a new uncompressed file...
-		wxFileOutputStream out(dir + name);
-		if (!out.Write(*in)) {
-
-			wxLogDebug(wxT("wxWebUpdateActionExtract::Run - couldn't decompress ") + name);
-			delete in;
-			return FALSE;
-		}
-    }
-
-	delete in;
-	return TRUE;
-}
-
-bool wxWebUpdateActionExtract::SetProperties(const wxArrayString &propnames,
-										const wxArrayString &propvalues)
-{
-	wxString flags;
-
-	for (int i=0; i < (int)propnames.GetCount(); i++) {
-		if (propnames[i] == wxT("where"))
-			m_strWhere = propvalues[i];
-		else if (propnames[i] == wxT("file"))
-			m_strFile = propvalues[i];
-		else if (propnames[i] == wxT("type"))
-			m_strType = propvalues[i];
-		else
-			wxLogDebug(wxT("wxWebUpdateActionExtract::SetProperties - unknown property: ") 
-						+ propnames[i]);
-	}
-
-	// set defaults
-	if (m_strFile.IsEmpty())		// the FILE default value is $(thisfile)
-		m_strFile = wxWebUpdateInstaller::Get()->GetKeywordValue(wxT("thisfile"));
-	if (m_strWhere.IsEmpty())		// the WHERE default value is $(programdir)
-		m_strWhere = wxWebUpdateInstaller::Get()->GetKeywordValue(wxT("programdir"));
-	if (m_strType.IsEmpty())		// the TYPE default value is "zip"
-		m_strType = wxT("zip");
-
-	// validate the properties
-	wxFileName f(m_strWhere), f2(m_strFile);
-
-	// we won't do the wxFileName::FileExists check because the file we need to run
-	// could be a file which does not exist yet (e.g. its in the update package)
-	//
-	// NOTE: wxFileName::IsDir() only checks if the given string ends with a path
-	//       separator character (there are no real ways to do a ::IsDir check
-	//       without trying to access that path!) and thus we won't use it
-	if (m_strWhere.IsEmpty() || m_strFile.IsEmpty() || 
-		!f.IsOk() || !f2.IsOk()) 
-		return FALSE;
-
-	return TRUE;
-}
-
-
-
-// --------------------------
-// wxWEBUPDATEACTIONEXIT
-// --------------------------
-
-bool wxWebUpdateActionExit::Run() const
-{
-	int flags(m_nFlags);
-	wxString msg = wxT("This programs needs to exit in order to update itself.\n");
-
-	// tell the user that we are going to exit the application
-	if (flags & wxWUAE_NOTIFYUSER) {
-
-		if (flags & wxWUAE_RESTART)
-			msg += wxT("Then it will automatically restart...");
-
-		wxMessageBox(msg, wxWebUpdateInstaller::Get()->GetKeywordValue(wxT("appname")));
-
-	} else if (flags & wxWUAE_ASKUSER) {
-
-		wxASSERT_MSG(m_nFlags & wxWUAE_RESTART, 
-			wxT("If we just need to exit I have nothing to ask to the user"));
-		
-		int res = wxMessageBox(
-			msg + wxT("Do you want to restart it immediately after the update ?"),
-			wxWebUpdateInstaller::Get()->GetKeywordValue(wxT("appname")),
-			wxYES_NO);
-		if (res == wxNO)
-			flags &= ~wxWUAE_RESTART;	// remove the restart flag
-	}
-
-
-	// we need to exit our app	
-	wxCommandEvent exitev(wxWUAE_EXIT);
-	wxWebUpdater::Get()->AddPendingEvent(exitev);
-
-	return TRUE;
-}
-
-bool wxWebUpdateActionExit::SetProperties(const wxArrayString &propnames,
-										const wxArrayString &propvalues)
-{
-	wxString flags;
-
-	for (int i=0; i < (int)propnames.GetCount(); i++) {
-		if (propnames[i] == wxT("flags"))
-			flags = propvalues[i];
-		else
-			wxLogDebug(wxT("wxWebUpdateActionExit::SetProperties - unknown property: ") 
-						+ propnames[i]);
-	}
-
-	// set defaults
-	m_nFlags = 0;
-	if (flags.Contains(wxT("ASKUSER")))
-		m_nFlags |= wxWUAE_ASKUSER;
-	if (flags.Contains(wxT("NOTIFYUSER")))
-		m_nFlags |= wxWUAE_NOTIFYUSER;
-	if (flags.Contains(wxT("RESTART")))
-		m_nFlags |= wxWUAE_RESTART;
-	if (flags.IsEmpty())
-		m_nFlags = wxWUAE_ASKUSER;		// the default value
-
-	return TRUE;
-}
-
-
+//wxWebUpdater *wxWebUpdater::m_pTheUpdater = NULL;
 
 
 
@@ -439,16 +177,22 @@ void wxWebUpdateInstaller::InitDefaultKeywords()
 	// the program root folder
 	m_hashKeywords[wxT("programdir")] = wxGetCwd();
 
-	// the program path & filename
-	m_hashKeywords[wxT("program")] = wxTheApp->argv[0];
+	// the updater path & filename
+	m_hashKeywords[wxT("updater")] = wxTheApp->argv[0];
+
+	// the program-to-update path & filename
+	m_hashKeywords[wxT("program")] = 
+		wxFileName(m_hashKeywords[wxT("updater")]).
+			GetPath(wxPATH_GET_SEPARATOR | wxPATH_GET_VOLUME)
+			;
 		//wxFindAppPath(wxTheApp->argv[0], wxGetCwd(), wxTheApp->GetAppName());
 
-	// the program process ID
+	// the webupdater process ID
 	m_hashKeywords[wxT("pid")] = wxString::Format(wxT("%d"), wxGetProcessId());
 
 	// the program name
 	if (wxTheApp) 
-		m_hashKeywords[wxT("appname")] = wxTheApp->GetAppName();	
+		m_hashKeywords[wxT("appname")] = wxEmptyString;//wxTheApp->GetAppName();	
 #ifdef __WXDEBUG__
 	else
 		wxLogDebug(wxT("wxWebUpdateInstaller::InitDefaultKeywords - wxTheApp is not initialized !"));
@@ -461,6 +205,22 @@ void wxWebUpdateInstaller::InitDefaultKeywords()
 	else
 		wxLogDebug(wxT("wxWebUpdateInstaller::InitDefaultKeywords - wxTheApp/the top window is not initialized !"));
 #endif
+
+	// some command names
+	m_hashKeywords[wxT("cp")] = 
+#ifdef __WXMSW__
+		wxT("copy /y");
+#else
+		wxT("cp -f");
+#endif
+	m_hashKeywords[wxT("mv")] = 
+#ifdef __WXMSW__
+		wxT("move /y");
+#else
+		wxT("mv -f");
+#endif
+	m_hashKeywords[wxT("cd")] = wxT("cd");
+
 }
 
 void wxWebUpdateInstaller::FreeKeywords()
@@ -474,7 +234,6 @@ void wxWebUpdateInstaller::InitDefaultActions()
 {
 	m_hashActions[wxT("run")] = new wxWebUpdateActionRun();
 	m_hashActions[wxT("extract")] = new wxWebUpdateActionExtract();
-	m_hashActions[wxT("exit")] = new wxWebUpdateActionExit();
 }
 
 void wxWebUpdateInstaller::FreeActionHashMap()
@@ -526,7 +285,7 @@ void *wxWebUpdateInstallThread::Entry()
 {
 	// we'll use wxPostEvent to post this event since this is the
 	// only thread-safe way to post events !
-	wxCommandEvent updatevent(wxWUIT_INSTALLATION_COMPLETE);
+	wxCommandEvent updatevent(wxEVT_COMMAND_INSTALLATION_COMPLETE);
 
 	// begin our loop
 	while (!TestDestroy()) {
@@ -538,24 +297,13 @@ void *wxWebUpdateInstallThread::Entry()
 		}
 
 		wxLogDebug(wxT("wxWebUpdateInstallThread::Entry - installing ") + 
-					GetCurrent().m_strUpdateFile);
-		m_bSuccess = m_entries[m_nCurrentIndex].m_pDownload.Install();
+					m_strUpdateFile);
+		m_bSuccess = m_pDownload.Install();
 		wxLogDebug(wxT("wxWebUpdateInstallThread::Entry - completed installation"));
 
-		// we have installed the file... proceed with next ?
-		if (m_nCurrentIndex < (int)m_entries.GetCount()-1) {
-
-			// proceed with the next package in the queue
-			m_nCurrentIndex++;
-
-			// return to install mode
-			wxMutexLocker locker(m_mStatus);
-			m_nStatus = wxWUITS_INSTALLING;
-
-		} else {
-
-			// go in wait mode
-			wxMutexLocker locker(m_mStatus);
+		// go in wait mode
+		{
+  			wxMutexLocker locker(m_mStatus);
 			m_nStatus = wxWUITS_WAITING;
 		}
 
@@ -571,7 +319,7 @@ void *wxWebUpdateInstallThread::Entry()
 // -------------------------
 // wxWEBUPDATER
 // -------------------------
-
+/*
 void wxWebUpdater::OnUpdateExit(wxCommandEvent &)
 {
 	if (m_pWebUpdateDlg) {
@@ -594,12 +342,12 @@ void wxWebUpdater::OnUpdateExec(wxCommandEvent &ce)
 
 	wxLogDebug(wxT("wxWebUpdater::OnUpdateExec - executing the command:\n\n\t\t") +
 				cmd + wxT("\n\n with flags: %d"), flags);
-	/*long res =*/ ::wxExecute(cmd, flags);
+	/*long res =* ::wxExecute(cmd, flags);
 /*	if ((m_nExecFlag & wxEXEC_SYNC) && res != -1)
 		return TRUE;
 	if ((m_nExecFlag & wxEXEC_ASYNC) && res != 0)
 		return TRUE;
-	return FALSE;*/
+	return FALSE;*
 }
 
 void wxWebUpdater::OnWebUpdateDlgShow(wxCommandEvent &ce)
@@ -613,4 +361,4 @@ void wxWebUpdater::OnWebUpdateDlgDestroy(wxCommandEvent &)
 	wxLogDebug(wxT("wxWebUpdater::OnWebUpdateDlgDestroy - a wxWebUpdate dialog has been closed"));
 	m_pWebUpdateDlg = NULL;
 }
-
+*/

@@ -19,7 +19,6 @@
 
 // wxWidgets headers
 #include "wx/webupdatedef.h"
-#include "wx/installer.h"
 #include "wx/xml/xml.h"
 #include "wx/url.h"
 
@@ -85,6 +84,10 @@ typedef wxString		wxVersion;
 
 
 
+// -----------------------------------------------------------------------------
+// CLASSES WHICH WORK WITH *LOCAL* FILES
+// -----------------------------------------------------------------------------
+
 //! A simple container of the two basic info which wxWebUpdate classes 
 //! need to know about user *local* packages: the NAME and the local VERSION.
 //! This class should not be confused with wxWebUpdatePackage which instead
@@ -92,7 +95,7 @@ typedef wxString		wxVersion;
 //! on the *remote* server.
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateLocalPackage : public wxObject
 {
-public:		// to avoid setters/getters
+protected:
 
 	//! The name of this package.
 	wxString m_strName;
@@ -110,6 +113,15 @@ public:
 	bool IsOk() const
 		{ return !m_strName.IsEmpty() && !m_version.IsEmpty(); }
 
+	wxVersion GetVersion() const
+		{ return m_version; }
+	wxString GetName() const
+		{ return m_strName; }
+
+	//! Sets the version for this local package.
+	void SetVersion(const wxVersion &v)
+		{ m_version = v; }
+
 private:
 	DECLARE_CLASS(wxWebUpdateLocalPackage)
 };
@@ -117,6 +129,169 @@ private:
 // a container of wxWebUpdateLocalPackage used by wxWebUpdater
 WX_DECLARE_USER_EXPORTED_OBJARRAY(wxWebUpdateLocalPackage, wxWebUpdateLocalPackageArray, WXDLLIMPEXP_WEBUPDATE);
 
+//! This is the class which performs the XML parsing of the webupdate
+//! LOCAL scripts; local scripts are used just to keep trace of the 
+//! package installed on the PC and their versions.
+//! See #wxWebUpdateXMLScript for the class which parses the XML remote
+//! scripts (which are much more complex since they keep installation info).
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateLocalXMLScript : public wxXmlDocument
+{
+protected:
+
+	//! The name of the application whose packages must be updated.
+	wxString m_strAppName;
+
+	//! The name of the XRC resource file which should be used to update
+	//! the local packages.
+	wxString m_strXRC;
+	
+	//! The URI of the remote update script.
+	wxString m_strRemoteURI;
+	
+	//! The application executable file name.
+	wxString m_strAppFile;
+	
+	//! The URI of this local update script.
+	//! Set by #Load and used in #Save.
+	wxString m_strLocalURI;
+
+protected:
+
+	//! Creates a wxWebUpdatePackage from the given XML node.
+	//! The caller must delete the returned pointer.
+	wxWebUpdateLocalPackage *GetPackage(const wxXmlNode *package) const;
+
+	//! Returns the text content of the given node.
+	wxString GetNodeContent(const wxXmlNode *node) const;
+
+public:
+
+	wxWebUpdateLocalXMLScript(const wxString &localURI = wxEmptyString);
+	virtual ~wxWebUpdateLocalXMLScript() {}
+
+public:		// main functions
+
+	//! Returns TRUE if at least the root of this document is valid.
+	bool IsOk() const
+		{ if (!GetRoot() || GetRoot()->GetName() != wxT("webupdate")) return FALSE; return TRUE; }
+
+    //! Parses the local XML script located at the given URI.
+	//! This function can open any resource which can be handled
+	//! by wxFileSystem but it should typically be used to load
+	//! a file stored in the user's PC.
+	//! Returns TRUE if the document was successfully parsed.
+    virtual bool Load(const wxString &uri);
+    
+    //! Saves this XML file with the updated contents in the same location
+    //! given to the #Load function (since local update scripts should always
+    //! be kept in the fixed-name files).
+    virtual bool Save() const;
+    
+public:		// getters
+
+	//! Returns the wxWebUpdatePackage stored in this document for
+	//! the given package. Returns NULL if the package you asked for
+	//! is not present in this XML document.
+	virtual wxWebUpdateLocalPackage *GetPackage(const wxString &packagename) const;
+
+	//! Returns all the available packages from this XML document.
+	virtual wxWebUpdateLocalPackageArray GetAllPackages() const;
+	
+	//! Returns the name of the application whose packages must be updated.
+	wxString GetAppName() const
+		{ return m_strAppName; }
+		
+	//! Returns the filename of the application to update.
+	wxString GetAppFile() const
+		{ return m_strAppFile; }
+  		
+	//! Returns the name of the XRC resources to use to update the packages.
+	wxString GetXRCResName() const
+		{ return m_strXRC; }
+		
+	//! Returns the URI for the WebUpdate remote script.
+	wxString GetRemoteScriptURI() const
+		{ return m_strRemoteURI; }
+		
+	//! Returns the URI for this WebUpdate local script.
+	wxString GetLocalScriptURI() const
+		{ return m_strLocalURI; }
+
+public: 	// setters
+
+	//! Forces the removal of the old XML script and the reconstruction of the
+	//! new one based on the given array.
+	void SetPackageArray(const wxWebUpdateLocalPackageArray &arr);
+
+private:
+	DECLARE_CLASS(wxWebUpdateLocalXMLScript)
+};
+
+
+
+
+
+
+// -----------------------------------------------------------------------------
+// CLASSES WHICH WORK WITH *REMOTE* FILES
+// -----------------------------------------------------------------------------
+
+//! The base abstract class for the handler of an <actions> subtag of
+//! a webupdate XML script. See webupdate.dtd for the specification of
+//! the format of the WebUpdate XML script and for the description of
+//! the standard wxWebUpdateAction-derived classes.
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateAction : public wxObject
+{
+protected:
+
+	//! The name of this action.
+	wxString m_strName;
+
+	//! The list of properties for this action.
+	wxArrayString m_arrPropName;
+
+	//! The list of the property values for this action.
+	wxArrayString m_arrPropValue;
+
+public:
+    wxWebUpdateAction(const wxString &name = wxEmptyString)
+         : m_strName(name) {}
+
+    virtual ~wxWebUpdateAction() {}
+
+public:		// miscellaneous
+    
+	//! Returns TRUE if this action was correctly initialized.
+    bool IsOk() const
+        { return !m_strName.IsEmpty() && 
+			m_arrPropName.GetCount() == m_arrPropValue.GetCount(); }
+
+	//! Returns the value for the given property or wxEmptyString if that
+	//! property has not been set for this object.
+	wxString GetPropValue(const wxString &propname) const
+		{ int n=m_arrPropName.Index(propname); if (n!=wxNOT_FOUND) return m_arrPropValue.Item(n); return wxEmptyString; }
+
+	//! Sets the property names & values for this action.
+	virtual bool SetProperties(const wxArrayString &propnames,
+							const wxArrayString &propvalues) = 0;
+
+	//! Run this action.
+	virtual bool Run() const = 0;
+
+	//! Returns a copy of this action.
+	virtual wxWebUpdateAction *Clone() const = 0;
+    
+public:     // getters
+
+    wxString GetName() const
+        { return m_strName; } 
+
+private:
+	DECLARE_CLASS(wxWebUpdateAction)
+};
+
+// a container of wxWebUpdateAction used by wxWebUpdateDownload
+WX_DECLARE_USER_EXPORTED_OBJARRAY(wxWebUpdateAction*, wxWebUpdateActionArray, WXDLLIMPEXP_WEBUPDATE);
 
 //! Contains the info about an available download.
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDownload : public wxObject
@@ -207,8 +382,12 @@ public:		// miscellaneous
 	virtual unsigned long GetDownloadSize(bool forceRecalc = FALSE);
 
 	//! Returns TRUE if the download size for this file has been already cached.
-	virtual bool IsDownloadSizeCached() const
+	bool IsDownloadSizeCached() const
 		{ return m_size != 1; }
+		
+	//! Sets the download size for this file.
+	void SetDownloadSize(int n)
+		{ m_size=n; }
 
 	//! Returns the filename of the resource pointed by the current URL
 	//! (thus the returned name is extracted from the download URL).
@@ -337,6 +516,11 @@ public:
     
 public:		// package utilities
 
+	//! Returns TRUE if this package was correctly initialized.
+	bool IsOk() const
+		{ return !m_strID.IsEmpty() && !m_strLatestVersion.IsEmpty() &&
+				m_arrWebUpdates.GetCount() > 0; }
+
 	//! Adds the given download package to the array.
 	virtual void AddDownloadPackage(const wxWebUpdateDownload &toadd)
 		{ m_arrWebUpdates.Add(toadd); }
@@ -432,6 +616,10 @@ public:
 	virtual ~wxWebUpdateXMLScript() {}
 
 public:		// main functions
+
+	//! Returns TRUE if at least the root of this document is valid.
+	bool IsOk() const
+		{ if (!GetRoot() || GetRoot()->GetName() != wxT("webupdate")) return FALSE; return TRUE; }
 
     //! Parses the XML script located at the given URI.
 	//! This function can open any resource which can be handled

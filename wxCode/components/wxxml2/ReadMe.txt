@@ -2,16 +2,12 @@
  wxXml2 component info
  ---------------------
  
- Component:  wxxml2
- Release:    2005-1-4
- Documents:  http://wxcode.sourceforge.net/components/wxxml2/index.html
- wxWidgets:  2.4.x, 2.5.x
- Maintainer: Francesco Montorsi (frm)
- Subdir:     wxxml2
+ Website: http://wxcode.sourceforge.net/components/wxxml2
+ Version: 1.5
  
  Description:
  A simple set of classes, wxXml2Namespace, wxXml2Property, wxXml2Node, wxXml2DTD and
- wxXml2Document, that interfaces wxWidgets with libxml2.
+ wxXml2Document, that interface wxWidgets with libxml2.
  With this component you can add load/save/edit XML support to your wxWidgets application
  using all the power of a well-known library like libxml2.
  The full support for DTDs allows you to easily check your XML documents & thus to
@@ -21,6 +17,7 @@
  By now, these classes wrap only the most important libxml2 features but they are
  perfectly integrated with wxWidgets and easily extensible since they provide good
  commented code & doxygen docs.
+
 
 
  wxXml2 wrappers sample

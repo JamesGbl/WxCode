@@ -19,201 +19,26 @@
 
 // wxWidgets headers
 #include "wx/webupdatedef.h"		// for WXDLLIMPEXP_WEBUPDATE macros only
-#include "wx/url.h"
+#include "wx/webupdate.h"
 
 
 // defined later
 class WXDLLIMPEXP_WEBUPDATE wxDownloadThread;
-class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDownload;
-class WXDLLIMPEXP_WEBUPDATE wxWebUpdatePackage;
-class WXDLLIMPEXP_WEBUPDATE wxWebUpdateLocalPackageArray;
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDlg;
-
-extern WXDLLIMPEXP_DATA_WEBUPDATE(wxWebUpdateDownload) wxEmptyWebUpdateDownload;
 
 // this is the even sent by a wxDownloadThread class to the wxEvtHandler
 // which is given it in its constructor.
-DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_WEBUPDATE, wxWUIT_INSTALLATION_COMPLETE, -1);
+DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_WEBUPDATE, wxEVT_COMMAND_INSTALLATION_COMPLETE, -1);
+
+#define EVT_INSTALLATION_COMPLETE(id, func)		\
+	EVT_COMMAND(id, wxEVT_COMMAND_INSTALLATION_COMPLETE, func)
+
 
 //! The possible values of the wxDownloadThread::m_nStatus variable.
 enum wxWebUpdateInstallThreadStatus {
 	wxWUITS_WAITING = -1,
 	wxWUITS_INSTALLING
 };
-
-// the message sent to wxApp by wxWebUpdateActionExit
-DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_WEBUPDATE, wxWUAE_EXIT, -1);
-
-// the message sent to wxApp by wxWebUpdateActionRun
-DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_WEBUPDATE, wxWUAR_EXECUTE, -1);
-
-
-//! The base abstract class for the handler of an <action> tag of
-//! a webupdate script.
-class WXDLLIMPEXP_WEBUPDATE wxWebUpdateAction : public wxObject
-{
-protected:
-
-	//! The name of this action.
-	wxString m_strName;
-
-	//! The list of properties for this action.
-	wxArrayString m_arrPropName;
-
-	//! The list of the property values for this action.
-	wxArrayString m_arrPropValue;
-
-public:
-    wxWebUpdateAction(const wxString &name = wxEmptyString)
-         : m_strName(name) {}
-
-    virtual ~wxWebUpdateAction() {}
-
-public:		// miscellaneous
-    
-	//! Returns TRUE if this action was correctly initialized.
-    bool IsOk() const
-        { return !m_strName.IsEmpty() && 
-			m_arrPropName.GetCount() == m_arrPropValue.GetCount(); }
-
-	//! Returns the value for the given property or wxEmptyString if that
-	//! property has not been set for this object.
-	wxString GetPropValue(const wxString &propname) const
-		{ int n=m_arrPropName.Index(propname); if (n!=wxNOT_FOUND) return m_arrPropValue.Item(n); return wxEmptyString; }
-
-	//! Sets the property names & values for this action.
-	virtual bool SetProperties(const wxArrayString &propnames,
-							const wxArrayString &propvalues) = 0;
-
-	//! Run this action.
-	virtual bool Run() const = 0;
-
-	//! Returns a copy of this action.
-	virtual wxWebUpdateAction *Clone() const = 0;
-    
-public:     // getters
-
-    wxString GetName() const
-        { return m_strName; } 
-
-private:
-	DECLARE_CLASS(wxWebUpdateAction)
-};
-
-
-//! The "run" action.
-class WXDLLIMPEXP_WEBUPDATE wxWebUpdateActionRun : public wxWebUpdateAction
-{
-protected:
-
-	//! The arguments to give to the program which is run.
-	wxString m_strArgs;
-
-	//! The path & name of the executable file to run.
-	wxString m_strFile;
-
-	//! The run flags: wxEXEC_ASYNC, wxEXEC_SYNC, wxEXEC_NOHIDE.
-	int m_nExecFlag;
-
-public:
-    wxWebUpdateActionRun()
-         : wxWebUpdateAction(wxT("run")) {}
-    virtual ~wxWebUpdateActionRun() {}
-
-public:
-
-	//! Sets the property names & values for this action.
-	virtual bool SetProperties(const wxArrayString &propnames,
-							const wxArrayString &propvalues);
-
-	//! Run this action.
-	virtual bool Run() const;
-
-	//! Returns a copy of this action.
-	virtual wxWebUpdateAction *Clone() const
-		{ return new wxWebUpdateActionRun(*this); }
-
-private:
-	DECLARE_CLASS(wxWebUpdateActionRun)
-};
-
-
-//! The "extract" action.
-class WXDLLIMPEXP_WEBUPDATE wxWebUpdateActionExtract : public wxWebUpdateAction
-{
-protected:
-
-	//! The place where the contents of the file will be extracted.
-	wxString m_strWhere;
-
-	//! The file to extract.
-	wxString m_strFile;
-
-	//! The type of archive.
-	wxString m_strType;
-
-public:
-    wxWebUpdateActionExtract()
-         : wxWebUpdateAction(wxT("extract")) {}
-    virtual ~wxWebUpdateActionExtract() {}
-
-public:
-
-	//! Sets the property names & values for this action.
-	virtual bool SetProperties(const wxArrayString &propnames,
-							const wxArrayString &propvalues);
-
-	//! Run this action.
-	virtual bool Run() const;
-
-	//! Returns a copy of this action.
-	virtual wxWebUpdateAction *Clone() const
-		{ return new wxWebUpdateActionExtract(*this); }
-
-private:
-	DECLARE_CLASS(wxWebUpdateActionExtract)
-};
-
-
-#define wxWUAE_RESTART				1
-#define wxWUAE_ASKUSER				2
-#define	wxWUAE_NOTIFYUSER			4
-
-//! The "exit" action.
-class WXDLLIMPEXP_WEBUPDATE wxWebUpdateActionExit : public wxWebUpdateAction
-{
-protected:
-
-	//! One of wxWUAE_RESTART, wxWUAE_ASKUSER, wxWUAE_NOTIFYUSER.
-	int m_nFlags;
-
-public:
-    wxWebUpdateActionExit()
-         : wxWebUpdateAction(wxT("exit")) {}
-    virtual ~wxWebUpdateActionExit() {}
-
-public:
-
-	//! Sets the property names & values for this action.
-	virtual bool SetProperties(const wxArrayString &propnames,
-							const wxArrayString &propvalues);
-
-	//! Run this action.
-	virtual bool Run() const;
-
-	//! Returns a copy of this action.
-	virtual wxWebUpdateAction *Clone() const
-		{ return new wxWebUpdateActionExit(*this); }
-
-private:
-	DECLARE_CLASS(wxWebUpdateActionExit)
-};
-
-
-
-
-// a container of wxWebUpdateAction used by wxWebUpdateDownload
-WX_DECLARE_USER_EXPORTED_OBJARRAY(wxWebUpdateAction*, wxWebUpdateActionArray, WXDLLIMPEXP_WEBUPDATE);
 
 // an hash map with wxString as keys and wxWebUpdateAction as values.
 // Used by wxWebUpdateInstaller.
@@ -296,7 +121,7 @@ private:
 };
 
 
-
+/*
 //! A singleton class which responds to the wxWebUpdateAction events.
 //! This class code will be executed from the main thread.
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdater : public wxEvtHandler
@@ -308,16 +133,34 @@ protected:
 
 	//! The instance of the current wxWebUpdateDlg shown to the user.
 	wxWebUpdateDlg *m_pWebUpdateDlg;
+	
+	//! The array of local packages.
+	wxWebUpdateLocalPackageArray m_arr;
+	
+	//! The name of the application to update.
+	wxString m_strAppName;
 
 public:
 	wxWebUpdater() { m_pWebUpdateDlg = NULL; }
 	virtual ~wxWebUpdater() {}
 
-
-public:		// to be implemented
+public:		// setters/getters for updater properties
 
 	//! Returns the list of the currently installed local packages.
-	virtual wxWebUpdateLocalPackageArray GetLocalPackages() const = 0;
+	wxWebUpdateLocalPackageArray GetLocalPackages() const
+		{ return m_arr; }
+	
+	//! Sets the array of local packages.
+	void SetLocalPackages(const wxWebUpdateLocalPackageArray &arr)
+		{ m_arr = arr; }
+		
+	//! Returns the name for the application to update.
+	wxString GetAppName() const
+		{ return m_strAppName; }
+		
+	//! Sets the name of the application to update.
+	void SetAppName(const wxString &name)
+		{ m_strAppName = name; }
 
 public:		// event handlers
 
@@ -343,27 +186,10 @@ private:
 	DECLARE_CLASS(wxWebUpdateInstaller)
 	DECLARE_EVENT_TABLE()
 };
-
-
-
-//! An installer entry for wxWebUpdateInstallThread.
-class wxWebUpdateInstallThreadEntry 
-{
-public:		// to avoid setters/getters
-
-	//! The downloaded file which is our update package.
-	wxString m_strUpdateFile;
-
-	//! The package which contains the wxWebUpdateAction to be executed.
-	wxWebUpdateDownload &m_pDownload;
-
-public:
-	wxWebUpdateInstallThreadEntry() : m_pDownload(wxEmptyWebUpdateDownload) {}
-	virtual ~wxWebUpdateInstallThreadEntry() {}
-};
+*/
 
 // a container of wxWebUpdateInstallThreadEntry used by wxWebUpdateInstallThread
-WX_DECLARE_USER_EXPORTED_OBJARRAY(wxWebUpdateInstallThreadEntry, wxWebUpdateInstallThreadEntryArray, WXDLLIMPEXP_WEBUPDATE);
+//WX_DECLARE_USER_EXPORTED_OBJARRAY(wxWebUpdateInstallThreadEntry, wxWebUpdateInstallThreadEntryArray, WXDLLIMPEXP_WEBUPDATE);
 
 
 //! The thread used to install the packages.
@@ -386,8 +212,11 @@ public:		// to avoid setters/getters (these vars are only read by this thread;
 	//! The wxEvtHandler which will receive our wxDT_NOTIFICATION events.
 	wxEvtHandler *m_pHandler;
 
-	//! The packages to install.
-	wxWebUpdateInstallThreadEntryArray m_entries;
+	//! The downloaded file which is our update package.
+	wxString m_strUpdateFile;
+
+	//! The package which contains the wxWebUpdateAction to be executed.
+	wxWebUpdateDownload &m_pDownload;
 
 protected:		// these are vars protected by mutexes...
 
@@ -403,7 +232,8 @@ protected:		// these are vars protected by mutexes...
 
 public:
 	wxWebUpdateInstallThread(wxEvtHandler *dlg = NULL)
-		: wxThread(wxTHREAD_JOINABLE), m_pHandler(dlg)
+		: wxThread(wxTHREAD_JOINABLE), m_pHandler(dlg), 
+  			m_pDownload(wxEmptyWebUpdateDownload)
 		{ m_bSuccess=TRUE; m_nInstallationCount=0; m_nCurrentIndex=0;
 		  m_nStatus = wxWUITS_WAITING; }
 
@@ -436,9 +266,8 @@ public:		// miscellaneous
 
 	//! Starts a new installation.
 	//! This function must be called only when this thread is not installing anything else.
-	void QueueNewInstall(wxWebUpdateInstallThreadEntry &install) {
-		//wxASSERT(!IsInstalling());
-		m_entries.Add(install);
+	void BeginNewInstall() {
+		wxASSERT(!IsInstalling());
 		wxMutexLocker lock(m_mStatus);
 		m_nStatus = wxWUITS_INSTALLING;
 	}
@@ -449,14 +278,6 @@ public:		// miscellaneous
 		wxMutexLocker lock(m_mStatus);
 		m_nStatus = wxWUITS_WAITING;
 	}
-
-	//! Returns the current element which is being downloaded.
-	wxWebUpdateInstallThreadEntry &GetCurrent()
-		{ return m_entries[m_nCurrentIndex]; }
-
-	//! Returns the oldest download in the queue (i.e. the first).
-	wxWebUpdateInstallThreadEntry &GetOldest()
-		{ return m_entries[0]; } 
 
 	//! Returns TRUE if the last installation was successful.
 	bool InstallationWasSuccessful() const		

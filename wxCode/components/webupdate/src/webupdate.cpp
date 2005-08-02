@@ -32,12 +32,20 @@
 #include <wx/filesys.h>
 #include "wx/webupdate.h"
 #include "wx/download.h"
+#include "wx/installer.h"
 
 
 // wxWidgets RTTI
-IMPLEMENT_CLASS(wxWebUpdateXMLScript, wxXmlDocument)
-IMPLEMENT_CLASS(wxWebUpdatePackage, wxObject)
+IMPLEMENT_CLASS(wxWebUpdateLocalPackage, wxObject)
+IMPLEMENT_CLASS(wxWebUpdateLocalXMLScript, wxXmlDocument)
+
+IMPLEMENT_CLASS(wxWebUpdateAction, wxObject)
 IMPLEMENT_CLASS(wxWebUpdateDownload, wxObject)
+IMPLEMENT_CLASS(wxWebUpdatePackage, wxObject)
+IMPLEMENT_CLASS(wxWebUpdateXMLScript, wxXmlDocument)
+
+#include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
+WX_DEFINE_USER_EXPORTED_OBJARRAY(wxWebUpdateActionArray);
 
 #include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
 WX_DEFINE_USER_EXPORTED_OBJARRAY(wxWebUpdateDownloadArray);
@@ -53,6 +61,230 @@ WX_DEFINE_USER_EXPORTED_OBJARRAY(wxWebUpdateLocalPackageArray);
 wxWebUpdateDownload wxEmptyWebUpdateDownload(wxT("invalid"));
 wxWebUpdatePackage wxEmptyWebUpdatePackage(wxT("invalid"));
 wxWebUpdateLocalPackage wxEmptyWebUpdateLocalPackage(wxT("invalid"));
+
+
+
+
+// ---------------------------
+// wxWEBUPDATELOCALXMLSCRIPT
+// ---------------------------
+
+wxWebUpdateLocalXMLScript::wxWebUpdateLocalXMLScript(const wxString &strURI)
+{ 
+	// we can load
+	if (!strURI.IsEmpty()) Load(strURI); 
+}
+
+// taken from wx/src/xrc/xmlres.cpp, wxXmlResourceHandler::GetNodeContent
+wxString wxWebUpdateLocalXMLScript::GetNodeContent(const wxXmlNode *node) const
+{
+    const wxXmlNode *n = node;
+    if (n == NULL) return wxEmptyString;
+    n = n->GetChildren();
+
+    while (n)
+    {
+        if (n->GetType() == wxXML_TEXT_NODE ||
+            n->GetType() == wxXML_CDATA_SECTION_NODE)
+            return n->GetContent();
+        n = n->GetNext();
+    }
+
+    return wxEmptyString;
+}
+
+wxWebUpdateLocalPackage *wxWebUpdateLocalXMLScript::GetPackage(const wxXmlNode *package) const
+{
+	if (!package || package->GetName() != wxT("local-package")) return NULL;
+
+	wxString packagename;
+	wxXmlProperty *prop = package->GetProperties();
+	while (prop && prop->GetName() != wxT("id"))
+		prop = prop->GetNext();
+	if (prop) packagename = prop->GetValue();
+
+	// parse this package
+	wxString ver;
+	wxXmlNode *child = package->GetChildren();
+	while (child) {
+
+		if (child->GetName() == wxT("version")) {
+
+			// get the version string
+			ver = GetNodeContent(child);
+		}
+
+		// proceed
+		child = child->GetNext();
+	}
+	
+	if (ver.IsEmpty())
+		return NULL;
+	
+	return new wxWebUpdateLocalPackage(packagename, ver);	// the caller must delete it
+}
+
+wxWebUpdateLocalPackage *wxWebUpdateLocalXMLScript::GetPackage(const wxString &packagename) const
+{
+	if (!IsOk())
+		return NULL;
+	wxXmlNode *package = GetRoot()->GetChildren();
+    
+	bool matches = FALSE;
+	while (package && !matches) {
+
+		while (package && package->GetName() != wxT("local-package"))
+			package = package->GetNext();
+		if (!package) return NULL;		// could not found other PACKAGE tags in this script !
+
+		wxXmlProperty *prop = package->GetProperties();
+		while (prop && prop->GetName() != wxT("id"))
+			prop = prop->GetNext();
+		matches = prop->GetValue() == packagename;
+	}
+
+	if (!package) 
+		return NULL;	// could not found the required package
+	return GetPackage(package);
+}
+
+wxWebUpdateLocalPackageArray wxWebUpdateLocalXMLScript::GetAllPackages() const
+{
+	wxWebUpdateLocalPackageArray ret;
+
+	// check root of the local script file
+	if (!IsOk())
+		return ret;		// empty array = error
+	wxXmlNode *package = GetRoot()->GetChildren();
+
+	while (package) {
+	
+		if (package->GetName() == wxT("local-package")) {
+		
+			// add the package
+			wxWebUpdateLocalPackage *toadd = GetPackage(package);
+			if (toadd) ret.Add(toadd);
+		}
+		
+		package = package->GetNext();
+	}
+
+	return ret;
+}
+
+bool wxWebUpdateLocalXMLScript::Load(const wxString &uri)
+{
+	wxLogDebug(wxT("wxWebUpdateXMLScript::Load - loading ") + uri);
+
+    // refer to "webupdate.dtd" for a definition of the XML webupdate info script
+    // first of all, we need to open a connection to the given url     
+	wxFileSystem fs;
+	wxFSFile *xml = fs.OpenFile(uri);
+	if (!xml) return FALSE;	
+
+	// parse the XML file
+	wxXmlDocument::Load(*xml->GetStream());
+	delete xml;
+
+	// load the user custom messages (if present)
+	if (!IsOk())
+		return FALSE;
+
+    wxXmlNode *child = GetRoot()->GetChildren();
+	while (child) {
+
+		if (child->GetName() == wxT("appname")) {
+		
+			// save the name of the app using WebUpdate
+			m_strAppName = GetNodeContent(child);
+
+		} else if (child->GetName() == wxT("dlgxrc")) {
+		
+			// save the name of the XRC file to use
+			m_strXRC = GetNodeContent(child);
+		
+  		} else if (child->GetName() == wxT("appfile")) {
+		
+			// save the filename of the program to update
+			m_strAppFile = GetNodeContent(child);
+  		
+    	} else if (child->GetName() == wxT("remoteuri")) {
+		
+			// save the location of the remote script
+			m_strRemoteURI = GetNodeContent(child);
+  		}
+  		
+		child = child->GetNext();
+	}
+
+	m_strLocalURI = uri;
+	return TRUE;
+}
+
+void wxWebUpdateLocalXMLScript::SetPackageArray(const wxWebUpdateLocalPackageArray &arr)
+{
+	// remove old contents
+	wxXmlNode *p = GetRoot()->GetChildren();
+	while (p) {
+		wxXmlNode *next = p->GetNext();
+		delete p;
+		p = next;
+	}
+	
+	// set the appname
+	wxXmlNode *appname = new wxXmlNode(GetRoot(), wxXML_ELEMENT_NODE, wxT("appname"), 
+						   			wxEmptyString, NULL, NULL);
+	appname->AddChild(new wxXmlNode(appname, wxXML_TEXT_NODE, wxEmptyString,
+									m_strAppName, NULL, NULL));
+	GetRoot()->AddChild(appname);
+	
+	// set the appfile
+	wxXmlNode *appfile = new wxXmlNode(GetRoot(), wxXML_ELEMENT_NODE, wxT("appfile"), 
+						 			wxEmptyString, NULL, NULL);
+	appfile->AddChild(new wxXmlNode(appfile, wxXML_TEXT_NODE, wxEmptyString,
+									m_strAppFile, NULL, NULL));
+	appname->SetNext(appfile);
+	
+	// set the XRC name
+	wxXmlNode *xrc = new wxXmlNode(GetRoot(), wxXML_ELEMENT_NODE, wxT("dlgxrc"), 
+						 			wxEmptyString, NULL, NULL);
+	xrc->AddChild(new wxXmlNode(xrc, wxXML_TEXT_NODE, wxEmptyString,
+									m_strXRC, NULL, NULL));
+	appfile->SetNext(xrc);
+	
+	// set the remote URI
+	wxXmlNode *uri = new wxXmlNode(GetRoot(), wxXML_ELEMENT_NODE, wxT("remoteuri"), 
+						 			wxEmptyString, NULL, NULL);
+	uri->AddChild(new wxXmlNode(uri, wxXML_TEXT_NODE, wxEmptyString,
+									m_strRemoteURI, NULL, NULL));
+	xrc->SetNext(uri);
+	
+	// create the array of local packages
+	wxXmlNode *prev = uri;
+	for (int i=0; i < (int)arr.GetCount(); i++) {
+	
+		// create the local-package tag with its ID property
+		wxXmlNode *lp = new wxXmlNode(GetRoot(), wxXML_ELEMENT_NODE, wxT("local-package"),
+										wxEmptyString, new wxXmlProperty(wxT("id"), 
+          								arr[i].GetName(), NULL), NULL);
+ 		
+ 		// create its VERSION subtag
+ 		wxXmlNode *v = new wxXmlNode(lp, wxXML_ELEMENT_NODE, wxT("version"),
+ 									wxEmptyString, NULL, NULL);
+		v->AddChild(new wxXmlNode(v, wxXML_TEXT_NODE, wxEmptyString,
+									arr[i].GetVersion(), NULL, NULL));		
+		prev->SetNext(lp);
+		prev = lp;
+	}
+}
+
+bool wxWebUpdateLocalXMLScript::Save() const
+{
+	wxASSERT_MSG(!m_strLocalURI.IsEmpty(), wxT("Invalid filename !"));
+	return wxXmlDocument::Save(m_strLocalURI);
+}
+
+
 
 
 
@@ -275,9 +507,8 @@ wxDownloadThread *wxWebUpdateDownload::DownloadAsynch(const wxString &path,
 		return NULL;
 	}
 
-	wxDownloadThreadEntry e;
-	e.m_strOutput = path;
-	thread->QueueNewDownload(e);
+	thread->m_strOutput = path;
+	thread->BeginNewDownload();
 
 	return thread;
 }
@@ -645,10 +876,9 @@ wxWebUpdatePackageArray wxWebUpdateXMLScript::GetAllPackages() const
 	wxWebUpdatePackageArray ret;
 
 	// now it's time to parse the XML file we expect to be in 'xml' input stream    
-    wxXmlNode *webupdate = GetRoot();
-	if (!webupdate || webupdate->GetName() != wxT("webupdate"))
+	if (!IsOk())
 		return ret;		// empty array = error
-	wxXmlNode *package = webupdate->GetChildren();
+	wxXmlNode *package = GetRoot()->GetChildren();
 
 	while (package) {
 		wxWebUpdatePackage *toadd = GetPackage(package);
@@ -672,15 +902,14 @@ bool wxWebUpdateXMLScript::Load(const wxString &uri)
 	if (!xml) return FALSE;	
 
 	// parse the XML file
-	bool success = wxXmlDocument::Load(*xml->GetStream());
+	wxXmlDocument::Load(*xml->GetStream());
 	delete xml;
 
-	// load the use custom messages (if present)
-    wxXmlNode *webupdate = GetRoot();
-	if (!success || !webupdate || webupdate->GetName() != wxT("webupdate"))
+	// load the user custom messages (if present)
+	if (!IsOk())
 		return FALSE;
 
-    wxXmlNode *child = webupdate->GetChildren();
+    wxXmlNode *child = GetRoot()->GetChildren();
 	while (child) {
 
 		if (child->GetName() == wxT("msg-update-available"))

@@ -26,7 +26,6 @@ NM = @NM@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_DIR = @INSTALL_DIR@
-srcdir = @srcdir@
 top_builddir = @top_builddir@
 libdir = @libdir@
 includedir = @includedir@
@@ -124,7 +123,7 @@ COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd = $(NM) minimal$(EXEEXT) | if \
 
 all: $(__keybinder_lib___depname) $(__keybinder_dll___depname) ../sample/minimal$(EXEEXT)
 
-install: all $(__install_keybinder_lib___depname) $(__install_keybinder_dll___depname)
+install: all install-wxheaders $(__install_keybinder_lib___depname) $(__install_keybinder_dll___depname)
 
 uninstall: 
 	rm -f  $(DESTDIR)$(includedir)/wx/keybinderdef.h\
@@ -223,6 +222,10 @@ docs:
 cleandocs: 
 	rm -rf ../docs/html
 
+install-wxheaders: 
+	$(INSTALL_DIR) $(DESTDIR)$(includedir)/wx
+	(cd ../src ; $(INSTALL_DATA)  ../include/wx/*.h $(DESTDIR)$(includedir)/wx)
+
 @COND_WX_SHARED_0@../lib/$(LIBPREFIX)keybinder$(LIBEXT): $(KEYBINDER_LIB_OBJECTS)
 @COND_WX_SHARED_0@	rm -f $@
 @COND_WX_SHARED_0@	$(AR) rcu $@ $(KEYBINDER_LIB_OBJECTS)
@@ -249,22 +252,22 @@ cleandocs:
 	$(__minimal___mac_setfilecmd)
 	$(__minimal___os2_emxbindcmd)
 
-keybinder_lib_keybinder.o: $(srcdir)/../src/keybinder.cpp
-	$(CXXC) -c -o $@ $(KEYBINDER_LIB_CXXFLAGS) $(srcdir)/../src/keybinder.cpp
+keybinder_lib_keybinder.o: ../src/keybinder.cpp
+	$(CXXC) -c -o $@ $(KEYBINDER_LIB_CXXFLAGS) ../src/keybinder.cpp
 
-keybinder_lib_menuutils.o: $(srcdir)/../src/menuutils.cpp
-	$(CXXC) -c -o $@ $(KEYBINDER_LIB_CXXFLAGS) $(srcdir)/../src/menuutils.cpp
+keybinder_lib_menuutils.o: ../src/menuutils.cpp
+	$(CXXC) -c -o $@ $(KEYBINDER_LIB_CXXFLAGS) ../src/menuutils.cpp
 
-keybinder_dll_keybinder.o: $(srcdir)/../src/keybinder.cpp
-	$(CXXC) -c -o $@ $(KEYBINDER_DLL_CXXFLAGS) $(srcdir)/../src/keybinder.cpp
+keybinder_dll_keybinder.o: ../src/keybinder.cpp
+	$(CXXC) -c -o $@ $(KEYBINDER_DLL_CXXFLAGS) ../src/keybinder.cpp
 
-keybinder_dll_menuutils.o: $(srcdir)/../src/menuutils.cpp
-	$(CXXC) -c -o $@ $(KEYBINDER_DLL_CXXFLAGS) $(srcdir)/../src/menuutils.cpp
+keybinder_dll_menuutils.o: ../src/menuutils.cpp
+	$(CXXC) -c -o $@ $(KEYBINDER_DLL_CXXFLAGS) ../src/menuutils.cpp
 
-minimal_minimal.o: $(srcdir)/../sample/minimal.cpp
-	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/../sample/minimal.cpp
+minimal_minimal.o: ../src/../sample/minimal.cpp
+	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) ../src/../sample/minimal.cpp
 
-minimal_minimal_rc.o: $(srcdir)/../sample/minimal.rc
+minimal_minimal_rc.o: ../src/../sample/minimal.rc
 	$(RESCOMP) -i$< -o$@  --include-dir ../include --include-dir ../sample
 
 

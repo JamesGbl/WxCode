@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE webupdate SYSTEM "webupdate.dtd">
+<!DOCTYPE webupdate SYSTEM "remote.dtd">
 <!-- $Id$ -->
 
 <webupdate>

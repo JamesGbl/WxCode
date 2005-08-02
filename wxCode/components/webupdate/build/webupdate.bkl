@@ -5,10 +5,22 @@
 	<!-- Some defaults for the variables used by wxCode bakefiles -->
 	<set var="WXCODE_BAKEFILEDIR">../../../build/bakefiles</set>
 	<include file="$(WXCODE_BAKEFILEDIR)/defaults.bkl"/>
+	<include file="$(WXCODE_BAKEFILEDIR)/tags.bkl"/>
 	
 
 	<!-- The WebUpdate settings -->
 	<!-- ====================== -->
+
+	<if cond="TARGETING_IDE=='0'">
+		<option name="USE_HTTPENGINE">
+			<values>1,0</values>
+			<default-value>0</default-value>
+			<description>If 1 then wxHTTPEngine component will be used for proxy/authentication stuff</description>
+		</option>
+	</if>
+	<if cond="TARGETING_IDE=='1'">
+		<set var="USE_HTTPENGINE">0</set>
+	</if>
 	
 	<if cond="TARGETING_WIN32=='1'">
 		<option name="HTTPENGINE_DIR" category="path">
@@ -18,12 +30,8 @@
 	</if>
 	
 	<set var="COMP_NAME">webupdate</set>
-	<set var="COMP_SRC">../src/webupdate.cpp ../src/webupdatedlg.cpp ../src/checkedlistctrl.cpp
-					../src/md5.cpp ../src/installer.cpp ../src/download.cpp</set>
-	<set var="COMP_HDR">../include/wx/webupdatedef.h ../include/wx/webupdate.h ../include/wx/webupdatedlg.h 
-					../include/wx/checkedlistctrl.h ../include/wx/md5.h ../include/wx/installer.h  
-					../include/wx/download.h</set>	
-	<set var="COMP_SAMPLE_SRC"/>
+	<set var="COMP_SRC">webupdate.cpp webupdatedlg.cpp checkedlistctrl.cpp	md5.cpp installer.cpp download.cpp stdactions.cpp app.cpp</set>
+	<set var="COMP_HDR">wx/webupdatedef.h wx/webupdate.h wx/webupdatedlg.h wx/checkedlistctrl.h wx/md5.h wx/installer.h wx/download.h wx/stdactions.h</set>		
 	
 	<set var="COMP_SAMPLE1_SRC">../samples/simple/v1.0.0/minimal.cpp</set>
 	<set var="COMP_SAMPLE1_UPDATED_SRC">../samples/simple/v2.0.3/minimal.cpp</set>
@@ -44,10 +52,39 @@
 	<include file="$(WXCODE_BAKEFILEDIR)/wxcode.bkl"/>
 
 
+	<!-- handle the HTTPENGINE optional dependency -->
+	<set var="HTTPENGINEDEP_LIBPATH">
+		<if cond="TARGETING_WIN32=='1'">$(HTTPENGINE_DIR)/lib</if>
+	</set>
+	<set var="HTTPENGINEDEP_INCPATH">
+		<if cond="TARGETING_WIN32=='1'">$(HTTPENGINE_DIR)/include</if>
+	</set>
+	<set var="HTTPENGINEDEP_DEF">
+		<if cond="USE_HTTPENGINE=='1'">wxUSE_HTTPENGINE</if>
+	</set>
+	<set var="HTTPENGINEDEP_LIB">
+		<if cond="USE_HTTPENGINE=='1'">httpengine</if>
+	</set>
+
+
 	<!-- The real target: wxcode.bkl does not declare a real target but a template called
-	     "complib". In this way modifications are allowed to the basic template. -->
-	<lib id="webupdate_lib" template="complib" cond="WX_SHARED=='0'"/>
-	<dll id="webupdate_dll" template="compdll" cond="WX_SHARED=='1'">		
+	     "complib". In this way modifications are allowed to the basic template. 
+	<lib id="webupdate_lib" template="complib,webupdate" cond="WX_SHARED=='0'"/>
+	<dll id="webupdate_dll" template="compdll,webupdate" cond="WX_SHARED=='1'"><webupdatelibs/></dll>
+	<set var="MSVC6PRJ_MERGED_TARGETS">webupdate=webupdate_lib+webupdate_dll</set> -->
+	<exe id="webupdater" template="basic,wx,wxcode-basic">
+		<lib-path>$(HTTPENGINEDEP_LIBPATH)</lib-path>
+		<include>$(HTTPENGINEDEP_INCPATH)</include>
+		<define>$(HTTPENGINEDEP_DEF)</define>
+
+		<app-type>gui</app-type>		
+		<dirname>../src</dirname>
+		<res-include>../src</res-include>
+		<win32-res>..$(DIRSEP)src$(DIRSEP)app.rc</win32-res>
+		
+		<sources>$(COMP_SRC)</sources>
+		<headers>$(PCOMP_HDR)</headers>
+		<sys-lib>$(HTTPENGINEDEP_LIB)</sys-lib>
 		<wx-lib>html</wx-lib>
 		<wx-lib>adv</wx-lib>
 		<wx-lib>xrc</wx-lib>
@@ -55,72 +92,36 @@
 		<wx-lib>net</wx-lib>
         <wx-lib>core</wx-lib>
         <wx-lib>base</wx-lib>
-	</dll>
-	<set var="MSVC6PRJ_MERGED_TARGETS">webupdate=webupdate_lib+webupdate_dll</set>
-	
-	<template id="webupdatecompsample" template="compsamplebasic">
-		<include>..$(DIRSEP)..$(DIRSEP)include</include>
-		<app-type>gui</app-type>
-		<library>webupdate_lib</library>
-		<wx-lib>html</wx-lib>
-		<wx-lib>adv</wx-lib>
-		<wx-lib>xrc</wx-lib>
-		<wx-lib>xml</wx-lib>
-		<wx-lib>net</wx-lib>
-        <wx-lib>core</wx-lib>
-        <wx-lib>base</wx-lib>
-	</template>
-	
-	
-	
-	
-	<!-- Our REPLACER cross-platform utility -->
-	<!-- =================================== -->
-	
-	<exe id="replacer">
-	    <if cond="TARGETING_WIN32=='1'">
-			<app-type>gui</app-type>
-			<sys-lib>user32</sys-lib>		<!-- for the MessageBox() API -->
-			<sys-lib>shell32</sys-lib>		<!-- for the ShellExecute() API -->
-		</if>
-		<if cond="TARGETING_WIN32=='0'">
-			<app-type>console</app-type>
-		</if>
-		
-		<exename>replacer</exename>
-		<sources>../src/replacer/replacer.c</sources>
-		<dirname>..</dirname>		
-		
-		<if cond="FORMAT!='autoconf'">
-		<define>
-            $(substituteFromDict(WX_DEBUG,{'1':'','0':'NDEBUG'}))
-        </define>
-        <optimize>
-            $(substituteFromDict(WX_DEBUG,{'1':'off','0':'speed'}))
-        </optimize>
-        <debug-info>
-            $(substituteFromDict(WX_DEBUG,{'1':'on','0':'off'}))
-        </debug-info>
-		</if>
 	</exe>
 	
+	<!-- after the creation of the EXE, put it in all the samples folders -->
 	<if cond="TARGETING_IDE=='0' and TARGETING_WIN32=='1'">
-		<define-rule name="copyrep" extends="copy-file-to-file">
+		<define-rule name="copyrep" extends="copy-files">
 			<template>
-				<if cond="TARGETING_WIN32=='1'"><src>../replacer.exe</src></if>
+				<srcdir>../src</srcdir>
+				<if cond="TARGETING_WIN32=='1'"><files>webupdater.exe webupdatedlg.xrc</files></if>
+				<if cond="TARGETING_WIN32=='0'"><files>webupdater webupdatedlg.xrc</files></if>
 				<dependency-of>all</dependency-of>				
 			</template>		
 		</define-rule>
-		<copyrep id="rep4_simple100"><dst>../samples/simple/v1.0.0/</dst></copyrep>
-		<copyrep id="rep4_simple203"><dst>../samples/simple/v2.0.3/</dst></copyrep>
-		<copyrep id="rep4_adv001"><dst>../samples/advanced/v0.0.1/</dst></copyrep>
-		<copyrep id="rep4_adv150"><dst>../samples/advanced/v1.5.0/</dst></copyrep>
+		<copyrep id="rep4_simple100"><dstdir>../samples/simple/v1.0.0</dstdir></copyrep>
+		<copyrep id="rep4_simple203"><dstdir>../samples/simple/v2.0.3</dstdir></copyrep>
+		<copyrep id="rep4_adv001"><dstdir>../samples/advanced/v0.0.1</dstdir></copyrep>
+		<copyrep id="rep4_adv150"><dstdir>../samples/advanced/v1.5.0</dstdir></copyrep>
 	</if>
 	
+
 	
 	
 	<!--             Our SAMPLES             -->
 	<!-- =================================== -->
+	
+	<template id="webupdatecompsample" template="compsamplebasic">
+		<include>..$(DIRSEP)..$(DIRSEP)include</include>
+		<app-type>gui</app-type>		
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib>
+	</template>
 
 	<!-- use _ instead of '-' or '.' because MSVC6 does not like these chars -->
 	<exe id="simple_1_0_0" template="webupdatecompsample">

@@ -1,13 +1,9 @@
 
-  wxScript component info
- -------------------------
+ wxScript component info
+ -----------------------
 
- Component:  wxscript
- Release:    2004-09-07
- Documents:  http://wxcode.sourceforge.net/components/wxscript/index.html
- wxWidgets:  2.4.x, 2.5.x
- Maintainer: Francesco Montorsi (frm)
- Subdir:     wxscript
+ Website: http://wxcode.sourceforge.net/components/wxscript
+ Version: 2.0
  
  Description:
  A set of abstract classes to add a script-interpreter support to your wxWidgets

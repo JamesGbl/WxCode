@@ -10,33 +10,15 @@
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 INSTALL = @INSTALL@
-SHARED_LD_CXX = @SHARED_LD_CXX@
-LIBEXT = @LIBEXT@
-LIBPREFIX = @LIBPREFIX@
-SO_SUFFIX = @SO_SUFFIX@
-DLLIMP_SUFFIX = @DLLIMP_SUFFIX@
 EXEEXT = @EXEEXT@
-LN_S = @LN_S@
 RESCOMP = @RESCOMP@
 SETFILE = @SETFILE@
-PIC_FLAG = @PIC_FLAG@
-SONAME_FLAG = @SONAME_FLAG@
-STRIP = @STRIP@
 NM = @NM@
-INSTALL_PROGRAM = @INSTALL_PROGRAM@
-INSTALL_DATA = @INSTALL_DATA@
-INSTALL_DIR = @INSTALL_DIR@
-srcdir = @srcdir@
 top_builddir = @top_builddir@
 libdir = @libdir@
 includedir = @includedir@
-DLLPREFIX = @DLLPREFIX@
 LDFLAGS_GUI = @LDFLAGS_GUI@
-AR = @AR@
-RANLIB = @RANLIB@
-CC = @CC@
 CXX = @CXX@
-CFLAGS = @CFLAGS@
 CXXFLAGS = @CXXFLAGS@
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
@@ -46,26 +28,18 @@ WX_LIBS = @WX_LIBS@
 ### Variables: ###
 
 DESTDIR = 
-WEBUPDATE_LIB_CXXFLAGS = -I../include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
-WEBUPDATE_LIB_OBJECTS =  \
-	webupdate_lib_webupdate.o \
-	webupdate_lib_webupdatedlg.o \
-	webupdate_lib_checkedlistctrl.o \
-	webupdate_lib_md5.o \
-	webupdate_lib_installer.o \
-	webupdate_lib_download.o
-WEBUPDATE_DLL_CXXFLAGS = -I../include -DWXMAKINGDLL_WEBUPDATE $(PIC_FLAG) \
-	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
-WEBUPDATE_DLL_OBJECTS =  \
-	webupdate_dll_webupdate.o \
-	webupdate_dll_webupdatedlg.o \
-	webupdate_dll_checkedlistctrl.o \
-	webupdate_dll_md5.o \
-	webupdate_dll_installer.o \
-	webupdate_dll_download.o
-REPLACER_CFLAGS =   $(CPPFLAGS) $(CFLAGS)
-REPLACER_OBJECTS =  \
-	replacer_replacer.o
+WEBUPDATER_CXXFLAGS = -I../include $(__HTTPENGINEDEP_DEF_p) $(WX_CXXFLAGS) \
+	$(CPPFLAGS) $(CXXFLAGS)
+WEBUPDATER_OBJECTS =  \
+	$(__webupdater___win32rc) \
+	webupdater_webupdate.o \
+	webupdater_webupdatedlg.o \
+	webupdater_checkedlistctrl.o \
+	webupdater_md5.o \
+	webupdater_installer.o \
+	webupdater_download.o \
+	webupdater_stdactions.o \
+	webupdater_app.o
 SIMPLE_1_0_0_CXXFLAGS = -I../include -I../../include $(WX_CXXFLAGS) $(CPPFLAGS) \
 	$(CXXFLAGS)
 SIMPLE_1_0_0_OBJECTS =  \
@@ -89,63 +63,17 @@ ADVANCED_1_5_0_OBJECTS =  \
 
 ### Conditionally set variables: ###
 
-@COND_DEPS_TRACKING_0@CCC = $(CC)
-@COND_DEPS_TRACKING_1@CCC = $(top_builddir)./bk-deps $(CC)
-@COND_DEPS_TRACKING_0@CXXC = $(CXX)
 @COND_DEPS_TRACKING_1@CXXC = $(top_builddir)./bk-deps $(CXX)
-@COND_WX_SHARED_0@__webupdate_lib___depname = \
-@COND_WX_SHARED_0@	../lib/$(LIBPREFIX)webupdate$(LIBEXT)
-@COND_WX_SHARED_0@__install_webupdate_lib___depname = install_webupdate_lib
-@COND_WX_SHARED_1@__webupdate_dll___depname = \
-@COND_WX_SHARED_1@	../lib/$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf3)
-@COND_WX_SHARED_1@__install_webupdate_dll___depname = install_webupdate_dll
-COND_PLATFORM_MACOSX_1___webupdate_dll___macinstnamecmd = -install_name \
-	$(libdir)/$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf2)
-@COND_PLATFORM_MACOSX_1@__webupdate_dll___macinstnamecmd = $(COND_PLATFORM_MACOSX_1___webupdate_dll___macinstnamecmd)
-@COND_PLATFORM_OS2_1@__webupdate_dll___importlib = \
-@COND_PLATFORM_OS2_1@	-import \
-@COND_PLATFORM_OS2_1@	../lib/$(LIBPREFIX)webupdate.$(DLLIMP_SUFFIX)
-@COND_WINDOWS_IMPLIB_1@__webupdate_dll___importlib = \
-@COND_WINDOWS_IMPLIB_1@	-Wl,--out-implib,../lib/$(LIBPREFIX)webupdate.$(DLLIMP_SUFFIX)
-@COND_PLATFORM_MACOSX_0_USE_SOVERSION_1@__webupdate_dll___targetsuf2 \
-@COND_PLATFORM_MACOSX_0_USE_SOVERSION_1@	= .$(SO_SUFFIX).0
-@COND_PLATFORM_MACOSX_1_USE_SOVERSION_1@__webupdate_dll___targetsuf2 \
-@COND_PLATFORM_MACOSX_1_USE_SOVERSION_1@	= .0.$(SO_SUFFIX)
-@COND_USE_SOVERSION_0@__webupdate_dll___targetsuf2 = .$(SO_SUFFIX)
-@COND_PLATFORM_MACOSX_0_USE_SOVERCYGWIN_0_USE_SOVERSION_1@__webupdate_dll___targetsuf3 \
-@COND_PLATFORM_MACOSX_0_USE_SOVERCYGWIN_0_USE_SOVERSION_1@	= \
-@COND_PLATFORM_MACOSX_0_USE_SOVERCYGWIN_0_USE_SOVERSION_1@	.$(SO_SUFFIX).0.0.0
-@COND_PLATFORM_MACOSX_1_USE_SOVERSION_1@__webupdate_dll___targetsuf3 \
-@COND_PLATFORM_MACOSX_1_USE_SOVERSION_1@	= .0.0.0.$(SO_SUFFIX)
-@COND_USE_SOVERCYGWIN_1_USE_SOVERSION_1@__webupdate_dll___targetsuf3 \
-@COND_USE_SOVERCYGWIN_1_USE_SOVERSION_1@	= -0.$(SO_SUFFIX)
-@COND_USE_SOVERSION_0@__webupdate_dll___targetsuf3 = .$(SO_SUFFIX)
-@COND_USE_SOVERLINUX_1@__webupdate_dll___soname_flags \
-@COND_USE_SOVERLINUX_1@	= \
-@COND_USE_SOVERLINUX_1@	$(SONAME_FLAG)$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf2)
-@COND_USE_SOVERSOLARIS_1@__webupdate_dll___soname_flags \
-@COND_USE_SOVERSOLARIS_1@	= \
-@COND_USE_SOVERSOLARIS_1@	$(SONAME_FLAG)$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf3)
-COND_USE_SOSYMLINKS_1___webupdate_dll___so_symlinks_cmd = (cd ../lib/; rm -f \
-	$(LIBPREFIX)webupdate.$(DLLIMP_SUFFIX) \
-	$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf2); $(LN_S) \
-	$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf3) \
-	$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf2); $(LN_S) \
-	$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf2) \
-	$(LIBPREFIX)webupdate.$(DLLIMP_SUFFIX))
-@COND_USE_SOSYMLINKS_1@__webupdate_dll___so_symlinks_cmd = $(COND_USE_SOSYMLINKS_1___webupdate_dll___so_symlinks_cmd)
-COND_USE_SOSYMLINKS_1___webupdate_dll___so_symlinks_inst_cmd = rm -f \
-	$(LIBPREFIX)webupdate.$(DLLIMP_SUFFIX) \
-	$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf2); $(LN_S) \
-	$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf3) \
-	$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf2); $(LN_S) \
-	$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf2) \
-	$(LIBPREFIX)webupdate.$(DLLIMP_SUFFIX)
-@COND_USE_SOSYMLINKS_1@__webupdate_dll___so_symlinks_inst_cmd = $(COND_USE_SOSYMLINKS_1___webupdate_dll___so_symlinks_inst_cmd)
-@COND_PLATFORM_MACOSX_1@__webupdate_dll___macver = \
-@COND_PLATFORM_MACOSX_1@	-compatibility_version 0 -current_version 0
-@COND_PLATFORM_MAC_1@__replacer___mac_setfilecmd = \
-@COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL replacer$(EXEEXT)
+@COND_DEPS_TRACKING_0@CXXC = $(CXX)
+@COND_PLATFORM_MAC_1@__webupdater___mac_setfilecmd = \
+@COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL webupdater$(EXEEXT)
+@COND_USE_HTTPENGINE_1@__HTTPENGINEDEP_DEF_p = -DwxUSE_HTTPENGINE
+@COND_USE_HTTPENGINE_1@__HTTPENGINEDEP_DEF_p_2 = --define wxUSE_HTTPENGINE
+COND_PLATFORM_OS2_1___webupdater___os2_emxbindcmd = $(NM) webupdater$(EXEEXT) \
+	| if grep -q pmwin.763 ; then emxbind -ep webupdater$(EXEEXT) ; fi
+@COND_PLATFORM_OS2_1@__webupdater___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___webupdater___os2_emxbindcmd)
+@COND_PLATFORM_WIN32_1@__webupdater___win32rc = webupdater_app_rc.o
+@COND_USE_HTTPENGINE_1@__HTTPENGINEDEP_LIB_p = -lhttpengine
 @COND_PLATFORM_WIN32_1@__simple_1_0_0___win32rc = simple_1_0_0_minimal_rc.o
 @COND_PLATFORM_WIN32_1@__simple_2_0_3___win32rc = simple_2_0_3_minimal_rc.o
 @COND_PLATFORM_WIN32_1@__advanced_0_0_1___win32rc = \
@@ -163,9 +91,9 @@ COND_PLATFORM_OS2_1___advanced_0 = $(NM) advanced$(EXEEXT) | if grep -q pmwin.76
 
 ### Targets: ###
 
-all: $(__webupdate_lib___depname) $(__webupdate_dll___depname) ../replacer$(EXEEXT) ../samples/simple/v1.0.0/simple$(EXEEXT) ../samples/simple/v2.0.3/simple$(EXEEXT) ../samples/advanced/v0.0.1/advanced$(EXEEXT) ../samples/advanced/v1.5.0/advanced$(EXEEXT)
+all: ../src/webupdater$(EXEEXT) ../samples/simple/v1.0.0/simple$(EXEEXT) ../samples/simple/v2.0.3/simple$(EXEEXT) ../samples/advanced/v0.0.1/advanced$(EXEEXT) ../samples/advanced/v1.5.0/advanced$(EXEEXT)
 
-install: all $(__install_webupdate_lib___depname) $(__install_webupdate_dll___depname)
+install: all
 
 uninstall: 
 	rm -f  $(DESTDIR)$(includedir)/wx/webupdatedef.h\
@@ -174,20 +102,16 @@ uninstall:
 	$(DESTDIR)$(includedir)/wx/checkedlistctrl.h\
 	$(DESTDIR)$(includedir)/wx/md5.h\
 	$(DESTDIR)$(includedir)/wx/installer.h\
-	$(DESTDIR)$(includedir)/wx/download.h
+	$(DESTDIR)$(includedir)/wx/download.h\
+	$(DESTDIR)$(includedir)/wx/stdactions.h
 	rm -f $(libdir)/*webupdate*
 
 install-strip: install
-	$(STRIP) $(DESTDIR)$(libdir)/$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf3)
 
 clean: 
 	rm -rf ./.deps ./.pch
 	rm -f ./*.o
-	rm -f ../lib/$(LIBPREFIX)webupdate$(LIBEXT)
-	rm -f ../lib/$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf3)
-	rm -f ../lib/$(LIBPREFIX)webupdate.$(DLLIMP_SUFFIX)
-	rm -f ../lib/$(LIBPREFIX)webupdate.$(DLLIMP_SUFFIX) ../lib/$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf2)
-	rm -f ../replacer$(EXEEXT)
+	rm -f ../src/webupdater$(EXEEXT)
 	rm -f ../samples/simple/v1.0.0/simple$(EXEEXT)
 	rm -f ../samples/simple/v2.0.3/simple$(EXEEXT)
 	rm -f ../samples/advanced/v0.0.1/advanced$(EXEEXT)
@@ -272,120 +196,89 @@ docs:
 cleandocs: 
 	rm -rf ../docs/html
 
-@COND_WX_SHARED_0@../lib/$(LIBPREFIX)webupdate$(LIBEXT): $(WEBUPDATE_LIB_OBJECTS)
-@COND_WX_SHARED_0@	rm -f $@
-@COND_WX_SHARED_0@	$(AR) rcu $@ $(WEBUPDATE_LIB_OBJECTS)
-@COND_WX_SHARED_0@	$(RANLIB) $@
-
-@COND_WX_SHARED_0@install_webupdate_lib: 
-@COND_WX_SHARED_0@	$(INSTALL_DIR) $(DESTDIR)$(libdir)
-@COND_WX_SHARED_0@	$(INSTALL_DATA) ../lib/$(LIBPREFIX)webupdate$(LIBEXT) $(DESTDIR)$(libdir)
-
-@COND_WX_SHARED_1@../lib/$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf3): $(WEBUPDATE_DLL_OBJECTS)
-@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(WEBUPDATE_DLL_OBJECTS) $(LDFLAGS) -L../lib $(__webupdate_dll___macinstnamecmd) $(__webupdate_dll___importlib) $(__webupdate_dll___soname_flags) $(__webupdate_dll___macver)  $(WX_LIBS)
-@COND_WX_SHARED_1@	
-@COND_WX_SHARED_1@	$(__webupdate_dll___so_symlinks_cmd)
-
-@COND_WX_SHARED_1@install_webupdate_dll: 
-@COND_WX_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(libdir)
-@COND_WX_SHARED_1@	$(INSTALL_DATA) ../lib/$(LIBPREFIX)webupdate.$(DLLIMP_SUFFIX) $(DESTDIR)$(libdir)
-@COND_WX_SHARED_1@	$(INSTALL_PROGRAM) ../lib/$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf3) $(DESTDIR)$(libdir)
-@COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__webupdate_dll___so_symlinks_inst_cmd))
-
-../replacer$(EXEEXT): $(REPLACER_OBJECTS)
-	$(CC) -o $@ $(REPLACER_OBJECTS) $(LDFLAGS)
+../src/webupdater$(EXEEXT): $(WEBUPDATER_OBJECTS) $(__webupdater___win32rc)
+	$(CXX) -o $@ $(WEBUPDATER_OBJECTS) $(LDFLAGS) -L../lib -L $(LDFLAGS_GUI)  $(WX_LIBS) $(__HTTPENGINEDEP_LIB_p)
 	
-	$(__replacer___mac_setfilecmd)
+	$(__webupdater___mac_setfilecmd)
+	$(__webupdater___os2_emxbindcmd)
 
-../samples/simple/v1.0.0/simple$(EXEEXT): $(SIMPLE_1_0_0_OBJECTS) $(__webupdate_lib___depname) $(__simple_1_0_0___win32rc)
-	$(CXX) -o $@ $(SIMPLE_1_0_0_OBJECTS) -L../lib $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS) -lwebupdate
+../samples/simple/v1.0.0/simple$(EXEEXT): $(SIMPLE_1_0_0_OBJECTS) $(__simple_1_0_0___win32rc)
+	$(CXX) -o $@ $(SIMPLE_1_0_0_OBJECTS) $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS)
 	
 	$(__simple)
 	$(__simple_0)
 
-../samples/simple/v2.0.3/simple$(EXEEXT): $(SIMPLE_2_0_3_OBJECTS) $(__webupdate_lib___depname) $(__simple_2_0_3___win32rc)
-	$(CXX) -o $@ $(SIMPLE_2_0_3_OBJECTS) -L../lib $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS) -lwebupdate
+../samples/simple/v2.0.3/simple$(EXEEXT): $(SIMPLE_2_0_3_OBJECTS) $(__simple_2_0_3___win32rc)
+	$(CXX) -o $@ $(SIMPLE_2_0_3_OBJECTS) $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS)
 	
 	$(__simple)
 	$(__simple_0)
 
-../samples/advanced/v0.0.1/advanced$(EXEEXT): $(ADVANCED_0_0_1_OBJECTS) $(__webupdate_lib___depname) $(__advanced_0_0_1___win32rc)
-	$(CXX) -o $@ $(ADVANCED_0_0_1_OBJECTS) -L../lib $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS) -lwebupdate
+../samples/advanced/v0.0.1/advanced$(EXEEXT): $(ADVANCED_0_0_1_OBJECTS) $(__advanced_0_0_1___win32rc)
+	$(CXX) -o $@ $(ADVANCED_0_0_1_OBJECTS) $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS)
 	
 	$(__advanced)
 	$(__advanced_0)
 
-../samples/advanced/v1.5.0/advanced$(EXEEXT): $(ADVANCED_1_5_0_OBJECTS) $(__webupdate_lib___depname) $(__advanced_1_5_0___win32rc)
-	$(CXX) -o $@ $(ADVANCED_1_5_0_OBJECTS) -L../lib $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS) -lwebupdate
+../samples/advanced/v1.5.0/advanced$(EXEEXT): $(ADVANCED_1_5_0_OBJECTS) $(__advanced_1_5_0___win32rc)
+	$(CXX) -o $@ $(ADVANCED_1_5_0_OBJECTS) $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS)
 	
 	$(__advanced)
 	$(__advanced_0)
 
-webupdate_lib_webupdate.o: $(srcdir)/../src/webupdate.cpp
-	$(CXXC) -c -o $@ $(WEBUPDATE_LIB_CXXFLAGS) $(srcdir)/../src/webupdate.cpp
+webupdater_app_rc.o: ../src/../src/app.rc
+	$(RESCOMP) -i$< -o$@  --include-dir ../include  $(__HTTPENGINEDEP_DEF_p_2) --include-dir ../src
 
-webupdate_lib_webupdatedlg.o: $(srcdir)/../src/webupdatedlg.cpp
-	$(CXXC) -c -o $@ $(WEBUPDATE_LIB_CXXFLAGS) $(srcdir)/../src/webupdatedlg.cpp
+webupdater_webupdate.o: ../src/webupdate.cpp
+	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) ../src/webupdate.cpp
 
-webupdate_lib_checkedlistctrl.o: $(srcdir)/../src/checkedlistctrl.cpp
-	$(CXXC) -c -o $@ $(WEBUPDATE_LIB_CXXFLAGS) $(srcdir)/../src/checkedlistctrl.cpp
+webupdater_webupdatedlg.o: ../src/webupdatedlg.cpp
+	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) ../src/webupdatedlg.cpp
 
-webupdate_lib_md5.o: $(srcdir)/../src/md5.cpp
-	$(CXXC) -c -o $@ $(WEBUPDATE_LIB_CXXFLAGS) $(srcdir)/../src/md5.cpp
+webupdater_checkedlistctrl.o: ../src/checkedlistctrl.cpp
+	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) ../src/checkedlistctrl.cpp
 
-webupdate_lib_installer.o: $(srcdir)/../src/installer.cpp
-	$(CXXC) -c -o $@ $(WEBUPDATE_LIB_CXXFLAGS) $(srcdir)/../src/installer.cpp
+webupdater_md5.o: ../src/md5.cpp
+	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) ../src/md5.cpp
 
-webupdate_lib_download.o: $(srcdir)/../src/download.cpp
-	$(CXXC) -c -o $@ $(WEBUPDATE_LIB_CXXFLAGS) $(srcdir)/../src/download.cpp
+webupdater_installer.o: ../src/installer.cpp
+	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) ../src/installer.cpp
 
-webupdate_dll_webupdate.o: $(srcdir)/../src/webupdate.cpp
-	$(CXXC) -c -o $@ $(WEBUPDATE_DLL_CXXFLAGS) $(srcdir)/../src/webupdate.cpp
+webupdater_download.o: ../src/download.cpp
+	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) ../src/download.cpp
 
-webupdate_dll_webupdatedlg.o: $(srcdir)/../src/webupdatedlg.cpp
-	$(CXXC) -c -o $@ $(WEBUPDATE_DLL_CXXFLAGS) $(srcdir)/../src/webupdatedlg.cpp
+webupdater_stdactions.o: ../src/stdactions.cpp
+	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) ../src/stdactions.cpp
 
-webupdate_dll_checkedlistctrl.o: $(srcdir)/../src/checkedlistctrl.cpp
-	$(CXXC) -c -o $@ $(WEBUPDATE_DLL_CXXFLAGS) $(srcdir)/../src/checkedlistctrl.cpp
+webupdater_app.o: ../src/app.cpp
+	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) ../src/app.cpp
 
-webupdate_dll_md5.o: $(srcdir)/../src/md5.cpp
-	$(CXXC) -c -o $@ $(WEBUPDATE_DLL_CXXFLAGS) $(srcdir)/../src/md5.cpp
+simple_1_0_0_minimal.o: ../src/../samples/simple/v1.0.0/minimal.cpp
+	$(CXXC) -c -o $@ $(SIMPLE_1_0_0_CXXFLAGS) ../src/../samples/simple/v1.0.0/minimal.cpp
 
-webupdate_dll_installer.o: $(srcdir)/../src/installer.cpp
-	$(CXXC) -c -o $@ $(WEBUPDATE_DLL_CXXFLAGS) $(srcdir)/../src/installer.cpp
-
-webupdate_dll_download.o: $(srcdir)/../src/download.cpp
-	$(CXXC) -c -o $@ $(WEBUPDATE_DLL_CXXFLAGS) $(srcdir)/../src/download.cpp
-
-replacer_replacer.o: $(srcdir)/../src/replacer/replacer.c
-	$(CCC) -c -o $@ $(REPLACER_CFLAGS) $(srcdir)/../src/replacer/replacer.c
-
-simple_1_0_0_minimal.o: $(srcdir)/../samples/simple/v1.0.0/minimal.cpp
-	$(CXXC) -c -o $@ $(SIMPLE_1_0_0_CXXFLAGS) $(srcdir)/../samples/simple/v1.0.0/minimal.cpp
-
-simple_1_0_0_minimal_rc.o: $(srcdir)/../samples/simple/v1.0.0/minimal.rc
+simple_1_0_0_minimal_rc.o: ../src/../samples/simple/v1.0.0/minimal.rc
 	$(RESCOMP) -i$< -o$@  --include-dir ../include --include-dir ../../include --include-dir ../samples/simple/v1.0.0
 
-simple_2_0_3_minimal.o: $(srcdir)/../samples/simple/v2.0.3/minimal.cpp
-	$(CXXC) -c -o $@ $(SIMPLE_2_0_3_CXXFLAGS) $(srcdir)/../samples/simple/v2.0.3/minimal.cpp
+simple_2_0_3_minimal.o: ../src/../samples/simple/v2.0.3/minimal.cpp
+	$(CXXC) -c -o $@ $(SIMPLE_2_0_3_CXXFLAGS) ../src/../samples/simple/v2.0.3/minimal.cpp
 
-simple_2_0_3_minimal_rc.o: $(srcdir)/../samples/simple/v2.0.3/minimal.rc
+simple_2_0_3_minimal_rc.o: ../src/../samples/simple/v2.0.3/minimal.rc
 	$(RESCOMP) -i$< -o$@  --include-dir ../include --include-dir ../../include --include-dir ../samples/simple/v2.0.3
 
-advanced_0_0_1_minimal.o: $(srcdir)/../samples/advanced/v0.0.1/minimal.cpp
-	$(CXXC) -c -o $@ $(ADVANCED_0_0_1_CXXFLAGS) $(srcdir)/../samples/advanced/v0.0.1/minimal.cpp
+advanced_0_0_1_minimal.o: ../src/../samples/advanced/v0.0.1/minimal.cpp
+	$(CXXC) -c -o $@ $(ADVANCED_0_0_1_CXXFLAGS) ../src/../samples/advanced/v0.0.1/minimal.cpp
 
-advanced_0_0_1_minimal_rc.o: $(srcdir)/../samples/advanced/v0.0.1/minimal.rc
+advanced_0_0_1_minimal_rc.o: ../src/../samples/advanced/v0.0.1/minimal.rc
 	$(RESCOMP) -i$< -o$@  --include-dir ../include --include-dir ../../include --include-dir ../samples/advanced/v0.0.1
 
-advanced_1_5_0_minimal.o: $(srcdir)/../samples/advanced/v1.5.0/minimal.cpp
-	$(CXXC) -c -o $@ $(ADVANCED_1_5_0_CXXFLAGS) $(srcdir)/../samples/advanced/v1.5.0/minimal.cpp
+advanced_1_5_0_minimal.o: ../src/../samples/advanced/v1.5.0/minimal.cpp
+	$(CXXC) -c -o $@ $(ADVANCED_1_5_0_CXXFLAGS) ../src/../samples/advanced/v1.5.0/minimal.cpp
 
-advanced_1_5_0_minimal_rc.o: $(srcdir)/../samples/advanced/v1.5.0/minimal.rc
+advanced_1_5_0_minimal_rc.o: ../src/../samples/advanced/v1.5.0/minimal.rc
 	$(RESCOMP) -i$< -o$@  --include-dir ../include --include-dir ../../include --include-dir ../samples/advanced/v1.5.0
 
 
 # Include dependency info, if present:
 @IF_GNU_MAKE@-include .deps/*.d
 
-.PHONY: all install uninstall clean distclean install_webupdate_lib install_webupdate_dll
+.PHONY: all install uninstall clean distclean

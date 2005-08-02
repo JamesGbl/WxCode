@@ -1,14 +1,9 @@
 
-  Keybinder component info
- -----------------------------
+ Keybinder component info
+ ------------------------
 
- Component:  keybinder
- Release:    2004-09-08
- Documents:  http://wxcode.sourceforge.net/components/keybinder/index.html
- wxWidgets:  2.4.x, 2.5.x
- Maintainer: Francesco Montorsi (frm)
- Subdir:     keybinder
-
+ Website: http://wxcode.sourceforge.net/components/keybinder
+ Version: 2.0
  Description:
  A generic system to bind one or more keyshortcut to the commands you want
  (menu commands or whatever you like).

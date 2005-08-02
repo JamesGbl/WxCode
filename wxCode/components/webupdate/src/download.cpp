@@ -34,10 +34,11 @@
 #endif
 
 // wxWidgets RTTI
-DEFINE_EVENT_TYPE(wxDT_DOWNLOAD_COMPLETE);
+DEFINE_EVENT_TYPE(wxEVT_COMMAND_DOWNLOAD_COMPLETE);
+DEFINE_EVENT_TYPE(wxEVT_COMMAND_CACHESIZE_COMPLETE);
 
-#include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
-WX_DEFINE_USER_EXPORTED_OBJARRAY(wxDownloadThreadEntryArray);
+//#include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
+//WX_DEFINE_USER_EXPORTED_OBJARRAY(wxURLArray);
 
 
 
@@ -61,7 +62,7 @@ void *wxDownloadThread::Entry()
 {
 	// we'll use wxPostEvent to post this event since this is the
 	// only thread-safe way to post events !
-	wxCommandEvent updatevent(wxDT_DOWNLOAD_COMPLETE);
+	wxCommandEvent updatevent(wxEVT_COMMAND_DOWNLOAD_COMPLETE);
 
 	// begin our loop
 	while (!TestDestroy()) {
@@ -72,9 +73,6 @@ void *wxDownloadThread::Entry()
 			continue;
 		}
 
-		// start to download the first entry in the queue		
-		wxDownloadThreadEntry &dte = m_downloads[m_nCurrentIndex];
-
 		// reset our variables
 		m_nFinalSize = 0;
 		m_nCurrentSize = 0;
@@ -82,10 +80,10 @@ void *wxDownloadThread::Entry()
 		// we are starting the download of a file; update our datetime field
 		m_dtStart = wxDateTime::UNow();
 
-		wxLogDebug(wxT("wxDownloadThread::Entry - downloading ") + dte.m_strURI);
+		wxLogDebug(wxT("wxDownloadThread::Entry - downloading ") + m_strURI);
 
 		// ensure we can build a wxURL from the given URI
-		wxURL u(dte.m_strURI);
+		wxURL u(m_strURI);
 		if (u.GetError() != wxURL_NOERR)
 			ABORT_DOWNLOAD();
 
@@ -98,7 +96,7 @@ void *wxDownloadThread::Entry()
 		// now work on streams; wx docs says that using wxURL::GetInputStream
 		// is deprecated but this is the only way to set advanced info like
 		// proxy, user & password...
-		wxFileOutputStream out(dte.m_strOutput);
+		wxFileOutputStream out(m_strOutput);
 		wxInputStream *in = u.GetInputStream();
 		if (in == NULL)
 			ABORT_DOWNLOAD();
@@ -158,23 +156,13 @@ void *wxDownloadThread::Entry()
 		m_mStatus.Unlock();
 
 		// get the md5 checksum for the just downloaded file
-		m_strComputedMD5 = wxMD5::GetFileMD5(dte.m_strOutput);
+		m_strComputedMD5 = wxMD5::GetFileMD5(m_strOutput);
 #endif
 
 		// we have successfully download the file
 		m_bSuccess = TRUE;		
 	
-		if (m_nCurrentIndex < (int)m_downloads.GetCount()-1) {
-
-			// proceed with the next download in the queue
-			m_nCurrentIndex++;
-
-			// return to download mode
-			wxMutexLocker locker(m_mStatus);
-			m_nStatus = wxDTS_DOWNLOADING;
-
-		} else {
-
+		{
 			// go in wait mode
 			wxMutexLocker locker(m_mStatus);
 			m_nStatus = wxDTS_WAITING;
@@ -233,5 +221,59 @@ wxString wxDownloadThread::GetRemainingTime() const
 					remsec/3600, (remsec/60)%60, (remsec/3600)%60);
 	else
 		return wxT("not available");
+}
+
+
+
+// ---------------------
+// wxSIZECACHERTHREAD
+// ---------------------
+
+void *wxSizeCacherThread::Entry()
+{
+	wxLogDebug(wxT("wxSizeCacherThread::Entry - caching file sizes"));
+	bool allok = TRUE;
+
+	// be sure to have n null entries in our cache array, where
+	// 'n' is the number of URLs whose size must be cached
+	m_urlSizes.Empty();
+	m_urlSizes.Add((long)0, m_urls.GetCount());
+
+	// begin our loop
+	for (int i=0; i<(int)m_urls.GetCount() && !TestDestroy(); i++) {
+	
+		// getting the input stream for the url is the only way
+		// to get the size of the resource pointed by that url...
+		wxURL u(m_urls[i]);
+		wxInputStream *stream = u.GetInputStream();
+		if (!stream) {
+			allok = FALSE;
+  			continue;
+		}
+		if (!stream->IsOk()) {
+			allok = FALSE;
+			delete stream;		// avoid leaks
+			continue;
+		}
+		
+		m_urlSizes[i] = stream->GetSize();
+		if (m_urlSizes[i] == 0xffffff)
+			m_urlSizes[i] = 0;
+		allok &= (m_urlSizes[i] != 0);
+		delete stream;
+	}
+
+	wxLogDebug(wxT("wxSizeCacherThread::Entry - caching of file sizes completed"));
+	return (void *)allok;
+}
+
+void wxSizeCacherThread::OnExit()
+{
+	// we'll use wxPostEvent to post this event since this is the
+	// only thread-safe way to post events !
+	wxCommandEvent updatevent(wxEVT_COMMAND_CACHESIZE_COMPLETE);
+	//wxPostEvent(m_pHandler, updatevent);
+	updatevent.SetClientData(&this->m_urlSizes);
+	m_pHandler->ProcessEvent(updatevent);
 }
 

@@ -10,14 +10,8 @@
 # These are configurable options:
 # -------------------------------------------------------------------------
 
-# C compiler 
-CC = cl
-
 # C++ compiler 
 CXX = cl
-
-# Standard flags for CC 
-CFLAGS = 
 
 # Standard flags for C++ 
 CXXFLAGS = 
@@ -27,6 +21,12 @@ CPPFLAGS =
 
 # Standard linker flags 
 LDFLAGS = 
+
+# If 1 then wxHTTPEngine component will be used for proxy/authentication stuff [1,0]
+USE_HTTPENGINE = 0
+
+# The path to the wxHTTPBuilder (httpengine) component 
+HTTPENGINE_DIR = ..\..\httpengine
 
 # The directory where wxWidgets library is installed 
 WX_DIR = $(WXWIN)
@@ -51,55 +51,46 @@ WX_VERSION = 26
 
 ### Variables: ###
 
-WEBUPDATE_LIB_CXXFLAGS = /MD$(VAR_19) /DWIN32 $(__WARNINGS) $(VAR) $(VAR_16) \
-	/Fd..\lib\webupdate$(WXLIBPOSTFIX).pdb $(VAR_18) $(__WX_SHAREDDEFINE_p) \
-	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
+WEBUPDATER_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
+	$(__OPTIMIZEFLAG) $(__DEBUGINFO) /Fd..\src\webupdater.pdb \
+	$(____DEBUGRUNTIME) $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) \
+	$(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
 	/I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	/I$(WX_DIR)\include /I..\include /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
-WEBUPDATE_LIB_OBJECTS =  \
-	msvc\webupdate_lib_webupdate.obj \
-	msvc\webupdate_lib_webupdatedlg.obj \
-	msvc\webupdate_lib_checkedlistctrl.obj \
-	msvc\webupdate_lib_md5.obj \
-	msvc\webupdate_lib_installer.obj \
-	msvc\webupdate_lib_download.obj
-WEBUPDATE_DLL_CXXFLAGS = /MD$(VAR_19) /DWIN32 $(__WARNINGS) $(VAR) $(VAR_16) \
-	/Fd..\lib\webupdate$(WXLIBPOSTFIX).pdb $(VAR_18) $(__WX_SHAREDDEFINE_p) \
-	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
-	/I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	/I$(WX_DIR)\include /I..\include /DWXMAKINGDLL_WEBUPDATE /GR /EHsc \
-	$(CPPFLAGS) $(CXXFLAGS)
-WEBUPDATE_DLL_OBJECTS =  \
-	msvc\webupdate_dll_webupdate.obj \
-	msvc\webupdate_dll_webupdatedlg.obj \
-	msvc\webupdate_dll_checkedlistctrl.obj \
-	msvc\webupdate_dll_md5.obj \
-	msvc\webupdate_dll_installer.obj \
-	msvc\webupdate_dll_download.obj
-REPLACER_CFLAGS = /MD$(VAR_19) /DWIN32 /D_WINDOWS $(____WX_DEBUG_27_p) $(VAR) \
-	$(VAR_16) $(VAR_18) /Fd..\replacer.pdb $(CPPFLAGS) $(CFLAGS)
-REPLACER_OBJECTS =  \
-	msvc\replacer_replacer.obj
-SIMPLE_1_0_0_CXXFLAGS = /MD$(VAR_19) /DWIN32 $(__WARNINGS) $(VAR) $(VAR_16) \
-	/Fd..\samples\simple\v1.0.0\simple.pdb $(VAR_18) $(__WX_SHAREDDEFINE_p) \
-	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
+	/I$(WX_DIR)\include /I..\include /I$(HTTPENGINE_DIR)\include \
+	$(__HTTPENGINEDEP_DEF_p) /D_WINDOWS /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
+WEBUPDATER_OBJECTS =  \
+	msvc\webupdater_app.res \
+	msvc\webupdater_webupdate.obj \
+	msvc\webupdater_webupdatedlg.obj \
+	msvc\webupdater_checkedlistctrl.obj \
+	msvc\webupdater_md5.obj \
+	msvc\webupdater_installer.obj \
+	msvc\webupdater_download.obj \
+	msvc\webupdater_stdactions.obj \
+	msvc\webupdater_app.obj
+SIMPLE_1_0_0_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
+	$(__OPTIMIZEFLAG) $(__DEBUGINFO) /Fd..\samples\simple\v1.0.0\simple.pdb \
+	$(____DEBUGRUNTIME) $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) \
+	$(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
 	/I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	/I$(WX_DIR)\include /I..\include /I..\..\include /D_WINDOWS /GR /EHsc \
 	$(CPPFLAGS) $(CXXFLAGS)
 SIMPLE_1_0_0_OBJECTS =  \
 	msvc\simple_1_0_0_minimal.obj \
 	msvc\simple_1_0_0_minimal.res
-SIMPLE_2_0_3_CXXFLAGS = /MD$(VAR_19) /DWIN32 $(__WARNINGS) $(VAR) $(VAR_16) \
-	/Fd..\samples\simple\v2.0.3\simple.pdb $(VAR_18) $(__WX_SHAREDDEFINE_p) \
-	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
+SIMPLE_2_0_3_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
+	$(__OPTIMIZEFLAG) $(__DEBUGINFO) /Fd..\samples\simple\v2.0.3\simple.pdb \
+	$(____DEBUGRUNTIME) $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) \
+	$(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
 	/I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	/I$(WX_DIR)\include /I..\include /I..\..\include /D_WINDOWS /GR /EHsc \
 	$(CPPFLAGS) $(CXXFLAGS)
 SIMPLE_2_0_3_OBJECTS =  \
 	msvc\simple_2_0_3_minimal.obj \
 	msvc\simple_2_0_3_minimal.res
-ADVANCED_0_0_1_CXXFLAGS = /MD$(VAR_19) /DWIN32 $(__WARNINGS) $(VAR) $(VAR_16) \
-	/Fd..\samples\advanced\v0.0.1\advanced.pdb $(VAR_18) \
+ADVANCED_0_0_1_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
+	$(__OPTIMIZEFLAG) $(__DEBUGINFO) \
+	/Fd..\samples\advanced\v0.0.1\advanced.pdb $(____DEBUGRUNTIME) \
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
 	/D__WXMSW__ /I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	/I$(WX_DIR)\include /I..\include /I..\..\include /D_WINDOWS /GR /EHsc \
@@ -107,8 +98,9 @@ ADVANCED_0_0_1_CXXFLAGS = /MD$(VAR_19) /DWIN32 $(__WARNINGS) $(VAR) $(VAR_16) \
 ADVANCED_0_0_1_OBJECTS =  \
 	msvc\advanced_0_0_1_minimal.obj \
 	msvc\advanced_0_0_1_minimal.res
-ADVANCED_1_5_0_CXXFLAGS = /MD$(VAR_19) /DWIN32 $(__WARNINGS) $(VAR) $(VAR_16) \
-	/Fd..\samples\advanced\v1.5.0\advanced.pdb $(VAR_18) \
+ADVANCED_1_5_0_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
+	$(__OPTIMIZEFLAG) $(__DEBUGINFO) \
+	/Fd..\samples\advanced\v1.5.0\advanced.pdb $(____DEBUGRUNTIME) \
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
 	/D__WXMSW__ /I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	/I$(WX_DIR)\include /I..\include /I..\..\include /D_WINDOWS /GR /EHsc \
@@ -120,19 +112,16 @@ ADVANCED_1_5_0_OBJECTS =  \
 ### Conditionally set variables: ###
 
 !if "$(WX_DEBUG)" == "1"
-WX3RDPARTLIBPOSTFIX = d
+WX3RDPARTYLIBPOSTFIX = d
 !endif
-!if "$(WX_SHARED)" == "0"
-__webupdate_lib___depname = ..\lib\webupdate$(WXLIBPOSTFIX).lib
+!if "$(USE_HTTPENGINE)" == "1"
+__HTTPENGINEDEP_DEF_p = /DwxUSE_HTTPENGINE
 !endif
-!if "$(WX_SHARED)" == "1"
-__webupdate_dll___depname = ..\lib\webupdate$(WXLIBPOSTFIX).dll
+!if "$(USE_HTTPENGINE)" == "1"
+__HTTPENGINEDEP_DEF_p_1 = /d wxUSE_HTTPENGINE
 !endif
-!if "$(WX_DEBUG)" == "0"
-____WX_DEBUG_27_p = /DNDEBUG
-!endif
-!if "$(WX_DEBUG)" == "1"
-____WX_DEBUG_27_p = 
+!if "$(USE_HTTPENGINE)" == "1"
+__HTTPENGINEDEP_LIB_p = httpengine.lib
 !endif
 !if "$(WX_DEBUG)" == "0"
 __WARNINGS = /w
@@ -141,58 +130,58 @@ __WARNINGS = /w
 __WARNINGS = /W4
 !endif
 !if "$(WX_DEBUG)" == "0"
-VAR = /O2
+__OPTIMIZEFLAG = /O2
 !endif
 !if "$(WX_DEBUG)" == "1"
-VAR = /Od
+__OPTIMIZEFLAG = /Od
 !endif
 !if "$(WX_DEBUG)" == "0"
-VAR_16 = 
+__DEBUGINFO = 
 !endif
 !if "$(WX_DEBUG)" == "1"
-VAR_16 = /Zi
+__DEBUGINFO = /Zi
 !endif
 !if "$(WX_DEBUG)" == "0"
-VAR_17 = 
+__DEBUGINFO_3 = 
 !endif
 !if "$(WX_DEBUG)" == "1"
-VAR_17 = /DEBUG
+__DEBUGINFO_3 = /DEBUG
 !endif
 !if "$(WX_DEBUG)" == "0"
-VAR_18 = 
+____DEBUGRUNTIME = 
 !endif
 !if "$(WX_DEBUG)" == "1"
-VAR_18 = /D_DEBUG
+____DEBUGRUNTIME = /D_DEBUG
 !endif
 !if "$(WX_DEBUG)" == "0"
-____DEBUGRUNTIME_2 = 
+____DEBUGRUNTIME_3 = 
 !endif
 !if "$(WX_DEBUG)" == "1"
-____DEBUGRUNTIME_2 = /d _DEBUG
+____DEBUGRUNTIME_3 = /d _DEBUG
 !endif
 !if "$(WX_DEBUG)" == "0"
-VAR_19 = 
+__DEBUGRUNTIME = 
 !endif
 !if "$(WX_DEBUG)" == "1"
-VAR_19 = d
+__DEBUGRUNTIME = d
 !endif
 !if "$(WX_SHARED)" == "1"
 __WX_SHAREDDEFINE_p = /DWXUSINGDLL
 !endif
 !if "$(WX_SHARED)" == "1"
-__WX_SHAREDDEFINE_p_11 = /d WXUSINGDLL
+__WX_SHAREDDEFINE_p_12 = /d WXUSINGDLL
 !endif
 !if "$(WX_UNICODE)" == "1"
 __WXUNICODE_DEFINE_p = /D_UNICODE
 !endif
 !if "$(WX_UNICODE)" == "1"
-__WXUNICODE_DEFINE_p_11 = /d _UNICODE
+__WXUNICODE_DEFINE_p_12 = /d _UNICODE
 !endif
 !if "$(WX_DEBUG)" == "1"
 __WXDEBUG_DEFINE_p = /D__WXDEBUG__
 !endif
 !if "$(WX_DEBUG)" == "1"
-__WXDEBUG_DEFINE_p_11 = /d __WXDEBUG__
+__WXDEBUG_DEFINE_p_12 = /d __WXDEBUG__
 !endif
 !if "$(WX_DEBUG)" == "0" && "$(WX_UNICODE)" == "1"
 WXLIBPOSTFIX = u
@@ -217,20 +206,15 @@ msvc:
 
 ### Targets: ###
 
-all: $(__webupdate_lib___depname) $(__webupdate_dll___depname) ..\replacer.exe ..\samples\simple\v1.0.0\ ..\samples\simple\v2.0.3\ ..\samples\advanced\v0.0.1\ ..\samples\advanced\v1.5.0\ ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
+all: ..\src\webupdater.exe rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150 ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
 
 clean: 
 	-if exist msvc\*.obj del msvc\*.obj
 	-if exist msvc\*.res del msvc\*.res
 	-if exist msvc\*.pch del msvc\*.pch
-	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).lib del ..\lib\webupdate$(WXLIBPOSTFIX).lib
-	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).dll del ..\lib\webupdate$(WXLIBPOSTFIX).dll
-	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).ilk del ..\lib\webupdate$(WXLIBPOSTFIX).ilk
-	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).pdb del ..\lib\webupdate$(WXLIBPOSTFIX).pdb
-	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).lib del ..\lib\webupdate$(WXLIBPOSTFIX).lib
-	-if exist ..\replacer.exe del ..\replacer.exe
-	-if exist ..\replacer.ilk del ..\replacer.ilk
-	-if exist ..\replacer.pdb del ..\replacer.pdb
+	-if exist ..\src\webupdater.exe del ..\src\webupdater.exe
+	-if exist ..\src\webupdater.ilk del ..\src\webupdater.ilk
+	-if exist ..\src\webupdater.pdb del ..\src\webupdater.pdb
 	-if exist ..\samples\simple\v1.0.0\simple.exe del ..\samples\simple\v1.0.0\simple.exe
 	-if exist ..\samples\simple\v1.0.0\simple.ilk del ..\samples\simple\v1.0.0\simple.ilk
 	-if exist ..\samples\simple\v1.0.0\simple.pdb del ..\samples\simple\v1.0.0\simple.pdb
@@ -320,118 +304,95 @@ docs:
 cleandocs: 
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
-!if "$(WX_SHARED)" == "0"
-..\lib\webupdate$(WXLIBPOSTFIX).lib: $(WEBUPDATE_LIB_OBJECTS)
-	if exist $@ del $@
-	link /LIB /NOLOGO /OUT:$@ @<<
-	$(WEBUPDATE_LIB_OBJECTS)
-<<
-!endif
-
-!if "$(WX_SHARED)" == "1"
-..\lib\webupdate$(WXLIBPOSTFIX).dll: $(WEBUPDATE_DLL_OBJECTS)
-	link /DLL /NOLOGO /OUT:$@ $(LDFLAGS) $(VAR_17)  /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES) /LIBPATH:..\lib @<<
-	$(WEBUPDATE_DLL_OBJECTS)  wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /IMPLIB:..\lib\webupdate$(WXLIBPOSTFIX).lib
-<<
-!endif
-
-..\replacer.exe: $(REPLACER_OBJECTS)
-	link /NOLOGO /OUT:$@ $(LDFLAGS) /SUBSYSTEM:WINDOWS $(VAR_17) @<<
-	$(REPLACER_OBJECTS)  user32.lib shell32.lib
+..\src\webupdater.exe: $(WEBUPDATER_OBJECTS) msvc\webupdater_app.res
+	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_3)  /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES) /LIBPATH:..\lib /LIBPATH:$(HTTPENGINE_DIR)\lib /SUBSYSTEM:WINDOWS @<<
+	$(WEBUPDATER_OBJECTS)  $(__HTTPENGINEDEP_LIB_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
 
-..\samples\simple\v1.0.0\: ..\replacer.exe
-	copy ..\replacer.exe ..\samples\simple\v1.0.0\
+rep4_simple100: 
+	if not exist ..\samples\simple\v1.0.0 mkdir ..\samples\simple\v1.0.0
+	for %f in (webupdater.exe webupdatedlg.xrc) do if not exist ..\samples\simple\v1.0.0\%f copy ..\src\%f ..\samples\simple\v1.0.0
 
-..\samples\simple\v2.0.3\: ..\replacer.exe
-	copy ..\replacer.exe ..\samples\simple\v2.0.3\
+rep4_simple203: 
+	if not exist ..\samples\simple\v2.0.3 mkdir ..\samples\simple\v2.0.3
+	for %f in (webupdater.exe webupdatedlg.xrc) do if not exist ..\samples\simple\v2.0.3\%f copy ..\src\%f ..\samples\simple\v2.0.3
 
-..\samples\advanced\v0.0.1\: ..\replacer.exe
-	copy ..\replacer.exe ..\samples\advanced\v0.0.1\
+rep4_adv001: 
+	if not exist ..\samples\advanced\v0.0.1 mkdir ..\samples\advanced\v0.0.1
+	for %f in (webupdater.exe webupdatedlg.xrc) do if not exist ..\samples\advanced\v0.0.1\%f copy ..\src\%f ..\samples\advanced\v0.0.1
 
-..\samples\advanced\v1.5.0\: ..\replacer.exe
-	copy ..\replacer.exe ..\samples\advanced\v1.5.0\
+rep4_adv150: 
+	if not exist ..\samples\advanced\v1.5.0 mkdir ..\samples\advanced\v1.5.0
+	for %f in (webupdater.exe webupdatedlg.xrc) do if not exist ..\samples\advanced\v1.5.0\%f copy ..\src\%f ..\samples\advanced\v1.5.0
 
-..\samples\simple\v1.0.0\simple.exe: $(SIMPLE_1_0_0_OBJECTS) $(__webupdate_lib___depname) msvc\simple_1_0_0_minimal.res
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(VAR_17)  /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES) /LIBPATH:..\lib /SUBSYSTEM:WINDOWS @<<
-	$(SIMPLE_1_0_0_OBJECTS)  ..\lib\webupdate$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
+..\samples\simple\v1.0.0\simple.exe: $(SIMPLE_1_0_0_OBJECTS) msvc\simple_1_0_0_minimal.res
+	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_3)  /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES) /LIBPATH:..\lib /SUBSYSTEM:WINDOWS @<<
+	$(SIMPLE_1_0_0_OBJECTS)  wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
 
-..\samples\simple\v2.0.3\simple.exe: $(SIMPLE_2_0_3_OBJECTS) $(__webupdate_lib___depname) msvc\simple_2_0_3_minimal.res
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(VAR_17)  /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES) /LIBPATH:..\lib /SUBSYSTEM:WINDOWS @<<
-	$(SIMPLE_2_0_3_OBJECTS)  ..\lib\webupdate$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
+..\samples\simple\v2.0.3\simple.exe: $(SIMPLE_2_0_3_OBJECTS) msvc\simple_2_0_3_minimal.res
+	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_3)  /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES) /LIBPATH:..\lib /SUBSYSTEM:WINDOWS @<<
+	$(SIMPLE_2_0_3_OBJECTS)  wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
 
-..\samples\advanced\v0.0.1\advanced.exe: $(ADVANCED_0_0_1_OBJECTS) $(__webupdate_lib___depname) msvc\advanced_0_0_1_minimal.res
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(VAR_17)  /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES) /LIBPATH:..\lib /SUBSYSTEM:WINDOWS @<<
-	$(ADVANCED_0_0_1_OBJECTS)  ..\lib\webupdate$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
+..\samples\advanced\v0.0.1\advanced.exe: $(ADVANCED_0_0_1_OBJECTS) msvc\advanced_0_0_1_minimal.res
+	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_3)  /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES) /LIBPATH:..\lib /SUBSYSTEM:WINDOWS @<<
+	$(ADVANCED_0_0_1_OBJECTS)  wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
 
-..\samples\advanced\v1.5.0\advanced.exe: $(ADVANCED_1_5_0_OBJECTS) $(__webupdate_lib___depname) msvc\advanced_1_5_0_minimal.res
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(VAR_17)  /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES) /LIBPATH:..\lib /SUBSYSTEM:WINDOWS @<<
-	$(ADVANCED_1_5_0_OBJECTS)  ..\lib\webupdate$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
+..\samples\advanced\v1.5.0\advanced.exe: $(ADVANCED_1_5_0_OBJECTS) msvc\advanced_1_5_0_minimal.res
+	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_3)  /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES) /LIBPATH:..\lib /SUBSYSTEM:WINDOWS @<<
+	$(ADVANCED_1_5_0_OBJECTS)  wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
 
-msvc\webupdate_lib_webupdate.obj: .\..\src\webupdate.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATE_LIB_CXXFLAGS) $**
+msvc\webupdater_app.res: ..\src\..\src\app.rc
+	rc /fo$@  /d WIN32 $(____DEBUGRUNTIME_3) $(__WX_SHAREDDEFINE_p_12) $(__WXUNICODE_DEFINE_p_12) $(__WXDEBUG_DEFINE_p_12) /d __WXMSW__ /i $(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include /i ..\include /i $(HTTPENGINE_DIR)\include $(__HTTPENGINEDEP_DEF_p_1) /d _WINDOWS /i ..\src $**
 
-msvc\webupdate_lib_webupdatedlg.obj: .\..\src\webupdatedlg.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATE_LIB_CXXFLAGS) $**
+msvc\webupdater_webupdate.obj: ..\src\webupdate.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATER_CXXFLAGS) $**
 
-msvc\webupdate_lib_checkedlistctrl.obj: .\..\src\checkedlistctrl.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATE_LIB_CXXFLAGS) $**
+msvc\webupdater_webupdatedlg.obj: ..\src\webupdatedlg.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATER_CXXFLAGS) $**
 
-msvc\webupdate_lib_md5.obj: .\..\src\md5.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATE_LIB_CXXFLAGS) $**
+msvc\webupdater_checkedlistctrl.obj: ..\src\checkedlistctrl.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATER_CXXFLAGS) $**
 
-msvc\webupdate_lib_installer.obj: .\..\src\installer.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATE_LIB_CXXFLAGS) $**
+msvc\webupdater_md5.obj: ..\src\md5.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATER_CXXFLAGS) $**
 
-msvc\webupdate_lib_download.obj: .\..\src\download.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATE_LIB_CXXFLAGS) $**
+msvc\webupdater_installer.obj: ..\src\installer.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATER_CXXFLAGS) $**
 
-msvc\webupdate_dll_webupdate.obj: .\..\src\webupdate.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATE_DLL_CXXFLAGS) $**
+msvc\webupdater_download.obj: ..\src\download.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATER_CXXFLAGS) $**
 
-msvc\webupdate_dll_webupdatedlg.obj: .\..\src\webupdatedlg.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATE_DLL_CXXFLAGS) $**
+msvc\webupdater_stdactions.obj: ..\src\stdactions.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATER_CXXFLAGS) $**
 
-msvc\webupdate_dll_checkedlistctrl.obj: .\..\src\checkedlistctrl.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATE_DLL_CXXFLAGS) $**
+msvc\webupdater_app.obj: ..\src\app.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATER_CXXFLAGS) $**
 
-msvc\webupdate_dll_md5.obj: .\..\src\md5.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATE_DLL_CXXFLAGS) $**
-
-msvc\webupdate_dll_installer.obj: .\..\src\installer.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATE_DLL_CXXFLAGS) $**
-
-msvc\webupdate_dll_download.obj: .\..\src\download.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATE_DLL_CXXFLAGS) $**
-
-msvc\replacer_replacer.obj: .\..\src\replacer\replacer.c
-	$(CC) /c /nologo /TC /Fo$@ $(REPLACER_CFLAGS) $**
-
-msvc\simple_1_0_0_minimal.obj: .\..\samples\simple\v1.0.0\minimal.cpp
+msvc\simple_1_0_0_minimal.obj: ..\src\..\samples\simple\v1.0.0\minimal.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(SIMPLE_1_0_0_CXXFLAGS) $**
 
-msvc\simple_1_0_0_minimal.res: .\..\samples\simple\v1.0.0\minimal.rc
-	rc /fo$@  /d WIN32 $(____DEBUGRUNTIME_2) $(__WX_SHAREDDEFINE_p_11) $(__WXUNICODE_DEFINE_p_11) $(__WXDEBUG_DEFINE_p_11) /d __WXMSW__ /i $(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include /i ..\include /i ..\..\include /d _WINDOWS /i ..\samples\simple\v1.0.0 $**
+msvc\simple_1_0_0_minimal.res: ..\src\..\samples\simple\v1.0.0\minimal.rc
+	rc /fo$@  /d WIN32 $(____DEBUGRUNTIME_3) $(__WX_SHAREDDEFINE_p_12) $(__WXUNICODE_DEFINE_p_12) $(__WXDEBUG_DEFINE_p_12) /d __WXMSW__ /i $(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include /i ..\include /i ..\..\include /d _WINDOWS /i ..\samples\simple\v1.0.0 $**
 
-msvc\simple_2_0_3_minimal.obj: .\..\samples\simple\v2.0.3\minimal.cpp
+msvc\simple_2_0_3_minimal.obj: ..\src\..\samples\simple\v2.0.3\minimal.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(SIMPLE_2_0_3_CXXFLAGS) $**
 
-msvc\simple_2_0_3_minimal.res: .\..\samples\simple\v2.0.3\minimal.rc
-	rc /fo$@  /d WIN32 $(____DEBUGRUNTIME_2) $(__WX_SHAREDDEFINE_p_11) $(__WXUNICODE_DEFINE_p_11) $(__WXDEBUG_DEFINE_p_11) /d __WXMSW__ /i $(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include /i ..\include /i ..\..\include /d _WINDOWS /i ..\samples\simple\v2.0.3 $**
+msvc\simple_2_0_3_minimal.res: ..\src\..\samples\simple\v2.0.3\minimal.rc
+	rc /fo$@  /d WIN32 $(____DEBUGRUNTIME_3) $(__WX_SHAREDDEFINE_p_12) $(__WXUNICODE_DEFINE_p_12) $(__WXDEBUG_DEFINE_p_12) /d __WXMSW__ /i $(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include /i ..\include /i ..\..\include /d _WINDOWS /i ..\samples\simple\v2.0.3 $**
 
-msvc\advanced_0_0_1_minimal.obj: .\..\samples\advanced\v0.0.1\minimal.cpp
+msvc\advanced_0_0_1_minimal.obj: ..\src\..\samples\advanced\v0.0.1\minimal.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(ADVANCED_0_0_1_CXXFLAGS) $**
 
-msvc\advanced_0_0_1_minimal.res: .\..\samples\advanced\v0.0.1\minimal.rc
-	rc /fo$@  /d WIN32 $(____DEBUGRUNTIME_2) $(__WX_SHAREDDEFINE_p_11) $(__WXUNICODE_DEFINE_p_11) $(__WXDEBUG_DEFINE_p_11) /d __WXMSW__ /i $(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include /i ..\include /i ..\..\include /d _WINDOWS /i ..\samples\advanced\v0.0.1 $**
+msvc\advanced_0_0_1_minimal.res: ..\src\..\samples\advanced\v0.0.1\minimal.rc
+	rc /fo$@  /d WIN32 $(____DEBUGRUNTIME_3) $(__WX_SHAREDDEFINE_p_12) $(__WXUNICODE_DEFINE_p_12) $(__WXDEBUG_DEFINE_p_12) /d __WXMSW__ /i $(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include /i ..\include /i ..\..\include /d _WINDOWS /i ..\samples\advanced\v0.0.1 $**
 
-msvc\advanced_1_5_0_minimal.obj: .\..\samples\advanced\v1.5.0\minimal.cpp
+msvc\advanced_1_5_0_minimal.obj: ..\src\..\samples\advanced\v1.5.0\minimal.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(ADVANCED_1_5_0_CXXFLAGS) $**
 
-msvc\advanced_1_5_0_minimal.res: .\..\samples\advanced\v1.5.0\minimal.rc
-	rc /fo$@  /d WIN32 $(____DEBUGRUNTIME_2) $(__WX_SHAREDDEFINE_p_11) $(__WXUNICODE_DEFINE_p_11) $(__WXDEBUG_DEFINE_p_11) /d __WXMSW__ /i $(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include /i ..\include /i ..\..\include /d _WINDOWS /i ..\samples\advanced\v1.5.0 $**
+msvc\advanced_1_5_0_minimal.res: ..\src\..\samples\advanced\v1.5.0\minimal.rc
+	rc /fo$@  /d WIN32 $(____DEBUGRUNTIME_3) $(__WX_SHAREDDEFINE_p_12) $(__WXUNICODE_DEFINE_p_12) $(__WXDEBUG_DEFINE_p_12) /d __WXMSW__ /i $(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include /i ..\include /i ..\..\include /d _WINDOWS /i ..\samples\advanced\v1.5.0 $**
 
