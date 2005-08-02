@@ -465,7 +465,7 @@ wxString wxWebUpdateDownload::GetFileName() const
 
 bool wxWebUpdateDownload::DownloadSynch(const wxString &path
 #if wxUSE_HTTPENGINE
-										, const wxProxySettings &proxy
+										, const wxProxySettings &
 #endif
 										) 
 {

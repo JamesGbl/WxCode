@@ -88,33 +88,43 @@ void *wxDownloadThread::Entry()
 
 		// ensure we can build a wxURL from the given URI
 #if wxUSE_HTTPENGINE
-		wxHTTPBuilder u;
-		u.InitContentTypes(); // Initialise the content types on the page
-		
-		if (m_proxy.m_bUseProxy) {
-			u.HttpProxy(m_proxy.m_strProxyHostname, m_proxy.m_nProxyPort);
-			if (m_proxy.m_bProxyAuth)
-				u.HttpProxyAuth(m_proxy.m_strProxyUsername, m_proxy.m_strProxyPassword);
-		}
-		
-		if (m_proxy.m_bUseAuth)
-			u.Authenticate(m_proxy.m_strAuthUsername, m_proxy.m_strAuthPassword);
+		wxInputStream *in = NULL;
 
+		if (m_strURI.StartsWith(wxT("http://"))) {
+
+			wxHTTPBuilder u;
+			u.InitContentTypes(); // Initialise the content types on the page
+			
+			if (m_proxy.m_bUseProxy) {
+				u.HttpProxy(m_proxy.m_strProxyHostname, m_proxy.m_nProxyPort);
+				if (m_proxy.m_bProxyAuth)
+					u.HttpProxyAuth(m_proxy.m_strProxyUsername, m_proxy.m_strProxyPassword);
+			}
+			
+			if (m_proxy.m_bUseAuth)
+				u.Authenticate(m_proxy.m_strAuthUsername, m_proxy.m_strAuthPassword);
+
+			in = u.GetInputStream(m_strURI);
+
+		} else {
+
+			// for other protocols (mainly file://) use simple wxURL
+			wxURL u(m_strURI);
+			if (u.GetError() != wxURL_NOERR)
+				ABORT_DOWNLOAD();
+			in = u.GetInputStream();
+		}
 #else
 		wxURL u(m_strURI);
 		if (u.GetError() != wxURL_NOERR)
 			ABORT_DOWNLOAD();
+		wxInputStream *in = u.GetInputStream();
 #endif
 		
 		// now work on streams; wx docs says that using wxURL::GetInputStream
 		// is deprecated but this is the only way to set advanced info like
 		// proxy, user & password...
 		wxFileOutputStream out(m_strOutput);
-#if wxUSE_HTTPENGINE
-		wxInputStream *in = u.GetInputStream(m_strURI);
-#else
-		wxInputStream *in = u.GetInputStream();
-#endif
 		if (in == NULL)
 			ABORT_DOWNLOAD();
 		if (!in->IsOk() || !out.IsOk()) {
