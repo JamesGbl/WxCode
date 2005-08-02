@@ -34,6 +34,9 @@
 #include "wx/download.h"
 #include "wx/installer.h"
 
+#if wxUSE_HTTPENGINE
+#include <wx/httpengine/httpbuilder.h>
+#endif
 
 // wxWidgets RTTI
 IMPLEMENT_CLASS(wxWebUpdateLocalPackage, wxObject)
@@ -221,61 +224,75 @@ bool wxWebUpdateLocalXMLScript::Load(const wxString &uri)
 	return TRUE;
 }
 
-void wxWebUpdateLocalXMLScript::SetPackageArray(const wxWebUpdateLocalPackageArray &arr)
+// some simple helpers for wxWebUpdateLocalXMLScript::RebuildHeader
+wxXmlNode *wxCreateElemNode(const wxString &name)
+{ return new wxXmlNode(NULL, wxXML_ELEMENT_NODE, name, wxEmptyString, NULL, NULL); }
+
+wxXmlNode *wxCreateElemTextNode(const wxString &name, const wxString &content = wxEmptyString)
+{ 
+	wxXmlNode *n = wxCreateElemNode(name); 
+	n->AddChild(new wxXmlNode(NULL, wxXML_TEXT_NODE, wxEmptyString, content, NULL, NULL));
+	return n;
+}
+
+wxXmlNode *wxWebUpdateLocalXMLScript::BuildHeader() const
 {
-	// remove old contents
-	wxXmlNode *p = GetRoot()->GetChildren();
-	while (p) {
-		wxXmlNode *next = p->GetNext();
-		delete p;
-		p = next;
-	}
+	// the webupdate root
+	wxXmlNode *webupdate = wxCreateElemNode(wxT("webupdate"));
 	
 	// set the appname
-	wxXmlNode *appname = new wxXmlNode(GetRoot(), wxXML_ELEMENT_NODE, wxT("appname"), 
-						   			wxEmptyString, NULL, NULL);
-	appname->AddChild(new wxXmlNode(appname, wxXML_TEXT_NODE, wxEmptyString,
-									m_strAppName, NULL, NULL));
-	GetRoot()->AddChild(appname);
+	wxXmlNode *appname = wxCreateElemTextNode(wxT("appname"), m_strAppName);
+	webupdate->AddChild(appname);
 	
 	// set the appfile
-	wxXmlNode *appfile = new wxXmlNode(GetRoot(), wxXML_ELEMENT_NODE, wxT("appfile"), 
-						 			wxEmptyString, NULL, NULL);
-	appfile->AddChild(new wxXmlNode(appfile, wxXML_TEXT_NODE, wxEmptyString,
-									m_strAppFile, NULL, NULL));
+	wxXmlNode *appfile = wxCreateElemTextNode(wxT("appfile"), m_strAppFile);
 	appname->SetNext(appfile);
 	
 	// set the XRC name
-	wxXmlNode *xrc = new wxXmlNode(GetRoot(), wxXML_ELEMENT_NODE, wxT("dlgxrc"), 
-						 			wxEmptyString, NULL, NULL);
-	xrc->AddChild(new wxXmlNode(xrc, wxXML_TEXT_NODE, wxEmptyString,
-									m_strXRC, NULL, NULL));
+	wxXmlNode *xrc = wxCreateElemTextNode(wxT("dlgxrc"), m_strXRC);
 	appfile->SetNext(xrc);
 	
 	// set the remote URI
-	wxXmlNode *uri = new wxXmlNode(GetRoot(), wxXML_ELEMENT_NODE, wxT("remoteuri"), 
-						 			wxEmptyString, NULL, NULL);
-	uri->AddChild(new wxXmlNode(uri, wxXML_TEXT_NODE, wxEmptyString,
-									m_strRemoteURI, NULL, NULL));
+	wxXmlNode *uri = wxCreateElemTextNode(wxT("remoteuri"), m_strRemoteURI);
 	xrc->SetNext(uri);
+
+	return webupdate;
+}
+
+void wxWebUpdateLocalXMLScript::SetPackageArray(const wxWebUpdateLocalPackageArray &arr)
+{
+	wxXmlNode *webupdate = BuildHeader();
+
+	// get the last child node
+	wxXmlNode *last = webupdate->GetChildren();
+	while (last)
+		if (last->GetNext() == NULL)
+			break;
+		else
+			last = last->GetNext();
 	
 	// create the array of local packages
-	wxXmlNode *prev = uri;
+	wxXmlNode *prev = last;
 	for (int i=0; i < (int)arr.GetCount(); i++) {
 	
 		// create the local-package tag with its ID property
-		wxXmlNode *lp = new wxXmlNode(GetRoot(), wxXML_ELEMENT_NODE, wxT("local-package"),
+		wxXmlNode *lp = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("local-package"),
 										wxEmptyString, new wxXmlProperty(wxT("id"), 
           								arr[i].GetName(), NULL), NULL);
  		
  		// create its VERSION subtag
- 		wxXmlNode *v = new wxXmlNode(lp, wxXML_ELEMENT_NODE, wxT("version"),
- 									wxEmptyString, NULL, NULL);
-		v->AddChild(new wxXmlNode(v, wxXML_TEXT_NODE, wxEmptyString,
-									arr[i].GetVersion(), NULL, NULL));		
+ 		lp->AddChild(wxCreateElemTextNode(wxT("version"), arr[i].GetVersion()));
+
+		// set the parent
+		lp->SetParent(webupdate);
+
+		// proceed with next
 		prev->SetNext(lp);
 		prev = lp;
 	}
+
+	// replace the old document
+	SetRoot(webupdate);
 }
 
 bool wxWebUpdateLocalXMLScript::Save() const
@@ -446,26 +463,32 @@ wxString wxWebUpdateDownload::GetFileName() const
 	return m_urlDownload.AfterLast('/');
 }
 
-bool wxWebUpdateDownload::DownloadSynch(const wxString &path, const wxString &proxy,
-								const wxString &user, const wxString &password) 
+bool wxWebUpdateDownload::DownloadSynch(const wxString &path
+#if wxUSE_HTTPENGINE
+										, const wxProxySettings &proxy
+#endif
+										) 
 {
 	if (path.IsEmpty()) return FALSE;
 	
+#if wxUSE_HTTPENGINE
+	// set advanced URL options
+	wxHTTPBuilder u;
+#else
 	wxURL u(m_urlDownload);
 	if (u.GetError() != wxURL_NOERR)
 		return FALSE;
-	
-	// set advanced URL options
-	if (!proxy.IsEmpty())
-		u.SetProxy(proxy);
-	u.GetProtocol().SetUser(user);
-	u.GetProtocol().SetPassword(password);
+#endif
 	
 	// now work on streams; wx docs says that using wxURL::GetInputStream
 	// is deprecated but this is the only way to set advanced info like
 	// proxy, user & password...
 	wxFileOutputStream out(path);
+#if wxUSE_HTTPENGINE
+	wxInputStream *in = u.GetInputStream(m_urlDownload);
+#else
 	wxInputStream *in = u.GetInputStream();
+#endif
 	if (in == NULL)
 		return FALSE;
 	if (!out.IsOk()) {
@@ -487,18 +510,17 @@ bool wxWebUpdateDownload::DownloadSynch(const wxString &path, const wxString &pr
 }
 
 wxDownloadThread *wxWebUpdateDownload::DownloadAsynch(const wxString &path, 
-									wxEvtHandler *phandler,	const wxString &proxy,
-									const wxString &user, const wxString &password) 
+														wxEvtHandler *phandler
+#if wxUSE_HTTPENGINE
+														, const wxProxySettings &proxy
+#endif
+									) 
 {
 	if (path.IsEmpty()) return NULL;
-	wxDownloadThread *thread = new wxDownloadThread();
+	wxDownloadThread *thread = new wxDownloadThread(phandler);
 
 	// just set the download options
-	thread->m_strHTTPAuthPassword = password;
-	thread->m_strHTTPAuthUsername = user;
-	thread->m_pHandler = phandler;
-	thread->m_strProxyHostname = proxy.BeforeFirst(wxT(':'));
-	thread->m_strProxyPort = proxy.AfterFirst(wxT(':'));
+	thread->m_proxy = proxy;
 
 	// launch the download
 	if (thread->Create() != wxTHREAD_NO_ERROR ||

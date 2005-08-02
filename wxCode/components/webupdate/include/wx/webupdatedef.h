@@ -19,13 +19,13 @@
 //! If this define is set to 1, then the wxCheckedListCtrl will be used
 //! instead of a simple wxListCtrl.
 #ifndef wxUSE_CHECKEDLISTCTRL
-	#define wxWU_USE_CHECKEDLISTCTRL				1
+	#define wxUSE_CHECKEDLISTCTRL					1
 #endif
 
 //! If this define is set to 1, then the wxMD5 classes will be used and 
 //! compiled (see md5.cpp for license over MD5 algorithm).
 #ifndef wxUSE_MD5
-	#define wxDT_USE_MD5							1
+	#define wxUSE_MD5								1
 #endif
 
 //! If this define is set to 1, then the wxHTTPBuilder component dependency

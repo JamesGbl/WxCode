@@ -25,7 +25,7 @@
 #include "wx/checkedlistctrl.h"
 
 
-#if wxWU_USE_CHECKEDLISTCTRL
+#if wxUSE_CHECKEDLISTCTRL
 
 // resources
 #include "wx/checked.xpm"
@@ -392,4 +392,4 @@ void wxCheckedListCtrl::OnMouseEvent(wxMouseEvent& event)
 	event.Skip(); 
 }
 
-#endif		// wxWU_USE_CHECKEDLISTCTRL
+#endif		// wxUSE_CHECKEDLISTCTRL

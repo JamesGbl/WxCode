@@ -53,18 +53,33 @@ enum wxDownloadThreadStatus {
 	wxDTS_COMPUTINGMD5	
 };
 
-//! A download entry for wxDownloadThread.
-class wxDownloadThreadEntry 
+
+
+#if wxUSE_HTTPENGINE
+//! All the settings about proxy.
+class WXDLLIMPEXP_WEBUPDATE wxProxySettings
 {
+public:
+	// when using wxHTTPBuilder, we can show some adv settings
+	// for proxy servers...
+	wxString m_strProxyHostname;
+    wxString m_strProxyUsername;
+    wxString m_strProxyPassword;
+    wxString m_strProxyExceptions;
+    bool m_bUseProxy;
+    bool m_bProxyAuth;
+    long m_nProxyPort;
+   
+    bool m_bUseAuth;
+    wxString m_strAuthUsername;
+    wxString m_strAuthPassword;
+    bool m_bRememberPasswd;
 
 public:
-	wxDownloadThreadEntry() {}
-	virtual ~wxDownloadThreadEntry() {}
+	wxProxySettings() {}
+	virtual ~wxProxySettings() {}
 };
-
-
-// a container of wxDownloadThreadEntry used by wxDownloadThread
-//WX_DECLARE_USER_EXPORTED_OBJARRAY(wxDownloadThreadEntry, wxDownloadThreadEntryArray, WXDLLIMPEXP_WEBUPDATE);
+#endif
 
 
 //! The thread helper which downloads the webupdate script and/or packages.
@@ -92,7 +107,7 @@ protected:		// these are written by this thread and they must be only read
 	//! This is the result state of the last download.
 	bool m_bSuccess;
 
-#if wxDT_USE_MD5
+#if wxUSE_MD5
 
 	//! The MD5 checksum for the downloaded file computed when the file has been
 	//! completely downloaded.
@@ -148,20 +163,10 @@ public:		// to avoid setters/getters
 
 public:		// advanced options
 
-	//! The username used to get the current file.
-	//! HTTP Basic authentication is enabled only when this var is not empty.
-	wxString m_strHTTPAuthUsername;
-
-	//! The password used to get the current file.
-	//! HTTP Basic authentication is enabled only when this var is not empty.
-	wxString m_strHTTPAuthPassword;
-
-	//! The hostname of the proxy server.
-	wxString m_strProxyHostname;
-
-	//! The port number of the proxy server.
-	wxString m_strProxyPort;
-
+#if wxUSE_HTTPENGINE
+	//! Collects all options about proxy.
+	wxProxySettings m_proxy;
+#endif
 
 public:
 	wxDownloadThread(wxEvtHandler *dlg = NULL)
@@ -203,7 +208,7 @@ public:		// getters
 	//! Returns a string containing the current time left for this download.
 	virtual wxString GetRemainingTime() const;
 
-#if wxDT_USE_MD5
+#if wxUSE_MD5
 	//! Returns the MD5 computed for the last downloaded file.
 	//! This variable is empty if no files have been downloaded yet.
 	wxString GetComputedMD5() const

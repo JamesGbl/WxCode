@@ -82,26 +82,27 @@ enum wxWebUpdateDlgStatus {
 };
 
 
-
 //! The advanced panel of a wxWebUpdateDlg.
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateAdvPanel : public wxPanel 
 {
 protected:		// pointers to our controls
-
-	wxTextCtrl *m_pProxyHostname, *m_pProxyPortNumber,
-				*m_pUsername, *m_pPassword;
+	
 	wxTextCtrl *m_pDownloadPathTextCtrl;
-	wxCheckBox *m_pRemoveFiles;
+	wxCheckBox *m_pRemoveFiles, *m_pSaveLog;
+
+#if wxUSE_HTTPENGINE
+	wxProxySettings m_proxy;
+#endif
 
 protected:
 
 	//! Loads the XRC for this dialog and init the control pointers.
 	void InitWidgetsFromXRC();
 
-
 protected:		// event handlers
 
 	void OnBrowse(wxCommandEvent &);
+	void OnConnSettings(wxCommandEvent &);
 
 public:
 
@@ -112,18 +113,11 @@ public:
 	virtual ~wxWebUpdateAdvPanel() 
 		{}
 
-
-	// proxy stuff
-	wxString GetProxyHostName() const
-		{ return m_pProxyHostname->GetValue(); } 
-	wxString GetProxyPortNumber() const
-		{ return m_pProxyPortNumber->GetValue(); } 
-
-	// HTTP authentication stuff
-	wxString GetUsername() const
-		{ return m_pUsername->GetValue(); } 
-	wxString GetPassword() const
-		{ return m_pPassword->GetValue(); } 
+#if wxUSE_HTTPENGINE
+	//! Returns the updated proxy settings.
+	wxProxySettings GetProxySettings() const
+		{ return m_proxy; }
+#endif
 
 	//! Returns the path chosen by the user for the downloaded file.
 	//! This one is initialized to the temporary folder for the current user.
@@ -134,6 +128,10 @@ public:
 	bool RemoveFiles() const
 		{ wxASSERT(m_pRemoveFiles); return m_pRemoveFiles->GetValue(); }
 
+	//! Returns TRUE if the user has chosen to save a log file.
+	bool SaveLog() const
+		{ wxASSERT(m_pSaveLog); return m_pSaveLog->GetValue(); }
+
 
 private:
 	DECLARE_CLASS(wxWebUpdateAdvPanel)
@@ -141,7 +139,7 @@ private:
 };
 
 
-#if wxWU_USE_CHECKEDLISTCTRL
+#if wxUSE_CHECKEDLISTCTRL
 	#define wxWUDLC_BASECLASS wxCheckedListCtrl
 #else
 	#define wxWUDLC_BASECLASS wxListCtrl
@@ -295,7 +293,7 @@ protected:		// remote-related stuff
 	//! An array of flags; TRUE for the n-th entry means that the n-th package
 	//! (referring to the m_pUpdatesList listctrl package array) has already
 	//! been installed.
-//	wxArrayBool m_bInstalled;
+	wxArrayBool m_bInstalled;
 	
 	//! The index of the package that we are currently downloading.
 	int m_nCurrentIdx;

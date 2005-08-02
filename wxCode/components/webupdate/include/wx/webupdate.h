@@ -29,6 +29,10 @@ class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDownload;
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdatePackage;
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateLocalPackage;
 
+#if wxUSE_HTTPENGINE
+class wxProxySettings;
+#endif
+
 //! A global wxWebUpdateDownload variable which contains empty (and thus invalid)
 //! settings.
 extern WXDLLIMPEXP_DATA_WEBUPDATE(wxWebUpdateDownload) wxEmptyWebUpdateDownload;
@@ -164,6 +168,9 @@ protected:
 	//! Returns the text content of the given node.
 	wxString GetNodeContent(const wxXmlNode *node) const;
 
+	//! Builds the header of the local script and returns it.
+	wxXmlNode *wxWebUpdateLocalXMLScript::BuildHeader() const;
+
 public:
 
 	wxWebUpdateLocalXMLScript(const wxString &localURI = wxEmptyString);
@@ -186,7 +193,8 @@ public:		// main functions
     //! given to the #Load function (since local update scripts should always
     //! be kept in the fixed-name files).
     virtual bool Save() const;
-    
+
+
 public:		// getters
 
 	//! Returns the wxWebUpdatePackage stored in this document for
@@ -402,17 +410,19 @@ public:		// main functions
 	//! \param user The username for the HTTP authentication (if it's required).
 	//! \param password The password for the HTTP authentication (if it's required).
 	virtual wxDownloadThread *DownloadAsynch(const wxString &path, 
-								wxEvtHandler *handler,
-								const wxString &proxy = wxEmptyString,
-								const wxString &user = wxEmptyString,
-								const wxString &password = wxEmptyString);
+								wxEvtHandler *handler
+#if wxUSE_HTTPENGINE
+								, const wxProxySettings &proxy
+#endif
+								);
 
 	//! Downloads this package synchronously and thus when the function returns
 	//! the package has been completely downloaded (if result is TRUE).
-	virtual bool DownloadSynch(const wxString &path,
-								const wxString &proxy = wxEmptyString,
-								const wxString &user = wxEmptyString,
-								const wxString &password = wxEmptyString);
+	virtual bool DownloadSynch(const wxString &path
+#if wxUSE_HTTPENGINE
+								, const wxProxySettings &proxy
+#endif
+								);
 
 	//! Installs this download using the global wxWebUpdateInstaller class
 	//! (see wxWebUpdateInstaller::Get).

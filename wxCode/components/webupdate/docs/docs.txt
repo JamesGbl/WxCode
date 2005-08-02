@@ -1,0 +1,56 @@
+// This is an additional doxygen documentation page
+// To get access to the entire documentation of this
+// component, you should run 'doxygen' in this folder
+
+
+/*! 
+
+\mainpage WebUpdate
+
+
+\section intro How to integrate WebUpdate in your application
+Before using this component, you need to know some few concepts:
+- a 'package' is a set of files which have in common their function and are packaged
+in a single archive. A 'remote package' is an archive hosted in the webserver.
+A 'local package' is a package which is installed in the user's system (typically 
+'installed' means 'uncompressed').
+
+
+It's quite easy to use WebUpdate following these simple steps:
+
+1) <strong>Plan your "update" strategies</strong>: do you need more than a single
+package ? Which files will belong to each package ? Which format are you going to
+use for your packages: simple archives (ZIP, TAR.GZ, ...) or installers (MSI, RPM,
+DEB) ? 
+
+2) <strong>Write your 'local.xml' file</strong>: this is the simplest XML used
+by WebUpdate...
+
+3) <strong>Write your 'remote.xml' file</strong>: this is a bit more complex and
+contains all the important info.
+
+4) <strong>Create your packages</strong>: 
+
+5) <strong>Test your update system</strong>:
+
+This should be enough to use your WebUpdate component. If you need some further
+option then you can derive your own web updater modifying the WebUpdate sources.
+To do this you can use this doxygen reference guide. But if you just need an
+updater for your program, then you can simply use the component as it is.
+
+*/
+
+
+
+/*! 
+
+\page faq The Frequently Asked Questions about WebUpdate
+
+\section dsg Design of WebUpdate
+1) Why does WebUpdate provides a separate application for handling the update process ?
+   Why it does not provide a library which can be linked to the application to update
+   so that I can ship a single executable ?
+
+2) Why using XML for the scripts ?
+
+*/

@@ -26,7 +26,7 @@ LDFLAGS =
 USE_HTTPENGINE = 0
 
 # The path to the wxHTTPBuilder (httpengine) component 
-HTTPENGINE_DIR = ..\..\httpengine
+HTTPENGINE_DIR = ..\..\wxhttpengine
 
 # The directory where wxWidgets library is installed 
 WX_DIR = $(WXWIN)
@@ -113,7 +113,7 @@ ifeq ($(USE_HTTPENGINE),1)
 __HTTPENGINEDEP_DEF_p_1 = --define wxUSE_HTTPENGINE
 endif
 ifeq ($(USE_HTTPENGINE),1)
-__HTTPENGINEDEP_LIB_p = -lhttpengine
+__HTTPENGINEDEP_LIB_p = -lhttpengine$(WXLIBPOSTFIX)
 endif
 ifeq ($(WX_DEBUG),0)
 __WARNINGS = 
@@ -180,7 +180,7 @@ mingw:
 
 ### Targets: ###
 
-all: ..\src\webupdater.exe rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150 ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
+all: rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150 ..\src\webupdater.exe ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
 
 clean: 
 	-if exist mingw\*.o del mingw\*.o
@@ -267,9 +267,6 @@ docs:
 cleandocs: 
 	-if exist ..\docs\html then rmdir /S /Q ..\docs\html
 
-..\src\webupdater.exe: $(WEBUPDATER_OBJECTS) mingw\webupdater_app_rc.o
-	$(CXX) -o $@ $(WEBUPDATER_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -L$(HTTPENGINE_DIR)\lib -Wl,--subsystem,windows -mwindows  $(__HTTPENGINEDEP_LIB_p) -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
-
 rep4_simple100: 
 	if not exist ..\samples\simple\v1.0.0 mkdir ..\samples\simple\v1.0.0
 	for %%f in (webupdater.exe webupdatedlg.xrc) do if not exist ..\samples\simple\v1.0.0\%%f copy ..\src\%%f ..\samples\simple\v1.0.0
@@ -285,6 +282,9 @@ rep4_adv001:
 rep4_adv150: 
 	if not exist ..\samples\advanced\v1.5.0 mkdir ..\samples\advanced\v1.5.0
 	for %%f in (webupdater.exe webupdatedlg.xrc) do if not exist ..\samples\advanced\v1.5.0\%%f copy ..\src\%%f ..\samples\advanced\v1.5.0
+
+..\src\webupdater.exe: $(WEBUPDATER_OBJECTS) mingw\webupdater_app_rc.o
+	$(CXX) -o $@ $(WEBUPDATER_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -L$(HTTPENGINE_DIR)\lib -Wl,--subsystem,windows -mwindows  $(__HTTPENGINEDEP_LIB_p) -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
 ..\samples\simple\v1.0.0\simple.exe: $(SIMPLE_1_0_0_OBJECTS) mingw\simple_1_0_0_minimal_rc.o
 	$(CXX) -o $@ $(SIMPLE_1_0_0_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -Wl,--subsystem,windows -mwindows  -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32

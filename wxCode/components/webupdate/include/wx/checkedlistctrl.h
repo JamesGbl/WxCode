@@ -22,7 +22,7 @@
 #include <wx/listctrl.h>
 #include <wx/imaglist.h>
 
-#if wxWU_USE_CHECKEDLISTCTRL
+#if wxUSE_CHECKEDLISTCTRL
 
 // image indexes (used internally by wxCheckedListCtrl)
 #define wxCLC_UNCHECKED_IMGIDX				0		// unchecked & enabled
@@ -148,7 +148,7 @@ private:
 };
 
 
-#endif	// wxWU_USE_CHECKEDLISTCTRL
+#endif	// wxUSE_CHECKEDLISTCTRL
 
 #endif	// _WX_CHECKEDLISTCTRL_H_
 

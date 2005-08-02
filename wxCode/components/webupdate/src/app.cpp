@@ -20,6 +20,10 @@
 //! The local XRC file which is loaded.
 #define wxWU_LOCAL_XRC				wxT("webupdatedlg.xrc")
 
+//! The name of our default log file.
+#define wxWU_LOGFILENAME			wxT("webupdatelog.txt")
+
+
 #if defined( __WXMSW__ ) && defined( __VISUALC__ )
 #include <crtdbg.h>
 #define mcDUMP_ON_EXIT		\
@@ -51,6 +55,7 @@
 #include <wx/image.h>
 #include <wx/wfstream.h>
 #include <wx/cmdline.h>
+#include <wx/textfile.h>
 
 #include "wx/webupdatedlg.h"
 
@@ -96,28 +101,37 @@ static const wxCmdLineEntryDesc g_cmdLineDesc[] =
 
 // -----------------------------------------------------------------------------
 // a little log class which saves log messages to a file (see /savelog switch)
+// by Francesco Montorsi <frm@users.sourceforge.net>; wxWidgets-licensed
 // -----------------------------------------------------------------------------
 
-class myFileLog : public wxLogPassThrough
+class wxFileLog : public wxLogPassThrough
 {
-	wxFile out;
+	wxTextFile out;
 
 public:
-	myFileLog() { 
-		out.Create(wxT("log.txt"), TRUE); 
+	wxFileLog(const wxString &filename, const wxString &header = wxEmptyString) { 
+		wxRemoveFile(filename);
+		out.Create(filename);
 
 		// create a little header to make our log nicer
-		wxString header = wxT("\n LOG OF TEST1 SESSION BEGAN AT ") + 
-							wxDateTime::Now().Format(wxT("%x %X")) +
-							wxT("\n-----------------------------------------------\n\n");
-		out.Write(header, header.Len());		
+		if (!header.IsEmpty()) {
+			out.AddLine(wxEmptyString);
+			out.AddLine(header);
+			out.AddLine(wxT(" ") + wxString(wxT('-'), 70));
+			out.AddLine(wxEmptyString);
+		}
+
+		PassMessages(TRUE);
 	}
 
-	virtual ~myFileLog() { out.Close(); }
+	virtual ~wxFileLog() 
+		{ out.Write(); out.Close(); }
 
+	// writes to the file the log message
 	virtual void DoLog(wxLogLevel level, const wxChar *msg, time_t timestamp)
-	{ out.Write(msg, wxStrlen(msg)); out.Write(wxT("\n"), 1); 
-		wxLogPassThrough::DoLog(level, msg, timestamp); }
+		{ wxLogPassThrough::DoLog(level, msg, timestamp);
+		  wxString str; TimeStamp(&str);
+		  out.AddLine(wxT(" ") + str + msg); }
 };
 
 
@@ -129,10 +143,16 @@ class WebUpdaterApp : public wxApp
 {
 public:
 
-	wxWebUpdateDlg *m_dlg;
+	// our main dialog
+	wxDialog *m_dlg;
+
+	// our local script
 	wxWebUpdateLocalXMLScript m_script;
+
+	// TRUE if the updated app will be restarted
 	bool m_bRestart;
 
+	// our log window
 	wxLogWindow *m_log;
 
 public:
@@ -194,21 +214,22 @@ bool WebUpdaterApp::OnInit()
     wxCmdLineParser parser(g_cmdLineDesc, argc, argv);
     if (parser.Parse() != 0)
 		return 0;		// help was shown / an error occurred
-	
-	// check for other options & switches (ORDER IS IMPORTANT !)
-	wxString toload;
-	m_bRestart = parser.Found(SWITCH_RESTART);
-	if (parser.Found(SWITCH_SAVELOG))
-		new myFileLog();		// it automatically installs itself as the new logger
-	if (!parser.Found(OPTION_XMLSCRIPT, &toload))
-		toload = wxWU_LOCAL_XMLSCRIPT;
 
-#ifdef __WXDEBUG__432
+#ifdef __WXDEBUG__XXXXX				// the logframe causes problems in the exit stage
 	// create an useful log window
 	m_log = new wxLogWindow(NULL, wxT("WebUpdater log"));
 	m_log->GetFrame()->Move(50, 50+350);
 	m_log->GetFrame()->SetSize(800, 300);
 #endif
+	
+	// check for other options & switches (ORDER IS IMPORTANT !)
+	wxString toload;
+	m_bRestart = parser.Found(SWITCH_RESTART);
+	if (parser.Found(SWITCH_SAVELOG))
+		new wxFileLog(wxWU_LOGFILENAME, wxT(" LOG OF WEBUPDATER SESSION BEGAN AT ") + 
+						wxDateTime::Now().Format(wxT("%x %X")));		// it automatically installs itself as the new logger
+	if (!parser.Found(OPTION_XMLSCRIPT, &toload))
+		toload = wxWU_LOCAL_XMLSCRIPT;
 
 	// this is for using wxDownloadThread
 	wxSocketBase::Initialize();
@@ -233,9 +254,18 @@ bool WebUpdaterApp::OnInit()
     wxXmlResource::Get()->Load(wxWU_LOCAL_XRC);
 
 	// create our main dialog
+#if 1
 	m_dlg = new WebUpdaterDlg(m_script);
 	SetTopWindow(m_dlg);
 	SetExitOnFrameDelete(TRUE);
+#else
+
+	// to test wxWebUpdateAdvPanel alone
+	m_dlg = new wxDialog(NULL, -1, wxT(""), wxDefaultPosition, wxDefaultSize, 
+		wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
+	new wxWebUpdateAdvPanel(m_dlg);
+	SetTopWindow(m_dlg);		
+#endif
 
 	// show the dialog...
 	m_dlg->CenterOnScreen();	

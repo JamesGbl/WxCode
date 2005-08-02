@@ -29,8 +29,12 @@
 #include "wx/download.h"
 #include <wx/wfstream.h>
 
-#if wxDT_USE_MD5
+#if wxUSE_MD5
 #include "wx/md5.h"
+#endif
+
+#if wxUSE_HTTPENGINE
+#include <wx/httpengine/httpbuilder.h>
 #endif
 
 // wxWidgets RTTI
@@ -83,21 +87,34 @@ void *wxDownloadThread::Entry()
 		wxLogDebug(wxT("wxDownloadThread::Entry - downloading ") + m_strURI);
 
 		// ensure we can build a wxURL from the given URI
+#if wxUSE_HTTPENGINE
+		wxHTTPBuilder u;
+		u.InitContentTypes(); // Initialise the content types on the page
+		
+		if (m_proxy.m_bUseProxy) {
+			u.HttpProxy(m_proxy.m_strProxyHostname, m_proxy.m_nProxyPort);
+			if (m_proxy.m_bProxyAuth)
+				u.HttpProxyAuth(m_proxy.m_strProxyUsername, m_proxy.m_strProxyPassword);
+		}
+		
+		if (m_proxy.m_bUseAuth)
+			u.Authenticate(m_proxy.m_strAuthUsername, m_proxy.m_strAuthPassword);
+
+#else
 		wxURL u(m_strURI);
 		if (u.GetError() != wxURL_NOERR)
 			ABORT_DOWNLOAD();
-
-		// set advanced URL options
-		if (!m_strProxyHostname.IsEmpty() && !m_strProxyPort.IsEmpty())
-			u.SetProxy(m_strProxyHostname + wxT(":") + m_strProxyPort);
-		u.GetProtocol().SetUser(m_strHTTPAuthUsername);
-		u.GetProtocol().SetPassword(m_strHTTPAuthPassword);
+#endif
 		
 		// now work on streams; wx docs says that using wxURL::GetInputStream
 		// is deprecated but this is the only way to set advanced info like
 		// proxy, user & password...
 		wxFileOutputStream out(m_strOutput);
+#if wxUSE_HTTPENGINE
+		wxInputStream *in = u.GetInputStream(m_strURI);
+#else
 		wxInputStream *in = u.GetInputStream();
+#endif
 		if (in == NULL)
 			ABORT_DOWNLOAD();
 		if (!in->IsOk() || !out.IsOk()) {
@@ -150,7 +167,7 @@ void *wxDownloadThread::Entry()
 						m_nCurrentSize);
 
 		// do we have to compute MD5 ?
-#if wxDT_USE_MD5
+#if wxUSE_MD5
 		m_mStatus.Lock();
 		m_nStatus = wxDTS_COMPUTINGMD5;
 		m_mStatus.Unlock();

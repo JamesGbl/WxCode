@@ -47,6 +47,10 @@
 #include <wx/dialup.h>
 #include <wx/tokenzr.h>
 
+#if wxUSE_HTTPENGINE
+	#include <wx/httpengine/proxysettingsdlg.h>
+#endif
+
 // wxWidgets RTTI
 IMPLEMENT_CLASS(wxWebUpdateAdvPanel, wxPanel)
 IMPLEMENT_CLASS(wxWebUpdateDlg, wxDialog)
@@ -88,7 +92,8 @@ END_EVENT_TABLE()
 BEGIN_EVENT_TABLE(wxWebUpdateAdvPanel, wxPanel)
 
 	// buttons
-    EVT_BUTTON(XRCID("IDWUD_BROWSE"), wxWebUpdateAdvPanel::OnBrowse)
+    EVT_BUTTON(XRCID("IDWUAP_BROWSE"), wxWebUpdateAdvPanel::OnBrowse)
+    EVT_BUTTON(XRCID("IDWUAP_CONNSETTINGS"), wxWebUpdateAdvPanel::OnConnSettings)
 
 END_EVENT_TABLE()
 
@@ -193,7 +198,7 @@ void wxWebUpdateListCtrl::RebuildPackageList(bool bShowOnlyOutOfDate)
 					continue;		// continue with next package
 				}
 
-#if wxWU_USE_CHECKEDLISTCTRL
+#if wxUSE_CHECKEDLISTCTRL
 				// at least disable this item...
 				Enable(idx, FALSE);
 #endif
@@ -232,19 +237,19 @@ void wxWebUpdateListCtrl::RebuildPackageList(bool bShowOnlyOutOfDate)
 		switch (curr.GetImportance()) {
 		case wxWUPI_HIGH:
 			SetItem(idx, 4, wxT("high!"));
-#if wxWU_USE_CHECKEDLISTCTRL
+#if wxUSE_CHECKEDLISTCTRL
 			Check(idx, tocheck);
 #endif
 			break;
 		case wxWUPI_NORMAL:
 			SetItem(idx, 4, wxT("normal"));
-#if wxWU_USE_CHECKEDLISTCTRL
+#if wxUSE_CHECKEDLISTCTRL
 			Check(idx, tocheck);
 #endif
 			break;
 		case wxWUPI_LOW:
 			SetItem(idx, 4, wxT("low"));
-#if wxWU_USE_CHECKEDLISTCTRL
+#if wxUSE_CHECKEDLISTCTRL
 			Check(idx, FALSE);
 #endif
 			break;
@@ -388,7 +393,7 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 
 	// and build our dialog window
 	wxASSERT_MSG(wxXmlResource::Get()->LoadDialog(this, GetParent(), m_xmlLocal.GetXRCResName()),
-			wxT("Error while building wxWebUpdateDlg; check you've loaded webupdatedlg.xrc !"));
+			wxT("Error while building wxWebUpdateDlg; check you've loaded webupdatedlg.xrc and that's a valid XRC !"));
 
     // Make an instance of our new custom class.
     m_pUpdatesList = new wxWebUpdateListCtrl(this, -1, wxDefaultPosition,
@@ -566,10 +571,11 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
 	wxLogDebug(wxT("wxWebUpdateDlg::OnScriptDownload - XML script loaded successfully"));
 	wxWebUpdatePackageArray arr = m_xmlRemote.GetAllPackages();
 	
-	wxASSERT_MSG(m_bDownloaded.GetCount() == 0, 
+	wxASSERT_MSG(m_bDownloaded.GetCount() == 0 && m_bInstalled.GetCount() == 0, 
  			wxT("the webupdate script has already been downloaded before ?"));
 	m_bDownloaded.Add(FALSE, arr.GetCount());
- 	
+	m_bInstalled.Add(FALSE, arr.GetCount());
+	
 	// is everything up to date ?
 	bool allupdated = TRUE;
 	for (int j=0; j < (int)arr.GetCount(); j++) {
@@ -726,8 +732,7 @@ bool wxWebUpdateDlg::InstallFirstPackage()
 	// find the first package whose requirements have already been installed
 	int toinstall = -1;
 	for (int i=0; i < m_pUpdatesList->GetItemCount(); i++) {
-		if (m_pUpdatesList->GetRequiredList(i).IsEmpty() ||
-				IsReadyForInstallation(i)) {
+		if (IsReadyForInstallation(i) && !m_bInstalled[i]) {
 			toinstall = i;
 			break;
 		}
@@ -748,7 +753,10 @@ bool wxWebUpdateDlg::InstallFirstPackage()
 }
 
 
-// event handlers
+
+// ---------------------------------
+// wxWEBUPDATEDLG - event handlers
+// ---------------------------------
 
 void wxWebUpdateDlg::OnTextURL(wxTextUrlEvent& event)
 {
@@ -769,11 +777,10 @@ void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 	wxASSERT_MSG(!m_dThread->IsDownloading(), 
 		wxT("The wxWUD_OK button should be disabled !"));
 
+#if wxUSE_HTTPENGINE
 	// first update the advanced options
-	m_dThread->m_strHTTPAuthUsername = m_pAdvPanel->GetUsername();
-	m_dThread->m_strHTTPAuthPassword = m_pAdvPanel->GetPassword();
-	m_dThread->m_strProxyPort = m_pAdvPanel->GetProxyPortNumber();
-	m_dThread->m_strProxyHostname = m_pAdvPanel->GetProxyHostName();
+	m_dThread->m_proxy = m_pAdvPanel->GetProxySettings();
+#endif
 
 	// check if we already downloaded the XML webupdate script
 	if (!m_xmlRemote.IsOk()) {
@@ -787,12 +794,14 @@ void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 
 	wxASSERT_MSG(DownloadFirstPackage(),
 		wxT("The wxWUD_OK button should be enabled only when one or more packages are checked"));
+
+	UpdateWindowUI();
 }
 
 void wxWebUpdateDlg::OnCancel(wxCommandEvent &)
 {
 	if (m_dThread->IsDownloading() 
-#ifdef wxDT_USE_MD5
+#ifdef wxUSE_MD5
 		|| m_dThread->IsComputingMD5()
 #endif
 		) {
@@ -876,6 +885,8 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 
 			if (m_dThread->m_strMD5.IsEmpty() || m_dThread->IsMD5Ok()) {
 
+				wxASSERT_MSG(!m_bDownloaded[m_nCurrentIdx] && !m_bInstalled[m_nCurrentIdx],
+					wxT("We are downloading/installing the same package again ?"));
 				m_bDownloaded[m_nCurrentIdx] = TRUE;
 	
 				// if this is the last package which must be downloaded
@@ -884,6 +895,7 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 				
 					// the order of the package installation cannot be 
 					// randomly chosen
+					wxLogDebug(wxT("wxWebUpdateDlg::OnDownloadComplete - beginning installation of downloaded packages"));
 					InstallFirstPackage();					
     			}
 				
@@ -904,14 +916,20 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 
 void wxWebUpdateDlg::OnInstallationComplete(wxCommandEvent &)
 {
-	if (!m_iThread->InstallationWasSuccessful()) {
+	if (m_iThread->InstallationWasSuccessful()) {
+
+		m_bInstalled[m_nCurrentIdx] = TRUE;
 
 		// uncheck the item we have just installed...
 		m_pUpdatesList->Check(m_nCurrentIdx, FALSE);
 		
-		// update the version fields for the local package...
+		// find the installed package
 		wxWebUpdateLocalPackageArray arr(GetLocalPackages());
 		wxWebUpdatePackage &r = GetRemotePackages().Item(m_nCurrentIdx);
+		wxLogDebug(wxT("wxWebUpdateDlg::OnInstallationComplete - completed installation of \"")
+					+ r.GetName() + wxT("\"..."));
+
+		// update the version fields for the local package...
 		wxWebUpdateLocalPackage &l = arr.Item(m_nCurrentIdx);
 		if (!l.IsOk()) 
   			arr.Add(wxWebUpdateLocalPackage(r.GetName(), r.GetLatestVersion()));
@@ -933,11 +951,13 @@ void wxWebUpdateDlg::OnInstallationComplete(wxCommandEvent &)
     	}
 			
 		// proceed with next
-		InstallFirstPackage();
+		if (!InstallFirstPackage())
+			wxLogDebug(wxT("wxWebUpdateDlg::OnInstallationComplete - completed the installation of all packages"));
 		
 	} else {
 	
 		// warn the user
+		m_bInstalled[m_nCurrentIdx] = FALSE;
 		wxMessageBox(wxT("The downloaded package \"") + m_dThread->m_strOutput + 
 						wxT("\"\ncould not be installed.") +
 						wxT("\n\nPlease contact the support team for more info."), 
@@ -1153,12 +1173,13 @@ void wxWebUpdateAdvPanel::InitWidgetsFromXRC()
 	// ---------------------
 
 	m_pDownloadPathTextCtrl = XRCCTRL(*this, "IDWUAP_DOWNLOAD_PATH", wxTextCtrl);
-	m_pProxyHostname = XRCCTRL(*this, "IDWUAP_HOSTNAME", wxTextCtrl);
-	m_pProxyPortNumber = XRCCTRL(*this, "IDWUAP_PORTNUMBER", wxTextCtrl);
-	m_pUsername = XRCCTRL(*this, "IDWUAP_USERNAME", wxTextCtrl);
-	m_pPassword = XRCCTRL(*this, "IDWUAP_PASSWORD", wxTextCtrl);
+	m_pSaveLog = XRCCTRL(*this, "IDWUAP_SAVELOG", wxCheckBox);
 	m_pRemoveFiles = XRCCTRL(*this, "IDWUAP_REMOVE", wxCheckBox);
 
+#if !wxUSE_HTTPENGINE
+	wxButton *b = XRCCTRL(*this, "IDWUAP_CONNSETTINGS", wxButton);
+	b->Hide();
+#endif
 
 
 	// init control data
@@ -1198,5 +1219,35 @@ void wxWebUpdateAdvPanel::OnBrowse(wxCommandEvent &)
 
 		// just don't change nothing
 	}
+}
+
+void wxWebUpdateAdvPanel::OnConnSettings(wxCommandEvent &)
+{
+#if wxUSE_HTTPENGINE
+	wxProxySettingsDlg dlg(this, -1, wxT("WebUpdate proxy settings"));
+
+	wxTopLevelWindow *tw = wxDynamicCast(GetParent(), wxTopLevelWindow);
+	if (tw) dlg.SetIcon( tw->GetIcon() );
+
+	dlg.CenterOnScreen();
+	dlg.SetHost(m_proxy.m_strProxyHostname);
+	dlg.SetPortW(m_proxy.m_nProxyPort);
+	dlg.SetUsername(m_proxy.m_strProxyUsername);
+	dlg.SetPassword(m_proxy.m_strProxyPassword);
+	dlg.SetAuthProxy(m_proxy.m_bProxyAuth);
+	//dlg.SetExceptions(m_proxy.m_strProxyExceptions);
+	//dlg.SetExceptionsDesc( _T("") );
+	//dlg.SetExceptionsNote( _T("") );
+	
+	if( dlg.ShowModal() == wxID_OK )
+	{
+		m_proxy.m_strProxyHostname = dlg.GetHost();
+		m_proxy.m_nProxyPort = dlg.GetPort();
+		m_proxy.m_strProxyUsername = dlg.GetUsername( );
+		m_proxy.m_strProxyPassword = dlg.GetPassword( );
+		m_proxy.m_bProxyAuth = dlg.IsAuthProxy();
+		//m_proxy.m_strProxyExceptions = dlg.GetExceptions();
+	}
+#endif
 }
 

@@ -166,7 +166,7 @@
 			<option>0</option>
             <object class="wxBoxSizer">
                 <orient>wxHORIZONTAL</orient>
-
+					
 				<object class="sizeritem">
 					<flag>wxGROW</flag>
 					<border>5</border>
@@ -211,7 +211,7 @@
 			
 			<!-- this is very important since it determines the portion of the wxWebUpdateAdvPanel which
 				can be shown -->
-			<option>8</option>
+			<option>5</option>
 					
 			<!-- OUR SECOND UNKNOWN CONTROL: be careful that this control is inside the first sizer of the
 				 dialog or the "Show/hide adv panel" button won't work !! -->
@@ -300,152 +300,50 @@
                 </object>
             </object>
         </object>
-		
-		
+
         <object class="sizeritem">
-            <flag>wxGROW</flag>
 			<option>0</option>
+            <flag>wxGROW</flag>
             <border>5</border>
-            <object class="wxBoxSizer">
-                <orient>wxHORIZONTAL</orient>
-                <object class="sizeritem">
-                    <flag>wxGROW|wxLEFT|wxBOTTOM</flag>
-                    <border>5</border>
-					<option>1</option>
-					
-					
-                    <object class="wxStaticBoxSizer">
-                        <orient>wxVERTICAL</orient>
-                        <label>Authentication settings</label>
-
-						<!--
-                        <object class="sizeritem">
-                            <flag>wxALIGN_LEFT|wxALL</flag>
-                            <border>5</border>
-                            <object class="wxStaticText" name="IDWUAP_TEXT2">
-                                <label>Leave empty if not required.</label>
-                            </object>
-                        </object>
-						-->
-
-                        <object class="sizeritem">
-                            <flag>wxALIGN_CENTER|wxGROW</flag>
-                            <border>5</border>
-                            <object class="wxGridSizer">
-                                <cols>2</cols>
-                                <rows>0</rows>
-                                <vgap>0</vgap>
-                                <hgap>0</hgap>
-                                <object class="sizeritem">
-                                    <flag>wxALIGN_CENTER|wxALL</flag>
-                                    <border>5</border>
-                                    <object class="wxStaticText" name="IDWUAP_TEXT3">
-                                        <label>Username:</label>
-                                    </object>
-                                </object>
-                                <object class="sizeritem">
-                                    <flag>wxGROW|wxALL</flag>
-                                    <border>5</border>
-                                    <object class="wxTextCtrl" name="IDWUAP_USERNAME">
-                                        <size>80,-1</size>
-                                        <value></value>
-                                    </object>
-                                </object>
-                                <object class="sizeritem">
-                                    <flag>wxALIGN_CENTER|wxALL</flag>
-                                    <border>5</border>
-                                    <object class="wxStaticText" name="IDWUAP_TEXT4">
-                                        <label>Password:</label>
-                                    </object>
-                                </object>
-                                <object class="sizeritem">
-                                    <flag>wxGROW|wxALL</flag>
-                                    <border>5</border>
-                                    <object class="wxTextCtrl" name="IDWUAP_PASSWORD">
-										<style>wxTE_PASSWORD</style>
-                                        <size>80,-1</size>
-                                        <value></value>
-                                    </object>
-                                </object>
-                            </object>
-                        </object>
-                    </object>
-                </object>
+			<object class="wxBoxSizer">
+				<orient>wxHORIZONTAL</orient>
+				<object class="sizeritem">
+					<flag>wxALIGN_CENTER|wxALL|wxGROW</flag>
+					<border>5</border>
+					<option>2</option>
+					<object class="wxBoxSizer">
+						<orient>wxVERTICAL</orient>
+						<object class="sizeritem">
+							<flag>wxALIGN_LEFT|wxALL</flag>
+							<border>5</border>
+							<object class="wxCheckBox" name="IDWUAP_SAVELOG">
+								<checked>0</checked>
+								<label>Save a log file</label>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<flag>wxALIGN_LEFT|wxALL</flag>
+							<border>5</border>
+							<object class="wxCheckBox" name="IDWUAP_REMOVE">
+								<checked>1</checked>
+								<label>Remove downloaded files after installation</label>
+							</object>
+						</object>				
+					</object>
+				</object>
 				
-                <object class="sizeritem">
-                    <flag>wxGROW|wxLEFT|wxRIGHT|wxBOTTOM</flag>
-                    <border>5</border>
+				<!-- by default, wxWebUpdateDlg will show this button only if the wxUSE_HTTPENGINE symbol is set to 1 -->
+				<object class="sizeritem">
+					<flag>wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxGROW|wxALL</flag>
+					<border>5</border>
 					<option>1</option>
-					
-					
-                    <object class="wxStaticBoxSizer">
-                        <orient>wxVERTICAL</orient>
-                        <label>Proxy settings</label>
-                        
-						<!--
-						<object class="sizeritem">
-                            <flag>wxALIGN_LEFT|wxALL</flag>
-                            <border>5</border>
-                            <object class="wxStaticText" name="IDWUAP_TEXT5">
-                                <label>Leave empty if not required.</label>
-                            </object>
-                        </object>
-						-->	
-								
-						<object class="sizeritem">
-                            <flag>wxALIGN_CENTER|wxGROW</flag>
-                            <border>5</border>
-								
-                            <object class="wxGridSizer">
-                                <cols>2</cols>
-                                <rows>0</rows>
-                                <vgap>0</vgap>
-                                <hgap>0</hgap>
-                                <object class="sizeritem">
-                                    <flag>wxALIGN_CENTER|wxALL</flag>
-                                    <border>5</border>
-                                    <object class="wxStaticText" name="IDWUAP_TEXT6">
-                                        <label>Proxy hostname:</label>
-                                    </object>
-                                </object>
-                                <object class="sizeritem">
-                                    <flag>wxGROW|wxALL</flag>
-                                    <border>5</border>
-                                    <object class="wxTextCtrl" name="IDWUAP_HOSTNAME">
-                                        <size>80,-1</size>
-                                        <value></value>
-                                    </object>
-                                </object>
-                                <object class="sizeritem">
-                                    <flag>wxALIGN_CENTER|wxALL</flag>
-                                    <border>5</border>
-                                    <object class="wxStaticText" name="IDWUAP_TEXT7">
-                                        <label>Port number:</label>
-                                    </object>
-                                </object>
-                                <object class="sizeritem">
-                                    <flag>wxGROW|wxALL</flag>
-                                    <border>5</border>
-                                    <object class="wxTextCtrl" name="IDWUAP_PORTNUMBER">
-                                        <size>80,-1</size>
-                                        <value></value>
-                                    </object>
-                                </object>
-                            </object>
-                        </object>
-                    </object>
-                </object>
-            </object>
-        </object>
-        <object class="sizeritem">
-            <flag>wxALIGN_LEFT|wxALL</flag>
-            <border>5</border>
-            <object class="wxCheckBox" name="IDWUAP_REMOVE">
-				<checked>1</checked>
-                <label>Remove downloaded files after installation</label>
-            </object>
-        </object>
-    </object>
+					<object class="wxButton" name="IDWUAP_CONNSETTINGS">
+						<label>Connection settings...</label>
+					</object>
+				</object>
+			</object>
+		</object>
+    </object>		
 </object>
 
 </resource>

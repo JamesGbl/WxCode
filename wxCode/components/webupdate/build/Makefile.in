@@ -91,7 +91,7 @@ COND_PLATFORM_OS2_1___advanced_0 = $(NM) advanced$(EXEEXT) | if grep -q pmwin.76
 
 ### Targets: ###
 
-all: ../src/webupdater$(EXEEXT) ../samples/simple/v1.0.0/simple$(EXEEXT) ../samples/simple/v2.0.3/simple$(EXEEXT) ../samples/advanced/v0.0.1/advanced$(EXEEXT) ../samples/advanced/v1.5.0/advanced$(EXEEXT)
+all: rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150 ../src/webupdater$(EXEEXT) ../samples/simple/v1.0.0/simple$(EXEEXT) ../samples/simple/v2.0.3/simple$(EXEEXT) ../samples/advanced/v0.0.1/advanced$(EXEEXT) ../samples/advanced/v1.5.0/advanced$(EXEEXT)
 
 install: all
 
@@ -196,6 +196,54 @@ docs:
 cleandocs: 
 	rm -rf ../docs/html
 
+rep4_simple100: 
+	@mkdir -p ../samples/simple/v1.0.0
+	@for f in webupdater webupdatedlg.xrc; do \
+	if test ! -f ../samples/simple/v1.0.0/$$f -a ! -d ../samples/simple/v1.0.0/$$f ; \
+	then x=yep ; \
+	else x=`find ../src/$$f -newer ../samples/simple/v1.0.0/$$f -print` ; \
+	fi; \
+	case "$$x" in ?*) \
+	cp -pRf ../src/$$f ../samples/simple/v1.0.0 ;; \
+	esac; \
+	done
+
+rep4_simple203: 
+	@mkdir -p ../samples/simple/v2.0.3
+	@for f in webupdater webupdatedlg.xrc; do \
+	if test ! -f ../samples/simple/v2.0.3/$$f -a ! -d ../samples/simple/v2.0.3/$$f ; \
+	then x=yep ; \
+	else x=`find ../src/$$f -newer ../samples/simple/v2.0.3/$$f -print` ; \
+	fi; \
+	case "$$x" in ?*) \
+	cp -pRf ../src/$$f ../samples/simple/v2.0.3 ;; \
+	esac; \
+	done
+
+rep4_adv001: 
+	@mkdir -p ../samples/advanced/v0.0.1
+	@for f in webupdater webupdatedlg.xrc; do \
+	if test ! -f ../samples/advanced/v0.0.1/$$f -a ! -d ../samples/advanced/v0.0.1/$$f ; \
+	then x=yep ; \
+	else x=`find ../src/$$f -newer ../samples/advanced/v0.0.1/$$f -print` ; \
+	fi; \
+	case "$$x" in ?*) \
+	cp -pRf ../src/$$f ../samples/advanced/v0.0.1 ;; \
+	esac; \
+	done
+
+rep4_adv150: 
+	@mkdir -p ../samples/advanced/v1.5.0
+	@for f in webupdater webupdatedlg.xrc; do \
+	if test ! -f ../samples/advanced/v1.5.0/$$f -a ! -d ../samples/advanced/v1.5.0/$$f ; \
+	then x=yep ; \
+	else x=`find ../src/$$f -newer ../samples/advanced/v1.5.0/$$f -print` ; \
+	fi; \
+	case "$$x" in ?*) \
+	cp -pRf ../src/$$f ../samples/advanced/v1.5.0 ;; \
+	esac; \
+	done
+
 ../src/webupdater$(EXEEXT): $(WEBUPDATER_OBJECTS) $(__webupdater___win32rc)
 	$(CXX) -o $@ $(WEBUPDATER_OBJECTS) $(LDFLAGS) -L../lib -L $(LDFLAGS_GUI)  $(WX_LIBS) $(__HTTPENGINEDEP_LIB_p)
 	
@@ -281,4 +329,4 @@ advanced_1_5_0_minimal_rc.o: ../src/../samples/advanced/v1.5.0/minimal.rc
 # Include dependency info, if present:
 @IF_GNU_MAKE@-include .deps/*.d
 
-.PHONY: all install uninstall clean distclean
+.PHONY: all install uninstall clean distclean rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150

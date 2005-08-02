@@ -19,12 +19,12 @@
 		</option>
 	</if>
 	<if cond="TARGETING_IDE=='1'">
-		<set var="USE_HTTPENGINE">0</set>
+		<set var="USE_HTTPENGINE">1</set>
 	</if>
 	
 	<if cond="TARGETING_WIN32=='1'">
 		<option name="HTTPENGINE_DIR" category="path">
-			<default-value>..\..\httpengine</default-value>
+			<default-value>..\..\wxhttpengine</default-value>
 			<description>The path to the wxHTTPBuilder (httpengine) component</description>
 		</option>
 	</if>
@@ -63,10 +63,53 @@
 		<if cond="USE_HTTPENGINE=='1'">wxUSE_HTTPENGINE</if>
 	</set>
 	<set var="HTTPENGINEDEP_LIB">
-		<if cond="USE_HTTPENGINE=='1'">httpengine</if>
+		<if cond="USE_HTTPENGINE=='1'">httpengine$(WXLIBPOSTFIX)</if>
 	</set>
 
+	
+	<!-- before the creation of the EXE, put the WebUpdater XRC file in all samples folders -->
+	<if cond="TARGETING_IDE=='0'">
+		<define-rule name="copyrep" extends="copy-files">
+			<template>
+				<srcdir>../src</srcdir>
+				<if cond="TARGETING_WIN32=='1'"><files>webupdater.exe webupdatedlg.xrc</files></if>
+				<if cond="TARGETING_WIN32=='0'"><files>webupdater webupdatedlg.xrc</files></if>
+				<dependency-of>all</dependency-of>				
+			</template>		
+		</define-rule>
+		<copyrep id="rep4_simple100"><dstdir>$(COMP_SAMPLE1_DIR)</dstdir></copyrep>
+		<copyrep id="rep4_simple203"><dstdir>$(COMP_SAMPLE1_UPDATED_DIR)</dstdir></copyrep>
+		<copyrep id="rep4_adv001"><dstdir>$(COMP_SAMPLE2_DIR)</dstdir></copyrep>
+		<copyrep id="rep4_adv150"><dstdir>$(COMP_SAMPLE2_UPDATED_DIR)</dstdir></copyrep>
+	</if>
+	
+	<!-- for MSVC6PRJ this hack will supply the lack of action targets -->
+    <define-tag name="msvc-copy-xrc" rules="exe,dll,lib,action">
+        <if cond="FORMAT=='msvc6prj'">
+	        
+			<set var="_xrcname">webupdatedlg.xrc</set>
+			<set var="_xrc">..\src\$(_xrcname)</set>
+			<msvc-project-files>$(_xrcname)</msvc-project-files>
 
+			<set var="Output1">$(nativePaths(COMP_SAMPLE1_DIR))\$(_xrcname)</set>
+			<set var="Output2">$(nativePaths(COMP_SAMPLE1_UPDATED_DIR))\$(_xrcname)</set>
+			<set var="Output3">$(nativePaths(COMP_SAMPLE2_DIR))\$(_xrcname)</set>
+			<set var="Output4">$(nativePaths(COMP_SAMPLE2_UPDATED_DIR))\$(_xrcname)</set>
+			
+            <set var="_custom_build_files" append="1">$(_xrcname)</set>
+            <set var="_custom_build_webupdatedlg_xrc">
+Copying the XRC file from $(_xrc) to the sample folders
+InputPath=$(_xrc)
+
+"$(Output1)" : $(DOLLAR)(SOURCE) "$(DOLLAR)(INTDIR)" "$(DOLLAR)(OUTDIR)"
+$(TAB)copy "$(DOLLAR)(InputPath)" "$(Output1)"
+$(TAB)copy "$(DOLLAR)(InputPath)" "$(Output2)"
+$(TAB)copy "$(DOLLAR)(InputPath)" "$(Output3)"
+$(TAB)copy "$(DOLLAR)(InputPath)" "$(Output4)"
+            </set>
+        </if>
+    </define-tag>
+	
 	<!-- The real target: wxcode.bkl does not declare a real target but a template called
 	     "complib". In this way modifications are allowed to the basic template. 
 	<lib id="webupdate_lib" template="complib,webupdate" cond="WX_SHARED=='0'"/>
@@ -84,6 +127,10 @@
 		
 		<sources>$(COMP_SRC)</sources>
 		<headers>$(PCOMP_HDR)</headers>
+		
+		<msvc-file-group>XRC:*.xrc</msvc-file-group>
+		<msvc-copy-xrc/>
+		
 		<sys-lib>$(HTTPENGINEDEP_LIB)</sys-lib>
 		<wx-lib>html</wx-lib>
 		<wx-lib>adv</wx-lib>
@@ -93,23 +140,7 @@
         <wx-lib>core</wx-lib>
         <wx-lib>base</wx-lib>
 	</exe>
-	
-	<!-- after the creation of the EXE, put it in all the samples folders -->
-	<if cond="TARGETING_IDE=='0' and TARGETING_WIN32=='1'">
-		<define-rule name="copyrep" extends="copy-files">
-			<template>
-				<srcdir>../src</srcdir>
-				<if cond="TARGETING_WIN32=='1'"><files>webupdater.exe webupdatedlg.xrc</files></if>
-				<if cond="TARGETING_WIN32=='0'"><files>webupdater webupdatedlg.xrc</files></if>
-				<dependency-of>all</dependency-of>				
-			</template>		
-		</define-rule>
-		<copyrep id="rep4_simple100"><dstdir>../samples/simple/v1.0.0</dstdir></copyrep>
-		<copyrep id="rep4_simple203"><dstdir>../samples/simple/v2.0.3</dstdir></copyrep>
-		<copyrep id="rep4_adv001"><dstdir>../samples/advanced/v0.0.1</dstdir></copyrep>
-		<copyrep id="rep4_adv150"><dstdir>../samples/advanced/v1.5.0</dstdir></copyrep>
-	</if>
-	
+
 
 	
 	
