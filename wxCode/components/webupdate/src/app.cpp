@@ -77,14 +77,14 @@
 // usage instructions for this app
 // ----------------------------------------------------------------------------
 
-#define OPTION_XMLSCRIPT		wxT("cfg")
+#define OPTION_XMLSCRIPT		wxT("x")
 #define SWITCH_RESTART			wxT("r")
 #define SWITCH_SAVELOG			wxT("s")
 
 static const wxCmdLineEntryDesc g_cmdLineDesc[] =
 {
 	// options
-	{ wxCMD_LINE_OPTION, OPTION_XMLSCRIPT, wxT("config"), 
+	{ wxCMD_LINE_OPTION, OPTION_XMLSCRIPT, wxT("xml"), 
 		wxT("Use the given local XML file"),
 		wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
 		
@@ -94,6 +94,8 @@ static const wxCmdLineEntryDesc g_cmdLineDesc[] =
 		wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
 	{ wxCMD_LINE_SWITCH, SWITCH_SAVELOG, wxT("savelog"), 
 		wxT("Saves the log messages to 'log.txt'") },
+	{ wxCMD_LINE_SWITCH, _T("h"), _T("help"), _T("Show this help message"),
+		wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
 
 	{ wxCMD_LINE_NONE }
 };
@@ -243,9 +245,14 @@ bool WebUpdaterApp::OnInit()
     wxMemoryFSHandler::AddFile(wxT("www.xpm"), wxBitmap(www_xpm), wxBITMAP_TYPE_XPM);	
 
 	// load the local XML webupdate script
-	if (!m_script.Load(toload)) {
+	wxFileName fn(toload);
+	fn.MakeAbsolute(wxGetCwd());
+	if (!m_script.Load(fn.GetFullPath())) {
 		wxMessageBox(wxT("The installation of the WebUpdater component of this application\n")
-					wxT("is corrupted (missing ") +  toload + wxT("); please reinstall the program."), wxT("Fatal error"),
+					wxT("is corrupted; the file:\n\n\t") + 
+					fn.GetFullPath() + 
+					wxT("\n\n is missing; please reinstall the program."), 
+					wxT("Fatal error"),
 					wxICON_ERROR | wxOK);	
 		return FALSE;
 	}

@@ -188,7 +188,7 @@ borland:
 
 ### Targets: ###
 
-all: rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150 ..\src\webupdater.exe ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
+all: ..\src\webupdater.exe rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150 ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
 
 clean: 
 	-if exist borland\*.obj del borland\*.obj
@@ -304,6 +304,11 @@ docs:
 cleandocs: 
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
+..\src\webupdater.exe: $(WEBUPDATER_OBJECTS)  borland\webupdater_app.res
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -L$(HTTPENGINE_DIR)\lib -aa @&&|
+	c0w32.obj $(WEBUPDATER_OBJECTS),$@,, $(__HTTPENGINEDEP_LIB_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,, borland\webupdater_app.res
+|
+
 rep4_simple100: 
 	if not exist ..\samples\simple\v1.0.0 mkdir ..\samples\simple\v1.0.0
 	for %f in (webupdater.exe webupdatedlg.xrc) do if not exist ..\samples\simple\v1.0.0\%f copy ..\src\%f ..\samples\simple\v1.0.0
@@ -320,27 +325,22 @@ rep4_adv150:
 	if not exist ..\samples\advanced\v1.5.0 mkdir ..\samples\advanced\v1.5.0
 	for %f in (webupdater.exe webupdatedlg.xrc) do if not exist ..\samples\advanced\v1.5.0\%f copy ..\src\%f ..\samples\advanced\v1.5.0
 
-..\src\webupdater.exe: $(WEBUPDATER_OBJECTS)  borland\webupdater_app.res
-	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -L$(HTTPENGINE_DIR)\lib -aa @&&|
-	c0w32.obj $(WEBUPDATER_OBJECTS),$@,, $(__HTTPENGINEDEP_LIB_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,, borland\webupdater_app.res
-|
-
-..\samples\simple\v1.0.0\simple.exe: $(SIMPLE_1_0_0_OBJECTS)  borland\simple_1_0_0_minimal.res
+..\samples\simple\v1.0.0\simple.exe: $(SIMPLE_1_0_0_OBJECTS) ..\src\webupdater.exe  borland\simple_1_0_0_minimal.res
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -aa @&&|
 	c0w32.obj $(SIMPLE_1_0_0_OBJECTS),$@,, wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,, borland\simple_1_0_0_minimal.res
 |
 
-..\samples\simple\v2.0.3\simple.exe: $(SIMPLE_2_0_3_OBJECTS)  borland\simple_2_0_3_minimal.res
+..\samples\simple\v2.0.3\simple.exe: $(SIMPLE_2_0_3_OBJECTS) ..\src\webupdater.exe  borland\simple_2_0_3_minimal.res
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -aa @&&|
 	c0w32.obj $(SIMPLE_2_0_3_OBJECTS),$@,, wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,, borland\simple_2_0_3_minimal.res
 |
 
-..\samples\advanced\v0.0.1\advanced.exe: $(ADVANCED_0_0_1_OBJECTS)  borland\advanced_0_0_1_minimal.res
+..\samples\advanced\v0.0.1\advanced.exe: $(ADVANCED_0_0_1_OBJECTS) ..\src\webupdater.exe  borland\advanced_0_0_1_minimal.res
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -aa @&&|
 	c0w32.obj $(ADVANCED_0_0_1_OBJECTS),$@,, wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,, borland\advanced_0_0_1_minimal.res
 |
 
-..\samples\advanced\v1.5.0\advanced.exe: $(ADVANCED_1_5_0_OBJECTS)  borland\advanced_1_5_0_minimal.res
+..\samples\advanced\v1.5.0\advanced.exe: $(ADVANCED_1_5_0_OBJECTS) ..\src\webupdater.exe  borland\advanced_1_5_0_minimal.res
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -aa @&&|
 	c0w32.obj $(ADVANCED_1_5_0_OBJECTS),$@,, wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,, borland\advanced_1_5_0_minimal.res
 |

@@ -247,6 +247,184 @@ LINK32=link.exe
 # Name "advanced_1_5_0 - Win32 Unicode Release"
 # Name "advanced_1_5_0 - Win32 Debug"
 # Name "advanced_1_5_0 - Win32 Release"
+# Begin Group "WebUpdater stuff"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=..\src\webupdatedlg.xrc
+
+!IF  "$(CFG)" == "advanced_1_5_0 - Win32 DLL Unicode Debug"
+
+# Begin Custom Build - Copying the XRC file and from ..\src\webupdatedlg.xrc to the sample folder
+InputPath=..\src\webupdatedlg.xrc
+
+"..\samples\advanced\v1.5.0\webupdatedlg.xrc" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	copy "$(InputPath)" "..\samples\advanced\v1.5.0"
+
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "advanced_1_5_0 - Win32 DLL Unicode Release"
+
+# Begin Custom Build - Copying the XRC file and from ..\src\webupdatedlg.xrc to the sample folder
+InputPath=..\src\webupdatedlg.xrc
+
+"..\samples\advanced\v1.5.0\webupdatedlg.xrc" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	copy "$(InputPath)" "..\samples\advanced\v1.5.0"
+
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "advanced_1_5_0 - Win32 DLL Debug"
+
+# Begin Custom Build - Copying the XRC file and from ..\src\webupdatedlg.xrc to the sample folder
+InputPath=..\src\webupdatedlg.xrc
+
+"..\samples\advanced\v1.5.0\webupdatedlg.xrc" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	copy "$(InputPath)" "..\samples\advanced\v1.5.0"
+
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "advanced_1_5_0 - Win32 DLL Release"
+
+# Begin Custom Build - Copying the XRC file and from ..\src\webupdatedlg.xrc to the sample folder
+InputPath=..\src\webupdatedlg.xrc
+
+"..\samples\advanced\v1.5.0\webupdatedlg.xrc" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	copy "$(InputPath)" "..\samples\advanced\v1.5.0"
+
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "advanced_1_5_0 - Win32 Unicode Debug"
+
+# Begin Custom Build - Copying the XRC file and from ..\src\webupdatedlg.xrc to the sample folder
+InputPath=..\src\webupdatedlg.xrc
+
+"..\samples\advanced\v1.5.0\webupdatedlg.xrc" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	copy "$(InputPath)" "..\samples\advanced\v1.5.0"
+
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "advanced_1_5_0 - Win32 Unicode Release"
+
+# Begin Custom Build - Copying the XRC file and from ..\src\webupdatedlg.xrc to the sample folder
+InputPath=..\src\webupdatedlg.xrc
+
+"..\samples\advanced\v1.5.0\webupdatedlg.xrc" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	copy "$(InputPath)" "..\samples\advanced\v1.5.0"
+
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "advanced_1_5_0 - Win32 Debug"
+
+# Begin Custom Build - Copying the XRC file and from ..\src\webupdatedlg.xrc to the sample folder
+InputPath=..\src\webupdatedlg.xrc
+
+"..\samples\advanced\v1.5.0\webupdatedlg.xrc" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	copy "$(InputPath)" "..\samples\advanced\v1.5.0"
+
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "advanced_1_5_0 - Win32 Release"
+
+# Begin Custom Build - Copying the XRC file and from ..\src\webupdatedlg.xrc to the sample folder
+InputPath=..\src\webupdatedlg.xrc
+
+"..\samples\advanced\v1.5.0\webupdatedlg.xrc" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	copy "$(InputPath)" "..\samples\advanced\v1.5.0"
+
+# End Custom Build
+
+!ENDIF
+
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\webupdater.exe
+
+!IF  "$(CFG)" == "advanced_1_5_0 - Win32 DLL Unicode Debug"
+
+# Begin Custom Build - Copying the WebUpdater app from ..\src\webupdater.exe to the sample folder
+InputPath=..\src\webupdater.exe
+
+"..\samples\advanced\v1.5.0\webupdater.exe" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	copy "$(InputPath)" "..\samples\advanced\v1.5.0"
+
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "advanced_1_5_0 - Win32 DLL Unicode Release"
+
+# Begin Custom Build - Copying the WebUpdater app from ..\src\webupdater.exe to the sample folder
+InputPath=..\src\webupdater.exe
+
+"..\samples\advanced\v1.5.0\webupdater.exe" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	copy "$(InputPath)" "..\samples\advanced\v1.5.0"
+
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "advanced_1_5_0 - Win32 DLL Debug"
+
+# Begin Custom Build - Copying the WebUpdater app from ..\src\webupdater.exe to the sample folder
+InputPath=..\src\webupdater.exe
+
+"..\samples\advanced\v1.5.0\webupdater.exe" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	copy "$(InputPath)" "..\samples\advanced\v1.5.0"
+
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "advanced_1_5_0 - Win32 DLL Release"
+
+# Begin Custom Build - Copying the WebUpdater app from ..\src\webupdater.exe to the sample folder
+InputPath=..\src\webupdater.exe
+
+"..\samples\advanced\v1.5.0\webupdater.exe" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	copy "$(InputPath)" "..\samples\advanced\v1.5.0"
+
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "advanced_1_5_0 - Win32 Unicode Debug"
+
+# Begin Custom Build - Copying the WebUpdater app from ..\src\webupdater.exe to the sample folder
+InputPath=..\src\webupdater.exe
+
+"..\samples\advanced\v1.5.0\webupdater.exe" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	copy "$(InputPath)" "..\samples\advanced\v1.5.0"
+
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "advanced_1_5_0 - Win32 Unicode Release"
+
+# Begin Custom Build - Copying the WebUpdater app from ..\src\webupdater.exe to the sample folder
+InputPath=..\src\webupdater.exe
+
+"..\samples\advanced\v1.5.0\webupdater.exe" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	copy "$(InputPath)" "..\samples\advanced\v1.5.0"
+
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "advanced_1_5_0 - Win32 Debug"
+
+# Begin Custom Build - Copying the WebUpdater app from ..\src\webupdater.exe to the sample folder
+InputPath=..\src\webupdater.exe
+
+"..\samples\advanced\v1.5.0\webupdater.exe" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	copy "$(InputPath)" "..\samples\advanced\v1.5.0"
+
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "advanced_1_5_0 - Win32 Release"
+
+# Begin Custom Build - Copying the WebUpdater app from ..\src\webupdater.exe to the sample folder
+InputPath=..\src\webupdater.exe
+
+"..\samples\advanced\v1.5.0\webupdater.exe" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	copy "$(InputPath)" "..\samples\advanced\v1.5.0"
+
+# End Custom Build
+
+!ENDIF
+
+# End Source File
+# End Group
 # Begin Group "Source Files"
 
 # PROP Default_Filter ""

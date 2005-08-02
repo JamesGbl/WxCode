@@ -91,7 +91,7 @@ COND_PLATFORM_OS2_1___advanced_0 = $(NM) advanced$(EXEEXT) | if grep -q pmwin.76
 
 ### Targets: ###
 
-all: rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150 ../src/webupdater$(EXEEXT) ../samples/simple/v1.0.0/simple$(EXEEXT) ../samples/simple/v2.0.3/simple$(EXEEXT) ../samples/advanced/v0.0.1/advanced$(EXEEXT) ../samples/advanced/v1.5.0/advanced$(EXEEXT)
+all: ../src/webupdater$(EXEEXT) rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150 ../samples/simple/v1.0.0/simple$(EXEEXT) ../samples/simple/v2.0.3/simple$(EXEEXT) ../samples/advanced/v0.0.1/advanced$(EXEEXT) ../samples/advanced/v1.5.0/advanced$(EXEEXT)
 
 install: all
 
@@ -196,6 +196,12 @@ docs:
 cleandocs: 
 	rm -rf ../docs/html
 
+../src/webupdater$(EXEEXT): $(WEBUPDATER_OBJECTS) $(__webupdater___win32rc)
+	$(CXX) -o $@ $(WEBUPDATER_OBJECTS) $(LDFLAGS) -L../lib -L $(LDFLAGS_GUI)  $(WX_LIBS) $(__HTTPENGINEDEP_LIB_p)
+	
+	$(__webupdater___mac_setfilecmd)
+	$(__webupdater___os2_emxbindcmd)
+
 rep4_simple100: 
 	@mkdir -p ../samples/simple/v1.0.0
 	@for f in webupdater webupdatedlg.xrc; do \
@@ -244,31 +250,25 @@ rep4_adv150:
 	esac; \
 	done
 
-../src/webupdater$(EXEEXT): $(WEBUPDATER_OBJECTS) $(__webupdater___win32rc)
-	$(CXX) -o $@ $(WEBUPDATER_OBJECTS) $(LDFLAGS) -L../lib -L $(LDFLAGS_GUI)  $(WX_LIBS) $(__HTTPENGINEDEP_LIB_p)
-	
-	$(__webupdater___mac_setfilecmd)
-	$(__webupdater___os2_emxbindcmd)
-
-../samples/simple/v1.0.0/simple$(EXEEXT): $(SIMPLE_1_0_0_OBJECTS) $(__simple_1_0_0___win32rc)
+../samples/simple/v1.0.0/simple$(EXEEXT): $(SIMPLE_1_0_0_OBJECTS) ../src/webupdater$(EXEEXT) $(__simple_1_0_0___win32rc)
 	$(CXX) -o $@ $(SIMPLE_1_0_0_OBJECTS) $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS)
 	
 	$(__simple)
 	$(__simple_0)
 
-../samples/simple/v2.0.3/simple$(EXEEXT): $(SIMPLE_2_0_3_OBJECTS) $(__simple_2_0_3___win32rc)
+../samples/simple/v2.0.3/simple$(EXEEXT): $(SIMPLE_2_0_3_OBJECTS) ../src/webupdater$(EXEEXT) $(__simple_2_0_3___win32rc)
 	$(CXX) -o $@ $(SIMPLE_2_0_3_OBJECTS) $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS)
 	
 	$(__simple)
 	$(__simple_0)
 
-../samples/advanced/v0.0.1/advanced$(EXEEXT): $(ADVANCED_0_0_1_OBJECTS) $(__advanced_0_0_1___win32rc)
+../samples/advanced/v0.0.1/advanced$(EXEEXT): $(ADVANCED_0_0_1_OBJECTS) ../src/webupdater$(EXEEXT) $(__advanced_0_0_1___win32rc)
 	$(CXX) -o $@ $(ADVANCED_0_0_1_OBJECTS) $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS)
 	
 	$(__advanced)
 	$(__advanced_0)
 
-../samples/advanced/v1.5.0/advanced$(EXEEXT): $(ADVANCED_1_5_0_OBJECTS) $(__advanced_1_5_0___win32rc)
+../samples/advanced/v1.5.0/advanced$(EXEEXT): $(ADVANCED_1_5_0_OBJECTS) ../src/webupdater$(EXEEXT) $(__advanced_1_5_0___win32rc)
 	$(CXX) -o $@ $(ADVANCED_1_5_0_OBJECTS) $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS)
 	
 	$(__advanced)

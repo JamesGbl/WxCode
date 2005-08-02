@@ -15,11 +15,11 @@
 
 #ifdef __WXMSW__
 	#define wxUPDATE_AND_EXIT(uri)					\
-		wxExecute(wxT("webupdater.exe ") uri);		\
+		wxExecute(wxT("webupdater.exe --xml=") uri);		\
 		Close(true);
 #else
 	#define wxUPDATE_AND_EXIT(uri)					\
-		wxExecute(wxT("./webupdater ") uri);		\
+		wxExecute(wxT("./webupdater --xml=") uri);		\
 		Close(true);
 #endif
 

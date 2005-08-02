@@ -190,7 +190,7 @@ watcom :
 
 ### Targets: ###
 
-all : .SYMBOLIC rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150 ..\src\webupdater.exe ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
+all : .SYMBOLIC ..\src\webupdater.exe rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150 ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
 
 clean : .SYMBOLIC 
 	-if exist watcom\*.obj del watcom\*.obj
@@ -283,6 +283,17 @@ docs :
 cleandocs :  
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
+..\src\webupdater.exe :  $(WEBUPDATER_OBJECTS) watcom\webupdater_app.res
+	@%create watcom\webupdater.lbc
+	@%append watcom\webupdater.lbc option quiet
+	@%append watcom\webupdater.lbc name $^@
+	@%append watcom\webupdater.lbc option caseexact
+	@%append watcom\webupdater.lbc $(LDFLAGS) $(__DEBUGINFO_5)  libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib libpath $(HTTPENGINE_DIR)\lib system nt_win ref '_WinMain@16'
+	@for %i in ($(WEBUPDATER_OBJECTS)) do @%append watcom\webupdater.lbc file %i
+	@for %i in ( $(__HTTPENGINEDEP_LIB_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\webupdater.lbc library %i
+	@%append watcom\webupdater.lbc option resource=watcom\webupdater_app.res
+	wlink @watcom\webupdater.lbc
+
 rep4_simple100 : .SYMBOLIC 
 	if not exist ..\samples\simple\v1.0.0 mkdir ..\samples\simple\v1.0.0
 	for %f in (webupdater.exe webupdatedlg.xrc) do if not exist ..\samples\simple\v1.0.0\%f copy ..\src\%f ..\samples\simple\v1.0.0
@@ -299,18 +310,7 @@ rep4_adv150 : .SYMBOLIC
 	if not exist ..\samples\advanced\v1.5.0 mkdir ..\samples\advanced\v1.5.0
 	for %f in (webupdater.exe webupdatedlg.xrc) do if not exist ..\samples\advanced\v1.5.0\%f copy ..\src\%f ..\samples\advanced\v1.5.0
 
-..\src\webupdater.exe :  $(WEBUPDATER_OBJECTS) watcom\webupdater_app.res
-	@%create watcom\webupdater.lbc
-	@%append watcom\webupdater.lbc option quiet
-	@%append watcom\webupdater.lbc name $^@
-	@%append watcom\webupdater.lbc option caseexact
-	@%append watcom\webupdater.lbc $(LDFLAGS) $(__DEBUGINFO_5)  libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib libpath $(HTTPENGINE_DIR)\lib system nt_win ref '_WinMain@16'
-	@for %i in ($(WEBUPDATER_OBJECTS)) do @%append watcom\webupdater.lbc file %i
-	@for %i in ( $(__HTTPENGINEDEP_LIB_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\webupdater.lbc library %i
-	@%append watcom\webupdater.lbc option resource=watcom\webupdater_app.res
-	wlink @watcom\webupdater.lbc
-
-..\samples\simple\v1.0.0\simple.exe :  $(SIMPLE_1_0_0_OBJECTS) watcom\simple_1_0_0_minimal.res
+..\samples\simple\v1.0.0\simple.exe :  $(SIMPLE_1_0_0_OBJECTS) ..\src\webupdater.exe watcom\simple_1_0_0_minimal.res
 	@%create watcom\simple_1_0_0.lbc
 	@%append watcom\simple_1_0_0.lbc option quiet
 	@%append watcom\simple_1_0_0.lbc name $^@
@@ -321,7 +321,7 @@ rep4_adv150 : .SYMBOLIC
 	@%append watcom\simple_1_0_0.lbc option resource=watcom\simple_1_0_0_minimal.res
 	wlink @watcom\simple_1_0_0.lbc
 
-..\samples\simple\v2.0.3\simple.exe :  $(SIMPLE_2_0_3_OBJECTS) watcom\simple_2_0_3_minimal.res
+..\samples\simple\v2.0.3\simple.exe :  $(SIMPLE_2_0_3_OBJECTS) ..\src\webupdater.exe watcom\simple_2_0_3_minimal.res
 	@%create watcom\simple_2_0_3.lbc
 	@%append watcom\simple_2_0_3.lbc option quiet
 	@%append watcom\simple_2_0_3.lbc name $^@
@@ -332,7 +332,7 @@ rep4_adv150 : .SYMBOLIC
 	@%append watcom\simple_2_0_3.lbc option resource=watcom\simple_2_0_3_minimal.res
 	wlink @watcom\simple_2_0_3.lbc
 
-..\samples\advanced\v0.0.1\advanced.exe :  $(ADVANCED_0_0_1_OBJECTS) watcom\advanced_0_0_1_minimal.res
+..\samples\advanced\v0.0.1\advanced.exe :  $(ADVANCED_0_0_1_OBJECTS) ..\src\webupdater.exe watcom\advanced_0_0_1_minimal.res
 	@%create watcom\advanced_0_0_1.lbc
 	@%append watcom\advanced_0_0_1.lbc option quiet
 	@%append watcom\advanced_0_0_1.lbc name $^@
@@ -343,7 +343,7 @@ rep4_adv150 : .SYMBOLIC
 	@%append watcom\advanced_0_0_1.lbc option resource=watcom\advanced_0_0_1_minimal.res
 	wlink @watcom\advanced_0_0_1.lbc
 
-..\samples\advanced\v1.5.0\advanced.exe :  $(ADVANCED_1_5_0_OBJECTS) watcom\advanced_1_5_0_minimal.res
+..\samples\advanced\v1.5.0\advanced.exe :  $(ADVANCED_1_5_0_OBJECTS) ..\src\webupdater.exe watcom\advanced_1_5_0_minimal.res
 	@%create watcom\advanced_1_5_0.lbc
 	@%append watcom\advanced_1_5_0.lbc option quiet
 	@%append watcom\advanced_1_5_0.lbc name $^@

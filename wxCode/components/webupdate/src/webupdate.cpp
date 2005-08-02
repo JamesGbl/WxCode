@@ -520,7 +520,9 @@ wxDownloadThread *wxWebUpdateDownload::DownloadAsynch(const wxString &path,
 	wxDownloadThread *thread = new wxDownloadThread(phandler);
 
 	// just set the download options
+#if wxUSE_HTTPENGINE
 	thread->m_proxy = proxy;
+#endif
 
 	// launch the download
 	if (thread->Create() != wxTHREAD_NO_ERROR ||
