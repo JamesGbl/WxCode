@@ -200,11 +200,11 @@ public:
 public:		// getters
 
 	//! Returns the array of updated packages parsed from the WebUpdate XML Script.
-	wxWebUpdatePackageArray GetRemotePackages() const
+	wxWebUpdatePackageArray &GetRemotePackages()
 		{ return m_arrUpdatedPackages; }
 
 	//! Returns the array of updated packages taken from the wxWebUpdater.
-	wxWebUpdateLocalPackageArray GetLocalPackages() const
+	wxWebUpdateLocalPackageArray &GetLocalPackages()
 		{ return m_arrLocalPackages; }
 
 	//! Returns a pointer to the local package with the given name or NULL if such
@@ -261,6 +261,14 @@ protected:		// pointers to our controls
 
 	// we store advanced settings here:
 	wxWebUpdateAdvPanel *m_pAdvPanel;	
+
+	//! The number of files downloaded by our #m_dThread.
+	//! Even if wxDownloadThread::GetDownloadCount() could be used for
+	//! retrieving this info, we keep a separed field here so that we
+	//! can remove from the filecount the webupdate XML remote script.
+	//! We could also do a check in each UpdateUI event and avoid this
+	//! field but it's much more easier to keep this and remove the check ;-)
+	int m_nFileCount;
 	
 protected:		// XML scripts
 
@@ -359,7 +367,7 @@ public:
 									const wxWebUpdateLocalXMLScript &script)
 		{ m_parent=parent; m_xmlLocal=script; 			
 			m_bUserAborted=FALSE; m_nStatus=wxWUDS_UNDEFINED;
-			m_nCurrentIdx=-1; InitWidgetsFromXRC(); }
+			m_nCurrentIdx=-1; m_nFileCount=0; InitWidgetsFromXRC(); }
 
 	virtual ~wxWebUpdateDlg() 
 		{ if (m_dThread) delete m_dThread;
@@ -380,11 +388,11 @@ public:		// main functions
 	void AbortDialog();
 
 	//! Returns the array of updated packages parsed from the WebUpdate XML Script.
-	wxWebUpdatePackageArray GetRemotePackages() const
+	wxWebUpdatePackageArray &GetRemotePackages()
 		{ return m_pUpdatesList->GetRemotePackages(); }
 
 	//! Returns the array of local packages taken from wxWebUpdater.
-	wxWebUpdateLocalPackageArray GetLocalPackages() const
+	wxWebUpdateLocalPackageArray &GetLocalPackages()
 		{ return m_pUpdatesList->GetLocalPackages(); }
 	
 	//! Sets the local XML script which acts as configuration file for the

@@ -314,7 +314,8 @@ public:		// to avoid setters/getters (these vars are only read by this thread;
 	wxArrayString m_urls;
 
 public:
-	wxSizeCacherThread(wxEvtHandler *dlg = NULL) : wxThread(wxTHREAD_JOINABLE), m_pHandler(dlg) {}
+	wxSizeCacherThread(wxEvtHandler *dlg = NULL) 
+		: wxThread(wxTHREAD_DETACHED), m_pHandler(dlg) {}
 	virtual ~wxSizeCacherThread() {}
 
     //! Cache the file sizes and then exits (this raises a call to #OnExit)

@@ -141,7 +141,7 @@ void wxWebUpdateListCtrl::RebuildPackageList(bool bShowOnlyOutOfDate)
 						// some packages could not be added to the list....
 	for (int i=0; i < (int)m_arrUpdatedPackages.GetCount(); i++, idx++) {
 
-		wxWebUpdatePackage &curr = m_arrUpdatedPackages.Item(i);		
+		wxWebUpdatePackage &curr = m_arrUpdatedPackages[i];
 		wxLogDebug(wxT("wxWebUpdateListCtrl::RebuildPackageList - Adding the '") + 
 			curr.GetName() + wxT("' package to the wxListCtrl"));
 
@@ -321,9 +321,16 @@ void wxWebUpdateListCtrl::OnCacheSizeComplete(wxCommandEvent &ev)
 	for (int i=0; i<(int)m_arrUpdatedPackages.GetCount(); i++)
 		m_arrUpdatedPackages[i].GetDownloadPackage().SetDownloadSize(arr[i]);
 
-	// FIXME: we could just read each package name from the list and update its
-	//        size field...
-	//RebuildPackageList();
+	// modify the items currently shown
+	for (int j=0; j < GetItemCount(); j++) {
+			
+		wxWebUpdatePackage &p = GetRemotePackage(GetItemText(j)); 
+		wxASSERT_MSG(p.GetDownloadPackage().IsDownloadSizeCached(),
+					wxT("Why does this item has not a cached size ?"));
+		unsigned long bytesize = p.GetDownloadPackage().GetDownloadSize();
+		SetItem(j, 3, wxGetSizeStr(bytesize));
+	}
+
 	wxLogDebug(wxT("wxWebUpdateListCtrl::OnCacheSizeComplete - sizes cached"));
 }
 
@@ -543,6 +550,11 @@ void wxWebUpdateDlg::ShowErrorMsg(const wxString &str) const
 
 void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
 {
+	// remove this download from our counter
+	wxASSERT_MSG(m_nFileCount == 1, 
+		wxT("Only the WebUpdate XML script should have been downloaded"));
+	m_nFileCount--;
+
 	// ok, we can now parse the XML doc
 	if (!m_xmlRemote.Load(xmluri)) {
 		ShowErrorMsg(wxT("Cannot parse the XML update script downloaded as: ") + 
@@ -724,8 +736,7 @@ bool wxWebUpdateDlg::InstallFirstPackage()
 	if (toinstall == -1)
 		return FALSE;
 
-	const wxWebUpdatePackage &pkg = 
-			m_pUpdatesList->GetRemotePackages().Item(toinstall);
+	const wxWebUpdatePackage &pkg = GetRemotePackages().Item(toinstall);
 	const wxWebUpdateDownload &download = pkg.GetDownloadPackage();
 
 	m_nCurrentIdx = toinstall;
@@ -854,6 +865,8 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 	} else {
 
 		wxLogDebug(wxT("wxWebUpdateDlg::OnDownloadComplete - Download status: successfully completed"));
+		m_nFileCount++;
+
 		if (downloadingScript) {
 
 			// handle the XML parsing & control update 
@@ -897,8 +910,8 @@ void wxWebUpdateDlg::OnInstallationComplete(wxCommandEvent &)
 		m_pUpdatesList->Check(m_nCurrentIdx, FALSE);
 		
 		// update the version fields for the local package...
-		wxWebUpdateLocalPackageArray arr(m_pUpdatesList->GetLocalPackages());
-		wxWebUpdatePackage &r = m_pUpdatesList->GetRemotePackages().Item(m_nCurrentIdx);
+		wxWebUpdateLocalPackageArray arr(GetLocalPackages());
+		wxWebUpdatePackage &r = GetRemotePackages().Item(m_nCurrentIdx);
 		wxWebUpdateLocalPackage &l = arr.Item(m_nCurrentIdx);
 		if (!l.IsOk()) 
   			arr.Add(wxWebUpdateLocalPackage(r.GetName(), r.GetLatestVersion()));
@@ -1068,13 +1081,8 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 		if (nLabelMode != m_nStatus) {
 
 			// update our meters
-			int d = m_dThread->GetDownloadCount(),
+			int d = m_nFileCount,		// see #m_nFileCount description
 				i = m_iThread->GetInstallationCount();
-
-			// we need to decrement the "d" var since we don't want to take in count
-			// the download of the XML webupdate script
-			if (d > 0 && m_dThread->m_strID == wxWUD_XMLSCRIPT_ID)
-				d--;
 
 			if (d > 0 && i > 0)
 				m_pSpeedText->SetLabel(
@@ -1094,7 +1102,7 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 			m_pTimeText->SetLabel(wxT("No downloads running..."));
 
 			if (scriptOk)
-				m_pOkBtn->SetLabel(wxT("Download & install"));
+				m_pOkBtn->SetLabel(wxT("Download && install"));
 			else
 				m_pOkBtn->SetLabel(wxT("Get update list"));
 

@@ -1,5 +1,5 @@
 <!-- 
-   Name:        webupdate.dtd
+   Name:        remote.dtd
    Purpose:     a simple DTD to validate update script
    Author:      Francesco Montorsi
    Created:     2005/06/24
@@ -15,7 +15,7 @@
    I suggest you to look at the following files as examples of WebUpdate scripts:
    
      http://wxcode.sf.net/components/webupdate/script1.xml
-	 http://wxcode.sf.net/components/webupdate/script2.xml
+     http://wxcode.sf.net/components/webupdate/script2.xml
 	 
    Also remember to validate your XML files against this DTD before mailing for
    problems about your scripts: WebUpdate component is not responsible for
@@ -23,8 +23,8 @@
 
 
    NOTE ABOUT "KEYWORD SUBSTITUTION": in this context, by "keyword substitution" 
-   we mean the process of replacing thos strings in the form $(...) with values
-   defined at compile-time in the program which downloads this script file.
+   we mean the process of replacing those strings in the form $(...) with values
+   defined at compile-time & run-time in the program which downloads this script file.
    Keyword substitution is performed only in the text content of those tags whose  
    description explicitely state it.
    The list of keywords which can be used is:
@@ -36,12 +36,18 @@
      $(newtempdir) = a temporary folder which has been created by the WebUpdate and thus is empty
    
    - names:   
-     $(appname) = the name of the application
-     $(framename) = the label of the main frame of the application     
+     $(appname) = the name of the application (as loaded by the local script)     
+
+   - command names:
+     $(cp) = the copy command (i.e. 'cp -f' on unix, 'copy /y' on windows)
+     $(mv) = the move command (i.e. 'mv -f' on unix, 'move /y' on windows)
+     $(cd) = the change directory command (i.e. 'cd' on both unix & windows)
    
    - miscellaneous:
-     $(pid) = the process ID of the application
-     $(program) = the path of the file and the filename of the program executable
+     $(pid) = the process ID of the updater program
+	 $(updater) = the path of the file and the filename of the WebUpdater program
+     $(program) = the path of the file and the filename of the program executable to update
+	                       (the filename is taken from the local script)
 	 
    - these are available only after the relative tags:
      $(latest-version) = the version of the package (available only after <latest-version>)
@@ -166,25 +172,22 @@
 
 
 <!-- ACTION tag: allows to specify an action to take when the download is complete.
-                 There are some built-in action handlers for "run", "extract", "exit"...				 
+                 There are some built-in action handlers for "run", "extract", "exit"...
 -->
-<!ELEMENT actions (run|extract|exit)+>
+<!ELEMENT actions (run|extract|exit|replace)+>
 
 
 <!-- for "run" action tags -->
 <!ELEMENT run EMPTY>
-<!ATTLIST run flags CDATA "ASYNC">				<!-- the possible flags are: ASYNC, SYNC -->
+<!ATTLIST run flags (ASYNC|SYNC) "ASYNC">			<!-- the possible flags are: ASYNC, SYNC -->
 <!ATTLIST run args CDATA "">					<!-- the arguments to give to the file to run -->
 <!ATTLIST run file CDATA #IMPLIED>				<!-- REQUIRED: the path+name of the file to run -->
 
 <!-- for "extract" action tags -->
 <!ELEMENT extract EMPTY>
-<!ATTLIST extract where CDATA "$(programdir)">      <!-- the folder where extracted files will be put -->
-<!ATTLIST extract file CDATA "$(thisfile)">         <!-- the file to extract -->
-<!ATTLIST extract type CDATA "zip">					<!-- the possible values actually are: 'zip' -->
+<!ATTLIST extract where CDATA "$(programdir)">			<!-- the folder where extracted files will be put -->
+<!ATTLIST extract file CDATA "$(thisfile)">			<!-- the file to extract -->
+<!ATTLIST extract type (zip) "zip">				<!-- the possible values actually are: 'zip' -->
 
-<!-- for "exit" action tags -->
-<!ELEMENT exit EMPTY>
-<!ATTLIST exit flags CDATA "NOTIFYUSER">    		<!-- the possible flags are:  NOTIFYUSER  -->
 
-<!-- add the attributes for you own actions here -->
+<!-- add the attributes for you own actions here (and modify the 'actions' element tag definition) -->

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<webupdate>
+	<app>wxWebUpdate SIMPLE sample</app>
+	<appfile>simple</appfile>
+	<dlgxrc>wxWebUpdateSimpleDlg</dlgxrc>
+
+	<localuri>local2.xml</localuri>
+	<remoteuri>http://wxcode.sourceforge.net/components/webupdate/script1.xml</remoteuri>
+
+	<local-package id="simple">
+		<version>1.0.0</version>
+	</local-package>
+</webupdate>
+

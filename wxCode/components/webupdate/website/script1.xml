@@ -20,11 +20,7 @@
 			<platform name="msw"/>	
 			
 			<actions>
-				<extract file="$(thisfile)" where="$(newtempdir)"/>
-				<run file="$(programdir)\replacer.exe" 
-					args="--pid $(pid) --from $(newtempdir) --to $(programdir) --restart $(program)" 
-					flags="ASYNC"/>
-				<exit flags="NOTIFYUSER"/>
+				<extract file="$(thisfile)" where="$(programdir)"/>
 			</actions>
 
 	  </latest-download>
