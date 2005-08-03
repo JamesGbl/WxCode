@@ -306,7 +306,7 @@ cleandocs:
 
 ..\src\webupdater.exe: $(WEBUPDATER_OBJECTS) msvc\webupdater_app.res
 	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_3)  /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES) /LIBPATH:..\lib /LIBPATH:$(HTTPENGINE_DIR)\lib /SUBSYSTEM:WINDOWS @<<
-	$(WEBUPDATER_OBJECTS)  $(__HTTPENGINEDEP_LIB_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
+	$(WEBUPDATER_OBJECTS)  $(__HTTPENGINEDEP_LIB_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
 
 rep4_simple100: 

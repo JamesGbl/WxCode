@@ -73,6 +73,7 @@ void *wxDownloadThread::Entry()
 
 		if (m_nStatus == wxDTS_WAITING) {
 			//wxLogDebug(wxT("wxDownloadThread::Entry - sleeping 1sec"));
+			m_bReady = TRUE;
 			wxThread::Sleep(100);
 			continue;
 		}
@@ -92,6 +93,7 @@ void *wxDownloadThread::Entry()
 
 		if (m_strURI.StartsWith(wxT("http://"))) {
 
+			wxLogDebug(wxT("wxDownloadThread::Entry - using wxHTTPBuilder"));
 			wxHTTPBuilder u;
 			u.InitContentTypes(); // Initialise the content types on the page
 			
@@ -109,6 +111,7 @@ void *wxDownloadThread::Entry()
 		} else {
 
 			// for other protocols (mainly file://) use simple wxURL
+			wxLogDebug(wxT("wxDownloadThread::Entry - using wxURL"));
 			wxURL u(m_strURI);
 			if (u.GetError() != wxURL_NOERR)
 				ABORT_DOWNLOAD();

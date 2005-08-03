@@ -232,6 +232,14 @@
 			<option>2</option>
             <object class="wxBoxSizer">
                 <orient>wxHORIZONTAL</orient>
+                <object class="sizeritem">
+                    <flag>wxGROW|wxLEFT</flag>
+                    <border>5</border>
+					<option>2</option>
+                    <object class="wxButton" name="IDWUD_ABOUT">
+                        <label>About</label>
+                    </object>
+                </object>				
 				<object class="spacer">
 					<flag>wxGROW|wxALL</flag>
 					<border>5</border>

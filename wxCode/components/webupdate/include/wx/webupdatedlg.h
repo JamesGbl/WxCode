@@ -179,20 +179,22 @@ public:
 		long style = wxLC_ICON, const wxValidator& validator = wxDefaultValidator, 
 		const wxString& name = wxListCtrlNameStr)
 		: wxWUDLC_BASECLASS(parent, id, pos, size, style, validator, name)
-		{ /*InitLocalPackages();*/ }
+		{}
 
 	virtual ~wxWebUpdateListCtrl() 
 		{}
 
 
-	//! Initializes the local packages for this application asking them to
-	//! wxWebUpdater.
-//	void InitLocalPackages()
-//		{ m_arrLocalPackages = wxWebUpdater::Get()->GetLocalPackages(); }
-
 	//! Rebuilds the list of the packages inside the main wxListCtrl
 	//! using the #m_arrUpdatedPackages array. Removes any old content.
 	void RebuildPackageList(bool bShowOnlyOutOfDate = TRUE);
+
+	//! Updates the version fields of all items in the listctrl.
+	void UpdatePackagesVersions(bool bShowOnlyOutOfDate = TRUE);
+
+	//! Sets the local version field for the listctrl item at idx #idx.
+	//! Uses the given remote package for checking its update state.
+	wxWebUpdateCheckFlag SetLocalVersionFor(int idx, wxWebUpdatePackage &curr);
 
 
 public:		// getters
@@ -216,6 +218,7 @@ public:		// getters
 	wxString GetRequiredList(int n) const
 		{ return m_arrUpdatedPackages[n].GetPrerequisites(); }
 
+	//! Returns TRUE if the given local package is up to date.
 	bool IsPackageUp2date(const wxString &name);
 
 public:		// setters
@@ -314,6 +317,9 @@ protected:
 	//! Loads the XRC for this dialog and init the control pointers.
 	void InitWidgetsFromXRC();
 
+	//! Initializes the threads.
+	void InitThreads();
+
 	//! Shows to the user a simple wxMessageBox with the error description
 	//! customized for the current application.
 	void ShowErrorMsg(const wxString &) const;
@@ -336,14 +342,19 @@ protected:
 	//!
 	bool IsReadyForInstallation(int i) const;
 
+	//! Checks if all packages are up to date and shows the right message to the
+	//! user in the two cases (yes, all updated / no, someone needs to be updated).
+	bool CheckForAllUpdated(bool forcedefaultmsg = FALSE);
+
 protected:		// event handlers
 
 	void OnDownload(wxCommandEvent &);
 	void OnCancel(wxCommandEvent &);
+	void OnAbout(wxCommandEvent &);
 	void OnShowFilter(wxCommandEvent &);	
 	void OnShowHideAdv(wxCommandEvent &);	
 	void OnUpdateUI(wxUpdateUIEvent &);
-	void OnIdle(wxIdleEvent &);
+	//void OnIdle(wxIdleEvent &);
 	void OnTextURL(wxTextUrlEvent &);
 
 	// for event raised by our wxDownloadThread....
@@ -362,10 +373,7 @@ public:
 	//!         wxDialog(parent, id, title, pos, size, style, name)
 	//! is not required since we are using XRC system
 	wxWebUpdateDlg::wxWebUpdateDlg(wxWindow *parent, 
-									const wxWebUpdateLocalXMLScript &script)
-		{ m_parent=parent; m_xmlLocal=script; 			
-			m_bUserAborted=FALSE; m_nStatus=wxWUDS_UNDEFINED;
-			m_nCurrentIdx=-1; m_nFileCount=0; InitWidgetsFromXRC(); }
+						const wxWebUpdateLocalXMLScript &script);
 
 	virtual ~wxWebUpdateDlg() 
 		{ if (m_dThread) delete m_dThread;
@@ -374,12 +382,9 @@ public:
 
 public:		// main functions
 
-	//! Shows the dialog and immediately start the download of the webupdate script.
-	//int ShowModal();
-	bool Show(const bool show);
-
-	//! Destroys the dialog.
-	bool Destroy();
+	//! Checks that the user is connected to internet.
+	//! Aborts this dialog if not.
+	void ConnectionRequired();
 
 	//! Call this function instead of EndModal(wxCANCEL) to abort this dialog.
 	//! This function takes care of our wxDownloadThread, infact.

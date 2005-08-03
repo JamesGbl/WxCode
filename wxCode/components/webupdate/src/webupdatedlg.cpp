@@ -69,6 +69,7 @@ BEGIN_EVENT_TABLE(wxWebUpdateDlg, wxDialog)
     EVT_BUTTON(XRCID("IDWUD_OK"), wxWebUpdateDlg::OnDownload)
     EVT_BUTTON(XRCID("IDWUD_CANCEL"), wxWebUpdateDlg::OnCancel)	
     EVT_BUTTON(XRCID("IDWUD_SHOWHIDEADV"), wxWebUpdateDlg::OnShowHideAdv)
+    EVT_BUTTON(XRCID("IDWUD_ABOUT"), wxWebUpdateDlg::OnAbout)
 
 	// we need to intercept also the clicks on the close box in the system menu
 	EVT_BUTTON(wxID_CANCEL, wxWebUpdateDlg::OnCancel)
@@ -81,7 +82,6 @@ BEGIN_EVENT_TABLE(wxWebUpdateDlg, wxDialog)
 
 	// miscellaneous
 	EVT_TEXT_URL(XRCID("IDWUD_DESCRIPTION"), wxWebUpdateDlg::OnTextURL)
-	EVT_IDLE(wxWebUpdateDlg::OnIdle)
 	
 	// from threads
 	EVT_DOWNLOAD_COMPLETE(-1, wxWebUpdateDlg::OnDownloadComplete)
@@ -137,6 +137,42 @@ wxString wxGetSizeStr(unsigned long bytesize)
 // wxWEBUPDATELISTCTRL
 // ---------------------
 
+wxWebUpdateCheckFlag wxWebUpdateListCtrl::SetLocalVersionFor(int idx, wxWebUpdatePackage &curr)
+{
+	// here we need some further work to find if this package
+	// is already installed...
+	wxWebUpdateLocalPackage &local = GetLocalPackage(curr.GetName());
+
+	if (!local.IsOk()) {
+
+		// a matching local package does not exist...
+		SetItem(idx, 2, wxT("not installed"));
+		return wxWUCF_NOTINSTALLED;
+	}
+	
+	SetItem(idx, 2, local.GetVersion());
+	
+	// compare versions
+	wxWebUpdateCheckFlag f = curr.Check(local.GetVersion());
+	if (f == wxWUCF_OUTOFDATE) {
+		
+		// build a bold font
+		wxFont font(GetFont());
+		font.SetWeight(wxFONTWEIGHT_BOLD);
+		
+		// and set it for this item
+		wxListItem li;
+		li.SetId(idx);
+		li.SetFont(font);
+		li.SetBackgroundColour(*wxWHITE);
+		li.SetTextColour(*wxRED);
+		SetItem(li);
+	}
+	
+	// let the caller handle this flag
+	return f;
+}
+
 void wxWebUpdateListCtrl::RebuildPackageList(bool bShowOnlyOutOfDate)
 {
 	// remove old contents
@@ -156,67 +192,27 @@ void wxWebUpdateListCtrl::RebuildPackageList(bool bShowOnlyOutOfDate)
 		InsertItem(idx, curr.GetName());
 		
 
+
 		// set the properties for the second column (LATEST VERSION)
 		// ---------------------------------------------------------
 		SetItem(idx, 1, curr.GetLatestVersion());
 
 
+
 		// set the properties for the third column (LOCAL VERSION)
-		// here we need some further work to find if this package
-		// is already installed...
 		// -------------------------------------------------------
-		wxWebUpdateLocalPackage &local = GetLocalPackage(curr.GetName());
 
-		// did we find a local matching package ?
-		bool tocheck = FALSE;
-		if (local.IsOk()) {
-			SetItem(idx, 2, local.GetVersion());
-
-			// compare versions
-			wxWebUpdateCheckFlag f = curr.Check(local.GetVersion());
-			if (f == wxWUCF_OUTOFDATE) {
-
-				// build a bold font
-				wxFont font(GetFont());
-				font.SetWeight(wxFONTWEIGHT_BOLD);
-
-				// and set it for this item
-				wxListItem li;
-				li.SetId(idx);
-				li.SetFont(font);
-				li.SetBackgroundColour(*wxWHITE);
-				li.SetTextColour(*wxRED);
-				SetItem(li);
-				tocheck = TRUE;
-
-			} else if (f == wxWUCF_UPDATED) {
-
-				// we already have the latest version... 
-				if (bShowOnlyOutOfDate) {
-					DeleteItem(idx);
-					idx--;
-					continue;		// continue with next package
-				}
-
-#if wxUSE_CHECKEDLISTCTRL
-				// at least disable this item...
-				Enable(idx, FALSE);
-#endif
-			} else if (f == wxWUCF_FAILED) {
-
-				// error !
-				DeleteItem(idx);
-				idx--;
-
-				continue;		// continue with next package
-			}
-
-		} else {
-
-			// a matching local package does not exist...
-			SetItem(idx, 2, wxT("not installed"));
-			tocheck = TRUE;
+		// tocheck is TRUE for outdated items
+		wxWebUpdateCheckFlag f = SetLocalVersionFor(idx, curr);
+		bool tocheck = (f == wxWUCF_OUTOFDATE || f == wxWUCF_NOTINSTALLED);
+			
+		if ((f == wxWUCF_UPDATED && bShowOnlyOutOfDate) || f == wxWUCF_FAILED) {
+			
+			DeleteItem(idx);
+			idx--;
+			continue;		// continue with next package
 		}
+
 
 
 		// set the properties for the fourth column (SIZE)
@@ -225,7 +221,7 @@ void wxWebUpdateListCtrl::RebuildPackageList(bool bShowOnlyOutOfDate)
 		// we'll leave the task of updating this field to the 
 		// wxSizeCacherThread that has been launched by wxWebUpdateDlg
 		unsigned long bytesize = 0;
-  		wxWebUpdateDownload &d = curr.GetDownloadPackage();
+  		wxWebUpdateDownload &d = curr.GetDownload();
     	if (d.IsDownloadSizeCached())
      		bytesize = d.GetDownloadSize();
 		SetItem(idx, 3, wxGetSizeStr(bytesize));
@@ -324,15 +320,15 @@ void wxWebUpdateListCtrl::OnCacheSizeComplete(wxCommandEvent &ev)
 	wxArrayLong &arr = *((wxArrayLong *)ev.GetClientData());
 	
 	for (int i=0; i<(int)m_arrUpdatedPackages.GetCount(); i++)
-		m_arrUpdatedPackages[i].GetDownloadPackage().SetDownloadSize(arr[i]);
+		m_arrUpdatedPackages[i].GetDownload().SetDownloadSize(arr[i]);
 
 	// modify the items currently shown
 	for (int j=0; j < GetItemCount(); j++) {
 			
 		wxWebUpdatePackage &p = GetRemotePackage(GetItemText(j)); 
-		wxASSERT_MSG(p.GetDownloadPackage().IsDownloadSizeCached(),
+		wxASSERT_MSG(p.GetDownload().IsDownloadSizeCached(),
 					wxT("Why does this item has not a cached size ?"));
-		unsigned long bytesize = p.GetDownloadPackage().GetDownloadSize();
+		unsigned long bytesize = p.GetDownload().GetDownloadSize();
 		SetItem(j, 3, wxGetSizeStr(bytesize));
 	}
 
@@ -345,7 +341,7 @@ void wxWebUpdateListCtrl::CacheDownloadSizes()
 	wxSizeCacherThread *p = new wxSizeCacherThread(this);
 	//wxURLArray &urls = p->m_urls;
 	for (int i=0; i < (int)m_arrUpdatedPackages.GetCount(); i++) {
-		wxString u = m_arrUpdatedPackages[i].GetDownloadPackage().GetDownloadString();
+		wxString u = m_arrUpdatedPackages[i].GetDownload().GetDownloadString();
 		p->m_urls.Add(u);
 	}
 		
@@ -371,12 +367,48 @@ bool wxWebUpdateListCtrl::IsPackageUp2date(const wxString &name)
 	return FALSE;
 }
 
+void wxWebUpdateListCtrl::UpdatePackagesVersions(bool bShowOnlyOutOfDate)
+{
+	for (int j=0; j < GetItemCount(); j++) {
+			
+		wxWebUpdatePackage &curr = GetRemotePackage(GetItemText(j)); 
+		wxWebUpdateCheckFlag f = SetLocalVersionFor(j, curr);
+			
+		if ((f == wxWUCF_UPDATED && bShowOnlyOutOfDate) || f == wxWUCF_FAILED) {
+			
+			DeleteItem(j);
+			j--;
+			continue;		// continue with next package
+		}
+	}
+}
+
 
 
 
 // ---------------------
 // wxWEBUPDATEDLG
 // ---------------------
+
+wxWebUpdateDlg::wxWebUpdateDlg(wxWindow *parent, 
+						const wxWebUpdateLocalXMLScript &script)
+{
+	m_parent=parent; 
+	m_xmlLocal=script; 			
+	m_bUserAborted=FALSE; 
+	m_nStatus=wxWUDS_UNDEFINED;
+	m_nCurrentIdx=-1; 
+	m_nFileCount=0; 
+
+	m_dThread = NULL;
+	m_iThread = NULL;
+
+	// init our GUI
+	InitWidgetsFromXRC();
+
+	// and then our worker threads
+	InitThreads();
+}
 
 void wxWebUpdateDlg::InitWidgetsFromXRC()
 {
@@ -391,8 +423,11 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 	// build the dialog
 	// ----------------
 
+	wxString res = m_xmlLocal.GetXRCResName();
+	wxLogDebug(wxT("wxWebUpdateDlg::InitWidgetsFromXRC - loading the '") + res + wxT("' resource..."));
+
 	// and build our dialog window
-	wxASSERT_MSG(wxXmlResource::Get()->LoadDialog(this, GetParent(), m_xmlLocal.GetXRCResName()),
+	wxASSERT_MSG(wxXmlResource::Get()->LoadDialog(this, GetParent(), res),
 			wxT("Error while building wxWebUpdateDlg; check you've loaded webupdatedlg.xrc and that's a valid XRC !"));
 
     // Make an instance of our new custom class.
@@ -455,15 +490,7 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 	int size = m_pUpdatesList->GetClientSize().GetWidth()-colwidth;	
 	m_pUpdatesList->SetColumnWidth(3, size > 50 ? size : 50);
 
-	m_pUpdatesList->SetLocalPackages(m_xmlLocal.GetAllPackages());
-
-
-
-	// init other stuff
-	// ----------------
-
-	m_dThread = new wxDownloadThread(this);
-	m_iThread = new wxWebUpdateInstallThread(this);
+	m_pUpdatesList->SetLocalPackages(m_xmlLocal.GetAllPackages());	
 
 	wxCommandEvent fake;
 	OnShowHideAdv(fake);	// begin with adv options hidden
@@ -480,70 +507,59 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 	GetSizer()->SetSizeHints(this);
 }
 
-bool wxWebUpdateDlg::Show(const bool show)
+void wxWebUpdateDlg::ConnectionRequired()
 {
-	static bool firstTime = TRUE;
-
-	if (firstTime) {
-
-		// are we connected ?
-		wxDialUpManager *mng = wxDialUpManager::Create();
-		if (mng->IsOk()) {
-
-			if (!mng->IsOnline()) {
-
-				wxMessageBox(wxT("You are not connected to Internet ! Please connect and then retry..."),
-							wxT("Error"), wxOK | wxICON_ERROR);
-				delete mng;
-				return 0;
-			}
-		}
-
-		delete mng;
-
-		// launch a separate thread for the webupdate script download
-		if (m_dThread->Create() != wxTHREAD_NO_ERROR ||
-			m_dThread->Run() != wxTHREAD_NO_ERROR) {
-			wxMessageBox(wxT("Low resources; cannot run the WebUpdate dialog...\n")
-						wxT("Close some applications and then retry."), 
-						wxT("Error"), wxOK | wxICON_ERROR);
+	// are we connected ?
+	wxDialUpManager *mng = wxDialUpManager::Create();
+	if (mng->IsOk()) {
+		
+		if (!mng->IsOnline()) {
+			
+			wxMessageBox(wxT("You are not connected to Internet ! Please connect and then retry..."),
+				wxT("Error"), wxOK | wxICON_ERROR);
+			wxLogDebug(wxT("wxWebUpdateDlg::ConnectionRequired - not connected to Internet ! Aborting webupdate."));
+			delete mng;
 			AbortDialog();
 		}
-
-		// init also our installer thread
-		if (m_iThread->Create() != wxTHREAD_NO_ERROR ||
-			m_iThread->Run() != wxTHREAD_NO_ERROR) {
-			wxMessageBox(wxT("Low resources; cannot run the WebUpdate dialog...\n")
-						wxT("Close some applications and then retry."), 
-						wxT("Error"), wxOK | wxICON_ERROR);
-			AbortDialog();
-		}
-
-		// send a notification to the global wxWebUpdater
-		wxCommandEvent ce(wxWUD_INIT);
-		ce.SetClientData(this);
-	//	wxWebUpdater::Get()->AddPendingEvent(ce);
-
-		firstTime = FALSE;
 	}
-
-	// proceed with standard processing
-	return wxDialog::Show(show);
+	
+	delete mng;
+	wxLogDebug(wxT("wxWebUpdateDlg::ConnectionRequired - we are online..."));
 }
 
-bool wxWebUpdateDlg::Destroy()
+void wxWebUpdateDlg::InitThreads()
 {
+	wxASSERT_MSG(m_dThread == NULL && m_iThread == NULL,
+						wxT("initializing threads twice ?"));
+	m_dThread = new wxDownloadThread(this);
+	m_iThread = new wxWebUpdateInstallThread(this);
+
+	// launch a separate thread for the webupdate script download
+	if (m_dThread->Create() != wxTHREAD_NO_ERROR ||
+		m_dThread->Run() != wxTHREAD_NO_ERROR) {
+		wxMessageBox(wxT("Low resources; cannot run the WebUpdate dialog...\n")
+			wxT("Close some applications and then retry."), 
+			wxT("Error"), wxOK | wxICON_ERROR);
+		wxLogDebug(wxT("wxWebUpdateDlg::InitThreads - cannot run the download thread !"));
+		AbortDialog();
+	}
+	
+	// init also our installer thread
+	if (m_iThread->Create() != wxTHREAD_NO_ERROR ||
+		m_iThread->Run() != wxTHREAD_NO_ERROR) {
+		wxMessageBox(wxT("Low resources; cannot run the WebUpdate dialog...\n")
+			wxT("Close some applications and then retry."), 
+			wxT("Error"), wxOK | wxICON_ERROR);
+		wxLogDebug(wxT("wxWebUpdateDlg::InitThreads - cannot run the installer thread !"));
+		AbortDialog();
+	}
+	
 	// send a notification to the global wxWebUpdater
-	wxCommandEvent ce(wxWUD_DESTROY);
-//	wxWebUpdater::Get()->AddPendingEvent(ce);
-
-	return wxDialog::Destroy();
-}
-
-void wxWebUpdateDlg::OnIdle(wxIdleEvent &)
-{
-	/*if (m_iThread->IsRunning() || m_dThread->IsRunning())
-		return;*/
+	wxCommandEvent ce(wxWUD_INIT);
+	ce.SetClientData(this);
+	//	wxWebUpdater::Get()->AddPendingEvent(ce);
+	
+	wxLogDebug(wxT("wxWebUpdateDlg::InitThreads - successfully initialized the download & install threads..."));
 }
 
 void wxWebUpdateDlg::ShowErrorMsg(const wxString &str) const
@@ -551,6 +567,48 @@ void wxWebUpdateDlg::ShowErrorMsg(const wxString &str) const
 	wxLogDebug(str);
 	wxMessageBox(str + wxT("\nContact the support team of ") + GetAppName() +
 					wxT(" for help."), wxT("Error"), wxOK | wxICON_ERROR);
+}
+
+bool wxWebUpdateDlg::CheckForAllUpdated(bool forcedefaultmsg)
+{
+	wxWebUpdatePackageArray arr = m_xmlRemote.GetAllPackages();
+	bool allupdated = TRUE;
+	for (int j=0; j < (int)arr.GetCount(); j++) {
+
+		// get the local package info
+		wxWebUpdateLocalPackage &local = 
+			m_pUpdatesList->GetLocalPackage(arr[j].GetName());
+		wxASSERT_MSG(local.IsOk(), wxT("Error in the local/remote XML script"));
+
+		// do the version check
+		if (arr[j].Check(local.GetVersion()) == wxWUCF_OUTOFDATE) {
+			allupdated = FALSE;
+			break;		// not all packages are uptodate
+		}
+	}
+
+	if (allupdated) {
+
+		// show to the user the "update not available" message
+		wxString defaultmsg = wxT("You have the latest version of all packages of ") +
+							GetAppName() + wxT("... exiting the update dialog.");
+		wxString usermsg = m_xmlRemote.GetUpdateNotAvailableMsg();
+		wxMessageBox((usermsg.IsEmpty() || forcedefaultmsg) ? defaultmsg : usermsg, 
+					GetAppName(), wxOK | wxICON_INFORMATION);
+
+		AbortDialog();
+		return TRUE;		// TRUE = exit this dialog
+
+	} else {
+
+		// some updates are available... show the message only if the webupdate
+		// script contains an explicit user-customized message for this evenience
+		wxString usermsg = m_xmlRemote.GetUpdateAvailableMsg();
+		if (!usermsg.IsEmpty())
+			wxMessageBox(usermsg, GetAppName(), wxOK | wxICON_INFORMATION);
+	}
+
+	return FALSE;			// FALSE = do not exit the dialog
 }
 
 void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
@@ -577,40 +635,8 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
 	m_bInstalled.Add(FALSE, arr.GetCount());
 	
 	// is everything up to date ?
-	bool allupdated = TRUE;
-	for (int j=0; j < (int)arr.GetCount(); j++) {
-
-		// get the local package info
-		wxWebUpdateLocalPackage &local = 
-			m_pUpdatesList->GetLocalPackage(arr[j].GetName());
-		wxASSERT_MSG(local.IsOk(), wxT("Error in the local/remote XML script"));
-
-		// do the version check
-		if (arr[j].Check(local.GetVersion()) == wxWUCF_OUTOFDATE) {
-			allupdated = FALSE;
-			break;		// not all packages are uptodate
-		}
-	}
-
-	if (allupdated) {
-
-		// show to the user the "update not available" message
-		wxString defaultmsg = wxT("You have the latest version of all packages of ") +
-							GetAppName() + wxT("... exiting the update dialog.");
-		wxString usermsg = m_xmlRemote.GetUpdateNotAvailableMsg();
-		wxMessageBox(usermsg.IsEmpty() ? defaultmsg : usermsg, 
-					GetAppName(), wxOK | wxICON_INFORMATION);
-
-		AbortDialog();
-		return;	
-	} else {
-
-		// some updates are available... show the message only if the webupdate
-		// script contains an explicit user-customized message for this evenience
-		wxString usermsg = m_xmlRemote.GetUpdateAvailableMsg();
-		if (!usermsg.IsEmpty())
-			wxMessageBox(usermsg, GetAppName(), wxOK | wxICON_INFORMATION);
-	}
+	if (CheckForAllUpdated())
+		return;
 
 	// what if we could not found any valid package in the webupdate script ?
 	m_pUpdatesList->SetRemotePackages(arr);
@@ -687,7 +713,7 @@ bool wxWebUpdateDlg::DownloadFirstPackage()
 	// with the i-th package contained into m_arrUpdatedPackages
 	wxString name = m_pUpdatesList->GetItemText(todownload);
 	wxWebUpdatePackage &pkg = m_pUpdatesList->GetRemotePackage(name);
-	wxWebUpdateDownload &dl = pkg.GetDownloadPackage();
+	wxWebUpdateDownload &dl = pkg.GetDownload();
 	
 	// init thread variables
 	m_nCurrentIdx = todownload;
@@ -700,6 +726,10 @@ bool wxWebUpdateDlg::DownloadFirstPackage()
 	// reset the gauge GUI
 	m_pGauge->SetValue(0);
 	m_pGauge->SetRange(dl.GetDownloadSize());
+
+	// (eventually) check that we are online 
+	if (m_dThread->m_strURI.StartsWith(wxT("http://")))
+		ConnectionRequired();
 	
 	// launch the download
 	m_dThread->BeginNewDownload();
@@ -742,7 +772,7 @@ bool wxWebUpdateDlg::InstallFirstPackage()
 		return FALSE;
 
 	const wxWebUpdatePackage &pkg = GetRemotePackages().Item(toinstall);
-	const wxWebUpdateDownload &download = pkg.GetDownloadPackage();
+	const wxWebUpdateDownload &download = pkg.GetDownload();
 
 	m_nCurrentIdx = toinstall;
 	m_iThread->m_pDownload = (const wxWebUpdateDownload &)download;
@@ -784,11 +814,16 @@ void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 
 	// check if we already downloaded the XML webupdate script
 	if (!m_xmlRemote.IsOk()) {
+
+		if (m_xmlLocal.GetRemoteScriptURI().StartsWith(wxT("http://")))
+			ConnectionRequired();
+
 		m_dThread->m_strURI = m_xmlLocal.GetRemoteScriptURI();
 		m_dThread->m_strResName = wxT("XML WebUpdate script");
 		m_dThread->m_strOutput = wxFileName::CreateTempFileName(wxT("webupdate"));
 		m_dThread->m_strID = wxWUD_XMLSCRIPT_ID;
 		m_dThread->BeginNewDownload();
+		UpdateWindowUI();
 		return;
 	}
 
@@ -821,6 +856,36 @@ void wxWebUpdateDlg::OnCancel(wxCommandEvent &)
 	}
 
 	AbortDialog();
+}
+
+void wxWebUpdateDlg::OnAbout(wxCommandEvent &)
+{
+/*
+	wxBoxSizer *topsizer;
+	wxHtmlWindow *html;
+	wxDialog dlg(m_pFrame, wxID_ANY, wxString(wxT("About WebUpdater")));
+	
+	topsizer = new wxBoxSizer(wxVERTICAL);
+	html = new wxHtmlWindow(&dlg, wxID_ANY, wxDefaultPosition,
+						wxSize(380, 160), wxHW_SCROLLBAR_NEVER | wxSUNKEN_BORDER);
+	html->SetBorders(0);
+
+	wxFileName url(m_strHelpPath + wxT("about.htm"));
+	mcASSERT(html->LoadFile(url), wxT("Invalid about page..."));
+	html->SetSize(html->GetInternalRepresentation()->GetWidth(),
+		html->GetInternalRepresentation()->GetHeight());
+	
+	topsizer->Add(html, 1, wxALL, 10);
+	topsizer->Add(new wxStaticLine(&dlg, wxID_ANY), 0, wxEXPAND | wxLEFT | wxRIGHT, 10);
+	wxButton *bu1 = new wxButton(&dlg, wxID_OK, wxT("OK"));
+	bu1->SetDefault();
+	topsizer->Add(bu1, 0, wxALL | wxALIGN_RIGHT, 15);
+	
+	dlg.SetSizer(topsizer);
+	topsizer->Fit(&dlg);
+	
+	dlg.ShowModal();
+*/
 }
 
 void wxWebUpdateDlg::OnShowFilter(wxCommandEvent &)
@@ -943,16 +1008,27 @@ void wxWebUpdateDlg::OnInstallationComplete(wxCommandEvent &)
 		if (!m_xmlLocal.Save()) {
 		
 			// don't save the new version in the listctrl array
+			// since something went wrong...
 			
   		} else {
   		
   			// save the new local array in our listctrl
-  			m_pUpdatesList->SetLocalPackages(arr);
+			m_pUpdatesList->SetLocalPackages(arr);
+
+			// and update the listctrl versions
+  			m_pUpdatesList->UpdatePackagesVersions(m_pShowOnlyOOD->GetValue());
     	}
 			
 		// proceed with next
-		if (!InstallFirstPackage())
+		if (!InstallFirstPackage()) {
+
+			// notify the user
 			wxLogDebug(wxT("wxWebUpdateDlg::OnInstallationComplete - completed the installation of all packages"));
+			wxMessageBox(wxT("The installation of the selected packages has been completed successfully !"), 
+						wxT("WebUpdater"), wxICON_INFORMATION | wxOK);
+
+			CheckForAllUpdated(TRUE);
+		}
 		
 	} else {
 	
@@ -1093,16 +1169,16 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 		// reset our gauge control
 		m_pGauge->SetValue(0);
 		
+		// update our meters
+		int d = m_nFileCount,		// see #m_nFileCount description
+			i = m_iThread->GetInstallationCount();
+		
 		// did we download our WebUpdate script ?
 		bool scriptOk = m_xmlRemote.IsOk();
 
 		// re-enable what we disabled when we launched the thread
 		wxASSERT(m_nStatus == wxWUDS_UNDEFINED);
 		if (nLabelMode != m_nStatus) {
-
-			// update our meters
-			int d = m_nFileCount,		// see #m_nFileCount description
-				i = m_iThread->GetInstallationCount();
 
 			if (d > 0 && i > 0)
 				m_pSpeedText->SetLabel(

@@ -268,7 +268,7 @@ cleandocs:
 	-if exist ..\docs\html then rmdir /S /Q ..\docs\html
 
 ..\src\webupdater.exe: $(WEBUPDATER_OBJECTS) mingw\webupdater_app_rc.o
-	$(CXX) -o $@ $(WEBUPDATER_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -L$(HTTPENGINE_DIR)\lib -Wl,--subsystem,windows -mwindows  $(__HTTPENGINEDEP_LIB_p) -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+	$(CXX) -o $@ $(WEBUPDATER_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -L$(HTTPENGINE_DIR)\lib -Wl,--subsystem,windows -mwindows  $(__HTTPENGINEDEP_LIB_p) -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
 rep4_simple100: 
 	if not exist ..\samples\simple\v1.0.0 mkdir ..\samples\simple\v1.0.0

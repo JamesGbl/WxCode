@@ -76,7 +76,7 @@ public:
     bool m_bRememberPasswd;
 
 public:
-	wxProxySettings() {}
+	wxProxySettings() { m_bUseProxy = m_bProxyAuth = 0; m_nProxyPort = 0; m_bUseAuth = FALSE; }
 	virtual ~wxProxySettings() {}
 };
 #endif
@@ -118,6 +118,8 @@ protected:		// these are written by this thread and they must be only read
 
 	//! The number of files downloaded by this thread.
 	int m_nFileCount;
+
+	bool m_bReady;
 
 protected:		// these are vars protected by mutexes...
 
@@ -173,7 +175,7 @@ public:
 		: wxThread(wxTHREAD_JOINABLE), m_pHandler(dlg)
 		{ m_bSuccess=FALSE; m_dtStart = wxDateTime::UNow(); m_nFileCount=0; 
 		  m_nStatus = wxDTS_WAITING; m_nFinalSize = 0; m_nCurrentSize = 0; 
-		  m_nCurrentIndex=0; }
+		  m_nCurrentIndex=0; m_bReady=FALSE; }
 
 	virtual ~wxDownloadThread() {}
 
@@ -252,7 +254,7 @@ public:		// miscellaneous
 	//! This function must be called only when this thread is not downloading
 	//! nor computing any MD5...
 	void BeginNewDownload() { //wxDownloadThreadEntry &down) {
-		//wxASSERT(!IsDownloading() && !IsComputingMD5());
+		wxASSERT(m_bReady && !IsDownloading() && !IsComputingMD5());
 		//m_downloads.Add(down);
 		wxMutexLocker lock(m_mStatus);
 		m_nStatus = wxDTS_DOWNLOADING;		

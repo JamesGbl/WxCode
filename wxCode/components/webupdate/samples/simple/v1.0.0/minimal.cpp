@@ -13,15 +13,8 @@
 // declarations
 // ============================================================================
 
-#ifdef __WXMSW__
-	#define wxUPDATE_AND_EXIT(uri)					\
-		wxExecute(wxT("webupdater.exe --xml=") uri);		\
-		Close(true);
-#else
-	#define wxUPDATE_AND_EXIT(uri)					\
-		wxExecute(wxT("./webupdater --xml=") uri);		\
-		Close(true);
-#endif
+#define VERSION				wxT("1.0.0")
+#define APP_NAME			wxT("wxWebUpdate SIMPLE sample")
 
 // ----------------------------------------------------------------------------
 // headers
@@ -39,6 +32,7 @@
 #ifndef WX_PRECOMP
     #include "wx/wx.h"
 #endif
+#include "wx/textfile.h"
 
 // ----------------------------------------------------------------------------
 // resources
@@ -65,7 +59,6 @@ public:
     // initialization (doing it here and not in the ctor allows to have an error
     // return: if OnInit() returns false, the application terminates)
     virtual bool OnInit();
-	int OnExit();
 };
 
 // ----------------------------------------------------------------------------
@@ -140,15 +133,8 @@ IMPLEMENT_APP(MyApp)
 bool MyApp::OnInit()
 {
     // create the main application window
-    SetAppName(wxT("wxWebUpdate SIMPLE sample"));
+    SetAppName(APP_NAME);
     MyFrame *frame = new MyFrame(GetAppName());
-
-#ifdef __WXDEBUG__
-	// create an useful log window
-	wxLogWindow *pwindow = new wxLogWindow(frame, wxT("log"));
-	pwindow->GetFrame()->Move(50, 50+350);
-	pwindow->GetFrame()->SetSize(800, 300);
-#endif
 
     // and show it (the frames, unlike simple controls, are not shown when
     // created initially)
@@ -160,15 +146,12 @@ bool MyApp::OnInit()
     return true;
 }
 
-int MyApp::OnExit()
-{
-	return 0;
-}
-
 
 // ----------------------------------------------------------------------------
 // main frame
 // ----------------------------------------------------------------------------
+
+wxString g_location;
 
 // frame constructor
 MyFrame::MyFrame(const wxString& title)
@@ -177,21 +160,59 @@ MyFrame::MyFrame(const wxString& title)
     // set the frame icon
     SetIcon(wxICON(mondrian));
 
-#if 1    
+#if 1			// this section just makes the sample nicer 
+				// (you don't need to add it to your program)
+
+	// load our simple datafile
+	wxString text, location;
+	wxTextFile t;
+
+	// when running the sample using the MSVC6PRJ the working directory is build/
+	if (wxGetCwd().Right(5) == wxT("build"))
+		g_location = wxT("../samples/simple/v") VERSION wxT("/");
+	else
+		g_location = wxT("./");
+	location = g_location + wxT("simpledata.txt");
+
+	if (!t.Open(location))
+		wxMessageBox(wxT("Couldn't load my datafile !"), wxT("Error"));
+	else
+		for (int i=0; i < (int)t.GetLineCount(); i++)
+			text += t.GetLine(i) + wxT("\n");
+
 	wxPanel *panel = new wxPanel(this, -1);
     wxSizer *sz = new wxBoxSizer(wxVERTICAL);
 
 	// create the wxTextCtrl where the file structure is shown
-	sz->Add(new wxStaticText(panel, -1, wxT("Program EXE version: 1.0.0")), 0, wxGROW | wxALL, 5);
+	wxFont f(*wxNORMAL_FONT);
+	wxStaticText *st = new wxStaticText(panel, -1, wxT("Version of this program: ") VERSION,
+									wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
+	f.SetWeight(wxFONTWEIGHT_BOLD);
+	st->SetFont(f);
+	sz->Add(st, 0, wxGROW | wxALL, 5);
     sz->Add(new wxTextCtrl(panel, -1, 
 		wxT("This program provides an example of the WebUpdate component simplest features:\n")
-		wxT(" - all the configuration settings of the webupdater are saved in an XML file.\n")
-		wxT(" - the webupdater is able to replace the program executable since it runs when ")
+		wxT(" 1) all the configuration settings of the webupdater are saved in an XML file (the 'local script').\n\n")
+		wxT(" 2) all the informations about the updates are saved in another XML file (the 'remote script') which ")
+		wxT("can be placed in your webserver or on a CDROM or other support.\n\n")
+		wxT(" 3) the webupdater is able to replace the program executable since it runs when ")
   		wxT("the target program, i.e. the program to update, is not running.\n\n")
-    	wxT("For more info look at the WebUpdate documentation."),
+		wxT(" 4) the GUI of the WebUpdater can be chosen at run-time since it loads it from an XRC file. ")
+		wxT("The name of the XRC file loaded is fixed but the name of the resource loaded is defined in the ")
+		wxT("local XML script so that you can easily change the GUI of the WebUpdater keeping untouched the EXE.\n")
+		wxT("In fact, the only difference between the two 'File' menuitems is that they tell WebUpdater to use ")
+		wxT("different dialogs for the update process...\n\n")
+    	wxT("For more info and for the full list of WebUpdater features, look at the WebUpdate documentation."),
 		wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE), 1, wxGROW);
-    panel->SetSizer(sz);
+
+	sz->Add(new wxStaticText(panel, -1, wxT("A simple datafile of this program: ")), 0, wxGROW | wxALL, 5);
+    sz->Add(new wxTextCtrl(panel, -1, text,
+		wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE), 1, wxGROW);
+    
+	panel->SetSizer(sz);
     sz->SetSizeHints(panel);
+	sz->SetSizeHints(this);
+	SetSize(GetMinSize().GetWidth()*3, -1);
 #endif
 
 #if wxUSE_MENUS
@@ -247,13 +268,31 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
     wxMessageBox(msg, wxT("About ") + wxGetApp().GetAppName(), wxOK | wxICON_INFORMATION, this);
 }
 
+
+
+/* 
+   THESE ARE THE ONLY REAL MODIFICATION REQUIRED TO INTEGRATE WEBUPDATER
+   IN YOUR PROGRAM USING IT IN THE SIMPLEST WAY (SEE WEBUPDATER DOCS)
+*/
+
+void wxUpdateAndExit(wxFrame *caller, const wxString &uri)
+{
+#ifdef __WXMSW__	
+	wxExecute(wxT("webupdater.exe /s /r /x ../samples/simple/v1.0.0/webupdatedlg.xrc /l ") + uri);
+	caller->Close(true);
+#else	
+	wxExecute(wxT("./webupdater /s --xrc=../samples/simple/v1.0.0 --xml=") + uri);
+	caller->Close(true);
+#endif
+}
+
 void MyFrame::OnUpdateCheckSimple(wxCommandEvent &)
 {
-	wxUPDATE_AND_EXIT(wxT("local.xml"));
+	wxUpdateAndExit(this, g_location + wxT("local2.xml"));
 }
 
 void MyFrame::OnUpdateCheckAdv(wxCommandEvent &)
 {
-	wxUPDATE_AND_EXIT(wxT("local2.xml"));
+	wxUpdateAndExit(this, g_location + wxT("local.xml"));
 }
 

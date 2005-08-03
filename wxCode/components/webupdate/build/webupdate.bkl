@@ -19,7 +19,7 @@
 		</option>
 	</if>
 	<if cond="TARGETING_IDE=='1'">
-		<set var="USE_HTTPENGINE">1</set>
+		<set var="USE_HTTPENGINE">0</set>
 	</if>
 	
 	<if cond="TARGETING_WIN32=='1'">
@@ -84,8 +84,6 @@
 		<msvc-project-files>..\src\webupdatedlg.xrc</msvc-project-files>
 		
 		<sys-lib>$(HTTPENGINEDEP_LIB)</sys-lib>
-		<wx-lib>html</wx-lib>
-		<wx-lib>adv</wx-lib>
 		<wx-lib>xrc</wx-lib>
 		<wx-lib>xml</wx-lib>
 		<wx-lib>net</wx-lib>

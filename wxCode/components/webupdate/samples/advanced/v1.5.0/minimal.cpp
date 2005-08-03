@@ -309,7 +309,7 @@ void MyFrame::OnUpdateCheckSimple(wxCommandEvent &)
 		return;
 	}
 	
-	wxWebUpdateDownload download = update->GetDownloadPackage();
+	wxWebUpdateDownload download = update->GetDownload();
 	if (!download.IsOkForThisPlatform()) {
 		wxMessageBox(wxString(wxT("The XML script does not support this platform (")) +
 			wxWebUpdateDownload::GetThisPlatformString() + wxT(")"),

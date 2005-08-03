@@ -51,6 +51,7 @@
 #endif
 
 #include <wx/xrc/xmlres.h>
+#include <wx/xrc/xh_all.h>
 #include <wx/fs_mem.h>
 #include <wx/image.h>
 #include <wx/wfstream.h>
@@ -77,7 +78,8 @@
 // usage instructions for this app
 // ----------------------------------------------------------------------------
 
-#define OPTION_XMLSCRIPT		wxT("x")
+#define OPTION_XMLSCRIPT		wxT("l")
+#define OPTION_XRC				wxT("x")
 #define SWITCH_RESTART			wxT("r")
 #define SWITCH_SAVELOG			wxT("s")
 
@@ -87,14 +89,20 @@ static const wxCmdLineEntryDesc g_cmdLineDesc[] =
 	{ wxCMD_LINE_OPTION, OPTION_XMLSCRIPT, wxT("xml"), 
 		wxT("Use the given local XML file"),
 		wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+	{ wxCMD_LINE_OPTION, OPTION_XRC, wxT("xrc"), 
+		wxT("Use the given local XRC file"),
+		wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
 		
 	// switches
 	{ wxCMD_LINE_SWITCH, SWITCH_RESTART, wxT("restart"), 
 		wxT("Restart the updated application when WebUpdater is closed"),
-		wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
+		wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
 	{ wxCMD_LINE_SWITCH, SWITCH_SAVELOG, wxT("savelog"), 
-		wxT("Saves the log messages to 'log.txt'") },
-	{ wxCMD_LINE_SWITCH, _T("h"), _T("help"), _T("Show this help message"),
+		wxT("Saves the log messages to '") wxWU_LOGFILENAME wxT("'"),
+		wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+
+	// help
+	{ wxCMD_LINE_SWITCH, wxT("h"), wxT("help"), wxT("Show this help message"),
 		wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
 
 	{ wxCMD_LINE_NONE }
@@ -207,6 +215,84 @@ END_EVENT_TABLE()
 // WEBUPDATERAPP
 // ----------------------------------------------------------------------------
 
+// using this function instead of wxXmlResource::Get()->InitAllHandlers()
+// let us to avoid the ADV and HTML wx libraries (unused in this app) and
+// thus make the executable smaller
+void wxInitRequiredXmlHandlers()
+{
+	wxXmlResource *p = wxXmlResource::Get();
+		
+	p->AddHandler(new wxBitmapXmlHandler);
+    p->AddHandler(new wxIconXmlHandler);
+    p->AddHandler(new wxMenuXmlHandler);
+    p->AddHandler(new wxMenuBarXmlHandler);
+    p->AddHandler(new wxDialogXmlHandler);
+    p->AddHandler(new wxPanelXmlHandler);
+    p->AddHandler(new wxSizerXmlHandler);
+    p->AddHandler(new wxStdDialogButtonSizerXmlHandler);
+    p->AddHandler(new wxButtonXmlHandler);
+    p->AddHandler(new wxBitmapButtonXmlHandler);
+    p->AddHandler(new wxStaticTextXmlHandler);
+    p->AddHandler(new wxStaticBoxXmlHandler);
+    p->AddHandler(new wxStaticBitmapXmlHandler);
+    p->AddHandler(new wxTreeCtrlXmlHandler);
+    p->AddHandler(new wxListCtrlXmlHandler);
+#if wxUSE_CHOICE
+    p->AddHandler(new wxChoiceXmlHandler);
+#endif
+#if wxUSE_SLIDER
+    p->AddHandler(new wxSliderXmlHandler);
+#endif
+#if wxUSE_GAUGE
+    p->AddHandler(new wxGaugeXmlHandler);
+#endif
+#if wxUSE_CHECKBOX
+    p->AddHandler(new wxCheckBoxXmlHandler);
+#endif
+#if wxUSE_SPINBTN
+    p->AddHandler(new wxSpinButtonXmlHandler);
+#endif
+#if wxUSE_SPINCTRL
+    p->AddHandler(new wxSpinCtrlXmlHandler);
+#endif
+#if wxUSE_SCROLLBAR
+    p->AddHandler(new wxScrollBarXmlHandler);
+#endif
+#if wxUSE_RADIOBOX
+    p->AddHandler(new wxRadioBoxXmlHandler);
+    p->AddHandler(new wxRadioButtonXmlHandler);
+#endif
+#if wxUSE_COMBOBOX
+    p->AddHandler(new wxComboBoxXmlHandler);
+#endif
+#if wxUSE_NOTEBOOK
+    p->AddHandler(new wxNotebookXmlHandler);
+#endif
+#if wxUSE_LISTBOOK
+    p->AddHandler(new wxListbookXmlHandler);
+#endif
+#if wxUSE_CHOICEBOOK
+    p->AddHandler(new wxChoicebookXmlHandler);
+#endif
+    p->AddHandler(new wxTextCtrlXmlHandler);
+#if wxUSE_LISTBOX
+    p->AddHandler(new wxListBoxXmlHandler);
+#endif
+#if wxUSE_TOOLBAR
+    p->AddHandler(new wxToolBarXmlHandler);
+#endif
+#if wxUSE_STATLINE
+    p->AddHandler(new wxStaticLineXmlHandler);
+#endif
+    p->AddHandler(new wxUnknownWidgetXmlHandler);
+#if wxUSE_DIRDLG
+    p->AddHandler(new wxGenericDirCtrlXmlHandler);
+#endif
+    p->AddHandler(new wxFrameXmlHandler);
+    p->AddHandler(new wxScrolledWindowXmlHandler);
+    p->AddHandler(new wxSplitterWindowXmlHandler);
+}
+
 bool WebUpdaterApp::OnInit()
 {
 	mcDUMP_ON_EXIT;			// for debugging only	
@@ -225,13 +311,15 @@ bool WebUpdaterApp::OnInit()
 #endif
 	
 	// check for other options & switches (ORDER IS IMPORTANT !)
-	wxString toload;
+	wxString xml, xrc;
 	m_bRestart = parser.Found(SWITCH_RESTART);
 	if (parser.Found(SWITCH_SAVELOG))
 		new wxFileLog(wxWU_LOGFILENAME, wxT(" LOG OF WEBUPDATER SESSION BEGAN AT ") + 
 						wxDateTime::Now().Format(wxT("%x %X")));		// it automatically installs itself as the new logger
-	if (!parser.Found(OPTION_XMLSCRIPT, &toload))
-		toload = wxWU_LOCAL_XMLSCRIPT;
+	if (!parser.Found(OPTION_XMLSCRIPT, &xml))
+		xml = wxWU_LOCAL_XMLSCRIPT;
+	if (!parser.Found(OPTION_XRC, &xrc))
+		xrc = wxWU_LOCAL_XRC;
 
 	// this is for using wxDownloadThread
 	wxSocketBase::Initialize();
@@ -240,12 +328,13 @@ bool WebUpdaterApp::OnInit()
 	// webupdater app's executable so that the users of WebUpdate are not required
 	// to ship together with the EXE also the www image...
 	wxInitAllImageHandlers();
-	wxXmlResource::Get()->InitAllHandlers();
+	//wxXmlResource::Get()->InitAllHandlers();
+	wxInitRequiredXmlHandlers();
 	wxFileSystem::AddHandler(new wxMemoryFSHandler);
     wxMemoryFSHandler::AddFile(wxT("www.xpm"), wxBitmap(www_xpm), wxBITMAP_TYPE_XPM);	
 
 	// load the local XML webupdate script
-	wxFileName fn(toload);
+	wxFileName fn(xml);
 	fn.MakeAbsolute(wxGetCwd());
 	if (!m_script.Load(fn.GetFullPath())) {
 		wxMessageBox(wxT("The installation of the WebUpdater component of this application\n")
@@ -258,7 +347,7 @@ bool WebUpdaterApp::OnInit()
 	}
 	
     // load our XRC file
-    wxXmlResource::Get()->Load(wxWU_LOCAL_XRC);
+    wxXmlResource::Get()->Load(xrc);
 
 	// create our main dialog
 #if 1

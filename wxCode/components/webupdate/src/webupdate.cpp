@@ -30,6 +30,7 @@
 #include <wx/file.h>
 #include <wx/wfstream.h>
 #include <wx/filesys.h>
+#include <wx/tokenzr.h>
 #include "wx/webupdate.h"
 #include "wx/download.h"
 #include "wx/installer.h"
@@ -215,6 +216,22 @@ bool wxWebUpdateLocalXMLScript::Load(const wxString &uri)
 		
 			// save the location of the remote script
 			m_strRemoteURI = GetNodeContent(child);
+
+  		} else if (child->GetName() == wxT("keywords")) {
+		
+			// this should be a comma separed list of pairs:  key=value
+			wxString str = GetNodeContent(child);
+			wxStringTokenizer tkz(str, wxT(","));
+			while ( tkz.HasMoreTokens() ) {
+				wxString token = tkz.GetNextToken();
+			
+				// is this a valid token ?
+				if (!token.Contains(wxT("=")))
+     				continue;
+				else
+					wxWebUpdateInstaller::Get()->SetKeywordValue(
+							token.BeforeFirst(wxT('=')), token.AfterFirst(wxT('=')));
+			}
   		}
   		
 		child = child->GetNext();
@@ -557,7 +574,7 @@ bool wxWebUpdateDownload::Install() const
 // wxWEBUPDATEPACKAGE
 // ---------------------
 
-wxWebUpdateDownload &wxWebUpdatePackage::GetDownloadPackage(wxWebUpdatePlatform code) const
+wxWebUpdateDownload &wxWebUpdatePackage::GetDownload(wxWebUpdatePlatform code) const
 {
 	if (code == wxWUP_INVALID) 
 		code = wxWebUpdateDownload::GetThisPlatformCode();
@@ -837,7 +854,7 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) c
 			// parse this download
 			wxWebUpdateDownload update = GetDownload(child);
 			if (update.IsOk())
-				ret->AddDownloadPackage(update);
+				ret->AddDownload(update);
 			else
 				wxLogDebug(wxT("wxWebUpdateXMLScript::GetPackage - skipping an invalid <latest-download> tag"));
 

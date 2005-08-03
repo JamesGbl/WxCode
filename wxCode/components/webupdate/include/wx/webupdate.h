@@ -63,7 +63,8 @@ enum wxWebUpdateCheckFlag {
 						 //!< or that the local version of this program is greater
 						 //!< than the latest available version on the website.
     wxWUCF_UPDATED,      //!< Your program is still up-to-date.
-    wxWUCF_OUTOFDATE     //!< The web server holds an updated version.
+    wxWUCF_OUTOFDATE,    //!< The web server holds an updated version.
+	wxWUCF_NOTINSTALLED	 //!< The package is not installed on the user's PC.
 };
 
 
@@ -532,18 +533,18 @@ public:		// package utilities
 				m_arrWebUpdates.GetCount() > 0; }
 
 	//! Adds the given download package to the array.
-	virtual void AddDownloadPackage(const wxWebUpdateDownload &toadd)
+	virtual void AddDownload(const wxWebUpdateDownload &toadd)
 		{ m_arrWebUpdates.Add(toadd); }
 
 	//! Returns a reference to the download package for the given platform string.
-	virtual wxWebUpdateDownload &GetDownloadPackage(const wxString &platform) const
-		{ return GetDownloadPackage(wxWebUpdateDownload::GetPlatformCode(platform)); }	
+	virtual wxWebUpdateDownload &GetDownload(const wxString &platform) const
+		{ return GetDownload(wxWebUpdateDownload::GetPlatformCode(platform)); }	
 	
 	//! Returns a reference to the download package for the given platform code.
 	//! In each package it should exist only a single download for each platform
 	//! so the returned object should be the only item which is designed for the
 	//! given platform.
-	virtual wxWebUpdateDownload &GetDownloadPackage(
+	virtual wxWebUpdateDownload &GetDownload(
 				wxWebUpdatePlatform code = wxWUP_INVALID) const;
 
 	//! Caches the download sizes of all contained packages.
@@ -552,6 +553,9 @@ public:		// package utilities
 public:		// version check
 
     //! Checks if the webserver holds a more recent version of the given package.
+	//! This function never returns the wxWUCF_NOTINSTALLED symbol since it's assumed
+	//! that the version you give is the version of the same package installed on
+	//! the user's PC.
     //! \param strURL The URL of the XML file stored in the web server which holds 
     //!        the informations to parse.
     //! \param version The string version of the package which is being tested.
