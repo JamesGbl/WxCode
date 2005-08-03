@@ -10,8 +10,8 @@
 # create the updates for the given program name ($1 = name, $2 = version)
 function CreateUpdate { 
     cd $1/v$2
-	zip -9 ../../$1-$2.zip *.exe *.txt
-	tar -czf ../../$1-$2.tar.gz *.exe *.txt
+	zip -9 ../../$1-$2.zip $1.exe *.txt
+	tar -czf ../../$1-$2.tar.gz $1.exe *.txt
 	cd ../..
 }
 
