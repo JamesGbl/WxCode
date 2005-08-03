@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+
+<!-- Created by: Francesco Montorsi <frm@users.sourceforge.net>                  -->
+<!-- RCS-ID: $Id: Bakefiles.bkgen,v 1.1 2005-08-03 10:54:02 frm Exp $   -->
+
+<bakefile-gen>
+
+
+    <input>lcdwindow.bkl</input>
+
+
+    <disable-formats>dmars,dmars_smake,cbx_unix,cbuilderx,msevc4prj</disable-formats>
+    <add-formats>autoconf,borland,dmars_smake,dmars,mingw,msvc,msvc6prj,msevc4prj,watcom,cbuilderx,cbx_unix</add-formats>
+
+    <!-- required since wxCode uses wx presets stored in wxWidgets subfolders... -->
+    <add-flags>-I%WXWIN%\build\bakefiles\wxpresets</add-flags>
+    
+</bakefile-gen>

@@ -2,8 +2,7 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 # WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
 
 ###############################################################################
-
-Project: "LCDSample"=".\LCDSample.dsp" - Package Owner=<4>
+Project: "lcdwindow"=lcdwindow_lcdwindow.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -15,14 +14,17 @@ Package=<4>
 
 ###############################################################################
 
-Global:
+Project: "minimal"=lcdwindow_minimal.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
 }}}
 
-Package=<3>
+Package=<4>
 {{{
+Begin Project Dependency
+Project_Dep_Name lcdwindow
+End Project Dependency
 }}}
 
 ###############################################################################
