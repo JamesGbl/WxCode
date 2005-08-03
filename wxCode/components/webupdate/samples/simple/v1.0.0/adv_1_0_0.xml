@@ -2,8 +2,7 @@
 <webupdate>
 	<appname>wxWebUpdate SIMPLE sample</appname>
 	<appfile>simple</appfile>
-	<dlgxrc>wxWebUpdateSimpleDlg</dlgxrc>
-	
+	<dlgxrc>wxWebUpdateeDlg</dlgxrc>
 	<remoteuri>http://wxcode.sourceforge.net/components/webupdate/script1.xml</remoteuri>
 
 	<local-package id="simple">
