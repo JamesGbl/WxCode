@@ -292,11 +292,11 @@ void wxUpdateAndExit(wxFrame *caller, const wxString &xrc, const wxString &xml)
 
 void MyFrame::OnUpdateCheckSimple(wxCommandEvent &)
 {
-	wxUpdateAndExit(this, g_location + wxT("webupdatedlg.xrc"), g_location + wxT("local2.xml"));
+	wxUpdateAndExit(this, g_location + wxT("webupdatedlg.xrc"), g_location + wxT("simple.xml"));
 }
 
 void MyFrame::OnUpdateCheckAdv(wxCommandEvent &)
 {
-	wxUpdateAndExit(this, g_location + wxT("webupdatedlg.xrc"), g_location + wxT("local.xml"));
+	wxUpdateAndExit(this, g_location + wxT("webupdatedlg.xrc"), g_location + wxT("adv.xml"));
 }
 
