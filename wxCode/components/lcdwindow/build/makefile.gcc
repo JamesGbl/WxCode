@@ -67,7 +67,6 @@ MINIMAL_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -mthreads \
 	-I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	-I$(WX_DIR)\include -I..\include $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
-	mingw\minimal_clockthread.o \
 	mingw\minimal_lcdsampleapp.o \
 	mingw\minimal_lcdsampleframe.o \
 	mingw\minimal_clockthread.o
@@ -250,9 +249,6 @@ mingw\minimal_lcdsampleapp.o: ./../samples/lcdsampleapp.cpp
 	$(CXX) -c -o $@ $(MINIMAL_CXXFLAGS) $(CPPDEPS) $<
 
 mingw\minimal_lcdsampleframe.o: ./../samples/lcdsampleframe.cpp
-	$(CXX) -c -o $@ $(MINIMAL_CXXFLAGS) $(CPPDEPS) $<
-
-mingw\minimal_clockthread.o: ./../samples/clockthread.cpp
 	$(CXX) -c -o $@ $(MINIMAL_CXXFLAGS) $(CPPDEPS) $<
 
 mingw\minimal_clockthread.o: ./../samples/clockthread.cpp

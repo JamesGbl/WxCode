@@ -52,7 +52,6 @@ LCDWINDOW_DLL_OBJECTS =  \
 	lcdwindow_dll_lcdwindow.o
 MINIMAL_CXXFLAGS =   -I../include  $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
-	minimal_clockthread.o \
 	minimal_lcdsampleapp.o \
 	minimal_lcdsampleframe.o \
 	minimal_clockthread.o
@@ -260,9 +259,6 @@ minimal_lcdsampleapp.o: $(srcdir)/../samples/lcdsampleapp.cpp
 
 minimal_lcdsampleframe.o: $(srcdir)/../samples/lcdsampleframe.cpp
 	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/../samples/lcdsampleframe.cpp
-
-minimal_clockthread.o: $(srcdir)/../samples/clockthread.cpp
-	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/../samples/clockthread.cpp
 
 minimal_clockthread.o: $(srcdir)/../samples/clockthread.cpp
 	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/../samples/clockthread.cpp

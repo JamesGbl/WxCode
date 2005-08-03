@@ -92,7 +92,6 @@ MINIMAL_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG_1) $(__DEBUGINFO) -tWM \
 	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	-I$(WX_DIR)\include -I..\include $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
-	borland\minimal_clockthread.obj \
 	borland\minimal_lcdsampleapp.obj \
 	borland\minimal_lcdsampleframe.obj \
 	borland\minimal_clockthread.obj
@@ -283,9 +282,6 @@ borland\minimal_lcdsampleapp.obj: .\..\samples\lcdsampleapp.cpp
 	$(CXX) -q -c -P -o$@ $(MINIMAL_CXXFLAGS) $**
 
 borland\minimal_lcdsampleframe.obj: .\..\samples\lcdsampleframe.cpp
-	$(CXX) -q -c -P -o$@ $(MINIMAL_CXXFLAGS) $**
-
-borland\minimal_clockthread.obj: .\..\samples\clockthread.cpp
 	$(CXX) -q -c -P -o$@ $(MINIMAL_CXXFLAGS) $**
 
 borland\minimal_clockthread.obj: .\..\samples\clockthread.cpp

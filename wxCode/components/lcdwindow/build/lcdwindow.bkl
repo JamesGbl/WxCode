@@ -2,7 +2,7 @@
 
 <!-- Created by: Francesco Montorsi <frm@users.sourceforge.net>     -->
 <!-- Creation date: 9/10/2004                                       -->
-<!-- RCS-ID: $Id: lcdwindow.bkl,v 1.1 2005-08-03 10:54:02 frm Exp $        -->
+<!-- RCS-ID: $Id: lcdwindow.bkl,v 1.2 2005-08-03 11:03:48 frm Exp $        -->
 
 <makefile>
 
@@ -18,8 +18,8 @@
 	<set var="COMP_SRC">lcdwindow.cpp</set>
 	<set var="COMP_HDR">wx/lcdwindow.h</set>
 	<set var="COMP_SAMPLE_DIR">../samples</set>
-	<set var="COMP_SAMPLE_SRC">clockthread.cpp lcdsampleapp.cpp lcdsampleframe.cpp clockthread.cpp</set>
-	<set var="COMP_SAMPLE_HDR">clockthread.h lcdsampleapp.h lcdsampleframe.h clockthread.h</set>
+	<set var="COMP_SAMPLE_SRC">lcdsampleapp.cpp lcdsampleframe.cpp clockthread.cpp</set>
+	<set var="COMP_SAMPLE_HDR">lcdsampleapp.h lcdsampleframe.h clockthread.h</set>
 
 
 	<!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->

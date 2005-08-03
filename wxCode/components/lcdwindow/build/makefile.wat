@@ -156,7 +156,6 @@ MINIMAL_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
 	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
 	-i=$(WX_DIR)\include -i=..\include $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  &
-	watcom\minimal_clockthread.obj &
 	watcom\minimal_lcdsampleapp.obj &
 	watcom\minimal_lcdsampleframe.obj &
 	watcom\minimal_clockthread.obj
@@ -303,9 +302,6 @@ watcom\minimal_lcdsampleapp.obj :  .AUTODEPEND .\..\samples\lcdsampleapp.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(MINIMAL_CXXFLAGS) $<
 
 watcom\minimal_lcdsampleframe.obj :  .AUTODEPEND .\..\samples\lcdsampleframe.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(MINIMAL_CXXFLAGS) $<
-
-watcom\minimal_clockthread.obj :  .AUTODEPEND .\..\samples\clockthread.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(MINIMAL_CXXFLAGS) $<
 
 watcom\minimal_clockthread.obj :  .AUTODEPEND .\..\samples\clockthread.cpp

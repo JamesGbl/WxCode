@@ -253,33 +253,6 @@ LINK32=link.exe
 # Begin Source File
 
 SOURCE=.\..\samples\clockthread.cpp
-
-!IF  "$(CFG)" == "minimal - Win32 DLL Unicode Debug"
-
-
-!ELSEIF  "$(CFG)" == "minimal - Win32 DLL Unicode Release"
-
-
-!ELSEIF  "$(CFG)" == "minimal - Win32 DLL Debug"
-
-
-!ELSEIF  "$(CFG)" == "minimal - Win32 DLL Release"
-
-
-!ELSEIF  "$(CFG)" == "minimal - Win32 Unicode Debug"
-
-
-!ELSEIF  "$(CFG)" == "minimal - Win32 Unicode Release"
-
-
-!ELSEIF  "$(CFG)" == "minimal - Win32 Debug"
-
-
-!ELSEIF  "$(CFG)" == "minimal - Win32 Release"
-
-
-!ENDIF
-
 # End Source File
 # Begin Source File
 
