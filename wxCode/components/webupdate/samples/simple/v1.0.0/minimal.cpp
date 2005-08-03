@@ -129,9 +129,13 @@ IMPLEMENT_APP(MyApp)
 // the application class
 // ----------------------------------------------------------------------------
 
+#include <crtdbg.h>
+
 // wxT('Main program') equivalent: the program execution "starts" here
 bool MyApp::OnInit()
 {
+	//_CrtSetBreakAlloc(2275);
+
     // create the main application window
     SetAppName(APP_NAME);
     MyFrame *frame = new MyFrame(GetAppName());
@@ -275,24 +279,24 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
    IN YOUR PROGRAM USING IT IN THE SIMPLEST WAY (SEE WEBUPDATER DOCS)
 */
 
-void wxUpdateAndExit(wxFrame *caller, const wxString &uri)
+void wxUpdateAndExit(wxFrame *caller, const wxString &xrc, const wxString &xml)
 {
 #ifdef __WXMSW__	
-	wxExecute(wxT("webupdater.exe /s /r /x ../samples/simple/v1.0.0/webupdatedlg.xrc /l ") + uri);
+	wxExecute(wxT("webupdater.exe /s /r /x ") + xrc + wxT(" /l ") + xml);	
 	caller->Close(true);
 #else	
-	wxExecute(wxT("./webupdater /s --xrc=../samples/simple/v1.0.0 --xml=") + uri);
+	wxExecute(wxT("./webupdater /s --xrc=../samples/simple/v1.0.0 --xml=") + xml);
 	caller->Close(true);
 #endif
 }
 
 void MyFrame::OnUpdateCheckSimple(wxCommandEvent &)
 {
-	wxUpdateAndExit(this, g_location + wxT("local2.xml"));
+	wxUpdateAndExit(this, g_location + wxT("webupdatedlg.xrc"), g_location + wxT("local2.xml"));
 }
 
 void MyFrame::OnUpdateCheckAdv(wxCommandEvent &)
 {
-	wxUpdateAndExit(this, g_location + wxT("local.xml"));
+	wxUpdateAndExit(this, g_location + wxT("webupdatedlg.xrc"), g_location + wxT("local.xml"));
 }
 
