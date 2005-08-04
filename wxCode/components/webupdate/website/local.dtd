@@ -59,10 +59,25 @@
 
 
 <!-- KEYWORDS tag: specifies additional keywords used by WebUpdate to substitute
-                                  $(xxxx) strings in the remote script. See remote.dtd for more info.
+                                  $(xxxx) strings in the remote script. See remote.dtd for more info
+								  about keyword substitution.
                                   The keywords must be in the format:
 								   key1="value1",key2="value2",key3="value3" ...
-				  In the sample above, the following substitution will be performed
+								In the sample above, the following substitution will be performed
+								
+								$(key1)  => value1
+								$(key2)  => value2
+								$(key3)  => value3
+								....
+								
+								Note: this tag is parsed after that all the standard keywords (see remote.dtd)
+								has been initialized so that you can override them (e.g. using 
+								programdir=c:\programdir\loaded\by\registry, the WebUpdater will
+								use that value to substitute $(programdir) keys...).
+								
+								Note #2: this is the only tag in a local XML script where keyword substitution
+								is performed: i.e. the following is allowed and does what you think:
+									        <keywords>addondir=$(programdir)\addons</keywords> 
 -->
 <!ELEMENT keywords (#PCDATA)>
 

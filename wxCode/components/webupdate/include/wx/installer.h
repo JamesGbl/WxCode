@@ -102,6 +102,12 @@ public:		// action hashmap
 	wxWebUpdateActionHashMap &GetActionHashMap()
 		{ return m_hashActions; }
 
+	virtual void InitDefaultActions();
+	virtual void FreeActionHashMap();
+
+
+public:		// keywords hashmap
+
 	wxStringStringHashMap &GetKeywords()
 		{ return m_hashKeywords; }
 
@@ -110,86 +116,16 @@ public:		// action hashmap
 
 	void SetKeywordValue(const wxString &name, const wxString &val)
 		{ m_hashKeywords[name] = val; }
-	
+
+	//! Does string substitution using the current keyword hashmap.
+	wxString DoKeywordSubstitution(const wxString &str);
+
 	virtual void InitDefaultKeywords();
 	virtual void FreeKeywords();
-	virtual void InitDefaultActions();
-	virtual void FreeActionHashMap();
 
 private:
 	DECLARE_CLASS(wxWebUpdateInstaller)
 };
-
-
-/*
-//! A singleton class which responds to the wxWebUpdateAction events.
-//! This class code will be executed from the main thread.
-class WXDLLIMPEXP_WEBUPDATE wxWebUpdater : public wxEvtHandler
-{
-protected:
-
-	//! The global instance of this class.
-	static wxWebUpdater *m_pTheUpdater;
-
-	//! The instance of the current wxWebUpdateDlg shown to the user.
-	wxWebUpdateDlg *m_pWebUpdateDlg;
-	
-	//! The array of local packages.
-	wxWebUpdateLocalPackageArray m_arr;
-	
-	//! The name of the application to update.
-	wxString m_strAppName;
-
-public:
-	wxWebUpdater() { m_pWebUpdateDlg = NULL; }
-	virtual ~wxWebUpdater() {}
-
-public:		// setters/getters for updater properties
-
-	//! Returns the list of the currently installed local packages.
-	wxWebUpdateLocalPackageArray GetLocalPackages() const
-		{ return m_arr; }
-	
-	//! Sets the array of local packages.
-	void SetLocalPackages(const wxWebUpdateLocalPackageArray &arr)
-		{ m_arr = arr; }
-		
-	//! Returns the name for the application to update.
-	wxString GetAppName() const
-		{ return m_strAppName; }
-		
-	//! Sets the name of the application to update.
-	void SetAppName(const wxString &name)
-		{ m_strAppName = name; }
-
-public:		// event handlers
-
-	void OnUpdateExit(wxCommandEvent &);
-	void OnUpdateExec(wxCommandEvent &);
-	void OnWebUpdateDlgShow(wxCommandEvent &);
-	void OnWebUpdateDlgDestroy(wxCommandEvent &);
-
-public:		// single ton accessors
-
-    //! Gets the global wxWebUpdateInstaller object or creates one if none exists.
-    static wxWebUpdater *Get()
-	{ wxASSERT_MSG(m_pTheUpdater, 
-		wxT("The wxWebUpdater class should have been created in wxApp::OnInit")); 
-		return m_pTheUpdater;}
-
-    //! Sets the global wxWebUpdateInstaller object and returns a pointer to the 
-	//! previous one (may be NULL).
-    static wxWebUpdater *Set(wxWebUpdater *res)
-	{ wxWebUpdater *old = m_pTheUpdater; m_pTheUpdater = res; return old; }
-
-private:
-	DECLARE_CLASS(wxWebUpdateInstaller)
-	DECLARE_EVENT_TABLE()
-};
-*/
-
-// a container of wxWebUpdateInstallThreadEntry used by wxWebUpdateInstallThread
-//WX_DECLARE_USER_EXPORTED_OBJARRAY(wxWebUpdateInstallThreadEntry, wxWebUpdateInstallThreadEntryArray, WXDLLIMPEXP_WEBUPDATE);
 
 
 //! The thread used to install the packages.

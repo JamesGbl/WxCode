@@ -226,11 +226,35 @@ bool wxWebUpdateLocalXMLScript::Load(const wxString &uri)
 				wxString token = tkz.GetNextToken();
 			
 				// is this a valid token ?
-				if (!token.Contains(wxT("=")))
-     				continue;
-				else
-					wxWebUpdateInstaller::Get()->SetKeywordValue(
-							token.BeforeFirst(wxT('=')), token.AfterFirst(wxT('=')));
+				if (token.Contains(wxT("="))) { 
+
+					wxString keyname = token.BeforeFirst(wxT('='));
+					if (keyname.IsEmpty() || keyname.Contains(wxT(' '))) {
+
+						wxLogDebug(wxT("wxWebUpdateLocalXMLScript::Load - found an invalid keyword name: ")
+									+ keyname);
+						continue;
+					}
+
+					wxString value = token.AfterFirst(wxT('='));
+					if (value.IsEmpty()) {
+
+						wxLogDebug(wxT("wxWebUpdateLocalXMLScript::Load - found an invalid keyword value: ")
+									+ value);
+						continue;
+					}
+
+					// keyword values can contain other keywords...
+					value = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(value);
+
+					// add this keyword
+					wxWebUpdateInstaller::Get()->SetKeywordValue(keyname, value);
+
+				} else {
+
+					wxLogDebug(wxT("wxWebUpdateLocalXMLScript::Load - found an invalid keyword token: ")
+									+ token);
+				}
 			}
   		}
   		
@@ -681,29 +705,6 @@ wxString wxWebUpdateXMLScript::GetNodeContent(const wxXmlNode *node) const
     return wxEmptyString;
 }
 
-wxString wxWebUpdateXMLScript::DoKeywordSubstitution(const wxString &str) const
-{
-	wxStringStringHashMap &list = wxWebUpdateInstaller::Get()->GetKeywords();
-	wxString text(str);
-
-	// iterate over all the elements in the class
-    wxStringStringHashMap::iterator it;
-    for (it = list.begin(); it != list.end(); ++it) {
-        wxString key = it->first, value = it->second;
-		if (value.IsEmpty()) continue;		// skip empty values
-
-		text.Replace(wxT("$(") + key + wxT(")"), value);
-    }
-
-#ifdef __WXDEBUG__
-	if (text.Contains(wxT("$(")))
-		wxLogDebug(wxT("wxWebUpdateXMLScript::DoKeywordSubstitution - ")
-				wxT("found unknown keywords in the string:\n") + text);
-#endif
-
-	return text;
-}
-
 wxWebUpdateActionArray wxWebUpdateXMLScript::GetActionArray(const wxXmlNode *actions) const
 {	
 	wxWebUpdateActionArray ret;
@@ -725,7 +726,7 @@ wxWebUpdateActionArray wxWebUpdateXMLScript::GetActionArray(const wxXmlNode *act
 			names.Add(prop->GetName());
 			
 			// the values can contain keywords to substitute
-			values.Add(DoKeywordSubstitution(prop->GetValue()));
+			values.Add(wxWebUpdateInstaller::Get()->DoKeywordSubstitution(prop->GetValue()));
 			prop = prop->GetNext();
 		}
 		
@@ -760,7 +761,7 @@ wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdow
 		if (child->GetName() == wxT("uri")) {
 
 			// extract filename for this download
-			uri = DoKeywordSubstitution(GetNodeContent(child));
+			uri = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(GetNodeContent(child));
 
 			// FIXME: how can we do it better ?
 			wxString name(uri.AfterLast('/'));
@@ -861,7 +862,7 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) c
 		} else if (child->GetName() == wxT("description")) {
 
 			// do keywords substitution in the description
-			ret->m_strDescription = DoKeywordSubstitution(GetNodeContent(child));
+			ret->m_strDescription = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(GetNodeContent(child));
 		}
 
 		// proceed
@@ -954,9 +955,9 @@ bool wxWebUpdateXMLScript::Load(const wxString &uri)
 	while (child) {
 
 		if (child->GetName() == wxT("msg-update-available"))
-			m_strUpdateAvailableMsg = DoKeywordSubstitution(GetNodeContent(child));
+			m_strUpdateAvailableMsg = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(GetNodeContent(child));
 		else if (child->GetName() == wxT("msg-update-notavailable"))
-			m_strUpdateNotAvailableMsg = DoKeywordSubstitution(GetNodeContent(child));
+			m_strUpdateNotAvailableMsg = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(GetNodeContent(child));
 
 		child = child->GetNext();
 	}

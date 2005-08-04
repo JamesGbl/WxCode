@@ -264,6 +264,29 @@ wxWebUpdateAction *wxWebUpdateInstaller::CreateNewAction(const wxString &name,
 	return NULL;		// unknown action name
 }
 
+wxString wxWebUpdateInstaller::DoKeywordSubstitution(const wxString &str)
+{
+	wxStringStringHashMap &list = GetKeywords();
+	wxString text(str);
+
+	// iterate over all the elements in the class
+    wxStringStringHashMap::iterator it;
+    for (it = list.begin(); it != list.end(); ++it) {
+        wxString key = it->first, value = it->second;
+		if (value.IsEmpty()) continue;		// skip empty values
+
+		text.Replace(wxT("$(") + key + wxT(")"), value);
+    }
+
+	if (text.Contains(wxT("$(")))
+		wxLogDebug(wxT("wxWebUpdateInstaller::DoKeywordSubstitution - ")
+				wxT("found unknown keywords in the string:\n") + text);
+
+	return text;
+}
+
+
+
 
 
 // -------------------------

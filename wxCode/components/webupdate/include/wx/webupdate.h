@@ -620,10 +620,6 @@ protected:
 	//! Returns the text content of the given node.
 	wxString GetNodeContent(const wxXmlNode *node) const;
 
-	//! Does string substitution using the current keyword hashmap of
-	//! the given wxWebUpdateInstaller.
-	wxString DoKeywordSubstitution(const wxString &str) const;
-
 public:
 
 	wxWebUpdateXMLScript(const wxString &strURI = wxEmptyString);

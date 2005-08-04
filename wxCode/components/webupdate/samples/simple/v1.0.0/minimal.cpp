@@ -129,13 +129,9 @@ IMPLEMENT_APP(MyApp)
 // the application class
 // ----------------------------------------------------------------------------
 
-#include <crtdbg.h>
-
 // wxT('Main program') equivalent: the program execution "starts" here
 bool MyApp::OnInit()
 {
-	//_CrtSetBreakAlloc(2275);
-
     // create the main application window
     SetAppName(APP_NAME);
     MyFrame *frame = new MyFrame(GetAppName());
@@ -155,8 +151,6 @@ bool MyApp::OnInit()
 // main frame
 // ----------------------------------------------------------------------------
 
-wxString g_location;
-
 // frame constructor
 MyFrame::MyFrame(const wxString& title)
        : wxFrame(NULL, wxID_ANY, title, wxPoint(50, 50), wxSize(500, 300))
@@ -168,17 +162,26 @@ MyFrame::MyFrame(const wxString& title)
 				// (you don't need to add it to your program)
 
 	// load our simple datafile
-	wxString text, location;
+	wxString text;
 	wxTextFile t;
 
 	// when running the sample using the MSVC6PRJ the working directory is build/
-	if (wxGetCwd().Right(5) == wxT("build"))
-		g_location = wxT("../samples/simple/v") VERSION wxT("/");
-	else
-		g_location = wxT("./");
-	location = g_location + wxT("simpledata.txt");
+	// this is bad since we need as working directory the sample's folder 
+	// (otherwise: 
+	//  - we would need to override all standard paths of WebUpdater 
+	//    (using something like --xrc=../samples/simple/v1.0.0/webupdatedlg.xrc ...)
+	//  - the $(programdir) WebUpdater keyword would point to the build/ folder
+	//    and we would need to override it in the local.xml script
+	// ) so we just refuse to run from build/ which keeps this sample simple.
+	//
+	// If you want to run this sample from MSVC6PRJ folder then you should change
+	// the working directory using Project->Settings->Debug->'Working directory'
+	// editbox, setting it to ..\samples\simple\vVERSION_OF_THIS_SAMPLE
+	wxASSERT_MSG(wxGetCwd().Right(5) != wxT("build"), 
+		wxT("You must set the correct working directory before running this sample !")
+		wxT("See the comments in the source file of this minimal sample for more info."));
 
-	if (!t.Open(location))
+	if (!t.Open(wxT("simpledata.txt")))
 		wxMessageBox(wxT("Couldn't load my datafile !"), wxT("Error"));
 	else
 		for (int i=0; i < (int)t.GetLineCount(); i++)
@@ -285,18 +288,18 @@ void wxUpdateAndExit(wxFrame *caller, const wxString &xrc, const wxString &xml)
 	wxExecute(wxT("webupdater.exe /s /r /x ") + xrc + wxT(" /l ") + xml);	
 	caller->Close(true);
 #else	
-	wxExecute(wxT("./webupdater /s --xrc=../samples/simple/v1.0.0 --xml=") + xml);
+	wxExecute(wxT("./webupdater --savelog --restart --xrc=") + xrc + wxT(" --xml=") + xml);
 	caller->Close(true);
 #endif
 }
 
 void MyFrame::OnUpdateCheckSimple(wxCommandEvent &)
 {
-	wxUpdateAndExit(this, g_location + wxT("webupdatedlg.xrc"), g_location + wxT("simple.xml"));
+	wxUpdateAndExit(this, wxT("webupdatedlg.xrc"), wxT("simple.xml"));
 }
 
 void MyFrame::OnUpdateCheckAdv(wxCommandEvent &)
 {
-	wxUpdateAndExit(this, g_location + wxT("webupdatedlg.xrc"), g_location + wxT("adv.xml"));
+	wxUpdateAndExit(this, wxT("webupdatedlg.xrc"), wxT("adv.xml"));
 }
 
