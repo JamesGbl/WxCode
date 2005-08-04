@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.79 2005-07-13 17:49:09 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.80 2005-08-04 16:18:23 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -641,8 +641,7 @@ protected:
                               int image, int selectedImage,
                               wxTreeItemData *data);
     bool HasButtons(void) const
-        { return (m_imageListButtons != NULL) ||
-                  HasFlag (wxTR_TWIST_BUTTONS|wxTR_HAS_BUTTONS); }
+        { return (m_imageListButtons) || HasFlag (wxTR_TWIST_BUTTONS|wxTR_HAS_BUTTONS); }
 
 protected:
     void CalculateLineHeight();
@@ -2930,21 +2929,16 @@ void wxTreeListMainWindow::PaintItem (wxTreeListItem *item, wxDC& dc) {
         int image = NO_IMAGE;
         int image_w = 0;
         if(i == GetMainColumn()) {
-            if (m_imageListNormal) image = item->GetCurrentImage();
             x = item->GetX() + MARGIN;
-            if (!HasButtons()) {
-                x += -m_indent + m_indent/2;
-            }else if (m_imageListButtons) {
-                x += -m_btnWidth2;
-                if (item->HasPlus()) x += m_btnWidth + MARGIN;
-            }else if (item->HasPlus()) {
-                x += -m_btnWidth2+m_btnWidth + LINEATROOT;
+            if (HasButtons()) {
+                x += (m_btnWidth-m_btnWidth2);
             }else{
-                x += -m_indent -m_btnWidth2+m_btnWidth + LINEATROOT;
+                x -= m_indent/2;
             }
+            if (m_imageListNormal) image = item->GetCurrentImage();
         }else{
-            image = item->GetImage(i);
             x = x_colstart + MARGIN;
+            image = item->GetImage(i);
         }
         if (image != NO_IMAGE) image_w = m_imgWidth + MARGIN;
 
@@ -3033,9 +3027,9 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
     int x = x_maincol + MARGIN; // start of column
     if (HasFlag(wxTR_LINES_AT_ROOT)) x += LINEATROOT; // space for lines at root
     if (HasButtons()) {
-        x += -m_btnWidth2 + m_btnWidth; // half button space
+        x += (m_btnWidth-m_btnWidth2); // half button space
     }else{
-        x += m_indent/2;
+        x += (m_indent-m_indent/2);
     }
     if (HasFlag(wxTR_HIDE_ROOT)) {
         x += m_indent * (level-1); // indent but not level 1
@@ -3086,16 +3080,16 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
             dc.SetPen(m_dottedPen);
             int x2 = x - m_indent;
             if (x2 < (x_maincol + MARGIN)) x2 = x_maincol + MARGIN;
-            int x3 = x - m_btnWidth2 + m_btnWidth;
-            if (!HasButtons()) {
-                dc.DrawLine (x2, y_mid, x2 + m_indent/2, y_mid);
-            }else if (m_imageListButtons) {
-                dc.DrawLine (x2, y_mid, x - m_btnWidth2, y_mid);
-            }else if (item->HasPlus()) {
-                dc.DrawLine (x2, y_mid, x - m_btnWidth2, y_mid);
-                dc.DrawLine (x3, y_mid, x3 + LINEATROOT, y_mid);
+            int x3 = x + (m_btnWidth-m_btnWidth2);
+            if (HasButtons()) {
+                if (item->HasPlus()) {
+                    dc.DrawLine (x2, y_mid, x - m_btnWidth2, y_mid);
+                    dc.DrawLine (x3, y_mid, x3 + LINEATROOT, y_mid);
+                }else{
+                    dc.DrawLine (x2, y_mid, x3 + LINEATROOT, y_mid);
+                }
             }else{
-                dc.DrawLine (x2, y_mid, x3 -m_indent + LINEATROOT, y_mid);
+                dc.DrawLine (x2, y_mid, x - m_indent/2, y_mid);
             }
         }
 
@@ -3746,7 +3740,7 @@ void wxTreeListMainWindow::OnMouse (wxMouseEvent &event) {
 
         if (((flags & wxTREE_HITTEST_ONITEMBUTTON) ||
              (flags & wxTREE_HITTEST_ONITEMICON)) &&
-            HasButtons() && item->HasPlus()) {
+            item->HasPlus()) {
 
             // only toggle the item for a single click, double click on
             // the button doesn't do anything (it toggles the item twice)
@@ -3866,9 +3860,9 @@ void wxTreeListMainWindow::CalculateLevel (wxTreeListItem *item, wxDC &dc,
     int x = x_colstart + MARGIN; // start of column
     if (HasFlag(wxTR_LINES_AT_ROOT)) x += LINEATROOT; // space for lines at root
     if (HasButtons()) {
-        x += -m_btnWidth2 + m_btnWidth; // half button space
+        x += (m_btnWidth-m_btnWidth2); // half button space
     }else{
-        x += m_indent/2;
+        x += (m_indent-m_indent/2);
     }
     if (HasFlag(wxTR_HIDE_ROOT)) {
         x += m_indent * (level-1); // indent but not level 1
@@ -4041,7 +4035,7 @@ int wxTreeListMainWindow::GetItemWidth (int column, wxTreeListItem *item) {
     if (column == GetMainColumn()) {
         width += MARGIN;
         if (HasFlag(wxTR_LINES_AT_ROOT)) width += LINEATROOT;
-        if (HasButtons() && item->HasPlus()) width += m_btnWidth + MARGIN;
+        if (HasButtons()) width += m_btnWidth + LINEATROOT;
         if (item->GetCurrentImage() != NO_IMAGE) width += m_imgWidth;
         if (level) width += level * GetIndent();
     }
