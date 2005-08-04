@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by: Otto Wyss
 // Created:     04/01/98
-// RCS-ID:      $Id: treelisttest.cpp,v 1.12 2005-02-09 16:48:45 wyo Exp $
+// RCS-ID:      $Id: treelisttest.cpp,v 1.13 2005-08-04 16:20:18 wyo Exp $
 // Copyright:   (c) wxCode
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -796,6 +796,7 @@ void MyTreeListCtrl::AddTestItemsToTree(size_t numChildren,
     }
 
     AddItemsRecursively(rootId, numChildren, depth, 0);
+    AddItemsRecursively(rootId, 1, 1, 0);
 
     // set some colours/fonts for testing
     SetItemFont(rootId, *wxITALIC_FONT);
