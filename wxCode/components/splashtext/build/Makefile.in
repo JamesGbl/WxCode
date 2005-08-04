@@ -12,12 +12,14 @@ exec_prefix = @exec_prefix@
 INSTALL = @INSTALL@
 EXEEXT = @EXEEXT@
 SETFILE = @SETFILE@
+NM = @NM@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_DIR = @INSTALL_DIR@
 srcdir = @srcdir@
 top_builddir = @top_builddir@
 libdir = @libdir@
 includedir = @includedir@
+LDFLAGS_GUI = @LDFLAGS_GUI@
 CXX = @CXX@
 CXXFLAGS = @CXXFLAGS@
 CPPFLAGS = @CPPFLAGS@
@@ -39,6 +41,10 @@ SPLASHTEXT_OBJECTS =  \
 @COND_DEPS_TRACKING_0@CXXC = $(CXX)
 @COND_PLATFORM_MAC_1@__splashtext___mac_setfilecmd = \
 @COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL splashtext$(EXEEXT)
+COND_PLATFORM_OS2_1___splashtext___os2_emxbindcmd = $(NM) \
+	../src/splashtext$(EXEEXT) | if grep -q pmwin.763 ; then emxbind -ep \
+	../src/splashtext$(EXEEXT) ; fi
+@COND_PLATFORM_OS2_1@__splashtext___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___splashtext___os2_emxbindcmd)
 
 ### Targets: ###
 
@@ -47,7 +53,7 @@ all: ../src/splashtext$(EXEEXT)
 install: all install-wxheaders
 
 uninstall: 
-	rm -f  $(DESTDIR)$(includedir)/splashtext.h
+	rm -f  $(DESTDIR)$(includedir)/
 	rm -f $(libdir)/*SplashText*
 
 install-strip: install
@@ -141,9 +147,10 @@ install-wxheaders:
 	(cd $(srcdir) ; $(INSTALL_DATA)  ../include/wx/*.h $(DESTDIR)$(includedir)/wx)
 
 ../src/splashtext$(EXEEXT): $(SPLASHTEXT_OBJECTS)
-	$(CXX) -o $@ $(SPLASHTEXT_OBJECTS) $(LDFLAGS) -L../lib  $(WX_LIBS)
+	$(CXX) -o $@ $(SPLASHTEXT_OBJECTS) $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS)
 	
 	$(__splashtext___mac_setfilecmd)
+	$(__splashtext___os2_emxbindcmd)
 
 splashtext_splashtext.o: $(srcdir)/../src/splashtext.cpp
 	$(CXXC) -c -o $@ $(SPLASHTEXT_CXXFLAGS) $(srcdir)/../src/splashtext.cpp

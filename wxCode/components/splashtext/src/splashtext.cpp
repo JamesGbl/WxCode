@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by:
 // Created:     21/8/2000
-// RCS-ID:      $Id: splashtext.cpp,v 1.1.1.1 2003-12-28 21:05:25 wyo Exp $
+// RCS-ID:      $Id: splashtext.cpp,v 1.2 2005-08-04 12:31:20 frm Exp $
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -81,42 +81,41 @@ IMPLEMENT_APP(MyApp)
 
 static const wxCmdLineEntryDesc cmdLineDesc[] =
 {
-    { wxCMD_LINE_SWITCH, "h", "help",           "show usage" },
-    { wxCMD_LINE_SWITCH, "v", "verbose",        "be verbose" },
-    { wxCMD_LINE_SWITCH, "q", "quiet",          "be quiet" },
-    { wxCMD_LINE_SWITCH, "b", "batch",          "batch mode (no GUI)" },
-    { wxCMD_LINE_SWITCH, "bo", "bold",          "use a bold font" },
-    { wxCMD_LINE_SWITCH, "it", "italic",        "use an italic font" },
-    { wxCMD_LINE_SWITCH, "r", "right-justify",  "right justify the text" },
-    { wxCMD_LINE_SWITCH, "l", "left-justify",   "left justify the text (the default)" },
-    { wxCMD_LINE_SWITCH, "c", "centre",         "centre the text" },
-    { wxCMD_LINE_SWITCH, "a", "antialias",     "antialias (smooth) the text" },
+    { wxCMD_LINE_SWITCH, wxT("h"), wxT("help"),           wxT("show usage") },
+    { wxCMD_LINE_SWITCH, wxT("v"), wxT("verbose"),        wxT("be verbose") },
+    { wxCMD_LINE_SWITCH, wxT("q"), wxT("quiet"),          wxT("be quiet") },
+    { wxCMD_LINE_SWITCH, wxT("b"), wxT("batch"),          wxT("batch mode (no GUI)") },
+    { wxCMD_LINE_SWITCH, wxT("bo"), wxT("bold"),          wxT("use a bold font") },
+    { wxCMD_LINE_SWITCH, wxT("it"), wxT("italic"),        wxT("use an italic font") },
+    { wxCMD_LINE_SWITCH, wxT("r"), wxT("right-justify"),  wxT("right justify the text") },
+    { wxCMD_LINE_SWITCH, wxT("l"), wxT("left-justify"),   wxT("left justify the text (the default)") },
+    { wxCMD_LINE_SWITCH, wxT("c"), wxT("centre"),         wxT("centre the text") },
+    { wxCMD_LINE_SWITCH, wxT("a"), wxT("antialias"),     wxT("antialias (smooth) the text") },
 
-    { wxCMD_LINE_OPTION, "o", "output",         "output file (finished splash screen)" },
-    { wxCMD_LINE_OPTION, "i", "input",          "input file (template splash screen)" },
-    { wxCMD_LINE_OPTION, "t", "text",           "text to add to splash screen" },
-    { wxCMD_LINE_OPTION, "f", "face",           "facename to use" },
-    { wxCMD_LINE_OPTION, "p", "pointsize",      "point size to use", wxCMD_LINE_VAL_NUMBER },
-    { wxCMD_LINE_OPTION, "x", "x-position",     "x position of text", wxCMD_LINE_VAL_NUMBER },
-    { wxCMD_LINE_OPTION, "y", "y-position",     "y position of text", wxCMD_LINE_VAL_NUMBER },
-    { wxCMD_LINE_OPTION, "fcol", "foreground-colour",     "text foreground colour in 6-digit hex" },
-    { wxCMD_LINE_OPTION, "bcol", "background-colour",     "text background colour in 6-digit hex" },
-    { wxCMD_LINE_OPTION, "m", "magnify",     "magnification factor (amount text is magnified, then scaled down)", wxCMD_LINE_VAL_NUMBER },
+    { wxCMD_LINE_OPTION, wxT("o"), wxT("output"),         wxT("output file (finished splash screen)") },
+    { wxCMD_LINE_OPTION, wxT("i"), wxT("input"),          wxT("input file (template splash screen)") },
+    { wxCMD_LINE_OPTION, wxT("t"), wxT("text"),           wxT("text to add to splash screen") },
+    { wxCMD_LINE_OPTION, wxT("f"), wxT("face"),           wxT("facename to use") },
+    { wxCMD_LINE_OPTION, wxT("p"), wxT("pointsize"),      wxT("point size to use"), wxCMD_LINE_VAL_NUMBER },
+    { wxCMD_LINE_OPTION, wxT("x"), wxT("x-position"),     wxT("x position of text"), wxCMD_LINE_VAL_NUMBER },
+    { wxCMD_LINE_OPTION, wxT("y"), wxT("y-position"),     wxT("y position of text"), wxCMD_LINE_VAL_NUMBER },
+    { wxCMD_LINE_OPTION, wxT("fcol"), wxT("foreground-colour"),     wxT("text foreground colour in 6-digit hex") },
+    { wxCMD_LINE_OPTION, wxT("bcol"), wxT("background-colour"),     wxT("text background colour in 6-digit hex") },
+    { wxCMD_LINE_OPTION, wxT("m"), wxT("magnify"),     wxT("magnification factor (amount text is magnified, then scaled down)"), wxCMD_LINE_VAL_NUMBER },
 
     { wxCMD_LINE_NONE }
 };
 
 MyApp::MyApp()
 {
-	SetDefaults();
 }
 
 void MyApp::SetDefaults()
 {
-    m_inputFilename = "";
-    m_outputFilename = "";
-    m_text = "";
-    m_fontFaceName = "Arial";
+    m_inputFilename = wxT("");
+    m_outputFilename = wxT("");
+    m_text = wxT("");
+    m_fontFaceName = wxT("Arial");
     m_fontPointSize = 14;
     m_fontStyle = wxNORMAL;
     m_fontWeight = wxNORMAL;
@@ -131,13 +130,14 @@ void MyApp::SetDefaults()
 	m_textBackgroundColour = * wxWHITE;
 }
 
-// 'Main program' equivalent: the program execution "starts" here
+// wxT('Main program') equivalent: the program execution "starts" here
 bool MyApp::OnInit()
 {
+	SetDefaults();
 	wxInitAllImageHandlers();
 
     // create the main application window
-    MyFrame *frame = new MyFrame("SplashText",
+    MyFrame *frame = new MyFrame(wxT("SplashText"),
                                  wxPoint(50, 50), wxSize(500, 500));
 
 	// Reconstruct the command line for future editing by user
@@ -145,11 +145,11 @@ bool MyApp::OnInit()
 	for (i = 1; i < argc; i++)
 	{
 		wxString str(argv[i]);
-		if (str.Find(' ') != -1)
+		if (str.Find(wxT(' ')) != -1)
 			str = wxString(wxT('"')) + str + wxString(wxT('"'));
 		m_cmdLine += str;
 		if (i < (argc - 1))
-			m_cmdLine += " ";
+			m_cmdLine += wxT(" ");
 	}
 
     m_parser.SetCmdLine(argc, argv);
@@ -188,65 +188,65 @@ bool MyApp::ProcessCommandLine(MyFrame* frame)
     else if (retValue > 0)
     {
         // Syntax error
-        Log("Sorry, syntax error.");
+        Log(wxT("Sorry, syntax error."));
 		success = FALSE;
     }
     else
     {
-        if (m_parser.Found("h"))
+        if (m_parser.Found(wxT("h")))
         {
             m_parser.Usage();
 			success = FALSE;
         }
         else
         {
-			m_batchMode = m_parser.Found("b");
+			m_batchMode = m_parser.Found(wxT("b"));
 
 			// command line OK. Find option values.
-			if (!m_parser.Found("i", & m_inputFilename))
+			if (!m_parser.Found(wxT("i"), & m_inputFilename))
 			{
-				Log("You must supply an input filename.");
+				Log(wxT("You must supply an input filename."));
 				m_batchMode = FALSE;
 				success = FALSE;
 			}
-			if (!m_parser.Found("o", & m_outputFilename))
+			if (!m_parser.Found(wxT("o"), & m_outputFilename))
 			{
-				Log("You must supply an output filename.");
+				Log(wxT("You must supply an output filename."));
 				m_batchMode = FALSE;
 				success = FALSE;
 			}
-			if (!m_parser.Found("t", & m_text))
+			if (!m_parser.Found(wxT("t"), & m_text))
 			{
-				Log("You must supply some text to add.");
+				Log(wxT("You must supply some text to add."));
 				success = FALSE;
 				m_batchMode = FALSE;
 			}
-			m_parser.Found("f", & m_fontFaceName);
-			m_parser.Found("p", & m_fontPointSize);
+			m_parser.Found(wxT("f"), & m_fontFaceName);
+			m_parser.Found(wxT("p"), & m_fontPointSize);
 			long x = 0, y = 0;
-			m_parser.Found("x", & x);
-			m_parser.Found("y", & y);
+			m_parser.Found(wxT("x"), & x);
+			m_parser.Found(wxT("y"), & y);
 			m_textPosition = wxPoint(x, y);
 
 			wxString colourStr;
-			if (m_parser.Found("fcol", & colourStr))
+			if (m_parser.Found(wxT("fcol"), & colourStr))
 			{
 				m_textForegroundColour = wxHexStringToColour(colourStr);
 			}
-			if (m_parser.Found("bcol", & colourStr))
+			if (m_parser.Found(wxT("bcol"), & colourStr))
 			{
 				m_textBackgroundColour = wxHexStringToColour(colourStr);
 			}
-			m_parser.Found("m", & m_scaleFactor);
+			m_parser.Found(wxT("m"), & m_scaleFactor);
 			
 			// Find switches
-			m_verbose = m_parser.Found("v");
-			m_centre = m_parser.Found("c");
-			m_rightJustify = m_parser.Found("r");
-			m_antialias = m_parser.Found("a");
-			if (m_parser.Found("bo"))
+			m_verbose = m_parser.Found(wxT("v"));
+			m_centre = m_parser.Found(wxT("c"));
+			m_rightJustify = m_parser.Found(wxT("r"));
+			m_antialias = m_parser.Found(wxT("a"));
+			if (m_parser.Found(wxT("bo")))
 				m_fontWeight = wxBOLD;
-			if (m_parser.Found("it"))
+			if (m_parser.Found(wxT("it")))
 				m_fontStyle = wxITALIC;
         }
     }
@@ -272,13 +272,13 @@ bool MyApp::MakeSplash()
 		!templateImage.LoadFile(m_inputFilename, imageType))
 	{
 		wxString msg;
-		msg.Printf("Sorry, could not load template image %s", (const char*) m_inputFilename);
+		msg.Printf(wxT("Sorry, could not load template image %s"), (const wxChar*) m_inputFilename);
 		wxLogMessage(msg);
 		return FALSE;
 	}
 
 	wxString msg;
-	msg.Printf("Creating new file %s from template file %s and text %s",
+	msg.Printf(wxT("Creating new file %s from template file %s and text %s"),
 		(const wxChar*) m_outputFilename, (const wxChar*) m_inputFilename, (const wxChar*) m_text);
 	Log(msg);
 
@@ -326,7 +326,7 @@ bool MyApp::MakeSplash()
     memDC.DrawText(m_text, 0, 0);
     memDC.SelectObject(wxNullBitmap);
 
-    wxImage image(bitmap);
+    wxImage image = bitmap.ConvertToImage();
 	if (m_antialias)
 	{
 		wxImage anti = wxAntiAlias(image);
@@ -340,11 +340,12 @@ bool MyApp::MakeSplash()
 	}
 
 	image.SetMaskColour(m_textBackgroundColour.Red(), m_textBackgroundColour.Green(), m_textBackgroundColour.Blue());
-    bitmap = image.ConvertToBitmap();
+    
+	wxBitmap bitmap2(image);
 
 	// Now draw the image into the template image
 
-	wxBitmap templateBitmap = templateImage.ConvertToBitmap();
+	wxBitmap templateBitmap(templateImage);
 	wxMemoryDC memDCTemplate;
 	memDCTemplate.SelectObject(templateBitmap);
 	
@@ -364,15 +365,15 @@ bool MyApp::MakeSplash()
 		y = m_textPosition.y; // Currently, always start at this position
 		x = m_textPosition.x;
 	}
-	memDCTemplate.DrawBitmap(bitmap, x, y, TRUE);
+	memDCTemplate.DrawBitmap(bitmap2, x, y, TRUE);
 	memDCTemplate.SelectObject(wxNullBitmap);
 
-	wxImage completeImage(templateBitmap);
+	wxImage completeImage = templateBitmap.ConvertToImage();
 
 	int saveImageType = wxDetermineImageType(m_outputFilename);
 	if (saveImageType == -1)
 	{
-		wxLogMessage("Sorry, unknown output image file type.");
+		wxLogMessage(wxT("Sorry, unknown output image file type."));
 		return FALSE;
 	}
 
@@ -384,7 +385,7 @@ bool MyApp::MakeSplash()
 	if (!completeImage.SaveFile(m_outputFilename, saveImageType))
 	{
 		wxString msg;
-		msg.Printf("Sorry, could not save image to %s", (const char*) m_outputFilename);
+		msg.Printf(wxT("Sorry, could not save image to %s"), (const wxChar*) m_outputFilename);
 		wxLogMessage(msg);
 		return FALSE;
 	}
@@ -392,7 +393,7 @@ bool MyApp::MakeSplash()
     if (wxTheClipboard->Open())
     {
         wxTheClipboard->Clear();
-        wxTheClipboard->SetData(new wxBitmapDataObject(bitmap));
+        wxTheClipboard->SetData(new wxBitmapDataObject(bitmap2));
         wxTheClipboard->Close();
     }
 #endif
@@ -429,22 +430,22 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     SetIcon(wxICON(splash));
 
     // create a menu bar
-    wxMenu *menuFile = new wxMenu("", wxMENU_TEAROFF);
+    wxMenu *menuFile = new wxMenu(wxT(""), wxMENU_TEAROFF);
 
     // the "About" item should be in the help menu
     wxMenu *helpMenu = new wxMenu;
-    helpMenu->Append(SplashText_ShowUsage, "Show &Usage\tCtrl-U", "Show usage");
-    helpMenu->Append(SplashText_ShowReadme, "Show &ReadMe\tCtrl-M", "Show ReadMe file");
+    helpMenu->Append(SplashText_ShowUsage, wxT("Show &Usage\tCtrl-U"), wxT("Show usage"));
+    helpMenu->Append(SplashText_ShowReadme, wxT("Show &ReadMe\tCtrl-M"), wxT("Show ReadMe file"));
     helpMenu->AppendSeparator();
-    helpMenu->Append(SplashText_About, "&About...\tCtrl-A", "Show about dialog");
+    helpMenu->Append(SplashText_About, wxT("&About...\tCtrl-A"), wxT("Show about dialog"));
 
-    menuFile->Append(SplashText_SetArgs, "&Run Command...\tCtrl-R", "Run command after prompting");
-    menuFile->Append(SplashText_Quit, "E&xit\tAlt-X", "Quit this program");
+    menuFile->Append(SplashText_SetArgs, wxT("&Run Command...\tCtrl-R"), wxT("Run command after prompting"));
+    menuFile->Append(SplashText_Quit, wxT("E&xit\tAlt-X"), wxT("Quit this program"));
 
     // now append the freshly created menu to the menu bar...
     wxMenuBar *menuBar = new wxMenuBar();
-    menuBar->Append(menuFile, "&File");
-    menuBar->Append(helpMenu, "&Help");
+    menuBar->Append(menuFile, wxT("&File"));
+    menuBar->Append(helpMenu, wxT("&Help"));
 
     // ... and attach this menu bar to the frame
     SetMenuBar(menuBar);
@@ -461,7 +462,7 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
 #if 0
     // create a status bar just for fun (by default with 1 pane only)
     CreateStatusBar(2);
-    SetStatusText("Welcome to MakeSplash");
+    SetStatusText(wxT("Welcome to MakeSplash"));
 #endif // wxUSE_STATUSBAR
 }
 
@@ -479,7 +480,7 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
     wxString msg;
     msg.Printf(_T("SplashText adds text to a bitmap."));
 
-    wxMessageBox(msg, "About SplashText", wxOK | wxICON_INFORMATION, this);
+    wxMessageBox(msg, wxT("About SplashText"), wxOK | wxICON_INFORMATION, this);
 }
 
 void MyFrame::Log(const wxString& text)
@@ -505,7 +506,7 @@ void MyFrame::OnShowUsage(wxCommandEvent& event)
 
 void MyFrame::OnSetArgs(wxCommandEvent& event)
 {
-	wxString args = wxGetTextFromUser(_("Please enter command line arguments"), _("MakeSplash"),
+	wxString args = wxGetTextFromUser(_T("Please enter command line arguments"), _T("MakeSplash"),
 		wxGetApp().m_cmdLine);
 	if (!args.IsEmpty())
 	{
@@ -518,11 +519,11 @@ void MyFrame::OnSetArgs(wxCommandEvent& event)
 
 void MyFrame::OnShowReadMe(wxCommandEvent& event)
 {
-	if (wxFileExists("splashtext.txt"))
-		m_logCtrl->LoadFile("splashtext.txt");
+	if (wxFileExists(wxT("splashtext.txt")))
+		m_logCtrl->LoadFile(wxT("splashtext.txt"));
 	else
 	{
-		wxMessageBox("Sorry, could not find splashtext.txt", "SplashText", wxOK|wxICON_INFORMATION);
+		wxMessageBox(wxT("Sorry, could not find splashtext.txt"), wxT("SplashText"), wxOK|wxICON_INFORMATION);
 	}
 }
 
@@ -617,7 +618,7 @@ wxImage wxAntiAlias2(const wxImage& image)
 
        blue = blue/40;
 
-       anti.SetRGB( x, y, (unsigned char) red, (unsigned char) green, (unsigned char) blue );
+       anti.SetRGB( x, y, (wxChar) red, (wxChar) green, (wxChar) blue );
     }
     return anti;
 }
@@ -655,17 +656,17 @@ int wxDetermineImageType(const wxString& filename)
     wxSplitPath(filename, & path, & name, & ext);
 
     ext.MakeLower();
-    if (ext == "jpg" || ext == "jpeg")
+    if (ext == wxT("jpg") || ext == wxT("jpeg"))
         return wxBITMAP_TYPE_JPEG;
-    else if (ext == "gif")
+    else if (ext == wxT("gif"))
         return wxBITMAP_TYPE_GIF;
-    else if (ext == "bmp")
+    else if (ext == wxT("bmp"))
         return wxBITMAP_TYPE_BMP;
-    else if (ext == "png")
+    else if (ext == wxT("png"))
         return wxBITMAP_TYPE_PNG;
-    else if (ext == "pcx")
+    else if (ext == wxT("pcx"))
         return wxBITMAP_TYPE_PCX;
-    else if (ext == "tif" || ext == "tiff")
+    else if (ext == wxT("tif") || ext == wxT("tiff"))
         return wxBITMAP_TYPE_TIF;
     else
         return -1;
