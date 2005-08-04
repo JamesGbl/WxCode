@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.29 2005-06-17 17:21:29 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.30 2005-08-04 17:12:34 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -27,6 +27,7 @@ class WXDLLEXPORT wxTreeListItem;
 class WXDLLEXPORT wxTreeListHeaderWindow;
 class WXDLLEXPORT wxTreeListMainWindow;
 
+#define wxTR_VIRTUAL    0x1000    // The application provides items text on demand.
 
 // Using this typedef removes an ambiguity when calling Remove()
 #ifdef __WXMSW__
@@ -492,6 +493,9 @@ public:
         { EditLabel (item, GetMainColumn()); }
     // edit item's label of the given column
     void EditLabel (const wxTreeItemId& item, int column);
+
+    // virtual mode
+    virtual wxString OnGetItemText( wxTreeItemData* item, long column ) const;
 
     // sorting
     // this function is called to compare 2 items and should return -1, 0

@@ -212,6 +212,17 @@ closest to the defaults for the native control for a particular toolkit.
 </FONT></TD></TR>
 
 
+<TR><TD VALIGN=TOP WIDTH=198>
+<FONT FACE="Arial, Lucida, Helvetica">
+<B>wxTR_VIRTUAL</B>
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+The application provides items text on demand.
+</FONT></TD></TR>
+
+
 </TABLE>
 <P>
 See also window styles overview.<P>
@@ -462,6 +473,7 @@ to a newer version: see
 <A HREF="#wxtreelistctrlisvisible">wxTreeListCtrl::IsVisible</A><BR>
 <A HREF="#wxtreelistctrlitemhaschildren">wxTreeListCtrl::ItemHasChildren</A><BR>
 <A HREF="#wxtreelistctrloncompareitems">wxTreeListCtrl::OnCompareItems</A><BR>
+<A HREF="#wxtreelistctrlongetitemtext">wxTreeListCtrl::OnGetItemText</A><BR>
 <A HREF="#wxtreelistctrlprependitem">wxTreeListCtrl::PrependItem</A><BR>
 <A HREF="#wxtreelistctrlrefresh">wxTreeListCtrl::Refresh</A><BR>
 <A HREF="#wxtreelistctrlsetbackgroundcolour">wxTreeListCtrl::SetBackgroundColour</A><BR>
@@ -1382,6 +1394,14 @@ positive value if the first item is less than, equal to or greater than the
 second one.<P>
 The base class version compares items alphabetically.<P>
 See also: <A HREF="manual_wxtreelistctrl.html#wxtreelistctrlsortchildren">SortChildren</A><P>
+
+<HR>
+<A NAME="wxtreelistctrlongetitemtext"></A>
+<H3>wxTreeListCtrl::OnGetItemText</H3>
+<P>
+<B>wxString</B> <B>OnGetItemText</B>(<B>wxTreeItemData* </B><I>item</I>, <B>long </B><I>column</I>) <B>const</B><P>
+This function <B>must</B> be overloaded in the derived class for a control with <TT>wxTR_VIRTUAL</TT> style. It should return the
+string containing the text of the given column for the specified item.<P>
 
 <HR>
 <A NAME="wxtreelistctrlprependitem"></A>

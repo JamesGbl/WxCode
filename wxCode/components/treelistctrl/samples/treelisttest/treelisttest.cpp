@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by: Otto Wyss
 // Created:     04/01/98
-// RCS-ID:      $Id: treelisttest.cpp,v 1.13 2005-08-04 16:20:18 wyo Exp $
+// RCS-ID:      $Id: treelisttest.cpp,v 1.14 2005-08-04 17:12:35 wyo Exp $
 // Copyright:   (c) wxCode
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -87,6 +87,7 @@ BEGIN_EVENT_TABLE(MyFrame, wxFrame)
     MENU_LINK(TogRootLines)
     MENU_LINK(TogBorder)
     MENU_LINK(TogFullHighlight)
+    MENU_LINK(TogVirtual)
     MENU_LINK(SetFgColour)
     MENU_LINK(SetBgColour)
     MENU_LINK(ResetStyle)
@@ -200,6 +201,7 @@ MyFrame::MyFrame(const wxString& title, int x, int y, int w, int h)
     style_menu->AppendCheckItem(TreeListTest_TogHideRoot, wxT("Toggle &hidden root"));
     style_menu->AppendCheckItem(TreeListTest_TogBorder, wxT("Toggle &item border"));
     style_menu->AppendCheckItem(TreeListTest_TogFullHighlight, wxT("Toggle &full row highlight"));
+    style_menu->AppendCheckItem(TreeListTest_TogVirtual, wxT("Toggle &virtual mode"));
     style_menu->AppendCheckItem(TreeListTest_TogEdit, wxT("Toggle &edit mode"));
 #ifndef NO_MULTIPLE_SELECTION
     style_menu->AppendCheckItem(TreeListTest_ToggleSel, wxT("Toggle &selection mode"));
@@ -753,7 +755,7 @@ void MyTreeListCtrl::AddItemsRecursively (const wxTreeItemId& idParent,
                 image = imageSel = -1;
             }
             wxTreeItemId id = AppendItem (idParent, str, image, imageSel,
-                                         new MyTreeItemData(str));
+                                          new MyTreeItemData(str, n+1));
             str.Printf (_("Item%d"), n + 1);
             SetItemText (id, 1, _("Col1, ") + str);
             SetItemText (id, 2, _("Col2, ") + str);
@@ -789,7 +791,7 @@ void MyTreeListCtrl::AddTestItemsToTree(size_t numChildren,
     SetColumnEditable (2, true);
     wxTreeItemId rootId = AddRoot(wxT("Root"),
                                   image, image,
-                                  new MyTreeItemData(wxT("Root item")));
+                                  new MyTreeItemData(wxT("Root item"), -1));
     if ( image != -1 )
     {
         SetItemImage(rootId, TreeListCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded);
@@ -1190,4 +1192,24 @@ void MyTreeItemData::ShowInfo(wxTreeListCtrl *tree)
                  Bool2String(tree->IsBold(GetId())),
                  tree->GetChildrenCount(GetId()),
                  tree->GetChildrenCount(GetId(), false));
+}
+
+wxString MyTreeListCtrl::OnGetItemText( wxTreeItemData* item, long column ) const
+{
+    if( item != NULL )
+    {
+        MyTreeItemData* myitem = static_cast<MyTreeItemData*>(item);
+
+        if( column == GetMainColumn() )
+        {
+            return myitem->GetDesc();
+        }
+        else if( myitem->GetRow() != -1 )
+        {
+            wxString s;
+            s.Printf( wxT("V Col%ld, Item%d"), column, myitem->GetRow() );
+            return s;
+        }
+    }
+    return wxEmptyString;
 }

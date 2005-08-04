@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.80 2005-08-04 16:18:23 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.81 2005-08-04 17:12:36 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -257,6 +257,9 @@ public:
     // accessors
     // ---------
 
+    // return true if this is a virtual list control
+    bool IsVirtual() const { return HasFlag(wxTR_VIRTUAL); }
+
     // get the total number of items in the control
     size_t GetCount() const;
 
@@ -302,6 +305,7 @@ public:
     wxString GetItemText (const wxTreeItemId& item) const
     { return GetItemText (item, GetMainColumn()); }
     wxString GetItemText (const wxTreeItemId& item, int column) const;
+    wxString GetItemText (wxTreeItemData* item, int column) const;
 
     // get one of the images associated with the item (normal by default)
     int GetItemImage (const wxTreeItemId& item,
@@ -740,12 +744,15 @@ public:
 
     const wxString GetText() const
     {
-        if(m_text.GetCount() > 0) return m_text[0];
-        return wxEmptyString;
+        return GetText(0);
     }
     const wxString GetText (int column) const
     {
-        if (column < (int)m_text.GetCount()) return m_text[column];
+        if(m_text.GetCount() > 0)
+        {
+            if( IsVirtual() )   return m_owner->GetItemText( m_data, column );
+            else                return m_text[column];
+        }
         return wxEmptyString;
     }
 
@@ -843,6 +850,7 @@ public:
     bool IsExpanded()  const { return !m_isCollapsed; }
     bool HasPlus()     const { return m_hasPlus || HasChildren(); }
     bool IsBold()      const { return m_isBold != 0; }
+    bool IsVirtual()   const { return m_owner->IsVirtual(); }
 
     // attributes
     // get them - may be NULL
@@ -4005,7 +4013,14 @@ wxString wxTreeListMainWindow::GetItemText (const wxTreeItemId& itemId,
                                             int column) const {
     wxCHECK_MSG (itemId.IsOk(), _T(""), _T("invalid tree item") );
 
-    return ((wxTreeListItem*) itemId.m_pItem)->GetText (column);
+    if( IsVirtual() )   return m_owner->OnGetItemText(((wxTreeListItem*) itemId.m_pItem)->GetData(),column);
+    else                return ((wxTreeListItem*) itemId.m_pItem)->GetText (column);
+}
+
+wxString wxTreeListMainWindow::GetItemText (wxTreeItemData* item,
+int column) const {
+   wxASSERT_MSG( IsVirtual(), _T("can be used only with virtual control") );
+   return m_owner->OnGetItemText(item,column);
 }
 
 void wxTreeListMainWindow::SetFocus() {
@@ -4606,4 +4621,9 @@ wxSize wxTreeListCtrl::DoGetBestSize() const
 {
     // something is better than nothing...
     return wxSize (200,200); // but it should be specified values! FIXME
+}
+
+wxString wxTreeListCtrl::OnGetItemText( wxTreeItemData* item, long column ) const
+{
+    return wxEmptyString;
 }

@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by:
 // Created:     04/01/98
-// RCS-ID:      $Id: treelisttest.h,v 1.4 2004-09-27 17:45:22 wyo Exp $
+// RCS-ID:      $Id: treelisttest.h,v 1.5 2005-08-04 17:12:35 wyo Exp $
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -36,13 +36,15 @@ private:
 class MyTreeItemData : public wxTreeItemData
 {
 public:
-    MyTreeItemData(const wxString& desc) : m_desc(desc) { }
+    MyTreeItemData(const wxString& desc, int row) : m_desc(desc), m_row(row) { }
 
     void ShowInfo(wxTreeListCtrl *tree);
     const wxChar *GetDesc() const { return m_desc.c_str(); }
+    int GetRow() const { return m_row; }
 
 private:
     wxString m_desc;
+    int m_row;
 };
 
 class MyTreeListCtrl : public wxTreeListCtrl
@@ -106,6 +108,7 @@ public:
 
 protected:
     virtual int OnCompareItems(const wxTreeItemId& i1, const wxTreeItemId& i2);
+    virtual wxString OnGetItemText( wxTreeItemData* item, long column ) const;
 
     // is this the test item which we use in several event handlers?
     bool IsTestItem(const wxTreeItemId& item)
@@ -161,6 +164,8 @@ public:
         { TogStyle(event.GetId(), wxTR_ROW_LINES); }
     void OnTogFullHighlight(wxCommandEvent& event)
         { TogStyle(event.GetId(), wxTR_FULL_ROW_HIGHLIGHT); }
+    void OnTogVirtual(wxCommandEvent& event)
+        { TogStyle(event.GetId(), wxTR_VIRTUAL); }
 
     void OnResetStyle(wxCommandEvent& WXUNUSED(event))
         { CreateTreeWithDefStyle(); }
@@ -245,6 +250,7 @@ enum
     TreeListTest_TogRootLines,
     TreeListTest_TogBorder,
     TreeListTest_TogFullHighlight,
+    TreeListTest_TogVirtual,
     TreeListTest_SetFgColour,
     TreeListTest_SetBgColour,
     TreeListTest_ResetStyle,
