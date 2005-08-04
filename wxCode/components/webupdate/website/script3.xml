@@ -16,7 +16,7 @@
       <latest-download>
 	  
 			<!-- use a simple ZIP -->
-			<uri>http://wxcode.sourceforge.net/components/webupdate/simple-$(latest-version).zip</uri>
+			<uri>file://./simple-$(latest-version).zip</uri>
 			<platform name="msw"/>	
 			
 			<actions>
@@ -27,7 +27,7 @@
       <latest-download>
 	  
 			<!-- on unix-based OS we use .tar.gz archives -->
-			<uri>http://wxcode.sourceforge.net/components/webupdate/simple-$(latest-version).tar.gz</uri>
+			<uri>file://./simple-$(latest-version).tar.gz</uri>
 			<platform name="gtk"/>
 			
 			<actions><run/></actions>
