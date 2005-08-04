@@ -1,0 +1,52 @@
+<?xml version="1.0" ?>
+
+<!-- Created by: Francesco Montorsi <frm@users.sourceforge.net>     -->
+<!-- Creation date: 9/10/2004                                       -->
+<!-- RCS-ID: $Id                    -->
+
+<makefile>
+
+	<!-- Some defaults for the variables used by wxCode bakefiles -->
+	<set var="WXCODE_BAKEFILEDIR">../../../build/bakefiles</set>
+	<include file="$(WXCODE_BAKEFILEDIR)/defaults.bkl"/>
+	
+
+	<!-- Settings for this component -->
+	<!-- =========================== -->
+
+	<set var="COMP_NAME">DlgBased</set>
+	<set var="COMP_SRC"></set>
+	<set var="COMP_HDR"></set>
+	<set var="COMP_SAMPLE1_SRC">../samples/calc/calc.cpp</set>
+	<set var="COMP_SAMPLE1_HDR">../samples/calc/calcdlg.h</set>
+	<set var="COMP_SAMPLE2_SRC">../samples/dlgapp/dlgapp.cpp</set>
+	<set var="COMP_SAMPLE2_HDR"></set>
+
+	<!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->
+	<include file="$(WXCODE_BAKEFILEDIR)/wxcode.bkl"/>
+
+
+
+
+	<!-- Samples for this component -->
+	<!-- ========================== -->
+
+	<!-- The sample of the component: as for the LIB target, this exe derives from a 
+	     template contained in wxcode.bkl which can be modified here -->
+	<exe id="calc" template="compsample">
+		<dirname>../samples/calc</dirname>
+		<sources>$(COMP_SAMPLE1_SRC)</sources>
+		<headers>$(COMP_SAMPLE1_HDR)</headers>
+		<wx-lib>core</wx-lib>
+		<wx-lib>base</wx-lib>
+	</exe>
+	<exe id="dlgapp" template="compsample">
+		<dirname>../samples/dlgapp</dirname>
+		<sources>$(COMP_SAMPLE2_SRC)</sources>
+		<headers>$(COMP_SAMPLE2_HDR)</headers>
+		<wx-lib>core</wx-lib>
+		<wx-lib>base</wx-lib>
+	</exe>
+    	
+</makefile>
+
