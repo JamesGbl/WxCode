@@ -1,27 +1,14 @@
-Microsoft Developer Studio Workspace File, Format Version 5.00
+Microsoft Developer Studio Workspace File, Format Version 6.00
 # WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
 
 ###############################################################################
-
-Project: "SplashTextVC"=.\SplashTextVC.dsp - Package Owner=<4>
+Project: "splashtext"=splashtext.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
 }}}
 
 Package=<4>
-{{{
-}}}
-
-###############################################################################
-
-Global:
-
-Package=<5>
-{{{
-}}}
-
-Package=<3>
 {{{
 }}}
 
