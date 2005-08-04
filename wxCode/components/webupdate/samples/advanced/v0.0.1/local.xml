@@ -5,7 +5,7 @@
 	<dlgxrc>wxWebUpdateDlg</dlgxrc>
 	<remoteuri>http://wxcode.sourceforge.net/components/webupdate/script2.xml</remoteuri>
 
-	<local-package id="simple">
+	<local-package id="core">
 		<version>0.0.1</version>
 	</local-package>
 </webupdate>

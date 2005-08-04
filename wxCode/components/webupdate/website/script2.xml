@@ -60,7 +60,7 @@
 
    <!-- our ADDON3 package -->
    <package id="addon3">
-	  <requires>core</requires>
+	  <requires>core,addon1,addon2</requires>
       <latest-version importance="low">1.5.0</latest-version>      
 
 	  <!-- a single download for all platforms -->

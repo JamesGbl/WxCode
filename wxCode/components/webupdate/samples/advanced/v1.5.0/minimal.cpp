@@ -77,8 +77,7 @@ enum
     Minimal_About = wxID_ABOUT,
 
 				// these were added by me
-	Minimal_UpdateCheckSimple,
-	Minimal_UpdateCheckWithDlg,
+	Minimal_UpdateCheck
 };
 
 // Define a new frame type: this is going to be our main frame
@@ -93,8 +92,7 @@ public:
     void OnQuit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
 
-	void OnUpdateCheckSimple(wxCommandEvent& event);
-	void OnUpdateCheckAdv(wxCommandEvent& event);
+	void OnUpdateCheck(wxCommandEvent& event);
 
 private:
     // any class wishing to process wxWindows events must use this macro
@@ -112,8 +110,7 @@ BEGIN_EVENT_TABLE(MyFrame, wxFrame)
     EVT_MENU(Minimal_Quit,  MyFrame::OnQuit)
     EVT_MENU(Minimal_About, MyFrame::OnAbout)
 
-    EVT_MENU(Minimal_UpdateCheckSimple, MyFrame::OnUpdateCheckSimple)
-    EVT_MENU(Minimal_UpdateCheckWithDlg, MyFrame::OnUpdateCheckAdv)
+    EVT_MENU(Minimal_UpdateCheck, MyFrame::OnUpdateCheck)
 END_EVENT_TABLE()
 
 // Create a new application object: this macro will allow wxWindows to create
@@ -198,17 +195,14 @@ MyFrame::MyFrame(const wxString& title)
 	st->SetFont(f);
 	sz->Add(st, 0, wxGROW | wxALL, 5);
     sz->Add(new wxTextCtrl(panel, -1, 
-		wxT("This program provides an example of the WebUpdate component simplest features:\n")
-		wxT(" 1) all the configuration settings of the webupdater are saved in an XML file (the 'local script').\n\n")
-		wxT(" 2) all the informations about the updates are saved in another XML file (the 'remote script') which ")
-		wxT("can be placed in your webserver or on a CDROM or other support.\n\n")
-		wxT(" 3) the webupdater is able to replace the program executable since it runs when ")
-  		wxT("the target program, i.e. the program to update, is not running.\n\n")
-		wxT(" 4) the GUI of the WebUpdater can be chosen at run-time since it loads it from an XRC file. ")
-		wxT("The name of the XRC file loaded is fixed but the name of the resource loaded is defined in the ")
-		wxT("local XML script so that you can easily change the GUI of the WebUpdater keeping untouched the EXE.\n")
-		wxT("In fact, the only difference between the two 'File' menuitems is that they tell WebUpdater to use ")
-		wxT("different dialogs for the update process...\n\n")
+		wxT("This program provides an example of some 'advanced' WebUpdate component features:\n")
+		wxT(" 1) multiple packages (core, addon1, addon2, addon3).\n\n")
+		wxT(" 2) how to write cross-platform remote script (see the scrip2.xml file in the website\\ folder)\n\n")
+		wxT(" 3) dependencies among the packages\n\n")
+		wxT("Unlike the simple samples, this program does not allow you to use the wxWebUpdateSimpleDlg resources ")
+		wxT("for updating the application but this is only because this advanced application's aim is mainly to show ")
+		wxT("you how to use multiple packages for the same application and thus the full wxWebUpdateDlg is required ")
+		wxT("since wxWebUpdateSimpleDlg does not show the package list...\n\n")
     	wxT("For more info and for the full list of WebUpdater features, look at the WebUpdate documentation."),
 		wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE), 1, wxGROW);
 
@@ -225,9 +219,7 @@ MyFrame::MyFrame(const wxString& title)
 #if wxUSE_MENUS
     // create a menu bar
     wxMenu *menuFile = new wxMenu;
-    menuFile->Append(Minimal_UpdateCheckSimple, _T("Check for updates (simple)"), 
-            _T("Checks for updates and eventually downloads the update version..."));	
-    menuFile->Append(Minimal_UpdateCheckWithDlg, _T("Check for updates (advanced)"), 
+    menuFile->Append(Minimal_UpdateCheck, _T("Check for updates..."), 
             _T("Checks for updates and eventually downloads the update version..."));	
     menuFile->Append(Minimal_Quit, _T("E&xit\tAlt-X"), _T("Quit this program"));	
     
@@ -293,13 +285,9 @@ void wxUpdateAndExit(wxFrame *caller, const wxString &xrc, const wxString &xml)
 #endif
 }
 
-void MyFrame::OnUpdateCheckSimple(wxCommandEvent &)
+void MyFrame::OnUpdateCheck(wxCommandEvent &)
 {
-	wxUpdateAndExit(this, wxT("webupdatedlg.xrc"), wxT("simple.xml"));
+	wxUpdateAndExit(this, wxT("webupdatedlg.xrc"), wxT("local.xml"));
 }
 
-void MyFrame::OnUpdateCheckAdv(wxCommandEvent &)
-{
-	wxUpdateAndExit(this, wxT("webupdatedlg.xrc"), wxT("adv.xml"));
-}
 
