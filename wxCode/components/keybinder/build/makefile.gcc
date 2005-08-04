@@ -74,7 +74,7 @@ MINIMAL_OBJECTS =  \
 ### Conditionally set variables: ###
 
 ifeq ($(WX_DEBUG),1)
-WX3RDPARTYLIBPOSTFIX = d
+WX3RDPARTLIBPOSTFIX = d
 endif
 ifeq ($(WX_SHARED),0)
 __keybinder_lib___depname = ..\lib\libkeybinder$(WXLIBPOSTFIX).a
@@ -242,28 +242,28 @@ endif
 
 ifeq ($(WX_SHARED),1)
 ..\lib\keybinder$(WXLIBPOSTFIX).dll: $(KEYBINDER_DLL_OBJECTS)
-	$(CXX) -shared -fPIC -o $@ $(KEYBINDER_DLL_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -Wl,--out-implib,..\lib\libkeybinder$(WXLIBPOSTFIX).a  -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+	$(CXX) -shared -fPIC -o $@ $(KEYBINDER_DLL_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -Wl,--out-implib,..\lib\libkeybinder$(WXLIBPOSTFIX).a  -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTLIBPOSTFIX) -lwxjpeg$(WX3RDPARTLIBPOSTFIX) -lwxpng$(WX3RDPARTLIBPOSTFIX) -lwxzlib$(WX3RDPARTLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 endif
 
 ..\sample\minimal.exe: $(MINIMAL_OBJECTS) mingw\minimal_minimal_rc.o $(__keybinder_lib___depname)
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -Wl,--subsystem,windows -mwindows  ..\lib\libkeybinder$(WXLIBPOSTFIX).a -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -Wl,--subsystem,windows -mwindows  ..\lib\libkeybinder$(WXLIBPOSTFIX).a -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTLIBPOSTFIX) -lwxjpeg$(WX3RDPARTLIBPOSTFIX) -lwxpng$(WX3RDPARTLIBPOSTFIX) -lwxzlib$(WX3RDPARTLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
-mingw\keybinder_lib_keybinder.o: ../src/keybinder.cpp
+mingw\keybinder_lib_keybinder.o: ./../src/keybinder.cpp
 	$(CXX) -c -o $@ $(KEYBINDER_LIB_CXXFLAGS) $(CPPDEPS) $<
 
-mingw\keybinder_lib_menuutils.o: ../src/menuutils.cpp
+mingw\keybinder_lib_menuutils.o: ./../src/menuutils.cpp
 	$(CXX) -c -o $@ $(KEYBINDER_LIB_CXXFLAGS) $(CPPDEPS) $<
 
-mingw\keybinder_dll_keybinder.o: ../src/keybinder.cpp
+mingw\keybinder_dll_keybinder.o: ./../src/keybinder.cpp
 	$(CXX) -c -o $@ $(KEYBINDER_DLL_CXXFLAGS) $(CPPDEPS) $<
 
-mingw\keybinder_dll_menuutils.o: ../src/menuutils.cpp
+mingw\keybinder_dll_menuutils.o: ./../src/menuutils.cpp
 	$(CXX) -c -o $@ $(KEYBINDER_DLL_CXXFLAGS) $(CPPDEPS) $<
 
-mingw\minimal_minimal.o: ../src/../sample/minimal.cpp
+mingw\minimal_minimal.o: ./../sample/minimal.cpp
 	$(CXX) -c -o $@ $(MINIMAL_CXXFLAGS) $(CPPDEPS) $<
 
-mingw\minimal_minimal_rc.o: ../src/../sample/minimal.rc
+mingw\minimal_minimal_rc.o: ./../sample/minimal.rc
 	windres --use-temp-file -i$< -o$@ $(__WX_SHAREDDEFINE_p_4) --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_4) $(__WXDEBUG_DEFINE_p_4) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ..\include --include-dir ..\sample
 
 .PHONY: all clean

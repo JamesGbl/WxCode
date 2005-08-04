@@ -14,6 +14,7 @@ EXEEXT = @EXEEXT@
 RESCOMP = @RESCOMP@
 SETFILE = @SETFILE@
 NM = @NM@
+srcdir = @srcdir@
 top_builddir = @top_builddir@
 libdir = @libdir@
 includedir = @includedir@
@@ -28,10 +29,9 @@ WX_LIBS = @WX_LIBS@
 ### Variables: ###
 
 DESTDIR = 
-WEBUPDATER_CXXFLAGS = -I../include $(__HTTPENGINEDEP_DEF_p) $(WX_CXXFLAGS) \
-	$(CPPFLAGS) $(CXXFLAGS)
+WEBUPDATER_CXXFLAGS = -I../include -I../include $(__HTTPENGINEDEP_DEF_p) \
+	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 WEBUPDATER_OBJECTS =  \
-	$(__webupdater___win32rc) \
 	webupdater_webupdate.o \
 	webupdater_webupdatedlg.o \
 	webupdater_checkedlistctrl.o \
@@ -39,7 +39,8 @@ WEBUPDATER_OBJECTS =  \
 	webupdater_installer.o \
 	webupdater_download.o \
 	webupdater_stdactions.o \
-	webupdater_app.o
+	webupdater_app.o \
+	$(__webupdater___win32rc)
 SIMPLE_1_0_0_CXXFLAGS = -I../include -I../../include $(WX_CXXFLAGS) $(CPPFLAGS) \
 	$(CXXFLAGS)
 SIMPLE_1_0_0_OBJECTS =  \
@@ -274,55 +275,55 @@ rep4_adv150:
 	$(__advanced)
 	$(__advanced_0)
 
-webupdater_app_rc.o: ../src/../src/app.rc
-	$(RESCOMP) -i$< -o$@  --include-dir ../include  $(__HTTPENGINEDEP_DEF_p_2) --include-dir ../src
+webupdater_webupdate.o: $(srcdir)/../src/webupdate.cpp
+	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) $(srcdir)/../src/webupdate.cpp
 
-webupdater_webupdate.o: ../src/webupdate.cpp
-	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) ../src/webupdate.cpp
+webupdater_webupdatedlg.o: $(srcdir)/../src/webupdatedlg.cpp
+	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) $(srcdir)/../src/webupdatedlg.cpp
 
-webupdater_webupdatedlg.o: ../src/webupdatedlg.cpp
-	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) ../src/webupdatedlg.cpp
+webupdater_checkedlistctrl.o: $(srcdir)/../src/checkedlistctrl.cpp
+	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) $(srcdir)/../src/checkedlistctrl.cpp
 
-webupdater_checkedlistctrl.o: ../src/checkedlistctrl.cpp
-	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) ../src/checkedlistctrl.cpp
+webupdater_md5.o: $(srcdir)/../src/md5.cpp
+	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) $(srcdir)/../src/md5.cpp
 
-webupdater_md5.o: ../src/md5.cpp
-	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) ../src/md5.cpp
+webupdater_installer.o: $(srcdir)/../src/installer.cpp
+	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) $(srcdir)/../src/installer.cpp
 
-webupdater_installer.o: ../src/installer.cpp
-	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) ../src/installer.cpp
+webupdater_download.o: $(srcdir)/../src/download.cpp
+	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) $(srcdir)/../src/download.cpp
 
-webupdater_download.o: ../src/download.cpp
-	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) ../src/download.cpp
+webupdater_stdactions.o: $(srcdir)/../src/stdactions.cpp
+	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) $(srcdir)/../src/stdactions.cpp
 
-webupdater_stdactions.o: ../src/stdactions.cpp
-	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) ../src/stdactions.cpp
+webupdater_app.o: $(srcdir)/../src/app.cpp
+	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) $(srcdir)/../src/app.cpp
 
-webupdater_app.o: ../src/app.cpp
-	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) ../src/app.cpp
+webupdater_app_rc.o: $(srcdir)/../src/app.rc
+	$(RESCOMP) -i$< -o$@  --include-dir ../include --include-dir ../include  $(__HTTPENGINEDEP_DEF_p_2) --include-dir ../src
 
-simple_1_0_0_minimal.o: ../src/../samples/simple/v1.0.0/minimal.cpp
-	$(CXXC) -c -o $@ $(SIMPLE_1_0_0_CXXFLAGS) ../src/../samples/simple/v1.0.0/minimal.cpp
+simple_1_0_0_minimal.o: $(srcdir)/../samples/simple/v1.0.0/minimal.cpp
+	$(CXXC) -c -o $@ $(SIMPLE_1_0_0_CXXFLAGS) $(srcdir)/../samples/simple/v1.0.0/minimal.cpp
 
-simple_1_0_0_minimal_rc.o: ../src/../samples/simple/v1.0.0/minimal.rc
+simple_1_0_0_minimal_rc.o: $(srcdir)/../samples/simple/v1.0.0/minimal.rc
 	$(RESCOMP) -i$< -o$@  --include-dir ../include --include-dir ../../include --include-dir ../samples/simple/v1.0.0
 
-simple_2_0_3_minimal.o: ../src/../samples/simple/v2.0.3/minimal.cpp
-	$(CXXC) -c -o $@ $(SIMPLE_2_0_3_CXXFLAGS) ../src/../samples/simple/v2.0.3/minimal.cpp
+simple_2_0_3_minimal.o: $(srcdir)/../samples/simple/v2.0.3/minimal.cpp
+	$(CXXC) -c -o $@ $(SIMPLE_2_0_3_CXXFLAGS) $(srcdir)/../samples/simple/v2.0.3/minimal.cpp
 
-simple_2_0_3_minimal_rc.o: ../src/../samples/simple/v2.0.3/minimal.rc
+simple_2_0_3_minimal_rc.o: $(srcdir)/../samples/simple/v2.0.3/minimal.rc
 	$(RESCOMP) -i$< -o$@  --include-dir ../include --include-dir ../../include --include-dir ../samples/simple/v2.0.3
 
-advanced_0_0_1_minimal.o: ../src/../samples/advanced/v0.0.1/minimal.cpp
-	$(CXXC) -c -o $@ $(ADVANCED_0_0_1_CXXFLAGS) ../src/../samples/advanced/v0.0.1/minimal.cpp
+advanced_0_0_1_minimal.o: $(srcdir)/../samples/advanced/v0.0.1/minimal.cpp
+	$(CXXC) -c -o $@ $(ADVANCED_0_0_1_CXXFLAGS) $(srcdir)/../samples/advanced/v0.0.1/minimal.cpp
 
-advanced_0_0_1_minimal_rc.o: ../src/../samples/advanced/v0.0.1/minimal.rc
+advanced_0_0_1_minimal_rc.o: $(srcdir)/../samples/advanced/v0.0.1/minimal.rc
 	$(RESCOMP) -i$< -o$@  --include-dir ../include --include-dir ../../include --include-dir ../samples/advanced/v0.0.1
 
-advanced_1_5_0_minimal.o: ../src/../samples/advanced/v1.5.0/minimal.cpp
-	$(CXXC) -c -o $@ $(ADVANCED_1_5_0_CXXFLAGS) ../src/../samples/advanced/v1.5.0/minimal.cpp
+advanced_1_5_0_minimal.o: $(srcdir)/../samples/advanced/v1.5.0/minimal.cpp
+	$(CXXC) -c -o $@ $(ADVANCED_1_5_0_CXXFLAGS) $(srcdir)/../samples/advanced/v1.5.0/minimal.cpp
 
-advanced_1_5_0_minimal_rc.o: ../src/../samples/advanced/v1.5.0/minimal.rc
+advanced_1_5_0_minimal_rc.o: $(srcdir)/../samples/advanced/v1.5.0/minimal.rc
 	$(RESCOMP) -i$< -o$@  --include-dir ../include --include-dir ../../include --include-dir ../samples/advanced/v1.5.0
 
 

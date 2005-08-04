@@ -124,7 +124,7 @@ COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd = $(NM) minimal$(EXEEXT) | if \
 
 all: $(__wxxml2_lib___depname) $(__wxxml2_dll___depname) ../sample/minimal$(EXEEXT)
 
-install: all $(__install_wxxml2_lib___depname) $(__install_wxxml2_dll___depname)
+install: all install-wxheaders $(__install_wxxml2_lib___depname) $(__install_wxxml2_dll___depname)
 
 uninstall: 
 	rm -f  $(DESTDIR)$(includedir)/wx/xml2def.h\
@@ -222,6 +222,10 @@ docs:
 
 cleandocs: 
 	rm -rf ../docs/html
+
+install-wxheaders: 
+	$(INSTALL_DIR) $(DESTDIR)$(includedir)/wx
+	(cd $(srcdir) ; $(INSTALL_DATA)  ../include/wx/*.h $(DESTDIR)$(includedir)/wx)
 
 @COND_WX_SHARED_0@../lib/$(LIBPREFIX)wxxml2$(LIBEXT): $(WXXML2_LIB_OBJECTS)
 @COND_WX_SHARED_0@	rm -f $@

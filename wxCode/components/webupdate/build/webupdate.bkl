@@ -67,7 +67,7 @@
 	</set>
 	
 	<!-- WebUpdate does not provide libraries... -->
-	<exe id="webupdater" template="basic,wx,wxcode-basic">
+	<exe id="webupdater" template="compexe">
 		<lib-path>$(HTTPENGINEDEP_LIBPATH)</lib-path>
 		<include>$(HTTPENGINEDEP_INCPATH)</include>
 		<define>$(HTTPENGINEDEP_DEF)</define>
@@ -76,9 +76,6 @@
 		<dirname>../src</dirname>
 		<res-include>../src</res-include>
 		<win32-res>..$(DIRSEP)src$(DIRSEP)app.rc</win32-res>
-		
-		<sources>$(COMP_SRC)</sources>
-		<headers>$(PCOMP_HDR)</headers>
 		
 		<msvc-file-group>XRC:*.xrc</msvc-file-group>
 		<msvc-project-files>..\src\webupdatedlg.xrc</msvc-project-files>

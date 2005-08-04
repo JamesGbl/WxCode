@@ -431,7 +431,7 @@ cleandocs :
 	@for %i in ($(WXSCRIPT_DLL_OBJECTS)) do @%append watcom\wxscript_dll.lbc file %i
 	@for %i in ( $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\wxscript_dll.lbc library %i
 	@%append watcom\wxscript_dll.lbc
-	@%append watcom\wxscript_dll.lbc system nt_dll
+	@%append watcom\wxscript_dll.lbc system nr_dll
 	wlink @watcom\wxscript_dll.lbc
 	wlib -q -n -b ..\lib\wxscript$(WXLIBPOSTFIX).lib +$^@
 !endif
@@ -459,38 +459,38 @@ cleandocs :
 	wlink @watcom\test2.lbc
 
 watcom\wxscript_lib_script.obj :  .AUTODEPEND .\..\src\script.cpp
-	$(CXX) -zq -fo=$^@ $(WXSCRIPT_LIB_CXXFLAGS) $<
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSCRIPT_LIB_CXXFLAGS) $<
 
 watcom\wxscript_lib_scpython.obj :  .AUTODEPEND .\..\src\scpython.cpp
-	$(CXX) -zq -fo=$^@ $(WXSCRIPT_LIB_CXXFLAGS) $<
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSCRIPT_LIB_CXXFLAGS) $<
 
 watcom\wxscript_lib_sccint.obj :  .AUTODEPEND .\..\src\sccint.cpp
-	$(CXX) -zq -fo=$^@ $(WXSCRIPT_LIB_CXXFLAGS) $<
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSCRIPT_LIB_CXXFLAGS) $<
 
 watcom\wxscript_lib_scunderc.obj :  .AUTODEPEND .\..\src\scunderc.cpp
-	$(CXX) -zq -fo=$^@ $(WXSCRIPT_LIB_CXXFLAGS) $<
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSCRIPT_LIB_CXXFLAGS) $<
 
 watcom\wxscript_lib_sclua.obj :  .AUTODEPEND .\..\src\sclua.cpp
-	$(CXX) -zq -fo=$^@ $(WXSCRIPT_LIB_CXXFLAGS) $<
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSCRIPT_LIB_CXXFLAGS) $<
 
 watcom\wxscript_dll_script.obj :  .AUTODEPEND .\..\src\script.cpp
-	$(CXX) -zq -fo=$^@ $(WXSCRIPT_DLL_CXXFLAGS) $<
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSCRIPT_DLL_CXXFLAGS) $<
 
 watcom\wxscript_dll_scpython.obj :  .AUTODEPEND .\..\src\scpython.cpp
-	$(CXX) -zq -fo=$^@ $(WXSCRIPT_DLL_CXXFLAGS) $<
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSCRIPT_DLL_CXXFLAGS) $<
 
 watcom\wxscript_dll_sccint.obj :  .AUTODEPEND .\..\src\sccint.cpp
-	$(CXX) -zq -fo=$^@ $(WXSCRIPT_DLL_CXXFLAGS) $<
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSCRIPT_DLL_CXXFLAGS) $<
 
 watcom\wxscript_dll_scunderc.obj :  .AUTODEPEND .\..\src\scunderc.cpp
-	$(CXX) -zq -fo=$^@ $(WXSCRIPT_DLL_CXXFLAGS) $<
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSCRIPT_DLL_CXXFLAGS) $<
 
 watcom\wxscript_dll_sclua.obj :  .AUTODEPEND .\..\src\sclua.cpp
-	$(CXX) -zq -fo=$^@ $(WXSCRIPT_DLL_CXXFLAGS) $<
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXSCRIPT_DLL_CXXFLAGS) $<
 
 watcom\test1_test.obj :  .AUTODEPEND .\..\tests\test1\test.cpp
-	$(CXX) -zq -fo=$^@ $(TEST1_CXXFLAGS) $<
+	$(CXX) -bt=nt -zq -fo=$^@ $(TEST1_CXXFLAGS) $<
 
 watcom\test2_test.obj :  .AUTODEPEND .\..\tests\test2\test.cpp
-	$(CXX) -zq -fo=$^@ $(TEST2_CXXFLAGS) $<
+	$(CXX) -bt=nt -zq -fo=$^@ $(TEST2_CXXFLAGS) $<
 

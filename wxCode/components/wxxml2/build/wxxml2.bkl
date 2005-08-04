@@ -21,9 +21,10 @@
 	</option>
 
 	<set var="COMP_NAME">wxxml2</set>
-	<set var="COMP_SRC">../src/xml2.cpp ../src/dtd.cpp</set>
-	<set var="COMP_HDR">../include/wx/xml2def.h ../include/wx/xml2.h ../include/wx/dtd.h</set>	
-	<set var="COMP_SAMPLE_SRC">../sample/minimal.cpp</set>
+	<set var="COMP_SRC">xml2.cpp dtd.cpp</set>
+	<set var="COMP_HDR">wx/xml2def.h wx/xml2.h wx/dtd.h</set>	
+	<set var="COMP_SAMPLE_DIR">../sample</set>
+	<set var="COMP_SAMPLE_SRC">minimal.cpp</set>
 	<set var="WX_UNICODE_DEFAULT">1</set>
 	<set var="WX_VERSION_DEFAULT">26</set>
 

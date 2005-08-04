@@ -31,11 +31,11 @@ class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDlg;
 
 extern WXDLLIMPEXP_DATA_WEBUPDATE(wxWebUpdateDownload) wxEmptyWebUpdateDownload;
 
-// the message sent to wxApp by wxWebUpdateActionExit
-DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_WEBUPDATE, wxWUAE_EXIT, -1);
-
 // the message sent to wxApp by wxWebUpdateActionRun
-DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_WEBUPDATE, wxWUAR_EXECUTE, -1);
+DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_WEBUPDATE, wxEVT_COMMAND_EXECUTE, -1);
+
+#define EVT_EXECUTE(id, func)		\
+	EVT_COMMAND(id, wxEVT_COMMAND_EXECUTE, func)
 
 
 //! The "run" action.

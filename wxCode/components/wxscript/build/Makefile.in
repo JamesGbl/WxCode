@@ -165,7 +165,7 @@ COND_USE_SOSYMLINKS_1___wxscript_dll___so_symlinks_inst_cmd = rm -f \
 
 all: $(__wxscript_lib___depname) $(__wxscript_dll___depname) ../tests/test1/test1$(EXEEXT) ../tests/test2/test2$(EXEEXT)
 
-install: all $(__install_wxscript_lib___depname) $(__install_wxscript_dll___depname)
+install: all install-wxheaders $(__install_wxscript_lib___depname) $(__install_wxscript_dll___depname)
 
 uninstall: 
 	rm -f  $(DESTDIR)$(includedir)/wx/script.h\
@@ -267,6 +267,10 @@ docs:
 
 cleandocs: 
 	rm -rf ../docs/html
+
+install-wxheaders: 
+	$(INSTALL_DIR) $(DESTDIR)$(includedir)/wx
+	(cd $(srcdir) ; $(INSTALL_DATA)  ../include/wx/*.h $(DESTDIR)$(includedir)/wx)
 
 @COND_WX_SHARED_0@../lib/$(LIBPREFIX)wxscript$(LIBEXT): $(WXSCRIPT_LIB_OBJECTS)
 @COND_WX_SHARED_0@	rm -f $@

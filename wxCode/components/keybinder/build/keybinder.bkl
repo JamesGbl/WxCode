@@ -17,7 +17,8 @@
 	<set var="COMP_NAME">keybinder</set>
 	<set var="COMP_SRC">keybinder.cpp menuutils.cpp</set>
 	<set var="COMP_HDR">wx/keybinderdef.h wx/keybinder.h wx/menuutils.h</set>	
-	<set var="COMP_SAMPLE_SRC">../sample/minimal.cpp</set>
+	<set var="COMP_SAMPLE_DIR">../sample</set>
+	<set var="COMP_SAMPLE_SRC">minimal.cpp</set>
 	<set var="WX_UNICODE_DEFAULT">1</set>
 	<set var="WX_VERSION_DEFAULT">26</set>
 

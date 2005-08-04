@@ -59,6 +59,7 @@
 #include <wx/textfile.h>
 
 #include "wx/webupdatedlg.h"
+#include "wx/stdactions.h"
 
 
 // ----------------------------------------------------------------------------
@@ -174,6 +175,14 @@ public:
     
     // Closes the WebUpdaterApp.
 	virtual int OnExit();
+
+public:			// we need to intercept the execute event; see wxWebUpdateActionRun::Run
+				// for more info
+
+    void OnExecute(wxCommandEvent &event);
+
+private:	
+    DECLARE_EVENT_TABLE()
 };
 
 
@@ -206,6 +215,9 @@ private:
 // ----------------------------------------------------------------------------
 
 IMPLEMENT_APP(WebUpdaterApp)
+BEGIN_EVENT_TABLE(WebUpdaterApp, wxApp)
+	EVT_EXECUTE(-1, WebUpdaterApp::OnExecute)
+END_EVENT_TABLE()
 BEGIN_EVENT_TABLE(WebUpdaterDlg, wxWebUpdateDlg)
 	EVT_CLOSE(WebUpdaterDlg::OnQuit)
 END_EVENT_TABLE()
@@ -390,6 +402,15 @@ int WebUpdaterApp::OnExit()
 	return wxApp::OnExit();
 }
 
+void WebUpdaterApp::OnExecute(wxCommandEvent &ce)
+{
+	wxString cmd = ce.GetString();
+	int flags = ce.GetInt();
+
+	wxLogDebug(wxT("WebUpdaterApp::OnExecute - executing the command:\n\n\t\t") +
+				cmd + wxT("\n\n with flags: %d"), flags);
+	wxExecute(cmd, flags);
+}
 
 
 // ----------------------------------------------------------------------------

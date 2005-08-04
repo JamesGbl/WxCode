@@ -284,7 +284,7 @@ cleandocs :
 	@for %i in ($(WXXML2_DLL_OBJECTS)) do @%append watcom\wxxml2_dll.lbc file %i
 	@for %i in ( libxml2.lib iconv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\wxxml2_dll.lbc library %i
 	@%append watcom\wxxml2_dll.lbc
-	@%append watcom\wxxml2_dll.lbc system nt_dll
+	@%append watcom\wxxml2_dll.lbc system nr_dll
 	wlink @watcom\wxxml2_dll.lbc
 	wlib -q -n -b ..\lib\wxxml2$(WXLIBPOSTFIX).lib +$^@
 !endif
@@ -301,17 +301,17 @@ cleandocs :
 	wlink @watcom\minimal.lbc
 
 watcom\wxxml2_lib_xml2.obj :  .AUTODEPEND .\..\src\xml2.cpp
-	$(CXX) -zq -fo=$^@ $(WXXML2_LIB_CXXFLAGS) $<
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXXML2_LIB_CXXFLAGS) $<
 
 watcom\wxxml2_lib_dtd.obj :  .AUTODEPEND .\..\src\dtd.cpp
-	$(CXX) -zq -fo=$^@ $(WXXML2_LIB_CXXFLAGS) $<
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXXML2_LIB_CXXFLAGS) $<
 
 watcom\wxxml2_dll_xml2.obj :  .AUTODEPEND .\..\src\xml2.cpp
-	$(CXX) -zq -fo=$^@ $(WXXML2_DLL_CXXFLAGS) $<
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXXML2_DLL_CXXFLAGS) $<
 
 watcom\wxxml2_dll_dtd.obj :  .AUTODEPEND .\..\src\dtd.cpp
-	$(CXX) -zq -fo=$^@ $(WXXML2_DLL_CXXFLAGS) $<
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXXML2_DLL_CXXFLAGS) $<
 
 watcom\minimal_minimal.obj :  .AUTODEPEND .\..\sample\minimal.cpp
-	$(CXX) -zq -fo=$^@ $(MINIMAL_CXXFLAGS) $<
+	$(CXX) -bt=nt -zq -fo=$^@ $(MINIMAL_CXXFLAGS) $<
 

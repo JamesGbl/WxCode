@@ -120,6 +120,9 @@ public:		// keywords hashmap
 	//! Does string substitution using the current keyword hashmap.
 	wxString DoKeywordSubstitution(const wxString &str);
 
+	//! Does the '//' string substitution.
+	wxString DoPathSubstitution(const wxString &str);
+
 	virtual void InitDefaultKeywords();
 	virtual void FreeKeywords();
 

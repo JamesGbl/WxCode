@@ -45,7 +45,6 @@ DEFINE_EVENT_TYPE(wxEVT_COMMAND_INSTALLATION_COMPLETE);
 
 // global objects
 wxWebUpdateInstaller *wxWebUpdateInstaller::m_pTheInstaller = NULL;
-//wxWebUpdater *wxWebUpdater::m_pTheUpdater = NULL;
 
 
 
@@ -220,7 +219,7 @@ void wxWebUpdateInstaller::InitDefaultKeywords()
 		wxT("mv -f");
 #endif
 	m_hashKeywords[wxT("cd")] = wxT("cd");
-
+	m_hashKeywords[wxT("mkdir")] = wxT("mkdir");
 }
 
 void wxWebUpdateInstaller::FreeKeywords()
@@ -285,6 +284,12 @@ wxString wxWebUpdateInstaller::DoKeywordSubstitution(const wxString &str)
 	return text;
 }
 
+wxString wxWebUpdateInstaller::DoPathSubstitution(const wxString &str)
+{
+	wxString copy(str), sep = wxFileName::GetPathSeparator();
+	copy.Replace(wxT("//"), sep);
+	return copy;
+}
 
 
 
@@ -338,50 +343,3 @@ void *wxWebUpdateInstallThread::Entry()
 }
 
 
-
-// -------------------------
-// wxWEBUPDATER
-// -------------------------
-/*
-void wxWebUpdater::OnUpdateExit(wxCommandEvent &)
-{
-	if (m_pWebUpdateDlg) {
-
-		// close any wxWebUpdateDlg(-derived) window which is open
-		wxLogDebug(wxT("wxWebUpdater::OnUpdateExit - closing the WebUpdate dialog"));
-		m_pWebUpdateDlg->AbortDialog();
-		m_pWebUpdateDlg->Destroy();
-	}
-
-	// close the main window => close the app
-	wxLogDebug(wxT("wxWebUpdater::OnUpdateExit - exiting the app"));
-	wxTheApp->GetTopWindow()->Close(true);
-}
-
-void wxWebUpdater::OnUpdateExec(wxCommandEvent &ce)
-{
-	wxString cmd = ce.GetString();
-	int flags = ce.GetInt();
-
-	wxLogDebug(wxT("wxWebUpdater::OnUpdateExec - executing the command:\n\n\t\t") +
-				cmd + wxT("\n\n with flags: %d"), flags);
-	/*long res =* ::wxExecute(cmd, flags);
-/*	if ((m_nExecFlag & wxEXEC_SYNC) && res != -1)
-		return TRUE;
-	if ((m_nExecFlag & wxEXEC_ASYNC) && res != 0)
-		return TRUE;
-	return FALSE;*
-}
-
-void wxWebUpdater::OnWebUpdateDlgShow(wxCommandEvent &ce)
-{
-	wxLogDebug(wxT("wxWebUpdater::OnWebUpdateDlgShow - a wxWebUpdate dialog has been shown"));
-	m_pWebUpdateDlg = (wxWebUpdateDlg *)ce.GetClientData();
-}
-
-void wxWebUpdater::OnWebUpdateDlgDestroy(wxCommandEvent &)
-{
-	wxLogDebug(wxT("wxWebUpdater::OnWebUpdateDlgDestroy - a wxWebUpdate dialog has been closed"));
-	m_pWebUpdateDlg = NULL;
-}
-*/

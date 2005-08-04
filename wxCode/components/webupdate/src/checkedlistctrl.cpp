@@ -339,8 +339,9 @@ void wxCheckedListCtrl::CheckAll(bool check)
 bool wxCheckedListCtrl::DeleteItem(long item)
 {
 	// shift our additional state array
-	for (int i=item,max=GetItemCount(); i < max-1; i++)
-		m_stateList[i] = m_stateList[i+1];
+	//for (int i=item,max=GetItemCount(); i < max-1; i++)
+	//	m_stateList[i] = m_stateList[i+1];
+	m_stateList.RemoveAt(item, 1);
 
 	return wxListCtrl::DeleteItem(item);
 }

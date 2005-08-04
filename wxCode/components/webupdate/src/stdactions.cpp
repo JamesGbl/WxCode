@@ -39,10 +39,7 @@
 
 
 // wxWidgets RTTI
-DEFINE_EVENT_TYPE(wxEVT_COMMAND_EXIT);
 DEFINE_EVENT_TYPE(wxEVT_COMMAND_EXECUTE);
-//DEFINE_EVENT_TYPE(wxEVT_COMMAND_EXIT);
-DEFINE_EVENT_TYPE(wxWUAR_EXECUTE);
 
 // default wxWebUpdate actions
 IMPLEMENT_CLASS(wxWebUpdateActionRun, wxWebUpdateAction)
@@ -50,10 +47,6 @@ IMPLEMENT_CLASS(wxWebUpdateActionExtract, wxWebUpdateAction)
 
 #include <wx/ptr_scpd.h>
 wxDEFINE_SCOPED_PTR_TYPE(wxArchiveEntry);
-
-// global objects
-//wxWebUpdateInstaller *wxWebUpdateInstaller::m_pTheInstaller = NULL;
-//wxWebUpdater *wxWebUpdater::m_pTheUpdater = NULL;
 
 
 
@@ -69,19 +62,22 @@ bool wxWebUpdateActionRun::Run() const
 	if (!f.FileExists()) {
 
 		wxLogDebug(wxT("wxWebUpdateActionRun::Run - the file \"") + m_strFile +
-				wxT("\" does not exist !"));
-		return FALSE;
+				wxT("\" does not exist; proceeding anyway (maybe it's in PATH)"));
+
+		// proceed: the executable could be in the system path...
 	}
 
 	// unfortunately we cannot use ::wxExecute from a secondary thread
 	// (and wxWebUpdateAction run from a wxWebUpdateInstallThread) so we
 	// are forced to send a message to wxApp which launches the command for us
-	wxCommandEvent runev(wxWUAR_EXECUTE);
+	wxCommandEvent runev(wxEVT_COMMAND_EXECUTE);
 	runev.SetString(m_strFile + wxT(" ") + m_strArgs);
 	runev.SetInt(m_nExecFlag | wxEXEC_NODISABLE | wxEXEC_NODISABLE);
-	//wxWebUpdater::Get()->AddPendingEvent(runev);
 	
-	// FIXME
+	// our app should process this event...
+	wxLogDebug(wxT("wxWebUpdateActionRun::Run - sending to wxTheApp the command:\n\n")
+				+ runev.GetString() + wxT("\n\nwith flags: %d"), runev.GetInt());
+	wxTheApp->AddPendingEvent(runev);
 
 	return TRUE;
 }
@@ -93,9 +89,12 @@ bool wxWebUpdateActionRun::SetProperties(const wxArrayString &propnames,
 
 	m_strArgs = wxEmptyString;			// the ARGS default value
 	for (int i=0; i < (int)propnames.GetCount(); i++) {
+		wxLogDebug(wxT("wxWebUpdateActionRun::SetProperties - name: [")
+				+ propnames[i] + wxT("], value: [") + propvalues[i] + wxT("]"));
+
 		if (propnames[i] == wxT("args"))
 			m_strArgs = propvalues[i];
-		else if (propnames[i] == wxT("file"))
+		else if (propnames[i] == wxT("file") || propnames[i] == wxT("cmd"))
 			m_strFile = propvalues[i];
 		else if (propnames[i] == wxT("flags"))
 			flags = propvalues[i];
@@ -117,12 +116,15 @@ bool wxWebUpdateActionRun::SetProperties(const wxArrayString &propnames,
 						+ flags);
 	}
 
+	if (m_strFile.IsEmpty())
+		m_strFile = wxWebUpdateInstaller::Get()->GetKeywordValue(wxT("thisfile"));
+
 	// validate the properties
 	wxFileName f(m_strFile);			// the FILE property is required !
 
 	// we won't do the wxFileName::FileExists check because the file we need to run
 	// could be a file which does not exist yet (e.g. its in the update package)
-	if (m_strFile.IsEmpty() || !f.IsOk()) 
+	if (!f.IsOk()) 
 		return FALSE;
 
 	return TRUE;
@@ -137,6 +139,10 @@ bool wxWebUpdateActionRun::SetProperties(const wxArrayString &propnames,
 
 bool wxWebUpdateActionExtract::Run() const
 {
+	wxLogDebug(wxT("wxWebUpdateActionExtract::Run - going to extract the file [")
+				+ m_strFile + wxT("] of type [") + m_strType + wxT("] in\n\n")
+				+ m_strWhere + wxT("\n\n"));
+
 	// wxFileName wants a path separator at the end of directory names
 	wxString dir(m_strWhere);
 	if (dir.Last() != wxFileName::GetPathSeparator())
@@ -166,6 +172,8 @@ bool wxWebUpdateActionExtract::Run() const
     {
         // access meta-data
         wxString name = entry->GetName();
+		wxLogDebug(wxT("wxWebUpdateActionExtract::Run - extracting [") + name +
+			wxT("] as [") + dir + name + wxT("]..."));
 
         // now just dump this entry to a new uncompressed file...
 		wxFileOutputStream out(dir + name);
@@ -187,6 +195,9 @@ bool wxWebUpdateActionExtract::SetProperties(const wxArrayString &propnames,
 	wxString flags;
 
 	for (int i=0; i < (int)propnames.GetCount(); i++) {
+		wxLogDebug(wxT("wxWebUpdateActionExtract::SetProperties - name: [")
+				+ propnames[i] + wxT("], value: [") + propvalues[i] + wxT("]"));
+
 		if (propnames[i] == wxT("where"))
 			m_strWhere = propvalues[i];
 		else if (propnames[i] == wxT("file"))

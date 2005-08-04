@@ -577,10 +577,15 @@ bool wxWebUpdateDlg::CheckForAllUpdated(bool forcedefaultmsg)
 
 		// get the local package info
 		wxWebUpdateLocalPackage &local = 
-			m_pUpdatesList->GetLocalPackage(arr[j].GetName());
-		wxASSERT_MSG(local.IsOk(), wxT("Error in the local/remote XML script"));
+			m_pUpdatesList->GetLocalPackage(arr[j].GetName());		
 
 		// do the version check
+		if (!local.IsOk()) {
+
+			// this package is not even installed on the user's PC !
+			allupdated = FALSE;
+			break;
+		}
 		if (arr[j].Check(local.GetVersion()) == wxWUCF_OUTOFDATE) {
 			allupdated = FALSE;
 			break;		// not all packages are uptodate

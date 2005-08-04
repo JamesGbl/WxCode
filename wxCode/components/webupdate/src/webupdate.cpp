@@ -718,7 +718,7 @@ wxWebUpdateActionArray wxWebUpdateXMLScript::GetActionArray(const wxXmlNode *act
 
 		wxString actname(child->GetName());
 		
-		// convert to a wxArrayString the properties
+		// convert to a wxArrayString the properties of this node
 		wxArrayString names, values;
 		wxXmlProperty *prop = child->GetProperties();
 		while (prop) {
@@ -726,7 +726,13 @@ wxWebUpdateActionArray wxWebUpdateXMLScript::GetActionArray(const wxXmlNode *act
 			names.Add(prop->GetName());
 			
 			// the values can contain keywords to substitute
-			values.Add(wxWebUpdateInstaller::Get()->DoKeywordSubstitution(prop->GetValue()));
+			wxString v = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(prop->GetValue());
+
+			// and also path separator characters
+			v = wxWebUpdateInstaller::Get()->DoPathSubstitution(v);
+
+			// add this new value
+			values.Add(v);
 			prop = prop->GetNext();
 		}
 		
