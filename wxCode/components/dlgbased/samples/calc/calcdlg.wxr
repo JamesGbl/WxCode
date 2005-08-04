@@ -1,48 +1,48 @@
-static char *dialog1 = "dialog(name = 'dialog1',\
-  style = 'wxRAISED_BORDER | wxCAPTION | wxTHICK_FRAME | wxSYSTEM_MENU',\
-  title = 'Calc',\
+static char *dialog1 = "dialog(name = wxT('dialog1'),\
+  style = wxT('wxRAISED_BORDER | wxCAPTION | wxTHICK_FRAME | wxSYSTEM_MENU'),\
+  title = wxT('Calc'),\
   id = 100,\
   x = 10, y = 10, width = 67, height = 106,\
-  background_colour = 'C0C0C0',\
+  background_colour = wxT('C0C0C0'),\
   use_dialog_units = 1,\
   use_system_defaults = 0,\
-  font = [8, 'wxSWISS', 'wxNORMAL', 'wxNORMAL', 0, 'MS Sans Serif'],\
-  control = [102, wxButton, '0', '0', 'button1', 4, 91, 12, 12, '',\
-      [8, 'wxSWISS', 'wxNORMAL', 'wxNORMAL', 0, 'MS Sans Serif']],\
-  control = [103, wxButton, '1', '0', 'button2', 4, 75, 12, 12, '',\
-      [8, 'wxSWISS', 'wxNORMAL', 'wxNORMAL', 0, 'MS Sans Serif']],\
-  control = [104, wxButton, '2', '0', 'button3', 20, 75, 12, 12, '',\
-      [8, 'wxSWISS', 'wxNORMAL', 'wxNORMAL', 0, 'MS Sans Serif']],\
-  control = [105, wxButton, '3', '0', 'button4', 36, 75, 12, 12, '',\
-      [8, 'wxSWISS', 'wxNORMAL', 'wxNORMAL', 0, 'MS Sans Serif']],\
-  control = [106, wxButton, '4', '0', 'button5', 4, 59, 12, 12, '',\
-      [8, 'wxSWISS', 'wxNORMAL', 'wxNORMAL', 0, 'MS Sans Serif']],\
-  control = [107, wxButton, '5', '0', 'button6', 20, 59, 12, 12, '',\
-      [8, 'wxSWISS', 'wxNORMAL', 'wxNORMAL', 0, 'MS Sans Serif']],\
-  control = [108, wxButton, '6', '0', 'button7', 36, 59, 12, 12, '',\
-      [8, 'wxSWISS', 'wxNORMAL', 'wxNORMAL', 0, 'MS Sans Serif']],\
-  control = [109, wxButton, '7', '0', 'button8', 4, 43, 12, 12, '',\
-      [8, 'wxSWISS', 'wxNORMAL', 'wxNORMAL', 0, 'MS Sans Serif']],\
-  control = [110, wxButton, '8', '0', 'button9', 20, 43, 12, 12, '',\
-      [8, 'wxSWISS', 'wxNORMAL', 'wxNORMAL', 0, 'MS Sans Serif']],\
-  control = [111, wxButton, '9', '0', 'button10', 36, 43, 12, 12, '',\
-      [8, 'wxSWISS', 'wxNORMAL', 'wxNORMAL', 0, 'MS Sans Serif']],\
-  control = [112, wxButton, '.', '0', 'button11', 20, 91, 12, 12, '',\
-      [8, 'wxSWISS', 'wxNORMAL', 'wxNORMAL', 0, 'MS Sans Serif']],\
-  control = [113, wxButton, '=', '0', 'button12', 36, 91, 12, 12, '',\
-      [8, 'wxSWISS', 'wxNORMAL', 'wxNORMAL', 0, 'MS Sans Serif']],\
-  control = [117, wxButton, '/', '0', 'button13', 52, 43, 12, 12, '',\
-      [8, 'wxSWISS', 'wxNORMAL', 'wxNORMAL', 0, 'MS Sans Serif']],\
-  control = [116, wxButton, 'x', '0', 'button14', 52, 59, 12, 12, '',\
-      [8, 'wxSWISS', 'wxNORMAL', 'wxNORMAL', 0, 'MS Sans Serif']],\
-  control = [115, wxButton, '-', '0', 'button15', 52, 75, 12, 12, '',\
-      [8, 'wxSWISS', 'wxNORMAL', 'wxNORMAL', 0, 'MS Sans Serif']],\
-  control = [114, wxButton, '+', '0', 'button16', 52, 91, 12, 12, '',\
-      [8, 'wxSWISS', 'wxNORMAL', 'wxNORMAL', 0, 'MS Sans Serif']],\
-  control = [118, wxButton, 'C', '0', 'button17', 4, 28, 29, 12, '',\
-      [8, 'wxSWISS', 'wxNORMAL', 'wxNORMAL', 0, 'MS Sans Serif']],\
-  control = [119, wxButton, 'OFF', '0', 'button18', 36, 28, 28, 12, '',\
-      [8, 'wxSWISS', 'wxNORMAL', 'wxNORMAL', 0, 'MS Sans Serif']],\
-  control = [101, wxStaticText, '000000000000', '0', 'lblDisp', 4, 7, 56, 13, '',\
-      [10, 'wxSWISS', 'wxNORMAL', 'wxNORMAL', 0]]).";
+  font = [8, wxT('wxSWISS'), wxT('wxNORMAL'), wxT('wxNORMAL'), 0, wxT('MS Sans Serif')],\
+  control = [102, wxButton, wxT('0'), wxT('0'), wxT('button1'), 4, 91, 12, 12, wxT(''),\
+      [8, wxT('wxSWISS'), wxT('wxNORMAL'), wxT('wxNORMAL'), 0, wxT('MS Sans Serif')]],\
+  control = [103, wxButton, wxT('1'), wxT('0'), wxT('button2'), 4, 75, 12, 12, wxT(''),\
+      [8, wxT('wxSWISS'), wxT('wxNORMAL'), wxT('wxNORMAL'), 0, wxT('MS Sans Serif')]],\
+  control = [104, wxButton, wxT('2'), wxT('0'), wxT('button3'), 20, 75, 12, 12, wxT(''),\
+      [8, wxT('wxSWISS'), wxT('wxNORMAL'), wxT('wxNORMAL'), 0, wxT('MS Sans Serif')]],\
+  control = [105, wxButton, wxT('3'), wxT('0'), wxT('button4'), 36, 75, 12, 12, wxT(''),\
+      [8, wxT('wxSWISS'), wxT('wxNORMAL'), wxT('wxNORMAL'), 0, wxT('MS Sans Serif')]],\
+  control = [106, wxButton, wxT('4'), wxT('0'), wxT('button5'), 4, 59, 12, 12, wxT(''),\
+      [8, wxT('wxSWISS'), wxT('wxNORMAL'), wxT('wxNORMAL'), 0, wxT('MS Sans Serif')]],\
+  control = [107, wxButton, wxT('5'), wxT('0'), wxT('button6'), 20, 59, 12, 12, wxT(''),\
+      [8, wxT('wxSWISS'), wxT('wxNORMAL'), wxT('wxNORMAL'), 0, wxT('MS Sans Serif')]],\
+  control = [108, wxButton, wxT('6'), wxT('0'), wxT('button7'), 36, 59, 12, 12, wxT(''),\
+      [8, wxT('wxSWISS'), wxT('wxNORMAL'), wxT('wxNORMAL'), 0, wxT('MS Sans Serif')]],\
+  control = [109, wxButton, wxT('7'), wxT('0'), wxT('button8'), 4, 43, 12, 12, wxT(''),\
+      [8, wxT('wxSWISS'), wxT('wxNORMAL'), wxT('wxNORMAL'), 0, wxT('MS Sans Serif')]],\
+  control = [110, wxButton, wxT('8'), wxT('0'), wxT('button9'), 20, 43, 12, 12, wxT(''),\
+      [8, wxT('wxSWISS'), wxT('wxNORMAL'), wxT('wxNORMAL'), 0, wxT('MS Sans Serif')]],\
+  control = [111, wxButton, wxT('9'), wxT('0'), wxT('button10'), 36, 43, 12, 12, wxT(''),\
+      [8, wxT('wxSWISS'), wxT('wxNORMAL'), wxT('wxNORMAL'), 0, wxT('MS Sans Serif')]],\
+  control = [112, wxButton, wxT('.'), wxT('0'), wxT('button11'), 20, 91, 12, 12, wxT(''),\
+      [8, wxT('wxSWISS'), wxT('wxNORMAL'), wxT('wxNORMAL'), 0, wxT('MS Sans Serif')]],\
+  control = [113, wxButton, wxT('='), wxT('0'), wxT('button12'), 36, 91, 12, 12, wxT(''),\
+      [8, wxT('wxSWISS'), wxT('wxNORMAL'), wxT('wxNORMAL'), 0, wxT('MS Sans Serif')]],\
+  control = [117, wxButton, wxT('/'), wxT('0'), wxT('button13'), 52, 43, 12, 12, wxT(''),\
+      [8, wxT('wxSWISS'), wxT('wxNORMAL'), wxT('wxNORMAL'), 0, wxT('MS Sans Serif')]],\
+  control = [116, wxButton, wxT('x'), wxT('0'), wxT('button14'), 52, 59, 12, 12, wxT(''),\
+      [8, wxT('wxSWISS'), wxT('wxNORMAL'), wxT('wxNORMAL'), 0, wxT('MS Sans Serif')]],\
+  control = [115, wxButton, wxT('-'), wxT('0'), wxT('button15'), 52, 75, 12, 12, wxT(''),\
+      [8, wxT('wxSWISS'), wxT('wxNORMAL'), wxT('wxNORMAL'), 0, wxT('MS Sans Serif')]],\
+  control = [114, wxButton, wxT('+'), wxT('0'), wxT('button16'), 52, 91, 12, 12, wxT(''),\
+      [8, wxT('wxSWISS'), wxT('wxNORMAL'), wxT('wxNORMAL'), 0, wxT('MS Sans Serif')]],\
+  control = [118, wxButton, wxT('C'), wxT('0'), wxT('button17'), 4, 28, 29, 12, wxT(''),\
+      [8, wxT('wxSWISS'), wxT('wxNORMAL'), wxT('wxNORMAL'), 0, wxT('MS Sans Serif')]],\
+  control = [119, wxButton, wxT('OFF'), wxT('0'), wxT('button18'), 36, 28, 28, 12, wxT(''),\
+      [8, wxT('wxSWISS'), wxT('wxNORMAL'), wxT('wxNORMAL'), 0, wxT('MS Sans Serif')]],\
+  control = [101, wxStaticText, wxT('000000000000'), wxT('0'), wxT('lblDisp'), 4, 7, 56, 13, wxT(''),\
+      [10, wxT('wxSWISS'), wxT('wxNORMAL'), wxT('wxNORMAL'), 0]]).";
 

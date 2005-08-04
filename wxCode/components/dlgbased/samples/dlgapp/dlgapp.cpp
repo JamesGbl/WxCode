@@ -138,7 +138,7 @@ bool MyApp::OnInit()
 	//       Horizontal dimension has to take into account the thin
 	//       hilighting border around the dialog (2 points in
 	//       Win 95).
-    MyDialog *dialog = new MyDialog("Temp Converter",
+    MyDialog *dialog = new MyDialog(wxT("Temp Converter"),
                                  wxPoint(0, 0), wxSize(147, 162));
 	
 	// Center the dialog when first shown
@@ -166,26 +166,26 @@ MyDialog::MyDialog(const wxString& title, const wxPoint& pos, const wxSize& size
 
 	// Create static box to enclose text and conversion buttons
 	wxStaticBox *statBox = new wxStaticBox(this, Dlgapp_StaticBox,
-		                                   wxString("Convert"),
+		                                   wxString(wxT("Convert")),
 										   wxPoint(5,0), wxSize(130, 100));
 
 	// Static text celsius
-	wxStaticText *celText = new wxStaticText(this, Dlgapp_CelText, wxString("Celsius:"), wxPoint(10,15));
+	wxStaticText *celText = new wxStaticText(this, Dlgapp_CelText, wxString(wxT("Celsius:")), wxPoint(10,15));
 
 	// Text control
-	celDegree = new wxTextCtrl(this, Dlgapp_CelDegree, wxString(""), wxPoint(10,30), wxSize(50,20));
+	celDegree = new wxTextCtrl(this, Dlgapp_CelDegree, wxString(wxT("")), wxPoint(10,30), wxSize(50,20));
 
 	// Static text fahrenheit
-	wxStaticText *fahrText = new wxStaticText(this, Dlgapp_FahrText, wxString("Fahrenheit:"), wxPoint(10,55));
+	wxStaticText *fahrText = new wxStaticText(this, Dlgapp_FahrText, wxString(wxT("Fahrenheit:")), wxPoint(10,55));
 
 	// Another text control
-	fahrDegree = new wxTextCtrl(this, Dlgapp_FahrDegree, wxString(""), wxPoint(10,70), wxSize(50,20));
+	fahrDegree = new wxTextCtrl(this, Dlgapp_FahrDegree, wxString(wxT("")), wxPoint(10,70), wxSize(50,20));
 	
 	// Four command buttons.
-	wxButton *btnCelToFahr = new wxButton( this, Dlgapp_CelToFahr, "C -> F", wxPoint(80,30), wxSize(50,20));
-	wxButton *btnFahrToCel = new wxButton( this, Dlgapp_FahrToCel, "F -> C", wxPoint(80,70), wxSize(50,20));
-	wxButton *btnAbout     = new wxButton( this, Dlgapp_About, "About", wxPoint(10,110), wxSize(50,20));
-	wxButton *btnClose     = new wxButton( this, Dlgapp_Close, "Close", wxPoint(80,110), wxSize(50,20));
+	wxButton *btnCelToFahr = new wxButton( this, Dlgapp_CelToFahr, wxT("C -> F"), wxPoint(80,30), wxSize(50,20));
+	wxButton *btnFahrToCel = new wxButton( this, Dlgapp_FahrToCel, wxT("F -> C"), wxPoint(80,70), wxSize(50,20));
+	wxButton *btnAbout     = new wxButton( this, Dlgapp_About, wxT("About"), wxPoint(10,110), wxSize(50,20));
+	wxButton *btnClose     = new wxButton( this, Dlgapp_Close, wxT("Close"), wxPoint(80,110), wxSize(50,20));
 
 	// no default button
 }
@@ -222,8 +222,8 @@ void MyDialog::OnCelToFahr(wxCommandEvent& WXUNUSED(event))
 	//       just checks for int numbers
 	if (celStr.IsEmpty())
 	{
-		wxMessageBox("I don't see any valid\n"
-			         "Celsius entry!", "Error!",
+		wxMessageBox(wxT("I don't see any valid\n")
+			         wxT("Celsius entry!"), wxT("Error!"),
                       wxOK | wxICON_EXCLAMATION | wxCENTRE);
 		return;
 	}
@@ -234,7 +234,7 @@ void MyDialog::OnCelToFahr(wxCommandEvent& WXUNUSED(event))
 	float fahrValue = (celValue * 9.0f / 5.0f ) + 32.0f ;
 	// Convert temperature to a string
 	wxString fahrStr;
-	fahrStr.Printf("%5.2f",fahrValue);
+	fahrStr.Printf(wxT("%5.2f"),fahrValue);
 	// Update text control
 	fahrDegree->SetValue(fahrStr);
 	return;
@@ -250,8 +250,8 @@ void MyDialog::OnFahrToCel(wxCommandEvent& WXUNUSED(event))
 	// Check the control is not empty
 	if (fahrStr.IsEmpty())
 	{
-		wxMessageBox("I don't see any valid\n"
-			         "Fahrenheit entry!", "Error!",
+		wxMessageBox(wxT("I don't see any valid\n")
+			         wxT("Fahrenheit entry!"), wxT("Error!"),
                       wxOK | wxICON_EXCLAMATION | wxCENTRE);
 		return;
 	}
@@ -262,7 +262,7 @@ void MyDialog::OnFahrToCel(wxCommandEvent& WXUNUSED(event))
 	float celValue = (fahrValue - 32.0f) * 5.0f / 9.0f ;
 	// Convert temperature to a string
 	wxString celStr;
-	celStr.Printf("%5.2f",celValue);
+	celStr.Printf(wxT("%5.2f"),celValue);
 	// Update text control
 	celDegree->SetValue(celStr);
 	return;
@@ -287,11 +287,11 @@ void MyDialog::OnQuit(wxCommandEvent& WXUNUSED(event))
 void MyDialog::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
     wxString msg;
-    msg.Printf("Thanks for using Temp Converter!\n"
-		       "(C) 1999 by Marco Ghislanzoni\n"
-               "Written using %s"
+    msg.Printf(wxT("Thanks for using Temp Converter!\n")
+		       wxT("(C) 1999 by Marco Ghislanzoni\n")
+               wxT("Written using %s")
 #ifdef wxBETA_NUMBER
-               " (beta %d)"
+               wxT(" (beta %d)")
 #endif // wxBETA_NUMBER
                , wxVERSION_STRING
 #ifdef wxBETA_NUMBER
@@ -299,5 +299,5 @@ void MyDialog::OnAbout(wxCommandEvent& WXUNUSED(event))
 #endif // wxBETA_NUMBER
               );
 
-    wxMessageBox(msg, "Dialog App", wxOK | wxICON_INFORMATION, this);
+    wxMessageBox(msg, wxT("Dialog App"), wxOK | wxICON_INFORMATION, this);
 }

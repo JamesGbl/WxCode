@@ -166,7 +166,7 @@ bool TheApp::OnInit()
 {
 	#if defined(__WXMSW__)
 	  // Load the .wxr 'file' from a .rc resource, under Windows.
-	  dialog1 = wxLoadUserResource("dialog1", "WXRDATA");
+	  dialog1 = wxLoadUserResource(wxT("dialog1"), wxT("WXRDATA"));
 	  // All resources in the file (only one in this case) get parsed
 	  // by this call.
 	  wxResourceParseString(dialog1);
@@ -180,7 +180,7 @@ bool TheApp::OnInit()
     // Create main dialog using default constructor
 	MainDialog *dialog = new MainDialog();
 
-	if (dialog->LoadFromResource(NULL, "dialog1"))
+	if (dialog->LoadFromResource(NULL, wxT("dialog1")))
     {
 
 		// Set the dialog icon
@@ -193,23 +193,23 @@ bool TheApp::OnInit()
 
 #ifdef __USELOCALE__
 		// Set the locale for string to double conversion
-		setlocale( LC_ALL, "English");
+		setlocale( LC_ALL, wxT("English"));
 #endif
 
 		// Retrieve a pointer to display control
 		// The display control should display its content right
 		// aligned but this option unfortunately is not present...
-        dialog->txtDisplay = (wxStaticText *)wxFindWindowByName("lblDisp", dialog);
+        dialog->txtDisplay = (wxStaticText *)wxFindWindowByName(wxT("lblDisp"), dialog);
         if (dialog->txtDisplay)
 		{	
 			// Set initial display value
-			dialog->txtDisplay->SetLabel("0");
+			dialog->txtDisplay->SetLabel(wxT("0"));
 		}
     }
 	else
 	{
 		// Problems with resources
-		wxMessageBox("Error loading resources!", "ERROR!",
+		wxMessageBox(wxT("Error loading resources!"), wxT("ERROR!"),
                             wxOK | wxICON_EXCLAMATION, NULL);
 		// We return FALSE so the application stops
 		return FALSE;
@@ -260,7 +260,7 @@ void MainDialog::SetIcon(const wxIcon& icon)
 
 void MainDialog::OnClear(wxCommandEvent& WXUNUSED(event))
 {
-	txtDisplay->SetLabel("0");
+	txtDisplay->SetLabel(wxT("0"));
 	lastOp = 0.0f ;
 	operation = ID_PLUS ;
 	result = 0.0f ;
@@ -282,7 +282,7 @@ void MainDialog::OnNumber(wxCommandEvent& event)
 
 	// Clear string if contains just 0
 	// or clear display flag is on
-	if (!display.Cmp("0") || clearDisplay)
+	if (!display.Cmp(wxT("0")) || clearDisplay)
 		display.Empty();
 
 	// Limit string length to 12 chars
@@ -293,18 +293,18 @@ void MainDialog::OnNumber(wxCommandEvent& event)
 			// If the first pressed char is "."
 			// then we want "0."
 			if ( display.Len() == 0 )
-				display = display + "0" ;
-			display = display + "." ;
+				display = display + wxT("0") ;
+			display = display + wxT(".") ;
 		}
 		else
 		{
 			// If first character entered is 0 we
 			// reject it
 			if ( id == 0 && display.Len() == 0 )
-				display = "0" ;
+				display = wxT("0") ;
 			else
 			{
-				add.Printf("%d",id);
+				add.Printf(wxT("%d"),id);
 				display = display + add;
 			}
 		}
@@ -359,7 +359,7 @@ void MainDialog::OnOperator(wxCommandEvent& event)
 	if ( currentOp == 0.0f && operation == ID_DIV )
 	{
 		wxBell();
-		txtDisplay->SetLabel("0");
+		txtDisplay->SetLabel(wxT("0"));
 		lastOp = 0.0f ;
 		operation = ID_PLUS ;
 		result = 0.0f ;
@@ -367,7 +367,7 @@ void MainDialog::OnOperator(wxCommandEvent& event)
 	}
 
 	result = DoOperation( lastOp, currentOp, operation ) ;
-	display.Printf("%.2f",result);
+	display.Printf(wxT("%.2f"),result);
 	// Limit result length to 12 chars
 	display = display.Left(12);
 	txtDisplay->SetLabel(display);
@@ -383,18 +383,18 @@ void MainDialog::OnOperator(wxCommandEvent& event)
 	return ;
 }
 
-void MainDialog::OnQuit(wxCommandEvent& WXUNUSED(event))
+void MainDialog::OnQuit(wxCloseEvent& WXUNUSED(event))
 {
 	// Hide main dialog
 	Show(FALSE);
 
 	// Display (C) dialog on exit
 	wxString msg;
-    msg.Printf("Thanks for using Calc!\n"
-		       "(C) 1999 by Marco Ghislanzoni\n"
-               "Written using %s"
+    msg.Printf(wxT("Thanks for using Calc!\n")
+		       wxT("(C) 1999 by Marco Ghislanzoni\n")
+               wxT("Written using %s")
 #ifdef wxBETA_NUMBER
-               " (beta %d)"
+               wxT(" (beta %d)")
 #endif // wxBETA_NUMBER
                , wxVERSION_STRING
 #ifdef wxBETA_NUMBER
@@ -402,7 +402,7 @@ void MainDialog::OnQuit(wxCommandEvent& WXUNUSED(event))
 #endif // wxBETA_NUMBER
               );
 
-    wxMessageBox(msg, "Calc", wxOK | wxICON_INFORMATION, NULL);
+    wxMessageBox(msg, wxT("Calc"), wxOK | wxICON_INFORMATION, NULL);
 
 	// NOTE Since our main window is a dialog and not
 	// ---- a frame we have to close it using Destroy
