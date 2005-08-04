@@ -26,7 +26,7 @@
 	  </latest-download>
       <latest-download>
 	  
-			<!-- on unix-base OS we use .tar.gz archives -->
+			<!-- on unix-based OS we use .tar.gz archives -->
 			<uri>http://wxcode.sourceforge.net/components/webupdate/simple-$(latest-version).tar.gz</uri>
 			<platform name="gtk"/>
 			

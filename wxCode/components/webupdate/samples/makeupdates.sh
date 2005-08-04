@@ -15,13 +15,15 @@ function CreateUpdate {
 	cd ../..
 }
 
-#remove old & create new packages
+# remove old & create new packages
 rm -f *.zip *.tar.gz
 CreateUpdate simple 2.0.3
 CreateUpdate advanced 1.5.0
 
-# for the advanced sample, create also the "addon" package
-cd advanced/v1.5.0 && zip -9 ../../addon-1.5.0.zip addon* && cd ../..
+# for the advanced sample, create also the "addon" packages
+cd advanced/v1.5.0 && zip -9 ../../addon1-1.5.0.zip addon1/* && cd ../..
+cd advanced/v1.5.0 && zip -9 ../../addon2-1.5.0.zip addon2/* && cd ../..
+cd advanced/v1.5.0 && zip -9 ../../addon3-1.5.0.zip addon3/* && cd ../..
 
 # move the packages
 mv -f *.zip ../website

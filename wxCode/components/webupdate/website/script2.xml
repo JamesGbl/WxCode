@@ -15,31 +15,64 @@
 			<platform name="msw"/>	
 			
 			<actions>
-				<extract file="$(thisfile)" where="$(newtempdir)"/>
-				<run file="$(programdir)\replacer.exe" 
-					args="--pid $(pid) --from $(newtempdir) --to $(programdir)" 
-					flags="ASYNC"/>
-				<exit flags="NOTIFYUSER"/>
+				<extract file="$(thisfile)" where="$(programdir)"/>
 			</actions>
 	  </latest-download>
    </package>
    
    
    
-   <!-- our ADDON package -->
-   <package id="addon">
+   <!-- our ADDON1 package -->
+   <package id="addon1">
 	  <requires>core</requires>
       <latest-version importance="low">1.5.0</latest-version>      
 
 	  <!-- a single download for all platforms -->
       <latest-download>
-			<uri>file://e:/wxcode/components/webupdate/website/addon-$(latest-version).zip</uri>
+			<uri>file://e:/wxcode/components/webupdate/website/addon1-$(latest-version).zip</uri>
 			<platform name="any"/>	
 			
 			<actions>
-				<extract file="$(thisfile)" where="$(programdir)"/>
+				<run cmd="$(mkdir)" args="$(programdir)//addon1" flags="SYNC" />
+				<extract file="$(thisfile)" where="$(programdir)//addon1"/>
 			</actions>
 	  </latest-download>
    </package>
 
+   
+   <!-- our ADDON2 package -->
+   <package id="addon2">
+	  <requires>core</requires>
+      <latest-version importance="low">1.5.0</latest-version>      
+
+	  <!-- a single download for all platforms -->
+      <latest-download>
+			<uri>file://e:/wxcode/components/webupdate/website/addon2-$(latest-version).zip</uri>
+			<platform name="any"/>	
+			
+			<actions>
+				<run cmd="$(mkdir)" args="$(programdir)//addon2" flags="SYNC" />
+				<extract file="$(thisfile)" where="$(programdir)//addon2"/>
+			</actions>
+	  </latest-download>
+   </package>
+   
+
+   <!-- our ADDON3 package -->
+   <package id="addon3">
+	  <requires>core</requires>
+      <latest-version importance="low">1.5.0</latest-version>      
+
+	  <!-- a single download for all platforms -->
+      <latest-download>
+			<uri>file://e:/wxcode/components/webupdate/website/addon3-$(latest-version).zip</uri>
+			<platform name="any"/>	
+			
+			<actions>
+				<run cmd="$(mkdir)" args="$(programdir)//addon3" flags="SYNC" />
+				<extract file="$(thisfile)" where="$(programdir)//addon3"/>
+			</actions>
+	  </latest-download>
+   </package>
+   
 </webupdate>

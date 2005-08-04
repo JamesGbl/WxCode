@@ -21,6 +21,13 @@
    problems about your scripts: WebUpdate component is not responsible for
    unwanted behaviours coming from malformed update scripts !
 
+   NOTE ABOUT THE SPECIAL '//' CHAR SEQUENCE: sometimes you need to specify in
+   one of the <actions> subtags the path separator in a platform-indepedent way.
+   This can be done using twice the forward slash character: that sequence will be
+   translated (only in <action> subtags!) as '/' on Unix-based systems and as '\' on
+   win32 systems.
+   If you need to write the '//' sequence and you don't want it to be substituted you need
+   to write three times the forward slash: '///' will be intepreted as '//'.
 
    NOTE ABOUT "KEYWORD SUBSTITUTION": in this context, by "keyword substitution" 
    we mean the process of replacing those strings in the form $(...) with values
@@ -42,6 +49,7 @@
      $(cp) = the copy command (i.e. 'cp -f' on unix, 'copy /y' on windows)
      $(mv) = the move command (i.e. 'mv -f' on unix, 'move /y' on windows)
      $(cd) = the change directory command (i.e. 'cd' on both unix & windows)
+	 $(mkdir) = the make directory command (i.e. 'mkdir' on both unix & windows)
    
    - miscellaneous:
      $(pid) = the process ID of the updater program
@@ -181,7 +189,8 @@
 <!ELEMENT run EMPTY>
 <!ATTLIST run flags (ASYNC|SYNC) "ASYNC">			<!-- the possible flags are: ASYNC, SYNC -->
 <!ATTLIST run args CDATA "">					<!-- the arguments to give to the file to run -->
-<!ATTLIST run file CDATA #IMPLIED>				<!-- REQUIRED: the path+name of the file to run -->
+<!ATTLIST run cmd CDATA "$(thisfile)">				<!-- REQUIRED: the path+name of the file to run; identic to 'file' property - use the one you prefer -->
+<!ATTLIST run file CDATA "$(thisfile)">				<!-- REQUIRED: the path+name of the file to run; identic to 'cmd' property - use the one you prefer -->
 
 <!-- for "extract" action tags -->
 <!ELEMENT extract EMPTY>
