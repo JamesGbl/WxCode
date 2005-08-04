@@ -11,7 +11,7 @@
       <latest-download>
 	  
 			<!-- use a simple ZIP -->
-			<uri>file://e:/wxcode/components/webupdate/website/advanced-$(latest-version).zip</uri>
+			<uri>http://wxcode.sourceforge.net/components/webupdate/advanced-$(latest-version).zip</uri>
 			<platform name="msw"/>	
 			
 			<actions>
@@ -29,7 +29,7 @@
 
 	  <!-- a single download for all platforms -->
       <latest-download>
-			<uri>file://e:/wxcode/components/webupdate/website/addon1-$(latest-version).zip</uri>
+			<uri>http://wxcode.sourceforge.net/components/webupdate/addon1-$(latest-version).zip</uri>
 			<platform name="any"/>	
 			
 			<actions>
@@ -47,7 +47,7 @@
 
 	  <!-- a single download for all platforms -->
       <latest-download>
-			<uri>file://e:/wxcode/components/webupdate/website/addon2-$(latest-version).zip</uri>
+			<uri>http://wxcode.sourceforge.net/components/webupdate/addon2-$(latest-version).zip</uri>
 			<platform name="any"/>	
 			
 			<actions>
@@ -65,7 +65,7 @@
 
 	  <!-- a single download for all platforms -->
       <latest-download>
-			<uri>file://e:/wxcode/components/webupdate/website/addon3-$(latest-version).zip</uri>
+			<uri>http://wxcode.sourceforge.net/components/webupdate/addon3-$(latest-version).zip</uri>
 			<platform name="any"/>	
 			
 			<actions>
