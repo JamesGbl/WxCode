@@ -1,0 +1,34 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+Project: "tmclib"=treemultictrl_tmclib.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "multictrltest"=treemultictrl_multictrltest.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+Begin Project Dependency
+Project_Dep_Name tmclib
+End Project Dependency
+Begin Project Dependency
+Project_Dep_Name tmclib
+End Project Dependency
+}}}
+
+###############################################################################
+

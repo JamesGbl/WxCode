@@ -1,0 +1,60 @@
+Welcome to wxTreeMultiCtrl - A wxWidgets control that allows wxWindow controls to be shaped in a tree, 
+                             with folding capabilities, like a scrollable property sheet.
+
+Current wxTreeMultiCtrl version is v1.08
+
+    README $Revision: 1.1 $
+    README $Date: 2005-08-05 18:23:30 $
+
+FIXED AND NEW FEATURES 
+----------------------
+
+Jul 21, 2005
+	v1.09
+	- Ok my secomd attempt with Bakefile. Cmake is great, but it annoys me that the FindWxWin.cmake script still sucks bigtime
+	- The bakefile seems to work fine now for debug, it is the only addition. Now wxWin 2.6.0 - 2.4.2 is properly supported
+	
+May 05, 2005
+    v1.08 - 
+    - Tried Bakefile for this project, but due to it's 'incompleteness' towards user projects I had to use CMake again.
+    - I also altered the FindWxWin.CMAKE file so seperate libraries can be used instead of monolithic 
+    - Fixed a local redraw bug (category: Bug) (completed: 4/30/2005)
+    - IsExpanded argument removed (category: Bug) (completed: 4/30/2005)
+    - Added new Panther OSX icons (completed: 4/30/2005) thanks to David Wright
+    - 0000093: [Documentation] Added doxygen generation in CMake script (jorgb)
+               Set USE_DOXYGEN to YES in CMake to get documentation on the fly (or check it from the site)
+    - 0000048: [Improvements] Allow a checkboxes and radioboxes at any level (jorgb)
+               If you don't wish checkbox functionality (remember this is a toggle so not all items automatically get a 
+               checkbox) simply set USE_CHECKBOXVIEW in CMake to NO. This will exclude this functionality in the compile
+               process (saves about 15k). I made this a compiler option because extra 3 icon bitmaps are included in the build.
+    - 0000077: [GUI behaviour] Upon clicking the checkbox is not redrawn properly (jorgb)
+    - 0000081: [Development] Upon checking the TreeMultiItemNode, the underlying items should be all checked or cleared (jorgb)
+    - 0000072: [GUI behaviour] Optimize performance on redrawing of the nodes (jorgb)
+    - 0000049: [wxWidgets Distrib Problems] Arranged the source so it matches the Contrib directory of wxWidgets (jorgb)
+               If wxWidgets wants to put it in the contrib, I won't stop them.
+    - 0000047: [Improvements] Add a new way how to allow controls at the caption level (jorgb)
+               This is a patch which can be found at: http://solidsteel.nl/bugs/view.php?id=47 although I strongly advice
+               against it. I do not offer support on bugs when this patch is applied, because I haven't been able to test
+               it thoroughly, and it seems to disrupt the intended object model.
+
+    For a change history, see changes.txt
+
+HOW TO BUILD
+------------
+
+Bakefile is now used for the build generation. You should (in practice) not need to rebuild the files. Please go to the 
+build directory and select the project file of your choice.
+
+Please do not forget to set the WXWIN environment var under Windows. This points to the root dir of wxWidgets, eg.
+
+	WXWIN=Z:\wxWidgets\wx2.6.1\
+
+AFTER you set it, then start up any Visual Studio projects or else the env var is not yet in memory.
+
+If you do need to rebuild the makefiles / projects.. 
+
+    1) Download and install Bakefile (http://bakefile.sourceforge.net)
+    2) Under Windows the build/Bakefiles.bkgen will work out of the box (set the WXWIN env var though)
+	   Under Linux please change the %WXWIN% include setting for an include setting where wxWidgets presets are found
+	3) run bakefile_gen and it should regenerate the projects, if needed switch on your projects in Bakefiles.bkgen
+	

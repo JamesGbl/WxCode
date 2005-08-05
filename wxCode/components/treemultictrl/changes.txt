@@ -1,0 +1,66 @@
+Jul 21, 2005
+	v1.09
+	- Ok my secomd attempt with Bakefile. Cmake is great, but it annoys me that the FindWxWin.cmake script still sucks bigtime
+	- The bakefile seems to work fine now, it is the only addition. Now wxWin 2.6.0 - 2.4.2 is properly supported
+
+May 05, 2005
+    v1.08 - 
+    - Tried Bakefile for this project, but due to it's 'incompleteness' towards user projects I had to use CMake again.
+    - I also altered the FindWxWin.CMAKE file so seperate libraries can be used instead of monolithic 
+    - Fixed a local redraw bug (category: Bug) (completed: 4/30/2005)
+    - IsExpanded argument removed (category: Bug) (completed: 4/30/2005)
+    - Added new Panther OSX icons (completed: 4/30/2005) thanks to David Wright
+    - 0000093: [Documentation] Added doxygen generation in CMake script (jorgb)
+               Set USE_DOXYGEN to YES in CMake to get documentation on the fly (or check it from the site)
+    - 0000048: [Improvements] Allow a checkboxes and radioboxes at any level (jorgb)
+               If you don't wish checkbox functionality (remember this is a toggle so not all items automatically get a 
+               checkbox) simply set USE_CHECKBOXVIEW in CMake to NO. This will exclude this functionality in the compile
+               process (saves about 15k). I made this a compiler option because extra 3 icon bitmaps are included in the build.
+    - 0000077: [GUI behaviour] Upon clicking the checkbox is not redrawn properly (jorgb)
+    - 0000081: [Development] Upon checking the TreeMultiItemNode, the underlying items should be all checked or cleared (jorgb)
+    - 0000072: [GUI behaviour] Optimize performance on redrawing of the nodes (jorgb)
+    - 0000049: [wxWidgets Distrib Problems] Arranged the source so it matches the Contrib directory of wxWidgets (jorgb)
+               If wxWidgets wants to put it in the contrib, I won't stop them.
+    - 0000047: [Improvements] Add a new way how to allow controls at the caption level (jorgb)
+               This is a patch which can be found at: http://solidsteel.nl/bugs/view.php?id=47 although I strongly advice
+               against it. I do not offer support on bugs when this patch is applied, because I haven't been able to test
+               it thoroughly, and it seems to disrupt the intended object model.
+      
+July 08, 2004
+	v1.07 - This is an intermediate version, where the only things that changed are the use of CMake as primary make
+			file generator. I have decided to use this, because of the ever cumbersome job of keeping makefiles consistent
+			under Linux, MacOS, HP-UX, and under windows, maintaining VS6 and VS7 as projects. Now that the current makefiles
+			give problems under HP-UX, CMakifying the project files should solve a lot of x-platform issues. Please consult
+			README for build information.
+
+June 10, 2004
+	v1.06 - Fixed a bug where calling GetSize() before creation would return garbage in wxWidgets 2.4.2. Also centered the
+			collapse / expand icons when a custom font would be applied with SetCaptionFont. Also fixed a small error where
+			the calculated width of the tree nodes with a custom font would be wrong and based on default font.
+
+June 09, 2004
+	v1.05 - Changed project for the test sample to run on wxWidgets 2.5.2. The big library that was used in 
+	        wxWidgets 2.5.1 and down, doesn't compile nomore for 2.5.2 so I decided it was time to advance to the
+	        new library way. If you need the old library settings, simple delete the new libs, and add the old 
+	        wxmsw lib in visual studio.
+
+June 07, 2004
+	v1.05 - Fixed a small bug in 2.4.2. It is not allowed to use a wxPaintDC outside an OnPaint event. I needed a DC
+	        for the client font, so I used a wxClientDC. Thanks to Aron Pongo for pointing it out!
+	        
+	      - Fixed a two step creation bug. When using in a XRC the proper create is not called. This was reported by 
+	        Gregory Jaegy. 
+
+May 28, 2004 
+	v1.04 - Added methods to change the caption font. Per default it is the same as the standard DC font under windows, but
+	        using SetCaptionFont and GetCaptionFont the font can be changed. Be aware that SetCaptionFont is a global caption
+	        font modifier. It does not change the font of the window controls added. This was added to allow bold faced 
+	        captions under some OS'es.
+	
+	      - The icons for the collapsing and expanding nodes are now different under various OS'es. For Mac I created (simple)
+	        triangles, the Linux version are close to what linux uses as a standard as well. Any other OS will get the default
+	        Windows XP look icons. For Mac I am still looking for better gfx. 
+	        
+May 01, 2004
+	v1.03 - Compiles now under wxWidgets 2.5.1., wxGTK 2.5.1 still untested. There was a problem with wxArray::Remove 
+	        so I used wxArray::Detach instead
