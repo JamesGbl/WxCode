@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<!-- $Id: resizec.bkl,v 1.1 2005-08-06 16:05:01 magr Exp $ -->
+
+<makefile>
+
+    <include file="../../build/bakefiles/common_samples.bkl"/>
+
+    <exe id="resizecd" template="wx_sample" template_append="wx_append">
+        <sources>resizec.cpp resizecd.cpp</sources>
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib>
+    </exe>
+
+</makefile>

@@ -1,0 +1,21 @@
+###############################################################################
+# Purpose: Makefile.in for resizeable controls sample for Unix with autoconf
+# Created: 17.09.00
+# Author:  VS
+# Version: $Id: Makefile.in,v 1.1 2005-08-06 16:05:01 magr Exp $
+###############################################################################
+
+top_srcdir = $(HOME)/wxGTK-2.4.0
+top_builddir = $(HOME)/wxGTK-2.4.0/buildgtk
+program_dir = contrib/samples/resizec
+
+PROGRAM=resizecd
+
+OBJECTS=$(PROGRAM).o \
+	myframe.o \
+        ownerrnd.o \
+        resizec.o
+
+include $(top_builddir)/src/makeprog.env
+
+
