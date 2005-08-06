@@ -11,7 +11,7 @@
 	<!-- =================== -->
 
 	<option name="LIBXML2_DIR" category="path">
-		<default-value>c:\libxml2</default-value>
+		<default-value>..\thirdparty\libxml2</default-value>
 		<description>The libxml2 library main folder</description>
 	</option>
 

@@ -782,7 +782,7 @@ void wxXml2Node::MakeLower()
 }
 
 wxXml2Node wxXml2Node::Find(const wxString &name, const wxString &content, 
-							int occ, bool bNS) const
+							int occ, bool bNS, bool recurse) const
 {
 	wxXml2Node tmp;    // this will be automatically removed
 	wxXml2Document doc(GetDoc());
@@ -791,10 +791,10 @@ wxXml2Node wxXml2Node::Find(const wxString &name, const wxString &content,
 	tmp.CreateTemp(wxXML_ELEMENT_NODE, doc, name, content);
 	doc.DestroyIfUnlinked();
 
-	return Find(tmp, occ, bNS);
+	return Find(tmp, occ, bNS, recurse);
 }
 
-wxXml2Node wxXml2Node::Find(const wxXml2Node &tofind, int occ, bool bNS) const
+wxXml2Node wxXml2Node::Find(const wxXml2Node &tofind, int occ, bool bNS, bool recurse) const
 {
 	// check pointer is okay
 	wxASSERT_MSG(tofind != NULL, wxT("Invalid pointer"));
@@ -820,9 +820,11 @@ wxXml2Node wxXml2Node::Find(const wxXml2Node &tofind, int occ, bool bNS) const
 				return n;
 		}
 
-		// search among the children of this node...
-		if ((r = n.Find(tofind, occ, bNS)) != NULL)
-			return r;
+		if (recurse) {
+			// search among the children of this node...
+			if ((r = n.Find(tofind, occ, bNS, recurse)) != NULL)
+				return r;
+		}
 
 		// search in next child
 		n = n.GetNext();

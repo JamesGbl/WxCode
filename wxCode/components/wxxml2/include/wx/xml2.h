@@ -1329,13 +1329,21 @@ public:		// miscellaneous
 	//! This function does not check neither properties, children (except for
 	//! the first text child which is tested if content != wxEmptyString)
 	//! nor siblings.
+	//! The \c recurse parameter can be used to disable the recursive behaviour
+	//! (which is the default) of this function. In fact, if \c recurse == FALSE
+	//! only the children of this node will be tested and the function won't 
+    //! descend into the child nodes.
 	wxXml2Node Find(const wxString &name, 
 					const wxString &content = wxEmptyString,
-					int occ = 0, bool bNS = TRUE) const;
+					int occ = 0, bool bNS = TRUE, bool recurse = TRUE) const;
 
 	//! Searches the occ-th occurrence of a node like the given one among 
 	//! all the children of this object. Also checks namespace if bNS == TRUE.
-	wxXml2Node Find(const wxXml2Node &tofind, int occ = 0, bool bNS = TRUE) const;
+	//! The \c recurse parameter can be used to disable the recursive behaviour
+	//! (which is the default) of this function. In fact, if \c recurse == FALSE
+	//! only the children of this node will be tested and the function won't 
+    //! descend into the child nodes.
+	wxXml2Node Find(const wxXml2Node &tofind, int occ = 0, bool bNS = TRUE, bool recurse = TRUE) const;
 
 	//! Encapsulates this node in another node with the given name; if the
 	//! 

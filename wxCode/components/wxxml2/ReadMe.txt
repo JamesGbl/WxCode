@@ -86,4 +86,5 @@
 
  Francesco Montorsi          frm@users.sourceforge.net
 
-
+ Thanks to the following people for their patches:
+ - Scott Fant  for helping with wxXml2Node::Find 

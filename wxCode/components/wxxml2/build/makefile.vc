@@ -23,7 +23,7 @@ CPPFLAGS =
 LDFLAGS = 
 
 # The libxml2 library main folder 
-LIBXML2_DIR = c:\libxml2
+LIBXML2_DIR = ..\thirdparty\libxml2
 
 # The iconv library main folder 
 ICONV_DIR = c:\iconv

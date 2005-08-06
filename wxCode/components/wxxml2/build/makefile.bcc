@@ -41,7 +41,7 @@ LDFLAGS =
 
 # The libxml2 library main folder 
 !ifndef LIBXML2_DIR
-LIBXML2_DIR = c:\libxml2
+LIBXML2_DIR = ..\thirdparty\libxml2
 !endif
 
 # The iconv library main folder 
