@@ -1,6 +1,7 @@
 <!-- 
    Name:        remote.dtd
    Purpose:     a simple DTD to validate update script
+   Version:     1.0
    Author:      Francesco Montorsi
    Created:     2005/06/24
    RCS-ID:      $Id$
@@ -11,6 +12,14 @@
    in your webserver. This file should make easier to check validity of the
    scripts you write and it should also be as a simple reference guide for the 
    update script format.
+
+   The remote XML scripts which follows this DTD should include the following
+   line before the <webupdate> root tag:
+
+      <!DOCTYPE webupdate PUBLIC "-//WebUpdate//DTD WebUpdater 1.0//EN" 
+            "http://wxcode.sourceforge.net/components/webupdate/remote.dtd">
+
+   which just tells to XML parser that the XML file follows the WebUpdater DTD v1.0.
 
    I suggest you to look at the following files as examples of WebUpdate scripts:
    
@@ -37,25 +46,28 @@
    The list of keywords which can be used is:
    
    - folders:   
-     $(programdir) = the folder where the program executable is placed
-     $(downloaddir) = the folder where the downloaded files are placed
-     $(tempdir) = a temporary folder already existing and thus (probably) non-empty
-     $(newtempdir) = a temporary folder which has been created by the WebUpdate and thus is empty
+     $(programdir) = the folder where the WebUpdater executable is placed; ends with '//' special character.
+     $(downloaddir) = the folder where the downloaded files are placed; ends with '//' special character.
+     $(tempdir) = a temporary folder already existing and thus (probably) non-empty; ends with '//' special character.
+     $(newtempdir) = a temporary folder which has been created by the WebUpdate and thus is empty; ends with '//' special character.
    
    - names:   
-     $(appname) = the name of the application (as loaded by the local script)     
+     $(appname) = the name of the application (as loaded by the local script)
+     $(updatername) = the name of the WebUpdater application
+     $(exe) = the postfix of an executable file for the current platform 
+              (i.e .EXE on win32, nothing on other platforms)
 
    - command names:
-     $(cp) = the copy command (i.e. 'cp -f' on unix, 'copy /y' on windows)
-     $(mv) = the move command (i.e. 'mv -f' on unix, 'move /y' on windows)
-     $(cd) = the change directory command (i.e. 'cd' on both unix & windows)
-	 $(mkdir) = the make directory command (i.e. 'mkdir' on both unix & windows)
+     $(cp) = the copy command (i.e. 'cp -f' on unix, 'cmd.exe /c copy /y' on windows)
+     $(mv) = the move command (i.e. 'mv -f' on unix, 'cmd.exe /c move /y' on windows)
+     $(cd) = the change directory command (i.e. 'cd' on unix, 'cmd.exe /c cd' on windows)
+     $(mkdir) = the make directory command (i.e. 'mkdir' on unix, 'cmd.exe /c mkdir' on windows)
    
    - miscellaneous:
      $(pid) = the process ID of the updater program
-	 $(updater) = the path of the file and the filename of the WebUpdater program
-     $(program) = the path of the file and the filename of the program executable to update
-	                       (the filename is taken from the local script)
+     $(updater) = the path of the file and the filename of the WebUpdater program
+     $(program) = the path of the file and the filename of the program to update
+                  (the filename is taken from the local script)
 	 
    - these are available only after the relative tags:
      $(latest-version) = the version of the package (available only after <latest-version>)
@@ -68,9 +80,12 @@
 
 
 <!-- WEBUPDATE tag: this is the root of the script file.
+                    Requires the 'version' property which must be set to the
+                    same version of this DTD file (you can find it at the
+                    beginning of this document).
 -->
 <!ELEMENT webupdate (msg-update-available?, msg-update-notavailable?, package*)>
-
+<!ATTLIST webupdate version CDATA #IMPLIED>
 
 
 
@@ -189,14 +204,24 @@
 <!ELEMENT run EMPTY>
 <!ATTLIST run flags (ASYNC|SYNC) "ASYNC">			<!-- the possible flags are: ASYNC, SYNC -->
 <!ATTLIST run args CDATA "">					<!-- the arguments to give to the file to run -->
-<!ATTLIST run cmd CDATA "$(thisfile)">				<!-- REQUIRED: the path+name of the file to run; identic to 'file' property - use the one you prefer -->
-<!ATTLIST run file CDATA "$(thisfile)">				<!-- REQUIRED: the path+name of the file to run; identic to 'cmd' property - use the one you prefer -->
+<!ATTLIST run cmd CDATA "$(thisfile)">				<!-- the path+name of the file to run; identic to 'file' property - use the one you prefer -->
+<!ATTLIST run file CDATA "$(thisfile)">				<!-- the path+name of the file to run; identic to 'cmd' property - use the one you prefer -->
 
-<!-- for "extract" action tags -->
+<!-- for "extract" action tags: this action has a special behaviour which allow to update
+     the WebUpdater application itself. In fact, when it founds a compressed file which
+     is named "$(updatername)$(exe)", then it outputs the file as "_$(updatername)$(exe)".
+     This is because the WebUpdater cannot replace itself and thus any try to overwrite the
+     WebUpdater executable would fail.
+     The app which uses WebUpdater should look for filenames called "_$(updatername)$(exe)" 
+     and rename them to "$(updatername)$(exe)". -->
 <!ELEMENT extract EMPTY>
 <!ATTLIST extract where CDATA "$(programdir)">			<!-- the folder where extracted files will be put -->
 <!ATTLIST extract file CDATA "$(thisfile)">			<!-- the file to extract -->
 <!ATTLIST extract type (zip) "zip">				<!-- the possible values actually are: 'zip' -->
-
+<!ATTLIST extract namemap CDATA "">		<!-- a comma-separed list of values like
+                                                            compressedname1=outputname1,compressedname2=outputname2...
+                                                     which tell the extract action how to name the extracted file.
+                                                     By default, the list is empty and each compressed file is extracted
+                                                     in the destination folder using the compressed filename. -->
 
 <!-- add the attributes for you own actions here (and modify the 'actions' element tag definition) -->

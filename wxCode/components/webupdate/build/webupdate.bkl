@@ -7,6 +7,7 @@
 	<include file="$(WXCODE_BAKEFILEDIR)/defaults.bkl"/>
 	<include file="$(WXCODE_BAKEFILEDIR)/tags.bkl"/>
 	
+	
 
 	<!-- The WebUpdate settings -->
 	<!-- ====================== -->
@@ -23,15 +24,23 @@
 	</if>
 	
 	<if cond="TARGETING_WIN32=='1'">
+
+		<!-- on unix-like OS we assume that the component is installed in wx folders -->
 		<option name="HTTPENGINE_DIR" category="path">
 			<default-value>..\..\wxhttpengine</default-value>
 			<description>The path to the wxHTTPBuilder (httpengine) component</description>
 		</option>
 	</if>
-	
+
 	<set var="COMP_NAME">webupdate</set>
-	<set var="COMP_SRC">webupdate.cpp webupdatedlg.cpp checkedlistctrl.cpp	md5.cpp installer.cpp download.cpp stdactions.cpp app.cpp</set>
-	<set var="COMP_HDR">wx/webupdatedef.h wx/webupdate.h wx/webupdatedlg.h wx/checkedlistctrl.h wx/md5.h wx/installer.h wx/download.h wx/stdactions.h</set>		
+
+	<!-- these are for the WebUpdate library -->
+	<set var="COMP_SRC">webupdate.cpp webupdatedlg.cpp checkedlistctrl.cpp	md5.cpp installer.cpp download.cpp stdactions.cpp webupdatectrl.cpp</set>
+	<set var="COMP_HDR">wx/webupdatedef.h wx/webupdate.h wx/webupdatedlg.h wx/checkedlistctrl.h wx/md5.h wx/installer.h wx/download.h wx/stdactions.h wx/webupdatectrl.h</set>		
+
+	<!-- these are for the WebUpdaterApp (and need to be prefixed!) -->
+	<set var="APP_SRC">../src/app.cpp</set>
+	<set var="APP_HDR"></set>		
 	
 	<set var="COMP_SAMPLE1_SRC">../samples/simple/v1.0.0/minimal.cpp</set>
 	<set var="COMP_SAMPLE1_UPDATED_SRC">../samples/simple/v2.0.3/minimal.cpp</set>
@@ -66,28 +75,61 @@
 		<if cond="USE_HTTPENGINE=='1'">httpengine$(WXLIBPOSTFIX)</if>
 	</set>
 	
-	<!-- WebUpdate does not provide libraries... -->
-	<exe id="webupdater" template="compexe">
-		<lib-path>$(HTTPENGINEDEP_LIBPATH)</lib-path>
-		<include>$(HTTPENGINEDEP_INCPATH)</include>
-		<define>$(HTTPENGINEDEP_DEF)</define>
-
-		<app-type>gui</app-type>		
-		<dirname>../src</dirname>
-		<res-include>../src</res-include>
-		<win32-res>..$(DIRSEP)src$(DIRSEP)app.rc</win32-res>
-		
-		<msvc-file-group>XRC:*.xrc</msvc-file-group>
-		<msvc-project-files>..\src\webupdatedlg.xrc</msvc-project-files>
-		
-		<sys-lib>$(HTTPENGINEDEP_LIB)</sys-lib>
-		<wx-lib>xrc</wx-lib>
-		<wx-lib>xml</wx-lib>
-		<wx-lib>net</wx-lib>
-        <wx-lib>core</wx-lib>
-        <wx-lib>base</wx-lib>
-	</exe>
-
+	<!-- 'mod.bkl' is where advanced users can store their additional source
+         files for the WebUpdater application -->
+ 	<include file="mod.bkl" ignore_missing="1"/>
+ 	<set var="MOD_SRC" overwrite="0"/>
+ 	<set var="MOD_HDR" overwrite="0"/> 	
+ 	<set var="MAKE_LIB" overwrite="0">1</set>
+ 	<set var="MAKE_EXE" overwrite="0">1</set>
+ 	
+	<if cond="MAKE_LIB=='1'">
+		<!-- the WebUpdate library: only for advanced uses -->
+		<lib id="webupdate_lib" template="complib" cond="WX_SHARED=='0'">
+			<sources>$(MOD_SRC)</sources>
+	  		<headers>$(MOD_HDR)</headers>
+		</lib>
+		<dll id="webupdate_dll" template="compdll" cond="WX_SHARED=='1'">
+			<sources>$(MOD_SRC)</sources>
+	  		<headers>$(MOD_HDR)</headers>
+	
+			<sys-lib>$(HTTPENGINEDEP_LIB)</sys-lib>
+			<wx-lib>xrc</wx-lib>
+			<wx-lib>xml</wx-lib>
+			<wx-lib>net</wx-lib>
+			<wx-lib>core</wx-lib>
+			<wx-lib>base</wx-lib>
+		</dll>
+		<set var="MSVC6PRJ_MERGED_TARGETS">webupdate=webupdate_lib+webupdate_dll</set>
+	</if>
+ 
+  	<if cond="MAKE_EXE=='1'">	
+		<!-- the WebUpdater utility... -->
+		<exe id="webupdater" template="compexe">
+			<lib-path>$(HTTPENGINEDEP_LIBPATH)</lib-path>
+			<include>$(HTTPENGINEDEP_INCPATH)</include>
+			<define>$(HTTPENGINEDEP_DEF)</define>
+	
+			<app-type>gui</app-type>		
+			<dirname>../src</dirname>
+			<res-include>../src</res-include>
+			<win32-res>..$(DIRSEP)src$(DIRSEP)app.rc</win32-res>
+			
+			<msvc-file-group>XRC:*.xrc</msvc-file-group>
+			<msvc-project-files>..\src\webupdatedlg.xrc</msvc-project-files>
+	
+			<sources>$(APP_SRC)</sources>
+			<headers>$(APP_HDR)</headers>
+	
+			<library>webupdate_lib</library>
+			<sys-lib>$(HTTPENGINEDEP_LIB)</sys-lib>
+			<wx-lib>xrc</wx-lib>
+			<wx-lib>xml</wx-lib>
+			<wx-lib>net</wx-lib>
+		    <wx-lib>core</wx-lib>
+	       	<wx-lib>base</wx-lib>
+		</exe>
+	</if>
 
 	
 	

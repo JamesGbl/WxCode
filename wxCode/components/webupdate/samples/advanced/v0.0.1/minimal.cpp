@@ -16,6 +16,8 @@
 #define VERSION				wxT("0.0.1")
 #define APP_NAME			wxT("wxWebUpdate ADVANCED sample")
 
+void wxUpdateWebUpdaterIfRequired();
+
 // ----------------------------------------------------------------------------
 // headers
 // ----------------------------------------------------------------------------
@@ -129,6 +131,8 @@ IMPLEMENT_APP(MyApp)
 // wxT('Main program') equivalent: the program execution "starts" here
 bool MyApp::OnInit()
 {
+	wxUpdateWebUpdaterIfRequired();
+
     // create the main application window
     SetAppName(APP_NAME);
     MyFrame *frame = new MyFrame(GetAppName());
@@ -274,6 +278,7 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
    IN YOUR PROGRAM USING IT IN THE SIMPLEST WAY (SEE WEBUPDATER DOCS)
 */
 
+// call this in the event handler used to show the wxWebUpdateDlg
 void wxUpdateAndExit(wxFrame *caller, const wxString &xrc, const wxString &xml)
 {
 #ifdef __WXMSW__	
@@ -283,6 +288,20 @@ void wxUpdateAndExit(wxFrame *caller, const wxString &xrc, const wxString &xml)
 	wxExecute(wxT("./webupdater --savelog --restart --xrc=") + xrc + wxT(" --xml=") + xml);
 	caller->Close(true);
 #endif
+}
+
+// call this in your wxApp::OnInit()
+void wxUpdateWebUpdaterIfRequired()
+{
+#ifdef __WXMSW__
+	wxString newupdater = wxT("_webupdater.exe"), oldupdater = wxT("webupdater.exe");
+#else
+	wxString newupdater = wxT("_webupdater"), oldupdater = wxT("webupdater");	
+#endif
+	if (wxFileName::FileExists(newupdater)) {
+		wxRemoveFile(oldupdater);
+		wxRenameFile(newupdater, oldupdater);
+	}
 }
 
 void MyFrame::OnUpdateCheck(wxCommandEvent &)

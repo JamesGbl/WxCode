@@ -67,7 +67,7 @@ INPUT                  = ../src/ \
                          docs.txt
 FILE_PATTERNS          = 
 RECURSIVE              = NO
-EXCLUDE                = 
+EXCLUDE                = app.cpp
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = 
 EXAMPLE_PATH           = 

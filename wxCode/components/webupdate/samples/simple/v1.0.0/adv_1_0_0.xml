@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
-<webupdate>
+<!DOCTYPE webupdate PUBLIC "-//WebUpdate//DTD WebUpdater 1.0//EN" "http://wxcode.sourceforge.net/components/webupdate/local.dtd">
+<!-- RCS-ID: $Id$ -->
+
+<webupdate version="1.0">
 	<appname>wxWebUpdate SIMPLE sample</appname>
 	<appfile>simple</appfile>
 	<dlgxrc>wxWebUpdateDlg</dlgxrc>

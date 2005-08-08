@@ -67,19 +67,12 @@ bool wxWebUpdateActionRun::Run() const
 		// proceed: the executable could be in the system path...
 	}
 
-	// unfortunately we cannot use ::wxExecute from a secondary thread
-	// (and wxWebUpdateAction run from a wxWebUpdateInstallThread) so we
-	// are forced to send a message to wxApp which launches the command for us
-	wxCommandEvent runev(wxEVT_COMMAND_EXECUTE);
-	runev.SetString(m_strFile + wxT(" ") + m_strArgs);
-	runev.SetInt(m_nExecFlag | wxEXEC_NODISABLE | wxEXEC_NODISABLE);
-	
-	// our app should process this event...
-	wxLogDebug(wxT("wxWebUpdateActionRun::Run - sending to wxTheApp the command:\n\n")
-				+ runev.GetString() + wxT("\n\nwith flags: %d"), runev.GetInt());
-	wxTheApp->AddPendingEvent(runev);
+	int retcode = wxExecute(m_strFile + wxT(" ") + m_strArgs, 
+ 							m_nExecFlag | wxEXEC_NODISABLE | wxEXEC_NODISABLE);
 
-	return TRUE;
+	// FIXME: how do we know if this retcode means success or not ?
+	//        (some programs could not respect the 0=success UNIX standard...)
+	return (retcode == 0);
 }
 
 bool wxWebUpdateActionRun::SetProperties(const wxArrayString &propnames,
@@ -139,6 +132,7 @@ bool wxWebUpdateActionRun::SetProperties(const wxArrayString &propnames,
 
 bool wxWebUpdateActionExtract::Run() const
 {
+	wxArrayString orig, output;
 	wxLogDebug(wxT("wxWebUpdateActionExtract::Run - going to extract the file [")
 				+ m_strFile + wxT("] of type [") + m_strType + wxT("] in\n\n")
 				+ m_strWhere + wxT("\n\n"));
@@ -156,6 +150,14 @@ bool wxWebUpdateActionExtract::Run() const
 				wxT("\" or the file \"") + m_strFile + wxT("\" does not exist !"));
 		return FALSE;
 	}
+	
+	// parse the namemap
+	wxArrayString compressed, extracted;
+	int count = wxWebUpdateInstaller::Get()->ParsePairValueList(m_strNameMap, compressed, extracted);
+
+	// do the substitutions also on the compressed filenames
+	for (int i=0; i < count; i++)
+		compressed[i] = wxWebUpdateInstaller::Get()->DoSubstitution(compressed[i]);
 
 	// create the archive factory
 	wxArchiveClassFactory *factory = NULL;
@@ -172,11 +174,18 @@ bool wxWebUpdateActionExtract::Run() const
     {
         // access meta-data
         wxString name = entry->GetName();
+        wxString output = dir + name;
+        
+        // is this file registered in the name map ?
+        int idx = compressed.Index(name);
+        if (idx != wxNOT_FOUND)
+        	output = dir + extracted[idx];
+        
 		wxLogDebug(wxT("wxWebUpdateActionExtract::Run - extracting [") + name +
-			wxT("] as [") + dir + name + wxT("]..."));
+			wxT("] as [") + output + wxT("]..."));
 
         // now just dump this entry to a new uncompressed file...
-		wxFileOutputStream out(dir + name);
+		wxFileOutputStream out(output);
 		if (!out.Write(*in)) {
 
 			wxLogDebug(wxT("wxWebUpdateActionExtract::Run - couldn't decompress ") + name);
@@ -204,10 +213,18 @@ bool wxWebUpdateActionExtract::SetProperties(const wxArrayString &propnames,
 			m_strFile = propvalues[i];
 		else if (propnames[i] == wxT("type"))
 			m_strType = propvalues[i];
+		else if (propnames[i] == wxT("namemap"))
+			m_strNameMap = propvalues[i];
 		else
 			wxLogDebug(wxT("wxWebUpdateActionExtract::SetProperties - unknown property: ") 
 						+ propnames[i]);
 	}
+	
+	// by default, WebUpdater executables must be extracted with the '_'
+	// character prepended
+	wxString str = wxWebUpdateInstaller::Get()->GetKeywordValue(wxT("updatername")) +
+					wxWebUpdateInstaller::Get()->GetKeywordValue(wxT("exe"));
+	m_strNameMap = str + wxT("=_") + str + m_strNameMap;
 
 	// set defaults
 	if (m_strFile.IsEmpty())		// the FILE default value is $(thisfile)

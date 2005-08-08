@@ -37,6 +37,7 @@
 #include <wx/zipstrm.h>
 #include <wx/msgdlg.h>
 #include <wx/app.h>
+#include <wx/tokenzr.h>
 
 
 // wxWidgets RTTI
@@ -162,64 +163,46 @@ void wxWebUpdateInstaller::InitDefaultKeywords()
 
 	// a temporary folder
 	m_hashKeywords[wxT("tempdir")] = 
-		wxFileName::CreateTempFileName(wxT("webupdate")).BeforeLast(sep);
+		wxFileName::CreateTempFileName(wxT("webupdate")).BeforeLast(sep)
+  		+ sep;
 
 	// the folder where we put the downloaded files
 	m_hashKeywords[wxT("downloaddir")] = m_hashKeywords[wxT("tempdir")];		// by default it's the temp folder
 
 	// a new temporary folder
 	wxString newtempdir(m_hashKeywords[wxT("tempdir")] + sep + 
-			wxT("webupdate") + wxDateTime::Now().Format(wxT("%d%H%M%S")));
+			wxT("webupdate") + wxDateTime::Now().Format(wxT("%d%H%M%S")) + sep);
 	if (wxFileName::Mkdir(newtempdir))
 		m_hashKeywords[wxT("newtempdir")] = newtempdir;
 
-	// the program root folder
+	// the updater root folder
 	m_hashKeywords[wxT("programdir")] = wxGetCwd();
 
 	// the updater path & filename
-	m_hashKeywords[wxT("updater")] = wxTheApp->argv[0];
-
-	// the program-to-update path & filename
-	m_hashKeywords[wxT("program")] = 
-		wxFileName(m_hashKeywords[wxT("updater")]).
-			GetPath(wxPATH_GET_SEPARATOR | wxPATH_GET_VOLUME)
-			;
-		//wxFindAppPath(wxTheApp->argv[0], wxGetCwd(), wxTheApp->GetAppName());
+	m_hashKeywords[wxT("updater")] = wxFileName(wxTheApp->argv[0]).
+				GetPath(wxPATH_GET_SEPARATOR | wxPATH_GET_VOLUME);
+	m_hashKeywords[wxT("updatername")] = wxFileName(wxTheApp->argv[0]).GetName();
 
 	// the webupdater process ID
 	m_hashKeywords[wxT("pid")] = wxString::Format(wxT("%d"), wxGetProcessId());
 
-	// the program name
-	if (wxTheApp) 
-		m_hashKeywords[wxT("appname")] = wxEmptyString;//wxTheApp->GetAppName();	
-#ifdef __WXDEBUG__
-	else
-		wxLogDebug(wxT("wxWebUpdateInstaller::InitDefaultKeywords - wxTheApp is not initialized !"));
-#endif
-
-	// the name of the main frame of the program
-	if (wxTheApp && wxTheApp->GetTopWindow()) 
-		m_hashKeywords[wxT("framename")] = wxTheApp->GetTopWindow()->GetTitle();
-#ifdef __WXDEBUG__
-	else
-		wxLogDebug(wxT("wxWebUpdateInstaller::InitDefaultKeywords - wxTheApp/the top window is not initialized !"));
-#endif
-
 	// some command names
-	m_hashKeywords[wxT("cp")] = 
 #ifdef __WXMSW__
-		wxT("copy /y");
+	m_hashKeywords[wxT("cp")] = wxT("cmd.exe /c copy /y");
+	m_hashKeywords[wxT("mv")] = wxT("cmd.exe /c move /y");
+	m_hashKeywords[wxT("cd")] = wxT("cmd.exe /c cd");
+	m_hashKeywords[wxT("mkdir")] = wxT("cmd.exe /c mkdir");
+	m_hashKeywords[wxT("exe")] = wxT(".exe");
 #else
-		wxT("cp -f");
-#endif
-	m_hashKeywords[wxT("mv")] = 
-#ifdef __WXMSW__
-		wxT("move /y");
-#else
-		wxT("mv -f");
-#endif
+	m_hashKeywords[wxT("cp")] = wxT("cp -f");
+	m_hashKeywords[wxT("mv")] = wxT("mv -f");
 	m_hashKeywords[wxT("cd")] = wxT("cd");
 	m_hashKeywords[wxT("mkdir")] = wxT("mkdir");
+	m_hashKeywords[wxT("exe")] = wxEmptyString;
+#endif
+
+	// some other keywords will be added later by other
+	// wxWebUpdate* classes
 }
 
 void wxWebUpdateInstaller::FreeKeywords()
@@ -290,6 +273,89 @@ wxString wxWebUpdateInstaller::DoPathSubstitution(const wxString &str)
 	copy.Replace(wxT("//"), sep);
 	return copy;
 }
+
+int wxWebUpdateInstaller::ParsePairValueList(const wxString &str, wxArrayString &names, wxArrayString &values)
+{		
+	// this should be a comma separed list of pairs:  key=value
+	wxStringTokenizer tkz(str, wxT(","));
+	while ( tkz.HasMoreTokens() ) {
+		wxString token = tkz.GetNextToken();
+	
+		// is this a valid token ?
+		if (token.Contains(wxT("="))) { 
+
+			wxString keyname = token.BeforeFirst(wxT('='));
+			if (keyname.IsEmpty() || keyname.Contains(wxT(')'))) {
+
+				wxLogDebug(wxT("wxWebUpdaterInstaller::ParsePairValueList - found an invalid keyword name: ")
+							+ keyname);
+				continue;
+			}
+
+			wxString value = token.AfterFirst(wxT('='));
+			if (value.IsEmpty()) {
+
+				wxLogDebug(wxT("wxWebUpdaterInstaller::ParsePairValueList - found an invalid keyword value: ")
+							+ value);
+				continue;
+			}
+
+			// keyword values can contain other keywords...
+			value = DoSubstitution(value);
+
+			// save this key & value
+			names.Add(keyname);
+			values.Add(value);
+
+		} else {
+
+			wxLogDebug(wxT("wxWebUpdateInstaller::ParsePairValueList - found an invalid keyword token: ")
+							+ token);
+		}
+	}
+	
+	wxASSERT(names.GetCount() == values.GetCount());
+	return names.GetCount();
+}
+
+wxWebUpdateCheckFlag wxWebUpdateInstaller::VersionCheck(const wxVersion &ver) const
+{
+	int maj, min, rel;
+	if (!wxWebUpdatePackage::ExtractVersionNumbers(ver, &maj, &min, &rel)) {
+	
+		wxLogDebug(wxT("wxWebUpdateInstaller::VersionCheck - invalid version format (")
+  					+ ver + wxT(") ?"));
+		return wxWUCF_FAILED;
+	}
+	
+	int r = wxWebUpdatePackage::StdVersionCheck(maj, min, rel,
+			wxWUI_VERSION_MAJOR, wxWUI_VERSION_MINOR, wxWUI_VERSION_RELEASE);
+	if (r == 1) return wxWUCF_FAILED;
+	if (r == 0) return wxWUCF_UPDATED;
+	return wxWUCF_OUTOFDATE;
+}
+
+void wxWebUpdateInstaller::ShowErrorMsg(const wxString &str)
+{
+	// both log it
+	wxLogDebug(str);
+	
+	// and notify the user
+	wxMessageBox(str + wxT("\nContact the support team of ") + 
+					GetKeywordValue(wxT("appname")) +
+					wxT(" for help."), wxT("Error"), wxOK | wxICON_ERROR);
+}
+
+void wxWebUpdateInstaller::ShowNotificationMsg(const wxString &str, const wxString &title)
+{
+	// both log it
+	wxLogDebug(str);
+
+	// and notify the user
+	wxMessageBox(str, title.IsEmpty() ? GetKeywordValue(wxT("appname")) : title, 
+ 						wxOK | wxICON_INFORMATION);
+}
+
 
 
 

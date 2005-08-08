@@ -70,6 +70,14 @@ WX3RDPARTLIBPOSTFIX =
 !ifeq WX_DEBUG 1
 WX3RDPARTLIBPOSTFIX = d
 !endif
+__webupdate_lib___depname =
+!ifeq WX_SHARED 0
+__webupdate_lib___depname = ..\lib\webupdate$(WXLIBPOSTFIX).lib
+!endif
+__webupdate_dll___depname =
+!ifeq WX_SHARED 1
+__webupdate_dll___depname = ..\lib\webupdate$(WXLIBPOSTFIX).dll
+!endif
 __HTTPENGINEDEP_LIB_p =
 !ifeq USE_HTTPENGINE 1
 __HTTPENGINEDEP_LIB_p = httpengine$(WXLIBPOSTFIX).lib
@@ -144,6 +152,33 @@ __WXLIBPATH_FILENAMES = \lib\wat_dll
 
 ### Variables: ###
 
+WEBUPDATE_LIB_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
+	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
+	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
+	-i=$(WX_DIR)\include -i=..\include $(CPPFLAGS) $(CXXFLAGS)
+WEBUPDATE_LIB_OBJECTS =  &
+	watcom\webupdate_lib_webupdate.obj &
+	watcom\webupdate_lib_webupdatedlg.obj &
+	watcom\webupdate_lib_checkedlistctrl.obj &
+	watcom\webupdate_lib_md5.obj &
+	watcom\webupdate_lib_installer.obj &
+	watcom\webupdate_lib_download.obj &
+	watcom\webupdate_lib_stdactions.obj &
+	watcom\webupdate_lib_webupdatectrl.obj
+WEBUPDATE_DLL_CXXFLAGS = -bd $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
+	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
+	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
+	-i=$(WX_DIR)\include -i=..\include -dWXMAKINGDLL_WEBUPDATE $(CPPFLAGS) &
+	$(CXXFLAGS)
+WEBUPDATE_DLL_OBJECTS =  &
+	watcom\webupdate_dll_webupdate.obj &
+	watcom\webupdate_dll_webupdatedlg.obj &
+	watcom\webupdate_dll_checkedlistctrl.obj &
+	watcom\webupdate_dll_md5.obj &
+	watcom\webupdate_dll_installer.obj &
+	watcom\webupdate_dll_download.obj &
+	watcom\webupdate_dll_stdactions.obj &
+	watcom\webupdate_dll_webupdatectrl.obj
 WEBUPDATER_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
 	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
@@ -158,6 +193,7 @@ WEBUPDATER_OBJECTS =  &
 	watcom\webupdater_installer.obj &
 	watcom\webupdater_download.obj &
 	watcom\webupdater_stdactions.obj &
+	watcom\webupdater_webupdatectrl.obj &
 	watcom\webupdater_app.obj
 SIMPLE_1_0_0_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
@@ -191,7 +227,7 @@ watcom :
 
 ### Targets: ###
 
-all : .SYMBOLIC ..\src\webupdater.exe rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150 ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
+all : .SYMBOLIC $(__webupdate_lib___depname) $(__webupdate_dll___depname) ..\src\webupdater.exe rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150 ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
 
 clean : .SYMBOLIC 
 	-if exist watcom\*.obj del watcom\*.obj
@@ -199,6 +235,9 @@ clean : .SYMBOLIC
 	-if exist watcom\*.lbc del watcom\*.lbc
 	-if exist watcom\*.ilk del watcom\*.ilk
 	-if exist watcom\*.pch del watcom\*.pch
+	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).lib del ..\lib\webupdate$(WXLIBPOSTFIX).lib
+	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).dll del ..\lib\webupdate$(WXLIBPOSTFIX).dll
+	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).lib del ..\lib\webupdate$(WXLIBPOSTFIX).lib
 	-if exist ..\src\webupdater.exe del ..\src\webupdater.exe
 	-if exist ..\samples\simple\v1.0.0\simple.exe del ..\samples\simple\v1.0.0\simple.exe
 	-if exist ..\samples\simple\v2.0.3\simple.exe del ..\samples\simple\v2.0.3\simple.exe
@@ -284,14 +323,36 @@ docs :
 cleandocs :  
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
-..\src\webupdater.exe :  $(WEBUPDATER_OBJECTS) watcom\webupdater_app.res
+!ifeq WX_SHARED 0
+..\lib\webupdate$(WXLIBPOSTFIX).lib :  $(WEBUPDATE_LIB_OBJECTS)
+	@%create watcom\webupdate_lib.lbc
+	@for %i in ($(WEBUPDATE_LIB_OBJECTS)) do @%append watcom\webupdate_lib.lbc +%i
+	wlib -q -p4096 -n -b $^@ @watcom\webupdate_lib.lbc
+!endif
+
+!ifeq WX_SHARED 1
+..\lib\webupdate$(WXLIBPOSTFIX).dll :  $(WEBUPDATE_DLL_OBJECTS)
+	@%create watcom\webupdate_dll.lbc
+	@%append watcom\webupdate_dll.lbc option quiet
+	@%append watcom\webupdate_dll.lbc name $^@
+	@%append watcom\webupdate_dll.lbc option caseexact
+	@%append watcom\webupdate_dll.lbc $(LDFLAGS) $(__DEBUGINFO_5)  libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib
+	@for %i in ($(WEBUPDATE_DLL_OBJECTS)) do @%append watcom\webupdate_dll.lbc file %i
+	@for %i in ( $(__HTTPENGINEDEP_LIB_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\webupdate_dll.lbc library %i
+	@%append watcom\webupdate_dll.lbc
+	@%append watcom\webupdate_dll.lbc system nr_dll
+	wlink @watcom\webupdate_dll.lbc
+	wlib -q -n -b ..\lib\webupdate$(WXLIBPOSTFIX).lib +$^@
+!endif
+
+..\src\webupdater.exe :  $(WEBUPDATER_OBJECTS) watcom\webupdater_app.res $(__webupdate_lib___depname)
 	@%create watcom\webupdater.lbc
 	@%append watcom\webupdater.lbc option quiet
 	@%append watcom\webupdater.lbc name $^@
 	@%append watcom\webupdater.lbc option caseexact
 	@%append watcom\webupdater.lbc $(LDFLAGS) $(__DEBUGINFO_5)  libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib libpath $(HTTPENGINE_DIR)\lib system nt_win ref '_WinMain@16'
 	@for %i in ($(WEBUPDATER_OBJECTS)) do @%append watcom\webupdater.lbc file %i
-	@for %i in ( $(__HTTPENGINEDEP_LIB_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\webupdater.lbc library %i
+	@for %i in ( ..\lib\webupdate$(WXLIBPOSTFIX).lib $(__HTTPENGINEDEP_LIB_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\webupdater.lbc library %i
 	@%append watcom\webupdater.lbc option resource=watcom\webupdater_app.res
 	wlink @watcom\webupdater.lbc
 
@@ -355,6 +416,54 @@ rep4_adv150 : .SYMBOLIC
 	@%append watcom\advanced_1_5_0.lbc option resource=watcom\advanced_1_5_0_minimal.res
 	wlink @watcom\advanced_1_5_0.lbc
 
+watcom\webupdate_lib_webupdate.obj :  .AUTODEPEND .\..\src\webupdate.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
+
+watcom\webupdate_lib_webupdatedlg.obj :  .AUTODEPEND .\..\src\webupdatedlg.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
+
+watcom\webupdate_lib_checkedlistctrl.obj :  .AUTODEPEND .\..\src\checkedlistctrl.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
+
+watcom\webupdate_lib_md5.obj :  .AUTODEPEND .\..\src\md5.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
+
+watcom\webupdate_lib_installer.obj :  .AUTODEPEND .\..\src\installer.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
+
+watcom\webupdate_lib_download.obj :  .AUTODEPEND .\..\src\download.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
+
+watcom\webupdate_lib_stdactions.obj :  .AUTODEPEND .\..\src\stdactions.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
+
+watcom\webupdate_lib_webupdatectrl.obj :  .AUTODEPEND .\..\src\webupdatectrl.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
+
+watcom\webupdate_dll_webupdate.obj :  .AUTODEPEND .\..\src\webupdate.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
+
+watcom\webupdate_dll_webupdatedlg.obj :  .AUTODEPEND .\..\src\webupdatedlg.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
+
+watcom\webupdate_dll_checkedlistctrl.obj :  .AUTODEPEND .\..\src\checkedlistctrl.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
+
+watcom\webupdate_dll_md5.obj :  .AUTODEPEND .\..\src\md5.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
+
+watcom\webupdate_dll_installer.obj :  .AUTODEPEND .\..\src\installer.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
+
+watcom\webupdate_dll_download.obj :  .AUTODEPEND .\..\src\download.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
+
+watcom\webupdate_dll_stdactions.obj :  .AUTODEPEND .\..\src\stdactions.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
+
+watcom\webupdate_dll_webupdatectrl.obj :  .AUTODEPEND .\..\src\webupdatectrl.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
+
 watcom\webupdater_webupdate.obj :  .AUTODEPEND .\..\src\webupdate.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATER_CXXFLAGS) $<
 
@@ -376,11 +485,14 @@ watcom\webupdater_download.obj :  .AUTODEPEND .\..\src\download.cpp
 watcom\webupdater_stdactions.obj :  .AUTODEPEND .\..\src\stdactions.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATER_CXXFLAGS) $<
 
-watcom\webupdater_app.obj :  .AUTODEPEND .\..\src\app.cpp
+watcom\webupdater_webupdatectrl.obj :  .AUTODEPEND .\..\src\webupdatectrl.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATER_CXXFLAGS) $<
 
 watcom\webupdater_app.res :  .AUTODEPEND .\..\src\app.rc
 	wrc -q -ad -bt=nt -r -fo=$^@ $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\include -i=$(HTTPENGINE_DIR)\include $(__HTTPENGINEDEP_DEF_p) -i=..\src $<
+
+watcom\webupdater_app.obj :  .AUTODEPEND .\..\src\app.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATER_CXXFLAGS) $<
 
 watcom\simple_1_0_0_minimal.obj :  .AUTODEPEND .\..\samples\simple\v1.0.0\minimal.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(SIMPLE_1_0_0_CXXFLAGS) $<

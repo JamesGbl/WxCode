@@ -159,15 +159,15 @@ public:
 
 	// our local script
 	wxWebUpdateLocalXMLScript m_script;
-
-	// TRUE if the updated app will be restarted
-	bool m_bRestart;
+	
+	// our extra options (taken from command line)
+	wxWebUpdateExtraOptions m_optExtra;
 
 	// our log window
 	wxLogWindow *m_log;
 
 public:
-	WebUpdaterApp() : m_dlg(NULL), m_bRestart(FALSE), m_log(NULL) {}
+	WebUpdaterApp() : m_dlg(NULL), m_log(NULL) {}
 	virtual ~WebUpdaterApp() {}
 
 	// Initializes the WebUpdaterApp.
@@ -193,8 +193,9 @@ private:
 class WebUpdaterDlg : public wxWebUpdateDlg
 {
 public:
-	WebUpdaterDlg(const wxWebUpdateLocalXMLScript &script)
-		: wxWebUpdateDlg(NULL, script) {}
+	WebUpdaterDlg(const wxWebUpdateLocalXMLScript &script,
+					wxWebUpdateExtraOptions *opt)
+		: wxWebUpdateDlg(NULL, script, opt) {}
 	virtual ~WebUpdaterDlg() {}
 
 
@@ -311,6 +312,7 @@ bool WebUpdaterApp::OnInit()
 	//_CrtSetBreakAlloc(31100);
 
 	// parse the command line
+	wxLogDebug(wxT("WebUpdaterApp::OnInit - parsing the command line"));
     wxCmdLineParser parser(g_cmdLineDesc, argc, argv);
     if (parser.Parse() != 0)
 		return 0;		// help was shown / an error occurred
@@ -324,7 +326,10 @@ bool WebUpdaterApp::OnInit()
 	
 	// check for other options & switches (ORDER IS IMPORTANT !)
 	wxString xml, xrc;
-	m_bRestart = parser.Found(SWITCH_RESTART);
+	
+	m_optExtra.m_bRestart = parser.Found(SWITCH_RESTART);
+	m_optExtra.m_bSaveLog = parser.Found(SWITCH_SAVELOG);
+	
 	if (parser.Found(SWITCH_SAVELOG))
 		new wxFileLog(wxWU_LOGFILENAME, wxT(" LOG OF WEBUPDATER SESSION BEGAN AT ") + 
 						wxDateTime::Now().Format(wxT("%x %X")));		// it automatically installs itself as the new logger
@@ -334,6 +339,7 @@ bool WebUpdaterApp::OnInit()
 		xrc = wxWU_LOCAL_XRC;
 
 	// this is for using wxDownloadThread
+	wxLogDebug(wxT("WebUpdaterApp::OnInit - initializing sockets & handlers"));
 	wxSocketBase::Initialize();
 
 	// this little snippet allows us to embed our WWW bitmap directly in the
@@ -346,24 +352,43 @@ bool WebUpdaterApp::OnInit()
     wxMemoryFSHandler::AddFile(wxT("www.xpm"), wxBitmap(www_xpm), wxBITMAP_TYPE_XPM);	
 
 	// load the local XML webupdate script
+	wxLogDebug(wxT("WebUpdaterApp::OnInit - loading the local XML webupdate script ") + xml);	
 	wxFileName fn(xml);
 	fn.MakeAbsolute(wxGetCwd());
 	if (!m_script.Load(fn.GetFullPath())) {
-		wxMessageBox(wxT("The installation of the WebUpdater component of this application\n")
+		wxWebUpdateInstaller::Get()->ShowErrorMsg(
+					wxT("The installation of the WebUpdater component of this application\n")
 					wxT("is corrupted; the file:\n\n\t") + 
 					fn.GetFullPath() + 
-					wxT("\n\n is missing; please reinstall the program."), 
-					wxT("Fatal error"),
-					wxICON_ERROR | wxOK);	
+					wxT("\n\n is missing (or invalid); please reinstall the program."));
 		return FALSE;
 	}
 	
     // load our XRC file
-    wxXmlResource::Get()->Load(xrc);
+	wxLogDebug(wxT("WebUpdaterApp::OnInit - loading the XRC file ") + xrc);    
+    if (!wxXmlResource::Get()->Load(xrc)) {
+		wxWebUpdateInstaller::Get()->ShowErrorMsg(
+					wxT("The WebUpdater configuration file is corrupted; the file:\n\n\t") +				
+					xrc + 
+					wxT("\n\n is missing (or invalid); please reinstall the program."));
+		return FALSE;
+	}
+
+	// check that the program-to-update EXE exists
+	wxString app2update = m_script.GetAppFile() + 
+		wxWebUpdateInstaller::Get()->GetKeywordValue(wxT("exe"));
+	if (!wxFileName::FileExists(app2update)) {
+		wxWebUpdateInstaller::Get()->ShowErrorMsg(
+					wxT("The WebUpdater configuration file is corrupted; the file:\n\n\t") +					
+					app2update + 
+					wxT("\n\n is missing (or invalid); please reinstall the program."));
+		return FALSE;
+	}
 
 	// create our main dialog
 #if 1
-	m_dlg = new WebUpdaterDlg(m_script);
+	wxLogDebug(wxT("WebUpdaterApp::OnInit - creating the WebUpdaterDlg"));
+	m_dlg = new WebUpdaterDlg(m_script, &m_optExtra);
 	SetTopWindow(m_dlg);
 	SetExitOnFrameDelete(TRUE);
 #else
@@ -386,10 +411,13 @@ bool WebUpdaterApp::OnInit()
 int WebUpdaterApp::OnExit()
 {
 	// remove the singleton objects
+	wxLogDebug(wxT("WebUpdaterApp::OnExit - deleting the WebUpdate installer"));	
 	delete wxWebUpdateInstaller::Set(NULL);
 	
 	// before exiting this app, rerun the program we've just updated
-	if (m_bRestart) {
+	if (m_optExtra.m_bRestart) {
+	
+		wxLogDebug(wxT("WebUpdaterApp::OnExit - restarting the updated application ") + m_script.GetAppFile());	
 		wxExecute(
 #ifdef __WXMSW__
 			m_script.GetAppFile() + wxT(".exe")
@@ -406,10 +434,18 @@ void WebUpdaterApp::OnExecute(wxCommandEvent &ce)
 {
 	wxString cmd = ce.GetString();
 	int flags = ce.GetInt();
+	wxMutex *m = (wxMutex*)ce.GetExtraLong();
+	wxCondition *cond = (wxCondition *)ce.GetClientData();
 
+	wxMutexLocker locker(*m);
+	int res = wxExecute(cmd, flags);
+	
+	// save the return code in the event
+	ce.SetInt(res);
+	
 	wxLogDebug(wxT("WebUpdaterApp::OnExecute - executing the command:\n\n\t\t") +
-				cmd + wxT("\n\n with flags: %d"), flags);
-	wxExecute(cmd, flags);
+				cmd + wxT("\n\n with flags: %d; the exit code is: %d"), flags, res);	
+	cond->Broadcast();		// let the wxWebUpdateActionRun know that we have finished
 }
 
 
@@ -435,7 +471,7 @@ void WebUpdaterDlg::OnQuit(wxCloseEvent &)
 	if (f) f->Close(true);
 #endif
     Destroy();
-	//wxExit();
+	wxLogDebug(wxT("WebUpdaterDlg::OnQuit - quitting"));
 }
 
 void WebUpdaterDlg::EndModal(int)
@@ -443,3 +479,4 @@ void WebUpdaterDlg::EndModal(int)
 	// we are not showing the dlg as modal, thus just close it
 	Close(true);
 }
+

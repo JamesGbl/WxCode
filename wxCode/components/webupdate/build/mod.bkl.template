@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<makefile>
+
+	<!-- list here the additional sources & header files which you
+         use to implement your custom actions. -->
+ 	<set var="MOD_SRC"></set>
+ 	<set var="MOD_HDR"></set>
+ 	
+ 	<!-- with this two vars you can control the lib & exe output
+ 	<set var="MAKE_LIB">1</set>
+ 	<set var="MAKE_EXE">1</set> -->
+      
+</makefile>

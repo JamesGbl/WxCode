@@ -30,7 +30,6 @@
 #include <wx/file.h>
 #include <wx/wfstream.h>
 #include <wx/filesys.h>
-#include <wx/tokenzr.h>
 #include "wx/webupdate.h"
 #include "wx/download.h"
 #include "wx/installer.h"
@@ -79,33 +78,10 @@ wxWebUpdateLocalXMLScript::wxWebUpdateLocalXMLScript(const wxString &strURI)
 	if (!strURI.IsEmpty()) Load(strURI); 
 }
 
-// taken from wx/src/xrc/xmlres.cpp, wxXmlResourceHandler::GetNodeContent
-wxString wxWebUpdateLocalXMLScript::GetNodeContent(const wxXmlNode *node) const
-{
-    const wxXmlNode *n = node;
-    if (n == NULL) return wxEmptyString;
-    n = n->GetChildren();
-
-    while (n)
-    {
-        if (n->GetType() == wxXML_TEXT_NODE ||
-            n->GetType() == wxXML_CDATA_SECTION_NODE)
-            return n->GetContent();
-        n = n->GetNext();
-    }
-
-    return wxEmptyString;
-}
-
 wxWebUpdateLocalPackage *wxWebUpdateLocalXMLScript::GetPackage(const wxXmlNode *package) const
 {
 	if (!package || package->GetName() != wxT("local-package")) return NULL;
-
-	wxString packagename;
-	wxXmlProperty *prop = package->GetProperties();
-	while (prop && prop->GetName() != wxT("id"))
-		prop = prop->GetNext();
-	if (prop) packagename = prop->GetValue();
+	wxString packagename = wxWebUpdateXMLScript::GetPackageID(package);
 
 	// parse this package
 	wxString ver;
@@ -115,7 +91,7 @@ wxWebUpdateLocalPackage *wxWebUpdateLocalXMLScript::GetPackage(const wxXmlNode *
 		if (child->GetName() == wxT("version")) {
 
 			// get the version string
-			ver = GetNodeContent(child);
+			ver = wxWebUpdateXMLScript::GetNodeContent(child);
 		}
 
 		// proceed
@@ -141,10 +117,7 @@ wxWebUpdateLocalPackage *wxWebUpdateLocalXMLScript::GetPackage(const wxString &p
 			package = package->GetNext();
 		if (!package) return NULL;		// could not found other PACKAGE tags in this script !
 
-		wxXmlProperty *prop = package->GetProperties();
-		while (prop && prop->GetName() != wxT("id"))
-			prop = prop->GetNext();
-		matches = prop->GetValue() == packagename;
+		matches = (wxWebUpdateXMLScript::GetPackageID(package) == packagename);
 	}
 
 	if (!package) 
@@ -189,73 +162,47 @@ bool wxWebUpdateLocalXMLScript::Load(const wxString &uri)
 	// parse the XML file
 	wxXmlDocument::Load(*xml->GetStream());
 	delete xml;
-
-	// load the user custom messages (if present)
 	if (!IsOk())
 		return FALSE;
-
+		
+	// look at the version
+	if (wxWebUpdateXMLScript::GetWebUpdateVersion(GetRoot(), 
+				m_strWebUpdateVersion) == wxWUCF_FAILED)
+		return FALSE;
+		
     wxXmlNode *child = GetRoot()->GetChildren();
 	while (child) {
 
 		if (child->GetName() == wxT("appname")) {
 		
 			// save the name of the app using WebUpdate
-			m_strAppName = GetNodeContent(child);
+			m_strAppName = wxWebUpdateXMLScript::GetNodeContent(child);
+			wxWebUpdateInstaller::Get()->SetKeywordValue(wxT("appname"), m_strAppName);
 
 		} else if (child->GetName() == wxT("dlgxrc")) {
 		
 			// save the name of the XRC file to use
-			m_strXRC = GetNodeContent(child);
+			m_strXRC = wxWebUpdateXMLScript::GetNodeContent(child);
 		
   		} else if (child->GetName() == wxT("appfile")) {
 		
 			// save the filename of the program to update
-			m_strAppFile = GetNodeContent(child);
+			m_strAppFile = wxWebUpdateXMLScript::GetNodeContent(child);
   		
     	} else if (child->GetName() == wxT("remoteuri")) {
 		
 			// save the location of the remote script
-			m_strRemoteURI = GetNodeContent(child);
+			m_strRemoteURI = wxWebUpdateXMLScript::GetNodeContent(child);
 
   		} else if (child->GetName() == wxT("keywords")) {
 		
 			// this should be a comma separed list of pairs:  key=value
-			wxString str = GetNodeContent(child);
-			wxStringTokenizer tkz(str, wxT(","));
-			while ( tkz.HasMoreTokens() ) {
-				wxString token = tkz.GetNextToken();
-			
-				// is this a valid token ?
-				if (token.Contains(wxT("="))) { 
+			wxArrayString keys, values;
+			int count = wxWebUpdateInstaller::Get()->ParsePairValueList(
+					wxWebUpdateXMLScript::GetNodeContent(child), keys, values);
 
-					wxString keyname = token.BeforeFirst(wxT('='));
-					if (keyname.IsEmpty() || keyname.Contains(wxT(' '))) {
-
-						wxLogDebug(wxT("wxWebUpdateLocalXMLScript::Load - found an invalid keyword name: ")
-									+ keyname);
-						continue;
-					}
-
-					wxString value = token.AfterFirst(wxT('='));
-					if (value.IsEmpty()) {
-
-						wxLogDebug(wxT("wxWebUpdateLocalXMLScript::Load - found an invalid keyword value: ")
-									+ value);
-						continue;
-					}
-
-					// keyword values can contain other keywords...
-					value = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(value);
-
-					// add this keyword
-					wxWebUpdateInstaller::Get()->SetKeywordValue(keyname, value);
-
-				} else {
-
-					wxLogDebug(wxT("wxWebUpdateLocalXMLScript::Load - found an invalid keyword token: ")
-									+ token);
-				}
-			}
+			for (int i=0; i < count; i++)
+				wxWebUpdateInstaller::Get()->SetKeywordValue(keys[i], values[i]);
   		}
   		
 		child = child->GetNext();
@@ -269,8 +216,7 @@ bool wxWebUpdateLocalXMLScript::Load(const wxString &uri)
 wxXmlNode *wxCreateElemNode(const wxString &name)
 { return new wxXmlNode(NULL, wxXML_ELEMENT_NODE, name, wxEmptyString, NULL, NULL); }
 
-wxXmlNode *wxCreateElemTextNode(const wxString &name, const wxString &content = wxEmptyString)
-{ 
+wxXmlNode *wxCreateElemTextNode(const wxString &name, const wxString &content = wxEmptyString){ 
 	wxXmlNode *n = wxCreateElemNode(name); 
 	n->AddChild(new wxXmlNode(NULL, wxXML_TEXT_NODE, wxEmptyString, content, NULL, NULL));
 	return n;
@@ -280,6 +226,8 @@ wxXmlNode *wxWebUpdateLocalXMLScript::BuildHeader() const
 {
 	// the webupdate root
 	wxXmlNode *webupdate = wxCreateElemNode(wxT("webupdate"));
+	webupdate->AddProperty(new wxXmlProperty(wxT("version"),
+								wxWebUpdateInstaller::Get()->GetVersion(), NULL));
 	
 	// set the appname
 	wxXmlNode *appname = wxCreateElemTextNode(wxT("appname"), m_strAppName);
@@ -342,6 +290,47 @@ bool wxWebUpdateLocalXMLScript::Save() const
 	return wxXmlDocument::Save(m_strLocalURI);
 }
 
+
+
+
+// ---------------------
+// wxWEBUPDATEACTION
+// ---------------------
+
+long wxWebUpdateAction::wxExecute(const wxString &command, int flags) const
+{
+	if (wxIsMainThread())
+		return wxExecute(command, flags);		// no problems !
+
+	// unfortunately we cannot use ::wxExecute from a secondary thread
+	// (and wxWebUpdateActions run from a wxWebUpdateInstallThread) so we
+	// are forced to send a message to wxApp which launches the command for us
+	wxCommandEvent runev(wxEVT_COMMAND_EXECUTE);
+	runev.SetString(command);
+	runev.SetInt(flags);
+	
+	// our app should process this event...
+	wxLogDebug(wxT("wxWebUpdateAction::wxExecute - sending to wxTheApp the command: ")
+					+ runev.GetString());
+	
+	// to understand when the wxApp object has executed the command, we need
+	// a wxCondition and we also need to pass it to the wxApp using the event
+	wxMutex m;
+	wxCondition cond(m);
+	runev.SetClientData(&cond);
+	runev.SetExtraLong((long)&m);
+	
+	// start !
+	m.Lock();
+	wxTheApp->AddPendingEvent(runev);
+
+	// then wait for wxApp to do its job
+	cond.Wait();
+	
+	// the wxApp should have stored the wxExecute return code in the
+	// INT field of the event...
+	return runev.GetInt();
+}
 
 
 
@@ -628,23 +617,42 @@ wxWebUpdateCheckFlag wxWebUpdatePackage::Check(int lmaj, int lmin, int lrel) con
 	int maj, min, rel;
 	if (!ExtractVersionNumbers(m_strLatestVersion, &maj, &min, &rel))
 		return wxWUCF_FAILED;
-	
-	// catch invalid cases
-	// i.e. when local version greater than latest available version
-	if (maj < lmaj) return wxWUCF_FAILED;
-	if (maj == lmaj && min < lmin) return wxWUCF_FAILED;
-	if (maj == lmaj && min == lmin && rel < lrel) return wxWUCF_FAILED;
 
-	// do the check
-	if (maj > lmaj) return wxWUCF_OUTOFDATE;
-	if (maj == lmaj && min > lmin) return wxWUCF_OUTOFDATE;
-	if (maj == lmaj && min == lmin && rel > lrel) return wxWUCF_OUTOFDATE;
-	if (maj == lmaj && min == lmin && rel == lrel) return wxWUCF_UPDATED;
+	int res = StdVersionCheck(maj, min, rel,		// remote package
+							lmaj, lmin, lrel);		// local package
+
+	// catch invalid cases
+	// i.e. when local version is greater than latest available version	
+	if (res == -1) return wxWUCF_FAILED;
+	
+	// catch other cases
+	if (res == 0) return wxWUCF_UPDATED;
+	if (res == 1) return wxWUCF_OUTOFDATE;
 
 	wxASSERT_MSG(0, wxT("All cases should have been handled... "));
 	return wxWUCF_FAILED;
 }
 
+// static
+int wxWebUpdatePackage::StdVersionCheck(int maj1, int min1, int rel1,
+										int maj2, int min2, int rel2)
+{
+	// package 1 < package 2 ?
+	if (maj1 < maj2) return -1;
+	if (maj1 == maj2 && min1 < min2) return -1;
+	if (maj1 == maj2 && min1 == min2 && rel1 < rel2) return -1;
+
+	// package 1 > package 2 ?
+	if (maj1 > maj2) return 1;
+	if (maj1 == maj2 && min1 > min2) return 1;
+	if (maj1 == maj2 && min1 == min2 && rel1 > rel2) return 1;
+	
+	// package 1 == package 2 ?
+	wxASSERT(maj1 == maj2 && min1 == min2 && rel1 == rel2);
+ 	return 0;
+}
+
+// static
 bool wxWebUpdatePackage::ExtractVersionNumbers(const wxString &str, int *maj, 
 											   int *min, int *rel)
 {
@@ -655,8 +663,14 @@ bool wxWebUpdatePackage::ExtractVersionNumbers(const wxString &str, int *maj,
 	wxString minor = str.AfterFirst(wxT('.')).BeforeFirst(wxT('.'));
 	wxString release = str.AfterFirst(wxT('.')).AfterFirst(wxT('.'));
 
-	if (major.IsEmpty() || minor.IsEmpty() || release.IsEmpty())
-		return FALSE;
+	if (major.IsEmpty() || !major.IsNumber() || 
+		(!minor.IsEmpty() && !minor.IsNumber()) ||
+		(!release.IsEmpty() && !release.IsNumber()))
+		return FALSE;			// invalid version format !
+	if (minor.IsEmpty())
+		minor = wxT("0");				// allow version formats of the type "1" = "1.0.0"
+	if (release.IsEmpty())
+		release = wxT("0");			// allow version formats of the type "1.2" = "1.2.0"
 
 	// then convert them in numbers
 	major.ToULong(&n);
@@ -687,8 +701,8 @@ wxWebUpdateXMLScript::wxWebUpdateXMLScript(const wxString &strURI)
 	if (!strURI.IsEmpty()) Load(strURI); 
 }
 
-// taken from wx/src/xrc/xmlres.cpp, wxXmlResourceHandler::GetNodeContent
-wxString wxWebUpdateXMLScript::GetNodeContent(const wxXmlNode *node) const
+// static; taken from wx/src/xrc/xmlres.cpp, wxXmlResourceHandler::GetNodeContent
+wxString wxWebUpdateXMLScript::GetNodeContent(const wxXmlNode *node)
 {
     const wxXmlNode *n = node;
     if (n == NULL) return wxEmptyString;
@@ -813,12 +827,7 @@ wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdow
 wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) const
 {
 	if (!package || package->GetName() != wxT("package")) return NULL;
-
-	wxString packagename;
-	wxXmlProperty *prop = package->GetProperties();
-	while (prop && prop->GetName() != wxT("id"))
-		prop = prop->GetNext();
-	if (prop) packagename = prop->GetValue();
+	wxString packagename = GetPackageID(package);
 	
 	// init the return value
 	wxWebUpdatePackage *ret = new wxWebUpdatePackage(packagename);	
@@ -893,13 +902,27 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) c
 	return ret;		// the caller must delete it
 }
 
+// static
+wxString wxWebUpdateXMLScript::GetPackageID(const wxXmlNode *package)
+{
+	wxXmlProperty *prop = package->GetProperties();
+	while (prop && prop->GetName() != wxT("id")) {
+		wxLogDebug(wxT("wxWebUpdateXMLScript::GetPackageID - found unsupported ")
+  				wxT("package property: ") + prop->GetName() + wxT("=") + prop->GetValue());
+		prop = prop->GetNext();
+	}
+ 
+  	if (prop)
+   		return prop->GetValue();		// found !
+	return wxEmptyString;	
+}
+
 wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxString &packagename) const
 {
-	// now it's time to parse the XML file we expect to be in 'xml' input stream    
-    wxXmlNode *webupdate = GetRoot();
-	if (!webupdate || webupdate->GetName() != wxT("webupdate"))
+	// check root
+	if (!IsOk())
 		return NULL;
-	wxXmlNode *package = webupdate->GetChildren();
+	wxXmlNode *package = GetRoot()->GetChildren();
     
 	bool matches = FALSE;
 	while (package && !matches) {
@@ -908,10 +931,7 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxString &packagename
 			package = package->GetNext();
 		if (!package) return NULL;		// could not found other PACKAGE tags in this script !
 
-		wxXmlProperty *prop = package->GetProperties();
-		while (prop && prop->GetName() != wxT("id"))
-			prop = prop->GetNext();
-		matches = prop->GetValue() == packagename;
+		matches = (GetPackageID(package) == packagename);
 	}
 
 	if (!package) 
@@ -939,6 +959,45 @@ wxWebUpdatePackageArray wxWebUpdateXMLScript::GetAllPackages() const
 	return ret;
 }
 
+// static
+wxWebUpdateCheckFlag wxWebUpdateXMLScript::GetWebUpdateVersion(const wxXmlNode *package, wxVersion &ver)
+{
+	wxXmlProperty *prop = package->GetProperties();
+	while (prop && prop->GetName() != wxT("version")) {
+		wxLogDebug(wxT("wxWebUpdateXMLScript::GetWebUpdateVersion - found unsupported ")
+  				wxT("webupdate property: ") + prop->GetName() + wxT("=") + prop->GetValue());
+		prop = prop->GetNext();
+    }
+    
+    if (prop == NULL) {
+		wxLogDebug(wxT("wxWebUpdateXMLScript::GetWebUpdateVersion - could not find the ")
+  				wxT("version property in the root tag. Defaulting to version ")
+      			+ wxWebUpdateInstaller::Get()->GetVersion());
+		ver = wxWebUpdateInstaller::Get()->GetVersion();
+	
+	} else {
+
+		ver = prop->GetValue();
+		wxLogDebug(wxT("wxWebUpdateXMLScript::GetWebUpdateVersion - the version ")
+  				wxT("of this XML WebUpdate document is ") + ver);
+	}
+    
+    // do the version check
+	wxWebUpdateCheckFlag f = wxWebUpdateInstaller::Get()->VersionCheck(ver);
+	if (f == wxWUCF_UPDATED)
+		wxLogDebug(wxT("wxWebUpdateXMLScript::GetWebUpdateVersion - the version ")
+  				wxT("of this XML WebUpdate document matches the installer engine version"));
+	else if (f == wxWUCF_OUTOFDATE)
+		wxLogDebug(wxT("wxWebUpdateXMLScript::GetWebUpdateVersion - the version ")
+  				wxT("of this XML WebUpdate document is older than the installer engine... ")
+      			wxT("continuing anyway"));
+	else
+		wxLogDebug(wxT("wxWebUpdateXMLScript::GetWebUpdateVersion - the version ")
+  				wxT("of this XML WebUpdate document is newer than the installer engine... ")
+      			wxT("aborting (cannot handle the new features!)"));
+	return f;
+}
+
 bool wxWebUpdateXMLScript::Load(const wxString &uri)
 {
 	wxLogDebug(wxT("wxWebUpdateXMLScript::Load - loading ") + uri);
@@ -952,14 +1011,17 @@ bool wxWebUpdateXMLScript::Load(const wxString &uri)
 	// parse the XML file
 	wxXmlDocument::Load(*xml->GetStream());
 	delete xml;
-
-	// load the user custom messages (if present)
 	if (!IsOk())
+		return FALSE;
+
+	// look at the version
+	if (GetWebUpdateVersion(GetRoot(), m_strWebUpdateVersion) == wxWUCF_FAILED)
 		return FALSE;
 
     wxXmlNode *child = GetRoot()->GetChildren();
 	while (child) {
 
+		// parse the children of <webupdate> which are not packages
 		if (child->GetName() == wxT("msg-update-available"))
 			m_strUpdateAvailableMsg = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(GetNodeContent(child));
 		else if (child->GetName() == wxT("msg-update-notavailable"))

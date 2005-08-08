@@ -14,7 +14,7 @@
 
 // optimization for GCC
 #if defined(__GNUG__) && !defined(__APPLE__)
-#pragma interface "stdcations.h"
+#pragma interface "stdactions.h"
 #endif
 
 // wxWidgets headers
@@ -30,12 +30,6 @@ class WXDLLIMPEXP_WEBUPDATE wxWebUpdateLocalPackageArray;
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDlg;
 
 extern WXDLLIMPEXP_DATA_WEBUPDATE(wxWebUpdateDownload) wxEmptyWebUpdateDownload;
-
-// the message sent to wxApp by wxWebUpdateActionRun
-DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_WEBUPDATE, wxEVT_COMMAND_EXECUTE, -1);
-
-#define EVT_EXECUTE(id, func)		\
-	EVT_COMMAND(id, wxEVT_COMMAND_EXECUTE, func)
 
 
 //! The "run" action.
@@ -88,6 +82,9 @@ protected:
 
 	//! The type of archive.
 	wxString m_strType;
+	
+	//! The name map for naming the extracted files.
+	wxString m_strNameMap;
 
 public:
     wxWebUpdateActionExtract()

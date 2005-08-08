@@ -266,39 +266,8 @@ public:		// miscellaneous
 		wxMutexLocker lock(m_mStatus);
 		m_nStatus = wxDTS_WAITING;
 	}
-
-	//! Returns the current element which is being downloaded.
-//	wxDownloadThreadEntry &GetCurrent()
-//		{ return m_downloads[m_nCurrentIndex]; }
-
-	//! Returns the oldest download in the queue (i.e. the first).
-//	wxDownloadThreadEntry &GetOldest()
-//		{ return m_downloads[0]; } 
-/*
-	//! Removes the oldest downloaded file from the queue.
-	void RemoveOldestDownload() {
-		//wxASSERT(IsPaused());
-		wxMutexLocker lock(m_mIndex);
-		m_downloads.RemoveAt(0, 1);
-		m_nFileCount--;
-		if (m_nCurrentIndex > 0) 
-			m_nCurrentIndex--;
-	}
-
-	//! Cleans all the download queue.
-	void CleanQueue() {
-		wxASSERT(!IsDownloading() && !IsComputingMD5());
-		m_downloads.Clear();
-		m_nCurrentIndex = 0;
-		wxMutexLocker lock(m_mStatus);
-		m_nStatus = wxDTS_WAITING;
-		m_nFileCount = 0;
-	}*/
 };
 
-
-// a container of wxURLs used by wxSizeCacherThread
-//WX_DECLARE_USER_EXPORTED_OBJARRAY(wxURL, wxURLArray, WXDLLIMPEXP_WEBUPDATE);
 
 
 //! This threads just retrieve the sizes of the given files and cache them.
@@ -309,7 +278,11 @@ class WXDLLIMPEXP_WEBUPDATE wxSizeCacherThread : public wxThread
 protected:
 
 	//! The array with our precomputed sizes.
-	wxArrayLong m_urlSizes;
+	//! It must be allocated on the heap since it will be returned as
+	//! result by the wxEVT_COMMAND_CACHESIZE_COMPLETE event and when the
+	//! event handler will process this event, this thread could have been
+	//! already destroyed (this is a detached thread).
+	wxArrayLong *m_urlSizes;
 
 public:		// to avoid setters/getters (these vars are only read by this thread;
 			// they are never written and so they are not protected with mutexes).
@@ -331,17 +304,6 @@ public:
     //! Sends the wxEVT_COMMAND_CACHESIZE_COMPLETE event
 	//! to the #m_pHandler event handler.
     virtual void OnExit();
-
-public:		// getters
-
-	//! Returns the array of the file sizes.
-	//! A null value means that the size of that resource could not be computed.
-	wxArrayLong GetFileSizes() const
-		{ return m_urlSizes; }
-
-	//! Returns the file size for the given URL string.
-	//! Returns -1 if that URL is not present in the array of the cached sizes.
-	long GetSizeOf(const wxURL &) const;
 };
 
 #endif // _WX_DOWNLOAD_H_

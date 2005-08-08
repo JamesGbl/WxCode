@@ -89,6 +89,16 @@ typedef wxString		wxVersion;
 
 
 
+// the message sent to wxApp by wxWebUpdateAction::wxExecute
+DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_WEBUPDATE, wxEVT_COMMAND_EXECUTE, -1);
+
+#define EVT_EXECUTE(id, func)		\
+	EVT_COMMAND(id, wxEVT_COMMAND_EXECUTE, func)
+
+
+
+
+
 // -----------------------------------------------------------------------------
 // CLASSES WHICH WORK WITH *LOCAL* FILES
 // -----------------------------------------------------------------------------
@@ -143,6 +153,11 @@ class WXDLLIMPEXP_WEBUPDATE wxWebUpdateLocalXMLScript : public wxXmlDocument
 {
 protected:
 
+	//! The version of this WebUpdate XML script.
+	//! This is different from the XML version (which should always be "1.0");
+	//! this is the version of the WebUpdate DTD which is followed by this doc.
+	wxVersion m_strWebUpdateVersion;
+	
 	//! The name of the application whose packages must be updated.
 	wxString m_strAppName;
 
@@ -162,7 +177,7 @@ protected:
 
 protected:
 
-	//! Creates a wxWebUpdatePackage from the given XML node.
+	//! Creates a wxWebUpdateLocalPackage from the given XML node.
 	//! The caller must delete the returned pointer.
 	wxWebUpdateLocalPackage *GetPackage(const wxXmlNode *package) const;
 
@@ -267,6 +282,15 @@ public:
          : m_strName(name) {}
 
     virtual ~wxWebUpdateAction() {}
+    
+public:		// utilities
+
+	//! This is a nice way to execute an arbitrary command in a thread-safe
+	//! way since if this action is being executed from a secondary thread,
+	//! it will then add an event in the main thread's queue which will exec
+	//! the command. So, from the action-programmer's point of view, this
+	//! wxExecute works transparently as the standard wxWidgets's one does.
+	virtual long wxExecute(const wxString &command, int flags = wxEXEC_ASYNC) const;
 
 public:		// miscellaneous
     
@@ -516,10 +540,17 @@ protected:		// member variables
 	//! This list should contain only the IDs of other existing packages.
 	wxString m_strPrerequisites;
 
-protected:		// utilities
+public:		// utilities
 
 	//! Returns in the given int* the parsed version numbers of the given wxVersion.
 	static bool ExtractVersionNumbers(const wxVersion &str, int *maj, int *min, int *rel);
+
+	//! Returns
+	//!   1 when the package 1 is more updated than package 2
+	//!   0 when the package 1 has the same version of package 2
+	//!  -1 when the package 1 is older than package 2
+	static int StdVersionCheck(int maj1, int min1, int rel1,
+							int maj2, int min2, int rel2);
     
 public:
     wxWebUpdatePackage(const wxString &id = wxEmptyString) : m_strID(id) {}
@@ -599,14 +630,32 @@ class WXDLLIMPEXP_WEBUPDATE wxWebUpdateXMLScript : public wxXmlDocument
 {
 protected:
 
+	//! The version of this WebUpdate XML script.
+	//! This is different from the XML version (which should always be "1.0");
+	//! this is the version of the WebUpdate DTD which is followed by this doc.
+	wxVersion m_strWebUpdateVersion;
+
 	//! The content of the <msg-update-available> tag, if present.
     wxString m_strUpdateAvailableMsg;
 	
 	//! The content of the <msg-update-notavailable> tag, if present.
     wxString m_strUpdateNotAvailableMsg;
 
-protected:
+public:		// static utilities (used also by wxWebUpdateLocalXMLScript)
 
+	//! Returns the ID (i.e. the name) of a package from the given
+	//! XML node or wxEmptyString if the ID could not be found.
+	static wxString GetPackageID(const wxXmlNode *package);
+	
+	//! Returns teh version property value stored in the given node.
+	//! Does also the version check against wxWebUpdateInstaller's version.
+	static wxWebUpdateCheckFlag GetWebUpdateVersion(const wxXmlNode *root, wxVersion &);
+
+	//! Returns the text content of the given node.
+	static wxString GetNodeContent(const wxXmlNode *node);
+	
+protected:	// internal utilities	
+	
 	//! Parses the given <actions> node.
 	wxWebUpdateActionArray GetActionArray(const wxXmlNode *actions) const;
 
@@ -616,9 +665,6 @@ protected:
 
 	//! Creates a wxWebUpdateDownload from the given XML node.
 	wxWebUpdateDownload GetDownload(const wxXmlNode *latestdownload) const;
-
-	//! Returns the text content of the given node.
-	wxString GetNodeContent(const wxXmlNode *node) const;
 
 public:
 
@@ -647,10 +693,12 @@ public:		// main functions
 	virtual wxWebUpdatePackageArray GetAllPackages() const;
 
 	//! Returns the content of the <msg-update-available> tag, if present. 
-	wxString GetUpdateAvailableMsg() const		{ return m_strUpdateAvailableMsg; }
+	wxString GetUpdateAvailableMsg() const
+ 		{ return m_strUpdateAvailableMsg; }
 
 	//! Returns the content of the <msg-update-notavailable> tag, if present. 
-	wxString GetUpdateNotAvailableMsg() const	{ return m_strUpdateNotAvailableMsg; }
+	wxString GetUpdateNotAvailableMsg() const
+ 		{ return m_strUpdateNotAvailableMsg; }
 
 private:
 	DECLARE_CLASS(wxWebUpdateXMLScript)

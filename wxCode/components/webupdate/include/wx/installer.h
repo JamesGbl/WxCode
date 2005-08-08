@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 // Name:        installer.h
-// Purpose:     wxWebUpdateAction and wxWebUpdateInstaller
+// Purpose:     wxWebUpdateInstaller and wxWebUpdateInstallThread
 // Author:      Francesco Montorsi
 // Created:     2005/07/14
 // RCS-ID:      $Id$
@@ -21,6 +21,12 @@
 #include "wx/webupdatedef.h"		// for WXDLLIMPEXP_WEBUPDATE macros only
 #include "wx/webupdate.h"
 
+
+//! The version of the supported local & remote XML scripts.
+#define wxWUI_VERSION_MAJOR			1
+#define wxWUI_VERSION_MINOR			0
+#define wxWUI_VERSION_RELEASE		0		// should always be zero (not used)
+#define wxWUI_VERSION_STRING		wxT("1.0")
 
 // defined later
 class WXDLLIMPEXP_WEBUPDATE wxDownloadThread;
@@ -73,7 +79,7 @@ public:
 	wxWebUpdateInstaller() 
 		{ InitDefaultKeywords(); InitDefaultActions(); }
 	virtual ~wxWebUpdateInstaller() 
-		{ FreeActionHashMap();
+		{ FreeActionHashMap(); FreeKeywords();
 		  /* user needs to delete the global wxWebUpdateInstaller object !! 
 		     using  
 		             delete wxWebUpdateInstaller::Set(NULL);
@@ -91,39 +97,93 @@ public:		// single ton accessors
 	{ wxWebUpdateInstaller *old = m_pTheInstaller; m_pTheInstaller = res; return old; }
 
 
+public:		// global utilities
+
+	//! Shows to the user a simple wxMessageBox with the error description
+	//! customized for the current application. Also logs it.
+	void ShowErrorMsg(const wxString &);
+	
+	//! Shows to the user a notification message. Also logs it.
+	void ShowNotificationMsg(const wxString &, const wxString &title = wxEmptyString);
+
+public:		// supported version for the local & remote XML scripts
+
+	//! Returns the version of the local & remote XML scripts which are
+	//! supported by this wxWebUpdateInstaller.
+	//! This version is also the version of the WebUpdater application.
+	wxVersion GetVersion() const
+		{ return wxWUI_VERSION_STRING; }
+		
+	//! Does the version check for the given wxVersion object.
+	wxWebUpdateCheckFlag VersionCheck(const wxVersion &v) const;
+
 public:		// action hashmap
 
+	//! Adds the handler for a new action.
+	//! To understand how to add support for a new action in the remote XML
+ 	//! script, look at the WebUpdate docs.
 	void AddActionHandler(wxWebUpdateAction *custom)
 		{ if (!custom) return; m_hashActions[custom->GetName()] = custom; }
 
+	//! Creates a new action to handle an <actions> subtag with the given name.
+	//! The \c propnames and \c propvalues parameters are the array of the
+	//! property names and property values found in the tag.
+	//! This function is called by wxWebUpdateXMLScript only and should not be
+	//! called by the user.
 	wxWebUpdateAction *CreateNewAction(const wxString &name, 
 		const wxArrayString *propnames, const wxArrayString *propvalues);
 
+	//! Returns a reference to the entire action hashmap.
 	wxWebUpdateActionHashMap &GetActionHashMap()
 		{ return m_hashActions; }
 
+	//! Initializes the default actions (see stdactions.h).
 	virtual void InitDefaultActions();
+	
+	//! Removes all actions from the hash map.
 	virtual void FreeActionHashMap();
 
 
 public:		// keywords hashmap
 
+	//! Returns a reference to the entire keywords hashmap.
 	wxStringStringHashMap &GetKeywords()
 		{ return m_hashKeywords; }
 
+	//! Returns the value of the given keyword or wxEmptyString if such
+	//! keyword does not exist.
 	wxString GetKeywordValue(const wxString &name)
 		{ return m_hashKeywords[name]; }
 
+	//! Creates a key with the given name & value.
+	//! If such key already existed, then it is overwritten.
 	void SetKeywordValue(const wxString &name, const wxString &val)
 		{ m_hashKeywords[name] = val; }
 
-	//! Does string substitution using the current keyword hashmap.
+	//! Does $(xxx) substitutions on the given text and then returns it.
 	wxString DoKeywordSubstitution(const wxString &str);
 
-	//! Does the '//' string substitution.
+	//! Does the '//' string substitution; i.e. substitutes the '//'
+	//! characters into '\' char for win32 and '/' char for unix-based OS.
 	wxString DoPathSubstitution(const wxString &str);
+	
+	//! Does both the keyword and the path substitution.
+	wxString DoSubstitution(const wxString &str)
+		{ return DoPathSubstitution(DoKeywordSubstitution(str)); }
+		
+	//! Parses the given comma-separed list of tokens in the form name=value
+	//! and saves all the names & values in the two given wxArrayString.
+	//! Calls #DoSubstitution on the values.
+	//! Returns the number of names/values saved in the arrays.
+	int ParsePairValueList(const wxString &str, wxArrayString &names, wxArrayString &values);
 
+	//! Initializes the default keywords (and their values!).
 	virtual void InitDefaultKeywords();
+	
+	//! Does the cleanup for the keywords hashmap.
+	//! Since the hashmap cleans itself automatically when it's deleted,
+	//! this function should just remove temporary files/folders/variables
+	//! allocated by #InitDefaultKeywords.
 	virtual void FreeKeywords();
 
 private:

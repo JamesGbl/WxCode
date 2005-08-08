@@ -2,7 +2,7 @@
 <!DOCTYPE webupdate PUBLIC "-//WebUpdate//DTD WebUpdater 1.0//EN" "http://wxcode.sourceforge.net/components/webupdate/remote.dtd">
 <!-- $Id$ -->
 
-<webupdate>   
+<webupdate version="1.0">   
 
    <!-- our CORE package: we use this to deliver the sample binaries -->
    <package id="core">

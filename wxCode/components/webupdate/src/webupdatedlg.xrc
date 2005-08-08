@@ -11,7 +11,7 @@
      be removed from this XRC file -->
 <object class="wxDialog" name="wxWebUpdateDlg">
 	<style>wxRESIZE_BORDER|wxCAPTION|wxCLOSE_BOX|wxSYSTEM_MENU</style>
-    <title>Update</title>
+    <title>WebUpdater</title>
 
     <object class="wxBoxSizer">
     <orient>wxVERTICAL</orient>
@@ -270,6 +270,191 @@
 </object>
 
 
+
+<!-- the "light" version of wxWebUpdateDlg - well-suited for small/medium
+     apps which use one or two packages only...
+     This dialog does not show the wxWebUpdateListCtrl nor the package
+     description.  -->
+<object class="wxDialog" name="wxWebUpdateSimpleDlg">
+	<style>wxRESIZE_BORDER|wxCAPTION|wxCLOSE_BOX|wxSYSTEM_MENU</style>
+    <title>WebUpdater</title>
+
+    <object class="wxBoxSizer">
+    <orient>wxVERTICAL</orient>
+	<object class="sizeritem">
+	<flag>wxALL|wxGROW</flag>
+	<border>5</border>
+	<option>1</option>
+	
+	<!-- the vertical boxsizer which contains everything -->
+	<!-- NOTE: IDWUD stays for IDWebUpdateDlg            -->
+    <object class="wxBoxSizer">
+        <orient>wxVERTICAL</orient>
+		
+		<object class="sizeritem">
+            <flag>wxALL</flag>
+            <border>0</border>
+            <object class="wxBoxSizer">
+                <orient>wxHORIZONTAL</orient>
+
+				<object class="sizeritem">
+					<flag>wxALIGN_LEFT|wxLEFT|wxTOP|wxBOTTOM</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="IDWUD_INTRO_TEXT">
+						<label>This dialog allows you to update </label>
+					</object>
+				</object>
+				
+				<object class="sizeritem">
+					<flag>wxALIGN_LEFT|wxALL</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="IDWUD_APPNAME_TEXT">
+						<font>
+							<weight>bold</weight>
+						</font>					
+						<label>APPNAME</label>
+					</object>
+				</object>
+            </object>
+        </object>		
+		
+		<!-- GAUGE SECTION -->
+        <object class="sizeritem">
+            <flag>wxALIGN_CENTER|wxALL|wxGROW</flag>
+            <border>5</border>
+            <object class="wxStaticLine" name="IDWUD_LINE3">                
+                <style>wxLI_HORIZONTAL</style>
+            </object>
+        </object>
+		<object class="sizeritem">
+			<flag>wxALIGN_LEFT|wxBOTTOM|wxLEFT|wxRIGHT</flag>
+			<border>5</border>
+			<object class="wxStaticText" name="IDWUD_PROGRESS_TEXT">
+				<label>Download status:</label>
+			</object>
+		</object>
+        <object class="sizeritem">
+            <flag>wxGROW|wxBOTTOM|wxLEFT|wxRIGHT</flag>
+            <border>5</border>
+			<option>0</option>
+            <object class="wxGauge" name="IDWUD_GAUGE">                 
+                <max>100</max>
+                <value>0</value>
+            </object>
+        </object>
+		
+
+        <object class="sizeritem">
+            <flag>wxGROW|wxALL</flag>
+            <border>5</border>
+			<option>0</option>
+            <object class="wxBoxSizer">
+                <orient>wxHORIZONTAL</orient>
+					
+				<object class="sizeritem">
+					<flag>wxGROW</flag>
+					<border>5</border>
+					<option>1</option>
+					<object class="wxButton" name="IDWUD_SHOWHIDEADV">
+						<label>Show advanced settings >></label>
+					</object>
+				</object>
+				<object class="spacer">
+					<flag>wxGROW</flag>
+					<border>5</border>
+					<option>1</option>
+				</object>
+				
+				<!-- this static text is updated on real-time by wxWebUpdateDlg so
+					 we need to use the wxST_NO_AUTORESIZE flag -->
+				<object class="sizeritem">
+					<flag>wxGROW</flag>
+					<border>5</border>
+					<option>1</option>
+					<object class="wxStaticText" name="IDWUD_TIME_TEXT">
+						<style>wxALIGN_RIGHT|wxST_NO_AUTORESIZE</style>
+						<label></label>
+					</object>
+				</object>
+
+            </object>
+        </object> 
+
+
+				<object class="spacer">
+					<flag>wxGROW</flag>
+					<border>5</border>
+					<option>0</option>
+					<size>10,10</size>
+				</object>
+
+
+		<object class="sizeritem">
+			<flag>wxGROW</flag>
+			<border>10</border>
+			
+			<!-- this is very important since it determines the portion of the wxWebUpdateAdvPanel which
+				can be shown -->
+			<option>5</option>
+					
+			<!-- OUR SECOND UNKNOWN CONTROL: be careful that this control is inside the first sizer of the
+				 dialog or the "Show/hide adv panel" button won't work !! -->
+			<object class="unknown" name="IDWUD_ADVPANEL"/>
+		</object>
+
+        <object class="sizeritem">
+            <flag>wxALIGN_CENTER|wxALL|wxGROW</flag>
+            <border>5</border>
+            <object class="wxStaticLine" name="IDWUD_LINE1">                
+                <style>wxLI_HORIZONTAL</style>
+            </object>
+        </object>
+		
+        <object class="sizeritem">
+            <flag>wxGROW|wxALL</flag>
+            <border>5</border>
+			<option>2</option>
+            <object class="wxBoxSizer">
+                <orient>wxHORIZONTAL</orient>
+                <object class="sizeritem">
+                    <flag>wxGROW|wxLEFT</flag>
+                    <border>5</border>
+					<option>2</option>
+                    <object class="wxButton" name="IDWUD_ABOUT">
+                        <label>About</label>
+                    </object>
+                </object>				
+				<object class="spacer">
+					<flag>wxGROW|wxALL</flag>
+					<border>5</border>
+					<option>3</option>
+				</object>
+                <object class="sizeritem">
+                    <flag>wxGROW|wxRIGHT</flag>
+                    <border>5</border>
+					<option>2</option>
+                    <object class="wxButton" name="IDWUD_CANCEL">
+                        <label>Cancel</label>
+                    </object>
+                </object>
+                <object class="sizeritem">
+                    <flag>wxGROW</flag>
+                    <border>5</border>
+					<option>2</option>
+                    <object class="wxButton" name="IDWUD_OK">
+                        <label>Download</label>
+                    </object>
+                </object>
+            </object>
+        </object> 
+    </object> 
+	
+	</object> 
+	</object> 
+</object>
+
+
+
 <!-- the panel containing the advanced options -->
 <object class="wxPanel" name="wxWebUpdateAdvPanel">
 	<style></style>
@@ -324,9 +509,9 @@
 						<object class="sizeritem">
 							<flag>wxALIGN_LEFT|wxALL</flag>
 							<border>5</border>
-							<object class="wxCheckBox" name="IDWUAP_SAVELOG">
+							<object class="wxCheckBox" name="IDWUAP_RESTART">
 								<checked>0</checked>
-								<label>Save a log file</label>
+								<label>Restart XXX after the update</label>
 							</object>
 						</object>
 						<object class="sizeritem">
@@ -345,13 +530,139 @@
 					<flag>wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxGROW|wxALL</flag>
 					<border>5</border>
 					<option>1</option>
-					<object class="wxButton" name="IDWUAP_CONNSETTINGS">
-						<label>Connection settings...</label>
+					<object class="wxButton" name="IDWUAP_PROXYSETTINGS">
+						<label>Proxy settings...</label>
+					</object>
+				</object>
+
+				<object class="sizeritem">
+					<flag>wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxGROW|wxALL</flag>
+					<border>5</border>
+					<option>1</option>
+					<object class="wxButton" name="IDWUAP_AUTHSETTINGS">
+						<label>Authentication settings...</label>
 					</object>
 				</object>
 			</object>
 		</object>
     </object>		
+</object>
+
+
+<!-- The about dialog shown by wxWebUpdateDlg and wxWebUpdateSimpleDlg... -->
+<object class="wxDialog" name="WebUpdateAboutDlg">
+	<style>wxRESIZE_BORDER|wxCAPTION</style>
+    <title>About WebUpdater</title>
+
+    <object class="wxBoxSizer">
+        <orient>wxVERTICAL</orient>
+        <object class="sizeritem">
+            <flag>wxALIGN_CENTER</flag>
+            <border>5</border>
+            <object class="wxBoxSizer">
+                <orient>wxHORIZONTAL</orient>
+                <object class="sizeritem">
+                    <flag>wxALIGN_CENTER|wxALL</flag>
+                    <border>5</border>
+                    <object class="wxStaticBitmap" name="IDWUAD_WWW">
+                        <bitmap>memory:www.png</bitmap>
+                    </object>
+                </object>
+                <object class="sizeritem">
+                    <flag>wxALIGN_CENTER|wxALL</flag>
+                    <border>5</border>
+                    <object class="wxStaticText" name="IDWUAD_TEXT">
+                        <label>WebUpdater is a wxWidgets-licensed component 
+hosted at wxCode, written by Francesco Montorsi.
+
+WebUpdater is based on the wxHTTPEngine component 
+and wxWidgets.</label>
+                    </object>
+                </object>
+            </object>
+        </object>
+        <object class="sizeritem">
+            <flag>wxALIGN_CENTER</flag>
+            <border>5</border>
+            <object class="wxStaticBoxSizer">
+                <orient>wxVERTICAL</orient>
+                <label>Contact info</label>
+                <object class="sizeritem">
+                    <flag>wxALIGN_CENTER|wxALL</flag>
+                    <border>5</border>
+                    <object class="wxGridSizer">
+                        <cols>2</cols>
+                        <rows>0</rows>
+                        <vgap>0</vgap>
+                        <hgap>0</hgap>
+                        <object class="sizeritem">
+                            <flag>wxALIGN_CENTER|wxALL</flag>
+                            <border>5</border>
+                            <object class="wxStaticText" name="IDWUAD_TEXT2">
+                                <label>WebUpdater homepage:</label>
+                            </object>
+                        </object>
+                        <object class="sizeritem">
+                            <flag>wxALIGN_CENTER|wxALL</flag>
+                            <border>5</border>
+                            <object class="wxStaticText" name="IDWUAD_WEBUPDATE_LINK">
+                                <label>http://wxcode.sf.net/components/webupdate</label>
+                            </object>
+                        </object>
+                        <object class="sizeritem">
+                            <flag>wxALIGN_CENTER|wxALL</flag>
+                            <border>5</border>
+                            <object class="wxStaticText" name="IDWUAD_TEXT3">
+                                <label>For reporting bugs about WebUpdater:</label>
+                            </object>
+                        </object>
+                        <object class="sizeritem">
+                            <flag>wxALIGN_CENTER|wxALL</flag>
+                            <border>5</border>
+                            <object class="wxStaticText" name="IDWUAD_WEBUPDATEBUGS_LINK">
+                                <label>http://sourceforge.net/projects/wxcode</label>
+                            </object>
+                        </object>
+                        <object class="sizeritem">
+                            <flag>wxALIGN_CENTER|wxALL</flag>
+                            <border>5</border>
+                            <object class="wxStaticText" name="IDWUAD_TEXT4">
+                                <label>wxWidgets homepage:</label>
+                            </object>
+                        </object>
+                        <object class="sizeritem">
+                            <flag>wxALIGN_CENTER|wxALL</flag>
+                            <border>5</border>
+                            <object class="wxStaticText" name="IDWUAD_WXWIDGETS_LINK">
+                                <label>http://www.wxwidgets.org</label>
+                            </object>
+                        </object>
+                        <object class="sizeritem">
+                            <flag>wxALIGN_CENTER|wxALL</flag>
+                            <border>5</border>
+                            <object class="wxStaticText" name="IDWUAD_TEXT5">
+                                <label>wxHTTPEngine homepage:</label>
+                            </object>
+                        </object>
+                        <object class="sizeritem">
+                            <flag>wxALIGN_CENTER|wxALL</flag>
+                            <border>5</border>
+                            <object class="wxStaticText" name="IDWUAD_WXHTTPENGINE_LINK">
+                                <label>http://wxcode.sf.net/components/wxhttpengine</label>
+                            </object>
+                        </object>
+                    </object>
+                </object>
+            </object>
+        </object>
+        <object class="sizeritem">
+            <flag>wxALIGN_RIGHT|wxALL</flag>
+            <border>5</border>
+            <object class="wxButton" name="wxID_CANCEL">
+                <label>OK</label>
+            </object>
+        </object>
+    </object>
 </object>
 
 </resource>

@@ -2,7 +2,7 @@
 <!DOCTYPE webupdate PUBLIC "-//WebUpdate//DTD WebUpdater 1.0//EN" "http://wxcode.sourceforge.net/components/webupdate/remote.dtd">
 <!-- $Id$ -->
 
-<webupdate>
+<webupdate version="1.0">
 
    <!-- our customized messages -->
    <msg-update-available>Some updates for "$(framename)" are available; don't miss them !</msg-update-available>

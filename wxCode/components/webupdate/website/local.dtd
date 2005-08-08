@@ -1,6 +1,7 @@
 <!-- 
    Name:        local.dtd
    Purpose:     a simple DTD to validate local update script
+   Version:     1.0
    Author:      Francesco Montorsi
    Created:     2005/06/24
    RCS-ID:      $Id$
@@ -12,6 +13,14 @@
    This file should make easier to check validity of the
    scripts you write and it should also be as a simple reference guide for the 
    update script format.
+
+   The local XML scripts which follows this DTD should include the following
+   line before the <webupdate> root tag:
+
+      <!DOCTYPE webupdate PUBLIC "-//WebUpdate//DTD WebUpdater 1.0//EN" 
+            "http://wxcode.sourceforge.net/components/webupdate/local.dtd">
+
+   which just tells to XML parser that the XML file follows the WebUpdater DTD v1.0.
 	 
    Also remember to validate your XML files against this DTD before mailing for
    problems about your scripts: WebUpdate component is not responsible for
@@ -23,8 +32,13 @@
 
 
 <!-- WEBUPDATE tag: this is the root of the script file.
+                    Requires the 'version' property which must be set to the
+                    same version of this DTD file (you can find it at the
+                    beginning of this document).
 -->
 <!ELEMENT webupdate (appname,appfile,dlgxrc,remoteuri,keywords?,local-package*)>
+<!ATTLIST webupdate version CDATA #IMPLIED>
+
 
 
 

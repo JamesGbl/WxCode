@@ -98,13 +98,16 @@ void *wxDownloadThread::Entry()
 			u.InitContentTypes(); // Initialise the content types on the page
 			
 			if (m_proxy.m_bUseProxy) {
+				wxLogDebug(wxT("wxDownloadThread::Entry - using the proxy settings"));
 				u.HttpProxy(m_proxy.m_strProxyHostname, m_proxy.m_nProxyPort);
 				if (m_proxy.m_bProxyAuth)
 					u.HttpProxyAuth(m_proxy.m_strProxyUsername, m_proxy.m_strProxyPassword);
 			}
 			
-			if (m_proxy.m_bUseAuth)
+			if (m_proxy.m_bUseAuth) {
+				wxLogDebug(wxT("wxDownloadThread::Entry - using the basic authentication settings"));
 				u.Authenticate(m_proxy.m_strAuthUsername, m_proxy.m_strAuthPassword);
+			}
 
 			in = u.GetInputStream(m_strURI);
 
@@ -266,8 +269,8 @@ void *wxSizeCacherThread::Entry()
 
 	// be sure to have n null entries in our cache array, where
 	// 'n' is the number of URLs whose size must be cached
-	m_urlSizes.Empty();
-	m_urlSizes.Add((long)0, m_urls.GetCount());
+	m_urlSizes = new wxArrayLong();
+	m_urlSizes->Add((long)0, m_urls.GetCount());
 
 	// begin our loop
 	for (int i=0; i<(int)m_urls.GetCount() && !TestDestroy(); i++) {
@@ -286,10 +289,12 @@ void *wxSizeCacherThread::Entry()
 			continue;
 		}
 		
-		m_urlSizes[i] = stream->GetSize();
-		if (m_urlSizes[i] == 0xffffff)
-			m_urlSizes[i] = 0;
-		allok &= (m_urlSizes[i] != 0);
+		int sz = stream->GetSize();
+		if (sz == 0xffffff)
+			sz = 0;
+
+		m_urlSizes->Item(i) = sz;
+		allok &= (m_urlSizes->Item(i) != 0);
 		delete stream;
 	}
 
@@ -302,8 +307,9 @@ void wxSizeCacherThread::OnExit()
 	// we'll use wxPostEvent to post this event since this is the
 	// only thread-safe way to post events !
 	wxCommandEvent updatevent(wxEVT_COMMAND_CACHESIZE_COMPLETE);
-	//wxPostEvent(m_pHandler, updatevent);
-	updatevent.SetClientData(&this->m_urlSizes);
-	m_pHandler->ProcessEvent(updatevent);
+	
+	// the event handler must delete the wxArrayLong which we pass to it in the event !
+	updatevent.SetClientData(m_urlSizes);
+	wxPostEvent(m_pHandler, updatevent);
 }
 
