@@ -35,6 +35,7 @@ void wxUpdateWebUpdaterIfRequired();
     #include "wx/wx.h"
 #endif
 #include "wx/textfile.h"
+#include "wx/filename.h"
 
 // ----------------------------------------------------------------------------
 // resources

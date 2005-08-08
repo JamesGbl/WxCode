@@ -375,12 +375,14 @@ bool WebUpdaterApp::OnInit()
 	}
 
 	// check that the program-to-update EXE exists
-	wxString app2update = m_script.GetAppFile() + 
+	wxString tmp = m_script.GetAppFile() + 
 		wxWebUpdateInstaller::Get()->GetKeywordValue(wxT("exe"));
-	if (!wxFileName::FileExists(app2update)) {
+	wxFileName app2update(tmp);
+	app2update.MakeAbsolute(wxGetCwd());
+	if (!wxFileName::FileExists(app2update.GetFullPath())) {
 		wxWebUpdateInstaller::Get()->ShowErrorMsg(
 					wxT("The WebUpdater configuration file is corrupted; the file:\n\n\t") +					
-					app2update + 
+					app2update.GetFullPath() + 
 					wxT("\n\n is missing (or invalid); please reinstall the program."));
 		return FALSE;
 	}
