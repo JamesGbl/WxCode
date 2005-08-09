@@ -218,22 +218,26 @@
 	<copy-file-to-file id="setup">
 		<src>$(CONFIG_SRC)</src>
 		<dst>$(CONFIG_DST)</dst>
+		<clean-files>$(CONFIG_DST)</clean-files>
 		<dependency-of>all</dependency-of>
 	</copy-file-to-file>
 	<copy-file-to-file id="setup2">
 		<src>$(CONFIG2_SRC)</src>
 		<dst>$(CONFIG2_DST)</dst>
+		<clean-files>$(CONFIG2_DST)</clean-files>
 		<dependency-of>all</dependency-of>
 	</copy-file-to-file>
 	<copy-file-to-file id="setup3">
 		<src>$(CONFIG3_SRC)</src>
 		<dst>$(CONFIG3_DST)</dst>
+		<clean-files>$(CONFIG3_DST)</clean-files>
 		<dependency-of>all</dependency-of>
 	</copy-file-to-file>
 	<copy-file-to-file id="setup4">
 		<src>$(CONFIG4_SRC)</src>
 		<dst>$(CONFIG4_DST)</dst>
-		<dependency-of>all</dependency-of>
+		<clean-files>$(CONFIG4_DST)</clean-files>
+		<dependency-of>all</dependency-of>		
 	</copy-file-to-file>
 	
     <!-- This defines a tag which includes headers on MSVC          -->

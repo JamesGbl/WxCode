@@ -138,6 +138,10 @@ clean:
 	-if exist borland\*.obj del borland\*.obj
 	-if exist borland\*.res del borland\*.res
 	-if exist borland\*.csm del borland\*.csm
+	-if exist ..\lib\config.h del ..\lib\config.h
+	-if exist ..\include\iconv.h del ..\include\iconv.h
+	-if exist ..\libcharset\include\localcharset.h del ..\libcharset\include\localcharset.h
+	-if exist ..\libcharset\config.h del ..\libcharset\config.h
 	-if exist ..\lib\iconv.lib del ..\lib\iconv.lib
 	-if exist ..\lib\iconv.dll del ..\lib\iconv.dll
 	-if exist ..\lib\iconv.tds del ..\lib\iconv.tds

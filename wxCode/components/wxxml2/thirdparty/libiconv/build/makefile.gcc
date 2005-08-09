@@ -115,6 +115,10 @@ all: ..\lib\config.h ..\include\iconv.h ..\libcharset\include\localcharset.h ..\
 clean: 
 	-if exist mingw\*.o del mingw\*.o
 	-if exist mingw\*.d del mingw\*.d
+	-if exist ..\lib\config.h del ..\lib\config.h
+	-if exist ..\include\iconv.h del ..\include\iconv.h
+	-if exist ..\libcharset\include\localcharset.h del ..\libcharset\include\localcharset.h
+	-if exist ..\libcharset\config.h del ..\libcharset\config.h
 	-if exist ..\lib\libiconv.a del ..\lib\libiconv.a
 	-if exist ..\lib\iconv.dll del ..\lib\iconv.dll
 	-if exist ..\lib\libiconv.a del ..\lib\libiconv.a

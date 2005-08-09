@@ -705,7 +705,7 @@ $(TAB)copy "$(DOLLAR)(InputPath)" ..\$(CONFIG_DSTNAME)
 	<phony id="libonly">
 		<set var="DEPNAME">
 			<if cond="SHARED=='1'">libxml2_dll</if>
-			<if cond="SHARED==''">libxml2_lib</if>
+			<if cond="SHARED=='0'">libxml2_lib</if>
 		</set>
 		<depends>$(DEPNAME)</depends>
 	</phony>

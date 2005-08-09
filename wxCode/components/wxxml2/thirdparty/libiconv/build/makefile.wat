@@ -155,6 +155,10 @@ clean : .SYMBOLIC
 	-if exist watcom\*.lbc del watcom\*.lbc
 	-if exist watcom\*.ilk del watcom\*.ilk
 	-if exist watcom\*.pch del watcom\*.pch
+	-if exist ..\lib\config.h del ..\lib\config.h
+	-if exist ..\include\iconv.h del ..\include\iconv.h
+	-if exist ..\libcharset\include\localcharset.h del ..\libcharset\include\localcharset.h
+	-if exist ..\libcharset\config.h del ..\libcharset\config.h
 	-if exist ..\lib\iconv.lib del ..\lib\iconv.lib
 	-if exist ..\lib\iconv.dll del ..\lib\iconv.dll
 	-if exist ..\lib\iconv.lib del ..\lib\iconv.lib

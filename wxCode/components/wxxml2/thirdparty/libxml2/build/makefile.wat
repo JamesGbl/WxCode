@@ -85,7 +85,7 @@ __libxml2_dll___depname =
 __libxml2_dll___depname = ..\lib\libxml2.dll
 !endif
 ____libonly_DEPNAME_DEP =
-!ifeq SHARED
+!ifeq SHARED 0
 ____libonly_DEPNAME_DEP = $(__libxml2_lib___depname)
 !endif
 !ifeq SHARED 1
