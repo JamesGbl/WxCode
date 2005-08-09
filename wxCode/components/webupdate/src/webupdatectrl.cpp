@@ -443,7 +443,7 @@ wxWebUpdatePackage *wxWebUpdateListCtrl::GetNextPackageToDownload()
 	if (todownload == -1)
 		return NULL;
 
-	return 	&m_arrRemotePackages[todownload];
+	return 	&m_arrRemotePackages[GetPackageIndexForItem(todownload)];
 }
 
 bool wxWebUpdateListCtrl::IsReadyForInstallation(int n)
@@ -483,7 +483,7 @@ wxWebUpdatePackage *wxWebUpdateListCtrl::GetNextPackageToInstall()
 	if (toinstall == -1)
 		return NULL;
 
-	return &m_arrRemotePackages[toinstall];
+	return &m_arrRemotePackages[GetPackageIndexForItem(toinstall)];
 }
 
 void wxWebUpdateListCtrl::SetDownloadStatus(const wxWebUpdatePackage &p, bool status)

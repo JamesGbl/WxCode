@@ -24,4 +24,3 @@
 
  Special thanks to Ulrich Telle for the great help given in design-stage and feature-proposal.
  Thanks also to all wxWidgets developers who helped me in the wx-users mailing list.
-

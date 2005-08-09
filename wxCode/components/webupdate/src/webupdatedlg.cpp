@@ -402,7 +402,7 @@ bool wxWebUpdateDlg::DownloadNextPackage()
 	// there maybe some hidden packages... leave all this handling to our
 	// listctrl class...
 	m_current = m_pUpdatesList->GetNextPackageToDownload();
-	wxASSERT(m_current);
+	if (m_current == NULL) return FALSE;		// no other packages to download
 	wxWebUpdateDownload &dl = m_current->GetDownload();
 	
 	// init thread variables
@@ -434,7 +434,7 @@ bool wxWebUpdateDlg::InstallNextPackage()
 					wxT("Invalid state mode"));
 
 	m_current = m_pUpdatesList->GetNextPackageToInstall();
-	wxASSERT(m_current);
+	if (m_current == NULL) return FALSE;		// no other packages to install
 	wxWebUpdateDownload &download = m_current->GetDownload();
 
 	// launch the installation

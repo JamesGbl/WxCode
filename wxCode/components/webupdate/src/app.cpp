@@ -194,8 +194,7 @@ class WebUpdaterDlg : public wxWebUpdateDlg
 {
 public:
 	WebUpdaterDlg(const wxWebUpdateLocalXMLScript &script,
-					wxWebUpdateExtraOptions *opt)
-		: wxWebUpdateDlg(NULL, script, opt) {}
+					wxWebUpdateExtraOptions *opt);
 	virtual ~WebUpdaterDlg() {}
 
 
@@ -419,14 +418,16 @@ int WebUpdaterApp::OnExit()
 	// before exiting this app, rerun the program we've just updated
 	if (m_optExtra.m_bRestart) {
 	
-		wxLogDebug(wxT("WebUpdaterApp::OnExit - restarting the updated application ") + m_script.GetAppFile());	
-		wxExecute(
+		wxString cmd =
 #ifdef __WXMSW__
-			m_script.GetAppFile() + wxT(".exe")
+			m_script.GetAppFile() + wxT(".exe");
 #else
-			wxT("./") + m_script.GetAppFile()
+			wxT("./") + m_script.GetAppFile();
 #endif 
-		);
+		
+		wxLogDebug(wxT("WebUpdaterApp::OnExit - restarting the updated application [") + 
+					cmd + wxT("]..."));	
+		wxExecute(cmd, wxEXEC_ASYNC);
 	}
 
 	return wxApp::OnExit();
@@ -454,6 +455,18 @@ void WebUpdaterApp::OnExecute(wxCommandEvent &ce)
 // ----------------------------------------------------------------------------
 // WEBUPDATERDLG
 // ----------------------------------------------------------------------------
+
+WebUpdaterDlg::WebUpdaterDlg(const wxWebUpdateLocalXMLScript &script, wxWebUpdateExtraOptions *opt)
+						: wxWebUpdateDlg(NULL, script, opt) 
+{
+	//wxIconBundle icons(wxT("app.ico"), wxBITMAP_TYPE_ICO);
+
+	// our icon comes from the BlueSphere icon theme,
+	// look under "apps/up2date.png", which I found at:
+	//    http://svgicons.sourceforge.net/
+	// Thanks to the author of the SVGIcons project, Vadim Plessky !
+	SetIcon(wxICON(app));
+}
 
 void WebUpdaterDlg::OnQuit(wxCloseEvent &)
 {

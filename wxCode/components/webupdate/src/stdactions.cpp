@@ -68,7 +68,7 @@ bool wxWebUpdateActionRun::Run() const
 	}
 
 	int retcode = wxExecute(m_strFile + wxT(" ") + m_strArgs, 
- 							m_nExecFlag | wxEXEC_NODISABLE | wxEXEC_NODISABLE);
+ 							m_nExecFlag | wxEXEC_NODISABLE);
 
 	// FIXME: how do we know if this retcode means success or not ?
 	//        (some programs could not respect the 0=success UNIX standard...)
