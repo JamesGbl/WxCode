@@ -119,7 +119,7 @@ libiconv:
 
 libxml2: 
 	@echo cd ..\libxml2\build >libxml2.bat
-	@echo $(MAKE) -f makefile.bcc $(MAKEARGS)  >>libxml2.bat
+	@echo $(MAKE) -f makefile.bcc $(MAKEARGS) libonly >>libxml2.bat
 	call libxml2.bat
 	@del libxml2.bat
 

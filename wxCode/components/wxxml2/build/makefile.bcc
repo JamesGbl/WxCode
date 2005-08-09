@@ -61,7 +61,7 @@ WX_SHARED = 0
 
 # Compile Unicode build of wxWidgets? [0,1]
 !ifndef WX_UNICODE
-WX_UNICODE = 0
+WX_UNICODE = 1
 !endif
 
 # Use debug build of wxWidgets (define __WXDEBUG__)? [0,1]
@@ -90,7 +90,7 @@ WXXML2_LIB_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG_1) $(__DEBUGINFO) \
 	-tWM $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
 	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	-I$(WX_DIR)\include -I..\include -I..\thirdparty\libxml2\include \
-	-I..\thirdparty\iconv\include $(CPPFLAGS) $(CXXFLAGS)
+	-I..\thirdparty\libiconv\include $(CPPFLAGS) $(CXXFLAGS)
 WXXML2_LIB_OBJECTS =  \
 	borland\wxxml2_lib_xml2.obj \
 	borland\wxxml2_lib_dtd.obj
@@ -98,8 +98,8 @@ WXXML2_DLL_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG_1) $(__DEBUGINFO) \
 	-tWM $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
 	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	-I$(WX_DIR)\include -I..\include -DWXMAKINGDLL_WXXML2 \
-	-I..\thirdparty\libxml2\include -I..\thirdparty\iconv\include $(CPPFLAGS) \
-	$(CXXFLAGS)
+	-I..\thirdparty\libxml2\include -I..\thirdparty\libiconv\include \
+	$(CPPFLAGS) $(CXXFLAGS)
 WXXML2_DLL_OBJECTS =  \
 	borland\wxxml2_dll_xml2.obj \
 	borland\wxxml2_dll_dtd.obj
@@ -107,7 +107,7 @@ MINIMAL_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG_1) $(__DEBUGINFO) -tWM \
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
 	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	-I$(WX_DIR)\include -I..\include -I..\thirdparty\libxml2\include \
-	-I..\thirdparty\iconv\include $(CPPFLAGS) $(CXXFLAGS)
+	-I..\thirdparty\libiconv\include $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	borland\minimal_minimal.obj
 
@@ -182,6 +182,8 @@ clean:
 	@echo $(MAKE) -f makefile.bcc $(MAKEARGS) clean >>borland\thirdparty.bat
 	call borland\thirdparty.bat
 	@del borland\thirdparty.bat
+	-if exist ..\lib\*.lib del ..\lib\*.lib
+	-if exist ..\lib\*.dll del ..\lib\*.dll
 	-if exist ..\lib\wxxml2$(WXLIBPOSTFIX).lib del ..\lib\wxxml2$(WXLIBPOSTFIX).lib
 	-if exist ..\lib\wxxml2$(WXLIBPOSTFIX).dll del ..\lib\wxxml2$(WXLIBPOSTFIX).dll
 	-if exist ..\lib\wxxml2$(WXLIBPOSTFIX).tds del ..\lib\wxxml2$(WXLIBPOSTFIX).tds
@@ -202,6 +204,12 @@ thirdparty:
 	@echo $(MAKE) -f makefile.bcc $(MAKEARGS) all >>borland\thirdparty.bat
 	call borland\thirdparty.bat
 	@del borland\thirdparty.bat
+
+setupdep: thirdparty
+	-copy ..\thirdparty\libxml2\lib\*.lib ..\lib
+	-copy ..\thirdparty\libiconv\lib\*.lib ..\lib
+	-copy ..\thirdparty\libxml2\lib\*.dll ..\lib
+	-copy ..\thirdparty\libiconv\lib\*.dll ..\lib
 
 tarball: 
 	-cd ..
@@ -283,7 +291,7 @@ cleandocs:
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
 !if "$(WX_SHARED)" == "0"
-..\lib\wxxml2$(WXLIBPOSTFIX).lib: $(WXXML2_LIB_OBJECTS) thirdparty
+..\lib\wxxml2$(WXLIBPOSTFIX).lib: $(WXXML2_LIB_OBJECTS) setupdep
 	if exist $@ del $@
 	tlib /a /p4096 $@ @&&|
 	$(WXXML2_LIB_OBJECTS)
@@ -291,15 +299,15 @@ cleandocs:
 !endif
 
 !if "$(WX_SHARED)" == "1"
-..\lib\wxxml2$(WXLIBPOSTFIX).dll: $(WXXML2_DLL_OBJECTS) thirdparty
-	ilink32 -Tpd -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -L..\thirdparty\libxml2\lib -L..\thirdparty\iconv\lib @&&|
+..\lib\wxxml2$(WXLIBPOSTFIX).dll: $(WXXML2_DLL_OBJECTS) setupdep
+	ilink32 -Tpd -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -L..\thirdparty\libxml2\lib -L..\thirdparty\libiconv\lib @&&|
 	c0d32.obj $(WXXML2_DLL_OBJECTS),$@,, libxml2.lib iconv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
 |
 	implib -f ..\lib\wxxml2$(WXLIBPOSTFIX) $@
 !endif
 
-..\sample\minimal.exe: $(MINIMAL_OBJECTS) thirdparty $(__wxxml2_lib___depname)
-	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -aa -L..\thirdparty\libxml2\lib -L..\thirdparty\iconv\lib @&&|
+..\sample\minimal.exe: $(MINIMAL_OBJECTS) setupdep $(__wxxml2_lib___depname)
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -aa -L..\thirdparty\libxml2\lib -L..\thirdparty\libiconv\lib @&&|
 	c0w32.obj $(MINIMAL_OBJECTS),$@,, ..\lib\wxxml2$(WXLIBPOSTFIX).lib libxml2.lib iconv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
 |
 

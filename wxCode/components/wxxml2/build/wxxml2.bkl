@@ -7,6 +7,9 @@
 	<include file="$(WXCODE_BAKEFILEDIR)/defaults.bkl"/>
 	<include file="$(WXCODE_BAKEFILEDIR)/tags.bkl"/>
 	<include file="$(WXCODE_BAKEFILEDIR)/utils.bkl"/>
+
+	<set var="WX_UNICODE_DEFAULT">1</set>
+	<set var="WX_VERSION_DEFAULT">26</set>
 	<include file="presets/wx.bkl"/>
  	
 
@@ -18,7 +21,7 @@
 	     useful at all) use the libxml2 & iconv placed in the thirdparty folder -->
 	<!-- on unix instead we will use the system-installed libxml2 & iconv libs -->
 	<set var="LIBXML2_DIR">..$(DIRSEP)thirdparty$(DIRSEP)libxml2</set>
-	<set var="ICONV_DIR">..$(DIRSEP)thirdparty$(DIRSEP)iconv</set>
+	<set var="ICONV_DIR">..$(DIRSEP)thirdparty$(DIRSEP)libiconv</set>
 
 	<if cond="TARGETING_IDE=='0' and TARGETING_WIN32=='1'">	
 
@@ -35,9 +38,21 @@
 	          	 BUILD="$(BUILD_EQUIVALENT)" ICONV_DIR="..$(DIRSEP)..$(DIRSEP)libiconv"
 		    </set-makeargs>
 		</smart-subproject>
+		
+		<!-- to make things easier for the user of wxXml2, we now copy the libiconv & libxml2 libraries in our ..\lib folder;
+                since this target makes sense only on win32 we can safely use platform-dependent commands... -->
+		<action id="setupdep">
+			<depends>thirdparty</depends>
+			<command>-copy $(LIBXML2_DIR)\lib\*.lib ..\lib</command>
+			<command>-copy $(ICONV_DIR)\lib\*.lib ..\lib</command>
+			<command>-copy $(LIBXML2_DIR)\lib\*.dll ..\lib</command>
+			<command>-copy $(ICONV_DIR)\lib\*.dll ..\lib</command>
+			<clean-files>..\lib\*.lib</clean-files>
+			<clean-files>..\lib\*.dll</clean-files>
+		</action>
 	</if>
-	<if cond="TARGETING_IDE=='1'">
-		<phony id="thirdparty"/>		<!-- msvc6prj does not support subprojects -->
+	<if cond="TARGETING_IDE=='1' or TARGETING_WIN32=='0'">
+		<phony id="setupdep"/>		<!-- msvc6prj does not support subprojects -->
 	</if>
 	
 
@@ -50,8 +65,6 @@
 	<set var="COMP_HDR">wx/xml2def.h wx/xml2.h wx/dtd.h</set>	
 	<set var="COMP_SAMPLE_DIR">../sample</set>
 	<set var="COMP_SAMPLE_SRC">minimal.cpp</set>
-	<set var="WX_UNICODE_DEFAULT">1</set>
-	<set var="WX_VERSION_DEFAULT">26</set>
 
 	<!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->
 	<include file="$(WXCODE_BAKEFILEDIR)/wxcode.bkl"/>
@@ -62,7 +75,7 @@
 	<set var="STATIC_DEF"><if cond="WX_SHARED=='0' and FORMAT=='mingw'">LIBXML_STATIC</if></set>
 	<template id="xmlbasic">
 		<if cond="TARGETING_WIN32=='1'">
-			<depends>thirdparty</depends>
+			<depends>setupdep</depends>
 			<stdlib>$(LIBXML2_DIR)</stdlib>
 			<stdlib>$(ICONV_DIR)</stdlib>
 		<!--	<define>$(STATIC_DEF)</define>  -->
@@ -76,7 +89,7 @@
 		<if cond="FORMAT!='autoconf'"><sys-lib>iconv</sys-lib></if>	
 	</define-tag>
 
-
+	<!-- our wxXml2 library -->
 	<lib id="wxxml2_lib" template="complib,xmlbasic" cond="WX_SHARED=='0'"/>
 	<dll id="wxxml2_dll" template="compdll,xmlbasic" cond="WX_SHARED=='1'">
 		<xml2libs/>

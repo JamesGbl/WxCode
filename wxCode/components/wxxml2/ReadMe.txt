@@ -19,65 +19,13 @@
  commented code & doxygen docs.
 
 
-
- wxXml2 wrappers sample
- ----------------------
+ ChangeLog
+ ---------
  
- This is a little application (a modified version of the minimal sample taken from
- the wxWidgets library) that uses the wxXml classes showing their main features.
-
- The wrappers have been tested with various versions of libxml2, up to version 2.6.16;
- use the one you prefer starting from version 2.5.0...
- 
-
-
- Installation
- ------------
-
- The wxXml2 wrappers are packed in a few source files and few header files,
- so you could think the best way to use them is to build the source files
- together with the sources of your app: in this case you should just add
- the source & header files to your project and compile them with the
- standard wxWidgets flags.
-
- Anyway, others may find a library more portable.
- To build a library, you can use the makefiles in the BUILD folder.
- They support all common flags (BUILD=release/debug, UNICODE=1/0 and so on...).
-
- Obviously these wrappers require the presence of the LIBXML2 library
- and, only on win32, of the ICONV library. These two libraries are cross-platform
- and can be compiled with various compilers. If you want to download the
- precompiled binaries for win32, I suggest you to download the LIBS package
- of the MathStudio project (http://sourceforge.net/projects/mathstudio) which
- contains these two libraries compiled with MSVC, BORLAND and MINGW compilers.
-
- The most important thing you should do, specially if you've never used these classes
- before, is to build the sample and read its source file.
- The doxygen docs are a useful and detailed reference manual to use after you learnt
- how wxxml2 wrappers must be used.
-
- In particular, when building wxscript on an autoconf-based system (like Linux/GNU-based systems),
- you have to create the makefile doing:
-
-  cd build
-  aclocal
-  autoconf
-  ./configure [here you should use the same flags you used to configure wxWin]
-  make
- 
- Type "./configure --help" for more info.
- The autoconf-based systems also support a "make install" target which builds the library and then
- copies the headers of the component to /usr/local/include and the lib to /usr/local/lib.
- For any problem, feel free to contact frm@users.sourceforge.net
-
-
-
-
- Known bugs
- ----------
-
- None
-
+ 1.5 - added libxml2 & libiconv to the build system for win32 users.
+       added a new parameter in wxXml2Node::Find
+ 1.1 - second release; fixed the sample and the docs
+ 1.0 - first release of wxXml2 wrappers
 
 
 

@@ -60,7 +60,7 @@ libiconv:
 	$(MAKE) -C ..\libiconv\build -f makefile.gcc $(MAKEARGS)
 
 libxml2: 
-	$(MAKE) -C ..\libxml2\build -f makefile.gcc $(MAKEARGS)
+	$(MAKE) -C ..\libxml2\build -f makefile.gcc $(MAKEARGS) libonly
 
 .PHONY: all clean BUILD SHARED UNICODE ICONV_DIR libiconv libxml2
 

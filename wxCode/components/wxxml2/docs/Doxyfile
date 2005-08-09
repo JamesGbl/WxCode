@@ -63,7 +63,8 @@ WARN_LOGFILE           =
 # configuration options related to the input files
 #---------------------------------------------------------------------------
 INPUT                  = ../src/ \
-                         ../include/wx/
+                         ../include/wx/ \
+						 docs.txt
 FILE_PATTERNS          = 
 RECURSIVE              = NO
 EXCLUDE                = 

@@ -85,6 +85,6 @@ libiconv : .SYMBOLIC
 
 libxml2 : .SYMBOLIC 
 	cd ..\libxml2\build
-	wmake $(__MAKEOPTS__) -f makefile.wat $(MAKEARGS)
+	wmake $(__MAKEOPTS__) -f makefile.wat $(MAKEARGS) libonly
 	cd $(WATCOM_CWD)
 

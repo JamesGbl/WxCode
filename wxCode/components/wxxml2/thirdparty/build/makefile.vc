@@ -68,6 +68,6 @@ sub_libiconv:
 
 sub_libxml2: 
 	cd ..\libxml2\build
-	$(MAKE) -f makefile.vc $(MAKEARGS)
+	$(MAKE) -f makefile.vc $(MAKEARGS) libonly
 	cd $(MAKEDIR)
 

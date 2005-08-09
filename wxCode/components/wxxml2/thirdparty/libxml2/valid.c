@@ -1212,14 +1212,14 @@ xmlDumpElementContent(xmlBufferPtr buf, xmlElementContentPtr content, int glob) 
  * xmlSprintfElementContent:
  * @buf:  an output buffer
  * @content:  An element table
- * @glob: 1 if one must print the englobing parenthesis, 0 otherwise
+ * @englob: 1 if one must print the englobing parenthesis, 0 otherwise
  *
  * Deprecated, unsafe, use xmlSnprintfElementContent
  */
 void
 xmlSprintfElementContent(char *buf ATTRIBUTE_UNUSED,
 	                 xmlElementContentPtr content ATTRIBUTE_UNUSED,
-			 int glob ATTRIBUTE_UNUSED) {
+			 int englob ATTRIBUTE_UNUSED) {
 }
 #endif /* LIBXML_OUTPUT_ENABLED */
 
@@ -1228,13 +1228,13 @@ xmlSprintfElementContent(char *buf ATTRIBUTE_UNUSED,
  * @buf:  an output buffer
  * @size:  the buffer size
  * @content:  An element table
- * @glob: 1 if one must print the englobing parenthesis, 0 otherwise
+ * @englob: 1 if one must print the englobing parenthesis, 0 otherwise
  *
  * This will dump the content of the element content definition
  * Intended just for the debug routine
  */
 void
-xmlSnprintfElementContent(char *buf, int size, xmlElementContentPtr content, int glob) {
+xmlSnprintfElementContent(char *buf, int size, xmlElementContentPtr content, int englob) {
     int len;
 
     if (content == NULL) return;
@@ -1244,7 +1244,7 @@ xmlSnprintfElementContent(char *buf, int size, xmlElementContentPtr content, int
 	    strcat(buf, " ...");
 	return;
     }
-    if (glob) strcat(buf, "(");
+    if (englob) strcat(buf, "(");
     switch (content->type) {
         case XML_ELEMENT_CONTENT_PCDATA:
             strcat(buf, "#PCDATA");
@@ -1306,7 +1306,7 @@ xmlSnprintfElementContent(char *buf, int size, xmlElementContentPtr content, int
 		xmlSnprintfElementContent(buf, size, content->c2, 0);
 	    break;
     }
-    if (glob)
+    if (englob)
         strcat(buf, ")");
     switch (content->ocur) {
         case XML_ELEMENT_CONTENT_ONCE:
@@ -1484,6 +1484,10 @@ xmlAddElementDecl(xmlValidCtxtPtr ctxt,
             if (ns != NULL)
 	        xmlFree(ns);
 	    return(NULL);
+	}
+	if (ns != NULL) {
+	    xmlFree(ns);
+	    ns = NULL;
 	}
     } else {
 	ret = (xmlElementPtr) xmlMalloc(sizeof(xmlElement));
@@ -1864,6 +1868,7 @@ xmlScanAttributeDecl(xmlDtdPtr dtd, const xmlChar *elem) {
  * xmlScanIDAttributeDecl:
  * @ctxt:  the validation context
  * @elem:  the element name
+ * @err: whether to raise errors here
  *
  * Verify that the element don't have too many ID attributes
  * declared.
@@ -1871,7 +1876,7 @@ xmlScanAttributeDecl(xmlDtdPtr dtd, const xmlChar *elem) {
  * Returns the number of ID attributes found.
  */
 static int
-xmlScanIDAttributeDecl(xmlValidCtxtPtr ctxt, xmlElementPtr elem) {
+xmlScanIDAttributeDecl(xmlValidCtxtPtr ctxt, xmlElementPtr elem, int err) {
     xmlAttributePtr cur;
     int ret = 0;
 
@@ -1880,7 +1885,7 @@ xmlScanIDAttributeDecl(xmlValidCtxtPtr ctxt, xmlElementPtr elem) {
     while (cur != NULL) {
         if (cur->atype == XML_ATTRIBUTE_ID) {
 	    ret ++;
-	    if (ret > 1)
+	    if ((ret > 1) && (err))
 		xmlErrValidNode(ctxt, (xmlNodePtr) elem, XML_DTD_MULTIPLE_ID,
 	       "Element %s has too many ID attributes defined : %s\n",
 		       elem->name, cur->name, NULL);
@@ -2058,6 +2063,12 @@ xmlAddAttributeDecl(xmlValidCtxtPtr ctxt,
      * fill the structure.
      */
     ret->atype = type;
+    /*
+     * doc must be set before possible error causes call
+     * to xmlFreeAttribute (because it's used to check on
+     * dict use)
+     */
+    ret->doc = dtd->doc;
     if (dict) {
 	ret->name = xmlDictLookup(dict, name, -1);
 	ret->prefix = xmlDictLookup(dict, ns, -1);
@@ -2102,7 +2113,7 @@ xmlAddAttributeDecl(xmlValidCtxtPtr ctxt,
 
 #ifdef LIBXML_VALID_ENABLED
         if ((type == XML_ATTRIBUTE_ID) &&
-	    (xmlScanIDAttributeDecl(NULL, elemDef) != 0)) {
+	    (xmlScanIDAttributeDecl(NULL, elemDef, 1) != 0)) {
 	    xmlErrValidNode(ctxt, (xmlNodePtr) dtd, XML_DTD_MULTIPLE_ID,
 	   "Element %s has too may ID attributes defined : %s\n",
 		   elem, name, NULL);
@@ -2145,7 +2156,6 @@ xmlAddAttributeDecl(xmlValidCtxtPtr ctxt,
      * Link it to the DTD
      */
     ret->parent = dtd;
-    ret->doc = dtd->doc;
     if (dtd->last == NULL) {
 	dtd->children = dtd->last = (xmlNodePtr) ret;
     } else {
@@ -2768,6 +2778,7 @@ xmlRemoveID(xmlDocPtr doc, xmlAttrPtr attr) {
     }
     xmlHashRemoveEntry(table, ID, (xmlHashDeallocator) xmlFreeID);
     xmlFree(ID);
+	attr->atype = 0;
     return(0);
 }
 
@@ -4037,7 +4048,7 @@ xmlValidateAttributeDecl(xmlValidCtxtPtr ctxt, xmlDocPtr doc,
         xmlElementPtr elem = xmlGetDtdElementDesc(doc->intSubset,
 	                                          attr->elem);
 	if (elem != NULL) {
-	    nbId = xmlScanIDAttributeDecl(NULL, elem);
+	    nbId = xmlScanIDAttributeDecl(NULL, elem, 0);
 	} else {
 	    xmlAttributeTablePtr table;
 
@@ -4059,7 +4070,7 @@ xmlValidateAttributeDecl(xmlValidCtxtPtr ctxt, xmlDocPtr doc,
 	    int extId = 0;
 	    elem = xmlGetDtdElementDesc(doc->extSubset, attr->elem);
 	    if (elem != NULL) {
-		extId = xmlScanIDAttributeDecl(NULL, elem);
+		extId = xmlScanIDAttributeDecl(NULL, elem, 0);
 	    }
 	    if (extId > 1) {
 		xmlErrValidNodeNr(ctxt, (xmlNodePtr) attr, XML_DTD_ID_SUBSET,

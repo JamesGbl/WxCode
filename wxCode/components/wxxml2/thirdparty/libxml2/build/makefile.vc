@@ -51,53 +51,100 @@ WITH_ZLIB = 0
 
 ### Variables: ###
 
-LIBXML2_CFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
+LIBXML2_LIB_CFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
 	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	/Fd..\lib\libxml2.pdb $(____DEBUGRUNTIME) /I..\include \
 	/I$(ICONV_DIR)\include $(__ZLIB_DEF_p) $(__DEBUG_DEF_p) $(__STATIC_DEF_p) \
 	/DWIN32 /D_WINDOWS /D_MBCS $(THREADS_DEF) $(CPPFLAGS) $(CFLAGS)
-LIBXML2_OBJECTS =  \
-	msvc\libxml2_c14n.obj \
-	msvc\libxml2_catalog.obj \
-	msvc\libxml2_chvalid.obj \
-	msvc\libxml2_debugXML.obj \
-	msvc\libxml2_dict.obj \
-	msvc\libxml2_DOCBparser.obj \
-	msvc\libxml2_encoding.obj \
-	msvc\libxml2_entities.obj \
-	msvc\libxml2_error.obj \
-	msvc\libxml2_globals.obj \
-	msvc\libxml2_hash.obj \
-	msvc\libxml2_HTMLparser.obj \
-	msvc\libxml2_HTMLtree.obj \
-	msvc\libxml2_legacy.obj \
-	msvc\libxml2_list.obj \
-	msvc\libxml2_nanoftp.obj \
-	msvc\libxml2_nanohttp.obj \
-	msvc\libxml2_parser.obj \
-	msvc\libxml2_parserInternals.obj \
-	msvc\libxml2_pattern.obj \
-	msvc\libxml2_relaxng.obj \
-	msvc\libxml2_SAX2.obj \
-	msvc\libxml2_SAX.obj \
-	msvc\libxml2_threads.obj \
-	msvc\libxml2_tree.obj \
-	msvc\libxml2_uri.obj \
-	msvc\libxml2_valid.obj \
-	msvc\libxml2_xinclude.obj \
-	msvc\libxml2_xlink.obj \
-	msvc\libxml2_xmlIO.obj \
-	msvc\libxml2_xmlmemory.obj \
-	msvc\libxml2_xmlreader.obj \
-	msvc\libxml2_xmlregexp.obj \
-	msvc\libxml2_xmlsave.obj \
-	msvc\libxml2_xmlschemas.obj \
-	msvc\libxml2_xmlschemastypes.obj \
-	msvc\libxml2_xmlunicode.obj \
-	msvc\libxml2_xmlwriter.obj \
-	msvc\libxml2_xpath.obj \
-	msvc\libxml2_xpointer.obj \
-	msvc\libxml2_xmlstring.obj
+LIBXML2_LIB_OBJECTS =  \
+	msvc\libxml2_lib_c14n.obj \
+	msvc\libxml2_lib_catalog.obj \
+	msvc\libxml2_lib_chvalid.obj \
+	msvc\libxml2_lib_debugXML.obj \
+	msvc\libxml2_lib_dict.obj \
+	msvc\libxml2_lib_DOCBparser.obj \
+	msvc\libxml2_lib_encoding.obj \
+	msvc\libxml2_lib_entities.obj \
+	msvc\libxml2_lib_error.obj \
+	msvc\libxml2_lib_globals.obj \
+	msvc\libxml2_lib_hash.obj \
+	msvc\libxml2_lib_HTMLparser.obj \
+	msvc\libxml2_lib_HTMLtree.obj \
+	msvc\libxml2_lib_legacy.obj \
+	msvc\libxml2_lib_list.obj \
+	msvc\libxml2_lib_nanoftp.obj \
+	msvc\libxml2_lib_nanohttp.obj \
+	msvc\libxml2_lib_parser.obj \
+	msvc\libxml2_lib_parserInternals.obj \
+	msvc\libxml2_lib_pattern.obj \
+	msvc\libxml2_lib_relaxng.obj \
+	msvc\libxml2_lib_SAX2.obj \
+	msvc\libxml2_lib_SAX.obj \
+	msvc\libxml2_lib_threads.obj \
+	msvc\libxml2_lib_tree.obj \
+	msvc\libxml2_lib_uri.obj \
+	msvc\libxml2_lib_valid.obj \
+	msvc\libxml2_lib_xinclude.obj \
+	msvc\libxml2_lib_xlink.obj \
+	msvc\libxml2_lib_xmlIO.obj \
+	msvc\libxml2_lib_xmlmemory.obj \
+	msvc\libxml2_lib_xmlreader.obj \
+	msvc\libxml2_lib_xmlregexp.obj \
+	msvc\libxml2_lib_xmlsave.obj \
+	msvc\libxml2_lib_xmlschemas.obj \
+	msvc\libxml2_lib_xmlschemastypes.obj \
+	msvc\libxml2_lib_xmlunicode.obj \
+	msvc\libxml2_lib_xmlwriter.obj \
+	msvc\libxml2_lib_xpath.obj \
+	msvc\libxml2_lib_xpointer.obj \
+	msvc\libxml2_lib_xmlstring.obj
+LIBXML2_DLL_CFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
+	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
+	/Fd..\lib\libxml2.pdb $(____DEBUGRUNTIME) /I..\include \
+	/I$(ICONV_DIR)\include $(__ZLIB_DEF_p) $(__DEBUG_DEF_p) $(__STATIC_DEF_p) \
+	/DWIN32 /D_WINDOWS /D_MBCS $(THREADS_DEF) $(CPPFLAGS) $(CFLAGS)
+LIBXML2_DLL_OBJECTS =  \
+	msvc\libxml2_dll_c14n.obj \
+	msvc\libxml2_dll_catalog.obj \
+	msvc\libxml2_dll_chvalid.obj \
+	msvc\libxml2_dll_debugXML.obj \
+	msvc\libxml2_dll_dict.obj \
+	msvc\libxml2_dll_DOCBparser.obj \
+	msvc\libxml2_dll_encoding.obj \
+	msvc\libxml2_dll_entities.obj \
+	msvc\libxml2_dll_error.obj \
+	msvc\libxml2_dll_globals.obj \
+	msvc\libxml2_dll_hash.obj \
+	msvc\libxml2_dll_HTMLparser.obj \
+	msvc\libxml2_dll_HTMLtree.obj \
+	msvc\libxml2_dll_legacy.obj \
+	msvc\libxml2_dll_list.obj \
+	msvc\libxml2_dll_nanoftp.obj \
+	msvc\libxml2_dll_nanohttp.obj \
+	msvc\libxml2_dll_parser.obj \
+	msvc\libxml2_dll_parserInternals.obj \
+	msvc\libxml2_dll_pattern.obj \
+	msvc\libxml2_dll_relaxng.obj \
+	msvc\libxml2_dll_SAX2.obj \
+	msvc\libxml2_dll_SAX.obj \
+	msvc\libxml2_dll_threads.obj \
+	msvc\libxml2_dll_tree.obj \
+	msvc\libxml2_dll_uri.obj \
+	msvc\libxml2_dll_valid.obj \
+	msvc\libxml2_dll_xinclude.obj \
+	msvc\libxml2_dll_xlink.obj \
+	msvc\libxml2_dll_xmlIO.obj \
+	msvc\libxml2_dll_xmlmemory.obj \
+	msvc\libxml2_dll_xmlreader.obj \
+	msvc\libxml2_dll_xmlregexp.obj \
+	msvc\libxml2_dll_xmlsave.obj \
+	msvc\libxml2_dll_xmlschemas.obj \
+	msvc\libxml2_dll_xmlschemastypes.obj \
+	msvc\libxml2_dll_xmlunicode.obj \
+	msvc\libxml2_dll_xmlwriter.obj \
+	msvc\libxml2_dll_xpath.obj \
+	msvc\libxml2_dll_xpointer.obj \
+	msvc\libxml2_dll_xmlstring.obj
 TESTAUTOMATA_CFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
 	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	/Fd..\bin\testAutomata.pdb $(____DEBUGRUNTIME) /I..\include \
@@ -187,6 +234,18 @@ THREADS_DEF = /D_REENTRANT /DHAVE_WIN32_THREADS /DHAVE_COMPILER_TLS
 !if "$(WITH_THREADS)" == "posix"
 THREADS_DEF = /D_REENTRANT /DHAVE_PTHREAD_H
 !endif
+!if "$(SHARED)" == "0"
+__libxml2_lib___depname = ..\lib\libxml2.lib
+!endif
+!if "$(SHARED)" == "1"
+__libxml2_dll___depname = ..\lib\libxml2.dll
+!endif
+!if "$(SHARED)" == ""
+____libonly_DEPNAME_DEP = $(__libxml2_lib___depname)
+!endif
+!if "$(SHARED)" == "1"
+____libonly_DEPNAME_DEP = $(__libxml2_dll___depname)
+!endif
 !if "$(BUILD)" == "debug"
 __WARNINGS = /W4
 !endif
@@ -209,10 +268,10 @@ __DEBUGINFO = /Zi
 __DEBUGINFO = 
 !endif
 !if "$(BUILD)" == "debug"
-__DEBUGINFO_10 = /DEBUG
+__DEBUGINFO_1_0 = /DEBUG
 !endif
 !if "$(BUILD)" == "release"
-__DEBUGINFO_10 = 
+__DEBUGINFO_1_0 = 
 !endif
 !if "$(BUILD)" == "debug"
 ____DEBUGRUNTIME = /D_DEBUG
@@ -258,12 +317,16 @@ msvc:
 
 ### Targets: ###
 
-all: ..\config.h setupdirs ..\lib\libxml2.lib ..\bin\testAutomata.exe ..\bin\testC14N.exe ..\bin\testHTML.exe ..\bin\testReader.exe ..\bin\testRegexp.exe ..\bin\testRelax.exe ..\bin\testSax.exe ..\bin\testSchemas.exe ..\bin\testURI.exe ..\bin\testXPath.exe ..\bin\xmllint.exe
+all: ..\config.h setupdirs $(__libxml2_lib___depname) $(__libxml2_dll___depname) ..\bin\testAutomata.exe ..\bin\testC14N.exe ..\bin\testHTML.exe ..\bin\testReader.exe ..\bin\testRegexp.exe ..\bin\testRelax.exe ..\bin\testSax.exe ..\bin\testSchemas.exe ..\bin\testURI.exe ..\bin\testXPath.exe ..\bin\xmllint.exe
 
 clean: 
 	-if exist msvc\*.obj del msvc\*.obj
 	-if exist msvc\*.res del msvc\*.res
 	-if exist msvc\*.pch del msvc\*.pch
+	-if exist ..\lib\libxml2.lib del ..\lib\libxml2.lib
+	-if exist ..\lib\libxml2.dll del ..\lib\libxml2.dll
+	-if exist ..\lib\libxml2.ilk del ..\lib\libxml2.ilk
+	-if exist ..\lib\libxml2.pdb del ..\lib\libxml2.pdb
 	-if exist ..\lib\libxml2.lib del ..\lib\libxml2.lib
 	-if exist ..\bin\testAutomata.exe del ..\bin\testAutomata.exe
 	-if exist ..\bin\testAutomata.ilk del ..\bin\testAutomata.ilk
@@ -310,189 +373,323 @@ clean:
 
 setupdirs: ..\lib ..\bin
 
-..\lib\libxml2.lib: $(LIBXML2_OBJECTS) ..\config.h ..\lib
+!if "$(SHARED)" == "0"
+..\lib\libxml2.lib: $(LIBXML2_LIB_OBJECTS) ..\config.h ..\lib
 	if exist $@ del $@
 	link /LIB /NOLOGO /OUT:$@ @<<
-	$(LIBXML2_OBJECTS)
+	$(LIBXML2_LIB_OBJECTS)
 <<
+!endif
 
-..\bin\testAutomata.exe: $(TESTAUTOMATA_OBJECTS) ..\lib\libxml2.lib
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_10) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
+!if "$(SHARED)" == "1"
+..\lib\libxml2.dll: $(LIBXML2_DLL_OBJECTS) ..\config.h ..\lib
+	link /DLL /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib @<<
+	$(LIBXML2_DLL_OBJECTS)  $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p) /IMPLIB:..\lib\libxml2.lib
+<<
+!endif
+
+libonly: $(____libonly_DEPNAME_DEP)
+
+..\bin\testAutomata.exe: $(TESTAUTOMATA_OBJECTS) $(__libxml2_lib___depname)
+	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
 	$(TESTAUTOMATA_OBJECTS)  ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)
 <<
 
-..\bin\testC14N.exe: $(TESTC14N_OBJECTS) ..\lib\libxml2.lib
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_10) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
+..\bin\testC14N.exe: $(TESTC14N_OBJECTS) $(__libxml2_lib___depname)
+	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
 	$(TESTC14N_OBJECTS)  ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)
 <<
 
-..\bin\testHTML.exe: $(TESTHTML_OBJECTS) ..\lib\libxml2.lib
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_10) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
+..\bin\testHTML.exe: $(TESTHTML_OBJECTS) $(__libxml2_lib___depname)
+	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
 	$(TESTHTML_OBJECTS)  ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)
 <<
 
-..\bin\testReader.exe: $(TESTREADER_OBJECTS) ..\lib\libxml2.lib
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_10) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
+..\bin\testReader.exe: $(TESTREADER_OBJECTS) $(__libxml2_lib___depname)
+	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
 	$(TESTREADER_OBJECTS)  ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)
 <<
 
-..\bin\testRegexp.exe: $(TESTREGEXP_OBJECTS) ..\lib\libxml2.lib
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_10) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
+..\bin\testRegexp.exe: $(TESTREGEXP_OBJECTS) $(__libxml2_lib___depname)
+	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
 	$(TESTREGEXP_OBJECTS)  ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)
 <<
 
-..\bin\testRelax.exe: $(TESTRELAX_OBJECTS) ..\lib\libxml2.lib
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_10) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
+..\bin\testRelax.exe: $(TESTRELAX_OBJECTS) $(__libxml2_lib___depname)
+	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
 	$(TESTRELAX_OBJECTS)  ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)
 <<
 
-..\bin\testSax.exe: $(TESTSAX_OBJECTS) ..\lib\libxml2.lib
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_10) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
+..\bin\testSax.exe: $(TESTSAX_OBJECTS) $(__libxml2_lib___depname)
+	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
 	$(TESTSAX_OBJECTS)  ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)
 <<
 
-..\bin\testSchemas.exe: $(TESTSCHEMAS_OBJECTS) ..\lib\libxml2.lib
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_10) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
+..\bin\testSchemas.exe: $(TESTSCHEMAS_OBJECTS) $(__libxml2_lib___depname)
+	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
 	$(TESTSCHEMAS_OBJECTS)  ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)
 <<
 
-..\bin\testURI.exe: $(TESTURI_OBJECTS) ..\lib\libxml2.lib
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_10) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
+..\bin\testURI.exe: $(TESTURI_OBJECTS) $(__libxml2_lib___depname)
+	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
 	$(TESTURI_OBJECTS)  ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)
 <<
 
-..\bin\testXPath.exe: $(TESTXPATH_OBJECTS) ..\lib\libxml2.lib
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_10) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
+..\bin\testXPath.exe: $(TESTXPATH_OBJECTS) $(__libxml2_lib___depname)
+	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
 	$(TESTXPATH_OBJECTS)  ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)
 <<
 
-..\bin\xmllint.exe: $(XMLLINT_OBJECTS) ..\lib\libxml2.lib
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_10) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
+..\bin\xmllint.exe: $(XMLLINT_OBJECTS) $(__libxml2_lib___depname)
+	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
 	$(XMLLINT_OBJECTS)  ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)
 <<
 
-msvc\libxml2_c14n.obj: .\..\c14n.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_c14n.obj: .\..\c14n.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_catalog.obj: .\..\catalog.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_catalog.obj: .\..\catalog.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_chvalid.obj: .\..\chvalid.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_chvalid.obj: .\..\chvalid.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_debugXML.obj: .\..\debugXML.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_debugXML.obj: .\..\debugXML.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_dict.obj: .\..\dict.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_dict.obj: .\..\dict.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_DOCBparser.obj: .\..\DOCBparser.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_DOCBparser.obj: .\..\DOCBparser.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_encoding.obj: .\..\encoding.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_encoding.obj: .\..\encoding.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_entities.obj: .\..\entities.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_entities.obj: .\..\entities.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_error.obj: .\..\error.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_error.obj: .\..\error.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_globals.obj: .\..\globals.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_globals.obj: .\..\globals.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_hash.obj: .\..\hash.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_hash.obj: .\..\hash.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_HTMLparser.obj: .\..\HTMLparser.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_HTMLparser.obj: .\..\HTMLparser.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_HTMLtree.obj: .\..\HTMLtree.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_HTMLtree.obj: .\..\HTMLtree.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_legacy.obj: .\..\legacy.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_legacy.obj: .\..\legacy.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_list.obj: .\..\list.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_list.obj: .\..\list.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_nanoftp.obj: .\..\nanoftp.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_nanoftp.obj: .\..\nanoftp.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_nanohttp.obj: .\..\nanohttp.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_nanohttp.obj: .\..\nanohttp.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_parser.obj: .\..\parser.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_parser.obj: .\..\parser.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_parserInternals.obj: .\..\parserInternals.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_parserInternals.obj: .\..\parserInternals.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_pattern.obj: .\..\pattern.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_pattern.obj: .\..\pattern.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_relaxng.obj: .\..\relaxng.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_relaxng.obj: .\..\relaxng.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_SAX2.obj: .\..\SAX2.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_SAX2.obj: .\..\SAX2.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_SAX.obj: .\..\SAX.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_SAX.obj: .\..\SAX.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_threads.obj: .\..\threads.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_threads.obj: .\..\threads.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_tree.obj: .\..\tree.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_tree.obj: .\..\tree.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_uri.obj: .\..\uri.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_uri.obj: .\..\uri.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_valid.obj: .\..\valid.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_valid.obj: .\..\valid.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_xinclude.obj: .\..\xinclude.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_xinclude.obj: .\..\xinclude.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_xlink.obj: .\..\xlink.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_xlink.obj: .\..\xlink.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_xmlIO.obj: .\..\xmlIO.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_xmlIO.obj: .\..\xmlIO.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_xmlmemory.obj: .\..\xmlmemory.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_xmlmemory.obj: .\..\xmlmemory.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_xmlreader.obj: .\..\xmlreader.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_xmlreader.obj: .\..\xmlreader.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_xmlregexp.obj: .\..\xmlregexp.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_xmlregexp.obj: .\..\xmlregexp.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_xmlsave.obj: .\..\xmlsave.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_xmlsave.obj: .\..\xmlsave.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_xmlschemas.obj: .\..\xmlschemas.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_xmlschemas.obj: .\..\xmlschemas.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_xmlschemastypes.obj: .\..\xmlschemastypes.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_xmlschemastypes.obj: .\..\xmlschemastypes.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_xmlunicode.obj: .\..\xmlunicode.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_xmlunicode.obj: .\..\xmlunicode.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_xmlwriter.obj: .\..\xmlwriter.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_xmlwriter.obj: .\..\xmlwriter.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_xpath.obj: .\..\xpath.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_xpath.obj: .\..\xpath.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_xpointer.obj: .\..\xpointer.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_xpointer.obj: .\..\xpointer.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
 
-msvc\libxml2_xmlstring.obj: .\..\xmlstring.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_CFLAGS) $**
+msvc\libxml2_lib_xmlstring.obj: .\..\xmlstring.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_LIB_CFLAGS) $**
+
+msvc\libxml2_dll_c14n.obj: .\..\c14n.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_catalog.obj: .\..\catalog.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_chvalid.obj: .\..\chvalid.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_debugXML.obj: .\..\debugXML.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_dict.obj: .\..\dict.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_DOCBparser.obj: .\..\DOCBparser.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_encoding.obj: .\..\encoding.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_entities.obj: .\..\entities.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_error.obj: .\..\error.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_globals.obj: .\..\globals.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_hash.obj: .\..\hash.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_HTMLparser.obj: .\..\HTMLparser.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_HTMLtree.obj: .\..\HTMLtree.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_legacy.obj: .\..\legacy.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_list.obj: .\..\list.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_nanoftp.obj: .\..\nanoftp.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_nanohttp.obj: .\..\nanohttp.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_parser.obj: .\..\parser.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_parserInternals.obj: .\..\parserInternals.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_pattern.obj: .\..\pattern.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_relaxng.obj: .\..\relaxng.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_SAX2.obj: .\..\SAX2.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_SAX.obj: .\..\SAX.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_threads.obj: .\..\threads.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_tree.obj: .\..\tree.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_uri.obj: .\..\uri.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_valid.obj: .\..\valid.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_xinclude.obj: .\..\xinclude.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_xlink.obj: .\..\xlink.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_xmlIO.obj: .\..\xmlIO.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_xmlmemory.obj: .\..\xmlmemory.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_xmlreader.obj: .\..\xmlreader.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_xmlregexp.obj: .\..\xmlregexp.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_xmlsave.obj: .\..\xmlsave.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_xmlschemas.obj: .\..\xmlschemas.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_xmlschemastypes.obj: .\..\xmlschemastypes.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_xmlunicode.obj: .\..\xmlunicode.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_xmlwriter.obj: .\..\xmlwriter.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_xpath.obj: .\..\xpath.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_xpointer.obj: .\..\xpointer.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
+
+msvc\libxml2_dll_xmlstring.obj: .\..\xmlstring.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBXML2_DLL_CFLAGS) $**
 
 msvc\testAutomata_testAutomata.obj: .\..\testAutomata.c
 	$(CC) /c /nologo /TC /Fo$@ $(TESTAUTOMATA_CFLAGS) $**

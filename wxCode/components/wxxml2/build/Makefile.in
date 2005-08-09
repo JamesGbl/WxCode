@@ -142,6 +142,8 @@ clean:
 distclean: clean
 	rm -f config.cache config.log config.status bk-deps bk-make-pch shared-ld-sh Makefile
 
+setupdep: 
+
 tarball: 
 	( cd .. && tar -cvzf ../wxxml2.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
 
@@ -267,4 +269,4 @@ minimal_minimal.o: $(srcdir)/../sample/minimal.cpp
 # Include dependency info, if present:
 @IF_GNU_MAKE@-include .deps/*.d
 
-.PHONY: all install uninstall clean distclean install_wxxml2_lib install_wxxml2_dll
+.PHONY: all install uninstall clean distclean setupdep install_wxxml2_lib install_wxxml2_dll

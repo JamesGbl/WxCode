@@ -749,7 +749,9 @@ xmlRegFreeAtom(xmlRegAtomPtr atom) {
 	xmlRegFreeRange(atom->ranges[i]);
     if (atom->ranges != NULL)
 	xmlFree(atom->ranges);
-    if (atom->type == XML_REGEXP_STRING)
+    if ((atom->type == XML_REGEXP_STRING) && (atom->valuep != NULL))
+	xmlFree(atom->valuep);
+    if ((atom->type == XML_REGEXP_BLOCK_NAME) && (atom->valuep != NULL))
 	xmlFree(atom->valuep);
     xmlFree(atom);
 }
@@ -2635,14 +2637,14 @@ xmlRegStrEqualWildcard(const xmlChar *expStr, const xmlChar *valStr) {
 		do {
 		    if (*valStr == XML_REG_STRING_SEPARATOR)
 			break;
-		    *valStr++;
+		    valStr++;
 		} while (*valStr != 0);
 		continue;
 	    } else
 		return(0);
 	}
-	*expStr++;
-	*valStr++;
+	expStr++;
+	valStr++;
     } while (*valStr != 0);
     if (*expStr != 0)
 	return (0);

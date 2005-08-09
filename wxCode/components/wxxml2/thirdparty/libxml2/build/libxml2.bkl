@@ -92,12 +92,6 @@
     <!--                    GENERIC VARIABLES                       -->
     <!--                                                            -->
 
-    <!--    Set the ISDLL variable, so that we can use it           -->
-    <!--    inside an if statement later on (options not            -->
-    <!--    allowed in if statements).                              -->
-    <set var="ISDLL" cond="SHARED=='1'">1</set>
-    <set var="ISDLL" cond="SHARED=='0'">0</set>
-
     <!--    The unicode define we want.  By default bakefile        -->
     <!--    makes variables an empty string, so if unicode          -->
     <!--    is not defined $(UNICODE_DEFINE) would expand           -->
@@ -382,7 +376,8 @@
 	
 	<set var="LIBXML_MAJOR_VERSION">2</set>
 	<set var="LIBXML_MINOR_VERSION">6</set>
-	<set var="LIBXML_MICRO_VERSION">16</set>
+	<set var="LIBXML_MICRO_VERSION">20</set>
+	<set var="LIBXML_VERSION">$(LIBXML_MAJOR_VERSION).$(LIBXML_MINOR_VERSION).$(LIBXML_MICRO_VERSION)</set>
 	
 	<!-- some defines related to threads -->
 	<set var="THREADS_DEF">
@@ -551,7 +546,7 @@ $(TAB)copy "$(DOLLAR)(InputPath)" ..\$(CONFIG_DSTNAME)
         <dirname>$(XMLTESTDIR)</dirname>
         <app-type>console</app-type>        
 
-        <library>libxml2</library>
+        <library>libxml2_lib</library>
 		
         <sys-lib>$(ICONV_LIB)</sys-lib>
         <sys-lib>$(WSOCK32_LIB)</sys-lib>
@@ -568,7 +563,7 @@ $(TAB)copy "$(DOLLAR)(InputPath)" ..\$(CONFIG_DSTNAME)
     <!--                  LIBXML2 LIBRARY TARGET                    -->
     <!--                                                            -->  
     
-    <lib id="libxml2" template="xml2">
+    <template id="xml2sources">
     	
     	<!-- this is useful only when using MSVC6PRJ -->
     	<if cond="FORMAT=='msvc6prj'">
@@ -695,8 +690,27 @@ $(TAB)copy "$(DOLLAR)(InputPath)" ..\$(CONFIG_DSTNAME)
 			$(XMLBASEDIR)$(DIRSEP)trionan.h
 			$(XMLBASEDIR)$(DIRSEP)include$(DIRSEP)wsockcompat.h			
        </headers>
-    </lib>
-
+    </template>
+	<lib id="libxml2_lib" template="xml2,xml2sources" cond="SHARED=='0'"/>
+	<dll id="libxml2_dll" template="xml2,xml2sources" cond="SHARED=='1'">
+		<version>$(LIBXML_VERSION)</version>
+		<dllname>libxml2</dllname>
+        <sys-lib>$(ICONV_LIB)</sys-lib>
+        <sys-lib>$(WSOCK32_LIB)</sys-lib>
+		<sys-lib>$(ZLIB_LIB)</sys-lib> 
+        <sys-lib>$(POSIX_LIB)</sys-lib>
+	</dll>
+	<set var="MSVC6PRJ_MERGED_TARGETS">libxml2=libxml2_lib+libxml2_dll</set>
+	
+	<phony id="libonly">
+		<set var="DEPNAME">
+			<if cond="SHARED=='1'">libxml2_dll</if>
+			<if cond="SHARED==''">libxml2_lib</if>
+		</set>
+		<depends>$(DEPNAME)</depends>
+	</phony>
+	
+	
 
 
     <!--                                                -->

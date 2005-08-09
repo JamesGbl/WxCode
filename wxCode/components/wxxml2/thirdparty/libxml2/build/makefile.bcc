@@ -82,52 +82,98 @@ WITH_ZLIB = 0
 
 ### Variables: ###
 
-LIBXML2_CFLAGS = -I$(BCCDIR)\include $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) \
-	$(__DEBUGINFO) -I..\include -I$(ICONV_DIR)\include $(__ZLIB_DEF_p) \
-	$(__DEBUG_DEF_p) $(__STATIC_DEF_p) -DWIN32 -D_WINDOWS -D_MBCS -D_NO_VCL \
-	-DEILSEQ=2 $(THREADS_DEF) $(CPPFLAGS) $(CFLAGS)
-LIBXML2_OBJECTS =  \
-	borland\libxml2_c14n.obj \
-	borland\libxml2_catalog.obj \
-	borland\libxml2_chvalid.obj \
-	borland\libxml2_debugXML.obj \
-	borland\libxml2_dict.obj \
-	borland\libxml2_DOCBparser.obj \
-	borland\libxml2_encoding.obj \
-	borland\libxml2_entities.obj \
-	borland\libxml2_error.obj \
-	borland\libxml2_globals.obj \
-	borland\libxml2_hash.obj \
-	borland\libxml2_HTMLparser.obj \
-	borland\libxml2_HTMLtree.obj \
-	borland\libxml2_legacy.obj \
-	borland\libxml2_list.obj \
-	borland\libxml2_nanoftp.obj \
-	borland\libxml2_nanohttp.obj \
-	borland\libxml2_parser.obj \
-	borland\libxml2_parserInternals.obj \
-	borland\libxml2_pattern.obj \
-	borland\libxml2_relaxng.obj \
-	borland\libxml2_SAX2.obj \
-	borland\libxml2_SAX.obj \
-	borland\libxml2_threads.obj \
-	borland\libxml2_tree.obj \
-	borland\libxml2_uri.obj \
-	borland\libxml2_valid.obj \
-	borland\libxml2_xinclude.obj \
-	borland\libxml2_xlink.obj \
-	borland\libxml2_xmlIO.obj \
-	borland\libxml2_xmlmemory.obj \
-	borland\libxml2_xmlreader.obj \
-	borland\libxml2_xmlregexp.obj \
-	borland\libxml2_xmlsave.obj \
-	borland\libxml2_xmlschemas.obj \
-	borland\libxml2_xmlschemastypes.obj \
-	borland\libxml2_xmlunicode.obj \
-	borland\libxml2_xmlwriter.obj \
-	borland\libxml2_xpath.obj \
-	borland\libxml2_xpointer.obj \
-	borland\libxml2_xmlstring.obj
+LIBXML2_LIB_CFLAGS = -I$(BCCDIR)\include $(__UNICODE_DEFINE_p) \
+	$(__OPTIMIZEFLAG) $(__DEBUGINFO) -I..\include -I$(ICONV_DIR)\include \
+	$(__ZLIB_DEF_p) $(__DEBUG_DEF_p) $(__STATIC_DEF_p) -DWIN32 -D_WINDOWS -D_MBCS \
+	-D_NO_VCL -DEILSEQ=2 $(THREADS_DEF) $(CPPFLAGS) $(CFLAGS)
+LIBXML2_LIB_OBJECTS =  \
+	borland\libxml2_lib_c14n.obj \
+	borland\libxml2_lib_catalog.obj \
+	borland\libxml2_lib_chvalid.obj \
+	borland\libxml2_lib_debugXML.obj \
+	borland\libxml2_lib_dict.obj \
+	borland\libxml2_lib_DOCBparser.obj \
+	borland\libxml2_lib_encoding.obj \
+	borland\libxml2_lib_entities.obj \
+	borland\libxml2_lib_error.obj \
+	borland\libxml2_lib_globals.obj \
+	borland\libxml2_lib_hash.obj \
+	borland\libxml2_lib_HTMLparser.obj \
+	borland\libxml2_lib_HTMLtree.obj \
+	borland\libxml2_lib_legacy.obj \
+	borland\libxml2_lib_list.obj \
+	borland\libxml2_lib_nanoftp.obj \
+	borland\libxml2_lib_nanohttp.obj \
+	borland\libxml2_lib_parser.obj \
+	borland\libxml2_lib_parserInternals.obj \
+	borland\libxml2_lib_pattern.obj \
+	borland\libxml2_lib_relaxng.obj \
+	borland\libxml2_lib_SAX2.obj \
+	borland\libxml2_lib_SAX.obj \
+	borland\libxml2_lib_threads.obj \
+	borland\libxml2_lib_tree.obj \
+	borland\libxml2_lib_uri.obj \
+	borland\libxml2_lib_valid.obj \
+	borland\libxml2_lib_xinclude.obj \
+	borland\libxml2_lib_xlink.obj \
+	borland\libxml2_lib_xmlIO.obj \
+	borland\libxml2_lib_xmlmemory.obj \
+	borland\libxml2_lib_xmlreader.obj \
+	borland\libxml2_lib_xmlregexp.obj \
+	borland\libxml2_lib_xmlsave.obj \
+	borland\libxml2_lib_xmlschemas.obj \
+	borland\libxml2_lib_xmlschemastypes.obj \
+	borland\libxml2_lib_xmlunicode.obj \
+	borland\libxml2_lib_xmlwriter.obj \
+	borland\libxml2_lib_xpath.obj \
+	borland\libxml2_lib_xpointer.obj \
+	borland\libxml2_lib_xmlstring.obj
+LIBXML2_DLL_CFLAGS = -I$(BCCDIR)\include $(__UNICODE_DEFINE_p) \
+	$(__OPTIMIZEFLAG) $(__DEBUGINFO) -I..\include -I$(ICONV_DIR)\include \
+	$(__ZLIB_DEF_p) $(__DEBUG_DEF_p) $(__STATIC_DEF_p) -DWIN32 -D_WINDOWS -D_MBCS \
+	-D_NO_VCL -DEILSEQ=2 $(THREADS_DEF) $(CPPFLAGS) $(CFLAGS)
+LIBXML2_DLL_OBJECTS =  \
+	borland\libxml2_dll_c14n.obj \
+	borland\libxml2_dll_catalog.obj \
+	borland\libxml2_dll_chvalid.obj \
+	borland\libxml2_dll_debugXML.obj \
+	borland\libxml2_dll_dict.obj \
+	borland\libxml2_dll_DOCBparser.obj \
+	borland\libxml2_dll_encoding.obj \
+	borland\libxml2_dll_entities.obj \
+	borland\libxml2_dll_error.obj \
+	borland\libxml2_dll_globals.obj \
+	borland\libxml2_dll_hash.obj \
+	borland\libxml2_dll_HTMLparser.obj \
+	borland\libxml2_dll_HTMLtree.obj \
+	borland\libxml2_dll_legacy.obj \
+	borland\libxml2_dll_list.obj \
+	borland\libxml2_dll_nanoftp.obj \
+	borland\libxml2_dll_nanohttp.obj \
+	borland\libxml2_dll_parser.obj \
+	borland\libxml2_dll_parserInternals.obj \
+	borland\libxml2_dll_pattern.obj \
+	borland\libxml2_dll_relaxng.obj \
+	borland\libxml2_dll_SAX2.obj \
+	borland\libxml2_dll_SAX.obj \
+	borland\libxml2_dll_threads.obj \
+	borland\libxml2_dll_tree.obj \
+	borland\libxml2_dll_uri.obj \
+	borland\libxml2_dll_valid.obj \
+	borland\libxml2_dll_xinclude.obj \
+	borland\libxml2_dll_xlink.obj \
+	borland\libxml2_dll_xmlIO.obj \
+	borland\libxml2_dll_xmlmemory.obj \
+	borland\libxml2_dll_xmlreader.obj \
+	borland\libxml2_dll_xmlregexp.obj \
+	borland\libxml2_dll_xmlsave.obj \
+	borland\libxml2_dll_xmlschemas.obj \
+	borland\libxml2_dll_xmlschemastypes.obj \
+	borland\libxml2_dll_xmlunicode.obj \
+	borland\libxml2_dll_xmlwriter.obj \
+	borland\libxml2_dll_xpath.obj \
+	borland\libxml2_dll_xpointer.obj \
+	borland\libxml2_dll_xmlstring.obj
 TESTAUTOMATA_CFLAGS = -I$(BCCDIR)\include $(__UNICODE_DEFINE_p) \
 	$(__OPTIMIZEFLAG) $(__DEBUGINFO) -I..\include -I$(ICONV_DIR)\include \
 	$(__ZLIB_DEF_p) $(__DEBUG_DEF_p) $(__STATIC_DEF_p) -DWIN32 -D_WINDOWS -D_MBCS \
@@ -215,6 +261,18 @@ THREADS_DEF = $(THREADS_DEF) -D__MT__
 !if "$(WITH_THREADS)" == "posix"
 THREADS_DEF = $(THREADS_DEF) -D__MT__
 !endif
+!if "$(SHARED)" == "0"
+__libxml2_lib___depname = ..\lib\libxml2.lib
+!endif
+!if "$(SHARED)" == "1"
+__libxml2_dll___depname = ..\lib\libxml2.dll
+!endif
+!if "$(SHARED)" == ""
+____libonly_DEPNAME_DEP = $(__libxml2_lib___depname)
+!endif
+!if "$(SHARED)" == "1"
+____libonly_DEPNAME_DEP = $(__libxml2_dll___depname)
+!endif
 !if "$(UNICODE)" == "1"
 __UNICODE_DEFINE_p = -D_UNICODE
 !endif
@@ -262,12 +320,19 @@ borland:
 
 ### Targets: ###
 
-all: ..\config.h setupdirs ..\lib\libxml2.lib ..\bin\testAutomata.exe ..\bin\testC14N.exe ..\bin\testHTML.exe ..\bin\testReader.exe ..\bin\testRegexp.exe ..\bin\testRelax.exe ..\bin\testSax.exe ..\bin\testSchemas.exe ..\bin\testURI.exe ..\bin\testXPath.exe ..\bin\xmllint.exe
+all: ..\config.h setupdirs $(__libxml2_lib___depname) $(__libxml2_dll___depname) ..\bin\testAutomata.exe ..\bin\testC14N.exe ..\bin\testHTML.exe ..\bin\testReader.exe ..\bin\testRegexp.exe ..\bin\testRelax.exe ..\bin\testSax.exe ..\bin\testSchemas.exe ..\bin\testURI.exe ..\bin\testXPath.exe ..\bin\xmllint.exe
 
 clean: 
 	-if exist borland\*.obj del borland\*.obj
 	-if exist borland\*.res del borland\*.res
 	-if exist borland\*.csm del borland\*.csm
+	-if exist ..\lib\libxml2.lib del ..\lib\libxml2.lib
+	-if exist ..\lib\libxml2.dll del ..\lib\libxml2.dll
+	-if exist ..\lib\libxml2.tds del ..\lib\libxml2.tds
+	-if exist ..\lib\libxml2.ilc del ..\lib\libxml2.ilc
+	-if exist ..\lib\libxml2.ild del ..\lib\libxml2.ild
+	-if exist ..\lib\libxml2.ilf del ..\lib\libxml2.ilf
+	-if exist ..\lib\libxml2.ils del ..\lib\libxml2.ils
 	-if exist ..\lib\libxml2.lib del ..\lib\libxml2.lib
 	-if exist ..\bin\testAutomata.exe del ..\bin\testAutomata.exe
 	-if exist ..\bin\testAutomata.tds del ..\bin\testAutomata.tds
@@ -347,189 +412,324 @@ clean:
 
 setupdirs: ..\lib ..\bin
 
-..\lib\libxml2.lib: $(LIBXML2_OBJECTS) ..\config.h ..\lib
+!if "$(SHARED)" == "0"
+..\lib\libxml2.lib: $(LIBXML2_LIB_OBJECTS) ..\config.h ..\lib
 	if exist $@ del $@
 	tlib /a /p4096 $@ @&&|
-	$(LIBXML2_OBJECTS)
+	$(LIBXML2_LIB_OBJECTS)
 |
+!endif
 
-..\bin\testAutomata.exe: $(TESTAUTOMATA_OBJECTS) ..\lib\libxml2.lib
+!if "$(SHARED)" == "1"
+..\lib\libxml2.dll: $(LIBXML2_DLL_OBJECTS) ..\config.h ..\lib
+	ilink32 -Tpd -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(ICONV_DIR)\lib @&&|
+	c0d32.obj $(LIBXML2_DLL_OBJECTS),$@,, $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p) import32.lib cw32.lib,,
+|
+	implib -f ..\lib\libxml2 $@
+!endif
+
+libonly: $(____libonly_DEPNAME_DEP)
+
+..\bin\testAutomata.exe: $(TESTAUTOMATA_OBJECTS) $(__libxml2_lib___depname)
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
 	c0x32.obj $(TESTAUTOMATA_OBJECTS),$@,, ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p) import32.lib cw32.lib,,
 |
 
-..\bin\testC14N.exe: $(TESTC14N_OBJECTS) ..\lib\libxml2.lib
+..\bin\testC14N.exe: $(TESTC14N_OBJECTS) $(__libxml2_lib___depname)
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
 	c0x32.obj $(TESTC14N_OBJECTS),$@,, ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p) import32.lib cw32.lib,,
 |
 
-..\bin\testHTML.exe: $(TESTHTML_OBJECTS) ..\lib\libxml2.lib
+..\bin\testHTML.exe: $(TESTHTML_OBJECTS) $(__libxml2_lib___depname)
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
 	c0x32.obj $(TESTHTML_OBJECTS),$@,, ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p) import32.lib cw32.lib,,
 |
 
-..\bin\testReader.exe: $(TESTREADER_OBJECTS) ..\lib\libxml2.lib
+..\bin\testReader.exe: $(TESTREADER_OBJECTS) $(__libxml2_lib___depname)
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
 	c0x32.obj $(TESTREADER_OBJECTS),$@,, ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p) import32.lib cw32.lib,,
 |
 
-..\bin\testRegexp.exe: $(TESTREGEXP_OBJECTS) ..\lib\libxml2.lib
+..\bin\testRegexp.exe: $(TESTREGEXP_OBJECTS) $(__libxml2_lib___depname)
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
 	c0x32.obj $(TESTREGEXP_OBJECTS),$@,, ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p) import32.lib cw32.lib,,
 |
 
-..\bin\testRelax.exe: $(TESTRELAX_OBJECTS) ..\lib\libxml2.lib
+..\bin\testRelax.exe: $(TESTRELAX_OBJECTS) $(__libxml2_lib___depname)
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
 	c0x32.obj $(TESTRELAX_OBJECTS),$@,, ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p) import32.lib cw32.lib,,
 |
 
-..\bin\testSax.exe: $(TESTSAX_OBJECTS) ..\lib\libxml2.lib
+..\bin\testSax.exe: $(TESTSAX_OBJECTS) $(__libxml2_lib___depname)
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
 	c0x32.obj $(TESTSAX_OBJECTS),$@,, ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p) import32.lib cw32.lib,,
 |
 
-..\bin\testSchemas.exe: $(TESTSCHEMAS_OBJECTS) ..\lib\libxml2.lib
+..\bin\testSchemas.exe: $(TESTSCHEMAS_OBJECTS) $(__libxml2_lib___depname)
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
 	c0x32.obj $(TESTSCHEMAS_OBJECTS),$@,, ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p) import32.lib cw32.lib,,
 |
 
-..\bin\testURI.exe: $(TESTURI_OBJECTS) ..\lib\libxml2.lib
+..\bin\testURI.exe: $(TESTURI_OBJECTS) $(__libxml2_lib___depname)
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
 	c0x32.obj $(TESTURI_OBJECTS),$@,, ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p) import32.lib cw32.lib,,
 |
 
-..\bin\testXPath.exe: $(TESTXPATH_OBJECTS) ..\lib\libxml2.lib
+..\bin\testXPath.exe: $(TESTXPATH_OBJECTS) $(__libxml2_lib___depname)
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
 	c0x32.obj $(TESTXPATH_OBJECTS),$@,, ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p) import32.lib cw32.lib,,
 |
 
-..\bin\xmllint.exe: $(XMLLINT_OBJECTS) ..\lib\libxml2.lib
+..\bin\xmllint.exe: $(XMLLINT_OBJECTS) $(__libxml2_lib___depname)
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
 	c0x32.obj $(XMLLINT_OBJECTS),$@,, ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p) import32.lib cw32.lib,,
 |
 
-borland\libxml2_c14n.obj: .\..\c14n.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_c14n.obj: .\..\c14n.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_catalog.obj: .\..\catalog.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_catalog.obj: .\..\catalog.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_chvalid.obj: .\..\chvalid.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_chvalid.obj: .\..\chvalid.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_debugXML.obj: .\..\debugXML.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_debugXML.obj: .\..\debugXML.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_dict.obj: .\..\dict.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_dict.obj: .\..\dict.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_DOCBparser.obj: .\..\DOCBparser.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_DOCBparser.obj: .\..\DOCBparser.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_encoding.obj: .\..\encoding.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_encoding.obj: .\..\encoding.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_entities.obj: .\..\entities.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_entities.obj: .\..\entities.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_error.obj: .\..\error.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_error.obj: .\..\error.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_globals.obj: .\..\globals.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_globals.obj: .\..\globals.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_hash.obj: .\..\hash.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_hash.obj: .\..\hash.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_HTMLparser.obj: .\..\HTMLparser.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_HTMLparser.obj: .\..\HTMLparser.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_HTMLtree.obj: .\..\HTMLtree.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_HTMLtree.obj: .\..\HTMLtree.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_legacy.obj: .\..\legacy.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_legacy.obj: .\..\legacy.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_list.obj: .\..\list.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_list.obj: .\..\list.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_nanoftp.obj: .\..\nanoftp.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_nanoftp.obj: .\..\nanoftp.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_nanohttp.obj: .\..\nanohttp.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_nanohttp.obj: .\..\nanohttp.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_parser.obj: .\..\parser.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_parser.obj: .\..\parser.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_parserInternals.obj: .\..\parserInternals.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_parserInternals.obj: .\..\parserInternals.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_pattern.obj: .\..\pattern.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_pattern.obj: .\..\pattern.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_relaxng.obj: .\..\relaxng.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_relaxng.obj: .\..\relaxng.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_SAX2.obj: .\..\SAX2.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_SAX2.obj: .\..\SAX2.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_SAX.obj: .\..\SAX.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_SAX.obj: .\..\SAX.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_threads.obj: .\..\threads.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_threads.obj: .\..\threads.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_tree.obj: .\..\tree.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_tree.obj: .\..\tree.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_uri.obj: .\..\uri.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_uri.obj: .\..\uri.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_valid.obj: .\..\valid.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_valid.obj: .\..\valid.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_xinclude.obj: .\..\xinclude.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_xinclude.obj: .\..\xinclude.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_xlink.obj: .\..\xlink.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_xlink.obj: .\..\xlink.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_xmlIO.obj: .\..\xmlIO.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_xmlIO.obj: .\..\xmlIO.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_xmlmemory.obj: .\..\xmlmemory.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_xmlmemory.obj: .\..\xmlmemory.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_xmlreader.obj: .\..\xmlreader.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_xmlreader.obj: .\..\xmlreader.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_xmlregexp.obj: .\..\xmlregexp.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_xmlregexp.obj: .\..\xmlregexp.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_xmlsave.obj: .\..\xmlsave.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_xmlsave.obj: .\..\xmlsave.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_xmlschemas.obj: .\..\xmlschemas.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_xmlschemas.obj: .\..\xmlschemas.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_xmlschemastypes.obj: .\..\xmlschemastypes.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_xmlschemastypes.obj: .\..\xmlschemastypes.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_xmlunicode.obj: .\..\xmlunicode.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_xmlunicode.obj: .\..\xmlunicode.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_xmlwriter.obj: .\..\xmlwriter.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_xmlwriter.obj: .\..\xmlwriter.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_xpath.obj: .\..\xpath.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_xpath.obj: .\..\xpath.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_xpointer.obj: .\..\xpointer.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_xpointer.obj: .\..\xpointer.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
 
-borland\libxml2_xmlstring.obj: .\..\xmlstring.c
-	$(CC) -q -c -P- -o$@ $(LIBXML2_CFLAGS) $**
+borland\libxml2_lib_xmlstring.obj: .\..\xmlstring.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_LIB_CFLAGS) $**
+
+borland\libxml2_dll_c14n.obj: .\..\c14n.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_catalog.obj: .\..\catalog.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_chvalid.obj: .\..\chvalid.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_debugXML.obj: .\..\debugXML.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_dict.obj: .\..\dict.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_DOCBparser.obj: .\..\DOCBparser.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_encoding.obj: .\..\encoding.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_entities.obj: .\..\entities.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_error.obj: .\..\error.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_globals.obj: .\..\globals.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_hash.obj: .\..\hash.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_HTMLparser.obj: .\..\HTMLparser.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_HTMLtree.obj: .\..\HTMLtree.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_legacy.obj: .\..\legacy.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_list.obj: .\..\list.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_nanoftp.obj: .\..\nanoftp.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_nanohttp.obj: .\..\nanohttp.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_parser.obj: .\..\parser.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_parserInternals.obj: .\..\parserInternals.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_pattern.obj: .\..\pattern.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_relaxng.obj: .\..\relaxng.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_SAX2.obj: .\..\SAX2.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_SAX.obj: .\..\SAX.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_threads.obj: .\..\threads.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_tree.obj: .\..\tree.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_uri.obj: .\..\uri.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_valid.obj: .\..\valid.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_xinclude.obj: .\..\xinclude.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_xlink.obj: .\..\xlink.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_xmlIO.obj: .\..\xmlIO.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_xmlmemory.obj: .\..\xmlmemory.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_xmlreader.obj: .\..\xmlreader.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_xmlregexp.obj: .\..\xmlregexp.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_xmlsave.obj: .\..\xmlsave.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_xmlschemas.obj: .\..\xmlschemas.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_xmlschemastypes.obj: .\..\xmlschemastypes.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_xmlunicode.obj: .\..\xmlunicode.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_xmlwriter.obj: .\..\xmlwriter.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_xpath.obj: .\..\xpath.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_xpointer.obj: .\..\xpointer.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
+
+borland\libxml2_dll_xmlstring.obj: .\..\xmlstring.c
+	$(CC) -q -c -P- -o$@ $(LIBXML2_DLL_CFLAGS) $**
 
 borland\testAutomata_testAutomata.obj: .\..\testAutomata.c
 	$(CC) -q -c -P- -o$@ $(TESTAUTOMATA_CFLAGS) $**

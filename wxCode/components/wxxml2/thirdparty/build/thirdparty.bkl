@@ -25,7 +25,7 @@
 	<subproject id="libxml2">
 		<dependency-of>all</dependency-of>
 		<dir>../libxml2/build</dir>
-		<target/>
+		<target>libonly</target>
 	</subproject>
 
 </makefile>

@@ -19,6 +19,12 @@ CFLAGS =
 # Standard preprocessor flags (common for CC and CXX) 
 CPPFLAGS = 
 
+# Standard linker flags 
+LDFLAGS = 
+
+# If set to zero a STATIC libxml library will be built [0,1]
+SHARED = 0
+
 # Compile Unicode build? [0,1]
 UNICODE = 0
 
@@ -33,52 +39,93 @@ BUILD = release
 
 ### Variables: ###
 
-ICONV_CFLAGS = /MD$(__DEBUGRUNTIME_7) /DWIN32 $(__WARNINGS_2) \
-	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG_3) $(__DEBUGINFO_4) \
-	/Fd..\lib\iconv.pdb $(____DEBUGRUNTIME_6_p) /DHAVE_CONFIG_H \
-	/DENABLE_RELOCATABLE=1 /DIN_LIBRARY /DNO_XMALLOC \
+ICONV_LIB_CFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
+	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) /Fd..\lib\iconv.pdb \
+	$(____DEBUGRUNTIME) $(__ICONV_SHAREDDEF1_p) $(__ICONV_SHAREDDEF2_p) \
+	/DHAVE_CONFIG_H /DENABLE_RELOCATABLE=1 /DIN_LIBRARY /DNO_XMALLOC \
 	/Dset_relocation_prefix=libiconv_set_relocation_prefix \
 	/Drelocate=libiconv_relocate /I..\include /I..\libcharset\include \
 	/I..\libcharset $(CPPFLAGS) $(CFLAGS)
-ICONV_OBJECTS =  \
-	msvc\iconv_iconv.obj \
-	msvc\iconv_localcharset.obj \
-	msvc\iconv_relocatable.obj
+ICONV_LIB_OBJECTS =  \
+	msvc\iconv_lib_iconv.obj \
+	msvc\iconv_lib_localcharset.obj \
+	msvc\iconv_lib_relocatable.obj
+ICONV_DLL_CFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
+	$(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG) $(__DEBUGINFO) /Fd..\lib\iconv.pdb \
+	$(____DEBUGRUNTIME) $(__ICONV_SHAREDDEF1_p) $(__ICONV_SHAREDDEF2_p) \
+	/DHAVE_CONFIG_H /DENABLE_RELOCATABLE=1 /DIN_LIBRARY /DNO_XMALLOC \
+	/Dset_relocation_prefix=libiconv_set_relocation_prefix \
+	/Drelocate=libiconv_relocate /I..\include /I..\libcharset\include \
+	/I..\libcharset $(CPPFLAGS) $(CFLAGS)
+ICONV_DLL_OBJECTS =  \
+	msvc\iconv_dll_iconv.obj \
+	msvc\iconv_dll_localcharset.obj \
+	msvc\iconv_dll_relocatable.obj
 
 ### Conditionally set variables: ###
 
+!if "$(SHARED)" == "0"
+__iconv_lib___depname = ..\lib\iconv.lib
+!endif
+!if "$(SHARED)" == "1"
+__iconv_dll___depname = ..\lib\iconv.dll
+!endif
 !if "$(BUILD)" == "debug"
-__WARNINGS_2 = /W4
+__DEBUGINFO_14 = /DEBUG
 !endif
 !if "$(BUILD)" == "release"
-__WARNINGS_2 = /w
+__DEBUGINFO_14 = 
+!endif
+!if "$(SHARED)" == "0"
+__CONFIG2_SRCNAME_FILENAMES = iconv.h.msvc-static
+!endif
+!if "$(SHARED)" == "1"
+__CONFIG2_SRCNAME_FILENAMES = iconv.h.msvc-shared
+!endif
+!if "$(SHARED)" == "0"
+__CONFIG3_SRCNAME_FILENAMES = localcharset.h.in
+!endif
+!if "$(SHARED)" == "1"
+__CONFIG3_SRCNAME_FILENAMES = localcharset.h.msvc-shared
+!endif
+!if "$(BUILD)" == "debug"
+__WARNINGS = /W4
+!endif
+!if "$(BUILD)" == "release"
+__WARNINGS = /w
 !endif
 !if "$(UNICODE)" == "1"
 __UNICODE_DEFINE_p = /D_UNICODE
 !endif
 !if "$(BUILD)" == "debug"
-__OPTIMIZEFLAG_3 = /Od
+__OPTIMIZEFLAG = /Od
 !endif
 !if "$(BUILD)" == "release"
-__OPTIMIZEFLAG_3 = /O2
+__OPTIMIZEFLAG = /O2
 !endif
 !if "$(BUILD)" == "debug"
-__DEBUGINFO_4 = /Zi
+__DEBUGINFO = /Zi
 !endif
 !if "$(BUILD)" == "release"
-__DEBUGINFO_4 = 
+__DEBUGINFO = 
 !endif
 !if "$(BUILD)" == "debug"
-____DEBUGRUNTIME_6_p = /D_DEBUG
+____DEBUGRUNTIME = /D_DEBUG
 !endif
 !if "$(BUILD)" == "release"
-____DEBUGRUNTIME_6_p = 
+____DEBUGRUNTIME = 
 !endif
 !if "$(BUILD)" == "debug"
-__DEBUGRUNTIME_7 = d
+__DEBUGRUNTIME = d
 !endif
 !if "$(BUILD)" == "release"
-__DEBUGRUNTIME_7 = 
+__DEBUGRUNTIME = 
+!endif
+!if "$(SHARED)" == "1"
+__ICONV_SHAREDDEF1_p = /DBUILDING_LIBICONV
+!endif
+!if "$(SHARED)" == "1"
+__ICONV_SHAREDDEF2_p = /DBUILDING_DLL
 !endif
 
 
@@ -88,38 +135,60 @@ msvc:
 
 ### Targets: ###
 
-all: ..\lib\config.h ..\include\iconv.h ..\libcharset\include\localcharset.h ..\libcharset\config.h ..\lib\iconv.lib
+all: ..\lib\config.h ..\include\iconv.h ..\libcharset\include\localcharset.h ..\libcharset\config.h $(__iconv_lib___depname) $(__iconv_dll___depname)
 
 clean: 
 	-if exist msvc\*.obj del msvc\*.obj
 	-if exist msvc\*.res del msvc\*.res
 	-if exist msvc\*.pch del msvc\*.pch
 	-if exist ..\lib\iconv.lib del ..\lib\iconv.lib
+	-if exist ..\lib\iconv.dll del ..\lib\iconv.dll
+	-if exist ..\lib\iconv.ilk del ..\lib\iconv.ilk
+	-if exist ..\lib\iconv.pdb del ..\lib\iconv.pdb
+	-if exist ..\lib\iconv.lib del ..\lib\iconv.lib
 
 ..\lib\config.h: ..\lib\config.h.msvc
 	copy ..\lib\config.h.msvc ..\lib\config.h
 
-..\include\iconv.h: ..\include\iconv.h.msvc-static
-	copy ..\include\iconv.h.msvc-static ..\include\iconv.h
+..\include\iconv.h: ..\include\$(__CONFIG2_SRCNAME_FILENAMES)
+	copy ..\include\$(__CONFIG2_SRCNAME_FILENAMES) ..\include\iconv.h
 
-..\libcharset\include\localcharset.h: ..\libcharset\include\localcharset.h.in
-	copy ..\libcharset\include\localcharset.h.in ..\libcharset\include\localcharset.h
+..\libcharset\include\localcharset.h: ..\libcharset\include\$(__CONFIG3_SRCNAME_FILENAMES)
+	copy ..\libcharset\include\$(__CONFIG3_SRCNAME_FILENAMES) ..\libcharset\include\localcharset.h
 
 ..\libcharset\config.h: ..\libcharset\config.h.msvc
 	copy ..\libcharset\config.h.msvc ..\libcharset\config.h
 
-..\lib\iconv.lib: $(ICONV_OBJECTS) ..\lib\config.h ..\include\iconv.h ..\libcharset\include\localcharset.h ..\libcharset\config.h
+!if "$(SHARED)" == "0"
+..\lib\iconv.lib: $(ICONV_LIB_OBJECTS) ..\lib\config.h ..\include\iconv.h ..\libcharset\include\localcharset.h ..\libcharset\config.h
 	if exist $@ del $@
 	link /LIB /NOLOGO /OUT:$@ @<<
-	$(ICONV_OBJECTS)
+	$(ICONV_LIB_OBJECTS)
 <<
+!endif
 
-msvc\iconv_iconv.obj: .\..\lib\iconv.c
-	$(CC) /c /nologo /TC /Fo$@ $(ICONV_CFLAGS) $**
+!if "$(SHARED)" == "1"
+..\lib\iconv.dll: $(ICONV_DLL_OBJECTS) ..\lib\config.h ..\include\iconv.h ..\libcharset\include\localcharset.h ..\libcharset\config.h
+	link /DLL /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_14) @<<
+	$(ICONV_DLL_OBJECTS)  /IMPLIB:..\lib\iconv.lib
+<<
+!endif
 
-msvc\iconv_localcharset.obj: .\..\libcharset\lib\localcharset.c
-	$(CC) /c /nologo /TC /Fo$@ $(ICONV_CFLAGS) $**
+msvc\iconv_lib_iconv.obj: .\..\lib\iconv.c
+	$(CC) /c /nologo /TC /Fo$@ $(ICONV_LIB_CFLAGS) $**
 
-msvc\iconv_relocatable.obj: .\..\lib\relocatable.c
-	$(CC) /c /nologo /TC /Fo$@ $(ICONV_CFLAGS) $**
+msvc\iconv_lib_localcharset.obj: .\..\libcharset\lib\localcharset.c
+	$(CC) /c /nologo /TC /Fo$@ $(ICONV_LIB_CFLAGS) $**
+
+msvc\iconv_lib_relocatable.obj: .\..\lib\relocatable.c
+	$(CC) /c /nologo /TC /Fo$@ $(ICONV_LIB_CFLAGS) $**
+
+msvc\iconv_dll_iconv.obj: .\..\lib\iconv.c
+	$(CC) /c /nologo /TC /Fo$@ $(ICONV_DLL_CFLAGS) $**
+
+msvc\iconv_dll_localcharset.obj: .\..\libcharset\lib\localcharset.c
+	$(CC) /c /nologo /TC /Fo$@ $(ICONV_DLL_CFLAGS) $**
+
+msvc\iconv_dll_relocatable.obj: .\..\lib\relocatable.c
+	$(CC) /c /nologo /TC /Fo$@ $(ICONV_DLL_CFLAGS) $**
 

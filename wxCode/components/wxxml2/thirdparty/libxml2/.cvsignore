@@ -3,9 +3,11 @@ test*
 *.spec
 *.sub
 *.in
+*.tests
 configure
 config.h
-
+runsuite.c
+runtest.c
 install-sh
 *.1
 *.3

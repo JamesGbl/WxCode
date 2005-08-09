@@ -94,9 +94,6 @@
 #endif
 #define SOCKET int
 #endif
-#if defined(VMS) || defined(__VMS)
-#define XML_SOCKLEN_T unsigned int
-#endif
 
 #ifdef __BEOS__
 #ifndef PF_INET
@@ -108,10 +105,14 @@
 #define ss_family __ss_family
 #endif
 
+#ifndef XML_SOCKLEN_T
+#define XML_SOCKLEN_T unsigned int
+#endif
+
 #define FTP_COMMAND_OK		200
 #define FTP_SYNTAX_ERROR	500
 #define FTP_GET_PASSWD		331
-#define FTP_BUF_SIZE		512
+#define FTP_BUF_SIZE		1024
 
 #define XML_NANO_MAX_URLBUF	4096
 

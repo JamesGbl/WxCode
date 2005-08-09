@@ -80,12 +80,6 @@
     <!--                    GENERIC VARIABLES                       -->
     <!--                                                            -->
 
-    <!--    Set the ISDLL variable, so that we can use it           -->
-    <!--    inside an if statement later on (options not            -->
-    <!--    allowed in if statements).                              -->
-    <set var="ISDLL" cond="SHARED=='1'">1</set>
-    <set var="ISDLL" cond="SHARED=='0'">0</set>
-
     <!--    The unicode define we want.  By default bakefile        -->
     <!--    makes variables an empty string, so if unicode          -->
     <!--    is not defined $(UNICODE_DEFINE) would expand           -->
@@ -168,17 +162,22 @@
    	</set>
    	
    	<set var="ICONV_SHAREDDEF1">
-		<if cond="ISDLL=='1'">BUILDING_LIBICONV</if>
+		<if cond="SHARED=='1'">BUILDING_LIBICONV</if>
    	</set>
    	<set var="ICONV_SHAREDDEF2">
-		<if cond="ISDLL=='1'">BUILDING_DLL</if>
+		<if cond="SHARED=='1'">BUILDING_DLL</if>
    	</set>
 
 	<!-- The root directory of libxml2 -->
 	<set var="ICONVBASEDIR">..</set>
 	<set var="ICONVINCLUDEDIR">$(ICONVBASEDIR)$(DIRSEP)include</set>
-
+	
+	<set var="ICONV_MAJOR_VERSION">1</set>
+	<set var="ICONV_MINOR_VERSION">9</set>
+	<set var="ICONV_MICRO_VERSION">1</set>
+	<set var="ICONV_VERSION">$(ICONV_MAJOR_VERSION).$(ICONV_MINOR_VERSION).$(ICONV_MICRO_VERSION)</set>
   
+
 
  
     <!--                                                            -->
@@ -189,14 +188,14 @@
     <set var="CONFIG_DSTNAME">config.h</set>
 
     <set var="CONFIG2_SRCNAME">
-    	<if cond="ISDLL=='1'">iconv.h.msvc-shared</if>
-    	<if cond="ISDLL=='0'">iconv.h.msvc-static</if>
+    	<if cond="SHARED=='1'">iconv.h.msvc-shared</if>
+    	<if cond="SHARED=='0'">iconv.h.msvc-static</if>
      </set>
     <set var="CONFIG2_DSTNAME">iconv.h</set>
 
     <set var="CONFIG3_SRCNAME">
-    	<if cond="ISDLL=='1'">localcharset.h.msvc-shared</if>
-    	<if cond="ISDLL=='0'">localcharset.h.in</if>
+    	<if cond="SHARED=='1'">localcharset.h.msvc-shared</if>
+    	<if cond="SHARED=='0'">localcharset.h.in</if>
      </set>
     <set var="CONFIG3_DSTNAME">localcharset.h</set>
     
@@ -279,7 +278,7 @@
     <!--                  ICONV LIBRARY TARGET                      -->
     <!--                                                            -->  
     
-    <lib id="iconv" template="base">
+    <template id="iconv" template="base">
     	<depends>setup</depends>
     	<depends>setup2</depends>
     	<depends>setup3</depends>
@@ -312,6 +311,12 @@
 			$(ICONVBASEDIR)$(DIRSEP)libcharset$(DIRSEP)lib$(DIRSEP)localcharset.c
 			$(ICONVBASEDIR)$(DIRSEP)lib$(DIRSEP)relocatable.c
         </sources>
-    </lib>
-
+    </template>
+	<lib id="iconv_lib" template="iconv" cond="SHARED=='0'"/>
+	<dll id="iconv_dll" template="iconv" cond="SHARED=='1'">
+		<version>$(ICONV_VERSION)</version>
+		<dllname>iconv</dllname>
+	</dll>
+	<set var="MSVC6PRJ_MERGED_TARGETS">iconv=iconv_lib+iconv_dll</set>
+	
 </makefile>
