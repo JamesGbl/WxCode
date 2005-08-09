@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<!-- $Id$ -->
+
+<bakefile-gen>
+    
+    <disable-formats>msvc6prj,gnu,dmars,cbx_unix,cbuilderx</disable-formats>
+    <input>thirdparty.bkl</input>
+
+    <!-- List of output formats to generate: -->
+    <add-formats>
+        borland,dmars,mingw,msvc,watcom,cbuilderx,cbx_unix,gnu
+    </add-formats>
+
+
+</bakefile-gen>

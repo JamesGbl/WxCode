@@ -311,7 +311,7 @@ protected:
 
 protected:		// reference counting utilities
 
-	//! \page wxxml2 wxXml2Wrappers and reference counting.
+	//! \page refcount wxXml2Wrappers and reference counting.
 	//! wxXml2Wrapper-derived classes does not use a full Copy-On-Write
 	//! technique: when copying a wxXml2Wrapper you just create a new
 	//! wxXml2Wrapper (which requires few bytes and thus this is a very
