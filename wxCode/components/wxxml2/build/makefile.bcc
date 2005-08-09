@@ -19,9 +19,19 @@ BCCDIR = $(MAKEDIR)\..
 # These are configurable options:
 # -------------------------------------------------------------------------
 
+# C compiler 
+!ifndef CC
+CC = bcc32
+!endif
+
 # C++ compiler 
 !ifndef CXX
 CXX = bcc32
+!endif
+
+# Standard flags for CC 
+!ifndef CFLAGS
+CFLAGS = 
 !endif
 
 # Standard flags for C++ 
@@ -39,16 +49,6 @@ CPPFLAGS = -a8 -g0
 LDFLAGS = 
 !endif
 
-# The libxml2 library main folder 
-!ifndef LIBXML2_DIR
-LIBXML2_DIR = ..\thirdparty\libxml2
-!endif
-
-# The iconv library main folder 
-!ifndef ICONV_DIR
-ICONV_DIR = c:\iconv
-!endif
-
 # The directory where wxWidgets library is installed 
 !ifndef WX_DIR
 WX_DIR = $(WXWIN)
@@ -61,7 +61,7 @@ WX_SHARED = 0
 
 # Compile Unicode build of wxWidgets? [0,1]
 !ifndef WX_UNICODE
-WX_UNICODE = 1
+WX_UNICODE = 0
 !endif
 
 # Use debug build of wxWidgets (define __WXDEBUG__)? [0,1]
@@ -82,11 +82,15 @@ WX_VERSION = 26
 
 ### Variables: ###
 
+MAKEARGS = -DCC="$(CC)" -DCXX="$(CXX)" -DCFLAGS="$(CFLAGS)" \
+	-DCXXFLAGS="$(CXXFLAGS)" -DCPPFLAGS="$(CPPFLAGS)" -DLDFLAGS="$(LDFLAGS)" \
+	-DSHARED="$(WX_SHARED)" -DUNICODE="$(WX_UNICODE)" \
+	-DBUILD="$(BUILD_EQUIVALENT)"
 WXXML2_LIB_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG_1) $(__DEBUGINFO) \
 	-tWM $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
 	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	-I$(WX_DIR)\include -I..\include -I$(LIBXML2_DIR)\include \
-	-I$(ICONV_DIR)\include $(CPPFLAGS) $(CXXFLAGS)
+	-I$(WX_DIR)\include -I..\include -I..\thirdparty\libxml2\include \
+	-I..\thirdparty\iconv\include $(CPPFLAGS) $(CXXFLAGS)
 WXXML2_LIB_OBJECTS =  \
 	borland\wxxml2_lib_xml2.obj \
 	borland\wxxml2_lib_dtd.obj
@@ -94,22 +98,29 @@ WXXML2_DLL_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG_1) $(__DEBUGINFO) \
 	-tWM $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
 	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	-I$(WX_DIR)\include -I..\include -DWXMAKINGDLL_WXXML2 \
-	-I$(LIBXML2_DIR)\include -I$(ICONV_DIR)\include $(CPPFLAGS) $(CXXFLAGS)
+	-I..\thirdparty\libxml2\include -I..\thirdparty\iconv\include $(CPPFLAGS) \
+	$(CXXFLAGS)
 WXXML2_DLL_OBJECTS =  \
 	borland\wxxml2_dll_xml2.obj \
 	borland\wxxml2_dll_dtd.obj
 MINIMAL_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG_1) $(__DEBUGINFO) -tWM \
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
 	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	-I$(WX_DIR)\include -I..\include -I$(LIBXML2_DIR)\include \
-	-I$(ICONV_DIR)\include $(CPPFLAGS) $(CXXFLAGS)
+	-I$(WX_DIR)\include -I..\include -I..\thirdparty\libxml2\include \
+	-I..\thirdparty\iconv\include $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	borland\minimal_minimal.obj
 
 ### Conditionally set variables: ###
 
 !if "$(WX_DEBUG)" == "1"
-WX3RDPARTLIBPOSTFIX = d
+WX3RDPARTYLIBPOSTFIX = d
+!endif
+!if "$(WX_DEBUG)" == "0"
+BUILD_EQUIVALENT = release
+!endif
+!if "$(WX_DEBUG)" == "1"
+BUILD_EQUIVALENT = debug
 !endif
 !if "$(WX_SHARED)" == "0"
 __wxxml2_lib___depname = ..\lib\wxxml2$(WXLIBPOSTFIX).lib
@@ -161,12 +172,16 @@ borland:
 
 ### Targets: ###
 
-all: $(__wxxml2_lib___depname) $(__wxxml2_dll___depname) ..\sample\minimal.exe
+all: thirdparty $(__wxxml2_lib___depname) $(__wxxml2_dll___depname) ..\sample\minimal.exe
 
 clean: 
 	-if exist borland\*.obj del borland\*.obj
 	-if exist borland\*.res del borland\*.res
 	-if exist borland\*.csm del borland\*.csm
+	@echo cd ..\thirdparty\build >borland\thirdparty.bat
+	@echo $(MAKE) -f makefile.bcc $(MAKEARGS) clean >>borland\thirdparty.bat
+	call borland\thirdparty.bat
+	@del borland\thirdparty.bat
 	-if exist ..\lib\wxxml2$(WXLIBPOSTFIX).lib del ..\lib\wxxml2$(WXLIBPOSTFIX).lib
 	-if exist ..\lib\wxxml2$(WXLIBPOSTFIX).dll del ..\lib\wxxml2$(WXLIBPOSTFIX).dll
 	-if exist ..\lib\wxxml2$(WXLIBPOSTFIX).tds del ..\lib\wxxml2$(WXLIBPOSTFIX).tds
@@ -181,6 +196,12 @@ clean:
 	-if exist ..\sample\minimal.ild del ..\sample\minimal.ild
 	-if exist ..\sample\minimal.ilf del ..\sample\minimal.ilf
 	-if exist ..\sample\minimal.ils del ..\sample\minimal.ils
+
+thirdparty: 
+	@echo cd ..\thirdparty\build >borland\thirdparty.bat
+	@echo $(MAKE) -f makefile.bcc $(MAKEARGS) all >>borland\thirdparty.bat
+	call borland\thirdparty.bat
+	@del borland\thirdparty.bat
 
 tarball: 
 	-cd ..
@@ -262,7 +283,7 @@ cleandocs:
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
 !if "$(WX_SHARED)" == "0"
-..\lib\wxxml2$(WXLIBPOSTFIX).lib: $(WXXML2_LIB_OBJECTS)
+..\lib\wxxml2$(WXLIBPOSTFIX).lib: $(WXXML2_LIB_OBJECTS) thirdparty
 	if exist $@ del $@
 	tlib /a /p4096 $@ @&&|
 	$(WXXML2_LIB_OBJECTS)
@@ -270,16 +291,16 @@ cleandocs:
 !endif
 
 !if "$(WX_SHARED)" == "1"
-..\lib\wxxml2$(WXLIBPOSTFIX).dll: $(WXXML2_DLL_OBJECTS)
-	ilink32 -Tpd -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -L$(LIBXML2_DIR)\lib -L$(ICONV_DIR)\lib @&&|
-	c0d32.obj $(WXXML2_DLL_OBJECTS),$@,, libxml2.lib iconv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
+..\lib\wxxml2$(WXLIBPOSTFIX).dll: $(WXXML2_DLL_OBJECTS) thirdparty
+	ilink32 -Tpd -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -L..\thirdparty\libxml2\lib -L..\thirdparty\iconv\lib @&&|
+	c0d32.obj $(WXXML2_DLL_OBJECTS),$@,, libxml2.lib iconv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
 |
 	implib -f ..\lib\wxxml2$(WXLIBPOSTFIX) $@
 !endif
 
-..\sample\minimal.exe: $(MINIMAL_OBJECTS) $(__wxxml2_lib___depname)
-	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -aa -L$(LIBXML2_DIR)\lib -L$(ICONV_DIR)\lib @&&|
-	c0w32.obj $(MINIMAL_OBJECTS),$@,, ..\lib\wxxml2$(WXLIBPOSTFIX).lib libxml2.lib iconv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
+..\sample\minimal.exe: $(MINIMAL_OBJECTS) thirdparty $(__wxxml2_lib___depname)
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -aa -L..\thirdparty\libxml2\lib -L..\thirdparty\iconv\lib @&&|
+	c0w32.obj $(MINIMAL_OBJECTS),$@,, ..\lib\wxxml2$(WXLIBPOSTFIX).lib libxml2.lib iconv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
 |
 
 borland\wxxml2_lib_xml2.obj: .\..\src\xml2.cpp

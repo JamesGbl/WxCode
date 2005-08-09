@@ -37,27 +37,22 @@ CXX = @CXX@
 CXXFLAGS = @CXXFLAGS@
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
-LIBXML2_DIR = @LIBXML2_DIR@
-ICONV_DIR = @ICONV_DIR@
 WX_CXXFLAGS = @WX_CXXFLAGS@
 WX_LIBS = @WX_LIBS@
 
 ### Variables: ###
 
 DESTDIR = 
-WXXML2_LIB_CXXFLAGS = -I../include -I$(LIBXML2_DIR)/include \
-	-I$(ICONV_DIR)/include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+WXXML2_LIB_CXXFLAGS = -I../include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 WXXML2_LIB_OBJECTS =  \
 	wxxml2_lib_xml2.o \
 	wxxml2_lib_dtd.o
-WXXML2_DLL_CXXFLAGS = -I../include -DWXMAKINGDLL_WXXML2 \
-	-I$(LIBXML2_DIR)/include -I$(ICONV_DIR)/include $(PIC_FLAG) $(WX_CXXFLAGS) \
-	$(CPPFLAGS) $(CXXFLAGS)
+WXXML2_DLL_CXXFLAGS = -I../include -DWXMAKINGDLL_WXXML2 $(PIC_FLAG) \
+	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 WXXML2_DLL_OBJECTS =  \
 	wxxml2_dll_xml2.o \
 	wxxml2_dll_dtd.o
-MINIMAL_CXXFLAGS = -I../include -I$(LIBXML2_DIR)/include \
-	-I$(ICONV_DIR)/include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_CXXFLAGS =   -I../include  $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	minimal_minimal.o
 
@@ -127,8 +122,8 @@ all: $(__wxxml2_lib___depname) $(__wxxml2_dll___depname) ../sample/minimal$(EXEE
 install: all install-wxheaders $(__install_wxxml2_lib___depname) $(__install_wxxml2_dll___depname)
 
 uninstall: 
-	rm -f  $(DESTDIR)$(includedir)/wx/xml2def.h\
-	$(DESTDIR)$(includedir)/wx/xml2.h\
+	rm -f $(DESTDIR)$(includedir)/wx/xml2def.h \
+	$(DESTDIR)$(includedir)/wx/xml2.h \
 	$(DESTDIR)$(includedir)/wx/dtd.h
 	rm -f $(libdir)/*wxxml2*
 
@@ -237,7 +232,7 @@ install-wxheaders:
 @COND_WX_SHARED_0@	$(INSTALL_DATA) ../lib/$(LIBPREFIX)wxxml2$(LIBEXT) $(DESTDIR)$(libdir)
 
 @COND_WX_SHARED_1@../lib/$(DLLPREFIX)wxxml2$(__wxxml2_dll___targetsuf3): $(WXXML2_DLL_OBJECTS)
-@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(WXXML2_DLL_OBJECTS) $(LDFLAGS) -L../lib $(__wxxml2_dll___macinstnamecmd) $(__wxxml2_dll___importlib) $(__wxxml2_dll___soname_flags) $(__wxxml2_dll___macver) -L$(LIBXML2_DIR)/lib -L$(ICONV_DIR)/lib  $(WX_LIBS) -lxml2
+@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(WXXML2_DLL_OBJECTS) $(LDFLAGS) -L../lib $(__wxxml2_dll___macinstnamecmd) $(__wxxml2_dll___importlib) $(__wxxml2_dll___soname_flags) $(__wxxml2_dll___macver)  $(WX_LIBS) -lxml2
 @COND_WX_SHARED_1@	
 @COND_WX_SHARED_1@	$(__wxxml2_dll___so_symlinks_cmd)
 
@@ -248,7 +243,7 @@ install-wxheaders:
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__wxxml2_dll___so_symlinks_inst_cmd))
 
 ../sample/minimal$(EXEEXT): $(MINIMAL_OBJECTS) $(__wxxml2_lib___depname)
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) -L../lib $(LDFLAGS) -L../lib $(LDFLAGS_GUI) -L$(LIBXML2_DIR)/lib -L$(ICONV_DIR)/lib  $(WX_LIBS) -lwxxml2 -lxml2
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) -L../lib $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS) -lwxxml2 -lxml2
 	
 	$(__minimal___mac_setfilecmd)
 	$(__minimal___os2_emxbindcmd)

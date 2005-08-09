@@ -10,8 +10,14 @@
 # These are configurable options:
 # -------------------------------------------------------------------------
 
+# C compiler 
+CC = wcc386
+
 # C++ compiler 
 CXX = wpp386
+
+# Standard flags for CC 
+CFLAGS = 
 
 # Standard flags for C++ 
 CXXFLAGS = 
@@ -22,12 +28,6 @@ CPPFLAGS =
 # Standard linker flags 
 LDFLAGS = 
 
-# The libxml2 library main folder 
-LIBXML2_DIR = ..\thirdparty\libxml2
-
-# The iconv library main folder 
-ICONV_DIR = c:\iconv
-
 # The directory where wxWidgets library is installed 
 WX_DIR = $(%WXWIN)
 
@@ -35,7 +35,7 @@ WX_DIR = $(%WXWIN)
 WX_SHARED = 0
 
 # Compile Unicode build of wxWidgets? [0,1]
-WX_UNICODE = 1
+WX_UNICODE = 0
 
 # Use debug build of wxWidgets (define __WXDEBUG__)? [0,1]
 WX_DEBUG = 1
@@ -66,9 +66,16 @@ WATCOM_CWD = $+ $(%cdrive):$(%cwd) $-
 
 ### Conditionally set variables: ###
 
-WX3RDPARTLIBPOSTFIX =
+WX3RDPARTYLIBPOSTFIX =
 !ifeq WX_DEBUG 1
-WX3RDPARTLIBPOSTFIX = d
+WX3RDPARTYLIBPOSTFIX = d
+!endif
+BUILD_EQUIVALENT =
+!ifeq WX_DEBUG 0
+BUILD_EQUIVALENT = release
+!endif
+!ifeq WX_DEBUG 1
+BUILD_EQUIVALENT = debug
 !endif
 __wxxml2_lib___depname =
 !ifeq WX_SHARED 0
@@ -144,11 +151,14 @@ __WXLIBPATH_FILENAMES = \lib\wat_dll
 
 ### Variables: ###
 
+MAKEARGS = CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" &
+	CPPFLAGS="$(CPPFLAGS)" LDFLAGS="$(LDFLAGS)" SHARED="$(WX_SHARED)" &
+	UNICODE="$(WX_UNICODE)" BUILD="$(BUILD_EQUIVALENT)"
 WXXML2_LIB_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
 	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
-	-i=$(WX_DIR)\include -i=..\include -i=$(LIBXML2_DIR)\include &
-	-i=$(ICONV_DIR)\include $(CPPFLAGS) $(CXXFLAGS)
+	-i=$(WX_DIR)\include -i=..\include -i=..\thirdparty\libxml2\include &
+	-i=..\thirdparty\iconv\include $(CPPFLAGS) $(CXXFLAGS)
 WXXML2_LIB_OBJECTS =  &
 	watcom\wxxml2_lib_xml2.obj &
 	watcom\wxxml2_lib_dtd.obj
@@ -156,15 +166,16 @@ WXXML2_DLL_CXXFLAGS = -bd $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
 	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
 	-i=$(WX_DIR)\include -i=..\include -dWXMAKINGDLL_WXXML2 &
-	-i=$(LIBXML2_DIR)\include -i=$(ICONV_DIR)\include $(CPPFLAGS) $(CXXFLAGS)
+	-i=..\thirdparty\libxml2\include -i=..\thirdparty\iconv\include &
+	$(CPPFLAGS) $(CXXFLAGS)
 WXXML2_DLL_OBJECTS =  &
 	watcom\wxxml2_dll_xml2.obj &
 	watcom\wxxml2_dll_dtd.obj
 MINIMAL_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
 	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
-	-i=$(WX_DIR)\include -i=..\include -i=$(LIBXML2_DIR)\include &
-	-i=$(ICONV_DIR)\include $(CPPFLAGS) $(CXXFLAGS)
+	-i=$(WX_DIR)\include -i=..\include -i=..\thirdparty\libxml2\include &
+	-i=..\thirdparty\iconv\include $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  &
 	watcom\minimal_minimal.obj
 
@@ -175,7 +186,7 @@ watcom :
 
 ### Targets: ###
 
-all : .SYMBOLIC $(__wxxml2_lib___depname) $(__wxxml2_dll___depname) ..\sample\minimal.exe
+all : .SYMBOLIC thirdparty $(__wxxml2_lib___depname) $(__wxxml2_dll___depname) ..\sample\minimal.exe
 
 clean : .SYMBOLIC 
 	-if exist watcom\*.obj del watcom\*.obj
@@ -183,10 +194,18 @@ clean : .SYMBOLIC
 	-if exist watcom\*.lbc del watcom\*.lbc
 	-if exist watcom\*.ilk del watcom\*.ilk
 	-if exist watcom\*.pch del watcom\*.pch
+	cd ..\thirdparty\build
+	wmake $(__MAKEOPTS__) -f makefile.wat $(MAKEARGS) clean
+	cd $(WATCOM_CWD)
 	-if exist ..\lib\wxxml2$(WXLIBPOSTFIX).lib del ..\lib\wxxml2$(WXLIBPOSTFIX).lib
 	-if exist ..\lib\wxxml2$(WXLIBPOSTFIX).dll del ..\lib\wxxml2$(WXLIBPOSTFIX).dll
 	-if exist ..\lib\wxxml2$(WXLIBPOSTFIX).lib del ..\lib\wxxml2$(WXLIBPOSTFIX).lib
 	-if exist ..\sample\minimal.exe del ..\sample\minimal.exe
+
+thirdparty : .SYMBOLIC 
+	cd ..\thirdparty\build
+	wmake $(__MAKEOPTS__) -f makefile.wat $(MAKEARGS) all
+	cd $(WATCOM_CWD)
 
 tarball :  
 	-cd ..
@@ -268,35 +287,35 @@ cleandocs :
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
 !ifeq WX_SHARED 0
-..\lib\wxxml2$(WXLIBPOSTFIX).lib :  $(WXXML2_LIB_OBJECTS)
+..\lib\wxxml2$(WXLIBPOSTFIX).lib :  $(WXXML2_LIB_OBJECTS) thirdparty
 	@%create watcom\wxxml2_lib.lbc
 	@for %i in ($(WXXML2_LIB_OBJECTS)) do @%append watcom\wxxml2_lib.lbc +%i
 	wlib -q -p4096 -n -b $^@ @watcom\wxxml2_lib.lbc
 !endif
 
 !ifeq WX_SHARED 1
-..\lib\wxxml2$(WXLIBPOSTFIX).dll :  $(WXXML2_DLL_OBJECTS)
+..\lib\wxxml2$(WXLIBPOSTFIX).dll :  $(WXXML2_DLL_OBJECTS) thirdparty
 	@%create watcom\wxxml2_dll.lbc
 	@%append watcom\wxxml2_dll.lbc option quiet
 	@%append watcom\wxxml2_dll.lbc name $^@
 	@%append watcom\wxxml2_dll.lbc option caseexact
-	@%append watcom\wxxml2_dll.lbc $(LDFLAGS) $(__DEBUGINFO_1)  libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib libpath $(LIBXML2_DIR)\lib libpath $(ICONV_DIR)\lib
+	@%append watcom\wxxml2_dll.lbc $(LDFLAGS) $(__DEBUGINFO_1)  libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib libpath ..\thirdparty\libxml2\lib libpath ..\thirdparty\iconv\lib
 	@for %i in ($(WXXML2_DLL_OBJECTS)) do @%append watcom\wxxml2_dll.lbc file %i
-	@for %i in ( libxml2.lib iconv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\wxxml2_dll.lbc library %i
+	@for %i in ( libxml2.lib iconv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\wxxml2_dll.lbc library %i
 	@%append watcom\wxxml2_dll.lbc
 	@%append watcom\wxxml2_dll.lbc system nr_dll
 	wlink @watcom\wxxml2_dll.lbc
 	wlib -q -n -b ..\lib\wxxml2$(WXLIBPOSTFIX).lib +$^@
 !endif
 
-..\sample\minimal.exe :  $(MINIMAL_OBJECTS) $(__wxxml2_lib___depname)
+..\sample\minimal.exe :  $(MINIMAL_OBJECTS) thirdparty $(__wxxml2_lib___depname)
 	@%create watcom\minimal.lbc
 	@%append watcom\minimal.lbc option quiet
 	@%append watcom\minimal.lbc name $^@
 	@%append watcom\minimal.lbc option caseexact
-	@%append watcom\minimal.lbc $(LDFLAGS) $(__DEBUGINFO_1)  libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib system nt_win ref '_WinMain@16' libpath $(LIBXML2_DIR)\lib libpath $(ICONV_DIR)\lib
+	@%append watcom\minimal.lbc $(LDFLAGS) $(__DEBUGINFO_1)  libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib system nt_win ref '_WinMain@16' libpath ..\thirdparty\libxml2\lib libpath ..\thirdparty\iconv\lib
 	@for %i in ($(MINIMAL_OBJECTS)) do @%append watcom\minimal.lbc file %i
-	@for %i in ( ..\lib\wxxml2$(WXLIBPOSTFIX).lib libxml2.lib iconv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\minimal.lbc library %i
+	@for %i in ( ..\lib\wxxml2$(WXLIBPOSTFIX).lib libxml2.lib iconv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\minimal.lbc library %i
 	@%append watcom\minimal.lbc
 	wlink @watcom\minimal.lbc
 

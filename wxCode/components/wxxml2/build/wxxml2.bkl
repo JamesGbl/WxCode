@@ -5,20 +5,45 @@
 	<!-- Some defaults for the variables used by wxCode bakefiles -->
 	<set var="WXCODE_BAKEFILEDIR">../../../build/bakefiles</set>
 	<include file="$(WXCODE_BAKEFILEDIR)/defaults.bkl"/>
+	<include file="$(WXCODE_BAKEFILEDIR)/tags.bkl"/>
+	<include file="$(WXCODE_BAKEFILEDIR)/utils.bkl"/>
+	<include file="presets/wx.bkl"/>
+ 	
+
+	<!-- The dependencies... -->
+	<!-- =================== -->
+
+	<!-- on win32 we will always (at first I put an option to disable this
+	     but that made the build system more complex and probably wasn't very
+	     useful at all) use the libxml2 & iconv placed in the thirdparty folder -->
+	<!-- on unix instead we will use the system-installed libxml2 & iconv libs -->
+	<set var="LIBXML2_DIR">..$(DIRSEP)thirdparty$(DIRSEP)libxml2</set>
+	<set var="ICONV_DIR">..$(DIRSEP)thirdparty$(DIRSEP)iconv</set>
+
+	<if cond="TARGETING_IDE=='0' and TARGETING_WIN32=='1'">	
+
+		<!-- conversion from WX_DEBUG to BUILD options -->
+	    <set var="BUILD_EQUIVALENT">
+	        <if cond="WX_DEBUG=='1'">debug</if>
+	        <if cond="WX_DEBUG=='0'">release</if>
+	    </set>
+		<smart-subproject id="thirdparty">
+			<dependency-of>all</dependency-of>
+			<dir>../thirdparty/build</dir>
+		    <set-makeargs>	        
+		         SHARED="$(WX_SHARED)" UNICODE="$(WX_UNICODE)" 
+	          	 BUILD="$(BUILD_EQUIVALENT)"
+		    </set-makeargs>
+		</smart-subproject>
+	</if>
+	<if cond="TARGETING_IDE=='1'">
+		<phony id="thirdparty"/>		<!-- msvc6prj does not support subprojects -->
+	</if>
 	
+
 
 	<!-- The wxXml2 settings -->
 	<!-- =================== -->
-
-	<option name="LIBXML2_DIR" category="path">
-		<default-value>..\thirdparty\libxml2</default-value>
-		<description>The libxml2 library main folder</description>
-	</option>
-
-	<option name="ICONV_DIR" category="path">
-		<default-value>c:\iconv</default-value>
-		<description>The iconv library main folder</description>
-	</option>
 
 	<set var="COMP_NAME">wxxml2</set>
 	<set var="COMP_SRC">xml2.cpp dtd.cpp</set>
@@ -31,18 +56,20 @@
 	<!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->
 	<include file="$(WXCODE_BAKEFILEDIR)/wxcode.bkl"/>
 
-
-
 	<!-- Be sure to include this line in your projects which use the
 	libxml2 library: otherwise you'll get "undefined references to __xmlFree"
 	when compiling wxxml2 with MINGW compiler -->
-<!--	<set var="STATIC_DEF"><if cond="SHARED=='0' and FORMAT=='mingw'">LIBXML_STATIC</if></set>  -->
+	<set var="STATIC_DEF"><if cond="WX_SHARED=='0' and FORMAT=='mingw'">LIBXML_STATIC</if></set>
 	<template id="xmlbasic">
-		<stdlib>$(LIBXML2_DIR)</stdlib>
-		<stdlib>$(ICONV_DIR)</stdlib>
-	<!--	<define>$(STATIC_DEF)</define>  -->
+		<if cond="TARGETING_WIN32=='1'">
+			<depends>thirdparty</depends>
+			<stdlib>$(LIBXML2_DIR)</stdlib>
+			<stdlib>$(ICONV_DIR)</stdlib>
+		<!--	<define>$(STATIC_DEF)</define>  -->
+		</if>
 	</template>
 
+	<!-- the libraries required by wxXml2 -->
 	<define-tag name="xml2libs" rules="lib,dll,exe">
 		<if cond="FORMAT=='mingw' or FORMAT=='autoconf'"><sys-lib>xml2</sys-lib></if>
 		<if cond="FORMAT!='mingw' and FORMAT!='autoconf'"><sys-lib>libxml2</sys-lib></if>
@@ -53,18 +80,22 @@
 	<lib id="wxxml2_lib" template="complib,xmlbasic" cond="WX_SHARED=='0'"/>
 	<dll id="wxxml2_dll" template="compdll,xmlbasic" cond="WX_SHARED=='1'">
 		<xml2libs/>
-        <wx-lib>core</wx-lib>
-        <wx-lib>base</wx-lib>
+	        <wx-lib>core</wx-lib>
+        	<wx-lib>base</wx-lib>
 	</dll>
 	<set var="MSVC6PRJ_MERGED_TARGETS">wxxml2=wxxml2_lib+wxxml2_dll</set>
-	
-	
+
+
+
+
 	<!-- The sample of wxXml2 -->
+	<!-- ==================== -->
+
 	<exe id="minimal" template="compsample,xmlbasic">
 		<library>wxxml2_lib</library>
 		<xml2libs/>
-        <wx-lib>core</wx-lib>
-        <wx-lib>base</wx-lib>
+	        <wx-lib>core</wx-lib>
+        	<wx-lib>base</wx-lib>
 	</exe>
     
 </makefile>
