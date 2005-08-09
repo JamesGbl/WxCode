@@ -71,8 +71,11 @@ bool wxWebUpdateActionRun::Run() const
  							m_nExecFlag | wxEXEC_NODISABLE);
 
 	// FIXME: how do we know if this retcode means success or not ?
-	//        (some programs could not respect the 0=success UNIX standard...)
-	return (retcode == 0);
+	//        (some programs could not respect the 0=success UNIX standard...)	
+	if (retcode != 0) 
+		wxLogDebug(wxT("wxWebUpdateActionRun::Run - got a non-null return code for ")
+					wxT("the last command; proceeding anyway..."));
+	return TRUE;
 }
 
 bool wxWebUpdateActionRun::SetProperties(const wxArrayString &propnames,
@@ -174,6 +177,16 @@ bool wxWebUpdateActionExtract::Run() const
     {
         // access meta-data
         wxString name = entry->GetName();
+		if (entry->IsDir()) {
+
+			if (!wxMkdir(name))
+				wxLogDebug(wxT("wxWebUpdateActionExtract::Run - could not create the [") + name + wxT("] folder.. proceeding anyway"));
+			else
+				wxLogDebug(wxT("wxWebUpdateActionExtract::Run - created the [") + name + wxT("] folder"));
+		
+			continue;		// this entry contains no data
+		}
+
         wxString output = dir + name;
         
         // is this file registered in the name map ?
@@ -186,7 +199,7 @@ bool wxWebUpdateActionExtract::Run() const
 
         // now just dump this entry to a new uncompressed file...
 		wxFileOutputStream out(output);
-		if (!out.Write(*in)) {
+		if (!out.IsOk() || !out.Write(*in)) {
 
 			wxLogDebug(wxT("wxWebUpdateActionExtract::Run - couldn't decompress ") + name);
 			delete in;

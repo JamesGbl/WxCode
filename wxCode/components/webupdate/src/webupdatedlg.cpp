@@ -561,6 +561,7 @@ void wxWebUpdateDlg::OnCancel(wxCommandEvent &)
 void wxWebUpdateDlg::OnAbout(wxCommandEvent &)
 {
 	wxWebUpdateAboutDlg dlg(this);
+	dlg.CenterOnScreen();
 	dlg.ShowModal();
 }
 
@@ -1076,7 +1077,7 @@ void wxWebUpdateAboutDlg::InitWidgetsFromXRC()
 
 	// eventually set the version of the WebUpdater...
 	wxStaticText *ver = wxWU_XRCCTRL(*this, "IDWUAD_VERSION", wxStaticText);
-	if (ver) ver->SetLabel(wxWebUpdateInstaller::Get()->GetVersion());
+	if (ver) ver->SetLabel(wxWUAD_PREFIX + wxWebUpdateInstaller::Get()->GetVersion() + wxWUAD_POSTFIX);
 
 	GetSizer()->SetSizeHints(this);
 }

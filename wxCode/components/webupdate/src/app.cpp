@@ -330,7 +330,9 @@ bool WebUpdaterApp::OnInit()
 	m_optExtra.m_bSaveLog = parser.Found(SWITCH_SAVELOG);
 	
 	if (parser.Found(SWITCH_SAVELOG))
-		new wxFileLog(wxWU_LOGFILENAME, wxT(" LOG OF WEBUPDATER SESSION BEGAN AT ") + 
+		new wxFileLog(wxWU_LOGFILENAME, wxT(" LOG OF WEBUPDATER ") + 
+						wxWebUpdateInstaller::Get()->GetVersion() + 
+						wxT(" SESSION BEGAN AT ") + 
 						wxDateTime::Now().Format(wxT("%x %X")));		// it automatically installs itself as the new logger
 	if (!parser.Found(OPTION_XMLSCRIPT, &xml))
 		xml = wxWU_LOCAL_XMLSCRIPT;
@@ -443,9 +445,14 @@ void WebUpdaterApp::OnExecute(wxCommandEvent &ce)
 	wxMutexLocker locker(*m);
 	int res = wxExecute(cmd, flags);
 	
-	// save the return code in the event
-	ce.SetInt(res);
+	// we cannot save the return code in the event since the event we have here
+	// is not the same event instance sent by the wxWebUpdateAction::wxExecute
+	// function...
+	// so we are forced to save the result directly in a global variable of
+	// wxWebUpdateAction - hacky way to do it !!
+	wxWebUpdateAction::m_nExecResult = res;
 	
+	// tell wxWebUpdateAction that we have finished
 	wxLogDebug(wxT("WebUpdaterApp::OnExecute - executing the command:\n\n\t\t") +
 				cmd + wxT("\n\n with flags: %d; the exit code is: %d"), flags, res);	
 	cond->Broadcast();		// let the wxWebUpdateActionRun know that we have finished

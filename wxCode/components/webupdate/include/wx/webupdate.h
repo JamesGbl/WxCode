@@ -266,6 +266,12 @@ private:
 //! the standard wxWebUpdateAction-derived classes.
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateAction : public wxObject
 {
+public:		// see the hack in wxApp::OnExecute
+
+	//! Holds the return code of the last wxExecute which was executed by
+	//! the wxApp under request of our ::wxExecute function.
+	static int m_nExecResult;
+
 protected:
 
 	//! The name of this action.

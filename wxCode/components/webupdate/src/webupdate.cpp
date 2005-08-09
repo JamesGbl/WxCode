@@ -64,7 +64,7 @@ WX_DEFINE_USER_EXPORTED_OBJARRAY(wxWebUpdateLocalPackageArray);
 wxWebUpdateDownload wxEmptyWebUpdateDownload(wxT("invalid"));
 wxWebUpdatePackage wxEmptyWebUpdatePackage(wxT("invalid"));
 wxWebUpdateLocalPackage wxEmptyWebUpdateLocalPackage(wxT("invalid"));
-
+int wxWebUpdateAction::m_nExecResult = 0;
 
 
 
@@ -327,9 +327,9 @@ long wxWebUpdateAction::wxExecute(const wxString &command, int flags) const
 	// then wait for wxApp to do its job
 	cond.Wait();
 	
-	// the wxApp should have stored the wxExecute return code in the
-	// INT field of the event...
-	return runev.GetInt();
+	// the wxApp should have stored the wxExecute return code in our
+	// m_nExecResult variable
+	return m_nExecResult;
 }
 
 
