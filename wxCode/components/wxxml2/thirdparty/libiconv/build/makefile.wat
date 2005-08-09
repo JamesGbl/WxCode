@@ -79,8 +79,8 @@ __DEBUGINFO_2 = -d0
 ICONV_CFLAGS = $(__WARNINGS_0) $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG_1) &
 	$(__DEBUGINFO_2) -dHAVE_CONFIG_H -dENABLE_RELOCATABLE=1 -dIN_LIBRARY &
 	-dNO_XMALLOC -dset_relocation_prefix=libiconv_set_relocation_prefix &
-	-drelocate=libiconv_relocate -dEILSEQ=ENOENT -i=..\include &
-	-i=..\libcharset\include -i=..\libcharset $(CPPFLAGS) $(CFLAGS)
+	-drelocate=libiconv_relocate -i=..\include -i=..\libcharset\include &
+	-i=..\libcharset $(CPPFLAGS) $(CFLAGS)
 ICONV_OBJECTS =  &
 	watcom\iconv_iconv.obj &
 	watcom\iconv_localcharset.obj &
@@ -121,11 +121,11 @@ clean : .SYMBOLIC
 	wlib -q -p4096 -n -b $^@ @watcom\iconv.lbc
 
 watcom\iconv_iconv.obj :  .AUTODEPEND .\..\lib\iconv.c
-	$(CC) -zq -fo=$^@ $(ICONV_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(ICONV_CFLAGS) $<
 
 watcom\iconv_localcharset.obj :  .AUTODEPEND .\..\libcharset\lib\localcharset.c
-	$(CC) -zq -fo=$^@ $(ICONV_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(ICONV_CFLAGS) $<
 
 watcom\iconv_relocatable.obj :  .AUTODEPEND .\..\lib\relocatable.c
-	$(CC) -zq -fo=$^@ $(ICONV_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(ICONV_CFLAGS) $<
 

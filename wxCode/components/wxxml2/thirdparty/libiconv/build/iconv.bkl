@@ -296,7 +296,7 @@
         <define>relocate=libiconv_relocate</define>
 
 		<!-- borland does not have EILSEQ... -->
-		<define>EILSEQ=ENOENT</define>
+		<if cond="FORMAT=='borland'"><define>EILSEQ=ENOENT</define></if>
         
         <include>$(ICONVBASEDIR)$(DIRSEP)include</include>    
         <include>$(ICONVBASEDIR)$(DIRSEP)libcharset$(DIRSEP)include</include>

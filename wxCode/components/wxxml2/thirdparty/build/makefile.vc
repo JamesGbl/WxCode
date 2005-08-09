@@ -10,6 +10,18 @@
 # These are configurable options:
 # -------------------------------------------------------------------------
 
+#  
+BUILD = 
+
+#  
+SHARED = 
+
+#  
+UNICODE = 
+
+#  
+ICONV_DIR = 
+
 
 
 # -------------------------------------------------------------------------
@@ -19,7 +31,8 @@
 ### Variables: ###
 
 MAKEARGS = CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" \
-	CPPFLAGS="$(CPPFLAGS)" LDFLAGS="$(LDFLAGS)"
+	CPPFLAGS="$(CPPFLAGS)" LDFLAGS="$(LDFLAGS)" BUILD="$(BUILD)" \
+	SHARED="$(SHARED)" UNICODE="$(UNICODE)" ICONV_DIR="$(ICONV_DIR)"
 
 ### Conditionally set variables: ###
 
@@ -39,6 +52,14 @@ clean:
 	cd ..\libxml2\build
 	$(MAKE) -f makefile.vc $(MAKEARGS) clean
 	cd $(MAKEDIR)
+
+BUILD: 
+
+SHARED: 
+
+UNICODE: 
+
+ICONV_DIR: 
 
 sub_libiconv: 
 	cd ..\libiconv\build

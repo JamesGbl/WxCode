@@ -37,8 +37,8 @@ CPPDEPS = -MT$@ -MF$@.d -MD
 ICONV_CFLAGS = -DHAVE_W32API_H $(__UNICODE_DEFINE_p) $(__OPTIMIZEFLAG_1) \
 	$(__DEBUGINFO_2) -DHAVE_CONFIG_H -DENABLE_RELOCATABLE=1 -DIN_LIBRARY \
 	-DNO_XMALLOC -Dset_relocation_prefix=libiconv_set_relocation_prefix \
-	-Drelocate=libiconv_relocate -DEILSEQ=ENOENT -I..\include \
-	-I..\libcharset\include -I..\libcharset $(CPPFLAGS) $(CFLAGS)
+	-Drelocate=libiconv_relocate -I..\include -I..\libcharset\include \
+	-I..\libcharset $(CPPFLAGS) $(CFLAGS)
 ICONV_OBJECTS =  \
 	mingw\iconv_iconv.o \
 	mingw\iconv_localcharset.o \

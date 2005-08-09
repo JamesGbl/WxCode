@@ -6,12 +6,22 @@
 
 <bakefile-gen>
 
+    <input>
+	wxxml2.bkl
+	../thirdparty/build/thirdparty.bkl
+	../thirdparty/libxml2/build/libxml2.bkl
+	../thirdparty/libiconv/build/iconv.bkl
+    </input>
 
-    <input>wxxml2.bkl</input>
-
-
+    <!-- add formats to all the BKL listed above -->
     <disable-formats>dmars,dmars_smake,cbx_unix,cbuilderx,msevc4prj</disable-formats>
     <add-formats>autoconf,borland,dmars_smake,dmars,mingw,msvc,msvc6prj,msevc4prj,watcom,cbuilderx,cbx_unix</add-formats>
+
+    <!-- see the readme to understand why UNIX makefiles are not generated;
+         msvc6prj is disabled because does not support <subproject> tags -->
+    <del-formats files="../thirdparty/build/*.bkl,../thirdparty/libxml2/build/*.bkl,../thirdparty/libiconv/build/*.bkl">
+        autoconf,msvc6prj
+    </del-formats>
 
     <!-- required since wxCode uses wx presets stored in wxWidgets subfolders... -->
     <add-flags>-I%WXWIN%\build\bakefiles\wxpresets</add-flags>

@@ -10,6 +10,18 @@
 # These are configurable options:
 # -------------------------------------------------------------------------
 
+#  
+BUILD = 
+
+#  
+SHARED = 
+
+#  
+UNICODE = 
+
+#  
+ICONV_DIR = 
+
 
 
 # -------------------------------------------------------------------------
@@ -37,7 +49,8 @@ WATCOM_CWD = $+ $(%cdrive):$(%cwd) $-
 ### Variables: ###
 
 MAKEARGS = CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" &
-	CPPFLAGS="$(CPPFLAGS)" LDFLAGS="$(LDFLAGS)"
+	CPPFLAGS="$(CPPFLAGS)" LDFLAGS="$(LDFLAGS)" BUILD="$(BUILD)" &
+	SHARED="$(SHARED)" UNICODE="$(UNICODE)" ICONV_DIR="$(ICONV_DIR)"
 
 
 ### Targets: ###
@@ -56,6 +69,14 @@ clean : .SYMBOLIC
 	cd ..\libxml2\build
 	wmake $(__MAKEOPTS__) -f makefile.wat $(MAKEARGS) clean
 	cd $(WATCOM_CWD)
+
+BUILD : .SYMBOLIC 
+
+SHARED : .SYMBOLIC 
+
+UNICODE : .SYMBOLIC 
+
+ICONV_DIR : .SYMBOLIC 
 
 libiconv : .SYMBOLIC 
 	cd ..\libiconv\build

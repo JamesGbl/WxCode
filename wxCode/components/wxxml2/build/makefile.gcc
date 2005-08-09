@@ -53,7 +53,8 @@ WX_VERSION = 26
 
 MAKEARGS = CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" \
 	CPPFLAGS="$(CPPFLAGS)" LDFLAGS="$(LDFLAGS)" SHARED="$(WX_SHARED)" \
-	UNICODE="$(WX_UNICODE)" BUILD="$(BUILD_EQUIVALENT)"
+	UNICODE="$(WX_UNICODE)" BUILD="$(BUILD_EQUIVALENT)" \
+	ICONV_DIR="..\..\libiconv"
 CPPDEPS = -MT$@ -MF$@.d -MD
 WXXML2_LIB_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -mthreads \
 	$(__WX_SHAREDDEFINE_p) -DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) \
@@ -86,7 +87,7 @@ MINIMAL_OBJECTS =  \
 ### Conditionally set variables: ###
 
 ifeq ($(WX_DEBUG),1)
-WX3RDPARTYLIBPOSTFIX = d
+WX3RDPARTLIBPOSTFIX = d
 endif
 ifeq ($(WX_DEBUG),0)
 BUILD_EQUIVALENT = release
@@ -255,11 +256,11 @@ endif
 
 ifeq ($(WX_SHARED),1)
 ..\lib\wxxml2$(WXLIBPOSTFIX).dll: $(WXXML2_DLL_OBJECTS) thirdparty
-	$(CXX) -shared -fPIC -o $@ $(WXXML2_DLL_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -Wl,--out-implib,..\lib\libwxxml2$(WXLIBPOSTFIX).a -L..\thirdparty\libxml2\lib -L..\thirdparty\iconv\lib  -lxml2 -liconv -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+	$(CXX) -shared -fPIC -o $@ $(WXXML2_DLL_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -Wl,--out-implib,..\lib\libwxxml2$(WXLIBPOSTFIX).a -L..\thirdparty\libxml2\lib -L..\thirdparty\iconv\lib  -lxml2 -liconv -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTLIBPOSTFIX) -lwxjpeg$(WX3RDPARTLIBPOSTFIX) -lwxpng$(WX3RDPARTLIBPOSTFIX) -lwxzlib$(WX3RDPARTLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 endif
 
 ..\sample\minimal.exe: $(MINIMAL_OBJECTS) thirdparty $(__wxxml2_lib___depname)
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -Wl,--subsystem,windows -mwindows -L..\thirdparty\libxml2\lib -L..\thirdparty\iconv\lib  ..\lib\libwxxml2$(WXLIBPOSTFIX).a -lxml2 -liconv -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -Wl,--subsystem,windows -mwindows -L..\thirdparty\libxml2\lib -L..\thirdparty\iconv\lib  ..\lib\libwxxml2$(WXLIBPOSTFIX).a -lxml2 -liconv -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTLIBPOSTFIX) -lwxjpeg$(WX3RDPARTLIBPOSTFIX) -lwxpng$(WX3RDPARTLIBPOSTFIX) -lwxzlib$(WX3RDPARTLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
 mingw\wxxml2_lib_xml2.o: ./../src/xml2.cpp
 	$(CXX) -c -o $@ $(WXXML2_LIB_CXXFLAGS) $(CPPDEPS) $<

@@ -10,6 +10,18 @@
 # These are configurable options:
 # -------------------------------------------------------------------------
 
+#  
+BUILD = 
+
+#  
+SHARED = 
+
+#  
+UNICODE = 
+
+#  
+ICONV_DIR = 
+
 
 
 # -------------------------------------------------------------------------
@@ -19,7 +31,8 @@
 ### Variables: ###
 
 MAKEARGS = CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" \
-	CPPFLAGS="$(CPPFLAGS)" LDFLAGS="$(LDFLAGS)"
+	CPPFLAGS="$(CPPFLAGS)" LDFLAGS="$(LDFLAGS)" BUILD="$(BUILD)" \
+	SHARED="$(SHARED)" UNICODE="$(UNICODE)" ICONV_DIR="$(ICONV_DIR)"
 
 ### Conditionally set variables: ###
 
@@ -35,13 +48,21 @@ clean:
 	$(MAKE) -C ..\libiconv\build -f makefile.gcc $(MAKEARGS) clean
 	$(MAKE) -C ..\libxml2\build -f makefile.gcc $(MAKEARGS) clean
 
+BUILD: 
+
+SHARED: 
+
+UNICODE: 
+
+ICONV_DIR: 
+
 libiconv: 
 	$(MAKE) -C ..\libiconv\build -f makefile.gcc $(MAKEARGS)
 
 libxml2: 
 	$(MAKE) -C ..\libxml2\build -f makefile.gcc $(MAKEARGS)
 
-.PHONY: all clean libiconv libxml2
+.PHONY: all clean BUILD SHARED UNICODE ICONV_DIR libiconv libxml2
 
 
 # Dependencies tracking:

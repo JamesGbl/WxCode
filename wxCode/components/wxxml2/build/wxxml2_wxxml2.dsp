@@ -2,10 +2,10 @@
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
-# TARGTYPE "Win32 (x86) Dynamic-Link Library" 0x0102
 # TARGTYPE "Win32 (x86) Static Library" 0x0104
+# TARGTYPE "Win32 (x86) Dynamic-Link Library" 0x0102
 
-CFG=wxxml2 - Win32 Release
+CFG=wxxml2 - Win32 Default
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
@@ -14,18 +14,18 @@ CFG=wxxml2 - Win32 Release
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "wxxml2_wxxml2.mak" CFG="wxxml2 - Win32 Release"
+!MESSAGE NMAKE /f "wxxml2_wxxml2.mak" CFG="wxxml2 - Win32 Default"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
 !MESSAGE "wxxml2 - Win32 DLL Unicode Debug" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE "wxxml2 - Win32 DLL Unicode Release" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "wxxml2 - Win32 DLL Unicode" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "wxxml2 - Win32 DLL Debug" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE "wxxml2 - Win32 DLL Release" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "wxxml2 - Win32 DLL" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "wxxml2 - Win32 Unicode Debug" (based on "Win32 (x86) Static Library")
-!MESSAGE "wxxml2 - Win32 Unicode Release" (based on "Win32 (x86) Static Library")
+!MESSAGE "wxxml2 - Win32 Unicode" (based on "Win32 (x86) Static Library")
 !MESSAGE "wxxml2 - Win32 Debug" (based on "Win32 (x86) Static Library")
-!MESSAGE "wxxml2 - Win32 Release" (based on "Win32 (x86) Static Library")
+!MESSAGE "wxxml2 - Win32 Default" (based on "Win32 (x86) Static Library")
 !MESSAGE 
 
 # Begin Project
@@ -60,7 +60,7 @@ LINK32=link.exe
 # ADD BASE LINK32 libxml2.lib iconv.lib wxmsw26ud_core.lib wxbase26ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /dll /machine:i386 /out:"..\lib\wxxml2ud.dll" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib" /implib:"..\lib\wxxml2ud.lib" /debug /libpath:"..\thirdparty\libxml2\lib" /libpath:"..\thirdparty\iconv\lib"
 # ADD LINK32 libxml2.lib iconv.lib wxmsw26ud_core.lib wxbase26ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /dll /machine:i386 /out:"..\lib\wxxml2ud.dll" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib" /implib:"..\lib\wxxml2ud.lib" /debug /libpath:"..\thirdparty\libxml2\lib" /libpath:"..\thirdparty\iconv\lib"
 
-!ELSEIF  "$(CFG)" == "wxxml2 - Win32 DLL Unicode Release"
+!ELSEIF  "$(CFG)" == "wxxml2 - Win32 DLL Unicode"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -110,7 +110,7 @@ LINK32=link.exe
 # ADD BASE LINK32 libxml2.lib iconv.lib wxmsw26d_core.lib wxbase26d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /dll /machine:i386 /out:"..\lib\wxxml2d.dll" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib" /implib:"..\lib\wxxml2d.lib" /debug /libpath:"..\thirdparty\libxml2\lib" /libpath:"..\thirdparty\iconv\lib"
 # ADD LINK32 libxml2.lib iconv.lib wxmsw26d_core.lib wxbase26d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /dll /machine:i386 /out:"..\lib\wxxml2d.dll" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib" /implib:"..\lib\wxxml2d.lib" /debug /libpath:"..\thirdparty\libxml2\lib" /libpath:"..\thirdparty\iconv\lib"
 
-!ELSEIF  "$(CFG)" == "wxxml2 - Win32 DLL Release"
+!ELSEIF  "$(CFG)" == "wxxml2 - Win32 DLL"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -158,7 +158,7 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo /out:"..\lib\wxxml2ud.lib"
 # ADD LIB32 /nologo /out:"..\lib\wxxml2ud.lib"
 
-!ELSEIF  "$(CFG)" == "wxxml2 - Win32 Unicode Release"
+!ELSEIF  "$(CFG)" == "wxxml2 - Win32 Unicode"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -204,7 +204,7 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo /out:"..\lib\wxxml2d.lib"
 # ADD LIB32 /nologo /out:"..\lib\wxxml2d.lib"
 
-!ELSEIF  "$(CFG)" == "wxxml2 - Win32 Release"
+!ELSEIF  "$(CFG)" == "wxxml2 - Win32 Default"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -232,13 +232,13 @@ LIB32=link.exe -lib
 # Begin Target
 
 # Name "wxxml2 - Win32 DLL Unicode Debug"
-# Name "wxxml2 - Win32 DLL Unicode Release"
+# Name "wxxml2 - Win32 DLL Unicode"
 # Name "wxxml2 - Win32 DLL Debug"
-# Name "wxxml2 - Win32 DLL Release"
+# Name "wxxml2 - Win32 DLL"
 # Name "wxxml2 - Win32 Unicode Debug"
-# Name "wxxml2 - Win32 Unicode Release"
+# Name "wxxml2 - Win32 Unicode"
 # Name "wxxml2 - Win32 Debug"
-# Name "wxxml2 - Win32 Release"
+# Name "wxxml2 - Win32 Default"
 # Begin Group "Source Files"
 
 # PROP Default_Filter ""

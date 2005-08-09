@@ -38,8 +38,8 @@ ICONV_CFLAGS = /MD$(__DEBUGRUNTIME_7) /DWIN32 $(__WARNINGS_2) \
 	/Fd..\lib\iconv.pdb $(____DEBUGRUNTIME_6_p) /DHAVE_CONFIG_H \
 	/DENABLE_RELOCATABLE=1 /DIN_LIBRARY /DNO_XMALLOC \
 	/Dset_relocation_prefix=libiconv_set_relocation_prefix \
-	/Drelocate=libiconv_relocate /DEILSEQ=ENOENT /I..\include \
-	/I..\libcharset\include /I..\libcharset $(CPPFLAGS) $(CFLAGS)
+	/Drelocate=libiconv_relocate /I..\include /I..\libcharset\include \
+	/I..\libcharset $(CPPFLAGS) $(CFLAGS)
 ICONV_OBJECTS =  \
 	msvc\iconv_iconv.obj \
 	msvc\iconv_localcharset.obj \

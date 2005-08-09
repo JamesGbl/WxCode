@@ -32,7 +32,7 @@
 			<dir>../thirdparty/build</dir>
 		    <set-makeargs>	        
 		         SHARED="$(WX_SHARED)" UNICODE="$(WX_UNICODE)" 
-	          	 BUILD="$(BUILD_EQUIVALENT)"
+	          	 BUILD="$(BUILD_EQUIVALENT)" ICONV_DIR="..$(DIRSEP)..$(DIRSEP)libiconv"
 		    </set-makeargs>
 		</smart-subproject>
 	</if>

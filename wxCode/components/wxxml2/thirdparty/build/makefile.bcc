@@ -49,6 +49,26 @@ CPPFLAGS = -a8 -g0
 LDFLAGS = 
 !endif
 
+#  
+!ifndef BUILD
+BUILD = 
+!endif
+
+#  
+!ifndef SHARED
+SHARED = 
+!endif
+
+#  
+!ifndef UNICODE
+UNICODE = 
+!endif
+
+#  
+!ifndef ICONV_DIR
+ICONV_DIR = 
+!endif
+
 
 
 # -------------------------------------------------------------------------
@@ -58,7 +78,9 @@ LDFLAGS =
 ### Variables: ###
 
 MAKEARGS = -DCC="$(CC)" -DCXX="$(CXX)" -DCFLAGS="$(CFLAGS)" \
-	-DCXXFLAGS="$(CXXFLAGS)" -DCPPFLAGS="$(CPPFLAGS)" -DLDFLAGS="$(LDFLAGS)"
+	-DCXXFLAGS="$(CXXFLAGS)" -DCPPFLAGS="$(CPPFLAGS)" -DLDFLAGS="$(LDFLAGS)" \
+	-DBUILD="$(BUILD)" -DSHARED="$(SHARED)" -DUNICODE="$(UNICODE)" \
+	-DICONV_DIR="$(ICONV_DIR)"
 
 ### Conditionally set variables: ###
 
@@ -80,6 +102,14 @@ clean:
 	@echo $(MAKE) -f makefile.bcc $(MAKEARGS) clean >>libxml2.bat
 	call libxml2.bat
 	@del libxml2.bat
+
+BUILD: 
+
+SHARED: 
+
+UNICODE: 
+
+ICONV_DIR: 
 
 libiconv: 
 	@echo cd ..\libiconv\build >libiconv.bat

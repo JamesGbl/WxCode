@@ -66,9 +66,9 @@ WATCOM_CWD = $+ $(%cdrive):$(%cwd) $-
 
 ### Conditionally set variables: ###
 
-WX3RDPARTYLIBPOSTFIX =
+WX3RDPARTLIBPOSTFIX =
 !ifeq WX_DEBUG 1
-WX3RDPARTYLIBPOSTFIX = d
+WX3RDPARTLIBPOSTFIX = d
 !endif
 BUILD_EQUIVALENT =
 !ifeq WX_DEBUG 0
@@ -153,7 +153,8 @@ __WXLIBPATH_FILENAMES = \lib\wat_dll
 
 MAKEARGS = CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" &
 	CPPFLAGS="$(CPPFLAGS)" LDFLAGS="$(LDFLAGS)" SHARED="$(WX_SHARED)" &
-	UNICODE="$(WX_UNICODE)" BUILD="$(BUILD_EQUIVALENT)"
+	UNICODE="$(WX_UNICODE)" BUILD="$(BUILD_EQUIVALENT)" &
+	ICONV_DIR="..\..\libiconv"
 WXXML2_LIB_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
 	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
@@ -301,7 +302,7 @@ cleandocs :
 	@%append watcom\wxxml2_dll.lbc option caseexact
 	@%append watcom\wxxml2_dll.lbc $(LDFLAGS) $(__DEBUGINFO_1)  libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib libpath ..\thirdparty\libxml2\lib libpath ..\thirdparty\iconv\lib
 	@for %i in ($(WXXML2_DLL_OBJECTS)) do @%append watcom\wxxml2_dll.lbc file %i
-	@for %i in ( libxml2.lib iconv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\wxxml2_dll.lbc library %i
+	@for %i in ( libxml2.lib iconv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\wxxml2_dll.lbc library %i
 	@%append watcom\wxxml2_dll.lbc
 	@%append watcom\wxxml2_dll.lbc system nr_dll
 	wlink @watcom\wxxml2_dll.lbc
@@ -315,7 +316,7 @@ cleandocs :
 	@%append watcom\minimal.lbc option caseexact
 	@%append watcom\minimal.lbc $(LDFLAGS) $(__DEBUGINFO_1)  libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib system nt_win ref '_WinMain@16' libpath ..\thirdparty\libxml2\lib libpath ..\thirdparty\iconv\lib
 	@for %i in ($(MINIMAL_OBJECTS)) do @%append watcom\minimal.lbc file %i
-	@for %i in ( ..\lib\wxxml2$(WXLIBPOSTFIX).lib libxml2.lib iconv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\minimal.lbc library %i
+	@for %i in ( ..\lib\wxxml2$(WXLIBPOSTFIX).lib libxml2.lib iconv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\minimal.lbc library %i
 	@%append watcom\minimal.lbc
 	wlink @watcom\minimal.lbc
 
