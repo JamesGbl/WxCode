@@ -273,7 +273,7 @@ PACKAGE_VERSION='1.5'
 PACKAGE_STRING='wxxml2 1.5'
 PACKAGE_BUGREPORT='frm@sourceforge.net'
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os AWK INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S RANLIB ac_ct_RANLIB CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CXX CXXFLAGS ac_ct_CXX CXXCPP LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os AWK INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S RANLIB ac_ct_RANLIB CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CXX CXXFLAGS ac_ct_CXX CXXCPP XML2_CONFIG XML_CPPFLAGS XML_LIBS WX_CONFIG_PATH WX_CPPFLAGS WX_CFLAGS WX_CXXFLAGS WX_CFLAGS_ONLY WX_CXXFLAGS_ONLY WX_LIBS WX_LIBS_STATIC WX_VERSION SET_MAKE MAKE_SET AR ac_ct_AR STRIP ac_ct_STRIP NM ac_ct_NM INSTALL_DIR LDFLAGS_GUI IF_GNU_MAKE PLATFORM_UNIX PLATFORM_WIN32 PLATFORM_MSDOS PLATFORM_MAC PLATFORM_MACOS PLATFORM_MACOSX PLATFORM_OS2 PLATFORM_BEOS SO_SUFFIX SO_SUFFIX_MODULE DLLIMP_SUFFIX LIBPREFIX LIBEXT DLLPREFIX DLLPREFIX_MODULE dlldir AIX_CXX_LD SHARED_LD_CC SHARED_LD_CXX SHARED_LD_MODULE_CC SHARED_LD_MODULE_CXX PIC_FLAG WINDOWS_IMPLIB USE_SOVERSION USE_SOVERLINUX USE_SOVERSOLARIS USE_SOVERCYGWIN USE_MACVERSION USE_SOSYMLINKS SONAME_FLAG DEPS_TRACKING RESCOMP SETFILE COND_DEPS_TRACKING_0 COND_DEPS_TRACKING_1 COND_PLATFORM_MACOSX_0_USE_SOVERCYGWIN_0_USE_SOVERSION_1 COND_PLATFORM_MACOSX_0_USE_SOVERSION_1 COND_PLATFORM_MACOSX_1 COND_PLATFORM_MACOSX_1_USE_SOVERSION_1 COND_PLATFORM_MAC_1 COND_PLATFORM_OS2_1 COND_USE_SOSYMLINKS_1 COND_USE_SOVERCYGWIN_1_USE_SOVERSION_1 COND_USE_SOVERLINUX_1 COND_USE_SOVERSION_0 COND_USE_SOVERSOLARIS_1 COND_WINDOWS_IMPLIB_1 COND_WX_SHARED_0 COND_WX_SHARED_1 LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -815,6 +815,23 @@ if test -n "$ac_init_help"; then
      short | recursive ) echo "Configuration of wxxml2 1.5:";;
    esac
   cat <<\_ACEOF
+
+Optional Features:
+  --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
+  --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
+  --disable-xmltest       Do not try to compile and run a test LIBXML program
+  --enable-omf            use OMF object format (OS/2)
+
+Optional Packages:
+  --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
+  --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
+  --with-xml-prefix=PFX   Prefix where libxml is installed (optional)
+  --with-xml-exec-prefix=PFX Exec prefix where libxml is installed (optional)
+  --with-wxdir=PATH       Use uninstalled version of wxWidgets in PATH
+  --with-wx-config=CONFIG wx-config script to use (optional)
+  --with-wx-prefix=PREFIX Prefix where wxWidgets is installed (optional)
+  --with-wx-exec-prefix=PREFIX
+                          Exec prefix where wxWidgets is installed (optional)
 
 Some influential environment variables:
   CC          C compiler command
@@ -3120,8 +3137,313 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 # check for the libxml2 library
 # AM_PATH_XML([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]]])
 # Test for XML, and define XML_CPPFLAGS and XML_LIBS
-AM_PATH_XML2(2.6.1, ,
-	AC_MSG_ERROR([Cannot found the libxml2 library or your libxml2 is too old (libxml2 > 2.6.1 is required); download it from http://xmlsoft.org]))
+
+
+
+# Check whether --with-xml-prefix or --without-xml-prefix was given.
+if test "${with_xml_prefix+set}" = set; then
+  withval="$with_xml_prefix"
+  xml_config_prefix="$withval"
+else
+  xml_config_prefix=""
+fi;
+
+# Check whether --with-xml-exec-prefix or --without-xml-exec-prefix was given.
+if test "${with_xml_exec_prefix+set}" = set; then
+  withval="$with_xml_exec_prefix"
+  xml_config_exec_prefix="$withval"
+else
+  xml_config_exec_prefix=""
+fi;
+# Check whether --enable-xmltest or --disable-xmltest was given.
+if test "${enable_xmltest+set}" = set; then
+  enableval="$enable_xmltest"
+
+else
+  enable_xmltest=yes
+fi;
+
+  if test x$xml_config_exec_prefix != x ; then
+     xml_config_args="$xml_config_args"
+     if test x${XML2_CONFIG+set} != xset ; then
+        XML2_CONFIG=$xml_config_exec_prefix/bin/xml2-config
+     fi
+  fi
+  if test x$xml_config_prefix != x ; then
+     xml_config_args="$xml_config_args --prefix=$xml_config_prefix"
+     if test x${XML2_CONFIG+set} != xset ; then
+        XML2_CONFIG=$xml_config_prefix/bin/xml2-config
+     fi
+  fi
+
+  # Extract the first word of "xml2-config", so it can be a program name with args.
+set dummy xml2-config; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_path_XML2_CONFIG+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $XML2_CONFIG in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_XML2_CONFIG="$XML2_CONFIG" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_XML2_CONFIG="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_path_XML2_CONFIG" && ac_cv_path_XML2_CONFIG="no"
+  ;;
+esac
+fi
+XML2_CONFIG=$ac_cv_path_XML2_CONFIG
+
+if test -n "$XML2_CONFIG"; then
+  echo "$as_me:$LINENO: result: $XML2_CONFIG" >&5
+echo "${ECHO_T}$XML2_CONFIG" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+  min_xml_version=2.6.1
+  echo "$as_me:$LINENO: checking for libxml - version >= $min_xml_version" >&5
+echo $ECHO_N "checking for libxml - version >= $min_xml_version... $ECHO_C" >&6
+  no_xml=""
+  if test "$XML2_CONFIG" = "no" ; then
+    no_xml=yes
+  else
+    XML_CPPFLAGS=`$XML2_CONFIG $xml_config_args --cflags`
+    XML_LIBS=`$XML2_CONFIG $xml_config_args --libs`
+    xml_config_major_version=`$XML2_CONFIG $xml_config_args --version | \
+           sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\1/'`
+    xml_config_minor_version=`$XML2_CONFIG $xml_config_args --version | \
+           sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\2/'`
+    xml_config_micro_version=`$XML2_CONFIG $xml_config_args --version | \
+           sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\3/'`
+    if test "x$enable_xmltest" = "xyes" ; then
+      ac_save_CPPFLAGS="$CPPFLAGS"
+      ac_save_LIBS="$LIBS"
+      CPPFLAGS="$CPPFLAGS $XML_CPPFLAGS"
+      LIBS="$XML_LIBS $LIBS"
+      rm -f conf.xmltest
+      if test "$cross_compiling" = yes; then
+  echo $ac_n "cross compiling; assumed OK... $ac_c"
+else
+  cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <libxml/xmlversion.h>
+
+int
+main()
+{
+  int xml_major_version, xml_minor_version, xml_micro_version;
+  int major, minor, micro;
+  char *tmp_version;
+
+  system("touch conf.xmltest");
+
+  /* Capture xml2-config output via autoconf/configure variables */
+  /* HP/UX 9 (%@#!) writes to sscanf strings */
+  tmp_version = (char *)strdup("$min_xml_version");
+  if (sscanf(tmp_version, "%d.%d.%d", &major, &minor, &micro) != 3) {
+     printf("%s, bad version string from xml2-config\n", "$min_xml_version");
+     exit(1);
+   }
+   free(tmp_version);
+
+   /* Capture the version information from the header files */
+   tmp_version = (char *)strdup(LIBXML_DOTTED_VERSION);
+   if (sscanf(tmp_version, "%d.%d.%d", &xml_major_version, &xml_minor_version, &xml_micro_version) != 3) {
+     printf("%s, bad version string from libxml includes\n", "LIBXML_DOTTED_VERSION");
+     exit(1);
+   }
+   free(tmp_version);
+
+ /* Compare xml2-config output to the libxml headers */
+  if ((xml_major_version != $xml_config_major_version) ||
+      (xml_minor_version != $xml_config_minor_version) ||
+      (xml_micro_version != $xml_config_micro_version))
+    {
+      printf("*** libxml header files (version %d.%d.%d) do not match\n",
+         xml_major_version, xml_minor_version, xml_micro_version);
+      printf("*** xml2-config (version %d.%d.%d)\n",
+         $xml_config_major_version, $xml_config_minor_version, $xml_config_micro_version);
+      return 1;
+    }
+/* Compare the headers to the library to make sure we match */
+  /* Less than ideal -- doesn't provide us with return value feedback,
+   * only exits if there's a serious mismatch between header and library.
+   */
+    LIBXML_TEST_VERSION;
+
+    /* Test that the library is greater than our minimum version */
+    if ((xml_major_version > major) ||
+        ((xml_major_version == major) && (xml_minor_version > minor)) ||
+        ((xml_major_version == major) && (xml_minor_version == minor) &&
+        (xml_micro_version >= micro)))
+      {
+        return 0;
+       }
+     else
+      {
+        printf("\n*** An old version of libxml (%d.%d.%d) was found.\n",
+               xml_major_version, xml_minor_version, xml_micro_version);
+        printf("*** You need a version of libxml newer than %d.%d.%d. The latest version of\n",
+           major, minor, micro);
+        printf("*** libxml is always available from ftp://ftp.xmlsoft.org.\n");
+        printf("***\n");
+        printf("*** If you have already installed a sufficiently new version, this error\n");
+        printf("*** probably means that the wrong copy of the xml2-config shell script is\n");
+        printf("*** being found. The easiest way to fix this is to remove the old version\n");
+        printf("*** of LIBXML, but you can also set the XML2_CONFIG environment to point to the\n");
+        printf("*** correct copy of xml2-config. (In this case, you will have to\n");
+        printf("*** modify your LD_LIBRARY_PATH enviroment variable, or edit /etc/ld.so.conf\n");
+        printf("*** so that the correct libraries are found at run-time))\n");
+    }
+  return 1;
+}
+
+_ACEOF
+rm -f conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && { ac_try='./conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  :
+else
+  echo "$as_me: program exited with status $ac_status" >&5
+echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+( exit $ac_status )
+no_xml=yes
+fi
+rm -f core *.core gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+fi
+       CPPFLAGS="$ac_save_CPPFLAGS"
+       LIBS="$ac_save_LIBS"
+     fi
+  fi
+
+  if test "x$no_xml" = x ; then
+     echo "$as_me:$LINENO: result: yes (version $xml_config_major_version.$xml_config_minor_version.$xml_config_micro_version)" >&5
+echo "${ECHO_T}yes (version $xml_config_major_version.$xml_config_minor_version.$xml_config_micro_version)" >&6
+     :
+  else
+     echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+     if test "$XML2_CONFIG" = "no" ; then
+       echo "*** The xml2-config script installed by LIBXML could not be found"
+       echo "*** If libxml was installed in PREFIX, make sure PREFIX/bin is in"
+       echo "*** your path, or set the XML2_CONFIG environment variable to the"
+       echo "*** full path to xml2-config."
+     else
+       if test -f conf.xmltest ; then
+        :
+       else
+          echo "*** Could not run libxml test program, checking why..."
+          CPPFLAGS="$CPPFLAGS $XML_CPPFLAGS"
+          LIBS="$LIBS $XML_LIBS"
+          cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+#include <libxml/xmlversion.h>
+#include <stdio.h>
+
+int
+main ()
+{
+ LIBXML_TEST_VERSION; return 0;
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_c_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+   echo "*** The test program compiled, but did not run. This usually means"
+          echo "*** that the run-time linker is not finding LIBXML or finding the wrong"
+          echo "*** version of LIBXML. If it is not finding LIBXML, you'll need to set your"
+          echo "*** LD_LIBRARY_PATH environment variable, or edit /etc/ld.so.conf to point"
+          echo "*** to the installed location  Also, make sure you have run ldconfig if that"
+          echo "*** is required on your system"
+          echo "***"
+          echo "*** If you have an old version installed, it is best to remove it, although"
+          echo "*** you may also be able to get things to work by modifying LD_LIBRARY_PATH"
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+ echo "*** The test program failed to compile or link. See the file config.log for the"
+          echo "*** exact error that occured. This usually means LIBXML was incorrectly installed"
+          echo "*** or that you have moved LIBXML since it was installed. In the latter case, you"
+          echo "*** may want to edit the xml2-config script: $XML2_CONFIG"
+fi
+rm -f conftest.err conftest.$ac_objext \
+      conftest$ac_exeext conftest.$ac_ext
+          CPPFLAGS="$ac_save_CPPFLAGS"
+          LIBS="$ac_save_LIBS"
+       fi
+     fi
+
+     XML_CPPFLAGS=""
+     XML_LIBS=""
+     { { echo "$as_me:$LINENO: error: Cannot found the libxml2 library or your libxml2 is too old (libxml2 > 2.6.1 is required); download it from http://xmlsoft.org" >&5
+echo "$as_me: error: Cannot found the libxml2 library or your libxml2 is too old (libxml2 > 2.6.1 is required); download it from http://xmlsoft.org" >&2;}
+   { (exit 1); exit 1; }; }
+  fi
+
+
+  rm -f conf.xmltest
+
 
 # add all XML stuff that we've found...
 CXXFLAGS="$CXXFLAGS $XML_CPPFLAGS"
@@ -3141,8 +3463,248 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
 
 # Check for wxWidgets
-AM_OPTIONS_WXCONFIG
-AM_PATH_WXCONFIG(2.6.0, wxWin=1, wxWin=0)
+
+
+# Check whether --with-wxdir or --without-wxdir was given.
+if test "${with_wxdir+set}" = set; then
+  withval="$with_wxdir"
+   wx_config_name="$withval/wx-config"
+                  wx_config_args="--inplace"
+fi;
+
+# Check whether --with-wx-config or --without-wx-config was given.
+if test "${with_wx_config+set}" = set; then
+  withval="$with_wx_config"
+  wx_config_name="$withval"
+fi;
+
+# Check whether --with-wx-prefix or --without-wx-prefix was given.
+if test "${with_wx_prefix+set}" = set; then
+  withval="$with_wx_prefix"
+  wx_config_prefix="$withval"
+else
+  wx_config_prefix=""
+fi;
+
+# Check whether --with-wx-exec-prefix or --without-wx-exec-prefix was given.
+if test "${with_wx_exec_prefix+set}" = set; then
+  withval="$with_wx_exec_prefix"
+  wx_config_exec_prefix="$withval"
+else
+  wx_config_exec_prefix=""
+fi;
+
+
+    if test x${WX_CONFIG_NAME+set} != xset ; then
+     WX_CONFIG_NAME=wx-config
+  fi
+
+  if test "x$wx_config_name" != x ; then
+     WX_CONFIG_NAME="$wx_config_name"
+  fi
+
+    if test x$wx_config_exec_prefix != x ; then
+     wx_config_args="$wx_config_args --exec-prefix=$wx_config_exec_prefix"
+     WX_LOOKUP_PATH="$wx_config_exec_prefix/bin"
+  fi
+  if test x$wx_config_prefix != x ; then
+     wx_config_args="$wx_config_args --prefix=$wx_config_prefix"
+     WX_LOOKUP_PATH="$WX_LOOKUP_PATH:$wx_config_prefix/bin"
+  fi
+  if test "$cross_compiling" = "yes"; then
+     wx_config_args="$wx_config_args --host=$host_alias"
+  fi
+
+    if test -x "$WX_CONFIG_NAME" ; then
+     echo "$as_me:$LINENO: checking for wx-config" >&5
+echo $ECHO_N "checking for wx-config... $ECHO_C" >&6
+     WX_CONFIG_PATH="$WX_CONFIG_NAME"
+     echo "$as_me:$LINENO: result: $WX_CONFIG_PATH" >&5
+echo "${ECHO_T}$WX_CONFIG_PATH" >&6
+  else
+     # Extract the first word of "$WX_CONFIG_NAME", so it can be a program name with args.
+set dummy $WX_CONFIG_NAME; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_path_WX_CONFIG_PATH+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $WX_CONFIG_PATH in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_WX_CONFIG_PATH="$WX_CONFIG_PATH" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+as_dummy=""$WX_LOOKUP_PATH:$PATH""
+for as_dir in $as_dummy
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_WX_CONFIG_PATH="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_path_WX_CONFIG_PATH" && ac_cv_path_WX_CONFIG_PATH="no"
+  ;;
+esac
+fi
+WX_CONFIG_PATH=$ac_cv_path_WX_CONFIG_PATH
+
+if test -n "$WX_CONFIG_PATH"; then
+  echo "$as_me:$LINENO: result: $WX_CONFIG_PATH" >&5
+echo "${ECHO_T}$WX_CONFIG_PATH" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+  fi
+
+  if test "$WX_CONFIG_PATH" != "no" ; then
+    WX_VERSION=""
+
+    min_wx_version=2.6.0
+    if test -z "" ; then
+      echo "$as_me:$LINENO: checking for wxWidgets version >= $min_wx_version" >&5
+echo $ECHO_N "checking for wxWidgets version >= $min_wx_version... $ECHO_C" >&6
+    else
+      echo "$as_me:$LINENO: checking for wxWidgets version >= $min_wx_version ()" >&5
+echo $ECHO_N "checking for wxWidgets version >= $min_wx_version ()... $ECHO_C" >&6
+    fi
+
+    WX_CONFIG_WITH_ARGS="$WX_CONFIG_PATH $wx_config_args  "
+
+    WX_VERSION=`$WX_CONFIG_WITH_ARGS --version 2>/dev/null`
+    wx_config_major_version=`echo $WX_VERSION | \
+           sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\1/'`
+    wx_config_minor_version=`echo $WX_VERSION | \
+           sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\2/'`
+    wx_config_micro_version=`echo $WX_VERSION | \
+           sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\3/'`
+
+    wx_requested_major_version=`echo $min_wx_version | \
+           sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\1/'`
+    wx_requested_minor_version=`echo $min_wx_version | \
+           sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\2/'`
+    wx_requested_micro_version=`echo $min_wx_version | \
+           sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\3/'`
+
+
+    wx_ver_ok=""
+    if test "x$WX_VERSION" != x ; then
+      if test $wx_config_major_version -gt $wx_requested_major_version; then
+        wx_ver_ok=yes
+      else
+        if test $wx_config_major_version -eq $wx_requested_major_version; then
+           if test $wx_config_minor_version -gt $wx_requested_minor_version; then
+              wx_ver_ok=yes
+           else
+              if test $wx_config_minor_version -eq $wx_requested_minor_version; then
+                 if test $wx_config_micro_version -ge $wx_requested_micro_version; then
+                    wx_ver_ok=yes
+                 fi
+              fi
+           fi
+        fi
+      fi
+    fi
+
+
+    if test -n "$wx_ver_ok"; then
+
+      echo "$as_me:$LINENO: result: yes (version $WX_VERSION)" >&5
+echo "${ECHO_T}yes (version $WX_VERSION)" >&6
+      WX_LIBS=`$WX_CONFIG_WITH_ARGS --libs`
+
+                              echo "$as_me:$LINENO: checking for wxWidgets static library" >&5
+echo $ECHO_N "checking for wxWidgets static library... $ECHO_C" >&6
+      WX_LIBS_STATIC=`$WX_CONFIG_WITH_ARGS --static --libs 2>/dev/null`
+      if test "x$WX_LIBS_STATIC" = "x"; then
+        echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+      else
+        echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6
+      fi
+
+            wx_has_cppflags=""
+      if test $wx_config_major_version -gt 2; then
+        wx_has_cppflags=yes
+      else
+        if test $wx_config_major_version -eq 2; then
+           if test $wx_config_minor_version -gt 2; then
+              wx_has_cppflags=yes
+           else
+              if test $wx_config_minor_version -eq 2; then
+                 if test $wx_config_micro_version -ge 6; then
+                    wx_has_cppflags=yes
+                 fi
+              fi
+           fi
+        fi
+      fi
+
+      if test "x$wx_has_cppflags" = x ; then
+                  WX_CFLAGS=`$WX_CONFIG_WITH_ARGS --cflags`
+         WX_CPPFLAGS=$WX_CFLAGS
+         WX_CXXFLAGS=$WX_CFLAGS
+
+         WX_CFLAGS_ONLY=$WX_CFLAGS
+         WX_CXXFLAGS_ONLY=$WX_CFLAGS
+      else
+                  WX_CPPFLAGS=`$WX_CONFIG_WITH_ARGS --cppflags`
+         WX_CXXFLAGS=`$WX_CONFIG_WITH_ARGS --cxxflags`
+         WX_CFLAGS=`$WX_CONFIG_WITH_ARGS --cflags`
+
+         WX_CFLAGS_ONLY=`echo $WX_CFLAGS | sed "s@^$WX_CPPFLAGS *@@"`
+         WX_CXXFLAGS_ONLY=`echo $WX_CXXFLAGS | sed "s@^$WX_CFLAGS *@@"`
+      fi
+
+      wxWin=1
+
+    else
+
+       if test "x$WX_VERSION" = x; then
+                    echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+       else
+          echo "$as_me:$LINENO: result: no (version $WX_VERSION is not new enough)" >&5
+echo "${ECHO_T}no (version $WX_VERSION is not new enough)" >&6
+       fi
+
+       WX_CFLAGS=""
+       WX_CPPFLAGS=""
+       WX_CXXFLAGS=""
+       WX_LIBS=""
+       WX_LIBS_STATIC=""
+       wxWin=0
+
+    fi
+  else
+
+    WX_CFLAGS=""
+    WX_CPPFLAGS=""
+    WX_CXXFLAGS=""
+    WX_LIBS=""
+    WX_LIBS_STATIC=""
+    wxWin=0
+
+  fi
+
+
+
+
+
+
+
+
+
+
 if test "$wxWin" != 1; then
 	{ { echo "$as_me:$LINENO: error:
 	   wxWidgets must be installed on your system
@@ -3227,7 +3789,1948 @@ fi
 ## Final macros
 ## ------------
 
-AC_BAKEFILE(m4_include(autoconf_inc.m4))
+
+
+
+
+    if test "x$BAKEFILE_HOST" = "x"; then
+        BAKEFILE_HOST="${host}"
+    fi
+
+    if test "x$BAKEFILE_CHECK_BASICS" != "xno"; then
+
+    if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}ranlib", so it can be a program name with args.
+set dummy ${ac_tool_prefix}ranlib; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_prog_RANLIB+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$RANLIB"; then
+  ac_cv_prog_RANLIB="$RANLIB" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_RANLIB="${ac_tool_prefix}ranlib"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+fi
+fi
+RANLIB=$ac_cv_prog_RANLIB
+if test -n "$RANLIB"; then
+  echo "$as_me:$LINENO: result: $RANLIB" >&5
+echo "${ECHO_T}$RANLIB" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+fi
+if test -z "$ac_cv_prog_RANLIB"; then
+  ac_ct_RANLIB=$RANLIB
+  # Extract the first word of "ranlib", so it can be a program name with args.
+set dummy ranlib; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_prog_ac_ct_RANLIB+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$ac_ct_RANLIB"; then
+  ac_cv_prog_ac_ct_RANLIB="$ac_ct_RANLIB" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_ac_ct_RANLIB="ranlib"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_prog_ac_ct_RANLIB" && ac_cv_prog_ac_ct_RANLIB=":"
+fi
+fi
+ac_ct_RANLIB=$ac_cv_prog_ac_ct_RANLIB
+if test -n "$ac_ct_RANLIB"; then
+  echo "$as_me:$LINENO: result: $ac_ct_RANLIB" >&5
+echo "${ECHO_T}$ac_ct_RANLIB" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+  RANLIB=$ac_ct_RANLIB
+else
+  RANLIB="$ac_cv_prog_RANLIB"
+fi
+
+    # Find a good install program.  We prefer a C program (faster),
+# so one script is as good as another.  But avoid the broken or
+# incompatible versions:
+# SysV /etc/install, /usr/sbin/install
+# SunOS /usr/etc/install
+# IRIX /sbin/install
+# AIX /bin/install
+# AmigaOS /C/install, which installs bootblocks on floppy discs
+# AIX 4 /usr/bin/installbsd, which doesn't work without a -g flag
+# AFS /usr/afsws/bin/install, which mishandles nonexistent args
+# SVR4 /usr/ucb/install, which tries to use the nonexistent group "staff"
+# OS/2's system install, which has a completely different semantic
+# ./install, which can be erroneously created by make from ./install.sh.
+echo "$as_me:$LINENO: checking for a BSD-compatible install" >&5
+echo $ECHO_N "checking for a BSD-compatible install... $ECHO_C" >&6
+if test -z "$INSTALL"; then
+if test "${ac_cv_path_install+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  # Account for people who put trailing slashes in PATH elements.
+case $as_dir/ in
+  ./ | .// | /cC/* | \
+  /etc/* | /usr/sbin/* | /usr/etc/* | /sbin/* | /usr/afsws/bin/* | \
+  ?:\\/os2\\/install\\/* | ?:\\/OS2\\/INSTALL\\/* | \
+  /usr/ucb/* ) ;;
+  *)
+    # OSF1 and SCO ODT 3.0 have their own names for install.
+    # Don't use installbsd from OSF since it installs stuff as root
+    # by default.
+    for ac_prog in ginstall scoinst install; do
+      for ac_exec_ext in '' $ac_executable_extensions; do
+	if $as_executable_p "$as_dir/$ac_prog$ac_exec_ext"; then
+	  if test $ac_prog = install &&
+	    grep dspmsg "$as_dir/$ac_prog$ac_exec_ext" >/dev/null 2>&1; then
+	    # AIX install.  It has an incompatible calling convention.
+	    :
+	  elif test $ac_prog = install &&
+	    grep pwplus "$as_dir/$ac_prog$ac_exec_ext" >/dev/null 2>&1; then
+	    # program-specific install script used by HP pwplus--don't use.
+	    :
+	  else
+	    ac_cv_path_install="$as_dir/$ac_prog$ac_exec_ext -c"
+	    break 3
+	  fi
+	fi
+      done
+    done
+    ;;
+esac
+done
+
+
+fi
+  if test "${ac_cv_path_install+set}" = set; then
+    INSTALL=$ac_cv_path_install
+  else
+    # As a last resort, use the slow shell script.  We don't cache a
+    # path for INSTALL within a source directory, because that will
+    # break other packages using the cache if that directory is
+    # removed, or if the path is relative.
+    INSTALL=$ac_install_sh
+  fi
+fi
+echo "$as_me:$LINENO: result: $INSTALL" >&5
+echo "${ECHO_T}$INSTALL" >&6
+
+# Use test -z because SunOS4 sh mishandles braces in ${var-val}.
+# It thinks the first close brace ends the variable substitution.
+test -z "$INSTALL_PROGRAM" && INSTALL_PROGRAM='${INSTALL}'
+
+test -z "$INSTALL_SCRIPT" && INSTALL_SCRIPT='${INSTALL}'
+
+test -z "$INSTALL_DATA" && INSTALL_DATA='${INSTALL} -m 644'
+
+    echo "$as_me:$LINENO: checking whether ln -s works" >&5
+echo $ECHO_N "checking whether ln -s works... $ECHO_C" >&6
+LN_S=$as_ln_s
+if test "$LN_S" = "ln -s"; then
+  echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6
+else
+  echo "$as_me:$LINENO: result: no, using $LN_S" >&5
+echo "${ECHO_T}no, using $LN_S" >&6
+fi
+
+
+    echo "$as_me:$LINENO: checking whether ${MAKE-make} sets \$(MAKE)" >&5
+echo $ECHO_N "checking whether ${MAKE-make} sets \$(MAKE)... $ECHO_C" >&6
+set dummy ${MAKE-make}; ac_make=`echo "$2" | sed 'y,:./+-,___p_,'`
+if eval "test \"\${ac_cv_prog_make_${ac_make}_set+set}\" = set"; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  cat >conftest.make <<\_ACEOF
+all:
+	@echo 'ac_maketemp="$(MAKE)"'
+_ACEOF
+# GNU make sometimes prints "make[1]: Entering...", which would confuse us.
+eval `${MAKE-make} -f conftest.make 2>/dev/null | grep temp=`
+if test -n "$ac_maketemp"; then
+  eval ac_cv_prog_make_${ac_make}_set=yes
+else
+  eval ac_cv_prog_make_${ac_make}_set=no
+fi
+rm -f conftest.make
+fi
+if eval "test \"`echo '$ac_cv_prog_make_'${ac_make}_set`\" = yes"; then
+  echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6
+  SET_MAKE=
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+  SET_MAKE="MAKE=${MAKE-make}"
+fi
+
+
+
+    if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}ar", so it can be a program name with args.
+set dummy ${ac_tool_prefix}ar; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_prog_AR+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$AR"; then
+  ac_cv_prog_AR="$AR" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_AR="${ac_tool_prefix}ar"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+fi
+fi
+AR=$ac_cv_prog_AR
+if test -n "$AR"; then
+  echo "$as_me:$LINENO: result: $AR" >&5
+echo "${ECHO_T}$AR" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+fi
+if test -z "$ac_cv_prog_AR"; then
+  ac_ct_AR=$AR
+  # Extract the first word of "ar", so it can be a program name with args.
+set dummy ar; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_prog_ac_ct_AR+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$ac_ct_AR"; then
+  ac_cv_prog_ac_ct_AR="$ac_ct_AR" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_ac_ct_AR="ar"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_prog_ac_ct_AR" && ac_cv_prog_ac_ct_AR="ar"
+fi
+fi
+ac_ct_AR=$ac_cv_prog_ac_ct_AR
+if test -n "$ac_ct_AR"; then
+  echo "$as_me:$LINENO: result: $ac_ct_AR" >&5
+echo "${ECHO_T}$ac_ct_AR" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+  AR=$ac_ct_AR
+else
+  AR="$ac_cv_prog_AR"
+fi
+
+    if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}strip", so it can be a program name with args.
+set dummy ${ac_tool_prefix}strip; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_prog_STRIP+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$STRIP"; then
+  ac_cv_prog_STRIP="$STRIP" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_STRIP="${ac_tool_prefix}strip"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+fi
+fi
+STRIP=$ac_cv_prog_STRIP
+if test -n "$STRIP"; then
+  echo "$as_me:$LINENO: result: $STRIP" >&5
+echo "${ECHO_T}$STRIP" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+fi
+if test -z "$ac_cv_prog_STRIP"; then
+  ac_ct_STRIP=$STRIP
+  # Extract the first word of "strip", so it can be a program name with args.
+set dummy strip; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_prog_ac_ct_STRIP+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$ac_ct_STRIP"; then
+  ac_cv_prog_ac_ct_STRIP="$ac_ct_STRIP" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_ac_ct_STRIP="strip"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_prog_ac_ct_STRIP" && ac_cv_prog_ac_ct_STRIP=":"
+fi
+fi
+ac_ct_STRIP=$ac_cv_prog_ac_ct_STRIP
+if test -n "$ac_ct_STRIP"; then
+  echo "$as_me:$LINENO: result: $ac_ct_STRIP" >&5
+echo "${ECHO_T}$ac_ct_STRIP" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+  STRIP=$ac_ct_STRIP
+else
+  STRIP="$ac_cv_prog_STRIP"
+fi
+
+    if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}nm", so it can be a program name with args.
+set dummy ${ac_tool_prefix}nm; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_prog_NM+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$NM"; then
+  ac_cv_prog_NM="$NM" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_NM="${ac_tool_prefix}nm"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+fi
+fi
+NM=$ac_cv_prog_NM
+if test -n "$NM"; then
+  echo "$as_me:$LINENO: result: $NM" >&5
+echo "${ECHO_T}$NM" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+fi
+if test -z "$ac_cv_prog_NM"; then
+  ac_ct_NM=$NM
+  # Extract the first word of "nm", so it can be a program name with args.
+set dummy nm; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_prog_ac_ct_NM+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$ac_ct_NM"; then
+  ac_cv_prog_ac_ct_NM="$ac_ct_NM" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_ac_ct_NM="nm"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_prog_ac_ct_NM" && ac_cv_prog_ac_ct_NM=":"
+fi
+fi
+ac_ct_NM=$ac_cv_prog_ac_ct_NM
+if test -n "$ac_ct_NM"; then
+  echo "$as_me:$LINENO: result: $ac_ct_NM" >&5
+echo "${ECHO_T}$ac_ct_NM" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+  NM=$ac_ct_NM
+else
+  NM="$ac_cv_prog_NM"
+fi
+
+
+    case ${BAKEFILE_HOST} in
+        *-hp-hpux* )
+                                    INSTALL_DIR="mkdir -p"
+            ;;
+        *)  INSTALL_DIR="$INSTALL -d"
+            ;;
+    esac
+
+
+    LDFLAGS_GUI=
+    case ${BAKEFILE_HOST} in
+        *-*-cygwin* | *-*-mingw32* )
+        LDFLAGS_GUI="-mwindows"
+    esac
+
+
+    fi
+
+        echo "$as_me:$LINENO: checking if make is GNU make" >&5
+echo $ECHO_N "checking if make is GNU make... $ECHO_C" >&6
+if test "${bakefile_cv_prog_makeisgnu+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+
+        if ( ${SHELL-sh} -c "${MAKE-make} --version" 2> /dev/null |
+                egrep -s GNU > /dev/null); then
+            bakefile_cv_prog_makeisgnu="yes"
+        else
+            bakefile_cv_prog_makeisgnu="no"
+        fi
+
+fi
+echo "$as_me:$LINENO: result: $bakefile_cv_prog_makeisgnu" >&5
+echo "${ECHO_T}$bakefile_cv_prog_makeisgnu" >&6
+
+    if test "x$bakefile_cv_prog_makeisgnu" = "xyes"; then
+        IF_GNU_MAKE=""
+    else
+        IF_GNU_MAKE="#"
+    fi
+
+
+
+    PLATFORM_UNIX=0
+    PLATFORM_WIN32=0
+    PLATFORM_MSDOS=0
+    PLATFORM_MAC=0
+    PLATFORM_MACOS=0
+    PLATFORM_MACOSX=0
+    PLATFORM_OS2=0
+    PLATFORM_BEOS=0
+
+    if test "x$BAKEFILE_FORCE_PLATFORM" = "x"; then
+        case "${BAKEFILE_HOST}" in
+            *-*-mingw32* )
+                PLATFORM_WIN32=1
+            ;;
+            *-pc-msdosdjgpp )
+                PLATFORM_MSDOS=1
+            ;;
+            *-pc-os2_emx | *-pc-os2-emx )
+                PLATFORM_OS2=1
+            ;;
+            powerpc-*-darwin* )
+                PLATFORM_MAC=1
+                PLATFORM_MACOSX=1
+            ;;
+            *-*-beos* )
+                PLATFORM_BEOS=1
+            ;;
+            powerpc-apple-macos* )
+                PLATFORM_MAC=1
+                PLATFORM_MACOS=1
+            ;;
+            * )
+                PLATFORM_UNIX=1
+            ;;
+        esac
+    else
+        case "$BAKEFILE_FORCE_PLATFORM" in
+            win32 )
+                PLATFORM_WIN32=1
+            ;;
+            msdos )
+                PLATFORM_MSDOS=1
+            ;;
+            os2 )
+                PLATFORM_OS2=1
+            ;;
+            darwin )
+                PLATFORM_MAC=1
+                PLATFORM_MACOSX=1
+            ;;
+            unix )
+                PLATFORM_UNIX=1
+            ;;
+            beos )
+                PLATFORM_BEOS=1
+            ;;
+            * )
+                { { echo "$as_me:$LINENO: error: Unknown platform: $BAKEFILE_FORCE_PLATFORM" >&5
+echo "$as_me: error: Unknown platform: $BAKEFILE_FORCE_PLATFORM" >&2;}
+   { (exit 1); exit 1; }; }
+            ;;
+        esac
+    fi
+
+
+
+
+
+
+
+
+
+
+
+    # Check whether --enable-omf or --disable-omf was given.
+if test "${enable_omf+set}" = set; then
+  enableval="$enable_omf"
+  bk_os2_use_omf="$enableval"
+fi;
+
+    case "${BAKEFILE_HOST}" in
+      *-*-darwin* )
+                        CFLAGS="$CFLAGS -fno-common"
+        CXXFLAGS="$CXXFLAGS -fno-common"
+        ;;
+
+      *-pc-os2_emx | *-pc-os2-emx )
+        if test "x$bk_os2_use_omf" = "xyes" ; then
+            AR=emxomfar
+            RANLIB=:
+            LDFLAGS="-Zomf $LDFLAGS"
+            CFLAGS="-Zomf $CFLAGS"
+            CXXFLAGS="-Zomf $CXXFLAGS"
+            OS2_LIBEXT="lib"
+        else
+            OS2_LIBEXT="a"
+        fi
+        ;;
+
+      i*86-*-beos* )
+        LDFLAGS="-L/boot/develop/lib/x86 $LDFLAGS"
+        ;;
+    esac
+
+
+    SO_SUFFIX="so"
+    SO_SUFFIX_MODULE="so"
+    EXEEXT=""
+    LIBPREFIX="lib"
+    LIBEXT=".a"
+    DLLPREFIX="lib"
+    DLLPREFIX_MODULE=""
+    DLLIMP_SUFFIX=""
+    dlldir="$libdir"
+
+    case "${BAKEFILE_HOST}" in
+        *-hp-hpux* )
+            SO_SUFFIX="sl"
+            SO_SUFFIX_MODULE="sl"
+        ;;
+        *-*-aix* )
+                                                                        SO_SUFFIX="a"
+            SO_SUFFIX_MODULE="a"
+        ;;
+        *-*-cygwin* )
+            SO_SUFFIX="dll"
+            SO_SUFFIX_MODULE="dll"
+            DLLIMP_SUFFIX="dll.a"
+            EXEEXT=".exe"
+            DLLPREFIX="cyg"
+            dlldir="$bindir"
+        ;;
+        *-*-mingw32* )
+            SO_SUFFIX="dll"
+            SO_SUFFIX_MODULE="dll"
+            DLLIMP_SUFFIX="dll.a"
+            EXEEXT=".exe"
+            DLLPREFIX=""
+            dlldir="$bindir"
+        ;;
+        *-pc-msdosdjgpp )
+            EXEEXT=".exe"
+            DLLPREFIX=""
+            dlldir="$bindir"
+        ;;
+        *-pc-os2_emx | *-pc-os2-emx )
+            SO_SUFFIX="dll"
+            SO_SUFFIX_MODULE="dll"
+            DLLIMP_SUFFIX=$OS2_LIBEXT
+            EXEEXT=".exe"
+            DLLPREFIX=""
+            LIBPREFIX=""
+            LIBEXT=".$OS2_LIBEXT"
+            dlldir="$bindir"
+        ;;
+        powerpc-*-darwin* )
+            SO_SUFFIX="dylib"
+            SO_SUFFIX_MODULE="bundle"
+        ;;
+    esac
+
+    if test "x$DLLIMP_SUFFIX" = "x" ; then
+        DLLIMP_SUFFIX="$SO_SUFFIX"
+    fi
+
+
+
+
+
+
+
+
+
+
+
+
+        PIC_FLAG=""
+    if test "x$GCC" = "xyes"; then
+                PIC_FLAG="-fPIC"
+    fi
+
+        SHARED_LD_CC="\$(CC) -shared ${PIC_FLAG} -o"
+    SHARED_LD_CXX="\$(CXX) -shared ${PIC_FLAG} -o"
+    WINDOWS_IMPLIB=0
+
+    case "${BAKEFILE_HOST}" in
+      *-hp-hpux* )
+                if test "x$GCC" != "xyes"; then
+                        LDFLAGS="$LDFLAGS -L/usr/lib"
+
+            SHARED_LD_CC="${CC} -b -o"
+            SHARED_LD_CXX="${CXX} -b -o"
+            PIC_FLAG="+Z"
+        fi
+      ;;
+
+      *-*-linux* )
+        if test "x$GCC" != "xyes"; then
+            echo "$as_me:$LINENO: checking for Intel compiler" >&5
+echo $ECHO_N "checking for Intel compiler... $ECHO_C" >&6
+if test "${bakefile_cv_prog_icc+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+
+                cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+                        #ifndef __INTEL_COMPILER
+                        #error Not icc
+                        #endif
+
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext
+if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+  (eval $ac_compile) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_cxx_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest.$ac_objext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  bakefile_cv_prog_icc=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+bakefile_cv_prog_icc=no
+
+fi
+rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+
+fi
+echo "$as_me:$LINENO: result: $bakefile_cv_prog_icc" >&5
+echo "${ECHO_T}$bakefile_cv_prog_icc" >&6
+            if test "$bakefile_cv_prog_icc" = "yes"; then
+                PIC_FLAG="-KPIC"
+            fi
+        fi
+      ;;
+
+      *-*-solaris2* )
+        if test "x$GCC" != xyes ; then
+            SHARED_LD_CC="${CC} -G -o"
+            SHARED_LD_CXX="${CXX} -G -o"
+            PIC_FLAG="-KPIC"
+        fi
+      ;;
+
+      *-*-darwin* )
+
+                                echo "$as_me:$LINENO: checking for gcc 3.1 or later" >&5
+echo $ECHO_N "checking for gcc 3.1 or later... $ECHO_C" >&6
+if test "${wx_cv_gcc31+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+
+           cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+                   #if (__GNUC__ < 3) || \
+                       ((__GNUC__ == 3) && (__GNUC_MINOR__ < 1))
+                       #error old gcc
+                   #endif
+
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext
+if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+  (eval $ac_compile) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_cxx_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest.$ac_objext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+
+                   wx_cv_gcc31=yes
+
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+
+                   wx_cv_gcc31=no
+
+
+fi
+rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+
+fi
+echo "$as_me:$LINENO: result: $wx_cv_gcc31" >&5
+echo "${ECHO_T}$wx_cv_gcc31" >&6
+        if test "$wx_cv_gcc31" = "no"; then
+
+D='$'
+cat <<EOF >shared-ld-sh
+#!/bin/sh
+#-----------------------------------------------------------------------------
+#-- Name:        distrib/mac/shared-ld-sh
+#-- Purpose:     Link a mach-o dynamic shared library for Darwin / Mac OS X
+#-- Author:      Gilles Depeyrot
+#-- Copyright:   (c) 2002 Gilles Depeyrot
+#-- Licence:     any use permitted
+#-----------------------------------------------------------------------------
+
+verbose=0
+args=""
+objects=""
+linking_flag="-dynamiclib"
+ldargs="-r -keep_private_externs -nostdlib"
+
+while test ${D}# -gt 0; do
+    case ${D}1 in
+
+       -v)
+        verbose=1
+        ;;
+
+       -o|-compatibility_version|-current_version|-framework|-undefined|-install_name)
+        # collect these options and values
+        args="${D}{args} ${D}1 ${D}2"
+        shift
+        ;;
+
+       -s|-Wl,*)
+        # collect these load args
+        ldargs="${D}{ldargs} ${D}1"
+
+       -l*|-L*|-flat_namespace|-headerpad_max_install_names)
+        # collect these options
+        args="${D}{args} ${D}1"
+        ;;
+
+       -dynamiclib|-bundle)
+        linking_flag="${D}1"
+        ;;
+
+       -*)
+        echo "shared-ld: unhandled option '${D}1'"
+        exit 1
+        ;;
+
+        *.o | *.a | *.dylib)
+        # collect object files
+        objects="${D}{objects} ${D}1"
+        ;;
+
+        *)
+        echo "shared-ld: unhandled argument '${D}1'"
+        exit 1
+        ;;
+
+    esac
+    shift
+done
+
+status=0
+
+#
+# Link one module containing all the others
+#
+if test ${D}{verbose} = 1; then
+    echo "c++ ${D}{ldargs} ${D}{objects} -o master.${D}${D}.o"
+fi
+c++ ${D}{ldargs} ${D}{objects} -o master.${D}${D}.o
+status=${D}?
+
+#
+# Link the shared library from the single module created, but only if the
+# previous command didn't fail:
+#
+if test ${D}{status} = 0; then
+    if test ${D}{verbose} = 1; then
+        echo "c++ ${D}{linking_flag} master.${D}${D}.o ${D}{args}"
+    fi
+    c++ ${D}{linking_flag} master.${D}${D}.o ${D}{args}
+    status=${D}?
+fi
+
+#
+# Remove intermediate module
+#
+rm -f master.${D}${D}.o
+
+exit ${D}status
+EOF
+
+            chmod +x shared-ld-sh
+
+                        SHARED_LD_CC="`pwd`/shared-ld-sh -dynamiclib -headerpad_max_install_names -o"
+            SHARED_LD_MODULE_CC="`pwd`/shared-ld-sh -bundle -headerpad_max_install_names -o"
+            SHARED_LD_CXX="$SHARED_LD_CC"
+            SHARED_LD_MODULE_CXX="$SHARED_LD_MODULE_CC"
+        else
+                        SHARED_LD_CC="\${CC} -dynamiclib -single_module -headerpad_max_install_names -o"
+            SHARED_LD_MODULE_CC="\${CC} -bundle -single_module -headerpad_max_install_names -o"
+            SHARED_LD_CXX="\${CXX} -dynamiclib -single_module -headerpad_max_install_names -o"
+            SHARED_LD_MODULE_CXX="\${CXX} -bundle -single_module -headerpad_max_install_names -o"
+        fi
+
+        PIC_FLAG="-dynamic -fPIC"
+      ;;
+
+      *-*-aix* )
+                if test "x$GCC" != "xyes"; then
+                                    # Extract the first word of "makeC++SharedLib", so it can be a program name with args.
+set dummy makeC++SharedLib; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_prog_AIX_CXX_LD+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$AIX_CXX_LD"; then
+  ac_cv_prog_AIX_CXX_LD="$AIX_CXX_LD" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_AIX_CXX_LD="makeC++SharedLib"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_prog_AIX_CXX_LD" && ac_cv_prog_AIX_CXX_LD="/usr/lpp/xlC/bin/makeC++SharedLib"
+fi
+fi
+AIX_CXX_LD=$ac_cv_prog_AIX_CXX_LD
+if test -n "$AIX_CXX_LD"; then
+  echo "$as_me:$LINENO: result: $AIX_CXX_LD" >&5
+echo "${ECHO_T}$AIX_CXX_LD" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+                        SHARED_LD_CC="$AIX_CC_LD -p 0 -o"
+            SHARED_LD_CXX="$AIX_CXX_LD -p 0 -o"
+        fi
+      ;;
+
+      *-*-beos* )
+                        SHARED_LD_CC="${LD} -nostart -o"
+        SHARED_LD_CXX="${LD} -nostart -o"
+      ;;
+
+      *-*-irix* )
+                if test "x$GCC" != "xyes"; then
+            PIC_FLAG="-KPIC"
+        fi
+      ;;
+
+      *-*-cygwin* | *-*-mingw32* )
+        PIC_FLAG=""
+        SHARED_LD_CC="\$(CC) -shared -o"
+        SHARED_LD_CXX="\$(CXX) -shared -o"
+        WINDOWS_IMPLIB=1
+      ;;
+
+      *-pc-os2_emx | *-pc-os2-emx )
+        SHARED_LD_CC="`pwd`/dllar.sh -libf INITINSTANCE -libf TERMINSTANCE -o"
+        SHARED_LD_CXX="`pwd`/dllar.sh -libf INITINSTANCE -libf TERMINSTANCE -o"
+        PIC_FLAG=""
+
+D='$'
+cat <<EOF >dllar.sh
+#!/bin/sh
+#
+# dllar - a tool to build both a .dll and an .a file
+# from a set of object (.o) files for EMX/OS2.
+#
+#  Written by Andrew Zabolotny, bit@freya.etu.ru
+#  Ported to Unix like shell by Stefan Neis, Stefan.Neis@t-online.de
+#
+#  This script will accept a set of files on the command line.
+#  All the public symbols from the .o files will be exported into
+#  a .DEF file, then linker will be run (through gcc) against them to
+#  build a shared library consisting of all given .o files. All libraries
+#  (.a) will be first decompressed into component .o files then act as
+#  described above. You can optionally give a description (-d "description")
+#  which will be put into .DLL. To see the list of accepted options (as well
+#  as command-line format) simply run this program without options. The .DLL
+#  is built to be imported by name (there is no guarantee that new versions
+#  of the library you build will have same ordinals for same symbols).
+#
+#  dllar is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2, or (at your option)
+#  any later version.
+#
+#  dllar is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with dllar; see the file COPYING.  If not, write to the Free
+#  Software Foundation, 59 Temple Place - Suite 330, Boston, MA
+#  02111-1307, USA.
+
+# To successfuly run this program you will need:
+#  - Current drive should have LFN support (HPFS, ext2, network, etc)
+#    (Sometimes dllar generates filenames which won't fit 8.3 scheme)
+#  - gcc
+#    (used to build the .dll)
+#  - emxexp
+#    (used to create .def file from .o files)
+#  - emximp
+#    (used to create .a file from .def file)
+#  - GNU text utilites (cat, sort, uniq)
+#    used to process emxexp output
+#  - GNU file utilities (mv, rm)
+#  - GNU sed
+#  - lxlite (optional, see flag below)
+#    (used for general .dll cleanup)
+#
+
+flag_USE_LXLITE=1;
+
+#
+# helper functions
+# basnam, variant of basename, which does _not_ remove the path, _iff_
+#                              second argument (suffix to remove) is given
+basnam(){
+    case ${D}# in
+    1)
+        echo ${D}1 | sed 's/.*\\///' | sed 's/.*\\\\//'
+        ;;
+    2)
+        echo ${D}1 | sed 's/'${D}2'${D}//'
+        ;;
+    *)
+        echo "error in basnam ${D}*"
+        exit 8
+        ;;
+    esac
+}
+
+# Cleanup temporary files and output
+CleanUp() {
+    cd ${D}curDir
+    for i in ${D}inputFiles ; do
+        case ${D}i in
+        *!)
+            rm -rf \`basnam ${D}i !\`
+            ;;
+        *)
+            ;;
+        esac
+    done
+
+    # Kill result in case of failure as there is just to many stupid make/nmake
+    # things out there which doesn't do this.
+    if [ ${D}# -eq 0 ]; then
+        rm -f ${D}arcFile ${D}arcFile2 ${D}defFile ${D}dllFile
+    fi
+}
+
+# Print usage and exit script with rc=1.
+PrintHelp() {
+ echo 'Usage: dllar.sh [-o[utput] output_file] [-i[mport] importlib_name]'
+ echo '       [-name-mangler-script script.sh]'
+ echo '       [-d[escription] "dll descrption"] [-cc "CC"] [-f[lags] "CFLAGS"]'
+ echo '       [-ord[inals]] -ex[clude] "symbol(s)"'
+ echo '       [-libf[lags] "{INIT|TERM}{GLOBAL|INSTANCE}"] [-nocrt[dll]] [-nolxl[ite]]'
+ echo '       [*.o] [*.a]'
+ echo '*> "output_file" should have no extension.'
+ echo '   If it has the .o, .a or .dll extension, it is automatically removed.'
+ echo '   The import library name is derived from this and is set to "name".a,'
+ echo '   unless overridden by -import'
+ echo '*> "importlib_name" should have no extension.'
+ echo '   If it has the .o, or .a extension, it is automatically removed.'
+ echo '   This name is used as the import library name and may be longer and'
+ echo '   more descriptive than the DLL name which has to follow the old '
+ echo '   8.3 convention of FAT.'
+ echo '*> "script.sh may be given to override the output_file name by a'
+ echo '   different name. It is mainly useful if the regular make process'
+ echo '   of some package does not take into account OS/2 restriction of'
+ echo '   DLL name lengths. It takes the importlib name as input and is'
+ echo '   supposed to procude a shorter name as output. The script should'
+ echo '   expect to get importlib_name without extension and should produce'
+ echo '   a (max.) 8 letter name without extension.'
+ echo '*> "cc" is used to use another GCC executable.   (default: gcc.exe)'
+ echo '*> "flags" should be any set of valid GCC flags. (default: -s -Zcrtdll)'
+ echo '   These flags will be put at the start of GCC command line.'
+ echo '*> -ord[inals] tells dllar to export entries by ordinals. Be careful.'
+ echo '*> -ex[clude] defines symbols which will not be exported. You can define'
+ echo '   multiple symbols, for example -ex "myfunc yourfunc _GLOBAL*".'
+ echo '   If the last character of a symbol is "*", all symbols beginning'
+ echo '   with the prefix before "*" will be exclude, (see _GLOBAL* above).'
+ echo '*> -libf[lags] can be used to add INITGLOBAL/INITINSTANCE and/or'
+ echo '   TERMGLOBAL/TERMINSTANCE flags to the dynamically-linked library.'
+ echo '*> -nocrt[dll] switch will disable linking the library against emx''s'
+ echo '   C runtime DLLs.'
+ echo '*> -nolxl[ite] switch will disable running lxlite on the resulting DLL.'
+ echo '*> All other switches (for example -L./ or -lmylib) will be passed'
+ echo '   unchanged to GCC at the end of command line.'
+ echo '*> If you create a DLL from a library and you do not specify -o,'
+ echo '   the basename for DLL and import library will be set to library name,'
+ echo '   the initial library will be renamed to 'name'_s.a (_s for static)'
+ echo '   i.e. "dllar gcc.a" will create gcc.dll and gcc.a, and the initial'
+ echo '   library will be renamed into gcc_s.a.'
+ echo '--------'
+ echo 'Example:'
+ echo '   dllar -o gcc290.dll libgcc.a -d "GNU C runtime library" -ord'
+ echo '    -ex "__main __ctordtor*" -libf "INITINSTANCE TERMINSTANCE"'
+ CleanUp
+ exit 1
+}
+
+# Execute a command.
+# If exit code of the commnad <> 0 CleanUp() is called and we'll exit the script.
+# @Uses    Whatever CleanUp() uses.
+doCommand() {
+    echo "${D}*"
+    eval ${D}*
+    rcCmd=${D}?
+
+    if [ ${D}rcCmd -ne 0 ]; then
+        echo "command failed, exit code="${D}rcCmd
+        CleanUp
+        exit ${D}rcCmd
+    fi
+}
+
+# main routine
+# setup globals
+cmdLine=${D}*
+outFile=""
+outimpFile=""
+inputFiles=""
+renameScript=""
+description=""
+CC=gcc.exe
+CFLAGS="-s -Zcrtdll"
+EXTRA_CFLAGS=""
+EXPORT_BY_ORDINALS=0
+exclude_symbols=""
+library_flags=""
+curDir=\`pwd\`
+curDirS=curDir
+case ${D}curDirS in
+*/)
+  ;;
+*)
+  curDirS=${D}{curDirS}"/"
+  ;;
+esac
+# Parse commandline
+libsToLink=0
+omfLinking=0
+while [ ${D}1 ]; do
+    case ${D}1 in
+    -ord*)
+        EXPORT_BY_ORDINALS=1;
+        ;;
+    -o*)
+	shift
+        outFile=${D}1
+	;;
+    -i*)
+        shift
+        outimpFile=${D}1
+        ;;
+    -name-mangler-script)
+        shift
+        renameScript=${D}1
+        ;;
+    -d*)
+        shift
+        description=${D}1
+        ;;
+    -f*)
+        shift
+        CFLAGS=${D}1
+        ;;
+    -c*)
+        shift
+        CC=${D}1
+        ;;
+    -h*)
+        PrintHelp
+        ;;
+    -ex*)
+        shift
+        exclude_symbols=${D}{exclude_symbols}${D}1" "
+        ;;
+    -libf*)
+        shift
+        library_flags=${D}{library_flags}${D}1" "
+        ;;
+    -nocrt*)
+        CFLAGS="-s"
+        ;;
+    -nolxl*)
+        flag_USE_LXLITE=0
+        ;;
+    -* | /*)
+        case ${D}1 in
+        -L* | -l*)
+            libsToLink=1
+            ;;
+        -Zomf)
+            omfLinking=1
+            ;;
+        *)
+            ;;
+        esac
+        EXTRA_CFLAGS=${D}{EXTRA_CFLAGS}" "${D}1
+        ;;
+    *.dll)
+        EXTRA_CFLAGS="${D}{EXTRA_CFLAGS} \`basnam ${D}1 .dll\`"
+        if [ ${D}omfLinking -eq 1 ]; then
+            EXTRA_CFLAGS="${D}{EXTRA_CFLAGS}.lib"
+	else
+            EXTRA_CFLAGS="${D}{EXTRA_CFLAGS}.a"
+        fi
+        ;;
+    *)
+        found=0;
+        if [ ${D}libsToLink -ne 0 ]; then
+            EXTRA_CFLAGS=${D}{EXTRA_CFLAGS}" "${D}1
+        else
+            for file in ${D}1 ; do
+                if [ -f ${D}file ]; then
+                    inputFiles="${D}{inputFiles} ${D}file"
+                    found=1
+                fi
+            done
+            if [ ${D}found -eq 0 ]; then
+                echo "ERROR: No file(s) found: "${D}1
+                exit 8
+            fi
+        fi
+      ;;
+    esac
+    shift
+done # iterate cmdline words
+
+#
+if [ -z "${D}inputFiles" ]; then
+    echo "dllar: no input files"
+    PrintHelp
+fi
+
+# Now extract all .o files from .a files
+newInputFiles=""
+for file in ${D}inputFiles ; do
+    case ${D}file in
+    *.a | *.lib)
+        case ${D}file in
+        *.a)
+            suffix=".a"
+            AR="ar"
+            ;;
+        *.lib)
+            suffix=".lib"
+            AR="emxomfar"
+            EXTRA_CFLAGS="${D}EXTRA_CFLAGS -Zomf"
+            ;;
+        *)
+            ;;
+        esac
+        dirname=\`basnam ${D}file ${D}suffix\`"_%"
+        mkdir ${D}dirname
+        if [ ${D}? -ne 0 ]; then
+            echo "Failed to create subdirectory ./${D}dirname"
+            CleanUp
+            exit 8;
+        fi
+        # Append '!' to indicate archive
+        newInputFiles="${D}newInputFiles ${D}{dirname}!"
+        doCommand "cd ${D}dirname; ${D}AR x ../${D}file"
+        cd ${D}curDir
+        found=0;
+        for subfile in ${D}dirname/*.o* ; do
+            if [ -f ${D}subfile ]; then
+                found=1
+                if [ -s ${D}subfile ]; then
+	            # FIXME: This should be: is file size > 32 byte, _not_ > 0!
+                    newInputFiles="${D}newInputFiles ${D}subfile"
+                fi
+            fi
+        done
+        if [ ${D}found -eq 0 ]; then
+            echo "WARNING: there are no files in archive \\'${D}file\\'"
+        fi
+        ;;
+    *)
+        newInputFiles="${D}{newInputFiles} ${D}file"
+        ;;
+    esac
+done
+inputFiles="${D}newInputFiles"
+
+# Output filename(s).
+do_backup=0;
+if [ -z ${D}outFile ]; then
+    do_backup=1;
+    set outFile ${D}inputFiles; outFile=${D}2
+fi
+
+# If it is an archive, remove the '!' and the '_%' suffixes
+case ${D}outFile in
+*_%!)
+    outFile=\`basnam ${D}outFile _%!\`
+    ;;
+*)
+    ;;
+esac
+case ${D}outFile in
+*.dll)
+    outFile=\`basnam ${D}outFile .dll\`
+    ;;
+*.DLL)
+    outFile=\`basnam ${D}outFile .DLL\`
+    ;;
+*.o)
+    outFile=\`basnam ${D}outFile .o\`
+    ;;
+*.obj)
+    outFile=\`basnam ${D}outFile .obj\`
+    ;;
+*.a)
+    outFile=\`basnam ${D}outFile .a\`
+    ;;
+*.lib)
+    outFile=\`basnam ${D}outFile .lib\`
+    ;;
+*)
+    ;;
+esac
+case ${D}outimpFile in
+*.a)
+    outimpFile=\`basnam ${D}outimpFile .a\`
+    ;;
+*.lib)
+    outimpFile=\`basnam ${D}outimpFile .lib\`
+    ;;
+*)
+    ;;
+esac
+if [ -z ${D}outimpFile ]; then
+    outimpFile=${D}outFile
+fi
+defFile="${D}{outFile}.def"
+arcFile="${D}{outimpFile}.a"
+arcFile2="${D}{outimpFile}.lib"
+
+#create ${D}dllFile as something matching 8.3 restrictions,
+if [ -z ${D}renameScript ] ; then
+    dllFile="${D}outFile"
+else
+    dllFile=\`${D}renameScript ${D}outimpFile\`
+fi
+
+if [ ${D}do_backup -ne 0 ] ; then
+    if [ -f ${D}arcFile ] ; then
+        doCommand "mv ${D}arcFile ${D}{outFile}_s.a"
+    fi
+    if [ -f ${D}arcFile2 ] ; then
+        doCommand "mv ${D}arcFile2 ${D}{outFile}_s.lib"
+    fi
+fi
+
+# Extract public symbols from all the object files.
+tmpdefFile=${D}{defFile}_%
+rm -f ${D}tmpdefFile
+for file in ${D}inputFiles ; do
+    case ${D}file in
+    *!)
+        ;;
+    *)
+        doCommand "emxexp -u ${D}file >> ${D}tmpdefFile"
+        ;;
+    esac
+done
+
+# Create the def file.
+rm -f ${D}defFile
+echo "LIBRARY \`basnam ${D}dllFile\` ${D}library_flags" >> ${D}defFile
+dllFile="${D}{dllFile}.dll"
+if [ ! -z ${D}description ]; then
+    echo "DESCRIPTION  \\"${D}{description}\\"" >> ${D}defFile
+fi
+echo "EXPORTS" >> ${D}defFile
+
+doCommand "cat ${D}tmpdefFile | sort.exe | uniq.exe > ${D}{tmpdefFile}%"
+grep -v "^ *;" < ${D}{tmpdefFile}% | grep -v "^ *${D}" >${D}tmpdefFile
+
+# Checks if the export is ok or not.
+for word in ${D}exclude_symbols; do
+    grep -v ${D}word < ${D}tmpdefFile >${D}{tmpdefFile}%
+    mv ${D}{tmpdefFile}% ${D}tmpdefFile
+done
+
+
+if [ ${D}EXPORT_BY_ORDINALS -ne 0 ]; then
+    sed "=" < ${D}tmpdefFile | \\
+    sed '
+      N
+      : loop
+      s/^\\([0-9]\\+\\)\\([^;]*\\)\\(;.*\\)\\?/\\2 @\\1 NONAME/
+      t loop
+    ' > ${D}{tmpdefFile}%
+    grep -v "^ *${D}" < ${D}{tmpdefFile}% > ${D}tmpdefFile
+else
+    rm -f ${D}{tmpdefFile}%
+fi
+cat ${D}tmpdefFile >> ${D}defFile
+rm -f ${D}tmpdefFile
+
+# Do linking, create implib, and apply lxlite.
+gccCmdl="";
+for file in ${D}inputFiles ; do
+    case ${D}file in
+    *!)
+        ;;
+    *)
+        gccCmdl="${D}gccCmdl ${D}file"
+        ;;
+    esac
+done
+doCommand "${D}CC ${D}CFLAGS -Zdll -o ${D}dllFile ${D}defFile ${D}gccCmdl ${D}EXTRA_CFLAGS"
+touch "${D}{outFile}.dll"
+
+doCommand "emximp -o ${D}arcFile ${D}defFile"
+if [ ${D}flag_USE_LXLITE -ne 0 ]; then
+    add_flags="";
+    if [ ${D}EXPORT_BY_ORDINALS -ne 0 ]; then
+        add_flags="-ynd"
+    fi
+    doCommand "lxlite -cs -t: -mrn -mln ${D}add_flags ${D}dllFile"
+fi
+doCommand "emxomf -s -l ${D}arcFile"
+
+# Successful exit.
+CleanUp 1
+exit 0
+EOF
+
+        chmod +x dllar.sh
+      ;;
+
+      powerpc-apple-macos* | \
+      *-*-freebsd* | *-*-openbsd* | *-*-netbsd* | \
+      *-*-sunos4* | \
+      *-*-osf* | \
+      *-*-dgux5* | \
+      *-*-sysv5* | \
+      *-pc-msdosdjgpp )
+              ;;
+
+      *)
+        { { echo "$as_me:$LINENO: error: unknown system type $BAKEFILE_HOST." >&5
+echo "$as_me: error: unknown system type $BAKEFILE_HOST." >&2;}
+   { (exit 1); exit 1; }; }
+    esac
+
+    if test "x$PIC_FLAG" != "x" ; then
+        PIC_FLAG="$PIC_FLAG -DPIC"
+    fi
+
+    if test "x$SHARED_LD_MODULE_CC" = "x" ; then
+        SHARED_LD_MODULE_CC="$SHARED_LD_CC"
+    fi
+    if test "x$SHARED_LD_MODULE_CXX" = "x" ; then
+        SHARED_LD_MODULE_CXX="$SHARED_LD_CXX"
+    fi
+
+
+
+
+
+
+
+
+
+    USE_SOVERSION=0
+    USE_SOVERLINUX=0
+    USE_SOVERSOLARIS=0
+    USE_SOVERCYGWIN=0
+    USE_SOSYMLINKS=0
+    USE_MACVERSION=0
+    SONAME_FLAG=
+
+    case "${BAKEFILE_HOST}" in
+      *-*-linux* | *-*-freebsd* )
+        SONAME_FLAG="-Wl,-soname,"
+        USE_SOVERSION=1
+        USE_SOVERLINUX=1
+        USE_SOSYMLINKS=1
+      ;;
+
+      *-*-solaris2* )
+        SONAME_FLAG="-h "
+        USE_SOVERSION=1
+        USE_SOVERSOLARIS=1
+        USE_SOSYMLINKS=1
+      ;;
+
+      *-*-darwin* )
+        USE_MACVERSION=1
+        USE_SOVERSION=1
+        USE_SOSYMLINKS=1
+      ;;
+
+      *-*-cygwin* )
+        USE_SOVERSION=1
+        USE_SOVERCYGWIN=1
+      ;;
+    esac
+
+
+
+
+
+
+
+
+
+
+    echo "$as_me:$LINENO: checking for dependency tracking method" >&5
+echo $ECHO_N "checking for dependency tracking method... $ECHO_C" >&6
+    DEPS_TRACKING=0
+
+    if test "x$GCC" = "xyes"; then
+        DEPSMODE=gcc
+        DEPS_TRACKING=1
+        case "${BAKEFILE_HOST}" in
+            powerpc-*-darwin* )
+                                                DEPSFLAG_GCC="-no-cpp-precomp -MMD"
+            ;;
+            * )
+                DEPSFLAG_GCC="-MMD"
+            ;;
+        esac
+        echo "$as_me:$LINENO: result: gcc" >&5
+echo "${ECHO_T}gcc" >&6
+    elif test "x$MWCC" = "xyes"; then
+        DEPSMODE=mwcc
+        DEPS_TRACKING=1
+        DEPSFLAG_MWCC="-MM"
+        echo "$as_me:$LINENO: result: mwcc" >&5
+echo "${ECHO_T}mwcc" >&6
+    elif test "x$SUNCC" = "xyes"; then
+        DEPSMODE=suncc
+        DEPS_TRACKING=1
+        DEPSFLAG_SUNCC="-xM1"
+        echo "$as_me:$LINENO: result: suncc" >&5
+echo "${ECHO_T}suncc" >&6
+    else
+        echo "$as_me:$LINENO: result: none" >&5
+echo "${ECHO_T}none" >&6
+    fi
+
+    if test $DEPS_TRACKING = 1 ; then
+
+D='$'
+cat <<EOF >bk-deps
+#!/bin/sh
+
+# This script is part of Bakefile (http://bakefile.sourceforge.net) autoconf
+# script. It is used to track C/C++ files dependencies in portable way.
+#
+# Permission is given to use this file in any way.
+
+DEPSMODE=${DEPSMODE}
+DEPSDIR=.deps
+DEPSFLAG_GCC="${DEPSFLAG_GCC}"
+DEPSFLAG_MWCC="${DEPSFLAG_MWCC}"
+DEPSFLAG_SUNCC="${DEPSFLAG_SUNCC}"
+
+mkdir -p ${D}DEPSDIR
+
+if test ${D}DEPSMODE = gcc ; then
+    ${D}* ${D}{DEPSFLAG_GCC}
+    status=${D}?
+    if test ${D}{status} != 0 ; then
+        exit ${D}{status}
+    fi
+    # move created file to the location we want it in:
+    while test ${D}# -gt 0; do
+        case "${D}1" in
+            -o )
+                shift
+                objfile=${D}1
+            ;;
+            -* )
+            ;;
+            * )
+                srcfile=${D}1
+            ;;
+        esac
+        shift
+    done
+    depfile=\`basename ${D}srcfile | sed -e 's/\\..*${D}/.d/g'\`
+    depobjname=\`echo ${D}depfile |sed -e 's/\\.d/.o/g'\`
+    if test -f ${D}depfile ; then
+        sed -e "s,${D}depobjname:,${D}objfile:,g" ${D}depfile >${D}{DEPSDIR}/${D}{objfile}.d
+        rm -f ${D}depfile
+    else
+        depfile=\`basename ${D}objfile | sed -e 's/\\..*${D}/.d/g'\`
+        if test -f ${D}depfile ; then
+            sed -e "/^${D}objfile/!s,${D}depobjname:,${D}objfile:,g" ${D}depfile >${D}{DEPSDIR}/${D}{objfile}.d
+            rm -f ${D}depfile
+        fi
+    fi
+    exit 0
+elif test ${D}DEPSMODE = mwcc ; then
+    ${D}*
+    status=${D}?
+    if test ${D}{status} != 0 ; then
+        exit ${D}{status}
+    fi
+    # Run mwcc again with -MM and redirect into the dep file we want
+    # NOTE: We can't use shift here because we need ${D}* to be valid
+    prevarg=
+    for arg in ${D}* ; do
+        if test "${D}prevarg" = "-o"; then
+            objfile=${D}arg
+        else
+            case "${D}arg" in
+                -* )
+                ;;
+                * )
+                    srcfile=${D}arg
+                ;;
+            esac
+        fi
+        prevarg="${D}arg"
+    done
+    ${D}* ${D}DEPSFLAG_MWCC >${D}{DEPSDIR}/${D}{objfile}.d
+    exit 0
+elif test ${D}DEPSMODE = suncc; then
+    ${D}* || exit
+    # Run compiler again with deps flag and redirect into the dep file.
+    # It doesn't work if the '-o FILE' option is used, but without it the
+    # dependency file will contain the wrong name for the object. So it is
+    # removed from the command line, and the dep file is fixed with sed.
+    cmd=""
+    while test ${D}# -gt 0; do
+        case "${D}1" in
+            -o )
+                shift
+                objfile=${D}1
+            ;;
+            * )
+                eval arg${D}#=\\${D}1
+                cmd="${D}cmd \\${D}arg${D}#"
+            ;;
+        esac
+        shift
+    done
+    eval "${D}cmd ${D}DEPSFLAG_SUNCC" | sed "s|.*:|${D}objfile:|" >${D}{DEPSDIR}/${D}{objfile}.d
+    exit 0
+else
+    ${D}*
+    exit ${D}?
+fi
+EOF
+
+        chmod +x bk-deps
+    fi
+
+
+
+
+    RESCOMP=
+    SETFILE=
+
+    case ${BAKEFILE_HOST} in
+        *-*-cygwin* | *-*-mingw32* )
+                        if test "$build" != "$host" ; then
+                RESCOMP=$host_alias-windres
+            else
+                # Extract the first word of "windres", so it can be a program name with args.
+set dummy windres; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_prog_RESCOMP+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$RESCOMP"; then
+  ac_cv_prog_RESCOMP="$RESCOMP" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_RESCOMP="windres"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_prog_RESCOMP" && ac_cv_prog_RESCOMP="windres"
+fi
+fi
+RESCOMP=$ac_cv_prog_RESCOMP
+if test -n "$RESCOMP"; then
+  echo "$as_me:$LINENO: result: $RESCOMP" >&5
+echo "${ECHO_T}$RESCOMP" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+            fi
+         ;;
+
+      *-*-darwin* | powerpc-apple-macos* )
+            # Extract the first word of "Rez", so it can be a program name with args.
+set dummy Rez; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_prog_RESCOMP+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$RESCOMP"; then
+  ac_cv_prog_RESCOMP="$RESCOMP" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_RESCOMP="Rez"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_prog_RESCOMP" && ac_cv_prog_RESCOMP="/Developer/Tools/Rez"
+fi
+fi
+RESCOMP=$ac_cv_prog_RESCOMP
+if test -n "$RESCOMP"; then
+  echo "$as_me:$LINENO: result: $RESCOMP" >&5
+echo "${ECHO_T}$RESCOMP" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+            # Extract the first word of "SetFile", so it can be a program name with args.
+set dummy SetFile; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_prog_SETFILE+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$SETFILE"; then
+  ac_cv_prog_SETFILE="$SETFILE" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_SETFILE="SetFile"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_prog_SETFILE" && ac_cv_prog_SETFILE="/Developer/Tools/SetFile"
+fi
+fi
+SETFILE=$ac_cv_prog_SETFILE
+if test -n "$SETFILE"; then
+  echo "$as_me:$LINENO: result: $SETFILE" >&5
+echo "${ECHO_T}$SETFILE" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+        ;;
+    esac
+
+
+
+
+
+    BAKEFILE_BAKEFILE_M4_VERSION="0.1.9"
+
+
+BAKEFILE_AUTOCONF_INC_M4_VERSION="0.1.9"
+
+    COND_DEPS_TRACKING_0="#"
+    if test "x$DEPS_TRACKING" = "x0" ; then
+        COND_DEPS_TRACKING_0=""
+    fi
+
+    COND_DEPS_TRACKING_1="#"
+    if test "x$DEPS_TRACKING" = "x1" ; then
+        COND_DEPS_TRACKING_1=""
+    fi
+
+    COND_PLATFORM_MACOSX_0_USE_SOVERCYGWIN_0_USE_SOVERSION_1="#"
+    if test "x$PLATFORM_MACOSX" = "x0" -a "x$USE_SOVERCYGWIN" = "x0" -a "x$USE_SOVERSION" = "x1" ; then
+        COND_PLATFORM_MACOSX_0_USE_SOVERCYGWIN_0_USE_SOVERSION_1=""
+    fi
+
+    COND_PLATFORM_MACOSX_0_USE_SOVERSION_1="#"
+    if test "x$PLATFORM_MACOSX" = "x0" -a "x$USE_SOVERSION" = "x1" ; then
+        COND_PLATFORM_MACOSX_0_USE_SOVERSION_1=""
+    fi
+
+    COND_PLATFORM_MACOSX_1="#"
+    if test "x$PLATFORM_MACOSX" = "x1" ; then
+        COND_PLATFORM_MACOSX_1=""
+    fi
+
+    COND_PLATFORM_MACOSX_1_USE_SOVERSION_1="#"
+    if test "x$PLATFORM_MACOSX" = "x1" -a "x$USE_SOVERSION" = "x1" ; then
+        COND_PLATFORM_MACOSX_1_USE_SOVERSION_1=""
+    fi
+
+    COND_PLATFORM_MAC_1="#"
+    if test "x$PLATFORM_MAC" = "x1" ; then
+        COND_PLATFORM_MAC_1=""
+    fi
+
+    COND_PLATFORM_OS2_1="#"
+    if test "x$PLATFORM_OS2" = "x1" ; then
+        COND_PLATFORM_OS2_1=""
+    fi
+
+    COND_USE_SOSYMLINKS_1="#"
+    if test "x$USE_SOSYMLINKS" = "x1" ; then
+        COND_USE_SOSYMLINKS_1=""
+    fi
+
+    COND_USE_SOVERCYGWIN_1_USE_SOVERSION_1="#"
+    if test "x$USE_SOVERCYGWIN" = "x1" -a "x$USE_SOVERSION" = "x1" ; then
+        COND_USE_SOVERCYGWIN_1_USE_SOVERSION_1=""
+    fi
+
+    COND_USE_SOVERLINUX_1="#"
+    if test "x$USE_SOVERLINUX" = "x1" ; then
+        COND_USE_SOVERLINUX_1=""
+    fi
+
+    COND_USE_SOVERSION_0="#"
+    if test "x$USE_SOVERSION" = "x0" ; then
+        COND_USE_SOVERSION_0=""
+    fi
+
+    COND_USE_SOVERSOLARIS_1="#"
+    if test "x$USE_SOVERSOLARIS" = "x1" ; then
+        COND_USE_SOVERSOLARIS_1=""
+    fi
+
+    COND_WINDOWS_IMPLIB_1="#"
+    if test "x$WINDOWS_IMPLIB" = "x1" ; then
+        COND_WINDOWS_IMPLIB_1=""
+    fi
+
+    COND_WX_SHARED_0="#"
+    if test "x$WX_SHARED" = "x0" ; then
+        COND_WX_SHARED_0=""
+    fi
+
+    COND_WX_SHARED_1="#"
+    if test "x$WX_SHARED" = "x1" ; then
+        COND_WX_SHARED_1=""
+    fi
+
+
+
+    if test "$BAKEFILE_AUTOCONF_INC_M4_VERSION" = "" ; then
+        { { echo "$as_me:$LINENO: error: No version found in autoconf_inc.m4 - bakefile macro was changed to take additional argument, perhaps configure.in wasn't updated (see the documentation)?" >&5
+echo "$as_me: error: No version found in autoconf_inc.m4 - bakefile macro was changed to take additional argument, perhaps configure.in wasn't updated (see the documentation)?" >&2;}
+   { (exit 1); exit 1; }; }
+    fi
+
+    if test "$BAKEFILE_BAKEFILE_M4_VERSION" != "$BAKEFILE_AUTOCONF_INC_M4_VERSION" ; then
+        { { echo "$as_me:$LINENO: error: Versions of Bakefile used to generate makefiles ($BAKEFILE_AUTOCONF_INC_M4_VERSION) and configure ($BAKEFILE_BAKEFILE_M4_VERSION) do not match." >&5
+echo "$as_me: error: Versions of Bakefile used to generate makefiles ($BAKEFILE_AUTOCONF_INC_M4_VERSION) and configure ($BAKEFILE_BAKEFILE_M4_VERSION) do not match." >&2;}
+   { (exit 1); exit 1; }; }
+    fi
+
           ac_config_files="$ac_config_files Makefile"
 
 cat >confcache <<\_ACEOF
@@ -3895,6 +6398,78 @@ s,@CXX@,$CXX,;t t
 s,@CXXFLAGS@,$CXXFLAGS,;t t
 s,@ac_ct_CXX@,$ac_ct_CXX,;t t
 s,@CXXCPP@,$CXXCPP,;t t
+s,@XML2_CONFIG@,$XML2_CONFIG,;t t
+s,@XML_CPPFLAGS@,$XML_CPPFLAGS,;t t
+s,@XML_LIBS@,$XML_LIBS,;t t
+s,@WX_CONFIG_PATH@,$WX_CONFIG_PATH,;t t
+s,@WX_CPPFLAGS@,$WX_CPPFLAGS,;t t
+s,@WX_CFLAGS@,$WX_CFLAGS,;t t
+s,@WX_CXXFLAGS@,$WX_CXXFLAGS,;t t
+s,@WX_CFLAGS_ONLY@,$WX_CFLAGS_ONLY,;t t
+s,@WX_CXXFLAGS_ONLY@,$WX_CXXFLAGS_ONLY,;t t
+s,@WX_LIBS@,$WX_LIBS,;t t
+s,@WX_LIBS_STATIC@,$WX_LIBS_STATIC,;t t
+s,@WX_VERSION@,$WX_VERSION,;t t
+s,@SET_MAKE@,$SET_MAKE,;t t
+s,@MAKE_SET@,$MAKE_SET,;t t
+s,@AR@,$AR,;t t
+s,@ac_ct_AR@,$ac_ct_AR,;t t
+s,@STRIP@,$STRIP,;t t
+s,@ac_ct_STRIP@,$ac_ct_STRIP,;t t
+s,@NM@,$NM,;t t
+s,@ac_ct_NM@,$ac_ct_NM,;t t
+s,@INSTALL_DIR@,$INSTALL_DIR,;t t
+s,@LDFLAGS_GUI@,$LDFLAGS_GUI,;t t
+s,@IF_GNU_MAKE@,$IF_GNU_MAKE,;t t
+s,@PLATFORM_UNIX@,$PLATFORM_UNIX,;t t
+s,@PLATFORM_WIN32@,$PLATFORM_WIN32,;t t
+s,@PLATFORM_MSDOS@,$PLATFORM_MSDOS,;t t
+s,@PLATFORM_MAC@,$PLATFORM_MAC,;t t
+s,@PLATFORM_MACOS@,$PLATFORM_MACOS,;t t
+s,@PLATFORM_MACOSX@,$PLATFORM_MACOSX,;t t
+s,@PLATFORM_OS2@,$PLATFORM_OS2,;t t
+s,@PLATFORM_BEOS@,$PLATFORM_BEOS,;t t
+s,@SO_SUFFIX@,$SO_SUFFIX,;t t
+s,@SO_SUFFIX_MODULE@,$SO_SUFFIX_MODULE,;t t
+s,@DLLIMP_SUFFIX@,$DLLIMP_SUFFIX,;t t
+s,@LIBPREFIX@,$LIBPREFIX,;t t
+s,@LIBEXT@,$LIBEXT,;t t
+s,@DLLPREFIX@,$DLLPREFIX,;t t
+s,@DLLPREFIX_MODULE@,$DLLPREFIX_MODULE,;t t
+s,@dlldir@,$dlldir,;t t
+s,@AIX_CXX_LD@,$AIX_CXX_LD,;t t
+s,@SHARED_LD_CC@,$SHARED_LD_CC,;t t
+s,@SHARED_LD_CXX@,$SHARED_LD_CXX,;t t
+s,@SHARED_LD_MODULE_CC@,$SHARED_LD_MODULE_CC,;t t
+s,@SHARED_LD_MODULE_CXX@,$SHARED_LD_MODULE_CXX,;t t
+s,@PIC_FLAG@,$PIC_FLAG,;t t
+s,@WINDOWS_IMPLIB@,$WINDOWS_IMPLIB,;t t
+s,@USE_SOVERSION@,$USE_SOVERSION,;t t
+s,@USE_SOVERLINUX@,$USE_SOVERLINUX,;t t
+s,@USE_SOVERSOLARIS@,$USE_SOVERSOLARIS,;t t
+s,@USE_SOVERCYGWIN@,$USE_SOVERCYGWIN,;t t
+s,@USE_MACVERSION@,$USE_MACVERSION,;t t
+s,@USE_SOSYMLINKS@,$USE_SOSYMLINKS,;t t
+s,@SONAME_FLAG@,$SONAME_FLAG,;t t
+s,@DEPS_TRACKING@,$DEPS_TRACKING,;t t
+s,@RESCOMP@,$RESCOMP,;t t
+s,@SETFILE@,$SETFILE,;t t
+s,@COND_DEPS_TRACKING_0@,$COND_DEPS_TRACKING_0,;t t
+s,@COND_DEPS_TRACKING_1@,$COND_DEPS_TRACKING_1,;t t
+s,@COND_PLATFORM_MACOSX_0_USE_SOVERCYGWIN_0_USE_SOVERSION_1@,$COND_PLATFORM_MACOSX_0_USE_SOVERCYGWIN_0_USE_SOVERSION_1,;t t
+s,@COND_PLATFORM_MACOSX_0_USE_SOVERSION_1@,$COND_PLATFORM_MACOSX_0_USE_SOVERSION_1,;t t
+s,@COND_PLATFORM_MACOSX_1@,$COND_PLATFORM_MACOSX_1,;t t
+s,@COND_PLATFORM_MACOSX_1_USE_SOVERSION_1@,$COND_PLATFORM_MACOSX_1_USE_SOVERSION_1,;t t
+s,@COND_PLATFORM_MAC_1@,$COND_PLATFORM_MAC_1,;t t
+s,@COND_PLATFORM_OS2_1@,$COND_PLATFORM_OS2_1,;t t
+s,@COND_USE_SOSYMLINKS_1@,$COND_USE_SOSYMLINKS_1,;t t
+s,@COND_USE_SOVERCYGWIN_1_USE_SOVERSION_1@,$COND_USE_SOVERCYGWIN_1_USE_SOVERSION_1,;t t
+s,@COND_USE_SOVERLINUX_1@,$COND_USE_SOVERLINUX_1,;t t
+s,@COND_USE_SOVERSION_0@,$COND_USE_SOVERSION_0,;t t
+s,@COND_USE_SOVERSOLARIS_1@,$COND_USE_SOVERSOLARIS_1,;t t
+s,@COND_WINDOWS_IMPLIB_1@,$COND_WINDOWS_IMPLIB_1,;t t
+s,@COND_WX_SHARED_0@,$COND_WX_SHARED_0,;t t
+s,@COND_WX_SHARED_1@,$COND_WX_SHARED_1,;t t
 s,@LIBOBJS@,$LIBOBJS,;t t
 s,@LTLIBOBJS@,$LTLIBOBJS,;t t
 CEOF
