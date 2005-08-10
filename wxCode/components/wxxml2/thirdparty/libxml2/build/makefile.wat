@@ -349,6 +349,9 @@ clean : .SYMBOLIC
 ..\config.h :  ..\include\win32config.h
 	copy ..\include\win32config.h ..\config.h
 
+watcom :  
+	if not exist watcom mkdir watcom
+
 ..\lib :  
 	if not exist ..\lib mkdir ..\lib
 

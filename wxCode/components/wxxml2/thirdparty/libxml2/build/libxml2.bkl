@@ -446,6 +446,10 @@
 	</if>
     
 	<if cond="FORMAT!='msvc6prj'">
+	
+		<!-- setupbuilddir is required by "libonly" phony target - bakefile autogenerates this but that auto-generated target
+		        is bypassed by "libonly" which thus would not work without this... -->
+		<mkdir id="setupbuilddir"><dir>$(BUILDDIR)</dir></mkdir>
 		<mkdir id="setuplibdir"><dir>$(XMLBASEDIR)$(DIRSEP)lib</dir></mkdir>
 		<mkdir id="setupbindir"><dir>$(XMLBASEDIR)$(DIRSEP)bin</dir></mkdir>
 			

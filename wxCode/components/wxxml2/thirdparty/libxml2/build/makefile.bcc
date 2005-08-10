@@ -404,6 +404,9 @@ clean:
 ..\config.h: ..\include\win32config.h
 	copy ..\include\win32config.h ..\config.h
 
+borland: 
+	if not exist borland mkdir borland
+
 ..\lib: 
 	if not exist ..\lib mkdir ..\lib
 

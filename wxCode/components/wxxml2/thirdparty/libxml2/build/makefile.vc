@@ -365,6 +365,9 @@ clean:
 ..\config.h: ..\include\win32config.h
 	copy ..\include\win32config.h ..\config.h
 
+msvc: 
+	if not exist msvc mkdir msvc
+
 ..\lib: 
 	if not exist ..\lib mkdir ..\lib
 

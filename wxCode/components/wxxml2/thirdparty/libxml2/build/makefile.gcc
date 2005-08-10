@@ -304,6 +304,9 @@ clean:
 ..\config.h: ..\include\win32config.h
 	copy ..\include\win32config.h ..\config.h
 
+mingw: 
+	if not exist mingw mkdir mingw
+
 ..\lib: 
 	if not exist ..\lib mkdir ..\lib
 
