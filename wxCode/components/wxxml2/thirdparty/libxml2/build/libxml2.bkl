@@ -456,6 +456,7 @@
 	    <!-- Creates all output folders -->	
 	    <phony id="setupdirs">
 			<dependency-of>all</dependency-of>	    
+			<depends>setupbuilddir</depends>
 	    	<depends>setuplibdir</depends>
 	    	<depends>setupbindir</depends>
 	    </phony>

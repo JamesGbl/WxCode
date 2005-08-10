@@ -413,7 +413,7 @@ borland:
 ..\bin: 
 	if not exist ..\bin mkdir ..\bin
 
-setupdirs: ..\lib ..\bin
+setupdirs: borland ..\lib ..\bin
 
 !if "$(SHARED)" == "0"
 ..\lib\libxml2.lib: $(LIBXML2_LIB_OBJECTS) ..\config.h ..\lib

@@ -358,7 +358,7 @@ watcom :
 ..\bin :  
 	if not exist ..\bin mkdir ..\bin
 
-setupdirs : .SYMBOLIC ..\lib ..\bin
+setupdirs : .SYMBOLIC watcom ..\lib ..\bin
 
 !ifeq SHARED 0
 ..\lib\libxml2.lib :  $(LIBXML2_LIB_OBJECTS) ..\config.h ..\lib

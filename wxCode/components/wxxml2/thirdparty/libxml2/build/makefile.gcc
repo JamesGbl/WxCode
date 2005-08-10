@@ -313,7 +313,7 @@ mingw:
 ..\bin: 
 	if not exist ..\bin mkdir ..\bin
 
-setupdirs: ..\lib ..\bin
+setupdirs: mingw ..\lib ..\bin
 
 ifeq ($(SHARED),0)
 ..\lib\libxml2.a: $(LIBXML2_LIB_OBJECTS) ..\config.h ..\lib
