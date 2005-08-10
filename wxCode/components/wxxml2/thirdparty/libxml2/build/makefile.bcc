@@ -404,7 +404,7 @@ clean:
 ..\config.h: ..\include\win32config.h
 	copy ..\include\win32config.h ..\config.h
 
-borland: 
+setupbuilddir: 
 	if not exist borland mkdir borland
 
 ..\lib: 
@@ -413,7 +413,7 @@ borland:
 ..\bin: 
 	if not exist ..\bin mkdir ..\bin
 
-setupdirs: borland ..\lib ..\bin
+setupdirs: setupbuilddir ..\lib ..\bin
 
 !if "$(SHARED)" == "0"
 ..\lib\libxml2.lib: $(LIBXML2_LIB_OBJECTS) ..\config.h ..\lib
@@ -425,7 +425,7 @@ setupdirs: borland ..\lib ..\bin
 
 !if "$(SHARED)" == "1"
 ..\lib\libxml2.dll: $(LIBXML2_DLL_OBJECTS) ..\config.h ..\lib
-	ilink32 -Tpd -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(ICONV_DIR)\lib @&&|
+	ilink32 -Tpd -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk  $(__DEBUGINFO) -L$(ICONV_DIR)\lib @&&|
 	c0d32.obj $(LIBXML2_DLL_OBJECTS),$@,, $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p) import32.lib cw32.lib,,
 |
 	implib -f ..\lib\libxml2 $@
@@ -434,57 +434,57 @@ setupdirs: borland ..\lib ..\bin
 libonly: ..\config.h setupdirs $(____libonly_DEPNAME_DEP)
 
 ..\bin\testAutomata.exe: $(TESTAUTOMATA_OBJECTS) $(__libxml2_lib___depname)
-	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk  $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
 	c0x32.obj $(TESTAUTOMATA_OBJECTS),$@,, ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p) import32.lib cw32.lib,,
 |
 
 ..\bin\testC14N.exe: $(TESTC14N_OBJECTS) $(__libxml2_lib___depname)
-	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk  $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
 	c0x32.obj $(TESTC14N_OBJECTS),$@,, ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p) import32.lib cw32.lib,,
 |
 
 ..\bin\testHTML.exe: $(TESTHTML_OBJECTS) $(__libxml2_lib___depname)
-	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk  $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
 	c0x32.obj $(TESTHTML_OBJECTS),$@,, ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p) import32.lib cw32.lib,,
 |
 
 ..\bin\testReader.exe: $(TESTREADER_OBJECTS) $(__libxml2_lib___depname)
-	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk  $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
 	c0x32.obj $(TESTREADER_OBJECTS),$@,, ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p) import32.lib cw32.lib,,
 |
 
 ..\bin\testRegexp.exe: $(TESTREGEXP_OBJECTS) $(__libxml2_lib___depname)
-	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk  $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
 	c0x32.obj $(TESTREGEXP_OBJECTS),$@,, ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p) import32.lib cw32.lib,,
 |
 
 ..\bin\testRelax.exe: $(TESTRELAX_OBJECTS) $(__libxml2_lib___depname)
-	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk  $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
 	c0x32.obj $(TESTRELAX_OBJECTS),$@,, ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p) import32.lib cw32.lib,,
 |
 
 ..\bin\testSax.exe: $(TESTSAX_OBJECTS) $(__libxml2_lib___depname)
-	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk  $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
 	c0x32.obj $(TESTSAX_OBJECTS),$@,, ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p) import32.lib cw32.lib,,
 |
 
 ..\bin\testSchemas.exe: $(TESTSCHEMAS_OBJECTS) $(__libxml2_lib___depname)
-	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk  $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
 	c0x32.obj $(TESTSCHEMAS_OBJECTS),$@,, ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p) import32.lib cw32.lib,,
 |
 
 ..\bin\testURI.exe: $(TESTURI_OBJECTS) $(__libxml2_lib___depname)
-	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk  $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
 	c0x32.obj $(TESTURI_OBJECTS),$@,, ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p) import32.lib cw32.lib,,
 |
 
 ..\bin\testXPath.exe: $(TESTXPATH_OBJECTS) $(__libxml2_lib___depname)
-	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk  $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
 	c0x32.obj $(TESTXPATH_OBJECTS),$@,, ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p) import32.lib cw32.lib,,
 |
 
 ..\bin\xmllint.exe: $(XMLLINT_OBJECTS) $(__libxml2_lib___depname)
-	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk  $(__DEBUGINFO) -L$(ICONV_DIR)\lib -ap @&&|
 	c0x32.obj $(XMLLINT_OBJECTS),$@,, ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p) import32.lib cw32.lib,,
 |
 

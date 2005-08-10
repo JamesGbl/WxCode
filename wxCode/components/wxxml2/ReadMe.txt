@@ -30,7 +30,7 @@
 	 - updated the bakefile build system with wxWidgets bakefile presets;
 	   now configure script automatically detects the wx configuration used
 	 - added the wxXML2CHECK_VERSION macro
-	 - added compatibility with 2.5.4 < libxml2 < 2.6.1
+	 - fixed compilation warnings with Mingw about uninitialized base classes
 	 
  1.1 
      - second release; fixed the sample and the docs

@@ -146,7 +146,13 @@
         <set var="WARNINGS">default</set>
         <set var="MYCPPFLAGS">-Wall</set>
     </if>
-    
+	
+	<!-- same for MYCPPFLAGS -->
+	<set var="MYLDFLAGS"></set>
+    <if cond="FORMAT=='msvc' or FORMAT=='msvc6prj'">
+        <set var="MYLDFLAGS">/NODEFAULTLIB:MSVCRTD.lib</set>
+    </if>
+
     
     
   
@@ -449,7 +455,10 @@
 	
 		<!-- setupbuilddir is required by "libonly" phony target - bakefile autogenerates this but that auto-generated target
 		        is bypassed by "libonly" which thus would not work without this... -->
-		<mkdir id="setupbuilddir"><dir>$(BUILDDIR)</dir></mkdir>
+		<mkdir id="setupbuilddir">			
+			<dir>$(BUILDDIR)</dir>
+			<set var="__targetname">setupbuilddir</set>		<!-- must be after <dir> tag; used to avoid to get two targets with the same name -->
+		</mkdir>
 		<mkdir id="setuplibdir"><dir>$(XMLBASEDIR)$(DIRSEP)lib</dir></mkdir>
 		<mkdir id="setupbindir"><dir>$(XMLBASEDIR)$(DIRSEP)bin</dir></mkdir>
 			
@@ -509,8 +518,9 @@ $(TAB)copy "$(DOLLAR)(InputPath)" ..\$(CONFIG_DSTNAME)
             <define>HAVE_W32API_H</define>
             <ldflags>-mthreads</ldflags>
         </if>
-
-        <cxxflags>$(MYCPPFLAGS)</cxxflags>
+	
+        <cflags>$(MYCPPFLAGS)</cflags>
+		<ldflags>$(MYLDFLAGS)</ldflags>
         <warnings>$(WARNINGS)</warnings>
         <define>$(UNICODE_DEFINE)</define>
         <optimize>$(OPTIMIZEFLAG)</optimize>

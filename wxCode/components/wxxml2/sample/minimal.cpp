@@ -271,11 +271,11 @@ MyFrame::MyFrame(const wxString& title)
     menuFile->Append(Minimal_LoadXML, _T("Load XML..."), _T("Loads the given file and tries to parse it..."));
     menuFile->Append(Minimal_LoadDTD, _T("Load DTD..."), _T("Loads the given file and tries to parse it..."));
     menuFile->AppendSeparator();
-    menuFile->Append(Minimal_SaveSimple, _T("Save a simple HTML file"), _T("Creates a sample HTML file and saves it in the given location."));  
-    menuFile->Append(Minimal_SaveAdv, _T("Save an advanced XHTML file"), _T("Creates a sample XHTML file and saves it in the given location."));    
-    menuFile->Append(Minimal_SaveDTD, _T("Save a DTD file"), _T("Creates a sample DTD file and saves it in the given location."));  
+    menuFile->Append(Minimal_SaveSimple, _T("Save a simple HTML file..."), _T("Creates a sample HTML file and saves it in the given location."));  
+    menuFile->Append(Minimal_SaveAdv, _T("Save an advanced XHTML file..."), _T("Creates a sample XHTML file and saves it in the given location."));    
+    menuFile->Append(Minimal_SaveDTD, _T("Save a DTD file..."), _T("Creates a sample DTD file and saves it in the given location."));  
     menuFile->AppendSeparator();
-    menuFile->Append(Minimal_Valid, _T("Validate against DTD"), _T("Validates an XML file against a DTD."));    
+    menuFile->Append(Minimal_Valid, _T("Validate against DTD..."), _T("Validates an XML file against a DTD."));    
     menuFile->AppendSeparator();
     menuFile->Append(Minimal_Quit, _T("E&xit\tAlt-X"), _T("Quit this program"));    
 

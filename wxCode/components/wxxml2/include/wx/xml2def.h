@@ -12,6 +12,7 @@
 #ifndef _WX_WXXML2_DEFS_H_
 #define _WX_WXXML2_DEFS_H_
 
+
 // Defines for shared builds.
 // Simple reference for using these macros and for writin components
 // which support shared builds:

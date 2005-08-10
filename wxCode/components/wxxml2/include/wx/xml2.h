@@ -245,7 +245,13 @@ extern WXDLLIMPEXP_DATA_WXXML2(wxXml2BaseNode) wxXml2EmptyBaseNode;
 //!       MAJOR|MAJOR|MINOR|RELEASE|RELEASE
 //!
 #define wxXML2CHECK_VERSION(major,minor,release) \
-	LIBXML_VERSION >= major##0##minor##release
+	(LIBXML_VERSION >= major##0##minor##release)
+
+// wxXml2 cannot be compiled with libxml2 < 2.6.1 since SAX2 API was not
+// present prior that version...
+#if !wxXML2CHECK_VERSION(2, 6, 10)
+	#error wxXml2 requires at least libxml2 2.6.1; please download it from http://xmlsoft.org
+#endif
 
 //! A wrapper for some libxml2 static functions regarding the entire
 //! parser. In particular, you should call the #Init() function before
@@ -568,7 +574,7 @@ public:
 		{ JustWrappedNew(); }
 
 	//! Copies the given wrapper (does not imply the XML structure copy).
-	wxXml2Property(const wxXml2Property &prop) : m_attr(NULL)
+	wxXml2Property(const wxXml2Property &prop) : wxXml2Wrapper(), m_attr(NULL)
 		{ Copy(prop); }
 
 	//! Destructor.
@@ -700,7 +706,7 @@ public:
 	wxXml2Namespace(xmlNs *ns, wxXml2Node &owner);
 
 	//! Copies the given wrapper (does not imply the XML structure copy).
-	wxXml2Namespace(const wxXml2Namespace &ns) : m_ns(NULL), m_owner(NULL)
+	wxXml2Namespace(const wxXml2Namespace &ns) : wxXml2Wrapper(), m_ns(NULL), m_owner(NULL)
 		{ Copy(ns); }
 
 	//! Destroys this namespace if it is completely unlinked from a greater
@@ -802,7 +808,7 @@ public:
 		{ JustWrappedNew(); }
 
 	//! Copies the given wrapper (does not imply the XML structure copy).
-	wxXml2Document(const wxXml2Document &doc) : m_doc(NULL)
+	wxXml2Document(const wxXml2Document &doc) : wxXml2Wrapper(), m_doc(NULL)
 		{ Copy(doc); }
 
 	//! Destructor.
@@ -1111,7 +1117,7 @@ public:
 		{ m_obj = (wxXml2BaseNodeObj *)node; JustWrappedNew(); }
 
 	//! Copies the given wrapper (does not imply the XML structure copy).
-	wxXml2Node(const wxXml2Node &n)
+	wxXml2Node(const wxXml2Node &n) : wxXml2BaseNode()
 		{ Copy(n); }
 
 	//! Copies the given wrapper (does not imply the XML structure copy).

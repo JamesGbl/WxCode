@@ -365,7 +365,7 @@ clean:
 ..\config.h: ..\include\win32config.h
 	copy ..\include\win32config.h ..\config.h
 
-msvc: 
+setupbuilddir: 
 	if not exist msvc mkdir msvc
 
 ..\lib: 
@@ -374,7 +374,7 @@ msvc:
 ..\bin: 
 	if not exist ..\bin mkdir ..\bin
 
-setupdirs: msvc ..\lib ..\bin
+setupdirs: setupbuilddir ..\lib ..\bin
 
 !if "$(SHARED)" == "0"
 ..\lib\libxml2.lib: $(LIBXML2_LIB_OBJECTS) ..\config.h ..\lib
@@ -386,7 +386,7 @@ setupdirs: msvc ..\lib ..\bin
 
 !if "$(SHARED)" == "1"
 ..\lib\libxml2.dll: $(LIBXML2_DLL_OBJECTS) ..\config.h ..\lib
-	link /DLL /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib @<<
+	link /DLL /NOLOGO /OUT:$@ $(LDFLAGS) /NODEFAULTLIB:MSVCRTD.lib $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib @<<
 	$(LIBXML2_DLL_OBJECTS)  $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p) /IMPLIB:..\lib\libxml2.lib
 <<
 !endif
@@ -394,57 +394,57 @@ setupdirs: msvc ..\lib ..\bin
 libonly: ..\config.h setupdirs $(____libonly_DEPNAME_DEP)
 
 ..\bin\testAutomata.exe: $(TESTAUTOMATA_OBJECTS) $(__libxml2_lib___depname)
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
+	link /NOLOGO /OUT:$@ $(LDFLAGS) /NODEFAULTLIB:MSVCRTD.lib $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
 	$(TESTAUTOMATA_OBJECTS)  ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)
 <<
 
 ..\bin\testC14N.exe: $(TESTC14N_OBJECTS) $(__libxml2_lib___depname)
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
+	link /NOLOGO /OUT:$@ $(LDFLAGS) /NODEFAULTLIB:MSVCRTD.lib $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
 	$(TESTC14N_OBJECTS)  ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)
 <<
 
 ..\bin\testHTML.exe: $(TESTHTML_OBJECTS) $(__libxml2_lib___depname)
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
+	link /NOLOGO /OUT:$@ $(LDFLAGS) /NODEFAULTLIB:MSVCRTD.lib $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
 	$(TESTHTML_OBJECTS)  ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)
 <<
 
 ..\bin\testReader.exe: $(TESTREADER_OBJECTS) $(__libxml2_lib___depname)
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
+	link /NOLOGO /OUT:$@ $(LDFLAGS) /NODEFAULTLIB:MSVCRTD.lib $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
 	$(TESTREADER_OBJECTS)  ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)
 <<
 
 ..\bin\testRegexp.exe: $(TESTREGEXP_OBJECTS) $(__libxml2_lib___depname)
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
+	link /NOLOGO /OUT:$@ $(LDFLAGS) /NODEFAULTLIB:MSVCRTD.lib $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
 	$(TESTREGEXP_OBJECTS)  ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)
 <<
 
 ..\bin\testRelax.exe: $(TESTRELAX_OBJECTS) $(__libxml2_lib___depname)
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
+	link /NOLOGO /OUT:$@ $(LDFLAGS) /NODEFAULTLIB:MSVCRTD.lib $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
 	$(TESTRELAX_OBJECTS)  ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)
 <<
 
 ..\bin\testSax.exe: $(TESTSAX_OBJECTS) $(__libxml2_lib___depname)
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
+	link /NOLOGO /OUT:$@ $(LDFLAGS) /NODEFAULTLIB:MSVCRTD.lib $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
 	$(TESTSAX_OBJECTS)  ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)
 <<
 
 ..\bin\testSchemas.exe: $(TESTSCHEMAS_OBJECTS) $(__libxml2_lib___depname)
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
+	link /NOLOGO /OUT:$@ $(LDFLAGS) /NODEFAULTLIB:MSVCRTD.lib $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
 	$(TESTSCHEMAS_OBJECTS)  ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)
 <<
 
 ..\bin\testURI.exe: $(TESTURI_OBJECTS) $(__libxml2_lib___depname)
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
+	link /NOLOGO /OUT:$@ $(LDFLAGS) /NODEFAULTLIB:MSVCRTD.lib $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
 	$(TESTURI_OBJECTS)  ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)
 <<
 
 ..\bin\testXPath.exe: $(TESTXPATH_OBJECTS) $(__libxml2_lib___depname)
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
+	link /NOLOGO /OUT:$@ $(LDFLAGS) /NODEFAULTLIB:MSVCRTD.lib $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
 	$(TESTXPATH_OBJECTS)  ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)
 <<
 
 ..\bin\xmllint.exe: $(XMLLINT_OBJECTS) $(__libxml2_lib___depname)
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
+	link /NOLOGO /OUT:$@ $(LDFLAGS) /NODEFAULTLIB:MSVCRTD.lib $(__DEBUGINFO_1_0) /LIBPATH:$(ICONV_DIR)\lib /SUBSYSTEM:CONSOLE @<<
 	$(XMLLINT_OBJECTS)  ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)
 <<
 

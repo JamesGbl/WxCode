@@ -54,8 +54,8 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /libpath:"c:\iconv\lib" /subsystem:console
-# ADD LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /libpath:"c:\iconv\lib" /subsystem:console
+# ADD BASE LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /NODEFAULTLIB:MSVCRTD.lib /libpath:"c:\iconv\lib" /subsystem:console
+# ADD LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /NODEFAULTLIB:MSVCRTD.lib /libpath:"c:\iconv\lib" /subsystem:console
 
 !ELSEIF  "$(CFG)" == "testSax - Win32 DLL Unicode Debug"
 
@@ -77,8 +77,8 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /libpath:"c:\iconv\lib" /debug /subsystem:console
-# ADD LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /libpath:"c:\iconv\lib" /debug /subsystem:console
+# ADD BASE LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /NODEFAULTLIB:MSVCRTD.lib /libpath:"c:\iconv\lib" /debug /subsystem:console
+# ADD LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /NODEFAULTLIB:MSVCRTD.lib /libpath:"c:\iconv\lib" /debug /subsystem:console
 
 !ELSEIF  "$(CFG)" == "testSax - Win32 DLL Release"
 
@@ -100,8 +100,8 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /libpath:"c:\iconv\lib" /subsystem:console
-# ADD LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /libpath:"c:\iconv\lib" /subsystem:console
+# ADD BASE LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /NODEFAULTLIB:MSVCRTD.lib /libpath:"c:\iconv\lib" /subsystem:console
+# ADD LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /NODEFAULTLIB:MSVCRTD.lib /libpath:"c:\iconv\lib" /subsystem:console
 
 !ELSEIF  "$(CFG)" == "testSax - Win32 DLL Debug"
 
@@ -123,8 +123,8 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /libpath:"c:\iconv\lib" /debug /subsystem:console
-# ADD LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /libpath:"c:\iconv\lib" /debug /subsystem:console
+# ADD BASE LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /NODEFAULTLIB:MSVCRTD.lib /libpath:"c:\iconv\lib" /debug /subsystem:console
+# ADD LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /NODEFAULTLIB:MSVCRTD.lib /libpath:"c:\iconv\lib" /debug /subsystem:console
 
 !ELSEIF  "$(CFG)" == "testSax - Win32 Unicode Release"
 
@@ -146,8 +146,8 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /libpath:"c:\iconv\lib" /subsystem:console
-# ADD LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /libpath:"c:\iconv\lib" /subsystem:console
+# ADD BASE LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /NODEFAULTLIB:MSVCRTD.lib /libpath:"c:\iconv\lib" /subsystem:console
+# ADD LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /NODEFAULTLIB:MSVCRTD.lib /libpath:"c:\iconv\lib" /subsystem:console
 
 !ELSEIF  "$(CFG)" == "testSax - Win32 Unicode Debug"
 
@@ -169,8 +169,8 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /libpath:"c:\iconv\lib" /debug /subsystem:console
-# ADD LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /libpath:"c:\iconv\lib" /debug /subsystem:console
+# ADD BASE LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /NODEFAULTLIB:MSVCRTD.lib /libpath:"c:\iconv\lib" /debug /subsystem:console
+# ADD LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /NODEFAULTLIB:MSVCRTD.lib /libpath:"c:\iconv\lib" /debug /subsystem:console
 
 !ELSEIF  "$(CFG)" == "testSax - Win32 Release"
 
@@ -192,8 +192,8 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /libpath:"c:\iconv\lib" /subsystem:console
-# ADD LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /libpath:"c:\iconv\lib" /subsystem:console
+# ADD BASE LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /NODEFAULTLIB:MSVCRTD.lib /libpath:"c:\iconv\lib" /subsystem:console
+# ADD LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /NODEFAULTLIB:MSVCRTD.lib /libpath:"c:\iconv\lib" /subsystem:console
 
 !ELSEIF  "$(CFG)" == "testSax - Win32 Debug"
 
@@ -215,8 +215,8 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /libpath:"c:\iconv\lib" /debug /subsystem:console
-# ADD LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /libpath:"c:\iconv\lib" /debug /subsystem:console
+# ADD BASE LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /NODEFAULTLIB:MSVCRTD.lib /libpath:"c:\iconv\lib" /debug /subsystem:console
+# ADD LINK32 ..\lib\libxml2.lib iconv.lib wsock32.lib /nologo /machine:i386 /out:"..\bin\testSax.exe" /NODEFAULTLIB:MSVCRTD.lib /libpath:"c:\iconv\lib" /debug /subsystem:console
 
 !ENDIF
 

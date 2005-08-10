@@ -349,7 +349,7 @@ clean : .SYMBOLIC
 ..\config.h :  ..\include\win32config.h
 	copy ..\include\win32config.h ..\config.h
 
-watcom :  
+setupbuilddir :  
 	if not exist watcom mkdir watcom
 
 ..\lib :  
@@ -358,7 +358,7 @@ watcom :
 ..\bin :  
 	if not exist ..\bin mkdir ..\bin
 
-setupdirs : .SYMBOLIC watcom ..\lib ..\bin
+setupdirs : .SYMBOLIC setupbuilddir ..\lib ..\bin
 
 !ifeq SHARED 0
 ..\lib\libxml2.lib :  $(LIBXML2_LIB_OBJECTS) ..\config.h ..\lib
@@ -373,7 +373,7 @@ setupdirs : .SYMBOLIC watcom ..\lib ..\bin
 	@%append watcom\libxml2_dll.lbc option quiet
 	@%append watcom\libxml2_dll.lbc name $^@
 	@%append watcom\libxml2_dll.lbc option caseexact
-	@%append watcom\libxml2_dll.lbc $(LDFLAGS) $(__DEBUGINFO_15) libpath $(ICONV_DIR)\lib
+	@%append watcom\libxml2_dll.lbc $(LDFLAGS)  $(__DEBUGINFO_15) libpath $(ICONV_DIR)\lib
 	@for %i in ($(LIBXML2_DLL_OBJECTS)) do @%append watcom\libxml2_dll.lbc file %i
 	@for %i in ( $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)) do @%append watcom\libxml2_dll.lbc library %i
 	@%append watcom\libxml2_dll.lbc
@@ -389,7 +389,7 @@ libonly : .SYMBOLIC ..\config.h setupdirs $(____libonly_DEPNAME_DEP)
 	@%append watcom\testAutomata.lbc option quiet
 	@%append watcom\testAutomata.lbc name $^@
 	@%append watcom\testAutomata.lbc option caseexact
-	@%append watcom\testAutomata.lbc $(LDFLAGS) $(__DEBUGINFO_15) libpath $(ICONV_DIR)\lib system nt ref 'main_'
+	@%append watcom\testAutomata.lbc $(LDFLAGS)  $(__DEBUGINFO_15) libpath $(ICONV_DIR)\lib system nt ref 'main_'
 	@for %i in ($(TESTAUTOMATA_OBJECTS)) do @%append watcom\testAutomata.lbc file %i
 	@for %i in ( ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)) do @%append watcom\testAutomata.lbc library %i
 	@%append watcom\testAutomata.lbc
@@ -400,7 +400,7 @@ libonly : .SYMBOLIC ..\config.h setupdirs $(____libonly_DEPNAME_DEP)
 	@%append watcom\testC14N.lbc option quiet
 	@%append watcom\testC14N.lbc name $^@
 	@%append watcom\testC14N.lbc option caseexact
-	@%append watcom\testC14N.lbc $(LDFLAGS) $(__DEBUGINFO_15) libpath $(ICONV_DIR)\lib system nt ref 'main_'
+	@%append watcom\testC14N.lbc $(LDFLAGS)  $(__DEBUGINFO_15) libpath $(ICONV_DIR)\lib system nt ref 'main_'
 	@for %i in ($(TESTC14N_OBJECTS)) do @%append watcom\testC14N.lbc file %i
 	@for %i in ( ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)) do @%append watcom\testC14N.lbc library %i
 	@%append watcom\testC14N.lbc
@@ -411,7 +411,7 @@ libonly : .SYMBOLIC ..\config.h setupdirs $(____libonly_DEPNAME_DEP)
 	@%append watcom\testHTML.lbc option quiet
 	@%append watcom\testHTML.lbc name $^@
 	@%append watcom\testHTML.lbc option caseexact
-	@%append watcom\testHTML.lbc $(LDFLAGS) $(__DEBUGINFO_15) libpath $(ICONV_DIR)\lib system nt ref 'main_'
+	@%append watcom\testHTML.lbc $(LDFLAGS)  $(__DEBUGINFO_15) libpath $(ICONV_DIR)\lib system nt ref 'main_'
 	@for %i in ($(TESTHTML_OBJECTS)) do @%append watcom\testHTML.lbc file %i
 	@for %i in ( ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)) do @%append watcom\testHTML.lbc library %i
 	@%append watcom\testHTML.lbc
@@ -422,7 +422,7 @@ libonly : .SYMBOLIC ..\config.h setupdirs $(____libonly_DEPNAME_DEP)
 	@%append watcom\testReader.lbc option quiet
 	@%append watcom\testReader.lbc name $^@
 	@%append watcom\testReader.lbc option caseexact
-	@%append watcom\testReader.lbc $(LDFLAGS) $(__DEBUGINFO_15) libpath $(ICONV_DIR)\lib system nt ref 'main_'
+	@%append watcom\testReader.lbc $(LDFLAGS)  $(__DEBUGINFO_15) libpath $(ICONV_DIR)\lib system nt ref 'main_'
 	@for %i in ($(TESTREADER_OBJECTS)) do @%append watcom\testReader.lbc file %i
 	@for %i in ( ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)) do @%append watcom\testReader.lbc library %i
 	@%append watcom\testReader.lbc
@@ -433,7 +433,7 @@ libonly : .SYMBOLIC ..\config.h setupdirs $(____libonly_DEPNAME_DEP)
 	@%append watcom\testRegexp.lbc option quiet
 	@%append watcom\testRegexp.lbc name $^@
 	@%append watcom\testRegexp.lbc option caseexact
-	@%append watcom\testRegexp.lbc $(LDFLAGS) $(__DEBUGINFO_15) libpath $(ICONV_DIR)\lib system nt ref 'main_'
+	@%append watcom\testRegexp.lbc $(LDFLAGS)  $(__DEBUGINFO_15) libpath $(ICONV_DIR)\lib system nt ref 'main_'
 	@for %i in ($(TESTREGEXP_OBJECTS)) do @%append watcom\testRegexp.lbc file %i
 	@for %i in ( ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)) do @%append watcom\testRegexp.lbc library %i
 	@%append watcom\testRegexp.lbc
@@ -444,7 +444,7 @@ libonly : .SYMBOLIC ..\config.h setupdirs $(____libonly_DEPNAME_DEP)
 	@%append watcom\testRelax.lbc option quiet
 	@%append watcom\testRelax.lbc name $^@
 	@%append watcom\testRelax.lbc option caseexact
-	@%append watcom\testRelax.lbc $(LDFLAGS) $(__DEBUGINFO_15) libpath $(ICONV_DIR)\lib system nt ref 'main_'
+	@%append watcom\testRelax.lbc $(LDFLAGS)  $(__DEBUGINFO_15) libpath $(ICONV_DIR)\lib system nt ref 'main_'
 	@for %i in ($(TESTRELAX_OBJECTS)) do @%append watcom\testRelax.lbc file %i
 	@for %i in ( ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)) do @%append watcom\testRelax.lbc library %i
 	@%append watcom\testRelax.lbc
@@ -455,7 +455,7 @@ libonly : .SYMBOLIC ..\config.h setupdirs $(____libonly_DEPNAME_DEP)
 	@%append watcom\testSax.lbc option quiet
 	@%append watcom\testSax.lbc name $^@
 	@%append watcom\testSax.lbc option caseexact
-	@%append watcom\testSax.lbc $(LDFLAGS) $(__DEBUGINFO_15) libpath $(ICONV_DIR)\lib system nt ref 'main_'
+	@%append watcom\testSax.lbc $(LDFLAGS)  $(__DEBUGINFO_15) libpath $(ICONV_DIR)\lib system nt ref 'main_'
 	@for %i in ($(TESTSAX_OBJECTS)) do @%append watcom\testSax.lbc file %i
 	@for %i in ( ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)) do @%append watcom\testSax.lbc library %i
 	@%append watcom\testSax.lbc
@@ -466,7 +466,7 @@ libonly : .SYMBOLIC ..\config.h setupdirs $(____libonly_DEPNAME_DEP)
 	@%append watcom\testSchemas.lbc option quiet
 	@%append watcom\testSchemas.lbc name $^@
 	@%append watcom\testSchemas.lbc option caseexact
-	@%append watcom\testSchemas.lbc $(LDFLAGS) $(__DEBUGINFO_15) libpath $(ICONV_DIR)\lib system nt ref 'main_'
+	@%append watcom\testSchemas.lbc $(LDFLAGS)  $(__DEBUGINFO_15) libpath $(ICONV_DIR)\lib system nt ref 'main_'
 	@for %i in ($(TESTSCHEMAS_OBJECTS)) do @%append watcom\testSchemas.lbc file %i
 	@for %i in ( ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)) do @%append watcom\testSchemas.lbc library %i
 	@%append watcom\testSchemas.lbc
@@ -477,7 +477,7 @@ libonly : .SYMBOLIC ..\config.h setupdirs $(____libonly_DEPNAME_DEP)
 	@%append watcom\testURI.lbc option quiet
 	@%append watcom\testURI.lbc name $^@
 	@%append watcom\testURI.lbc option caseexact
-	@%append watcom\testURI.lbc $(LDFLAGS) $(__DEBUGINFO_15) libpath $(ICONV_DIR)\lib system nt ref 'main_'
+	@%append watcom\testURI.lbc $(LDFLAGS)  $(__DEBUGINFO_15) libpath $(ICONV_DIR)\lib system nt ref 'main_'
 	@for %i in ($(TESTURI_OBJECTS)) do @%append watcom\testURI.lbc file %i
 	@for %i in ( ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)) do @%append watcom\testURI.lbc library %i
 	@%append watcom\testURI.lbc
@@ -488,7 +488,7 @@ libonly : .SYMBOLIC ..\config.h setupdirs $(____libonly_DEPNAME_DEP)
 	@%append watcom\testXPath.lbc option quiet
 	@%append watcom\testXPath.lbc name $^@
 	@%append watcom\testXPath.lbc option caseexact
-	@%append watcom\testXPath.lbc $(LDFLAGS) $(__DEBUGINFO_15) libpath $(ICONV_DIR)\lib system nt ref 'main_'
+	@%append watcom\testXPath.lbc $(LDFLAGS)  $(__DEBUGINFO_15) libpath $(ICONV_DIR)\lib system nt ref 'main_'
 	@for %i in ($(TESTXPATH_OBJECTS)) do @%append watcom\testXPath.lbc file %i
 	@for %i in ( ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)) do @%append watcom\testXPath.lbc library %i
 	@%append watcom\testXPath.lbc
@@ -499,7 +499,7 @@ libonly : .SYMBOLIC ..\config.h setupdirs $(____libonly_DEPNAME_DEP)
 	@%append watcom\xmllint.lbc option quiet
 	@%append watcom\xmllint.lbc name $^@
 	@%append watcom\xmllint.lbc option caseexact
-	@%append watcom\xmllint.lbc $(LDFLAGS) $(__DEBUGINFO_15) libpath $(ICONV_DIR)\lib system nt ref 'main_'
+	@%append watcom\xmllint.lbc $(LDFLAGS)  $(__DEBUGINFO_15) libpath $(ICONV_DIR)\lib system nt ref 'main_'
 	@for %i in ($(XMLLINT_OBJECTS)) do @%append watcom\xmllint.lbc file %i
 	@for %i in ( ..\lib\libxml2.lib $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)) do @%append watcom\xmllint.lbc library %i
 	@%append watcom\xmllint.lbc

@@ -267,7 +267,8 @@ protected:
 public:
 
 	wxXml2Enumeration(xmlEnumeration *towrap = NULL) : m_enum(towrap) {}
-	wxXml2Enumeration(const wxXml2Enumeration &tocopy) { Copy(tocopy); }
+	wxXml2Enumeration(const wxXml2Enumeration &tocopy) : wxXml2HelpWrapper() 
+		{ Copy(tocopy); }
 
 	wxXml2Enumeration(const wxString &name, const wxXml2Enumeration &next)
 		{ m_enum=NULL; Create(name, next); }
@@ -339,7 +340,7 @@ public:
 		{ m_obj = (wxXml2BaseNodeObj*)n; JustWrappedNew(); }
 
 	//! Copies the given wrapper (does not imply the XML structure copy).
-	wxXml2ElemDecl(const wxXml2ElemDecl &n)
+	wxXml2ElemDecl(const wxXml2ElemDecl &n) : wxXml2BaseNode()
 		{ Copy(n); }
 	
 	//! Creates a new element declaration and automatically
@@ -410,7 +411,7 @@ public:
 		{ m_obj = (wxXml2BaseNodeObj*)n; JustWrappedNew(); }
 
 	//! Copies the given wrapper (does not imply the XML structure copy).
-	wxXml2AttrDecl(const wxXml2AttrDecl &n) 
+	wxXml2AttrDecl(const wxXml2AttrDecl &n) : wxXml2BaseNode()
 		{ Copy(n); }
 	
 	//! Creates a new element declaration and automatically
@@ -492,7 +493,7 @@ public:
 		{ m_obj = (wxXml2BaseNodeObj*)n; JustWrappedNew(); }
 
 	//! Copies the given wrapper (does not imply the XML structure copy).
-	wxXml2EntityDecl(const wxXml2EntityDecl &n) 
+	wxXml2EntityDecl(const wxXml2EntityDecl &n) : wxXml2BaseNode()
 		{ Copy(n); }
 	
 
@@ -630,7 +631,7 @@ public:
 		{ JustWrappedNew(); }
 
 	//! Copies the given wrapper (does not imply the XML structure copy).
-	wxXml2DTD(const wxXml2DTD &dtd) : m_dtd(NULL)
+	wxXml2DTD(const wxXml2DTD &dtd) : wxXml2Wrapper(), m_dtd(NULL)
 		{ Copy(dtd); }
 
 	//! Destroys this DTD if it is completely unlinked from a greater
