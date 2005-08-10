@@ -379,7 +379,7 @@ setupdirs : .SYMBOLIC ..\lib ..\bin
 	wlib -q -n -b ..\lib\libxml2.lib +$^@
 !endif
 
-libonly : .SYMBOLIC $(____libonly_DEPNAME_DEP)
+libonly : .SYMBOLIC ..\config.h setupdirs $(____libonly_DEPNAME_DEP)
 
 ..\bin\testAutomata.exe :  $(TESTAUTOMATA_OBJECTS) $(__libxml2_lib___depname)
 	@%create watcom\testAutomata.lbc

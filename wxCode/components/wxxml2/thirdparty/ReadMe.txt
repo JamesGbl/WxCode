@@ -7,9 +7,8 @@
  For more info on the licenses, authors, change logs, etc you
  should download these libraries at
 
-   http://xmlsoft.org                    for libxml2
-   http://                               for iconv
-
+   http://xmlsoft.org                        for libxml2
+   http://www.gnu.org/software/libiconv/     for libiconv
 
 
 
@@ -19,7 +18,7 @@
  In short the licenses are:
 
    MIT license for libxml2
-   LGPL license for iconv
+   LGPL license for libiconv
 
 
 
@@ -42,7 +41,7 @@
    3) the bakefiles are tested & almost-surely work only on win32 because
       typically unix-based systems already include these libraries by
       default (libxml2 is used by Gnome; thus everywhere you have Gnome
-      you'll probably have also libxml2 and iconv!).
+      you'll probably have also libxml2 and libiconv!).
  
  On win32 obviously those libraries are not installed and if you rely on
  precompiled-binaries of libxml2 then you'll probably need to distribute
@@ -55,3 +54,10 @@
  *very* comfortable to launch a single command to build both libxml2
  and iconv with the same options, don't you ?
 
+
+
+
+ How to update libxml2 and libiconv
+ ==================================
+ 
+ 

@@ -324,7 +324,7 @@ ifeq ($(SHARED),1)
 	$(CC) -shared -fPIC -o $@ $(LIBXML2_DLL_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -L$(ICONV_DIR)\lib -Wl,--out-implib,..\lib\libxml2.a  $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)
 endif
 
-libonly: $(____libonly_DEPNAME_DEP)
+libonly: ..\config.h setupdirs $(____libonly_DEPNAME_DEP)
 
 ..\bin\testAutomata.exe: $(TESTAUTOMATA_OBJECTS) $(__libxml2_lib___depname)
 	$(CC) -o $@ $(TESTAUTOMATA_OBJECTS) $(LDFLAGS) -mthreads $(__DEBUGINFO) -L$(ICONV_DIR)\lib   ..\lib\libxml2.a $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)

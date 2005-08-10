@@ -5,11 +5,21 @@
 
 /*! 
 
-\mainpage wxXml2
+\mainpage 
+
+<center><em>libxml2 wrappers for wxWidgets<br/>written by Francesco Montorsi (c) 2005</em></center>
 
 This is the reference guide for wxXml2 component.
-Please look at \link refcount wxXml2 reference count page \endlink and to
-\link dep wxXml2 dependencies \endlink pages which were written by hand.
+wxXml2 are C++ wrappers of libxml2 for the wxWidgets cross-platform GUI toolkit.
+wxXml2 is wxWidgets-licensed; libxml2 is MIT-licensed and libiconv (the dependency of libxml2) is
+LGPL-licensend.
+
+Currently there is not a full tutorial but the usage of wxXml2 classes is pretty easy; just take a look
+at the \ref sample page to get an idea.
+
+To build wxXml2 and integrate it in your program, look at the \ref installation page.
+
+Last, also look at \ref refcount page for some important notes about wxXml2 classes usage.
 
 */
 
@@ -17,51 +27,85 @@ Please look at \link refcount wxXml2 reference count page \endlink and to
 
 /*! 
 
-\page dep wxXml2 dependencies
+\page sample The minimal sample of wxXml2
 
-wxXml2 is a wrapper for libxml2 and thus it depends on libxml2 and all libxml2's dependencies, too.
-Libxml2 depends on zlib and iconv. The first library is already built-in with wxWidgets so that there
-are no problems with that. Iconv library instead needs to be compiled and linked together with
-libxml2 and wxxml2.
+This is the source file of the minimal wxXml2 sample reported here as a quick reference...
+\include minimal.cpp
+
 */
+
+
+
 
 /*!
 
 \page installation wxXml2 installation
 
 The wxXml2 wrappers are packed in a few source files and few header files,
- so you could think the best way to use them is to build the source files
- together with the sources of your app: in this case you should just add
- the source & header files to your project and compile them with the
- standard wxWidgets flags.
+so you <b>could think the best way to use them is to build the source files
+together with the sources of your app</b>: in this case you should just add
+the source & header files to your project and compile them with the
+standard wxWidgets flags (they support both Unicode/ANSI, shared/static, debug/release builds).
 
- Anyway, others may find a library more portable.
- To build a library, you can use the makefiles in the BUILD folder.
- They support all common flags (BUILD=release/debug, UNICODE=1/0 and so on...).
+However, you should take in count that even if you include wxXml2 sources and headers in your
+project, you will still need to add the libxml2 and libiconv dependencies to your project.
 
- Obviously these wrappers require the presence of the LIBXML2 library
- and, only on win32, of the ICONV library. These two libraries are cross-platform
- and can be compiled with various compilers. If you want to download the
- precompiled binaries for win32, I suggest you to download the LIBS package
- of the MathStudio project (http://sourceforge.net/projects/mathstudio) which
- contains these two libraries compiled with MSVC, BORLAND and MINGW compilers.
+wxXml2, in fact, is a wrapper for libxml2 and thus it depends on libxml2 and all libxml2's dependencies, too.
+Libxml2 depends on zlib and iconv. The first library is already built-in with wxWidgets so that there
+are no problems with that. Libiconv instead needs to be compiled and linked together with
+libxml2 and wxxml2.
 
- The most important thing you should do, specially if you've never used these classes
- before, is to build the sample and read its source file.
- The doxygen docs are a useful and detailed reference manual to use after you learnt
- how wxxml2 wrappers must be used.
+So, <b>others may find a library more portable</b>; just choose your favourite one...
 
- In particular, when building wxscript on an autoconf-based system (like Linux/GNU-based systems),
- you have to create the makefile doing:
+<br/><br/>
 
+
+
+\section win32 How to compile wxXml2 on win32
+
+To build a library from wxXml2 sources, you can use the makefiles in the BUILD folder.
+They support all common wx flags (WX_DEBUG=0/1, WX_UNICODE=1/0, WX_SHARED=1/0).
+In win32 releases you will also find that exists a "thirdparty" folder which contains
+the libxml2 and libiconv libraries; this is very handy on win32, where libxml2 and libiconv
+are always missing (not part of Microsoft sources, yet ;-)) since you just need to go in
+the build\ folder of wxXml2 and type:
+
+for MSVC compiler: <tt>nmake -fmakefile.vc [same wxWidgets configuration using WX_DEBUG=0/1 WX_SHARED=0/1 WX_UNICODE=0/1 options]</tt>
+
+for Borland compiler: <tt>make -fmakefile.bcc [same wxWidgets configuration using WX_DEBUG=0/1 WX_SHARED=0/1 WX_UNICODE=0/1 options]</tt>
+
+for Watcom compiler: <tt>wmake -fmakefile.wat [same wxWidgets configuration using WX_DEBUG=0/1 WX_SHARED=0/1 WX_UNICODE=0/1 options]</tt>
+
+for Mingw compiler: <tt>mingw32-make -fmakefile.gcc [same wxWidgets configuration using WX_DEBUG=0/1 WX_SHARED=0/1 WX_UNICODE=0/1 options]</tt>
+
+Some notes: consider it normal to get thousands warnings from libxml2 and libiconv when compiling them in debug mode.
+
+
+<br/><br/>
+
+
+
+\section unix How to compile wxXml2 on Unix-based OS
+
+You will notice that the TAR.GZ distribution of wxXml2 comes without the libxml2 and libiconv thirdparty libraries. This is because these two libraries typically are part of all major linux distributions so that you probably won't need to download and install them.
+So, <b>on Unix-based operating systems</b>, unzip the tar.gz archive and type:
+
+<tt>
   cd build
-  aclocal
-  autoconf
-  ./configure [here you should use the same flags you used to configure wxWin]
+  
+  ./configure
+  
   make
- 
- Type "./configure --help" for more info.
- The autoconf-based systems also support a "make install" target which builds the library and then
- copies the headers of the component to /usr/local/include and the lib to /usr/local/lib.
- For any problem, feel free to contact frm@users.sourceforge.net
+  
+  make install
+</tt>
+
+Type "./configure --help" for more info.
+For any problem, feel free to contact frm@users.sourceforge.net.
+
+After compilation, the most important thing you should do, specially if you've never used these classes
+before, is to build the \ref sample and read its source file.
+These doxygen docs are a useful and detailed reference manual to use after you learnt
+how wxxml2 wrappers must be used.
+
 */
