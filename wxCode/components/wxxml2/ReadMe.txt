@@ -22,10 +22,19 @@
  ChangeLog
  ---------
  
- 1.5 - added libxml2 & libiconv to the build system for win32 users.
-       added a new parameter in wxXml2Node::Find
- 1.1 - second release; fixed the sample and the docs
- 1.0 - first release of wxXml2 wrappers
+ 1.5 
+     - added libxml2 & libiconv to the build system for win32 users; 
+       this removes the ZLIB dependency from libxml2.
+     - added a new parameter in wxXml2Node::Find to allow enable/disable 
+	   of recursive searchs
+	 - updated the bakefile build system with wxWidgets bakefile presets;
+	   now configure script automatically detects the wx configuration used
+	 
+ 1.1 
+     - second release; fixed the sample and the docs
+	 
+ 1.0 
+     - first release of wxXml2 wrappers
 
 
 
