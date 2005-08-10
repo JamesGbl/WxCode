@@ -80,7 +80,8 @@ enum
     Minimal_About = wxID_ABOUT,
 
 				// these were added by me
-	Minimal_UpdateCheck
+	Minimal_UpdateCheck,
+	Minimal_LocalCheck
 };
 
 // Define a new frame type: this is going to be our main frame
@@ -96,6 +97,7 @@ public:
     void OnAbout(wxCommandEvent& event);
 
 	void OnUpdateCheck(wxCommandEvent& event);
+	void OnLocalCheck(wxCommandEvent& event);
 
 private:
     // any class wishing to process wxWindows events must use this macro
@@ -114,6 +116,7 @@ BEGIN_EVENT_TABLE(MyFrame, wxFrame)
     EVT_MENU(Minimal_About, MyFrame::OnAbout)
 
     EVT_MENU(Minimal_UpdateCheck, MyFrame::OnUpdateCheck)
+    EVT_MENU(Minimal_LocalCheck, MyFrame::OnLocalCheck)
 END_EVENT_TABLE()
 
 // Create a new application object: this macro will allow wxWindows to create
@@ -226,6 +229,8 @@ MyFrame::MyFrame(const wxString& title)
     wxMenu *menuFile = new wxMenu;
     menuFile->Append(Minimal_UpdateCheck, _T("Check for updates..."), 
             _T("Checks for updates and eventually downloads the update version..."));	
+    menuFile->Append(Minimal_LocalCheck, _T("Check for updates using local packages"), 
+            _T("Checks for updates and eventually downloads the update version..."));	
     menuFile->Append(Minimal_Quit, _T("E&xit\tAlt-X"), _T("Quit this program"));	
     
     // the "About" item should be in the help menu
@@ -306,6 +311,11 @@ void wxUpdateWebUpdaterIfRequired()
 }
 
 void MyFrame::OnUpdateCheck(wxCommandEvent &)
+{
+	wxUpdateAndExit(this, wxT("webupdatedlg.xrc"), wxT("online.xml"));
+}
+
+void MyFrame::OnLocalCheck(wxCommandEvent &)
 {
 	wxUpdateAndExit(this, wxT("webupdatedlg.xrc"), wxT("local.xml"));
 }

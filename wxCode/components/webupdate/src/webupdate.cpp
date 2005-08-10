@@ -28,6 +28,7 @@
 
 #include <wx/url.h>
 #include <wx/file.h>
+#include <wx/app.h>
 #include <wx/wfstream.h>
 #include <wx/filesys.h>
 #include "wx/webupdate.h"

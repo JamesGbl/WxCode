@@ -80,6 +80,7 @@ protected:		// event handlers
 
 	void OnItemCheck(wxListEvent &ev);
 	void OnItemUncheck(wxListEvent &ev);
+	void OnSize(wxSizeEvent &);
 
 	// for event raised by our wxCacheSizerThread....
 	void OnCacheSizeComplete(wxCommandEvent &);
@@ -93,7 +94,7 @@ protected:		// event handlers
 	//! n-th item currently shown in this listctrl.
 	//! The two indexes could not match when, for example, we are
 	//! showing only outdated packages in the listctrl.
-	int GetPackageIndexForItem(int i);
+	int GetPackageIndexForItem(int i) const;
 
 	//! Sets the local version field for the listctrl item at idx #idx
 	//! using the idx-th item of the local package array for retrieving
@@ -176,6 +177,12 @@ public:		// getters
 	
 	//! Returns the installation status for the given package.
 	bool IsInstalled(const wxWebUpdatePackage &) const;	
+
+	//! Returns TRUE if the n-th item can be checked (by the user).
+	bool CanBeChecked(int n);
+
+	//! Returns TRUE if the n-th item can be unchecked (by the user).
+	bool CanBeUnchecked(int n);
 
 public:		// setters
 

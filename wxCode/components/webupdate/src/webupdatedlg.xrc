@@ -267,17 +267,10 @@
           <flag>wxGROW|wxALL</flag> <border>5</border> 
           <option>0</option>
           <object class="wxBoxSizer">
-            <orient>wxHORIZONTAL</orient> 
-            <object class="sizeritem">
-              <flag>wxGROW</flag> <border>5</border> 
-              <option>1</option>
-              <object class="wxButton" name="IDWUD_SHOWHIDEADV">
-                <label>Show advanced settings >></label>
-              </object>
-            </object>
+            <orient>wxHORIZONTAL</orient>             
             <object class="spacer">
               <flag>wxGROW</flag> <border>5</border> 
-              <option>1</option>
+              <option>2</option>
             </object>
             <!-- this static text is updated on real-time by wxWebUpdateDlg so
 					 we need to use the wxST_NO_AUTORESIZE flag -->
@@ -291,15 +284,24 @@
             </object>
           </object>
         </object>
-        <object class="spacer">
-          <flag>wxGROW</flag> <border>5</border> 
-          <option>0</option>
-          <size>10,10</size> </object>
         <object class="sizeritem">
-          <flag>wxGROW</flag> <border>10</border> 
+          <flag>wxALIGN_CENTER|wxALL|wxGROW</flag> <border>5</border> 
+          <object class="wxStaticLine" name="IDWUD_LINE2">
+            <style>wxLI_HORIZONTAL</style>
+          </object>
+        </object>		
+        <object class="spacer">
+          <flag>wxGROW</flag>
+		  <border>5</border> 
+          <option>0</option>
+          <size>10,10</size>
+		</object>
+        <object class="sizeritem">
+          <flag>wxGROW</flag>
+		  <border>10</border> 
           <!-- this is very important since it determines the portion of the wxWebUpdateAdvPanel which
 				can be shown -->
-          <option>5</option>
+          <option>6</option>
           <!-- OUR SECOND UNKNOWN CONTROL: be careful that this control is inside the first sizer of the
 				 dialog or the "Show/hide adv panel" button won't work !! -->
           <object class="unknown" name="IDWUD_ADVPANEL"/>

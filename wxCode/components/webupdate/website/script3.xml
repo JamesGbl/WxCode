@@ -3,10 +3,6 @@
 <!-- $Id$ -->
 
 <webupdate version="1.0">
-
-   <!-- our customized messages -->
-   <msg-update-available>Some updates for "$(framename)" are available; don't miss them !</msg-update-available>
-   <msg-update-notavailable>You have the most updated version of "$(framename)"...</msg-update-notavailable>
 	 
    <!-- for an example of XML webupdate script with multiple packages see script2.xml -->
    <package id="simple">

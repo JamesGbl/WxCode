@@ -177,23 +177,30 @@ bool wxWebUpdateActionExtract::Run() const
     {
         // access meta-data
         wxString name = entry->GetName();
-		if (entry->IsDir()) {
+        
+        // is this file/dir registered in the name map ?
+        int idx = compressed.Index(name);
+        if (idx != wxNOT_FOUND)
+        	name = extracted[idx];
+        wxString output = dir + name;
 
-			if (!wxMkdir(name))
-				wxLogDebug(wxT("wxWebUpdateActionExtract::Run - could not create the [") + name + wxT("] folder.. proceeding anyway"));
+		// can be different from "dir" if "name" includes a relative path...
+		wxString outputdir = wxFileName(output).GetPath();
+
+		// intercept directories...
+		if (!wxDirExists(outputdir)) {
+
+			if (wxFileName(outputdir).Mkdir(0777, wxPATH_MKDIR_FULL))
+				wxLogDebug(wxT("wxWebUpdateActionExtract::Run - created the [") + 
+							outputdir + wxT("] folder"));
 			else
-				wxLogDebug(wxT("wxWebUpdateActionExtract::Run - created the [") + name + wxT("] folder"));
+				wxLogDebug(wxT("wxWebUpdateActionExtract::Run - could not create the [") + 
+							outputdir + wxT("] folder.. proceeding anyway"));
 		
 			continue;		// this entry contains no data
 		}
 
-        wxString output = dir + name;
-        
-        // is this file registered in the name map ?
-        int idx = compressed.Index(name);
-        if (idx != wxNOT_FOUND)
-        	output = dir + extracted[idx];
-        
+		// this is a file...
 		wxLogDebug(wxT("wxWebUpdateActionExtract::Run - extracting [") + name +
 			wxT("] as [") + output + wxT("]..."));
 

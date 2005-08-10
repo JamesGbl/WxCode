@@ -112,17 +112,9 @@ WEBUPDATE_DLL_OBJECTS =  \
 WEBUPDATER_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) -tWM \
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
 	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	-I$(WX_DIR)\include -I..\include -I..\include -I$(HTTPENGINE_DIR)\include \
+	-I$(WX_DIR)\include -I..\include -I$(HTTPENGINE_DIR)\include \
 	$(__HTTPENGINEDEP_DEF_p) $(CPPFLAGS) $(CXXFLAGS)
 WEBUPDATER_OBJECTS =  \
-	borland\webupdater_webupdate.obj \
-	borland\webupdater_webupdatedlg.obj \
-	borland\webupdater_checkedlistctrl.obj \
-	borland\webupdater_md5.obj \
-	borland\webupdater_installer.obj \
-	borland\webupdater_download.obj \
-	borland\webupdater_stdactions.obj \
-	borland\webupdater_webupdatectrl.obj \
 	borland\webupdater_app.obj
 SIMPLE_1_0_0_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	-tWM $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
@@ -451,32 +443,8 @@ borland\webupdate_dll_stdactions.obj: .\..\src\stdactions.cpp
 borland\webupdate_dll_webupdatectrl.obj: .\..\src\webupdatectrl.cpp
 	$(CXX) -q -c -P -o$@ $(WEBUPDATE_DLL_CXXFLAGS) $**
 
-borland\webupdater_webupdate.obj: .\..\src\webupdate.cpp
-	$(CXX) -q -c -P -o$@ $(WEBUPDATER_CXXFLAGS) $**
-
-borland\webupdater_webupdatedlg.obj: .\..\src\webupdatedlg.cpp
-	$(CXX) -q -c -P -o$@ $(WEBUPDATER_CXXFLAGS) $**
-
-borland\webupdater_checkedlistctrl.obj: .\..\src\checkedlistctrl.cpp
-	$(CXX) -q -c -P -o$@ $(WEBUPDATER_CXXFLAGS) $**
-
-borland\webupdater_md5.obj: .\..\src\md5.cpp
-	$(CXX) -q -c -P -o$@ $(WEBUPDATER_CXXFLAGS) $**
-
-borland\webupdater_installer.obj: .\..\src\installer.cpp
-	$(CXX) -q -c -P -o$@ $(WEBUPDATER_CXXFLAGS) $**
-
-borland\webupdater_download.obj: .\..\src\download.cpp
-	$(CXX) -q -c -P -o$@ $(WEBUPDATER_CXXFLAGS) $**
-
-borland\webupdater_stdactions.obj: .\..\src\stdactions.cpp
-	$(CXX) -q -c -P -o$@ $(WEBUPDATER_CXXFLAGS) $**
-
-borland\webupdater_webupdatectrl.obj: .\..\src\webupdatectrl.cpp
-	$(CXX) -q -c -P -o$@ $(WEBUPDATER_CXXFLAGS) $**
-
 borland\webupdater_app.res: .\..\src\app.rc
-	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include $(__WX_SHAREDDEFINE_p_1_0) $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) -d__WXMSW__ -i$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\include -i$(HTTPENGINE_DIR)\include $(__HTTPENGINEDEP_DEF_p_1) -i..\src $**
+	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include $(__WX_SHAREDDEFINE_p_1_0) $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) -d__WXMSW__ -i$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i$(HTTPENGINE_DIR)\include $(__HTTPENGINEDEP_DEF_p_1) -i..\src $**
 
 borland\webupdater_app.obj: .\..\src\app.cpp
 	$(CXX) -q -c -P -o$@ $(WEBUPDATER_CXXFLAGS) $**

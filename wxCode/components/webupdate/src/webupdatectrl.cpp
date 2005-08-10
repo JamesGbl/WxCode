@@ -52,6 +52,7 @@ IMPLEMENT_CLASS(wxWebUpdateListCtrl, wxWUDLC_BASECLASS)
 BEGIN_EVENT_TABLE(wxWebUpdateListCtrl, wxWUDLC_BASECLASS)
 	EVT_LIST_ITEM_CHECKED(-1, wxWebUpdateListCtrl::OnItemCheck)
 	EVT_LIST_ITEM_UNCHECKED(-1, wxWebUpdateListCtrl::OnItemUncheck)
+	EVT_SIZE(wxWebUpdateListCtrl::OnSize)
 
 	EVT_CACHESIZE_COMPLETE(-1, wxWebUpdateListCtrl::OnCacheSizeComplete)
 END_EVENT_TABLE()
@@ -74,9 +75,9 @@ wxString wxGetSizeStr(unsigned long bytesize)
 	else if (bytesize < 1024) 
 		sz = wxString::Format(wxT("%d B"), bytesize);
 	else if (bytesize < 1024*1024) 
-		sz = wxString::Format(wxT("%.2f kB"), ((float)bytesize/1024.));
+		sz = wxString::Format(wxT("%.0f kB"), ((float)bytesize/1024.));
 	else if (bytesize < 1024*1024*1024) 
-		sz = wxString::Format(wxT("%.2f MB"), ((float)bytesize/(1024.*1024.)));
+		sz = wxString::Format(wxT("%.1f MB"), ((float)bytesize/(1024.*1024.)));
 	else 
 		// petabytes are not handled because they require a division
 		// for a number of the order 2^40 which exceed the 32 bits
@@ -108,6 +109,10 @@ wxWebUpdateListCtrl::wxWebUpdateListCtrl(wxWindow* parent, wxWindowID id,
 	InsertColumn(3, wxT("Size"));
 	InsertColumn(4, wxT("Importance"));
 	InsertColumn(5, wxT("Requires"));
+}
+
+void wxWebUpdateListCtrl::OnSize(wxSizeEvent &)
+{
 	SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
 	SetColumnWidth(1, wxLIST_AUTOSIZE_USEHEADER);
 	SetColumnWidth(2, wxLIST_AUTOSIZE_USEHEADER);	
@@ -120,7 +125,7 @@ wxWebUpdateListCtrl::wxWebUpdateListCtrl(wxWindow* parent, wxWindowID id,
 					GetColumnWidth(2) +
 					GetColumnWidth(4) +
 					GetColumnWidth(5);
-	int col3size = GetClientSize().GetWidth()-colwidth;	
+	int col3size = GetClientSize().GetWidth()-colwidth-5;	
 	SetColumnWidth(3, col3size > 50 ? col3size : 50);
 }
 
@@ -289,10 +294,13 @@ wxWebUpdatePackage &wxWebUpdateListCtrl::GetRemotePackage(const wxString &name)
 
 void wxWebUpdateListCtrl::OnItemCheck(wxListEvent &ev)
 {
-	if (m_bLocked) return;		// discard this event
-
 	int n = ev.GetIndex();
 	wxASSERT_MSG(IsChecked(n), wxT("Something broken in wxCheckedListCtrl"));
+	
+	if (!CanBeChecked(n)) { 
+		Check(n, FALSE);
+		return;
+	}
 
 	// check also all the packages required by the package that the 
 	// user has just checked...
@@ -301,17 +309,20 @@ void wxWebUpdateListCtrl::OnItemCheck(wxListEvent &ev)
 
 		wxString str = m_arrRemotePackages[GetPackageIndexForItem(i)].GetName();
 		if (i != n &&							// don't process the just-checked item
-			required.Contains(str))
+			required.Contains(str) &&
+			CanBeChecked(i))
 			Check(i, TRUE);
 	}
 }
 
 void wxWebUpdateListCtrl::OnItemUncheck(wxListEvent &ev)
 {
-	if (m_bLocked) return;		// discard this event
-
 	int n = ev.GetIndex();
 	wxASSERT_MSG(!IsChecked(n), wxT("Something broken in wxCheckedListCtrl"));
+	if (!CanBeUnchecked(n)) { 
+		Check(n, TRUE);
+		return;
+	}
 	
 	// collect some info
 	wxString str = m_arrRemotePackages[GetPackageIndexForItem(n)].GetName();
@@ -322,7 +333,8 @@ void wxWebUpdateListCtrl::OnItemUncheck(wxListEvent &ev)
 	
 		wxString req = m_arrRemotePackages[GetPackageIndexForItem(i)].GetPrerequisites();
 		if (i != n &&							// don't process the just-unchecked item
-			req.Contains(str))
+			req.Contains(str) &&
+			CanBeUnchecked(i))
 			Check(i, FALSE);
 	}
 }
@@ -410,11 +422,33 @@ void wxWebUpdateListCtrl::UpdatePackagesVersions(wxWebUpdateListCtrlFilter filte
 	}
 }
 
-int wxWebUpdateListCtrl::GetPackageIndexForItem(int i)
+int wxWebUpdateListCtrl::GetPackageIndexForItem(int i) const
 {
 	// in #RebuildPackageList we set as item data the index in our
 	// remote package array...
 	return GetItemData(i);
+}
+
+bool wxWebUpdateListCtrl::CanBeChecked(int n)
+{
+	if (m_bLocked) return FALSE;		// discard user interaction in any case.
+
+	// cannot check packages which are already up-to-date...
+	wxWebUpdateCheckFlag f = IsPackageUp2date(m_arrRemotePackages[GetPackageIndexForItem(n)]);
+	if (f == wxWUCF_UPDATED || f == wxWUCF_FAILED)
+		return FALSE;
+	return TRUE;
+}
+
+bool wxWebUpdateListCtrl::CanBeUnchecked(int n)
+{
+	if (m_bLocked) 
+		return FALSE;		// discard user interaction in any case.
+	
+	wxWebUpdateCheckFlag f = IsPackageUp2date(m_arrRemotePackages[GetPackageIndexForItem(n)]);
+	wxASSERT_MSG(f != wxWUCF_UPDATED && f != wxWUCF_FAILED,
+				wxT("That item should not have been checked !"));
+	return TRUE;
 }
 
 wxWebUpdatePackage *wxWebUpdateListCtrl::GetNextPackageToDownload()

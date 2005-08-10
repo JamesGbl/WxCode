@@ -84,17 +84,9 @@ WEBUPDATER_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -mthreads \
 	$(__WX_SHAREDDEFINE_p) -DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
-	-I..\include -I..\include -I$(HTTPENGINE_DIR)\include \
-	$(__HTTPENGINEDEP_DEF_p) $(CPPFLAGS) $(CXXFLAGS)
+	-I..\include -I$(HTTPENGINE_DIR)\include $(__HTTPENGINEDEP_DEF_p) \
+	$(CPPFLAGS) $(CXXFLAGS)
 WEBUPDATER_OBJECTS =  \
-	mingw\webupdater_webupdate.o \
-	mingw\webupdater_webupdatedlg.o \
-	mingw\webupdater_checkedlistctrl.o \
-	mingw\webupdater_md5.o \
-	mingw\webupdater_installer.o \
-	mingw\webupdater_download.o \
-	mingw\webupdater_stdactions.o \
-	mingw\webupdater_webupdatectrl.o \
 	mingw\webupdater_app_rc.o \
 	mingw\webupdater_app.o
 SIMPLE_1_0_0_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
@@ -396,32 +388,8 @@ mingw\webupdate_dll_stdactions.o: ./../src/stdactions.cpp
 mingw\webupdate_dll_webupdatectrl.o: ./../src/webupdatectrl.cpp
 	$(CXX) -c -o $@ $(WEBUPDATE_DLL_CXXFLAGS) $(CPPDEPS) $<
 
-mingw\webupdater_webupdate.o: ./../src/webupdate.cpp
-	$(CXX) -c -o $@ $(WEBUPDATER_CXXFLAGS) $(CPPDEPS) $<
-
-mingw\webupdater_webupdatedlg.o: ./../src/webupdatedlg.cpp
-	$(CXX) -c -o $@ $(WEBUPDATER_CXXFLAGS) $(CPPDEPS) $<
-
-mingw\webupdater_checkedlistctrl.o: ./../src/checkedlistctrl.cpp
-	$(CXX) -c -o $@ $(WEBUPDATER_CXXFLAGS) $(CPPDEPS) $<
-
-mingw\webupdater_md5.o: ./../src/md5.cpp
-	$(CXX) -c -o $@ $(WEBUPDATER_CXXFLAGS) $(CPPDEPS) $<
-
-mingw\webupdater_installer.o: ./../src/installer.cpp
-	$(CXX) -c -o $@ $(WEBUPDATER_CXXFLAGS) $(CPPDEPS) $<
-
-mingw\webupdater_download.o: ./../src/download.cpp
-	$(CXX) -c -o $@ $(WEBUPDATER_CXXFLAGS) $(CPPDEPS) $<
-
-mingw\webupdater_stdactions.o: ./../src/stdactions.cpp
-	$(CXX) -c -o $@ $(WEBUPDATER_CXXFLAGS) $(CPPDEPS) $<
-
-mingw\webupdater_webupdatectrl.o: ./../src/webupdatectrl.cpp
-	$(CXX) -c -o $@ $(WEBUPDATER_CXXFLAGS) $(CPPDEPS) $<
-
 mingw\webupdater_app_rc.o: ./../src/app.rc
-	windres --use-temp-file -i$< -o$@ $(__WX_SHAREDDEFINE_p_1_0) --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ..\include --include-dir ..\include --include-dir $(HTTPENGINE_DIR)/include $(__HTTPENGINEDEP_DEF_p_1) --include-dir ../src
+	windres --use-temp-file -i$< -o$@ $(__WX_SHAREDDEFINE_p_1_0) --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ..\include --include-dir $(HTTPENGINE_DIR)/include $(__HTTPENGINEDEP_DEF_p_1) --include-dir ../src
 
 mingw\webupdater_app.o: ./../src/app.cpp
 	$(CXX) -c -o $@ $(WEBUPDATER_CXXFLAGS) $(CPPDEPS) $<

@@ -3,7 +3,7 @@
 	<appname>wxWebUpdate ADVANCED sample</appname>
 	<appfile>advanced</appfile>
 	<dlgxrc>wxWebUpdateDlg</dlgxrc>
-	<remoteuri>file:../../../website/script3.xml</remoteuri>
+	<remoteuri>http://wxcode.sourceforge.net/components/webupdate/script2.xml</remoteuri>
 
 	<local-package id="core">
 		<version>0.0.1</version>

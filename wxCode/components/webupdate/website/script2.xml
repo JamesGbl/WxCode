@@ -33,8 +33,8 @@
 			<platform name="any"/>	
 			
 			<actions>
-				<run cmd="$(mkdir)" args="$(programdir)//addon1" flags="SYNC" />
-				<extract file="$(thisfile)" where="$(programdir)//addon1"/>
+				<run cmd="$(mkdir)" args="$(programdir)//addons" flags="SYNC" />
+				<extract file="$(thisfile)" where="$(programdir)//addons"/>
 			</actions>
 	  </latest-download>
    </package>
@@ -51,8 +51,8 @@
 			<platform name="any"/>	
 			
 			<actions>
-				<run cmd="$(mkdir)" args="$(programdir)//addon2" flags="SYNC" />
-				<extract file="$(thisfile)" where="$(programdir)//addon2"/>
+				<run cmd="$(mkdir)" args="$(programdir)//addons" flags="SYNC" />
+				<extract file="$(thisfile)" where="$(programdir)//addons"/>
 			</actions>
 	  </latest-download>
    </package>
@@ -69,8 +69,8 @@
 			<platform name="any"/>	
 			
 			<actions>
-				<run cmd="$(mkdir)" args="$(programdir)//addon3" flags="SYNC" />
-				<extract file="$(thisfile)" where="$(programdir)//addon3"/>
+				<run cmd="$(mkdir)" args="$(programdir)//addons" flags="SYNC" />
+				<extract file="$(thisfile)" where="$(programdir)//addons"/>
 			</actions>
 	  </latest-download>
    </package>

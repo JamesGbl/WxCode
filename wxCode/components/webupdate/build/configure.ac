@@ -6,7 +6,7 @@
 # ==============================================================
 
 AC_PREREQ(2.59)
-AC_INIT(webupdate, 1.0, [frm@sourceforge.net])
+AC_INIT([webupdate], [1.0], [frm@sourceforge.net])
 
 # This allows us to use Bakefile, recognizing the system type
 # (and sets the AC_CANONICAL_BUILD, AC_CANONICAL_HOST and

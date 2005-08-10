@@ -105,7 +105,7 @@
  
   	<if cond="MAKE_EXE=='1'">	
 		<!-- the WebUpdater utility... -->
-		<exe id="webupdater" template="compexe">
+		<exe id="webupdater" template="basic,wx,wxcode-basic">
 			<lib-path>$(HTTPENGINEDEP_LIBPATH)</lib-path>
 			<include>$(HTTPENGINEDEP_INCPATH)</include>
 			<define>$(HTTPENGINEDEP_DEF)</define>
@@ -160,8 +160,8 @@
 			<set var="_xrc">..\src\$(_xrcname)</set>
 			<set var="_webupdatername">webupdater.exe</set>
 			<set var="_webupdater">..\src\$(_webupdatername)</set>
-			<msvc-project-files>$(_xrcname)</msvc-project-files>
-			<msvc-project-files>$(_webupdatername)</msvc-project-files>
+			<msvc-project-files>$(_xrc)</msvc-project-files>
+			<msvc-project-files>$(_webupdater)</msvc-project-files>
 			<set var="_output">$(nativePaths(value))</set>
 			
             <set var="_custom_build_files" append="1">$(_xrcname) $(_webupdatername)</set>

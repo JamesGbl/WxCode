@@ -246,7 +246,14 @@ protected:		// pointers to our controls
 	//! can remove from the filecount the webupdate XML remote script.
 	//! We could also do a check in each UpdateUI event and avoid this
 	//! field but it's much more easier to keep this and remove the check ;-)
-	int m_nFileCount;
+	//! Also, using a separate variable, we can reset this value each time
+	//! the user starts a new download+install process.
+	int m_nDownloadCount;
+
+	//! wxWebUpdateInstallThread::GetInstallationCount() could be used
+	//! using a separate variable we can reset this value each time
+	//! the user starts a new download+install process.
+	int m_nInstallCount;
 	
 protected:		// XML scripts
 

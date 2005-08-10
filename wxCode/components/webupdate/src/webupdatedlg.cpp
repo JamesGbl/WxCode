@@ -114,7 +114,7 @@ wxWebUpdateDlg::wxWebUpdateDlg(wxWindow *parent,
 	m_xmlLocal=script; 			
 	m_bUserAborted=FALSE; 
 	m_nStatus=wxWUDS_WAITINGXML;
-	m_nFileCount=0; 
+	m_nDownloadCount=0; 
 
 	m_dThread = NULL;
 	m_iThread = NULL;
@@ -154,15 +154,15 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 	m_pAdvPanel = new wxWebUpdateAdvPanel(this, m_xmlLocal, m_optExtra);
 
     // attach our classes in the XRC placeholders
-	if (!wxXmlResource::Get()->AttachUnknownControl(wxT("IDWUD_LISTCTRL"),
-                                                m_pUpdatesList)) {
+	if (FindWindow(wxT("IDWUD_LISTCTRL_container")) == NULL ||
+		!wxXmlResource::Get()->AttachUnknownControl(wxT("IDWUD_LISTCTRL"), m_pUpdatesList)) {
                                                 
         // maybe that the user's custom XRC file does not contain a IDWUD_LISTCTRL...
         m_pUpdatesList->Hide();
     }
-                                                                                                    
-	if (!wxXmlResource::Get()->AttachUnknownControl(wxT("IDWUD_ADVPANEL"),
-        			                                        m_pAdvPanel)) {
+
+	if (FindWindow(wxT("IDWUD_ADVPANEL_container")) == NULL ||
+		!wxXmlResource::Get()->AttachUnknownControl(wxT("IDWUD_ADVPANEL"), m_pAdvPanel)) {
 		
   		// maybe that the user's custom XRC file does not contain a IDWUD_ADVPANEL...
     	m_pAdvPanel->Hide();        
@@ -200,6 +200,14 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 	}
 
 
+	// this is a little hardcoded value to make wxWebUpdateSimpleDlg looks nicer...
+	wxSize sz = GetMinSize();
+	int w = wxSystemSettings::GetMetric(wxSYS_SCREEN_X);
+	if (w != -1) sz.SetWidth((int)(w*0.6));	
+	SetMinSize(sz);
+
+
+
 	// relayout
 	// --------
 
@@ -207,7 +215,7 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 	// to expand our dialog... force a layout recalculation	
 	GetSizer()->Layout();
 	GetSizer()->Fit(this);
-	GetSizer()->SetSizeHints(this);
+	GetSizer()->SetSizeHints(this);	
 }
 
 void wxWebUpdateDlg::ConnectionRequired()
@@ -308,9 +316,9 @@ wxWebUpdateListCtrlFilter wxWebUpdateDlg::GetPackageFilter() const
 void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
 {
 	// remove this download from our counter
-	wxASSERT_MSG(m_nFileCount == 1, 
+	wxASSERT_MSG(m_nDownloadCount == 1, 
 		wxT("Only the WebUpdate XML script should have been downloaded"));
-	m_nFileCount--;
+	m_nDownloadCount--;
 
 	// ok, we can now parse the XML doc
 	if (!m_xmlRemote.Load(xmluri)) {
@@ -493,6 +501,10 @@ void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 	m_dThread->m_proxy = m_pAdvPanel->GetProxySettings();
 #endif
 
+	// clear old file counts
+	m_nDownloadCount = 0;
+	m_nInstallCount = 0;
+
 	// check if we already downloaded the XML webupdate script
 	if (m_nStatus == wxWUDS_WAITINGXML) {
 
@@ -622,7 +634,7 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 	} else {
 
 		wxLogDebug(wxT("wxWebUpdateDlg::OnDownloadComplete - Download status: successfully completed"));
-		m_nFileCount++;
+		m_nDownloadCount++;
 
 		if (downloadingScript) {
 
@@ -668,6 +680,8 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 
 void wxWebUpdateDlg::OnInstallationComplete(wxCommandEvent &)
 {
+	m_nInstallCount++;
+
 	if (m_iThread->InstallationWasSuccessful()) {
 
 		m_pUpdatesList->SetInstallStatus(*m_current, TRUE);
@@ -853,8 +867,8 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 		m_pGauge->SetValue(0);
 		
 		// update our meters
-		int d = m_nFileCount,		// see #m_nFileCount description
-			i = m_iThread->GetInstallationCount();
+		int d = m_nDownloadCount,		// see #m_nFileCount description
+			i = m_nInstallCount;
 		
 		// did we download our WebUpdate script ?
 		bool scriptOk = (m_nStatus != wxWUDS_WAITINGXML);
@@ -874,10 +888,8 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 					wxString::Format(wxWUD_SPEEDTEXT_PREFIX wxT("downloaded %d package(s)"), d));
 			else if (d == 0 && scriptOk)
 				m_pSpeedText->SetLabel(wxWUD_SPEEDTEXT_PREFIX wxT("WebUpdate script successfully downloaded"));
-			else if (d == -1 && !scriptOk)
+			else if (d == 0 && !scriptOk)
 				m_pSpeedText->SetLabel(wxWUD_SPEEDTEXT_PREFIX wxT("waiting WebUpdate script download"));
-			else
-				m_pSpeedText->SetLabel(wxWUD_SPEEDTEXT_PREFIX wxT("download failed !"));
 
 			// in any case (wxWUDS_INSTALLING/wxWUDS_UNDEFINED) we are not downloading
 			// anything now...
