@@ -7,7 +7,7 @@
 
 
 AC_PREREQ(2.57)
-AC_INIT(wxxml2, 2.0, [frm@sourceforge.net])
+AC_INIT(wxxml2, 1.5, [frm@sourceforge.net])
 
 
 # This allows us to use Bakefile, recognizing the system type
@@ -28,8 +28,14 @@ AC_PROG_CXXCPP
 # check for the libxml2 library
 # AM_PATH_XML([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]]])
 # Test for XML, and define XML_CPPFLAGS and XML_LIBS
-AM_PATH_XML2([2.6.1], [],
+AM_PATH_XML2([2.5.4], [],
 	[AC_MSG_ERROR([Cannot found the libxml2 library or your libxml2 is too old (libxml2 > 2.6.1 is required); download it from http://xmlsoft.org])])
+
+# add all XML stuff that we've found...
+CXXFLAGS="$CXXFLAGS $XML_CPPFLAGS"
+CFLAGS="$CFLAGS $XML_CPPFLAGS"
+LDFLAGS="$LDFLAGS $WX_LIBS $XML_LIBS"
+
 
 
 
@@ -114,8 +120,8 @@ AC_OUTPUT
 # Just a little msg for GNU AUTOtools newbies (like me)
 echo
 echo " ------------------------------------------------------"
-echo "  Successfully configured wxDockIt ${PACKAGE_VERSION}:"
-echo "  wxDockIt will be built using the same configuration "
+echo "  Successfully configured ${PACKAGE_NAME} ${PACKAGE_VERSION}:"
+echo "  ${PACKAGE_NAME} will be built using the same configuration "
 echo "  used to build wxWidgets:"
 if [[ "$WX_DEBUG" = "1" ]]; then
 	echo "  - DEBUG build"

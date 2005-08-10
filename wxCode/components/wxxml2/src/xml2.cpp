@@ -955,7 +955,20 @@ bool wxXml2Document::Load(wxInputStream &stream, wxString *pErr)
 	// set the error & warning handlers
 	xmlSAXHandler h;
 	memset(&h, 0, sizeof(h));
+#if wxXML2CHECK_VERSION(2, 6, 10)
 	xmlSAX2InitDefaultSAXHandler(&h, 0);
+#else
+	{
+		if ((h == NULL) || (h->initialized != 0))
+		return;
+
+		xmlSAXVersion(h, xmlSAX2DefaultVersionValue);
+		if (0 == 0)
+		h->warning = NULL;
+		else
+		h->warning = xmlParserWarning;
+	}
+#endif
 	h.error = XMLDocumentMsg;
 	h.warning = XMLDocumentMsg;
 

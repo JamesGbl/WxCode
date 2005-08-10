@@ -229,6 +229,24 @@ extern WXDLLIMPEXP_DATA_WXXML2(wxXml2BaseNode) wxXml2EmptyBaseNode;
 // Classes
 // --------------
 
+
+//! Checks if the libxml2 version currently used (when compiling) is 
+//! newer or match the given version numbers.
+//! The version numbers must be: 1 digit for major & minor; always
+//! 2 digits for release:
+//! \code
+//! #if wxXML2CHECK_VERSION(2, 6, 10)
+//!     put here the code for libxml2 >= 2.6.10
+//! #else
+//!     put here the code for libxml2 < 2.6.10
+//! #endif
+//! \endcode
+//! \note LIBXML_VERSION is in the format 
+//!       MAJOR|MAJOR|MINOR|RELEASE|RELEASE
+//!
+#define wxXML2CHECK_VERSION(major,minor,release) \
+	LIBXML_VERSION >= major##0##minor##release
+
 //! A wrapper for some libxml2 static functions regarding the entire
 //! parser. In particular, you should call the #Init() function before
 //! using any of the wxXml2Wrapper and you should call the #Cleanup()

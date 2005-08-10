@@ -79,7 +79,16 @@ for Watcom compiler: <tt>wmake -fmakefile.wat [same wxWidgets configuration usin
 for Mingw compiler: <tt>mingw32-make -fmakefile.gcc [same wxWidgets configuration using WX_DEBUG=0/1 WX_SHARED=0/1 WX_UNICODE=0/1 options]</tt>
 
 Some notes: consider it normal to get thousands warnings from libxml2 and libiconv when compiling them in debug mode.
+It's also normal to get always the following linker warning with MSVC:
 
+<tt>LINK : warning LNK4049: locally defined symbol "_xmlFree" imported</tt>
+
+this is a libxml2 problem...
+
+To help you to find the generated libraries/DLLs, I configured the build system so that all *.lib and *.dll files
+of libiconv and libxml2 goes in the wxXml2/lib folder. This also means that in your program you can include as new
+library path searched by the linker only <tt>wxXml2/lib</tt>; however you still have to add as include paths both
+<tt>wxXml2/include</tt>, <tt>wxXml2/thirdparty/libxml2/include</tt>, <tt>wxXml2/thirdparty/libiconv/include</tt> folders.
 
 <br/><br/>
 
@@ -102,6 +111,8 @@ So, <b>on Unix-based operating systems</b>, unzip the tar.gz archive and type:
 
 Type "./configure --help" for more info.
 For any problem, feel free to contact frm@users.sourceforge.net.
+
+<br/><br/>
 
 After compilation, the most important thing you should do, specially if you've never used these classes
 before, is to build the \ref sample and read its source file.

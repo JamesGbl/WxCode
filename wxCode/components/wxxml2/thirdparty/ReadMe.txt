@@ -60,4 +60,8 @@
  How to update libxml2 and libiconv
  ==================================
  
+ Just decompress the libxml2 and libiconv packages in this thirdparty\
+ folder overwriting old files.
+ Then go in wxXml2\build and run bakefile_gen; if there are no
+ incompatible changes in libxml2 and libiconv this should be enough !
  
