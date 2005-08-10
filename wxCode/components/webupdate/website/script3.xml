@@ -2,35 +2,78 @@
 <!DOCTYPE webupdate PUBLIC "-//WebUpdate//DTD WebUpdater 1.0//EN" "http://wxcode.sourceforge.net/components/webupdate/remote.dtd">
 <!-- $Id$ -->
 
-<webupdate version="1.0">
-	 
-   <!-- for an example of XML webupdate script with multiple packages see script2.xml -->
-   <package id="simple">
-      <latest-version importance="high">2.0.3</latest-version>
-	  
-	  <!-- our downloads (1 per platform) -->
+<!-- This script is exactly like script2.xml just with local URIs instead of absolute HTTP ones-->
+<webupdate version="1.0">   
+
+   <!-- our CORE package: we use this to deliver the sample binaries -->
+   <package id="core">
+      <latest-version importance="normal">1.5.0</latest-version>
+
       <latest-download>
 	  
 			<!-- use a simple ZIP -->
-			<uri>file://./simple-$(latest-version).zip</uri>
+			<uri>file:$(remotedir)advanced-$(latest-version).zip</uri>
 			<platform name="msw"/>	
 			
 			<actions>
 				<extract file="$(thisfile)" where="$(programdir)"/>
 			</actions>
-
 	  </latest-download>
+   </package>
+   
+   
+   
+   <!-- our ADDON1 package -->
+   <package id="addon1">
+	  <requires>core</requires>
+      <latest-version importance="low">1.5.0</latest-version>      
+
+	  <!-- a single download for all platforms -->
       <latest-download>
-	  
-			<!-- on unix-based OS we use .tar.gz archives -->
-			<uri>file://./simple-$(latest-version).tar.gz</uri>
-			<platform name="gtk"/>
+			<uri>file:$(remotedir)addon1-$(latest-version).zip</uri>
+			<platform name="any"/>	
 			
-			<actions><run/></actions>
+			<actions>
+				<run cmd="$(mkdir)" args="$(programdir)//addons" flags="SYNC" />
+				<extract file="$(thisfile)" where="$(programdir)//addons"/>
+			</actions>
 	  </latest-download>
-
-	  <!-- description for this package; don't break lines or you'll get some empty spaces in the final description string -->
-	  <description>The package containing the binaries for the "$(framename)"... if you need to show to the user a link to your changelog, then the right place is this: URLs like http://wxcode.sourceforge.net are automatically highlighted and made clickable...</description>
    </package>
 
+   
+   <!-- our ADDON2 package -->
+   <package id="addon2">
+	  <requires>core</requires>
+      <latest-version importance="low">1.5.0</latest-version>      
+
+	  <!-- a single download for all platforms -->
+      <latest-download>
+			<uri>file:$(remotedir)addon2-$(latest-version).zip</uri>
+			<platform name="any"/>	
+			
+			<actions>
+				<run cmd="$(mkdir)" args="$(programdir)//addons" flags="SYNC" />
+				<extract file="$(thisfile)" where="$(programdir)//addons"/>
+			</actions>
+	  </latest-download>
+   </package>
+   
+
+   <!-- our ADDON3 package -->
+   <package id="addon3">
+	  <requires>core,addon1,addon2</requires>
+      <latest-version importance="low">1.5.0</latest-version>      
+
+	  <!-- a single download for all platforms -->
+      <latest-download>
+			<uri>file:$(remotedir)addon3-$(latest-version).zip</uri>
+			<platform name="any"/>	
+			
+			<actions>
+				<run cmd="$(mkdir)" args="$(programdir)//addons" flags="SYNC" />
+				<extract file="$(thisfile)" where="$(programdir)//addons"/>
+			</actions>
+	  </latest-download>
+   </package>
+   
 </webupdate>

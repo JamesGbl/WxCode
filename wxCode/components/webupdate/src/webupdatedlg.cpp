@@ -511,7 +511,7 @@ void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 		wxASSERT_MSG(!m_xmlRemote.IsOk(),
 					wxT("The XML remote script should have not been loaded yet !"));
 
-		if (m_xmlLocal.GetRemoteScriptURI().StartsWith(wxT("http://")))
+		if (wxIsHTTPProtocol(m_xmlLocal.GetRemoteScriptURI()))
 			ConnectionRequired();
 
 		// keep our status in wxWUDS_WAITINGXML even if we are downloading the XML

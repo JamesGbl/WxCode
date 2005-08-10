@@ -183,17 +183,39 @@ bool wxWebUpdateLocalXMLScript::Load(const wxString &uri)
 		} else if (child->GetName() == wxT("dlgxrc")) {
 		
 			// save the name of the XRC file to use
-			m_strXRC = wxWebUpdateXMLScript::GetNodeContent(child);
+			m_strXRC = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(
+									wxWebUpdateXMLScript::GetNodeContent(child));
 		
   		} else if (child->GetName() == wxT("appfile")) {
 		
 			// save the filename of the program to update
-			m_strAppFile = wxWebUpdateXMLScript::GetNodeContent(child);
+			m_strAppFile = wxWebUpdateInstaller::Get()->DoSubstitution(
+									wxWebUpdateXMLScript::GetNodeContent(child));
   		
     	} else if (child->GetName() == wxT("remoteuri")) {
 		
 			// save the location of the remote script
-			m_strRemoteURI = wxWebUpdateXMLScript::GetNodeContent(child);
+			m_strRemoteURI = wxWebUpdateInstaller::Get()->DoSubstitution(
+									wxWebUpdateXMLScript::GetNodeContent(child));
+
+			// support for file: URIs
+			if (wxIsFileProtocol(m_strRemoteURI)) {
+
+				// is this a relative path ?
+				wxFileName fn = wxGetFileNameFromURI(m_strRemoteURI);				
+				if (fn.IsRelative()) {
+
+					// <remoteuri> tag should specify relative paths
+					// using the folder containing the local XML script
+					// as the folder used to solve the relative path.
+					wxFileName currdir(uri);
+					wxASSERT_MSG(currdir.IsAbsolute(), wxT("Invalid local URI"));
+					fn.MakeAbsolute(currdir.GetPath());
+				}
+
+				// replace our file URI with the wxFileName-filtered uri.
+				m_strRemoteURI = wxMakeFileURI(fn);
+			}
 
   		} else if (child->GetName() == wxT("keywords")) {
 		
@@ -209,7 +231,26 @@ bool wxWebUpdateLocalXMLScript::Load(const wxString &uri)
 		child = child->GetNext();
 	}
 
+	// is this local file valid ?
+	if (m_strAppName.IsEmpty() || m_strXRC.IsEmpty() || m_strAppFile.IsEmpty() ||
+		m_strRemoteURI.IsEmpty())
+		return FALSE;
+
+	// save the URI of this local XML script.
 	m_strLocalURI = uri;
+	wxWebUpdateInstaller::Get()->SetKeywordValue(wxT("localxml"), uri);
+
+	// save the URI of the remote XML script.
+	wxWebUpdateInstaller::Get()->SetKeywordValue(wxT("remotexml"), m_strRemoteURI);
+
+	// save also the folders
+	wxFileName f(wxGetFileNameFromURI(m_strRemoteURI));
+	wxWebUpdateInstaller::Get()->SetKeywordValue(wxT("remotedir"), 
+						f.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR));
+	wxFileName f2(wxGetFileNameFromURI(m_strLocalURI));
+	wxWebUpdateInstaller::Get()->SetKeywordValue(wxT("localdir"), 
+						f2.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR));
+
 	return TRUE;
 }
 
@@ -489,9 +530,8 @@ unsigned long wxWebUpdateDownload::GetDownloadSize(bool forceRecalc)
 }
 
 wxString wxWebUpdateDownload::GetFileName() const
-{
-	// FIXME: how can we do it better ?
-	return m_urlDownload.AfterLast('/');
+{	
+	return wxGetFileNameFromURI(m_urlDownload).GetFullName();
 }
 
 bool wxWebUpdateDownload::DownloadSynch(const wxString &path
@@ -784,10 +824,16 @@ wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdow
 			// extract filename for this download
 			uri = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(GetNodeContent(child));
 
-			// FIXME: how can we do it better ?
-			wxString name(uri.AfterLast('/'));
+			// the substitution process could have put some '\' (on win32) in the URI var... fix them
+			uri.Replace(wxT("\\"), wxT("/"));
+
+			// be sure that our "uri" var contains a valid URI...
+			uri = wxURI(uri).BuildURI();
+
+			// this keyword will be removed when exiting from this XML node
 			list[wxT("thisfile")] = list[wxT("downloaddir")] +
-				wxFileName::GetPathSeparator() + name;		// will be removed when exiting
+				wxFileName::GetPathSeparator() + 
+				wxGetFileNameFromURI(uri).GetFullName();
 
 		} else if (child->GetName() == wxT("md5")) {
 
@@ -1030,6 +1076,10 @@ bool wxWebUpdateXMLScript::Load(const wxString &uri)
 
 		child = child->GetNext();
 	}
+
+	// don't save here the URI of this XML script; it has been already saved by
+	// wxWebUpdateLocalXMLScript::Load
+	// (also we are probably parsing a temporary copy on the local PC here...)
 
 	return TRUE;
 }

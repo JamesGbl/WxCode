@@ -345,10 +345,13 @@ protected:
 	//! downloaded files and is taken from the wxWebUpdateXMLScript.
 	wxString m_strMD5;
 
-	//! The URL to the download.
+	//! The URL to the download. Remember that an URL does not mean esclusively
+	//! strings starting with "http:"; URLs can also point to local files and
+	//! start with "file:".
 	//! Note: this info was initially kept in a wxURL variable but since
 	//!       wxURL::GetInputStream() is deprecated in favour of wxFileSystem
-	//!       I use here a wxString which is easier to handle.    
+	//!       and wxURI is not very comfortable to use; I prefer to use here a 
+	//!       wxString which is easier to handle.    
 	wxString m_urlDownload;
 
 	//! The (rough) size of the resource pointed by #m_urlDownload.

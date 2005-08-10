@@ -50,6 +50,15 @@
      $(downloaddir) = the folder where the downloaded files are placed; ends with '//' special character.
      $(tempdir) = a temporary folder already existing and thus (probably) non-empty; ends with '//' special character.
      $(newtempdir) = a temporary folder which has been created by the WebUpdate and thus is empty; ends with '//' special character.
+	 $(localdir) = the folder where the local XML script is located; ends with '//' special character.
+	 $(remotedir) = the folder where the remote XML script is located; ends with '//' special character.
+
+   - files:
+     $(updater) = the path of the file and the filename of the WebUpdater program
+     $(program) = the path of the file and the filename of the program to update
+                  (the filename is taken from the local script)
+     $(localxml) = the path of the file and the filename (as URI) of the local XML script (acquired when parsing the local script).
+     $(remotexml) = the path of the file and the filename (as URI) of the remote XML script (taken from the local XML script).
    
    - names:   
      $(appname) = the name of the application (as loaded by the local script)
@@ -65,9 +74,6 @@
    
    - miscellaneous:
      $(pid) = the process ID of the updater program
-     $(updater) = the path of the file and the filename of the WebUpdater program
-     $(program) = the path of the file and the filename of the program to update
-                  (the filename is taken from the local script)
 	 
    - these are available only after the relative tags:
      $(latest-version) = the version of the package (available only after <latest-version>)

@@ -23,6 +23,33 @@
 #include <wx/datetime.h>
 
 
+// defined later
+class wxFileName;
+
+
+// Some protocol utilities
+// -----------------------
+
+//! Returns TRUE if the given URI should be handled by wxFileProto class
+//! because it starts with 'file:' and represent a file URI.
+WXDLLIMPEXP_WEBUPDATE bool wxIsFileProtocol(const wxString &uri);
+
+//! Returns TRUE if the given URI should be handled by wxURL class
+//! because it starts with 'http:' and represent a HTTP URI.
+WXDLLIMPEXP_WEBUPDATE bool wxIsHTTPProtocol(const wxString &uri);
+
+//! Returns the filename pointed by the given file URI.
+WXDLLIMPEXP_WEBUPDATE wxFileName wxGetFileNameFromURI(const wxString &uri);
+
+//! Returns a string with the file URI for the given filename.
+WXDLLIMPEXP_WEBUPDATE wxString wxMakeFileURI(const wxFileName &fn);
+
+
+
+
+// Events
+// ----------------------
+
 // this is the even sent by a wxDownloadThread class to the wxEvtHandler
 // which is given it in its constructor.
 DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_WEBUPDATE, wxEVT_COMMAND_DOWNLOAD_COMPLETE, -1);

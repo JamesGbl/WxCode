@@ -28,6 +28,7 @@
 
 #include "wx/download.h"
 #include <wx/wfstream.h>
+#include <wx/filename.h>
 
 #if wxUSE_MD5
 #include "wx/md5.h"
@@ -41,8 +42,48 @@
 DEFINE_EVENT_TYPE(wxEVT_COMMAND_DOWNLOAD_COMPLETE);
 DEFINE_EVENT_TYPE(wxEVT_COMMAND_CACHESIZE_COMPLETE);
 
-//#include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
-//WX_DEFINE_USER_EXPORTED_OBJARRAY(wxURLArray);
+
+
+// ---------------------
+// Globals
+// ---------------------
+
+bool wxIsFileProtocol(const wxString &uri)
+{
+	// file: is the signature of a file URI...
+	return uri.StartsWith(wxT("file:"));
+}
+
+bool wxIsHTTPProtocol(const wxString &uri)
+{
+	// http: is the signature of a file URI...
+	return uri.StartsWith(wxT("http:"));
+}
+
+wxFileName wxGetFileNameFromURI(const wxString &uri)
+{
+	// remove the file: prefix
+	wxString path(uri);
+	path.Remove(0, wxString(wxT("file:")).Len());
+
+	// now just build a wxfilename
+	return wxFileName(path);			// URIs always use the '/' directory separator
+}
+
+wxString wxMakeFileURI(const wxFileName &fn)
+{
+	wxString path = fn.GetFullPath();
+
+	// in case we are using win32 paths with backslashes...
+	// (this must be done also under Unix since even there we could
+	//  be forced to handle win32 paths)
+	path.Replace(wxT("\\"), wxT("/"));
+	
+	// now use wxURI as filter
+	return wxURI(wxT("file:") + path).BuildURI();
+}
+
+
 
 
 
@@ -91,7 +132,7 @@ void *wxDownloadThread::Entry()
 #if wxUSE_HTTPENGINE
 		wxInputStream *in = NULL;
 
-		if (m_strURI.StartsWith(wxT("http://"))) {
+		if (!wxIsFileProtocol(m_strURI)) {
 
 			wxLogDebug(wxT("wxDownloadThread::Entry - using wxHTTPBuilder"));
 			wxHTTPBuilder u;
