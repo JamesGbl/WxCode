@@ -441,9 +441,11 @@
 			<!-- not need to do anything here...							  -->
 		</copy-file-to-file>
 	</if>
+	<if cond="FORMAT=='msvc6prj' or FORMAT=='autoconf' or FORMAT=='gnu'">
+		<phony id="setup"/>
+	</if>
     
 	<if cond="FORMAT!='msvc6prj'">
-	    
 		<mkdir id="setuplibdir"><dir>$(XMLBASEDIR)$(DIRSEP)lib</dir></mkdir>
 		<mkdir id="setupbindir"><dir>$(XMLBASEDIR)$(DIRSEP)bin</dir></mkdir>
 			
@@ -453,6 +455,9 @@
 	    	<depends>setuplibdir</depends>
 	    	<depends>setupbindir</depends>
 	    </phony>
+	</if>
+	<if cond="FORMAT=='msvc6prj'">
+		<phony id="setupdirs"/>
 	</if>
 
     <!-- This defines a tag which includes headers on MSVC          -->
@@ -707,6 +712,8 @@ $(TAB)copy "$(DOLLAR)(InputPath)" ..\$(CONFIG_DSTNAME)
 			<if cond="SHARED=='1'">libxml2_dll</if>
 			<if cond="SHARED=='0'">libxml2_lib</if>
 		</set>
+		<depends>setup</depends>
+		<depends>setupdirs</depends>
 		<depends>$(DEPNAME)</depends>
 	</phony>
 	
