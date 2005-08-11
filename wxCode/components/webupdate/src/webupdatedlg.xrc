@@ -244,6 +244,10 @@
             </object>
           </object>
         </object>
+		<object class="spacer">
+		  <flag>wxGROW|wxALL</flag> <border>5</border> 
+		  <option>1</option>
+		</object>		
         <!-- GAUGE SECTION -->
         <object class="sizeritem">
           <flag>wxALIGN_CENTER|wxALL|wxGROW</flag> <border>5</border> 
@@ -284,6 +288,10 @@
             </object>
           </object>
         </object>
+		<object class="spacer">
+		  <flag>wxGROW|wxALL</flag> <border>5</border> 
+		  <option>1</option>
+		</object>			
         <object class="sizeritem">
           <flag>wxALIGN_CENTER|wxALL|wxGROW</flag> <border>5</border> 
           <object class="wxStaticLine" name="IDWUD_LINE2">
@@ -293,7 +301,7 @@
         <object class="spacer">
           <flag>wxGROW</flag>
 		  <border>5</border> 
-          <option>0</option>
+          <option>1</option>
           <size>10,10</size>
 		</object>
         <object class="sizeritem">
@@ -301,7 +309,8 @@
 		  <border>10</border> 
           <!-- this is very important since it determines the portion of the wxWebUpdateAdvPanel which
 				can be shown -->
-          <option>6</option>
+          <option>10</option>
+		  <size>1,170</size>
           <!-- OUR SECOND UNKNOWN CONTROL: be careful that this control is inside the first sizer of the
 				 dialog or the "Show/hide adv panel" button won't work !! -->
           <object class="unknown" name="IDWUD_ADVPANEL"/>
@@ -314,7 +323,7 @@
         </object>
         <object class="sizeritem">
           <flag>wxGROW|wxALL</flag> <border>5</border> 
-          <option>2</option>
+          <option>4</option>
           <object class="wxBoxSizer">
             <orient>wxHORIZONTAL</orient> 
             <object class="sizeritem">
@@ -389,14 +398,17 @@
         <orient>wxHORIZONTAL</orient> 
         <object class="sizeritem">
           <flag>wxALIGN_CENTER|wxALL|wxGROW</flag> <border>5</border> 
-          <option>2</option>
+          <option>4</option>
           <object class="wxBoxSizer">
             <orient>wxVERTICAL</orient> 
             <object class="sizeritem">
               <flag>wxALIGN_LEFT|wxALL</flag> <border>5</border> 
               <object class="wxCheckBox" name="IDWUAP_RESTART">
                 <checked>0</checked> 
-                <label>Restart XXX after the update</label>
+				
+				<!-- we must make the label long enough otherwise the name we set at run-time 
+				        could forge this static text to overlap with other controls -->
+                <label>Restart !!HERE GOES THE APPLICATION NAME!! after the update</label>
               </object>
             </object>
             <object class="sizeritem">
@@ -413,14 +425,16 @@
           <flag>wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxGROW|wxALL</flag> <border>5</border> 
           <option>1</option>
           <object class="wxButton" name="IDWUAP_PROXYSETTINGS">
-            <label>Proxy settings...</label>
+			<style>wxBU_LEFT|wxBU_RIGHT</style>
+            <label>Proxy\nsettings</label>
           </object>
         </object>
         <object class="sizeritem">
           <flag>wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxGROW|wxALL</flag> <border>5</border> 
           <option>1</option>
           <object class="wxButton" name="IDWUAP_AUTHSETTINGS">
-            <label>Authentication settings...</label>
+			<style>wxBU_LEFT|wxBU_RIGHT</style>
+            <label>Authentication\nsettings</label>
           </object>
         </object>
       </object>

@@ -96,16 +96,24 @@ public:
     bool m_bUseProxy;
     bool m_bProxyAuth;
     long m_nProxyPort;
-   
-    bool m_bUseAuth;
-    wxString m_strAuthUsername;
-    wxString m_strAuthPassword;
-    bool m_bRememberPasswd;
 
 public:
-	wxProxySettings() { m_bUseProxy = m_bProxyAuth = 0; m_nProxyPort = 0; m_bUseAuth = FALSE; }
+	wxProxySettings() { m_bUseProxy = m_bProxyAuth = 0; m_nProxyPort = 0; }
 	virtual ~wxProxySettings() {}
 };
+
+class WXDLLIMPEXP_WEBUPDATE wxHTTPAuthSettings
+{
+public:
+   bool m_bUseAuth;
+   wxString m_strAuthUsername;
+   wxString m_strAuthPassword;
+   bool m_bRememberPasswd;
+
+public:
+    wxHTTPAuthSettings() { m_bUseAuth = FALSE; m_bRememberPasswd = FALSE; }
+    virtual ~wxHTTPAuthSettings() {}
+}; 
 #endif
 
 
@@ -195,6 +203,9 @@ public:		// advanced options
 #if wxUSE_HTTPENGINE
 	//! Collects all options about proxy.
 	wxProxySettings m_proxy;
+
+	//! Collects all options about HTTP authentication.
+	wxHTTPAuthSettings m_auth;
 #endif
 
 public:

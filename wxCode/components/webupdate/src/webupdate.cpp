@@ -36,7 +36,7 @@
 #include "wx/installer.h"
 
 #if wxUSE_HTTPENGINE
-#include <wx/httpengine/httpbuilder.h>
+#include <wx/httpbuilder.h>
 #endif
 
 // wxWidgets RTTI
@@ -194,12 +194,14 @@ bool wxWebUpdateLocalXMLScript::Load(const wxString &uri)
   		
     	} else if (child->GetName() == wxT("remoteuri")) {
 		
-			// save the location of the remote script
-			m_strRemoteURI = wxWebUpdateInstaller::Get()->DoSubstitution(
+			// save the location of the remote script: it's important not to
+			// do the '//' substitution in strings which can contain http://
+			// strings...
+			m_strRemoteURI = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(
 									wxWebUpdateXMLScript::GetNodeContent(child));
 
 			// support for file: URIs
-			if (wxIsFileProtocol(m_strRemoteURI)) {
+			if (wxIsFileProtocol(m_strRemoteURI)) {				
 
 				// is this a relative path ?
 				wxFileName fn = wxGetFileNameFromURI(m_strRemoteURI);				

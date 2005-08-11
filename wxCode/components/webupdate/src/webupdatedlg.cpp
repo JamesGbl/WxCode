@@ -48,7 +48,8 @@
 #include <wx/tokenzr.h>
 
 #if wxUSE_HTTPENGINE
-	#include <wx/httpengine/proxysettingsdlg.h>
+	#include <wx/proxysettingsdlg.h>
+	#include <wx/authdlg.h>
 #endif
 
 // wxWidgets RTTI
@@ -166,6 +167,7 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 		
   		// maybe that the user's custom XRC file does not contain a IDWUD_ADVPANEL...
     	m_pAdvPanel->Hide();        
+
     }
     
     
@@ -213,6 +215,7 @@ void wxWebUpdateDlg::InitWidgetsFromXRC()
 
 	// we have changed the appname statictext control so maybe we need
 	// to expand our dialog... force a layout recalculation	
+	GetSizer()->CalcMin();
 	GetSizer()->Layout();
 	GetSizer()->Fit(this);
 	GetSizer()->SetSizeHints(this);	
@@ -349,7 +352,7 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
 	}
 	
 	// we have successfully complete step #1
-	wxASSERT_MSG(m_nStatus == wxWUDS_WAITINGXML,
+	wxASSERT_MSG(m_nStatus == wxWUDS_DOWNLOADINGXML,
 				wxT("Wrong status setting !"));
 	m_nStatus = wxWUDS_WAITING;		// CHANGE OUR STATUS
 }
@@ -499,6 +502,7 @@ void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 #if wxUSE_HTTPENGINE
 	// first update the advanced options
 	m_dThread->m_proxy = m_pAdvPanel->GetProxySettings();
+	m_dThread->m_auth = m_pAdvPanel->GetHTTPAuthSettings();
 #endif
 
 	// clear old file counts
@@ -520,6 +524,9 @@ void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 		m_dThread->m_strOutput = wxFileName::CreateTempFileName(wxT("webupdate"));
 		m_dThread->m_strID = wxWUD_XMLSCRIPT_ID;
 		m_dThread->BeginNewDownload();
+
+		// CHANGE OUR STATUS
+		m_nStatus = wxWUDS_DOWNLOADINGXML;
 		UpdateWindowUI();
 		return;
 	}
@@ -541,14 +548,13 @@ void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 	wxASSERT_MSG(atleastone, wxT("The wxWUD_OK button should be enabled only when ")
  							wxT("one or more packages are ready for download"));
 
-
 	// FIXME: is this required ?
 	UpdateWindowUI();
 }
 
 void wxWebUpdateDlg::OnCancel(wxCommandEvent &)
 {
-	if (m_nStatus == wxWUDS_DOWNLOADING) {
+	if (m_nStatus == wxWUDS_DOWNLOADING || m_nStatus == wxWUDS_DOWNLOADINGXML) {
 
 		// we are now labeled as wxWUD_CANCEL_DOWNLOAD...
 		// thus we only stop the download
@@ -612,7 +618,11 @@ void wxWebUpdateDlg::OnShowHideAdv(wxCommandEvent &)
 
 void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 {
-	bool downloadingScript = (m_dThread->m_strID == wxWUD_XMLSCRIPT_ID);
+	bool downloadingScript = (m_nStatus == wxWUDS_DOWNLOADINGXML);
+#ifdef __WXDEBUG__
+	if (downloadingScript) 
+		wxASSERT(m_dThread->m_strID == wxWUD_XMLSCRIPT_ID);
+#endif
 
 	// first of all, we need to know if download was successful
 	if (!m_dThread->DownloadWasSuccessful()) {
@@ -624,7 +634,7 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 					wxT(" from\n\n") + m_dThread->m_strURI + wxT("\n\nURL... "));
 		
 		if (downloadingScript) {
-			wxLogDebug(wxT("wxWebUpdateDlg::OnDownloadComplete - we were downloading the XML script... aborting dialog"));		
+			wxLogDebug(wxT("wxWebUpdateDlg::OnDownloadComplete - we were downloading the XML script... aborting dialog"));
 			AbortDialog();		// this is a unrecoverable error !
 		}
 
@@ -785,12 +795,13 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 	// check our state var looking at the thread status
 	if (m_dThread->IsDownloading() || m_dThread->IsComputingMD5()) {
 
-		wxASSERT_MSG(m_nStatus == wxWUDS_WAITINGXML ||		// special: when we download the XML remote script
-					m_nStatus == wxWUDS_DOWNLOADING,		// our status is still wxWUDS_WAITINGXML
+		wxASSERT_MSG(m_nStatus == wxWUDS_DOWNLOADINGXML ||
+					m_nStatus == wxWUDS_DOWNLOADING,	
 						wxT("invalid status mode"));
 	} else {
 
-		wxASSERT_MSG(m_nStatus != wxWUDS_DOWNLOADING,
+		wxASSERT_MSG(m_nStatus != wxWUDS_DOWNLOADING &&
+					m_nStatus != wxWUDS_DOWNLOADINGXML,
 						wxT("invalid status mode"));
 	}
 
@@ -805,7 +816,8 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 	}
 
 	// change UI labels according to the current status
-	if (m_nStatus == wxWUDS_DOWNLOADING) {
+	if (m_nStatus == wxWUDS_DOWNLOADING ||
+		m_nStatus == wxWUDS_DOWNLOADINGXML) {
 
 		// need to change labels ?
 		if (m_dThread->IsDownloading() && nLabelMode != wxWUDS_DOWNLOADING) {
@@ -975,6 +987,8 @@ void wxWebUpdateAdvPanel::InitWidgetsFromXRC()
 		m_pRestart->SetLabel(wxT("Restart ") + m_xmlLocal.GetAppName() + 
   							wxT(" after the update is finished"));
 		m_pRestart->SetValue(m_optExtra->m_bRestart);
+		//m_pRestart->GetBestSize();
+		//m_pRestart->GetContainingSizer()->CalcMin();
  	}
 	
 
@@ -982,6 +996,8 @@ void wxWebUpdateAdvPanel::InitWidgetsFromXRC()
 	// relayout
 	// --------
 
+	//GetSizer()->CalcMin();
+	GetSizer()->Layout();
 	GetSizer()->Fit(this);
 	GetSizer()->SetSizeHints(this);
 }
@@ -1016,7 +1032,7 @@ void wxWebUpdateAdvPanel::OnProxySettings(wxCommandEvent &)
 
 	dlg.CenterOnScreen();
 	dlg.SetHost(m_proxy.m_strProxyHostname);
-	dlg.SetPortW(m_proxy.m_nProxyPort);
+	dlg.SetPortNumber(m_proxy.m_nProxyPort);
 	dlg.SetUsername(m_proxy.m_strProxyUsername);
 	dlg.SetPassword(m_proxy.m_strProxyPassword);
 	dlg.SetAuthProxy(m_proxy.m_bProxyAuth);
@@ -1039,29 +1055,20 @@ void wxWebUpdateAdvPanel::OnProxySettings(wxCommandEvent &)
 void wxWebUpdateAdvPanel::OnAuthSettings(wxCommandEvent &)
 {
 #if wxUSE_HTTPENGINE
-	wxProxySettingsDlg dlg(this, -1, wxT("WebUpdate proxy settings"));
+	wxAuthenticateDlg dlg(this, -1, wxT("WebUpdate authentication settings"));
 
 	wxTopLevelWindow *tw = wxDynamicCast(GetParent(), wxTopLevelWindow);
 	if (tw) dlg.SetIcon( tw->GetIcon() );
 
 	dlg.CenterOnScreen();
-	dlg.SetHost(m_proxy.m_strProxyHostname);
-	dlg.SetPortW(m_proxy.m_nProxyPort);
-	dlg.SetUsername(m_proxy.m_strProxyUsername);
-	dlg.SetPassword(m_proxy.m_strProxyPassword);
-	dlg.SetAuthProxy(m_proxy.m_bProxyAuth);
-	//dlg.SetExceptions(m_proxy.m_strProxyExceptions);
-	//dlg.SetExceptionsDesc( _T("") );
-	//dlg.SetExceptionsNote( _T("") );
+	dlg.SetUsername(m_auth.m_strAuthUsername);
+	dlg.SetPassword(m_auth.m_strAuthPassword);
+	dlg.SetRememberPassword(m_auth.m_bRememberPasswd);
 	
-	if( dlg.ShowModal() == wxID_OK )
-	{
-		m_proxy.m_strProxyHostname = dlg.GetHost();
-		m_proxy.m_nProxyPort = dlg.GetPort();
-		m_proxy.m_strProxyUsername = dlg.GetUsername( );
-		m_proxy.m_strProxyPassword = dlg.GetPassword( );
-		m_proxy.m_bProxyAuth = dlg.IsAuthProxy();
-		//m_proxy.m_strProxyExceptions = dlg.GetExceptions();
+	if (dlg.ShowModal() == wxID_OK) {
+		m_auth.m_strAuthUsername = dlg.GetUsername();
+		m_auth.m_strAuthPassword = dlg.GetPassword();
+		m_auth.m_bRememberPasswd = dlg.GetRememberPassword();
 	}
 #endif
 }

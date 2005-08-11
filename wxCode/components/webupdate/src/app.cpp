@@ -399,8 +399,10 @@ bool WebUpdaterApp::OnInit()
 	// to test wxWebUpdateAdvPanel alone
 	m_dlg = new wxDialog(NULL, -1, wxT(""), wxDefaultPosition, wxDefaultSize, 
 		wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
-	new wxWebUpdateAdvPanel(m_dlg);
-	SetTopWindow(m_dlg);		
+	wxBoxSizer *sz = new wxBoxSizer(wxVERTICAL);
+	sz->Add(new wxWebUpdateAdvPanel(m_dlg, m_script, &m_optExtra), 1, 5, wxGROW);
+	sz->SetSizeHints(m_dlg);
+	SetTopWindow(m_dlg);
 #endif
 
 	// show the dialog...

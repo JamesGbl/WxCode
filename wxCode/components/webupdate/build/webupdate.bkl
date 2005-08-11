@@ -83,33 +83,37 @@
  	<set var="MAKE_LIB" overwrite="0">1</set>
  	<set var="MAKE_EXE" overwrite="0">1</set>
  	
+	<template id="webupdatecommon">
+			<lib-path>$(HTTPENGINEDEP_LIBPATH)</lib-path>
+			<include>$(HTTPENGINEDEP_INCPATH)</include>
+			<define>$(HTTPENGINEDEP_DEF)</define>
+	</template>
+	<define-tag name="webupdatelibs" rules="exe,dll">
+		<sys-lib>$(HTTPENGINEDEP_LIB)</sys-lib>
+		<wx-lib>xrc</wx-lib>
+		<wx-lib>xml</wx-lib>
+		<wx-lib>net</wx-lib>
+		<wx-lib>core</wx-lib>
+		<wx-lib>base</wx-lib>	
+	</define-tag>
+	
 	<if cond="MAKE_LIB=='1'">
 		<!-- the WebUpdate library: only for advanced uses -->
-		<lib id="webupdate_lib" template="complib" cond="WX_SHARED=='0'">
+		<lib id="webupdate_lib" template="complib,webupdatecommon" cond="WX_SHARED=='0'">
 			<sources>$(MOD_SRC)</sources>
 	  		<headers>$(MOD_HDR)</headers>
 		</lib>
-		<dll id="webupdate_dll" template="compdll" cond="WX_SHARED=='1'">
+		<dll id="webupdate_dll" template="compdll,webupdatecommon" cond="WX_SHARED=='1'">
 			<sources>$(MOD_SRC)</sources>
 	  		<headers>$(MOD_HDR)</headers>
-	
-			<sys-lib>$(HTTPENGINEDEP_LIB)</sys-lib>
-			<wx-lib>xrc</wx-lib>
-			<wx-lib>xml</wx-lib>
-			<wx-lib>net</wx-lib>
-			<wx-lib>core</wx-lib>
-			<wx-lib>base</wx-lib>
+			<webupdatelibs/>
 		</dll>
 		<set var="MSVC6PRJ_MERGED_TARGETS">webupdate=webupdate_lib+webupdate_dll</set>
 	</if>
  
   	<if cond="MAKE_EXE=='1'">	
 		<!-- the WebUpdater utility... -->
-		<exe id="webupdater" template="basic,wx,wxcode-basic">
-			<lib-path>$(HTTPENGINEDEP_LIBPATH)</lib-path>
-			<include>$(HTTPENGINEDEP_INCPATH)</include>
-			<define>$(HTTPENGINEDEP_DEF)</define>
-	
+		<exe id="webupdater" template="basic,wx,wxcode-basic,webupdatecommon">
 			<app-type>gui</app-type>		
 			<dirname>../src</dirname>
 			<res-include>../src</res-include>
@@ -122,12 +126,7 @@
 			<headers>$(APP_HDR)</headers>
 	
 			<library>webupdate_lib</library>
-			<sys-lib>$(HTTPENGINEDEP_LIB)</sys-lib>
-			<wx-lib>xrc</wx-lib>
-			<wx-lib>xml</wx-lib>
-			<wx-lib>net</wx-lib>
-		    <wx-lib>core</wx-lib>
-	       	<wx-lib>base</wx-lib>
+			<webupdatelibs/>
 		</exe>
 	</if>
 
@@ -138,7 +137,7 @@
 	
 	<!-- after the creation of the EXE, put the WebUpdater XRC file in all samples folders -->
 	<if cond="TARGETING_IDE=='0'">
-		<define-rule name="copyrep" extends="copy-files">
+		<define-rule name="copyrep" extends="force-copy-files">
 			<template>
 				<srcdir>../src</srcdir>
 				<if cond="TARGETING_WIN32=='1'"><files>webupdater.exe webupdatedlg.xrc</files></if>

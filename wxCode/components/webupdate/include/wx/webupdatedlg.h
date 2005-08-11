@@ -87,6 +87,9 @@ enum wxWebUpdateDlgStatus {
 	//! The user must still hit the "Get update list" button and
 	//! the XML remote script has not been loaded yet
 	wxWUDS_WAITINGXML = -1,	
+
+	//! We are downloading the remote XML script.
+	wxWUDS_DOWNLOADINGXML,
 	
 	//! We have successfully loaded the remote XML script and we are
 	//! waiting that the user chooses the packages to download & install
@@ -141,6 +144,7 @@ protected:		// pointers to our controls
 
 #if wxUSE_HTTPENGINE
 	wxProxySettings m_proxy;
+	wxHTTPAuthSettings m_auth;
 #endif
 
 	//! The local XML script used to get some info.
@@ -177,6 +181,10 @@ public:
 	//! Returns the updated proxy settings.
 	wxProxySettings GetProxySettings() const
 		{ return m_proxy; }
+
+	//! Returns the updated HTTP authentication settings.
+	wxHTTPAuthSettings GetHTTPAuthSettings() const
+		{ return m_auth; }
 #endif
 
 	//! Returns the path chosen by the user for the downloaded file.

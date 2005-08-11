@@ -35,7 +35,7 @@
 #endif
 
 #if wxUSE_HTTPENGINE
-#include <wx/httpengine/httpbuilder.h>
+#include <wx/httpbuilder.h>
 #endif
 
 // wxWidgets RTTI
@@ -145,9 +145,9 @@ void *wxDownloadThread::Entry()
 					u.HttpProxyAuth(m_proxy.m_strProxyUsername, m_proxy.m_strProxyPassword);
 			}
 			
-			if (m_proxy.m_bUseAuth) {
+			if (m_auth.m_bUseAuth) {
 				wxLogDebug(wxT("wxDownloadThread::Entry - using the basic authentication settings"));
-				u.Authenticate(m_proxy.m_strAuthUsername, m_proxy.m_strAuthPassword);
+				u.Authenticate(m_auth.m_strAuthUsername, m_auth.m_strAuthPassword);
 			}
 
 			in = u.GetInputStream(m_strURI);
