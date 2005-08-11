@@ -1,0 +1,80 @@
+<?xml version="1.0" ?>
+<makefile>
+
+	<!-- Some defaults for the variables used by wxCode bakefiles -->
+	<set var="WXCODE_BAKEFILEDIR">../../../build/bakefiles</set>
+	<include file="$(WXCODE_BAKEFILEDIR)/defaults.bkl"/>
+	
+
+	<!-- The HTTPENGINE settings -->
+	<!-- ====================== -->
+
+	<set var="COMP_NAME">httpengine</set>
+	<set var="COMP_SRC">
+			..\src\authdlg.cpp
+			..\src\httpbuilder.cpp
+			..\src\httpbuilderthread.cpp
+			..\src\hyperlinkctrl.cpp
+			..\src\pleasewaitdlg.cpp
+			..\src\proxysettingsdlg.cpp	
+	</set>
+	<set var="COMP_HDR">
+			../include/wx/authdlg.h
+			../include/wx/base64.h
+			../include/wx/httpbuilder.h
+			../include/wx/httpbuilderthread.h
+			../include/wx/hyperlinkctrl.h
+			../include/wx/proxysettingsdlg.h
+			../include/wx/httpenginedef.h
+	</set>
+	<set var="COMP_SAMPLE_SRC">
+			../sample/httpengineapp.cpp
+			../sample/httpenginedlg.cpp
+	</set>
+	<set var="COMP_SAMPLE_HDR">
+			../sample/httpengineapp.h
+			../sample/httpenginedlg.h
+	</set>
+	
+	<set var="COMP_WANT_INSTALL_TARGET">0</set>
+	<set var="WX_UNICODE_DEFAULT">0</set>
+	<set var="WX_VERSION_DEFAULT">26</set>
+
+	<!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->
+	<include file="$(WXCODE_BAKEFILEDIR)/wxcode.bkl"/>
+	<set var="POSTFIX">
+    <if cond="WX_SHARED=='0'">_lib</if>
+    <if cond="WX_SHARED=='1'">_dll</if>
+   </set>
+	<set var="BUILDDIR">$(FORMAT)$(WXLIBPOSTFIX)$(POSTFIX)</set>
+
+	<!-- The real target: wxcode.bkl does not declare a real target but a template called
+	     "complib". In this way modifications are allowed to the basic template. -->
+	<lib id="httpengine_lib" template="complib" cond="WX_SHARED=='0'">
+		<install-to>$(LIBDIR)</install-to>
+    <!-- <stdlib>$(SQLITE3_DIR)</stdlib> -->
+	</lib>
+	<dll id="httpengine_dll" template="compdll" cond="WX_SHARED=='1'">		
+		<wx-lib>net</wx-lib>
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib>
+	</dll>
+	<set var="MSVC6PRJ_MERGED_TARGETS">httpengine=httpengine_lib+httpengine_dll</set>
+	
+	
+	
+	<!--             The Sample             -->
+	<!-- =================================== -->
+
+	<!-- use _ instead of '-' or '.' because MSVC6 does not like these chars -->
+	<exe id="httpenginetest" template="compsample">
+		<dirname>../sample</dirname>
+		<res-include>..$(DIRSEP)sample</res-include>
+		<win32-res>..$(DIRSEP)sample$(DIRSEP)httpengine.rc</win32-res>
+		<library>httpengine_lib</library>
+		<wx-lib>net</wx-lib>
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib>		
+	</exe>
+    
+</makefile>
