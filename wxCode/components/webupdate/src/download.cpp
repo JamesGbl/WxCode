@@ -60,6 +60,12 @@ bool wxIsHTTPProtocol(const wxString &uri)
 	return uri.StartsWith(wxT("http:"));
 }
 
+bool wxIsWebProtocol(const wxString &uri)
+{
+	// AFAIK the only protocol which does not require an internet connection is file:
+	return !wxIsFileProtocol(uri);
+}
+
 wxFileName wxGetFileNameFromURI(const wxString &uri)
 {
 	// remove the file: prefix

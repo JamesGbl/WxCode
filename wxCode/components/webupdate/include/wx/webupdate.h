@@ -382,7 +382,7 @@ public:
 						const wxString &plat = wxEmptyString,
 						const wxString &md5 = wxEmptyString,
 						const wxWebUpdateActionArray *actions = NULL)
-         : m_platform(wxWUP_INVALID), m_urlDownload(url), m_strMD5(md5)
+         : m_platform(wxWUP_INVALID), m_strMD5(md5), m_urlDownload(url)
 		{ SetPlatform(plat); m_size=1; if (actions) m_arrActions = *actions; }
 
     virtual ~wxWebUpdateDownload();
@@ -392,7 +392,8 @@ public:		// handle in the right way the issue of the m_arrActions array
 			// in order to avoid double-destruction (and thus invalid memory
 			// accesses) of the same pointers !
 	
-	wxWebUpdateDownload(const wxWebUpdateDownload &tocopy)
+	wxWebUpdateDownload(const wxWebUpdateDownload &tocopy) 
+		: wxObject()		// avoid warnings with GCC
 		{ Copy(tocopy); }
 
 	//! Copies the given wxWebUpdateDownload object into this one, duplicating

@@ -20,7 +20,7 @@
 		</option>
 	</if>
 	<if cond="TARGETING_IDE=='1'">
-		<set var="USE_HTTPENGINE">0</set>
+		<set var="USE_HTTPENGINE">1</set>
 	</if>
 	
 	<if cond="TARGETING_WIN32=='1'">

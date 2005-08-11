@@ -23,6 +23,7 @@
 
 // includes
 #include "wx/checkedlistctrl.h"
+#include <wx/icon.h>
 
 
 #if wxUSE_CHECKEDLISTCTRL

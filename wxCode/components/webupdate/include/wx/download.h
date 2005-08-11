@@ -38,6 +38,9 @@ WXDLLIMPEXP_WEBUPDATE bool wxIsFileProtocol(const wxString &uri);
 //! because it starts with 'http:' and represent a HTTP URI.
 WXDLLIMPEXP_WEBUPDATE bool wxIsHTTPProtocol(const wxString &uri);
 
+//! Returns TRUE if the given URI requires an Internet connection to be resolved.
+WXDLLIMPEXP_WEBUPDATE bool wxIsWebProtocol(const wxString &uri);
+
 //! Returns the filename pointed by the given file URI.
 WXDLLIMPEXP_WEBUPDATE wxFileName wxGetFileNameFromURI(const wxString &uri);
 

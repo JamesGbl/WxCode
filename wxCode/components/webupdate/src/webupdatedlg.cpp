@@ -46,6 +46,9 @@
 #include <wx/image.h>
 #include <wx/dialup.h>
 #include <wx/tokenzr.h>
+#include <wx/tokenzr.h>
+#include <wx/settings.h>
+
 
 #if wxUSE_HTTPENGINE
 	#include <wx/proxysettingsdlg.h>
@@ -428,7 +431,7 @@ bool wxWebUpdateDlg::DownloadNextPackage()
 	m_pGauge->SetRange(dl.GetDownloadSize());
 
 	// (eventually) check that we are online 
-	if (m_dThread->m_strURI.StartsWith(wxT("http://")))
+	if (wxIsWebProtocol(m_dThread->m_strURI))
 		ConnectionRequired();
 	
 	// launch the download
@@ -515,7 +518,7 @@ void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 		wxASSERT_MSG(!m_xmlRemote.IsOk(),
 					wxT("The XML remote script should have not been loaded yet !"));
 
-		if (wxIsHTTPProtocol(m_xmlLocal.GetRemoteScriptURI()))
+		if (wxIsWebProtocol(m_xmlLocal.GetRemoteScriptURI()))
 			ConnectionRequired();
 
 		// keep our status in wxWUDS_WAITINGXML even if we are downloading the XML
@@ -554,6 +557,8 @@ void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 
 void wxWebUpdateDlg::OnCancel(wxCommandEvent &)
 {
+	wxLogDebug(wxT("wxWebUpdateDlg::OnCancel - user hit the cancel button..."));
+
 	if (m_nStatus == wxWUDS_DOWNLOADING || m_nStatus == wxWUDS_DOWNLOADINGXML) {
 
 		// we are now labeled as wxWUD_CANCEL_DOWNLOAD...
@@ -562,6 +567,11 @@ void wxWebUpdateDlg::OnCancel(wxCommandEvent &)
 			m_bUserAborted = TRUE;
 			m_dThread->AbortDownload();		
 		}
+
+		// CHANGE OUR STATUS
+		if (m_nStatus == wxWUDS_DOWNLOADING) m_nStatus = wxWUDS_WAITING;
+		if (m_nStatus == wxWUDS_DOWNLOADINGXML) m_nStatus = wxWUDS_WAITINGXML;
+
 		return;
 
 	} else if (m_nStatus == wxWUDS_INSTALLING) {
