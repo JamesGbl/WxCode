@@ -1,8 +1,8 @@
 ##---------------------------------------------------------------------------
 ## $RCSfile: CMakeLists.txt,v $
 ## $Source: /home/ulrich/cvs-wxcode/wxCode/components/treemultictrl/contrib/src/treemultictrl/CMakeLists.txt,v $
-## $Revision: 1.1 $
-## $Date: 2005-08-05 19:17:25 $
+## $Revision: 1.2 $
+## $Date: 2005-08-11 18:02:13 $
 ##---------------------------------------------------------------------------
 ## Author:      Jorgen Bodde
 ## Copyright:   (c) Jorgen Bodde
@@ -13,11 +13,11 @@
 
 ADD_LIBRARY(treemultictrl TreeMultiItemBase.cpp TreeMultiItemNode.cpp TreeMultiItemWindow.cpp
                           TreeMultiItemRoot.cpp wxTreeMultiCtrl.cpp
-            ${TREEMULTICTRL_SOURCE_DIR}/contrib/include/wx/treemultictrl/wxTreeMultiCtrl.h
-            ${TREEMULTICTRL_SOURCE_DIR}/contrib/include/wx/treemultictrl/TreeMultiItemBase.h 
-            ${TREEMULTICTRL_SOURCE_DIR}/contrib/include/wx/treemultictrl/TreeMultiItemNode.h
-            ${TREEMULTICTRL_SOURCE_DIR}/contrib/include/wx/treemultictrl/TreeMultiItemRoot.h 
-            ${TREEMULTICTRL_SOURCE_DIR}/contrib/include/wx/treemultictrl/TreeMultiItemWindow.h )
+                          ${TREEMULTICTRL_SOURCE_DIR}/contrib/include/wx/treemultictrl/wxTreeMultiCtrl.h
+                          ${TREEMULTICTRL_SOURCE_DIR}/contrib/include/wx/treemultictrl/TreeMultiItemBase.h 
+                          ${TREEMULTICTRL_SOURCE_DIR}/contrib/include/wx/treemultictrl/TreeMultiItemNode.h
+                          ${TREEMULTICTRL_SOURCE_DIR}/contrib/include/wx/treemultictrl/TreeMultiItemRoot.h 
+                          ${TREEMULTICTRL_SOURCE_DIR}/contrib/include/wx/treemultictrl/TreeMultiItemWindow.h )
 
 IF(LINUX)
   ADD_DEFINITIONS( -DLINUX=1 )

@@ -3,17 +3,19 @@ Welcome to wxTreeMultiCtrl - A wxWidgets control that allows wxWindow controls t
 
 Current wxTreeMultiCtrl version is v1.08
 
-    README $Revision: 1.1 $
-    README $Date: 2005-08-05 18:23:30 $
+    README $Revision: 1.2 $
+    README $Date: 2005-08-11 18:02:13 $
 
 FIXED AND NEW FEATURES 
 ----------------------
 
+Aug 11, 2005
+    - In between release to get CMake working next to Bakefile. Sorry, but Bakefile has it's limitations!   
 Jul 21, 2005
-	v1.09
-	- Ok my secomd attempt with Bakefile. Cmake is great, but it annoys me that the FindWxWin.cmake script still sucks bigtime
-	- The bakefile seems to work fine now for debug, it is the only addition. Now wxWin 2.6.0 - 2.4.2 is properly supported
-	
+    v1.09
+    - Ok my secomd attempt with Bakefile. Cmake is great, but it annoys me that the FindWxWin.cmake script still sucks bigtime
+    - The bakefile seems to work fine now for debug, it is the only addition. Now wxWin 2.6.0 - 2.4.2 is properly supported
+    
 May 05, 2005
     v1.08 - 
     - Tried Bakefile for this project, but due to it's 'incompleteness' towards user projects I had to use CMake again.
@@ -42,19 +44,59 @@ May 05, 2005
 HOW TO BUILD
 ------------
 
-Bakefile is now used for the build generation. You should (in practice) not need to rebuild the files. Please go to the 
-build directory and select the project file of your choice.
+    MAKE WITH CMAKE
+    ===============     
+        Why CMake? It has a slightly different approach towards Bakefile. To begin with, the projects are generated
+        on the spot for you after you set the options YOU want! For example, when you don't want checkbox view support
+        built in wxTreeMultiCtrl, set wxUSE_CHECKBOXVIEW to NO as option. With Bakefile, you need to do this in the 
+        project. It can also auto generate Doxygen documentation for you on the spot! So it is still my favorite
+        project generator. What to do:
+        
+            1. Download and install CMake: http://www.cmake.org
+            
+            2. Edit CMakeLists.txt in the main dir of this component, and make sure the wxWidgets flags are set
+               properly. 
+               
+            3. On Windows
+                
+                - Run CMakeSetup.exe
+                - Select the compiler you want to generate projects for
+                - Where is the source: {this component location}, eg. Z:\Src\tmc\wxCode\components\treemultictrl\
+                - Where to build the binaries: D:\temp\out-of-the\source\treemultictrl
+                - Press CONFIGURE
+                * Select your options, e.g. wxUSE_CHECKBOXVIEW, DOXYGEN documentation, etc
+                - Press CONFIGURE until OK button is enabled
+                - Press OK to generate the projects
+                
+              On Linux
+              
+                - cd /home/someuser/tmp
+                - mkdir tmc
+                - cd tmc
+                - ccmake {path to tmc source}
+                - Follow steps and look at (*) at windows section
+            
+              NOTE FOR MINGW USERS
+            
+                Simply run CMakeSetup.exe inside the MSYS shell, and follow the steps on Windows platform.
+                
+            4. Run or make project
 
-Please do not forget to set the WXWIN environment var under Windows. This points to the root dir of wxWidgets, eg.
-
-	WXWIN=Z:\wxWidgets\wx2.6.1\
-
-AFTER you set it, then start up any Visual Studio projects or else the env var is not yet in memory.
-
-If you do need to rebuild the makefiles / projects.. 
-
-    1) Download and install Bakefile (http://bakefile.sourceforge.net)
-    2) Under Windows the build/Bakefiles.bkgen will work out of the box (set the WXWIN env var though)
-	   Under Linux please change the %WXWIN% include setting for an include setting where wxWidgets presets are found
-	3) run bakefile_gen and it should regenerate the projects, if needed switch on your projects in Bakefiles.bkgen
-	
+    MAKE WITH BAKEFILE
+    ==================
+        Bakefile is now also used for the build generation. You should (in practice) not need to rebuild the files. Please go to the 
+        build directory and select the project file of your choice.
+        
+        Please do not forget to set the WXWIN environment var under Windows. This points to the root dir of wxWidgets, eg.
+        
+            WXWIN=Z:\wxWidgets\wx2.6.1\
+        
+        AFTER you set it, then start up any Visual Studio projects or else the env var is not yet in memory.
+        
+        If you do need to rebuild the makefiles / projects.. 
+        
+            1) Download and install Bakefile (http://bakefile.sourceforge.net)
+            2) Under Windows the build/Bakefiles.bkgen will work out of the box (set the WXWIN env var though)
+               Under Linux please change the %WXWIN% include setting for an include setting where wxWidgets presets are found
+            3) run bakefile_gen and it should regenerate the projects, if needed switch on your projects in Bakefiles.bkgen
+            

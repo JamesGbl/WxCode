@@ -1,8 +1,8 @@
 ##---------------------------------------------------------------------------
 ## $RCSfile: FindwxWin.cmake,v $
 ## $Source: /home/ulrich/cvs-wxcode/wxCode/components/treemultictrl/bin/FindwxWin.cmake,v $
-## $Revision: 1.1 $
-## $Date: 2005-08-05 18:23:30 $
+## $Revision: 1.2 $
+## $Date: 2005-08-11 18:02:13 $
 ##---------------------------------------------------------------------------
 ## Author:      Jorgen Bodde
 ## Copyright:   (c) Jorgen Bodde
@@ -372,12 +372,34 @@ IF( WIN32 )
 ELSE( WIN32 )
     
     FIND_PROGRAM( CMAKE_WX_CONFIG wx-config ../wx/bin ../../wx/bin )
-    SET( CMAKE_WX_CXX_FLAGS "`${CMAKE_WX_CONFIG} --cxxflags`" )
-    SET( WXWINDOWS_LIBRARIES "`${CMAKE_WX_CONFIG} --libs`" )
-
     IF(CMAKE_WX_CONFIG)
-        SET(WXWINDOWS_FOUND 1)
+      SET(WXWINDOWS_FOUND 1)
+      # run the config program to get cxxflags
+      EXEC_PROGRAM(${CMAKE_WX_CONFIG} ARGS --cxxflags OUTPUT_VARIABLE
+        CMAKE_WX_CXX_FLAGS RETURN_VALUE RET1)
+      # run the config program to get the libs
+      EXEC_PROGRAM(${CMAKE_WX_CONFIG} ARGS --libs OUTPUT_VARIABLE
+        WXWINDOWS_LIBRARIES_TMP RETURN_VALUE RET2)
+      # for libraries break things up into a ; separated variable
+      SEPARATE_ARGUMENTS(WXWINDOWS_LIBRARIES_TMP)
+      SET(LAST_FRAME 0)
+      # now put the stuff back into WXWINDOWS_LIBRARIES
+      # but combine all the -framework foo arguments back together
+      FOREACH(arg ${WXWINDOWS_LIBRARIES_TMP})
+        IF(${arg} MATCHES "-framework")
+          SET(LAST_FRAME 1)
+        ELSE(${arg} MATCHES "-framework")
+          # not a -framework argument
+          IF(LAST_FRAME)
+            SET(WXWINDOWS_LIBRARIES ${WXWINDOWS_LIBRARIES} "-framework ${arg}")
+            SET(LAST_FRAME 0)
+          ELSE(LAST_FRAME)
+            SET(WXWINDOWS_LIBRARIES ${WXWINDOWS_LIBRARIES} ${arg})
+          ENDIF(LAST_FRAME)
+        ENDIF(${arg} MATCHES "-framework")
+      ENDFOREACH(arg)
     ENDIF(CMAKE_WX_CONFIG)
+
     
     ## extract linkdirs (-L) for rpath
     ## use regular expression to match wildcard equivalent "-L*<endchar>"
@@ -420,10 +442,12 @@ ELSE( WIN32 )
         # just in case `gtk-config --cflags`does not work
         # SET( WXWINDOWS_INCLUDE_DIR ${WXWINDOWS_INCLUDE_DIR}  /usr/include/gtk-2.0 /usr/include/gtk-2.0/include /usr/lib/gtk-2.0/include /usr/include/glib-2.0 /usr/lib/glib-2.0/include /usr/include/pango-1.0 /usr/include/atk-1.0 )
         # What about FindGTK.cmake? and what if somebody uses wxMotif?
-        SET( CMAKE_WX_CXX_FLAGS "${CMAKE_WX_CXX_FLAGS} `gtk-config --cflags`" )
-        #find Xwindows
-        INCLUDE( ${CMAKE_ROOT}/Modules/FindX11.cmake )
-        SET( WXWINDOWS_INCLUDE_DIR ${WXWINDOWS_INCLUDE_DIR}  ${X11_INCLUDE_DIR} )
+        IF(NOT APPLE)
+          SET( CMAKE_WX_CXX_FLAGS "${CMAKE_WX_CXX_FLAGS} `gtk-config --cflags`" )
+          #find Xwindows
+          INCLUDE( ${CMAKE_ROOT}/Modules/FindX11.cmake )
+          SET( WXWINDOWS_INCLUDE_DIR ${WXWINDOWS_INCLUDE_DIR}  ${X11_INCLUDE_DIR} )
+        ENDIF(NOT APPLE)
     ENDIF( CYGWIN OR MINGW )
    
 ENDIF( WIN32 )

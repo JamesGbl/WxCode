@@ -1,8 +1,8 @@
 ##---------------------------------------------------------------------------
 ## $RCSfile: CMakeLists.txt,v $
 ## $Source: /home/ulrich/cvs-wxcode/wxCode/components/treemultictrl/contrib/samples/treemultictrl/CMakeLists.txt,v $
-## $Revision: 1.1 $
-## $Date: 2005-08-05 19:17:25 $
+## $Revision: 1.2 $
+## $Date: 2005-08-11 18:02:13 $
 ##---------------------------------------------------------------------------
 ## Author:      Jorgen Bodde
 ## Copyright:   (c) Jorgen Bodde
@@ -38,4 +38,4 @@ ELSE(USE_CHECKBOXVIEW)
 ENDIF(USE_CHECKBOXVIEW)
 
 LINK_DIRECTORIES(${TREEMULTICTRL_BINARY_DIR}/contrib/lib ${LINK_DIRECTORIES})
-TARGET_LINK_LIBRARIES(multictrltest treemultictrl ${WXWINDOWS_LIBRARIES})
+TARGET_LINK_LIBRARIES(multictrltest treemultictrl ${WXWIDGETS_LIBRARIES})
