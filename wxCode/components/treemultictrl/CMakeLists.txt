@@ -1,8 +1,8 @@
 ##---------------------------------------------------------------------------
 ## $RCSfile: CMakeLists.txt,v $
 ## $Source: /home/ulrich/cvs-wxcode/wxCode/components/treemultictrl/CMakeLists.txt,v $
-## $Revision: 1.2 $
-## $Date: 2005-08-11 18:02:13 $
+## $Revision: 1.3 $
+## $Date: 2005-08-11 20:37:32 $
 ##---------------------------------------------------------------------------
 ## Author:      Jorgen Bodde
 ## Copyright:   (c) Jorgen Bodde
@@ -52,6 +52,7 @@ LINK_DIRECTORIES( ${WXWIDGETS_LINK_DIRECTORIES})
 
 OPTION( MAKE_DOXYGEN     "Generate doxygen documentation for the wxTreeMultiCtrl"                                    ON  )
 OPTION( USE_CHECKBOXVIEW "Enable checkbox view functionality (if wanted, checkboxes can be placed in front of items" OFF )
+OPTION( USE_XMLMAPPER    "Enable XML mapping functionality where wxTreeMultiCtrl can show LibXML2 data"              ON )
 
 # If option Doxygen, create config script
 CONFIGURE_FILE(${TREEMULTICTRL_SOURCE_DIR}/doc/Doxyfile.in

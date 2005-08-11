@@ -1,8 +1,8 @@
 ##---------------------------------------------------------------------------
 ## $RCSfile: CMakeLists.txt,v $
 ## $Source: /home/ulrich/cvs-wxcode/wxCode/components/treemultictrl/contrib/src/treemultictrl/CMakeLists.txt,v $
-## $Revision: 1.2 $
-## $Date: 2005-08-11 18:02:13 $
+## $Revision: 1.3 $
+## $Date: 2005-08-11 20:37:33 $
 ##---------------------------------------------------------------------------
 ## Author:      Jorgen Bodde
 ## Copyright:   (c) Jorgen Bodde
@@ -12,12 +12,13 @@
 # Add files to library treemultictrl
 
 ADD_LIBRARY(treemultictrl TreeMultiItemBase.cpp TreeMultiItemNode.cpp TreeMultiItemWindow.cpp
-                          TreeMultiItemRoot.cpp wxTreeMultiCtrl.cpp
+                          TreeMultiItemRoot.cpp wxTreeMultiCtrl.cpp TreeMultiXmlMapper.cpp
                           ${TREEMULTICTRL_SOURCE_DIR}/contrib/include/wx/treemultictrl/wxTreeMultiCtrl.h
                           ${TREEMULTICTRL_SOURCE_DIR}/contrib/include/wx/treemultictrl/TreeMultiItemBase.h 
                           ${TREEMULTICTRL_SOURCE_DIR}/contrib/include/wx/treemultictrl/TreeMultiItemNode.h
                           ${TREEMULTICTRL_SOURCE_DIR}/contrib/include/wx/treemultictrl/TreeMultiItemRoot.h 
-                          ${TREEMULTICTRL_SOURCE_DIR}/contrib/include/wx/treemultictrl/TreeMultiItemWindow.h )
+                          ${TREEMULTICTRL_SOURCE_DIR}/contrib/include/wx/treemultictrl/TreeMultiItemWindow.h 
+                          ${TREEMULTICTRL_SOURCE_DIR}/contrib/include/wx/treemultictrl/TreeMultiXmlMapper.h )
 
 IF(LINUX)
   ADD_DEFINITIONS( -DLINUX=1 )
@@ -32,3 +33,11 @@ IF(USE_CHECKBOXVIEW)
 ELSE(USE_CHECKBOXVIEW)
   ADD_DEFINITIONS( -DCHECKBOXVIEW=0)
 ENDIF(USE_CHECKBOXVIEW)
+
+# if the XML mapper is not desired, it is 
+# ifdef'ed out of the source so no compile
+# errors will occur
+
+IF(USE_XMLMAPPER)
+	ADD_DEFINITIONS( -DwxUSE_TMC_XMLMAPPER=1 )
+ENDIF(USE_XMLMAPPER)
