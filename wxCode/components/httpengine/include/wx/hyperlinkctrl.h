@@ -110,7 +110,7 @@ public:
 
 	// Constructor
 	wxHyperlinkCtrl( wxWindow *parent, wxWindowID id, const wxString &label,
-			const wxPoint &pos, const wxSize &size, int style = 0, const wxString& name = wxT("staticText"), const wxString& szURL = wxT("") );
+			const wxPoint &pos, const wxSize &size, int style = 0, const wxString& name = wxT("staticText"), const wxString& szURL = wxEmptyString);
 
 	// Link Colours properties
 	void SetColours( const wxColour &link = wxColour( wxT("BLUE") ), const wxColour &visited  = wxColour(wxT("VIOLET")), const wxColour &rollover = wxColour( wxT("BLUE") ))
@@ -127,13 +127,13 @@ public:
 	};
 
 	// Underline properties
-	void SetUnderlines( const bool &link = true, const bool &visited = true, const bool &rollover = true )
+	void SetUnderlines( const bool link = true, const bool visited = true, const bool rollover = true )
 	{
 		m_bLinkUnderline = link;
 		m_bRolloverUnderline = rollover;
 		m_bVisitedUnderline = visited;
 	};
-	void GetUnderlines( bool &link, bool &visited, bool &rollover )
+	void GetUnderlines( bool link, bool visited, bool rollover )
 	{
 		link = m_bLinkUnderline;
 		rollover = m_bRolloverUnderline;
@@ -145,11 +145,11 @@ public:
 	void GetLinkCursor( wxCursor &cur ) { cur = m_crHand; };
 
 	// Visited properties
-	void SetVisited( const bool &bVisited = false ) { m_bVisited = bVisited; };
+	void SetVisited( const bool bVisited = false ) { m_bVisited = bVisited; };
 	bool GetVisited( void ) { return m_bVisited; }
 
 	// Bold font properties
-	void SetBold( const bool &bBold = false) { m_bBold = bBold; };
+	void SetBold( const bool bBold = false) { m_bBold = bBold; };
 	bool GetBold( void ) { return m_bBold; };
 
 	// URL properties
@@ -157,42 +157,42 @@ public:
 	wxString GetURL( void ) { return m_szURL; }
 
   // Open in same window property
-  void OpenInSameWindow( const bool &bIfPossible = false ) { m_bSameWinIfPossible = bIfPossible; };
+  void OpenInSameWindow( const bool bIfPossible = false ) { m_bSameWinIfPossible = bIfPossible; };
 
 	// Broswer Path
 	void SetBrowserPath( const wxString &browser ) { m_szBrowserPath = browser; };
 	wxString GetBrowserPath( void ) { return m_szBrowserPath; };
 
   // Roll over properties
-	void EnableRollover( const bool &bEnable = false ) { m_bEnableRollover = bEnable; };
+	void EnableRollover( const bool bEnable = false ) { m_bEnableRollover = bEnable; };
 
 	// Report errors property
-	void ReportErrors( const bool &bReport = true ) { m_bReportErrors = bReport; };
+	void ReportErrors( const bool bReport = true ) { m_bReportErrors = bReport; };
 
 //**Added By Mark McManus
   //AutoBrowse property
-  void AutoBrowse( const bool &bBrowse = true ){ m_bAutoBrowse = bBrowse; };
+  void AutoBrowse( const bool bBrowse = true ){ m_bAutoBrowse = bBrowse; };
 
   //DoPopup property
-  void DoPopup( const bool &bPopup = true ) { m_bDoPopup = bPopup; };
+  void DoPopup( const bool bPopup = true ) { m_bDoPopup = bPopup; };
 
 //**Mark McManus
 
 	// Goto URL
-	static bool GotoURL( const wxString &szUrl, const wxString &szBrowser = wxT(""), const bool &bReportErrors = false, const bool &bSameWinIfPossible = false );
+	static bool GotoURL( const wxString &szUrl, const wxString &szBrowser = wxEmptyString, const bool bReportErrors = false, const bool bSameWinIfPossible = false );
 
 	// Refresh link properties
-	void UpdateLink( const bool &bRefresh = true );
+	void UpdateLink( const bool bRefresh = true );
 
 private:
 	// Copy URL event
 	void OnPopUpCopy( wxCommandEvent &event );
 
 	// Mouse event
-	void OnMouseEvent( wxMouseEvent& event );
+	void OnMouseEvent( wxMouseEvent &event );
 
 	// ErrorMmessage
-	static void DisplayError( const wxString &szError, const bool &bReportErrors );
+	static void DisplayError( const wxString &szError, const bool bReportErrors );
 	
 	// The URL to goto.
 	wxString m_szURL;

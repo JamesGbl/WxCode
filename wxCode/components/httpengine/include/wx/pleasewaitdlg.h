@@ -37,7 +37,7 @@ public:
 	void UpdateMessage(const wxString &message);
 	virtual bool Update( const wxString &newmsg = wxEmptyString);
 	void Resume(void);
-	void EnableCancel(const bool &enable = true);
+	void EnableCancel(const bool enable = true);
   void DisableCancel(void) { EnableCancel(false); };
 
 
