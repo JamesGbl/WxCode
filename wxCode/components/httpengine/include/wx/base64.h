@@ -100,7 +100,7 @@ WXDLLIMPEXP_HTTPENGINE wxString wxBase64Decode(const wxString &str)
   int length = str.Length();
   unsigned int current = 0;
   int i = 0, j = 0, k;
-  wxChar ch = NULL;
+  wxChar ch = ' ';
 
   while( current != str.Length() && length-- > 0 )
   {
@@ -116,7 +116,7 @@ WXDLLIMPEXP_HTTPENGINE wxString wxBase64Decode(const wxString &str)
 
 		if (ch == ' ') ch = '+'; 
 
-		ch = base64_reverse_table[ch];
+		ch = base64_reverse_table[ (int)ch]; //CHECK
 		if (ch < 0) continue;
 
 		switch(i % 4)

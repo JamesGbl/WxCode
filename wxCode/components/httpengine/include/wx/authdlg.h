@@ -25,6 +25,8 @@
 #include <wx/intl.h>
 #include "wx/httpenginedef.h"
 
+#include "wx/httpbuilder.h"
+
 class WXDLLIMPEXP_HTTPENGINE wxAuthenticateDlg : public wxDialog
 {
 
@@ -34,19 +36,22 @@ public:
 	wxString GetPassword(void);
 	wxString GetUsername(void);
   bool GetRememberPassword(void);
-	
+  wxHTTPAuthSettings GetAuthSettings();
+  	
 	void SetPassword( const wxString &password );
 	void SetUsername( const wxString &username );
   void SetRememberPassword( const bool &remember );
+  void SetAuthSettings(const wxHTTPAuthSettings &settings);
 
   wxAuthenticateDlg(wxWindow* parent, wxWindowID id, const wxString &caption = _("Authenticate"), const wxString &message = wxEmptyString, const bool &showRememberPasswd = false );
   virtual ~wxAuthenticateDlg();
 
 private:
 
-  wxTextCtrl        *m_tcUsername;
-  wxTextCtrl        *m_tcPassword;
-  wxCheckBox        *m_cbRememberPassword;
+  wxTextCtrl          *m_tcUsername;
+  wxTextCtrl          *m_tcPassword;
+  wxCheckBox          *m_cbRememberPassword;
+  wxHTTPAuthSettings  m_settings;
 };
 
 #endif
