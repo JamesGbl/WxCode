@@ -3,7 +3,11 @@
 // Purpose:     HTTP Authentication dialog for use in gui applications
 // Author:      Angelo Mandato
 // Created:     2005/08/11
+<<<<<<< authdlg.cpp
 // RCS-ID:      $Id$
+=======
+// RCS-ID:      $Id$
+>>>>>>> 1.8
 // Copyright:   (c) 2002-2005 Angelo Mandato
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
