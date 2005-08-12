@@ -23,7 +23,7 @@
 #include <wx/checkbox.h>
 #include <wx/intl.h>
 #include "wx/httpenginedef.h"
-
+#include "wx/httpbuilder.h"
 
 class WXDLLIMPEXP_HTTPENGINE wxProxySettingsDlg : public wxDialog
 {
@@ -31,26 +31,28 @@ class WXDLLIMPEXP_HTTPENGINE wxProxySettingsDlg : public wxDialog
 public:
 	void OnRequiresAuthentication( wxCommandEvent &event );
 	bool IsAuthProxy(void);
-	void SetAuthProxy( const bool &auth = true );
+	void SetAuthProxy( const bool auth = true );
 
   // Properties
 	wxString GetPassword(void);
 	wxString GetUsername(void);
 	wxString GetHost(void);
-  long GetPort(void);
+  long GetPortNumber(void);
   wxString  GetExceptions(void);
+  wxProxySettings GetProxySettings(void);
 
 	void SetPassword( const wxString &password );
 	void SetUsername( const wxString &username );
 	void SetHost( const wxString &host );
-	void SetPort( const long &port );
+	void SetPortNumber( const long port );
   void SetExceptions( const wxString &exceptions );
+  void SetProxySettings(const wxProxySettings &settings);
 
   // Additional settings:
   void SetExceptionsDesc(const wxString &text);
   void SetExceptionsNote(const wxString &text);
 
-  wxProxySettingsDlg(wxWindow* parent, wxWindowID id, const wxString& caption = _T("Proxy Settings"), const wxString message = _T("Specify proxy settings"), const bool &bShowNoProxyFor = false );
+  wxProxySettingsDlg(wxWindow* parent, wxWindowID id, const wxString& caption = _T("Proxy Settings"), const wxString message = _T("Specify proxy settings"), const bool bShowNoProxyFor = false );
   virtual ~wxProxySettingsDlg();
 
 private:
@@ -65,6 +67,8 @@ private:
 
   wxStaticText      *m_stExceptionsDesc;
   wxStaticText      *m_stExceptionsNote;
+
+  wxProxySettings   m_settings;
 
   DECLARE_EVENT_TABLE()
 };
