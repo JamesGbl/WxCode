@@ -1,0 +1,6 @@
+//Microsoft Developer Studio generated resource script.
+//
+
+wxHTTPEngine ICON "httpengine.ico"
+
+#include <wx/msw/wx.rc>
