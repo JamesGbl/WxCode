@@ -769,6 +769,65 @@ AboutDialog::AboutDialog
 	wxButton *b = new wxButton( this, wxID_OK, wxT("OK"), wxPoint(258,8), wxDefaultSize );
 	b->SetFocus();
 
+	wxStaticText *txtTitle = new wxStaticText( this, -1, wxT("wxHTTPEngine Examples"), wxPoint(12,10), wxSize( 170, 24));
+
+	wxFont fntTemp = txtTitle->GetFont();
+	fntTemp.SetWeight( wxBOLD );
+	fntTemp.SetPointSize( fntTemp.GetPointSize() + 2);
+	txtTitle->SetFont( fntTemp );
+
+  new wxStaticText( this, -1, wxT("wxHTTPBuilder and wxHyperlinkCtrl examples"), wxPoint(50,40) );
+	new wxStaticText( this, -1, wxT("Copyright (C) 2002-2005 Angelo Mandato"), wxPoint(50,60) );
+
+  // Default hyperlink
+	new wxHyperlinkCtrl( this, About_Link1, wxT("wxHTTPEngine at wxCode.sf.net"),
+		 	wxPoint(50,80), wxDefaultSize, 0, wxT("statictextlink2"), wxT("http://wxcode.sourceforge.net/components/wxhttpengine/") );
+
+  // Web link with underline rollovers, opens in new window
+	wxHyperlinkCtrl *hyper2 = new wxHyperlinkCtrl( this, About_Link2, wxT("www.spaceblue.com"),
+		 	wxPoint(50,100), wxDefaultSize, wxTAB_TRAVERSAL , wxT("statictextlink2"), wxT("http://www.spaceblue.com") );
+
+	hyper2->SetColours( wxColour(wxT("BLUE")), wxColour(wxT("BLUE")), wxColour(wxT("BLUE")) );
+	hyper2->EnableRollover(true);
+	hyper2->SetUnderlines(false, false, true);
+	hyper2->SetBold(true);
+  hyper2->OpenInSameWindow( true ); // middle click to open in new window
+  hyper2->SetToolTip( wxT("Middle click to open in new browser window"));
+	hyper2->UpdateLink();
+  //hyper2->SetWindowStyle( hyper2->GetWindowStyle() | wxWANTS_CHARS );
+
+	// Intense link examples..
+	wxHyperlinkCtrl *hyper3 = new wxHyperlinkCtrl( this,About_Link3, wxT("wxWindows online search"),
+	  wxPoint(50,120), wxDefaultSize, 0, wxT("statictextlink2"), wxT("http://www.wxwindows.org/search.htm") );
+
+	hyper3->SetToolTip( wxT("Right click for custom pop up menu") );
+	hyper3->SetLinkCursor( wxCURSOR_QUESTION_ARROW );
+	hyper3->SetColours( wxColour(wxT("GREEN")), wxColour(wxT("RED")), wxColour(wxT("YELLOW")) );
+	hyper3->SetUnderlines(false, false, false);
+	//hyper3->SetBrowserPath("C:\\Program Files\\Internet Explorer\\IEXPLORE.EXE" );
+  //hyper3->SetBrowserPath("C:\\Program Files\\Netscape\\Netscape 6\\netscp6.exe" );
+	hyper3->SetBrowserPath(wxT("c:\\program files\\mozilla firefox\\firefox.exe") );
+	hyper3->EnableRollover(true);
+	hyper3->SetBold(true);
+	hyper3->DoPopup(false);
+
+	hyper3->UpdateLink();
+
+
+	wxHyperlinkCtrl *hyper4 = new wxHyperlinkCtrl( this, About_Link4, wxT("Open Google in current browser window?"),
+    wxPoint(50,140), wxDefaultSize, 0, wxT("statictextlink2"), wxT("") );
+
+	hyper4->SetToolTip( wxT("Click link for Yes, No, Cancel Dialog") );
+	hyper4->AutoBrowse(false);
+	hyper4->UpdateLink();
+  // Test some other links...
+}
+/*
+ wxDialog( parent, id, title, position, size, style)
+{
+	wxButton *b = new wxButton( this, wxID_OK, wxT("OK"), wxPoint(258,8), wxDefaultSize );
+	b->SetFocus();
+
 	wxStaticText *txtTitle = new wxStaticText( this, -1, wxT("wxHTTPEngine Examples"), wxPoint(12,10), wxSize( 170, 24)); 
 
 	wxFont fntTemp = txtTitle->GetFont();
@@ -821,7 +880,7 @@ AboutDialog::AboutDialog
 	hyper4->UpdateLink();
   // Test some other links...
 }
-
+*/
 #ifdef HYPERLINKCTRL_COMMANDEVENT
 
 void AboutDialog::OnHyperlink(wxCommandEvent &event)
