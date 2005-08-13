@@ -240,7 +240,7 @@ wxInputStream* wxHTTPBuilder::GetInputStream(const wxString& url, const wxString
     path += wxT("://");
     path += szHost;
     if( nPort != m_proxySettings.m_nProxyPort )
-      path += wxString::Format(wxT("%d"), nPort);
+      path += wxString::Format(wxT(":%d"), nPort);
     path += szRequest;
   }
 
