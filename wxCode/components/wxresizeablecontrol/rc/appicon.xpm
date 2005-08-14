@@ -1,0 +1,39 @@
+/* XPM */
+static char *appicon_xpm[] = {
+/* width height num_colors chars_per_pixel */
+"    16    16       16            1",
+/* colors */
+"` c #000000",
+". c #000080",
+"# c #008000",
+"a c #008080",
+"b c #800000",
+"c c #800080",
+"d c #808000",
+"e c #c0c0c0",
+"f c #808080",
+"g c #0000ff",
+"h c #00ff00",
+"i c #00ffff",
+"j c #ff0000",
+"k c #ff00ff",
+"l c #ffff00",
+"m c #ffffff",
+/* pixels */
+"mmmmmmmmmmmmmmmm",
+"m```````````mmmm",
+"m``mm``mmm``mmmm",
+"m`mfmffmffm`fmfm",
+"m`mfmmmmmmm`mmmm",
+"m``mmmmmmm``mmfm",
+"m``fmmmmmm``mmfm",
+"m`mfmmmmmmm`mmmm",
+"m`mmmmmmmmm`mmfm",
+"m``fm``mmm``mmfm",
+"m```````````mmmm",
+"mmmmmmmmmmmmmmfm",
+"mmmfmmmmmmmmmmfm",
+"mmmfmmmmmmmmmmmm",
+"mmmfmffmffmffmfm",
+"mmmmmmmmmmmmmmmm"
+};
