@@ -2,8 +2,8 @@
 <!--
 	$RCSfile: treemultictrl.bkl,v $
 	$Source: /home/ulrich/cvs-wxcode/wxCode/components/treemultictrl/build/treemultictrl.bkl,v $
-	$Revision: 1.1 $
-	$Date: 2005-08-05 18:23:30 $
+	$Revision: 1.2 $
+	$Date: 2005-08-16 17:51:50 $
 -->
 	
 <makefile>
@@ -32,7 +32,7 @@
             ../contrib/src/treemultictrl/TreeMultiItemNode.cpp
             ../contrib/src/treemultictrl/TreeMultiItemWindow.cpp
             ../contrib/src/treemultictrl/TreeMultiItemRoot.cpp
-            ../contrib/src/treemultictrl/wxTreeMultiCtrl.cpp
+            ../contrib/src/treemultictrl/TreeMultiXmlMapper.cpp
         </sources>		
     </template>
 
@@ -52,6 +52,18 @@
         <runtime-libs>dynamic</runtime-libs>        
 		<sources>
             ../contrib/samples/treemultictrl/MultiCtrlTest.cpp
+        </sources>
+        <library>tmclib</library>
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib>
+    </exe>	
+    
+    <exe id="multictrlxml" template="wx,tmcsettings">
+        <depends>tmclib</depends>
+		<app-type>gui</app-type>
+        <runtime-libs>dynamic</runtime-libs>        
+		<sources>
+            ../contrib/samples/xmlmapper/MultiCtrlTestXML.cpp
         </sources>
         <library>tmclib</library>
         <wx-lib>core</wx-lib>

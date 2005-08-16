@@ -37,11 +37,15 @@ TMCLIB_OBJECTS =  \
 	lib/tmclib_TreeMultiItemNode.o \
 	lib/tmclib_TreeMultiItemWindow.o \
 	lib/tmclib_TreeMultiItemRoot.o \
-	lib/tmclib_wxTreeMultiCtrl.o
+	lib/tmclib_TreeMultiXmlMapper.o
 MULTICTRLTEST_CXXFLAGS = -I../contrib/include/wx/treemultictrl \
 	-DCHECKBOXVIEW=0 $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 MULTICTRLTEST_OBJECTS =  \
 	samples/multictrltest_MultiCtrlTest.o
+MULTICTRLXML_CXXFLAGS = -I../contrib/include/wx/treemultictrl \
+	-DCHECKBOXVIEW=0 $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+MULTICTRLXML_OBJECTS =  \
+	samples/multictrlxml_MultiCtrlTestXML.o
 
 ### Conditionally set variables: ###
 
@@ -53,10 +57,16 @@ COND_PLATFORM_OS2_1___multictrltest___os2_emxbindcmd = $(NM) \
 	samples/multictrltest$(EXEEXT) | if grep -q pmwin.763 ; then emxbind -ep \
 	samples/multictrltest$(EXEEXT) ; fi
 @COND_PLATFORM_OS2_1@__multictrltest___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___multictrltest___os2_emxbindcmd)
+@COND_PLATFORM_MAC_1@__multictrlxml___mac_setfilecmd = \
+@COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL multictrlxml$(EXEEXT)
+COND_PLATFORM_OS2_1___multictrlxml___os2_emxbindcmd = $(NM) \
+	samples/multictrlxml$(EXEEXT) | if grep -q pmwin.763 ; then emxbind -ep \
+	samples/multictrlxml$(EXEEXT) ; fi
+@COND_PLATFORM_OS2_1@__multictrlxml___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___multictrlxml___os2_emxbindcmd)
 
 ### Targets: ###
 
-all: lib/$(LIBPREFIX)tmclib$(LIBEXT) samples/multictrltest$(EXEEXT)
+all: lib/$(LIBPREFIX)tmclib$(LIBEXT) samples/multictrltest$(EXEEXT) samples/multictrlxml$(EXEEXT)
 
 install: all
 
@@ -69,6 +79,7 @@ clean:
 	rm -f samples/*.o
 	rm -f lib/$(LIBPREFIX)tmclib$(LIBEXT)
 	rm -f samples/multictrltest$(EXEEXT)
+	rm -f samples/multictrlxml$(EXEEXT)
 
 distclean: clean
 	rm -f config.cache config.log config.status bk-deps bk-make-pch shared-ld-sh Makefile
@@ -84,6 +95,12 @@ samples/multictrltest$(EXEEXT): $(MULTICTRLTEST_OBJECTS) lib/$(LIBPREFIX)tmclib$
 	$(__multictrltest___mac_setfilecmd)
 	$(__multictrltest___os2_emxbindcmd)
 
+samples/multictrlxml$(EXEEXT): $(MULTICTRLXML_OBJECTS) lib/$(LIBPREFIX)tmclib$(LIBEXT) lib/$(LIBPREFIX)tmclib$(LIBEXT)
+	$(CXX) -o $@ $(MULTICTRLXML_OBJECTS) -Llib $(LDFLAGS)  $(LDFLAGS_GUI)  $(WX_LIBS) -ltmclib
+	
+	$(__multictrlxml___mac_setfilecmd)
+	$(__multictrlxml___os2_emxbindcmd)
+
 lib/tmclib_TreeMultiItemBase.o: $(srcdir)/../contrib/src/treemultictrl/TreeMultiItemBase.cpp
 	$(CXXC) -c -o $@ $(TMCLIB_CXXFLAGS) $(srcdir)/../contrib/src/treemultictrl/TreeMultiItemBase.cpp
 
@@ -96,11 +113,14 @@ lib/tmclib_TreeMultiItemWindow.o: $(srcdir)/../contrib/src/treemultictrl/TreeMul
 lib/tmclib_TreeMultiItemRoot.o: $(srcdir)/../contrib/src/treemultictrl/TreeMultiItemRoot.cpp
 	$(CXXC) -c -o $@ $(TMCLIB_CXXFLAGS) $(srcdir)/../contrib/src/treemultictrl/TreeMultiItemRoot.cpp
 
-lib/tmclib_wxTreeMultiCtrl.o: $(srcdir)/../contrib/src/treemultictrl/wxTreeMultiCtrl.cpp
-	$(CXXC) -c -o $@ $(TMCLIB_CXXFLAGS) $(srcdir)/../contrib/src/treemultictrl/wxTreeMultiCtrl.cpp
+lib/tmclib_TreeMultiXmlMapper.o: $(srcdir)/../contrib/src/treemultictrl/TreeMultiXmlMapper.cpp
+	$(CXXC) -c -o $@ $(TMCLIB_CXXFLAGS) $(srcdir)/../contrib/src/treemultictrl/TreeMultiXmlMapper.cpp
 
 samples/multictrltest_MultiCtrlTest.o: $(srcdir)/../contrib/samples/treemultictrl/MultiCtrlTest.cpp
 	$(CXXC) -c -o $@ $(MULTICTRLTEST_CXXFLAGS) $(srcdir)/../contrib/samples/treemultictrl/MultiCtrlTest.cpp
+
+samples/multictrlxml_MultiCtrlTestXML.o: $(srcdir)/../contrib/samples/xmlmapper/MultiCtrlTestXML.cpp
+	$(CXXC) -c -o $@ $(MULTICTRLXML_CXXFLAGS) $(srcdir)/../contrib/samples/xmlmapper/MultiCtrlTestXML.cpp
 
 
 # Include dependency info, if present:

@@ -56,7 +56,7 @@ TMCLIB_OBJECTS =  \
 	lib\tmclib_TreeMultiItemNode.o \
 	lib\tmclib_TreeMultiItemWindow.o \
 	lib\tmclib_TreeMultiItemRoot.o \
-	lib\tmclib_wxTreeMultiCtrl.o
+	lib\tmclib_TreeMultiXmlMapper.o
 MULTICTRLTEST_CXXFLAGS = -DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
@@ -64,6 +64,13 @@ MULTICTRLTEST_CXXFLAGS = -DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) \
 	-DCHECKBOXVIEW=0 $(CPPFLAGS) $(CXXFLAGS)
 MULTICTRLTEST_OBJECTS =  \
 	samples\multictrltest_MultiCtrlTest.o
+MULTICTRLXML_CXXFLAGS = -DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) \
+	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
+	-I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
+	-I$(WX_DIR)\include -I..\contrib\include\wx\treemultictrl -g \
+	-DCHECKBOXVIEW=0 $(CPPFLAGS) $(CXXFLAGS)
+MULTICTRLXML_OBJECTS =  \
+	samples\multictrlxml_MultiCtrlTestXML.o
 
 ### Conditionally set variables: ###
 
@@ -105,13 +112,14 @@ samples:
 
 ### Targets: ###
 
-all: lib\libtmclib.a samples\multictrltest.exe
+all: lib\libtmclib.a samples\multictrltest.exe samples\multictrlxml.exe
 
 clean: 
 	-if exist samples\*.o del samples\*.o
 	-if exist samples\*.d del samples\*.d
 	-if exist lib\libtmclib.a del lib\libtmclib.a
 	-if exist samples\multictrltest.exe del samples\multictrltest.exe
+	-if exist samples\multictrlxml.exe del samples\multictrlxml.exe
 
 lib\libtmclib.a: $(TMCLIB_OBJECTS)
 	if exist $@ del $@
@@ -120,6 +128,9 @@ lib\libtmclib.a: $(TMCLIB_OBJECTS)
 
 samples\multictrltest.exe: $(MULTICTRLTEST_OBJECTS) lib\libtmclib.a lib\libtmclib.a
 	$(CXX) -o $@ $(MULTICTRLTEST_OBJECTS) $(LDFLAGS) -mthreads -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -g -Wl,--subsystem,windows -mwindows  lib\libtmclib.a -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTLIBPOSTFIX) -lwxjpeg$(WX3RDPARTLIBPOSTFIX) -lwxpng$(WX3RDPARTLIBPOSTFIX) -lwxzlib$(WX3RDPARTLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+
+samples\multictrlxml.exe: $(MULTICTRLXML_OBJECTS) lib\libtmclib.a lib\libtmclib.a
+	$(CXX) -o $@ $(MULTICTRLXML_OBJECTS) $(LDFLAGS) -mthreads -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -g -Wl,--subsystem,windows -mwindows  lib\libtmclib.a -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTLIBPOSTFIX) -lwxjpeg$(WX3RDPARTLIBPOSTFIX) -lwxpng$(WX3RDPARTLIBPOSTFIX) -lwxzlib$(WX3RDPARTLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
 lib\tmclib_TreeMultiItemBase.o: ./../contrib/src/treemultictrl/TreeMultiItemBase.cpp
 	$(CXX) -c -o $@ $(TMCLIB_CXXFLAGS) $(CPPDEPS) $<
@@ -133,11 +144,14 @@ lib\tmclib_TreeMultiItemWindow.o: ./../contrib/src/treemultictrl/TreeMultiItemWi
 lib\tmclib_TreeMultiItemRoot.o: ./../contrib/src/treemultictrl/TreeMultiItemRoot.cpp
 	$(CXX) -c -o $@ $(TMCLIB_CXXFLAGS) $(CPPDEPS) $<
 
-lib\tmclib_wxTreeMultiCtrl.o: ./../contrib/src/treemultictrl/wxTreeMultiCtrl.cpp
+lib\tmclib_TreeMultiXmlMapper.o: ./../contrib/src/treemultictrl/TreeMultiXmlMapper.cpp
 	$(CXX) -c -o $@ $(TMCLIB_CXXFLAGS) $(CPPDEPS) $<
 
 samples\multictrltest_MultiCtrlTest.o: ./../contrib/samples/treemultictrl/MultiCtrlTest.cpp
 	$(CXX) -c -o $@ $(MULTICTRLTEST_CXXFLAGS) $(CPPDEPS) $<
+
+samples\multictrlxml_MultiCtrlTestXML.o: ./../contrib/samples/xmlmapper/MultiCtrlTestXML.cpp
+	$(CXX) -c -o $@ $(MULTICTRLXML_CXXFLAGS) $(CPPDEPS) $<
 
 .PHONY: all clean
 

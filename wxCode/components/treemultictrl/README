@@ -3,11 +3,34 @@ Welcome to wxTreeMultiCtrl - A wxWidgets control that allows wxWindow controls t
 
 Current wxTreeMultiCtrl version is v1.08
 
-    README $Revision: 1.2 $
-    README $Date: 2005-08-11 18:02:13 $
+    README $Revision: 1.3 $
+    README $Date: 2005-08-16 17:51:49 $
 
 FIXED AND NEW FEATURES 
 ----------------------
+Aug 16, 2005
+	- I made a start with the XML wrapper! This neat little wrapper allows you to define fields in XML
+	  which the wxTreeMultiXmlWrapper class will interpret and display. This is very handy for wizard
+	  presentation.
+	  
+	  The syntax is something like;
+	  
+        <wizard>
+            <category caption="Please enter your personal experience" >
+                <check id="LIKEITORNOT" caption="Do you like this?" />
+            </category>
+            <category caption="And now for some other fun">
+                <category caption="Project settings">
+                    <check id="INCLUDE_SETTINGS" caption="Include a wxConfig code fragment" />
+                    <check id="INCLUDE_ABOUT" caption="Include an about dialog" default="1"/>
+                    <check id="USE_XRC" caption="Setup an XRC fragment for XRC dialogs" />
+                </category>
+                <check id="CB_ONLY" caption="Only checkboxes right now Wink" />
+            </category>
+        </wizard> 
+	  
+      This is still under construction see below for instructions how to use it. This is no real version
+      release yet.
 
 Aug 11, 2005
     - In between release to get CMake working next to Bakefile. Sorry, but Bakefile has it's limitations!   
@@ -43,6 +66,23 @@ May 05, 2005
 
 HOW TO BUILD
 ------------
+
+    ENABLING XML MAPPER CLASS
+    =========================
+        - Download TinyXML (http://www.sourceforge.net/projects/tinyxml) and compile it. 
+        
+        For CMake
+        ---------
+        When following the steps "MAKE WITH CMAKE" in the wizard, set wxUSE_XMLWRAPPER to YES.
+        Press OK, and fill in the two paths to the TinyXML library (one for the include and one 
+        for the lib path). Then generate again and you are all set.
+        
+        For normal projects
+        -------------------
+        For BAKEFILE projects in the /build dir of this release, define the constant wxUSE_XMLMAPPER 
+        in your project files. Include in the library path the path to TinyXML's compiled libs, use
+        the ones without STL support. Add the include path to the tinyXML in your project file, and 
+        add the libraries too: tinyxmld.lib (debug) and tinyxml.lib (release) 
 
     MAKE WITH CMAKE
     ===============     

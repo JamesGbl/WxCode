@@ -251,7 +251,7 @@ SOURCE=.\..\contrib\src\treemultictrl\TreeMultiItemWindow.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\..\contrib\src\treemultictrl\wxTreeMultiCtrl.cpp
+SOURCE=.\..\contrib\src\treemultictrl\TreeMultiXmlMapper.cpp
 # End Source File
 # End Group
 # End Target

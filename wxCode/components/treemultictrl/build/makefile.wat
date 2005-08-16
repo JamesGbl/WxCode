@@ -107,13 +107,19 @@ TMCLIB_OBJECTS =  &
 	lib\tmclib_TreeMultiItemNode.obj &
 	lib\tmclib_TreeMultiItemWindow.obj &
 	lib\tmclib_TreeMultiItemRoot.obj &
-	lib\tmclib_wxTreeMultiCtrl.obj
+	lib\tmclib_TreeMultiXmlMapper.obj
 MULTICTRLTEST_CXXFLAGS = $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
 	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
 	-i=$(WX_DIR)\include -i=..\contrib\include\wx\treemultictrl -d2 &
 	-dCHECKBOXVIEW=0 -br $(CPPFLAGS) $(CXXFLAGS)
 MULTICTRLTEST_OBJECTS =  &
 	samples\multictrltest_MultiCtrlTest.obj
+MULTICTRLXML_CXXFLAGS = $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
+	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
+	-i=$(WX_DIR)\include -i=..\contrib\include\wx\treemultictrl -d2 &
+	-dCHECKBOXVIEW=0 -br $(CPPFLAGS) $(CXXFLAGS)
+MULTICTRLXML_OBJECTS =  &
+	samples\multictrlxml_MultiCtrlTestXML.obj
 
 
 all : samples
@@ -122,7 +128,7 @@ samples :
 
 ### Targets: ###
 
-all : .SYMBOLIC lib\tmclib.lib samples\multictrltest.exe
+all : .SYMBOLIC lib\tmclib.lib samples\multictrltest.exe samples\multictrlxml.exe
 
 clean : .SYMBOLIC 
 	-if exist samples\*.obj del samples\*.obj
@@ -132,6 +138,7 @@ clean : .SYMBOLIC
 	-if exist samples\*.pch del samples\*.pch
 	-if exist lib\tmclib.lib del lib\tmclib.lib
 	-if exist samples\multictrltest.exe del samples\multictrltest.exe
+	-if exist samples\multictrlxml.exe del samples\multictrlxml.exe
 
 lib\tmclib.lib :  $(TMCLIB_OBJECTS)
 	@%create lib\tmclib.lbc
@@ -149,6 +156,17 @@ samples\multictrltest.exe :  $(MULTICTRLTEST_OBJECTS) lib\tmclib.lib lib\tmclib.
 	@%append samples\multictrltest.lbc
 	wlink @samples\multictrltest.lbc
 
+samples\multictrlxml.exe :  $(MULTICTRLXML_OBJECTS) lib\tmclib.lib lib\tmclib.lib
+	@%create samples\multictrlxml.lbc
+	@%append samples\multictrlxml.lbc option quiet
+	@%append samples\multictrlxml.lbc name $^@
+	@%append samples\multictrlxml.lbc option caseexact
+	@%append samples\multictrlxml.lbc $(LDFLAGS) libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) debug all system nt_win ref '_WinMain@16'
+	@for %i in ($(MULTICTRLXML_OBJECTS)) do @%append samples\multictrlxml.lbc file %i
+	@for %i in ( lib\tmclib.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append samples\multictrlxml.lbc library %i
+	@%append samples\multictrlxml.lbc
+	wlink @samples\multictrlxml.lbc
+
 lib\tmclib_TreeMultiItemBase.obj :  .AUTODEPEND .\..\contrib\src\treemultictrl\TreeMultiItemBase.cpp
 	$(CXX) -zq -fo=$^@ $(TMCLIB_CXXFLAGS) $<
 
@@ -161,9 +179,12 @@ lib\tmclib_TreeMultiItemWindow.obj :  .AUTODEPEND .\..\contrib\src\treemultictrl
 lib\tmclib_TreeMultiItemRoot.obj :  .AUTODEPEND .\..\contrib\src\treemultictrl\TreeMultiItemRoot.cpp
 	$(CXX) -zq -fo=$^@ $(TMCLIB_CXXFLAGS) $<
 
-lib\tmclib_wxTreeMultiCtrl.obj :  .AUTODEPEND .\..\contrib\src\treemultictrl\wxTreeMultiCtrl.cpp
+lib\tmclib_TreeMultiXmlMapper.obj :  .AUTODEPEND .\..\contrib\src\treemultictrl\TreeMultiXmlMapper.cpp
 	$(CXX) -zq -fo=$^@ $(TMCLIB_CXXFLAGS) $<
 
 samples\multictrltest_MultiCtrlTest.obj :  .AUTODEPEND .\..\contrib\samples\treemultictrl\MultiCtrlTest.cpp
 	$(CXX) -zq -fo=$^@ $(MULTICTRLTEST_CXXFLAGS) $<
+
+samples\multictrlxml_MultiCtrlTestXML.obj :  .AUTODEPEND .\..\contrib\samples\xmlmapper\MultiCtrlTestXML.cpp
+	$(CXX) -zq -fo=$^@ $(MULTICTRLXML_CXXFLAGS) $<
 
