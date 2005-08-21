@@ -26,6 +26,7 @@
 #include <wx/panel.h>
 #include <wx/checkbox.h>
 #include <wx/textctrl.h>
+#include <wx/xrc/xmlres.h>
 
 //! Returns a string with a short size description for the given number of bytes.
 WXDLLIMPEXP_WEBUPDATE wxString wxGetSizeStr(unsigned long bytesize);
@@ -107,14 +108,36 @@ protected:		// event handlers
 	virtual bool IsToDiscard(wxWebUpdateListCtrlFilter filter, int itemidx, wxWebUpdateCheckFlag f);
 
 public:
+	
+	//! Constructs this wxWebUpdateListCtrl.
+	wxWebUpdateListCtrl::wxWebUpdateListCtrl()
+		: wxWUDLC_BASECLASS(), m_bLocked(FALSE) {}
 
-	//! Constructs a wxWebUpdateAdvPanel.
+	//! Constructs this wxWebUpdateListCtrl.
 	wxWebUpdateListCtrl::wxWebUpdateListCtrl(wxWindow* parent, wxWindowID id, 
+		const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, 
+		long style = wxLC_ICON, const wxValidator& validator = wxDefaultValidator, 
+		const wxString& name = wxListCtrlNameStr) 
+		: wxWUDLC_BASECLASS(), m_bLocked(FALSE)
+		{ Create(parent, id, pos, size, style, validator, name); }
+
+	bool Create(wxWindow* parent, wxWindowID id, 
 		const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, 
 		long style = wxLC_ICON, const wxValidator& validator = wxDefaultValidator, 
 		const wxString& name = wxListCtrlNameStr);
 
 	virtual ~wxWebUpdateListCtrl() {}
+
+#if !wxUSE_CHECKEDLISTCTRL
+public:			// wxCheckedListCtrl-emulation
+
+	void Check(long item, bool checked)
+		{ SetItemState(item, (checked ? wxLIST_STATE_SELECTED : 0), wxLIST_MASK_STATE); }
+	bool IsChecked(long item) const
+		{ return GetItemState(item, wxLIST_STATE_SELECTED) != 0; }
+	int GetCheckedItemCount() const;
+
+#endif
 
 public:			// miscellaneous
 
@@ -203,6 +226,16 @@ public:		// setters
 private:
 	DECLARE_CLASS(wxWebUpdateListCtrl)
 	DECLARE_EVENT_TABLE()
+};
+
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateListCtrlXmlHandler : public wxXmlResourceHandler
+{
+	DECLARE_DYNAMIC_CLASS(wxWebUpdateListCtrlXmlHandler)
+
+public:
+    wxWebUpdateListCtrlXmlHandler();
+    virtual wxObject *DoCreateResource();
+    virtual bool CanHandle(wxXmlNode *node);
 };
 
 #endif // _WX_WEBUPDATECTRL_H_

@@ -50,10 +50,15 @@
 // wxWidgets RTTI
 IMPLEMENT_CLASS(wxWebUpdateListCtrl, wxWUDLC_BASECLASS)
 BEGIN_EVENT_TABLE(wxWebUpdateListCtrl, wxWUDLC_BASECLASS)
+#if wxUSE_CHECKEDLISTCTRL
 	EVT_LIST_ITEM_CHECKED(-1, wxWebUpdateListCtrl::OnItemCheck)
 	EVT_LIST_ITEM_UNCHECKED(-1, wxWebUpdateListCtrl::OnItemUncheck)
-	EVT_SIZE(wxWebUpdateListCtrl::OnSize)
+#else
+	EVT_LIST_ITEM_SELECTED(-1, wxWebUpdateListCtrl::OnItemCheck)
+	EVT_LIST_ITEM_DESELECTED(-1, wxWebUpdateListCtrl::OnItemUncheck)
+#endif
 
+	EVT_SIZE(wxWebUpdateListCtrl::OnSize)
 	EVT_CACHESIZE_COMPLETE(-1, wxWebUpdateListCtrl::OnCacheSizeComplete)
 END_EVENT_TABLE()
 
@@ -94,12 +99,13 @@ wxString wxGetSizeStr(unsigned long bytesize)
 // wxWEBUPDATELISTCTRL
 // ---------------------
 
-wxWebUpdateListCtrl::wxWebUpdateListCtrl(wxWindow* parent, wxWindowID id, 
+bool wxWebUpdateListCtrl::Create(wxWindow* parent, wxWindowID id, 
 					const wxPoint& pos, const wxSize& size, long style, 
 			  		const wxValidator& validator, const wxString& name)
-		: wxWUDLC_BASECLASS(parent, id, pos, size, style, validator, name)
 {
-	m_bLocked = FALSE;
+	if (!wxWUDLC_BASECLASS::Create(parent, id, pos, size, 
+		style | wxLC_REPORT | wxSUNKEN_BORDER, validator, name))
+		return FALSE;
 
 	// init the list control with the column names
 	// (items will be inserted as soon as we load the webupdate script)the user-supplied wxWebUpdateLocalPackages
@@ -109,10 +115,23 @@ wxWebUpdateListCtrl::wxWebUpdateListCtrl(wxWindow* parent, wxWindowID id,
 	InsertColumn(3, wxT("Size"));
 	InsertColumn(4, wxT("Importance"));
 	InsertColumn(5, wxT("Requires"));
+
+	return TRUE;
 }
 
-void wxWebUpdateListCtrl::OnSize(wxSizeEvent &)
+void wxWebUpdateListCtrl::OnSize(wxSizeEvent &ev)
 {
+	// on some wx ports this size event is very important in order to make the 
+	// listctrl resize correctly; thus we always need to set the "skipped" flag
+	// so that others can process this event
+	ev.Skip();
+
+	// on some wx ports, calling #InsertColumn in the ::Create function generates
+	// a size event: since in these cases not all columns have been already created
+	// we must discard those events...
+	if (GetColumnCount() < 6)
+		return;
+
 	SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
 	SetColumnWidth(1, wxLIST_AUTOSIZE_USEHEADER);
 	SetColumnWidth(2, wxLIST_AUTOSIZE_USEHEADER);	
@@ -211,7 +230,7 @@ void wxWebUpdateListCtrl::RebuildPackageList(wxWebUpdateListCtrlFilter filter)
 		// tocheck is TRUE for outdated items
 		wxWebUpdateCheckFlag f = SetLocalVersionFor(idx, curr);
 		bool tocheck = (f == wxWUCF_OUTOFDATE || f == wxWUCF_NOTINSTALLED);
-			
+		
 		if (IsToDiscard(filter, idx, f)) {
 			
 			DeleteItem(idx);
@@ -239,21 +258,15 @@ void wxWebUpdateListCtrl::RebuildPackageList(wxWebUpdateListCtrlFilter filter)
 		switch (curr.GetImportance()) {
 		case wxWUPI_HIGH:
 			SetItem(idx, 4, wxT("high!"));
-#if wxUSE_CHECKEDLISTCTRL
 			Check(idx, tocheck);
-#endif
 			break;
 		case wxWUPI_NORMAL:
 			SetItem(idx, 4, wxT("normal"));
-#if wxUSE_CHECKEDLISTCTRL
 			Check(idx, tocheck);
-#endif
 			break;
 		case wxWUPI_LOW:
 			SetItem(idx, 4, wxT("low"));
-#if wxUSE_CHECKEDLISTCTRL
 			Check(idx, FALSE);
-#endif
 			break;
 		default:
 			wxASSERT_MSG(0, wxT("Invalid package !"));
@@ -291,6 +304,20 @@ wxWebUpdatePackage &wxWebUpdateListCtrl::GetRemotePackage(const wxString &name)
 			return m_arrRemotePackages[j];
 	return wxEmptyWebUpdatePackage;
 }
+
+#if !wxUSE_CHECKEDLISTCTRL
+
+int wxWebUpdateListCtrl::GetCheckedItemCount() const
+{
+	int res = 0;
+	for (int i=0; i<GetItemCount(); i++)
+		if (IsChecked(i))
+			res++;
+
+	return res;
+}
+
+#endif
 
 void wxWebUpdateListCtrl::OnItemCheck(wxListEvent &ev)
 {
@@ -455,11 +482,12 @@ wxWebUpdatePackage *wxWebUpdateListCtrl::GetNextPackageToDownload()
 {
 	if (!IsShown()) {
 	
-		// we are hidden; thus the user cannot check the packages he want
+		// we are hidden; thus the user cannot check the packages he wants
 		// to install... we will just select automatically *all* available
 		// packages...
 		for (int i=0; i < GetItemCount(); i++)
-			Check(i, TRUE);
+			if (CanBeChecked(i))
+				Check(i, TRUE);
 	}
 	
 	// launch the download of the selected packages
@@ -550,4 +578,41 @@ bool wxWebUpdateListCtrl::IsDownloaded(const wxWebUpdatePackage &p) const
 	if (idx == wxNOT_FOUND) return FALSE;
 
 	return m_bDownloaded[idx];
+}
+
+
+
+
+// -------------------------------
+// wxWEBUPDATELISTCTRLXMLHANDLER
+// -------------------------------
+
+IMPLEMENT_DYNAMIC_CLASS(wxWebUpdateListCtrlXmlHandler, wxXmlResourceHandler)
+
+wxWebUpdateListCtrlXmlHandler::wxWebUpdateListCtrlXmlHandler()
+: wxXmlResourceHandler()
+{
+    //XRC_ADD_STYLE(wxWULC_XXX);
+    AddWindowStyles();
+}
+
+wxObject *wxWebUpdateListCtrlXmlHandler::DoCreateResource()
+{
+    XRC_MAKE_INSTANCE(list, wxWebUpdateListCtrl)
+
+	wxLogDebug(wxT("wxWebUpdateListCtrlXmlHandler::DoCreateResource"));
+    list->Create(m_parentAsWindow,
+                 GetID(),
+                 GetPosition(), GetSize(),
+                 GetStyle(),
+                 wxDefaultValidator,
+                 GetName());
+    SetupWindow(list);
+
+    return list;
+}
+
+bool wxWebUpdateListCtrlXmlHandler::CanHandle(wxXmlNode *node)
+{
+    return IsOfClass(node, wxT("wxWebUpdateListCtrl"));
 }

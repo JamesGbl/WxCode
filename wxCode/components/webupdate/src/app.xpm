@@ -1,5 +1,5 @@
 /* XPM */
-static char *Pixmap[] = {
+static char *app_xpm[] = {
 "32 32 256 3",
 "000 c #16171D",
 "001 c #021130",

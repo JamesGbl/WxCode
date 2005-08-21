@@ -82,32 +82,37 @@ class wxGauge;
 //! These should be used internally by wxWebUpdateDlg only and user
 //! should not care about it; however they give a good idea of the
 //! update process 'steps'.
+//! \note We assign to these enum items values like those used typically
+//!       for a variable which holds a bit mask.
+//!       This is only to make it easier to write the wxWUD_CHECK_STATUS
+//!       macro: wxWebUpdateDlg::m_nStatus can hold only *one* of the
+//!       following values in each moment !
 enum wxWebUpdateDlgStatus {
 
 	//! The user must still hit the "Get update list" button and
 	//! the XML remote script has not been loaded yet
-	wxWUDS_WAITINGXML = -1,	
+	wxWUDS_WAITINGXML = 1,	
 
 	//! We are downloading the remote XML script.
-	wxWUDS_DOWNLOADINGXML,
+	wxWUDS_DOWNLOADINGXML = 2,
 	
 	//! We have successfully loaded the remote XML script and we are
 	//! waiting that the user chooses the packages to download & install
-	wxWUDS_WAITING,
+	wxWUDS_WAITING = 4,
 	
 	//! The user has chosen the packages to download & install and we
 	//! are downloading them.
-	wxWUDS_DOWNLOADING,
+	wxWUDS_DOWNLOADING = 8,
 	
 	//! The download of *all* user-chosen packaged has been completed and
 	//! we are installing them, one by one, in an order which is allowed
 	//! by the package dependencies.
-	wxWUDS_INSTALLING,
+	wxWUDS_INSTALLING = 16,
 	
 	// when the wxWUDS_INSTALLING phase has been completed, then the
 	// dialog will automatically exit if all packages are up2date;
 	// otherwise it will return to the wxWUDS_WAITING status.
-	wxWUDS_EXITING
+	wxWUDS_EXITING = 32
 };
 
 
@@ -148,7 +153,7 @@ protected:		// pointers to our controls
 #endif
 
 	//! The local XML script used to get some info.
-	const wxWebUpdateLocalXMLScript &m_xmlLocal;
+	const wxWebUpdateLocalXMLScript *m_xmlLocal;
 	
 	//! The extra options specified to WebUpdater.
 	wxWebUpdateExtraOptions *m_optExtra;
@@ -156,7 +161,7 @@ protected:		// pointers to our controls
 protected:
 
 	//! Loads the XRC for this dialog and init the control pointers.
-	void InitWidgetsFromXRC();
+	bool InitWidgetsFromXRC(wxWindow *parent);
 
 protected:		// event handlers
 
@@ -167,15 +172,28 @@ protected:		// event handlers
 
 public:
 
-	//! Constructs a wxWebUpdateAdvPanel.
-	wxWebUpdateAdvPanel::wxWebUpdateAdvPanel(wxWindow *parent,
- 									const wxWebUpdateLocalXMLScript &script,
-          							wxWebUpdateExtraOptions *opt = NULL)
-									: m_xmlLocal(script), m_optExtra(opt)
-  		{ m_parent = parent; InitWidgetsFromXRC(); }
+	//! Constructs a wxWebUpdateAdvPanel; for two-step creation.
+	wxWebUpdateAdvPanel::wxWebUpdateAdvPanel()
+			: m_xmlLocal(NULL), m_optExtra(NULL) {}
 
-	virtual ~wxWebUpdateAdvPanel() 
-		{}
+	//! Constructs a wxWebUpdateAdvPanel.
+	wxWebUpdateAdvPanel::wxWebUpdateAdvPanel(wxWindow* parent)
+			: m_xmlLocal(NULL), m_optExtra(NULL)
+  		{ Create(parent); }
+
+	//! Creates this panel as child of the given window.
+	bool Create(wxWindow* parent);
+
+
+	virtual ~wxWebUpdateAdvPanel() {}
+
+
+public:		// setters
+
+ 	void SetData(const wxWebUpdateLocalXMLScript *script,
+					wxWebUpdateExtraOptions *opt);
+
+public:		// getters
 
 #if wxUSE_HTTPENGINE
 	//! Returns the updated proxy settings.
@@ -208,17 +226,29 @@ private:
 };
 
 
+//! The XRC handler for wxWebUpdateAdvPanel.
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateAdvPanelXmlHandler : public wxXmlResourceHandler
+{
+	DECLARE_DYNAMIC_CLASS(wxWebUpdateAdvPanelXmlHandler)
+
+public:
+    wxWebUpdateAdvPanelXmlHandler();
+    virtual wxObject *DoCreateResource();
+    virtual bool CanHandle(wxXmlNode *node);
+};
+
+
 //! The about dialog shown by wxWebUpdateDlg.
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateAboutDlg : public wxDialog 
 {
 protected:
 
 	//! Loads the XRC for this dialog and init the control pointers.
-	void InitWidgetsFromXRC();
+	bool InitWidgetsFromXRC(wxWindow *parent);
 
 public:
 	wxWebUpdateAboutDlg::wxWebUpdateAboutDlg(wxWindow *parent)
-		{ m_parent=parent; InitWidgetsFromXRC(); }
+		{ InitWidgetsFromXRC(parent); }
 	virtual ~wxWebUpdateAboutDlg() {}
 
 private:
@@ -306,10 +336,10 @@ protected:		// wxWebUpdateDlg-internals
 protected:		// init helpers
 
 	//! Loads the XRC for this dialog and init the control pointers.
-	void InitWidgetsFromXRC();
+	bool InitWidgetsFromXRC(wxWindow *parent);
 
 	//! Initializes the threads.
-	void InitThreads();
+	bool InitThreads();
 
 protected:		// utilities
 
@@ -362,6 +392,9 @@ protected:		// event handlers
 
 public:
 
+	//! For two-step creations.
+	wxWebUpdateDlg::wxWebUpdateDlg() { PreInit(); }
+
 	//! Constructs a wxWebUpdateDlg.
 	//! This function does not take so many parameters like a typical
 	//! wxWindow or wxDialog does because it uses XRC to set all the
@@ -374,6 +407,14 @@ public:
 						const wxWebUpdateLocalXMLScript &script,
       					wxWebUpdateExtraOptions *opt = NULL);
 
+	//! Inits the values of the pointers and others var to NULL.
+	void PreInit();
+
+	//! Creates the dialog.
+	bool Create(wxWindow *parent, 
+				const wxWebUpdateLocalXMLScript &script,
+      			wxWebUpdateExtraOptions *opt = NULL);
+
 	virtual ~wxWebUpdateDlg() 
 		{ if (m_dThread) delete m_dThread;
 			if (m_iThread) delete m_iThread;}
@@ -382,8 +423,8 @@ public:
 public:		// main functions
 
 	//! Checks that the user is connected to internet.
-	//! Aborts this dialog if not.
-	void ConnectionRequired();
+	//! Aborts this dialog if not and in this case returns FALSE.
+	bool ConnectionRequired();
 
 	//! Call this function instead of EndModal(wxCANCEL) to abort this dialog.
 	//! This function takes care of our wxDownloadThread, infact.

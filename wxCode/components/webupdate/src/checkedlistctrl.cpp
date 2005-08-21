@@ -2,6 +2,7 @@
 // Name:        checkedlistctrl.cpp
 // Purpose:     wxCheckedListCtrl
 // Author:      Uknown ? (found at http://wiki.wxwidgets.org/wiki.pl?WxListCtrl)
+// Modified by: Francesco Montorsi
 // Created:     2005/06/29
 // RCS-ID:      $Id$
 // Copyright:   (c) 2005 Francesco Montorsi
@@ -48,11 +49,12 @@ DEFINE_EVENT_TYPE(wxEVT_COMMAND_LIST_ITEM_UNCHECKED);
 // wxCHECKEDLISTCTRL
 // ------------------
 
-wxCheckedListCtrl::wxCheckedListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
-        const wxSize& sz, long style, const wxValidator& validator, const wxString& name) 
-		: wxListCtrl(parent, id, pt, sz, style, validator, name), m_imageList(16, 16, TRUE)
-
+bool wxCheckedListCtrl::Create(wxWindow* parent, wxWindowID id, const wxPoint& pt,
+        const wxSize& sz, long style, const wxValidator& validator, const wxString& name)
 {
+	if (!wxListCtrl::Create(parent, id, pt, sz, style, validator, name))
+		return FALSE;
+
     SetImageList(&m_imageList, wxIMAGE_LIST_SMALL);
 
 	// the add order must respect the wxCLC_XXX_IMGIDX defines in the headers !
@@ -60,6 +62,8 @@ wxCheckedListCtrl::wxCheckedListCtrl(wxWindow* parent, wxWindowID id, const wxPo
     m_imageList.Add(wxIcon(checked_xpm));
     m_imageList.Add(wxIcon(unchecked_dis_xpm));
     m_imageList.Add(wxIcon(checked_dis_xpm));
+
+	return TRUE;
 }
 
 /* static */
@@ -190,16 +194,10 @@ bool wxCheckedListCtrl::SetItem(wxListItem& info)
 		// since when changing the background color, also the foreground color
 		// and the font of the item are changed, we try to respect the user
 		// choices of such attributes
-		//info.SetTextColour(this->GetItemTextColour(info.GetId()));
-
-#ifdef __PATCHED__
-		wxListItem li;
-		li.m_mask = wxLIST_MASK_DATA;
-		li.SetId(0);
-		wxListCtrl::GetItem(li);
-		//info.SetFont(this->GetItemFont(info.GetId());
-		info.SetFont(li.GetFont());
-		info.SetTextColour(li.GetTextColour());
+		info.SetTextColour(this->GetItemTextColour(info.GetId()));
+#if wxCHECK_VERSION(2, 6, 2)
+		// before wx 2.6.2 the wxListCtrl::SetItemFont function is missing
+		info.SetFont(this->GetItemFont(info.GetId()));
 #endif
 		
 		// change the background color to respect the enabled/disabled status...
@@ -347,6 +345,15 @@ bool wxCheckedListCtrl::DeleteItem(long item)
 	return wxListCtrl::DeleteItem(item);
 }
 
+int wxCheckedListCtrl::GetCheckedItemCount() const
+{
+	int res = 0;
+	for (int i=0; i<GetItemCount(); i++)
+		if (IsChecked(i))
+			res++;
+
+	return res;
+}
 
 // event handlers
 

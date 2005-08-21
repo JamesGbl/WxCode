@@ -50,8 +50,8 @@
      $(downloaddir) = the folder where the downloaded files are placed; ends with '//' special character.
      $(tempdir) = a temporary folder already existing and thus (probably) non-empty; ends with '//' special character.
      $(newtempdir) = a temporary folder which has been created by the WebUpdate and thus is empty; ends with '//' special character.
-	 $(localdir) = the folder where the local XML script is located; ends with '//' special character.
-	 $(remotedir) = the folder where the remote XML script is located; ends with '//' special character.
+     $(localdir) = the folder where the local XML script is located; ends with '//' special character.
+     $(remotedir) = the folder where the remote XML script is located; ends with '//' special character.
 
    - files:
      $(updater) = the path of the file and the filename of the WebUpdater program
@@ -71,6 +71,10 @@
      $(mv) = the move command (i.e. 'mv -f' on unix, 'cmd.exe /c move /y' on windows)
      $(cd) = the change directory command (i.e. 'cd' on unix, 'cmd.exe /c cd' on windows)
      $(mkdir) = the make directory command (i.e. 'mkdir' on unix, 'cmd.exe /c mkdir' on windows)
+     
+     NOTE: the commands above have the aesthetic disadvantage that they open a console window when they are used for example as:
+               <run cmd="$(cp)" args="c:\from\* c:\to" />
+           and thus you should try to use the <copy>, <mkdir> actions instead.
    
    - miscellaneous:
      $(pid) = the process ID of the updater program
@@ -200,26 +204,41 @@
 <!ELEMENT md5 (#PCDATA)>
 
 
-<!-- ACTION tag: allows to specify an action to take when the download is complete.
-                 There are some built-in action handlers for "run", "extract", "exit"...
+<!-- ACTIONS tag: allows to specify an action to take when the download is complete.
+                  There are some built-in action handlers for "run", "extract", "exit"...
+                  see the following section.
 -->
-<!ELEMENT actions (run|extract|exit|replace)+>
+<!ELEMENT actions (run|extract|copy|make)+>
 
 
-<!-- for "run" action tags -->
+
+
+<!--                                                                                -->
+<!--                          CHILDREN TAGS OF 'ACTIONS'                            -->
+<!--                                                                                -->
+
+<!-- RUN tag: executes through the shell of the platform a command specified through the
+              "cmd" or "file" properties.              
+-->
 <!ELEMENT run EMPTY>
 <!ATTLIST run flags (ASYNC|SYNC) "ASYNC">			<!-- the possible flags are: ASYNC, SYNC -->
 <!ATTLIST run args CDATA "">					<!-- the arguments to give to the file to run -->
 <!ATTLIST run cmd CDATA "$(thisfile)">				<!-- the path+name of the file to run; identic to 'file' property - use the one you prefer -->
 <!ATTLIST run file CDATA "$(thisfile)">				<!-- the path+name of the file to run; identic to 'cmd' property - use the one you prefer -->
 
-<!-- for "extract" action tags: this action has a special behaviour which allow to update
+
+<!-- EXTRACT tag: decompress the given "file" in the given location (see "where" property).
+                  The name of the decompressed file can be chosen using the "namemap" property.
+                  The destination folder will be created if it does not exist.
+
+     NOTE: this action has a special behaviour which allow to update
      the WebUpdater application itself. In fact, when it founds a compressed file which
      is named "$(updatername)$(exe)", then it outputs the file as "_$(updatername)$(exe)".
      This is because the WebUpdater cannot replace itself and thus any try to overwrite the
      WebUpdater executable would fail.
      The app which uses WebUpdater should look for filenames called "_$(updatername)$(exe)" 
-     and rename them to "$(updatername)$(exe)". -->
+     and rename them to "$(updatername)$(exe)". 
+-->
 <!ELEMENT extract EMPTY>
 <!ATTLIST extract where CDATA "$(programdir)">			<!-- the folder where extracted files will be put -->
 <!ATTLIST extract file CDATA "$(thisfile)">			<!-- the file to extract -->
@@ -230,4 +249,30 @@
                                                      By default, the list is empty and each compressed file is extracted
                                                      in the destination folder using the compressed filename. -->
 
-<!-- add the attributes for you own actions here (and modify the 'actions' element tag definition) -->
+
+<!-- COPY tag: copies the file from the given path to the given folder. Can be used as move actions using
+               the "move" property.
+-->
+<!ELEMENT copy EMPTY>
+<!ATTLIST copy from CDATA #IMPLIED>		<!-- the original files to copy; folders/patterns can be used -->
+<!ATTLIST copy to CDATA #IMPLIED>			<!-- the destination folder -->
+<!ATTLIST copy move (1|0) "0">				<!-- if "1" the "copy" action will act as "move" property -->
+<!ATTLIST copy create (1|0) "1">	            <!-- if "1" the destination folder will be created if it does not exist -->
+<!ATTLIST copy overwrite (1|0) "1">	        <!-- if "1" the destination files will be overwritten if they already exist -->
+
+
+<!-- MAKE tag: creates a folder/file. You must specify the "dir" property *or* the "file" property; not both.
+-->
+<!ELEMENT make EMPTY>
+<!ATTLIST make dir CDATA "">		        <!-- the folder to create -->
+<!ATTLIST make file CDATA "">		        <!-- the file to create; when using this property you also need to specify the "content" property -->
+<!ATTLIST make content CDATA "">		<!-- the content of the file which is created by this tag (evaluated only when using the "file" property -->
+<!ATTLIST make overwrite (1|0) "1">		<!-- when using the "file" property indicates if the file must be overwritten or not, if it already exists -->
+
+
+
+<!--                                                                                -->
+<!--                          ADDITIONAL CUSTOM ACTIONS                             -->
+<!--                                                                                -->
+<!-- add the definition for you own actions here (and modify the 'actions' element 
+     tag definition to include your actions in the enumeration values) -->

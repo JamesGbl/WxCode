@@ -2,6 +2,7 @@
 // Name:        checkedlistctrl.h
 // Purpose:     wxCheckedListCtrl
 // Author:      Uknown ? (found at http://wiki.wxwidgets.org/wiki.pl?WxListCtrl)
+// Modified by: Francesco Montorsi
 // Created:     2005/06/29
 // RCS-ID:      $Id$
 // Copyright:   (c) 2005 Francesco Montorsi
@@ -76,12 +77,25 @@ protected:
 	wxImageList m_imageList;
 
 public:
+	wxCheckedListCtrl()
+		: wxListCtrl(), m_imageList(16, 16, TRUE) {}
+
 	wxCheckedListCtrl(wxWindow *parent, wxWindowID id = -1, 
 						const wxPoint& pt = wxDefaultPosition,
 						const wxSize& sz = wxDefaultSize, 
 						long style = wxCLC_CHECK_WHEN_SELECTING,
 						const wxValidator& validator = wxDefaultValidator, 
+						const wxString& name = wxListCtrlNameStr)
+						: wxListCtrl(), m_imageList(16, 16, TRUE)
+		{ Create(parent, id, pt, sz, style, validator, name); }
+	
+	bool Create(wxWindow *parent, wxWindowID id = -1, 
+						const wxPoint& pt = wxDefaultPosition,
+						const wxSize& sz = wxDefaultSize, 
+						long style = wxCLC_CHECK_WHEN_SELECTING,
+						const wxValidator& validator = wxDefaultValidator, 
 						const wxString& name = wxListCtrlNameStr);
+
 	virtual ~wxCheckedListCtrl() {}
 
 
@@ -119,6 +133,9 @@ public:			// utilities
 	// this needs to be redeclared otherwise it's hidden by our other IsEnabled() function.
 	bool IsEnabled() const
 		{ return wxWindow::IsEnabled(); }
+
+	//! Returns the number of checked items in the control.
+	int GetCheckedItemCount() const;
 
 	// we overload these so we are sure they will use our
 	// #GetItem and #SetItem functions...

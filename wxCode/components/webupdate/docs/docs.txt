@@ -6,46 +6,48 @@
 /*! 
 
 \mainpage WebUpdate
-<center>by Francesco Montorsi</center>
+<center>A powerful and flexible cross-platform update solution<br/>by Francesco Montorsi</center>
 
 \section features WebUpdate features
-- Open source (\ref http://www.wxwidgets.org/licence.php "wxWidgets-licensed").
-- Cross-platform (using \ref http://www.wxwidgets.org "wxWidgets").
-- \link nonwxsample Ability to update any kind of application (also not wxWidgets-based). \endlink
-- Easily integrable in your application (needs only few modifications).
-- Small (the binary for win32 distributed at 
-\link http:// \endlink is only XXX Kb)
-- Handles an arbitrary number of packages.
-- Allows platform-dependent set of installation actions for each package.
-- Extensible GUI: even its GUI can be modified without recompiling the
+<div style="line-height:2em;">
+- <b>Open source</b>: wxWidgets-licensed; see http://www.wxwidgets.org/licence.php.
+- <b>Cross-platform</b>, using the wxWidgets library; see http://www.wxwidgets.org.
+- <b>Ability to update any kind of application</b>: also not wxWidgets-based and not written in C++; see \ref samples.
+- <b>Easily integrable in your application</b>: needs only few modifications; see \ref tutorial.
+- <b>Small</b> (the binary for win32 distributed at https://sourceforge.net/project/showfiles.php?group_id=51305&amp;package_id=45182 is about 500 Kb.
+- Handles an <b>arbitrary number of packages</b>.
+- Allows <b>platform-dependent set of installation actions</b> for each package.
+- <b>Extensible GUI</b>: even its GUI can be modified without recompiling the
 application (using the wxWidgets XRC system). This also means that you can
 choose among various GUI masks (some are better for simple programs with
 few packages, others are better for big programs with many packages) or 
 just create your own.
-- Extensible configuration files: the local & remote XML files (see below 
+- <b>Extensible configuration files</b>: the local & remote XML files (see \ref tutorial 
 for an explanation of this terminology) allows you to configure the behaviour 
 of the updater.
-- Extensible actions: the actions which are taken when downloading each
+- <b>Extensible actions</b>: the actions which are taken when downloading each
 package can be chosen by the programmer who writes the remote XML file and
 updater allows you to define new actions just deriving a C++ class.
-- Ability to update itself.
-- MD5 checks on the downloaded file to avoid data corruption.
-- Ability to download the updates & the remote XML file from any source:
+- <b>Ability to update itself</b>.
+- <b>MD5 checks</b> on the downloaded file to avoid data corruption.
+- <b>Ability to download the updates & the remote XML file from any source</b>:
 World Wide Web is the typical location but the WebUpdater can be configured
 to use the packages stored in a removable device (CD, DVD, floppies or whatelse).
 - Allows many properties to be set for each package: the 'importance', the
 platform which it targets, the description, \b its dependencies (on other packages)
 - The DTDs allows you to easily check your XML files.
+</div>
 
+<br/>
 
-\section howtostart How to start...
-
+\section howtostart Let's start...
+<div style="line-height:1em;">
 Don't start to dig in the doxygen documentation of the classes & functions of
 WebUpdate; you probably will never need to do that !
-Just read \ref tutorial and enjoy WebUpdate ;-)
 
-
-
+Just read \ref tutorial and enjoy WebUpdate.
+<br/><br/><br/>
+</div>
 
 */
 
@@ -61,31 +63,37 @@ The library is used only for some advanced things and for simple programs you wi
 typically need to use only the 'updater' copying the executable file in your
 program's folder. For more info about the design of the WebUpdate component, look at the 
 \ref faq "FAQ page"...
-- a 'package' is a set of files which have in common their function (or maybe their
+
+- a '<b>package</b>' is a set of files which have in common their function (or maybe their
 location in the program's folder structure) and are packaged
 in a single archive. A 'remote package' is an archive hosted in the webserver for
 download. A 'local package' is a package which is installed in the user's system 
 (typically 'installed' means 'uncompressed').
 The C++ classes used by WebUpdate to work on local & remote packages are
 wxWebUpdateLocalPackage and wxWebUpdatePackage, respectively.
-- a 'download' is the compressed file which holds the remote package files.
+
+- a '<b>download</b>' is the compressed file which holds the remote package files.
 A single remote package can have many downloads; typically one per targeted platform
 even if a single download can be used by more than a single platform.
 The C++ class used to store a 'download' is wxWebUpdateDownload.
-- an 'action' is one of the command to execute after the complete download of a
+
+- an '<b>action</b>' is one of the command to execute after the complete download of a
 package (i.e. after the download of the package's 'download' for the current platform).
 There are two predefined actions: wxWebUpdateActionRun and wxWebUpdateActionExtract.
 Their base class is wxWebUpdateAction. You can define your own customized actions
 deriving a new class from wxWebUpdateAction.
-- the 'local XML script' is the XML file which contains the configuration settings
+
+- the '<b>local XML script</b>' is the XML file which contains the configuration settings
 for the WebUpdater application and also the versions and the list of the local
 packages currently installed. The C++ class for local XML scripts is
 wxWebUpdateLocalXMLScript.
-- the 'remote XML script' is slightly more complex rather than the local XML script
+
+- the '<b>remote XML script</b>' is slightly more complex rather than the local XML script
 because it contains all the info about the remote packages in the webserver
 (specially their versions) and the info about their installation.
 The C++ class for remote XML scripts is wxWebUpdateXMLScript.
 
+<br/>
 
 \section howto_integrate How to integrate WebUpdate in your application
 It's quite easy to use WebUpdate in your programs following these simple steps:
@@ -110,46 +118,15 @@ the user will be smaller and thus updates will be faster (and the user happier).
 
 On the other hand, if you often make releases or have few time to do the packaging,
 and your program is not so big, you should consider to create a single package for
-each platform which will work both as installer for the user who download your program
-for the first time and also as update for the user using WebUpdater.
+each platform which will work both as installer for the user who downloads your program
+for the first time and also as update for the users using WebUpdater.
 
 
 
 2) <strong>Write your 'local.xml' file</strong>: this is the simplest XML used
 by WebUpdate; it looks like:
 
-\verbatim
-
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE webupdate PUBLIC "-//WebUpdate//DTD WebUpdater 1.0//EN" 
-	"http://wxcode.sourceforge.net/components/webupdate/local.dtd">
-
-<webupdate version="1.0">
-
-  <!-- some settings about the application to update... -->
-  <appname>AppName</appname>
-  <appfile>myprogram</appfile>
-  
-  <!-- ...about the XRC resource name to use for webupdater... -->
-  <dlgxrc>wxWebUpdateDlg</dlgxrc>
-  
-  <!-- ...where to find the list of updated packages ... -->
-  <remoteuri>http://myserver/updates/list.xml</remoteuri>
-  
-  <!-- ...the list of the local packages -->
-  <local-package id="core">
-    <version>1.0.0</version>
-  </local-package>
-  <local-package id="addon1">
-    <version>1.0.0</version>
-  </local-package>
-  <local-package id="addon2">
-    <version>1.0.0</version>
-  </local-package>
-  
-  ...
-</webupdate>
-\endverbatim
+\verbinclude local.xml.template
 
 For the complete reference to the tags that you can use in this XML file, you should
 look at \ref http://wxcode.sourceforge.net/components/webupdate/local.dtd 
@@ -162,35 +139,7 @@ understand what is allowed and what is not...).
 3) <strong>Write your 'remote.xml' file</strong>: this is a bit more complex and
 contains all the important info about the updated packages. It looks like:
 
-\verbatim
-
-<?xml version="1.0"?>
-<!DOCTYPE webupdate PUBLIC "-//WebUpdate//DTD WebUpdater 1.0//EN" 
-	"http://wxcode.sourceforge.net/components/webupdate/remote.dtd">
-
-<webupdate version="1.0">
-   <package id="simple">
-      <latest-version importance="high">2.0.3</latest-version>
-      <latest-download>
-			<uri>http://myserver/updates/simple.zip</uri>
-			<platform name="msw"/>	
-			<actions>
-				<extract file="$(thisfile)" where="$(programdir)"/>
-			</actions>
-	  </latest-download>
-      <latest-download>
-			<uri>http://myserver/updates/simple.tar.gz</uri>
-			<platform name="gtk"/>
-			<actions>
-   				<run/>
-       		</actions>
-	  </latest-download>
-	  <description>This is a simple package with two downloads !</description>
-   </package>
-
-   ...
-</webupdate>
-\endverbatim
+\verbinclude remote.xml.template
 
 Like for the local scripts, for the complete reference to the tags that you can 
 use in this XML file, you should look at  
@@ -253,6 +202,8 @@ then just mail me at frm@users.sourceforge.net.
 All the samples of WebUpdate comes with at least two different versions.
 This is because you need the old version of the sample to test the WebUpdater
 and I need the newer version for making the update package ;-)
+
+\note All the versions of the samples are completely random.
 
 \section wxsimple The simple samples
 

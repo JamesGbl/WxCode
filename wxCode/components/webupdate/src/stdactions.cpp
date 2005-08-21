@@ -44,6 +44,8 @@ DEFINE_EVENT_TYPE(wxEVT_COMMAND_EXECUTE);
 // default wxWebUpdate actions
 IMPLEMENT_CLASS(wxWebUpdateActionRun, wxWebUpdateAction)
 IMPLEMENT_CLASS(wxWebUpdateActionExtract, wxWebUpdateAction)
+IMPLEMENT_CLASS(wxWebUpdateActionCopy, wxWebUpdateAction)
+IMPLEMENT_CLASS(wxWebUpdateActionMake, wxWebUpdateAction)
 
 #include <wx/ptr_scpd.h>
 wxDEFINE_SCOPED_PTR_TYPE(wxArchiveEntry);
@@ -98,6 +100,10 @@ bool wxWebUpdateActionRun::SetProperties(const wxArrayString &propnames,
 			wxLogDebug(wxT("wxWebUpdateActionRun::SetProperties - unknown property: ") 
 						+ propnames[i]);
 	}
+
+	// do substitutions on the paths
+	m_strFile = wxWebUpdateInstaller::Get()->DoSubstitution(m_strFile);
+	m_strArgs = wxWebUpdateInstaller::Get()->DoSubstitution(m_strArgs);
 
 	// set defaults	
 	if (flags.IsEmpty())
@@ -239,12 +245,15 @@ bool wxWebUpdateActionExtract::SetProperties(const wxArrayString &propnames,
 			wxLogDebug(wxT("wxWebUpdateActionExtract::SetProperties - unknown property: ") 
 						+ propnames[i]);
 	}
+
+	// do substitutions on the paths
+	m_strWhere = wxWebUpdateInstaller::Get()->DoSubstitution(m_strWhere);
 	
 	// by default, WebUpdater executables must be extracted with the '_'
 	// character prepended
 	wxString str = wxWebUpdateInstaller::Get()->GetKeywordValue(wxT("updatername")) +
 					wxWebUpdateInstaller::Get()->GetKeywordValue(wxT("exe"));
-	m_strNameMap = str + wxT("=_") + str + m_strNameMap;
+	m_strNameMap = str + wxT("=_") + str + wxT(",") + m_strNameMap;
 
 	// set defaults
 	if (m_strFile.IsEmpty())		// the FILE default value is $(thisfile)
@@ -271,3 +280,214 @@ bool wxWebUpdateActionExtract::SetProperties(const wxArrayString &propnames,
 }
 
 
+
+
+
+
+// --------------------------
+// wxWEBUPDATEACTIONCOPY
+// --------------------------
+
+bool wxWebUpdateActionCopy::Run() const
+{
+	wxArrayString orig, output;
+	wxLogDebug(wxT("wxWebUpdateActionCopy::Run - going to copy the file(s)/folder(s) [")
+				+ m_strFrom + wxT("] in [")	+ m_strTo + wxT("]"));
+
+	// wxFileName wants a path separator at the end of directory names
+	wxString dir(m_strTo);
+	if (dir.Last() != wxFileName::GetPathSeparator())
+		dir += wxFileName::GetPathSeparator();
+
+	// be sure that the destination directory exists
+	wxFileName f(dir);
+	if (!f.DirExists() && !m_bCreate) {
+
+		wxLogDebug(wxT("wxWebUpdateActionCopy::Run - the folder \"") + m_strTo +
+				wxT("\" does not exist and create=0 !"));
+		return FALSE;
+	}
+	
+	// do we need to create the destination folder ?
+	if (!f.DirExists()) {
+		wxASSERT_MSG(m_bCreate, 
+			wxT("The create=0 case should have been already catched"));
+
+		if (f.Mkdir(0777, wxPATH_MKDIR_FULL))
+			wxLogDebug(wxT("wxWebUpdateActionCopy::Run - created the [") + 
+							f.GetPath() + wxT("] folder"));
+		else
+			wxLogDebug(wxT("wxWebUpdateActionCopy::Run - could not create the [") + 
+							f.GetPath() + wxT("] folder.. proceeding anyway"));
+	}
+
+	// do the copy
+	// FIXME: how to handle the "m_bMove" flag ??
+	if (!wxCopyFile(m_strFrom, m_strTo, m_bOverwrite))
+		return FALSE;
+	return TRUE;
+}
+
+bool wxWebUpdateActionCopy::SetProperties(const wxArrayString &propnames,
+										const wxArrayString &propvalues)
+{
+	// set the defaults
+	m_bMove = FALSE;
+	m_bCreate = TRUE;
+	m_bOverwrite = TRUE;
+
+	for (int i=0; i < (int)propnames.GetCount(); i++) {
+		wxLogDebug(wxT("wxWebUpdateActionCopy::SetProperties - name: [")
+				+ propnames[i] + wxT("], value: [") + propvalues[i] + wxT("]"));
+
+		if (propnames[i] == wxT("from"))
+			m_strFrom = propvalues[i];
+		else if (propnames[i] == wxT("to"))
+			m_strTo = propvalues[i];
+		else if (propnames[i] == wxT("create"))
+			m_bCreate = (propvalues[i] == wxT("1"));
+		else if (propnames[i] == wxT("move"))
+			m_bMove = (propvalues[i] == wxT("1"));
+		else if (propnames[i] == wxT("overwrite"))
+			m_bOverwrite = (propvalues[i] == wxT("1"));
+		else
+			wxLogDebug(wxT("wxWebUpdateActionCopy::SetProperties - unknown property: ") 
+						+ propnames[i]);
+	}
+
+	// do substitutions on the paths
+	m_strFrom = wxWebUpdateInstaller::Get()->DoSubstitution(m_strFrom);
+	m_strTo = wxWebUpdateInstaller::Get()->DoSubstitution(m_strTo);
+
+	// validate the properties
+	wxFileName f(m_strFrom), f2(m_strTo);
+
+	// we won't do the wxFileName::FileExists check because the file we need to run
+	// could be a file which does not exist yet (e.g. its in the update package)
+	//
+	// NOTE: wxFileName::IsDir() only checks if the given string ends with a path
+	//       separator character (there are no real ways to do a ::IsDir check
+	//       without trying to access that path!) and thus we won't use it
+	if (m_strFrom.IsEmpty() || m_strTo.IsEmpty() || 
+		!f.IsOk() || !f2.IsOk()) 
+		return FALSE;
+
+	return TRUE;
+}
+
+
+
+
+
+// --------------------------
+// wxWEBUPDATEACTIONMAKE
+// --------------------------
+
+bool wxWebUpdateActionMake::Run() const
+{
+	wxArrayString orig, output;
+	wxLogDebug(wxT("wxWebUpdateActionMake::Run - going to make the file/folder [")
+				+ m_strTarget + wxT("]"));
+
+	// do we have to create a folder ?
+	if (m_bDir) {
+
+		// wxFileName wants a path separator at the end of directory names
+		wxString dir(m_strTarget);
+		if (dir.Last() != wxFileName::GetPathSeparator())
+			dir += wxFileName::GetPathSeparator();
+
+		wxFileName f(dir);
+		if (f.DirExists()) {
+
+			wxLogDebug(wxT("wxWebUpdateActionMake::Run - the folder \"") + m_strTarget +
+					wxT("\" already exist... proceeding anyway"));
+			return TRUE;
+		}
+
+		// create it !
+		if (f.Mkdir(0777, wxPATH_MKDIR_FULL))
+			wxLogDebug(wxT("wxWebUpdateActionMake::Run - created the [") + 
+							f.GetPath() + wxT("] folder"));
+		else
+			wxLogDebug(wxT("wxWebUpdateActionMake::Run - could not create the [") + 
+							f.GetPath() + wxT("] folder.. proceeding anyway"));
+
+	} else {		// or a file ?
+
+		wxFileName f(m_strTarget);
+		if (f.FileExists()) {
+
+			if (m_bOverwrite)
+				wxLogDebug(wxT("wxWebUpdateActionMake::Run - the file \"") + m_strTarget +
+					wxT("\" already exist... proceeding anyway (overwrite=1)"));
+			else
+				return TRUE;		// exit
+		}
+
+		// create it !
+		wxFileOutputStream out(f.GetFullPath());
+		size_t bytes(m_strContent.Len()*sizeof(wxChar));
+
+		if (out.Write(m_strContent.c_str(), bytes).LastWrite() != bytes) {
+			wxLogDebug(wxT("wxWebUpdateActionMake::Run - could not create the [") + 
+							f.GetFullPath() + wxT("] file."));
+			return FALSE;
+		}
+
+		wxLogDebug(wxT("wxWebUpdateActionMake::Run - created the [") + 
+					f.GetFullPath() + wxT("] file with content [") + 
+					m_strContent + wxT("]..."));
+	}
+	
+	return TRUE;
+}
+
+bool wxWebUpdateActionMake::SetProperties(const wxArrayString &propnames,
+										const wxArrayString &propvalues)
+{
+	// set defaults
+	m_bDir = FALSE;
+	m_bOverwrite = TRUE;
+
+	for (int i=0; i < (int)propnames.GetCount(); i++) {
+		wxLogDebug(wxT("wxWebUpdateActionMake::SetProperties - name: [")
+				+ propnames[i] + wxT("], value: [") + propvalues[i] + wxT("]"));
+
+		if (propnames[i] == wxT("dir")) {
+			m_strTarget = propvalues[i];
+			m_bDir = TRUE;
+		} else if (propnames[i] == wxT("file")) {
+			m_strTarget = propvalues[i];
+			m_bDir = FALSE;
+		} else if (propnames[i] == wxT("content"))
+			m_strContent = propvalues[i];
+		else if (propnames[i] == wxT("overwrite"))
+			m_bOverwrite = (propvalues[i] == wxT("1"));
+		else
+			wxLogDebug(wxT("wxWebUpdateActionMake::SetProperties - unknown property: ") 
+						+ propnames[i]);
+	}
+
+	// do substitutions on the paths
+	m_strTarget = wxWebUpdateInstaller::Get()->DoSubstitution(m_strTarget);
+
+	// validate the properties
+	wxFileName f(m_strTarget);
+
+	// we won't do the wxFileName::FileExists check because the file we need to run
+	// could be a file which does not exist yet (e.g. its in the update package)
+	//
+	// NOTE: wxFileName::IsDir() only checks if the given string ends with a path
+	//       separator character (there are no real ways to do a ::IsDir check
+	//       without trying to access that path!) and thus we won't use it
+	if (m_strTarget.IsEmpty() || !f.IsOk()) 
+		return FALSE;
+
+	if (m_bDir && !m_strContent.IsEmpty())
+		wxLogDebug(wxT("wxWebUpdateActionMake::SetProperties - I will ignore the 'content' ")
+					wxT("property value (") + m_strContent + wxT(") since I will create ")
+					wxT("a folder and not a file"));
+
+	return TRUE;
+}

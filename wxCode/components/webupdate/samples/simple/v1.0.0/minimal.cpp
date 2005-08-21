@@ -210,7 +210,7 @@ MyFrame::MyFrame(const wxString& title)
 		wxT("In fact, the only difference between the two 'File' menuitems is that they tell WebUpdater to use ")
 		wxT("different dialogs for the update process...\n\n")
     	wxT("For more info and for the full list of WebUpdater features, look at the WebUpdate documentation."),
-		wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE), 1, wxGROW);
+		wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE), 2, wxGROW);
 
 	sz->Add(new wxStaticText(panel, -1, wxT("A simple datafile of this program: ")), 0, wxGROW | wxALL, 5);
     sz->Add(new wxTextCtrl(panel, -1, text,
@@ -219,7 +219,7 @@ MyFrame::MyFrame(const wxString& title)
 	panel->SetSizer(sz);
     sz->SetSizeHints(panel);
 	sz->SetSizeHints(this);
-	SetSize(GetMinSize().GetWidth()*3, -1);
+	SetSize(GetMinSize().GetWidth()*3, (int)(GetMinSize().GetHeight()*1.1));
 #endif
 
 #if wxUSE_MENUS

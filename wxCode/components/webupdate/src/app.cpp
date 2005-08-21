@@ -59,6 +59,7 @@
 #include <wx/textfile.h>
 
 #include "wx/webupdatedlg.h"
+#include "wx/webupdatectrl.h"
 #include "wx/stdactions.h"
 
 
@@ -170,6 +171,9 @@ public:
 	WebUpdaterApp() : m_dlg(NULL), m_log(NULL) {}
 	virtual ~WebUpdaterApp() {}
 
+	// helper of OnInit()
+	bool OnPreInit();
+
 	// Initializes the WebUpdaterApp.
     virtual bool OnInit();
     
@@ -227,6 +231,16 @@ END_EVENT_TABLE()
 // WEBUPDATERAPP
 // ----------------------------------------------------------------------------
 
+void wxInitRequiredImageHandlers()
+{
+#if wxUSE_LIBPNG
+  wxImage::AddHandler( new wxPNGHandler );
+#endif
+#if wxUSE_XPM
+  wxImage::AddHandler( new wxXPMHandler );
+#endif
+}
+
 // using this function instead of wxXmlResource::Get()->InitAllHandlers()
 // let us to avoid the ADV and HTML wx libraries (unused in this app) and
 // thus make the executable smaller
@@ -236,12 +250,9 @@ void wxInitRequiredXmlHandlers()
 		
 	p->AddHandler(new wxBitmapXmlHandler);
     p->AddHandler(new wxIconXmlHandler);
-    p->AddHandler(new wxMenuXmlHandler);
-    p->AddHandler(new wxMenuBarXmlHandler);
     p->AddHandler(new wxDialogXmlHandler);
     p->AddHandler(new wxPanelXmlHandler);
     p->AddHandler(new wxSizerXmlHandler);
-    p->AddHandler(new wxStdDialogButtonSizerXmlHandler);
     p->AddHandler(new wxButtonXmlHandler);
     p->AddHandler(new wxBitmapButtonXmlHandler);
     p->AddHandler(new wxStaticTextXmlHandler);
@@ -267,18 +278,12 @@ void wxInitRequiredXmlHandlers()
 #if wxUSE_SPINCTRL
     p->AddHandler(new wxSpinCtrlXmlHandler);
 #endif
-#if wxUSE_SCROLLBAR
-    p->AddHandler(new wxScrollBarXmlHandler);
-#endif
 #if wxUSE_RADIOBOX
     p->AddHandler(new wxRadioBoxXmlHandler);
     p->AddHandler(new wxRadioButtonXmlHandler);
 #endif
 #if wxUSE_COMBOBOX
     p->AddHandler(new wxComboBoxXmlHandler);
-#endif
-#if wxUSE_NOTEBOOK
-    p->AddHandler(new wxNotebookXmlHandler);
 #endif
 #if wxUSE_LISTBOOK
     p->AddHandler(new wxListbookXmlHandler);
@@ -290,25 +295,20 @@ void wxInitRequiredXmlHandlers()
 #if wxUSE_LISTBOX
     p->AddHandler(new wxListBoxXmlHandler);
 #endif
-#if wxUSE_TOOLBAR
-    p->AddHandler(new wxToolBarXmlHandler);
-#endif
 #if wxUSE_STATLINE
     p->AddHandler(new wxStaticLineXmlHandler);
 #endif
     p->AddHandler(new wxUnknownWidgetXmlHandler);
-#if wxUSE_DIRDLG
-    p->AddHandler(new wxGenericDirCtrlXmlHandler);
-#endif
-    p->AddHandler(new wxFrameXmlHandler);
-    p->AddHandler(new wxScrolledWindowXmlHandler);
-    p->AddHandler(new wxSplitterWindowXmlHandler);
+
+	// our custom handlers
+    p->AddHandler(new wxWebUpdateListCtrlXmlHandler);
+    p->AddHandler(new wxWebUpdateAdvPanelXmlHandler);
 }
 
-bool WebUpdaterApp::OnInit()
+bool WebUpdaterApp::OnPreInit()
 {
-	mcDUMP_ON_EXIT;			// for debugging only	
-	//_CrtSetBreakAlloc(31100);
+	// show the user that we are running
+	//wxBusyCursor wait;
 
 	// parse the command line
 	wxLogDebug(wxT("WebUpdaterApp::OnInit - parsing the command line"));
@@ -343,12 +343,17 @@ bool WebUpdaterApp::OnInit()
 	wxLogDebug(wxT("WebUpdaterApp::OnInit - initializing sockets & handlers"));
 	wxSocketBase::Initialize();
 
+	// load only required handles (so that the linker can remove all
+	// the unused libraries); instead of
+	//    wxInitAllImageHandlers();
+	//    wxXmlResource::Get()->InitAllHandlers();
+	// we do:
+	wxInitRequiredImageHandlers();
+	wxInitRequiredXmlHandlers();
+
 	// this little snippet allows us to embed our WWW bitmap directly in the
 	// webupdater app's executable so that the users of WebUpdate are not required
-	// to ship together with the EXE also the www image...
-	wxInitAllImageHandlers();
-	//wxXmlResource::Get()->InitAllHandlers();
-	wxInitRequiredXmlHandlers();
+	// to ship together with the EXE also the www image...	
 	wxFileSystem::AddHandler(new wxMemoryFSHandler);
     wxMemoryFSHandler::AddFile(wxT("www.xpm"), wxBitmap(www_xpm), wxBITMAP_TYPE_XPM);	
 
@@ -388,10 +393,21 @@ bool WebUpdaterApp::OnInit()
 		return FALSE;
 	}
 
+	return TRUE;
+}
+
+bool WebUpdaterApp::OnInit()
+{
+	mcDUMP_ON_EXIT;			// for debugging only	
+	//_CrtSetBreakAlloc(31100);	
+
+	if (!OnPreInit())
+		return FALSE;	
+
 	// create our main dialog
 #if 1
 	wxLogDebug(wxT("WebUpdaterApp::OnInit - creating the WebUpdaterDlg"));
-	m_dlg = new WebUpdaterDlg(m_script, &m_optExtra);
+	m_dlg = new WebUpdaterDlg(m_script, &m_optExtra);	
 	SetTopWindow(m_dlg);
 	SetExitOnFrameDelete(TRUE);
 #else
@@ -434,6 +450,7 @@ int WebUpdaterApp::OnExit()
 		wxExecute(cmd, wxEXEC_ASYNC);
 	}
 
+	wxLogDebug(wxT("WebUpdaterApp::OnExit - calling wxApp::OnExit"));	
 	return wxApp::OnExit();
 }
 
@@ -459,6 +476,8 @@ void WebUpdaterApp::OnExecute(wxCommandEvent &ce)
 				cmd + wxT("\n\n with flags: %d; the exit code is: %d"), flags, res);	
 	cond->Broadcast();		// let the wxWebUpdateActionRun know that we have finished
 }
+
+
 
 
 // ----------------------------------------------------------------------------

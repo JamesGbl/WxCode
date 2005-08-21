@@ -216,6 +216,8 @@ void wxWebUpdateInstaller::InitDefaultActions()
 {
 	m_hashActions[wxT("run")] = new wxWebUpdateActionRun();
 	m_hashActions[wxT("extract")] = new wxWebUpdateActionExtract();
+	m_hashActions[wxT("copy")] = new wxWebUpdateActionCopy();
+	m_hashActions[wxT("make")] = new wxWebUpdateActionMake();
 }
 
 void wxWebUpdateInstaller::FreeActionHashMap()
@@ -365,7 +367,7 @@ void wxWebUpdateInstaller::ShowNotificationMsg(const wxString &str, const wxStri
 // -------------------------
 
 // this macro avoid the repetion of a lot of code;
-#define ABORT_INSTALL() {								\
+#define wxWUIT_ABORT_INSTALL() {								\
 			wxLogDebug(wxT("wxWebUpdateInstallThread::Entry - INSTALLATION ABORTED !!!"));		\
 			m_bSuccess = FALSE;							\
 			m_mStatus.Lock();							\

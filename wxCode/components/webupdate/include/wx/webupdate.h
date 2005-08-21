@@ -285,7 +285,7 @@ protected:
 
 public:
     wxWebUpdateAction(const wxString &name = wxEmptyString)
-         : m_strName(name) {}
+		: m_strName(name) { }
 
     virtual ~wxWebUpdateAction() {}
     

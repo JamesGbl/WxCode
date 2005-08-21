@@ -98,14 +98,15 @@ wxString wxMakeFileURI(const wxFileName &fn)
 // ---------------------
 
 // this macro avoids the repetion of a lot of code
-#define ABORT_DOWNLOAD() {								\
-			wxLogDebug(wxT("wxDownloadThread::Entry - DOWNLOAD ABORTED !!!"));		\
-			m_bSuccess = FALSE;							\
-			m_mStatus.Lock();							\
-			m_nStatus = wxDTS_WAITING;					\
-			m_mStatus.Unlock();							\
-			wxPostEvent(m_pHandler, updatevent);		\
-			continue;									\
+#define wxDT_ABORT_DOWNLOAD(msg) {									\
+			wxLogDebug(wxT("wxDownloadThread::Entry - ") +			\
+				wxString(msg) + wxT(" - DOWNLOAD ABORTED !!!"));	\
+			m_bSuccess = FALSE;										\
+			m_mStatus.Lock();										\
+			m_nStatus = wxDTS_WAITING;								\
+			m_mStatus.Unlock();										\
+			wxPostEvent(m_pHandler, updatevent);					\
+			continue;												\
 	}
 
 
@@ -135,11 +136,23 @@ void *wxDownloadThread::Entry()
 		wxLogDebug(wxT("wxDownloadThread::Entry - downloading ") + m_strURI);
 
 		// ensure we can build a wxURL from the given URI
-#if wxUSE_HTTPENGINE
+		wxString path;
 		wxInputStream *in = NULL;
 
-		if (!wxIsFileProtocol(m_strURI)) {
+		if (wxIsFileProtocol(m_strURI)) {
 
+			// we can handle file:// protocols ourselves
+			wxLogDebug(wxT("wxDownloadThread::Entry - using wxURL"));
+			wxURI u(m_strURI);
+			//if (u.GetError() != wxURL_NOERR)
+			//	wxDT_ABORT_DOWNLOAD(wxT("wxURL cannot parse this url"));
+			in = new wxFileInputStream(u.GetPath());
+				//u.GetInputStream();
+			path = u.GetPath();
+
+		} else {
+
+#if wxUSE_HTTPENGINE
 			wxLogDebug(wxT("wxDownloadThread::Entry - using wxHTTPBuilder"));
 			wxHTTPBuilder u;
 			u.InitContentTypes(); // Initialise the content types on the page
@@ -157,32 +170,36 @@ void *wxDownloadThread::Entry()
 			}
 
 			in = u.GetInputStream(m_strURI);
-
-		} else {
-
-			// for other protocols (mainly file://) use simple wxURL
-			wxLogDebug(wxT("wxDownloadThread::Entry - using wxURL"));
+#else
+			wxLogDebug(wxT("wxDownloadThread::Entry - using wxURL"));		
 			wxURL u(m_strURI);
 			if (u.GetError() != wxURL_NOERR)
-				ABORT_DOWNLOAD();
-			in = u.GetInputStream();
-		}
-#else
-		wxURL u(m_strURI);
-		if (u.GetError() != wxURL_NOERR)
-			ABORT_DOWNLOAD();
-		wxInputStream *in = u.GetInputStream();
+				wxDT_ABORT_DOWNLOAD(wxString(wxT("wxURL cannot parse this url [") + 
+										m_strURI + wxT("]")));
+			wxInputStream *in = u.GetInputStream();
+			path = u.GetPath();
 #endif
-		
+		}
+
+		// check INPUT
+		if (in == NULL) {
+			// something is wrong with the input URL...
+			wxDT_ABORT_DOWNLOAD(wxT("Cannot open the INPUT stream; ")
+				wxT("url path is [") + path + wxT("]"));
+		}
+		if (!in->IsOk()) {
+			delete in;
+			wxDT_ABORT_DOWNLOAD(wxT("Cannot init the INPUT stream"));
+		}
+	
 		// now work on streams; wx docs says that using wxURL::GetInputStream
 		// is deprecated but this is the only way to set advanced info like
 		// proxy, user & password...
 		wxFileOutputStream out(m_strOutput);
-		if (in == NULL)
-			ABORT_DOWNLOAD();
-		if (!in->IsOk() || !out.IsOk()) {
+		if (!out.IsOk()) {
 			delete in;
-			ABORT_DOWNLOAD();
+			wxDT_ABORT_DOWNLOAD(wxT("Cannot open/init the OUPUT stream [")
+								+ m_strOutput + wxT("]"));
 		}
 		m_nFinalSize = in->GetSize();
 
@@ -218,13 +235,15 @@ void *wxDownloadThread::Entry()
 #endif
 		}
 		
+		// we don't need the INPUT stream anymore...
+		delete in;
+
 		// if m_nFinalSize is set to zero, then we cannot trust it;
 		// we must consider the size of the remote file as unavailable
 		// since the wxHTTP protocol does not allow us to get it...
-		delete in;
 		if (!out.IsOk() || out.GetSize() == 0 ||
 			(out.GetSize() != m_nFinalSize && m_nFinalSize != 0))
-			ABORT_DOWNLOAD();
+			wxDT_ABORT_DOWNLOAD(wxT("Output FILE stream size is wrong"));
 		
 		wxLogDebug(wxT("wxDownloadThread::Entry - completed download of %d bytes"),
 						m_nCurrentSize);

@@ -19,6 +19,7 @@
 				<extract file="$(thisfile)" where="$(programdir)"/>
 			</actions>
 	  </latest-download>
+	  <description>It's a good habit to always include a description for each package - in this way the user knows what he's downloading... in this case this is the package which contains a simple data file and the updated EXE for $(appname)</description>
    </package>
    
    
@@ -38,6 +39,7 @@
 				<extract file="$(thisfile)" where="$(programdir)//addons"/>
 			</actions>
 	  </latest-download>
+	  <description>This is the package $(id) for $(appname)</description>
    </package>
 
    
@@ -56,6 +58,7 @@
 				<extract file="$(thisfile)" where="$(programdir)//addons"/>
 			</actions>
 	  </latest-download>
+	  <description>This is the package $(id) for $(appname)</description>
    </package>
    
 
@@ -70,10 +73,15 @@
 			<platform name="any"/>	
 			
 			<actions>
+            
+                <!-- unlike other addon packages here I want also to show the usage of the "namemap" property:
+                the "addon.txt" which should be contains in the addon3 package will be decompressed as
+                "myaddonfile.txt" ;-) -->
 				<run cmd="$(mkdir)" args="$(programdir)//addons" flags="SYNC" />
-				<extract file="$(thisfile)" where="$(programdir)//addons"/>
+				<extract file="$(thisfile)" where="$(programdir)//addons" namemap="addon.txt=myaddonfile.txt" />
 			</actions>
 	  </latest-download>
+	  <description>This is the package $(id) for $(appname)</description>
    </package>
    
 </webupdate>

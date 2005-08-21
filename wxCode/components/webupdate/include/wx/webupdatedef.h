@@ -12,6 +12,9 @@
 #ifndef _WX_WEBUPDATE_DEFS_H_
 #define _WX_WEBUPDATE_DEFS_H_
 
+#ifdef __WXMSW__
+#include <wx/msw/msvcrt.h>
+#endif
 
 // Conditional compilation
 // -----------------------

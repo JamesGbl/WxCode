@@ -313,25 +313,25 @@ cleandocs:
 rep4_simple100: 
 	@mkdir -p ../samples/simple/v1.0.0
 	@for f in webupdater webupdatedlg.xrc; do \
-	cp -pRf ../src/$$f ../samples/simple/v1.0.0 ;; \
+	cp -pRf ../src/$$f ../samples/simple/v1.0.0 ; \
 	done
 
 rep4_simple203: 
 	@mkdir -p ../samples/simple/v2.0.3
 	@for f in webupdater webupdatedlg.xrc; do \
-	cp -pRf ../src/$$f ../samples/simple/v2.0.3 ;; \
+	cp -pRf ../src/$$f ../samples/simple/v2.0.3 ; \
 	done
 
 rep4_adv001: 
 	@mkdir -p ../samples/advanced/v0.0.1
 	@for f in webupdater webupdatedlg.xrc; do \
-	cp -pRf ../src/$$f ../samples/advanced/v0.0.1 ;; \
+	cp -pRf ../src/$$f ../samples/advanced/v0.0.1 ; \
 	done
 
 rep4_adv150: 
 	@mkdir -p ../samples/advanced/v1.5.0
 	@for f in webupdater webupdatedlg.xrc; do \
-	cp -pRf ../src/$$f ../samples/advanced/v1.5.0 ;; \
+	cp -pRf ../src/$$f ../samples/advanced/v1.5.0 ; \
 	done
 
 ../samples/simple/v1.0.0/simple$(EXEEXT): $(SIMPLE_1_0_0_OBJECTS) ../src/webupdater$(EXEEXT) $(__simple_1_0_0___win32rc)
