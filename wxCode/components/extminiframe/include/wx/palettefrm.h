@@ -1,120 +1,12 @@
 /////////////////////////////////////////////////////////////////////////////
 // Name:        wx/palettefrm.h
-// Purpose:     wxPaletteFrame, wxMainFrame, wxMiniButton
+// Purpose:     wxExtMiniFrame, wxMainFrame, wxMiniButton
 // Author:      Francesco Montorsi
 // Created:     2004/03/03
 // RCS-ID:      $Id$
 // Copyright:   (c) Francesco Montorsi
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
-
-
-
-
-/*
-
-  wxMainFrame & wxPaletteFrame features
-  -------------------------------------
-
-  1) the ability to be activated/deactivated when the main frame
-     activation state changes (wxMSW only): that is, when the
-	 mainframe is active, then also all the wxPaletteFrame(s) are
-	 always drawn as active.
-
-  2) the ability to contain any type of children, and to use
-     wxSizers to layout them; this allows the creation of
-     wxT("advanced toolbars") (e.g. like MSOffice's ones)
-
-  3) the ability to draw any type of wxMiniButton in its caption 
-     area (standard minibuttons are already provided)
-
-  4) the ability to be rolled/unrolled (maybe using wxCollapseBox);
-     useful to temporary make smaller big wxPaletteFrame windows
-
-  5) the ability to show a context menu, when right-clicked in the
-     caption bar, to allow the user to show/hide a specific palette
-
-  6) the ability to save/load the layout of the wxPaletteFrames
-     in the given wxConfig object
-
-  7) the cross-platformness (wxMSW, wxX11 and wxGTK)
-
-
-
-
-  1) DESIGN issues (that is, wxT("How I wasted my time trying various approaches"))
-  ----------------------------------------------------------------------------
-
-  Another approach for the implementation of a window such as wxPaletteFrame
-  could be to derive a class from wxFrame and then, as I tried, to emulate the
-  active state of the mainframe drawing a fake title bar over the real bar.
-  This approach has two problems:
-    1) under Win32 it generates some flickering, specially for big palettes
-	2) under GTK it cannot be implemented because there's no way to draw the
-	   mainframe's titlebar as active when it is not (but this problem is
-	   present also in the current implementation !!!)
-
-  Another first approach could also be to avoid accepting the focus on the 
-  palette window and, even while the user is dragging/resizing the window,
-  continuosly transfer focus from the palette to the main frame: like the
-  previous solution, in this way flickering would produce a very nasty
-  effect... (at least on Win32 where I tried it)
-
-
-
-   
-
-  2) FOCUS issues on Win32
-  ------------------------
-
-  One of the major features of wxPaletteFrame is its ability to keep 
-  always the same activation state of the wxMainFrame associated with  
-  an user-intuitive interface.
-
-  I managed to implement this feature on Win32 only for one reason:
-  on GTK we miss some important information (the window which is going
-  to be activated, for example) for events such as activation & nonclient 
-  activation...
-
-  This feature is much more difficult to achieve than it would seems
-  because one fix rule of Win32 is that only one window at time can
-  be the active window. There's no way to have two active windows
-  at the same time... however, wxPaletteFrame uses the same trick used
-  by classes like CMiniFrameWnd in the MFC (that is, the classes used
-  to create detachable toolbars): when the active window is the parent
-  window, the wxPaletteFrame draws itself with the color of an active
-  caption even if it's not.
-
-  The focus synchronization system must be able to handle the focus
-  changes summed up in this table:
-
-      [0] = another app or a child of [1], which is not [2]
-      [1] = the wxMainFrame which owns [2]
-      [2] = a wxPaletteFrame owned by [1]
-  
-
-   focus   |            what must be done            | the function which
-   change  |                                         |       does it
- ----------+-----------------------------------------+-------------------
-  [0]->[1] | [1] becomes ACTIVE;                     | wxMainFrame::
-           | all wxPaletteFrames must be ACTIVATED   |   OnActivate 
-           |                                         |              
-  [1]->[0] | [1] becomes INACTIVE;                   | wxMainFrame::
-           | all wxPaletteFrames must be DEACTIVATED |   OnActivate 
-           |                                         |              
-  [1]->[2] | [1] doesn't update its titlebar (that   | wxMainFrame::
-           | is, it keeps its ACTIVE color);         |   MSWOnNcActivate
-           |                                         |                  
-  [2]->[1] | [1] should already be drawn as ACTIVE   | wxPaletteFrame:: 
-           | [2] must keep its ACTIVE color          |   OnActivate     
-           |                                         |                  
-  [2]->[0] | [2] should notify [1] that it must be   | wxPaletteFrame:: 
-           | drawn as INACTIVE like all its palettes |   MSWOnActivate  
-           |                                         |                  
-  [0]->[2] | [2] should notify [1] that it must be   | wxPaletteFrame:: 
-           | drawn as ACTIVE like all its palettes   |   MSWOnActivate  
-
-*/
 
 
 
@@ -129,7 +21,7 @@
 
 
 
-// wxPaletteFrame defines
+// wxExtMiniFrame defines
 // ----------------------
 
 // this is done to ensure compability with wxWidgets < 2.5.1
@@ -142,61 +34,61 @@
 #endif
 
 
-// the space left between two minibuttons in a wxPaletteFrame caption
-#define wxPALETTEFRM_BTN_GAP			2
+// the space left between two minibuttons in a wxExtMiniFrame caption
+#define wxEXTMINIFRM_BTN_GAP			2
 
 // button height is calculated as:   
-//        wxPALETTEFRM_BTN_HEIGHT_MULT * GetParent()->GetTitleHeight()
-#define wxPALETTEFRM_BTN_HEIGHT_MULT	0.8
+//        wxEXTMINIFRM_BTN_HEIGHT_MULT * GetParent()->GetTitleHeight()
+#define wxEXTMINIFRM_BTN_HEIGHT_MULT	0.8
 
 // button width is calculated as:
-//        wxPALETTEFRM_BTN_RATIO*GetButtonHeight()
+//        wxEXTMINIFRM_BTN_RATIO*GetButtonHeight()
 //
 // NOTE: this value should be near 1.0 because the button's Draw() functions
 //       expect the button to be similar to a square
-#define wxPALETTEFRM_BTN_RATIO			1.2
+#define wxEXTMINIFRM_BTN_RATIO			1.2
 
-// under Win32 this is the DWORD which is attached to each wxPaletteFrame
+// under Win32 this is the DWORD which is attached to each wxExtMiniFrame
 // with the wxSetWindowUserData() to be able to identify it through the
 // wxGetWindowUserData()...
-#define wxPALETTEFRM_MARKER				0xF0F0F0F0
+#define wxEXTMINIFRM_MARKER				0xF0F0F0F0
 
 
 
 
 
-// Conditional compilation (used for paletteframe development only)
+// Conditional compilation (used for wxExtMiniFrame development only)
 // -------------------------------------------------------------------
 
 // if this is defined, a lot of wxLogDebug calls will be enabled
 #ifdef __WXDEBUG__
-//	#define wxPALETTEFRM_FULLDEBUG 			1
+//	#define wxEXTMINIFRM_FULLDEBUG 			1
 #endif
 
-// if not defined wxPaletteFrame will be replaced by wxMiniFrame
-#define wxPALETTEFRM_USE_PALETTEFRM
+// if not defined wxExtMiniFrame will be replaced by wxMiniFrame
+#define wxEXTMINIFRM_USE_EXTMINIFRM
 
 // if not defined, wxMainFrame will be replaced by wxFrame
-#define wxPALETTEFRM_USE_MAINFRAME
+#define wxEXTMINIFRM_USE_MAINFRAME
 
 // if not defined, wxMiniButton won't be used at all
-#define wxPALETTEFRM_USE_MINIBTN
+#define wxEXTMINIFRM_USE_MINIBTN
 
 // if we want a very fast redraw, then we must exclude the gradient fill
-// in the caption bar of the paletteframes...
-//#define wxPALETTEFRM_FASTREDRAW
+// in the caption bar of the miniframes...
+//#define wxEXTMINIFRM_FASTREDRAW
 
 
 
 
-// wxPaletteFrame & wxMainFrame styles
+// wxExtMiniFrame & wxMainFrame styles
 // (the new styles use values which don't conflict with
 //  the wxWidgets standard styles)
 // -----------------------------------
 
-// the default style for a wxPaletteFrame window
+// the default style for a wxExtMiniFrame window
 #ifdef __WXMSW__
-	#define wxPALETTEFRM_DEFAULT_STYLE		(wxCAPTION | wxRESIZE_BORDER |		\
+	#define wxEXTMINIFRM_DEFAULT_STYLE		(wxCAPTION | wxRESIZE_BORDER |		\
 											wxCLOSE_BOX |						\
 											wxFRAME_FLOAT_ON_PARENT |			\
 											wxFRAME_TOOL_WINDOW |	 			\
@@ -205,13 +97,13 @@
 #else
 
 	// on GTK we must absolutely avoid the wxFRAME_TOOL_WINDOW style flag
-	#define wxPALETTEFRM_DEFAULT_STYLE		((wxDEFAULT_FRAME_STYLE & ~wxMAXIMIZE_BOX) & ~wxMINIMIZE_BOX)
+	#define wxEXTMINIFRM_DEFAULT_STYLE		((wxDEFAULT_FRAME_STYLE & ~wxMAXIMIZE_BOX) & ~wxMINIMIZE_BOX)
 #endif
 
 										
 // the mask which is used to filter out unsupported window style
-// while creating wxPaletteFrame windows
-#define wxPALETTEFRM_STYLE_MASK			0xFFFFFFFFFFFFFFFF
+// while creating wxExtMiniFrame windows
+#define wxEXTMINIFRM_STYLE_MASK			0xFFFFFFFFFFFFFFFF
 /*(wxCAPTION | wxRESIZE_BORDER |		\
 										wxFULL_REPAINT_ON_RESIZE |			\
 										wxPOPUP_WINDOW |					\
@@ -227,9 +119,9 @@
 										wxCLIP_CHILDREN)
 
 
-// The hitcodes returned by wxPaletteFrame::OnHitTest
+// The hitcodes returned by wxExtMiniFrame::OnHitTest
 // frame hit test return values taken from wx/toplevel.h
-enum wxPaletteFrameHitCode
+enum wxExtMiniFrameHitCode
 {
     wxPFHT_TOPLEVEL_NOWHERE         = 0x00000000,
     wxPFHT_TOPLEVEL_CLIENT_AREA     = 0x00000001,
@@ -249,31 +141,26 @@ enum wxPaletteFrameHitCode
 
 
 
-// wxPaletteFrame macros
+// wxExtMiniFrame macros
 // ---------------------
 
-// a little useful macro
-#ifndef wxSAFE_DELETE
-#define wxSAFE_DELETE(x)				{ if (x) delete x; x = NULL; }
-#endif
-
 // for debugging purpose
-#ifdef wxPALETTEFRM_FULLDEBUG
-#define wxPALETTE_LOG			wxLogDebug
+#ifdef wxEXTMINIFRM_FULLDEBUG
+#define wxEXTMF_LOG			wxLogDebug
 #else
 #ifdef __GNUG__
-#define wxPALETTE_LOG(...)		/* expand to nothing */
+#define wxEXTMF_LOG(...)		/* expand to nothing */
 #else
-#define wxPALETTE_LOG			/* expand to nothing */
+#define wxEXTMF_LOG			/* expand to nothing */
 #endif
 #endif
 
-#ifndef wxPALETTEFRM_USE_MAINFRAME
+#ifndef wxEXTMINIFRM_USE_MAINFRAME
 	#define wxMainFrameBase			wxFrame
 #endif
 
-#ifndef wxPALETTEFRM_USE_PALETTEFRM
-	#define wxPaletteFrameBase		wxMiniFrame
+#ifndef wxEXTMINIFRM_USE_EXTMINIFRM
+	#define wxExtMiniFrameBase		wxMiniFrame
 #endif
 
 
@@ -286,14 +173,14 @@ class wxWindowDC;
 
 
 
-#ifdef wxPALETTEFRM_USE_PALETTEFRM
+#ifdef wxEXTMINIFRM_USE_EXTMINIFRM
 
-// The main frame which owns wxPaletteFrames.
-// Applications using wxPaletteFrame should derive their own
+// The main frame which owns wxExtMiniFrames.
+// Applications using wxExtMiniFrame should derive their own
 // frames from this class instead of wxFrame.
 //
-// A palette window
-class WXDLLIMPEXP_PALETTEFRM wxPaletteFrameBase : public wxFrame
+// A extminiframe window
+class WXDLLIMPEXP_WXEXTMINIFRAME wxExtMiniFrameBase : public wxFrame
 {
 private:		// this should never be touched directly !!!
 
@@ -320,10 +207,10 @@ protected:		// member variables
 	// This variable is used to restore the size when unrolling.
 	wxSize m_szLast;
 
-	// The size hints of the palette window before last roll-up.
+	// The size hints of the extminiframe window before last roll-up.
 	wxSize m_szLastHints;
 
-	// If TRUE the wxPaletteFrame shows the context menu returned by 
+	// If TRUE the wxExtMiniFrame shows the context menu returned by 
 	// wxMainFrame::GetPalCtxMenu when the user right-clicks the caption bar.
 	bool m_bShowCtxMenu;
 
@@ -339,7 +226,7 @@ protected:		// internal utilities
 		return wxRect(GetPosition(), GetSize());
 	}
 
-#ifdef wxPALETTEFRM_USE_MINIBTN
+#ifdef wxEXTMINIFRM_USE_MINIBTN
 	// Checks the style for the wxMINIMIZE_BOX, wxMAXIMIZE_BOX, wxCOLLAPSE_BOX, 
 	// wxCLOSE_BOX styles and then adds the required minibuttons...
 	virtual void AddMiniButtonFromStyle(long style);
@@ -367,35 +254,35 @@ protected:		// internal utilities
 
 	// Draws a frame in the given DC for the given window in the given
 	// rect with the given activation state and eventually with an icon.
-	virtual void DrawCaption(wxPaletteFrameBase *, wxDC &, const wxRect &rc,
+	virtual void DrawCaption(wxExtMiniFrameBase *, wxDC &, const wxRect &rc,
 		bool drawicon = TRUE, bool drawactive = TRUE);
 
-	// Inits to zero/NULL all the wxPaletteFrameBase internal variables
+	// Inits to zero/NULL all the wxExtMiniFrameBase internal variables
 	void Init();
 
 public:
 
 	// Default constructor.
-	wxPaletteFrameBase() { Init(); }
-	wxPaletteFrameBase(
+	wxExtMiniFrameBase() { Init(); }
+	wxExtMiniFrameBase(
 		wxMainFrameBase *parent,
 		wxWindowID id,
-		const wxString &title = wxT("Palette"),
+		const wxString &title = wxT("wxExtMiniFrame"),
 		const wxPoint& pos = wxDefaultPosition,
 		const wxSize& size = wxDefaultSize,
-		long style = wxPALETTEFRM_DEFAULT_STYLE,
-		const wxString& name = wxT("wxPaletteFrame"));
+		long style = wxEXTMINIFRM_DEFAULT_STYLE,
+		const wxString& name = wxT("wxExtMiniFrame"));
 
 	bool Create(wxMainFrameBase *parent,
 			wxWindowID id,
 			const wxString& title,
 			const wxPoint& pos = wxDefaultPosition,
 			const wxSize& size = wxDefaultSize,
-			long style = wxPALETTEFRM_DEFAULT_STYLE,
-			const wxString& name = wxT("wxPaletteFrame"));
+			long style = wxEXTMINIFRM_DEFAULT_STYLE,
+			const wxString& name = wxT("wxExtMiniFrame"));
 
 	// Destructor.
-	virtual ~wxPaletteFrameBase();
+	virtual ~wxExtMiniFrameBase();
 
 
 
@@ -407,7 +294,7 @@ public:
 	// to determine if this window must be marked as active.
 	virtual bool IsToDrawAsActive() const	 { return m_bIsActive; }
 
-#ifdef wxPALETTEFRM_USE_MINIBTN
+#ifdef wxEXTMINIFRM_USE_MINIBTN
 	// Adds a button. Buttons are added in right-to-left order.
 	virtual void AddMiniButton(wxMiniButtonBase *pBtn);
 
@@ -436,9 +323,9 @@ public:
 	// Enables/disables context menu,
 	void EnableCtxMenu(bool b = TRUE)		{ m_bShowCtxMenu = b; }
 	
-	// Returns one of the wxPaletteFrameHitCode indicating the position
-	// of the mouse cursor over this palette frame.
-	virtual wxPaletteFrameHitCode HitTest(const wxPoint &pos);
+	// Returns one of the wxExtMiniFrameHitCode indicating the position
+	// of the mouse cursor over this extminiframe frame.
+	virtual wxExtMiniFrameHitCode HitTest(const wxPoint &pos);
 
 		
 
@@ -544,7 +431,7 @@ public:
 	// Creates a simple wxPanel which is used as client window for this
 	// frame and then returns it.
 	// Inside a wxPanel you can use place any other window, eventually
-	// using sizers to handle them. This makes a wxPaletteFrame a
+	// using sizers to handle them. This makes a wxExtMiniFrame a
 	// flexible object which can be used as advanced toolbar.
 	wxWindow *CreateClient(long style = wxNO_BORDER);
 
@@ -584,39 +471,39 @@ private:
 	DECLARE_EVENT_TABLE()
 };
 
-#endif		// wxPALETTEFRM_USE_PALETTEFRM
+#endif		// wxEXTMINIFRM_USE_EXTMINIFRM
 
 
 
 
-#ifdef wxPALETTEFRM_USE_MAINFRAME
+#ifdef wxEXTMINIFRM_USE_MAINFRAME
 
-// Implements a wxFrame that can handle any number of wxPaletteFrame
+// Implements a wxFrame that can handle any number of wxExtMiniFrame
 // as children. 
-class WXDLLIMPEXP_PALETTEFRM wxMainFrameBase : public wxFrame
+class WXDLLIMPEXP_WXEXTMINIFRAME wxMainFrameBase : public wxFrame
 {
 protected:		// member variables
 
 	// The menu to show when the user right-clicks one of the captionbar
-	// of a child wxPaletteFrame.
+	// of a child wxExtMiniFrame.
 	wxMenu *m_pPalCtxMenu;
 
 	// The flag used to enable/disable the context menu
 	bool m_bCtxMenuEnabled;
 
-	// If TRUE the menu commands related to the context menu of the palettes
+	// If TRUE the menu commands related to the context menu of the miniframes
 	// are automatically handled.
 	bool m_bCtxMenuHandlingEnabled;
 
 	// The flag used to decide if we must search the main menu bar of
 	// this wxFrame window to update the menu items with the same IDs
-	// of those in the paletteframes' context menu.
+	// of those in the miniframes' context menu.
 	// If in the main menubar there are no menu items with the same IDs of 
-	// those menu items shown in the paletteframes' context menu, then this
+	// those menu items shown in the miniframes' context menu, then this
 	// flag *must* be set to FALSE, otherwise an ASSERT will fail.
 	bool m_bUpdateMainMenubar;
 
-	// The list of the wxPaletteFrame owned by this window.
+	// The list of the wxExtMiniFrame owned by this window.
 	wxArrayPtrVoid m_palList;
 
 
@@ -645,14 +532,14 @@ public:
 	// wxMainFrame miscellaneous functions
 	// ------------------------------------
 
-	// Returns TRUE if the given handle is one of the wxPaletteFrame owned
+	// Returns TRUE if the given handle is one of the wxExtMiniFrame owned
 	// by this window.
-	bool IsOneOfPalettes(WXWidget h) const;
+	bool IsOneOfExtMiniFrame(WXWidget h) const;
 
 	// Handles the wxEVT_ACTIVATE event.
 	virtual void OnActivate(wxActivateEvent &event);
 
-	// Synchronizes the context menu of the paletteframes with their
+	// Synchronizes the context menu of the miniframes with their
 	// actual show state...
 	void SyncPalContextMenu();
 
@@ -660,7 +547,7 @@ public:
 	void SyncMainMenubar();
 
 	// Enables/disables the context menu; when it is disabled and the user
-	// right-clicks the wxPaletteFrames' caption bar, nothing happens.
+	// right-clicks the wxExtMiniFrames' caption bar, nothing happens.
 	void EnableContextMenu(bool b = TRUE)			{ m_bCtxMenuEnabled = b; }
 
 	// Enables/disables the automatic handling of the context menu commands.
@@ -668,7 +555,7 @@ public:
 
 	// This is very useful to enable the automatic update of those menu items
 	// of the main menubar with the same IDs of the menu items shown in the
-	// wxPaletteFrameBase's context menu, to keep the two menus synchronized.
+	// wxExtMiniFrameBase's context menu, to keep the two menus synchronized.
 	// See the m_bUpdateMainMenubar description above for more info.
 	void EnableMainMenubarUpdate(bool b = TRUE)		{ m_bUpdateMainMenubar = b; }
 
@@ -678,20 +565,20 @@ public:
 	// Returns the main menubar update activation flag
 	bool isMainMenubarUpdateEnabled() const	{ return m_bUpdateMainMenubar; }
 
-	// Returns the menu to be shown as context menu in the wxPaletteFrames.
+	// Returns the menu to be shown as context menu in the wxExtMiniFrames.
 	wxMenu *GetPalContextMenu()				{ return m_pPalCtxMenu; }
 
-	// Returns the number of wxPaletteFrame owned by this window.
+	// Returns the number of wxExtMiniFrame owned by this window.
 	int GetPalCount() const					{ return (int)m_palList.GetCount(); }
 
-	// Returns the n-th wxPaletteFrame owned by this window.
-	wxPaletteFrameBase *GetPal(int n) const	{ return (wxPaletteFrameBase *)m_palList.Item(n); }
+	// Returns the n-th wxExtMiniFrame owned by this window.
+	wxExtMiniFrameBase *GetPal(int n) const	{ return (wxExtMiniFrameBase *)m_palList.Item(n); }
 
 	// Returns the base ID to use for the menu items in the context menu
-	// of the wxPaletteFrame(s).
+	// of the wxExtMiniFrame(s).
 	virtual int GetPalMenuBaseId() const		{ return wxID_HIGHEST+1; }
 
-	// Initializes the context menu with the list of the titles of the wxPaletteFrames
+	// Initializes the context menu with the list of the titles of the wxExtMiniFrames
 	virtual void InitPalContextMenu();
 
 	// Undoes what #InitPalContextMenu() does.
@@ -707,24 +594,24 @@ public:
 	virtual bool ProcessEvent(wxEvent &ev);
 };
 
-#endif		// wxPALETTEFRM_USE_MAINFRAME
+#endif		// wxEXTMINIFRM_USE_MAINFRAME
 
 
 
-#ifdef wxPALETTEFRM_USE_MINIBTN
+#ifdef wxEXTMINIFRM_USE_MINIBTN
 
 
-// A minibutton which can be placed in the wxPaletteFrame caption.
+// A minibutton which can be placed in the wxExtMiniFrame caption.
 // This class doesn't derive from wxWindow because of some problems
 // it would have if it was a window, for example being hidden by 
-// wxPaletteFrame caption even if it is a wxPaletteFrame's child
+// wxExtMiniFrame caption even if it is a wxExtMiniFrame's child
 // window...
-class WXDLLIMPEXP_PALETTEFRM wxMiniButtonBase : public wxEvtHandler//wxObject
+class WXDLLIMPEXP_WXEXTMINIFRAME wxMiniButtonBase : public wxEvtHandler//wxObject
 {
 protected:		// member variables
 
 	// The parent of this button
-	wxPaletteFrameBase *m_pParent;
+	wxExtMiniFrameBase *m_pParent;
 
 	// The position of this button in parent coordinates
 	wxPoint m_ptPos;
@@ -757,9 +644,9 @@ public:
 
 
 	// Default constructor.
-	// The parent window *must* be a wxPaletteFrameBase because we
-	// need some wxPaletteFrame-specific functions	
-	wxMiniButtonBase(wxPaletteFrameBase *parent, int id = -1);
+	// The parent window *must* be a wxExtMiniFrameBase because we
+	// need some wxExtMiniFrame-specific functions	
+	wxMiniButtonBase(wxExtMiniFrameBase *parent, int id = -1);
 	wxMiniButtonBase() { Init(); }
 
 	virtual ~wxMiniButtonBase() {}
@@ -780,7 +667,7 @@ public:
 	virtual wxSize GetSize() const;
 
 	// Returns the parent of this button.
-	wxPaletteFrameBase *GetParent() const		{ return m_pParent; }
+	wxExtMiniFrameBase *GetParent() const		{ return m_pParent; }
 
 	// Returns TRUE if the given position was over the button.
 	virtual bool HitTest(const wxPoint& pos);
@@ -827,7 +714,7 @@ public:
 	int GetBorderSize() const;
 };
 
-#endif		// wxPALETTEFRM_USE_MINIBTN
+#endif		// wxEXTMINIFRM_USE_MINIBTN
 
 
 

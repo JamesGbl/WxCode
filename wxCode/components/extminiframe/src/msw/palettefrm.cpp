@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 // Name:        msw/palettefrm.cpp
-// Purpose:     wxPaletteFrame, wxPaletteFrame, wxPaletteButton, wxMiniButton
+// Purpose:     wxExtMiniFrame, wxExtMiniFrame, wxMiniButton
 //              wxCloseBox, wxMaximizeBox, wxMinimizeBox, wxCollapseBox
 // Author:      Francesco Montorsi
 // Created:     2004/03/03
@@ -50,15 +50,15 @@
 
 
 // RTTI class declarations
-#ifdef wxPALETTEFRM_USE_PALETTEFRM
-IMPLEMENT_DYNAMIC_CLASS(wxPaletteFrame, wxFrame)
+#ifdef wxEXTMINIFRM_USE_EXTMINIFRM
+IMPLEMENT_DYNAMIC_CLASS(wxExtMiniFrame, wxFrame)
 #endif
 
-#ifdef wxPALETTEFRM_USE_MINIBTN
+#ifdef wxEXTMINIFRM_USE_MINIBTN
 IMPLEMENT_ABSTRACT_CLASS(wxMiniButton, wxObject)
 #endif
 
-#ifdef wxPALETTEFRM_USE_MAINFRAME
+#ifdef wxEXTMINIFRM_USE_MAINFRAME
 IMPLEMENT_DYNAMIC_CLASS(wxMainFrame, wxFrame)
 #endif
 
@@ -73,12 +73,12 @@ IMPLEMENT_DYNAMIC_CLASS(wxMainFrame, wxFrame)
 // wxMAINFRAME
 // ------------------------------------
 
-#ifdef wxPALETTEFRM_USE_MAINFRAME
+#ifdef wxEXTMINIFRM_USE_MAINFRAME
 
 void wxMainFrame::OnActivate(wxActivateEvent &event)
 {
 	// log this event
-	wxPALETTE_LOG(wxT("wxMainFrame::OnActivate - status: %d"), event.GetActive());
+	wxEXTMF_LOG(wxT("wxMainFrame::OnActivate - status: %d"), event.GetActive());
 
 	if (event.GetActive()) {
 		
@@ -92,19 +92,19 @@ void wxMainFrame::OnActivate(wxActivateEvent &event)
 bool wxMainFrame::MSWOnNcActivate(bool bGoingToBeActive, WXHWND hwnd)
 {
 	// log this event
-	wxPALETTE_LOG(wxT("wxMainFrame::MSWOnNcActivate - bGoingToBeActive = %d"), 
+	wxEXTMF_LOG(wxT("wxMainFrame::MSWOnNcActivate - bGoingToBeActive = %d"), 
 		bGoingToBeActive);
 
 	if (!bGoingToBeActive) {
 		
 		// scan the palettes
 		for (int i=0; i < GetPalCount(); i++) {
-			wxPaletteFrame *p = (wxPaletteFrame *)GetPal(i);
+			wxExtMiniFrame *p = (wxExtMiniFrame *)GetPal(i);
 			
 			if (p->GetHandle() == (WXWidget)hwnd) {
 
-				wxPALETTE_LOG(wxT("wxMainFrame::MSWOnNcActivate - ")
-					wxT("A mainframe's palette is being ACTIVATED..."));
+				wxEXTMF_LOG(wxT("wxMainFrame::MSWOnNcActivate - ")
+					wxT("A mainframe's extminiframe is being ACTIVATED..."));
 
 				// the caller must not allow this message to be processed
 				// by DefWindowProc: the title bar of this window must
@@ -121,18 +121,18 @@ bool wxMainFrame::MSWOnNcActivate(bool bGoingToBeActive, WXHWND hwnd)
 bool wxMainFrame::MSWOnActivate(bool bGoingToBeActive, WXHWND hwnd)
 {
 	// log this event
-	wxPALETTE_LOG(wxT("wxMainFrame::MSWOnActivate - bGoingToBeActive = %d"), 
+	wxEXTMF_LOG(wxT("wxMainFrame::MSWOnActivate - bGoingToBeActive = %d"), 
 		bGoingToBeActive);
 
 	// if this window is being deactived and the window which
-	// is going to be active, is not one of our wxPaletteFrame...
-	if (!bGoingToBeActive && !IsOneOfPalettes((WXWidget)hwnd)) {
+	// is going to be active, is not one of our wxExtMiniFrame...
+	if (!bGoingToBeActive && !IsOneOfExtMiniFrame((WXWidget)hwnd)) {
 		
-		// notify all wxPaletteFrames that we are not active any longer...			
+		// notify all wxExtMiniFrames that we are not active any longer...			
 		for (int i=0; i < GetPalCount(); i++)
 			GetPal(i)->SetAsInactive();
 
-		wxPALETTE_LOG(wxT("wxMainFrame::MSWOnActivate - deactivated *all* palettes"));
+		wxEXTMF_LOG(wxT("wxMainFrame::MSWOnActivate - deactivated *all* miniframes"));
 		//Refresh();
 	}
 	
@@ -164,18 +164,18 @@ long wxMainFrame::MSWWindowProc(WXUINT nMsg, WXWPARAM wParam, WXLPARAM lParam)
 	return wxFrame::MSWWindowProc(nMsg, wParam, lParam);
 }
 
-#endif		// wxPALETTEFRM_USE_MAINFRAME
+#endif		// wxEXTMINIFRM_USE_MAINFRAME
 
 
 
 
-#ifdef wxPALETTEFRM_USE_PALETTEFRM
+#ifdef wxEXTMINIFRM_USE_EXTMINIFRM
 
 // ------------------------------------
-// wxPALETTEFRAME
+// wxEXTMINIFRAME
 // ------------------------------------
 
-wxPaletteFrame::wxPaletteFrame(wxMainFrame* parent,
+wxExtMiniFrame::wxExtMiniFrame(wxMainFrame* parent,
 		wxWindowID id,
 		const wxString &title,
 		const wxPoint& pos,
@@ -187,7 +187,7 @@ wxPaletteFrame::wxPaletteFrame(wxMainFrame* parent,
     Create(parent, id, title, pos, size, style, name);
 }
 
-bool wxPaletteFrame::Create(wxMainFrame *parent,
+bool wxExtMiniFrame::Create(wxMainFrame *parent,
 		wxWindowID id,
 		const wxString &title,
 		const wxPoint& pos,
@@ -195,14 +195,14 @@ bool wxPaletteFrame::Create(wxMainFrame *parent,
 		long style,
 		const wxString& name)
 {
-    wxPALETTE_LOG(wxT("wxPaletteFrame::Create - creation started"));
+    wxEXTMF_LOG(wxT("wxExtMiniFrame::Create - creation started"));
 
 	// actually create the window...
-    wxPaletteFrameBase::Create(parent, id, title, pos, size, style, name);
+    wxExtMiniFrameBase::Create(parent, id, title, pos, size, style, name);
 
-	// set this marker to allow wxPaletteFrame::IsPaletteFrame to be
-	// able to identify wxPaletteFrame just using an WXHWND
-	int data = wxPALETTEFRM_MARKER;
+	// set this marker to allow wxExtMiniFrame::IsExtMiniFrame to be
+	// able to identify wxExtMiniFrame just using an WXHWND
+	int data = wxEXTMINIFRM_MARKER;
 #if wxCHECK_VERSION(2, 5, 1)
 	wxSetWindowUserData((HWND)GetHandle(), &data);
 #else
@@ -216,20 +216,20 @@ bool wxPaletteFrame::Create(wxMainFrame *parent,
 	// just to simulate msDev style
 	//SetFont(wxFont(8, wxSWISS, wxNORMAL, wxNORMAL, FALSE, wxT("MS Sans Serif")));
 
-	wxPALETTE_LOG(wxT("wxPaletteFrame::Create - ")
-		wxT("A wxPaletteFrame has been successfully created..."));
+	wxEXTMF_LOG(wxT("wxExtMiniFrame::Create - ")
+		wxT("A wxExtMiniFrame has been successfully created..."));
 
 	return TRUE;
 }
 
-int wxPaletteFrame::GetTitleHeight() const
+int wxExtMiniFrame::GetTitleHeight() const
 {
 	if (GetWindowStyle() & wxFRAME_TOOL_WINDOW)
 		return GetSystemMetrics(SM_CYSMCAPTION);//-GetBorderSize();
 	return GetSystemMetrics(SM_CYCAPTION);//-GetBorderSize();
 }
 
-int wxPaletteFrame::GetBorderSize() const
+int wxExtMiniFrame::GetBorderSize() const
 {
 	if ((GetWindowStyle() & wxRESIZE_BORDER) ||
 		(GetWindowStyle() & wxSUNKEN_BORDER))
@@ -237,7 +237,7 @@ int wxPaletteFrame::GetBorderSize() const
 	return 1;
 }
 
-bool wxPaletteFrame::IsPaletteFrame(WXHWND win)
+bool wxExtMiniFrame::IsExtMiniFrame(WXHWND win)
 {
 	// something like:
 	//
@@ -250,17 +250,17 @@ bool wxPaletteFrame::IsPaletteFrame(WXHWND win)
 	// wxFULL_REPAINT_ON_RESIZE flag is present in one window and
 	// not in the other...
 
-	// see wxPaletteFrame::Create() for more info	
+	// see wxExtMiniFrame::Create() for more info	
 #if wxCHECK_VERSION(2, 5, 1)
 	int n = (int)wxGetWindowUserData((HWND)win);
 #else
 	int n = ::GetWindowLong((HWND)win, GWL_USERDATA);
 #endif
-	return (n & wxPALETTEFRM_MARKER) != 0;
+	return (n & wxEXTMINIFRM_MARKER) != 0;
 
 }
 
-void wxPaletteFrame::MSWInitNCMouseEvent(wxMouseEvent &ev, WXLPARAM lParam, bool transform)
+void wxExtMiniFrame::MSWInitNCMouseEvent(wxMouseEvent &ev, WXLPARAM lParam, bool transform)
 {
 	POINTS pts = MAKEPOINTS(lParam);
 	wxPoint tmp(pts.x, pts.y);
@@ -270,7 +270,7 @@ void wxPaletteFrame::MSWInitNCMouseEvent(wxMouseEvent &ev, WXLPARAM lParam, bool
 	InitMouseEvent(ev, tmp.x, tmp.y, NULL);
 }
 
-void wxPaletteFrame::SendSizeEvent()
+void wxExtMiniFrame::SendSizeEvent()
 {
 	RECT r = wxGetWindowRect(GetHwnd());
 	
@@ -283,13 +283,13 @@ void wxPaletteFrame::SendSizeEvent()
 
 
 // ------------------------------------
-// wxPALETTEFRAME - static utilities
+// wxEXTMINIFRAME - static utilities
 // ------------------------------------
 
-void wxPaletteFrame::DrawCaption(wxPaletteFrameBase *pwnd, wxDC& dc, const wxRect &rect,
+void wxExtMiniFrame::DrawCaption(wxExtMiniFrameBase *pwnd, wxDC& dc, const wxRect &rect,
 							   bool icon, bool active)
 {
-	wxASSERT_MSG(pwnd, wxT("Cannot call this function without a wxPaletteFrame valid pointer"));
+	wxASSERT_MSG(pwnd, wxT("Cannot call this function without a wxExtMiniFrame valid pointer"));
 
 	RECT rc;
 	rc.left = rect.x;
@@ -298,7 +298,7 @@ void wxPaletteFrame::DrawCaption(wxPaletteFrameBase *pwnd, wxDC& dc, const wxRec
 	rc.bottom = rect.y+rect.height;
 
 	int flags = 
-#ifndef wxPALETTEFRM_FASTREDRAW
+#ifndef wxEXTMINIFRM_FASTREDRAW
 		DC_GRADIENT | 
 #endif
 		DC_TEXT | DC_SMALLCAP;
@@ -311,7 +311,7 @@ void wxPaletteFrame::DrawCaption(wxPaletteFrameBase *pwnd, wxDC& dc, const wxRec
 	::DrawCaption((HWND)pwnd->GetHWND(), (HDC)dc.GetHDC(), &rc, flags);
 	
 	// log
-	wxPALETTE_LOG(wxT("wxPaletteFrame::DrawCaption - active: %d"), active);
+	wxEXTMF_LOG(wxT("wxExtMiniFrame::DrawCaption - active: %d"), active);
 }
 
 
@@ -320,10 +320,10 @@ void wxPaletteFrame::DrawCaption(wxPaletteFrameBase *pwnd, wxDC& dc, const wxRec
 
 
 // ------------------------------------
-// wxPALETTEFRAME - MSW functions
+// wxEXTMINIFRAME - MSW functions
 // ------------------------------------
 
-WXDWORD wxPaletteFrame::MSWGetStyle(long fl, WXDWORD *ex) const
+WXDWORD wxExtMiniFrame::MSWGetStyle(long fl, WXDWORD *ex) const
 {
 	// the WS_POPUP style is very important to allow the frame window 
 	// to float on its parent and not to be clipped againt parent's
@@ -331,7 +331,7 @@ WXDWORD wxPaletteFrame::MSWGetStyle(long fl, WXDWORD *ex) const
 	return (wxWindow::MSWGetStyle(fl, ex) | WS_POPUP) & (~WS_CHILD);
 }
 
-void wxPaletteFrame::MSWOnActivate(bool bGoingToBeActive, WXHWND win)
+void wxExtMiniFrame::MSWOnActivate(bool bGoingToBeActive, WXHWND win)
 {
 	if (!bGoingToBeActive) {
 
@@ -340,11 +340,11 @@ void wxPaletteFrame::MSWOnActivate(bool bGoingToBeActive, WXHWND win)
 
 			// ... and the window which is going to receive it,
 			// is not our parent...
-			if (!IsPaletteFrame(win)) {
+			if (!IsExtMiniFrame(win)) {
 
-				// ... nor it is another wxPaletteFrame...
-				wxPALETTE_LOG(wxT("wxPaletteFrame::MSWOnActivate - ")
-					wxT("A non wxPaletteFrame/wxMainFrame is going to be activated"));
+				// ... nor it is another wxExtMiniFrame...
+				wxEXTMF_LOG(wxT("wxExtMiniFrame::MSWOnActivate - ")
+					wxT("A non wxExtMiniFrame/wxMainFrame is going to be activated"));
 
 				// ... we must then notify the parent which will deactivate
 				// itself and all its palettes...
@@ -359,19 +359,19 @@ void wxPaletteFrame::MSWOnActivate(bool bGoingToBeActive, WXHWND win)
 		if ((WXWidget)win != GetParent()->GetHandle()) {
 			
 			// ... was not our parent...
-			wxPALETTE_LOG(wxT("wxPaletteFrame::MSWOnActivate - ")
-				wxT("A wxPaletteFrame has been activated by a non-wxMainFrame"));
+			wxEXTMF_LOG(wxT("wxExtMiniFrame::MSWOnActivate - ")
+				wxT("A wxExtMiniFrame has been activated by a non-wxMainFrame"));
 
-			if (!IsPaletteFrame(win)) {
+			if (!IsExtMiniFrame(win)) {
 			
-				// ... and it was not a wxPaletteFrame: notify the parent that we must become active...
+				// ... and it was not a wxExtMiniFrame: notify the parent that we must become active...
 				::SendMessage((HWND)GetParent()->GetHandle(), WM_ACTIVATE, WA_ACTIVE, (LPARAM)win);
 			}
 		}
 	}
 }
 
-long wxPaletteFrame::MSWGetHitTest(WXLPARAM lParam)
+long wxExtMiniFrame::MSWGetHitTest(WXLPARAM lParam)
 {
 	// extract point coords
 	POINTS pts = MAKEPOINTS(lParam);
@@ -380,7 +380,7 @@ long wxPaletteFrame::MSWGetHitTest(WXLPARAM lParam)
 	// convert them
 	pos = ScreenToFrame(pos);
 
-	// perform hit test using the common wxPaletteFrameBase function
+	// perform hit test using the common wxExtMiniFrameBase function
 	long r = HitTest(pos);
 	
 	// convert from OnHitTest codes to Win32 codes
@@ -410,7 +410,7 @@ long wxPaletteFrame::MSWGetHitTest(WXLPARAM lParam)
 		wxFAIL_MSG(wxT("Unrecognized flag..."));
 	}
 	
-#ifdef wxPALETTEFRM_FULLDEBUG
+#ifdef wxEXTMINIFRM_FULLDEBUG
 	
 	// convert the hit test result in a string to ouput
 	wxString debug;
@@ -431,13 +431,13 @@ long wxPaletteFrame::MSWGetHitTest(WXLPARAM lParam)
 		debug = wxT("TWO BORDERS JUNCTION");
 	}
 	
-	wxPALETTE_LOG(wxT("wxPaletteFrame::OnHitTest - %s"), debug);
+	wxEXTMF_LOG(wxT("wxExtMiniFrame::OnHitTest - %s"), debug);
 #endif
 
 	return r;
 }
 
-long wxPaletteFrame::MSWWindowProc(WXUINT nMsg, WXWPARAM wParam, WXLPARAM lParam)
+long wxExtMiniFrame::MSWWindowProc(WXUINT nMsg, WXWPARAM wParam, WXLPARAM lParam)
 {
 	// we must perform our own hit testing because this class derives
 	// directly from wxWindow and not from wxFrame (to understand
@@ -506,19 +506,19 @@ long wxPaletteFrame::MSWWindowProc(WXUINT nMsg, WXWPARAM wParam, WXLPARAM lParam
 
 
 // ------------------------------------
-// wxPALETTEFRAME - event handlers
+// wxEXTMINIFRAME - event handlers
 // ------------------------------------
 
-void wxPaletteFrame::OnActivate(wxActivateEvent &ev)
+void wxExtMiniFrame::OnActivate(wxActivateEvent &ev)
 {
-	wxPALETTE_LOG(wxT("wxPaletteFrame::OnActivate [%d]: status: %d"), 
+	wxEXTMF_LOG(wxT("wxExtMiniFrame::OnActivate [%d]: status: %d"), 
 		GetHandle(), ev.GetActive());
 	
 	if (ev.GetActive()) {
 		
 		// we have been activated; notify this to our wxMainFrame
 		// activating it too (it will then reflect activation
-		// state change to us and to all other wxPaletteFrames it owns)
+		// state change to us and to all other wxExtMiniFrames it owns)
 		::SendMessage((HWND)GetParent()->GetHandle(), WM_ACTIVATE, 
 									WA_ACTIVE, (LPARAM)GetHandle());
 	} else {
@@ -531,12 +531,12 @@ void wxPaletteFrame::OnActivate(wxActivateEvent &ev)
 
 
 // ---------------------------------
-// wxPALETTEFRAME - Roll/Unroll
+// wxEXTMINIFRAME - Roll/Unroll
 // ---------------------------------
 
-void wxPaletteFrame::Roll()
+void wxExtMiniFrame::Roll()
 {
-	/**************************************** identic to wxPaletteFrameBase::Roll() */
+	/**************************************** identic to wxExtMiniFrameBase::Roll() */
 	if (IsRolled())
 		return;		// already rolled
 
@@ -566,26 +566,26 @@ void wxPaletteFrame::Roll()
 	// we need to move buttons in the right place...
 	Layout();
 
-	// force parent refresh so that this palette window will get its
+	// force parent refresh so that this extminiframe window will get its
 	// activation messages and focus will not go out of sync...
 	GetParent()->Refresh();
 
 	// DO NOT REFRESH OURSELVES...
 	// this->Refresh();
 
-#ifdef wxPALETTEFRM_USE_MINIBTN
+#ifdef wxEXTMINIFRM_USE_MINIBTN
 	// just the minibuttons (in particular, the wxCollapseBox button)
 	wxWindowDC dc(this);
 	DrawMiniButtons(dc);
 #endif
 }
 
-#endif		// wxPALETTEFRM_USE_PALETTEFRM
+#endif		// wxEXTMINIFRM_USE_EXTMINIFRM
 
 
 
 
-#ifdef wxPALETTEFRM_USE_MINIBTN
+#ifdef wxEXTMINIFRM_USE_MINIBTN
 
 // ------------------------------------
 // wxMINIBUTTON
@@ -630,5 +630,5 @@ int wxMiniButton::GetBorderSize() const
 	return 3;
 }
 
-#endif		// wxPALETTEFRM_USE_MINIBTN
+#endif		// wxEXTMINIFRM_USE_MINIBTN
 

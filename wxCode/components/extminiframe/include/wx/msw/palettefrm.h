@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 // Name:        wx/msw/palettefrm.h
-// Purpose:     wxPaletteFrame, wxMainFrame, wxPaletteButton, wxMiniButton
+// Purpose:     wxExtMiniFrame, wxMainFrame, wxMiniButton
 //              wxCloseBox, wxMaximizeBox, wxMinimizeBox, wxCollapseBox
 // Author:      Francesco Montorsi
 // Created:     2004/03/03
@@ -15,7 +15,7 @@
 #define _WX_PALETTEFRM_
 
 
-// this is required under Win32 because wxPaletteFrame and wxMiniButton,
+// this is required under Win32 because wxExtMiniFrame and wxMiniButton,
 // under Win32, use some Win32 APIs to draw faster and with the Win32
 // look & feel their captions & borders...
 // 
@@ -30,50 +30,50 @@
 class wxMainFrame;
 
 
-#ifndef wxPALETTEFRM_USE_MAINFRAME
+#ifndef wxEXTMINIFRM_USE_MAINFRAME
 	#define wxMainFrame			wxFrame
 #endif
 
-#ifndef wxPALETTEFRM_USE_PALETTEFRM
-	#define wxPaletteFrame		wxMiniFrame
+#ifndef wxEXTMINIFRM_USE_EXTMINIFRM
+	#define wxExtMiniFrame		wxMiniFrame
 #endif
 
 
 
-#ifdef wxPALETTEFRM_USE_PALETTEFRM
+#ifdef wxEXTMINIFRM_USE_EXTMINIFRM
 
-class WXDLLIMPEXP_PALETTEFRM wxPaletteFrame : public wxPaletteFrameBase
+class WXDLLIMPEXP_WXEXTMINIFRAME wxExtMiniFrame : public wxExtMiniFrameBase
 {
 protected:		// internal utilities
 
 	// Draws a frame in the given DC for the given window in the given
 	// rect with the given activation state and eventually with an icon.
-	virtual void DrawCaption(wxPaletteFrameBase *, wxDC &, const wxRect &rc,
+	virtual void DrawCaption(wxExtMiniFrameBase *, wxDC &, const wxRect &rc,
 		bool drawicon = TRUE, bool drawactive = TRUE);
 
 public:
 
 	// Default constructor.
-	wxPaletteFrame() {}
-	wxPaletteFrame(
+	wxExtMiniFrame() {}
+	wxExtMiniFrame(
 		wxMainFrame* parent,
 		wxWindowID id,
-		const wxString &title = wxT("Palette"),
+		const wxString &title = wxT("wxExtMiniFrame"),
 		const wxPoint& pos = wxDefaultPosition,
 		const wxSize& size = wxDefaultSize,
-		long style = wxPALETTEFRM_DEFAULT_STYLE,
-		const wxString& name = wxT("wxPaletteFrame"));
+		long style = wxEXTMINIFRM_DEFAULT_STYLE,
+		const wxString& name = wxT("wxExtMiniFrame"));
 
 	bool Create(wxMainFrame *parent,
 			wxWindowID id,
 			const wxString& title,
 			const wxPoint& pos = wxDefaultPosition,
 			const wxSize& size = wxDefaultSize,
-			long style = wxPALETTEFRM_DEFAULT_STYLE,
-			const wxString& name = wxT("wxPaletteFrame"));
+			long style = wxEXTMINIFRM_DEFAULT_STYLE,
+			const wxString& name = wxT("wxExtMiniFrame"));
 
 	// Destructor.
-	virtual ~wxPaletteFrame() {}
+	virtual ~wxExtMiniFrame() {}
 
 
 
@@ -94,8 +94,8 @@ public:
 	// Static utilities
 	// ----------------------
 
-	// Returns TRUE if the given handle belongs to a wxPaletteFrame.
-	static bool IsPaletteFrame(WXHWND h);
+	// Returns TRUE if the given handle belongs to a wxExtMiniFrame.
+	static bool IsExtMiniFrame(WXHWND h);
 
 
 
@@ -124,7 +124,7 @@ public:
     virtual long MSWWindowProc(WXUINT nMsg, WXWPARAM wParam, WXLPARAM lParam);
 
 	// Returns the Win32 hit test code converting it from the one returned
-	// by wxPaletteFrameBase::HitTest which is a wxPaletteFrameHitCode value.
+	// by wxExtMiniFrameBase::HitTest which is a wxExtMiniFrameHitCode value.
 	virtual long MSWGetHitTest(WXLPARAM lParam);
 
 
@@ -136,16 +136,16 @@ public:
 
 
 private:
-	DECLARE_DYNAMIC_CLASS( wxPaletteFrame )
+	DECLARE_DYNAMIC_CLASS( wxExtMiniFrame )
 };
 
-#endif		// wxPALETTEFRM_USE_PALETTEFRM
+#endif		// wxEXTMINIFRM_USE_EXTMINIFRM
 
 
 
-#ifdef wxPALETTEFRM_USE_MAINFRAME
+#ifdef wxEXTMINIFRM_USE_MAINFRAME
 
-class WXDLLIMPEXP_PALETTEFRM wxMainFrame : public wxMainFrameBase
+class WXDLLIMPEXP_WXEXTMINIFRAME wxMainFrame : public wxMainFrameBase
 {
 public:
 
@@ -178,19 +178,19 @@ private:
 	DECLARE_DYNAMIC_CLASS( wxMainFrame )
 };
 
-#endif		// wxPALETTEFRM_USE_MAINFRAME
+#endif		// wxEXTMINIFRM_USE_MAINFRAME
 
 
 
 
-#ifdef wxPALETTEFRM_USE_MINIBTN
+#ifdef wxEXTMINIFRM_USE_MINIBTN
 
-class WXDLLIMPEXP_PALETTEFRM wxMiniButton : public wxMiniButtonBase
+class WXDLLIMPEXP_WXEXTMINIFRAME wxMiniButton : public wxMiniButtonBase
 {
 public:
 
 	wxMiniButton() {}
-	wxMiniButton(wxPaletteFrameBase *parent, int bSmall = -1)
+	wxMiniButton(wxExtMiniFrameBase *parent, int bSmall = -1)
 		: wxMiniButtonBase(parent, bSmall) {}
 	virtual ~wxMiniButton() {}
 
@@ -204,6 +204,6 @@ private:
 	DECLARE_ABSTRACT_CLASS( wxMiniButton )
 };
 
-#endif		// wxPALETTEFRM_USE_MINIBTN
+#endif		// wxEXTMINIFRM_USE_MINIBTN
 
 #endif		// _WX_PALETTEFRM_

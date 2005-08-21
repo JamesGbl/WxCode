@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 // Name:        wx/x11/palettefrm.h
-// Purpose:     wxPaletteFrame
+// Purpose:     wxExtMiniFrame
 // Author:      Francesco Montorsi
 // Created:     2004/03/03
 // RCS-ID:      $Id$
@@ -60,12 +60,12 @@ void wxCreateWMClientLeader(Display *, int);
 
 
 
-// The main frame which owns wxPaletteFrames.
-// Applications using wxPaletteFrame should derive their own
+// The main frame which owns wxExtMiniFrames.
+// Applications using wxExtMiniFrame should derive their own
 // frames from this class instead of wxFrame.
 //
-// A palette window
-class WXDLLEXPORT wxPaletteFrame : public wxPaletteFrameBase
+// A extminiframe window
+class WXDLLEXPORT wxExtMiniFrame : public wxExtMiniFrameBase
 {
 protected:		// internal utilities
 
@@ -89,23 +89,23 @@ protected:		// internal utilities
 public:
 
 	// Default constructor.
-	wxPaletteFrame() {}
-	wxPaletteFrame(
+	wxExtMiniFrame() {}
+	wxExtMiniFrame(
 		wxMainFrameBase *parent,
 		wxWindowID id,
-		const wxString &title = "Palette",
+		const wxString &title = wxT("wxExtMiniFrame"),
 		const wxPoint& pos = wxDefaultPosition,
 		const wxSize& size = wxDefaultSize,
-		long style = wxPALETTEFRM_DEFAULT_STYLE,
-		const wxString& name = "wxPaletteFrame");
+		long style = wxEXTMINIFRM_DEFAULT_STYLE,
+		const wxString& name = wxT("wxExtMiniFrame"));
 
 	bool Create(wxMainFrameBase *parent,
 			wxWindowID id,
 			const wxString& title,
 			const wxPoint& pos = wxDefaultPosition,
 			const wxSize& size = wxDefaultSize,
-			long style = wxPALETTEFRM_DEFAULT_STYLE,
-			const wxString& name = "wxPaletteFrame");
+			long style = wxEXTMINIFRM_DEFAULT_STYLE,
+			const wxString& name = wxT("wxExtMiniFrame"));
 
 	
 	// these three functions are required to implement ex-novo
@@ -118,7 +118,7 @@ public:
 	virtual void Roll();
 	
 private:
-	DECLARE_DYNAMIC_CLASS( wxPaletteFrame )
+	DECLARE_DYNAMIC_CLASS( wxExtMiniFrame )
 };
 
 

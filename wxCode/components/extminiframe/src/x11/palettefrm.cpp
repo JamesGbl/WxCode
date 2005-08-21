@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 // Name:        x11/palettefrm.cpp
-// Purpose:     wxPaletteFrame
+// Purpose:     wxExtMiniFrame
 // Author:      Francesco Montorsi
 // Created:     2004/03/03
 // RCS-ID:      $Id$
@@ -40,7 +40,7 @@
 
 
 // RTTI class declarations
-IMPLEMENT_DYNAMIC_CLASS(wxPaletteFrame, wxFrame)
+IMPLEMENT_DYNAMIC_CLASS(wxExtMiniFrame, wxFrame)
 
 
 
@@ -57,7 +57,7 @@ IMPLEMENT_DYNAMIC_CLASS(wxPaletteFrame, wxFrame)
 
 void wxCreateWMClientLeader(Display *d, int scr)
 {
-	wxPALETTE_LOG(wxT("CreateWMClientLeader()"));
+	wxEXTMF_LOG(wxT("CreateWMClientLeader()"));
 	
     if ( x11_wm_client_leader ) return;
 	
@@ -78,7 +78,7 @@ void wxCreateWMClientLeader(Display *d, int scr)
 
 void wxInitX11Atoms(Display *d)
 {
-	wxPALETTE_LOG(wxT("InitX11Atoms()"));
+	wxEXTMF_LOG(wxT("InitX11Atoms()"));
 	
 	X11_GET_ATOM( d, wxT("WM_PROTOCOLS"), &x11_wm_protocols );
 	X11_GET_ATOM( d, wxT("WM_DELETE_WINDOW"), &x11_wm_delete_window );
@@ -108,10 +108,10 @@ void wxInitX11Atoms(Display *d)
 
 
 // ------------------------------------
-// wxPALETTEFRAME
+// wxEXTMINIFRAME
 // ------------------------------------
 
-wxPaletteFrame::wxPaletteFrame(wxMainFrameBase* parent,
+wxExtMiniFrame::wxExtMiniFrame(wxMainFrameBase* parent,
 							   wxWindowID id,
 							   const wxString &title,
 							   const wxPoint& pos,
@@ -123,7 +123,7 @@ wxPaletteFrame::wxPaletteFrame(wxMainFrameBase* parent,
     Create(parent, id, title, pos, size, style, name);
 }
 
-bool wxPaletteFrame::Create(wxMainFrameBase* parent,
+bool wxExtMiniFrame::Create(wxMainFrameBase* parent,
 							wxWindowID id,
 							const wxString &title,
 							const wxPoint& pos,
@@ -133,10 +133,10 @@ bool wxPaletteFrame::Create(wxMainFrameBase* parent,
 {
 	Init();		// this sets to false/zero/NULL all variables...
 	
-    wxPALETTE_LOG(wxT("wxPaletteFrameX11::Create - creation started"));
+    wxEXTMF_LOG(wxT("wxExtMiniFrameX11::Create - creation started"));
 	
 	// remove invalid styles...
-	style &= wxPALETTEFRM_STYLE_MASK;
+	style &= wxEXTMINIFRM_STYLE_MASK;
 	
 	long toremove = wxSTAY_ON_TOP | wxTOPLEVEL_EX_DIALOG | wxSIMPLE_BORDER | wxSUNKEN_BORDER;
 	style &= ~toremove;
@@ -154,7 +154,7 @@ bool wxPaletteFrame::Create(wxMainFrameBase* parent,
         parent->AddChild(this);
     wxTopLevelWindows.Append(this);
 	
-	wxPALETTE_LOG(wxT("setting some basics"));
+	wxEXTMF_LOG(wxT("setting some basics"));
 	
 	// actually create the window...
     if (GetExtraStyle() & wxTOPLEVEL_EX_DIALOG)
@@ -181,7 +181,7 @@ bool wxPaletteFrame::Create(wxMainFrameBase* parent,
         m_height = 380;
 	
 	// this contains the X11 specific stuff
-	wxPALETTE_LOG(wxT("setting as toolbar"));
+	wxEXTMF_LOG(wxT("setting as toolbar"));
 	SetAsToolbar(0, 0, 0);
 	
     // if we would set auto layout to TRUE, we would get Layout() automatically
@@ -190,17 +190,17 @@ bool wxPaletteFrame::Create(wxMainFrameBase* parent,
     SetAutoLayout(FALSE);
 	
 	// save window title
-	wxPALETTE_LOG(wxT("setting the title"));
+	wxEXTMF_LOG(wxT("setting the title"));
 	SetTitle(title);
 	
 	// add the standard minibuttons required (in RIGHT order !!!)
-	wxPALETTE_LOG(wxT("wxPaletteFrameX11::Create - adding minibuttons (if any)"));
+	wxEXTMF_LOG(wxT("wxExtMiniFrameX11::Create - adding minibuttons (if any)"));
 	AddMiniButtonFromStyle(style);
 	
 	// set a smaller font for this window
 	SetFont(wxFont(10, wxSWISS, wxNORMAL, wxNORMAL));
 	
-	// set some defaults (this would be done normally by wxPaletteFrameBase::Create
+	// set some defaults (this would be done normally by wxExtMiniFrameBase::Create
 	// but here we do not call it, because it would call the wxFrame::Create function
 	// which we need to override... so, we must set them ourselves)
 	m_pClientWnd = NULL;
@@ -209,13 +209,13 @@ bool wxPaletteFrame::Create(wxMainFrameBase* parent,
 	m_bDragging = FALSE;
 	m_ptDragAnchor = wxPoint(-1, -1);
 	
-	wxPALETTE_LOG(wxT("wxPaletteFrameX11::Create - ")
-		wxT("A wxPaletteFrameX11 has been successfully created..."));
+	wxEXTMF_LOG(wxT("wxExtMiniFrameX11::Create - ")
+		wxT("A wxExtMiniFrameX11 has been successfully created..."));
 	
 	return TRUE;
 }
 
-void wxPaletteFrame::SetAsToolbar(Display *, Window, int)
+void wxExtMiniFrame::SetAsToolbar(Display *, Window, int)
 {
     // get some global utils
 	Display *d = wxGlobalDisplay();
@@ -290,7 +290,7 @@ void wxPaletteFrame::SetAsToolbar(Display *, Window, int)
 	//     net_winstates[curr_winstate++] = x11_net_wm_state_above;
 	
 	
-	// this tells the WM to mantain the wxPaletteFrame always above the parent
+	// this tells the WM to mantain the wxExtMiniFrame always above the parent
 	// (which is the application's main frame)
 	XSetTransientForHint( d, id, (Window)GetParent()->GetMainWindow() );
 	
@@ -312,9 +312,9 @@ void wxPaletteFrame::SetAsToolbar(Display *, Window, int)
 	
 	XClassHint class_hint;
 	class_hint.res_name = wxT("myApp"); // application name
-	class_hint.res_class = wxT("wxPaletteFrame");	// application class
+	class_hint.res_class = wxT("wxExtMiniFrame");	// application class
 	
-	wxPALETTE_LOG(wxT("wxPaletteFrameX11::SetAsToolbar() - setting WM prop"));
+	wxEXTMF_LOG(wxT("wxExtMiniFrameX11::SetAsToolbar() - setting WM prop"));
    	XSetWMProperties( d, id, 0, 0, 0, 0, &size_hints, &wm_hints, &class_hint );
 	
 	Atom protocols[4];
@@ -323,10 +323,10 @@ void wxPaletteFrame::SetAsToolbar(Display *, Window, int)
 	protocols[n++] = x11_wm_take_focus;	// support take focus window protocol
 	protocols[n++] = x11_net_wm_ping;	// support _NET_WM_PING protocol
 	
-	wxPALETTE_LOG(wxT("wxPaletteFrameX11::SetAsToolbar() - setting WM protocols"));
+	wxEXTMF_LOG(wxT("wxExtMiniFrameX11::SetAsToolbar() - setting WM protocols"));
 	XSetWMProtocols( d, id, protocols, n );
 	
-	wxPALETTE_LOG(wxT("wxPaletteFrameX11::SetAsToolbar() - going to change various properties"));
+	wxEXTMF_LOG(wxT("wxExtMiniFrameX11::SetAsToolbar() - going to change various properties"));
 	
     // set mwm hints
     if ( mwmhints.flags != 0l )
@@ -365,22 +365,22 @@ void wxPaletteFrame::SetAsToolbar(Display *, Window, int)
 	XConfigureWindow(d, id, CWStackMode, &xwc);	
 }
 
-bool wxPaletteFrame::OnPosLeftDown(const wxPoint &pos)
+bool wxExtMiniFrame::OnPosLeftDown(const wxPoint &pos)
 {
-	wxPALETTE_LOG(wxT("wxPaletteFrameX11::OnPosLeftDown()"));
+	wxEXTMF_LOG(wxT("wxExtMiniFrameX11::OnPosLeftDown()"));
 	
-	if (wxPaletteFrameBase::OnPosLeftDown(pos))
+	if (wxExtMiniFrameBase::OnPosLeftDown(pos))
 		return TRUE;
 	
 	// check if the user clicked on the title bar
-	wxPaletteFrameHitCode hc = HitTest(pos);
+	wxExtMiniFrameHitCode hc = HitTest(pos);
 	switch (hc) {
 	case wxPFHT_TOPLEVEL_TITLEBAR:		// start dragging
 		if (m_ptDragAnchor.x == -1)
 			m_ptDragAnchor = pos;
 		
 		m_bDragging = TRUE;
-		wxPALETTE_LOG(wxT("wxPaletteFrameX11::OnPosLeftDown - draganchor %d;%d"), 
+		wxEXTMF_LOG(wxT("wxExtMiniFrameX11::OnPosLeftDown - draganchor %d;%d"), 
 			m_ptDragAnchor.x, m_ptDragAnchor.y);		
 		CaptureMouse();
 		return TRUE;
@@ -389,7 +389,7 @@ bool wxPaletteFrame::OnPosLeftDown(const wxPoint &pos)
 	return FALSE;		
 }
 
-void wxPaletteFrame::OnMotion(wxMouseEvent &event)
+void wxExtMiniFrame::OnMotion(wxMouseEvent &event)
 {
 	//wxPoint pos = event.GetPosition();
 	//pos = ClientToScreen(pos);
@@ -404,7 +404,7 @@ void wxPaletteFrame::OnMotion(wxMouseEvent &event)
 		if (m_ptDragAnchor.x == -1)
 			m_ptDragAnchor = pos;
 		
-		wxPALETTE_LOG(wxT("wxPaletteFrameX11::OnMotion - draganchor %d;%d - pos %d;%d"), 
+		wxEXTMF_LOG(wxT("wxExtMiniFrameX11::OnMotion - draganchor %d;%d - pos %d;%d"), 
 			m_ptDragAnchor.x, m_ptDragAnchor.y, pos.x, pos.y);
 		
 		Move(pos.x - m_ptDragAnchor.x, 
@@ -423,7 +423,7 @@ void wxPaletteFrame::OnMotion(wxMouseEvent &event)
 		pos.y += GetTitleHeight()*2+GetBorderSize()*2;
 		
 		// check where the mouse is placed
-		wxPaletteFrameHitCode hc = HitTest(pos);
+		wxExtMiniFrameHitCode hc = HitTest(pos);
 		
 		switch (hc) {
 		/*case wxPFHT_TOPLEVEL_BORDER_W:		// resizing has not been implemented yet...
@@ -450,13 +450,13 @@ void wxPaletteFrame::OnMotion(wxMouseEvent &event)
 			SetCursor(*wxSTANDARD_CURSOR);
 		}
 		
-		wxPALETTE_LOG(wxT("wxPaletteFrameX11::OnMotion - POSITION: %d;%d HITCODE: %d"), pos.x, pos.y, hc);
+		wxEXTMF_LOG(wxT("wxExtMiniFrameX11::OnMotion - POSITION: %d;%d HITCODE: %d"), pos.x, pos.y, hc);
 	}
 }
 
-bool wxPaletteFrame::OnPosLeftUp(const wxPoint &pos)
+bool wxExtMiniFrame::OnPosLeftUp(const wxPoint &pos)
 {
-	wxPALETTE_LOG(wxT("wxPaletteFrameX11::OnPosLeftUp"));
+	wxEXTMF_LOG(wxT("wxExtMiniFrameX11::OnPosLeftUp"));
 	m_bDragging = FALSE;
 	m_ptDragAnchor = wxPoint(-1, -1);
 	
@@ -465,10 +465,10 @@ bool wxPaletteFrame::OnPosLeftUp(const wxPoint &pos)
 	if (GetCapture() == this)
 		ReleaseMouse();
 	
-	return wxPaletteFrameBase::OnPosLeftUp(pos);
+	return wxExtMiniFrameBase::OnPosLeftUp(pos);
 }
 
-void wxPaletteFrame::Roll()
+void wxExtMiniFrame::Roll()
 {
 	if (IsRolled())
 		return;		// already rolled
@@ -495,7 +495,7 @@ void wxPaletteFrame::Roll()
 	// cause of the bug above explained (position reset when calling SetSize()) we must
 	// save our position so we can restore it later...
 	wxPoint pos = GetPosition();
-	wxPALETTE_LOG(wxT("wxPaletteFrameBase::Roll() - before rolling I was at %d;%d"), pos.x, pos.y);
+	wxEXTMF_LOG(wxT("wxExtMiniFrameBase::Roll() - before rolling I was at %d;%d"), pos.x, pos.y);
 	
 	
 	wxSize newsz = GetRolledSize();

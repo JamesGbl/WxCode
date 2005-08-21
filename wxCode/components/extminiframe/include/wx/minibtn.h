@@ -23,12 +23,12 @@
 
 
 
-#ifdef wxPALETTEFRM_USE_MINIBTN
+#ifdef wxEXTMINIFRM_USE_MINIBTN
 
 // wxCloseBox is a window close button (the classical "x" in the
 // top-right border of the window caption) which can be used in
-// wxPaletteFrames to hide the window.
-class WXDLLIMPEXP_PALETTEFRM wxCloseBoxBase : public wxMiniButton
+// wxExtMiniFrames to hide the window.
+class WXDLLIMPEXP_WXEXTMINIFRAME wxCloseBoxBase : public wxMiniButton
 {
 protected:
 	void Draw(wxDC &, int, int);
@@ -36,7 +36,7 @@ protected:
 
 public:
 	wxCloseBoxBase() {}			// required by wxWidgets' RTTI system
-	wxCloseBoxBase(wxPaletteFrameBase *parent, int bSmall = -1) :
+	wxCloseBoxBase(wxExtMiniFrameBase *parent, int bSmall = -1) :
 	  wxMiniButton(parent, bSmall) {}
 	virtual ~wxCloseBoxBase() {}
 };
@@ -46,7 +46,7 @@ public:
 // wxMAXIMIZE_BOX; its behaviour is not defined.
 // If you want to use it, derive a new class and override
 // the Exec() function.
-class WXDLLIMPEXP_PALETTEFRM wxMaximizeBoxBase : public wxMiniButton
+class WXDLLIMPEXP_WXEXTMINIFRAME wxMaximizeBoxBase : public wxMiniButton
 {
 protected:	
 	void Draw(wxDC &, int, int);
@@ -54,7 +54,7 @@ protected:
 
 public:
 	wxMaximizeBoxBase() {}			// required by wxWidgets' RTTI system
-	wxMaximizeBoxBase(wxPaletteFrameBase *parent, int bSmall = -1) :
+	wxMaximizeBoxBase(wxExtMiniFrameBase *parent, int bSmall = -1) :
 	  wxMiniButton(parent, bSmall) {}
 	virtual ~wxMaximizeBoxBase() {}
 };
@@ -64,7 +64,7 @@ public:
 // wxMINIMIZE_BOX; its behaviour is not defined.
 // If you want to use it, derive a new class and override
 // the Exec() function.
-class WXDLLIMPEXP_PALETTEFRM wxMinimizeBoxBase : public wxMiniButton
+class WXDLLIMPEXP_WXEXTMINIFRAME wxMinimizeBoxBase : public wxMiniButton
 {
 protected:	
 	void Draw(wxDC &, int, int);
@@ -72,7 +72,7 @@ protected:
 
 public:
 	wxMinimizeBoxBase() {}			// required by wxWidgets' RTTI system
-	wxMinimizeBoxBase(wxPaletteFrameBase *parent, int bSmall = -1) :
+	wxMinimizeBoxBase(wxExtMiniFrameBase *parent, int bSmall = -1) :
 	  wxMiniButton(parent, bSmall) {}
 	virtual ~wxMinimizeBoxBase() {}
 };
@@ -80,14 +80,14 @@ public:
 
 
 // A wxMiniButton which allows the user to roll/unroll the 
-// wxPaletteFrame associated: roll/unroll is useful for
-// those palettes which are quite cumbersome.
+// wxExtMiniFrame associated: roll/unroll is useful for
+// those miniframes which are quite cumbersome.
 //
 // wxCollapseBox appears as a triangle pointing right when
 // the window is rolled-up and pointing left when the window
 // is unrolled...
 //
-class WXDLLIMPEXP_PALETTEFRM wxCollapseBoxBase : public wxMiniButton
+class WXDLLIMPEXP_WXEXTMINIFRAME wxCollapseBoxBase : public wxMiniButton
 {
 protected:
 
@@ -98,7 +98,7 @@ protected:
 
 public:
 	wxCollapseBoxBase() {}			// required by wxWidgets' RTTI system
-	wxCollapseBoxBase(wxPaletteFrameBase *parent, int bSmall = -1) :
+	wxCollapseBoxBase(wxExtMiniFrameBase *parent, int bSmall = -1) :
 	  wxMiniButton(parent, bSmall) {}
 	virtual ~wxCollapseBoxBase() {}
 
@@ -116,10 +116,10 @@ public:
 BEGIN_DECLARE_EVENT_TYPES()
 
 	// I hope those IDs are not used in your app...
-	DECLARE_EXPORTED_EVENT_TYPE( WXDLLIMPEXP_PALETTEFRM, wxEVT_COMMAND_CLOSEBOX_CLICKED, wxID_HIGHEST + 1000 )
-	DECLARE_EXPORTED_EVENT_TYPE( WXDLLIMPEXP_PALETTEFRM, wxEVT_COMMAND_MAXIMIZEBOX_CLICKED, wxID_HIGHEST + 1001 )
-	DECLARE_EXPORTED_EVENT_TYPE( WXDLLIMPEXP_PALETTEFRM, wxEVT_COMMAND_MINIMIZEBOX_CLICKED, wxID_HIGHEST + 1002 )
-	DECLARE_EXPORTED_EVENT_TYPE( WXDLLIMPEXP_PALETTEFRM, wxEVT_COMMAND_COLLAPSEBOX_CLICKED, wxID_HIGHEST + 1003 )
+	DECLARE_EXPORTED_EVENT_TYPE( WXDLLIMPEXP_WXEXTMINIFRAME, wxEVT_COMMAND_CLOSEBOX_CLICKED, wxID_HIGHEST + 1000 )
+	DECLARE_EXPORTED_EVENT_TYPE( WXDLLIMPEXP_WXEXTMINIFRAME, wxEVT_COMMAND_MAXIMIZEBOX_CLICKED, wxID_HIGHEST + 1001 )
+	DECLARE_EXPORTED_EVENT_TYPE( WXDLLIMPEXP_WXEXTMINIFRAME, wxEVT_COMMAND_MINIMIZEBOX_CLICKED, wxID_HIGHEST + 1002 )
+	DECLARE_EXPORTED_EVENT_TYPE( WXDLLIMPEXP_WXEXTMINIFRAME, wxEVT_COMMAND_COLLAPSEBOX_CLICKED, wxID_HIGHEST + 1003 )
 
 END_DECLARE_EVENT_TYPES()
 
@@ -149,7 +149,7 @@ END_DECLARE_EVENT_TYPES()
 		wxStaticCastEvent( wxCommandEventFunction, &fn ),					\
 		(wxObject *) NULL ),
 
-#endif		// wxPALETTEFRM_USE_MINIBTN
+#endif		// wxEXTMINIFRM_USE_MINIBTN
 		
 
 #if defined(__WXMSW__)

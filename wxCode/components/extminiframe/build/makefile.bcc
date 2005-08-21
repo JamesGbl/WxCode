@@ -51,7 +51,7 @@ WX_SHARED = 0
 
 # Compile Unicode build of wxWidgets? [0,1]
 !ifndef WX_UNICODE
-WX_UNICODE = 1
+WX_UNICODE = 0
 !endif
 
 # Use debug build of wxWidgets (define __WXDEBUG__)? [0,1]
@@ -72,27 +72,27 @@ WX_VERSION = 26
 
 ### Variables: ###
 
-PALETTEFRM_LIB_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG_1) \
+EXTMINIFRAME_LIB_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG_1) \
 	$(__DEBUGINFO) -tWM $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	-I$(WX_DIR)\include -I..\include $(CPPFLAGS) $(CXXFLAGS)
-PALETTEFRM_LIB_OBJECTS =  \
-	borland\palettefrm_lib_minibtncmn.obj \
-	borland\palettefrm_lib_palettefrmcmn.obj \
-	borland\palettefrm_lib_minibtn.obj \
-	borland\palettefrm_lib_palettefrm.obj
-PALETTEFRM_DLL_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG_1) \
+EXTMINIFRAME_LIB_OBJECTS =  \
+	borland\extminiframe_lib_minibtncmn.obj \
+	borland\extminiframe_lib_palettefrmcmn.obj \
+	borland\extminiframe_lib_minibtn.obj \
+	borland\extminiframe_lib_palettefrm.obj
+EXTMINIFRAME_DLL_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG_1) \
 	$(__DEBUGINFO) -tWM $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	-I$(WX_DIR)\include -I..\include -DWXMAKINGDLL_PALETTEFRM $(CPPFLAGS) \
+	-I$(WX_DIR)\include -I..\include -DWXMAKINGDLL_WXEXTMINIFRAME $(CPPFLAGS) \
 	$(CXXFLAGS)
-PALETTEFRM_DLL_OBJECTS =  \
-	borland\palettefrm_dll_minibtncmn.obj \
-	borland\palettefrm_dll_palettefrmcmn.obj \
-	borland\palettefrm_dll_minibtn.obj \
-	borland\palettefrm_dll_palettefrm.obj
+EXTMINIFRAME_DLL_OBJECTS =  \
+	borland\extminiframe_dll_minibtncmn.obj \
+	borland\extminiframe_dll_palettefrmcmn.obj \
+	borland\extminiframe_dll_minibtn.obj \
+	borland\extminiframe_dll_palettefrm.obj
 MINIMAL_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG_1) $(__DEBUGINFO) -tWM \
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
 	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
@@ -103,13 +103,13 @@ MINIMAL_OBJECTS =  \
 ### Conditionally set variables: ###
 
 !if "$(WX_DEBUG)" == "1"
-WX3RDPARTLIBPOSTFIX = d
+WX3RDPARTYLIBPOSTFIX = d
 !endif
 !if "$(WX_SHARED)" == "0"
-__palettefrm_lib___depname = ..\lib\palettefrm$(WXLIBPOSTFIX).lib
+__extminiframe_lib___depname = ..\lib\wxextminiframe$(WXLIBPOSTFIX).lib
 !endif
 !if "$(WX_SHARED)" == "1"
-__palettefrm_dll___depname = ..\lib\palettefrm$(WXLIBPOSTFIX).dll
+__extminiframe_dll___depname = ..\lib\wxextminiframe$(WXLIBPOSTFIX).dll
 !endif
 !if "$(WX_SHARED)" == "1"
 __WX_SHAREDDEFINE_p_4 = -dWXUSINGDLL
@@ -164,20 +164,20 @@ borland:
 
 ### Targets: ###
 
-all: $(__palettefrm_lib___depname) $(__palettefrm_dll___depname) ..\sample\minimal.exe
+all: $(__extminiframe_lib___depname) $(__extminiframe_dll___depname) ..\sample\minimal.exe
 
 clean: 
 	-if exist borland\*.obj del borland\*.obj
 	-if exist borland\*.res del borland\*.res
 	-if exist borland\*.csm del borland\*.csm
-	-if exist ..\lib\palettefrm$(WXLIBPOSTFIX).lib del ..\lib\palettefrm$(WXLIBPOSTFIX).lib
-	-if exist ..\lib\palettefrm$(WXLIBPOSTFIX).dll del ..\lib\palettefrm$(WXLIBPOSTFIX).dll
-	-if exist ..\lib\palettefrm$(WXLIBPOSTFIX).tds del ..\lib\palettefrm$(WXLIBPOSTFIX).tds
-	-if exist ..\lib\palettefrm$(WXLIBPOSTFIX).ilc del ..\lib\palettefrm$(WXLIBPOSTFIX).ilc
-	-if exist ..\lib\palettefrm$(WXLIBPOSTFIX).ild del ..\lib\palettefrm$(WXLIBPOSTFIX).ild
-	-if exist ..\lib\palettefrm$(WXLIBPOSTFIX).ilf del ..\lib\palettefrm$(WXLIBPOSTFIX).ilf
-	-if exist ..\lib\palettefrm$(WXLIBPOSTFIX).ils del ..\lib\palettefrm$(WXLIBPOSTFIX).ils
-	-if exist ..\lib\palettefrm$(WXLIBPOSTFIX).lib del ..\lib\palettefrm$(WXLIBPOSTFIX).lib
+	-if exist ..\lib\wxextminiframe$(WXLIBPOSTFIX).lib del ..\lib\wxextminiframe$(WXLIBPOSTFIX).lib
+	-if exist ..\lib\wxextminiframe$(WXLIBPOSTFIX).dll del ..\lib\wxextminiframe$(WXLIBPOSTFIX).dll
+	-if exist ..\lib\wxextminiframe$(WXLIBPOSTFIX).tds del ..\lib\wxextminiframe$(WXLIBPOSTFIX).tds
+	-if exist ..\lib\wxextminiframe$(WXLIBPOSTFIX).ilc del ..\lib\wxextminiframe$(WXLIBPOSTFIX).ilc
+	-if exist ..\lib\wxextminiframe$(WXLIBPOSTFIX).ild del ..\lib\wxextminiframe$(WXLIBPOSTFIX).ild
+	-if exist ..\lib\wxextminiframe$(WXLIBPOSTFIX).ilf del ..\lib\wxextminiframe$(WXLIBPOSTFIX).ilf
+	-if exist ..\lib\wxextminiframe$(WXLIBPOSTFIX).ils del ..\lib\wxextminiframe$(WXLIBPOSTFIX).ils
+	-if exist ..\lib\wxextminiframe$(WXLIBPOSTFIX).lib del ..\lib\wxextminiframe$(WXLIBPOSTFIX).lib
 	-if exist ..\sample\minimal.exe del ..\sample\minimal.exe
 	-if exist ..\sample\minimal.tds del ..\sample\minimal.tds
 	-if exist ..\sample\minimal.ilc del ..\sample\minimal.ilc
@@ -187,11 +187,11 @@ clean:
 
 tarball: 
 	-cd ..
-	-tar -cvzf ..\palettefrm.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* *
+	-tar -cvzf ..\wxextminiframe.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* *
 
 zip: 
 	-cd ..
-	-zip -r9 ..\palettefrm.zip *  -x *.pdb -x *.log -x *.o*
+	-zip -r9 ..\wxextminiframe.zip *  -x *.pdb -x *.log -x *.o*
 
 deepclean: 
 	-del /S ..\*.a
@@ -265,49 +265,49 @@ cleandocs:
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
 !if "$(WX_SHARED)" == "0"
-..\lib\palettefrm$(WXLIBPOSTFIX).lib: $(PALETTEFRM_LIB_OBJECTS)
+..\lib\wxextminiframe$(WXLIBPOSTFIX).lib: $(EXTMINIFRAME_LIB_OBJECTS)
 	if exist $@ del $@
 	tlib /a /p4096 $@ @&&|
-	$(PALETTEFRM_LIB_OBJECTS)
+	$(EXTMINIFRAME_LIB_OBJECTS)
 |
 !endif
 
 !if "$(WX_SHARED)" == "1"
-..\lib\palettefrm$(WXLIBPOSTFIX).dll: $(PALETTEFRM_DLL_OBJECTS)
+..\lib\wxextminiframe$(WXLIBPOSTFIX).dll: $(EXTMINIFRAME_DLL_OBJECTS)
 	ilink32 -Tpd -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib @&&|
-	c0d32.obj $(PALETTEFRM_DLL_OBJECTS),$@,, wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
+	c0d32.obj $(EXTMINIFRAME_DLL_OBJECTS),$@,, wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
 |
-	implib -f ..\lib\palettefrm$(WXLIBPOSTFIX) $@
+	implib -f ..\lib\wxextminiframe$(WXLIBPOSTFIX) $@
 !endif
 
-..\sample\minimal.exe: $(MINIMAL_OBJECTS)  borland\minimal_minimal.res $(__palettefrm_lib___depname)
+..\sample\minimal.exe: $(MINIMAL_OBJECTS)  borland\minimal_minimal.res $(__extminiframe_lib___depname)
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -aa @&&|
-	c0w32.obj $(MINIMAL_OBJECTS),$@,, ..\lib\palettefrm$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,, borland\minimal_minimal.res
+	c0w32.obj $(MINIMAL_OBJECTS),$@,, ..\lib\wxextminiframe$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,, borland\minimal_minimal.res
 |
 
-borland\palettefrm_lib_minibtncmn.obj: .\..\src\common\minibtncmn.cpp
-	$(CXX) -q -c -P -o$@ $(PALETTEFRM_LIB_CXXFLAGS) $**
+borland\extminiframe_lib_minibtncmn.obj: .\..\src\common\minibtncmn.cpp
+	$(CXX) -q -c -P -o$@ $(EXTMINIFRAME_LIB_CXXFLAGS) $**
 
-borland\palettefrm_lib_palettefrmcmn.obj: .\..\src\common\palettefrmcmn.cpp
-	$(CXX) -q -c -P -o$@ $(PALETTEFRM_LIB_CXXFLAGS) $**
+borland\extminiframe_lib_palettefrmcmn.obj: .\..\src\common\palettefrmcmn.cpp
+	$(CXX) -q -c -P -o$@ $(EXTMINIFRAME_LIB_CXXFLAGS) $**
 
-borland\palettefrm_lib_minibtn.obj: .\..\src\msw\minibtn.cpp
-	$(CXX) -q -c -P -o$@ $(PALETTEFRM_LIB_CXXFLAGS) $**
+borland\extminiframe_lib_minibtn.obj: .\..\src\msw\minibtn.cpp
+	$(CXX) -q -c -P -o$@ $(EXTMINIFRAME_LIB_CXXFLAGS) $**
 
-borland\palettefrm_lib_palettefrm.obj: .\..\src\msw\palettefrm.cpp
-	$(CXX) -q -c -P -o$@ $(PALETTEFRM_LIB_CXXFLAGS) $**
+borland\extminiframe_lib_palettefrm.obj: .\..\src\msw\palettefrm.cpp
+	$(CXX) -q -c -P -o$@ $(EXTMINIFRAME_LIB_CXXFLAGS) $**
 
-borland\palettefrm_dll_minibtncmn.obj: .\..\src\common\minibtncmn.cpp
-	$(CXX) -q -c -P -o$@ $(PALETTEFRM_DLL_CXXFLAGS) $**
+borland\extminiframe_dll_minibtncmn.obj: .\..\src\common\minibtncmn.cpp
+	$(CXX) -q -c -P -o$@ $(EXTMINIFRAME_DLL_CXXFLAGS) $**
 
-borland\palettefrm_dll_palettefrmcmn.obj: .\..\src\common\palettefrmcmn.cpp
-	$(CXX) -q -c -P -o$@ $(PALETTEFRM_DLL_CXXFLAGS) $**
+borland\extminiframe_dll_palettefrmcmn.obj: .\..\src\common\palettefrmcmn.cpp
+	$(CXX) -q -c -P -o$@ $(EXTMINIFRAME_DLL_CXXFLAGS) $**
 
-borland\palettefrm_dll_minibtn.obj: .\..\src\msw\minibtn.cpp
-	$(CXX) -q -c -P -o$@ $(PALETTEFRM_DLL_CXXFLAGS) $**
+borland\extminiframe_dll_minibtn.obj: .\..\src\msw\minibtn.cpp
+	$(CXX) -q -c -P -o$@ $(EXTMINIFRAME_DLL_CXXFLAGS) $**
 
-borland\palettefrm_dll_palettefrm.obj: .\..\src\msw\palettefrm.cpp
-	$(CXX) -q -c -P -o$@ $(PALETTEFRM_DLL_CXXFLAGS) $**
+borland\extminiframe_dll_palettefrm.obj: .\..\src\msw\palettefrm.cpp
+	$(CXX) -q -c -P -o$@ $(EXTMINIFRAME_DLL_CXXFLAGS) $**
 
 borland\minimal_minimal.obj: .\..\sample\minimal.cpp
 	$(CXX) -q -c -P -o$@ $(MINIMAL_CXXFLAGS) $**

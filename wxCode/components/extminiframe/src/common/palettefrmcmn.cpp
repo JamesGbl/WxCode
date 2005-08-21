@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 // Name:        palettefrmcmn.cpp
-// Purpose:     wxPaletteFrameBase, wxMainFrameBase, wxMiniButtonBase
+// Purpose:     wxExtMiniFrameBase, wxMainFrameBase, wxMiniButtonBase
 // Author:      Francesco Montorsi
 // Created:     2004/03/03
 // RCS-ID:      $Id$
@@ -37,16 +37,16 @@
 
 
 // intercept minibtn clicks
-#ifdef wxPALETTEFRM_USE_PALETTEFRM
+#ifdef wxEXTMINIFRM_USE_EXTMINIFRM
 
-BEGIN_EVENT_TABLE( wxPaletteFrameBase, wxFrame )
-#ifdef wxPALETTEFRM_USE_MINIBTN
-	EVT_CLOSEBOX_CLICKED( -1, wxPaletteFrameBase::OnCloseBox )
-	EVT_COLLAPSEBOX_CLICKED( -1, wxPaletteFrameBase::OnCollapseBox )
+BEGIN_EVENT_TABLE( wxExtMiniFrameBase, wxFrame )
+#ifdef wxEXTMINIFRM_USE_MINIBTN
+	EVT_CLOSEBOX_CLICKED( -1, wxExtMiniFrameBase::OnCloseBox )
+	EVT_COLLAPSEBOX_CLICKED( -1, wxExtMiniFrameBase::OnCollapseBox )
 #endif
 END_EVENT_TABLE()
 
-#endif		// wxPALETTEFRM_USE_PALETTEFRM
+#endif		// wxEXTMINIFRM_USE_EXTMINIFRM
 
 
 
@@ -56,7 +56,7 @@ END_EVENT_TABLE()
 // wxMAINFRAMEBASE
 // ------------------------------------
 
-#ifdef wxPALETTEFRM_USE_MAINFRAME
+#ifdef wxEXTMINIFRM_USE_MAINFRAME
 
 void wxMainFrameBase::Init()
 {
@@ -68,11 +68,11 @@ void wxMainFrameBase::Init()
 	m_bCtxMenuHandlingEnabled = TRUE;
 }
 
-bool wxMainFrameBase::IsOneOfPalettes(WXWidget win) const
+bool wxMainFrameBase::IsOneOfExtMiniFrame(WXWidget win) const
 {
 	// scan children
 	for (int i=0; i < GetPalCount(); i++) {
-		wxPaletteFrameBase *p = (wxPaletteFrameBase *)GetPal(i);
+		wxExtMiniFrameBase *p = (wxExtMiniFrameBase *)GetPal(i);
 		if (win == p->GetHandle())
 			return TRUE;
 	}
@@ -83,24 +83,24 @@ bool wxMainFrameBase::IsOneOfPalettes(WXWidget win) const
 
 void wxMainFrameBase::AddChild(wxWindowBase *newchild)
 {
-	// if the new child is a wxPaletteFrameBase, we add it to
+	// if the new child is a wxExtMiniFrameBase, we add it to
 	// our special list, too.
-	// Obviously, here we cannot use #IsOneOfPalettes() because
+	// Obviously, here we cannot use IsOneOfExtMiniFrame() because
 	// that function works with m_palList...
-	if (newchild->IsKindOf(CLASSINFO(wxPaletteFrame)))
-		m_palList.Add((wxPaletteFrameBase*)newchild);
+	if (newchild->IsKindOf(CLASSINFO(wxExtMiniFrame)))
+		m_palList.Add((wxExtMiniFrameBase*)newchild);
 
 	wxFrame::AddChild(newchild);
 }
 
 void wxMainFrameBase::RemoveChild(wxWindowBase *newchild)
 {
-	// if the new child is a wxPaletteFrameBase, we add it to
+	// if the new child is a wxExtMiniFrameBase, we add it to
 	// our special list, too.
-	// Obviously, here we cannot use #IsOneOfPalettes() because
+	// Obviously, here we cannot use IsOneOfExtMiniFrame() because
 	// that function works with m_palList...
-	if (newchild->IsKindOf(CLASSINFO(wxPaletteFrame)))
-		m_palList.Remove((wxPaletteFrameBase*)newchild);
+	if (newchild->IsKindOf(CLASSINFO(wxExtMiniFrame)))
+		m_palList.Remove((wxExtMiniFrameBase*)newchild);
 
 	wxFrame::RemoveChild(newchild);
 }
@@ -119,7 +119,7 @@ void wxMainFrameBase::InitPalContextMenu()
 
 	// and sync it...
 	SyncPalContextMenu();
-	wxPALETTE_LOG(wxT("wxMainFrameBase::InitPalContextMenu - created the context menu with %d menu items"), 
+	wxEXTMF_LOG(wxT("wxMainFrameBase::InitPalContextMenu - created the context menu with %d menu items"), 
 						m_pPalCtxMenu->GetMenuItemCount());
 }
 
@@ -148,22 +148,22 @@ void wxMainFrameBase::SyncMainMenubar()
 void wxMainFrameBase::CleanupPalContextMenu()
 {
     // just delete the context menu and set it to NULL
-    wxSAFE_DELETE(m_pPalCtxMenu);
+    wxDELETE(m_pPalCtxMenu);
 }
 
 void wxMainFrameBase::OnActivate(wxActivateEvent &event)
 {
 	// log this event
-	wxPALETTE_LOG(wxT("wxMainFrameBase::OnActivate - status: %d"), event.GetActive());
+	wxEXTMF_LOG(wxT("wxMainFrameBase::OnActivate - status: %d"), event.GetActive());
 
 	if (event.GetActive()) {
 		
-		// notify all our wxPaletteFrameBases that we are going
+		// notify all our wxExtMiniFrameBases that we are going
 		// to be active...
 		for (int i=0; i < GetPalCount(); i++)
 			GetPal(i)->SetAsActive();
 
-		wxPALETTE_LOG(wxT("wxMainFrameBase::OnActivate - activated *all* palettes"));
+		wxEXTMF_LOG(wxT("wxMainFrameBase::OnActivate - activated *all* wxExtMiniFrames"));
 		
 	}
 		
@@ -191,7 +191,7 @@ bool wxMainFrameBase::ProcessEvent(wxEvent &ev)
 		// these two flags can disable the automatic handling...
 		m_bCtxMenuEnabled && m_bCtxMenuHandlingEnabled) {
 		
-		wxPALETTE_LOG(wxT("wxMainFrameBase::ProcessEvent() - going to handle a menu command..."));
+		wxEXTMF_LOG(wxT("wxMainFrameBase::ProcessEvent() - going to handle a menu command..."));
 
 		int palid = ev.GetId()-GetPalMenuBaseId();
 
@@ -203,18 +203,18 @@ bool wxMainFrameBase::ProcessEvent(wxEvent &ev)
 	return wxFrame::ProcessEvent(ev);
 }
 
-#endif		// wxPALETTEFRM_USE_MAINFRAME
+#endif		// wxEXTMINIFRM_USE_MAINFRAME
 
 
 
 
 // ------------------------------------
-// wxPALETTEFRAMEBASE
+// wxEXTMINIFRAMEBASE
 // ------------------------------------
 
-#ifdef wxPALETTEFRM_USE_PALETTEFRM
+#ifdef wxEXTMINIFRM_USE_EXTMINIFRM
 
-wxPaletteFrameBase::wxPaletteFrameBase(wxMainFrameBase* parent,
+wxExtMiniFrameBase::wxExtMiniFrameBase(wxMainFrameBase* parent,
 		wxWindowID id,
 		const wxString &title,
 		const wxPoint& pos,
@@ -228,7 +228,7 @@ wxPaletteFrameBase::wxPaletteFrameBase(wxMainFrameBase* parent,
     Create(parent, id, title, pos, size, style, name);
 }
 
-void wxPaletteFrameBase::Init()
+void wxExtMiniFrameBase::Init()
 {
 	m_bIsActive = FALSE;
 	m_bRolled = FALSE;
@@ -236,7 +236,7 @@ void wxPaletteFrameBase::Init()
 	m_bShowCtxMenu = FALSE;
 }
 
-bool wxPaletteFrameBase::Create(wxMainFrameBase* parent,
+bool wxExtMiniFrameBase::Create(wxMainFrameBase* parent,
 		wxWindowID id,
 		const wxString &title,
 		const wxPoint& pos,
@@ -244,10 +244,10 @@ bool wxPaletteFrameBase::Create(wxMainFrameBase* parent,
 		long style,
 		const wxString& name)
 {
-    wxPALETTE_LOG(wxT("wxPaletteFrameBase::Create - creation started"));
+    wxEXTMF_LOG(wxT("wxExtMiniFrameBase::Create - creation started"));
 
 	// remove invalid styles...
-	//style &= wxPALETTEFRM_STYLE_MASK;
+	//style &= wxEXTMINIFRM_STYLE_MASK;
 	//style |= wxFULL_REPAINT_ON_RESIZE;
 
 	// actually create the window...
@@ -261,9 +261,9 @@ bool wxPaletteFrameBase::Create(wxMainFrameBase* parent,
 	// save window title
 	SetTitle(title);
 	
-#ifdef wxPALETTEFRM_USE_MINIBTN	
+#ifdef wxEXTMINIFRM_USE_MINIBTN	
 	// add the standard minibuttons required (in RIGHT order !!!)
-	wxPALETTE_LOG(wxT("wxPaletteFrameBase::Create - adding minibuttons (if any)"));
+	wxEXTMF_LOG(wxT("wxExtMiniFrameBase::Create - adding minibuttons (if any)"));
 	AddMiniButtonFromStyle(style);
 #endif
 
@@ -280,17 +280,17 @@ bool wxPaletteFrameBase::Create(wxMainFrameBase* parent,
 	// by default, show the context menu
 	m_bShowCtxMenu = TRUE;
 
-	wxPALETTE_LOG(wxT("wxPaletteFrameBase::Create - ")
-		wxT("A wxPaletteFrameBase has been successfully created..."));
+	wxEXTMF_LOG(wxT("wxExtMiniFrameBase::Create - ")
+		wxT("A wxExtMiniFrameBase has been successfully created..."));
 
 	return TRUE;
 }
 
-wxPaletteFrameBase::~wxPaletteFrameBase()
+wxExtMiniFrameBase::~wxExtMiniFrameBase()
 {
-	wxPALETTE_LOG(wxT("wxPaletteFrameBase: destroyed"));
+	wxEXTMF_LOG(wxT("wxExtMiniFrameBase: destroyed"));
 	
-#ifdef wxPALETTEFRM_USE_MINIBTN
+#ifdef wxEXTMINIFRM_USE_MINIBTN
 	// delete our minibuttons: they wouldn't be deleted automatically
 	// because the array is not a wxObjArray and it contains only pointers
 	for (int i=0; i < GetButtonCount(); i++)
@@ -305,10 +305,10 @@ wxPaletteFrameBase::~wxPaletteFrameBase()
 
 
 // --------------------------------------
-// wxPaletteFrameBase - static utilities
+// wxExtMiniFrameBase - static utilities
 // --------------------------------------
 
-void wxPaletteFrameBase::DrawSunkenBorders(wxDC &dc, const wxRect &rect)
+void wxExtMiniFrameBase::DrawSunkenBorders(wxDC &dc, const wxRect &rect)
 {
 	// draw shades creating the following pattern:
 	// LLLLLLLLLLLLLLLLLLLLL
@@ -330,10 +330,10 @@ void wxPaletteFrameBase::DrawSunkenBorders(wxDC &dc, const wxRect &rect)
 	dc.DrawLine(rect.x+rect.width-1, rect.y, rect.x+rect.width-1, rect.y+rect.height);
 }
 
-void wxPaletteFrameBase::DrawCaption(wxPaletteFrameBase *pwnd, wxDC& dc, const wxRect &rect,
+void wxExtMiniFrameBase::DrawCaption(wxExtMiniFrameBase *pwnd, wxDC& dc, const wxRect &rect,
 									bool /*icon*/, bool active)
 {
-	wxASSERT_MSG(pwnd, wxT("Cannot call this function without a wxPaletteFrameBase valid pointer"));
+	wxASSERT_MSG(pwnd, wxT("Cannot call this function without a wxExtMiniFrameBase valid pointer"));
 
 	// eventually find the title height	
 	int titleheight = pwnd->GetTitleHeight();
@@ -359,7 +359,7 @@ void wxPaletteFrameBase::DrawCaption(wxPaletteFrameBase *pwnd, wxDC& dc, const w
 	dc.SetBackgroundMode(wxTRANSPARENT);
 	dc.DrawText(pwnd->GetTitle(), rect.x+bs*3, rect.y+bs+(titleheight-h)/2-1);
 	
-	wxPALETTE_LOG(wxT("wxPaletteFrameBase::DrawCaption - active: %d"), active);
+	wxEXTMF_LOG(wxT("wxExtMiniFrameBase::DrawCaption - active: %d"), active);
 }
 
 
@@ -368,40 +368,40 @@ void wxPaletteFrameBase::DrawCaption(wxPaletteFrameBase *pwnd, wxDC& dc, const w
 
 
 // ------------------------------------
-// wxPaletteFrameBase - miscellaneous
+// wxExtMiniFrameBase - miscellaneous
 // ------------------------------------
 
-int wxPaletteFrameBase::GetTitleHeight() const
+int wxExtMiniFrameBase::GetTitleHeight() const
 {
 	return 17;		// hardcoded :-(
 }
 
-int wxPaletteFrameBase::GetBorderSize() const
+int wxExtMiniFrameBase::GetBorderSize() const
 {
-	return 2;		// see wxPaletteFrameBase::DrawSunkenBorders
+	return 2;		// see wxExtMiniFrameBase::DrawSunkenBorders
 }
 
-#ifdef wxPALETTEFRM_USE_MINIBTN
+#ifdef wxEXTMINIFRM_USE_MINIBTN
 
-void wxPaletteFrameBase::AddMiniButtonFromStyle(long style)
+void wxExtMiniFrameBase::AddMiniButtonFromStyle(long style)
 {
 	if (style & wxCLOSE_BOX) {
 		AddMiniButton(new wxCloseBox(this));
-		wxPALETTE_LOG(wxT("wxPaletteFrameBase::Create - added a wxCloseBox"));
+		wxEXTMF_LOG(wxT("wxExtMiniFrameBase::Create - added a wxCloseBox"));
 	}
 	
 	if (style & wxMAXIMIZE_BOX) {
 		AddMiniButton(new wxMaximizeBox(this));
-		wxPALETTE_LOG(wxT("wxPaletteFrameBase::Create - added a wxMaximizeBox"));
+		wxEXTMF_LOG(wxT("wxExtMiniFrameBase::Create - added a wxMaximizeBox"));
 	}
 	
 	if (style & wxMINIMIZE_BOX) {
 		AddMiniButton(new wxMinimizeBox(this));
-		wxPALETTE_LOG(wxT("wxPaletteFrameBase::Create - added a wxMinimizeBox"));
+		wxEXTMF_LOG(wxT("wxExtMiniFrameBase::Create - added a wxMinimizeBox"));
 	}
 }
 
-void wxPaletteFrameBase::AddMiniButton(wxMiniButtonBase *pBtn)
+void wxExtMiniFrameBase::AddMiniButton(wxMiniButtonBase *pBtn)
 {
 	// add the new minibutton to our list
 	m_arrButtons.Add(pBtn);
@@ -410,7 +410,7 @@ void wxPaletteFrameBase::AddMiniButton(wxMiniButtonBase *pBtn)
 	MoveMiniButtons();
 }
 
-wxPoint wxPaletteFrameBase::GetButtonPos(int i) const
+wxPoint wxExtMiniFrameBase::GetButtonPos(int i) const
 {
 	if (i >= GetButtonCount())
 		return wxPoint(-1, -1);
@@ -420,7 +420,7 @@ wxPoint wxPaletteFrameBase::GetButtonPos(int i) const
 
 	// get the width of all the previous buttons
 	for (int c=0; c <= i; c++)
-		offset += GetButton(i)->GetSize().GetWidth()+wxPALETTEFRM_BTN_GAP;
+		offset += GetButton(i)->GetSize().GetWidth()+wxEXTMINIFRM_BTN_GAP;
 	
 #ifdef __WXX11__
 	y += 2;		// a little correction to make them better placed
@@ -429,9 +429,9 @@ wxPoint wxPaletteFrameBase::GetButtonPos(int i) const
 	return wxPoint(GetSize().GetWidth()-offset, y);
 }
 
-#endif		// wxPALETTEFRM_USE_MINIBTN
+#endif		// wxEXTMINIFRM_USE_MINIBTN
 
-void wxPaletteFrameBase::SetAsActive(bool bNewState)
+void wxExtMiniFrameBase::SetAsActive(bool bNewState)
 {
 	bool old = m_bIsActive;
 	m_bIsActive = bNewState;
@@ -440,7 +440,7 @@ void wxPaletteFrameBase::SetAsActive(bool bNewState)
 	if (old != bNewState) Draw();
 }
 
-wxPaletteFrameHitCode wxPaletteFrameBase::HitTest(const wxPoint &pos)
+wxExtMiniFrameHitCode wxExtMiniFrameBase::HitTest(const wxPoint &pos)
 {
 	int xPos = pos.x; 
 	int yPos = pos.y; 
@@ -491,10 +491,10 @@ wxPaletteFrameHitCode wxPaletteFrameBase::HitTest(const wxPoint &pos)
 
 
 // --------------------------------------
-// wxPaletteFrameBase - layout load/save
+// wxExtMiniFrameBase - layout load/save
 // --------------------------------------
 
-void wxPaletteFrameBase::SaveLayout(wxConfigBase *p, const wxString &keypath) const
+void wxExtMiniFrameBase::SaveLayout(wxConfigBase *p, const wxString &keypath) const
 {
 	wxString keyname(keypath);
 	if (keyname == wxEmptyString)
@@ -504,7 +504,7 @@ void wxPaletteFrameBase::SaveLayout(wxConfigBase *p, const wxString &keypath) co
 	p->Write(keyname, EncodeLayout());
 }
 
-bool wxPaletteFrameBase::LoadLayout(wxConfigBase *p, const wxString &keypath)
+bool wxExtMiniFrameBase::LoadLayout(wxConfigBase *p, const wxString &keypath)
 {
 	wxString keyname(keypath);
 	if (keyname == wxEmptyString)
@@ -519,7 +519,7 @@ bool wxPaletteFrameBase::LoadLayout(wxConfigBase *p, const wxString &keypath)
 	return TRUE;
 }
 
-wxString wxPaletteFrameBase::EncodeLayout() const
+wxString wxExtMiniFrameBase::EncodeLayout() const
 {
 	// encode our layout in a wxString in this way:
 	//
@@ -539,9 +539,9 @@ wxString wxPaletteFrameBase::EncodeLayout() const
 		IsShown());
 }
 
-void wxPaletteFrameBase::DecodeLayout(const wxString &str)
+void wxExtMiniFrameBase::DecodeLayout(const wxString &str)
 {
-	// see wxPaletteFrameBase::EncodeLayout for more info about the
+	// see wxExtMiniFrameBase::EncodeLayout for more info about the
 	// encoding format of the given string...
 
 	// read the string tokens
@@ -585,10 +585,10 @@ void wxPaletteFrameBase::DecodeLayout(const wxString &str)
 
 
 // ----------------------------------------
-// wxPaletteFrameBase - wxWindow overrides
+// wxExtMiniFrameBase - wxWindow overrides
 // ----------------------------------------
 
-bool wxPaletteFrameBase::ProcessEvent(wxEvent &event)
+bool wxExtMiniFrameBase::ProcessEvent(wxEvent &event)
 {	
 	int type = event.GetEventType();
 
@@ -600,7 +600,7 @@ bool wxPaletteFrameBase::ProcessEvent(wxEvent &event)
 		
 #ifndef __WXMSW__
 
-	// on wxMSW the wxPaletteFrame::MSWWindowProc will call the
+	// on wxMSW the wxExtMiniFrame::MSWWindowProc will call the
 	// mouse event handlers
 
 	if (type == wxEVT_LEFT_DOWN)
@@ -645,9 +645,9 @@ bool wxPaletteFrameBase::ProcessEvent(wxEvent &event)
 	return b;
 }
 
-bool wxPaletteFrameBase::Destroy()
+bool wxExtMiniFrameBase::Destroy()
 {
-	wxPALETTE_LOG(wxT("wxPaletteFrame::Destroy"));
+	wxEXTMF_LOG(wxT("wxExtMiniFrame::Destroy"));
 	
 	// copied from wxTopLevelWindowBase::Destroy()
 	// because this class is like wxFrame and thus it needs to have a
@@ -658,7 +658,7 @@ bool wxPaletteFrameBase::Destroy()
 	//       because if we let wxWindowBase do it, wxMainFrameBase::RemoveChild
 	//       will be called with a pointer to a partially removed window:
 	//       wxMainFrameBase would not recognize that the given pointer is
-	//       a wxPaletteFrameBase...
+	//       a wxExtMiniFrameBase...
 
     // delayed destruction: the frame will be deleted during the next idle
     // loop iteration
@@ -674,7 +674,7 @@ bool wxPaletteFrameBase::Destroy()
     return TRUE;
 }
 
-wxPoint wxPaletteFrameBase::ClientToFrame(const wxPoint &pt) const
+wxPoint wxExtMiniFrameBase::ClientToFrame(const wxPoint &pt) const
 {
 	wxPoint newpt(pt);
 
@@ -685,7 +685,7 @@ wxPoint wxPaletteFrameBase::ClientToFrame(const wxPoint &pt) const
 	return newpt;
 }
 
-wxPoint wxPaletteFrameBase::ScreenToFrame(const wxPoint &pos) const
+wxPoint wxExtMiniFrameBase::ScreenToFrame(const wxPoint &pos) const
 {
 	// just transform to frame coords: don't subtract border sizes
 	return wxPoint(pos.x-GetPosition().x, pos.y-GetPosition().y);
@@ -693,13 +693,13 @@ wxPoint wxPaletteFrameBase::ScreenToFrame(const wxPoint &pos) const
 
 #ifndef __WXGTK__
 
-wxPoint wxPaletteFrameBase::GetClientAreaOrigin() const
+wxPoint wxExtMiniFrameBase::GetClientAreaOrigin() const
 {
 	// this is not a common wxWindow but a wxFrame-like window
 	return wxPoint(GetBorderSize(), GetBorderSize()+GetTitleHeight());
 }
 
-void wxPaletteFrameBase::DoGetClientSize(int *width, int *height) const
+void wxExtMiniFrameBase::DoGetClientSize(int *width, int *height) const
 {
 	wxSize sz = GetSize();
 	wxPoint pt = GetClientAreaOrigin();
@@ -713,7 +713,7 @@ void wxPaletteFrameBase::DoGetClientSize(int *width, int *height) const
 	if (height) *height = sz.y - pt.y - bs;
 }
 
-void wxPaletteFrameBase::DoSetClientSize(int width, int height)
+void wxExtMiniFrameBase::DoSetClientSize(int width, int height)
 {
 	// call GetClientAreaOrigin() to take the caption bar in count
 	wxPoint pt = GetClientAreaOrigin();
@@ -726,17 +726,17 @@ void wxPaletteFrameBase::DoSetClientSize(int width, int height)
 #endif
 
 
-#ifdef wxPALETTEFRM_USE_MINIBTN
+#ifdef wxEXTMINIFRM_USE_MINIBTN
 
-void wxPaletteFrameBase::MoveMiniButtons()
+void wxExtMiniFrameBase::MoveMiniButtons()
 {
 #ifdef __WXDEBUG__
-	wxString str = wxT("wxPaletteFrameBase::MoveMiniButtons - ");
+	wxString str = wxT("wxExtMiniFrameBase::MoveMiniButtons - ");
 	if (GetButtonCount() > 0)
 		str += wxString::Format(wxT("first is at %d;%d"), GetButtonPos(0).x, GetButtonPos(0).y);
 	else
 		str += wxT("no minibuttons in this palette...");
-	wxPALETTE_LOG(str);
+	wxEXTMF_LOG(str);
 #endif
 
 	// repositionate all the buttons
@@ -744,9 +744,9 @@ void wxPaletteFrameBase::MoveMiniButtons()
 		GetButton(i)->Move(GetButtonPos(i));
 }
 
-#endif		// wxPALETTEFRM_USE_MINIBTN
+#endif		// wxEXTMINIFRM_USE_MINIBTN
 
-bool wxPaletteFrameBase::Layout()
+bool wxExtMiniFrameBase::Layout()
 {
 	// under x11 this function is called a LOT of times...
 	//MoveMiniButtons();
@@ -755,7 +755,7 @@ bool wxPaletteFrameBase::Layout()
 	return wxFrame::Layout();
 }
 
-void wxPaletteFrameBase::Update()
+void wxExtMiniFrameBase::Update()
 {
 	//MoveMiniButtons();
 
@@ -771,12 +771,12 @@ void wxPaletteFrameBase::Update()
 
 
 // -------------------------------------
-// wxPaletteFrameBase - event handlers
+// wxExtMiniFrameBase - event handlers
 // -------------------------------------
 
-void wxPaletteFrameBase::OnCloseBox(wxCommandEvent &)
+void wxExtMiniFrameBase::OnCloseBox(wxCommandEvent &)
 {
-	wxPALETTE_LOG(wxT("wxPaletteFrameBase::OnCloseBox()"));
+	wxEXTMF_LOG(wxT("wxExtMiniFrameBase::OnCloseBox()"));
 
 	// just hide the owner of this minibutton...
 	Hide();
@@ -789,20 +789,20 @@ void wxPaletteFrameBase::OnCloseBox(wxCommandEvent &)
 	// Close(TRUE);
 }
 
-void wxPaletteFrameBase::OnCollapseBox(wxCommandEvent &)
+void wxExtMiniFrameBase::OnCollapseBox(wxCommandEvent &)
 {
-	wxPALETTE_LOG(wxT("wxPaletteFrameBase::OnCollapseBox()"));
+	wxEXTMF_LOG(wxT("wxExtMiniFrameBase::OnCollapseBox()"));
 	
-	// our parent is a wxPaletteFrame !!!
+	// our parent is a wxExtMiniFrame !!!
 	if (!IsRolled())
 		Roll();
 	else
 		UnRoll();
 }
 
-void wxPaletteFrameBase::OnActivate(wxActivateEvent &ev)
+void wxExtMiniFrameBase::OnActivate(wxActivateEvent &ev)
 {
-	wxPALETTE_LOG(wxT("wxPaletteFrameBase::OnActivate [%d]: status: %d"), 
+	wxEXTMF_LOG(wxT("wxExtMiniFrameBase::OnActivate [%d]: status: %d"), 
 		GetHandle(), ev.GetActive());
 	
 	if (!ev.GetActive()) {
@@ -812,24 +812,24 @@ void wxPaletteFrameBase::OnActivate(wxActivateEvent &ev)
 	}
 }
 
-void wxPaletteFrameBase::OnClose(wxCloseEvent &)
+void wxExtMiniFrameBase::OnClose(wxCloseEvent &)
 {
-	wxPALETTE_LOG(wxT("wxPaletteFrameBase::OnClose()"));
+	wxEXTMF_LOG(wxT("wxExtMiniFrameBase::OnClose()"));
 	
 	// just destroy this window: this class never vetoes
 	// the closure...
 	Destroy();
 }
 
-void wxPaletteFrameBase::OnPaint(wxPaintEvent &)
+void wxExtMiniFrameBase::OnPaint(wxPaintEvent &)
 {
-	wxPALETTE_LOG(wxT("wxPaletteFrameBase::OnPaint"));
+	wxEXTMF_LOG(wxT("wxExtMiniFrameBase::OnPaint"));
 	
 	// get the caption area rect
 	wxRect captionarea(GetBorderSize(), GetBorderSize(), 
 					GetSize().GetWidth(), GetTitleHeight());
 
-#ifdef wxPALETTEFRM_USE_MINIBTN
+#ifdef wxEXTMINIFRM_USE_MINIBTN
 	// get the minibtn area rect
 	const int firstx = GetButtonPos(0).x-5;
 	const int lastx = GetButtonPos(GetButtonCount()-1).x-5;
@@ -848,7 +848,7 @@ void wxPaletteFrameBase::OnPaint(wxPaintEvent &)
 		// avoid flickering when possible...
 		if (rect.Intersects(captionarea))
 			drawcaption = TRUE;
-#ifdef wxPALETTEFRM_USE_MINIBTN
+#ifdef wxEXTMINIFRM_USE_MINIBTN
 		if (rect.Intersects(minibtnarea))
 			drawminibtn = TRUE;
 #endif
@@ -862,11 +862,11 @@ void wxPaletteFrameBase::OnPaint(wxPaintEvent &)
 	Draw(NULL, drawcaption, drawminibtn);
 }
 
-#ifdef wxPALETTEFRM_USE_MINIBTN
+#ifdef wxEXTMINIFRM_USE_MINIBTN
 
-void wxPaletteFrameBase::DrawMiniButtons(wxDC &dc)
+void wxExtMiniFrameBase::DrawMiniButtons(wxDC &dc)
 {
-	wxPALETTE_LOG(wxT("wxPaletteFrameBase::DrawMiniButtons"));	
+	wxEXTMF_LOG(wxT("wxExtMiniFrameBase::DrawMiniButtons"));	
 	
 	// draw all the minibuttons
 	for (int i = 0; i < GetButtonCount(); ++i)
@@ -875,7 +875,7 @@ void wxPaletteFrameBase::DrawMiniButtons(wxDC &dc)
 
 #endif
 
-void wxPaletteFrameBase::OnSize(wxSizeEvent &)
+void wxExtMiniFrameBase::OnSize(wxSizeEvent &)
 {
 	// let the base class process this event (like wxFrame, we must
 	// perform a special automatic behaviour on sizing when a wxPalettFrame
@@ -894,7 +894,7 @@ void wxPaletteFrameBase::OnSize(wxSizeEvent &)
 		thechild->SetSize(GetClientSize());		
 	}*/
 
-#ifdef wxPALETTEFRM_USE_MINIBTN	
+#ifdef wxEXTMINIFRM_USE_MINIBTN	
 	// if we are resizing the window horizontally, then we
 	// need to update minibtns;
 	// HOW CAN I KNOW IF USER IS RESIZING HORIZONTALLY ?
@@ -908,23 +908,23 @@ void wxPaletteFrameBase::OnSize(wxSizeEvent &)
 #endif
 }
 
-void wxPaletteFrameBase::OnLeftDown(wxMouseEvent &ev)
+void wxExtMiniFrameBase::OnLeftDown(wxMouseEvent &ev)
 { OnPosLeftDown(ev.GetPosition()); }
 
-void wxPaletteFrameBase::OnLeftUp(wxMouseEvent &ev)
+void wxExtMiniFrameBase::OnLeftUp(wxMouseEvent &ev)
 { OnPosLeftUp(ev.GetPosition()); }
 
-void wxPaletteFrameBase::OnRightDown(wxMouseEvent &ev)
+void wxExtMiniFrameBase::OnRightDown(wxMouseEvent &ev)
 { OnPosRightDown(ev.GetPosition()); }
 
-void wxPaletteFrameBase::OnRightUp(wxMouseEvent &ev)
+void wxExtMiniFrameBase::OnRightUp(wxMouseEvent &ev)
 { OnPosRightUp(ev.GetPosition()); }
 
-bool wxPaletteFrameBase::OnPosLeftDown(const wxPoint &pos)
+bool wxExtMiniFrameBase::OnPosLeftDown(const wxPoint &pos)
 {
-	wxPALETTE_LOG(wxT("wxPaletteFrameBase::OnLeftDown()"));
+	wxEXTMF_LOG(wxT("wxExtMiniFrameBase::OnLeftDown()"));
 
-#ifdef wxPALETTEFRM_USE_MINIBTN	
+#ifdef wxEXTMINIFRM_USE_MINIBTN	
 	wxPoint tmp = pos;
 #ifndef __WXX11__
 	tmp = ClientToFrame(tmp);
@@ -940,11 +940,11 @@ bool wxPaletteFrameBase::OnPosLeftDown(const wxPoint &pos)
 	return FALSE;
 }
 
-bool wxPaletteFrameBase::OnPosLeftUp(const wxPoint &pos)
+bool wxExtMiniFrameBase::OnPosLeftUp(const wxPoint &pos)
 {
-	wxPALETTE_LOG(wxT("wxPaletteFrameBase::OnLeftUp()"));
+	wxEXTMF_LOG(wxT("wxExtMiniFrameBase::OnLeftUp()"));
 	
-#ifdef wxPALETTEFRM_USE_MINIBTN
+#ifdef wxEXTMINIFRM_USE_MINIBTN
 	wxPoint tmp = pos;
 #ifndef __WXX11__	
 	tmp = ClientToFrame(tmp);
@@ -963,38 +963,38 @@ bool wxPaletteFrameBase::OnPosLeftUp(const wxPoint &pos)
 	return FALSE;
 }
 
-bool wxPaletteFrameBase::OnPosRightDown(const wxPoint &)
+bool wxExtMiniFrameBase::OnPosRightDown(const wxPoint &)
 {
 	// default implementation does nothing
 
 	return TRUE;
 }
 
-bool wxPaletteFrameBase::OnPosRightUp(const wxPoint &pos)
+bool wxExtMiniFrameBase::OnPosRightUp(const wxPoint &pos)
 {
-	wxPALETTE_LOG(wxT("wxPaletteFrameBase::OnPosRightUp - handling a click at [%d;%d] - showctxmenu: %d"), 
+	wxEXTMF_LOG(wxT("wxExtMiniFrameBase::OnPosRightUp - handling a click at [%d;%d] - showctxmenu: %d"), 
 					pos.x, pos.y, m_bShowCtxMenu);
 	
-#ifdef wxPALETTEFRM_USE_MAINFRAME
+#ifdef wxEXTMINIFRM_USE_MAINFRAME
 	wxMainFrameBase *parent = (wxMainFrameBase *)GetParent();
 #endif
 
 	// if this window has context menu disabled...
 	if (!m_bShowCtxMenu 
-#ifdef wxPALETTEFRM_USE_MAINFRAME
+#ifdef wxEXTMINIFRM_USE_MAINFRAME
 			|| !parent->isContextMenuEnabled()
 #endif
 		) {
 		
-		wxPALETTE_LOG(wxT("wxPaletteFrameBase::OnPosRightUp - The context menu won't be shown..."));
+		wxEXTMF_LOG(wxT("wxExtMiniFrameBase::OnPosRightUp - The context menu won't be shown..."));
 		return TRUE;
 	}
 		
-#ifdef wxPALETTEFRM_USE_MAINFRAME
+#ifdef wxEXTMINIFRM_USE_MAINFRAME
 	wxPoint tmp = pos;
 	wxMenu *ctx = parent->GetPalContextMenu();
 
-	wxASSERT_MSG(ctx, wxT("This palette frame has the wxPALETTEFRM_SHOW_CONTEXT_MENU ")
+	wxASSERT_MSG(ctx, wxT("This palette frame has the wxEXTMINIFRM_SHOW_CONTEXT_MENU ")
 					wxT("style set but the main frame doesn't provide a valid context menu..."));
 
 #ifdef __WXMSW__
@@ -1005,7 +1005,7 @@ bool wxPaletteFrameBase::OnPosRightUp(const wxPoint &pos)
 #endif
 
 	PopupMenu(ctx, tmp);
-#endif						// wxPALETTEFRM_USE_MAINFRAME	
+#endif						// wxEXTMINIFRM_USE_MAINFRAME	
 	
 	// don't delete the menu just popped up: the wxMainFrameBase
 	// could decide to reuse it...
@@ -1020,34 +1020,34 @@ bool wxPaletteFrameBase::OnPosRightUp(const wxPoint &pos)
 
 
 // -------------------------------------
-// wxPaletteFrameBase - client handlers
+// wxExtMiniFrameBase - client handlers
 // -------------------------------------
 
-wxWindow *wxPaletteFrameBase::CreateClient(long style)
+wxWindow *wxExtMiniFrameBase::CreateClient(long style)
 {
 	SetClient(new wxPanel(this, -1, wxDefaultPosition,
 		wxDefaultSize, style | wxNO_FULL_REPAINT_ON_RESIZE,
-		wxT("wxPaletteFrameBase client")));	
+		wxT("wxExtMiniFrameBase client")));	
 
 	return GetClient();
 }
 
-void wxPaletteFrameBase::SetClient(wxWindow *pWnd)
+void wxExtMiniFrameBase::SetClient(wxWindow *pWnd)
 {
 	wxASSERT_MSG(pWnd != NULL && pWnd != m_pClientWnd,
 		wxT("Invalid client window !!"));
 
-	wxSAFE_DELETE(m_pClientWnd);		// delete old one
+	wxDELETE(m_pClientWnd);		// delete old one
 	m_pClientWnd = pWnd;
 
 	// VERY IMPORTANT: this is required for the client window to be shown
 	m_pClientWnd->Move(0, 0);
 }
 
-void wxPaletteFrameBase::SetSizeHintsUsingClientHints()
+void wxExtMiniFrameBase::SetSizeHintsUsingClientHints()
 {
 	// this function will resize this window taking in count everything:
-	// borders, title and obviously the child (called by wxPaletteFrameBase's
+	// borders, title and obviously the child (called by wxExtMiniFrameBase's
 	// function as "client") window...
 	Fit();
 	
@@ -1063,10 +1063,10 @@ void wxPaletteFrameBase::SetSizeHintsUsingClientHints()
 
 
 // ---------------------------------
-// wxPaletteFrameBase - Roll/Unroll
+// wxExtMiniFrameBase - Roll/Unroll
 // ---------------------------------
 
-void wxPaletteFrameBase::Roll()
+void wxExtMiniFrameBase::Roll()
 {
 	if (IsRolled())
 		return;		// already rolled
@@ -1089,7 +1089,7 @@ void wxPaletteFrameBase::Roll()
 	//
 	// something like, would cause some problems of child-positionining:
 	// SetWindowStyle(GetWindowStyle() & ~wxRESIZE_BORDER | wxSUNKEN_BORDER);
-#ifdef wxPALETTEFRM_USE_MINIBTN
+#ifdef wxEXTMINIFRM_USE_MINIBTN
 	// we need to move buttons in the right place...
 	MoveMiniButtons();
 #endif
@@ -1098,7 +1098,7 @@ void wxPaletteFrameBase::Roll()
 	this->Refresh();
 }
 
-void wxPaletteFrameBase::UnRoll()
+void wxExtMiniFrameBase::UnRoll()
 {
 	if (!IsRolled())
 		return;		// already unrolled
@@ -1115,7 +1115,7 @@ void wxPaletteFrameBase::UnRoll()
 	m_bRolled = FALSE;		// we are unrolled, now
 }
 
-wxSize wxPaletteFrameBase::GetRolledSize() const
+wxSize wxExtMiniFrameBase::GetRolledSize() const
 {
 	wxScreenDC dc;
 	int titlelenght;
@@ -1129,7 +1129,7 @@ wxSize wxPaletteFrameBase::GetRolledSize() const
 	return wxSize(titlelenght+60+bs, GetTitleHeight()+bs+2);
 }
 
-wxSize wxPaletteFrameBase::GetUnRolledSize() const
+wxSize wxExtMiniFrameBase::GetUnRolledSize() const
 {
 	// if we are currently rolled, the unrolled size should
 	// have been saved in m_szLast...
@@ -1140,7 +1140,7 @@ wxSize wxPaletteFrameBase::GetUnRolledSize() const
 	return GetSize();
 }
 
-void wxPaletteFrameBase::Draw(wxWindowDC *dc, bool bDrawCaption, bool bDrawMiniBtn)
+void wxExtMiniFrameBase::Draw(wxWindowDC *dc, bool bDrawCaption, bool bDrawMiniBtn)
 {
 	bool clean = FALSE;
 	
@@ -1159,12 +1159,12 @@ void wxPaletteFrameBase::Draw(wxWindowDC *dc, bool bDrawCaption, bool bDrawMiniB
 	// draw this frame
 	DrawSunkenBorders(*dc, wxRect(0, 0, w, h));
 
-#ifdef wxPALETTEFRM_USE_MINIBTN
+#ifdef wxEXTMINIFRM_USE_MINIBTN
 
 	// redraw the left part of the caption bar only when we want to
 	// do a fast redraw (this way, we can avoid to redraw minibtn
 	// and have a performance gain)
-#ifdef wxPALETTEFRM_FASTREDRAW
+#ifdef wxEXTMINIFRM_FASTREDRAW
 	if (!bDrawMiniBtn)
 		rc.width = GetButtonPos(GetButtonCount()-1).x-5;
 #endif
@@ -1173,8 +1173,8 @@ void wxPaletteFrameBase::Draw(wxWindowDC *dc, bool bDrawCaption, bool bDrawMiniB
 	if (bDrawCaption)
 		DrawCaption(this, *dc, rc, TRUE, IsToDrawAsActive());
 
-#ifdef wxPALETTEFRM_USE_MINIBTN		
-#ifdef wxPALETTEFRM_FASTREDRAW
+#ifdef wxEXTMINIFRM_USE_MINIBTN		
+#ifdef wxEXTMINIFRM_FASTREDRAW
 	// draw also our minibuttons if caller has requested so...
 	if (bDrawMiniBtn)
 		DrawMiniButtons(*dc);
@@ -1188,7 +1188,7 @@ void wxPaletteFrameBase::Draw(wxWindowDC *dc, bool bDrawCaption, bool bDrawMiniB
 	if (clean) delete dc;
 }
 
-#endif		// wxPALETTEFRM_USE_PALETTEFRM
+#endif		// wxEXTMINIFRM_USE_EXTMINIFRM
 					       
 
 
@@ -1197,9 +1197,9 @@ void wxPaletteFrameBase::Draw(wxWindowDC *dc, bool bDrawCaption, bool bDrawMiniB
 // wxMINIBUTTONBASE
 // ------------------------------------
 
-#ifdef wxPALETTEFRM_USE_MINIBTN
+#ifdef wxEXTMINIFRM_USE_MINIBTN
 
-wxMiniButtonBase::wxMiniButtonBase(wxPaletteFrameBase *parent, int id)
+wxMiniButtonBase::wxMiniButtonBase(wxExtMiniFrameBase *parent, int id)
 {
 	Init();
 
@@ -1211,8 +1211,8 @@ wxMiniButtonBase::wxMiniButtonBase(wxPaletteFrameBase *parent, int id)
 	m_nId = id;	
 
 	// this must be changed as soon as possible
-	// (wxPaletteFrameBase::AddMiniButton automatically calls the
-	// wxPaletteFrameBase::Layout function which repositionates all
+	// (wxExtMiniFrameBase::AddMiniButton automatically calls the
+	// wxExtMiniFrameBase::Layout function which repositionates all
 	// the minibuttons)...
 	m_ptPos = wxDefaultPosition;
 }
@@ -1231,7 +1231,7 @@ void wxMiniButtonBase::Init()
 
 void wxMiniButtonBase::Draw(wxDC &dc)
 {
-	//wxPaletteFrameBase::DrawSunkenBorder(dc, wxRect(m_ptPos.x, m_ptPos.y, wxMINIBTN_WIDTH, wxMINIBTN_HEIGHT), m_bPressed);
+	//wxExtMiniFrameBase::DrawSunkenBorder(dc, wxRect(m_ptPos.x, m_ptPos.y, wxMINIBTN_WIDTH, wxMINIBTN_HEIGHT), m_bPressed);
 	Draw(dc, m_ptPos.x, m_ptPos.y);//+wxMINIBTN_BORDER_SIZE);//+(int)m_bPressed);
 }
 
@@ -1257,14 +1257,14 @@ bool wxMiniButtonBase::OnLeftDown(const wxPoint& pos)
 
 		// we are being pressed
 		m_bPressed = TRUE;
-		wxPALETTE_LOG(wxT("wxMiniButtonBase::OnLeftDown - A minibutton is being pressed (%d;%d)"), pos.x, pos.y);
+		wxEXTMF_LOG(wxT("wxMiniButtonBase::OnLeftDown - A minibutton is being pressed (%d;%d)"), pos.x, pos.y);
 
 		// redraw ourselves...
 		Refresh();
 		return TRUE;
 	}
 
-	wxPALETTE_LOG(wxT("wxMiniButtonBase::OnLeftDown - this one was not clicked (%d;%d)"), pos.x, pos.y);
+	wxEXTMF_LOG(wxT("wxMiniButtonBase::OnLeftDown - this one was not clicked (%d;%d)"), pos.x, pos.y);
 	
 	return FALSE;
 }
@@ -1283,7 +1283,7 @@ bool wxMiniButtonBase::OnLeftUp(const wxPoint &pos)
 	// we are not being pressed anymore...
 	m_bCapturing = FALSE;
 	m_bPressed = FALSE;
-	wxPALETTE_LOG(wxT("wxMiniButtonBase::OnLeftUp - A minibutton has been released (%d;%d)"), pos.x, pos.y);
+	wxEXTMF_LOG(wxT("wxMiniButtonBase::OnLeftUp - A minibutton has been released (%d;%d)"), pos.x, pos.y);
 
 	// redraw ourselves...
 	Refresh();
@@ -1291,7 +1291,7 @@ bool wxMiniButtonBase::OnLeftUp(const wxPoint &pos)
 	// check if we must trigger the action attached to this button
 	if (HitTest(pos) && m_bEnabled) {
 	
-		//wxPALETTE_LOG("wxMiniButtonBase::OnPosLeftUp - sending a wxEVT_COMMAND_MINIBTN_CLICKED event");
+		//wxEXTMF_LOG("wxMiniButtonBase::OnPosLeftUp - sending a wxEVT_COMMAND_MINIBTN_CLICKED event");
 		
 		//wxCommandEvent ce(wxEVT_COMMAND_MINIBTN_CLICKED, GetId());
 		//GetParent()->AddPendingEvent(ce);
@@ -1305,8 +1305,8 @@ wxSize wxMiniButtonBase::GetSize() const
 	int w=-1,h=-1;
 	
 	// adaptive height & width
-	h = (int)(m_pParent->GetTitleHeight()*wxPALETTEFRM_BTN_HEIGHT_MULT);
-	w = (int)(h*wxPALETTEFRM_BTN_RATIO);
+	h = (int)(m_pParent->GetTitleHeight()*wxEXTMINIFRM_BTN_HEIGHT_MULT);
+	w = (int)(h*wxEXTMINIFRM_BTN_RATIO);
 
 	return wxSize(w, h);
 }
@@ -1320,7 +1320,7 @@ void wxMiniButtonBase::Refresh()
 void wxMiniButtonBase::DrawButtonFrame(wxDC &dc, int x, int y)
 {
 	wxRect rc(wxPoint(x, y), GetSize());
-	wxPaletteFrameBase::DrawSunkenBorders(dc, rc);
+	wxExtMiniFrameBase::DrawSunkenBorders(dc, rc);
 	
 	// fill the interior
 	if (!m_bPressed)
@@ -1335,10 +1335,10 @@ void wxMiniButtonBase::DrawButtonFrame(wxDC &dc, int x, int y)
 
 int wxMiniButtonBase::GetBorderSize() const
 {
-	// we used wxPaletteFrameBase::DrawSunkenBorders in DrawButtonFrame...
+	// we used wxExtMiniFrameBase::DrawSunkenBorders in DrawButtonFrame...
 	return m_pParent->GetBorderSize();
 }
 
-#endif		// wxPALETTEFRM_USE_MINIBTN
+#endif		// wxEXTMINIFRM_USE_MINIBTN
 
 

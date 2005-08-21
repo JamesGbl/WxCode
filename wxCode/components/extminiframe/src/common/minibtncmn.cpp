@@ -30,7 +30,7 @@
 
 
 
-#ifdef wxPALETTEFRM_USE_MINIBTN
+#ifdef wxEXTMINIFRM_USE_MINIBTN
 
 // define the event type for wxMiniButtons
 DEFINE_EVENT_TYPE( wxEVT_COMMAND_CLOSEBOX_CLICKED )
@@ -49,7 +49,7 @@ void wxCloseBoxBase::Draw(wxDC &dc, int x, int y)
 	int bw = GetSize().GetWidth();
 	int bh = GetSize().GetHeight();
 
-	wxPALETTE_LOG(wxT("wxCloseBoxBase::Draw() at %d;%d - %d;%d"), x, y, bw, bh);
+	wxEXTMF_LOG(wxT("wxCloseBoxBase::Draw() at %d;%d - %d;%d"), x, y, bw, bh);
 	
 	// draw our frame
 	DrawButtonFrame(dc, x, y);
@@ -82,7 +82,7 @@ void wxCloseBoxBase::Draw(wxDC &dc, int x, int y)
 
 bool wxCloseBoxBase::Exec()
 {
-	wxPALETTE_LOG(wxT("wxCloseBoxBase::Exec() - sending a wxEVT_COMMAND_CLOSEBOX_CLICKED to %d"), GetParent());
+	wxEXTMF_LOG(wxT("wxCloseBoxBase::Exec() - sending a wxEVT_COMMAND_CLOSEBOX_CLICKED to %d"), GetParent());
 
 	wxCommandEvent ev(wxEVT_COMMAND_CLOSEBOX_CLICKED, GetParent()->GetId());
 	GetParent()->AddPendingEvent(ev);
@@ -103,7 +103,7 @@ void wxMaximizeBoxBase::Draw(wxDC &dc, int x, int y)
 	int bw = GetSize().GetWidth();
 	int bh = GetSize().GetHeight();
 
-	wxPALETTE_LOG(wxT("wxMaximizeBoxBase::Draw() at %d;%d - %d;%d"), x, y, bw, bh);
+	wxEXTMF_LOG(wxT("wxMaximizeBoxBase::Draw() at %d;%d - %d;%d"), x, y, bw, bh);
 	
 	// draw our frame
 	DrawButtonFrame(dc, x, y);
@@ -123,7 +123,7 @@ void wxMaximizeBoxBase::Draw(wxDC &dc, int x, int y)
 
 bool wxMaximizeBoxBase::Exec()
 {
-	wxPALETTE_LOG(wxT("wxMaximizeBoxBase::Exec() - sending a wxEVT_COMMAND_MAXIMIZEBOX_CLICKED"));
+	wxEXTMF_LOG(wxT("wxMaximizeBoxBase::Exec() - sending a wxEVT_COMMAND_MAXIMIZEBOX_CLICKED"));
 
 	// the behaviour of this function should be defined in the event handler
 	// of wxEVT_COMMAND_MAXIMIZEBOX_CLICKED... 
@@ -146,7 +146,7 @@ void wxMinimizeBoxBase::Draw(wxDC &dc, int x, int y)
 	int bw = GetSize().GetWidth();
 	int bh = GetSize().GetHeight();
 
-	wxPALETTE_LOG(wxT("wxMinimizeBoxBase::Draw() at %d;%d - %d;%d"), x, y, bw, bh);
+	wxEXTMF_LOG(wxT("wxMinimizeBoxBase::Draw() at %d;%d - %d;%d"), x, y, bw, bh);
 	
 	// draw our frame
 	DrawButtonFrame(dc, x, y);
@@ -163,7 +163,7 @@ void wxMinimizeBoxBase::Draw(wxDC &dc, int x, int y)
 
 bool wxMinimizeBoxBase::Exec()
 {
-	wxPALETTE_LOG(wxT("wxMinimizeBoxBase::Exec() - sending a wxEVT_COMMAND_MINIMIZEBOX_CLICKED"));
+	wxEXTMF_LOG(wxT("wxMinimizeBoxBase::Exec() - sending a wxEVT_COMMAND_MINIMIZEBOX_CLICKED"));
 
 	// the behaviour of this minibutton should be defined in the event handler
 	// which will intercept this event...
@@ -184,7 +184,7 @@ bool wxMinimizeBoxBase::Exec()
 
 void wxCollapseBoxBase::Draw(wxDC &dc, int x, int y)
 {
-	wxPALETTE_LOG(wxT("wxCollapseBoxBase::Draw() - parent's roll state: %d"), isParentRolled());
+	wxEXTMF_LOG(wxT("wxCollapseBoxBase::Draw() - parent's roll state: %d"), isParentRolled());
 	dc.SetPen(*wxTRANSPARENT_PEN);
 
 	wxPoint arr[3];
@@ -241,7 +241,7 @@ void wxCollapseBoxBase::Draw(wxDC &dc, int x, int y)
 
 bool wxCollapseBoxBase::Exec()
 {
-	wxPALETTE_LOG(wxT("wxCollapseBoxBase::Exec() - sending a wxEVT_COMMAND_COLLAPSEBOX_CLICKED"));
+	wxEXTMF_LOG(wxT("wxCollapseBoxBase::Exec() - sending a wxEVT_COMMAND_COLLAPSEBOX_CLICKED"));
 
 	// this should be typically used to roll/unroll the window...
 	wxCommandEvent ev(wxEVT_COMMAND_COLLAPSEBOX_CLICKED, GetParent()->GetId());
@@ -253,11 +253,11 @@ bool wxCollapseBoxBase::Exec()
 bool wxCollapseBoxBase::isParentRolled() const
 {
 	// just use the parent function
-	return ((wxPaletteFrameBase *)m_pParent)->IsRolled();
+	return ((wxExtMiniFrameBase *)m_pParent)->IsRolled();
 }
 
 
-#endif		// #ifdef wxPALETTEFRM_USE_MINIBTN
+#endif		// #ifdef wxEXTMINIFRM_USE_MINIBTN
 
 
 

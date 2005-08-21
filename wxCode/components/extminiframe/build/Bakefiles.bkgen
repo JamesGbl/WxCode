@@ -6,7 +6,7 @@
 <bakefile-gen>
 
 
-    <input>palettefrm.bkl</input>
+    <input>wxextminiframe.bkl</input>
 
 
     <disable-formats>dmars,dmars_smake,cbx_unix,gnu,cbuilderx,msevc4prj</disable-formats>

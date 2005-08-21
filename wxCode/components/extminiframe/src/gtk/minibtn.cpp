@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 // Name:        gtk/palettefrm.cpp
-// Purpose:     wxPaletteFrame, wxPaletteFrame, wxPaletteButton, wxMiniButton
+// Purpose:     wxExtMiniFrame, wxExtMiniFrame, wxMiniButton
 //              wxCloseBox, wxMaximizeBox, wxMinimizeBox, wxCollapseBox
 // Author:      Francesco Montorsi
 // Created:     2004/03/03
@@ -251,7 +251,7 @@ void wxCollapseBox::UpdatePixmap()
 	GtkWidget *image = gtk_bin_get_child((GtkBin*)m_button);
 	if (image == NULL || !GTK_IS_IMAGE(image)) return;
 	
-	wxPALETTE_LOG(wxT("wxCollapseBox::UpdatePixmap - updating the button pixmap"));
+	wxEXTMF_LOG(wxT("wxCollapseBox::UpdatePixmap - updating the button pixmap"));
 	GdkBitmap *mask = (GdkBitmap*) NULL;
 	GdkPixmap *pix = gdk_pixmap_create_from_xpm_d(
 		wxGetRootWindow()->window,
@@ -266,7 +266,7 @@ void wxCollapseBox::UpdatePixmap()
 
 bool wxCollapseBox::Exec()
 {
-	wxPALETTE_LOG(wxT("wxCollapseBoxGTK::Exec - parent rollstate: %d"), isParentRolled());
+	wxEXTMF_LOG(wxT("wxCollapseBoxGTK::Exec - parent rollstate: %d"), isParentRolled());
 	bool ret = wxCollapseBoxBase::Exec();
 	
 	// maybe we need to change the GdkPixmap used for this button...

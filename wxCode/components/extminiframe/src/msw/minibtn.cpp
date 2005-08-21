@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 // Name:        msw/palettefrm.cpp
-// Purpose:     wxPaletteFrame, wxPaletteFrame, wxPaletteButton, wxMiniButton
+// Purpose:     wxExtMiniFrame, wxExtMiniFrame, wxMiniButton
 //              wxCloseBox, wxMaximizeBox, wxMinimizeBox, wxCollapseBox
 // Author:      Francesco Montorsi
 // Created:     2004/03/03
@@ -35,7 +35,7 @@
 #include "wx/minibtn.h"
 
 
-#ifdef wxPALETTEFRM_USE_MINIBTN
+#ifdef wxEXTMINIFRM_USE_MINIBTN
 
 
 // RTTI class declarations
@@ -54,7 +54,7 @@ IMPLEMENT_DYNAMIC_CLASS(wxCollapseBox, wxMiniButton)
 
 void wxCloseBox::Draw(wxDC &dc, int x, int y)
 {
-	wxPALETTE_LOG(wxT("wxCloseBox::Draw() at %d;%d"), x, y);
+	wxEXTMF_LOG(wxT("wxCloseBox::Draw() at %d;%d"), x, y);
 
 	DrawMSWStdButton(dc, x, y, DFCS_CAPTIONCLOSE);
 }
@@ -66,7 +66,7 @@ void wxCloseBox::Draw(wxDC &dc, int x, int y)
 
 void wxMaximizeBox::Draw(wxDC &dc, int x, int y)
 {
-	wxPALETTE_LOG(wxT("wxMaximizeBox::Draw()"));
+	wxEXTMF_LOG(wxT("wxMaximizeBox::Draw()"));
 	
 	// draw the maximize or restore box...
 	DrawMSWStdButton(dc, x, y, (GetParent()->IsRolled() ?
@@ -80,10 +80,10 @@ void wxMaximizeBox::Draw(wxDC &dc, int x, int y)
 
 void wxMinimizeBox::Draw(wxDC &dc, int x, int y)
 {
-	wxPALETTE_LOG(wxT("wxMinimizeBox::Draw()"));
+	wxEXTMF_LOG(wxT("wxMinimizeBox::Draw()"));
 
 	DrawMSWStdButton(dc, x, y, DFCS_CAPTIONMIN);
 }
 
 
-#endif		// wxPALETTEFRM_USE_MINIBTN
+#endif		// wxEXTMINIFRM_USE_MINIBTN

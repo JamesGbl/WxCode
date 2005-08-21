@@ -18,7 +18,7 @@
 #endif
 
 
-#ifdef wxPALETTEFRM_USE_MINIBTN
+#ifdef wxEXTMINIFRM_USE_MINIBTN
 
 // the number of rows in the pixmaps of our minibuttons.
 #define wxMINIBNT_PIXMAP_ROWS			22
@@ -27,7 +27,7 @@
 
 // wxCloseBox is a window close button (the classical "x" in the
 // top-right border of the window caption) which can be used in
-// wxPaletteFrames to hide the window.
+// wxExtMiniFrames to hide the window.
 class WXDLLEXPORT wxCloseBox : public wxCloseBoxBase
 {
 protected:
@@ -37,7 +37,7 @@ protected:
 public:
 
 	wxCloseBox() {}		// required by wxWidgets RTTI system
-	wxCloseBox(wxPaletteFrameBase *parent, int bSmall = -1) :
+	wxCloseBox(wxExtMiniFrameBase *parent, int bSmall = -1) :
 	  wxCloseBoxBase(parent, bSmall) { CreatePixmap(m_pixmap); }
 	virtual ~wxCloseBox() {}
 
@@ -59,7 +59,7 @@ protected:
 public:
 
 	wxMaximizeBox() {}		// required by wxWidgets RTTI system
-	wxMaximizeBox(wxPaletteFrameBase *parent, int bSmall = -1) :
+	wxMaximizeBox(wxExtMiniFrameBase *parent, int bSmall = -1) :
 	  wxMaximizeBoxBase(parent, bSmall) { CreatePixmap(m_pixmap); }
 	virtual ~wxMaximizeBox() {}
 
@@ -81,7 +81,7 @@ protected:
 public:
 
 	wxMinimizeBox() {}		// required by wxWidgets RTTI system
-	wxMinimizeBox(wxPaletteFrameBase *parent, int bSmall = -1) :
+	wxMinimizeBox(wxExtMiniFrameBase *parent, int bSmall = -1) :
 	  wxMinimizeBoxBase(parent, bSmall) { CreatePixmap(m_pixmap); }
 	virtual ~wxMinimizeBox() {}
 
@@ -92,8 +92,8 @@ private:
 
 
 // A wxMiniButton which allows the user to roll/unroll the 
-// wxPaletteFrame associated: roll/unroll is useful for
-// those palettes which are quite cumbersome.
+// wxExtMiniFrame associated: roll/unroll is useful for
+// those miniframes which are quite cumbersome.
 //
 // wxCollapseBox appears as a triangle pointing right when
 // the window is rolled-up and pointing left when the window
@@ -123,7 +123,7 @@ protected:		// some overloads
 public:
 
 	wxCollapseBox() {}		// required by wxWidgets RTTI system
-	wxCollapseBox(wxPaletteFrameBase *parent, int bSmall = -1) :
+	wxCollapseBox(wxExtMiniFrameBase *parent, int bSmall = -1) :
 	  wxCollapseBoxBase(parent, bSmall) 
 	  { CreatePixmap(m_pixmapRolled); m_bShowingRolled=TRUE; }
 	virtual ~wxCollapseBox() {}
@@ -132,5 +132,5 @@ private:
 	DECLARE_DYNAMIC_CLASS( wxCollapseBox )
 };
 
-#endif			// wxPALETTEFRM_USE_MINIBTN
+#endif			// wxEXTMINIFRM_USE_MINIBTN
 #endif			// _WX_MINIBTN_H_

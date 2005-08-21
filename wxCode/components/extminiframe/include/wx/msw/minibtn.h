@@ -13,12 +13,12 @@
 #ifndef _WX_MINIBTN_H_
 #define _WX_MINIBTN_H_
 
-#ifdef wxPALETTEFRM_USE_MINIBTN
+#ifdef wxEXTMINIFRM_USE_MINIBTN
 
 // wxCloseBox is a window close button (the classical "x" in the
 // top-right border of the window caption) which can be used in
-// wxPaletteFrames to hide the window.
-class WXDLLIMPEXP_PALETTEFRM wxCloseBox : public wxCloseBoxBase
+// wxExtMiniFrames to hide the window.
+class WXDLLIMPEXP_WXEXTMINIFRAME wxCloseBox : public wxCloseBoxBase
 {
 protected:
 	void Draw(wxDC &, int, int);
@@ -26,7 +26,7 @@ protected:
 public:
 
 	wxCloseBox() {}		// required by wxWidgets RTTI system
-	wxCloseBox(wxPaletteFrameBase *parent, int bSmall = -1) :
+	wxCloseBox(wxExtMiniFrameBase *parent, int bSmall = -1) :
 	  wxCloseBoxBase(parent, bSmall) {}
 	virtual ~wxCloseBox() {}
 
@@ -39,7 +39,7 @@ private:
 // wxMAXIMIZE_BOX; its behaviour is not defined.
 // If you want to use it, derive a new class and override
 // the Exec() function.
-class WXDLLIMPEXP_PALETTEFRM wxMaximizeBox : public wxMaximizeBoxBase
+class WXDLLIMPEXP_WXEXTMINIFRAME wxMaximizeBox : public wxMaximizeBoxBase
 {
 protected:
 	void Draw(wxDC &, int, int);
@@ -47,7 +47,7 @@ protected:
 public:
 
 	wxMaximizeBox() {}		// required by wxWidgets RTTI system
-	wxMaximizeBox(wxPaletteFrameBase *parent, int bSmall = -1) :
+	wxMaximizeBox(wxExtMiniFrameBase *parent, int bSmall = -1) :
 	  wxMaximizeBoxBase(parent, bSmall) {}
 	virtual ~wxMaximizeBox() {}
 
@@ -60,7 +60,7 @@ private:
 // wxMINIMIZE_BOX; its behaviour is not defined.
 // If you want to use it, derive a new class and override
 // the Exec() function.
-class WXDLLIMPEXP_PALETTEFRM wxMinimizeBox : public wxMinimizeBoxBase
+class WXDLLIMPEXP_WXEXTMINIFRAME wxMinimizeBox : public wxMinimizeBoxBase
 {
 protected:
 	void Draw(wxDC &, int, int);
@@ -68,7 +68,7 @@ protected:
 public:
 
 	wxMinimizeBox() {}		// required by wxWidgets RTTI system
-	wxMinimizeBox(wxPaletteFrameBase *parent, int bSmall = -1) :
+	wxMinimizeBox(wxExtMiniFrameBase *parent, int bSmall = -1) :
 	  wxMinimizeBoxBase(parent, bSmall) {}
 	virtual ~wxMinimizeBox() {}
 
@@ -79,13 +79,13 @@ private:
 
 
 // A wxMiniButton which allows the user to roll/unroll the 
-// wxPaletteFrame associated: roll/unroll is useful for
-// those palettes which are quite cumbersome.
+// wxExtMiniFrame associated: roll/unroll is useful for
+// those miniframes which are quite cumbersome.
 //
 // wxCollapseBox appears as a triangle pointing right when
 // the window is rolled-up and pointing left when the window
 // is unrolled...
-class WXDLLIMPEXP_PALETTEFRM wxCollapseBox : public wxCollapseBoxBase
+class WXDLLIMPEXP_WXEXTMINIFRAME wxCollapseBox : public wxCollapseBoxBase
 {
 protected:
 
@@ -96,7 +96,7 @@ protected:
 public:
 
 	wxCollapseBox() {}		// required by wxWidgets RTTI system
-	wxCollapseBox(wxPaletteFrameBase *parent, int bSmall = -1) :
+	wxCollapseBox(wxExtMiniFrameBase *parent, int bSmall = -1) :
 	  wxCollapseBoxBase(parent, bSmall) {}
 	virtual ~wxCollapseBox() {}
 
@@ -105,6 +105,6 @@ private:
 };
 
 
-#endif			// wxPALETTEFRM_USE_MINIBTN
+#endif			// wxEXTMINIFRM_USE_MINIBTN
 
 #endif			// _WX_MINIBTN_H_

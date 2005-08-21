@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 // Name:		gtk/palettefrm.cpp
-// Purpose: 	wxPaletteFrame, wxPaletteFrame, wxPaletteButton, wxMiniButton
+// Purpose: 	wxExtMiniFrame, wxExtMiniFrame, wxMiniButton
 //				wxCloseBox, wxMaximizeBox, wxMinimizeBox, wxCollapseBox
 // Author:		Francesco Montorsi
 // Created:     2004/03/03
@@ -36,16 +36,16 @@
 
 
 // wxWidgets RTTI system
-IMPLEMENT_DYNAMIC_CLASS(wxPaletteFrame, wxFrame)
+IMPLEMENT_DYNAMIC_CLASS(wxExtMiniFrame, wxFrame)
 IMPLEMENT_ABSTRACT_CLASS(wxMiniButton, wxObject)
 
 // event table
-BEGIN_EVENT_TABLE(wxPaletteFrame, wxFrame)
+BEGIN_EVENT_TABLE(wxExtMiniFrame, wxFrame)
 
 	// for some reason, we need to specify these handlers here too
-	// (see the event table of wxPaletteFrameBase)
-	EVT_CLOSEBOX_CLICKED( -1, wxPaletteFrameBase::OnCloseBox )
-	EVT_COLLAPSEBOX_CLICKED( -1, wxPaletteFrameBase::OnCollapseBox )
+	// (see the event table of wxExtMiniFrameBase)
+	EVT_CLOSEBOX_CLICKED( -1, wxExtMiniFrameBase::OnCloseBox )
+	EVT_COLLAPSEBOX_CLICKED( -1, wxExtMiniFrameBase::OnCollapseBox )
 	
 END_EVENT_TABLE()
 
@@ -93,9 +93,9 @@ static void DrawFrame( GtkWidget *widget, int x, int y, int w, int h )
 //-----------------------------------------------------------------------------
 
 static void gtk_window_own_expose_callback( GtkWidget *widget, 
-										   GdkEventExpose *gdk_event, wxPaletteFrame *win )
+										   GdkEventExpose *gdk_event, wxExtMiniFrame *win )
 {
-	wxPALETTE_LOG(wxT("gtk_window_own_expose_callback"));
+	wxEXTMF_LOG(wxT("gtk_window_own_expose_callback"));
 	if (g_isIdle) wxapp_install_idle_handler();
 	
 	if (!win->m_hasVMT) return;
@@ -120,7 +120,7 @@ static void gtk_window_own_expose_callback( GtkWidget *widget,
 		dc.SetFont( *wxSMALL_FONT );
 		
 		// get the metrics of the paletteframe involved:
-		// some adjustments are hardcoded to make the palette looks better
+		// some adjustments are hardcoded to make the extminiframe looks better
 		int height = win->GetTitleHeight(), bs = win->GetBorderSize();
 		
 		GdkGC *gc = gdk_gc_new( pizza->bin_window );
@@ -145,7 +145,7 @@ static void gtk_window_own_expose_callback( GtkWidget *widget,
 static void gtk_window_own_draw_callback( GtkWidget *widget, 
 										 GdkRectangle *WXUNUSED(rect), wxFrame *win )
 {
-	wxPALETTE_LOG(wxT("gtk_window_own_draw_callback"));
+	wxEXTMF_LOG(wxT("gtk_window_own_draw_callback"));
 	if (g_isIdle) wxapp_install_idle_handler();
 	
 	if (!win->m_hasVMT) return;
@@ -190,9 +190,9 @@ static void gtk_window_own_draw_callback( GtkWidget *widget,
 //-----------------------------------------------------------------------------
 
 static gint gtk_window_button_press_callback( GtkWidget *widget, 
-											 GdkEventButton *gdk_event, wxPaletteFrame *win )
+											 GdkEventButton *gdk_event, wxExtMiniFrame *win )
 {
-	wxPALETTE_LOG(wxT("gtk_window_button_press_callback"));
+	wxEXTMF_LOG(wxT("gtk_window_button_press_callback"));
 	if (g_isIdle) wxapp_install_idle_handler();
 	
 	if (!win->m_hasVMT) return FALSE;
@@ -201,11 +201,11 @@ static gint gtk_window_button_press_callback( GtkWidget *widget,
 	
 	if (win->m_isDragging) return TRUE;
 	
-#ifdef wxPALETTEFRM_USE_PALETTEFRM	
+#ifdef wxEXTMINIFRM_USE_EXTMINIFRM	
 	// right button clicks are used to pop up the menu context
 	if (gdk_event->button == 3) {
 		
-		wxPALETTE_LOG(wxT("gtk_window_button_press_callback - handling a right click at [%d;%d] for [%d]; ")
+		wxEXTMF_LOG(wxT("gtk_window_button_press_callback - handling a right click at [%d;%d] for [%d]; ")
 			wxT("palettefrm label window is [%d]"), 
 			(int)gdk_event->x, (int)gdk_event->y, gdk_event->window, win->m_gdkLabelWnd);
 		wxPoint pt((int)gdk_event->x, (int)gdk_event->y);// + win->GetTitleHeight());
@@ -216,7 +216,7 @@ static gint gtk_window_button_press_callback( GtkWidget *widget,
 			win->HitTest(pt) == wxPFHT_TOPLEVEL_TITLEBAR)
 			win->OnPosRightUp(pt);
 		else
-			wxPALETTE_LOG(wxT("gtk_window_button_press_callback - skipping this right click"));
+			wxEXTMF_LOG(wxT("gtk_window_button_press_callback - skipping this right click"));
 		return TRUE;
 	}
 #endif
@@ -259,9 +259,9 @@ static gint gtk_window_button_press_callback( GtkWidget *widget,
 // "button_release_event" of m_mainWidget
 //-----------------------------------------------------------------------------
 
-static gint gtk_window_button_release_callback( GtkWidget *widget, GdkEventButton *gdk_event, wxPaletteFrame *win )
+static gint gtk_window_button_release_callback( GtkWidget *widget, GdkEventButton *gdk_event, wxExtMiniFrame *win )
 {
-	wxPALETTE_LOG(wxT("gtk_window_button_release_callback"));
+	wxEXTMF_LOG(wxT("gtk_window_button_release_callback"));
 	if (g_isIdle) wxapp_install_idle_handler();
 	
 	if (!win->m_hasVMT) return FALSE;
@@ -293,7 +293,7 @@ static gint gtk_window_button_release_callback( GtkWidget *widget, GdkEventButto
 // "motion_notify_event" of m_mainWidget
 //-----------------------------------------------------------------------------
 
-static gint gtk_window_motion_notify_callback( GtkWidget *widget, GdkEventMotion *gdk_event, wxPaletteFrame *win )
+static gint gtk_window_motion_notify_callback( GtkWidget *widget, GdkEventMotion *gdk_event, wxExtMiniFrame *win )
 {
 	if (g_isIdle) wxapp_install_idle_handler();
 	
@@ -328,14 +328,14 @@ static gint gtk_window_motion_notify_callback( GtkWidget *widget, GdkEventMotion
 
 
 //-----------------------------------------------------------------------------
-// wxPALETTEFRAME
+// wxEXTMINIFRAME
 //-----------------------------------------------------------------------------
 
-bool wxPaletteFrame::Create( wxMainFrame *parent, wxWindowID id, const wxString &title,
+bool wxExtMiniFrame::Create( wxMainFrame *parent, wxWindowID id, const wxString &title,
 							const wxPoint &pos, const wxSize &size,
 							long style, const wxString &name )
 {
-	//style = wxPALETTEFRM_DEFAULT_STYLE;//style | wxCAPTION | wxTINY_CAPTION_HORIZ;
+	//style = wxEXTMINIFRM_DEFAULT_STYLE;//style | wxCAPTION | wxTINY_CAPTION_HORIZ;
 	
 	if ((style & wxCAPTION) || (style & wxTINY_CAPTION_HORIZ) || (style & wxTINY_CAPTION_VERT))
 		m_miniTitle = GetTitleHeight();
@@ -348,8 +348,8 @@ bool wxPaletteFrame::Create( wxMainFrame *parent, wxWindowID id, const wxString 
 	m_diffY = 0;
 	
 	// create our base version
-	wxPALETTE_LOG(wxT("wxPaletteFrame::Create - creating the wxPaletteFrameBase"));
-	if (!wxPaletteFrameBase::Create( parent, id, title, pos, size, style, name ))
+	wxEXTMF_LOG(wxT("wxExtMiniFrame::Create - creating the wxExtMiniFrameBase"));
+	if (!wxExtMiniFrameBase::Create( parent, id, title, pos, size, style, name ))
 		return FALSE;
 	
 	// this let us to be placed over the parent...
@@ -386,7 +386,7 @@ bool wxPaletteFrame::Create( wxMainFrame *parent, wxWindowID id, const wxString 
 	return TRUE;
 }
 
-wxPaletteFrame::wxPaletteFrame(wxMainFrameBase* parent,
+wxExtMiniFrame::wxExtMiniFrame(wxMainFrameBase* parent,
 							   wxWindowID id,
 							   const wxString &title,
 							   const wxPoint& pos,
@@ -398,9 +398,9 @@ wxPaletteFrame::wxPaletteFrame(wxMainFrameBase* parent,
 	Create(parent, id, title, pos, size, style, name);
 }
 
-wxPaletteFrame::~wxPaletteFrame()
+wxExtMiniFrame::~wxExtMiniFrame()
 {
-	wxPALETTE_LOG(wxT("wxPaletteFrameGTK - destroyed"));
+	wxEXTMF_LOG(wxT("wxExtMiniFrameGTK - destroyed"));
 }
 
 
@@ -413,7 +413,7 @@ wxPaletteFrame::~wxPaletteFrame()
 
 static void gtk_button_clicked_callback( GtkWidget *WXUNUSED(widget), wxMiniButton *mb )
 {
-	wxPALETTE_LOG(wxT("gtk_button_clicked_callback"));
+	wxEXTMF_LOG(wxT("gtk_button_clicked_callback"));
 	if (g_isIdle) wxapp_install_idle_handler();
 	
 	// this minibtn has been clicked...
@@ -446,10 +446,10 @@ void wxMiniButton::CreatePixmap(char **xpm)
 	// init the m_button widget
 	CreateButtonWidget(xpm);
 		
-	wxPaletteFrameBase *parent = GetParent();
+	wxExtMiniFrameBase *parent = GetParent();
 	
 	// attach this GtkButton to our parent
-	wxPALETTE_LOG(wxT("wxMiniButton::CreatePixmap - creating a pixmap placed at [%d;%d]"), 
+	wxEXTMF_LOG(wxT("wxMiniButton::CreatePixmap - creating a pixmap placed at [%d;%d]"), 
 						GetPos().x, GetPos().y);
 	gtk_pizza_put( GTK_PIZZA(parent->m_mainWidget),
 		m_button,
@@ -463,7 +463,7 @@ void wxMiniButton::CreatePixmap(char **xpm)
 
 void wxMiniButton::Move(int x, int y)
 {
-	wxPALETTE_LOG(wxT("wxMiniButton::Move - moving at %d;%d"), x, y);
+	wxEXTMF_LOG(wxT("wxMiniButton::Move - moving at %d;%d"), x, y);
 	wxASSERT(GetParent() != NULL);
 
 	// move the button widget

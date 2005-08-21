@@ -29,7 +29,7 @@ WX_DIR = $(%WXWIN)
 WX_SHARED = 0
 
 # Compile Unicode build of wxWidgets? [0,1]
-WX_UNICODE = 1
+WX_UNICODE = 0
 
 # Use debug build of wxWidgets (define __WXDEBUG__)? [0,1]
 WX_DEBUG = 1
@@ -60,17 +60,17 @@ WATCOM_CWD = $+ $(%cdrive):$(%cwd) $-
 
 ### Conditionally set variables: ###
 
-WX3RDPARTLIBPOSTFIX =
+WX3RDPARTYLIBPOSTFIX =
 !ifeq WX_DEBUG 1
-WX3RDPARTLIBPOSTFIX = d
+WX3RDPARTYLIBPOSTFIX = d
 !endif
-__palettefrm_lib___depname =
+__extminiframe_lib___depname =
 !ifeq WX_SHARED 0
-__palettefrm_lib___depname = ..\lib\palettefrm$(WXLIBPOSTFIX).lib
+__extminiframe_lib___depname = ..\lib\wxextminiframe$(WXLIBPOSTFIX).lib
 !endif
-__palettefrm_dll___depname =
+__extminiframe_dll___depname =
 !ifeq WX_SHARED 1
-__palettefrm_dll___depname = ..\lib\palettefrm$(WXLIBPOSTFIX).dll
+__extminiframe_dll___depname = ..\lib\wxextminiframe$(WXLIBPOSTFIX).dll
 !endif
 __WARNINGS =
 !ifeq WX_DEBUG 0
@@ -138,25 +138,25 @@ __WXLIBPATH_FILENAMES = \lib\wat_dll
 
 ### Variables: ###
 
-PALETTEFRM_LIB_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
+EXTMINIFRAME_LIB_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
 	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
 	-i=$(WX_DIR)\include -i=..\include $(CPPFLAGS) $(CXXFLAGS)
-PALETTEFRM_LIB_OBJECTS =  &
-	watcom\palettefrm_lib_minibtncmn.obj &
-	watcom\palettefrm_lib_palettefrmcmn.obj &
-	watcom\palettefrm_lib_minibtn.obj &
-	watcom\palettefrm_lib_palettefrm.obj
-PALETTEFRM_DLL_CXXFLAGS = -bd $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
-	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
+EXTMINIFRAME_LIB_OBJECTS =  &
+	watcom\extminiframe_lib_minibtncmn.obj &
+	watcom\extminiframe_lib_palettefrmcmn.obj &
+	watcom\extminiframe_lib_minibtn.obj &
+	watcom\extminiframe_lib_palettefrm.obj
+EXTMINIFRAME_DLL_CXXFLAGS = -bd $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) &
+	-bm $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
 	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
-	-i=$(WX_DIR)\include -i=..\include -dWXMAKINGDLL_PALETTEFRM $(CPPFLAGS) &
+	-i=$(WX_DIR)\include -i=..\include -dWXMAKINGDLL_WXEXTMINIFRAME $(CPPFLAGS) &
 	$(CXXFLAGS)
-PALETTEFRM_DLL_OBJECTS =  &
-	watcom\palettefrm_dll_minibtncmn.obj &
-	watcom\palettefrm_dll_palettefrmcmn.obj &
-	watcom\palettefrm_dll_minibtn.obj &
-	watcom\palettefrm_dll_palettefrm.obj
+EXTMINIFRAME_DLL_OBJECTS =  &
+	watcom\extminiframe_dll_minibtncmn.obj &
+	watcom\extminiframe_dll_palettefrmcmn.obj &
+	watcom\extminiframe_dll_minibtn.obj &
+	watcom\extminiframe_dll_palettefrm.obj
 MINIMAL_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
 	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
@@ -171,7 +171,7 @@ watcom :
 
 ### Targets: ###
 
-all : .SYMBOLIC $(__palettefrm_lib___depname) $(__palettefrm_dll___depname) ..\sample\minimal.exe
+all : .SYMBOLIC $(__extminiframe_lib___depname) $(__extminiframe_dll___depname) ..\sample\minimal.exe
 
 clean : .SYMBOLIC 
 	-if exist watcom\*.obj del watcom\*.obj
@@ -179,18 +179,18 @@ clean : .SYMBOLIC
 	-if exist watcom\*.lbc del watcom\*.lbc
 	-if exist watcom\*.ilk del watcom\*.ilk
 	-if exist watcom\*.pch del watcom\*.pch
-	-if exist ..\lib\palettefrm$(WXLIBPOSTFIX).lib del ..\lib\palettefrm$(WXLIBPOSTFIX).lib
-	-if exist ..\lib\palettefrm$(WXLIBPOSTFIX).dll del ..\lib\palettefrm$(WXLIBPOSTFIX).dll
-	-if exist ..\lib\palettefrm$(WXLIBPOSTFIX).lib del ..\lib\palettefrm$(WXLIBPOSTFIX).lib
+	-if exist ..\lib\wxextminiframe$(WXLIBPOSTFIX).lib del ..\lib\wxextminiframe$(WXLIBPOSTFIX).lib
+	-if exist ..\lib\wxextminiframe$(WXLIBPOSTFIX).dll del ..\lib\wxextminiframe$(WXLIBPOSTFIX).dll
+	-if exist ..\lib\wxextminiframe$(WXLIBPOSTFIX).lib del ..\lib\wxextminiframe$(WXLIBPOSTFIX).lib
 	-if exist ..\sample\minimal.exe del ..\sample\minimal.exe
 
 tarball :  
 	-cd ..
-	-tar -cvzf ..\palettefrm.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* *
+	-tar -cvzf ..\wxextminiframe.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* *
 
 zip :  
 	-cd ..
-	-zip -r9 ..\palettefrm.zip *  -x *.pdb -x *.log -x *.o*
+	-zip -r9 ..\wxextminiframe.zip *  -x *.pdb -x *.log -x *.o*
 
 deepclean :  
 	-del /S ..\*.a
@@ -264,61 +264,61 @@ cleandocs :
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
 !ifeq WX_SHARED 0
-..\lib\palettefrm$(WXLIBPOSTFIX).lib :  $(PALETTEFRM_LIB_OBJECTS)
-	@%create watcom\palettefrm_lib.lbc
-	@for %i in ($(PALETTEFRM_LIB_OBJECTS)) do @%append watcom\palettefrm_lib.lbc +%i
-	wlib -q -p4096 -n -b $^@ @watcom\palettefrm_lib.lbc
+..\lib\wxextminiframe$(WXLIBPOSTFIX).lib :  $(EXTMINIFRAME_LIB_OBJECTS)
+	@%create watcom\extminiframe_lib.lbc
+	@for %i in ($(EXTMINIFRAME_LIB_OBJECTS)) do @%append watcom\extminiframe_lib.lbc +%i
+	wlib -q -p4096 -n -b $^@ @watcom\extminiframe_lib.lbc
 !endif
 
 !ifeq WX_SHARED 1
-..\lib\palettefrm$(WXLIBPOSTFIX).dll :  $(PALETTEFRM_DLL_OBJECTS)
-	@%create watcom\palettefrm_dll.lbc
-	@%append watcom\palettefrm_dll.lbc option quiet
-	@%append watcom\palettefrm_dll.lbc name $^@
-	@%append watcom\palettefrm_dll.lbc option caseexact
-	@%append watcom\palettefrm_dll.lbc $(LDFLAGS) $(__DEBUGINFO_1)  libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib
-	@for %i in ($(PALETTEFRM_DLL_OBJECTS)) do @%append watcom\palettefrm_dll.lbc file %i
-	@for %i in ( wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\palettefrm_dll.lbc library %i
-	@%append watcom\palettefrm_dll.lbc
-	@%append watcom\palettefrm_dll.lbc system nr_dll
-	wlink @watcom\palettefrm_dll.lbc
-	wlib -q -n -b ..\lib\palettefrm$(WXLIBPOSTFIX).lib +$^@
+..\lib\wxextminiframe$(WXLIBPOSTFIX).dll :  $(EXTMINIFRAME_DLL_OBJECTS)
+	@%create watcom\extminiframe_dll.lbc
+	@%append watcom\extminiframe_dll.lbc option quiet
+	@%append watcom\extminiframe_dll.lbc name $^@
+	@%append watcom\extminiframe_dll.lbc option caseexact
+	@%append watcom\extminiframe_dll.lbc $(LDFLAGS) $(__DEBUGINFO_1)  libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib
+	@for %i in ($(EXTMINIFRAME_DLL_OBJECTS)) do @%append watcom\extminiframe_dll.lbc file %i
+	@for %i in ( wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\extminiframe_dll.lbc library %i
+	@%append watcom\extminiframe_dll.lbc
+	@%append watcom\extminiframe_dll.lbc system nr_dll
+	wlink @watcom\extminiframe_dll.lbc
+	wlib -q -n -b ..\lib\wxextminiframe$(WXLIBPOSTFIX).lib +$^@
 !endif
 
-..\sample\minimal.exe :  $(MINIMAL_OBJECTS) watcom\minimal_minimal.res $(__palettefrm_lib___depname)
+..\sample\minimal.exe :  $(MINIMAL_OBJECTS) watcom\minimal_minimal.res $(__extminiframe_lib___depname)
 	@%create watcom\minimal.lbc
 	@%append watcom\minimal.lbc option quiet
 	@%append watcom\minimal.lbc name $^@
 	@%append watcom\minimal.lbc option caseexact
 	@%append watcom\minimal.lbc $(LDFLAGS) $(__DEBUGINFO_1)  libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib system nt_win ref '_WinMain@16'
 	@for %i in ($(MINIMAL_OBJECTS)) do @%append watcom\minimal.lbc file %i
-	@for %i in ( ..\lib\palettefrm$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\minimal.lbc library %i
+	@for %i in ( ..\lib\wxextminiframe$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\minimal.lbc library %i
 	@%append watcom\minimal.lbc option resource=watcom\minimal_minimal.res
 	wlink @watcom\minimal.lbc
 
-watcom\palettefrm_lib_minibtncmn.obj :  .AUTODEPEND .\..\src\common\minibtncmn.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(PALETTEFRM_LIB_CXXFLAGS) $<
+watcom\extminiframe_lib_minibtncmn.obj :  .AUTODEPEND .\..\src\common\minibtncmn.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(EXTMINIFRAME_LIB_CXXFLAGS) $<
 
-watcom\palettefrm_lib_palettefrmcmn.obj :  .AUTODEPEND .\..\src\common\palettefrmcmn.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(PALETTEFRM_LIB_CXXFLAGS) $<
+watcom\extminiframe_lib_palettefrmcmn.obj :  .AUTODEPEND .\..\src\common\palettefrmcmn.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(EXTMINIFRAME_LIB_CXXFLAGS) $<
 
-watcom\palettefrm_lib_minibtn.obj :  .AUTODEPEND .\..\src\msw\minibtn.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(PALETTEFRM_LIB_CXXFLAGS) $<
+watcom\extminiframe_lib_minibtn.obj :  .AUTODEPEND .\..\src\msw\minibtn.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(EXTMINIFRAME_LIB_CXXFLAGS) $<
 
-watcom\palettefrm_lib_palettefrm.obj :  .AUTODEPEND .\..\src\msw\palettefrm.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(PALETTEFRM_LIB_CXXFLAGS) $<
+watcom\extminiframe_lib_palettefrm.obj :  .AUTODEPEND .\..\src\msw\palettefrm.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(EXTMINIFRAME_LIB_CXXFLAGS) $<
 
-watcom\palettefrm_dll_minibtncmn.obj :  .AUTODEPEND .\..\src\common\minibtncmn.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(PALETTEFRM_DLL_CXXFLAGS) $<
+watcom\extminiframe_dll_minibtncmn.obj :  .AUTODEPEND .\..\src\common\minibtncmn.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(EXTMINIFRAME_DLL_CXXFLAGS) $<
 
-watcom\palettefrm_dll_palettefrmcmn.obj :  .AUTODEPEND .\..\src\common\palettefrmcmn.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(PALETTEFRM_DLL_CXXFLAGS) $<
+watcom\extminiframe_dll_palettefrmcmn.obj :  .AUTODEPEND .\..\src\common\palettefrmcmn.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(EXTMINIFRAME_DLL_CXXFLAGS) $<
 
-watcom\palettefrm_dll_minibtn.obj :  .AUTODEPEND .\..\src\msw\minibtn.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(PALETTEFRM_DLL_CXXFLAGS) $<
+watcom\extminiframe_dll_minibtn.obj :  .AUTODEPEND .\..\src\msw\minibtn.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(EXTMINIFRAME_DLL_CXXFLAGS) $<
 
-watcom\palettefrm_dll_palettefrm.obj :  .AUTODEPEND .\..\src\msw\palettefrm.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(PALETTEFRM_DLL_CXXFLAGS) $<
+watcom\extminiframe_dll_palettefrm.obj :  .AUTODEPEND .\..\src\msw\palettefrm.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(EXTMINIFRAME_DLL_CXXFLAGS) $<
 
 watcom\minimal_minimal.obj :  .AUTODEPEND .\..\sample\minimal.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(MINIMAL_CXXFLAGS) $<

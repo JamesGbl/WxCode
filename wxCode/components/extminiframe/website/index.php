@@ -9,40 +9,40 @@
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-AU">
 	<?php
-      $compname = "wxPaletteFrame";
-      $subdir = "paletteframe";
+      $compname = "wxExtMiniFrame";
+      $subdir = "wxextminiframe";
       require("compwebsite.inc.php");
   ?>
 
-	<br/><?php write_h1("Screenshots"); ?>
+  <br/><?php write_h1("Screenshots"); ?>
   <p>These screenshots have been taken from the sample program included with this component.</p>
-  <p>This is a wxMainFrame (no aesthetic differences with a standard wxFrame) with two wxPaletteFrames with
+  <p>This is a wxMainFrame (no aesthetic differences with a standard wxFrame) with two wxExtMiniFrames with
   some different wxMiniButtons in their titlebars, running on WinXP:</p>
-  <div align="center"><?php writeScreenshotLink("winxp.png", "The wxPaletteFrame on wxMSW"); ?></div>
-  <p>Please note that, even if the cursor and the focus is given to the wxPaletteFrame #2, also the wxMainFrame
+  <div align="center"><?php writeScreenshotLink("winxp.png", "The wxExtMiniFrame on wxMSW"); ?></div>
+  <p>Please note that, even if the cursor and the focus is given to the wxExtMiniFrame #2, also the wxMainFrame
   is drawn with an active titlebar: this is a trick which was hard to implement but it is quite common in the
   Win32 toolbars.<br/>
   This is the same sample running on Red Hat 9.0 with KDE as the window manager:</p>
-  <div align="center"><?php writeScreenshotLink("kde.png", "The wxPaletteFrame on wxX11"); ?></div>
+  <div align="center"><?php writeScreenshotLink("kde.png", "The wxExtMiniFrame on wxX11"); ?></div>
 
-	<br/><?php write_h1("Future enhancements"); ?>
-  <p>The wxPaletteFrame component is complete under wxMSW, wxGTK. Under wxX11 the only feature missing in the
-  last one is the palette resizing system.</p>
+  <br/><?php write_h1("Future enhancements"); ?>
+  <p>The wxExtMiniFrame component is complete under wxMSW, wxGTK and wxX11. The only feature missing in the
+  last two is the miniframe resizing system.</p>
  
  
   <?php write_h1("Documentation"); ?>
   <p>Sorry; I've written no docs for this component because its use should be quite intuitive. Also,
   the sample is quite heavily commented and thus you should be able to learn the additional features
-  of wxPaletteFrame (respect wxMiniFrame) looking at the sample source file.</p>
+  of wxExtMiniFrame (respect wxMiniFrame) looking at the sample source file.</p>
     
 
-	<br/><?php write_h1("Known bugs"); ?>
+  <br/><?php write_h1("Known bugs"); ?>
   <p>None. To submit a bug report please look at <a href="../../faq.php">wxCode FAQ</a>.</p>
 
 
-	<br/><?php write_h1("Future enhancements"); ?>
-  <p>None. To submit a feature request please look at <a href="../../faq.php">wxCode FAQ</a>.</p>
+  <br/><?php write_h1("Future enhancements"); ?>
+  <p>Miniframe resizing system for wxGTK and wxX11. wxMac support (I don't have a mac so for this I require the help of someone who has it). To submit a feature request please look at <a href="../../faq.php">wxCode FAQ</a>.</p>
     
 
-	<br/><?php include '../../footer.inc.html'; ?>
+  <br/><?php include '../../footer.inc.html'; ?>
 </html>

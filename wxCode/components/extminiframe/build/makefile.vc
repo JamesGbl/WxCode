@@ -29,7 +29,7 @@ WX_DIR = $(WXWIN)
 WX_SHARED = 0
 
 # Compile Unicode build of wxWidgets? [0,1]
-WX_UNICODE = 1
+WX_UNICODE = 0
 
 # Use debug build of wxWidgets (define __WXDEBUG__)? [0,1]
 WX_DEBUG = 1
@@ -45,29 +45,29 @@ WX_VERSION = 26
 
 ### Variables: ###
 
-PALETTEFRM_LIB_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
-	$(__OPTIMIZEFLAG) $(__DEBUGINFO) /Fd..\lib\palettefrm$(WXLIBPOSTFIX).pdb \
-	$(____DEBUGRUNTIME) $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) \
-	$(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
-	/I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
+EXTMINIFRAME_LIB_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
+	$(__OPTIMIZEFLAG) $(__DEBUGINFO) \
+	/Fd..\lib\wxextminiframe$(WXLIBPOSTFIX).pdb $(____DEBUGRUNTIME) \
+	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
+	/D__WXMSW__ /I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	/I$(WX_DIR)\include /I..\include /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
-PALETTEFRM_LIB_OBJECTS =  \
-	msvc\palettefrm_lib_minibtncmn.obj \
-	msvc\palettefrm_lib_palettefrmcmn.obj \
-	msvc\palettefrm_lib_minibtn.obj \
-	msvc\palettefrm_lib_palettefrm.obj
-PALETTEFRM_DLL_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
-	$(__OPTIMIZEFLAG) $(__DEBUGINFO) /Fd..\lib\palettefrm$(WXLIBPOSTFIX).pdb \
-	$(____DEBUGRUNTIME) $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) \
-	$(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
-	/I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	/I$(WX_DIR)\include /I..\include /DWXMAKINGDLL_PALETTEFRM /GR /EHsc \
+EXTMINIFRAME_LIB_OBJECTS =  \
+	msvc\extminiframe_lib_minibtncmn.obj \
+	msvc\extminiframe_lib_palettefrmcmn.obj \
+	msvc\extminiframe_lib_minibtn.obj \
+	msvc\extminiframe_lib_palettefrm.obj
+EXTMINIFRAME_DLL_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
+	$(__OPTIMIZEFLAG) $(__DEBUGINFO) \
+	/Fd..\lib\wxextminiframe$(WXLIBPOSTFIX).pdb $(____DEBUGRUNTIME) \
+	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
+	/D__WXMSW__ /I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
+	/I$(WX_DIR)\include /I..\include /DWXMAKINGDLL_WXEXTMINIFRAME /GR /EHsc \
 	$(CPPFLAGS) $(CXXFLAGS)
-PALETTEFRM_DLL_OBJECTS =  \
-	msvc\palettefrm_dll_minibtncmn.obj \
-	msvc\palettefrm_dll_palettefrmcmn.obj \
-	msvc\palettefrm_dll_minibtn.obj \
-	msvc\palettefrm_dll_palettefrm.obj
+EXTMINIFRAME_DLL_OBJECTS =  \
+	msvc\extminiframe_dll_minibtncmn.obj \
+	msvc\extminiframe_dll_palettefrmcmn.obj \
+	msvc\extminiframe_dll_minibtn.obj \
+	msvc\extminiframe_dll_palettefrm.obj
 MINIMAL_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) $(__OPTIMIZEFLAG) \
 	$(__DEBUGINFO) /Fd..\sample\minimal.pdb $(____DEBUGRUNTIME) \
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
@@ -80,13 +80,13 @@ MINIMAL_OBJECTS =  \
 ### Conditionally set variables: ###
 
 !if "$(WX_DEBUG)" == "1"
-WX3RDPARTLIBPOSTFIX = d
+WX3RDPARTYLIBPOSTFIX = d
 !endif
 !if "$(WX_SHARED)" == "0"
-__palettefrm_lib___depname = ..\lib\palettefrm$(WXLIBPOSTFIX).lib
+__extminiframe_lib___depname = ..\lib\wxextminiframe$(WXLIBPOSTFIX).lib
 !endif
 !if "$(WX_SHARED)" == "1"
-__palettefrm_dll___depname = ..\lib\palettefrm$(WXLIBPOSTFIX).dll
+__extminiframe_dll___depname = ..\lib\wxextminiframe$(WXLIBPOSTFIX).dll
 !endif
 !if "$(WX_DEBUG)" == "0"
 ____DEBUGRUNTIME_29_p_1 = 
@@ -171,26 +171,26 @@ msvc:
 
 ### Targets: ###
 
-all: $(__palettefrm_lib___depname) $(__palettefrm_dll___depname) ..\sample\minimal.exe
+all: $(__extminiframe_lib___depname) $(__extminiframe_dll___depname) ..\sample\minimal.exe
 
 clean: 
 	-if exist msvc\*.obj del msvc\*.obj
 	-if exist msvc\*.res del msvc\*.res
 	-if exist msvc\*.pch del msvc\*.pch
-	-if exist ..\lib\palettefrm$(WXLIBPOSTFIX).lib del ..\lib\palettefrm$(WXLIBPOSTFIX).lib
-	-if exist ..\lib\palettefrm$(WXLIBPOSTFIX).dll del ..\lib\palettefrm$(WXLIBPOSTFIX).dll
-	-if exist ..\lib\palettefrm$(WXLIBPOSTFIX).ilk del ..\lib\palettefrm$(WXLIBPOSTFIX).ilk
-	-if exist ..\lib\palettefrm$(WXLIBPOSTFIX).pdb del ..\lib\palettefrm$(WXLIBPOSTFIX).pdb
-	-if exist ..\lib\palettefrm$(WXLIBPOSTFIX).lib del ..\lib\palettefrm$(WXLIBPOSTFIX).lib
+	-if exist ..\lib\wxextminiframe$(WXLIBPOSTFIX).lib del ..\lib\wxextminiframe$(WXLIBPOSTFIX).lib
+	-if exist ..\lib\wxextminiframe$(WXLIBPOSTFIX).dll del ..\lib\wxextminiframe$(WXLIBPOSTFIX).dll
+	-if exist ..\lib\wxextminiframe$(WXLIBPOSTFIX).ilk del ..\lib\wxextminiframe$(WXLIBPOSTFIX).ilk
+	-if exist ..\lib\wxextminiframe$(WXLIBPOSTFIX).pdb del ..\lib\wxextminiframe$(WXLIBPOSTFIX).pdb
+	-if exist ..\lib\wxextminiframe$(WXLIBPOSTFIX).lib del ..\lib\wxextminiframe$(WXLIBPOSTFIX).lib
 	-if exist ..\sample\minimal.exe del ..\sample\minimal.exe
 	-if exist ..\sample\minimal.ilk del ..\sample\minimal.ilk
 	-if exist ..\sample\minimal.pdb del ..\sample\minimal.pdb
 
 tarball: 
-	( cd .. && tar -cvzf ..\palettefrm.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
+	( cd .. && tar -cvzf ..\wxextminiframe.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
 
 zip: 
-	( cd .. && zip -r9 ..\palettefrm.zip *  -x *.pdb -x *.log -x *.o* )
+	( cd .. && zip -r9 ..\wxextminiframe.zip *  -x *.pdb -x *.log -x *.o* )
 
 deepclean: 
 	-del /S ..\*.a
@@ -263,48 +263,48 @@ cleandocs:
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
 !if "$(WX_SHARED)" == "0"
-..\lib\palettefrm$(WXLIBPOSTFIX).lib: $(PALETTEFRM_LIB_OBJECTS)
+..\lib\wxextminiframe$(WXLIBPOSTFIX).lib: $(EXTMINIFRAME_LIB_OBJECTS)
 	if exist $@ del $@
 	link /LIB /NOLOGO /OUT:$@ @<<
-	$(PALETTEFRM_LIB_OBJECTS)
+	$(EXTMINIFRAME_LIB_OBJECTS)
 <<
 !endif
 
 !if "$(WX_SHARED)" == "1"
-..\lib\palettefrm$(WXLIBPOSTFIX).dll: $(PALETTEFRM_DLL_OBJECTS)
+..\lib\wxextminiframe$(WXLIBPOSTFIX).dll: $(EXTMINIFRAME_DLL_OBJECTS)
 	link /DLL /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_0)  /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES) /LIBPATH:..\lib @<<
-	$(PALETTEFRM_DLL_OBJECTS)  wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /IMPLIB:..\lib\palettefrm$(WXLIBPOSTFIX).lib
+	$(EXTMINIFRAME_DLL_OBJECTS)  wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /IMPLIB:..\lib\wxextminiframe$(WXLIBPOSTFIX).lib
 <<
 !endif
 
-..\sample\minimal.exe: $(MINIMAL_OBJECTS) msvc\minimal_minimal.res $(__palettefrm_lib___depname)
+..\sample\minimal.exe: $(MINIMAL_OBJECTS) msvc\minimal_minimal.res $(__extminiframe_lib___depname)
 	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_0)  /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES) /LIBPATH:..\lib /SUBSYSTEM:WINDOWS @<<
-	$(MINIMAL_OBJECTS)  ..\lib\palettefrm$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
+	$(MINIMAL_OBJECTS)  ..\lib\wxextminiframe$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
 
-msvc\palettefrm_lib_minibtncmn.obj: .\..\src\common\minibtncmn.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PALETTEFRM_LIB_CXXFLAGS) $**
+msvc\extminiframe_lib_minibtncmn.obj: .\..\src\common\minibtncmn.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(EXTMINIFRAME_LIB_CXXFLAGS) $**
 
-msvc\palettefrm_lib_palettefrmcmn.obj: .\..\src\common\palettefrmcmn.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PALETTEFRM_LIB_CXXFLAGS) $**
+msvc\extminiframe_lib_palettefrmcmn.obj: .\..\src\common\palettefrmcmn.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(EXTMINIFRAME_LIB_CXXFLAGS) $**
 
-msvc\palettefrm_lib_minibtn.obj: .\..\src\msw\minibtn.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PALETTEFRM_LIB_CXXFLAGS) $**
+msvc\extminiframe_lib_minibtn.obj: .\..\src\msw\minibtn.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(EXTMINIFRAME_LIB_CXXFLAGS) $**
 
-msvc\palettefrm_lib_palettefrm.obj: .\..\src\msw\palettefrm.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PALETTEFRM_LIB_CXXFLAGS) $**
+msvc\extminiframe_lib_palettefrm.obj: .\..\src\msw\palettefrm.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(EXTMINIFRAME_LIB_CXXFLAGS) $**
 
-msvc\palettefrm_dll_minibtncmn.obj: .\..\src\common\minibtncmn.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PALETTEFRM_DLL_CXXFLAGS) $**
+msvc\extminiframe_dll_minibtncmn.obj: .\..\src\common\minibtncmn.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(EXTMINIFRAME_DLL_CXXFLAGS) $**
 
-msvc\palettefrm_dll_palettefrmcmn.obj: .\..\src\common\palettefrmcmn.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PALETTEFRM_DLL_CXXFLAGS) $**
+msvc\extminiframe_dll_palettefrmcmn.obj: .\..\src\common\palettefrmcmn.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(EXTMINIFRAME_DLL_CXXFLAGS) $**
 
-msvc\palettefrm_dll_minibtn.obj: .\..\src\msw\minibtn.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PALETTEFRM_DLL_CXXFLAGS) $**
+msvc\extminiframe_dll_minibtn.obj: .\..\src\msw\minibtn.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(EXTMINIFRAME_DLL_CXXFLAGS) $**
 
-msvc\palettefrm_dll_palettefrm.obj: .\..\src\msw\palettefrm.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PALETTEFRM_DLL_CXXFLAGS) $**
+msvc\extminiframe_dll_palettefrm.obj: .\..\src\msw\palettefrm.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(EXTMINIFRAME_DLL_CXXFLAGS) $**
 
 msvc\minimal_minimal.obj: .\..\sample\minimal.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(MINIMAL_CXXFLAGS) $**

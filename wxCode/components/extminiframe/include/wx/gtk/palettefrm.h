@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 // Name:        wx/gtk/palettefrm.h
-// Purpose:     wxPaletteFrame, wxMainFrame, wxPaletteButton, wxMiniButton
+// Purpose:     wxExtMiniFrame, wxMainFrame, wxMiniButton
 //              wxCloseBox, wxMaximizeBox, wxMinimizeBox, wxCollapseBox
 // Author:      Francesco Montorsi
 // Created:     2004/03/03
@@ -19,38 +19,38 @@
 #endif
 
 
-// The main frame which owns wxPaletteFrames.
-// Applications using wxPaletteFrame should derive their own
+// The main frame which owns wxExtMiniFrames.
+// Applications using wxExtMiniFrame should derive their own
 // frames from this class instead of wxFrame.
 //
-// A palette window
-class wxPaletteFrame : public wxPaletteFrameBase
+// A extminiframe window
+class wxExtMiniFrame : public wxExtMiniFrameBase
 {
 protected:		// internal utilities
 
 public:
 
 	// Default constructor.
-	wxPaletteFrame() {}
-	wxPaletteFrame(
+	wxExtMiniFrame() {}
+	wxExtMiniFrame(
 		wxMainFrameBase *parent,
 		wxWindowID id,
 		const wxString &title = wxT("Palette"),
 		const wxPoint& pos = wxDefaultPosition,
 		const wxSize& size = wxDefaultSize,
-		long style = wxPALETTEFRM_DEFAULT_STYLE,
-		const wxString& name = wxT("wxPaletteFrame"));
+		long style = wxEXTMINIFRM_DEFAULT_STYLE,
+		const wxString& name = wxT("wxExtMiniFrame"));
 
 	bool Create(wxMainFrameBase *parent,
 			wxWindowID id,
 			const wxString& title,
 			const wxPoint& pos = wxDefaultPosition,
 			const wxSize& size = wxDefaultSize,
-			long style = wxPALETTEFRM_DEFAULT_STYLE,
+			long style = wxEXTMINIFRM_DEFAULT_STYLE,
 			const wxString& name = wxFrameNameStr);
 
 	// Destructor.
-	virtual ~wxPaletteFrame();
+	virtual ~wxExtMiniFrame();
 
 
 			
@@ -64,12 +64,12 @@ public:		// these must be public since they must be accessible by C functions
 	GdkWindow *m_gdkLabelWnd;
 	
 private:
-	DECLARE_DYNAMIC_CLASS( wxPaletteFrame )
+	DECLARE_DYNAMIC_CLASS( wxExtMiniFrame )
 	DECLARE_EVENT_TABLE()
 };
 
 
-#ifdef wxPALETTEFRM_USE_MINIBTN
+#ifdef wxEXTMINIFRM_USE_MINIBTN
 
 // A GTK mini button: a GDK pixmap attached to a gtkWidget
 class WXDLLEXPORT wxMiniButton : public wxMiniButtonBase
@@ -87,7 +87,7 @@ protected:
 public:
 
 	wxMiniButton() {}
-	wxMiniButton(wxPaletteFrameBase *parent, int bSmall = -1)
+	wxMiniButton(wxExtMiniFrameBase *parent, int bSmall = -1)
 		: wxMiniButtonBase(parent, bSmall) {}
 	virtual ~wxMiniButton() {}
 
@@ -101,6 +101,6 @@ private:
 	DECLARE_ABSTRACT_CLASS( wxMiniButton )
 };
 
-#endif		// wxPALETTEFRM_USE_MINIBTN
+#endif		// wxEXTMINIFRM_USE_MINIBTN
 
 #endif		// _WX_PALETTEFRM_BASE_H_

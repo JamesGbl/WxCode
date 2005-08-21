@@ -111,7 +111,7 @@ public:
     virtual bool OnInit();
 	virtual int OnExit();
 	
-	wxPaletteFrame *pal1, *pal2;	
+	wxExtMiniFrame *pal1, *pal2;	
 };
 
 // ----------------------------------------------------------------------------
@@ -176,7 +176,7 @@ BEGIN_EVENT_TABLE(MyFrame, wxMainFrame)
     //EVT_MENU(Minimal_Pal1,  MyFrame::OnPalette1)
     //EVT_MENU(Minimal_Pal2, MyFrame::OnPalette2)
 
-#ifdef wxPALETTEFRM_USE_MINIBTN
+#ifdef wxEXTMINIFRM_USE_MINIBTN
 	// intercept a minibtn click just to show how it's done...
 	EVT_MINIMIZEBOX_CLICKED(-1, MyFrame::OnMinimizeBox)
 #endif
@@ -194,23 +194,23 @@ IMPLEMENT_APP(MyApp)
 // implementation
 // ============================================================================
 
-wxPaletteFrame *CreateNewPaletteWindow(wxMainFrame *parent, const wxString &str)
+wxExtMiniFrame *CreateNewPaletteWindow(wxMainFrame *parent, const wxString &str)
 {
-	// create the new palette window
-	wxPaletteFrame *my = new wxPaletteFrame(parent, -1, str, 
+	// create the new extminiframe  window
+	wxExtMiniFrame *my = new wxExtMiniFrame(parent, -1, str, 
 							wxPoint(200, 200), wxSize(100, 100));	
 
 	// put something in its client window
 #if 1
 
-#ifdef wxPALETTEFRM_USE_PALETTEFRM
+#ifdef wxEXTMINIFRM_USE_EXTMINIFRM
 	wxWindow *win = my->CreateClient();	
 #else
 	wxWindow *win = new wxPanel(my, -1);
 #endif	
 	
 	wxBoxSizer *box = new wxBoxSizer(wxVERTICAL);
-	box->Add(new wxStaticText(win, -1, wxT("Hi; this is a wxPaletteFrame which contains a\n")
+	box->Add(new wxStaticText(win, -1, wxT("Hi; this is a wxExtMiniFrame which contains a\n")
 										wxT("wxBoxSizer with some common controls just to show\n")
 										wxT("you that it can contain anything you want...")), 0, wxALL, 5);
 	box->Add(new wxTextCtrl(win, -1, wxT("You can type here what you want..."), 
@@ -223,8 +223,8 @@ wxPaletteFrame *CreateNewPaletteWindow(wxMainFrame *parent, const wxString &str)
 	win->SetSizer(box);
 	box->SetSizeHints(win);
 		
-#ifdef wxPALETTEFRM_USE_PALETTEFRM
-	// this must be called at the end of the palette creation
+#ifdef wxEXTMINIFRM_USE_EXTMINIFRM
+	// this must be called at the end of the extminiframe creation
 	my->SetSizeHintsUsingClientHints();
 #endif	
 	
@@ -254,8 +254,8 @@ bool MyApp::OnInit()
     frame->Show(true);
 	
 
-	// VERY IMPORTANT: to make the GTK version of wxPaletteFrame work
-	// correctly, you have to show all wxPaletteFrames *after* you've
+	// VERY IMPORTANT: to make the GTK version of wxExtMiniFrame work
+	// correctly, you have to show all wxExtMiniFrames *after* you've
 	// shown the main frame.
 
 #if 0
@@ -265,21 +265,21 @@ bool MyApp::OnInit()
 	my->Show();
 #else
 
-	// 1) create & personalize the wxPaletteFrame(s)
-	pal1 = CreateNewPaletteWindow(frame, wxT("wxPaletteFrame #1"));
-	pal2 = CreateNewPaletteWindow(frame, wxT("wxPaletteFrame #2"));
+	// 1) create & personalize the wxExtMiniFrame(s)
+	pal1 = CreateNewPaletteWindow(frame, wxT("wxExtMiniFrame #1"));
+	pal2 = CreateNewPaletteWindow(frame, wxT("wxExtMiniFrame #2"));
 	
-#ifdef wxPALETTEFRM_USE_MINIBTN
+#ifdef wxEXTMINIFRM_USE_MINIBTN
 	pal1->AddMiniButton(new wxCollapseBox(pal1));	
 	pal2->AddMiniButton(new wxMaximizeBox(pal2));
 	pal2->AddMiniButton(new wxMinimizeBox(pal2));
 #endif
 
 	// 2) try to load layouts
-	wxConfig *pcfg = new wxConfig(wxT("wxPaletteFrame sample"));
+	wxConfig *pcfg = new wxConfig(wxT("wxExtMiniFrame sample"));
 	bool b = TRUE;
 
-#ifdef wxPALETTEFRM_USE_PALETTEFRM
+#ifdef wxEXTMINIFRM_USE_EXTMINIFRM
 #ifndef __WXX11__
 	b &= pal1->LoadLayout(pcfg);
 	b &= pal2->LoadLayout(pcfg);
@@ -302,7 +302,7 @@ bool MyApp::OnInit()
 	delete pcfg;
 	
 	// 5) set up palette's context menu and enable it
-#ifdef wxPALETTEFRM_USE_MAINFRAME
+#ifdef wxEXTMINIFRM_USE_MAINFRAME
 	frame->InitPalContextMenu();
 	frame->EnableContextMenu(); 			// this would not be necessary but I want to show its existence
 	frame->EnableContextMenuHandling();		// also this one is already enabled by default...
@@ -340,11 +340,15 @@ MyFrame::MyFrame(const wxString& title)
 	wxPanel *panel = new wxPanel(this);
 	wxBoxSizer *box = new wxBoxSizer(wxVERTICAL);
 	box->Add(new wxStaticText(panel, -1, 
-			wxT("As you can see, the wxPaletteFrame-derived classes\n")
-			wxT("can contain not only any type of client windows\n")
-			wxT("but they can also have special wxMiniButtons like\n")
+			wxT("As you can see, the wxExtMiniFrame-derived classes\n")
+			wxT("can contain not only any type of client windows since they\n")
+			wxT("expose a wxPanel as client window.\n\n")
+			wxT("They can also have special wxMiniButtons like\n")
 			wxT("the wxCollapseBox you can see in the caption bar of\n")
-			wxT("the first palette window...")), 0, wxALL, 5);
+			wxT("the first extminiframe window...\n\n")
+			wxT("Last, you can try out the layout load/save system moving & resizing\n")
+			wxT("the wxExtMiniframes, exiting the app and then restarting it.\n")
+			), 0, wxALL, 5);
 	wxTextCtrl *main = new wxTextCtrl(panel, -1, wxT(""), wxDefaultPosition, 
 		wxDefaultSize, wxTE_MULTILINE);
 	box->Add(main, 1, wxALL | wxGROW, 5);
@@ -359,8 +363,8 @@ MyFrame::MyFrame(const wxString& title)
     wxMenu *helpMenu = new wxMenu;
     helpMenu->Append(Minimal_About, _T("&About...\tF1"), _T("Show about dialog"));
 
-	menuFile->AppendCheckItem(Minimal_Pal1, _T("Show palette #1"), _T(""));
-	menuFile->AppendCheckItem(Minimal_Pal2, _T("Show palette #2"), _T(""));
+	menuFile->AppendCheckItem(Minimal_Pal1, _T("Show extminiframe #1"), _T(""));
+	menuFile->AppendCheckItem(Minimal_Pal2, _T("Show extminiframe #2"), _T(""));
 	menuFile->AppendSeparator();
 
     menuFile->Append(Minimal_Quit, _T("E&xit\tAlt-X"), _T("Quit this program"));	
@@ -384,10 +388,10 @@ MyFrame::MyFrame(const wxString& title)
 
 MyFrame::~MyFrame()
 {
-#ifdef wxPALETTEFRM_USE_PALETTEFRM
+#ifdef wxEXTMINIFRM_USE_EXTMINIFRM
 #ifndef __WXX11__
 	// 7) save layouts
-	wxConfig *pcfg = new wxConfig(wxT("wxPaletteFrame sample"));
+	wxConfig *pcfg = new wxConfig(wxT("wxExtMiniFrame sample"));
 	wxGetApp().pal1->SaveLayout(pcfg);
 	wxGetApp().pal2->SaveLayout(pcfg);
 	delete pcfg;
