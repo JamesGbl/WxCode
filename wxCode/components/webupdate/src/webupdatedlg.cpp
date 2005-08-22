@@ -1102,24 +1102,10 @@ void wxWebUpdateAdvPanel::OnProxySettings(wxCommandEvent &)
 	if (tw) dlg.SetIcon( tw->GetIcon() );
 
 	dlg.CenterOnScreen();
-	dlg.SetHost(m_proxy.m_strProxyHostname);
-	dlg.SetPortNumber(m_proxy.m_nProxyPort);
-	dlg.SetUsername(m_proxy.m_strProxyUsername);
-	dlg.SetPassword(m_proxy.m_strProxyPassword);
-	dlg.SetAuthProxy(m_proxy.m_bProxyAuth);
-	//dlg.SetExceptions(m_proxy.m_strProxyExceptions);
-	//dlg.SetExceptionsDesc( _T("") );
-	//dlg.SetExceptionsNote( _T("") );
+	dlg.SetProxySettings(m_proxy);
 	
 	if( dlg.ShowModal() == wxID_OK )
-	{
-		m_proxy.m_strProxyHostname = dlg.GetHost();
-		m_proxy.m_nProxyPort = dlg.GetPort();
-		m_proxy.m_strProxyUsername = dlg.GetUsername( );
-		m_proxy.m_strProxyPassword = dlg.GetPassword( );
-		m_proxy.m_bProxyAuth = dlg.IsAuthProxy();
-		//m_proxy.m_strProxyExceptions = dlg.GetExceptions();
-	}
+		m_proxy = dlg.GetProxySettings();
 #endif
 }
 
@@ -1132,15 +1118,10 @@ void wxWebUpdateAdvPanel::OnAuthSettings(wxCommandEvent &)
 	if (tw) dlg.SetIcon( tw->GetIcon() );
 
 	dlg.CenterOnScreen();
-	dlg.SetUsername(m_auth.m_strAuthUsername);
-	dlg.SetPassword(m_auth.m_strAuthPassword);
-	dlg.SetRememberPassword(m_auth.m_bRememberPasswd);
+	dlg.SetAuthSettings(m_auth);
 	
-	if (dlg.ShowModal() == wxID_OK) {
-		m_auth.m_strAuthUsername = dlg.GetUsername();
-		m_auth.m_strAuthPassword = dlg.GetPassword();
-		m_auth.m_bRememberPasswd = dlg.GetRememberPassword();
-	}
+	if (dlg.ShowModal() == wxID_OK)
+		m_auth = dlg.GetAuthSettings();
 #endif
 }
 

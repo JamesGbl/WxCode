@@ -154,22 +154,24 @@ void *wxDownloadThread::Entry()
 
 #if wxUSE_HTTPENGINE
 			wxLogDebug(wxT("wxDownloadThread::Entry - using wxHTTPBuilder"));
-			wxHTTPBuilder u;
-			u.InitContentTypes(); // Initialise the content types on the page
+			wxHTTPBuilder http;
+			http.InitContentTypes(); // Initialise the content types on the page			
+
+			// the proxy & auth settings should have been initialized by the
+			// user of wxDownloadThread ! 
 			
 			if (m_proxy.m_bUseProxy) {
 				wxLogDebug(wxT("wxDownloadThread::Entry - using the proxy settings"));
-				u.HttpProxy(m_proxy.m_strProxyHostname, m_proxy.m_nProxyPort);
-				if (m_proxy.m_bProxyAuth)
-					u.HttpProxyAuth(m_proxy.m_strProxyUsername, m_proxy.m_strProxyPassword);
+				http.SetProxySettings(m_proxy);
 			}
 			
-			if (m_auth.m_bUseAuth) {
+			if (false) {//m_auth.m_bUseAuth) {
 				wxLogDebug(wxT("wxDownloadThread::Entry - using the basic authentication settings"));
-				u.Authenticate(m_auth.m_strAuthUsername, m_auth.m_strAuthPassword);
+				m_auth.SetBasicAuth(); // Set the class to use the authentication settings
+				http.SetAuthentication(m_auth);
 			}
 
-			in = u.GetInputStream(m_strURI);
+			in = http.GetInputStream(m_strURI);
 #else
 			wxLogDebug(wxT("wxDownloadThread::Entry - using wxURL"));		
 			wxURL u(m_strURI);

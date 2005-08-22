@@ -26,6 +26,11 @@
 // defined later
 class wxFileName;
 
+#if wxUSE_HTTPENGINE
+#include <wx/httpbuilder.h>
+#endif
+
+
 
 // Some protocol utilities
 // -----------------------
@@ -83,41 +88,6 @@ enum wxDownloadThreadStatus {
 	wxDTS_COMPUTINGMD5	
 };
 
-
-
-#if wxUSE_HTTPENGINE
-//! All the settings about proxy.
-class WXDLLIMPEXP_WEBUPDATE wxProxySettings
-{
-public:
-	// when using wxHTTPBuilder, we can show some adv settings
-	// for proxy servers...
-	wxString m_strProxyHostname;
-    wxString m_strProxyUsername;
-    wxString m_strProxyPassword;
-    wxString m_strProxyExceptions;
-    bool m_bUseProxy;
-    bool m_bProxyAuth;
-    long m_nProxyPort;
-
-public:
-	wxProxySettings() { m_bUseProxy = m_bProxyAuth = 0; m_nProxyPort = 0; }
-	virtual ~wxProxySettings() {}
-};
-
-class WXDLLIMPEXP_WEBUPDATE wxHTTPAuthSettings
-{
-public:
-   bool m_bUseAuth;
-   wxString m_strAuthUsername;
-   wxString m_strAuthPassword;
-   bool m_bRememberPasswd;
-
-public:
-    wxHTTPAuthSettings() { m_bUseAuth = FALSE; m_bRememberPasswd = FALSE; }
-    virtual ~wxHTTPAuthSettings() {}
-}; 
-#endif
 
 
 //! The thread helper which downloads the webupdate script and/or packages.
