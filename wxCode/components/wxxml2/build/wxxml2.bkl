@@ -52,7 +52,7 @@
 		</action>
 	</if>
 	<if cond="TARGETING_IDE=='1' or TARGETING_WIN32=='0'">
-		<phony id="setupdep"/>		<!-- msvc6prj does not support subprojects -->
+		<phony id="setupdep"/>		<!-- msvc6prj does not support subprojects ! see install doc for more info about using MSVC6prj -->
 	</if>
 	
 

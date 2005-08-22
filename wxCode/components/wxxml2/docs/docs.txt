@@ -55,13 +55,34 @@ Libxml2 depends on zlib and iconv. The first library is already built-in with wx
 are no problems with that. Libiconv instead needs to be compiled and linked together with
 libxml2 and wxxml2.
 
-So, <b>others may find a library more portable</b>; just choose your favourite one...
+So, <b>others may find a library more portable</b>; just choose your favourite integration mode.
+Below you find help about compiling wxXml2 as a <b>library</b>.
 
 <br/><br/>
 
 
+\section win32_msvc6 How to compile the wxXml2 library on win32 (with MSVC project files)
 
-\section win32 How to compile wxXml2 on win32
+<b>The MSVC6 project files shipped with wxXml2 do not build the <em>required</em> libxml2 and libiconv libraries.</b>
+This is because the compilation of these "thirdparty" libraries require some steps that cannot be performed by
+MSVC6 project files and require to run a makefile.
+
+If you try to use the MSVC6 project files without thirdparty libraries in <tt>wxxml2\lib</tt> you'll get (obviously!) a lot of linker errors about "unresolved external symbols".
+You can still use MSVC6 project files to build wxXml2 and its sample but you will first need to:
+
+1) get the libxml2 and libiconv binaries (look at http://www.zlatkovic.com/libxml.en.html) and put the precompiled
+libraries in <tt>wxxml2\lib</tt>;
+
+or
+
+2) compile for the first time wxXml2 using the makefiles (following builds of wxXml2 can be done through MSVC6 project files as long as thirdparty libraries are not deleted from <tt>wxxml2\lib</tt>).
+This is probably the fastest way since libxml2 and libiconv are packed with wxXml2 now.
+For help about compiling wxXml2 with makefiles, please look at the section below.
+
+<br/>
+
+
+\section win32 How to compile the wxXml2 library on win32 (with makefiles)
 
 To build a library from wxXml2 sources, you can use the makefiles in the BUILD folder.
 They support all common wx flags (WX_DEBUG=0/1, WX_UNICODE=1/0, WX_SHARED=1/0).
@@ -71,11 +92,8 @@ are always missing (not part of Microsoft sources, yet ;-)) since you just need 
 the build\ folder of wxXml2 and type:
 
 for MSVC compiler: <tt>nmake -fmakefile.vc [same wxWidgets configuration using WX_DEBUG=0/1 WX_SHARED=0/1 WX_UNICODE=0/1 options]</tt>
-
 for Borland compiler: <tt>make -fmakefile.bcc [same wxWidgets configuration using WX_DEBUG=0/1 WX_SHARED=0/1 WX_UNICODE=0/1 options]</tt>
-
 for Watcom compiler: <tt>wmake -fmakefile.wat [same wxWidgets configuration using WX_DEBUG=0/1 WX_SHARED=0/1 WX_UNICODE=0/1 options]</tt>
-
 for Mingw compiler: <tt>mingw32-make -fmakefile.gcc [same wxWidgets configuration using WX_DEBUG=0/1 WX_SHARED=0/1 WX_UNICODE=0/1 options]</tt>
 
 Some notes: consider it normal to get thousands warnings from libxml2 and libiconv when compiling them in debug mode.
@@ -86,15 +104,19 @@ It's also normal to get always the following linker warning with MSVC:
 this is a libxml2 problem...
 
 To help you to find the generated libraries/DLLs, I configured the build system so that all *.lib and *.dll files
-of libiconv and libxml2 goes in the wxXml2/lib folder. This also means that in your program you can include as new
-library path searched by the linker only <tt>wxXml2/lib</tt>; however you still have to add as include paths both
-<tt>wxXml2/include</tt>, <tt>wxXml2/thirdparty/libxml2/include</tt>, <tt>wxXml2/thirdparty/libiconv/include</tt> folders.
+of libiconv and libxml2 goes in the <tt>wxxml2/lib</tt> folder. This also means that in your program you can include as new
+library path searched by the linker only <tt>wxxml2/lib</tt>; however you still have to add as include paths all the
+- <tt>wxxml2/include</tt>, 
+- <tt>wxxml2/thirdparty/libxml2/include</tt>, 
+- <tt>wxxml2/thirdparty/libiconv/include</tt> 
 
-<br/><br/>
+folders.
+
+<br/>
 
 
 
-\section unix How to compile wxXml2 on Unix-based OS
+\section unix How to compile the wxXml2 library on Unix-based OS
 
 You will notice that the TAR.GZ distribution of wxXml2 comes without the libxml2 and libiconv thirdparty libraries. This is because these two libraries typically are part of all major linux distributions so that you probably won't need to download and install them.
 So, <b>on Unix-based operating systems</b>, unzip the tar.gz archive and type:
@@ -112,7 +134,7 @@ So, <b>on Unix-based operating systems</b>, unzip the tar.gz archive and type:
 Type "./configure --help" for more info.
 For any problem, feel free to contact frm@users.sourceforge.net.
 
-<br/><br/>
+<br/>
 
 After compilation, the most important thing you should do, specially if you've never used these classes
 before, is to build the \ref sample and read its source file.

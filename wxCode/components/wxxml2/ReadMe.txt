@@ -3,7 +3,7 @@
  ---------------------
  
  Website: http://wxcode.sourceforge.net/components/wxxml2
- Version: 1.5
+ Version: 1.6
  
  Description:
  A simple set of classes, wxXml2Namespace, wxXml2Property, wxXml2Node, wxXml2DTD and
@@ -19,8 +19,23 @@
  commented code & doxygen docs.
 
 
+
+ Install info
+ ------------
+
+ Please look at docs\html\index.html which links the installation page.
+ Also be careful that if you use Microsoft Visual Studio, just opening the 
+ project files of the "build" folder and build them won't work !
+ Don't skip the install doc ;-)
+
+
+
  ChangeLog
  ---------
+ 
+ 1.6
+     - fixed the install docs with a section about MSVC6 project files
+     - fixed a problem with configure script about wxWidgets build flag detection
  
  1.5 
      - added libxml2 & libiconv to the build system for win32 users; 
