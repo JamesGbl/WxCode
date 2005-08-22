@@ -91,9 +91,9 @@ the libxml2 and libiconv libraries; this is very handy on win32, where libxml2 a
 are always missing (not part of Microsoft sources, yet ;-)) since you just need to go in
 the build\ folder of wxXml2 and type:
 
-for MSVC compiler: <tt>nmake -fmakefile.vc [same wxWidgets configuration using WX_DEBUG=0/1 WX_SHARED=0/1 WX_UNICODE=0/1 options]</tt>
-for Borland compiler: <tt>make -fmakefile.bcc [same wxWidgets configuration using WX_DEBUG=0/1 WX_SHARED=0/1 WX_UNICODE=0/1 options]</tt>
-for Watcom compiler: <tt>wmake -fmakefile.wat [same wxWidgets configuration using WX_DEBUG=0/1 WX_SHARED=0/1 WX_UNICODE=0/1 options]</tt>
+for MSVC compiler: <tt>nmake -fmakefile.vc [same wxWidgets configuration using WX_DEBUG=0/1 WX_SHARED=0/1 WX_UNICODE=0/1 options]</tt><br/>
+for Borland compiler: <tt>make -fmakefile.bcc [same wxWidgets configuration using WX_DEBUG=0/1 WX_SHARED=0/1 WX_UNICODE=0/1 options]</tt><br/>
+for Watcom compiler: <tt>wmake -fmakefile.wat [same wxWidgets configuration using WX_DEBUG=0/1 WX_SHARED=0/1 WX_UNICODE=0/1 options]</tt><br/>
 for Mingw compiler: <tt>mingw32-make -fmakefile.gcc [same wxWidgets configuration using WX_DEBUG=0/1 WX_SHARED=0/1 WX_UNICODE=0/1 options]</tt>
 
 Some notes: consider it normal to get thousands warnings from libxml2 and libiconv when compiling them in debug mode.
