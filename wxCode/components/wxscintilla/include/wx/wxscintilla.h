@@ -12,7 +12,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.h,v 1.22 2005-06-29 17:00:14 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.h,v 1.23 2005-08-23 18:35:17 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -20,7 +20,7 @@
 #ifndef __WXSCINTILLA_H__
 #define __WXSCINTILLA_H__
 
-#define wxSCINTILLA_VERSION _T("1.64.0")
+#define wxSCINTILLA_VERSION _T("1.65.0")
 
 #include <wx/wx.h>
 #include <wx/dnd.h>
@@ -147,6 +147,7 @@
 #define wxSCI_CHARSET_MAC 77
 #define wxSCI_CHARSET_OEM 255
 #define wxSCI_CHARSET_RUSSIAN 204
+#define wxSCI_CHARSET_CYRILLIC 1251
 #define wxSCI_CHARSET_SHIFTJIS 128
 #define wxSCI_CHARSET_SYMBOL 2
 #define wxSCI_CHARSET_TURKISH 162
@@ -381,6 +382,7 @@
 #define wxSCI_LEX_SMALLTALK 72
 #define wxSCI_LEX_FLAGSHIP 73
 #define wxSCI_LEX_CSOUND 74
+#define wxSCI_LEX_FREEBASIC 75
 
 // When a lexer specifies its language as SCLEX_AUTOMATIC it receives a
 // value assigned in sequence from SCLEX_AUTOMATIC+1.
@@ -763,10 +765,14 @@
 #define wxSCI_LISP_COMMENT 1
 #define wxSCI_LISP_NUMBER 2
 #define wxSCI_LISP_KEYWORD 3
+#define wxSCI_LISP_KEYWORD_KW 4
+#define wxSCI_LISP_SYMBOL 5
 #define wxSCI_LISP_STRING 6
 #define wxSCI_LISP_STRINGEOL 8
 #define wxSCI_LISP_IDENTIFIER 9
 #define wxSCI_LISP_OPERATOR 10
+#define wxSCI_LISP_SPECIAL 11
+#define wxSCI_LISP_MULTI_COMMENT 12
 
 // Lexical states for SCLEX_EIFFEL and SCLEX_EIFFELKW
 #define wxSCI_EIFFEL_DEFAULT 0
@@ -1258,37 +1264,25 @@
 
 // Lexical states for SCLEX_T3
 #define wxSCI_T3_DEFAULT 0
-#define wxSCI_T3_PREPROCESSOR 1
-#define wxSCI_T3_BLOCK_COMMENT 2
-#define wxSCI_T3_LINE_COMMENT 3
-#define wxSCI_T3_OPERATOR 4
-#define wxSCI_T3_KEYWORD 5
-#define wxSCI_T3_NUMBER 6
-#define wxSCI_T3_BRACKET 7
-#define wxSCI_T3_HTML_TAG 8
-#define wxSCI_T3_HTML_STRING 9
-#define wxSCI_T3_S_STRING 10
-#define wxSCI_T3_S_LIB_DIRECTIVE 11
-#define wxSCI_T3_S_MSG_PARAM 12
-#define wxSCI_T3_S_H_DEFAULT 13
-#define wxSCI_T3_D_STRING 14
-#define wxSCI_T3_D_LIB_DIRECTIVE 15
-#define wxSCI_T3_D_MSG_PARAM 16
-#define wxSCI_T3_D_H_DEFAULT 17
-#define wxSCI_T3_X_DEFAULT 18
-#define wxSCI_T3_X_PREPROCESSOR 19
-#define wxSCI_T3_X_BLOCK_COMMENT 20
-#define wxSCI_T3_X_LINE_COMMENT 21
-#define wxSCI_T3_X_S_STRING 22
-#define wxSCI_T3_X_S_LIB_DIRECTIVE 23
-#define wxSCI_T3_X_S_MSG_PARAM 24
-#define wxSCI_T3_X_S_H_DEFAULT 25
-#define wxSCI_T3_X_D_STRING 26
-#define wxSCI_T3_X_D_LIB_DIRECTIVE 27
-#define wxSCI_T3_X_D_MSG_PARAM 28
-#define wxSCI_T3_X_D_H_DEFAULT 29
-#define wxSCI_T3_USER1 30
-#define wxSCI_T3_USER2 31
+#define wxSCI_T3_X_DEFAULT 1
+#define wxSCI_T3_PREPROCESSOR 2
+#define wxSCI_T3_BLOCK_COMMENT 3
+#define wxSCI_T3_LINE_COMMENT 4
+#define wxSCI_T3_OPERATOR 5
+#define wxSCI_T3_KEYWORD 6
+#define wxSCI_T3_NUMBER 7
+#define wxSCI_T3_IDENTIFIER 8
+#define wxSCI_T3_S_STRING 9
+#define wxSCI_T3_D_STRING 10
+#define wxSCI_T3_X_STRING 11
+#define wxSCI_T3_LIB_DIRECTIVE 12
+#define wxSCI_T3_MSG_PARAM 13
+#define wxSCI_T3_HTML_TAG 14
+#define wxSCI_T3_HTML_DEFAULT 15
+#define wxSCI_T3_HTML_STRING 16
+#define wxSCI_T3_USER1 17
+#define wxSCI_T3_USER2 18
+#define wxSCI_T3_USER3 19
 
 // Lexical states for SCLEX_REBOL
 #define wxSCI_REBOL_DEFAULT 0
