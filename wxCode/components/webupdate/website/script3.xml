@@ -35,7 +35,7 @@
 			<platform name="any"/>	
 			
 			<actions>
-				<run cmd="$(mkdir)" args="$(programdir)//addons" flags="SYNC" />
+				<make dir="$(programdir)//addon1" />
 				<extract file="$(thisfile)" where="$(programdir)//addons"/>
 			</actions>
 	  </latest-download>
@@ -54,7 +54,7 @@
 			<platform name="any"/>	
 			
 			<actions>
-				<run cmd="$(mkdir)" args="$(programdir)//addons" flags="SYNC" />
+				<make dir="$(programdir)//addon2" />
 				<extract file="$(thisfile)" where="$(programdir)//addons"/>
 			</actions>
 	  </latest-download>
@@ -77,7 +77,7 @@
                 <!-- unlike other addon packages here I want also to show the usage of the "namemap" property:
                 the "addon.txt" which should be contains in the addon3 package will be decompressed as
                 "myaddonfile.txt" ;-) -->
-				<run cmd="$(mkdir)" args="$(programdir)//addons" flags="SYNC" />
+				<make dir="$(programdir)//addon3" />
 				<extract file="$(thisfile)" where="$(programdir)//addons" namemap="addon.txt=myaddonfile.txt" />
 			</actions>
 	  </latest-download>

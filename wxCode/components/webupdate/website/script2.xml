@@ -34,7 +34,7 @@
 			<platform name="any"/>	
 			
 			<actions>
-				<run cmd="$(mkdir)" args="$(programdir)//addons" flags="SYNC" />
+				<make dir="$(programdir)//addon1" />
 				<extract file="$(thisfile)" where="$(programdir)//addons"/>
 			</actions>
 	  </latest-download>
@@ -53,7 +53,7 @@
 			<platform name="any"/>	
 			
 			<actions>
-				<run cmd="$(mkdir)" args="$(programdir)//addons" flags="SYNC" />
+				<make dir="$(programdir)//addon2" />
 				<extract file="$(thisfile)" where="$(programdir)//addons"/>
 			</actions>
 	  </latest-download>
@@ -72,7 +72,7 @@
 			<platform name="any"/>	
 			
 			<actions>
-				<run cmd="$(mkdir)" args="$(programdir)//addons" flags="SYNC" />
+				<make dir="$(programdir)//addon3" />
 				<extract file="$(thisfile)" where="$(programdir)//addons"/>
 			</actions>
 	  </latest-download>

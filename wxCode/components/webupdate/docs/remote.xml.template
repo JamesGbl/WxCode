@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+
+<!-- the Document Type Definition (DTD) for a remote XML WebUpdate script
+     is located at
+     
+        http://wxcode.sourceforge.net/components/webupdate/remote.dtd  
+   
+     as the following tag says to the XML parsers.
+-->
+<!DOCTYPE webupdate PUBLIC "-//WebUpdate//DTD WebUpdater 1.0//EN" 
+	"http://wxcode.sourceforge.net/components/webupdate/remote.dtd">
+
+
+<!-- The <webupdate> tag is the root of the local XML script.
+     Every info is contained inside it.
+     You should always specify as property of this tag the version
+     of this local XML script. -->
+<webupdate version="1.0">
+
+
+   <!-- all the info about a specific package are enclose in the <package> tag -->
+   <package id="simple">
+   
+      <!-- the most important is the latest version available for this package -->
+      <latest-version importance="high">2.0.3</latest-version>
+      
+      <!-- then comes the donwload URLs... -->
+      <latest-download>
+			<uri>http://myserver/updates/simple.zip</uri>
+            
+            <!-- each 'download' can be for one or more specific platform(s) or for
+                 all platforms (using "any") -->
+			<platform name="msw"/>	
+            
+            <!-- now you need to tell to WebUpdater how to install this package... -->
+			<actions>
+            
+                <!-- the EXTRACT action is one of the predefined actions... -->
+				<extract file="$(thisfile)" where="$(programdir)"/>
+			</actions>
+	  </latest-download>
+      
+      <!-- another download... -->
+      <latest-download>
+			<uri>http://myserver/updates/simple.tar.gz</uri>
+            
+            <!-- ... for another platform -->
+			<platform name="gtk"/>
+            
+			<actions>
+            
+                <!-- just "run" this file after the download: i.e. open it with
+                     the default application for this file type -->
+   				<run/>
+       		</actions>
+	  </latest-download>
+      
+      <!-- description is a package-specific property... -->
+	  <description>This is a simple package with two downloads !</description>
+   </package>
+
+
+   <!-- other package definitions follow... -->
+   ...
+   
+   
+</webupdate>

@@ -143,8 +143,8 @@ bool wxWebUpdateActionExtract::Run() const
 {
 	wxArrayString orig, output;
 	wxLogDebug(wxT("wxWebUpdateActionExtract::Run - going to extract the file [")
-				+ m_strFile + wxT("] of type [") + m_strType + wxT("] in\n\n")
-				+ m_strWhere + wxT("\n\n"));
+				+ m_strFile + wxT("] of type [") + m_strType + wxT("] in [")
+				+ m_strWhere + wxT("]"));
 
 	// wxFileName wants a path separator at the end of directory names
 	wxString dir(m_strWhere);
@@ -491,3 +491,4 @@ bool wxWebUpdateActionMake::SetProperties(const wxArrayString &propnames,
 
 	return TRUE;
 }
+
