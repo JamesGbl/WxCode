@@ -35,7 +35,7 @@
 			
 			<actions>
 				<make dir="$(programdir)//addon1" />
-				<extract file="$(thisfile)" where="$(programdir)//addons"/>
+				<extract file="$(thisfile)" where="$(programdir)//addon1"/>
 			</actions>
 	  </latest-download>
 	  <description>This is the package $(id) for $(appname)</description>
@@ -54,7 +54,7 @@
 			
 			<actions>
 				<make dir="$(programdir)//addon2" />
-				<extract file="$(thisfile)" where="$(programdir)//addons"/>
+				<extract file="$(thisfile)" where="$(programdir)//addon2"/>
 			</actions>
 	  </latest-download>
 	  <description>This is the package $(id) for $(appname)</description>
@@ -73,7 +73,7 @@
 			
 			<actions>
 				<make dir="$(programdir)//addon3" />
-				<extract file="$(thisfile)" where="$(programdir)//addons"/>
+				<extract file="$(thisfile)" where="$(programdir)//addon3"/>
 			</actions>
 	  </latest-download>
 	  <description>This is the package $(id) for $(appname)</description>

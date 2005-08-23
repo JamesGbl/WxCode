@@ -215,7 +215,9 @@ public:		// to avoid setters/getters (these vars are only read by this thread;
 	wxString m_strUpdateFile;
 
 	//! The package which contains the wxWebUpdateAction to be executed.
-	wxWebUpdateDownload &m_pDownload;
+	//! This is a pointer to avoid unwanted copies (both for performances and
+	//! to avoid duplicate log messages).
+	wxWebUpdateDownload *m_pDownload;
 
 protected:		// these are vars protected by mutexes...
 
@@ -231,10 +233,9 @@ protected:		// these are vars protected by mutexes...
 
 public:
 	wxWebUpdateInstallThread(wxEvtHandler *dlg = NULL)
-		: wxThread(wxTHREAD_JOINABLE), m_pHandler(dlg), 
-  			m_pDownload(wxEmptyWebUpdateDownload)
+		: wxThread(wxTHREAD_JOINABLE), m_pHandler(dlg)
 		{ m_bSuccess=TRUE; m_nInstallationCount=0; m_nCurrentIndex=0;
-		  m_nStatus = wxWUITS_WAITING; }
+		  m_nStatus = wxWUITS_WAITING; m_pDownload=NULL; }
 
 	virtual ~wxWebUpdateInstallThread() {}
 

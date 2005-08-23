@@ -507,7 +507,7 @@ bool wxWebUpdateDlg::InstallNextPackage()
 	wxWebUpdateDownload &download = m_current->GetDownload();
 
 	// launch the installation
-	m_iThread->m_pDownload = (const wxWebUpdateDownload &)download;
+	m_iThread->m_pDownload = &download;
 	m_iThread->m_strUpdateFile = GetOutputFilenameFor(*m_current);
 	m_iThread->BeginNewInstall();
 	wxLogDebug(wxT("wxWebUpdateDlg::InstallNextPackage - launching installation of ") + 

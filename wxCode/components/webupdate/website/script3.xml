@@ -36,7 +36,7 @@
 			
 			<actions>
 				<make dir="$(programdir)//addon1" />
-				<extract file="$(thisfile)" where="$(programdir)//addons"/>
+				<extract file="$(thisfile)" where="$(programdir)//addon1"/>
 			</actions>
 	  </latest-download>
 	  <description>This is the package $(id) for $(appname)</description>
@@ -55,7 +55,7 @@
 			
 			<actions>
 				<make dir="$(programdir)//addon2" />
-				<extract file="$(thisfile)" where="$(programdir)//addons"/>
+				<extract file="$(thisfile)" where="$(programdir)//addon2"/>
 			</actions>
 	  </latest-download>
 	  <description>This is the package $(id) for $(appname)</description>
@@ -78,7 +78,7 @@
                 the "addon.txt" which should be contains in the addon3 package will be decompressed as
                 "myaddonfile.txt" ;-) -->
 				<make dir="$(programdir)//addon3" />
-				<extract file="$(thisfile)" where="$(programdir)//addons" namemap="addon.txt=myaddonfile.txt" />
+				<extract file="$(thisfile)" where="$(programdir)//addon3" namemap="addon.txt=myaddonfile.txt" />
 			</actions>
 	  </latest-download>
 	  <description>This is the package $(id) for $(appname)</description>

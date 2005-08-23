@@ -394,7 +394,7 @@ void *wxWebUpdateInstallThread::Entry()
 
 		wxLogDebug(wxT("wxWebUpdateInstallThread::Entry - installing ") + 
 					m_strUpdateFile);
-		m_bSuccess = m_pDownload.Install();
+		m_bSuccess = m_pDownload->Install();
 		wxLogDebug(wxT("wxWebUpdateInstallThread::Entry - completed installation"));
 
 		// go in wait mode
