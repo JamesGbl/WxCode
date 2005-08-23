@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.81 2005-08-04 17:12:36 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.82 2005-08-23 18:21:30 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -3355,8 +3355,9 @@ void wxTreeListMainWindow::OnChar (wxKeyEvent &event) {
                 }
             }else {
                 newItem = GetItemParent (m_curItem);
-                // don't go to root if it is hidden
-                if ((newItem == GetRootItem()) && HasFlag(wxTR_HIDE_ROOT)) break;
+                if ((newItem == GetRootItem()) && HasFlag(wxTR_HIDE_ROOT)) {
+                    newItem = (wxTreeItemId*)NULL; // don't go to root if it is hidden
+                }
             }
         }break;
 
