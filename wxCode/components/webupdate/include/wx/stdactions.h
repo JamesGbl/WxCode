@@ -49,7 +49,7 @@ public:															\
 																\
 	/* Returns a copy of this action. */						\
 	virtual wxWebUpdateAction *Clone() const					\
-		{ wxLogDebug(wxT(#classname) wxT("::Clone"));			\
+		{ /*wxLogDebug(wxT(#classname) wxT("::Clone"));*/		\
 			return new classname(*this); }						\
 																\
 	DECLARE_CLASS(classname)

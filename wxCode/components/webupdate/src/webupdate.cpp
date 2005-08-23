@@ -194,14 +194,16 @@ bool wxWebUpdateLocalXMLScript::Load(const wxString &uri)
   		
     	} else if (child->GetName() == wxT("remoteuri")) {
 		
+			// we keep the original, un-substituted URI to save it later in ::Save
+			m_strRemoteURIOriginal = wxWebUpdateXMLScript::GetNodeContent(child);
+			
 			// save the location of the remote script: it's important not to
 			// do the '//' substitution in strings which can contain http://
 			// strings...
-			m_strRemoteURI = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(
-									wxWebUpdateXMLScript::GetNodeContent(child));
+			m_strRemoteURI = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(m_strRemoteURIOriginal);
 
-			// support for file: URIs
-			if (wxIsFileProtocol(m_strRemoteURI)) {				
+			// support for "file:" URIs
+			if (wxIsFileProtocol(m_strRemoteURI)) {
 
 				// is this a relative path ?
 				wxFileName fn = wxGetFileNameFromURI(m_strRemoteURI);				
@@ -221,13 +223,12 @@ bool wxWebUpdateLocalXMLScript::Load(const wxString &uri)
 
   		} else if (child->GetName() == wxT("keywords")) {
 		
-			// this should be a comma separed list of pairs:  key=value
-			wxArrayString keys, values;
+			// this should be a comma separed list of pairs:  key=value			
 			int count = wxWebUpdateInstaller::Get()->ParsePairValueList(
-					wxWebUpdateXMLScript::GetNodeContent(child), keys, values);
+					wxWebUpdateXMLScript::GetNodeContent(child), m_arrNames, m_arrValues);
 
 			for (int i=0; i < count; i++)
-				wxWebUpdateInstaller::Get()->SetKeywordValue(keys[i], values[i]);
+				wxWebUpdateInstaller::Get()->SetKeywordValue(m_arrNames[i], m_arrValues[i]);
   		}
   		
 		child = child->GetNext();
@@ -286,8 +287,18 @@ wxXmlNode *wxWebUpdateLocalXMLScript::BuildHeader() const
 	appfile->SetNext(xrc);
 	
 	// set the remote URI
-	wxXmlNode *uri = wxCreateElemTextNode(wxT("remoteuri"), m_strRemoteURI);
+	wxXmlNode *uri = wxCreateElemTextNode(wxT("remoteuri"), 
+		m_strRemoteURIOriginal.IsEmpty() ? m_strRemoteURI : m_strRemoteURIOriginal);
 	xrc->SetNext(uri);
+	
+	// set the keywords
+	wxString content;
+	for (int i=0; i < (int)m_arrNames.GetCount(); i++)
+		content += m_arrNames[i] + wxT("=") + m_arrValues[i] + wxT(",");
+	if (!content.IsEmpty())
+		content.RemoveLast();		// remove the last comma
+	wxXmlNode *keywords = wxCreateElemTextNode(wxT("keywords"), content);
+	uri->SetNext(keywords);
 
 	return webupdate;
 }

@@ -151,6 +151,18 @@ WX_DECLARE_USER_EXPORTED_OBJARRAY(wxWebUpdateLocalPackage, wxWebUpdateLocalPacka
 //! scripts (which are much more complex since they keep installation info).
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateLocalXMLScript : public wxXmlDocument
 {
+	//! The original un-substituted URI of the remote update script.
+	//! This is kept for saving it unchanged in Save().
+	wxString m_strRemoteURIOriginal;
+
+	//! The original array of variable names of a <keywords> tag.
+	//! This is kept for saving it unchanged in Save().
+	wxArrayString m_arrNames;
+
+	//! The original array of variable values of a <keywords> tag.
+	//! This is kept for saving it unchanged in Save().
+	wxArrayString m_arrValues;
+
 protected:
 
 	//! The version of this WebUpdate XML script.
