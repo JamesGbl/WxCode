@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.82 2005-08-23 18:21:30 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.83 2005-08-23 18:25:48 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -369,7 +369,7 @@ public:
     // ---------------------
 
     // is the item visible (it might be outside the view or not expanded)?
-    bool IsVisible(const wxTreeItemId& item) const;
+    bool IsVisible(const wxTreeItemId& item, bool fullRow) const;
     // does the item has any children?
     bool HasChildren(const wxTreeItemId& item) const;
     // is the item expanded (only makes sense if HasChildren())?
@@ -438,9 +438,9 @@ public:
     wxTreeItemId GetPrevExpanded(const wxTreeItemId& item) const;
 
     // get visible item, see IsVisible()
-    wxTreeItemId GetFirstVisibleItem() const;
-    wxTreeItemId GetNextVisible(const wxTreeItemId& item) const;
-    wxTreeItemId GetPrevVisible(const wxTreeItemId& item) const;
+    wxTreeItemId GetFirstVisibleItem(bool fullRow) const;
+    wxTreeItemId GetNextVisible(const wxTreeItemId& item, bool fullRow) const;
+    wxTreeItemId GetPrevVisible(const wxTreeItemId& item, bool fullRow) const;
 
     // operations
     // ----------
@@ -1943,7 +1943,7 @@ bool wxTreeListMainWindow::SetFont (const wxFont &font) {
 // item status inquiries
 // ----------------------------------------------------------------------------
 
-bool wxTreeListMainWindow::IsVisible (const wxTreeItemId& item) const {
+bool wxTreeListMainWindow::IsVisible (const wxTreeItemId& item, bool fullRow) const {
     wxCHECK_MSG (item.IsOk(), false, _T("invalid tree item"));
 
     // An item is only visible if it's not a descendant of a collapsed item
@@ -1958,9 +1958,9 @@ bool wxTreeListMainWindow::IsVisible (const wxTreeItemId& item) const {
     wxSize clientSize = GetClientSize();
     wxRect rect;
     if ((!GetBoundingRect (item, rect)) ||
-        (rect.GetWidth() == 0 || rect.GetHeight() == 0) ||
+        ((!fullRow && rect.GetWidth() == 0) || rect.GetHeight() == 0) ||
         (rect.GetBottom() < 0 || rect.GetTop() > clientSize.y) ||
-        (rect.GetRight() < 0 || rect.GetLeft() > clientSize.x)) return false;
+        (!fullRow && (rect.GetRight() < 0 || rect.GetLeft() > clientSize.x))) return false;
 
     return true;
 }
@@ -2140,25 +2140,25 @@ wxTreeItemId wxTreeListMainWindow::GetPrevExpanded (const wxTreeItemId& item) co
     return GetPrev (item, true);
 }
 
-wxTreeItemId wxTreeListMainWindow::GetFirstVisibleItem() const {
-    return GetNextVisible (GetRootItem());
+wxTreeItemId wxTreeListMainWindow::GetFirstVisibleItem (bool fullRow) const {
+    return GetNextVisible (GetRootItem(), fullRow);
 }
 
-wxTreeItemId wxTreeListMainWindow::GetNextVisible (const wxTreeItemId& item) const {
+wxTreeItemId wxTreeListMainWindow::GetNextVisible (const wxTreeItemId& item, bool fullRow) const {
     wxCHECK_MSG (item.IsOk(), wxTreeItemId(), _T("invalid tree item"));
     wxTreeItemId id = GetNext (item, true);
     while (id.IsOk()) {
-        if (IsVisible (id)) return id;
+        if (IsVisible (id, fullRow)) return id;
         id = GetNext (id, true);
     }
     return wxTreeItemId();
 }
 
-wxTreeItemId wxTreeListMainWindow::GetPrevVisible (const wxTreeItemId& item) const {
+wxTreeItemId wxTreeListMainWindow::GetPrevVisible (const wxTreeItemId& item, bool fullRow) const {
     wxCHECK_MSG (item.IsOk(), wxTreeItemId(), _T("invalid tree item"));
     wxTreeItemId id = GetPrev (item, true);
     while (id.IsOk()) {
-        if (IsVisible (id)) return id;
+        if (IsVisible (id, fullRow)) return id;
         id = GetPrev(id, true);
     }
     return wxTreeItemId();
@@ -2691,7 +2691,7 @@ wxTreeItemId wxTreeListMainWindow::FindItem (const wxTreeItemId& item, const wxS
         if (mode & wxTL_MODE_NAV_LEVEL) {
             next = GetNextSibling (next);
         }else if (mode & wxTL_MODE_NAV_VISIBLE) { //
-            next = GetNextVisible (next);
+            next = GetNextVisible (next, false);
         }else if (mode & wxTL_MODE_NAV_EXPANDED) {
             next = GetNextExpanded (next);
         }else{ // (mode & wxTL_MODE_NAV_FULLTREE) default
@@ -2727,7 +2727,7 @@ wxTreeItemId wxTreeListMainWindow::FindItem (const wxTreeItemId& item, const wxS
         if (mode & wxTL_MODE_NAV_LEVEL) {
             next = GetNextSibling (next);
         }else if (mode & wxTL_MODE_NAV_VISIBLE) { //
-            next = GetNextVisible (next);
+            next = GetNextVisible (next, false);
         }else if (mode & wxTL_MODE_NAV_EXPANDED) {
             next = GetNextExpanded (next);
         }else{ // (mode & wxTL_MODE_NAV_FULLTREE) default
@@ -4289,8 +4289,8 @@ long wxTreeListCtrl::GetWindowStyle() const
     return style;
 }
 
-bool wxTreeListCtrl::IsVisible(const wxTreeItemId& item) const
-{ return m_main_win->IsVisible(item); }
+bool wxTreeListCtrl::IsVisible(const wxTreeItemId& item, bool fullRow) const
+{ return m_main_win->IsVisible(item, fullRow); }
 
 bool wxTreeListCtrl::HasChildren(const wxTreeItemId& item) const
 { return m_main_win->HasChildren(item); }
@@ -4377,14 +4377,14 @@ wxTreeItemId wxTreeListCtrl::GetNextExpanded(const wxTreeItemId& item) const
 wxTreeItemId wxTreeListCtrl::GetPrevExpanded(const wxTreeItemId& item) const
 { return m_main_win->GetPrevExpanded(item); }
 
-wxTreeItemId wxTreeListCtrl::GetFirstVisibleItem() const
-{ return m_main_win->GetFirstVisibleItem(); }
+wxTreeItemId wxTreeListCtrl::GetFirstVisibleItem(bool fullRow) const
+{ return m_main_win->GetFirstVisibleItem(fullRow); }
 
-wxTreeItemId wxTreeListCtrl::GetNextVisible(const wxTreeItemId& item) const
-{ return m_main_win->GetNextVisible(item); }
+wxTreeItemId wxTreeListCtrl::GetNextVisible(const wxTreeItemId& item, bool fullRow) const
+{ return m_main_win->GetNextVisible(item, fullRow); }
 
-wxTreeItemId wxTreeListCtrl::GetPrevVisible(const wxTreeItemId& item) const
-{ return m_main_win->GetPrevVisible(item); }
+wxTreeItemId wxTreeListCtrl::GetPrevVisible(const wxTreeItemId& item, bool fullRow) const
+{ return m_main_win->GetPrevVisible(item, fullRow); }
 
 wxTreeItemId wxTreeListCtrl::AddRoot (const wxString& text, int image,
                                       int selectedImage, wxTreeItemData* data)

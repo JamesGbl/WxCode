@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.30 2005-08-04 17:12:34 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.31 2005-08-23 18:25:48 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -332,7 +332,7 @@ public:
     // ---------------------
 
     // is the item visible (it might be outside the view or not expanded)?
-    bool IsVisible (const wxTreeItemId& item) const;
+    bool IsVisible (const wxTreeItemId& item, bool fullRow = false) const;
     // does the item has any children?
     bool HasChildren (const wxTreeItemId& item) const;
     // is the item expanded (only makes sense if HasChildren())?
@@ -401,9 +401,9 @@ public:
     wxTreeItemId GetPrevExpanded(const wxTreeItemId& item) const;
 
     // get visible item, see IsVisible()
-    wxTreeItemId GetFirstVisibleItem() const;
-    wxTreeItemId GetNextVisible(const wxTreeItemId& item) const;
-    wxTreeItemId GetPrevVisible(const wxTreeItemId& item) const;
+    wxTreeItemId GetFirstVisibleItem(bool fullRow = false) const;
+    wxTreeItemId GetNextVisible(const wxTreeItemId& item, bool fullRow = false) const;
+    wxTreeItemId GetPrevVisible(const wxTreeItemId& item, bool fullRow = false) const;
 
     // operations
     // ----------
