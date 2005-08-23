@@ -2,7 +2,7 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 # WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
 
 ###############################################################################
-Project: "palettefrm"=palettefrm_palettefrm.dsp - Package Owner=<4>
+Project: "extminiframe"=wxextminiframe_extminiframe.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -14,7 +14,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "minimal"=palettefrm_minimal.dsp - Package Owner=<4>
+Project: "minimal"=wxextminiframe_minimal.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -23,7 +23,7 @@ Package=<5>
 Package=<4>
 {{{
 Begin Project Dependency
-Project_Dep_Name palettefrm
+Project_Dep_Name extminiframe
 End Project Dependency
 }}}
 

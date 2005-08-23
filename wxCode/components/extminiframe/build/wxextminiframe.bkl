@@ -1,0 +1,134 @@
+<?xml version="1.0" ?>
+
+<!-- Created by: Francesco Montorsi <frm@users.sourceforge.net>     -->
+<!-- Creation date: 9/10/2004                                       -->
+<!-- RCS-ID: $Id$ -->
+
+<makefile>
+
+	<!-- Some defaults for the variables used by wxCode bakefiles -->
+	<set var="WXCODE_BAKEFILEDIR">../../../build/bakefiles</set>
+	<include file="$(WXCODE_BAKEFILEDIR)/defaults.bkl"/>
+	<include file="$(WXCODE_BAKEFILEDIR)/tags.bkl"/>
+	<include file="presets/wx.bkl"/>
+
+
+	<!-- Settings for this component -->
+	<!-- =========================== -->
+<!--
+	<if cond="FORMAT=='autoconf'">
+	
+		<!- it's task of our configure.ac script understand which port we will be using with the AUTOCONF format ->
+		<option name="WX_PORT">
+			<values>WXGTK,WXMAC,WXMOTIF,WXX11,WXMGL</values>
+		</option>
+	</if>
+	<if cond="TARGETING_WIN32=='1'">
+		<set var="WX_PORT">WXMSW</set>
+	</if> -->
+	
+	<!-- define each port sources apart: some outputs need all of them -->
+	<set var="MSW_SRC">../src/msw/minibtn.cpp ../src/msw/palettefrm.cpp</set>
+	<set var="GTK_SRC">../src/gtk/palettefrm.cpp ../src/gtk/minibtn.cpp</set>
+	<set var="X11_SRC">../src/x11/palettefrm.cpp</set>
+	
+	<set var="MSW_HDR">../include/wx/msw/minibtn.h ../include/wx/msw/palettefrm.h</set>
+	<set var="GTK_HDR">../include/wx/gtk/palettefrm.h ../include/wx/gtk/minibtn.h</set>
+	<set var="X11_HDR">../include/wx/x11/palettefrm.h</set>
+	
+	<!-- these vars need the prefix since Bakefile cannot add it later itself since the right value of the variable is chosen at 
+	        compile-time and not at baking-time -->
+	<set var="PORT_SPECIFIC_SOURCES">
+		<if cond="WX_PORT=='msw'">$(MSW_SRC)</if>
+		<if cond="WX_PORT=='gtk'">$(GTK_SRC)</if>
+		<if cond="WX_PORT=='x11'">$(X11_SRC)</if>
+	</set>
+	<set var="PORT_SPECIFIC_HEADERS">
+		<if cond="WX_PORT=='msw'">$(MSW_HDR)</if>
+		<if cond="WX_PORT=='gtk'">$(GTK_HDR)</if>
+		<if cond="WX_PORT=='x11'">$(X11_HDR)</if>
+	</set>
+
+	<set var="COMP_NAME">wxextminiframe</set>
+	
+	<!-- cannot merge COMP_SRC directly with PORT_SPECIFIC_SOURCES otherwise bakefile won't be able to generate the autoconf format -->
+	<set var="COMP_SRC">	common/minibtncmn.cpp common/palettefrmcmn.cpp</set>
+	<set var="COMP_HDR">	wx/minibtn.h wx/palettefrm.h wx/palettefrmdef.h</set>
+	<set var="COMP_SAMPLE_DIR">../sample</set>
+	<set var="COMP_SAMPLE_SRC">minimal.cpp</set>
+	<set var="WX_UNICODE_DEFAULT">1</set>
+	<set var="WX_VERSION_DEFAULT">26</set>
+
+	<!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->
+	<include file="$(WXCODE_BAKEFILEDIR)/wxcode.bkl"/>
+
+	<!-- The template which adds GTK or X11 include & lib search paths on AUTOCONF -->
+	<template id="extmf">		
+		<set var="PORT_FLAGS">
+			<if cond="WX_PORT=='gtk'">`pkg-config --cflags gtk+-2.0`</if>
+			<if cond="WX_PORT=='x11'">-I/usr/X11R6/include</if>
+		</set>
+		
+		<!-- port-specific flags -->
+		<cppflags>$(PORT_FLAGS)</cppflags>
+		
+		<!-- to make the msvc6prj output nicer -->
+		<msvc-file-group>Common:*common*,wx/*.h</msvc-file-group>
+		<msvc-file-group>MSW-specific:*msw*</msvc-file-group>
+		<msvc-file-group>X11-specific:*x11*</msvc-file-group>
+		<msvc-file-group>GTK-specific:*gtk*</msvc-file-group>
+	</template>
+
+	<!-- The real target: wxcode.bkl does not declare a real target but a template called
+	     "complib". In this way modifications are allowed to the basic template. -->
+	<lib id="extminiframe_lib" template="complib,extmf" cond="WX_SHARED=='0'">		
+	
+		<!-- we cannot add to msvc6prj the sources of the other ports without making them "compilable"... -->
+		<msvc-project-files>$(GTK_HDR) $(X11_HDR)</msvc-project-files>
+		<sources>$(PORT_SPECIFIC_SOURCES)</sources>
+		<headers>$(PORT_SPECIFIC_HEADERS)</headers>
+	</lib>
+	<dll id="extminiframe_dll" template="compdll,extmf" cond="WX_SHARED=='1'">
+		<sources>$(PORT_SPECIFIC_SOURCES)</sources>
+		<headers>$(PORT_SPECIFIC_HEADERS)</headers>
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib>
+	</dll>
+	<set var="MSVC6PRJ_MERGED_TARGETS">extminiframe=extminiframe_lib+extminiframe_dll</set>
+
+
+
+	<!-- The sample -->
+
+	<!-- The sample of the component: as for the LIB target, this exe derives from a 
+	     template contained in wxcode.bkl which can be modified here -->
+	<exe id="minimal" template="compsample,extmf">
+		<win32-res>..$(DIRSEP)sample$(DIRSEP)minimal.rc</win32-res>
+		<library>extminiframe_lib</library>
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib>		
+	</exe>
+	
+	<if cond="FORMAT=='autoconf'">
+		<!-- Install port-specific headers -->
+		<data-files-tg id="install-gtk-headers">
+			<files>$(COMP_BASEPATH)/include/wx/gtk/*.h</files>
+			<install-to>$(INCLUDEDIR)/wx/gtk</install-to>
+		</data-files-tg>
+		<data-files-tg id="install-x11-headers">
+			<files>$(COMP_BASEPATH)/include/wx/x11/*.h</files>
+			<install-to>$(INCLUDEDIR)/wx/x11</install-to>
+		</data-files-tg>
+
+		<set var="INSTALL_DEP">
+			<if cond="WX_PORT=='gtk'">install-gtk-headers</if>
+			<if cond="WX_PORT=='x11'">install-x11-headers</if>
+		</set>
+
+		<modify-target target="install">
+			<depends>$(INSTALL_DEP)</depends>
+		</modify-target>
+	</if>
+	
+</makefile>
+
