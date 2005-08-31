@@ -64,4 +64,17 @@
    ...
    
    
+   <!-- if you want to be able to update the updater, you should include this
+       package in the list (see the WebUpdate documentation for more info) -->
+   <package id="WebUpdater">
+      <latest-version importance="high">XXX</latest-version>
+      <latest-download>
+			<uri>https://sourceforge.net/project/showfiles.php?group_id=51305&package_id=45182</uri>
+			<platform name="msw"/>
+			<md5></md5>
+			<actions><extract file="$(thisfile)" where="$(programdir)"/></actions>
+	  </latest-download>
+	  <description>The WebUpdater program that you are currently running.</description>
+   </package>
+   
 </webupdate>

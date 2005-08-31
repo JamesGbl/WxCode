@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <!-- the Document Type Definition (DTD) for a local XML WebUpdate script
      is located at
      
@@ -10,7 +9,12 @@
 -->
 <!DOCTYPE webupdate PUBLIC "-//WebUpdate//DTD WebUpdater 1.0//EN" 
 	"http://wxcode.sourceforge.net/components/webupdate/local.dtd">
-
+	
+	
+<!-- NOTE: all the comments located in local XML scripts will be lost
+     after the first update by WebUpdater since it overwrites this file
+     and don't save the comments, too.
+-->
 
 
 <!-- The <webupdate> tag is the root of the local XML script.
@@ -47,6 +51,12 @@
       
       <!-- the list can be as long as you need... -->
       ...
-  
+      
+      
+      <!-- if you want to be able to update the updater, you should include this
+           package in the list (see the WebUpdate documentation for more info) -->
+      <local-package id="WebUpdater">
+        <version>1.0.0</version>
+      </local-package>
   
 </webupdate>

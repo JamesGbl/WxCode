@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 // Name:        download.h
-// Purpose:     wxDownloadThread
+// Purpose:     wxDownloadThread, wxSizeCacherThread
 // Author:      Francesco Montorsi
 // Created:     2005/07/14
 // RCS-ID:      $Id$
@@ -51,6 +51,12 @@ WXDLLIMPEXP_WEBUPDATE wxFileName wxGetFileNameFromURI(const wxString &uri);
 
 //! Returns a string with the file URI for the given filename.
 WXDLLIMPEXP_WEBUPDATE wxString wxMakeFileURI(const wxFileName &fn);
+
+//! Returns a wxInputStream (no seek abilities) from the given URI (file: or http:) or NULL.
+WXDLLIMPEXP_WEBUPDATE wxInputStream *wxGetInputStreamFromURI(const wxString &uri);
+
+//! Returns the size in bytes of the resource pointed by the given URI or zero.
+WXDLLIMPEXP_WEBUPDATE unsigned long wxGetSizeOfURI(const wxString &uri);
 
 
 
@@ -150,8 +156,6 @@ public:		// to avoid setters/getters (these vars are only read by this thread;
 	//! The wxEvtHandler which will receive our wxDT_NOTIFICATION events.
 	wxEvtHandler *m_pHandler;
 
-	//! Our download queue.
-//	wxDownloadThreadEntryArray m_downloads;
 public:		// to avoid setters/getters
 
 	//! The URI of the resource this thread will download.
@@ -175,10 +179,10 @@ public:		// advanced options
 
 #if wxUSE_HTTPENGINE
 	//! Collects all options about proxy.
-	wxProxySettings m_proxy;
+	static wxProxySettings m_proxy;
 
 	//! Collects all options about HTTP authentication.
-	wxHTTPAuthSettings m_auth;
+	static wxHTTPAuthSettings m_auth;
 #endif
 
 public:
@@ -264,9 +268,8 @@ public:		// miscellaneous
 	//! Starts a new download.
 	//! This function must be called only when this thread is not downloading
 	//! nor computing any MD5...
-	void BeginNewDownload() { //wxDownloadThreadEntry &down) {
+	void BeginNewDownload() {
 		wxASSERT(m_bReady && !IsDownloading() && !IsComputingMD5());
-		//m_downloads.Add(down);
 		wxMutexLocker lock(m_mStatus);
 		m_nStatus = wxDTS_DOWNLOADING;		
 	}
@@ -284,6 +287,8 @@ public:		// miscellaneous
 //! This threads just retrieve the sizes of the given files and cache them.
 //! All remote operations can take various time to be completed and thus
 //! they should all be performed by a secondary thread.
+//! This thread will use the wxProxySettings and wxHTTPAuthSettings from the
+//! wxDownloadThread, if they are available.
 class WXDLLIMPEXP_WEBUPDATE wxSizeCacherThread : public wxThread
 {
 protected:

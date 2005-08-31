@@ -36,6 +36,7 @@
 #include <wx/zipstrm.h>
 #include <wx/msgdlg.h>
 #include <wx/app.h>
+#include <wx/mimetype.h>
 
 
 // wxWidgets RTTI
@@ -46,6 +47,7 @@ IMPLEMENT_CLASS(wxWebUpdateActionRun, wxWebUpdateAction)
 IMPLEMENT_CLASS(wxWebUpdateActionExtract, wxWebUpdateAction)
 IMPLEMENT_CLASS(wxWebUpdateActionCopy, wxWebUpdateAction)
 IMPLEMENT_CLASS(wxWebUpdateActionMake, wxWebUpdateAction)
+IMPLEMENT_CLASS(wxWebUpdateActionOpen, wxWebUpdateAction)
 
 #include <wx/ptr_scpd.h>
 wxDEFINE_SCOPED_PTR_TYPE(wxArchiveEntry);
@@ -63,7 +65,7 @@ bool wxWebUpdateActionRun::Run() const
 	wxFileName f(m_strFile);
 	if (!f.FileExists()) {
 
-		wxLogDebug(wxT("wxWebUpdateActionRun::Run - the file \"") + m_strFile +
+		wxLogUsrMsg(wxT("wxWebUpdateActionRun::Run - the file \"") + m_strFile +
 				wxT("\" does not exist; proceeding anyway (maybe it's in PATH)"));
 
 		// proceed: the executable could be in the system path...
@@ -75,7 +77,7 @@ bool wxWebUpdateActionRun::Run() const
 	// FIXME: how do we know if this retcode means success or not ?
 	//        (some programs could not respect the 0=success UNIX standard...)	
 	if (retcode != 0) 
-		wxLogDebug(wxT("wxWebUpdateActionRun::Run - got a non-null return code for ")
+		wxLogAdvMsg(wxT("wxWebUpdateActionRun::Run - got a non-null return code for ")
 					wxT("the last command; proceeding anyway..."));
 	return TRUE;
 }
@@ -97,7 +99,7 @@ bool wxWebUpdateActionRun::SetProperties(const wxArrayString &propnames,
 		else if (propnames[i] == wxT("flags"))
 			flags = propvalues[i];
 		else
-			wxLogDebug(wxT("wxWebUpdateActionRun::SetProperties - unknown property: ") 
+			wxLogAdvMsg(wxT("wxWebUpdateActionRun::SetProperties - unknown property: ") 
 						+ propnames[i]);
 	}
 
@@ -114,7 +116,7 @@ bool wxWebUpdateActionRun::SetProperties(const wxArrayString &propnames,
 		m_nExecFlag = wxEXEC_SYNC;
 	else {
 		m_nExecFlag = wxEXEC_ASYNC;
-		wxLogDebug(wxT("wxWebUpdateActionRun::SetProperties - unknown exec flag: ") 
+		wxLogAdvMsg(wxT("wxWebUpdateActionRun::SetProperties - unknown exec flag: ") 
 						+ flags);
 	}
 
@@ -142,7 +144,7 @@ bool wxWebUpdateActionRun::SetProperties(const wxArrayString &propnames,
 bool wxWebUpdateActionExtract::Run() const
 {
 	wxArrayString orig, output;
-	wxLogDebug(wxT("wxWebUpdateActionExtract::Run - going to extract the file [")
+	wxLogUsrMsg(wxT("wxWebUpdateActionExtract::Run - going to extract the file [")
 				+ m_strFile + wxT("] of type [") + m_strType + wxT("] in [")
 				+ m_strWhere + wxT("]"));
 
@@ -155,7 +157,7 @@ bool wxWebUpdateActionExtract::Run() const
 	wxFileName f(dir), f2(m_strFile);
 	if (!f.DirExists() || !f2.FileExists()) {
 
-		wxLogDebug(wxT("wxWebUpdateActionExtract::Run - the folder \"") + m_strWhere +
+		wxLogUsrMsg(wxT("wxWebUpdateActionExtract::Run - the folder \"") + m_strWhere +
 				wxT("\" or the file \"") + m_strFile + wxT("\" does not exist !"));
 		return FALSE;
 	}
@@ -197,24 +199,24 @@ bool wxWebUpdateActionExtract::Run() const
 		if (!wxDirExists(outputdir)) {
 
 			if (wxFileName(outputdir).Mkdir(0777, wxPATH_MKDIR_FULL))
-				wxLogDebug(wxT("wxWebUpdateActionExtract::Run - created the [") + 
+				wxLogAdvMsg(wxT("wxWebUpdateActionExtract::Run - created the [") + 
 							outputdir + wxT("] folder"));
 			else
-				wxLogDebug(wxT("wxWebUpdateActionExtract::Run - could not create the [") + 
+				wxLogAdvMsg(wxT("wxWebUpdateActionExtract::Run - could not create the [") + 
 							outputdir + wxT("] folder.. proceeding anyway"));
 		
 			continue;		// this entry contains no data
 		}
 
 		// this is a file...
-		wxLogDebug(wxT("wxWebUpdateActionExtract::Run - extracting [") + name +
+		wxLogUsrMsg(wxT("wxWebUpdateActionExtract::Run - extracting [") + name +
 			wxT("] as [") + output + wxT("]..."));
 
         // now just dump this entry to a new uncompressed file...
 		wxFileOutputStream out(output);
 		if (!out.IsOk() || !out.Write(*in)) {
 
-			wxLogDebug(wxT("wxWebUpdateActionExtract::Run - couldn't decompress ") + name);
+			wxLogUsrMsg(wxT("wxWebUpdateActionExtract::Run - couldn't decompress ") + name);
 			delete in;
 			return FALSE;
 		}
@@ -230,7 +232,7 @@ bool wxWebUpdateActionExtract::SetProperties(const wxArrayString &propnames,
 	wxString flags;
 
 	for (int i=0; i < (int)propnames.GetCount(); i++) {
-		wxLogDebug(wxT("wxWebUpdateActionExtract::SetProperties - name: [")
+		wxLogAdvMsg(wxT("wxWebUpdateActionExtract::SetProperties - name: [")
 				+ propnames[i] + wxT("], value: [") + propvalues[i] + wxT("]"));
 
 		if (propnames[i] == wxT("where"))
@@ -242,7 +244,7 @@ bool wxWebUpdateActionExtract::SetProperties(const wxArrayString &propnames,
 		else if (propnames[i] == wxT("namemap"))
 			m_strNameMap = propvalues[i];
 		else
-			wxLogDebug(wxT("wxWebUpdateActionExtract::SetProperties - unknown property: ") 
+			wxLogAdvMsg(wxT("wxWebUpdateActionExtract::SetProperties - unknown property: ") 
 						+ propnames[i]);
 	}
 
@@ -291,7 +293,7 @@ bool wxWebUpdateActionExtract::SetProperties(const wxArrayString &propnames,
 bool wxWebUpdateActionCopy::Run() const
 {
 	wxArrayString orig, output;
-	wxLogDebug(wxT("wxWebUpdateActionCopy::Run - going to copy the file(s)/folder(s) [")
+	wxLogUsrMsg(wxT("wxWebUpdateActionCopy::Run - going to copy the file(s)/folder(s) [")
 				+ m_strFrom + wxT("] in [")	+ m_strTo + wxT("]"));
 
 	// wxFileName wants a path separator at the end of directory names
@@ -303,7 +305,7 @@ bool wxWebUpdateActionCopy::Run() const
 	wxFileName f(dir);
 	if (!f.DirExists() && !m_bCreate) {
 
-		wxLogDebug(wxT("wxWebUpdateActionCopy::Run - the folder \"") + m_strTo +
+		wxLogAdvMsg(wxT("wxWebUpdateActionCopy::Run - the folder \"") + m_strTo +
 				wxT("\" does not exist and create=0 !"));
 		return FALSE;
 	}
@@ -314,10 +316,10 @@ bool wxWebUpdateActionCopy::Run() const
 			wxT("The create=0 case should have been already catched"));
 
 		if (f.Mkdir(0777, wxPATH_MKDIR_FULL))
-			wxLogDebug(wxT("wxWebUpdateActionCopy::Run - created the [") + 
+			wxLogAdvMsg(wxT("wxWebUpdateActionCopy::Run - created the [") + 
 							f.GetPath() + wxT("] folder"));
 		else
-			wxLogDebug(wxT("wxWebUpdateActionCopy::Run - could not create the [") + 
+			wxLogAdvMsg(wxT("wxWebUpdateActionCopy::Run - could not create the [") + 
 							f.GetPath() + wxT("] folder.. proceeding anyway"));
 	}
 
@@ -337,7 +339,7 @@ bool wxWebUpdateActionCopy::SetProperties(const wxArrayString &propnames,
 	m_bOverwrite = TRUE;
 
 	for (int i=0; i < (int)propnames.GetCount(); i++) {
-		wxLogDebug(wxT("wxWebUpdateActionCopy::SetProperties - name: [")
+		wxLogAdvMsg(wxT("wxWebUpdateActionCopy::SetProperties - name: [")
 				+ propnames[i] + wxT("], value: [") + propvalues[i] + wxT("]"));
 
 		if (propnames[i] == wxT("from"))
@@ -351,7 +353,7 @@ bool wxWebUpdateActionCopy::SetProperties(const wxArrayString &propnames,
 		else if (propnames[i] == wxT("overwrite"))
 			m_bOverwrite = (propvalues[i] == wxT("1"));
 		else
-			wxLogDebug(wxT("wxWebUpdateActionCopy::SetProperties - unknown property: ") 
+			wxLogAdvMsg(wxT("wxWebUpdateActionCopy::SetProperties - unknown property: ") 
 						+ propnames[i]);
 	}
 
@@ -386,7 +388,7 @@ bool wxWebUpdateActionCopy::SetProperties(const wxArrayString &propnames,
 bool wxWebUpdateActionMake::Run() const
 {
 	wxArrayString orig, output;
-	wxLogDebug(wxT("wxWebUpdateActionMake::Run - going to make the file/folder [")
+	wxLogUsrMsg(wxT("wxWebUpdateActionMake::Run - going to make the file/folder [")
 				+ m_strTarget + wxT("]"));
 
 	// do we have to create a folder ?
@@ -400,7 +402,7 @@ bool wxWebUpdateActionMake::Run() const
 		wxFileName f(dir);
 		if (f.DirExists()) {
 
-			wxLogDebug(wxT("wxWebUpdateActionMake::Run - the folder \"") + m_strTarget +
+			wxLogAdvMsg(wxT("wxWebUpdateActionMake::Run - the folder \"") + m_strTarget +
 					wxT("\" already exist... proceeding anyway"));
 			return TRUE;
 		}
@@ -419,7 +421,7 @@ bool wxWebUpdateActionMake::Run() const
 		if (f.FileExists()) {
 
 			if (m_bOverwrite)
-				wxLogDebug(wxT("wxWebUpdateActionMake::Run - the file \"") + m_strTarget +
+				wxLogAdvMsg(wxT("wxWebUpdateActionMake::Run - the file \"") + m_strTarget +
 					wxT("\" already exist... proceeding anyway (overwrite=1)"));
 			else
 				return TRUE;		// exit
@@ -430,12 +432,12 @@ bool wxWebUpdateActionMake::Run() const
 		size_t bytes(m_strContent.Len()*sizeof(wxChar));
 
 		if (out.Write(m_strContent.c_str(), bytes).LastWrite() != bytes) {
-			wxLogDebug(wxT("wxWebUpdateActionMake::Run - could not create the [") + 
+			wxLogUsrMsg(wxT("wxWebUpdateActionMake::Run - could not create the [") + 
 							f.GetFullPath() + wxT("] file."));
 			return FALSE;
 		}
 
-		wxLogDebug(wxT("wxWebUpdateActionMake::Run - created the [") + 
+		wxLogUsrMsg(wxT("wxWebUpdateActionMake::Run - created the [") + 
 					f.GetFullPath() + wxT("] file with content [") + 
 					m_strContent + wxT("]..."));
 	}
@@ -451,7 +453,7 @@ bool wxWebUpdateActionMake::SetProperties(const wxArrayString &propnames,
 	m_bOverwrite = TRUE;
 
 	for (int i=0; i < (int)propnames.GetCount(); i++) {
-		wxLogDebug(wxT("wxWebUpdateActionMake::SetProperties - name: [")
+		wxLogAdvMsg(wxT("wxWebUpdateActionMake::SetProperties - name: [")
 				+ propnames[i] + wxT("], value: [") + propvalues[i] + wxT("]"));
 
 		if (propnames[i] == wxT("dir")) {
@@ -465,7 +467,7 @@ bool wxWebUpdateActionMake::SetProperties(const wxArrayString &propnames,
 		else if (propnames[i] == wxT("overwrite"))
 			m_bOverwrite = (propvalues[i] == wxT("1"));
 		else
-			wxLogDebug(wxT("wxWebUpdateActionMake::SetProperties - unknown property: ") 
+			wxLogAdvMsg(wxT("wxWebUpdateActionMake::SetProperties - unknown property: ") 
 						+ propnames[i]);
 	}
 
@@ -485,9 +487,120 @@ bool wxWebUpdateActionMake::SetProperties(const wxArrayString &propnames,
 		return FALSE;
 
 	if (m_bDir && !m_strContent.IsEmpty())
-		wxLogDebug(wxT("wxWebUpdateActionMake::SetProperties - I will ignore the 'content' ")
+		wxLogAdvMsg(wxT("wxWebUpdateActionMake::SetProperties - I will ignore the 'content' ")
 					wxT("property value (") + m_strContent + wxT(") since I will create ")
 					wxT("a folder and not a file"));
+
+	return TRUE;
+}
+
+
+
+
+// --------------------------
+// wxWEBUPDATEACTIONOPEN
+// --------------------------
+
+bool wxWebUpdateActionOpen::Run() const
+{
+	wxFileName f(m_strFile);
+	wxLogUsrMsg(wxT("wxWebUpdateActionOpen::Run - opening the file [")
+				+ m_strFile + wxT("]"));
+
+	if (!f.FileExists()) {
+
+		wxLogUsrMsg(wxT("wxWebUpdateActionOpen::Run - the file \"") + m_strFile +
+				wxT("\" does not exist !"));
+		return FALSE;
+	}
+	
+	// a little exception for Web pages: wxWidgets has the better function
+	// wxLaunchDefaultBrowser which has a bteer error-checking and more
+	// fallbacks, so use it if possible
+    if (f.GetExt().StartsWith(wxT("htm")) && m_nExecFlag == wxEXEC_ASYNC)
+    	return wxLaunchDefaultBrowser(m_strFile);
+
+    // get the mime type 
+    wxFileType *ft;
+	if (m_strMime.IsEmpty())
+		if (f.GetExt().IsEmpty())
+			return FALSE;		// how do we get the MIME type without extension ?
+		else
+		    ft = wxTheMimeTypesManager->GetFileTypeFromExtension(f.GetExt());
+ 	else
+ 		ft =  wxTheMimeTypesManager->GetFileTypeFromMimeType(m_strMime);
+ 	
+    if (!ft) {
+        wxLogUsrMsg(wxT("wxWebUpdateActionOpen::Run - No default application can open the file [") + m_strFile + wxT("]"));
+        return false;
+    }
+
+    wxString mt;
+    ft->GetMimeType(&mt);
+
+	// get the open command
+    wxString cmd;
+    bool ok = ft->GetOpenCommand(&cmd, wxFileType::MessageParameters(m_strFile));
+    delete ft;
+
+    if (!ok) {
+	    wxLogUsrMsg(wxT("wxWebUpdateActionOpen::Run - Cannot get the OPEN command for [") + m_strFile + wxT("]"));
+    	return FALSE;
+	}
+	
+    if( wxExecute (cmd, m_nExecFlag) == -1 ) {
+        wxLogUsrMsg(wxT("wxWebUpdateActionOpen::Run - Failed to launch application for [") + m_strFile + wxT("]"));
+        return FALSE;
+    } 
+
+	return TRUE;
+}
+
+bool wxWebUpdateActionOpen::SetProperties(const wxArrayString &propnames,
+										const wxArrayString &propvalues)
+{
+	wxString flags;
+	for (int i=0; i < (int)propnames.GetCount(); i++) {
+		wxLogDebug(wxT("wxWebUpdateActionOpen::SetProperties - name: [")
+				+ propnames[i] + wxT("], value: [") + propvalues[i] + wxT("]"));
+
+		if (propnames[i] == wxT("file"))
+			m_strFile = propvalues[i];
+		else if (propnames[i] == wxT("mime"))
+			m_strMime = propvalues[i];
+		else if (propnames[i] == wxT("flags"))
+			flags = propvalues[i];
+		else
+			wxLogAdvMsg(wxT("wxWebUpdateActionOpen::SetProperties - unknown property: ") 
+						+ propnames[i]);
+	}
+
+	// do substitutions on the paths
+	m_strFile = wxWebUpdateInstaller::Get()->DoSubstitution(m_strFile);
+
+	// set defaults	
+	if (flags.IsEmpty())
+		m_nExecFlag = wxEXEC_ASYNC;		// the FLAGS default value
+	else if (flags == wxT("ASYNC"))
+		m_nExecFlag = wxEXEC_ASYNC;
+	else if (flags == wxT("SYNC"))
+		m_nExecFlag = wxEXEC_SYNC;
+	else {
+		m_nExecFlag = wxEXEC_ASYNC;
+		wxLogAdvMsg(wxT("wxWebUpdateActionOpen::SetProperties - unknown exec flag: ") 
+						+ flags);
+	}
+
+	if (m_strFile.IsEmpty())
+		m_strFile = wxWebUpdateInstaller::Get()->GetKeywordValue(wxT("thisfile"));
+
+	// validate the properties
+	wxFileName f(m_strFile);			// the FILE property is required !
+
+	// we won't do the wxFileName::FileExists check because the file we need to run
+	// could be a file which does not exist yet (e.g. its in the update package)
+	if (!f.IsOk()) 
+		return FALSE;
 
 	return TRUE;
 }

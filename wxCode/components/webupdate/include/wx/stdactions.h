@@ -141,5 +141,24 @@ protected:
 };
 
 
+
+//! The "open" action.
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateActionOpen : public wxWebUpdateAction
+{
+	DECLARE_WEBUPDATEACTION(wxWebUpdateActionOpen, wxT("open"))
+
+protected:
+
+	//! The path & name of the file to open.
+	wxString m_strFile;
+	
+	//! The MIME type of the file.
+	wxString m_strMime;
+
+	//! The run flags: wxEXEC_ASYNC, wxEXEC_SYNC, wxEXEC_NOHIDE.
+	int m_nExecFlag;
+};
+
+
 #endif // _WX_STDACTIONS_H_
 

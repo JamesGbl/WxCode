@@ -6,48 +6,60 @@
 /*! 
 
 \mainpage WebUpdate
-<center>A powerful and flexible cross-platform update solution<br/>by Francesco Montorsi</center>
+<center><em>A powerful and flexible cross-platform update solution<br/>by Francesco Montorsi</em></center>
 
 \section features WebUpdate features
-<div style="line-height:2em;">
 - <b>Open source</b>: wxWidgets-licensed; see http://www.wxwidgets.org/licence.php.
+
 - <b>Cross-platform</b>, using the wxWidgets library; see http://www.wxwidgets.org.
+
 - <b>Ability to update any kind of application</b>: also not wxWidgets-based and not written in C++; see \ref samples.
+
 - <b>Easily integrable in your application</b>: needs only few modifications; see \ref tutorial.
-- <b>Small</b> (the binary for win32 distributed at https://sourceforge.net/project/showfiles.php?group_id=51305&amp;package_id=45182 is about 500 Kb.
+
+- <b>Small</b>: the binary for win32 distributed at https://sourceforge.net/project/showfiles.php?group_id=51305&amp;package_id=45182 is about 500 Kb.
+
 - Handles an <b>arbitrary number of packages</b>.
-- Allows <b>platform-dependent set of installation actions</b> for each package.
-- <b>Extensible GUI</b>: even its GUI can be modified without recompiling the
+
+- Allows <b>platform-independent set of installation actions</b> for each package.
+
+- <b>Extensible GUI</b>: it can be modified without recompiling the
 application (using the wxWidgets XRC system). This also means that you can
 choose among various GUI masks (some are better for simple programs with
 few packages, others are better for big programs with many packages) or 
 just create your own.
+
 - <b>Extensible configuration files</b>: the local & remote XML files (see \ref tutorial 
 for an explanation of this terminology) allows you to configure the behaviour 
 of the updater.
+
 - <b>Extensible actions</b>: the actions which are taken when downloading each
 package can be chosen by the programmer who writes the remote XML file and
 updater allows you to define new actions just deriving a C++ class.
-- <b>Ability to update itself</b>.
-- <b>MD5 checks</b> on the downloaded file to avoid data corruption.
+See \ref customaction page.
+
+- <b>Ability to update itself</b>: see \ref updateupdater.
+
+- Optional <b>MD5 checks</b> on the downloaded file to avoid data corruption.
+
 - <b>Ability to download the updates & the remote XML file from any source</b>:
 World Wide Web is the typical location but the WebUpdater can be configured
-to use the packages stored in a removable device (CD, DVD, floppies or whatelse).
+to use the packages stored in any device (CD, DVD, floppies or whatelse).
+See the FAQ \ref faq_localupdates.
+
 - Allows many properties to be set for each package: the 'importance', the
-platform which it targets, the description, \b its dependencies (on other packages)
-- The DTDs allows you to easily check your XML files.
-</div>
+platform which it targets, the description, its <b>dependencies on other packages</b>
+
+- The <b>DTD</b>s allows you to easily check your XML files: see \ref localdtd and \ref remotedtd.
 
 <br/>
 
+
 \section howtostart Let's start...
-<div style="line-height:1em;">
 Don't start to dig in the doxygen documentation of the classes & functions of
 WebUpdate; you probably will never need to do that !
-
 Just read \ref tutorial and enjoy WebUpdate.
 <br/><br/><br/>
-</div>
 
 */
 
@@ -79,9 +91,11 @@ The C++ class used to store a 'download' is wxWebUpdateDownload.
 
 - an '<b>action</b>' is one of the command to execute after the complete download of a
 package (i.e. after the download of the package's 'download' for the current platform).
-There are two predefined actions: wxWebUpdateActionRun and wxWebUpdateActionExtract.
+There are some predefined actions: wxWebUpdateActionRun, wxWebUpdateActionExtract,
+wxWebUpdateActionMake, wxWebUpdateActionOpen...
 Their base class is wxWebUpdateAction. You can define your own customized actions
-deriving a new class from wxWebUpdateAction.
+deriving a new class from wxWebUpdateAction. For more info about creation of your
+custom actions, see \ref customaction page.
 
 - the '<b>local XML script</b>' is the XML file which contains the configuration settings
 for the WebUpdater application and also the versions and the list of the local
@@ -129,7 +143,7 @@ by WebUpdate; it looks like:
 \verbinclude local.xml.template
 
 For the complete reference to the tags that you can use in this XML file, you should
-look at \ref http://wxcode.sourceforge.net/components/webupdate/local.dtd 
+look at \ref localdtd 
 (even if you don't know the DTD syntax it should be quite easy to
 understand what is allowed and what is not...). 
 
@@ -142,21 +156,20 @@ contains all the important info about the updated packages. It looks like:
 \verbinclude remote.xml.template
 
 Like for the local scripts, for the complete reference to the tags that you can 
-use in this XML file, you should look at  
-\ref http://wxcode.sourceforge.net/components/webupdate/remote.dtd . 
+use in this XML file, you should look at \ref remotedtd .
 
 
 
 4) <strong>Create your packages</strong>: now, you should create the archives/installers
 that you planned to use as update packages. WebUpdate does not require any special hack
 to be included in your packages (like the filelist or other ugly things).
-It just requires that, if you want to use the <extract> action, you use one of the
-wxWidgets-supported archive types (look at remote.dtd for more info).
+It just requires that, if you want to use the \<extract\> action, you use one of the
+wxWidgets-supported archive types (look at \ref remotedtd for more info).
 
 After the creation of the packages, you should just upload them in the right places.
 Also take in count that while you are testing the update system you can put the packages
-in your hard disk and then use in the <remoteuri> and <uri> tags of the local & remote
-XML scripts local URIs (e.g. <uri>file:c:/simple.zip</uri>) instead of the remote ones;
+in your hard disk and then use in the \<remoteuri\> and \<uri\> tags of the local & remote
+XML scripts local URIs (e.g. \<uri\> file:c:/simple.zip \</uri\>) instead of the remote ones;
 this allows you to test the update system also when you are offline and, most important,
 to test it quickly (since downloads are usually slower than hard disk accesses !).
 
@@ -165,12 +178,14 @@ to test it quickly (since downloads are usually slower than hard disk accesses !
 5) <strong>Modify your program to use WebUpdater</strong>: this is the 'real' integration
 step. The changes to your app are very small:
 - somewhere (typically in the handler of a menu command) you should put an execute
-istruction to run 'webupdater(.exe)'. You can see how to do this using wxWidgets in the
-WebUpdate samples.
-- just after the call to 'webupdater(.exe)' you should add an exit istruction; that is,
-just after that your program has run the updater your program must also exit 
-(this is because the updater will probably need to override your program's executable
-or other files locked by your program... see the \ref faq for more info).
+istruction to run \c "./webupdater" (on unix) or \c "webupdater.exe" (on win32). 
+You can see how to do this using wxWidgets in the WebUpdate samples.
+
+- just after the call to \c "webupdater(.exe)" you should add an exit istruction; that is,
+just after that your program has run the updater, it must also exit.
+This is because the updater will probably need to replace your program's executable
+or other files locked by your program... and this cannot be done until the program-to-update
+is running. See the \ref faq for more info.
 
 Then, just compile WebUpdater (or download its binary distribution)
 and put the executable file in your program's root folder. That's it !
@@ -190,9 +205,37 @@ For a soft approach you could also prefer to look directly to the samples of Web
 In this case first look at \ref samples page.
 
 Last: if you think something is missing from this tutorial or from the documentation,
-then just mail me at frm@users.sourceforge.net.
+then just mail me at "frm AT users.sourceforge.net".
 
 */
+
+
+
+/*!
+
+\page remotedtd The Remote XML WebUpdate DTD
+
+Note: for latest version of this document, you should look at: http://wxcode.sourceforge.net/components/webupdate/remote.dtd
+
+\verbinclude remote.dtd
+
+*/
+
+
+
+
+/*!
+
+\page localdtd The Local XML WebUpdate DTD
+
+Note: for latest version of this document, you should look at: http://wxcode.sourceforge.net/components/webupdate/local.dtd
+
+\verbinclude local.dtd
+
+*/
+
+
+
 
 
 /*! 
@@ -203,13 +246,46 @@ All the samples of WebUpdate comes with at least two different versions.
 This is because you need the old version of the sample to test the WebUpdater
 and I need the newer version for making the update package ;-)
 
-\note All the versions of the samples are completely random.
+\note All the version numbers of the samples are completely random.
 
-\section wxsimple The simple samples
+\note To build the samples, you need to use the same makefiles which build the
+      WebUpdater and which are located in \c webupdater/build
 
-\section wxadv The advanced samples
+<br/>
 
-\section nonwxsample The platform samples
+
+\section wxsimple The "simple" samples
+
+The "simple" samples in \c samples/simple folder shows you the following:
+
+- the GUI masks of WebUpdater: wxWebUpdateDlg (the most complete one) and wxWebUpdateSimpleDlg.
+
+- how to run WebUpdater from the application to update.
+
+- how to write and use multiple local XML scripts (one per each mask used).
+
+<br/>
+
+
+\section wxadv The "advanced" samples
+
+The "advanced" samples in \c samples/advanced folder shows you the following:
+
+- multiple packages and inter-packages dependencies
+
+- some more advanced installer actions: \<make\>, \<open\>...
+
+<br/>
+
+
+\section customact The "custom action" samples
+
+The "custom action" sample in \c samples/customaction folder shows you how to 
+create a new wxWebUpdateAction-derived for specialized tasks; it's not a "full"
+sample since it cannot be compiled but you can still use the files in that folder,
+together with the \ref customaction page to implement a sample custom action:
+wxWebUpdateActionFontInstall.
+
 */
 
 
@@ -219,15 +295,68 @@ and I need the newer version for making the update package ;-)
 \page faq The Frequently Asked Questions about WebUpdate
 
 \section dsg Design of WebUpdate
-1) Why does WebUpdate provides a separate application for handling the update process ?
-   Why it does not provide a library which can be linked to the application to update
-   so that I can ship a single executable ?
 
-2) Why using XML for the scripts ?
+\subsection faq_exec 1) Why does WebUpdate provides a separate application for handling the update process ? Why I cannot use the provided library and link that to the application to update so that I can ship a single executable ?
+
+   Initially, this WebUpdate project provided only a library and it was designed so that
+   the application to update would have linked it and created the update dialog window
+   directly. Even if this approach has the advantage of being more compact (a single executable
+   file which updates itself) it makes impossible to update the executable and the files it is
+   using !
+
+   In fact, while the program is running, its executable file, and eventually any other data file
+   which the program has open, are "locked" and thus they cannot be replaced/renamed/deleted.
+   This makes this approach unworkable: almost any program needs to update its executable
+   file.
+
+   The most used strategy is to keep the program-to-update and the updater separed and this is
+   also the approach used by WebUpdate. In this way, when the user clicks the "Update this program"
+   link (it can be any type of control; see \ref tutorial) in the program-to-update, the program
+   executes asynchronously the WebUpdater application and immediately exits itself.
+   So, the program and its data files can be safely updated from WebUpdater since the program-to-update
+   is not running. Obviously you then have some problems to update the WebUpdater itself...
+   but there is a simple workaround: look at \ref updateupdater.
+
+   The library which is built by WebUpdate sources is only for advanced features
+   (see \ref customaction).   
+
+
+\subsection faq_xml 2) Why using XML for the scripts ?
+
+   Why not ? It's easy to parse and human readable. Most important: you don't have to learn 
+   new syntax rules created ad hoc for WebUpdate.
+
+<br/>
 
 
 \section usage Using WebUpdate
-1) How 
+
+\subsection faq_hide 1) How can I avoid that the user looks into my local XML file and my XRC file ?
+ 
+   A simple way to do this is to just rename the files with a different extension and use the
+   \c --xml and the \c --xrc WebUpdater options to specify the new file names.
+   This is a typical trick which usually keeps naive users away from the application's core
+   files; a more secure way, for XRC resources at least, is to convert the XRC file in a compiled
+   XRS file using the \c wxrc utility shipped with wxWidgets.
+
+\subsection faq_localupdates 2) How can I use WebUpdate to take the update packages from a non-http resource ?
+
+  You can write your XML local & remote scripts so that WebUpdate will take updates from a non-http resource
+  (a local drive/specific folder). In order to do this, you have to modify the \c remoteuri tag content in the
+  local XML script using the \c file protocol (e.g. \c file:/usr/local/updates, 
+  <tt>file:c:/temp/updates</tt> - even on windows, use '/' and not '\\' as path separator).
+
+  In this way the XML remote script can also be placed somewhere \e locally.
+  To tell WebUpdate to use local update packages, you should use the \c file protocol also in the
+  \c uri tags of the remote XML scripts.
+
+  Last, remember that keyword substitution is performed in all URIs so that you can write
+  valid URIs as: <tt>file:$(remotedir)mypackage.msi</tt> or <tt>file:$(localdir)..//..//remote.xml</tt>.
+
+  A typical application of "local updates" is to allow the user to update the program using a removable
+  device (CD, DVD, floppy or whatelse). See the \c --ask-uri option in the \ref webupdater page.
+
+<br/>
 
 */
 
@@ -237,8 +366,46 @@ and I need the newer version for making the update package ;-)
 
 \page webupdater WebUpdater application reference
 
-The WebUpdater application accepts some command lines which can be very useful:
+The WebUpdater application accepts some command line options which can be very useful:
+you can get this list using the "--help" option.
+
+\li \c --xml=mypath/mylocal.xml: by default, WebUpdater searches for a local XML configuration
+    file called "local.xml" in its same folder; with this option you can override this default 
+    and specify both the path and the filename of the local XML file to load.
+
+\li \c --xrc=mypath/myxrc.xrc: by default, WebUpdater searches for an XRC file 
+    called "webupdatedlg.xrc" in its same folder; with this option you can override this default 
+    and specify both the path and the filename of the XRC file to load.
+    Note that this is not the only way to customize the GUI mask of WebUpdater: in the local
+    XML file you can also use the \<dlgxrc\> tag to specify the name of the resource to use
+    from the XRC file which is loaded.
+
+\li \c --uri=http://myserver.com/remote.xml: allows you to specify the URI used to
+    load the remote XML script. Note that you *must* specify this URI either through this
+    option or through the \<remoteuri\> tag in the local XML script and that this option
+    has precedence over the \<remoteuri\> tag.<br/>
+    If you use this option, you cannot use also \c --ask-uri.
+
+\li \c --ask-uri=path/name_of_remote_xml.xml: tells WebUpdater to ask to the user to select a local 
+    folder (can be the drive of a removable device, too) where the remote XML script is placed.
+    Until the user selects a folder which contains a file named \c "name_of_remote_xml.xml"
+    (i.e. the argument given to the \c --ask-uri option) the WebUpdater won't proceed.
+    The default path shown to the user in the directory selector dialog is the \c path of the
+    argument of the option.<br/>
+    If you use this option, you cannot use also \c --uri.
+
+\li \c --restart: tell WebUpdater to restart the updated application after update process
+    is complete. Note that this option will set as initially checked the relative checkbox
+    in the wxWebUpdateAdvPanel XRC default resource but the user will still be able to 
+    uncheck it and thus avoid that the updated application is restarted.
+    To make it impossible for the user to restart the application, you should remove that
+    checkbox from the wxWebUpdateAdvPanel resource of \c webupdatedlg.xrc.
+
+\li \c --savelog: tell WebUpdater to save a log file (called by default \c webupdater.log)
+    with some diagnostic messages which are useful to discover eventual bugs.
+
 */
+
 
 
 /*! 
@@ -246,8 +413,157 @@ The WebUpdater application accepts some command lines which can be very useful:
 \page updateupdater How to update the WebUpdater
 
 First, look at \ref faq and in particular to the first question in design section.
-As you can understand
+As you can understand, there's no good (i.e. reliable & cross-platform) to replace
+the executable file of a running program.
+So, WebUpdater is a program separed from the application-to-update. This makes it easy
+to update the application-to-update but what about the WebUpdater itself ?
+How can it be updated, in case a new version is released ?
+
+The answer is: using the \<extract\> action and a little trick in the application-to-update.
+If you look at the \ref remotedtd you will note in the \<extract\> action tag documentation 
+that when extracting files from compressed archives, it always extracts the files named
+\c "webupdater.exe" (on win32) or \c "webupdater" (on unix) as \c "_webupdater.exe" (on win32)
+or \c "_webupdater" (on unix).
+
+The final replacement takes place when the application-to-update runs again: infact it should
+include a check just after initialization for the existence of a \c "_webupdater(.exe)" file.
+If such file is found, then it means that during the last update, a newer version of the WebUpdater
+has been downloaded: the application just needs to remove the old \c "webupdater(.exe)" file and
+then rename the \c "_webupdater(.exe)" file into \c "webupdater(.exe)".
+
+That's it: an easy and reliable way to update the updater.
+You can found the wxWidgets-based code that does the check for the \c "_webupdater(.exe)" file,
+in a cross-platform way, in the \c advanced sample.
 
 */
 
+
+
+/*!
+
+\page customaction How to create a new custom action
+
+This document describes how to add a "mod" to WebUpdate so that it recognizes a new
+action tag. Note that you should first consider accurately:
+
+- the standard actions: wxWebUpdateActionRun, wxWebUpdateActionCopy, wxWebUpdateActionMake,
+  wxWebUpdateActionOpen. They are designed to be as flexible as possible (e.g. the 'copy'
+  action can also be used as 'move' action; make can be used to create files or folders.. etc)
+  and thus they cover a wide range of common needs.
+
+- other solutions like using an installer (.MSI, .DEB, .RPM) which provides a much more complete
+  set of possible installation steps and platform-specific actions.
+
+<br/>
+
+\section required Required libraries & utilities for making a WebUpdate mod
+
+If you want to make a MOD (i.e. a "modification") to WebUpdate, then you need the following
+libraries installed in your system:
+
+- wxWidgets (http://www.wxwidgets.org): WebUpdate is entirely based on this great cross-platform
+  GUI toolkit so you cannot avoid this dependency
+
+- wxHttpEngine (http://wxcode.sourceforge.net/showcomp.php?name=wxHttpEngine): if you want to
+  compile WebUpdater with proxy & HTTP authentication support, you need this library and then
+  you need to use the \c USE_HTTPENGINE=1 (on win32) or \c --with-httpengine (on unix) option
+  when compiling WebUpdater (see WebUpdate Readme for more info)
+
+and also the following tools:
+
+- a compiler (obviously!)
+
+- Bakefile (http://bakefile.sourceforge.net): this is the makefile-generator used by WebUpdate
+  and is required by step #2.
+
+After you have installed these, you're ready to go !
+
+<br/>
+
+\section step1 Step #1: Writing your wxWebUpdateAction-derived class
+
+Create the header file and the source file for your new action: you can see a new sample
+custom action in \c samples/customaction/fontinstall.*; these files also are a good
+start point for writing the implementation of your own action.
+
+As you can see from \c samples/customaction/fontinstall.h, your action class definition will
+look like: 
+
+\code
+class WXDLLIMPEXP_WEBUPDATE MyAction : public wxWebUpdateAction
+{
+	DECLARE_WEBUPDATEACTION(MyAction, wxT("tagname"))
+
+protected:		// here go the declarations of the variables used by this action
+
+	// Holds the content of the first property of this action
+	wxString m_strFirstProperty;
+
+	...
+};
+\endcode
+
+Obviously instead of \c "tagname" you should put the name of the XML tag which will
+be handled by your action (choose a lowercase name which does not contain blank characters).
+
+You won't need to declare any constructor/destructor using the \c DECLARE_WEBUPDATEACTION
+macro defined in \c stdactions.h.
+
+
+The implementation of your class requires you to write only two functions which will be called
+by the WebUpdate installer:
+
+- wxWebUpdateAction::Run()
+- wxWebUpdateAction::SetProperties()
+
+follow the links for more info about these functions.
+
+<br/>
+
+
+
+\section step2 Step #2: Creating your "modded" WebUpdate
+
+Now, create a \c mod.bkl file like the one in the \c samples/customaction folder; for a more
+complete list of options that you can use in your \c mod.bkl, see \c build/mod.bkl.template.
+
+The list of source & header files which you write in your \c mod.bkl will be compiled together
+with WebUpdate and will become part of the updater.
+
+Now, you just need to put the files that you created in the right folders:
+
+- move the source files in the \c webupdate/src folder;
+- move the header files in the \c webupdate/include/wx folder;
+- move the \c mod.bkl file in the \c webupdate/build folder;
+
+Ok; now run the "bakefile_gen" utility in the \c webupdate/build folder to regenerate
+the makefiles of WebUpdate. If you get errors from the \c bakefile_gen command, then check your
+\c mod.bkl file: all the others BKL files of WebUpdate should be working ;)
+
+Last step: compile the modded WebUpdate. In order to do this, you need to look to the WebUpdate
+ReadMe file.
+
+<br/>
+
+
+\section step3 Conclusion
+
+Some advices:
+- if you want to make WebUpdater as small as possible, you should use the \c WX_DEBUG=0 (on win32)
+  or \c --disable-debug (on unix) option. On Win32 I strongly advise you to use the UPX compressor 
+  (see http://upx.sourceforge.net) to cut the size of the EXE by more than 50%.
+
+- if you think that others could benefit from your wxWebUpdateAction-derived class, and also
+  these conditions are met:
+  \li you agree to use wxWidgets license for your wxWebUpdateAction-derived class
+  \li your action implementation is cross-platform  
+  then, please submit your code to the author ("frm AT users.sourceforge.net"); I will be pleased
+  to include your code in the next WebUpdate release.
+
+
+- if you need to share some of your application's code with your wxWebUpdateAction-derived class,
+  then you can copy together with your class implementation files also your application's sources
+  and add them to your \c mod.bkl
+
+*/
 

@@ -98,8 +98,11 @@ BEGIN_EVENT_TABLE(wxWebUpdateAdvPanel, wxPanel)
     EVT_BUTTON(XRCID("IDWUAP_BROWSE"), wxWebUpdateAdvPanel::OnBrowse)
     EVT_BUTTON(XRCID("IDWUAP_PROXYSETTINGS"), wxWebUpdateAdvPanel::OnProxySettings)
     EVT_BUTTON(XRCID("IDWUAP_AUTHSETTINGS"), wxWebUpdateAdvPanel::OnAuthSettings)
-    EVT_CHECKBOX(XRCID("IDWUAP_RESTART"), wxWebUpdateAdvPanel::OnRestart)
     
+    // checkboxes
+    EVT_CHECKBOX(XRCID("IDWUAP_RESTART"), wxWebUpdateAdvPanel::OnRestart)
+    EVT_CHECKBOX(XRCID("IDWUAP_SAVELOG"), wxWebUpdateAdvPanel::OnSaveLog)
+        
 END_EVENT_TABLE()
 
 
@@ -139,12 +142,11 @@ wxString wxWUDGetStatus(wxWebUpdateDlgStatus s)
 // ---------------------
 
 wxWebUpdateDlg::wxWebUpdateDlg(wxWindow *parent, 
-								const wxWebUpdateLocalXMLScript &script,
-        						wxWebUpdateExtraOptions *opt)
-    							: wxDialog(), m_optExtra(opt)
+								const wxWebUpdateLocalXMLScript &script)
+    							: wxDialog()
 {
 	PreInit();
-	Create(parent, script, opt);
+	Create(parent, script);
 }
 
 void wxWebUpdateDlg::PreInit()
@@ -160,12 +162,10 @@ void wxWebUpdateDlg::PreInit()
 }
 	
 bool wxWebUpdateDlg::Create(wxWindow *parent, 
-				const wxWebUpdateLocalXMLScript &script,
-      			wxWebUpdateExtraOptions *opt)
+							const wxWebUpdateLocalXMLScript &script)
 {
 	// copy the local XML script
 	m_xmlLocal = script; 
-	m_optExtra = opt;
 
 	// init our GUI
 	if (!InitWidgetsFromXRC(parent))
@@ -191,10 +191,10 @@ bool wxWebUpdateDlg::InitWidgetsFromXRC(wxWindow *parent)
 	// ----------------
 
 	wxString res = m_xmlLocal.GetXRCResName();
-	wxLogDebug(wxT("wxWebUpdateDlg::InitWidgetsFromXRC - loading the '") + res + wxT("' resource..."));
+	wxLogAdvMsg(wxT("wxWebUpdateDlg::InitWidgetsFromXRC - loading the [") + res + wxT("] resource..."));
 
 	if (!wxXmlResource::Get()->LoadDialog(this, parent, res)) {
-		wxLogDebug(wxT("Error while building wxWebUpdateDlg; ")
+		wxLogAdvMsg(wxT("Error while building wxWebUpdateDlg; ")
 			wxT("check that the given XRC (webupdatedlg.xrc by default) is valid !"));
 
 		return FALSE;
@@ -211,6 +211,7 @@ bool wxWebUpdateDlg::InitWidgetsFromXRC(wxWindow *parent)
 	m_pGauge = wxWU_XRCCTRL(*this, "IDWUD_GAUGE", wxGauge);
 	m_pDescription = wxWU_XRCCTRL(*this, "IDWUD_DESCRIPTION", wxTextCtrl);	// can be NULL
 	m_pShowOnlyOOD = wxWU_XRCCTRL(*this, "IDWUD_SHOWFILTER", wxCheckBox);
+	m_pLog = wxWU_XRCCTRL(*this, "IDWUD_LOG", wxTextCtrl);	// can be NULL
 
 	// these two *CANNOT* be NULL, just hidden
 	m_pUpdatesList =  wxWU_XRCCTRL(*this, "IDWUD_LISTCTRL", wxWebUpdateListCtrl);
@@ -230,7 +231,7 @@ bool wxWebUpdateDlg::InitWidgetsFromXRC(wxWindow *parent)
 	// update core controls
 	wxASSERT_MSG(m_pUpdatesList && m_pAdvPanel, wxT("Cannot be NULL, just hidden"));
 	m_pUpdatesList->SetLocalPackages(m_xmlLocal.GetAllPackages());
-	m_pAdvPanel->SetData(&m_xmlLocal, m_optExtra);
+	m_pAdvPanel->SetData(&m_xmlLocal);
 
 	// aesthetic
 	if (m_pAppNameText) 
@@ -240,7 +241,11 @@ bool wxWebUpdateDlg::InitWidgetsFromXRC(wxWindow *parent)
 		wxCommandEvent fake;
 		OnShowHideAdv(fake);	// begin with adv options hidden
 	}
-
+	if (m_pLog) {
+	
+		wxWebUpdateLog *logger = wxDynamicCast(wxLog::GetActiveTarget(), wxWebUpdateLog);
+		if (logger) logger->WriteUsrMsgAlsoToTextCtrl(m_pLog);
+	}
 
 	// this is a little hardcoded value to make wxWebUpdateSimpleDlg looks nicer...
 	wxSize sz = GetMinSize();
@@ -265,7 +270,7 @@ bool wxWebUpdateDlg::InitWidgetsFromXRC(wxWindow *parent)
 
 bool wxWebUpdateDlg::ConnectionRequired()
 {
-	wxLogDebug(wxT("wxWebUpdateDlg::ConnectionRequired - creating the wxDialUpManager"));
+	wxLogAdvMsg(wxT("wxWebUpdateDlg::ConnectionRequired - creating the wxDialUpManager"));
 	bool res = FALSE;
 
 	// are we connected ?
@@ -278,12 +283,12 @@ bool wxWebUpdateDlg::ConnectionRequired()
 						wxT("WebUpdater needs to download the update list from the World Wide Web...\n")
 						wxT("Please connect and then retry."),
 						wxT("Error"), wxOK | wxICON_ERROR);
-			wxLogDebug(wxT("wxWebUpdateDlg::ConnectionRequired - not connected to Internet !"));			
+			wxLogUsrMsg(wxT("wxWebUpdateDlg::ConnectionRequired - not connected to Internet !"));			
 			res = FALSE;
 
 		} else {
 
-			wxLogDebug(wxT("wxWebUpdateDlg::ConnectionRequired - we are online..."));
+			wxLogUsrMsg(wxT("wxWebUpdateDlg::ConnectionRequired - found a valid connection"));
 			res = TRUE;
 		}
 	}
@@ -306,7 +311,7 @@ bool wxWebUpdateDlg::InitThreads()
 		wxMessageBox(wxT("Low resources; cannot run the WebUpdate dialog...\n")
 			wxT("Close some applications and then retry."), 
 			wxT("Error"), wxOK | wxICON_ERROR);
-		wxLogDebug(wxT("wxWebUpdateDlg::InitThreads - cannot run the download thread !"));
+		wxLogAdvMsg(wxT("wxWebUpdateDlg::InitThreads - cannot run the download thread !"));
 		AbortDialog();
 
 		return FALSE;
@@ -318,13 +323,13 @@ bool wxWebUpdateDlg::InitThreads()
 		wxMessageBox(wxT("Low resources; cannot run the WebUpdate dialog...\n")
 			wxT("Close some applications and then retry."), 
 			wxT("Error"), wxOK | wxICON_ERROR);
-		wxLogDebug(wxT("wxWebUpdateDlg::InitThreads - cannot run the installer thread !"));
+		wxLogAdvMsg(wxT("wxWebUpdateDlg::InitThreads - cannot run the installer thread !"));
 		AbortDialog();
 
 		return FALSE;
 	}
 	
-	wxLogDebug(wxT("wxWebUpdateDlg::InitThreads - successfully initialized the download & install threads..."));
+	wxLogAdvMsg(wxT("wxWebUpdateDlg::InitThreads - successfully initialized the download & install threads..."));
 	return TRUE;
 }
 
@@ -390,7 +395,7 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
 
 	// update our remote package array (which is contained in 
 	// our wxWebUpdateListCtrl to be exact)
-	wxLogDebug(wxT("wxWebUpdateDlg::OnScriptDownload - XML script loaded successfully"));
+	wxLogUsrMsg(wxT("wxWebUpdateDlg::OnScriptDownload - XML script loaded successfully"));
 	m_pUpdatesList->SetRemotePackages(m_xmlRemote.GetAllPackages());
 	m_pUpdatesList->RebuildPackageList(GetPackageFilter());
 		
@@ -416,19 +421,19 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
 
 void wxWebUpdateDlg::AbortDialog()
 {
-	wxLogDebug(wxT("wxWebUpdateDlg::AbortDialog - stopping the download thread"));
+	wxLogAdvMsg(wxT("wxWebUpdateDlg::AbortDialog - stopping the download thread"));
 	if (m_dThread->IsPaused())
 		m_dThread->Run();		// we need the thread running if we want to delete it !
 	if (m_dThread->IsRunning())
 		m_dThread->Delete();
-	wxLogDebug(wxT("wxWebUpdateDlg::AbortDialog - stopped & deleted the download thread"));
+	wxLogAdvMsg(wxT("wxWebUpdateDlg::AbortDialog - stopped & deleted the download thread"));
 
-	wxLogDebug(wxT("wxWebUpdateDlg::AbortDialog - stopping the installer thread"));
+	wxLogAdvMsg(wxT("wxWebUpdateDlg::AbortDialog - stopping the installer thread"));
 	if (m_iThread->IsPaused())
 		m_iThread->Run();		// we need the thread running if we want to delete it !
 	if (m_iThread->IsRunning())
 		m_iThread->Delete();
-	wxLogDebug(wxT("wxWebUpdateDlg::AbortDialog - stopped & deleted the installer thread"));
+	wxLogAdvMsg(wxT("wxWebUpdateDlg::AbortDialog - stopped & deleted the installer thread"));
 
 	m_nStatus = wxWUDS_EXITING;
 	EndModal(wxCANCEL);
@@ -491,7 +496,7 @@ bool wxWebUpdateDlg::DownloadNextPackage()
 	
 	// launch the download
 	m_dThread->BeginNewDownload();
-	wxLogDebug(wxT("wxWebUpdateDlg::DownloadNextPackage - launching download of ") + 
+	wxLogUsrMsg(wxT("wxWebUpdateDlg::DownloadNextPackage - launching download of ") + 
 			m_dThread->m_strURI);
 			
 	return TRUE;
@@ -510,7 +515,7 @@ bool wxWebUpdateDlg::InstallNextPackage()
 	m_iThread->m_pDownload = &download;
 	m_iThread->m_strUpdateFile = GetOutputFilenameFor(*m_current);
 	m_iThread->BeginNewInstall();
-	wxLogDebug(wxT("wxWebUpdateDlg::InstallNextPackage - launching installation of ") + 
+	wxLogUsrMsg(wxT("wxWebUpdateDlg::InstallNextPackage - launching installation of ") + 
 			m_iThread->m_strUpdateFile);
 	
 	return TRUE;
@@ -524,7 +529,7 @@ void wxWebUpdateDlg::RemoveCurrentPackage()
 		wxASSERT(m_current);		
 		
 		wxString file = GetOutputFilenameFor(*m_current);
-		wxLogDebug(wxT("wxWebUpdateDlg::RemoveCurrentPackage - removing the package ")
+		wxLogAdvMsg(wxT("wxWebUpdateDlg::RemoveCurrentPackage - removing the package ")
   					+ m_current->GetName() + wxT(" [") + file + wxT("]"));
   					
 		wxRemoveFile(file);
@@ -612,7 +617,7 @@ void wxWebUpdateDlg::OnDownload(wxCommandEvent &)
 
 void wxWebUpdateDlg::OnCancel(wxCommandEvent &)
 {
-	wxLogDebug(wxT("wxWebUpdateDlg::OnCancel - user hit the cancel button..."));
+	wxLogUsrMsg(wxT("wxWebUpdateDlg::OnCancel - user hit the cancel button..."));
 
 	if (m_nStatus == wxWUDS_DOWNLOADING || m_nStatus == wxWUDS_DOWNLOADINGXML) {
 
@@ -695,7 +700,7 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 					wxT(" from\n\n") + m_dThread->m_strURI + wxT("\n\nURL... "));
 		
 		if (downloadingScript) {
-			wxLogDebug(wxT("wxWebUpdateDlg::OnDownloadComplete - we were downloading the XML script... aborting dialog"));
+			wxLogUsrMsg(wxT("wxWebUpdateDlg::OnDownloadComplete - failed while downloading the XML script... aborting dialog"));
 			AbortDialog();		// this is a unrecoverable error !
 		}
 
@@ -704,7 +709,7 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 
 	} else {
 
-		wxLogDebug(wxT("wxWebUpdateDlg::OnDownloadComplete - Download status: successfully completed"));
+		wxLogUsrMsg(wxT("wxWebUpdateDlg::OnDownloadComplete - Download status: successfully completed"));
 		m_nDownloadCount++;
 
 		if (downloadingScript) {
@@ -727,7 +732,7 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 
 					// the order of the package installation cannot be 
 					// randomly chosen
-					wxLogDebug(wxT("wxWebUpdateDlg::OnDownloadComplete - beginning installation of downloaded packages"));
+					wxLogUsrMsg(wxT("wxWebUpdateDlg::OnDownloadComplete - beginning installation of downloaded packages"));
 					m_nStatus = wxWUDS_INSTALLING;	// CHANGE OUR STATUS
 					InstallNextPackage();
     			}
@@ -759,7 +764,7 @@ void wxWebUpdateDlg::OnInstallationComplete(wxCommandEvent &)
 		
 		// find the installed package
 		wxWebUpdateLocalPackageArray arr(GetLocalPackages());		// do a copy
-		wxLogDebug(wxT("wxWebUpdateDlg::OnInstallationComplete - completed installation of \"")
+		wxLogUsrMsg(wxT("wxWebUpdateDlg::OnInstallationComplete - completed installation of \"")
 					+ m_current->GetName() + wxT("\"..."));
 
 		// update the version fields for the local package...
@@ -802,7 +807,7 @@ void wxWebUpdateDlg::OnInstallationComplete(wxCommandEvent &)
 		// proceed with next
 		if (!InstallNextPackage()) {
 
-			wxLogDebug(wxT("wxWebUpdateDlg::OnInstallationComplete - completed the installation of all packages"));
+			wxLogUsrMsg(wxT("wxWebUpdateDlg::OnInstallationComplete - completed the installation of all packages"));
 			
 			// notify the user
 			wxWebUpdateInstaller::Get()->ShowNotificationMsg(wxT("The installation of the selected packages has been completed successfully !"));
@@ -852,7 +857,7 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 				wxString name = m_pUpdatesList->GetItemText(i);
 				wxWebUpdatePackage &pkg = m_pUpdatesList->GetRemotePackage(name);
 		
-				wxLogDebug(wxT("wxWebUpdateDlg::OnUpdateUI - updating the description with value: ") + pkg.GetDescription());
+				wxLogAdvMsg(wxT("wxWebUpdateDlg::OnUpdateUI - updating the description with value: ") + pkg.GetDescription());
 				m_pDescription->SetValue(pkg.GetDescription());
 				firstselected = i;
 				break;
@@ -1014,7 +1019,7 @@ bool wxWebUpdateAdvPanel::InitWidgetsFromXRC(wxWindow *parent)
 
 	// and build our dialog window
 	if (!wxXmlResource::Get()->LoadPanel(this, parent, wxT("wxWebUpdateAdvPanel"))) {
-		wxLogDebug(wxT("Error while creating the wxWebUpdateAdvPanel - be sure you loaded webupdatedlg.xrc !"));
+		wxLogAdvMsg(wxT("Error while creating the wxWebUpdateAdvPanel - be sure you loaded webupdatedlg.xrc !"));
 		return FALSE;	
 	}			
 
@@ -1025,6 +1030,7 @@ bool wxWebUpdateAdvPanel::InitWidgetsFromXRC(wxWindow *parent)
 	m_pDownloadPathTextCtrl = wxWU_XRCCTRL(*this, "IDWUAP_DOWNLOAD_PATH", wxTextCtrl);	// can be NULL
 	m_pRestart = wxWU_XRCCTRL(*this, "IDWUAP_RESTART", wxCheckBox);					// can be NULL
 	m_pRemoveFiles = wxWU_XRCCTRL(*this, "IDWUAP_REMOVE", wxCheckBox);				// can be NULL
+	m_pSaveLog =  wxWU_XRCCTRL(*this, "IDWUAP_SAVELOG", wxCheckBox);				// can be NULL
 
 #if !wxUSE_HTTPENGINE
 	// if not using wxHttpEngine component, hide our ADV conn settings buttons
@@ -1059,17 +1065,21 @@ bool wxWebUpdateAdvPanel::InitWidgetsFromXRC(wxWindow *parent)
 	return TRUE;
 }
 
-void wxWebUpdateAdvPanel::SetData(const wxWebUpdateLocalXMLScript *script,
-									wxWebUpdateExtraOptions *opt)
+void wxWebUpdateAdvPanel::SetData(wxWebUpdateLocalXMLScript *script)
 {
 	m_xmlLocal = script;
-	m_optExtra = opt;
-	
 	if (m_pRestart) {
 	
+		// update the restart checkbox, if present
 		m_pRestart->SetLabel(wxT("Restart ") + m_xmlLocal->GetAppName() + 
   							wxT(" after the update is finished"));
-		m_pRestart->SetValue(m_optExtra->m_bRestart);		
+		m_pRestart->SetValue(m_xmlLocal->IsAppToRestart());		
+ 	}
+
+	if (m_pSaveLog) {
+	
+		// update the savelog checkbox, if present
+		m_pSaveLog->SetValue(m_xmlLocal->IsLogToSave());		
  	}
 }
 
@@ -1082,7 +1092,7 @@ void wxWebUpdateAdvPanel::OnBrowse(wxCommandEvent &)
 	if (dlg.ShowModal() == wxID_OK) {
 
 		m_pDownloadPathTextCtrl->SetValue(dlg.GetPath());
-		wxLogDebug(wxT("wxWebUpdateDlg::OnBrowse - New output path is ") + dlg.GetPath());
+		wxLogUsrMsg(wxT("wxWebUpdateDlg::OnBrowse - New output path is ") + dlg.GetPath());
 
 		// save it also in our update installer
 		wxWebUpdateInstaller::Get()->SetKeywordValue(wxT("downloaddir"), dlg.GetPath());
@@ -1128,7 +1138,13 @@ void wxWebUpdateAdvPanel::OnAuthSettings(wxCommandEvent &)
 void wxWebUpdateAdvPanel::OnRestart(wxCommandEvent &ev)
 {
 	// update the restart field
-	m_optExtra->m_bRestart = ev.IsChecked();
+	m_xmlLocal->OverrideRestartFlag(ev.IsChecked());
+}
+
+void wxWebUpdateAdvPanel::OnSaveLog(wxCommandEvent &ev)
+{
+	// update the restart field
+	m_xmlLocal->OverrideSaveLogFlag(ev.IsChecked());
 }
 
 
@@ -1180,7 +1196,7 @@ bool wxWebUpdateAboutDlg::InitWidgetsFromXRC(wxWindow *parent)
 	// ----------------
 	
 	if (!wxXmlResource::Get()->LoadDialog(this, parent, wxT("wxWebUpdateAboutDlg"))) {
-		wxLogDebug(wxT("Error while creating the wxWebUpdateAboutDlg - be sure you loaded webupdatedlg.xrc !"));
+		wxLogAdvMsg(wxT("Error while creating the wxWebUpdateAboutDlg - be sure you loaded webupdatedlg.xrc !"));
 		return FALSE;
 	}	
 

@@ -6,21 +6,24 @@
 	<set var="WXCODE_BAKEFILEDIR">../../../build/bakefiles</set>
 	<include file="$(WXCODE_BAKEFILEDIR)/defaults.bkl"/>
 	<include file="$(WXCODE_BAKEFILEDIR)/tags.bkl"/>
+	<include file="presets/wx.bkl"/>
 	
 	
 
-	<!-- The WebUpdate settings -->
-	<!-- ====================== -->
+	<!-- The wxHttpEngine dependency -->
+	<!-- =========================== -->
+
+    <set var="USE_HTTPENGINE_DEFAULT">1</set>
 
 	<if cond="TARGETING_IDE=='0'">
 		<option name="USE_HTTPENGINE">
 			<values>1,0</values>
-			<default-value>0</default-value>
+			<default-value>$(USE_HTTPENGINE_DEFAULT)</default-value>
 			<description>If 1 then wxHTTPEngine component will be used for proxy/authentication stuff</description>
 		</option>
 	</if>
 	<if cond="TARGETING_IDE=='1'">
-		<set var="USE_HTTPENGINE">1</set>
+		<set var="USE_HTTPENGINE">$(USE_HTTPENGINE_DEFAULT)</set>
 	</if>
 	
 	<if cond="TARGETING_WIN32=='1'">
@@ -32,6 +35,55 @@
 		</option>
 	</if>
 
+	<!-- handle the HTTPENGINE optional dependency -->
+	<set var="HTTPENGINEDEP_LIBPATH">
+		<if cond="TARGETING_WIN32=='1'">$(HTTPENGINE_DIR)/lib</if>
+	</set>
+	<set var="HTTPENGINEDEP_INCPATH">
+		<if cond="TARGETING_WIN32=='1'">$(HTTPENGINE_DIR)/include</if>
+	</set>
+	<set var="HTTPENGINEDEP_DEF">
+		<if cond="USE_HTTPENGINE=='1'">wxUSE_HTTPENGINE</if>
+	</set>
+	<set var="HTTPENGINEDEP_LIB">
+		<if cond="USE_HTTPENGINE=='1'">httpengine$(WXLIBPOSTFIX)</if>
+	</set>
+ 
+  	
+	
+
+	<!-- The MOD settings -->
+	<!-- ================ -->
+	
+	<!-- 'mod.bkl' is where advanced users can store their additional source
+         files for the WebUpdater application -->
+ 	<include file="mod.bkl" ignore_missing="1"/>
+ 	
+ 	<!-- in case mod.bkl is missing, we set the defaults... -->
+ 	<set var="MOD_SRC" overwrite="0"/>
+ 	<set var="MOD_HDR" overwrite="0"/> 	
+ 	<set var="MAKE_LIB" overwrite="0">1</set>
+ 	<set var="MAKE_EXE" overwrite="0">1</set>
+ 	<set var="MODDED" overwrite="0">1</set>
+
+
+
+
+	<!-- The WebUpdate settings -->
+	<!-- ====================== -->
+
+    <!-- wxCode bakefiles by default build EXEs optimized for speed and not for
+         size when WX_DEBUG==0; but we want to make executable as small as possible -->
+    <set var="MYOPTIMIZEFLAG">
+        <if cond="WX_DEBUG=='1'">off</if>
+        <if cond="WX_DEBUG=='0'">size</if>
+    </set>
+    
+    <set var="MODDED_DEF">
+        <if cond="MODDED=='1'">MODDED</if>
+        <if cond="MODDED=='0'"></if>
+    </set>
+    
 	<set var="COMP_NAME">webupdate</set>
 
 	<!-- these are for the WebUpdate library -->
@@ -51,7 +103,6 @@
 	<set var="COMP_SAMPLE2_UPDATED_SRC">../samples/advanced/v1.5.0/minimal.cpp</set>
 	<set var="COMP_SAMPLE2_DIR">../samples/advanced/v0.0.1</set>
 	<set var="COMP_SAMPLE2_UPDATED_DIR">../samples/advanced/v1.5.0</set>
-
 	
 	<set var="COMP_WANT_INSTALL_TARGET">0</set>
 	<set var="WX_UNICODE_DEFAULT">1</set>
@@ -59,43 +110,38 @@
 
 	<!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->
 	<include file="$(WXCODE_BAKEFILEDIR)/wxcode.bkl"/>
-
-
-	<!-- handle the HTTPENGINE optional dependency -->
-	<set var="HTTPENGINEDEP_LIBPATH">
-		<if cond="TARGETING_WIN32=='1'">$(HTTPENGINE_DIR)/lib</if>
-	</set>
-	<set var="HTTPENGINEDEP_INCPATH">
-		<if cond="TARGETING_WIN32=='1'">$(HTTPENGINE_DIR)/include</if>
-	</set>
-	<set var="HTTPENGINEDEP_DEF">
-		<if cond="USE_HTTPENGINE=='1'">wxUSE_HTTPENGINE</if>
-	</set>
-	<set var="HTTPENGINEDEP_LIB">
-		<if cond="USE_HTTPENGINE=='1'">httpengine$(WXLIBPOSTFIX)</if>
-	</set>
-	
-	<!-- 'mod.bkl' is where advanced users can store their additional source
-         files for the WebUpdater application -->
- 	<include file="mod.bkl" ignore_missing="1"/>
- 	<set var="MOD_SRC" overwrite="0"/>
- 	<set var="MOD_HDR" overwrite="0"/> 	
- 	<set var="MAKE_LIB" overwrite="0">1</set>
- 	<set var="MAKE_EXE" overwrite="0">1</set>
  	
 	<template id="webupdatecommon">
+            <!-- for wxHttpEngine dependency -->
 			<lib-path>$(HTTPENGINEDEP_LIBPATH)</lib-path>
 			<include>$(HTTPENGINEDEP_INCPATH)</include>
 			<define>$(HTTPENGINEDEP_DEF)</define>
+			
+            <!-- miscellaneous -->
+            <optimize>$(MYOPTIMIZEFLAG)</optimize>
+			<define>$(MODDED_DEF)</define>
 	</template>
 	<define-tag name="webupdatelibs" rules="exe,dll">
 		<sys-lib>$(HTTPENGINEDEP_LIB)</sys-lib>
+		
+		<!-- the MSVC compiler can build without the ADV & HTML libraries... -->
+		<if cond="FORMAT!='msvc' and FORMAT!='msvc6prj'">
+    		<wx-lib>adv</wx-lib>
+            <wx-lib>html</wx-lib>
+		</if>
+		
 		<wx-lib>xrc</wx-lib>
 		<wx-lib>xml</wx-lib>
 		<wx-lib>net</wx-lib>
 		<wx-lib>core</wx-lib>
 		<wx-lib>base</wx-lib>	
 	</define-tag>
+
+
+
+
+	<!-- The WebUpdater target -->
+	<!-- ===================== -->
 	
 	<if cond="MAKE_LIB=='1'">
 		<!-- the WebUpdate library: only for advanced uses -->

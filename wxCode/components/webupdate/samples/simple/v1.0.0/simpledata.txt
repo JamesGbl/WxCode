@@ -1,6 +1,9 @@
  ====================================================
- EXAMPLE OF A DATA FILE FOR THE SIMPLE PROGRAM v2.0.3
+ EXAMPLE OF A DATA FILE FOR THE SIMPLE PROGRAM v1.0.0
  ====================================================
  
- This is the example of a generic data file updated for version 2.0.3
- See the datafile in the simple program v 1.0.0 for more info...
+ This is the example of a generic data file required by your program to run.
+ This file needs to be updated when updating the program to a new version and
+ in fact if you try to run the simple v.1.0.0 program and update it, you'll see
+ that the WebUpdater replaces both the executable program and this data file.
+ 

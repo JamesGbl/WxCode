@@ -35,7 +35,6 @@ void wxUpdateWebUpdaterIfRequired();
     #include "wx/wx.h"
 #endif
 #include "wx/textfile.h"
-#include "wx/filename.h"
 
 // ----------------------------------------------------------------------------
 // resources
@@ -283,20 +282,41 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
    THESE ARE THE ONLY REAL MODIFICATION REQUIRED TO INTEGRATE WEBUPDATER
    IN YOUR PROGRAM USING IT IN THE SIMPLEST WAY (SEE WEBUPDATER DOCS)
 */
+#include "wx/filename.h"
 
 // call this in the event handler used to show the wxWebUpdateDlg
-void wxUpdateAndExit(wxFrame *caller, const wxString &xrc, const wxString &xml)
+void wxUpdateAndExit(wxFrame *caller, 
+					bool savelog = FALSE,
+     				bool restart = TRUE,
+     				const wxString &xrc = wxEmptyString, 	// --xrc option won't be given using wxEmptyString
+         			const wxString &res = wxEmptyString,	// --res option won't be given using wxEmptyString
+            		const wxString &xml = wxEmptyString,	// --xml option won't be given using wxEmptyString
+         			const wxString &uri = wxEmptyString)	// --uri option won't be given using wxEmptyString
 {
-#ifdef __WXMSW__	
-	wxExecute(wxT("webupdater.exe /s /r /x ") + xrc + wxT(" /l ") + xml);	
-	caller->Close(true);
+	wxString opts;
+ 
+ 	if (savelog)
+  		opts += wxT(" --savelog");
+    if (restart)
+    	opts += wxT(" --restart");
+    if (!xrc.IsEmpty())
+     	opts += wxT(" --xrc=") + xrc;
+    if (!res.IsEmpty())
+    	opts += wxT(" --res=") + res;
+ 	if (!xml.IsEmpty())
+  		opts += wxT(" --xml=") + xml;
+ 	if (!uri.IsEmpty())
+  		opts += wxT(" --uri=") + uri;
+
+#ifdef __WXMSW__
+	wxExecute(wxT("webupdater.exe") + opts);
 #else	
-	wxExecute(wxT("./webupdater --savelog --restart --xrc=") + xrc + wxT(" --xml=") + xml);
-	caller->Close(true);
+	wxExecute(wxT("./webupdater") + opts);
 #endif
+	caller->Close(true);
 }
 
-// call this in your wxApp::OnInit()
+// to be called in your wxApp::OnInit()
 void wxUpdateWebUpdaterIfRequired()
 {
 #ifdef __WXMSW__
@@ -312,12 +332,18 @@ void wxUpdateWebUpdaterIfRequired()
 
 void MyFrame::OnUpdateCheck(wxCommandEvent &)
 {
-	wxUpdateAndExit(this, wxT("webupdatedlg.xrc"), wxT("online.xml"));
+	wxUpdateAndExit(this, TRUE, TRUE, wxEmptyString, wxEmptyString, wxEmptyString, 
+ 						wxT("http://wxcode.sourceforge.net/components/webupdate/script2.xml"));
 }
 
 void MyFrame::OnLocalCheck(wxCommandEvent &)
 {
-	wxUpdateAndExit(this, wxT("webupdatedlg.xrc"), wxT("local.xml"));
+	// for --uri option you must use an absolute path or 
+ 	// a path relative to the local.xml file
+ 	// (for te --xml and --xrc option, a path relative to the 
+  	//  WebUpdater executable location must be used)
+	wxUpdateAndExit(this, TRUE, TRUE, wxEmptyString, wxEmptyString, wxEmptyString, 
+ 						wxT("file:../../../website/script3.xml"));
 }
 
 

@@ -36,7 +36,7 @@
                     same version of this DTD file (you can find it at the
                     beginning of this document).
 -->
-<!ELEMENT webupdate (appname,appfile,dlgxrc,remoteuri,keywords?,local-package*)>
+<!ELEMENT webupdate (appname,appfile,xrc?,res?,restart?,savelog?,remoteuri?,keywords?,local-package*)>
 <!ATTLIST webupdate version CDATA #IMPLIED>
 
 
@@ -62,12 +62,44 @@
 <!ELEMENT appfile (#PCDATA)>
 
 
-<!-- DLGXRC: specifies the name of the dialog resource to load from the XRC file.
+<!-- XRC: specifies the name of the XRC resource file. 
+          If this tag is not specified, then "webupdatedlg.xrc" will be used.
+          Can be overridden by the --xrc command line option.
 -->
-<!ELEMENT dlgxrc (#PCDATA)>
+<!ELEMENT xrc (#PCDATA)>
+
+
+<!-- RES: specifies the name of the dialog resource to load from the XRC file.
+          You can also avoid to use this tag and use the --res option of the
+          WebUpdater program instead.
+          Can be overridden by the --res command line option.
+-->
+<!ELEMENT res (#PCDATA)>
+
+
+<!-- RESTART: can be "0" or "1" and indicates if the updated application should
+              be restarted when WebUpdater will be closed or not.
+              This tag is optional; default value is "0".
+              Can be overridden by the --restart command line option.
+-->
+<!ELEMENT restart (#PCDATA)>
+
+
+<!-- SAVELOG: can be "0" or "1" and indicates if the WebUpdater should save a
+              a log file for debugging purposes.
+              This tag is optional; default value is "0".
+              Can be overridden by the --savelog command line option.
+-->
+<!ELEMENT savelog (#PCDATA)>
 
 
 <!-- REMOTEURI tag: specifies where the WebUpdate remote script is stored.
+                    This tag is optional in the sense that it can be missing from
+                    the XML local script but in this case it *must* be present in
+                    the WebUpdater command line options since this is a required info.
+                    If this tag is present and also the --uri command line option is
+                    given to WebUpdater, then the command line option will override this
+                    value.
 -->
 <!ELEMENT remoteuri (#PCDATA)>
 

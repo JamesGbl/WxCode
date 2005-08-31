@@ -30,6 +30,33 @@ AC_LANG(C++)
 AM_WXPRESETS([2.6.1])
 
 
+# Two little custom macros which define the ENABLE/WITH configure arguments.
+# Macro arguments:
+# $1 = the name of the --enable- feature
+# $2 = the description of that feature
+# $3 = the default value for that feature
+#
+# NOTE: the space between the two hyphens (-) are required since in XML
+#       they are forbidden... remove them before using this file
+#
+AC_DEFUN([MY_ARG_ENABLE], [AC_ARG_ENABLE($1, 
+			AC_HELP_STRING([--enable-$1],
+			[$2 (default is $3)]),, [enable_$1=$3])])
+AC_DEFUN([MY_ARG_WITH], [AC_ARG_WITH($1, 
+			AC_HELP_STRING([--with-$1],
+			[$2 (default is $3)]),, [with_$1=$3])])
+
+MY_ARG_WITH([httpengine], [Enables the proxy and authentication support], [yes])
+
+if test "$with_httpengine" = "yes"; then
+   USE_HTTPENGINE=1
+   AC_MSG_RESULT([Checking for the --with-httpengine option... yes])
+else
+   USE_HTTPENGINE=0
+   AC_MSG_RESULT([Checking for the --with-httpengine option... no])
+fi
+
+
 
 # final macros
 AC_BAKEFILE([m4_include(autoconf_inc.m4)])

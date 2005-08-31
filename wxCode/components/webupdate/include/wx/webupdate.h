@@ -21,6 +21,8 @@
 #include "wx/webupdatedef.h"
 #include "wx/xml/xml.h"
 #include "wx/url.h"
+#include "wx/log.h"
+#include "wx/textfile.h"
 
 
 // defined later
@@ -99,6 +101,51 @@ DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_WEBUPDATE, wxEVT_COMMAND_EXECUTE, -1);
 
 
 
+// --------------------------------
+// LOG FUNCTIONS USED BY WEBUPDATE
+// --------------------------------
+
+enum
+{
+    wxLOG_UsrMsg = wxLOG_User,  // messages shown to the user + saved in the log file
+    wxLOG_AdvMsg,				// messages saved in the log file only
+    wxLOG_NewSection			// a new phase in program flow
+};
+
+DECLARE_LOG_FUNCTION(AdvMsg);
+DECLARE_LOG_FUNCTION(UsrMsg);
+DECLARE_LOG_FUNCTION(NewSection);
+
+//! A wxLogPassThrough-derived log target for the WebUpdate classes.
+//! This target processes in smart way the log strings sent by
+//!   wxLogAdvMsg
+//!   wxLogUsrMsg
+//!   wxLogNewSection
+//! global functions providing both facilities for saving the log in
+//! a wxTextCtrl and into a wxTextFile.
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateLog : public wxLogPassThrough
+{
+	wxTextCtrl *m_pTextCtrl;
+	wxTextFile m_txtFile;
+
+public:
+	wxWebUpdateLog() { m_pTextCtrl=NULL; }
+	virtual ~wxWebUpdateLog() { StopFileLog(); }
+
+	void WriteUsrMsgAlsoToTextCtrl(wxTextCtrl *);
+	void WriteAllMsgAlsoToFile(const wxString &filename);
+	void StopFileLog();
+
+	void DoLog(wxLogLevel, const wxChar *, time_t);
+	void DoLogDecoratedString(wxLogLevel, const wxChar *);
+	
+private:
+	DECLARE_CLASS(wxWebUpdateLog)
+};
+
+
+
+
 // -----------------------------------------------------------------------------
 // CLASSES WHICH WORK WITH *LOCAL* FILES
 // -----------------------------------------------------------------------------
@@ -173,9 +220,12 @@ protected:
 	//! The name of the application whose packages must be updated.
 	wxString m_strAppName;
 
+	//! The XRC file to load.
+	wxString m_strXRC;
+
 	//! The name of the XRC resource file which should be used to update
 	//! the local packages.
-	wxString m_strXRC;
+	wxString m_strXRCRes;
 	
 	//! The URI of the remote update script.
 	wxString m_strRemoteURI;
@@ -186,7 +236,13 @@ protected:
 	//! The URI of this local update script.
 	//! Set by #Load and used in #Save.
 	wxString m_strLocalURI;
-
+	
+	//! The content of the \<savelog\> tag.
+	bool m_bSaveLog;
+	
+	//! The content of the \<restart\> tag.
+	bool m_bRestart;
+	
 protected:
 
 	//! Creates a wxWebUpdateLocalPackage from the given XML node.
@@ -197,7 +253,10 @@ protected:
 	wxString GetNodeContent(const wxXmlNode *node) const;
 
 	//! Builds the header of the local script and returns it.
-	wxXmlNode *wxWebUpdateLocalXMLScript::BuildHeader() const;
+	wxXmlNode *BuildHeader() const;
+	
+	//! Saves the given remote script URI.
+	void SetRemoteScriptURI(const wxString &uri);
 
 public:
 
@@ -207,8 +266,7 @@ public:
 public:		// main functions
 
 	//! Returns TRUE if at least the root of this document is valid.
-	bool IsOk() const
-		{ if (!GetRoot() || GetRoot()->GetName() != wxT("webupdate")) return FALSE; return TRUE; }
+	bool IsOk() const;
 
     //! Parses the local XML script located at the given URI.
 	//! This function can open any resource which can be handled
@@ -240,10 +298,14 @@ public:		// getters
 	//! Returns the filename of the application to update.
 	wxString GetAppFile() const
 		{ return m_strAppFile; }
+		
+	//! Returns the nameof the XRC file to load.
+	wxString GetXRC() const
+		{ return m_strXRC; }
   		
 	//! Returns the name of the XRC resources to use to update the packages.
 	wxString GetXRCResName() const
-		{ return m_strXRC; }
+		{ return m_strXRCRes; }
 		
 	//! Returns the URI for the WebUpdate remote script.
 	wxString GetRemoteScriptURI() const
@@ -252,6 +314,14 @@ public:		// getters
 	//! Returns the URI for this WebUpdate local script.
 	wxString GetLocalScriptURI() const
 		{ return m_strLocalURI; }
+		
+	//! Returns TRUE if the program-to-update should be restarted.
+	bool IsAppToRestart() const
+		{ return m_bRestart; }
+
+	//! Returns TRUE if the log file should be saved.
+	bool IsLogToSave() const
+		{ return m_bSaveLog; }
 
 public: 	// setters
 
@@ -259,6 +329,17 @@ public: 	// setters
 	//! new one based on the given array.
 	void SetPackageArray(const wxWebUpdateLocalPackageArray &arr);
 
+	void OverrideXRC(const wxString &xrc)
+		{ m_strXRC = xrc; }
+	void OverrideXRCResName(const wxString &xrcres)
+		{ m_strXRCRes = xrcres; }
+	void OverrideRestartFlag(bool val)
+		{ m_bRestart = val; }
+	void OverrideSaveLogFlag(bool val)
+		{ m_bSaveLog = val; }
+	void OverrideRemoteScriptURI(const wxString &remote)
+		{ SetRemoteScriptURI(remote); }
+		
 private:
 	DECLARE_CLASS(wxWebUpdateLocalXMLScript)
 };
@@ -272,7 +353,7 @@ private:
 // CLASSES WHICH WORK WITH *REMOTE* FILES
 // -----------------------------------------------------------------------------
 
-//! The base abstract class for the handler of an <actions> subtag of
+//! The base abstract class for the handler of an \<actions\> subtag of
 //! a webupdate XML script. See webupdate.dtd for the specification of
 //! the format of the WebUpdate XML script and for the description of
 //! the standard wxWebUpdateAction-derived classes.
@@ -322,11 +403,25 @@ public:		// miscellaneous
 	wxString GetPropValue(const wxString &propname) const
 		{ int n=m_arrPropName.Index(propname); if (n!=wxNOT_FOUND) return m_arrPropValue.Item(n); return wxEmptyString; }
 
-	//! Sets the property names & values for this action.
+	//! Parses the properties of the XML action tag.
+	//! Called by wxWebUpdateInstaller when the action tag handled
+    //! by this class is found while parsing the remote XML script.
+    //! This function should store inside the class' variables, the data extracted
+    //! by the tag properties.
+    //! The first array contains the names of the properties of the XML action tag while
+    //! the second array contains the relative values.
+    //! The two arrays always have the same number of elements.
 	virtual bool SetProperties(const wxArrayString &propnames,
-							const wxArrayString &propvalues) = 0;
+								const wxArrayString &propvalues) = 0;
 
 	//! Run this action.
+	//! This function is called by wxWebUpdateInstaller when the download of the
+	//! relative package has been successfully completed and when all the previous
+	//! actions have been successfully completed, too.
+	//! This function contains the core implementation of the WebUpdate action.
+	//! It should return TRUE if the action has been successfully completed or
+	//! completed with warnings. It should return FALSE if the action could not
+	//! be completed and the installation of the relative package should stop.
 	virtual bool Run() const = 0;
 
 	//! Returns a copy of this action.

@@ -9,5 +9,10 @@
  	<!-- with this two vars you can control the lib & exe output
  	<set var="MAKE_LIB">1</set>
  	<set var="MAKE_EXE">1</set> -->
+ 	
+ 	<!-- if you want that wxInitializeMod() and wxUninitializeMod() are called,
+         then you need to define MODDED to 1; this will enable the "MODDED"
+         symbol when compiling which will make WebUpdater call those functions. -->
+    <set var="MODDED">0</set>
       
 </makefile>

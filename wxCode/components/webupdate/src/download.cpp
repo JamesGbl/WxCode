@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 // Name:        download.cpp
-// Purpose:     wxDownloadThread
+// Purpose:     wxDownloadThread, wxSizeCacherThread
 // Author:      Francesco Montorsi
 // Created:     2005/06/23
 // RCS-ID:      $Id$
@@ -27,6 +27,7 @@
 #endif
 
 #include "wx/download.h"
+#include "wx/webupdate.h"
 #include <wx/wfstream.h>
 #include <wx/filename.h>
 
@@ -89,6 +90,87 @@ wxString wxMakeFileURI(const wxFileName &fn)
 	return wxURI(wxT("file:") + path).BuildURI();
 }
 
+wxInputStream *wxGetInputStreamFromURI(const wxString &uri)
+{
+	wxInputStream *in;
+
+	if (wxIsFileProtocol(uri)) {
+
+		// we can handle file:// protocols ourselves
+		wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using wxURL"));
+		wxURI u(uri);
+		//if (u.GetError() != wxURL_NOERR)
+		//	wxDT_ABORT_DOWNLOAD(wxT("wxURL cannot parse this url"));
+		in = new wxFileInputStream(u.GetPath());
+
+	} else {
+
+#if wxUSE_HTTPENGINE
+		wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using wxHTTPBuilder"));
+		wxHTTPBuilder http;
+		http.InitContentTypes(); // Initialise the content types on the page			
+
+		// the proxy & auth settings should have been initialized by the
+		// user of wxDownloadThread ! 
+		
+		if (wxDownloadThread::m_proxy.m_bUseProxy) {
+			wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using the proxy settings"));
+			http.SetProxySettings(wxDownloadThread::m_proxy);
+		}
+		
+		if (false) {//m_auth.m_bUseAuth) {
+			wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using the basic authentication settings"));
+			wxDownloadThread::m_auth.SetBasicAuth(); // Set the class to use the authentication settings
+			http.SetAuthentication(wxDownloadThread::m_auth);
+		}
+
+		in = http.GetInputStream(uri);
+#else
+		wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using wxURL"));		
+		wxURL u(uri);
+		if (u.GetError() != wxURL_NOERR) {
+			wxLogUsrMsg(wxString(wxT("wxURL cannot parse this url [") + 
+									uri + wxT("]")));
+			return NULL;
+		}
+		
+		in = u.GetInputStream();
+#endif
+	}
+	
+	return in;
+}
+
+unsigned long wxGetSizeOfURI(const wxString &uri)
+{
+	wxInputStream *is = wxGetInputStreamFromURI(uri);
+	if (is == NULL)
+		return 0;
+	
+	if (!is->IsOk()) {
+		delete is;		// be sure to avoid leaks
+		return 0;
+	}
+
+	// intercept the 302 HTTP "return code"
+#if 0
+	wxProtocol &p = u.GetProtocol();
+	wxHTTP *http = wxDynamicCast(&p, wxHTTP);
+	if (http != NULL && http->GetResponse() == 302) {
+		wxLogUsrMsg(wxT("wxGetSizeOfURI - can't get the size of the resource located at [") +
+			uri + wxT("] because the request has been redirected... update your URL"));
+		return 0;
+	}
+#endif	
+
+	unsigned long sz = (unsigned long)is->GetSize();
+	delete is;
+
+	// see wxHTTP::GetInputStream docs
+	if (sz == 0xffffffff)
+		sz = 0;
+	return sz;
+}
 
 
 
@@ -99,7 +181,7 @@ wxString wxMakeFileURI(const wxFileName &fn)
 
 // this macro avoids the repetion of a lot of code
 #define wxDT_ABORT_DOWNLOAD(msg) {									\
-			wxLogDebug(wxT("wxDownloadThread::Entry - ") +			\
+			wxLogUsrMsg(wxT("wxDownloadThread::Entry - ") +			\
 				wxString(msg) + wxT(" - DOWNLOAD ABORTED !!!"));	\
 			m_bSuccess = FALSE;										\
 			m_mStatus.Lock();										\
@@ -133,61 +215,16 @@ void *wxDownloadThread::Entry()
 		// we are starting the download of a file; update our datetime field
 		m_dtStart = wxDateTime::UNow();
 
-		wxLogDebug(wxT("wxDownloadThread::Entry - downloading ") + m_strURI);
+		wxLogUsrMsg(wxT("wxDownloadThread::Entry - downloading ") + m_strURI);
 
 		// ensure we can build a wxURL from the given URI
-		wxString path;
-		wxInputStream *in = NULL;
-
-		if (wxIsFileProtocol(m_strURI)) {
-
-			// we can handle file:// protocols ourselves
-			wxLogDebug(wxT("wxDownloadThread::Entry - using wxURL"));
-			wxURI u(m_strURI);
-			//if (u.GetError() != wxURL_NOERR)
-			//	wxDT_ABORT_DOWNLOAD(wxT("wxURL cannot parse this url"));
-			in = new wxFileInputStream(u.GetPath());
-				//u.GetInputStream();
-			path = u.GetPath();
-
-		} else {
-
-#if wxUSE_HTTPENGINE
-			wxLogDebug(wxT("wxDownloadThread::Entry - using wxHTTPBuilder"));
-			wxHTTPBuilder http;
-			http.InitContentTypes(); // Initialise the content types on the page			
-
-			// the proxy & auth settings should have been initialized by the
-			// user of wxDownloadThread ! 
-			
-			if (m_proxy.m_bUseProxy) {
-				wxLogDebug(wxT("wxDownloadThread::Entry - using the proxy settings"));
-				http.SetProxySettings(m_proxy);
-			}
-			
-			if (false) {//m_auth.m_bUseAuth) {
-				wxLogDebug(wxT("wxDownloadThread::Entry - using the basic authentication settings"));
-				m_auth.SetBasicAuth(); // Set the class to use the authentication settings
-				http.SetAuthentication(m_auth);
-			}
-
-			in = http.GetInputStream(m_strURI);
-#else
-			wxLogDebug(wxT("wxDownloadThread::Entry - using wxURL"));		
-			wxURL u(m_strURI);
-			if (u.GetError() != wxURL_NOERR)
-				wxDT_ABORT_DOWNLOAD(wxString(wxT("wxURL cannot parse this url [") + 
-										m_strURI + wxT("]")));
-			wxInputStream *in = u.GetInputStream();
-			path = u.GetPath();
-#endif
-		}
+		wxInputStream *in = wxGetInputStreamFromURI(m_strURI);
 
 		// check INPUT
 		if (in == NULL) {
 			// something is wrong with the input URL...
 			wxDT_ABORT_DOWNLOAD(wxT("Cannot open the INPUT stream; ")
-				wxT("url path is [") + path + wxT("]"));
+				wxT("url is [") + m_strURI + wxT("]"));
 		}
 		if (!in->IsOk()) {
 			delete in;
@@ -232,7 +269,7 @@ void *wxDownloadThread::Entry()
 			// do not send too many log messages; send a log message
 			// each 20 cycles (i.e. each 20*wxDT_BUF_TEMP_SIZE byte downloaded)
 			if ((m_nCurrentSize % (wxDT_BUF_TEMP_SIZE*20)) == 0)
-				wxLogDebug(wxT("wxDownloadThread::Entry - downloaded %d bytes"),
+				wxLogUsrMsgwxT("wxDownloadThread::Entry - downloaded %d bytes"),
 						m_nCurrentSize);
 #endif
 		}
@@ -247,7 +284,7 @@ void *wxDownloadThread::Entry()
 			(out.GetSize() != m_nFinalSize && m_nFinalSize != 0))
 			wxDT_ABORT_DOWNLOAD(wxT("Output FILE stream size is wrong"));
 		
-		wxLogDebug(wxT("wxDownloadThread::Entry - completed download of %d bytes"),
+		wxLogUsrMsg(wxT("wxDownloadThread::Entry - completed download of %d bytes"),
 						m_nCurrentSize);
 
 		// do we have to compute MD5 ?
@@ -332,7 +369,7 @@ wxString wxDownloadThread::GetRemainingTime() const
 
 void *wxSizeCacherThread::Entry()
 {
-	wxLogDebug(wxT("wxSizeCacherThread::Entry - caching file sizes"));
+	wxLogAdvMsg(wxT("wxSizeCacherThread::Entry - caching file sizes"));
 	bool allok = TRUE;
 
 	// be sure to have n null entries in our cache array, where
@@ -345,28 +382,11 @@ void *wxSizeCacherThread::Entry()
 	
 		// getting the input stream for the url is the only way
 		// to get the size of the resource pointed by that url...
-		wxURL u(m_urls[i]);
-		wxInputStream *stream = u.GetInputStream();
-		if (!stream) {
-			allok = FALSE;
-  			continue;
-		}
-		if (!stream->IsOk()) {
-			allok = FALSE;
-			delete stream;		// avoid leaks
-			continue;
-		}
-		
-		int sz = stream->GetSize();
-		if (sz == 0xffffff)
-			sz = 0;
-
-		m_urlSizes->Item(i) = sz;
+		m_urlSizes->Item(i) = wxGetSizeOfURI(m_urls[i]);
 		allok &= (m_urlSizes->Item(i) != 0);
-		delete stream;
 	}
 
-	wxLogDebug(wxT("wxSizeCacherThread::Entry - caching of file sizes completed"));
+	wxLogAdvMsg(wxT("wxSizeCacherThread::Entry - caching of file sizes completed"));
 	return (void *)allok;
 }
 

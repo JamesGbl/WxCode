@@ -67,10 +67,11 @@ INPUT                  = ../src/ \
                          docs.txt
 FILE_PATTERNS          = 
 RECURSIVE              = NO
-EXCLUDE                = app.cpp
+EXCLUDE                = ../src/app.cpp
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = 
-EXAMPLE_PATH           = .
+EXAMPLE_PATH           = . \
+			 ../website
 EXAMPLE_PATTERNS       = 
 EXAMPLE_RECURSIVE      = NO
 IMAGE_PATH             = 

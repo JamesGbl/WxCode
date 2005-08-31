@@ -125,7 +125,7 @@ public:		// action hashmap
 	void AddActionHandler(wxWebUpdateAction *custom)
 		{ if (!custom) return; m_hashActions[custom->GetName()] = custom; }
 
-	//! Creates a new action to handle an <actions> subtag with the given name.
+	//! Creates a new action to handle an \<actions\> subtag with the given name.
 	//! The \c propnames and \c propvalues parameters are the array of the
 	//! property names and property values found in the tag.
 	//! This function is called by wxWebUpdateXMLScript only and should not be

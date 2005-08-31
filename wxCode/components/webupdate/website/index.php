@@ -36,9 +36,12 @@
 
     
 	<br/><?php write_h1("Future enhancements"); ?>
-  <p>Allow in the REMOTE XML script to specify a "category" for the packages and use
+    <p>- Allow in the REMOTE XML script to specify a "category" for the packages and use
 a wxWebUpdateTreeCtrl instead of wxWebUpdateListCtrl to show the packages (and make
-WebUpdater similar to Cygwin setup program). To submit a feature request please look at <a href="../../support.php">wxCode support page</a>.</p>
+WebUpdater similar to Cygwin setup program). </p>
+    <p>- </p>
+
+    <p>To submit a feature request please look at <a href="../../support.php">wxCode support page</a>.</p>
     
 
 	<br/><?php require("footer.inc.php"); ?>

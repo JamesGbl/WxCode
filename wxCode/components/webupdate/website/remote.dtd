@@ -270,6 +270,21 @@
 <!ATTLIST make overwrite (1|0) "1">		<!-- when using the "file" property indicates if the file must be overwritten or not, if it already exists -->
 
 
+<!-- OPEN tag: opens with the default MIME handler, the resource pointed by the "file" property.
+               This action is similar to the <run> action but works using the default MIME
+               handler for the given file while <run> asks the shell to execute it.
+
+               You can specify the MIME type for the given file explicitely using the "mime"
+               property. If no "mime" property is specified, then the extension of the file
+               will be used to find the MIME type.
+-->
+<!ELEMENT open EMPTY>
+<!ATTLIST open file CDATA "$(thisfile)">	<!-- the file to open -->
+<!ATTLIST open flags (ASYNC|SYNC) "ASYNC">	<!-- the possible flags are: ASYNC, SYNC -->
+<!ATTLIST open mime CDATA "">	                <!-- the MIME type explicit for the "file": text/plain, text/html ... -->
+
+
+
 
 <!--                                                                                -->
 <!--                          ADDITIONAL CUSTOM ACTIONS                             -->

@@ -117,10 +117,11 @@ enum wxWebUpdateDlgStatus {
 
 
 
-//! A little container of the extra (extra referred to the options
-//! already present in the local XML script) options supported by
-//! wxWebUpdate* classes.
-class wxWebUpdateExtraOptions
+//! A container of the extra (extra referred to the options already present in the 
+//! local XML script) options supported by wxWebUpdate* classes and provided to 
+//! WebUpdater through command line options.
+//! These options override the eventually same options specified in the local XML script.
+/*class wxWebUpdateExtraOptions
 {
 public:
 
@@ -131,11 +132,14 @@ public:
 	//! TRUE if the application-to-update asked to save a log of this
 	//! update session.
 	bool m_bSaveLog;
+	
+	//! The name of the XRC resource to load as main WebUpdater dialog.
+	wxString m_strRes;
 
 public:
 	wxWebUpdateExtraOptions() { m_bRestart=m_bSaveLog=FALSE; }
 	virtual ~wxWebUpdateExtraOptions() {}
-};
+};*/
 
 
 //! The advanced panel of a wxWebUpdateDlg which contains all connection
@@ -145,7 +149,7 @@ class WXDLLIMPEXP_WEBUPDATE wxWebUpdateAdvPanel : public wxPanel
 protected:		// pointers to our controls
 	
 	wxTextCtrl *m_pDownloadPathTextCtrl;
-	wxCheckBox *m_pRemoveFiles, *m_pRestart;
+	wxCheckBox *m_pRemoveFiles, *m_pRestart, *m_pSaveLog;
 
 #if wxUSE_HTTPENGINE
 	wxProxySettings m_proxy;
@@ -153,10 +157,7 @@ protected:		// pointers to our controls
 #endif
 
 	//! The local XML script used to get some info.
-	const wxWebUpdateLocalXMLScript *m_xmlLocal;
-	
-	//! The extra options specified to WebUpdater.
-	wxWebUpdateExtraOptions *m_optExtra;
+	wxWebUpdateLocalXMLScript *m_xmlLocal;
 
 protected:
 
@@ -169,16 +170,17 @@ protected:		// event handlers
 	void OnProxySettings(wxCommandEvent &);
 	void OnAuthSettings(wxCommandEvent &);
 	void OnRestart(wxCommandEvent &);
-
+	void OnSaveLog(wxCommandEvent &);
+	
 public:
 
 	//! Constructs a wxWebUpdateAdvPanel; for two-step creation.
 	wxWebUpdateAdvPanel::wxWebUpdateAdvPanel()
-			: m_xmlLocal(NULL), m_optExtra(NULL) {}
+			: m_xmlLocal(NULL) {}
 
 	//! Constructs a wxWebUpdateAdvPanel.
 	wxWebUpdateAdvPanel::wxWebUpdateAdvPanel(wxWindow* parent)
-			: m_xmlLocal(NULL), m_optExtra(NULL)
+			: m_xmlLocal(NULL)
   		{ Create(parent); }
 
 	//! Creates this panel as child of the given window.
@@ -190,8 +192,7 @@ public:
 
 public:		// setters
 
- 	void SetData(const wxWebUpdateLocalXMLScript *script,
-					wxWebUpdateExtraOptions *opt);
+ 	void SetData(wxWebUpdateLocalXMLScript *script);
 
 public:		// getters
 
@@ -224,6 +225,7 @@ private:
 	DECLARE_CLASS(wxWebUpdateAdvPanel)
 	DECLARE_EVENT_TABLE()
 };
+
 
 
 //! The XRC handler for wxWebUpdateAdvPanel.
@@ -269,7 +271,7 @@ protected:		// pointers to our controls
 	wxStaticText *m_pAppNameText, *m_pTimeText, *m_pSpeedText;
 	wxButton *m_pOkBtn, *m_pCancelBtn, *m_pShowHideAdvBtn;
 	wxGauge *m_pGauge;
-	wxTextCtrl *m_pDescription;
+	wxTextCtrl *m_pDescription, *m_pLog;
 	wxCheckBox *m_pShowOnlyOOD;
 
 	// our listctrl
@@ -302,14 +304,6 @@ protected:		// XML scripts
 	//! The local XML script.
 	wxWebUpdateLocalXMLScript m_xmlLocal;
 	
-	//! Some additional options which are typically specified on the 
-	//! command line of the WebUpdater application.
-	//! (They can change from time to time so that it would be annoying
-	//!  to put them in the local XML script).
-	//! This is a reference in case we need to modify these options and
-	//! notify the WebUpdater application of this.
-	wxWebUpdateExtraOptions *m_optExtra;
-
 protected:		// remote-related stuff
 
 	//! The thread we use to download the webupdate script & packages.	
@@ -404,16 +398,14 @@ public:
 	//! is not required since we are using XRC system
 	wxWebUpdateDlg::wxWebUpdateDlg(
  						wxWindow *parent, 
-						const wxWebUpdateLocalXMLScript &script,
-      					wxWebUpdateExtraOptions *opt = NULL);
+						const wxWebUpdateLocalXMLScript &script);
 
 	//! Inits the values of the pointers and others var to NULL.
 	void PreInit();
 
 	//! Creates the dialog.
 	bool Create(wxWindow *parent, 
-				const wxWebUpdateLocalXMLScript &script,
-      			wxWebUpdateExtraOptions *opt = NULL);
+				const wxWebUpdateLocalXMLScript &script);
 
 	virtual ~wxWebUpdateDlg() 
 		{ if (m_dThread) delete m_dThread;
@@ -447,6 +439,10 @@ public:		// main functions
 	//! Returns the name of the application to update.
 	wxString GetAppName() const
 		{ return m_xmlLocal.GetAppName(); }
+		
+	//! Returns TRUE if the application updated should be restarted.
+	bool IsAppToRestart() const
+		{ return m_xmlLocal.IsAppToRestart(); }
 
 	//! Returns the filter currently in use for the package listctrl.
 	wxWebUpdateListCtrlFilter GetPackageFilter() const;

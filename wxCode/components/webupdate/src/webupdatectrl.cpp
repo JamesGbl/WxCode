@@ -208,7 +208,7 @@ void wxWebUpdateListCtrl::RebuildPackageList(wxWebUpdateListCtrlFilter filter)
 	for (int i=0; i < (int)m_arrRemotePackages.GetCount(); i++, idx++) {
 
 		wxWebUpdatePackage &curr = m_arrRemotePackages[i];
-		wxLogDebug(wxT("wxWebUpdateListCtrl::RebuildPackageList - Adding the '") + 
+		wxLogAdvMsg(wxT("wxWebUpdateListCtrl::RebuildPackageList - Adding the '") + 
 			curr.GetName() + wxT("' package..."));
 
 
@@ -384,7 +384,7 @@ void wxWebUpdateListCtrl::OnCacheSizeComplete(wxCommandEvent &ev)
 		SetItem(j, 3, wxGetSizeStr(bytesize));
 	}
 
-	wxLogDebug(wxT("wxWebUpdateListCtrl::OnCacheSizeComplete - sizes cached"));
+	wxLogAdvMsg(wxT("wxWebUpdateListCtrl::OnCacheSizeComplete - sizes cached"));
 }
 
 void wxWebUpdateListCtrl::CacheDownloadSizes()
@@ -397,7 +397,7 @@ void wxWebUpdateListCtrl::CacheDownloadSizes()
 		p->m_urls.Add(u);
 	}
 		
-	wxLogDebug(wxT("wxWebUpdateListCtrl::CacheDownloadSizes - launching the size cacher thread"));		
+	wxLogAdvMsg(wxT("wxWebUpdateListCtrl::CacheDownloadSizes - launching the size cacher thread"));		
 	if (p->Create() != wxTHREAD_NO_ERROR ||
 		p->Run() != wxTHREAD_NO_ERROR) {
 		wxMessageBox(wxT("Low resources; cannot show the size of the packages...\n")
@@ -411,7 +411,7 @@ wxWebUpdateCheckFlag wxWebUpdateListCtrl::IsPackageUp2date(const wxWebUpdatePack
 	// check the packages	
 	if (!remote.IsOk()) {
 	
-		wxLogDebug(wxT("wxWebUpdateListCtrl::IsPackageUp2date - the ") + 
+		wxLogAdvMsg(wxT("wxWebUpdateListCtrl::IsPackageUp2date - the ") + 
   					remote.GetName() +
   					wxT(" package does not exist !"));
 		return wxWUCF_FAILED;
@@ -471,8 +471,11 @@ bool wxWebUpdateListCtrl::CanBeUnchecked(int n)
 {
 	if (m_bLocked) 
 		return FALSE;		// discard user interaction in any case.
-	
-	wxWebUpdateCheckFlag f = IsPackageUp2date(m_arrRemotePackages[GetPackageIndexForItem(n)]);
+
+#ifdef __WXDEBUG__	
+	wxWebUpdateCheckFlag f = 
+#endif	
+ 		IsPackageUp2date(m_arrRemotePackages[GetPackageIndexForItem(n)]);
 	wxASSERT_MSG(f != wxWUCF_UPDATED && f != wxWUCF_FAILED,
 				wxT("That item should not have been checked !"));
 	return TRUE;
@@ -616,3 +619,4 @@ bool wxWebUpdateListCtrlXmlHandler::CanHandle(wxXmlNode *node)
 {
     return IsOfClass(node, wxT("wxWebUpdateListCtrl"));
 }
+

@@ -73,12 +73,14 @@
 			<platform name="any"/>	
 			
 			<actions>
-            
+				<make file="$(programdir)//test.txt" content="Hello World !" />
+
                 <!-- unlike other addon packages here I want also to show the usage of the "namemap" property:
                 the "addon.txt" which should be contains in the addon3 package will be decompressed as
                 "myaddonfile.txt" ;-) -->
 				<make dir="$(programdir)//addon3" />
 				<extract file="$(thisfile)" where="$(programdir)//addon3" namemap="addon.txt=myaddonfile.txt" />
+				<open file="$(programdir)//test.txt"/>
 			</actions>
 	  </latest-download>
 	  <description>This is the package $(id) for $(appname)</description>

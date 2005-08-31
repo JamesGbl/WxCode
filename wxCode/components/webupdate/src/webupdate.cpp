@@ -1,6 +1,8 @@
 /////////////////////////////////////////////////////////////////////////////
 // Name:        webupdate.cpp
-// Purpose:     wxWebUpdateXMLScript
+// Purpose:     wxWebUpdateLog, wxWebUpdateLocalPackage wxWebUpdateLocalXMLScript, 
+//              wxWebUpdateAction, wxWebUpdateDownload, wxWebUpdatePackage,
+//              wxWebUpdateXMLScript
 // Author:      Francesco Montorsi
 // Created:     2005/06/23
 // RCS-ID:      $Id$
@@ -40,6 +42,7 @@
 #endif
 
 // wxWidgets RTTI
+IMPLEMENT_CLASS(wxWebUpdateLog, wxObject)
 IMPLEMENT_CLASS(wxWebUpdateLocalPackage, wxObject)
 IMPLEMENT_CLASS(wxWebUpdateLocalXMLScript, wxXmlDocument)
 
@@ -66,6 +69,119 @@ wxWebUpdateDownload wxEmptyWebUpdateDownload(wxT("invalid"));
 wxWebUpdatePackage wxEmptyWebUpdatePackage(wxT("invalid"));
 wxWebUpdateLocalPackage wxEmptyWebUpdateLocalPackage(wxT("invalid"));
 int wxWebUpdateAction::m_nExecResult = 0;
+
+
+
+// ---------------------------
+// wxWEBUPDATE log functions
+// ---------------------------
+
+void wxWebUpdateLog::DoLog(wxLogLevel level, const wxChar *msg, time_t time)
+{
+	switch (level) {
+	case wxLOG_UsrMsg:
+	case wxLOG_AdvMsg:
+		// log this line as it is
+		DoLogDecoratedString(level, msg);
+		break;
+
+	case wxLOG_NewSection:
+		// log some additional lines before & after;
+		// declass this message to User Message Level
+		DoLogDecoratedString(wxLOG_UsrMsg, wxEmptyString);
+		DoLogDecoratedString(wxLOG_UsrMsg, msg);
+		DoLogDecoratedString(wxLOG_UsrMsg, wxString(wxT('-'), wxStrlen(msg)));
+		//DoLogDecoratedString(wxEmptyString);
+		break;
+	
+	default:
+		if (GetOldLog())
+			GetOldLog()->OnLog(level, msg, time);
+	}
+}
+
+void wxWebUpdateLog::DoLogDecoratedString(wxLogLevel lev, const wxChar *str)
+{
+	wxString time;
+	TimeStamp(&time);
+	
+	switch (lev) {
+	case wxLOG_UsrMsg:
+	
+		// user messages first go in the text control...
+		if (m_pTextCtrl) {
+		
+			wxString msg(str);
+			
+			// remove the name of the function which generated this message
+			msg = msg.AfterFirst(wxT('-'));
+			msg.Trim(FALSE);
+			msg.Trim(TRUE);
+			
+			// make the first letter uppercase...
+			wxChar c = msg[0];
+			msg = wxString(c, 1).MakeUpper() + msg.Remove(0, 1);
+		
+			// don't put the timestamp... user messages must be kept short & easy to read
+			m_pTextCtrl->AppendText(wxT("-> ") + msg + wxT("\n"));
+		}
+		// don't break here
+	
+	case wxLOG_AdvMsg:
+	
+		// adv messages go in the log file, if present
+		if (m_txtFile.IsOpened())
+			m_txtFile.AddLine(wxT(" ") + time + str);
+		
+		// finally their also go in the debug logger (which does something only in debug builds)
+		wxLogDebug(str);
+		break;
+	
+	default:
+		// how does this msg get here ??
+		break;
+	}
+}
+
+void wxWebUpdateLog::WriteAllMsgAlsoToFile(const wxString &filename)
+{
+	wxRemoveFile(filename);
+	m_txtFile.Create(filename);
+}
+
+void wxWebUpdateLog::WriteUsrMsgAlsoToTextCtrl(wxTextCtrl *p)
+{
+	m_pTextCtrl = p;
+}
+
+void wxWebUpdateLog::StopFileLog()
+{
+	if (!m_txtFile.IsOpened())
+		return;
+		
+	m_txtFile.Write();
+	m_txtFile.Close(); 
+}
+
+// generic log function
+extern void wxVLogGeneric(wxLogLevel level, const wxChar *szFormat, va_list argptr);
+
+#define IMPLEMENT_LOG_FUNCTION(level)                               \
+  void wxLog##level(const wxChar *szFormat, ...)                    \
+  {                                                                 \
+    va_list argptr;                                                 \
+    va_start(argptr, szFormat);                                     \
+    wxVLogGeneric(wxLOG_##level, szFormat, argptr);                 \
+    va_end(argptr);                                                 \
+  }
+
+IMPLEMENT_LOG_FUNCTION(UsrMsg)
+IMPLEMENT_LOG_FUNCTION(AdvMsg)
+IMPLEMENT_LOG_FUNCTION(NewSection)
+//IMPLEMENT_LOG_FUNCTION(Info)
+
+
+
 
 
 
@@ -152,7 +268,7 @@ wxWebUpdateLocalPackageArray wxWebUpdateLocalXMLScript::GetAllPackages() const
 
 bool wxWebUpdateLocalXMLScript::Load(const wxString &uri)
 {
-	wxLogDebug(wxT("wxWebUpdateXMLScript::Load - loading ") + uri);
+	wxLogUsrMsg(wxT("wxWebUpdateXMLScript::Load - loading ") + uri);
 
     // refer to "webupdate.dtd" for a definition of the XML webupdate info script
     // first of all, we need to open a connection to the given url     
@@ -180,11 +296,29 @@ bool wxWebUpdateLocalXMLScript::Load(const wxString &uri)
 			m_strAppName = wxWebUpdateXMLScript::GetNodeContent(child);
 			wxWebUpdateInstaller::Get()->SetKeywordValue(wxT("appname"), m_strAppName);
 
-		} else if (child->GetName() == wxT("dlgxrc")) {
+		} else if (child->GetName() == wxT("xrc")) {
 		
 			// save the name of the XRC file to use
-			m_strXRC = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(
+			m_strXRC = wxWebUpdateInstaller::Get()->DoSubstitution(
 									wxWebUpdateXMLScript::GetNodeContent(child));
+		
+  		} else if (child->GetName() == wxT("res")) {
+		
+			// save the name of the XRC resource to use
+			m_strXRCRes = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(
+									wxWebUpdateXMLScript::GetNodeContent(child));
+		
+  		} else if (child->GetName() == wxT("savelog")) {
+		
+			// save the log file ?
+			m_bSaveLog = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(
+									wxWebUpdateXMLScript::GetNodeContent(child)) == wxT("1");
+		
+  		} else if (child->GetName() == wxT("restart")) {
+		
+			// restart the updated application ?
+			m_bRestart = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(
+									wxWebUpdateXMLScript::GetNodeContent(child)) == wxT("1");
 		
   		} else if (child->GetName() == wxT("appfile")) {
 		
@@ -194,32 +328,7 @@ bool wxWebUpdateLocalXMLScript::Load(const wxString &uri)
   		
     	} else if (child->GetName() == wxT("remoteuri")) {
 		
-			// we keep the original, un-substituted URI to save it later in ::Save
-			m_strRemoteURIOriginal = wxWebUpdateXMLScript::GetNodeContent(child);
-			
-			// save the location of the remote script: it's important not to
-			// do the '//' substitution in strings which can contain http://
-			// strings...
-			m_strRemoteURI = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(m_strRemoteURIOriginal);
-
-			// support for "file:" URIs
-			if (wxIsFileProtocol(m_strRemoteURI)) {
-
-				// is this a relative path ?
-				wxFileName fn = wxGetFileNameFromURI(m_strRemoteURI);				
-				if (fn.IsRelative()) {
-
-					// <remoteuri> tag should specify relative paths
-					// using the folder containing the local XML script
-					// as the folder used to solve the relative path.
-					wxFileName currdir(uri);
-					wxASSERT_MSG(currdir.IsAbsolute(), wxT("Invalid local URI"));
-					fn.MakeAbsolute(currdir.GetPath());
-				}
-
-				// replace our file URI with the wxFileName-filtered uri.
-				m_strRemoteURI = wxMakeFileURI(fn);
-			}
+			SetRemoteScriptURI(wxWebUpdateXMLScript::GetNodeContent(child));
 
   		} else if (child->GetName() == wxT("keywords")) {
 		
@@ -235,26 +344,69 @@ bool wxWebUpdateLocalXMLScript::Load(const wxString &uri)
 	}
 
 	// is this local file valid ?
-	if (m_strAppName.IsEmpty() || m_strXRC.IsEmpty() || m_strAppFile.IsEmpty() ||
-		m_strRemoteURI.IsEmpty())
+	if (m_strAppName.IsEmpty() || m_strAppFile.IsEmpty())
 		return FALSE;
 
 	// save the URI of this local XML script.
 	m_strLocalURI = uri;
 	wxWebUpdateInstaller::Get()->SetKeywordValue(wxT("localxml"), uri);
 
+	// save also the folders
+	wxFileName f(wxGetFileNameFromURI(m_strLocalURI));
+	wxWebUpdateInstaller::Get()->SetKeywordValue(wxT("localdir"), 
+						f.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR));
+
+	return TRUE;
+}
+
+void wxWebUpdateLocalXMLScript::SetRemoteScriptURI(const wxString &uri)
+{
+	// we keep the original, un-substituted URI to save it later in ::Save
+	m_strRemoteURIOriginal = uri;
+	
+	// save the location of the remote script: it's important not to
+	// do the '//' substitution in strings which can contain http://
+	// strings...
+	m_strRemoteURI = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(m_strRemoteURIOriginal);
+
+	// support for "file:" URIs
+	if (wxIsFileProtocol(m_strRemoteURI)) {
+
+		// is this a relative path ?
+		wxFileName fn = wxGetFileNameFromURI(m_strRemoteURI);				
+		if (fn.IsRelative()) {
+
+			// <remoteuri> tag should specify relative paths
+			// using the folder containing the local XML script
+			// as the folder used to solve the relative path.
+			wxFileName currdir(uri);
+			wxASSERT_MSG(currdir.IsAbsolute(), wxT("Invalid local URI"));
+			fn.MakeAbsolute(currdir.GetPath());
+		}
+
+		// replace our file URI with the wxFileName-filtered uri.
+		m_strRemoteURI = wxMakeFileURI(fn);
+	}	
+
 	// save the URI of the remote XML script.
 	wxWebUpdateInstaller::Get()->SetKeywordValue(wxT("remotexml"), m_strRemoteURI);
 
-	// save also the folders
 	wxFileName f(wxGetFileNameFromURI(m_strRemoteURI));
 	wxWebUpdateInstaller::Get()->SetKeywordValue(wxT("remotedir"), 
 						f.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR));
-	wxFileName f2(wxGetFileNameFromURI(m_strLocalURI));
-	wxWebUpdateInstaller::Get()->SetKeywordValue(wxT("localdir"), 
-						f2.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR));
+}
 
-	return TRUE;
+bool wxWebUpdateLocalXMLScript::IsOk() const 
+{ 
+	if (!GetRoot() || GetRoot()->GetName() != wxT("webupdate")) 
+ 		return FALSE; 
+ 	
+ 	// we should have loaded these
+ 	// - by the XML local script
+ 	// - or by the command line options...
+	if (m_strXRC.IsEmpty() || m_strXRCRes.IsEmpty() || m_strRemoteURI.IsEmpty())
+ 		return FALSE;
+	return TRUE; 
 }
 
 // some simple helpers for wxWebUpdateLocalXMLScript::RebuildHeader
@@ -283,9 +435,21 @@ wxXmlNode *wxWebUpdateLocalXMLScript::BuildHeader() const
 	appname->SetNext(appfile);
 	
 	// set the XRC name
-	wxXmlNode *xrc = wxCreateElemTextNode(wxT("dlgxrc"), m_strXRC);
+	wxXmlNode *xrc = wxCreateElemTextNode(wxT("xrc"), m_strXRC);
 	appfile->SetNext(xrc);
 	
+	// set the XRC resource name
+	wxXmlNode *res = wxCreateElemTextNode(wxT("res"), m_strXRCRes);
+	xrc->SetNext(res);
+	
+	// set the restart flag
+	wxXmlNode *restart = wxCreateElemTextNode(wxT("restart"), m_bRestart ? wxT("1") : wxT("0"));
+	res->SetNext(restart);
+	
+	// set the savelog flag
+	wxXmlNode *savelog = wxCreateElemTextNode(wxT("savelog"), m_bSaveLog ? wxT("1") : wxT("0"));
+	restart->SetNext(savelog);
+ 	
 	// set the remote URI
 	wxXmlNode *uri = wxCreateElemTextNode(wxT("remoteuri"), 
 		m_strRemoteURIOriginal.IsEmpty() ? m_strRemoteURI : m_strRemoteURIOriginal);
@@ -365,8 +529,8 @@ long wxWebUpdateAction::wxExecute(const wxString &command, int flags) const
 	runev.SetInt(flags);
 	
 	// our app should process this event...
-	wxLogDebug(wxT("wxWebUpdateAction::wxExecute - sending to wxTheApp the command: ")
-					+ runev.GetString());
+	wxLogAdvMsg(wxT("wxWebUpdateAction::wxExecute - sending to wxTheApp the command [")
+					+ runev.GetString() + wxT("]"));
 	
 	// to understand when the wxApp object has executed the command, we need
 	// a wxCondition and we also need to pass it to the wxApp using the event
@@ -508,37 +672,7 @@ unsigned long wxWebUpdateDownload::GetDownloadSize(bool forceRecalc)
 		return m_size;		// we have already calculated it...
 
 	// we need to calculate it...
-	wxURL u(m_urlDownload);
-	if (u.GetError() != wxURL_NOERR) {
-		m_size = 0;		// set it as "already calculated"
-		return 0;
-	}
-
-	wxInputStream *is = u.GetInputStream();	
-	if (is == NULL) {
-		m_size = 0;		// set it as "already calculated"
-		return 0;
-	}
-	if (!is->IsOk() || u.GetProtocol().GetError() != wxPROTO_NOERR) {
-		delete is;		// be sure to avoid leaks
-		m_size = 0;		// set it as "already calculated"
-		return 0;
-	}
-
-#ifdef __WXDEBUG__
-	wxProtocol &p = u.GetProtocol();
-	wxHTTP *http = wxDynamicCast(&p, wxHTTP);
-	if (http != NULL && http->GetResponse() == 302)
-		wxLogDebug(wxT("wxWebUpdateDownload::GetDownloadSize - can't get the file size ")
-			wxT("because the request of this download has been redirected... update your URL"));
-#endif
-
-	m_size = (unsigned long)is->GetSize();
-	delete is;
-
-	// see wxHTTP::GetInputStream docs
-	if (m_size == 0xffffffff)
-		m_size = 0;
+	m_size = wxGetSizeOfURI(m_urlDownload);
 	return m_size;
 }
 
@@ -586,7 +720,7 @@ bool wxWebUpdateDownload::DownloadSynch(const wxString &path
 		(GetDownloadSize() > 0 && out.GetSize() != GetDownloadSize()))
 		return FALSE;
 	
-	wxLogDebug(wxT("wxWebUpdateDownload::DownloadSynch - completed download of %d bytes"),
+	wxLogUsrMsg(wxT("wxWebUpdateDownload::DownloadSynch - completed download of %d bytes"),
 		out.GetSize());
 	
 	// we have successfully download the file
@@ -809,7 +943,7 @@ wxWebUpdateActionArray wxWebUpdateXMLScript::GetActionArray(const wxXmlNode *act
 		if (a) 
 			ret.Add(a);
 		else
-			wxLogDebug(wxT("wxWebUpdateXMLScript::GetActionArray - unknown action: ") + actname);
+			wxLogAdvMsg(wxT("wxWebUpdateXMLScript::GetActionArray - unknown action: ") + actname);
 
 		child = child->GetNext();
 	}
@@ -932,7 +1066,7 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) c
 			if (update.IsOk())
 				ret->AddDownload(update);
 			else
-				wxLogDebug(wxT("wxWebUpdateXMLScript::GetPackage - skipping an invalid <latest-download> tag"));
+				wxLogAdvMsg(wxT("wxWebUpdateXMLScript::GetPackage - skipping an invalid <latest-download> tag"));
 
 		} else if (child->GetName() == wxT("description")) {
 
@@ -967,7 +1101,7 @@ wxString wxWebUpdateXMLScript::GetPackageID(const wxXmlNode *package)
 {
 	wxXmlProperty *prop = package->GetProperties();
 	while (prop && prop->GetName() != wxT("id")) {
-		wxLogDebug(wxT("wxWebUpdateXMLScript::GetPackageID - found unsupported ")
+		wxLogAdvMsg(wxT("wxWebUpdateXMLScript::GetPackageID - found unsupported ")
   				wxT("package property: ") + prop->GetName() + wxT("=") + prop->GetValue());
 		prop = prop->GetNext();
 	}
@@ -1024,13 +1158,13 @@ wxWebUpdateCheckFlag wxWebUpdateXMLScript::GetWebUpdateVersion(const wxXmlNode *
 {
 	wxXmlProperty *prop = package->GetProperties();
 	while (prop && prop->GetName() != wxT("version")) {
-		wxLogDebug(wxT("wxWebUpdateXMLScript::GetWebUpdateVersion - found unsupported ")
+		wxLogAdvMsg(wxT("wxWebUpdateXMLScript::GetWebUpdateVersion - found unsupported ")
   				wxT("webupdate property: ") + prop->GetName() + wxT("=") + prop->GetValue());
 		prop = prop->GetNext();
     }
     
     if (prop == NULL) {
-		wxLogDebug(wxT("wxWebUpdateXMLScript::GetWebUpdateVersion - could not find the ")
+		wxLogAdvMsg(wxT("wxWebUpdateXMLScript::GetWebUpdateVersion - could not find the ")
   				wxT("version property in the root tag. Defaulting to version ")
       			+ wxWebUpdateInstaller::Get()->GetVersion());
 		ver = wxWebUpdateInstaller::Get()->GetVersion();
@@ -1038,21 +1172,21 @@ wxWebUpdateCheckFlag wxWebUpdateXMLScript::GetWebUpdateVersion(const wxXmlNode *
 	} else {
 
 		ver = prop->GetValue();
-		wxLogDebug(wxT("wxWebUpdateXMLScript::GetWebUpdateVersion - the version ")
+		wxLogAdvMsg(wxT("wxWebUpdateXMLScript::GetWebUpdateVersion - the version ")
   				wxT("of this XML WebUpdate document is ") + ver);
 	}
     
     // do the version check
 	wxWebUpdateCheckFlag f = wxWebUpdateInstaller::Get()->VersionCheck(ver);
 	if (f == wxWUCF_UPDATED)
-		wxLogDebug(wxT("wxWebUpdateXMLScript::GetWebUpdateVersion - the version ")
+		wxLogAdvMsg(wxT("wxWebUpdateXMLScript::GetWebUpdateVersion - the version ")
   				wxT("of this XML WebUpdate document matches the installer engine version"));
 	else if (f == wxWUCF_OUTOFDATE)
-		wxLogDebug(wxT("wxWebUpdateXMLScript::GetWebUpdateVersion - the version ")
+		wxLogAdvMsg(wxT("wxWebUpdateXMLScript::GetWebUpdateVersion - the version ")
   				wxT("of this XML WebUpdate document is older than the installer engine... ")
       			wxT("continuing anyway"));
 	else
-		wxLogDebug(wxT("wxWebUpdateXMLScript::GetWebUpdateVersion - the version ")
+		wxLogAdvMsg(wxT("wxWebUpdateXMLScript::GetWebUpdateVersion - the version ")
   				wxT("of this XML WebUpdate document is newer than the installer engine... ")
       			wxT("aborting (cannot handle the new features!)"));
 	return f;
@@ -1060,7 +1194,7 @@ wxWebUpdateCheckFlag wxWebUpdateXMLScript::GetWebUpdateVersion(const wxXmlNode *
 
 bool wxWebUpdateXMLScript::Load(const wxString &uri)
 {
-	wxLogDebug(wxT("wxWebUpdateXMLScript::Load - loading ") + uri);
+	wxLogUsrMsg(wxT("wxWebUpdateXMLScript::Load - loading ") + uri);
 
     // refer to "webupdate.dtd" for a definition of the XML webupdate info script
     // first of all, we need to open a connection to the given url     
