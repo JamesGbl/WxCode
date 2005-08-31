@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<makefile>
+
+	<!-- list here the additional sources & header files which you
+         use to implement your custom actions. -->
+ 	<set var="MOD_SRC">fontinstall.cpp</set>
+ 	<set var="MOD_HDR">fontinstall.h</set>
+      
+</makefile>

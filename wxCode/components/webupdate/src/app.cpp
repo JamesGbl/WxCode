@@ -373,7 +373,7 @@ bool WebUpdaterApp::OnPreInit()
 					wxT("The installation of the WebUpdater component of this application\n")
 					wxT("is corrupted; the file:\n\n\t") + 
 					fn.GetFullPath() + 
-					wxT("\n\n is missing (or invalid); please reinstall the program."));
+					wxT("\n\nis missing (or invalid); please reinstall the program."));
 		return FALSE;
 	}
 
@@ -434,7 +434,7 @@ bool WebUpdaterApp::OnPreInit()
 		wxWebUpdateInstaller::Get()->ShowErrorMsg(
 					wxT("The WebUpdater configuration file is corrupted; the file:\n\n\t") +				
 					m_script.GetXRCResName() + 
-					wxT("\n\n is missing (or invalid); please reinstall the program."));
+					wxT("\n\nis missing (or invalid); please reinstall the program."));
 		return FALSE;
 	}
 
@@ -447,7 +447,7 @@ bool WebUpdaterApp::OnPreInit()
 		wxWebUpdateInstaller::Get()->ShowErrorMsg(
 					wxT("The WebUpdater configuration file is corrupted; the file:\n\n\t") +					
 					app2update.GetFullPath() + 
-					wxT("\n\n is missing (or invalid); please reinstall the program."));
+					wxT("\n\nis missing (or invalid); please reinstall the program."));
 		return FALSE;
 	}
 	
