@@ -577,11 +577,6 @@ void WebUpdaterDlg::OnQuit(wxCloseEvent &)
     
 	// --> Don't use Close with a wxDialog,
 	//     use Destroy instead.
-#ifdef __WXDEBUG__
-	wxFrame *f = NULL;
-	if (wxGetApp().m_log) f = wxGetApp().m_log->GetFrame();
-	if (f) f->Close(true);
-#endif
     Destroy();
 	wxLogUsrMsg(wxT("WebUpdaterDlg::OnQuit - quitting"));
 }

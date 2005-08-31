@@ -243,7 +243,8 @@ bool wxWebUpdateDlg::InitWidgetsFromXRC(wxWindow *parent)
 	}
 	if (m_pLog) {
 	
-		wxWebUpdateLog *logger = wxDynamicCast(wxLog::GetActiveTarget(), wxWebUpdateLog);
+		// cannot use wxDynamicCast since wxLog does not derive from wxObject
+		wxWebUpdateLog *logger = wx_static_cast(wxWebUpdateLog*, wxLog::GetActiveTarget());
 		if (logger) logger->WriteUsrMsgAlsoToTextCtrl(m_pLog);
 	}
 

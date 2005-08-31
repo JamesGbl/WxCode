@@ -43,6 +43,11 @@
 DEFINE_EVENT_TYPE(wxEVT_COMMAND_DOWNLOAD_COMPLETE);
 DEFINE_EVENT_TYPE(wxEVT_COMMAND_CACHESIZE_COMPLETE);
 
+// statics
+wxProxySettings wxDownloadThread::m_proxy;
+wxHTTPAuthSettings wxDownloadThread::m_auth;
+
+
 
 
 // ---------------------
@@ -269,8 +274,8 @@ void *wxDownloadThread::Entry()
 			// do not send too many log messages; send a log message
 			// each 20 cycles (i.e. each 20*wxDT_BUF_TEMP_SIZE byte downloaded)
 			if ((m_nCurrentSize % (wxDT_BUF_TEMP_SIZE*20)) == 0)
-				wxLogUsrMsgwxT("wxDownloadThread::Entry - downloaded %d bytes"),
-						m_nCurrentSize);
+				wxLogUsrMsg(wxT("wxDownloadThread::Entry - downloaded %d bytes"),
+							m_nCurrentSize);
 #endif
 		}
 		
