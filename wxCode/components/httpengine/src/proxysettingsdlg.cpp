@@ -155,7 +155,7 @@ wxProxySettingsDlg::~wxProxySettingsDlg()
 //! Set proxy port number
 void wxProxySettingsDlg::SetPortNumber(const long port)
 {
-  m_tcPort->SetValue( wxString::Format("%ld", port) );
+  m_tcPort->SetValue( wxString::Format( wxT("%ld"), port) );
 }
 
 //! Set Proxy host
@@ -177,7 +177,7 @@ void wxProxySettingsDlg::SetPassword(const wxString &password)
 }
 
 //! Set exceptions list as string
-void wxProxySettingsDlg::SetExceptions(const wxString &exceptions)
+void wxProxySettingsDlg::SetHostExceptions(const wxString &exceptions)
 {
   m_tcExceptions->SetValue( exceptions );
 }
@@ -186,7 +186,7 @@ void wxProxySettingsDlg::SetProxySettings(const wxProxySettings &settings)
 {
   m_settings = settings;
   SetPortNumber(m_settings.m_nProxyPort);
-  SetExceptions(m_settings.m_strProxyExceptions);
+  SetHostExceptions(m_settings.m_strProxyExceptions);
   SetHost(m_settings.m_strProxyHostname);
   SetUsername(m_settings.m_strProxyUsername);
   SetPassword(m_settings.m_strProxyPassword);
@@ -220,7 +220,7 @@ wxString wxProxySettingsDlg::GetPassword()
 }
 
 //! Get exceptions string
-wxString wxProxySettingsDlg::GetExceptions()
+wxString wxProxySettingsDlg::GetHostExceptions()
 {
   return m_tcExceptions->GetValue();
 }
@@ -228,7 +228,7 @@ wxString wxProxySettingsDlg::GetExceptions()
 wxProxySettings wxProxySettingsDlg::GetProxySettings(void)
 {
   m_settings.m_nProxyPort = GetPortNumber();
-  m_settings.m_strProxyExceptions = GetExceptions();
+  m_settings.m_strProxyExceptions = GetHostExceptions();
   m_settings.m_strProxyHostname = GetHost();
   m_settings.m_strProxyUsername = GetUsername();
   m_settings.m_strProxyPassword = GetPassword();
@@ -259,14 +259,14 @@ bool wxProxySettingsDlg::IsAuthProxy()
 }
 
 //! Set description to describe what constitutes as exceptions host for your application
-void wxProxySettingsDlg::SetExceptionsDesc(const wxString &text)
+void wxProxySettingsDlg::SetHostExceptionsDesc(const wxString &text)
 {
   if( m_stExceptionsDesc )
     m_stExceptionsDesc->SetLabel(text);
 }
 
 //! Additional information which may be an example or note
-void wxProxySettingsDlg::SetExceptionsNote(const wxString &text)
+void wxProxySettingsDlg::SetHostExceptionsNote(const wxString &text)
 {
   if( m_stExceptionsNote )
     m_stExceptionsNote->SetLabel(text);
