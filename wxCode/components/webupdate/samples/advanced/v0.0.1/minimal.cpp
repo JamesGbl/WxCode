@@ -226,10 +226,10 @@ MyFrame::MyFrame(const wxString& title)
 #if wxUSE_MENUS
     // create a menu bar
     wxMenu *menuFile = new wxMenu;
-    menuFile->Append(Minimal_UpdateCheck, _T("Check for updates..."), 
-            _T("Checks for updates and eventually downloads the update version..."));	
-    menuFile->Append(Minimal_LocalCheck, _T("Check for updates using local packages"), 
-            _T("Checks for updates and eventually downloads the update version..."));	
+    menuFile->Append(Minimal_UpdateCheck, _T("Check for remote updates..."), 
+            _T("Checks for updates and eventually downloads the update version from WWW..."));	
+    menuFile->Append(Minimal_LocalCheck, _T("Check for local updates..."), 
+            _T("Checks for updates and eventually downloads the update version without requiring a connection..."));	
     menuFile->Append(Minimal_Quit, _T("E&xit\tAlt-X"), _T("Quit this program"));	
     
     // the "About" item should be in the help menu

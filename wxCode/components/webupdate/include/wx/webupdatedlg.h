@@ -377,6 +377,7 @@ protected:		// event handlers
 	void OnShowHideAdv(wxCommandEvent &);	
 	void OnUpdateUI(wxUpdateUIEvent &);
 	void OnTextURL(wxTextUrlEvent &);
+	void OnSize(wxSizeEvent &);
 
 	// for event raised by our wxDownloadThread....
 	void OnDownloadComplete(wxCommandEvent &);

@@ -25,7 +25,7 @@
    
      http://wxcode.sf.net/components/webupdate/script1.xml
      http://wxcode.sf.net/components/webupdate/script2.xml
-	 
+     
    Also remember to validate your XML files against this DTD before mailing for
    problems about your scripts: WebUpdate component is not responsible for
    unwanted behaviours coming from malformed update scripts !
@@ -78,7 +78,7 @@
    
    - miscellaneous:
      $(pid) = the process ID of the updater program
-	 
+     
    - these are available only after the relative tags:
      $(latest-version) = the version of the package (available only after <latest-version>)
      $(thisfile) = the name of the file of this package (available only after <uri>)
@@ -106,7 +106,7 @@
 
 <!-- PACKAGE tag: this begins a new package section where
                   are provided all the info about new updates.
-				  Requires an "id" attribute (which must be unique).
+                  Requires an "id" attribute (which must be unique).
 -->
 <!ELEMENT package (requires?, latest-version, latest-download*, description?)>
 <!ATTLIST package id ID #REQUIRED>
@@ -114,14 +114,14 @@
 
 <!-- MSG-UPDATE-AVAILABLE tag: contains a text message which is displayed to the user in case
                                a new version of some package is available for its platform. 
-							   Keyword substitution is performed in the text.
+                               Keyword substitution is performed in the text.
 -->
 <!ELEMENT msg-update-available (#PCDATA)>
 
 
 <!-- MSG-UPDATE-NOTAVAILABLE tag: contains a text message which is displayed to the user in case
                                  a new version of the package is NOT available for its platform. 
-							     Keyword substitution is performed in the text.
+                                 Keyword substitution is performed in the text.
 -->
 <!ELEMENT msg-update-notavailable (#PCDATA)>
 
@@ -136,7 +136,7 @@
 
 <!-- REQUIRES tag: lists the packages required for the installation of this package.
                    The list must be comma-separed and the names of the packages referenced
-				   must be declared somewhere in the web update script.
+                   must be declared somewhere in the web update script.
 -->
 <!ELEMENT requires (#PCDATA)>
 
@@ -144,8 +144,8 @@
 
 <!-- LATEST-VERSION tag: contains the version string of the most updated version
                          available in the webserver.
-						 You can use the 'importance' attribute to define how much
-						 important is this update...
+                         You can use the 'importance' attribute to define how much
+                         important is this update...
 -->
 <!ELEMENT latest-version (#PCDATA)>
 <!ATTLIST latest-version importance (low|normal|high) "normal">
@@ -153,10 +153,10 @@
 
 <!-- LATEST-DOWNLOAD tag: must contain the URI tag with the download location of the most updated
                           file available in the webserver. Requires also a "platform" child tag
-						  which specifies the platform targeted by this download.
-						  The "md5" subtag can be optionally used to specify a MD5 checksum.
-						  At least one "action" child tag must be present to specify the action to
-						  take at the end of the download.						  
+                          which specifies the platform targeted by this download.
+                          The "md5" subtag can be optionally used to specify a MD5 checksum.
+                          At least one "action" child tag must be present to specify the action to
+                          take at the end of the download.                        
 -->
 <!ELEMENT latest-download (uri, platform, md5?, actions+)>
 
@@ -164,7 +164,7 @@
 <!-- DESCRIPTION tag: the description for this package; contained URLs will be automatically highlighted
                       so that the user can click them to directly visit them.
                       This is useful to embed a link to the changelog for this package, for example.
-                      Keyword substitution is performed in the text.				  
+                      Keyword substitution is performed in the text.                  
 -->
 <!ELEMENT description (#PCDATA)>
 
@@ -185,15 +185,15 @@
 
 <!-- URI tag: specifies the URI of the current download.
               Keyword substitution is performed in the text; this allows you to write
-			  URLs in this way:
-			  
-			  <uri>http://mysite.net/myprog-$(latest-version).zip</uri>
-			  
-			  which is very handy for those projects who follow a strict naming rule.
-			  This allows you to avoid to update the filename each time a new release
-			  is out but don't forget that you will still need to update the tags:
-			  <latest-version>, <md5>, etc ...
-			  
+              URLs in this way:
+              
+              <uri>http://mysite.net/myprog-$(latest-version).zip</uri>
+              
+              which is very handy for those projects who follow a strict naming rule.
+              This allows you to avoid to update the filename each time a new release
+              is out but don't forget that you will still need to update the tags:
+              <latest-version>, <md5>, etc ...
+              
 -->
 <!ELEMENT uri (#PCDATA)>
 
@@ -221,10 +221,10 @@
               "cmd" or "file" properties.              
 -->
 <!ELEMENT run EMPTY>
-<!ATTLIST run flags (ASYNC|SYNC) "ASYNC">			<!-- the possible flags are: ASYNC, SYNC -->
-<!ATTLIST run args CDATA "">					<!-- the arguments to give to the file to run -->
-<!ATTLIST run cmd CDATA "$(thisfile)">				<!-- the path+name of the file to run; identic to 'file' property - use the one you prefer -->
-<!ATTLIST run file CDATA "$(thisfile)">				<!-- the path+name of the file to run; identic to 'cmd' property - use the one you prefer -->
+<!ATTLIST run flags (ASYNC|SYNC) "ASYNC">           <!-- the possible flags are: ASYNC, SYNC -->
+<!ATTLIST run args CDATA "">                        <!-- the arguments to give to the file to run -->
+<!ATTLIST run cmd CDATA "$(thisfile)">              <!-- the path+name of the file to run; identic to 'file' property - use the one you prefer -->
+<!ATTLIST run file CDATA "$(thisfile)">             <!-- the path+name of the file to run; identic to 'cmd' property - use the one you prefer -->
 
 
 <!-- EXTRACT tag: decompress the given "file" in the given location (see "where" property).
@@ -240,40 +240,40 @@
      and rename them to "$(updatername)$(exe)". 
 -->
 <!ELEMENT extract EMPTY>
-<!ATTLIST extract where CDATA "$(programdir)">			<!-- the folder where extracted files will be put -->
-<!ATTLIST extract file CDATA "$(thisfile)">			<!-- the file to extract -->
-<!ATTLIST extract type (zip) "zip">				<!-- the possible values actually are: 'zip' -->
-<!ATTLIST extract namemap CDATA "">		<!-- a comma-separed list of values like
+<!ATTLIST extract where CDATA "$(programdir)">          <!-- the folder where extracted files will be put -->
+<!ATTLIST extract file CDATA "$(thisfile)">             <!-- the file to extract -->
+<!ATTLIST extract type (zip) "zip">                     <!-- the possible values actually are: 'zip' -->
+<!ATTLIST extract namemap CDATA "">                     <!-- a comma-separed list of values like
                                                             compressedname1=outputname1,compressedname2=outputname2...
-                                                     which tell the extract action how to name the extracted file.
-                                                     By default, the list is empty and each compressed file is extracted
-                                                     in the destination folder using the compressed filename. -->
+                                                          which tell the extract action how to name the extracted file.
+                                                          By default, the list is empty and each compressed file is extracted
+                                                          in the destination folder using the compressed filename. -->
 
 
 <!-- COPY tag: copies the file from the given path to the given folder. Can be used as move actions using
                the "move" property.
 -->
 <!ELEMENT copy EMPTY>
-<!ATTLIST copy from CDATA #IMPLIED>		<!-- the original files to copy; folders/patterns can be used -->
-<!ATTLIST copy to CDATA #IMPLIED>			<!-- the destination folder -->
-<!ATTLIST copy move (1|0) "0">				<!-- if "1" the "copy" action will act as "move" property -->
-<!ATTLIST copy create (1|0) "1">	            <!-- if "1" the destination folder will be created if it does not exist -->
-<!ATTLIST copy overwrite (1|0) "1">	        <!-- if "1" the destination files will be overwritten if they already exist -->
+<!ATTLIST copy from CDATA #IMPLIED>            <!-- the original files to copy; folders/patterns can be used -->
+<!ATTLIST copy to CDATA #IMPLIED>              <!-- the destination folder -->
+<!ATTLIST copy move (1|0) "0">                 <!-- if "1" the "copy" action will act as "move" property -->
+<!ATTLIST copy create (1|0) "1">               <!-- if "1" the destination folder will be created if it does not exist -->
+<!ATTLIST copy overwrite (1|0) "1">            <!-- if "1" the destination files will be overwritten if they already exist -->
 
 
 <!-- MKDIR tag: creates a folder.
 -->
 <!ELEMENT mkdir EMPTY>
-<!ATTLIST mkdir dir CDATA #IMPLIED>		        <!-- the folder to create -->
+<!ATTLIST mkdir dir CDATA #IMPLIED>             <!-- the folder to create -->
 
 
 <!-- MKFILE tag: creates a file with the given content encoded in the given encoding.
 -->
 <!ELEMENT mkfile EMPTY>
-<!ATTLIST mkfile file CDATA #IMPLIED>		        <!-- the file name (and optionally its path) to create -->
-<!ATTLIST mkfile content CDATA "">		<!-- the content of the file which is created by this tag -->
-<!ATTLIST mkfile overwrite (1|0) "1">		<!-- indicates if the file must be overwritten or not, if it already exists -->
-<!ATTLIST mkfile encoding CDATA "UTF8">		<!-- indicates the encoding of the created file; defaults to UTF8 -->
+<!ATTLIST mkfile file CDATA #IMPLIED>       <!-- the file name (and optionally its path) to create -->
+<!ATTLIST mkfile content CDATA "">          <!-- the content of the file which is created by this tag -->
+<!ATTLIST mkfile overwrite (1|0) "1">       <!-- indicates if the file must be overwritten or not, if it already exists -->
+<!ATTLIST mkfile encoding CDATA "UTF8">     <!-- indicates the encoding of the created file; defaults to UTF8 -->
 
 
 <!-- OPEN tag: opens with the default MIME handler, the resource pointed by the "file" property.
@@ -285,9 +285,9 @@
                will be used to find the MIME type.
 -->
 <!ELEMENT open EMPTY>
-<!ATTLIST open file CDATA "$(thisfile)">	<!-- the file to open -->
-<!ATTLIST open flags (ASYNC|SYNC) "ASYNC">	<!-- the possible flags are: ASYNC, SYNC -->
-<!ATTLIST open mime CDATA "">	                <!-- the MIME type explicit for the "file": text/plain, text/html ... -->
+<!ATTLIST open file CDATA "$(thisfile)">    <!-- the file to open -->
+<!ATTLIST open flags (ASYNC|SYNC) "ASYNC">  <!-- the possible flags are: ASYNC, SYNC -->
+<!ATTLIST open mime CDATA "">               <!-- the MIME type explicit for the "file": text/plain, text/html ... -->
 
 
 

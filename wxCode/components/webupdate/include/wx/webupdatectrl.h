@@ -81,7 +81,6 @@ protected:		// event handlers
 
 	void OnItemCheck(wxListEvent &ev);
 	void OnItemUncheck(wxListEvent &ev);
-	void OnSize(wxSizeEvent &);
 
 	// for event raised by our wxCacheSizerThread....
 	void OnCacheSizeComplete(wxCommandEvent &);
@@ -140,6 +139,11 @@ public:			// wxCheckedListCtrl-emulation
 #endif
 
 public:			// miscellaneous
+
+	//! Adjust the width of the columns of the listctrl.
+	//! Not to call from a OnSize() event handler since it would then interfere
+	//! with user resizing events altering the size set by the user.
+	void AdjustColumnSizes();
 
 	//! Rebuilds the list of the packages inside the main wxListCtrl
 	//! using the #m_arrUpdatedPackages array. Removes any old content.

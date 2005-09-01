@@ -76,6 +76,7 @@ BEGIN_EVENT_TABLE(wxWebUpdateDlg, wxDialog)
 
 	// global UI updates
 	EVT_UPDATE_UI(-1, wxWebUpdateDlg::OnUpdateUI)
+	EVT_SIZE(wxWebUpdateDlg::OnSize)
 
 	// miscellaneous
 	EVT_TEXT_URL(XRCID("IDWUD_DESCRIPTION"), wxWebUpdateDlg::OnTextURL)
@@ -159,6 +160,19 @@ void wxWebUpdateDlg::PreInit()
 	// pointers
 	m_dThread = NULL;
 	m_iThread = NULL;
+
+	m_pAppNameText = NULL;
+	m_pSpeedText = NULL;
+	m_pTimeText = NULL;
+	m_pGauge = NULL;
+	m_pDescription = NULL;
+	m_pShowOnlyOOD = NULL;
+	m_pLog = NULL;
+	m_pUpdatesList = NULL;
+	m_pAdvPanel = NULL;
+	m_pOkBtn = NULL;
+	m_pCancelBtn = NULL;
+	m_pShowHideAdvBtn = NULL;
 }
 	
 bool wxWebUpdateDlg::Create(wxWindow *parent, 
@@ -556,6 +570,15 @@ void wxWebUpdateDlg::OnTextURL(wxTextUrlEvent& event)
          end = event.GetURLEnd();
 
     wxLaunchDefaultBrowser(m_pDescription->GetRange(start, end));
+}
+
+void wxWebUpdateDlg::OnSize(wxSizeEvent &ev)
+{
+	if (m_pUpdatesList && m_pUpdatesList->IsShown())
+		m_pUpdatesList->AdjustColumnSizes();
+
+	// very important ! otherwise sizer won't work
+	ev.Skip();
 }
 
 void wxWebUpdateDlg::OnDownload(wxCommandEvent &)

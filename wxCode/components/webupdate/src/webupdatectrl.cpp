@@ -58,7 +58,6 @@ BEGIN_EVENT_TABLE(wxWebUpdateListCtrl, wxWUDLC_BASECLASS)
 	EVT_LIST_ITEM_DESELECTED(-1, wxWebUpdateListCtrl::OnItemUncheck)
 #endif
 
-	EVT_SIZE(wxWebUpdateListCtrl::OnSize)
 	EVT_CACHESIZE_COMPLETE(-1, wxWebUpdateListCtrl::OnCacheSizeComplete)
 END_EVENT_TABLE()
 
@@ -115,17 +114,13 @@ bool wxWebUpdateListCtrl::Create(wxWindow* parent, wxWindowID id,
 	InsertColumn(3, wxT("Size"));
 	InsertColumn(4, wxT("Importance"));
 	InsertColumn(5, wxT("Require package(s)"));
+	AdjustColumnSizes();
 
 	return TRUE;
 }
 
-void wxWebUpdateListCtrl::OnSize(wxSizeEvent &ev)
+void wxWebUpdateListCtrl::AdjustColumnSizes()
 {
-	// on some wx ports this size event is very important in order to make the 
-	// listctrl resize correctly; thus we always need to set the "skipped" flag
-	// so that others can process this event
-	ev.Skip();
-
 	// on some wx ports, calling #InsertColumn in the ::Create function generates
 	// a size event: since in these cases not all columns have been already created
 	// we must discard those events...
@@ -390,8 +385,7 @@ void wxWebUpdateListCtrl::OnCacheSizeComplete(wxCommandEvent &ev)
 void wxWebUpdateListCtrl::CacheDownloadSizes()
 {	
 	// now load all the packages we need in local cache
-	wxSizeCacherThread *p = new wxSizeCacherThread(this);
-	//wxURLArray &urls = p->m_urls;
+	wxSizeCacherThread *p = new wxSizeCacherThread(this);	
 	for (int i=0; i < (int)m_arrRemotePackages.GetCount(); i++) {
 		wxString u = m_arrRemotePackages[i].GetDownload().GetDownloadString();
 		p->m_urls.Add(u);

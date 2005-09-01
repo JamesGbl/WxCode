@@ -390,20 +390,24 @@ bool WebUpdaterApp::OnPreInit()
         }
         
         // create the folder selector dialog
-        wxDirDialog dd(NULL, wxT("Choose the update folder"), askurifn.GetFullPath());
-        wxString path;
+		wxString startpath = askurifn.GetPath();
+		if (startpath.IsEmpty()) startpath = wxGetCwd();
+        wxDirDialog dd(NULL, wxT("Choose the folder containing the updated packages"), 
+						startpath);
+        wxString path, file;
         do {
             if (dd.ShowModal() == wxID_OK)
                 path = dd.GetPath();
-            if (path.Last() == wxFileName::GetPathSeparator())
+            if (!path.IsEmpty() && path.Last() == wxFileName::GetPathSeparator())
                 path.RemoveLast();
-        } while (path.IsEmpty() || !wxFileName(path + xmlname).FileExists());
+			file = path + wxFileName::GetPathSeparator() + xmlname;
+        } while (path.IsEmpty() || !wxFileName(file).FileExists());
 
         // override the remote XML script
-        wxFileName newremotexml(path + xmlname);
+        wxFileName newremotexml(file);
         wxLogAdvMsg(wxT("WebUpdaterApp::OnInit - overriding <remoteuri> with [") + 
                     newremotexml.GetFullPath() + wxT("]"));
-        uri = newremotexml.GetFullPath();
+        uri = wxMakeFileURI(newremotexml);
 	}
 
 	// now set the option values
