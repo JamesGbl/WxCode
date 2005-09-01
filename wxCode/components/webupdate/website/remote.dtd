@@ -261,13 +261,19 @@
 <!ATTLIST copy overwrite (1|0) "1">	        <!-- if "1" the destination files will be overwritten if they already exist -->
 
 
-<!-- MAKE tag: creates a folder/file. You must specify the "dir" property *or* the "file" property; not both.
+<!-- MKDIR tag: creates a folder.
 -->
-<!ELEMENT make EMPTY>
-<!ATTLIST make dir CDATA "">		        <!-- the folder to create -->
-<!ATTLIST make file CDATA "">		        <!-- the file to create; when using this property you also need to specify the "content" property -->
-<!ATTLIST make content CDATA "">		<!-- the content of the file which is created by this tag (evaluated only when using the "file" property -->
-<!ATTLIST make overwrite (1|0) "1">		<!-- when using the "file" property indicates if the file must be overwritten or not, if it already exists -->
+<!ELEMENT mkdir EMPTY>
+<!ATTLIST mkdir dir CDATA #IMPLIED>		        <!-- the folder to create -->
+
+
+<!-- MKFILE tag: creates a file with the given content encoded in the given encoding.
+-->
+<!ELEMENT mkfile EMPTY>
+<!ATTLIST mkfile file CDATA #IMPLIED>		        <!-- the file name (and optionally its path) to create -->
+<!ATTLIST mkfile content CDATA "">		<!-- the content of the file which is created by this tag -->
+<!ATTLIST mkfile overwrite (1|0) "1">		<!-- indicates if the file must be overwritten or not, if it already exists -->
+<!ATTLIST mkfile encoding CDATA "UTF8">		<!-- indicates the encoding of the created file; defaults to UTF8 -->
 
 
 <!-- OPEN tag: opens with the default MIME handler, the resource pointed by the "file" property.

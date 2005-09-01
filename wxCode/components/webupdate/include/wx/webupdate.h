@@ -41,6 +41,7 @@ extern WXDLLIMPEXP_DATA_WEBUPDATE(wxWebUpdateDownload) wxEmptyWebUpdateDownload;
 extern WXDLLIMPEXP_DATA_WEBUPDATE(wxWebUpdatePackage) wxEmptyWebUpdatePackage;
 extern WXDLLIMPEXP_DATA_WEBUPDATE(wxWebUpdateLocalPackage) wxEmptyWebUpdateLocalPackage;
 
+WXDLLIMPEXP_WEBUPDATE void wxUninitializeWebUpdate();
 
 //! The possible values of the "platform" attribute of the
 //! LATEST-DOWNLOAD tag supported by wxWebUpdateXMLScript.
@@ -267,6 +268,11 @@ public:		// main functions
 
 	//! Returns TRUE if at least the root of this document is valid.
 	bool IsOk() const;
+
+	//! Returns TRUE if all the required info which are stored inside a local XML
+	//! script (the remote XML script location, the XRC resource name... etc)
+	//! have been correctly loaded.
+	bool IsComplete() const;
 
     //! Parses the local XML script located at the given URI.
 	//! This function can open any resource which can be handled

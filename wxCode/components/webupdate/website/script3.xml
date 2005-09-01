@@ -35,7 +35,7 @@
 			<platform name="any"/>	
 			
 			<actions>
-				<make dir="$(programdir)//addon1" />
+				<mkdir dir="$(programdir)//addon1" />
 				<extract file="$(thisfile)" where="$(programdir)//addon1"/>
 			</actions>
 	  </latest-download>
@@ -46,7 +46,9 @@
    <!-- our ADDON2 package -->
    <package id="addon2">
 	  <requires>core</requires>
-      <latest-version importance="low">1.5.0</latest-version>      
+      
+      <!-- just to show that 'normnal' priorities are automatically checked... -->
+      <latest-version importance="normal">1.5.0</latest-version>      
 
 	  <!-- a single download for all platforms -->
       <latest-download>
@@ -54,7 +56,7 @@
 			<platform name="any"/>	
 			
 			<actions>
-				<make dir="$(programdir)//addon2" />
+				<mkdir dir="$(programdir)//addon2" />
 				<extract file="$(thisfile)" where="$(programdir)//addon2"/>
 			</actions>
 	  </latest-download>
@@ -73,12 +75,12 @@
 			<platform name="any"/>	
 			
 			<actions>
-				<make file="$(programdir)//test.txt" content="Hello World !" />
+				<mkfile file="$(programdir)//test.txt" content="Hello World !" encoding="ISO8859-1"/>
 
                 <!-- unlike other addon packages here I want also to show the usage of the "namemap" property:
                 the "addon.txt" which should be contains in the addon3 package will be decompressed as
                 "myaddonfile.txt" ;-) -->
-				<make dir="$(programdir)//addon3" />
+				<mkdir dir="$(programdir)//addon3" />
 				<extract file="$(thisfile)" where="$(programdir)//addon3" namemap="addon.txt=myaddonfile.txt" />
 				<open file="$(programdir)//test.txt"/>
 			</actions>

@@ -114,7 +114,7 @@ bool wxWebUpdateListCtrl::Create(wxWindow* parent, wxWindowID id,
 	InsertColumn(2, wxT("Local version"));
 	InsertColumn(3, wxT("Size"));
 	InsertColumn(4, wxT("Importance"));
-	InsertColumn(5, wxT("Requires"));
+	InsertColumn(5, wxT("Require package(s)"));
 
 	return TRUE;
 }

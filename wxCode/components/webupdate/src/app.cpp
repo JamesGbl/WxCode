@@ -312,6 +312,8 @@ void wxInitRequiredXmlHandlers()
 
 bool WebUpdaterApp::OnPreInit()
 {
+	// create the default wx logger
+	wxLog::SetActiveTarget(CreateLogTarget());
 	m_log = new wxWebUpdateLog();		// start this app's logger
 
 	// show the user that we are running
@@ -361,8 +363,6 @@ bool WebUpdaterApp::OnPreInit()
 	// to ship together with the EXE also the www image...	
 	wxFileSystem::AddHandler(new wxMemoryFSHandler);
     wxMemoryFSHandler::AddFile(wxT("www.xpm"), wxBitmap(www_xpm), wxBITMAP_TYPE_XPM);	
-    
-    // do we need to ask to the user the location of the remote XML Script ?
 
 	// load the local XML webupdate script
 	wxLogUsrMsg(wxT("WebUpdaterApp::OnInit - loading the local XML webupdate script ") + xml);	
@@ -422,23 +422,33 @@ bool WebUpdaterApp::OnPreInit()
  		m_script.OverrideXRCResName(wxWU_XRC_RESOURCE);		// load the defaults
 	if (m_script.GetXRC().IsEmpty())
  		m_script.OverrideXRC(wxWU_LOCAL_XRC);
-	wxASSERT(m_script.IsOk());
 
 	// do we need to create the logger as specified in the local XML file ?
 	if (m_script.IsLogToSave())
 		CreateFileLogger();
+
+	// do not proceed if in this stage we are still missing some required info
+	if (!m_script.IsComplete()) {
+		wxWebUpdateInstaller::Get()->ShowErrorMsg(
+					wxT("The WebUpdater configuration file is corrupted; the local XML script\n")					
+					wxT("is missing some required info. Please correct the local XML script or\n")
+					wxT("give these info to WebUpdater through the command line options."));
+		return FALSE;
+	}
+
+	wxASSERT(m_script.IsOk());
    	
     // load our XRC file
 	wxLogUsrMsg(wxT("WebUpdaterApp::OnInit - loading the XRC file ") + xrc);    
-    if (!wxXmlResource::Get()->Load(m_script.GetXRCResName())) {
+    if (!wxXmlResource::Get()->Load(m_script.GetXRC())) {
 		wxWebUpdateInstaller::Get()->ShowErrorMsg(
 					wxT("The WebUpdater configuration file is corrupted; the file:\n\n\t") +				
-					m_script.GetXRCResName() + 
+					m_script.GetXRC() + 
 					wxT("\n\nis missing (or invalid); please reinstall the program."));
 		return FALSE;
 	}
 
-	// check that the program-to-update EXE exists
+	// check that the program-to-update executable exists
 	wxString tmp = m_script.GetAppFile() + 
 		wxWebUpdateInstaller::Get()->GetKeywordValue(wxT("exe"));
 	wxFileName app2update(tmp);
@@ -465,8 +475,10 @@ bool WebUpdaterApp::OnInit()
 	mcDUMP_ON_EXIT;			// for debugging only	
 	//_CrtSetBreakAlloc(31100);	
 
-	if (!OnPreInit())
+	if (!OnPreInit()) {
+		wxUninitializeWebUpdate();
 		return FALSE;	
+	}
 
 	// create our main dialog
 #if 1
@@ -499,10 +511,7 @@ int WebUpdaterApp::OnExit()
 #ifdef MODDED
     wxUninitializeMod();
 #endif
-
-	// remove the singleton objects
-	wxLogAdvMsg(wxT("WebUpdaterApp::OnExit - deleting the WebUpdate installer"));	
-	delete wxWebUpdateInstaller::Set(NULL);
+	wxUninitializeWebUpdate();
 	
 	// before exiting this app, rerun the program we've just updated
 	if (m_dlg->IsAppToRestart()) {

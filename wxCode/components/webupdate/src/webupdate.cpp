@@ -72,6 +72,21 @@ int wxWebUpdateAction::m_nExecResult = 0;
 
 
 
+
+// --------------------
+// GLOBALS
+// --------------------
+
+void wxUninitializeWebUpdate()
+{
+	// remove the singleton objects
+	wxLogAdvMsg(wxT("wxUninitializeWebUpdate - deleting the WebUpdate installer"));	
+	wxWebUpdateInstaller *old = wxWebUpdateInstaller::Set(NULL);
+	if (old) delete old;
+}
+
+
+
 // ---------------------------
 // wxWEBUPDATE log functions
 // ---------------------------
@@ -91,12 +106,11 @@ void wxWebUpdateLog::DoLog(wxLogLevel level, const wxChar *msg, time_t time)
 		DoLogDecoratedString(wxLOG_UsrMsg, wxEmptyString);
 		DoLogDecoratedString(wxLOG_UsrMsg, msg);
 		DoLogDecoratedString(wxLOG_UsrMsg, wxString(wxT('-'), wxStrlen(msg)));
-		//DoLogDecoratedString(wxEmptyString);
+		DoLogDecoratedString(wxLOG_UsrMsg, wxEmptyString);
 		break;
 	
 	default:
-		if (GetOldLog())
-			GetOldLog()->OnLog(level, msg, time);
+		wxLogPassThrough::DoLog(level, msg, time);
 	}
 }
 
@@ -130,11 +144,16 @@ void wxWebUpdateLog::DoLogDecoratedString(wxLogLevel lev, const wxChar *str)
 	case wxLOG_AdvMsg:
 	
 		// adv messages go in the log file, if present
-		if (m_txtFile.IsOpened())
-			m_txtFile.AddLine(wxT(" ") + time + str);
+		if (m_txtFile.IsOpened()) {
+
+			wxString prefix(wxT(" ") + time);
+			wxString msg(str);
+			msg.Replace(wxT("\n"), wxT("\n") + wxString(wxT(' '), prefix.Len()));
+			m_txtFile.AddLine(prefix + msg);
+		}
 		
-		// finally their also go in the debug logger (which does something only in debug builds)
-		wxLogDebug(str);
+		// finally their also go in the old logger (which does something only in debug builds)
+		wxLogPassThrough::DoLog(lev, str, NULL);
 		break;
 	
 	default:
@@ -147,6 +166,8 @@ void wxWebUpdateLog::WriteAllMsgAlsoToFile(const wxString &filename)
 {
 	wxRemoveFile(filename);
 	m_txtFile.Create(filename);
+	m_txtFile.Open(filename);
+	m_txtFile.AddLine(wxEmptyString);
 }
 
 void wxWebUpdateLog::WriteUsrMsgAlsoToTextCtrl(wxTextCtrl *p)
@@ -284,9 +305,21 @@ bool wxWebUpdateLocalXMLScript::Load(const wxString &uri)
 		
 	// look at the version
 	if (wxWebUpdateXMLScript::GetWebUpdateVersion(GetRoot(), 
-				m_strWebUpdateVersion) == wxWUCF_FAILED)
+		m_strWebUpdateVersion) == wxWUCF_FAILED)
 		return FALSE;
-		
+
+	// save the URI of this local XML script.
+	// NOTE: this has to be done *before* processing the XML file since this info
+	//       is used by ::SetRemoteScriptURI
+	m_strLocalURI = uri;
+	wxWebUpdateInstaller::Get()->SetKeywordValue(wxT("localxml"), uri);
+
+	// save also the folders
+	wxFileName f(wxGetFileNameFromURI(m_strLocalURI));
+	wxWebUpdateInstaller::Get()->SetKeywordValue(wxT("localdir"), 
+						f.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR));
+
+	// start processing the XML file
     wxXmlNode *child = GetRoot()->GetChildren();
 	while (child) {
 
@@ -347,15 +380,6 @@ bool wxWebUpdateLocalXMLScript::Load(const wxString &uri)
 	if (m_strAppName.IsEmpty() || m_strAppFile.IsEmpty())
 		return FALSE;
 
-	// save the URI of this local XML script.
-	m_strLocalURI = uri;
-	wxWebUpdateInstaller::Get()->SetKeywordValue(wxT("localxml"), uri);
-
-	// save also the folders
-	wxFileName f(wxGetFileNameFromURI(m_strLocalURI));
-	wxWebUpdateInstaller::Get()->SetKeywordValue(wxT("localdir"), 
-						f.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR));
-
 	return TRUE;
 }
 
@@ -364,7 +388,8 @@ void wxWebUpdateLocalXMLScript::SetRemoteScriptURI(const wxString &uri)
 	// we keep the original, un-substituted URI to save it later in ::Save
 	m_strRemoteURIOriginal = uri;
 	
-	// save the location of the remote script: it's important not to
+	// save the location of the remote script: we avoid to do path substitution
+	// (i.e. '//' substitution ) because it's important not to
 	// do the '//' substitution in strings which can contain http://
 	// strings...
 	m_strRemoteURI = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(m_strRemoteURIOriginal);
@@ -373,13 +398,13 @@ void wxWebUpdateLocalXMLScript::SetRemoteScriptURI(const wxString &uri)
 	if (wxIsFileProtocol(m_strRemoteURI)) {
 
 		// is this a relative path ?
-		wxFileName fn = wxGetFileNameFromURI(m_strRemoteURI);				
+		wxFileName fn = wxGetFileNameFromURI(m_strRemoteURI);
 		if (fn.IsRelative()) {
 
 			// <remoteuri> tag should specify relative paths
 			// using the folder containing the local XML script
 			// as the folder used to solve the relative path.
-			wxFileName currdir(uri);
+			wxFileName currdir(m_strLocalURI);
 			wxASSERT_MSG(currdir.IsAbsolute(), wxT("Invalid local URI"));
 			fn.MakeAbsolute(currdir.GetPath());
 		}
@@ -400,7 +425,11 @@ bool wxWebUpdateLocalXMLScript::IsOk() const
 { 
 	if (!GetRoot() || GetRoot()->GetName() != wxT("webupdate")) 
  		return FALSE; 
- 	
+ 	return TRUE;
+}
+
+bool wxWebUpdateLocalXMLScript::IsComplete() const
+{
  	// we should have loaded these
  	// - by the XML local script
  	// - or by the command line options...
@@ -413,9 +442,17 @@ bool wxWebUpdateLocalXMLScript::IsOk() const
 wxXmlNode *wxCreateElemNode(const wxString &name)
 { return new wxXmlNode(NULL, wxXML_ELEMENT_NODE, name, wxEmptyString, NULL, NULL); }
 
-wxXmlNode *wxCreateElemTextNode(const wxString &name, const wxString &content = wxEmptyString){ 
+wxXmlNode *wxCreateElemTextNode(const wxString &name, const wxString &content = wxEmptyString)
+{ 
 	wxXmlNode *n = wxCreateElemNode(name); 
 	n->AddChild(new wxXmlNode(NULL, wxXML_TEXT_NODE, wxEmptyString, content, NULL, NULL));
+	return n;
+}
+
+wxXmlNode *wxCreateElemTextNode(wxXmlNode *prev, const wxString &name, const wxString &content = wxEmptyString)
+{ 
+	wxXmlNode *n = wxCreateElemTextNode(name, content);
+	prev->SetNext(n);
 	return n;
 }
 
@@ -428,32 +465,18 @@ wxXmlNode *wxWebUpdateLocalXMLScript::BuildHeader() const
 	
 	// set the appname
 	wxXmlNode *appname = wxCreateElemTextNode(wxT("appname"), m_strAppName);
-	webupdate->AddChild(appname);
+	webupdate->AddChild(appname);		// link this node as child of webupdate
 	
-	// set the appfile
-	wxXmlNode *appfile = wxCreateElemTextNode(wxT("appfile"), m_strAppFile);
-	appname->SetNext(appfile);
-	
-	// set the XRC name
-	wxXmlNode *xrc = wxCreateElemTextNode(wxT("xrc"), m_strXRC);
-	appfile->SetNext(xrc);
-	
-	// set the XRC resource name
-	wxXmlNode *res = wxCreateElemTextNode(wxT("res"), m_strXRCRes);
-	xrc->SetNext(res);
-	
-	// set the restart flag
-	wxXmlNode *restart = wxCreateElemTextNode(wxT("restart"), m_bRestart ? wxT("1") : wxT("0"));
-	res->SetNext(restart);
-	
-	// set the savelog flag
-	wxXmlNode *savelog = wxCreateElemTextNode(wxT("savelog"), m_bSaveLog ? wxT("1") : wxT("0"));
-	restart->SetNext(savelog);
+	// set all other children nodes
+	wxXmlNode *appfile = wxCreateElemTextNode(appname, wxT("appfile"), m_strAppFile);	
+	wxXmlNode *xrc = wxCreateElemTextNode(appfile, wxT("xrc"), m_strXRC);
+	wxXmlNode *res = wxCreateElemTextNode(xrc, wxT("res"), m_strXRCRes);
+	wxXmlNode *restart = wxCreateElemTextNode(res, wxT("restart"), m_bRestart ? wxT("1") : wxT("0"));
+	wxXmlNode *savelog = wxCreateElemTextNode(restart, wxT("savelog"), m_bSaveLog ? wxT("1") : wxT("0"));
  	
 	// set the remote URI
-	wxXmlNode *uri = wxCreateElemTextNode(wxT("remoteuri"), 
+	wxXmlNode *uri = wxCreateElemTextNode(savelog, wxT("remoteuri"), 
 		m_strRemoteURIOriginal.IsEmpty() ? m_strRemoteURI : m_strRemoteURIOriginal);
-	xrc->SetNext(uri);
 	
 	// set the keywords
 	wxString content;

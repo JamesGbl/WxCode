@@ -46,7 +46,8 @@ DEFINE_EVENT_TYPE(wxEVT_COMMAND_EXECUTE);
 IMPLEMENT_CLASS(wxWebUpdateActionRun, wxWebUpdateAction)
 IMPLEMENT_CLASS(wxWebUpdateActionExtract, wxWebUpdateAction)
 IMPLEMENT_CLASS(wxWebUpdateActionCopy, wxWebUpdateAction)
-IMPLEMENT_CLASS(wxWebUpdateActionMake, wxWebUpdateAction)
+IMPLEMENT_CLASS(wxWebUpdateActionMkdir, wxWebUpdateAction)
+IMPLEMENT_CLASS(wxWebUpdateActionMkfile, wxWebUpdateAction)
 IMPLEMENT_CLASS(wxWebUpdateActionOpen, wxWebUpdateAction)
 
 #include <wx/ptr_scpd.h>
@@ -382,92 +383,50 @@ bool wxWebUpdateActionCopy::SetProperties(const wxArrayString &propnames,
 
 
 // --------------------------
-// wxWEBUPDATEACTIONMAKE
+// wxWEBUPDATEACTIONMKDIR
 // --------------------------
 
-bool wxWebUpdateActionMake::Run() const
+bool wxWebUpdateActionMkdir::Run() const
 {
 	wxArrayString orig, output;
-	wxLogUsrMsg(wxT("wxWebUpdateActionMake::Run - going to make the file/folder [")
+	wxLogUsrMsg(wxT("wxWebUpdateActionMkdir::Run - going to make the folder [")
 				+ m_strTarget + wxT("]"));
-
-	// do we have to create a folder ?
-	if (m_bDir) {
-
-		// wxFileName wants a path separator at the end of directory names
-		wxString dir(m_strTarget);
-		if (dir.Last() != wxFileName::GetPathSeparator())
-			dir += wxFileName::GetPathSeparator();
-
-		wxFileName f(dir);
-		if (f.DirExists()) {
-
-			wxLogAdvMsg(wxT("wxWebUpdateActionMake::Run - the folder \"") + m_strTarget +
-					wxT("\" already exist... proceeding anyway"));
-			return TRUE;
-		}
-
-		// create it !
-		if (f.Mkdir(0777, wxPATH_MKDIR_FULL))
-			wxLogDebug(wxT("wxWebUpdateActionMake::Run - created the [") + 
-							f.GetPath() + wxT("] folder"));
-		else
-			wxLogDebug(wxT("wxWebUpdateActionMake::Run - could not create the [") + 
-							f.GetPath() + wxT("] folder.. proceeding anyway"));
-
-	} else {		// or a file ?
-
-		wxFileName f(m_strTarget);
-		if (f.FileExists()) {
-
-			if (m_bOverwrite)
-				wxLogAdvMsg(wxT("wxWebUpdateActionMake::Run - the file \"") + m_strTarget +
-					wxT("\" already exist... proceeding anyway (overwrite=1)"));
-			else
-				return TRUE;		// exit
-		}
-
-		// create it !
-		wxFileOutputStream out(f.GetFullPath());
-		size_t bytes(m_strContent.Len()*sizeof(wxChar));
-
-		if (out.Write(m_strContent.c_str(), bytes).LastWrite() != bytes) {
-			wxLogUsrMsg(wxT("wxWebUpdateActionMake::Run - could not create the [") + 
-							f.GetFullPath() + wxT("] file."));
-			return FALSE;
-		}
-
-		wxLogUsrMsg(wxT("wxWebUpdateActionMake::Run - created the [") + 
-					f.GetFullPath() + wxT("] file with content [") + 
-					m_strContent + wxT("]..."));
+	
+	// wxFileName wants a path separator at the end of directory names
+	wxString dir(m_strTarget);
+	if (dir.Last() != wxFileName::GetPathSeparator())
+		dir += wxFileName::GetPathSeparator();
+	
+	wxFileName f(dir);
+	if (f.DirExists()) {
+		
+		wxLogAdvMsg(wxT("wxWebUpdateActionMkdir::Run - the folder \"") + m_strTarget +
+			wxT("\" already exist... proceeding anyway"));
+		return TRUE;
 	}
+	
+	// create it !
+	if (f.Mkdir(0777, wxPATH_MKDIR_FULL))
+		wxLogDebug(wxT("wxWebUpdateActionMkdir::Run - created the [") + 
+		f.GetPath() + wxT("] folder"));
+	else
+		wxLogDebug(wxT("wxWebUpdateActionMkdir::Run - could not create the [") + 
+		f.GetPath() + wxT("] folder.. proceeding anyway"));
 	
 	return TRUE;
 }
 
-bool wxWebUpdateActionMake::SetProperties(const wxArrayString &propnames,
+bool wxWebUpdateActionMkdir::SetProperties(const wxArrayString &propnames,
 										const wxArrayString &propvalues)
 {
-	// set defaults
-	m_bDir = FALSE;
-	m_bOverwrite = TRUE;
-
 	for (int i=0; i < (int)propnames.GetCount(); i++) {
-		wxLogAdvMsg(wxT("wxWebUpdateActionMake::SetProperties - name: [")
+		wxLogAdvMsg(wxT("wxWebUpdateActionMkdir::SetProperties - name: [")
 				+ propnames[i] + wxT("], value: [") + propvalues[i] + wxT("]"));
 
-		if (propnames[i] == wxT("dir")) {
+		if (propnames[i] == wxT("dir"))
 			m_strTarget = propvalues[i];
-			m_bDir = TRUE;
-		} else if (propnames[i] == wxT("file")) {
-			m_strTarget = propvalues[i];
-			m_bDir = FALSE;
-		} else if (propnames[i] == wxT("content"))
-			m_strContent = propvalues[i];
-		else if (propnames[i] == wxT("overwrite"))
-			m_bOverwrite = (propvalues[i] == wxT("1"));
 		else
-			wxLogAdvMsg(wxT("wxWebUpdateActionMake::SetProperties - unknown property: ") 
+			wxLogAdvMsg(wxT("wxWebUpdateActionMkdir::SetProperties - unknown property: ") 
 						+ propnames[i]);
 	}
 
@@ -486,10 +445,102 @@ bool wxWebUpdateActionMake::SetProperties(const wxArrayString &propnames,
 	if (m_strTarget.IsEmpty() || !f.IsOk()) 
 		return FALSE;
 
-	if (m_bDir && !m_strContent.IsEmpty())
-		wxLogAdvMsg(wxT("wxWebUpdateActionMake::SetProperties - I will ignore the 'content' ")
-					wxT("property value (") + m_strContent + wxT(") since I will create ")
-					wxT("a folder and not a file"));
+	return TRUE;
+}
+
+
+
+
+// --------------------------
+// wxWEBUPDATEACTIONMKFILE
+// --------------------------
+
+bool wxWebUpdateActionMkfile::Run() const
+{
+	wxArrayString orig, output;
+	wxLogUsrMsg(wxT("wxWebUpdateActionMkfile::Run - going to make the file [")
+				+ m_strTarget + wxT("]"));
+
+	// do we have to create a folder ?
+	wxFileName f(m_strTarget);
+	if (f.FileExists()) {
+		
+		if (m_bOverwrite)
+			wxLogAdvMsg(wxT("wxWebUpdateActionMkfile::Run - the file \"") + m_strTarget +
+			wxT("\" already exist... proceeding anyway (overwrite=1)"));
+		else
+			return TRUE;		// exit
+	}
+	
+	// create it !
+	wxFileOutputStream out(f.GetFullPath());
+	
+	// first understand how many bytes will be required for the selected encoding
+	wxCSConv converter(m_strEncoding);
+	/*size_t bytes = converter.WC2MB(NULL, m_strContent, m_strContent.Len());
+	
+	// alloc the buffer
+	char *data = new char[bytes+16];
+	
+	// do real conversion
+	converter.WC2MB(data, m_strContent, m_strContent.Len());*/
+	const char *data = (const char*) m_strContent.mb_str(converter);
+	size_t bytes = strlen(data);
+	
+	// write
+	if (out.Write(data, bytes).LastWrite() != bytes) {
+		wxLogUsrMsg(wxT("wxWebUpdateActionMkfile::Run - could not create the [") + 
+			f.GetFullPath() + wxT("] file."));
+		//wxDELETEA(data);
+		return FALSE;
+	}
+	
+	//wxDELETEA(data);
+	wxLogUsrMsg(wxT("wxWebUpdateActionMkfile::Run - created the [") + 
+		f.GetFullPath() + wxT("] file with content [") + 
+		m_strContent + wxT("]..."));
+	
+	return TRUE;
+}
+
+bool wxWebUpdateActionMkfile::SetProperties(const wxArrayString &propnames,
+										const wxArrayString &propvalues)
+{
+	// set defaults
+	m_bOverwrite = TRUE;
+	m_strEncoding = wxT("utf8");
+
+	for (int i=0; i < (int)propnames.GetCount(); i++) {
+		wxLogAdvMsg(wxT("wxWebUpdateActionMkfile::SetProperties - name: [")
+				+ propnames[i] + wxT("], value: [") + propvalues[i] + wxT("]"));
+
+		if (propnames[i] == wxT("file"))
+			m_strTarget = propvalues[i];
+		else if (propnames[i] == wxT("content"))
+			m_strContent = propvalues[i];
+		else if (propnames[i] == wxT("overwrite"))
+			m_bOverwrite = (propvalues[i] == wxT("1"));
+		else if (propnames[i] == wxT("encoding"))
+			m_strEncoding = propvalues[i];
+		else
+			wxLogAdvMsg(wxT("wxWebUpdateActionMkfile::SetProperties - unknown property: ") 
+						+ propnames[i]);
+	}
+
+	// do substitutions on the paths
+	m_strTarget = wxWebUpdateInstaller::Get()->DoSubstitution(m_strTarget);
+
+	// validate the properties
+	wxFileName f(m_strTarget);
+
+	// we won't do the wxFileName::FileExists check because the file we need to run
+	// could be a file which does not exist yet (e.g. its in the update package)
+	//
+	// NOTE: wxFileName::IsDir() only checks if the given string ends with a path
+	//       separator character (there are no real ways to do a ::IsDir check
+	//       without trying to access that path!) and thus we won't use it
+	if (m_strTarget.IsEmpty() || !f.IsOk()) 
+		return FALSE;
 
 	return TRUE;
 }
@@ -548,7 +599,7 @@ bool wxWebUpdateActionOpen::Run() const
     	return FALSE;
 	}
 	
-    if( wxExecute (cmd, m_nExecFlag) == -1 ) {
+    if (wxExecute (cmd, m_nExecFlag) == -1) {
         wxLogUsrMsg(wxT("wxWebUpdateActionOpen::Run - Failed to launch application for [") + m_strFile + wxT("]"));
         return FALSE;
     } 

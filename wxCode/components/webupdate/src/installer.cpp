@@ -219,7 +219,8 @@ void wxWebUpdateInstaller::InitDefaultActions()
 	m_hashActions[wxT("run")] = new wxWebUpdateActionRun();
 	m_hashActions[wxT("extract")] = new wxWebUpdateActionExtract();
 	m_hashActions[wxT("copy")] = new wxWebUpdateActionCopy();
-	m_hashActions[wxT("make")] = new wxWebUpdateActionMake();
+	m_hashActions[wxT("mkdir")] = new wxWebUpdateActionMkdir();
+	m_hashActions[wxT("mkfile")] = new wxWebUpdateActionMkfile();
 	m_hashActions[wxT("open")] = new wxWebUpdateActionOpen();
 }
 
@@ -343,7 +344,7 @@ wxWebUpdateCheckFlag wxWebUpdateInstaller::VersionCheck(const wxVersion &ver) co
 void wxWebUpdateInstaller::ShowErrorMsg(const wxString &str)
 {
 	// both log it
-	wxLogDebug(str);
+	wxLogUsrMsg(str);
 	
 	// and notify the user
 	wxMessageBox(str + wxT("\nContact the support team of ") + 

@@ -119,27 +119,38 @@ protected:
 };
 
 
-//! The "make" action.
-class WXDLLIMPEXP_WEBUPDATE wxWebUpdateActionMake : public wxWebUpdateAction
+//! The "mkdir" action.
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateActionMkdir : public wxWebUpdateAction
 {
-	DECLARE_WEBUPDATEACTION(wxWebUpdateActionMake, wxT("make"))
+	DECLARE_WEBUPDATEACTION(wxWebUpdateActionMkdir, wxT("mkdir"))
 
 protected:
 
-	//! The new folder/file to create.
+	//! The new folder to create.
+	wxString m_strTarget;
+};
+
+
+//! The "mkfile" action.
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateActionMkfile : public wxWebUpdateAction
+{
+	DECLARE_WEBUPDATEACTION(wxWebUpdateActionMkfile, wxT("mkfile"))
+
+protected:
+
+	//! The new file to create.
 	wxString m_strTarget;
 
 	//! The content of the new file to create.
 	wxString m_strContent;
 
-	//! If TRUE then the <make> tag used the "dir" property and not the "file" one.
-	bool m_bDir;
+	//! The encoding of the new file to create.
+	wxString m_strEncoding;
 
 	//! If TRUE the file will be overwritten if it already exists.
 	//! Has sense only when m_bDir == FALSE.
 	bool m_bOverwrite;
 };
-
 
 
 //! The "open" action.

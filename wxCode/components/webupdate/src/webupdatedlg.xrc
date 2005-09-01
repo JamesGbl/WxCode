@@ -53,7 +53,7 @@
             <!-- the listctrl on the left -->
             <object class="sizeritem">
               <flag>wxGROW</flag> 
-              <option>11</option>
+              <option>13</option>
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient> 
                 <object class="sizeritem">

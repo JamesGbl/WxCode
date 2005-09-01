@@ -14,3 +14,5 @@ REM remove addons
 rmdir /S /Q addon1
 rmdir /S /Q addon2
 rmdir /S /Q addon3
+
+del test.txt

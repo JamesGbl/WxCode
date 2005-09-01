@@ -44,9 +44,10 @@ DEFINE_EVENT_TYPE(wxEVT_COMMAND_DOWNLOAD_COMPLETE);
 DEFINE_EVENT_TYPE(wxEVT_COMMAND_CACHESIZE_COMPLETE);
 
 // statics
+#if wxUSE_HTTPENGINE
 wxProxySettings wxDownloadThread::m_proxy;
 wxHTTPAuthSettings wxDownloadThread::m_auth;
-
+#endif
 
 
 
