@@ -42,7 +42,7 @@ public:
   void SetUseProxy(const bool bUse) { m_bUseProxy = bUse; };
 
 public:
-	wxProxySettings() { m_bRequiresAuth = 0; m_bUseProxy = 0; m_nProxyPort = 0; m_strProxyExceptionsDelim = ","; }
+	wxProxySettings() { m_bRequiresAuth = 0; m_bUseProxy = 0; m_nProxyPort = 0; m_strProxyExceptionsDelim = wxT(","); }
 	wxProxySettings(const wxProxySettings& data);
 	virtual ~wxProxySettings() {};
 	void operator=(const wxProxySettings& data);
