@@ -265,11 +265,11 @@ void wxHTTPEngineDialog::OnProxySettings(wxCommandEvent &event)
   dlg.SetUsername(m_szProxyUsername);
   dlg.SetPassword(m_szProxyPassword);
   dlg.SetAuthProxy(m_bProxyAuth);
-  dlg.SetExceptions(m_szProxyExceptions);
+  dlg.SetHostExceptions(m_szProxyExceptions);
 #endif
   // Your custom exception descriptiono and note
-  //dlg.SetExceptionsDesc( _T("") );
-  //dlg.SetExceptionsNote( _T("") );
+  //dlg.SetHostExceptionsDesc( _T("") );
+  //dlg.SetHostExceptionsNote( _T("") );
 
   if( dlg.ShowModal() == wxID_OK )
   {
@@ -281,7 +281,7 @@ void wxHTTPEngineDialog::OnProxySettings(wxCommandEvent &event)
     m_szProxyUsername = dlg.GetUsername( );
     m_szProxyPassword = dlg.GetPassword( );
     m_bProxyAuth = dlg.IsAuthProxy();
-    m_szProxyExceptions = dlg.GetExceptions();
+    m_szProxyExceptions = dlg.GetHostExceptions();
 #endif
   }
 }
@@ -784,8 +784,11 @@ AboutDialog::AboutDialog
 		 	wxPoint(50,80), wxDefaultSize, 0, wxT("statictextlink2"), wxT("http://wxcode.sourceforge.net/components/wxhttpengine/") );
 
   // Web link with underline rollovers, opens in new window
-	wxHyperlinkCtrl *hyper2 = new wxHyperlinkCtrl( this, About_Link2, wxT("www.spaceblue.com"),
-		 	wxPoint(50,100), wxDefaultSize, wxTAB_TRAVERSAL , wxT("statictextlink2"), wxT("http://www.spaceblue.com") );
+	//wxHyperlinkCtrl *hyper2 = new wxHyperlinkCtrl( this, About_Link2, wxT("www.spaceblue.com"),
+	//	 	wxPoint(50,100), wxDefaultSize, wxTAB_TRAVERSAL , wxT("statictextlink2"), wxT("http://www.spaceblue.com") );
+
+  wxHyperlinkCtrl *hyper2 = new wxHyperlinkCtrl( this, About_Link2, "www.leakybagel.com", 
+      wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL , "statictextlink1", "http://www.leakybagel.com" );
 
 	hyper2->SetColours( wxColour(wxT("BLUE")), wxColour(wxT("BLUE")), wxColour(wxT("BLUE")) );
 	hyper2->EnableRollover(true);
