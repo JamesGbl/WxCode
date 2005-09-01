@@ -38,19 +38,19 @@ public:
 	wxString GetUsername(void);
 	wxString GetHost(void);
   long GetPortNumber(void);
-  wxString  GetExceptions(void);
+  wxString  GetHostExceptions(void);
   wxProxySettings GetProxySettings(void);
 
 	void SetPassword( const wxString &password );
 	void SetUsername( const wxString &username );
 	void SetHost( const wxString &host );
 	void SetPortNumber( const long port );
-  void SetExceptions( const wxString &exceptions );
+  void SetHostExceptions( const wxString &exceptions );
   void SetProxySettings(const wxProxySettings &settings);
 
   // Additional settings:
-  void SetExceptionsDesc(const wxString &text);
-  void SetExceptionsNote(const wxString &text);
+  void SetHostExceptionsDesc(const wxString &text);
+  void SetHostExceptionsNote(const wxString &text);
 
   wxProxySettingsDlg(wxWindow* parent, wxWindowID id, const wxString& caption = _T("Proxy Settings"), const wxString message = _T("Specify proxy settings"), const bool bShowNoProxyFor = false );
   virtual ~wxProxySettingsDlg();
