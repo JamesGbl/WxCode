@@ -47,8 +47,8 @@ RSC=rc.exe
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\webupdate"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "$(WXWIN)\lib\vc_dll\mswud" /I "$(WXWIN)\include" /I "..\include" /Zi /Gm /GZ /Fd..\lib\webupdateud.pdb /I "..\..\wxhttpengine\include" /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "_DEBUG" /D "WXUSINGDLL" /D "_UNICODE" /D "__WXDEBUG__" /D "__WXMSW__" /D "WXMAKINGDLL_WEBUPDATE" /D "wxUSE_HTTPENGINE" /c
-# ADD CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "$(WXWIN)\lib\vc_dll\mswud" /I "$(WXWIN)\include" /I "..\include" /Zi /Gm /GZ /Fd..\lib\webupdateud.pdb /I "..\..\wxhttpengine\include" /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "_DEBUG" /D "WXUSINGDLL" /D "_UNICODE" /D "__WXDEBUG__" /D "__WXMSW__" /D "WXMAKINGDLL_WEBUPDATE" /D "wxUSE_HTTPENGINE" /c
+# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /W4 /I "$(WXWIN)\lib\vc_dll\mswud" /I "$(WXWIN)\include" /I "..\include" /Zi /Gm /GZ /Fd..\lib\webupdateud.pdb /I "..\..\wxhttpengine\include" /Od /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "_DEBUG" /D "WXUSINGDLL" /D "_UNICODE" /D "__WXDEBUG__" /D "__WXMSW__" /D "WXMAKINGDLL_WEBUPDATE" /D "wxUSE_HTTPENGINE" /c
+# ADD CPP /nologo /FD /MDd /GR /EHsc /W4 /I "$(WXWIN)\lib\vc_dll\mswud" /I "$(WXWIN)\include" /I "..\include" /Zi /Gm /GZ /Fd..\lib\webupdateud.pdb /I "..\..\wxhttpengine\include" /Od /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "_DEBUG" /D "WXUSINGDLL" /D "_UNICODE" /D "__WXDEBUG__" /D "__WXMSW__" /D "WXMAKINGDLL_WEBUPDATE" /D "wxUSE_HTTPENGINE" /c
 # ADD BASE MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "_DEBUG" /D "WXUSINGDLL" /D "_UNICODE" /D "__WXDEBUG__" /D "__WXMSW__" /D "WXMAKINGDLL_WEBUPDATE" /D "wxUSE_HTTPENGINE" /mktyplib203 /win32
 # ADD MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "_DEBUG" /D "WXUSINGDLL" /D "_UNICODE" /D "__WXDEBUG__" /D "__WXMSW__" /D "WXMAKINGDLL_WEBUPDATE" /D "wxUSE_HTTPENGINE" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG" /d "WXUSINGDLL" /d "_UNICODE" /d "__WXDEBUG__" /d "__WXMSW__" /i "$(WXWIN)\lib\vc_dll\mswud" /i "$(WXWIN)\include" /i "..\include" /d "WXMAKINGDLL_WEBUPDATE" /i "..\..\wxhttpengine\include" /d wxUSE_HTTPENGINE
@@ -72,8 +72,8 @@ LINK32=link.exe
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\webupdate"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /GR /EHsc /w /O2 /I "$(WXWIN)\lib\vc_dll\mswu" /I "$(WXWIN)\include" /I "..\include" /Fd..\lib\webupdateu.pdb /I "..\..\wxhttpengine\include" /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "WXUSINGDLL" /D "_UNICODE" /D "__WXMSW__" /D "WXMAKINGDLL_WEBUPDATE" /D "wxUSE_HTTPENGINE" /c
-# ADD CPP /nologo /FD /MD /GR /EHsc /w /O2 /I "$(WXWIN)\lib\vc_dll\mswu" /I "$(WXWIN)\include" /I "..\include" /Fd..\lib\webupdateu.pdb /I "..\..\wxhttpengine\include" /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "WXUSINGDLL" /D "_UNICODE" /D "__WXMSW__" /D "WXMAKINGDLL_WEBUPDATE" /D "wxUSE_HTTPENGINE" /c
+# ADD BASE CPP /nologo /FD /MD /GR /EHsc /w /I "$(WXWIN)\lib\vc_dll\mswu" /I "$(WXWIN)\include" /I "..\include" /Fd..\lib\webupdateu.pdb /I "..\..\wxhttpengine\include" /O1 /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "WXUSINGDLL" /D "_UNICODE" /D "__WXMSW__" /D "WXMAKINGDLL_WEBUPDATE" /D "wxUSE_HTTPENGINE" /c
+# ADD CPP /nologo /FD /MD /GR /EHsc /w /I "$(WXWIN)\lib\vc_dll\mswu" /I "$(WXWIN)\include" /I "..\include" /Fd..\lib\webupdateu.pdb /I "..\..\wxhttpengine\include" /O1 /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "WXUSINGDLL" /D "_UNICODE" /D "__WXMSW__" /D "WXMAKINGDLL_WEBUPDATE" /D "wxUSE_HTTPENGINE" /c
 # ADD BASE MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "WXUSINGDLL" /D "_UNICODE" /D "__WXMSW__" /D "WXMAKINGDLL_WEBUPDATE" /D "wxUSE_HTTPENGINE" /mktyplib203 /win32
 # ADD MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "WXUSINGDLL" /D "_UNICODE" /D "__WXMSW__" /D "WXMAKINGDLL_WEBUPDATE" /D "wxUSE_HTTPENGINE" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "WXUSINGDLL" /d "_UNICODE" /d "__WXMSW__" /i "$(WXWIN)\lib\vc_dll\mswu" /i "$(WXWIN)\include" /i "..\include" /d "WXMAKINGDLL_WEBUPDATE" /i "..\..\wxhttpengine\include" /d wxUSE_HTTPENGINE
@@ -97,8 +97,8 @@ LINK32=link.exe
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\webupdate"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "$(WXWIN)\lib\vc_dll\mswd" /I "$(WXWIN)\include" /I "..\include" /Zi /Gm /GZ /Fd..\lib\webupdated.pdb /I "..\..\wxhttpengine\include" /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "_DEBUG" /D "WXUSINGDLL" /D "__WXDEBUG__" /D "__WXMSW__" /D "WXMAKINGDLL_WEBUPDATE" /D "wxUSE_HTTPENGINE" /c
-# ADD CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "$(WXWIN)\lib\vc_dll\mswd" /I "$(WXWIN)\include" /I "..\include" /Zi /Gm /GZ /Fd..\lib\webupdated.pdb /I "..\..\wxhttpengine\include" /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "_DEBUG" /D "WXUSINGDLL" /D "__WXDEBUG__" /D "__WXMSW__" /D "WXMAKINGDLL_WEBUPDATE" /D "wxUSE_HTTPENGINE" /c
+# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /W4 /I "$(WXWIN)\lib\vc_dll\mswd" /I "$(WXWIN)\include" /I "..\include" /Zi /Gm /GZ /Fd..\lib\webupdated.pdb /I "..\..\wxhttpengine\include" /Od /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "_DEBUG" /D "WXUSINGDLL" /D "__WXDEBUG__" /D "__WXMSW__" /D "WXMAKINGDLL_WEBUPDATE" /D "wxUSE_HTTPENGINE" /c
+# ADD CPP /nologo /FD /MDd /GR /EHsc /W4 /I "$(WXWIN)\lib\vc_dll\mswd" /I "$(WXWIN)\include" /I "..\include" /Zi /Gm /GZ /Fd..\lib\webupdated.pdb /I "..\..\wxhttpengine\include" /Od /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "_DEBUG" /D "WXUSINGDLL" /D "__WXDEBUG__" /D "__WXMSW__" /D "WXMAKINGDLL_WEBUPDATE" /D "wxUSE_HTTPENGINE" /c
 # ADD BASE MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "_DEBUG" /D "WXUSINGDLL" /D "__WXDEBUG__" /D "__WXMSW__" /D "WXMAKINGDLL_WEBUPDATE" /D "wxUSE_HTTPENGINE" /mktyplib203 /win32
 # ADD MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "_DEBUG" /D "WXUSINGDLL" /D "__WXDEBUG__" /D "__WXMSW__" /D "WXMAKINGDLL_WEBUPDATE" /D "wxUSE_HTTPENGINE" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG" /d "WXUSINGDLL" /d "__WXDEBUG__" /d "__WXMSW__" /i "$(WXWIN)\lib\vc_dll\mswd" /i "$(WXWIN)\include" /i "..\include" /d "WXMAKINGDLL_WEBUPDATE" /i "..\..\wxhttpengine\include" /d wxUSE_HTTPENGINE
@@ -122,8 +122,8 @@ LINK32=link.exe
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\webupdate"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /GR /EHsc /w /O2 /I "$(WXWIN)\lib\vc_dll\msw" /I "$(WXWIN)\include" /I "..\include" /Fd..\lib\webupdate.pdb /I "..\..\wxhttpengine\include" /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "WXUSINGDLL" /D "__WXMSW__" /D "WXMAKINGDLL_WEBUPDATE" /D "wxUSE_HTTPENGINE" /c
-# ADD CPP /nologo /FD /MD /GR /EHsc /w /O2 /I "$(WXWIN)\lib\vc_dll\msw" /I "$(WXWIN)\include" /I "..\include" /Fd..\lib\webupdate.pdb /I "..\..\wxhttpengine\include" /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "WXUSINGDLL" /D "__WXMSW__" /D "WXMAKINGDLL_WEBUPDATE" /D "wxUSE_HTTPENGINE" /c
+# ADD BASE CPP /nologo /FD /MD /GR /EHsc /w /I "$(WXWIN)\lib\vc_dll\msw" /I "$(WXWIN)\include" /I "..\include" /Fd..\lib\webupdate.pdb /I "..\..\wxhttpengine\include" /O1 /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "WXUSINGDLL" /D "__WXMSW__" /D "WXMAKINGDLL_WEBUPDATE" /D "wxUSE_HTTPENGINE" /c
+# ADD CPP /nologo /FD /MD /GR /EHsc /w /I "$(WXWIN)\lib\vc_dll\msw" /I "$(WXWIN)\include" /I "..\include" /Fd..\lib\webupdate.pdb /I "..\..\wxhttpengine\include" /O1 /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "WXUSINGDLL" /D "__WXMSW__" /D "WXMAKINGDLL_WEBUPDATE" /D "wxUSE_HTTPENGINE" /c
 # ADD BASE MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "WXUSINGDLL" /D "__WXMSW__" /D "WXMAKINGDLL_WEBUPDATE" /D "wxUSE_HTTPENGINE" /mktyplib203 /win32
 # ADD MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "WXUSINGDLL" /D "__WXMSW__" /D "WXMAKINGDLL_WEBUPDATE" /D "wxUSE_HTTPENGINE" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "WXUSINGDLL" /d "__WXMSW__" /i "$(WXWIN)\lib\vc_dll\msw" /i "$(WXWIN)\include" /i "..\include" /d "WXMAKINGDLL_WEBUPDATE" /i "..\..\wxhttpengine\include" /d wxUSE_HTTPENGINE
@@ -147,8 +147,8 @@ LINK32=link.exe
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\webupdate"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "$(WXWIN)\lib\vc_lib\mswud" /I "$(WXWIN)\include" /I "..\include" /Zi /Gm /GZ /Fd..\lib\webupdateud.pdb /I "..\..\wxhttpengine\include" /D "WIN32" /D "_LIB" /D "_DEBUG" /D "_UNICODE" /D "__WXDEBUG__" /D "__WXMSW__" /D "wxUSE_HTTPENGINE" /c
-# ADD CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "$(WXWIN)\lib\vc_lib\mswud" /I "$(WXWIN)\include" /I "..\include" /Zi /Gm /GZ /Fd..\lib\webupdateud.pdb /I "..\..\wxhttpengine\include" /D "WIN32" /D "_LIB" /D "_DEBUG" /D "_UNICODE" /D "__WXDEBUG__" /D "__WXMSW__" /D "wxUSE_HTTPENGINE" /c
+# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /W4 /I "$(WXWIN)\lib\vc_lib\mswud" /I "$(WXWIN)\include" /I "..\include" /Zi /Gm /GZ /Fd..\lib\webupdateud.pdb /I "..\..\wxhttpengine\include" /Od /D "WIN32" /D "_LIB" /D "_DEBUG" /D "_UNICODE" /D "__WXDEBUG__" /D "__WXMSW__" /D "wxUSE_HTTPENGINE" /c
+# ADD CPP /nologo /FD /MDd /GR /EHsc /W4 /I "$(WXWIN)\lib\vc_lib\mswud" /I "$(WXWIN)\include" /I "..\include" /Zi /Gm /GZ /Fd..\lib\webupdateud.pdb /I "..\..\wxhttpengine\include" /Od /D "WIN32" /D "_LIB" /D "_DEBUG" /D "_UNICODE" /D "__WXDEBUG__" /D "__WXMSW__" /D "wxUSE_HTTPENGINE" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -170,8 +170,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\webupdate"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /GR /EHsc /w /O2 /I "$(WXWIN)\lib\vc_lib\mswu" /I "$(WXWIN)\include" /I "..\include" /Fd..\lib\webupdateu.pdb /I "..\..\wxhttpengine\include" /D "WIN32" /D "_LIB" /D "_UNICODE" /D "__WXMSW__" /D "wxUSE_HTTPENGINE" /c
-# ADD CPP /nologo /FD /MD /GR /EHsc /w /O2 /I "$(WXWIN)\lib\vc_lib\mswu" /I "$(WXWIN)\include" /I "..\include" /Fd..\lib\webupdateu.pdb /I "..\..\wxhttpengine\include" /D "WIN32" /D "_LIB" /D "_UNICODE" /D "__WXMSW__" /D "wxUSE_HTTPENGINE" /c
+# ADD BASE CPP /nologo /FD /MD /GR /EHsc /w /I "$(WXWIN)\lib\vc_lib\mswu" /I "$(WXWIN)\include" /I "..\include" /Fd..\lib\webupdateu.pdb /I "..\..\wxhttpengine\include" /O1 /D "WIN32" /D "_LIB" /D "_UNICODE" /D "__WXMSW__" /D "wxUSE_HTTPENGINE" /c
+# ADD CPP /nologo /FD /MD /GR /EHsc /w /I "$(WXWIN)\lib\vc_lib\mswu" /I "$(WXWIN)\include" /I "..\include" /Fd..\lib\webupdateu.pdb /I "..\..\wxhttpengine\include" /O1 /D "WIN32" /D "_LIB" /D "_UNICODE" /D "__WXMSW__" /D "wxUSE_HTTPENGINE" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -193,8 +193,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\webupdate"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "$(WXWIN)\lib\vc_lib\mswd" /I "$(WXWIN)\include" /I "..\include" /Zi /Gm /GZ /Fd..\lib\webupdated.pdb /I "..\..\wxhttpengine\include" /D "WIN32" /D "_LIB" /D "_DEBUG" /D "__WXDEBUG__" /D "__WXMSW__" /D "wxUSE_HTTPENGINE" /c
-# ADD CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "$(WXWIN)\lib\vc_lib\mswd" /I "$(WXWIN)\include" /I "..\include" /Zi /Gm /GZ /Fd..\lib\webupdated.pdb /I "..\..\wxhttpengine\include" /D "WIN32" /D "_LIB" /D "_DEBUG" /D "__WXDEBUG__" /D "__WXMSW__" /D "wxUSE_HTTPENGINE" /c
+# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /W4 /I "$(WXWIN)\lib\vc_lib\mswd" /I "$(WXWIN)\include" /I "..\include" /Zi /Gm /GZ /Fd..\lib\webupdated.pdb /I "..\..\wxhttpengine\include" /Od /D "WIN32" /D "_LIB" /D "_DEBUG" /D "__WXDEBUG__" /D "__WXMSW__" /D "wxUSE_HTTPENGINE" /c
+# ADD CPP /nologo /FD /MDd /GR /EHsc /W4 /I "$(WXWIN)\lib\vc_lib\mswd" /I "$(WXWIN)\include" /I "..\include" /Zi /Gm /GZ /Fd..\lib\webupdated.pdb /I "..\..\wxhttpengine\include" /Od /D "WIN32" /D "_LIB" /D "_DEBUG" /D "__WXDEBUG__" /D "__WXMSW__" /D "wxUSE_HTTPENGINE" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -216,8 +216,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\webupdate"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /GR /EHsc /w /O2 /I "$(WXWIN)\lib\vc_lib\msw" /I "$(WXWIN)\include" /I "..\include" /Fd..\lib\webupdate.pdb /I "..\..\wxhttpengine\include" /D "WIN32" /D "_LIB" /D "__WXMSW__" /D "wxUSE_HTTPENGINE" /c
-# ADD CPP /nologo /FD /MD /GR /EHsc /w /O2 /I "$(WXWIN)\lib\vc_lib\msw" /I "$(WXWIN)\include" /I "..\include" /Fd..\lib\webupdate.pdb /I "..\..\wxhttpengine\include" /D "WIN32" /D "_LIB" /D "__WXMSW__" /D "wxUSE_HTTPENGINE" /c
+# ADD BASE CPP /nologo /FD /MD /GR /EHsc /w /I "$(WXWIN)\lib\vc_lib\msw" /I "$(WXWIN)\include" /I "..\include" /Fd..\lib\webupdate.pdb /I "..\..\wxhttpengine\include" /O1 /D "WIN32" /D "_LIB" /D "__WXMSW__" /D "wxUSE_HTTPENGINE" /c
+# ADD CPP /nologo /FD /MD /GR /EHsc /w /I "$(WXWIN)\lib\vc_lib\msw" /I "$(WXWIN)\include" /I "..\include" /Fd..\lib\webupdate.pdb /I "..\..\wxhttpengine\include" /O1 /D "WIN32" /D "_LIB" /D "__WXMSW__" /D "wxUSE_HTTPENGINE" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe

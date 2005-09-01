@@ -22,12 +22,6 @@ CPPFLAGS =
 # Standard linker flags 
 LDFLAGS = 
 
-# If 1 then wxHTTPEngine component will be used for proxy/authentication stuff [1,0]
-USE_HTTPENGINE = 0
-
-# The path to the wxHTTPBuilder (httpengine) component 
-HTTPENGINE_DIR = ..\..\wxhttpengine
-
 # The directory where wxWidgets library is installed 
 WX_DIR = $(WXWIN)
 
@@ -35,13 +29,19 @@ WX_DIR = $(WXWIN)
 WX_SHARED = 0
 
 # Compile Unicode build of wxWidgets? [0,1]
-WX_UNICODE = 1
+WX_UNICODE = 0
 
 # Use debug build of wxWidgets (define __WXDEBUG__)? [0,1]
 WX_DEBUG = 1
 
 # Version of the wx library to build against. 
 WX_VERSION = 26
+
+# If 1 then wxHTTPEngine component will be used for proxy/authentication stuff [1,0]
+USE_HTTPENGINE = 1
+
+# The path to the wxHTTPBuilder (httpengine) component 
+HTTPENGINE_DIR = ..\..\wxhttpengine
 
 
 
@@ -52,12 +52,12 @@ WX_VERSION = 26
 ### Variables: ###
 
 CPPDEPS = -MT$@ -MF$@.d -MD
-WEBUPDATE_LIB_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
-	-mthreads $(__WX_SHAREDDEFINE_p) -DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) \
+WEBUPDATE_LIB_CXXFLAGS = $(__WARNINGS) $(__DEBUGINFO) -mthreads \
+	$(__WX_SHAREDDEFINE_p) -DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
 	-I..\include -I$(HTTPENGINE_DIR)\include $(__HTTPENGINEDEP_DEF_p) \
-	$(CPPFLAGS) $(CXXFLAGS)
+	$(__MYOPTIMIZEFLAG) $(CPPFLAGS) $(CXXFLAGS)
 WEBUPDATE_LIB_OBJECTS =  \
 	mingw\webupdate_lib_webupdate.o \
 	mingw\webupdate_lib_webupdatedlg.o \
@@ -67,12 +67,12 @@ WEBUPDATE_LIB_OBJECTS =  \
 	mingw\webupdate_lib_download.o \
 	mingw\webupdate_lib_stdactions.o \
 	mingw\webupdate_lib_webupdatectrl.o
-WEBUPDATE_DLL_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
-	-mthreads $(__WX_SHAREDDEFINE_p) -DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) \
+WEBUPDATE_DLL_CXXFLAGS = $(__WARNINGS) $(__DEBUGINFO) -mthreads \
+	$(__WX_SHAREDDEFINE_p) -DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
 	-I..\include -DWXMAKINGDLL_WEBUPDATE -I$(HTTPENGINE_DIR)\include \
-	$(__HTTPENGINEDEP_DEF_p) $(CPPFLAGS) $(CXXFLAGS)
+	$(__HTTPENGINEDEP_DEF_p) $(__MYOPTIMIZEFLAG) $(CPPFLAGS) $(CXXFLAGS)
 WEBUPDATE_DLL_OBJECTS =  \
 	mingw\webupdate_dll_webupdate.o \
 	mingw\webupdate_dll_webupdatedlg.o \
@@ -82,12 +82,12 @@ WEBUPDATE_DLL_OBJECTS =  \
 	mingw\webupdate_dll_download.o \
 	mingw\webupdate_dll_stdactions.o \
 	mingw\webupdate_dll_webupdatectrl.o
-WEBUPDATER_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -mthreads \
+WEBUPDATER_CXXFLAGS = $(__WARNINGS) $(__DEBUGINFO) -mthreads \
 	$(__WX_SHAREDDEFINE_p) -DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
 	-I..\include -I$(HTTPENGINE_DIR)\include $(__HTTPENGINEDEP_DEF_p) \
-	$(CPPFLAGS) $(CXXFLAGS)
+	$(__MYOPTIMIZEFLAG) $(CPPFLAGS) $(CXXFLAGS)
 WEBUPDATER_OBJECTS =  \
 	mingw\webupdater_app_rc.o \
 	mingw\webupdater_app.o
@@ -140,6 +140,12 @@ __HTTPENGINEDEP_DEF_p_4 = --define wxUSE_HTTPENGINE
 endif
 ifeq ($(USE_HTTPENGINE),1)
 __HTTPENGINEDEP_DEF_p = -DwxUSE_HTTPENGINE
+endif
+ifeq ($(WX_DEBUG),0)
+__MYOPTIMIZEFLAG = -Os
+endif
+ifeq ($(WX_DEBUG),1)
+__MYOPTIMIZEFLAG = -O0
 endif
 ifeq ($(USE_HTTPENGINE),1)
 __HTTPENGINEDEP_LIB_p = -lhttpengine$(WXLIBPOSTFIX)
@@ -308,11 +314,11 @@ endif
 
 ifeq ($(WX_SHARED),1)
 ..\lib\webupdate$(WXLIBPOSTFIX).dll: $(WEBUPDATE_DLL_OBJECTS)
-	$(CXX) -shared -fPIC -o $@ $(WEBUPDATE_DLL_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -Wl,--out-implib,..\lib\libwebupdate$(WXLIBPOSTFIX).a -L$(HTTPENGINE_DIR)\lib  $(__HTTPENGINEDEP_LIB_p) -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+	$(CXX) -shared -fPIC -o $@ $(WEBUPDATE_DLL_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -Wl,--out-implib,..\lib\libwebupdate$(WXLIBPOSTFIX).a -L$(HTTPENGINE_DIR)\lib  $(__HTTPENGINEDEP_LIB_p) -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 endif
 
 ..\src\webupdater.exe: $(WEBUPDATER_OBJECTS) mingw\webupdater_app_rc.o $(__webupdate_lib___depname)
-	$(CXX) -o $@ $(WEBUPDATER_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -L$(HTTPENGINE_DIR)\lib -Wl,--subsystem,windows -mwindows  ..\lib\libwebupdate$(WXLIBPOSTFIX).a $(__HTTPENGINEDEP_LIB_p) -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+	$(CXX) -o $@ $(WEBUPDATER_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -L$(HTTPENGINE_DIR)\lib -Wl,--subsystem,windows -mwindows  ..\lib\libwebupdate$(WXLIBPOSTFIX).a $(__HTTPENGINEDEP_LIB_p) -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
 rep4_simple100: 
 	if not exist ..\samples\simple\v1.0.0 mkdir ..\samples\simple\v1.0.0
@@ -391,7 +397,7 @@ mingw\webupdate_dll_webupdatectrl.o: ./../src/webupdatectrl.cpp
 	$(CXX) -c -o $@ $(WEBUPDATE_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 mingw\webupdater_app_rc.o: ./../src/app.rc
-	windres --use-temp-file -i$< -o$@ $(__WX_SHAREDDEFINE_p_1_0) --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ..\include --include-dir $(HTTPENGINE_DIR)/include $(__HTTPENGINEDEP_DEF_p_4) --include-dir ../src
+	windres --use-temp-file -i$< -o$@ $(__WX_SHAREDDEFINE_p_1_0) --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ..\include --include-dir $(HTTPENGINE_DIR)/include $(__HTTPENGINEDEP_DEF_p_4)  --include-dir ../src
 
 mingw\webupdater_app.o: ./../src/app.cpp
 	$(CXX) -c -o $@ $(WEBUPDATER_CXXFLAGS) $(CPPDEPS) $<

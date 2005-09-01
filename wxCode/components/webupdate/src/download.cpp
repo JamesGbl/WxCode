@@ -114,21 +114,25 @@ wxInputStream *wxGetInputStreamFromURI(const wxString &uri)
 #if wxUSE_HTTPENGINE
 		wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using wxHTTPBuilder"));
 		wxHTTPBuilder http;
-		http.InitContentTypes(); // Initialise the content types on the page			
+		//http.InitContentTypes(); // Initialise the content types on the page			
 
-		// the proxy & auth settings should have been initialized by the
-		// user of wxDownloadThread ! 
+		// NOTES: 
+		// 1) we use the static proxy & auth settings of wxDownloadThread
+		//    because this function is an helper function of wxDownloadThread
+		// 2) the proxy & auth settings should have been initialized by the
+		//    user of wxDownloadThread
+		// 3) the wx*Settings classes contain a boolean switch which allows
+		//    wxHTTPBuilder to understand if they are marked as "used" or not;
+		//    thus, setting them with the Set*() functions below does not
+		//    necessarily mean that they will be used.
+		http.SetProxySettings(wxDownloadThread::m_proxy);
+		http.SetAuthentication(wxDownloadThread::m_auth);
 		
-		if (wxDownloadThread::m_proxy.m_bUseProxy) {
+		// just to help debugging....
+		if (wxDownloadThread::m_proxy.m_bUseProxy)
 			wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using the proxy settings"));
-			http.SetProxySettings(wxDownloadThread::m_proxy);
-		}
-		
-		if (false) {//m_auth.m_bUseAuth) {
+		if (wxDownloadThread::m_auth.m_authType != wxHTTPAuthSettings::wxHTTP_AUTH_NONE)
 			wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using the basic authentication settings"));
-			wxDownloadThread::m_auth.SetBasicAuth(); // Set the class to use the authentication settings
-			http.SetAuthentication(wxDownloadThread::m_auth);
-		}
 
 		in = http.GetInputStream(uri);
 #else

@@ -1,20 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <webupdate version="1.0">
-  <appname>wxWebUpdate ADVANCED sample</appname>
-  <appfile>advanced</appfile>
-  <xrc>webupdatedlg.xrc</xrc>
-  <res>wxWebUpdateDlg</res>
-  <restart>1</restart>
-  <savelog>1</savelog>
-  <remoteuri>file:../../../website/script3.xml</remoteuri>
-  <keywords></keywords>
-  <local-package id="core">
-    <version>1.5.0</version>
-  </local-package>
-  <local-package id="addon1">
-    <version>1.5.0</version>
-  </local-package>
-  <local-package id="addon2">
-    <version>1.5.0</version>
-  </local-package>
+	<appname>wxWebUpdate ADVANCED sample</appname>
+	<appfile>advanced</appfile>
+	<res>wxWebUpdateDlg</res>
+
+	<local-package id="core">
+		<version>0.0.1</version>
+	</local-package>
 </webupdate>
+

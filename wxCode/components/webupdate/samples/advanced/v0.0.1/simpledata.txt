@@ -1,6 +1,8 @@
  ======================================================
- EXAMPLE OF A DATA FILE FOR THE ADVANCED PROGRAM v1.5.0
+ EXAMPLE OF A DATA FILE FOR THE ADVANCED PROGRAM v0.0.1
  ======================================================
  
- You've now got the updated simpledata.txt for the ADVANCED sample !
+ This is the data file for the wxWebUpdate ADVANCED sample v0.0.1...
+ and shows that WebUpdater can replace any kind of file required to
+ the program and not only the EXE ! 
  

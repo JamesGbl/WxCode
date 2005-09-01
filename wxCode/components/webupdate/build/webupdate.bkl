@@ -64,7 +64,7 @@
  	<set var="MOD_HDR" overwrite="0"/> 	
  	<set var="MAKE_LIB" overwrite="0">1</set>
  	<set var="MAKE_EXE" overwrite="0">1</set>
- 	<set var="MODDED" overwrite="0">1</set>
+ 	<set var="MODDED" overwrite="0">0</set>
 
 
 

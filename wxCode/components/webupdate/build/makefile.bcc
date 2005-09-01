@@ -39,16 +39,6 @@ CPPFLAGS = -a8 -g0
 LDFLAGS = 
 !endif
 
-# If 1 then wxHTTPEngine component will be used for proxy/authentication stuff [1,0]
-!ifndef USE_HTTPENGINE
-USE_HTTPENGINE = 0
-!endif
-
-# The path to the wxHTTPBuilder (httpengine) component 
-!ifndef HTTPENGINE_DIR
-HTTPENGINE_DIR = ..\..\wxhttpengine
-!endif
-
 # The directory where wxWidgets library is installed 
 !ifndef WX_DIR
 WX_DIR = $(WXWIN)
@@ -61,7 +51,7 @@ WX_SHARED = 0
 
 # Compile Unicode build of wxWidgets? [0,1]
 !ifndef WX_UNICODE
-WX_UNICODE = 1
+WX_UNICODE = 0
 !endif
 
 # Use debug build of wxWidgets (define __WXDEBUG__)? [0,1]
@@ -74,6 +64,16 @@ WX_DEBUG = 1
 WX_VERSION = 26
 !endif
 
+# If 1 then wxHTTPEngine component will be used for proxy/authentication stuff [1,0]
+!ifndef USE_HTTPENGINE
+USE_HTTPENGINE = 1
+!endif
+
+# The path to the wxHTTPBuilder (httpengine) component 
+!ifndef HTTPENGINE_DIR
+HTTPENGINE_DIR = ..\..\wxhttpengine
+!endif
+
 
 
 # -------------------------------------------------------------------------
@@ -82,11 +82,11 @@ WX_VERSION = 26
 
 ### Variables: ###
 
-WEBUPDATE_LIB_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
-	-tWM $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
+WEBUPDATE_LIB_CXXFLAGS = -I$(BCCDIR)\include $(__DEBUGINFO) -tWM \
+	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
 	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	-I$(WX_DIR)\include -I..\include -I$(HTTPENGINE_DIR)\include \
-	$(__HTTPENGINEDEP_DEF_p) $(CPPFLAGS) $(CXXFLAGS)
+	$(__HTTPENGINEDEP_DEF_p) $(__MYOPTIMIZEFLAG) $(CPPFLAGS) $(CXXFLAGS)
 WEBUPDATE_LIB_OBJECTS =  \
 	borland\webupdate_lib_webupdate.obj \
 	borland\webupdate_lib_webupdatedlg.obj \
@@ -96,12 +96,12 @@ WEBUPDATE_LIB_OBJECTS =  \
 	borland\webupdate_lib_download.obj \
 	borland\webupdate_lib_stdactions.obj \
 	borland\webupdate_lib_webupdatectrl.obj
-WEBUPDATE_DLL_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
-	-tWM $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
+WEBUPDATE_DLL_CXXFLAGS = -I$(BCCDIR)\include $(__DEBUGINFO) -tWM \
+	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
 	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	-I$(WX_DIR)\include -I..\include -DWXMAKINGDLL_WEBUPDATE \
-	-I$(HTTPENGINE_DIR)\include $(__HTTPENGINEDEP_DEF_p) $(CPPFLAGS) \
-	$(CXXFLAGS)
+	-I$(HTTPENGINE_DIR)\include $(__HTTPENGINEDEP_DEF_p) $(__MYOPTIMIZEFLAG) \
+	$(CPPFLAGS) $(CXXFLAGS)
 WEBUPDATE_DLL_OBJECTS =  \
 	borland\webupdate_dll_webupdate.obj \
 	borland\webupdate_dll_webupdatedlg.obj \
@@ -111,11 +111,11 @@ WEBUPDATE_DLL_OBJECTS =  \
 	borland\webupdate_dll_download.obj \
 	borland\webupdate_dll_stdactions.obj \
 	borland\webupdate_dll_webupdatectrl.obj
-WEBUPDATER_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) -tWM \
+WEBUPDATER_CXXFLAGS = -I$(BCCDIR)\include $(__DEBUGINFO) -tWM \
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
 	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	-I$(WX_DIR)\include -I..\include -I$(HTTPENGINE_DIR)\include \
-	$(__HTTPENGINEDEP_DEF_p) $(CPPFLAGS) $(CXXFLAGS)
+	$(__HTTPENGINEDEP_DEF_p) $(__MYOPTIMIZEFLAG) $(CPPFLAGS) $(CXXFLAGS)
 WEBUPDATER_OBJECTS =  \
 	borland\webupdater_app.obj
 SIMPLE_1_0_0_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
@@ -159,6 +159,12 @@ __HTTPENGINEDEP_DEF_p_4 = -dwxUSE_HTTPENGINE
 !endif
 !if "$(USE_HTTPENGINE)" == "1"
 __HTTPENGINEDEP_DEF_p = -DwxUSE_HTTPENGINE
+!endif
+!if "$(WX_DEBUG)" == "0"
+__MYOPTIMIZEFLAG = -O1
+!endif
+!if "$(WX_DEBUG)" == "1"
+__MYOPTIMIZEFLAG = -Od
 !endif
 !if "$(USE_HTTPENGINE)" == "1"
 __HTTPENGINEDEP_LIB_p = httpengine$(WXLIBPOSTFIX).lib
@@ -351,7 +357,7 @@ cleandocs:
 !if "$(WX_SHARED)" == "1"
 ..\lib\webupdate$(WXLIBPOSTFIX).dll: $(WEBUPDATE_DLL_OBJECTS)
 	ilink32 -Tpd -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -L$(HTTPENGINE_DIR)\lib @&&|
-	c0d32.obj $(WEBUPDATE_DLL_OBJECTS),$@,, $(__HTTPENGINEDEP_LIB_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
+	c0d32.obj $(WEBUPDATE_DLL_OBJECTS),$@,, $(__HTTPENGINEDEP_LIB_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
 |
 	implib -f ..\lib\webupdate$(WXLIBPOSTFIX) $@
 !endif
@@ -446,7 +452,7 @@ borland\webupdate_dll_webupdatectrl.obj: .\..\src\webupdatectrl.cpp
 	$(CXX) -q -c -P -o$@ $(WEBUPDATE_DLL_CXXFLAGS) $**
 
 borland\webupdater_app.res: .\..\src\app.rc
-	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include $(__WX_SHAREDDEFINE_p_1_0) $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) -d__WXMSW__ -i$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i$(HTTPENGINE_DIR)\include $(__HTTPENGINEDEP_DEF_p_4) -i..\src $**
+	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include $(__WX_SHAREDDEFINE_p_1_0) $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) -d__WXMSW__ -i$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i$(HTTPENGINE_DIR)\include $(__HTTPENGINEDEP_DEF_p_4)  -i..\src $**
 
 borland\webupdater_app.obj: .\..\src\app.cpp
 	$(CXX) -q -c -P -o$@ $(WEBUPDATER_CXXFLAGS) $**

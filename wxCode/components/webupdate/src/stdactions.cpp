@@ -475,17 +475,11 @@ bool wxWebUpdateActionMkfile::Run() const
 	// create it !
 	wxFileOutputStream out(f.GetFullPath());
 	
-	// first understand how many bytes will be required for the selected encoding
+	// do the encoding conversion
 	wxCSConv converter(m_strEncoding);
-	/*size_t bytes = converter.WC2MB(NULL, m_strContent, m_strContent.Len());
-	
-	// alloc the buffer
-	char *data = new char[bytes+16];
-	
-	// do real conversion
-	converter.WC2MB(data, m_strContent, m_strContent.Len());*/
-	const char *data = (const char*) m_strContent.mb_str(converter);
-	size_t bytes = strlen(data);
+	wxCharBuffer buf = m_strContent.mb_str(converter);
+	const char *data = (const char*) buf;
+	size_t bytes = strlen(data)*sizeof(char);
 	
 	// write
 	if (out.Write(data, bytes).LastWrite() != bytes) {
