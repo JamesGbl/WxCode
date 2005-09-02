@@ -3,7 +3,7 @@
 // Purpose:     mimetest application
 // Maintainer:  Otto Wyss
 // Created:     2005-03-07
-// RCS-ID:      $Id: mimetest.cpp,v 1.2 2005-03-08 18:54:03 wyo Exp $
+// RCS-ID:      $Id: mimetest.cpp,v 1.3 2005-09-02 20:20:19 wyo Exp $
 // Copyright:   (c) 2005 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -27,6 +27,9 @@
 
 //! wxWidgets headers
 #include <wx/dynlib.h>   // dynamic library support
+#include <wx/filedlg.h>  // file selector dialog
+#include <wx/filename.h> // file name support
+#include <wx/textdlg.h>  // text from user dialog
 
 //! wxCode headers
 #include "wx/mimetypes.h" // wxMimeType control
@@ -69,6 +72,14 @@ const wxString APP_INFOS = _("\
 If you like this app and want to help just subscribe to the users mailing \n\
 and ask what you can do.\
 ");
+
+// menu id's
+enum {
+    myID_EXISTS = wxID_HIGHEST,
+    myID_MATCH,
+    myID_ISSTANDARD,
+    myID_GETDATA,
+};
 
 
 //----------------------------------------------------------------------------
@@ -134,6 +145,8 @@ public:
     void OnClose (wxCloseEvent &event);
     void OnAbout (wxCommandEvent &event);
     void OnExit (wxCommandEvent &event);
+
+    void OnTest (wxCommandEvent &event);
 
 private:
     //! creates the application menu bar
@@ -273,6 +286,11 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
     EVT_CLOSE (                      AppFrame::OnClose)
     // file events
     EVT_MENU (wxID_EXIT,             AppFrame::OnExit)
+    // test events
+    EVT_MENU (myID_EXISTS,           AppFrame::OnTest)
+    EVT_MENU (myID_MATCH,            AppFrame::OnTest)
+    EVT_MENU (myID_ISSTANDARD,       AppFrame::OnTest)
+    EVT_MENU (myID_GETDATA,          AppFrame::OnTest)
     // help events
     EVT_MENU (wxID_ABOUT,            AppFrame::OnAbout)
 END_EVENT_TABLE ()
@@ -290,37 +308,8 @@ AppFrame::AppFrame (const wxString &title)
     // create menu
     CreateMenu ();
 
-    // create mime type
-    m_mime = new wxMimeType();
-    wxMimeTypeData data;
-    data.extension = _T("htb");
-    data.description = _T("Das ist ein Test");
-    data.appname = wxGetApp().argv[0];
-    data.icon = wxICON (mimetest);
-
-    // check mim type
-    if (m_mime->Match (&data)) {
-        wxMessageBox (_("Mime type exists, will be removed"), _("Mime type check"),
-                      wxOK | wxICON_INFORMATION);
-        m_mime->Remove (&data);
-    }else{
-        wxMessageBox (_("Mime type doesn't exists, will be added"), _("Mime type check"),
-                      wxOK | wxICON_INFORMATION);
-        m_mime->Add (_T("MimeType"), &data);
-    }
-
     // get mime type
-    wxMimeTypeData result;
-    result.extension = _T("htb");
-    wxString text;
-    bool ok = m_mime->GetData (&result);
-    if (ok) {
-        text = wxString::Format (_T("Extension: %s\nDescription: %s\nAppname: %s\n"),
-                                 result.extension.c_str(), 
-                                 result.description.c_str(), 
-                                 result.appname.c_str());
-    }
-    m_data = new wxTextCtrl (this, -1, text, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE);
+    m_data = new wxTextCtrl (this, -1, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE);
 
 }
 
@@ -340,12 +329,57 @@ void AppFrame::OnExit (wxCommandEvent &WXUNUSED(event)) {
     Close (true);
 }
 
+void AppFrame::OnTest (wxCommandEvent &event) {
+
+    // ask for file return if none
+    wxString file = wxFileSelector(wxFileSelectorPromptStr);
+    if (file.IsEmpty() || !wxFileExists (file)) return; // no file
+
+    // create mime type
+    m_mime = new wxMimeType();
+    wxMimeTypeData data;
+    data.extension = wxFileName (file).GetExt();
+    data.description = _T("");
+    data.appname = _T("");
+
+    // check mime type
+    wxString text;
+    if (event.GetId() == myID_EXISTS) {
+        if (m_mime->Exists (&data)) {
+            text = wxString::Format (_T("Mime type of %s exists\n"), data.extension.c_str());
+        }
+    }else if (event.GetId() == myID_MATCH) {
+        if (m_mime->Match (&data)) {
+            text = wxString::Format (_T("Mime type of %s matches\n"), data.extension.c_str());
+        }
+    }else if (event.GetId() == myID_ISSTANDARD) {
+        if (m_mime->IsStandard (&data)) {
+            text = wxString::Format (_T("Mime type of %s is standard\n"), data.extension.c_str());
+        }
+    }else if (event.GetId() == myID_GETDATA) {
+        if (m_mime->GetData (&data)) {
+            wxString text = wxString::Format (_T("Extension: %s\nDescription: %s\nAppname: %s\n"),
+                                              data.extension.c_str(),
+                                              data.description.c_str(),
+                                              data.appname.c_str());
+        }
+    }
+    m_data->SetValue (text);
+}
+
 // private functions
 void AppFrame::CreateMenu () {
 
     // File menu
     wxMenu *menuFile = new wxMenu;
     menuFile->Append (wxID_EXIT, _("&Quit\tCtrl+Q"));
+
+    // Test menu
+    wxMenu *menuTest = new wxMenu;
+    menuTest->Append (myID_EXISTS, _("&Exists"));
+    menuTest->Append (myID_MATCH, _("&Match"));
+    menuTest->Append (myID_ISSTANDARD, _("&Is standard"));
+    menuTest->Append (myID_GETDATA, _("&Get data"));
 
     // Help menu
     wxMenu *menuHelp = new wxMenu;
@@ -354,6 +388,7 @@ void AppFrame::CreateMenu () {
     // construct menu
     wxMenuBar *menuBar = new wxMenuBar;
     menuBar->Append (menuFile, _("&File"));
+    menuBar->Append (menuTest, _("&Test"));
     menuBar->Append (menuHelp, _("&Help"));
     SetMenuBar (menuBar);
 
