@@ -1,19 +1,19 @@
 ##############################################################################
 ## File:        Makefile
-## Purpose:     crashtest
+## Purpose:     splittest
 ## Maintainer:  Otto Wyss
 ## Created:     2004-10-01
-## RCS-ID:      $Id: Makefile,v 1.1 2005-05-24 16:02:43 wyo Exp $
+## RCS-ID:      $Id: Makefile,v 1.2 2005-09-02 20:55:58 wyo Exp $
 ## Copyright:   (c) 2004 wxCode
 ## Licence:     wxWindows
 ##############################################################################
 
 # list of source files
-SRC = crashtest.cpp \
-      crashprint.cpp
+SRC = splittest.cpp \
+      splitwindow.cpp
 
 # executable name
-PRG = crashtest
+PRG = splittest
 
 # source directories
 vpath %.cpp ../../src

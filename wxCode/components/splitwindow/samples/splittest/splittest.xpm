@@ -1,5 +1,5 @@
 /* XPM */
-static char *splittest_xpm[] = {
+static char *app_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 12 1",
 "  c black",
