@@ -1,11 +1,11 @@
 Component:  wxCrashPrint
 Release:    2004-12-23
 Documents:  http://wxcode.sourceforge.net/components/crashprint/index.html
-wxWidgets:  2.4.x, 2.5.x
+wxWidgets:  2.6.1
 Maintainer: Otto Wyss (wyo)
 Subdir:     crashprint
 
 Description:
 This class formats and prints a report in case the application crashes on
-Linux. Also included is the implementation of the BlackBox.dll which does 
+Linux. Also included is the implementation of the BlackBox.dll which does
 the same on Windows.
