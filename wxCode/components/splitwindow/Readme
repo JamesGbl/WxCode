@@ -1,11 +1,11 @@
-Component:  wxHyperLink
-Release:    2004-11-27
+Component:  wxSplitWindow
+Release:    2005-08-28
 Documents:  http://wxcode.sourceforge.net/components/hyperlink/index.html
 wxWidgets:  2.6.1
 Maintainer: Otto Wyss (wyo)
 Subdir:     hyperlink
 
 Description:
-wxHyperLink contains a static text element which links to an URL. Clicking on
-the URL activates the standard browser (via mimetype) and opens the URL. No
-checks on the URL is done.
+wxSplitWindow allows to split a window into 2 windows with a sash in between. 
+It's similar to wxSpitterWindow but it doesn't destroy any window if unsplit. 
+So the 2 partial windows can always be access regardless if split or unsplit.
