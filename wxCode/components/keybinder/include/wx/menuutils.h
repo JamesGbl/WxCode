@@ -31,12 +31,6 @@
 //! is found inside the given menu bar.
 int WXDLLIMPEXP_KEYBINDER wxFindMenuItem(wxMenuBar *, const wxString &strMenuItemName);
 
-
-// some useful macros
-#define wxSAFE_DELETE(x)					{ if (x) delete x; x = NULL; }
-#define wxSAFE_DELETE_ARRAY(x)				{ if (x) delete [] x; x = NULL; }
-
-
 //! The command type identifier for a wxMenuCmd.
 #define wxMENUCMD_TYPE						0x1234
 
