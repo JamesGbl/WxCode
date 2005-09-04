@@ -61,14 +61,6 @@
 //! The maximum number of arguments for a single function.
 #define wxSCRIPTFNC_MAX_ARGS			32
 
-#ifndef wxSAFE_DELETE
-#define wxSAFE_DELETE(x)				{ if (x) delete x; x = NULL; }
-#endif
-
-#ifndef wxSAFE_DELETE_ARRAY
-#define wxSAFE_DELETE_ARRAY(x)			{ if (x) delete [] x; x = NULL; }
-#endif
-
 #ifndef wxSCRIPT_EXPORT
 #ifdef __VISUALC__
 #define wxSCRIPT_EXPORT		_declspec(dllexport)

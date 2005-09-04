@@ -143,36 +143,36 @@ bool wxScriptInterpreter::Init(bool bCINT, bool bUnderC, bool bLua, bool bPython
 void wxScriptInterpreter::Cleanup()
 {
 #ifdef wxSCRIPT_USE_CINT
-	wxSAFE_DELETE(m_pCINT);
+	wxDELETE(m_pCINT);
 #endif
 
 #ifdef wxSCRIPT_USE_UNDERC
-	wxSAFE_DELETE(m_pUnderC);
+	wxDELETE(m_pUnderC);
 #endif
 
 #ifdef wxSCRIPT_USE_LUA
-	wxSAFE_DELETE(m_pLua);
+	wxDELETE(m_pLua);
 #endif
 
 #ifdef wxSCRIPT_USE_PYTHON
-	wxSAFE_DELETE(m_pPython);
+	wxDELETE(m_pPython);
 #endif
 
-	wxSAFE_DELETE(wxScriptTypeVOID);
-	wxSAFE_DELETE(wxScriptTypeINT);
-	wxSAFE_DELETE(wxScriptTypeCHAR);
-	wxSAFE_DELETE(wxScriptTypeLONG);
-	wxSAFE_DELETE(wxScriptTypeFLOAT);
-	wxSAFE_DELETE(wxScriptTypeDOUBLE);
-	wxSAFE_DELETE(wxScriptTypeBOOL);
+	wxDELETE(wxScriptTypeVOID);
+	wxDELETE(wxScriptTypeINT);
+	wxDELETE(wxScriptTypeCHAR);
+	wxDELETE(wxScriptTypeLONG);
+	wxDELETE(wxScriptTypeFLOAT);
+	wxDELETE(wxScriptTypeDOUBLE);
+	wxDELETE(wxScriptTypeBOOL);
 
-	wxSAFE_DELETE(wxScriptTypePVOID);
-	wxSAFE_DELETE(wxScriptTypePINT);
-	wxSAFE_DELETE(wxScriptTypePCHAR);
-	wxSAFE_DELETE(wxScriptTypePLONG);
-	wxSAFE_DELETE(wxScriptTypePFLOAT);
-	wxSAFE_DELETE(wxScriptTypePDOUBLE);
-	wxSAFE_DELETE(wxScriptTypePBOOL);
+	wxDELETE(wxScriptTypePVOID);
+	wxDELETE(wxScriptTypePINT);
+	wxDELETE(wxScriptTypePCHAR);
+	wxDELETE(wxScriptTypePLONG);
+	wxDELETE(wxScriptTypePFLOAT);
+	wxDELETE(wxScriptTypePDOUBLE);
+	wxDELETE(wxScriptTypePBOOL);
 }
 
 bool wxScriptInterpreter::areAllReady()
