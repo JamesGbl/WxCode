@@ -14,7 +14,7 @@
 	<!-- Settings for this component -->
 	<!-- =========================== -->
 
-	<set var="COMP_NAME">DlgBased</set>
+	<set var="COMP_NAME">dlgbased</set>
 	<set var="COMP_SRC"></set>
 	<set var="COMP_HDR"></set>
 	<set var="COMP_SAMPLE1_SRC">../samples/calc/calc.cpp</set>
