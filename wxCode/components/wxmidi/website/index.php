@@ -4,7 +4,7 @@
   // RCS-ID: $Id$
   // Notes: the index page of the website of wxMidi
   ////////////////////////////////////////////////////////////////////////////////////////////
-	header("Location: http://www.lenmus.org/sw/".
+	header("Location: http://www.lenmus.org/sw/"
 			."page.php?pid=paginas&amp;name=wxmidi&amp;lang=Eng");
 	exit();
 
