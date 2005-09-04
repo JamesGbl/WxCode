@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<!-- RCS-ID: $Id: splashtext.bkl,v 1.2 2005-08-04 12:31:20 frm Exp $ -->
+<!-- RCS-ID: $Id: splashtext.bkl,v 1.3 2005-09-04 18:45:53 frm Exp $ -->
 
 <makefile>
 
@@ -12,7 +12,7 @@
 	<!-- Settings for this component -->
 	<!-- =========================== -->
 
-	<set var="COMP_NAME">SplashText</set>
+	<set var="COMP_NAME">splashtext</set>
 	
 	<!-- COMP_SRC must list the component's sources with path relative to ../src -->
 	<!-- COMP_HDR must list the component's headers with path relative to ../include -->
