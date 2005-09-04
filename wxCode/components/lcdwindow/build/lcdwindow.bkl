@@ -2,7 +2,7 @@
 
 <!-- Created by: Francesco Montorsi <frm@users.sourceforge.net>     -->
 <!-- Creation date: 9/10/2004                                       -->
-<!-- RCS-ID: $Id: lcdwindow.bkl,v 1.2 2005-08-03 11:03:48 frm Exp $        -->
+<!-- RCS-ID: $Id: lcdwindow.bkl,v 1.3 2005-09-04 18:45:53 frm Exp $        -->
 
 <makefile>
 
@@ -14,7 +14,7 @@
 	<!-- Settings for this component -->
 	<!-- =========================== -->
 
-	<set var="COMP_NAME">LCDWindow</set>
+	<set var="COMP_NAME">lcdwindow</set>
 	<set var="COMP_SRC">lcdwindow.cpp</set>
 	<set var="COMP_HDR">wx/lcdwindow.h</set>
 	<set var="COMP_SAMPLE_DIR">../samples</set>
