@@ -3,7 +3,7 @@
 // Purpose:     wxHyperLink control
 // Maintainer:  Wyo
 // Created:     2003-04-07
-// RCS-ID:      $Id: hyperlink.cpp,v 1.4 2005-02-10 16:05:07 wyo Exp $
+// RCS-ID:      $Id: hyperlink.cpp,v 1.5 2005-09-06 19:21:54 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -55,13 +55,14 @@
 // wxHyperLink
 //----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS (wxHyperLink, wxStaticText)
+IMPLEMENT_DYNAMIC_CLASS (wxHyperLink, wxControl)
 
-BEGIN_EVENT_TABLE    (wxHyperLink, wxStaticText)
-    EVT_ENTER_WINDOW (wxHyperLink::OnWindowEnter)
-    EVT_LEAVE_WINDOW (wxHyperLink::OnWindowLeave)
+BEGIN_EVENT_TABLE    (wxHyperLink, wxControl)
     EVT_LEFT_DCLICK  (wxHyperLink::OnLinkActivate)
     EVT_LEFT_DOWN    (wxHyperLink::OnLinkActivate)
+    EVT_PAINT        (wxHyperLink::OnPaint)
+    EVT_ENTER_WINDOW (wxHyperLink::OnWindowEnter)
+    EVT_LEAVE_WINDOW (wxHyperLink::OnWindowLeave)
 END_EVENT_TABLE()
 
 bool wxHyperLink::Create (wxWindow *parent,
@@ -74,17 +75,17 @@ bool wxHyperLink::Create (wxWindow *parent,
     bool okay = FALSE;
 
     // create static text
-    okay = wxStaticText::Create (parent, id, label, pos, size, style, name);
-    wxASSERT_MSG (okay, _("Failed to create wxStaticText, needed by wxHyperLink!"));
+    okay = wxControl::Create (parent, id, pos, size, style|wxNO_BORDER, wxDefaultValidator, name);
+    wxASSERT_MSG (okay, _("Failed to create wxControl, needed by wxHyperLink!"));
 
     // initialize variables
+    SetLabel (label);
     m_URL = wxEmptyString;
-    m_Marked = false;
     m_Visited = false;
-    m_MarkedColour = wxColour (_T("DARK GREY"));
+    m_HoverCursor = wxCursor (wxCURSOR_HAND);
+    m_HoverColour = wxColour (_T("RED"));
     m_NormalColour = wxColour (_T("BLUE"));
     m_VisitedColour = wxColour (_T("PURPLE"));
-    m_HoverCursor = wxCursor (wxCURSOR_HAND);
 
     // set foreground colour
     SetForegroundColour (m_NormalColour);
@@ -95,21 +96,17 @@ bool wxHyperLink::Create (wxWindow *parent,
     // get background colour
     m_BackgroundColour = GetBackgroundColour ();
 
+    // determin and set minimal size
+    wxClientDC dc (this);
+    dc.SetFont(GetFont());
+    dc.GetTextExtent (GetLabel(), &m_width, &m_height);
+    SetBestSize (DoGetBestSize());
+
     return okay;
 } // Create
 
 //----------------------------------------------------------------------------
 // event handlers
-
-void wxHyperLink::OnWindowEnter (wxMouseEvent &WXUNUSED(event)) {
-    SetCursor (m_HoverCursor);
-    Refresh();
-}
-
-void wxHyperLink::OnWindowLeave (wxMouseEvent &WXUNUSED(event)) {
-    SetCursor (wxNullCursor);
-    Refresh();
-}
 
 void wxHyperLink::OnLinkActivate (wxMouseEvent &WXUNUSED(event)) {
     m_Visited = TRUE;
@@ -123,6 +120,34 @@ void wxHyperLink::OnLinkActivate (wxMouseEvent &WXUNUSED(event)) {
     }
 }
 
+void wxHyperLink::OnPaint (wxPaintEvent &WXUNUSED(event)) {
+    wxPaintDC dc(this);
+    dc.BeginDrawing();
+    dc.SetFont (GetFont());
+    dc.SetTextForeground (GetForegroundColour());
+    dc.DrawText (GetLabel(), 0, 0);
+    dc.EndDrawing();
+}
+
+void wxHyperLink::OnWindowEnter (wxMouseEvent &WXUNUSED(event)) {
+    SetCursor (m_HoverCursor);
+    SetForegroundColour (m_HoverColour);
+    Refresh();
+}
+
+void wxHyperLink::OnWindowLeave (wxMouseEvent &WXUNUSED(event)) {
+    SetCursor (wxNullCursor);
+    SetForegroundColour (!m_Visited? m_NormalColour: m_VisitedColour);
+    Refresh();
+}
+
+//----------------------------------------------------------------------------
+// size functions
+
+wxSize wxHyperLink::DoGetBestSize() const {
+    return wxSize (m_width, m_height);
+}
+
 //----------------------------------------------------------------------------
 // settings functions
 
@@ -134,12 +159,12 @@ void wxHyperLink::SetHoverCursor (wxCursor cursor) {
     m_HoverCursor = cursor;
 }
 
-wxColour wxHyperLink::GetMarkedColour () {
-    return m_MarkedColour;
+wxColour wxHyperLink::GetHoverColour () {
+    return m_HoverColour;
 }
 
-void wxHyperLink::SetMarkedColour (wxColour colour) {
-    m_MarkedColour = colour;
+void wxHyperLink::SetHoverColour (wxColour colour) {
+    m_HoverColour = colour;
 }
 
 wxColour wxHyperLink::GetNormalColour () {
@@ -150,10 +175,8 @@ void wxHyperLink::SetNormalColour (wxColour colour) {
     m_NormalColour = colour;
     if (!m_Visited) {
         SetForegroundColour (m_NormalColour);
-    }else{
-        SetForegroundColour (m_VisitedColour);
+        Refresh();
     }
-    Refresh();
 }
 
 wxColour wxHyperLink::GetVisitedColour () {
@@ -162,12 +185,10 @@ wxColour wxHyperLink::GetVisitedColour () {
 
 void wxHyperLink::SetVisitedColour (wxColour colour) {
     m_VisitedColour = colour;
-    if (!m_Visited) {
-        SetForegroundColour (m_NormalColour);
-    }else{
+    if (m_Visited) {
         SetForegroundColour (m_VisitedColour);
+        Refresh();
     }
-    Refresh();
 }
 
 wxString wxHyperLink::GetURL () {

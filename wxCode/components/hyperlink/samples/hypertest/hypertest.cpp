@@ -3,7 +3,7 @@
 // Purpose:     hypertest application
 // Maintainer:  Otto Wyss
 // Created:     2005-05-12
-// RCS-ID:      $Id: hypertest.cpp,v 1.4 2005-05-30 19:51:12 wyo Exp $
+// RCS-ID:      $Id: hypertest.cpp,v 1.5 2005-09-06 19:21:54 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -61,8 +61,8 @@ const wxString APP_LICENCE = _T("wxWindows");
 const wxString APP_VERSION = _T("0.0.1");
 const wxString APP_BUILD = _T(__DATE__);
 
-const wxString APP_WEBSITE = _T("http://wxcode.sourceforge.net");
-const wxString APP_MAIL = _T("http://wxcode.sourceforge.net/feedback.php");
+const wxString APP_WEBSITE = _T("http://wyoguide.sourceforge.net");
+const wxString APP_MAIL = _T("http://wyoguide.sourceforge.net/feedback.php");
 
 const wxString APP_INFOS = _("\
 If you like this app and want to help just subscribe to the users mailing \n\
