@@ -1,11 +1,12 @@
 Component:  wxHyperLink
-Release:    2004-12-23
+Release:    2005-09-02
 Documents:  http://wxcode.sourceforge.net/components/hyperlink/index.html
 wxWidgets:  2.6.1
 Maintainer: Otto Wyss (wyo)
 Subdir:     hyperlink
 
 Description:
-wxHyperLink contains a static text element which links to an URL. Clicking on
+wxHyperLink shows a text element which links to an URL. Clicking on
 the URL activates the standard browser (via mimetype) and opens the URL. No
-checks on the URL is done.
+checks on the URL is done. The shown URL might be different from the opened
+URL.
