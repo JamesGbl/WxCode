@@ -3,7 +3,7 @@
 // Purpose:     mimetest application
 // Maintainer:  Otto Wyss
 // Created:     2005-03-07
-// RCS-ID:      $Id: mimetest.cpp,v 1.3 2005-09-02 20:20:19 wyo Exp $
+// RCS-ID:      $Id: mimetest.cpp,v 1.4 2005-09-06 18:28:45 wyo Exp $
 // Copyright:   (c) 2005 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
