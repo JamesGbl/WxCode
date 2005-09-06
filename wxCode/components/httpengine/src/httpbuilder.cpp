@@ -380,7 +380,7 @@ bool wxHTTPBuilder::SendRequest(const wxString &path, const wxString& tempDirOrP
   const wxWX2MBbuf pathbuf = wxConvLocal.cWX2MB(buf);
   Write(pathbuf, strlen(wxMBSTRINGCAST pathbuf));
   SendHeaders();
-  Write(wxT("\r\n"), 2);
+  Write("\r\n", 2);		// NOTE: don't use the wxT() macro here - HTTP 1.1 uses US-ASCII (see RFC 2616)
   m_bytesSent = 0;
 
   if( req == wxHTTP_POST )

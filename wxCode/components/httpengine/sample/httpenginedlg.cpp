@@ -787,8 +787,8 @@ AboutDialog::AboutDialog
 	//wxHyperlinkCtrl *hyper2 = new wxHyperlinkCtrl( this, About_Link2, wxT("www.spaceblue.com"),
 	//	 	wxPoint(50,100), wxDefaultSize, wxTAB_TRAVERSAL , wxT("statictextlink2"), wxT("http://www.spaceblue.com") );
 
-  wxHyperlinkCtrl *hyper2 = new wxHyperlinkCtrl( this, About_Link2, "www.leakybagel.com", 
-      wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL , "statictextlink1", "http://www.leakybagel.com" );
+  wxHyperlinkCtrl *hyper2 = new wxHyperlinkCtrl( this, About_Link2, wxT("www.leakybagel.com"), 
+      wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL , wxT("statictextlink1"), wxT("http://www.leakybagel.com") );
 
 	hyper2->SetColours( wxColour(wxT("BLUE")), wxColour(wxT("BLUE")), wxColour(wxT("BLUE")) );
 	hyper2->EnableRollover(true);
