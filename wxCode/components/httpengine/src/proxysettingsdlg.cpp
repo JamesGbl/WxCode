@@ -131,6 +131,9 @@ wxProxySettingsDlg::wxProxySettingsDlg(wxWindow* parent, wxWindowID id, const wx
     sbSizer->Add(hsizer, 1, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 5);
 
     sizer->Add(sbSizer, 0, wxTOP|wxLEFT|wxRIGHT|wxEXPAND, 10);
+  } else {
+
+	  m_tcExceptions = NULL;
   }
 
   // Button row:
@@ -179,7 +182,7 @@ void wxProxySettingsDlg::SetPassword(const wxString &password)
 //! Set exceptions list as string
 void wxProxySettingsDlg::SetHostExceptions(const wxString &exceptions)
 {
-  m_tcExceptions->SetValue( exceptions );
+  if (m_tcExceptions) m_tcExceptions->SetValue( exceptions );
 }
 
 void wxProxySettingsDlg::SetProxySettings(const wxProxySettings &settings)
