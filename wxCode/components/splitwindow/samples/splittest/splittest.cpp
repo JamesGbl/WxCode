@@ -3,7 +3,7 @@
 // Purpose:     splittest application
 // Maintainer:  Otto Wyss
 // Created:     2004-12-21
-// RCS-ID:      $Id: splittest.cpp,v 1.2 2005-09-02 20:20:40 wyo Exp $
+// RCS-ID:      $Id: splittest.cpp,v 1.3 2005-09-06 18:31:13 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -301,7 +301,6 @@ AppFrame::AppFrame (const wxString &title)
 }
 
 AppFrame::~AppFrame () {
-    if (m_split) delete m_split;
 }
 
 // common event handlers
