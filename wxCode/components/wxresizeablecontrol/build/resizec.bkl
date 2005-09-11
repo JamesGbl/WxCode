@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<!-- RCS-ID: $Id: resizec.bkl,v 1.1 2005-09-11 12:54:06 frm Exp $ -->
+<!-- RCS-ID: $Id: resizec.bkl,v 1.2 2005-09-11 13:02:26 frm Exp $ -->
 
 <makefile>
 
@@ -25,7 +25,7 @@
          path relative to COMP_SAMPLE_DIR -->
 	<set var="COMP_SAMPLE_DIR">../samples</set>
 	<set var="COMP_SAMPLE_SRC">myframe.cpp ownerrnd.cpp resizecd.cpp childwnd.cpp</set>
-	<set var="COMP_SAMPLE_HDR">myframe.h ownerrnd.h resizecd.h</set>
+	<set var="COMP_SAMPLE_HDR">myframe.h ownerrnd.h resizecd.h childwnd.h</set>
 
 
 	<!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->

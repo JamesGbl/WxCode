@@ -276,6 +276,10 @@ SOURCE=.\..\samples\resizecd.rc
 # PROP Default_Filter ""
 # Begin Source File
 
+SOURCE=.\..\samples\childwnd.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\..\samples\myframe.h
 # End Source File
 # Begin Source File

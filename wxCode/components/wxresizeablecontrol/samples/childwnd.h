@@ -50,7 +50,8 @@ class ChildControl : public wxResizeableControl
                           const wxString &name = wxPanelNameStr)
       : wxResizeableControl(AParent,AnId,pos,size,style,name)
     {
-        Editor = new CustomTextControl(this,-1,_("Text"));
+        Editor = new CustomTextControl(this,-1,_("Text"), wxDefaultPosition, 
+						wxDefaultSize, wxTE_MULTILINE);
         wxSizeEvent evt(size);
         AddPendingEvent(evt);
     }
