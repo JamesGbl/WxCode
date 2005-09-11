@@ -2,7 +2,7 @@
 // Name:        myframe.cpp
 // Purpose:     resizeable controls sample: A derived frame, called MyFrame
 // Author:      Markus Greither
-// RCS-ID:      $Id: myframe.cpp,v 1.4 2005-09-11 16:07:44 frm Exp $
+// RCS-ID:      $Id: myframe.cpp,v 1.5 2005-09-11 18:07:59 magr Exp $
 // Copyright:   (c) Markus Greither
 // Licence:     wxWindows licence
 //-----------------------------------------------------------------------------
@@ -215,10 +215,10 @@ MyFrame::MyFrame(wxWindow* parent)
     // This has a child text editor. The sizing rectangles are shown
     // even if the child window has the focus, so that the user
     // does not need to switch between parent and child
-    new ChildControl((wxResizeableControlCanvas *)m_resizecanvas,
-                     0,wxPoint(250,20),wxSize(200,200),wxCLIP_SIBLINGS);
-
-	TestTextBox((wxResizeableControlCanvas *)m_resizecanvas);
+    ParentControl *par = new ParentControl((wxResizeableControlCanvas *)m_resizecanvas,
+                                           0,wxPoint(250,20),wxSize(200,200),wxCLIP_SIBLINGS);
+    wxResizeableChildTextCtrl *ctrl = new wxResizeableChildTextCtrl(par,-1,_("text"));
+    par->AddManagedChild(ctrl);
 }
 
 

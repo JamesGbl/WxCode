@@ -4,7 +4,7 @@
 // Author:      Markus Greither
 // Modified by:
 // Created:     
-// RCS-ID:      $Id: childwnd.h,v 1.3 2005-09-11 15:25:31 frm Exp $
+// RCS-ID:      $Id: childwnd.h,v 1.4 2005-09-11 18:06:11 magr Exp $
 // Copyright:   (c) Markus Greither
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -16,58 +16,28 @@
 #ifndef _CHILDWND_H_
 #define _CHILDWND_H_
 
-class CustomTextControl : public wxTextCtrl
-{
-   public:
-    //! Ctor
-    CustomTextControl() : wxTextCtrl() {}
-    //! Ctor
-    CustomTextControl(wxWindow *AParent, int AnId,const wxString &text,
-                          const wxPoint &pos = wxDefaultPosition,
-                          const wxSize &size = wxDefaultSize,long style = 0,
-                          const wxString &name = wxPanelNameStr)
-      : wxTextCtrl(AParent,AnId,text,pos,size,style)
-    {
-    }
-    //! Enable parent sizers on set focus
-    void OnSetFocus(wxFocusEvent &);
-    //! Disable parent sizers on set focus
-    void OnKillFocus(wxFocusEvent &);
-
-    DECLARE_EVENT_TABLE()
-};
-
 //! Derived class from wxResizableControl that has a child
-class ChildControl : public wxResizeableControl
+class ParentControl : public wxResizeableParentControl
 {
-     CustomTextControl *Editor;
    public:
     //! Ctor
-    ChildControl() : wxResizeableControl() {Editor = 0;}
+    ParentControl() : wxResizeableParentControl() {}
     //! Ctor
-    ChildControl(wxWindow *AParent, int AnId,const wxPoint &pos,
-                          const wxSize &size,long style = 0,
-                          const wxString &name = wxPanelNameStr)
-      : wxResizeableControl(AParent,AnId,pos,size,style,name)
-    {
-        Editor = new CustomTextControl(this,-1,_("Text"), wxDefaultPosition, 
-						wxDefaultSize, wxTE_MULTILINE);
-        wxSizeEvent evt(size);
-        AddPendingEvent(evt);
-    }
+    ParentControl(wxWindow *AParent, int AnId,
+                 const wxPoint &pos,
+                 const wxSize &size,long style = 0,
+                 const wxString &name = wxPanelNameStr)
+      : wxResizeableParentControl(AParent,AnId,pos,size,style,name) {}
 
 // Event handlers
     //! Paint handler
     void OnPaint(wxPaintEvent &event);
-
     //! Print or screen output routine
     void Paint(wxDC &dc,bool,wxSize &size);
-    //! Responds to size event
-    void OnSize(wxSizeEvent &event);
 
  protected:
     DECLARE_EVENT_TABLE()
-    DECLARE_DYNAMIC_CLASS(ChildControl)
+    DECLARE_DYNAMIC_CLASS(ParentControl)
 };
 
 #endif // _CHILDWND_H_

@@ -5,7 +5,7 @@
 // Author:      Markus Greither
 // Modified by:
 // Created:     11/10/02
-// RCS-ID:      $Id: resizec.h,v 1.2 2005-09-11 15:25:31 frm Exp $
+// RCS-ID:      $Id: resizec.h,v 1.3 2005-09-11 18:04:28 magr Exp $
 // Copyright:   (c) Markus Greither
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -403,6 +403,74 @@ class wxBitmapControl : public wxPictureControl
 
     DECLARE_EVENT_TABLE()
     DECLARE_DYNAMIC_CLASS(wxBitmapControl)
+};
+
+// ----------------------------------------------------------------------------
+// wxResizeableParentControl
+// ----------------------------------------------------------------------------
+
+//! Derived class from wxResizableControl that has a child
+class wxResizeableParentControl : public wxResizeableControl
+{
+  protected:
+    //! Child window which is automatically resized
+    wxWindow *m_child;
+
+  public:
+    //! Ctor
+    wxResizeableParentControl() : wxResizeableControl() {m_child = 0;}
+    //! Ctor
+    wxResizeableParentControl(wxWindow *AParent, int AnId,
+                              const wxPoint &pos,
+                              const wxSize &size,long style = 0,
+                              const wxString &name = wxPanelNameStr)
+      : wxResizeableControl(AParent,AnId,pos,size,style,name)
+    {
+        m_child = 0;
+    }
+
+// Event handlers
+    //! Responds to size event
+    void OnSize(wxSizeEvent &event);
+    //! Add the child
+    void AddManagedChild(wxWindow *child)
+    {
+        m_child = child;
+        if (m_child)
+            m_child->SetParent(this);
+        wxSizeEvent evt(GetSize());
+        AddPendingEvent(evt);
+    }
+
+ protected:
+    DECLARE_EVENT_TABLE()
+    DECLARE_DYNAMIC_CLASS(wxResizeableParentControl)
+};
+
+// ----------------------------------------------------------------------------
+// wxResizeableChildTextCtrl
+// ----------------------------------------------------------------------------
+
+//! Text control that enables the size boxes of a parent wxResizeableParentControl on focus
+class wxResizeableChildTextCtrl : public wxTextCtrl
+{
+   public:
+    //! Ctor
+    wxResizeableChildTextCtrl() : wxTextCtrl() {}
+    //! Ctor
+    wxResizeableChildTextCtrl(wxWindow *AParent, int AnId,const wxString &text,
+                               const wxPoint &pos = wxDefaultPosition,
+                               const wxSize &size = wxDefaultSize,long style = 0,
+                               const wxString &name = wxPanelNameStr)
+      : wxTextCtrl(AParent,AnId,text,pos,size,style)
+    {
+    }
+    //! Enable parent sizers on set focus
+    void OnSetFocus(wxFocusEvent &);
+    //! Disable parent sizers on set focus
+    void OnKillFocus(wxFocusEvent &);
+
+    DECLARE_EVENT_TABLE()
 };
 
 // ----------------------------------------------------------------------------

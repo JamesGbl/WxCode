@@ -4,7 +4,7 @@
 // Author:      Markus Greither
 // Modified by:
 // Created:     11/11/02
-// RCS-ID:      $Id: resizec.cpp,v 1.2 2005-09-11 15:25:31 frm Exp $
+// RCS-ID:      $Id: resizec.cpp,v 1.3 2005-09-11 18:06:52 magr Exp $
 // Copyright:   (c) Markus Greither
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -963,6 +963,53 @@ float wxBitmapControl::GetRatio()
 BEGIN_EVENT_TABLE(wxBitmapControl,wxPictureControl)
     EVT_MENU(wxID_CUT, wxBitmapControl::OnEditCut)
     EVT_MENU(wxID_COPY, wxBitmapControl::OnEditCopy)
+END_EVENT_TABLE()
+
+// ----------------------------------------------------------------------------
+// wxResizeableParentControl
+// ----------------------------------------------------------------------------
+
+IMPLEMENT_DYNAMIC_CLASS(wxResizeableParentControl, wxResizeableControl)
+
+void wxResizeableParentControl::OnSize(wxSizeEvent &event)
+{
+    wxSize size = event.GetSize();
+    if (m_child)
+        m_child->SetSize(wxResizeableControl::SizeXRad*2,
+                         wxResizeableControl::SizeYRad*2,
+                         size.x-2*wxResizeableControl::SizeXRad*2,
+                         size.y-2*wxResizeableControl::SizeYRad*2);
+    Refresh();
+    event.Skip();
+}
+
+BEGIN_EVENT_TABLE(wxResizeableParentControl,wxResizeableControl)
+    EVT_SIZE(wxResizeableParentControl::OnSize)
+END_EVENT_TABLE()
+
+// ----------------------------------------------------------------------------
+// wxResizeableChildTextControl
+// ----------------------------------------------------------------------------
+
+void wxResizeableChildTextCtrl::OnKillFocus(wxFocusEvent &event)
+{
+	wxCommandEvent notification(wxEVT_COMMAND_HIDE_SIZERS);
+	if (GetParent())
+	    GetParent()->ProcessEvent(notification);
+	event.Skip();
+}
+
+void wxResizeableChildTextCtrl::OnSetFocus(wxFocusEvent &event)
+{
+	wxCommandEvent notification(wxEVT_COMMAND_SHOW_SIZERS);
+	if (GetParent())
+	    GetParent()->ProcessEvent(notification);
+	event.Skip();
+}
+
+BEGIN_EVENT_TABLE(wxResizeableChildTextCtrl,wxTextCtrl)
+    EVT_SET_FOCUS(wxResizeableChildTextCtrl::OnSetFocus)
+    EVT_KILL_FOCUS(wxResizeableChildTextCtrl::OnKillFocus)
 END_EVENT_TABLE()
 
 // ----------------------------------------------------------------------------

@@ -4,7 +4,7 @@
 // Author:      Markus Greither
 // Modified by:
 // Created:     11/11/02
-// RCS-ID:      $Id: childwnd.cpp,v 1.2 2005-09-11 15:25:31 frm Exp $
+// RCS-ID:      $Id: childwnd.cpp,v 1.3 2005-09-11 18:05:25 magr Exp $
 // Copyright:   (c) Markus Greither
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -54,35 +54,13 @@
 #include "wx/clipbrd.h"
 #endif
 
-BEGIN_EVENT_TABLE(CustomTextControl,wxTextCtrl)
-    EVT_SET_FOCUS(CustomTextControl::OnSetFocus)
-    EVT_KILL_FOCUS(CustomTextControl::OnKillFocus)
+IMPLEMENT_DYNAMIC_CLASS(ParentControl,wxResizeableParentControl)
+
+BEGIN_EVENT_TABLE(ParentControl,wxResizeableParentControl)
+    EVT_PAINT(ParentControl::OnPaint)
 END_EVENT_TABLE()
 
-void CustomTextControl::OnKillFocus(wxFocusEvent &event)
-{
-	wxCommandEvent notification(wxEVT_COMMAND_HIDE_SIZERS);
-	if (GetParent())
-	    GetParent()->ProcessEvent(notification);
-	event.Skip();
-}
-
-void CustomTextControl::OnSetFocus(wxFocusEvent &event)
-{
-	wxCommandEvent notification(wxEVT_COMMAND_SHOW_SIZERS);
-	if (GetParent())
-	    GetParent()->ProcessEvent(notification);
-	event.Skip();
-}
-
-IMPLEMENT_DYNAMIC_CLASS(ChildControl,wxResizeableControl)
-
-BEGIN_EVENT_TABLE(ChildControl,wxResizeableControl)
-    EVT_PAINT(ChildControl::OnPaint)
-    EVT_SIZE(ChildControl::OnSize)
-END_EVENT_TABLE()
-
-void ChildControl::OnPaint(wxPaintEvent &)
+void ParentControl::OnPaint(wxPaintEvent &)
 {
     wxPaintDC dc(this);
     wxSize size = GetClientSize();
@@ -91,18 +69,7 @@ void ChildControl::OnPaint(wxPaintEvent &)
         DrawSizeRect(dc);
 }
 
-void ChildControl::OnSize(wxSizeEvent &event)
-{
-    wxSize size = event.GetSize();
-    Editor->SetSize(wxResizeableControl::SizeXRad*2,
-                    wxResizeableControl::SizeYRad*2,
-                    size.x-2*wxResizeableControl::SizeXRad*2,
-                    size.y-2*wxResizeableControl::SizeYRad*2);
-    Refresh();
-    event.Skip();
-}
-
-void ChildControl::Paint(wxDC &dc,bool printing,wxSize &WXUNUSED(size))
+void ParentControl::Paint(wxDC &dc,bool printing,wxSize &WXUNUSED(size))
 {
     // FIXME: Text output for printer
 }
