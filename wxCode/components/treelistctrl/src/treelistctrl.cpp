@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.83 2005-08-23 18:25:48 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.84 2005-09-11 08:08:16 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -4624,7 +4624,7 @@ wxSize wxTreeListCtrl::DoGetBestSize() const
     return wxSize (200,200); // but it should be specified values! FIXME
 }
 
-wxString wxTreeListCtrl::OnGetItemText( wxTreeItemData* item, long column ) const
+wxString wxTreeListCtrl::OnGetItemText( wxTreeItemData* WXUNUSED(item), long WXUNUSED(column)) const
 {
     return wxEmptyString;
 }
