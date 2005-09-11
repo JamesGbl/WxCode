@@ -1,0 +1,22 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN"><html><head>Index<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"></head><body>
+<ul>
+    <li> <object type="text/sitemap">
+        <param name="Local" value="content.html#content">
+        <param name="Name" value="Content">
+    </object>
+
+    <li> <object type="text/sitemap">
+        <param name="Local" value="impressum.html#licence">
+        <param name="Name" value="Licence">
+    </object>
+    <li> <object type="text/sitemap">
+        <param name="Local" value="impressum.html#support">
+        <param name="Name" value="Support">
+        </object>
+    <li> <object type="text/sitemap">
+        <param name="Local" value="impressum.html#copyright">
+        <param name="Name" value="Copyright">
+    </object>
+</ul>
+
+</body></html>

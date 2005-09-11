@@ -1,0 +1,15 @@
+[OPTIONS]
+Compatibility=1.1
+Contents file=index.hhc
+Default topic=content.html
+Display compile progress=No
+Full-text search=Yes
+Index file=index.hhk
+Title=wyoGuide-Demo Hilfe
+
+[FILES]
+content.html
+impressum.html
+
+[INFOTYPES]
+

@@ -1,0 +1,9 @@
+Component:  wxLocalize
+Release:    2005-09-06
+Documents:  http://wxcode.sourceforge.net/components/localize/index.html
+wxWidgets:  2.6.1
+Maintainer: Otto Wyss (wyo)
+Subdir:     localize
+
+Description:
+This component contains the localization functions which are missing from wxWidgets.

@@ -1,0 +1,50 @@
+<HTML>
+<head><title>wxLocalize</title></head>
+
+<BODY BGCOLOR=#FFFFFF>
+<FONT FACE="Arial, Lucida, Helvetica">
+<A NAME="wxLocalize"></A>
+
+<H2>wxLocalize</H2>
+<P>
+This component contains the localization functions which are missing from wxWidgets.
+<P>
+
+<B>Include files</B><P>
+&lt;wx/localize.h&gt;<P>
+
+<B>Functions</B><P>
+<A HREF="#getsystemlanguagecanonical">GetSystemLanguageCanonical</A><BR>
+<A HREF="#wxlocalize">wxLocalize</A><BR>
+<P>
+
+<HR>
+<A NAME="getsystemlanguagecanonical"></A>
+<H3>GetSystemLanguageCanonical</H3>
+<P>
+<B>wxString</B> <B>GetSystemLanguageCanonical</B>()
+<P>
+Returns the system language in canonical form.
+<P>
+
+<HR>
+<A NAME="wxlocalize"></A>
+<H3>wxLocalize</H3>
+<P>
+<B>wxString</B> <B>wxLocalize</B>(<B>const wxString&amp; </B><I>searchPath</I>, <B>const wxString&amp; </B><I>fullName</I>, <B>const wxString&amp; </B><I>lanugage</I>)
+<P>
+Searches the file specified by its full filename in the search paths for the language. Returns the name of the found file, else returns empty string.
+<P>
+<I>searchPath</I><UL><UL>
+List of paths, separated by wxPATH_SEP (';'), to be searched</UL></UL>
+<P>
+<P>
+<I>fullname</I><UL><UL>
+Full filename (name and extension) to be searched.</UL></UL>
+<P>
+<P>
+<I>lanugage</I><UL><UL>
+Language (canonical name) to be used</UL></UL>
+<P>
+
+</FONT></BODY></HTML>

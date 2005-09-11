@@ -1,0 +1,33 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+
+<html>
+
+<head>
+
+Contents
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+</head>
+
+<body>
+
+
+<object type="text/site properties">
+    <param name="ImageType" value="Folder">
+</object>
+<ul>
+    <li> <object type="text/sitemap">
+        <param name="Local" value="content.html">
+        <param name="Name" value="Inhalt">
+    </object>
+    <li> <object type="text/sitemap">
+        <param name="Local" value="impressum.html">
+        <param name="Name" value="Impressum">
+    </object>
+</ul>
+
+</body>
+
+</html>
+
