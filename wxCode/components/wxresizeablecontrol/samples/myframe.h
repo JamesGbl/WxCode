@@ -2,7 +2,7 @@
 // Name:        myframe.h
 // Purpose:     Resizeable controls sample: A derived frame, called MyFrame
 // Author:      Markus Greither
-// RCS-ID:      
+// RCS-ID:      $Id: myframe.h,v 1.2 2005-09-11 15:25:31 frm Exp $
 // Copyright:   (c) Markus Greither
 // Licence:     wxWindows licence
 //-----------------------------------------------------------------------------

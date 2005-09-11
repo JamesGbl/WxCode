@@ -2,7 +2,7 @@
 // Name:        resizecd.cpp
 // Purpose:     resizeable controls sample: Main application file
 // Author:      Markus Greither
-// RCS-ID:
+// RCS-ID:      $Id: resizecd.h,v 1.3 2005-09-11 15:25:31 frm Exp $
 // Copyright:   (c) Markus Greither
 // Licence:     wxWindows licence
 //-----------------------------------------------------------------------------

@@ -4,7 +4,7 @@
 // Author:      Markus Greither
 // Modified by:
 // Created:     11/11/02
-// RCS-ID:      $Id:     1.05 2003/12/19 magr
+// RCS-ID:      $Id: childwnd.cpp,v 1.2 2005-09-11 15:25:31 frm Exp $
 // Copyright:   (c) Markus Greither
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////

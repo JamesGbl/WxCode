@@ -4,7 +4,7 @@
 // Author:      Markus Greither
 // Modified by:
 // Created:     11/11/02
-// RCS-ID:      $Id:     1.07 2005/11/09 magr
+// RCS-ID:      $Id: resizec.cpp,v 1.2 2005-09-11 15:25:31 frm Exp $
 // Copyright:   (c) Markus Greither
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
