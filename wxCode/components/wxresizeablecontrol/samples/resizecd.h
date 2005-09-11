@@ -46,7 +46,7 @@ public:
     // application terminates)
     //! Initialize the application and show main frame
     virtual bool OnInit();
-    
+	virtual int OnExit();
 };
 
 //-----------------------------------------------------------------------------

@@ -43,6 +43,7 @@
 //-----------------------------------------------------------------------------
 
 #include "wx/image.h"               // wxImage
+#include "wx/textbox.h"
 
 //-----------------------------------------------------------------------------
 
@@ -74,6 +75,8 @@ bool MyApp::OnInit()
 #endif
     wxImage::AddHandler(new wxGIFHandler);
 
+	wxTextSpan::Init();
+
     // Make an instance of your derived frame. Passing NULL (the default value
     // of MyFrame's constructor is NULL) as the frame doesn't have a frame
     // since it is the first window.
@@ -84,5 +87,15 @@ bool MyApp::OnInit()
     
     // Return TRUE to tell program to continue (FALSE would terminate).
     return TRUE;
+}
+
+int MyApp::OnExit()
+{
+	wxTextSpan::Cleanup();
+#ifdef __WXDEBUG__
+	wxLogDebug(wxT("The maximum number of used spans is %d"), wxTextSpanArray::s_nMaxUsed);
+#endif
+
+	return wxApp::OnExit();
 }
 

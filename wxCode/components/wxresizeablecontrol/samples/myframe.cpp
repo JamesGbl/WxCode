@@ -64,6 +64,7 @@
 //-----------------------------------------------------------------------------
 
 #include "wx/resizec.h"
+#include "wx/textbox.h"
 
 //-----------------------------------------------------------------------------
 // User rendered resizeable controls
@@ -97,10 +98,48 @@ END_EVENT_TABLE()
 // Public methods
 //-----------------------------------------------------------------------------
 
+void TestTextBox(wxResizeableControlCanvas *rc)
+{
+	wxTextBox *txt = new wxTextBox(rc,
+                             0, wxPoint(300,250),
+                             wxSize(450,200),
+                             wxCLIP_SIBLINGS);	
+	txt->SetBackgroundColour(*wxWHITE);
+	txt->InitDefaultStyles();
+
+	wxString str1 = wxT("Hi !\nI'm a wxTextBox...\n\n");
+	wxString str2 = wxT("This is the title of this text\n");
+	wxString str3 = wxT("This is text styled with the default 'normal' ")
+					wxT("text style provided by wxTextBox.\nThere are ")
+					wxT("other various styles... see the docs for more info.");
+
+	// we add the first string using a custom style
+	txt->SetText(str1, wxTextStyle(wxTextAttr(*wxGREEN, wxNullColour, 
+									wxFont(14, wxFONTFAMILY_MODERN, wxFONTSTYLE_ITALIC, 
+									wxFONTWEIGHT_BOLD, FALSE, wxEmptyString)),
+								wxT("mystyle")));
+
+	// the other strings will use some of the default styles
+	txt->AppendText(str2, wxT("h1"));
+	txt->AppendText(str3, wxT("normal"));
+
+	// after all Set/AppendText calls we need to call Layout()
+	txt->Layout();
+	txt->SetCaretPos(wxTBCP_END);
+	//txt->SetSelection(-1, -1);
+
+#ifdef __WXDEBUG__
+	// for debugging
+	wxString content(txt->GetAllText());
+	wxString inserted(str1 + str2 + str3);
+	wxASSERT(content == inserted);
+#endif
+}
+
 // Constructor
 MyFrame::MyFrame(wxWindow* parent)
  : wxFrame(parent,-1,_T("Resizeable controls sample"),
-           wxPoint(50, 50), wxSize(550, 440))
+           wxPoint(50, 50), wxSize(950, 640))
 {
     // Set the icon for the frame.
     SetIcon(wxICON(appicon));
@@ -155,7 +194,7 @@ MyFrame::MyFrame(wxWindow* parent)
     // Try moving this around and see that the canvas scrollbars
     // are automatically updated
     new wxBitmapControl((wxResizeableControlCanvas *)m_resizecanvas,
-                        0,bitmap,wxPoint(350,300),
+                        0,bitmap,wxPoint(10,250),
                         wxSize(200,100),
                         wxCLIP_SIBLINGS);
     // This one has its own paint routine. Notice that the same routine
@@ -170,6 +209,8 @@ MyFrame::MyFrame(wxWindow* parent)
     // does not need to switch between parent and child
     new ChildControl((wxResizeableControlCanvas *)m_resizecanvas,
                      0,wxPoint(250,20),wxSize(200,200),wxCLIP_SIBLINGS);
+
+	TestTextBox((wxResizeableControlCanvas *)m_resizecanvas);
 }
 
 
