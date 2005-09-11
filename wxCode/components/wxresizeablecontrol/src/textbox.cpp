@@ -3,7 +3,7 @@
 // Purpose:     wxTextBoxLayoutStatus, wxTextBox
 // Author:      Francesco Montorsi
 // Created:     2005/8/16
-// RCS-ID:      $Id: textbox.cpp,v 1.1 2005-09-11 12:54:06 frm Exp $
+// RCS-ID:      $Id: textbox.cpp,v 1.2 2005-09-11 16:07:44 frm Exp $
 // Copyright:   (c) 2005 Francesco Montorsi
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
@@ -804,8 +804,7 @@ void wxTextBox::Copy()
 		wxTheClipboard->Close();
 	}/*/
 
-	wxCharBuffer cb = str.mb_str(wxConvUTF7);
-	const char *s = (const char *)cb;
+	str = wxT("{\\rtf1\\ansi\\pard ciao\\par }");
 	if (wxTheClipboard->Open())
 	{
 		// This data objects are held by the clipboard,
@@ -813,6 +812,10 @@ void wxTextBox::Copy()
 		
 		wxCustomDataObject *pdo = new wxCustomDataObject();
 		pdo->SetFormat(wxT("Rich Text Format"));
+		//pdo->SetData(str.Len()*sizeof(wxChar) + 1, str.c_str());
+		
+		wxCharBuffer cb = str.mb_str(wxConvUTF8);
+		const char *s = (const char *)cb;
 		pdo->SetData(strlen(s)+1, s);
 //#define CF_RTF 			TEXT("Rich Text Format")
 //#define CF_RTFNOOBJS 	TEXT("Rich Text Format Without Objects")
@@ -1565,13 +1568,8 @@ wxString wxTextBox::ExportRTF() const
 	//ret += m_spans.ExportRTF();
 	//return ret + wxT(" }");
 
-	wxString text/* =
-"{\\rtf1\\ansi\\pard ciao\\par"
-"}"*/;
-	
+	wxString text = wxT("{\\rtf1\\ansi\\pard ciao\\par }");
 	return text;
-
-
 }
 
 wxString wxTextBox::ExportSelectionToRTF() const

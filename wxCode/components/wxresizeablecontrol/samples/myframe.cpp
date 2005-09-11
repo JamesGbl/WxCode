@@ -2,7 +2,7 @@
 // Name:        myframe.cpp
 // Purpose:     resizeable controls sample: A derived frame, called MyFrame
 // Author:      Markus Greither
-// RCS-ID:      $Id: myframe.cpp,v 1.3 2005-09-11 15:25:31 frm Exp $
+// RCS-ID:      $Id: myframe.cpp,v 1.4 2005-09-11 16:07:44 frm Exp $
 // Copyright:   (c) Markus Greither
 // Licence:     wxWindows licence
 //-----------------------------------------------------------------------------
@@ -44,6 +44,7 @@
 
 // Since setting an icon
 #include "wx/image.h"
+#include "wx/filename.h"
 #include "wx/clipbrd.h"
 #include "wx/print.h"
 #include "wx/textctrl.h"
@@ -180,7 +181,14 @@ MyFrame::MyFrame(wxWindow* parent)
     // Now create some resizeable controls
     wxBitmap bitmap;
 
-    if (!bitmap.LoadFile(_T("builtwithwx.gif"),wxBITMAP_TYPE_GIF))
+	// get the path to our bitmap
+	wxString sep(wxFileName::GetPathSeparator()), basepath = wxGetCwd();
+	if (basepath.Last() != sep)
+		basepath += sep;
+	if (basepath.Right(6) == (wxT("build") + sep))	// are we running from MSVC6 ?
+		basepath += wxString(wxT("..")) + sep + wxT("samples") + sep;
+
+    if (!bitmap.LoadFile(basepath + wxT("builtwithwx.gif"),wxBITMAP_TYPE_GIF))
         wxMessageBox(_T("Couldn't load 'builtwithwx.gif' bitmap!"),
                      _T("Error"));
 
