@@ -2,7 +2,7 @@
 // Name:        resizecdd.cpp
 // Purpose:     resizeable controls sample: Main application file
 // Author:      Markus Greither
-// RCS-ID:      $Id: resizecd.cpp,v 1.3 2005-09-11 15:25:31 frm Exp $
+// RCS-ID:      $Id: resizecd.cpp,v 1.4 2005-09-12 09:40:17 frm Exp $
 // Copyright:   (c) Markus Greither
 // Licence:     wxWindows licence
 //-----------------------------------------------------------------------------
@@ -76,6 +76,7 @@ bool MyApp::OnInit()
     wxImage::AddHandler(new wxGIFHandler);
 
 	wxTextSpan::Init();
+	wxLog::SetVerbose();
 
     // Make an instance of your derived frame. Passing NULL (the default value
     // of MyFrame's constructor is NULL) as the frame doesn't have a frame

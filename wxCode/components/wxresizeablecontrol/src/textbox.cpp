@@ -3,7 +3,7 @@
 // Purpose:     wxTextBoxLayoutStatus, wxTextBox
 // Author:      Francesco Montorsi
 // Created:     2005/8/16
-// RCS-ID:      $Id: textbox.cpp,v 1.2 2005-09-11 16:07:44 frm Exp $
+// RCS-ID:      $Id: textbox.cpp,v 1.3 2005-09-12 09:40:17 frm Exp $
 // Copyright:   (c) 2005 Francesco Montorsi
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
@@ -784,7 +784,11 @@ public:
 	bool SetData(size_t len, const void *buf)
 	{ wxDELETEA(m_buf); m_buf = new char[len]; m_len=len; memcpy(m_buf, buf, len); m_buf[len] = 0; return TRUE;}
 
-	//size_t GetDataSize()
+	size_t GetDataSize() const
+	{ return m_len; }
+
+	virtual bool GetDataHere(void *buf) const
+	{ memcpy(buf, m_buf, m_len); return TRUE; }
 };
 
 void wxTextBox::Copy()
@@ -803,28 +807,43 @@ void wxTextBox::Copy()
 		wxTheClipboard->SetData( new wxTextDataObject(str) );
 		wxTheClipboard->Close();
 	}/*/
+		//pdo->SetData(str.Len()*sizeof(wxChar) + 1, str.c_str());
 
 	str = wxT("{\\rtf1\\ansi\\pard ciao\\par }");
 	if (wxTheClipboard->Open())
 	{
-		// This data objects are held by the clipboard,
-		// so do not delete them in the app.
-		
-		wxCustomDataObject *pdo = new wxCustomDataObject();
+		// create an RTF data object
+		wxDataObjectSimple *pdo = new wxRTFDataObject();
 		pdo->SetFormat(wxT("Rich Text Format"));
-		//pdo->SetData(str.Len()*sizeof(wxChar) + 1, str.c_str());
 		
+		// copy RTF string as UTF8
 		wxCharBuffer cb = str.mb_str(wxConvUTF8);
 		const char *s = (const char *)cb;
-		pdo->SetData(strlen(s)+1, s);
-//#define CF_RTF 			TEXT("Rich Text Format")
-//#define CF_RTFNOOBJS 	TEXT("Rich Text Format Without Objects")
-//#define CF_RETEXTOBJ 	TEXT("RichEdit Text and Objects")
+		pdo->SetData(strlen(s)+1, s);	// the +1 is used to force copy of the \0 character
 
+		// tell clipboard about our RTF
 		wxTheClipboard->SetData( pdo );
 		wxTheClipboard->Close();
 	}	
-/*
+/*	
+	// Read some text
+	if (wxTheClipboard->Open())
+	{
+		if (wxTheClipboard->IsSupported( wxT("Rich Text Format") ))
+		{
+			wxTextDataObject data;
+			wxTheClipboard->GetData( data );
+			wxMessageBox( data.GetText() );
+		}  
+		wxTheClipboard->Close();
+	}
+*/
+
+  /*
+	str = wxT("{\\rtf1\\ansi\\pard ciao\\par }");
+		wxCharBuffer cb = str.mb_str(wxConvUTF8);
+		const char *s = (const char *)cb;
+
                 int width = strlen(s) + 1;
                 int height = 1;
                 DWORD l = (width * height);
@@ -839,9 +858,10 @@ void wxTextBox::Copy()
                 }
 
 	
-                SetClipboardData(::RegisterClipboardFormat(CF_RTF), hGlobalMemory);*/
-
-
+				OpenClipboard(NULL);
+                SetClipboardData(::RegisterClipboardFormat(wxT("Rich Text Format")), hGlobalMemory);
+				CloseClipboard();
+*/
 }
 
 void wxTextBox::OnMouseMove(wxMouseEvent &me)
