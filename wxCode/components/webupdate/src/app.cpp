@@ -348,7 +348,7 @@ bool WebUpdaterApp::OnPreInit()
 
 	// this is for using wxDownloadThread
 	wxLogAdvMsg(wxT("WebUpdaterApp::OnInit - initializing sockets & handlers"));
-	wxSocketBase::Initialize();
+	//wxSocketBase::Initialize();
 
 	// load only required handles (so that the linker can remove all
 	// the unused libraries); instead of
@@ -483,6 +483,15 @@ bool WebUpdaterApp::OnInit()
 		wxUninitializeWebUpdate();
 		return FALSE;	
 	}
+
+
+		wxURL u(wxT("http://www.google.com"));
+		wxInputStream *in = u.GetInputStream();
+		wxFileOutputStream out(wxT("test"));
+		out.Write(*in);
+		
+
+
 
 	// create our main dialog
 #if 1
