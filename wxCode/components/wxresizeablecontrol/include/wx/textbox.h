@@ -3,7 +3,7 @@
 // Purpose:     wxTextBoxLayoutStatus, wxTextBoxInputStatus, wxTextBox
 // Author:      Francesco Montorsi
 // Created:     2005/8/15
-// RCS-ID:      $Id: textbox.h,v 1.1 2005-09-11 12:54:06 frm Exp $
+// RCS-ID:      $Id: textbox.h,v 1.2 2005-09-12 19:00:19 frm Exp $
 // Copyright:   (c) 2005 Francesco Montorsi
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
@@ -21,6 +21,7 @@
 #include "wx/textctrl.h"		// holds the definition of wxTextAttr
 #include "wx/resizec.h"
 #include "wx/textspan.h"
+
 
 // some data structures which will be used...
 WX_DECLARE_USER_EXPORTED_OBJARRAY(wxRect, wxRectArray, WXDLLIMPEXP_RESIZEC);

@@ -3,7 +3,7 @@
 // Purpose:     wxTextBoxLayoutStatus, wxTextBox
 // Author:      Francesco Montorsi
 // Created:     2005/8/16
-// RCS-ID:      $Id: textbox.cpp,v 1.3 2005-09-12 09:40:17 frm Exp $
+// RCS-ID:      $Id: textbox.cpp,v 1.4 2005-09-12 19:00:19 frm Exp $
 // Copyright:   (c) 2005 Francesco Montorsi
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
@@ -772,8 +772,9 @@ void wxTextBox::OnCtxMenuItem(wxCommandEvent &ce)
 
 //#include <richedit.h>
 
-class wxRTFDataObject : public wxDataObjectSimple
+class wxRTFDataObject : public wxDataObject
 {
+public:
 	char *m_buf;
 	size_t m_len;
 
@@ -781,13 +782,36 @@ public:
 	wxRTFDataObject() { m_buf=NULL; }
 	virtual ~wxRTFDataObject() {}
 
-	bool SetData(size_t len, const void *buf)
-	{ wxDELETEA(m_buf); m_buf = new char[len]; m_len=len; memcpy(m_buf, buf, len); m_buf[len] = 0; return TRUE;}
 
-	size_t GetDataSize() const
+    virtual wxDataFormat GetPreferredFormat(Direction dir = Get) const
+	{ return wxT("Rich Text Format"); }
+
+    virtual size_t GetFormatCount(Direction dir = Get) const
+	{ return 1; }
+
+    virtual void GetAllFormats(wxDataFormat *formats, Direction dir = Get) const
+	{ formats[0] = wxDataFormat(wxT("Rich Text Format")); }
+    
+    virtual size_t GetDataSize(const wxDataFormat& format) const
 	{ return m_len; }
 
-	virtual bool GetDataHere(void *buf) const
+#if 1
+	bool SetData(const wxDataFormat& format, size_t len, const void *buf)
+	{ wxDELETEA(m_buf); m_buf = new char[len]; m_len=len; memcpy(m_buf, buf, len); m_buf[len] = 0; return TRUE;}
+
+	virtual bool NeedsVerbatimData(const wxDataFormat& format) const
+	{ return TRUE; }
+
+#else
+
+	bool SetData(const wxDataFormat& format, size_t len, const void *buf)
+	{ wxDELETEA(m_buf); m_buf = new char[len+4]; m_len=len+4; 
+		memcpy(m_buf, "\x17\0\0\0", 4);	memcpy(m_buf+4, buf, len); m_buf[len+4] = 0; return TRUE;}
+
+	virtual bool NeedsVerbatimData(const wxDataFormat& format) const
+	{ return TRUE; }
+#endif
+	virtual bool GetDataHere(const wxDataFormat& format, void *buf) const
 	{ memcpy(buf, m_buf, m_len); return TRUE; }
 };
 
@@ -798,6 +822,11 @@ void wxTextBox::Copy()
 		str = ExportSelectionToRTF();
 	else
 		str = ExportRTF();
+
+
+	wxXmlNode *p = m_spans.ExportXHTML();
+
+
 /*
 	// export to clipboard
 	if (wxTheClipboard->Open())
@@ -806,38 +835,39 @@ void wxTextBox::Copy()
 		// so do not delete them in the app.
 		wxTheClipboard->SetData( new wxTextDataObject(str) );
 		wxTheClipboard->Close();
-	}/*/
-		//pdo->SetData(str.Len()*sizeof(wxChar) + 1, str.c_str());
+	}
+		//pdo->SetData(str.Len()*sizeof(wxChar) + 1, str.c_str());*/
 
-	str = wxT("{\\rtf1\\ansi\\pard ciao\\par }");
+
+	str = wxT("{\\rtf1\\ansi ciao }");
 	if (wxTheClipboard->Open())
 	{
 		// create an RTF data object
-		wxDataObjectSimple *pdo = new wxRTFDataObject();
-		pdo->SetFormat(wxT("Rich Text Format"));
+		wxRTFDataObject *pdo = new wxRTFDataObject();
 		
 		// copy RTF string as UTF8
 		wxCharBuffer cb = str.mb_str(wxConvUTF8);
 		const char *s = (const char *)cb;
-		pdo->SetData(strlen(s)+1, s);	// the +1 is used to force copy of the \0 character
+		pdo->SetData(wxT("Rich Text Format"),
+					strlen(s)+1, s);	// the +1 is used to force copy of the \0 character
 
 		// tell clipboard about our RTF
 		wxTheClipboard->SetData( pdo );
 		wxTheClipboard->Close();
 	}	
-/*	
+
 	// Read some text
 	if (wxTheClipboard->Open())
 	{
 		if (wxTheClipboard->IsSupported( wxT("Rich Text Format") ))
 		{
-			wxTextDataObject data;
+			wxRTFDataObject data;
 			wxTheClipboard->GetData( data );
-			wxMessageBox( data.GetText() );
+			wxMessageBox( wxString(data.m_buf, wxConvUTF8) );
 		}  
 		wxTheClipboard->Close();
 	}
-*/
+
 
   /*
 	str = wxT("{\\rtf1\\ansi\\pard ciao\\par }");

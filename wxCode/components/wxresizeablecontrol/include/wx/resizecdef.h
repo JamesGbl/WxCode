@@ -3,7 +3,7 @@
 // Purpose:     shared build defines
 // Author:      Francesco Montorsi
 // Created:     2005/8/15
-// RCS-ID:      $Id: resizecdef.h,v 1.1 2005-09-11 12:54:06 frm Exp $
+// RCS-ID:      $Id: resizecdef.h,v 1.2 2005-09-12 19:00:19 frm Exp $
 // Copyright:   (c) 2005 Francesco Montorsi
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
@@ -34,11 +34,11 @@
     #define WXDLLIMPEXP_DATA_RESIZEC(type)       WXIMPORT type
 #else // not making nor using DLL
     #define WXDLLIMPEXP_RESIZEC
-    #define WXDLLIMPEXP_DATA_RESIZEC(type)	    type
+    #define WXDLLIMPEXP_DATA_RESIZEC(type)	     type
 #endif
 
 
-#define wxUSE_TEXTBOX_XHTML_SUPPORT				0
+#define wxUSE_TEXTBOX_XHTML_SUPPORT				1
 
 #endif // _WX_RESIZEC_DEFS_H_
 

@@ -2,7 +2,7 @@
 // Name:        myframe.cpp
 // Purpose:     resizeable controls sample: A derived frame, called MyFrame
 // Author:      Markus Greither
-// RCS-ID:      $Id: myframe.cpp,v 1.5 2005-09-11 18:07:59 magr Exp $
+// RCS-ID:      $Id: myframe.cpp,v 1.6 2005-09-12 19:00:19 frm Exp $
 // Copyright:   (c) Markus Greither
 // Licence:     wxWindows licence
 //-----------------------------------------------------------------------------
@@ -219,6 +219,8 @@ MyFrame::MyFrame(wxWindow* parent)
                                            0,wxPoint(250,20),wxSize(200,200),wxCLIP_SIBLINGS);
     wxResizeableChildTextCtrl *ctrl = new wxResizeableChildTextCtrl(par,-1,_("text"));
     par->AddManagedChild(ctrl);
+
+	TestTextBox((wxResizeableControlCanvas *)m_resizecanvas);
 }
 
 
