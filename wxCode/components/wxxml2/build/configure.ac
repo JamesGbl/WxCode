@@ -7,8 +7,19 @@
 
 
 AC_PREREQ([2.57])
-AC_INIT([wxxml2], [1.5], [frm@sourceforge.net])
+AC_INIT([wxXml2], [1.5], [frm@sourceforge.net])
+AC_CONFIG_AUX_DIR([build])
+m4_include(../../../build/bakefiles/wxpresets.m4)
 AC_LANG(C++)
+
+
+# ENABLES/DISABLES THE DEBUG MODE FOR THESE MACROS
+DBG_CONFIGURE=1
+
+
+# before checks, declare the options of this configure script
+AM_OPTIONS_WXCONFIG
+AM_OPTIONS_WXPRESETS
 
 
 # This allows us to use Bakefile, recognizing the system type
@@ -39,7 +50,6 @@ CFLAGS="$CFLAGS $XML_CPPFLAGS"
 LDFLAGS="$LDFLAGS $WX_LIBS $XML_LIBS"
 
 
-
 # check for wxWidgets library 
 # and initialization of WX_* variables
 AM_WXPRESETS([2.4.0])
@@ -55,9 +65,29 @@ AC_OUTPUT
 
 # Just a little msg for GNU AUTOtools newbies (like me)
 echo
-echo " ------------------------------------------------------"
+echo " ----------------------------------------------------------------"
+echo "  Configuration for $PACKAGE_NAME $PACKAGE_VERSION successfully completed."
+echo "  Main configuration settings:"
+if [[ "$WX_DEBUG" = "1" ]]; then
+    echo "  - DEBUG build"
+else
+    echo "  - RELEASE build"
+fi
+if [[ "$WX_UNICODE" = "1" ]]; then
+    echo "  - UNICODE mode"
+else
+    echo "  - ANSI mode"
+fi
+if [[ "$WX_SHARED" = "1" ]]; then
+    echo "  - SHARED mode"
+else
+    echo "  - STATIC mode"
+fi
+echo
+echo "  The wxWidgets build which will be used by $PACKAGE_NAME $PACKAGE_VERSION"
+echo "  has the following settings:"
 AM_WXPRESETS_MSG
 echo
 echo "  Now, just run make."
-echo " ------------------------------------------------------"
+echo " ----------------------------------------------------------------"
 echo

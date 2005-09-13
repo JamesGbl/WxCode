@@ -63,7 +63,7 @@
 	<set var="COMP_NAME">wxxml2</set>
 	<set var="COMP_SRC">xml2.cpp dtd.cpp</set>
 	<set var="COMP_HDR">wx/xml2def.h wx/xml2.h wx/dtd.h</set>	
-	<set var="COMP_SAMPLE_DIR">../sample</set>
+	<set var="COMP_SAMPLE_DIR">$(COMP_BASEPATH)/sample</set>
 	<set var="COMP_SAMPLE_SRC">minimal.cpp</set>
 
 	<!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->

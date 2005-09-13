@@ -114,7 +114,7 @@ MINIMAL_OBJECTS =  \
 ### Conditionally set variables: ###
 
 !if "$(WX_DEBUG)" == "1"
-WX3RDPARTLIBPOSTFIX = d
+WX3RDPARTYLIBPOSTFIX = d
 !endif
 !if "$(WX_DEBUG)" == "0"
 BUILD_EQUIVALENT = release
@@ -301,14 +301,14 @@ cleandocs:
 !if "$(WX_SHARED)" == "1"
 ..\lib\wxxml2$(WXLIBPOSTFIX).dll: $(WXXML2_DLL_OBJECTS) setupdep
 	ilink32 -Tpd -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -L..\thirdparty\libxml2\lib -L..\thirdparty\libiconv\lib @&&|
-	c0d32.obj $(WXXML2_DLL_OBJECTS),$@,, libxml2.lib iconv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
+	c0d32.obj $(WXXML2_DLL_OBJECTS),$@,, libxml2.lib iconv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
 |
 	implib -f ..\lib\wxxml2$(WXLIBPOSTFIX) $@
 !endif
 
 ..\sample\minimal.exe: $(MINIMAL_OBJECTS) setupdep $(__wxxml2_lib___depname)
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -aa -L..\thirdparty\libxml2\lib -L..\thirdparty\libiconv\lib @&&|
-	c0w32.obj $(MINIMAL_OBJECTS),$@,, ..\lib\wxxml2$(WXLIBPOSTFIX).lib libxml2.lib iconv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
+	c0w32.obj $(MINIMAL_OBJECTS),$@,, ..\lib\wxxml2$(WXLIBPOSTFIX).lib libxml2.lib iconv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
 |
 
 borland\wxxml2_lib_xml2.obj: .\..\src\xml2.cpp
