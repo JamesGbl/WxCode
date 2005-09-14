@@ -46,8 +46,10 @@
 	<set var="POSTFIX">
     <if cond="WX_SHARED=='0'">_lib</if>
     <if cond="WX_SHARED=='1'">_dll</if>
-   </set>
+    </set>
+    <if cond="FORMAT!='autoconf'">
 	<set var="BUILDDIR">$(FORMAT)$(WXLIBPOSTFIX)$(POSTFIX)</set>
+    </if>
 
 	<!-- The real target: wxcode.bkl does not declare a real target but a template called
 	     "complib". In this way modifications are allowed to the basic template. -->
