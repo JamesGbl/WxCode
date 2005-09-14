@@ -7,4 +7,4 @@
 # A simple script to generate the configure script for a wxCode component
 
 
-( bakefile_gen && aclocal && autoconf && mv configure .. )
+( aclocal && autoconf && mv configure .. )
