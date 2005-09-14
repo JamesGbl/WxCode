@@ -1299,6 +1299,10 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
+# ENABLES/DISABLES THE DEBUG MODE FOR THIS CONFIGURE SCRIPT
+DBG_CONFIGURE=1
+
+
 
 
 
@@ -3590,7 +3594,7 @@ fi
   if test "$WX_CONFIG_PATH" != "no" ; then
     WX_VERSION=""
 
-    min_wx_version=2.2.1
+    min_wx_version=2.4.0
     if test -z "$WXCFG_FLAGS" ; then
       echo "$as_me:$LINENO: checking for wxWidgets version >= $min_wx_version" >&5
 echo $ECHO_N "checking for wxWidgets version >= $min_wx_version... $ECHO_C" >&6
@@ -3599,7 +3603,7 @@ echo $ECHO_N "checking for wxWidgets version >= $min_wx_version... $ECHO_C" >&6
 echo $ECHO_N "checking for wxWidgets version >= $min_wx_version ($WXCFG_FLAGS)... $ECHO_C" >&6
     fi
 
-    WX_CONFIG_WITH_ARGS="$WX_CONFIG_PATH $wx_config_args $WXCFG_FLAGS core,base"
+    WX_CONFIG_WITH_ARGS="$WX_CONFIG_PATH $wx_config_args $WXCFG_FLAGS net,core,base"
 
     WX_VERSION=`$WX_CONFIG_WITH_ARGS --version 2>/dev/null`
     wx_config_major_version=`echo $WX_VERSION | \
@@ -3739,7 +3743,7 @@ echo "${ECHO_T}no (version $WX_VERSION is not new enough)" >&6
     If you still get this error, then check that 'wx-config' is
     in path, the directory where wxWidgets libraries are installed
     (returned by 'wx-config --libs' command) is in LD_LIBRARY_PATH
-    or equivalent variable and wxWidgets version is  or above.
+    or equivalent variable and wxWidgets version is 2.4.0 or above.
 				" >&5
 echo "$as_me: error:
     The requested wxWidgets build couldn't be found.
@@ -3752,12 +3756,14 @@ echo "$as_me: error:
     If you still get this error, then check that 'wx-config' is
     in path, the directory where wxWidgets libraries are installed
     (returned by 'wx-config --libs' command) is in LD_LIBRARY_PATH
-    or equivalent variable and wxWidgets version is  or above.
+    or equivalent variable and wxWidgets version is 2.4.0 or above.
 				" >&2;}
    { (exit 1); exit 1; }; }
 			else
-																																CFLAGS="$CFLAGS $WX_CFLAGS_ONLY"
-				LDFLAGS="$LDFLAGS $WX_LIBS"
+
+                                if test "$DBG_CONFIGURE" = "1"; then
+                    echo "WX_LIBS: $WX_LIBS"
+                fi
 			fi
 
 

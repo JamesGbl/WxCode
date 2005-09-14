@@ -248,6 +248,10 @@ SOURCE=.\..\src\authdlg.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\..\src\base64.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\..\src\httpbuilder.cpp
 # End Source File
 # Begin Source File

@@ -46,6 +46,7 @@ WX_LIBS = @WX_LIBS@
 DESTDIR = 
 HTTPENGINE_LIB_CXXFLAGS = -I./include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 HTTPENGINE_LIB_OBJECTS =  \
+	httpengine_lib_base64.o \
 	httpengine_lib_authdlg.o \
 	httpengine_lib_httpbuilder.o \
 	httpengine_lib_httpbuilderthread.o \
@@ -55,6 +56,7 @@ HTTPENGINE_LIB_OBJECTS =  \
 HTTPENGINE_DLL_CXXFLAGS = -I./include -DWXMAKINGDLL_HTTPENGINE $(PIC_FLAG) \
 	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 HTTPENGINE_DLL_OBJECTS =  \
+	httpengine_dll_base64.o \
 	httpengine_dll_authdlg.o \
 	httpengine_dll_httpbuilder.o \
 	httpengine_dll_httpbuilderthread.o \
@@ -267,6 +269,9 @@ cleandocs:
 	$(__httpenginetest___mac_setfilecmd)
 	$(__httpenginetest___os2_emxbindcmd)
 
+httpengine_lib_base64.o: $(srcdir)/./src/base64.cpp
+	$(CXXC) -c -o $@ $(HTTPENGINE_LIB_CXXFLAGS) $(srcdir)/./src/base64.cpp
+
 httpengine_lib_authdlg.o: $(srcdir)/./src/authdlg.cpp
 	$(CXXC) -c -o $@ $(HTTPENGINE_LIB_CXXFLAGS) $(srcdir)/./src/authdlg.cpp
 
@@ -284,6 +289,9 @@ httpengine_lib_pleasewaitdlg.o: $(srcdir)/./src/pleasewaitdlg.cpp
 
 httpengine_lib_proxysettingsdlg.o: $(srcdir)/./src/proxysettingsdlg.cpp
 	$(CXXC) -c -o $@ $(HTTPENGINE_LIB_CXXFLAGS) $(srcdir)/./src/proxysettingsdlg.cpp
+
+httpengine_dll_base64.o: $(srcdir)/./src/base64.cpp
+	$(CXXC) -c -o $@ $(HTTPENGINE_DLL_CXXFLAGS) $(srcdir)/./src/base64.cpp
 
 httpengine_dll_authdlg.o: $(srcdir)/./src/authdlg.cpp
 	$(CXXC) -c -o $@ $(HTTPENGINE_DLL_CXXFLAGS) $(srcdir)/./src/authdlg.cpp

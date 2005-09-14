@@ -150,6 +150,7 @@ HTTPENGINE_LIB_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
 	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
 	-i=$(WX_DIR)\include -i=..\include $(CPPFLAGS) $(CXXFLAGS)
 HTTPENGINE_LIB_OBJECTS =  &
+	watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_base64.obj &
 	watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_authdlg.obj &
 	watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_httpbuilder.obj &
 	watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_httpbuilderthread.obj &
@@ -162,6 +163,7 @@ HTTPENGINE_DLL_CXXFLAGS = -bd $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm
 	-i=$(WX_DIR)\include -i=..\include -dWXMAKINGDLL_HTTPENGINE $(CPPFLAGS) &
 	$(CXXFLAGS)
 HTTPENGINE_DLL_OBJECTS =  &
+	watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_base64.obj &
 	watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_authdlg.obj &
 	watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_httpbuilder.obj &
 	watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_httpbuilderthread.obj &
@@ -308,6 +310,9 @@ cleandocs :
 	@%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest.lbc option resource=watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpengine.res
 	wlink @watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest.lbc
 
+watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_base64.obj :  .AUTODEPEND .\..\src\base64.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(HTTPENGINE_LIB_CXXFLAGS) $<
+
 watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_authdlg.obj :  .AUTODEPEND .\..\src\authdlg.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(HTTPENGINE_LIB_CXXFLAGS) $<
 
@@ -325,6 +330,9 @@ watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_pleasewaitdlg.obj :  .AUTODEPEND 
 
 watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_proxysettingsdlg.obj :  .AUTODEPEND .\..\src\proxysettingsdlg.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(HTTPENGINE_LIB_CXXFLAGS) $<
+
+watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_base64.obj :  .AUTODEPEND .\..\src\base64.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(HTTPENGINE_DLL_CXXFLAGS) $<
 
 watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_authdlg.obj :  .AUTODEPEND .\..\src\authdlg.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(HTTPENGINE_DLL_CXXFLAGS) $<

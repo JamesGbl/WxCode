@@ -78,6 +78,7 @@ HTTPENGINE_LIB_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG_1) \
 	-I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	-I$(WX_DIR)\include -I..\include $(CPPFLAGS) $(CXXFLAGS)
 HTTPENGINE_LIB_OBJECTS =  \
+	borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_base64.obj \
 	borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_authdlg.obj \
 	borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_httpbuilder.obj \
 	borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_httpbuilderthread.obj \
@@ -91,6 +92,7 @@ HTTPENGINE_DLL_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG_1) \
 	-I$(WX_DIR)\include -I..\include -DWXMAKINGDLL_HTTPENGINE $(CPPFLAGS) \
 	$(CXXFLAGS)
 HTTPENGINE_DLL_OBJECTS =  \
+	borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_base64.obj \
 	borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_authdlg.obj \
 	borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_httpbuilder.obj \
 	borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_httpbuilderthread.obj \
@@ -297,6 +299,9 @@ cleandocs:
 	c0w32.obj $(HTTPENGINETEST_OBJECTS),$@,, ..\lib\httpengine$(WXLIBPOSTFIX).lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,, borland$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpengine.res
 |
 
+borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_base64.obj: .\..\src\base64.cpp
+	$(CXX) -q -c -P -o$@ $(HTTPENGINE_LIB_CXXFLAGS) $**
+
 borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_authdlg.obj: .\..\src\authdlg.cpp
 	$(CXX) -q -c -P -o$@ $(HTTPENGINE_LIB_CXXFLAGS) $**
 
@@ -314,6 +319,9 @@ borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_pleasewaitdlg.obj: .\..\src\plea
 
 borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_proxysettingsdlg.obj: .\..\src\proxysettingsdlg.cpp
 	$(CXX) -q -c -P -o$@ $(HTTPENGINE_LIB_CXXFLAGS) $**
+
+borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_base64.obj: .\..\src\base64.cpp
+	$(CXX) -q -c -P -o$@ $(HTTPENGINE_DLL_CXXFLAGS) $**
 
 borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_authdlg.obj: .\..\src\authdlg.cpp
 	$(CXX) -q -c -P -o$@ $(HTTPENGINE_DLL_CXXFLAGS) $**

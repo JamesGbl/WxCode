@@ -52,6 +52,7 @@ HTTPENGINE_LIB_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
 	-I..\include $(CPPFLAGS) $(CXXFLAGS)
 HTTPENGINE_LIB_OBJECTS =  \
+	mingw$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_base64.o \
 	mingw$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_authdlg.o \
 	mingw$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_httpbuilder.o \
 	mingw$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_httpbuilderthread.o \
@@ -64,6 +65,7 @@ HTTPENGINE_DLL_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
 	-I..\include -DWXMAKINGDLL_HTTPENGINE $(CPPFLAGS) $(CXXFLAGS)
 HTTPENGINE_DLL_OBJECTS =  \
+	mingw$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_base64.o \
 	mingw$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_authdlg.o \
 	mingw$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_httpbuilder.o \
 	mingw$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_httpbuilderthread.o \
@@ -263,6 +265,9 @@ endif
 ..\sample\httpenginetest.exe: $(HTTPENGINETEST_OBJECTS) mingw$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpengine_rc.o $(__httpengine_lib___depname)
 	$(CXX) -o $@ $(HTTPENGINETEST_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -Wl,--subsystem,windows -mwindows  ..\lib\libhttpengine$(WXLIBPOSTFIX).a -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
+mingw$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_base64.o: ./../src/base64.cpp
+	$(CXX) -c -o $@ $(HTTPENGINE_LIB_CXXFLAGS) $(CPPDEPS) $<
+
 mingw$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_authdlg.o: ./../src/authdlg.cpp
 	$(CXX) -c -o $@ $(HTTPENGINE_LIB_CXXFLAGS) $(CPPDEPS) $<
 
@@ -280,6 +285,9 @@ mingw$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_pleasewaitdlg.o: ./../src/pleasewa
 
 mingw$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_proxysettingsdlg.o: ./../src/proxysettingsdlg.cpp
 	$(CXX) -c -o $@ $(HTTPENGINE_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+mingw$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_base64.o: ./../src/base64.cpp
+	$(CXX) -c -o $@ $(HTTPENGINE_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 mingw$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_authdlg.o: ./../src/authdlg.cpp
 	$(CXX) -c -o $@ $(HTTPENGINE_DLL_CXXFLAGS) $(CPPDEPS) $<

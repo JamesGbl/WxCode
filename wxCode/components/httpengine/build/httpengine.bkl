@@ -11,6 +11,7 @@
 
 	<set var="COMP_NAME">httpengine</set>
 	<set var="COMP_SRC">
+    base64.cpp
 			authdlg.cpp
 			httpbuilder.cpp
 			httpbuilderthread.cpp
