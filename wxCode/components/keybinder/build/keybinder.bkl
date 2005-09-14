@@ -17,7 +17,7 @@
 	<set var="COMP_NAME">keybinder</set>
 	<set var="COMP_SRC">keybinder.cpp menuutils.cpp</set>
 	<set var="COMP_HDR">wx/keybinderdef.h wx/keybinder.h wx/menuutils.h</set>	
-	<set var="COMP_SAMPLE_DIR">../sample</set>
+	<set var="COMP_SAMPLE_DIR">$(COMP_BASEPATH)/sample</set>
 	<set var="COMP_SAMPLE_SRC">minimal.cpp</set>
 	<set var="WX_UNICODE_DEFAULT">1</set>
 	<set var="WX_VERSION_DEFAULT">26</set>
@@ -40,8 +40,8 @@
 	<!-- The sample of the component: as for the LIB target, this exe derives from a 
 	     template contained in wxcode.bkl which can be modified here -->
 	<exe id="minimal" template="compsample">
-		<res-include>..$(DIRSEP)sample</res-include>
-		<win32-res>..$(DIRSEP)sample$(DIRSEP)minimal.rc</win32-res>
+		<res-include>$(COMP_BASEPATH)$(DIRSEP)sample</res-include>
+		<win32-res>$(COMP_BASEPATH)$(DIRSEP)sample$(DIRSEP)minimal.rc</win32-res>
 		<library>keybinder_lib</library>
         <wx-lib>core</wx-lib>
         <wx-lib>base</wx-lib>

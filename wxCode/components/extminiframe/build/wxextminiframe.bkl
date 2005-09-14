@@ -9,32 +9,19 @@
 	<!-- Some defaults for the variables used by wxCode bakefiles -->
 	<set var="WXCODE_BAKEFILEDIR">../../../build/bakefiles</set>
 	<include file="$(WXCODE_BAKEFILEDIR)/defaults.bkl"/>
-	<include file="$(WXCODE_BAKEFILEDIR)/tags.bkl"/>
-	<include file="presets/wx.bkl"/>
 
 
 	<!-- Settings for this component -->
 	<!-- =========================== -->
-<!--
-	<if cond="FORMAT=='autoconf'">
-	
-		<!- it's task of our configure.ac script understand which port we will be using with the AUTOCONF format ->
-		<option name="WX_PORT">
-			<values>WXGTK,WXMAC,WXMOTIF,WXX11,WXMGL</values>
-		</option>
-	</if>
-	<if cond="TARGETING_WIN32=='1'">
-		<set var="WX_PORT">WXMSW</set>
-	</if> -->
 	
 	<!-- define each port sources apart: some outputs need all of them -->
-	<set var="MSW_SRC">../src/msw/minibtn.cpp ../src/msw/palettefrm.cpp</set>
-	<set var="GTK_SRC">../src/gtk/palettefrm.cpp ../src/gtk/minibtn.cpp</set>
-	<set var="X11_SRC">../src/x11/palettefrm.cpp</set>
+	<set var="MSW_SRC">$(COMP_BASEPATH)/src/msw/minibtn.cpp $(COMP_BASEPATH)/src/msw/palettefrm.cpp</set>
+	<set var="GTK_SRC">$(COMP_BASEPATH)/src/gtk/palettefrm.cpp $(COMP_BASEPATH)/src/gtk/minibtn.cpp</set>
+	<set var="X11_SRC">$(COMP_BASEPATH)/src/x11/palettefrm.cpp</set>
 	
-	<set var="MSW_HDR">../include/wx/msw/minibtn.h ../include/wx/msw/palettefrm.h</set>
-	<set var="GTK_HDR">../include/wx/gtk/palettefrm.h ../include/wx/gtk/minibtn.h</set>
-	<set var="X11_HDR">../include/wx/x11/palettefrm.h</set>
+	<set var="MSW_HDR">$(COMP_BASEPATH)/include/wx/msw/minibtn.h $(COMP_BASEPATH)/include/wx/msw/palettefrm.h</set>
+	<set var="GTK_HDR">$(COMP_BASEPATH)/include/wx/gtk/palettefrm.h $(COMP_BASEPATH)/include/wx/gtk/minibtn.h</set>
+	<set var="X11_HDR">$(COMP_BASEPATH)/include/wx/x11/palettefrm.h</set>
 	
 	<!-- these vars need the prefix since Bakefile cannot add it later itself since the right value of the variable is chosen at 
 	        compile-time and not at baking-time -->
@@ -54,7 +41,7 @@
 	<!-- cannot merge COMP_SRC directly with PORT_SPECIFIC_SOURCES otherwise bakefile won't be able to generate the autoconf format -->
 	<set var="COMP_SRC">	common/minibtncmn.cpp common/palettefrmcmn.cpp</set>
 	<set var="COMP_HDR">	wx/minibtn.h wx/palettefrm.h wx/palettefrmdef.h</set>
-	<set var="COMP_SAMPLE_DIR">../sample</set>
+	<set var="COMP_SAMPLE_DIR">$(COMP_BASEPATH)/sample</set>
 	<set var="COMP_SAMPLE_SRC">minimal.cpp</set>
 	<set var="WX_UNICODE_DEFAULT">1</set>
 	<set var="WX_VERSION_DEFAULT">26</set>

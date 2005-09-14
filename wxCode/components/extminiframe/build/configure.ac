@@ -1,49 +1,53 @@
-# ==============================================================
-# A basic "configure.ac" using a WX-based bakefile
-#
+# ======================================================================================
 # Author: Francesco Montorsi
 # RCS-ID: $Id$
-# ==============================================================
-
-AC_PREREQ(2.59)
-AC_INIT([paletteframe], [1.5], [frm@sourceforge.net])
-
-# This allows us to use Bakefile, recognizing the system type
-# (and sets the AC_CANONICAL_BUILD, AC_CANONICAL_HOST and
-# AC_CANONICAL_TARGET variables)
-AC_CANONICAL_SYSTEM
-
-# Checks for programs.
-AC_PROG_AWK
-AC_PROG_INSTALL
-AC_PROG_LN_S
-AC_PROG_RANLIB
-AC_PROG_CC
-AC_PROG_CXX
-AC_PROG_CXXCPP
+#
+# A basic "configure.ac" for a wxCode component.
+# See 
+#    http://www.gnu.org/software/autoconf/manual/autoconf-2.57/html_mono/autoconf.html
+# for more info about autoconf and the autoconf macros.
+# ======================================================================================
 
 
-# check for wxWidgets library 
-# and initialization of WX_* variables
-AM_WXPRESETS([2.4.0])
+# ENABLES/DISABLES THE DEBUG MODE FOR THIS CONFIGURE SCRIPT
+#DBG_CONFIGURE=1
+
+# Init this configure script with basic info about the component
+AC_INIT([wxExtMiniFrame], [1.5], [frm@sourceforge.net])
+m4_include(../../../build/bakefiles/wxcode.m4)
+AM_WXCODE_INIT
 
 
 
-# final macros
-AC_BAKEFILE([m4_include(autoconf_inc.m4)])
-AC_CONFIG_FILES([Makefile])
-AC_OUTPUT
+
+## CONFIGURE OPTIONS
+##
+## Before starting checks, declare the options of this configure script
+## Here you should use the AC_ARG_ENABLE and AC_ARG_WITH macros
+## to add to this configure script the --enable-XXX and/or --with-XXX
+## options required. If you did not use any <option> tag in your
+## component's bakefile, then you can leave this section as is
+#####################################################################
+
+AM_OPTIONS_WXCONFIG
+AM_OPTIONS_WXPRESETS
 
 
 
-# Just a little msg for GNU AUTOtools newbies (like me)
-echo
-echo " ------------------------------------------------------"
-echo "  Successfully configured ${PACKAGE_NAME} ${PACKAGE_VERSION}:"
-echo "  ${PACKAGE_NAME} will be built using the same configuration "
-echo "  used to build wxWidgets:"
-AM_WXPRESETS_MSG
-echo
-echo "  Now, just run make."
-echo " ------------------------------------------------------"
-echo
+
+
+## CONFIGURE CHECKS
+##
+## Here you should use the AC_CHECK_LIB, AC_COMPILE_IFELSE, 
+## AC_LINK_IFELSE, etc macros to check that the libraries required
+## by your component exist on the host machine and match your
+## required options (version, build settings, etc)
+#####################################################################
+
+AM_WXCODE_CHECKS([2.4.0])       # 2.4.0 is the minimum required version of wx
+
+
+
+
+# end in a nice way the configure script
+AM_WXCODE_END

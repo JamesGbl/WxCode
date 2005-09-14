@@ -102,6 +102,18 @@ dnl ### begin block 20_COND_WINDOWS_IMPLIB_1[webupdate.bkl] ###
         COND_WINDOWS_IMPLIB_1=""
     fi
     AC_SUBST(COND_WINDOWS_IMPLIB_1)
+dnl ### begin block 20_COND_WX_DEBUG_0[webupdate.bkl] ###
+    COND_WX_DEBUG_0="#"
+    if test "x$WX_DEBUG" = "x0" ; then
+        COND_WX_DEBUG_0=""
+    fi
+    AC_SUBST(COND_WX_DEBUG_0)
+dnl ### begin block 20_COND_WX_DEBUG_1[webupdate.bkl] ###
+    COND_WX_DEBUG_1="#"
+    if test "x$WX_DEBUG" = "x1" ; then
+        COND_WX_DEBUG_1=""
+    fi
+    AC_SUBST(COND_WX_DEBUG_1)
 dnl ### begin block 20_COND_WX_SHARED_0[webupdate.bkl] ###
     COND_WX_SHARED_0="#"
     if test "x$WX_SHARED" = "x0" ; then

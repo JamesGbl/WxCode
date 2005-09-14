@@ -148,7 +148,7 @@ COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd = $(NM) minimal$(EXEEXT) | if \
 
 ### Targets: ###
 
-all: $(__extminiframe_lib___depname) $(__extminiframe_dll___depname) ../sample/minimal$(EXEEXT)
+all: $(__extminiframe_lib___depname) $(__extminiframe_dll___depname) ./sample/minimal$(EXEEXT)
 
 install: all install-wxheaders $(__install_extminiframe_lib___depname) $(__install_extminiframe_dll___depname) install-gtk-headers install-x11-headers $(__INSTALL_DEP_DEP)
 
@@ -168,7 +168,7 @@ clean:
 	rm -f ./lib/$(DLLPREFIX)wxextminiframe$(__extminiframe_dll___targetsuf3)
 	rm -f ./lib/$(LIBPREFIX)wxextminiframe.$(DLLIMP_SUFFIX)
 	rm -f ./lib/$(LIBPREFIX)wxextminiframe.$(DLLIMP_SUFFIX) ./lib/$(DLLPREFIX)wxextminiframe$(__extminiframe_dll___targetsuf2)
-	rm -f ../sample/minimal$(EXEEXT)
+	rm -f ./sample/minimal$(EXEEXT)
 
 distclean: clean
 	rm -f config.cache config.log config.status bk-deps bk-make-pch shared-ld-sh Makefile
@@ -273,7 +273,7 @@ install-wxheaders:
 @COND_WX_SHARED_1@	$(INSTALL_PROGRAM) ./lib/$(DLLPREFIX)wxextminiframe$(__extminiframe_dll___targetsuf3) $(DESTDIR)$(libdir)
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__extminiframe_dll___so_symlinks_inst_cmd))
 
-../sample/minimal$(EXEEXT): $(MINIMAL_OBJECTS) $(__minimal___win32rc) $(__extminiframe_lib___depname)
+./sample/minimal$(EXEEXT): $(MINIMAL_OBJECTS) $(__minimal___win32rc) $(__extminiframe_lib___depname)
 	$(CXX) -o $@ $(MINIMAL_OBJECTS) -L./lib $(LDFLAGS) -L./lib $(LDFLAGS_GUI)  $(WX_LIBS) -lwxextminiframe
 	
 	$(__minimal___mac_setfilecmd)
@@ -293,20 +293,20 @@ extminiframe_lib_minibtncmn.o: $(srcdir)/./src/common/minibtncmn.cpp
 extminiframe_lib_palettefrmcmn.o: $(srcdir)/./src/common/palettefrmcmn.cpp
 	$(CXXC) -c -o $@ $(EXTMINIFRAME_LIB_CXXFLAGS) $(srcdir)/./src/common/palettefrmcmn.cpp
 
-@COND_WX_PORT_MSW@extminiframe_lib_minibtn.o: $(srcdir)/../src/msw/minibtn.cpp
-@COND_WX_PORT_MSW@	$(CXXC) -c -o $@ $(EXTMINIFRAME_LIB_CXXFLAGS) $(srcdir)/../src/msw/minibtn.cpp
+@COND_WX_PORT_MSW@extminiframe_lib_minibtn.o: $(srcdir)/./src/msw/minibtn.cpp
+@COND_WX_PORT_MSW@	$(CXXC) -c -o $@ $(EXTMINIFRAME_LIB_CXXFLAGS) $(srcdir)/./src/msw/minibtn.cpp
 
-@COND_WX_PORT_GTK@extminiframe_lib_minibtn.o: $(srcdir)/../src/gtk/minibtn.cpp
-@COND_WX_PORT_GTK@	$(CXXC) -c -o $@ $(EXTMINIFRAME_LIB_CXXFLAGS) $(srcdir)/../src/gtk/minibtn.cpp
+@COND_WX_PORT_GTK@extminiframe_lib_minibtn.o: $(srcdir)/./src/gtk/minibtn.cpp
+@COND_WX_PORT_GTK@	$(CXXC) -c -o $@ $(EXTMINIFRAME_LIB_CXXFLAGS) $(srcdir)/./src/gtk/minibtn.cpp
 
-@COND_WX_PORT_MSW@extminiframe_lib_palettefrm.o: $(srcdir)/../src/msw/palettefrm.cpp
-@COND_WX_PORT_MSW@	$(CXXC) -c -o $@ $(EXTMINIFRAME_LIB_CXXFLAGS) $(srcdir)/../src/msw/palettefrm.cpp
+@COND_WX_PORT_MSW@extminiframe_lib_palettefrm.o: $(srcdir)/./src/msw/palettefrm.cpp
+@COND_WX_PORT_MSW@	$(CXXC) -c -o $@ $(EXTMINIFRAME_LIB_CXXFLAGS) $(srcdir)/./src/msw/palettefrm.cpp
 
-@COND_WX_PORT_GTK@extminiframe_lib_palettefrm.o: $(srcdir)/../src/gtk/palettefrm.cpp
-@COND_WX_PORT_GTK@	$(CXXC) -c -o $@ $(EXTMINIFRAME_LIB_CXXFLAGS) $(srcdir)/../src/gtk/palettefrm.cpp
+@COND_WX_PORT_GTK@extminiframe_lib_palettefrm.o: $(srcdir)/./src/gtk/palettefrm.cpp
+@COND_WX_PORT_GTK@	$(CXXC) -c -o $@ $(EXTMINIFRAME_LIB_CXXFLAGS) $(srcdir)/./src/gtk/palettefrm.cpp
 
-@COND_WX_PORT_X11@extminiframe_lib_palettefrm.o: $(srcdir)/../src/x11/palettefrm.cpp
-@COND_WX_PORT_X11@	$(CXXC) -c -o $@ $(EXTMINIFRAME_LIB_CXXFLAGS) $(srcdir)/../src/x11/palettefrm.cpp
+@COND_WX_PORT_X11@extminiframe_lib_palettefrm.o: $(srcdir)/./src/x11/palettefrm.cpp
+@COND_WX_PORT_X11@	$(CXXC) -c -o $@ $(EXTMINIFRAME_LIB_CXXFLAGS) $(srcdir)/./src/x11/palettefrm.cpp
 
 extminiframe_dll_minibtncmn.o: $(srcdir)/./src/common/minibtncmn.cpp
 	$(CXXC) -c -o $@ $(EXTMINIFRAME_DLL_CXXFLAGS) $(srcdir)/./src/common/minibtncmn.cpp
@@ -314,23 +314,23 @@ extminiframe_dll_minibtncmn.o: $(srcdir)/./src/common/minibtncmn.cpp
 extminiframe_dll_palettefrmcmn.o: $(srcdir)/./src/common/palettefrmcmn.cpp
 	$(CXXC) -c -o $@ $(EXTMINIFRAME_DLL_CXXFLAGS) $(srcdir)/./src/common/palettefrmcmn.cpp
 
-@COND_WX_PORT_MSW@extminiframe_dll_minibtn.o: $(srcdir)/../src/msw/minibtn.cpp
-@COND_WX_PORT_MSW@	$(CXXC) -c -o $@ $(EXTMINIFRAME_DLL_CXXFLAGS) $(srcdir)/../src/msw/minibtn.cpp
+@COND_WX_PORT_MSW@extminiframe_dll_minibtn.o: $(srcdir)/./src/msw/minibtn.cpp
+@COND_WX_PORT_MSW@	$(CXXC) -c -o $@ $(EXTMINIFRAME_DLL_CXXFLAGS) $(srcdir)/./src/msw/minibtn.cpp
 
-@COND_WX_PORT_GTK@extminiframe_dll_minibtn.o: $(srcdir)/../src/gtk/minibtn.cpp
-@COND_WX_PORT_GTK@	$(CXXC) -c -o $@ $(EXTMINIFRAME_DLL_CXXFLAGS) $(srcdir)/../src/gtk/minibtn.cpp
+@COND_WX_PORT_GTK@extminiframe_dll_minibtn.o: $(srcdir)/./src/gtk/minibtn.cpp
+@COND_WX_PORT_GTK@	$(CXXC) -c -o $@ $(EXTMINIFRAME_DLL_CXXFLAGS) $(srcdir)/./src/gtk/minibtn.cpp
 
-@COND_WX_PORT_MSW@extminiframe_dll_palettefrm.o: $(srcdir)/../src/msw/palettefrm.cpp
-@COND_WX_PORT_MSW@	$(CXXC) -c -o $@ $(EXTMINIFRAME_DLL_CXXFLAGS) $(srcdir)/../src/msw/palettefrm.cpp
+@COND_WX_PORT_MSW@extminiframe_dll_palettefrm.o: $(srcdir)/./src/msw/palettefrm.cpp
+@COND_WX_PORT_MSW@	$(CXXC) -c -o $@ $(EXTMINIFRAME_DLL_CXXFLAGS) $(srcdir)/./src/msw/palettefrm.cpp
 
-@COND_WX_PORT_GTK@extminiframe_dll_palettefrm.o: $(srcdir)/../src/gtk/palettefrm.cpp
-@COND_WX_PORT_GTK@	$(CXXC) -c -o $@ $(EXTMINIFRAME_DLL_CXXFLAGS) $(srcdir)/../src/gtk/palettefrm.cpp
+@COND_WX_PORT_GTK@extminiframe_dll_palettefrm.o: $(srcdir)/./src/gtk/palettefrm.cpp
+@COND_WX_PORT_GTK@	$(CXXC) -c -o $@ $(EXTMINIFRAME_DLL_CXXFLAGS) $(srcdir)/./src/gtk/palettefrm.cpp
 
-@COND_WX_PORT_X11@extminiframe_dll_palettefrm.o: $(srcdir)/../src/x11/palettefrm.cpp
-@COND_WX_PORT_X11@	$(CXXC) -c -o $@ $(EXTMINIFRAME_DLL_CXXFLAGS) $(srcdir)/../src/x11/palettefrm.cpp
+@COND_WX_PORT_X11@extminiframe_dll_palettefrm.o: $(srcdir)/./src/x11/palettefrm.cpp
+@COND_WX_PORT_X11@	$(CXXC) -c -o $@ $(EXTMINIFRAME_DLL_CXXFLAGS) $(srcdir)/./src/x11/palettefrm.cpp
 
-minimal_minimal.o: $(srcdir)/../sample/minimal.cpp
-	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/../sample/minimal.cpp
+minimal_minimal.o: $(srcdir)/./sample/minimal.cpp
+	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/./sample/minimal.cpp
 
 minimal_minimal_rc.o: $(srcdir)/../sample/minimal.rc
 	$(RESCOMP) -i$< -o$@  --include-dir ./include

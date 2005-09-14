@@ -5,8 +5,6 @@
 	<!-- Some defaults for the variables used by wxCode bakefiles -->
 	<set var="WXCODE_BAKEFILEDIR">../../../build/bakefiles</set>
 	<include file="$(WXCODE_BAKEFILEDIR)/defaults.bkl"/>
-	<include file="$(WXCODE_BAKEFILEDIR)/tags.bkl"/>
-	<include file="presets/wx.bkl"/>
 	
 	
 
@@ -91,18 +89,18 @@
 	<set var="COMP_HDR">wx/webupdatedef.h wx/webupdate.h wx/webupdatedlg.h wx/checkedlistctrl.h wx/md5.h wx/installer.h wx/download.h wx/stdactions.h wx/webupdatectrl.h</set>		
 
 	<!-- these are for the WebUpdaterApp (and need to be prefixed!) -->
-	<set var="APP_SRC">../src/app.cpp</set>
+	<set var="APP_SRC">$(COMP_BASEPATH)/src/app.cpp</set>
 	<set var="APP_HDR"></set>		
 	
-	<set var="COMP_SAMPLE1_SRC">../samples/simple/v1.0.0/minimal.cpp</set>
-	<set var="COMP_SAMPLE1_UPDATED_SRC">../samples/simple/v2.0.3/minimal.cpp</set>
-	<set var="COMP_SAMPLE1_DIR">../samples/simple/v1.0.0</set>
-	<set var="COMP_SAMPLE1_UPDATED_DIR">../samples/simple/v2.0.3</set>
+	<set var="COMP_SAMPLE1_SRC">$(COMP_BASEPATH)/samples/simple/v1.0.0/minimal.cpp</set>
+	<set var="COMP_SAMPLE1_UPDATED_SRC">$(COMP_BASEPATH)/samples/simple/v2.0.3/minimal.cpp</set>
+	<set var="COMP_SAMPLE1_DIR">$(COMP_BASEPATH)/samples/simple/v1.0.0</set>
+	<set var="COMP_SAMPLE1_UPDATED_DIR">$(COMP_BASEPATH)/samples/simple/v2.0.3</set>
 
-	<set var="COMP_SAMPLE2_SRC">../samples/advanced/v0.0.1/minimal.cpp</set>
-	<set var="COMP_SAMPLE2_UPDATED_SRC">../samples/advanced/v1.5.0/minimal.cpp</set>
-	<set var="COMP_SAMPLE2_DIR">../samples/advanced/v0.0.1</set>
-	<set var="COMP_SAMPLE2_UPDATED_DIR">../samples/advanced/v1.5.0</set>
+	<set var="COMP_SAMPLE2_SRC">$(COMP_BASEPATH)/samples/advanced/v0.0.1/minimal.cpp</set>
+	<set var="COMP_SAMPLE2_UPDATED_SRC">$(COMP_BASEPATH)/samples/advanced/v1.5.0/minimal.cpp</set>
+	<set var="COMP_SAMPLE2_DIR">$(COMP_BASEPATH)/samples/advanced/v0.0.1</set>
+	<set var="COMP_SAMPLE2_UPDATED_DIR">$(COMP_BASEPATH)/samples/advanced/v1.5.0</set>
 	
 	<set var="COMP_WANT_INSTALL_TARGET">0</set>
 	<set var="WX_UNICODE_DEFAULT">1</set>
