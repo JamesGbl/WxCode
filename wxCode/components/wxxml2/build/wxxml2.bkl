@@ -4,13 +4,8 @@
 
 	<!-- Some defaults for the variables used by wxCode bakefiles -->
 	<set var="WXCODE_BAKEFILEDIR">../../../build/bakefiles</set>
+    <set var="WX_UNICODE_DEFAULT">1</set>
 	<include file="$(WXCODE_BAKEFILEDIR)/defaults.bkl"/>
-	<include file="$(WXCODE_BAKEFILEDIR)/tags.bkl"/>
-	<include file="$(WXCODE_BAKEFILEDIR)/utils.bkl"/>
-
-	<set var="WX_UNICODE_DEFAULT">1</set>
-	<set var="WX_VERSION_DEFAULT">26</set>
-	<include file="presets/wx.bkl"/>
  	
 
 	<!-- The dependencies... -->
@@ -20,8 +15,8 @@
 	     but that made the build system more complex and probably wasn't very
 	     useful at all) use the libxml2 & iconv placed in the thirdparty folder -->
 	<!-- on unix instead we will use the system-installed libxml2 & iconv libs -->
-	<set var="LIBXML2_DIR">..$(DIRSEP)thirdparty$(DIRSEP)libxml2</set>
-	<set var="ICONV_DIR">..$(DIRSEP)thirdparty$(DIRSEP)libiconv</set>
+	<set var="LIBXML2_DIR">$(COMP_BASEPATH)$(DIRSEP)thirdparty$(DIRSEP)libxml2</set>
+	<set var="ICONV_DIR">$(COMP_BASEPATH)$(DIRSEP)thirdparty$(DIRSEP)libiconv</set>
 
 	<if cond="TARGETING_IDE=='0' and TARGETING_WIN32=='1'">	
 
@@ -32,7 +27,7 @@
 	    </set>
 		<smart-subproject id="thirdparty">
 			<dependency-of>all</dependency-of>
-			<dir>../thirdparty/build</dir>
+			<dir>$(COMP_BASEPATH)/thirdparty/build</dir>
 		    <set-makeargs>	        
 		         SHARED="$(WX_SHARED)" UNICODE="$(WX_UNICODE)" 
 	          	 BUILD="$(BUILD_EQUIVALENT)" ICONV_DIR="..$(DIRSEP)..$(DIRSEP)libiconv"
@@ -47,8 +42,8 @@
 			<command>-copy $(ICONV_DIR)\lib\*.lib ..\lib</command>
 			<command>-copy $(LIBXML2_DIR)\lib\*.dll ..\lib</command>
 			<command>-copy $(ICONV_DIR)\lib\*.dll ..\lib</command>
-			<clean-files>..\lib\*.lib</clean-files>
-			<clean-files>..\lib\*.dll</clean-files>
+			<clean-files>$(COMP_BASEPATH)\lib\*.lib</clean-files>
+			<clean-files>$(COMP_BASEPATH)\lib\*.dll</clean-files>
 		</action>
 	</if>
 	<if cond="TARGETING_IDE=='1' or TARGETING_WIN32=='0'">
