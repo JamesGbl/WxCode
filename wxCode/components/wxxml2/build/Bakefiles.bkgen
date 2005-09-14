@@ -24,8 +24,10 @@
     </del-formats>
 
     <!-- required since wxCode uses wx presets stored in wxWidgets subfolders... -->
-    <add-flags>-I%WXWIN%\build\bakefiles\wxpresets</add-flags>
+    <add-flags>-I%WXWIN%/build/bakefiles/wxpresets</add-flags>
 
+	<!-- since it's standard on Unix to have Makefile.in and the configure script in
+	     the root folder of the component to build, we put Makefile.in one directory up -->
     <add-flags formats="autoconf">
         -o../Makefile.in
     </add-flags>
