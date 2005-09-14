@@ -124,6 +124,11 @@ wxHTTPAuthSettings wxAuthenticateDlg::GetAuthSettings()
   m_settings.m_bRememberPasswd = GetRememberPassword();
   m_settings.m_strAuthUsername = GetUsername();
   m_settings.m_strAuthPassword = GetPassword();
+
+  // if the username is not empty, then we assume BASIC authentication must be used
+  if (!m_settings.m_strAuthUsername.IsEmpty())
+	  m_settings.SetBasicAuth();
+
   return m_settings;
 }
 

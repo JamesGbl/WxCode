@@ -225,7 +225,7 @@ wxString wxProxySettingsDlg::GetPassword()
 //! Get exceptions string
 wxString wxProxySettingsDlg::GetHostExceptions()
 {
-  return m_tcExceptions->GetValue();
+  if (m_tcExceptions) return m_tcExceptions->GetValue();
 }
 
 wxProxySettings wxProxySettingsDlg::GetProxySettings(void)
@@ -236,6 +236,10 @@ wxProxySettings wxProxySettingsDlg::GetProxySettings(void)
   m_settings.m_strProxyUsername = GetUsername();
   m_settings.m_strProxyPassword = GetPassword();
   m_settings.m_bRequiresAuth = IsAuthProxy();
+
+  // if the proxy hostname is not empty, then set the use proxy flag
+  m_settings.m_bUseProxy = !m_settings.m_strProxyHostname.IsEmpty();
+
   return m_settings;
 }
 

@@ -521,7 +521,7 @@ wxString wxHTTPBuilder::URLDecode(const wxString &value)
     if(szEncoded.GetChar(nEncodedPos)==wxT('%')) 
     {
       nEncodedPos++;
-      if( isxdigit(szEncoded.GetChar(nEncodedPos)) && isxdigit(szEncoded.GetChar(nEncodedPos+1)) ) 
+      if( wxIsxdigit(szEncoded.GetChar(nEncodedPos)) && wxIsxdigit(szEncoded.GetChar(nEncodedPos+1)) ) 
       {
         wxString szIntFromHex;
         szIntFromHex.Append( szEncoded.GetChar(nEncodedPos) );
@@ -549,7 +549,7 @@ wxString wxHTTPBuilder::URLEncode(const wxString &value)
   {
     wxChar cChar = value.GetChar(nPos);
 
-    if( ( isalpha( cChar )) || ( isdigit( cChar )) || (cChar == wxT('-')) || (cChar == wxT('@')) || (cChar == wxT('*')) || (cChar == wxT('_')) )
+    if( ( wxIsalpha( cChar )) || ( wxIsdigit( cChar )) || (cChar == wxT('-')) || (cChar == wxT('@')) || (cChar == wxT('*')) || (cChar == wxT('_')) )
     {
       szToReturn.Append( cChar );
     }
@@ -867,7 +867,7 @@ wxString wxHTTPBuilder::CreateBoundary(const int length)
     else
     {
       wxChar c = 0;
-      while( !isalnum(c) )
+      while( !wxIsalnum(c) )
         c = wxHTTPBuilder::Rand() % 96 + 32;
 
       szToReturn.Append(c);
