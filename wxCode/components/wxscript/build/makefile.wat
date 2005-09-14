@@ -22,6 +22,21 @@ CPPFLAGS =
 # Standard linker flags 
 LDFLAGS = 
 
+# The directory where wxWidgets library is installed 
+WX_DIR = $(%WXWIN)
+
+# Use DLL build of wx library to use? [0,1]
+WX_SHARED = 0
+
+# Compile Unicode build of wxWidgets? [0,1]
+WX_UNICODE = 0
+
+# Use debug build of wxWidgets (define __WXDEBUG__)? [0,1]
+WX_DEBUG = 1
+
+# Version of the wx library to build against. 
+WX_VERSION = 26
+
 # If 0 LUA won't be used [0,1]
 USE_LUA = 1
 
@@ -52,21 +67,6 @@ CINT_DIR = c:\cint
 # The UnderC library main folder 
 UNDERC_DIR = c:\ucc
 
-# The directory where wxWidgets library is installed 
-WX_DIR = $(%WXWIN)
-
-# Use DLL build of wx library to use? [0,1]
-WX_SHARED = 0
-
-# Compile Unicode build of wxWidgets? [0,1]
-WX_UNICODE = 1
-
-# Use debug build of wxWidgets (define __WXDEBUG__)? [0,1]
-WX_DEBUG = 1
-
-# Version of the wx library to build against. 
-WX_VERSION = 26
-
 
 
 # -------------------------------------------------------------------------
@@ -90,9 +90,9 @@ WATCOM_CWD = $+ $(%cdrive):$(%cwd) $-
 
 ### Conditionally set variables: ###
 
-WX3RDPARTLIBPOSTFIX =
+WX3RDPARTYLIBPOSTFIX =
 !ifeq WX_DEBUG 1
-WX3RDPARTLIBPOSTFIX = d
+WX3RDPARTYLIBPOSTFIX = d
 !endif
 PYTHON_MAJVER =
 !ifeq PYTHON_VER 2_2
@@ -429,7 +429,7 @@ cleandocs :
 	@%append watcom\wxscript_dll.lbc option caseexact
 	@%append watcom\wxscript_dll.lbc $(LDFLAGS) $(__DEBUGINFO_0)  libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4)
 	@for %i in ($(WXSCRIPT_DLL_OBJECTS)) do @%append watcom\wxscript_dll.lbc file %i
-	@for %i in ( $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\wxscript_dll.lbc library %i
+	@for %i in ( $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\wxscript_dll.lbc library %i
 	@%append watcom\wxscript_dll.lbc
 	@%append watcom\wxscript_dll.lbc system nr_dll
 	wlink @watcom\wxscript_dll.lbc
@@ -443,7 +443,7 @@ cleandocs :
 	@%append watcom\test1.lbc option caseexact
 	@%append watcom\test1.lbc $(LDFLAGS) $(__DEBUGINFO_0)  libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) system nt ref 'main_'
 	@for %i in ($(TEST1_OBJECTS)) do @%append watcom\test1.lbc file %i
-	@for %i in ( ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\test1.lbc library %i
+	@for %i in ( ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\test1.lbc library %i
 	@%append watcom\test1.lbc
 	wlink @watcom\test1.lbc
 
@@ -454,7 +454,7 @@ cleandocs :
 	@%append watcom\test2.lbc option caseexact
 	@%append watcom\test2.lbc $(LDFLAGS) $(__DEBUGINFO_0)  libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) system nt ref 'main_'
 	@for %i in ($(TEST2_OBJECTS)) do @%append watcom\test2.lbc file %i
-	@for %i in ( ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\test2.lbc library %i
+	@for %i in ( ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\test2.lbc library %i
 	@%append watcom\test2.lbc
 	wlink @watcom\test2.lbc
 

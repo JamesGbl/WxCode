@@ -4,7 +4,7 @@
 
 # TARGTYPE "Win32 (x86) Console Application" 0x0103
 
-CFG=test1 - Win32 Default
+CFG=test1 - Win32 Release
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
@@ -13,18 +13,18 @@ CFG=test1 - Win32 Default
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "wxscript_test1.mak" CFG="test1 - Win32 Default"
+!MESSAGE NMAKE /f "wxscript_test1.mak" CFG="test1 - Win32 Release"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
 !MESSAGE "test1 - Win32 DLL Unicode Debug" (based on "Win32 (x86) Console Application")
-!MESSAGE "test1 - Win32 DLL Unicode" (based on "Win32 (x86) Console Application")
+!MESSAGE "test1 - Win32 DLL Unicode Release" (based on "Win32 (x86) Console Application")
 !MESSAGE "test1 - Win32 DLL Debug" (based on "Win32 (x86) Console Application")
-!MESSAGE "test1 - Win32 DLL" (based on "Win32 (x86) Console Application")
+!MESSAGE "test1 - Win32 DLL Release" (based on "Win32 (x86) Console Application")
 !MESSAGE "test1 - Win32 Unicode Debug" (based on "Win32 (x86) Console Application")
-!MESSAGE "test1 - Win32 Unicode" (based on "Win32 (x86) Console Application")
+!MESSAGE "test1 - Win32 Unicode Release" (based on "Win32 (x86) Console Application")
 !MESSAGE "test1 - Win32 Debug" (based on "Win32 (x86) Console Application")
-!MESSAGE "test1 - Win32 Default" (based on "Win32 (x86) Console Application")
+!MESSAGE "test1 - Win32 Release" (based on "Win32 (x86) Console Application")
 !MESSAGE 
 
 # Begin Project
@@ -57,7 +57,7 @@ LINK32=link.exe
 # ADD BASE LINK32 ..\lib\wxscriptud.lib lua.lib lualib.lib tolua.lib wxmsw26ud_core.lib wxbase26ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\tests\test1\test1.exe" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib" /libpath:"c:\Python\libs" /libpath:"..\thirdparty\lua\lib" /libpath:"..\thirdparty\tolua\lib" /libpath:"c:\cint" /libpath:"c:\ucc" /debug /subsystem:console
 # ADD LINK32 ..\lib\wxscriptud.lib lua.lib lualib.lib tolua.lib wxmsw26ud_core.lib wxbase26ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\tests\test1\test1.exe" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib" /libpath:"c:\Python\libs" /libpath:"..\thirdparty\lua\lib" /libpath:"..\thirdparty\tolua\lib" /libpath:"c:\cint" /libpath:"c:\ucc" /debug /subsystem:console
 
-!ELSEIF  "$(CFG)" == "test1 - Win32 DLL Unicode"
+!ELSEIF  "$(CFG)" == "test1 - Win32 DLL Unicode Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -103,7 +103,7 @@ LINK32=link.exe
 # ADD BASE LINK32 ..\lib\wxscriptd.lib lua.lib lualib.lib tolua.lib wxmsw26d_core.lib wxbase26d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\tests\test1\test1.exe" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib" /libpath:"c:\Python\libs" /libpath:"..\thirdparty\lua\lib" /libpath:"..\thirdparty\tolua\lib" /libpath:"c:\cint" /libpath:"c:\ucc" /debug /subsystem:console
 # ADD LINK32 ..\lib\wxscriptd.lib lua.lib lualib.lib tolua.lib wxmsw26d_core.lib wxbase26d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\tests\test1\test1.exe" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib" /libpath:"c:\Python\libs" /libpath:"..\thirdparty\lua\lib" /libpath:"..\thirdparty\tolua\lib" /libpath:"c:\cint" /libpath:"c:\ucc" /debug /subsystem:console
 
-!ELSEIF  "$(CFG)" == "test1 - Win32 DLL"
+!ELSEIF  "$(CFG)" == "test1 - Win32 DLL Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -149,7 +149,7 @@ LINK32=link.exe
 # ADD BASE LINK32 ..\lib\wxscriptud.lib lua.lib lualib.lib tolua.lib wxmsw26ud_core.lib wxbase26ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\tests\test1\test1.exe" /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\lib" /libpath:"c:\Python\libs" /libpath:"..\thirdparty\lua\lib" /libpath:"..\thirdparty\tolua\lib" /libpath:"c:\cint" /libpath:"c:\ucc" /debug /subsystem:console
 # ADD LINK32 ..\lib\wxscriptud.lib lua.lib lualib.lib tolua.lib wxmsw26ud_core.lib wxbase26ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\tests\test1\test1.exe" /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\lib" /libpath:"c:\Python\libs" /libpath:"..\thirdparty\lua\lib" /libpath:"..\thirdparty\tolua\lib" /libpath:"c:\cint" /libpath:"c:\ucc" /debug /subsystem:console
 
-!ELSEIF  "$(CFG)" == "test1 - Win32 Unicode"
+!ELSEIF  "$(CFG)" == "test1 - Win32 Unicode Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -195,7 +195,7 @@ LINK32=link.exe
 # ADD BASE LINK32 ..\lib\wxscriptd.lib lua.lib lualib.lib tolua.lib wxmsw26d_core.lib wxbase26d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\tests\test1\test1.exe" /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\lib" /libpath:"c:\Python\libs" /libpath:"..\thirdparty\lua\lib" /libpath:"..\thirdparty\tolua\lib" /libpath:"c:\cint" /libpath:"c:\ucc" /debug /subsystem:console
 # ADD LINK32 ..\lib\wxscriptd.lib lua.lib lualib.lib tolua.lib wxmsw26d_core.lib wxbase26d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\tests\test1\test1.exe" /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\lib" /libpath:"c:\Python\libs" /libpath:"..\thirdparty\lua\lib" /libpath:"..\thirdparty\tolua\lib" /libpath:"c:\cint" /libpath:"c:\ucc" /debug /subsystem:console
 
-!ELSEIF  "$(CFG)" == "test1 - Win32 Default"
+!ELSEIF  "$(CFG)" == "test1 - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -223,13 +223,13 @@ LINK32=link.exe
 # Begin Target
 
 # Name "test1 - Win32 DLL Unicode Debug"
-# Name "test1 - Win32 DLL Unicode"
+# Name "test1 - Win32 DLL Unicode Release"
 # Name "test1 - Win32 DLL Debug"
-# Name "test1 - Win32 DLL"
+# Name "test1 - Win32 DLL Release"
 # Name "test1 - Win32 Unicode Debug"
-# Name "test1 - Win32 Unicode"
+# Name "test1 - Win32 Unicode Release"
 # Name "test1 - Win32 Debug"
-# Name "test1 - Win32 Default"
+# Name "test1 - Win32 Release"
 # Begin Group "Source Files"
 
 # PROP Default_Filter ""

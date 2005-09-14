@@ -1,25 +1,36 @@
-# ======================================================
-# A basic "configure.ac" using a WXBASE-based bakefile
-# ======================================================
+# ======================================================================================
+# Author: Francesco Montorsi
+# RCS-ID: $Id$
+#
+# A basic "configure.ac" for a wxCode component.
+# See 
+#    http://www.gnu.org/software/autoconf/manual/autoconf-2.57/html_mono/autoconf.html
+# for more info about autoconf and the autoconf macros.
+# ======================================================================================
 
-AC_PREREQ(2.57)
-AC_INIT(wxscript, 1.0, [frm@sourceforge.net])
+
+# ENABLES/DISABLES THE DEBUG MODE FOR THIS CONFIGURE SCRIPT
+#DBG_CONFIGURE=1
+
+# Init this configure script with basic info about the component
+AC_INIT([wxXml2], [1.5], [frm@sourceforge.net])
+m4_include(../../../build/bakefiles/wxcode.m4)
+AM_WXCODE_INIT
 
 
-# Some standard checks are required...
-AC_PROG_CXX
-AC_PROG_CC
-AC_PROG_CPP
-AC_PROG_RANLIB
-AC_PROG_MAKE_SET
 
-# This allows us to use Bakefile, recognizing the system type
-# (and sets the AC_CANONICAL_BUILD, AC_CANONICAL_HOST and
-# AC_CANONICAL_TARGET variables)
-AC_CANONICAL_SYSTEM
-	
-# This adds some standard wxWidgets options to the configure script
+
+## CONFIGURE OPTIONS
+##
+## Before starting checks, declare the options of this configure script
+## Here you should use the AC_ARG_ENABLE and AC_ARG_WITH macros
+## to add to this configure script the --enable-XXX and/or --with-XXX
+## options required. If you did not use any <option> tag in your
+## component's bakefile, then you can leave this section as is
+#####################################################################
+
 AM_OPTIONS_WXCONFIG
+AM_OPTIONS_WXPRESETS
 
 # Two little custom macros which define the ENABLE/WITH configure arguments.
 # Macro arguments:
@@ -37,58 +48,11 @@ AC_DEFUN([MY_ARG_WITH], [AC_ARG_WITH($1,
 			AC_HELP_STRING([--with-$1],
 			[$2 (default is $3)]),, [with_$1=$3])])
 
-MY_ARG_ENABLE([shared], [Builds shared libraries instead of static libraries], [no])
-MY_ARG_ENABLE([debug], [Builds in debug mode], [yes])
-MY_ARG_ENABLE([unicode], [Builds in UNICODE mode], [no])
-
-if test "$enable_shared" = "yes"; then
-   SHARED=1
-   AC_MSG_RESULT([Checking for the SHARED option... yes])
-else
-   SHARED=0
-   AC_MSG_RESULT([Checking for the SHARED option... no])
-fi
-
-if test "$enable_debug" = "yes"; then
-   BUILD=debug
-   AC_MSG_RESULT([Checking for the DEBUG option... yes])
-else
-   BUILD=release
-   AC_MSG_RESULT([Checking for the DEBUG option... no])
-fi
-
-if test "$enable_unicode" = "yes"; then
-   UNICODE=1
-   AC_MSG_RESULT([Checking for the UNICODE option... yes])
-else
-   UNICODE=0
-   AC_MSG_RESULT([Checking for the UNICODE option... no])
-fi
-	
-# check for wxWin version & presence
-AM_PATH_WXCONFIG([2.4.2], [wxWin=1], [wxWin=0])
-if test "$wxWin" != 1; then
-    AC_MSG_ERROR([
-               wxWindows must be installed on your system
-               but wx-config script couldn't be found.
-               Please check that wx-config is in path, the directory
-               where wxWindows libraries are installed (returned by
-               'wx-config - -libs' command) is in LD_LIBRARY_PATH or
-               equivalent variable and wxWindows version is 2.3.4 or above.
-       ])
-fi
-
-
-
-# wxScript-specific tests & options
-###################################
-
 MY_ARG_WITH([python], [Builds with Python support], [yes])
 MY_ARG_WITH([lua], [Builds with LUA support], [yes])
 MY_ARG_WITH([cint], [Builds with CINT support], [no])
 MY_ARG_WITH([underc], [Builds with UnderC support], [no])
 MY_ARG_WITH([pythonver], [The Python version to use], [2_4])
-
 
 if test "$with_python" = "yes"; then
    USE_PYTHON=1
@@ -101,19 +65,6 @@ fi
 if test "$with_lua" = "yes"; then
    USE_LUA=1
    AC_MSG_RESULT([Checking for the LUA option... yes])
-
-   AC_MSG_RESULT([Checking for the LUA & TOLUA presence... ])   
-   AC_CHECK_HEADER([lua.h], [hasLUA=1], [hasLUA=0])
-   AC_CHECK_HEADER([tolua.h], [hasTOLUA=1], [hasTOLUA=0])
-   if test "$hasLUA" != 1; then
-       AC_MSG_ERROR([Could not found LUA headers in system path; please 
-                     install latest version from www.lua.org or specify
-                     the --without-lua option])
-   elif test "$hasTOLUA" != 1; then
-       AC_MSG_ERROR([Could not found TOLUA headers in system path; please 
-                     install latest version from www.lua.org or specify
-                     the --without-lua option])
-   fi
 else
    USE_LUA=0
    AC_MSG_RESULT([Checking for the LUA option... no])
@@ -153,7 +104,46 @@ AC_MSG_RESULT([Checking for the Python version to use... $PYTHON_VER])
 #AM_PATH_PYTHON(2.2.2)
 
 
-# The final lines of the configure script
-AC_BAKEFILE
-AC_CONFIG_FILES([Makefile])
-AC_OUTPUT
+
+
+
+
+
+## CONFIGURE CHECKS
+##
+## Here you should use the AC_CHECK_LIB, AC_COMPILE_IFELSE, 
+## AC_LINK_IFELSE, etc macros to check that the libraries required
+## by your component exist on the host machine and match your
+## required options (version, build settings, etc)
+#####################################################################
+
+AM_WXCODE_CHECKS([2.4.0])       # 2.4.0 is the minimum required version of wx
+
+if test "$USE_LUA" = "1" ; then
+   
+   AC_CHECK_HEADER([lua.h], [hasLUA=1], [hasLUA=0])
+   AC_CHECK_HEADER([tolua.h], [hasTOLUA=1], [hasTOLUA=0])
+
+   AC_MSG_CHECKING([for the LUA & TOLUA presence... ])   
+   if test "$hasLUA" != 1; then
+       AC_MSG_ERROR([
+         Could not found LUA headers in system path; please 
+         install latest version from www.lua.org or specify
+         the --without-lua option
+                   ])
+   elif test "$hasTOLUA" != 1; then
+       AC_MSG_ERROR([
+         Could not found TOLUA headers in system path; please 
+         install latest version from www.lua.org or specify
+         the --without-lua option
+                   ])
+   fi
+
+   AC_MSG_RESULT([yes])
+fi
+
+
+
+
+# end in a nice way the configure script
+AM_WXCODE_END

@@ -39,6 +39,31 @@ CPPFLAGS = -a8 -g0
 LDFLAGS = 
 !endif
 
+# The directory where wxWidgets library is installed 
+!ifndef WX_DIR
+WX_DIR = $(WXWIN)
+!endif
+
+# Use DLL build of wx library to use? [0,1]
+!ifndef WX_SHARED
+WX_SHARED = 0
+!endif
+
+# Compile Unicode build of wxWidgets? [0,1]
+!ifndef WX_UNICODE
+WX_UNICODE = 0
+!endif
+
+# Use debug build of wxWidgets (define __WXDEBUG__)? [0,1]
+!ifndef WX_DEBUG
+WX_DEBUG = 1
+!endif
+
+# Version of the wx library to build against. 
+!ifndef WX_VERSION
+WX_VERSION = 26
+!endif
+
 # If 0 LUA won't be used [0,1]
 !ifndef USE_LUA
 USE_LUA = 1
@@ -87,31 +112,6 @@ CINT_DIR = c:\cint
 # The UnderC library main folder 
 !ifndef UNDERC_DIR
 UNDERC_DIR = c:\ucc
-!endif
-
-# The directory where wxWidgets library is installed 
-!ifndef WX_DIR
-WX_DIR = $(WXWIN)
-!endif
-
-# Use DLL build of wx library to use? [0,1]
-!ifndef WX_SHARED
-WX_SHARED = 0
-!endif
-
-# Compile Unicode build of wxWidgets? [0,1]
-!ifndef WX_UNICODE
-WX_UNICODE = 1
-!endif
-
-# Use debug build of wxWidgets (define __WXDEBUG__)? [0,1]
-!ifndef WX_DEBUG
-WX_DEBUG = 1
-!endif
-
-# Version of the wx library to build against. 
-!ifndef WX_VERSION
-WX_VERSION = 26
 !endif
 
 
@@ -167,7 +167,7 @@ TEST2_OBJECTS =  \
 ### Conditionally set variables: ###
 
 !if "$(WX_DEBUG)" == "1"
-WX3RDPARTLIBPOSTFIX = d
+WX3RDPARTYLIBPOSTFIX = d
 !endif
 !if "$(PYTHON_VER)" == "2_2"
 PYTHON_MAJVER = 2
@@ -420,19 +420,19 @@ cleandocs:
 !if "$(WX_SHARED)" == "1"
 ..\lib\wxscript$(WXLIBPOSTFIX).dll: $(WXSCRIPT_DLL_OBJECTS)
 	ilink32 -Tpd -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) @&&|
-	c0d32.obj $(WXSCRIPT_DLL_OBJECTS),$@,, $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
+	c0d32.obj $(WXSCRIPT_DLL_OBJECTS),$@,, $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
 |
 	implib -f ..\lib\wxscript$(WXLIBPOSTFIX) $@
 !endif
 
 ..\tests\test1\test1.exe: $(TEST1_OBJECTS) $(__wxscript_lib___depname)
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) -ap @&&|
-	c0x32.obj $(TEST1_OBJECTS),$@,, ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
+	c0x32.obj $(TEST1_OBJECTS),$@,, ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
 |
 
 ..\tests\test2\test2.exe: $(TEST2_OBJECTS) $(__wxscript_lib___depname)
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) -ap @&&|
-	c0x32.obj $(TEST2_OBJECTS),$@,, ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
+	c0x32.obj $(TEST2_OBJECTS),$@,, ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
 |
 
 borland\wxscript_lib_script.obj: .\..\src\script.cpp
