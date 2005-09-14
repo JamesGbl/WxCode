@@ -11,29 +11,30 @@
 
 	<set var="COMP_NAME">httpengine</set>
 	<set var="COMP_SRC">
-			..\src\authdlg.cpp
-			..\src\httpbuilder.cpp
-			..\src\httpbuilderthread.cpp
-			..\src\hyperlinkctrl.cpp
-			..\src\pleasewaitdlg.cpp
-			..\src\proxysettingsdlg.cpp	
+			authdlg.cpp
+			httpbuilder.cpp
+			httpbuilderthread.cpp
+			hyperlinkctrl.cpp
+			pleasewaitdlg.cpp
+			proxysettingsdlg.cpp	
 	</set>
 	<set var="COMP_HDR">
-			../include/wx/authdlg.h
-			../include/wx/base64.h
-			../include/wx/httpbuilder.h
-			../include/wx/httpbuilderthread.h
-			../include/wx/hyperlinkctrl.h
-			../include/wx/proxysettingsdlg.h
-			../include/wx/httpenginedef.h
+			wx/authdlg.h
+			wx/base64.h
+			wx/httpbuilder.h
+			wx/httpbuilderthread.h
+			wx/hyperlinkctrl.h
+			wx/proxysettingsdlg.h
+			wx/httpenginedef.h
 	</set>
+    <set var="COMP_SAMPLE_DIR">$(COMP_BASEPATH)/sample</set>
 	<set var="COMP_SAMPLE_SRC">
-			../sample/httpengineapp.cpp
-			../sample/httpenginedlg.cpp
+			httpengineapp.cpp
+			httpenginedlg.cpp
 	</set>
 	<set var="COMP_SAMPLE_HDR">
-			../sample/httpengineapp.h
-			../sample/httpenginedlg.h
+			httpengineapp.h
+			httpenginedlg.h
 	</set>
 	
 	<set var="COMP_WANT_INSTALL_TARGET">0</set>
@@ -50,10 +51,7 @@
 
 	<!-- The real target: wxcode.bkl does not declare a real target but a template called
 	     "complib". In this way modifications are allowed to the basic template. -->
-	<lib id="httpengine_lib" template="complib" cond="WX_SHARED=='0'">
-		<install-to>$(LIBDIR)</install-to>
-    <!-- <stdlib>$(SQLITE3_DIR)</stdlib> -->
-	</lib>
+	<lib id="httpengine_lib" template="complib" cond="WX_SHARED=='0'" />
 	<dll id="httpengine_dll" template="compdll" cond="WX_SHARED=='1'">		
 		<wx-lib>net</wx-lib>
         <wx-lib>core</wx-lib>
@@ -67,10 +65,9 @@
 	<!-- =================================== -->
 
 	<!-- use _ instead of '-' or '.' because MSVC6 does not like these chars -->
-	<exe id="httpenginetest" template="compsample">
-		<dirname>../sample</dirname>
-		<res-include>..$(DIRSEP)sample</res-include>
-		<win32-res>..$(DIRSEP)sample$(DIRSEP)httpengine.rc</win32-res>
+	<exe id="httpenginetest" template="compsample">		
+		<res-include>$(COMP_BASEPATH)$(DIRSEP)sample</res-include>
+		<win32-res>$(COMP_BASEPATH)$(DIRSEP)sample$(DIRSEP)httpengine.rc</win32-res>
 		<library>httpengine_lib</library>
 		<wx-lib>net</wx-lib>
         <wx-lib>core</wx-lib>

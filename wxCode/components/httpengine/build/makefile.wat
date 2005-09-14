@@ -6,7 +6,6 @@
 
 
 
-
 # -------------------------------------------------------------------------
 # These are configurable options:
 # -------------------------------------------------------------------------
@@ -61,9 +60,9 @@ WATCOM_CWD = $+ $(%cdrive):$(%cwd) $-
 
 ### Conditionally set variables: ###
 
-WX3RDPARTLIBPOSTFIX =
+WX3RDPARTYLIBPOSTFIX =
 !ifeq WX_DEBUG 1
-WX3RDPARTLIBPOSTFIX = d
+WX3RDPARTYLIBPOSTFIX = d
 !endif
 POSTFIX =
 !ifeq WX_SHARED 0
@@ -291,9 +290,9 @@ cleandocs :
 	@%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll.lbc option caseexact
 	@%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll.lbc $(LDFLAGS) $(__DEBUGINFO_1)  libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib
 	@for %i in ($(HTTPENGINE_DLL_OBJECTS)) do @%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll.lbc file %i
-	@for %i in ( wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll.lbc library %i
+	@for %i in ( wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll.lbc library %i
 	@%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll.lbc
-	@%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll.lbc system nt_dll
+	@%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll.lbc system nr_dll
 	wlink @watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll.lbc
 	wlib -q -n -b ..\lib\httpengine$(WXLIBPOSTFIX).lib +$^@
 !endif
@@ -305,51 +304,51 @@ cleandocs :
 	@%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest.lbc option caseexact
 	@%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest.lbc $(LDFLAGS) $(__DEBUGINFO_1)  libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib system nt_win ref '_WinMain@16'
 	@for %i in ($(HTTPENGINETEST_OBJECTS)) do @%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest.lbc file %i
-	@for %i in ( ..\lib\httpengine$(WXLIBPOSTFIX).lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest.lbc library %i
+	@for %i in ( ..\lib\httpengine$(WXLIBPOSTFIX).lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest.lbc library %i
 	@%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest.lbc option resource=watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpengine.res
 	wlink @watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest.lbc
 
-watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_authdlg.obj :  .AUTODEPEND .\..\src\..\src\authdlg.cpp
-	$(CXX) -zq -fo=$^@ $(HTTPENGINE_LIB_CXXFLAGS) $<
+watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_authdlg.obj :  .AUTODEPEND .\..\src\authdlg.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(HTTPENGINE_LIB_CXXFLAGS) $<
 
-watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_httpbuilder.obj :  .AUTODEPEND .\..\src\..\src\httpbuilder.cpp
-	$(CXX) -zq -fo=$^@ $(HTTPENGINE_LIB_CXXFLAGS) $<
+watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_httpbuilder.obj :  .AUTODEPEND .\..\src\httpbuilder.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(HTTPENGINE_LIB_CXXFLAGS) $<
 
-watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_httpbuilderthread.obj :  .AUTODEPEND .\..\src\..\src\httpbuilderthread.cpp
-	$(CXX) -zq -fo=$^@ $(HTTPENGINE_LIB_CXXFLAGS) $<
+watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_httpbuilderthread.obj :  .AUTODEPEND .\..\src\httpbuilderthread.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(HTTPENGINE_LIB_CXXFLAGS) $<
 
-watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_hyperlinkctrl.obj :  .AUTODEPEND .\..\src\..\src\hyperlinkctrl.cpp
-	$(CXX) -zq -fo=$^@ $(HTTPENGINE_LIB_CXXFLAGS) $<
+watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_hyperlinkctrl.obj :  .AUTODEPEND .\..\src\hyperlinkctrl.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(HTTPENGINE_LIB_CXXFLAGS) $<
 
-watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_pleasewaitdlg.obj :  .AUTODEPEND .\..\src\..\src\pleasewaitdlg.cpp
-	$(CXX) -zq -fo=$^@ $(HTTPENGINE_LIB_CXXFLAGS) $<
+watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_pleasewaitdlg.obj :  .AUTODEPEND .\..\src\pleasewaitdlg.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(HTTPENGINE_LIB_CXXFLAGS) $<
 
-watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_proxysettingsdlg.obj :  .AUTODEPEND .\..\src\..\src\proxysettingsdlg.cpp
-	$(CXX) -zq -fo=$^@ $(HTTPENGINE_LIB_CXXFLAGS) $<
+watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_proxysettingsdlg.obj :  .AUTODEPEND .\..\src\proxysettingsdlg.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(HTTPENGINE_LIB_CXXFLAGS) $<
 
-watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_authdlg.obj :  .AUTODEPEND .\..\src\..\src\authdlg.cpp
-	$(CXX) -zq -fo=$^@ $(HTTPENGINE_DLL_CXXFLAGS) $<
+watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_authdlg.obj :  .AUTODEPEND .\..\src\authdlg.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(HTTPENGINE_DLL_CXXFLAGS) $<
 
-watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_httpbuilder.obj :  .AUTODEPEND .\..\src\..\src\httpbuilder.cpp
-	$(CXX) -zq -fo=$^@ $(HTTPENGINE_DLL_CXXFLAGS) $<
+watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_httpbuilder.obj :  .AUTODEPEND .\..\src\httpbuilder.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(HTTPENGINE_DLL_CXXFLAGS) $<
 
-watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_httpbuilderthread.obj :  .AUTODEPEND .\..\src\..\src\httpbuilderthread.cpp
-	$(CXX) -zq -fo=$^@ $(HTTPENGINE_DLL_CXXFLAGS) $<
+watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_httpbuilderthread.obj :  .AUTODEPEND .\..\src\httpbuilderthread.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(HTTPENGINE_DLL_CXXFLAGS) $<
 
-watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_hyperlinkctrl.obj :  .AUTODEPEND .\..\src\..\src\hyperlinkctrl.cpp
-	$(CXX) -zq -fo=$^@ $(HTTPENGINE_DLL_CXXFLAGS) $<
+watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_hyperlinkctrl.obj :  .AUTODEPEND .\..\src\hyperlinkctrl.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(HTTPENGINE_DLL_CXXFLAGS) $<
 
-watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_pleasewaitdlg.obj :  .AUTODEPEND .\..\src\..\src\pleasewaitdlg.cpp
-	$(CXX) -zq -fo=$^@ $(HTTPENGINE_DLL_CXXFLAGS) $<
+watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_pleasewaitdlg.obj :  .AUTODEPEND .\..\src\pleasewaitdlg.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(HTTPENGINE_DLL_CXXFLAGS) $<
 
-watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_proxysettingsdlg.obj :  .AUTODEPEND .\..\src\..\src\proxysettingsdlg.cpp
-	$(CXX) -zq -fo=$^@ $(HTTPENGINE_DLL_CXXFLAGS) $<
+watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_proxysettingsdlg.obj :  .AUTODEPEND .\..\src\proxysettingsdlg.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(HTTPENGINE_DLL_CXXFLAGS) $<
 
-watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpengineapp.obj :  .AUTODEPEND .\..\samples\..\sample\httpengineapp.cpp
-	$(CXX) -zq -fo=$^@ $(HTTPENGINETEST_CXXFLAGS) $<
+watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpengineapp.obj :  .AUTODEPEND .\..\sample\httpengineapp.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(HTTPENGINETEST_CXXFLAGS) $<
 
-watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpenginedlg.obj :  .AUTODEPEND .\..\samples\..\sample\httpenginedlg.cpp
-	$(CXX) -zq -fo=$^@ $(HTTPENGINETEST_CXXFLAGS) $<
+watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpenginedlg.obj :  .AUTODEPEND .\..\sample\httpenginedlg.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(HTTPENGINETEST_CXXFLAGS) $<
 
 watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpengine.res :  .AUTODEPEND .\..\sample\httpengine.rc
 	wrc -q -ad -bt=nt -r -fo=$^@ $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\sample $<

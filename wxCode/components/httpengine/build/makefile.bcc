@@ -109,7 +109,7 @@ HTTPENGINETEST_OBJECTS =  \
 ### Conditionally set variables: ###
 
 !if "$(WX_DEBUG)" == "1"
-WX3RDPARTLIBPOSTFIX = d
+WX3RDPARTYLIBPOSTFIX = d
 !endif
 !if "$(WX_SHARED)" == "0"
 POSTFIX = _lib
@@ -287,56 +287,56 @@ cleandocs:
 !if "$(WX_SHARED)" == "1"
 ..\lib\httpengine$(WXLIBPOSTFIX).dll: $(HTTPENGINE_DLL_OBJECTS)
 	ilink32 -Tpd -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib @&&|
-	c0d32.obj $(HTTPENGINE_DLL_OBJECTS),$@,, wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
+	c0d32.obj $(HTTPENGINE_DLL_OBJECTS),$@,, wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
 |
 	implib -f ..\lib\httpengine$(WXLIBPOSTFIX) $@
 !endif
 
 ..\sample\httpenginetest.exe: $(HTTPENGINETEST_OBJECTS)  borland$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpengine.res $(__httpengine_lib___depname)
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -aa @&&|
-	c0w32.obj $(HTTPENGINETEST_OBJECTS),$@,, ..\lib\httpengine$(WXLIBPOSTFIX).lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTLIBPOSTFIX).lib wxjpeg$(WX3RDPARTLIBPOSTFIX).lib wxpng$(WX3RDPARTLIBPOSTFIX).lib wxzlib$(WX3RDPARTLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,, borland$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpengine.res
+	c0w32.obj $(HTTPENGINETEST_OBJECTS),$@,, ..\lib\httpengine$(WXLIBPOSTFIX).lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,, borland$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpengine.res
 |
 
-borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_authdlg.obj: .\..\src\..\src\authdlg.cpp
+borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_authdlg.obj: .\..\src\authdlg.cpp
 	$(CXX) -q -c -P -o$@ $(HTTPENGINE_LIB_CXXFLAGS) $**
 
-borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_httpbuilder.obj: .\..\src\..\src\httpbuilder.cpp
+borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_httpbuilder.obj: .\..\src\httpbuilder.cpp
 	$(CXX) -q -c -P -o$@ $(HTTPENGINE_LIB_CXXFLAGS) $**
 
-borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_httpbuilderthread.obj: .\..\src\..\src\httpbuilderthread.cpp
+borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_httpbuilderthread.obj: .\..\src\httpbuilderthread.cpp
 	$(CXX) -q -c -P -o$@ $(HTTPENGINE_LIB_CXXFLAGS) $**
 
-borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_hyperlinkctrl.obj: .\..\src\..\src\hyperlinkctrl.cpp
+borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_hyperlinkctrl.obj: .\..\src\hyperlinkctrl.cpp
 	$(CXX) -q -c -P -o$@ $(HTTPENGINE_LIB_CXXFLAGS) $**
 
-borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_pleasewaitdlg.obj: .\..\src\..\src\pleasewaitdlg.cpp
+borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_pleasewaitdlg.obj: .\..\src\pleasewaitdlg.cpp
 	$(CXX) -q -c -P -o$@ $(HTTPENGINE_LIB_CXXFLAGS) $**
 
-borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_proxysettingsdlg.obj: .\..\src\..\src\proxysettingsdlg.cpp
+borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_proxysettingsdlg.obj: .\..\src\proxysettingsdlg.cpp
 	$(CXX) -q -c -P -o$@ $(HTTPENGINE_LIB_CXXFLAGS) $**
 
-borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_authdlg.obj: .\..\src\..\src\authdlg.cpp
+borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_authdlg.obj: .\..\src\authdlg.cpp
 	$(CXX) -q -c -P -o$@ $(HTTPENGINE_DLL_CXXFLAGS) $**
 
-borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_httpbuilder.obj: .\..\src\..\src\httpbuilder.cpp
+borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_httpbuilder.obj: .\..\src\httpbuilder.cpp
 	$(CXX) -q -c -P -o$@ $(HTTPENGINE_DLL_CXXFLAGS) $**
 
-borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_httpbuilderthread.obj: .\..\src\..\src\httpbuilderthread.cpp
+borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_httpbuilderthread.obj: .\..\src\httpbuilderthread.cpp
 	$(CXX) -q -c -P -o$@ $(HTTPENGINE_DLL_CXXFLAGS) $**
 
-borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_hyperlinkctrl.obj: .\..\src\..\src\hyperlinkctrl.cpp
+borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_hyperlinkctrl.obj: .\..\src\hyperlinkctrl.cpp
 	$(CXX) -q -c -P -o$@ $(HTTPENGINE_DLL_CXXFLAGS) $**
 
-borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_pleasewaitdlg.obj: .\..\src\..\src\pleasewaitdlg.cpp
+borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_pleasewaitdlg.obj: .\..\src\pleasewaitdlg.cpp
 	$(CXX) -q -c -P -o$@ $(HTTPENGINE_DLL_CXXFLAGS) $**
 
-borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_proxysettingsdlg.obj: .\..\src\..\src\proxysettingsdlg.cpp
+borland$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_proxysettingsdlg.obj: .\..\src\proxysettingsdlg.cpp
 	$(CXX) -q -c -P -o$@ $(HTTPENGINE_DLL_CXXFLAGS) $**
 
-borland$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpengineapp.obj: .\..\samples\..\sample\httpengineapp.cpp
+borland$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpengineapp.obj: .\..\sample\httpengineapp.cpp
 	$(CXX) -q -c -P -o$@ $(HTTPENGINETEST_CXXFLAGS) $**
 
-borland$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpenginedlg.obj: .\..\samples\..\sample\httpenginedlg.cpp
+borland$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpenginedlg.obj: .\..\sample\httpenginedlg.cpp
 	$(CXX) -q -c -P -o$@ $(HTTPENGINETEST_CXXFLAGS) $**
 
 borland$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpengine.res: .\..\sample\httpengine.rc

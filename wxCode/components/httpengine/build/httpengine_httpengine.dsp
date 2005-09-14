@@ -2,10 +2,10 @@
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
-# TARGTYPE "Win32 (x86) Static Library" 0x0104
 # TARGTYPE "Win32 (x86) Dynamic-Link Library" 0x0102
+# TARGTYPE "Win32 (x86) Static Library" 0x0104
 
-CFG=httpengine - Win32 Default
+CFG=httpengine - Win32 Release
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
@@ -14,18 +14,18 @@ CFG=httpengine - Win32 Default
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "httpengine_httpengine.mak" CFG="httpengine - Win32 Default"
+!MESSAGE NMAKE /f "httpengine_httpengine.mak" CFG="httpengine - Win32 Release"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
 !MESSAGE "httpengine - Win32 DLL Unicode Debug" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE "httpengine - Win32 DLL Unicode" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "httpengine - Win32 DLL Unicode Release" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "httpengine - Win32 DLL Debug" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE "httpengine - Win32 DLL" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "httpengine - Win32 DLL Release" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "httpengine - Win32 Unicode Debug" (based on "Win32 (x86) Static Library")
-!MESSAGE "httpengine - Win32 Unicode" (based on "Win32 (x86) Static Library")
+!MESSAGE "httpengine - Win32 Unicode Release" (based on "Win32 (x86) Static Library")
 !MESSAGE "httpengine - Win32 Debug" (based on "Win32 (x86) Static Library")
-!MESSAGE "httpengine - Win32 Default" (based on "Win32 (x86) Static Library")
+!MESSAGE "httpengine - Win32 Release" (based on "Win32 (x86) Static Library")
 !MESSAGE 
 
 # Begin Project
@@ -60,7 +60,7 @@ LINK32=link.exe
 # ADD BASE LINK32 wxbase26ud_net.lib wxmsw26ud_core.lib wxbase26ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /dll /machine:i386 /out:"..\lib\httpengineud.dll" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib" /implib:"..\lib\httpengineud.lib" /debug
 # ADD LINK32 wxbase26ud_net.lib wxmsw26ud_core.lib wxbase26ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /dll /machine:i386 /out:"..\lib\httpengineud.dll" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib" /implib:"..\lib\httpengineud.lib" /debug
 
-!ELSEIF  "$(CFG)" == "httpengine - Win32 DLL Unicode"
+!ELSEIF  "$(CFG)" == "httpengine - Win32 DLL Unicode Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -110,7 +110,7 @@ LINK32=link.exe
 # ADD BASE LINK32 wxbase26d_net.lib wxmsw26d_core.lib wxbase26d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /dll /machine:i386 /out:"..\lib\httpengined.dll" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib" /implib:"..\lib\httpengined.lib" /debug
 # ADD LINK32 wxbase26d_net.lib wxmsw26d_core.lib wxbase26d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /dll /machine:i386 /out:"..\lib\httpengined.dll" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib" /implib:"..\lib\httpengined.lib" /debug
 
-!ELSEIF  "$(CFG)" == "httpengine - Win32 DLL"
+!ELSEIF  "$(CFG)" == "httpengine - Win32 DLL Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -158,7 +158,7 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo /out:"..\lib\httpengineud.lib"
 # ADD LIB32 /nologo /out:"..\lib\httpengineud.lib"
 
-!ELSEIF  "$(CFG)" == "httpengine - Win32 Unicode"
+!ELSEIF  "$(CFG)" == "httpengine - Win32 Unicode Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -204,7 +204,7 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo /out:"..\lib\httpengined.lib"
 # ADD LIB32 /nologo /out:"..\lib\httpengined.lib"
 
-!ELSEIF  "$(CFG)" == "httpengine - Win32 Default"
+!ELSEIF  "$(CFG)" == "httpengine - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -232,39 +232,39 @@ LIB32=link.exe -lib
 # Begin Target
 
 # Name "httpengine - Win32 DLL Unicode Debug"
-# Name "httpengine - Win32 DLL Unicode"
+# Name "httpengine - Win32 DLL Unicode Release"
 # Name "httpengine - Win32 DLL Debug"
-# Name "httpengine - Win32 DLL"
+# Name "httpengine - Win32 DLL Release"
 # Name "httpengine - Win32 Unicode Debug"
-# Name "httpengine - Win32 Unicode"
+# Name "httpengine - Win32 Unicode Release"
 # Name "httpengine - Win32 Debug"
-# Name "httpengine - Win32 Default"
+# Name "httpengine - Win32 Release"
 # Begin Group "Source Files"
 
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=.\..\src\..\src\authdlg.cpp
+SOURCE=.\..\src\authdlg.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\..\src\..\src\httpbuilder.cpp
+SOURCE=.\..\src\httpbuilder.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\..\src\..\src\httpbuilderthread.cpp
+SOURCE=.\..\src\httpbuilderthread.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\..\src\..\src\hyperlinkctrl.cpp
+SOURCE=.\..\src\hyperlinkctrl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\..\src\..\src\pleasewaitdlg.cpp
+SOURCE=.\..\src\pleasewaitdlg.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\..\src\..\src\proxysettingsdlg.cpp
+SOURCE=.\..\src\proxysettingsdlg.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -272,31 +272,31 @@ SOURCE=.\..\src\..\src\proxysettingsdlg.cpp
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=.\..\include\..\include\wx\authdlg.h
+SOURCE=.\..\include\wx\authdlg.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\..\include\..\include\wx\base64.h
+SOURCE=.\..\include\wx\base64.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\..\include\..\include\wx\httpbuilder.h
+SOURCE=.\..\include\wx\httpbuilder.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\..\include\..\include\wx\httpbuilderthread.h
+SOURCE=.\..\include\wx\httpbuilderthread.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\..\include\..\include\wx\httpenginedef.h
+SOURCE=.\..\include\wx\httpenginedef.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\..\include\..\include\wx\hyperlinkctrl.h
+SOURCE=.\..\include\wx\hyperlinkctrl.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\..\include\..\include\wx\proxysettingsdlg.h
+SOURCE=.\..\include\wx\proxysettingsdlg.h
 # End Source File
 # End Group
 # End Target

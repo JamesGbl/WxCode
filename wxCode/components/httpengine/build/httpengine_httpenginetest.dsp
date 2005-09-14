@@ -4,7 +4,7 @@
 
 # TARGTYPE "Win32 (x86) Application" 0x0101
 
-CFG=httpenginetest - Win32 Default
+CFG=httpenginetest - Win32 Release
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
@@ -13,18 +13,18 @@ CFG=httpenginetest - Win32 Default
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "httpengine_httpenginetest.mak" CFG="httpenginetest - Win32 Default"
+!MESSAGE NMAKE /f "httpengine_httpenginetest.mak" CFG="httpenginetest - Win32 Release"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
 !MESSAGE "httpenginetest - Win32 DLL Unicode Debug" (based on "Win32 (x86) Application")
-!MESSAGE "httpenginetest - Win32 DLL Unicode" (based on "Win32 (x86) Application")
+!MESSAGE "httpenginetest - Win32 DLL Unicode Release" (based on "Win32 (x86) Application")
 !MESSAGE "httpenginetest - Win32 DLL Debug" (based on "Win32 (x86) Application")
-!MESSAGE "httpenginetest - Win32 DLL" (based on "Win32 (x86) Application")
+!MESSAGE "httpenginetest - Win32 DLL Release" (based on "Win32 (x86) Application")
 !MESSAGE "httpenginetest - Win32 Unicode Debug" (based on "Win32 (x86) Application")
-!MESSAGE "httpenginetest - Win32 Unicode" (based on "Win32 (x86) Application")
+!MESSAGE "httpenginetest - Win32 Unicode Release" (based on "Win32 (x86) Application")
 !MESSAGE "httpenginetest - Win32 Debug" (based on "Win32 (x86) Application")
-!MESSAGE "httpenginetest - Win32 Default" (based on "Win32 (x86) Application")
+!MESSAGE "httpenginetest - Win32 Release" (based on "Win32 (x86) Application")
 !MESSAGE 
 
 # Begin Project
@@ -60,7 +60,7 @@ LINK32=link.exe
 # ADD BASE LINK32 ..\lib\httpengineud.lib wxbase26ud_net.lib wxmsw26ud_core.lib wxbase26ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\httpenginetest.exe" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib" /subsystem:windows /debug
 # ADD LINK32 ..\lib\httpengineud.lib wxbase26ud_net.lib wxmsw26ud_core.lib wxbase26ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\httpenginetest.exe" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib" /subsystem:windows /debug
 
-!ELSEIF  "$(CFG)" == "httpenginetest - Win32 DLL Unicode"
+!ELSEIF  "$(CFG)" == "httpenginetest - Win32 DLL Unicode Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -110,7 +110,7 @@ LINK32=link.exe
 # ADD BASE LINK32 ..\lib\httpengined.lib wxbase26d_net.lib wxmsw26d_core.lib wxbase26d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\httpenginetest.exe" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib" /subsystem:windows /debug
 # ADD LINK32 ..\lib\httpengined.lib wxbase26d_net.lib wxmsw26d_core.lib wxbase26d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\httpenginetest.exe" /libpath:"$(WXWIN)\lib\vc_dll" /libpath:"..\lib" /subsystem:windows /debug
 
-!ELSEIF  "$(CFG)" == "httpenginetest - Win32 DLL"
+!ELSEIF  "$(CFG)" == "httpenginetest - Win32 DLL Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -160,7 +160,7 @@ LINK32=link.exe
 # ADD BASE LINK32 ..\lib\httpengineud.lib wxbase26ud_net.lib wxmsw26ud_core.lib wxbase26ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\httpenginetest.exe" /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\lib" /subsystem:windows /debug
 # ADD LINK32 ..\lib\httpengineud.lib wxbase26ud_net.lib wxmsw26ud_core.lib wxbase26ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\httpenginetest.exe" /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\lib" /subsystem:windows /debug
 
-!ELSEIF  "$(CFG)" == "httpenginetest - Win32 Unicode"
+!ELSEIF  "$(CFG)" == "httpenginetest - Win32 Unicode Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -210,7 +210,7 @@ LINK32=link.exe
 # ADD BASE LINK32 ..\lib\httpengined.lib wxbase26d_net.lib wxmsw26d_core.lib wxbase26d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\httpenginetest.exe" /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\lib" /subsystem:windows /debug
 # ADD LINK32 ..\lib\httpengined.lib wxbase26d_net.lib wxmsw26d_core.lib wxbase26d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /nologo /machine:i386 /out:"..\sample\httpenginetest.exe" /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\lib" /subsystem:windows /debug
 
-!ELSEIF  "$(CFG)" == "httpenginetest - Win32 Default"
+!ELSEIF  "$(CFG)" == "httpenginetest - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -240,13 +240,13 @@ LINK32=link.exe
 # Begin Target
 
 # Name "httpenginetest - Win32 DLL Unicode Debug"
-# Name "httpenginetest - Win32 DLL Unicode"
+# Name "httpenginetest - Win32 DLL Unicode Release"
 # Name "httpenginetest - Win32 DLL Debug"
-# Name "httpenginetest - Win32 DLL"
+# Name "httpenginetest - Win32 DLL Release"
 # Name "httpenginetest - Win32 Unicode Debug"
-# Name "httpenginetest - Win32 Unicode"
+# Name "httpenginetest - Win32 Unicode Release"
 # Name "httpenginetest - Win32 Debug"
-# Name "httpenginetest - Win32 Default"
+# Name "httpenginetest - Win32 Release"
 # Begin Group "Source Files"
 
 # PROP Default_Filter ""
@@ -256,11 +256,11 @@ SOURCE=.\..\sample\httpengine.rc
 # End Source File
 # Begin Source File
 
-SOURCE=.\..\samples\..\sample\httpengineapp.cpp
+SOURCE=.\..\sample\httpengineapp.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\..\samples\..\sample\httpenginedlg.cpp
+SOURCE=.\..\sample\httpenginedlg.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -268,11 +268,11 @@ SOURCE=.\..\samples\..\sample\httpenginedlg.cpp
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=.\..\samples\..\sample\httpengineapp.h
+SOURCE=.\..\sample\httpengineapp.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\..\samples\..\sample\httpenginedlg.h
+SOURCE=.\..\sample\httpenginedlg.h
 # End Source File
 # End Group
 # End Target
