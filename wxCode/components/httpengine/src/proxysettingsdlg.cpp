@@ -225,7 +225,9 @@ wxString wxProxySettingsDlg::GetPassword()
 //! Get exceptions string
 wxString wxProxySettingsDlg::GetHostExceptions()
 {
-  if (m_tcExceptions) return m_tcExceptions->GetValue();
+  if (m_tcExceptions) 
+	  return m_tcExceptions->GetValue();
+  return wxEmptyString;
 }
 
 wxProxySettings wxProxySettingsDlg::GetProxySettings(void)
