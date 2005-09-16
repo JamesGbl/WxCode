@@ -2,7 +2,7 @@
 
 <!-- Created by: Francesco Montorsi <frm@users.sourceforge.net>                  -->
 <!-- Creation date: 9/10/2004                                                    -->
-<!-- RCS-ID: $Id: Bakefiles.bkgen,v 1.1 2005-08-04 12:18:24 frm Exp $   -->
+<!-- RCS-ID: $Id: Bakefiles.bkgen,v 1.2 2005-09-16 10:00:33 frm Exp $   -->
 
 <bakefile-gen>
 
@@ -14,6 +14,15 @@
     <add-formats>autoconf,borland,dmars_smake,dmars,mingw,msvc,msvc6prj,msevc4prj,watcom,cbuilderx,cbx_unix</add-formats>
 
     <!-- required since wxCode uses wx presets stored in wxWidgets subfolders... -->
-    <add-flags>-I%WXWIN%\build\bakefiles\wxpresets</add-flags>
+    <add-flags>-I%WXWIN%/build/bakefiles/wxpresets</add-flags>
+
+	<!-- since it's standard on Unix to have Makefile.in and the configure script in
+	     the root folder of the component to build, we put Makefile.in one directory up -->
+    <add-flags formats="autoconf">
+        -o../Makefile.in
+    </add-flags>
+    <add-flags formats="autoconf">
+        -DAUTOCONF_MACROS_FILE=autoconf_inc.m4
+    </add-flags>
     
 </bakefile-gen>
