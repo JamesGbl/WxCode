@@ -43,14 +43,14 @@ WX_LIBS = @WX_LIBS@
 ### Variables: ###
 
 DESTDIR = 
-LCDWINDOW_LIB_CXXFLAGS = -I../include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+LCDWINDOW_LIB_CXXFLAGS = -I./include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 LCDWINDOW_LIB_OBJECTS =  \
 	lcdwindow_lib_lcdwindow.o
-LCDWINDOW_DLL_CXXFLAGS = -I../include -DWXMAKINGDLL_LCDWINDOW $(PIC_FLAG) \
+LCDWINDOW_DLL_CXXFLAGS = -I./include -DWXMAKINGDLL_LCDWINDOW $(PIC_FLAG) \
 	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 LCDWINDOW_DLL_OBJECTS =  \
 	lcdwindow_dll_lcdwindow.o
-MINIMAL_CXXFLAGS =   -I../include  $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_CXXFLAGS =   -I./include  $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	minimal_lcdsampleapp.o \
 	minimal_lcdsampleframe.o \
@@ -61,19 +61,18 @@ MINIMAL_OBJECTS =  \
 @COND_DEPS_TRACKING_0@CXXC = $(CXX)
 @COND_DEPS_TRACKING_1@CXXC = $(top_builddir)./bk-deps $(CXX)
 @COND_WX_SHARED_0@__lcdwindow_lib___depname = \
-@COND_WX_SHARED_0@	../lib/$(LIBPREFIX)LCDWindow$(LIBEXT)
+@COND_WX_SHARED_0@	./lib/$(LIBPREFIX)lcdwindow$(LIBEXT)
 @COND_WX_SHARED_0@__install_lcdwindow_lib___depname = install_lcdwindow_lib
 @COND_WX_SHARED_1@__lcdwindow_dll___depname = \
-@COND_WX_SHARED_1@	../lib/$(DLLPREFIX)LCDWindow$(__lcdwindow_dll___targetsuf3)
+@COND_WX_SHARED_1@	./lib/$(DLLPREFIX)lcdwindow$(__lcdwindow_dll___targetsuf3)
 @COND_WX_SHARED_1@__install_lcdwindow_dll___depname = install_lcdwindow_dll
 COND_PLATFORM_MACOSX_1___lcdwindow_dll___macinstnamecmd = -install_name \
-	$(libdir)/$(DLLPREFIX)LCDWindow$(__lcdwindow_dll___targetsuf2)
+	$(libdir)/$(DLLPREFIX)lcdwindow$(__lcdwindow_dll___targetsuf2)
 @COND_PLATFORM_MACOSX_1@__lcdwindow_dll___macinstnamecmd = $(COND_PLATFORM_MACOSX_1___lcdwindow_dll___macinstnamecmd)
 @COND_PLATFORM_OS2_1@__lcdwindow_dll___importlib = \
-@COND_PLATFORM_OS2_1@	-import \
-@COND_PLATFORM_OS2_1@	../lib/$(LIBPREFIX)LCDWindow.$(DLLIMP_SUFFIX)
+@COND_PLATFORM_OS2_1@	-import ./lib/$(LIBPREFIX)lcdwindow.$(DLLIMP_SUFFIX)
 @COND_WINDOWS_IMPLIB_1@__lcdwindow_dll___importlib = \
-@COND_WINDOWS_IMPLIB_1@	-Wl,--out-implib,../lib/$(LIBPREFIX)LCDWindow.$(DLLIMP_SUFFIX)
+@COND_WINDOWS_IMPLIB_1@	-Wl,--out-implib,./lib/$(LIBPREFIX)lcdwindow.$(DLLIMP_SUFFIX)
 @COND_PLATFORM_MACOSX_0_USE_SOVERSION_1@__lcdwindow_dll___targetsuf2 \
 @COND_PLATFORM_MACOSX_0_USE_SOVERSION_1@	= .$(SO_SUFFIX).0
 @COND_PLATFORM_MACOSX_1_USE_SOVERSION_1@__lcdwindow_dll___targetsuf2 \
@@ -89,25 +88,25 @@ COND_PLATFORM_MACOSX_1___lcdwindow_dll___macinstnamecmd = -install_name \
 @COND_USE_SOVERSION_0@__lcdwindow_dll___targetsuf3 = .$(SO_SUFFIX)
 @COND_USE_SOVERLINUX_1@__lcdwindow_dll___soname_flags \
 @COND_USE_SOVERLINUX_1@	= \
-@COND_USE_SOVERLINUX_1@	$(SONAME_FLAG)$(DLLPREFIX)LCDWindow$(__lcdwindow_dll___targetsuf2)
+@COND_USE_SOVERLINUX_1@	$(SONAME_FLAG)$(DLLPREFIX)lcdwindow$(__lcdwindow_dll___targetsuf2)
 @COND_USE_SOVERSOLARIS_1@__lcdwindow_dll___soname_flags \
 @COND_USE_SOVERSOLARIS_1@	= \
-@COND_USE_SOVERSOLARIS_1@	$(SONAME_FLAG)$(DLLPREFIX)LCDWindow$(__lcdwindow_dll___targetsuf3)
-COND_USE_SOSYMLINKS_1___lcdwindow_dll___so_symlinks_cmd = (cd ../lib/; rm -f \
-	$(LIBPREFIX)LCDWindow.$(DLLIMP_SUFFIX) \
-	$(DLLPREFIX)LCDWindow$(__lcdwindow_dll___targetsuf2); $(LN_S) \
-	$(DLLPREFIX)LCDWindow$(__lcdwindow_dll___targetsuf3) \
-	$(DLLPREFIX)LCDWindow$(__lcdwindow_dll___targetsuf2); $(LN_S) \
-	$(DLLPREFIX)LCDWindow$(__lcdwindow_dll___targetsuf2) \
-	$(LIBPREFIX)LCDWindow.$(DLLIMP_SUFFIX))
+@COND_USE_SOVERSOLARIS_1@	$(SONAME_FLAG)$(DLLPREFIX)lcdwindow$(__lcdwindow_dll___targetsuf3)
+COND_USE_SOSYMLINKS_1___lcdwindow_dll___so_symlinks_cmd = (cd ./lib/; rm -f \
+	$(LIBPREFIX)lcdwindow.$(DLLIMP_SUFFIX) \
+	$(DLLPREFIX)lcdwindow$(__lcdwindow_dll___targetsuf2); $(LN_S) \
+	$(DLLPREFIX)lcdwindow$(__lcdwindow_dll___targetsuf3) \
+	$(DLLPREFIX)lcdwindow$(__lcdwindow_dll___targetsuf2); $(LN_S) \
+	$(DLLPREFIX)lcdwindow$(__lcdwindow_dll___targetsuf2) \
+	$(LIBPREFIX)lcdwindow.$(DLLIMP_SUFFIX))
 @COND_USE_SOSYMLINKS_1@__lcdwindow_dll___so_symlinks_cmd = $(COND_USE_SOSYMLINKS_1___lcdwindow_dll___so_symlinks_cmd)
 COND_USE_SOSYMLINKS_1___lcdwindow_dll___so_symlinks_inst_cmd = rm -f \
-	$(LIBPREFIX)LCDWindow.$(DLLIMP_SUFFIX) \
-	$(DLLPREFIX)LCDWindow$(__lcdwindow_dll___targetsuf2); $(LN_S) \
-	$(DLLPREFIX)LCDWindow$(__lcdwindow_dll___targetsuf3) \
-	$(DLLPREFIX)LCDWindow$(__lcdwindow_dll___targetsuf2); $(LN_S) \
-	$(DLLPREFIX)LCDWindow$(__lcdwindow_dll___targetsuf2) \
-	$(LIBPREFIX)LCDWindow.$(DLLIMP_SUFFIX)
+	$(LIBPREFIX)lcdwindow.$(DLLIMP_SUFFIX) \
+	$(DLLPREFIX)lcdwindow$(__lcdwindow_dll___targetsuf2); $(LN_S) \
+	$(DLLPREFIX)lcdwindow$(__lcdwindow_dll___targetsuf3) \
+	$(DLLPREFIX)lcdwindow$(__lcdwindow_dll___targetsuf2); $(LN_S) \
+	$(DLLPREFIX)lcdwindow$(__lcdwindow_dll___targetsuf2) \
+	$(LIBPREFIX)lcdwindow.$(DLLIMP_SUFFIX)
 @COND_USE_SOSYMLINKS_1@__lcdwindow_dll___so_symlinks_inst_cmd = $(COND_USE_SOSYMLINKS_1___lcdwindow_dll___so_symlinks_inst_cmd)
 @COND_PLATFORM_MACOSX_1@__lcdwindow_dll___macver = \
 @COND_PLATFORM_MACOSX_1@	-compatibility_version 0 -current_version 0
@@ -119,67 +118,67 @@ COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd = $(NM) minimal$(EXEEXT) | if \
 
 ### Targets: ###
 
-all: $(__lcdwindow_lib___depname) $(__lcdwindow_dll___depname) ../samples/minimal$(EXEEXT)
+all: $(__lcdwindow_lib___depname) $(__lcdwindow_dll___depname) ./samples/minimal$(EXEEXT)
 
 install: all install-wxheaders $(__install_lcdwindow_lib___depname) $(__install_lcdwindow_dll___depname)
 
 uninstall: 
-	rm -f  $(DESTDIR)$(includedir)/wx/lcdwindow.h
-	rm -f $(libdir)/*LCDWindow*
+	rm -f $(DESTDIR)$(includedir)/wx/lcdwindow.h
+	rm -f $(libdir)/*lcdwindow*
 
 install-strip: install
-	$(STRIP) $(DESTDIR)$(libdir)/$(DLLPREFIX)LCDWindow$(__lcdwindow_dll___targetsuf3)
+	$(STRIP) $(DESTDIR)$(libdir)/$(DLLPREFIX)lcdwindow$(__lcdwindow_dll___targetsuf3)
 
 clean: 
 	rm -rf ./.deps ./.pch
 	rm -f ./*.o
-	rm -f ../lib/$(LIBPREFIX)LCDWindow$(LIBEXT)
-	rm -f ../lib/$(DLLPREFIX)LCDWindow$(__lcdwindow_dll___targetsuf3)
-	rm -f ../lib/$(LIBPREFIX)LCDWindow.$(DLLIMP_SUFFIX)
-	rm -f ../lib/$(LIBPREFIX)LCDWindow.$(DLLIMP_SUFFIX) ../lib/$(DLLPREFIX)LCDWindow$(__lcdwindow_dll___targetsuf2)
-	rm -f ../samples/minimal$(EXEEXT)
+	rm -f ./lib/$(LIBPREFIX)lcdwindow$(LIBEXT)
+	rm -f ./lib/$(DLLPREFIX)lcdwindow$(__lcdwindow_dll___targetsuf3)
+	rm -f ./lib/$(LIBPREFIX)lcdwindow.$(DLLIMP_SUFFIX)
+	rm -f ./lib/$(LIBPREFIX)lcdwindow.$(DLLIMP_SUFFIX) ./lib/$(DLLPREFIX)lcdwindow$(__lcdwindow_dll___targetsuf2)
+	rm -f ./samples/minimal$(EXEEXT)
 
 distclean: clean
 	rm -f config.cache config.log config.status bk-deps bk-make-pch shared-ld-sh Makefile
 
 tarball: 
-	( cd .. && tar -cvzf ../LCDWindow.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
+	( cd . && tar -cvzf ../lcdwindow.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
 
 zip: 
-	( cd .. && zip -r9 ../LCDWindow.zip *  -x *.pdb -x *.log -x *.o* )
+	( cd . && zip -r9 ../lcdwindow.zip *  -x *.pdb -x *.log -x *.o* )
 
 deepclean: 
-	rm -f -r ../*.a
-	rm -f -r ../*.lib
-	rm -f -r ../*.pdb
-	rm -f -r ../*.dll
-	rm -f -r ../*.exp
-	rm -f -r ../*.so*
-	rm -f -r ../*.exe
-	rm -f -r ../*.obj
-	rm -f -r ../*.o
-	rm -f -r ../*.log
-	rm -f -r ../*.manifest*
-	rm -f -r ../*.log
-	rm -f -r ../.bakefile_gen.state
-	rm -f -r ../*.pch
-	rm -f -r ../*.ncb
-	rm -f -r ../*.plg
-	rm -f -r ../*.ncb
-	rm -f -r ../*.aps
-	rm -f -r ../*.suo
-	rm -f -r ../*.user
-	rm -f -r ../*.res
-	rm -f -r ../*.il?
-	rm -f -r ../*.tds
-	rm -f -r ../*.idb
-	rm -f -r ../*.map
-	rm -rf ../autom4te.cache
-	rm -rf ../.deps
-	rm -f -r ../config.status
-	rm -f -r ../config.log
-	rm -f -r ../Makefile
-	rm -f -r ../bk-deps
+	rm -f -r ./*.a
+	rm -f -r ./*.lib
+	rm -f -r ./*.pdb
+	rm -f -r ./*.dll
+	rm -f -r ./*.exp
+	rm -f -r ./*.so*
+	rm -f -r ./*.exe
+	rm -f -r ./*.obj
+	rm -f -r ./*.o
+	rm -f -r ./*.log
+	rm -f -r ./*.manifest*
+	rm -f -r ./*.log
+	rm -f -r ./.bakefile_gen.state
+	rm -f -r ./*.pch
+	rm -f -r ./*.ncb
+	rm -f -r ./*.plg
+	rm -f -r ./*.ncb
+	rm -f -r ./*.aps
+	rm -f -r ./*.suo
+	rm -f -r ./*.user
+	rm -f -r ./*.res
+	rm -f -r ./*.il?
+	rm -f -r ./*.tds
+	rm -f -r ./*.idb
+	rm -f -r ./*.map
+	rm -rf ./autom4te.cache
+	rm -rf ./.deps
+	rm -f -r ./config.status
+	rm -f -r ./config.log
+	rm -f -r ./Makefile
+	rm -f -r ./bk-deps
 	rm -f -r ./*.a
 	rm -f -r ./*.lib
 	rm -f -r ./*.pdb
@@ -213,55 +212,55 @@ deepclean:
 	rm -f -r ./bk-deps
 
 docs: 
-	( cd ../docs && doxygen )
+	( cd ./docs && doxygen )
 
 cleandocs: 
-	rm -rf ../docs/html
+	rm -rf ./docs/html
 
 install-wxheaders: 
 	$(INSTALL_DIR) $(DESTDIR)$(includedir)/wx
-	(cd $(srcdir) ; $(INSTALL_DATA)  ../include/wx/*.h $(DESTDIR)$(includedir)/wx)
+	(cd $(srcdir) ; $(INSTALL_DATA)  ./include/wx/*.h $(DESTDIR)$(includedir)/wx)
 
-@COND_WX_SHARED_0@../lib/$(LIBPREFIX)LCDWindow$(LIBEXT): $(LCDWINDOW_LIB_OBJECTS)
+@COND_WX_SHARED_0@./lib/$(LIBPREFIX)lcdwindow$(LIBEXT): $(LCDWINDOW_LIB_OBJECTS)
 @COND_WX_SHARED_0@	rm -f $@
 @COND_WX_SHARED_0@	$(AR) rcu $@ $(LCDWINDOW_LIB_OBJECTS)
 @COND_WX_SHARED_0@	$(RANLIB) $@
 
 @COND_WX_SHARED_0@install_lcdwindow_lib: 
 @COND_WX_SHARED_0@	$(INSTALL_DIR) $(DESTDIR)$(libdir)
-@COND_WX_SHARED_0@	$(INSTALL_DATA) ../lib/$(LIBPREFIX)LCDWindow$(LIBEXT) $(DESTDIR)$(libdir)
+@COND_WX_SHARED_0@	$(INSTALL_DATA) ./lib/$(LIBPREFIX)lcdwindow$(LIBEXT) $(DESTDIR)$(libdir)
 
-@COND_WX_SHARED_1@../lib/$(DLLPREFIX)LCDWindow$(__lcdwindow_dll___targetsuf3): $(LCDWINDOW_DLL_OBJECTS)
-@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(LCDWINDOW_DLL_OBJECTS) $(LDFLAGS) -L../lib $(__lcdwindow_dll___macinstnamecmd) $(__lcdwindow_dll___importlib) $(__lcdwindow_dll___soname_flags) $(__lcdwindow_dll___macver)  $(WX_LIBS)
+@COND_WX_SHARED_1@./lib/$(DLLPREFIX)lcdwindow$(__lcdwindow_dll___targetsuf3): $(LCDWINDOW_DLL_OBJECTS)
+@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(LCDWINDOW_DLL_OBJECTS) $(LDFLAGS) -L./lib $(__lcdwindow_dll___macinstnamecmd) $(__lcdwindow_dll___importlib) $(__lcdwindow_dll___soname_flags) $(__lcdwindow_dll___macver)  $(WX_LIBS)
 @COND_WX_SHARED_1@	
 @COND_WX_SHARED_1@	$(__lcdwindow_dll___so_symlinks_cmd)
 
 @COND_WX_SHARED_1@install_lcdwindow_dll: 
 @COND_WX_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(libdir)
-@COND_WX_SHARED_1@	$(INSTALL_DATA) ../lib/$(LIBPREFIX)LCDWindow.$(DLLIMP_SUFFIX) $(DESTDIR)$(libdir)
-@COND_WX_SHARED_1@	$(INSTALL_PROGRAM) ../lib/$(DLLPREFIX)LCDWindow$(__lcdwindow_dll___targetsuf3) $(DESTDIR)$(libdir)
+@COND_WX_SHARED_1@	$(INSTALL_DATA) ./lib/$(LIBPREFIX)lcdwindow.$(DLLIMP_SUFFIX) $(DESTDIR)$(libdir)
+@COND_WX_SHARED_1@	$(INSTALL_PROGRAM) ./lib/$(DLLPREFIX)lcdwindow$(__lcdwindow_dll___targetsuf3) $(DESTDIR)$(libdir)
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__lcdwindow_dll___so_symlinks_inst_cmd))
 
-../samples/minimal$(EXEEXT): $(MINIMAL_OBJECTS) $(__lcdwindow_lib___depname)
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) -L../lib $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS) -lLCDWindow
+./samples/minimal$(EXEEXT): $(MINIMAL_OBJECTS) $(__lcdwindow_lib___depname)
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) -L./lib $(LDFLAGS) -L./lib $(LDFLAGS_GUI)  $(WX_LIBS) -llcdwindow
 	
 	$(__minimal___mac_setfilecmd)
 	$(__minimal___os2_emxbindcmd)
 
-lcdwindow_lib_lcdwindow.o: $(srcdir)/../src/lcdwindow.cpp
-	$(CXXC) -c -o $@ $(LCDWINDOW_LIB_CXXFLAGS) $(srcdir)/../src/lcdwindow.cpp
+lcdwindow_lib_lcdwindow.o: $(srcdir)/./src/lcdwindow.cpp
+	$(CXXC) -c -o $@ $(LCDWINDOW_LIB_CXXFLAGS) $(srcdir)/./src/lcdwindow.cpp
 
-lcdwindow_dll_lcdwindow.o: $(srcdir)/../src/lcdwindow.cpp
-	$(CXXC) -c -o $@ $(LCDWINDOW_DLL_CXXFLAGS) $(srcdir)/../src/lcdwindow.cpp
+lcdwindow_dll_lcdwindow.o: $(srcdir)/./src/lcdwindow.cpp
+	$(CXXC) -c -o $@ $(LCDWINDOW_DLL_CXXFLAGS) $(srcdir)/./src/lcdwindow.cpp
 
-minimal_lcdsampleapp.o: $(srcdir)/../samples/lcdsampleapp.cpp
-	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/../samples/lcdsampleapp.cpp
+minimal_lcdsampleapp.o: $(srcdir)/./samples/lcdsampleapp.cpp
+	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/./samples/lcdsampleapp.cpp
 
-minimal_lcdsampleframe.o: $(srcdir)/../samples/lcdsampleframe.cpp
-	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/../samples/lcdsampleframe.cpp
+minimal_lcdsampleframe.o: $(srcdir)/./samples/lcdsampleframe.cpp
+	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/./samples/lcdsampleframe.cpp
 
-minimal_clockthread.o: $(srcdir)/../samples/clockthread.cpp
-	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/../samples/clockthread.cpp
+minimal_clockthread.o: $(srcdir)/./samples/clockthread.cpp
+	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/./samples/clockthread.cpp
 
 
 # Include dependency info, if present:

@@ -66,11 +66,11 @@ WX3RDPARTYLIBPOSTFIX = d
 !endif
 __lcdwindow_lib___depname =
 !ifeq WX_SHARED 0
-__lcdwindow_lib___depname = ..\lib\LCDWindow$(WXLIBPOSTFIX).lib
+__lcdwindow_lib___depname = ..\lib\lcdwindow$(WXLIBPOSTFIX).lib
 !endif
 __lcdwindow_dll___depname =
 !ifeq WX_SHARED 1
-__lcdwindow_dll___depname = ..\lib\LCDWindow$(WXLIBPOSTFIX).dll
+__lcdwindow_dll___depname = ..\lib\lcdwindow$(WXLIBPOSTFIX).dll
 !endif
 __WARNINGS =
 !ifeq WX_DEBUG 0
@@ -175,18 +175,18 @@ clean : .SYMBOLIC
 	-if exist watcom\*.lbc del watcom\*.lbc
 	-if exist watcom\*.ilk del watcom\*.ilk
 	-if exist watcom\*.pch del watcom\*.pch
-	-if exist ..\lib\LCDWindow$(WXLIBPOSTFIX).lib del ..\lib\LCDWindow$(WXLIBPOSTFIX).lib
-	-if exist ..\lib\LCDWindow$(WXLIBPOSTFIX).dll del ..\lib\LCDWindow$(WXLIBPOSTFIX).dll
-	-if exist ..\lib\LCDWindow$(WXLIBPOSTFIX).lib del ..\lib\LCDWindow$(WXLIBPOSTFIX).lib
+	-if exist ..\lib\lcdwindow$(WXLIBPOSTFIX).lib del ..\lib\lcdwindow$(WXLIBPOSTFIX).lib
+	-if exist ..\lib\lcdwindow$(WXLIBPOSTFIX).dll del ..\lib\lcdwindow$(WXLIBPOSTFIX).dll
+	-if exist ..\lib\lcdwindow$(WXLIBPOSTFIX).lib del ..\lib\lcdwindow$(WXLIBPOSTFIX).lib
 	-if exist ..\samples\minimal.exe del ..\samples\minimal.exe
 
 tarball :  
 	-cd ..
-	-tar -cvzf ..\LCDWindow.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* *
+	-tar -cvzf ..\lcdwindow.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* *
 
 zip :  
 	-cd ..
-	-zip -r9 ..\LCDWindow.zip *  -x *.pdb -x *.log -x *.o*
+	-zip -r9 ..\lcdwindow.zip *  -x *.pdb -x *.log -x *.o*
 
 deepclean :  
 	-del /S ..\*.a
@@ -260,14 +260,14 @@ cleandocs :
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
 !ifeq WX_SHARED 0
-..\lib\LCDWindow$(WXLIBPOSTFIX).lib :  $(LCDWINDOW_LIB_OBJECTS)
+..\lib\lcdwindow$(WXLIBPOSTFIX).lib :  $(LCDWINDOW_LIB_OBJECTS)
 	@%create watcom\lcdwindow_lib.lbc
 	@for %i in ($(LCDWINDOW_LIB_OBJECTS)) do @%append watcom\lcdwindow_lib.lbc +%i
 	wlib -q -p4096 -n -b $^@ @watcom\lcdwindow_lib.lbc
 !endif
 
 !ifeq WX_SHARED 1
-..\lib\LCDWindow$(WXLIBPOSTFIX).dll :  $(LCDWINDOW_DLL_OBJECTS)
+..\lib\lcdwindow$(WXLIBPOSTFIX).dll :  $(LCDWINDOW_DLL_OBJECTS)
 	@%create watcom\lcdwindow_dll.lbc
 	@%append watcom\lcdwindow_dll.lbc option quiet
 	@%append watcom\lcdwindow_dll.lbc name $^@
@@ -278,7 +278,7 @@ cleandocs :
 	@%append watcom\lcdwindow_dll.lbc
 	@%append watcom\lcdwindow_dll.lbc system nr_dll
 	wlink @watcom\lcdwindow_dll.lbc
-	wlib -q -n -b ..\lib\LCDWindow$(WXLIBPOSTFIX).lib +$^@
+	wlib -q -n -b ..\lib\lcdwindow$(WXLIBPOSTFIX).lib +$^@
 !endif
 
 ..\samples\minimal.exe :  $(MINIMAL_OBJECTS) $(__lcdwindow_lib___depname)
@@ -288,7 +288,7 @@ cleandocs :
 	@%append watcom\minimal.lbc option caseexact
 	@%append watcom\minimal.lbc $(LDFLAGS) $(__DEBUGINFO_1)  libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib system nt_win ref '_WinMain@16'
 	@for %i in ($(MINIMAL_OBJECTS)) do @%append watcom\minimal.lbc file %i
-	@for %i in ( ..\lib\LCDWindow$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\minimal.lbc library %i
+	@for %i in ( ..\lib\lcdwindow$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\minimal.lbc library %i
 	@%append watcom\minimal.lbc
 	wlink @watcom\minimal.lbc
 

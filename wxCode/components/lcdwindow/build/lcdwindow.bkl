@@ -2,7 +2,7 @@
 
 <!-- Created by: Francesco Montorsi <frm@users.sourceforge.net>     -->
 <!-- Creation date: 9/10/2004                                       -->
-<!-- RCS-ID: $Id: lcdwindow.bkl,v 1.3 2005-09-04 18:45:53 frm Exp $        -->
+<!-- RCS-ID: $Id: lcdwindow.bkl,v 1.4 2005-09-16 10:19:32 frm Exp $        -->
 
 <makefile>
 
@@ -16,8 +16,7 @@
 
 	<set var="COMP_NAME">lcdwindow</set>
 	<set var="COMP_SRC">lcdwindow.cpp</set>
-	<set var="COMP_HDR">wx/lcdwindow.h</set>
-	<set var="COMP_SAMPLE_DIR">../samples</set>
+	<set var="COMP_HDR">wx/lcdwindow.h</set>	
 	<set var="COMP_SAMPLE_SRC">lcdsampleapp.cpp lcdsampleframe.cpp clockthread.cpp</set>
 	<set var="COMP_SAMPLE_HDR">lcdsampleapp.h lcdsampleframe.h clockthread.h</set>
 

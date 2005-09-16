@@ -102,10 +102,10 @@ MINIMAL_OBJECTS =  \
 WX3RDPARTYLIBPOSTFIX = d
 !endif
 !if "$(WX_SHARED)" == "0"
-__lcdwindow_lib___depname = ..\lib\LCDWindow$(WXLIBPOSTFIX).lib
+__lcdwindow_lib___depname = ..\lib\lcdwindow$(WXLIBPOSTFIX).lib
 !endif
 !if "$(WX_SHARED)" == "1"
-__lcdwindow_dll___depname = ..\lib\LCDWindow$(WXLIBPOSTFIX).dll
+__lcdwindow_dll___depname = ..\lib\lcdwindow$(WXLIBPOSTFIX).dll
 !endif
 !if "$(WX_DEBUG)" == "0"
 __OPTIMIZEFLAG_1 = -O2
@@ -157,14 +157,14 @@ clean:
 	-if exist borland\*.obj del borland\*.obj
 	-if exist borland\*.res del borland\*.res
 	-if exist borland\*.csm del borland\*.csm
-	-if exist ..\lib\LCDWindow$(WXLIBPOSTFIX).lib del ..\lib\LCDWindow$(WXLIBPOSTFIX).lib
-	-if exist ..\lib\LCDWindow$(WXLIBPOSTFIX).dll del ..\lib\LCDWindow$(WXLIBPOSTFIX).dll
-	-if exist ..\lib\LCDWindow$(WXLIBPOSTFIX).tds del ..\lib\LCDWindow$(WXLIBPOSTFIX).tds
-	-if exist ..\lib\LCDWindow$(WXLIBPOSTFIX).ilc del ..\lib\LCDWindow$(WXLIBPOSTFIX).ilc
-	-if exist ..\lib\LCDWindow$(WXLIBPOSTFIX).ild del ..\lib\LCDWindow$(WXLIBPOSTFIX).ild
-	-if exist ..\lib\LCDWindow$(WXLIBPOSTFIX).ilf del ..\lib\LCDWindow$(WXLIBPOSTFIX).ilf
-	-if exist ..\lib\LCDWindow$(WXLIBPOSTFIX).ils del ..\lib\LCDWindow$(WXLIBPOSTFIX).ils
-	-if exist ..\lib\LCDWindow$(WXLIBPOSTFIX).lib del ..\lib\LCDWindow$(WXLIBPOSTFIX).lib
+	-if exist ..\lib\lcdwindow$(WXLIBPOSTFIX).lib del ..\lib\lcdwindow$(WXLIBPOSTFIX).lib
+	-if exist ..\lib\lcdwindow$(WXLIBPOSTFIX).dll del ..\lib\lcdwindow$(WXLIBPOSTFIX).dll
+	-if exist ..\lib\lcdwindow$(WXLIBPOSTFIX).tds del ..\lib\lcdwindow$(WXLIBPOSTFIX).tds
+	-if exist ..\lib\lcdwindow$(WXLIBPOSTFIX).ilc del ..\lib\lcdwindow$(WXLIBPOSTFIX).ilc
+	-if exist ..\lib\lcdwindow$(WXLIBPOSTFIX).ild del ..\lib\lcdwindow$(WXLIBPOSTFIX).ild
+	-if exist ..\lib\lcdwindow$(WXLIBPOSTFIX).ilf del ..\lib\lcdwindow$(WXLIBPOSTFIX).ilf
+	-if exist ..\lib\lcdwindow$(WXLIBPOSTFIX).ils del ..\lib\lcdwindow$(WXLIBPOSTFIX).ils
+	-if exist ..\lib\lcdwindow$(WXLIBPOSTFIX).lib del ..\lib\lcdwindow$(WXLIBPOSTFIX).lib
 	-if exist ..\samples\minimal.exe del ..\samples\minimal.exe
 	-if exist ..\samples\minimal.tds del ..\samples\minimal.tds
 	-if exist ..\samples\minimal.ilc del ..\samples\minimal.ilc
@@ -174,11 +174,11 @@ clean:
 
 tarball: 
 	-cd ..
-	-tar -cvzf ..\LCDWindow.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* *
+	-tar -cvzf ..\lcdwindow.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* *
 
 zip: 
 	-cd ..
-	-zip -r9 ..\LCDWindow.zip *  -x *.pdb -x *.log -x *.o*
+	-zip -r9 ..\lcdwindow.zip *  -x *.pdb -x *.log -x *.o*
 
 deepclean: 
 	-del /S ..\*.a
@@ -252,7 +252,7 @@ cleandocs:
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
 !if "$(WX_SHARED)" == "0"
-..\lib\LCDWindow$(WXLIBPOSTFIX).lib: $(LCDWINDOW_LIB_OBJECTS)
+..\lib\lcdwindow$(WXLIBPOSTFIX).lib: $(LCDWINDOW_LIB_OBJECTS)
 	if exist $@ del $@
 	tlib /a /p4096 $@ @&&|
 	$(LCDWINDOW_LIB_OBJECTS)
@@ -260,16 +260,16 @@ cleandocs:
 !endif
 
 !if "$(WX_SHARED)" == "1"
-..\lib\LCDWindow$(WXLIBPOSTFIX).dll: $(LCDWINDOW_DLL_OBJECTS)
+..\lib\lcdwindow$(WXLIBPOSTFIX).dll: $(LCDWINDOW_DLL_OBJECTS)
 	ilink32 -Tpd -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib @&&|
 	c0d32.obj $(LCDWINDOW_DLL_OBJECTS),$@,, wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
 |
-	implib -f ..\lib\LCDWindow$(WXLIBPOSTFIX) $@
+	implib -f ..\lib\lcdwindow$(WXLIBPOSTFIX) $@
 !endif
 
 ..\samples\minimal.exe: $(MINIMAL_OBJECTS) $(__lcdwindow_lib___depname)
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -aa @&&|
-	c0w32.obj $(MINIMAL_OBJECTS),$@,, ..\lib\LCDWindow$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
+	c0w32.obj $(MINIMAL_OBJECTS),$@,, ..\lib\lcdwindow$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
 |
 
 borland\lcdwindow_lib_lcdwindow.obj: .\..\src\lcdwindow.cpp
