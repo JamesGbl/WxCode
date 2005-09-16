@@ -3,7 +3,7 @@
 // Purpose:     wxTextBoxLayoutStatus, wxTextBox
 // Author:      Francesco Montorsi
 // Created:     2005/8/16
-// RCS-ID:      $Id: textbox.cpp,v 1.6 2005-09-16 17:06:12 frm Exp $
+// RCS-ID:      $Id: textbox.cpp,v 1.7 2005-09-16 17:12:12 frm Exp $
 // Copyright:   (c) 2005 Francesco Montorsi
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
@@ -26,6 +26,7 @@
 	#include <wx/dcclient.h>
 	#include <wx/menu.h>
 	#include <wx/msgdlg.h>
+	#include <wx/log.h>
 #endif
 
 #include "wx/textbox.h"

@@ -3,7 +3,7 @@
 // Purpose:     wxTextStyle, wxTextSpan, wxTextSpanArray
 // Author:      Francesco Montorsi
 // Created:     2005/8/19
-// RCS-ID:      $Id: textspan.cpp,v 1.4 2005-09-16 17:06:12 frm Exp $
+// RCS-ID:      $Id: textspan.cpp,v 1.5 2005-09-16 17:12:12 frm Exp $
 // Copyright:   (c) 2005 Francesco Montorsi
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
@@ -24,6 +24,7 @@
 #ifndef WX_PRECOMP
 	#include <wx/dcclient.h>
 	#include <wx/dcscreen.h>
+	#include <wx/log.h>
 #endif
 
 #include "wx/textspan.h"

@@ -2,7 +2,7 @@
 // Name:        myframe.cpp
 // Purpose:     resizeable controls sample: A derived frame, called MyFrame
 // Author:      Markus Greither
-// RCS-ID:      $Id: myframe.cpp,v 1.7 2005-09-16 17:06:12 frm Exp $
+// RCS-ID:      $Id: myframe.cpp,v 1.8 2005-09-16 17:12:12 frm Exp $
 // Copyright:   (c) Markus Greither
 // Licence:     wxWindows licence
 //-----------------------------------------------------------------------------
@@ -57,7 +57,7 @@
 // The application icon
 // All non-MSW platforms use an xpm. MSW uses an .ico file
 #if defined(__WXGTK__) || defined(__WXX11__) || defined(__WXMOTIF__) || defined(__WXMAC__) || defined(__WXMGL__)
-    #include "rc/appicon.xpm"
+    #include "mondrian.xpm"
 #endif
 
 //-----------------------------------------------------------------------------

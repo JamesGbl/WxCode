@@ -140,7 +140,7 @@ COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd = $(NM) minimal$(EXEEXT) | if \
 
 ### Targets: ###
 
-all: $(__wxresizeablecontrol_lib___depname) $(__wxresizeablecontrol_dll___depname) ../samples/minimal$(EXEEXT)
+all: $(__wxresizeablecontrol_lib___depname) $(__wxresizeablecontrol_dll___depname) ./samples/minimal$(EXEEXT)
 
 install: all install-wxheaders $(__install_wxresizeablecontrol_lib___depname) $(__install_wxresizeablecontrol_dll___depname)
 
@@ -161,7 +161,7 @@ clean:
 	rm -f ./lib/$(DLLPREFIX)wxresizeablecontrol$(__wxresizeablecontrol_dll___targetsuf3)
 	rm -f ./lib/$(LIBPREFIX)wxresizeablecontrol.$(DLLIMP_SUFFIX)
 	rm -f ./lib/$(LIBPREFIX)wxresizeablecontrol.$(DLLIMP_SUFFIX) ./lib/$(DLLPREFIX)wxresizeablecontrol$(__wxresizeablecontrol_dll___targetsuf2)
-	rm -f ../samples/minimal$(EXEEXT)
+	rm -f ./samples/minimal$(EXEEXT)
 
 distclean: clean
 	rm -f config.cache config.log config.status bk-deps bk-make-pch shared-ld-sh Makefile
@@ -266,7 +266,7 @@ install-wxheaders:
 @COND_WX_SHARED_1@	$(INSTALL_PROGRAM) ./lib/$(DLLPREFIX)wxresizeablecontrol$(__wxresizeablecontrol_dll___targetsuf3) $(DESTDIR)$(libdir)
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__wxresizeablecontrol_dll___so_symlinks_inst_cmd))
 
-../samples/minimal$(EXEEXT): $(MINIMAL_OBJECTS) $(__wxresizeablecontrol_lib___depname) $(__minimal___win32rc)
+./samples/minimal$(EXEEXT): $(MINIMAL_OBJECTS) $(__wxresizeablecontrol_lib___depname) $(__minimal___win32rc)
 	$(CXX) -o $@ $(MINIMAL_OBJECTS) -L./lib $(LDFLAGS) -L./lib $(LDFLAGS_GUI)  $(WX_LIBS) -lwxresizeablecontrol
 	
 	$(__minimal___mac_setfilecmd)
@@ -290,20 +290,20 @@ wxresizeablecontrol_dll_textbox.o: $(srcdir)/./src/textbox.cpp
 wxresizeablecontrol_dll_textspan.o: $(srcdir)/./src/textspan.cpp
 	$(CXXC) -c -o $@ $(WXRESIZEABLECONTROL_DLL_CXXFLAGS) $(srcdir)/./src/textspan.cpp
 
-minimal_myframe.o: $(srcdir)/../samples/myframe.cpp
-	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/../samples/myframe.cpp
+minimal_myframe.o: $(srcdir)/./samples/myframe.cpp
+	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/./samples/myframe.cpp
 
-minimal_ownerrnd.o: $(srcdir)/../samples/ownerrnd.cpp
-	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/../samples/ownerrnd.cpp
+minimal_ownerrnd.o: $(srcdir)/./samples/ownerrnd.cpp
+	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/./samples/ownerrnd.cpp
 
-minimal_resizecd.o: $(srcdir)/../samples/resizecd.cpp
-	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/../samples/resizecd.cpp
+minimal_resizecd.o: $(srcdir)/./samples/resizecd.cpp
+	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/./samples/resizecd.cpp
 
-minimal_childwnd.o: $(srcdir)/../samples/childwnd.cpp
-	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/../samples/childwnd.cpp
+minimal_childwnd.o: $(srcdir)/./samples/childwnd.cpp
+	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/./samples/childwnd.cpp
 
-minimal_resizecd_rc.o: $(srcdir)/../samples/resizecd.rc
-	$(RESCOMP) -i$< -o$@  --include-dir ./include --include-dir ../samples
+minimal_resizecd_rc.o: $(srcdir)/./samples/resizecd.rc
+	$(RESCOMP) -i$< -o$@  --include-dir ./include --include-dir ./samples
 
 
 # Include dependency info, if present:
