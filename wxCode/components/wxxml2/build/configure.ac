@@ -8,12 +8,13 @@
 # for more info about autoconf and the autoconf macros.
 # ======================================================================================
 
+# Init this configure script with basic info about the component
+# (DON'T PUT ANYTHING BEFORE AC_INIT, JUST COMMENTS)
+AC_INIT([wxXml2], [1.5], [frm@sourceforge.net])
 
 # ENABLES/DISABLES THE DEBUG MODE FOR THIS CONFIGURE SCRIPT
-#DBG_CONFIGURE=1
+DBG_CONFIGURE=1
 
-# Init this configure script with basic info about the component
-AC_INIT([wxXml2], [1.5], [frm@sourceforge.net])
 m4_include(../../../build/bakefiles/wxcode.m4)
 AM_WXCODE_INIT
 
