@@ -62,6 +62,7 @@ MINIMAL_OBJECTS =  \
 	minimal_myframe.o \
 	minimal_ownerrnd.o \
 	minimal_resizecd.o \
+	minimal_childwnd.o \
 	$(__minimal___win32rc)
 
 ### Conditionally set variables: ###
@@ -297,6 +298,9 @@ minimal_ownerrnd.o: $(srcdir)/../samples/ownerrnd.cpp
 
 minimal_resizecd.o: $(srcdir)/../samples/resizecd.cpp
 	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/../samples/resizecd.cpp
+
+minimal_childwnd.o: $(srcdir)/../samples/childwnd.cpp
+	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/../samples/childwnd.cpp
 
 minimal_resizecd_rc.o: $(srcdir)/../samples/resizecd.rc
 	$(RESCOMP) -i$< -o$@  --include-dir ../include
