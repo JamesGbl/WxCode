@@ -123,10 +123,10 @@ clean:
 	-if exist ..\src\splashtext.exe del ..\src\splashtext.exe
 
 tarball: 
-	( cd .. && tar -cvzf ..\SplashText.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
+	( cd .. && tar -cvzf ..\splashtext.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
 
 zip: 
-	( cd .. && zip -r9 ..\SplashText.zip *  -x *.pdb -x *.log -x *.o* )
+	( cd .. && zip -r9 ..\splashtext.zip *  -x *.pdb -x *.log -x *.o* )
 
 deepclean: 
 	-del /S ..\*.a

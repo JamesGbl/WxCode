@@ -30,7 +30,7 @@ WX_LIBS = @WX_LIBS@
 ### Variables: ###
 
 DESTDIR = 
-SPLASHTEXT_CXXFLAGS = -I../include -I../include $(WX_CXXFLAGS) $(CPPFLAGS) \
+SPLASHTEXT_CXXFLAGS = -I./include -I./include $(WX_CXXFLAGS) $(CPPFLAGS) \
 	$(CXXFLAGS)
 SPLASHTEXT_OBJECTS =  \
 	splashtext_splashtext.o
@@ -42,68 +42,68 @@ SPLASHTEXT_OBJECTS =  \
 @COND_PLATFORM_MAC_1@__splashtext___mac_setfilecmd = \
 @COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL splashtext$(EXEEXT)
 COND_PLATFORM_OS2_1___splashtext___os2_emxbindcmd = $(NM) \
-	../src/splashtext$(EXEEXT) | if grep -q pmwin.763 ; then emxbind -ep \
-	../src/splashtext$(EXEEXT) ; fi
+	./src/splashtext$(EXEEXT) | if grep -q pmwin.763 ; then emxbind -ep \
+	./src/splashtext$(EXEEXT) ; fi
 @COND_PLATFORM_OS2_1@__splashtext___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___splashtext___os2_emxbindcmd)
 
 ### Targets: ###
 
-all: ../src/splashtext$(EXEEXT)
+all: ./src/splashtext$(EXEEXT)
 
 install: all install-wxheaders
 
 uninstall: 
-	rm -f  $(DESTDIR)$(includedir)/
-	rm -f $(libdir)/*SplashText*
+	rm -f
+	rm -f $(libdir)/*splashtext*
 
 install-strip: install
 
 clean: 
 	rm -rf ./.deps ./.pch
 	rm -f ./*.o
-	rm -f ../src/splashtext$(EXEEXT)
+	rm -f ./src/splashtext$(EXEEXT)
 
 distclean: clean
 	rm -f config.cache config.log config.status bk-deps bk-make-pch shared-ld-sh Makefile
 
 tarball: 
-	( cd .. && tar -cvzf ../SplashText.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
+	( cd . && tar -cvzf ../splashtext.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* * )
 
 zip: 
-	( cd .. && zip -r9 ../SplashText.zip *  -x *.pdb -x *.log -x *.o* )
+	( cd . && zip -r9 ../splashtext.zip *  -x *.pdb -x *.log -x *.o* )
 
 deepclean: 
-	rm -f -r ../*.a
-	rm -f -r ../*.lib
-	rm -f -r ../*.pdb
-	rm -f -r ../*.dll
-	rm -f -r ../*.exp
-	rm -f -r ../*.so*
-	rm -f -r ../*.exe
-	rm -f -r ../*.obj
-	rm -f -r ../*.o
-	rm -f -r ../*.log
-	rm -f -r ../*.manifest*
-	rm -f -r ../*.log
-	rm -f -r ../.bakefile_gen.state
-	rm -f -r ../*.pch
-	rm -f -r ../*.ncb
-	rm -f -r ../*.plg
-	rm -f -r ../*.ncb
-	rm -f -r ../*.aps
-	rm -f -r ../*.suo
-	rm -f -r ../*.user
-	rm -f -r ../*.res
-	rm -f -r ../*.il?
-	rm -f -r ../*.tds
-	rm -f -r ../*.idb
-	rm -f -r ../*.map
-	rm -rf ../autom4te.cache
-	rm -rf ../.deps
-	rm -f -r ../config.status
-	rm -f -r ../config.log
-	rm -f -r ../Makefile
-	rm -f -r ../bk-deps
+	rm -f -r ./*.a
+	rm -f -r ./*.lib
+	rm -f -r ./*.pdb
+	rm -f -r ./*.dll
+	rm -f -r ./*.exp
+	rm -f -r ./*.so*
+	rm -f -r ./*.exe
+	rm -f -r ./*.obj
+	rm -f -r ./*.o
+	rm -f -r ./*.log
+	rm -f -r ./*.manifest*
+	rm -f -r ./*.log
+	rm -f -r ./.bakefile_gen.state
+	rm -f -r ./*.pch
+	rm -f -r ./*.ncb
+	rm -f -r ./*.plg
+	rm -f -r ./*.ncb
+	rm -f -r ./*.aps
+	rm -f -r ./*.suo
+	rm -f -r ./*.user
+	rm -f -r ./*.res
+	rm -f -r ./*.il?
+	rm -f -r ./*.tds
+	rm -f -r ./*.idb
+	rm -f -r ./*.map
+	rm -rf ./autom4te.cache
+	rm -rf ./.deps
+	rm -f -r ./config.status
+	rm -f -r ./config.log
+	rm -f -r ./Makefile
+	rm -f -r ./bk-deps
 	rm -f -r ./*.a
 	rm -f -r ./*.lib
 	rm -f -r ./*.pdb
@@ -137,23 +137,23 @@ deepclean:
 	rm -f -r ./bk-deps
 
 docs: 
-	( cd ../docs && doxygen )
+	( cd ./docs && doxygen )
 
 cleandocs: 
-	rm -rf ../docs/html
+	rm -rf ./docs/html
 
 install-wxheaders: 
 	$(INSTALL_DIR) $(DESTDIR)$(includedir)/wx
-	(cd $(srcdir) ; $(INSTALL_DATA)  ../include/wx/*.h $(DESTDIR)$(includedir)/wx)
+	(cd $(srcdir) ; $(INSTALL_DATA)  ./include/wx/*.h $(DESTDIR)$(includedir)/wx)
 
-../src/splashtext$(EXEEXT): $(SPLASHTEXT_OBJECTS)
-	$(CXX) -o $@ $(SPLASHTEXT_OBJECTS) $(LDFLAGS) -L../lib $(LDFLAGS_GUI)  $(WX_LIBS)
+./src/splashtext$(EXEEXT): $(SPLASHTEXT_OBJECTS)
+	$(CXX) -o $@ $(SPLASHTEXT_OBJECTS) $(LDFLAGS) -L./lib $(LDFLAGS_GUI)  $(WX_LIBS)
 	
 	$(__splashtext___mac_setfilecmd)
 	$(__splashtext___os2_emxbindcmd)
 
-splashtext_splashtext.o: $(srcdir)/../src/splashtext.cpp
-	$(CXXC) -c -o $@ $(SPLASHTEXT_CXXFLAGS) $(srcdir)/../src/splashtext.cpp
+splashtext_splashtext.o: $(srcdir)/./src/splashtext.cpp
+	$(CXXC) -c -o $@ $(SPLASHTEXT_CXXFLAGS) $(srcdir)/./src/splashtext.cpp
 
 
 # Include dependency info, if present:

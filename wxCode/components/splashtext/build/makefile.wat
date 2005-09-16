@@ -156,11 +156,11 @@ clean : .SYMBOLIC
 
 tarball :  
 	-cd ..
-	-tar -cvzf ..\SplashText.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* *
+	-tar -cvzf ..\splashtext.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* *
 
 zip :  
 	-cd ..
-	-zip -r9 ..\SplashText.zip *  -x *.pdb -x *.log -x *.o*
+	-zip -r9 ..\splashtext.zip *  -x *.pdb -x *.log -x *.o*
 
 deepclean :  
 	-del /S ..\*.a
