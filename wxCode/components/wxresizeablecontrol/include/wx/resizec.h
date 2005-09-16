@@ -5,7 +5,7 @@
 // Author:      Markus Greither
 // Modified by:
 // Created:     11/10/02
-// RCS-ID:      $Id: resizec.h,v 1.3 2005-09-11 18:04:28 magr Exp $
+// RCS-ID:      $Id: resizec.h,v 1.4 2005-09-16 10:30:58 frm Exp $
 // Copyright:   (c) Markus Greither
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -18,7 +18,7 @@
 #endif
 
 #include "wx/resizecdef.h"
-
+#include <wx/scrolwin.h>
 
 // defined later...
 class WXDLLIMPEXP_RESIZEC wxResizeableControlCanvas;

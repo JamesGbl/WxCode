@@ -4,7 +4,7 @@
 // Author:      Markus Greither
 // Modified by:
 // Created:     11/11/02
-// RCS-ID:      $Id: resizec.cpp,v 1.3 2005-09-11 18:06:52 magr Exp $
+// RCS-ID:      $Id: resizec.cpp,v 1.4 2005-09-16 10:30:58 frm Exp $
 // Copyright:   (c) Markus Greither
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -256,10 +256,10 @@ void wxResizeableControl::DrawSizeRect(wxDC &dc)
 {
     int AltROP = dc.GetLogicalFunction();
     dc.SetLogicalFunction(wxXOR);
-    wxBrush brs(wxSystemSettings::GetSystemColour(wxSYS_COLOUR_WINDOW),wxSOLID);
+    wxBrush brs(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW),wxSOLID);
     const wxBrush &OldBr = dc.GetBrush();
     dc.SetBrush(brs);
-    wxPen pen(wxSystemSettings::GetSystemColour(wxSYS_COLOUR_WINDOW),1,wxSOLID);
+    wxPen pen(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW),1,wxSOLID);
     dc.SetPen(pen);
     for (int i = 0;i < 8;i++)
     {
@@ -1057,7 +1057,7 @@ void wxResizeableControlCanvas::OnChildWindowChange(wxCommandEvent &ev)
 
 void wxResizeableControlCanvas::UpdateScrollRange()
 {
-    wxNode *Child = GetChildren().First();
+    wxWindowListNode *Child = GetChildren().GetFirst();
     wxSize GesSize;
     int x,y;
     GetViewStart(&x,&y);
@@ -1074,7 +1074,7 @@ void wxResizeableControlCanvas::UpdateScrollRange()
             if (rect.GetRight() > GesSize.x)
                 GesSize.x = rect.GetRight();
         }
-        Child = Child->Next();
+        Child = Child->GetNext();
     }
     SetScrollbars(1,1,GesSize.x,GesSize.y,x,y,true);
 }

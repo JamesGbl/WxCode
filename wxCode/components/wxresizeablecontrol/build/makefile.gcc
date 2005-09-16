@@ -286,7 +286,7 @@ mingw\minimal_childwnd.o: ./../samples/childwnd.cpp
 	$(CXX) -c -o $@ $(MINIMAL_CXXFLAGS) $(CPPDEPS) $<
 
 mingw\minimal_resizecd_rc.o: ./../samples/resizecd.rc
-	windres --use-temp-file -i$< -o$@ $(__WX_SHAREDDEFINE_p_4) --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_4) $(__WXDEBUG_DEFINE_p_4) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ..\include
+	windres --use-temp-file -i$< -o$@ $(__WX_SHAREDDEFINE_p_4) --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_4) $(__WXDEBUG_DEFINE_p_4) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ..\include --include-dir ../samples
 
 .PHONY: all clean
 

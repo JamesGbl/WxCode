@@ -3,7 +3,7 @@
 // Purpose:     wxTextBoxLayoutStatus, wxTextBox
 // Author:      Francesco Montorsi
 // Created:     2005/8/16
-// RCS-ID:      $Id: textbox.cpp,v 1.4 2005-09-12 19:00:19 frm Exp $
+// RCS-ID:      $Id: textbox.cpp,v 1.5 2005-09-16 10:30:58 frm Exp $
 // Copyright:   (c) 2005 Francesco Montorsi
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
@@ -22,13 +22,16 @@
 
 // includes
 #ifndef WX_PRECOMP
+	#include <wx/settings.h>
+	#include <wx/dcclient.h>
+	#include <wx/menu.h>
+	#include <wx/msgdlg.h>
 #endif
 
 #include "wx/textbox.h"
 #include <wx/tokenzr.h>
 #include <wx/caret.h>
 #include <wx/clipbrd.h>
-
 
 #include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(wxRectArray);
