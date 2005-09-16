@@ -17,9 +17,9 @@
 	<set var="COMP_NAME">dlgbased</set>
 	<set var="COMP_SRC"></set>
 	<set var="COMP_HDR"></set>
-	<set var="COMP_SAMPLE1_SRC">../samples/calc/calc.cpp</set>
-	<set var="COMP_SAMPLE1_HDR">../samples/calc/calcdlg.h</set>
-	<set var="COMP_SAMPLE2_SRC">../samples/dlgapp/dlgapp.cpp</set>
+	<set var="COMP_SAMPLE1_SRC">$(COMP_BASEPATH)/samples/calc/calc.cpp</set>
+	<set var="COMP_SAMPLE1_HDR">$(COMP_BASEPATH)/samples/calc/calcdlg.h</set>
+	<set var="COMP_SAMPLE2_SRC">$(COMP_BASEPATH)/samples/dlgapp/dlgapp.cpp</set>
 	<set var="COMP_SAMPLE2_HDR"></set>
 
 	<!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->
@@ -34,14 +34,14 @@
 	<!-- The sample of the component: as for the LIB target, this exe derives from a 
 	     template contained in wxcode.bkl which can be modified here -->
 	<exe id="calc" template="compsample">
-		<dirname>../samples/calc</dirname>
+		<dirname>$(COMP_BASEPATH)/samples/calc</dirname>
 		<sources>$(COMP_SAMPLE1_SRC)</sources>
 		<headers>$(COMP_SAMPLE1_HDR)</headers>
 		<wx-lib>core</wx-lib>
 		<wx-lib>base</wx-lib>
 	</exe>
 	<exe id="dlgapp" template="compsample">
-		<dirname>../samples/dlgapp</dirname>
+		<dirname>$(COMP_BASEPATH)/samples/dlgapp</dirname>
 		<sources>$(COMP_SAMPLE2_SRC)</sources>
 		<headers>$(COMP_SAMPLE2_HDR)</headers>
 		<wx-lib>core</wx-lib>

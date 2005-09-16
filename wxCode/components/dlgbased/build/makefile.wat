@@ -163,11 +163,11 @@ clean : .SYMBOLIC
 
 tarball :  
 	-cd ..
-	-tar -cvzf ..\DlgBased.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* *
+	-tar -cvzf ..\dlgbased.tar.gz --exclude=*.pdb --exclude=*.log --exclude=*.o* *
 
 zip :  
 	-cd ..
-	-zip -r9 ..\DlgBased.zip *  -x *.pdb -x *.log -x *.o*
+	-zip -r9 ..\dlgbased.zip *  -x *.pdb -x *.log -x *.o*
 
 deepclean :  
 	-del /S ..\*.a
