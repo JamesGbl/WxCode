@@ -5,7 +5,7 @@
 // Author:      Markus Greither
 // Modified by:
 // Created:     11/10/02
-// RCS-ID:      $Id: resizec.h,v 1.4 2005-09-16 10:30:58 frm Exp $
+// RCS-ID:      $Id: resizec.h,v 1.5 2005-09-16 17:06:12 frm Exp $
 // Copyright:   (c) Markus Greither
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -462,7 +462,7 @@ class wxResizeableChildTextCtrl : public wxTextCtrl
                                const wxPoint &pos = wxDefaultPosition,
                                const wxSize &size = wxDefaultSize,long style = 0,
                                const wxString &name = wxPanelNameStr)
-      : wxTextCtrl(AParent,AnId,text,pos,size,style)
+      : wxTextCtrl(AParent,AnId,text,pos,size,style,wxDefaultValidator,name)
     {
     }
     //! Enable parent sizers on set focus

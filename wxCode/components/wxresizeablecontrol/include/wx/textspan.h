@@ -3,7 +3,7 @@
 // Purpose:     wxTextStyle, wxTextSpan, wxTextSpanArray
 // Author:      Francesco Montorsi
 // Created:     2005/8/15
-// RCS-ID:      $Id: textspan.h,v 1.2 2005-09-12 19:00:19 frm Exp $
+// RCS-ID:      $Id: textspan.h,v 1.3 2005-09-16 17:06:12 frm Exp $
 // Copyright:   (c) 2005 Francesco Montorsi
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
@@ -191,6 +191,8 @@ public:		// getters
 		{ return m_strName; }
 	wxTextSpanTruncMode GetTruncMode() const
 		{ return m_truncMode; }
+	wxFont GetFont() const
+		{ return m_style.GetFont(); }
 
 	wxTextAttrAlignment GetHorizAlignment() const {
 		wxASSERT(m_style.GetAlignment() != wxTEXT_ALIGNMENT_DEFAULT &&
@@ -205,6 +207,16 @@ public:		// setters
 
 	void SetHorizAlignment(wxTextAttrAlignment);
 	void SetVertAlignment(wxTextStyleVertAlignment);
+
+public:		// export / import
+
+	wxString ExportRTF() const;
+	wxString ExportSelectionToRTF() const;
+
+#if wxUSE_TEXTBOX_XHTML_SUPPORT
+	wxXmlNode *ExportXHTML() const;
+	wxXmlNode *ExportXHTMLDiffFrom(const wxTextStyle *) const;
+#endif
 };
 
 
@@ -473,6 +485,9 @@ public:		// array export / import
 	wxString ExportSelectionToRTF() const;
 
 #if wxUSE_TEXTBOX_XHTML_SUPPORT
+
+	wxXmlDocument ExportXHTMLDoc() const;
+
 	wxXmlNode *ExportXHTML() const;
 	wxXmlNode *ExportSelectionToXHTML() const;
 #endif

@@ -3,7 +3,7 @@
 // Purpose:     wxTextBoxLayoutStatus, wxTextBoxInputStatus, wxTextBox
 // Author:      Francesco Montorsi
 // Created:     2005/8/15
-// RCS-ID:      $Id: textbox.h,v 1.2 2005-09-12 19:00:19 frm Exp $
+// RCS-ID:      $Id: textbox.h,v 1.3 2005-09-16 17:06:12 frm Exp $
 // Copyright:   (c) 2005 Francesco Montorsi
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
@@ -21,6 +21,7 @@
 #include "wx/textctrl.h"		// holds the definition of wxTextAttr
 #include "wx/resizec.h"
 #include "wx/textspan.h"
+#include <wx/dataobj.h>
 
 
 // some data structures which will be used...
@@ -485,5 +486,41 @@ public:		// events
 private:
     DECLARE_EVENT_TABLE()
 };
+
+
+//! An RTF data object inside the clipboard.
+class wxRTFDataObject : public wxDataObject
+{
+public:
+	char *m_buf;
+	size_t m_len;
+
+public:
+	wxRTFDataObject() { m_buf=NULL; }
+	virtual ~wxRTFDataObject() {}
+
+
+    virtual wxDataFormat GetPreferredFormat(Direction WXUNUSED(dir) = Get) const
+	{ return wxT("Rich Text Format"); }
+
+    virtual size_t GetFormatCount(Direction WXUNUSED(dir) = Get) const
+	{ return 1; }
+
+    virtual void GetAllFormats(wxDataFormat *formats, Direction WXUNUSED(dir) = Get) const
+	{ formats[0] = wxDataFormat(wxT("Rich Text Format")); }
+    
+    virtual size_t GetDataSize(const wxDataFormat& WXUNUSED(format)) const
+	{ return m_len; }
+
+	bool SetData(const wxDataFormat& WXUNUSED(format), size_t len, const void *buf)
+	{ wxDELETEA(m_buf); m_buf = new char[len]; m_len=len; memcpy(m_buf, buf, len); m_buf[len] = 0; return TRUE;}
+
+	virtual bool NeedsVerbatimData(const wxDataFormat& WXUNUSED(format)) const
+	{ return TRUE; }
+
+	virtual bool GetDataHere(const wxDataFormat& WXUNUSED(format), void *buf) const
+	{ memcpy(buf, m_buf, m_len); return TRUE; }
+};
+
 
 #endif // _WX_TEXTBOX_H_

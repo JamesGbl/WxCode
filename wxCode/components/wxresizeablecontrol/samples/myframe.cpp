@@ -2,7 +2,7 @@
 // Name:        myframe.cpp
 // Purpose:     resizeable controls sample: A derived frame, called MyFrame
 // Author:      Markus Greither
-// RCS-ID:      $Id: myframe.cpp,v 1.6 2005-09-12 19:00:19 frm Exp $
+// RCS-ID:      $Id: myframe.cpp,v 1.7 2005-09-16 17:06:12 frm Exp $
 // Copyright:   (c) Markus Greither
 // Licence:     wxWindows licence
 //-----------------------------------------------------------------------------
@@ -298,7 +298,7 @@ void MyFrame::OnCopy(wxCommandEvent& event)
 void MyFrame::OnCopyEnable(wxUpdateUIEvent& event)
 {
     wxPictureControl *ctr = wxDynamicCast(FindFocus(),wxPictureControl);
-    event.Enable(ctr);
+    event.Enable(ctr != NULL);
 }
 
 void MyFrame::OnPrint(wxCommandEvent& WXUNUSED(event))

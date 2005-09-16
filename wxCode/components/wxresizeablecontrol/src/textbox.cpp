@@ -3,7 +3,7 @@
 // Purpose:     wxTextBoxLayoutStatus, wxTextBox
 // Author:      Francesco Montorsi
 // Created:     2005/8/16
-// RCS-ID:      $Id: textbox.cpp,v 1.5 2005-09-16 10:30:58 frm Exp $
+// RCS-ID:      $Id: textbox.cpp,v 1.6 2005-09-16 17:06:12 frm Exp $
 // Copyright:   (c) 2005 Francesco Montorsi
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
@@ -32,6 +32,7 @@
 #include <wx/tokenzr.h>
 #include <wx/caret.h>
 #include <wx/clipbrd.h>
+#include <wx/sstream.h>
 
 #include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(wxRectArray);
@@ -773,75 +774,31 @@ void wxTextBox::OnCtxMenuItem(wxCommandEvent &ce)
 	wxLogDebug(wxT("wxTextBox::OnCtxMenuItem - context menu click handled"));
 }
 
-//#include <richedit.h>
-
-class wxRTFDataObject : public wxDataObject
-{
-public:
-	char *m_buf;
-	size_t m_len;
-
-public:
-	wxRTFDataObject() { m_buf=NULL; }
-	virtual ~wxRTFDataObject() {}
-
-
-    virtual wxDataFormat GetPreferredFormat(Direction dir = Get) const
-	{ return wxT("Rich Text Format"); }
-
-    virtual size_t GetFormatCount(Direction dir = Get) const
-	{ return 1; }
-
-    virtual void GetAllFormats(wxDataFormat *formats, Direction dir = Get) const
-	{ formats[0] = wxDataFormat(wxT("Rich Text Format")); }
-    
-    virtual size_t GetDataSize(const wxDataFormat& format) const
-	{ return m_len; }
-
-#if 1
-	bool SetData(const wxDataFormat& format, size_t len, const void *buf)
-	{ wxDELETEA(m_buf); m_buf = new char[len]; m_len=len; memcpy(m_buf, buf, len); m_buf[len] = 0; return TRUE;}
-
-	virtual bool NeedsVerbatimData(const wxDataFormat& format) const
-	{ return TRUE; }
-
-#else
-
-	bool SetData(const wxDataFormat& format, size_t len, const void *buf)
-	{ wxDELETEA(m_buf); m_buf = new char[len+4]; m_len=len+4; 
-		memcpy(m_buf, "\x17\0\0\0", 4);	memcpy(m_buf+4, buf, len); m_buf[len+4] = 0; return TRUE;}
-
-	virtual bool NeedsVerbatimData(const wxDataFormat& format) const
-	{ return TRUE; }
-#endif
-	virtual bool GetDataHere(const wxDataFormat& format, void *buf) const
-	{ memcpy(buf, m_buf, m_len); return TRUE; }
-};
-
 void wxTextBox::Copy()
 {
-	wxString str;
+/*	wxString str;
 	if (HasSelection())
 		str = ExportSelectionToRTF();
 	else
-		str = ExportRTF();
+		str = ExportRTF();*/
 
 
-	wxXmlNode *p = m_spans.ExportXHTML();
+	wxXmlDocument doc(m_spans.ExportXHTMLDoc());
+	wxStringOutputStream str;
+	doc.Save(str);
 
-
-/*
 	// export to clipboard
 	if (wxTheClipboard->Open())
 	{
 		// This data objects are held by the clipboard,
 		// so do not delete them in the app.
-		wxTheClipboard->SetData( new wxTextDataObject(str) );
+		wxString mystr(str.GetString());
+		wxTheClipboard->SetData( new wxTextDataObject(mystr) );
 		wxTheClipboard->Close();
 	}
-		//pdo->SetData(str.Len()*sizeof(wxChar) + 1, str.c_str());*/
+		//pdo->SetData(str.Len()*sizeof(wxChar) + 1, str.c_str());
 
-
+/*
 	str = wxT("{\\rtf1\\ansi ciao }");
 	if (wxTheClipboard->Open())
 	{

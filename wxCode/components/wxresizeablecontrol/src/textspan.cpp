@@ -3,7 +3,7 @@
 // Purpose:     wxTextStyle, wxTextSpan, wxTextSpanArray
 // Author:      Francesco Montorsi
 // Created:     2005/8/19
-// RCS-ID:      $Id: textspan.cpp,v 1.3 2005-09-16 10:30:58 frm Exp $
+// RCS-ID:      $Id: textspan.cpp,v 1.4 2005-09-16 17:06:12 frm Exp $
 // Copyright:   (c) 2005 Francesco Montorsi
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
@@ -61,6 +61,31 @@ bool wxRectInside(const wxRect &bigger, const wxRect &smaller)
 		return TRUE;
 	return FALSE;
 }
+
+wxXmlNode *wxCreateElemNode(const wxString &name)
+{ 
+	// create a node which acts as a container
+	return new wxXmlNode(NULL, wxXML_ELEMENT_NODE, name, wxEmptyString, NULL, NULL); 
+}
+
+wxXmlNode *wxCreateElemTextNode(const wxString &name, const wxString &content = wxEmptyString)
+{ 
+	wxXmlNode *n = wxCreateElemNode(name); 
+
+	// add to the container node a text node
+	n->AddChild(new wxXmlNode(NULL, wxXML_TEXT_NODE, wxEmptyString, content, NULL, NULL));
+	return n;
+}
+
+wxXmlNode *wxCreateElemTextNode(wxXmlNode *prev, const wxString &name, const wxString &content = wxEmptyString)
+{ 
+	// links with previous node
+	wxXmlNode *n = wxCreateElemTextNode(name, content);
+	prev->SetNext(n);
+
+	return n;
+}
+
 
 
 
@@ -139,6 +164,69 @@ void wxTextStyle::SetNewNameFromCurrentName()
 	wxString newname = m_strName.Left(offset) + wxString::Format(wxT("%d"), num+1);
 	m_strName = newname;
 }
+
+
+
+// -----------------------------------------
+// wxTEXTSTYLE - export
+// -----------------------------------------
+
+wxString wxTextStyle::ExportRTF() const
+{
+	wxString ret;
+
+	ret += wxT("");
+//	if (EndsWithDelimiter())
+//		ret += wxT(" \\line \n");		// the space at the end is important !
+
+	return ret;
+}
+
+wxXmlNode *wxTextStyle::ExportXHTML() const
+{
+	// we "entirely" differ from the wxNullTextStyle
+	return ExportXHTMLDiffFrom(wxNullTextStyle);
+}
+
+wxXmlNode *wxTextStyle::ExportXHTMLDiffFrom(const wxTextStyle *p) const
+{
+	wxString value;
+
+	// font facename
+	if (p == wxNullTextStyle ||
+		p->GetFont().GetFaceName() != GetFont().GetFaceName()) {
+		value += wxT("font-family: ");
+
+		// first the generic family
+		switch (GetFont().GetFamily()) {
+		case wxFONTFAMILY_SCRIPT:
+			value += wxT("cursive, ");
+			break;
+		case wxFONTFAMILY_DECORATIVE:
+			value += wxT("fantasy, ");
+			break;
+		case wxFONTFAMILY_DEFAULT:
+		case wxFONTFAMILY_SWISS:
+			value += wxT("sans-serif, ");
+			break;
+		case wxFONTFAMILY_TELETYPE:
+			value += wxT("monospace, ");
+			break;
+		case wxFONTFAMILY_ROMAN:
+			value += wxT("serif, ");
+			break;
+		}
+
+		// then the font family name
+		value += GetFont().GetFaceName();
+	}
+
+	// build a <span> tag with a "style" property
+	wxXmlProperty *prop = new wxXmlProperty(wxT("style"), value, NULL);
+	return new wxXmlNode(NULL, wxXML_ELEMENT_NODE, 
+							wxT("span"), wxEmptyString, prop, NULL);
+}
+
 
 
 
@@ -878,8 +966,9 @@ wxString wxTextSpan::ExportRTF() const
 
 wxXmlNode *wxTextSpan::ExportXHTML() const
 {
-	//wxXmlNode *txt = 
-	return NULL;
+	// we won't export our final newline ! the parent must check that !
+	return new wxXmlNode(NULL, wxXML_TEXT_NODE, wxEmptyString, 
+						GetTextWithoutDelim(), NULL, NULL);
 }
 
 
@@ -1187,30 +1276,45 @@ wxString wxTextSpanArray::ExportRTF() const
 }
 
 
-wxXmlNode *wxCreateElemNode(const wxString &name)
-{ return new wxXmlNode(NULL, wxXML_ELEMENT_NODE, name, wxEmptyString, NULL, NULL); }
-
-wxXmlNode *wxCreateElemTextNode(const wxString &name, const wxString &content = wxEmptyString)
-{ 
-	wxXmlNode *n = wxCreateElemNode(name); 
-	n->AddChild(new wxXmlNode(NULL, wxXML_TEXT_NODE, wxEmptyString, content, NULL, NULL));
-	return n;
-}
-
-wxXmlNode *wxCreateElemTextNode(wxXmlNode *prev, const wxString &name, const wxString &content = wxEmptyString)
-{ 
-	wxXmlNode *n = wxCreateElemTextNode(name, content);
-	prev->SetNext(n);
-	return n;
-}
-
-
 wxXmlNode *wxTextSpanArray::ExportXHTML() const
 {
-	wxXmlNode *root = wxCreateElemNode(wxT("root"));
+	wxXmlNode *root = wxCreateElemNode(wxT("root")), *previous = NULL;
 
-	for (int i=0; i < GetCount(); i++)		
-		root->AddChild(Item(i)->ExportXHTML());	
+	for (int i=0; i < GetCount(); i++) {
+
+		wxXmlNode *content = Item(i)->ExportXHTML();
+		wxXmlNode *container = content;
+
+		if (i == 0) {
+
+			// in case this is the first node we're going to output, then
+			// we need to wrap it into the XHTML for its style.
+			container = Item(i)->GetStyle()->ExportXHTML();
+			container->AddChild(content);
+		}
+/*
+		if (previous != NULL && 
+			Item(i)->GetStyle() != previous->GetStyle()) {
+
+			container = Item(i)->GetStyle()->ExportXHTMLDiffFrom(previous->GetStyle());
+			container->AddChild(content);
+		}*/
+		if (Item(i)->EndsWithDelimiter())
+			content->SetNext(wxCreateElemNode(wxT("br")));
+
+		// add to the XML document this node
+		root->AddChild(container);
+		previous = container;
+	}
 
 	return root;
 }
+
+wxXmlDocument wxTextSpanArray::ExportXHTMLDoc() const
+{
+	wxXmlDocument doc;
+	doc.SetRoot(ExportXHTML());
+
+	return doc;
+}
+
