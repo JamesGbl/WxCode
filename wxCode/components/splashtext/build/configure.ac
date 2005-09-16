@@ -1,6 +1,6 @@
 # ======================================================================================
 # Author: Francesco Montorsi
-# RCS-ID: $Id: configure.ac,v 1.2 2005-09-16 10:19:32 frm Exp $
+# RCS-ID: $Id: configure.ac,v 1.3 2005-09-16 17:06:12 frm Exp $
 #
 # A basic "configure.ac" for a wxCode component.
 # See 
@@ -15,7 +15,7 @@
 AC_INIT([SplashText], [1.0], [mymail@myserver.com])
 
 # ENABLES/DISABLES THE DEBUG MODE FOR THIS CONFIGURE SCRIPT
-DBG_CONFIGURE=1
+#DBG_CONFIGURE=1
 
 # you need the wxCode/build/bakefiles in your local repository to generate a configure
 # script from this configure.ac file since wxcode.m4 is required....
