@@ -12,7 +12,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.h,v 1.23 2005-08-23 18:35:17 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.h,v 1.24 2005-09-16 17:48:12 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -20,7 +20,7 @@
 #ifndef __WXSCINTILLA_H__
 #define __WXSCINTILLA_H__
 
-#define wxSCINTILLA_VERSION _T("1.65.0")
+#define wxSCINTILLA_VERSION _T("1.66.0")
 
 #include <wx/wx.h>
 #include <wx/dnd.h>
@@ -580,6 +580,7 @@
 #define wxSCI_PL_ARRAY 13
 #define wxSCI_PL_HASH 14
 #define wxSCI_PL_SYMBOLTABLE 15
+#define wxSCI_PL_VARIABLE_INDEXER 16
 #define wxSCI_PL_REGEX 17
 #define wxSCI_PL_REGSUBST 18
 #define wxSCI_PL_LONGQUOTE 19
@@ -595,6 +596,42 @@
 #define wxSCI_PL_STRING_QR 29
 #define wxSCI_PL_STRING_QW 30
 #define wxSCI_PL_POD_VERB 31
+
+// Lexical states for SCLEX_RUBY
+#define wxSCI_RB_DEFAULT 0
+#define wxSCI_RB_ERROR 1
+#define wxSCI_RB_COMMENTLINE 2
+#define wxSCI_RB_POD 3
+#define wxSCI_RB_NUMBER 4
+#define wxSCI_RB_WORD 5
+#define wxSCI_RB_STRING 6
+#define wxSCI_RB_CHARACTER 7
+#define wxSCI_RB_CLASSNAME 8
+#define wxSCI_RB_DEFNAME 9
+#define wxSCI_RB_OPERATOR 10
+#define wxSCI_RB_IDENTIFIER 11
+#define wxSCI_RB_REGEX 12
+#define wxSCI_RB_GLOBAL 13
+#define wxSCI_RB_SYMBOL 14
+#define wxSCI_RB_MODULE_NAME 15
+#define wxSCI_RB_INSTANCE_VAR 16
+#define wxSCI_RB_CLASS_VAR 17
+#define wxSCI_RB_BACKTICKS 18
+#define wxSCI_RB_DATASECTION 19
+#define wxSCI_RB_HERE_DELIM 20
+#define wxSCI_RB_HERE_Q 21
+#define wxSCI_RB_HERE_QQ 22
+#define wxSCI_RB_HERE_QX 23
+#define wxSCI_RB_STRING_Q 24
+#define wxSCI_RB_STRING_QQ 25
+#define wxSCI_RB_STRING_QX 26
+#define wxSCI_RB_STRING_QR 27
+#define wxSCI_RB_STRING_QW 28
+#define wxSCI_RB_WORD_DEMOTED 29
+#define wxSCI_RB_STDIN 30
+#define wxSCI_RB_STDOUT 31
+#define wxSCI_RB_STDERR 40
+#define wxSCI_RB_UPPER_BOUND 41
 
 // Lexical states for SCLEX_VB, SCLEX_VBSCRIPT, SCLEX_POWERBASIC
 #define wxSCI_B_DEFAULT 0
@@ -1165,6 +1202,7 @@
 #define wxSCI_AU3_PREPROCESSOR 11
 #define wxSCI_AU3_SPECIAL 12
 #define wxSCI_AU3_EXPAND 13
+#define wxSCI_AU3_COMOBJ 14
 
 // Lexical states for SCLEX_APDL
 #define wxSCI_APDL_DEFAULT 0
