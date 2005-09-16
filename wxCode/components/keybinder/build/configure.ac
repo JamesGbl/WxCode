@@ -9,11 +9,16 @@
 # ======================================================================================
 
 
+
+# Init this configure script with basic info about the component
+# (DON'T PUT ANYTHING BEFORE AC_INIT, JUST COMMENTS)
+AC_INIT([KeyBinder], [1.0], [noone@sourceforge.net])
+
 # ENABLES/DISABLES THE DEBUG MODE FOR THIS CONFIGURE SCRIPT
 #DBG_CONFIGURE=1
 
-# Init this configure script with basic info about the component
-AC_INIT([wxXml2], [1.5], [frm@sourceforge.net])
+# you need the wxCode/build/bakefiles in your local repository to generate a configure
+# script from this configure.ac file since wxcode.m4 is required....
 m4_include(../../../build/bakefiles/wxcode.m4)
 AM_WXCODE_INIT
 
