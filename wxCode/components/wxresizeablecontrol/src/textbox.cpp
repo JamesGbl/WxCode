@@ -3,7 +3,7 @@
 // Purpose:     wxTextBoxLayoutStatus, wxTextBox
 // Author:      Francesco Montorsi
 // Created:     2005/8/16
-// RCS-ID:      $Id: textbox.cpp,v 1.7 2005-09-16 17:12:12 frm Exp $
+// RCS-ID:      $Id: textbox.cpp,v 1.8 2005-09-18 10:05:29 frm Exp $
 // Copyright:   (c) 2005 Francesco Montorsi
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
@@ -38,7 +38,7 @@
 #include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(wxRectArray);
 
-BEGIN_EVENT_TABLE(wxTextBox, wxResizeableControl)
+BEGIN_EVENT_TABLE(wxTextBox, wxWindow)
     EVT_PAINT(wxTextBox::OnPaint)
 
 	// these events force a re-layouting of the box
@@ -93,7 +93,7 @@ void wxTextBoxInputStatus::SetAsSelEndCurrentCaretPos()
 wxTextBox::wxTextBox(wxWindow *parent, int id, const wxPoint &pos,
 					const wxSize &size, long style,
 					const wxString &name)
-			  : wxResizeableControl(parent, id, pos, size, style, name), m_input(m_spans)
+			  : wxWindow(parent, id, pos, size, style, name), m_input(m_spans)
 {
 	// the height will be changed by SetCaretPos...
 	SetCaret(new wxCaret(this, wxTB_CARET_WIDTH, 10));
@@ -417,6 +417,8 @@ void wxTextBox::SetText(const wxString &txt, const wxTextStyle &attr)
 
 void wxTextBox::ClipOtherBoxes()
 {
+	wxPoint ourpt(GetParent()->GetPosition());
+
 	// fist, clean old array
 	m_rc.Empty();
 
@@ -425,7 +427,7 @@ void wxTextBox::ClipOtherBoxes()
 	while (node)
 	{
 		wxResizeableControl *box = node->GetData();
-		if (box == this) {
+		if (box == GetParent()) {
 			node = node->GetNext();
 			continue;		// skip ourselves !
 		}
@@ -434,8 +436,8 @@ void wxTextBox::ClipOtherBoxes()
 		if (rc.Intersects(this->GetRect())) {
 
 			// convert from canvas coord to this textbox coords...
-			rc.SetX(rc.GetX() - GetPosition().x);
-			rc.SetY(rc.GetY() - GetPosition().y);
+			rc.SetX(rc.GetX() - ourpt.x);
+			rc.SetY(rc.GetY() - ourpt.y);
 
 			// normalize them
 			if (rc.GetX() < 0) {

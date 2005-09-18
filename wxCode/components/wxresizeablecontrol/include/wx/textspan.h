@@ -3,7 +3,7 @@
 // Purpose:     wxTextStyle, wxTextSpan, wxTextSpanArray
 // Author:      Francesco Montorsi
 // Created:     2005/8/15
-// RCS-ID:      $Id: textspan.h,v 1.3 2005-09-16 17:06:12 frm Exp $
+// RCS-ID:      $Id: textspan.h,v 1.4 2005-09-18 10:05:29 frm Exp $
 // Copyright:   (c) 2005 Francesco Montorsi
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
@@ -151,6 +151,8 @@ public:
 	//! The name for this style.
 	wxString m_strName;
 
+	//! The background mode for this style.
+	int m_nBkMode;
 
 public:		// some cached data
 
@@ -161,7 +163,8 @@ public:		// some cached data
 public:
 	wxTextStyle(const wxTextAttr &attr, const wxString &name, 
 				wxTextSpanTruncMode tm = wxTSTM_WORDWRAP,
-				wxTextStyleVertAlignment va = wxTSVA_MIDDLE);		
+				wxTextStyleVertAlignment va = wxTSVA_MIDDLE,
+				int bkmode = wxTRANSPARENT);		
 	virtual ~wxTextStyle() {}
 
 public:		// miscellaneous
@@ -187,12 +190,18 @@ public:		// getters
 		{ return m_nAveCharHeight; }
 	int GetMinCharWidth() const
 		{ return m_nMinCharWidth; }
+	int GetBackgroundMode() const
+		{ return m_nBkMode; }
 	wxString GetName() const
 		{ return m_strName; }
 	wxTextSpanTruncMode GetTruncMode() const
 		{ return m_truncMode; }
 	wxFont GetFont() const
 		{ return m_style.GetFont(); }
+	wxColour GetBackgroundColour() const
+		{ return m_style.GetBackgroundColour(); }
+	wxColour GetForegroundColour() const
+		{ return m_style.GetTextColour(); }
 
 	wxTextAttrAlignment GetHorizAlignment() const {
 		wxASSERT(m_style.GetAlignment() != wxTEXT_ALIGNMENT_DEFAULT &&

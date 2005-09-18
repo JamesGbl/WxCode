@@ -3,7 +3,7 @@
 // Purpose:     wxTextStyle, wxTextSpan, wxTextSpanArray
 // Author:      Francesco Montorsi
 // Created:     2005/8/19
-// RCS-ID:      $Id: textspan.cpp,v 1.5 2005-09-16 17:12:12 frm Exp $
+// RCS-ID:      $Id: textspan.cpp,v 1.6 2005-09-18 10:05:29 frm Exp $
 // Copyright:   (c) 2005 Francesco Montorsi
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
@@ -98,11 +98,13 @@ wxXmlNode *wxCreateElemTextNode(wxXmlNode *prev, const wxString &name, const wxS
 wxTextStyle::wxTextStyle(const wxTextAttr &attr, 
 						 const wxString &name, 
 						 wxTextSpanTruncMode tm,
-						 wxTextStyleVertAlignment va)
+						 wxTextStyleVertAlignment va,
+						 int bkmode)
 {
 	m_style = attr; 
 	m_strName=name; 
 	m_truncMode=tm; 
+	m_nBkMode=bkmode;
 	SetVertAlignment(va); 
 	SetHorizAlignment(attr.GetAlignment());
 	CacheData();
@@ -131,6 +133,7 @@ void wxTextStyle::Select(wxDC &dc) const
 	dc.SetTextForeground(m_style.GetTextColour());
 	dc.SetTextBackground(m_style.GetBackgroundColour());
 	dc.SetFont(m_style.GetFont());
+	dc.SetBackgroundMode(m_nBkMode);
 }
 
 void wxTextStyle::SetHorizAlignment(wxTextAttrAlignment align)
@@ -192,6 +195,7 @@ wxXmlNode *wxTextStyle::ExportXHTML() const
 wxXmlNode *wxTextStyle::ExportXHTMLDiffFrom(const wxTextStyle *p) const
 {
 	wxString value;
+#define wxTS_CSS_SEPARATOR			wxT("; ")
 
 	// font facename
 	if (p == wxNullTextStyle ||
@@ -222,6 +226,110 @@ wxXmlNode *wxTextStyle::ExportXHTMLDiffFrom(const wxTextStyle *p) const
 		value += GetFont().GetFaceName();
 	}
 
+	// font size
+	if (p == wxNullTextStyle ||
+		p->GetFont().GetPointSize() != GetFont().GetPointSize()) {
+		if (!value.IsEmpty()) value += wxTS_CSS_SEPARATOR;
+		value += wxString::Format(wxT("font-size: %dpt"), GetFont().GetPointSize());
+	}
+
+	// font style
+	if (p == wxNullTextStyle ||
+		p->GetFont().GetStyle() != GetFont().GetStyle()) {
+		if (!value.IsEmpty()) value += wxTS_CSS_SEPARATOR;
+		value += wxT("font-style: ");
+
+		switch (GetFont().GetStyle()) {
+		case wxFONTSTYLE_NORMAL:
+			value += wxT("normal");
+			break;
+		case wxFONTSTYLE_SLANT:
+			value += wxT("???");
+			break;
+		case wxFONTSTYLE_ITALIC:
+			value += wxT("italic");
+			break;
+		}
+	}
+
+	// font decoration
+	if (p == wxNullTextStyle ||
+		p->GetFont().GetUnderlined() != GetFont().GetUnderlined()) {
+		if (!value.IsEmpty()) value += wxTS_CSS_SEPARATOR;
+
+		if (GetFont().GetUnderlined())
+			value += wxT("text-decoration: underline");
+		else
+			value += wxT("text-decoration: none");
+	}
+
+	// font weight
+	if (p == wxNullTextStyle ||
+		p->GetFont().GetWeight() != GetFont().GetWeight()) {
+		if (!value.IsEmpty()) value += wxTS_CSS_SEPARATOR;
+		value += wxT("font-weight: ");
+
+		switch (GetFont().GetWeight()) {
+		case wxFONTWEIGHT_NORMAL:
+			value += wxT("normal");
+			break;
+		case wxFONTWEIGHT_LIGHT:
+			value += wxT("200");
+			break;
+		case wxFONTWEIGHT_BOLD:
+			value += wxT("bold");
+			break;
+		}
+	}
+	
+	// alignment
+	if (p == wxNullTextStyle ||
+		p->GetHorizAlignment() != GetHorizAlignment()) {
+		if (!value.IsEmpty()) value += wxTS_CSS_SEPARATOR;
+		value += wxT("text-align: ");
+
+		switch (GetHorizAlignment()) {
+		case wxTEXT_ALIGNMENT_LEFT:
+			value += wxT("left");
+			break;
+		case wxTEXT_ALIGNMENT_CENTER:
+			value += wxT("center");
+			break;
+		case wxTEXT_ALIGNMENT_RIGHT:
+			value += wxT("right");
+			break;
+		case wxTEXT_ALIGNMENT_JUSTIFIED:
+			value += wxT("justify");
+			break;
+		}
+	}
+	
+	// text background colour
+	if (p == wxNullTextStyle ||
+		p->GetBackgroundColour() != GetBackgroundColour()) {
+		if (!value.IsEmpty()) value += wxTS_CSS_SEPARATOR;
+		value += wxT("background-color: ");
+
+		wxColour col(GetBackgroundColour());
+
+		if (m_nBkMode == wxTRANSPARENT)
+			value += wxT("transparent");
+		else
+			value += wxString::Format(wxT("rgb(%d,%d,%d)"), 
+							col.Red(), col.Green(), col.Blue());
+	}		
+	
+	// text foreground colour
+	if (p == wxNullTextStyle ||
+		p->GetForegroundColour() != GetForegroundColour()) {
+		if (!value.IsEmpty()) value += wxTS_CSS_SEPARATOR;
+		value += wxT("color: ");
+
+		wxColour col(GetForegroundColour());
+		value += wxString::Format(wxT("rgb(%d,%d,%d)"), 
+					col.Red(), col.Green(), col.Blue());
+	}	
+	
 	// build a <span> tag with a "style" property
 	wxXmlProperty *prop = new wxXmlProperty(wxT("style"), value, NULL);
 	return new wxXmlNode(NULL, wxXML_ELEMENT_NODE, 
@@ -555,8 +663,7 @@ void wxTextSpan::Paint(wxDC &dc)
 	dc.DrawRectangle(m_pos, m_size);
 #endif
 
-	// without this the background could be erased...
-	dc.SetBackgroundMode(wxTRANSPARENT);
+	// without this the background could be erased...	
 	dc.DrawText(GetTextWithoutDelim(TRUE), 
 		m_pos.x+GetTextOffsetX(), m_pos.y+GetTextOffsetY());
 
@@ -1279,36 +1386,51 @@ wxString wxTextSpanArray::ExportRTF() const
 
 wxXmlNode *wxTextSpanArray::ExportXHTML() const
 {
-	wxXmlNode *root = wxCreateElemNode(wxT("root")), *previous = NULL;
+	if (GetCount() == 0)
+		return NULL;
 
-	for (int i=0; i < GetCount(); i++) {
+	wxXmlNode *html = wxCreateElemNode(wxT("html"));
+	wxXmlNode *body = wxCreateElemNode(wxT("body"));
+	wxXmlNode *root = wxCreateElemNode(wxT("p"));
+	html->AddChild(body);
+	body->AddChild(root);
+	
+	// this is the first node we're going to output:
+	// we need to wrap it into the XHTML for its style.	
+	wxXmlNode *firstcontainer = Item(0)->GetStyle()->ExportXHTML();
+	root->AddChild(firstcontainer);
+	firstcontainer->AddChild(Item(0)->ExportXHTML());
+	if (Item(0)->EndsWithDelimiter())
+		firstcontainer->AddChild(wxCreateElemNode(wxT("br")));
 
-		wxXmlNode *content = Item(i)->ExportXHTML();
-		wxXmlNode *container = content;
+	// export all the remaining nodes...
+	wxXmlNode *container = firstcontainer;
+	for (int i=1; i < GetCount(); i++) {
 
-		if (i == 0) {
-
-			// in case this is the first node we're going to output, then
-			// we need to wrap it into the XHTML for its style.
-			container = Item(i)->GetStyle()->ExportXHTML();
-			container->AddChild(content);
+		// if the style for this span is different from the style for the previous
+		// span, then we need to create a new container
+		if (Item(i)->GetStyle() != Item(i-1)->GetStyle()) {
+			
+			//container = Item(i)->GetStyle()->ExportXHTMLDiffFrom(previous->GetStyle());
+			container = Item(i)->GetStyle()->ExportXHTML();			
+			root->AddChild(container);
 		}
-/*
-		if (previous != NULL && 
-			Item(i)->GetStyle() != previous->GetStyle()) {
 
-			container = Item(i)->GetStyle()->ExportXHTMLDiffFrom(previous->GetStyle());
-			container->AddChild(content);
-		}*/
-		if (Item(i)->EndsWithDelimiter())
-			content->SetNext(wxCreateElemNode(wxT("br")));
+		do {
+			// add to the current container the XHTML for the i-th span
+			container->AddChild(Item(i)->ExportXHTML());
+			if (Item(i)->EndsWithDelimiter())
+				container->AddChild(wxCreateElemNode(wxT("br")));
+			i++;
 
-		// add to the XML document this node
-		root->AddChild(container);
-		previous = container;
+		} while (i < GetCount() && Item(i)->GetStyle() == Item(i-1)->GetStyle());
+
+		// the i-th span has not been exported yet... avoid that the 
+		// for loop increment make us lost a span...
+		i--;
 	}
 
-	return root;
+	return html;
 }
 
 wxXmlDocument wxTextSpanArray::ExportXHTMLDoc() const

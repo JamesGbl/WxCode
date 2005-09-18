@@ -2,7 +2,7 @@
 // Name:        myframe.cpp
 // Purpose:     resizeable controls sample: A derived frame, called MyFrame
 // Author:      Markus Greither
-// RCS-ID:      $Id: myframe.cpp,v 1.8 2005-09-16 17:12:12 frm Exp $
+// RCS-ID:      $Id: myframe.cpp,v 1.9 2005-09-18 10:05:29 frm Exp $
 // Copyright:   (c) Markus Greither
 // Licence:     wxWindows licence
 //-----------------------------------------------------------------------------
@@ -49,6 +49,9 @@
 #include "wx/print.h"
 #include "wx/textctrl.h"
 #include "myprintout.h"
+
+#include "wx/url.h"
+#include "wx/wfstream.h"
 
 //-----------------------------------------------------------------------------
 // Regular resources (the non-XRC kind).
@@ -101,10 +104,15 @@ END_EVENT_TABLE()
 
 void TestTextBox(wxResizeableControlCanvas *rc)
 {
-	wxTextBox *txt = new wxTextBox(rc,
+	wxResizeableParentControl *parent = 
+		new wxResizeableParentControl(rc,
                              0, wxPoint(300,250),
                              wxSize(450,200),
-                             wxCLIP_SIBLINGS);	
+                             wxCLIP_SIBLINGS);
+
+	wxTextBox *txt = new wxTextBox(parent, 0, wxDefaultPosition, wxSize(450, 200));	
+	parent->SetManagedChild(txt);
+
 	txt->SetBackgroundColour(*wxWHITE);
 	txt->InitDefaultStyles();
 
@@ -218,9 +226,15 @@ MyFrame::MyFrame(wxWindow* parent)
     ParentControl *par = new ParentControl((wxResizeableControlCanvas *)m_resizecanvas,
                                            0,wxPoint(250,20),wxSize(200,200),wxCLIP_SIBLINGS);
     wxResizeableChildTextCtrl *ctrl = new wxResizeableChildTextCtrl(par,-1,_("text"));
-    par->AddManagedChild(ctrl);
+    par->SetManagedChild(ctrl);
 
 	TestTextBox((wxResizeableControlCanvas *)m_resizecanvas);
+
+/*
+		wxURL u(wxT("http://www.google.com"));
+		wxInputStream *in = u.GetInputStream();
+		wxFileOutputStream out(wxT("test"));
+		out.Write(*in);*/
 }
 
 
@@ -236,7 +250,14 @@ void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 
 void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
-    wxString msg;
+ 
+		wxURL u(wxT("http://www.google.com"));
+		wxInputStream *in = u.GetInputStream();
+		wxFileOutputStream out(wxT("test"));
+		out.Write(*in);
+
+	
+	wxString msg;
     msg.Printf( _T("Sample application for resizeable controls.\n\n")
                 _T("Demonstrates\n")
                 _T("resizing, moving, cutting, pasting and printing\n")

@@ -3,7 +3,7 @@
 // Purpose:     wxTextBoxLayoutStatus, wxTextBoxInputStatus, wxTextBox
 // Author:      Francesco Montorsi
 // Created:     2005/8/15
-// RCS-ID:      $Id: textbox.h,v 1.3 2005-09-16 17:06:12 frm Exp $
+// RCS-ID:      $Id: textbox.h,v 1.4 2005-09-18 10:05:29 frm Exp $
 // Copyright:   (c) 2005 Francesco Montorsi
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
@@ -256,7 +256,7 @@ public:		// getters
 //!   of wxTextStyle
 //! All these features make wxTextBox a powerful window which can be used
 //! as a small word processor.
-class WXDLLIMPEXP_RESIZEC wxTextBox : public wxResizeableControl
+class WXDLLIMPEXP_RESIZEC wxTextBox : public wxWindow//wxResizeableControl
 {
 protected:		// core
 
@@ -318,12 +318,16 @@ protected:      // miscellaneous utilities
     void OnUserCaretMove(long modifiers);
 	
 public:
-    wxTextBox(wxWindow *parent, int id, const wxPoint &pos,
-              const wxSize &size,long style = 0,
+    wxTextBox(wxWindow *parent, int id, const wxPoint &pos = wxDefaultPosition,
+              const wxSize &size = wxDefaultSize, long style = 0,
               const wxString &name = wxPanelNameStr);
 	virtual ~wxTextBox() {}
 	
 public:		// layout
+
+	//! Returns the canvas which contains this resizeable control.
+	wxResizeableControlCanvas *GetCanvas()
+		{ return ((wxResizeableParentControl*)GetParent())->GetCanvas(); }
 
 	bool Layout();
 
