@@ -1315,6 +1315,15 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
+# Arguments:
+# $1 = the name (mixed case) of the component to check
+# $2 = the name of a header of the component to check (without 'wx/' prefix and '.h' suffix)
+# $3 = the name of the library of the component to check (without 'lib' prefix and .a/.so suffix)
+# $4 = a C++ line of code that forces the test program to be linked against the component in order to work
+# $5 = action if found
+# $6 = action if not found
+
+
 
 
 
@@ -1691,8 +1700,8 @@ else
   with_httpengine=yes
 fi;
 
-echo "$as_me:$LINENO: checking for the --with-httpengine option..." >&5
-echo $ECHO_N "checking for the --with-httpengine option...... $ECHO_C" >&6
+echo "$as_me:$LINENO: checking for the --with-httpengine option" >&5
+echo $ECHO_N "checking for the --with-httpengine option... $ECHO_C" >&6
 if test "$with_httpengine" = "yes"; then
    USE_HTTPENGINE=1
    echo "$as_me:$LINENO: result: yes" >&5
@@ -4266,12 +4275,24 @@ echo "$as_me: error: Your 'wx-config --cxxflags' command seems to define more th
 if test "$USE_HTTPENGINE" = "1"; then
 
     # check for wxHTTPEngine presence
-    echo "$as_me:$LINENO: checking for the wxHTTPEngine availability..." >&5
-echo $ECHO_N "checking for the wxHTTPEngine availability...... $ECHO_C" >&6
 
-cat >conftest.$ac_ext <<_ACEOF
 
-                    /* confdefs.h.  */
+                        CPPFLAGS_ORIGINAL=$CPPFLAGS
+            CXXFLAGS_ORIGINAL=$CXXFLAGS
+            CFLAGS_ORIGINAL=$CFLAGS
+            LDFLAGS_ORIGINAL=$LDFLAGS
+
+                                                                                                                                                            CPPFLAGS="$CPPFLAGS $WX_CPPFLAGS"
+            CXXFLAGS="$CXXFLAGS $WX_CXXFLAGS"
+            CFLAGS="$CFLAGS $WX_CFLAGS_ONLY"
+
+                        LDFLAGS="$LDFLAGS -lhttpengine $WX_LIBS"
+
+                        echo "$as_me:$LINENO: checking for the wxHTTPEngine availability" >&5
+echo $ECHO_N "checking for the wxHTTPEngine availability... $ECHO_C" >&6
+            cat >conftest.$ac_ext <<_ACEOF
+
+                            /* confdefs.h.  */
 _ACEOF
 cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
@@ -4308,25 +4329,32 @@ if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
   ac_status=$?
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
-  HTTPENGINE_PRESENCE=1
+  wxHTTPEngine_PRESENCE=1
 else
   echo "$as_me: failed program was:" >&5
 sed 's/^/| /' conftest.$ac_ext >&5
 
-HTTPENGINE_PRESENCE=0
+wxHTTPEngine_PRESENCE=0
 fi
 rm -f conftest.err conftest.$ac_objext \
       conftest$ac_exeext conftest.$ac_ext
 
-    if test "$HTTPENGINE_PRESENCE" = "1"; then
-       USE_HTTPENGINE=1
-       echo "$as_me:$LINENO: result: found" >&5
+            if test "$wxHTTPEngine_PRESENCE" = "1"; then
+               echo "$as_me:$LINENO: result: found" >&5
 echo "${ECHO_T}found" >&6
-    else
-       USE_HTTPENGINE=0
-       echo "$as_me:$LINENO: result: not found !" >&5
+               USE_HTTPENGINE=1
+            else
+               echo "$as_me:$LINENO: result: not found !" >&5
 echo "${ECHO_T}not found !" >&6
-    fi
+               # action if found
+                                USE_HTTPENGINE=0
+            fi
+
+                        CPPFLAGS=$CPPFLAGS_ORIGINAL
+            CXXFLAGS=$CXXFLAGS_ORIGINAL
+            CFLAGS=$CFLAGS_ORIGINAL
+            LDFLAGS=$LDFLAGS_ORIGINAL
+             # action if not found
 fi
 
 
