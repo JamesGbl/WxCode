@@ -5,7 +5,7 @@
 <webupdate version="1.0">
 	<appname>wxWebUpdate SIMPLE sample</appname>
 	<appfile>simple</appfile>
-	<res>wxWebUpdateDlg</res>
+	<res>wxWebUpdateSimpleDlg</res>
 	<remoteuri>http://wxcode.sourceforge.net/components/webupdate/script1.xml</remoteuri>
 
 	<local-package id="simple">

@@ -133,7 +133,7 @@ protected:
 	}
 	
 	size_t OnSysRead(void *buffer, size_t bufsize)
-	{ wxASSERT(m_pStream); return m_pStream->Read(buffer, bufsize).LastRead(); }
+		{ wxASSERT(m_pStream); return m_pStream->Read(buffer, bufsize).LastRead(); }
 };
 
 wxInputStream *wxGetInputStreamFromURI(const wxString &uri)

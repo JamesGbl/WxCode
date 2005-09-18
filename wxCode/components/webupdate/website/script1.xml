@@ -16,7 +16,8 @@
       <latest-download>
 	  
 			<!-- use a simple ZIP -->
-			<uri>http://wxcode.sourceforge.net/components/webupdate/simple-$(latest-version).zip</uri>
+			<uri>http://osdn.dl.sourceforge.net/sourceforge/wxcode/simple-$(latest-version).zip</uri>
+            <md5>5b9b21256c8c5377f0c1a953420d6fa8</md5>
 			<platform name="msw"/>	
 			
 			<actions>
@@ -26,8 +27,10 @@
 	  </latest-download>
       <latest-download>
 	  
-			<!-- on unix-based OS we use .tar.gz archives -->
-			<uri>http://wxcode.sourceforge.net/components/webupdate/simple-$(latest-version).tar.gz</uri>
+			<!-- on unix-based OS we would use .tar.gz archives but since wx currently has a built-in support only for ZIP archives,
+             we will use a ZIP also for unix-based OS -->
+			<uri>http://osdn.dl.sourceforge.net/sourceforge/wxcode/simple-$(latest-version).zip</uri>
+            <md5>5b9b21256c8c5377f0c1a953420d6fa8</md5>
 			<platform name="gtk"/>
 			
 			<actions><run/></actions>
