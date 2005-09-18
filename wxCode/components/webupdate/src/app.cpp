@@ -484,13 +484,6 @@ bool WebUpdaterApp::OnInit()
 		return FALSE;	
 	}
 
-/*
-		wxURL u(wxT("http://www.google.com"));
-		wxInputStream *in = u.GetInputStream();
-		wxFileOutputStream out(wxT("test"));
-		out.Write(*in);
-/*/
-
 	// create our main dialog
 #if 1
 	wxLogUsrMsg(wxT("WebUpdaterApp::OnInit - creating the WebUpdaterDlg"));

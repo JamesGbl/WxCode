@@ -99,6 +99,43 @@ wxString wxMakeFileURI(const wxFileName &fn)
 //wxURL *g_urlTemp;
 wxURL g_urlTemp;
 
+class wxURLInputStream : public wxInputStream
+{
+protected:
+	wxURL m_url;
+	wxInputStream *m_pStream;
+
+public:
+	wxURLInputStream(const wxString &url)
+		: m_url(url), m_pStream(NULL) { InitStream(); }
+	virtual ~wxURLInputStream() { wxDELETE(m_pStream); }
+
+	wxFileOffset SeekI( wxFileOffset pos, wxSeekMode mode )
+		{ wxASSERT(m_pStream); return m_pStream->SeekI(pos, mode); }
+	wxFileOffset TellI() const
+		{ wxASSERT(m_pStream); return m_pStream->TellI(); }
+	    
+	size_t GetSize() const 
+		{ wxASSERT(m_pStream); return m_pStream->GetSize(); }
+	bool IsOk() const
+		{ wxASSERT(m_pStream); return m_pStream != NULL; }
+	bool Eof() const
+		{ wxASSERT(m_pStream); return m_pStream->Eof(); }
+
+protected:
+
+	bool InitStream() {
+		if (m_url.GetError() != wxURL_NOERR)
+			return FALSE;
+		m_url.GetProtocol().SetTimeout(30);		// 30 sec are much better rather than 10 min !!!
+		m_pStream = m_url.GetInputStream();
+		return (m_pStream != NULL);
+	}
+	
+	size_t OnSysRead(void *buffer, size_t bufsize)
+	{ wxASSERT(m_pStream); return m_pStream->Read(buffer, bufsize).LastRead(); }
+};
+
 wxInputStream *wxGetInputStreamFromURI(const wxString &uri)
 {
 	wxInputStream *in;
@@ -117,7 +154,6 @@ wxInputStream *wxGetInputStreamFromURI(const wxString &uri)
 #if wxUSE_HTTPENGINE
 		wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using wxHTTPBuilder"));
 		wxHTTPBuilder http;
-		//http.InitContentTypes(); // Initialise the content types on the page			
 
 		// NOTES: 
 		// 1) we use the static proxy & auth settings of wxDownloadThread
@@ -139,7 +175,7 @@ wxInputStream *wxGetInputStreamFromURI(const wxString &uri)
 
 		in = http.GetInputStream(uri);
 #else
-		g_urlTemp.Create(uri);
+		/*g_urlTemp.Create(uri);
 		wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using wxURL"));		
 		if (g_urlTemp.GetError() != wxURL_NOERR) {
 			wxLogUsrMsg(wxString(wxT("wxURL cannot parse this url [") + 
@@ -147,7 +183,9 @@ wxInputStream *wxGetInputStreamFromURI(const wxString &uri)
 			return NULL;
 		}
 		
-		in = g_urlTemp.GetInputStream();
+		in = g_urlTemp.GetInputStream();*/
+		in = new wxURLInputStream(uri);
+		//in->
 #endif
 	}
 	
