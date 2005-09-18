@@ -96,6 +96,9 @@ wxString wxMakeFileURI(const wxFileName &fn)
 	return wxURI(wxT("file:") + path).BuildURI();
 }
 
+//wxURL *g_urlTemp;
+wxURL g_urlTemp;
+
 wxInputStream *wxGetInputStreamFromURI(const wxString &uri)
 {
 	wxInputStream *in;
@@ -136,15 +139,15 @@ wxInputStream *wxGetInputStreamFromURI(const wxString &uri)
 
 		in = http.GetInputStream(uri);
 #else
+		g_urlTemp.Create(uri);
 		wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using wxURL"));		
-		wxURL u(uri);
-		if (u.GetError() != wxURL_NOERR) {
+		if (g_urlTemp.GetError() != wxURL_NOERR) {
 			wxLogUsrMsg(wxString(wxT("wxURL cannot parse this url [") + 
 									uri + wxT("]")));
 			return NULL;
 		}
 		
-		in = u.GetInputStream();
+		in = g_urlTemp.GetInputStream();
 #endif
 	}
 	
