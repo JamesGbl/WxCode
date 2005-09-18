@@ -98,8 +98,7 @@ SIMPLE_1_0_0_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
 	$(____DEBUGRUNTIME) $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
 	/I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	/I$(WX_DIR)\include /I..\include /I..\..\include /D_WINDOWS /GR /EHsc \
-	$(CPPFLAGS) $(CXXFLAGS)
+	/I$(WX_DIR)\include /I..\include /D_WINDOWS /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
 SIMPLE_1_0_0_OBJECTS =  \
 	msvc\simple_1_0_0_minimal.obj \
 	msvc\simple_1_0_0_minimal.res
@@ -108,8 +107,7 @@ SIMPLE_2_0_3_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
 	$(____DEBUGRUNTIME) $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
 	/I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	/I$(WX_DIR)\include /I..\include /I..\..\include /D_WINDOWS /GR /EHsc \
-	$(CPPFLAGS) $(CXXFLAGS)
+	/I$(WX_DIR)\include /I..\include /D_WINDOWS /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
 SIMPLE_2_0_3_OBJECTS =  \
 	msvc\simple_2_0_3_minimal.obj \
 	msvc\simple_2_0_3_minimal.res
@@ -118,8 +116,7 @@ ADVANCED_0_0_1_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
 	/Fd..\samples\advanced\v0.0.1\advanced.pdb $(____DEBUGRUNTIME) \
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
 	/D__WXMSW__ /I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	/I$(WX_DIR)\include /I..\include /I..\..\include /D_WINDOWS /GR /EHsc \
-	$(CPPFLAGS) $(CXXFLAGS)
+	/I$(WX_DIR)\include /I..\include /D_WINDOWS /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
 ADVANCED_0_0_1_OBJECTS =  \
 	msvc\advanced_0_0_1_minimal.obj \
 	msvc\advanced_0_0_1_minimal.res
@@ -128,8 +125,7 @@ ADVANCED_1_5_0_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
 	/Fd..\samples\advanced\v1.5.0\advanced.pdb $(____DEBUGRUNTIME) \
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
 	/D__WXMSW__ /I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	/I$(WX_DIR)\include /I..\include /I..\..\include /D_WINDOWS /GR /EHsc \
-	$(CPPFLAGS) $(CXXFLAGS)
+	/I$(WX_DIR)\include /I..\include /D_WINDOWS /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
 ADVANCED_1_5_0_OBJECTS =  \
 	msvc\advanced_1_5_0_minimal.obj \
 	msvc\advanced_1_5_0_minimal.res
@@ -460,23 +456,23 @@ msvc\simple_1_0_0_minimal.obj: .\..\samples\simple\v1.0.0\minimal.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(SIMPLE_1_0_0_CXXFLAGS) $**
 
 msvc\simple_1_0_0_minimal.res: .\..\samples\simple\v1.0.0\minimal.rc
-	rc /fo$@  /d WIN32 $(____DEBUGRUNTIME_3) $(__WX_SHAREDDEFINE_p_1_0) $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) /d __WXMSW__ /i $(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include /i ..\include /i ..\..\include /d _WINDOWS /i ..\samples\simple\v1.0.0 $**
+	rc /fo$@  /d WIN32 $(____DEBUGRUNTIME_3) $(__WX_SHAREDDEFINE_p_1_0) $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) /d __WXMSW__ /i $(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include /i ..\include /d _WINDOWS /i ..\samples\simple\v1.0.0 $**
 
 msvc\simple_2_0_3_minimal.obj: .\..\samples\simple\v2.0.3\minimal.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(SIMPLE_2_0_3_CXXFLAGS) $**
 
 msvc\simple_2_0_3_minimal.res: .\..\samples\simple\v2.0.3\minimal.rc
-	rc /fo$@  /d WIN32 $(____DEBUGRUNTIME_3) $(__WX_SHAREDDEFINE_p_1_0) $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) /d __WXMSW__ /i $(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include /i ..\include /i ..\..\include /d _WINDOWS /i ..\samples\simple\v2.0.3 $**
+	rc /fo$@  /d WIN32 $(____DEBUGRUNTIME_3) $(__WX_SHAREDDEFINE_p_1_0) $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) /d __WXMSW__ /i $(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include /i ..\include /d _WINDOWS /i ..\samples\simple\v2.0.3 $**
 
 msvc\advanced_0_0_1_minimal.obj: .\..\samples\advanced\v0.0.1\minimal.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(ADVANCED_0_0_1_CXXFLAGS) $**
 
 msvc\advanced_0_0_1_minimal.res: .\..\samples\advanced\v0.0.1\minimal.rc
-	rc /fo$@  /d WIN32 $(____DEBUGRUNTIME_3) $(__WX_SHAREDDEFINE_p_1_0) $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) /d __WXMSW__ /i $(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include /i ..\include /i ..\..\include /d _WINDOWS /i ..\samples\advanced\v0.0.1 $**
+	rc /fo$@  /d WIN32 $(____DEBUGRUNTIME_3) $(__WX_SHAREDDEFINE_p_1_0) $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) /d __WXMSW__ /i $(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include /i ..\include /d _WINDOWS /i ..\samples\advanced\v0.0.1 $**
 
 msvc\advanced_1_5_0_minimal.obj: .\..\samples\advanced\v1.5.0\minimal.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(ADVANCED_1_5_0_CXXFLAGS) $**
 
 msvc\advanced_1_5_0_minimal.res: .\..\samples\advanced\v1.5.0\minimal.rc
-	rc /fo$@  /d WIN32 $(____DEBUGRUNTIME_3) $(__WX_SHAREDDEFINE_p_1_0) $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) /d __WXMSW__ /i $(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include /i ..\include /i ..\..\include /d _WINDOWS /i ..\samples\advanced\v1.5.0 $**
+	rc /fo$@  /d WIN32 $(____DEBUGRUNTIME_3) $(__WX_SHAREDDEFINE_p_1_0) $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) /d __WXMSW__ /i $(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include /i ..\include /d _WINDOWS /i ..\samples\advanced\v1.5.0 $**
 

@@ -56,12 +56,13 @@ AC_DEFUN([MY_ARG_WITH], [AC_ARG_WITH($1,
 
 MY_ARG_WITH([httpengine], [Enables the proxy and authentication support], [yes])
 
+AC_MSG_CHECKING([for the --with-httpengine option...])
 if test "$with_httpengine" = "yes"; then
    USE_HTTPENGINE=1
-   AC_MSG_RESULT([Checking for the --with-httpengine option... yes])
+   AC_MSG_RESULT([yes])
 else
    USE_HTTPENGINE=0
-   AC_MSG_RESULT([Checking for the --with-httpengine option... no])
+   AC_MSG_RESULT([no])
 fi
 
 
@@ -76,12 +77,33 @@ fi
 ## required options (version, build settings, etc)
 #####################################################################
 
-AM_WXCODE_CHECKS([2.6.1])
-
-# TODO: check for httpengine presence
-
+AM_WXCODE_CHECKS([2.6.1], [xrc,xml,net])
+if test "$USE_HTTPENGINE" = "1"; then
+    
+    # check for wxHTTPEngine presence
+    AC_MSG_CHECKING([for the wxHTTPEngine availability...])
+    AC_LINK_IFELSE([
+                    AC_LANG_PROGRAM([#include <wx/httpbuilder.h>],
+                                    [wxHTTPBuilder test;])
+                  ],
+                    [HTTPENGINE_PRESENCE=1], [HTTPENGINE_PRESENCE=0])
+    
+    if test "$HTTPENGINE_PRESENCE" = "1"; then
+       USE_HTTPENGINE=1
+       AC_MSG_RESULT([found])
+    else
+       USE_HTTPENGINE=0
+       AC_MSG_RESULT([not found !])
+    fi
+fi
 
 
 # end in a nice way the configure script
-AM_WXCODE_END
+AM_WXCODE_END_PART1
+if test "$USE_HTTPENGINE" = "1"; then
+   echo "  - wxHTTPEngine enabled"
+else
+   echo "  - wxHTTPEngine disabled"
+fi
+AM_WXCODE_END_PART2
 

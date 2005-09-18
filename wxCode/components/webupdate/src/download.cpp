@@ -55,6 +55,67 @@ wxHTTPAuthSettings wxDownloadThread::m_auth;
 // Globals
 // ---------------------
 
+
+//! Creates an input stream tied to the URL given in the constructor.
+//! This helper class provides a system to keep the wxURL which produces
+//! the wxHTTPStream alive until the stream is needed.
+//! The following code in fact
+//! \code
+//!     wxInputStream *in;
+//!		{
+//!         wxURL url(wxT("http://www.google.com"));
+//!         in = url.GetInputStream();
+//!     }
+//!     in->Read(somewhere, somebytes);
+//! \endcode
+//! will fail because wxURL (which contains the wxProtocol which estabilishes
+//! the socket connection) is gone out of scope when the wxInputStream is used.
+//! This class makes such code:
+//! \code
+//!     wxInputStream *in;
+//!		{
+//!         in = new wxURLInputStream(wxT("http://www.google.com"));
+//!     }
+//!     in->Read(somewhere, somebytes);
+//! \endcode
+//! possible.
+class wxURLInputStream : public wxInputStream
+{
+protected:
+	wxURL m_url;
+	wxInputStream *m_pStream;
+
+public:
+	wxURLInputStream(const wxString &url)
+		: m_url(url), m_pStream(NULL) { InitStream(); }
+	virtual ~wxURLInputStream() { wxDELETE(m_pStream); }
+
+	wxFileOffset SeekI( wxFileOffset pos, wxSeekMode mode )
+		{ wxASSERT(m_pStream); return m_pStream->SeekI(pos, mode); }
+	wxFileOffset TellI() const
+		{ wxASSERT(m_pStream); return m_pStream->TellI(); }
+	    
+	size_t GetSize() const 
+		{ wxASSERT(m_pStream); return m_pStream->GetSize(); }
+	bool IsOk() const
+		{ wxASSERT(m_pStream); return m_pStream != NULL; }
+	bool Eof() const
+		{ wxASSERT(m_pStream); return m_pStream->Eof(); }
+
+protected:
+
+	bool InitStream() {
+		if (m_url.GetError() != wxURL_NOERR)
+			return FALSE;
+		m_url.GetProtocol().SetTimeout(30);		// 30 sec are much better rather than 10 min !!!
+		m_pStream = m_url.GetInputStream();
+		return (m_pStream != NULL);
+	}
+	
+	size_t OnSysRead(void *buffer, size_t bufsize)
+		{ wxASSERT(m_pStream); return m_pStream->Read(buffer, bufsize).LastRead(); }
+};
+
 bool wxIsFileProtocol(const wxString &uri)
 {
 	// file: is the signature of a file URI...
@@ -95,46 +156,6 @@ wxString wxMakeFileURI(const wxFileName &fn)
 	// now use wxURI as filter
 	return wxURI(wxT("file:") + path).BuildURI();
 }
-
-//wxURL *g_urlTemp;
-wxURL g_urlTemp;
-
-class wxURLInputStream : public wxInputStream
-{
-protected:
-	wxURL m_url;
-	wxInputStream *m_pStream;
-
-public:
-	wxURLInputStream(const wxString &url)
-		: m_url(url), m_pStream(NULL) { InitStream(); }
-	virtual ~wxURLInputStream() { wxDELETE(m_pStream); }
-
-	wxFileOffset SeekI( wxFileOffset pos, wxSeekMode mode )
-		{ wxASSERT(m_pStream); return m_pStream->SeekI(pos, mode); }
-	wxFileOffset TellI() const
-		{ wxASSERT(m_pStream); return m_pStream->TellI(); }
-	    
-	size_t GetSize() const 
-		{ wxASSERT(m_pStream); return m_pStream->GetSize(); }
-	bool IsOk() const
-		{ wxASSERT(m_pStream); return m_pStream != NULL; }
-	bool Eof() const
-		{ wxASSERT(m_pStream); return m_pStream->Eof(); }
-
-protected:
-
-	bool InitStream() {
-		if (m_url.GetError() != wxURL_NOERR)
-			return FALSE;
-		m_url.GetProtocol().SetTimeout(30);		// 30 sec are much better rather than 10 min !!!
-		m_pStream = m_url.GetInputStream();
-		return (m_pStream != NULL);
-	}
-	
-	size_t OnSysRead(void *buffer, size_t bufsize)
-		{ wxASSERT(m_pStream); return m_pStream->Read(buffer, bufsize).LastRead(); }
-};
 
 wxInputStream *wxGetInputStreamFromURI(const wxString &uri)
 {

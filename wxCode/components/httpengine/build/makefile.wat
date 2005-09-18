@@ -359,5 +359,5 @@ watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpenginedlg.obj :  .AUTODEPEND 
 	$(CXX) -bt=nt -zq -fo=$^@ $(HTTPENGINETEST_CXXFLAGS) $<
 
 watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpengine.res :  .AUTODEPEND .\..\sample\httpengine.rc
-	wrc -q -ad -bt=nt -r -fo=$^@ $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\sample $<
+	wrc -q -ad -bt=nt -r -fo=$^@ $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\sample -i=..\sample $<
 

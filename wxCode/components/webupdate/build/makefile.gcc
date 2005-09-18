@@ -95,7 +95,7 @@ SIMPLE_1_0_0_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	-mthreads $(__WX_SHAREDDEFINE_p) -DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
-	-I..\include -I..\..\include $(CPPFLAGS) $(CXXFLAGS)
+	-I..\include $(CPPFLAGS) $(CXXFLAGS)
 SIMPLE_1_0_0_OBJECTS =  \
 	mingw\simple_1_0_0_minimal.o \
 	mingw\simple_1_0_0_minimal_rc.o
@@ -103,7 +103,7 @@ SIMPLE_2_0_3_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	-mthreads $(__WX_SHAREDDEFINE_p) -DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
-	-I..\include -I..\..\include $(CPPFLAGS) $(CXXFLAGS)
+	-I..\include $(CPPFLAGS) $(CXXFLAGS)
 SIMPLE_2_0_3_OBJECTS =  \
 	mingw\simple_2_0_3_minimal.o \
 	mingw\simple_2_0_3_minimal_rc.o
@@ -111,7 +111,7 @@ ADVANCED_0_0_1_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	-mthreads $(__WX_SHAREDDEFINE_p) -DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
-	-I..\include -I..\..\include $(CPPFLAGS) $(CXXFLAGS)
+	-I..\include $(CPPFLAGS) $(CXXFLAGS)
 ADVANCED_0_0_1_OBJECTS =  \
 	mingw\advanced_0_0_1_minimal.o \
 	mingw\advanced_0_0_1_minimal_rc.o
@@ -119,7 +119,7 @@ ADVANCED_1_5_0_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	-mthreads $(__WX_SHAREDDEFINE_p) -DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
-	-I..\include -I..\..\include $(CPPFLAGS) $(CXXFLAGS)
+	-I..\include $(CPPFLAGS) $(CXXFLAGS)
 ADVANCED_1_5_0_OBJECTS =  \
 	mingw\advanced_1_5_0_minimal.o \
 	mingw\advanced_1_5_0_minimal_rc.o
@@ -406,25 +406,25 @@ mingw\simple_1_0_0_minimal.o: ./../samples/simple/v1.0.0/minimal.cpp
 	$(CXX) -c -o $@ $(SIMPLE_1_0_0_CXXFLAGS) $(CPPDEPS) $<
 
 mingw\simple_1_0_0_minimal_rc.o: ./../samples/simple/v1.0.0/minimal.rc
-	windres --use-temp-file -i$< -o$@ $(__WX_SHAREDDEFINE_p_1_0) --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ..\include --include-dir ..\..\include --include-dir ../samples/simple/v1.0.0
+	windres --use-temp-file -i$< -o$@ $(__WX_SHAREDDEFINE_p_1_0) --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ..\include --include-dir ../samples/simple/v1.0.0
 
 mingw\simple_2_0_3_minimal.o: ./../samples/simple/v2.0.3/minimal.cpp
 	$(CXX) -c -o $@ $(SIMPLE_2_0_3_CXXFLAGS) $(CPPDEPS) $<
 
 mingw\simple_2_0_3_minimal_rc.o: ./../samples/simple/v2.0.3/minimal.rc
-	windres --use-temp-file -i$< -o$@ $(__WX_SHAREDDEFINE_p_1_0) --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ..\include --include-dir ..\..\include --include-dir ../samples/simple/v2.0.3
+	windres --use-temp-file -i$< -o$@ $(__WX_SHAREDDEFINE_p_1_0) --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ..\include --include-dir ../samples/simple/v2.0.3
 
 mingw\advanced_0_0_1_minimal.o: ./../samples/advanced/v0.0.1/minimal.cpp
 	$(CXX) -c -o $@ $(ADVANCED_0_0_1_CXXFLAGS) $(CPPDEPS) $<
 
 mingw\advanced_0_0_1_minimal_rc.o: ./../samples/advanced/v0.0.1/minimal.rc
-	windres --use-temp-file -i$< -o$@ $(__WX_SHAREDDEFINE_p_1_0) --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ..\include --include-dir ..\..\include --include-dir ../samples/advanced/v0.0.1
+	windres --use-temp-file -i$< -o$@ $(__WX_SHAREDDEFINE_p_1_0) --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ..\include --include-dir ../samples/advanced/v0.0.1
 
 mingw\advanced_1_5_0_minimal.o: ./../samples/advanced/v1.5.0/minimal.cpp
 	$(CXX) -c -o $@ $(ADVANCED_1_5_0_CXXFLAGS) $(CPPDEPS) $<
 
 mingw\advanced_1_5_0_minimal_rc.o: ./../samples/advanced/v1.5.0/minimal.rc
-	windres --use-temp-file -i$< -o$@ $(__WX_SHAREDDEFINE_p_1_0) --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ..\include --include-dir ..\..\include --include-dir ../samples/advanced/v1.5.0
+	windres --use-temp-file -i$< -o$@ $(__WX_SHAREDDEFINE_p_1_0) --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ..\include --include-dir ../samples/advanced/v1.5.0
 
 .PHONY: all clean rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150
 

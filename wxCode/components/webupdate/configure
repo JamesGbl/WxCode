@@ -1301,6 +1301,18 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
+# ENABLES/DISABLES THE DEBUG MODE FOR THIS CONFIGURE SCRIPT
+#DBG_CONFIGURE=1
+
+# you need the wxCode/build/bakefiles in your local repository to generate a configure
+# script from this configure.ac file since wxcode.m4 is required....
+
+
+
+
+
+
+
 
 
 
@@ -1380,6 +1392,7 @@ ac_cpp='$CXXCPP $CPPFLAGS'
 ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+
 
 
 
@@ -1678,14 +1691,16 @@ else
   with_httpengine=yes
 fi;
 
+echo "$as_me:$LINENO: checking for the --with-httpengine option..." >&5
+echo $ECHO_N "checking for the --with-httpengine option...... $ECHO_C" >&6
 if test "$with_httpengine" = "yes"; then
    USE_HTTPENGINE=1
-   echo "$as_me:$LINENO: result: Checking for the --with-httpengine option... yes" >&5
-echo "${ECHO_T}Checking for the --with-httpengine option... yes" >&6
+   echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6
 else
    USE_HTTPENGINE=0
-   echo "$as_me:$LINENO: result: Checking for the --with-httpengine option... no" >&5
-echo "${ECHO_T}Checking for the --with-httpengine option... no" >&6
+   echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
 fi
 
 
@@ -3623,7 +3638,7 @@ fi
   if test "$WX_CONFIG_PATH" != "no" ; then
     WX_VERSION=""
 
-    min_wx_version=2.2.1
+    min_wx_version=2.6.1
     if test -z "$WXCFG_FLAGS" ; then
       echo "$as_me:$LINENO: checking for wxWidgets version >= $min_wx_version" >&5
 echo $ECHO_N "checking for wxWidgets version >= $min_wx_version... $ECHO_C" >&6
@@ -3632,7 +3647,7 @@ echo $ECHO_N "checking for wxWidgets version >= $min_wx_version... $ECHO_C" >&6
 echo $ECHO_N "checking for wxWidgets version >= $min_wx_version ($WXCFG_FLAGS)... $ECHO_C" >&6
     fi
 
-    WX_CONFIG_WITH_ARGS="$WX_CONFIG_PATH $wx_config_args $WXCFG_FLAGS core,base"
+    WX_CONFIG_WITH_ARGS="$WX_CONFIG_PATH $wx_config_args $WXCFG_FLAGS xrc,xml,net,core,base"
 
     WX_VERSION=`$WX_CONFIG_WITH_ARGS --version 2>/dev/null`
     wx_config_major_version=`echo $WX_VERSION | \
@@ -3772,7 +3787,7 @@ echo "${ECHO_T}no (version $WX_VERSION is not new enough)" >&6
     If you still get this error, then check that 'wx-config' is
     in path, the directory where wxWidgets libraries are installed
     (returned by 'wx-config --libs' command) is in LD_LIBRARY_PATH
-    or equivalent variable and wxWidgets version is  or above.
+    or equivalent variable and wxWidgets version is 2.6.1 or above.
 				" >&5
 echo "$as_me: error:
     The requested wxWidgets build couldn't be found.
@@ -3785,12 +3800,14 @@ echo "$as_me: error:
     If you still get this error, then check that 'wx-config' is
     in path, the directory where wxWidgets libraries are installed
     (returned by 'wx-config --libs' command) is in LD_LIBRARY_PATH
-    or equivalent variable and wxWidgets version is  or above.
+    or equivalent variable and wxWidgets version is 2.6.1 or above.
 				" >&2;}
    { (exit 1); exit 1; }; }
 			else
-																																CFLAGS="$CFLAGS $WX_CFLAGS_ONLY"
-				LDFLAGS="$LDFLAGS $WX_LIBS"
+
+                                if test "$DBG_CONFIGURE" = "1"; then
+                    echo "WX_LIBS: $WX_LIBS"
+                fi
 			fi
 
 
@@ -4246,13 +4263,74 @@ echo "$as_me: error: Your 'wx-config --cxxflags' command seems to define more th
 
 
 
+if test "$USE_HTTPENGINE" = "1"; then
 
-# TODO: check for httpengine presence
+    # check for wxHTTPEngine presence
+    echo "$as_me:$LINENO: checking for the wxHTTPEngine availability..." >&5
+echo $ECHO_N "checking for the wxHTTPEngine availability...... $ECHO_C" >&6
 
+cat >conftest.$ac_ext <<_ACEOF
+
+                    /* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+#include <wx/httpbuilder.h>
+int
+main ()
+{
+wxHTTPBuilder test;
+  ;
+  return 0;
+}
+
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_cxx_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  HTTPENGINE_PRESENCE=1
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+HTTPENGINE_PRESENCE=0
+fi
+rm -f conftest.err conftest.$ac_objext \
+      conftest$ac_exeext conftest.$ac_ext
+
+    if test "$HTTPENGINE_PRESENCE" = "1"; then
+       USE_HTTPENGINE=1
+       echo "$as_me:$LINENO: result: found" >&5
+echo "${ECHO_T}found" >&6
+    else
+       USE_HTTPENGINE=0
+       echo "$as_me:$LINENO: result: not found !" >&5
+echo "${ECHO_T}not found !" >&6
+    fi
+fi
 
 
 # end in a nice way the configure script
-
 
 
 
@@ -7245,6 +7323,13 @@ fi
             else
                 echo "  - STATIC mode"
             fi
+
+if test "$USE_HTTPENGINE" = "1"; then
+   echo "  - wxHTTPEngine enabled"
+else
+   echo "  - wxHTTPEngine disabled"
+fi
+
             echo
             echo "  The wxWidgets build which will be used by $PACKAGE_NAME $PACKAGE_VERSION"
             echo "  has the following settings:"

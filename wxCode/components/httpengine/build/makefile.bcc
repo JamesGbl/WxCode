@@ -348,5 +348,5 @@ borland$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpenginedlg.obj: .\..\sample\h
 	$(CXX) -q -c -P -o$@ $(HTTPENGINETEST_CXXFLAGS) $**
 
 borland$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpengine.res: .\..\sample\httpengine.rc
-	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include $(__WX_SHAREDDEFINE_p_4) $(__WXUNICODE_DEFINE_p_4) $(__WXDEBUG_DEFINE_p_4) -d__WXMSW__ -i$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\sample $**
+	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include $(__WX_SHAREDDEFINE_p_4) $(__WXUNICODE_DEFINE_p_4) $(__WXDEBUG_DEFINE_p_4) -d__WXMSW__ -i$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\sample -i..\sample $**
 

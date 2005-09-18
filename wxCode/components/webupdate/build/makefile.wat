@@ -198,25 +198,25 @@ WEBUPDATER_OBJECTS =  &
 SIMPLE_1_0_0_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
 	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
-	-i=$(WX_DIR)\include -i=..\include -i=..\..\include $(CPPFLAGS) $(CXXFLAGS)
+	-i=$(WX_DIR)\include -i=..\include $(CPPFLAGS) $(CXXFLAGS)
 SIMPLE_1_0_0_OBJECTS =  &
 	watcom\simple_1_0_0_minimal.obj
 SIMPLE_2_0_3_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
 	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
-	-i=$(WX_DIR)\include -i=..\include -i=..\..\include $(CPPFLAGS) $(CXXFLAGS)
+	-i=$(WX_DIR)\include -i=..\include $(CPPFLAGS) $(CXXFLAGS)
 SIMPLE_2_0_3_OBJECTS =  &
 	watcom\simple_2_0_3_minimal.obj
 ADVANCED_0_0_1_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
 	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
-	-i=$(WX_DIR)\include -i=..\include -i=..\..\include $(CPPFLAGS) $(CXXFLAGS)
+	-i=$(WX_DIR)\include -i=..\include $(CPPFLAGS) $(CXXFLAGS)
 ADVANCED_0_0_1_OBJECTS =  &
 	watcom\advanced_0_0_1_minimal.obj
 ADVANCED_1_5_0_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
 	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
-	-i=$(WX_DIR)\include -i=..\include -i=..\..\include $(CPPFLAGS) $(CXXFLAGS)
+	-i=$(WX_DIR)\include -i=..\include $(CPPFLAGS) $(CXXFLAGS)
 ADVANCED_1_5_0_OBJECTS =  &
 	watcom\advanced_1_5_0_minimal.obj
 
@@ -474,23 +474,23 @@ watcom\simple_1_0_0_minimal.obj :  .AUTODEPEND .\..\samples\simple\v1.0.0\minima
 	$(CXX) -bt=nt -zq -fo=$^@ $(SIMPLE_1_0_0_CXXFLAGS) $<
 
 watcom\simple_1_0_0_minimal.res :  .AUTODEPEND .\..\samples\simple\v1.0.0\minimal.rc
-	wrc -q -ad -bt=nt -r -fo=$^@ $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\..\include -i=..\samples\simple\v1.0.0 $<
+	wrc -q -ad -bt=nt -r -fo=$^@ $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\samples\simple\v1.0.0 $<
 
 watcom\simple_2_0_3_minimal.obj :  .AUTODEPEND .\..\samples\simple\v2.0.3\minimal.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(SIMPLE_2_0_3_CXXFLAGS) $<
 
 watcom\simple_2_0_3_minimal.res :  .AUTODEPEND .\..\samples\simple\v2.0.3\minimal.rc
-	wrc -q -ad -bt=nt -r -fo=$^@ $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\..\include -i=..\samples\simple\v2.0.3 $<
+	wrc -q -ad -bt=nt -r -fo=$^@ $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\samples\simple\v2.0.3 $<
 
 watcom\advanced_0_0_1_minimal.obj :  .AUTODEPEND .\..\samples\advanced\v0.0.1\minimal.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(ADVANCED_0_0_1_CXXFLAGS) $<
 
 watcom\advanced_0_0_1_minimal.res :  .AUTODEPEND .\..\samples\advanced\v0.0.1\minimal.rc
-	wrc -q -ad -bt=nt -r -fo=$^@ $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\..\include -i=..\samples\advanced\v0.0.1 $<
+	wrc -q -ad -bt=nt -r -fo=$^@ $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\samples\advanced\v0.0.1 $<
 
 watcom\advanced_1_5_0_minimal.obj :  .AUTODEPEND .\..\samples\advanced\v1.5.0\minimal.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(ADVANCED_1_5_0_CXXFLAGS) $<
 
 watcom\advanced_1_5_0_minimal.res :  .AUTODEPEND .\..\samples\advanced\v1.5.0\minimal.rc
-	wrc -q -ad -bt=nt -r -fo=$^@ $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\..\include -i=..\samples\advanced\v1.5.0 $<
+	wrc -q -ad -bt=nt -r -fo=$^@ $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\samples\advanced\v1.5.0 $<
 

@@ -26,6 +26,7 @@
 // includes
 #ifndef WX_PRECOMP
 	#include <wx/log.h>
+	#include <wx/textctrl.h>
 #endif
 
 #include <wx/url.h>
@@ -153,7 +154,7 @@ void wxWebUpdateLog::DoLogDecoratedString(wxLogLevel lev, const wxChar *str)
 		}
 		
 		// finally their also go in the old logger (which does something only in debug builds)
-		wxLogPassThrough::DoLog(lev, str, NULL);
+		wxLogPassThrough::DoLog(lev, str, 0);
 		break;
 	
 	default:

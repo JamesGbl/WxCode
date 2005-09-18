@@ -345,5 +345,5 @@ msvc$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpenginedlg.obj: .\..\sample\http
 	$(CXX) /c /nologo /TP /Fo$@ $(HTTPENGINETEST_CXXFLAGS) $**
 
 msvc$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpengine.res: .\..\sample\httpengine.rc
-	rc /fo$@  /d WIN32 $(____DEBUGRUNTIME_29_p_1) $(__WX_SHAREDDEFINE_p_4) $(__WXUNICODE_DEFINE_p_4) $(__WXDEBUG_DEFINE_p_4) /d __WXMSW__ /i $(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include /i ..\include /d _WINDOWS /i ..\sample $**
+	rc /fo$@  /d WIN32 $(____DEBUGRUNTIME_29_p_1) $(__WX_SHAREDDEFINE_p_4) $(__WXUNICODE_DEFINE_p_4) $(__WXDEBUG_DEFINE_p_4) /d __WXMSW__ /i $(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include /i ..\include /d _WINDOWS /i ..\sample /i ..\sample $**
 

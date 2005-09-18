@@ -140,7 +140,7 @@ COND_PLATFORM_OS2_1___httpenginetest___os2_emxbindcmd = $(NM) \
 
 all: $(__httpengine_lib___depname) $(__httpengine_dll___depname) ./sample/httpenginetest$(EXEEXT)
 
-install: all $(__install_httpengine_lib___depname) $(__install_httpengine_dll___depname)
+install: all install-wxheaders $(__install_httpengine_lib___depname) $(__install_httpengine_dll___depname)
 
 uninstall: 
 	rm -f $(DESTDIR)$(includedir)/wx/authdlg.h \
@@ -243,6 +243,10 @@ docs:
 cleandocs: 
 	rm -rf ./docs/html
 
+install-wxheaders: 
+	$(INSTALL_DIR) $(DESTDIR)$(includedir)/wx
+	(cd $(srcdir) ; $(INSTALL_DATA)  ./include/wx/*.h $(DESTDIR)$(includedir)/wx)
+
 @COND_WX_SHARED_0@./lib/$(LIBPREFIX)httpengine$(LIBEXT): $(HTTPENGINE_LIB_OBJECTS)
 @COND_WX_SHARED_0@	rm -f $@
 @COND_WX_SHARED_0@	$(AR) rcu $@ $(HTTPENGINE_LIB_OBJECTS)
@@ -318,7 +322,7 @@ httpenginetest_httpenginedlg.o: $(srcdir)/./sample/httpenginedlg.cpp
 	$(CXXC) -c -o $@ $(HTTPENGINETEST_CXXFLAGS) $(srcdir)/./sample/httpenginedlg.cpp
 
 httpenginetest_httpengine_rc.o: $(srcdir)/./sample/httpengine.rc
-	$(RESCOMP) -i$< -o$@  --include-dir ./include --include-dir ./sample
+	$(RESCOMP) -i$< -o$@  --include-dir ./include --include-dir ./sample --include-dir ./sample
 
 
 # Include dependency info, if present:

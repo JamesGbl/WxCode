@@ -14,7 +14,7 @@
 AC_INIT([wxHttpEngine], [1.5], [frm@sourceforge.net])
 
 # ENABLES/DISABLES THE DEBUG MODE FOR THIS CONFIGURE SCRIPT
-DBG_CONFIGURE=1
+#DBG_CONFIGURE=1
 
 m4_include(../../../build/bakefiles/wxcode.m4)
 AM_WXCODE_INIT

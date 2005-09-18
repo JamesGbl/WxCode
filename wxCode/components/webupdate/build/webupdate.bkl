@@ -11,7 +11,7 @@
 	<!-- The wxHttpEngine dependency -->
 	<!-- =========================== -->
 
-    <set var="USE_HTTPENGINE_DEFAULT">0</set>
+	<set var="USE_HTTPENGINE_DEFAULT">0</set>
 
 	<if cond="TARGETING_IDE=='0'">
 		<option name="USE_HTTPENGINE">
@@ -102,7 +102,6 @@
 	<set var="COMP_SAMPLE2_DIR">$(COMP_BASEPATH)/samples/advanced/v0.0.1</set>
 	<set var="COMP_SAMPLE2_UPDATED_DIR">$(COMP_BASEPATH)/samples/advanced/v1.5.0</set>
 	
-	<set var="COMP_WANT_INSTALL_TARGET">0</set>
 	<set var="WX_UNICODE_DEFAULT">1</set>
 	<set var="WX_VERSION_DEFAULT">26</set>
 
@@ -159,9 +158,9 @@
 		<!-- the WebUpdater utility... -->
 		<exe id="webupdater" template="basic,wx,wxcode-basic,webupdatecommon">
 			<app-type>gui</app-type>		
-			<dirname>../src</dirname>
-			<res-include>../src</res-include>
-			<win32-res>..$(DIRSEP)src$(DIRSEP)app.rc</win32-res>
+			<dirname>$(COMP_BASEPATH)/src</dirname>
+			<res-include>$(COMP_BASEPATH)/src</res-include>
+			<win32-res>$(COMP_BASEPATH)$(DIRSEP)src$(DIRSEP)app.rc</win32-res>
 			
 			<msvc-file-group>XRC:*.xrc</msvc-file-group>
 			<msvc-project-files>..\src\webupdatedlg.xrc</msvc-project-files>
@@ -183,7 +182,7 @@
 	<if cond="TARGETING_IDE=='0'">
 		<define-rule name="copyrep" extends="force-copy-files">
 			<template>
-				<srcdir>../src</srcdir>
+				<srcdir>$(COMP_BASEPATH)/src</srcdir>
 				<if cond="TARGETING_WIN32=='1'"><files>webupdater.exe webupdatedlg.xrc</files></if>
 				<if cond="TARGETING_WIN32=='0'"><files>webupdater webupdatedlg.xrc</files></if>
 				<dependency-of>all</dependency-of>				
@@ -227,7 +226,7 @@ $(TAB)copy "$(DOLLAR)(InputPath)" "$(_output)"
 	
 	<template id="webupdatecompsample" template="compsamplebasic">
 		<depends>webupdater</depends>
-		<include>..$(DIRSEP)..$(DIRSEP)include</include>
+		<!-- <include>..$(DIRSEP)..$(DIRSEP)include</include> -->
 		<app-type>gui</app-type>		
         <wx-lib>core</wx-lib>
         <wx-lib>base</wx-lib>

@@ -37,8 +37,7 @@
 			httpengineapp.h
 			httpenginedlg.h
 	</set>
-	
-	<set var="COMP_WANT_INSTALL_TARGET">0</set>
+		
 	<set var="WX_UNICODE_DEFAULT">0</set>
 	<set var="WX_VERSION_DEFAULT">26</set>
 

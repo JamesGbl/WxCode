@@ -121,25 +121,25 @@ WEBUPDATER_OBJECTS =  \
 SIMPLE_1_0_0_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	-tWM $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
 	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	-I$(WX_DIR)\include -I..\include -I..\..\include $(CPPFLAGS) $(CXXFLAGS)
+	-I$(WX_DIR)\include -I..\include $(CPPFLAGS) $(CXXFLAGS)
 SIMPLE_1_0_0_OBJECTS =  \
 	borland\simple_1_0_0_minimal.obj
 SIMPLE_2_0_3_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	-tWM $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
 	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	-I$(WX_DIR)\include -I..\include -I..\..\include $(CPPFLAGS) $(CXXFLAGS)
+	-I$(WX_DIR)\include -I..\include $(CPPFLAGS) $(CXXFLAGS)
 SIMPLE_2_0_3_OBJECTS =  \
 	borland\simple_2_0_3_minimal.obj
 ADVANCED_0_0_1_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	-tWM $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
 	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	-I$(WX_DIR)\include -I..\include -I..\..\include $(CPPFLAGS) $(CXXFLAGS)
+	-I$(WX_DIR)\include -I..\include $(CPPFLAGS) $(CXXFLAGS)
 ADVANCED_0_0_1_OBJECTS =  \
 	borland\advanced_0_0_1_minimal.obj
 ADVANCED_1_5_0_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	-tWM $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
 	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	-I$(WX_DIR)\include -I..\include -I..\..\include $(CPPFLAGS) $(CXXFLAGS)
+	-I$(WX_DIR)\include -I..\include $(CPPFLAGS) $(CXXFLAGS)
 ADVANCED_1_5_0_OBJECTS =  \
 	borland\advanced_1_5_0_minimal.obj
 
@@ -461,23 +461,23 @@ borland\simple_1_0_0_minimal.obj: .\..\samples\simple\v1.0.0\minimal.cpp
 	$(CXX) -q -c -P -o$@ $(SIMPLE_1_0_0_CXXFLAGS) $**
 
 borland\simple_1_0_0_minimal.res: .\..\samples\simple\v1.0.0\minimal.rc
-	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include $(__WX_SHAREDDEFINE_p_1_0) $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) -d__WXMSW__ -i$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\..\include -i..\samples\simple\v1.0.0 $**
+	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include $(__WX_SHAREDDEFINE_p_1_0) $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) -d__WXMSW__ -i$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\samples\simple\v1.0.0 $**
 
 borland\simple_2_0_3_minimal.obj: .\..\samples\simple\v2.0.3\minimal.cpp
 	$(CXX) -q -c -P -o$@ $(SIMPLE_2_0_3_CXXFLAGS) $**
 
 borland\simple_2_0_3_minimal.res: .\..\samples\simple\v2.0.3\minimal.rc
-	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include $(__WX_SHAREDDEFINE_p_1_0) $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) -d__WXMSW__ -i$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\..\include -i..\samples\simple\v2.0.3 $**
+	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include $(__WX_SHAREDDEFINE_p_1_0) $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) -d__WXMSW__ -i$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\samples\simple\v2.0.3 $**
 
 borland\advanced_0_0_1_minimal.obj: .\..\samples\advanced\v0.0.1\minimal.cpp
 	$(CXX) -q -c -P -o$@ $(ADVANCED_0_0_1_CXXFLAGS) $**
 
 borland\advanced_0_0_1_minimal.res: .\..\samples\advanced\v0.0.1\minimal.rc
-	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include $(__WX_SHAREDDEFINE_p_1_0) $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) -d__WXMSW__ -i$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\..\include -i..\samples\advanced\v0.0.1 $**
+	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include $(__WX_SHAREDDEFINE_p_1_0) $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) -d__WXMSW__ -i$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\samples\advanced\v0.0.1 $**
 
 borland\advanced_1_5_0_minimal.obj: .\..\samples\advanced\v1.5.0\minimal.cpp
 	$(CXX) -q -c -P -o$@ $(ADVANCED_1_5_0_CXXFLAGS) $**
 
 borland\advanced_1_5_0_minimal.res: .\..\samples\advanced\v1.5.0\minimal.rc
-	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include $(__WX_SHAREDDEFINE_p_1_0) $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) -d__WXMSW__ -i$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\..\include -i..\samples\advanced\v1.5.0 $**
+	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include $(__WX_SHAREDDEFINE_p_1_0) $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) -d__WXMSW__ -i$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\samples\advanced\v1.5.0 $**
 
