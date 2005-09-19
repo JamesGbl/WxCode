@@ -6,5 +6,6 @@ Maintainer: Otto Wyss (wyo)
 Subdir:     mimetypes
 
 Description:
-wxMimeTypes gives to access (retrieve, read and write) any mime type information
-of a file.
+wxMimeTypes allows to access all information of the mime type of an application.
+An application can check if its mime type is correctly set and if not to install
+the mime type.

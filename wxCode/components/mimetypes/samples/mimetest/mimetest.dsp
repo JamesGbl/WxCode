@@ -7,16 +7,16 @@
 CFG=mimetest - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
-!MESSAGE
+!MESSAGE 
 !MESSAGE NMAKE /f "mimetest.mak".
-!MESSAGE
+!MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
-!MESSAGE
+!MESSAGE 
 !MESSAGE NMAKE /f "mimetest.mak" CFG="mimetest - Win32 Debug"
-!MESSAGE
+!MESSAGE 
 !MESSAGE Possible choices for configuration are:
-!MESSAGE
+!MESSAGE 
 !MESSAGE "mimetest - Win32 DebugUniv" (based on "Win32 (x86) Application")
 !MESSAGE "mimetest - Win32 ReleaseUniv" (based on "Win32 (x86) Application")
 !MESSAGE "mimetest - Win32 DebugDev" (based on "Win32 (x86) Application")
@@ -25,7 +25,7 @@ CFG=mimetest - Win32 Debug
 !MESSAGE "mimetest - Win32 ReleaseUnicode" (based on "Win32 (x86) Application")
 !MESSAGE "mimetest - Win32 Debug" (based on "Win32 (x86) Application")
 !MESSAGE "mimetest - Win32 Release" (based on "Win32 (x86) Application")
-!MESSAGE
+!MESSAGE 
 
 # Begin Project
 # PROP AllowPerConfigDependencies 0
@@ -259,7 +259,7 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26.lib wxbase26_net.lib wxbase26_odbc.lib wxbase26_xml.lib wxexpat.lib wxjpeg.lib wxmsw26_adv.lib wxmsw26_core.lib wxmsw26_dbgrid.lib wxmsw26_gl.lib wxmsw26_html.lib wxpng.lib wxregex.lib wxtiff.lib wxzlib.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"LIBCMT.lib" /libpath:"$(WXSTABLE)\lib\vc_lib"
 # SUBTRACT LINK32 /profile /map /debug
 
-!ENDIF
+!ENDIF 
 
 # Begin Target
 
@@ -274,57 +274,14 @@ LINK32=link.exe
 # Begin Source File
 
 SOURCE=.\mimetest.cpp
-DEP_CPP_SPLIT=\
-    ".\mimetest.xpm"\
+# End Source File
+# Begin Source File
 
-NODEP_CPP_SPLIT=\
-    ".\wx\mimetypes.h"\
-
-
-!IF  "$(CFG)" == "mimetest - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "mimetest - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "mimetest - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "mimetest - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "mimetest - Win32 DebugUnicode"
-
-!ELSEIF  "$(CFG)" == "mimetest - Win32 ReleaseUnicode"
-
-!ELSEIF  "$(CFG)" == "mimetest - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "mimetest - Win32 Release"
-
-!ENDIF
-
+SOURCE=.\mimetest.rc
 # End Source File
 # Begin Source File
 
 SOURCE="..\..\src\mimetypes.cpp"
-NODEP_CPP_SPLITW=\
-    "..\..\src\wx\mimetypes.h"\
-
-
-!IF  "$(CFG)" == "mimetest - Win32 DebugUniv"
-
-!ELSEIF  "$(CFG)" == "mimetest - Win32 ReleaseUniv"
-
-!ELSEIF  "$(CFG)" == "mimetest - Win32 DebugDev"
-
-!ELSEIF  "$(CFG)" == "mimetest - Win32 ReleaseDev"
-
-!ELSEIF  "$(CFG)" == "mimetest - Win32 DebugUnicode"
-
-!ELSEIF  "$(CFG)" == "mimetest - Win32 ReleaseUnicode"
-
-!ELSEIF  "$(CFG)" == "mimetest - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "mimetest - Win32 Release"
-
-!ENDIF
-
 # End Source File
 # End Target
 # End Project

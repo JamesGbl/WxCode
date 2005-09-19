@@ -1,2 +1,2 @@
-app ICON "mimetest.ico"
+mimetest ICON "mimetest.ico"
 #include "wx/msw/wx.rc"
