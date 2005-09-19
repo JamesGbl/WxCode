@@ -1,2 +1,2 @@
-app ICON "crashtest.ico"
+crashtest ICON "crashtest.ico"
 #include "wx/msw/wx.rc"

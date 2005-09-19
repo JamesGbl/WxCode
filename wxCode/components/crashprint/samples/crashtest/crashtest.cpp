@@ -3,7 +3,7 @@
 // Purpose:     CrashTest application
 // Maintainer:  Otto Wyss
 // Created:     2004-10-01
-// RCS-ID:      $Id: crashtest.cpp,v 1.7 2005-04-14 19:41:52 wyo Exp $
+// RCS-ID:      $Id: crashtest.cpp,v 1.8 2005-09-19 17:47:07 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -50,25 +50,24 @@
 // declarations
 //============================================================================
 
-const wxString APP_NAME = _T("CrashTest");
-const wxString APP_DESCR = _("\
-This application tests if the crash print is correct.\
-");
-
-const wxString APP_MAINT = _T("Otto Wyss");
+const wxString APP_NAME = _T("wxCrashPrint");
 const wxString APP_VENDOR = _T("wxCode");
-const wxString APP_COPYRIGTH = _T("(C) 2004 wxCode");
+const wxString APP_VERSION = _T("1.0.0");
+const wxString APP_MAINT = _T("Otto Wyss");
 const wxString APP_LICENCE = _T("wxWindows");
+const wxString APP_COPYRIGTH = _T("(C) 2005 Otto Wyss");
 
-const wxString APP_VERSION = _T("0.2.1");
-
-const wxString APP_WEBSITE = _T("http://wxcode.sourceforge.net");
-const wxString APP_MAIL = _T("http://wxcode.sourceforge.net/feedback.php");
+const wxString APP_DESCR = _("\
+wxCrashPrint formats and prints a report in case the application \n\
+crashes on Linux. Also included is the implementation of the \n\
+BlackBox.dll which does the same on Windows.\
+");
+const wxString APP_WEBSITE = _T("http://wxcode.sourceforge.net/");
 
 const wxString APP_INFOS = _("\
-If you like this app and want to help just subscribe to the users mailing \n\
-and ask what you can do.\
+This application is derived from the demo sample of wyoGuide.\
 ");
+const wxString APP_WYOGUIDE = _T("http://wyoguide.sourceforge.net");
 
 
 //----------------------------------------------------------------------------
@@ -83,6 +82,7 @@ wxCrashPrint g_crashprint;
 //----------------------------------------------------------------------------
 //! application
 class App: public wxApp {
+    friend class AppAbout;
 
 public:
     // standard overrides
@@ -102,6 +102,28 @@ private:
     wxDynamicLibrary  m_blackboxDll;
 #endif
 
+};
+
+
+//----------------------------------------------------------------------------
+//! about box of the application
+class AppAbout: public wxDialog {
+
+public:
+    //! constructor
+    AppAbout (wxWindow *parent, int milliseconds = 0);
+
+    //! destructor
+    ~AppAbout ();
+
+    // event handlers
+    void OnTimerEvent (wxTimerEvent &event);
+
+private:
+    // timer
+    wxTimer *m_timer;
+
+    DECLARE_EVENT_TABLE()
 };
 
 
@@ -135,6 +157,9 @@ bool App::OnInit () {
     SetVendorName (APP_VENDOR);
     g_appname.Append (APP_NAME);
 
+    // about box shown for 3 seconds
+    AppAbout (NULL, 3000);
+
     // print welcome
     wxPrintf (_T("%s (%s)\n"), g_appname.c_str(), APP_VERSION.c_str());
     wxPrintf (_T("%s\n\n"), APP_DESCR.c_str());
@@ -159,3 +184,89 @@ void App::OnFatalException () {
     g_crashprint.Report();
 }
 #endif
+
+
+//----------------------------------------------------------------------------
+// AppAbout
+//----------------------------------------------------------------------------
+
+const int myID_ABOUTTIMER = wxID_HIGHEST + 1;
+BEGIN_EVENT_TABLE (AppAbout, wxDialog)
+    EVT_TIMER (myID_ABOUTTIMER, AppAbout::OnTimerEvent)
+END_EVENT_TABLE ()
+
+AppAbout::AppAbout (wxWindow *parent,
+                    int milliseconds)
+        : wxDialog (parent, -1, _("About..."),
+                    wxDefaultPosition, wxDefaultSize,
+                    wxDEFAULT_DIALOG_STYLE | wxSTAY_ON_TOP) {
+
+    // set timer if any
+    m_timer = NULL;
+    if (milliseconds > 0) {
+        m_timer = new wxTimer (this, myID_ABOUTTIMER);
+        m_timer->Start (milliseconds, wxTIMER_ONE_SHOT);
+    }
+
+    // about info
+    wxFlexGridSizer *aboutinfo = new wxFlexGridSizer (2, 0, 2);
+    aboutinfo->Add (new wxStaticText(this, -1, _("Vendor: ")),0, wxALIGN_LEFT);
+    aboutinfo->Add (new wxStaticText(this, -1, APP_VENDOR),0, wxALIGN_LEFT);
+    aboutinfo->Add (new wxStaticText(this, -1, _("Version: ")),0, wxALIGN_LEFT);
+    aboutinfo->Add (new wxStaticText(this, -1, APP_VERSION),0, wxALIGN_LEFT);
+    aboutinfo->Add (new wxStaticText(this, -1, _("Written by: ")),0, wxALIGN_LEFT);
+    aboutinfo->Add (new wxStaticText(this, -1, APP_MAINT),0, wxALIGN_LEFT);
+    aboutinfo->Add (new wxStaticText(this, -1, _("Licence type: ")),0, wxALIGN_LEFT);
+    aboutinfo->Add (new wxStaticText(this, -1, APP_LICENCE),0, wxALIGN_LEFT);
+    aboutinfo->Add (new wxStaticText(this, -1, _("Copyright: ")),0, wxALIGN_LEFT);
+    aboutinfo->Add (new wxStaticText(this, -1, APP_COPYRIGTH),0, wxALIGN_LEFT);
+
+    // about icontitle//info
+    wxBoxSizer *aboutpane = new wxBoxSizer (wxHORIZONTAL);
+    wxBitmap bitmap = wxBitmap(wxICON (crashtest));
+    aboutpane->Add (new wxStaticBitmap (this, -1, bitmap),
+                    1, wxALIGN_CENTER | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT, 20);
+    aboutpane->Add (aboutinfo, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+    aboutpane->Add (20, 0);
+
+    // about complete
+    wxBoxSizer *totalpane = new wxBoxSizer (wxVERTICAL);
+    totalpane->Add (0, 10);
+    wxStaticText *appname = new wxStaticText(this, -1, APP_NAME);
+    appname->SetFont (wxFont (20, wxDEFAULT, wxNORMAL, wxBOLD));
+    totalpane->Add (appname, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, 40);
+    totalpane->Add (0, 10);
+    totalpane->Add (aboutpane, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 10);
+    totalpane->Add (new wxStaticText(this, -1, wxGetTranslation(APP_DESCR)),
+                    0, wxALIGN_LEFT | wxLEFT | wxRIGHT, 10);
+    totalpane->Add (0, 6);
+    totalpane->Add (new wxStaticText(this, -1, APP_WEBSITE),
+                    0, wxALIGN_CENTER | wxLEFT | wxRIGHT | wxBOTTOM, 10);
+    totalpane->Add (new wxStaticText(this, -1, wxGetTranslation(APP_INFOS)),
+                    0, wxALIGN_LEFT | wxLEFT | wxRIGHT, 10);
+    totalpane->Add (0, 6);
+    totalpane->Add (new wxStaticText (this, -1, APP_WYOGUIDE),
+                    0, wxALIGN_CENTER | wxLEFT | wxRIGHT | wxBOTTOM, 10);
+    wxButton *okButton = new wxButton (this, wxID_OK, _("OK"));
+    okButton->SetDefault();
+    totalpane->Add (okButton, 0, wxALIGN_CENTER | wxALL, 10);
+
+    SetSizerAndFit (totalpane);
+    CentreOnParent();
+    ShowModal();
+}
+
+AppAbout::~AppAbout () {
+    if (m_timer)  {
+        delete m_timer;
+        m_timer = NULL;
+    }
+}
+
+//----------------------------------------------------------------------------
+// event handlers
+void AppAbout::OnTimerEvent (wxTimerEvent &WXUNUSED(event)) {
+    if (m_timer) delete m_timer;
+    m_timer = NULL;
+    EndModal (wxID_OK);
+}
