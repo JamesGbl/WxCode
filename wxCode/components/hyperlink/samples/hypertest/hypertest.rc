@@ -1,2 +1,2 @@
-app ICON "hypertest.ico"
+hypertest ICON "hypertest.ico"
 #include "wx/msw/wx.rc"
