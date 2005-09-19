@@ -12,7 +12,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.h,v 1.24 2005-09-16 17:48:12 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.h,v 1.25 2005-09-19 15:40:20 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -1733,7 +1733,7 @@ class  WXDLLIMPEXP_SCI wxScintillaEvent;
 class WXDLLIMPEXP_SCI wxScintilla : public wxControl {
 public:
 
-#ifdef SWIG
+#ifdef SWIGPYTHON
     %pythonAppend wxScintilla   "self._setOORInfo(self)"
     %pythonAppend wxScintilla() ""
 
@@ -1743,6 +1743,12 @@ public:
                  const wxString& name = wxSCINameStr);
     %name(PreScintilla) wxScintilla();
 
+#elif defined (SWIGRUBY)
+    wxScintilla (wxWindow *parent, wxWindowID id=wxID_ANY,
+                 const wxPoint& pos = wxDefaultPosition,
+                 const wxSize& size = wxDefaultSize, long style = 0,
+                 const wxString& name = wxSCINameStr);
+    ~wxScintilla();
 #else
     wxScintilla (wxWindow *parent, wxWindowID id=wxID_ANY,
                  const wxPoint& pos = wxDefaultPosition,
