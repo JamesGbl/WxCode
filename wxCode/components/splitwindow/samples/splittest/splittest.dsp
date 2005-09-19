@@ -7,16 +7,16 @@
 CFG=splittest - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
-!MESSAGE
+!MESSAGE 
 !MESSAGE NMAKE /f "splittest.mak".
-!MESSAGE
+!MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
-!MESSAGE
+!MESSAGE 
 !MESSAGE NMAKE /f "splittest.mak" CFG="splittest - Win32 Debug"
-!MESSAGE
+!MESSAGE 
 !MESSAGE Possible choices for configuration are:
-!MESSAGE
+!MESSAGE 
 !MESSAGE "splittest - Win32 DebugUniv" (based on "Win32 (x86) Application")
 !MESSAGE "splittest - Win32 ReleaseUniv" (based on "Win32 (x86) Application")
 !MESSAGE "splittest - Win32 DebugDev" (based on "Win32 (x86) Application")
@@ -25,7 +25,7 @@ CFG=splittest - Win32 Debug
 !MESSAGE "splittest - Win32 ReleaseUnicode" (based on "Win32 (x86) Application")
 !MESSAGE "splittest - Win32 Debug" (based on "Win32 (x86) Application")
 !MESSAGE "splittest - Win32 Release" (based on "Win32 (x86) Application")
-!MESSAGE
+!MESSAGE 
 
 # Begin Project
 # PROP AllowPerConfigDependencies 0
@@ -259,7 +259,7 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26.lib wxbase26_net.lib wxbase26_odbc.lib wxbase26_xml.lib wxexpat.lib wxjpeg.lib wxmsw26_adv.lib wxmsw26_core.lib wxmsw26_dbgrid.lib wxmsw26_gl.lib wxmsw26_html.lib wxpng.lib wxregex.lib wxtiff.lib wxzlib.lib /nologo /subsystem:windows /incremental:yes /machine:I386 /nodefaultlib:"LIBCMT.lib" /libpath:"$(WXSTABLE)\lib\vc_lib"
 # SUBTRACT LINK32 /profile /map /debug
 
-!ENDIF
+!ENDIF 
 
 # Begin Target
 
@@ -274,6 +274,10 @@ LINK32=link.exe
 # Begin Source File
 
 SOURCE=.\splittest.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\splittest.rc
 # End Source File
 # Begin Source File
 
