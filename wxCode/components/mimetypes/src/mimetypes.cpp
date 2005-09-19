@@ -3,7 +3,7 @@
 // Purpose:     wxMimeType control
 // Maintainer:  Wyo
 // Created:     2005-03-08
-// RCS-ID:      $Id: mimetypes.cpp,v 1.4 2005-03-10 18:37:57 wyo Exp $
+// RCS-ID:      $Id: mimetypes.cpp,v 1.5 2005-09-19 17:54:04 wyo Exp $
 // Copyright:   (c) 2005 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -100,11 +100,13 @@ bool wxMimeType::Match (wxMimeTypeData* data) {
     wxFileType *filetype;
     filetype = wxTheMimeTypesManager->GetFileTypeFromExtension (data->extension);
     if (!filetype) return false;
-    wxString appname = filetype->GetOpenCommand (wxEmptyString);
+    filetype->GetMimeType (&data->mimetype);
+    filetype->GetDescription (&data->description);
+    wxFileType::MessageParameters params (data->filename, data->mimetype);
+    filetype->GetOpenCommand (&data->appname, params);
     delete filetype;
 
-    return (appname.Contains (data->appname));
-
+    return (!data->appname.IsEmpty());
 }
 
 bool wxMimeType::IsStandard (wxMimeTypeData* data) {
@@ -112,7 +114,6 @@ bool wxMimeType::IsStandard (wxMimeTypeData* data) {
     // not implemented
 
     return false;
-
 }
 
 bool wxMimeType::GetData (wxMimeTypeData* data) {
@@ -120,9 +121,11 @@ bool wxMimeType::GetData (wxMimeTypeData* data) {
     wxFileType *filetype;
     filetype = wxTheMimeTypesManager->GetFileTypeFromExtension (data->extension);
     if (!filetype) return false;
+    filetype->GetMimeType (&data->mimetype);
     filetype->GetDescription (&data->description);
-    data->appname = filetype->GetOpenCommand (wxEmptyString);
-    data->appname.Remove (data->appname.Length()-4);
+    wxFileType::MessageParameters params (data->filename, data->mimetype);
+    filetype->GetOpenCommand (&data->appname, params);
+    delete filetype;
 
     return true;
 }

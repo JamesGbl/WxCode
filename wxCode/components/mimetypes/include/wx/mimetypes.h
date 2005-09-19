@@ -3,7 +3,7 @@
 // Purpose:     wxMimeType control
 // Maintainer:  Wyo
 // Created:     2005-03-08
-// RCS-ID:      $Id: mimetypes.h,v 1.3 2005-03-10 18:37:23 wyo Exp $
+// RCS-ID:      $Id: mimetypes.h,v 1.4 2005-09-19 17:52:05 wyo Exp $
 // Copyright:   (c) 2005 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -33,6 +33,7 @@
 //----------------------------------------------------------------------------
 //! wxMimeTypeData
 struct wxMimeTypeData {
+    wxString mimetype;
     wxString filename;
     wxString extension;
     wxString magicId;
