@@ -3,7 +3,7 @@
 // Purpose:     Localetest application
 // Maintainer:  Otto Wyss
 // Created:     2004-10-01
-// RCS-ID:      $Id: localetest.cpp,v 1.1 2005-09-11 10:15:48 wyo Exp $
+// RCS-ID:      $Id: localetest.cpp,v 1.2 2005-09-19 17:50:06 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -50,23 +50,24 @@
 // declarations
 //============================================================================
 
-const wxString APP_NAME = _T("LocaleTest");
-const wxString APP_SYNOPSIS = _("Tests localisation");
-const wxString APP_DESCR = _("\
-This application tests if the localisation is correct. If it is correct all the texts \n\
-should be shown in the choosen language, else all texts are still shown in english.\
-");
-
-const wxString APP_MAINT = _T("Otto Wyss");
+const wxString APP_NAME = _T("wxLocalize");
 const wxString APP_VENDOR = _T("wxCode");
-const wxString APP_COPYRIGTH = _T("(C) 2004 wxCode");
+const wxString APP_VERSION = _T("1.0.0");
+const wxString APP_MAINT = _T("Otto Wyss");
 const wxString APP_LICENCE = _T("wxWindows");
+const wxString APP_COPYRIGTH = _T("(C) 2005 Otto Wyss");
 
-const wxString APP_VERSION = _T("0.2.2");
-const wxString APP_BUILD = _T(__DATE__);
+const wxString APP_DESCR = _("\
+wxLocalize allows for the localization of any text file of an \n\
+application. This is very handy for the help books (.htb) to \n\
+be equally localized as any text within the application.\
+");
+const wxString APP_WEBSITE = _T("http://wxcode.sourceforge.net/");
 
-const wxString APP_WEBSITE = _T("http://wyoguide.sourceforge.net");
-const wxString APP_MAIL = _T("http://wyoguide.sourceforge.net/feedback.php");
+const wxString APP_INFOS = _("\
+This application is derived from the demo sample of wyoGuide.\
+");
+const wxString APP_WYOGUIDE = _T("http://wyoguide.sourceforge.net");
 
 
 //----------------------------------------------------------------------------
@@ -177,6 +178,9 @@ bool App::OnInit () {
     SetVendorName (APP_VENDOR);
     g_appname.Append (APP_NAME);
 
+    // about box shown for 3 seconds
+    AppAbout (NULL, 3000);
+
     // initialize localisazion
     wxString appPath = g_appDirectory;
     if (appPath.IsEmpty()) appPath = wxFileName(argv[0]).GetPath (wxPATH_GET_VOLUME);
@@ -238,10 +242,12 @@ AppAbout::AppAbout (wxWindow *parent,
 
     // about info
     wxFlexGridSizer *aboutinfo = new wxFlexGridSizer (2, 0, 2);
-    aboutinfo->Add (new wxStaticText(this, -1, _("Written by: ")),0, wxALIGN_LEFT);
-    aboutinfo->Add (new wxStaticText(this, -1, APP_MAINT),0, wxALIGN_LEFT);
+    aboutinfo->Add (new wxStaticText(this, -1, _("Vendor: ")),0, wxALIGN_LEFT);
+    aboutinfo->Add (new wxStaticText(this, -1, APP_VENDOR),0, wxALIGN_LEFT);
     aboutinfo->Add (new wxStaticText(this, -1, _("Version: ")),0, wxALIGN_LEFT);
     aboutinfo->Add (new wxStaticText(this, -1, APP_VERSION),0, wxALIGN_LEFT);
+    aboutinfo->Add (new wxStaticText(this, -1, _("Written by: ")),0, wxALIGN_LEFT);
+    aboutinfo->Add (new wxStaticText(this, -1, APP_MAINT),0, wxALIGN_LEFT);
     aboutinfo->Add (new wxStaticText(this, -1, _("Licence type: ")),0, wxALIGN_LEFT);
     aboutinfo->Add (new wxStaticText(this, -1, APP_LICENCE),0, wxALIGN_LEFT);
     aboutinfo->Add (new wxStaticText(this, -1, _("Copyright: ")),0, wxALIGN_LEFT);
@@ -249,31 +255,35 @@ AppAbout::AppAbout (wxWindow *parent,
 
     // about icontitle//info
     wxBoxSizer *aboutpane = new wxBoxSizer (wxHORIZONTAL);
-    wxBitmap bitmap = wxBitmap(wxICON (hypertest));
+    wxBitmap bitmap = wxBitmap(wxICON (localetest));
     aboutpane->Add (new wxStaticBitmap (this, -1, bitmap),
-                    0, wxALIGN_CENTER | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT, 40);
-    aboutpane->Add (aboutinfo, 1, wxEXPAND);
-    aboutpane->Add (60, 0);
+                    1, wxALIGN_CENTER | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT, 20);
+    aboutpane->Add (aboutinfo, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+    aboutpane->Add (20, 0);
 
     // about complete
-    wxBoxSizer *testpane = new wxBoxSizer (wxVERTICAL);
-    testpane->Add (0, 20);
+    wxBoxSizer *totalpane = new wxBoxSizer (wxVERTICAL);
+    totalpane->Add (0, 10);
     wxStaticText *appname = new wxStaticText(this, -1, APP_NAME);
-    appname->SetFont (wxFont (24, wxDEFAULT, wxNORMAL, wxBOLD));
-    testpane->Add (appname, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, 40);
-    testpane->Add (0, 10);
-    testpane->Add (aboutpane, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT | wxBOTTOM, 10);
-    testpane->Add (new wxStaticText(this, -1, _(APP_SYNOPSIS)),
-                    0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxBOTTOM, 10);
-    testpane->Add (new wxStaticText(this, -1, _(APP_DESCR)),
-                    0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxBOTTOM, 10);
-    testpane->Add (new wxStaticText(this, -1, APP_WEBSITE),
+    appname->SetFont (wxFont (20, wxDEFAULT, wxNORMAL, wxBOLD));
+    totalpane->Add (appname, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, 40);
+    totalpane->Add (0, 10);
+    totalpane->Add (aboutpane, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 10);
+    totalpane->Add (new wxStaticText(this, -1, wxGetTranslation(APP_DESCR)),
+                    0, wxALIGN_LEFT | wxLEFT | wxRIGHT, 10);
+    totalpane->Add (0, 6);
+    totalpane->Add (new wxStaticText(this, -1, APP_WEBSITE),
+                    0, wxALIGN_CENTER | wxLEFT | wxRIGHT | wxBOTTOM, 10);
+    totalpane->Add (new wxStaticText(this, -1, wxGetTranslation(APP_INFOS)),
+                    0, wxALIGN_LEFT | wxLEFT | wxRIGHT, 10);
+    totalpane->Add (0, 6);
+    totalpane->Add (new wxStaticText (this, -1, APP_WYOGUIDE),
                     0, wxALIGN_CENTER | wxLEFT | wxRIGHT | wxBOTTOM, 10);
     wxButton *okButton = new wxButton (this, wxID_OK, _("OK"));
     okButton->SetDefault();
-    testpane->Add (okButton, 0, wxALIGN_CENTER | wxALL, 10);
+    totalpane->Add (okButton, 0, wxALIGN_CENTER | wxALL, 10);
 
-    SetSizerAndFit (testpane);
+    SetSizerAndFit (totalpane);
     CentreOnParent();
     ShowModal();
 }
@@ -314,16 +324,15 @@ AppFrame::AppFrame (const wxString &title)
                     wxDEFAULT_FRAME_STYLE | wxNO_FULL_REPAINT_ON_RESIZE) {
 
     // set icon and background
-    SetIcon (wxICON (hypertest));
-
-    // about box shown for 3 seconds
-//?    AppAbout (this, 3000);
+    SetIcon (wxICON (localetest));
 
     // create menu
     CreateMenu ();
 
     // Test window
-    m_test = new wxTextCtrl (this, -1, APP_DESCR, wxDefaultPosition, wxDefaultSize,
+    wxString descr = wxGetTranslation(APP_DESCR);
+    descr.Replace ("\n", wxEmptyString);
+    m_test = new wxTextCtrl (this, -1, descr, wxDefaultPosition, wxDefaultSize,
                                        wxTE_MULTILINE|wxTE_WORDWRAP|wxTE_READONLY);
 
 }

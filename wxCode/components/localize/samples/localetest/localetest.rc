@@ -1,2 +1,2 @@
-app ICON "localetest.ico"
+localetest ICON "localetest.ico"
 #include "wx/msw/wx.rc"

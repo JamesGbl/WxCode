@@ -6,4 +6,6 @@ Maintainer: Otto Wyss (wyo)
 Subdir:     localize
 
 Description:
-This component contains the localization functions which are missing from wxWidgets.
+wxLocalize allows for the localization of any text file of an application. This
+is very handy for the help books (.htb) to be equally localized as any text within
+the application.
