@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.84 2005-09-11 08:08:16 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.85 2005-09-23 20:10:00 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -4278,6 +4278,7 @@ void wxTreeListCtrl::SetWindowStyle(const long style)
 {
     if(m_main_win)
         m_main_win->SetWindowStyle(style);
+    m_windowStyle = style;
     // TODO: provide something like wxTL_NO_HEADERS to hide m_header_win
 }
 
