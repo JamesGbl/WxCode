@@ -1,0 +1,87 @@
+<?xml version="1.0" ?>
+
+<!-- RCS-ID: $Id: shortcutpanel.bkl,v 1.1 2005-09-25 05:31:35 jblough Exp $ -->
+
+<makefile>
+
+	<!-- Some defaults for the variables used by wxCode bakefiles -->
+	<set var="WXCODE_BAKEFILEDIR">../../../build/bakefiles</set>
+	<include file="$(WXCODE_BAKEFILEDIR)/defaults.bkl"/>
+	
+
+	<!-- Settings for this component -->
+	<!-- =========================== -->
+
+	<!-- this is the name of the folder which contains this component and thus
+	     should always be in lowercase -->
+	<set var="COMP_NAME">shortcutpanel</set>
+	
+	<!-- COMP_SRC must list the component's sources with path relative to ../src -->
+	<!-- COMP_HDR must list the component's headers with path relative to ../include -->
+	<set var="COMP_SRC">Shortcut.cpp ShortcutGroup.cpp ShortcutPanel.cpp</set>
+	<set var="COMP_HDR">ShortcutGroup.h Shortcut.h ShortcutPanel.h</set>
+
+	<!-- the folder where component sample sources and headers are kept.
+	     NOTE: *never* use something like "../samples" since some formats (like autoconf)
+	           have makefiles which are not placed in the "build" subfolder but directly
+	           in the component root folder; to refer to the component's root folder use
+			   $(COMP_BASE_PATH) which is set to ".." for win32 makefiles and "." for 
+			   autoconf -->
+	<set var="COMP_SAMPLE_DIR">$(COMP_BASEPATH)/sample</set>
+	
+	<!-- both the COMP_SAMPLE_SRC and COMP_SAMPLE_HDR must list the sample's files with
+         path relative to COMP_SAMPLE_DIR -->
+	<set var="COMP_SAMPLE_SRC">sample.cpp</set>
+	<set var="COMP_SAMPLE_HDR">exit.xpm four.xpm one.xpm three.xpm</set>
+
+
+	<!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->
+	<include file="$(WXCODE_BAKEFILEDIR)/wxcode.bkl"/>
+
+
+	<!-- The real target: wxcode.bkl does not declare a real target but a template called
+	     "complib". In this way modifications are allowed to the basic template. -->
+	<lib id="shortcutpanel_lib" template="complib" cond="WX_SHARED=='0'">
+  </lib>
+
+	<dll id="shortcutpanel_dll" template="compdll" cond="WX_SHARED=='1'">
+    <include>$(COMP_BASEPATH)</include>
+
+		<!-- remove the libraries which are not required by your project -->
+		<wx-lib>adv</wx-lib>
+		<wx-lib>html</wx-lib>
+		<wx-lib>xrc</wx-lib>
+		<wx-lib>xml</wx-lib>
+		<wx-lib>net</wx-lib>
+		<wx-lib>core</wx-lib>
+		<wx-lib>base</wx-lib>
+	</dll>
+	
+	<!-- this makes the MSVC6 project files much nicer... -->
+	<set var="MSVC6PRJ_MERGED_TARGETS">shortcutpanel=shortcutpanel_lib+shortcutpanel_dll</set>
+
+
+	<!-- Samples for this component -->
+	<!-- ========================== -->
+
+	<!-- The sample of the component: as for the LIB target, this exe derives from a 
+	     template contained in wxcode.bkl which can be modified here -->
+	<exe id="shortcutpanel_demo" template="compsample">
+    <exename>sample</exename>
+    <dirname>$(COMP_BASEPATH)/bin</dirname>
+    <include>$(COMP_BASEPATH)</include>
+
+		<library>shortcutpanel_lib</library>
+
+		<!-- remove the libraries which are not required by your project -->
+		<wx-lib>adv</wx-lib>
+		<wx-lib>html</wx-lib>
+		<wx-lib>xrc</wx-lib>
+		<wx-lib>xml</wx-lib>
+		<wx-lib>net</wx-lib>
+		<wx-lib>core</wx-lib>
+		<wx-lib>base</wx-lib>
+	</exe>
+    	
+</makefile>
+
