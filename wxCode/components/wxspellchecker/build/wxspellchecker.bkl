@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<!-- RCS-ID: $Id: wxspellchecker.bkl,v 1.1 2005-09-25 05:34:18 jblough Exp $ -->
+<!-- RCS-ID: $Id: wxspellchecker.bkl,v 1.2 2005-09-26 00:24:18 jblough Exp $ -->
 
 <makefile>
 
@@ -52,7 +52,7 @@
   </lib>
 
 	<dll id="wxspellchecker_dll" template="compdll" cond="WX_SHARED=='1'">
-    <depends>myspell_lib</depends>
+    <library>myspell_lib</library>
     <include>$(COMP_BASEPATH)</include>
 
 		<!-- remove the libraries which are not required by your project -->
@@ -80,8 +80,8 @@
     <dirname>$(COMP_BASEPATH)/bin</dirname>
     <include>$(COMP_BASEPATH)</include>
 
-		<library>myspell_lib</library>
 		<library>wxspellchecker_lib</library>
+		<library>myspell_lib</library>
 
 		<!-- remove the libraries which are not required by your project -->
 		<wx-lib>adv</wx-lib>
