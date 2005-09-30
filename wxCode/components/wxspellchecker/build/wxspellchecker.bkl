@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<!-- RCS-ID: $Id: wxspellchecker.bkl,v 1.2 2005-09-26 00:24:18 jblough Exp $ -->
+<!-- RCS-ID: $Id: wxspellchecker.bkl,v 1.3 2005-09-30 01:23:10 jblough Exp $ -->
 
 <makefile>
 
@@ -20,6 +20,8 @@
 	<!-- COMP_HDR must list the component's headers with path relative to ../include -->
 	<set var="COMP_SRC">AspellInterface.cpp SpellCheckCmdLineInterface.cpp SpellCheckDialogInterface.cpp SpellCheckEngineInterface.cpp SpellCheckUserInterface.cpp AspellWrapper.cpp XmlSpellCheckDialog.cpp MySpellInterface.cpp SpellCheckEngineOption.cpp SpellCheckerOptionsDialog.cpp PersonalDictionary.cpp XmlPersonalDictionaryDialog.cpp</set>
 	<set var="COMP_HDR">AspellInterface.h SpellCheckCmdLineInterface.h SpellCheckDialogInterface.h SpellCheckEngineInterface.h SpellCheckUserInterface.h AspellWrapper.h XmlSpellCheckDialog.h MySpellInterface.h SpellCheckEngineOption.h SpellCheckerOptionsDialog.h PersonalDictionary.h XmlPersonalDictionaryDialog.h</set>
+   <set var="MYSPELL_SRC">$(COMP_BASEPATH)/MySpell/affentry.cxx $(COMP_BASEPATH)/MySpell/affixmgr.cxx $(COMP_BASEPATH)/MySpell/csutil.cxx $(COMP_BASEPATH)/MySpell/dictmgr.cxx $(COMP_BASEPATH)/MySpell/hashmgr.cxx $(COMP_BASEPATH)/MySpell/myspell.cxx $(COMP_BASEPATH)/MySpell/suggestmgr.cxx</set>
+   <set var="MYSPELL_HDR">$(COMP_BASEPATH)/MySpell/affentry.hxx $(COMP_BASEPATH)/MySpell/affixmgr.hxx $(COMP_BASEPATH)/MySpell/csutil.hxx $(COMP_BASEPATH)/MySpell/dictmgr.hxx $(COMP_BASEPATH)/MySpell/hashmgr.hxx $(COMP_BASEPATH)/MySpell/myspell.hxx $(COMP_BASEPATH)/MySpell/suggestmgr.hxx</set>
 
 	<!-- the folder where component sample sources and headers are kept.
 	     NOTE: *never* use something like "../samples" since some formats (like autoconf)
@@ -46,14 +48,17 @@
 
 	<!-- The real target: wxcode.bkl does not declare a real target but a template called
 	     "complib". In this way modifications are allowed to the basic template. -->
-	<lib id="wxspellchecker_lib" template="complib" cond="WX_SHARED=='0'">
-    <depends>myspell_lib</depends>
+  <lib id="wxspellchecker_lib" template="complib" cond="WX_SHARED=='0'">
     <include>$(COMP_BASEPATH)</include>
+    <sources>$(MYSPELL_SRC)</sources>
+    <headers>$(MYSPELL_HDR)</headers>
   </lib>
 
 	<dll id="wxspellchecker_dll" template="compdll" cond="WX_SHARED=='1'">
-    <library>myspell_lib</library>
     <include>$(COMP_BASEPATH)</include>
+
+    <sources>$(MYSPELL_SRC)</sources>
+    <headers>$(MYSPELL_HDR)</headers>
 
 		<!-- remove the libraries which are not required by your project -->
 		<wx-lib>adv</wx-lib>
@@ -66,7 +71,7 @@
 	</dll>
 	
 	<!-- this makes the MSVC6 project files much nicer... -->
-	<set var="MSVC6PRJ_MERGED_TARGETS">wxspellchecker=myspell_lib+wxspellchecker_lib+wxspellchecker_dll</set>
+	<set var="MSVC6PRJ_MERGED_TARGETS">wxspellchecker=wxspellchecker_lib+wxspellchecker_dll</set>
 
 
 
@@ -81,7 +86,6 @@
     <include>$(COMP_BASEPATH)</include>
 
 		<library>wxspellchecker_lib</library>
-		<library>myspell_lib</library>
 
 		<!-- remove the libraries which are not required by your project -->
 		<wx-lib>adv</wx-lib>
