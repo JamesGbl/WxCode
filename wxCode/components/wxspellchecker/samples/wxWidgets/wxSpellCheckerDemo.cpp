@@ -170,10 +170,12 @@ MyFrame::MyFrame(const wxString& title)
 
     if (m_pMySpellInterface->InitializeSpellCheckEngine() == false)
     {
+      delete m_pMySpellInterface;
       m_pMySpellInterface = NULL;
     }
     if (m_pAspellInterface->InitializeSpellCheckEngine() == false)
     {
+      delete m_pAspellInterface;
       m_pAspellInterface = NULL;
       m_nSelectedSpellCheckEngine = MyFrame::USE_MYSPELL;
     }
@@ -290,6 +292,7 @@ void MyFrame::OnEditOptions(wxCommandEvent& event)
       for (OptionsMap::iterator it = pOptionsMap->begin(); it != pOptionsMap->end(); it++)
         ReturnSelectedSpellCheckEngine()->AddOptionToMap(it->second);
     }
+    ReturnSelectedSpellCheckEngine()->ApplyOptions();
   }
 }
 
