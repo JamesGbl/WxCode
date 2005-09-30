@@ -36,8 +36,6 @@ AspellInterface::AspellInterface(wxSpellCheckUserInterface* pDlg /* = NULL */)
     m_pSpellUserInterface->SetSpellCheckEngine(this);
 
   SetDefaultOptions();
-
-  InitializeSpellCheckEngine();
 }
 
 AspellInterface::~AspellInterface()
