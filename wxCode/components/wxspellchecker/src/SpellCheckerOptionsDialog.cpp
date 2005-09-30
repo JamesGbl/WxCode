@@ -192,7 +192,7 @@ void SpellCheckerOptionsDialog::OnBrowseForDir(wxCommandEvent& event)
   wxDirDialog DirDialog(this,  _T("Choose a directory"), strDefaultDir);
   if (DirDialog.ShowModal() == wxID_OK)
   {
-    m_ModifiedOptions[strOptionName].SetValue(DirDialog.GetPath());
+    m_ModifiedOptions[strOptionName].SetValue(DirDialog.GetPath(), SpellCheckEngineOption::DIR);
     TransferDataToWindow();
   }
 }
@@ -214,7 +214,7 @@ void SpellCheckerOptionsDialog::OnBrowseForFile(wxCommandEvent& event)
   wxFileDialog FileDialog(this, _T("Choose a file"), strDefaultDir, strDefaultFileName);
   if (FileDialog.ShowModal() == wxID_OK)
   {
-    m_ModifiedOptions[strOptionName].SetValue(FileDialog.GetPath());
+    m_ModifiedOptions[strOptionName].SetValue(FileDialog.GetPath(), SpellCheckEngineOption::FILE);
     TransferDataToWindow();
   }
 }
@@ -242,8 +242,10 @@ bool SpellCheckerOptionsDialog::TransferDataFromWindow()
             pCurrentOption->SetValue(((wxTextCtrl*)pControl)->GetValue());
           break;
         case SpellCheckEngineOption::DIR:
+          pCurrentOption->SetValue(((wxTextCtrl*)pControl)->GetValue(), SpellCheckEngineOption::DIR);
+          break;
         case SpellCheckEngineOption::FILE:
-          pCurrentOption->SetValue(((wxTextCtrl*)pControl)->GetValue());
+          pCurrentOption->SetValue(((wxTextCtrl*)pControl)->GetValue(), SpellCheckEngineOption::FILE);
           break;
         case SpellCheckEngineOption::LONG:
           pCurrentOption->SetValue((long)((wxSpinCtrl*)pControl)->GetValue());
