@@ -409,6 +409,7 @@ void XmlSpellCheckDialog::OnOptions(wxCommandEvent& event)
       for (OptionsMap::iterator it = pOptionsMap->begin(); it != pOptionsMap->end(); it++)
         m_pSpellCheckEngine->AddOptionToMap(it->second);
     }
+    m_pSpellCheckEngine->ApplyOptions();
   }
 }
 
