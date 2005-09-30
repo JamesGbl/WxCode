@@ -18,8 +18,6 @@ MySpellInterface::MySpellInterface(wxSpellCheckUserInterface* pDlg /* = NULL */)
   SetDefaultOptions();
 
   m_PersonalDictionary.LoadPersonalDictionary();
-  
-  InitializeSpellCheckEngine();
 }
 
 MySpellInterface::~MySpellInterface()
@@ -108,9 +106,7 @@ int MySpellInterface::SetOption(SpellCheckEngineOption& Option)
     return false; // We don't understand this option so return the error
   
   // We'll something changed so tear down the old spell check engine and create a new one
-  UninitializeSpellCheckEngine();
   return InitializeSpellCheckEngine();
-
 }
 
 wxString MySpellInterface::CheckSpelling(wxString strText)
