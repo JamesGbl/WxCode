@@ -1,0 +1,27 @@
+/* XPM */
+static char *dirclosed_xpm[] = {
+/* columns rows colors chars-per-pixel */
+"16 16 5 1",
+"  c black",
+". c yellow",
+"X c #848284",
+"o c #C6C3C6",
+"O c gray100",
+/* pixels */
+"OOXXXXXOOOOOOOOO",
+"OXo.o.oXOOOOOOOO",
+"Xo.o.o.oXXXXXXOO",
+"XOOOOOOOOOOOOX O",
+"XO.o.oO Oo.o.X O",
+"XOo.oOO OOo.oX O",
+"XO.o.     .o.X O",
+"XOo.oOO OOo.oX O",
+"XO.o.oO Oo.o.X O",
+"XOo.o.o.o.o.oX O",
+"XO.o.o.o.o.o.X O",
+"XXXXXXXXXXXXXX O",
+"O              O",
+"OOOOOOOOOOOOOOOO",
+"OOOOOOOOOOOOOOOO",
+"OOOOOOOOOOOOOOOO"
+};
