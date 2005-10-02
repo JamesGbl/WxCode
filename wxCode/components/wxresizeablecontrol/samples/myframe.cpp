@@ -2,7 +2,7 @@
 // Name:        myframe.cpp
 // Purpose:     resizeable controls sample: A derived frame, called MyFrame
 // Author:      Markus Greither
-// RCS-ID:      $Id: myframe.cpp,v 1.9 2005-09-18 10:05:29 frm Exp $
+// RCS-ID:      $Id: myframe.cpp,v 1.10 2005-10-02 19:43:46 frm Exp $
 // Copyright:   (c) Markus Greither
 // Licence:     wxWindows licence
 //-----------------------------------------------------------------------------
@@ -229,12 +229,6 @@ MyFrame::MyFrame(wxWindow* parent)
     par->SetManagedChild(ctrl);
 
 	TestTextBox((wxResizeableControlCanvas *)m_resizecanvas);
-
-/*
-		wxURL u(wxT("http://www.google.com"));
-		wxInputStream *in = u.GetInputStream();
-		wxFileOutputStream out(wxT("test"));
-		out.Write(*in);*/
 }
 
 
@@ -250,13 +244,6 @@ void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 
 void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
- 
-		wxURL u(wxT("http://www.google.com"));
-		wxInputStream *in = u.GetInputStream();
-		wxFileOutputStream out(wxT("test"));
-		out.Write(*in);
-
-	
 	wxString msg;
     msg.Printf( _T("Sample application for resizeable controls.\n\n")
                 _T("Demonstrates\n")

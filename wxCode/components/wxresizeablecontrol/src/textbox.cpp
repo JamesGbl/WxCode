@@ -3,7 +3,7 @@
 // Purpose:     wxTextBoxLayoutStatus, wxTextBox
 // Author:      Francesco Montorsi
 // Created:     2005/8/16
-// RCS-ID:      $Id: textbox.cpp,v 1.8 2005-09-18 10:05:29 frm Exp $
+// RCS-ID:      $Id: textbox.cpp,v 1.9 2005-10-02 19:43:46 frm Exp $
 // Copyright:   (c) 2005 Francesco Montorsi
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
@@ -56,10 +56,15 @@ BEGIN_EVENT_TABLE(wxTextBox, wxWindow)
 	EVT_LEFT_UP(wxTextBox::OnLUp)				// used to end selections
 	EVT_MOTION(wxTextBox::OnMouseMove)			// used to select
 
-
+	// context menu events
 	EVT_MENU_RANGE(wxTBCM_BASEID,
 					wxTBCM_FINALID,
 					wxTextBox::OnCtxMenuItem)
+
+
+	// required when we are contained into a wxResizeableParentControl
+    EVT_SET_FOCUS(wxTextBox::OnSetFocus)
+    EVT_KILL_FOCUS(wxTextBox::OnKillFocus)
 
 END_EVENT_TABLE()
 
@@ -104,6 +109,9 @@ wxTextBox::wxTextBox(wxWindow *parent, int id, const wxPoint &pos,
 	m_bContextMenuEnabled = TRUE;
 
 	m_bSelecting = FALSE;
+
+	// we want to emulate textctrl
+	SetCursor(wxCursor(wxCURSOR_IBEAM));
 }
 
 wxTextSpanTruncFlag wxTextBox::TruncateToSize(wxTextBoxLayoutStatus &p)
@@ -418,6 +426,8 @@ void wxTextBox::SetText(const wxString &txt, const wxTextStyle &attr)
 void wxTextBox::ClipOtherBoxes()
 {
 	wxPoint ourpt(GetParent()->GetPosition());
+	wxRect ourrc(this->GetRect());
+	ourrc.Offset(ourpt);
 
 	// fist, clean old array
 	m_rc.Empty();
@@ -433,7 +443,7 @@ void wxTextBox::ClipOtherBoxes()
 		}
 		
 		wxRect rc(box->GetRect());
-		if (rc.Intersects(this->GetRect())) {
+		if (rc.Intersects(ourrc)) {
 
 			// convert from canvas coord to this textbox coords...
 			rc.SetX(rc.GetX() - ourpt.x);
@@ -449,7 +459,10 @@ void wxTextBox::ClipOtherBoxes()
 				rc.SetHeight(rc.GetHeight() + rc.GetY());
 				rc.SetY(0);
 			}
-			
+
+			// these should always be true if we are intersecting the
+			// rect of this window
+			wxASSERT(rc.GetHeight() > 0 && rc.GetWidth() > 0);
 			m_rc.Add(rc);
 		}
 
@@ -543,6 +556,22 @@ void wxTextBox::OnSiblingChange(wxCommandEvent &ev)
 	Layout();
 	Refresh();
 	ev.Skip();
+}
+
+void wxTextBox::OnKillFocus(wxFocusEvent &event)
+{
+	wxCommandEvent notification(wxEVT_COMMAND_HIDE_SIZERS);
+	if (GetParent())
+	    GetParent()->ProcessEvent(notification);
+	event.Skip();
+}
+
+void wxTextBox::OnSetFocus(wxFocusEvent &event)
+{
+	wxCommandEvent notification(wxEVT_COMMAND_SHOW_SIZERS);
+	if (GetParent())
+	    GetParent()->ProcessEvent(notification);
+	event.Skip();
 }
 
 void wxTextBox::OnChar(wxKeyEvent &ke)

@@ -4,7 +4,7 @@
 // Author:      Markus Greither
 // Modified by:
 // Created:     11/11/02
-// RCS-ID:      $Id: resizec.cpp,v 1.4 2005-09-16 10:30:58 frm Exp $
+// RCS-ID:      $Id: resizec.cpp,v 1.5 2005-10-02 19:43:46 frm Exp $
 // Copyright:   (c) Markus Greither
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -983,8 +983,29 @@ void wxResizeableParentControl::OnSize(wxSizeEvent &event)
     event.Skip();
 }
 
+void wxResizeableParentControl::OnPaint(wxPaintEvent &event)
+{
+    if (m_hasfocus) {
+		wxPaintDC dc(this);
+        DrawSizeRect(dc);
+	}
+
+	event.Skip();
+}
+
+void wxResizeableParentControl::OnSiblingChange(wxCommandEvent &event)
+{
+    if (m_child)
+		m_child->ProcessEvent(event);
+
+	event.Skip();
+}
+
+
 BEGIN_EVENT_TABLE(wxResizeableParentControl,wxResizeableControl)
     EVT_SIZE(wxResizeableParentControl::OnSize)
+    EVT_PAINT(wxResizeableParentControl::OnPaint)
+	EVT_SIBLING_CHANGED(wxID_ANY, wxResizeableParentControl::OnSiblingChange)
 END_EVENT_TABLE()
 
 // ----------------------------------------------------------------------------
@@ -1039,6 +1060,7 @@ void wxResizeableControlCanvas::OnChildWindowChange(wxCommandEvent &ev)
 		wxASSERT_MSG(0, wxT("Unknown child window change !"));
 
 	notification.SetId(ev.GetId());
+	notification.StopPropagation();		// we don't want that this event propagates upward toward parents
 
 	// send the event to all other siblings
 	wxResizeableControlList::Node *node = GetControlList().GetFirst();

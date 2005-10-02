@@ -5,7 +5,7 @@
 // Author:      Markus Greither
 // Modified by:
 // Created:     11/10/02
-// RCS-ID:      $Id: resizec.h,v 1.6 2005-09-18 10:05:29 frm Exp $
+// RCS-ID:      $Id: resizec.h,v 1.7 2005-10-02 19:43:46 frm Exp $
 // Copyright:   (c) Markus Greither
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -433,6 +433,13 @@ class wxResizeableParentControl : public wxResizeableControl
     //! Responds to size event
     void OnSize(wxSizeEvent &event);
 
+	//! Draws size rect when this window has the focus
+	//! (like when the user uses one of our sizer to resize the child window).
+    void OnPaint(wxPaintEvent &event);
+
+	//! Drops sibling events to the child window.
+	void OnSiblingChange(wxCommandEvent &event);
+
     //! Sets the given window as our managed window.
 	//! A wxResizeableParentControl can contain only a single managed child window
 	//! at time.
@@ -442,8 +449,7 @@ class wxResizeableParentControl : public wxResizeableControl
         if (m_child)
             m_child->SetParent(this);
 
-		// 
-
+		// required to adapt this window to this child
         wxSizeEvent evt(GetSize());
         AddPendingEvent(evt);
     }
