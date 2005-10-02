@@ -1,19 +1,19 @@
 ##############################################################################
 ## File:        Makefile
-## Purpose:     treelisttest
+## Purpose:     splittest
 ## Maintainer:  Otto Wyss
-## Created:     2004-03-22
-## RCS-ID:      $Id: Makefile,v 1.7 2005-04-03 09:36:28 wyo Exp $
-## Copyright:   (c) wyoDesktop
-## Licence:     wxWidgets licence
+## Created:     2004-10-01
+## RCS-ID:      $Id: Makefile,v 1.8 2005-10-02 07:19:28 wyo Exp $
+## Copyright:   (c) 2004 wxCode
+## Licence:     wxWindows
 ##############################################################################
 
 # list of source files
-SRC = treelisttest.cpp \
-      treelistctrl.cpp
+SRC = splittest.cpp \
+      splitwindow.cpp
 
 # executable name
-PRG = treelisttest
+PRG = splittest
 
 # source directories
 vpath %.cpp ../../src

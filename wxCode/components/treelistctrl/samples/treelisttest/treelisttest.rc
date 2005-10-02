@@ -1,6 +1,6 @@
-mondrian ICON "mondrian.ico"
-aaaa     ICON "mondrian.ico"
-
+treelisttest ICON "treelisttest.ico"
 #include "wx/msw/wx.rc"
 
-
+dirclosed BITMAP "bitmaps/dirclosed.bmp"
+diropened BITMAP "bitmaps/diropened.bmp"
+file      BITMAP "bitmaps/file.bmp"
