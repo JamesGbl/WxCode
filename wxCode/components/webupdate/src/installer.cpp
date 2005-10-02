@@ -198,7 +198,7 @@ void wxWebUpdateInstaller::InitDefaultKeywords()
 	m_hashKeywords[wxT("mv")] = wxT("mv -f");
 	m_hashKeywords[wxT("cd")] = wxT("cd");
 	m_hashKeywords[wxT("mkdir")] = wxT("mkdir");
-	m_hashKeywords[wxT("exe")] = wxEmptyString;
+	m_hashKeywords[wxT("exe")] = wxT("");
 #endif
 
 	// some other keywords will be added later by other

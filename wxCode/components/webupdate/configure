@@ -4274,7 +4274,8 @@ echo "$as_me: error: Your 'wx-config --cxxflags' command seems to define more th
 
 if test "$USE_HTTPENGINE" = "1"; then
 
-    # check for wxHTTPEngine presence
+    # check for wxHTTPEngine presence, eventually disabling it if the
+    # test program cannot be linked...
 
 
                         CPPFLAGS_ORIGINAL=$CPPFLAGS

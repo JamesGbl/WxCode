@@ -247,7 +247,7 @@ install-wxheaders:
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__keybinder_dll___so_symlinks_inst_cmd))
 
 ./sample/minimal$(EXEEXT): $(MINIMAL_OBJECTS) $(__minimal___win32rc) $(__keybinder_lib___depname)
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) -L./lib $(LDFLAGS) -L./lib $(LDFLAGS_GUI)  $(WX_LIBS) -lkeybinder
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) -L./lib $(LDFLAGS) -L./lib $(LDFLAGS_GUI)  -lkeybinder $(WX_LIBS)
 	
 	$(__minimal___mac_setfilecmd)
 	$(__minimal___os2_emxbindcmd)
@@ -268,7 +268,7 @@ minimal_minimal.o: $(srcdir)/./sample/minimal.cpp
 	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/./sample/minimal.cpp
 
 minimal_minimal_rc.o: $(srcdir)/./sample/minimal.rc
-	$(RESCOMP) -i$< -o$@  --include-dir ./include --include-dir ./sample
+	$(RESCOMP) -i$< -o$@  --include-dir ./include --include-dir ./sample --include-dir ./sample
 
 
 # Include dependency info, if present:

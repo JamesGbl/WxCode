@@ -308,5 +308,5 @@ watcom\minimal_minimal.obj :  .AUTODEPEND .\..\sample\minimal.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(MINIMAL_CXXFLAGS) $<
 
 watcom\minimal_minimal.res :  .AUTODEPEND .\..\sample\minimal.rc
-	wrc -q -ad -bt=nt -r -fo=$^@ $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\sample $<
+	wrc -q -ad -bt=nt -r -fo=$^@ $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\sample -i=..\sample $<
 

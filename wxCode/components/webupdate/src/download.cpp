@@ -164,10 +164,8 @@ wxInputStream *wxGetInputStreamFromURI(const wxString &uri)
 	if (wxIsFileProtocol(uri)) {
 
 		// we can handle file:// protocols ourselves
-		wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using wxURL"));
+		wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using wxFileInputStream"));
 		wxURI u(uri);
-		//if (u.GetError() != wxURL_NOERR)
-		//	wxDT_ABORT_DOWNLOAD(wxT("wxURL cannot parse this url"));
 		in = new wxFileInputStream(u.GetPath());
 
 	} else {
@@ -196,17 +194,11 @@ wxInputStream *wxGetInputStreamFromURI(const wxString &uri)
 
 		in = http.GetInputStream(uri);
 #else
-		/*g_urlTemp.Create(uri);
-		wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using wxURL"));		
-		if (g_urlTemp.GetError() != wxURL_NOERR) {
-			wxLogUsrMsg(wxString(wxT("wxURL cannot parse this url [") + 
-									uri + wxT("]")));
-			return NULL;
-		}
 		
-		in = g_urlTemp.GetInputStream();*/
-		in = new wxURLInputStream(uri);
-		//in->
+		// we won't directly use wxURL because it must be alive together with
+		// the wxInputStream it generates... wxURLInputStream solves this problem
+		wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using wxURL"));
+		in = new wxURLInputStream(uri);		
 #endif
 	}
 	

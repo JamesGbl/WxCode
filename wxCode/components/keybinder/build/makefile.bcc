@@ -297,5 +297,5 @@ borland\minimal_minimal.obj: .\..\sample\minimal.cpp
 	$(CXX) -q -c -P -o$@ $(MINIMAL_CXXFLAGS) $**
 
 borland\minimal_minimal.res: .\..\sample\minimal.rc
-	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include $(__WX_SHAREDDEFINE_p_4) $(__WXUNICODE_DEFINE_p_4) $(__WXDEBUG_DEFINE_p_4) -d__WXMSW__ -i$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\sample $**
+	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include $(__WX_SHAREDDEFINE_p_4) $(__WXUNICODE_DEFINE_p_4) $(__WXDEBUG_DEFINE_p_4) -d__WXMSW__ -i$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\sample -i..\sample $**
 

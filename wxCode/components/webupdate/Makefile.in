@@ -281,7 +281,7 @@ cleandocs:
 
 install-wxheaders: 
 	$(INSTALL_DIR) $(DESTDIR)$(includedir)/wx
-	(cd $(srcdir) ; $(INSTALL_DATA)  zxcvzxvc./include/wx/*.h $(DESTDIR)$(includedir)/wx)
+	(cd $(srcdir) ; $(INSTALL_DATA)  ./include/wx/*.h $(DESTDIR)$(includedir)/wx)
 
 @COND_WX_SHARED_0@./lib/$(LIBPREFIX)webupdate$(LIBEXT): $(WEBUPDATE_LIB_OBJECTS)
 @COND_WX_SHARED_0@	rm -f $@
