@@ -3,7 +3,7 @@
 // Purpose:     treelisttest application
 // Maintainer:  Otto Wyss
 // Created:     2004-12-21
-// RCS-ID:      $Id: treelisttest.cpp,v 1.15 2005-10-02 07:19:28 wyo Exp $
+// RCS-ID:      $Id: treelisttest.cpp,v 1.16 2005-10-06 19:33:25 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -111,6 +111,9 @@ enum {
     myID_SETATTRIBUTE,
     myID_GETCOUNT,
     myID_GETCHILDREN,
+    myID_LISTALL,
+    myID_LISTCHILDREN,
+    myID_LISTSELECTED,
     myID_SETINDENT,
     myID_SETIMAGESIZE,
 };
@@ -205,6 +208,9 @@ public:
     void OnSelectExtended (wxCommandEvent &event);
     void OnGetCount (wxCommandEvent &event);
     void OnGetChildren (wxCommandEvent &event);
+    void OnListAll (wxCommandEvent &event);
+    void OnListChildren (wxCommandEvent &event);
+    void OnListSelected (wxCommandEvent &event);
     void OnSetIndent (wxCommandEvent &event);
     void OnSetImageSize (wxCommandEvent &event);
 
@@ -392,6 +398,9 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
     // extra events
     EVT_MENU (myID_GETCOUNT,           AppFrame::OnGetCount)
     EVT_MENU (myID_GETCHILDREN,        AppFrame::OnGetChildren)
+    EVT_MENU (myID_LISTALL,            AppFrame::OnListAll)
+    EVT_MENU (myID_LISTCHILDREN,       AppFrame::OnListChildren)
+    EVT_MENU (myID_LISTSELECTED,       AppFrame::OnListSelected)
     EVT_MENU (myID_SETINDENT,          AppFrame::OnSetIndent)
     EVT_MENU (myID_SETIMAGESIZE,       AppFrame::OnSetImageSize)
     // help events
@@ -530,7 +539,7 @@ void AppFrame::OnGotoItem (wxCommandEvent &WXUNUSED(event)) {
     if (num < 0) return;
     wxTreeItemId item = m_treelist->GetRootItem();
     for (int i = 0; i < num; ++i) {
-        item = m_treelist->GetNext (item, true);
+        item = m_treelist->GetNext (item);
         if (!item) break;
     }
     if (item) m_treelist->SelectItem (item);
@@ -675,6 +684,40 @@ void AppFrame::OnGetChildren (wxCommandEvent &WXUNUSED(event)) {
                   _T("Children count"), wxOK | wxICON_INFORMATION);
 }
 
+void AppFrame::OnListAll (wxCommandEvent &WXUNUSED(event)) {
+    wxTreeItemId item = m_treelist->GetSelection();
+    if (!item.IsOk()) item = m_treelist->GetRootItem ();
+    wxString text;
+    while (item.IsOk()) {
+        text.Append (m_treelist->GetItemText (item) + _T("\n"));
+        item = m_treelist->GetNext (item);
+    }
+    wxMessageBox (text, _T("All items"), wxOK | wxICON_INFORMATION);
+}
+
+void AppFrame::OnListChildren (wxCommandEvent &WXUNUSED(event)) {
+    wxTreeItemId item = m_treelist->GetSelection();
+    if (!item.IsOk()) item = m_treelist->GetRootItem ();
+    wxString text;
+    wxTreeItemIdValue cookie;
+    item = m_treelist->GetFirstChild (item, cookie);
+    while (item.IsOk()) {
+        text.Append (m_treelist->GetItemText (item) + _T("\n"));
+        item = m_treelist->GetNextSibling (item);
+    }
+    wxMessageBox (text, _T("Children items"), wxOK | wxICON_INFORMATION);
+}
+
+void AppFrame::OnListSelected (wxCommandEvent &WXUNUSED(event)) {
+    wxArrayTreeItemIds items;
+    int count = m_treelist->GetSelections (items);
+    wxString text;
+    for (int i = 0; i < count; ++i) {
+        text.Append (m_treelist->GetItemText (items[i]) + _T("\n"));
+    }
+    wxMessageBox (text, _T("Selected items"), wxOK | wxICON_INFORMATION);
+}
+
 void AppFrame::OnSetIndent (wxCommandEvent &WXUNUSED(event)) {
     int indent = wxGetNumberFromUser (_T(""), _T("Enter the indent value"),
                                       _T("Get value"), m_treelist->GetIndent());
@@ -747,11 +790,15 @@ void AppFrame::CreateMenu () {
 
     // view menu
     wxMenu *menuExtra = new wxMenu;
-    menuExtra->Append (myID_SETINDENT, _("Set &Indent to ..."));
-    menuExtra->Append (myID_SETIMAGESIZE, _("Set image si&ze..."));
-    menuExtra->AppendSeparator();
     menuExtra->Append (myID_GETCOUNT, _("Get total count"));
     menuExtra->Append (myID_GETCHILDREN, _("Get children count"));
+    menuExtra->AppendSeparator();
+    menuExtra->Append (myID_LISTALL, _("List all items"));
+    menuExtra->Append (myID_LISTCHILDREN, _("List all children"));
+    menuExtra->Append (myID_LISTSELECTED, _("List selected items"));
+    menuExtra->AppendSeparator();
+    menuExtra->Append (myID_SETINDENT, _("Set &Indent to ..."));
+    menuExtra->Append (myID_SETIMAGESIZE, _("Set image si&ze..."));
 
     // Help menu
     wxMenu *menuHelp = new wxMenu;
