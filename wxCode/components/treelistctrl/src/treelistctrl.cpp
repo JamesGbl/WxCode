@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.85 2005-09-23 20:10:00 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.86 2005-10-06 19:32:01 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -429,8 +429,8 @@ public:
     wxTreeItemId GetPrevSibling(const wxTreeItemId& item) const;
 
     // get item in the full tree (currently only for internal use)
-    wxTreeItemId GetNext(const wxTreeItemId& item, bool expanded = false) const;
-    wxTreeItemId GetPrev(const wxTreeItemId& item, bool expanded = false) const;
+    wxTreeItemId GetNext(const wxTreeItemId& item, bool fulltree = true) const;
+    wxTreeItemId GetPrev(const wxTreeItemId& item, bool fulltree = true) const;
 
     // get expanded item, see IsExpanded()
     wxTreeItemId GetFirstExpandedItem() const;
@@ -2087,11 +2087,11 @@ wxTreeItemId wxTreeListMainWindow::GetPrevSibling (const wxTreeItemId& item) con
 }
 
 // Only for internal use right now, but should probably be public
-wxTreeItemId wxTreeListMainWindow::GetNext (const wxTreeItemId& item, bool expanded) const {
+wxTreeItemId wxTreeListMainWindow::GetNext (const wxTreeItemId& item, bool fulltree) const {
     wxCHECK_MSG (item.IsOk(), wxTreeItemId(), _T("invalid tree item"));
 
     // if there are any children, return first child
-    if (!expanded || ((wxTreeListItem*)item.m_pItem)->IsExpanded()) {
+    if (fulltree || ((wxTreeListItem*)item.m_pItem)->IsExpanded()) {
         wxArrayTreeListItems& children = ((wxTreeListItem*)item.m_pItem)->GetChildren();
         if (children.GetCount() > 0) return children.Item (0);
     }
@@ -2107,11 +2107,11 @@ wxTreeItemId wxTreeListMainWindow::GetNext (const wxTreeItemId& item, bool expan
 }
 
 // Only for internal use right now, but should probably be public
-wxTreeItemId wxTreeListMainWindow::GetPrev (const wxTreeItemId& item, bool expanded) const {
+wxTreeItemId wxTreeListMainWindow::GetPrev (const wxTreeItemId& item, bool fulltree) const {
     wxCHECK_MSG (item.IsOk(), wxTreeItemId(), _T("invalid tree item"));
 
     // if there are any children, return last child
-    if (!expanded || ((wxTreeListItem*)item.m_pItem)->IsExpanded()) {
+    if (fulltree || ((wxTreeListItem*)item.m_pItem)->IsExpanded()) {
         wxArrayTreeListItems& children = ((wxTreeListItem*)item.m_pItem)->GetChildren();
         if (children.GetCount() > 0) return children.Item (children.GetCount()-1);
     }
@@ -2132,12 +2132,12 @@ wxTreeItemId wxTreeListMainWindow::GetFirstExpandedItem() const {
 
 wxTreeItemId wxTreeListMainWindow::GetNextExpanded (const wxTreeItemId& item) const {
     wxCHECK_MSG (item.IsOk(), wxTreeItemId(), _T("invalid tree item"));
-    return GetNext (item, true);
+    return GetNext (item, false);
 }
 
 wxTreeItemId wxTreeListMainWindow::GetPrevExpanded (const wxTreeItemId& item) const {
     wxCHECK_MSG (item.IsOk(), wxTreeItemId(), _T("invalid tree item"));
-    return GetPrev (item, true);
+    return GetPrev (item, false);
 }
 
 wxTreeItemId wxTreeListMainWindow::GetFirstVisibleItem (bool fullRow) const {
@@ -2146,10 +2146,10 @@ wxTreeItemId wxTreeListMainWindow::GetFirstVisibleItem (bool fullRow) const {
 
 wxTreeItemId wxTreeListMainWindow::GetNextVisible (const wxTreeItemId& item, bool fullRow) const {
     wxCHECK_MSG (item.IsOk(), wxTreeItemId(), _T("invalid tree item"));
-    wxTreeItemId id = GetNext (item, true);
+    wxTreeItemId id = GetNext (item, false);
     while (id.IsOk()) {
         if (IsVisible (id, fullRow)) return id;
-        id = GetNext (id, true);
+        id = GetNext (id, false);
     }
     return wxTreeItemId();
 }
@@ -2695,7 +2695,7 @@ wxTreeItemId wxTreeListMainWindow::FindItem (const wxTreeItemId& item, const wxS
         }else if (mode & wxTL_MODE_NAV_EXPANDED) {
             next = GetNextExpanded (next);
         }else{ // (mode & wxTL_MODE_NAV_FULLTREE) default
-            next = GetNext (next);
+            next = GetNext (next, true);
         }
     }
 
@@ -2731,7 +2731,7 @@ wxTreeItemId wxTreeListMainWindow::FindItem (const wxTreeItemId& item, const wxS
         }else if (mode & wxTL_MODE_NAV_EXPANDED) {
             next = GetNextExpanded (next);
         }else{ // (mode & wxTL_MODE_NAV_FULLTREE) default
-            next = GetNext (next);
+            next = GetNext (next, true);
         }
         if (!next.IsOk() && item.IsOk()) {
             next = (wxTreeListItem*)GetRootItem().m_pItem;
@@ -4363,11 +4363,11 @@ wxTreeItemId wxTreeListCtrl::GetNextSibling(const wxTreeItemId& item) const
 wxTreeItemId wxTreeListCtrl::GetPrevSibling(const wxTreeItemId& item) const
 { return m_main_win->GetPrevSibling(item); }
 
-wxTreeItemId wxTreeListCtrl::GetNext(const wxTreeItemId& item, bool expanded) const
-{ return m_main_win->GetNext(item, expanded); }
+wxTreeItemId wxTreeListCtrl::GetNext(const wxTreeItemId& item) const
+{ return m_main_win->GetNext(item, true); }
 
-wxTreeItemId wxTreeListCtrl::GetPrev(const wxTreeItemId& item, bool expanded) const
-{ return m_main_win->GetPrev(item, expanded); }
+wxTreeItemId wxTreeListCtrl::GetPrev(const wxTreeItemId& item) const
+{ return m_main_win->GetPrev(item, true); }
 
 wxTreeItemId wxTreeListCtrl::GetFirstExpandedItem() const
 { return m_main_win->GetFirstExpandedItem(); }

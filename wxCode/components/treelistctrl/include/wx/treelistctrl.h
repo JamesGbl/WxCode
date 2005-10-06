@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.31 2005-08-23 18:25:48 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.32 2005-10-06 19:31:30 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -392,8 +392,8 @@ public:
     wxTreeItemId GetPrevSibling(const wxTreeItemId& item) const;
 
     // get item in the full tree (currently only for internal use)
-    wxTreeItemId GetNext(const wxTreeItemId& item, bool expanded = false) const;
-    wxTreeItemId GetPrev(const wxTreeItemId& item, bool expanded = false) const;
+    wxTreeItemId GetNext(const wxTreeItemId& item) const;
+    wxTreeItemId GetPrev(const wxTreeItemId& item) const;
 
     // get expanded item, see IsExpanded()
     wxTreeItemId GetFirstExpandedItem() const;
