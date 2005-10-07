@@ -3,7 +3,7 @@
 // Purpose:     treelisttest application
 // Maintainer:  Otto Wyss
 // Created:     2004-12-21
-// RCS-ID:      $Id: treelisttest.cpp,v 1.16 2005-10-06 19:33:25 wyo Exp $
+// RCS-ID:      $Id: treelisttest.cpp,v 1.17 2005-10-07 18:36:58 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -253,7 +253,7 @@ bool App::OnInit () {
     g_appname.Append (APP_NAME);
 
     // about box shown for 3 seconds
-//?    AppAbout (NULL, 3000);
+    AppAbout (NULL, 3000);
 
     // create application frame
     m_frame = new AppFrame (APP_NAME);
@@ -687,8 +687,9 @@ void AppFrame::OnGetChildren (wxCommandEvent &WXUNUSED(event)) {
 void AppFrame::OnListAll (wxCommandEvent &WXUNUSED(event)) {
     wxTreeItemId item = m_treelist->GetSelection();
     if (!item.IsOk()) item = m_treelist->GetRootItem ();
+    wxTreeItemId last = m_treelist->GetNextSibling (item);
     wxString text;
-    while (item.IsOk()) {
+    while (item.IsOk() && (item != last)) {
         text.Append (m_treelist->GetItemText (item) + _T("\n"));
         item = m_treelist->GetNext (item);
     }
