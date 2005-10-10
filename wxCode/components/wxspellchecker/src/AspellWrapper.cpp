@@ -41,7 +41,7 @@ bool AspellWrapper::LoadFunctions()
     DeleteAspellDocumentChecker =  (delete_aspell_document_checker_type)m_AspellLibrary.GetSymbol(_("delete_aspell_document_checker"));
     DeleteAspellConfig =  (delete_aspell_config_type)m_AspellLibrary.GetSymbol(_("delete_aspell_config"));
     DeleteAspellSpeller =  (delete_aspell_speller_type)m_AspellLibrary.GetSymbol(_("delete_aspell_speller"));
-    DeleteAspellCanHaveError =  (delete_aspell_can_have_error_type)m_AspellLibrary.GetSymbol(_("delete_aspell_can_have_error"));    ToAspellSpeller =  (to_aspell_speller_type)m_AspellLibrary.GetSymbol(_("to_aspell_speller"));
+    DeleteAspellCanHaveError =  (delete_aspell_can_have_error_type)m_AspellLibrary.GetSymbol(_("delete_aspell_can_have_error"));    ToAspellSpeller =  (to_aspell_speller_type)m_AspellLibrary.GetSymbol(_("to_aspell_speller"));
     NewAspellConfig =  (new_aspell_config_type)m_AspellLibrary.GetSymbol(_("new_aspell_config"));
     AspellConfigReplace =  (aspell_config_replace_type)m_AspellLibrary.GetSymbol(_("aspell_config_replace"));
     AspellSpellerCheck =  (aspell_speller_check_type)m_AspellLibrary.GetSymbol(_("aspell_speller_check"));
@@ -50,7 +50,7 @@ bool AspellWrapper::LoadFunctions()
     ToAspellDocumentChecker =  (to_aspell_document_checker_type)m_AspellLibrary.GetSymbol(_("to_aspell_document_checker"));
     AspellDocumentCheckerProcess =  (aspell_document_checker_process_type)m_AspellLibrary.GetSymbol(_("aspell_document_checker_process"));
     AspellDocumentCheckerNextMisspelling =  (aspell_document_checker_next_misspelling_type)m_AspellLibrary.GetSymbol(_("aspell_document_checker_next_misspelling"));
-    AspellSpellerSuggest =  (aspell_speller_suggest_type)m_AspellLibrary.GetSymbol(_("aspell_speller_suggest"));    AspellWordListElements =  (aspell_word_list_elements_type)m_AspellLibrary.GetSymbol(_("aspell_word_list_elements"));
+    AspellSpellerSuggest =  (aspell_speller_suggest_type)m_AspellLibrary.GetSymbol(_("aspell_speller_suggest"));    AspellWordListElements =  (aspell_word_list_elements_type)m_AspellLibrary.GetSymbol(_("aspell_word_list_elements"));
     AspellStringEnumerationNext =  (aspell_string_enumeration_next_type)m_AspellLibrary.GetSymbol(_("aspell_string_enumeration_next"));
     DeleteAspellStringEnumeration =  (delete_aspell_string_enumeration_type)m_AspellLibrary.GetSymbol(_("delete_aspell_string_enumeration"));
     AspellSpellerAddToPersonal =  (aspell_speller_add_to_personal_type)m_AspellLibrary.GetSymbol(_("aspell_speller_add_to_personal"));
