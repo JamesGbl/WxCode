@@ -1,4 +1,5 @@
 #include "SpellCheckEngineOption.h"
+#include "wx/filename.h"
 
 #include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
 WX_DEFINE_OBJARRAY(VariantArray);
@@ -38,11 +39,28 @@ SpellCheckEngineOption::SpellCheckEngineOption(wxString strName, wxString strTex
   m_strOptionName = strName;
   m_strDialogText = strText;
   m_PossibleValuesArray.Clear();
-  wxVariant OptionValue(strValue);
-  m_OptionValue = OptionValue;
   m_nOptionType = nType;
   m_bShowOption = true;
   m_strDependency = _T("");
+
+  // Convert relative paths to absolute paths
+  if ((m_nOptionType == SpellCheckEngineOption::DIR) || (m_nOptionType == SpellCheckEngineOption::FILE))
+  {
+    wxFileName path(strValue);
+    
+    if (path.IsRelative())
+    {
+      path.MakeAbsolute();
+    }
+    
+    wxVariant OptionValue(path.GetFullPath());
+    m_OptionValue = OptionValue;
+  }
+  else
+  {
+    wxVariant OptionValue(strValue);
+    m_OptionValue = OptionValue;
+  }
 }
 
 SpellCheckEngineOption::SpellCheckEngineOption(wxString strName, wxString strText, long nValue)
