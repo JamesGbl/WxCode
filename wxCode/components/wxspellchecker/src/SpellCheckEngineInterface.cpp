@@ -8,7 +8,8 @@ wxSpellCheckEngineInterface::wxSpellCheckEngineInterface()
 	m_AlwaysReplaceMap.clear();
 	m_AlwaysIgnoreList.IsEmpty();
 	m_pSpellUserInterface = NULL;
-	m_bPersonalDictionaryModified = FALSE;
+	m_bPersonalDictionaryModified = false;
+  m_bEngineInitialized = false;
 }
 
 wxSpellCheckEngineInterface::~wxSpellCheckEngineInterface()
@@ -80,7 +81,7 @@ void wxSpellCheckEngineInterface::DefineContext(const wxString& strText, long nO
     strLocalText.Replace("\n", " ");
 	  
     long nStartPosition = 0;
-    bool bTrimFront = FALSE;
+    bool bTrimFront = false;
     long nOffsetTrimmed = nOffset;
     if (nOffset > 50)
     {
@@ -89,7 +90,7 @@ void wxSpellCheckEngineInterface::DefineContext(const wxString& strText, long nO
       bTrimFront = TRUE;
     }
   
-    bool bTrimEnd = FALSE;
+    bool bTrimEnd = false;
     long nEndPosition = wxSTRING_MAXLEN;
     if ((unsigned)(nStartPosition + nLength + 50) < strLocalText.Length())
     {
@@ -194,3 +195,4 @@ void wxSpellCheckEngineInterface::ShowOption(const wxString& strOption, bool bSh
   if (it != m_Options.end())
     it->second.SetShowOption(bShow);
 }
+
