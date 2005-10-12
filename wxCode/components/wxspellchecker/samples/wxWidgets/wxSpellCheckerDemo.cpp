@@ -19,6 +19,8 @@
     #include "wx/wx.h"
 #endif
 
+#include "wx/filename.h"
+
 // ----------------------------------------------------------------------------
 // resources
 // ----------------------------------------------------------------------------
@@ -166,36 +168,22 @@ MyFrame::MyFrame(const wxString& title)
     m_bSpellCheckOnRightClick = false;
 
     m_pAspellInterface = new AspellInterface();
+    SetDefaultAspellOptions();
     m_pMySpellInterface = new MySpellInterface();
+    SetDefaultMySpellOptions();
 
-    if (m_pMySpellInterface->InitializeSpellCheckEngine() == false)
-    {
-      delete m_pMySpellInterface;
-      m_pMySpellInterface = NULL;
-    }
-    if (m_pAspellInterface->InitializeSpellCheckEngine() == false)
-    {
-      delete m_pAspellInterface;
-      m_pAspellInterface = NULL;
-      m_nSelectedSpellCheckEngine = MyFrame::USE_MYSPELL;
-    }
+    m_pMySpellInterface->InitializeSpellCheckEngine();
+    m_pAspellInterface->InitializeSpellCheckEngine();
 }
 
 
 
 MyFrame::~MyFrame()
 {
-    if (m_pAspellInterface)
-    {
-      delete m_pAspellInterface;
-      m_pAspellInterface = NULL;
-    }
-    
-    if (m_pMySpellInterface)
-    {
-      delete m_pMySpellInterface;
-      m_pMySpellInterface = NULL;
-    }
+  SavePersonalDictionaries();
+
+  wxDELETE(m_pAspellInterface);
+  wxDELETE(m_pMySpellInterface);
 }
 
 // event handlers
@@ -258,8 +246,15 @@ void MyFrame::OnSpellCheckMozillaUI(wxCommandEvent& event)
   wxSpellCheckEngineInterface* pSpellChecker = ReturnSelectedSpellCheckEngine();
   if (pSpellChecker)
   {
-    pSpellChecker->SetSpellCheckUserInterface(new MySpellingDialog(NULL));
-    SpellCheck(pSpellChecker);
+    if (pSpellChecker->IsInitialized())
+    {
+      pSpellChecker->SetSpellCheckUserInterface(new MySpellingDialog(NULL));
+      SpellCheck(pSpellChecker);
+    }
+    else
+    {
+      ::wxMessageBox(wxString::Format(_("Current options prevent proper %s spell check engine initialization.  Spell check is not possible."), pSpellChecker->GetSpellCheckEngineName().c_str()));
+    }
   }
 }
 
@@ -349,7 +344,88 @@ void MyFrame::XmlSpellCheck(wxString strDialogResource)
   wxSpellCheckEngineInterface* pSpellChecker = ReturnSelectedSpellCheckEngine();
   if (pSpellChecker)
   {
-    pSpellChecker->SetSpellCheckUserInterface(new XmlSpellCheckDialog(NULL, _T("resource.xrc"), strDialogResource, _T("PersonalDictionary")));
-    SpellCheck(pSpellChecker);
+    if (pSpellChecker->IsInitialized())
+    {
+      pSpellChecker->SetSpellCheckUserInterface(new XmlSpellCheckDialog(NULL, _T("resource.xrc"), strDialogResource, _T("PersonalDictionary")));
+      SpellCheck(pSpellChecker);
+    }
+    else
+    {
+      ::wxMessageBox(wxString::Format(_("Current options prevent proper %s spell check engine initialization.  Spell check is not possible."), pSpellChecker->GetSpellCheckEngineName().c_str()));
+    }
+  }
+}
+
+void MyFrame::SetDefaultAspellOptions()
+{
+  if (m_pAspellInterface)
+  {
+    SpellCheckEngineOption LanguageOption(_T("lang"), _T("Language Code"), _("en"), SpellCheckEngineOption::STRING); // A list of possible values would be good here
+    LanguageOption.SetDependency(_T("dict-dir"));
+    m_pAspellInterface->AddOptionToMap(LanguageOption);
+    SpellCheckEngineOption DataDirOption(_T("data-dir"), _T("Language Data File Directory"), _("data"), SpellCheckEngineOption::DIR);
+    m_pAspellInterface->AddOptionToMap(DataDirOption);
+    SpellCheckEngineOption DictDirOption(_T("dict-dir"), _T("Language Word List Directory"), _("dict"), SpellCheckEngineOption::DIR);
+    m_pAspellInterface->AddOptionToMap(DictDirOption);
+  
+    SpellCheckEngineOption SuggestionModeOption(_T("sug-mode"), _T("Suggestion Mode"), _T("normal"), SpellCheckEngineOption::STRING);
+    SuggestionModeOption.AddPossibleValue(wxString(_T("ultra")));
+    SuggestionModeOption.AddPossibleValue(wxString(_T("fast")));
+    SuggestionModeOption.AddPossibleValue(wxString(_T("normal")));
+    SuggestionModeOption.AddPossibleValue(wxString(_T("bad-spellers")));
+    m_pAspellInterface->AddOptionToMap(SuggestionModeOption);
+
+    /* - Not compatible with Aspell 0.60 library
+    SpellCheckEngineOption FilterModeOption(_T("mode"), _T("Filter Mode"), pConfig->Read(_T("mode"), _T("none")));
+    FilterModeOption.AddPossibleValue(wxString(_T("none")));
+    FilterModeOption.AddPossibleValue(wxString(_T("url")));
+    FilterModeOption.AddPossibleValue(wxString(_T("email")));
+    FilterModeOption.AddPossibleValue(wxString(_T("sgml")));
+    FilterModeOption.AddPossibleValue(wxString(_T("tex")));
+    m_pAspellInterface->AddOptionToMap(FilterModeOption);
+    */
+
+    bool bIgnoreCase = false;
+    SpellCheckEngineOption IgnoreCaseOption(_T("ignore-case"), _T("Ignore Case"), bIgnoreCase);
+    m_pAspellInterface->AddOptionToMap(IgnoreCaseOption);
+    m_pAspellInterface->ApplyOptions();
+
+    // Set the personal dictionary file
+    m_pAspellInterface->OpenPersonalDictionary(_("personaldictionary.dic"));
+  }
+}
+
+void MyFrame::SetDefaultMySpellOptions()
+{
+  if (m_pMySpellInterface)
+  {
+    SpellCheckEngineOption DictionaryPathOption(_T("dictionary-path"), _T("Dictionary Path"), wxFileName::GetCwd(), SpellCheckEngineOption::DIR);
+    // If you need to set an option but don't want the option to be user editable, use SetShowOption as follows:
+    //  DictionaryPathOption.SetShowOption(false);
+    m_pMySpellInterface->AddOptionToMap(DictionaryPathOption);
+    SpellCheckEngineOption LanguageOption(_T("language"), _T("Language"), _("English (United States)"), SpellCheckEngineOption::STRING);
+    LanguageOption.SetDependency(_T("dictionary-path"));
+    m_pMySpellInterface->AddOptionToMap(LanguageOption);
+
+    // Add custom dictionary entries
+    m_pMySpellInterface->AddCustomMySpellDictionary(_("Michigan, USA"), _("en_US"));
+
+    m_pMySpellInterface->ApplyOptions();
+
+    // Set the personal dictionary file
+    m_pMySpellInterface->OpenPersonalDictionary(_("personaldictionary.dic"));
+  }
+}
+
+void MyFrame::SavePersonalDictionaries()
+{
+  if (m_pAspellInterface)
+  {
+    m_pAspellInterface->GetPersonalDictionary()->SavePersonalDictionary();
+  }
+
+  if (m_pMySpellInterface)
+  {
+    m_pMySpellInterface->GetPersonalDictionary()->SavePersonalDictionary();
   }
 }

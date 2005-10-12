@@ -47,6 +47,10 @@ public:
     wxSpellCheckEngineInterface* ReturnSelectedSpellCheckEngine();
     void XmlSpellCheck(wxString strDialogResource);
     
+    void SetDefaultAspellOptions();
+    void SetDefaultMySpellOptions();
+    void SavePersonalDictionaries();
+
 private:
     wxTextCtrl* textCtrl;
     bool m_bSpellCheckOnRightClick;
