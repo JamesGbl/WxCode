@@ -35,24 +35,47 @@ AspellInterface::AspellInterface(wxSpellCheckUserInterface* pDlg /* = NULL */)
   if (m_pSpellUserInterface != NULL)
     m_pSpellUserInterface->SetSpellCheckEngine(this);
 
-  SetDefaultOptions();
+  LoadLibrary();
 }
 
 AspellInterface::~AspellInterface()
 {
   wxASSERT_MSG(m_AspellWrapper.IsLoaded(), _T("Aspell library wrapper isn't loaded and Aspell interface can't be properly cleaned up"));
   
-  SaveUserOptions();
+  if (m_bPersonalDictionaryModified)
+  {
+    //if (wxYES == ::wxMessageBox("Would you like to save any of your changes to your personal dictionary?", "Save Changes", wxYES_NO | wxICON_QUESTION))
+      //m_AspellWrapper.AspellSpellerSaveAllWordLists(m_AspellSpeller);
+    m_PersonalDictionary.SavePersonalDictionary();
+  }
+
+  UnloadLibrary();
+
+  if (m_pSpellUserInterface != NULL)
+  {
+    delete m_pSpellUserInterface;
+    m_pSpellUserInterface = NULL;
+  }
+}
+
+bool AspellInterface::LoadLibrary()
+{
+  if (!m_AspellWrapper.LoadFunctions())
+    return false;
   
+	if (m_AspellConfig == NULL)
+		m_AspellConfig = m_AspellWrapper.NewAspellConfig();
+	
+	if (m_AspellConfig == NULL)
+		return false;
+
+	return true;
+}
+
+bool AspellInterface::UnloadLibrary()
+{
   if (m_AspellWrapper.IsLoaded())  // If the Aspell library wrapper isn't loaded then we can't properly clean up
   {
-    if (m_bPersonalDictionaryModified)
-    {
-      //if (wxYES == ::wxMessageBox("Would you like to save any of your changes to your personal dictionary?", "Save Changes", wxYES_NO | wxICON_QUESTION))
-        //m_AspellWrapper.AspellSpellerSaveAllWordLists(m_AspellSpeller);
-      m_PersonalDictionary.SavePersonalDictionary();
-    }
-  
     if (m_AspellChecker != NULL)
     {
       m_AspellWrapper.DeleteAspellDocumentChecker(m_AspellChecker);
@@ -70,12 +93,6 @@ AspellInterface::~AspellInterface()
       m_AspellWrapper.DeleteAspellSpeller(m_AspellSpeller);
       m_AspellSpeller = NULL;
     }
-  
-    if (m_pSpellUserInterface != NULL)
-    {
-      delete m_pSpellUserInterface;
-      m_pSpellUserInterface = NULL;
-    }
   }
   
   m_AspellWrapper.Unload();
@@ -83,36 +100,35 @@ AspellInterface::~AspellInterface()
 
 int AspellInterface::InitializeSpellCheckEngine()
 {
-  m_PersonalDictionary.LoadPersonalDictionary();
-  
-  if (!m_AspellWrapper.LoadFunctions())
-    return FALSE;
-  
-	if (m_AspellConfig == NULL)
-		m_AspellConfig = m_AspellWrapper.NewAspellConfig();
-	
-	if (m_AspellConfig == NULL)
-		return FALSE;
+  LoadLibrary();
 
-  ApplyOptions();
-  
   AspellCanHaveError* ret = m_AspellWrapper.NewAspellSpeller(m_AspellConfig);
   if (m_AspellWrapper.AspellError(ret) != 0)
 	{
-    ::wxMessageBox(wxString::Format("Error: %s\n",m_AspellWrapper.AspellErrorMessage(ret)));
+    //::wxMessageBox(wxString::Format("Error: %s\n",m_AspellWrapper.AspellErrorMessage(ret)));
     m_AspellWrapper.DeleteAspellCanHaveError(ret);
-    return FALSE;
+    return false;
   }
   m_AspellSpeller = m_AspellWrapper.ToAspellSpeller(ret);
   
-	return TRUE;
+  m_bEngineInitialized = true;
+  return true;
 }
 
 int AspellInterface::UninitializeSpellCheckEngine()
 {
-  m_AspellWrapper.Unload();
+  m_bEngineInitialized = false;
+  return UnloadLibrary();
+}
 
-	return TRUE;
+void AspellInterface::ApplyOptions()  // Go through all the options in the options map and apply them to the spell check engine
+{
+  for (OptionsMap::iterator it = m_Options.begin(); it != m_Options.end(); it++)
+  {
+    SetOption(it->second);
+  }
+
+  InitializeSpellCheckEngine();
 }
 
 int AspellInterface::SetOption(SpellCheckEngineOption& Option)
@@ -121,16 +137,16 @@ int AspellInterface::SetOption(SpellCheckEngineOption& Option)
 		m_AspellConfig = m_AspellWrapper.NewAspellConfig();
 
 	if (m_AspellConfig == NULL)
-		return FALSE;
+		return false;
 	
   wxString strValue = Option.GetValueAsString();
   // wxVariant returns booleans as "0" or "1", and Aspell expects "true" or "false"
   if (Option.GetOptionType() == SpellCheckEngineOption::BOOLEAN)
     strValue = (strValue == _T("0")) ? _T("false") : _T("true");
-    
+
 	m_AspellWrapper.AspellConfigReplace(m_AspellConfig, Option.GetName(), strValue);
 
-	return TRUE;
+	return true;
 }
 
 void AspellInterface::UpdatePossibleValues(SpellCheckEngineOption& OptionDependency, SpellCheckEngineOption& OptionToUpdate)
@@ -211,10 +227,10 @@ wxString AspellInterface::CheckSpelling(wxString strText)
     if (m_PersonalDictionary.IsWordInDictionary(strBadWord))
       continue;
     
-		bool bReplaceFromMap = FALSE;
+		bool bReplaceFromMap = false;
 		StringToStringMap::iterator WordFinder = m_AlwaysReplaceMap.find(strBadWord);
 		if (WordFinder != m_AlwaysReplaceMap.end())
-			bReplaceFromMap = TRUE;
+			bReplaceFromMap = true;
 		
 		int nUserReturnValue = 0;
 		if (!bReplaceFromMap)
@@ -325,6 +341,12 @@ wxArrayString AspellInterface::GetWordListAsArray()
   return m_PersonalDictionary.GetWordListAsArray();
 }
 
+void AspellInterface::OpenPersonalDictionary(const wxString& strPersonalDictionaryFile)
+{
+  m_PersonalDictionary.SetDictionaryFileName(strPersonalDictionaryFile);
+  m_PersonalDictionary.LoadPersonalDictionary();
+}
+
 ///////////// Options /////////////////
 //
 // Aspell Options:
@@ -341,56 +363,3 @@ wxArrayString AspellInterface::GetWordListAsArray()
 //	lang -> language to use
 //	personal -> personal word list file name
 //	extra-dicts -> extra dictionaries to use
-int AspellInterface::SetDefaultOptions()
-{
-  wxConfigBase* pConfig = wxConfigBase::Get();
-
-  wxString strPath = _T("/wxSpellChecker-") + GetSpellCheckEngineName();
-  pConfig->SetPath(strPath);
-  
-	wxString strDataDir = pConfig->Read(_T("data-dir"), wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("data")));
-	wxString strDictDir = pConfig->Read(_T("dict-dir"), wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("dict")));
-  wxString strLanguage = pConfig->Read(_T("lang"), _T("en"));
-
-  // Double check that the directory exists.  Otherwise we might have bad settings from a previous installation
-  if (wxFileName::DirExists(strDataDir) == false)
-    strDataDir = wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("data"));
-  if (wxFileName::DirExists(strDictDir) == false)
-    strDictDir = wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("dict"));
-
-  SpellCheckEngineOption LanguageOption(_T("lang"), _T("Language Code"), strLanguage); // A list of possible values would be good here
-  LanguageOption.SetDependency(_T("dict-dir"));
-  AddOptionToMap(LanguageOption);
-  SpellCheckEngineOption DataDirOption(_T("data-dir"), _T("Language Data File Directory"), strDataDir, SpellCheckEngineOption::DIR);
-  AddOptionToMap(DataDirOption);
-  SpellCheckEngineOption DictDirOption(_T("dict-dir"), _T("Language Word List Directory"), strDictDir, SpellCheckEngineOption::DIR);
-  AddOptionToMap(DictDirOption);
-  
-  SpellCheckEngineOption SuggestionModeOption(_T("sug-mode"), _T("Suggestion Mode"), pConfig->Read(_T("sug-mode"), _T("normal")));
-  SuggestionModeOption.AddPossibleValue(wxString(_T("ultra")));
-  SuggestionModeOption.AddPossibleValue(wxString(_T("fast")));
-  SuggestionModeOption.AddPossibleValue(wxString(_T("normal")));
-  SuggestionModeOption.AddPossibleValue(wxString(_T("bad-spellers")));
-  AddOptionToMap(SuggestionModeOption);
-
-  /* - Not compatible with Aspell 0.60 library
-  SpellCheckEngineOption FilterModeOption(_T("mode"), _T("Filter Mode"), pConfig->Read(_T("mode"), _T("none")));
-  FilterModeOption.AddPossibleValue(wxString(_T("none")));
-  FilterModeOption.AddPossibleValue(wxString(_T("url")));
-  FilterModeOption.AddPossibleValue(wxString(_T("email")));
-  FilterModeOption.AddPossibleValue(wxString(_T("sgml")));
-  FilterModeOption.AddPossibleValue(wxString(_T("tex")));
-  AddOptionToMap(FilterModeOption);
-  */
-
-  bool bIgnoreCase = false;
-  pConfig->Read(_T("ignore-care"), &bIgnoreCase, false);
-  SpellCheckEngineOption IgnoreCaseOption(_T("ignore-case"), _T("Ignore Case"), bIgnoreCase);
-  AddOptionToMap(IgnoreCaseOption);
-
-  
-  // One thing to note is that the absence of certain files (en.dat and en_phonet.dat in the case of english)
-  //  in the data-dir directory causes the aspell library to have an "abnormal termination message under windows)
-
-  return true;
-}

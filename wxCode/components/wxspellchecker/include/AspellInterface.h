@@ -25,7 +25,6 @@ public:
   virtual wxString GetSpellCheckEngineName() { return _T("Aspell"); }
 	virtual int InitializeSpellCheckEngine();
 	virtual int UninitializeSpellCheckEngine();
-	virtual int SetDefaultOptions();
   virtual int SetOption(SpellCheckEngineOption& Option);
   virtual void UpdatePossibleValues(SpellCheckEngineOption& OptionDependency, SpellCheckEngineOption& OptionToUpdate);
 	virtual bool IsWordInDictionary(const wxString& strWord);
@@ -34,7 +33,12 @@ public:
   virtual int AddWordToDictionary(const wxString& strWord);
   virtual int RemoveWordFromDictionary(const wxString& strWord);
   virtual wxArrayString GetWordListAsArray();
+  void OpenPersonalDictionary(const wxString& strPersonalDictionaryFile);
   PersonalDictionary* GetPersonalDictionary() { return &m_PersonalDictionary; }
+
+  bool LoadLibrary();
+  bool UnloadLibrary();
+  virtual void ApplyOptions();  // Go through all the options in the options map and apply them to the spell check engine
 
 private:  
   // Aspell data structures
@@ -59,3 +63,4 @@ private:
 };
 
 #endif  // __ASPELL_CHECK_INTERFACE__
+
