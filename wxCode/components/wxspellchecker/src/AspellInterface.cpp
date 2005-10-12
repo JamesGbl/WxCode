@@ -96,6 +96,8 @@ bool AspellInterface::UnloadLibrary()
   }
   
   m_AspellWrapper.Unload();
+
+  return true;
 }
 
 int AspellInterface::InitializeSpellCheckEngine()
