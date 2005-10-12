@@ -36,6 +36,7 @@ protected:
   StringToStringMap m_AlwaysReplaceMap;	// We need a map here to store the misspelled word and its replacement
   wxArrayString m_AlwaysIgnoreList;
 	bool m_bPersonalDictionaryModified;
+  bool m_bEngineInitialized;
 
   // Create a pointer to the dialog to present.
   // The main reason that this is here rather than created only if needed, is that I wanted repeat appearances
@@ -53,13 +54,13 @@ public:
   virtual wxString GetSpellCheckEngineName() = 0;
 	virtual int InitializeSpellCheckEngine() = 0;
 	virtual int UninitializeSpellCheckEngine() = 0;
-	virtual int SetDefaultOptions() = 0;
   virtual int SetOption(SpellCheckEngineOption& Option) = 0;
-  virtual bool AddOptionToMap(SpellCheckEngineOption& Option);
+  virtual bool AddOptionToMap(SpellCheckEngineOption& option);
   virtual void ApplyOptions();  // Go through all the options in the options map and apply them to the spell check engine
   OptionsMap* GetOptions() { return &m_Options; }
   virtual void UpdatePossibleValues(SpellCheckEngineOption& OptionDependency, SpellCheckEngineOption& OptionToUpdate) { wxASSERT(false); }
   virtual void SaveUserOptions();
+  bool IsInitialized() { return m_bEngineInitialized; }
 
   // Spell Checker Search/Suggestion functions
 	virtual bool IsWordInDictionary(const wxString& strWord) = 0;
