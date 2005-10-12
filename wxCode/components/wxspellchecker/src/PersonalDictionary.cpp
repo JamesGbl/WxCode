@@ -15,8 +15,8 @@ PersonalDictionary::~PersonalDictionary()
   
 bool PersonalDictionary::LoadPersonalDictionary()
 {
-  wxFileName sPath; 
-  sPath.Assign(wxFileName::GetCwd(), m_strDictionaryFileName);
+  wxFileName sPath(m_strDictionaryFileName);
+  sPath.MakeAbsolute();
 
   wxTextFile DictFile(sPath.GetFullPath());
   if (!DictFile.Exists())
@@ -57,8 +57,8 @@ bool PersonalDictionary::LoadPersonalDictionary()
 
 bool PersonalDictionary::SavePersonalDictionary()
 {
-  wxFileName sPath; 
-  sPath.Assign(wxFileName::GetCwd(), m_strDictionaryFileName);
+  wxFileName sPath(m_strDictionaryFileName);
+  sPath.MakeAbsolute();
 
   wxTextFile DictFile(sPath.GetFullPath());
   
