@@ -37,8 +37,8 @@ public:
   virtual wxString GetSpellCheckEngineName() { return _T("MySpell"); }
 	virtual int InitializeSpellCheckEngine();
 	virtual int UninitializeSpellCheckEngine();
-	virtual int SetDefaultOptions();
   virtual int SetOption(SpellCheckEngineOption& Option);
+  virtual void UpdatePossibleValues(SpellCheckEngineOption& OptionDependency, SpellCheckEngineOption& OptionToUpdate);
 	virtual wxString CheckSpelling(wxString strText);
   wxArrayString GetSuggestions(const wxString& strMisspelledWord);
 
@@ -46,14 +46,25 @@ public:
   virtual int AddWordToDictionary(const wxString& strWord);
   virtual int RemoveWordFromDictionary(const wxString& strWord);
   virtual wxArrayString GetWordListAsArray();
+  void OpenPersonalDictionary(const wxString& strPersonalDictionaryFile);
   PersonalDictionary* GetPersonalDictionary() { return &m_PersonalDictionary; }
-
+  void AddCustomMySpellDictionary(const wxString& strDictionaryName, const wxString& strDictionaryFileRoot);
+  void CleanCustomMySpellDictionaries() { m_CustomMySpellDictionaryMap.clear(); }
 
 private:  
+  void PopulateDictionaryMap(StringToStringMap* pLookupMap, const wxString& strDictionaryPath);
+  void AddDictionaryElement(StringToStringMap* pLookupMap, const wxString& strDictionaryPath, const wxString& strDictionaryName, const wxString& strDictionaryFileRoot);
+  wxString GetSelectedLanguage();
+  wxString GetAffixFileName();
+  wxString GetAffixFileName(const wxString& strDictionaryName);
+  wxString GetDictionaryFileName();
+  wxString GetDictionaryFileName(const wxString& strDictionaryName);
+
 	MySpell* m_pMySpell;
   
-  wxString m_strAffixFile;
-  wxString m_strDictionaryFile;
+  StringToStringMap m_DictionaryLookupMap;
+  StringToStringMap m_CustomMySpellDictionaryMap;
+  wxString m_strDictionaryPath;
   
   PersonalDictionary m_PersonalDictionary;
 };

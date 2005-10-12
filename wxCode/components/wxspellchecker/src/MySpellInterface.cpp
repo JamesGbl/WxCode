@@ -14,16 +14,10 @@ MySpellInterface::MySpellInterface(wxSpellCheckUserInterface* pDlg /* = NULL */)
 
   m_pMySpell = NULL;
   m_bPersonalDictionaryModified = false;
-
-  SetDefaultOptions();
-
-  m_PersonalDictionary.LoadPersonalDictionary();
 }
 
 MySpellInterface::~MySpellInterface()
 {
-  SaveUserOptions();
-
   if (m_bPersonalDictionaryModified)
   {
     //if (wxYES == ::wxMessageBox("Would you like to save any of your changes to your personal dictionary?", "Save Changes", wxYES_NO | wxICON_QUESTION))
@@ -42,44 +36,22 @@ MySpellInterface::~MySpellInterface()
 int MySpellInterface::InitializeSpellCheckEngine()
 {
   UninitializeSpellCheckEngine();
- 
-  m_pMySpell= new MySpell(m_strAffixFile.c_str(), m_strDictionaryFile.c_str());
+
+  wxString strAffixFile = GetAffixFileName();
+  wxString strDictionaryFile = GetDictionaryFileName();
   
-  return (m_pMySpell != NULL);
+  if ((strAffixFile != wxEmptyString) && (strDictionaryFile != wxEmptyString))
+    m_pMySpell = new MySpell(strAffixFile.c_str(), strDictionaryFile.c_str());
+  
+  m_bEngineInitialized = (m_pMySpell != NULL);
+  return m_bEngineInitialized;
 }
 
 int MySpellInterface::UninitializeSpellCheckEngine()
 {
-  if (m_pMySpell)
-  {
-    delete m_pMySpell;
-    m_pMySpell = NULL;
-  }
-  return TRUE;
-}
-
-int MySpellInterface::SetDefaultOptions()
-{
-  wxConfigBase* pConfig = wxConfigBase::Get();
-
-  wxString strPath = _T("/wxSpellChecker-") + GetSpellCheckEngineName();
-  pConfig->SetPath(strPath);
-
-	m_strAffixFile = pConfig->Read(_T("affix-file"), wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("en_US.aff")));
-	m_strDictionaryFile = pConfig->Read(_T("dict-file"), wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("en_US.dic")));
-
-  // Make sure that the table is initially empty
-  if (wxFileName::FileExists(m_strAffixFile) == false)
-	  m_strAffixFile = wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("en_US.aff"));
-  if (wxFileName::FileExists(m_strDictionaryFile) == false)
-	m_strDictionaryFile = wxString::Format(_T("%s%c%s"), ::wxGetCwd().c_str(), wxFileName::GetPathSeparator(), _T("en_US.dic"));
-  
-  SpellCheckEngineOption AffixFileOption(_T("affix-file"), _T("Affix File"), m_strAffixFile, SpellCheckEngineOption::FILE);
-  AddOptionToMap(AffixFileOption);
-  SpellCheckEngineOption DictFileOption(_T("dict-file"), _T("Dictionary File"), m_strDictionaryFile, SpellCheckEngineOption::FILE);
-  AddOptionToMap(DictFileOption);
-
-  return TRUE;
+  wxDELETE(m_pMySpell);
+  m_bEngineInitialized = false;
+  return true;
 }
 
 int MySpellInterface::SetOption(SpellCheckEngineOption& Option)
@@ -88,19 +60,29 @@ int MySpellInterface::SetOption(SpellCheckEngineOption& Option)
   // dictionary files.  To change those, a new MySpell instance must be created though
   
   // First make sure that either the affix or dict file have changed
-  if (Option.GetName() == _T("affix-file"))
+  if (Option.GetName() == _T("dictionary-path"))
   {
-    if (m_strAffixFile == Option.GetValueAsString())
-      return true;  // Even though the option didn't change, it isn't an error, so return true
-    else
-      m_strAffixFile = Option.GetValueAsString();
+    m_strDictionaryPath = Option.GetValueAsString();
+    PopulateDictionaryMap(&m_DictionaryLookupMap, m_strDictionaryPath);
+
+    //SpellCheckEngineOption LanguageOption(_T("language"), _T("Language"), GetSelectedLanguage());
+  
+    /*
+    StringToStringMap::iterator start = m_DictionaryLookupMap.begin();
+    StringToStringMap::iterator stop = m_DictionaryLookupMap.end();
+    while (start != stop)
+    {
+      LanguageOption.AddPossibleValue((*start).first);
+      start++;
+    }
+    */
+    //AddOptionToMap(LanguageOption);
+    
+    //return true;  // Even though the option didn't change, it isn't an error, so return true
   }
-  else if (Option.GetName() == _T("dict-file"))
+  else if (Option.GetName() == _T("language"))
   {
-    if (m_strDictionaryFile == Option.GetValueAsString())
-      return true;  // Even though the option didn't change, it isn't an error, so return true
-    else
-      m_strDictionaryFile = Option.GetValueAsString();
+    //return true;  // Even though the option didn't change, it isn't an error, so return true
   }
   else
     return false; // We don't understand this option so return the error
@@ -137,10 +119,10 @@ wxString MySpellInterface::CheckSpelling(wxString strText)
       if (m_PersonalDictionary.IsWordInDictionary(token))
         continue;
       
-      bool bReplaceFromMap = FALSE;
+      bool bReplaceFromMap = false;
       StringToStringMap::iterator WordFinder = m_AlwaysReplaceMap.find(token);
       if (WordFinder != m_AlwaysReplaceMap.end())
-        bReplaceFromMap = TRUE;
+        bReplaceFromMap = true;
 
       int nUserReturnValue = 0;
 
@@ -225,4 +207,193 @@ wxArrayString MySpellInterface::GetWordListAsArray()
 // Since MySpell doesn't have a concept of a personal dictionary, we can create a file
 // to hold new words and if spell check fails then we check this map before asking the user
 // It's not the best (as it won't support the affix feature of MySpell), but it'll work
+
+void MySpellInterface::PopulateDictionaryMap(StringToStringMap* pLookupMap, const wxString& strDictionaryPath)
+{
+  if (pLookupMap == NULL)
+    pLookupMap = &m_DictionaryLookupMap;
+  
+  pLookupMap->clear();
+
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Afrikaans (South Africa)"), _("af_ZA"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Bulgarian (Bulgaria)"), _("bg_BG"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Catalan (Spain)"), _("ca_ES"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Czech (Czech Republic)"), _("cs_CZ"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Welsh (Wales)"), _("cy_GB"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Danish (Denmark)"), _("da_DK"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("German (Austria)"), _("de_AT"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("German (Switzerland)"), _("de_CH"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("German (Germany- orig dict)"), _("de_DE"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("German (Germany-old & neu ortho.)"), _("de_DE_comb"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("German (Germany-neu ortho.)"), _("de_DE_neu"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Greek (Greece)"), _("el_GR"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("English (Australia)"), _("en_AU"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("English (Canada)"), _("en_CA"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("English (United Kingdom)"), _("en_GB"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("English (New Zealand)"), _("en_NZ"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("English (United States)"), _("en_US"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Esperanto (anywhere)"), _("eo_l3"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Spanish (Spain-etal)"), _("es_ES"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Spanish (Mexico)"), _("es_MX"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Faroese (Faroe Islands)"), _("fo_FO"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("French (France)"), _("fr_FR"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Irish (Ireland)"), _("ga_IE"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Scottish Gaelic (Scotland)"), _("gd_GB"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Galician (Spain)"), _("gl_ES"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Hebrew (Israel)"), _("he_IL"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Croatian (Croatia)"), _("hr_HR"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Hungarian (Hungary)"), _("hu_HU"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Interlingua (x-register)"), _("ia"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Indonesian (Indonesia)"), _("id_ID"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Italian (Italy)"), _("it_IT"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Kurdish (Turkey)"), _("ku_TR"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Latin (x-register)"), _("la"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Lithuanian (Lithuania)"), _("lt_LT"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Latvian (Latvia)"), _("lv_LV"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Malagasy (Madagascar)"), _("mg_MG"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Maori (New Zealand)"), _("mi_NZ"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Malay (Malaysia)"), _("ms_MY"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Norwegian Bokmaal (Norway)"), _("nb_NO"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Dutch (Netherlands)"), _("nl_NL"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Norwegian Nynorsk (Norway)"), _("nn_NO"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Chichewa (Malawi)"), _("ny_MW"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Polish (Poland)"), _("pl_PL"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Portuguese (Brazil)"), _("pt_BR"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Portuguese (Portugal)"), _("pt_PT"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Romanian (Romania)"), _("ro_RO"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Russian (Russia)"), _("ru_RU"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Russian ye (Russia)"), _("ru_RU_ie"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Russian yo (Russia)"), _("ru_RU_yo"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Kiswahili (Africa)"), _("rw_RW"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Slovak (Slovakia)"), _("sk_SK"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Slovenian (Slovenia)"), _("sl_SI"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Swedish (Sweden)"), _("sv_SE"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Kiswahili (Africa)"), _("sw_KE"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Tetum (Indonesia)"), _("tet_ID"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Tagalog (Philippines)"), _("tl_PH"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Setswana (Africa)"), _("tn_ZA"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Ukrainian (Ukraine)"), _("uk_UA"));
+  AddDictionaryElement(pLookupMap, strDictionaryPath, _("Zulu (Africa)"), _("zu_ZA"));
+
+  // Add the custom MySpell dictionary entries to the map
+  StringToStringMap::iterator start = m_CustomMySpellDictionaryMap.begin();
+  StringToStringMap::iterator stop = m_CustomMySpellDictionaryMap.end();
+  while (start != stop)
+  {
+    AddDictionaryElement(pLookupMap, strDictionaryPath, (*start).first, (*start).second);
+    start++;
+  }
+}
+
+void MySpellInterface::UpdatePossibleValues(SpellCheckEngineOption& OptionDependency, SpellCheckEngineOption& OptionToUpdate)
+{
+  if ((OptionDependency.GetName().IsSameAs(_T("dictionary-path"))) && (OptionToUpdate.GetName().IsSameAs(_T("language"))))
+  {
+    StringToStringMap tempLookupMap;
+    wxString strDictionaryPath = OptionDependency.GetValueAsString();
+    PopulateDictionaryMap(&tempLookupMap, strDictionaryPath);
+
+    StringToStringMap::iterator start = tempLookupMap.begin();
+    StringToStringMap::iterator stop = tempLookupMap.end();
+    while (start != stop)
+    {
+      OptionToUpdate.AddPossibleValue((*start).first);
+      start++;
+    }
+  }
+  else
+  {
+    ::wxMessageBox(wxString::Format(_T("Unsure how to update the possible values for %s based on the value of %s"), OptionDependency.GetText().c_str(), OptionToUpdate.GetText().c_str()));
+  }
+}
+
+void MySpellInterface::AddDictionaryElement(StringToStringMap* pLookupMap, const wxString& strDictionaryPath, const wxString& strDictionaryName, const wxString& strDictionaryFileRoot)
+{
+  wxFileName strAffixFileName(strDictionaryPath + wxFILE_SEP_PATH + strDictionaryFileRoot + _(".aff"));
+  wxFileName strDictionaryFileName(strDictionaryPath + wxFILE_SEP_PATH + strDictionaryFileRoot + _(".dic"));
+  if (strAffixFileName.FileExists() && strDictionaryFileName.FileExists())
+  {
+    (*pLookupMap)[strDictionaryName] = strDictionaryFileRoot;
+  }
+}
+
+wxString MySpellInterface::GetSelectedLanguage()
+{
+  OptionsMap::iterator it = m_Options.find(_("language"));
+  if (it != m_Options.end())
+  {
+    return it->second.GetValueAsString();
+  }
+  else
+  {
+    return wxEmptyString;
+  }
+}
+
+wxString MySpellInterface::GetAffixFileName()
+{
+  wxString strLanguage = GetSelectedLanguage();
+  if (strLanguage != wxEmptyString)
+  {
+    return GetAffixFileName(strLanguage);
+  }
+  else
+  {
+    return wxEmptyString;
+  }
+}
+
+wxString MySpellInterface::GetAffixFileName(const wxString& strDictionaryName)
+{
+  StringToStringMap::iterator finder = m_DictionaryLookupMap.find(strDictionaryName);
+  if (finder != m_DictionaryLookupMap.end())
+  {
+    return (m_strDictionaryPath + wxFILE_SEP_PATH + (*finder).second + _(".aff"));
+  }
+  else
+  {
+    return wxEmptyString;
+  }
+}
+
+wxString MySpellInterface::GetDictionaryFileName()
+{
+  wxString strLanguage = GetSelectedLanguage();
+  if (strLanguage != wxEmptyString)
+  {
+    return GetDictionaryFileName(strLanguage);
+  }
+  else
+  {
+    return wxEmptyString;
+  }
+}
+
+wxString MySpellInterface::GetDictionaryFileName(const wxString& strDictionaryName)
+{
+  StringToStringMap::iterator finder = m_DictionaryLookupMap.find(strDictionaryName);
+  if (finder != m_DictionaryLookupMap.end())
+  {
+    return (m_strDictionaryPath + wxFILE_SEP_PATH + (*finder).second + _(".dic"));
+  }
+  else
+  {
+    return wxEmptyString;
+  }
+}
+
+void MySpellInterface::AddCustomMySpellDictionary(const wxString& strDictionaryName, const wxString& strDictionaryFileRoot)
+{
+  m_CustomMySpellDictionaryMap[strDictionaryName] = strDictionaryFileRoot;
+}
+
+void MySpellInterface::OpenPersonalDictionary(const wxString& strPersonalDictionaryFile)
+{
+  m_PersonalDictionary.SetDictionaryFileName(strPersonalDictionaryFile);
+  m_PersonalDictionary.LoadPersonalDictionary();
+}
+
+///////////// Options /////////////////
+// "dictionary-path" - location of dictionary files
+// "language" - selected language
 
