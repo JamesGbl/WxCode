@@ -1,6 +1,6 @@
 #include "license.readme"
 
-#ifndef __VISUALC__
+#ifdef __UNIX__
   #include <unistd.h>
 #endif
 #include <cstdlib>
