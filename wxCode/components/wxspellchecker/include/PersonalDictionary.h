@@ -23,6 +23,7 @@ public:
   void RemoveWord(const wxString& strWord);
   wxArrayString GetWordListAsArray();
   wxString GetDictionaryFileName() { return m_strDictionaryFileName; }
+  void SetDictionaryFileName(const wxString& filename) { m_strDictionaryFileName = filename; }
 
 private:
   wxArrayString m_DictionaryWords;
