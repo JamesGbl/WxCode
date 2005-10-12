@@ -96,10 +96,15 @@ void SpellCheckerOptionsDialog::PopulateOptionsSizer(wxSizer* pSizer)
         if ((pCurrentOption->GetPossibleValuesArray()->GetCount() > 0) || (!strDependency.IsEmpty()))
         {
           wxString* ComboStrings = NULL;
-          wxComboBox* pCombo = new wxComboBox( this, -1, pCurrentOption->GetValueAsString(), wxDefaultPosition, wxDefaultSize, 0, ComboStrings, 0, wxDefaultValidator, strName);
+          wxComboBox* pCombo = new wxComboBox( this, -1, pCurrentOption->GetValueAsString(), wxDefaultPosition, wxDefaultSize, 0, ComboStrings, wxCB_SORT, wxDefaultValidator, strName);
           VariantArray* pArray = pCurrentOption->GetPossibleValuesArray();
+          wxArrayString sortedArray;
           for (unsigned int i=0; i<pArray->GetCount(); i++)
-            pCombo->Append(pArray->Item(i));
+            sortedArray.Add(pArray->Item(i));
+
+          sortedArray.Sort();
+          for (unsigned int j=0; j<sortedArray.GetCount(); j++)
+            pCombo->Append(sortedArray[j]);
           // Add this wxComboBox control to the dialog
           pSizer->Add(pCombo, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
           
@@ -329,10 +334,14 @@ void SpellCheckerOptionsDialog::UpdateControlPossibleValues(wxFocusEvent& event)
       // Now repopulate the combo box contents
       pCombo->Clear();
       VariantArray* pArray = Option.GetPossibleValuesArray();
+      wxArrayString sortedArray;
       for (unsigned int i=0; i<pArray->GetCount(); i++)
-      {
-        pCombo->Append(pArray->Item(i));
-      }
+        sortedArray.Add(pArray->Item(i));
+
+      sortedArray.Sort();
+      for (unsigned int j=0; j<sortedArray.GetCount(); j++)
+        pCombo->Append(sortedArray[j]);
+
       pCombo->SetValue(Option.GetValueAsString());
       
       // Update the dependency struct so that we don't unnecessarily update this list again
