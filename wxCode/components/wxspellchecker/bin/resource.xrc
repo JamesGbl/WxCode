@@ -228,7 +228,7 @@
                         <option>1</option>
                         <object class="wxListBox" name="ListPersonalWords">
                             <size>200,150</size>
-                            <style>wxLB_SINGLE</style>
+                            <style>wxLB_SINGLE|wxLB_SORT</style>
                         </object>
                     </object>
                     <object class="sizeritem">
