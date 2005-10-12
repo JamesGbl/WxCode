@@ -63,13 +63,13 @@ bool AspellInterface::LoadLibrary()
   if (!m_AspellWrapper.LoadFunctions())
     return false;
   
-	if (m_AspellConfig == NULL)
-		m_AspellConfig = m_AspellWrapper.NewAspellConfig();
+  if (m_AspellConfig == NULL)
+    m_AspellConfig = m_AspellWrapper.NewAspellConfig();
 	
-	if (m_AspellConfig == NULL)
-		return false;
+  if (m_AspellConfig == NULL)
+    return false;
 
-	return true;
+  return true;
 }
 
 bool AspellInterface::UnloadLibrary()
@@ -102,7 +102,8 @@ bool AspellInterface::UnloadLibrary()
 
 int AspellInterface::InitializeSpellCheckEngine()
 {
-  LoadLibrary();
+  if (!m_AspellWrapper.IsLoaded())
+    return false;
 
   AspellCanHaveError* ret = m_AspellWrapper.NewAspellSpeller(m_AspellConfig);
   if (m_AspellWrapper.AspellError(ret) != 0)
@@ -120,7 +121,7 @@ int AspellInterface::InitializeSpellCheckEngine()
 int AspellInterface::UninitializeSpellCheckEngine()
 {
   m_bEngineInitialized = false;
-  return UnloadLibrary();
+  return true;
 }
 
 void AspellInterface::ApplyOptions()  // Go through all the options in the options map and apply them to the spell check engine
@@ -135,6 +136,9 @@ void AspellInterface::ApplyOptions()  // Go through all the options in the optio
 
 int AspellInterface::SetOption(SpellCheckEngineOption& Option)
 {
+  if (!m_AspellWrapper.IsLoaded())
+    return false;
+
 	if (m_AspellConfig == NULL)
 		m_AspellConfig = m_AspellWrapper.NewAspellConfig();
 
