@@ -90,7 +90,9 @@ void MySpellingDialog::CreateDialog()
 	// Finally the bottom section
   pTopSizer->Add(new wxStaticText(this, IDC_STATIC_LANGUAGE, _T("Language:"), wxDefaultPosition), 0, wxLEFT | wxRIGHT | wxTOP, 10);
   wxBoxSizer* pBottomRowSizer = new wxBoxSizer(wxHORIZONTAL);
-  pBottomRowSizer->Add(new wxChoice(this, IDC_CHOICE_LANGUAGE), 1, wxEXPAND);
+  wxBoxSizer* pLanguageComboSizer = new wxBoxSizer(wxHORIZONTAL);
+  pLanguageComboSizer->Add(new wxChoice(this, IDC_CHOICE_LANGUAGE), 1, wxEXPAND);
+  pBottomRowSizer->Add(pLanguageComboSizer, 1, wxEXPAND, 0);
 	pBottomRowSizer->Add(new wxButton(this, wxID_CLOSE, _T("Close")), 0, wxEXPAND | wxLEFT, 5);
 	
 	pTopSizer->Add(pBottomRowSizer, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 10);
