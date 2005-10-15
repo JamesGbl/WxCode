@@ -20,6 +20,7 @@
 #endif
 
 #include "wx/filename.h"
+#include "wx/config.h"
 
 // ----------------------------------------------------------------------------
 // resources
@@ -429,3 +430,59 @@ void MyFrame::SavePersonalDictionaries()
     m_pMySpellInterface->GetPersonalDictionary()->SavePersonalDictionary();
   }
 }
+
+void MyFrame::SaveOptions()
+{
+  // This function isn't actually used in the demo, but here is some sample code as to how you might save
+  //  the spell checker options
+  OptionsMap* pAspellOptions = m_pAspellInterface->GetOptions();
+  wxConfigBase* pConfig = wxConfigBase::Get();
+  if (pConfig)
+  {
+    wxString strPath = m_pAspellInterface->GetSpellCheckEngineName();
+    pConfig->SetPath(strPath);
+    wxString strOption = wxEmptyString;
+
+    // Iterate through ALL the options
+    for (OptionsMap::iterator it = pAspellOptions->begin(); it != pAspellOptions->end(); it++)
+    {
+      strOption = _T("/") + strPath + _T("/") + it->second.GetName();
+      switch (it->second.GetOptionType())
+      {
+        case SpellCheckEngineOption::STRING:
+        case SpellCheckEngineOption::DIR:
+        case SpellCheckEngineOption::FILE:
+          // For DIR and FILE options, GetStringValue() returns the absolute path
+          pConfig->Write(strOption, it->second.GetStringValue());
+          break;
+        case SpellCheckEngineOption::LONG:
+          pConfig->Write(strOption, it->second.GetLongValue());
+          break;
+        case SpellCheckEngineOption::DOUBLE:
+          pConfig->Write(strOption, it->second.GetDoubleValue());
+          break;
+        case SpellCheckEngineOption::BOOLEAN:
+          pConfig->Write(strOption, it->second.GetBoolValue());
+          break;
+        default:
+          pConfig->Write(strOption, it->second.GetStringValue());
+          break;
+      };
+    }
+    // End of code saving ALL options
+
+
+    // Save only selected options ("language" in this case)
+    OptionsMap* pMySpellOptions = m_pMySpellInterface->GetOptions();
+    strPath = m_pMySpellInterface->GetSpellCheckEngineName();
+    pConfig->SetPath(strPath);
+    strOption = wxEmptyString;
+    OptionsMap::iterator finder = pMySpellOptions->find(_T("language"));
+    if (finder != pMySpellOptions->end())
+    {
+      strOption = _T("/") + strPath + _T("/") + finder->second.GetName();
+      pConfig->Write(strOption, finder->second.GetValueAsString());
+    }
+  }
+}
+

@@ -50,6 +50,7 @@ public:
     void SetDefaultAspellOptions();
     void SetDefaultMySpellOptions();
     void SavePersonalDictionaries();
+    void SaveOptions();
 
 private:
     wxTextCtrl* textCtrl;
