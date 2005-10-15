@@ -232,3 +232,4 @@ void SpellCheckEngineOption::SetValue(bool bValue)
   m_OptionValue = OptionValue;
   m_nOptionType = SpellCheckEngineOption::BOOLEAN;
 }
+
