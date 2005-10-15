@@ -75,7 +75,7 @@ AC_DEFUN([AC_BAKEFILE_PLATFORM],
             *-pc-os2_emx | *-pc-os2-emx )
                 PLATFORM_OS2=1
             ;;
-            powerpc-*-darwin* )
+            *-*-darwin* )
                 PLATFORM_MAC=1
                 PLATFORM_MACOSX=1
             ;; 
@@ -144,8 +144,14 @@ AC_DEFUN([AC_BAKEFILE_PLATFORM_SPECIFICS],
       *-*-darwin* )
         dnl For Unix to MacOS X porting instructions, see:
         dnl http://fink.sourceforge.net/doc/porting/porting.html
-        CFLAGS="$CFLAGS -fno-common"
-        CXXFLAGS="$CXXFLAGS -fno-common"
+        if test "x$GCC" = "xyes"; then
+            CFLAGS="$CFLAGS -fno-common"
+            CXXFLAGS="$CXXFLAGS -fno-common"
+        fi
+        if test "x$XLCC" = "xyes"; then
+            CFLAGS="$CFLAGS -qnocommon"
+            CXXFLAGS="$CXXFLAGS -qnocommon"
+        fi
         ;;
 
       *-pc-os2_emx | *-pc-os2-emx )
@@ -231,7 +237,7 @@ AC_DEFUN([AC_BAKEFILE_SUFFIXES],
             LIBEXT=".$OS2_LIBEXT"
             dlldir="$bindir"
         ;;
-        powerpc-*-darwin* )
+        *-*-darwin* )
             SO_SUFFIX="dylib"
             SO_SUFFIX_MODULE="bundle"
         ;;
@@ -325,7 +331,7 @@ AC_DEFUN([AC_BAKEFILE_SHARED_LD],
         dnl If using newer dev tools then there is a -single_module flag that
         dnl we can use to do this, otherwise we'll need to use a helper
         dnl script.  Check the version of gcc to see which way we can go:
-        AC_CACHE_CHECK([for gcc 3.1 or later], wx_cv_gcc31, [
+        AC_CACHE_CHECK([for gcc 3.1 or later], bakefile_cv_gcc31, [
            AC_TRY_COMPILE([],
                [
                    #if (__GNUC__ < 3) || \
@@ -334,14 +340,14 @@ AC_DEFUN([AC_BAKEFILE_SHARED_LD],
                    #endif
                ],
                [
-                   wx_cv_gcc31=yes
+                   bakefile_cv_gcc31=yes
                ],
                [
-                   wx_cv_gcc31=no
+                   bakefile_cv_gcc31=no
                ]
            )
         ])
-        if test "$wx_cv_gcc31" = "no"; then
+        if test "$bakefile_cv_gcc31" = "no"; then
             AC_BAKEFILE_CREATE_FILE_SHARED_LD_SH
             chmod +x shared-ld-sh
 
@@ -358,17 +364,41 @@ AC_DEFUN([AC_BAKEFILE_SHARED_LD],
             SHARED_LD_MODULE_CXX="\${CXX} -bundle -single_module -headerpad_max_install_names -o"
         fi
 
-        PIC_FLAG="-dynamic -fPIC"
+        if test "x$GCC" == "xyes"; then
+            PIC_FLAG="-dynamic -fPIC"
+        fi
+        if test "x$XLCC" = "xyes"; then
+            PIC_FLAG="-dynamic -DPIC"
+        fi
       ;;
 
       *-*-aix* )
-        dnl default settings are ok for gcc
-        if test "x$GCC" != "xyes"; then
-            dnl the abs path below used to be hardcoded here so I guess it must
-            dnl be some sort of standard location under AIX?
+        if test "x$GCC" = "xyes"; then
+	    dnl at least gcc 2.95 warns that -fPIC is ignored when
+	    dnl compiling each and every file under AIX which is annoying,
+	    dnl so don't use it there (it's useless as AIX runs on
+	    dnl position-independent architectures only anyhow)
+	    PIC_FLAG=""
+
+	    dnl -bexpfull is needed by AIX linker to export all symbols (by
+	    dnl default it doesn't export any and even with -bexpall it
+	    dnl doesn't export all C++ support symbols, e.g. vtable
+	    dnl pointers) but it's only available starting from 5.1 (with
+	    dnl maintenance pack 2, whatever this is), see
+	    dnl http://www-128.ibm.com/developerworks/eserver/articles/gnu.html
+	    case "${BAKEFILE_HOST}" in
+		*-*-aix5* )
+		    LD_EXPFULL="-Wl,-bexpfull"
+		    ;;
+	    esac
+
+	    SHARED_LD_CC="\$(CC) -shared $LD_EXPFULL -o"
+	    SHARED_LD_CXX="\$(CXX) -shared $LD_EXPFULL -o"
+	else
+	    dnl FIXME: makeC++SharedLib is obsolete, what should we do for
+	    dnl        recent AIX versions?
             AC_CHECK_PROG(AIX_CXX_LD, makeC++SharedLib,
                           makeC++SharedLib, /usr/lpp/xlC/bin/makeC++SharedLib)
-            dnl FIXME - what about makeCSharedLib?            
             SHARED_LD_CC="$AIX_CC_LD -p 0 -o"
             SHARED_LD_CXX="$AIX_CXX_LD -p 0 -o"
         fi
@@ -404,7 +434,7 @@ AC_DEFUN([AC_BAKEFILE_SHARED_LD],
       ;;
       
       powerpc-apple-macos* | \
-      *-*-freebsd* | *-*-openbsd* | *-*-netbsd* | \
+      *-*-freebsd* | *-*-openbsd* | *-*-netbsd* | *-*-k*bsd*-gnu | \
       *-*-sunos4* | \
       *-*-osf* | \
       *-*-dgux5* | \
@@ -454,7 +484,7 @@ AC_DEFUN([AC_BAKEFILE_SHARED_VERSIONS],
     SONAME_FLAG=
 
     case "${BAKEFILE_HOST}" in
-      *-*-linux* | *-*-freebsd* )
+      *-*-linux* | *-*-freebsd* | *-*-k*bsd*-gnu )
         SONAME_FLAG="-Wl,-soname,"
         USE_SOVERSION=1
         USE_SOVERLINUX=1
@@ -499,33 +529,43 @@ dnl ---------------------------------------------------------------------------
 AC_DEFUN([AC_BAKEFILE_DEPS],
 [
     AC_MSG_CHECKING([for dependency tracking method])
-    DEPS_TRACKING=0
+    DEPS_TRACKING=1
 
     if test "x$GCC" = "xyes"; then
         DEPSMODE=gcc
-        DEPS_TRACKING=1
         case "${BAKEFILE_HOST}" in
-            powerpc-*-darwin* )
+            *-*-darwin* )
                 dnl -cpp-precomp (the default) conflicts with -MMD option
                 dnl used by bk-deps (see also http://developer.apple.com/documentation/Darwin/Conceptual/PortingUnix/compiling/chapter_4_section_3.html)
-                DEPSFLAG_GCC="-no-cpp-precomp -MMD"
+                DEPSFLAG="-no-cpp-precomp -MMD"
             ;;
             * )
-                DEPSFLAG_GCC="-MMD"
+                DEPSFLAG="-MMD"
             ;;
         esac
         AC_MSG_RESULT([gcc])
     elif test "x$MWCC" = "xyes"; then
         DEPSMODE=mwcc
-        DEPS_TRACKING=1
-        DEPSFLAG_MWCC="-MM"
+        DEPSFLAG="-MM"
         AC_MSG_RESULT([mwcc])
     elif test "x$SUNCC" = "xyes"; then
-        DEPSMODE=suncc
-        DEPS_TRACKING=1
-        DEPSFLAG_SUNCC="-xM1"
-        AC_MSG_RESULT([suncc])
+        DEPSMODE=unixcc
+        DEPSFLAG="-xM1"
+        AC_MSG_RESULT([Sun cc])
+    elif test "x$SGICC" = "xyes"; then
+        DEPSMODE=unixcc
+        DEPSFLAG="-M"
+        AC_MSG_RESULT([SGI cc])
+    elif test "x$HPCC" = "xyes"; then
+        DEPSMODE=unixcc
+        DEPSFLAG="+make"
+        AC_MSG_RESULT([HP cc])
+    elif test "x$COMPAQCC" = "xyes"; then
+        DEPSMODE=gcc
+        DEPSFLAG="-MD"
+        AC_MSG_RESULT([Compaq cc])
     else
+        DEPS_TRACKING=0
         AC_MSG_RESULT([none])
     fi
 
@@ -533,7 +573,7 @@ AC_DEFUN([AC_BAKEFILE_DEPS],
         AC_BAKEFILE_CREATE_FILE_BK_DEPS
         chmod +x bk-deps
     fi
-    
+
     AC_SUBST(DEPS_TRACKING)
 ])
 
@@ -1221,14 +1261,12 @@ cat <<EOF >bk-deps
 
 DEPSMODE=${DEPSMODE}
 DEPSDIR=.deps
-DEPSFLAG_GCC="${DEPSFLAG_GCC}"
-DEPSFLAG_MWCC="${DEPSFLAG_MWCC}"
-DEPSFLAG_SUNCC="${DEPSFLAG_SUNCC}"
+DEPSFLAG="${DEPSFLAG}"
 
 mkdir -p ${D}DEPSDIR
 
 if test ${D}DEPSMODE = gcc ; then
-    ${D}* ${D}{DEPSFLAG_GCC}
+    ${D}* ${D}{DEPSFLAG}
     status=${D}?
     if test ${D}{status} != 0 ; then
         exit ${D}{status}
@@ -1254,7 +1292,12 @@ if test ${D}DEPSMODE = gcc ; then
         sed -e "s,${D}depobjname:,${D}objfile:,g" ${D}depfile >${D}{DEPSDIR}/${D}{objfile}.d
         rm -f ${D}depfile
     else
+        # "g++ -MMD -o fooobj.o foosrc.cpp" produces fooobj.d
         depfile=\`basename ${D}objfile | sed -e 's/\\..*${D}/.d/g'\`
+        if test ! -f ${D}depfile ; then
+            # "cxx -MD -o fooobj.o foosrc.cpp" creates fooobj.o.d (Compaq C++)
+            depfile="${D}objfile.d"
+        fi
         if test -f ${D}depfile ; then
             sed -e "/^${D}objfile/!s,${D}depobjname:,${D}objfile:,g" ${D}depfile >${D}{DEPSDIR}/${D}{objfile}.d
             rm -f ${D}depfile
@@ -1262,11 +1305,7 @@ if test ${D}DEPSMODE = gcc ; then
     fi
     exit 0
 elif test ${D}DEPSMODE = mwcc ; then
-    ${D}*
-    status=${D}?
-    if test ${D}{status} != 0 ; then
-        exit ${D}{status}
-    fi
+    ${D}* || exit ${D}?
     # Run mwcc again with -MM and redirect into the dep file we want
     # NOTE: We can't use shift here because we need ${D}* to be valid
     prevarg=
@@ -1284,10 +1323,10 @@ elif test ${D}DEPSMODE = mwcc ; then
         fi
         prevarg="${D}arg"
     done
-    ${D}* ${D}DEPSFLAG_MWCC >${D}{DEPSDIR}/${D}{objfile}.d
+    ${D}* ${D}DEPSFLAG >${D}{DEPSDIR}/${D}{objfile}.d
     exit 0
-elif test ${D}DEPSMODE = suncc; then
-    ${D}* || exit
+elif test ${D}DEPSMODE = unixcc; then
+    ${D}* || exit ${D}?
     # Run compiler again with deps flag and redirect into the dep file.
     # It doesn't work if the '-o FILE' option is used, but without it the
     # dependency file will contain the wrong name for the object. So it is
@@ -1306,7 +1345,7 @@ elif test ${D}DEPSMODE = suncc; then
         esac
         shift
     done
-    eval "${D}cmd ${D}DEPSFLAG_SUNCC" | sed "s|.*:|${D}objfile:|" >${D}{DEPSDIR}/${D}{objfile}.d
+    eval "${D}cmd ${D}DEPSFLAG" | sed "s|.*:|${D}objfile:|" >${D}{DEPSDIR}/${D}{objfile}.d
     exit 0
 else
     ${D}*
@@ -1354,6 +1393,7 @@ while test ${D}# -gt 0; do
        -s|-Wl,*)
         # collect these load args
         ldargs="${D}{ldargs} ${D}1"
+        ;;
 
        -l*|-L*|-flat_namespace|-headerpad_max_install_names)
         # collect these options

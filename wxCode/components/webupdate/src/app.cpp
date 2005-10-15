@@ -66,6 +66,7 @@
 #include <wx/wfstream.h>
 #include <wx/cmdline.h>
 #include <wx/textfile.h>
+#include <wx/apptrait.h>
 
 #include "wx/webupdatedlg.h"
 #include "wx/webupdatectrl.h"
@@ -313,7 +314,7 @@ void wxInitRequiredXmlHandlers()
 bool WebUpdaterApp::OnPreInit()
 {
 	// create the default wx logger
-	wxLog::SetActiveTarget(CreateLogTarget());
+	wxLog::SetActiveTarget(GetTraits()->CreateLogTarget());
 	m_log = new wxWebUpdateLog();		// start this app's logger
 
 	// show the user that we are running
@@ -321,8 +322,8 @@ bool WebUpdaterApp::OnPreInit()
 
 	// parse the command line
 	wxLogUsrMsg(wxT("WebUpdaterApp::OnInit - parsing the command line"));
-    wxCmdLineParser parser(g_cmdLineDesc, argc, argv);
-    if (parser.Parse() != 0)
+	wxCmdLineParser parser(g_cmdLineDesc, argc, argv);
+	if (parser.Parse() != 0)
 		return 0;		// help was shown / an error occurred
 	
 	// check for other options & switches (ORDER IS IMPORTANT !)
@@ -340,7 +341,7 @@ bool WebUpdaterApp::OnPreInit()
 	bool hasAskUri = parser.Found(OPTION_ASKURI, &askuri);
 	
 	// check for valid options
-    wxFileName askurifn(askuri);
+	wxFileName askurifn(askuri);
 	if ((hasAskUri && hasUri) || (hasAskUri && !askurifn.IsOk())) {
     	wxLogError(wxT("WebUpdaterApp::OnInit - you cannot use both '--ask-uri' and '--uri' !"));
     	return FALSE;
@@ -483,6 +484,14 @@ bool WebUpdaterApp::OnInit()
 		wxUninitializeWebUpdate();
 		return FALSE;	
 	}
+
+
+	wxString test = wxT("this is a test");
+	wxString test2 = test;
+
+	test += test2;
+	test2 = wxT("I'd love to have good stepping ;)");
+
 
 	// create our main dialog
 #if 1

@@ -44,8 +44,8 @@ WX_LIBS = @WX_LIBS@
 ### Variables: ###
 
 DESTDIR = 
-WEBUPDATE_LIB_CXXFLAGS = -I./include $(__HTTPENGINEDEP_DEF_p) $(WX_CXXFLAGS) \
-	$(CPPFLAGS) $(CXXFLAGS)
+WEBUPDATE_LIB_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include \
+	$(__HTTPENGINEDEP_DEF_p) $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 WEBUPDATE_LIB_OBJECTS =  \
 	webupdate_lib_webupdate.o \
 	webupdate_lib_webupdatedlg.o \
@@ -55,8 +55,9 @@ WEBUPDATE_LIB_OBJECTS =  \
 	webupdate_lib_download.o \
 	webupdate_lib_stdactions.o \
 	webupdate_lib_webupdatectrl.o
-WEBUPDATE_DLL_CXXFLAGS = -I./include -DWXMAKINGDLL_WEBUPDATE \
-	$(__HTTPENGINEDEP_DEF_p) $(PIC_FLAG) $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+WEBUPDATE_DLL_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include \
+	-DWXMAKINGDLL_WEBUPDATE $(__HTTPENGINEDEP_DEF_p) $(PIC_FLAG) $(WX_CXXFLAGS) \
+	$(CPPFLAGS) $(CXXFLAGS)
 WEBUPDATE_DLL_OBJECTS =  \
 	webupdate_dll_webupdate.o \
 	webupdate_dll_webupdatedlg.o \
@@ -66,24 +67,28 @@ WEBUPDATE_DLL_OBJECTS =  \
 	webupdate_dll_download.o \
 	webupdate_dll_stdactions.o \
 	webupdate_dll_webupdatectrl.o
-WEBUPDATER_CXXFLAGS = -I./include $(__HTTPENGINEDEP_DEF_p) $(WX_CXXFLAGS) \
-	$(CPPFLAGS) $(CXXFLAGS)
+WEBUPDATER_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include \
+	$(__HTTPENGINEDEP_DEF_p) $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 WEBUPDATER_OBJECTS =  \
 	$(__webupdater___win32rc) \
 	webupdater_app.o
-SIMPLE_1_0_0_CXXFLAGS = -I./include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+SIMPLE_1_0_0_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include $(WX_CXXFLAGS) \
+	$(CPPFLAGS) $(CXXFLAGS)
 SIMPLE_1_0_0_OBJECTS =  \
 	simple_1_0_0_minimal.o \
 	$(__simple_1_0_0___win32rc)
-SIMPLE_2_0_3_CXXFLAGS = -I./include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+SIMPLE_2_0_3_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include $(WX_CXXFLAGS) \
+	$(CPPFLAGS) $(CXXFLAGS)
 SIMPLE_2_0_3_OBJECTS =  \
 	simple_2_0_3_minimal.o \
 	$(__simple_2_0_3___win32rc)
-ADVANCED_0_0_1_CXXFLAGS = -I./include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+ADVANCED_0_0_1_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include $(WX_CXXFLAGS) \
+	$(CPPFLAGS) $(CXXFLAGS)
 ADVANCED_0_0_1_OBJECTS =  \
 	advanced_0_0_1_minimal.o \
 	$(__advanced_0_0_1___win32rc)
-ADVANCED_1_5_0_CXXFLAGS = -I./include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+ADVANCED_1_5_0_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include $(WX_CXXFLAGS) \
+	$(CPPFLAGS) $(CXXFLAGS)
 ADVANCED_1_5_0_OBJECTS =  \
 	advanced_1_5_0_minimal.o \
 	$(__advanced_1_5_0___win32rc)
@@ -162,6 +167,8 @@ COND_PLATFORM_OS2_1___simple_0 = $(NM) simple$(EXEEXT) | if grep -q pmwin.763 ; 
 	emxbind -ep simple$(EXEEXT) ; fi
 @COND_PLATFORM_OS2_1@__simple_0 = $(COND_PLATFORM_OS2_1___simple_0)
 @COND_PLATFORM_MAC_1@__advanced = $(SETFILE) -t APPL advanced$(EXEEXT)
+@COND_WX_SHARED_1@__WX_SHAREDDEFINE_p = -DWXUSINGDLL
+@COND_WX_SHARED_1@__WX_SHAREDDEFINE_p_7 = --define WXUSINGDLL
 COND_PLATFORM_OS2_1___advanced_0 = $(NM) advanced$(EXEEXT) | if grep -q pmwin.763 ; \
 	then emxbind -ep advanced$(EXEEXT) ; fi
 @COND_PLATFORM_OS2_1@__advanced_0 = $(COND_PLATFORM_OS2_1___advanced_0)
@@ -293,7 +300,7 @@ install-wxheaders:
 @COND_WX_SHARED_0@	$(INSTALL_DATA) ./lib/$(LIBPREFIX)webupdate$(LIBEXT) $(DESTDIR)$(libdir)
 
 @COND_WX_SHARED_1@./lib/$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf3): $(WEBUPDATE_DLL_OBJECTS)
-@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(WEBUPDATE_DLL_OBJECTS) $(LDFLAGS) -L./lib $(__webupdate_dll___macinstnamecmd) $(__webupdate_dll___importlib) $(__webupdate_dll___soname_flags) $(__webupdate_dll___macver) -L  $(WX_LIBS) $(__HTTPENGINEDEP_LIB_p)
+@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(WEBUPDATE_DLL_OBJECTS) $(LDFLAGS)   -L./lib $(__webupdate_dll___macinstnamecmd) $(__webupdate_dll___importlib) $(__webupdate_dll___soname_flags) $(__webupdate_dll___macver) -L  $(__HTTPENGINEDEP_LIB_p) $(WX_LIBS)
 @COND_WX_SHARED_1@	
 @COND_WX_SHARED_1@	$(__webupdate_dll___so_symlinks_cmd)
 
@@ -304,7 +311,7 @@ install-wxheaders:
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__webupdate_dll___so_symlinks_inst_cmd))
 
 ./src/webupdater$(EXEEXT): $(WEBUPDATER_OBJECTS) $(__webupdater___win32rc) $(__webupdate_lib___depname)
-	$(CXX) -o $@ $(WEBUPDATER_OBJECTS) -L./lib $(LDFLAGS) -L./lib -L $(LDFLAGS_GUI)  $(WX_LIBS) -lwebupdate $(__HTTPENGINEDEP_LIB_p)
+	$(CXX) -o $@ $(WEBUPDATER_OBJECTS) -L./lib $(LDFLAGS)   -L./lib -L $(LDFLAGS_GUI)  -lwebupdate $(__HTTPENGINEDEP_LIB_p) $(WX_LIBS)
 	
 	$(__webupdater___mac_setfilecmd)
 	$(__webupdater___os2_emxbindcmd)
@@ -334,25 +341,25 @@ rep4_adv150:
 	done
 
 ./samples/simple/v1.0.0/simple$(EXEEXT): $(SIMPLE_1_0_0_OBJECTS) ./src/webupdater$(EXEEXT) $(__simple_1_0_0___win32rc)
-	$(CXX) -o $@ $(SIMPLE_1_0_0_OBJECTS) $(LDFLAGS) -L./lib $(LDFLAGS_GUI)  $(WX_LIBS)
+	$(CXX) -o $@ $(SIMPLE_1_0_0_OBJECTS) $(LDFLAGS)   -L./lib $(LDFLAGS_GUI)  $(WX_LIBS)
 	
 	$(__simple)
 	$(__simple_0)
 
 ./samples/simple/v2.0.3/simple$(EXEEXT): $(SIMPLE_2_0_3_OBJECTS) ./src/webupdater$(EXEEXT) $(__simple_2_0_3___win32rc)
-	$(CXX) -o $@ $(SIMPLE_2_0_3_OBJECTS) $(LDFLAGS) -L./lib $(LDFLAGS_GUI)  $(WX_LIBS)
+	$(CXX) -o $@ $(SIMPLE_2_0_3_OBJECTS) $(LDFLAGS)   -L./lib $(LDFLAGS_GUI)  $(WX_LIBS)
 	
 	$(__simple)
 	$(__simple_0)
 
 ./samples/advanced/v0.0.1/advanced$(EXEEXT): $(ADVANCED_0_0_1_OBJECTS) ./src/webupdater$(EXEEXT) $(__advanced_0_0_1___win32rc)
-	$(CXX) -o $@ $(ADVANCED_0_0_1_OBJECTS) $(LDFLAGS) -L./lib $(LDFLAGS_GUI)  $(WX_LIBS)
+	$(CXX) -o $@ $(ADVANCED_0_0_1_OBJECTS) $(LDFLAGS)   -L./lib $(LDFLAGS_GUI)  $(WX_LIBS)
 	
 	$(__advanced)
 	$(__advanced_0)
 
 ./samples/advanced/v1.5.0/advanced$(EXEEXT): $(ADVANCED_1_5_0_OBJECTS) ./src/webupdater$(EXEEXT) $(__advanced_1_5_0___win32rc)
-	$(CXX) -o $@ $(ADVANCED_1_5_0_OBJECTS) $(LDFLAGS) -L./lib $(LDFLAGS_GUI)  $(WX_LIBS)
+	$(CXX) -o $@ $(ADVANCED_1_5_0_OBJECTS) $(LDFLAGS)   -L./lib $(LDFLAGS_GUI)  $(WX_LIBS)
 	
 	$(__advanced)
 	$(__advanced_0)
@@ -406,7 +413,7 @@ webupdate_dll_webupdatectrl.o: $(srcdir)/./src/webupdatectrl.cpp
 	$(CXXC) -c -o $@ $(WEBUPDATE_DLL_CXXFLAGS) $(srcdir)/./src/webupdatectrl.cpp
 
 webupdater_app_rc.o: $(srcdir)/./src/app.rc
-	$(RESCOMP) -i$< -o$@  --include-dir ./include  $(__HTTPENGINEDEP_DEF_p_5)  --include-dir ./src
+	$(RESCOMP) -i$< -o$@ $(__WX_SHAREDDEFINE_p_7) --include-dir ./include  $(__HTTPENGINEDEP_DEF_p_5)  --include-dir ./src
 
 webupdater_app.o: $(srcdir)/./src/app.cpp
 	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) $(srcdir)/./src/app.cpp
@@ -415,25 +422,25 @@ simple_1_0_0_minimal.o: $(srcdir)/./samples/simple/v1.0.0/minimal.cpp
 	$(CXXC) -c -o $@ $(SIMPLE_1_0_0_CXXFLAGS) $(srcdir)/./samples/simple/v1.0.0/minimal.cpp
 
 simple_1_0_0_minimal_rc.o: $(srcdir)/./samples/simple/v1.0.0/minimal.rc
-	$(RESCOMP) -i$< -o$@  --include-dir ./include --include-dir ./samples/simple/v1.0.0
+	$(RESCOMP) -i$< -o$@ $(__WX_SHAREDDEFINE_p_7) --include-dir ./include --include-dir ./samples/simple/v1.0.0
 
 simple_2_0_3_minimal.o: $(srcdir)/./samples/simple/v2.0.3/minimal.cpp
 	$(CXXC) -c -o $@ $(SIMPLE_2_0_3_CXXFLAGS) $(srcdir)/./samples/simple/v2.0.3/minimal.cpp
 
 simple_2_0_3_minimal_rc.o: $(srcdir)/./samples/simple/v2.0.3/minimal.rc
-	$(RESCOMP) -i$< -o$@  --include-dir ./include --include-dir ./samples/simple/v2.0.3
+	$(RESCOMP) -i$< -o$@ $(__WX_SHAREDDEFINE_p_7) --include-dir ./include --include-dir ./samples/simple/v2.0.3
 
 advanced_0_0_1_minimal.o: $(srcdir)/./samples/advanced/v0.0.1/minimal.cpp
 	$(CXXC) -c -o $@ $(ADVANCED_0_0_1_CXXFLAGS) $(srcdir)/./samples/advanced/v0.0.1/minimal.cpp
 
 advanced_0_0_1_minimal_rc.o: $(srcdir)/./samples/advanced/v0.0.1/minimal.rc
-	$(RESCOMP) -i$< -o$@  --include-dir ./include --include-dir ./samples/advanced/v0.0.1
+	$(RESCOMP) -i$< -o$@ $(__WX_SHAREDDEFINE_p_7) --include-dir ./include --include-dir ./samples/advanced/v0.0.1
 
 advanced_1_5_0_minimal.o: $(srcdir)/./samples/advanced/v1.5.0/minimal.cpp
 	$(CXXC) -c -o $@ $(ADVANCED_1_5_0_CXXFLAGS) $(srcdir)/./samples/advanced/v1.5.0/minimal.cpp
 
 advanced_1_5_0_minimal_rc.o: $(srcdir)/./samples/advanced/v1.5.0/minimal.rc
-	$(RESCOMP) -i$< -o$@  --include-dir ./include --include-dir ./samples/advanced/v1.5.0
+	$(RESCOMP) -i$< -o$@ $(__WX_SHAREDDEFINE_p_7) --include-dir ./include --include-dir ./samples/advanced/v1.5.0
 
 
 # Include dependency info, if present:
