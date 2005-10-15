@@ -1,8 +1,6 @@
 #include "SpellCheckEngineInterface.h"
 #include "SpellCheckUserInterface.h"
 
-#include <wx/config.h>
-
 wxSpellCheckEngineInterface::wxSpellCheckEngineInterface()
 {
 	m_AlwaysReplaceMap.clear();
@@ -151,41 +149,6 @@ void wxSpellCheckEngineInterface::ApplyOptions()
   for (OptionsMap::iterator it = m_Options.begin(); it != m_Options.end(); it++)
   {
     SetOption(it->second);
-  }
-}
-
-void wxSpellCheckEngineInterface::SaveUserOptions()
-{
-  wxConfigBase* pConfig = wxConfigBase::Get();
-  if (pConfig)
-  {
-    wxString strPath = _T("wxSpellChecker-") + GetSpellCheckEngineName();
-    pConfig->SetPath(strPath);
-    wxString strOption = _T("");
-    for (OptionsMap::iterator it = m_Options.begin(); it != m_Options.end(); it++)
-    {
-      strOption = _T("/") + strPath + _T("/") + it->second.GetName();
-      switch (it->second.GetOptionType())
-      {
-        case SpellCheckEngineOption::STRING:
-        case SpellCheckEngineOption::DIR:
-        case SpellCheckEngineOption::FILE:
-          pConfig->Write(strOption, it->second.GetStringValue());
-          break;
-        case SpellCheckEngineOption::LONG:
-          pConfig->Write(strOption, it->second.GetLongValue());
-          break;
-        case SpellCheckEngineOption::DOUBLE:
-          pConfig->Write(strOption, it->second.GetDoubleValue());
-          break;
-        case SpellCheckEngineOption::BOOLEAN:
-          pConfig->Write(strOption, it->second.GetBoolValue());
-          break;
-        default:
-          pConfig->Write(strOption, it->second.GetStringValue());
-          break;
-      };
-    }
   }
 }
 

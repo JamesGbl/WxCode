@@ -59,7 +59,6 @@ public:
   virtual void ApplyOptions();  // Go through all the options in the options map and apply them to the spell check engine
   OptionsMap* GetOptions() { return &m_Options; }
   virtual void UpdatePossibleValues(SpellCheckEngineOption& OptionDependency, SpellCheckEngineOption& OptionToUpdate) { wxASSERT(false); }
-  virtual void SaveUserOptions();
   bool IsInitialized() { return m_bEngineInitialized; }
 
   // Spell Checker Search/Suggestion functions
