@@ -38,7 +38,7 @@ WX_DEBUG = 1
 WX_VERSION = 26
 
 # If 1 then wxHTTPEngine component will be used for proxy/authentication stuff [1,0]
-USE_HTTPENGINE = 0
+USE_HTTPENGINE = 1
 
 # The path to the wxHTTPBuilder (httpengine) component 
 HTTPENGINE_DIR = ..\..\wxhttpengine

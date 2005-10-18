@@ -116,6 +116,55 @@ protected:
 		{ wxASSERT(m_pStream); return m_pStream->Read(buffer, bufsize).LastRead(); }
 };
 
+#if wxUSE_HTTPENGINE
+
+// exactly like wxURLInputStream just for wxHTTPEngine
+class wxSafeHTTPEngineInputStream : public wxInputStream
+{
+protected:
+	wxHTTPBuilder m_http;
+	wxInputStream *m_pStream;
+
+public:
+	wxSafeHTTPEngineInputStream(const wxString &url,
+					const wxProxySettings &proxy,
+					const wxHTTPAuthSettings &auth) 
+					: m_pStream(NULL) {
+		m_http.SetProxySettings(proxy);
+		m_http.SetAuthentication(auth);
+		InitStream(url);
+	}
+	virtual ~wxSafeHTTPEngineInputStream() { wxDELETE(m_pStream); }
+
+	wxFileOffset SeekI( wxFileOffset pos, wxSeekMode mode )
+		{ wxASSERT(m_pStream); return m_pStream->SeekI(pos, mode); }
+	wxFileOffset TellI() const
+		{ wxASSERT(m_pStream); return m_pStream->TellI(); }
+	    
+	size_t GetSize() const 
+		{ wxASSERT(m_pStream); return m_pStream->GetSize(); }
+	bool IsOk() const
+		{ wxASSERT(m_pStream); return m_pStream != NULL; }
+	bool Eof() const
+		{ wxASSERT(m_pStream); return m_pStream->Eof(); }
+
+protected:
+
+	bool InitStream(const wxString &url) {
+		m_http.SetTimeout(30);		// 30 sec are much better rather than 10 min !!!
+		m_pStream = m_http.GetInputStream(url);
+		return (m_pStream != NULL);
+	}
+	
+	size_t OnSysRead(void *buffer, size_t bufsize)
+		{ wxASSERT(m_pStream); return m_pStream->Read(buffer, bufsize).LastRead(); }
+};
+
+#endif
+
+
+
+
 bool wxIsFileProtocol(const wxString &uri)
 {
 	// file: is the signature of a file URI...
@@ -172,7 +221,8 @@ wxInputStream *wxGetInputStreamFromURI(const wxString &uri)
 
 #if wxUSE_HTTPENGINE
 		wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using wxHTTPBuilder"));
-		wxHTTPBuilder http;
+		in = new wxSafeHTTPEngineInputStream(uri, 
+				wxDownloadThread::m_proxy, wxDownloadThread::m_auth);
 
 		// NOTES: 
 		// 1) we use the static proxy & auth settings of wxDownloadThread
@@ -183,16 +233,12 @@ wxInputStream *wxGetInputStreamFromURI(const wxString &uri)
 		//    wxHTTPBuilder to understand if they are marked as "used" or not;
 		//    thus, setting them with the Set*() functions below does not
 		//    necessarily mean that they will be used.
-		http.SetProxySettings(wxDownloadThread::m_proxy);
-		http.SetAuthentication(wxDownloadThread::m_auth);
 		
 		// just to help debugging....
 		if (wxDownloadThread::m_proxy.m_bUseProxy)
 			wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using the proxy settings"));
 		if (wxDownloadThread::m_auth.m_authType != wxHTTPAuthSettings::wxHTTP_AUTH_NONE)
 			wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using the basic authentication settings"));
-
-		in = http.GetInputStream(uri);
 #else
 		
 		// we won't directly use wxURL because it must be alive together with

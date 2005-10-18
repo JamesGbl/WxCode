@@ -38,7 +38,7 @@ WX_DEBUG = 1
 WX_VERSION = 26
 
 # If 1 then wxHTTPEngine component will be used for proxy/authentication stuff [1,0]
-USE_HTTPENGINE = 0
+USE_HTTPENGINE = 1
 
 # The path to the wxHTTPBuilder (httpengine) component 
 HTTPENGINE_DIR = ..\..\wxhttpengine
@@ -340,7 +340,7 @@ cleandocs :
 	@for %i in ($(WEBUPDATE_DLL_OBJECTS)) do @%append watcom\webupdate_dll.lbc file %i
 	@for %i in ( $(__HTTPENGINEDEP_LIB_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\webupdate_dll.lbc library %i
 	@%append watcom\webupdate_dll.lbc
-	@%append watcom\webupdate_dll.lbc system nr_dll
+	@%append watcom\webupdate_dll.lbc system nt_dll
 	wlink @watcom\webupdate_dll.lbc
 	wlib -q -n -b ..\lib\webupdate$(WXLIBPOSTFIX).lib +$^@
 !endif
@@ -417,79 +417,79 @@ rep4_adv150 : .SYMBOLIC
 	wlink @watcom\advanced_1_5_0.lbc
 
 watcom\webupdate_lib_webupdate.obj :  .AUTODEPEND .\..\src\webupdate.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
 
 watcom\webupdate_lib_webupdatedlg.obj :  .AUTODEPEND .\..\src\webupdatedlg.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
 
 watcom\webupdate_lib_checkedlistctrl.obj :  .AUTODEPEND .\..\src\checkedlistctrl.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
 
 watcom\webupdate_lib_md5.obj :  .AUTODEPEND .\..\src\md5.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
 
 watcom\webupdate_lib_installer.obj :  .AUTODEPEND .\..\src\installer.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
 
 watcom\webupdate_lib_download.obj :  .AUTODEPEND .\..\src\download.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
 
 watcom\webupdate_lib_stdactions.obj :  .AUTODEPEND .\..\src\stdactions.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
 
 watcom\webupdate_lib_webupdatectrl.obj :  .AUTODEPEND .\..\src\webupdatectrl.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
 
 watcom\webupdate_dll_webupdate.obj :  .AUTODEPEND .\..\src\webupdate.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
 
 watcom\webupdate_dll_webupdatedlg.obj :  .AUTODEPEND .\..\src\webupdatedlg.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
 
 watcom\webupdate_dll_checkedlistctrl.obj :  .AUTODEPEND .\..\src\checkedlistctrl.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
 
 watcom\webupdate_dll_md5.obj :  .AUTODEPEND .\..\src\md5.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
 
 watcom\webupdate_dll_installer.obj :  .AUTODEPEND .\..\src\installer.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
 
 watcom\webupdate_dll_download.obj :  .AUTODEPEND .\..\src\download.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
 
 watcom\webupdate_dll_stdactions.obj :  .AUTODEPEND .\..\src\stdactions.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
 
 watcom\webupdate_dll_webupdatectrl.obj :  .AUTODEPEND .\..\src\webupdatectrl.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
+	$(CXX) -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
 
 watcom\webupdater_app.res :  .AUTODEPEND .\..\src\app.rc
 	wrc -q -ad -bt=nt -r -fo=$^@ $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=$(HTTPENGINE_DIR)\include $(__HTTPENGINEDEP_DEF_p)  -i=..\src $<
 
 watcom\webupdater_app.obj :  .AUTODEPEND .\..\src\app.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATER_CXXFLAGS) $<
+	$(CXX) -zq -fo=$^@ $(WEBUPDATER_CXXFLAGS) $<
 
 watcom\simple_1_0_0_minimal.obj :  .AUTODEPEND .\..\samples\simple\v1.0.0\minimal.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(SIMPLE_1_0_0_CXXFLAGS) $<
+	$(CXX) -zq -fo=$^@ $(SIMPLE_1_0_0_CXXFLAGS) $<
 
 watcom\simple_1_0_0_minimal.res :  .AUTODEPEND .\..\samples\simple\v1.0.0\minimal.rc
 	wrc -q -ad -bt=nt -r -fo=$^@ $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\samples\simple\v1.0.0 $<
 
 watcom\simple_2_0_3_minimal.obj :  .AUTODEPEND .\..\samples\simple\v2.0.3\minimal.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(SIMPLE_2_0_3_CXXFLAGS) $<
+	$(CXX) -zq -fo=$^@ $(SIMPLE_2_0_3_CXXFLAGS) $<
 
 watcom\simple_2_0_3_minimal.res :  .AUTODEPEND .\..\samples\simple\v2.0.3\minimal.rc
 	wrc -q -ad -bt=nt -r -fo=$^@ $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\samples\simple\v2.0.3 $<
 
 watcom\advanced_0_0_1_minimal.obj :  .AUTODEPEND .\..\samples\advanced\v0.0.1\minimal.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(ADVANCED_0_0_1_CXXFLAGS) $<
+	$(CXX) -zq -fo=$^@ $(ADVANCED_0_0_1_CXXFLAGS) $<
 
 watcom\advanced_0_0_1_minimal.res :  .AUTODEPEND .\..\samples\advanced\v0.0.1\minimal.rc
 	wrc -q -ad -bt=nt -r -fo=$^@ $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\samples\advanced\v0.0.1 $<
 
 watcom\advanced_1_5_0_minimal.obj :  .AUTODEPEND .\..\samples\advanced\v1.5.0\minimal.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(ADVANCED_1_5_0_CXXFLAGS) $<
+	$(CXX) -zq -fo=$^@ $(ADVANCED_1_5_0_CXXFLAGS) $<
 
 watcom\advanced_1_5_0_minimal.res :  .AUTODEPEND .\..\samples\advanced\v1.5.0\minimal.rc
 	wrc -q -ad -bt=nt -r -fo=$^@ $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\samples\advanced\v1.5.0 $<

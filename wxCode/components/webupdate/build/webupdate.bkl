@@ -11,7 +11,7 @@
 	<!-- The wxHttpEngine dependency -->
 	<!-- =========================== -->
 
-	<set var="USE_HTTPENGINE_DEFAULT">0</set>
+	<set var="USE_HTTPENGINE_DEFAULT">1</set>
 
 	<if cond="TARGETING_IDE=='0'">
 		<option name="USE_HTTPENGINE">
