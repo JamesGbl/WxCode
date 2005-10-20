@@ -2,210 +2,210 @@
 <makefile>
 
 
-	<!-- Some defaults for the variables used by wxCode bakefiles -->
-	<set var="WXCODE_BAKEFILEDIR">../../../build/bakefiles</set>
-	<include file="$(WXCODE_BAKEFILEDIR)/defaults.bkl"/>
-	
-	
+    <!-- Some defaults for the variables used by wxCode bakefiles -->
+    <set var="WXCODE_BAKEFILEDIR">../../../build/bakefiles</set>
+    <include file="$(WXCODE_BAKEFILEDIR)/defaults.bkl"/>
 
-	<!-- The wxHttpEngine dependency -->
-	<!-- =========================== -->
 
-	<set var="USE_HTTPENGINE_DEFAULT">1</set>
 
-	<if cond="TARGETING_IDE=='0'">
-		<option name="USE_HTTPENGINE">
-			<values>1,0</values>
-			<default-value>$(USE_HTTPENGINE_DEFAULT)</default-value>
-			<description>If 1 then wxHTTPEngine component will be used for proxy/authentication stuff</description>
-		</option>
-	</if>
-	<if cond="TARGETING_IDE=='1'">
-		<set var="USE_HTTPENGINE">$(USE_HTTPENGINE_DEFAULT)</set>
-	</if>
-	
-	<if cond="TARGETING_WIN32=='1'">
+    <!-- The wxHttpEngine dependency -->
+    <!-- =========================== -->
 
-		<!-- on unix-like OS we assume that the component is installed in wx folders -->
-		<option name="HTTPENGINE_DIR" category="path">
-			<default-value>..\..\wxhttpengine</default-value>
-			<description>The path to the wxHTTPBuilder (httpengine) component</description>
-		</option>
-	</if>
+    <set var="USE_HTTPENGINE_DEFAULT">1</set>
 
-	<!-- handle the HTTPENGINE optional dependency -->
-	<set var="HTTPENGINEDEP_LIBPATH">
-		<if cond="TARGETING_WIN32=='1'">$(HTTPENGINE_DIR)/lib</if>
-	</set>
-	<set var="HTTPENGINEDEP_INCPATH">
-		<if cond="TARGETING_WIN32=='1'">$(HTTPENGINE_DIR)/include</if>
-	</set>
-	<set var="HTTPENGINEDEP_DEF">
-		<if cond="USE_HTTPENGINE=='1'">wxUSE_HTTPENGINE</if>
-	</set>
-	<set var="HTTPENGINEDEP_LIB">
-		<if cond="USE_HTTPENGINE=='1'">httpengine$(WXLIBPOSTFIX)</if>
-	</set>
- 
-  	
-	
+    <if cond="TARGETING_IDE=='0'">
+        <option name="USE_HTTPENGINE">
+            <values>1,0</values>
+            <default-value>$(USE_HTTPENGINE_DEFAULT)</default-value>
+            <description>If 1 then wxHTTPEngine component will be used for proxy/authentication stuff</description>
+        </option>
+    </if>
+    <if cond="TARGETING_IDE=='1'">
+        <set var="USE_HTTPENGINE">$(USE_HTTPENGINE_DEFAULT)</set>
+    </if>
 
-	<!-- The MOD settings -->
-	<!-- ================ -->
-	
-	<!-- 'mod.bkl' is where advanced users can store their additional source
-         files for the WebUpdater application -->
- 	<include file="mod.bkl" ignore_missing="1"/>
- 	
- 	<!-- in case mod.bkl is missing, we set the defaults... -->
- 	<set var="MOD_SRC" overwrite="0"/>
- 	<set var="MOD_HDR" overwrite="0"/> 	
- 	<set var="MAKE_LIB" overwrite="0">1</set>
- 	<set var="MAKE_EXE" overwrite="0">1</set>
- 	<set var="MODDED" overwrite="0">0</set>
+    <if cond="TARGETING_WIN32=='1'">
+
+        <!-- on unix-like OS we assume that the component is installed in wx folders -->
+        <option name="HTTPENGINE_DIR" category="path">
+            <default-value>..\..\wxhttpengine</default-value>
+            <description>The path to the wxHTTPBuilder (httpengine) component</description>
+        </option>
+    </if>
+
+    <!-- handle the HTTPENGINE optional dependency -->
+    <set var="HTTPENGINEDEP_LIBPATH">
+        <if cond="TARGETING_WIN32=='1'">$(HTTPENGINE_DIR)/lib</if>
+    </set>
+    <set var="HTTPENGINEDEP_INCPATH">
+        <if cond="TARGETING_WIN32=='1'">$(HTTPENGINE_DIR)/include</if>
+    </set>
+    <set var="HTTPENGINEDEP_DEF">
+        <if cond="USE_HTTPENGINE=='1'">wxUSE_HTTPENGINE</if>
+    </set>
+    <set var="HTTPENGINEDEP_LIB">
+        <if cond="USE_HTTPENGINE=='1'">httpengine$(WXLIBPOSTFIX)</if>
+    </set>
 
 
 
 
-	<!-- The WebUpdate settings -->
-	<!-- ====================== -->
+    <!-- The MOD settings -->
+    <!-- ================ -->
+
+    <!-- 'mod.bkl' is where advanced users can store their additional source
+        files for the WebUpdater application -->
+    <include file="mod.bkl" ignore_missing="1"/>
+
+    <!-- in case mod.bkl is missing, we set the defaults... -->
+    <set var="MOD_SRC" overwrite="0"/>
+    <set var="MOD_HDR" overwrite="0"/>
+    <set var="MAKE_LIB" overwrite="0">1</set>
+    <set var="MAKE_EXE" overwrite="0">1</set>
+    <set var="MODDED" overwrite="0">0</set>
+
+
+
+
+    <!-- The WebUpdate settings -->
+    <!-- ====================== -->
 
     <!-- wxCode bakefiles by default build EXEs optimized for speed and not for
-         size when WX_DEBUG==0; but we want to make executable as small as possible -->
+        size when WX_DEBUG==0; but we want to make executable as small as possible -->
     <set var="MYOPTIMIZEFLAG">
         <if cond="WX_DEBUG=='1'">off</if>
         <if cond="WX_DEBUG=='0'">size</if>
     </set>
-    
+
     <set var="MODDED_DEF">
         <if cond="MODDED=='1'">MODDED</if>
         <if cond="MODDED=='0'"></if>
     </set>
-    
-	<set var="COMP_NAME">webupdate</set>
 
-	<!-- these are for the WebUpdate library -->
-	<set var="COMP_SRC">webupdate.cpp webupdatedlg.cpp checkedlistctrl.cpp	md5.cpp installer.cpp download.cpp stdactions.cpp webupdatectrl.cpp</set>
-	<set var="COMP_HDR">wx/webupdatedef.h wx/webupdate.h wx/webupdatedlg.h wx/checkedlistctrl.h wx/md5.h wx/installer.h wx/download.h wx/stdactions.h wx/webupdatectrl.h</set>		
+    <set var="COMP_NAME">webupdate</set>
 
-	<!-- these are for the WebUpdaterApp (and need to be prefixed!) -->
-	<set var="APP_SRC">$(COMP_BASEPATH)/src/app.cpp</set>
-	<set var="APP_HDR"></set>		
-	
-	<set var="COMP_SAMPLE1_SRC">$(COMP_BASEPATH)/samples/simple/v1.0.0/minimal.cpp</set>
-	<set var="COMP_SAMPLE1_UPDATED_SRC">$(COMP_BASEPATH)/samples/simple/v2.0.3/minimal.cpp</set>
-	<set var="COMP_SAMPLE1_DIR">$(COMP_BASEPATH)/samples/simple/v1.0.0</set>
-	<set var="COMP_SAMPLE1_UPDATED_DIR">$(COMP_BASEPATH)/samples/simple/v2.0.3</set>
+    <!-- these are for the WebUpdate library -->
+    <set var="COMP_SRC">webupdate.cpp webupdatedlg.cpp checkedlistctrl.cpp  md5.cpp installer.cpp download.cpp stdactions.cpp webupdatectrl.cpp</set>
+    <set var="COMP_HDR">wx/webupdatedef.h wx/webupdate.h wx/webupdatedlg.h wx/checkedlistctrl.h wx/md5.h wx/installer.h wx/download.h wx/stdactions.h wx/webupdatectrl.h</set>
 
-	<set var="COMP_SAMPLE2_SRC">$(COMP_BASEPATH)/samples/advanced/v0.0.1/minimal.cpp</set>
-	<set var="COMP_SAMPLE2_UPDATED_SRC">$(COMP_BASEPATH)/samples/advanced/v1.5.0/minimal.cpp</set>
-	<set var="COMP_SAMPLE2_DIR">$(COMP_BASEPATH)/samples/advanced/v0.0.1</set>
-	<set var="COMP_SAMPLE2_UPDATED_DIR">$(COMP_BASEPATH)/samples/advanced/v1.5.0</set>
-	
-	<set var="WX_UNICODE_DEFAULT">1</set>
-	<set var="WX_VERSION_DEFAULT">26</set>
+    <!-- these are for the WebUpdaterApp (and need to be prefixed!) -->
+    <set var="APP_SRC">$(COMP_BASEPATH)/src/app.cpp</set>
+    <set var="APP_HDR"></set>
 
-	<!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->
-	<include file="$(WXCODE_BAKEFILEDIR)/wxcode.bkl"/>
- 	
-	<template id="webupdatecommon">
-            <!-- for wxHttpEngine dependency -->
-			<lib-path>$(HTTPENGINEDEP_LIBPATH)</lib-path>
-			<include>$(HTTPENGINEDEP_INCPATH)</include>
-			<define>$(HTTPENGINEDEP_DEF)</define>
-			
-            <!-- miscellaneous -->
-            <optimize>$(MYOPTIMIZEFLAG)</optimize>
-			<define>$(MODDED_DEF)</define>
-	</template>
-	<define-tag name="webupdatelibs" rules="exe,dll">
-		<sys-lib>$(HTTPENGINEDEP_LIB)</sys-lib>
-		
-		<!-- the MSVC compiler can build without the ADV & HTML libraries... -->
-		<if cond="FORMAT!='msvc' and FORMAT!='msvc6prj'">
-    		<wx-lib>adv</wx-lib>
+    <set var="COMP_SAMPLE1_SRC">$(COMP_BASEPATH)/samples/simple/v1.0.0/minimal.cpp</set>
+    <set var="COMP_SAMPLE1_UPDATED_SRC">$(COMP_BASEPATH)/samples/simple/v2.0.3/minimal.cpp</set>
+    <set var="COMP_SAMPLE1_DIR">$(COMP_BASEPATH)/samples/simple/v1.0.0</set>
+    <set var="COMP_SAMPLE1_UPDATED_DIR">$(COMP_BASEPATH)/samples/simple/v2.0.3</set>
+
+    <set var="COMP_SAMPLE2_SRC">$(COMP_BASEPATH)/samples/advanced/v0.0.1/minimal.cpp</set>
+    <set var="COMP_SAMPLE2_UPDATED_SRC">$(COMP_BASEPATH)/samples/advanced/v1.5.0/minimal.cpp</set>
+    <set var="COMP_SAMPLE2_DIR">$(COMP_BASEPATH)/samples/advanced/v0.0.1</set>
+    <set var="COMP_SAMPLE2_UPDATED_DIR">$(COMP_BASEPATH)/samples/advanced/v1.5.0</set>
+
+    <set var="WX_UNICODE_DEFAULT">1</set>
+    <set var="WX_VERSION_DEFAULT">26</set>
+
+    <!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->
+    <include file="$(WXCODE_BAKEFILEDIR)/wxcode.bkl"/>
+
+    <template id="webupdatecommon">
+        <!-- for wxHttpEngine dependency -->
+        <lib-path>$(HTTPENGINEDEP_LIBPATH)</lib-path>
+        <include>$(HTTPENGINEDEP_INCPATH)</include>
+        <define>$(HTTPENGINEDEP_DEF)</define>
+
+        <!-- miscellaneous -->
+        <optimize>$(MYOPTIMIZEFLAG)</optimize>
+        <define>$(MODDED_DEF)</define>
+    </template>
+    <define-tag name="webupdatelibs" rules="exe,dll">
+        <sys-lib>$(HTTPENGINEDEP_LIB)</sys-lib>
+
+        <!-- the MSVC compiler can build without the ADV & HTML libraries... -->
+        <if cond="FORMAT!='msvc' and FORMAT!='msvc6prj'">
+            <wx-lib>adv</wx-lib>
             <wx-lib>html</wx-lib>
-		</if>
-		
-		<wx-lib>xrc</wx-lib>
-		<wx-lib>xml</wx-lib>
-		<wx-lib>net</wx-lib>
-		<wx-lib>core</wx-lib>
-		<wx-lib>base</wx-lib>	
-	</define-tag>
+        </if>
+
+        <wx-lib>xrc</wx-lib>
+        <wx-lib>xml</wx-lib>
+        <wx-lib>net</wx-lib>
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib>
+    </define-tag>
 
 
 
 
-	<!-- The WebUpdater target -->
-	<!-- ===================== -->
-	
-	<if cond="MAKE_LIB=='1'">
-		<!-- the WebUpdate library: only for advanced uses -->
-		<lib id="webupdate_lib" template="complib,webupdatecommon" cond="WX_SHARED=='0'">
-			<sources>$(MOD_SRC)</sources>
-	  		<headers>$(MOD_HDR)</headers>
-		</lib>
-		<dll id="webupdate_dll" template="compdll,webupdatecommon" cond="WX_SHARED=='1'">
-			<sources>$(MOD_SRC)</sources>
-	  		<headers>$(MOD_HDR)</headers>
-			<webupdatelibs/>
-		</dll>
-		<set var="MSVC6PRJ_MERGED_TARGETS">webupdate=webupdate_lib+webupdate_dll</set>
-	</if>
- 
-  	<if cond="MAKE_EXE=='1'">	
-		<!-- the WebUpdater utility... -->
-		<exe id="webupdater" template="basic,wx,wxcode-basic,webupdatecommon">
-			<app-type>gui</app-type>		
-			<dirname>$(COMP_BASEPATH)/src</dirname>
-			<res-include>$(COMP_BASEPATH)/src</res-include>
-			<win32-res>$(COMP_BASEPATH)$(DIRSEP)src$(DIRSEP)app.rc</win32-res>
-			
-			<msvc-file-group>XRC:*.xrc</msvc-file-group>
-			<msvc-project-files>..\src\webupdatedlg.xrc</msvc-project-files>
-	
-			<sources>$(APP_SRC)</sources>
-			<headers>$(APP_HDR)</headers>
-	
-			<library>webupdate_lib</library>
-			<webupdatelibs/>
-		</exe>
-	</if>
+    <!-- The WebUpdater target -->
+    <!-- ===================== -->
 
-	
-	
-	<!--             Our SAMPLES             -->
-	<!-- =================================== -->
-	
-	<!-- after the creation of the EXE, put the WebUpdater XRC file in all samples folders -->
-	<if cond="TARGETING_IDE=='0'">
-		<define-rule name="copyrep" extends="force-copy-files">
-			<template>
-				<srcdir>$(COMP_BASEPATH)/src</srcdir>
-				<if cond="TARGETING_WIN32=='1'"><files>webupdater.exe webupdatedlg.xrc</files></if>
-				<if cond="TARGETING_WIN32=='0'"><files>webupdater webupdatedlg.xrc</files></if>
-				<dependency-of>all</dependency-of>				
-			</template>		
-		</define-rule>
-		<copyrep id="rep4_simple100"><dstdir>$(COMP_SAMPLE1_DIR)</dstdir></copyrep>
-		<copyrep id="rep4_simple203"><dstdir>$(COMP_SAMPLE1_UPDATED_DIR)</dstdir></copyrep>
-		<copyrep id="rep4_adv001"><dstdir>$(COMP_SAMPLE2_DIR)</dstdir></copyrep>
-		<copyrep id="rep4_adv150"><dstdir>$(COMP_SAMPLE2_UPDATED_DIR)</dstdir></copyrep>
-	</if>
-	
-	<!-- for MSVC6PRJ this hack will supply the lack of action targets -->
+    <if cond="MAKE_LIB=='1'">
+        <!-- the WebUpdate library: only for advanced uses -->
+        <lib id="webupdate_lib" template="complib,webupdatecommon" cond="WX_SHARED=='0'">
+            <sources>$(MOD_SRC)</sources>
+            <headers>$(MOD_HDR)</headers>
+        </lib>
+        <dll id="webupdate_dll" template="compdll,webupdatecommon" cond="WX_SHARED=='1'">
+            <sources>$(MOD_SRC)</sources>
+            <headers>$(MOD_HDR)</headers>
+            <webupdatelibs/>
+        </dll>
+        <set var="MSVC6PRJ_MERGED_TARGETS">webupdate=webupdate_lib+webupdate_dll</set>
+    </if>
+
+    <if cond="MAKE_EXE=='1'">
+        <!-- the WebUpdater utility... -->
+        <exe id="webupdater" template="basic,wx,wxcode-basic,webupdatecommon">
+            <app-type>gui</app-type>
+            <dirname>$(COMP_BASEPATH)/src</dirname>
+            <res-include>$(COMP_BASEPATH)/src</res-include>
+            <win32-res>$(COMP_BASEPATH)$(DIRSEP)src$(DIRSEP)app.rc</win32-res>
+
+            <msvc-file-group>XRC:*.xrc</msvc-file-group>
+            <msvc-project-files>..\src\webupdatedlg.xrc</msvc-project-files>
+
+            <sources>$(PCOMP_SRC) $(APP_SRC)</sources>
+            <headers>$(PCOMP_HDR) $(APP_HDR)</headers>
+
+            <!-- <library>webupdate_lib</library> -->
+            <webupdatelibs/>
+        </exe>
+    </if>
+
+
+
+    <!--             Our SAMPLES             -->
+    <!-- =================================== -->
+
+    <!-- after the creation of the EXE, put the WebUpdater XRC file in all samples folders -->
+    <if cond="TARGETING_IDE=='0'">
+        <define-rule name="copyrep" extends="force-copy-files">
+            <template>
+                <srcdir>$(COMP_BASEPATH)/src</srcdir>
+                <if cond="TARGETING_WIN32=='1'"><files>webupdater.exe webupdatedlg.xrc</files></if>
+                <if cond="TARGETING_WIN32=='0'"><files>webupdater webupdatedlg.xrc</files></if>
+                <dependency-of>all</dependency-of>
+            </template>
+        </define-rule>
+        <copyrep id="rep4_simple100"><dstdir>$(COMP_SAMPLE1_DIR)</dstdir></copyrep>
+        <copyrep id="rep4_simple203"><dstdir>$(COMP_SAMPLE1_UPDATED_DIR)</dstdir></copyrep>
+        <copyrep id="rep4_adv001"><dstdir>$(COMP_SAMPLE2_DIR)</dstdir></copyrep>
+        <copyrep id="rep4_adv150"><dstdir>$(COMP_SAMPLE2_UPDATED_DIR)</dstdir></copyrep>
+    </if>
+
+    <!-- for MSVC6PRJ this hack will supply the lack of action targets -->
     <define-tag name="msvc-copy-xrc" rules="exe,dll,lib,action">
         <if cond="FORMAT=='msvc6prj'">
-	        			
-			<set var="_xrcname">webupdatedlg.xrc</set>
-			<set var="_xrc">..\src\$(_xrcname)</set>
-			<set var="_webupdatername">webupdater.exe</set>
-			<set var="_webupdater">..\src\$(_webupdatername)</set>
-			<msvc-project-files>$(_xrc)</msvc-project-files>
-			<msvc-project-files>$(_webupdater)</msvc-project-files>
-			<set var="_output">$(nativePaths(value))</set>
-			
+
+            <set var="_xrcname">webupdatedlg.xrc</set>
+            <set var="_xrc">..\src\$(_xrcname)</set>
+            <set var="_webupdatername">webupdater.exe</set>
+            <set var="_webupdater">..\src\$(_webupdatername)</set>
+            <msvc-project-files>$(_xrc)</msvc-project-files>
+            <msvc-project-files>$(_webupdater)</msvc-project-files>
+            <set var="_output">$(nativePaths(value))</set>
+
             <set var="_custom_build_files" append="1">$(_xrcname) $(_webupdatername)</set>
             <set var="_custom_build_webupdatedlg_xrc">
 Copying the XRC file and from $(_xrc) to the sample folder
@@ -223,44 +223,44 @@ $(TAB)copy "$(DOLLAR)(InputPath)" "$(_output)"
             </set>
         </if>
     </define-tag>
-	
-	<template id="webupdatecompsample" template="compsamplebasic">
-		<depends>webupdater</depends>
-		<!-- <include>..$(DIRSEP)..$(DIRSEP)include</include> -->
-		<app-type>gui</app-type>		
+
+    <template id="webupdatecompsample" template="compsamplebasic">
+        <depends>webupdater</depends>
+        <!-- <include>..$(DIRSEP)..$(DIRSEP)include</include> -->
+        <app-type>gui</app-type>
         <wx-lib>core</wx-lib>
         <wx-lib>base</wx-lib>
-	</template>
-	
+    </template>
+
     <define-tag name="samplestuff" rules="exe">
-		<msvc-file-group>WebUpdater stuff:*.xrc *.exe</msvc-file-group>		
-		<msvc-copy-xrc>$(value)</msvc-copy-xrc>		
-		
-		<dirname>$(value)</dirname>
-		<res-include>$(value)</res-include>
-		<win32-res>$(value)$(DIRSEP)minimal.rc</win32-res>
-	</define-tag>
-	
-	<!-- use _ instead of '-' or '.' because MSVC6 does not like these chars -->
-	<exe id="simple_1_0_0" template="webupdatecompsample">
-		<exename>simple</exename>
-		<sources>$(COMP_SAMPLE1_SRC)</sources>
-		<samplestuff>$(COMP_SAMPLE1_DIR)</samplestuff>
-	</exe>
-	<exe id="simple_2_0_3" template="webupdatecompsample">
-		<exename>simple</exename>
-		<sources>$(COMP_SAMPLE1_UPDATED_SRC)</sources>
-		<samplestuff>$(COMP_SAMPLE1_UPDATED_DIR)</samplestuff>
-	</exe>
-	<exe id="advanced_0_0_1" template="webupdatecompsample">		
-		<exename>advanced</exename>
-		<sources>$(COMP_SAMPLE2_SRC)</sources>
-		<samplestuff>$(COMP_SAMPLE2_DIR)</samplestuff>
-	</exe>
-	<exe id="advanced_1_5_0" template="webupdatecompsample">
-		<exename>advanced</exename>
-		<sources>$(COMP_SAMPLE2_UPDATED_SRC)</sources>
-		<samplestuff>$(COMP_SAMPLE2_UPDATED_DIR)</samplestuff>
-	</exe>
-    
+        <msvc-file-group>WebUpdater stuff:*.xrc *.exe</msvc-file-group>
+        <msvc-copy-xrc>$(value)</msvc-copy-xrc>
+
+        <dirname>$(value)</dirname>
+        <res-include>$(value)</res-include>
+        <win32-res>$(value)$(DIRSEP)minimal.rc</win32-res>
+    </define-tag>
+
+    <!-- use _ instead of '-' or '.' because MSVC6 does not like these chars -->
+    <exe id="simple_1_0_0" template="webupdatecompsample">
+        <exename>simple</exename>
+        <sources>$(COMP_SAMPLE1_SRC)</sources>
+        <samplestuff>$(COMP_SAMPLE1_DIR)</samplestuff>
+    </exe>
+    <exe id="simple_2_0_3" template="webupdatecompsample">
+        <exename>simple</exename>
+        <sources>$(COMP_SAMPLE1_UPDATED_SRC)</sources>
+        <samplestuff>$(COMP_SAMPLE1_UPDATED_DIR)</samplestuff>
+    </exe>
+    <exe id="advanced_0_0_1" template="webupdatecompsample">
+        <exename>advanced</exename>
+        <sources>$(COMP_SAMPLE2_SRC)</sources>
+        <samplestuff>$(COMP_SAMPLE2_DIR)</samplestuff>
+    </exe>
+    <exe id="advanced_1_5_0" template="webupdatecompsample">
+        <exename>advanced</exename>
+        <sources>$(COMP_SAMPLE2_UPDATED_SRC)</sources>
+        <samplestuff>$(COMP_SAMPLE2_UPDATED_DIR)</samplestuff>
+    </exe>
+
 </makefile>

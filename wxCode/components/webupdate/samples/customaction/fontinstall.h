@@ -12,11 +12,6 @@
 #ifndef _WX_FONTINSTALL_H_
 #define _WX_FONTINSTALL_H_
 
-// optimization for GCC
-#if defined(__GNUG__) && !defined(__APPLE__)
-#pragma interface "fontinstall.h"
-#endif
-
 // defines the base class wxWebUpdateAction
 #include "wx/stdactions.h"
 

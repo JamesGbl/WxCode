@@ -13,11 +13,6 @@
 #ifndef _WX_CHECKEDLISTCTRL_H_
 #define _WX_CHECKEDLISTCTRL_H_
 
-// optimization for GCC
-#if defined(__GNUG__) && !defined(__APPLE__)
-#pragma interface "checkedlistctrl.h"
-#endif
-
 // wxWidgets headers
 #include "wx/webupdatedef.h"		// for the WXDLLIMPEXP_WEBUPDATE macro
 #include <wx/listctrl.h>

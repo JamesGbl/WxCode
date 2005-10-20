@@ -12,11 +12,6 @@
 #ifndef _WX_WEBUPDATEDLG_H_
 #define _WX_WEBUPDATEDLG_H_
 
-// optimization for GCC
-#if defined(__GNUG__) && !defined(__APPLE__)
-#pragma interface "webupdatedlg.h"
-#endif
-
 // wxWidgets headers
 #include "wx/webupdate.h"
 #include "wx/download.h"

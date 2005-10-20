@@ -12,11 +12,6 @@
 #ifndef _WX_INSTALLER_H_
 #define _WX_INSTALLER_H_
 
-// optimization for GCC
-#if defined(__GNUG__) && !defined(__APPLE__)
-#pragma interface "installer.h"
-#endif
-
 // wxWidgets headers
 #include "wx/webupdatedef.h"		// for WXDLLIMPEXP_WEBUPDATE macros only
 #include "wx/webupdate.h"

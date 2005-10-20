@@ -36,11 +36,6 @@
 #ifndef _WX_MD5_H_
 #define _WX_MD5_H_
 
-// optimization for GCC
-#if defined(__GNUG__) && !defined(__APPLE__)
-#pragma interface "md5.h"
-#endif
-
 // wxWidgets headers
 #include "wx/webupdatedef.h"		// for the WXDLLIMPEXP_WEBUPDATE macro
 #include "wx/string.h"
