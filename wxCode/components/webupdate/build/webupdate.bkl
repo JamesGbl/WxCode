@@ -109,9 +109,11 @@
     <include file="$(WXCODE_BAKEFILEDIR)/wxcode.bkl"/>
 
     <template id="webupdatecommon">
-        <!-- for wxHttpEngine dependency -->
-        <lib-path>$(HTTPENGINEDEP_LIBPATH)</lib-path>
-        <include>$(HTTPENGINEDEP_INCPATH)</include>
+        <if cond="TARGETING_WIN32=='1'">
+            <!-- for wxHttpEngine dependency  (on unix they should be installed in system paths)-->
+            <lib-path>$(HTTPENGINEDEP_LIBPATH)</lib-path>
+            <include>$(HTTPENGINEDEP_INCPATH)</include>
+        </if>
         <define>$(HTTPENGINEDEP_DEF)</define>
 
         <!-- miscellaneous -->
@@ -165,10 +167,10 @@
             <msvc-file-group>XRC:*.xrc</msvc-file-group>
             <msvc-project-files>..\src\webupdatedlg.xrc</msvc-project-files>
 
-            <sources>$(PCOMP_SRC) $(APP_SRC)</sources>
-            <headers>$(PCOMP_HDR) $(APP_HDR)</headers>
+            <sources>$(APP_SRC)</sources>
+            <headers>$(APP_HDR)</headers>
 
-            <!-- <library>webupdate_lib</library> -->
+            <library>webupdate_lib</library>
             <webupdatelibs/>
         </exe>
     </if>

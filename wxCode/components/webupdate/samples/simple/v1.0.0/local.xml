@@ -1,14 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
+<!DOCTYPE webupdate PUBLIC "-//WebUpdate//DTD WebUpdater 1.0//EN" "http://wxcode.sourceforge.net/components/webupdate/local.dtd">
+<!-- RCS-ID: $Id$ -->
+
 <webupdate version="1.0">
-  <appname>wxWebUpdate SIMPLE sample</appname>
-  <appfile>simple</appfile>
-  <xrc>webupdatedlg.xrc</xrc>
-  <res>wxWebUpdateSimpleDlg</res>
-  <restart>1</restart>
-  <savelog>1</savelog>
-  <remoteuri>http://wxcode.sourceforge.net/components/webupdate/script1.xml</remoteuri>
-  <keywords></keywords>
-  <local-package id="simple">
-    <version>2.0.3</version>
-  </local-package>
+	<appname>wxWebUpdate SIMPLE sample</appname>
+	<appfile>simple</appfile>
+	<res>wxWebUpdateSimpleDlg</res>
+	<remoteuri>http://wxcode.sourceforge.net/components/webupdate/script1.xml</remoteuri>
+
+	<local-package id="simple">
+		<version>1.0.0</version>
+	</local-package>
 </webupdate>
+

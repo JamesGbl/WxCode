@@ -1704,12 +1704,12 @@ fi;
 echo "$as_me:$LINENO: checking for the --with-httpengine option" >&5
 echo $ECHO_N "checking for the --with-httpengine option... $ECHO_C" >&6
 if test "$with_httpengine" = "yes"; then
-   USE_HTTPENGINE=1
-   echo "$as_me:$LINENO: result: yes" >&5
+USE_HTTPENGINE=1
+echo "$as_me:$LINENO: result: yes" >&5
 echo "${ECHO_T}yes" >&6
 else
-   USE_HTTPENGINE=0
-   echo "$as_me:$LINENO: result: no" >&5
+USE_HTTPENGINE=0
+echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6
 fi
 
@@ -7459,9 +7459,9 @@ fi
             fi
 
 if test "$USE_HTTPENGINE" = "1"; then
-   echo "  - wxHTTPEngine enabled"
+echo "  - wxHTTPEngine enabled"
 else
-   echo "  - wxHTTPEngine disabled"
+echo "  - wxHTTPEngine disabled"
 fi
 
             echo
