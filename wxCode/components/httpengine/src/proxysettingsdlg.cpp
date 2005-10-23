@@ -42,7 +42,7 @@ BEGIN_EVENT_TABLE(wxProxySettingsDlg, wxDialog)
 END_EVENT_TABLE()
 
 //! wxProxySettingsDlg constructor
-wxProxySettingsDlg::wxProxySettingsDlg(wxWindow* parent, wxWindowID id, const wxString& caption, const wxString message, const bool bShowNoProxyFor)
+wxProxySettingsDlg::wxProxySettingsDlg(wxWindow* parent, wxWindowID id, const wxString& caption, const wxString& message, const bool bShowNoProxyFor)
 : wxDialog(parent, id, caption, wxDefaultPosition, wxDefaultSize)
 {
   m_stExceptionsDesc = NULL;

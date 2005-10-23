@@ -52,7 +52,7 @@ public:
   void SetHostExceptionsDesc(const wxString &text);
   void SetHostExceptionsNote(const wxString &text);
 
-  wxProxySettingsDlg(wxWindow* parent, wxWindowID id, const wxString& caption = _T("Proxy Settings"), const wxString message = _T("Specify proxy settings"), const bool bShowNoProxyFor = false );
+  wxProxySettingsDlg(wxWindow* parent, wxWindowID id, const wxString& caption = _T("Proxy Settings"), const wxString& message = _T("Specify proxy settings"), const bool bShowNoProxyFor = false );
   virtual ~wxProxySettingsDlg();
 
 private:
