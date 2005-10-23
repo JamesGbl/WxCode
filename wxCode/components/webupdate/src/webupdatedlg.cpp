@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-// Name:    webupdatedlg.cpp
+// Name:        webupdatedlg.cpp
 // Purpose:     wxWebUpdateDlg, wxWebUpdateAdvPanel, wxWebUpdateAboutDlg
 // Author:      Francesco Montorsi
 // Created:     2005/06/23
@@ -59,10 +59,10 @@ IMPLEMENT_CLASS(wxWebUpdateAboutDlg, wxDialog)
 BEGIN_EVENT_TABLE(wxWebUpdateDlg, wxDialog)
 
     // buttons
-EVT_BUTTON(XRCID("IDWUD_OK"), wxWebUpdateDlg::OnDownload)
-EVT_BUTTON(XRCID("IDWUD_CANCEL"), wxWebUpdateDlg::OnCancel)
-EVT_BUTTON(XRCID("IDWUD_SHOWHIDEADV"), wxWebUpdateDlg::OnShowHideAdv)
-EVT_BUTTON(XRCID("IDWUD_ABOUT"), wxWebUpdateDlg::OnAbout)
+    EVT_BUTTON(XRCID("IDWUD_OK"), wxWebUpdateDlg::OnDownload)
+    EVT_BUTTON(XRCID("IDWUD_CANCEL"), wxWebUpdateDlg::OnCancel)
+    EVT_BUTTON(XRCID("IDWUD_SHOWHIDEADV"), wxWebUpdateDlg::OnShowHideAdv)
+    EVT_BUTTON(XRCID("IDWUD_ABOUT"), wxWebUpdateDlg::OnAbout)
 
     // we need to intercept also the clicks on the close box in the system menu
     EVT_BUTTON(wxID_CANCEL, wxWebUpdateDlg::OnCancel)
@@ -103,6 +103,27 @@ EVT_CHECKBOX(XRCID("IDWUAP_SAVELOG"), wxWebUpdateAdvPanel::OnSaveLog)
 END_EVENT_TABLE()
 
 
+
+
+// -----------------------
+// GLOBALS
+// -----------------------
+
+bool g_processingEvent = FALSE;
+
+void StopUIUpdates()
+{ g_processingEvent = TRUE; }
+
+void RestoreUIUpdates()
+{ g_processingEvent = FALSE; }
+
+class wxUIUpdateStopper
+{
+public:
+    wxUIUpdateStopper() { StopUIUpdates(); }
+    virtual ~wxUIUpdateStopper() { RestoreUIUpdates(); }
+};
+
 // a little utility function
 wxString wxWUDGetStatus(wxWebUpdateDlgStatus s)
 {
@@ -124,7 +145,7 @@ wxString wxWUDGetStatus(wxWebUpdateDlgStatus s)
 
 
 // a little utility macro
-#define wxWUD_CHECK_STATUS(allowed)                                     \
+#define wxWUD_CHECK_STATUS(allowed)                                 \
     { wxASSERT_MSG(m_nStatus & (allowed),                           \
                 wxT("invalid status mode (") +                      \
                 wxWUDGetStatus(m_nStatus) + wxT(")")); }
@@ -365,7 +386,7 @@ bool wxWebUpdateDlg::CheckForAllUpdated(bool forcedefaultmsg)
         wxString defaultmsg = wxT("You have the latest version of all packages of ") +
                             GetAppName() + wxT("... exiting the update dialog.");
         wxString usermsg = m_xmlRemote.GetUpdateNotAvailableMsg();
-        //wxWebUpdateInstaller::Get()->ShowNotificationMsg((usermsg.IsEmpty() || forcedefaultmsg) ? defaultmsg : usermsg);
+        wxWebUpdateInstaller::Get()->ShowNotificationMsg((usermsg.IsEmpty() || forcedefaultmsg) ? defaultmsg : usermsg);
 
         AbortDialog();
         return TRUE;        // TRUE = exit this dialog
@@ -464,9 +485,9 @@ wxWindow *wxWebUpdateDlg::ShowHideChild(const wxString &name)
     if (!item) return NULL;
 
     // invert the show state
-if (p->IsShown())
+    if (p->IsShown())
         item->Show(FALSE);
-else
+    else
         item->Show(TRUE);
     return p;
 }
@@ -703,6 +724,9 @@ void wxWebUpdateDlg::OnShowHideAdv(wxCommandEvent &)
 
 void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 {
+    // we need to change our internal status variable before any other UI update event occurs
+    wxUIUpdateStopper stopper;
+
     bool downloadingScript = (m_nStatus == wxWUDS_DOWNLOADINGXML);
 #ifdef __WXDEBUG__
     if (downloadingScript)
@@ -758,7 +782,7 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
                     wxLogUsrMsg(wxT("wxWebUpdateDlg::OnDownloadComplete - beginning installation of downloaded packages"));
                     m_nStatus = wxWUDS_INSTALLING;  // CHANGE OUR STATUS
                     InstallNextPackage();
-            }
+                }
 
             } else {
 
@@ -779,6 +803,9 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
 
 void wxWebUpdateDlg::OnInstallationComplete(wxCommandEvent &)
 {
+    // we need to change our internal status variable before any other UI update event occurs
+    wxUIUpdateStopper stopper;
+
     m_nInstallCount++;
 
     if (m_iThread->InstallationWasSuccessful()) {
@@ -822,10 +849,10 @@ void wxWebUpdateDlg::OnInstallationComplete(wxCommandEvent &)
 
             // and update the listctrl versions
             m_pUpdatesList->UpdatePackagesVersions(GetPackageFilter());
-    }
+        }
 
-    // if the user asked to remove the downloaded packages, do it now
-    RemoveCurrentPackage();
+        // if the user asked to remove the downloaded packages, do it now
+        RemoveCurrentPackage();
 
         // proceed with next
         if (!InstallNextPackage()) {
@@ -863,7 +890,7 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
     static wxDateTime lastupdate = wxDateTime::UNow();
 
     // special
-    if (m_nStatus == wxWUDS_EXITING)
+    if (m_nStatus == wxWUDS_EXITING || g_processingEvent == TRUE)
         return;
 
     // change the description label eventually
@@ -1137,7 +1164,7 @@ void wxWebUpdateAdvPanel::OnProxySettings(wxCommandEvent &)
     dlg.CenterOnScreen();
     dlg.SetProxySettings(m_proxy);
 
-    if( dlg.ShowModal() == wxID_OK )
+    if (dlg.ShowModal() == wxID_OK)
         m_proxy = dlg.GetProxySettings();
 #endif
 }
@@ -1180,28 +1207,28 @@ IMPLEMENT_DYNAMIC_CLASS(wxWebUpdateAdvPanelXmlHandler, wxXmlResourceHandler)
 
 wxWebUpdateAdvPanelXmlHandler::wxWebUpdateAdvPanelXmlHandler() : wxXmlResourceHandler()
 {
-AddWindowStyles();
+    AddWindowStyles();
 }
 
 wxObject *wxWebUpdateAdvPanelXmlHandler::DoCreateResource()
 {
-XRC_MAKE_INSTANCE(panel, wxWebUpdateAdvPanel)
+    XRC_MAKE_INSTANCE(panel, wxWebUpdateAdvPanel)
 
-panel->Create(m_parentAsWindow);
-    panel->SetId(GetID());
-    // GetPosition(), GetSize(),
-    // GetStyle(wxT("style"), wxTAB_TRAVERSAL),
-panel->SetName(GetName());
+    panel->Create(m_parentAsWindow);
+        panel->SetId(GetID());
+        // GetPosition(), GetSize(),
+        // GetStyle(wxT("style"), wxTAB_TRAVERSAL),
+    panel->SetName(GetName());
 
-SetupWindow(panel);
-CreateChildren(panel);
+    SetupWindow(panel);
+    CreateChildren(panel);
 
-return panel;
+    return panel;
 }
 
 bool wxWebUpdateAdvPanelXmlHandler::CanHandle(wxXmlNode *node)
 {
-return IsOfClass(node, wxT("wxWebUpdateAdvPanel"));
+    return IsOfClass(node, wxT("wxWebUpdateAdvPanel"));
 }
 
 

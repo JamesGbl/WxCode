@@ -54,7 +54,7 @@ AC_DEFUN([MY_ARG_WITH], [AC_ARG_WITH($1,
                         AC_HELP_STRING([--with-$1],
                         [$2 (default is $3)]),, [with_$1=$3])])
 
-MY_ARG_WITH([httpengine], [Enables the proxy and authentication support], [yes])
+MY_ARG_WITH([httpengine], [Enables the proxy and authentication support; requires the wxHttpEngine component], [yes])
 
 AC_MSG_CHECKING([for the --with-httpengine option])
 if test "$with_httpengine" = "yes"; then
@@ -82,8 +82,8 @@ if test "$USE_HTTPENGINE" = "1"; then
 
     # check for wxHTTPEngine presence, eventually disabling it if the
     # test program cannot be linked...
-    AM_WXCODE_CHECKFOR_COMPONENT([wxHTTPEngine], [httpbuilder], [httpengine],
-                                [wxHTTPBuilder test;],
+    AM_WXCODE_CHECKFOR_COMPONENT([wxHTTPEngine], [wx/httpbuilder.h],
+                                [httpengine], [wxHTTPBuilder test;],
                                 [USE_HTTPENGINE=1],     # action if found
                                 [USE_HTTPENGINE=0])     # action if not found
 fi

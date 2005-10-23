@@ -837,8 +837,8 @@ Optional Packages:
   --with-x11              Uses the wxX11 port (default is wxlike)
   --with-mac              Uses the wxMac port (default is wxlike)
   --with-mgl              Uses the wxMGL port (default is wxlike)
-  --with-httpengine       Enables the proxy and authentication support
-                          (default is yes)
+  --with-httpengine       Enables the proxy and authentication support;
+                          requires the wxHttpEngine component (default is yes)
 
 Some influential environment variables:
   CC          C compiler command
@@ -1317,7 +1317,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 # Arguments:
 # $1 = the name (mixed case) of the component to check
-# $2 = the name of a header of the component to check (without 'wx/' prefix and '.h' suffix)
+# $2 = the name of a header of the component to check (with 'wx/' prefix and '.h' suffix)
 # $3 = the name of the library of the component to check (without 'lib' prefix and .a/.so suffix)
 # $4 = a C++ line of code that forces the test program to be linked against the component in order to work
 # $5 = action if found
@@ -4335,8 +4335,9 @@ echo "$as_me: error: Your 'wx-config --cxxflags' command seems to define more th
 
 
                                                             if [ "$WX_DEBUG" = "1" ]; then
-                CPPFLAGS="$CPPFLAGS -g -O0"
-                CFLAGS="$CFLAGS -g -O0"
+
+                                CPPFLAGS="$CPPFLAGS -g -O0 -Wall -Wundef -Wno-ctor-dtor-privacy"
+                CFLAGS="$CFLAGS -g -O0 -Wall -Wundef"
             else
                 CPPFLAGS="$CPPFLAGS -O2"
                 CFLAGS="$CFLAGS -O2"
@@ -4352,12 +4353,12 @@ if test "$USE_HTTPENGINE" = "1"; then
             CXXFLAGS_ORIGINAL=$CXXFLAGS
             CFLAGS_ORIGINAL=$CFLAGS
             LDFLAGS_ORIGINAL=$LDFLAGS
+            LIBS_ORIGINAL=$LIBS
 
-                                                                                                                                                            CPPFLAGS="$CPPFLAGS $WX_CPPFLAGS"
-            CXXFLAGS="$CXXFLAGS $WX_CXXFLAGS"
+                                                                                                                                                                                                CPPFLAGS="$CPPFLAGS $WX_CPPFLAGS"
             CFLAGS="$CFLAGS $WX_CFLAGS_ONLY"
 
-                        LDFLAGS="$LDFLAGS -lhttpengine $WX_LIBS"
+                        LIBS="$LIBS -lhttpengine $WX_LIBS"
 
                         echo "$as_me:$LINENO: checking for the wxHTTPEngine availability" >&5
 echo $ECHO_N "checking for the wxHTTPEngine availability... $ECHO_C" >&6
@@ -4410,6 +4411,7 @@ fi
 rm -f conftest.err conftest.$ac_objext \
       conftest$ac_exeext conftest.$ac_ext
 
+
             if test "$wxHTTPEngine_PRESENCE" = "1"; then
                echo "$as_me:$LINENO: result: found" >&5
 echo "${ECHO_T}found" >&6
@@ -4425,6 +4427,7 @@ echo "${ECHO_T}not found !" >&6
             CXXFLAGS=$CXXFLAGS_ORIGINAL
             CFLAGS=$CFLAGS_ORIGINAL
             LDFLAGS=$LDFLAGS_ORIGINAL
+            LIBS=$LIBS_ORIGINAL
              # action if not found
 fi
 
