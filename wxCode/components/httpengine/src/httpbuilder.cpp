@@ -273,12 +273,20 @@ wxString wxHTTPBuilder::GetInputString(const wxString &url, const wxString& temp
     return szToReturn; // There was an error
 
   m_bytesRead = 0;
-  wxChar buf[8192];
+
+  // we won't use a wxChar buffer here since the server replies in US/ASCII encoding
+  char buf[8192];
 
   while( true )
   {
     inp_stream->Read( buf, WXSIZEOF(buf) );
+
+    // convert from char -> wxChar
+#if wxUSE_UNICODE
+    szToReturn.Append( wxString(buf, wxConvUTF8), inp_stream->LastRead() );
+#else
     szToReturn.Append( buf, inp_stream->LastRead() );
+#endif
 
     int lastRead = inp_stream->LastRead();
     if( lastRead == 0 )
