@@ -917,7 +917,7 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 
 #ifdef __WXDEBUG__
     // check our state var looking at the thread status
-    /*if (m_dThread->IsDownloading() || m_dThread->IsComputingMD5())
+    if (m_dThread->IsDownloading() || m_dThread->IsComputingMD5())
         wxWUD_CHECK_STATUS(wxWUDS_DOWNLOADINGXML | wxWUDS_DOWNLOADING)
     else
         wxWUD_CHECK_STATUS(~(wxWUDS_DOWNLOADINGXML | wxWUDS_DOWNLOADING))
@@ -925,7 +925,7 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
     if (m_iThread->IsInstalling())
         wxWUD_CHECK_STATUS(wxWUDS_INSTALLING)
     else
-        wxWUD_CHECK_STATUS(~wxWUDS_INSTALLING)*/
+        wxWUD_CHECK_STATUS(~wxWUDS_INSTALLING)
 #endif
 
     // change UI labels according to the current status
