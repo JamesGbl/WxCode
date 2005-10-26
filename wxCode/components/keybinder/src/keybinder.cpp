@@ -1163,7 +1163,7 @@ void wxKeyConfigPanel::BuildCtrls()
 
 		// use a combobox + a listbox
 		m_pCommandsList = new wxListBox(this, wxKEYBINDER_COMMANDS_BOX_ID, wxDefaultPosition,
-									wxDefaultSize, 0, NULL);
+									wxDefaultSize, (int)0, (const wxString *)NULL);
 		m_pCategories = new wxComboBox(this, wxKEYBINDER_CATEGORIES_ID,
 								wxEmptyString, wxDefaultPosition, wxDefaultSize, 
 								0, NULL, wxCB_READONLY);
@@ -1472,7 +1472,7 @@ void wxKeyConfigPanel::AddRootIfMissing(const wxString &rootname)
 
 wxCmd *wxKeyConfigPanel::GetSelCmd() const
 {
-	int id;
+	long id;
 	
 	if (IsUsingTreeCtrl()) {
 
@@ -1490,7 +1490,7 @@ wxCmd *wxKeyConfigPanel::GetSelCmd() const
 		if (sel < 0)
 			return NULL;
 
-		id = (int)m_pCommandsList->GetClientData(sel);
+		id = (long)m_pCommandsList->GetClientData(sel);
 	}
 
 	return m_kBinder.GetCmd(id);

@@ -2,83 +2,83 @@
 <!DOCTYPE webupdate PUBLIC "-//WebUpdate//DTD WebUpdater 1.0//EN" "http://wxcode.sourceforge.net/components/webupdate/remote.dtd">
 <!-- $Id$ -->
 
-<webupdate version="1.0">   
+<webupdate version="1.0">
 
-   <!-- our CORE package: we use this to deliver the sample binaries -->
-   <package id="core">
-      <latest-version importance="normal">1.5.0</latest-version>
+    <!-- our CORE package: we use this to deliver the sample binaries -->
+    <package id="core">
+        <latest-version importance="normal">1.5.0</latest-version>
 
-      <latest-download>
-	  
-			<!-- use a simple ZIP -->
-			<uri>http://wxcode.sourceforge.net/components/webupdate/advanced-$(latest-version).zip</uri>
-			<platform name="msw"/>	
-			
-			<actions>
-				<extract file="$(thisfile)" where="$(programdir)"/>
-			</actions>
-	  </latest-download>
-	  <description>It's a good habit to always include a description for each package - in this way the user knows what he's downloading... in this case this is the package which contains a simple data file and the updated EXE for $(appname)</description>
-   </package>
-   
-   
-   
-   <!-- our ADDON1 package -->
-   <package id="addon1">
-	  <requires>core</requires>
-      <latest-version importance="low">1.5.0</latest-version>      
+        <latest-download>
 
-	  <!-- a single download for all platforms -->
-      <latest-download>
-			<uri>http://wxcode.sourceforge.net/components/webupdate/addon1-$(latest-version).zip</uri>
-			<platform name="any"/>	
-			
-			<actions>
-				<mkdir dir="$(programdir)//addon1" />
-				<extract file="$(thisfile)" where="$(programdir)//addon1"/>
-			</actions>
-	  </latest-download>
-	  <description>This is the package $(id) for $(appname)</description>
-   </package>
+            <!-- use a simple ZIP -->
+            <uri>http://wxcode.sourceforge.net/components/webupdate/advanced-$(latest-version).zip</uri>
+            <platform name="msw"/>
 
-   
-   <!-- our ADDON2 package -->
-   <package id="addon2">
-	  <requires>core</requires>
-      
-      <!-- just to show that 'normnal' priorities are automatically checked... -->
-      <latest-version importance="normal">1.5.0</latest-version>      
+            <actions>
+                <extract file="$(thisfile)" where="$(programdir)"/>
+            </actions>
+        </latest-download>
+        <description>It's a good habit to always include a description for each package - in this way the user knows what he's downloading... in this case this is the package which contains a simple data file and the updated EXE for $(appname)</description>
+    </package>
 
-	  <!-- a single download for all platforms -->
-      <latest-download>
-			<uri>http://wxcode.sourceforge.net/components/webupdate/addon2-$(latest-version).zip</uri>
-			<platform name="any"/>	
-			
-			<actions>
-				<mkdir dir="$(programdir)//addon2" />
-				<extract file="$(thisfile)" where="$(programdir)//addon2"/>
-			</actions>
-	  </latest-download>
-	  <description>This is the package $(id) for $(appname)</description>
-   </package>
-   
 
-   <!-- our ADDON3 package -->
-   <package id="addon3">
-	  <requires>core,addon1,addon2</requires>
-      <latest-version importance="low">1.5.0</latest-version>      
 
-	  <!-- a single download for all platforms -->
-      <latest-download>
-			<uri>http://wxcode.sourceforge.net/components/webupdate/addon3-$(latest-version).zip</uri>
-			<platform name="any"/>	
-			
-			<actions>
-				<mkdir dir="$(programdir)//addon3" />
-				<extract file="$(thisfile)" where="$(programdir)//addon3"/>
-			</actions>
-	  </latest-download>
-	  <description>This is the package $(id) for $(appname)</description>
-   </package>
-   
+    <!-- our ADDON1 package -->
+    <package id="addon1">
+        <requires>core</requires>
+        <latest-version importance="low">1.5.0</latest-version>
+
+        <!-- a single download for all platforms -->
+        <latest-download>
+            <uri>http://wxcode.sourceforge.net/components/webupdate/addon1-$(latest-version).zip</uri>
+            <platform name="any"/>
+
+            <actions>
+                <mkdir dir="$(programdir)//addon1" />
+                <extract file="$(thisfile)" where="$(programdir)//addon1"/>
+            </actions>
+        </latest-download>
+        <description>This is the package $(id) for $(appname)</description>
+    </package>
+
+
+    <!-- our ADDON2 package -->
+    <package id="addon2">
+        <requires>core</requires>
+
+        <!-- just to show that 'normal' priorities are automatically checked... -->
+        <latest-version importance="normal">1.5.0</latest-version>
+
+        <!-- a single download for all platforms -->
+        <latest-download>
+            <uri>http://wxcode.sourceforge.net/components/webupdate/addon2-$(latest-version).zip</uri>
+            <platform name="any"/>
+
+            <actions>
+                <mkdir dir="$(programdir)//addon2" />
+                <extract file="$(thisfile)" where="$(programdir)//addon2"/>
+            </actions>
+        </latest-download>
+        <description>This is the package $(id) for $(appname)</description>
+    </package>
+
+
+    <!-- our ADDON3 package -->
+    <package id="addon3">
+        <requires>core,addon1,addon2</requires>
+        <latest-version importance="low">1.5.0</latest-version>
+
+        <!-- a single download for all platforms -->
+        <latest-download>
+            <uri>http://wxcode.sourceforge.net/components/webupdate/addon3-$(latest-version).zip</uri>
+            <platform name="any"/>
+
+            <actions>
+                <mkdir dir="$(programdir)//addon3" />
+                <extract file="$(thisfile)" where="$(programdir)//addon3"/>
+            </actions>
+        </latest-download>
+        <description>This is the package $(id) for $(appname)</description>
+    </package>
+
 </webupdate>

@@ -14,7 +14,7 @@
 
 # Init this configure script with basic info about the component
 AC_INIT([wxExtMiniFrame], [1.5], [frm@sourceforge.net])
-m4_include(../../../build/bakefiles/wxcode.m4)
+m4_include(../../../build/autoconf/wxcode.m4)
 AM_WXCODE_INIT
 
 

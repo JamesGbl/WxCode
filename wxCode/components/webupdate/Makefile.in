@@ -71,7 +71,7 @@ WEBUPDATER_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include \
 	$(__HTTPENGINEDEP_DEF_p) $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 WEBUPDATER_OBJECTS =  \
 	$(__webupdater___win32rc) \
-	webupdater_app.o
+	webupdater_webapp.o
 SIMPLE_1_0_0_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include $(WX_CXXFLAGS) \
 	$(CPPFLAGS) $(CXXFLAGS)
 SIMPLE_1_0_0_OBJECTS =  \
@@ -202,6 +202,10 @@ clean:
 	rm -f ./lib/$(LIBPREFIX)webupdate.$(DLLIMP_SUFFIX)
 	rm -f ./lib/$(LIBPREFIX)webupdate.$(DLLIMP_SUFFIX) ./lib/$(DLLPREFIX)webupdate$(__webupdate_dll___targetsuf2)
 	rm -f ./src/webupdater$(EXEEXT)
+	rm -f ./samples/simple/v1.0.0/webupdater ./samples/simple/v1.0.0/webupdatedlg.xrc
+	rm -f ./samples/simple/v2.0.3/webupdater ./samples/simple/v2.0.3/webupdatedlg.xrc
+	rm -f ./samples/advanced/v0.0.1/webupdater ./samples/advanced/v0.0.1/webupdatedlg.xrc
+	rm -f ./samples/advanced/v1.5.0/webupdater ./samples/advanced/v1.5.0/webupdatedlg.xrc
 	rm -f ./samples/simple/v1.0.0/simple$(EXEEXT)
 	rm -f ./samples/simple/v2.0.3/simple$(EXEEXT)
 	rm -f ./samples/advanced/v0.0.1/advanced$(EXEEXT)
@@ -415,8 +419,8 @@ webupdate_dll_webupdatectrl.o: $(srcdir)/./src/webupdatectrl.cpp
 webupdater_app_rc.o: $(srcdir)/./src/app.rc
 	$(RESCOMP) -i$< -o$@ $(__WX_SHAREDDEFINE_p_7) --include-dir ./include $(__HTTPENGINEDEP_DEF_p_5)  --include-dir ./src
 
-webupdater_app.o: $(srcdir)/./src/app.cpp
-	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) $(srcdir)/./src/app.cpp
+webupdater_webapp.o: $(srcdir)/./src/webapp.cpp
+	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) $(srcdir)/./src/webapp.cpp
 
 simple_1_0_0_minimal.o: $(srcdir)/./samples/simple/v1.0.0/minimal.cpp
 	$(CXXC) -c -o $@ $(SIMPLE_1_0_0_CXXFLAGS) $(srcdir)/./samples/simple/v1.0.0/minimal.cpp

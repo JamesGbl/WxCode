@@ -58,11 +58,11 @@ MY_ARG_WITH([httpengine], [Enables the proxy and authentication support; require
 
 AC_MSG_CHECKING([for the --with-httpengine option])
 if test "$with_httpengine" = "yes"; then
-USE_HTTPENGINE=1
-AC_MSG_RESULT([yes])
+    USE_HTTPENGINE=1
+    AC_MSG_RESULT([yes])
 else
-USE_HTTPENGINE=0
-AC_MSG_RESULT([no])
+    USE_HTTPENGINE=0
+    AC_MSG_RESULT([no])
 fi
 
 

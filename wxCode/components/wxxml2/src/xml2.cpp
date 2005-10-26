@@ -916,7 +916,7 @@ bool wxXml2Document::Create(const wxString &version)
 bool wxXml2Document::operator==(const wxXml2Document &doc) const
 {
 	// check for null pointers
-	if ((int)doc.GetObj() ^ (int)GetObj())
+	if ((long)doc.GetObj() ^ (long)GetObj())
 		return FALSE;
 	if (GetRoot() == doc.GetRoot())
 		return TRUE;

@@ -36,6 +36,7 @@
  1.6
      - fixed the install docs with a section about MSVC6 project files
      - fixed a problem with configure script about wxWidgets build flag detection
+     - fixed compilation on 64 bit machines (tested under FC4)
  
  1.5 
      - added libxml2 & libiconv to the build system for win32 users; 

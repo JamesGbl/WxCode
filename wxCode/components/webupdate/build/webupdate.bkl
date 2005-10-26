@@ -89,7 +89,7 @@
     <set var="COMP_HDR">wx/webupdatedef.h wx/webupdate.h wx/webupdatedlg.h wx/checkedlistctrl.h wx/md5.h wx/installer.h wx/download.h wx/stdactions.h wx/webupdatectrl.h</set>
 
     <!-- these are for the WebUpdaterApp (and need to be prefixed!) -->
-    <set var="APP_SRC">$(COMP_BASEPATH)/src/app.cpp</set>
+    <set var="APP_SRC">$(COMP_BASEPATH)/src/webapp.cpp</set>
     <set var="APP_HDR"></set>
 
     <set var="COMP_SAMPLE1_SRC">$(COMP_BASEPATH)/samples/simple/v1.0.0/minimal.cpp</set>
@@ -182,18 +182,29 @@
 
     <!-- after the creation of the EXE, put the WebUpdater XRC file in all samples folders -->
     <if cond="TARGETING_IDE=='0'">
+
+        <if cond="TARGETING_WIN32=='1'">
+            <set var="FILELIST">webupdater.exe webupdatedlg.xrc</set>
+        </if>
+        <if cond="TARGETING_WIN32=='0'">
+            <set var="FILELIST">webupdater webupdatedlg.xrc</set>
+        </if>
+
         <define-rule name="copyrep" extends="force-copy-files">
             <template>
                 <srcdir>$(COMP_BASEPATH)/src</srcdir>
-                <if cond="TARGETING_WIN32=='1'"><files>webupdater.exe webupdatedlg.xrc</files></if>
-                <if cond="TARGETING_WIN32=='0'"><files>webupdater webupdatedlg.xrc</files></if>
+                <files>$(FILELIST)</files>
                 <dependency-of>all</dependency-of>
             </template>
+            <define-tag name="dst">
+                <dstdir>$(value)</dstdir>
+                <clean-files>$(''.join([(__dstdir + DIRSEP + '%s ') % (x) for x in FILELIST.split()]))</clean-files>
+            </define-tag>
         </define-rule>
-        <copyrep id="rep4_simple100"><dstdir>$(COMP_SAMPLE1_DIR)</dstdir></copyrep>
-        <copyrep id="rep4_simple203"><dstdir>$(COMP_SAMPLE1_UPDATED_DIR)</dstdir></copyrep>
-        <copyrep id="rep4_adv001"><dstdir>$(COMP_SAMPLE2_DIR)</dstdir></copyrep>
-        <copyrep id="rep4_adv150"><dstdir>$(COMP_SAMPLE2_UPDATED_DIR)</dstdir></copyrep>
+        <copyrep id="rep4_simple100"><dst>$(COMP_SAMPLE1_DIR)</dst></copyrep>
+        <copyrep id="rep4_simple203"><dst>$(COMP_SAMPLE1_UPDATED_DIR)</dst></copyrep>
+        <copyrep id="rep4_adv001"><dst>$(COMP_SAMPLE2_DIR)</dst></copyrep>
+        <copyrep id="rep4_adv150"><dst>$(COMP_SAMPLE2_UPDATED_DIR)</dst></copyrep>
     </if>
 
     <!-- for MSVC6PRJ this hack will supply the lack of action targets -->

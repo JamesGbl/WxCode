@@ -226,7 +226,7 @@ bool wxWebUpdateDlg::InitWidgetsFromXRC(wxWindow *parent)
 
     if (!wxXmlResource::Get()->LoadDialog(this, parent, res)) {
         wxLogAdvMsg(wxT("Error while building wxWebUpdateDlg; ")
-            wxT("check that the given XRC (webupdatedlg.xrc by default) is valid !"));
+                wxT("check that the given XRC [") + res + wxT("] is valid !"));
 
         return FALSE;
     }

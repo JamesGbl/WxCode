@@ -194,7 +194,7 @@ WEBUPDATER_CXXFLAGS = $(__WARNINGS) $(__DEBUGINFO) -bm $(__WX_SHAREDDEFINE_p) &
 	-i=$(WX_DIR)\include -i=..\include -i=$(HTTPENGINE_DIR)\include &
 	$(__HTTPENGINEDEP_DEF_p) $(__MYOPTIMIZEFLAG) $(CPPFLAGS) $(CXXFLAGS)
 WEBUPDATER_OBJECTS =  &
-	watcom\webupdater_app.obj
+	watcom\webupdater_webapp.obj
 SIMPLE_1_0_0_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
 	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
@@ -239,6 +239,10 @@ clean : .SYMBOLIC
 	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).dll del ..\lib\webupdate$(WXLIBPOSTFIX).dll
 	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).lib del ..\lib\webupdate$(WXLIBPOSTFIX).lib
 	-if exist ..\src\webupdater.exe del ..\src\webupdater.exe
+	-if exist ..\samples\simple\v1.0.0\webupdater.exe ..\samples\simple\v1.0.0\webupdatedlg.xrc  del ..\samples\simple\v1.0.0\webupdater.exe ..\samples\simple\v1.0.0\webupdatedlg.xrc
+	-if exist ..\samples\simple\v2.0.3\webupdater.exe ..\samples\simple\v2.0.3\webupdatedlg.xrc  del ..\samples\simple\v2.0.3\webupdater.exe ..\samples\simple\v2.0.3\webupdatedlg.xrc
+	-if exist ..\samples\advanced\v0.0.1\webupdater.exe ..\samples\advanced\v0.0.1\webupdatedlg.xrc  del ..\samples\advanced\v0.0.1\webupdater.exe ..\samples\advanced\v0.0.1\webupdatedlg.xrc
+	-if exist ..\samples\advanced\v1.5.0\webupdater.exe ..\samples\advanced\v1.5.0\webupdatedlg.xrc  del ..\samples\advanced\v1.5.0\webupdater.exe ..\samples\advanced\v1.5.0\webupdatedlg.xrc
 	-if exist ..\samples\simple\v1.0.0\simple.exe del ..\samples\simple\v1.0.0\simple.exe
 	-if exist ..\samples\simple\v2.0.3\simple.exe del ..\samples\simple\v2.0.3\simple.exe
 	-if exist ..\samples\advanced\v0.0.1\advanced.exe del ..\samples\advanced\v0.0.1\advanced.exe
@@ -467,7 +471,7 @@ watcom\webupdate_dll_webupdatectrl.obj :  .AUTODEPEND .\..\src\webupdatectrl.cpp
 watcom\webupdater_app.res :  .AUTODEPEND .\..\src\app.rc
 	wrc -q -ad -bt=nt -r -fo=$^@ $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=$(HTTPENGINE_DIR)\include $(__HTTPENGINEDEP_DEF_p)  -i=..\src $<
 
-watcom\webupdater_app.obj :  .AUTODEPEND .\..\src\app.cpp
+watcom\webupdater_webapp.obj :  .AUTODEPEND .\..\src\webapp.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATER_CXXFLAGS) $<
 
 watcom\simple_1_0_0_minimal.obj :  .AUTODEPEND .\..\samples\simple\v1.0.0\minimal.cpp

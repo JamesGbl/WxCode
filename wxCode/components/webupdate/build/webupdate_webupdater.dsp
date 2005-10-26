@@ -260,11 +260,11 @@ SOURCE=.\..\src\webupdatedlg.xrc
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=.\..\src\app.cpp
+SOURCE=.\..\src\app.rc
 # End Source File
 # Begin Source File
 
-SOURCE=.\..\src\app.rc
+SOURCE=.\..\src\webapp.cpp
 # End Source File
 # End Group
 # End Target

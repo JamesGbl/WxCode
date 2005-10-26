@@ -92,7 +92,7 @@ WEBUPDATER_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) $(__DEBUGINFO) 
 	$(CXXFLAGS)
 WEBUPDATER_OBJECTS =  \
 	msvc\webupdater_app.res \
-	msvc\webupdater_app.obj
+	msvc\webupdater_webapp.obj
 SIMPLE_1_0_0_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
 	$(__OPTIMIZEFLAG) $(__DEBUGINFO) /Fd..\samples\simple\v1.0.0\simple.pdb \
 	$(____DEBUGRUNTIME) $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) \
@@ -253,6 +253,10 @@ clean:
 	-if exist ..\src\webupdater.exe del ..\src\webupdater.exe
 	-if exist ..\src\webupdater.ilk del ..\src\webupdater.ilk
 	-if exist ..\src\webupdater.pdb del ..\src\webupdater.pdb
+	-if exist ..\samples\simple\v1.0.0\webupdater.exe ..\samples\simple\v1.0.0\webupdatedlg.xrc  del ..\samples\simple\v1.0.0\webupdater.exe ..\samples\simple\v1.0.0\webupdatedlg.xrc
+	-if exist ..\samples\simple\v2.0.3\webupdater.exe ..\samples\simple\v2.0.3\webupdatedlg.xrc  del ..\samples\simple\v2.0.3\webupdater.exe ..\samples\simple\v2.0.3\webupdatedlg.xrc
+	-if exist ..\samples\advanced\v0.0.1\webupdater.exe ..\samples\advanced\v0.0.1\webupdatedlg.xrc  del ..\samples\advanced\v0.0.1\webupdater.exe ..\samples\advanced\v0.0.1\webupdatedlg.xrc
+	-if exist ..\samples\advanced\v1.5.0\webupdater.exe ..\samples\advanced\v1.5.0\webupdatedlg.xrc  del ..\samples\advanced\v1.5.0\webupdater.exe ..\samples\advanced\v1.5.0\webupdatedlg.xrc
 	-if exist ..\samples\simple\v1.0.0\simple.exe del ..\samples\simple\v1.0.0\simple.exe
 	-if exist ..\samples\simple\v1.0.0\simple.ilk del ..\samples\simple\v1.0.0\simple.ilk
 	-if exist ..\samples\simple\v1.0.0\simple.pdb del ..\samples\simple\v1.0.0\simple.pdb
@@ -449,7 +453,7 @@ msvc\webupdate_dll_webupdatectrl.obj: .\..\src\webupdatectrl.cpp
 msvc\webupdater_app.res: .\..\src\app.rc
 	rc /fo$@  /d WIN32 $(____DEBUGRUNTIME_3) $(__WX_SHAREDDEFINE_p_1_0) $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) /d __WXMSW__ /i $(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include /i ..\include /i $(HTTPENGINE_DIR)\include $(__HTTPENGINEDEP_DEF_p_4)  /d _WINDOWS /i ..\src $**
 
-msvc\webupdater_app.obj: .\..\src\app.cpp
+msvc\webupdater_webapp.obj: .\..\src\webapp.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(WEBUPDATER_CXXFLAGS) $**
 
 msvc\simple_1_0_0_minimal.obj: .\..\samples\simple\v1.0.0\minimal.cpp

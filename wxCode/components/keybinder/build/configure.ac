@@ -19,7 +19,7 @@ AC_INIT([KeyBinder], [1.0], [noone@sourceforge.net])
 
 # you need the wxCode/build/bakefiles in your local repository to generate a configure
 # script from this configure.ac file since wxcode.m4 is required....
-m4_include(../../../build/bakefiles/wxcode.m4)
+m4_include(../../../build/autoconf/wxcode.m4)
 AM_WXCODE_INIT
 
 

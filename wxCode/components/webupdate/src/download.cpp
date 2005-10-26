@@ -95,7 +95,7 @@ public:
     size_t GetSize() const
         { wxASSERT(m_pStream); return m_pStream->GetSize(); }
     bool IsOk() const
-        { wxASSERT(m_pStream); return m_pStream != NULL; }
+        { wxASSERT(m_pStream); return (m_pStream != NULL && m_pStream->IsOk()); }
     bool Eof() const
         { wxASSERT(m_pStream); return m_pStream->Eof(); }
 
@@ -141,7 +141,7 @@ public:
     size_t GetSize() const
         { wxASSERT(m_pStream); return m_pStream->GetSize(); }
     bool IsOk() const
-        { wxASSERT(m_pStream); return m_pStream != NULL; }
+        { wxASSERT(m_pStream); return (m_pStream != NULL && m_pStream->IsOk()); }
     bool Eof() const
         { wxASSERT(m_pStream); return m_pStream->Eof(); }
 
@@ -250,6 +250,7 @@ wxInputStream *wxGetInputStreamFromURI(const wxString &uri)
 
 unsigned long wxGetSizeOfURI(const wxString &uri)
 {
+    wxLogDebug(wxT("wxGetSizeOfURI - getting size of [") + uri + wxT("]"));
     wxInputStream *is = wxGetInputStreamFromURI(uri);
     if (is == NULL)
         return 0;
@@ -478,6 +479,9 @@ void *wxSizeCacherThread::Entry()
 {
     wxLogAdvMsg(wxT("wxSizeCacherThread::Entry - caching file sizes"));
     bool allok = TRUE;
+
+    if (m_urls.GetCount() == 0)
+        return (void*)FALSE;     // no urls whose size must be cached ?
 
     // be sure to have n null entries in our cache array, where
     // 'n' is the number of URLs whose size must be cached
