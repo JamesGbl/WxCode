@@ -16,6 +16,8 @@
 #define VERSION				wxT("1.5.0")
 #define APP_NAME			wxT("wxWebUpdate ADVANCED sample")
 
+void wxUpdateWebUpdaterIfRequired();
+
 // ----------------------------------------------------------------------------
 // headers
 // ----------------------------------------------------------------------------
@@ -77,7 +79,8 @@ enum
     Minimal_About = wxID_ABOUT,
 
 				// these were added by me
-	Minimal_UpdateCheck
+	Minimal_UpdateCheck,
+	Minimal_LocalCheck
 };
 
 // Define a new frame type: this is going to be our main frame
@@ -93,6 +96,7 @@ public:
     void OnAbout(wxCommandEvent& event);
 
 	void OnUpdateCheck(wxCommandEvent& event);
+	void OnLocalCheck(wxCommandEvent& event);
 
 private:
     // any class wishing to process wxWindows events must use this macro
@@ -111,6 +115,7 @@ BEGIN_EVENT_TABLE(MyFrame, wxFrame)
     EVT_MENU(Minimal_About, MyFrame::OnAbout)
 
     EVT_MENU(Minimal_UpdateCheck, MyFrame::OnUpdateCheck)
+    EVT_MENU(Minimal_LocalCheck, MyFrame::OnLocalCheck)
 END_EVENT_TABLE()
 
 // Create a new application object: this macro will allow wxWindows to create
@@ -129,6 +134,8 @@ IMPLEMENT_APP(MyApp)
 // wxT('Main program') equivalent: the program execution "starts" here
 bool MyApp::OnInit()
 {
+	wxUpdateWebUpdaterIfRequired();
+
     // create the main application window
     SetAppName(APP_NAME);
     MyFrame *frame = new MyFrame(GetAppName());
@@ -219,8 +226,10 @@ MyFrame::MyFrame(const wxString& title)
 #if wxUSE_MENUS
     // create a menu bar
     wxMenu *menuFile = new wxMenu;
-    menuFile->Append(Minimal_UpdateCheck, _T("Check for updates..."), 
-            _T("Checks for updates and eventually downloads the update version..."));	
+    menuFile->Append(Minimal_UpdateCheck, _T("Check for remote updates..."), 
+            _T("Checks for updates and eventually downloads the update version from WWW..."));	
+    menuFile->Append(Minimal_LocalCheck, _T("Check for local updates..."), 
+            _T("Checks for updates and eventually downloads the update version without requiring a connection..."));	
     menuFile->Append(Minimal_Quit, _T("E&xit\tAlt-X"), _T("Quit this program"));	
     
     // the "About" item should be in the help menu
@@ -273,21 +282,68 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
    THESE ARE THE ONLY REAL MODIFICATION REQUIRED TO INTEGRATE WEBUPDATER
    IN YOUR PROGRAM USING IT IN THE SIMPLEST WAY (SEE WEBUPDATER DOCS)
 */
+#include "wx/filename.h"
 
-void wxUpdateAndExit(wxFrame *caller, const wxString &xrc, const wxString &xml)
+// call this in the event handler used to show the wxWebUpdateDlg
+void wxUpdateAndExit(wxFrame *caller, 
+					bool savelog = FALSE,
+     				bool restart = TRUE,
+     				const wxString &xrc = wxEmptyString, 	// --xrc option won't be given using wxEmptyString
+         			const wxString &res = wxEmptyString,	// --res option won't be given using wxEmptyString
+            		const wxString &xml = wxEmptyString,	// --xml option won't be given using wxEmptyString
+         			const wxString &uri = wxEmptyString)	// --uri option won't be given using wxEmptyString
 {
-#ifdef __WXMSW__	
-	wxExecute(wxT("webupdater.exe /s /r /x ") + xrc + wxT(" /l ") + xml);	
-	caller->Close(true);
+	wxString opts;
+ 
+ 	if (savelog)
+  		opts += wxT(" --savelog");
+    if (restart)
+    	opts += wxT(" --restart");
+    if (!xrc.IsEmpty())
+     	opts += wxT(" --xrc=") + xrc;
+    if (!res.IsEmpty())
+    	opts += wxT(" --res=") + res;
+ 	if (!xml.IsEmpty())
+  		opts += wxT(" --xml=") + xml;
+ 	if (!uri.IsEmpty())
+  		opts += wxT(" --uri=") + uri;
+
+#ifdef __WXMSW__
+	wxExecute(wxT("webupdater.exe") + opts);
 #else	
-	wxExecute(wxT("./webupdater --savelog --restart --xrc=") + xrc + wxT(" --xml=") + xml);
-	caller->Close(true);
+	wxExecute(wxT("./webupdater") + opts);
 #endif
+	caller->Close(true);
+}
+
+// to be called in your wxApp::OnInit()
+void wxUpdateWebUpdaterIfRequired()
+{
+#ifdef __WXMSW__
+	wxString newupdater = wxT("_webupdater.exe"), oldupdater = wxT("webupdater.exe");
+#else
+	wxString newupdater = wxT("_webupdater"), oldupdater = wxT("webupdater");	
+#endif
+	if (wxFileName::FileExists(newupdater)) {
+		wxRemoveFile(oldupdater);
+		wxRenameFile(newupdater, oldupdater);
+	}
 }
 
 void MyFrame::OnUpdateCheck(wxCommandEvent &)
 {
-	wxUpdateAndExit(this, wxT("webupdatedlg.xrc"), wxT("local.xml"));
+	wxUpdateAndExit(this, TRUE, TRUE, wxEmptyString, wxEmptyString, wxEmptyString, 
+ 						wxT("http://wxcode.sourceforge.net/components/webupdate/script2.xml"));
+}
+
+void MyFrame::OnLocalCheck(wxCommandEvent &)
+{
+	// for --uri option you must use an absolute path or 
+ 	// a path relative to the local.xml file
+ 	// (for te --xml and --xrc option, a path relative to the 
+  	//  WebUpdater executable location must be used)
+	wxUpdateAndExit(this, TRUE, TRUE, wxEmptyString, wxEmptyString, wxEmptyString, 
+ 						wxT("file:../../../website/script3.xml"));
 }
 
 

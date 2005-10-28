@@ -13,7 +13,7 @@
 // declarations
 // ============================================================================
 
-#define VERSION				wxT("1.0.0")
+#define VERSION				wxT("2.0.3")
 #define APP_NAME			wxT("wxWebUpdate SIMPLE sample")
 
 void wxUpdateWebUpdaterIfRequired();
@@ -278,6 +278,8 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 
     wxMessageBox(msg, wxT("About ") + wxGetApp().GetAppName(), wxOK | wxICON_INFORMATION, this);
 }
+
+
 
 
 

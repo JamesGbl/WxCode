@@ -16,6 +16,8 @@
 #define VERSION				wxT("2.0.3")
 #define APP_NAME			wxT("wxWebUpdate SIMPLE sample")
 
+void wxUpdateWebUpdaterIfRequired();
+
 // ----------------------------------------------------------------------------
 // headers
 // ----------------------------------------------------------------------------
@@ -132,6 +134,8 @@ IMPLEMENT_APP(MyApp)
 // wxT('Main program') equivalent: the program execution "starts" here
 bool MyApp::OnInit()
 {
+	wxUpdateWebUpdaterIfRequired();
+
     // create the main application window
     SetAppName(APP_NAME);
     MyFrame *frame = new MyFrame(GetAppName());
@@ -277,29 +281,67 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 
 
 
+
+
 /* 
    THESE ARE THE ONLY REAL MODIFICATION REQUIRED TO INTEGRATE WEBUPDATER
    IN YOUR PROGRAM USING IT IN THE SIMPLEST WAY (SEE WEBUPDATER DOCS)
 */
+#include "wx/filename.h"
 
-void wxUpdateAndExit(wxFrame *caller, const wxString &xrc, const wxString &xml)
+// call this in the event handler used to show the wxWebUpdateDlg
+void wxUpdateAndExit(wxFrame *caller, 
+					bool savelog = FALSE,
+     				bool restart = TRUE,
+     				const wxString &xrc = wxEmptyString, 	// --xrc option won't be given using wxEmptyString
+         			const wxString &res = wxEmptyString,	// --res option won't be given using wxEmptyString
+            		const wxString &xml = wxEmptyString,	// --xml option won't be given using wxEmptyString
+         			const wxString &uri = wxEmptyString)	// --uri option won't be given using wxEmptyString
 {
-#ifdef __WXMSW__	
-	wxExecute(wxT("webupdater.exe /s /r /x ") + xrc + wxT(" /l ") + xml);	
-	caller->Close(true);
+	wxString opts;
+ 
+ 	if (savelog)
+  		opts += wxT(" --savelog");
+    if (restart)
+    	opts += wxT(" --restart");
+    if (!xrc.IsEmpty())
+     	opts += wxT(" --xrc=") + xrc;
+    if (!res.IsEmpty())
+    	opts += wxT(" --res=") + res;
+ 	if (!xml.IsEmpty())
+  		opts += wxT(" --xml=") + xml;
+ 	if (!uri.IsEmpty())
+  		opts += wxT(" --uri=") + uri;
+
+#ifdef __WXMSW__
+	wxExecute(wxT("webupdater.exe") + opts);
 #else	
-	wxExecute(wxT("./webupdater --savelog --restart --xrc=") + xrc + wxT(" --xml=") + xml);
-	caller->Close(true);
+	wxExecute(wxT("./webupdater") + opts);
 #endif
+	caller->Close(true);
+}
+
+// to be called in your wxApp::OnInit()
+void wxUpdateWebUpdaterIfRequired()
+{
+#ifdef __WXMSW__
+	wxString newupdater = wxT("_webupdater.exe"), oldupdater = wxT("webupdater.exe");
+#else
+	wxString newupdater = wxT("_webupdater"), oldupdater = wxT("webupdater");	
+#endif
+	if (wxFileName::FileExists(newupdater)) {
+		wxRemoveFile(oldupdater);
+		wxRenameFile(newupdater, oldupdater);
+	}
 }
 
 void MyFrame::OnUpdateCheckSimple(wxCommandEvent &)
 {
-	wxUpdateAndExit(this, wxT("webupdatedlg.xrc"), wxT("simple.xml"));
+	wxUpdateAndExit(this, TRUE, TRUE, wxT("webupdatedlg.xrc"), wxT("wxWebUpdateSimpleDlg"));
 }
 
 void MyFrame::OnUpdateCheckAdv(wxCommandEvent &)
 {
-	wxUpdateAndExit(this, wxT("webupdatedlg.xrc"), wxT("adv.xml"));
+	wxUpdateAndExit(this, TRUE, TRUE, wxT("webupdatedlg.xrc"), wxT("wxWebUpdateDlg"));
 }
 
