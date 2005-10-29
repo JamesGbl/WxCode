@@ -46,14 +46,15 @@ protected:
   
 public:
   // Base class administration functions
-	void SetSpellCheckUserInterface(wxSpellCheckUserInterface* pDlg);
+  void SetSpellCheckUserInterface(wxSpellCheckUserInterface* pDlg);
+  wxSpellCheckUserInterface* GetSpellCheckUserInterface() const { return m_pSpellUserInterface; }
 
 	// Spell Checker functions
 
   // Spell Checker Engine Administration functions
   virtual wxString GetSpellCheckEngineName() = 0;
-	virtual int InitializeSpellCheckEngine() = 0;
-	virtual int UninitializeSpellCheckEngine() = 0;
+  virtual int InitializeSpellCheckEngine() = 0;
+  virtual int UninitializeSpellCheckEngine() = 0;
   virtual int SetOption(SpellCheckEngineOption& Option) = 0;
   virtual bool AddOptionToMap(SpellCheckEngineOption& option);
   virtual void ApplyOptions();  // Go through all the options in the options map and apply them to the spell check engine
