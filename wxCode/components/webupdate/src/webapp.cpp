@@ -18,13 +18,13 @@
 #define wxWU_LOCAL_XMLSCRIPT            wxT("local.xml")
 
 //! The local XRC file which is loaded if no --xrc option is specified.
-#define wxWU_LOCAL_XRC              wxT("webupdatedlg.xrc")
+#define wxWU_LOCAL_XRC                  wxT("webupdatedlg.xrc")
 
 //! The name of the XRC resource which is loaded if no --res option is specified.
 #define wxWU_XRC_RESOURCE               wxT("wxWebUpdateDlg")
 
 //! The name of our default log file.
-#define wxWU_LOGFILENAME            wxT("webupdatelog.txt")
+#define wxWU_LOGFILENAME                wxT("webupdatelog.txt")
 
 
 #ifdef MODDED
@@ -91,9 +91,9 @@
 // ----------------------------------------------------------------------------
 
 #define OPTION_XMLSCRIPT        wxT("l")
-#define OPTION_XRC                  wxT("x")
+#define OPTION_XRC              wxT("x")
 #define OPTION_RESOURCE         wxT("e")
-#define OPTION_URI                  wxT("u")
+#define OPTION_URI              wxT("u")
 #define OPTION_ASKURI           wxT("a")
 
 #define SWITCH_RESTART          wxT("r")
@@ -169,6 +169,8 @@ public:
         if (m_bLoggerInstalled)
             return;     // already installed !
 
+        wxLogDebug(wxT("CreateFileLogger - creating the logfile [") +
+                wxString(wxWU_LOGFILENAME) + wxT("]"));
         m_log->WriteAllMsgAlsoToFile(wxWU_LOGFILENAME);
         wxLogNewSection(wxT(" LOG OF WEBUPDATER ") +
                         wxWebUpdateInstaller::Get()->GetVersion() +
@@ -435,8 +437,8 @@ bool WebUpdaterApp::OnPreInit()
     // do not proceed if in this stage we are still missing some required info
     if (!m_script.IsComplete()) {
         wxWebUpdateInstaller::Get()->ShowErrorMsg(
-                    wxT("The WebUpdater configuration file is corrupted; the local XML script\n")
-                    wxT("is missing some required info. Please correct the local XML script or\n")
+                    wxT("The WebUpdater configuration file is corrupted; the local XML script ")
+                    wxT("is missing some required info. Please correct the local XML script or ")
                     wxT("give these info to WebUpdater through the command line options."));
         return FALSE;
     }

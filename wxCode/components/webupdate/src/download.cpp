@@ -92,10 +92,10 @@ public:
     wxFileOffset TellI() const
         { wxASSERT(m_pStream); return m_pStream->TellI(); }
 
+    bool IsOk() const
+        { if (m_pStream == NULL) return FALSE; return m_pStream->IsOk(); }
     size_t GetSize() const
         { wxASSERT(m_pStream); return m_pStream->GetSize(); }
-    bool IsOk() const
-        { wxASSERT(m_pStream); return (m_pStream != NULL && m_pStream->IsOk()); }
     bool Eof() const
         { wxASSERT(m_pStream); return m_pStream->Eof(); }
 
@@ -138,10 +138,10 @@ public:
     wxFileOffset TellI() const
         { wxASSERT(m_pStream); return m_pStream->TellI(); }
 
+    bool IsOk() const
+        { if (m_pStream == NULL) return FALSE; return m_pStream->IsOk(); }
     size_t GetSize() const
         { wxASSERT(m_pStream); return m_pStream->GetSize(); }
-    bool IsOk() const
-        { wxASSERT(m_pStream); return (m_pStream != NULL && m_pStream->IsOk()); }
     bool Eof() const
         { wxASSERT(m_pStream); return m_pStream->Eof(); }
 
