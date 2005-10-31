@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.86 2005-10-06 19:32:01 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.87 2005-10-31 17:17:24 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -2952,18 +2952,20 @@ void wxTreeListMainWindow::PaintItem (wxTreeListItem *item, wxDC& dc) {
 
         // honor text alignment
         wxString text = item->GetText(i);
+        int w = 0;
         switch ( m_owner->GetHeaderWindow()->GetColumn(i).GetAlignment() ) {
         case wxALIGN_LEFT:
             // nothing to do, already left aligned
             break;
         case wxALIGN_RIGHT:
             dc.GetTextExtent (text, &text_w, NULL);
-            x = x_colstart + col_w - (image_w + text_w + MARGIN);
+            w = col_w - (image_w + text_w + MARGIN);
+            x += (w > 0)? w: 0;
             break;
         case wxALIGN_CENTER:
             dc.GetTextExtent(text, &text_w, NULL);
-            int w = col_w - image_w - text_w;
-            x = x_colstart + (w > 0)? w: 0;
+            w = (col_w - (image_w + text_w + MARGIN))/2;
+            x += (w > 0)? w: 0;
             break;
         }
         int text_x = x + image_w;

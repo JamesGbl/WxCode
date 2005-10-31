@@ -3,7 +3,7 @@
 // Purpose:     treelisttest application
 // Maintainer:  Otto Wyss
 // Created:     2004-12-21
-// RCS-ID:      $Id: treelisttest.cpp,v 1.19 2005-10-31 16:39:40 wyo Exp $
+// RCS-ID:      $Id: treelisttest.cpp,v 1.20 2005-10-31 17:17:02 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -455,6 +455,7 @@ AppFrame::AppFrame (const wxString &title)
     m_treelist->SetColumnEditable (0, true);
     m_treelist->AddColumn (_T("Second"), wxMax (sz.x - k, 100), wxALIGN_LEFT);
     m_treelist->SetColumnEditable (1, true);
+    m_treelist->SetColumnAlignment (1, wxALIGN_LEFT);
     wxTreeItemId root = m_treelist->AddRoot (_T("Root"));
     m_treelist->SetItemText (root, 1, wxString::Format (_T("Root, text 0")));
     wxTreeItemId parent;
