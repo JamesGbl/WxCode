@@ -3,7 +3,7 @@
 // Purpose:     treelisttest application
 // Maintainer:  Otto Wyss
 // Created:     2004-12-21
-// RCS-ID:      $Id: treelisttest.cpp,v 1.17 2005-10-07 18:36:58 wyo Exp $
+// RCS-ID:      $Id: treelisttest.cpp,v 1.18 2005-10-31 16:22:22 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -116,6 +116,7 @@ enum {
     myID_LISTSELECTED,
     myID_SETINDENT,
     myID_SETIMAGESIZE,
+    myID_VETOEVENT,
 };
 
 
@@ -213,6 +214,8 @@ public:
     void OnListSelected (wxCommandEvent &event);
     void OnSetIndent (wxCommandEvent &event);
     void OnSetImageSize (wxCommandEvent &event);
+    void OnVetoEvent (wxCommandEvent &event);
+    void OnVetoingEvent (wxTreeEvent &event);
 
 private:
     //! creates the application menu bar
@@ -222,6 +225,7 @@ private:
     wxTreeListCtrl* m_treelist;
 
     int m_imgsize;
+    bool m_vetoEvent;
 
     void CheckStyle (int id, long flag);
     void ToggleStyle (int id, long flag);
@@ -393,8 +397,8 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
     EVT_MENU (myID_SHOWIMAGES,         AppFrame::OnShowImages)
     EVT_MENU (myID_ITEMEDIT,           AppFrame::OnItemEditMode)
     EVT_MENU (myID_ITEMVIRTUAL,        AppFrame::OnItemVirtualMode)
-    EVT_MENU (myID_SELECTMULTIPLE,      AppFrame::OnSelectMultiple)
-    EVT_MENU (myID_SELECTEXTENDED,      AppFrame::OnSelectExtended)
+    EVT_MENU (myID_SELECTMULTIPLE,     AppFrame::OnSelectMultiple)
+    EVT_MENU (myID_SELECTEXTENDED,     AppFrame::OnSelectExtended)
     // extra events
     EVT_MENU (myID_GETCOUNT,           AppFrame::OnGetCount)
     EVT_MENU (myID_GETCHILDREN,        AppFrame::OnGetChildren)
@@ -403,8 +407,15 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
     EVT_MENU (myID_LISTSELECTED,       AppFrame::OnListSelected)
     EVT_MENU (myID_SETINDENT,          AppFrame::OnSetIndent)
     EVT_MENU (myID_SETIMAGESIZE,       AppFrame::OnSetImageSize)
+    EVT_MENU (myID_VETOEVENT,          AppFrame::OnVetoEvent)
     // help events
     EVT_MENU (wxID_ABOUT,              AppFrame::OnAbout)
+    // tree
+    EVT_TREE_BEGIN_LABEL_EDIT (-1,     AppFrame::OnVetoingEvent)
+    EVT_TREE_END_LABEL_EDIT (-1,       AppFrame::OnVetoingEvent)
+    EVT_TREE_ITEM_COLLAPSING (-1,      AppFrame::OnVetoingEvent)
+    EVT_TREE_ITEM_EXPANDING (-1,       AppFrame::OnVetoingEvent)
+    EVT_TREE_SEL_CHANGING (-1,         AppFrame::OnVetoingEvent)
 END_EVENT_TABLE ()
 
 AppFrame::AppFrame (const wxString &title)
@@ -419,6 +430,7 @@ AppFrame::AppFrame (const wxString &title)
 
     // set image size
     m_imgsize = -1;
+    m_vetoEvent = false;
 
     // create tree
     m_treelist = new wxTreeListCtrl (this);
@@ -736,6 +748,15 @@ void AppFrame::OnSetImageSize (wxCommandEvent &WXUNUSED(event)) {
     }
 }
 
+void AppFrame::OnVetoEvent (wxCommandEvent &event) {
+    m_vetoEvent = !m_vetoEvent;
+    GetMenuBar()->Check (event.GetId(), m_vetoEvent);
+}
+
+void AppFrame::OnVetoingEvent (wxTreeEvent &event) {
+    if (m_vetoEvent) event.Veto();
+}
+
 // private functions
 void AppFrame::CreateMenu () {
 
@@ -789,7 +810,7 @@ void AppFrame::CreateMenu () {
     menuView->AppendSeparator();
     menuView->Append (myID_SETATTRIBUTE, _("Set &attribute"), menuAttr);
 
-    // view menu
+    // extra menu
     wxMenu *menuExtra = new wxMenu;
     menuExtra->Append (myID_GETCOUNT, _("Get total count"));
     menuExtra->Append (myID_GETCHILDREN, _("Get children count"));
@@ -800,6 +821,8 @@ void AppFrame::CreateMenu () {
     menuExtra->AppendSeparator();
     menuExtra->Append (myID_SETINDENT, _("Set &Indent to ..."));
     menuExtra->Append (myID_SETIMAGESIZE, _("Set image si&ze..."));
+    menuExtra->AppendSeparator();
+    menuExtra->AppendCheckItem (myID_VETOEVENT, _("&Veto event"));
 
     // Help menu
     wxMenu *menuHelp = new wxMenu;
