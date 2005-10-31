@@ -3,7 +3,7 @@
 // Purpose:     treelisttest application
 // Maintainer:  Otto Wyss
 // Created:     2004-12-21
-// RCS-ID:      $Id: treelisttest.cpp,v 1.18 2005-10-31 16:22:22 wyo Exp $
+// RCS-ID:      $Id: treelisttest.cpp,v 1.19 2005-10-31 16:39:40 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -28,6 +28,7 @@
 //! wxWidgets headers
 #include <wx/colordlg.h> // user colour dialog
 #include <wx/fontdlg.h>  // user font dialog
+#include <wx/numdlg.h>   // user number dialog
 #include <wx/textdlg.h>  // text input dialog
 #include <wx/image.h>    // image support
 #include <wx/imaglist.h> // image list support
