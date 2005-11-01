@@ -3,7 +3,7 @@
 // Purpose:     treelisttest application
 // Maintainer:  Otto Wyss
 // Created:     2004-12-21
-// RCS-ID:      $Id: treelisttest.cpp,v 1.20 2005-10-31 17:17:02 wyo Exp $
+// RCS-ID:      $Id: treelisttest.cpp,v 1.21 2005-11-01 19:20:51 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -95,6 +95,10 @@ enum {
     myID_ATTRBOLDFONT,
     myID_ATTRFONTSTYLE,
     myID_ATTRITEMIMAGE,
+    myID_SETALIGNMENT,
+    myID_SETALIGNLEFT,
+    myID_SETALIGNCENTER,
+    myID_SETALIGNRIGHT,
     myID_BUTTONSNORMAL,
     myID_BUTTONSTWISTER,
     myID_BUTTONSIMAGE,
@@ -194,6 +198,7 @@ public:
     void OnBoldFont (wxCommandEvent &event);
     void OnFontStyle (wxCommandEvent &event);
     void OnItemImage (wxCommandEvent &event);
+    void OnAlignment (wxCommandEvent &event);
     void OnButtonsNormals (wxCommandEvent &event);
     void OnButtonsTwister (wxCommandEvent &event);
     void OnButtonsImage (wxCommandEvent &event);
@@ -225,6 +230,7 @@ private:
     // tree window
     wxTreeListCtrl* m_treelist;
 
+    int m_alignment;
     int m_imgsize;
     bool m_vetoEvent;
 
@@ -386,6 +392,9 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
     EVT_MENU (myID_ATTRBOLDFONT,       AppFrame::OnBoldFont)
     EVT_MENU (myID_ATTRFONTSTYLE,      AppFrame::OnFontStyle)
     EVT_MENU (myID_ATTRITEMIMAGE,      AppFrame::OnItemImage)
+    EVT_MENU (myID_SETALIGNLEFT,       AppFrame::OnAlignment)
+    EVT_MENU (myID_SETALIGNCENTER,     AppFrame::OnAlignment)
+    EVT_MENU (myID_SETALIGNRIGHT,      AppFrame::OnAlignment)
     EVT_MENU (myID_BUTTONSNORMAL,      AppFrame::OnButtonsNormals)
     EVT_MENU (myID_BUTTONSTWISTER,     AppFrame::OnButtonsTwister)
     EVT_MENU (myID_BUTTONSIMAGE,       AppFrame::OnButtonsImage)
@@ -430,6 +439,7 @@ AppFrame::AppFrame (const wxString &title)
     CreateMenu ();
 
     // set image size
+    m_alignment = wxALIGN_LEFT;
     m_imgsize = -1;
     m_vetoEvent = false;
 
@@ -588,6 +598,15 @@ void AppFrame::OnItemImage (wxCommandEvent &WXUNUSED(event)) {
                                    _T("Get number"), m_treelist->GetItemImage (c));
     if (num < 0) return;
     m_treelist->SetItemImage (c, wxTreeItemIcon_Normal, num);
+}
+
+void AppFrame::OnAlignment (wxCommandEvent &event) {
+    switch (event.GetId()) {
+        case myID_SETALIGNLEFT:   {m_alignment = wxALIGN_LEFT; break;}
+        case myID_SETALIGNCENTER: {m_alignment = wxALIGN_CENTER; break;}
+        case myID_SETALIGNRIGHT:  {m_alignment = wxALIGN_RIGHT; break;}
+    }
+    m_treelist->SetColumnAlignment (1, m_alignment);
 }
 
 void AppFrame::OnButtonsNormals (wxCommandEvent &event) {
@@ -783,13 +802,19 @@ void AppFrame::CreateMenu () {
     menuEdit->Append (myID_FIND, _T("&Find item"), menuFind);
     menuEdit->Append (myID_GOTO, _T("&Goto item ..."));
 
-    // Import submenu
+    // Attribute submenu
     wxMenu *menuAttr = new wxMenu;
     menuAttr->Append (myID_ATTRTEXTCOLOUR, _("Text colour ..."));
     menuAttr->Append (myID_ATTRBACKCOLOUR, _("Background ..."));
     menuAttr->AppendCheckItem (myID_ATTRBOLDFONT, _("Bold font"));
     menuAttr->Append (myID_ATTRFONTSTYLE, _("Font style ..."));
     menuAttr->Append (myID_ATTRITEMIMAGE, _("Item image ..."));
+
+    // Alignment submenu
+    wxMenu *menuAlign = new wxMenu;
+    menuAlign->Append (myID_SETALIGNLEFT, _("&Left"));
+    menuAlign->Append (myID_SETALIGNCENTER, _("&Center"));
+    menuAlign->Append (myID_SETALIGNRIGHT, _("&Right"));
 
     // view menu
     wxMenu *menuView = new wxMenu;
@@ -811,6 +836,7 @@ void AppFrame::CreateMenu () {
     menuView->AppendCheckItem (myID_SELECTEXTENDED, _("Toggle &select extended"));
     menuView->AppendSeparator();
     menuView->Append (myID_SETATTRIBUTE, _("Set &attribute"), menuAttr);
+    menuView->Append (myID_SETALIGNMENT, _("Align &column"), menuAlign);
 
     // extra menu
     wxMenu *menuExtra = new wxMenu;
