@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.87 2005-10-31 17:17:24 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.88 2005-11-03 19:23:17 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -2939,7 +2939,7 @@ void wxTreeListMainWindow::PaintItem (wxTreeListItem *item, wxDC& dc) {
         if(i == GetMainColumn()) {
             x = item->GetX() + MARGIN;
             if (HasButtons()) {
-                x += (m_btnWidth-m_btnWidth2);
+                x += (m_btnWidth-m_btnWidth2) + LINEATROOT;
             }else{
                 x -= m_indent/2;
             }
