@@ -990,6 +990,7 @@ wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdow
         if (child->GetName() == wxT("uri")) {
 
             // extract filename for this download
+            wxLogDebug(wxT("wxWebUpdateXMLScript::GetDownload - the URI for this download is [") + GetNodeContent(child) + wxT("]"));
             uri = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(GetNodeContent(child));
 
             // the substitution process could have put some '\' (on win32) in the URI var... fix them
@@ -997,6 +998,7 @@ wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdow
 
             // be sure that our "uri" var contains a valid URI...
             uri = wxURI(uri).BuildURI();
+            wxLogDebug(wxT("wxWebUpdateXMLScript::GetDownload - the expanded URI for this download is [") + uri + wxT("]"));
 
             // this keyword will be removed when exiting from this XML node
             list[wxT("thisfile")] = list[wxT("downloaddir")] +
@@ -1045,6 +1047,7 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) c
     wxString packagename = GetPackageID(package);
 
     // init the return value
+    wxLogAdvMsg(wxT("wxWebUpdateXMLScript::GetPackage - parsing package [") + packagename + wxT("]"));
     wxWebUpdatePackage *ret = new wxWebUpdatePackage(packagename);
 
     // add to the current keyword list the current ID
