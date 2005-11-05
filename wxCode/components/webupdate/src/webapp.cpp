@@ -450,7 +450,7 @@ bool WebUpdaterApp::OnPreInit()
     wxASSERT(m_script.IsOk());
 
     // load our XRC file
-    wxLogUsrMsg(wxT("WebUpdaterApp::OnInit - loading the XRC file ") + xrc);
+    wxLogUsrMsg(wxT("WebUpdaterApp::OnInit - loading the XRC file [") + m_script.GetXRC() + wxT("]"));
     if (!wxXmlResource::Get()->Load(m_script.GetXRC())) {
         wxWebUpdateInstaller::Get()->ShowErrorMsg(
                     wxT("The WebUpdater configuration file is corrupted; the file:\n\n\t") +
@@ -494,6 +494,8 @@ bool WebUpdaterApp::OnInit()
 #if 1
     wxLogUsrMsg(wxT("WebUpdaterApp::OnInit - creating the WebUpdaterDlg"));
     m_dlg = new WebUpdaterDlg(m_script);
+    if (!m_dlg->IsOk())
+        return FALSE;       // failure
     SetTopWindow(m_dlg);
     SetExitOnFrameDelete(TRUE);
 #else

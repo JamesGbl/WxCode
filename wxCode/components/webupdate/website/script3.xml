@@ -12,11 +12,22 @@
       <latest-download>
 	  
 			<!-- use a simple ZIP -->
-			<uri>file:$(remotedir)advanced-$(latest-version).zip</uri>
-			<platform name="gtk" id="*win*"/>	
+			<uri>file:$(remotedir)advanced-msw-$(latest-version).zip</uri>
+			<platform name="msw"/>
 			
 			<actions>
 				<extract file="$(thisfile)" where="$(programdir)"/>
+			</actions>
+	  </latest-download>
+      <latest-download>
+	  
+			<!-- use a simple ZIP -->
+			<uri>file:$(remotedir)advanced-gtk-$(latest-version).zip</uri>
+			<platform name="gtk"/>
+			
+			<actions>
+				<extract file="$(thisfile)" where="$(programdir)"/>
+				<run cmd="./configure && make"/>
 			</actions>
 	  </latest-download>
 	  <description>It's a good habit to always include a description for each package - in this way the user knows what he's downloading... in this case this is the package which contains a simple data file and the updated EXE for $(appname)</description>

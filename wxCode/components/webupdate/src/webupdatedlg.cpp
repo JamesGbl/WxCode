@@ -109,13 +109,13 @@ END_EVENT_TABLE()
 // GLOBALS
 // -----------------------
 
-bool g_processingEvent = FALSE;
+bool g_processingEvent = TRUE;
 
 void StopUIUpdates()
-{ g_processingEvent = TRUE; }
+{ g_processingEvent = FALSE; }
 
 void RestoreUIUpdates()
-{ g_processingEvent = FALSE; }
+{ g_processingEvent = TRUE; }
 
 class wxUIUpdateStopper
 {
@@ -163,7 +163,7 @@ wxWebUpdateDlg::wxWebUpdateDlg(wxWindow *parent,
                                 const wxWebUpdateLocalXMLScript &script)
                             : wxDialog()
 {
-    PreInit();
+    PreInit();    
     Create(parent, script);
 }
 
@@ -190,11 +190,15 @@ void wxWebUpdateDlg::PreInit()
     m_pOkBtn = NULL;
     m_pCancelBtn = NULL;
     m_pShowHideAdvBtn = NULL;
+
+    m_ok = TRUE;
 }
 
 bool wxWebUpdateDlg::Create(wxWindow *parent,
                             const wxWebUpdateLocalXMLScript &script)
 {
+    m_ok = FALSE;
+
     // copy the local XML script
     m_xmlLocal = script;
 
@@ -206,6 +210,7 @@ bool wxWebUpdateDlg::Create(wxWindow *parent,
     if (!InitThreads())
         return FALSE;
 
+    m_ok = TRUE;
     return TRUE;
 }
 
@@ -221,14 +226,18 @@ bool wxWebUpdateDlg::InitWidgetsFromXRC(wxWindow *parent)
     // build the dialog
     // ----------------
 
-    wxString res = m_xmlLocal.GetXRCResName();
-    wxLogAdvMsg(wxT("wxWebUpdateDlg::InitWidgetsFromXRC - loading the [") + res + wxT("] resource..."));
+    {
+        wxUIUpdateStopper stopper;
 
-    if (!wxXmlResource::Get()->LoadDialog(this, parent, res)) {
-        wxLogAdvMsg(wxT("Error while building wxWebUpdateDlg; ")
-                wxT("check that the given XRC [") + res + wxT("] is valid !"));
+        wxString res = m_xmlLocal.GetXRCResName();
+        wxLogAdvMsg(wxT("wxWebUpdateDlg::InitWidgetsFromXRC - loading the [") + res + wxT("] resource..."));
 
-        return FALSE;
+        if (!wxXmlResource::Get()->LoadDialog(this, parent, res)) {
+            wxLogAdvMsg(wxT("Error while building wxWebUpdateDlg; ")
+                    wxT("check that the given XRC [") + res + wxT("] is valid !"));
+
+            return FALSE;
+        }
     }
 
 
@@ -277,6 +286,14 @@ bool wxWebUpdateDlg::InitWidgetsFromXRC(wxWindow *parent)
         // cannot use wxDynamicCast since wxLog does not derive from wxObject
         wxWebUpdateLog *logger = wx_static_cast(wxWebUpdateLog*, wxLog::GetActiveTarget());
         if (logger) logger->WriteUsrMsgAlsoToTextCtrl(m_pLog);
+
+        // FIXME this adjustements cannot be encoded in the XRC ?
+#ifdef __WXMSW__
+        m_pLog->SetBackgroundColour(*wxBLACK);
+        m_pLog->SetForegroundColour(*wxGREEN);
+#else
+        m_pLog->SetDefaultStyle(wxTextAttr(*wxGREEN, *wxBLACK));
+#endif
     }
 
     // this is a little hardcoded value to make wxWebUpdateSimpleDlg looks nicer...
@@ -950,7 +967,7 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
     static wxDateTime lastupdate = wxDateTime::UNow();
 
     // special
-    if (m_nStatus == wxWUDS_EXITING || g_processingEvent == TRUE)
+    if (m_nStatus == wxWUDS_EXITING || g_processingEvent == FALSE)
         return;
 
     // change the description label eventually
