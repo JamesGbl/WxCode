@@ -11,14 +11,16 @@
 function CreateUpdate { 
     cd $1/v$2
 	zip -9 ../../$1-$2.zip $1.exe *.txt -x CVS
-	tar -c -z --exclude=CVS -f ../../$1-$2.tar.gz $1.exe *.txt
+	
+	# tar are not supported yet !
+	####tar -c -z --exclude=CVS -f ../../$1-$2.tar.gz $1.exe *.txt
 	cd ../..
 }
 
 # remove old & create new packages
 rm -f *.zip *.tar.gz
-CreateUpdate simple 2.0.3
-CreateUpdate advanced 1.5.0
+CreateUpdate simple-msw 2.0.3
+CreateUpdate advanced-msw 1.5.0
 
 # for the advanced sample, create also the "addon" packages
 cd advanced/v1.5.0/addon1 && zip -9 ../../../addon1-1.5.0.zip * -i *.txt && cd ../../..

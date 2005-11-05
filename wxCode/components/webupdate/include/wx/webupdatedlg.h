@@ -269,6 +269,9 @@ protected:		// pointers to our controls
 	wxTextCtrl *m_pDescription, *m_pLog;
 	wxCheckBox *m_pShowOnlyOOD;
 
+    // used to check if inside wxWebUpdateDlg everything went good
+    bool m_ok;
+
 	// our listctrl
 	wxWebUpdateListCtrl *m_pUpdatesList;
 
@@ -408,6 +411,10 @@ public:
 	//! Creates the dialog.
 	bool Create(wxWindow *parent, 
 				const wxWebUpdateLocalXMLScript &script);
+
+    //! Returns TRUE if in the creation process everything was successful.
+    bool IsOk() const
+        { return m_ok; }
 
 	virtual ~wxWebUpdateDlg() 
 		{ if (m_dThread) delete m_dThread;

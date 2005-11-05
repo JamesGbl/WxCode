@@ -80,7 +80,8 @@ enum
 
 				// these were added by me
 	Minimal_UpdateCheckSimple,
-	Minimal_UpdateCheckWithDlg,
+	Minimal_UpdateCheckAdv,
+    Minimal_UpdateCheckLog
 };
 
 // Define a new frame type: this is going to be our main frame
@@ -97,6 +98,7 @@ public:
 
 	void OnUpdateCheckSimple(wxCommandEvent& event);
 	void OnUpdateCheckAdv(wxCommandEvent& event);
+	void OnUpdateCheckLog(wxCommandEvent& event);
 
 private:
     // any class wishing to process wxWindows events must use this macro
@@ -115,7 +117,8 @@ BEGIN_EVENT_TABLE(MyFrame, wxFrame)
     EVT_MENU(Minimal_About, MyFrame::OnAbout)
 
     EVT_MENU(Minimal_UpdateCheckSimple, MyFrame::OnUpdateCheckSimple)
-    EVT_MENU(Minimal_UpdateCheckWithDlg, MyFrame::OnUpdateCheckAdv)
+    EVT_MENU(Minimal_UpdateCheckAdv, MyFrame::OnUpdateCheckAdv)
+    EVT_MENU(Minimal_UpdateCheckLog, MyFrame::OnUpdateCheckLog)
 END_EVENT_TABLE()
 
 // Create a new application object: this macro will allow wxWindows to create
@@ -231,7 +234,9 @@ MyFrame::MyFrame(const wxString& title)
     wxMenu *menuFile = new wxMenu;
     menuFile->Append(Minimal_UpdateCheckSimple, _T("Check for updates (simple)"), 
             _T("Checks for updates and eventually downloads the update version..."));	
-    menuFile->Append(Minimal_UpdateCheckWithDlg, _T("Check for updates (advanced)"), 
+    menuFile->Append(Minimal_UpdateCheckAdv, _T("Check for updates (advanced)"), 
+            _T("Checks for updates and eventually downloads the update version..."));	
+    menuFile->Append(Minimal_UpdateCheckLog, _T("Check for updates (with log window)"), 
             _T("Checks for updates and eventually downloads the update version..."));	
     menuFile->Append(Minimal_Quit, _T("E&xit\tAlt-X"), _T("Quit this program"));	
     
@@ -343,5 +348,10 @@ void MyFrame::OnUpdateCheckSimple(wxCommandEvent &)
 void MyFrame::OnUpdateCheckAdv(wxCommandEvent &)
 {
 	wxUpdateAndExit(this, TRUE, TRUE, wxT("webupdatedlg.xrc"), wxT("wxWebUpdateDlg"));
+}
+
+void MyFrame::OnUpdateCheckLog(wxCommandEvent &)
+{
+	wxUpdateAndExit(this, TRUE, TRUE, wxT("webupdatedlg.xrc"), wxT("wxWebUpdateLogDlg"));
 }
 
