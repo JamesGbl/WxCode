@@ -161,11 +161,6 @@ public:
 protected:
 
     bool InitStream(const wxString &url) {
-        if (m_url.GetError() != wxURL_NOERR) {
-            m_lasterror = wxSTREAM_READ_ERROR;
-            return FALSE;
-        }
-
         m_http.SetTimeout(30);      // 30 sec are much better rather than 10 min !!!
         m_pStream = m_http.GetInputStream(url);
         Synch();
