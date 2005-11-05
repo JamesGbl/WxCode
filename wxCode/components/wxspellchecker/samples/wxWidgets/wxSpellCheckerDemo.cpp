@@ -411,6 +411,14 @@ void MyFrame::SetDefaultMySpellOptions()
     // Add custom dictionary entries
     m_pMySpellInterface->AddCustomMySpellDictionary(_("Michigan, USA"), _("en_US"));
 
+    // An alternative to using the "dictionary-path" and "language" options is to use the dict-file and affix-file options
+    //  and set the dictionary and affix file directory with these options.
+    // The "dict-file" and "affix-file" options go together and are mutually exclusive from using the "dictionary-path" and "language" options
+    //SpellCheckEngineOption DictionaryFileOption(_T("dict-file"), _T("Dictionary File"), wxFileName::GetCwd() + wxFILE_SEP_PATH + _T("en_US.dic"), SpellCheckEngineOption::FILE);
+    //m_pMySpellInterface->AddOptionToMap(DictionaryFileOption);
+    //SpellCheckEngineOption AffixFileOption(_T("affix-file"), _T("Affix File"), wxFileName::GetCwd() + wxFILE_SEP_PATH + _T("en_US.aff"), SpellCheckEngineOption::FILE);
+    //m_pMySpellInterface->AddOptionToMap(AffixFileOption);
+
     m_pMySpellInterface->ApplyOptions();
 
     // Set the personal dictionary file

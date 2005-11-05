@@ -62,27 +62,34 @@ int MySpellInterface::SetOption(SpellCheckEngineOption& Option)
   // First make sure that either the affix or dict file have changed
   if (Option.GetName() == _T("dictionary-path"))
   {
+    // Dictionary path and language are now invalid, so clear them out
+    m_Options.erase(_T("dict-file"));
+    m_Options.erase(_T("affix-file"));
+    
     m_strDictionaryPath = Option.GetValueAsString();
     PopulateDictionaryMap(&m_DictionaryLookupMap, m_strDictionaryPath);
-
-    //SpellCheckEngineOption LanguageOption(_T("language"), _T("Language"), GetSelectedLanguage());
-  
-    /*
-    StringToStringMap::iterator start = m_DictionaryLookupMap.begin();
-    StringToStringMap::iterator stop = m_DictionaryLookupMap.end();
-    while (start != stop)
-    {
-      LanguageOption.AddPossibleValue((*start).first);
-      start++;
-    }
-    */
-    //AddOptionToMap(LanguageOption);
-    
     //return true;  // Even though the option didn't change, it isn't an error, so return true
   }
   else if (Option.GetName() == _T("language"))
   {
+    m_Options.erase(_T("dict-file"));
+    m_Options.erase(_T("affix-file"));
+    
     //return true;  // Even though the option didn't change, it isn't an error, so return true
+  }
+  else if (Option.GetName() == _T("affix-file"))
+  {
+    // Dictionary path and language are now invalid, so clear them out
+    m_strDictionaryPath = _T("");
+    m_Options.erase(_T("dictionary-path"));
+    m_Options.erase(_T("language"));
+  }
+  else if (Option.GetName() == _T("dict-file"))
+  {
+    // Dictionary path and language are now invalid, so clear them out
+    m_strDictionaryPath = _T("");
+    m_Options.erase(_T("dictionary-path"));
+    m_Options.erase(_T("language"));
   }
   else
     return false; // We don't understand this option so return the error
@@ -334,14 +341,22 @@ wxString MySpellInterface::GetSelectedLanguage()
 
 wxString MySpellInterface::GetAffixFileName()
 {
-  wxString strLanguage = GetSelectedLanguage();
-  if (strLanguage != wxEmptyString)
+  OptionsMap::iterator it = m_Options.find(_T("affix-file"));
+  if (it != m_Options.end())
   {
-    return GetAffixFileName(strLanguage);
+    return it->second.GetValueAsString();
   }
   else
   {
-    return wxEmptyString;
+    wxString strLanguage = GetSelectedLanguage();
+    if (strLanguage != wxEmptyString)
+    {
+      return GetAffixFileName(strLanguage);
+    }
+    else
+    {
+      return wxEmptyString;
+    }
   }
 }
 
@@ -360,14 +375,22 @@ wxString MySpellInterface::GetAffixFileName(const wxString& strDictionaryName)
 
 wxString MySpellInterface::GetDictionaryFileName()
 {
-  wxString strLanguage = GetSelectedLanguage();
-  if (strLanguage != wxEmptyString)
+  OptionsMap::iterator it = m_Options.find(_T("dict-file"));
+  if (it != m_Options.end())
   {
-    return GetDictionaryFileName(strLanguage);
+    return it->second.GetValueAsString();
   }
   else
   {
-    return wxEmptyString;
+    wxString strLanguage = GetSelectedLanguage();
+    if (strLanguage != wxEmptyString)
+    {
+      return GetDictionaryFileName(strLanguage);
+    }
+    else
+    {
+      return wxEmptyString;
+    }
   }
 }
 
@@ -398,4 +421,9 @@ void MySpellInterface::OpenPersonalDictionary(const wxString& strPersonalDiction
 ///////////// Options /////////////////
 // "dictionary-path" - location of dictionary files
 // "language" - selected language
+//
+// - OR -
+//
+// "dict-file" - dictionary file
+// "affix-file" - affix file
 
