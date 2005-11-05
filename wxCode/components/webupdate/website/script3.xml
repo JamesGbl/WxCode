@@ -13,7 +13,7 @@
 	  
 			<!-- use a simple ZIP -->
 			<uri>file:$(remotedir)advanced-$(latest-version).zip</uri>
-			<platform name="msw"/>	
+			<platform name="gtk" id="*win*"/>	
 			
 			<actions>
 				<extract file="$(thisfile)" where="$(programdir)"/>

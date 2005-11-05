@@ -1,6 +1,6 @@
 <!-- 
    Name:        remote.dtd
-   Purpose:     a simple DTD to validate update script
+   Purpose:     a simple DTD to validate update scripts
    Version:     1.0
    Author:      Francesco Montorsi
    Created:     2005/06/24
@@ -180,6 +180,8 @@
 -->
 <!ELEMENT platform EMPTY>
 <!ATTLIST platform name (msw|gtk|mac|x11|motif|mgl|os2|any) "any">
+<!ATTLIST platform arch (32|64) "32">	<!-- 32 or 64 bit architecture ? -->
+<!ATTLIST platform id CDATA "*")>		<!-- a regexp matching the wxGetOsDescription() for the targeted platform -->
 
 
 
