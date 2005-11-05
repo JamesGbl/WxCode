@@ -44,19 +44,21 @@ WX_LIBS = @WX_LIBS@
 ### Variables: ###
 
 DESTDIR = 
-EXTMINIFRAME_LIB_CXXFLAGS = -I./include $(VAR) $(WX_CXXFLAGS) $(CPPFLAGS) \
-	$(CXXFLAGS)
+EXTMINIFRAME_LIB_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include $(VAR) \
+	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 EXTMINIFRAME_LIB_OBJECTS =  \
 	extminiframe_lib_minibtncmn.o \
 	extminiframe_lib_palettefrmcmn.o \
 	$(__PORT_SPECIFIC_SOURCES_OBJECTS)
-EXTMINIFRAME_DLL_CXXFLAGS = -I./include -DWXMAKINGDLL_WXEXTMINIFRAME $(VAR) \
-	$(PIC_FLAG) $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+EXTMINIFRAME_DLL_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include \
+	-DWXMAKINGDLL_WXEXTMINIFRAME $(VAR) $(PIC_FLAG) $(WX_CXXFLAGS) $(CPPFLAGS) \
+	$(CXXFLAGS)
 EXTMINIFRAME_DLL_OBJECTS =  \
 	extminiframe_dll_minibtncmn.o \
 	extminiframe_dll_palettefrmcmn.o \
 	$(__PORT_SPECIFIC_SOURCES_OBJECTS_1)
-MINIMAL_CXXFLAGS = -I./include $(VAR) $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include $(VAR) $(WX_CXXFLAGS) \
+	$(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	minimal_minimal.o \
 	$(__minimal___win32rc)
@@ -137,12 +139,14 @@ COND_USE_SOSYMLINKS_1___extminiframe_dll___so_symlinks_inst_cmd = rm -f \
 @COND_WX_PORT_X11@	extminiframe_dll_palettefrm.o
 @COND_PLATFORM_MAC_1@__minimal___mac_setfilecmd = \
 @COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL minimal$(EXEEXT)
+@COND_WX_SHARED_1@__WX_SHAREDDEFINE_p_5 = --define WXUSINGDLL
 COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd = $(NM) minimal$(EXEEXT) | if \
 	grep -q pmwin.763 ; then emxbind -ep minimal$(EXEEXT) ; fi
 @COND_PLATFORM_OS2_1@__minimal___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd)
 @COND_PLATFORM_WIN32_1@__minimal___win32rc = minimal_minimal_rc.o
 @COND_WX_PORT_GTK@__INSTALL_DEP_DEP = install-gtk-headers
 @COND_WX_PORT_X11@__INSTALL_DEP_DEP = install-x11-headers
+@COND_WX_SHARED_1@__WX_SHAREDDEFINE_p = -DWXUSINGDLL
 @COND_WX_PORT_GTK@VAR = `pkg-config --cflags gtk+-2.0`
 @COND_WX_PORT_X11@VAR = -I/usr/X11R6/include
 
@@ -263,7 +267,7 @@ install-wxheaders:
 @COND_WX_SHARED_0@	$(INSTALL_DATA) ./lib/$(LIBPREFIX)wxextminiframe$(LIBEXT) $(DESTDIR)$(libdir)
 
 @COND_WX_SHARED_1@./lib/$(DLLPREFIX)wxextminiframe$(__extminiframe_dll___targetsuf3): $(EXTMINIFRAME_DLL_OBJECTS)
-@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(EXTMINIFRAME_DLL_OBJECTS) $(LDFLAGS) -L./lib $(__extminiframe_dll___macinstnamecmd) $(__extminiframe_dll___importlib) $(__extminiframe_dll___soname_flags) $(__extminiframe_dll___macver)  $(WX_LIBS)
+@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(EXTMINIFRAME_DLL_OBJECTS) $(LDFLAGS)   -L./lib $(__extminiframe_dll___macinstnamecmd) $(__extminiframe_dll___importlib) $(__extminiframe_dll___soname_flags) $(__extminiframe_dll___macver)  $(WX_LIBS)
 @COND_WX_SHARED_1@	
 @COND_WX_SHARED_1@	$(__extminiframe_dll___so_symlinks_cmd)
 
@@ -274,7 +278,7 @@ install-wxheaders:
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__extminiframe_dll___so_symlinks_inst_cmd))
 
 ./sample/minimal$(EXEEXT): $(MINIMAL_OBJECTS) $(__minimal___win32rc) $(__extminiframe_lib___depname)
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) -L./lib $(LDFLAGS) -L./lib $(LDFLAGS_GUI)  $(WX_LIBS) -lwxextminiframe
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) -L./lib $(LDFLAGS)   -L./lib $(LDFLAGS_GUI)  -lwxextminiframe $(WX_LIBS)
 	
 	$(__minimal___mac_setfilecmd)
 	$(__minimal___os2_emxbindcmd)
@@ -333,7 +337,7 @@ minimal_minimal.o: $(srcdir)/./sample/minimal.cpp
 	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/./sample/minimal.cpp
 
 minimal_minimal_rc.o: $(srcdir)/../sample/minimal.rc
-	$(RESCOMP) -i$< -o$@  --include-dir ./include
+	$(RESCOMP) -i$< -o$@ $(__WX_SHAREDDEFINE_p_5) --include-dir ./include --include-dir ./sample
 
 
 # Include dependency info, if present:

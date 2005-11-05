@@ -237,6 +237,23 @@ docs:
 cleandocs: 
 	-if exist ..\docs\html then rmdir /S /Q ..\docs\html
 
+install: all install-wxheaders
+	copy /Y ..\lib\*wxextminiframe* $(WX_DIR)$(WXLIBPATH)
+	copy /Y ..\lib\*wxextminiframe* $(WX_DIR)$(WXLIBPATH)
+
+install-wxheaders: 
+	mkdir $(WX_DIR)/include/wx
+	cd .
+	copy /Y  ../include/wx/*.h $(WX_DIR)/include/wx
+
+uninstall: 
+	-if exist $(WX_DIR)\include\wx\minibtn.h \
+	$(WX_DIR)\include\wx\palettefrm.h \
+	$(WX_DIR)\include\wx\palettefrmdef.h then del /Q $(WX_DIR)\include\wx\minibtn.h \
+	$(WX_DIR)\include\wx\palettefrm.h \
+	$(WX_DIR)\include\wx\palettefrmdef.h
+	-if exist $(WX_DIR)$(WXLIBPATH)\*wxextminiframe* then del /Q $(WX_DIR)$(WXLIBPATH)\*wxextminiframe*
+
 ifeq ($(WX_SHARED),0)
 ..\lib\libwxextminiframe$(WXLIBPOSTFIX).a: $(EXTMINIFRAME_LIB_OBJECTS)
 	if exist $@ del $@
@@ -280,9 +297,9 @@ mingw\minimal_minimal.o: ./../sample/minimal.cpp
 	$(CXX) -c -o $@ $(MINIMAL_CXXFLAGS) $(CPPDEPS) $<
 
 mingw\minimal_minimal_rc.o: ./../sample/minimal.rc
-	windres --use-temp-file -i$< -o$@ $(__WX_SHAREDDEFINE_p_4) --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_4) $(__WXDEBUG_DEFINE_p_4) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ..\include
+	windres --use-temp-file -i$< -o$@ $(__WX_SHAREDDEFINE_p_4) --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_4) $(__WXDEBUG_DEFINE_p_4) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ..\include --include-dir ../sample
 
-.PHONY: all clean
+.PHONY: all clean install uninstall
 
 
 # Dependencies tracking:

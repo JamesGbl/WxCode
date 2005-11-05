@@ -96,6 +96,18 @@ dnl ### begin block 20_COND_WINDOWS_IMPLIB_1[palettefrm.bkl,wxextminiframe.bkl] 
         COND_WINDOWS_IMPLIB_1=""
     fi
     AC_SUBST(COND_WINDOWS_IMPLIB_1)
+dnl ### begin block 20_COND_WX_DEBUG_0[wxextminiframe.bkl] ###
+    COND_WX_DEBUG_0="#"
+    if test "x$WX_DEBUG" = "x0" ; then
+        COND_WX_DEBUG_0=""
+    fi
+    AC_SUBST(COND_WX_DEBUG_0)
+dnl ### begin block 20_COND_WX_DEBUG_1[wxextminiframe.bkl] ###
+    COND_WX_DEBUG_1="#"
+    if test "x$WX_DEBUG" = "x1" ; then
+        COND_WX_DEBUG_1=""
+    fi
+    AC_SUBST(COND_WX_DEBUG_1)
 dnl ### begin block 20_COND_WX_PORT_GTK[palettefrm.bkl,wxextminiframe.bkl] ###
     COND_WX_PORT_GTK="#"
     if test "x$WX_PORT" = "xgtk" ; then

@@ -128,19 +128,19 @@ WXLIBPOSTFIX = d
 WXLIBPOSTFIX = ud
 !endif
 !endif
-__WXLIBPATH_FILENAMES =
+WXLIBPATH =
 !ifeq WX_SHARED 0
-__WXLIBPATH_FILENAMES = \lib\wat_lib
+WXLIBPATH = \lib\wat_lib
 !endif
 !ifeq WX_SHARED 1
-__WXLIBPATH_FILENAMES = \lib\wat_dll
+WXLIBPATH = \lib\wat_dll
 !endif
 
 ### Variables: ###
 
 EXTMINIFRAME_LIB_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
-	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
+	-d__WXMSW__ -i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) &
 	-i=$(WX_DIR)\include -i=..\include $(CPPFLAGS) $(CXXFLAGS)
 EXTMINIFRAME_LIB_OBJECTS =  &
 	watcom\extminiframe_lib_minibtncmn.obj &
@@ -149,7 +149,7 @@ EXTMINIFRAME_LIB_OBJECTS =  &
 	watcom\extminiframe_lib_palettefrm.obj
 EXTMINIFRAME_DLL_CXXFLAGS = -bd $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) &
 	-bm $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
-	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
+	-d__WXMSW__ -i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) &
 	-i=$(WX_DIR)\include -i=..\include -dWXMAKINGDLL_WXEXTMINIFRAME $(CPPFLAGS) &
 	$(CXXFLAGS)
 EXTMINIFRAME_DLL_OBJECTS =  &
@@ -159,7 +159,7 @@ EXTMINIFRAME_DLL_OBJECTS =  &
 	watcom\extminiframe_dll_palettefrm.obj
 MINIMAL_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
-	-d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) &
+	-d__WXMSW__ -i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) &
 	-i=$(WX_DIR)\include -i=..\include $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  &
 	watcom\minimal_minimal.obj
@@ -263,6 +263,23 @@ docs :
 cleandocs :  
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
+install : .SYMBOLIC all install-wxheaders
+	copy /Y ..\lib\*wxextminiframe* $(WX_DIR)$(WXLIBPATH)
+	copy /Y ..\lib\*wxextminiframe* $(WX_DIR)$(WXLIBPATH)
+
+install-wxheaders :  
+	mkdir $(WX_DIR)/include/wx
+	cd .
+	copy /Y  ../include/wx/*.h $(WX_DIR)/include/wx
+
+uninstall : .SYMBOLIC 
+	-if exist $(WX_DIR)\include\wx\minibtn.h \
+	$(WX_DIR)\include\wx\palettefrm.h \
+	$(WX_DIR)\include\wx\palettefrmdef.h del /Q $(WX_DIR)\include\wx\minibtn.h \
+	$(WX_DIR)\include\wx\palettefrm.h \
+	$(WX_DIR)\include\wx\palettefrmdef.h
+	-if exist $(WX_DIR)$(WXLIBPATH)\*wxextminiframe* del /Q $(WX_DIR)$(WXLIBPATH)\*wxextminiframe*
+
 !ifeq WX_SHARED 0
 ..\lib\wxextminiframe$(WXLIBPOSTFIX).lib :  $(EXTMINIFRAME_LIB_OBJECTS)
 	@%create watcom\extminiframe_lib.lbc
@@ -276,7 +293,7 @@ cleandocs :
 	@%append watcom\extminiframe_dll.lbc option quiet
 	@%append watcom\extminiframe_dll.lbc name $^@
 	@%append watcom\extminiframe_dll.lbc option caseexact
-	@%append watcom\extminiframe_dll.lbc $(LDFLAGS) $(__DEBUGINFO_1)  libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib
+	@%append watcom\extminiframe_dll.lbc $(LDFLAGS) $(__DEBUGINFO_1)  libpath $(WX_DIR)$(WXLIBPATH) libpath ..\lib
 	@for %i in ($(EXTMINIFRAME_DLL_OBJECTS)) do @%append watcom\extminiframe_dll.lbc file %i
 	@for %i in ( wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\extminiframe_dll.lbc library %i
 	@%append watcom\extminiframe_dll.lbc
@@ -290,7 +307,7 @@ cleandocs :
 	@%append watcom\minimal.lbc option quiet
 	@%append watcom\minimal.lbc name $^@
 	@%append watcom\minimal.lbc option caseexact
-	@%append watcom\minimal.lbc $(LDFLAGS) $(__DEBUGINFO_1)  libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) libpath ..\lib system nt_win ref '_WinMain@16'
+	@%append watcom\minimal.lbc $(LDFLAGS) $(__DEBUGINFO_1)  libpath $(WX_DIR)$(WXLIBPATH) libpath ..\lib system nt_win ref '_WinMain@16'
 	@for %i in ($(MINIMAL_OBJECTS)) do @%append watcom\minimal.lbc file %i
 	@for %i in ( ..\lib\wxextminiframe$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\minimal.lbc library %i
 	@%append watcom\minimal.lbc option resource=watcom\minimal_minimal.res
@@ -324,5 +341,5 @@ watcom\minimal_minimal.obj :  .AUTODEPEND .\..\sample\minimal.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(MINIMAL_CXXFLAGS) $<
 
 watcom\minimal_minimal.res :  .AUTODEPEND .\..\sample\minimal.rc
-	wrc -q -ad -bt=nt -r -fo=$^@ $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include $<
+	wrc -q -ad -bt=nt -r -fo=$^@ $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\sample $<
 
