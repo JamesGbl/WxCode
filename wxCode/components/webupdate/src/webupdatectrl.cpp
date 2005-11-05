@@ -42,7 +42,6 @@
 #include <wx/xrc/xmlres.h>
 #include <wx/image.h>
 #include <wx/dialup.h>
-#include <wx/tokenzr.h>
 
 // wxWidgets RTTI
 IMPLEMENT_CLASS(wxWebUpdateListCtrl, wxWUDLC_BASECLASS)
@@ -223,7 +222,7 @@ void wxWebUpdateListCtrl::RebuildPackageList(wxWebUpdateListCtrlFilter filter)
         wxWebUpdateCheckFlag f = SetLocalVersionFor(idx, curr);
         bool tocheck = (f == wxWUCF_OUTOFDATE || f == wxWUCF_NOTINSTALLED);
 
-        if (IsToDiscard(filter, idx, f)) {
+        if (IsToDiscard(filter, idx, curr, f)) {
 
             DeleteItem(idx);
             idx--;
@@ -239,8 +238,8 @@ void wxWebUpdateListCtrl::RebuildPackageList(wxWebUpdateListCtrlFilter filter)
         // wxSizeCacherThread that has been launched by wxWebUpdateDlg
         unsigned long bytesize = 0;
         wxWebUpdateDownload &d = curr.GetDownload();
-    if (d.IsDownloadSizeCached())
-        bytesize = d.GetDownloadSize();
+        if (d.IsDownloadSizeCached())
+            bytesize = d.GetDownloadSize();
         SetItem(idx, 3, wxGetSizeStr(bytesize));
 
 
@@ -418,12 +417,21 @@ wxWebUpdateCheckFlag wxWebUpdateListCtrl::IsPackageUp2date(const wxWebUpdatePack
     return remote.Check(local.GetVersion());
 }
 
-bool wxWebUpdateListCtrl::IsToDiscard(wxWebUpdateListCtrlFilter filter, int, wxWebUpdateCheckFlag f)
+bool wxWebUpdateListCtrl::IsToDiscard(wxWebUpdateListCtrlFilter filter,
+                                      int, const wxWebUpdatePackage &pkg, 
+                                      wxWebUpdateCheckFlag f) const
 {
+    // do checks without looking directly at the package
     if (filter == wxWULCF_ONLY_OUTOFDATE && f == wxWUCF_UPDATED)
         return TRUE;        // this is not out-of-date
     if (f == wxWUCF_FAILED)
-        return TRUE;
+        return TRUE;        // couldn't perform the check for some reaon ?
+
+    // check package platform
+    wxASSERT_MSG(pkg.GetDownload() != wxEmptyWebUpdateDownload,
+            wxT("This package does not have any download suitable for current platform !\n")
+            wxT("It should have been filtered out by wxWebUpdateDlg::FilterOtherPlatforms"));
+
     return FALSE;
 }
 
@@ -434,7 +442,7 @@ void wxWebUpdateListCtrl::UpdatePackagesVersions(wxWebUpdateListCtrlFilter filte
         wxWebUpdatePackage &curr = m_arrRemotePackages[GetPackageIndexForItem(j)];
         wxWebUpdateCheckFlag f = SetLocalVersionFor(j, curr);
 
-        if (IsToDiscard(filter, j, f)) {
+        if (IsToDiscard(filter, j, curr, f)) {
 
             DeleteItem(j);
             j--;
@@ -507,19 +515,13 @@ wxWebUpdatePackage *wxWebUpdateListCtrl::GetNextPackageToDownload()
 
 bool wxWebUpdateListCtrl::IsReadyForInstallation(int n)
 {
-    wxString str = m_arrRemotePackages[n].GetPrerequisites();
-    if (str.IsEmpty()) return TRUE;
+    wxArrayString str = m_arrRemotePackages[n].GetParsedPrerequisites();
+    if (str.GetCount() == 0) return TRUE;
 
-    // extract each required package from the list
-    wxStringTokenizer tkz(str, wxT(","));
-    while ( tkz.HasMoreTokens() )
-    {
-        wxString token = tkz.GetNextToken();
-
-        // is this package installed & up2date ?
-        if (IsPackageUp2date(token) != wxWUCF_UPDATED)
-        return FALSE;
-    }
+    // are all packages installed & up2date ?
+    for (int i=0; i < (int)str.GetCount(); i++)        
+        if (IsPackageUp2date(str[i]) != wxWUCF_UPDATED)
+            return FALSE;
 
     return TRUE;
 }
@@ -533,7 +535,7 @@ wxWebUpdatePackage *wxWebUpdateListCtrl::GetNextPackageToInstall()
         int n = GetPackageIndexForItem(i);
         if (IsReadyForInstallation(n) &&
             m_bDownloaded[n] &&
-        !m_bInstalled[n]) {
+            !m_bInstalled[n]) {
             toinstall = i;
             break;
         }

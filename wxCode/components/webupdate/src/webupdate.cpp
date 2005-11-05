@@ -34,6 +34,8 @@
 #include "wx/webupdate.h"
 #include "wx/download.h"
 #include "wx/installer.h"
+#include <wx/tokenzr.h>
+#include <wx/regex.h>
 
 #if wxUSE_HTTPENGINE
 #include <wx/httpbuilder.h>
@@ -576,48 +578,63 @@ long wxWebUpdateAction::wxExecute(const wxString &command, int flags) const
 
 
 // ---------------------
-// wxWEBUPDATEDOWNLOAD
+// wxWEBUPDATEPLATFORM
 // ---------------------
 
-wxWebUpdateDownload::~wxWebUpdateDownload()
+bool wxWebUpdatePlatform::Matches(const wxWebUpdatePlatform &plat) const
 {
-    // clean our array of actions (since it holds pointers it won't
-    // auto-clean itself in the proper way !)
-    for (int i=0; i < (int)m_arrActions.GetCount(); i++)
-        if (m_arrActions.Item(i))
-            delete m_arrActions.Item(i);
-}
+    // check port name
+    if (m_name != plat.m_name && 
+        (m_name != wxWUP_ANY && plat.m_name != wxWUP_ANY))
+        return FALSE;
+    
+    // check architecture
+    if (m_arch != plat.m_arch && 
+        (m_arch != wxWUA_ANY && plat.m_arch != wxWUA_ANY))
+        return FALSE;
 
-void wxWebUpdateDownload::Copy(const wxWebUpdateDownload &tocopy)
-{
-    m_platform = tocopy.m_platform;
-    m_strMD5 = tocopy.m_strMD5;
-    m_urlDownload = tocopy.m_urlDownload;
-    m_size = tocopy.m_size;
-
-    m_arrActions.Clear();
-    for (int i=0; i < (int)tocopy.m_arrActions.GetCount(); i++) {
-        wxWebUpdateAction *newact = tocopy.m_arrActions.Item(i)->Clone();
-        m_arrActions.Add(newact);
+    // check platform ID using regexp
+    wxRegEx our(m_strID);
+    if (!our.IsValid()) {
+        wxLogDebug(wxT("wxWebUpdatePlatform::Matches - [") + m_strID + 
+                    wxT("] is a malformed regular expression !"));
+        return FALSE;       // syntax error !
     }
+
+    if (our.Matches(plat.m_strID))
+        return TRUE;
+    return FALSE;
 }
 
-wxWebUpdatePlatform wxWebUpdateDownload::GetThisPlatformCode()
+wxString wxWebUpdatePlatform::GetAsString() const
 {
+    // concatenate all our info
+    return GetPortString(m_name) + wxT(" - ") + GetArchString(m_arch) +
+           wxT(" - ") + m_strID;
+}
+
+wxWebUpdatePlatform wxWebUpdatePlatform::GetThisPlatform()
+{
+    wxWebUpdatePlatform plat;
+
+    // get port name
     switch ( wxGetOsVersion() )
     {
     case wxMOTIF_X:
-        return wxWUP_MOTIF;
+        plat.SetPort(wxWUP_MOTIF);
+        break;
 
     case wxMAC:
     case wxMAC_DARWIN:
-        return wxWUP_MAC;
+        plat.SetPort(wxWUP_MAC);
+        break;
 
     case wxGTK:
     case wxGTK_WIN32:
     case wxGTK_OS2:
     case wxGTK_BEOS:
-        return wxWUP_GTK;
+        plat.SetPort(wxWUP_GTK);
+        break;
 
     case wxWINDOWS:
     case wxPENWINDOWS:
@@ -625,26 +642,46 @@ wxWebUpdatePlatform wxWebUpdateDownload::GetThisPlatformCode()
     case wxWIN32S:
     case wxWIN95:
     case wxWIN386:
-        return wxWUP_MSW;
+        plat.SetPort(wxWUP_MSW);
+        break;
 
     case wxMGL_UNIX:
     case wxMGL_X:
     case wxMGL_WIN32:
     case wxMGL_OS2:
-        return wxWUP_MGL;
+        plat.SetPort(wxWUP_MGL);
+        break;
 
     case wxWINDOWS_OS2:
     case wxOS2_PM:
-        return wxWUP_OS2;
+        plat.SetPort(wxWUP_OS2);
+        break;
 
     default:
-        return wxWUP_INVALID;
+        plat.SetPort(wxWUP_INVALID);
     }
+
+    // get architecture
+    // TODO FIXME
+    plat.SetArch(wxWUA_ANY);
+
+    // get ID
+    plat.SetID(wxGetOsDescription());
+
+    return plat;
 }
 
-wxWebUpdatePlatform wxWebUpdateDownload::GetPlatformCode(const wxString &plat)
+wxWebUpdateArch wxWebUpdatePlatform::GetArch(const wxString &arch)
 {
-    wxWebUpdatePlatform ret = wxWUP_INVALID;
+    wxWebUpdateArch ret = wxWUA_INVALID;
+    if (arch.StartsWith(wxT("32"))) ret = wxWUA_32;
+    if (arch.StartsWith(wxT("64"))) ret = wxWUA_64;
+    return ret;
+}
+
+wxWebUpdatePort wxWebUpdatePlatform::GetPort(const wxString &plat)
+{
+    wxWebUpdatePort ret = wxWUP_INVALID;
     if (plat == wxT("msw")) ret = wxWUP_MSW;
     if (plat == wxT("gtk")) ret = wxWUP_GTK;
     if (plat == wxT("os2")) ret = wxWUP_OS2;
@@ -655,7 +692,7 @@ wxWebUpdatePlatform wxWebUpdateDownload::GetPlatformCode(const wxString &plat)
     return ret;
 }
 
-wxString wxWebUpdateDownload::GetPlatformString(wxWebUpdatePlatform code)
+wxString wxWebUpdatePlatform::GetPortString(wxWebUpdatePort code)
 {
     wxString ret;
     switch (code) {
@@ -680,11 +717,67 @@ wxString wxWebUpdateDownload::GetPlatformString(wxWebUpdatePlatform code)
     case wxWUP_ANY:
         ret = wxT("any");
         break;
+    case wxWUP_INVALID:
+        ret = wxT("invalid");
+        break;
     default:
         return wxEmptyString;
     }
 
     return ret;
+}
+
+wxString wxWebUpdatePlatform::GetArchString(wxWebUpdateArch code)
+{
+    wxString ret;
+    switch (code) {
+    case wxWUA_32:
+        ret = wxT("32bit");
+        break;
+    case wxWUA_64:
+        ret = wxT("64bit");
+        break;
+    case wxWUA_ANY:
+        ret = wxT("any");
+        break;
+    case wxWUA_INVALID:
+        ret = wxT("invalid");
+        break;
+    default:
+        return wxEmptyString;
+    }
+
+    return ret;
+}
+
+
+
+
+// ---------------------
+// wxWEBUPDATEDOWNLOAD
+// ---------------------
+
+wxWebUpdateDownload::~wxWebUpdateDownload()
+{
+    // clean our array of actions (since it holds pointers it won't
+    // auto-clean itself in the proper way !)
+    for (int i=0; i < (int)m_arrActions.GetCount(); i++)
+        if (m_arrActions.Item(i))
+            delete m_arrActions.Item(i);
+}
+
+void wxWebUpdateDownload::Copy(const wxWebUpdateDownload &tocopy)
+{
+    m_platform = tocopy.m_platform;
+    m_strMD5 = tocopy.m_strMD5;
+    m_urlDownload = tocopy.m_urlDownload;
+    m_size = tocopy.m_size;
+
+    m_arrActions.Clear();
+    for (int i=0; i < (int)tocopy.m_arrActions.GetCount(); i++) {
+        wxWebUpdateAction *newact = tocopy.m_arrActions.Item(i)->Clone();
+        m_arrActions.Add(newact);
+    }
 }
 
 unsigned long wxWebUpdateDownload::GetDownloadSize(bool forceRecalc)
@@ -796,14 +889,23 @@ bool wxWebUpdateDownload::Install() const
 // wxWEBUPDATEPACKAGE
 // ---------------------
 
-wxWebUpdateDownload &wxWebUpdatePackage::GetDownload(wxWebUpdatePlatform code) const
+wxArrayString wxWebUpdatePackage::GetParsedPrerequisites() const
 {
-    if (code == wxWUP_INVALID)
-        code = wxWebUpdateDownload::GetThisPlatformCode();
+    wxArrayString ret;
+    wxStringTokenizer tkz(m_strPrerequisites, wxT(","));
+    while (tkz.HasMoreTokens())    
+        ret.Add(tkz.GetNextToken());
+    return ret;
+}
+
+wxWebUpdateDownload &wxWebUpdatePackage::GetDownload(wxWebUpdatePlatform plat) const
+{
+    // get current platform if given one is not valid
+    if (!plat.IsOk())
+        plat = wxWebUpdatePlatform::GetThisPlatform();
 
     for (int i=0; i<(int)m_arrWebUpdates.GetCount(); i++)
-        if (m_arrWebUpdates.Item(i).GetPlatform() == code ||
-                m_arrWebUpdates.Item(i).GetPlatform() == wxWUP_ANY)
+        if (m_arrWebUpdates.Item(i).GetPlatform().Matches(plat))
             return m_arrWebUpdates.Item(i);
 
     // could not find a download for the given platform....
@@ -978,7 +1080,7 @@ wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdow
         return wxEmptyWebUpdateDownload;
 
     // the info we need to build a wxWebUpdateDownload...
-    wxString platform, md5, uri;
+    wxString platform, md5, uri, arch, id;
     wxWebUpdateActionArray actions;
     wxStringStringHashMap &list = wxWebUpdateInstaller::Get()->GetKeywords();
 
@@ -1012,11 +1114,15 @@ wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdow
 
         } else if (child->GetName() == wxT("platform")) {
 
-            // search the "name" property
+            // search the known properties
             wxXmlProperty *prop = child->GetProperties();
             while (prop) {
                 if (prop->GetName() == wxT("name"))
                     platform = prop->GetValue();
+                if (prop->GetName() == wxT("arch"))
+                    arch = prop->GetValue();
+                if (prop->GetName() == wxT("id"))
+                    id = prop->GetValue();
                 prop = prop->GetNext();
             }
 
@@ -1038,7 +1144,9 @@ wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdow
     if (platform.IsEmpty() || actions.GetCount() <= 0)
         return wxEmptyWebUpdateDownload;
 
-    return wxWebUpdateDownload(uri, platform, md5, &actions);
+    return wxWebUpdateDownload(uri, 
+                                wxWebUpdatePlatform(platform, arch, id),
+                                md5, &actions);
 }
 
 wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) const

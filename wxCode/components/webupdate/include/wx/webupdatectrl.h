@@ -98,8 +98,13 @@ protected:		// event handlers
 	wxWebUpdateCheckFlag SetLocalVersionFor(int idx, wxWebUpdatePackage &curr);
 
 	//! Returns TRUE if the item-idx item shown in the listctrl is to discard
-	//! when applying the given filter.
-	virtual bool IsToDiscard(wxWebUpdateListCtrlFilter filter, int itemidx, wxWebUpdateCheckFlag f);
+	//! when applying the current filter.
+    //! Takes also the result of the update check done between the remote package
+    //! and the local package.
+	virtual bool IsToDiscard(wxWebUpdateListCtrlFilter, 
+                            int itemidx, 
+                            const wxWebUpdatePackage &pkg,
+                            wxWebUpdateCheckFlag f) const;
 
 public:
 	
@@ -142,11 +147,11 @@ public:			// miscellaneous
 
 	//! Rebuilds the list of the packages inside the main wxListCtrl
 	//! using the #m_arrUpdatedPackages array. Removes any old content.
-	void RebuildPackageList(wxWebUpdateListCtrlFilter filter);
+	void RebuildPackageList(wxWebUpdateListCtrlFilter);
 
 	//! Updates the local version fields of all items in the listctrl using
 	//! the version strings stored in the local package array.
-	void UpdatePackagesVersions(wxWebUpdateListCtrlFilter filter);
+	void UpdatePackagesVersions(wxWebUpdateListCtrlFilter);
 
 	//! Returns a wxWebUpdateCheckFlag for the given package
 	//! (both the remote & local package arrays are used, obviously!).
@@ -226,6 +231,8 @@ private:
 	DECLARE_CLASS(wxWebUpdateListCtrl)
 	DECLARE_EVENT_TABLE()
 };
+
+
 
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateListCtrlXmlHandler : public wxXmlResourceHandler
 {

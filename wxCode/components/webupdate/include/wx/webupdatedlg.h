@@ -357,7 +357,13 @@ protected:		// pseudo event handlers
 
 	//! Checks if all packages are up to date and shows the right message to the
 	//! user in the two cases (yes, all updated / no, someone needs to be updated).
-	bool CheckForAllUpdated(bool forcedefaultmsg = FALSE);
+	bool CheckForAllUpdated(wxWebUpdatePackageArray &arr, bool forcedefaultmsg = FALSE);
+
+    //! Filters out all those packages which don't have a download suitable for the
+    //! current platform. Also those packages which depend from a non-available
+    //! package are filtered out.
+    //! Returns TRUE if there are no packages left in the given array.
+    bool FilterOtherPlatforms(wxWebUpdatePackageArray &arr);
 	
 	//! Removes the current package if the user has chosen to do that after
 	//! that the current package has been installed.

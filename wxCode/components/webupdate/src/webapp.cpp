@@ -349,6 +349,10 @@ bool WebUpdaterApp::OnPreInit()
         return FALSE;
     }
 
+    // show our platform in log files
+    wxLogAdvMsg(wxT("WebUpdaterApp::OnPreInit - current platform is [") 
+        + wxWebUpdatePlatform::GetThisPlatform().GetAsString() + wxT("]"));
+
     // this is for using wxDownloadThread
     wxLogAdvMsg(wxT("WebUpdaterApp::OnInit - initializing sockets & handlers"));
     wxSocketBase::Initialize();

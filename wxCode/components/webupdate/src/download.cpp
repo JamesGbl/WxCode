@@ -88,16 +88,17 @@ public:
     virtual ~wxURLInputStream() { wxDELETE(m_pStream); }
 
     wxFileOffset SeekI( wxFileOffset pos, wxSeekMode mode )
-    { wxASSERT(m_pStream); wxFileOffset fo = m_pStream->SeekI(pos, mode); Synch(); return fo; }
+        { wxASSERT(m_pStream); wxFileOffset fo = m_pStream->SeekI(pos, mode); 
+            Synch(); return fo; }
     wxFileOffset TellI() const
-    { wxASSERT(m_pStream); return m_pStream->TellI(); }
+        { wxASSERT(m_pStream); return m_pStream->TellI(); }
 
     bool IsOk() const
-    { if (m_pStream == NULL) return FALSE; return m_pStream->IsOk(); }
+        { if (m_pStream == NULL) return FALSE; return m_pStream->IsOk(); }
     size_t GetSize() const
-    { wxASSERT(m_pStream); return m_pStream->GetSize(); }
+        { wxASSERT(m_pStream); return m_pStream->GetSize(); }
     bool Eof() const
-    { wxASSERT(m_pStream); return m_pStream->Eof(); }
+        { wxASSERT(m_pStream); return m_pStream->Eof(); }
 
 protected:
 
@@ -106,9 +107,11 @@ protected:
             m_lasterror = wxSTREAM_READ_ERROR;
             return FALSE;
         }
+
         m_url.GetProtocol().SetTimeout(30);         // 30 sec are much better rather than 10 min !!!
         m_pStream = m_url.GetInputStream();
         Synch();
+
         return IsOk();
     }
 
@@ -117,7 +120,7 @@ protected:
     }
 
     size_t OnSysRead(void *buffer, size_t bufsize)
-    { wxASSERT(m_pStream); size_t ret = m_pStream->Read(buffer, bufsize).LastRead(); Synch(); return ret; }
+        { wxASSERT(m_pStream); size_t ret = m_pStream->Read(buffer, bufsize).LastRead(); Synch(); return ret; }
 };
 
 #if wxUSE_HTTPENGINE
@@ -138,10 +141,13 @@ public:
         m_http.SetAuthentication(auth);
         InitStream(url);
     }
+
     virtual ~wxSafeHTTPEngineInputStream() { wxDELETE(m_pStream); }
 
+
     wxFileOffset SeekI( wxFileOffset pos, wxSeekMode mode )
-        { wxASSERT(m_pStream); return m_pStream->SeekI(pos, mode); }
+        { wxASSERT(m_pStream); wxFileOffset fo = m_pStream->SeekI(pos, mode); 
+            Synch(); return fo; }
     wxFileOffset TellI() const
         { wxASSERT(m_pStream); return m_pStream->TellI(); }
 
@@ -155,13 +161,24 @@ public:
 protected:
 
     bool InitStream(const wxString &url) {
+        if (m_url.GetError() != wxURL_NOERR) {
+            m_lasterror = wxSTREAM_READ_ERROR;
+            return FALSE;
+        }
+
         m_http.SetTimeout(30);      // 30 sec are much better rather than 10 min !!!
         m_pStream = m_http.GetInputStream(url);
+        Synch();
+
         return (m_pStream != NULL);
     }
 
+    void Synch() {
+        if (m_pStream) m_lasterror = m_pStream->GetLastError();
+    }
+
     size_t OnSysRead(void *buffer, size_t bufsize)
-        { wxASSERT(m_pStream); return m_pStream->Read(buffer, bufsize).LastRead(); }
+        { wxASSERT(m_pStream); size_t ret = m_pStream->Read(buffer, bufsize).LastRead(); Synch(); return ret; }
 };
 
 #endif

@@ -365,11 +365,9 @@ bool wxWebUpdateDlg::InitThreads()
     return TRUE;
 }
 
-bool wxWebUpdateDlg::CheckForAllUpdated(bool forcedefaultmsg)
+bool wxWebUpdateDlg::CheckForAllUpdated(wxWebUpdatePackageArray &arr, bool forcedefaultmsg)
 {
-    wxWebUpdatePackageArray &arr = GetRemotePackages();
     bool allupdated = TRUE;
-
     for (int j=0; j < (int)arr.GetCount(); j++) {
         if (m_pUpdatesList->IsPackageUp2date(arr[j]) != wxWUCF_UPDATED) {
             allupdated = FALSE;
@@ -403,6 +401,60 @@ bool wxWebUpdateDlg::CheckForAllUpdated(bool forcedefaultmsg)
     return FALSE;           // FALSE = do not exit the dialog
 }
 
+bool wxWebUpdateDlg::FilterOtherPlatforms(wxWebUpdatePackageArray &arr)
+{
+    wxString removed;
+    for (int j=0; j < (int)arr.GetCount(); j++) {
+        if (arr[j].GetDownload() == wxEmptyWebUpdateDownload) {
+            
+            // remove this package from the list
+            removed += wxT(",") + arr[j].GetName();
+            arr.RemoveAt(j, 1);
+            j--;    // recheck the j-th package
+        }
+    }
+
+    // now remove those packages which depend on previously removed packages
+    bool restart;
+    do {
+        restart = FALSE;
+        for (int i=0; i < (int)arr.GetCount(); i++) {
+            wxArrayString req(arr[i].GetParsedPrerequisites());
+
+            for (int k=0; k < (int)req.GetCount(); k++) {
+                if (removed.Contains(req[k])) {
+
+                    // the i-th package depends on a removed package...
+                    removed += wxT(",") + arr[i].GetName();
+                    arr.RemoveAt(i, 1);
+                    i--;
+                
+                    // start all the loops again since having removed this package
+                    // could require us to remove also others which were previously
+                    // checked...
+                    restart = TRUE;
+                    break;
+                }
+            }
+
+            if (restart) 
+                break;
+        }
+    } while (restart);
+
+    // warn the user eventually
+    if (arr.GetCount() == 0) {
+
+        wxWebUpdateInstaller::Get()->ShowNotificationMsg(
+            wxT("No updates available for this platform..."));
+        AbortDialog();
+
+        return FALSE;        // FALSE = exit this dialog
+    }
+
+    return TRUE;
+}
+
 wxWebUpdateListCtrlFilter wxWebUpdateDlg::GetPackageFilter() const
 {
     // if the "show only out of date" checkbox exists in the XRC...
@@ -428,15 +480,23 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
         return;
     }
 
-    // update our remote package array (which is contained in
-    // our wxWebUpdateListCtrl to be exact)
+    // do a basic filtering: remove packages which don't have downloads
+    // suitable for this platform
+    wxWebUpdatePackageArray arr(m_xmlRemote.GetAllPackages());
+    if (!FilterOtherPlatforms(arr))
+        return;      // no downloads for this platform ? then exit the dialog
+                     // (a message dialog has already been shown by CheckForAllUpdated)
+
+    // update our remote package array (which is contained only in
+    // our wxWebUpdateListCtrl to avoid data duplications)
     wxLogUsrMsg(wxT("wxWebUpdateDlg::OnScriptDownload - XML script loaded successfully"));
-    m_pUpdatesList->SetRemotePackages(m_xmlRemote.GetAllPackages());
+    m_pUpdatesList->SetRemotePackages(arr);
     m_pUpdatesList->RebuildPackageList(GetPackageFilter());
 
     // is everything up to date ?
-    if (CheckForAllUpdated())
-        return;     // all is updated, we must exit this dialog
+    if (CheckForAllUpdated(arr))
+        return;     // all is updated, we must exit this dialog 
+                    // (a message dialog has already been shown by CheckForAllUpdated)
 
     // what if we could not found any valid package in the webupdate script ?
     if (m_pUpdatesList->GetItemCount() == 0) {
@@ -864,7 +924,7 @@ void wxWebUpdateDlg::OnInstallationComplete(wxCommandEvent &)
 
             // CHANGE OUR STATUS back to wait mode
             m_nStatus = wxWUDS_WAITING;
-            CheckForAllUpdated(TRUE);
+            CheckForAllUpdated(GetRemotePackages(), TRUE);
         }
 
     } else {
