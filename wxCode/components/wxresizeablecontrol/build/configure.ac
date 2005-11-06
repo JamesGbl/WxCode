@@ -1,6 +1,6 @@
 # ======================================================================================
 # Author: Francesco Montorsi
-# RCS-ID: $Id: configure.ac,v 1.2 2005-09-16 17:06:12 frm Exp $
+# RCS-ID: $Id: configure.ac,v 1.3 2005-11-06 12:30:14 frm Exp $
 #
 # A basic "configure.ac" for a wxCode component.
 # See 
@@ -19,7 +19,7 @@ AC_INIT([wxResizeableControl], [1.0], [frm@users.sourceforge.net])
 
 # you need the wxCode/build/bakefiles in your local repository to generate a configure
 # script from this configure.ac file since wxcode.m4 is required....
-m4_include(../../../build/bakefiles/wxcode.m4)
+m4_include(../../../build/autoconf/wxcode.m4)
 AM_WXCODE_INIT
 
 
@@ -49,9 +49,7 @@ AM_OPTIONS_WXPRESETS            # don't touch this macro
 ## required options (version, build settings, etc)
 #####################################################################
 
-AM_WXCODE_CHECKS([2.4.0],       # here put the minimum required version of wx
-                [])             # here you must put a comma-separed list of all wx required libraries 
-                                # except for base,core (e.g. "xml,net,adv"); leave empty if you use only core & base
+AM_WXCODE_CHECKS([2.4.0], [xml])
 
 
 # end in a nice way the configure script

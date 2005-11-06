@@ -49,8 +49,8 @@ WXRESIZEABLECONTROL_LIB_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
 	$(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	/Fd..\lib\wxresizeablecontrol$(WXLIBPOSTFIX).pdb $(____DEBUGRUNTIME) \
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
-	/D__WXMSW__ /I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	/I$(WX_DIR)\include /I..\include /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
+	/D__WXMSW__ /I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) /I$(WX_DIR)\include \
+	/I..\include /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
 WXRESIZEABLECONTROL_LIB_OBJECTS =  \
 	msvc\wxresizeablecontrol_lib_resizec.obj \
 	msvc\wxresizeablecontrol_lib_textbox.obj \
@@ -59,9 +59,9 @@ WXRESIZEABLECONTROL_DLL_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
 	$(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	/Fd..\lib\wxresizeablecontrol$(WXLIBPOSTFIX).pdb $(____DEBUGRUNTIME) \
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
-	/D__WXMSW__ /I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	/I$(WX_DIR)\include /I..\include /DWXMAKINGDLL_WXRESIZEABLECONTROL /GR /EHsc \
-	$(CPPFLAGS) $(CXXFLAGS)
+	/D__WXMSW__ /I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) /I$(WX_DIR)\include \
+	/I..\include /DWXMAKINGDLL_WXRESIZEABLECONTROL /GR /EHsc $(CPPFLAGS) \
+	$(CXXFLAGS)
 WXRESIZEABLECONTROL_DLL_OBJECTS =  \
 	msvc\wxresizeablecontrol_dll_resizec.obj \
 	msvc\wxresizeablecontrol_dll_textbox.obj \
@@ -69,8 +69,8 @@ WXRESIZEABLECONTROL_DLL_OBJECTS =  \
 MINIMAL_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) $(__OPTIMIZEFLAG) \
 	$(__DEBUGINFO) /Fd..\samples\minimal.pdb $(____DEBUGRUNTIME) \
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
-	/D__WXMSW__ /I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	/I$(WX_DIR)\include /I..\include /D_WINDOWS /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
+	/D__WXMSW__ /I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) /I$(WX_DIR)\include \
+	/I..\include /D_WINDOWS /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	msvc\minimal_myframe.obj \
 	msvc\minimal_ownerrnd.obj \
@@ -161,10 +161,10 @@ WXLIBPOSTFIX = d
 WXLIBPOSTFIX = ud
 !endif
 !if "$(WX_SHARED)" == "0"
-__WXLIBPATH_FILENAMES = \lib\vc_lib
+WXLIBPATH = \lib\vc_lib
 !endif
 !if "$(WX_SHARED)" == "1"
-__WXLIBPATH_FILENAMES = \lib\vc_dll
+WXLIBPATH = \lib\vc_dll
 !endif
 
 
@@ -265,6 +265,25 @@ docs:
 cleandocs: 
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
+install: all install-wxheaders
+	copy /Y ..\lib\wxresizeablecontrol$(WXLIBPOSTFIX).lib $(WX_DIR)$(WXLIBPATH)
+	copy /Y ..\lib\wxresizeablecontrol$(WXLIBPOSTFIX).dll $(WX_DIR)$(WXLIBPATH)
+
+install-wxheaders: 
+	mkdir $(WX_DIR)/include/wx
+	cd .
+	copy /Y  ../include/wx/*.h $(WX_DIR)/include/wx
+
+uninstall: 
+	-if exist $(WX_DIR)\include\wx\resizec.h \
+	$(WX_DIR)\include\wx\textbox.h \
+	$(WX_DIR)\include\wx\textspan.h \
+	$(WX_DIR)\include\wx\resizecdef.h del /Q $(WX_DIR)\include\wx\resizec.h \
+	$(WX_DIR)\include\wx\textbox.h \
+	$(WX_DIR)\include\wx\textspan.h \
+	$(WX_DIR)\include\wx\resizecdef.h
+	-if exist $(WX_DIR)$(WXLIBPATH)\*wxresizeablecontrol* del /Q $(WX_DIR)$(WXLIBPATH)\*wxresizeablecontrol*
+
 !if "$(WX_SHARED)" == "0"
 ..\lib\wxresizeablecontrol$(WXLIBPOSTFIX).lib: $(WXRESIZEABLECONTROL_LIB_OBJECTS)
 	if exist $@ del $@
@@ -275,13 +294,13 @@ cleandocs:
 
 !if "$(WX_SHARED)" == "1"
 ..\lib\wxresizeablecontrol$(WXLIBPOSTFIX).dll: $(WXRESIZEABLECONTROL_DLL_OBJECTS)
-	link /DLL /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_0)  /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES) /LIBPATH:..\lib @<<
+	link /DLL /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_0)  /LIBPATH:$(WX_DIR)$(WXLIBPATH) /LIBPATH:..\lib @<<
 	$(WXRESIZEABLECONTROL_DLL_OBJECTS)  wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /IMPLIB:..\lib\wxresizeablecontrol$(WXLIBPOSTFIX).lib
 <<
 !endif
 
 ..\samples\minimal.exe: $(MINIMAL_OBJECTS) $(__wxresizeablecontrol_lib___depname) msvc\minimal_resizecd.res
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_0)  /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES) /LIBPATH:..\lib /SUBSYSTEM:WINDOWS @<<
+	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_0)  /LIBPATH:$(WX_DIR)$(WXLIBPATH) /LIBPATH:..\lib /SUBSYSTEM:WINDOWS @<<
 	$(MINIMAL_OBJECTS)  ..\lib\wxresizeablecontrol$(WXLIBPOSTFIX).lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
 
@@ -316,5 +335,5 @@ msvc\minimal_childwnd.obj: .\..\samples\childwnd.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(MINIMAL_CXXFLAGS) $**
 
 msvc\minimal_resizecd.res: .\..\samples\resizecd.rc
-	rc /fo$@  /d WIN32 $(____DEBUGRUNTIME_29_p_1) $(__WX_SHAREDDEFINE_p_4) $(__WXUNICODE_DEFINE_p_4) $(__WXDEBUG_DEFINE_p_4) /d __WXMSW__ /i $(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include /i ..\include /d _WINDOWS /i ..\samples $**
+	rc /fo$@  /d WIN32 $(____DEBUGRUNTIME_29_p_1) $(__WX_SHAREDDEFINE_p_4) $(__WXUNICODE_DEFINE_p_4) $(__WXDEBUG_DEFINE_p_4) /d __WXMSW__ /i $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include /i ..\include /d _WINDOWS /i ..\samples $**
 

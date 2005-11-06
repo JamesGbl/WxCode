@@ -44,20 +44,21 @@ WX_LIBS = @WX_LIBS@
 ### Variables: ###
 
 DESTDIR = 
-WXRESIZEABLECONTROL_LIB_CXXFLAGS = -I./include $(WX_CXXFLAGS) $(CPPFLAGS) \
-	$(CXXFLAGS)
+WXRESIZEABLECONTROL_LIB_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include \
+	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 WXRESIZEABLECONTROL_LIB_OBJECTS =  \
 	wxresizeablecontrol_lib_resizec.o \
 	wxresizeablecontrol_lib_textbox.o \
 	wxresizeablecontrol_lib_textspan.o
-WXRESIZEABLECONTROL_DLL_CXXFLAGS = -I./include \
+WXRESIZEABLECONTROL_DLL_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include \
 	-DWXMAKINGDLL_WXRESIZEABLECONTROL $(PIC_FLAG) $(WX_CXXFLAGS) $(CPPFLAGS) \
 	$(CXXFLAGS)
 WXRESIZEABLECONTROL_DLL_OBJECTS =  \
 	wxresizeablecontrol_dll_resizec.o \
 	wxresizeablecontrol_dll_textbox.o \
 	wxresizeablecontrol_dll_textspan.o
-MINIMAL_CXXFLAGS =   -I./include  $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include $(WX_CXXFLAGS) \
+	$(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	minimal_myframe.o \
 	minimal_ownerrnd.o \
@@ -133,10 +134,12 @@ COND_USE_SOSYMLINKS_1___wxresizeablecontrol_dll___so_symlinks_inst_cmd = rm \
 @COND_PLATFORM_MACOSX_1@	= -compatibility_version 0 -current_version 0
 @COND_PLATFORM_MAC_1@__minimal___mac_setfilecmd = \
 @COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL minimal$(EXEEXT)
+@COND_WX_SHARED_1@__WX_SHAREDDEFINE_p_5 = --define WXUSINGDLL
 COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd = $(NM) minimal$(EXEEXT) | if \
 	grep -q pmwin.763 ; then emxbind -ep minimal$(EXEEXT) ; fi
 @COND_PLATFORM_OS2_1@__minimal___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd)
 @COND_PLATFORM_WIN32_1@__minimal___win32rc = minimal_resizecd_rc.o
+@COND_WX_SHARED_1@__WX_SHAREDDEFINE_p = -DWXUSINGDLL
 
 ### Targets: ###
 
@@ -256,7 +259,7 @@ install-wxheaders:
 @COND_WX_SHARED_0@	$(INSTALL_DATA) ./lib/$(LIBPREFIX)wxresizeablecontrol$(LIBEXT) $(DESTDIR)$(libdir)
 
 @COND_WX_SHARED_1@./lib/$(DLLPREFIX)wxresizeablecontrol$(__wxresizeablecontrol_dll___targetsuf3): $(WXRESIZEABLECONTROL_DLL_OBJECTS)
-@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(WXRESIZEABLECONTROL_DLL_OBJECTS) $(LDFLAGS) -L./lib $(__wxresizeablecontrol_dll___macinstnamecmd) $(__wxresizeablecontrol_dll___importlib) $(__wxresizeablecontrol_dll___soname_flags) $(__wxresizeablecontrol_dll___macver)  $(WX_LIBS)
+@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(WXRESIZEABLECONTROL_DLL_OBJECTS) $(LDFLAGS)   -L./lib $(__wxresizeablecontrol_dll___macinstnamecmd) $(__wxresizeablecontrol_dll___importlib) $(__wxresizeablecontrol_dll___soname_flags) $(__wxresizeablecontrol_dll___macver)  $(WX_LIBS)
 @COND_WX_SHARED_1@	
 @COND_WX_SHARED_1@	$(__wxresizeablecontrol_dll___so_symlinks_cmd)
 
@@ -267,7 +270,7 @@ install-wxheaders:
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__wxresizeablecontrol_dll___so_symlinks_inst_cmd))
 
 ./samples/minimal$(EXEEXT): $(MINIMAL_OBJECTS) $(__wxresizeablecontrol_lib___depname) $(__minimal___win32rc)
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) -L./lib $(LDFLAGS) -L./lib $(LDFLAGS_GUI)  $(WX_LIBS) -lwxresizeablecontrol
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) -L./lib $(LDFLAGS)   -L./lib $(LDFLAGS_GUI)  -lwxresizeablecontrol $(WX_LIBS)
 	
 	$(__minimal___mac_setfilecmd)
 	$(__minimal___os2_emxbindcmd)
@@ -303,7 +306,7 @@ minimal_childwnd.o: $(srcdir)/./samples/childwnd.cpp
 	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/./samples/childwnd.cpp
 
 minimal_resizecd_rc.o: $(srcdir)/./samples/resizecd.rc
-	$(RESCOMP) -i$< -o$@  --include-dir ./include --include-dir ./samples
+	$(RESCOMP) -i$< -o$@ $(__WX_SHAREDDEFINE_p_5) --include-dir ./include --include-dir ./samples
 
 
 # Include dependency info, if present:

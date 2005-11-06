@@ -75,8 +75,8 @@ WX_VERSION = 26
 WXRESIZEABLECONTROL_LIB_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG_1) \
 	$(__DEBUGINFO) -tWM $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
-	-I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	-I$(WX_DIR)\include -I..\include $(CPPFLAGS) $(CXXFLAGS)
+	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
+	-I..\include $(CPPFLAGS) $(CXXFLAGS)
 WXRESIZEABLECONTROL_LIB_OBJECTS =  \
 	borland\wxresizeablecontrol_lib_resizec.obj \
 	borland\wxresizeablecontrol_lib_textbox.obj \
@@ -84,17 +84,16 @@ WXRESIZEABLECONTROL_LIB_OBJECTS =  \
 WXRESIZEABLECONTROL_DLL_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG_1) \
 	$(__DEBUGINFO) -tWM $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
-	-I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	-I$(WX_DIR)\include -I..\include -DWXMAKINGDLL_WXRESIZEABLECONTROL \
-	$(CPPFLAGS) $(CXXFLAGS)
+	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
+	-I..\include -DWXMAKINGDLL_WXRESIZEABLECONTROL $(CPPFLAGS) $(CXXFLAGS)
 WXRESIZEABLECONTROL_DLL_OBJECTS =  \
 	borland\wxresizeablecontrol_dll_resizec.obj \
 	borland\wxresizeablecontrol_dll_textbox.obj \
 	borland\wxresizeablecontrol_dll_textspan.obj
 MINIMAL_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG_1) $(__DEBUGINFO) -tWM \
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
-	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	-I$(WX_DIR)\include -I..\include $(CPPFLAGS) $(CXXFLAGS)
+	-D__WXMSW__ -I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
+	-I..\include $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	borland\minimal_myframe.obj \
 	borland\minimal_ownerrnd.obj \
@@ -154,10 +153,10 @@ WXLIBPOSTFIX = d
 WXLIBPOSTFIX = ud
 !endif
 !if "$(WX_SHARED)" == "0"
-__WXLIBPATH_FILENAMES = \lib\bcc_lib
+WXLIBPATH = \lib\bcc_lib
 !endif
 !if "$(WX_SHARED)" == "1"
-__WXLIBPATH_FILENAMES = \lib\bcc_dll
+WXLIBPATH = \lib\bcc_dll
 !endif
 
 
@@ -267,6 +266,25 @@ docs:
 cleandocs: 
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
+install: all install-wxheaders
+	copy /Y ..\lib\wxresizeablecontrol$(WXLIBPOSTFIX).lib $(WX_DIR)$(WXLIBPATH)
+	copy /Y ..\lib\wxresizeablecontrol$(WXLIBPOSTFIX).dll $(WX_DIR)$(WXLIBPATH)
+
+install-wxheaders: 
+	mkdir $(WX_DIR)/include/wx
+	cd .
+	copy /Y  ../include/wx/*.h $(WX_DIR)/include/wx
+
+uninstall: 
+	-if exist $(WX_DIR)\include\wx\resizec.h \
+	$(WX_DIR)\include\wx\textbox.h \
+	$(WX_DIR)\include\wx\textspan.h \
+	$(WX_DIR)\include\wx\resizecdef.h del /Q $(WX_DIR)\include\wx\resizec.h \
+	$(WX_DIR)\include\wx\textbox.h \
+	$(WX_DIR)\include\wx\textspan.h \
+	$(WX_DIR)\include\wx\resizecdef.h
+	-if exist $(WX_DIR)$(WXLIBPATH)\*wxresizeablecontrol* del /Q $(WX_DIR)$(WXLIBPATH)\*wxresizeablecontrol*
+
 !if "$(WX_SHARED)" == "0"
 ..\lib\wxresizeablecontrol$(WXLIBPOSTFIX).lib: $(WXRESIZEABLECONTROL_LIB_OBJECTS)
 	if exist $@ del $@
@@ -277,14 +295,14 @@ cleandocs:
 
 !if "$(WX_SHARED)" == "1"
 ..\lib\wxresizeablecontrol$(WXLIBPOSTFIX).dll: $(WXRESIZEABLECONTROL_DLL_OBJECTS)
-	ilink32 -Tpd -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib @&&|
+	ilink32 -Tpd -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(WXLIBPATH) -L..\lib @&&|
 	c0d32.obj $(WXRESIZEABLECONTROL_DLL_OBJECTS),$@,, wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
 |
 	implib -f ..\lib\wxresizeablecontrol$(WXLIBPOSTFIX) $@
 !endif
 
 ..\samples\minimal.exe: $(MINIMAL_OBJECTS) $(__wxresizeablecontrol_lib___depname)  borland\minimal_resizecd.res
-	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib -aa @&&|
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(WXLIBPATH) -L..\lib -aa @&&|
 	c0w32.obj $(MINIMAL_OBJECTS),$@,, ..\lib\wxresizeablecontrol$(WXLIBPOSTFIX).lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,, borland\minimal_resizecd.res
 |
 
@@ -319,5 +337,5 @@ borland\minimal_childwnd.obj: .\..\samples\childwnd.cpp
 	$(CXX) -q -c -P -o$@ $(MINIMAL_CXXFLAGS) $**
 
 borland\minimal_resizecd.res: .\..\samples\resizecd.rc
-	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include $(__WX_SHAREDDEFINE_p_4) $(__WXUNICODE_DEFINE_p_4) $(__WXDEBUG_DEFINE_p_4) -d__WXMSW__ -i$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\samples $**
+	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include $(__WX_SHAREDDEFINE_p_4) $(__WXUNICODE_DEFINE_p_4) $(__WXDEBUG_DEFINE_p_4) -d__WXMSW__ -i$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\samples $**
 
