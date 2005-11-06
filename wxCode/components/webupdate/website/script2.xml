@@ -9,11 +9,15 @@
         <latest-version importance="normal">1.5.0</latest-version>
 
         <latest-download>
-
-            <!-- use a simple ZIP -->
-            <uri>http://wxcode.sourceforge.net/components/webupdate/advanced-$(latest-version).zip</uri>
+            <uri>http://osdn.dl.sourceforge.net/sourceforge/wxcode/advanced-msw-$(latest-version).zip</uri>
             <platform name="msw"/>
-
+            <actions>
+                <extract file="$(thisfile)" where="$(programdir)"/>
+            </actions>
+        </latest-download>
+        <latest-download>
+            <uri>http://osdn.dl.sourceforge.net/sourceforge/wxcode/advanced-gtk-$(latest-version).zip</uri>
+            <platform name="gtk"/>
             <actions>
                 <extract file="$(thisfile)" where="$(programdir)"/>
             </actions>
