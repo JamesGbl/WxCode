@@ -27,39 +27,50 @@
 #include <wx/arrimpl.cpp>
 
 #include <pwd.h>                   // For finding usernames from ids
-#include <grp.h>                    // Ditto groupnames
+#include <grp.h>                   // Ditto groupnames
+#include <sys/statvfs.h>        // For statvfs(), used in CanTHISUserWrite()
 
 #include "Filedata.h"
 
 
-FileData::FileData( wxString filepath, bool defererence /*=false*/ )	:	Filepath(filepath)
+FileData::FileData( wxString filepath, bool defererence /*=false*/ )  :  Filepath(filepath)
 {
 statstruct = new struct stat;
 
 if ( ! defererence )
-	{	result = lstat(Filepath, statstruct);	                                     // lstat rather than stat as it doesn't dereference symlinks
-		if ( !result && IsSymlink() )                                               // If we have a valid result & it's a symlink
-				symlinkdestination = new FileData( filepath, true );     //   load another FileData with its reference
-		 else symlinkdestination = NULL;
-	}
+  {  result = lstat(Filepath, statstruct);                                    // lstat rather than stat as it doesn't dereference symlinks
+    if ( !result && IsSymlink() )                                               // If we have a valid result & it's a symlink
+        symlinkdestination = new FileData( filepath, true );     //   load another FileData with its reference
+     else symlinkdestination = NULL;
+  }
  else
-	{	result = stat(Filepath, statstruct);             // Unless we WANT to dereference, in which case use stat
-		if ( result != -1 )  
-                     // Strangely, stat/lstat don't return any filepath data.  Here we need it, so we have to use readlink
-			{	char buf[500];          // We have to specify a char buffer.  500 bytes should be long enough: it gets truncated anyway
-				int ans = readlink(Filepath, buf, 500 );                   // Readlink inserts into buf the destination filepath of the symlink
-				if ( ans != -1 ) 	Filepath = wxString( buf, ans );     // If it worked, ans holds the length of the destination filepath. Put it into Filepath
-				else 
-					{	BrokenlinkName = Filepath;         // If readlink was unsuccessful, store the broken-link name here
-						Filepath = wxEmptyString;           //      and kill the symlink's name
-					}
-			}
-			
-		 else BrokenlinkName = Filepath;               // If result was unsuccessful, store the broken-link name here
-		 
-		symlinkdestination = NULL;                       // We don't use symlinkdestination, so NULL it
-	}
+  {  result = stat(Filepath, statstruct);             // Unless we WANT to dereference, in which case use stat
+    if ( result != -1 )
+      {              // Strangely, stat/lstat don't return any filepath data.  Here we need it, so we have to use readlink
+          char buf[500];          // We have to specify a char buffer.  500 bytes should be long enough: it gets truncated anyway
+          int ans = readlink(Filepath, buf, 500 );                   // Readlink inserts into buf the destination filepath of the symlink
+          if ( ans != -1 ) 	Filepath = wxString( buf, ans );     // If it worked, ans holds the length of the destination filepath. Put it into Filepath
+            else 
+              {  BrokenlinkName = Filepath;         // If readlink was unsuccessful, store the broken-link name here
+                  Filepath = wxEmptyString;           //      and kill the symlink's name
+              }
+      }
+
+      else BrokenlinkName = Filepath;               // If result was unsuccessful, store the broken-link name here
+
+    symlinkdestination = NULL;                       // We don't use symlinkdestination, so NULL it
+  }
 }
+
+wxString FileData::GetPath()
+{
+if ( ! IsValid() ) return wxEmptyString;
+
+wxString Path = GetFilepath();
+if ( Path.Right(1) == wxFILE_SEP_PATH )  Path = Path.BeforeLast(wxFILE_SEP_PATH);  // Avoid problems with any terminal '/'
+       // Chop off any filename & add a '/' for luck.  This also means we return '/' if the original filepath was itself '/' !
+return wxString( Path.BeforeLast(wxFILE_SEP_PATH) + wxFILE_SEP_PATH );  
+ }
 
 bool FileData::IsFileExecutable()      // See if the file is executable (by SOMEONE, not necessarily us)
 {
@@ -72,30 +83,54 @@ return ( !!(st_mode & S_IXUSR) || !!(st_mode & S_IXGRP) || !!(st_mode & S_IXOTH)
 
 bool FileData::CanTHISUserRead()    // Do WE have permission to read this file
 {
+if ( ! IsValid() ) return false;
+       // We can't use access() if this is a symlink, as it reports on the target instead.  This is a particular problem if the symlink is broken!
+if ( IsSymlink() ) return true;                      // All symlinks seem to have global rwx permissions
+
 int result = access(Filepath, R_OK);                 // Use 'access' to see if we have read permission
 return ( result==0 ?  true : false );
 }
 
 bool FileData::CanTHISUserWrite()    // Do WE have permission to write to this file
 {
-int result = access(Filepath, W_OK);               // Use 'access' to see if we have write permission
+if ( ! IsValid() ) return false;
+       // We can't use access() if this is a symlink, as it reports on the target instead.  This is a particular problem if the symlink is broken!
+if ( IsSymlink() )                                   // All symlinks seem to have global rwx permissions, so no need to check for these
+  { struct statvfs buf;                              // However we do need to check for a ro filesystem
+    int ans = statvfs( GetPath(), &buf );            // Use the path here, rather than the filepath, as statvfs can't cope with broken symlinks
+    return ( ans==0 && (buf.f_flag & ST_RDONLY)==0 );
+  }
+
+int result = access(Filepath, W_OK);                 // Use 'access' to see if we have write permission
 return ( result==0 ?  true : false );
 }
 
 bool FileData::CanTHISUserExecute()  // Do WE have permission to execute this file
 {
-int result = access(Filepath, X_OK);                // Use 'access' to see if we have execute permission
+if ( ! IsValid() ) return false;
+   // I _am_ using access() here, even for symlinks. Otherwise, as symlinks all have rwx permissions, they'll all appear to be executable, even if the target isn't!
+int result = access(Filepath, X_OK);                 // Use 'access' to see if we have execute permission
+return ( result==0 ?  true : false );
+}
+
+bool FileData::CanTHISUserWriteExec()  // Do WE have write & exec permissions for this file
+{
+if ( ! IsValid() ) return false;
+       // We can't use access() if this is a symlink, as it reports on the target instead.  This is a particular problem if the symlink is broken!
+if ( IsSymlink() ) return CanTHISUserWrite();                 // All symlinks seem to have global rwx permissions, but use CanTHISUserWrite() to check for a ro filesystem
+
+int result = access(Filepath, W_OK | X_OK);                 // Use 'access' to see if we have write/exec permissions
 return ( result==0 ?  true : false );
 }
 
 bool FileData::CanTHISUserRename()  // See if the file's PARENT DIR is Writable by US
 {
 if ( ! IsValid() ) return false;
-                 // To rename a file or dir, we need to have 'write' permission for its parent dir
+                 // To rename a file or dir, we need to have 'write' permission for its parent dir (and exec permission, otherwise we can't stat it)
 FileData dir( Filepath.BeforeLast(wxFILE_SEP_PATH) );	       // Make a FileData for the parent dir
 if ( ! dir.IsValid() ) return false;                                      // If stat() returned an error, the answer must be 'No'
 
-if ( ! dir.CanTHISUserWrite() ) return false;                     // Return false if parent dir hasn't write permission for us
+if ( ! dir.CanTHISUserWriteExec() ) return false;              // Return false if parent dir hasn't permissions for us
 
                                    // If we HAVE got write permission, we still have to check that the Sticky bit isn't set
 if ( ! dir.IsSticky() ) return true;                                     // If it isn't, we're OK
@@ -151,23 +186,23 @@ wxString FileData::PermissionsToText()  // Returns a string describing the filet
 {
 wxString text;
 text.Printf("%c%c%c%c%c%c%c%c%c%c", IsRegularFile() ? wxT('-') : wxT('d'),  // To start with, assume all non-regular files are dirs
-	IsUserReadable() ? wxT('r') : wxT('-'), IsUserWriteable() ? wxT('w') : wxT('-'), IsUserExecutable() ? wxT('x') : wxT('-'),
-	IsGroupReadable() ? wxT('r') : wxT('-'), IsGroupWriteable() ? wxT('w') : wxT('-'), IsGroupExecutable() ? wxT('x') : wxT('-'),
-	IsOtherReadable() ? wxT('r') : wxT('-'), IsOtherWriteable() ? wxT('w') : wxT('-'), IsOtherExecutable() ? wxT('x') : wxT('-')
-				);
+    IsUserReadable() ? wxT('r') : wxT('-'), IsUserWriteable() ? wxT('w') : wxT('-'), IsUserExecutable() ? wxT('x') : wxT('-'),
+    IsGroupReadable() ? wxT('r') : wxT('-'), IsGroupWriteable() ? wxT('w') : wxT('-'), IsGroupExecutable() ? wxT('x') : wxT('-'),
+    IsOtherReadable() ? wxT('r') : wxT('-'), IsOtherWriteable() ? wxT('w') : wxT('-'), IsOtherExecutable() ? wxT('x') : wxT('-')
+              );
 
 if ( text.GetChar(0) != wxT('-') )                                       // If it wasn't a file, 
-	if ( IsDir() ) ;                                                                //   check it really IS a dir (& if so, do nothing).  If it's NOT a dir, it'll be one of the miscellany
-	else if ( IsSymlink() ) text.SetChar(0, wxT('l'));		
-	else if ( IsCharDev() ) text.SetChar(0, wxT('c'));		
-	else if ( IsBlkDev() ) text.SetChar(0, wxT('b'));		
-	else if ( IsSocket() ) text.SetChar(0, wxT('s'));		
-	else if ( IsFIFO() ) text.SetChar(0, wxT('p'));		
+    if ( IsDir() ) ;                                                                //   check it really IS a dir (& if so, do nothing).  If it's NOT a dir, it'll be one of the miscellany
+    else if ( IsSymlink() ) text.SetChar(0, wxT('l'));	
+    else if ( IsCharDev() ) text.SetChar(0, wxT('c'));
+    else if ( IsBlkDev() ) text.SetChar(0, wxT('b'));
+    else if ( IsSocket() ) text.SetChar(0, wxT('s'));
+    else if ( IsFIFO() ) text.SetChar(0, wxT('p'));
                       // Now amend string if the unusual permissions are set.
-if ( IsSetuid() ) text.GetChar(3) == wxT('x') ?  text.SetChar(3, wxT('s')) : text.SetChar(3, wxT('S'));	//  If originally 'x', use lower case, otherwise upper
+if ( IsSetuid() ) text.GetChar(3) == wxT('x') ?  text.SetChar(3, wxT('s')) : text.SetChar(3, wxT('S'));  //  If originally 'x', use lower case, otherwise upper
 if ( IsSetgid() ) text.GetChar(6) == wxT('x') ?  text.SetChar(6, wxT('s')) : text.SetChar(6, wxT('S'));
 if ( IsSticky() ) text.GetChar(9) == wxT('x') ?  text.SetChar(9, wxT('t')) : text.SetChar(9, wxT('T'));
-			
+
 return text;
 }
 
@@ -175,21 +210,21 @@ wxString FileData::Type()   // Returns string version of type eg "Directory"
 {
 wxString type;
 
-if ( IsRegularFile() )			type = wxT("Regular File");
-else if ( IsDir() )				type = wxT("Directory");
-else if ( IsSymlink() )		type = wxT("Symbolic Link");
-else if ( IsCharDev() )	type = wxT("Character Device");
-else if ( IsBlkDev() )		type = wxT("Block Device");
-else if ( IsSocket() )		type = wxT("Socket");
-else if ( IsFIFO() )			type = wxT("FIFO");
- else type = wxT("Unknown Type?!");
- 
+if ( IsRegularFile() )         type = wxT("Regular File");
+else if ( IsDir() )             type = wxT("Directory");
+else if ( IsSymlink() )      type = wxT("Symbolic Link");
+else if ( IsCharDev() )     type = wxT("Character Device");
+else if ( IsBlkDev() )        type = wxT("Block Device");
+else if ( IsSocket() )        type = wxT("Socket");
+else if ( IsFIFO() )            type = wxT("FIFO");
+  else type = wxT("Unknown Type?!");
+
 return type;
 }
 
 wxString FileData::GetOwner()  // Returns owner's name as string
 {
-struct passwd* p = getpwuid( OwnerID() );	                      // Use getpwuid to fill password struct
+struct passwd* p = getpwuid( OwnerID() );                       // Use getpwuid to fill password struct
  
 return p == NULL ? wxEmptyString : p->pw_name;
 }
@@ -201,6 +236,14 @@ struct group* g=getgrgid( GroupID() );                            // Use getgrgi
 return g == NULL ? wxEmptyString : g->gr_name;
 }
 
+wxString FileData::GetUltimateDestination()  // Returns the filepath at the end of a series of symlinks (or the original filepath if not a symlink)
+{
+char buf[500];
+// This function absolutes a relative path, and undoes any symlinks within the path eg /foo/subdir where foo is a symlink for /bar
+if ( realpath( GetFilepath().c_str(), buf ) == NULL ) return wxEmptyString;
+
+return wxString(buf);
+}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 

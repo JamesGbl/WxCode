@@ -19,11 +19,13 @@ FileData( wxString Filename, bool defererence = false );                    // I
 bool IsValid(){ return result != -1; }
 wxString GetFilepath(){ return result ? wxString("") : Filepath; }
 wxString GetFilename(){ return result ? wxString("") : Filepath.AfterLast(wxFILE_SEP_PATH); }
+wxString GetPath();
 
 bool IsFileExecutable();                                                         // See if the file is executable (by SOMEONE, not necessarily us)
 bool CanTHISUserRead();
 bool CanTHISUserWrite();
 bool CanTHISUserExecute();
+bool CanTHISUserWriteExec();
 bool CanTHISUserRename();                                                 // See if the file's PARENT DIR is Writable by THIS USER
 bool CanTHISUserChmod();                                                  // See if the file's permissions are changable by US
 
@@ -43,6 +45,7 @@ blksize_t GetBlocksize(){ return statstruct->st_blksize; }    // Returns filesys
 blkcnt_t GetBlockNo(){ return statstruct->st_blocks; }       // Returns no of allocated blocks for the file
 
 ino_t GetInodeNo(){ return statstruct->st_ino; }                 // Returns inode no
+dev_t GetDeviceID() { return  statstruct->st_dev; }            // Returns the device ie which disk or partition the file is on
 nlink_t GetHardLinkNo(){ return statstruct->st_nlink; }        // Returns no of hard links
 
 bool IsRegularFile(){ if ( ! IsValid() ) return false; return S_ISREG(statstruct->st_mode); }  // Is Filepath a Regular File?
@@ -76,10 +79,11 @@ size_t GetPermissions(){ return statstruct->st_mode & 07777; }       // Returns 
 
 class FileData* GetSymlinkData(){ return symlinkdestination; }
 wxString GetSymlinkDestination(){ if ( ! GetSymlinkData()->GetFilepath().IsEmpty() ) return GetSymlinkData()->GetFilepath(); 
-																else return GetSymlinkData()->BrokenlinkName;    // If the symlink's broken, this is where the original target name is stored
-														 }
+                                                       else return GetSymlinkData()->BrokenlinkName;    // If the symlink's broken, this is where the original target name is stored
+                                                   }
+wxString GetUltimateDestination();                                         // Returns the file at the end of a series of symlinks (or original filepath if not a link)
 
-bool DoChmod( mode_t newmode );	                                    // If appropriate, change the file's permissions to newmode
+bool DoChmod( mode_t newmode );                                     // If appropriate, change the file's permissions to newmode
 bool DoChangeOwner( uid_t owner );                                    // If appropriate, change the file's owner
 bool DoChangeGroup( gid_t group );                                     // If appropriate, change the file's group
 

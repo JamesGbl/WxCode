@@ -1,7 +1,7 @@
 Component:  UnixFiledataClass
-Release:    1.0
+Release:    1.1
 Documents:  http://wxcode.sourceforge.net/components/unixfiledataclass/index.html
-wxWidgets:  2.4.x, 2.6.1
+wxWidgets:  2.4.x, 2.6.2
 Maintainer: David Hart (dghart)
 Subdir:     unixfiledataclass
 
@@ -13,3 +13,13 @@ correctly with symlinks.
  
 None of this is rocket science, most methods just returning parts of statstruct. 
 However I hope it saves some wheel-reinvention.
+
+
+
+Release 1.1 fixes a bug in CanTHISUserRead() and CanTHISUserWrite().
+The new version checks symlinks separately, as access() automatically dereferences these.
+This resulted in wrong answers, especially in the case of broken symlinks.
+I've also changed CanTHISUserRename() to check the parent dir for exec permission as well as write,
+as without this the dir cannot be stat.ed.  This meant adding a CanTHISUserWriteExec() function.
+
+Other minor additions are GetDeviceID() and GetUltimateDestination(); and GetPath() which is used internally.

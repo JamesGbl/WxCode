@@ -6,6 +6,7 @@ IsFileExecutable();
 CanTHISUserRead();
 CanTHISUserWrite();
 CanTHISUserExecute();
+CanTHISUserWriteExec();
 CanTHISUserRename();
 CanTHISUserChmod();
 
@@ -39,6 +40,7 @@ GetParsedSize();
 GetBlocksize();
 GetBlockNo();
 GetInodeNo();
+GetDeviceID();
 GetHardLinkNo();
 
 IsRegularFile();
@@ -52,6 +54,7 @@ IsFIFO();
 Type();                          // Returns string version of type eg "Directory"
 
 GetSymlinkDestination(); 
+GetUltimateDestination();        // Returns the file at the end of a series of symlinks
 
 The last three methods attempt to change permissions, ownership and group
 
