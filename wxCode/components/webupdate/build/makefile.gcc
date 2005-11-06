@@ -309,6 +309,35 @@ docs:
 cleandocs: 
 	-if exist ..\docs\html then rmdir /S /Q ..\docs\html
 
+install: all install-wxheaders
+	copy /Y ..\lib\libwebupdate$(WXLIBPOSTFIX).a $(WX_DIR)$(WXLIBPATH)
+	copy /Y ..\lib\webupdate$(WXLIBPOSTFIX).dll $(WX_DIR)$(WXLIBPATH)
+
+install-wxheaders: 
+	mkdir $(WX_DIR)/include/wx
+	cd .
+	copy /Y  ../include/wx/*.h $(WX_DIR)/include/wx
+
+uninstall: 
+	-if exist $(WX_DIR)\include\wx\webupdatedef.h \
+	$(WX_DIR)\include\wx\webupdate.h \
+	$(WX_DIR)\include\wx\webupdatedlg.h \
+	$(WX_DIR)\include\wx\checkedlistctrl.h \
+	$(WX_DIR)\include\wx\md5.h \
+	$(WX_DIR)\include\wx\installer.h \
+	$(WX_DIR)\include\wx\download.h \
+	$(WX_DIR)\include\wx\stdactions.h \
+	$(WX_DIR)\include\wx\webupdatectrl.h then del /Q $(WX_DIR)\include\wx\webupdatedef.h \
+	$(WX_DIR)\include\wx\webupdate.h \
+	$(WX_DIR)\include\wx\webupdatedlg.h \
+	$(WX_DIR)\include\wx\checkedlistctrl.h \
+	$(WX_DIR)\include\wx\md5.h \
+	$(WX_DIR)\include\wx\installer.h \
+	$(WX_DIR)\include\wx\download.h \
+	$(WX_DIR)\include\wx\stdactions.h \
+	$(WX_DIR)\include\wx\webupdatectrl.h
+	-if exist $(WX_DIR)$(WXLIBPATH)\*webupdate* then del /Q $(WX_DIR)$(WXLIBPATH)\*webupdate*
+
 ifeq ($(WX_SHARED),0)
 ..\lib\libwebupdate$(WXLIBPOSTFIX).a: $(WEBUPDATE_LIB_OBJECTS)
 	if exist $@ del $@
@@ -430,7 +459,7 @@ mingw\advanced_1_5_0_minimal.o: ./../samples/advanced/v1.5.0/minimal.cpp
 mingw\advanced_1_5_0_minimal_rc.o: ./../samples/advanced/v1.5.0/minimal.rc
 	windres --use-temp-file -i$< -o$@ $(__WX_SHAREDDEFINE_p_1_0) --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ..\include --include-dir ../samples/advanced/v1.5.0
 
-.PHONY: all clean rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150
+.PHONY: all clean install uninstall rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150
 
 
 # Dependencies tracking:

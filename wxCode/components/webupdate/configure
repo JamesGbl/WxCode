@@ -837,8 +837,6 @@ Optional Packages:
   --with-x11              Uses the wxX11 port (default is wxlike)
   --with-mac              Uses the wxMac port (default is wxlike)
   --with-mgl              Uses the wxMGL port (default is wxlike)
-  --with-httpengine       Enables the proxy and authentication support;
-                          requires the wxHttpEngine component (default is yes)
 
 Some influential environment variables:
   CC          C compiler command
@@ -1315,13 +1313,16 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
-# Arguments:
-# $1 = the name (mixed case) of the component to check
-# $2 = the name of a header of the component to check (with 'wx/' prefix and '.h' suffix)
-# $3 = the name of the library of the component to check (without 'lib' prefix and .a/.so suffix)
-# $4 = a C++ line of code that forces the test program to be linked against the component in order to work
-# $5 = action if found
-# $6 = action if not found
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1679,37 +1680,17 @@ echo "$as_me: error: unrecognized option value (allowed values: yes, wxlike) !" 
         fi
 
 
-
-# Two little custom macros which define the ENABLE/WITH configure arguments.
-# Macro arguments:
-# $1 = the name of the --enable- feature
-# $2 = the description of that feature
-# $3 = the default value for that feature
-#
-# NOTE: the space between the two hyphens (-) are required since in XML
-#       they are forbidden... remove them before using this file
-#
-
-
-
-
-# Check whether --with-httpengine or --without-httpengine was given.
-if test "${with_httpengine+set}" = set; then
-  withval="$with_httpengine"
-
-else
-  with_httpengine=yes
-fi;
+MY_ARG_WITH(httpengine, Enables the proxy and authentication support; requires the wxHttpEngine component, yes)
 
 echo "$as_me:$LINENO: checking for the --with-httpengine option" >&5
 echo $ECHO_N "checking for the --with-httpengine option... $ECHO_C" >&6
 if test "$with_httpengine" = "yes"; then
-USE_HTTPENGINE=1
-echo "$as_me:$LINENO: result: yes" >&5
+    USE_HTTPENGINE=1
+    echo "$as_me:$LINENO: result: yes" >&5
 echo "${ECHO_T}yes" >&6
 else
-USE_HTTPENGINE=0
-echo "$as_me:$LINENO: result: no" >&5
+    USE_HTTPENGINE=0
+    echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6
 fi
 
@@ -3853,7 +3834,7 @@ echo "$as_me: error:
                                     echo "$as_me:$LINENO: checking if wxWidgets was built with UNICODE enabled" >&5
 echo $ECHO_N "checking if wxWidgets was built with UNICODE enabled... $ECHO_C" >&6
 
-		WX_UNICODE=$(expr match "$WX_SELECTEDCONFIG" ".*unicode.*")
+		WX_UNICODE=$(expr "$WX_SELECTEDCONFIG" : ".*unicode.*")
 
             if test "$WX_UNICODE" != "0"; then
                 WX_UNICODE=1
@@ -3877,7 +3858,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets was built in DEBUG mode" >&5
 echo $ECHO_N "checking if wxWidgets was built in DEBUG mode... $ECHO_C" >&6
 
-		WX_DEBUG=$(expr match "$WX_SELECTEDCONFIG" ".*debug.*")
+		WX_DEBUG=$(expr "$WX_SELECTEDCONFIG" : ".*debug.*")
 
             if test "$WX_DEBUG" != "0"; then
                 WX_DEBUG=1
@@ -3902,7 +3883,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets was built in STATIC mode" >&5
 echo $ECHO_N "checking if wxWidgets was built in STATIC mode... $ECHO_C" >&6
 
-		WX_STATIC=$(expr match "$WX_SELECTEDCONFIG" ".*static.*")
+		WX_STATIC=$(expr "$WX_SELECTEDCONFIG" : ".*static.*")
 
             if test "$WX_STATIC" != "0"; then
                 WX_STATIC=1
@@ -3933,7 +3914,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxGTK" >&5
 echo $ECHO_N "checking if wxWidgets port is wxGTK... $ECHO_C" >&6
 
-		WX_GTKPORT=$(expr match "$WX_SELECTEDCONFIG" ".*gtk.*")
+		WX_GTKPORT=$(expr "$WX_SELECTEDCONFIG" : ".*gtk.*")
 
             if test "$WX_GTKPORT" != "0"; then
                 WX_GTKPORT=1
@@ -3957,7 +3938,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxMotif" >&5
 echo $ECHO_N "checking if wxWidgets port is wxMotif... $ECHO_C" >&6
 
-		WX_MOTIFPORT=$(expr match "$WX_SELECTEDCONFIG" ".*motif.*")
+		WX_MOTIFPORT=$(expr "$WX_SELECTEDCONFIG" : ".*motif.*")
 
             if test "$WX_MOTIFPORT" != "0"; then
                 WX_MOTIFPORT=1
@@ -3981,7 +3962,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxMac" >&5
 echo $ECHO_N "checking if wxWidgets port is wxMac... $ECHO_C" >&6
 
-		WX_MACPORT=$(expr match "$WX_SELECTEDCONFIG" ".*mac.*")
+		WX_MACPORT=$(expr "$WX_SELECTEDCONFIG" : ".*mac.*")
 
             if test "$WX_MACPORT" != "0"; then
                 WX_MACPORT=1
@@ -4005,7 +3986,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxX11" >&5
 echo $ECHO_N "checking if wxWidgets port is wxX11... $ECHO_C" >&6
 
-		WX_X11PORT=$(expr match "$WX_SELECTEDCONFIG" ".*x11.*")
+		WX_X11PORT=$(expr "$WX_SELECTEDCONFIG" : ".*x11.*")
 
             if test "$WX_X11PORT" != "0"; then
                 WX_X11PORT=1
@@ -4029,7 +4010,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxMGL" >&5
 echo $ECHO_N "checking if wxWidgets port is wxMGL... $ECHO_C" >&6
 
-		WX_MGLPORT=$(expr match "$WX_SELECTEDCONFIG" ".*mgl.*")
+		WX_MGLPORT=$(expr "$WX_SELECTEDCONFIG" : ".*mgl.*")
 
             if test "$WX_MGLPORT" != "0"; then
                 WX_MGLPORT=1
@@ -4056,7 +4037,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxGTK uses GTK 2.x or GTK 1.x" >&5
 echo $ECHO_N "checking if wxGTK uses GTK 2.x or GTK 1.x... $ECHO_C" >&6
 
-		WX_TEMP=$(expr match "$WX_SELECTEDCONFIG" ".*gtk2.*")
+		WX_TEMP=$(expr "$WX_SELECTEDCONFIG" : ".*gtk2.*")
 
             if test "$WX_TEMP" != "0"; then
                 WX_TEMP=1
@@ -4088,7 +4069,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets was built with UNICODE enabled" >&5
 echo $ECHO_N "checking if wxWidgets was built with UNICODE enabled... $ECHO_C" >&6
 
-		WX_UNICODE=$(expr match "$WX_CPPFLAGS" ".*unicode.*")
+		WX_UNICODE=$(expr "$WX_CPPFLAGS" : ".*unicode.*")
 
             if test "$WX_UNICODE" != "0"; then
                 WX_UNICODE=1
@@ -4112,7 +4093,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets was built in DEBUG mode" >&5
 echo $ECHO_N "checking if wxWidgets was built in DEBUG mode... $ECHO_C" >&6
 
-		WX_DEBUG=$(expr match "$WX_CPPFLAGS" ".*__WXDEBUG__.*")
+		WX_DEBUG=$(expr "$WX_CPPFLAGS" : ".*__WXDEBUG__.*")
 
             if test "$WX_DEBUG" != "0"; then
                 WX_DEBUG=1
@@ -4136,7 +4117,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets was built in STATIC mode" >&5
 echo $ECHO_N "checking if wxWidgets was built in STATIC mode... $ECHO_C" >&6
 
-		WX_STATIC=$(expr match "$WX_CPPFLAGS" ".*static.*")
+		WX_STATIC=$(expr "$WX_CPPFLAGS" : ".*static.*")
 
             if test "$WX_STATIC" != "0"; then
                 WX_STATIC=1
@@ -4167,7 +4148,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxGTK" >&5
 echo $ECHO_N "checking if wxWidgets port is wxGTK... $ECHO_C" >&6
 
-		WX_GTKPORT=$(expr match "$WX_CPPFLAGS" ".*__WXGTK__.*")
+		WX_GTKPORT=$(expr "$WX_CPPFLAGS" : ".*__WXGTK__.*")
 
             if test "$WX_GTKPORT" != "0"; then
                 WX_GTKPORT=1
@@ -4191,7 +4172,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxMotif" >&5
 echo $ECHO_N "checking if wxWidgets port is wxMotif... $ECHO_C" >&6
 
-		WX_MOTIFPORT=$(expr match "$WX_CPPFLAGS" ".*__WXMOTIF__.*")
+		WX_MOTIFPORT=$(expr "$WX_CPPFLAGS" : ".*__WXMOTIF__.*")
 
             if test "$WX_MOTIFPORT" != "0"; then
                 WX_MOTIFPORT=1
@@ -4215,7 +4196,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxMac" >&5
 echo $ECHO_N "checking if wxWidgets port is wxMac... $ECHO_C" >&6
 
-		WX_MACPORT=$(expr match "$WX_CPPFLAGS" ".*__WXMAC__.*")
+		WX_MACPORT=$(expr "$WX_CPPFLAGS" : ".*__WXMAC__.*")
 
             if test "$WX_MACPORT" != "0"; then
                 WX_MACPORT=1
@@ -4239,7 +4220,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxX11" >&5
 echo $ECHO_N "checking if wxWidgets port is wxX11... $ECHO_C" >&6
 
-		WX_X11PORT=$(expr match "$WX_CPPFLAGS" ".*__WXX11__.*")
+		WX_X11PORT=$(expr "$WX_CPPFLAGS" : ".*__WXX11__.*")
 
             if test "$WX_X11PORT" != "0"; then
                 WX_X11PORT=1
@@ -4263,7 +4244,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxMGL" >&5
 echo $ECHO_N "checking if wxWidgets port is wxMGL... $ECHO_C" >&6
 
-		WX_MGLPORT=$(expr match "$WX_CPPFLAGS" ".*__WXMGL__.*")
+		WX_MGLPORT=$(expr "$WX_CPPFLAGS" : ".*__WXMGL__.*")
 
             if test "$WX_MGLPORT" != "0"; then
                 WX_MGLPORT=1
@@ -4290,7 +4271,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxGTK uses GTK 2.x or GTK 1.x" >&5
 echo $ECHO_N "checking if wxGTK uses GTK 2.x or GTK 1.x... $ECHO_C" >&6
 
-		WX_TEMP=$(expr match "$WX_CPPFLAGS" ".*gtk2.*")
+		WX_TEMP=$(expr "$WX_CPPFLAGS" : ".*gtk2.*")
 
             if test "$WX_TEMP" != "0"; then
                 WX_TEMP=1
@@ -4410,7 +4391,6 @@ wxHTTPEngine_PRESENCE=0
 fi
 rm -f conftest.err conftest.$ac_objext \
       conftest$ac_exeext conftest.$ac_ext
-
 
             if test "$wxHTTPEngine_PRESENCE" = "1"; then
                echo "$as_me:$LINENO: result: found" >&5

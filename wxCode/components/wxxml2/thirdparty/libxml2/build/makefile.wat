@@ -377,7 +377,7 @@ setupdirs : .SYMBOLIC setupbuilddir ..\lib ..\bin
 	@for %i in ($(LIBXML2_DLL_OBJECTS)) do @%append watcom\libxml2_dll.lbc file %i
 	@for %i in ( $(__ICONV_LIB_p) $(__WSOCK32_LIB_p) $(__ZLIB_LIB_p) $(__POSIX_LIB_p)) do @%append watcom\libxml2_dll.lbc library %i
 	@%append watcom\libxml2_dll.lbc
-	@%append watcom\libxml2_dll.lbc system nt_dll
+	@%append watcom\libxml2_dll.lbc system nr_dll
 	wlink @watcom\libxml2_dll.lbc
 	wlib -q -n -b ..\lib\libxml2.lib +$^@
 !endif
@@ -506,281 +506,281 @@ libonly : .SYMBOLIC ..\config.h setupdirs $(____libonly_DEPNAME_DEP)
 	wlink @watcom\xmllint.lbc
 
 watcom\libxml2_lib_c14n.obj :  .AUTODEPEND .\..\c14n.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_catalog.obj :  .AUTODEPEND .\..\catalog.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_chvalid.obj :  .AUTODEPEND .\..\chvalid.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_debugXML.obj :  .AUTODEPEND .\..\debugXML.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_dict.obj :  .AUTODEPEND .\..\dict.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_DOCBparser.obj :  .AUTODEPEND .\..\DOCBparser.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_encoding.obj :  .AUTODEPEND .\..\encoding.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_entities.obj :  .AUTODEPEND .\..\entities.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_error.obj :  .AUTODEPEND .\..\error.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_globals.obj :  .AUTODEPEND .\..\globals.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_hash.obj :  .AUTODEPEND .\..\hash.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_HTMLparser.obj :  .AUTODEPEND .\..\HTMLparser.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_HTMLtree.obj :  .AUTODEPEND .\..\HTMLtree.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_legacy.obj :  .AUTODEPEND .\..\legacy.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_list.obj :  .AUTODEPEND .\..\list.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_nanoftp.obj :  .AUTODEPEND .\..\nanoftp.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_nanohttp.obj :  .AUTODEPEND .\..\nanohttp.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_parser.obj :  .AUTODEPEND .\..\parser.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_parserInternals.obj :  .AUTODEPEND .\..\parserInternals.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_pattern.obj :  .AUTODEPEND .\..\pattern.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_relaxng.obj :  .AUTODEPEND .\..\relaxng.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_SAX2.obj :  .AUTODEPEND .\..\SAX2.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_SAX.obj :  .AUTODEPEND .\..\SAX.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_threads.obj :  .AUTODEPEND .\..\threads.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_tree.obj :  .AUTODEPEND .\..\tree.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_uri.obj :  .AUTODEPEND .\..\uri.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_valid.obj :  .AUTODEPEND .\..\valid.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_xinclude.obj :  .AUTODEPEND .\..\xinclude.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_xlink.obj :  .AUTODEPEND .\..\xlink.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_xmlIO.obj :  .AUTODEPEND .\..\xmlIO.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_xmlmemory.obj :  .AUTODEPEND .\..\xmlmemory.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_xmlreader.obj :  .AUTODEPEND .\..\xmlreader.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_xmlregexp.obj :  .AUTODEPEND .\..\xmlregexp.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_xmlsave.obj :  .AUTODEPEND .\..\xmlsave.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_xmlschemas.obj :  .AUTODEPEND .\..\xmlschemas.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_xmlschemastypes.obj :  .AUTODEPEND .\..\xmlschemastypes.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_xmlunicode.obj :  .AUTODEPEND .\..\xmlunicode.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_xmlwriter.obj :  .AUTODEPEND .\..\xmlwriter.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_xpath.obj :  .AUTODEPEND .\..\xpath.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_xpointer.obj :  .AUTODEPEND .\..\xpointer.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_lib_xmlstring.obj :  .AUTODEPEND .\..\xmlstring.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_LIB_CFLAGS) $<
 
 watcom\libxml2_dll_c14n.obj :  .AUTODEPEND .\..\c14n.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_catalog.obj :  .AUTODEPEND .\..\catalog.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_chvalid.obj :  .AUTODEPEND .\..\chvalid.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_debugXML.obj :  .AUTODEPEND .\..\debugXML.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_dict.obj :  .AUTODEPEND .\..\dict.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_DOCBparser.obj :  .AUTODEPEND .\..\DOCBparser.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_encoding.obj :  .AUTODEPEND .\..\encoding.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_entities.obj :  .AUTODEPEND .\..\entities.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_error.obj :  .AUTODEPEND .\..\error.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_globals.obj :  .AUTODEPEND .\..\globals.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_hash.obj :  .AUTODEPEND .\..\hash.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_HTMLparser.obj :  .AUTODEPEND .\..\HTMLparser.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_HTMLtree.obj :  .AUTODEPEND .\..\HTMLtree.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_legacy.obj :  .AUTODEPEND .\..\legacy.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_list.obj :  .AUTODEPEND .\..\list.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_nanoftp.obj :  .AUTODEPEND .\..\nanoftp.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_nanohttp.obj :  .AUTODEPEND .\..\nanohttp.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_parser.obj :  .AUTODEPEND .\..\parser.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_parserInternals.obj :  .AUTODEPEND .\..\parserInternals.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_pattern.obj :  .AUTODEPEND .\..\pattern.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_relaxng.obj :  .AUTODEPEND .\..\relaxng.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_SAX2.obj :  .AUTODEPEND .\..\SAX2.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_SAX.obj :  .AUTODEPEND .\..\SAX.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_threads.obj :  .AUTODEPEND .\..\threads.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_tree.obj :  .AUTODEPEND .\..\tree.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_uri.obj :  .AUTODEPEND .\..\uri.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_valid.obj :  .AUTODEPEND .\..\valid.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_xinclude.obj :  .AUTODEPEND .\..\xinclude.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_xlink.obj :  .AUTODEPEND .\..\xlink.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_xmlIO.obj :  .AUTODEPEND .\..\xmlIO.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_xmlmemory.obj :  .AUTODEPEND .\..\xmlmemory.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_xmlreader.obj :  .AUTODEPEND .\..\xmlreader.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_xmlregexp.obj :  .AUTODEPEND .\..\xmlregexp.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_xmlsave.obj :  .AUTODEPEND .\..\xmlsave.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_xmlschemas.obj :  .AUTODEPEND .\..\xmlschemas.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_xmlschemastypes.obj :  .AUTODEPEND .\..\xmlschemastypes.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_xmlunicode.obj :  .AUTODEPEND .\..\xmlunicode.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_xmlwriter.obj :  .AUTODEPEND .\..\xmlwriter.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_xpath.obj :  .AUTODEPEND .\..\xpath.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_xpointer.obj :  .AUTODEPEND .\..\xpointer.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\libxml2_dll_xmlstring.obj :  .AUTODEPEND .\..\xmlstring.c
-	$(CC) -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(LIBXML2_DLL_CFLAGS) $<
 
 watcom\testAutomata_testAutomata.obj :  .AUTODEPEND .\..\testAutomata.c
-	$(CC) -zq -fo=$^@ $(TESTAUTOMATA_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(TESTAUTOMATA_CFLAGS) $<
 
 watcom\testC14N_testC14N.obj :  .AUTODEPEND .\..\testC14N.c
-	$(CC) -zq -fo=$^@ $(TESTC14N_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(TESTC14N_CFLAGS) $<
 
 watcom\testHTML_testHTML.obj :  .AUTODEPEND .\..\testHTML.c
-	$(CC) -zq -fo=$^@ $(TESTHTML_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(TESTHTML_CFLAGS) $<
 
 watcom\testReader_testReader.obj :  .AUTODEPEND .\..\testReader.c
-	$(CC) -zq -fo=$^@ $(TESTREADER_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(TESTREADER_CFLAGS) $<
 
 watcom\testRegexp_testRegexp.obj :  .AUTODEPEND .\..\testRegexp.c
-	$(CC) -zq -fo=$^@ $(TESTREGEXP_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(TESTREGEXP_CFLAGS) $<
 
 watcom\testRelax_testRelax.obj :  .AUTODEPEND .\..\testRelax.c
-	$(CC) -zq -fo=$^@ $(TESTRELAX_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(TESTRELAX_CFLAGS) $<
 
 watcom\testSax_testSax.obj :  .AUTODEPEND .\..\testSax.c
-	$(CC) -zq -fo=$^@ $(TESTSAX_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(TESTSAX_CFLAGS) $<
 
 watcom\testSchemas_testSchemas.obj :  .AUTODEPEND .\..\testSchemas.c
-	$(CC) -zq -fo=$^@ $(TESTSCHEMAS_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(TESTSCHEMAS_CFLAGS) $<
 
 watcom\testURI_testURI.obj :  .AUTODEPEND .\..\testURI.c
-	$(CC) -zq -fo=$^@ $(TESTURI_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(TESTURI_CFLAGS) $<
 
 watcom\testXPath_testXPath.obj :  .AUTODEPEND .\..\testXPath.c
-	$(CC) -zq -fo=$^@ $(TESTXPATH_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(TESTXPATH_CFLAGS) $<
 
 watcom\xmllint_xmllint.obj :  .AUTODEPEND .\..\xmllint.c
-	$(CC) -zq -fo=$^@ $(XMLLINT_CFLAGS) $<
+	$(CC) -bt=nt -zq -fo=$^@ $(XMLLINT_CFLAGS) $<
 

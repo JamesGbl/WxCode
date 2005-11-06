@@ -233,6 +233,23 @@ docs:
 cleandocs: 
 	-if exist ..\docs\html then rmdir /S /Q ..\docs\html
 
+install: all install-wxheaders
+	copy /Y ..\lib\libkeybinder$(WXLIBPOSTFIX).a $(WX_DIR)$(WXLIBPATH)
+	copy /Y ..\lib\keybinder$(WXLIBPOSTFIX).dll $(WX_DIR)$(WXLIBPATH)
+
+install-wxheaders: 
+	mkdir $(WX_DIR)/include/wx
+	cd .
+	copy /Y  ../include/wx/*.h $(WX_DIR)/include/wx
+
+uninstall: 
+	-if exist $(WX_DIR)\include\wx\keybinderdef.h \
+	$(WX_DIR)\include\wx\keybinder.h \
+	$(WX_DIR)\include\wx\menuutils.h then del /Q $(WX_DIR)\include\wx\keybinderdef.h \
+	$(WX_DIR)\include\wx\keybinder.h \
+	$(WX_DIR)\include\wx\menuutils.h
+	-if exist $(WX_DIR)$(WXLIBPATH)\*keybinder* then del /Q $(WX_DIR)$(WXLIBPATH)\*keybinder*
+
 ifeq ($(WX_SHARED),0)
 ..\lib\libkeybinder$(WXLIBPOSTFIX).a: $(KEYBINDER_LIB_OBJECTS)
 	if exist $@ del $@
@@ -266,7 +283,7 @@ mingw\minimal_minimal.o: ./../sample/minimal.cpp
 mingw\minimal_minimal_rc.o: ./../sample/minimal.rc
 	windres --use-temp-file -i$< -o$@ $(__WX_SHAREDDEFINE_p_4) --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_4) $(__WXDEBUG_DEFINE_p_4) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ..\include --include-dir ../sample --include-dir ..\sample
 
-.PHONY: all clean
+.PHONY: all clean install uninstall
 
 
 # Dependencies tracking:

@@ -43,16 +43,18 @@ WX_LIBS = @WX_LIBS@
 ### Variables: ###
 
 DESTDIR = 
-WXXML2_LIB_CXXFLAGS =   -I./include  $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+WXXML2_LIB_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include $(WX_CXXFLAGS) \
+	$(CPPFLAGS) $(CXXFLAGS)
 WXXML2_LIB_OBJECTS =  \
 	wxxml2_lib_xml2.o \
 	wxxml2_lib_dtd.o
-WXXML2_DLL_CXXFLAGS = -I./include -DWXMAKINGDLL_WXXML2 $(PIC_FLAG) \
-	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+WXXML2_DLL_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include -DWXMAKINGDLL_WXXML2 \
+	$(PIC_FLAG) $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 WXXML2_DLL_OBJECTS =  \
 	wxxml2_dll_xml2.o \
 	wxxml2_dll_dtd.o
-MINIMAL_CXXFLAGS =   -I./include  $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include $(WX_CXXFLAGS) \
+	$(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	minimal_minimal.o
 
@@ -114,6 +116,7 @@ COND_USE_SOSYMLINKS_1___wxxml2_dll___so_symlinks_inst_cmd = rm -f \
 COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd = $(NM) minimal$(EXEEXT) | if \
 	grep -q pmwin.763 ; then emxbind -ep minimal$(EXEEXT) ; fi
 @COND_PLATFORM_OS2_1@__minimal___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd)
+@COND_WX_SHARED_1@__WX_SHAREDDEFINE_p = -DWXUSINGDLL
 
 ### Targets: ###
 
@@ -234,7 +237,7 @@ install-wxheaders:
 @COND_WX_SHARED_0@	$(INSTALL_DATA) ./lib/$(LIBPREFIX)wxxml2$(LIBEXT) $(DESTDIR)$(libdir)
 
 @COND_WX_SHARED_1@./lib/$(DLLPREFIX)wxxml2$(__wxxml2_dll___targetsuf3): $(WXXML2_DLL_OBJECTS)
-@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(WXXML2_DLL_OBJECTS) $(LDFLAGS) -L./lib $(__wxxml2_dll___macinstnamecmd) $(__wxxml2_dll___importlib) $(__wxxml2_dll___soname_flags) $(__wxxml2_dll___macver)  $(WX_LIBS) -lxml2
+@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(WXXML2_DLL_OBJECTS) $(LDFLAGS)   -L./lib $(__wxxml2_dll___macinstnamecmd) $(__wxxml2_dll___importlib) $(__wxxml2_dll___soname_flags) $(__wxxml2_dll___macver)  -lxml2 $(WX_LIBS)
 @COND_WX_SHARED_1@	
 @COND_WX_SHARED_1@	$(__wxxml2_dll___so_symlinks_cmd)
 
@@ -245,7 +248,7 @@ install-wxheaders:
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__wxxml2_dll___so_symlinks_inst_cmd))
 
 ./sample/minimal$(EXEEXT): $(MINIMAL_OBJECTS) $(__wxxml2_lib___depname)
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) -L./lib $(LDFLAGS) -L./lib $(LDFLAGS_GUI)  $(WX_LIBS) -lwxxml2 -lxml2
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) -L./lib $(LDFLAGS)   -L./lib $(LDFLAGS_GUI)  -lwxxml2 -lxml2 $(WX_LIBS)
 	
 	$(__minimal___mac_setfilecmd)
 	$(__minimal___os2_emxbindcmd)

@@ -3,7 +3,7 @@
 # RCS-ID: $Id$
 #
 # A basic "configure.ac" for a wxCode component.
-# See 
+# See
 #    http://www.gnu.org/software/autoconf/manual/autoconf-2.57/html_mono/autoconf.html
 # for more info about autoconf and the autoconf macros.
 # ======================================================================================
@@ -16,7 +16,7 @@ AC_INIT([wxScript], [1.5], [frm@sourceforge.net])
 # ENABLES/DISABLES THE DEBUG MODE FOR THIS CONFIGURE SCRIPT
 DBG_CONFIGURE=1
 
-m4_include(../../../build/bakefiles/wxcode.m4)
+m4_include(../../../build/autoconf/wxcode.m4)
 AM_WXCODE_INIT
 
 
@@ -43,12 +43,12 @@ AM_OPTIONS_WXPRESETS
 # NOTE: the space between the two hyphens (-) are required since in XML
 #       they are forbidden... remove them before using this file
 #
-AC_DEFUN([MY_ARG_ENABLE], [AC_ARG_ENABLE($1, 
-			AC_HELP_STRING([--enable-$1],
-			[$2 (default is $3)]),, [enable_$1=$3])])
-AC_DEFUN([MY_ARG_WITH], [AC_ARG_WITH($1, 
-			AC_HELP_STRING([--with-$1],
-			[$2 (default is $3)]),, [with_$1=$3])])
+AC_DEFUN([MY_ARG_ENABLE], [AC_ARG_ENABLE($1,
+            AC_HELP_STRING([--enable-$1],
+            [$2 (default is $3)]),, [enable_$1=$3])])
+AC_DEFUN([MY_ARG_WITH], [AC_ARG_WITH($1,
+            AC_HELP_STRING([--with-$1],
+            [$2 (default is $3)]),, [with_$1=$3])])
 
 MY_ARG_WITH([python], [Builds with Python support], [yes])
 MY_ARG_WITH([lua], [Builds with LUA support], [yes])
@@ -113,7 +113,7 @@ AC_MSG_RESULT([Checking for the Python version to use... $PYTHON_VER])
 
 ## CONFIGURE CHECKS
 ##
-## Here you should use the AC_CHECK_LIB, AC_COMPILE_IFELSE, 
+## Here you should use the AC_CHECK_LIB, AC_COMPILE_IFELSE,
 ## AC_LINK_IFELSE, etc macros to check that the libraries required
 ## by your component exist on the host machine and match your
 ## required options (version, build settings, etc)
@@ -122,20 +122,20 @@ AC_MSG_RESULT([Checking for the Python version to use... $PYTHON_VER])
 AM_WXCODE_CHECKS([2.4.0])       # 2.4.0 is the minimum required version of wx
 
 if test "$USE_LUA" = "1" ; then
-   
+
    AC_CHECK_HEADER([lua.h], [hasLUA=1], [hasLUA=0])
    AC_CHECK_HEADER([tolua.h], [hasTOLUA=1], [hasTOLUA=0])
 
-   AC_MSG_CHECKING([for the LUA & TOLUA presence... ])   
+   AC_MSG_CHECKING([for the LUA & TOLUA presence... ])
    if test "$hasLUA" != 1; then
        AC_MSG_ERROR([
-         Could not found LUA headers in system path; please 
+         Could not found LUA headers in system path; please
          install latest version from www.lua.org or specify
          the --without-lua option
                    ])
    elif test "$hasTOLUA" != 1; then
        AC_MSG_ERROR([
-         Could not found TOLUA headers in system path; please 
+         Could not found TOLUA headers in system path; please
          install latest version from www.lua.org or specify
          the --without-lua option
                    ])
