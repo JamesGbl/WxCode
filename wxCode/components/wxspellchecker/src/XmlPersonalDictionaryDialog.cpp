@@ -3,10 +3,10 @@
 #include <wx/xrc/xmlres.h>
 
 BEGIN_EVENT_TABLE(XmlPersonalDictionaryDialog, wxDialog)
-  EVT_BUTTON(XRCID(_T("ButtonAddToDict")), XmlPersonalDictionaryDialog::AddWordToPersonalDictionary)
-  EVT_BUTTON(XRCID(_T("ButtonReplaceInDict")), XmlPersonalDictionaryDialog::ReplaceInPersonalDictionary)
-  EVT_BUTTON(XRCID(_T("ButtonRemoveFromDict")), XmlPersonalDictionaryDialog::RemoveFromPersonalDictionary)
-  EVT_BUTTON(XRCID(_T("ButtonClose")), XmlPersonalDictionaryDialog::OnClose)
+  EVT_BUTTON(XRCID("ButtonAddToDict"), XmlPersonalDictionaryDialog::AddWordToPersonalDictionary)
+  EVT_BUTTON(XRCID("ButtonReplaceInDict"), XmlPersonalDictionaryDialog::ReplaceInPersonalDictionary)
+  EVT_BUTTON(XRCID("ButtonRemoveFromDict"), XmlPersonalDictionaryDialog::RemoveFromPersonalDictionary)
+  EVT_BUTTON(XRCID("ButtonClose"), XmlPersonalDictionaryDialog::OnClose)
 END_EVENT_TABLE()
 
 XmlPersonalDictionaryDialog::XmlPersonalDictionaryDialog(wxWindow* parent, wxString strResourceFile, wxString strResource, wxSpellCheckEngineInterface* pEngine)

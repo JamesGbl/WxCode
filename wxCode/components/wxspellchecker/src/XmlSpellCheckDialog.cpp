@@ -39,13 +39,13 @@ END_EVENT_TABLE()
 XmlSpellCheckDialog::XmlSpellCheckDialog(wxWindow *parent, wxString strResourceFile, wxString strDialogResource, wxString strWordListResource, wxSpellCheckEngineInterface* pSpellChecker)
   : wxSpellCheckUserInterface(pSpellChecker) // DON'T call wxDialog constructor
 {
-	m_strReplaceWithText = "";
+  m_strReplaceWithText = _T("");
 
   m_strDialogResource = strDialogResource;
   m_strResourceFile = strResourceFile;
   m_strWordListResource = strWordListResource;
 
-	CreateDialog(parent);
+  CreateDialog(parent);
 }
 
 XmlSpellCheckDialog::~XmlSpellCheckDialog()
