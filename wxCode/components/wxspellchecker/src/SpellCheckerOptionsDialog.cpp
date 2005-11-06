@@ -189,7 +189,7 @@ void SpellCheckerOptionsDialog::OnBrowseForDir(wxCommandEvent& event)
   wxString strBrowseName = ((wxWindow*)(event.GetEventObject()))->GetName();
   wxString strOptionName = strBrowseName.Left(strBrowseName.Length() - wxString(_T("-browse")).Length());
   wxWindow* pControl = wxWindow::FindWindowByName(strOptionName, this);
-  wxString strDefaultDir = "";
+  wxString strDefaultDir = _T("");
   if (pControl)
   {
     strDefaultDir = ((wxTextCtrl*)pControl)->GetValue();

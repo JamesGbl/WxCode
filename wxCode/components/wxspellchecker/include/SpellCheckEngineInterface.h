@@ -87,7 +87,7 @@ public:
   public:  
     MisspellingContext::MisspellingContext()
     {
-      m_strContext = "";
+      m_strContext = _T("");
       m_nOffset = 0;
       m_nLength = 0;
     }

@@ -203,14 +203,14 @@ bool AspellInterface::IsWordInDictionary(const wxString& strWord)
 wxString AspellInterface::CheckSpelling(wxString strText)
 {
   if (m_AspellSpeller == NULL)
-    return "";
+    return _T("");
 
 	//int nCorrect = m_AspellWrapper.AspellSpellerCheck(m_AspellSpeller, strText, strText.Length());
   /* Set up the document checker */
   AspellCanHaveError* ret = m_AspellWrapper.NewAspellDocumentChecker(m_AspellSpeller);
   if (m_AspellWrapper.AspellError(ret) != 0) {
     ::wxMessageBox(wxString::Format("Error: %s\n",m_AspellWrapper.AspellErrorMessage(ret)));
-    return "";
+    return _T("");
   }
   m_AspellChecker = m_AspellWrapper.ToAspellDocumentChecker(ret);
 
