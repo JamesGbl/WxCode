@@ -1,9 +1,9 @@
 # ======================================================================================
 # Author: Francesco Montorsi
-# RCS-ID: $Id: configure.ac,v 1.1 2005-09-25 05:34:18 jblough Exp $
+# RCS-ID: $Id: configure.ac,v 1.2 2005-11-06 12:30:14 frm Exp $
 #
 # A basic "configure.ac" for a wxCode component.
-# See 
+# See
 #    http://www.gnu.org/software/autoconf/manual/autoconf-2.57/html_mono/autoconf.html
 # for more info about autoconf and the autoconf macros.
 # ======================================================================================
@@ -19,7 +19,7 @@ DBG_CONFIGURE=1
 
 # you need the wxCode/build/bakefiles in your local repository to generate a configure
 # script from this configure.ac file since wxcode.m4 is required....
-m4_include(../../../build/bakefiles/wxcode.m4)
+m4_include(../../../build/autoconf/wxcode.m4)
 AM_WXCODE_INIT
 
 
@@ -43,14 +43,14 @@ AM_OPTIONS_WXPRESETS            # don't touch this macro
 
 ## CONFIGURE CHECKS
 ##
-## Here you should use the AC_CHECK_LIB, AC_COMPILE_IFELSE, 
+## Here you should use the AC_CHECK_LIB, AC_COMPILE_IFELSE,
 ## AC_LINK_IFELSE, etc macros to check that the libraries required
 ## by your component exist on the host machine and match your
 ## required options (version, build settings, etc)
 #####################################################################
 
 AM_WXCODE_CHECKS([2.4.0],       # here put the minimum required version of wx
-                [])             # here you must put a comma-separed list of all wx required libraries 
+                [])             # here you must put a comma-separed list of all wx required libraries
                                 # except for base,core (e.g. "xml,net,adv"); leave empty if you use only core & base
 
 
