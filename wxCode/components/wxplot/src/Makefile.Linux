@@ -105,6 +105,7 @@ install:
 	mkdir -p $(HEADINS)wxPlot
 	cp $(BINDINGS)wxPlot.h $(HEADINS)wxPlot
 	cp $(HDIR)plplot.h $(HEADINS)wxPlot
+        cp $(HDIR)plConfig.h $(WXDIR)/include/wxPlot
 clean:
 	rm -f *.o *.a
 
