@@ -584,19 +584,19 @@ long wxWebUpdateAction::wxExecute(const wxString &command, int flags) const
 bool wxWebUpdatePlatform::Matches(const wxWebUpdatePlatform &plat) const
 {
     // check port name
-    if (m_name != plat.m_name && 
+    if (m_name != plat.m_name &&
         (m_name != wxWUP_ANY && plat.m_name != wxWUP_ANY))
         return FALSE;
-    
+
     // check architecture
-    if (m_arch != plat.m_arch && 
+    if (m_arch != plat.m_arch &&
         (m_arch != wxWUA_ANY && plat.m_arch != wxWUA_ANY))
         return FALSE;
 
     // check platform ID using regexp
     wxRegEx our(m_strID);
     if (!our.IsValid()) {
-        wxLogDebug(wxT("wxWebUpdatePlatform::Matches - [") + m_strID + 
+        wxLogDebug(wxT("wxWebUpdatePlatform::Matches - [") + m_strID +
                     wxT("] is a malformed regular expression !"));
         return FALSE;       // syntax error !
     }
@@ -834,7 +834,7 @@ bool wxWebUpdateDownload::DownloadSynch(const wxString &path
         (GetDownloadSize() > 0 && out.GetSize() != GetDownloadSize()))
         return FALSE;
 
-    wxLogUsrMsg(wxT("wxWebUpdateDownload::DownloadSynch - completed download of %d bytes"),
+    wxLogUsrMsg(wxT("wxWebUpdateDownload::DownloadSynch - completed download of %lu bytes"),
         out.GetSize());
 
     // we have successfully download the file
@@ -893,7 +893,7 @@ wxArrayString wxWebUpdatePackage::GetParsedPrerequisites() const
 {
     wxArrayString ret;
     wxStringTokenizer tkz(m_strPrerequisites, wxT(","));
-    while (tkz.HasMoreTokens())    
+    while (tkz.HasMoreTokens())
         ret.Add(tkz.GetNextToken());
     return ret;
 }
@@ -1144,7 +1144,7 @@ wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdow
     if (platform.IsEmpty() || actions.GetCount() <= 0)
         return wxEmptyWebUpdateDownload;
 
-    return wxWebUpdateDownload(uri, 
+    return wxWebUpdateDownload(uri,
                                 wxWebUpdatePlatform(platform, arch, id),
                                 md5, &actions);
 }

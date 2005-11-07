@@ -822,6 +822,8 @@ Optional Features:
   --enable-static         Builds in static mode (default is wxlike)
   --enable-unicode        Builds in unicode mode (default is wxlike)
   --enable-debug          Builds in debug mode (default is wxlike)
+  --enable-httpengine     Enables the proxy and authentication support;
+                          requires the wxHttpEngine component (default is yes)
   --enable-omf            use OMF object format (OS/2)
 
 Optional Packages:
@@ -1680,7 +1682,13 @@ echo "$as_me: error: unrecognized option value (allowed values: yes, wxlike) !" 
         fi
 
 
-MY_ARG_WITH(httpengine, Enables the proxy and authentication support; requires the wxHttpEngine component, yes)
+# Check whether --enable-httpengine or --disable-httpengine was given.
+if test "${enable_httpengine+set}" = set; then
+  enableval="$enable_httpengine"
+
+else
+  enable_httpengine=yes
+fi;
 
 echo "$as_me:$LINENO: checking for the --with-httpengine option" >&5
 echo $ECHO_N "checking for the --with-httpengine option... $ECHO_C" >&6

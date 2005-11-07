@@ -76,6 +76,9 @@ wxHTTPAuthSettings wxDownloadThread::m_auth;
 //!     in->Read(somewhere, somebytes);
 //! \endcode
 //! possible.
+//! NOTE: various hacks are required also to get around the fact that the wxStreamBase::IsOk()
+//!       function is not virtual and thus we always have to set our error variable accordingly
+//!       after each operation.
 class wxURLInputStream : public wxInputStream
 {
 protected:
@@ -88,7 +91,7 @@ public:
     virtual ~wxURLInputStream() { wxDELETE(m_pStream); }
 
     wxFileOffset SeekI( wxFileOffset pos, wxSeekMode mode )
-        { wxASSERT(m_pStream); wxFileOffset fo = m_pStream->SeekI(pos, mode); 
+        { wxASSERT(m_pStream); wxFileOffset fo = m_pStream->SeekI(pos, mode);
             Synch(); return fo; }
     wxFileOffset TellI() const
         { wxASSERT(m_pStream); return m_pStream->TellI(); }
@@ -108,15 +111,22 @@ protected:
             return FALSE;
         }
 
+        wxLogDebug(wxT("wxURLInputStream - no URL parsing errors..."));
+
         m_url.GetProtocol().SetTimeout(30);         // 30 sec are much better rather than 10 min !!!
+        wxLogDebug(wxT("wxURLInputStream - calling wxURL::GetInputStream"));
         m_pStream = m_url.GetInputStream();
+        wxLogDebug(wxT("wxURLInputStream - call was successful"));
         Synch();
 
         return IsOk();
     }
 
     void Synch() {
-        if (m_pStream) m_lasterror = m_pStream->GetLastError();
+        if (m_pStream)
+            m_lasterror = m_pStream->GetLastError();
+        else
+            m_lasterror = wxSTREAM_READ_ERROR;
     }
 
     size_t OnSysRead(void *buffer, size_t bufsize)
@@ -146,7 +156,7 @@ public:
 
 
     wxFileOffset SeekI( wxFileOffset pos, wxSeekMode mode )
-        { wxASSERT(m_pStream); wxFileOffset fo = m_pStream->SeekI(pos, mode); 
+        { wxASSERT(m_pStream); wxFileOffset fo = m_pStream->SeekI(pos, mode);
             Synch(); return fo; }
     wxFileOffset TellI() const
         { wxASSERT(m_pStream); return m_pStream->TellI(); }
@@ -169,7 +179,10 @@ protected:
     }
 
     void Synch() {
-        if (m_pStream) m_lasterror = m_pStream->GetLastError();
+        if (m_pStream)
+            m_lasterror = m_pStream->GetLastError();
+        else
+            m_lasterror = wxSTREAM_READ_ERROR;
     }
 
     size_t OnSysRead(void *buffer, size_t bufsize)
@@ -271,10 +284,13 @@ unsigned long wxGetSizeOfURI(const wxString &uri)
 {
     wxLogDebug(wxT("wxGetSizeOfURI - getting size of [") + uri + wxT("]"));
     wxInputStream *is = wxGetInputStreamFromURI(uri);
-    if (is == NULL)
+    if (is == NULL) {
+        wxLogDebug(wxT("wxGetSizeOfURI - aborting; invalid URL !"));
         return 0;
+    }
 
     if (!is->IsOk()) {
+        wxLogDebug(wxT("wxGetSizeOfURI - aborting; invalid URL !"));
         delete is;          // be sure to avoid leaks
         return 0;
     }
@@ -308,13 +324,13 @@ unsigned long wxGetSizeOfURI(const wxString &uri)
 
 // this macro avoids the repetion of a lot of code
 #define wxDT_ABORT_DOWNLOAD(msg) {                                      \
-            wxLogUsrMsg(wxT("wxDownloadThread::Entry - ") +         \
-                wxString(msg) + wxT(" - DOWNLOAD ABORTED !!!"));    \
+            wxLogUsrMsg(wxT("wxDownloadThread::Entry - ") +             \
+                wxString(msg) + wxT(" - DOWNLOAD ABORTED !!!"));        \
             m_bSuccess = FALSE;                                         \
             m_mStatus.Lock();                                           \
             m_nStatus = wxDTS_WAITING;                                  \
             m_mStatus.Unlock();                                         \
-            wxPostEvent(m_pHandler, updatevent);                    \
+            wxPostEvent(m_pHandler, updatevent);                        \
             continue;                                                   \
     }
 
@@ -396,7 +412,7 @@ void *wxDownloadThread::Entry()
             // do not send too many log messages; send a log message
             // each 20 cycles (i.e. each 20*wxDT_BUF_TEMP_SIZE byte downloaded)
             if ((m_nCurrentSize % (wxDT_BUF_TEMP_SIZE*20)) == 0)
-                wxLogUsrMsg(wxT("wxDownloadThread::Entry - downloaded %d bytes"),
+                wxLogUsrMsg(wxT("wxDownloadThread::Entry - downloaded %lu bytes"),
                             m_nCurrentSize);
 #endif
         }
@@ -411,7 +427,7 @@ void *wxDownloadThread::Entry()
             (out.GetSize() != m_nFinalSize && m_nFinalSize != 0))
             wxDT_ABORT_DOWNLOAD(wxT("Output FILE stream size is wrong"));
 
-        wxLogUsrMsg(wxT("wxDownloadThread::Entry - completed download of %d bytes"),
+        wxLogUsrMsg(wxT("wxDownloadThread::Entry - completed download of %lu bytes"),
                         m_nCurrentSize);
 
         // do we have to compute MD5 ?
@@ -457,7 +473,7 @@ wxString wxDownloadThread::GetDownloadSpeed() const
 
     // we don't like bytes per millisecond as measure unit !
     long nKBPerSec = (nBytesPerMilliSec * 1000/1024).ToLong();          // our conversion factor
-    return wxString::Format(wxT("%d KB/s"), nKBPerSec);
+    return wxString::Format(wxT("%li KB/s"), nKBPerSec);
 }
 
 wxString wxDownloadThread::GetRemainingTime() const
@@ -478,11 +494,11 @@ wxString wxDownloadThread::GetRemainingTime() const
         return wxT("not available");
 
     if (remsec < 60)
-        return wxString::Format(wxT("%d sec"), remsec);
+        return wxString::Format(wxT("%li sec"), remsec);
     else if (remsec < 60*60)
-        return wxString::Format(wxT("%d min, %d sec"), remsec/60, remsec%60);
+        return wxString::Format(wxT("%li min, %li sec"), remsec/60, remsec%60);
     else if (remsec < 60*60*24)
-        return wxString::Format(wxT("%d hours, %d min, %d sec"),
+        return wxString::Format(wxT("%li hours, %li min, %li sec"),
                     remsec/3600, (remsec/60)%60, (remsec/3600)%60);
     else
         return wxT("not available");

@@ -163,7 +163,7 @@ wxWebUpdateDlg::wxWebUpdateDlg(wxWindow *parent,
                                 const wxWebUpdateLocalXMLScript &script)
                             : wxDialog()
 {
-    PreInit();    
+    PreInit();
     Create(parent, script);
 }
 
@@ -288,12 +288,9 @@ bool wxWebUpdateDlg::InitWidgetsFromXRC(wxWindow *parent)
         if (logger) logger->WriteUsrMsgAlsoToTextCtrl(m_pLog);
 
         // FIXME this adjustements cannot be encoded in the XRC ?
-#ifdef __WXMSW__
         m_pLog->SetBackgroundColour(*wxBLACK);
         m_pLog->SetForegroundColour(*wxGREEN);
-#else
-        m_pLog->SetDefaultStyle(wxTextAttr(*wxGREEN, *wxBLACK));
-#endif
+        //m_pLog->SetDefaultStyle(wxTextAttr(*wxGREEN, *wxBLACK)); seems not to work
     }
 
     // this is a little hardcoded value to make wxWebUpdateSimpleDlg looks nicer...
@@ -423,7 +420,7 @@ bool wxWebUpdateDlg::FilterOtherPlatforms(wxWebUpdatePackageArray &arr)
     wxString removed;
     for (int j=0; j < (int)arr.GetCount(); j++) {
         if (arr[j].GetDownload() == wxEmptyWebUpdateDownload) {
-            
+
             // remove this package from the list
             removed += wxT(",") + arr[j].GetName();
             arr.RemoveAt(j, 1);
@@ -445,7 +442,7 @@ bool wxWebUpdateDlg::FilterOtherPlatforms(wxWebUpdatePackageArray &arr)
                     removed += wxT(",") + arr[i].GetName();
                     arr.RemoveAt(i, 1);
                     i--;
-                
+
                     // start all the loops again since having removed this package
                     // could require us to remove also others which were previously
                     // checked...
@@ -454,7 +451,7 @@ bool wxWebUpdateDlg::FilterOtherPlatforms(wxWebUpdatePackageArray &arr)
                 }
             }
 
-            if (restart) 
+            if (restart)
                 break;
         }
     } while (restart);
@@ -512,7 +509,7 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
 
     // is everything up to date ?
     if (CheckForAllUpdated(arr))
-        return;     // all is updated, we must exit this dialog 
+        return;     // all is updated, we must exit this dialog
                     // (a message dialog has already been shown by CheckForAllUpdated)
 
     // what if we could not found any valid package in the webupdate script ?

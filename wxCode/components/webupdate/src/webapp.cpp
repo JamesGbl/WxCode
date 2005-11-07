@@ -350,7 +350,7 @@ bool WebUpdaterApp::OnPreInit()
     }
 
     // show our platform in log files
-    wxLogAdvMsg(wxT("WebUpdaterApp::OnPreInit - current platform is [") 
+    wxLogAdvMsg(wxT("WebUpdaterApp::OnPreInit - current platform is [")
         + wxWebUpdatePlatform::GetThisPlatform().GetAsString() + wxT("]"));
 
     // this is for using wxDownloadThread

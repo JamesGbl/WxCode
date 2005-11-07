@@ -73,7 +73,7 @@ wxString wxGetSizeStr(unsigned long bytesize)
     if (bytesize == 0)
         sz = wxT("NA");     // not available
     else if (bytesize < 1024)
-        sz = wxString::Format(wxT("%d B"), bytesize);
+        sz = wxString::Format(wxT("%lu B"), bytesize);
     else if (bytesize < 1024*1024)
         sz = wxString::Format(wxT("%.0f kB"), ((float)bytesize/1024.));
     else if (bytesize < 1024*1024*1024)
@@ -380,6 +380,11 @@ void wxWebUpdateListCtrl::OnCacheSizeComplete(wxCommandEvent &ev)
 
 void wxWebUpdateListCtrl::CacheDownloadSizes()
 {
+    // it makes sense to cache download sizes even when this listctrl is hidden
+    // since we need the download size in any case for the progress bar
+    // if (!this->IsShown())
+    //    return;
+
     // now load all the packages we need in local cache
     wxSizeCacherThread *p = new wxSizeCacherThread(this);
     for (int i=0; i < (int)m_arrRemotePackages.GetCount(); i++) {
@@ -418,7 +423,7 @@ wxWebUpdateCheckFlag wxWebUpdateListCtrl::IsPackageUp2date(const wxWebUpdatePack
 }
 
 bool wxWebUpdateListCtrl::IsToDiscard(wxWebUpdateListCtrlFilter filter,
-                                      int, const wxWebUpdatePackage &pkg, 
+                                      int, const wxWebUpdatePackage &pkg,
                                       wxWebUpdateCheckFlag f) const
 {
     // do checks without looking directly at the package
@@ -519,7 +524,7 @@ bool wxWebUpdateListCtrl::IsReadyForInstallation(int n)
     if (str.GetCount() == 0) return TRUE;
 
     // are all packages installed & up2date ?
-    for (int i=0; i < (int)str.GetCount(); i++)        
+    for (int i=0; i < (int)str.GetCount(); i++)
         if (IsPackageUp2date(str[i]) != wxWUCF_UPDATED)
             return FALSE;
 

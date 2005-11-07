@@ -184,21 +184,23 @@
     <if cond="TARGETING_IDE=='0'">
 
         <if cond="TARGETING_WIN32=='1'">
-            <set var="FILELIST">webupdater.exe webupdatedlg.xrc</set>
+            <set var="FILE1">webupdater.exe</set>
         </if>
         <if cond="TARGETING_WIN32=='0'">
-            <set var="FILELIST">webupdater webupdatedlg.xrc</set>
+            <set var="FILE1">webupdater</set>
         </if>
+        <set var="FILE2">webupdatedlg.xrc</set>
 
         <define-rule name="copyrep" extends="force-copy-files">
             <template>
                 <srcdir>$(COMP_BASEPATH)/src</srcdir>
-                <files>$(FILELIST)</files>
+                <files>$(FILE1) $(FILE2)</files>
                 <dependency-of>all</dependency-of>
             </template>
             <define-tag name="dst">
                 <dstdir>$(value)</dstdir>
-                <clean-files>$(''.join([(__dstdir + DIRSEP + '%s ') % (x) for x in FILELIST.split()]))</clean-files>
+                <clean-files>$(FILE1)</clean-files>
+                <clean-files>$(FILE2)</clean-files>
             </define-tag>
         </define-rule>
         <copyrep id="rep4_simple100"><dst>$(COMP_SAMPLE1_DIR)</dst></copyrep>

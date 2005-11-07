@@ -37,7 +37,7 @@ AM_WXCODE_INIT
 AM_OPTIONS_WXCONFIG
 AM_OPTIONS_WXPRESETS
 
-MY_ARG_WITH([httpengine], [Enables the proxy and authentication support; requires the wxHttpEngine component], [yes])
+AM_WXCODE_ARG_ENABLE([httpengine], [Enables the proxy and authentication support; requires the wxHttpEngine component], [yes])
 
 AC_MSG_CHECKING([for the --with-httpengine option])
 if test "$with_httpengine" = "yes"; then

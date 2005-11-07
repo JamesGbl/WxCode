@@ -67,11 +67,11 @@ wxString GetExecutablePath()
         wxChar buf[512];
         *buf = '\0';
 #if wxUSE_UNICODE
-		GetModuleFileNameW
+        GetModuleFileNameW
 #else
-		GetModuleFileNameA
+        GetModuleFileNameA
 #endif
-			(NULL, buf, 511);
+            (NULL, buf, 511);
         path = buf;
 
 #elif defined(__WXMAC__)
@@ -155,208 +155,208 @@ wxString wxFindAppPath(const wxString& argv0, const wxString& cwd, const wxStrin
 }
 
 void wxWebUpdateInstaller::InitDefaultKeywords()
-{	
-	wxChar sep = wxFileName::GetPathSeparator();
+{
+    wxChar sep = wxFileName::GetPathSeparator();
 
-	// a temporary folder
-	m_hashKeywords[wxT("tempdir")] = 
-		wxFileName::CreateTempFileName(wxT("webupdate")).BeforeLast(sep)
-  		+ sep;
+    // a temporary folder
+    m_hashKeywords[wxT("tempdir")] =
+        wxFileName::CreateTempFileName(wxT("webupdate")).BeforeLast(sep)
+        + sep;
 
-	// the folder where we put the downloaded files
-	m_hashKeywords[wxT("downloaddir")] = m_hashKeywords[wxT("tempdir")];		// by default it's the temp folder
+    // the folder where we put the downloaded files
+    m_hashKeywords[wxT("downloaddir")] = m_hashKeywords[wxT("tempdir")];        // by default it's the temp folder
 
-	// a new temporary folder
-	wxString newtempdir(m_hashKeywords[wxT("tempdir")] + sep + 
-			wxT("webupdate") + wxDateTime::Now().Format(wxT("%d%H%M%S")) + sep);
-	if (wxFileName::Mkdir(newtempdir))
-		m_hashKeywords[wxT("newtempdir")] = newtempdir;
+    // a new temporary folder
+    wxString newtempdir(m_hashKeywords[wxT("tempdir")] + sep +
+            wxT("webupdate") + wxDateTime::Now().Format(wxT("%d%H%M%S")) + sep);
+    if (wxFileName::Mkdir(newtempdir))
+        m_hashKeywords[wxT("newtempdir")] = newtempdir;
 
-	// the updater root folder
-	m_hashKeywords[wxT("programdir")] = wxGetCwd();
+    // the updater root folder
+    m_hashKeywords[wxT("programdir")] = wxGetCwd();
 
-	// the updater path & filename
-	m_hashKeywords[wxT("updater")] = wxFileName(wxTheApp->argv[0]).
-				GetPath(wxPATH_GET_SEPARATOR | wxPATH_GET_VOLUME);
-	m_hashKeywords[wxT("updatername")] = wxFileName(wxTheApp->argv[0]).GetName();
+    // the updater path & filename
+    m_hashKeywords[wxT("updater")] = wxFileName(wxTheApp->argv[0]).
+                GetPath(wxPATH_GET_SEPARATOR | wxPATH_GET_VOLUME);
+    m_hashKeywords[wxT("updatername")] = wxFileName(wxTheApp->argv[0]).GetName();
 
-	// the webupdater process ID
-	m_hashKeywords[wxT("pid")] = wxString::Format(wxT("%d"), wxGetProcessId());
+    // the webupdater process ID
+    m_hashKeywords[wxT("pid")] = wxString::Format(wxT("%lu"), wxGetProcessId());
 
-	// some command names
+    // some command names
 #ifdef __WXMSW__
-	m_hashKeywords[wxT("cp")] = wxT("cmd.exe /c copy /y");
-	m_hashKeywords[wxT("mv")] = wxT("cmd.exe /c move /y");
-	m_hashKeywords[wxT("cd")] = wxT("cmd.exe /c cd");
-	m_hashKeywords[wxT("mkdir")] = wxT("cmd.exe /c mkdir");
-	m_hashKeywords[wxT("exe")] = wxT(".exe");
+    m_hashKeywords[wxT("cp")] = wxT("cmd.exe /c copy /y");
+    m_hashKeywords[wxT("mv")] = wxT("cmd.exe /c move /y");
+    m_hashKeywords[wxT("cd")] = wxT("cmd.exe /c cd");
+    m_hashKeywords[wxT("mkdir")] = wxT("cmd.exe /c mkdir");
+    m_hashKeywords[wxT("exe")] = wxT(".exe");
 #else
-	m_hashKeywords[wxT("cp")] = wxT("cp -f");
-	m_hashKeywords[wxT("mv")] = wxT("mv -f");
-	m_hashKeywords[wxT("cd")] = wxT("cd");
-	m_hashKeywords[wxT("mkdir")] = wxT("mkdir");
-	m_hashKeywords[wxT("exe")] = wxT("");
+    m_hashKeywords[wxT("cp")] = wxT("cp -f");
+    m_hashKeywords[wxT("mv")] = wxT("mv -f");
+    m_hashKeywords[wxT("cd")] = wxT("cd");
+    m_hashKeywords[wxT("mkdir")] = wxT("mkdir");
+    m_hashKeywords[wxT("exe")] = wxT("");
 #endif
 
-	// some other keywords will be added later by other
-	// wxWebUpdate* classes
+    // some other keywords will be added later by other
+    // wxWebUpdate* classes
 }
 
 void wxWebUpdateInstaller::FreeKeywords()
 {
-	// remove the newtempdir we created in #InitDefaultKeywords
-	wxString folder(m_hashKeywords[wxT("newtempdir")]);
-	if (!wxFileName::Rmdir(folder))
-		wxLogAdvMsg(wxT("wxWebUpdateInstaller::FreeKeywords - could not remove the ")
-  					wxT("temporary folder [") + folder + wxT("] created during initialization"));
+    // remove the newtempdir we created in #InitDefaultKeywords
+    wxString folder(m_hashKeywords[wxT("newtempdir")]);
+    if (!wxFileName::Rmdir(folder))
+        wxLogAdvMsg(wxT("wxWebUpdateInstaller::FreeKeywords - could not remove the ")
+                    wxT("temporary folder [") + folder + wxT("] created during initialization"));
 }
 
 void wxWebUpdateInstaller::InitDefaultActions()
 {
-	m_hashActions[wxT("run")] = new wxWebUpdateActionRun();
-	m_hashActions[wxT("extract")] = new wxWebUpdateActionExtract();
-	m_hashActions[wxT("copy")] = new wxWebUpdateActionCopy();
-	m_hashActions[wxT("mkdir")] = new wxWebUpdateActionMkdir();
-	m_hashActions[wxT("mkfile")] = new wxWebUpdateActionMkfile();
-	m_hashActions[wxT("open")] = new wxWebUpdateActionOpen();
+    m_hashActions[wxT("run")] = new wxWebUpdateActionRun();
+    m_hashActions[wxT("extract")] = new wxWebUpdateActionExtract();
+    m_hashActions[wxT("copy")] = new wxWebUpdateActionCopy();
+    m_hashActions[wxT("mkdir")] = new wxWebUpdateActionMkdir();
+    m_hashActions[wxT("mkfile")] = new wxWebUpdateActionMkfile();
+    m_hashActions[wxT("open")] = new wxWebUpdateActionOpen();
 }
 
 void wxWebUpdateInstaller::FreeActionHashMap()
 {
-	wxWebUpdateActionHashMap::iterator it;
+    wxWebUpdateActionHashMap::iterator it;
     for ( it = m_hashActions.begin(); it != m_hashActions.end(); ++it ) {
         wxWebUpdateAction *p = it->second;
         if (p) delete p;
     }
 }
 
-wxWebUpdateAction *wxWebUpdateInstaller::CreateNewAction(const wxString &name, 
-						const wxArrayString *names, const wxArrayString *values)
+wxWebUpdateAction *wxWebUpdateInstaller::CreateNewAction(const wxString &name,
+                        const wxArrayString *names, const wxArrayString *values)
 {
-	// search in our hashmap for the given keyname
-	if (m_hashActions[name] != NULL) {
-	
-		wxWebUpdateAction *handler = m_hashActions[name]->Clone();
-		if (names && values) 
-			if (!handler->SetProperties(*names, *values))
-				wxLogAdvMsg(wxT("wxWebUpdateInstaller::CreateNewAction - couldn't ")
-						wxT("set correctly the properties for the new action [") +
-						name + wxT("] - proceeding anyway..."));
+    // search in our hashmap for the given keyname
+    if (m_hashActions[name] != NULL) {
 
-		return handler;
-	}
+        wxWebUpdateAction *handler = m_hashActions[name]->Clone();
+        if (names && values)
+            if (!handler->SetProperties(*names, *values))
+                wxLogAdvMsg(wxT("wxWebUpdateInstaller::CreateNewAction - couldn't ")
+                        wxT("set correctly the properties for the new action [") +
+                        name + wxT("] - proceeding anyway..."));
 
-	return NULL;		// unknown action name
+        return handler;
+    }
+
+    return NULL;        // unknown action name
 }
 
 wxString wxWebUpdateInstaller::DoKeywordSubstitution(const wxString &str)
 {
-	wxStringStringHashMap &list = GetKeywords();
-	wxString text(str);
+    wxStringStringHashMap &list = GetKeywords();
+    wxString text(str);
 
-	// iterate over all the elements in the class
+    // iterate over all the elements in the class
     wxStringStringHashMap::iterator it;
     for (it = list.begin(); it != list.end(); ++it) {
         wxString key = it->first, value = it->second;
-		if (value.IsEmpty()) continue;		// skip empty values
+        if (value.IsEmpty()) continue;      // skip empty values
 
-		text.Replace(wxT("$(") + key + wxT(")"), value);
+        text.Replace(wxT("$(") + key + wxT(")"), value);
     }
 
-	if (text.Contains(wxT("$(")))
-		wxLogAdvMsg(wxT("wxWebUpdateInstaller::DoKeywordSubstitution - ")
-				wxT("found unknown keywords in the string: [") + text + wxT("]"));
+    if (text.Contains(wxT("$(")))
+        wxLogAdvMsg(wxT("wxWebUpdateInstaller::DoKeywordSubstitution - ")
+                wxT("found unknown keywords in the string: [") + text + wxT("]"));
 
-	return text;
+    return text;
 }
 
 wxString wxWebUpdateInstaller::DoPathSubstitution(const wxString &str)
 {
-	wxString copy(str), sep = wxFileName::GetPathSeparator();
-	copy.Replace(wxT("//"), sep);
-	return copy;
+    wxString copy(str), sep = wxFileName::GetPathSeparator();
+    copy.Replace(wxT("//"), sep);
+    return copy;
 }
 
 int wxWebUpdateInstaller::ParsePairValueList(const wxString &str, wxArrayString &names, wxArrayString &values)
-{		
-	// this should be a comma separed list of pairs:  key=value
-	wxStringTokenizer tkz(str, wxT(","));
-	while ( tkz.HasMoreTokens() ) {
-		wxString token = tkz.GetNextToken();
-	
-		// is this a valid token ?
-		if (token.Contains(wxT("="))) { 
+{
+    // this should be a comma separed list of pairs:  key=value
+    wxStringTokenizer tkz(str, wxT(","));
+    while ( tkz.HasMoreTokens() ) {
+        wxString token = tkz.GetNextToken();
 
-			wxString keyname = token.BeforeFirst(wxT('='));
-			if (keyname.IsEmpty() || keyname.Contains(wxT(')'))) {
+        // is this a valid token ?
+        if (token.Contains(wxT("="))) {
 
-				wxLogAdvMsg(wxT("wxWebUpdaterInstaller::ParsePairValueList - found an invalid keyword name: [")
-							+ keyname + wxT("]"));
-				continue;
-			}
+            wxString keyname = token.BeforeFirst(wxT('='));
+            if (keyname.IsEmpty() || keyname.Contains(wxT(')'))) {
 
-			wxString value = token.AfterFirst(wxT('='));
-			if (value.IsEmpty()) {
+                wxLogAdvMsg(wxT("wxWebUpdaterInstaller::ParsePairValueList - found an invalid keyword name: [")
+                            + keyname + wxT("]"));
+                continue;
+            }
 
-				wxLogAdvMsg(wxT("wxWebUpdaterInstaller::ParsePairValueList - found an invalid keyword value: [")
-							+ value + wxT("]"));
-				continue;
-			}
+            wxString value = token.AfterFirst(wxT('='));
+            if (value.IsEmpty()) {
 
-			// keyword values can contain other keywords...
-			value = DoSubstitution(value);
+                wxLogAdvMsg(wxT("wxWebUpdaterInstaller::ParsePairValueList - found an invalid keyword value: [")
+                            + value + wxT("]"));
+                continue;
+            }
 
-			// save this key & value
-			names.Add(keyname);
-			values.Add(value);
+            // keyword values can contain other keywords...
+            value = DoSubstitution(value);
 
-		} else {
+            // save this key & value
+            names.Add(keyname);
+            values.Add(value);
 
-			wxLogAdvMsg(wxT("wxWebUpdateInstaller::ParsePairValueList - found an invalid keyword token: [")
-							+ token + wxT("]"));
-		}
-	}
-	
-	wxASSERT(names.GetCount() == values.GetCount());
-	return names.GetCount();
+        } else {
+
+            wxLogAdvMsg(wxT("wxWebUpdateInstaller::ParsePairValueList - found an invalid keyword token: [")
+                            + token + wxT("]"));
+        }
+    }
+
+    wxASSERT(names.GetCount() == values.GetCount());
+    return names.GetCount();
 }
 
 wxWebUpdateCheckFlag wxWebUpdateInstaller::VersionCheck(const wxVersion &ver) const
 {
-	int maj, min, rel;
-	if (!wxWebUpdatePackage::ExtractVersionNumbers(ver, &maj, &min, &rel)) {
-	
-		wxLogUsrMsg(wxT("wxWebUpdateInstaller::VersionCheck - invalid version format [")
-  					+ ver + wxT("] !"));
-		return wxWUCF_FAILED;
-	}
-	
-	int r = wxWebUpdatePackage::StdVersionCheck(maj, min, rel,
-			wxWUI_VERSION_MAJOR, wxWUI_VERSION_MINOR, wxWUI_VERSION_RELEASE);
-	if (r == 1) return wxWUCF_FAILED;
-	if (r == 0) return wxWUCF_UPDATED;
-	return wxWUCF_OUTOFDATE;
+    int maj, min, rel;
+    if (!wxWebUpdatePackage::ExtractVersionNumbers(ver, &maj, &min, &rel)) {
+
+        wxLogUsrMsg(wxT("wxWebUpdateInstaller::VersionCheck - invalid version format [")
+                    + ver + wxT("] !"));
+        return wxWUCF_FAILED;
+    }
+
+    int r = wxWebUpdatePackage::StdVersionCheck(maj, min, rel,
+            wxWUI_VERSION_MAJOR, wxWUI_VERSION_MINOR, wxWUI_VERSION_RELEASE);
+    if (r == 1) return wxWUCF_FAILED;
+    if (r == 0) return wxWUCF_UPDATED;
+    return wxWUCF_OUTOFDATE;
 }
 
 void wxWebUpdateInstaller::ShowErrorMsg(const wxString &str)
 {
-	// both log it
-	wxLogUsrMsg(str);
-	
-	// and notify the user
-	wxMessageBox(str + wxT("\nContact the support team of ") + 
-					GetKeywordValue(wxT("appname")) +
-					wxT(" for help."), wxT("Error"), wxOK | wxICON_ERROR);
+    // both log it
+    wxLogUsrMsg(str);
+
+    // and notify the user
+    wxMessageBox(str + wxT("\nContact the support team of ") +
+                    GetKeywordValue(wxT("appname")) +
+                    wxT(" for help."), wxT("Error"), wxOK | wxICON_ERROR);
 }
 
 void wxWebUpdateInstaller::ShowNotificationMsg(const wxString &str, const wxString &title)
 {
-	// both log it
-	wxLogDebug(str);
+    // both log it
+    wxLogDebug(str);
 
-	// and notify the user
-	wxMessageBox(str, title.IsEmpty() ? GetKeywordValue(wxT("appname")) : title, 
- 						wxOK | wxICON_INFORMATION);
+    // and notify the user
+    wxMessageBox(str, title.IsEmpty() ? GetKeywordValue(wxT("appname")) : title,
+                        wxOK | wxICON_INFORMATION);
 }
 
 
@@ -368,48 +368,48 @@ void wxWebUpdateInstaller::ShowNotificationMsg(const wxString &str, const wxStri
 // -------------------------
 
 // this macro avoid the repetion of a lot of code;
-#define wxWUIT_ABORT_INSTALL() {								\
-			wxLogUsrMsg(wxT("wxWebUpdateInstallThread::Entry - INSTALLATION ABORTED !!!"));		\
-			m_bSuccess = FALSE;							\
-			m_mStatus.Lock();							\
-			m_nStatus = wxWUITS_WAITING;				\
-			m_mStatus.Unlock();							\
-			wxPostEvent(m_pHandler, updatevent);		\
-			continue;									\
-	}
+#define wxWUIT_ABORT_INSTALL() {                                \
+            wxLogUsrMsg(wxT("wxWebUpdateInstallThread::Entry - INSTALLATION ABORTED !!!"));     \
+            m_bSuccess = FALSE;                         \
+            m_mStatus.Lock();                           \
+            m_nStatus = wxWUITS_WAITING;                \
+            m_mStatus.Unlock();                         \
+            wxPostEvent(m_pHandler, updatevent);        \
+            continue;                                   \
+    }
 
 void *wxWebUpdateInstallThread::Entry()
 {
-	// we'll use wxPostEvent to post this event since this is the
-	// only thread-safe way to post events !
-	wxCommandEvent updatevent(wxEVT_COMMAND_INSTALLATION_COMPLETE);
+    // we'll use wxPostEvent to post this event since this is the
+    // only thread-safe way to post events !
+    wxCommandEvent updatevent(wxEVT_COMMAND_INSTALLATION_COMPLETE);
 
-	// begin our loop
-	while (!TestDestroy()) {
+    // begin our loop
+    while (!TestDestroy()) {
 
-		if (m_nStatus == wxWUITS_WAITING) {
-			//wxLogDebug(wxT("wxWebUpdateInstallThread::Entry - sleeping 1sec"));
-			wxThread::Sleep(100);
-			continue;
-		}
+        if (m_nStatus == wxWUITS_WAITING) {
+            //wxLogDebug(wxT("wxWebUpdateInstallThread::Entry - sleeping 1sec"));
+            wxThread::Sleep(100);
+            continue;
+        }
 
-		wxLogUsrMsg(wxT("wxWebUpdateInstallThread::Entry - installing [") + 
-					m_strUpdateFile + wxT("]"));
-		m_bSuccess = m_pDownload->Install();
-		wxLogUsrMsg(wxT("wxWebUpdateInstallThread::Entry - completed installation of [") +
-  					m_strUpdateFile + wxT("]"));
+        wxLogUsrMsg(wxT("wxWebUpdateInstallThread::Entry - installing [") +
+                    m_strUpdateFile + wxT("]"));
+        m_bSuccess = m_pDownload->Install();
+        wxLogUsrMsg(wxT("wxWebUpdateInstallThread::Entry - completed installation of [") +
+                    m_strUpdateFile + wxT("]"));
 
-		// go in wait mode
-		{
-  			wxMutexLocker locker(m_mStatus);
-			m_nStatus = wxWUITS_WAITING;
-		}
+        // go in wait mode
+        {
+            wxMutexLocker locker(m_mStatus);
+            m_nStatus = wxWUITS_WAITING;
+        }
 
-		wxPostEvent(m_pHandler, updatevent);
-		m_nInstallationCount++;
-	}
+        wxPostEvent(m_pHandler, updatevent);
+        m_nInstallationCount++;
+    }
 
-	return (void*)FALSE;
+    return (void*)FALSE;
 }
 
 
