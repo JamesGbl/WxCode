@@ -112,8 +112,6 @@ COND_USE_SOSYMLINKS_1___keybinder_dll___so_symlinks_inst_cmd = rm -f \
 	$(DLLPREFIX)keybinder$(__keybinder_dll___targetsuf2) \
 	$(LIBPREFIX)keybinder.$(DLLIMP_SUFFIX)
 @COND_USE_SOSYMLINKS_1@__keybinder_dll___so_symlinks_inst_cmd = $(COND_USE_SOSYMLINKS_1___keybinder_dll___so_symlinks_inst_cmd)
-@COND_PLATFORM_MACOSX_1@__keybinder_dll___macver = \
-@COND_PLATFORM_MACOSX_1@	-compatibility_version 0 -current_version 0
 @COND_PLATFORM_MAC_1@__minimal___mac_setfilecmd = \
 @COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL minimal$(EXEEXT)
 @COND_WX_SHARED_1@__WX_SHAREDDEFINE_p_5 = --define WXUSINGDLL
@@ -240,7 +238,7 @@ install-wxheaders:
 @COND_WX_SHARED_0@	$(INSTALL_DATA) ./lib/$(LIBPREFIX)keybinder$(LIBEXT) $(DESTDIR)$(libdir)
 
 @COND_WX_SHARED_1@./lib/$(DLLPREFIX)keybinder$(__keybinder_dll___targetsuf3): $(KEYBINDER_DLL_OBJECTS)
-@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(KEYBINDER_DLL_OBJECTS) $(LDFLAGS)   -L./lib $(__keybinder_dll___macinstnamecmd) $(__keybinder_dll___importlib) $(__keybinder_dll___soname_flags) $(__keybinder_dll___macver)  $(WX_LIBS)
+@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(KEYBINDER_DLL_OBJECTS) $(LDFLAGS)   -L./lib $(__keybinder_dll___macinstnamecmd) $(__keybinder_dll___importlib) $(__keybinder_dll___soname_flags)  $(WX_LIBS)
 @COND_WX_SHARED_1@	
 @COND_WX_SHARED_1@	$(__keybinder_dll___so_symlinks_cmd)
 

@@ -264,9 +264,9 @@ install : .SYMBOLIC all install-wxheaders
 	copy /Y ..\lib\keybinder$(WXLIBPOSTFIX).dll $(WX_DIR)$(WXLIBPATH)
 
 install-wxheaders :  
-	mkdir $(WX_DIR)/include/wx
+	mkdir $(WX_DIR)\include\wx
 	cd .
-	copy /Y  ../include/wx/*.h $(WX_DIR)/include/wx
+	copy /Y  ..\include\wx\*.h $(WX_DIR)\include\wx
 
 uninstall : .SYMBOLIC 
 	-if exist $(WX_DIR)\include\wx\keybinderdef.h \
