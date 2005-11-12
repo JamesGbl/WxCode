@@ -9,20 +9,22 @@
 ?>
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-AU">
-	<?php
+        <?php
       $compname = "WebUpdate";
       $subdir = "webupdate";
       require("compwebsite.inc.php");
   ?>
 
 
-	<br/><?php write_h1("Screenshots"); ?>
-	<p>Description</p>
+  <br/><?php write_h1("Screenshots"); ?>
+  <p>WebUpdate can be used with several GUI masks (all customizable):</p>
   <div class="center">
     <?php writeScreenshotLink("kde-simple.png", "WebUpdate on wxGTK 2.7.0 with a simple GUI mask"); ?>
     <?php writeScreenshotLink("msw-simple.png", "WebUpdate on wxMSW 2.6.2 with a simple GUI mask"); ?>
+    <br/>
     <?php writeScreenshotLink("kde-adv.png", "WebUpdate on wxGTK 2.7.0 with the advanced GUI mask"); ?>
     <?php writeScreenshotLink("msw-adv.png", "WebUpdate on wxMSW 2.6.2 with the advanced GUI mask"); ?>
+    <br/>
     <?php writeScreenshotLink("kde-logwnd.png", "WebUpdate on wxGTK 2.7.0 with the simple GUI mask + log window"); ?>
     <?php writeScreenshotLink("msw-logwnd.png", "WebUpdate on wxMSW 2.6.2 with the simple GUI mask + log window"); ?>
   </div>
@@ -36,17 +38,17 @@
   <a href="../../docs/webupdate/">here</a>.</p>
 
 
-	<br/><?php write_h1("Known bugs"); ?>
+        <br/><?php write_h1("Known bugs"); ?>
   <p>None. To submit a bug report please look at <a href="../../support.php">wxCode support page</a>.</p>
 
-    
-	<br/><?php write_h1("Future enhancements"); ?>
+
+        <br/><?php write_h1("Future enhancements"); ?>
     <p>- Allow in the REMOTE XML script to specify a "category" for the packages and use
 a wxWebUpdateTreeCtrl instead of wxWebUpdateListCtrl to show the packages (and make
 WebUpdater similar to Cygwin setup program). </p>
 
     <p>To submit a feature request please look at <a href="../../support.php">wxCode support page</a>.</p>
-    
 
-	<br/><?php require("footer.inc.php"); ?>
+
+        <br/><?php require("footer.inc.php"); ?>
 </html>
