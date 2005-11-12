@@ -1714,6 +1714,7 @@ fi
 ## required options (version, build settings, etc)
 #####################################################################
 
+# unfortunately wx2.6 has a  bug with net support under unix and thus is unsupported
 # Make sure we can run config.sub.
 $ac_config_sub sun4 >/dev/null 2>&1 ||
   { { echo "$as_me:$LINENO: error: cannot run $ac_config_sub" >&5
@@ -3641,7 +3642,7 @@ fi
   if test "$WX_CONFIG_PATH" != "no" ; then
     WX_VERSION=""
 
-    min_wx_version=2.6.1
+    min_wx_version=2.7.0
     if test -z "$WXCFG_FLAGS" ; then
       echo "$as_me:$LINENO: checking for wxWidgets version >= $min_wx_version" >&5
 echo $ECHO_N "checking for wxWidgets version >= $min_wx_version... $ECHO_C" >&6
@@ -3790,7 +3791,7 @@ echo "${ECHO_T}no (version $WX_VERSION is not new enough)" >&6
     If you still get this error, then check that 'wx-config' is
     in path, the directory where wxWidgets libraries are installed
     (returned by 'wx-config --libs' command) is in LD_LIBRARY_PATH
-    or equivalent variable and wxWidgets version is 2.6.1 or above.
+    or equivalent variable and wxWidgets version is 2.7.0 or above.
 				" >&5
 echo "$as_me: error:
     The requested wxWidgets build couldn't be found.
@@ -3803,7 +3804,7 @@ echo "$as_me: error:
     If you still get this error, then check that 'wx-config' is
     in path, the directory where wxWidgets libraries are installed
     (returned by 'wx-config --libs' command) is in LD_LIBRARY_PATH
-    or equivalent variable and wxWidgets version is 2.6.1 or above.
+    or equivalent variable and wxWidgets version is 2.7.0 or above.
 				" >&2;}
    { (exit 1); exit 1; }; }
 			else

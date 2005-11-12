@@ -19,7 +19,12 @@
 	<br/><?php write_h1("Screenshots"); ?>
 	<p>Description</p>
   <div class="center">
-    <?php writeScreenshotLink("msw.png", "WebUpdate on wxMSW 2.6.1"); ?>
+    <?php writeScreenshotLink("kde-simple.png", "WebUpdate on wxGTK 2.7.0 with a simple GUI mask"); ?>
+    <?php writeScreenshotLink("msw-simple.png", "WebUpdate on wxMSW 2.6.2 with a simple GUI mask"); ?>
+    <?php writeScreenshotLink("kde-adv.png", "WebUpdate on wxGTK 2.7.0 with the advanced GUI mask"); ?>
+    <?php writeScreenshotLink("msw-adv.png", "WebUpdate on wxMSW 2.6.2 with the advanced GUI mask"); ?>
+    <?php writeScreenshotLink("kde-logwnd.png", "WebUpdate on wxGTK 2.7.0 with the simple GUI mask + log window"); ?>
+    <?php writeScreenshotLink("msw-logwnd.png", "WebUpdate on wxMSW 2.6.2 with the simple GUI mask + log window"); ?>
   </div>
 
 
@@ -39,7 +44,6 @@
     <p>- Allow in the REMOTE XML script to specify a "category" for the packages and use
 a wxWebUpdateTreeCtrl instead of wxWebUpdateListCtrl to show the packages (and make
 WebUpdater similar to Cygwin setup program). </p>
-    <p>- </p>
 
     <p>To submit a feature request please look at <a href="../../support.php">wxCode support page</a>.</p>
     
