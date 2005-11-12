@@ -30,25 +30,26 @@
   </div>
 
 
+  <br/><?php write_h1("Download"); ?>
+  <p>There are three downloads available for this component: the <a href="http://prdownloads.sourceforge.net/wxcode/webupdate-1.0.tar.gz?download">source package</a>, a <a href="http://prdownloads.sourceforge.net/wxcode/webupdate-msw-1.0.zip?download">precompiled sample for Win32</a> and a <a href="http://prdownloads.sourceforge.net/wxcode/webupdate-gtk2-1.0.tar.gz?download">precompiled sample for GTK2</a>.<br/>
+    To tryout the component, you can download one of the sample packages but to work with it you'll need to download the source package (which also contains the full documentation which is available also <a href="../../docs/webupdate/">here</a>).</p>
 
-  <!-- NOTE TO THE DOCUMENTATION: for uploading you component docs in the website,
-       see the ReadMe.txt file at wxCode\template... -->
+
   <br/><?php write_h1("Documentation"); ?>
-  <p>The documentation for this component is available online
-  <a href="../../docs/webupdate/">here</a>.</p>
+  <p>The documentation for this component is available online <a href="../../docs/webupdate/">here</a>.</p>
 
 
-        <br/><?php write_h1("Known bugs"); ?>
+  <br/><?php write_h1("Known bugs"); ?>
   <p>None. To submit a bug report please look at <a href="../../support.php">wxCode support page</a>.</p>
 
 
-        <br/><?php write_h1("Future enhancements"); ?>
-    <p>- Allow in the REMOTE XML script to specify a "category" for the packages and use
+  <br/><?php write_h1("Future enhancements"); ?>
+  <p>- Allow in the REMOTE XML script to specify a "category" for the packages and use
 a wxWebUpdateTreeCtrl instead of wxWebUpdateListCtrl to show the packages (and make
 WebUpdater similar to Cygwin setup program). </p>
 
-    <p>To submit a feature request please look at <a href="../../support.php">wxCode support page</a>.</p>
+  <p>To submit a feature request please look at <a href="../../support.php">wxCode support page</a>.</p>
 
 
-        <br/><?php require("footer.inc.php"); ?>
+  <br/><?php require("footer.inc.php"); ?>
 </html>
