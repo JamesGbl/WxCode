@@ -135,11 +135,17 @@ endif
 ifeq ($(WX_SHARED),1)
 __webupdate_dll___depname = ..\lib\webupdate$(WXLIBPOSTFIX).dll
 endif
-ifeq ($(USE_HTTPENGINE),1)
-__HTTPENGINEDEP_DEF_p_4 = --define wxUSE_HTTPENGINE
+ifeq ($(USE_HTTPENGINE),0)
+__HTTPENGINEDEP_DEF_p_4 = --define wxUSE_HTTPENGINE=0
 endif
 ifeq ($(USE_HTTPENGINE),1)
-__HTTPENGINEDEP_DEF_p = -DwxUSE_HTTPENGINE
+__HTTPENGINEDEP_DEF_p_4 = --define wxUSE_HTTPENGINE=1
+endif
+ifeq ($(USE_HTTPENGINE),0)
+__HTTPENGINEDEP_DEF_p = -DwxUSE_HTTPENGINE=0
+endif
+ifeq ($(USE_HTTPENGINE),1)
+__HTTPENGINEDEP_DEF_p = -DwxUSE_HTTPENGINE=1
 endif
 ifeq ($(WX_DEBUG),0)
 __MYOPTIMIZEFLAG = -Os
@@ -224,10 +230,14 @@ clean:
 	-if exist ..\lib\webupdate$(WXLIBPOSTFIX).dll del ..\lib\webupdate$(WXLIBPOSTFIX).dll
 	-if exist ..\lib\libwebupdate$(WXLIBPOSTFIX).a del ..\lib\libwebupdate$(WXLIBPOSTFIX).a
 	-if exist ..\src\webupdater.exe del ..\src\webupdater.exe
-	-if exist ..\samples\simple\v1.0.0\webupdater.exe ..\samples\simple\v1.0.0\webupdatedlg.xrc  del ..\samples\simple\v1.0.0\webupdater.exe ..\samples\simple\v1.0.0\webupdatedlg.xrc
-	-if exist ..\samples\simple\v2.0.3\webupdater.exe ..\samples\simple\v2.0.3\webupdatedlg.xrc  del ..\samples\simple\v2.0.3\webupdater.exe ..\samples\simple\v2.0.3\webupdatedlg.xrc
-	-if exist ..\samples\advanced\v0.0.1\webupdater.exe ..\samples\advanced\v0.0.1\webupdatedlg.xrc  del ..\samples\advanced\v0.0.1\webupdater.exe ..\samples\advanced\v0.0.1\webupdatedlg.xrc
-	-if exist ..\samples\advanced\v1.5.0\webupdater.exe ..\samples\advanced\v1.5.0\webupdatedlg.xrc  del ..\samples\advanced\v1.5.0\webupdater.exe ..\samples\advanced\v1.5.0\webupdatedlg.xrc
+	-if exist webupdater.exe del webupdater.exe
+	-if exist webupdatedlg.xrc del webupdatedlg.xrc
+	-if exist webupdater.exe del webupdater.exe
+	-if exist webupdatedlg.xrc del webupdatedlg.xrc
+	-if exist webupdater.exe del webupdater.exe
+	-if exist webupdatedlg.xrc del webupdatedlg.xrc
+	-if exist webupdater.exe del webupdater.exe
+	-if exist webupdatedlg.xrc del webupdatedlg.xrc
 	-if exist ..\samples\simple\v1.0.0\simple.exe del ..\samples\simple\v1.0.0\simple.exe
 	-if exist ..\samples\simple\v2.0.3\simple.exe del ..\samples\simple\v2.0.3\simple.exe
 	-if exist ..\samples\advanced\v0.0.1\advanced.exe del ..\samples\advanced\v0.0.1\advanced.exe

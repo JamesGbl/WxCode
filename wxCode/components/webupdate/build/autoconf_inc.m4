@@ -60,6 +60,12 @@ dnl ### begin block 20_COND_PLATFORM_WIN32_1[webupdate.bkl] ###
         COND_PLATFORM_WIN32_1=""
     fi
     AC_SUBST(COND_PLATFORM_WIN32_1)
+dnl ### begin block 20_COND_USE_HTTPENGINE_0[webupdate.bkl] ###
+    COND_USE_HTTPENGINE_0="#"
+    if test "x$USE_HTTPENGINE" = "x0" ; then
+        COND_USE_HTTPENGINE_0=""
+    fi
+    AC_SUBST(COND_USE_HTTPENGINE_0)
 dnl ### begin block 20_COND_USE_HTTPENGINE_1[webupdate.bkl] ###
     COND_USE_HTTPENGINE_1="#"
     if test "x$USE_HTTPENGINE" = "x1" ; then

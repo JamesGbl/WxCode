@@ -41,7 +41,8 @@
         <if cond="TARGETING_WIN32=='1'">$(HTTPENGINE_DIR)/include</if>
     </set>
     <set var="HTTPENGINEDEP_DEF">
-        <if cond="USE_HTTPENGINE=='1'">wxUSE_HTTPENGINE</if>
+        <if cond="USE_HTTPENGINE=='1'">wxUSE_HTTPENGINE=1</if>
+        <if cond="USE_HTTPENGINE=='0'">wxUSE_HTTPENGINE=0</if>
     </set>
     <set var="HTTPENGINEDEP_LIB">
         <if cond="USE_HTTPENGINE=='1'">httpengine$(WXLIBPOSTFIX)</if>
