@@ -4,8 +4,8 @@
   <appfile>simple</appfile>
   <xrc>webupdatedlg.xrc</xrc>
   <res>wxWebUpdateSimpleDlg</res>
-  <restart>1</restart>
-  <savelog>1</savelog>
+  <restart>0</restart>
+  <savelog>0</savelog>
   <remoteuri>http://wxcode.sourceforge.net/components/webupdate/script1.xml</remoteuri>
   <keywords></keywords>
   <local-package id="simple">
