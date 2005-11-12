@@ -60,7 +60,8 @@ fi
 ## required options (version, build settings, etc)
 #####################################################################
 
-AM_WXCODE_CHECKS([2.6.1], [xrc,xml,net])
+# unfortunately wx2.6 has a  bug with net support under unix and thus is unsupported
+AM_WXCODE_CHECKS([2.7.0], [xrc,xml,net])
 if test "$USE_HTTPENGINE" = "1"; then
 
     # check for wxHTTPEngine presence, eventually disabling it if the

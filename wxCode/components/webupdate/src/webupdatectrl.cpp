@@ -384,6 +384,19 @@ void wxWebUpdateListCtrl::CacheDownloadSizes()
     // since we need the download size in any case for the progress bar
     // if (!this->IsShown())
     //    return;
+#if 0
+
+    // TO TEST wxGetSizeOfURI
+    // 1) try strings that won't be parsable (e.g. abcdhttp://)
+    // 2) try strings that will parse but do not point to any real file (e.g. http://myserver.com/nonexistingfile)
+    // 3) try with a real file (e.g. http://www.google.com)
+    unsigned long n = wxGetSizeOfURI(wxT("http://osdn.dl.sourceforge.net/sourceforge/wxcode/simple-gtk-2.0.3.zipfdsafdas"));
+    if (n == 0xfffffff)
+        wxMessageBox(wxString::Format(wxT("fake ")));
+    else
+        wxMessageBox(wxString::Format(wxT("%lu"), n));
+
+#else
 
     // now load all the packages we need in local cache
     wxSizeCacherThread *p = new wxSizeCacherThread(this);
@@ -402,6 +415,7 @@ void wxWebUpdateListCtrl::CacheDownloadSizes()
                     wxT("Close some applications and then retry."),
                     wxT("Error"), wxOK | wxICON_ERROR);
     }
+#endif
 }
 
 wxWebUpdateCheckFlag wxWebUpdateListCtrl::IsPackageUp2date(const wxWebUpdatePackage &remote)

@@ -108,6 +108,7 @@ protected:
     bool InitStream() {
         if (m_url.GetError() != wxURL_NOERR) {
             m_lasterror = wxSTREAM_READ_ERROR;
+            wxLogDebug(wxT("wxURLInputStream - error with given URL..."));
             return FALSE;
         }
 
