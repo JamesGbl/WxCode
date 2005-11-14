@@ -49,8 +49,8 @@ HTTPENGINE_LIB_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
 	$(__OPTIMIZEFLAG) $(__DEBUGINFO) /Fd..\lib\httpengine$(WXLIBPOSTFIX).pdb \
 	$(____DEBUGRUNTIME) $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
-	/I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	/I$(WX_DIR)\include /I..\include /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
+	/I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) /I$(WX_DIR)\include \
+	/I..\include /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
 HTTPENGINE_LIB_OBJECTS =  \
 	msvc$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_base64.obj \
 	msvc$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_lib_authdlg.obj \
@@ -63,9 +63,8 @@ HTTPENGINE_DLL_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
 	$(__OPTIMIZEFLAG) $(__DEBUGINFO) /Fd..\lib\httpengine$(WXLIBPOSTFIX).pdb \
 	$(____DEBUGRUNTIME) $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
-	/I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	/I$(WX_DIR)\include /I..\include /DWXMAKINGDLL_HTTPENGINE /GR /EHsc \
-	$(CPPFLAGS) $(CXXFLAGS)
+	/I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) /I$(WX_DIR)\include \
+	/I..\include /DWXMAKINGDLL_HTTPENGINE /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
 HTTPENGINE_DLL_OBJECTS =  \
 	msvc$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_base64.obj \
 	msvc$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll_authdlg.obj \
@@ -78,8 +77,8 @@ HTTPENGINETEST_CXXFLAGS = /MD$(__DEBUGRUNTIME) /DWIN32 $(__WARNINGS) \
 	$(__OPTIMIZEFLAG) $(__DEBUGINFO) /Fd..\sample\httpenginetest.pdb \
 	$(____DEBUGRUNTIME) $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
-	/I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	/I$(WX_DIR)\include /I..\include /D_WINDOWS /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
+	/I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) /I$(WX_DIR)\include \
+	/I..\include /D_WINDOWS /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
 HTTPENGINETEST_OBJECTS =  \
 	msvc$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpengineapp.obj \
 	msvc$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpenginedlg.obj \
@@ -172,10 +171,10 @@ WXLIBPOSTFIX = d
 WXLIBPOSTFIX = ud
 !endif
 !if "$(WX_SHARED)" == "0"
-__WXLIBPATH_FILENAMES = \lib\vc_lib
+WXLIBPATH = \lib\vc_lib
 !endif
 !if "$(WX_SHARED)" == "1"
-__WXLIBPATH_FILENAMES = \lib\vc_dll
+WXLIBPATH = \lib\vc_dll
 !endif
 
 
@@ -276,6 +275,31 @@ docs:
 cleandocs: 
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
+install: all install-wxheaders
+	copy /Y ..\lib\httpengine$(WXLIBPOSTFIX).lib $(WX_DIR)$(WXLIBPATH)
+	copy /Y ..\lib\httpengine$(WXLIBPOSTFIX).dll $(WX_DIR)$(WXLIBPATH)
+
+install-wxheaders: 
+	mkdir $(WX_DIR)\include\wx
+	cd .
+	copy /Y  ..\include\wx\*.h $(WX_DIR)\include\wx
+
+uninstall: 
+	-if exist $(WX_DIR)\include\wx\authdlg.h \
+	$(WX_DIR)\include\wx\base64.h \
+	$(WX_DIR)\include\wx\httpbuilder.h \
+	$(WX_DIR)\include\wx\httpbuilderthread.h \
+	$(WX_DIR)\include\wx\hyperlinkctrl.h \
+	$(WX_DIR)\include\wx\proxysettingsdlg.h \
+	$(WX_DIR)\include\wx\httpenginedef.h del /Q $(WX_DIR)\include\wx\authdlg.h \
+	$(WX_DIR)\include\wx\base64.h \
+	$(WX_DIR)\include\wx\httpbuilder.h \
+	$(WX_DIR)\include\wx\httpbuilderthread.h \
+	$(WX_DIR)\include\wx\hyperlinkctrl.h \
+	$(WX_DIR)\include\wx\proxysettingsdlg.h \
+	$(WX_DIR)\include\wx\httpenginedef.h
+	-if exist $(WX_DIR)$(WXLIBPATH)\*httpengine* del /Q $(WX_DIR)$(WXLIBPATH)\*httpengine*
+
 !if "$(WX_SHARED)" == "0"
 ..\lib\httpengine$(WXLIBPOSTFIX).lib: $(HTTPENGINE_LIB_OBJECTS)
 	if exist $@ del $@
@@ -286,13 +310,13 @@ cleandocs:
 
 !if "$(WX_SHARED)" == "1"
 ..\lib\httpengine$(WXLIBPOSTFIX).dll: $(HTTPENGINE_DLL_OBJECTS)
-	link /DLL /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_0)  /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES) /LIBPATH:..\lib @<<
+	link /DLL /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_0)  /LIBPATH:$(WX_DIR)$(WXLIBPATH) /LIBPATH:..\lib @<<
 	$(HTTPENGINE_DLL_OBJECTS)  wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /IMPLIB:..\lib\httpengine$(WXLIBPOSTFIX).lib
 <<
 !endif
 
 ..\sample\httpenginetest.exe: $(HTTPENGINETEST_OBJECTS) msvc$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpengine.res $(__httpengine_lib___depname)
-	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_0)  /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES) /LIBPATH:..\lib /SUBSYSTEM:WINDOWS @<<
+	link /NOLOGO /OUT:$@ $(LDFLAGS) $(__DEBUGINFO_0)  /LIBPATH:$(WX_DIR)$(WXLIBPATH) /LIBPATH:..\lib /SUBSYSTEM:WINDOWS @<<
 	$(HTTPENGINETEST_OBJECTS)  ..\lib\httpengine$(WXLIBPOSTFIX).lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
 
@@ -345,5 +369,5 @@ msvc$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpenginedlg.obj: .\..\sample\http
 	$(CXX) /c /nologo /TP /Fo$@ $(HTTPENGINETEST_CXXFLAGS) $**
 
 msvc$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpengine.res: .\..\sample\httpengine.rc
-	rc /fo$@  /d WIN32 $(____DEBUGRUNTIME_29_p_1) $(__WX_SHAREDDEFINE_p_4) $(__WXUNICODE_DEFINE_p_4) $(__WXDEBUG_DEFINE_p_4) /d __WXMSW__ /i $(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include /i ..\include /d _WINDOWS /i ..\sample /i ..\sample $**
+	rc /fo$@  /d WIN32 $(____DEBUGRUNTIME_29_p_1) $(__WX_SHAREDDEFINE_p_4) $(__WXUNICODE_DEFINE_p_4) $(__WXDEBUG_DEFINE_p_4) /d __WXMSW__ /i $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include /i ..\include /d _WINDOWS /i ..\sample /i ..\sample $**
 

@@ -44,7 +44,8 @@ WX_LIBS = @WX_LIBS@
 ### Variables: ###
 
 DESTDIR = 
-HTTPENGINE_LIB_CXXFLAGS = -I./include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+HTTPENGINE_LIB_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include $(WX_CXXFLAGS) \
+	$(CPPFLAGS) $(CXXFLAGS)
 HTTPENGINE_LIB_OBJECTS =  \
 	httpengine_lib_base64.o \
 	httpengine_lib_authdlg.o \
@@ -53,8 +54,8 @@ HTTPENGINE_LIB_OBJECTS =  \
 	httpengine_lib_hyperlinkctrl.o \
 	httpengine_lib_pleasewaitdlg.o \
 	httpengine_lib_proxysettingsdlg.o
-HTTPENGINE_DLL_CXXFLAGS = -I./include -DWXMAKINGDLL_HTTPENGINE $(PIC_FLAG) \
-	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+HTTPENGINE_DLL_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include \
+	-DWXMAKINGDLL_HTTPENGINE $(PIC_FLAG) $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 HTTPENGINE_DLL_OBJECTS =  \
 	httpengine_dll_base64.o \
 	httpengine_dll_authdlg.o \
@@ -63,7 +64,8 @@ HTTPENGINE_DLL_OBJECTS =  \
 	httpengine_dll_hyperlinkctrl.o \
 	httpengine_dll_pleasewaitdlg.o \
 	httpengine_dll_proxysettingsdlg.o
-HTTPENGINETEST_CXXFLAGS = -I./include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+HTTPENGINETEST_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include $(WX_CXXFLAGS) \
+	$(CPPFLAGS) $(CXXFLAGS)
 HTTPENGINETEST_OBJECTS =  \
 	httpenginetest_httpengineapp.o \
 	httpenginetest_httpenginedlg.o \
@@ -125,16 +127,16 @@ COND_USE_SOSYMLINKS_1___httpengine_dll___so_symlinks_inst_cmd = rm -f \
 	$(DLLPREFIX)httpengine$(__httpengine_dll___targetsuf2) \
 	$(LIBPREFIX)httpengine.$(DLLIMP_SUFFIX)
 @COND_USE_SOSYMLINKS_1@__httpengine_dll___so_symlinks_inst_cmd = $(COND_USE_SOSYMLINKS_1___httpengine_dll___so_symlinks_inst_cmd)
-@COND_PLATFORM_MACOSX_1@__httpengine_dll___macver = \
-@COND_PLATFORM_MACOSX_1@	-compatibility_version 0 -current_version 0
 @COND_PLATFORM_MAC_1@__httpenginetest___mac_setfilecmd \
-@COND_PLATFORM_MAC_1@	= $(SETFILE) -t APPL httpenginetest$(EXEEXT)
+@COND_PLATFORM_MAC_1@	= $(SETFILE) -t APPL ./sample/httpenginetest$(EXEEXT)
+@COND_WX_SHARED_1@__WX_SHAREDDEFINE_p_5 = --define WXUSINGDLL
 COND_PLATFORM_OS2_1___httpenginetest___os2_emxbindcmd = $(NM) \
 	httpenginetest$(EXEEXT) | if grep -q pmwin.763 ; then emxbind -ep \
 	httpenginetest$(EXEEXT) ; fi
 @COND_PLATFORM_OS2_1@__httpenginetest___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___httpenginetest___os2_emxbindcmd)
 @COND_PLATFORM_WIN32_1@__httpenginetest___win32rc = \
 @COND_PLATFORM_WIN32_1@	httpenginetest_httpengine_rc.o
+@COND_WX_SHARED_1@__WX_SHAREDDEFINE_p = -DWXUSINGDLL
 
 ### Targets: ###
 
@@ -257,7 +259,7 @@ install-wxheaders:
 @COND_WX_SHARED_0@	$(INSTALL_DATA) ./lib/$(LIBPREFIX)httpengine$(LIBEXT) $(DESTDIR)$(libdir)
 
 @COND_WX_SHARED_1@./lib/$(DLLPREFIX)httpengine$(__httpengine_dll___targetsuf3): $(HTTPENGINE_DLL_OBJECTS)
-@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(HTTPENGINE_DLL_OBJECTS) $(LDFLAGS) -L./lib $(__httpengine_dll___macinstnamecmd) $(__httpengine_dll___importlib) $(__httpengine_dll___soname_flags) $(__httpengine_dll___macver)  $(WX_LIBS)
+@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(HTTPENGINE_DLL_OBJECTS) $(LDFLAGS)   -L./lib $(__httpengine_dll___macinstnamecmd) $(__httpengine_dll___importlib) $(__httpengine_dll___soname_flags)  $(WX_LIBS)
 @COND_WX_SHARED_1@	
 @COND_WX_SHARED_1@	$(__httpengine_dll___so_symlinks_cmd)
 
@@ -268,7 +270,7 @@ install-wxheaders:
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__httpengine_dll___so_symlinks_inst_cmd))
 
 ./sample/httpenginetest$(EXEEXT): $(HTTPENGINETEST_OBJECTS) $(__httpenginetest___win32rc) $(__httpengine_lib___depname)
-	$(CXX) -o $@ $(HTTPENGINETEST_OBJECTS) -L./lib $(LDFLAGS) -L./lib $(LDFLAGS_GUI)  $(WX_LIBS) -lhttpengine
+	$(CXX) -o $@ $(HTTPENGINETEST_OBJECTS) -L./lib $(LDFLAGS)   -L./lib $(LDFLAGS_GUI)  -lhttpengine $(WX_LIBS)
 	
 	$(__httpenginetest___mac_setfilecmd)
 	$(__httpenginetest___os2_emxbindcmd)
@@ -322,7 +324,7 @@ httpenginetest_httpenginedlg.o: $(srcdir)/./sample/httpenginedlg.cpp
 	$(CXXC) -c -o $@ $(HTTPENGINETEST_CXXFLAGS) $(srcdir)/./sample/httpenginedlg.cpp
 
 httpenginetest_httpengine_rc.o: $(srcdir)/./sample/httpengine.rc
-	$(RESCOMP) -i$< -o$@  --include-dir ./include --include-dir ./sample --include-dir ./sample
+	$(RESCOMP) -i$< -o$@ $(__WX_SHAREDDEFINE_p_5) --include-dir ./include --include-dir ./sample --include-dir ./sample
 
 
 # Include dependency info, if present:

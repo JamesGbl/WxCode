@@ -250,6 +250,31 @@ docs:
 cleandocs: 
 	-if exist ..\docs\html then rmdir /S /Q ..\docs\html
 
+install: all install-wxheaders
+	copy /Y ..\lib\libhttpengine$(WXLIBPOSTFIX).a $(WX_DIR)$(WXLIBPATH)
+	copy /Y ..\lib\httpengine$(WXLIBPOSTFIX).dll $(WX_DIR)$(WXLIBPATH)
+
+install-wxheaders: 
+	mkdir $(WX_DIR)\include\wx
+	cd .
+	copy /Y  ..\include\wx\*.h $(WX_DIR)\include\wx
+
+uninstall: 
+	-if exist $(WX_DIR)\include\wx\authdlg.h \
+	$(WX_DIR)\include\wx\base64.h \
+	$(WX_DIR)\include\wx\httpbuilder.h \
+	$(WX_DIR)\include\wx\httpbuilderthread.h \
+	$(WX_DIR)\include\wx\hyperlinkctrl.h \
+	$(WX_DIR)\include\wx\proxysettingsdlg.h \
+	$(WX_DIR)\include\wx\httpenginedef.h then del /Q $(WX_DIR)\include\wx\authdlg.h \
+	$(WX_DIR)\include\wx\base64.h \
+	$(WX_DIR)\include\wx\httpbuilder.h \
+	$(WX_DIR)\include\wx\httpbuilderthread.h \
+	$(WX_DIR)\include\wx\hyperlinkctrl.h \
+	$(WX_DIR)\include\wx\proxysettingsdlg.h \
+	$(WX_DIR)\include\wx\httpenginedef.h
+	-if exist $(WX_DIR)$(WXLIBPATH)\*httpengine* then del /Q $(WX_DIR)$(WXLIBPATH)\*httpengine*
+
 ifeq ($(WX_SHARED),0)
 ..\lib\libhttpengine$(WXLIBPOSTFIX).a: $(HTTPENGINE_LIB_OBJECTS)
 	if exist $@ del $@
@@ -316,7 +341,7 @@ mingw$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpenginedlg.o: ./../sample/httpe
 mingw$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpengine_rc.o: ./../sample/httpengine.rc
 	windres --use-temp-file -i$< -o$@ $(__WX_SHAREDDEFINE_p_4) --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_4) $(__WXDEBUG_DEFINE_p_4) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ..\include --include-dir ../sample --include-dir ..\sample
 
-.PHONY: all clean
+.PHONY: all clean install uninstall
 
 
 # Dependencies tracking:
