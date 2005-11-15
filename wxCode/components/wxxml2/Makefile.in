@@ -109,10 +109,8 @@ COND_USE_SOSYMLINKS_1___wxxml2_dll___so_symlinks_inst_cmd = rm -f \
 	$(DLLPREFIX)wxxml2$(__wxxml2_dll___targetsuf2) \
 	$(LIBPREFIX)wxxml2.$(DLLIMP_SUFFIX)
 @COND_USE_SOSYMLINKS_1@__wxxml2_dll___so_symlinks_inst_cmd = $(COND_USE_SOSYMLINKS_1___wxxml2_dll___so_symlinks_inst_cmd)
-@COND_PLATFORM_MACOSX_1@__wxxml2_dll___macver = \
-@COND_PLATFORM_MACOSX_1@	-compatibility_version 0 -current_version 0
 @COND_PLATFORM_MAC_1@__minimal___mac_setfilecmd = \
-@COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL minimal$(EXEEXT)
+@COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL ./sample/minimal$(EXEEXT)
 COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd = $(NM) minimal$(EXEEXT) | if \
 	grep -q pmwin.763 ; then emxbind -ep minimal$(EXEEXT) ; fi
 @COND_PLATFORM_OS2_1@__minimal___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd)
@@ -237,7 +235,7 @@ install-wxheaders:
 @COND_WX_SHARED_0@	$(INSTALL_DATA) ./lib/$(LIBPREFIX)wxxml2$(LIBEXT) $(DESTDIR)$(libdir)
 
 @COND_WX_SHARED_1@./lib/$(DLLPREFIX)wxxml2$(__wxxml2_dll___targetsuf3): $(WXXML2_DLL_OBJECTS)
-@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(WXXML2_DLL_OBJECTS) $(LDFLAGS)   -L./lib $(__wxxml2_dll___macinstnamecmd) $(__wxxml2_dll___importlib) $(__wxxml2_dll___soname_flags) $(__wxxml2_dll___macver)  -lxml2 $(WX_LIBS)
+@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(WXXML2_DLL_OBJECTS) $(LDFLAGS)   -L./lib $(__wxxml2_dll___macinstnamecmd) $(__wxxml2_dll___importlib) $(__wxxml2_dll___soname_flags)  -lxml2 $(WX_LIBS)
 @COND_WX_SHARED_1@	
 @COND_WX_SHARED_1@	$(__wxxml2_dll___so_symlinks_cmd)
 

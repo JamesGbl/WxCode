@@ -3821,7 +3821,7 @@ echo "$as_me: error:
                                     echo "$as_me:$LINENO: checking if wxWidgets was built with UNICODE enabled" >&5
 echo $ECHO_N "checking if wxWidgets was built with UNICODE enabled... $ECHO_C" >&6
 
-		WX_UNICODE=$(expr match "$WX_SELECTEDCONFIG" ".*unicode.*")
+		WX_UNICODE=$(expr "$WX_SELECTEDCONFIG" : ".*unicode.*")
 
             if test "$WX_UNICODE" != "0"; then
                 WX_UNICODE=1
@@ -3845,7 +3845,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets was built in DEBUG mode" >&5
 echo $ECHO_N "checking if wxWidgets was built in DEBUG mode... $ECHO_C" >&6
 
-		WX_DEBUG=$(expr match "$WX_SELECTEDCONFIG" ".*debug.*")
+		WX_DEBUG=$(expr "$WX_SELECTEDCONFIG" : ".*debug.*")
 
             if test "$WX_DEBUG" != "0"; then
                 WX_DEBUG=1
@@ -3870,7 +3870,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets was built in STATIC mode" >&5
 echo $ECHO_N "checking if wxWidgets was built in STATIC mode... $ECHO_C" >&6
 
-		WX_STATIC=$(expr match "$WX_SELECTEDCONFIG" ".*static.*")
+		WX_STATIC=$(expr "$WX_SELECTEDCONFIG" : ".*static.*")
 
             if test "$WX_STATIC" != "0"; then
                 WX_STATIC=1
@@ -3901,7 +3901,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxGTK" >&5
 echo $ECHO_N "checking if wxWidgets port is wxGTK... $ECHO_C" >&6
 
-		WX_GTKPORT=$(expr match "$WX_SELECTEDCONFIG" ".*gtk.*")
+		WX_GTKPORT=$(expr "$WX_SELECTEDCONFIG" : ".*gtk.*")
 
             if test "$WX_GTKPORT" != "0"; then
                 WX_GTKPORT=1
@@ -3925,7 +3925,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxMotif" >&5
 echo $ECHO_N "checking if wxWidgets port is wxMotif... $ECHO_C" >&6
 
-		WX_MOTIFPORT=$(expr match "$WX_SELECTEDCONFIG" ".*motif.*")
+		WX_MOTIFPORT=$(expr "$WX_SELECTEDCONFIG" : ".*motif.*")
 
             if test "$WX_MOTIFPORT" != "0"; then
                 WX_MOTIFPORT=1
@@ -3949,7 +3949,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxMac" >&5
 echo $ECHO_N "checking if wxWidgets port is wxMac... $ECHO_C" >&6
 
-		WX_MACPORT=$(expr match "$WX_SELECTEDCONFIG" ".*mac.*")
+		WX_MACPORT=$(expr "$WX_SELECTEDCONFIG" : ".*mac.*")
 
             if test "$WX_MACPORT" != "0"; then
                 WX_MACPORT=1
@@ -3973,7 +3973,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxX11" >&5
 echo $ECHO_N "checking if wxWidgets port is wxX11... $ECHO_C" >&6
 
-		WX_X11PORT=$(expr match "$WX_SELECTEDCONFIG" ".*x11.*")
+		WX_X11PORT=$(expr "$WX_SELECTEDCONFIG" : ".*x11.*")
 
             if test "$WX_X11PORT" != "0"; then
                 WX_X11PORT=1
@@ -3997,7 +3997,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxMGL" >&5
 echo $ECHO_N "checking if wxWidgets port is wxMGL... $ECHO_C" >&6
 
-		WX_MGLPORT=$(expr match "$WX_SELECTEDCONFIG" ".*mgl.*")
+		WX_MGLPORT=$(expr "$WX_SELECTEDCONFIG" : ".*mgl.*")
 
             if test "$WX_MGLPORT" != "0"; then
                 WX_MGLPORT=1
@@ -4016,6 +4016,30 @@ echo "${ECHO_T}no" >&6
         fi
 
 
+        if test "$MSWPORT" = "wxlike" ; then
+
+                                    echo "$as_me:$LINENO: checking if wxWidgets port is wxMSW" >&5
+echo $ECHO_N "checking if wxWidgets port is wxMSW... $ECHO_C" >&6
+
+		WX_MSWPORT=$(expr "$WX_SELECTEDCONFIG" : ".*msw.*")
+
+            if test "$WX_MSWPORT" != "0"; then
+                WX_MSWPORT=1
+                echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6
+                WX_PORT="msw"
+            else
+                WX_MSWPORT=0
+                echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+                :
+            fi
+        else
+
+                        WX_MSWPORT=$MSWPORT
+        fi
+
+
                                     if test "$WX_PORT" = "gtk"; then
                 TEMP=wxlike
 
@@ -4024,7 +4048,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxGTK uses GTK 2.x or GTK 1.x" >&5
 echo $ECHO_N "checking if wxGTK uses GTK 2.x or GTK 1.x... $ECHO_C" >&6
 
-		WX_TEMP=$(expr match "$WX_SELECTEDCONFIG" ".*gtk2.*")
+		WX_TEMP=$(expr "$WX_SELECTEDCONFIG" : ".*gtk2.*")
 
             if test "$WX_TEMP" != "0"; then
                 WX_TEMP=1
@@ -4056,7 +4080,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets was built with UNICODE enabled" >&5
 echo $ECHO_N "checking if wxWidgets was built with UNICODE enabled... $ECHO_C" >&6
 
-		WX_UNICODE=$(expr match "$WX_CPPFLAGS" ".*unicode.*")
+		WX_UNICODE=$(expr "$WX_CPPFLAGS" : ".*unicode.*")
 
             if test "$WX_UNICODE" != "0"; then
                 WX_UNICODE=1
@@ -4080,7 +4104,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets was built in DEBUG mode" >&5
 echo $ECHO_N "checking if wxWidgets was built in DEBUG mode... $ECHO_C" >&6
 
-		WX_DEBUG=$(expr match "$WX_CPPFLAGS" ".*__WXDEBUG__.*")
+		WX_DEBUG=$(expr "$WX_CPPFLAGS" : ".*__WXDEBUG__.*")
 
             if test "$WX_DEBUG" != "0"; then
                 WX_DEBUG=1
@@ -4104,7 +4128,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets was built in STATIC mode" >&5
 echo $ECHO_N "checking if wxWidgets was built in STATIC mode... $ECHO_C" >&6
 
-		WX_STATIC=$(expr match "$WX_CPPFLAGS" ".*static.*")
+		WX_STATIC=$(expr "$WX_CPPFLAGS" : ".*static.*")
 
             if test "$WX_STATIC" != "0"; then
                 WX_STATIC=1
@@ -4135,7 +4159,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxGTK" >&5
 echo $ECHO_N "checking if wxWidgets port is wxGTK... $ECHO_C" >&6
 
-		WX_GTKPORT=$(expr match "$WX_CPPFLAGS" ".*__WXGTK__.*")
+		WX_GTKPORT=$(expr "$WX_CPPFLAGS" : ".*__WXGTK__.*")
 
             if test "$WX_GTKPORT" != "0"; then
                 WX_GTKPORT=1
@@ -4159,7 +4183,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxMotif" >&5
 echo $ECHO_N "checking if wxWidgets port is wxMotif... $ECHO_C" >&6
 
-		WX_MOTIFPORT=$(expr match "$WX_CPPFLAGS" ".*__WXMOTIF__.*")
+		WX_MOTIFPORT=$(expr "$WX_CPPFLAGS" : ".*__WXMOTIF__.*")
 
             if test "$WX_MOTIFPORT" != "0"; then
                 WX_MOTIFPORT=1
@@ -4183,7 +4207,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxMac" >&5
 echo $ECHO_N "checking if wxWidgets port is wxMac... $ECHO_C" >&6
 
-		WX_MACPORT=$(expr match "$WX_CPPFLAGS" ".*__WXMAC__.*")
+		WX_MACPORT=$(expr "$WX_CPPFLAGS" : ".*__WXMAC__.*")
 
             if test "$WX_MACPORT" != "0"; then
                 WX_MACPORT=1
@@ -4207,7 +4231,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxX11" >&5
 echo $ECHO_N "checking if wxWidgets port is wxX11... $ECHO_C" >&6
 
-		WX_X11PORT=$(expr match "$WX_CPPFLAGS" ".*__WXX11__.*")
+		WX_X11PORT=$(expr "$WX_CPPFLAGS" : ".*__WXX11__.*")
 
             if test "$WX_X11PORT" != "0"; then
                 WX_X11PORT=1
@@ -4231,7 +4255,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxMGL" >&5
 echo $ECHO_N "checking if wxWidgets port is wxMGL... $ECHO_C" >&6
 
-		WX_MGLPORT=$(expr match "$WX_CPPFLAGS" ".*__WXMGL__.*")
+		WX_MGLPORT=$(expr "$WX_CPPFLAGS" : ".*__WXMGL__.*")
 
             if test "$WX_MGLPORT" != "0"; then
                 WX_MGLPORT=1
@@ -4250,6 +4274,30 @@ echo "${ECHO_T}no" >&6
         fi
 
 
+        if test "$MSWPORT" = "wxlike" ; then
+
+                                    echo "$as_me:$LINENO: checking if wxWidgets port is wxMSW" >&5
+echo $ECHO_N "checking if wxWidgets port is wxMSW... $ECHO_C" >&6
+
+		WX_MSWPORT=$(expr "$WX_CPPFLAGS" : ".*__WXMSW__.*")
+
+            if test "$WX_MSWPORT" != "0"; then
+                WX_MSWPORT=1
+                echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6
+                WX_PORT="msw"
+            else
+                WX_MSWPORT=0
+                echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+                :
+            fi
+        else
+
+                        WX_MSWPORT=$MSWPORT
+        fi
+
+
                                     if test "$WX_PORT" = "gtk"; then
                 TEMP=wxlike
 
@@ -4258,7 +4306,7 @@ echo "${ECHO_T}no" >&6
                                     echo "$as_me:$LINENO: checking if wxGTK uses GTK 2.x or GTK 1.x" >&5
 echo $ECHO_N "checking if wxGTK uses GTK 2.x or GTK 1.x... $ECHO_C" >&6
 
-		WX_TEMP=$(expr match "$WX_CPPFLAGS" ".*gtk2.*")
+		WX_TEMP=$(expr "$WX_CPPFLAGS" : ".*gtk2.*")
 
             if test "$WX_TEMP" != "0"; then
                 WX_TEMP=1
@@ -5409,6 +5457,73 @@ echo "${ECHO_T}$bakefile_cv_prog_icc" >&6
 
       *-*-darwin* )
 
+                                echo "$as_me:$LINENO: checking for gcc 3.1 or later" >&5
+echo $ECHO_N "checking for gcc 3.1 or later... $ECHO_C" >&6
+if test "${bakefile_cv_gcc31+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+
+           cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+                   #if (__GNUC__ < 3) || \
+                       ((__GNUC__ == 3) && (__GNUC_MINOR__ < 1))
+                       #error old gcc
+                   #endif
+
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext
+if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+  (eval $ac_compile) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_cxx_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest.$ac_objext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+
+                   bakefile_cv_gcc31=yes
+
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+
+                   bakefile_cv_gcc31=no
+
+
+fi
+rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+
+fi
+echo "$as_me:$LINENO: result: $bakefile_cv_gcc31" >&5
+echo "${ECHO_T}$bakefile_cv_gcc31" >&6
+        if test "$bakefile_cv_gcc31" = "no"; then
+
 D='$'
 cat <<EOF >shared-ld-sh
 #!/bin/sh
@@ -5503,83 +5618,17 @@ rm -f master.${D}${D}.o
 exit ${D}status
 EOF
 
-        chmod +x shared-ld-sh
+            chmod +x shared-ld-sh
 
-        SHARED_LD_MODULE_CC="`pwd`/shared-ld-sh -bundle -headerpad_max_install_names -o"
-        SHARED_LD_MODULE_CXX="$SHARED_LD_MODULE_CC"
-
-
-                                echo "$as_me:$LINENO: checking for gcc 3.1 or later" >&5
-echo $ECHO_N "checking for gcc 3.1 or later... $ECHO_C" >&6
-if test "${bakefile_cv_gcc31+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-
-           cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-
-int
-main ()
-{
-
-                   #if (__GNUC__ < 3) || \
-                       ((__GNUC__ == 3) && (__GNUC_MINOR__ < 1))
-                       #error old gcc
-                   #endif
-
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext
-if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
-  (eval $ac_compile) 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } &&
-	 { ac_try='test -z "$ac_cxx_werror_flag"
-			 || test ! -s conftest.err'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; } &&
-	 { ac_try='test -s conftest.$ac_objext'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; }; then
-
-                   bakefile_cv_gcc31=yes
-
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-
-                   bakefile_cv_gcc31=no
-
-
-fi
-rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
-
-fi
-echo "$as_me:$LINENO: result: $bakefile_cv_gcc31" >&5
-echo "${ECHO_T}$bakefile_cv_gcc31" >&6
-        if test "$bakefile_cv_gcc31" = "no"; then
                         SHARED_LD_CC="`pwd`/shared-ld-sh -dynamiclib -headerpad_max_install_names -o"
+            SHARED_LD_MODULE_CC="`pwd`/shared-ld-sh -bundle -headerpad_max_install_names -o"
             SHARED_LD_CXX="$SHARED_LD_CC"
+            SHARED_LD_MODULE_CXX="$SHARED_LD_MODULE_CC"
         else
                         SHARED_LD_CC="\${CC} -dynamiclib -single_module -headerpad_max_install_names -o"
+            SHARED_LD_MODULE_CC="\${CC} -bundle -single_module -headerpad_max_install_names -o"
             SHARED_LD_CXX="\${CXX} -dynamiclib -single_module -headerpad_max_install_names -o"
+            SHARED_LD_MODULE_CXX="\${CXX} -bundle -single_module -headerpad_max_install_names -o"
         fi
 
         if test "x$GCC" == "xyes"; then
@@ -5592,18 +5641,18 @@ echo "${ECHO_T}$bakefile_cv_gcc31" >&6
 
       *-*-aix* )
         if test "x$GCC" = "xyes"; then
-                                                            PIC_FLAG=""
+	    	    	    	    	    PIC_FLAG=""
 
-                                                                                    case "${BAKEFILE_HOST}" in
-                *-*-aix5* )
-                    LD_EXPFULL="-Wl,-bexpfull"
-                    ;;
-            esac
+	    	    	    	    	    	    	    case "${BAKEFILE_HOST}" in
+		*-*-aix5* )
+		    LD_EXPFULL="-Wl,-bexpfull"
+		    ;;
+	    esac
 
-            SHARED_LD_CC="\$(CC) -shared $LD_EXPFULL -o"
-            SHARED_LD_CXX="\$(CXX) -shared $LD_EXPFULL -o"
-        else
-                                    # Extract the first word of "makeC++SharedLib", so it can be a program name with args.
+	    SHARED_LD_CC="\$(CC) -shared $LD_EXPFULL -o"
+	    SHARED_LD_CXX="\$(CXX) -shared $LD_EXPFULL -o"
+	else
+	    	                # Extract the first word of "makeC++SharedLib", so it can be a program name with args.
 set dummy makeC++SharedLib; ac_word=$2
 echo "$as_me:$LINENO: checking for $ac_word" >&5
 echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
