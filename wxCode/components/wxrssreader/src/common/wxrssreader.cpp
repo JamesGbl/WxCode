@@ -3,7 +3,7 @@
 // Purpose:     RSS Reader for wxForum 
 // Author:      Ryan Norton 
 // Created:     06/27/2005 
-// RCS-ID:      $Id: wxrssreader.cpp,v 1.1 2005-11-10 15:56:05 ryannpcs Exp $
+// RCS-ID:      $Id: wxrssreader.cpp,v 1.1 2005-11-16 22:34:45 ryannpcs Exp $
 // Copyright:   (c) Ryan Norton 
 // Licence:     Public Domain 
 /////////////////////////////////////////////////////////////////////////////// 

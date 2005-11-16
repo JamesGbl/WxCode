@@ -1,0 +1,376 @@
+<?xml version="1.0" ?>
+<!--	Above is just a doctype definition signifying that  -->
+<!--	this file is an xml file (which a bakefile is)		-->
+
+<!-- Below is just a line for putting the RCS Id of the file-->
+<!-- $Id: wxrssreader.bkl,v 1.1 2005-11-16 22:34:45 ryannpcs Exp $ -->
+
+<!--					GENERIC BAKEFILE					-->
+<!--														-->
+<!--	This is a generic bakefile, heavily commented for	-->
+<!--	explanatory reasons.								-->
+<!--														-->
+<!--	In particular, this bakefile is for building a		-->
+<!--	library, and a console and a gui sample which rely	-->
+<!--	upon that library, standard system libraries, and	-->
+<!--	additionally, wxWindows.							-->
+
+<!--	makefile tag signifies the beginning of the bakefile-->
+<makefile>
+
+	<!--					OPTIONS							-->
+	<!--													-->
+	<!--	These are essentially the configurations you	-->
+	<!--	want in bakefile.								-->
+	<!--													-->
+	<!--	In MSVC these are the different build			-->
+	<!--	configurations you can have (in the build menu),-->
+	<!--	and in autoconf is enabled with enable-xxx=xx.  -->
+	<!--	For other compilers a seperate configuration	-->
+	<!--	file is created (such as config.gnu on gnu)		-->
+	<!--	which has several options a user can modify.	-->
+	<!--													-->
+	<!--	Note that the above only happens if an option	-->
+	<!--	is not constant, i.e. if it cannot be determined-->
+	<!--	by bakefile itself.								-->
+
+	<!--	This is a standard option that determines		-->
+	<!--	whether the user wants to build this library as	-->
+	<!--	a dll or as a static library.					-->
+	<option name="SHARED">
+		<values>0,1</values>
+		<values-description>,DLL</values-description>
+		<default-value>0</default-value>
+		<description>
+			What type of library to build?
+		</description>
+	</option>
+
+	<!-- Configuration for building the bakefile with		-->
+	<!-- unicode strings or not (unicode or ansi).			-->
+	<option name="UNICODE">
+		<values>0,1</values>
+		<values-description>,Unicode</values-description>
+		<default-value>0</default-value>        
+		<description>
+			Compile Unicode build of wxWindows?
+		</description>
+	</option>
+
+	<!-- There are several options that deal with build		-->
+	<!-- types. First, there's this one, BUILD.				-->
+	<!--													-->
+	<!-- BUILD determines whether or not we want to build	-->
+	<!-- in release or debug mode.  Note that in practice	-->
+	<!-- this means modifying the optimize tag, which by	-->
+	<!-- default is set to off.  In this case debug means	-->
+	<!-- off (no optimizations), and release means speed	-->
+	<!-- (fast with inlining).  There is also a size option -->
+	<!-- that is not addressed in this example bakefile.	-->
+    <option name="BUILD">
+        <values>debug,release</values>
+        <values-description>Debug,Release</values-description>
+        <default-value>release</default-value>
+        <description>
+            Type of compiled binaries
+        </description>
+    </option>
+
+	<!--													-->
+	<!--					Variables						-->
+	<!--													-->
+	<!--	These are variables, the same way global		-->
+	<!--	variables are in c/c++.							-->
+	<!--													-->
+	<!--	To "use" a variable you use the form $(VAR)		-->
+	<!--	where VAR is the name of the variable, and the	-->
+	<!--	contants of the variable will be expanded, much -->
+	<!--	like a #define in c/c++.						-->
+	<!--													-->
+	<!--	Variables in bakefile have their hitches though.-->
+	<!--													-->
+	<!--	The real thing to watch out for is when using	-->
+	<!--	variables in if expressions - these variables	-->
+	<!--	must be a constant value, usually 1 or 0.  In	-->
+	<!--	practice this means declaring the variable		-->
+	<!--	with the cond statement INSIDE the tag, rather	-->
+	<!--	then having an if statement inside the variable.-->
+
+	<!--	Set the ISDLL variable, so that we can use it   -->
+	<!--	inside an if statement later on (options not	-->
+	<!--	allowed in if statements).						-->
+	<set var="ISDLL" cond="SHARED=='1'">1</set>
+	<set var="ISDLL" cond="SHARED=='0'">0</set>
+
+	<!--	The unicode define we want.  By default bakefile-->
+	<!--	makes variables an empty string, so if unicode	-->
+	<!--	is not defined $(UNICODE_DEFINE) would expand	-->
+	<!--	to nothing (literally).							-->
+    <set var="UNICODE_DEFINE">
+        <if cond="FORMAT!='autoconf' and UNICODE=='1'">_UNICODE</if>
+    </set>
+
+	<!--	Value we will use later on for the debug-info	-->
+	<!--	tag inside our templates.						-->
+	<set var="DEBUGINFO">
+        <if cond="BUILD=='debug'">on</if>
+        <if cond="BUILD=='release'">off</if>
+    </set>
+
+	<!--	Value we will use later on for the debug-runtime-->
+	<!--	tag inside our templates.						-->
+    <set var="DEBUGRUNTIME">
+        <if cond="BUILD=='debug'">on</if>
+        <if cond="BUILD=='release'">off</if>
+    </set>
+
+	<!--	Value for optimize tag.							-->
+    <set var="OPTIMIZEFLAG">
+        <if cond="BUILD=='debug'">off</if>
+        <if cond="BUILD=='release'">speed</if>
+    </set>
+	
+	<!--	These are handy ways of dealing with the		-->
+	<!--	extensions in the library names of the			--> 
+	<!--	wxWindows library.								-->
+	<set var="WXLIBPOSTFIX">
+		<if cond="BUILD=='debug' and UNICODE=='1'">ud</if>
+		<if cond="BUILD=='debug' and UNICODE=='0'">d</if>
+		<if cond="BUILD=='release' and UNICODE=='1'">u</if>
+	</set>
+	<set var="WXSUBLIBPOSTFIX">
+		<if cond="BUILD=='debug' and UNICODE=='0'">d</if>
+	</set>
+
+	<!-- Level of warnings.  Here we max it out in debug	-->
+	<!-- mode, and turn them off in release mode.			-->
+	<set var="WARNINGS">
+		<if cond="BUILD=='debug'">max</if>
+		<if cond="BUILD=='release'">no</if>
+	</set>
+
+	<!-- wx 2.5? -->
+	<set var="WX25" cond="WXVER=='2_4'">0</set>
+	<set var="WX25" cond="WXVER=='2_5'">1</set>
+	
+	<!--		PROJECT SPECIFIC SETTINGS					-->	
+	<!--	These are settings that you should modify to	-->
+	<!--	suit your needs.  The values here are only		-->
+	<!--	examples.										-->
+
+
+	<!--	Extra #define statements common across	-->
+	<!--	all files of all targets.				-->
+	<set var="EXTRADEFS">
+	</set>
+
+	<!--		SETTINGS FOR THE DIFFERENT TARGETS		-->
+	<!--													-->
+	<!--	Here is the place where	we put the location		-->
+	<!--	of the source files for our project.			-->
+
+	<!-- GUI(wxWindows) APP -->
+	<set var="BUILDGUIAPP">1</set>
+	<set var="GUIAPPNAME">wxrssreader</set>
+
+	<set var="GUIAPPDIR">../../bin</set>
+	<set var="GUIAPPSOURCES">
+		../../src/common/wxrssreader.cpp
+	</set>
+	<set var="GUIAPPHEADERS">
+	</set>
+
+	<!--													-->
+	<!--					Templates						-->
+	<!--													-->
+	<!--	While not required, templates make your			-->
+	<!--	bakefiles much more readable.  Templates, in	-->
+	<!--	essence, are abstract classes like c++.			-->
+	<!--													-->
+	<!--	Your build targets "inherit" the template,		-->
+	<!--	along with the info associated with the template-->
+
+	<!-- This defines a tag which includes headers on MSVC	-->
+	<!-- Note that $(value) is stuck in there by bakefile,	-->
+	<!-- and is the value between the beginning and end tag.-->
+	<define-tag name="headers" rules="dll,lib,exe">
+		<if cond="FORMAT=='msvc6prj'">
+			<msvc-project-files>
+				$(value)
+			</msvc-project-files>
+		</if>
+	</define-tag>
+
+	<!--	The "base class" of all our build targets		-->
+	<!--	This links with the appropriate native			-->
+	<!--	libraries required by the platform, the libaries-->
+	<!--	we want for our stuff, and the wxWindows libs.	-->
+	<!--													-->
+	<!--	QUICK NOTE ABOUT THE SYS-LIB TAG:				-->
+	<!--	The sys-lib tag, as should be evident, links	-->
+	<!--	the target with a static library (or stub) that	-->
+	<!--	resides on the system.  What's not evident is	-->
+	<!--	that sys-lib checks only the path on the system,-->
+	<!--	and not any libaries we make, for that we need	-->
+	<!--	to use the depend tag.							-->
+    <template id="base">
+
+        <!-- If targeting the Windows OS, link with the		-->
+		<!-- libraries manually								--> 
+        <if cond="FORMAT!='autoconf' and FORMAT!='gnu'">        
+			<!-- If on borland, we don't need to do much	-->
+		    <if cond="FORMAT=='borland'">
+                <sys-lib>ole2w32</sys-lib>
+            </if>
+
+			<!-- Non-borland, on the other hand...			-->
+	        <if cond="FORMAT!='borland'">
+                <sys-lib>kernel32</sys-lib>
+                <sys-lib>user32</sys-lib>
+                <sys-lib>gdi32</sys-lib>
+                <sys-lib>comdlg32</sys-lib>
+                <sys-lib>winspool</sys-lib>
+                <sys-lib>winmm</sys-lib>
+                <sys-lib>shell32</sys-lib>
+                <sys-lib>comctl32</sys-lib>
+                <sys-lib>odbc32</sys-lib>
+                <sys-lib>ole32</sys-lib>
+                <sys-lib>oleaut32</sys-lib>
+                <sys-lib>uuid</sys-lib>
+                <sys-lib>rpcrt4</sys-lib>
+                <sys-lib>advapi32</sys-lib>
+                <sys-lib>wsock32</sys-lib>
+            </if>
+
+			<!-- Libs common to both borland and MSVC -->
+            <if cond="FORMAT=='msvc' or FORMAT=='msvc6prj' or FORMAT=='borland'">
+                <sys-lib>oleacc</sys-lib>
+            </if>
+        </if> <!-- end if windows -->
+
+		<!-- wxWindows-specific stuff							-->
+		<if cond="FORMAT!='autoconf' and FORMAT!='gnu'">
+			<sys-lib>wxmsw27$(WXLIBPOSTFIX)_core</sys-lib>
+			<sys-lib>wxbase27$(WXLIBPOSTFIX)</sys-lib> 
+			<sys-lib>wxbase27$(WXLIBPOSTFIX)_net</sys-lib> 
+			<sys-lib>wxmsw27$(WXLIBPOSTFIX)_adv</sys-lib> 
+           		<sys-lib>wxmsw27$(WXLIBPOSTFIX)_html</sys-lib> 
+			<sys-lib>wxregex$(WXSUBLIBPOSTFIX)</sys-lib> 
+			<!--
+			<sys-lib>wxtiff$(WXSUBLIBPOSTFIX)</sys-lib> 
+			<sys-lib>wxjpeg$(WXSUBLIBPOSTFIX)</sys-lib> 
+			<sys-lib>wxpng$(WXSUBLIBPOSTFIX)</sys-lib> 
+			<sys-lib>wxzlib$(WXSUBLIBPOSTFIX)</sys-lib> 
+			<sys-lib>wxexpat$(WXSUBLIBPOSTFIX)</sys-lib>
+			-->
+			 <!--   <sys-lib>$(UNICOWS_LIB)</sys-lib> -->
+		</if>
+
+		<!--	REST OF THE OPTIONS		-->
+
+		<!-- Additional include paths	-->
+		<warnings>$(WARNINGS)</warnings>
+		<define>$(UNICODE_DEFINE) $(EXTRADEFS)</define>
+		<optimize>$(OPTIMIZEFLAG)</optimize>
+		<debug-info>$(DEBUGINFO)</debug-info>
+		<debug-runtime-libs>$(DEBUGRUNTIME)</debug-runtime-libs>
+
+		<!-- These are file groups in MSVC	-->
+		<!-- Here we just create two folders,	-->
+		<!-- "Sources" and "Headers"			-->
+        <if cond="FORMAT=='msvc6prj'">
+            <msvc-file-group>wxRSSReader Sources:../../src/common/*.c*</msvc-file-group>
+        </if>
+		<!-- If not on windows, we can use wxWindows configuration	-->
+		<!-- utilities to include the libs and defines for us.		-->
+		<!-- note that ldlibs should always be used because of gnu issues -->
+		<if cond="FORMAT=='autoconf' or FORMAT=='gnu'">
+			<ldlibs>`wx-config --libs`</ldlibs>
+			<cxxflags>`wx-config --cxxflags`</cxxflags>
+		</if>
+    </template> <!-- end base template -->
+
+
+
+    <!--							-->
+    <!-- For bundles on OSX					-->
+    <!--							-->
+    
+	<if cond="FORMAT=='gnu'">
+    <define-tag name="osx-bundle" rules="exe">
+
+        <set var="BUNDLE_IDENTIFIER">$(id)</set>
+
+	<set var="WXDIR">../../../wxWidgets</set>
+
+    <set var="MAC_VERSION">1.0</set>
+    <set var="BUNDLE_PLIST">$(WXDIR)/src/mac/carbon/Info.plist.in</set>
+    <set var="BUNDLE_RESOURCE">/usr/lib/local/libwx_mac-2.5.4.rsrc</set>
+    <set var="BUNDLE_ICONS">$(WXDIR)/src/mac/carbon/wxmac.icns</set>
+    
+        <!-- bundle directory: -->
+	<set var="BINDIR">../../bin/</set>
+        <set var="BUNDLE">$(BINDIR)$(id).app/Contents</set>
+        <set var="BUNDLE_TGT">$(BUNDLE)/PkgInfo</set>
+        <set var="BUNDLE_TGT_REF">$(BUNDLE)/PkgInfo</set>
+
+        
+        <add-target target="$(BUNDLE_TGT)" type="action"/>
+        <modify-target target="$(BUNDLE_TGT)">
+		<depends>$(id)</depends>
+            <!-- required data: -->
+            <command>
+		/Developer/Tools/Rez -d __DARWIN__ -t APPL -d __WXMAC__ -o $(BINDIR)$(id) Carbon.r /usr/local/lib/libwx_mac-2.5.4.r $(WXDIR)/samples/sample.r
+		/Developer/Tools/SetFile -a C ../../bin/$(id)
+
+                <!-- create the directories: -->
+                mkdir -p $(BUNDLE)
+                mkdir -p $(BUNDLE)/MacOS
+                mkdir -p $(BUNDLE)/Resources
+
+                <!-- Info.plist: -->
+                sed -e "s/IDENTIFIER/$(BUNDLE_IDENTIFIER)/" \
+                    -e "s/EXECUTABLE/$(id)/" \
+                    -e "s/VERSION/$(MAC_VERSION)/" \
+                    $(BUNDLE_PLIST) >$(BUNDLE)/Info.plist
+
+                <!-- PkgInfo: -->
+                echo -n "APPL????" >$(BUNDLE)/PkgInfo
+
+                <!-- make a hardlink to the binary: -->
+                ln -f $(ref("__targetdir",id))$(ref("__targetname",id)) $(BUNDLE)/MacOS/$(id)
+
+                <!-- ditto wxWidgets resources and icons: -->
+                cp -f $(BUNDLE_RESOURCE) $(BUNDLE)/Resources/$(id).rsrc
+                cp -f $(BUNDLE_ICONS) $(BUNDLE)/Resources/wxmac.icns
+            </command>            
+        </modify-target>
+        
+        <!-- add pseudo target id_bundle: -->
+        <add-target target="$(id)_bundle" type="phony"/>
+        <modify-target target="$(id)_bundle">
+            <dependency-of>all</dependency-of>
+            <depends>$(BUNDLE_TGT_REF)</depends>
+        </modify-target>
+
+        <!-- "make clean" should delete the bundle: -->
+        <modify-target target="clean">
+            <command>rm -rf $(id).app</command>
+        </modify-target>
+        
+    </define-tag>
+	</if>
+
+
+	<!--															-->
+	<!--					GUI APP									-->
+	<!--															-->
+
+	<exe id="wxrssreader" template="base" cond="BUILDGUIAPP=='1'">
+		<app-type>gui</app-type>
+		<dirname>$(GUIAPPDIR)</dirname>
+		<sources>$(GUIAPPSOURCES)</sources>
+		<headers>$(GUIAPPHEADERS)</headers>
+	</exe>
+</makefile>
+
