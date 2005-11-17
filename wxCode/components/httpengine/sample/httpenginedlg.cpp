@@ -153,6 +153,11 @@ wxHTTPEngineDialog::wxHTTPEngineDialog(const wxString& title, const wxPoint& pos
       // : wxDialog((wxDialog *) NULL, -1, title, pos, size)
        : wxFrame((wxFrame *) NULL, -1, title, pos, size, wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN)
 {
+  // Load previously saved settings
+  wxConfigBase *pConfig = wxConfigBase::Get();
+  m_authSettings.AuthSettingsLoad(*pConfig);
+  m_proxySettings.ProxySettingsLoad(*pConfig);
+
   m_thread = NULL;
   m_http = NULL;
   m_timer = NULL;
@@ -231,6 +236,11 @@ wxHTTPEngineDialog::wxHTTPEngineDialog(const wxString& title, const wxPoint& pos
 wxHTTPEngineDialog::~wxHTTPEngineDialog()
 {
   //delete m_sock;
+
+  // Save previously set settings
+  wxConfigBase *pConfig = wxConfigBase::Get();
+  m_authSettings.AuthSettingsSave(*pConfig);
+  m_proxySettings.ProxySettingsSave(*pConfig);
 }
 
 // event handlers
@@ -788,7 +798,7 @@ AboutDialog::AboutDialog
 	//	 	wxPoint(50,100), wxDefaultSize, wxTAB_TRAVERSAL , wxT("statictextlink2"), wxT("http://www.spaceblue.com") );
 
   wxHyperlinkCtrl *hyper2 = new wxHyperlinkCtrl( this, About_Link2, wxT("www.leakybagel.com"), 
-      wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL , wxT("statictextlink1"), wxT("http://www.leakybagel.com") );
+      wxPoint(50,100), wxDefaultSize, wxTAB_TRAVERSAL , wxT("statictextlink1"), wxT("http://www.leakybagel.com") );
 
 	hyper2->SetColours( wxColour(wxT("BLUE")), wxColour(wxT("BLUE")), wxColour(wxT("BLUE")) );
 	hyper2->EnableRollover(true);

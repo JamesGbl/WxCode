@@ -60,17 +60,28 @@ bool wxHTTPEngineApp::OnInit()
 
     // create the main application window
     wxHTTPEngineDialog *dialog = new wxHTTPEngineDialog(_T("wxHTTP Engine"),
-                                 wxPoint(50, 50), wxSize(400, 350));
+                                 wxPoint(50, 50), wxSize(400, 340));
 
     // and show it (the frames, unlike simple controls, are not shown when
     // created initially)
     dialog->Show(TRUE);
-	SetTopWindow(dialog);
+	  SetTopWindow(dialog);
+
+    // Create a config object
+    wxConfigBase *pConfig = wxConfigBase::Get();
 
     // success: wxApp::OnRun() will be called which will enter the main message
     // loop and the application will run. If we returned FALSE here, the
     // application would exit immediately.
     return TRUE;
+}
+
+int wxHTTPEngineApp::OnExit()
+{
+  // Delete the config object:
+  delete wxConfigBase::Set((wxConfigBase *) NULL);
+
+  return 0;
 }
 
 // eof
