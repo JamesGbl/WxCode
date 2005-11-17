@@ -25,7 +25,9 @@
 
 #include <wx/protocol/http.h>
 #include "wx/httpenginedef.h"
-
+#if wxUSE_CONFIG
+  #include <wx/config.h>
+#endif
 //! wxProxySettings class, makes getting and setting proxy settings easier.
 class WXDLLIMPEXP_HTTPENGINE wxProxySettings
 {
@@ -41,8 +43,13 @@ public:
 
   void SetUseProxy(const bool bUse) { m_bUseProxy = bUse; };
 
+#if wxUSE_CONFIG
+  void ProxySettingsLoad(wxConfigBase& config);
+  void ProxySettingsSave(wxConfigBase& config) const;
+#endif
+
 public:
-	wxProxySettings() { m_bRequiresAuth = 0; m_bUseProxy = 0; m_nProxyPort = 0; m_strProxyExceptionsDelim = wxT(","); }
+	wxProxySettings() { m_bRequiresAuth = 0; m_bUseProxy = 0; m_nProxyPort = 8080; m_strProxyExceptionsDelim = wxT(","); }
 	wxProxySettings(const wxProxySettings& data);
 	virtual ~wxProxySettings() {};
 	void operator=(const wxProxySettings& data);
@@ -67,6 +74,11 @@ public:
 	
 	void SetBasicAuth() { m_authType = wxHTTP_AUTH_BASIC; };
 	void SetNoAuth() { m_authType = wxHTTP_AUTH_NONE; };
+
+#if wxUSE_CONFIG
+  void AuthSettingsLoad(wxConfigBase& config);
+  void AuthSettingsSave(wxConfigBase& config) const;
+#endif
 
 public:
 	wxHTTPAuthSettings() { m_bRememberPasswd = 0; m_authType = wxHTTP_AUTH_NONE; }

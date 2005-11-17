@@ -60,6 +60,31 @@ void wxProxySettings::operator=(const wxProxySettings& data)
 	m_nProxyPort = data.m_nProxyPort;
 }
 
+#if wxUSE_CONFIG
+void wxProxySettings::ProxySettingsLoad(wxConfigBase& config)
+{
+  m_bRequiresAuth = (config.Read(wxT("RequiresAuth"), m_bRequiresAuth) == 1);
+  m_bUseProxy = (config.Read(wxT("UseProxy"), m_bUseProxy) == 1);
+  m_nProxyPort = config.Read(wxT("ProxyPort"), m_nProxyPort);
+  m_strProxyExceptions = config.Read(wxT("ProxyExceptions"), m_strProxyExceptions);
+  m_strProxyExceptionsDelim = config.Read(wxT("ProxyExceptionsDelim"), m_strProxyExceptionsDelim);
+  m_strProxyHostname = config.Read(wxT("ProxyHostname"), m_strProxyHostname);
+  m_strProxyPassword = config.Read(wxT("ProxyPassword"), m_strProxyPassword);
+  m_strProxyUsername = config.Read(wxT("ProxyUsername"), m_strProxyUsername);
+}
+
+void wxProxySettings::ProxySettingsSave(wxConfigBase& config) const
+{
+  config.Write(wxT("RequiresAuth"), (long)m_bRequiresAuth);
+  config.Write(wxT("UseProxy"), (long)m_bUseProxy);
+  config.Write(wxT("ProxyPort"), (long)m_nProxyPort);
+  config.Write(wxT("ProxyExceptions"), m_strProxyExceptions);
+  config.Write(wxT("ProxyExceptionsDelim"), m_strProxyExceptionsDelim);
+  config.Write(wxT("ProxyHostname"), m_strProxyHostname);
+  config.Write(wxT("ProxyUsername"), m_strProxyUsername);
+  config.Write(wxT("ProxyPassword"), m_strProxyPassword);
+}
+#endif
 
 wxHTTPAuthSettings::wxHTTPAuthSettings(const wxHTTPAuthSettings& data)
 {
@@ -73,6 +98,24 @@ void wxHTTPAuthSettings::operator=(const wxHTTPAuthSettings& data)
 	m_bRememberPasswd = data.m_bRememberPasswd;
   m_authType = data.m_authType;
 }
+
+#if wxUSE_CONFIG
+void wxHTTPAuthSettings::AuthSettingsLoad(wxConfigBase& config)
+{
+  m_authType = (wxHTTPAuthSettings::wxHTTP_Auth)config.Read(wxT("AuthType"), m_authType);
+  m_bRememberPasswd = (config.Read(wxT("RememberPasswd"), m_authType) == 1);
+  m_strAuthUsername = config.Read(wxT("AuthUsername"), m_strAuthUsername);
+  m_strAuthPassword = config.Read(wxT("AuthPassword"), m_strAuthPassword);
+}
+
+void wxHTTPAuthSettings::AuthSettingsSave(wxConfigBase& config) const
+{
+  config.Write(wxT("AuthType"), (long)m_authType);
+  config.Write(wxT("RememberPasswd"), (long)m_bRememberPasswd);
+  config.Write(wxT("AuthUsername"), m_strAuthUsername);
+  config.Write(wxT("AuthPassword"), m_strAuthPassword);
+}
+#endif
 
 //! wxHTTPBuilderStream handles reading the data received from web server.
 //! This class is typically not used outside of the wxHTTPEngine library.
