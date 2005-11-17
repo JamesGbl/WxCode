@@ -23,7 +23,6 @@
 	<set var="WX_VERSION_DEFAULT">26</set>
 
 
-
 	<!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->
 	<include file="$(WXCODE_BAKEFILEDIR)/wxcode.bkl"/>
 
@@ -31,8 +30,8 @@
 	     "complib". In this way modifications are allowed to the basic template. -->
 	<lib id="keybinder_lib" template="complib" cond="WX_SHARED=='0'"/>
 	<dll id="keybinder_dll" template="compdll" cond="WX_SHARED=='1'">
-        <wx-lib>core</wx-lib>
-        <wx-lib>base</wx-lib>
+	        <wx-lib>core</wx-lib>
+        	<wx-lib>base</wx-lib>
 	</dll>
 	<set var="MSVC6PRJ_MERGED_TARGETS">keybinder=keybinder_lib+keybinder_dll</set>
 	
@@ -43,8 +42,8 @@
 		<res-include>$(COMP_BASEPATH)$(DIRSEP)sample</res-include>
 		<win32-res>$(COMP_BASEPATH)$(DIRSEP)sample$(DIRSEP)minimal.rc</win32-res>
 		<library>keybinder_lib</library>
-        <wx-lib>core</wx-lib>
-        <wx-lib>base</wx-lib>
+	        <wx-lib>core</wx-lib>
+        	<wx-lib>base</wx-lib>
 	</exe>
     	
 </makefile>
