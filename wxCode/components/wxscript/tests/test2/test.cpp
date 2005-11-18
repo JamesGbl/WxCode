@@ -31,6 +31,7 @@
 //  + lua.lib 
 //  + lualib.lib       for the LUA interpreter & TOLUA utility
 // pythonXX.lib        for the Python interpreter
+// perlXX.lib          for the Perl interpreter
 //
 // and wxWidgets libraries
 //
@@ -66,6 +67,7 @@
 #include <wx/sccint.h>		// our interpreter...
 #include <wx/scunderc.h>		// our interpreter...
 #include <wx/scpython.h>		// our interpreter...
+#include <wx/scperl.h>		// our interpreter...
 #include "test.h"
 
 
@@ -86,6 +88,9 @@
 #endif
 #ifdef wxSCRIPT_USE_UNDERC
 	#define TEST_UNDERC
+#endif
+#ifdef wxSCRIPT_USE_PERL
+	#define TEST_PERL
 #endif
 
 
@@ -206,6 +211,9 @@ void CallFnc1(const wxScriptFunctionArray &arr)
 #ifdef TEST_PYTHON
 	wxScriptFunction *fpy = arr.Get(wxT("py_func1"));
 #endif
+#ifdef TEST_PERL
+	wxScriptFunction *fpl = arr.Get(wxT("pl_func1"));
+#endif
 
 	wxScriptVar result;
 	wxScriptVar args[3];
@@ -273,6 +281,22 @@ void CallFnc1(const wxScriptFunctionArray &arr)
 		}
 	}
 #endif
+
+#ifdef TEST_PERL
+	if (fpl) {
+
+		// we cannot check if this is our function...
+		if (!fpl->Exec(result, args)) {
+			
+			wxPrintf(wxT("Execution failed: %s"), wxScriptInterpreter::GetLastErr().c_str());
+			
+		} else {
+			
+			wxPrintf(wxT(">%s('try', 3) returned %s\n"), fpl->GetName().c_str(), 
+				result.GetContentString().c_str());
+		}
+	}
+#endif
 }
 
 void CallFnc2(const wxScriptFunctionArray &arr)
@@ -292,6 +316,9 @@ void CallFnc2(const wxScriptFunctionArray &arr)
 #endif
 #ifdef TEST_PYTHON
 	wxScriptFunction *fpy = arr.Get(wxT("py_func2"));
+#endif
+#ifdef TEST_PERL
+	wxScriptFunction *fpl = arr.Get(wxT("pl_func2"));
 #endif
 
 	wxScriptVar result;
@@ -355,6 +382,22 @@ void CallFnc2(const wxScriptFunctionArray &arr)
 		} else {
 			
 			wxPrintf(wxT(">%s('true') returned %s\n"), fpy->GetName().c_str(),
+				result.GetContentString().c_str());
+		}		
+	}
+#endif
+
+#ifdef TEST_PERL
+	if (fpl) {
+
+		// we cannot check if this is our function...
+		if (!fpl->Exec(result, args)) {
+			
+			wxPrintf(wxT("Execution failed: %s"), wxScriptInterpreter::GetLastErr().c_str());
+			
+		} else {
+			
+			wxPrintf(wxT(">%s('true') returned %s\n"), fpl->GetName().c_str(),
 				result.GetContentString().c_str());
 		}		
 	}
@@ -502,6 +545,19 @@ void MainTestSet()
 	delete file4;
 #endif
 
+#ifdef TEST_PERL
+	// load a perl script file
+	wxPrintf(wxT(">Loading the 'script5.pl'...\n"));
+	wxScriptFile *file5 = wxScriptInterpreter::Load(basepath + wxT("script5.pl"));
+	if (!file5) {
+		wxPrintf(wxT("\nLoad failed: %s"), wxScriptInterpreter::GetLastErr().c_str());		
+		wxScriptInterpreter::Cleanup();
+		return;
+	}
+
+	delete file5;
+#endif
+
 	// get function list
 	wxScriptFunctionArray arr;
 	wxScriptInterpreter::GetTotalFunctionList(arr);
@@ -537,7 +593,7 @@ int main(int, char **)
 	wxPrintf(wxT(" about the wxScript and wxScript-related classes.\n\n"));
 
 	// which interpreters do we have to test ?
-	bool cint=FALSE, underc=FALSE, lua=FALSE, python=FALSE;
+	bool cint=FALSE, underc=FALSE, lua=FALSE, python=FALSE, perl=FALSE;
 #ifdef TEST_CINT
 	cint=TRUE;
 #endif
@@ -550,9 +606,12 @@ int main(int, char **)
 #ifdef TEST_PYTHON
 	python=TRUE;
 #endif
+#ifdef TEST_PERL
+	perl=TRUE;
+#endif
 
 	// init
-	wxScriptInterpreter::Init(cint, underc, lua, python);
+	wxScriptInterpreter::Init(cint, underc, lua, python, perl);
 	wxPrintf(wxT(">I'm initializing the script interpreters...\n"));
 	if (!wxScriptInterpreter::areAllReady()) {
 		wxPrintf(wxT("Initialization failed."));
@@ -560,7 +619,7 @@ int main(int, char **)
 		return 0;
 	}
 
-#if !defined(TEST_LUA) && !defined(TEST_PYTHON) && !defined(TEST_CINT) && !defined(TEST_UNDERC)
+#if !defined(TEST_LUA) && !defined(TEST_PYTHON) && !defined(TEST_CINT) && !defined(TEST_UNDERC) && !defined(TEST_PERL)
 	wxPrintf(wxT("No script interpreter to test ?\n"));
 	return 0;
 #endif
@@ -577,6 +636,9 @@ int main(int, char **)
 #endif
 #ifdef TEST_UNDERC
 	wxPrintf(wxUnderC::Get()->GetVersionInfo() + wxT("\n"));
+#endif
+#ifdef TEST_PERL
+	wxPrintf(wxPerl::Get()->GetVersionInfo() + wxT("\n"));
 #endif
     
 	// run some tests

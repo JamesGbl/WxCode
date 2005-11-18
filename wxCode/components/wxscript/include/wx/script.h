@@ -44,6 +44,9 @@
 #define wxSCRIPT_USE_PYTHON
 #endif
 
+#ifndef wxSCRIPT_NO_PERL
+#define wxSCRIPT_USE_PERL
+#endif
 
 
 // Includes
@@ -439,8 +442,9 @@ enum wxScriptFileType {
 	wxUNDERC_SCRIPTFILE = 1,	// extension = "uc"
 	wxLUA_SCRIPTFILE = 2,		// extension = "lua"
 	wxPYTHON_SCRIPTFILE = 3,	// extension = "py"
+	wxPERL_SCRIPTFILE = 4,	// extension = "pl"
 
-	wxSCRIPT_SUPPORTED_FORMATS = 4		// this must be the last
+	wxSCRIPT_SUPPORTED_FORMATS = 5		// this must be the last
 };
 
 
@@ -490,6 +494,7 @@ class wxCINT;
 class wxUnderC;
 class wxLua;
 class wxPython;
+class wxPerl;
 
 //! A singleton class that wraps all the script interpreters supported.
 class WXDLLIMPEXP_WXSCRIPT wxScriptInterpreter
@@ -502,6 +507,7 @@ protected:		// use wxCINT::Get(), wxUnderC::Get() or wxLua::Get() to
 	static wxUnderC *m_pUnderC;
 	static wxLua *m_pLua;
 	static wxPython *m_pPython;
+	static wxPerl *m_pPerl;
 
 public:		// ctor & dtor
 
@@ -521,7 +527,7 @@ public:		// static functions
 
 	//! Initializes the script interpreter.
 	static bool Init(bool bCINT = TRUE, bool bUnderC = TRUE, 
-						bool bLua = TRUE, bool bPython = TRUE);
+						bool bLua = TRUE, bool bPython = TRUE, bool bPerl = TRUE);
 
 	//! Deallocates the script interpreter.
 	static void Cleanup();

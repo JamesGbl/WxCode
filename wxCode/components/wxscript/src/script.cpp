@@ -31,6 +31,10 @@
 #include "wx/scpython.h"
 #endif
 
+#ifdef wxSCRIPT_USE_PERL
+#include "wx/scperl.h"
+#endif
+
 
 // setup static
 wxString wxScriptFile::m_strFileExt[];
@@ -39,6 +43,7 @@ wxCINT *wxScriptInterpreter::m_pCINT = NULL;
 wxUnderC *wxScriptInterpreter::m_pUnderC = NULL;
 wxLua *wxScriptInterpreter::m_pLua = NULL;
 wxPython *wxScriptInterpreter::m_pPython = NULL;
+wxPerl *wxScriptInterpreter::m_pPerl = NULL;
 
 
 // global objects
@@ -72,7 +77,7 @@ wxScriptInterpreter::wxScriptInterpreter()
 wxScriptInterpreter::~wxScriptInterpreter()
 {}
 
-bool wxScriptInterpreter::Init(bool bCINT, bool bUnderC, bool bLua, bool bPython)
+bool wxScriptInterpreter::Init(bool bCINT, bool bUnderC, bool bLua, bool bPython, bool bPerl)
 {
 	// two conditions must be met in order to properly init of the
 	// supported interpreter: 
@@ -113,12 +118,18 @@ bool wxScriptInterpreter::Init(bool bCINT, bool bUnderC, bool bLua, bool bPython
 	if (bPython) m_pPython->Init();
 #endif
 
+#ifdef wxSCRIPT_USE_PERL
+	if (bPerl) m_pPerl = new wxPerl();
+	if (bPerl) m_pPerl->Init();
+#endif
+
 	// just to avoid compiler warnings when one of the
 	// wxSCRIPT_USE_LUA/UNDERC/CINT is not defined...
 	wxUnusedVar(bLua);
 	wxUnusedVar(bUnderC);
 	wxUnusedVar(bCINT);
 	wxUnusedVar(bPython);
+	wxUnusedVar(bPerl);
 
 	// create global objects
 	wxScriptTypeVOID = new wxScriptTypeInfo(wxT("void"));
@@ -158,6 +169,10 @@ void wxScriptInterpreter::Cleanup()
 	wxDELETE(m_pPython);
 #endif
 
+#ifdef wxSCRIPT_USE_PERL
+	wxDELETE(m_pPerl);
+#endif
+
 	wxDELETE(wxScriptTypeVOID);
 	wxDELETE(wxScriptTypeINT);
 	wxDELETE(wxScriptTypeCHAR);
@@ -195,6 +210,10 @@ bool wxScriptInterpreter::areAllReady()
 	if (m_pPython) res &= m_pPython->isReady();
 #endif
 
+#ifdef wxSCRIPT_USE_PERL
+	if (m_pPerl) res &= m_pPerl->isReady();
+#endif
+
 	return res;
 }
 
@@ -219,6 +238,10 @@ void wxScriptInterpreter::GetTotalFunctionList(wxScriptFunctionArray &arr)
 	
 #ifdef wxSCRIPT_USE_PYTHON
 	if (m_pPython && m_pPython->isReady()) m_pPython->GetFunctionList(arrpy);
+#endif
+
+#ifdef wxSCRIPT_USE_PERL
+	if (m_pPerl && m_pPerl->isReady()) m_pPerl->GetFunctionList(arrpy);
 #endif
 
 	// append all the functions collected in one single array
@@ -282,6 +305,9 @@ wxScriptFile *wxScriptInterpreter::Load(const wxString &file, wxScriptFileType t
 		// -- is used for lua comments...
 		if (tmp.GetChar(0) == wxT('-') && tmp.GetChar(1) == wxT('-'))
 			t = wxLUA_SCRIPTFILE;
+		else if (tmp.GetChar(0) == wxT('#') 		// # is used by perl and python
+                 && (tmp.Find("perl") != -1))       // so we look for a # then 'perl' in perl scripts
+			t = wxPERL_SCRIPTFILE;                  // as in #!/usr/bin/perl
 		else if (tmp.GetChar(0) == wxT('#'))		// # is used by python
 			t = wxPYTHON_SCRIPTFILE;
 		else if ((tmp.GetChar(0) == wxT('/') && tmp.GetChar(1) == wxT('/')) ||
@@ -314,6 +340,12 @@ wxScriptFile *wxScriptInterpreter::Load(const wxString &file, wxScriptFileType t
 	case wxPYTHON_SCRIPTFILE:
 #ifdef wxSCRIPT_USE_PYTHON		
 		p = new wxScriptFilePython();
+#endif
+		break;
+
+	case wxPERL_SCRIPTFILE:
+#ifdef wxSCRIPT_USE_PERL		
+		p = new wxScriptFilePerl();
 #endif
 		break;
 

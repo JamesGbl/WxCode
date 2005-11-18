@@ -63,6 +63,7 @@
 #include <wx/sccint.h>		// our interpreter...
 #include <wx/scunderc.h>		// our interpreter...
 #include <wx/scpython.h>		// our interpreter...
+#include <wx/scperl.h>		// our interpreter...
 
 
 
@@ -140,6 +141,9 @@
 #endif
 #ifdef wxSCRIPT_USE_UNDERC
 	#define TEST_UNDERC
+#endif
+#ifdef wxSCRIPT_USE_PERL
+	#define TEST_PERL
 #endif
 
 
@@ -231,7 +235,7 @@ int main(int, char **)
 		return 0;
 	}
 
-#if !defined(TEST_LUA) && !defined(TEST_PYTHON) && !defined(TEST_CINT) && !defined(TEST_UNDERC)
+#if !defined(TEST_LUA) && !defined(TEST_PYTHON) && !defined(TEST_CINT) && !defined(TEST_UNDERC) && !defined(TEST_PERL)
 	wxPrintf(wxT("No script interpreter to test ?\n"));
 	wxScriptInterpreter::Cleanup();
 	return 0;
@@ -249,6 +253,9 @@ int main(int, char **)
 #endif
 #ifdef TEST_UNDERC
 	wxPrintf(wxUnderC::Get()->GetVersionInfo() + wxT("\n"));
+#endif
+#ifdef TEST_PERL
+	wxPrintf(wxPerl::Get()->GetVersionInfo() + wxT("\n"));
 #endif
 
 
