@@ -84,6 +84,24 @@ dnl ### begin block 20_COND_PYTHON_VER_2_6[wxscript.bkl] ###
         COND_PYTHON_VER_2_6=""
     fi
     AC_SUBST(COND_PYTHON_VER_2_6)
+dnl ### begin block 20_COND_PYTHON_VER_5_8[wxscript.bkl] ###
+    COND_PYTHON_VER_5_8="#"
+    if test "x$PYTHON_VER" = "x5_8" ; then
+        COND_PYTHON_VER_5_8=""
+    fi
+    AC_SUBST(COND_PYTHON_VER_5_8)
+dnl ### begin block 20_COND_PYTHON_VER_5_9[wxscript.bkl] ###
+    COND_PYTHON_VER_5_9="#"
+    if test "x$PYTHON_VER" = "x5_9" ; then
+        COND_PYTHON_VER_5_9=""
+    fi
+    AC_SUBST(COND_PYTHON_VER_5_9)
+dnl ### begin block 20_COND_PYTHON_VER_6_0[wxscript.bkl] ###
+    COND_PYTHON_VER_6_0="#"
+    if test "x$PYTHON_VER" = "x6_0" ; then
+        COND_PYTHON_VER_6_0=""
+    fi
+    AC_SUBST(COND_PYTHON_VER_6_0)
 dnl ### begin block 20_COND_USE_CINT_0[wxscript.bkl] ###
     COND_USE_CINT_0="#"
     if test "x$USE_CINT" = "x0" ; then
@@ -108,6 +126,18 @@ dnl ### begin block 20_COND_USE_LUA_1[wxscript.bkl] ###
         COND_USE_LUA_1=""
     fi
     AC_SUBST(COND_USE_LUA_1)
+dnl ### begin block 20_COND_USE_PERL_0[wxscript.bkl] ###
+    COND_USE_PERL_0="#"
+    if test "x$USE_PERL" = "x0" ; then
+        COND_USE_PERL_0=""
+    fi
+    AC_SUBST(COND_USE_PERL_0)
+dnl ### begin block 20_COND_USE_PERL_1[wxscript.bkl] ###
+    COND_USE_PERL_1="#"
+    if test "x$USE_PERL" = "x1" ; then
+        COND_USE_PERL_1=""
+    fi
+    AC_SUBST(COND_USE_PERL_1)
 dnl ### begin block 20_COND_USE_PYTHON_0[wxscript.bkl] ###
     COND_USE_PYTHON_0="#"
     if test "x$USE_PYTHON" = "x0" ; then
@@ -168,6 +198,18 @@ dnl ### begin block 20_COND_WINDOWS_IMPLIB_1[wxscript.bkl] ###
         COND_WINDOWS_IMPLIB_1=""
     fi
     AC_SUBST(COND_WINDOWS_IMPLIB_1)
+dnl ### begin block 20_COND_WX_DEBUG_0[wxscript.bkl] ###
+    COND_WX_DEBUG_0="#"
+    if test "x$WX_DEBUG" = "x0" ; then
+        COND_WX_DEBUG_0=""
+    fi
+    AC_SUBST(COND_WX_DEBUG_0)
+dnl ### begin block 20_COND_WX_DEBUG_1[wxscript.bkl] ###
+    COND_WX_DEBUG_1="#"
+    if test "x$WX_DEBUG" = "x1" ; then
+        COND_WX_DEBUG_1=""
+    fi
+    AC_SUBST(COND_WX_DEBUG_1)
 dnl ### begin block 20_COND_WX_SHARED_0[wxscript.bkl] ###
     COND_WX_SHARED_0="#"
     if test "x$WX_SHARED" = "x0" ; then

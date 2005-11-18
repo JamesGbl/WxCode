@@ -2,8 +2,8 @@
 // Name:        scperl.cpp
 // Author:      Jerry Fath
 // Created:     2005/13/11
-// RCS-ID:      
-// Copyright:   (c) Francesco Montorsi
+// RCS-ID:      $Id$
+// Copyright:   (c) Jerry Fath
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -11,21 +11,22 @@
 
 // includes
 #include "wx/script.h"
-#ifdef wxSCRIPT_USE_PERL				// compile-time choice (see wx/script.h)
+#ifdef wxSCRIPT_USE_PERL                // compile-time choice (see wx/script.h)
 
 // required includes
 #include "wx/scperl.h"
 
-#include <EXTERN.h>
-#include <perl.h>
-//One of the perl includes defines 'bool' as char which causes problems
-//This fixes it
-#undef bool
-
-//For wxLogDebug
+// For wxLogDebug
 #include <wx/log.h>
 
-static 	PerlInterpreter *my_perl;
+#include <EXTERN.h>
+#include <perl.h>
+
+// One of the perl includes defines 'bool' as char which causes problems
+// This fixes it
+#undef bool
+
+static  PerlInterpreter *my_perl;
 
 
 //////////////////////////////////////////////////////
@@ -38,11 +39,11 @@ EXTERN_C void boot_DynaLoader (pTHX_ CV* cv);
 EXTERN_C void
 xs_init(pTHX)
 {
-	char *file = __FILE__;
-	dXSUB_SYS;
+    char *file = __FILE__;
+    dXSUB_SYS;
 
-	/* DynaLoader is a special case */
-	newXS("DynaLoader::boot_DynaLoader", boot_DynaLoader, file);
+    /* DynaLoader is a special case */
+    newXS("DynaLoader::boot_DynaLoader", boot_DynaLoader, file);
 }
 ///////////////////////////////////////////////////
 
@@ -65,10 +66,10 @@ bool wxPerl::Init()
         perl_construct(my_perl);
         m_bInit = true;
         //add our extension to the list of the available for loading extensions:
-	    wxScriptFile::m_strFileExt[wxPERL_SCRIPTFILE] = wxT("pl");
+        wxScriptFile::m_strFileExt[wxPERL_SCRIPTFILE] = wxT("pl");
     }
 
-	return m_bInit;
+    return m_bInit;
 }
 
 void wxPerl::Cleanup()
@@ -103,9 +104,9 @@ void wxPerl::GetFunctionList(wxScriptFunctionArray &arr) const
                 subName.MakeUpper();
                 if (subName.Cmp((const char *)keyname) != 0) {
                     //It's a user sub
-			        // Create the new function entry
+                    // Create the new function entry
                     subName = keyname;
-			        arr.Append(new wxScriptFunctionPerl(subName));
+                    arr.Append(new wxScriptFunctionPerl(subName));
                 }
             }
         }
@@ -116,7 +117,7 @@ void wxPerl::GetFunctionList(wxScriptFunctionArray &arr) const
 wxString wxPerl::GetVersionInfo() const
 {
     wxString Perl_Ver;
-    
+
     SV* versionSV = get_sv("]", 0);
     if (versionSV) {
         STRLEN len;
@@ -152,47 +153,47 @@ bool wxScriptFunctionPerl::Exec(wxScriptVar &ret, wxScriptVar *arg) const
         PUSHMARK(SP) ;
 
         int n = 0;
-	    while (arg[n].GetType().isValid()) {
-		    wxScriptTypeInfo t = arg[n].GetType();
+        while (arg[n].GetType().isValid()) {
+            wxScriptTypeInfo t = arg[n].GetType();
 
-		    // a bool ?
+            // a bool ?
             if (t.Match(wxScriptTypeBOOL)) {
                 argVal = arg[n].GetContentLong();
-			    XPUSHs(sv_2mortal(newSViv(argVal)));
+                XPUSHs(sv_2mortal(newSViv(argVal)));
             }
-		    // a long, char, or int ?
-		    else if (t.Match(wxScriptTypeINT) ||
-				    t.Match(wxScriptTypeLONG) ||
+            // a long, char, or int ?
+            else if (t.Match(wxScriptTypeINT) ||
+                    t.Match(wxScriptTypeLONG) ||
                     t.Match(wxScriptTypeCHAR)) {
                 argVal = arg[n].GetContentLong();
-			    XPUSHs(sv_2mortal(newSViv(argVal)));
+                XPUSHs(sv_2mortal(newSViv(argVal)));
             }
-		    // a float or a double ?
-		    else if (t.Match(wxScriptTypeFLOAT) ||
+            // a float or a double ?
+            else if (t.Match(wxScriptTypeFLOAT) ||
                 t.Match(wxScriptTypeDOUBLE)) {
                 argValDbl = arg[n].GetContentDouble();
-			    XPUSHs(sv_2mortal(newSVnv(argValDbl)));
+                XPUSHs(sv_2mortal(newSVnv(argValDbl)));
             }
-		    // a pointer ?
-		    else if (t.isPointer()) {
-			    // to chars ?
-			    wxScriptTypeInfo pt = t.GetPointerType();
+            // a pointer ?
+            else if (t.isPointer()) {
+                // to chars ?
+                wxScriptTypeInfo pt = t.GetPointerType();
                 if (pt.Match(wxScriptTypeCHAR)) {
                     argValPtr = arg[n].GetPointer();
                     XPUSHs(sv_2mortal(newSVpv((const char *)argValPtr, 0)));
                 }
-			    // to something else ?
+                // to something else ?
                 else {
                     argValPtr = arg[n].GetPointer();
                     XPUSHs(sv_2mortal(newSVpv((const char *)argValPtr, 0)));
                 }
-		    }
-		    // We've got a type we don't understand
-		    else 
-			    return FALSE;
+            }
+            // We've got a type we don't understand
+            else
+                return FALSE;
 
-		    n++;		// next argument
-	    }
+            n++;        // next argument
+        }
 
         PUTBACK ;
 
@@ -215,23 +216,23 @@ bool wxScriptFunctionPerl::Exec(wxScriptVar &ret, wxScriptVar *arg) const
                 wxLogDebug(wxT("wxScriptFunctionPerlExec: eval didn't return a value"));
             }
             else {
-                //Determine the return type and set the wxScriptVar ret accordingly 
+                //Determine the return type and set the wxScriptVar ret accordingly
                 SV *retSVp;
                 svtype retType;
                 retSVp = POPs;
                 retType = (svtype)SvTYPE(retSVp);
                 if ((retType == SVt_IV) || (retType == SVt_PVIV)) {
-       			    ret.SetType(wxT("long"));
-			        ret.SetContent((long)SvIV(retSVp));
+                    ret.SetType(wxT("long"));
+                    ret.SetContent((long)SvIV(retSVp));
                 }
                 else if ((retType == SVt_NV) || (retType == SVt_PVNV)) {
-       			    ret.SetType(wxT("double"));
-			        ret.SetContent((double)SvNV(retSVp));
+                    ret.SetType(wxT("double"));
+                    ret.SetContent((double)SvNV(retSVp));
                 }
                 else if (retType == SVt_PV) {
                     STRLEN len;
-       			    ret.SetType(wxT("char*"));
-			        ret.SetContent((char *)SvPV(retSVp, len));
+                    ret.SetType(wxT("char*"));
+                    ret.SetContent((char *)SvPV(retSVp, len));
                 }
                 else {
                     //This is bad - not an expected type
@@ -252,18 +253,18 @@ bool wxScriptFunctionPerl::Exec(wxScriptVar &ret, wxScriptVar *arg) const
 
 
 
-// --------------
+// ------------------
 // wxSCRIPTFILEPERL
-// --------------
+// ------------------
 
 bool wxScriptFilePerl::Load(const wxString &file)
 {
     int exitstatus = 0;
 
     // remember the script filename
-	m_strFileName = file;
+    m_strFileName = file;
 
-	// load it
+    // load it
     char *embedding[2];
     embedding[0] = "";
     embedding[1] = (char *)m_strFileName.c_str();
@@ -272,10 +273,10 @@ bool wxScriptFilePerl::Load(const wxString &file)
     if (!exitstatus) {
         exitstatus = perl_run(my_perl);
     }
-	
+
     return (exitstatus == 0);
 }
 
-#endif		// wxSCRIPT_USE_PERL
+#endif      // wxSCRIPT_USE_PERL
 
 

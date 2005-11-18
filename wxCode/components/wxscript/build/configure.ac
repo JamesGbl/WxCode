@@ -14,7 +14,7 @@
 AC_INIT([wxScript], [1.5], [frm@sourceforge.net])
 
 # ENABLES/DISABLES THE DEBUG MODE FOR THIS CONFIGURE SCRIPT
-DBG_CONFIGURE=1
+#DBG_CONFIGURE=1
 
 m4_include(../../../build/autoconf/wxcode.m4)
 AM_WXCODE_INIT
@@ -34,58 +34,50 @@ AM_WXCODE_INIT
 AM_OPTIONS_WXCONFIG
 AM_OPTIONS_WXPRESETS
 
-# Two little custom macros which define the ENABLE/WITH configure arguments.
-# Macro arguments:
-# $1 = the name of the --enable- feature
-# $2 = the description of that feature
-# $3 = the default value for that feature
-#
-# NOTE: the space between the two hyphens (-) are required since in XML
-#       they are forbidden... remove them before using this file
-#
-AC_DEFUN([MY_ARG_ENABLE], [AC_ARG_ENABLE($1,
-            AC_HELP_STRING([--enable-$1],
-            [$2 (default is $3)]),, [enable_$1=$3])])
-AC_DEFUN([MY_ARG_WITH], [AC_ARG_WITH($1,
-            AC_HELP_STRING([--with-$1],
-            [$2 (default is $3)]),, [with_$1=$3])])
+AM_WXCODE_ARG_WITH([perl], [Builds with Perl support], [yes])
+AM_WXCODE_ARG_WITH([python], [Builds with Python support], [yes])
+AM_WXCODE_ARG_WITH([pythonver], [The Python version to use], [2_4])
+AM_WXCODE_ARG_WITH([lua], [Builds with LUA support], [yes])
+AM_WXCODE_ARG_WITH([cint], [Builds with CINT support], [no])
+AM_WXCODE_ARG_WITH([underc], [Builds with UnderC support], [no])
 
-MY_ARG_WITH([python], [Builds with Python support], [yes])
-MY_ARG_WITH([lua], [Builds with LUA support], [yes])
-MY_ARG_WITH([cint], [Builds with CINT support], [no])
-MY_ARG_WITH([underc], [Builds with UnderC support], [no])
-MY_ARG_WITH([pythonver], [The Python version to use], [2_4])
-
+if test "$with_perl" = "yes"; then
+   USE_PERL=1
+   AC_MSG_RESULT([Checking for the --with-perl option... yes])
+else
+   USE_PERL=0
+   AC_MSG_RESULT([Checking for the --with-perl option... no])
+fi
 if test "$with_python" = "yes"; then
    USE_PYTHON=1
-   AC_MSG_RESULT([Checking for the PYTHON option... yes])
+   AC_MSG_RESULT([Checking for the --with-python option... yes])
 else
    USE_PYTHON=0
-   AC_MSG_RESULT([Checking for the PYTHON option... no])
+   AC_MSG_RESULT([Checking for the --with-python option... no])
 fi
 
 if test "$with_lua" = "yes"; then
    USE_LUA=1
-   AC_MSG_RESULT([Checking for the LUA option... yes])
+   AC_MSG_RESULT([Checking for the --with-lua option... yes])
 else
    USE_LUA=0
-   AC_MSG_RESULT([Checking for the LUA option... no])
+   AC_MSG_RESULT([Checking for the --with-lua option... no])
 fi
 
 if test "$with_underc" = "yes"; then
    USE_UNDERC=1
-   AC_MSG_RESULT([Checking for the UNDERC option... yes])
+   AC_MSG_RESULT([Checking for the --with-underc option... yes])
 else
    USE_UNDERC=0
-   AC_MSG_RESULT([Checking for the UNDERC option... no])
+   AC_MSG_RESULT([Checking for the --with-underc option... no])
 fi
 
 if test "$with_cint" = "yes"; then
    USE_CINT=1
-   AC_MSG_RESULT([Checking for the CINT option... yes])
+   AC_MSG_RESULT([Checking for the --with-cint option... yes])
 else
    USE_CINT=0
-   AC_MSG_RESULT([Checking for the CINT option... no])
+   AC_MSG_RESULT([Checking for the --with-cint option... no])
 fi
 
 if test "$with_pythonver" = "2_2"; then
@@ -103,7 +95,6 @@ else
 fi
 AC_MSG_RESULT([Checking for the Python version to use... $PYTHON_VER])
 
-#AM_PATH_PYTHON(2.2.2)
 
 
 
@@ -126,26 +117,73 @@ if test "$USE_LUA" = "1" ; then
    AC_CHECK_HEADER([lua.h], [hasLUA=1], [hasLUA=0])
    AC_CHECK_HEADER([tolua.h], [hasTOLUA=1], [hasTOLUA=0])
 
+   # we put this message *after* calling AC_CHECK_HEADER
+   # since they print a lot of lines and we want to be able to print a "yes"
+   # immediately after this message
    AC_MSG_CHECKING([for the LUA & TOLUA presence... ])
+
    if test "$hasLUA" != 1; then
+       AC_MSG_RESULT([no])
        AC_MSG_ERROR([
          Could not found LUA headers in system path; please
-         install latest version from www.lua.org or specify
-         the --without-lua option
+         install latest version from www.lua.org...
+         disabling LUA support.
                    ])
+        USE_LUA=0
    elif test "$hasTOLUA" != 1; then
-       AC_MSG_ERROR([
+      AC_MSG_RESULT([no])
+       AC_MSG_WARN([
          Could not found TOLUA headers in system path; please
-         install latest version from www.lua.org or specify
-         the --without-lua option
+         install latest version from www.lua.org...
+         disabling LUA support.
                    ])
+       USE_LUA=0
+   else
+       AC_MSG_RESULT([yes])
    fi
+fi
+
+if test "$USE_PYTHON" = "1" ; then
+
+   maj=${PYTHON_VER%%_*}
+   min=${PYTHON_VER%%*_}
+   AM_PATH_PYTHON([$maj.$min], [hasPython=1], [hasPython=0])
+   if test "$hasPython" != 1; then
+       AC_MSG_WARN([
+         Could not found Python in system paths; please
+         install latest version from www.python.org...
+         disabling Python support.
+                   ])
+       USE_PYTHON=0
+   else
+       AC_MSG_RESULT([yes])
+   fi
+fi
+
+if test "$USE_PERL" = "1" ; then
+
+   AC_MSG_CHECKING([for the Perl presence... ])
 
    AC_MSG_RESULT([yes])
 fi
 
 
 
-
 # end in a nice way the configure script
-AM_WXCODE_END
+AM_WXCODE_END_PART1
+if test "$USE_PYTHON" = "1"; then
+    echo "  - Python enabled"
+else
+    echo "  - Python disabled"
+fi
+if test "$USE_LUA" = "1"; then
+    echo "  - Lua enabled"
+else
+    echo "  - Lua disabled"
+fi
+if test "$USE_PERL" = "1"; then
+    echo "  - Perl enabled"
+else
+    echo "  - Perl disabled"
+fi
+AM_WXCODE_END_PART2

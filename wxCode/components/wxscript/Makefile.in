@@ -37,39 +37,39 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 WX_CXXFLAGS = @WX_CXXFLAGS@
 WX_LIBS = @WX_LIBS@
-LUA_DIR = @LUA_DIR@
-TOLUA_DIR = @TOLUA_DIR@
-PYTHON_DIR = @PYTHON_DIR@
-CINT_DIR = @CINT_DIR@
-UNDERC_DIR = @UNDERC_DIR@
 
 ### Variables: ###
 
 DESTDIR = 
-WXSCRIPT_LIB_CXXFLAGS = -I./include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) \
-	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE) $(WX_CXXFLAGS) \
-	$(CPPFLAGS) $(CXXFLAGS)
+WXSCRIPT_LIB_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include $(SCRIPTDEFINE1) \
+	$(SCRIPTDEFINE2) $(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTDEFINE5) \
+	$(SCRIPTINCLUDE) $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 WXSCRIPT_LIB_OBJECTS =  \
 	wxscript_lib_script.o \
 	wxscript_lib_scpython.o \
 	wxscript_lib_sccint.o \
 	wxscript_lib_scunderc.o \
-	wxscript_lib_sclua.o
-WXSCRIPT_DLL_CXXFLAGS = -I./include -DWXMAKINGDLL_WXSCRIPT $(SCRIPTDEFINE1) \
-	$(SCRIPTDEFINE2) $(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE) \
-	$(PIC_FLAG) $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+	wxscript_lib_sclua.o \
+	wxscript_lib_scperl.o
+WXSCRIPT_DLL_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include \
+	-DWXMAKINGDLL_WXSCRIPT $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) $(SCRIPTDEFINE3) \
+	$(SCRIPTDEFINE4) $(SCRIPTDEFINE5) $(SCRIPTINCLUDE) $(PIC_FLAG) \
+	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 WXSCRIPT_DLL_OBJECTS =  \
 	wxscript_dll_script.o \
 	wxscript_dll_scpython.o \
 	wxscript_dll_sccint.o \
 	wxscript_dll_scunderc.o \
-	wxscript_dll_sclua.o
-TEST1_CXXFLAGS = -I./include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) $(SCRIPTDEFINE3) \
-	$(SCRIPTDEFINE4) $(SCRIPTINCLUDE) $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+	wxscript_dll_sclua.o \
+	wxscript_dll_scperl.o
+TEST1_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include $(SCRIPTDEFINE1) \
+	$(SCRIPTDEFINE2) $(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTDEFINE5) \
+	$(SCRIPTINCLUDE) $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 TEST1_OBJECTS =  \
 	test1_test.o
-TEST2_CXXFLAGS = -I./include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) $(SCRIPTDEFINE3) \
-	$(SCRIPTDEFINE4) $(SCRIPTINCLUDE) $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+TEST2_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include $(SCRIPTDEFINE1) \
+	$(SCRIPTDEFINE2) $(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTDEFINE5) \
+	$(SCRIPTINCLUDE) $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 TEST2_OBJECTS =  \
 	test2_test.o
 
@@ -89,14 +89,11 @@ TEST2_OBJECTS =  \
 @COND_PYTHON_VER_2_6@PYTHON_MINVER = 6
 @COND_USE_PYTHON_1@SCRIPTINCLUDE = \
 @COND_USE_PYTHON_1@	-I/usr/include/python$(PYTHON_MAJVER).$(PYTHON_MINVER)
-@COND_USE_PYTHON_1@SCRIPTLIBPATH1 = -L$(PYTHON_DIR)/libs
-@COND_USE_LUA_1@SCRIPTLIBPATH2 = -L$(LUA_DIR)/lib -L$(TOLUA_DIR)/lib
-@COND_USE_CINT_1@SCRIPTLIBPATH3 = -L$(CINT_DIR)/lib
-@COND_USE_UNDERC_1@SCRIPTLIBPATH4 = -L$(UNDERC_DIR)/lib
 @COND_USE_PYTHON_0@SCRIPTDEFINE1 = -DwxSCRIPT_NO_PYTHON
 @COND_USE_LUA_0@SCRIPTDEFINE2 = -DwxSCRIPT_NO_LUA
 @COND_USE_CINT_0@SCRIPTDEFINE3 = -DwxSCRIPT_NO_CINT
 @COND_USE_UNDERC_0@SCRIPTDEFINE4 = -DwxSCRIPT_NO_UNDERC
+@COND_USE_PERL_0@SCRIPTDEFINE5 = -DwxSCRIPT_NO_PERL
 @COND_WX_SHARED_0@__wxscript_lib___depname = \
 @COND_WX_SHARED_0@	./lib/$(LIBPREFIX)wxscript$(LIBEXT)
 @COND_WX_SHARED_0@__install_wxscript_lib___depname = install_wxscript_lib
@@ -145,12 +142,11 @@ COND_USE_SOSYMLINKS_1___wxscript_dll___so_symlinks_inst_cmd = rm -f \
 	$(DLLPREFIX)wxscript$(__wxscript_dll___targetsuf2) \
 	$(LIBPREFIX)wxscript.$(DLLIMP_SUFFIX)
 @COND_USE_SOSYMLINKS_1@__wxscript_dll___so_symlinks_inst_cmd = $(COND_USE_SOSYMLINKS_1___wxscript_dll___so_symlinks_inst_cmd)
-@COND_PLATFORM_MACOSX_1@__wxscript_dll___macver = \
-@COND_PLATFORM_MACOSX_1@	-compatibility_version 0 -current_version 0
 @COND_PLATFORM_MAC_1@__test1___mac_setfilecmd = \
-@COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL test1$(EXEEXT)
+@COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL ../tests/test1/test1$(EXEEXT)
 @COND_PLATFORM_MAC_1@__test2___mac_setfilecmd = \
-@COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL test2$(EXEEXT)
+@COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL ../tests/test2/test2$(EXEEXT)
+@COND_WX_SHARED_1@__WX_SHAREDDEFINE_p = -DWXUSINGDLL
 @COND_USE_PYTHON_1@__SCRIPTLIB1_p = \
 @COND_USE_PYTHON_1@	-lpython$(PYTHON_MAJVER)$(PYTHON_MINVER)
 @COND_USE_LUA_1@__SCRIPTLIB2A_p = -llua
@@ -158,6 +154,7 @@ COND_USE_SOSYMLINKS_1___wxscript_dll___so_symlinks_inst_cmd = rm -f \
 @COND_USE_LUA_1@__SCRIPTLIB2C_p = -ltolua
 @COND_USE_CINT_1@__SCRIPTLIB3_p = -lcint
 @COND_USE_UNDERC_1@__SCRIPTLIB4_p = -lucc12
+@COND_USE_PERL_1@__SCRIPTLIB5_p = -lperl
 
 ### Targets: ###
 
@@ -171,6 +168,7 @@ uninstall:
 	$(DESTDIR)$(includedir)/wx/sccint.h \
 	$(DESTDIR)$(includedir)/wx/scunderc.h \
 	$(DESTDIR)$(includedir)/wx/sclua.h \
+	$(DESTDIR)$(includedir)/wx/scperl.h \
 	$(DESTDIR)$(includedir)/wx/scdef.h
 	rm -f $(libdir)/*wxscript*
 
@@ -280,7 +278,7 @@ install-wxheaders:
 @COND_WX_SHARED_0@	$(INSTALL_DATA) ./lib/$(LIBPREFIX)wxscript$(LIBEXT) $(DESTDIR)$(libdir)
 
 @COND_WX_SHARED_1@./lib/$(DLLPREFIX)wxscript$(__wxscript_dll___targetsuf3): $(WXSCRIPT_DLL_OBJECTS)
-@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(WXSCRIPT_DLL_OBJECTS) $(LDFLAGS) -L./lib $(__wxscript_dll___macinstnamecmd) $(__wxscript_dll___importlib) $(__wxscript_dll___soname_flags) $(__wxscript_dll___macver) $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4)  $(WX_LIBS) $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p)
+@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(WXSCRIPT_DLL_OBJECTS) $(LDFLAGS)   -L./lib $(__wxscript_dll___macinstnamecmd) $(__wxscript_dll___importlib) $(__wxscript_dll___soname_flags)   $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) $(__SCRIPTLIB5_p) $(WX_LIBS)
 @COND_WX_SHARED_1@	
 @COND_WX_SHARED_1@	$(__wxscript_dll___so_symlinks_cmd)
 
@@ -291,12 +289,12 @@ install-wxheaders:
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__wxscript_dll___so_symlinks_inst_cmd))
 
 ../tests/test1/test1$(EXEEXT): $(TEST1_OBJECTS) $(__wxscript_lib___depname)
-	$(CXX) -o $@ $(TEST1_OBJECTS) -L./lib $(LDFLAGS) -L./lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4)   $(WX_LIBS) -lwxscript $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p)
+	$(CXX) -o $@ $(TEST1_OBJECTS) -L./lib $(LDFLAGS)   -L./lib    -lwxscript $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) $(__SCRIPTLIB5_p) $(WX_LIBS)
 	
 	$(__test1___mac_setfilecmd)
 
 ../tests/test2/test2$(EXEEXT): $(TEST2_OBJECTS) $(__wxscript_lib___depname)
-	$(CXX) -o $@ $(TEST2_OBJECTS) -L./lib $(LDFLAGS) -L./lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4)   $(WX_LIBS) -lwxscript $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p)
+	$(CXX) -o $@ $(TEST2_OBJECTS) -L./lib $(LDFLAGS)   -L./lib    -lwxscript $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) $(__SCRIPTLIB5_p) $(WX_LIBS)
 	
 	$(__test2___mac_setfilecmd)
 
@@ -315,6 +313,9 @@ wxscript_lib_scunderc.o: $(srcdir)/./src/scunderc.cpp
 wxscript_lib_sclua.o: $(srcdir)/./src/sclua.cpp
 	$(CXXC) -c -o $@ $(WXSCRIPT_LIB_CXXFLAGS) $(srcdir)/./src/sclua.cpp
 
+wxscript_lib_scperl.o: $(srcdir)/./src/scperl.cpp
+	$(CXXC) -c -o $@ $(WXSCRIPT_LIB_CXXFLAGS) $(srcdir)/./src/scperl.cpp
+
 wxscript_dll_script.o: $(srcdir)/./src/script.cpp
 	$(CXXC) -c -o $@ $(WXSCRIPT_DLL_CXXFLAGS) $(srcdir)/./src/script.cpp
 
@@ -329,6 +330,9 @@ wxscript_dll_scunderc.o: $(srcdir)/./src/scunderc.cpp
 
 wxscript_dll_sclua.o: $(srcdir)/./src/sclua.cpp
 	$(CXXC) -c -o $@ $(WXSCRIPT_DLL_CXXFLAGS) $(srcdir)/./src/sclua.cpp
+
+wxscript_dll_scperl.o: $(srcdir)/./src/scperl.cpp
+	$(CXXC) -c -o $@ $(WXSCRIPT_DLL_CXXFLAGS) $(srcdir)/./src/scperl.cpp
 
 test1_test.o: $(srcdir)/../tests/test1/test.cpp
 	$(CXXC) -c -o $@ $(TEST1_CXXFLAGS) $(srcdir)/../tests/test1/test.cpp

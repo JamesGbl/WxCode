@@ -64,9 +64,19 @@ WX_DEBUG = 1
 WX_VERSION = 26
 !endif
 
+# Use monolithic build of wxWidgets? [0,1]
+!ifndef WX_MONOLITHIC
+WX_MONOLITHIC = 0
+!endif
+
 # If 0 LUA won't be used [0,1]
 !ifndef USE_LUA
 USE_LUA = 1
+!endif
+
+# If 0 Perl won't be used [0,1]
+!ifndef USE_PERL
+USE_PERL = 1
 !endif
 
 # If 0 Python won't be used [0,1]
@@ -92,6 +102,11 @@ LUA_DIR = ..\thirdparty\lua
 # The TOLUA library main folder 
 !ifndef TOLUA_DIR
 TOLUA_DIR = ..\thirdparty\tolua
+!endif
+
+# The PERL library main folder 
+!ifndef PERL_DIR
+PERL_DIR = c:\perl
 !endif
 
 # The Python library main folder 
@@ -124,43 +139,48 @@ UNDERC_DIR = c:\ucc
 
 WXSCRIPT_LIB_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	-tWM $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
-	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	-I$(WX_DIR)\include -I..\include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) \
-	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) \
-	$(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(CPPFLAGS) $(CXXFLAGS)
+	-D__WXMSW__ -I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
+	-I..\include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) $(SCRIPTDEFINE3) \
+	$(SCRIPTDEFINE4) $(SCRIPTDEFINE5) $(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) \
+	$(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(SCRIPTINCLUDE5) $(CPPFLAGS) \
+	$(CXXFLAGS)
 WXSCRIPT_LIB_OBJECTS =  \
 	borland\wxscript_lib_script.obj \
 	borland\wxscript_lib_scpython.obj \
 	borland\wxscript_lib_sccint.obj \
 	borland\wxscript_lib_scunderc.obj \
-	borland\wxscript_lib_sclua.obj
+	borland\wxscript_lib_sclua.obj \
+	borland\wxscript_lib_scperl.obj
 WXSCRIPT_DLL_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) \
 	-tWM $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
-	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	-I$(WX_DIR)\include -I..\include -DWXMAKINGDLL_WXSCRIPT $(SCRIPTDEFINE1) \
-	$(SCRIPTDEFINE2) $(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) \
-	$(SCRIPTINCLUDE2) $(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(CPPFLAGS) \
-	$(CXXFLAGS)
+	-D__WXMSW__ -I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
+	-I..\include -DWXMAKINGDLL_WXSCRIPT $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) \
+	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTDEFINE5) $(SCRIPTINCLUDE1) \
+	$(SCRIPTINCLUDE2) $(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(SCRIPTINCLUDE5) \
+	$(CPPFLAGS) $(CXXFLAGS)
 WXSCRIPT_DLL_OBJECTS =  \
 	borland\wxscript_dll_script.obj \
 	borland\wxscript_dll_scpython.obj \
 	borland\wxscript_dll_sccint.obj \
 	borland\wxscript_dll_scunderc.obj \
-	borland\wxscript_dll_sclua.obj
+	borland\wxscript_dll_sclua.obj \
+	borland\wxscript_dll_scperl.obj
 TEST1_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) -tWM \
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
-	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	-I$(WX_DIR)\include -I..\include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) \
-	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) \
-	$(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(CPPFLAGS) $(CXXFLAGS)
+	-D__WXMSW__ -I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
+	-I..\include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) $(SCRIPTDEFINE3) \
+	$(SCRIPTDEFINE4) $(SCRIPTDEFINE5) $(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) \
+	$(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(SCRIPTINCLUDE5) $(CPPFLAGS) \
+	$(CXXFLAGS)
 TEST1_OBJECTS =  \
 	borland\test1_test.obj
 TEST2_CXXFLAGS = -I$(BCCDIR)\include $(__OPTIMIZEFLAG) $(__DEBUGINFO) -tWM \
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) \
-	-D__WXMSW__ -I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	-I$(WX_DIR)\include -I..\include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) \
-	$(SCRIPTDEFINE3) $(SCRIPTDEFINE4) $(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) \
-	$(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(CPPFLAGS) $(CXXFLAGS)
+	-D__WXMSW__ -I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
+	-I..\include $(SCRIPTDEFINE1) $(SCRIPTDEFINE2) $(SCRIPTDEFINE3) \
+	$(SCRIPTDEFINE4) $(SCRIPTDEFINE5) $(SCRIPTINCLUDE1) $(SCRIPTINCLUDE2) \
+	$(SCRIPTINCLUDE3) $(SCRIPTINCLUDE4) $(SCRIPTINCLUDE5) $(CPPFLAGS) \
+	$(CXXFLAGS)
 TEST2_OBJECTS =  \
 	borland\test2_test.obj
 
@@ -211,6 +231,9 @@ SCRIPTINCLUDE3 = -I$(CINT_DIR)
 !if "$(USE_UNDERC)" == "1"
 SCRIPTINCLUDE4 = -I$(UNDERC_DIR)
 !endif
+!if "$(USE_PERL)" == "1"
+SCRIPTINCLUDE5 = -I$(PERL_DIR)
+!endif
 !if "$(USE_PYTHON)" == "1"
 SCRIPTLIBPATH1 = -L$(PYTHON_DIR)\libs
 !endif
@@ -223,6 +246,9 @@ SCRIPTLIBPATH3 = -L$(CINT_DIR)\lib
 !if "$(USE_UNDERC)" == "1"
 SCRIPTLIBPATH4 = -L$(UNDERC_DIR)\lib
 !endif
+!if "$(USE_PERL)" == "1"
+SCRIPTLIBPATH5 = -L$(PERL_DIR)\lib
+!endif
 !if "$(USE_PYTHON)" == "0"
 SCRIPTDEFINE1 = -DwxSCRIPT_NO_PYTHON
 !endif
@@ -234,6 +260,9 @@ SCRIPTDEFINE3 = -DwxSCRIPT_NO_CINT
 !endif
 !if "$(USE_UNDERC)" == "0"
 SCRIPTDEFINE4 = -DwxSCRIPT_NO_UNDERC
+!endif
+!if "$(USE_PERL)" == "0"
+SCRIPTDEFINE5 = -DwxSCRIPT_NO_PERL
 !endif
 !if "$(WX_SHARED)" == "0"
 __wxscript_lib___depname = ..\lib\wxscript$(WXLIBPOSTFIX).lib
@@ -283,6 +312,45 @@ __SCRIPTLIB3_p = cint.lib
 !if "$(USE_UNDERC)" == "1"
 __SCRIPTLIB4_p = ucc12.lib
 !endif
+!if "$(USE_PERL)" == "1"
+__SCRIPTLIB5_p = perl58.lib
+!endif
+!if "$(WX_DEBUG)" == "0" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "0"
+__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)_core.lib
+!endif
+!if "$(WX_DEBUG)" == "0" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "1"
+__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)u_core.lib
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "0"
+__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)d_core.lib
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "1"
+__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)ud_core.lib
+!endif
+!if "$(WX_DEBUG)" == "0" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "0"
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION).lib
+!endif
+!if "$(WX_DEBUG)" == "0" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "1"
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)u.lib
+!endif
+!if "$(WX_DEBUG)" == "0" && "$(WX_MONOLITHIC)" == "1" && "$(WX_UNICODE)" == "0"
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION).lib
+!endif
+!if "$(WX_DEBUG)" == "0" && "$(WX_MONOLITHIC)" == "1" && "$(WX_UNICODE)" == "1"
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)u.lib
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "0"
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)d.lib
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "1"
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)ud.lib
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_MONOLITHIC)" == "1" && "$(WX_UNICODE)" == "0"
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)d.lib
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_MONOLITHIC)" == "1" && "$(WX_UNICODE)" == "1"
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)ud.lib
+!endif
 !if "$(WX_DEBUG)" == "0"
 __DEBUGINFO = -v-
 !endif
@@ -290,10 +358,10 @@ __DEBUGINFO = -v-
 __DEBUGINFO = -v
 !endif
 !if "$(WX_SHARED)" == "0"
-__WXLIBPATH_FILENAMES = \lib\bcc_lib
+WXLIBPATH = \lib\bcc_lib
 !endif
 !if "$(WX_SHARED)" == "1"
-__WXLIBPATH_FILENAMES = \lib\bcc_dll
+WXLIBPATH = \lib\bcc_dll
 !endif
 
 
@@ -409,6 +477,31 @@ docs:
 cleandocs: 
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
+install: all install-wxheaders
+	copy /Y ..\lib\wxscript$(WXLIBPOSTFIX).lib $(WX_DIR)$(WXLIBPATH)
+	copy /Y ..\lib\wxscript$(WXLIBPOSTFIX).dll $(WX_DIR)$(WXLIBPATH)
+
+install-wxheaders: 
+	mkdir $(WX_DIR)\include\wx
+	cd .
+	copy /Y  ..\include\wx\*.h $(WX_DIR)\include\wx
+
+uninstall: 
+	-if exist $(WX_DIR)\include\wx\script.h \
+	$(WX_DIR)\include\wx\scpython.h \
+	$(WX_DIR)\include\wx\sccint.h \
+	$(WX_DIR)\include\wx\scunderc.h \
+	$(WX_DIR)\include\wx\sclua.h \
+	$(WX_DIR)\include\wx\scperl.h \
+	$(WX_DIR)\include\wx\scdef.h del /Q $(WX_DIR)\include\wx\script.h \
+	$(WX_DIR)\include\wx\scpython.h \
+	$(WX_DIR)\include\wx\sccint.h \
+	$(WX_DIR)\include\wx\scunderc.h \
+	$(WX_DIR)\include\wx\sclua.h \
+	$(WX_DIR)\include\wx\scperl.h \
+	$(WX_DIR)\include\wx\scdef.h
+	-if exist $(WX_DIR)$(WXLIBPATH)\*wxscript* del /Q $(WX_DIR)$(WXLIBPATH)\*wxscript*
+
 !if "$(WX_SHARED)" == "0"
 ..\lib\wxscript$(WXLIBPOSTFIX).lib: $(WXSCRIPT_LIB_OBJECTS)
 	if exist $@ del $@
@@ -419,20 +512,20 @@ cleandocs:
 
 !if "$(WX_SHARED)" == "1"
 ..\lib\wxscript$(WXLIBPOSTFIX).dll: $(WXSCRIPT_DLL_OBJECTS)
-	ilink32 -Tpd -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) @&&|
-	c0d32.obj $(WXSCRIPT_DLL_OBJECTS),$@,, $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
+	ilink32 -Tpd -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(WXLIBPATH) -L..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) $(SCRIPTLIBPATH5) @&&|
+	c0d32.obj $(WXSCRIPT_DLL_OBJECTS),$@,, $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) $(__SCRIPTLIB5_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
 |
 	implib -f ..\lib\wxscript$(WXLIBPOSTFIX) $@
 !endif
 
 ..\tests\test1\test1.exe: $(TEST1_OBJECTS) $(__wxscript_lib___depname)
-	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) -ap @&&|
-	c0x32.obj $(TEST1_OBJECTS),$@,, ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(WXLIBPATH) -L..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) $(SCRIPTLIBPATH5) -ap @&&|
+	c0x32.obj $(TEST1_OBJECTS),$@,, ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) $(__SCRIPTLIB5_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
 |
 
 ..\tests\test2\test2.exe: $(TEST2_OBJECTS) $(__wxscript_lib___depname)
-	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -L..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) -ap @&&|
-	c0x32.obj $(TEST2_OBJECTS),$@,, ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
+	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(WXLIBPATH) -L..\lib $(SCRIPTLIBPATH1) $(SCRIPTLIBPATH2) $(SCRIPTLIBPATH3) $(SCRIPTLIBPATH4) $(SCRIPTLIBPATH5) -ap @&&|
+	c0x32.obj $(TEST2_OBJECTS),$@,, ..\lib\wxscript$(WXLIBPOSTFIX).lib $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) $(__SCRIPTLIB5_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib oleacc.lib import32.lib cw32mt.lib,,
 |
 
 borland\wxscript_lib_script.obj: .\..\src\script.cpp
@@ -450,6 +543,9 @@ borland\wxscript_lib_scunderc.obj: .\..\src\scunderc.cpp
 borland\wxscript_lib_sclua.obj: .\..\src\sclua.cpp
 	$(CXX) -q -c -P -o$@ $(WXSCRIPT_LIB_CXXFLAGS) $**
 
+borland\wxscript_lib_scperl.obj: .\..\src\scperl.cpp
+	$(CXX) -q -c -P -o$@ $(WXSCRIPT_LIB_CXXFLAGS) $**
+
 borland\wxscript_dll_script.obj: .\..\src\script.cpp
 	$(CXX) -q -c -P -o$@ $(WXSCRIPT_DLL_CXXFLAGS) $**
 
@@ -463,6 +559,9 @@ borland\wxscript_dll_scunderc.obj: .\..\src\scunderc.cpp
 	$(CXX) -q -c -P -o$@ $(WXSCRIPT_DLL_CXXFLAGS) $**
 
 borland\wxscript_dll_sclua.obj: .\..\src\sclua.cpp
+	$(CXX) -q -c -P -o$@ $(WXSCRIPT_DLL_CXXFLAGS) $**
+
+borland\wxscript_dll_scperl.obj: .\..\src\scperl.cpp
 	$(CXX) -q -c -P -o$@ $(WXSCRIPT_DLL_CXXFLAGS) $**
 
 borland\test1_test.obj: .\..\tests\test1\test.cpp
