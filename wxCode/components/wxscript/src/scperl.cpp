@@ -19,7 +19,7 @@
 // For wxLogDebug
 #include <wx/log.h>
 
-#include <EXTERN.h>
+#include <EXTERN.h>		// it's important to preserve the uppercase of this header name
 #include <perl.h>
 
 // One of the perl includes defines 'bool' as char which causes problems
@@ -60,6 +60,13 @@ bool wxPerl::Init()
     m_bInit = false;
 
     PERL_SYS_INIT3(&argc,&argv,&env);
+
+#ifdef __WXDEBUG__
+    wxUnusedVar(argv);
+    wxUnusedVar(argc);
+    wxUnusedVar(env);
+#endif
+
     my_perl = perl_alloc();
     if (my_perl) {
         PL_perl_destruct_level = 0;
@@ -127,7 +134,7 @@ wxString wxPerl::GetVersionInfo() const
         //The above case won't work until after parse and run
         Perl_Ver = "5.008000";  //We do things that require Perl >= 5.8
     }
-    wxLogDebug(wxT("wxPerlGetVersionInfo: version = %s"), Perl_Ver);
+    wxLogDebug(wxT("wxPerlGetVersionInfo: version = %s"), Perl_Ver.c_str());
     return Perl_Ver;
 }
 
@@ -142,7 +149,7 @@ bool wxScriptFunctionPerl::Exec(wxScriptVar &ret, wxScriptVar *arg) const
     int argVal;
     void *argValPtr;
     double argValDbl;
-    int nRetVal;
+    //int nRetVal;
 
     {
         dSP ;

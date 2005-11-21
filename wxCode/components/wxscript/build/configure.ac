@@ -17,6 +17,7 @@ AC_INIT([wxScript], [1.5], [frm@sourceforge.net])
 #DBG_CONFIGURE=1
 
 m4_include(../../../build/autoconf/wxcode.m4)
+m4_include(perl.m4)
 AM_WXCODE_INIT
 
 
@@ -161,10 +162,7 @@ if test "$USE_PYTHON" = "1" ; then
 fi
 
 if test "$USE_PERL" = "1" ; then
-
-   AC_MSG_CHECKING([for the Perl presence... ])
-
-   AC_MSG_RESULT([yes])
+   AM_PATH_PERL
 fi
 
 
