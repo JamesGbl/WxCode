@@ -1,79 +1,78 @@
 <?xml version="1.0" ?>
 <makefile>
 
-	<!-- Some defaults for the variables used by wxCode bakefiles -->
-	<set var="WXCODE_BAKEFILEDIR">../../../build/bakefiles</set>
-	<include file="$(WXCODE_BAKEFILEDIR)/defaults.bkl"/>
-	
+    <!-- Some defaults for the variables used by wxCode bakefiles -->
+    <set var="WXCODE_BAKEFILEDIR">../../../build/bakefiles</set>
+    <include file="$(WXCODE_BAKEFILEDIR)/defaults.bkl"/>
 
-	<!-- The HTTPENGINE settings -->
-	<!-- ====================== -->
 
-	<set var="COMP_NAME">httpengine</set>
-	<set var="COMP_SRC">
+    <!-- The HTTPENGINE settings -->
+    <!-- ====================== -->
+
+    <set var="COMP_NAME">httpengine</set>
+    <set var="COMP_SRC">
     base64.cpp
-			authdlg.cpp
-			httpbuilder.cpp
-			httpbuilderthread.cpp
-			hyperlinkctrl.cpp
-			pleasewaitdlg.cpp
-			proxysettingsdlg.cpp	
-	</set>
-	<set var="COMP_HDR">
-			wx/authdlg.h
-			wx/base64.h
-			wx/httpbuilder.h
-			wx/httpbuilderthread.h
-			wx/hyperlinkctrl.h
-			wx/proxysettingsdlg.h
-			wx/httpenginedef.h
-	</set>
+            authdlg.cpp
+            httpbuilder.cpp
+            httpbuilderthread.cpp
+            hyperlinkctrl.cpp
+            pleasewaitdlg.cpp
+            proxysettingsdlg.cpp
+    </set>
+    <set var="COMP_HDR">
+            wx/authdlg.h
+            wx/base64.h
+            wx/httpbuilder.h
+            wx/httpbuilderthread.h
+            wx/hyperlinkctrl.h
+            wx/proxysettingsdlg.h
+            wx/httpenginedef.h
+    </set>
     <set var="COMP_SAMPLE_DIR">$(COMP_BASEPATH)/sample</set>
-	<set var="COMP_SAMPLE_SRC">
-			httpengineapp.cpp
-			httpenginedlg.cpp
-	</set>
-	<set var="COMP_SAMPLE_HDR">
-			httpengineapp.h
-			httpenginedlg.h
-	</set>
-		
-	<set var="WX_UNICODE_DEFAULT">0</set>
-	<set var="WX_VERSION_DEFAULT">26</set>
+    <set var="COMP_SAMPLE_SRC">
+            httpengineapp.cpp
+            httpenginedlg.cpp
+    </set>
+    <set var="COMP_SAMPLE_HDR">
+            httpengineapp.h
+            httpenginedlg.h
+    </set>
 
-	<!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->
-	<include file="$(WXCODE_BAKEFILEDIR)/wxcode.bkl"/>
-	<set var="POSTFIX">
+    <set var="WX_UNICODE_DEFAULT">0</set>
+    <set var="WX_VERSION_DEFAULT">26</set>
+
+    <!-- The wxCode bakefile to include after the definition of the COMP_XXXX variables... -->
+    <include file="$(WXCODE_BAKEFILEDIR)/wxcode.bkl"/>
+    <set var="POSTFIX">
     <if cond="WX_SHARED=='0'">_lib</if>
     <if cond="WX_SHARED=='1'">_dll</if>
     </set>
     <if cond="FORMAT!='autoconf'">
-	<set var="BUILDDIR">$(FORMAT)$(WXLIBPOSTFIX)$(POSTFIX)</set>
+    <set var="BUILDDIR">$(FORMAT)$(WXLIBPOSTFIX)$(POSTFIX)</set>
     </if>
 
-	<!-- The real target: wxcode.bkl does not declare a real target but a template called
-	     "complib". In this way modifications are allowed to the basic template. -->
-	<lib id="httpengine_lib" template="complib" cond="WX_SHARED=='0'" />
-	<dll id="httpengine_dll" template="compdll" cond="WX_SHARED=='1'">		
-		<wx-lib>net</wx-lib>
+    <!-- The real target: wxcode.bkl does not declare a real target but a template called
+         "complib". In this way modifications are allowed to the basic template. -->
+    <lib id="httpengine_lib" template="complib" cond="WX_SHARED=='0'" />
+    <dll id="httpengine_dll" template="compdll" cond="WX_SHARED=='1'">
+        <wx-lib>net</wx-lib>
         <wx-lib>core</wx-lib>
         <wx-lib>base</wx-lib>
-	</dll>
-	<set var="MSVC6PRJ_MERGED_TARGETS">httpengine=httpengine_lib+httpengine_dll</set>
-	
-	
-	
-	<!--             The Sample             -->
-	<!-- =================================== -->
+    </dll>
+    <set var="MSVC6PRJ_MERGED_TARGETS">httpengine=httpengine_lib+httpengine_dll</set>
 
-	<!-- use _ instead of '-' or '.' because MSVC6 does not like these chars -->
-	<exe id="httpenginetest" template="compsample">		
-		<res-include>$(COMP_BASEPATH)$(DIRSEP)sample</res-include>
-		<win32-res>$(COMP_BASEPATH)$(DIRSEP)sample$(DIRSEP)httpengine.rc</win32-res>
-		<library>httpengine_lib</library>
-		<wx-lib>net</wx-lib>
+
+
+    <!--             The Sample             -->
+    <!-- =================================== -->
+
+    <!-- use _ instead of '-' or '.' because MSVC6 does not like these chars -->
+    <exe id="httpenginetest" template="compsample">
+        <win32-res>$(COMP_BASEPATH)$(DIRSEP)sample$(DIRSEP)httpengine.rc</win32-res>
+        <library>httpengine_lib</library>
+        <wx-lib>net</wx-lib>
         <wx-lib>core</wx-lib>
-        <wx-lib>base</wx-lib>		
-	</exe>
-    
+        <wx-lib>base</wx-lib>
+    </exe>
+
 </makefile>

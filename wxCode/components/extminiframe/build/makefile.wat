@@ -37,6 +37,9 @@ WX_DEBUG = 1
 # Version of the wx library to build against. 
 WX_VERSION = 26
 
+# Use monolithic build of wxWidgets? [0,1]
+WX_MONOLITHIC = 0
+
 
 
 # -------------------------------------------------------------------------
@@ -99,6 +102,92 @@ __DEBUGINFO_1 =
 !endif
 !ifeq WX_DEBUG 1
 __DEBUGINFO_1 = debug all
+!endif
+__WXLIB_CORE_NAME_p =
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 0
+__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)_core.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 1
+__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)u_core.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 0
+__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)d_core.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 1
+__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)ud_core.lib
+!endif
+!endif
+!endif
+__WXLIB_BASE_NAME_p =
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 0
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION).lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 1
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)u.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 1
+!ifeq WX_UNICODE 0
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION).lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 1
+!ifeq WX_UNICODE 1
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)u.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 0
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)d.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 1
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)ud.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 1
+!ifeq WX_UNICODE 0
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)d.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 1
+!ifeq WX_UNICODE 1
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)ud.lib
+!endif
+!endif
 !endif
 __WX_SHAREDDEFINE_p =
 !ifeq WX_SHARED 1
@@ -264,13 +353,13 @@ cleandocs :
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
 install : .SYMBOLIC all install-wxheaders
-	copy /Y ..\lib\*wxextminiframe* $(WX_DIR)$(WXLIBPATH)
-	copy /Y ..\lib\*wxextminiframe* $(WX_DIR)$(WXLIBPATH)
+	copy /Y ..\lib\wxextminiframe$(WXLIBPOSTFIX).lib $(WX_DIR)$(WXLIBPATH)
+	copy /Y ..\lib\wxextminiframe$(WXLIBPOSTFIX).dll $(WX_DIR)$(WXLIBPATH)
 
 install-wxheaders :  
-	mkdir $(WX_DIR)/include/wx
+	mkdir $(WX_DIR)\include\wx
 	cd .
-	copy /Y  ../include/wx/*.h $(WX_DIR)/include/wx
+	copy /Y  ..\include\wx\*.h $(WX_DIR)\include\wx
 
 uninstall : .SYMBOLIC 
 	-if exist $(WX_DIR)\include\wx\minibtn.h \
@@ -295,7 +384,7 @@ uninstall : .SYMBOLIC
 	@%append watcom\extminiframe_dll.lbc option caseexact
 	@%append watcom\extminiframe_dll.lbc $(LDFLAGS) $(__DEBUGINFO_1)  libpath $(WX_DIR)$(WXLIBPATH) libpath ..\lib
 	@for %i in ($(EXTMINIFRAME_DLL_OBJECTS)) do @%append watcom\extminiframe_dll.lbc file %i
-	@for %i in ( wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\extminiframe_dll.lbc library %i
+	@for %i in ( $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\extminiframe_dll.lbc library %i
 	@%append watcom\extminiframe_dll.lbc
 	@%append watcom\extminiframe_dll.lbc system nr_dll
 	wlink @watcom\extminiframe_dll.lbc
@@ -309,7 +398,7 @@ uninstall : .SYMBOLIC
 	@%append watcom\minimal.lbc option caseexact
 	@%append watcom\minimal.lbc $(LDFLAGS) $(__DEBUGINFO_1)  libpath $(WX_DIR)$(WXLIBPATH) libpath ..\lib system nt_win ref '_WinMain@16'
 	@for %i in ($(MINIMAL_OBJECTS)) do @%append watcom\minimal.lbc file %i
-	@for %i in ( ..\lib\wxextminiframe$(WXLIBPOSTFIX).lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\minimal.lbc library %i
+	@for %i in ( ..\lib\wxextminiframe$(WXLIBPOSTFIX).lib $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\minimal.lbc library %i
 	@%append watcom\minimal.lbc option resource=watcom\minimal_minimal.res
 	wlink @watcom\minimal.lbc
 

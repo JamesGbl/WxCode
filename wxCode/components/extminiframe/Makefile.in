@@ -127,8 +127,6 @@ COND_USE_SOSYMLINKS_1___extminiframe_dll___so_symlinks_inst_cmd = rm -f \
 	$(DLLPREFIX)wxextminiframe$(__extminiframe_dll___targetsuf2) \
 	$(LIBPREFIX)wxextminiframe.$(DLLIMP_SUFFIX)
 @COND_USE_SOSYMLINKS_1@__extminiframe_dll___so_symlinks_inst_cmd = $(COND_USE_SOSYMLINKS_1___extminiframe_dll___so_symlinks_inst_cmd)
-@COND_PLATFORM_MACOSX_1@__extminiframe_dll___macver \
-@COND_PLATFORM_MACOSX_1@	= -compatibility_version 0 -current_version 0
 @COND_WX_PORT_GTK@__PORT_SPECIFIC_SOURCES_OBJECTS_1 = \
 @COND_WX_PORT_GTK@	extminiframe_dll_palettefrm.o \
 @COND_WX_PORT_GTK@	extminiframe_dll_minibtn.o
@@ -138,7 +136,7 @@ COND_USE_SOSYMLINKS_1___extminiframe_dll___so_symlinks_inst_cmd = rm -f \
 @COND_WX_PORT_X11@__PORT_SPECIFIC_SOURCES_OBJECTS_1 = \
 @COND_WX_PORT_X11@	extminiframe_dll_palettefrm.o
 @COND_PLATFORM_MAC_1@__minimal___mac_setfilecmd = \
-@COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL minimal$(EXEEXT)
+@COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL ./sample/minimal$(EXEEXT)
 @COND_WX_SHARED_1@__WX_SHAREDDEFINE_p_5 = --define WXUSINGDLL
 COND_PLATFORM_OS2_1___minimal___os2_emxbindcmd = $(NM) minimal$(EXEEXT) | if \
 	grep -q pmwin.763 ; then emxbind -ep minimal$(EXEEXT) ; fi
@@ -267,7 +265,7 @@ install-wxheaders:
 @COND_WX_SHARED_0@	$(INSTALL_DATA) ./lib/$(LIBPREFIX)wxextminiframe$(LIBEXT) $(DESTDIR)$(libdir)
 
 @COND_WX_SHARED_1@./lib/$(DLLPREFIX)wxextminiframe$(__extminiframe_dll___targetsuf3): $(EXTMINIFRAME_DLL_OBJECTS)
-@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(EXTMINIFRAME_DLL_OBJECTS) $(LDFLAGS)   -L./lib $(__extminiframe_dll___macinstnamecmd) $(__extminiframe_dll___importlib) $(__extminiframe_dll___soname_flags) $(__extminiframe_dll___macver)  $(WX_LIBS)
+@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(EXTMINIFRAME_DLL_OBJECTS) $(LDFLAGS)   -L./lib $(__extminiframe_dll___macinstnamecmd) $(__extminiframe_dll___importlib) $(__extminiframe_dll___soname_flags)  $(WX_LIBS)
 @COND_WX_SHARED_1@	
 @COND_WX_SHARED_1@	$(__extminiframe_dll___so_symlinks_cmd)
 

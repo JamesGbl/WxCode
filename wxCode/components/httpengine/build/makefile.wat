@@ -37,6 +37,9 @@ WX_DEBUG = 1
 # Version of the wx library to build against. 
 WX_VERSION = 26
 
+# Use monolithic build of wxWidgets? [0,1]
+WX_MONOLITHIC = 0
+
 
 
 # -------------------------------------------------------------------------
@@ -107,6 +110,121 @@ __DEBUGINFO_1 =
 !ifeq WX_DEBUG 1
 __DEBUGINFO_1 = debug all
 !endif
+__WXLIB_NET_NAME_p =
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 0
+__WXLIB_NET_NAME_p = wxbase$(WX_VERSION)_net.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 1
+__WXLIB_NET_NAME_p = wxbase$(WX_VERSION)u_net.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 0
+__WXLIB_NET_NAME_p = wxbase$(WX_VERSION)d_net.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 1
+__WXLIB_NET_NAME_p = wxbase$(WX_VERSION)ud_net.lib
+!endif
+!endif
+!endif
+__WXLIB_CORE_NAME_p =
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 0
+__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)_core.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 1
+__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)u_core.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 0
+__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)d_core.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 1
+__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)ud_core.lib
+!endif
+!endif
+!endif
+__WXLIB_BASE_NAME_p =
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 0
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION).lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 1
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)u.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 1
+!ifeq WX_UNICODE 0
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION).lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 1
+!ifeq WX_UNICODE 1
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)u.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 0
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)d.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 1
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)ud.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 1
+!ifeq WX_UNICODE 0
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)d.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 1
+!ifeq WX_UNICODE 1
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)ud.lib
+!endif
+!endif
+!endif
 __WX_SHAREDDEFINE_p =
 !ifeq WX_SHARED 1
 __WX_SHAREDDEFINE_p = -dWXUSINGDLL
@@ -173,7 +291,8 @@ HTTPENGINE_DLL_OBJECTS =  &
 HTTPENGINETEST_CXXFLAGS = $(__WARNINGS) $(__OPTIMIZEFLAG) $(__DEBUGINFO) -bm &
 	$(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) &
 	-d__WXMSW__ -i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) &
-	-i=$(WX_DIR)\include -i=..\include $(CPPFLAGS) $(CXXFLAGS)
+	-i=$(WX_DIR)\include -i=..\include -dprova -i=provainc $(CPPFLAGS) &
+	$(CXXFLAGS)
 HTTPENGINETEST_OBJECTS =  &
 	watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpengineapp.obj &
 	watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpenginedlg.obj
@@ -317,7 +436,7 @@ uninstall : .SYMBOLIC
 	@%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll.lbc option caseexact
 	@%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll.lbc $(LDFLAGS) $(__DEBUGINFO_1)  libpath $(WX_DIR)$(WXLIBPATH) libpath ..\lib
 	@for %i in ($(HTTPENGINE_DLL_OBJECTS)) do @%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll.lbc file %i
-	@for %i in ( wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll.lbc library %i
+	@for %i in ( $(__WXLIB_NET_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll.lbc library %i
 	@%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll.lbc
 	@%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll.lbc system nr_dll
 	wlink @watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpengine_dll.lbc
@@ -331,7 +450,7 @@ uninstall : .SYMBOLIC
 	@%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest.lbc option caseexact
 	@%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest.lbc $(LDFLAGS) $(__DEBUGINFO_1)  libpath $(WX_DIR)$(WXLIBPATH) libpath ..\lib system nt_win ref '_WinMain@16'
 	@for %i in ($(HTTPENGINETEST_OBJECTS)) do @%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest.lbc file %i
-	@for %i in ( ..\lib\httpengine$(WXLIBPOSTFIX).lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest.lbc library %i
+	@for %i in ( ..\lib\httpengine$(WXLIBPOSTFIX).lib $(__WXLIB_NET_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest.lbc library %i
 	@%append watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest.lbc option resource=watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpengine.res
 	wlink @watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest.lbc
 
@@ -384,5 +503,5 @@ watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpenginedlg.obj :  .AUTODEPEND 
 	$(CXX) -bt=nt -zq -fo=$^@ $(HTTPENGINETEST_CXXFLAGS) $<
 
 watcom$(WXLIBPOSTFIX)$(POSTFIX)\httpenginetest_httpengine.res :  .AUTODEPEND .\..\sample\httpengine.rc
-	wrc -q -ad -bt=nt -r -fo=$^@ $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\sample -i=..\sample $<
+	wrc -q -ad -bt=nt -r -fo=$^@ $(__WX_SHAREDDEFINE_p) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\sample -dprova -i=provainc $<
 

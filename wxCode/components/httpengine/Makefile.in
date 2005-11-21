@@ -64,8 +64,8 @@ HTTPENGINE_DLL_OBJECTS =  \
 	httpengine_dll_hyperlinkctrl.o \
 	httpengine_dll_pleasewaitdlg.o \
 	httpengine_dll_proxysettingsdlg.o
-HTTPENGINETEST_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include $(WX_CXXFLAGS) \
-	$(CPPFLAGS) $(CXXFLAGS)
+HTTPENGINETEST_CXXFLAGS = $(__WX_SHAREDDEFINE_p) -I./include -Dprova -Iprovainc \
+	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 HTTPENGINETEST_OBJECTS =  \
 	httpenginetest_httpengineapp.o \
 	httpenginetest_httpenginedlg.o \
@@ -324,7 +324,7 @@ httpenginetest_httpenginedlg.o: $(srcdir)/./sample/httpenginedlg.cpp
 	$(CXXC) -c -o $@ $(HTTPENGINETEST_CXXFLAGS) $(srcdir)/./sample/httpenginedlg.cpp
 
 httpenginetest_httpengine_rc.o: $(srcdir)/./sample/httpengine.rc
-	$(RESCOMP) -i$< -o$@ $(__WX_SHAREDDEFINE_p_5) --include-dir ./include --include-dir ./sample --include-dir ./sample
+	$(RESCOMP) -i$< -o$@ $(__WX_SHAREDDEFINE_p_5) --include-dir ./include --include-dir ./sample --define prova --include-dir provainc
 
 
 # Include dependency info, if present:
