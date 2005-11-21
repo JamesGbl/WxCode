@@ -1392,8 +1392,6 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
-
-
             ac_aux_dir=
 for ac_dir in ../../../build/autoconf build $srcdir/../../../build/autoconf build; do
   if test -f $ac_dir/install-sh; then
@@ -5430,79 +5428,11 @@ else
 echo "${ECHO_T}no" >&6
 fi
 
-        if [ "$PERL" = "NOTFOUND" ]; then
-            { { echo "$as_me:$LINENO: error:
-    Cannot find a perl interpreter in the PATH.
-    If you have perl installed, then add the perl binary to your PATH; if you
-    do not have it installed, then please download and install latest version
-    from http://www.perl.org and retry.
-                        " >&5
-echo "$as_me: error:
-    Cannot find a perl interpreter in the PATH.
-    If you have perl installed, then add the perl binary to your PATH; if you
-    do not have it installed, then please download and install latest version
-    from http://www.perl.org and retry.
-                        " >&2;}
-   { (exit 1); exit 1; }; }
-        fi
 
-                if [ "$with_perl" = "yes" ]; then
-            with_perl=""
-        fi
-
-        if [ -z "$with_perl" ]; then
-
-                        PERL_MODULES_DIR=$($PERL -MConfig -e 'print $Config{archlib}')
-            PERL_CORE_DIR="$PERL_MODULES_DIR/CORE"
-        else
-
-                        PERL_CORE_DIR="$with_perl"
-        fi
-
-        as_ac_File=`echo "ac_cv_file_$PERL_CORE_DIR/perl.h" | $as_tr_sh`
-echo "$as_me:$LINENO: checking for $PERL_CORE_DIR/perl.h" >&5
-echo $ECHO_N "checking for $PERL_CORE_DIR/perl.h... $ECHO_C" >&6
-if eval "test \"\${$as_ac_File+set}\" = set"; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  test "$cross_compiling" = yes &&
-  { { echo "$as_me:$LINENO: error: cannot check for file existence when cross compiling" >&5
-echo "$as_me: error: cannot check for file existence when cross compiling" >&2;}
-   { (exit 1); exit 1; }; }
-if test -r "$PERL_CORE_DIR/perl.h"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-echo "$as_me:$LINENO: result: `eval echo '${'$as_ac_File'}'`" >&5
-echo "${ECHO_T}`eval echo '${'$as_ac_File'}'`" >&6
-if test `eval echo '${'$as_ac_File'}'` = yes; then
-  hasPerlHeader=1
-else
-  hasPerlHeader=0
-fi
-
-        if [ "$hasPerlHeader" = "0" ]; then
-            { { echo "$as_me:$LINENO: error:
-    Could not find the perl.h file. I looked under
-        $PERL_CORE_DIR
-    if for some reason you have it installed somewhere else, then please use
-    the --with-perl=PATH option.
-                        " >&5
-echo "$as_me: error:
-    Could not find the perl.h file. I looked under
-        $PERL_CORE_DIR
-    if for some reason you have it installed somewhere else, then please use
-    the --with-perl=PATH option.
-                        " >&2;}
-   { (exit 1); exit 1; }; }
-        fi
-
-
-                CXXFLAGS="-I$PERL_CORE_DIR $CXXFLAGS"
+                PERL_CORE_DIR="$($PERL -MConfig -e 'print $Config{archlib}')/CORE"
+        CXXFLAGS="-I$PERL_CORE_DIR $CXXFLAGS"
         CFLAGS="-I$PERL_CORE_DIR $CFLAGS"
-
+        LDFLAGS="$(perl -MExtUtils::Embed -e ldopts) $LDFLAGS"
 
 fi
 

@@ -52,11 +52,11 @@
 
     <!-- lua & tolua have their own bakefiles; just unzip their archives in ..\thirdparty -->
     <option name="LUA_DIR" category="path">
-        <default-value>..\thirdparty\lua</default-value>
+        <default-value>$(COMP_BASEPATH)$(DIRSEP)thirdparty$(DIRSEP)lua</default-value>
         <description>The LUA library main folder</description>
     </option>
     <option name="TOLUA_DIR" category="path">
-        <default-value>..\thirdparty\tolua</default-value>
+        <default-value>$(COMP_BASEPATH)$(DIRSEP)thirdparty$(DIRSEP)tolua</default-value>
         <description>The TOLUA library main folder</description>
     </option>
 
@@ -115,13 +115,13 @@
     <set var="COMP_SRC">script.cpp scpython.cpp sccint.cpp scunderc.cpp sclua.cpp scperl.cpp</set>
     <set var="COMP_HDR">wx/script.h wx/scpython.h wx/sccint.h wx/scunderc.h wx/sclua.h wx/scperl.h wx/scdef.h</set>
 
-    <set var="COMP_SAMPLE_SRC">../tests/test1/test.cpp</set>
-    <set var="COMP_SAMPLE_HDR">../tests/test1/test.h</set>
-    <set var="COMP_SAMPLE_DIR">../tests/test1</set>
+    <set var="COMP_SAMPLE1_SRC">$(COMP_BASEPATH)/tests/test1/test.cpp</set>
+    <set var="COMP_SAMPLE1_HDR">$(COMP_BASEPATH)/tests/test1/test.h</set>
+    <set var="COMP_SAMPLE1_DIR">$(COMP_BASEPATH)/tests/test1</set>
 
-    <set var="COMP_SAMPLE2_SRC">../tests/test2/test.cpp</set>
-    <set var="COMP_SAMPLE2_HDR">../tests/test2/test.h</set>
-    <set var="COMP_SAMPLE2_DIR">../tests/test2</set>
+    <set var="COMP_SAMPLE2_SRC">$(COMP_BASEPATH)/tests/test2/test.cpp</set>
+    <set var="COMP_SAMPLE2_HDR">$(COMP_BASEPATH)/tests/test2/test.h</set>
+    <set var="COMP_SAMPLE2_DIR">$(COMP_BASEPATH)/tests/test2</set>
 
 
     <!-- Additional source file -->
@@ -295,9 +295,9 @@
     <!-- The first sample of the component: as for the LIB target, this exe derives from a
          template contained in wxcode.bkl which can be modified here -->
     <exe id="test1" template="compsamplebasic,wxscriptbase">
-        <sources>$(COMP_SAMPLE_SRC)</sources>
-        <headers>$(COMP_SAMPLE_HDR)</headers>
-        <dirname>$(COMP_SAMPLE_DIR)</dirname>
+        <sources>$(COMP_SAMPLE1_SRC)</sources>
+        <headers>$(COMP_SAMPLE1_HDR)</headers>
+        <dirname>$(COMP_SAMPLE1_DIR)</dirname>
         <app-type>console</app-type>
 
         <library>wxscript_lib</library>

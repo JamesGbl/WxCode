@@ -143,9 +143,9 @@ COND_USE_SOSYMLINKS_1___wxscript_dll___so_symlinks_inst_cmd = rm -f \
 	$(LIBPREFIX)wxscript.$(DLLIMP_SUFFIX)
 @COND_USE_SOSYMLINKS_1@__wxscript_dll___so_symlinks_inst_cmd = $(COND_USE_SOSYMLINKS_1___wxscript_dll___so_symlinks_inst_cmd)
 @COND_PLATFORM_MAC_1@__test1___mac_setfilecmd = \
-@COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL ../tests/test1/test1$(EXEEXT)
+@COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL ./tests/test1/test1$(EXEEXT)
 @COND_PLATFORM_MAC_1@__test2___mac_setfilecmd = \
-@COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL ../tests/test2/test2$(EXEEXT)
+@COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL ./tests/test2/test2$(EXEEXT)
 @COND_WX_SHARED_1@__WX_SHAREDDEFINE_p = -DWXUSINGDLL
 @COND_USE_PYTHON_1@__SCRIPTLIB1_p = \
 @COND_USE_PYTHON_1@	-lpython$(PYTHON_MAJVER)$(PYTHON_MINVER)
@@ -158,7 +158,7 @@ COND_USE_SOSYMLINKS_1___wxscript_dll___so_symlinks_inst_cmd = rm -f \
 
 ### Targets: ###
 
-all: $(__wxscript_lib___depname) $(__wxscript_dll___depname) ../tests/test1/test1$(EXEEXT) ../tests/test2/test2$(EXEEXT)
+all: $(__wxscript_lib___depname) $(__wxscript_dll___depname) ./tests/test1/test1$(EXEEXT) ./tests/test2/test2$(EXEEXT)
 
 install: all install-wxheaders $(__install_wxscript_lib___depname) $(__install_wxscript_dll___depname)
 
@@ -182,8 +182,8 @@ clean:
 	rm -f ./lib/$(DLLPREFIX)wxscript$(__wxscript_dll___targetsuf3)
 	rm -f ./lib/$(LIBPREFIX)wxscript.$(DLLIMP_SUFFIX)
 	rm -f ./lib/$(LIBPREFIX)wxscript.$(DLLIMP_SUFFIX) ./lib/$(DLLPREFIX)wxscript$(__wxscript_dll___targetsuf2)
-	rm -f ../tests/test1/test1$(EXEEXT)
-	rm -f ../tests/test2/test2$(EXEEXT)
+	rm -f ./tests/test1/test1$(EXEEXT)
+	rm -f ./tests/test2/test2$(EXEEXT)
 
 distclean: clean
 	rm -f config.cache config.log config.status bk-deps bk-make-pch shared-ld-sh Makefile
@@ -288,12 +288,12 @@ install-wxheaders:
 @COND_WX_SHARED_1@	$(INSTALL_PROGRAM) ./lib/$(DLLPREFIX)wxscript$(__wxscript_dll___targetsuf3) $(DESTDIR)$(libdir)
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__wxscript_dll___so_symlinks_inst_cmd))
 
-../tests/test1/test1$(EXEEXT): $(TEST1_OBJECTS) $(__wxscript_lib___depname)
+./tests/test1/test1$(EXEEXT): $(TEST1_OBJECTS) $(__wxscript_lib___depname)
 	$(CXX) -o $@ $(TEST1_OBJECTS) -L./lib $(LDFLAGS)   -L./lib    -lwxscript $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) $(__SCRIPTLIB5_p) $(WX_LIBS)
 	
 	$(__test1___mac_setfilecmd)
 
-../tests/test2/test2$(EXEEXT): $(TEST2_OBJECTS) $(__wxscript_lib___depname)
+./tests/test2/test2$(EXEEXT): $(TEST2_OBJECTS) $(__wxscript_lib___depname)
 	$(CXX) -o $@ $(TEST2_OBJECTS) -L./lib $(LDFLAGS)   -L./lib    -lwxscript $(__SCRIPTLIB1_p) $(__SCRIPTLIB2A_p) $(__SCRIPTLIB2B_p) $(__SCRIPTLIB2C_p) $(__SCRIPTLIB3_p) $(__SCRIPTLIB4_p) $(__SCRIPTLIB5_p) $(WX_LIBS)
 	
 	$(__test2___mac_setfilecmd)
@@ -334,11 +334,11 @@ wxscript_dll_sclua.o: $(srcdir)/./src/sclua.cpp
 wxscript_dll_scperl.o: $(srcdir)/./src/scperl.cpp
 	$(CXXC) -c -o $@ $(WXSCRIPT_DLL_CXXFLAGS) $(srcdir)/./src/scperl.cpp
 
-test1_test.o: $(srcdir)/../tests/test1/test.cpp
-	$(CXXC) -c -o $@ $(TEST1_CXXFLAGS) $(srcdir)/../tests/test1/test.cpp
+test1_test.o: $(srcdir)/./tests/test1/test.cpp
+	$(CXXC) -c -o $@ $(TEST1_CXXFLAGS) $(srcdir)/./tests/test1/test.cpp
 
-test2_test.o: $(srcdir)/../tests/test2/test.cpp
-	$(CXXC) -c -o $@ $(TEST2_CXXFLAGS) $(srcdir)/../tests/test2/test.cpp
+test2_test.o: $(srcdir)/./tests/test2/test.cpp
+	$(CXXC) -c -o $@ $(TEST2_CXXFLAGS) $(srcdir)/./tests/test2/test.cpp
 
 
 # Include dependency info, if present:

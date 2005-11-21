@@ -5,6 +5,10 @@
 # Creation date: 14/9/2005
 #
 # A simple script to generate the configure script for a wxCode component
+# Some features of this version:
+# - automatic test for aclocal version
+# - able to be called from any folder
+#   (i.e. you can call it typing 'build/acregen.sh', not only './acregen.sh')
 
 
 # called when an old version of aclocal is found
@@ -35,4 +39,9 @@ if [[ "$majok" = "1" && "$minok" = "0" ]]; then aclocalold; fi
 if [[ "$majok" = "1" && "$minok" = "1" && "$relok" = 0 ]]; then aclocalold; fi
 
 # we can safely proceed
-( aclocal && autoconf && mv configure .. )
+me=$(basename $0)
+path=${0%%/$me}        # path from which the script has been launched
+current=$(pwd)
+cd $path
+aclocal && autoconf && mv configure ..
+cd $current
