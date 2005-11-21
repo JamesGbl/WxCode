@@ -2,7 +2,7 @@
 // Name:        myframe.cpp
 // Purpose:     resizeable controls sample: A derived frame, called MyFrame
 // Author:      Markus Greither
-// RCS-ID:      $Id: myframe.cpp,v 1.10 2005-10-02 19:43:46 frm Exp $
+// RCS-ID:      $Id: myframe.cpp,v 1.11 2005-11-21 20:53:39 frm Exp $
 // Copyright:   (c) Markus Greither
 // Licence:     wxWindows licence
 //-----------------------------------------------------------------------------
@@ -104,44 +104,44 @@ END_EVENT_TABLE()
 
 void TestTextBox(wxResizeableControlCanvas *rc)
 {
-	wxResizeableParentControl *parent = 
-		new wxResizeableParentControl(rc,
+    wxResizeableParentControl *parent =
+        new wxResizeableParentControl(rc,
                              0, wxPoint(300,250),
                              wxSize(450,200),
                              wxCLIP_SIBLINGS);
 
-	wxTextBox *txt = new wxTextBox(parent, 0, wxDefaultPosition, wxSize(450, 200));	
-	parent->SetManagedChild(txt);
+    wxTextBox *txt = new wxTextBox(parent, 0, wxDefaultPosition, wxSize(450, 200));
+    parent->SetManagedChild(txt);
 
-	txt->SetBackgroundColour(*wxWHITE);
-	txt->InitDefaultStyles();
+    txt->SetBackgroundColour(*wxWHITE);
+    txt->InitDefaultStyles();
 
-	wxString str1 = wxT("Hi !\nI'm a wxTextBox...\n\n");
-	wxString str2 = wxT("This is the title of this text\n");
-	wxString str3 = wxT("This is text styled with the default 'normal' ")
-					wxT("text style provided by wxTextBox.\nThere are ")
-					wxT("other various styles... see the docs for more info.");
+    wxString str1 = wxT("Hi !\nI'm a wxTextBox...\n\n");
+    wxString str2 = wxT("This is the title of this text\n");
+    wxString str3 = wxT("This is text styled with the default 'normal' ")
+                    wxT("text style provided by wxTextBox.\nThere are ")
+                    wxT("other various styles... see the docs for more info.");
 
-	// we add the first string using a custom style
-	txt->SetText(str1, wxTextStyle(wxTextAttr(*wxGREEN, wxNullColour, 
-									wxFont(14, wxFONTFAMILY_MODERN, wxFONTSTYLE_ITALIC, 
-									wxFONTWEIGHT_BOLD, FALSE, wxEmptyString)),
-								wxT("mystyle")));
+    // we add the first string using a custom style
+    txt->SetText(str1, wxTextStyle(wxTextAttr(*wxGREEN, wxNullColour,
+                                    wxFont(14, wxFONTFAMILY_MODERN, wxFONTSTYLE_ITALIC,
+                                    wxFONTWEIGHT_BOLD, FALSE, wxEmptyString)),
+                                wxT("mystyle")));
 
-	// the other strings will use some of the default styles
-	txt->AppendText(str2, wxT("h1"));
-	txt->AppendText(str3, wxT("normal"));
+    // the other strings will use some of the default styles
+    txt->AppendText(str2, wxT("h1"));
+    txt->AppendText(str3, wxT("normal"));
 
-	// after all Set/AppendText calls we need to call Layout()
-	txt->Layout();
-	txt->SetCaretPos(wxTBCP_END);
-	//txt->SetSelection(-1, -1);
+    // after all Set/AppendText calls we need to call Layout()
+    txt->Layout();
+    txt->SetCaretPos(wxTBCP_END);
+    //txt->SetSelection(-1, -1);
 
 #ifdef __WXDEBUG__
-	// for debugging
-	wxString content(txt->GetAllText());
-	wxString inserted(str1 + str2 + str3);
-	wxASSERT(content == inserted);
+    // for debugging
+    wxString content(txt->GetAllText());
+    wxString inserted(str1 + str2 + str3);
+    wxASSERT(content == inserted);
 #endif
 }
 
@@ -156,7 +156,7 @@ MyFrame::MyFrame(wxWindow* parent)
 #if wxUSE_MENUS
     // create a menu bar
     wxMenu *menuFile = new wxMenu;
-    menuFile->Append(wxID_PRINT, _T("&Print preview"), 
+    menuFile->Append(wxID_PRINT, _T("&Print preview"),
                      _T("Print preview/print active control"));
     menuFile->Append(wxID_CLOSE, _T("E&xit\tAlt-X"), _T("Quit this program"));
 
@@ -189,12 +189,12 @@ MyFrame::MyFrame(wxWindow* parent)
     // Now create some resizeable controls
     wxBitmap bitmap;
 
-	// get the path to our bitmap
-	wxString sep(wxFileName::GetPathSeparator()), basepath = wxGetCwd();
-	if (basepath.Last() != sep)
-		basepath += sep;
-	if (basepath.Right(6) == (wxT("build") + sep))	// are we running from MSVC6 ?
-		basepath += wxString(wxT("..")) + sep + wxT("samples") + sep;
+    // get the path to our bitmap
+    wxString sep(wxFileName::GetPathSeparator()), basepath = wxGetCwd();
+    if (basepath.Last() != sep)
+        basepath += sep;
+    if (basepath.Right(6) == (wxT("build") + sep))  // are we running from MSVC6 ?
+        basepath += wxString(wxT("..")) + sep + wxT("samples") + sep;
 
     if (!bitmap.LoadFile(basepath + wxT("builtwithwx.gif"),wxBITMAP_TYPE_GIF))
         wxMessageBox(_T("Couldn't load 'builtwithwx.gif' bitmap!"),
@@ -228,7 +228,7 @@ MyFrame::MyFrame(wxWindow* parent)
     wxResizeableChildTextCtrl *ctrl = new wxResizeableChildTextCtrl(par,-1,_("text"));
     par->SetManagedChild(ctrl);
 
-	TestTextBox((wxResizeableControlCanvas *)m_resizecanvas);
+    //TestTextBox((wxResizeableControlCanvas *)m_resizecanvas);
 }
 
 
@@ -244,7 +244,7 @@ void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 
 void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
-	wxString msg;
+    wxString msg;
     msg.Printf( _T("Sample application for resizeable controls.\n\n")
                 _T("Demonstrates\n")
                 _T("resizing, moving, cutting, pasting and printing\n")
