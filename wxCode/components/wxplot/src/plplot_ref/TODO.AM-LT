@@ -3,7 +3,7 @@ Description: ToDo list for the PLplot AM-LT branch
 Author: Rafael Laboissière <rafael@debian.org>
 Created on: Fri Apr 20 09:26:39 CEST 2001
 Last modified on: Tue Nov 18 17:39:26 CET 2003
-$Id: TODO.AM-LT,v 1.1 2005-07-26 19:21:19 carreracg Exp $
+$Id: TODO.AM-LT,v 1.2 2005-11-22 15:56:49 carreracg Exp $
 
 This file is here just to get my work organized.  It will hopefully
 disappear when the AM-LT branch will get merged into MAIN.  [N.B.: the

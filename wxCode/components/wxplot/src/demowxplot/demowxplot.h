@@ -72,7 +72,7 @@ public:
     void OnQuit(wxCommandEvent& event);
     void OnClose(wxCloseEvent& event);
 
-    void OnMenuOpen(wxCommandEvent& event);
+    void OnMenuOpen(wxMenuEvent& event);
   
     wxMenu *file_menu;
     MyChild *mchild[6];

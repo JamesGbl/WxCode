@@ -1,6 +1,6 @@
 /*
    plgridd.c: Plot grids data from irregularly sampled data.
-   $Id: plgridd.c,v 1.1 2005-07-26 19:21:21 carreracg Exp $
+   $Id: plgridd.c,v 1.2 2005-11-22 15:56:49 carreracg Exp $
 
    Copyright (C) 2004  Joao Cardoso
    Copyright (C) 2004  Alan W. Irwin

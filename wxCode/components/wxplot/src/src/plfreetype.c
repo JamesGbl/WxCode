@@ -1,4 +1,4 @@
-/* $Id: plfreetype.c,v 1.1 2005-07-26 19:21:21 carreracg Exp $
+/* $Id: plfreetype.c,v 1.2 2005-11-22 15:56:49 carreracg Exp $
  *
  * Copyright (C) 2002, 2004  Andrew Roach
  * Copyright (C) 2002  Maurice LeBrun

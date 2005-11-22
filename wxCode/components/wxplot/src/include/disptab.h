@@ -1,4 +1,4 @@
-/* $Id: disptab.h,v 1.1 2005-07-26 19:10:59 carreracg Exp $
+/* $Id: disptab.h,v 1.2 2005-11-22 15:56:49 carreracg Exp $
 
    Defines the data structure which holds the driver functions.
 */

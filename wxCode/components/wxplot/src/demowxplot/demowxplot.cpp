@@ -153,10 +153,10 @@ bool MyApp::OnInit()
     file_menu->Append(MDI_NEW_WINDOW5, _T("&Plot5\tCtrl-5"), _T("Create a new child window"));
     file_menu->Append(MDI_NEW_WINDOW6, _T("&Plot6\tCtrl-6"), _T("Create a new child window"));
     file_menu->AppendSeparator();
-    file_menu->Append( ID_PRINT, "&Print..." );
-    file_menu->Append( ID_PRINT_SETUP, "&Print &Setup..." );
-    file_menu->Append( ID_PAGE_SETUP, "&Page Set&up..." );
-    file_menu->Append( ID_PREVIEW, "&Print Pre&view..." );
+    file_menu->Append( ID_PRINT, _T("&Print...") );
+    file_menu->Append( ID_PRINT_SETUP, _T("&Print &Setup...") );
+    file_menu->Append( ID_PAGE_SETUP, _T("&Page Set&up...") );
+    file_menu->Append( ID_PREVIEW, _T("&Print Pre&view...") );
     
     file_menu->Enable( ID_PRINT, false);
     file_menu->Enable( ID_PAGE_SETUP, false);
@@ -226,7 +226,7 @@ void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event) )
 {
     (void)wxMessageBox(_T("Demo wxPlot - plplot-5.5.1\n")
-                       _T("By Germán Carrera 2005\n")
+                       _T("By German Carrera 2005\n")
                        _T("with the colaboration of\n")
                        _T("Amparo Gil & Javier J. Segura\n")
                        _T("at the University of Cantabria\n")
@@ -468,7 +468,7 @@ void MyFrame::OnPrint(wxCommandEvent& WXUNUSED(event))
     wxPrinter printer(& printDialogData);
     MyPrintout printout("My printout",mchild[maximized]->canvas);
     if (!printer.Print(this, &printout, TRUE))
-        wxMessageBox("There was a problem printing.\nPerhaps your current printer is not set correctly?", "Printing", wxOK);
+        wxMessageBox(_T("There was a problem printing.\nPerhaps your current printer is not set correctly?"), _T("Printing"), wxOK);
     else
     {
         (*g_printData) = printer.GetPrintDialogData().GetPrintData();
@@ -483,11 +483,11 @@ void MyFrame::OnPrintPreview(wxCommandEvent& WXUNUSED(event))
     if (!preview->Ok())
     {
         delete preview;
-        wxMessageBox("There was a problem previewing.\nPerhaps your current printer is not set correctly?", "Previewing", wxOK);
+        wxMessageBox(_T("There was a problem previewing.\nPerhaps your current printer is not set correctly?"), _T("Previewing"), wxOK);
         return;
     }
     
-    wxPreviewFrame *frame = new wxPreviewFrame(preview, this, "Demo Print Preview", wxDefaultPosition, wxDefaultSize); 
+    wxPreviewFrame *frame = new wxPreviewFrame(preview, this, _T("Demo Print Preview"), wxDefaultPosition, wxDefaultSize); 
     frame->Centre(wxBOTH);
     frame->Initialize();
     frame->Show(TRUE);
@@ -504,7 +504,7 @@ void MyFrame::OnPrintSetup(wxCommandEvent& WXUNUSED(event))
     (*g_printData) = printerDialog.GetPrintDialogData().GetPrintData();
 }
 
-void MyFrame::OnMenuOpen(wxCommandEvent& WXUNUSED(event))
+void MyFrame::OnMenuOpen(wxMenuEvent& WXUNUSED(event))
 {
   if(maximized>0)
     {
@@ -568,7 +568,7 @@ void MyCanvas::OnDraw(wxDC& dc)
     Plot3(dc,0,0);
 }
 
-/* $Id: demowxplot.cpp,v 1.1 2005-07-26 19:10:59 carreracg Exp $
+/* $Id: demowxplot.cpp,v 1.2 2005-11-22 15:56:49 carreracg Exp $
 
 	Simple line plot and multiple windows demo.
 
@@ -651,7 +651,7 @@ void MyCanvas::Plot1(wxDC& dc, int w_, int h_)
   delete(wxplot);
 }
 
-/* $Id: demowxplot.cpp,v 1.1 2005-07-26 19:10:59 carreracg Exp $
+/* $Id: demowxplot.cpp,v 1.2 2005-11-22 15:56:49 carreracg Exp $
 
 	plshade demo, using color fill.
 

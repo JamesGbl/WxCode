@@ -1,4 +1,4 @@
-/* $Id: plcore.c,v 1.3 2005-07-26 19:21:20 carreracg Exp $
+/* $Id: plcore.c,v 1.4 2005-11-22 15:56:49 carreracg Exp $
 
 	Central dispatch facility for PLplot.
 	Also contains the PLplot main data structures, external access

@@ -1,4 +1,4 @@
-/* $Id: plbuf.c,v 1.1 2005-07-26 19:21:20 carreracg Exp $
+/* $Id: plbuf.c,v 1.2 2005-11-22 15:56:49 carreracg Exp $
 
     Handle plot buffer.
 

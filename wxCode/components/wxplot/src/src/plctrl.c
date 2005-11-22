@@ -1,4 +1,4 @@
-/* $Id: plctrl.c,v 1.3 2005-07-26 19:21:20 carreracg Exp $
+/* $Id: plctrl.c,v 1.4 2005-11-22 15:56:49 carreracg Exp $
 
 	Misc. control routines, like begin, end, exit, change graphics/text
 	mode, change color.  Includes some spillage from plcore.c.  If you

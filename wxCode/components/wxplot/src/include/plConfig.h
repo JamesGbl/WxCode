@@ -1,5 +1,5 @@
 /* -*-C-*- */
-/* $Id: plConfig.h,v 1.1 2005-07-26 19:10:59 carreracg Exp $
+/* $Id: plConfig.h,v 1.2 2005-11-22 15:56:49 carreracg Exp $
 
     Maurice LeBrun
     IFS, University of Texas at Austin

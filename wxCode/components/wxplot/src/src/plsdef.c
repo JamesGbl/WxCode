@@ -1,4 +1,4 @@
-/* $Id: plsdef.c,v 1.3 2005-07-26 19:21:21 carreracg Exp $
+/* $Id: plsdef.c,v 1.4 2005-11-22 15:56:49 carreracg Exp $
 
 	Routines to set various plplot parameters, such as char height,
 	symbol size, tick length, line and fill patterns, etc.

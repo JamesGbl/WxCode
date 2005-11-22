@@ -1,4 +1,4 @@
-/* $Id: metadefs.h,v 1.3 2005-07-26 19:10:59 carreracg Exp $
+/* $Id: metadefs.h,v 1.4 2005-11-22 15:56:49 carreracg Exp $
 
 	Geoffrey Furnish
 	5 May 1991

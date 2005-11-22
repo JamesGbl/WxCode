@@ -1,4 +1,4 @@
-/* $Id: plfreetype.h,v 1.1 2005-07-26 19:10:59 carreracg Exp $
+/* $Id: plfreetype.h,v 1.2 2005-11-22 15:56:49 carreracg Exp $
  *
  *    Header file for Support routines for freetype font engine
  *
