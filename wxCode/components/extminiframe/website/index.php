@@ -8,7 +8,7 @@
   ////////////////////////////////////////////////////////////////////////////////////////////
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-AU">
-	<?php
+    <?php
       $compname = "wxExtMiniFrame";
       $subdir = "wxextminiframe";
       require("compwebsite.inc.php");
@@ -28,13 +28,13 @@
   <br/><?php write_h1("Future enhancements"); ?>
   <p>The wxExtMiniFrame component is complete under wxMSW, wxGTK and wxX11. The only feature missing in the
   last two is the miniframe resizing system.</p>
- 
- 
+
+
   <?php write_h1("Documentation"); ?>
   <p>Sorry; I've written no docs for this component because its use should be quite intuitive. Also,
   the sample is quite heavily commented and thus you should be able to learn the additional features
   of wxExtMiniFrame (respect wxMiniFrame) looking at the sample source file.</p>
-    
+
 
   <br/><?php write_h1("Known bugs"); ?>
   <p>None. To submit a bug report please look at <a href="../../faq.php">wxCode FAQ</a>.</p>
@@ -42,7 +42,7 @@
 
   <br/><?php write_h1("Future enhancements"); ?>
   <p>Miniframe resizing system for wxGTK and wxX11. wxMac support (I don't have a mac so for this I require the help of someone who has it). To submit a feature request please look at <a href="../../faq.php">wxCode FAQ</a>.</p>
-    
 
-  <br/><?php include '../../footer.inc.html'; ?>
+
+  <br/><?php require("footer.inc.php"); ?>
 </html>
