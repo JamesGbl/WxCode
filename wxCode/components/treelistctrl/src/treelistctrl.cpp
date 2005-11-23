@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.88 2005-11-03 19:23:17 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.89 2005-11-23 18:29:48 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -2214,6 +2214,9 @@ wxTreeItemId wxTreeListMainWindow::AddRoot (const wxString& text,
 #endif
     }
     if (HasFlag(wxTR_HIDE_ROOT)) {
+        // if we will hide the root, make sure children are visible
+        m_rootItem->SetHasPlus();
+        m_rootItem->Expand();
 #if !wxCHECK_VERSION(2, 5, 0)
         long cookie = 0;
 #else
