@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.89 2005-11-23 18:29:48 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.90 2005-11-24 16:32:10 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -796,11 +796,11 @@ public:
         }
     }
 
-    void SetData(wxTreeItemData *data) { m_data = data; }
+    void SetData (wxTreeItemData *data) { m_data = data; }
 
-    void SetHasPlus(bool has = true) { m_hasPlus = has; }
+    void SetHasPlus (bool has) { m_hasPlus = has; }
 
-    void SetBold(bool bold) { m_isBold = bold; }
+    void SetBold (bool bold) { m_isBold = bold; }
 
     int GetX() const { return m_x; }
     int GetY() const { return m_y; }
@@ -1830,6 +1830,11 @@ void wxTreeListMainWindow::SetWindowStyle (const long styles) {
     // none of the parents has updatable styles
     m_windowStyle = styles;
     m_dirty = true;
+    // if we will hide the root, make sure children are visible
+    if (HasFlag(wxTR_HIDE_ROOT)) {
+        m_rootItem->SetHasPlus (true);
+        m_rootItem->Expand();
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -1890,6 +1895,7 @@ void wxTreeListMainWindow::SetItemHasChildren (const wxTreeItemId& item,
                                                bool has) {
     wxCHECK_RET (item.IsOk(), _T("invalid tree item"));
     wxTreeListItem *pItem = (wxTreeListItem*) item.m_pItem;
+    if (HasFlag(wxTR_HIDE_ROOT) && (item == m_rootItem)) return;
     pItem->SetHasPlus (has);
     RefreshLine (pItem);
 }
@@ -2213,9 +2219,9 @@ wxTreeItemId wxTreeListMainWindow::AddRoot (const wxString& text,
         data->SetId(m_rootItem);
 #endif
     }
+    // if we will hide the root, make sure children are visible
     if (HasFlag(wxTR_HIDE_ROOT)) {
-        // if we will hide the root, make sure children are visible
-        m_rootItem->SetHasPlus();
+        m_rootItem->SetHasPlus (true);
         m_rootItem->Expand();
 #if !wxCHECK_VERSION(2, 5, 0)
         long cookie = 0;
@@ -2373,6 +2379,9 @@ void wxTreeListMainWindow::Collapse (const wxTreeItemId& itemId) {
     wxCHECK_RET (item, _T("invalid item in wxTreeListMainWindow::Collapse") );
 
     if (!item->HasPlus() || !item->IsExpanded()) return;
+
+    // don't collaps hidden root, make sure children stay visible
+    if (HasFlag(wxTR_HIDE_ROOT) && (itemId == m_rootItem)) return;
 
     // send event to user code
     wxTreeEvent event (wxEVT_COMMAND_TREE_ITEM_COLLAPSING, m_owner->GetId() );
