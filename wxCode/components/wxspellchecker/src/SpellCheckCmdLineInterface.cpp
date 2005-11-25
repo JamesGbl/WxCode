@@ -29,15 +29,16 @@ void SpellCheckCmdLineInterface::PrintMisspelling()
     wxSpellCheckEngineInterface::MisspellingContext Context = m_pSpellCheckEngine->GetCurrentMisspellingContext();
     wxString strContext = Context.GetContext();
     // Append the closing marker first since the opening marker would shift where the closing marker would have to go
-    strContext.insert(Context.GetOffset() + Context.GetLength(), "<-**");
-    strContext.insert(Context.GetOffset(), "**->");
-    wxPrintf("%s\n", strContext.c_str());
+    strContext.insert(Context.GetOffset() + Context.GetLength(), _T("<-**"));
+    strContext.insert(Context.GetOffset(), _T("**->"));
+    wxCharBuffer contextCharBuffer(wxConvUTF8.cWC2MB(strContext.wc_str(*wxConvCurrent)));
+    wxPrintf(_("%s\n"), (const char*)contextCharBuffer);
   }
 }
 
 void SpellCheckCmdLineInterface::PrintSuggestions()
 {
-  wxPrintf("Suggestions: \n");
+  wxPrintf(_T("Suggestions: \n"));
 
   if (m_pSpellCheckEngine)
   {
@@ -47,11 +48,14 @@ void SpellCheckCmdLineInterface::PrintSuggestions()
       // Add each suggestion to the list
 			// The (nCtr < 5) clause is to make the list of suggestions manageable to the user
       for (unsigned int nCtr = 0; (nCtr < SuggestionArray.GetCount()) && (nCtr < 5); nCtr++)
-        wxPrintf(" '%s'", SuggestionArray[nCtr].c_str());
+      {
+        wxCharBuffer suggestionCharBuffer(wxConvUTF8.cWC2MB(SuggestionArray[nCtr].wc_str(*wxConvCurrent)));
+        wxPrintf(_(" '%s'"), (const char*)suggestionCharBuffer);
+      }
     }
     else
     {
-      wxPrintf(" (no suggestions)\n");
+      wxPrintf(_T(" (no suggestions)\n"));
     }
   }
 }

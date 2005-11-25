@@ -150,7 +150,9 @@ int AspellInterface::SetOption(SpellCheckEngineOption& Option)
   if (Option.GetOptionType() == SpellCheckEngineOption::BOOLEAN)
     strValue = (strValue == _T("0")) ? _T("false") : _T("true");
 
-	m_AspellWrapper.AspellConfigReplace(m_AspellConfig, Option.GetName(), strValue);
+  wxCharBuffer nameCharBuffer = ConvertToUTF8(Option.GetName());
+  wxCharBuffer valueCharBuffer = ConvertToUTF8(strValue);
+	m_AspellWrapper.AspellConfigReplace(m_AspellConfig, nameCharBuffer, valueCharBuffer);
 
 	return true;
 }
@@ -166,7 +168,9 @@ void AspellInterface::UpdatePossibleValues(SpellCheckEngineOption& OptionDepende
       AspellDictInfoEnumeration* dels;
       const AspellDictInfo* entry;
     
-      m_AspellWrapper.AspellConfigReplace(config, OptionDependency.GetName(), OptionDependency.GetValueAsString());
+      wxCharBuffer nameCharBuffer = ConvertToUTF8(OptionDependency.GetName());
+      wxCharBuffer valueCharBuffer = ConvertToUTF8(OptionDependency.GetValueAsString());
+      m_AspellWrapper.AspellConfigReplace(config, nameCharBuffer, valueCharBuffer);
       
       // The returned pointer should _not_ need to be deleted
       dlist = m_AspellWrapper.GetAspellDictInfoList(config);
@@ -179,14 +183,16 @@ void AspellInterface::UpdatePossibleValues(SpellCheckEngineOption& OptionDepende
       OptionToUpdate.GetPossibleValuesArray()->Clear();
       while ( (entry = m_AspellWrapper.AspellDictInfoEnumerationNext(dels)) != 0) 
       {
-        OptionToUpdate.AddPossibleValue(wxString(entry->name));
+        OptionToUpdate.AddPossibleValue(wxString(ConvertFromUTF8(entry->name)));
       }
     
       m_AspellWrapper.DeleteAspellDictInfoEnumeration(dels);
     }
     else
     {
-      ::wxMessageBox(wxString::Format(_T("Unsure how to update the possible values for %s based on the value of %s"), OptionDependency.GetText().c_str(), OptionToUpdate.GetText().c_str()));
+      wxMessageOutput* msgOut = wxMessageOutput::Get();
+      if (msgOut)
+        msgOut->Printf(_T("Unsure how to update the possible values for ") + OptionDependency.GetText() + _T(" based on the value of ") + OptionToUpdate.GetText() + _T("\n"));
     }
   }
 }
@@ -196,7 +202,8 @@ bool AspellInterface::IsWordInDictionary(const wxString& strWord)
   if (m_AspellSpeller == NULL)
     return false;
 
-  return ((m_AspellWrapper.AspellSpellerCheck(m_AspellSpeller, strWord, strWord.Length()) == 1) || (m_PersonalDictionary.IsWordInDictionary(strWord)));
+  wxCharBuffer wordCharBuffer = ConvertToUTF8(strWord);
+  return ((m_AspellWrapper.AspellSpellerCheck(m_AspellSpeller, wordCharBuffer, -1) == 1) || (m_PersonalDictionary.IsWordInDictionary(strWord)));
 }
 
 // This function loops through the document and check each word.
@@ -208,13 +215,17 @@ wxString AspellInterface::CheckSpelling(wxString strText)
 	//int nCorrect = m_AspellWrapper.AspellSpellerCheck(m_AspellSpeller, strText, strText.Length());
   /* Set up the document checker */
   AspellCanHaveError* ret = m_AspellWrapper.NewAspellDocumentChecker(m_AspellSpeller);
-  if (m_AspellWrapper.AspellError(ret) != 0) {
-    ::wxMessageBox(wxString::Format("Error: %s\n",m_AspellWrapper.AspellErrorMessage(ret)));
+  if (m_AspellWrapper.AspellError(ret) != 0)
+  {
+    wxMessageOutput* msgOut = wxMessageOutput::Get();
+    if (msgOut)
+      msgOut->Printf(_T("Error: %s\n"),m_AspellWrapper.AspellErrorMessage(ret));
     return _T("");
   }
   m_AspellChecker = m_AspellWrapper.ToAspellDocumentChecker(ret);
 
-  m_AspellWrapper.AspellDocumentCheckerProcess(m_AspellChecker , strText, -1);
+  wxCharBuffer textCharBuffer = ConvertToUTF8(strText);
+  m_AspellWrapper.AspellDocumentCheckerProcess(m_AspellChecker , (const char*)textCharBuffer, -1);
 
   int nDiff = 0;
 
@@ -259,8 +270,10 @@ wxString AspellInterface::CheckSpelling(wxString strText)
 			// Increase/Decreate the character difference so that the next loop is on track
 			nDiff += strReplacementText.Length() - token.len;
 			// Let the spell checker know what the correct replacement was
-			m_AspellWrapper.AspellSpellerStoreReplacement(m_AspellSpeller, strBadWord, token.len,
-																strReplacementText, strReplacementText.Length());
+      wxCharBuffer badWordCharBuffer = ConvertToUTF8(strBadWord);
+      wxCharBuffer replacementWordCharBuffer = ConvertToUTF8(strReplacementText);
+			m_AspellWrapper.AspellSpellerStoreReplacement(m_AspellSpeller, badWordCharBuffer, -1,//token.len,
+																replacementWordCharBuffer, -1);//strReplacementText.Length());
 			m_bPersonalDictionaryModified = true;	// Storing this information modifies the dictionary
 	    // Replace the misspelled word with the replacement */
 			strText.replace(token.offset, token.len, strReplacementText);
@@ -278,7 +291,8 @@ wxString AspellInterface::CheckSpelling(wxString strText)
 wxArrayString AspellInterface::GetSuggestions(const wxString& strMisspelledWord)
 {
   wxArrayString wxReturnArray;
-  const AspellWordList * suggestions = m_AspellWrapper.AspellSpellerSuggest(m_AspellSpeller, strMisspelledWord, strMisspelledWord.Length());
+  wxCharBuffer misspelledWordCharBuffer = ConvertToUTF8(strMisspelledWord);
+  const AspellWordList * suggestions = m_AspellWrapper.AspellSpellerSuggest(m_AspellSpeller, misspelledWordCharBuffer, -1);//strMisspelledWord.Length());
 
   AspellStringEnumeration * elements = m_AspellWrapper.AspellWordListElements(suggestions);
 
@@ -287,7 +301,7 @@ wxArrayString AspellInterface::GetSuggestions(const wxString& strMisspelledWord)
   while ( (word = m_AspellWrapper.AspellStringEnumerationNext(elements)) != NULL )
   {
     // add to suggestion list
-    wxReturnArray.Add(word);
+    wxReturnArray.Add(ConvertFromUTF8(word));
   }
   m_AspellWrapper.DeleteAspellStringEnumeration(elements);
 

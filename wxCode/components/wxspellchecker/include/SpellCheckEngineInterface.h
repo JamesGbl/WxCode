@@ -77,6 +77,10 @@ public:
   virtual void DefineContext(const wxString& strText, long nOffset, long nLength);
   void ShowOption(const wxString& strOption, bool bShow = true);
 
+  // Helper functions for Unicode compatibility
+  const wxCharBuffer ConvertToUTF8(const wxString& inputString);
+  wxString ConvertFromUTF8(const char* inputBuffer);
+
   class MisspellingContext
   {
   protected:

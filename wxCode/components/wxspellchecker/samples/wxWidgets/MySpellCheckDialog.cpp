@@ -28,7 +28,7 @@ END_EVENT_TABLE()
 MySpellingDialog::MySpellingDialog(wxWindow *parent, wxSpellCheckEngineInterface* pSpellChecker)
   : wxSpellCheckDialogInterface(parent, pSpellChecker)
 {
-	m_strReplaceWithText = "";
+	m_strReplaceWithText = _("");
 
   m_pSpellCheckEngine = pSpellChecker;
 	CreateDialog();
@@ -98,7 +98,7 @@ void MySpellingDialog::CreateDialog()
 	pTopSizer->Add(pBottomRowSizer, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 10);
 	
   // Add a context section
-  pTopSizer->Add(new wxTextCtrl(this, IDC_TEXT_CONTEXT, "", wxDefaultPosition, wxSize(320,100), wxTE_MULTILINE | wxTE_READONLY | wxTE_NOHIDESEL | wxTE_RICH2 ), 0, wxEXPAND | wxALIGN_CENTER);
+  pTopSizer->Add(new wxTextCtrl(this, IDC_TEXT_CONTEXT, _T(""), wxDefaultPosition, wxSize(320,100), wxTE_MULTILINE | wxTE_READONLY | wxTE_NOHIDESEL | wxTE_RICH2 ), 0, wxEXPAND | wxALIGN_CENTER);
 
 	// Now attach the main sizer to the window
 	SetSizer(pTopSizer);
@@ -388,7 +388,7 @@ void MyPersonalDictionaryDialog::CreateDialog()
 
   wxBoxSizer* pNewWordSizer = new wxBoxSizer(wxHORIZONTAL);
   pNewWordSizer->Add(10, 0);
-	pNewWordSizer->Add(new wxTextCtrl(this, IDC_TEXT_NEW_PERSONAL_WORD, "", wxDefaultPosition), 1, wxEXPAND | wxGROW);
+	pNewWordSizer->Add(new wxTextCtrl(this, IDC_TEXT_NEW_PERSONAL_WORD, _T(""), wxDefaultPosition), 1, wxEXPAND | wxGROW);
   pNewWordSizer->Add(new wxButton(this, IDC_BUTTON_ADD_TO_DICT, _T("Add")), 0, wxEXPAND | wxLEFT | wxRIGHT, 10);
   pTopSizer->Add(pNewWordSizer, 0, wxEXPAND | wxGROW, 10);
   pTopSizer->Add(10, 10);

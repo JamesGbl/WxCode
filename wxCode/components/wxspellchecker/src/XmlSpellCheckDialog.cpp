@@ -225,7 +225,7 @@ void XmlSpellCheckDialog::OnCheckWord(wxCommandEvent& event)
       }
       else
       {
-        pListBox->Append("(no suggestions)");
+        pListBox->Append(_T("(no suggestions)"));
         pListBox->Enable(FALSE);
       }
     }
@@ -357,7 +357,7 @@ void XmlSpellCheckDialog::SetMisspelledWord(const wxString& strMisspelling)
       }
       else
       {
-        pListBox->Append("(no suggestions)");
+        pListBox->Append(_T("(no suggestions)"));
         pListBox->Enable(FALSE);
       }
     }

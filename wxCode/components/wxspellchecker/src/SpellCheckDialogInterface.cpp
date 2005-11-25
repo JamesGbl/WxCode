@@ -1,7 +1,7 @@
 #include "SpellCheckDialogInterface.h"
 
 wxSpellCheckDialogInterface::wxSpellCheckDialogInterface(wxWindow *parent, wxSpellCheckEngineInterface* SpellChecker /*= NULL*/)
-  : wxDialog(parent, -1, wxString("Spell-Checker"),wxDefaultPosition, wxSize(330,245), wxDEFAULT_DIALOG_STYLE),
+  : wxDialog(parent, -1, wxString(_T("Spell-Checker")),wxDefaultPosition, wxSize(330,245), wxDEFAULT_DIALOG_STYLE),
   wxSpellCheckUserInterface(SpellChecker)
 {
 }

@@ -41,7 +41,11 @@ int MySpellInterface::InitializeSpellCheckEngine()
   wxString strDictionaryFile = GetDictionaryFileName();
   
   if ((strAffixFile != wxEmptyString) && (strDictionaryFile != wxEmptyString))
-    m_pMySpell = new MySpell(strAffixFile.c_str(), strDictionaryFile.c_str());
+  {
+    wxCharBuffer affixFileCharBuffer = ConvertToUTF8(strAffixFile);
+    wxCharBuffer dictionaryFileCharBuffer = ConvertToUTF8(strDictionaryFile);
+    m_pMySpell = new MySpell(affixFileCharBuffer, dictionaryFileCharBuffer);
+  }
   
   m_bEngineInitialized = (m_pMySpell != NULL);
   return m_bEngineInitialized;
@@ -174,10 +178,11 @@ wxArrayString MySpellInterface::GetSuggestions(const wxString& strMisspelledWord
   {
     char **wlst;
 
-    int ns = m_pMySpell->suggest(&wlst,strMisspelledWord.c_str());
+    wxCharBuffer misspelledWordCharBuffer = ConvertToUTF8(strMisspelledWord);
+    int ns = m_pMySpell->suggest(&wlst, misspelledWordCharBuffer);
     for (int i=0; i < ns; i++)
     {
-      wxReturnArray.Add(wlst[i]);
+      wxReturnArray.Add(ConvertFromUTF8(wlst[i]));
       free(wlst[i]);
     }
     free(wlst);
@@ -191,7 +196,8 @@ bool MySpellInterface::IsWordInDictionary(const wxString& strWord)
   if (m_pMySpell == NULL)
     return false;
 
-  return ((m_pMySpell->spell(strWord) == 1) || (m_PersonalDictionary.IsWordInDictionary(strWord)));
+  wxCharBuffer wordCharBuffer = ConvertToUTF8(strWord);
+  return ((m_pMySpell->spell(wordCharBuffer) == 1) || (m_PersonalDictionary.IsWordInDictionary(strWord)));
 }
 
 int MySpellInterface::AddWordToDictionary(const wxString& strWord)
@@ -312,7 +318,9 @@ void MySpellInterface::UpdatePossibleValues(SpellCheckEngineOption& OptionDepend
   }
   else
   {
-    ::wxMessageBox(wxString::Format(_T("Unsure how to update the possible values for %s based on the value of %s"), OptionDependency.GetText().c_str(), OptionToUpdate.GetText().c_str()));
+    wxMessageOutput* msgOut = wxMessageOutput::Get();
+    if (msgOut)
+      msgOut->Printf(_T("Unsure how to update the possible values for %s based on the value of %s"), OptionDependency.GetText().c_str(), OptionToUpdate.GetText().c_str());
   }
 }
 

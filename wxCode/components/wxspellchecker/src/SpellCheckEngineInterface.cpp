@@ -75,8 +75,8 @@ void wxSpellCheckEngineInterface::DefineContext(const wxString& strText, long nO
   else
   {
     wxString strLocalText = strText;
-    strLocalText.Replace("\r", " ");
-    strLocalText.Replace("\n", " ");
+    strLocalText.Replace(_("\r"), _(" "));
+    strLocalText.Replace(_("\n"), _(" "));
 	  
     long nStartPosition = 0;
     bool bTrimFront = false;
@@ -105,7 +105,7 @@ void wxSpellCheckEngineInterface::DefineContext(const wxString& strText, long nO
     // Remove characters before the first space character
     if (bTrimFront)
     {
-      if (strContext.Contains(" "))
+      if (strContext.Contains(_(" ")))
       {
         nOffsetTrimmed -= strContext.Find(' ') + 1; // Figure out how much of the offset was trimmed off by remove the characters before the first space
         strContext = strContext.AfterFirst(' ');
@@ -115,7 +115,7 @@ void wxSpellCheckEngineInterface::DefineContext(const wxString& strText, long nO
     // Remove characters before the first space character
     if (bTrimEnd)
     {
-      if (strContext.Contains(" "))
+      if (strContext.Contains(_(" ")))
         strContext = strContext.BeforeLast(' ');
     }
   
@@ -157,5 +157,25 @@ void wxSpellCheckEngineInterface::ShowOption(const wxString& strOption, bool bSh
   OptionsMap::iterator it = m_Options.find(strOption);
   if (it != m_Options.end())
     it->second.SetShowOption(bShow);
+}
+
+const wxCharBuffer wxSpellCheckEngineInterface::ConvertToUTF8(const wxString& inputString)
+{
+#if wxUSE_UNICODE
+  wxCharBuffer returnBuffer(wxConvUTF8.cWC2MB(inputString.wc_str(*wxConvCurrent)));
+#else
+  wxCharBuffer returnBuffer = inputString.c_str();
+#endif
+  return returnBuffer;
+}
+
+wxString wxSpellCheckEngineInterface::ConvertFromUTF8(const char* inputBuffer)
+{
+#if wxUSE_UNICODE
+  wxString returnString(wxConvUTF8.cMB2WC(inputBuffer), *wxConvCurrent);
+#else
+  wxString returnString(inputBuffer);
+#endif
+  return returnString;
 }
 
