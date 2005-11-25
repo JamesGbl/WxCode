@@ -43,7 +43,7 @@ void XmlPersonalDictionaryDialog::PopulatePersonalWordListBox()
 {
   if (m_pSpellCheckEngine != NULL)
   {
-    wxListBox* pListBox = XRCCTRL(*this, _T("ListPersonalWords"), wxListBox);
+    wxListBox* pListBox = XRCCTRL(*this, "ListPersonalWords", wxListBox);
 
     if (pListBox)
     {
@@ -68,7 +68,7 @@ void XmlPersonalDictionaryDialog::AddWordToPersonalDictionary(wxCommandEvent& ev
   {
     TransferDataFromWindow();
 
-    wxTextCtrl* pText = XRCCTRL(*this, _T("TextNewPersonalWord"), wxTextCtrl);
+    wxTextCtrl* pText = XRCCTRL(*this, "TextNewPersonalWord", wxTextCtrl);
 
     if (pText != NULL)
     {
@@ -95,12 +95,12 @@ void XmlPersonalDictionaryDialog::ReplaceInPersonalDictionary(wxCommandEvent& ev
     wxString strNewWord = _T("");
 
     // Find the old word
-    wxListBox* pListBox = XRCCTRL(*this, _T("ListPersonalWords"), wxListBox);
+    wxListBox* pListBox = XRCCTRL(*this, "ListPersonalWords", wxListBox);
     if (pListBox)
       strOldWord = pListBox->GetStringSelection();
     
     // Find the new word
-    wxTextCtrl* pText = XRCCTRL(*this, _T("TextNewPersonalWord"), wxTextCtrl);
+    wxTextCtrl* pText = XRCCTRL(*this, "TextNewPersonalWord", wxTextCtrl);
     if (pText)
     {
       strNewWord = pText->GetValue();
@@ -123,14 +123,18 @@ void XmlPersonalDictionaryDialog::RemoveFromPersonalDictionary(wxCommandEvent& e
   if (m_pSpellCheckEngine != NULL)
   {
     TransferDataFromWindow();
-    wxListBox* pListBox = XRCCTRL(*this, _T("ListPersonalWords"), wxListBox);
+    wxListBox* pListBox = XRCCTRL(*this, "ListPersonalWords", wxListBox);
     if (pListBox)
     {
       wxString strWord = pListBox->GetStringSelection();
       if (!strWord.Trim().IsEmpty())
       {
         if (!(m_pSpellCheckEngine->RemoveWordFromDictionary(strWord)))
-          ::wxMessageBox(_T("There was an error removing \"") + strWord + _T("\" to the personal dictionary"));
+        {
+          wxMessageOutput* msgOut = wxMessageOutput::Get();
+          if (msgOut)
+            msgOut->Printf(_T("There was an error removing \"") + strWord + _T("\" to the personal dictionary"));
+        }
       }
     }
     PopulatePersonalWordListBox();
