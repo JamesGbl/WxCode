@@ -31,7 +31,9 @@ bool AspellWrapper::LoadFunctions()
   
   if (::wxFileExists(m_strLibraryPath) == false)
   {
-    ::wxMessageBox(_T("Aspell library not found.  Aspell spell checking engine unavailable"));
+    wxMessageOutput* msgOut = wxMessageOutput::Get();
+    if (msgOut)
+      msgOut->Printf(_T("Aspell library not found.  Aspell spell checking engine unavailable\n"));
     return false;
   }
   
