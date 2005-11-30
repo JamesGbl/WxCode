@@ -12,7 +12,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.h,v 1.25 2005-09-19 15:40:20 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.h,v 1.26 2005-11-30 20:46:13 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -2275,7 +2275,7 @@ public:
     int GetPrintColourMode();
 
     // Find some text in the document.
-    int FindText (int minPos, int maxPos, const wxString& text, int flags=0);
+    int FindText (int minPos, int maxPos, const wxString& text, int flags=0, int* lengthFound = 0);
 
     // On Windows, will draw the document into a display context such as a printer.
     int FormatRange (bool doDraw, int startPos, int endPos, wxDC* draw, wxDC* target, wxRect renderRect, wxRect pageRect);

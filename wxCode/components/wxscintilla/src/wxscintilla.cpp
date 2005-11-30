@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.27 2005-06-08 19:49:19 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.28 2005-11-30 20:46:38 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -1084,12 +1084,15 @@ int wxScintilla::GetPrintColourMode() {
 
 // Find some text in the document.
 int wxScintilla::FindText (int minPos, int maxPos, const wxString& text, int flags) {
+int wxScintilla::FindText (int minPos, int maxPos, const wxString& text, int flags, int* lengthFound) {
     TextToFind  ft;
     ft.chrg.cpMin = minPos;
     ft.chrg.cpMax = maxPos;
     wxWX2MBbuf buf = (wxWX2MBbuf)wx2sci(text);
     ft.lpstrText = (char*)(const char*)buf;
-    return SendMsg (SCI_FINDTEXT, flags, (long)&ft);
+    int ret = SendMsg (SCI_FINDTEXT, flags, (long)&ft);
+    if (lengthFound) *lengthFound = ft.chrgText.cpMax - ft.chrgText.cpMin;
+    return ret;
 }
 
 // On Windows, will draw the document into a display context such as a printer.
