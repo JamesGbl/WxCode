@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.28 2005-11-30 20:46:38 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.29 2005-11-30 20:49:12 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -1083,7 +1083,6 @@ int wxScintilla::GetPrintColourMode() {
 }
 
 // Find some text in the document.
-int wxScintilla::FindText (int minPos, int maxPos, const wxString& text, int flags) {
 int wxScintilla::FindText (int minPos, int maxPos, const wxString& text, int flags, int* lengthFound) {
     TextToFind  ft;
     ft.chrg.cpMin = minPos;
