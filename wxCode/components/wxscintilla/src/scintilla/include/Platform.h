@@ -21,25 +21,29 @@
 #define PLAT_FOX 0
 
 #if defined(FOX)
-#undef PLAT_FOX
-#define PLAT_FOX 1
+    #undef PLAT_FOX
+    #define PLAT_FOX 1
 
 #elif defined(__WX__)
-#undef PLAT_WX
-#define PLAT_WX  1
+    #undef PLAT_WX
+    #define PLAT_WX  1
+    #undef PLAT_WIN
+    #define PLAT_WIN 1
 
 #elif defined(GTK)
-#undef PLAT_GTK
-#define PLAT_GTK 1
+    #undef PLAT_GTK
+    #define PLAT_GTK 1
+    #undef PLAT_WX
+    #define PLAT_WX  1
 
-#ifdef _MSC_VER
-#undef PLAT_GTK_WIN32
-#define PLAT_GTK_WIN32 1
-#endif
+    #ifdef _MSC_VER
+        #undef PLAT_GTK_WIN32
+        #define PLAT_GTK_WIN32 1
+    #endif
 
 #else
-#undef PLAT_WIN
-#define PLAT_WIN 1
+    #undef PLAT_WIN
+    #define PLAT_WIN 1
 
 #endif
 
