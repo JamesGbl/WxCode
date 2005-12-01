@@ -3,7 +3,7 @@
 // Purpose:     treelisttest application
 // Maintainer:  Otto Wyss
 // Created:     2004-12-21
-// RCS-ID:      $Id: treelisttest.cpp,v 1.22 2005-12-01 21:58:06 wyo Exp $
+// RCS-ID:      $Id: treelisttest.cpp,v 1.23 2005-12-01 22:03:42 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -531,15 +531,15 @@ void AppFrame::OnExit (wxCommandEvent &WXUNUSED(event)) {
 void AppFrame::OnAddItem (wxCommandEvent &WXUNUSED(event)) {
     wxString text = wxString::Format (_T("Item #%d"), m_treelist->GetCount()+1);
     wxTreeItemId c = m_treelist->GetSelection();
-    m_treelist->AppendItem (c, text);
-    m_treelist->EnsureVisible (c);
+    wxTreeItemId n = m_treelist->AppendItem (c, text);
+    m_treelist->EnsureVisible (n);
 }
 
 void AppFrame::OnInsertItem (wxCommandEvent &WXUNUSED(event)) {
     wxString text = wxString::Format (_T("Item #%d"), m_treelist->GetCount()+1);
     wxTreeItemId c = m_treelist->GetSelection();
-    m_treelist->InsertItem (m_treelist->GetItemParent(c), c, text);
-    m_treelist->EnsureVisible (c);
+    wxTreeItemId n = m_treelist->InsertItem (m_treelist->GetItemParent(c), c, text);
+    m_treelist->EnsureVisible (n);
 }
 
 void AppFrame::OnDelete (wxCommandEvent &WXUNUSED(event)) {
