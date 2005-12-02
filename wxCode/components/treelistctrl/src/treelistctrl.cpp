@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.90 2005-11-24 16:32:10 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.91 2005-12-02 17:02:49 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -796,11 +796,11 @@ public:
         }
     }
 
-    void SetData (wxTreeItemData *data) { m_data = data; }
+    void SetData(wxTreeItemData *data) { m_data = data; }
 
-    void SetHasPlus (bool has) { m_hasPlus = has; }
+    void SetHasPlus(bool has = true) { m_hasPlus = has; }
 
-    void SetBold (bool bold) { m_isBold = bold; }
+    void SetBold(bool bold) { m_isBold = bold; }
 
     int GetX() const { return m_x; }
     int GetY() const { return m_y; }
@@ -1830,11 +1830,6 @@ void wxTreeListMainWindow::SetWindowStyle (const long styles) {
     // none of the parents has updatable styles
     m_windowStyle = styles;
     m_dirty = true;
-    // if we will hide the root, make sure children are visible
-    if (HasFlag(wxTR_HIDE_ROOT)) {
-        m_rootItem->SetHasPlus (true);
-        m_rootItem->Expand();
-    }
 }
 
 //-----------------------------------------------------------------------------
@@ -1895,7 +1890,6 @@ void wxTreeListMainWindow::SetItemHasChildren (const wxTreeItemId& item,
                                                bool has) {
     wxCHECK_RET (item.IsOk(), _T("invalid tree item"));
     wxTreeListItem *pItem = (wxTreeListItem*) item.m_pItem;
-    if (HasFlag(wxTR_HIDE_ROOT) && (item == m_rootItem)) return;
     pItem->SetHasPlus (has);
     RefreshLine (pItem);
 }
@@ -2219,9 +2213,9 @@ wxTreeItemId wxTreeListMainWindow::AddRoot (const wxString& text,
         data->SetId(m_rootItem);
 #endif
     }
-    // if we will hide the root, make sure children are visible
     if (HasFlag(wxTR_HIDE_ROOT)) {
-        m_rootItem->SetHasPlus (true);
+        // if we will hide the root, make sure children are visible
+        m_rootItem->SetHasPlus();
         m_rootItem->Expand();
 #if !wxCHECK_VERSION(2, 5, 0)
         long cookie = 0;
@@ -2351,8 +2345,7 @@ void wxTreeListMainWindow::Expand (const wxTreeItemId& itemId) {
     if (m_owner->ProcessEvent (event) && !event.IsAllowed()) return; // expand canceled
 
     item->Expand();
-    CalculatePositions();
-    RefreshSubtree (item);
+    m_dirty = true;
 
     // send event to user code
     event.SetEventType (wxEVT_COMMAND_TREE_ITEM_EXPANDED);
@@ -2380,9 +2373,6 @@ void wxTreeListMainWindow::Collapse (const wxTreeItemId& itemId) {
 
     if (!item->HasPlus() || !item->IsExpanded()) return;
 
-    // don't collaps hidden root, make sure children stay visible
-    if (HasFlag(wxTR_HIDE_ROOT) && (itemId == m_rootItem)) return;
-
     // send event to user code
     wxTreeEvent event (wxEVT_COMMAND_TREE_ITEM_COLLAPSING, m_owner->GetId() );
 #if !wxCHECK_VERSION(2, 5, 0)
@@ -2394,8 +2384,7 @@ void wxTreeListMainWindow::Collapse (const wxTreeItemId& itemId) {
     if (m_owner->ProcessEvent (event) && !event.IsAllowed()) return; // collapse canceled
 
     item->Collapse();
-    CalculatePositions();
-    RefreshSubtree (item);
+    m_dirty = true;
 
     // send event to user code
     event.SetEventType (wxEVT_COMMAND_TREE_ITEM_COLLAPSED);
@@ -2529,6 +2518,9 @@ void wxTreeListMainWindow::SelectItem (const wxTreeItemId& itemId,
         if (!unselected) UnselectAll();
         wxTreeListItem *last = (wxTreeListItem*) lastId.m_pItem;
 
+        // ensure that the position of the item it calculated in any case
+        if (m_dirty) CalculatePositions();
+
         // select item range according Y-position
         if (last->GetY() < item->GetY()) {
             if (!TagAllChildrenUntilLast (last, item)) {
@@ -2623,10 +2615,8 @@ void wxTreeListMainWindow::EnsureVisible (const wxTreeItemId& item) {
 void wxTreeListMainWindow::ScrollTo (const wxTreeItemId &item) {
     if (!item.IsOk()) return; // do nothing if no item
 
-    // We have to call this here because the label in
-    // question might just have been added and no screen
-    // update taken place.
-    if (m_dirty) wxYieldIfNeeded();
+    // ensure that the position of the item it calculated in any case
+    if (m_dirty) CalculatePositions();
 
     wxTreeListItem *gitem = (wxTreeListItem*) item.m_pItem;
 
@@ -3551,9 +3541,8 @@ void wxTreeListMainWindow::EditLabel (const wxTreeItemId& item, int column) {
 
     if (!te.IsAllowed()) return;
 
-    // We have to call this here because the label in question might just have
-    // been added and no screen update has taken place
-    if (m_dirty) wxYieldIfNeeded();
+    // ensure that the position of the item it calculated in any case
+    if (m_dirty) CalculatePositions();
 
     wxTreeListHeaderWindow* header_win = m_owner->GetHeaderWindow();
     int x = 0;
