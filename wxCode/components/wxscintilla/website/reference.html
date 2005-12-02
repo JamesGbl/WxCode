@@ -282,7 +282,7 @@ See also: <a class="jump" href="#SearchAndReplaceUsingTheTarget">Search and repl
 </p>
 
 <ul style="list-style-type:none">
-<li><a class="message" href="#FindText">int FindText (int minPos, int maxPos, const wxString& text, int flags=0)</a></li>
+<li><a class="message" href="#FindText">int FindText (int minPos, int maxPos, const wxString& text, int flags = 0, int* lengthFound = NULL)</a></li>
 <li><a class="message" href="#SearchAnchor">void SearchAnchor()</a></li>
 <li><a class="message" href="#SearchNext">int SearchNext (int flags, const wxString& text)</a></li>
 <li><a class="message" href="#SearchPrev">int SearchPrev (int flags, const wxString& text)</a></li>
@@ -362,9 +362,9 @@ In a regular expression, special characters interpreted are:
 </tbody></table>
 
 <div class="divider2"></div>
-<h4><a name="FindText">int FindText (int minPos, int maxPos, const wxString& text, int flags=0)</a></h4>
+<h4><a name="FindText">int FindText (int minPos, int maxPos, const wxString& text, int flags = 0, int* lengthFound = NULL)</a></h4>
 <p>
-FindText performs a straightforward text search through the entire document. The <code>minPos</code> and <code>maxPos</code> arguments specify the range within the Document to search.  No surprise, the <code>text</code> argument is a string object containing the string to search for. The <code>flags</code> argument controls the search. You can set <code>maxPos</code> less than <code>minPos</code> to search in reverse. Returns the start position of the found text, or wxSCI_INVALID_POSITION if it isn't found.
+FindText performs a straightforward text search through the entire document. The <code>minPos</code> and <code>maxPos</code> arguments specify the range within the Document to search.  No surprise, the <code>text</code> argument is a string object containing the string to search for. The <code>flags</code> argument controls the search. You can set <code>maxPos</code> less than <code>minPos</code> to search in reverse. Returns the start position of the found text, or wxSCI_INVALID_POSITION if it isn't found. If <code>lengthFound</code> is given the length of the found text is returned.
 </p>
 <p>
 See also: <code><a class="message" href="#SearchInTarget">SearchInTarget</a></code>
@@ -631,7 +631,7 @@ Scintilla maintains a selection that stretches between two points, the anchor an
 <li><a class="message" href="#PointYFromPosition">PointYFromPosition: Currently not implemented!</a></li>
 <li><a class="message" href="#HideSelection">void HideSelection (bool hide)</a></li>
 <li><a class="message" href="#GetSelectedText">wxString GetSelectedText()</a></li>
-<li><a class="message" href="#GetCurLine">wxString GetCurLine (int* linePos=NULL)</a></li>
+<li><a class="message" href="#GetCurLine">wxString GetCurLine (int* linePos = NULL)</a></li>
 <li><a class="message" href="#SelectionIsRectangle">bool SelectionIsRectangle()</a></li>
 <li><a class="message" href="#SetSelectionMode">void SetSelectionMode (int mode)</a></li>
 <li><a class="message" href="#GetSelectionMode">int GetSelectionMode()</a></li>
@@ -793,7 +793,7 @@ See also: <code><a class="message" href="#GetCurLine">GetCurLine</a>, <a class="
 </p>
 
 <div class="divider2"></div>
-<h4><a name="GetCurLine">wxString GetCurLine (int* linePos=NULL)</a></h4>
+<h4><a name="GetCurLine">wxString GetCurLine (int* linePos = NULL)</a></h4>
 <p>
 Retrieves the text of the line containing the caret and returns the position within the line of the caret.
 </p>
