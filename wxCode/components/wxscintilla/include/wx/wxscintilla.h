@@ -12,7 +12,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.h,v 1.26 2005-11-30 20:46:13 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.h,v 1.27 2005-12-02 16:59:05 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -1860,7 +1860,7 @@ public:
 #ifdef SWIG
     wxString GetCurLine (int* OUTPUT);
 #else
-    wxString GetCurLine (int* linePos=NULL);
+    wxString GetCurLine (int* linePos = NULL);
 #endif
 
     // Retrieve the position of the last correctly styled character.
@@ -2275,7 +2275,7 @@ public:
     int GetPrintColourMode();
 
     // Find some text in the document.
-    int FindText (int minPos, int maxPos, const wxString& text, int flags=0, int* lengthFound = 0);
+    int FindText (int minPos, int maxPos, const wxString& text, int flags=0, int* lengthFound = NULL);
 
     // On Windows, will draw the document into a display context such as a printer.
     int FormatRange (bool doDraw, int startPos, int endPos, wxDC* draw, wxDC* target, wxRect renderRect, wxRect pageRect);
@@ -3197,7 +3197,7 @@ public:
 #ifdef SWIG
     wxCharBuffer GetCurLineRaw (int* OUTPUT);
 #else
-    wxCharBuffer GetCurLineRaw (int* linePos=NULL);
+    wxCharBuffer GetCurLineRaw (int* linePos = NULL);
 #endif
 
     // Retrieve the contents of a line.
