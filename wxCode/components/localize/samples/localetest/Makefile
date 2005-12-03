@@ -3,17 +3,17 @@
 ## Purpose:     localetest
 ## Maintainer:  Otto Wyss
 ## Created:     2004-10-01
-## RCS-ID:      $Id: Makefile,v 1.1 2005-09-11 10:15:48 wyo Exp $
+## RCS-ID:      $Id: Makefile,v 1.2 2005-12-03 08:27:20 wyo Exp $
 ## Copyright:   (c) 2004 wxCode
 ## Licence:     wxWindows
 ##############################################################################
 
 # list of source files
 SRC = localetest.cpp \
-      localize.cpp.cpp
+      localize.cpp
 
 # executable name
-PRG = crashtest
+PRG = localetest
 
 # source directories
 vpath %.cpp ../../src
