@@ -629,8 +629,8 @@ void Window::SetCursor(Cursor curs) {
 }
 
 
-void Window::SetTitle(const char *s) {
-    GETWIN(id)->SetTitle(sci2wx(s));
+void Window::SetTitle (const char *s) {
+    GETWIN(id)->SetLabel (sci2wx(s));
 }
 
 
