@@ -159,23 +159,45 @@ void wxSpellCheckEngineInterface::ShowOption(const wxString& strOption, bool bSh
     it->second.SetShowOption(bShow);
 }
 
-const wxCharBuffer wxSpellCheckEngineInterface::ConvertToUTF8(const wxString& inputString)
+const wxCharBuffer wxSpellCheckEngineInterface::ConvertToUnicode(const wxString& inputString)
 {
 #if wxUSE_UNICODE
-  wxCharBuffer returnBuffer(wxConvUTF8.cWC2MB(inputString.wc_str(*wxConvCurrent)));
+  wxString strEncoding = GetCharacterEncoding();
+  if (strEncoding != wxEmptyString)
+  {
+    wxCSConv conv(strEncoding);
+    wxCharBuffer returnBuffer(conv.cWC2MB(inputString.wc_str(*wxConvCurrent)));
+    return returnBuffer;
+  }
+  else
+  {
+    wxCharBuffer returnBuffer(wxConvUTF8.cWC2MB(inputString.wc_str(*wxConvCurrent)));
+    return returnBuffer;
+  }
 #else
   wxCharBuffer returnBuffer = inputString.c_str();
-#endif
   return returnBuffer;
+#endif
 }
 
-wxString wxSpellCheckEngineInterface::ConvertFromUTF8(const char* inputBuffer)
+wxString wxSpellCheckEngineInterface::ConvertFromUnicode(const char* inputBuffer)
 {
 #if wxUSE_UNICODE
-  wxString returnString(wxConvUTF8.cMB2WC(inputBuffer), *wxConvCurrent);
+  wxString strEncoding = GetCharacterEncoding();
+  if (strEncoding != wxEmptyString)
+  {
+    wxCSConv conv(strEncoding);
+    wxString returnString(conv.cMB2WC(inputBuffer), *wxConvCurrent);
+    return returnString;
+  }
+  else
+  {
+    wxString returnString(wxConvUTF8.cMB2WC(inputBuffer), *wxConvCurrent);
+    return returnString;
+  }
 #else
   wxString returnString(inputBuffer);
-#endif
   return returnString;
+#endif
 }
 

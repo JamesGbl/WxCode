@@ -150,8 +150,8 @@ int AspellInterface::SetOption(SpellCheckEngineOption& Option)
   if (Option.GetOptionType() == SpellCheckEngineOption::BOOLEAN)
     strValue = (strValue == _T("0")) ? _T("false") : _T("true");
 
-  wxCharBuffer nameCharBuffer = ConvertToUTF8(Option.GetName());
-  wxCharBuffer valueCharBuffer = ConvertToUTF8(strValue);
+  wxCharBuffer nameCharBuffer = ConvertToUnicode(Option.GetName());
+  wxCharBuffer valueCharBuffer = ConvertToUnicode(strValue);
 	m_AspellWrapper.AspellConfigReplace(m_AspellConfig, nameCharBuffer, valueCharBuffer);
 
 	return true;
@@ -168,8 +168,8 @@ void AspellInterface::UpdatePossibleValues(SpellCheckEngineOption& OptionDepende
       AspellDictInfoEnumeration* dels;
       const AspellDictInfo* entry;
     
-      wxCharBuffer nameCharBuffer = ConvertToUTF8(OptionDependency.GetName());
-      wxCharBuffer valueCharBuffer = ConvertToUTF8(OptionDependency.GetValueAsString());
+      wxCharBuffer nameCharBuffer = ConvertToUnicode(OptionDependency.GetName());
+      wxCharBuffer valueCharBuffer = ConvertToUnicode(OptionDependency.GetValueAsString());
       m_AspellWrapper.AspellConfigReplace(config, nameCharBuffer, valueCharBuffer);
       
       // The returned pointer should _not_ need to be deleted
@@ -183,7 +183,7 @@ void AspellInterface::UpdatePossibleValues(SpellCheckEngineOption& OptionDepende
       OptionToUpdate.GetPossibleValuesArray()->Clear();
       while ( (entry = m_AspellWrapper.AspellDictInfoEnumerationNext(dels)) != 0) 
       {
-        OptionToUpdate.AddPossibleValue(wxString(ConvertFromUTF8(entry->name)));
+        OptionToUpdate.AddPossibleValue(wxString(ConvertFromUnicode(entry->name)));
       }
     
       m_AspellWrapper.DeleteAspellDictInfoEnumeration(dels);
@@ -202,7 +202,7 @@ bool AspellInterface::IsWordInDictionary(const wxString& strWord)
   if (m_AspellSpeller == NULL)
     return false;
 
-  wxCharBuffer wordCharBuffer = ConvertToUTF8(strWord);
+  wxCharBuffer wordCharBuffer = ConvertToUnicode(strWord);
   return ((m_AspellWrapper.AspellSpellerCheck(m_AspellSpeller, wordCharBuffer, -1) == 1) || (m_PersonalDictionary.IsWordInDictionary(strWord)));
 }
 
@@ -224,7 +224,7 @@ wxString AspellInterface::CheckSpelling(wxString strText)
   }
   m_AspellChecker = m_AspellWrapper.ToAspellDocumentChecker(ret);
 
-  wxCharBuffer textCharBuffer = ConvertToUTF8(strText);
+  wxCharBuffer textCharBuffer = ConvertToUnicode(strText);
   m_AspellWrapper.AspellDocumentCheckerProcess(m_AspellChecker , (const char*)textCharBuffer, -1);
 
   int nDiff = 0;
@@ -270,8 +270,8 @@ wxString AspellInterface::CheckSpelling(wxString strText)
 			// Increase/Decreate the character difference so that the next loop is on track
 			nDiff += strReplacementText.Length() - token.len;
 			// Let the spell checker know what the correct replacement was
-      wxCharBuffer badWordCharBuffer = ConvertToUTF8(strBadWord);
-      wxCharBuffer replacementWordCharBuffer = ConvertToUTF8(strReplacementText);
+      wxCharBuffer badWordCharBuffer = ConvertToUnicode(strBadWord);
+      wxCharBuffer replacementWordCharBuffer = ConvertToUnicode(strReplacementText);
 			m_AspellWrapper.AspellSpellerStoreReplacement(m_AspellSpeller, badWordCharBuffer, -1,//token.len,
 																replacementWordCharBuffer, -1);//strReplacementText.Length());
 			m_bPersonalDictionaryModified = true;	// Storing this information modifies the dictionary
@@ -291,7 +291,7 @@ wxString AspellInterface::CheckSpelling(wxString strText)
 wxArrayString AspellInterface::GetSuggestions(const wxString& strMisspelledWord)
 {
   wxArrayString wxReturnArray;
-  wxCharBuffer misspelledWordCharBuffer = ConvertToUTF8(strMisspelledWord);
+  wxCharBuffer misspelledWordCharBuffer = ConvertToUnicode(strMisspelledWord);
   const AspellWordList * suggestions = m_AspellWrapper.AspellSpellerSuggest(m_AspellSpeller, misspelledWordCharBuffer, -1);//strMisspelledWord.Length());
 
   AspellStringEnumeration * elements = m_AspellWrapper.AspellWordListElements(suggestions);
@@ -301,7 +301,7 @@ wxArrayString AspellInterface::GetSuggestions(const wxString& strMisspelledWord)
   while ( (word = m_AspellWrapper.AspellStringEnumerationNext(elements)) != NULL )
   {
     // add to suggestion list
-    wxReturnArray.Add(ConvertFromUTF8(word));
+    wxReturnArray.Add(ConvertFromUnicode(word));
   }
   m_AspellWrapper.DeleteAspellStringEnumeration(elements);
 
@@ -365,6 +365,12 @@ void AspellInterface::OpenPersonalDictionary(const wxString& strPersonalDictiona
 {
   m_PersonalDictionary.SetDictionaryFileName(strPersonalDictionaryFile);
   m_PersonalDictionary.LoadPersonalDictionary();
+}
+
+wxString AspellInterface::GetCharacterEncoding()
+{
+  wxString returnString(wxT("UTF-8"));
+  return returnString;
 }
 
 ///////////// Options /////////////////

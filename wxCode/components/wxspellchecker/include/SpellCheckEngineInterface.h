@@ -78,8 +78,10 @@ public:
   void ShowOption(const wxString& strOption, bool bShow = true);
 
   // Helper functions for Unicode compatibility
-  const wxCharBuffer ConvertToUTF8(const wxString& inputString);
-  wxString ConvertFromUTF8(const char* inputBuffer);
+  const wxCharBuffer ConvertToUnicode(const wxString& inputString);
+  wxString ConvertFromUnicode(const char* inputBuffer);
+
+  virtual wxString GetCharacterEncoding() = 0;
 
   class MisspellingContext
   {

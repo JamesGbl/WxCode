@@ -51,6 +51,8 @@ public:
   void AddCustomMySpellDictionary(const wxString& strDictionaryName, const wxString& strDictionaryFileRoot);
   void CleanCustomMySpellDictionaries() { m_CustomMySpellDictionaryMap.clear(); }
 
+  virtual wxString GetCharacterEncoding();
+
 private:  
   void PopulateDictionaryMap(StringToStringMap* pLookupMap, const wxString& strDictionaryPath);
   void AddDictionaryElement(StringToStringMap* pLookupMap, const wxString& strDictionaryPath, const wxString& strDictionaryName, const wxString& strDictionaryFileRoot);

@@ -40,6 +40,8 @@ public:
   bool UnloadLibrary();
   virtual void ApplyOptions();  // Go through all the options in the options map and apply them to the spell check engine
 
+  virtual wxString GetCharacterEncoding();
+
 private:  
   // Aspell data structures
   AspellWrapper m_AspellWrapper;

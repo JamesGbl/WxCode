@@ -42,8 +42,8 @@ int MySpellInterface::InitializeSpellCheckEngine()
   
   if ((strAffixFile != wxEmptyString) && (strDictionaryFile != wxEmptyString))
   {
-    wxCharBuffer affixFileCharBuffer = ConvertToUTF8(strAffixFile);
-    wxCharBuffer dictionaryFileCharBuffer = ConvertToUTF8(strDictionaryFile);
+    wxCharBuffer affixFileCharBuffer = ConvertToUnicode(strAffixFile);
+    wxCharBuffer dictionaryFileCharBuffer = ConvertToUnicode(strDictionaryFile);
     m_pMySpell = new MySpell(affixFileCharBuffer, dictionaryFileCharBuffer);
   }
   
@@ -178,11 +178,11 @@ wxArrayString MySpellInterface::GetSuggestions(const wxString& strMisspelledWord
   {
     char **wlst;
 
-    wxCharBuffer misspelledWordCharBuffer = ConvertToUTF8(strMisspelledWord);
+    wxCharBuffer misspelledWordCharBuffer = ConvertToUnicode(strMisspelledWord);
     int ns = m_pMySpell->suggest(&wlst, misspelledWordCharBuffer);
     for (int i=0; i < ns; i++)
     {
-      wxReturnArray.Add(ConvertFromUTF8(wlst[i]));
+      wxReturnArray.Add(ConvertFromUnicode(wlst[i]));
       free(wlst[i]);
     }
     free(wlst);
@@ -196,7 +196,7 @@ bool MySpellInterface::IsWordInDictionary(const wxString& strWord)
   if (m_pMySpell == NULL)
     return false;
 
-  wxCharBuffer wordCharBuffer = ConvertToUTF8(strWord);
+  wxCharBuffer wordCharBuffer = ConvertToUnicode(strWord);
   return ((m_pMySpell->spell(wordCharBuffer) == 1) || (m_PersonalDictionary.IsWordInDictionary(strWord)));
 }
 
@@ -424,6 +424,15 @@ void MySpellInterface::OpenPersonalDictionary(const wxString& strPersonalDiction
 {
   m_PersonalDictionary.SetDictionaryFileName(strPersonalDictionaryFile);
   m_PersonalDictionary.LoadPersonalDictionary();
+}
+
+wxString MySpellInterface::GetCharacterEncoding()
+{
+  if (m_pMySpell == NULL)
+    return wxEmptyString;
+
+  wxString encoding(wxConvUTF8.cMB2WC(m_pMySpell->get_dic_encoding()), *wxConvCurrent);
+  return encoding;
 }
 
 ///////////// Options /////////////////
