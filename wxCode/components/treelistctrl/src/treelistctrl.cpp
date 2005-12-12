@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.91 2005-12-02 17:02:49 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.92 2005-12-12 21:45:39 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -575,6 +575,7 @@ public:
 
     int GetBestColumnWidth (int column, wxTreeItemId parent = wxTreeItemId());
     int GetItemWidth (int column, wxTreeListItem *item);
+    wxFont GetItemFont (wxTreeListItem *item);
 
     void SetFocus();
 
@@ -1469,7 +1470,7 @@ void wxTreeListItem::DeleteChildren (wxTreeListMainWindow *tree) {
         wxTreeListItem *child = m_children[n];
         if (tree) {
             tree->SendDeleteEvent (child);
-            if (tree->m_curItem == child) tree->m_curItem = (wxTreeListItem*)NULL;
+            if (tree->m_selectItem == child) tree->m_selectItem = (wxTreeListItem*)NULL;
         }
         child->DeleteChildren (tree);
         delete child;
@@ -1934,7 +1935,9 @@ bool wxTreeListMainWindow::SetFont (const wxFont &font) {
                          m_normalFont.GetFamily(),
                          m_normalFont.GetStyle(),
                          wxBOLD,
-                         m_normalFont.GetUnderlined());
+                         m_normalFont.GetUnderlined(),
+                         m_normalFont.GetFaceName());
+    CalculateLineHeight();
     return true;
 }
 
@@ -2305,7 +2308,7 @@ void wxTreeListMainWindow::Delete (const wxTreeItemId& itemId) {
     if (changeKeyCurrent)  m_shiftItem = parent;
 
     SendDeleteEvent (item);
-    if (m_curItem == item) m_curItem = (wxTreeListItem*)NULL;
+    if (m_selectItem == item) m_selectItem = (wxTreeListItem*)NULL;
     item->DeleteChildren (this);
     delete item;
 }
@@ -2322,6 +2325,7 @@ void wxTreeListMainWindow::DeleteRoot() {
         m_dirty = true;
         SendDeleteEvent (m_rootItem);
         m_curItem = (wxTreeListItem*)NULL;
+        m_selectItem= (wxTreeListItem*)NULL;
         m_rootItem->DeleteChildren (this);
         delete m_rootItem;
         m_rootItem = NULL;
@@ -2860,13 +2864,8 @@ void wxTreeListMainWindow::PaintItem (wxTreeListItem *item, wxDC& dc) {
 
     wxTreeItemAttr *attr = item->GetAttributes();
 
-    if (attr && attr->HasFont()) {
-        dc.SetFont (attr->GetFont());
-    }else if (item->IsBold()) {
-        dc.SetFont (m_boldFont);
-    }else{
-        dc.SetFont (m_normalFont);
-    }
+    dc.SetFont (GetItemFont (item));
+
     wxColour colText;
     if (attr && attr->HasTextColour()) {
         colText = attr->GetTextColour();
@@ -3837,15 +3836,7 @@ void wxTreeListMainWindow::CalculateSize (wxTreeListItem *item, wxDC &dc) {
     wxCoord text_w = 0;
     wxCoord text_h = 0;
 
-    wxTreeItemAttr *attr = item->GetAttributes();
-
-    if (attr && attr->HasFont()) {
-        dc.SetFont (attr->GetFont());
-    }else if (item->IsBold()) {
-        dc.SetFont (m_boldFont);
-    }else{
-        dc.SetFont (m_normalFont);
-    }
+    dc.SetFont (GetItemFont (item));
 
     dc.GetTextExtent (item->GetText (m_main_column), &text_w, &text_h);
 
@@ -4031,22 +4022,25 @@ void wxTreeListMainWindow::SetFocus() {
     wxWindow::SetFocus();
 }
 
+wxFont wxTreeListMainWindow::GetItemFont (wxTreeListItem *item) {
+    wxTreeItemAttr *attr = item->GetAttributes();
+
+    if (attr && attr->HasFont()) {
+        return attr->GetFont();
+    }else if (item->IsBold()) {
+        return m_boldFont;
+    }else{
+        return m_normalFont;
+   }
+}
+
 int wxTreeListMainWindow::GetItemWidth (int column, wxTreeListItem *item) {
     if (!item) return 0;
 
-    // count indent level
-    int level = 0;
-    wxTreeListItem *parent = item->GetItemParent();
-    wxTreeListItem *root = (wxTreeListItem*)GetRootItem().m_pItem;
-    while (parent && (!HasFlag(wxTR_HIDE_ROOT) || (parent != root))) {
-        level++;
-        parent = parent->GetItemParent();
-    }
-
     // determine item width
     int w = 0, h = 0;
-    wxFont font = item->Attr().GetFont();
-    GetTextExtent (item->GetText(column), &w, &h, NULL, NULL, font.Ok()? &font: NULL);
+    wxFont font = GetItemFont (item);
+    GetTextExtent (item->GetText (column), &w, &h, NULL, NULL, font.Ok()? &font: NULL);
     w += 2*MARGIN;
 
     // calculate width
@@ -4056,6 +4050,15 @@ int wxTreeListMainWindow::GetItemWidth (int column, wxTreeListItem *item) {
         if (HasFlag(wxTR_LINES_AT_ROOT)) width += LINEATROOT;
         if (HasButtons()) width += m_btnWidth + LINEATROOT;
         if (item->GetCurrentImage() != NO_IMAGE) width += m_imgWidth;
+
+        // count indent level
+        int level = 0;
+        wxTreeListItem *parent = item->GetItemParent();
+        wxTreeListItem *root = (wxTreeListItem*)GetRootItem().m_pItem;
+        while (parent && (!HasFlag(wxTR_HIDE_ROOT) || (parent != root))) {
+            level++;
+            parent = parent->GetItemParent();
+        }
         if (level) width += level * GetIndent();
     }
 
@@ -4143,7 +4146,7 @@ void wxTreeListCtrl::CalculateAndSetHeaderHeight()
         // only update if changed
         if (h != m_headerHeight) {
             m_headerHeight = h;
-            m_header_win->SetSize (m_header_win->GetSize().x, m_headerHeight);
+            DoHeaderLayout();
         }
     }
 }
@@ -4588,7 +4591,7 @@ void wxTreeListCtrl::SetColumnEditable(int column, bool shown)
 void wxTreeListCtrl::SetColumnShown(int column, bool shown)
 {
     wxASSERT_MSG (column != GetMainColumn(), _T("The main column may not be hidden") );
-    m_header_win->SetColumn (column, GetColumn(column).SetShown(GetMainColumn()? true: shown));
+    m_header_win->SetColumn (column, GetColumn(column).SetShown(GetMainColumn()==column? true: shown));
     m_header_win->Refresh();
 }
 
