@@ -310,7 +310,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os AWK INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S RANLIB ac_ct_RANLIB CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CXX CXXFLAGS ac_ct_CXX CXXCPP WX_CONFIG_PATH WX_CPPFLAGS WX_CFLAGS WX_CXXFLAGS WX_CFLAGS_ONLY WX_CXXFLAGS_ONLY WX_LIBS WX_LIBS_STATIC WX_VERSION EGREP PYTHON PYTHON_VERSION PYTHON_PREFIX PYTHON_EXEC_PREFIX PYTHON_PLATFORM pythondir pkgpythondir pyexecdir pkgpyexecdir PERL SET_MAKE MAKE_SET AR ac_ct_AR STRIP ac_ct_STRIP NM ac_ct_NM INSTALL_DIR LDFLAGS_GUI IF_GNU_MAKE PLATFORM_UNIX PLATFORM_WIN32 PLATFORM_MSDOS PLATFORM_MAC PLATFORM_MACOS PLATFORM_MACOSX PLATFORM_OS2 PLATFORM_BEOS SO_SUFFIX SO_SUFFIX_MODULE DLLIMP_SUFFIX LIBPREFIX LIBEXT DLLPREFIX DLLPREFIX_MODULE dlldir AIX_CXX_LD SHARED_LD_CC SHARED_LD_CXX SHARED_LD_MODULE_CC SHARED_LD_MODULE_CXX PIC_FLAG WINDOWS_IMPLIB USE_SOVERSION USE_SOVERLINUX USE_SOVERSOLARIS USE_SOVERCYGWIN USE_MACVERSION USE_SOSYMLINKS SONAME_FLAG DEPS_TRACKING RESCOMP SETFILE COND_DEPS_TRACKING_0 COND_DEPS_TRACKING_1 COND_PLATFORM_MACOSX_0_USE_SOVERCYGWIN_0_USE_SOVERSION_1 COND_PLATFORM_MACOSX_0_USE_SOVERSION_1 COND_PLATFORM_MACOSX_1 COND_PLATFORM_MACOSX_1_USE_SOVERSION_1 COND_PLATFORM_MAC_1 COND_PLATFORM_OS2_1 COND_PYTHON_VER_2_2 COND_PYTHON_VER_2_3 COND_PYTHON_VER_2_4 COND_PYTHON_VER_2_5 COND_PYTHON_VER_2_6 COND_PYTHON_VER_5_8 COND_PYTHON_VER_5_9 COND_PYTHON_VER_6_0 COND_USE_CINT_0 COND_USE_CINT_1 COND_USE_LUA_0 COND_USE_LUA_1 COND_USE_PERL_0 COND_USE_PERL_1 COND_USE_PYTHON_0 COND_USE_PYTHON_1 COND_USE_SOSYMLINKS_1 COND_USE_SOVERCYGWIN_1_USE_SOVERSION_1 COND_USE_SOVERLINUX_1 COND_USE_SOVERSION_0 COND_USE_SOVERSOLARIS_1 COND_USE_UNDERC_0 COND_USE_UNDERC_1 COND_WINDOWS_IMPLIB_1 COND_WX_DEBUG_0 COND_WX_DEBUG_1 COND_WX_SHARED_0 COND_WX_SHARED_1 LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os AWK INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S RANLIB ac_ct_RANLIB CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CXX CXXFLAGS ac_ct_CXX CXXCPP WX_CONFIG_PATH WX_CPPFLAGS WX_CFLAGS WX_CXXFLAGS WX_CFLAGS_ONLY WX_CXXFLAGS_ONLY WX_LIBS WX_LIBS_STATIC WX_VERSION EGREP PYTHON PYTHON_VERSION PYTHON_PREFIX PYTHON_EXEC_PREFIX PYTHON_PLATFORM pythondir pkgpythondir pyexecdir pkgpyexecdir PERL SET_MAKE MAKE_SET AR ac_ct_AR STRIP ac_ct_STRIP NM ac_ct_NM INSTALL_DIR RM ac_ct_RM UNINSTALL UNINSTALL_PROGRAM UNINSTALL_DATA UNINSTALL_DIR LDFLAGS_GUI IF_GNU_MAKE PLATFORM_UNIX PLATFORM_WIN32 PLATFORM_MSDOS PLATFORM_MAC PLATFORM_MACOS PLATFORM_MACOSX PLATFORM_OS2 PLATFORM_BEOS SO_SUFFIX SO_SUFFIX_MODULE DLLIMP_SUFFIX LIBPREFIX LIBEXT DLLPREFIX DLLPREFIX_MODULE dlldir AIX_CXX_LD SHARED_LD_CC SHARED_LD_CXX SHARED_LD_MODULE_CC SHARED_LD_MODULE_CXX PIC_FLAG WINDOWS_IMPLIB USE_SOVERSION USE_SOVERLINUX USE_SOVERSOLARIS USE_SOVERCYGWIN USE_MACVERSION USE_SOSYMLINKS SONAME_FLAG DEPS_TRACKING WINDRES ac_ct_WINDRES REZ SETFILE COND_DEPS_TRACKING_0 COND_DEPS_TRACKING_1 COND_PLATFORM_MACOSX_0_USE_SOVERCYGWIN_0_USE_SOVERSION_1 COND_PLATFORM_MACOSX_0_USE_SOVERSION_1 COND_PLATFORM_MACOSX_1 COND_PLATFORM_MACOSX_1_USE_SOVERSION_1 COND_PLATFORM_MAC_1 COND_PLATFORM_OS2_1 COND_PYTHON_VER_2_2 COND_PYTHON_VER_2_3 COND_PYTHON_VER_2_4 COND_PYTHON_VER_2_5 COND_PYTHON_VER_2_6 COND_PYTHON_VER_5_8 COND_PYTHON_VER_5_9 COND_PYTHON_VER_6_0 COND_USE_CINT_0 COND_USE_CINT_1 COND_USE_LUA_0 COND_USE_LUA_1 COND_USE_PERL_0 COND_USE_PERL_1 COND_USE_PYTHON_0 COND_USE_PYTHON_1 COND_USE_SOSYMLINKS_1 COND_USE_SOVERCYGWIN_1_USE_SOVERSION_1 COND_USE_SOVERLINUX_1 COND_USE_SOVERSION_0 COND_USE_SOVERSOLARIS_1 COND_USE_UNDERC_0 COND_USE_UNDERC_1 COND_WINDOWS_IMPLIB_1 COND_WX_DEBUG_0 COND_WX_DEBUG_1 COND_WX_SHARED_0 COND_WX_SHARED_1 LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -1416,6 +1416,9 @@ fi
 ac_config_guess="$SHELL $ac_aux_dir/config.guess"
 ac_config_sub="$SHELL $ac_aux_dir/config.sub"
 ac_configure="$SHELL $ac_aux_dir/configure" # This should be Cygnus configure.
+
+
+
 
 
 
@@ -4590,10 +4593,10 @@ echo "$as_me: error:
 
                                                             if [ "$WX_DEBUG" = "1" ]; then
 
-                                CPPFLAGS="$CPPFLAGS -g -O0 -Wall -Wundef -Wno-ctor-dtor-privacy"
+                                                                                                CXXFLAGS="$CXXFLAGS -g -O0 -Wall -Wundef -Wno-ctor-dtor-privacy"
                 CFLAGS="$CFLAGS -g -O0 -Wall -Wundef"
             else
-                CPPFLAGS="$CPPFLAGS -O2"
+                CXXFLAGS="$CXXFLAGS -O2"
                 CFLAGS="$CFLAGS -O2"
             fi
                # 2.4.0 is the minimum required version of wx
@@ -5439,11 +5442,19 @@ fi
 
 
 # end in a nice way the configure script
+          ac_config_files="$ac_config_files thirdparty/Makefile"
+
 
 
 
 
     if test "x$BAKEFILE_HOST" = "x"; then
+               if test "x${host}" = "x" ; then
+                       { { echo "$as_me:$LINENO: error: You must call the autoconf \"CANONICAL_HOST\" macro in your configure.ac (or .in) file." >&5
+echo "$as_me: error: You must call the autoconf \"CANONICAL_HOST\" macro in your configure.ac (or .in) file." >&2;}
+   { (exit 1); exit 1; }; }
+               fi
+
         BAKEFILE_HOST="${host}"
     fi
 
@@ -5901,6 +5912,95 @@ fi
     esac
 
 
+    if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}rm", so it can be a program name with args.
+set dummy ${ac_tool_prefix}rm; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_prog_RM+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$RM"; then
+  ac_cv_prog_RM="$RM" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_RM="${ac_tool_prefix}rm"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+fi
+fi
+RM=$ac_cv_prog_RM
+if test -n "$RM"; then
+  echo "$as_me:$LINENO: result: $RM" >&5
+echo "${ECHO_T}$RM" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+fi
+if test -z "$ac_cv_prog_RM"; then
+  ac_ct_RM=$RM
+  # Extract the first word of "rm", so it can be a program name with args.
+set dummy rm; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_prog_ac_ct_RM+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$ac_ct_RM"; then
+  ac_cv_prog_ac_ct_RM="$ac_ct_RM" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_ac_ct_RM="rm"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_prog_ac_ct_RM" && ac_cv_prog_ac_ct_RM=":"
+fi
+fi
+ac_ct_RM=$ac_cv_prog_ac_ct_RM
+if test -n "$ac_ct_RM"; then
+  echo "$as_me:$LINENO: result: $ac_ct_RM" >&5
+echo "${ECHO_T}$ac_ct_RM" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+  RM=$ac_ct_RM
+else
+  RM="$ac_cv_prog_RM"
+fi
+
+    UNINSTALL="$RM -f"
+    UNINSTALL_PROGRAM=$UNINSTALL
+    UNINSTALL_DATA=$UNINSTALL
+    UNINSTALL_DIR="$RM -rf"
+
+
+
+
+
     LDFLAGS_GUI=
     case ${BAKEFILE_HOST} in
         *-*-cygwin* | *-*-mingw32* )
@@ -6215,73 +6315,6 @@ echo "${ECHO_T}$bakefile_cv_prog_icc" >&6
 
       *-*-darwin* )
 
-                                echo "$as_me:$LINENO: checking for gcc 3.1 or later" >&5
-echo $ECHO_N "checking for gcc 3.1 or later... $ECHO_C" >&6
-if test "${bakefile_cv_gcc31+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-
-           cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-
-int
-main ()
-{
-
-                   #if (__GNUC__ < 3) || \
-                       ((__GNUC__ == 3) && (__GNUC_MINOR__ < 1))
-                       #error old gcc
-                   #endif
-
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext
-if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
-  (eval $ac_compile) 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } &&
-	 { ac_try='test -z "$ac_cxx_werror_flag"
-			 || test ! -s conftest.err'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; } &&
-	 { ac_try='test -s conftest.$ac_objext'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; }; then
-
-                   bakefile_cv_gcc31=yes
-
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-
-                   bakefile_cv_gcc31=no
-
-
-fi
-rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
-
-fi
-echo "$as_me:$LINENO: result: $bakefile_cv_gcc31" >&5
-echo "${ECHO_T}$bakefile_cv_gcc31" >&6
-        if test "$bakefile_cv_gcc31" = "no"; then
-
 D='$'
 cat <<EOF >shared-ld-sh
 #!/bin/sh
@@ -6376,17 +6409,83 @@ rm -f master.${D}${D}.o
 exit ${D}status
 EOF
 
-            chmod +x shared-ld-sh
+        chmod +x shared-ld-sh
 
+        SHARED_LD_MODULE_CC="`pwd`/shared-ld-sh -bundle -headerpad_max_install_names -o"
+        SHARED_LD_MODULE_CXX="$SHARED_LD_MODULE_CC"
+
+
+                                echo "$as_me:$LINENO: checking for gcc 3.1 or later" >&5
+echo $ECHO_N "checking for gcc 3.1 or later... $ECHO_C" >&6
+if test "${bakefile_cv_gcc31+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+
+           cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+                   #if (__GNUC__ < 3) || \
+                       ((__GNUC__ == 3) && (__GNUC_MINOR__ < 1))
+                       #error old gcc
+                   #endif
+
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext
+if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+  (eval $ac_compile) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_cxx_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest.$ac_objext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+
+                   bakefile_cv_gcc31=yes
+
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+
+                   bakefile_cv_gcc31=no
+
+
+fi
+rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+
+fi
+echo "$as_me:$LINENO: result: $bakefile_cv_gcc31" >&5
+echo "${ECHO_T}$bakefile_cv_gcc31" >&6
+        if test "$bakefile_cv_gcc31" = "no"; then
                         SHARED_LD_CC="`pwd`/shared-ld-sh -dynamiclib -headerpad_max_install_names -o"
-            SHARED_LD_MODULE_CC="`pwd`/shared-ld-sh -bundle -headerpad_max_install_names -o"
             SHARED_LD_CXX="$SHARED_LD_CC"
-            SHARED_LD_MODULE_CXX="$SHARED_LD_MODULE_CC"
         else
                         SHARED_LD_CC="\${CC} -dynamiclib -single_module -headerpad_max_install_names -o"
-            SHARED_LD_MODULE_CC="\${CC} -bundle -single_module -headerpad_max_install_names -o"
             SHARED_LD_CXX="\${CXX} -dynamiclib -single_module -headerpad_max_install_names -o"
-            SHARED_LD_MODULE_CXX="\${CXX} -bundle -single_module -headerpad_max_install_names -o"
         fi
 
         if test "x$GCC" == "xyes"; then
@@ -6399,18 +6498,18 @@ EOF
 
       *-*-aix* )
         if test "x$GCC" = "xyes"; then
-	    	    	    	    	    PIC_FLAG=""
+                                                            PIC_FLAG=""
 
-	    	    	    	    	    	    	    case "${BAKEFILE_HOST}" in
-		*-*-aix5* )
-		    LD_EXPFULL="-Wl,-bexpfull"
-		    ;;
-	    esac
+                                                                                    case "${BAKEFILE_HOST}" in
+                *-*-aix5* )
+                    LD_EXPFULL="-Wl,-bexpfull"
+                    ;;
+            esac
 
-	    SHARED_LD_CC="\$(CC) -shared $LD_EXPFULL -o"
-	    SHARED_LD_CXX="\$(CXX) -shared $LD_EXPFULL -o"
-	else
-	    	                # Extract the first word of "makeC++SharedLib", so it can be a program name with args.
+            SHARED_LD_CC="\$(CC) -shared $LD_EXPFULL -o"
+            SHARED_LD_CXX="\$(CXX) -shared $LD_EXPFULL -o"
+        else
+                                    # Extract the first word of "makeC++SharedLib", so it can be a program name with args.
 set dummy makeC++SharedLib; ac_word=$2
 echo "$as_me:$LINENO: checking for $ac_word" >&5
 echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
@@ -6667,9 +6766,9 @@ while [ ${D}1 ]; do
         EXPORT_BY_ORDINALS=1;
         ;;
     -o*)
-	shift
+    shift
         outFile=${D}1
-	;;
+    ;;
     -i*)
         shift
         outimpFile=${D}1
@@ -6724,7 +6823,7 @@ while [ ${D}1 ]; do
         EXTRA_CFLAGS="${D}{EXTRA_CFLAGS} \`basnam ${D}1 .dll\`"
         if [ ${D}omfLinking -eq 1 ]; then
             EXTRA_CFLAGS="${D}{EXTRA_CFLAGS}.lib"
-	else
+    else
             EXTRA_CFLAGS="${D}{EXTRA_CFLAGS}.a"
         fi
         ;;
@@ -6789,7 +6888,7 @@ for file in ${D}inputFiles ; do
             if [ -f ${D}subfile ]; then
                 found=1
                 if [ -s ${D}subfile ]; then
-	            # FIXME: This should be: is file size > 32 byte, _not_ > 0!
+                # FIXME: This should be: is file size > 32 byte, _not_ > 0!
                     newInputFiles="${D}newInputFiles ${D}subfile"
                 fi
             fi
@@ -7190,23 +7289,18 @@ EOF
 
 
 
-    RESCOMP=
-    SETFILE=
-
     case ${BAKEFILE_HOST} in
         *-*-cygwin* | *-*-mingw32* )
-                        if test "$build" != "$host" ; then
-                RESCOMP=$host_alias-windres
-            else
-                # Extract the first word of "windres", so it can be a program name with args.
-set dummy windres; ac_word=$2
+                        if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}windres", so it can be a program name with args.
+set dummy ${ac_tool_prefix}windres; ac_word=$2
 echo "$as_me:$LINENO: checking for $ac_word" >&5
 echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
-if test "${ac_cv_prog_RESCOMP+set}" = set; then
+if test "${ac_cv_prog_WINDRES+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  if test -n "$RESCOMP"; then
-  ac_cv_prog_RESCOMP="$RESCOMP" # Let the user override the test.
+  if test -n "$WINDRES"; then
+  ac_cv_prog_WINDRES="$WINDRES" # Let the user override the test.
 else
 as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
 for as_dir in $PATH
@@ -7215,26 +7309,67 @@ do
   test -z "$as_dir" && as_dir=.
   for ac_exec_ext in '' $ac_executable_extensions; do
   if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_RESCOMP="windres"
+    ac_cv_prog_WINDRES="${ac_tool_prefix}windres"
     echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
 done
 done
 
-  test -z "$ac_cv_prog_RESCOMP" && ac_cv_prog_RESCOMP="windres"
 fi
 fi
-RESCOMP=$ac_cv_prog_RESCOMP
-if test -n "$RESCOMP"; then
-  echo "$as_me:$LINENO: result: $RESCOMP" >&5
-echo "${ECHO_T}$RESCOMP" >&6
+WINDRES=$ac_cv_prog_WINDRES
+if test -n "$WINDRES"; then
+  echo "$as_me:$LINENO: result: $WINDRES" >&5
+echo "${ECHO_T}$WINDRES" >&6
 else
   echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6
 fi
 
-            fi
+fi
+if test -z "$ac_cv_prog_WINDRES"; then
+  ac_ct_WINDRES=$WINDRES
+  # Extract the first word of "windres", so it can be a program name with args.
+set dummy windres; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_prog_ac_ct_WINDRES+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$ac_ct_WINDRES"; then
+  ac_cv_prog_ac_ct_WINDRES="$ac_ct_WINDRES" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_ac_ct_WINDRES="windres"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+fi
+fi
+ac_ct_WINDRES=$ac_cv_prog_ac_ct_WINDRES
+if test -n "$ac_ct_WINDRES"; then
+  echo "$as_me:$LINENO: result: $ac_ct_WINDRES" >&5
+echo "${ECHO_T}$ac_ct_WINDRES" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+  WINDRES=$ac_ct_WINDRES
+else
+  WINDRES="$ac_cv_prog_WINDRES"
+fi
+
          ;;
 
       *-*-darwin* | powerpc-apple-macos* )
@@ -7242,11 +7377,11 @@ fi
 set dummy Rez; ac_word=$2
 echo "$as_me:$LINENO: checking for $ac_word" >&5
 echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
-if test "${ac_cv_prog_RESCOMP+set}" = set; then
+if test "${ac_cv_prog_REZ+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  if test -n "$RESCOMP"; then
-  ac_cv_prog_RESCOMP="$RESCOMP" # Let the user override the test.
+  if test -n "$REZ"; then
+  ac_cv_prog_REZ="$REZ" # Let the user override the test.
 else
 as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
 for as_dir in $PATH
@@ -7255,20 +7390,20 @@ do
   test -z "$as_dir" && as_dir=.
   for ac_exec_ext in '' $ac_executable_extensions; do
   if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_RESCOMP="Rez"
+    ac_cv_prog_REZ="Rez"
     echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
 done
 done
 
-  test -z "$ac_cv_prog_RESCOMP" && ac_cv_prog_RESCOMP="/Developer/Tools/Rez"
+  test -z "$ac_cv_prog_REZ" && ac_cv_prog_REZ="/Developer/Tools/Rez"
 fi
 fi
-RESCOMP=$ac_cv_prog_RESCOMP
-if test -n "$RESCOMP"; then
-  echo "$as_me:$LINENO: result: $RESCOMP" >&5
-echo "${ECHO_T}$RESCOMP" >&6
+REZ=$ac_cv_prog_REZ
+if test -n "$REZ"; then
+  echo "$as_me:$LINENO: result: $REZ" >&5
+echo "${ECHO_T}$REZ" >&6
 else
   echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6
@@ -7312,6 +7447,7 @@ fi
 
         ;;
     esac
+
 
 
 
@@ -8069,6 +8205,7 @@ for ac_config_target in $ac_config_targets
 do
   case "$ac_config_target" in
   # Handling of arguments.
+  "thirdparty/Makefile" ) CONFIG_FILES="$CONFIG_FILES thirdparty/Makefile" ;;
   "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
   *) { { echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
@@ -8212,6 +8349,12 @@ s,@ac_ct_STRIP@,$ac_ct_STRIP,;t t
 s,@NM@,$NM,;t t
 s,@ac_ct_NM@,$ac_ct_NM,;t t
 s,@INSTALL_DIR@,$INSTALL_DIR,;t t
+s,@RM@,$RM,;t t
+s,@ac_ct_RM@,$ac_ct_RM,;t t
+s,@UNINSTALL@,$UNINSTALL,;t t
+s,@UNINSTALL_PROGRAM@,$UNINSTALL_PROGRAM,;t t
+s,@UNINSTALL_DATA@,$UNINSTALL_DATA,;t t
+s,@UNINSTALL_DIR@,$UNINSTALL_DIR,;t t
 s,@LDFLAGS_GUI@,$LDFLAGS_GUI,;t t
 s,@IF_GNU_MAKE@,$IF_GNU_MAKE,;t t
 s,@PLATFORM_UNIX@,$PLATFORM_UNIX,;t t
@@ -8245,7 +8388,9 @@ s,@USE_MACVERSION@,$USE_MACVERSION,;t t
 s,@USE_SOSYMLINKS@,$USE_SOSYMLINKS,;t t
 s,@SONAME_FLAG@,$SONAME_FLAG,;t t
 s,@DEPS_TRACKING@,$DEPS_TRACKING,;t t
-s,@RESCOMP@,$RESCOMP,;t t
+s,@WINDRES@,$WINDRES,;t t
+s,@ac_ct_WINDRES@,$ac_ct_WINDRES,;t t
+s,@REZ@,$REZ,;t t
 s,@SETFILE@,$SETFILE,;t t
 s,@COND_DEPS_TRACKING_0@,$COND_DEPS_TRACKING_0,;t t
 s,@COND_DEPS_TRACKING_1@,$COND_DEPS_TRACKING_1,;t t

@@ -168,6 +168,7 @@ fi
 
 
 # end in a nice way the configure script
+AC_CONFIG_FILES([thirdparty/Makefile])
 AM_WXCODE_END_PART1
 if test "$USE_PYTHON" = "1"; then
     echo "  - Python enabled"
