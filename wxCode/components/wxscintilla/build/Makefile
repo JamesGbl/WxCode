@@ -3,7 +3,7 @@
 ## Purpose:     wxScintilla
 ## Maintainer:  Otto Wyss
 ## Created:     2004-09-19
-## RCS-ID:      $Id: Makefile,v 1.10 2005-06-16 16:36:39 wyo Exp $
+## RCS-ID:      $Id: Makefile,v 1.11 2005-12-17 16:01:38 wyo Exp $
 ## Copyright:   (c) 2004 wxCode
 ## Licence:     wxWindows
 ##############################################################################
@@ -93,9 +93,9 @@ vpath %.cpp ../src
 vpath %.cxx ../src/scintilla/src
 
 # additional header directories
-INC = -I../include/ \
-      -I../src/scintilla/include/ \
-      -I../src/scintilla/src/
+INC = -I../include \
+      -I../src/scintilla/include \
+      -I../src/scintilla/src
 
 DEF = -D__WX__=1 -DSCI_LEXER -DLINK_LEXERS
 
@@ -112,6 +112,7 @@ LIB = libwxscintilla
 ifneq ($(WXDEVEL),)
   WXDEVEL_Release = $(WXDEVEL)/Release/
   WXDEVEL_Debug = $(WXDEVEL)/Debug/
+  WXDEVEL_Unicode = $(WXDEVEL)/Unicode/
   WXDEVEL_Univ = $(WXDEVEL)/Univ/
 endif
 
@@ -129,6 +130,10 @@ ifeq ($(MAKECMDGOALS),debug)
 endif
 ifeq ($(MAKECMDGOALS),develdebug)
   WXCONFIG=$(WXDEVEL_Debug)wx-config --inplace
+  GTKCONFIG=pkg-config gtk+-2.0
+endif
+ifeq ($(MAKECMDGOALS),unicode)
+  WXCONFIG=$(WXDEVEL_Unicode)wx-config --inplace
   GTKCONFIG=pkg-config gtk+-2.0
 endif
 ifeq ($(MAKECMDGOALS),univdebug)
@@ -158,8 +163,12 @@ develdebug:	$(LIB).so.dd
 $(LIB).so.dd:	$(OBJ)
 	g++ -fpic --share -o ../lib/$@ $^ `$(WXCONFIG) --libs`
 
-univdebug:	$(LIB).so.ud
+unicode:	$(LIB).so.ud
 $(LIB).so.ud:	$(OBJ)
+	g++ -fpic --share -o ../lib/$@ $^ `$(WXCONFIG) --libs`
+
+univdebug:	$(LIB).so.vd
+$(LIB).so.vd:	$(OBJ)
 	g++ -fpic --share -o ../lib/$@ $^ `$(WXCONFIG) --libs`
 
 clean:
