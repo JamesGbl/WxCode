@@ -3,7 +3,7 @@
 ## Purpose:     wxScintilla
 ## Maintainer:  Otto Wyss
 ## Created:     2004-09-19
-## RCS-ID:      $Id: Makefile,v 1.11 2005-12-17 16:01:38 wyo Exp $
+## RCS-ID:      $Id: Makefile,v 1.12 2005-12-17 16:05:43 wyo Exp $
 ## Copyright:   (c) 2004 wxCode
 ## Licence:     wxWindows
 ##############################################################################
@@ -112,7 +112,6 @@ LIB = libwxscintilla
 ifneq ($(WXDEVEL),)
   WXDEVEL_Release = $(WXDEVEL)/Release/
   WXDEVEL_Debug = $(WXDEVEL)/Debug/
-  WXDEVEL_Unicode = $(WXDEVEL)/Unicode/
   WXDEVEL_Univ = $(WXDEVEL)/Univ/
 endif
 
@@ -130,10 +129,6 @@ ifeq ($(MAKECMDGOALS),debug)
 endif
 ifeq ($(MAKECMDGOALS),develdebug)
   WXCONFIG=$(WXDEVEL_Debug)wx-config --inplace
-  GTKCONFIG=pkg-config gtk+-2.0
-endif
-ifeq ($(MAKECMDGOALS),unicode)
-  WXCONFIG=$(WXDEVEL_Unicode)wx-config --inplace
   GTKCONFIG=pkg-config gtk+-2.0
 endif
 ifeq ($(MAKECMDGOALS),univdebug)
@@ -163,12 +158,8 @@ develdebug:	$(LIB).so.dd
 $(LIB).so.dd:	$(OBJ)
 	g++ -fpic --share -o ../lib/$@ $^ `$(WXCONFIG) --libs`
 
-unicode:	$(LIB).so.ud
+univdebug:	$(LIB).so.ud
 $(LIB).so.ud:	$(OBJ)
-	g++ -fpic --share -o ../lib/$@ $^ `$(WXCONFIG) --libs`
-
-univdebug:	$(LIB).so.vd
-$(LIB).so.vd:	$(OBJ)
 	g++ -fpic --share -o ../lib/$@ $^ `$(WXCONFIG) --libs`
 
 clean:
