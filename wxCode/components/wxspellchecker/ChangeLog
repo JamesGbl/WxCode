@@ -1,6 +1,10 @@
+2005-12-03 : SpellCheckEngineInterface should now use the correct character encoding for the selected dictionary
+
 2005-11-25 : wxSpellChecker should now compile with Unicode support
              Replaced usage of wxMessageBox and wxPrintf with wxMessageOutput for better command-line support
              
+2005-11-05 : Added back the ability to use the "affix-file" and "dict-file" options as an alternative to the "dictionary-path" and "language" options
+
 2005-10-15 : Applied patches contributed by Julian SmarApplied patches contributed by Julian Smart
              Based on user feedback, removed option saving/loading from the spell check libraries.  This is best left in the application code
              Sample spell check engine option saving/loading code added to the demo application
