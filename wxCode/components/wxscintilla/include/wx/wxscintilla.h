@@ -12,7 +12,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.h,v 1.28 2005-12-03 06:02:17 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.h,v 1.29 2005-12-21 17:25:58 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -20,7 +20,7 @@
 #ifndef __WXSCINTILLA_H__
 #define __WXSCINTILLA_H__
 
-#define wxSCINTILLA_VERSION _T("1.66.1")
+#define wxSCINTILLA_VERSION _T("1.67.0")
 
 #include <wx/wx.h>
 #include <wx/dnd.h>
@@ -403,6 +403,8 @@
 #define wxSCI_P_IDENTIFIER 11
 #define wxSCI_P_COMMENTBLOCK 12
 #define wxSCI_P_STRINGEOL 13
+#define wxSCI_P_WORD2 14
+#define wxSCI_P_DECORATOR 15
 
 // Lexical states for SCLEX_CPP
 #define wxSCI_C_DEFAULT 0
@@ -1271,15 +1273,16 @@
 #define wxSCI_CAML_TAGNAME 2
 #define wxSCI_CAML_KEYWORD 3
 #define wxSCI_CAML_KEYWORD2 4
-#define wxSCI_CAML_LINENUM 5
-#define wxSCI_CAML_OPERATOR 6
-#define wxSCI_CAML_NUMBER 7
-#define wxSCI_CAML_CHAR 8
-#define wxSCI_CAML_STRING 9
-#define wxSCI_CAML_COMMENT 10
-#define wxSCI_CAML_COMMENT1 11
-#define wxSCI_CAML_COMMENT2 12
-#define wxSCI_CAML_COMMENT3 13
+#define wxSCI_CAML_KEYWORD3 5
+#define wxSCI_CAML_LINENUM 6
+#define wxSCI_CAML_OPERATOR 7
+#define wxSCI_CAML_NUMBER 8
+#define wxSCI_CAML_CHAR 9
+#define wxSCI_CAML_STRING 11
+#define wxSCI_CAML_COMMENT 12
+#define wxSCI_CAML_COMMENT1 13
+#define wxSCI_CAML_COMMENT2 14
+#define wxSCI_CAML_COMMENT3 15
 
 // Lexical states for SCLEX_HA
 #define wxSCI_HA_DEFAULT 0
@@ -1375,6 +1378,7 @@
 #define wxSCI_SQL_USER2 20
 #define wxSCI_SQL_USER3 21
 #define wxSCI_SQL_USER4 22
+#define wxSCI_SQL_QUOTEDIDENTIFIER 23
 
 // Lexical states for SCLEX_ST
 #define wxSCI_ST_DEFAULT 0
@@ -1929,6 +1933,9 @@ public:
     // Define a marker from a bitmap
     void MarkerDefineBitmap (int markerNumber, const wxBitmap& bmp);
 
+    // Add a set of markers to a line.
+    void MarkerAddSet (int line, int markerSet);
+
     // Set a margin to be either numeric or symbolic.
     void SetMarginType (int margin, int marginType);
 
@@ -2215,6 +2222,15 @@ public:
 
     // Switch between sticky and non-sticky: meant to be bound to a key.
     void ToggleCaretSticky ();
+
+    // Enable/Disable convert-on-paste for line endings.
+    void SetPasteConvertEndings (bool convert);
+
+    // Get convert-on-paste setting.
+    bool GetPasteConvertEndings ();
+
+    // Duplicate the selection. If selection empty duplicate the line containing the caret.
+    void SelectionDuplicate ();
 
     // Show or hide the horizontal scroll bar.
     void SetUseHorizontalScrollBar (bool show);
@@ -3070,6 +3086,9 @@ public:
     wxString GetProperty (const wxString& key);
     wxString GetPropertyExpanded (const wxString& key);
     int GetPropertyInt (const wxString& key);
+
+    // Retrieve the number of bits the current lexer needs for styling.
+    int GetStyleBitsNeeded ();
 
     // Set up the key words used by the lexer.
     void SetKeyWords (int keywordSet, const wxString& keyWords);

@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.29 2005-11-30 20:49:12 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.30 2005-12-21 17:25:58 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -521,6 +521,11 @@ void wxScintilla::MarkerDefineBitmap (int markerNumber, const wxBitmap& bmp) {
     buff[len] = 0;
     SendMsg (SCI_MARKERDEFINEPIXMAP, markerNumber, (long)buff);
     delete [] buff;
+}
+
+// Add a set of markers to a line.
+void wxScintilla::MarkerAddSet (int line, int markerSet) {
+    SendMsg (SCI_MARKERADDSET, line, markerSet);
 }
 
 // Set a margin to be either numeric or symbolic.
@@ -2460,6 +2465,21 @@ void wxScintilla::ToggleCaretSticky () {
     SendMsg (SCI_TOGGLECARETSTICKY, 0, 0);
 }
 
+// Enable/Disable convert-on-paste for line endings.
+void wxScintilla::SetPasteConvertEndings (bool convert) {
+    SendMsg (SCI_SETPASTECONVERTENDINGS, convert, 0);
+}
+
+// Get convert-on-paste setting.
+bool wxScintilla::GetPasteConvertEndings () {
+    return SendMsg (SCI_GETPASTECONVERTENDINGS, 0, 0) != 0;
+}
+
+// Duplicate the selection. If selection empty duplicate the line containing the caret.
+void wxScintilla::SelectionDuplicate () {
+    SendMsg (SCI_SELECTIONDUPLICATE, 0, 0);
+}
+
 // Start notifying the container of all key presses and commands.
 void wxScintilla::StartRecord () {
     SendMsg (SCI_STARTRECORD, 0, 0);
@@ -2509,6 +2529,11 @@ wxString wxScintilla::GetPropertyExpanded (const wxString& key) {
 }
 int wxScintilla::GetPropertyInt (const wxString& key) {
     return SendMsg (SCI_GETPROPERTYINT, (long)(const char*)wx2sci(key), 0);
+}
+
+// Retrieve the number of bits the current lexer needs for styling.
+int wxScintilla::GetStyleBitsNeeded () {
+    return SendMsg (SCI_GETSTYLEBITSNEEDED, 0, 0);
 }
 
 // Set up the key words used by the lexer.
