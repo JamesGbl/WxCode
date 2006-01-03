@@ -20,7 +20,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\wxWidgets260\include;..\..\..\wxWidgets260\lib\vc_lib\mswd;..\..\include"
+				AdditionalIncludeDirectories="..\..\..\wxWidgets262\include;..\..\..\wxWidgets262\lib\vc_lib\mswd;..\..\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;__WXMSW__;__WXDEBUG__;NOPCH"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -38,7 +38,7 @@
 				OutputFile="$(OutDir)/midisound.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="..\..\..\wxWidgets260\lib\vc_lib;..\..\lib\pmd;..\..\lib"
+				AdditionalLibraryDirectories="..\..\..\wxWidgets262\lib\vc_lib;..\..\lib\pmd;..\..\lib"
 				IgnoreAllDefaultLibraries="FALSE"
 				IgnoreDefaultLibraryNames="libcd.lib"
 				GenerateDebugInformation="TRUE"

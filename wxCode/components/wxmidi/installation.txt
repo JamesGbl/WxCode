@@ -4,42 +4,42 @@
  ======================
  
  Component:  wxMidi
- Release:    1.0, pre-release
- Date:       03-Sep-2005
+ Release:    1.1
+ Date:       03-Jan-2006
  wxWidgets:  2.4.x, 2.5.x, 2.6.x
  Maintainer: Cecilio Salmeron  /  s.cecilio@gmail.com
    
  Description:
- 	wxMidi is a MIDI interface based on PortMidi, the Portable Real-Time MIDI Library, 
- 	(PortMidi is available at: http://www.cs.cmu.edu/~music/portmidi/).
+    wxMidi is a MIDI interface based on PortMidi, the Portable Real-Time MIDI Library, 
+    (PortMidi is available at: http://www.cs.cmu.edu/~music/portmidi/).
  
-	wxMidi offers a set of classes: wxMidiSystem, wxMidiDevice, wxMidiMessage, 
-	wxMidiDatabaseGM and derived from them, that interfaces wxWidgets with the PortMidi
-	library. With this component you can add MIDI in/out support to your wxWidgets
-	application.
+    wxMidi offers a set of classes: wxMidiSystem, wxMidiDevice, wxMidiMessage, 
+    wxMidiDatabaseGM and derived from them, that interfaces wxWidgets with the PortMidi
+    library. With this component you can add MIDI in/out support to your wxWidgets
+    application.
 
-	The main differences with PortMidi are:
+    The main differences with PortMidi are:
 
-	- wxMidi provides a suitable interface, object oriented, to use portmidi with wxWidgets.
+    - wxMidi provides a suitable interface, object oriented, to use portmidi with wxWidgets.
  
-	- All strings has been moved from PortMidi and adapted to support internationalization.
+    - All strings has been moved from PortMidi and adapted to support internationalization.
  
-	- SysEx messages are not received in chunks with real-time messages interleaved. In wxMidi,
-		sysex messages are received completed, in a single string of bytes, and any
-		real-time message embeded is delivered before the sysex message is delivered.
+    - SysEx messages are not received in chunks with real-time messages interleaved. In wxMidi,
+        sysex messages are received completed, in a single string of bytes, and any
+        real-time message embeded is delivered before the sysex message is delivered.
  
-	- All buffer allocation process for messages is now hiden in the wxMidi clases. User has
-		not to worry abut this.
+    - All buffer allocation process for messages is now hiden in the wxMidi clases. User has
+        not to worry abut this.
 
-	- wxMidi also includes an additional feature, class wxMidiDatabaseGB, which provides methods
-		for dealing with the General MIDI Standard (GM) instruments list. 
+    - wxMidi also includes an additional feature, class wxMidiDatabaseGM, which provides methods
+        for dealing with the General MIDI Standard (GM) instruments list. 
 
 
- 	By now, these classes wrap only the most important PortMidi features but they are
- 	perfectly integrated with wxWidgets and easily extensible since they provide good
- 	commented code and documentation.
+    By now, these classes wrap only the most important PortMidi features but they are
+    perfectly integrated with wxWidgets and easily extensible since they provide good
+    commented code and documentation.
 
-	wxMidi has been tested only in Windows.
+    wxMidi has been tested only in Windows.
  
 
 
@@ -51,35 +51,49 @@
  
 
 
- wxMidi 1.0 package structure
+ wxMidi 1.x package structure
  =============================
 
- Directory		Contents
- -------------------	--------------------------------------------------------
- build/msw		makefiles and project files for compiling the project. Version MS VC++
+ Directory              Contents
+ -------------------    --------------------------------------------------------
+ build/msw              makefiles and project files for compiling the project. Version MS VC++
 
- samples/midisound	source files the sample application
+ samples/midisound      source files the sample application
 
- src/wxMidi		source files for wxMidi
+ src/wxMidi             source files for wxMidi
 
- src/portmidi		portmidi package
+ src/portmidi           portmidi package
  
- include		include files for using wxMidi
+ include                include files for using wxMidi
 
- lib			library files for using wxMidi
- lib/pm			portmidi release libraries
- lib/pmd		portmidi debug libraries
+ lib                    library files for using wxMidi
+ lib/pm                 portmidi release libraries
+ lib/pmd                portmidi debug libraries
 
- doc			documentation
-
-
+ doc                    documentation
 
 
- wxMidi 1.0 Installation
+
+
+ wxMidi 1.x Installation
  ========================
+ 
+wxMidi has been developed and tested in Windows. Makefiles included in this distribution are only
+for MS Visual Studio 2003 .NET.  Sorry, but I do not have equipment/knowledge to give
+support for other compilers/platforms. Any help with this will be appreciated.
+
 
  =============================================================================
  Step 1: INSTALL PORTMIDI    (For windows is already done. You can skip this step)
+
+   Be aware that the current version of PortMidi (17/nov/04) produces systematically
+   a memory leak. The problem is not serious as the memory leak refers to some small
+   fixed blocks of memory (about 20-40 bytes, one block per MIDI device in your machine)
+   allocated on initialization that are not released at termination of the portmidi package.
+   The problem IS FIXED in the PortMidi package included with wxMidi and the patch
+   has been reported to PortMidi maintainers.
+   But take this into account if you decide to download the PortMidi package and install
+   it instead of using the precompiled package included with wxMidi.
  =============================================================================
 
 
@@ -116,15 +130,15 @@
  =============================================================================
 
 1)  Compile wxMidi. All makefiles and project are located in build\msw directory.
-	After successful compilation you'll find the library in the subdirectory wxMidi\lib. 
-	Name of the compiled library follow this scheme: name begin with "wxmidi" followed by
-	version number and letters indicating if the library is compiled as Unicode ('u') 
-	and/or debug build ('d'). Here are some examples:
+    After successful compilation you'll find the library in the subdirectory wxMidi\lib. 
+    Name of the compiled library follow this scheme: name begin with "wxmidi" followed by
+    version number and letters indicating if the library is compiled as Unicode ('u') 
+    and/or debug build ('d'). Here are some examples:
 
-		  lib\wxmidi10.lib	release library
-		  lib\wxmidi10u.lib	release Unicode library
-		  lib\wxmidi10d.lib	Debug library
-		  lib\wxmidi10ud.lib	Debug Unicode library
+          lib\wxmidi10.lib  release library
+          lib\wxmidi10u.lib release Unicode library
+          lib\wxmidi10d.lib Debug library
+          lib\wxmidi10ud.lib    Debug Unicode library
 
 
 2)  IMPORTANT! In Windows, portmidi needs the pm_dll.dll, but there is no simple way
@@ -143,7 +157,7 @@ For now, only project file for MS VC .NET 2003 !!
 
 2)  Copy pm_dll.dll from wxMidi\lib\pmd\pm_dll.dll to the application.exe folder.
 
-3)  Run it. Good luck!
+3)  Run it. Good luck and enjoy!
 
 
 
@@ -151,17 +165,7 @@ For now, only project file for MS VC .NET 2003 !!
  Known bugs and problems
  ========================
 
- 1. During the tests, the debugger has reported systematically a memory leak. The problem
-	has been traced back to the portmidi package and has been reported to the portmidi maintainers.
-	It is not a serious problem as the memory leak reported refers to some small fixed blocks of memory
-	(about 20-40 bytes, one block per MIDI device in your machine) allocated on initialization
-	that are not released at termination of the portmidi package. According to portmidi maintainers,
-	it is not clear if the problem is a Windows problem or a portmidi problem, but it is going to
-	be investigated.
+    None.
 
-
- 2. wxMidi has been developed and tested in Windows. Makefiles included in this distribution are only
-	for MS Visual Studio 2003 .NET.  Sorry, but I do not have equipment/knowledge to give
-	support for other compilers/platforms. Any help with this is welcome.
 
 
