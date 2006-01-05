@@ -3,7 +3,7 @@
 // Purpose:     mimetest application
 // Maintainer:  Otto Wyss
 // Created:     2005-03-07
-// RCS-ID:      $Id: mimetest.cpp,v 1.5 2005-09-19 17:53:06 wyo Exp $
+// RCS-ID:      $Id: mimetest.cpp,v 1.6 2006-01-05 13:01:31 wyo Exp $
 // Copyright:   (c) 2005 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -83,6 +83,12 @@ enum {
 //----------------------------------------------------------------------------
 //! global application name
 wxString g_appname;
+
+
+//----------------------------------------------------------------------------
+//! class declarations
+class AppFrame;
+
 
 //----------------------------------------------------------------------------
 //! application
