@@ -3,7 +3,7 @@
 // Purpose:     splittest application
 // Maintainer:  Otto Wyss
 // Created:     2004-12-21
-// RCS-ID:      $Id: splittest.cpp,v 1.4 2005-09-19 17:55:07 wyo Exp $
+// RCS-ID:      $Id: splittest.cpp,v 1.5 2006-01-05 13:01:57 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -73,6 +73,12 @@ const wxString APP_WYOGUIDE = _T("http://wyoguide.sourceforge.net");
 //----------------------------------------------------------------------------
 //! global application name
 wxString g_appname;
+
+
+//----------------------------------------------------------------------------
+//! class declarations
+class AppFrame;
+
 
 //----------------------------------------------------------------------------
 //! application
