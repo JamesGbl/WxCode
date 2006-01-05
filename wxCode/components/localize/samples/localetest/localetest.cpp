@@ -3,7 +3,7 @@
 // Purpose:     Localetest application
 // Maintainer:  Otto Wyss
 // Created:     2004-10-01
-// RCS-ID:      $Id: localetest.cpp,v 1.2 2005-09-19 17:50:06 wyo Exp $
+// RCS-ID:      $Id: localetest.cpp,v 1.3 2006-01-05 13:01:12 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -80,6 +80,12 @@ wxString g_appDirectory;
 //! global help provider
 wxHtmlHelpController *g_help = NULL;
 wxString g_helppath;
+
+
+//----------------------------------------------------------------------------
+//! class declarations
+class AppFrame;
+
 
 //----------------------------------------------------------------------------
 //! application
