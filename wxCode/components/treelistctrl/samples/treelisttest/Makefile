@@ -3,13 +3,14 @@
 ## Purpose:     treelisttest
 ## Maintainer:  Otto Wyss
 ## Created:     2004-10-01
-## RCS-ID:      $Id: Makefile,v 1.9 2005-10-31 16:40:01 wyo Exp $
+## RCS-ID:      $Id: Makefile,v 1.10 2006-01-05 15:16:36 wyo Exp $
 ## Copyright:   (c) 2004 wxCode
 ## Licence:     wxWindows
 ##############################################################################
 
 # list of source files
-SRC = treelisttest.cpp
+SRC = treelisttest.cpp \
+      treelistctrl.cpp
 
 # executable name
 PRG = treelisttest
