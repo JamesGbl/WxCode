@@ -3,7 +3,7 @@
 // Purpose:     Localetest application
 // Maintainer:  Otto Wyss
 // Created:     2004-10-01
-// RCS-ID:      $Id: localetest.cpp,v 1.3 2006-01-05 13:01:12 wyo Exp $
+// RCS-ID:      $Id: localetest.cpp,v 1.4 2006-01-05 15:16:02 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -337,7 +337,7 @@ AppFrame::AppFrame (const wxString &title)
 
     // Test window
     wxString descr = wxGetTranslation(APP_DESCR);
-    descr.Replace ("\n", wxEmptyString);
+    descr.Replace (_T("\n"), wxEmptyString);
     m_test = new wxTextCtrl (this, -1, descr, wxDefaultPosition, wxDefaultSize,
                                        wxTE_MULTILINE|wxTE_WORDWRAP|wxTE_READONLY);
 
