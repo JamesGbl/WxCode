@@ -3,7 +3,7 @@
 // Purpose:     treelisttest application
 // Maintainer:  Otto Wyss
 // Created:     2004-12-21
-// RCS-ID:      $Id: treelisttest.cpp,v 1.23 2005-12-01 22:03:42 wyo Exp $
+// RCS-ID:      $Id: treelisttest.cpp,v 1.24 2006-01-05 13:02:15 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -128,6 +128,12 @@ enum {
 //----------------------------------------------------------------------------
 //! global application name
 wxString g_appname;
+
+
+//----------------------------------------------------------------------------
+//! class declarations
+class AppFrame;
+
 
 //----------------------------------------------------------------------------
 //! application
