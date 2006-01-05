@@ -3,7 +3,7 @@
 // Purpose:     wxScintilla test application
 // Maintainer:  Otto Wyss
 // Created:     2003-09-01
-// RCS-ID:      $Id: test.cpp,v 1.6 2005-09-19 17:57:07 wyo Exp $
+// RCS-ID:      $Id: test.cpp,v 1.7 2006-01-05 13:02:51 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows licence
 //////////////////////////////////////////////////////////////////////////////
@@ -76,8 +76,6 @@ const wxString APP_WYOGUIDE = _T("http://wyoguide.sourceforge.net");
 
 #define NONAME _("<untitled>")
 
-class AppBook;
-
 
 //----------------------------------------------------------------------------
 //! global application name
@@ -86,6 +84,12 @@ wxString *g_appname = NULL;
 //! global print data, to remember settings during the session
 wxPrintData *g_printData = (wxPrintData*) NULL;
 wxPageSetupData *g_pageSetupData = (wxPageSetupData*) NULL;
+
+
+//----------------------------------------------------------------------------
+//! class declarations
+class AppFrame;
+class AppBook;
 
 
 //----------------------------------------------------------------------------
