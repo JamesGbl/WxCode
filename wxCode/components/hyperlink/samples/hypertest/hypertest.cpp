@@ -3,7 +3,7 @@
 // Purpose:     hypertest application
 // Maintainer:  Otto Wyss
 // Created:     2005-05-12
-// RCS-ID:      $Id: hypertest.cpp,v 1.6 2005-09-19 17:48:04 wyo Exp $
+// RCS-ID:      $Id: hypertest.cpp,v 1.7 2006-01-05 13:00:51 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -69,6 +69,12 @@ const wxString APP_WYOGUIDE = _T("http://wyoguide.sourceforge.net");
 //----------------------------------------------------------------------------
 //! global application name
 wxString g_appname;
+
+
+//----------------------------------------------------------------------------
+//! class declarations
+class AppFrame;
+
 
 //----------------------------------------------------------------------------
 //! application
