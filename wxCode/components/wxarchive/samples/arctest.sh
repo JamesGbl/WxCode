@@ -3,7 +3,7 @@
 # Name:        arctest.sh
 # Purpose:     Test script for wxArchive classes
 # Author:      Mike Wetherell
-# RCS-ID:      $Id: arctest.sh,v 1.4 2005-04-02 11:22:38 chiclero Exp $
+# RCS-ID:      $Id: arctest.sh,v 1.5 2006-01-15 17:41:47 mweth Exp $
 # Copyright:   (c) 2004 Mike Wetherell
 # Licence:     wxWindows licence
 #############################################################################
@@ -97,7 +97,7 @@ maketestdata() {
 # clean up the temporary files
 #
 cleanup() {
-    trap - 0
+    trap 0
     rm -rf $tmpdir
 }
 
