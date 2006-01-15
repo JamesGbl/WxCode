@@ -2,7 +2,7 @@
 // Name:        tarstrm.cpp
 // Purpose:     Streams for Tar files
 // Author:      Mike Wetherell
-// RCS-ID:      $Id: tarstrm.cpp,v 1.4 2005-04-02 11:21:51 chiclero Exp $
+// RCS-ID:      $Id: tarstrm.cpp,v 1.5 2006-01-15 17:43:26 mweth Exp $
 // Copyright:   (c) 2004 Mike Wetherell
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -499,14 +499,14 @@ wxString wxTarEntry::GetInternalName(const wxString& name,
 
 bool wxTarEntry::IsDir() const
 {
-    return m_TypeFlag == wxTAR_DIRTYPE;
+    return m_TypeFlag - wxTAR_DIRTYPE == 0;
 }
 
 void wxTarEntry::SetIsDir(bool isDir)
 {
     if (isDir)
         m_TypeFlag = wxTAR_DIRTYPE;
-    else if (m_TypeFlag == wxTAR_DIRTYPE)
+    else if (m_TypeFlag - wxTAR_DIRTYPE == 0)
         m_TypeFlag = wxTAR_REGTYPE;
 }
 
@@ -998,7 +998,7 @@ bool wxTarOutputStream::PutNextEntry(wxTarEntry *entry)
         char typeflag = e->GetTypeFlag();
 
         // pax does now allow data for wxTAR_LNKTYPE
-        if (!m_pax || typeflag != wxTAR_LNKTYPE)
+        if (!m_pax || typeflag - wxTAR_LNKTYPE != 0)
             if (strchr(nodata, typeflag) != NULL)
                 CloseEntry();
     }
