@@ -2,7 +2,7 @@
 // Name:        tests/tartest.cpp
 // Purpose:     Test the tar classes
 // Author:      Mike Wetherell
-// RCS-ID:      $Id: tartest.cpp,v 1.2 2005-04-02 11:26:55 chiclero Exp $
+// RCS-ID:      $Id: tartest.cpp,v 1.3 2006-01-15 17:42:33 mweth Exp $
 // Copyright:   (c) 2004 Mike Wetherell
 // Licence:     wxWindows licence
 ///////////////////////////////////////////////////////////////////////////////
@@ -35,8 +35,9 @@ public:
     static CppUnit::Test *suite() { return (new tartest)->makeSuite(); }
 
 protected:
-    CppUnit::Test *makeTest(string descr, int id, int options,
-                            bool genericInterface, const wxString& archiver,
+    CppUnit::Test *makeTest(string descr, int options,
+                            bool genericInterface,
+                            const wxString& archiver,
                             const wxString& unarchiver);
 };
 
@@ -49,7 +50,6 @@ tartest::tartest()
 
 CppUnit::Test *tartest::makeTest(
     string descr,
-    int   id,
     int   options,
     bool  genericInterface,
     const wxString& archiver,
@@ -60,11 +60,11 @@ CppUnit::Test *tartest::makeTest(
 
     if (genericInterface)
         return new ArchiveTestCase<wxArchiveClassFactory>(
-                            descr, id, new wxTarClassFactory,
+                            descr, new wxTarClassFactory,
                             options, archiver, unarchiver);
     else
         return new ArchiveTestCase<wxTarClassFactory>(
-                            descr, id, new wxTarClassFactory,
+                            descr, new wxTarClassFactory,
                             options, archiver, unarchiver);
 }
 
