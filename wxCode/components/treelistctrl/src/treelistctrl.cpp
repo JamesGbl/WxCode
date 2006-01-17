@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.92 2005-12-12 21:45:39 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.93 2006-01-17 20:46:00 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -1711,7 +1711,7 @@ void wxTreeListMainWindow::Init() {
 
     m_findTimer = new wxTimer (this, -1);
 
-#if defined( __WXMAC__ ) && __WXMAC_CARBON__
+#if defined( __WXMAC__ ) && defined(__WXMAC_CARBON__)
     m_normalFont.MacCreateThemeFont (kThemeViewsFont);
 #else
     m_normalFont = wxSystemSettings::GetFont (wxSYS_DEFAULT_GUI_FONT);
