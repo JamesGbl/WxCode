@@ -33,6 +33,7 @@
     #include <wx/progdlg.h>
     #include <wx/checkbox.h>
     #include <wx/xrc/xh_all.h>
+    #include <wx/intl.h>        // for _() support
 #endif
 
 // includes
@@ -71,7 +72,7 @@ wxString wxGetSizeStr(unsigned long bytesize)
 {
     wxString sz;
     if (bytesize == 0)
-        sz = wxT("NA");     // not available
+        sz = _("NA");     // not available
     else if (bytesize < 1024)
         sz = wxString::Format(wxT("%lu B"), bytesize);
     else if (bytesize < 1024*1024)
@@ -104,12 +105,12 @@ bool wxWebUpdateListCtrl::Create(wxWindow* parent, wxWindowID id,
 
     // init the list control with the column names
     // (items will be inserted as soon as we load the webupdate script)the user-supplied wxWebUpdateLocalPackages
-    InsertColumn(0, wxT("Package name"));
-    InsertColumn(1, wxT("Latest version"));
-    InsertColumn(2, wxT("Local version"));
-    InsertColumn(3, wxT("Size"));
-    InsertColumn(4, wxT("Importance"));
-    InsertColumn(5, wxT("Require package(s)"));
+    InsertColumn(0, _("Package name"));
+    InsertColumn(1, _("Latest version"));
+    InsertColumn(2, _("Local version"));
+    InsertColumn(3, _("Size"));
+    InsertColumn(4, _("Importance"));
+    InsertColumn(5, _("Require package(s)"));
     AdjustColumnSizes();
 
     return TRUE;
@@ -162,7 +163,7 @@ wxWebUpdateCheckFlag wxWebUpdateListCtrl::SetLocalVersionFor(int idx, wxWebUpdat
     if (!local.IsOk()) {
 
         // a matching local package does not exist...
-        SetItem(idx, 2, wxT("not installed"));
+        SetItem(idx, 2, _("not installed"));
         return wxWUCF_NOTINSTALLED;
     }
 
@@ -248,15 +249,15 @@ void wxWebUpdateListCtrl::RebuildPackageList(wxWebUpdateListCtrlFilter filter)
         // ----------------------------------------------------
         switch (curr.GetImportance()) {
         case wxWUPI_HIGH:
-            SetItem(idx, 4, wxT("high!"));
+            SetItem(idx, 4, _("high!"));
             Check(idx, tocheck);
             break;
         case wxWUPI_NORMAL:
-            SetItem(idx, 4, wxT("normal"));
+            SetItem(idx, 4, _("normal"));
             Check(idx, tocheck);
             break;
         case wxWUPI_LOW:
-            SetItem(idx, 4, wxT("low"));
+            SetItem(idx, 4, _("low"));
             Check(idx, FALSE);
             break;
         default:
@@ -268,7 +269,7 @@ void wxWebUpdateListCtrl::RebuildPackageList(wxWebUpdateListCtrlFilter filter)
         // ----------------------------------------------------
 
         wxString str(curr.GetPrerequisites());
-        SetItem(idx, 5, str.IsEmpty() ? wxT("none") : str.c_str());
+        SetItem(idx, 5, str.IsEmpty() ? _("none") : str.c_str());
 
 
         // set as item data the index in our remote package array
@@ -411,9 +412,9 @@ void wxWebUpdateListCtrl::CacheDownloadSizes()
     wxLogAdvMsg(wxT("wxWebUpdateListCtrl::CacheDownloadSizes - launching the size cacher thread"));
     if (p->Create() != wxTHREAD_NO_ERROR ||
         p->Run() != wxTHREAD_NO_ERROR) {
-        wxMessageBox(wxT("Low resources; cannot show the size of the packages...\n")
-                    wxT("Close some applications and then retry."),
-                    wxT("Error"), wxOK | wxICON_ERROR);
+        wxMessageBox(_("Low resources; cannot show the size of the packages...\n" \
+                       "Close some applications and then retry."),
+                    _("Error"), wxOK | wxICON_ERROR);
     }
 #endif
 }

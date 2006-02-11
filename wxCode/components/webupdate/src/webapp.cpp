@@ -72,6 +72,9 @@
 #include "wx/webupdatectrl.h"
 #include "wx/stdactions.h"
 
+//*****{ 09.02.2006 gh *****
+#include "wx/fileconf.h"
+//*****} 09.02.2006 gh *****
 
 // ----------------------------------------------------------------------------
 // resources
@@ -103,31 +106,32 @@ static const wxCmdLineEntryDesc g_cmdLineDesc[] =
 {
     // options
     { wxCMD_LINE_OPTION, OPTION_XMLSCRIPT, wxT("xml"),
-        wxT("Use the given local XML file"),
+        _("Use the given local XML file"),
         wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
     { wxCMD_LINE_OPTION, OPTION_XRC, wxT("xrc"),
-        wxT("Use the given local XRC file"),
+        _("Use the given local XRC file"),
         wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
     { wxCMD_LINE_OPTION, OPTION_RESOURCE, wxT("res"),
-        wxT("Use the given resource name when loading the XRC"),
+        _("Use the given resource name when loading the XRC"),
         wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
     { wxCMD_LINE_OPTION, OPTION_URI, wxT("uri"),
-        wxT("Use the given URI to load the remote XML file"),
+        _("Use the given URI to load the remote XML file"),
         wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
     { wxCMD_LINE_OPTION, OPTION_ASKURI, wxT("ask-uri"),
-        wxT("Asks the uer the URI of the remote XML file"),
+        _("Asks the uer the URI of the remote XML file"),
         wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
 
     // switches
     { wxCMD_LINE_SWITCH, SWITCH_RESTART, wxT("restart"),
-        wxT("Restart the updated application when WebUpdater is closed"),
+        _("Restart the updated application when WebUpdater is closed"),
         wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
     { wxCMD_LINE_SWITCH, SWITCH_SAVELOG, wxT("savelog"),
-        wxT("Saves the log messages to '") wxWU_LOGFILENAME wxT("'"),
+        _("Saves the log messages to '") + wxString(wxWU_LOGFILENAME) + wxT("'"),
         wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
 
     // help
-    { wxCMD_LINE_SWITCH, wxT("h"), wxT("help"), wxT("Show this help message"),
+    { wxCMD_LINE_SWITCH, wxT("h"), wxT("help"),
+        _("Show this help message"),
         wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
 
     { wxCMD_LINE_NONE }
@@ -159,28 +163,22 @@ public:
     // our log window
     wxWebUpdateLog *m_log;
 
+protected:
+    // for i18n support
+    wxLocale m_locale;
+
+
 public:
     WebUpdaterApp() : m_dlg(NULL), m_log(NULL) { m_bLoggerInstalled=FALSE; }
     virtual ~WebUpdaterApp() {}
 
 
-    void CreateFileLogger()
-    {
-        if (m_bLoggerInstalled)
-            return;     // already installed !
+    // helpers of OnPreInit()
+    // NOTE: they are listed in the same order they are called by OnPreInit()
+    void CreateFileLogger();
+    void SetupLanguage();
 
-        wxLogDebug(wxT("CreateFileLogger - creating the logfile [") +
-                wxString(wxWU_LOGFILENAME) + wxT("]"));
-        m_log->WriteAllMsgAlsoToFile(wxWU_LOGFILENAME);
-        wxLogNewSection(wxT(" LOG OF WEBUPDATER ") +
-                        wxWebUpdateInstaller::Get()->GetVersion() +
-                        wxT(" SESSION BEGAN AT ") +
-                        wxDateTime::Now().Format(wxT("%x %X")));        // it automatically installs itself as the new logger
-        m_bLoggerInstalled = TRUE;
-    }
-
-
-    // helper of OnInit()
+    // called before OnInit() and before any window is created
     bool OnPreInit();
 
     // Initializes the WebUpdaterApp.
@@ -313,6 +311,61 @@ void wxInitRequiredXmlHandlers()
     p->AddHandler(new wxWebUpdateAdvPanelXmlHandler);
 }
 
+void WebUpdaterApp::CreateFileLogger()
+{
+    if (m_bLoggerInstalled)
+        return;     // already installed !
+
+    wxLogDebug(wxT("WebUpdaterApp::CreateFileLogger - creating the logfile [") +
+            wxString(wxWU_LOGFILENAME) + wxT("]"));
+    m_log->WriteAllMsgAlsoToFile(wxWU_LOGFILENAME);
+    wxLogNewSection(wxT(" LOG OF WEBUPDATER ") +
+                    wxWebUpdateInstaller::Get()->GetVersion() +
+                    wxT(" SESSION BEGAN AT ") +
+                    wxDateTime::Now().Format(wxT("%x %X")));        // it automatically installs itself as the new logger
+    m_bLoggerInstalled = TRUE;
+}
+
+void WebUpdaterApp::SetupLanguage()
+{
+    wxConfig *config = new wxConfig();
+    wxString strLangCanonical;
+
+    // load, if present, the setting of desired language from wxConfig
+    config->SetPath(wxT("/General"));
+    config->Read(wxT("Language"), &strLangCanonical, wxEmptyString);
+
+    int langID = wxLANGUAGE_DEFAULT;
+    if (!strLangCanonical.IsEmpty()) {
+
+        // there is a desired language defined...
+        const wxLanguageInfo* pLangInfo = m_locale.FindLanguageInfo(strLangCanonical);
+        if (pLangInfo != NULL) {
+
+            // and it's valid...
+            langID = pLangInfo->Language;
+        }
+    }
+
+    // Initialization...
+    m_locale.Init(langID);
+
+    // test if there is a LANG subfolder in the directory in our working dir
+    wxString path = wxGetCwd() + wxFileName::GetPathSeparator() + wxT("lang");
+    wxLogAdvMsg(wxT("WebUpdaterApp::SetupLanguage - searching in [") + path + wxT("]"));
+    if (::wxDirExists(path)) {
+        wxLogAdvMsg(wxT("WebUpdaterApp::SetupLanguage - found the LANG subfolder"));
+
+        // .mo-files are located in subdir "lang"...
+        m_locale.AddCatalogLookupPathPrefix(wxT("lang"));
+    }
+
+    // Initialize the catalogs we'll be using
+    if (m_locale.AddCatalog(GetAppName().MakeLower()))
+        wxLogAdvMsg(wxT("WebUpdaterApp::SetupLanguage - successfully set the %s catalog"), GetAppName().c_str());
+    wxDELETE(config);
+}
+
 bool WebUpdaterApp::OnPreInit()
 {
     // create the default wx logger
@@ -322,8 +375,12 @@ bool WebUpdaterApp::OnPreInit()
     // show the user that we are running
     //wxBusyCursor wait;
 
+    // support multiple language !
+    SetAppName(wxT("WebUpdater"));      // before accessing wxConfig objects, let's set this
+    SetupLanguage();
+
     // parse the command line
-    wxLogUsrMsg(wxT("WebUpdaterApp::OnInit - parsing the command line"));
+    wxLogUsrMsg(_("WebUpdaterApp::OnInit - parsing the command line"));
     wxCmdLineParser parser(g_cmdLineDesc, argc, argv);
     if (parser.Parse() != 0)
         return 0;           // help was shown / an error occurred
@@ -345,7 +402,7 @@ bool WebUpdaterApp::OnPreInit()
     // check for valid options
     wxFileName askurifn(askuri);
     if ((hasAskUri && hasUri) || (hasAskUri && !askurifn.IsOk())) {
-        wxLogError(wxT("WebUpdaterApp::OnInit - you cannot use both '--ask-uri' and '--uri' !"));
+        wxLogError(_("WebUpdaterApp::OnInit - you cannot use both '--ask-uri' and '--uri' !"));
         return FALSE;
     }
 
@@ -372,15 +429,15 @@ bool WebUpdaterApp::OnPreInit()
     wxMemoryFSHandler::AddFile(wxT("www.xpm"), wxBitmap(www_xpm), wxBITMAP_TYPE_XPM);
 
     // load the local XML webupdate script
-    wxLogUsrMsg(wxT("WebUpdaterApp::OnInit - loading the local XML webupdate script ") + xml);
+    wxLogUsrMsg(_("WebUpdaterApp::OnInit - loading the local XML webupdate script ") + xml);
     wxFileName fn(xml);
     fn.MakeAbsolute(wxGetCwd());
     if (!m_script.Load(fn.GetFullPath())) {
         wxWebUpdateInstaller::Get()->ShowErrorMsg(
-                    wxT("The installation of the WebUpdater component of this application\n")
-                    wxT("is corrupted; the file:\n\n\t") +
+                    _("The installation of the WebUpdater component of this application\n" \
+                      "is corrupted; the file:\n\n\t") +
                     fn.GetFullPath() +
-                    wxT("\n\nis missing (or invalid); please reinstall the program."));
+                    _("\n\nis missing (or invalid); please reinstall the program."));
         return FALSE;
     }
 
@@ -391,7 +448,7 @@ bool WebUpdaterApp::OnPreInit()
             if (m_script.GetRemoteScriptURI()) {
                 xmlname = m_script.GetRemoteScriptURI().AfterLast(wxFileName::GetPathSeparator());
             } else {
-                wxLogError(wxT("WebUpdaterApp::OnInit - the --ask-uri option is incomplete"));
+                wxLogError(_("WebUpdaterApp::OnInit - the --ask-uri option is incomplete"));
                 return FALSE;
             }
         }
@@ -399,7 +456,7 @@ bool WebUpdaterApp::OnPreInit()
         // create the folder selector dialog
         wxString startpath = askurifn.GetPath();
         if (startpath.IsEmpty()) startpath = wxGetCwd();
-        wxDirDialog dd(NULL, wxT("Choose the folder containing the updated packages"),
+        wxDirDialog dd(NULL, _("Choose the folder containing the updated packages"),
                             startpath);
         wxString path, file;
         do {
@@ -441,21 +498,21 @@ bool WebUpdaterApp::OnPreInit()
     // do not proceed if in this stage we are still missing some required info
     if (!m_script.IsComplete()) {
         wxWebUpdateInstaller::Get()->ShowErrorMsg(
-                    wxT("The WebUpdater configuration file is corrupted; the local XML script ")
-                    wxT("is missing some required info. Please correct the local XML script or ")
-                    wxT("give these info to WebUpdater through the command line options."));
+                    _("The WebUpdater configuration file is corrupted; the local XML script " \
+                      "is missing some required info. Please correct the local XML script or " \
+                      "give these info to WebUpdater through the command line options."));
         return FALSE;
     }
 
     wxASSERT(m_script.IsOk());
 
     // load our XRC file
-    wxLogUsrMsg(wxT("WebUpdaterApp::OnInit - loading the XRC file [") + m_script.GetXRC() + wxT("]"));
+    wxLogUsrMsg(_("WebUpdaterApp::OnInit - loading the XRC file [") + m_script.GetXRC() + wxT("]"));
     if (!wxXmlResource::Get()->Load(m_script.GetXRC())) {
         wxWebUpdateInstaller::Get()->ShowErrorMsg(
-                    wxT("The WebUpdater configuration file is corrupted; the file:\n\n\t") +
+                    _("The WebUpdater configuration file is corrupted; the file:\n\n\t") +
                     m_script.GetXRC() +
-                    wxT("\n\nis missing (or invalid); please reinstall the program."));
+                    _("\n\nis missing (or invalid); please reinstall the program."));
         return FALSE;
     }
 
@@ -466,9 +523,9 @@ bool WebUpdaterApp::OnPreInit()
     app2update.MakeAbsolute(wxGetCwd());
     if (!wxFileName::FileExists(app2update.GetFullPath())) {
         wxWebUpdateInstaller::Get()->ShowErrorMsg(
-                    wxT("The WebUpdater configuration file is corrupted; the file:\n\n\t") +
+                    _("The WebUpdater configuration file is corrupted; the file:\n\n\t") +
                     app2update.GetFullPath() +
-                    wxT("\n\nis missing (or invalid); please reinstall the program."));
+                    _("\n\nis missing (or invalid); please reinstall the program."));
         return FALSE;
     }
 
@@ -492,7 +549,7 @@ bool WebUpdaterApp::OnInit()
 
     // create our main dialog
 #if 1
-    wxLogUsrMsg(wxT("WebUpdaterApp::OnInit - creating the WebUpdaterDlg"));
+    wxLogUsrMsg(_("WebUpdaterApp::OnInit - creating the WebUpdaterDlg"));
     m_dlg = new WebUpdaterDlg(m_script);
     if (!m_dlg->IsOk())
         return FALSE;       // failure
@@ -599,7 +656,7 @@ void WebUpdaterDlg::OnQuit(wxCloseEvent &)
     // --> Don't use Close with a wxDialog,
     //     use Destroy instead.
     Destroy();
-    wxLogUsrMsg(wxT("WebUpdaterDlg::OnQuit - quitting"));
+    wxLogUsrMsg(_("WebUpdaterDlg::OnQuit - quitting"));
 }
 
 void WebUpdaterDlg::EndModal(int)

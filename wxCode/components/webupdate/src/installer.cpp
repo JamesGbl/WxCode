@@ -20,7 +20,8 @@
 
 // includes
 #ifndef WX_PRECOMP
-#include "wx/log.h"
+    #include "wx/log.h"
+    #include <wx/intl.h>        // for _() support
 #endif
 
 #include "wx/installer.h"
@@ -326,7 +327,7 @@ wxWebUpdateCheckFlag wxWebUpdateInstaller::VersionCheck(const wxVersion &ver) co
     int maj, min, rel;
     if (!wxWebUpdatePackage::ExtractVersionNumbers(ver, &maj, &min, &rel)) {
 
-        wxLogUsrMsg(wxT("wxWebUpdateInstaller::VersionCheck - invalid version format [")
+        wxLogUsrMsg(_("wxWebUpdateInstaller::VersionCheck - invalid version format [")
                     + ver + wxT("] !"));
         return wxWUCF_FAILED;
     }
@@ -344,9 +345,9 @@ void wxWebUpdateInstaller::ShowErrorMsg(const wxString &str)
     wxLogUsrMsg(str);
 
     // and notify the user
-    wxMessageBox(str + wxT("\nContact the support team of ") +
+    wxMessageBox(str + _("\nContact the support team of ") +
                     GetKeywordValue(wxT("appname")) +
-                    wxT(" for help."), wxT("Error"), wxOK | wxICON_ERROR);
+                    _(" for help."), _("Error"), wxOK | wxICON_ERROR);
 }
 
 void wxWebUpdateInstaller::ShowNotificationMsg(const wxString &str, const wxString &title)
@@ -369,7 +370,7 @@ void wxWebUpdateInstaller::ShowNotificationMsg(const wxString &str, const wxStri
 
 // this macro avoid the repetion of a lot of code;
 #define wxWUIT_ABORT_INSTALL() {                                \
-            wxLogUsrMsg(wxT("wxWebUpdateInstallThread::Entry - INSTALLATION ABORTED !!!"));     \
+            wxLogUsrMsg(_("wxWebUpdateInstallThread::Entry - INSTALLATION ABORTED !!!"));     \
             m_bSuccess = FALSE;                         \
             m_mStatus.Lock();                           \
             m_nStatus = wxWUITS_WAITING;                \
@@ -393,10 +394,10 @@ void *wxWebUpdateInstallThread::Entry()
             continue;
         }
 
-        wxLogUsrMsg(wxT("wxWebUpdateInstallThread::Entry - installing [") +
+        wxLogUsrMsg(_("wxWebUpdateInstallThread::Entry - installing [") +
                     m_strUpdateFile + wxT("]"));
         m_bSuccess = m_pDownload->Install();
-        wxLogUsrMsg(wxT("wxWebUpdateInstallThread::Entry - completed installation of [") +
+        wxLogUsrMsg(_("wxWebUpdateInstallThread::Entry - completed installation of [") +
                     m_strUpdateFile + wxT("]"));
 
         // go in wait mode

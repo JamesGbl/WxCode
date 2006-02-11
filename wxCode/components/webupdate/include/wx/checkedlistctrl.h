@@ -63,100 +63,100 @@ DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_WEBUPDATE, wxEVT_COMMAND_LIST_ITEM_UNCHE
 class WXDLLIMPEXP_WEBUPDATE wxCheckedListCtrl : public wxListCtrl
 {
 protected:
-	
-	// we have to keep a different array to keep track of the additional
-	// states we support....
-	wxArrayInt m_stateList;
 
-	// our set of checkbox images...
-	wxImageList m_imageList;
+    // we have to keep a different array to keep track of the additional
+    // states we support....
+    wxArrayInt m_stateList;
+
+    // our set of checkbox images...
+    wxImageList m_imageList;
 
 public:
-	wxCheckedListCtrl()
-		: wxListCtrl(), m_imageList(16, 16, TRUE) {}
+    wxCheckedListCtrl()
+        : wxListCtrl(), m_imageList(16, 16, TRUE) {}
 
-	wxCheckedListCtrl(wxWindow *parent, wxWindowID id = -1, 
-						const wxPoint& pt = wxDefaultPosition,
-						const wxSize& sz = wxDefaultSize, 
-						long style = wxCLC_CHECK_WHEN_SELECTING,
-						const wxValidator& validator = wxDefaultValidator, 
-						const wxString& name = wxListCtrlNameStr)
-						: wxListCtrl(), m_imageList(16, 16, TRUE)
-		{ Create(parent, id, pt, sz, style, validator, name); }
-	
-	bool Create(wxWindow *parent, wxWindowID id = -1, 
-						const wxPoint& pt = wxDefaultPosition,
-						const wxSize& sz = wxDefaultSize, 
-						long style = wxCLC_CHECK_WHEN_SELECTING,
-						const wxValidator& validator = wxDefaultValidator, 
-						const wxString& name = wxListCtrlNameStr);
+    wxCheckedListCtrl(wxWindow *parent, wxWindowID id = -1,
+                        const wxPoint& pt = wxDefaultPosition,
+                        const wxSize& sz = wxDefaultSize,
+                        long style = wxCLC_CHECK_WHEN_SELECTING,
+                        const wxValidator& validator = wxDefaultValidator,
+                        const wxString& name = wxListCtrlNameStr)
+                        : wxListCtrl(), m_imageList(16, 16, TRUE)
+        { Create(parent, id, pt, sz, style, validator, name); }
 
-	virtual ~wxCheckedListCtrl() {}
+    bool Create(wxWindow *parent, wxWindowID id = -1,
+                        const wxPoint& pt = wxDefaultPosition,
+                        const wxSize& sz = wxDefaultSize,
+                        long style = wxCLC_CHECK_WHEN_SELECTING,
+                        const wxValidator& validator = wxDefaultValidator,
+                        const wxString& name = wxListCtrlNameStr);
+
+    virtual ~wxCheckedListCtrl() {}
 
 
 public:			// utilities
 
-	// core overloads (i.e. the most generic overloads)
-	bool GetItem(wxListItem& info) const;
-	bool SetItem(wxListItem& info);
+    // core overloads (i.e. the most generic overloads)
+    bool GetItem(wxListItem& info) const;
+    bool SetItem(wxListItem& info);
     long InsertItem(wxListItem& info);
-	bool DeleteItem(long item);	
-	bool DeleteAllItems()
-		{ m_stateList.Clear(); return wxListCtrl::DeleteAllItems(); }
+    bool DeleteItem(long item);
+    bool DeleteAllItems()
+        { m_stateList.Clear(); return wxListCtrl::DeleteAllItems(); }
 
-	bool SortItems(wxListCtrlCompare, long)
-		{ wxASSERT_MSG(0, wxT("Not implemented yet ! sorry... ")); return FALSE; }
-	
-	// shortcuts to the SetItemState function
-	void Check(long item, bool checked);
-	void Enable(long item, bool enable);
-	void CheckAll(bool checked = true);
-	void EnableAll(bool enable = true);
+    bool SortItems(wxListCtrlCompare, long)
+        { wxASSERT_MSG(0, wxT("Not implemented yet ! sorry... ")); return FALSE; }
 
-	// this needs to be redeclared otherwise it's hidden by our other Enable() function.
-	// However you should use #EnableAll instead of this function if you want to get
-	// good graphics (try to understand)
-	virtual bool Enable(bool enable = true)
-		{ return wxListCtrl::Enable(enable); }
+    // shortcuts to the SetItemState function
+    void Check(long item, bool checked);
+    void Enable(long item, bool enable);
+    void CheckAll(bool checked = true);
+    void EnableAll(bool enable = true);
 
-	// shortcuts to the GetItemState function
-	bool IsChecked(long item) const
-		{ return GetItemState(item, wxLIST_STATE_CHECKED) != 0; }
-	bool IsEnabled(long item) const
-		{ return GetItemState(item, wxLIST_STATE_ENABLED) != 0; }
+    // this needs to be redeclared otherwise it's hidden by our other Enable() function.
+    // However you should use #EnableAll instead of this function if you want to get
+    // good graphics (try to understand)
+    virtual bool Enable(bool enable = true)
+        { return wxListCtrl::Enable(enable); }
 
-	// this needs to be redeclared otherwise it's hidden by our other IsEnabled() function.
-	bool IsEnabled() const
-		{ return wxWindow::IsEnabled(); }
+    // shortcuts to the GetItemState function
+    bool IsChecked(long item) const
+        { return GetItemState(item, wxLIST_STATE_CHECKED) != 0; }
+    bool IsEnabled(long item) const
+        { return GetItemState(item, wxLIST_STATE_ENABLED) != 0; }
 
-	//! Returns the number of checked items in the control.
-	int GetCheckedItemCount() const;
+    // this needs to be redeclared otherwise it's hidden by our other IsEnabled() function.
+    bool IsEnabled() const
+        { return wxWindow::IsEnabled(); }
 
-	// we overload these so we are sure they will use our
-	// #GetItem and #SetItem functions...
-	bool SetItemState(long item, long state, long stateMask);
-	int GetItemState(long item, long stateMask) const;
+    //! Returns the number of checked items in the control.
+    int GetCheckedItemCount() const;
+
+    // we overload these so we are sure they will use our
+    // #GetItem and #SetItem functions...
+    bool SetItemState(long item, long state, long stateMask);
+    int GetItemState(long item, long stateMask) const;
     long InsertItem( long index, const wxString& label, int imageIndex = -1);
-	long SetItem(long index, int col, const wxString& label, int imageId = -1);
+    long SetItem(long index, int col, const wxString& label, int imageId = -1);
 
-	// the image associated with an element is already in used by wxCheckedListCtrl
-	// itself to show the checkbox and it cannot be handled by the user !
-	bool SetItemImage(long, int)
-		{ wxASSERT_MSG(0, wxT("This function cannot be used with wxCheckedListCtrl !")); return FALSE; }
+    // the image associated with an element is already in used by wxCheckedListCtrl
+    // itself to show the checkbox and it cannot be handled by the user !
+    bool SetItemImage(long, int)
+        { wxASSERT_MSG(0, wxT("This function cannot be used with wxCheckedListCtrl !")); return FALSE; }
 
 protected:		// event handlers
 
-	void OnMouseEvent(wxMouseEvent& event);
+    void OnMouseEvent(wxMouseEvent& event);
 
 protected:		// internal utilities
 
-	static int GetItemImageFromAdditionalState(int addstate);
-	static int GetAndRemoveAdditionalState(long *state, int statemask);
-	wxColour GetBgColourFromAdditionalState(int additionalstate);
+    static int GetItemImageFromAdditionalState(int addstate);
+    static int GetAndRemoveAdditionalState(long *state, int statemask);
+    wxColour GetBgColourFromAdditionalState(int additionalstate);
 
 private:
-	DECLARE_CLASS(wxCheckedListCtrl)
-	DECLARE_EVENT_TABLE()
+    DECLARE_CLASS(wxCheckedListCtrl)
+    DECLARE_EVENT_TABLE()
 };
 
 

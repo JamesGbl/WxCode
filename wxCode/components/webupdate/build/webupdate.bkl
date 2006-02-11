@@ -1,6 +1,9 @@
 <?xml version="1.0" ?>
 <makefile>
 
+    <!-- i18n support -->
+    <using module="gettext"/>
+
 
     <!-- Some defaults for the variables used by wxCode bakefiles -->
     <set var="WXCODE_BAKEFILEDIR">../../../build/bakefiles</set>
@@ -158,8 +161,59 @@
     </if>
 
     <if cond="MAKE_EXE=='1'">
+
+        <!-- Internationalization support -->
+        <gettext-catalogs id="locale">
+            <srcdir>$(COMP_BASEPATH)/locale</srcdir>
+            <catalog-name>webupdater</catalog-name>
+            <linguas>it de</linguas>
+            <install-to>$(LOCALEDIR)</install-to>
+        </gettext-catalogs>
+
+        <set var="MSGFMT">msgfmt --statistics</set>
+        <set var="MSGMERGE">msgmerge</set>
+        <set var="XGETTEXT">xgettext</set>
+        <set var="XARGS">xargs</set>
+        <set var="XGETTEXT_ARGS">--c++ -k_ -kwxPLURAL:1,2 -kwxTRANSLATE -s -j</set>
+        <set var="POFILE">webupdater.po</set>
+        <set var="XRCFILE">$(COMP_BASEPATH)/src/webupdatedlg.xrc</set>
+
+        <define-tag name="updatepo" rules="action">
+            <command>
+                touch $(value)
+                find $(COMP_BASEPATH)/include -name "*.h" | $(XARGS) $(XGETTEXT) $(XGETTEXT_ARGS) -o $(value)
+                find $(COMP_BASEPATH)/src -name "*.cpp" | $(XARGS) $(XGETTEXT) $(XGETTEXT_ARGS) -o $(value)
+                find $(COMP_BASEPATH)/src -name "*.xrc.*" | $(XARGS) $(XGETTEXT) $(XGETTEXT_ARGS) -o $(value)
+            </command>
+        </define-tag>
+        <define-tag name="compilepo" rules="action">
+            <command>
+                $(MSGFMT) -o $(value.replace('po', 'mo')) $(value)
+            </command>
+        </define-tag>
+
+
+        <action id="xrcscan">
+            <!-- Extract translatable strings from XRC and put them in a fake file which will be scanned later -->
+            <command>wxrc $(XRCFILE) -g -c -o $(XRCFILE).extracted</command>
+        </action>
+
+        <action id="webupdater.po" cond="TARGETING_WIN32=='0'">
+            <depends>xrcscan</depends>
+
+            <!-- Scan all source and headers files and extract translatable strings -->
+            <updatepo>locale/it/$(POFILE)</updatepo>
+            <updatepo>locale/de/$(POFILE)</updatepo>
+
+            <compilepo>locale/it/$(POFILE)</compilepo>
+            <compilepo>locale/de/$(POFILE)</compilepo>
+        </action>
+
+
         <!-- the WebUpdater utility... -->
         <exe id="webupdater" template="basic,wx,wxcode-basic,webupdatecommon">
+            <depends>locale</depends>
+
             <app-type>gui</app-type>
             <dirname>$(COMP_BASEPATH)/src</dirname>
             <res-include>$(COMP_BASEPATH)/src</res-include>

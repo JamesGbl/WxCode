@@ -50,7 +50,7 @@ bool wxInitializeMod()
     // been created.
     // You should add your custom webupdate actions to it here:
     wxWebUpdateInstaller::Get()->AddActionHandler(new wxWebUpdateFontInstall);
-    
+
     // the action handlers will be automatically cleaned by wxWebUpdateInstaller
     // so that the "new" above won't create a memory leak
 }
@@ -73,12 +73,12 @@ bool wxWebUpdateActionFontInstall::Run() const
 	// be sure that the font to install exists
 	wxFileName f(m_strFile);
 	if (!f.FileExists()) {
-    
+
         // you should use two different types of wxLogXXX functions:
         // - wxLogUsrMsg for msg to be shown to the user & saved in the log file
         // - wxLogAdvMsg for msg to be saved in the log file only
-		wxLogUsrMsg(wxT("wxWebUpdateActionFontInstall::Run - the font \"") + m_strFile +
-				wxT("\" does not exist !"));
+		wxLogUsrMsg(_("wxWebUpdateActionFontInstall::Run - the font \"") + m_strFile +
+				_("\" does not exist !"));
 		return FALSE;
 	}
 
@@ -86,10 +86,10 @@ bool wxWebUpdateActionFontInstall::Run() const
 
 	// use Win32 APIs to install fonts
 	AddFontResource(f.GetFullPath());
-	
+
 #else
 
-	wxLogError(wxT("wxWebUpdateActionFontInstall is not implemented for this platform !"));
+	wxLogError(_("wxWebUpdateActionFontInstall is not implemented for this platform !"));
 
 #endif
 
@@ -109,7 +109,7 @@ bool wxWebUpdateActionFontInstall::SetProperties(const wxArrayString &propnames,
 		if (propnames[i] == wxT("file"))
 			m_strFile = propvalues[i];
 		else
-			wxLogAdvMsg(wxT("wxWebUpdateActionFontInstall::SetProperties - unknown property: ") 
+			wxLogAdvMsg(wxT("wxWebUpdateActionFontInstall::SetProperties - unknown property: ")
 						+ propnames[i]);
 	}
 
@@ -123,7 +123,7 @@ bool wxWebUpdateActionFontInstall::SetProperties(const wxArrayString &propnames,
 
 	// we won't do the wxFileName::FileExists check because the file we need to run
 	// could be a file which does not exist yet (e.g. its in the update package)
-	if (!f.IsOk()) 
+	if (!f.IsOk())
 		return FALSE;
 
 	return TRUE;

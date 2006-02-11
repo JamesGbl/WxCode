@@ -24,6 +24,7 @@
 #ifndef WX_PRECOMP
     #include <wx/log.h>
     #include <wx/textctrl.h>
+    #include <wx/intl.h>        // for _() support
 #endif
 
 #include <wx/url.h>
@@ -289,7 +290,7 @@ wxWebUpdateLocalPackageArray wxWebUpdateLocalXMLScript::GetAllPackages() const
 
 bool wxWebUpdateLocalXMLScript::Load(const wxString &uri)
 {
-    wxLogUsrMsg(wxT("wxWebUpdateXMLScript::Load - loading ") + uri);
+    wxLogUsrMsg(_("wxWebUpdateXMLScript::Load - loading ") + uri);
 
     // refer to "webupdate.dtd" for a definition of the XML webupdate info script
     // first of all, we need to open a connection to the given url
@@ -834,7 +835,7 @@ bool wxWebUpdateDownload::DownloadSynch(const wxString &path
         (GetDownloadSize() > 0 && out.GetSize() != GetDownloadSize()))
         return FALSE;
 
-    wxLogUsrMsg(wxT("wxWebUpdateDownload::DownloadSynch - completed download of %lu bytes"),
+    wxLogUsrMsg(_("wxWebUpdateDownload::DownloadSynch - completed download of %lu bytes"),
         out.GetSize());
 
     // we have successfully download the file
@@ -1326,7 +1327,7 @@ wxWebUpdateCheckFlag wxWebUpdateXMLScript::GetWebUpdateVersion(const wxXmlNode *
 
 bool wxWebUpdateXMLScript::Load(const wxString &uri)
 {
-    wxLogUsrMsg(wxT("wxWebUpdateXMLScript::Load - loading ") + uri);
+    wxLogUsrMsg(_("wxWebUpdateXMLScript::Load - loading ") + uri);
 
     // refer to "webupdate.dtd" for a definition of the XML webupdate info script
     // first of all, we need to open a connection to the given url

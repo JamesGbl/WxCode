@@ -20,7 +20,8 @@
 
 // includes
 #ifndef WX_PRECOMP
-#include "wx/log.h"
+    #include "wx/log.h"
+    #include <wx/intl.h>        // for _() support
 #endif
 
 #include "wx/download.h"
@@ -301,7 +302,7 @@ unsigned long wxGetSizeOfURI(const wxString &uri)
     wxProtocol &p = u.GetProtocol();
     wxHTTP *http = wxDynamicCast(&p, wxHTTP);
     if (http != NULL && http->GetResponse() == 302) {
-        wxLogUsrMsg(wxT("wxGetSizeOfURI - can't get the size of the resource located at [") +
+        wxLogUsrMsg(_("wxGetSizeOfURI - can't get the size of the resource located at [") +
             uri + wxT("] because the request has been redirected... update your URL"));
         return 0;
     }
@@ -325,7 +326,7 @@ unsigned long wxGetSizeOfURI(const wxString &uri)
 
 // this macro avoids the repetion of a lot of code
 #define wxDT_ABORT_DOWNLOAD(msg) {                                      \
-            wxLogUsrMsg(wxT("wxDownloadThread::Entry - ") +             \
+            wxLogUsrMsg(_("wxDownloadThread::Entry - ") +             \
                 wxString(msg) + wxT(" - DOWNLOAD ABORTED !!!"));        \
             m_bSuccess = FALSE;                                         \
             m_mStatus.Lock();                                           \
@@ -359,7 +360,7 @@ void *wxDownloadThread::Entry()
         // we are starting the download of a file; update our datetime field
         m_dtStart = wxDateTime::UNow();
 
-        wxLogUsrMsg(wxT("wxDownloadThread::Entry - downloading ") + m_strURI);
+        wxLogUsrMsg(_("wxDownloadThread::Entry - downloading ") + m_strURI);
 
         // ensure we can build a wxURL from the given URI
         wxInputStream *in = wxGetInputStreamFromURI(m_strURI);
@@ -367,12 +368,12 @@ void *wxDownloadThread::Entry()
         // check INPUT
         if (in == NULL) {
             // something is wrong with the input URL...
-            wxDT_ABORT_DOWNLOAD(wxT("Cannot open the INPUT stream; ")
-                wxT("url is [") + m_strURI + wxT("]"));
+            wxDT_ABORT_DOWNLOAD(_("Cannot open the INPUT stream; url is [") +
+                                m_strURI + wxT("]"));
         }
         if (!in->IsOk()) {
             delete in;
-            wxDT_ABORT_DOWNLOAD(wxT("Cannot init the INPUT stream"));
+            wxDT_ABORT_DOWNLOAD(_("Cannot init the INPUT stream"));
         }
 
         // now work on streams; wx docs says that using wxURL::GetInputStream
@@ -381,7 +382,7 @@ void *wxDownloadThread::Entry()
         wxFileOutputStream out(m_strOutput);
         if (!out.IsOk()) {
             delete in;
-            wxDT_ABORT_DOWNLOAD(wxT("Cannot open/init the OUPUT stream [")
+            wxDT_ABORT_DOWNLOAD(_("Cannot open/init the OUPUT stream [")
                                 + m_strOutput + wxT("]"));
         }
         m_nFinalSize = in->GetSize();
@@ -413,7 +414,7 @@ void *wxDownloadThread::Entry()
             // do not send too many log messages; send a log message
             // each 20 cycles (i.e. each 20*wxDT_BUF_TEMP_SIZE byte downloaded)
             if ((m_nCurrentSize % (wxDT_BUF_TEMP_SIZE*20)) == 0)
-                wxLogUsrMsg(wxT("wxDownloadThread::Entry - downloaded %lu bytes"),
+                wxLogUsrMsg(_("wxDownloadThread::Entry - downloaded %lu bytes"),
                             m_nCurrentSize);
 #endif
         }
@@ -428,7 +429,7 @@ void *wxDownloadThread::Entry()
             (out.GetSize() != m_nFinalSize && m_nFinalSize != 0))
             wxDT_ABORT_DOWNLOAD(wxT("Output FILE stream size is wrong"));
 
-        wxLogUsrMsg(wxT("wxDownloadThread::Entry - completed download of %lu bytes"),
+        wxLogUsrMsg(_("wxDownloadThread::Entry - completed download of %lu bytes"),
                         m_nCurrentSize);
 
         // do we have to compute MD5 ?
@@ -479,20 +480,22 @@ wxString wxDownloadThread::GetDownloadSpeed() const
 
 wxString wxDownloadThread::GetRemainingTime() const
 {
+    wxString na = _("not available");       // translate only once !
+
     wxASSERT(IsDownloading());
     wxLongLong sec = GetElapsedMSec()/1000;
     if (sec <= 0)
-        return wxT("not available");        // avoid division by zero
+        return na;        // avoid division by zero
 
     // remaining time is the number of bytes we still need to download
     // divided by our download speed...
     wxLongLong nBytesPerSec = wxLongLong(GetCurrDownloadedBytes()) / sec;
     if (nBytesPerSec <= 0)
-        return wxT("not available");        // avoid division by zero
+        return na;        // avoid division by zero
 
     long remsec = (wxLongLong(m_nFinalSize-GetCurrDownloadedBytes())/nBytesPerSec).ToLong();
     if (remsec < 0)
-        return wxT("not available");
+        return na;
 
     if (remsec < 60)
         return wxString::Format(wxT("%li sec"), remsec);
@@ -502,7 +505,7 @@ wxString wxDownloadThread::GetRemainingTime() const
         return wxString::Format(wxT("%li hours, %li min, %li sec"),
                     remsec/3600, (remsec/60)%60, (remsec/3600)%60);
     else
-        return wxT("not available");
+        return na;
 }
 
 
