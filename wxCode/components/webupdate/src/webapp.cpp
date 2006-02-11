@@ -118,7 +118,7 @@ static const wxCmdLineEntryDesc g_cmdLineDesc[] =
         _("Use the given URI to load the remote XML file"),
         wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
     { wxCMD_LINE_OPTION, OPTION_ASKURI, wxT("ask-uri"),
-        _("Asks the uer the URI of the remote XML file"),
+        _("Asks the user the URI of the remote XML file"),
         wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
 
     // switches
