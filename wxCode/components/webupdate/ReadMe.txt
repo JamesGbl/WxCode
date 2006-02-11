@@ -1,10 +1,10 @@
 
  WebUpdate component info
  ------------------------
- 
+
  Website: http://wxcode.sourceforge.net/components/webupdate
  Version: 1.0
- 
+
  Description:
  A complete, open source, cross-platform update solution for any type of application.
  Provides a easily-integrable, small application which connects to a web server and
@@ -29,7 +29,7 @@
   cd build
   ./configure
   make
- 
+
  Type "./configure --help" for more info.
  The --with-httpengine/--without-httpengine option can be used to compile
  with/without the wxHttpEngine component.
@@ -43,6 +43,7 @@
  Change Log
  ----------
 
+ 1.1 - added i18n support (thanks to Helmut Giritzer)
  1.0 - first release
 
 
@@ -55,4 +56,5 @@
 
  Special thanks to Ulrich Telle for the great help given in design-stage and feature-proposal.
  Thanks to Angelo Mandato for its useful wxHttpEngine component.
+ Thanks to Helmut Giritzer for German translation and for helping me to add i18n support to WebUpdate.
  Thanks also to all wxWidgets developers who helped me in the wx-users mailing list.

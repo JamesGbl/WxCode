@@ -3,7 +3,7 @@
 // component, you should run 'doxygen' in this folder
 
 
-/*! 
+/*!
 
 \mainpage WebUpdate
 <center><em>A powerful and flexible cross-platform update solution<br/>by Francesco Montorsi</em></center>
@@ -26,11 +26,11 @@
 - <b>Extensible GUI</b>: it can be modified without recompiling the
 application (using the wxWidgets XRC system). This also means that you can
 choose among various GUI masks (some are better for simple programs with
-few packages, others are better for big programs with many packages) or 
+few packages, others are better for big programs with many packages) or
 just create your own.
 
-- <b>Extensible configuration files</b>: the local & remote XML files (see \ref tutorial 
-for an explanation of this terminology) allows you to configure the behaviour 
+- <b>Extensible configuration files</b>: the local & remote XML files (see \ref tutorial
+for an explanation of this terminology) allows you to configure the behaviour
 of the updater.
 
 - <b>Extensible actions</b>: the actions which are taken when downloading each
@@ -51,6 +51,9 @@ See the FAQ \ref faq_localupdates.
 platform which it targets, the description, its <b>dependencies on other packages</b>
 
 - The <b>DTD</b>s allows you to easily check your XML files: see \ref localdtd and \ref remotedtd.
+
+- Localized: currently in Italian and German.
+  Mail <a href="mailto:frm@nospam@users.sourceforge.net">me</a> if you want to help adding a new translation !
 
 <br/>
 
@@ -73,13 +76,13 @@ used in all WebUpdate documentation:
 '<strong>WebUpdater</strong>' or just '<strong>updater</strong>'.
 The library is used only for some advanced things and for simple programs you will
 typically need to use only the 'updater' copying the executable file in your
-program's folder. For more info about the design of the WebUpdate component, look at the 
+program's folder. For more info about the design of the WebUpdate component, look at the
 \ref faq "FAQ page"...
 
 - a '<b>package</b>' is a set of files which have in common their function (or maybe their
 location in the program's folder structure) and are packaged
 in a single archive. A 'remote package' is an archive hosted in the webserver for
-download. A 'local package' is a package which is installed in the user's system 
+download. A 'local package' is a package which is installed in the user's system
 (typically 'installed' means 'uncompressed').
 The C++ classes used by WebUpdate to work on local & remote packages are
 wxWebUpdateLocalPackage and wxWebUpdatePackage, respectively.
@@ -143,9 +146,9 @@ by WebUpdate; it looks like:
 \verbinclude local.xml.template
 
 For the complete reference to the tags that you can use in this XML file, you should
-look at \ref localdtd 
+look at \ref localdtd
 (even if you don't know the DTD syntax it should be quite easy to
-understand what is allowed and what is not...). 
+understand what is allowed and what is not...).
 
 
 
@@ -155,7 +158,7 @@ contains all the important info about the updated packages. It looks like:
 
 \verbinclude remote.xml.template
 
-Like for the local scripts, for the complete reference to the tags that you can 
+Like for the local scripts, for the complete reference to the tags that you can
 use in this XML file, you should look at \ref remotedtd .
 
 
@@ -178,7 +181,7 @@ to test it quickly (since downloads are usually slower than hard disk accesses !
 5) <strong>Modify your program to use WebUpdater</strong>: this is the 'real' integration
 step. The changes to your app are very small:
 - somewhere (typically in the handler of a menu command) you should put an execute
-istruction to run \c "./webupdater" (on unix) or \c "webupdater.exe" (on win32). 
+istruction to run \c "./webupdater" (on unix) or \c "webupdater.exe" (on win32).
 You can see how to do this using wxWidgets in the WebUpdate samples.
 
 - just after the call to \c "webupdater(.exe)" you should add an exit istruction; that is,
@@ -238,7 +241,7 @@ Note: for latest version of this document, you should look at: http://wxcode.sou
 
 
 
-/*! 
+/*!
 
 \page samples The samples of WebUpdate
 
@@ -280,7 +283,7 @@ The "advanced" samples in \c samples/advanced folder shows you the following:
 
 \section customact The "custom action" samples
 
-The "custom action" sample in \c samples/customaction folder shows you how to 
+The "custom action" sample in \c samples/customaction folder shows you how to
 create a new wxWebUpdateAction-derived for specialized tasks; it's not a "full"
 sample since it cannot be compiled but you can still use the files in that folder,
 together with the \ref customaction page to implement a sample custom action:
@@ -290,7 +293,7 @@ wxWebUpdateActionFontInstall.
 
 
 
-/*! 
+/*!
 
 \page faq The Frequently Asked Questions about WebUpdate
 
@@ -318,12 +321,12 @@ wxWebUpdateActionFontInstall.
    but there is a simple workaround: look at \ref updateupdater.
 
    The library which is built by WebUpdate sources is only for advanced features
-   (see \ref customaction).   
+   (see \ref customaction).
 
 
 \subsection faq_xml 2) Why using XML for the scripts ?
 
-   Why not ? It's easy to parse and human readable. Most important: you don't have to learn 
+   Why not ? It's easy to parse and human readable. Most important: you don't have to learn
    new syntax rules created ad hoc for WebUpdate.
 
 <br/>
@@ -332,7 +335,7 @@ wxWebUpdateActionFontInstall.
 \section usage Using WebUpdate
 
 \subsection faq_hide 1) How can I avoid that the user looks into my local XML file and my XRC file ?
- 
+
    A simple way to do this is to just rename the files with a different extension and use the
    \c --xml and the \c --xrc WebUpdater options to specify the new file names.
    This is a typical trick which usually keeps naive users away from the application's core
@@ -343,7 +346,7 @@ wxWebUpdateActionFontInstall.
 
   You can write your XML local & remote scripts so that WebUpdate will take updates from a non-http resource
   (a local drive/specific folder). In order to do this, you have to modify the \c remoteuri tag content in the
-  local XML script using the \c file protocol (e.g. \c file:/usr/local/updates, 
+  local XML script using the \c file protocol (e.g. \c file:/usr/local/updates,
   <tt>file:c:/temp/updates</tt> - even on windows, use '/' and not '\\' as path separator).
 
   In this way the XML remote script can also be placed somewhere \e locally.
@@ -362,7 +365,7 @@ wxWebUpdateActionFontInstall.
 
 
 
-/*! 
+/*!
 
 \page webupdater WebUpdater application reference
 
@@ -370,11 +373,11 @@ The WebUpdater application accepts some command line options which can be very u
 you can get this list using the "--help" option.
 
 \li \c --xml=mypath/mylocal.xml: by default, WebUpdater searches for a local XML configuration
-    file called "local.xml" in its same folder; with this option you can override this default 
+    file called "local.xml" in its same folder; with this option you can override this default
     and specify both the path and the filename of the local XML file to load.
 
-\li \c --xrc=mypath/myxrc.xrc: by default, WebUpdater searches for an XRC file 
-    called "webupdatedlg.xrc" in its same folder; with this option you can override this default 
+\li \c --xrc=mypath/myxrc.xrc: by default, WebUpdater searches for an XRC file
+    called "webupdatedlg.xrc" in its same folder; with this option you can override this default
     and specify both the path and the filename of the XRC file to load.
     Note that this is not the only way to customize the GUI mask of WebUpdater: in the local
     XML file you can also use the \<dlgxrc\> tag to specify the name of the resource to use
@@ -386,7 +389,7 @@ you can get this list using the "--help" option.
     has precedence over the \<remoteuri\> tag.<br/>
     If you use this option, you cannot use also \c --ask-uri.
 
-\li \c --ask-uri=path/name_of_remote_xml.xml: tells WebUpdater to ask to the user to select a local 
+\li \c --ask-uri=path/name_of_remote_xml.xml: tells WebUpdater to ask to the user to select a local
     folder (can be the drive of a removable device, too) where the remote XML script is placed.
     Until the user selects a folder which contains a file named \c "name_of_remote_xml.xml"
     (i.e. the argument given to the \c --ask-uri option) the WebUpdater won't proceed.
@@ -396,7 +399,7 @@ you can get this list using the "--help" option.
 
 \li \c --restart: tell WebUpdater to restart the updated application after update process
     is complete. Note that this option will set as initially checked the relative checkbox
-    in the wxWebUpdateAdvPanel XRC default resource but the user will still be able to 
+    in the wxWebUpdateAdvPanel XRC default resource but the user will still be able to
     uncheck it and thus avoid that the updated application is restarted.
     To make it impossible for the user to restart the application, you should remove that
     checkbox from the wxWebUpdateAdvPanel resource of \c webupdatedlg.xrc.
@@ -408,7 +411,7 @@ you can get this list using the "--help" option.
 
 
 
-/*! 
+/*!
 
 \page updateupdater How to update the WebUpdater
 
@@ -420,7 +423,7 @@ to update the application-to-update but what about the WebUpdater itself ?
 How can it be updated, in case a new version is released ?
 
 The answer is: using the \<extract\> action and a little trick in the application-to-update.
-If you look at the \ref remotedtd you will note in the \<extract\> action tag documentation 
+If you look at the \ref remotedtd you will note in the \<extract\> action tag documentation
 that when extracting files from compressed archives, it always extracts the files named
 \c "webupdater.exe" (on win32) or \c "webupdater" (on unix) as \c "_webupdater.exe" (on win32)
 or \c "_webupdater" (on unix).
@@ -487,7 +490,7 @@ custom action in \c samples/customaction/fontinstall.*; these files also are a g
 start point for writing the implementation of your own action.
 
 As you can see from \c samples/customaction/fontinstall.h, your action class definition will
-look like: 
+look like:
 
 \code
 class WXDLLIMPEXP_WEBUPDATE MyAction : public wxWebUpdateAction
@@ -550,13 +553,13 @@ ReadMe file.
 
 Some advices:
 - if you want to make WebUpdater as small as possible, you should use the \c WX_DEBUG=0 (on win32)
-  or \c --disable-debug (on unix) option. On Win32 I strongly advise you to use the UPX compressor 
+  or \c --disable-debug (on unix) option. On Win32 I strongly advise you to use the UPX compressor
   (see http://upx.sourceforge.net) to cut the size of the EXE by more than 50%.
 
 - if you think that others could benefit from your wxWebUpdateAction-derived class, and also
   these conditions are met:
   \li you agree to use wxWidgets license for your wxWebUpdateAction-derived class
-  \li your action implementation is cross-platform  
+  \li your action implementation is cross-platform
   then, please submit your code to the author ("frm AT users.sourceforge.net"); I will be pleased
   to include your code in the next WebUpdate release.
 

@@ -30,31 +30,31 @@ class wxGauge;
 
 
 //! The prefix of the static text control which shows the remaining time.
-#define wxWUD_TIMETEXT_PREFIX			wxT("Time remaining: ")
+#define wxWUD_TIMETEXT_PREFIX			_("Time remaining: ")
 
 //! The prefix of the static text control which shows the current status.
-#define wxWUD_SPEEDTEXT_PREFIX			wxT("Status: ")
+#define wxWUD_SPEEDTEXT_PREFIX			_("Status: ")
 
 //! The possible labels of the wxWUD_OK button.
-#define wxWUD_OK_DEFAULT_LABEL			wxT("Download")
-#define wxWUD_OK_INSTALL				wxT("Install")
+#define wxWUD_OK_DEFAULT_LABEL			_("Download")
+#define wxWUD_OK_INSTALL				_("Install")
 
 //! The possible labels of the wxWUD_CANCEL button
-#define wxWUD_CANCEL_DEFAULT_LABEL		wxT("Cancel")
-#define wxWUD_CANCEL_DOWNLOAD			wxT("Stop download")
-#define wxWUD_CANCEL_INSTALLATION		wxT("Stop installation")
+#define wxWUD_CANCEL_DEFAULT_LABEL		_("Cancel")
+#define wxWUD_CANCEL_DOWNLOAD			_("Stop download")
+#define wxWUD_CANCEL_INSTALLATION		_("Stop installation")
 
 //! The possible labels of the wxWUD_SHOWHIDEADV button
-#define wxWUD_SHOWHIDEADV_SHOW			wxT("Show advanced settings >>")
-#define wxWUD_SHOWHIDEADV_HIDE			wxT("Hide advanced settings <<")
+#define wxWUD_SHOWHIDEADV_SHOW			_("Show advanced settings >>")
+#define wxWUD_SHOWHIDEADV_HIDE			_("Hide advanced settings <<")
 
 
 //! Our wxWUD_GAUGE control accepts values from zero to wxWUD_GAUGE_RANGE.
 #define wxWUD_GAUGE_RANGE				1000
 
 //! The text prefix for the IDWUAD_VERSION.
-#define wxWUAD_PREFIX					wxT("This is WebUpdater version ")
-#define wxWUAD_POSTFIX					wxT("\nby Francesco Montorsi (c) 2005")
+#define wxWUAD_PREFIX					_("This is WebUpdater version ")
+#define wxWUAD_POSTFIX					_("\nby Francesco Montorsi (c) 2005")
 
 
 //! The ID of the XML webupdate resource script.
@@ -86,24 +86,24 @@ enum wxWebUpdateDlgStatus {
 
 	//! The user must still hit the "Get update list" button and
 	//! the XML remote script has not been loaded yet
-	wxWUDS_WAITINGXML = 1,	
+	wxWUDS_WAITINGXML = 1,
 
 	//! We are downloading the remote XML script.
 	wxWUDS_DOWNLOADINGXML = 2,
-	
+
 	//! We have successfully loaded the remote XML script and we are
 	//! waiting that the user chooses the packages to download & install
 	wxWUDS_WAITING = 4,
-	
+
 	//! The user has chosen the packages to download & install and we
 	//! are downloading them.
 	wxWUDS_DOWNLOADING = 8,
-	
+
 	//! The download of *all* user-chosen packaged has been completed and
 	//! we are installing them, one by one, in an order which is allowed
 	//! by the package dependencies.
 	wxWUDS_INSTALLING = 16,
-	
+
 	// when the wxWUDS_INSTALLING phase has been completed, then the
 	// dialog will automatically exit if all packages are up2date;
 	// otherwise it will return to the wxWUDS_WAITING status.
@@ -112,8 +112,8 @@ enum wxWebUpdateDlgStatus {
 
 
 
-//! A container of the extra (extra referred to the options already present in the 
-//! local XML script) options supported by wxWebUpdate* classes and provided to 
+//! A container of the extra (extra referred to the options already present in the
+//! local XML script) options supported by wxWebUpdate* classes and provided to
 //! WebUpdater through command line options.
 //! These options override the eventually same options specified in the local XML script.
 /*class wxWebUpdateExtraOptions
@@ -123,11 +123,11 @@ public:
 	//! TRUE if the application-to-update asked to be restarted at the end
 	//! of the update process.
 	bool m_bRestart;
-	
+
 	//! TRUE if the application-to-update asked to save a log of this
 	//! update session.
 	bool m_bSaveLog;
-	
+
 	//! The name of the XRC resource to load as main WebUpdater dialog.
 	wxString m_strRes;
 
@@ -139,10 +139,10 @@ public:
 
 //! The advanced panel of a wxWebUpdateDlg which contains all connection
 //! settings options and some miscellaneous others.
-class WXDLLIMPEXP_WEBUPDATE wxWebUpdateAdvPanel : public wxPanel 
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateAdvPanel : public wxPanel
 {
 protected:		// pointers to our controls
-	
+
 	wxTextCtrl *m_pDownloadPathTextCtrl;
 	wxCheckBox *m_pRemoveFiles, *m_pRestart, *m_pSaveLog;
 
@@ -166,7 +166,7 @@ protected:		// event handlers
 	void OnAuthSettings(wxCommandEvent &);
 	void OnRestart(wxCommandEvent &);
 	void OnSaveLog(wxCommandEvent &);
-	
+
 public:
 
 	//! Constructs a wxWebUpdateAdvPanel; for two-step creation.
@@ -204,7 +204,7 @@ public:		// getters
 	//! Returns the path chosen by the user for the downloaded file.
 	//! This one is initialized to the temporary folder for the current user.
 	wxString GetDownloadPath() const
-		{ return m_pDownloadPathTextCtrl->GetValue(); } 
+		{ return m_pDownloadPathTextCtrl->GetValue(); }
 
 	//! Returns TRUE if the user has chosen to remove the downloaded files.
 	bool RemoveFiles() const
@@ -236,7 +236,7 @@ public:
 
 
 //! The about dialog shown by wxWebUpdateDlg.
-class WXDLLIMPEXP_WEBUPDATE wxWebUpdateAboutDlg : public wxDialog 
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateAboutDlg : public wxDialog
 {
 protected:
 
@@ -258,11 +258,11 @@ private:
 //! NOTE: it's quite difficult to derive a new class from wxProgressDialog
 //!       (which would be more suited rather than the generic wxDialog as
 //!       base class) so we emulate some of wxProgressDialog features
-//!       even if we are not using it. 
-class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDlg : public wxDialog 
+//!       even if we are not using it.
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDlg : public wxDialog
 {
 protected:		// pointers to our controls
-	
+
 	wxStaticText *m_pAppNameText, *m_pTimeText, *m_pSpeedText;
 	wxButton *m_pOkBtn, *m_pCancelBtn, *m_pShowHideAdvBtn;
 	wxGauge *m_pGauge;
@@ -276,7 +276,7 @@ protected:		// pointers to our controls
 	wxWebUpdateListCtrl *m_pUpdatesList;
 
 	// we store advanced settings here:
-	wxWebUpdateAdvPanel *m_pAdvPanel;	
+	wxWebUpdateAdvPanel *m_pAdvPanel;
 
 	//! The number of files downloaded by our #m_dThread.
 	//! Even if wxDownloadThread::GetDownloadCount() could be used for
@@ -292,24 +292,24 @@ protected:		// pointers to our controls
 	//! using a separate variable we can reset this value each time
 	//! the user starts a new download+install process.
 	int m_nInstallCount;
-	
+
 protected:		// XML scripts
 
 	//! The webupdate XML script. This variable becomes valid only once
 	//! the first download has been completed.
 	wxWebUpdateXMLScript m_xmlRemote;
-	
+
 	//! The local XML script.
 	wxWebUpdateLocalXMLScript m_xmlLocal;
-	
+
 protected:		// remote-related stuff
 
-	//! The thread we use to download the webupdate script & packages.	
+	//! The thread we use to download the webupdate script & packages.
 	wxDownloadThread *m_dThread;
 
 	//! The thread we use to install the packages.
 	wxWebUpdateInstallThread *m_iThread;
-	
+
 	//! The package that we are currently downloading if m_nStatus == wxWUDS_DOWNLADING;
 	//! the package that we are installing if m_nStatus == wxWUDS_INSTALLING.
 	wxWebUpdatePackage *m_current;
@@ -338,7 +338,7 @@ protected:		// utilities
 	//! Shows or hides the child window with the given name and then returns
 	//! a pointer to it.
 	wxWindow *ShowHideChild(const wxString &name);
-	
+
 	//! Returns the name of the local file where the given remote package
 	//! will be/has been saved after the download.
 	wxString GetOutputFilenameFor(const wxWebUpdatePackage &p);
@@ -348,11 +348,11 @@ protected:		// pseudo event handlers
 	//! Called when the XML script file has been downloaded.
 	void OnScriptDownload(const wxString &xmluri);
 
-	//! Downloads the first item in the listctrl which is checked and which 
+	//! Downloads the first item in the listctrl which is checked and which
 	//! has not been already downloaded.
 	//! Returns TRUE if there were checked & not-downloaded packages.
 	bool DownloadNextPackage();
-	
+
 	//! Installs the first item in the listctrl which is checked and has been
 	//! downloaded.
 	//! Returns TRUE if there were a package to install.
@@ -367,7 +367,7 @@ protected:		// pseudo event handlers
     //! package are filtered out.
     //! Returns TRUE if there are no packages left in the given array.
     bool FilterOtherPlatforms(wxWebUpdatePackageArray &arr);
-	
+
 	//! Removes the current package if the user has chosen to do that after
 	//! that the current package has been installed.
 	void RemoveCurrentPackage();
@@ -377,8 +377,8 @@ protected:		// event handlers
 	void OnDownload(wxCommandEvent &);
 	void OnCancel(wxCommandEvent &);
 	void OnAbout(wxCommandEvent &);
-	void OnShowFilter(wxCommandEvent &);	
-	void OnShowHideAdv(wxCommandEvent &);	
+	void OnShowFilter(wxCommandEvent &);
+	void OnShowHideAdv(wxCommandEvent &);
 	void OnUpdateUI(wxUpdateUIEvent &);
 	void OnTextURL(wxTextUrlEvent &);
 	void OnSize(wxSizeEvent &);
@@ -402,21 +402,21 @@ public:
 	//!         wxDialog(parent, id, title, pos, size, style, name)
 	//! is not required since we are using XRC system
 	wxWebUpdateDlg::wxWebUpdateDlg(
- 						wxWindow *parent, 
+ 						wxWindow *parent,
 						const wxWebUpdateLocalXMLScript &script);
 
 	//! Inits the values of the pointers and others var to NULL.
 	void PreInit();
 
 	//! Creates the dialog.
-	bool Create(wxWindow *parent, 
+	bool Create(wxWindow *parent,
 				const wxWebUpdateLocalXMLScript &script);
 
     //! Returns TRUE if in the creation process everything was successful.
     bool IsOk() const
         { return m_ok; }
 
-	virtual ~wxWebUpdateDlg() 
+	virtual ~wxWebUpdateDlg()
 		{ if (m_dThread) delete m_dThread;
 			if (m_iThread) delete m_iThread;}
 
@@ -438,24 +438,24 @@ public:		// main functions
 	//! Returns the array of local packages taken from wxWebUpdater.
 	wxWebUpdateLocalPackageArray &GetLocalPackages()
 		{ return m_pUpdatesList->GetLocalPackages(); }
-	
+
 	//! Sets the local XML script which acts as configuration file for the
 	//!	entire dialog (it contains the name of the application to update and
 	//! the XRC resource which should be used for this dialog).
 	void SetLocalScript(const wxWebUpdateLocalXMLScript &script)
 		{ m_xmlLocal = script; }
-		
+
 	//! Returns the name of the application to update.
 	wxString GetAppName() const
 		{ return m_xmlLocal.GetAppName(); }
-		
+
 	//! Returns TRUE if the application updated should be restarted.
 	bool IsAppToRestart() const
 		{ return m_xmlLocal.IsAppToRestart(); }
 
 	//! Returns the filter currently in use for the package listctrl.
 	wxWebUpdateListCtrlFilter GetPackageFilter() const;
-	
+
 private:
 	DECLARE_CLASS(wxWebUpdateDlg)
 	DECLARE_EVENT_TABLE()
