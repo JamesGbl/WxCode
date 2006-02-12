@@ -243,7 +243,8 @@
     <!--             Our SAMPLES             -->
     <!-- =================================== -->
 
-    <!-- after the creation of the EXE, put the WebUpdater XRC file in all samples folders -->
+    <!-- after the creation of the EXE, put the WebUpdater XRC file and
+         the LANG/ folder in all samples folders -->
     <if cond="TARGETING_IDE=='0'">
 
         <if cond="TARGETING_WIN32=='1'">
@@ -266,10 +267,31 @@
                 <clean-files>$(FILE2)</clean-files>
             </define-tag>
         </define-rule>
+        <define-rule name="copymo" extends="force-copy-files">
+            <template>
+                <srcdir>$(COMP_BASEPATH)/src</srcdir>
+                <files>$(FILE1) $(FILE2)</files>
+                <dependency-of>all</dependency-of>
+            </template>
+            <define-tag name="dst">
+                <command>$(MKDIR) $(value)/lang</command>
+                <command>$(MKDIR) $(value)/lang/it</command>
+                <command>$(MKDIR) $(value)/lang/de</command>
+                <dstdir>$(value)</dstdir>
+                <clean-files>$(FILE1)</clean-files>
+                <clean-files>$(FILE2)</clean-files>
+            </define-tag>
+        </define-rule>
+
         <copyrep id="rep4_simple100"><dst>$(COMP_SAMPLE1_DIR)</dst></copyrep>
         <copyrep id="rep4_simple203"><dst>$(COMP_SAMPLE1_UPDATED_DIR)</dst></copyrep>
         <copyrep id="rep4_adv001"><dst>$(COMP_SAMPLE2_DIR)</dst></copyrep>
         <copyrep id="rep4_adv150"><dst>$(COMP_SAMPLE2_UPDATED_DIR)</dst></copyrep>
+
+        <copymo id="po_simple100"><dst>$(COMP_SAMPLE1_DIR)</dst></copymo>
+        <copymo id="po_simple203"><dst>$(COMP_SAMPLE1_UPDATED_DIR)</dst></copymo>
+        <copymo id="po_adv001"><dst>$(COMP_SAMPLE2_DIR)</dst></copymo>
+        <copymo id="po_adv150"><dst>$(COMP_SAMPLE2_UPDATED_DIR)</dst></copymo>
     </if>
 
     <!-- for MSVC6PRJ this hack will supply the lack of action targets -->
