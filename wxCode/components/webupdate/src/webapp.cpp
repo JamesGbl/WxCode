@@ -123,10 +123,10 @@ static const wxCmdLineEntryDesc g_cmdLineDesc[] =
 
     // switches
     { wxCMD_LINE_SWITCH, SWITCH_RESTART, wxT("restart"),
-        _("Restart the updated application when WebUpdater is closed"),
+        _("Restart the updated application when WebUpdater quits"),
         wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
     { wxCMD_LINE_SWITCH, SWITCH_SAVELOG, wxT("savelog"),
-        _("Saves the log messages to '") + wxString(wxWU_LOGFILENAME) + wxT("'"),
+        _("Saves the log messages to '" wxWU_LOGFILENAME "'"),
         wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
 
     // help
@@ -429,15 +429,14 @@ bool WebUpdaterApp::OnPreInit()
     wxMemoryFSHandler::AddFile(wxT("www.xpm"), wxBitmap(www_xpm), wxBITMAP_TYPE_XPM);
 
     // load the local XML webupdate script
-    wxLogUsrMsg(_("WebUpdaterApp::OnInit - loading the local XML webupdate script ") + xml);
+    wxLogUsrMsg(_("WebUpdaterApp::OnInit - loading the local XML webupdate script %s"), xml.c_str());
     wxFileName fn(xml);
     fn.MakeAbsolute(wxGetCwd());
     if (!m_script.Load(fn.GetFullPath())) {
-        wxWebUpdateInstaller::Get()->ShowErrorMsg(
+        wxWebUpdateInstaller::Get()->ShowErrorMsg(wxString::Format(
                     _("The installation of the WebUpdater component of this application\n" \
-                      "is corrupted; the file:\n\n\t") +
-                    fn.GetFullPath() +
-                    _("\n\nis missing (or invalid); please reinstall the program."));
+                      "is corrupted; the file:\n\n\t%s\n\nis missing (or invalid); please " \
+                      "reinstall the program."), fn.GetFullPath().c_str()));
         return FALSE;
     }
 
@@ -507,12 +506,12 @@ bool WebUpdaterApp::OnPreInit()
     wxASSERT(m_script.IsOk());
 
     // load our XRC file
-    wxLogUsrMsg(_("WebUpdaterApp::OnInit - loading the XRC file [") + m_script.GetXRC() + wxT("]"));
+    wxLogUsrMsg(_("WebUpdaterApp::OnInit - loading the XRC file [%s]"), m_script.GetXRC().c_str());
     if (!wxXmlResource::Get()->Load(m_script.GetXRC())) {
-        wxWebUpdateInstaller::Get()->ShowErrorMsg(
-                    _("The WebUpdater configuration file is corrupted; the file:\n\n\t") +
-                    m_script.GetXRC() +
-                    _("\n\nis missing (or invalid); please reinstall the program."));
+        wxWebUpdateInstaller::Get()->ShowErrorMsg(wxString::Format(
+                    _("The WebUpdater configuration file is corrupted; the file:\n\n\t%s" \
+                      "\n\nis missing (or invalid); please reinstall the program."),
+                    m_script.GetXRC().c_str()));
         return FALSE;
     }
 
@@ -522,10 +521,10 @@ bool WebUpdaterApp::OnPreInit()
     wxFileName app2update(tmp);
     app2update.MakeAbsolute(wxGetCwd());
     if (!wxFileName::FileExists(app2update.GetFullPath())) {
-        wxWebUpdateInstaller::Get()->ShowErrorMsg(
-                    _("The WebUpdater configuration file is corrupted; the file:\n\n\t") +
-                    app2update.GetFullPath() +
-                    _("\n\nis missing (or invalid); please reinstall the program."));
+        wxWebUpdateInstaller::Get()->ShowErrorMsg(wxString::Format(
+                    _("The WebUpdater configuration file is corrupted; the file:\n\n\t%s" \
+                      "\n\nis missing (or invalid); please reinstall the program."),
+                    app2update.GetFullPath().c_str()));
         return FALSE;
     }
 

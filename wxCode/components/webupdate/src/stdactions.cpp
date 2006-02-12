@@ -64,8 +64,8 @@ bool wxWebUpdateActionRun::Run() const
 	wxFileName f(m_strFile);
 	if (!f.FileExists()) {
 
-		wxLogUsrMsg(_("wxWebUpdateActionRun::Run - the file \"") + m_strFile +
-				wxT("\" does not exist; proceeding anyway (maybe it's in PATH)"));
+		wxLogUsrMsg(_("wxWebUpdateActionRun::Run - the file [%s] does not exist; " \
+                      "proceeding anyway (maybe it's in PATH)"), m_strFile.c_str());
 
 		// proceed: the executable could be in the system path...
 	}
@@ -143,9 +143,9 @@ bool wxWebUpdateActionRun::SetProperties(const wxArrayString &propnames,
 bool wxWebUpdateActionExtract::Run() const
 {
 	wxArrayString orig, output;
-	wxLogUsrMsg(_("wxWebUpdateActionExtract::Run - going to extract the file [")
-				+ m_strFile + wxT("] of type [") + m_strType + wxT("] in [")
-				+ m_strWhere + wxT("]"));
+	wxLogUsrMsg(_("wxWebUpdateActionExtract::Run - going to extract the file " \
+                  "[%1$s] of type [%2$s] in [%3$s]"),
+				m_strFile.c_str(), m_strType.c_str(), m_strWhere.c_str());
 
 	// wxFileName wants a path separator at the end of directory names
 	wxString dir(m_strWhere);
@@ -156,8 +156,8 @@ bool wxWebUpdateActionExtract::Run() const
 	wxFileName f(dir), f2(m_strFile);
 	if (!f.DirExists() || !f2.FileExists()) {
 
-		wxLogUsrMsg(_("wxWebUpdateActionExtract::Run - the folder \"") + m_strWhere +
-				_("\" or the file \"") + m_strFile + _("\" does not exist !"));
+		wxLogUsrMsg(_("wxWebUpdateActionExtract::Run - the folder [%1$s] or the " \
+                      "file [%2$s] does not exist !"), m_strWhere.c_str(), m_strFile.c_str());
 		return FALSE;
 	}
 
@@ -208,14 +208,14 @@ bool wxWebUpdateActionExtract::Run() const
 		}
 
 		// this is a file...
-		wxLogUsrMsg(_("wxWebUpdateActionExtract::Run - extracting [") + name +
-			wxT("] as [") + output + wxT("]..."));
+		wxLogUsrMsg(_("wxWebUpdateActionExtract::Run - extracting [%1$s] as [%2$s]..."),
+                    name.c_str(), output.c_str());
 
         // now just dump this entry to a new uncompressed file...
 		wxFileOutputStream out(output);
 		if (!out.IsOk() || !out.Write(*in)) {
 
-			wxLogUsrMsg(_("wxWebUpdateActionExtract::Run - couldn't decompress ") + name);
+			wxLogUsrMsg(_("wxWebUpdateActionExtract::Run - couldn't decompress [%s]"), name.c_str());
 			delete in;
 			return FALSE;
 		}
@@ -292,8 +292,8 @@ bool wxWebUpdateActionExtract::SetProperties(const wxArrayString &propnames,
 bool wxWebUpdateActionCopy::Run() const
 {
 	wxArrayString orig, output;
-	wxLogUsrMsg(_("wxWebUpdateActionCopy::Run - going to copy the file(s)/folder(s) [")
-				+ m_strFrom + wxT("] in [")	+ m_strTo + wxT("]"));
+	wxLogUsrMsg(_("wxWebUpdateActionCopy::Run - going to copy the file(s)/folder(s) [%1$s] in [%2$s]"),
+				m_strFrom.c_str(), m_strTo.c_str());
 
 	// wxFileName wants a path separator at the end of directory names
 	wxString dir(m_strTo);
@@ -387,8 +387,7 @@ bool wxWebUpdateActionCopy::SetProperties(const wxArrayString &propnames,
 bool wxWebUpdateActionMkdir::Run() const
 {
 	wxArrayString orig, output;
-	wxLogUsrMsg(_("wxWebUpdateActionMkdir::Run - going to make the folder [")
-				+ m_strTarget + wxT("]"));
+	wxLogUsrMsg(_("wxWebUpdateActionMkdir::Run - going to make the folder [%s]"), m_strTarget.c_str());
 
 	// wxFileName wants a path separator at the end of directory names
 	wxString dir(m_strTarget);
@@ -456,8 +455,7 @@ bool wxWebUpdateActionMkdir::SetProperties(const wxArrayString &propnames,
 bool wxWebUpdateActionMkfile::Run() const
 {
 	wxArrayString orig, output;
-	wxLogUsrMsg(_("wxWebUpdateActionMkfile::Run - going to make the file [")
-				+ m_strTarget + wxT("]"));
+	wxLogUsrMsg(_("wxWebUpdateActionMkfile::Run - going to make the file [%s]"), m_strTarget.c_str());
 
 	// do we have to create a folder ?
 	wxFileName f(m_strTarget);
@@ -481,16 +479,15 @@ bool wxWebUpdateActionMkfile::Run() const
 
 	// write
 	if (out.Write(data, bytes).LastWrite() != bytes) {
-		wxLogUsrMsg(_("wxWebUpdateActionMkfile::Run - could not create the [") +
-			f.GetFullPath() + _("] file."));
+		wxLogUsrMsg(_("wxWebUpdateActionMkfile::Run - could not create the [%s] file"),
+			        f.GetFullPath().c_str());
 		//wxDELETEA(data);
 		return FALSE;
 	}
 
 	//wxDELETEA(data);
-	wxLogUsrMsg(_("wxWebUpdateActionMkfile::Run - created the [") +
-		f.GetFullPath() + _("] file with content [") +
-		m_strContent + _("]..."));
+	wxLogUsrMsg(_("wxWebUpdateActionMkfile::Run - created the [%1$s] file with content [%2$s]..."),
+                f.GetFullPath().c_str(), m_strContent.c_str());
 
 	return TRUE;
 }
@@ -547,13 +544,11 @@ bool wxWebUpdateActionMkfile::SetProperties(const wxArrayString &propnames,
 bool wxWebUpdateActionOpen::Run() const
 {
 	wxFileName f(m_strFile);
-	wxLogUsrMsg(_("wxWebUpdateActionOpen::Run - opening the file [")
-				+ m_strFile + wxT("]"));
+	wxLogUsrMsg(_("wxWebUpdateActionOpen::Run - opening the file [%s]"), m_strFile.c_str());
 
 	if (!f.FileExists()) {
 
-		wxLogUsrMsg(_("wxWebUpdateActionOpen::Run - the file \"") + m_strFile +
-				wxT("\" does not exist !"));
+		wxLogUsrMsg(_("wxWebUpdateActionOpen::Run - the file [%s] does not exist !"), m_strFile.c_str());
 		return FALSE;
 	}
 
@@ -574,7 +569,7 @@ bool wxWebUpdateActionOpen::Run() const
  		ft =  wxTheMimeTypesManager->GetFileTypeFromMimeType(m_strMime);
 
     if (!ft) {
-        wxLogUsrMsg(_("wxWebUpdateActionOpen::Run - No default application can open the file [") + m_strFile + wxT("]"));
+        wxLogUsrMsg(_("wxWebUpdateActionOpen::Run - no default application can open the file [%s]"), m_strFile.c_str());
         return false;
     }
 
@@ -587,12 +582,12 @@ bool wxWebUpdateActionOpen::Run() const
     delete ft;
 
     if (!ok) {
-	    wxLogUsrMsg(_("wxWebUpdateActionOpen::Run - Cannot get the OPEN command for [") + m_strFile + wxT("]"));
+	    wxLogUsrMsg(_("wxWebUpdateActionOpen::Run - cannot get the OPEN command for [%s]"), m_strFile.c_str());
     	return FALSE;
 	}
 
     if (wxExecute (cmd, m_nExecFlag) == -1) {
-        wxLogUsrMsg(_("wxWebUpdateActionOpen::Run - Failed to launch application for [") + m_strFile + wxT("]"));
+        wxLogUsrMsg(_("wxWebUpdateActionOpen::Run - failed to launch application for [%s]"), m_strFile.c_str());
         return FALSE;
     }
 

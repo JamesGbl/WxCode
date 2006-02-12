@@ -53,8 +53,8 @@ class wxGauge;
 #define wxWUD_GAUGE_RANGE				1000
 
 //! The text prefix for the IDWUAD_VERSION.
-#define wxWUAD_PREFIX					_("This is WebUpdater version ")
-#define wxWUAD_POSTFIX					_("\nby Francesco Montorsi (c) 2005")
+#define wxWUAD_VERSIONSTR				_("This is WebUpdater version %s\n" \
+                        				  "by Francesco Montorsi (c) 2005")
 
 
 //! The ID of the XML webupdate resource script.

@@ -178,18 +178,29 @@
         <set var="POFILE">webupdater.po</set>
         <set var="XRCFILE">$(COMP_BASEPATH)/src/webupdatedlg.xrc</set>
 
-        <define-tag name="updatepo" rules="action">
+        <define-tag name="create-pot" rules="action">
             <command>
+                rm -f $(value)
                 touch $(value)
                 find $(COMP_BASEPATH)/include -name "*.h" | $(XARGS) $(XGETTEXT) $(XGETTEXT_ARGS) -o $(value)
                 find $(COMP_BASEPATH)/src -name "*.cpp" | $(XARGS) $(XGETTEXT) $(XGETTEXT_ARGS) -o $(value)
                 find $(COMP_BASEPATH)/src -name "*.xrc.*" | $(XARGS) $(XGETTEXT) $(XGETTEXT_ARGS) -o $(value)
             </command>
         </define-tag>
-        <define-tag name="compilepo" rules="action">
+        <define-tag name="update-po" rules="action">
+            <command>
+                $(MSGMERGE) $(value) locale/$(POFILE)t > $(value).new &amp;&amp; mv $(value).new $(value)
+            </command>
+        </define-tag>
+        <define-tag name="compile-po" rules="action">
             <command>
                 $(MSGFMT) -o $(value.replace('po', 'mo')) $(value)
             </command>
+        </define-tag>
+
+        <define-tag name="update-and-compile-po" rules="action">
+            <update-po>$(value)</update-po>
+            <compile-po>$(value)</compile-po>
         </define-tag>
 
 
@@ -198,15 +209,12 @@
             <command>wxrc $(XRCFILE) -g -c -o $(XRCFILE).extracted</command>
         </action>
 
-        <action id="webupdater.po" cond="TARGETING_WIN32=='0'">
+        <action id="i18n" cond="TARGETING_WIN32=='0'">
             <depends>xrcscan</depends>
 
-            <!-- Scan all source and headers files and extract translatable strings -->
-            <updatepo>locale/it/$(POFILE)</updatepo>
-            <updatepo>locale/de/$(POFILE)</updatepo>
-
-            <compilepo>locale/it/$(POFILE)</compilepo>
-            <compilepo>locale/de/$(POFILE)</compilepo>
+            <create-pot>locale/$(POFILE)t</create-pot>
+            <update-and-compile-po>locale/it/$(POFILE)</update-and-compile-po>
+            <update-and-compile-po>locale/de/$(POFILE)</update-and-compile-po>
         </action>
 
 

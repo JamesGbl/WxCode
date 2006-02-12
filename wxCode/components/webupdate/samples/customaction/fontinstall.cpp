@@ -77,8 +77,8 @@ bool wxWebUpdateActionFontInstall::Run() const
         // you should use two different types of wxLogXXX functions:
         // - wxLogUsrMsg for msg to be shown to the user & saved in the log file
         // - wxLogAdvMsg for msg to be saved in the log file only
-		wxLogUsrMsg(_("wxWebUpdateActionFontInstall::Run - the font \"") + m_strFile +
-				_("\" does not exist !"));
+		wxLogUsrMsg(_("wxWebUpdateActionFontInstall::Run - the font [%s] does not exist !"),
+                    m_strFile.c_str());
 		return FALSE;
 	}
 

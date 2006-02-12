@@ -302,8 +302,8 @@ unsigned long wxGetSizeOfURI(const wxString &uri)
     wxProtocol &p = u.GetProtocol();
     wxHTTP *http = wxDynamicCast(&p, wxHTTP);
     if (http != NULL && http->GetResponse() == 302) {
-        wxLogUsrMsg(_("wxGetSizeOfURI - can't get the size of the resource located at [") +
-            uri + wxT("] because the request has been redirected... update your URL"));
+        wxLogUsrMsg(_("wxGetSizeOfURI - can't get the size of the resource located at [%s]" \
+                      " because the request has been redirected... update your URL"), uri);
         return 0;
     }
 #endif
@@ -325,9 +325,9 @@ unsigned long wxGetSizeOfURI(const wxString &uri)
 // ---------------------
 
 // this macro avoids the repetion of a lot of code
-#define wxDT_ABORT_DOWNLOAD(msg) {                                      \
-            wxLogUsrMsg(_("wxDownloadThread::Entry - ") +             \
-                wxString(msg) + wxT(" - DOWNLOAD ABORTED !!!"));        \
+#define wxDT_ABORT_DOWNLOAD(msg) {                                                      \
+            wxLogUsrMsg(_("wxDownloadThread::Entry - %s - DOWNLOAD ABORTED !!!"),       \
+                        wxString(msg).c_str());                         \
             m_bSuccess = FALSE;                                         \
             m_mStatus.Lock();                                           \
             m_nStatus = wxDTS_WAITING;                                  \
@@ -360,7 +360,7 @@ void *wxDownloadThread::Entry()
         // we are starting the download of a file; update our datetime field
         m_dtStart = wxDateTime::UNow();
 
-        wxLogUsrMsg(_("wxDownloadThread::Entry - downloading ") + m_strURI);
+        wxLogUsrMsg(_("wxDownloadThread::Entry - downloading [%s]"), m_strURI.c_str());
 
         // ensure we can build a wxURL from the given URI
         wxInputStream *in = wxGetInputStreamFromURI(m_strURI);
@@ -368,8 +368,7 @@ void *wxDownloadThread::Entry()
         // check INPUT
         if (in == NULL) {
             // something is wrong with the input URL...
-            wxDT_ABORT_DOWNLOAD(_("Cannot open the INPUT stream; url is [") +
-                                m_strURI + wxT("]"));
+            wxDT_ABORT_DOWNLOAD(wxString::Format(_("Cannot open the INPUT stream; url is [%s]"), m_strURI.c_str()));
         }
         if (!in->IsOk()) {
             delete in;
@@ -382,8 +381,7 @@ void *wxDownloadThread::Entry()
         wxFileOutputStream out(m_strOutput);
         if (!out.IsOk()) {
             delete in;
-            wxDT_ABORT_DOWNLOAD(_("Cannot open/init the OUPUT stream [")
-                                + m_strOutput + wxT("]"));
+            wxDT_ABORT_DOWNLOAD(wxString::Format(_("Cannot open/init the OUPUT stream [%s]"), m_strOutput.c_str()));
         }
         m_nFinalSize = in->GetSize();
 

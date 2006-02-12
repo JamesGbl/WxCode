@@ -345,16 +345,15 @@ locale_install:
 xrcscan: 
 	wxrc ./src/webupdatedlg.xrc -g -c -o ./src/webupdatedlg.xrc.extracted
 
-webupdater.po: xrcscan
-	touch locale/it/webupdater.po
-	find ./include -name "*.h" | xargs xgettext --c++ -k_ -kwxPLURAL:1,2 -kwxTRANSLATE -s -j -o locale/it/webupdater.po
-	find ./src -name "*.cpp" | xargs xgettext --c++ -k_ -kwxPLURAL:1,2 -kwxTRANSLATE -s -j -o locale/it/webupdater.po
-	find ./src -name "*.xrc.*" | xargs xgettext --c++ -k_ -kwxPLURAL:1,2 -kwxTRANSLATE -s -j -o locale/it/webupdater.po
-	touch locale/de/webupdater.po
-	find ./include -name "*.h" | xargs xgettext --c++ -k_ -kwxPLURAL:1,2 -kwxTRANSLATE -s -j -o locale/de/webupdater.po
-	find ./src -name "*.cpp" | xargs xgettext --c++ -k_ -kwxPLURAL:1,2 -kwxTRANSLATE -s -j -o locale/de/webupdater.po
-	find ./src -name "*.xrc.*" | xargs xgettext --c++ -k_ -kwxPLURAL:1,2 -kwxTRANSLATE -s -j -o locale/de/webupdater.po
+i18n: xrcscan
+	rm -f locale/webupdater.pot
+	touch locale/webupdater.pot
+	find ./include -name "*.h" | xargs xgettext --c++ -k_ -kwxPLURAL:1,2 -kwxTRANSLATE -s -j -o locale/webupdater.pot
+	find ./src -name "*.cpp" | xargs xgettext --c++ -k_ -kwxPLURAL:1,2 -kwxTRANSLATE -s -j -o locale/webupdater.pot
+	find ./src -name "*.xrc.*" | xargs xgettext --c++ -k_ -kwxPLURAL:1,2 -kwxTRANSLATE -s -j -o locale/webupdater.pot
+	msgmerge locale/it/webupdater.po locale/webupdater.pot > locale/it/webupdater.po.new && mv locale/it/webupdater.po.new locale/it/webupdater.po
 	msgfmt --statistics -o locale/it/webupdater.mo locale/it/webupdater.po
+	msgmerge locale/de/webupdater.po locale/webupdater.pot > locale/de/webupdater.po.new && mv locale/de/webupdater.po.new locale/de/webupdater.po
 	msgfmt --statistics -o locale/de/webupdater.mo locale/de/webupdater.po
 
 ./src/webupdater$(EXEEXT): $(WEBUPDATER_OBJECTS) locale $(__webupdater___win32rc) $(__webupdate_lib___depname)

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-02-11 15:43+0100\n"
+"POT-Creation-Date: 2006-02-12 12:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,149 +16,42 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/webupdatedlg.cpp:956
+#: src/installer.cpp:349
+#, fuzzy, c-format
 msgid ""
 "\n"
-"\n"
-"Please contact the support team for more info."
-msgstr ""
-"\n"
-"\n"
-"Prego contattare gli sviluppatori per più informazioni."
-
-#: src/webupdatedlg.cpp:872
-msgid ""
-"\n"
-"\n"
-"Please retry the download."
-msgstr ""
-"\n"
-"\n"
-"Prego riprovare il download."
-
-#: src/webupdatedlg.cpp:824
-msgid ""
-"\n"
-"\n"
-"URL... "
-msgstr ""
-"\n"
-"\n"
-"URL... "
-
-#: src/webupdatedlg.cpp:870
-msgid ""
-"\n"
-"\n"
-"instead of:\n"
-"\n"
-"\t"
-msgstr ""
-"\n"
-"\n"
-"invece che:\n"
-"\n"
-"\t"
-
-#: src/webapp.cpp:440 src/webapp.cpp:515 src/webapp.cpp:528
-msgid ""
-"\n"
-"\n"
-"is missing (or invalid); please reinstall the program."
-msgstr ""
-"\n"
-"\n"
-"è mancante (o invalida); prego reinstallare il programma."
-
-#: src/installer.cpp:348
-msgid ""
-"\n"
-"Contact the support team of "
+"Contact the support team of %s for help"
 msgstr ""
 "\n"
 "Contattare gli sviluppatori di "
 
-#: include/wx/webupdatedlg.h:57
-msgid ""
-"\n"
-"by Francesco Montorsi (c) 2005"
+#: src/webapp.cpp:129
+msgid "'"
 msgstr ""
-
-#: src/webupdatedlg.cpp:1206
-msgid " after the update is finished"
-msgstr " dopo che l'aggiornamento è finito"
-
-#: src/installer.cpp:350
-msgid " for help."
-msgstr " per aiuto."
-
-#: src/webupdatedlg.cpp:824
-msgid ""
-" from\n"
-"\n"
-msgstr " dan \n"
-
-#: src/webupdatedlg.cpp:522
-msgid " in the WebUpdate script. Exiting the update dialog."
-msgstr " nello script WebUpdate. Esco dalla finestra di dialogo..."
-
-#: src/webupdatedlg.cpp:955
-msgid ""
-"\"\n"
-"could not be installed."
-msgstr ""
-"\"\n"
-"non si è potuto installare."
-
-#: src/webupdatedlg.cpp:868
-msgid ""
-"\"\n"
-"is corrupted. MD5 checksum is:\n"
-"\n"
-"\t"
-msgstr ""
-"\"\n"
-"è corrotto. La somma MD5 è:\n"
-"\n"
-"\t"
-
-#: src/webupdatedlg.cpp:1046
-msgid "\" at "
-msgstr "\" at "
-
-#: src/stdactions.cpp:160
-msgid "\" does not exist !"
-msgstr "\" does not exist !"
-
-#: src/stdactions.cpp:160
-msgid "\" or the file \""
-msgstr "\" or the file \""
 
 #: src/webupdatedlg.cpp:400
 msgid "... exiting the update dialog."
 msgstr "... exiting the update dialog."
 
 #: src/webupdatedlg.xrc.extracted:3 src/webupdatedlg.xrc.extracted:14
-#: src/webupdatedlg.xrc.extracted:21 src/webupdatedlg.xrc.extracted:3
-#: src/webupdatedlg.xrc.extracted:14 src/webupdatedlg.xrc.extracted:21
+#: src/webupdatedlg.xrc.extracted:21
 msgid "APPNAME"
 msgstr "APPNAME"
 
 #: src/webupdatedlg.xrc.extracted:9 src/webupdatedlg.xrc.extracted:16
-#: src/webupdatedlg.xrc.extracted:23 src/webupdatedlg.xrc.extracted:9
-#: src/webupdatedlg.xrc.extracted:16 src/webupdatedlg.xrc.extracted:23
+#: src/webupdatedlg.xrc.extracted:23
 msgid "About"
 msgstr "About"
 
-#: src/webupdatedlg.xrc.extracted:33 src/webupdatedlg.xrc.extracted:33
+#: src/webupdatedlg.xrc.extracted:33
 msgid "About WebUpdater"
 msgstr "About WebUpdater"
 
 #: src/webapp.cpp:121
-msgid "Asks the uer the URI of the remote XML file"
-msgstr "  Asks the uer the URI of the remote XML file"
+msgid "Asks the user the URI of the remote XML file"
+msgstr ""
 
-#: src/webupdatedlg.xrc.extracted:32 src/webupdatedlg.xrc.extracted:32
+#: src/webupdatedlg.xrc.extracted:32
 msgid ""
 "Authentication\n"
 "settings"
@@ -166,65 +59,65 @@ msgstr ""
 "Authentication\n"
 "settings"
 
-#: src/webupdatedlg.xrc.extracted:28 src/webupdatedlg.xrc.extracted:28
+#: src/webupdatedlg.xrc.extracted:28
 msgid "Browse"
 msgstr "Browse"
 
-#: src/webupdatedlg.xrc.extracted:10 src/webupdatedlg.xrc.extracted:17
-#: src/webupdatedlg.xrc.extracted:24 include/wx/webupdatedlg.h:43
-#: src/webupdatedlg.xrc.extracted:10 src/webupdatedlg.xrc.extracted:17
-#: src/webupdatedlg.xrc.extracted:24
+#: include/wx/webupdatedlg.h:43 src/webupdatedlg.xrc.extracted:10
+#: src/webupdatedlg.xrc.extracted:17 src/webupdatedlg.xrc.extracted:24
 msgid "Cancel"
 msgstr "Cancel"
 
-#: src/download.cpp:376
+#: src/download.cpp:375
 msgid "Cannot init the INPUT stream"
 msgstr "Cannot init the INPUT stream"
 
 #: src/download.cpp:371
-msgid "Cannot open the INPUT stream; "
+#, fuzzy, c-format
+msgid "Cannot open the INPUT stream; url is [%s]"
 msgstr "Cannot open the INPUT stream; "
 
-#: src/download.cpp:371
-msgid "Cannot open the INPUT stream; url is ["
-msgstr ""
-
-#: src/download.cpp:385
-msgid "Cannot open/init the OUPUT stream ["
+#: src/download.cpp:384
+#, fuzzy, c-format
+msgid "Cannot open/init the OUPUT stream [%s]"
 msgstr "Cannot open/init the OUPUT stream ["
 
 #: src/webupdatedlg.cpp:493
-msgid "Cannot parse the XML update script downloaded as: "
+#, fuzzy, c-format
+msgid "Cannot parse the XML update script downloaded as: %s"
 msgstr "Cannot parse the XML update script downloaded as: "
 
 #: src/webupdatedlg.cpp:1221
 msgid "Choose a directory"
 msgstr "Choose a directory"
 
-#: src/webapp.cpp:459
+#: src/webapp.cpp:458
 msgid "Choose the folder containing the updated packages"
 msgstr "Choose the folder containing the updated packages"
 
-#: src/webupdatectrl.cpp:415 src/webupdatedlg.cpp:357
-msgid "Close some applications and then retry."
-msgstr "Close some applications and then retry."
-
-#: src/webupdatedlg.cpp:823
-msgid "Could not download the "
+#: src/webupdatedlg.cpp:824
+#, fuzzy, c-format
+msgid ""
+"Could not download the %s from\n"
+"\n"
+"%s\n"
+"\n"
+"URL..."
 msgstr "Could not download the "
 
 #: src/webupdatedlg.cpp:521
-msgid "Could not found any valid package for "
-msgstr "Could not found any valid package for "
+#, fuzzy, c-format
+msgid ""
+"Could not found any valid package for %s in the WebUpdate script. Exiting "
+"the update dialog."
+msgstr " nello script WebUpdate. Esco dalla finestra di dialogo..."
 
-#: src/webupdatedlg.xrc.extracted:11 src/webupdatedlg.xrc.extracted:18
-#: src/webupdatedlg.xrc.extracted:25 include/wx/webupdatedlg.h:39
-#: src/webupdatedlg.xrc.extracted:11 src/webupdatedlg.xrc.extracted:18
-#: src/webupdatedlg.xrc.extracted:25
+#: include/wx/webupdatedlg.h:39 src/webupdatedlg.xrc.extracted:11
+#: src/webupdatedlg.xrc.extracted:18 src/webupdatedlg.xrc.extracted:25
 msgid "Download"
 msgstr "Download"
 
-#: src/webupdatedlg.cpp:1107
+#: src/webupdatedlg.cpp:1106
 msgid "Download && install"
 msgstr "Download && install"
 
@@ -233,21 +126,20 @@ msgid "Download aborted..."
 msgstr "Download aborted..."
 
 #: src/webupdatedlg.xrc.extracted:7 src/webupdatedlg.xrc.extracted:15
-#: src/webupdatedlg.xrc.extracted:22 src/webupdatedlg.xrc.extracted:7
-#: src/webupdatedlg.xrc.extracted:15 src/webupdatedlg.xrc.extracted:22
+#: src/webupdatedlg.xrc.extracted:22
 msgid "Download status:"
 msgstr "Download status:"
 
-#: src/webupdatectrl.cpp:416 src/installer.cpp:350 src/webupdatedlg.cpp:332
-#: src/webupdatedlg.cpp:362 src/webupdatedlg.cpp:372 src/webupdatectrl.cpp:417
+#: src/webupdatectrl.cpp:417 src/installer.cpp:351 src/webupdatedlg.cpp:332
+#: src/webupdatedlg.cpp:362 src/webupdatedlg.cpp:372
 msgid "Error"
 msgstr "Error"
 
-#: src/webupdatedlg.xrc.extracted:39 src/webupdatedlg.xrc.extracted:39
+#: src/webupdatedlg.xrc.extracted:39
 msgid "For reporting bugs about WebUpdater:"
 msgstr "For reporting bugs about WebUpdater:"
 
-#: src/webupdatedlg.cpp:1109
+#: src/webupdatedlg.cpp:1108
 msgid "Get update list"
 msgstr "Get update list"
 
@@ -255,7 +147,7 @@ msgstr "Get update list"
 msgid "Hide advanced settings <<"
 msgstr ""
 
-#: src/webupdatectrl.cpp:111 src/webupdatectrl.cpp:112
+#: src/webupdatectrl.cpp:112
 msgid "Importance"
 msgstr "Importance"
 
@@ -263,21 +155,17 @@ msgstr "Importance"
 msgid "Install"
 msgstr ""
 
-#: src/webupdatectrl.cpp:108 src/webupdatectrl.cpp:109
+#: src/webupdatectrl.cpp:109
 msgid "Latest version"
 msgstr "Latest version"
 
-#: src/webupdatedlg.xrc.extracted:36 src/webupdatedlg.xrc.extracted:36
+#: src/webupdatedlg.xrc.extracted:36
 msgid "Links"
 msgstr "Links"
 
-#: src/webupdatectrl.cpp:109 src/webupdatectrl.cpp:110
+#: src/webupdatectrl.cpp:110
 msgid "Local version"
 msgstr "Local version"
-
-#: src/webupdatedlg.cpp:356
-msgid "Low resources; cannot run the WebUpdate dialog...\n"
-msgstr "Low resources; cannot run the WebUpdate dialog...\n"
 
 #: src/webupdatedlg.cpp:356
 msgid ""
@@ -285,22 +173,18 @@ msgid ""
 "Close some applications and then retry."
 msgstr ""
 
-#: src/webupdatectrl.cpp:414
-msgid "Low resources; cannot show the size of the packages...\n"
-msgstr "Low resources; cannot show the size of the packages...\n"
-
 #: src/webupdatectrl.cpp:415
 msgid ""
 "Low resources; cannot show the size of the packages...\n"
 "Close some applications and then retry."
 msgstr ""
 
-#: src/webupdatectrl.cpp:74 src/webupdatectrl.cpp:75
+#: src/webupdatectrl.cpp:75
 msgid "NA"
 msgstr "NA"
 
-#: src/webupdatedlg.cpp:1025 src/webupdatedlg.cpp:1062
-#: src/webupdatedlg.cpp:1104
+#: src/webupdatedlg.cpp:1025 src/webupdatedlg.cpp:1061
+#: src/webupdatedlg.cpp:1103
 msgid "No downloads running..."
 msgstr "No downloads running..."
 
@@ -308,23 +192,19 @@ msgstr "No downloads running..."
 msgid "No updates available for this platform..."
 msgstr "No updates available for this platform..."
 
-#: src/webupdatedlg.xrc.extracted:45 src/webupdatedlg.xrc.extracted:45
+#: src/webupdatedlg.xrc.extracted:45
 msgid "OK"
 msgstr "OK"
 
-#: src/webupdatedlg.xrc.extracted:6 src/webupdatedlg.xrc.extracted:6
+#: src/webupdatedlg.xrc.extracted:6
 msgid "Package description:"
 msgstr "Package description:"
 
-#: src/webupdatectrl.cpp:107 src/webupdatectrl.cpp:108
+#: src/webupdatectrl.cpp:108
 msgid "Package name"
 msgstr "Package name"
 
-#: src/webupdatedlg.cpp:331
-msgid "Please connect and then retry."
-msgstr "Please connect and then retry."
-
-#: src/webupdatedlg.xrc.extracted:31 src/webupdatedlg.xrc.extracted:31
+#: src/webupdatedlg.xrc.extracted:31
 msgid ""
 "Proxy\n"
 "settings"
@@ -332,36 +212,37 @@ msgstr ""
 "Proxy\n"
 "settings"
 
-#: src/webupdatedlg.xrc.extracted:30 src/webupdatedlg.xrc.extracted:30
+#: src/webupdatedlg.xrc.extracted:30
 msgid "Remove downloaded files after installation"
 msgstr "Remove downloaded files after installation"
 
-#: src/webupdatectrl.cpp:112 src/webupdatectrl.cpp:113
+#: src/webupdatectrl.cpp:113
 msgid "Require package(s)"
 msgstr "Require package(s)"
 
-#: src/webupdatedlg.cpp:1205
-msgid "Restart "
-msgstr "Restart "
-
-#: src/webupdatedlg.xrc.extracted:29 src/webupdatedlg.xrc.extracted:29
+#: src/webupdatedlg.xrc.extracted:29
 msgid "Restart !!HERE GOES THE APPLICATION NAME!! after the update"
 msgstr "Restart !!HERE GOES THE APPLICATION NAME!! after the update"
 
+#: src/webupdatedlg.cpp:1205
+#, fuzzy, c-format
+msgid "Restart %s after the update is finished"
+msgstr " dopo che l'aggiornamento è finito"
+
 #: src/webapp.cpp:126
-msgid "Restart the updated application when WebUpdater is closed"
+#, fuzzy
+msgid "Restart the updated application when WebUpdater quits"
 msgstr "Restart the updated application when WebUpdater is closed"
 
 #: src/webapp.cpp:129
 msgid "Saves the log messages to '"
 msgstr "Saves the log messages to '"
 
-#: src/webupdatedlg.xrc.extracted:8 include/wx/webupdatedlg.h:48
-#: src/webupdatedlg.xrc.extracted:8
+#: include/wx/webupdatedlg.h:48 src/webupdatedlg.xrc.extracted:8
 msgid "Show advanced settings >>"
 msgstr "Show advanced settings >>"
 
-#: src/webupdatedlg.xrc.extracted:5 src/webupdatedlg.xrc.extracted:5
+#: src/webupdatedlg.xrc.extracted:5
 msgid "Show only items out of date"
 msgstr "Show only items out of date"
 
@@ -369,7 +250,7 @@ msgstr "Show only items out of date"
 msgid "Show this help message"
 msgstr "Show this help message"
 
-#: src/webupdatectrl.cpp:110 src/webupdatectrl.cpp:111
+#: src/webupdatectrl.cpp:111
 msgid "Size"
 msgstr "Size"
 
@@ -385,57 +266,70 @@ msgstr ""
 msgid "Stop installation"
 msgstr ""
 
-#: src/webapp.cpp:513 src/webapp.cpp:526
+#: src/webapp.cpp:512 src/webapp.cpp:525
+#, fuzzy, c-format
 msgid ""
 "The WebUpdater configuration file is corrupted; the file:\n"
 "\n"
-"\t"
+"\t%s\n"
+"\n"
+"is missing (or invalid); please reinstall the program."
 msgstr ""
 "The WebUpdater configuration file is corrupted; the file:\n"
 "\n"
 "\t"
 
-#: src/webapp.cpp:501
-msgid "The WebUpdater configuration file is corrupted; the local XML script "
-msgstr "The WebUpdater configuration file is corrupted; the local XML script "
-
-#: src/webapp.cpp:501
+#: src/webapp.cpp:500
 msgid ""
 "The WebUpdater configuration file is corrupted; the local XML script is "
 "missing some required info. Please correct the local XML script or give "
 "these info to WebUpdater through the command line options."
 msgstr ""
 
-#: src/webupdatedlg.xrc.extracted:4 src/webupdatedlg.xrc.extracted:4
+#: src/webupdatedlg.xrc.extracted:4
 msgid "The available package updates are:"
 msgstr "The available package updates are:"
 
-#: src/webupdatedlg.cpp:867
-msgid "The downloaded file \""
-msgstr "The downloaded file \""
+#: src/webupdatedlg.cpp:868
+#, c-format
+msgid ""
+"The downloaded file '%1$s'\n"
+"is corrupted. MD5 checksum is:\n"
+"\n"
+"\t%2$s\n"
+"\n"
+"instead of:\n"
+"\n"
+"\t%3$s\n"
+"\n"
+"Please retry the download."
+msgstr ""
 
-#: src/webupdatedlg.xrc.extracted:26 src/webupdatedlg.xrc.extracted:26
+#: src/webupdatedlg.xrc.extracted:26
 msgid "The downloaded files will be saved in:"
 msgstr "The downloaded files will be saved in:"
 
 #: src/webupdatedlg.cpp:954
-msgid "The downloaded package \""
-msgstr "The downloaded package \""
-
-#: src/webapp.cpp:437
+#, fuzzy, c-format
 msgid ""
-"The installation of the WebUpdater component of this application\n"
-"is corrupted; the file:"
+"The downloaded package '%s'\n"
+"could not be installed.\n"
+"\n"
+"Please contact the support team for more info."
 msgstr ""
-"The installation of the WebUpdater component of this application\n"
-"is corrupted; the file:"
+"\n"
+"\n"
+"Prego contattare gli sviluppatori per più informazioni."
 
 #: src/webapp.cpp:437
+#, fuzzy, c-format
 msgid ""
 "The installation of the WebUpdater component of this application\n"
 "is corrupted; the file:\n"
 "\n"
-"\t"
+"\t%s\n"
+"\n"
+"is missing (or invalid); please reinstall the program."
 msgstr ""
 "The installation of the WebUpdater component of this application\n"
 "is corrupted; the file:\n"
@@ -449,16 +343,18 @@ msgstr ""
 "The installation of the selected packages has been completed successfully !"
 
 #: src/webupdatedlg.xrc.extracted:13 src/webupdatedlg.xrc.extracted:20
-#: src/webupdatedlg.xrc.extracted:13 src/webupdatedlg.xrc.extracted:20
 msgid "This dialog allows you to update "
 msgstr "This dialog allows you to update "
 
-#: src/webupdatedlg.xrc.extracted:2 src/webupdatedlg.xrc.extracted:2
+#: src/webupdatedlg.xrc.extracted:2
 msgid "This dialog allows you to update one or more packages for"
 msgstr "This dialog allows you to update one or more packages for"
 
 #: include/wx/webupdatedlg.h:56
-msgid "This is WebUpdater version "
+#, c-format
+msgid ""
+"This is WebUpdater version %s\n"
+"by Francesco Montorsi (c) 2005"
 msgstr ""
 
 #: include/wx/webupdatedlg.h:33
@@ -493,21 +389,20 @@ msgstr "WebUpdate authentication settings"
 msgid "WebUpdate proxy settings"
 msgstr "WebUpdate proxy settings"
 
-#: src/webupdatedlg.cpp:1098
+#: src/webupdatedlg.cpp:1097
 msgid "WebUpdate script successfully downloaded"
 msgstr "WebUpdate script successfully downloaded"
 
 #: src/webupdatedlg.xrc.extracted:1 src/webupdatedlg.xrc.extracted:12
-#: src/webupdatedlg.xrc.extracted:19 src/webupdatedlg.xrc.extracted:1
-#: src/webupdatedlg.xrc.extracted:12 src/webupdatedlg.xrc.extracted:19
+#: src/webupdatedlg.xrc.extracted:19
 msgid "WebUpdater"
 msgstr "WebUpdater"
 
-#: src/webupdatedlg.xrc.extracted:37 src/webupdatedlg.xrc.extracted:37
+#: src/webupdatedlg.xrc.extracted:37
 msgid "WebUpdater homepage:"
 msgstr "WebUpdater homepage:"
 
-#: src/webupdatedlg.xrc.extracted:35 src/webupdatedlg.xrc.extracted:35
+#: src/webupdatedlg.xrc.extracted:35
 msgid ""
 "WebUpdater is an open-source wxWidgets-licensed component hosted at wxCode.\n"
 "To know more about Open Source, go at http://www.opensource.org.\n"
@@ -521,29 +416,25 @@ msgstr ""
 "WebUpdater is based on wxWidgets and on the wxHTTPEngine component.\n"
 "This program uses the Message Digest Algorithm (MD5) by RSA Data Security.\n"
 
-#: src/webupdatedlg.cpp:330
-msgid ""
-"WebUpdater needs to download the update list from the World Wide Web...\n"
-msgstr ""
-"WebUpdater needs to download the update list from the World Wide Web...\n"
-
-#: src/webapp.cpp:552
+#: src/webapp.cpp:551
 msgid "WebUpdaterApp::OnInit - creating the WebUpdaterDlg"
 msgstr "WebUpdaterApp::OnInit - creating the WebUpdaterDlg"
 
-#: src/webapp.cpp:510
-msgid "WebUpdaterApp::OnInit - loading the XRC file ["
+#: src/webapp.cpp:509
+#, fuzzy, c-format
+msgid "WebUpdaterApp::OnInit - loading the XRC file [%s]"
 msgstr "WebUpdaterApp::OnInit - loading the XRC file ["
 
 #: src/webapp.cpp:432
-msgid "WebUpdaterApp::OnInit - loading the local XML webupdate script "
+#, fuzzy, c-format
+msgid "WebUpdaterApp::OnInit - loading the local XML webupdate script %s"
 msgstr "WebUpdaterApp::OnInit - loading the local XML webupdate script "
 
 #: src/webapp.cpp:383
 msgid "WebUpdaterApp::OnInit - parsing the command line"
 msgstr "WebUpdaterApp::OnInit - parsing the command line"
 
-#: src/webapp.cpp:451
+#: src/webapp.cpp:450
 msgid "WebUpdaterApp::OnInit - the --ask-uri option is incomplete"
 msgstr "WebUpdaterApp::OnInit - the --ask-uri option is incomplete"
 
@@ -551,7 +442,7 @@ msgstr "WebUpdaterApp::OnInit - the --ask-uri option is incomplete"
 msgid "WebUpdaterApp::OnInit - you cannot use both '--ask-uri' and '--uri' !"
 msgstr "WebUpdaterApp::OnInit - you cannot use both '--ask-uri' and '--uri' !"
 
-#: src/webapp.cpp:659
+#: src/webapp.cpp:658
 msgid "WebUpdaterDlg::OnQuit - quitting"
 msgstr "WebUpdaterDlg::OnQuit - quitting"
 
@@ -559,18 +450,14 @@ msgstr "WebUpdaterDlg::OnQuit - quitting"
 msgid "XML WebUpdate script"
 msgstr "XML WebUpdate script"
 
-#: src/webupdatedlg.xrc.extracted:34 src/webupdatedlg.xrc.extracted:34
+#: src/webupdatedlg.xrc.extracted:34
 msgid "XXXX"
 msgstr "XXXX"
 
 #: src/webupdatedlg.cpp:329
-msgid "You are not connected to Internet !\n"
-msgstr "You are not connected to Internet !\n"
-
-#: src/webupdatedlg.cpp:329
 msgid ""
 "You are not connected to Internet !\n"
-"WebUpdater needs to download the update list from the World Wide Web...\n"
+"WebUpdater needs to download the update list from Internet...\n"
 "Please connect and then retry."
 msgstr ""
 
@@ -578,19 +465,7 @@ msgstr ""
 msgid "You have the latest version of all packages of "
 msgstr "You have the latest version of all packages of "
 
-#: src/stdactions.cpp:492
-msgid "] file with content ["
-msgstr "] file with content ["
-
-#: src/stdactions.cpp:485
-msgid "] file."
-msgstr "] file."
-
-#: src/stdactions.cpp:493
-msgid "]..."
-msgstr "]..."
-
-#: src/webupdatedlg.xrc.extracted:27 src/webupdatedlg.xrc.extracted:27
+#: src/webupdatedlg.xrc.extracted:27
 msgid "c:\\\temp"
 msgstr "c:\\\temp"
 
@@ -598,170 +473,186 @@ msgstr "c:\\\temp"
 msgid "computing the file hash"
 msgstr "computing the file hash"
 
-#: src/webupdatedlg.cpp:1096
+#: src/webupdatedlg.cpp:1092
+#, fuzzy, c-format
+msgid "downloaded %1$d package(s) and installed %2$d package(s)"
+msgstr "downloaded %d package(s) and installed %d package(s)"
+
+#: src/webupdatedlg.cpp:1095
 #, c-format
 msgid "downloaded %d package(s)"
 msgstr "downloaded %d package(s)"
 
-#: src/webupdatedlg.cpp:1093
-#, c-format
-msgid "downloaded %d package(s) and installed %d package(s)"
-msgstr "downloaded %d package(s) and installed %d package(s)"
-
 #: src/webupdatedlg.cpp:1045
-msgid "downloading \""
+#, fuzzy, c-format
+msgid "downloading '%1$s' at %2$s"
 msgstr "downloading \""
 
-#: src/webapp.cpp:503
-msgid "give these info to WebUpdater through the command line options."
-msgstr "give these info to WebUpdater through the command line options."
-
-#: src/webupdatectrl.cpp:251 src/webupdatectrl.cpp:252
+#: src/webupdatectrl.cpp:252
 msgid "high!"
 msgstr "high!"
 
-#: src/webupdatedlg.xrc.extracted:40 src/webupdatedlg.xrc.extracted:40
+#: src/webupdatedlg.xrc.extracted:40
 msgid "http://sourceforge.net/projects/wxcode"
 msgstr "http://sourceforge.net/projects/wxcode"
 
-#: src/webupdatedlg.xrc.extracted:42 src/webupdatedlg.xrc.extracted:42
+#: src/webupdatedlg.xrc.extracted:42
 msgid "http://www.wxwidgets.org"
 msgstr "http://www.wxwidgets.org"
 
-#: src/webupdatedlg.xrc.extracted:38 src/webupdatedlg.xrc.extracted:38
+#: src/webupdatedlg.xrc.extracted:38
 msgid "http://wxcode.sf.net/components/webupdate"
 msgstr "http://wxcode.sf.net/components/webupdate"
 
-#: src/webupdatedlg.xrc.extracted:44 src/webupdatedlg.xrc.extracted:44
+#: src/webupdatedlg.xrc.extracted:44
 msgid "http://wxcode.sf.net/components/wxhttpengine"
 msgstr "http://wxcode.sf.net/components/wxhttpengine"
 
-#: src/webupdatedlg.cpp:1060
-msgid "installing \""
+#: src/webupdatedlg.cpp:1059
+#, fuzzy, c-format
+msgid "installing '%s'"
 msgstr "installing \""
 
-#: src/webapp.cpp:440
-msgid "is missing (or invalid); please reinstall the program."
-msgstr "is missing (or invalid); please reinstall the program."
-
-#: src/webapp.cpp:502
-msgid "is missing some required info. Please correct the local XML script or "
-msgstr "is missing some required info. Please correct the local XML script or "
-
-#: src/webupdatectrl.cpp:259 src/webupdatectrl.cpp:260
+#: src/webupdatectrl.cpp:260
 msgid "low"
 msgstr "low"
 
-#: src/webupdatectrl.cpp:271 src/webupdatectrl.cpp:272
+#: src/webupdatectrl.cpp:272
 msgid "none"
 msgstr "none"
 
-#: src/webupdatectrl.cpp:255 src/webupdatectrl.cpp:256
+#: src/webupdatectrl.cpp:256
 msgid "normal"
 msgstr "normal"
 
-#: src/download.cpp:483
+#: src/download.cpp:481
 msgid "not available"
 msgstr "not available"
 
-#: src/webupdatectrl.cpp:165 src/webupdatectrl.cpp:166
+#: src/webupdatectrl.cpp:166
 msgid "not installed"
 msgstr "not installed"
 
-#: src/download.cpp:372
-msgid "url is ["
-msgstr "url is ["
-
-#: src/webupdatedlg.cpp:1100
+#: src/webupdatedlg.cpp:1099
 msgid "waiting WebUpdate script download"
 msgstr "waiting WebUpdate script download"
 
 #: src/download.cpp:329
-msgid "wxDownloadThread::Entry - "
+#, fuzzy, c-format
+msgid "wxDownloadThread::Entry - %s - DOWNLOAD ABORTED !!!"
 msgstr "wxDownloadThread::Entry - "
 
-#: src/download.cpp:432
+#: src/download.cpp:430
 #, c-format
 msgid "wxDownloadThread::Entry - completed download of %lu bytes"
 msgstr "wxDownloadThread::Entry - completed download of %lu bytes"
 
-#: src/download.cpp:417
+#: src/download.cpp:415
 #, c-format
 msgid "wxDownloadThread::Entry - downloaded %lu bytes"
 msgstr "wxDownloadThread::Entry - downloaded %lu bytes"
 
 #: src/download.cpp:363
-msgid "wxDownloadThread::Entry - downloading "
+#, fuzzy, c-format
+msgid "wxDownloadThread::Entry - downloading [%s]"
 msgstr "wxDownloadThread::Entry - downloading "
 
 #: src/download.cpp:305
-msgid "wxGetSizeOfURI - can't get the size of the resource located at ["
+#, fuzzy, c-format
+msgid ""
+"wxGetSizeOfURI - can't get the size of the resource located at [%s] because "
+"the request has been redirected... update your URL"
 msgstr "wxGetSizeOfURI - can't get the size of the resource located at ["
 
-#: src/webupdatedlg.xrc.extracted:43 src/webupdatedlg.xrc.extracted:43
+#: src/webupdatedlg.xrc.extracted:43
 msgid "wxHTTPEngine homepage:"
 msgstr "wxHTTPEngine homepage:"
 
 #: src/stdactions.cpp:295
-msgid "wxWebUpdateActionCopy::Run - going to copy the file(s)/folder(s) ["
+#, fuzzy, c-format
+msgid ""
+"wxWebUpdateActionCopy::Run - going to copy the file(s)/folder(s) [%1$s] in [%"
+"2$s]"
 msgstr "wxWebUpdateActionCopy::Run - going to copy the file(s)/folder(s) ["
 
 #: src/stdactions.cpp:218
-msgid "wxWebUpdateActionExtract::Run - couldn't decompress "
+#, fuzzy, c-format
+msgid "wxWebUpdateActionExtract::Run - couldn't decompress [%s]"
 msgstr "wxWebUpdateActionExtract::Run - couldn't decompress "
 
 #: src/stdactions.cpp:211
-msgid "wxWebUpdateActionExtract::Run - extracting ["
+#, fuzzy, c-format
+msgid "wxWebUpdateActionExtract::Run - extracting [%1$s] as [%2$s]..."
 msgstr "wxWebUpdateActionExtract::Run - extracting ["
 
 #: src/stdactions.cpp:146
-msgid "wxWebUpdateActionExtract::Run - going to extract the file ["
+#, fuzzy, c-format
+msgid ""
+"wxWebUpdateActionExtract::Run - going to extract the file [%1$s] of type [%2"
+"$s] in [%3$s]"
 msgstr "wxWebUpdateActionExtract::Run - going to extract the file ["
 
 #: src/stdactions.cpp:159
-msgid "wxWebUpdateActionExtract::Run - the folder \""
+#, fuzzy, c-format
+msgid ""
+"wxWebUpdateActionExtract::Run - the folder [%1$s] or the file [%2$s] does "
+"not exist !"
 msgstr "wxWebUpdateActionExtract::Run - the folder \""
 
 #: src/stdactions.cpp:390
-msgid "wxWebUpdateActionMkdir::Run - going to make the folder ["
+#, fuzzy, c-format
+msgid "wxWebUpdateActionMkdir::Run - going to make the folder [%s]"
 msgstr "wxWebUpdateActionMkdir::Run - going to make the folder ["
 
-#: src/stdactions.cpp:484
-msgid "wxWebUpdateActionMkfile::Run - could not create the ["
+#: src/stdactions.cpp:482
+#, fuzzy, c-format
+msgid "wxWebUpdateActionMkfile::Run - could not create the [%s] file"
 msgstr "wxWebUpdateActionMkfile::Run - could not create the ["
 
-#: src/stdactions.cpp:491
-msgid "wxWebUpdateActionMkfile::Run - created the ["
+#: src/stdactions.cpp:489
+#, fuzzy, c-format
+msgid ""
+"wxWebUpdateActionMkfile::Run - created the [%1$s] file with content [%2$s]..."
 msgstr "wxWebUpdateActionMkfile::Run - created the ["
 
-#: src/stdactions.cpp:459
-msgid "wxWebUpdateActionMkfile::Run - going to make the file ["
+#: src/stdactions.cpp:458
+#, fuzzy, c-format
+msgid "wxWebUpdateActionMkfile::Run - going to make the file [%s]"
 msgstr "wxWebUpdateActionMkfile::Run - going to make the file ["
 
-#: src/stdactions.cpp:590
-msgid "wxWebUpdateActionOpen::Run - Cannot get the OPEN command for ["
+#: src/stdactions.cpp:585
+#, fuzzy, c-format
+msgid "wxWebUpdateActionOpen::Run - cannot get the OPEN command for [%s]"
 msgstr "wxWebUpdateActionOpen::Run - Cannot get the OPEN command for ["
 
-#: src/stdactions.cpp:595
-msgid "wxWebUpdateActionOpen::Run - Failed to launch application for ["
+#: src/stdactions.cpp:590
+#, fuzzy, c-format
+msgid "wxWebUpdateActionOpen::Run - failed to launch application for [%s]"
 msgstr "wxWebUpdateActionOpen::Run - Failed to launch application for ["
 
-#: src/stdactions.cpp:577
-msgid "wxWebUpdateActionOpen::Run - No default application can open the file ["
+#: src/stdactions.cpp:572
+#, fuzzy, c-format
+msgid ""
+"wxWebUpdateActionOpen::Run - no default application can open the file [%s]"
 msgstr ""
 "wxWebUpdateActionOpen::Run - No default application can open the file ["
 
-#: src/stdactions.cpp:550
-msgid "wxWebUpdateActionOpen::Run - opening the file ["
+#: src/stdactions.cpp:547
+#, fuzzy, c-format
+msgid "wxWebUpdateActionOpen::Run - opening the file [%s]"
 msgstr "wxWebUpdateActionOpen::Run - opening the file ["
 
-#: src/stdactions.cpp:555
-msgid "wxWebUpdateActionOpen::Run - the file \""
+#: src/stdactions.cpp:551
+#, fuzzy, c-format
+msgid "wxWebUpdateActionOpen::Run - the file [%s] does not exist !"
 msgstr "wxWebUpdateActionOpen::Run - the file \""
 
 #: src/stdactions.cpp:67
-msgid "wxWebUpdateActionRun::Run - the file \""
-msgstr "wxWebUpdateActionRun::Run - the file \""
+#, c-format
+msgid ""
+"wxWebUpdateActionRun::Run - the file [%s] does not exist; proceeding anyway "
+"(maybe it's in PATH)"
+msgstr ""
 
 #: src/webupdatedlg.cpp:338
 msgid "wxWebUpdateDlg::ConnectionRequired - found a valid connection"
@@ -771,29 +662,32 @@ msgstr "wxWebUpdateDlg::ConnectionRequired - found a valid connection"
 msgid "wxWebUpdateDlg::ConnectionRequired - not connected to Internet !"
 msgstr "wxWebUpdateDlg::ConnectionRequired - not connected to Internet !"
 
-#: src/webupdatedlg.cpp:609 src/webupdatedlg.cpp:611
-msgid "wxWebUpdateDlg::DownloadNextPackage - launching download of "
+#: src/webupdatedlg.cpp:611
+#, fuzzy, c-format
+msgid "wxWebUpdateDlg::DownloadNextPackage - launching download of [%s]"
 msgstr "wxWebUpdateDlg::DownloadNextPackage - launching download of "
 
-#: src/webupdatedlg.cpp:628 src/webupdatedlg.cpp:630
-msgid "wxWebUpdateDlg::InstallNextPackage - launching installation of "
+#: src/webupdatedlg.cpp:630
+#, fuzzy, c-format
+msgid "wxWebUpdateDlg::InstallNextPackage - launching installation of [%s]"
 msgstr "wxWebUpdateDlg::InstallNextPackage - launching installation of "
 
-#: src/webupdatedlg.cpp:1220 src/webupdatedlg.cpp:1226
-msgid "wxWebUpdateDlg::OnBrowse - New output path is "
+#: src/webupdatedlg.cpp:1226
+#, fuzzy, c-format
+msgid "wxWebUpdateDlg::OnBrowse - new output path is [%s]"
 msgstr "wxWebUpdateDlg::OnBrowse - New output path is "
 
-#: src/webupdatedlg.cpp:739 src/webupdatedlg.cpp:741
+#: src/webupdatedlg.cpp:741
 msgid "wxWebUpdateDlg::OnCancel - user hit the cancel button..."
 msgstr "wxWebUpdateDlg::OnCancel - user hit the cancel button..."
 
-#: src/webupdatedlg.cpp:834 src/webupdatedlg.cpp:836
+#: src/webupdatedlg.cpp:837
 msgid ""
 "wxWebUpdateDlg::OnDownloadComplete - Download status: successfully completed"
 msgstr ""
 "wxWebUpdateDlg::OnDownloadComplete - Download status: successfully completed"
 
-#: src/webupdatedlg.cpp:857 src/webupdatedlg.cpp:859
+#: src/webupdatedlg.cpp:860
 msgid ""
 "wxWebUpdateDlg::OnDownloadComplete - beginning installation of downloaded "
 "packages"
@@ -801,7 +695,7 @@ msgstr ""
 "wxWebUpdateDlg::OnDownloadComplete - beginning installation of downloaded "
 "packages"
 
-#: src/webupdatedlg.cpp:825 src/webupdatedlg.cpp:827
+#: src/webupdatedlg.cpp:828
 msgid ""
 "wxWebUpdateDlg::OnDownloadComplete - failed while downloading the XML "
 "script... aborting dialog"
@@ -809,11 +703,13 @@ msgstr ""
 "wxWebUpdateDlg::OnDownloadComplete - failed while downloading the XML "
 "script... aborting dialog"
 
-#: src/webupdatedlg.cpp:892 src/webupdatedlg.cpp:895
-msgid "wxWebUpdateDlg::OnInstallationComplete - completed installation of \""
+#: src/webupdatedlg.cpp:895
+#, fuzzy, c-format
+msgid ""
+"wxWebUpdateDlg::OnInstallationComplete - completed installation of [%s]..."
 msgstr "wxWebUpdateDlg::OnInstallationComplete - completed installation of \""
 
-#: src/webupdatedlg.cpp:935 src/webupdatedlg.cpp:938
+#: src/webupdatedlg.cpp:938
 msgid ""
 "wxWebUpdateDlg::OnInstallationComplete - completed the installation of all "
 "packages"
@@ -821,7 +717,7 @@ msgstr ""
 "wxWebUpdateDlg::OnInstallationComplete - completed the installation of all "
 "packages"
 
-#: src/webupdatedlg.cpp:507 src/webupdatedlg.cpp:508
+#: src/webupdatedlg.cpp:508
 msgid "wxWebUpdateDlg::OnScriptDownload - XML script loaded successfully"
 msgstr "wxWebUpdateDlg::OnScriptDownload - XML script loaded successfully"
 
@@ -830,26 +726,326 @@ msgstr "wxWebUpdateDlg::OnScriptDownload - XML script loaded successfully"
 msgid "wxWebUpdateDownload::DownloadSynch - completed download of %lu bytes"
 msgstr "wxWebUpdateDownload::DownloadSynch - completed download of %lu bytes"
 
-#: src/installer.cpp:373
+#: src/installer.cpp:374
 msgid "wxWebUpdateInstallThread::Entry - INSTALLATION ABORTED !!!"
 msgstr "wxWebUpdateInstallThread::Entry - INSTALLATION ABORTED !!!"
 
-#: src/installer.cpp:400
-msgid "wxWebUpdateInstallThread::Entry - completed installation of ["
+#: src/installer.cpp:401
+#, fuzzy, c-format
+msgid "wxWebUpdateInstallThread::Entry - completed installation of [%s]"
 msgstr "wxWebUpdateInstallThread::Entry - completed installation of ["
 
-#: src/installer.cpp:397
-msgid "wxWebUpdateInstallThread::Entry - installing ["
+#: src/installer.cpp:398
+#, fuzzy, c-format
+msgid "wxWebUpdateInstallThread::Entry - installing [%s]"
 msgstr "wxWebUpdateInstallThread::Entry - installing ["
 
 #: src/installer.cpp:330
-msgid "wxWebUpdateInstaller::VersionCheck - invalid version format ["
+#, fuzzy, c-format
+msgid "wxWebUpdateInstaller::VersionCheck - invalid version format [%s] !"
 msgstr "wxWebUpdateInstaller::VersionCheck - invalid version format ["
 
 #: src/webupdate.cpp:293 src/webupdate.cpp:1330
-msgid "wxWebUpdateXMLScript::Load - loading "
+#, fuzzy, c-format
+msgid "wxWebUpdateXMLScript::Load - loading [%s]"
 msgstr "wxWebUpdateXMLScript::Load - loading "
 
-#: src/webupdatedlg.xrc.extracted:41 src/webupdatedlg.xrc.extracted:41
+#: src/webupdatedlg.xrc.extracted:41
 msgid "wxWidgets homepage:"
 msgstr "wxWidgets homepage:"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Please contact the support team for more info."
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Prego contattare gli sviluppatori per più informazioni."
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Please retry the download."
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Prego riprovare il download."
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "URL... "
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "URL... "
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "instead of:\n"
+#~ "\n"
+#~ "\t"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "invece che:\n"
+#~ "\n"
+#~ "\t"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "is missing (or invalid); please reinstall the program."
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "è mancante (o invalida); prego reinstallare il programma."
+
+#~ msgid ""
+#~ "\n"
+#~ "Contact the support team of "
+#~ msgstr ""
+#~ "\n"
+#~ "Contattare gli sviluppatori di "
+
+#~ msgid " after the update is finished"
+#~ msgstr " dopo che l'aggiornamento è finito"
+
+#~ msgid " for help."
+#~ msgstr " per aiuto."
+
+#~ msgid ""
+#~ " from\n"
+#~ "\n"
+#~ msgstr " dan \n"
+
+#~ msgid " in the WebUpdate script. Exiting the update dialog."
+#~ msgstr " nello script WebUpdate. Esco dalla finestra di dialogo..."
+
+#~ msgid ""
+#~ "\"\n"
+#~ "could not be installed."
+#~ msgstr ""
+#~ "\"\n"
+#~ "non si è potuto installare."
+
+#~ msgid ""
+#~ "\"\n"
+#~ "is corrupted. MD5 checksum is:\n"
+#~ "\n"
+#~ "\t"
+#~ msgstr ""
+#~ "\"\n"
+#~ "è corrotto. La somma MD5 è:\n"
+#~ "\n"
+#~ "\t"
+
+#~ msgid "\" at "
+#~ msgstr "\" at "
+
+#~ msgid "\" does not exist !"
+#~ msgstr "\" does not exist !"
+
+#~ msgid "\" or the file \""
+#~ msgstr "\" or the file \""
+
+#~ msgid "Cannot open/init the OUPUT stream ["
+#~ msgstr "Cannot open/init the OUPUT stream ["
+
+#~ msgid "Cannot parse the XML update script downloaded as: "
+#~ msgstr "Cannot parse the XML update script downloaded as: "
+
+#~ msgid "Could not download the "
+#~ msgstr "Could not download the "
+
+#~ msgid "Could not found any valid package for "
+#~ msgstr "Could not found any valid package for "
+
+#~ msgid "Restart "
+#~ msgstr "Restart "
+
+#~ msgid "Restart the updated application when WebUpdater is closed"
+#~ msgstr "Restart the updated application when WebUpdater is closed"
+
+#~ msgid ""
+#~ "The WebUpdater configuration file is corrupted; the file:\n"
+#~ "\n"
+#~ "\t"
+#~ msgstr ""
+#~ "The WebUpdater configuration file is corrupted; the file:\n"
+#~ "\n"
+#~ "\t"
+
+#~ msgid "The downloaded file \""
+#~ msgstr "The downloaded file \""
+
+#~ msgid "The downloaded package \""
+#~ msgstr "The downloaded package \""
+
+#~ msgid ""
+#~ "The installation of the WebUpdater component of this application\n"
+#~ "is corrupted; the file:\n"
+#~ "\n"
+#~ "\t"
+#~ msgstr ""
+#~ "The installation of the WebUpdater component of this application\n"
+#~ "is corrupted; the file:\n"
+#~ "\n"
+#~ "\t"
+
+#~ msgid "WebUpdaterApp::OnInit - loading the XRC file ["
+#~ msgstr "WebUpdaterApp::OnInit - loading the XRC file ["
+
+#~ msgid "WebUpdaterApp::OnInit - loading the local XML webupdate script "
+#~ msgstr "WebUpdaterApp::OnInit - loading the local XML webupdate script "
+
+#~ msgid "] file with content ["
+#~ msgstr "] file with content ["
+
+#~ msgid "] file."
+#~ msgstr "] file."
+
+#~ msgid "]..."
+#~ msgstr "]..."
+
+#~ msgid "downloaded %d package(s) and installed %d package(s)"
+#~ msgstr "downloaded %d package(s) and installed %d package(s)"
+
+#~ msgid "downloading \""
+#~ msgstr "downloading \""
+
+#~ msgid "installing \""
+#~ msgstr "installing \""
+
+#~ msgid "wxDownloadThread::Entry - "
+#~ msgstr "wxDownloadThread::Entry - "
+
+#~ msgid "wxDownloadThread::Entry - downloading "
+#~ msgstr "wxDownloadThread::Entry - downloading "
+
+#~ msgid "wxGetSizeOfURI - can't get the size of the resource located at ["
+#~ msgstr "wxGetSizeOfURI - can't get the size of the resource located at ["
+
+#~ msgid "wxWebUpdateActionCopy::Run - going to copy the file(s)/folder(s) ["
+#~ msgstr "wxWebUpdateActionCopy::Run - going to copy the file(s)/folder(s) ["
+
+#~ msgid "wxWebUpdateActionExtract::Run - couldn't decompress "
+#~ msgstr "wxWebUpdateActionExtract::Run - couldn't decompress "
+
+#~ msgid "wxWebUpdateActionExtract::Run - extracting ["
+#~ msgstr "wxWebUpdateActionExtract::Run - extracting ["
+
+#~ msgid "wxWebUpdateActionExtract::Run - going to extract the file ["
+#~ msgstr "wxWebUpdateActionExtract::Run - going to extract the file ["
+
+#~ msgid "wxWebUpdateActionExtract::Run - the folder \""
+#~ msgstr "wxWebUpdateActionExtract::Run - the folder \""
+
+#~ msgid "wxWebUpdateActionMkdir::Run - going to make the folder ["
+#~ msgstr "wxWebUpdateActionMkdir::Run - going to make the folder ["
+
+#~ msgid "wxWebUpdateActionMkfile::Run - could not create the ["
+#~ msgstr "wxWebUpdateActionMkfile::Run - could not create the ["
+
+#~ msgid "wxWebUpdateActionMkfile::Run - created the ["
+#~ msgstr "wxWebUpdateActionMkfile::Run - created the ["
+
+#~ msgid "wxWebUpdateActionMkfile::Run - going to make the file ["
+#~ msgstr "wxWebUpdateActionMkfile::Run - going to make the file ["
+
+#~ msgid "wxWebUpdateActionOpen::Run - Cannot get the OPEN command for ["
+#~ msgstr "wxWebUpdateActionOpen::Run - Cannot get the OPEN command for ["
+
+#~ msgid "wxWebUpdateActionOpen::Run - Failed to launch application for ["
+#~ msgstr "wxWebUpdateActionOpen::Run - Failed to launch application for ["
+
+#~ msgid ""
+#~ "wxWebUpdateActionOpen::Run - No default application can open the file ["
+#~ msgstr ""
+#~ "wxWebUpdateActionOpen::Run - No default application can open the file ["
+
+#~ msgid "wxWebUpdateActionOpen::Run - opening the file ["
+#~ msgstr "wxWebUpdateActionOpen::Run - opening the file ["
+
+#~ msgid "wxWebUpdateActionOpen::Run - the file \""
+#~ msgstr "wxWebUpdateActionOpen::Run - the file \""
+
+#~ msgid "wxWebUpdateActionRun::Run - the file \""
+#~ msgstr "wxWebUpdateActionRun::Run - the file \""
+
+#~ msgid "wxWebUpdateDlg::DownloadNextPackage - launching download of "
+#~ msgstr "wxWebUpdateDlg::DownloadNextPackage - launching download of "
+
+#~ msgid "wxWebUpdateDlg::InstallNextPackage - launching installation of "
+#~ msgstr "wxWebUpdateDlg::InstallNextPackage - launching installation of "
+
+#~ msgid "wxWebUpdateDlg::OnBrowse - New output path is "
+#~ msgstr "wxWebUpdateDlg::OnBrowse - New output path is "
+
+#~ msgid ""
+#~ "wxWebUpdateDlg::OnInstallationComplete - completed installation of \""
+#~ msgstr ""
+#~ "wxWebUpdateDlg::OnInstallationComplete - completed installation of \""
+
+#~ msgid "wxWebUpdateInstallThread::Entry - completed installation of ["
+#~ msgstr "wxWebUpdateInstallThread::Entry - completed installation of ["
+
+#~ msgid "wxWebUpdateInstallThread::Entry - installing ["
+#~ msgstr "wxWebUpdateInstallThread::Entry - installing ["
+
+#~ msgid "wxWebUpdateInstaller::VersionCheck - invalid version format ["
+#~ msgstr "wxWebUpdateInstaller::VersionCheck - invalid version format ["
+
+#~ msgid "wxWebUpdateXMLScript::Load - loading "
+#~ msgstr "wxWebUpdateXMLScript::Load - loading "
+
+#~ msgid "Asks the uer the URI of the remote XML file"
+#~ msgstr "  Asks the uer the URI of the remote XML file"
+
+#~ msgid "Close some applications and then retry."
+#~ msgstr "Close some applications and then retry."
+
+#~ msgid "Low resources; cannot run the WebUpdate dialog...\n"
+#~ msgstr "Low resources; cannot run the WebUpdate dialog...\n"
+
+#~ msgid "Low resources; cannot show the size of the packages...\n"
+#~ msgstr "Low resources; cannot show the size of the packages...\n"
+
+#~ msgid "Please connect and then retry."
+#~ msgstr "Please connect and then retry."
+
+#~ msgid ""
+#~ "The WebUpdater configuration file is corrupted; the local XML script "
+#~ msgstr ""
+#~ "The WebUpdater configuration file is corrupted; the local XML script "
+
+#~ msgid ""
+#~ "The installation of the WebUpdater component of this application\n"
+#~ "is corrupted; the file:"
+#~ msgstr ""
+#~ "The installation of the WebUpdater component of this application\n"
+#~ "is corrupted; the file:"
+
+#~ msgid ""
+#~ "WebUpdater needs to download the update list from the World Wide Web...\n"
+#~ msgstr ""
+#~ "WebUpdater needs to download the update list from the World Wide Web...\n"
+
+#~ msgid "You are not connected to Internet !\n"
+#~ msgstr "You are not connected to Internet !\n"
+
+#~ msgid "give these info to WebUpdater through the command line options."
+#~ msgstr "give these info to WebUpdater through the command line options."
+
+#~ msgid "is missing (or invalid); please reinstall the program."
+#~ msgstr "is missing (or invalid); please reinstall the program."
+
+#~ msgid ""
+#~ "is missing some required info. Please correct the local XML script or "
+#~ msgstr ""
+#~ "is missing some required info. Please correct the local XML script or "
+
+#~ msgid "url is ["
+#~ msgstr "url is ["
