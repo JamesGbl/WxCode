@@ -4,8 +4,8 @@
 
  This folder contains:
  -> a PO template file (webupdater.pot)
+ -> .PO translation files
  -> this readme
- -> subfolders with .PO translation files
 
  In order to update the .PO safely (i.e. without losing already translated
  strings), run the 'make i18n' command from a Unix box after ./configure-ing.

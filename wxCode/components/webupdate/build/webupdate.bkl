@@ -175,7 +175,8 @@
         <set var="XGETTEXT">xgettext</set>
         <set var="XARGS">xargs</set>
         <set var="XGETTEXT_ARGS">--c++ -k_ -kwxPLURAL:1,2 -kwxTRANSLATE -s -j</set>
-        <set var="POFILE">webupdater.po</set>
+
+        <set var="POTFILE">locale/webupdater.pot</set>
         <set var="XRCFILE">$(COMP_BASEPATH)/src/webupdatedlg.xrc</set>
 
         <define-tag name="create-pot" rules="action">
@@ -189,7 +190,7 @@
         </define-tag>
         <define-tag name="update-po" rules="action">
             <command>
-                $(MSGMERGE) $(value) locale/$(POFILE)t > $(value).new &amp;&amp; mv $(value).new $(value)
+                $(MSGMERGE) $(value) $(POTFILE) > $(value).new &amp;&amp; mv $(value).new $(value)
             </command>
         </define-tag>
         <define-tag name="compile-po" rules="action">
@@ -212,9 +213,9 @@
         <action id="i18n" cond="TARGETING_WIN32=='0'">
             <depends>xrcscan</depends>
 
-            <create-pot>locale/$(POFILE)t</create-pot>
-            <update-and-compile-po>locale/it/$(POFILE)</update-and-compile-po>
-            <update-and-compile-po>locale/de/$(POFILE)</update-and-compile-po>
+            <create-pot>$(POTFILE)</create-pot>
+            <update-and-compile-po>locale/it.po</update-and-compile-po>
+            <update-and-compile-po>locale/de.po</update-and-compile-po>
         </action>
 
 
@@ -254,6 +255,8 @@
             <set var="FILE1">webupdater</set>
         </if>
         <set var="FILE2">webupdatedlg.xrc</set>
+        <set var="MOFILES">it.mo de.mo</set>
+        <set var="MKDIR" overwrite="0">mkdir</set>
 
         <define-rule name="copyrep" extends="force-copy-files">
             <template>
@@ -267,19 +270,15 @@
                 <clean-files>$(FILE2)</clean-files>
             </define-tag>
         </define-rule>
-        <define-rule name="copymo" extends="force-copy-files">
+        <define-rule name="copymo" extends="copy-files">
             <template>
-                <srcdir>$(COMP_BASEPATH)/src</srcdir>
-                <files>$(FILE1) $(FILE2)</files>
+                <srcdir>$(COMP_BASEPATH)/locale</srcdir>
+                <files>$(MOFILES)</files>
                 <dependency-of>all</dependency-of>
             </template>
             <define-tag name="dst">
-                <command>$(MKDIR) $(value)/lang</command>
-                <command>$(MKDIR) $(value)/lang/it</command>
-                <command>$(MKDIR) $(value)/lang/de</command>
-                <dstdir>$(value)</dstdir>
-                <clean-files>$(FILE1)</clean-files>
-                <clean-files>$(FILE2)</clean-files>
+                <!--<command>$(MKDIR) $(value)/lang</command>-->
+                <dstdir>$(value)/lang</dstdir>
             </define-tag>
         </define-rule>
 

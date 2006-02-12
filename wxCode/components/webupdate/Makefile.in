@@ -189,7 +189,7 @@ COND_PLATFORM_OS2_1___advanced = $(NM) advanced$(EXEEXT) | if grep -q pmwin.763 
 
 ### Targets: ###
 
-all: $(__webupdate_lib___depname) $(__webupdate_dll___depname) ./src/webupdater$(EXEEXT) rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150 ./samples/simple/v1.0.0/simple$(EXEEXT) ./samples/simple/v2.0.3/simple$(EXEEXT) ./samples/advanced/v0.0.1/advanced$(EXEEXT) ./samples/advanced/v1.5.0/advanced$(EXEEXT)
+all: $(__webupdate_lib___depname) $(__webupdate_dll___depname) ./src/webupdater$(EXEEXT) rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150 po_simple100 po_simple203 po_adv001 po_adv150 ./samples/simple/v1.0.0/simple$(EXEEXT) ./samples/simple/v2.0.3/simple$(EXEEXT) ./samples/advanced/v0.0.1/advanced$(EXEEXT) ./samples/advanced/v1.5.0/advanced$(EXEEXT)
 
 install: all install-wxheaders $(__install_webupdate_lib___depname) $(__install_webupdate_dll___depname) locale_install
 
@@ -351,10 +351,10 @@ i18n: xrcscan
 	find ./include -name "*.h" | xargs xgettext --c++ -k_ -kwxPLURAL:1,2 -kwxTRANSLATE -s -j -o locale/webupdater.pot
 	find ./src -name "*.cpp" | xargs xgettext --c++ -k_ -kwxPLURAL:1,2 -kwxTRANSLATE -s -j -o locale/webupdater.pot
 	find ./src -name "*.xrc.*" | xargs xgettext --c++ -k_ -kwxPLURAL:1,2 -kwxTRANSLATE -s -j -o locale/webupdater.pot
-	msgmerge locale/it/webupdater.po locale/webupdater.pot > locale/it/webupdater.po.new && mv locale/it/webupdater.po.new locale/it/webupdater.po
-	msgfmt --statistics -o locale/it/webupdater.mo locale/it/webupdater.po
-	msgmerge locale/de/webupdater.po locale/webupdater.pot > locale/de/webupdater.po.new && mv locale/de/webupdater.po.new locale/de/webupdater.po
-	msgfmt --statistics -o locale/de/webupdater.mo locale/de/webupdater.po
+	msgmerge locale/it.po locale/webupdater.pot > locale/it.po.new && mv locale/it.po.new locale/it.po
+	msgfmt --statistics -o locale/it.mo locale/it.po
+	msgmerge locale/de.po locale/webupdater.pot > locale/de.po.new && mv locale/de.po.new locale/de.po
+	msgfmt --statistics -o locale/de.mo locale/de.po
 
 ./src/webupdater$(EXEEXT): $(WEBUPDATER_OBJECTS) locale $(__webupdater___win32rc) $(__webupdate_lib___depname)
 	$(CXX) -o $@ $(WEBUPDATER_OBJECTS) -L./lib $(LDFLAGS)   -L./lib $(LDFLAGS_GUI)  -lwebupdate $(__HTTPENGINEDEP_LIB_p) $(WX_LIBS)
@@ -384,6 +384,54 @@ rep4_adv150:
 	@mkdir -p ./samples/advanced/v1.5.0
 	@for f in webupdater webupdatedlg.xrc; do \
 	cp -pRf ./src/$$f ./samples/advanced/v1.5.0 ; \
+	done
+
+po_simple100: 
+	@mkdir -p ./samples/simple/v1.0.0/lang
+	@for f in it.mo de.mo; do \
+	if test ! -f ./samples/simple/v1.0.0/lang/$$f -a ! -d ./samples/simple/v1.0.0/lang/$$f ; \
+	then x=yep ; \
+	else x=`find ./locale/$$f -newer ./samples/simple/v1.0.0/lang/$$f -print` ; \
+	fi; \
+	case "$$x" in ?*) \
+	cp -pRf ./locale/$$f ./samples/simple/v1.0.0/lang ;; \
+	esac; \
+	done
+
+po_simple203: 
+	@mkdir -p ./samples/simple/v2.0.3/lang
+	@for f in it.mo de.mo; do \
+	if test ! -f ./samples/simple/v2.0.3/lang/$$f -a ! -d ./samples/simple/v2.0.3/lang/$$f ; \
+	then x=yep ; \
+	else x=`find ./locale/$$f -newer ./samples/simple/v2.0.3/lang/$$f -print` ; \
+	fi; \
+	case "$$x" in ?*) \
+	cp -pRf ./locale/$$f ./samples/simple/v2.0.3/lang ;; \
+	esac; \
+	done
+
+po_adv001: 
+	@mkdir -p ./samples/advanced/v0.0.1/lang
+	@for f in it.mo de.mo; do \
+	if test ! -f ./samples/advanced/v0.0.1/lang/$$f -a ! -d ./samples/advanced/v0.0.1/lang/$$f ; \
+	then x=yep ; \
+	else x=`find ./locale/$$f -newer ./samples/advanced/v0.0.1/lang/$$f -print` ; \
+	fi; \
+	case "$$x" in ?*) \
+	cp -pRf ./locale/$$f ./samples/advanced/v0.0.1/lang ;; \
+	esac; \
+	done
+
+po_adv150: 
+	@mkdir -p ./samples/advanced/v1.5.0/lang
+	@for f in it.mo de.mo; do \
+	if test ! -f ./samples/advanced/v1.5.0/lang/$$f -a ! -d ./samples/advanced/v1.5.0/lang/$$f ; \
+	then x=yep ; \
+	else x=`find ./locale/$$f -newer ./samples/advanced/v1.5.0/lang/$$f -print` ; \
+	fi; \
+	case "$$x" in ?*) \
+	cp -pRf ./locale/$$f ./samples/advanced/v1.5.0/lang ;; \
+	esac; \
 	done
 
 ./samples/simple/v1.0.0/simple$(EXEEXT): $(SIMPLE_1_0_0_OBJECTS) ./src/webupdater$(EXEEXT) $(__simple_1_0_0___win32rc)
@@ -492,4 +540,4 @@ advanced_1_5_0_minimal_rc.o: $(srcdir)/./samples/advanced/v1.5.0/minimal.rc
 # Include dependency info, if present:
 @IF_GNU_MAKE@-include .deps/*.d
 
-.PHONY: all install uninstall clean distclean install_webupdate_lib install_webupdate_dll rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150
+.PHONY: all install uninstall clean distclean install_webupdate_lib install_webupdate_dll rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150 po_simple100 po_simple203 po_adv001 po_adv150

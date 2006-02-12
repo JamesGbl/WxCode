@@ -1,3 +1,6 @@
+lang
 *.exe
 *log*
 *.xrc
+advanced
+webupdater

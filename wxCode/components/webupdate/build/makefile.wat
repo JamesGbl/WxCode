@@ -234,7 +234,7 @@ watcom :
 
 ### Targets: ###
 
-all : .SYMBOLIC $(__webupdate_lib___depname) $(__webupdate_dll___depname) ..\src\webupdater.exe rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150 ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
+all : .SYMBOLIC $(__webupdate_lib___depname) $(__webupdate_dll___depname) ..\src\webupdater.exe rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150 po_simple100 po_simple203 po_adv001 po_adv150 ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
 
 clean : .SYMBOLIC 
 	-if exist watcom\*.obj del watcom\*.obj
@@ -419,6 +419,26 @@ rep4_adv001 : .SYMBOLIC
 rep4_adv150 : .SYMBOLIC 
 	if not exist ..\samples\advanced\v1.5.0 mkdir ..\samples\advanced\v1.5.0
 	for %f in (webupdater.exe webupdatedlg.xrc) do copy ..\src\%f ..\samples\advanced\v1.5.0
+
+po_simple100 : .SYMBOLIC 
+	if not exist ..\samples\simple\v1.0.0\lang mkdir ..\samples\simple\v1.0.0\lang
+	for %f in (it.mo de.mo) do if not exist ..\samples\simple\v1.0.0\lang\%f copy ..\locale\%f ..\samples\simple\v1.0.0\lang
+	mkdir ../samples/simple/v1.0.0/lang
+
+po_simple203 : .SYMBOLIC 
+	if not exist ..\samples\simple\v2.0.3\lang mkdir ..\samples\simple\v2.0.3\lang
+	for %f in (it.mo de.mo) do if not exist ..\samples\simple\v2.0.3\lang\%f copy ..\locale\%f ..\samples\simple\v2.0.3\lang
+	mkdir ../samples/simple/v2.0.3/lang
+
+po_adv001 : .SYMBOLIC 
+	if not exist ..\samples\advanced\v0.0.1\lang mkdir ..\samples\advanced\v0.0.1\lang
+	for %f in (it.mo de.mo) do if not exist ..\samples\advanced\v0.0.1\lang\%f copy ..\locale\%f ..\samples\advanced\v0.0.1\lang
+	mkdir ../samples/advanced/v0.0.1/lang
+
+po_adv150 : .SYMBOLIC 
+	if not exist ..\samples\advanced\v1.5.0\lang mkdir ..\samples\advanced\v1.5.0\lang
+	for %f in (it.mo de.mo) do if not exist ..\samples\advanced\v1.5.0\lang\%f copy ..\locale\%f ..\samples\advanced\v1.5.0\lang
+	mkdir ../samples/advanced/v1.5.0/lang
 
 ..\samples\simple\v1.0.0\simple.exe :  $(SIMPLE_1_0_0_OBJECTS) ..\src\webupdater.exe watcom\simple_1_0_0_minimal.res
 	@%create watcom\simple_1_0_0.lbc

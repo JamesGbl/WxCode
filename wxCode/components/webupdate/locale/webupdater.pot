@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-02-12 14:27+0100\n"
+"POT-Creation-Date: 2006-02-12 16:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -87,7 +87,7 @@ msgstr ""
 msgid "Choose a directory"
 msgstr ""
 
-#: src/webapp.cpp:458
+#: src/webapp.cpp:474
 msgid "Choose the folder containing the updated packages"
 msgstr ""
 
@@ -259,7 +259,7 @@ msgstr ""
 msgid "Stop installation"
 msgstr ""
 
-#: src/webapp.cpp:512 src/webapp.cpp:525
+#: src/webapp.cpp:528 src/webapp.cpp:541
 #, c-format
 msgid ""
 "The WebUpdater configuration file is corrupted; the file:\n"
@@ -269,7 +269,7 @@ msgid ""
 "is missing (or invalid); please reinstall the program."
 msgstr ""
 
-#: src/webapp.cpp:500
+#: src/webapp.cpp:516
 msgid ""
 "The WebUpdater configuration file is corrupted; the local XML script is "
 "missing some required info. Please correct the local XML script or give "
@@ -308,7 +308,7 @@ msgid ""
 "Please contact the support team for more info."
 msgstr ""
 
-#: src/webapp.cpp:437
+#: src/webapp.cpp:453
 #, c-format
 msgid ""
 "The installation of the WebUpdater component of this application\n"
@@ -393,33 +393,34 @@ msgid ""
 "This program uses the Message Digest Algorithm (MD5) by RSA Data Security.\n"
 msgstr ""
 
-#: src/webapp.cpp:551
+#: src/webapp.cpp:567
 msgid "WebUpdaterApp::OnInit - creating the WebUpdaterDlg"
 msgstr ""
 
-#: src/webapp.cpp:509
+#: src/webapp.cpp:525
 #, c-format
 msgid "WebUpdaterApp::OnInit - loading the XRC file [%s]"
 msgstr ""
 
-#: src/webapp.cpp:432
+#: src/webapp.cpp:448
 #, c-format
-msgid "WebUpdaterApp::OnInit - loading the local XML webupdate script %s"
+msgid "WebUpdaterApp::OnPreInit - loading the local XML webupdate script %s"
 msgstr ""
 
-#: src/webapp.cpp:383
-msgid "WebUpdaterApp::OnInit - parsing the command line"
+#: src/webapp.cpp:399
+msgid "WebUpdaterApp::OnPreInit - parsing the command line"
 msgstr ""
 
-#: src/webapp.cpp:450
-msgid "WebUpdaterApp::OnInit - the --ask-uri option is incomplete"
+#: src/webapp.cpp:466
+msgid "WebUpdaterApp::OnPreInit - the --ask-uri option is incomplete"
 msgstr ""
 
-#: src/webapp.cpp:405
-msgid "WebUpdaterApp::OnInit - you cannot use both '--ask-uri' and '--uri' !"
+#: src/webapp.cpp:421
+msgid ""
+"WebUpdaterApp::OnPreInit - you cannot use both '--ask-uri' and '--uri' !"
 msgstr ""
 
-#: src/webapp.cpp:658
+#: src/webapp.cpp:674
 msgid "WebUpdaterDlg::OnQuit - quitting"
 msgstr ""
 

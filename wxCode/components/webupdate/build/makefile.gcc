@@ -221,7 +221,7 @@ mingw:
 
 ### Targets: ###
 
-all: $(__webupdate_lib___depname) $(__webupdate_dll___depname) ..\src\webupdater.exe rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150 ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
+all: $(__webupdate_lib___depname) $(__webupdate_dll___depname) ..\src\webupdater.exe rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150 po_simple100 po_simple203 po_adv001 po_adv150 ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
 
 clean: 
 	-if exist mingw\*.o del mingw\*.o
@@ -382,6 +382,26 @@ rep4_adv150:
 	if not exist ..\samples\advanced\v1.5.0 mkdir ..\samples\advanced\v1.5.0
 	for %%f in (webupdater.exe webupdatedlg.xrc) do copy ..\src\%%f ..\samples\advanced\v1.5.0
 
+po_simple100: 
+	if not exist ..\samples\simple\v1.0.0\lang mkdir ..\samples\simple\v1.0.0\lang
+	for %%f in (it.mo de.mo) do if not exist ..\samples\simple\v1.0.0\lang\%%f copy ..\locale\%%f ..\samples\simple\v1.0.0\lang
+	mkdir ../samples/simple/v1.0.0/lang
+
+po_simple203: 
+	if not exist ..\samples\simple\v2.0.3\lang mkdir ..\samples\simple\v2.0.3\lang
+	for %%f in (it.mo de.mo) do if not exist ..\samples\simple\v2.0.3\lang\%%f copy ..\locale\%%f ..\samples\simple\v2.0.3\lang
+	mkdir ../samples/simple/v2.0.3/lang
+
+po_adv001: 
+	if not exist ..\samples\advanced\v0.0.1\lang mkdir ..\samples\advanced\v0.0.1\lang
+	for %%f in (it.mo de.mo) do if not exist ..\samples\advanced\v0.0.1\lang\%%f copy ..\locale\%%f ..\samples\advanced\v0.0.1\lang
+	mkdir ../samples/advanced/v0.0.1/lang
+
+po_adv150: 
+	if not exist ..\samples\advanced\v1.5.0\lang mkdir ..\samples\advanced\v1.5.0\lang
+	for %%f in (it.mo de.mo) do if not exist ..\samples\advanced\v1.5.0\lang\%%f copy ..\locale\%%f ..\samples\advanced\v1.5.0\lang
+	mkdir ../samples/advanced/v1.5.0/lang
+
 ..\samples\simple\v1.0.0\simple.exe: $(SIMPLE_1_0_0_OBJECTS) ..\src\webupdater.exe mingw\simple_1_0_0_minimal_rc.o
 	$(CXX) -o $@ $(SIMPLE_1_0_0_OBJECTS) $(LDFLAGS) $(__DEBUGINFO) -mthreads -mthreads -L$(WX_DIR)$(WXLIBPATH) -L..\lib -Wl,--subsystem,windows -mwindows  -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
@@ -472,7 +492,7 @@ mingw\advanced_1_5_0_minimal.o: ./../samples/advanced/v1.5.0/minimal.cpp
 mingw\advanced_1_5_0_minimal_rc.o: ./../samples/advanced/v1.5.0/minimal.rc
 	windres --use-temp-file -i$< -o$@ $(__WX_SHAREDDEFINE_p_1_0) --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_1_0) $(__WXDEBUG_DEFINE_p_1_0) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ..\include --include-dir ../samples/advanced/v1.5.0
 
-.PHONY: all clean rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150
+.PHONY: all clean rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150 po_simple100 po_simple203 po_adv001 po_adv150
 
 
 # Dependencies tracking:

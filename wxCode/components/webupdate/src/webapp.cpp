@@ -176,7 +176,7 @@ public:
     // helpers of OnPreInit()
     // NOTE: they are listed in the same order they are called by OnPreInit()
     void CreateFileLogger();
-    void SetupLanguage();
+    void SetupLocale();
 
     // called before OnInit() and before any window is created
     bool OnPreInit();
@@ -326,9 +326,9 @@ void WebUpdaterApp::CreateFileLogger()
     m_bLoggerInstalled = TRUE;
 }
 
-void WebUpdaterApp::SetupLanguage()
+void WebUpdaterApp::SetupLocale()
 {
-    wxConfig *config = new wxConfig();
+    wxConfigBase *config = wxConfig::Get();
     wxString strLangCanonical;
 
     // load, if present, the setting of desired language from wxConfig
@@ -344,7 +344,15 @@ void WebUpdaterApp::SetupLanguage()
 
             // and it's valid...
             langID = pLangInfo->Language;
+
+            // in case user wrote in config file something like 'Italian', we use this
+            // to put in strLangCanonical the 'it_IT' string
+            strLangCanonical = m_locale.GetLanguageInfo(langID)->CanonicalName;
         }
+    } else {
+
+        // write the default language in our config object
+        config->Write(wxT("Language"), m_locale.GetLanguageInfo(langID)->CanonicalName);
     }
 
     // Initialization...
@@ -352,18 +360,25 @@ void WebUpdaterApp::SetupLanguage()
 
     // test if there is a LANG subfolder in the directory in our working dir
     wxString path = wxGetCwd() + wxFileName::GetPathSeparator() + wxT("lang");
-    wxLogAdvMsg(wxT("WebUpdaterApp::SetupLanguage - searching in [") + path + wxT("]"));
+    wxLogAdvMsg(wxT("WebUpdaterApp::SetupLocale - searching for [") + path + wxT("]"));
     if (::wxDirExists(path)) {
-        wxLogAdvMsg(wxT("WebUpdaterApp::SetupLanguage - found the LANG subfolder"));
+        wxLogAdvMsg(wxT("WebUpdaterApp::SetupLocale - found the LANG subfolder"));
 
         // .mo-files are located in subdir "lang"...
         m_locale.AddCatalogLookupPathPrefix(wxT("lang"));
     }
 
-    // Initialize the catalogs we'll be using
-    if (m_locale.AddCatalog(GetAppName().MakeLower()))
-        wxLogAdvMsg(wxT("WebUpdaterApp::SetupLanguage - successfully set the %s catalog"), GetAppName().c_str());
-    wxDELETE(config);
+    // Initialize the catalog we'll be using
+    if (!strLangCanonical.IsEmpty()) {
+
+        wxString fn = strLangCanonical.Before('_') + wxT(".po");
+        wxLogAdvMsg(wxT("WebUpdaterApp::SetupLocale - loading %s catalog"), fn.c_str());
+        if (m_locale.AddCatalog(fn))
+            wxLogAdvMsg(wxT("WebUpdaterApp::SetupLocale - successfully set the %s catalog"), fn.c_str());
+    } else {
+
+        wxLogAdvMsg(wxT("WebUpdaterApp::SetupLocale - no custom catalog loaded from wxConfig"));
+    }
 }
 
 bool WebUpdaterApp::OnPreInit()
@@ -377,10 +392,11 @@ bool WebUpdaterApp::OnPreInit()
 
     // support multiple language !
     SetAppName(wxT("WebUpdater"));      // before accessing wxConfig objects, let's set this
-    SetupLanguage();
+    wxConfig::Get()->SetRecordDefaults();
+    SetupLocale();
 
     // parse the command line
-    wxLogUsrMsg(_("WebUpdaterApp::OnInit - parsing the command line"));
+    wxLogUsrMsg(_("WebUpdaterApp::OnPreInit - parsing the command line"));
     wxCmdLineParser parser(g_cmdLineDesc, argc, argv);
     if (parser.Parse() != 0)
         return 0;           // help was shown / an error occurred
@@ -402,7 +418,7 @@ bool WebUpdaterApp::OnPreInit()
     // check for valid options
     wxFileName askurifn(askuri);
     if ((hasAskUri && hasUri) || (hasAskUri && !askurifn.IsOk())) {
-        wxLogError(_("WebUpdaterApp::OnInit - you cannot use both '--ask-uri' and '--uri' !"));
+        wxLogError(_("WebUpdaterApp::OnPreInit - you cannot use both '--ask-uri' and '--uri' !"));
         return FALSE;
     }
 
@@ -411,7 +427,7 @@ bool WebUpdaterApp::OnPreInit()
         + wxWebUpdatePlatform::GetThisPlatform().GetAsString() + wxT("]"));
 
     // this is for using wxDownloadThread
-    wxLogAdvMsg(wxT("WebUpdaterApp::OnInit - initializing sockets & handlers"));
+    wxLogAdvMsg(wxT("WebUpdaterApp::OnPreInit - initializing sockets & handlers"));
     wxSocketBase::Initialize();
 
     // load only required handles (so that the linker can remove all
@@ -429,7 +445,7 @@ bool WebUpdaterApp::OnPreInit()
     wxMemoryFSHandler::AddFile(wxT("www.xpm"), wxBitmap(www_xpm), wxBITMAP_TYPE_XPM);
 
     // load the local XML webupdate script
-    wxLogUsrMsg(_("WebUpdaterApp::OnInit - loading the local XML webupdate script %s"), xml.c_str());
+    wxLogUsrMsg(_("WebUpdaterApp::OnPreInit - loading the local XML webupdate script %s"), xml.c_str());
     wxFileName fn(xml);
     fn.MakeAbsolute(wxGetCwd());
     if (!m_script.Load(fn.GetFullPath())) {
@@ -447,7 +463,7 @@ bool WebUpdaterApp::OnPreInit()
             if (m_script.GetRemoteScriptURI()) {
                 xmlname = m_script.GetRemoteScriptURI().AfterLast(wxFileName::GetPathSeparator());
             } else {
-                wxLogError(_("WebUpdaterApp::OnInit - the --ask-uri option is incomplete"));
+                wxLogError(_("WebUpdaterApp::OnPreInit - the --ask-uri option is incomplete"));
                 return FALSE;
             }
         }
@@ -468,7 +484,7 @@ bool WebUpdaterApp::OnPreInit()
 
         // override the remote XML script
         wxFileName newremotexml(file);
-        wxLogAdvMsg(wxT("WebUpdaterApp::OnInit - overriding <remoteuri> with [") +
+        wxLogAdvMsg(wxT("WebUpdaterApp::OnPreInit - overriding <remoteuri> with [") +
                 newremotexml.GetFullPath() + wxT("]"));
         uri = wxMakeFileURI(newremotexml);
     }
