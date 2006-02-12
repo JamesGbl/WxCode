@@ -41,6 +41,9 @@ WX_DEBUG = 1
 # Version of the wx library to build against. 
 WX_VERSION = 26
 
+# Use monolithic build of wxWidgets? [0,1]
+WX_MONOLITHIC = 0
+
 # If 1 then wxHTTPEngine component will be used for proxy/authentication stuff [1,0]
 USE_HTTPENGINE = 1
 
@@ -93,6 +96,151 @@ __HTTPENGINEDEP_LIB_p =
 !ifeq USE_HTTPENGINE 1
 __HTTPENGINEDEP_LIB_p = httpengine$(WXLIBPOSTFIX).lib
 !endif
+__WXLIB_ADV_NAME_p =
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 0
+__WXLIB_ADV_NAME_p = wxmsw$(WX_VERSION)_adv.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 1
+__WXLIB_ADV_NAME_p = wxmsw$(WX_VERSION)u_adv.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 0
+__WXLIB_ADV_NAME_p = wxmsw$(WX_VERSION)d_adv.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 1
+__WXLIB_ADV_NAME_p = wxmsw$(WX_VERSION)ud_adv.lib
+!endif
+!endif
+!endif
+__WXLIB_HTML_NAME_p =
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 0
+__WXLIB_HTML_NAME_p = wxmsw$(WX_VERSION)_html.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 1
+__WXLIB_HTML_NAME_p = wxmsw$(WX_VERSION)u_html.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 0
+__WXLIB_HTML_NAME_p = wxmsw$(WX_VERSION)d_html.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 1
+__WXLIB_HTML_NAME_p = wxmsw$(WX_VERSION)ud_html.lib
+!endif
+!endif
+!endif
+__WXLIB_XRC_NAME_p =
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 0
+__WXLIB_XRC_NAME_p = wxmsw$(WX_VERSION)_xrc.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 1
+__WXLIB_XRC_NAME_p = wxmsw$(WX_VERSION)u_xrc.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 0
+__WXLIB_XRC_NAME_p = wxmsw$(WX_VERSION)d_xrc.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 1
+__WXLIB_XRC_NAME_p = wxmsw$(WX_VERSION)ud_xrc.lib
+!endif
+!endif
+!endif
+__WXLIB_XML_NAME_p =
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 0
+__WXLIB_XML_NAME_p = wxbase$(WX_VERSION)_xml.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 1
+__WXLIB_XML_NAME_p = wxbase$(WX_VERSION)u_xml.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 0
+__WXLIB_XML_NAME_p = wxbase$(WX_VERSION)d_xml.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 1
+__WXLIB_XML_NAME_p = wxbase$(WX_VERSION)ud_xml.lib
+!endif
+!endif
+!endif
+__WXLIB_NET_NAME_p =
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 0
+__WXLIB_NET_NAME_p = wxbase$(WX_VERSION)_net.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 1
+__WXLIB_NET_NAME_p = wxbase$(WX_VERSION)u_net.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 0
+__WXLIB_NET_NAME_p = wxbase$(WX_VERSION)d_net.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 1
+__WXLIB_NET_NAME_p = wxbase$(WX_VERSION)ud_net.lib
+!endif
+!endif
+!endif
 __HTTPENGINEDEP_DEF_p =
 !ifeq USE_HTTPENGINE 0
 __HTTPENGINEDEP_DEF_p = -dwxUSE_HTTPENGINE=0
@@ -127,6 +275,92 @@ __DEBUGINFO_4 =
 !endif
 !ifeq WX_DEBUG 1
 __DEBUGINFO_4 = debug all
+!endif
+__WXLIB_CORE_NAME_p =
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 0
+__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)_core.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 1
+__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)u_core.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 0
+__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)d_core.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 1
+__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)ud_core.lib
+!endif
+!endif
+!endif
+__WXLIB_BASE_NAME_p =
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 0
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION).lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 1
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)u.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 1
+!ifeq WX_UNICODE 0
+__WXLIB_BASE_NAME_p = wxmsw$(WX_VERSION).lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 0
+!ifeq WX_MONOLITHIC 1
+!ifeq WX_UNICODE 1
+__WXLIB_BASE_NAME_p = wxmsw$(WX_VERSION)u.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 0
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)d.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 0
+!ifeq WX_UNICODE 1
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)ud.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 1
+!ifeq WX_UNICODE 0
+__WXLIB_BASE_NAME_p = wxmsw$(WX_VERSION)d.lib
+!endif
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_MONOLITHIC 1
+!ifeq WX_UNICODE 1
+__WXLIB_BASE_NAME_p = wxmsw$(WX_VERSION)ud.lib
+!endif
+!endif
 !endif
 __WX_SHAREDDEFINE_p =
 !ifeq WX_SHARED 1
@@ -382,7 +616,7 @@ uninstall :
 	@%append watcom\webupdate_dll.lbc option caseexact
 	@%append watcom\webupdate_dll.lbc $(LDFLAGS) $(__DEBUGINFO_4)  libpath $(WX_DIR)$(WXLIBPATH) libpath ..\lib libpath $(HTTPENGINE_DIR)\lib
 	@for %i in ($(WEBUPDATE_DLL_OBJECTS)) do @%append watcom\webupdate_dll.lbc file %i
-	@for %i in ( $(__HTTPENGINEDEP_LIB_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\webupdate_dll.lbc library %i
+	@for %i in ( $(__HTTPENGINEDEP_LIB_p) $(__WXLIB_ADV_NAME_p) $(__WXLIB_HTML_NAME_p) $(__WXLIB_XRC_NAME_p) $(__WXLIB_XML_NAME_p) $(__WXLIB_NET_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\webupdate_dll.lbc library %i
 	@%append watcom\webupdate_dll.lbc
 	@%append watcom\webupdate_dll.lbc system nt_dll
 	wlink @watcom\webupdate_dll.lbc
@@ -399,7 +633,7 @@ xrcscan :
 	@%append watcom\webupdater.lbc option caseexact
 	@%append watcom\webupdater.lbc $(LDFLAGS) $(__DEBUGINFO_4)  libpath $(WX_DIR)$(WXLIBPATH) libpath ..\lib libpath $(HTTPENGINE_DIR)\lib system nt_win ref '_WinMain@16'
 	@for %i in ($(WEBUPDATER_OBJECTS)) do @%append watcom\webupdater.lbc file %i
-	@for %i in ( ..\lib\webupdate$(WXLIBPOSTFIX).lib $(__HTTPENGINEDEP_LIB_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\webupdater.lbc library %i
+	@for %i in ( ..\lib\webupdate$(WXLIBPOSTFIX).lib $(__HTTPENGINEDEP_LIB_p) $(__WXLIB_ADV_NAME_p) $(__WXLIB_HTML_NAME_p) $(__WXLIB_XRC_NAME_p) $(__WXLIB_XML_NAME_p) $(__WXLIB_NET_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\webupdater.lbc library %i
 	@%append watcom\webupdater.lbc option resource=watcom\webupdater_app.res
 	@for %i in () do @%append watcom\webupdater.lbc option stack=%i
 	wlink @watcom\webupdater.lbc
@@ -423,22 +657,18 @@ rep4_adv150 : .SYMBOLIC
 po_simple100 : .SYMBOLIC 
 	if not exist ..\samples\simple\v1.0.0\lang mkdir ..\samples\simple\v1.0.0\lang
 	for %f in (it.mo de.mo) do if not exist ..\samples\simple\v1.0.0\lang\%f copy ..\locale\%f ..\samples\simple\v1.0.0\lang
-	mkdir ../samples/simple/v1.0.0/lang
 
 po_simple203 : .SYMBOLIC 
 	if not exist ..\samples\simple\v2.0.3\lang mkdir ..\samples\simple\v2.0.3\lang
 	for %f in (it.mo de.mo) do if not exist ..\samples\simple\v2.0.3\lang\%f copy ..\locale\%f ..\samples\simple\v2.0.3\lang
-	mkdir ../samples/simple/v2.0.3/lang
 
 po_adv001 : .SYMBOLIC 
 	if not exist ..\samples\advanced\v0.0.1\lang mkdir ..\samples\advanced\v0.0.1\lang
 	for %f in (it.mo de.mo) do if not exist ..\samples\advanced\v0.0.1\lang\%f copy ..\locale\%f ..\samples\advanced\v0.0.1\lang
-	mkdir ../samples/advanced/v0.0.1/lang
 
 po_adv150 : .SYMBOLIC 
 	if not exist ..\samples\advanced\v1.5.0\lang mkdir ..\samples\advanced\v1.5.0\lang
 	for %f in (it.mo de.mo) do if not exist ..\samples\advanced\v1.5.0\lang\%f copy ..\locale\%f ..\samples\advanced\v1.5.0\lang
-	mkdir ../samples/advanced/v1.5.0/lang
 
 ..\samples\simple\v1.0.0\simple.exe :  $(SIMPLE_1_0_0_OBJECTS) ..\src\webupdater.exe watcom\simple_1_0_0_minimal.res
 	@%create watcom\simple_1_0_0.lbc
@@ -447,7 +677,7 @@ po_adv150 : .SYMBOLIC
 	@%append watcom\simple_1_0_0.lbc option caseexact
 	@%append watcom\simple_1_0_0.lbc $(LDFLAGS) $(__DEBUGINFO_4)  libpath $(WX_DIR)$(WXLIBPATH) libpath ..\lib system nt_win ref '_WinMain@16'
 	@for %i in ($(SIMPLE_1_0_0_OBJECTS)) do @%append watcom\simple_1_0_0.lbc file %i
-	@for %i in ( wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\simple_1_0_0.lbc library %i
+	@for %i in ( $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\simple_1_0_0.lbc library %i
 	@%append watcom\simple_1_0_0.lbc option resource=watcom\simple_1_0_0_minimal.res
 	@for %i in () do @%append watcom\simple_1_0_0.lbc option stack=%i
 	wlink @watcom\simple_1_0_0.lbc
@@ -459,7 +689,7 @@ po_adv150 : .SYMBOLIC
 	@%append watcom\simple_2_0_3.lbc option caseexact
 	@%append watcom\simple_2_0_3.lbc $(LDFLAGS) $(__DEBUGINFO_4)  libpath $(WX_DIR)$(WXLIBPATH) libpath ..\lib system nt_win ref '_WinMain@16'
 	@for %i in ($(SIMPLE_2_0_3_OBJECTS)) do @%append watcom\simple_2_0_3.lbc file %i
-	@for %i in ( wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\simple_2_0_3.lbc library %i
+	@for %i in ( $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\simple_2_0_3.lbc library %i
 	@%append watcom\simple_2_0_3.lbc option resource=watcom\simple_2_0_3_minimal.res
 	@for %i in () do @%append watcom\simple_2_0_3.lbc option stack=%i
 	wlink @watcom\simple_2_0_3.lbc
@@ -471,7 +701,7 @@ po_adv150 : .SYMBOLIC
 	@%append watcom\advanced_0_0_1.lbc option caseexact
 	@%append watcom\advanced_0_0_1.lbc $(LDFLAGS) $(__DEBUGINFO_4)  libpath $(WX_DIR)$(WXLIBPATH) libpath ..\lib system nt_win ref '_WinMain@16'
 	@for %i in ($(ADVANCED_0_0_1_OBJECTS)) do @%append watcom\advanced_0_0_1.lbc file %i
-	@for %i in ( wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\advanced_0_0_1.lbc library %i
+	@for %i in ( $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\advanced_0_0_1.lbc library %i
 	@%append watcom\advanced_0_0_1.lbc option resource=watcom\advanced_0_0_1_minimal.res
 	@for %i in () do @%append watcom\advanced_0_0_1.lbc option stack=%i
 	wlink @watcom\advanced_0_0_1.lbc
@@ -483,7 +713,7 @@ po_adv150 : .SYMBOLIC
 	@%append watcom\advanced_1_5_0.lbc option caseexact
 	@%append watcom\advanced_1_5_0.lbc $(LDFLAGS) $(__DEBUGINFO_4)  libpath $(WX_DIR)$(WXLIBPATH) libpath ..\lib system nt_win ref '_WinMain@16'
 	@for %i in ($(ADVANCED_1_5_0_OBJECTS)) do @%append watcom\advanced_1_5_0.lbc file %i
-	@for %i in ( wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\advanced_1_5_0.lbc library %i
+	@for %i in ( $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watcom\advanced_1_5_0.lbc library %i
 	@%append watcom\advanced_1_5_0.lbc option resource=watcom\advanced_1_5_0_minimal.res
 	@for %i in () do @%append watcom\advanced_1_5_0.lbc option stack=%i
 	wlink @watcom\advanced_1_5_0.lbc

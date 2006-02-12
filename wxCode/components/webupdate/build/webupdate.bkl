@@ -277,7 +277,6 @@
                 <dependency-of>all</dependency-of>
             </template>
             <define-tag name="dst">
-                <!--<command>$(MKDIR) $(value)/lang</command>-->
                 <dstdir>$(value)/lang</dstdir>
             </define-tag>
         </define-rule>

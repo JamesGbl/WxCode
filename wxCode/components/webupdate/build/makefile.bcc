@@ -64,6 +64,11 @@ WX_DEBUG = 1
 WX_VERSION = 26
 !endif
 
+# Use monolithic build of wxWidgets? [0,1]
+!ifndef WX_MONOLITHIC
+WX_MONOLITHIC = 0
+!endif
+
 # If 1 then wxHTTPEngine component will be used for proxy/authentication stuff [1,0]
 !ifndef USE_HTTPENGINE
 USE_HTTPENGINE = 1
@@ -174,6 +179,66 @@ __MYOPTIMIZEFLAG = -Od
 !if "$(USE_HTTPENGINE)" == "1"
 __HTTPENGINEDEP_LIB_p = httpengine$(WXLIBPOSTFIX).lib
 !endif
+!if "$(WX_DEBUG)" == "0" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "0"
+__WXLIB_ADV_NAME_p = wxmsw$(WX_VERSION)_adv.lib
+!endif
+!if "$(WX_DEBUG)" == "0" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "1"
+__WXLIB_ADV_NAME_p = wxmsw$(WX_VERSION)u_adv.lib
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "0"
+__WXLIB_ADV_NAME_p = wxmsw$(WX_VERSION)d_adv.lib
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "1"
+__WXLIB_ADV_NAME_p = wxmsw$(WX_VERSION)ud_adv.lib
+!endif
+!if "$(WX_DEBUG)" == "0" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "0"
+__WXLIB_HTML_NAME_p = wxmsw$(WX_VERSION)_html.lib
+!endif
+!if "$(WX_DEBUG)" == "0" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "1"
+__WXLIB_HTML_NAME_p = wxmsw$(WX_VERSION)u_html.lib
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "0"
+__WXLIB_HTML_NAME_p = wxmsw$(WX_VERSION)d_html.lib
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "1"
+__WXLIB_HTML_NAME_p = wxmsw$(WX_VERSION)ud_html.lib
+!endif
+!if "$(WX_DEBUG)" == "0" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "0"
+__WXLIB_XRC_NAME_p = wxmsw$(WX_VERSION)_xrc.lib
+!endif
+!if "$(WX_DEBUG)" == "0" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "1"
+__WXLIB_XRC_NAME_p = wxmsw$(WX_VERSION)u_xrc.lib
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "0"
+__WXLIB_XRC_NAME_p = wxmsw$(WX_VERSION)d_xrc.lib
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "1"
+__WXLIB_XRC_NAME_p = wxmsw$(WX_VERSION)ud_xrc.lib
+!endif
+!if "$(WX_DEBUG)" == "0" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "0"
+__WXLIB_XML_NAME_p = wxbase$(WX_VERSION)_xml.lib
+!endif
+!if "$(WX_DEBUG)" == "0" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "1"
+__WXLIB_XML_NAME_p = wxbase$(WX_VERSION)u_xml.lib
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "0"
+__WXLIB_XML_NAME_p = wxbase$(WX_VERSION)d_xml.lib
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "1"
+__WXLIB_XML_NAME_p = wxbase$(WX_VERSION)ud_xml.lib
+!endif
+!if "$(WX_DEBUG)" == "0" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "0"
+__WXLIB_NET_NAME_p = wxbase$(WX_VERSION)_net.lib
+!endif
+!if "$(WX_DEBUG)" == "0" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "1"
+__WXLIB_NET_NAME_p = wxbase$(WX_VERSION)u_net.lib
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "0"
+__WXLIB_NET_NAME_p = wxbase$(WX_VERSION)d_net.lib
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "1"
+__WXLIB_NET_NAME_p = wxbase$(WX_VERSION)ud_net.lib
+!endif
 !if "$(WX_DEBUG)" == "0"
 __OPTIMIZEFLAG = -O2
 !endif
@@ -197,6 +262,42 @@ __WXDEBUG_DEFINE_p = -D__WXDEBUG__
 !endif
 !if "$(WX_DEBUG)" == "1"
 __WXDEBUG_DEFINE_p_1_0 = -d__WXDEBUG__
+!endif
+!if "$(WX_DEBUG)" == "0" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "0"
+__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)_core.lib
+!endif
+!if "$(WX_DEBUG)" == "0" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "1"
+__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)u_core.lib
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "0"
+__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)d_core.lib
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "1"
+__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)ud_core.lib
+!endif
+!if "$(WX_DEBUG)" == "0" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "0"
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION).lib
+!endif
+!if "$(WX_DEBUG)" == "0" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "1"
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)u.lib
+!endif
+!if "$(WX_DEBUG)" == "0" && "$(WX_MONOLITHIC)" == "1" && "$(WX_UNICODE)" == "0"
+__WXLIB_BASE_NAME_p = wxmsw$(WX_VERSION).lib
+!endif
+!if "$(WX_DEBUG)" == "0" && "$(WX_MONOLITHIC)" == "1" && "$(WX_UNICODE)" == "1"
+__WXLIB_BASE_NAME_p = wxmsw$(WX_VERSION)u.lib
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "0"
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)d.lib
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_MONOLITHIC)" == "0" && "$(WX_UNICODE)" == "1"
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)ud.lib
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_MONOLITHIC)" == "1" && "$(WX_UNICODE)" == "0"
+__WXLIB_BASE_NAME_p = wxmsw$(WX_VERSION)d.lib
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_MONOLITHIC)" == "1" && "$(WX_UNICODE)" == "1"
+__WXLIB_BASE_NAME_p = wxmsw$(WX_VERSION)ud.lib
 !endif
 !if "$(WX_DEBUG)" == "0"
 __DEBUGINFO = -v-
@@ -399,7 +500,7 @@ uninstall:
 !if "$(WX_SHARED)" == "1"
 ..\lib\webupdate$(WXLIBPOSTFIX).dll: $(WEBUPDATE_DLL_OBJECTS)
 	ilink32 -Tpd -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(WXLIBPATH) -L..\lib -L$(HTTPENGINE_DIR)\lib @&&|
-	c0d32.obj $(WEBUPDATE_DLL_OBJECTS),$@,, $(__HTTPENGINEDEP_LIB_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32mt.lib,,
+	c0d32.obj $(WEBUPDATE_DLL_OBJECTS),$@,, $(__HTTPENGINEDEP_LIB_p) $(__WXLIB_ADV_NAME_p) $(__WXLIB_HTML_NAME_p) $(__WXLIB_XRC_NAME_p) $(__WXLIB_XML_NAME_p) $(__WXLIB_NET_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32mt.lib,,
 |
 	implib -f ..\lib\webupdate$(WXLIBPOSTFIX) $@
 !endif
@@ -409,7 +510,7 @@ xrcscan:
 
 ..\src\webupdater.exe: $(WEBUPDATER_OBJECTS) locale  borland\webupdater_app.res $(__webupdate_lib___depname)
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(WXLIBPATH) -L..\lib -L$(HTTPENGINE_DIR)\lib -aa @&&|
-	c0w32.obj $(WEBUPDATER_OBJECTS),$@,, ..\lib\webupdate$(WXLIBPOSTFIX).lib $(__HTTPENGINEDEP_LIB_p) wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_adv.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_html.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_xrc.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_xml.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX)_net.lib wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32mt.lib,, borland\webupdater_app.res
+	c0w32.obj $(WEBUPDATER_OBJECTS),$@,, ..\lib\webupdate$(WXLIBPOSTFIX).lib $(__HTTPENGINEDEP_LIB_p) $(__WXLIB_ADV_NAME_p) $(__WXLIB_HTML_NAME_p) $(__WXLIB_XRC_NAME_p) $(__WXLIB_XML_NAME_p) $(__WXLIB_NET_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32mt.lib,, borland\webupdater_app.res
 |
 
 rep4_simple100: 
@@ -431,41 +532,37 @@ rep4_adv150:
 po_simple100: 
 	if not exist ..\samples\simple\v1.0.0\lang mkdir ..\samples\simple\v1.0.0\lang
 	for %f in (it.mo de.mo) do if not exist ..\samples\simple\v1.0.0\lang\%f copy ..\locale\%f ..\samples\simple\v1.0.0\lang
-	mkdir ../samples/simple/v1.0.0/lang
 
 po_simple203: 
 	if not exist ..\samples\simple\v2.0.3\lang mkdir ..\samples\simple\v2.0.3\lang
 	for %f in (it.mo de.mo) do if not exist ..\samples\simple\v2.0.3\lang\%f copy ..\locale\%f ..\samples\simple\v2.0.3\lang
-	mkdir ../samples/simple/v2.0.3/lang
 
 po_adv001: 
 	if not exist ..\samples\advanced\v0.0.1\lang mkdir ..\samples\advanced\v0.0.1\lang
 	for %f in (it.mo de.mo) do if not exist ..\samples\advanced\v0.0.1\lang\%f copy ..\locale\%f ..\samples\advanced\v0.0.1\lang
-	mkdir ../samples/advanced/v0.0.1/lang
 
 po_adv150: 
 	if not exist ..\samples\advanced\v1.5.0\lang mkdir ..\samples\advanced\v1.5.0\lang
 	for %f in (it.mo de.mo) do if not exist ..\samples\advanced\v1.5.0\lang\%f copy ..\locale\%f ..\samples\advanced\v1.5.0\lang
-	mkdir ../samples/advanced/v1.5.0/lang
 
 ..\samples\simple\v1.0.0\simple.exe: $(SIMPLE_1_0_0_OBJECTS) ..\src\webupdater.exe  borland\simple_1_0_0_minimal.res
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(WXLIBPATH) -L..\lib -aa @&&|
-	c0w32.obj $(SIMPLE_1_0_0_OBJECTS),$@,, wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32mt.lib,, borland\simple_1_0_0_minimal.res
+	c0w32.obj $(SIMPLE_1_0_0_OBJECTS),$@,, $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32mt.lib,, borland\simple_1_0_0_minimal.res
 |
 
 ..\samples\simple\v2.0.3\simple.exe: $(SIMPLE_2_0_3_OBJECTS) ..\src\webupdater.exe  borland\simple_2_0_3_minimal.res
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(WXLIBPATH) -L..\lib -aa @&&|
-	c0w32.obj $(SIMPLE_2_0_3_OBJECTS),$@,, wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32mt.lib,, borland\simple_2_0_3_minimal.res
+	c0w32.obj $(SIMPLE_2_0_3_OBJECTS),$@,, $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32mt.lib,, borland\simple_2_0_3_minimal.res
 |
 
 ..\samples\advanced\v0.0.1\advanced.exe: $(ADVANCED_0_0_1_OBJECTS) ..\src\webupdater.exe  borland\advanced_0_0_1_minimal.res
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(WXLIBPATH) -L..\lib -aa @&&|
-	c0w32.obj $(ADVANCED_0_0_1_OBJECTS),$@,, wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32mt.lib,, borland\advanced_0_0_1_minimal.res
+	c0w32.obj $(ADVANCED_0_0_1_OBJECTS),$@,, $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32mt.lib,, borland\advanced_0_0_1_minimal.res
 |
 
 ..\samples\advanced\v1.5.0\advanced.exe: $(ADVANCED_1_5_0_OBJECTS) ..\src\webupdater.exe  borland\advanced_1_5_0_minimal.res
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(WXLIBPATH) -L..\lib -aa @&&|
-	c0w32.obj $(ADVANCED_1_5_0_OBJECTS),$@,, wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32mt.lib,, borland\advanced_1_5_0_minimal.res
+	c0w32.obj $(ADVANCED_1_5_0_OBJECTS),$@,, $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32mt.lib,, borland\advanced_1_5_0_minimal.res
 |
 
 borland\webupdate_lib_webupdate.obj: .\..\src\webupdate.cpp

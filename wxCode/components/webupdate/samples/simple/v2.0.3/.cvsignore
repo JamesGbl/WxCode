@@ -2,3 +2,5 @@ lang
 *.exe
 *log*
 *.xrc
+simple
+webupdater
