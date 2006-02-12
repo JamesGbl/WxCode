@@ -67,14 +67,12 @@
 #include <wx/cmdline.h>
 #include <wx/textfile.h>
 #include <wx/apptrait.h>
+#include <wx/config.h>
 
 #include "wx/webupdatedlg.h"
 #include "wx/webupdatectrl.h"
 #include "wx/stdactions.h"
 
-//*****{ 09.02.2006 gh *****
-#include "wx/fileconf.h"
-//*****} 09.02.2006 gh *****
 
 // ----------------------------------------------------------------------------
 // resources
