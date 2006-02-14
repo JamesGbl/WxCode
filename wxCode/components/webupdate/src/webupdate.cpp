@@ -1040,8 +1040,18 @@ bool wxWebUpdateXMLScript::IsLangPropertyMatching(const wxXmlNode *n, const wxSt
         prop = prop->GetNext();
     wxString l = prop ? prop->GetValue() : wxT("en");    // english is the default
 
-    if (l == lang || l.Before(wxT('-')) == lang.Before(wxT('_')))
+    // does the LANG property match the given language name ?
+    if (l.IsSameAs(lang, FALSE) ||
+        l.BeforeFirst(wxT('-')).IsSameAs(lang.BeforeFirst(wxT('_')), FALSE)) {
+        wxLogDebug(wxT("wxWebUpdateXMLScript::IsLangPropertyMatching - ")
+                    wxT("found a [%s] LANG property matching the given [%s] language name"),
+                    l.c_str(), lang.c_str());
         return TRUE;
+    } else
+        wxLogDebug(wxT("wxWebUpdateXMLScript::IsLangPropertyMatching - ")
+                    wxT("found an [%s] LANG property not matching the given [%s] language name"),
+                    l.c_str(), lang.c_str());
+
     return FALSE;
 }
 

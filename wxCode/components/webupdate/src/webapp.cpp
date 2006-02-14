@@ -161,7 +161,6 @@ public:
     // our log window
     wxWebUpdateLog *m_log;
 
-protected:
     // for i18n support
     wxLocale m_locale;
 
@@ -647,7 +646,7 @@ void WebUpdaterApp::OnExecute(wxCommandEvent &ce)
 // ----------------------------------------------------------------------------
 
 WebUpdaterDlg::WebUpdaterDlg(const wxWebUpdateLocalXMLScript &script)
-                        : wxWebUpdateDlg(NULL, script)
+                        : wxWebUpdateDlg(NULL, script, &(wxGetApp().m_locale))
 {
     //wxIconBundle icons(wxT("app.ico"), wxBITMAP_TYPE_ICO);
 
