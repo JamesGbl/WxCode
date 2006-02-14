@@ -161,11 +161,12 @@ wxString wxWUDGetStatus(wxWebUpdateDlgStatus s)
 // ---------------------
 
 wxWebUpdateDlg::wxWebUpdateDlg(wxWindow *parent,
-                                const wxWebUpdateLocalXMLScript &script)
+                                const wxWebUpdateLocalXMLScript &script,
+                                const wxLocale *lang)
                             : wxDialog()
 {
     PreInit();
-    Create(parent, script);
+    Create(parent, script, lang);
 }
 
 void wxWebUpdateDlg::PreInit()
@@ -196,12 +197,14 @@ void wxWebUpdateDlg::PreInit()
 }
 
 bool wxWebUpdateDlg::Create(wxWindow *parent,
-                            const wxWebUpdateLocalXMLScript &script)
+                            const wxWebUpdateLocalXMLScript &script,
+                            const wxLocale *lang)
 {
     m_ok = FALSE;
 
     // copy the local XML script
     m_xmlLocal = script;
+    m_pLocale = lang;
 
     // init our GUI
     if (!InitWidgetsFromXRC(parent))
@@ -488,7 +491,8 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
     m_nDownloadCount--;
 
     // ok, we can now parse the XML doc
-    if (!m_xmlRemote.Load(xmluri)) {
+    wxString langid = m_pLocale ? m_pLocale->GetCanonicalName() : wxT("en");
+    if (!m_xmlRemote.Load(xmluri, langid)) {
         wxWebUpdateInstaller::Get()->ShowErrorMsg(wxString::Format(
                         _("Cannot parse the XML update script downloaded as: %s"),
                         m_dThread->m_strOutput.c_str()));

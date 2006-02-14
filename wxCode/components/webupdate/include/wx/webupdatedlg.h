@@ -314,6 +314,9 @@ protected:		// remote-related stuff
 	//! the package that we are installing if m_nStatus == wxWUDS_INSTALLING.
 	wxWebUpdatePackage *m_current;
 
+    //! The locale to use when choosing among localized messages from the XML remote script.
+    const wxLocale *m_pLocale;
+
 protected:		// wxWebUpdateDlg-internals
 
 	//! TRUE if we intentionally called wxDownloadThread::AbortDownload
@@ -403,14 +406,16 @@ public:
 	//! is not required since we are using XRC system
 	wxWebUpdateDlg::wxWebUpdateDlg(
  						wxWindow *parent,
-						const wxWebUpdateLocalXMLScript &script);
+						const wxWebUpdateLocalXMLScript &script,
+                        const wxLocale *lang = NULL);
 
 	//! Inits the values of the pointers and others var to NULL.
 	void PreInit();
 
 	//! Creates the dialog.
 	bool Create(wxWindow *parent,
-				const wxWebUpdateLocalXMLScript &script);
+				const wxWebUpdateLocalXMLScript &script,
+                const wxLocale *lang = NULL);
 
     //! Returns TRUE if in the creation process everything was successful.
     bool IsOk() const

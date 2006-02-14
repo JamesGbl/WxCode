@@ -373,6 +373,8 @@ void WebUpdaterApp::SetupLocale()
         wxLogAdvMsg(wxT("WebUpdaterApp::SetupLocale - loading %s catalog"), fn.c_str());
         if (m_locale.AddCatalog(fn))
             wxLogAdvMsg(wxT("WebUpdaterApp::SetupLocale - successfully set the %s catalog"), fn.c_str());
+        else
+            wxLogAdvMsg(wxT("WebUpdaterApp::SetupLocale - problems setting the %s catalog"), fn.c_str());
     } else {
 
         wxLogAdvMsg(wxT("WebUpdaterApp::SetupLocale - no custom catalog loaded from wxConfig"));

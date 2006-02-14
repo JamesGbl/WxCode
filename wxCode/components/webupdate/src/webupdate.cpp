@@ -1031,6 +1031,20 @@ wxString wxWebUpdateXMLScript::GetNodeContent(const wxXmlNode *node)
     return wxEmptyString;
 }
 
+// static
+bool wxWebUpdateXMLScript::IsLangPropertyMatching(const wxXmlNode *n, const wxString &lang)
+{
+    // look for the LANG property of this tag...
+    wxXmlProperty *prop = n->GetProperties();
+    while (prop && prop->GetName() != wxT("lang"))
+        prop = prop->GetNext();
+    wxString l = prop ? prop->GetValue() : wxT("en");    // english is the default
+
+    if (l == lang || l.Before(wxT('-')) == lang.Before(wxT('_')))
+        return TRUE;
+    return FALSE;
+}
+
 wxWebUpdateActionArray wxWebUpdateXMLScript::GetActionArray(const wxXmlNode *actions) const
 {
     wxWebUpdateActionArray ret;
@@ -1165,6 +1179,7 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) c
 
     // parse this package
     wxXmlNode *child = package->GetChildren();
+    bool bDescriptionLangFound = FALSE;
     while (child) {
 
         if (child->GetName() == wxT("requires")) {
@@ -1203,13 +1218,21 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) c
 
         } else if (child->GetName() == wxT("description")) {
 
-            // do keywords substitution in the description
-            ret->m_strDescription = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(GetNodeContent(child));
+            // if we did not find the description msg in the right language, then save this
+            // description message
+            if (!bDescriptionLangFound)
+                ret->m_strDescription = GetNodeContent(child);
+            if (IsLangPropertyMatching(child, m_strLanguageID))
+                bDescriptionLangFound = TRUE;
         }
 
         // proceed
         child = child->GetNext();
     }
+
+    // do keywords substitution in the package description
+    ret->m_strDescription = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(
+                                                         ret->m_strDescription);
 
     // remove the keywords we added while parsing
     list[wxT("id")] = wxEmptyString;
@@ -1325,9 +1348,11 @@ wxWebUpdateCheckFlag wxWebUpdateXMLScript::GetWebUpdateVersion(const wxXmlNode *
     return f;
 }
 
-bool wxWebUpdateXMLScript::Load(const wxString &uri)
+bool wxWebUpdateXMLScript::Load(const wxString &uri, const wxString &langID)
 {
     wxLogUsrMsg(_("wxWebUpdateXMLScript::Load - loading [%s]"), uri.c_str());
+    m_strLanguageID = langID;
+    wxASSERT(!m_strLanguageID.IsEmpty());
 
     // refer to "webupdate.dtd" for a definition of the XML webupdate info script
     // first of all, we need to open a connection to the given url
@@ -1346,13 +1371,26 @@ bool wxWebUpdateXMLScript::Load(const wxString &uri)
         return FALSE;
 
     wxXmlNode *child = GetRoot()->GetChildren();
+    bool bMsgUpdateAvailLangFound = FALSE, bMsgUpdateNotAvailLangFound = FALSE;
     while (child) {
 
         // parse the children of <webupdate> which are not packages
-        if (child->GetName() == wxT("msg-update-available"))
-            m_strUpdateAvailableMsg = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(GetNodeContent(child));
-        else if (child->GetName() == wxT("msg-update-notavailable"))
-            m_strUpdateNotAvailableMsg = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(GetNodeContent(child));
+        if (child->GetName() == wxT("msg-update-available")) {
+
+            if (!bMsgUpdateAvailLangFound)
+                m_strUpdateAvailableMsg = wxWebUpdateInstaller::Get()->
+                                            DoKeywordSubstitution(GetNodeContent(child));
+            if (IsLangPropertyMatching(child, m_strLanguageID))
+                bMsgUpdateAvailLangFound = TRUE;
+
+        } else if (child->GetName() == wxT("msg-update-notavailable")) {
+
+            if (!bMsgUpdateNotAvailLangFound)
+                m_strUpdateNotAvailableMsg = wxWebUpdateInstaller::Get()->
+                                            DoKeywordSubstitution(GetNodeContent(child));
+            if (IsLangPropertyMatching(child, m_strLanguageID))
+                bMsgUpdateNotAvailLangFound = TRUE;
+        }
 
         child = child->GetNext();
     }

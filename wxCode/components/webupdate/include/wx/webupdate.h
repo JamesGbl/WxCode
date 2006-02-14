@@ -467,7 +467,7 @@ protected:      // string -> enum conversions
     static wxWebUpdateArch GetArch(const wxString &arch);
 
 protected:      // enum -> string conversions
-    
+
     static wxString GetPortString(wxWebUpdatePort);
     static wxString GetArchString(wxWebUpdateArch);
 
@@ -475,15 +475,15 @@ public:
 
     // constructor using enums
     wxWebUpdatePlatform(const wxWebUpdatePort &port = wxWUP_ANY,
-                        const wxWebUpdateArch &arch = wxWUA_32, 
+                        const wxWebUpdateArch &arch = wxWUA_32,
                         const wxString &id = wxT("*"))
                         : m_name(port), m_arch(arch), m_strID(id) {}
 
     // constructor with wxStrings
     wxWebUpdatePlatform(const wxString &portname,
-                        const wxString &arch = wxT("32"), 
+                        const wxString &arch = wxT("32"),
                         const wxString &id = wxT("*"))
-                        : m_strID(id) 
+                        : m_strID(id)
         { m_name = GetPort(portname); m_arch = GetArch(arch); }
 
     virtual ~wxWebUpdatePlatform() {}
@@ -578,7 +578,7 @@ protected:
 public:
     wxWebUpdateDownload(const wxString &url,
                         const wxWebUpdatePlatform &plat = wxWUP_INVALID,
-                        const wxString &md5 = wxEmptyString,                        
+                        const wxString &md5 = wxEmptyString,
                         const wxWebUpdateActionArray *actions = NULL)
     : m_platform(wxWUP_INVALID), m_strMD5(md5), m_urlDownload(url)
         { SetPlatform(plat); m_size=1; if (actions) m_arrActions = *actions; }
@@ -603,7 +603,7 @@ public:         // handle in the right way the issue of the m_arrActions array
         { Copy(tocopy); return *this; }
 
     bool operator ==(const wxWebUpdateDownload &a) const
-        { return (m_platform == a.m_platform && m_strMD5 == a.m_strMD5 && 
+        { return (m_platform == a.m_platform && m_strMD5 == a.m_strMD5 &&
                     m_urlDownload == a.m_urlDownload && m_size == a.m_size); }
     bool operator !=(const wxWebUpdateDownload &a) const
         { return !(*this == a); }
@@ -613,7 +613,7 @@ public:         // miscellaneous
     //! Returns TRUE if this package was correctly initialized.
     bool IsOk() const
         { return wxURL(m_urlDownload).GetError() == wxURL_NOERR &&
-                    (m_strMD5.IsEmpty() || m_strMD5.Len() == 32) && 
+                    (m_strMD5.IsEmpty() || m_strMD5.Len() == 32) &&
                     m_platform != wxWUP_INVALID; }
 
     //! Like #IsOk() but returns TRUE only if this download is designed for
@@ -843,6 +843,9 @@ protected:
     //! The content of the <msg-update-notavailable> tag, if present.
     wxString m_strUpdateNotAvailableMsg;
 
+    //! The canonical language name for the messages loaded by the XML script.
+    wxString m_strLanguageID;
+
 public:         // static utilities (used also by wxWebUpdateLocalXMLScript)
 
     //! Returns the ID (i.e. the name) of a package from the given
@@ -855,6 +858,10 @@ public:         // static utilities (used also by wxWebUpdateLocalXMLScript)
 
     //! Returns the text content of the given node.
     static wxString GetNodeContent(const wxXmlNode *node);
+
+    //! Returns TRUE if the given canonical language name matches the LANG property
+    //! value of the given node. Returns FALSE otherwise.
+    static bool IsLangPropertyMatching(const wxXmlNode *node, const wxString &lang);
 
 protected:      // internal utilities
 
@@ -883,8 +890,11 @@ public:         // main functions
     //! This function can open any resource which can be handled
     //! by wxFileSystem but it should typically be used to load
     //! a file stored in a webserver.
+    //! Optionally you can specify the language to use when choosing
+    //! which message to load for those messages which are localized
+    //! (e.g. the description field of a wxWebUpdatePackage).
     //! Returns TRUE if the document was successfully parsed.
-    virtual bool Load(const wxString &uri);
+    virtual bool Load(const wxString &uri, const wxString &langID = wxT("en"));
 
     //! Returns the wxWebUpdatePackage stored in this document for
     //! the given package. Returns NULL if the package you asked for

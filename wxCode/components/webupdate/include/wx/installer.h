@@ -18,10 +18,11 @@
 
 
 //! The version of the supported local & remote XML scripts.
+//! This version is also the version of the WebUpdater application.
 #define wxWUI_VERSION_MAJOR			1
-#define wxWUI_VERSION_MINOR			0
+#define wxWUI_VERSION_MINOR			1
 #define wxWUI_VERSION_RELEASE		0		// should always be zero (not used)
-#define wxWUI_VERSION_STRING		wxT("1.0")
+#define wxWUI_VERSION_STRING		wxT("1.1")
 
 // defined later
 class WXDLLIMPEXP_WEBUPDATE wxDownloadThread;
@@ -50,11 +51,11 @@ WX_DECLARE_STRING_HASH_MAP_WITH_DECL(wxString, wxStringStringHashMap, class WXDL
 
 
 
-//! A singleton class which contains the list with all the 
+//! A singleton class which contains the list with all the
 //! registered wxWebUpdateAction which are recognized in the webupdate
 //! script in installation stage.
 //! To register a new wxWebUpdateAction-derived class, then do:
-//!    
+//!
 //!    wxWebUpdateInstaller::Get()->AddActionHandler(new myDerivedAction);
 //!
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateInstaller : public wxObject
@@ -71,12 +72,12 @@ protected:
 	wxStringStringHashMap m_hashKeywords;
 
 public:
-	wxWebUpdateInstaller() 
+	wxWebUpdateInstaller()
 		{ InitDefaultKeywords(); InitDefaultActions(); }
-	virtual ~wxWebUpdateInstaller() 
+	virtual ~wxWebUpdateInstaller()
 		{ FreeActionHashMap(); FreeKeywords();
-		  /* user needs to delete the global wxWebUpdateInstaller object !! 
-		     using  
+		  /* user needs to delete the global wxWebUpdateInstaller object !!
+		     using
 		             delete wxWebUpdateInstaller::Set(NULL);
 		     code in its wxApp::OnExit() function */ }
 
@@ -86,7 +87,7 @@ public:		// single ton accessors
     static wxWebUpdateInstaller *Get()
 	{ if (!m_pTheInstaller) m_pTheInstaller = new wxWebUpdateInstaller(); return m_pTheInstaller;}
 
-    //! Sets the global wxWebUpdateInstaller object and returns a pointer to the 
+    //! Sets the global wxWebUpdateInstaller object and returns a pointer to the
 	//! previous one (may be NULL).
     static wxWebUpdateInstaller *Set(wxWebUpdateInstaller *res)
 	{ wxWebUpdateInstaller *old = m_pTheInstaller; m_pTheInstaller = res; return old; }
@@ -97,7 +98,7 @@ public:		// global utilities
 	//! Shows to the user a simple wxMessageBox with the error description
 	//! customized for the current application. Also logs it.
 	void ShowErrorMsg(const wxString &);
-	
+
 	//! Shows to the user a notification message. Also logs it.
 	void ShowNotificationMsg(const wxString &, const wxString &title = wxEmptyString);
 
@@ -108,7 +109,7 @@ public:		// supported version for the local & remote XML scripts
 	//! This version is also the version of the WebUpdater application.
 	wxVersion GetVersion() const
 		{ return wxWUI_VERSION_STRING; }
-		
+
 	//! Does the version check for the given wxVersion object.
 	wxWebUpdateCheckFlag VersionCheck(const wxVersion &v) const;
 
@@ -125,7 +126,7 @@ public:		// action hashmap
 	//! property names and property values found in the tag.
 	//! This function is called by wxWebUpdateXMLScript only and should not be
 	//! called by the user.
-	wxWebUpdateAction *CreateNewAction(const wxString &name, 
+	wxWebUpdateAction *CreateNewAction(const wxString &name,
 		const wxArrayString *propnames, const wxArrayString *propvalues);
 
 	//! Returns a reference to the entire action hashmap.
@@ -134,7 +135,7 @@ public:		// action hashmap
 
 	//! Initializes the default actions (see stdactions.h).
 	virtual void InitDefaultActions();
-	
+
 	//! Removes all actions from the hash map.
 	virtual void FreeActionHashMap();
 
@@ -161,11 +162,11 @@ public:		// keywords hashmap
 	//! Does the '//' string substitution; i.e. substitutes the '//'
 	//! characters into '\' char for win32 and '/' char for unix-based OS.
 	wxString DoPathSubstitution(const wxString &str);
-	
+
 	//! Does both the keyword and the path substitution.
 	wxString DoSubstitution(const wxString &str)
 		{ return DoPathSubstitution(DoKeywordSubstitution(str)); }
-		
+
 	//! Parses the given comma-separed list of tokens in the form name=value
 	//! and saves all the names & values in the two given wxArrayString.
 	//! Calls #DoSubstitution on the values.
@@ -174,7 +175,7 @@ public:		// keywords hashmap
 
 	//! Initializes the default keywords (and their values!).
 	virtual void InitDefaultKeywords();
-	
+
 	//! Does the cleanup for the keywords hashmap.
 	//! Since the hashmap cleans itself automatically when it's deleted,
 	//! this function should just remove temporary files/folders/variables
@@ -193,7 +194,7 @@ protected:		// these are written by this thread and they must be only read
 				// by other classes; making them protected and exposing only
 				// getters for these vars ensures that we do not need to use
 				// mutexes...
-	
+
 	//! TRUE if the package was installed successfully.
 	bool m_bSuccess;
 
@@ -240,13 +241,13 @@ public:
 
 
 public:		// current status
-	
+
 	//! Returns TRUE if this thread is installing a package.
 	bool IsInstalling() const
 		{ return (IsRunning() && m_nStatus == wxWUITS_INSTALLING); }
 
 	//! Returns TRUE if this thread is running but it's not installing anything.
-	bool IsWaiting() const 
+	bool IsWaiting() const
 		{ return (IsRunning() && m_nStatus == wxWUITS_WAITING); }
 
 	//! Returns the current status of the thread.
@@ -275,7 +276,7 @@ public:		// miscellaneous
 	}
 
 	//! Returns TRUE if the last installation was successful.
-	bool InstallationWasSuccessful() const		
+	bool InstallationWasSuccessful() const
 		{ return m_bSuccess; }
 
 	//! Returns the number of packages successfully installed by this thread.

@@ -52,7 +52,7 @@ platform which it targets, the description, its <b>dependencies on other package
 
 - The <b>DTD</b>s allows you to easily check your XML files: see \ref localdtd and \ref remotedtd.
 
-- Localized: currently in Italian and German.
+- Multilanguage support: currently English, Italian and German.
   Mail <a href="mailto:frm@nospam@users.sourceforge.net">me</a> if you want to help adding a new translation !
 
 <br/>

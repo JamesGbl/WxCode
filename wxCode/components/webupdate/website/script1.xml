@@ -4,40 +4,46 @@
 
 <webupdate version="1.0">
 
-  <!-- our customized messages -->
-  <msg-update-available>Some updates for "$(appname)" are available; don't miss them !</msg-update-available>
-  <msg-update-notavailable>You have the most updated version of "$(appname)"...</msg-update-notavailable>
+    <!-- our customized messages in multiple languages ! -->
+    <msg-update-available lang="en">Some updates for "$(appname)" are available; don't miss them !</msg-update-available>
+    <msg-update-available lang="it">Sono disponibili alcuni aggiornamenti per "$(appname)"; non perderli !</msg-update-available>
+    <msg-update-available lang="de">Some updates for "$(appname)" are available; don't miss them !</msg-update-available>
+    <msg-update-notavailable lang="en">You have the most updated version of "$(appname)"...</msg-update-notavailable>
+    <msg-update-notavailable lang="it">Hai la versione più aggiornata di "$(appname)"...</msg-update-notavailable>
+    <msg-update-notavailable lang="de">You have the most updated version of "$(appname)"...</msg-update-notavailable>
 
-  <!-- for an example of XML webupdate script with multiple packages see script2.xml -->
-  <package id="simple">
-      <latest-version importance="high">2.0.3</latest-version>
+    <!-- for an example of XML webupdate script with multiple packages see script2.xml -->
+    <package id="simple">
+        <latest-version importance="high">2.0.3</latest-version>
 
-      <!-- our downloads (1 per platform) -->
-      <latest-download>
+        <!-- our downloads (1 per platform) -->
+        <latest-download>
 
-        <!-- use a simple ZIP -->
-        <uri>http://ovh.dl.sourceforge.net/sourceforge/wxcode/simple-msw-$(latest-version).zip</uri>
-        <md5>759e7a379455227783139cd734ec9335</md5>
-        <platform name="msw"/>
+            <!-- use a simple ZIP -->
+            <uri>http://ovh.dl.sourceforge.net/sourceforge/wxcode/simple-msw-$(latest-version).zip</uri>
+            <platform name="msw"/>
+            <md5>759e7a379455227783139cd734ec9335</md5>
 
-        <actions>
-          <extract file="$(thisfile)" where="$(programdir)"/>
-        </actions>
+            <actions>
+            <extract file="$(thisfile)" where="$(programdir)"/>
+            </actions>
 
-      </latest-download>
-      <latest-download>
+        </latest-download>
+        <latest-download>
 
-        <!-- on unix-based OS we would use .tar.gz archives but since wx currently has a built-in support only for ZIP archives,
-            we will use a ZIP also for unix-based OS -->
-        <uri>http://ovh.dl.sourceforge.net/sourceforge/wxcode/simple-gtk-$(latest-version).zip</uri>
-        <md5>3160f4e7d160ef0dbed7fdeff1233c69</md5>
-        <platform name="gtk"/>
+            <!-- on unix-based OS we would use .tar.gz archives but since wx currently has a built-in support only for ZIP archives,
+                we will use a ZIP also for unix-based OS -->
+            <uri>http://ovh.dl.sourceforge.net/sourceforge/wxcode/simple-gtk-$(latest-version).zip</uri>
+            <platform name="gtk"/>
+            <md5>3160f4e7d160ef0dbed7fdeff1233c69</md5>
 
-        <actions><run/></actions>
-      </latest-download>
+            <actions><run/></actions>
+        </latest-download>
 
-          <!-- description for this package; don't break lines or you'll get some empty spaces in the final description string -->
-      <description>The package containing the binaries for the "$(appname)"... if you need to show to the user a link to your changelog, then the right place is this: URLs like http://wxcode.sourceforge.net are automatically highlighted and made clickable...</description>
-  </package>
+        <!-- description for this package; don't break lines or you'll get some empty spaces in the final description string -->
+        <description lang="en">The package containing the binaries for "$(appname)"... if you need to show to the user a link to your changelog, then the right place is this: URLs like http://wxcode.sourceforge.net are automatically highlighted and made clickable...</description>
+        <description lang="it">Il pacchetto contenente i binari per "$(appname)"... se hai bisogno di mostrare all'utente un link al tuo changelog, allora il posto giusto è questo: gli URL come http://wxcode.sourceforge.net sono automaticamente evidenziati e resi cliccabili...</description>
+        <description lang="de">The package containing the binaries for the "$(appname)"... if you need to show to the user a link to your changelog, then the right place is this: URLs like http://wxcode.sourceforge.net are automatically highlighted and made clickable...</description>
+    </package>
 
 </webupdate>
