@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <!DOCTYPE webupdate PUBLIC "-//WebUpdate//DTD WebUpdater 1.0//EN" "http://wxcode.sourceforge.net/components/webupdate/remote.dtd">
 <!-- $Id$ -->
 
@@ -7,10 +7,10 @@
     <!-- our customized messages in multiple languages ! -->
     <msg-update-available lang="en">Some updates for "$(appname)" are available; don't miss them !</msg-update-available>
     <msg-update-available lang="it">Sono disponibili alcuni aggiornamenti per "$(appname)"; non perderli !</msg-update-available>
-    <msg-update-available lang="de">Some updates for "$(appname)" are available; don't miss them !</msg-update-available>
+    <msg-update-available lang="de">Updates für "$(appname)" sind verfügbar; lassen Sie sich diese nicht entgehen!</msg-update-available>
     <msg-update-notavailable lang="en">You have the most updated version of "$(appname)"...</msg-update-notavailable>
     <msg-update-notavailable lang="it">Hai la versione più aggiornata di "$(appname)"...</msg-update-notavailable>
-    <msg-update-notavailable lang="de">You have the most updated version of "$(appname)"...</msg-update-notavailable>
+    <msg-update-notavailable lang="de">Sie haben bereits die neueste Version von "$(appname)" installiert...</msg-update-notavailable>
 
     <!-- for an example of XML webupdate script with multiple packages see script2.xml -->
     <package id="simple">
@@ -43,7 +43,7 @@
         <!-- description for this package; don't break lines or you'll get some empty spaces in the final description string -->
         <description lang="en">The package containing the binaries for "$(appname)"... if you need to show to the user a link to your changelog, then the right place is this: URLs like http://wxcode.sourceforge.net are automatically highlighted and made clickable...</description>
         <description lang="it">Il pacchetto contenente i binari per "$(appname)"... se hai bisogno di mostrare all'utente un link al tuo changelog, allora il posto giusto è questo: gli URL come http://wxcode.sourceforge.net sono automaticamente evidenziati e resi cliccabili...</description>
-        <description lang="de">The package containing the binaries for the "$(appname)"... if you need to show to the user a link to your changelog, then the right place is this: URLs like http://wxcode.sourceforge.net are automatically highlighted and made clickable...</description>
+        <description lang="de">Das Paket mit den ausführbaren Dateien von "$(appname)"... wenn Sie dem Benutzer einen Link zu Ihrer Änderungs-Historie zeigen möchten, dann ist hier der richtige Platz dafür: URLs wie z.B. http://wxcode.sourceforge.net werden automatisch in klickbare Hyperlinks umgewandelt...</description>
     </package>
 
 </webupdate>
