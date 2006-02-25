@@ -1055,6 +1055,38 @@ bool wxWebUpdateXMLScript::IsLangPropertyMatching(const wxXmlNode *n, const wxSt
     return FALSE;
 }
 
+// static
+wxString wxWebUpdateXMLScript::ChooseLanguage(const wxXmlNode *n, const wxString &lang,
+                                              bool *bDescriptionLangFound, bool *bEnglishLangFound,
+                                              const wxString &currentmsg)
+{
+    wxASSERT(bDescriptionLangFound && bEnglishLangFound);   // cannot be NULL!
+    wxString out = currentmsg;
+    if (*bDescriptionLangFound == FALSE) {
+
+        if (IsLangPropertyMatching(n, lang)) {
+
+            out = GetNodeContent(n);
+            *bDescriptionLangFound = TRUE;       // found the language we were searching for!
+
+        } else if (*bEnglishLangFound == FALSE) {
+
+            // if we did not find the description msg in the right language
+            // (i.e. bDescriptionLangFound==FALSE) and we haven't found the
+            // english version of the message yet (i.e. bEnglishLangFound==FALSE),
+            // then save this description message as the current default
+            out = GetNodeContent(n);
+
+            // is this the english message ?
+            if (IsLangPropertyMatching(n, wxT("en")))
+                *bEnglishLangFound = TRUE;
+        }
+
+    }
+
+    return out;
+}
+
 wxWebUpdateActionArray wxWebUpdateXMLScript::GetActionArray(const wxXmlNode *actions) const
 {
     wxWebUpdateActionArray ret;
@@ -1189,7 +1221,7 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) c
 
     // parse this package
     wxXmlNode *child = package->GetChildren();
-    bool bDescriptionLangFound = FALSE;
+    bool bDescriptionLangFound = FALSE, bEnglishLangFound = FALSE;
     while (child) {
 
         if (child->GetName() == wxT("requires")) {
@@ -1228,12 +1260,9 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) c
 
         } else if (child->GetName() == wxT("description")) {
 
-            // if we did not find the description msg in the right language, then save this
-            // description message
-            if (!bDescriptionLangFound)
-                ret->m_strDescription = GetNodeContent(child);
-            if (IsLangPropertyMatching(child, m_strLanguageID))
-                bDescriptionLangFound = TRUE;
+            // all language-choose logic is in ChooseLanguage (which is called also in other places)
+            ret->m_strDescription = ChooseLanguage(child, m_strLanguageID, &bDescriptionLangFound,
+                                                   &bEnglishLangFound, ret->m_strDescription);
         }
 
         // proceed
@@ -1381,25 +1410,20 @@ bool wxWebUpdateXMLScript::Load(const wxString &uri, const wxString &langID)
         return FALSE;
 
     wxXmlNode *child = GetRoot()->GetChildren();
-    bool bMsgUpdateAvailLangFound = FALSE, bMsgUpdateNotAvailLangFound = FALSE;
+    bool bMsgUpdateAvailLangFound = FALSE, bMsgUpdateAvailEnglishFound = FALSE,
+         bMsgUpdateNotAvailLangFound = FALSE, bMsgUpdateNotAvailEnglishFound = FALSE;
     while (child) {
 
         // parse the children of <webupdate> which are not packages
         if (child->GetName() == wxT("msg-update-available")) {
-
-            if (!bMsgUpdateAvailLangFound)
-                m_strUpdateAvailableMsg = wxWebUpdateInstaller::Get()->
-                                            DoKeywordSubstitution(GetNodeContent(child));
-            if (IsLangPropertyMatching(child, m_strLanguageID))
-                bMsgUpdateAvailLangFound = TRUE;
+            m_strUpdateAvailableMsg = ChooseLanguage(child, m_strLanguageID, &bMsgUpdateAvailLangFound,
+                                                   &bMsgUpdateAvailEnglishFound, m_strUpdateAvailableMsg);
+            m_strUpdateAvailableMsg = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(m_strUpdateAvailableMsg);
 
         } else if (child->GetName() == wxT("msg-update-notavailable")) {
-
-            if (!bMsgUpdateNotAvailLangFound)
-                m_strUpdateNotAvailableMsg = wxWebUpdateInstaller::Get()->
-                                            DoKeywordSubstitution(GetNodeContent(child));
-            if (IsLangPropertyMatching(child, m_strLanguageID))
-                bMsgUpdateNotAvailLangFound = TRUE;
+            m_strUpdateNotAvailableMsg = ChooseLanguage(child, m_strLanguageID, &bMsgUpdateNotAvailLangFound,
+                                                   &bMsgUpdateNotAvailEnglishFound, m_strUpdateNotAvailableMsg);
+            m_strUpdateNotAvailableMsg = wxWebUpdateInstaller::Get()->DoKeywordSubstitution(m_strUpdateNotAvailableMsg);
         }
 
         child = child->GetNext();

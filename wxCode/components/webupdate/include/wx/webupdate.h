@@ -863,6 +863,12 @@ public:         // static utilities (used also by wxWebUpdateLocalXMLScript)
     //! value of the given node. Returns FALSE otherwise.
     static bool IsLangPropertyMatching(const wxXmlNode *node, const wxString &lang);
 
+    //! Returns the message in the best language found up to now
+    //! (see where this function is used to understand it!).
+    static wxString ChooseLanguage(const wxXmlNode *n, const wxString &lang,
+                                   bool *bDescriptionLangFound, bool *bEnglishLangFound,
+                                   const wxString &currentmsg);
+
 protected:      // internal utilities
 
     //! Parses the given <actions> node.
