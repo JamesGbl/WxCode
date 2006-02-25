@@ -1049,7 +1049,7 @@ bool wxWebUpdateXMLScript::IsLangPropertyMatching(const wxXmlNode *n, const wxSt
         return TRUE;
     } else
         wxLogDebug(wxT("wxWebUpdateXMLScript::IsLangPropertyMatching - ")
-                    wxT("found an [%s] LANG property not matching the given [%s] language name"),
+                    wxT("found a [%s] LANG property not matching the given [%s] language name"),
                     l.c_str(), lang.c_str());
 
     return FALSE;

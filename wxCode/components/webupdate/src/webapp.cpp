@@ -342,10 +342,18 @@ void WebUpdaterApp::SetupLocale()
             // and it's valid...
             langID = pLangInfo->Language;
 
-            // in case user wrote in config file something like 'Italian', we use this
-            // to put in strLangCanonical the 'it_IT' string
-            strLangCanonical = m_locale.GetLanguageInfo(langID)->CanonicalName;
+        } else {
+
+            // leave in langID the wxLANGUAGE_DEFAULT value
+            wxLogAdvMsg(wxT("WebUpdaterApp::SetupLocale - the language [%s] found in the " \
+                            "config file of WebUpdater is NOT valid; using default one"),
+                        strLangCanonical.c_str());
         }
+
+        // in case user wrote in config file something like 'Italian', we use this
+        // to put in strLangCanonical the 'it_IT' string
+        strLangCanonical = m_locale.GetLanguageInfo(langID)->CanonicalName;
+
     } else {
 
         // write the default language in our config object
