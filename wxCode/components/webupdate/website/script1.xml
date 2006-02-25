@@ -14,7 +14,7 @@
 
     <!-- this is just for wxWebUpdate debugging purpose ! -->
     <msg-update-available lang="test">msg-update-available test message!</msg-update-available>
-    <msg-update-notavailable lang="test">msg-update-notavailable test message!</msg-update-available>
+    <msg-update-notavailable lang="test">msg-update-notavailable test message!</msg-update-notavailable>
 
     <!-- for an example of XML webupdate script with multiple packages see script2.xml -->
     <package id="simple">
