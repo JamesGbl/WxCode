@@ -522,7 +522,7 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
     if (m_pUpdatesList->GetItemCount() == 0) {
 
         wxWebUpdateInstaller::Get()->ShowNotificationMsg(wxString::Format(
-                    _("Could not found any valid package for %s in the WebUpdate script. " \
+                    _("Could not find any valid package for %s in the WebUpdate script. " \
                       "Exiting the update dialog."), GetAppName().c_str()),
                     _("Warning"));
         AbortDialog();
