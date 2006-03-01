@@ -5,11 +5,12 @@
 <webupdate version="1.0">
 	<appname>wxWebUpdate SIMPLE sample</appname>
 	<appfile>simple</appfile>
-	<res>wxWebUpdateSimpleDlg</res>
+	<res>wxWebUpdateDlg</res>
 	<remoteuri>http://wxcode.sourceforge.net/components/webupdate/script1.xml</remoteuri>
 
 	<local-package id="simple">
-		<version>1.0.0</version>
+	
+	    <!-- give a higher version number -->
+		<version>2.5.3</version>
 	</local-package>
 </webupdate>
-

@@ -614,6 +614,32 @@ wxString wxWebUpdatePlatform::GetAsString() const
            wxT(" - ") + m_strID;
 }
 
+// some helpers for wxWebUpdatePlatform
+#if defined( __WXMSW__ )
+bool Is64BitOS()        // taken from http://blogs.msdn.com/oldnewthing/archive/2005/02/01/364563.aspx
+{
+#if defined(_WIN64)
+    return TRUE;  // 64-bit programs run only on Win64
+#elif defined(_WIN32)
+    // 32-bit programs run on both 32-bit and 64-bit Windows
+    // so must sniff
+    BOOL f64 = FALSE;
+    return IsWow64Process(GetCurrentProcess(), &f64) && f64;
+#else
+    return FALSE; // Win64 does not support Win16
+#endif
+}
+#else
+bool Is64BitOS()
+{
+    return wxGetOsDescription().Contains(wxT("AMD64")) ||
+           wxGetOsDescription().Contains(wxT("IA64")) ||
+           wxGetOsDescription().Contains(wxT("x64")) ||
+           wxGetOsDescription().Contains(wxT("X64"));
+}
+#endif
+
+// static
 wxWebUpdatePlatform wxWebUpdatePlatform::GetThisPlatform()
 {
     wxWebUpdatePlatform plat;
@@ -663,8 +689,7 @@ wxWebUpdatePlatform wxWebUpdatePlatform::GetThisPlatform()
     }
 
     // get architecture
-    // TODO FIXME
-    plat.SetArch(wxWUA_ANY);
+    plat.SetArch(Is64BitOS() ? wxWUA_64 : wxWUA_32);
 
     // get ID
     plat.SetID(wxGetOsDescription());

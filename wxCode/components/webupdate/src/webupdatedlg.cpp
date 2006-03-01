@@ -399,8 +399,8 @@ bool wxWebUpdateDlg::CheckForAllUpdated(wxWebUpdatePackageArray &arr, bool force
         m_nStatus = wxWUDS_WAITING;
 
         // show to the user the "update not available" message
-        wxString defaultmsg = _("You have the latest version of all packages of ") +
-                            GetAppName() + _("... exiting the update dialog.");
+        wxString defaultmsg = wxString::Format(_("You have the latest version of all packages of %s\n" \
+                                                 "... exiting the update dialog."), GetAppName().c_str());
         wxString usermsg = m_xmlRemote.GetUpdateNotAvailableMsg();
         wxWebUpdateInstaller::Get()->ShowNotificationMsg((usermsg.IsEmpty() || forcedefaultmsg) ? defaultmsg : usermsg);
 
@@ -464,7 +464,8 @@ bool wxWebUpdateDlg::FilterOtherPlatforms(wxWebUpdatePackageArray &arr)
     if (arr.GetCount() == 0) {
 
         wxWebUpdateInstaller::Get()->ShowNotificationMsg(
-            _("No updates available for this platform..."));
+            wxString::Format(_("No updates available for this platform (%s)... exiting the update dialog."),
+                             wxWebUpdatePlatform::GetThisPlatform().GetAsString().c_str()));
         AbortDialog();
 
         return FALSE;        // FALSE = exit this dialog
@@ -521,10 +522,14 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
     // what if we could not found any valid package in the webupdate script ?
     if (m_pUpdatesList->GetItemCount() == 0) {
 
-        wxWebUpdateInstaller::Get()->ShowNotificationMsg(wxString::Format(
-                    _("Could not find any valid package for %s in the WebUpdate script. " \
-                      "Exiting the update dialog."), GetAppName().c_str()),
-                    _("Warning"));
+        wxWebUpdateInstaller::Get()->ShowNotificationMsg(
+                wxString::Format(_("Could not find any valid package for %1$s " \
+                                   "in the WebUpdate script.\n\nThis could be because " \
+                                   "the local XML description file (%2$s) has been corrupted.\n\n" \
+                                   "Exiting the update dialog."),
+                                 GetAppName().c_str(),
+                                 m_xmlLocal.GetLocalScriptURI().c_str()),
+                _("Warning"));
         AbortDialog();
         return;
     }
