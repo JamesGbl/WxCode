@@ -12,6 +12,18 @@
 #ifndef _WX_HTTPBUILDER_H_
 #define _WX_HTTPBUILDER_H_
 
+#if (_MSC_VER >= 1400)       // VC8+
+	//#pragma warning(disable : 4996)    // Either disable all deprecation warnings,
+	// Or just turn off warnings about the newly deprecated CRT functions.
+	#ifndef _CRT_SECURE_NO_DEPRECATE
+		#define _CRT_SECURE_NO_DEPRECATE
+	#endif
+	#ifndef _CRT_NONSTDC_NO_DEPRECATE
+		#define _CRT_NONSTDC_NO_DEPRECATE
+	#endif
+#endif   // VC8+
+
+
 // optimization for GCC
 #if defined(__GNUG__) && !defined(__APPLE__)
 #pragma interface "httpbuilder.h"
@@ -175,7 +187,7 @@ public:
 	bool SaveFile(const wxString& filename, const wxString& path, const wxString& tempDirOrPrefix = wxEmptyString);
 
   // Send the built HTTP request and return a stream of the returned data from server.
-  wxInputStream* GetInputStream(const wxString& url, const wxString& tempDirOrPrefix = wxEmptyString);
+  wxInputStream* GetInputStream(const wxString& url, const wxString& tempDirOrPrefix = wxEmptyString, const wxHTTP_Req req = wxHTTP_GET );
 
   // Send the build HTTP requeset and return a string returned from the server.
   wxString GetInputString(const wxString &url, const wxString& tempDirOrPrefix = wxEmptyString);
@@ -192,7 +204,7 @@ public:
 protected:
   
   // helper functions that may be accessed by an extended class
-  bool SendRequest(const wxString& path, const wxString& tempDirOrPrefix = wxEmptyString );
+  bool SendRequest(const wxString& path, const wxString& tempDirOrPrefix = wxEmptyString, const wxHTTP_Req req = wxHTTP_GET  );
   wxString CreateBoundary( const int length );
 
   // Bytes Read 

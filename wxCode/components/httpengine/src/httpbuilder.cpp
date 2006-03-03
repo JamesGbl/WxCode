@@ -209,7 +209,7 @@ bool wxHTTPBuilder::SaveFile(const wxString &filename, const wxString& url, cons
 }
 
 //! Returns an wxInputStream pointer to read information from the web server.
-wxInputStream* wxHTTPBuilder::GetInputStream(const wxString& url, const wxString& tempDirOrPrefix)
+wxInputStream* wxHTTPBuilder::GetInputStream(const wxString& url, const wxString& tempDirOrPrefix, const wxHTTP_Req req )
 {
   wxHTTPBuilderStream *inp_stream = NULL;
   m_error = wxT("");
@@ -287,7 +287,7 @@ wxInputStream* wxHTTPBuilder::GetInputStream(const wxString& url, const wxString
     path += szRequest;
   }
 
-  if ( !SendRequest(path, tempDirOrPrefix) )
+  if ( !SendRequest(path, tempDirOrPrefix, req) )
   {
     m_error = wxT("Sending Request");
     return NULL;
@@ -351,9 +351,9 @@ wxString wxHTTPBuilder::GetInputString(const wxString &url, const wxString& temp
 //! NOTE: If you are using multipart post data (uploading files)
 //! This function may take a while to return.  It is highly recommended
 //! you write your application to use threads.
-bool wxHTTPBuilder::SendRequest(const wxString &path, const wxString& tempDirOrPrefix )
+bool wxHTTPBuilder::SendRequest(const wxString &path, const wxString& tempDirOrPrefix, const wxHTTP_Req req )
 {
-  wxHTTP_Req req = wxHTTP_GET;
+  wxHTTP_Req req_method = req;
   wxString szTempFile = wxEmptyString;
   wxString szPostBuf = wxEmptyString;
   wxInputStream *streamPost = NULL;
@@ -367,16 +367,19 @@ bool wxHTTPBuilder::SendRequest(const wxString &path, const wxString& tempDirOrP
     szPostBuf = GetPostBuffer();
 
   if( !szPostBuf.IsEmpty() || streamPost )
-    req = wxHTTP_POST;
+    req_method = wxHTTP_POST;
 
   const wxChar *request; // Build the request here
 
-  switch (req) {
+  switch (req_method) {
   case wxHTTP_GET:
     request = wxT("GET");
     break;
   case wxHTTP_POST:
     request = wxT("POST");
+    break;
+	case wxHTTP_HEAD:
+    request = wxT("HEAD");
     break;
   default:
     return false;
@@ -424,7 +427,7 @@ bool wxHTTPBuilder::SendRequest(const wxString &path, const wxString& tempDirOrP
                                                            : wxSOCKET_BLOCK );
   Notify(false);
 
-  wxString query = GetQueryString( req == wxHTTP_GET ? true : false); // Get the query string of (GET) variables to send to server
+  wxString query = GetQueryString( req_method == wxHTTP_GET ? true : false); // Get the query string of (GET) variables to send to server
 
   wxString buf;
   buf.Printf(wxT("%s %s%s HTTP/1.0\r\n"), request, path.c_str(), query.c_str() );
@@ -434,7 +437,7 @@ bool wxHTTPBuilder::SendRequest(const wxString &path, const wxString& tempDirOrP
   Write("\r\n", 2);		// NOTE: don't use the wxT() macro here - HTTP 1.1 uses US-ASCII (see RFC 2616)
   m_bytesSent = 0;
 
-  if( req == wxHTTP_POST )
+  if( req_method == wxHTTP_POST )
   {
     if( streamPost )
     {
