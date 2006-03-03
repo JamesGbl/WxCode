@@ -28,6 +28,7 @@
 	#include <wx/msgdlg.h>
 #endif
 
+#include <wx/filename.h>
 
 #include "httpengineapp.h"
 #include "httpenginedlg.h"
@@ -66,10 +67,12 @@ enum
     Minimal_Quit = 1,
     Minimal_About,
     Minimal_Go,
+		Minimal_HeadGo,
     Minimal_AddField,
 
     Minimal_ProxySettings,
     Minimal_Authentication,
+		Minimal_SaveResults,
 
     Minimal_UseProxySettings,
     Minimal_UseAuthentication,
@@ -123,6 +126,8 @@ BEGIN_EVENT_TABLE(wxHTTPEngineDialog, wxFrame)
     EVT_MENU(Minimal_About, wxHTTPEngineDialog::OnAbout)
 
     EVT_BUTTON(Minimal_Go, wxHTTPEngineDialog::OnGo)
+		EVT_MENU(Minimal_Go, wxHTTPEngineDialog::OnGo)
+		EVT_MENU(Minimal_HeadGo, wxHTTPEngineDialog::OnHeadGo)
     EVT_BUTTON(Minimal_AddField, wxHTTPEngineDialog::OnAddField)
     EVT_CLOSE(wxHTTPEngineDialog::OnClose)
 
@@ -131,10 +136,13 @@ BEGIN_EVENT_TABLE(wxHTTPEngineDialog, wxFrame)
 
     
     EVT_UPDATE_UI(Minimal_Go, wxHTTPEngineDialog::OnUpdate)
+		EVT_UPDATE_UI(Minimal_HeadGo, wxHTTPEngineDialog::OnUpdate)
     EVT_UPDATE_UI(Minimal_AddField, wxHTTPEngineDialog::OnUpdate)
     EVT_UPDATE_UI(Minimal_ProxySettings, wxHTTPEngineDialog::OnUpdate)
     EVT_UPDATE_UI(Minimal_Authentication, wxHTTPEngineDialog::OnUpdate)
     EVT_UPDATE_UI(Minimal_UseProxySettings, wxHTTPEngineDialog::OnUpdate)
+		EVT_UPDATE_UI(Minimal_SaveResults, wxHTTPEngineDialog::OnUpdate)
+		
     EVT_UPDATE_UI(Minimal_UseAuthentication, wxHTTPEngineDialog::OnUpdate)
     EVT_UPDATE_UI(Minimal_Stop, wxHTTPEngineDialog::OnUpdate)
 
@@ -172,7 +180,11 @@ wxHTTPEngineDialog::wxHTTPEngineDialog(const wxString& title, const wxPoint& pos
     // Options:
     optionsMenu->AppendCheckItem(Minimal_UseProxySettings, _T("Use Proxy"), _T("Use HTTP Proxy Server"));
     optionsMenu->AppendCheckItem(Minimal_UseAuthentication, _T("Authenticate"), _T("Use Basic Authentication"));
+		wxMenuItem *tmp = optionsMenu->AppendCheckItem(Minimal_SaveResults, _T("Save Results"), _T("Save results as file, otherwise view in textbox"));
+		tmp->Check(true);
     optionsMenu->AppendSeparator();
+		optionsMenu->Append(Minimal_Go, _T("Go"), _T("Send built information and receive results."));
+		optionsMenu->Append(Minimal_HeadGo, _T("Go (HEAD)"), _T("Send built information and receive headers only."));
     optionsMenu->Append(Minimal_Stop, _T("Stop"), _T("Stop downloading"));
 
     fileMenu->Append(Minimal_ProxySettings, _T("Proxy Settings"), _T("Set proxy settings"));
@@ -229,6 +241,8 @@ wxHTTPEngineDialog::wxHTTPEngineDialog(const wxString& title, const wxPoint& pos
     m_szAuthUsername = wxT("");
     m_szAuthPassword = wxT("");
     
+		m_bSaveResults = false;
+
     CreateStatusBar(2);
 }
 
@@ -364,10 +378,26 @@ void wxHTTPEngineDialog::OnGo(wxCommandEvent &)
     return;
   }
 
-  wxString szSaveAs = wxFileSelector( wxT("Save downloaded content as"), wxT(""), wxT(""), wxT(""), wxT("*.*"), wxSAVE|wxOVERWRITE_PROMPT, this );
-  if( szSaveAs.IsEmpty() )
-    return;
-
+	wxString szSaveAs = "";
+	if( this->m_bSaveResults )
+	{
+		szSaveAs = wxFileSelector( wxT("Save downloaded content as"), wxT(""), wxT(""), wxT(""), wxT("*.*"), wxSAVE|wxOVERWRITE_PROMPT, this );
+		if( szSaveAs.IsEmpty() )
+			return;
+	}
+	else
+	{
+		szSaveAs = wxFileName::CreateTempFileName( wxT("test") );
+		m_szTempFileName = szSaveAs;
+		wxRemove(szSaveAs );
+	}
+	/*
+	wxGetInputFromUser dlg(this, wxT("Enter Multipart Data"), wxPoint(-1, -1), wxSize(400, 300) );
+		dlg.set
+    if( dlg.ShowModal() == wxID_OK )
+      szValue = dlg.GetValue();
+	*/
+		
 
 
   // wxHTTP class file download example:
@@ -444,7 +474,7 @@ void wxHTTPEngineDialog::OnGo(wxCommandEvent &)
 #ifdef USETHREAD
 
   m_thread = new wxHTTPBuilderThread(this, Minimal_Thread, m_http, szURL);
-  m_thread->SaveToFile(true, szSaveAs);
+	m_thread->SaveToFile(true, szSaveAs);
 
   if( m_thread->Create() != wxTHREAD_NO_ERROR )
   {
@@ -533,6 +563,11 @@ void wxHTTPEngineDialog::OnGo(wxCommandEvent &)
 #endif
 }
 
+void wxHTTPEngineDialog::OnHeadGo( wxCommandEvent &event)
+{
+	wxMessageBox("This is a test");
+}
+
 void wxHTTPEngineDialog::OnAddField(wxCommandEvent &)
 {
   wxArrayString szaOptions;
@@ -579,7 +614,7 @@ void wxHTTPEngineDialog::OnAddField(wxCommandEvent &)
   }
   else if( type == wxHTTPBuilder::wxHTTP_TYPE_MULTIPARTDATA )
   {
-
+		
     wxGetInputFromUser dlg(this, wxT("Enter Multipart Data"), wxPoint(-1, -1), wxSize(400, 300) );
     if( dlg.ShowModal() == wxID_OK )
       szValue = dlg.GetValue();
@@ -635,6 +670,9 @@ void wxHTTPEngineDialog::OnUpdate(wxUpdateUIEvent &event)
     case  Minimal_UseAuthentication:   
       event.Enable( (m_thread == NULL) );
       break;
+		case Minimal_SaveResults:
+			event.Enable( (m_thread == NULL) );
+      break;
   }
 }
 
@@ -675,6 +713,32 @@ void wxHTTPEngineDialog::OnDownloadComplete(wxHTTPBuilderEvent &)
     msg = wxString::Format(wxT("Read: %dK"), read/1024);
   SetStatusText(msg, 1);
   SetStatusText(_T("Request completed."), 0);
+
+	if( !m_bSaveResults )
+	{
+		// Read the file, delete the file and then display results in dlg
+		wxString szContents = "";
+		wxFile file;
+    file.Open( m_szTempFileName, wxFile::read );
+
+    int nBytesRead = 0;
+
+    while( file.Eof() == false )
+    {
+      wxChar buf[8192];
+			file.Read(buf, 8192);
+			szContents +=  buf;
+    }
+    file.Close();
+		wxRemoveFile(m_szTempFileName);
+		m_szTempFileName = "";
+
+		// Display dialog here:
+		//wxGetInputFromUser dlg(this, wxT("Results"), wxPoint(-1, -1), wxSize(400, 300) );
+		//dlg.SetValue(szContents);
+		//dlg.ShowModal();
+		wxMessageBox(szContents);
+	}
 }
 
 void wxHTTPEngineDialog::OnUseProxy(wxCommandEvent &event)
@@ -685,6 +749,11 @@ void wxHTTPEngineDialog::OnUseProxy(wxCommandEvent &event)
 void wxHTTPEngineDialog::OnUseAuth(wxCommandEvent &event)
 {
   m_bUseAuth = event.IsChecked();
+}
+
+void wxHTTPEngineDialog::OnSaveResults(wxCommandEvent &event)
+{
+	m_bSaveResults = event.IsChecked();
 }
 
 void wxHTTPEngineDialog::OnTimer(wxTimerEvent &)
@@ -955,3 +1024,7 @@ void AboutDialog::OnMenu(wxCommandEvent &event)
 }
 
 // eof
+
+
+
+

@@ -35,10 +35,12 @@ public:
 	void OnTimer( wxTimerEvent &event );
 	void OnUseAuth(wxCommandEvent &event );
 	void OnUseProxy(wxCommandEvent &event);
+	void OnSaveResults(wxCommandEvent &event);
 	void OnDownloadComplete( wxHTTPBuilderEvent &event );
 	void OnUpdate( wxUpdateUIEvent &event);
 	void OnAddField( wxCommandEvent &event );
 	void OnGo( wxCommandEvent &event );
+	void OnHeadGo( wxCommandEvent &event );
 	void OnClose( wxCloseEvent &event );
 	void OnAbout( wxCommandEvent &event );
 	void OnQuit( wxCommandEvent &event );
@@ -69,7 +71,9 @@ private:
 
     wxProxySettings m_proxySettings;
       
-
+		bool			m_bSaveResults;
+		wxString	m_szTempFileName;
+			
     bool      m_bUseAuth;
     wxString  m_szAuthUsername;
     wxString  m_szAuthPassword;
@@ -96,7 +100,7 @@ public:
 	virtual ~wxGetInputFromUser();
 
   wxString GetValue(void) { return m_ctrl->GetValue(); };
-    
+	void SetValue(const wxString &value) { m_ctrl->SetValue(value); };
 
 private:
   wxTextCtrl  *m_ctrl;
