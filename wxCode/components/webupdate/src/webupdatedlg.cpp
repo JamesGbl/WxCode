@@ -329,9 +329,12 @@ bool wxWebUpdateDlg::ConnectionRequired()
 
         if (!mng->IsOnline()) {
 
-            wxMessageBox(_("You are not connected to Internet !\n" \
-                           "WebUpdater needs to download the update list from Internet...\n" \
-                           "Please connect and then retry."),
+			// the ugly \n\ form is to
+			// 1) make it compilable with MSVC
+			// 2) make it simple to translate keeping it as single paragraph in PO file
+            wxMessageBox(_("You are not connected to Internet !\n\
+                           WebUpdater needs to download the update list from Internet...\n\
+                           Please connect and then retry."),
                         _("Error"), wxOK | wxICON_ERROR);
             wxLogUsrMsg(_("wxWebUpdateDlg::ConnectionRequired - not connected to Internet !"));
             res = FALSE;
@@ -356,8 +359,8 @@ bool wxWebUpdateDlg::InitThreads()
     m_iThread = new wxWebUpdateInstallThread(this);
 
     // translate this only once ;)
-    wxString errMsg = _("Low resources; cannot run the WebUpdate dialog...\n" \
-                        "Close some applications and then retry.");
+    wxString errMsg = _("Low resources; cannot run the WebUpdate dialog...\n")
+                      _("Close some applications and then retry.");
 
     // launch a separate thread for the webupdate script download
     if (m_dThread->Create() != wxTHREAD_NO_ERROR ||
