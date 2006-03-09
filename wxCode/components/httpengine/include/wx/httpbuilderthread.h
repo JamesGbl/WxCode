@@ -94,8 +94,9 @@ public:
   int GetId(void) { return m_id; };
 
   // Thread properties, call before starting thread
-  void SaveToFile( const bool &saveToFile = false, const wxString &filename = wxEmptyString ) { m_saveToFile = saveToFile; m_filename = filename; };
+  void SaveToFile( const bool saveToFile = false, const wxString &filename = wxEmptyString ) { m_saveToFile = saveToFile; m_filename = filename; };
   void SetTempDirOrPrefix(const wxString &tempDir) { m_tempDir = tempDir; };
+	void GetHeadRequest(const bool getHeadReq = true ) { m_headRequest = getHeadReq; m_saveToFile = false; };
 
 private:
 
@@ -104,6 +105,7 @@ private:
   int                    	m_id;
   wxString             	m_data;
   bool                   	m_saveToFile;
+	bool										m_headRequest;
   wxString              	m_url;
   wxString             	m_tempDir;
   wxString              	m_filename;

@@ -208,6 +208,39 @@ bool wxHTTPBuilder::SaveFile(const wxString &filename, const wxString& url, cons
   return true;
 }
 
+//! Send HEAD request.  Returns 20x/30x/40x/50x response code if successful.  Returns -1 if error.
+int wxHTTPBuilder::GetHeadResponse(const wxString &url)
+{
+  wxString szToReturn = wxT("");
+  wxInputStream *inp_stream = GetInputStream(url, wxEmptyString, wxHTTP_HEAD);
+  if( inp_stream == NULL )
+    return -1; // There was an error
+
+  m_bytesRead = 0;
+
+  // we won't use a wxChar buffer here since the server replies in US/ASCII encoding
+  char buf[8192];
+
+	// read the rest of the string, if anything is there...
+  while( true )
+  {
+    inp_stream->Read( buf, WXSIZEOF(buf) );
+    int lastRead = inp_stream->LastRead();
+    if( lastRead == 0 )
+      break;
+
+    AddBytesRead( lastRead );
+
+    if( StopCheck() ) // For threads, they can stop this reading
+      break;
+  }
+
+  delete inp_stream;
+  inp_stream = NULL;
+
+  return GetResponse();
+}
+
 //! Returns an wxInputStream pointer to read information from the web server.
 wxInputStream* wxHTTPBuilder::GetInputStream(const wxString& url, const wxString& tempDirOrPrefix, const wxHTTP_Req req )
 {
@@ -294,16 +327,12 @@ wxInputStream* wxHTTPBuilder::GetInputStream(const wxString& url, const wxString
   }
 
   inp_stream = new wxHTTPBuilderStream(this);
-
-  if (!GetHeader(wxT("Content-Length")).IsEmpty())
-    inp_stream->m_httpsize = wxAtoi(WXSTRINGCAST GetHeader(wxT("Content-Length")));
-  else
-    inp_stream->m_httpsize = (size_t)-1;
-
+	inp_stream->m_httpsize = GetContentLength();
   inp_stream->m_read_bytes = 0;
 
   Notify(false);
-  SetFlags(wxSOCKET_BLOCK | wxSOCKET_WAITALL);
+  //SetFlags(wxSOCKET_BLOCK | wxSOCKET_WAITALL); // This is not necessary
+	
   return inp_stream;
 }
 
@@ -351,6 +380,7 @@ wxString wxHTTPBuilder::GetInputString(const wxString &url, const wxString& temp
 //! NOTE: If you are using multipart post data (uploading files)
 //! This function may take a while to return.  It is highly recommended
 //! you write your application to use threads.
+//! 
 bool wxHTTPBuilder::SendRequest(const wxString &path, const wxString& tempDirOrPrefix, const wxHTTP_Req req )
 {
   wxHTTP_Req req_method = req;
@@ -366,6 +396,7 @@ bool wxHTTPBuilder::SendRequest(const wxString &path, const wxString& tempDirOrP
   else // Try to get post buffer as text, if empty, then we are working with a GET
     szPostBuf = GetPostBuffer();
 
+	// As long as we are not posting data to the server, then we could have a GET or HEAD request
   if( !szPostBuf.IsEmpty() || streamPost )
     req_method = wxHTTP_POST;
 
@@ -422,12 +453,32 @@ bool wxHTTPBuilder::SendRequest(const wxString &path, const wxString& tempDirOrP
 
   SaveState();
 
-  // we may use non blocking sockets only if we can dispatch events from them
-  SetFlags( wxIsMainThread() && wxApp::IsMainLoopRunning() ? wxSOCKET_NONE
-                                                           : wxSOCKET_BLOCK );
+	// Changed by Angelo, The function call to SetFlags() should be specified by the designer of the application
+	// Some cases you may want the gui to block , other cases you may not want to wait for data, etc...
+	// this decision should be made by the programmer for its specific application
+
+	// This information taken from the wxWidgets book, page 476:
+	// There are 5 combinations you can pass to the SetFlags function
+	//SetFlags(wxSOCKET_NONE|wxSOCKET_BLOCK) - Behaves like standard blocking socket calls (calls to recv and send).
+	//SetFlags(wxSOCKET_NOWAIT) - Behaves like standard non-blocking socket calls.
+	//SetFlags(wxSOCKET_WAITALL|wxSOCKET_BLOCK) - Behaves like standard blocking socket calls, except that the underlying
+	// send or recv will be called repeatedly until all the data is sent or received.
+	//SetFlags(wxSOCKET_NONE) - Behaves like standard socket calls except the GUI will not block because of continuous
+	// calls to wxYield while the socket opeation is incomplete (for example, not all data has been read).
+	//SetFlags(wxSOCKET_WAITALL) - Behaves like wxSOCKET_WAITALL|wxSOCKET_BLOCK except that the GUI will not block.
+
+	// I highly recommend referring to the wxWidgets Book for further details: http://www.wxwidgets.org/book/index.htm
+
+	// The last two methods should be used with extreme caution.  They are only useful when using the socket within the
+	// primary thread (eg., not using the wxHTTPBuilderThread object)
+	
+	// Example usage for your application:
+	//SetFlags( wxIsMainThread() && wxApp::IsMainLoopRunning() ? wxSOCKET_NOWAIT
+  //                                                        : wxSOCKET_NONE|wxSOCKET_BLOCK );
+
   Notify(false);
 
-  wxString query = GetQueryString( req_method == wxHTTP_GET ? true : false); // Get the query string of (GET) variables to send to server
+  wxString query = GetQueryString( (req_method == wxHTTP_GET || req_method == wxHTTP_HEAD) ? true : false); // Get the query string of (GET) variables to send to server
 
   wxString buf;
   buf.Printf(wxT("%s %s%s HTTP/1.0\r\n"), request, path.c_str(), query.c_str() );
@@ -488,8 +539,8 @@ bool wxHTTPBuilder::SendRequest(const wxString &path, const wxString& tempDirOrP
   token.NextToken();
   tmp_str2 = token.NextToken();
 
-  m_http_response = wxAtoi(tmp_str2);
-  //SetStatusCode( m_http_response );
+	m_http_response = wxAtoi(tmp_str2);
+	ret_value = ParseHeaders(); // We want to parse the headers before we return true/false
 
   switch (tmp_str2[0u]) {
   case wxT('1'):
@@ -501,13 +552,15 @@ bool wxHTTPBuilder::SendRequest(const wxString &path, const wxString& tempDirOrP
   case wxT('3'):
     // REDIRECTION
     break;
-  default:
+	case wxT('4'):
+		// File missing or something happened on server
+		break;
+  default: // a 500+ error occurred, we need to stop
     m_perr = wxPROTO_NOFILE;
     RestoreState();
     return false;
   }
 
-  ret_value = ParseHeaders();
   RestoreState();
   return ret_value;
 }
@@ -590,7 +643,7 @@ wxString wxHTTPBuilder::URLDecode(const wxString &value)
     }
   }
 
-  return szDecoded; // return std::string
+  return szDecoded;
 }
 
 //! URL encode a string.
@@ -612,7 +665,9 @@ wxString wxHTTPBuilder::URLEncode(const wxString &value)
       switch( cChar )
       {
         case wxT(' '):  szToReturn.Append(wxT('+')); break;
+#ifdef HTTPBUILDER_ENCODE_LN_WITH_CRLN
         case wxT('\n'): szToReturn.Append(wxT("%0D%0A")); break;
+#endif
         default:
         {
           szToReturn.Append(wxT("%"));
@@ -873,7 +928,7 @@ wxInputStream* wxHTTPBuilder::GetPostBufferStream(const wxString &szTempFile)
   // End the posted data:
   wxString szToWrite = wxString::Format(wxT("--%s--\r\n"), szBoundary.c_str());
   out->Write( szToWrite, szToWrite.Length() );
-  m_bytesSent += out->LastWrite();
+	AddBytesSent( out->LastWrite() );
   nContentLength = out->GetSize(); // Get the size of the file before we close it
   delete out; // Close the stream
 
@@ -928,6 +983,39 @@ wxString wxHTTPBuilder::CreateBoundary(const int length)
     }
   }
   return szToReturn;
+}
+
+bool wxHTTPBuilder::ParseHeaders()
+{
+	m_rawHeaders.Empty();
+	wxString line;
+  wxStringTokenizer tokenzr;
+
+  ClearHeaders();
+  m_read = true;
+
+#if defined(__VISAGECPP__)
+// VA just can't stand while(1)
+  bool bOs2var = true;
+  while(bOs2var)
+#else
+  while (1)
+#endif
+  {
+    m_perr = ReadLine(this, line);
+    if (m_perr != wxPROTO_NOERR)
+      return false;
+
+    if (line.Length() == 0)
+      break;
+		if( !m_rawHeaders.IsEmpty() )
+			m_rawHeaders += wxT("\r\n");
+		m_rawHeaders += line;
+
+    wxString left_str = line.BeforeFirst(':');
+    m_headers[left_str] = line.AfterFirst(':').Strip(wxString::both);
+  }
+  return true;
 }
 
 //! Return specified string with the html special characters encoded.  Similar to PHP's htmlspecialchars() function.
@@ -1027,6 +1115,14 @@ wxString wxHTTPBuilder::GetCookieString()
   }
 
   return szToReturn;
+}
+
+//! Get content length, returns -1 if not found
+int wxHTTPBuilder::GetContentLength()
+{
+	if (!GetHeader(wxT("Content-Length")).IsEmpty())
+    return wxAtoi(WXSTRINGCAST GetHeader(wxT("Content-Length")));
+	return -1;
 }
 
 //! Parse a given URL into its parts (by reference).  Returns true if successful.
@@ -1217,34 +1313,6 @@ wxString wxHTTPBuilder::GetStatusCode(void)
   return wxT("Unknown");
 }
 
-/*
-//! Set a string of host names that should not use the HTTP proxy settings if set.
-void wxHTTPBuilder::HttpProxyExceptions(const wxString &exceptions, const wxString &delim)
-{
-  m_HttpProxyExceptionsArray.Empty();
-  wxString buf = exceptions;
-
-	int nFound = buf.Find(delim);
-
-	while( nFound != wxNOT_FOUND )
-	{
-    wxString value = buf.Left( nFound );
-    value.Trim(false);
-    value.Trim(true);
-    if( !value.IsEmpty() )
-      m_HttpProxyExceptionsArray.Add(value);
-		
-    buf.Remove(0, nFound + delim.Length() );
-		nFound = buf.Find(delim);
-	}
-
-  buf.Trim(false);
-  buf.Trim(true);
-  if( !buf.IsEmpty() )
-	  m_HttpProxyExceptionsArray.Add( buf );
-}
-*/
-
 //! Checks to see if the wxHTTPBuilder should use the proxy server for the specified host.
 bool wxHTTPBuilder::UseProxyForHost(const wxString &host)
 {
@@ -1288,11 +1356,13 @@ bool wxHTTPBuilder::UseProxyForHost(const wxString &host)
   return true;
 }
 
+//! Send HEAD request.  Returns 20x/30x/40x/50x response code if successful.  Returns -1 if error.
 wxProxySettings wxHTTPBuilder::GetProxySettings()
 {
 	return m_proxySettings;
 }
 
+//! Send HEAD request.  Returns 20x/30x/40x/50x response code if successful.  Returns -1 if error.
 void wxHTTPBuilder::SetProxySettings(const wxProxySettings &settings)
 {
 	m_proxySettings = settings;

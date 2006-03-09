@@ -12,17 +12,6 @@
 #ifndef _WX_HTTPBUILDER_H_
 #define _WX_HTTPBUILDER_H_
 
-#if (_MSC_VER >= 1400)       // VC8+
-	//#pragma warning(disable : 4996)    // Either disable all deprecation warnings,
-	// Or just turn off warnings about the newly deprecated CRT functions.
-	#ifndef _CRT_SECURE_NO_DEPRECATE
-		#define _CRT_SECURE_NO_DEPRECATE
-	#endif
-	#ifndef _CRT_NONSTDC_NO_DEPRECATE
-		#define _CRT_NONSTDC_NO_DEPRECATE
-	#endif
-#endif   // VC8+
-
 
 // optimization for GCC
 #if defined(__GNUG__) && !defined(__APPLE__)
@@ -31,11 +20,16 @@
 
 #define HTTPBUILDER_BASE64 // Use base 64 for HTTP Authentication
 #define HTTPBUILDER_BOUNDARY_LENGTH 40 // Boundary length for multipart posts
-#define HTTPBUILDER_VERSION wxT("1.2") // Version of wxHTTPBuilder
+#define HTTPBUILDER_VERSION wxT("1.3") // Version of wxHTTPBuilder
+
+// Add define to add a \r to the urlencoded string where \n is found
+//#define HTTPBUILDER_ENCODE_LN_WITH_CRLN // Not defined by default
+// Above added to resolve SF Request ID 1444286 
 
 #define HTTPBUILDER_NEWLINE wxT("\r\n") // For future use
 
 #include <wx/protocol/http.h>
+#include <wx/datetime.h>
 #include "wx/httpenginedef.h"
 #if wxUSE_CONFIG
   #include <wx/config.h>
@@ -97,8 +91,40 @@ public:
 	wxHTTPAuthSettings(const wxHTTPAuthSettings& data);
 	virtual ~wxHTTPAuthSettings() {};
 	void operator=(const wxHTTPAuthSettings& data);
-}; 
+};
 
+// wxHTTPCookieJar: future class for next version of wxHTTPBuilder
+/*
+// Documetation found here: http://wp.netscape.com/newsref/std/cookie_spec.html
+class WXDLLIMPEXP_HTTPENGINE wxHTTPCookieJar {
+public:
+	wxHTTPCookieJar() { }
+	wxHTTPCookieJar(const wxString& data);
+	virtual ~wxHTTPCookieJar() {};
+	void operator=(const wxHTTPCookieJar& data);
+
+	// ends the current browser session, deltes all cookies taht do not have an expired date
+	void EndSession();
+	
+	// Deletes all cookies set to expire after specified date
+	void ClearExpired(const wxDateTime& dt);
+
+	// Returns a header string for wxHTTPBuilder to use to set the cookies to send to server
+	wxString GetCookieHeader();
+
+	// Adds a new cookie or overwrites an existing cookie in the cookie jar
+	void SetCookie(wxString &cookie); 
+
+	// Load from File
+	bool Load(const wxString &filename);
+	// Save to File
+	bool Save(const wxString &filename);
+
+private:
+
+	wxArrayString	m_cookies;
+};
+*/
 
 class WXDLLIMPEXP_HTTPENGINE wxHTTPBuilder : public wxHTTP
 {
@@ -152,6 +178,11 @@ public:
 	wxString GetQueryString(bool includeAny = false);
   wxString GetCookieString(void);
 
+	// Get the reurned headers as a string:
+	wxString GetRawHeaders(void) { return m_rawHeaders; };
+
+	int	GetContentLength();
+	
 	// Handle the name/value pairs for the GET/POST/COOKIEs
 	wxString GetValue( const wxString &name, wxHTTP_Type type = wxHTTP_TYPE_ANY );
 	bool SetValue( const wxString &name, const wxString &value, wxHTTP_Type type = wxHTTP_TYPE_ANY );
@@ -189,9 +220,11 @@ public:
   // Send the built HTTP request and return a stream of the returned data from server.
   wxInputStream* GetInputStream(const wxString& url, const wxString& tempDirOrPrefix = wxEmptyString, const wxHTTP_Req req = wxHTTP_GET );
 
-  // Send the build HTTP requeset and return a string returned from the server.
+  // Send the build HTTP request and return a string returned from the server.
   wxString GetInputString(const wxString &url, const wxString& tempDirOrPrefix = wxEmptyString);
 
+	// Send the built HTTP 'HEAD' request and return the HTTP response code information
+	int GetHeadResponse(const wxString &url);
 
   // Error message
   wxString GetLastError(void) { return m_error; };
@@ -207,12 +240,17 @@ protected:
   bool SendRequest(const wxString& path, const wxString& tempDirOrPrefix = wxEmptyString, const wxHTTP_Req req = wxHTTP_GET  );
   wxString CreateBoundary( const int length );
 
+	bool ParseHeaders();
+
   // Bytes Read 
   int           m_bytesRead;
   int           m_bytesSent;
 
   // Stop what we are doing flag
   bool          m_Stop;
+
+	// Raw header data:
+	wxString			m_rawHeaders;
 
 private:
 

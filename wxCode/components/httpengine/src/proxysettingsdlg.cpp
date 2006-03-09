@@ -47,6 +47,7 @@ wxProxySettingsDlg::wxProxySettingsDlg(wxWindow* parent, wxWindowID id, const wx
 {
   m_stExceptionsDesc = NULL;
   m_stExceptionsNote = NULL;
+	m_tcExceptions = NULL;
 
   wxBoxSizer *sizer = new wxBoxSizer( wxVERTICAL );
   wxBoxSizer *hsizer = NULL;
@@ -131,9 +132,6 @@ wxProxySettingsDlg::wxProxySettingsDlg(wxWindow* parent, wxWindowID id, const wx
     sbSizer->Add(hsizer, 1, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 5);
 
     sizer->Add(sbSizer, 0, wxTOP|wxLEFT|wxRIGHT|wxEXPAND, 10);
-  } else {
-
-	  m_tcExceptions = NULL;
   }
 
   // Button row:

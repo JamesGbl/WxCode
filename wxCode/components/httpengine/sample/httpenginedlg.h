@@ -37,6 +37,7 @@ public:
 	void OnUseProxy(wxCommandEvent &event);
 	void OnSaveResults(wxCommandEvent &event);
 	void OnDownloadComplete( wxHTTPBuilderEvent &event );
+	void OnDownloadComplete2(wxHTTPBuilderEvent &event );
 	void OnUpdate( wxUpdateUIEvent &event);
 	void OnAddField( wxCommandEvent &event );
 	void OnGo( wxCommandEvent &event );
