@@ -64,8 +64,7 @@ bool wxWebUpdateActionRun::Run() const
 	wxFileName f(m_strFile);
 	if (!f.FileExists()) {
 
-		wxLogUsrMsg(_("wxWebUpdateActionRun::Run - the file [%s] does not exist; " \
-                      "proceeding anyway (maybe it's in PATH)"), m_strFile.c_str());
+		wxLogUsrMsg(_("wxWebUpdateActionRun::Run - the file [%s] does not exist; proceeding anyway (maybe it's in PATH)"), m_strFile.c_str());
 
 		// proceed: the executable could be in the system path...
 	}
@@ -143,8 +142,7 @@ bool wxWebUpdateActionRun::SetProperties(const wxArrayString &propnames,
 bool wxWebUpdateActionExtract::Run() const
 {
 	wxArrayString orig, output;
-	wxLogUsrMsg(_("wxWebUpdateActionExtract::Run - going to extract the file " \
-                  "[%1$s] of type [%2$s] in [%3$s]"),
+	wxLogUsrMsg(_("wxWebUpdateActionExtract::Run - going to extract the file [%1$s] of type [%2$s] in [%3$s]"),
 				m_strFile.c_str(), m_strType.c_str(), m_strWhere.c_str());
 
 	// wxFileName wants a path separator at the end of directory names
@@ -156,8 +154,7 @@ bool wxWebUpdateActionExtract::Run() const
 	wxFileName f(dir), f2(m_strFile);
 	if (!f.DirExists() || !f2.FileExists()) {
 
-		wxLogUsrMsg(_("wxWebUpdateActionExtract::Run - the folder [%1$s] or the " \
-                      "file [%2$s] does not exist !"), m_strWhere.c_str(), m_strFile.c_str());
+		wxLogUsrMsg(_("wxWebUpdateActionExtract::Run - the folder [%1$s] or the file [%2$s] does not exist !"), m_strWhere.c_str(), m_strFile.c_str());
 		return FALSE;
 	}
 

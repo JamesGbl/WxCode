@@ -412,8 +412,7 @@ void wxWebUpdateListCtrl::CacheDownloadSizes()
     wxLogAdvMsg(wxT("wxWebUpdateListCtrl::CacheDownloadSizes - launching the size cacher thread"));
     if (p->Create() != wxTHREAD_NO_ERROR ||
         p->Run() != wxTHREAD_NO_ERROR) {
-        wxMessageBox(_("Low resources; cannot show the size of the packages...\n" \
-                       "Close some applications and then retry."),
+        wxMessageBox(_("Low resources; cannot show the size of the packages...\nClose some applications and then retry."),
                     _("Error"), wxOK | wxICON_ERROR);
     }
 #endif

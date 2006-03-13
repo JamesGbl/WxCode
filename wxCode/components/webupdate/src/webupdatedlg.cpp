@@ -359,9 +359,7 @@ bool wxWebUpdateDlg::InitThreads()
     m_iThread = new wxWebUpdateInstallThread(this);
 
     // translate this only once ;)
-    wxString errMsg = wxGetTranslation( 
-                        wxT("Low resources; cannot run the WebUpdate dialog...\n")
-                        wxT("Close some applications and then retry."));
+    wxString errMsg = _("Low resources; cannot run the WebUpdate dialog...\nClose some applications and then retry.");
 
     // launch a separate thread for the webupdate script download
     if (m_dThread->Create() != wxTHREAD_NO_ERROR ||
@@ -403,8 +401,7 @@ bool wxWebUpdateDlg::CheckForAllUpdated(wxWebUpdatePackageArray &arr, bool force
         m_nStatus = wxWUDS_WAITING;
 
         // show to the user the "update not available" message
-        wxString defaultmsg = wxString::Format(_("You have the latest version of all packages of %s\n" \
-                                                 "... exiting the update dialog."), GetAppName().c_str());
+        wxString defaultmsg = wxString::Format(_("You have the latest version of all packages of %s...\nexiting the update dialog."), GetAppName().c_str());
         wxString usermsg = m_xmlRemote.GetUpdateNotAvailableMsg();
         wxWebUpdateInstaller::Get()->ShowNotificationMsg((usermsg.IsEmpty() || forcedefaultmsg) ? defaultmsg : usermsg);
 
@@ -527,10 +524,7 @@ void wxWebUpdateDlg::OnScriptDownload(const wxString &xmluri)
     if (m_pUpdatesList->GetItemCount() == 0) {
 
         wxWebUpdateInstaller::Get()->ShowNotificationMsg(
-                wxString::Format(_("Could not find any valid package for %1$s " \
-                                   "in the WebUpdate script.\n\nThis could be because " \
-                                   "the local XML description file (%2$s) has been corrupted.\n\n" \
-                                   "Exiting the update dialog."),
+                wxString::Format(_("Could not find any valid package for %1$s in the WebUpdate script.\n\nThis could be because the local XML description file (%2$s) has been corrupted.\n\nExiting the update dialog."),
                                  GetAppName().c_str(),
                                  m_xmlLocal.GetLocalScriptURI().c_str()),
                 _("Warning"));
@@ -878,8 +872,7 @@ void wxWebUpdateDlg::OnDownloadComplete(wxCommandEvent &)
             } else {
 
                 wxWebUpdateInstaller::Get()->ShowErrorMsg(wxString::Format(
-                        _("The downloaded file '%1$s'\nis corrupted. MD5 checksum is:\n\n\t%2$s" \
-                          "\n\ninstead of:\n\n\t%3$s\n\nPlease retry the download."),
+                        _("The downloaded file '%1$s'\nis corrupted. MD5 checksum is:\n\n\t%2$s\n\ninstead of:\n\n\t%3$s\n\nPlease retry the download."),
                         m_dThread->m_strOutput.c_str(),
                         m_dThread->GetComputedMD5().c_str(),
                         m_dThread->m_strMD5.c_str()));
@@ -964,8 +957,7 @@ void wxWebUpdateDlg::OnInstallationComplete(wxCommandEvent &)
         // warn the user
         m_pUpdatesList->SetInstallStatus(*m_current, TRUE);
         wxWebUpdateInstaller::Get()->ShowErrorMsg(wxString::Format(
-                        _("The downloaded package '%s'\ncould not be installed." \
-                          "\n\nPlease contact the support team for more info."),
+                        _("The downloaded package '%s'\ncould not be installed.\n\nPlease contact the support team for more info."),
                         m_dThread->m_strOutput.c_str()));
         RemoveCurrentPackage();
 

@@ -104,32 +104,32 @@ static const wxCmdLineEntryDesc g_cmdLineDesc[] =
 {
     // options
     { wxCMD_LINE_OPTION, OPTION_XMLSCRIPT, wxT("xml"),
-        _("Use the given local XML file"),
+        wxTRANSLATE("Use the given local XML file"),
         wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
     { wxCMD_LINE_OPTION, OPTION_XRC, wxT("xrc"),
-        _("Use the given local XRC file"),
+        wxTRANSLATE("Use the given local XRC file"),
         wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
     { wxCMD_LINE_OPTION, OPTION_RESOURCE, wxT("res"),
-        _("Use the given resource name when loading the XRC"),
+        wxTRANSLATE("Use the given resource name when loading the XRC"),
         wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
     { wxCMD_LINE_OPTION, OPTION_URI, wxT("uri"),
-        _("Use the given URI to load the remote XML file"),
+        wxTRANSLATE("Use the given URI to load the remote XML file"),
         wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
     { wxCMD_LINE_OPTION, OPTION_ASKURI, wxT("ask-uri"),
-        _("Asks the user the URI of the remote XML file"),
+        wxTRANSLATE("Asks the user the URI of the remote XML file"),
         wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
 
     // switches
     { wxCMD_LINE_SWITCH, SWITCH_RESTART, wxT("restart"),
-        _("Restart the updated application when WebUpdater quits"),
+        wxTRANSLATE("Restart the updated application when WebUpdater quits"),
         wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
     { wxCMD_LINE_SWITCH, SWITCH_SAVELOG, wxT("savelog"),
-        _("Saves the log messages to '" wxWU_LOGFILENAME "'"),
+        wxTRANSLATE("Saves the log messages to '") wxWU_LOGFILENAME wxTRANSLATE("'"),
         wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
 
     // help
     { wxCMD_LINE_SWITCH, wxT("h"), wxT("help"),
-        _("Show this help message"),
+        wxTRANSLATE("Show this help message"),
         wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
 
     { wxCMD_LINE_NONE }
@@ -345,8 +345,7 @@ void WebUpdaterApp::SetupLocale()
         } else {
 
             // leave in langID the wxLANGUAGE_DEFAULT value
-            wxLogAdvMsg(wxT("WebUpdaterApp::SetupLocale - the language [%s] found in the " \
-                            "config file of WebUpdater is NOT valid; using default one"),
+            wxLogAdvMsg(wxT("WebUpdaterApp::SetupLocale - the language [%s] found in the config file of WebUpdater is NOT valid; using default one"),
                         strLangCanonical.c_str());
         }
 
@@ -457,9 +456,7 @@ bool WebUpdaterApp::OnPreInit()
     fn.MakeAbsolute(wxGetCwd());
     if (!m_script.Load(fn.GetFullPath())) {
         wxWebUpdateInstaller::Get()->ShowErrorMsg(wxString::Format(
-                    _("The installation of the WebUpdater component of this application\n" \
-                      "is corrupted; the file:\n\n\t%s\n\nis missing (or invalid); please " \
-                      "reinstall the program."), fn.GetFullPath().c_str()));
+                    _("The installation of the WebUpdater component of this application\nis corrupted; the file:\n\n\t%s\n\nis missing (or invalid); please reinstall the program."), fn.GetFullPath().c_str()));
         return FALSE;
     }
 
@@ -520,20 +517,19 @@ bool WebUpdaterApp::OnPreInit()
     // do not proceed if in this stage we are still missing some required info
     if (!m_script.IsComplete()) {
         wxWebUpdateInstaller::Get()->ShowErrorMsg(
-                    _("The WebUpdater configuration file is corrupted; the local XML script " \
-                      "is missing some required info. Please correct the local XML script or " \
-                      "give these info to WebUpdater through the command line options."));
+                    _("The WebUpdater configuration file is corrupted; the local XML script is missing some required info. Please correct the local XML script or give these info to WebUpdater through the command line options."));
         return FALSE;
     }
 
     wxASSERT(m_script.IsOk());
 
+    // translate only once ;)
+    wxString msg = _("The WebUpdater configuration file is corrupted; the file:\n\n\t%s\n\nis missing (or invalid); please reinstall the program.");
+
     // load our XRC file
     wxLogUsrMsg(_("WebUpdaterApp::OnInit - loading the XRC file [%s]"), m_script.GetXRC().c_str());
     if (!wxXmlResource::Get()->Load(m_script.GetXRC())) {
-        wxWebUpdateInstaller::Get()->ShowErrorMsg(wxString::Format(
-                    _("The WebUpdater configuration file is corrupted; the file:\n\n\t%s" \
-                      "\n\nis missing (or invalid); please reinstall the program."),
+        wxWebUpdateInstaller::Get()->ShowErrorMsg(wxString::Format(msg,
                     m_script.GetXRC().c_str()));
         return FALSE;
     }
@@ -544,9 +540,7 @@ bool WebUpdaterApp::OnPreInit()
     wxFileName app2update(tmp);
     app2update.MakeAbsolute(wxGetCwd());
     if (!wxFileName::FileExists(app2update.GetFullPath())) {
-        wxWebUpdateInstaller::Get()->ShowErrorMsg(wxString::Format(
-                    _("The WebUpdater configuration file is corrupted; the file:\n\n\t%s" \
-                      "\n\nis missing (or invalid); please reinstall the program."),
+        wxWebUpdateInstaller::Get()->ShowErrorMsg(wxString::Format(msg,
                     app2update.GetFullPath().c_str()));
         return FALSE;
     }
