@@ -17,7 +17,6 @@ SO_SUFFIX = @SO_SUFFIX@
 DLLIMP_SUFFIX = @DLLIMP_SUFFIX@
 EXEEXT = @EXEEXT@
 LN_S = @LN_S@
-WINDRES = @WINDRES@
 SETFILE = @SETFILE@
 PIC_FLAG = @PIC_FLAG@
 SONAME_FLAG = @SONAME_FLAG@
@@ -41,6 +40,7 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 WX_CXXFLAGS = @WX_CXXFLAGS@
 WX_LIBS = @WX_LIBS@
+WX_RESCOMP = @WX_RESCOMP@
 
 ### Variables: ###
 
@@ -342,15 +342,13 @@ locale_install:
 	fi ; \
 	done
 
-xrcscan: 
+i18n: 
 	wxrc ./src/webupdatedlg.xrc -g -c -o ./src/webupdatedlg.xrc.extracted
-
-i18n: xrcscan
 	rm -f locale/webupdater.pot
 	touch locale/webupdater.pot
-	find ./include -name "*.h" | xargs xgettext --c++ -k_ -kwxPLURAL:1,2 -kwxTRANSLATE -s -j -o locale/webupdater.pot
-	find ./src -name "*.cpp" | xargs xgettext --c++ -k_ -kwxPLURAL:1,2 -kwxTRANSLATE -s -j -o locale/webupdater.pot
-	find ./src -name "*.xrc.*" | xargs xgettext --c++ -k_ -kwxPLURAL:1,2 -kwxTRANSLATE -s -j -o locale/webupdater.pot
+	find ./include -name "*.h" | xargs xgettext --c++ -k_ -kwxPLURAL:1,2 -kwxGetTranslation -kwxTRANSLATE -s -j -o locale/webupdater.pot
+	find ./src -name "*.cpp" | xargs xgettext --c++ -k_ -kwxPLURAL:1,2 -kwxGetTranslation -kwxTRANSLATE -s -j -o locale/webupdater.pot
+	find ./src -name "*.xrc.extracted" | xargs xgettext --c++ -k_ -kwxPLURAL:1,2 -kwxGetTranslation -kwxTRANSLATE -s -j -o locale/webupdater.pot
 	msgmerge locale/it.po locale/webupdater.pot > locale/it.po.new && mv locale/it.po.new locale/it.po
 	msgfmt --statistics -o locale/it.mo locale/it.po
 	msgmerge locale/de.po locale/webupdater.pot > locale/de.po.new && mv locale/de.po.new locale/de.po
@@ -507,7 +505,7 @@ webupdate_dll_webupdatectrl.o: $(srcdir)/./src/webupdatectrl.cpp
 	$(CXXC) -c -o $@ $(WEBUPDATE_DLL_CXXFLAGS) $(srcdir)/./src/webupdatectrl.cpp
 
 webupdater_app_rc.o: $(srcdir)/./src/app.rc
-	$(WINDRES) -i$< -o$@ $(__WX_SHAREDDEFINE_p_7) --include-dir ./include $(__HTTPENGINEDEP_DEF_p_5)  --include-dir ./src
+	$(WX_RESCOMP) -i$< -o$@ $(__WX_SHAREDDEFINE_p_7) --include-dir ./include $(__HTTPENGINEDEP_DEF_p_5)  --include-dir ./src
 
 webupdater_webapp.o: $(srcdir)/./src/webapp.cpp
 	$(CXXC) -c -o $@ $(WEBUPDATER_CXXFLAGS) $(srcdir)/./src/webapp.cpp
@@ -516,25 +514,25 @@ simple_1_0_0_minimal.o: $(srcdir)/./samples/simple/v1.0.0/minimal.cpp
 	$(CXXC) -c -o $@ $(SIMPLE_1_0_0_CXXFLAGS) $(srcdir)/./samples/simple/v1.0.0/minimal.cpp
 
 simple_1_0_0_minimal_rc.o: $(srcdir)/./samples/simple/v1.0.0/minimal.rc
-	$(WINDRES) -i$< -o$@ $(__WX_SHAREDDEFINE_p_7) --include-dir ./include --include-dir ./samples/simple/v1.0.0
+	$(WX_RESCOMP) -i$< -o$@ $(__WX_SHAREDDEFINE_p_7) --include-dir ./include --include-dir ./samples/simple/v1.0.0
 
 simple_2_0_3_minimal.o: $(srcdir)/./samples/simple/v2.0.3/minimal.cpp
 	$(CXXC) -c -o $@ $(SIMPLE_2_0_3_CXXFLAGS) $(srcdir)/./samples/simple/v2.0.3/minimal.cpp
 
 simple_2_0_3_minimal_rc.o: $(srcdir)/./samples/simple/v2.0.3/minimal.rc
-	$(WINDRES) -i$< -o$@ $(__WX_SHAREDDEFINE_p_7) --include-dir ./include --include-dir ./samples/simple/v2.0.3
+	$(WX_RESCOMP) -i$< -o$@ $(__WX_SHAREDDEFINE_p_7) --include-dir ./include --include-dir ./samples/simple/v2.0.3
 
 advanced_0_0_1_minimal.o: $(srcdir)/./samples/advanced/v0.0.1/minimal.cpp
 	$(CXXC) -c -o $@ $(ADVANCED_0_0_1_CXXFLAGS) $(srcdir)/./samples/advanced/v0.0.1/minimal.cpp
 
 advanced_0_0_1_minimal_rc.o: $(srcdir)/./samples/advanced/v0.0.1/minimal.rc
-	$(WINDRES) -i$< -o$@ $(__WX_SHAREDDEFINE_p_7) --include-dir ./include --include-dir ./samples/advanced/v0.0.1
+	$(WX_RESCOMP) -i$< -o$@ $(__WX_SHAREDDEFINE_p_7) --include-dir ./include --include-dir ./samples/advanced/v0.0.1
 
 advanced_1_5_0_minimal.o: $(srcdir)/./samples/advanced/v1.5.0/minimal.cpp
 	$(CXXC) -c -o $@ $(ADVANCED_1_5_0_CXXFLAGS) $(srcdir)/./samples/advanced/v1.5.0/minimal.cpp
 
 advanced_1_5_0_minimal_rc.o: $(srcdir)/./samples/advanced/v1.5.0/minimal.rc
-	$(WINDRES) -i$< -o$@ $(__WX_SHAREDDEFINE_p_7) --include-dir ./include --include-dir ./samples/advanced/v1.5.0
+	$(WX_RESCOMP) -i$< -o$@ $(__WX_SHAREDDEFINE_p_7) --include-dir ./include --include-dir ./samples/advanced/v1.5.0
 
 
 # Include dependency info, if present:

@@ -273,7 +273,7 @@ PACKAGE_VERSION='1.0'
 PACKAGE_STRING='webupdate 1.0'
 PACKAGE_BUGREPORT='frm@sourceforge.net'
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os AWK INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S RANLIB ac_ct_RANLIB CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CXX CXXFLAGS ac_ct_CXX CXXCPP WX_CONFIG_PATH WX_CPPFLAGS WX_CFLAGS WX_CXXFLAGS WX_CFLAGS_ONLY WX_CXXFLAGS_ONLY WX_LIBS WX_LIBS_STATIC WX_VERSION SET_MAKE MAKE_SET AR ac_ct_AR STRIP ac_ct_STRIP NM ac_ct_NM INSTALL_DIR LDFLAGS_GUI IF_GNU_MAKE PLATFORM_UNIX PLATFORM_WIN32 PLATFORM_MSDOS PLATFORM_MAC PLATFORM_MACOS PLATFORM_MACOSX PLATFORM_OS2 PLATFORM_BEOS SO_SUFFIX SO_SUFFIX_MODULE DLLIMP_SUFFIX LIBPREFIX LIBEXT DLLPREFIX DLLPREFIX_MODULE dlldir AIX_CXX_LD SHARED_LD_CC SHARED_LD_CXX SHARED_LD_MODULE_CC SHARED_LD_MODULE_CXX PIC_FLAG WINDOWS_IMPLIB USE_SOVERSION USE_SOVERLINUX USE_SOVERSOLARIS USE_SOVERCYGWIN USE_MACVERSION USE_SOSYMLINKS SONAME_FLAG DEPS_TRACKING RESCOMP SETFILE COND_DEPS_TRACKING_0 COND_DEPS_TRACKING_1 COND_PLATFORM_MACOSX_0_USE_SOVERCYGWIN_0_USE_SOVERSION_1 COND_PLATFORM_MACOSX_0_USE_SOVERSION_1 COND_PLATFORM_MACOSX_1 COND_PLATFORM_MACOSX_1_USE_SOVERSION_1 COND_PLATFORM_MAC_1 COND_PLATFORM_OS2_1 COND_PLATFORM_WIN32_1 COND_USE_HTTPENGINE_1 COND_USE_SOSYMLINKS_1 COND_USE_SOVERCYGWIN_1_USE_SOVERSION_1 COND_USE_SOVERLINUX_1 COND_USE_SOVERSION_0 COND_USE_SOVERSOLARIS_1 COND_WINDOWS_IMPLIB_1 COND_WX_DEBUG_0 COND_WX_DEBUG_1 COND_WX_SHARED_0 COND_WX_SHARED_1 LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os AWK INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S RANLIB ac_ct_RANLIB CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CXX CXXFLAGS ac_ct_CXX CXXCPP WX_CONFIG_PATH WX_CPPFLAGS WX_CFLAGS WX_CXXFLAGS WX_CFLAGS_ONLY WX_CXXFLAGS_ONLY WX_LIBS WX_LIBS_STATIC WX_VERSION WX_RESCOMP WX_VERSION_FULL WX_VERSION_MAJOR WX_VERSION_MINOR WX_PORT WX_GTKPORT_VERSION SET_MAKE MAKE_SET AR ac_ct_AR STRIP ac_ct_STRIP NM ac_ct_NM INSTALL_DIR LDFLAGS_GUI IF_GNU_MAKE PLATFORM_UNIX PLATFORM_WIN32 PLATFORM_MSDOS PLATFORM_MAC PLATFORM_MACOS PLATFORM_MACOSX PLATFORM_OS2 PLATFORM_BEOS SO_SUFFIX SO_SUFFIX_MODULE DLLIMP_SUFFIX LIBPREFIX LIBEXT DLLPREFIX DLLPREFIX_MODULE dlldir AIX_CXX_LD SHARED_LD_CC SHARED_LD_CXX SHARED_LD_MODULE_CC SHARED_LD_MODULE_CXX PIC_FLAG WINDOWS_IMPLIB USE_SOVERSION USE_SOVERLINUX USE_SOVERSOLARIS USE_SOVERCYGWIN USE_MACVERSION USE_SOSYMLINKS SONAME_FLAG DEPS_TRACKING WINDRES ac_ct_WINDRES REZ SETFILE COND_DEPS_TRACKING_0 COND_DEPS_TRACKING_1 COND_PLATFORM_MACOSX_0_USE_SOVERCYGWIN_0_USE_SOVERSION_1 COND_PLATFORM_MACOSX_0_USE_SOVERSION_1 COND_PLATFORM_MACOSX_1 COND_PLATFORM_MACOSX_1_USE_SOVERSION_1 COND_PLATFORM_MAC_1 COND_PLATFORM_OS2_1 COND_PLATFORM_WIN32_1 COND_USE_HTTPENGINE_0 COND_USE_HTTPENGINE_1 COND_USE_SOSYMLINKS_1 COND_USE_SOVERCYGWIN_1_USE_SOVERSION_1 COND_USE_SOVERLINUX_1 COND_USE_SOVERSION_0 COND_USE_SOVERSOLARIS_1 COND_WINDOWS_IMPLIB_1 COND_WX_DEBUG_0 COND_WX_DEBUG_1 COND_WX_SHARED_0 COND_WX_SHARED_1 LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -819,12 +819,15 @@ if test -n "$ac_init_help"; then
 Optional Features:
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
-  --enable-static         Builds in static mode (default is wxlike)
-  --enable-unicode        Builds in unicode mode (default is wxlike)
-  --enable-debug          Builds in debug mode (default is wxlike)
+  --enable-debug          Builds in debug mode (default is auto)
+  --enable-unicode        Builds in unicode mode (default is auto)
+  --enable-shared         Builds in shared mode (default is auto)
   --enable-httpengine     Enables the proxy and authentication support;
                           requires the wxHttpEngine component (default is yes)
   --enable-omf            use OMF object format (OS/2)
+  --disable-dependency-tracking
+                          don't use dependency tracking even if the compiler
+                          can
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -834,11 +837,14 @@ Optional Packages:
   --with-wx-prefix=PREFIX Prefix where wxWidgets is installed (optional)
   --with-wx-exec-prefix=PREFIX
                           Exec prefix where wxWidgets is installed (optional)
-  --with-motif            Uses the wxMotif port (default is wxlike)
-  --with-gtk              Uses the wxGTK port (default is wxlike)
-  --with-x11              Uses the wxX11 port (default is wxlike)
-  --with-mac              Uses the wxMac port (default is wxlike)
-  --with-mgl              Uses the wxMGL port (default is wxlike)
+  --with-motif            Uses the wxMotif port (default is auto)
+  --with-gtk              Uses the wxGTK port (default is auto)
+  --with-x11              Uses the wxX11 port (default is auto)
+  --with-mac              Uses the wxMac port (default is auto)
+  --with-mgl              Uses the wxMGL port (default is auto)
+  --with-msw              Uses the wxMSW port (default is auto)
+  --with-wxshared         Builds against a shared build of wxWidgets (default
+                          is auto)
 
 Some influential environment variables:
   CC          C compiler command
@@ -943,7 +949,7 @@ esac
     else
       echo "$as_me: WARNING: no configuration information is in $ac_dir" >&2
     fi
-    cd $ac_popdir
+    cd "$ac_popdir"
   done
 fi
 
@@ -1339,6 +1345,14 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
+
+
+
+
+
+
+
+
             ac_aux_dir=
 for ac_dir in ../../../build/autoconf build $srcdir/../../../build/autoconf build; do
   if test -f $ac_dir/install-sh; then
@@ -1363,6 +1377,60 @@ fi
 ac_config_guess="$SHELL $ac_aux_dir/config.guess"
 ac_config_sub="$SHELL $ac_aux_dir/config.sub"
 ac_configure="$SHELL $ac_aux_dir/configure" # This should be Cygnus configure.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1453,70 +1521,12 @@ fi;
 
 
 
-                # Check whether --enable-static or --disable-static was given.
-if test "${enable_static+set}" = set; then
-  enableval="$enable_static"
-
-else
-  enableval="wxlike"
-fi;
-
-                        echo "$as_me:$LINENO: checking for the --enable-static option" >&5
-echo $ECHO_N "checking for the --enable-static option... $ECHO_C" >&6
-            if test "$enableval" = "yes" ; then
-                echo "$as_me:$LINENO: result: yes" >&5
-echo "${ECHO_T}yes" >&6
-                STATIC=1
-
-            elif test "$enableval" = "no" ; then
-                echo "$as_me:$LINENO: result: no" >&5
-echo "${ECHO_T}no" >&6
-                STATIC=0
-            elif test "$enableval" = "wxlike" ; then
-                echo "$as_me:$LINENO: result: will be detected from wxWidgets" >&5
-echo "${ECHO_T}will be detected from wxWidgets" >&6
-                STATIC="wxlike"
-            else
-                { { echo "$as_me:$LINENO: error: unrecognized option value (allowed values: yes, no, wxlike) !" >&5
-echo "$as_me: error: unrecognized option value (allowed values: yes, no, wxlike) !" >&2;}
-   { (exit 1); exit 1; }; }
-            fi
-
-        # Check whether --enable-unicode or --disable-unicode was given.
-if test "${enable_unicode+set}" = set; then
-  enableval="$enable_unicode"
-
-else
-  enableval="wxlike"
-fi;
-
-                        echo "$as_me:$LINENO: checking for the --enable-unicode option" >&5
-echo $ECHO_N "checking for the --enable-unicode option... $ECHO_C" >&6
-            if test "$enableval" = "yes" ; then
-                echo "$as_me:$LINENO: result: yes" >&5
-echo "${ECHO_T}yes" >&6
-                UNICODE=1
-
-            elif test "$enableval" = "no" ; then
-                echo "$as_me:$LINENO: result: no" >&5
-echo "${ECHO_T}no" >&6
-                UNICODE=0
-            elif test "$enableval" = "wxlike" ; then
-                echo "$as_me:$LINENO: result: will be detected from wxWidgets" >&5
-echo "${ECHO_T}will be detected from wxWidgets" >&6
-                UNICODE="wxlike"
-            else
-                { { echo "$as_me:$LINENO: error: unrecognized option value (allowed values: yes, no, wxlike) !" >&5
-echo "$as_me: error: unrecognized option value (allowed values: yes, no, wxlike) !" >&2;}
-   { (exit 1); exit 1; }; }
-            fi
-
-        # Check whether --enable-debug or --disable-debug was given.
+                # Check whether --enable-debug or --disable-debug was given.
 if test "${enable_debug+set}" = set; then
   enableval="$enable_debug"
 
 else
-  enableval="wxlike"
+  enableval="auto"
 fi;
 
                         echo "$as_me:$LINENO: checking for the --enable-debug option" >&5
@@ -1530,25 +1540,95 @@ echo "${ECHO_T}yes" >&6
                 echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6
                 DEBUG=0
-            elif test "$enableval" = "wxlike" ; then
-                echo "$as_me:$LINENO: result: will be detected from wxWidgets" >&5
-echo "${ECHO_T}will be detected from wxWidgets" >&6
-                DEBUG="wxlike"
+            elif test "$enableval" = "auto" ; then
+                echo "$as_me:$LINENO: result: will be automatically detected" >&5
+echo "${ECHO_T}will be automatically detected" >&6
+                DEBUG="auto"
             else
-                { { echo "$as_me:$LINENO: error: unrecognized option value (allowed values: yes, no, wxlike) !" >&5
-echo "$as_me: error: unrecognized option value (allowed values: yes, no, wxlike) !" >&2;}
+                { { echo "$as_me:$LINENO: error:
+    Unrecognized option value (allowed values: yes, no, auto) !
+                " >&5
+echo "$as_me: error:
+    Unrecognized option value (allowed values: yes, no, auto) !
+                " >&2;}
+   { (exit 1); exit 1; }; }
+            fi
+
+        # Check whether --enable-unicode or --disable-unicode was given.
+if test "${enable_unicode+set}" = set; then
+  enableval="$enable_unicode"
+
+else
+  enableval="auto"
+fi;
+
+                        echo "$as_me:$LINENO: checking for the --enable-unicode option" >&5
+echo $ECHO_N "checking for the --enable-unicode option... $ECHO_C" >&6
+            if test "$enableval" = "yes" ; then
+                echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6
+                UNICODE=1
+
+            elif test "$enableval" = "no" ; then
+                echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+                UNICODE=0
+            elif test "$enableval" = "auto" ; then
+                echo "$as_me:$LINENO: result: will be automatically detected" >&5
+echo "${ECHO_T}will be automatically detected" >&6
+                UNICODE="auto"
+            else
+                { { echo "$as_me:$LINENO: error:
+    Unrecognized option value (allowed values: yes, no, auto) !
+                " >&5
+echo "$as_me: error:
+    Unrecognized option value (allowed values: yes, no, auto) !
+                " >&2;}
+   { (exit 1); exit 1; }; }
+            fi
+
+        # Check whether --enable-shared or --disable-shared was given.
+if test "${enable_shared+set}" = set; then
+  enableval="$enable_shared"
+
+else
+  enableval="auto"
+fi;
+
+                        echo "$as_me:$LINENO: checking for the --enable-shared option" >&5
+echo $ECHO_N "checking for the --enable-shared option... $ECHO_C" >&6
+            if test "$enableval" = "yes" ; then
+                echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6
+                SHARED=1
+
+            elif test "$enableval" = "no" ; then
+                echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+                SHARED=0
+            elif test "$enableval" = "auto" ; then
+                echo "$as_me:$LINENO: result: will be automatically detected" >&5
+echo "${ECHO_T}will be automatically detected" >&6
+                SHARED="auto"
+            else
+                { { echo "$as_me:$LINENO: error:
+    Unrecognized option value (allowed values: yes, no, auto) !
+                " >&5
+echo "$as_me: error:
+    Unrecognized option value (allowed values: yes, no, auto) !
+                " >&2;}
    { (exit 1); exit 1; }; }
             fi
 
 
-        PORT="wxlike"
+        PORT="auto"
 
 # Check whether --with-motif or --without-motif was given.
 if test "${with_motif+set}" = set; then
   withval="$with_motif"
 
 else
-  withval="wxlike"
+  withval="auto"
 fi;
 
                         echo "$as_me:$LINENO: checking for the --with-motif option" >&5
@@ -1558,13 +1638,21 @@ echo $ECHO_N "checking for the --with-motif option... $ECHO_C" >&6
 echo "${ECHO_T}yes" >&6
                 MOTIFPORT=1
                 PORT="motif"
-            elif test "$withval" = "wxlike" ; then
-                echo "$as_me:$LINENO: result: will be detected from wxWidgets" >&5
-echo "${ECHO_T}will be detected from wxWidgets" >&6
-                MOTIFPORT="wxlike"
+                                    elif test "" = "1" -a "$withval" = "no" ; then
+                echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+                MOTIFPORT=0
+            elif test "$withval" = "auto" ; then
+                echo "$as_me:$LINENO: result: will be automatically detected" >&5
+echo "${ECHO_T}will be automatically detected" >&6
+                MOTIFPORT="auto"
             else
-                { { echo "$as_me:$LINENO: error: unrecognized option value (allowed values: yes, wxlike) !" >&5
-echo "$as_me: error: unrecognized option value (allowed values: yes, wxlike) !" >&2;}
+                { { echo "$as_me:$LINENO: error:
+    Unrecognized option value (allowed values: yes, auto) !
+                " >&5
+echo "$as_me: error:
+    Unrecognized option value (allowed values: yes, auto) !
+                " >&2;}
    { (exit 1); exit 1; }; }
             fi
 
@@ -1574,7 +1662,7 @@ if test "${with_gtk+set}" = set; then
   withval="$with_gtk"
 
 else
-  withval="wxlike"
+  withval="auto"
 fi;
 
                         echo "$as_me:$LINENO: checking for the --with-gtk option" >&5
@@ -1584,13 +1672,21 @@ echo $ECHO_N "checking for the --with-gtk option... $ECHO_C" >&6
 echo "${ECHO_T}yes" >&6
                 GTKPORT=1
                 PORT="gtk"
-            elif test "$withval" = "wxlike" ; then
-                echo "$as_me:$LINENO: result: will be detected from wxWidgets" >&5
-echo "${ECHO_T}will be detected from wxWidgets" >&6
-                GTKPORT="wxlike"
+                                    elif test "" = "1" -a "$withval" = "no" ; then
+                echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+                GTKPORT=0
+            elif test "$withval" = "auto" ; then
+                echo "$as_me:$LINENO: result: will be automatically detected" >&5
+echo "${ECHO_T}will be automatically detected" >&6
+                GTKPORT="auto"
             else
-                { { echo "$as_me:$LINENO: error: unrecognized option value (allowed values: yes, wxlike) !" >&5
-echo "$as_me: error: unrecognized option value (allowed values: yes, wxlike) !" >&2;}
+                { { echo "$as_me:$LINENO: error:
+    Unrecognized option value (allowed values: yes, auto) !
+                " >&5
+echo "$as_me: error:
+    Unrecognized option value (allowed values: yes, auto) !
+                " >&2;}
    { (exit 1); exit 1; }; }
             fi
 
@@ -1600,7 +1696,7 @@ if test "${with_x11+set}" = set; then
   withval="$with_x11"
 
 else
-  withval="wxlike"
+  withval="auto"
 fi;
 
                         echo "$as_me:$LINENO: checking for the --with-x11 option" >&5
@@ -1610,13 +1706,21 @@ echo $ECHO_N "checking for the --with-x11 option... $ECHO_C" >&6
 echo "${ECHO_T}yes" >&6
                 X11PORT=1
                 PORT="x11"
-            elif test "$withval" = "wxlike" ; then
-                echo "$as_me:$LINENO: result: will be detected from wxWidgets" >&5
-echo "${ECHO_T}will be detected from wxWidgets" >&6
-                X11PORT="wxlike"
+                                    elif test "" = "1" -a "$withval" = "no" ; then
+                echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+                X11PORT=0
+            elif test "$withval" = "auto" ; then
+                echo "$as_me:$LINENO: result: will be automatically detected" >&5
+echo "${ECHO_T}will be automatically detected" >&6
+                X11PORT="auto"
             else
-                { { echo "$as_me:$LINENO: error: unrecognized option value (allowed values: yes, wxlike) !" >&5
-echo "$as_me: error: unrecognized option value (allowed values: yes, wxlike) !" >&2;}
+                { { echo "$as_me:$LINENO: error:
+    Unrecognized option value (allowed values: yes, auto) !
+                " >&5
+echo "$as_me: error:
+    Unrecognized option value (allowed values: yes, auto) !
+                " >&2;}
    { (exit 1); exit 1; }; }
             fi
 
@@ -1626,7 +1730,7 @@ if test "${with_mac+set}" = set; then
   withval="$with_mac"
 
 else
-  withval="wxlike"
+  withval="auto"
 fi;
 
                         echo "$as_me:$LINENO: checking for the --with-mac option" >&5
@@ -1636,13 +1740,21 @@ echo $ECHO_N "checking for the --with-mac option... $ECHO_C" >&6
 echo "${ECHO_T}yes" >&6
                 MACPORT=1
                 PORT="mac"
-            elif test "$withval" = "wxlike" ; then
-                echo "$as_me:$LINENO: result: will be detected from wxWidgets" >&5
-echo "${ECHO_T}will be detected from wxWidgets" >&6
-                MACPORT="wxlike"
+                                    elif test "" = "1" -a "$withval" = "no" ; then
+                echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+                MACPORT=0
+            elif test "$withval" = "auto" ; then
+                echo "$as_me:$LINENO: result: will be automatically detected" >&5
+echo "${ECHO_T}will be automatically detected" >&6
+                MACPORT="auto"
             else
-                { { echo "$as_me:$LINENO: error: unrecognized option value (allowed values: yes, wxlike) !" >&5
-echo "$as_me: error: unrecognized option value (allowed values: yes, wxlike) !" >&2;}
+                { { echo "$as_me:$LINENO: error:
+    Unrecognized option value (allowed values: yes, auto) !
+                " >&5
+echo "$as_me: error:
+    Unrecognized option value (allowed values: yes, auto) !
+                " >&2;}
    { (exit 1); exit 1; }; }
             fi
 
@@ -1652,7 +1764,7 @@ if test "${with_mgl+set}" = set; then
   withval="$with_mgl"
 
 else
-  withval="wxlike"
+  withval="auto"
 fi;
 
                         echo "$as_me:$LINENO: checking for the --with-mgl option" >&5
@@ -1662,23 +1774,100 @@ echo $ECHO_N "checking for the --with-mgl option... $ECHO_C" >&6
 echo "${ECHO_T}yes" >&6
                 MGLPORT=1
                 PORT="mgl"
-            elif test "$withval" = "wxlike" ; then
-                echo "$as_me:$LINENO: result: will be detected from wxWidgets" >&5
-echo "${ECHO_T}will be detected from wxWidgets" >&6
-                MGLPORT="wxlike"
+                                    elif test "" = "1" -a "$withval" = "no" ; then
+                echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+                MGLPORT=0
+            elif test "$withval" = "auto" ; then
+                echo "$as_me:$LINENO: result: will be automatically detected" >&5
+echo "${ECHO_T}will be automatically detected" >&6
+                MGLPORT="auto"
             else
-                { { echo "$as_me:$LINENO: error: unrecognized option value (allowed values: yes, wxlike) !" >&5
-echo "$as_me: error: unrecognized option value (allowed values: yes, wxlike) !" >&2;}
+                { { echo "$as_me:$LINENO: error:
+    Unrecognized option value (allowed values: yes, auto) !
+                " >&5
+echo "$as_me: error:
+    Unrecognized option value (allowed values: yes, auto) !
+                " >&2;}
    { (exit 1); exit 1; }; }
             fi
 
 
 
+# Check whether --with-msw or --without-msw was given.
+if test "${with_msw+set}" = set; then
+  withval="$with_msw"
+
+else
+  withval="auto"
+fi;
+
+                        echo "$as_me:$LINENO: checking for the --with-msw option" >&5
+echo $ECHO_N "checking for the --with-msw option... $ECHO_C" >&6
+            if test "$withval" = "yes" ; then
+                echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6
+                MSWPORT=1
+                PORT="msw"
+                                    elif test "" = "1" -a "$withval" = "no" ; then
+                echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+                MSWPORT=0
+            elif test "$withval" = "auto" ; then
+                echo "$as_me:$LINENO: result: will be automatically detected" >&5
+echo "${ECHO_T}will be automatically detected" >&6
+                MSWPORT="auto"
+            else
+                { { echo "$as_me:$LINENO: error:
+    Unrecognized option value (allowed values: yes, auto) !
+                " >&5
+echo "$as_me: error:
+    Unrecognized option value (allowed values: yes, auto) !
+                " >&2;}
+   { (exit 1); exit 1; }; }
+            fi
+
+
+
+# Check whether --with-wxshared or --without-wxshared was given.
+if test "${with_wxshared+set}" = set; then
+  withval="$with_wxshared"
+
+else
+  withval="auto"
+fi;
+
+                        echo "$as_me:$LINENO: checking for the --with-wxshared option" >&5
+echo $ECHO_N "checking for the --with-wxshared option... $ECHO_C" >&6
+            if test "$withval" = "yes" ; then
+                echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6
+                WX_SHARED=1
+
+                                    elif test "1" = "1" -a "$withval" = "no" ; then
+                echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+                WX_SHARED=0
+            elif test "$withval" = "auto" ; then
+                echo "$as_me:$LINENO: result: will be automatically detected" >&5
+echo "${ECHO_T}will be automatically detected" >&6
+                WX_SHARED="auto"
+            else
+                { { echo "$as_me:$LINENO: error:
+    Unrecognized option value (allowed values: yes, auto) !
+                " >&5
+echo "$as_me: error:
+    Unrecognized option value (allowed values: yes, auto) !
+                " >&2;}
+   { (exit 1); exit 1; }; }
+            fi
+
 
                 if test "$DBG_CONFIGURE" = "1"; then
-            echo "STATIC: $STATIC, DEBUG: $DEBUG, UNICODE: $UNICODE, PORT: $PORT"
-            echo "GTKPORT: $GTKPORT, X11PORT: $X11PORT, MACPORT: $MACPORT, MOTIFPORT: $MOTIFPORT, MGLPORT: $MGLPORT"
-            echo "PORT: $PORT"
+            echo "[dbg] SHARED: $SHARED, WX_SHARED: $WX_SHARED"
+            echo "[dbg] DEBUG: $DEBUG, UNICODE: $UNICODE, PORT: $PORT"
+            echo "[dbg] GTKPORT: $GTKPORT, X11PORT: $X11PORT, MACPORT: $MACPORT"
+            echo "[dbg] MOTIFPORT: $MOTIFPORT, MGLPORT: $MGLPORT"
         fi
 
 
@@ -1799,9 +1988,15 @@ test -n "$target_alias" &&
     NONENONEs,x,x, &&
   program_prefix=${target_alias}-
 
-                                    CFLAGS=
-            CXXFLAGS=
-            CPPFLAGS=
+                                    if test -z "$CFLAGS"; then
+                CFLAGS=
+            fi
+            if test -z "$CXXFLAGS"; then
+                CXXFLAGS=
+            fi
+            if test -z "$CPPFLAGS"; then
+                CPPFLAGS=
+            fi
 
                         for ac_prog in gawk mawk nawk awk
 do
@@ -2581,8 +2776,7 @@ if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   cat conftest.err >&5
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); } &&
-	 { ac_try='test -z "$ac_c_werror_flag"
-			 || test ! -s conftest.err'
+	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -2640,8 +2834,7 @@ if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   cat conftest.err >&5
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); } &&
-	 { ac_try='test -z "$ac_c_werror_flag"
-			 || test ! -s conftest.err'
+	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -2757,8 +2950,7 @@ if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   cat conftest.err >&5
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); } &&
-	 { ac_try='test -z "$ac_c_werror_flag"
-			 || test ! -s conftest.err'
+	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -2812,8 +3004,7 @@ if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   cat conftest.err >&5
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); } &&
-	 { ac_try='test -z "$ac_c_werror_flag"
-			 || test ! -s conftest.err'
+	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -2858,8 +3049,7 @@ if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   cat conftest.err >&5
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); } &&
-	 { ac_try='test -z "$ac_c_werror_flag"
-			 || test ! -s conftest.err'
+	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -2903,8 +3093,7 @@ if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   cat conftest.err >&5
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); } &&
-	 { ac_try='test -z "$ac_c_werror_flag"
-			 || test ! -s conftest.err'
+	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -3088,8 +3277,7 @@ if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   cat conftest.err >&5
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); } &&
-	 { ac_try='test -z "$ac_cxx_werror_flag"
-			 || test ! -s conftest.err'
+	 { ac_try='test -z "$ac_cxx_werror_flag"			 || test ! -s conftest.err'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -3147,8 +3335,7 @@ if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   cat conftest.err >&5
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); } &&
-	 { ac_try='test -z "$ac_cxx_werror_flag"
-			 || test ! -s conftest.err'
+	 { ac_try='test -z "$ac_cxx_werror_flag"			 || test ! -s conftest.err'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -3219,8 +3406,7 @@ if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   cat conftest.err >&5
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); } &&
-	 { ac_try='test -z "$ac_cxx_werror_flag"
-			 || test ! -s conftest.err'
+	 { ac_try='test -z "$ac_cxx_werror_flag"			 || test ! -s conftest.err'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -3264,8 +3450,7 @@ if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   cat conftest.err >&5
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); } &&
-	 { ac_try='test -z "$ac_cxx_werror_flag"
-			 || test ! -s conftest.err'
+	 { ac_try='test -z "$ac_cxx_werror_flag"			 || test ! -s conftest.err'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -3532,10 +3717,10 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
 
 
-                if test "$STATIC" = "1" ; then
-            WXCFG_FLAGS="--static=yes "
-        elif test "$STATIC" = "0" ; then
+                if test "$WX_SHARED" = "1" ; then
             WXCFG_FLAGS="--static=no "
+        elif test "$WX_SHARED" = "0" ; then
+            WXCFG_FLAGS="--static=yes "
         fi
 
         if test "$DEBUG" = "1" ; then
@@ -3560,13 +3745,17 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
             WXCFG_FLAGS="$WXCFG_FLAGS""--toolkit=mac "
         elif test "$MGLPORT" = "1" ; then
             WXCFG_FLAGS="$WXCFG_FLAGS""--toolkit=mgl "
+        elif test "$MSWPORT" = "1" ; then
+            WXCFG_FLAGS="$WXCFG_FLAGS""--toolkit=msw "
         fi
 
 
                 if test "$DBG_CONFIGURE" = "1"; then
-            echo "WXCFG_FLAGS: $WXCFG_FLAGS"
+            echo "[dbg] WXCFG_FLAGS: $WXCFG_FLAGS"
         fi
 
+
+                                    WX_ADDITIONAL_LIBS="xrc,xml,net,core,base"
 
 
     if test x${WX_CONFIG_NAME+set} != xset ; then
@@ -3651,7 +3840,7 @@ echo $ECHO_N "checking for wxWidgets version >= $min_wx_version... $ECHO_C" >&6
 echo $ECHO_N "checking for wxWidgets version >= $min_wx_version ($WXCFG_FLAGS)... $ECHO_C" >&6
     fi
 
-    WX_CONFIG_WITH_ARGS="$WX_CONFIG_PATH $wx_config_args $WXCFG_FLAGS xrc,xml,net,core,base"
+    WX_CONFIG_WITH_ARGS="$WX_CONFIG_PATH $wx_config_args $WXCFG_FLAGS $WX_ADDITIONAL_LIBS"
 
     WX_VERSION=`$WX_CONFIG_WITH_ARGS --version 2>/dev/null`
     wx_config_major_version=`echo $WX_VERSION | \
@@ -3723,6 +3912,22 @@ echo "${ECHO_T}yes" >&6
         fi
       fi
 
+            wx_has_rescomp=""
+      if test $wx_config_major_version -gt 2; then
+        wx_has_rescomp=yes
+      else
+        if test $wx_config_major_version -eq 2; then
+           if test $wx_config_minor_version -ge 7; then
+              wx_has_rescomp=yes
+           fi
+        fi
+      fi
+      if test "x$wx_has_rescomp" = x ; then
+                  WX_RESCOMP=
+      else
+         WX_RESCOMP=`$WX_CONFIG_WITH_ARGS --rescomp`
+      fi
+
       if test "x$wx_has_cppflags" = x ; then
                   WX_CFLAGS=`$WX_CONFIG_WITH_ARGS --cflags`
          WX_CPPFLAGS=$WX_CFLAGS
@@ -3756,6 +3961,7 @@ echo "${ECHO_T}no (version $WX_VERSION is not new enough)" >&6
        WX_CXXFLAGS=""
        WX_LIBS=""
        WX_LIBS_STATIC=""
+       WX_RESCOMP=""
        wxWin=0
 
     fi
@@ -3766,6 +3972,8 @@ echo "${ECHO_T}no (version $WX_VERSION is not new enough)" >&6
     WX_CXXFLAGS=""
     WX_LIBS=""
     WX_LIBS_STATIC=""
+    WX_RESCOMP=""
+
     wxWin=0
 
   fi
@@ -3779,71 +3987,87 @@ echo "${ECHO_T}no (version $WX_VERSION is not new enough)" >&6
 
 
 
-			if test "$wxWin" != 1; then
-				{ { echo "$as_me:$LINENO: error:
-    The requested wxWidgets build couldn't be found.
+
+            if test "$wxWin" != 1; then
+
+                if test ! -z "$WXCFG_FLAGS"; then
+
+                    MSG="
+    The configuration you asked for $PACKAGE_NAME requires a wxWidgets
+    build with the following settings:
+        $WXCFG_FLAGS
+    but such build is not available.
 
     Try to use the default build of wxWidgets
-    (try the command 'wx-config --list'); i.e. leave
+    (see the command 'wx-config --list') leaving
     the --enable-unicode, --enable-static, --enable-debug
-    and --with-* options to their default values.
+    and --with-* options to their default values."
+                fi
+
+                { { echo "$as_me:$LINENO: error:
+    The requested wxWidgets build couldn't be found.
+    $MSG
 
     If you still get this error, then check that 'wx-config' is
     in path, the directory where wxWidgets libraries are installed
     (returned by 'wx-config --libs' command) is in LD_LIBRARY_PATH
     or equivalent variable and wxWidgets version is 2.7.0 or above.
-				" >&5
+                " >&5
 echo "$as_me: error:
     The requested wxWidgets build couldn't be found.
-
-    Try to use the default build of wxWidgets
-    (try the command 'wx-config --list'); i.e. leave
-    the --enable-unicode, --enable-static, --enable-debug
-    and --with-* options to their default values.
+    $MSG
 
     If you still get this error, then check that 'wx-config' is
     in path, the directory where wxWidgets libraries are installed
     (returned by 'wx-config --libs' command) is in LD_LIBRARY_PATH
     or equivalent variable and wxWidgets version is 2.7.0 or above.
-				" >&2;}
+                " >&2;}
    { (exit 1); exit 1; }; }
-			else
+            else
+                                                                                                                                                                true;                                               fi
 
-                                if test "$DBG_CONFIGURE" = "1"; then
-                    echo "WX_LIBS: $WX_LIBS"
-                fi
-			fi
+                                                            WX_VERSION_FULL="$WX_VERSION"
 
 
-    					wx_config_major_version=`echo $WX_VERSION | \
+
+                                WX_VERSION_MAJOR=`echo $WX_VERSION | \
            sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\1/'`
-		wx_config_minor_version=`echo $WX_VERSION | \
+        WX_VERSION_MINOR=`echo $WX_VERSION | \
            sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\2/'`
-		WX_VERSION=$wx_config_major_version$wx_config_minor_version
+        WX_VERSION=$wx_config_major_version$wx_config_minor_version
+
+
+
 
 
                 if test "$DBG_CONFIGURE" = "1"; then
-            echo "WX_VERSION: $WX_VERSION"
+            echo "[dbg] WX_VERSION: $WX_VERSION"
         fi
 
+                                                        if test $WX_SHARED = "1"; then
+            STATIC=0
+        elif test $WX_SHARED = "0"; then
+            STATIC=1
+        elif test $WX_SHARED = "auto"; then
+            STATIC="auto"
+        fi
 
         if test $WX_VERSION -gt 26 ; then
 
-
-            WX_SELECTEDCONFIG=$($WX_CONFIG_WITH_ARGS --selected_config)
+                                    WX_SELECTEDCONFIG=$($WX_CONFIG_WITH_ARGS --selected_config)
 
                         if test "$DBG_CONFIGURE" = "1"; then
-                echo "Using wx-config --selected_config; WX_SELECTEDCONFIG: $WX_SELECTEDCONFIG"
+                echo "[dbg] Using wx-config --selected_config"
+                echo "[dbg] WX_SELECTEDCONFIG: $WX_SELECTEDCONFIG"
             fi
 
 
-
-        if test "$UNICODE" = "wxlike" ; then
+        if test "$UNICODE" = "auto" ; then
 
                                     echo "$as_me:$LINENO: checking if wxWidgets was built with UNICODE enabled" >&5
 echo $ECHO_N "checking if wxWidgets was built with UNICODE enabled... $ECHO_C" >&6
 
-		WX_UNICODE=$(expr "$WX_SELECTEDCONFIG" : ".*unicode.*")
+        WX_UNICODE=$(expr "$WX_SELECTEDCONFIG" : ".*unicode.*")
 
             if test "$WX_UNICODE" != "0"; then
                 WX_UNICODE=1
@@ -3862,12 +4086,12 @@ echo "${ECHO_T}no" >&6
         fi
 
 
-        if test "$DEBUG" = "wxlike" ; then
+        if test "$DEBUG" = "auto" ; then
 
                                     echo "$as_me:$LINENO: checking if wxWidgets was built in DEBUG mode" >&5
 echo $ECHO_N "checking if wxWidgets was built in DEBUG mode... $ECHO_C" >&6
 
-		WX_DEBUG=$(expr "$WX_SELECTEDCONFIG" : ".*debug.*")
+        WX_DEBUG=$(expr "$WX_SELECTEDCONFIG" : ".*debug.*")
 
             if test "$WX_DEBUG" != "0"; then
                 WX_DEBUG=1
@@ -3886,13 +4110,12 @@ echo "${ECHO_T}no" >&6
         fi
 
 
-
-        if test "$STATIC" = "wxlike" ; then
+        if test "$STATIC" = "auto" ; then
 
                                     echo "$as_me:$LINENO: checking if wxWidgets was built in STATIC mode" >&5
 echo $ECHO_N "checking if wxWidgets was built in STATIC mode... $ECHO_C" >&6
 
-		WX_STATIC=$(expr "$WX_SELECTEDCONFIG" : ".*static.*")
+        WX_STATIC=$(expr "$WX_SELECTEDCONFIG" : ".*static.*")
 
             if test "$WX_STATIC" != "0"; then
                 WX_STATIC=1
@@ -3910,20 +4133,15 @@ echo "${ECHO_T}no" >&6
                         WX_STATIC=$STATIC
         fi
 
-            if test "$WX_STATIC" != "0"; then
-                WX_SHARED=0
-            else
-                WX_SHARED=1
-            fi
 
                         WX_PORT="unknown"
 
-        if test "$GTKPORT" = "wxlike" ; then
+        if test "$GTKPORT" = "auto" ; then
 
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxGTK" >&5
 echo $ECHO_N "checking if wxWidgets port is wxGTK... $ECHO_C" >&6
 
-		WX_GTKPORT=$(expr "$WX_SELECTEDCONFIG" : ".*gtk.*")
+        WX_GTKPORT=$(expr "$WX_SELECTEDCONFIG" : ".*gtk.*")
 
             if test "$WX_GTKPORT" != "0"; then
                 WX_GTKPORT=1
@@ -3942,12 +4160,12 @@ echo "${ECHO_T}no" >&6
         fi
 
 
-        if test "$MOTIFPORT" = "wxlike" ; then
+        if test "$MOTIFPORT" = "auto" ; then
 
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxMotif" >&5
 echo $ECHO_N "checking if wxWidgets port is wxMotif... $ECHO_C" >&6
 
-		WX_MOTIFPORT=$(expr "$WX_SELECTEDCONFIG" : ".*motif.*")
+        WX_MOTIFPORT=$(expr "$WX_SELECTEDCONFIG" : ".*motif.*")
 
             if test "$WX_MOTIFPORT" != "0"; then
                 WX_MOTIFPORT=1
@@ -3966,12 +4184,12 @@ echo "${ECHO_T}no" >&6
         fi
 
 
-        if test "$MACPORT" = "wxlike" ; then
+        if test "$MACPORT" = "auto" ; then
 
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxMac" >&5
 echo $ECHO_N "checking if wxWidgets port is wxMac... $ECHO_C" >&6
 
-		WX_MACPORT=$(expr "$WX_SELECTEDCONFIG" : ".*mac.*")
+        WX_MACPORT=$(expr "$WX_SELECTEDCONFIG" : ".*mac.*")
 
             if test "$WX_MACPORT" != "0"; then
                 WX_MACPORT=1
@@ -3990,12 +4208,12 @@ echo "${ECHO_T}no" >&6
         fi
 
 
-        if test "$X11PORT" = "wxlike" ; then
+        if test "$X11PORT" = "auto" ; then
 
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxX11" >&5
 echo $ECHO_N "checking if wxWidgets port is wxX11... $ECHO_C" >&6
 
-		WX_X11PORT=$(expr "$WX_SELECTEDCONFIG" : ".*x11.*")
+        WX_X11PORT=$(expr "$WX_SELECTEDCONFIG" : ".*x11.*")
 
             if test "$WX_X11PORT" != "0"; then
                 WX_X11PORT=1
@@ -4014,12 +4232,12 @@ echo "${ECHO_T}no" >&6
         fi
 
 
-        if test "$MGLPORT" = "wxlike" ; then
+        if test "$MGLPORT" = "auto" ; then
 
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxMGL" >&5
 echo $ECHO_N "checking if wxWidgets port is wxMGL... $ECHO_C" >&6
 
-		WX_MGLPORT=$(expr "$WX_SELECTEDCONFIG" : ".*mgl.*")
+        WX_MGLPORT=$(expr "$WX_SELECTEDCONFIG" : ".*mgl.*")
 
             if test "$WX_MGLPORT" != "0"; then
                 WX_MGLPORT=1
@@ -4038,15 +4256,39 @@ echo "${ECHO_T}no" >&6
         fi
 
 
-                                    if test "$WX_PORT" = "gtk"; then
-                TEMP=wxlike
+        if test "$MSWPORT" = "auto" ; then
 
-        if test "$TEMP" = "wxlike" ; then
+                                    echo "$as_me:$LINENO: checking if wxWidgets port is wxMSW" >&5
+echo $ECHO_N "checking if wxWidgets port is wxMSW... $ECHO_C" >&6
 
-                                    echo "$as_me:$LINENO: checking if wxGTK uses GTK 2.x or GTK 1.x" >&5
-echo $ECHO_N "checking if wxGTK uses GTK 2.x or GTK 1.x... $ECHO_C" >&6
+        WX_MSWPORT=$(expr "$WX_SELECTEDCONFIG" : ".*msw.*")
 
-		WX_TEMP=$(expr "$WX_SELECTEDCONFIG" : ".*gtk2.*")
+            if test "$WX_MSWPORT" != "0"; then
+                WX_MSWPORT=1
+                echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6
+                WX_PORT="msw"
+            else
+                WX_MSWPORT=0
+                echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+                :
+            fi
+        else
+
+                        WX_MSWPORT=$MSWPORT
+        fi
+
+
+                                                if test "$WX_PORT" = "gtk"; then
+                TEMP=auto
+
+        if test "$TEMP" = "auto" ; then
+
+                                    echo "$as_me:$LINENO: checking if wxGTK uses GTK 2.x (instead of GTK 1.x)" >&5
+echo $ECHO_N "checking if wxGTK uses GTK 2.x (instead of GTK 1.x)... $ECHO_C" >&6
+
+        WX_TEMP=$(expr "$WX_SELECTEDCONFIG" : ".*gtk2.*")
 
             if test "$WX_TEMP" != "0"; then
                 WX_TEMP=1
@@ -4073,12 +4315,12 @@ echo "${ECHO_T}no" >&6
 
 
 
-        if test "$UNICODE" = "wxlike" ; then
+        if test "$UNICODE" = "auto" ; then
 
                                     echo "$as_me:$LINENO: checking if wxWidgets was built with UNICODE enabled" >&5
 echo $ECHO_N "checking if wxWidgets was built with UNICODE enabled... $ECHO_C" >&6
 
-		WX_UNICODE=$(expr "$WX_CPPFLAGS" : ".*unicode.*")
+        WX_UNICODE=$(expr "$WX_CPPFLAGS" : ".*unicode.*")
 
             if test "$WX_UNICODE" != "0"; then
                 WX_UNICODE=1
@@ -4097,12 +4339,12 @@ echo "${ECHO_T}no" >&6
         fi
 
 
-        if test "$DEBUG" = "wxlike" ; then
+        if test "$DEBUG" = "auto" ; then
 
                                     echo "$as_me:$LINENO: checking if wxWidgets was built in DEBUG mode" >&5
 echo $ECHO_N "checking if wxWidgets was built in DEBUG mode... $ECHO_C" >&6
 
-		WX_DEBUG=$(expr "$WX_CPPFLAGS" : ".*__WXDEBUG__.*")
+        WX_DEBUG=$(expr "$WX_CPPFLAGS" : ".*__WXDEBUG__.*")
 
             if test "$WX_DEBUG" != "0"; then
                 WX_DEBUG=1
@@ -4121,12 +4363,12 @@ echo "${ECHO_T}no" >&6
         fi
 
 
-        if test "$STATIC" = "wxlike" ; then
+        if test "$STATIC" = "auto" ; then
 
                                     echo "$as_me:$LINENO: checking if wxWidgets was built in STATIC mode" >&5
 echo $ECHO_N "checking if wxWidgets was built in STATIC mode... $ECHO_C" >&6
 
-		WX_STATIC=$(expr "$WX_CPPFLAGS" : ".*static.*")
+        WX_STATIC=$(expr "$WX_CPPFLAGS" : ".*static.*")
 
             if test "$WX_STATIC" != "0"; then
                 WX_STATIC=1
@@ -4144,20 +4386,15 @@ echo "${ECHO_T}no" >&6
                         WX_STATIC=$STATIC
         fi
 
-            if test "$WX_STATIC" != "0"; then
-                WX_SHARED=0
-            else
-                WX_SHARED=1
-            fi
 
                         WX_PORT="unknown"
 
-        if test "$GTKPORT" = "wxlike" ; then
+        if test "$GTKPORT" = "auto" ; then
 
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxGTK" >&5
 echo $ECHO_N "checking if wxWidgets port is wxGTK... $ECHO_C" >&6
 
-		WX_GTKPORT=$(expr "$WX_CPPFLAGS" : ".*__WXGTK__.*")
+        WX_GTKPORT=$(expr "$WX_CPPFLAGS" : ".*__WXGTK__.*")
 
             if test "$WX_GTKPORT" != "0"; then
                 WX_GTKPORT=1
@@ -4176,12 +4413,12 @@ echo "${ECHO_T}no" >&6
         fi
 
 
-        if test "$MOTIFPORT" = "wxlike" ; then
+        if test "$MOTIFPORT" = "auto" ; then
 
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxMotif" >&5
 echo $ECHO_N "checking if wxWidgets port is wxMotif... $ECHO_C" >&6
 
-		WX_MOTIFPORT=$(expr "$WX_CPPFLAGS" : ".*__WXMOTIF__.*")
+        WX_MOTIFPORT=$(expr "$WX_CPPFLAGS" : ".*__WXMOTIF__.*")
 
             if test "$WX_MOTIFPORT" != "0"; then
                 WX_MOTIFPORT=1
@@ -4200,12 +4437,12 @@ echo "${ECHO_T}no" >&6
         fi
 
 
-        if test "$MACPORT" = "wxlike" ; then
+        if test "$MACPORT" = "auto" ; then
 
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxMac" >&5
 echo $ECHO_N "checking if wxWidgets port is wxMac... $ECHO_C" >&6
 
-		WX_MACPORT=$(expr "$WX_CPPFLAGS" : ".*__WXMAC__.*")
+        WX_MACPORT=$(expr "$WX_CPPFLAGS" : ".*__WXMAC__.*")
 
             if test "$WX_MACPORT" != "0"; then
                 WX_MACPORT=1
@@ -4224,12 +4461,12 @@ echo "${ECHO_T}no" >&6
         fi
 
 
-        if test "$X11PORT" = "wxlike" ; then
+        if test "$X11PORT" = "auto" ; then
 
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxX11" >&5
 echo $ECHO_N "checking if wxWidgets port is wxX11... $ECHO_C" >&6
 
-		WX_X11PORT=$(expr "$WX_CPPFLAGS" : ".*__WXX11__.*")
+        WX_X11PORT=$(expr "$WX_CPPFLAGS" : ".*__WXX11__.*")
 
             if test "$WX_X11PORT" != "0"; then
                 WX_X11PORT=1
@@ -4248,12 +4485,12 @@ echo "${ECHO_T}no" >&6
         fi
 
 
-        if test "$MGLPORT" = "wxlike" ; then
+        if test "$MGLPORT" = "auto" ; then
 
                                     echo "$as_me:$LINENO: checking if wxWidgets port is wxMGL" >&5
 echo $ECHO_N "checking if wxWidgets port is wxMGL... $ECHO_C" >&6
 
-		WX_MGLPORT=$(expr "$WX_CPPFLAGS" : ".*__WXMGL__.*")
+        WX_MGLPORT=$(expr "$WX_CPPFLAGS" : ".*__WXMGL__.*")
 
             if test "$WX_MGLPORT" != "0"; then
                 WX_MGLPORT=1
@@ -4272,15 +4509,39 @@ echo "${ECHO_T}no" >&6
         fi
 
 
-                                    if test "$WX_PORT" = "gtk"; then
-                TEMP=wxlike
+        if test "$MSWPORT" = "auto" ; then
 
-        if test "$TEMP" = "wxlike" ; then
+                                    echo "$as_me:$LINENO: checking if wxWidgets port is wxMSW" >&5
+echo $ECHO_N "checking if wxWidgets port is wxMSW... $ECHO_C" >&6
 
-                                    echo "$as_me:$LINENO: checking if wxGTK uses GTK 2.x or GTK 1.x" >&5
-echo $ECHO_N "checking if wxGTK uses GTK 2.x or GTK 1.x... $ECHO_C" >&6
+        WX_MSWPORT=$(expr "$WX_CPPFLAGS" : ".*__WXMSW__.*")
 
-		WX_TEMP=$(expr "$WX_CPPFLAGS" : ".*gtk2.*")
+            if test "$WX_MSWPORT" != "0"; then
+                WX_MSWPORT=1
+                echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6
+                WX_PORT="msw"
+            else
+                WX_MSWPORT=0
+                echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+                :
+            fi
+        else
+
+                        WX_MSWPORT=$MSWPORT
+        fi
+
+
+                                                if test "$WX_PORT" = "gtk"; then
+                TEMP=auto
+
+        if test "$TEMP" = "auto" ; then
+
+                                    echo "$as_me:$LINENO: checking if wxGTK uses GTK 2.x (instead of GTK 1.x)" >&5
+echo $ECHO_N "checking if wxGTK uses GTK 2.x (instead of GTK 1.x)... $ECHO_C" >&6
+
+        WX_TEMP=$(expr "$WX_CPPFLAGS" : ".*gtk2.*")
 
             if test "$WX_TEMP" != "0"; then
                 WX_TEMP=1
@@ -4301,36 +4562,127 @@ echo "${ECHO_T}no" >&6
             fi
         fi
 
+                if test "$WX_STATIC" != "0"; then
+            WX_SHARED=0
+        else
+            WX_SHARED=1
+        fi
 
                 if test "$DBG_CONFIGURE" = "1"; then
-            echo "WX_SHARED: $WX_SHARED, WX_DEBUG: $WX_DEBUG, WX_UNICODE: $WX_UNICODE"
-            echo "WX_GTKPORT: $WX_GTKPORT, WX_MOTIFPORT: $WX_MOTIFPORT, WX_MACPORT: $WX_MACPORT, WX_X11PORT: $WX_X11PORT, WX_MGLPORT: $WX_MGLPORT"
-            echo "WX_PORT: $WX_PORT"
-            echo "WX_GTKPORT_VERSION: $WX_GTKPORT_VERSION"
+            echo "[dbg] WX_SHARED: $WX_SHARED"
+            echo "[dbg] WX_DEBUG: $WX_DEBUG"
+            echo "[dbg] WX_UNICODE: $WX_UNICODE"
+            echo "[dbg] WX_GTKPORT: $WX_GTKPORT, WX_MOTIFPORT: $WX_MOTIFPORT"
+            echo "[dbg] WX_MACPORT: $WX_MACPORT, WX_X11PORT: $WX_X11PORT"
+            echo "[dbg] WX_MGLPORT: $WX_MGLPORT, WX_MSWPORT: $WX_MSWPORT"
+            echo "[dbg] WX_PORT: $WX_PORT"
+            echo "[dbg] WX_GTKPORT_VERSION: $WX_GTKPORT_VERSION"
         fi
 
 
 
-        if test "$WX_PORT" = "unknown" -a "$PORT" = "wxlike" ; then
-            { { echo "$as_me:$LINENO: error: Cannot detect the currently installed wxWidgets port !" >&5
-echo "$as_me: error: Cannot detect the currently installed wxWidgets port !" >&2;}
+        if test "$WX_PORT" = "unknown" -a "$PORT" = "auto" ; then
+            { { echo "$as_me:$LINENO: error:
+                           Cannot detect the currently installed wxWidgets port !
+                           Check your 'wx-config --cxxflags'...
+                         " >&5
+echo "$as_me: error:
+                           Cannot detect the currently installed wxWidgets port !
+                           Check your 'wx-config --cxxflags'...
+                         " >&2;}
    { (exit 1); exit 1; }; }
         fi
-        if test "$(expr $WX_GTKPORT + $WX_MOTIFPORT + $WX_MACPORT + $WX_X11PORT + $WX_MGLPORT)" != "1" ; then
-            { { echo "$as_me:$LINENO: error: Your 'wx-config --cxxflags' command seems to define more than one port symbol..." >&5
-echo "$as_me: error: Your 'wx-config --cxxflags' command seems to define more than one port symbol..." >&2;}
+
+        checksum="$(expr $WX_GTKPORT + $WX_MOTIFPORT + $WX_MACPORT + \
+                                $WX_X11PORT + $WX_MGLPORT + $WX_MSWPORT)"
+        if test "$checksum" = "0" ; then
+            { { echo "$as_me:$LINENO: error:
+                           Cannot detect the currently installed wxWidgets port !
+                           Check your 'wx-config --cxxflags'...
+                         " >&5
+echo "$as_me: error:
+                           Cannot detect the currently installed wxWidgets port !
+                           Check your 'wx-config --cxxflags'...
+                         " >&2;}
+   { (exit 1); exit 1; }; }
+        fi
+        if test "$checksum" != "1" ; then
+            { { echo "$as_me:$LINENO: error:
+    Your 'wx-config --cxxflags' command seems to define more than one port symbol...
+    check your wxWidgets installation (the 'wx-config --list' command may help).
+                         " >&5
+echo "$as_me: error:
+    Your 'wx-config --cxxflags' command seems to define more than one port symbol...
+    check your wxWidgets installation (the 'wx-config --list' command may help).
+                         " >&2;}
    { (exit 1); exit 1; }; }
         fi
 
 
 
-                                                            if [ "$WX_DEBUG" = "1" ]; then
 
-                                CPPFLAGS="$CPPFLAGS -g -O0 -Wall -Wundef -Wno-ctor-dtor-privacy"
-                CFLAGS="$CFLAGS -g -O0 -Wall -Wundef"
+                                                        if test "$WX_SHARED" = "0" -a "$SHARED" = "1"; then
+            { { echo "$as_me:$LINENO: error:
+    Cannot build in shared mode against a static build of wxWidgets !
+    This error happens because the wxWidgets build which was selected
+    has been detected as STATIC while you asked to build $PACKAGE_NAME
+    in SHARED mode and this is not possible.
+    Use the '--disable-shared' option to build $PACKAGE_NAME
+    as STATIC or '--with-wxshared' to use a SHARED wxWidgets build.
+                         " >&5
+echo "$as_me: error:
+    Cannot build in shared mode against a static build of wxWidgets !
+    This error happens because the wxWidgets build which was selected
+    has been detected as STATIC while you asked to build $PACKAGE_NAME
+    in SHARED mode and this is not possible.
+    Use the '--disable-shared' option to build $PACKAGE_NAME
+    as STATIC or '--with-wxshared' to use a SHARED wxWidgets build.
+                         " >&2;}
+   { (exit 1); exit 1; }; }
+        fi
+
+
+                                    if test "$DEBUG" = "auto"; then
+                DEBUG=$WX_DEBUG
+
+                                if test "$DEBUG" = "1"; then
+                    BUILD="debug"
+                elif test "$DEBUG" = ""; then
+                    BUILD="release"
+                fi
+            fi
+            if test "$UNICODE" = "auto"; then
+                UNICODE=$WX_UNICODE
+            fi
+            if test "$SHARED" = "auto"; then
+                SHARED=$WX_SHARED
+            fi
+
+                                    if test -n "" ; then
+
+            if test "$WX_PORT" = "gtk" ; then
+                                                                                if test "$WX_GTKPORT_VERSION" = "1" ; then
+                    _GTKPKG_FL="gtk-config --cflags"
+                    GTKPKG_FLAGS=`$_GTKPKG_FL`
+                else
+                    _GTKPKG_FL="pkg-config --cflags gtk+-2.0"
+                    GTKPKG_FLAGS=`$_GTKPKG_FL`
+                fi
+            fi
+
+
+                                CXXFLAGS="$CXXFLAGS $GTKPKG_FLAGS"
+                CFLAGS="$CFLAGS $GTKPKG_FLAGS"
+            fi
+
+
+                                                                        if [ "$WX_DEBUG" = "1" ]; then
+
+                                                                                                                                                CXXFLAGS="$CXXFLAGS -g3 -O0 -Wall -Wundef -Wno-ctor-dtor-privacy"
+                CFLAGS="$CFLAGS -g3 -O0 -Wall -Wundef"
             else
-                CPPFLAGS="$CPPFLAGS -O2"
-                CFLAGS="$CFLAGS -O2"
+                CXXFLAGS="$CXXFLAGS -g0 -O2"
+                CFLAGS="$CFLAGS -g0 -O2"
             fi
 
 if test "$USE_HTTPENGINE" = "1"; then
@@ -4339,19 +4691,23 @@ if test "$USE_HTTPENGINE" = "1"; then
     # test program cannot be linked...
 
 
-                        CPPFLAGS_ORIGINAL=$CPPFLAGS
-            CXXFLAGS_ORIGINAL=$CXXFLAGS
-            CFLAGS_ORIGINAL=$CFLAGS
-            LDFLAGS_ORIGINAL=$LDFLAGS
-            LIBS_ORIGINAL=$LIBS
+
+        SAVED_CPPFLAGS="$CPPFLAGS"
+        SAVED_CXXFLAGS="$CXXFLAGS"
+        SAVED_CFLAGS="$CFLAGS"
+        SAVED_LIBS="$LIBS"
+
 
                                                                                                                                                                                                 CPPFLAGS="$CPPFLAGS $WX_CPPFLAGS"
             CFLAGS="$CFLAGS $WX_CFLAGS_ONLY"
 
                         LIBS="$LIBS -lhttpengine $WX_LIBS"
 
-                        echo "$as_me:$LINENO: checking for the wxHTTPEngine availability" >&5
-echo $ECHO_N "checking for the wxHTTPEngine availability... $ECHO_C" >&6
+                        if test -z "$COMPCHECK_MSG"; then
+                                COMPCHECK_MSG="if wxHTTPEngine is available"
+            fi
+            echo "$as_me:$LINENO: checking $COMPCHECK_MSG" >&5
+echo $ECHO_N "checking $COMPCHECK_MSG... $ECHO_C" >&6
             cat >conftest.$ac_ext <<_ACEOF
 
                             /* confdefs.h.  */
@@ -4378,8 +4734,7 @@ if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
   cat conftest.err >&5
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); } &&
-	 { ac_try='test -z "$ac_cxx_werror_flag"
-			 || test ! -s conftest.err'
+	 { ac_try='test -z "$ac_cxx_werror_flag"			 || test ! -s conftest.err'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -4402,21 +4757,22 @@ rm -f conftest.err conftest.$ac_objext \
       conftest$ac_exeext conftest.$ac_ext
 
             if test "$wxHTTPEngine_PRESENCE" = "1"; then
-               echo "$as_me:$LINENO: result: found" >&5
-echo "${ECHO_T}found" >&6
+               echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6
                USE_HTTPENGINE=1
             else
-               echo "$as_me:$LINENO: result: not found !" >&5
-echo "${ECHO_T}not found !" >&6
+               echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
                # action if found
                                 USE_HTTPENGINE=0
             fi
 
-                        CPPFLAGS=$CPPFLAGS_ORIGINAL
-            CXXFLAGS=$CXXFLAGS_ORIGINAL
-            CFLAGS=$CFLAGS_ORIGINAL
-            LDFLAGS=$LDFLAGS_ORIGINAL
-            LIBS=$LIBS_ORIGINAL
+
+        CPPFLAGS="$SAVED_CPPFLAGS"
+        CXXFLAGS="$SAVED_CXXFLAGS"
+        CFLAGS="$SAVED_CFLAGS"
+        LIBS="$SAVED_LIBS"
+
              # action if not found
 fi
 
@@ -4427,6 +4783,12 @@ fi
 
 
     if test "x$BAKEFILE_HOST" = "x"; then
+               if test "x${host}" = "x" ; then
+                       { { echo "$as_me:$LINENO: error: You must call the autoconf \"CANONICAL_HOST\" macro in your configure.ac (or .in) file." >&5
+echo "$as_me: error: You must call the autoconf \"CANONICAL_HOST\" macro in your configure.ac (or .in) file." >&2;}
+   { (exit 1); exit 1; }; }
+               fi
+
         BAKEFILE_HOST="${host}"
     fi
 
@@ -5140,7 +5502,7 @@ main ()
 {
 
                         #ifndef __INTEL_COMPILER
-                        #error Not icc
+                        This is not ICC
                         #endif
 
   ;
@@ -5156,8 +5518,7 @@ if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   cat conftest.err >&5
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); } &&
-	 { ac_try='test -z "$ac_cxx_werror_flag"
-			 || test ! -s conftest.err'
+	 { ac_try='test -z "$ac_cxx_werror_flag"			 || test ! -s conftest.err'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -5197,73 +5558,6 @@ echo "${ECHO_T}$bakefile_cv_prog_icc" >&6
       ;;
 
       *-*-darwin* )
-
-                                echo "$as_me:$LINENO: checking for gcc 3.1 or later" >&5
-echo $ECHO_N "checking for gcc 3.1 or later... $ECHO_C" >&6
-if test "${bakefile_cv_gcc31+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-
-           cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-
-int
-main ()
-{
-
-                   #if (__GNUC__ < 3) || \
-                       ((__GNUC__ == 3) && (__GNUC_MINOR__ < 1))
-                       #error old gcc
-                   #endif
-
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext
-if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
-  (eval $ac_compile) 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } &&
-	 { ac_try='test -z "$ac_cxx_werror_flag"
-			 || test ! -s conftest.err'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; } &&
-	 { ac_try='test -s conftest.$ac_objext'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; }; then
-
-                   bakefile_cv_gcc31=yes
-
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-
-                   bakefile_cv_gcc31=no
-
-
-fi
-rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
-
-fi
-echo "$as_me:$LINENO: result: $bakefile_cv_gcc31" >&5
-echo "${ECHO_T}$bakefile_cv_gcc31" >&6
-        if test "$bakefile_cv_gcc31" = "no"; then
 
 D='$'
 cat <<EOF >shared-ld-sh
@@ -5359,17 +5653,82 @@ rm -f master.${D}${D}.o
 exit ${D}status
 EOF
 
-            chmod +x shared-ld-sh
+        chmod +x shared-ld-sh
 
+        SHARED_LD_MODULE_CC="`pwd`/shared-ld-sh -bundle -headerpad_max_install_names -o"
+        SHARED_LD_MODULE_CXX="$SHARED_LD_MODULE_CC"
+
+
+                                echo "$as_me:$LINENO: checking for gcc 3.1 or later" >&5
+echo $ECHO_N "checking for gcc 3.1 or later... $ECHO_C" >&6
+if test "${bakefile_cv_gcc31+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+
+           cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+                   #if (__GNUC__ < 3) || \
+                       ((__GNUC__ == 3) && (__GNUC_MINOR__ < 1))
+                       This is old gcc
+                   #endif
+
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext
+if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+  (eval $ac_compile) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_cxx_werror_flag"			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest.$ac_objext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+
+                   bakefile_cv_gcc31=yes
+
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+
+                   bakefile_cv_gcc31=no
+
+
+fi
+rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+
+fi
+echo "$as_me:$LINENO: result: $bakefile_cv_gcc31" >&5
+echo "${ECHO_T}$bakefile_cv_gcc31" >&6
+        if test "$bakefile_cv_gcc31" = "no"; then
                         SHARED_LD_CC="`pwd`/shared-ld-sh -dynamiclib -headerpad_max_install_names -o"
-            SHARED_LD_MODULE_CC="`pwd`/shared-ld-sh -bundle -headerpad_max_install_names -o"
             SHARED_LD_CXX="$SHARED_LD_CC"
-            SHARED_LD_MODULE_CXX="$SHARED_LD_MODULE_CC"
         else
                         SHARED_LD_CC="\${CC} -dynamiclib -single_module -headerpad_max_install_names -o"
-            SHARED_LD_MODULE_CC="\${CC} -bundle -single_module -headerpad_max_install_names -o"
             SHARED_LD_CXX="\${CXX} -dynamiclib -single_module -headerpad_max_install_names -o"
-            SHARED_LD_MODULE_CXX="\${CXX} -bundle -single_module -headerpad_max_install_names -o"
         fi
 
         if test "x$GCC" == "xyes"; then
@@ -5382,18 +5741,18 @@ EOF
 
       *-*-aix* )
         if test "x$GCC" = "xyes"; then
-	    	    	    	    	    PIC_FLAG=""
+                                                            PIC_FLAG=""
 
-	    	    	    	    	    	    	    case "${BAKEFILE_HOST}" in
-		*-*-aix5* )
-		    LD_EXPFULL="-Wl,-bexpfull"
-		    ;;
-	    esac
+                                                                                    case "${BAKEFILE_HOST}" in
+                *-*-aix5* )
+                    LD_EXPFULL="-Wl,-bexpfull"
+                    ;;
+            esac
 
-	    SHARED_LD_CC="\$(CC) -shared $LD_EXPFULL -o"
-	    SHARED_LD_CXX="\$(CXX) -shared $LD_EXPFULL -o"
-	else
-	    	                # Extract the first word of "makeC++SharedLib", so it can be a program name with args.
+            SHARED_LD_CC="\$(CC) -shared $LD_EXPFULL -o"
+            SHARED_LD_CXX="\$(CXX) -shared $LD_EXPFULL -o"
+        else
+                                    # Extract the first word of "makeC++SharedLib", so it can be a program name with args.
 set dummy makeC++SharedLib; ac_word=$2
 echo "$as_me:$LINENO: checking for $ac_word" >&5
 echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
@@ -6015,54 +6374,66 @@ echo "$as_me: error: unknown system type $BAKEFILE_HOST." >&2;}
 
 
 
+    # Check whether --enable-dependency-tracking or --disable-dependency-tracking was given.
+if test "${enable_dependency_tracking+set}" = set; then
+  enableval="$enable_dependency_tracking"
+  bk_use_trackdeps="$enableval"
+fi;
+
     echo "$as_me:$LINENO: checking for dependency tracking method" >&5
 echo $ECHO_N "checking for dependency tracking method... $ECHO_C" >&6
-    DEPS_TRACKING=1
 
-    if test "x$GCC" = "xyes"; then
-        DEPSMODE=gcc
-        case "${BAKEFILE_HOST}" in
-            *-*-darwin* )
-                                                DEPSFLAG="-no-cpp-precomp -MMD"
-            ;;
-            * )
-                DEPSFLAG="-MMD"
-            ;;
-        esac
-        echo "$as_me:$LINENO: result: gcc" >&5
-echo "${ECHO_T}gcc" >&6
-    elif test "x$MWCC" = "xyes"; then
-        DEPSMODE=mwcc
-        DEPSFLAG="-MM"
-        echo "$as_me:$LINENO: result: mwcc" >&5
-echo "${ECHO_T}mwcc" >&6
-    elif test "x$SUNCC" = "xyes"; then
-        DEPSMODE=unixcc
-        DEPSFLAG="-xM1"
-        echo "$as_me:$LINENO: result: Sun cc" >&5
-echo "${ECHO_T}Sun cc" >&6
-    elif test "x$SGICC" = "xyes"; then
-        DEPSMODE=unixcc
-        DEPSFLAG="-M"
-        echo "$as_me:$LINENO: result: SGI cc" >&5
-echo "${ECHO_T}SGI cc" >&6
-    elif test "x$HPCC" = "xyes"; then
-        DEPSMODE=unixcc
-        DEPSFLAG="+make"
-        echo "$as_me:$LINENO: result: HP cc" >&5
-echo "${ECHO_T}HP cc" >&6
-    elif test "x$COMPAQCC" = "xyes"; then
-        DEPSMODE=gcc
-        DEPSFLAG="-MD"
-        echo "$as_me:$LINENO: result: Compaq cc" >&5
-echo "${ECHO_T}Compaq cc" >&6
-    else
+    if test "x$bk_use_trackdeps" = "xno" ; then
         DEPS_TRACKING=0
-        echo "$as_me:$LINENO: result: none" >&5
-echo "${ECHO_T}none" >&6
-    fi
+        echo "$as_me:$LINENO: result: disabled" >&5
+echo "${ECHO_T}disabled" >&6
+    else
+        DEPS_TRACKING=1
 
-    if test $DEPS_TRACKING = 1 ; then
+        if test "x$GCC" = "xyes"; then
+            DEPSMODE=gcc
+            case "${BAKEFILE_HOST}" in
+                *-*-darwin* )
+                                                            DEPSFLAG="-no-cpp-precomp -MMD"
+                ;;
+                * )
+                    DEPSFLAG="-MMD"
+                ;;
+            esac
+            echo "$as_me:$LINENO: result: gcc" >&5
+echo "${ECHO_T}gcc" >&6
+        elif test "x$MWCC" = "xyes"; then
+            DEPSMODE=mwcc
+            DEPSFLAG="-MM"
+            echo "$as_me:$LINENO: result: mwcc" >&5
+echo "${ECHO_T}mwcc" >&6
+        elif test "x$SUNCC" = "xyes"; then
+            DEPSMODE=unixcc
+            DEPSFLAG="-xM1"
+            echo "$as_me:$LINENO: result: Sun cc" >&5
+echo "${ECHO_T}Sun cc" >&6
+        elif test "x$SGICC" = "xyes"; then
+            DEPSMODE=unixcc
+            DEPSFLAG="-M"
+            echo "$as_me:$LINENO: result: SGI cc" >&5
+echo "${ECHO_T}SGI cc" >&6
+        elif test "x$HPCC" = "xyes"; then
+            DEPSMODE=unixcc
+            DEPSFLAG="+make"
+            echo "$as_me:$LINENO: result: HP cc" >&5
+echo "${ECHO_T}HP cc" >&6
+        elif test "x$COMPAQCC" = "xyes"; then
+            DEPSMODE=gcc
+            DEPSFLAG="-MD"
+            echo "$as_me:$LINENO: result: Compaq cc" >&5
+echo "${ECHO_T}Compaq cc" >&6
+        else
+            DEPS_TRACKING=0
+            echo "$as_me:$LINENO: result: none" >&5
+echo "${ECHO_T}none" >&6
+        fi
+
+        if test $DEPS_TRACKING = 1 ; then
 
 D='$'
 cat <<EOF >bk-deps
@@ -6167,29 +6538,25 @@ else
 fi
 EOF
 
-        chmod +x bk-deps
+            chmod +x bk-deps
+        fi
     fi
 
 
 
 
-    RESCOMP=
-    SETFILE=
-
     case ${BAKEFILE_HOST} in
         *-*-cygwin* | *-*-mingw32* )
-                        if test "$build" != "$host" ; then
-                RESCOMP=$host_alias-windres
-            else
-                # Extract the first word of "windres", so it can be a program name with args.
-set dummy windres; ac_word=$2
+                        if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}windres", so it can be a program name with args.
+set dummy ${ac_tool_prefix}windres; ac_word=$2
 echo "$as_me:$LINENO: checking for $ac_word" >&5
 echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
-if test "${ac_cv_prog_RESCOMP+set}" = set; then
+if test "${ac_cv_prog_WINDRES+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  if test -n "$RESCOMP"; then
-  ac_cv_prog_RESCOMP="$RESCOMP" # Let the user override the test.
+  if test -n "$WINDRES"; then
+  ac_cv_prog_WINDRES="$WINDRES" # Let the user override the test.
 else
 as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
 for as_dir in $PATH
@@ -6198,26 +6565,67 @@ do
   test -z "$as_dir" && as_dir=.
   for ac_exec_ext in '' $ac_executable_extensions; do
   if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_RESCOMP="windres"
+    ac_cv_prog_WINDRES="${ac_tool_prefix}windres"
     echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
 done
 done
 
-  test -z "$ac_cv_prog_RESCOMP" && ac_cv_prog_RESCOMP="windres"
 fi
 fi
-RESCOMP=$ac_cv_prog_RESCOMP
-if test -n "$RESCOMP"; then
-  echo "$as_me:$LINENO: result: $RESCOMP" >&5
-echo "${ECHO_T}$RESCOMP" >&6
+WINDRES=$ac_cv_prog_WINDRES
+if test -n "$WINDRES"; then
+  echo "$as_me:$LINENO: result: $WINDRES" >&5
+echo "${ECHO_T}$WINDRES" >&6
 else
   echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6
 fi
 
-            fi
+fi
+if test -z "$ac_cv_prog_WINDRES"; then
+  ac_ct_WINDRES=$WINDRES
+  # Extract the first word of "windres", so it can be a program name with args.
+set dummy windres; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_prog_ac_ct_WINDRES+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$ac_ct_WINDRES"; then
+  ac_cv_prog_ac_ct_WINDRES="$ac_ct_WINDRES" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_ac_ct_WINDRES="windres"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+fi
+fi
+ac_ct_WINDRES=$ac_cv_prog_ac_ct_WINDRES
+if test -n "$ac_ct_WINDRES"; then
+  echo "$as_me:$LINENO: result: $ac_ct_WINDRES" >&5
+echo "${ECHO_T}$ac_ct_WINDRES" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+  WINDRES=$ac_ct_WINDRES
+else
+  WINDRES="$ac_cv_prog_WINDRES"
+fi
+
          ;;
 
       *-*-darwin* | powerpc-apple-macos* )
@@ -6225,11 +6633,11 @@ fi
 set dummy Rez; ac_word=$2
 echo "$as_me:$LINENO: checking for $ac_word" >&5
 echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
-if test "${ac_cv_prog_RESCOMP+set}" = set; then
+if test "${ac_cv_prog_REZ+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  if test -n "$RESCOMP"; then
-  ac_cv_prog_RESCOMP="$RESCOMP" # Let the user override the test.
+  if test -n "$REZ"; then
+  ac_cv_prog_REZ="$REZ" # Let the user override the test.
 else
 as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
 for as_dir in $PATH
@@ -6238,20 +6646,20 @@ do
   test -z "$as_dir" && as_dir=.
   for ac_exec_ext in '' $ac_executable_extensions; do
   if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_RESCOMP="Rez"
+    ac_cv_prog_REZ="Rez"
     echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
 done
 done
 
-  test -z "$ac_cv_prog_RESCOMP" && ac_cv_prog_RESCOMP="/Developer/Tools/Rez"
+  test -z "$ac_cv_prog_REZ" && ac_cv_prog_REZ="/Developer/Tools/Rez"
 fi
 fi
-RESCOMP=$ac_cv_prog_RESCOMP
-if test -n "$RESCOMP"; then
-  echo "$as_me:$LINENO: result: $RESCOMP" >&5
-echo "${ECHO_T}$RESCOMP" >&6
+REZ=$ac_cv_prog_REZ
+if test -n "$REZ"; then
+  echo "$as_me:$LINENO: result: $REZ" >&5
+echo "${ECHO_T}$REZ" >&6
 else
   echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6
@@ -6300,10 +6708,11 @@ fi
 
 
 
-    BAKEFILE_BAKEFILE_M4_VERSION="0.1.9"
+
+    BAKEFILE_BAKEFILE_M4_VERSION="0.2.0"
 
 
-BAKEFILE_AUTOCONF_INC_M4_VERSION="0.1.9"
+BAKEFILE_AUTOCONF_INC_M4_VERSION="0.2.0"
 
     COND_DEPS_TRACKING_0="#"
     if test "x$DEPS_TRACKING" = "x0" ; then
@@ -6348,6 +6757,11 @@ BAKEFILE_AUTOCONF_INC_M4_VERSION="0.1.9"
     COND_PLATFORM_WIN32_1="#"
     if test "x$PLATFORM_WIN32" = "x1" ; then
         COND_PLATFORM_WIN32_1=""
+    fi
+
+    COND_USE_HTTPENGINE_0="#"
+    if test "x$USE_HTTPENGINE" = "x0" ; then
+        COND_USE_HTTPENGINE_0=""
     fi
 
     COND_USE_HTTPENGINE_1="#"
@@ -7095,6 +7509,12 @@ s,@WX_CXXFLAGS_ONLY@,$WX_CXXFLAGS_ONLY,;t t
 s,@WX_LIBS@,$WX_LIBS,;t t
 s,@WX_LIBS_STATIC@,$WX_LIBS_STATIC,;t t
 s,@WX_VERSION@,$WX_VERSION,;t t
+s,@WX_RESCOMP@,$WX_RESCOMP,;t t
+s,@WX_VERSION_FULL@,$WX_VERSION_FULL,;t t
+s,@WX_VERSION_MAJOR@,$WX_VERSION_MAJOR,;t t
+s,@WX_VERSION_MINOR@,$WX_VERSION_MINOR,;t t
+s,@WX_PORT@,$WX_PORT,;t t
+s,@WX_GTKPORT_VERSION@,$WX_GTKPORT_VERSION,;t t
 s,@SET_MAKE@,$SET_MAKE,;t t
 s,@MAKE_SET@,$MAKE_SET,;t t
 s,@AR@,$AR,;t t
@@ -7137,7 +7557,9 @@ s,@USE_MACVERSION@,$USE_MACVERSION,;t t
 s,@USE_SOSYMLINKS@,$USE_SOSYMLINKS,;t t
 s,@SONAME_FLAG@,$SONAME_FLAG,;t t
 s,@DEPS_TRACKING@,$DEPS_TRACKING,;t t
-s,@RESCOMP@,$RESCOMP,;t t
+s,@WINDRES@,$WINDRES,;t t
+s,@ac_ct_WINDRES@,$ac_ct_WINDRES,;t t
+s,@REZ@,$REZ,;t t
 s,@SETFILE@,$SETFILE,;t t
 s,@COND_DEPS_TRACKING_0@,$COND_DEPS_TRACKING_0,;t t
 s,@COND_DEPS_TRACKING_1@,$COND_DEPS_TRACKING_1,;t t
@@ -7148,6 +7570,7 @@ s,@COND_PLATFORM_MACOSX_1_USE_SOVERSION_1@,$COND_PLATFORM_MACOSX_1_USE_SOVERSION
 s,@COND_PLATFORM_MAC_1@,$COND_PLATFORM_MAC_1,;t t
 s,@COND_PLATFORM_OS2_1@,$COND_PLATFORM_OS2_1,;t t
 s,@COND_PLATFORM_WIN32_1@,$COND_PLATFORM_WIN32_1,;t t
+s,@COND_USE_HTTPENGINE_0@,$COND_USE_HTTPENGINE_0,;t t
 s,@COND_USE_HTTPENGINE_1@,$COND_USE_HTTPENGINE_1,;t t
 s,@COND_USE_SOSYMLINKS_1@,$COND_USE_SOSYMLINKS_1,;t t
 s,@COND_USE_SOVERCYGWIN_1_USE_SOVERSION_1@,$COND_USE_SOVERCYGWIN_1_USE_SOVERSION_1,;t t
@@ -7327,11 +7750,6 @@ esac
   *) ac_INSTALL=$ac_top_builddir$INSTALL ;;
   esac
 
-  if test x"$ac_file" != x-; then
-    { echo "$as_me:$LINENO: creating $ac_file" >&5
-echo "$as_me: creating $ac_file" >&6;}
-    rm -f "$ac_file"
-  fi
   # Let's still pretend it is `configure' which instantiates (i.e., don't
   # use $as_me), people would be surprised to read:
   #    /* config.h.  Generated by config.status.  */
@@ -7370,6 +7788,12 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
 	 fi;;
       esac
     done` || { (exit 1); exit 1; }
+
+  if test x"$ac_file" != x-; then
+    { echo "$as_me:$LINENO: creating $ac_file" >&5
+echo "$as_me: creating $ac_file" >&6;}
+    rm -f "$ac_file"
+  fi
 _ACEOF
 cat >>$CONFIG_STATUS <<_ACEOF
   sed "$ac_vpsub
@@ -7430,25 +7854,39 @@ if test "$no_create" != yes; then
 fi
 
 
-                        echo
-            echo " ----------------------------------------------------------------"
-            echo "  Configuration for $PACKAGE_NAME $PACKAGE_VERSION successfully completed."
-            echo "  Summary of main configuration settings for $PACKAGE_NAME:"
-            if [ "$WX_DEBUG" = "1" ]; then
-                echo "  - DEBUG build"
-            else
-                echo "  - RELEASE build"
-            fi
-            if [ "$WX_UNICODE" = "1" ]; then
-                echo "  - UNICODE mode"
-            else
-                echo "  - ANSI mode"
-            fi
-            if [ "$WX_SHARED" = "1" ]; then
-                echo "  - SHARED mode"
-            else
-                echo "  - STATIC mode"
-            fi
+
+        echo
+        echo " ----------------------------------------------------------------"
+        echo "  Configuration for $PACKAGE_NAME $PACKAGE_VERSION successfully completed."
+        echo "  Summary of main configuration settings for $PACKAGE_NAME:"
+
+        if [ "x$DEBUG" = "x1" ]; then
+            echo "  - DEBUG build"
+        elif [ "x$DEBUG" = "x0" ]; then
+            echo "  - RELEASE build"
+        else
+            echo "DEBUG is $DEBUG"
+        fi
+
+
+        if [ "x$UNICODE" = "x1" ]; then
+            echo "  - UNICODE mode"
+        elif [ "x$UNICODE" = "x0" ]; then
+            echo "  - ANSI mode"
+        else
+            echo "UNICODE is $UNICODE"
+        fi
+
+
+        if [ "x$SHARED" = "x1" ]; then
+            echo "  - SHARED mode"
+        elif [ "x$SHARED" = "x0" ]; then
+            echo "  - STATIC mode"
+        else
+            echo "SHARED is $SHARED"
+        fi
+
+
 
 if test "$USE_HTTPENGINE" = "1"; then
 echo "  - wxHTTPEngine enabled"
@@ -7456,48 +7894,60 @@ else
 echo "  - wxHTTPEngine disabled"
 fi
 
-            echo
-            echo "  The wxWidgets build which will be used by $PACKAGE_NAME $PACKAGE_VERSION"
-            echo "  has the following settings:"
+        echo
+        echo "  The wxWidgets build which will be used by $PACKAGE_NAME $PACKAGE_VERSION"
+        echo "  has the following settings:"
 
-		if test "$WX_DEBUG" = "1" ; then
-			echo "  - DEBUG build"
-		elif test "$WX_DEBUG" = "0" ; then
-			echo "  - RELEASE build"
-		else
-			echo "  Error in this configure script ! Please contact $PACKAGE_BUGREPORT"
-		fi
-		if test "$WX_UNICODE" = "1" ; then
-			echo "  - UNICODE mode"
-		elif test "$WX_UNICODE" = "0" ; then
-			echo "  - ANSI mode"
-		else
-			echo "  Error in this configure script ! Please contact $PACKAGE_BUGREPORT"
-		fi
-		if test "$WX_SHARED" = "1" ; then
-			echo "  - SHARED mode"
-		elif test "$WX_SHARED" = "0" ; then
-			echo "  - STATIC mode"
-		else
-			echo "  Error in this configure script ! Please contact $PACKAGE_BUGREPORT"
-		fi
-		echo "  - VERSION: $WX_VERSION"
 
-                if test "$WX_PORT" = "gtk"; then
-                    if test "$WX_GTKPORT_VERSION" = "1"; then
-                        echo "  - PORT: gtk (with GTK+ 1.x)"
-                    elif test "$WX_GTKPORT_VERSION" = "2" ; then
-			echo "  - PORT: gtk (with GTK+ 2.x)"
-                    else
-			echo "  Error in this configure script ! Please contact $PACKAGE_BUGREPORT"
-                    fi
-                else
-                    echo "  - PORT: $WX_PORT"
-                fi
+        if [ "x$WX_DEBUG" = "x1" ]; then
+            echo "  - DEBUG build"
+        elif [ "x$WX_DEBUG" = "x0" ]; then
+            echo "  - RELEASE build"
+        else
+            echo "WX_DEBUG is $WX_DEBUG"
+        fi
 
-            echo
-            echo "  Now, just run make."
-            echo " ----------------------------------------------------------------"
-            echo
+
+        if [ "x$WX_UNICODE" = "x1" ]; then
+            echo "  - UNICODE mode"
+        elif [ "x$WX_UNICODE" = "x0" ]; then
+            echo "  - ANSI mode"
+        else
+            echo "WX_UNICODE is $WX_UNICODE"
+        fi
+
+
+        if [ "x$WX_SHARED" = "x1" ]; then
+            echo "  - SHARED mode"
+        elif [ "x$WX_SHARED" = "x0" ]; then
+            echo "  - STATIC mode"
+        else
+            echo "WX_SHARED is $WX_SHARED"
+        fi
+
+        echo "  - VERSION: $WX_VERSION_FULL"
+
+        if test "$WX_PORT" = "gtk"; then
+            if test "$WX_GTKPORT_VERSION" = "1"; then
+                echo "  - PORT: gtk (with GTK+ 1.x)"
+            elif test "$WX_GTKPORT_VERSION" = "2" ; then
+                echo "  - PORT: gtk (with GTK+ 2.x)"
+            else
+                { { echo "$as_me:$LINENO: error:
+   Error in this configure script ! Please contact $PACKAGE_BUGREPORT
+                " >&5
+echo "$as_me: error:
+   Error in this configure script ! Please contact $PACKAGE_BUGREPORT
+                " >&2;}
+   { (exit 1); exit 1; }; }
+            fi
+        else
+            echo "  - PORT: $WX_PORT"
+        fi
+
+        echo
+        echo "  Now, just run make."
+        echo " ----------------------------------------------------------------"
+        echo
 
 
