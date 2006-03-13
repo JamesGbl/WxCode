@@ -9,7 +9,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: ScintillaWX.cpp,v 1.18 2006-03-13 19:12:50 wyo Exp $
+// RCS-ID:      $Id: ScintillaWX.cpp,v 1.19 2006-03-13 21:23:54 wyo Exp $
 // Copyright:   (c) 2000 by Total Control Software
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -204,6 +204,9 @@ ScintillaWX::ScintillaWX(wxScintilla* win) {
     sysCaretWidth = 0;
     sysCaretHeight = 0;
 #endif
+#endif
+#if wxUSE_DRAG_AND_DROP
+    startDragTimer = new wxStartDragTimer(this);
 #endif
 }
 
