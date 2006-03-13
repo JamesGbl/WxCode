@@ -70,13 +70,13 @@ void wxXml2::SetIndentMode(bool benable, int indentstep)
 	// we need to call xmlKeepBlanksDefault with FALSE if we want
 	// to _enable_ the indentation when saving...
 	m_nOld = xmlKeepBlanksDefault(!benable);
-	
-	// save current indentation string and replace it with our	
+
+	// save current indentation string and replace it with our
 	if (benable && indentstep > 0 && indentstep < 32) {
-	
+
 		memset(m_strIndent, ' ', indentstep);
 		m_strIndent[indentstep] = '\0';
-	
+
 		m_strOld = xmlTreeIndentString;
 		xmlTreeIndentString = m_strIndent;
 	}
@@ -100,14 +100,14 @@ void wxXml2Wrapper::DestroyIfUnlinked()
 {
 	if (IsNonEmpty() == FALSE) {
 
-		wxLogDebug(wxT("%s::DestroyIfUnlinked - nothing to destroy (empty)"), 
+		wxLogDebug(wxT("%s::DestroyIfUnlinked - nothing to destroy (empty)"),
 			GetClassInfo()->GetClassName());
 		return;
 	}
 
 	DecRefCount();
 	int refcount = GetRefCount();
-	
+
 	// we must check not only if this element is unlinked from a
 	// wider XML tree (if it is, then the root of that tree will
 	// destroy all its children recursively) but also if it is
@@ -117,23 +117,23 @@ void wxXml2Wrapper::DestroyIfUnlinked()
 	// an exception since it would try to access invalid memory...
 	bool unlinked = IsUnlinked();
 	if (unlinked && refcount == 0) {
-		
+
 		// ... anyway, if there are no parents of this structure
 		// and no wrappers are embedding it, then we can safely
 		// destroy it.
 		Destroy();
-		wxLogDebug(wxT("%s::DestroyIfUnlinked - destroyed"), 
+		wxLogDebug(wxT("%s::DestroyIfUnlinked - destroyed"),
 			GetClassInfo()->GetClassName());
 
 	} else {
 
 		// the memory associated with this property will be freed
-		// by the node which owns this object or by another wrapper	
+		// by the node which owns this object or by another wrapper
 		SetAsEmpty();
 
-		wxLogDebug(wxT("%s::DestroyIfUnlinked - NOT destroyed (because %s)"), 
+		wxLogDebug(wxT("%s::DestroyIfUnlinked - NOT destroyed (because %s)"),
 			GetClassInfo()->GetClassName(),
-			(!unlinked ? wxT("linked") : 
+			(!unlinked ? wxT("linked") :
 					wxString::Format(wxT("refcount is %d"), refcount).c_str()));
 	}
 }
@@ -145,7 +145,7 @@ void wxXml2Wrapper::DestroyIfUnlinked()
 //-----------------------------------------------------------------------------
 
 void wxXml2BaseNode::SetNext(const wxXml2BaseNode &next)
-{	
+{
 	if (wxXml2EmptyBaseNode != next)
 		xmlAddNextSibling((xmlNode *)m_obj, (xmlNode *)next.GetObj());
 	else
@@ -165,7 +165,7 @@ bool wxXml2BaseNode::IsUnlinked() const
 		return TRUE;
 
 	// if we have all null pointers, we are not linked anywhere
-	if (m_obj != NULL && m_obj->parent == NULL && 
+	if (m_obj != NULL && m_obj->parent == NULL &&
 		m_obj->prev == NULL &&	m_obj->next == NULL)
 		return TRUE;
 
@@ -219,7 +219,7 @@ bool wxXml2Property::IsUnlinked() const
 	if (m_attr != NULL && m_attr->parent == NULL &&
 		m_attr->next == NULL && m_attr->prev == NULL)
 		return TRUE;
-	
+
 	// at least one is set: we're linked
 	return FALSE;
 }
@@ -285,7 +285,7 @@ wxXml2Node wxXml2Property::GetOwner() const
 //-----------------------------------------------------------------------------
 
 wxXml2Namespace::wxXml2Namespace(xmlNs *ns, wxXml2Node &owner)
-: m_ns(ns), m_owner(owner.GetObj()) 
+: m_ns(ns), m_owner(owner.GetObj())
 { JustWrappedNew(); }
 
 bool wxXml2Namespace::operator==(const wxXml2Namespace &ns) const
@@ -307,7 +307,7 @@ void wxXml2Namespace::Create(const wxString &prefix,
 
 	// create the property; if the owner is an empty node, the property
 	// will be created unlinked from the main tree.
-	wxASSERT_MSG(owner != wxXml2EmptyNode, 
+	wxASSERT_MSG(owner != wxXml2EmptyNode,
               wxT("If I create an unlinked namespace, its ")
 			  wxT("memory will never be freed..."));
 	m_ns = xmlNewNs(owner.GetObj(), WX2XML(uri), WX2XML(prefix));
@@ -504,10 +504,10 @@ void wxXml2Node::Build(const wxXml2NodeType type, wxXml2Node &parent,
 		m_obj = (wxXml2BaseNodeObj *)xmlNewPI(WX2XML(name), WX2XML(content));
 		JustWrappedNew();
 
-		wxASSERT_MSG(doc != wxXml2EmptyDoc, 
+		wxASSERT_MSG(doc != wxXml2EmptyDoc,
 			wxT("A PI node must have no parents: it must be attached directly to a ")
 			wxT("document since it must be placed before any other type of node"));
-		
+
 		// prepend the node to the children list of the document
 		xmlAddPrevSibling(doc.GetObj()->children, (xmlNode *)m_obj);
 		break;
@@ -692,7 +692,7 @@ bool wxXml2Node::Cmp(const wxXml2Node &node) const
 
 		// also check namespace
 		if (GetNamespace() == node.GetNamespace()) {
-		
+
 			// everything was identic (but we didn't check on purpose
 			//  parents & children nor properties)
 			return TRUE;
@@ -724,7 +724,7 @@ bool wxXml2Node::HasProp(const wxString &propName) const
     wxXml2Property prop = GetProperties();
 
     while (prop != wxXml2EmptyProperty) {
-    	if (prop.GetName() == propName) 
+    	if (prop.GetName() == propName)
     	     return TRUE;
     	prop = prop.GetNext();
     }
@@ -747,7 +747,7 @@ bool wxXml2Node::GetPropVal(const wxString &propName, wxString *value) const
     return FALSE;
 }
 
-wxString wxXml2Node::GetPropVal(const wxString &propName, 
+wxString wxXml2Node::GetPropVal(const wxString &propName,
 								const wxString &defaultVal) const
 {
 	wxString tmp;
@@ -781,7 +781,7 @@ void wxXml2Node::MakeLower()
 	}
 }
 
-wxXml2Node wxXml2Node::Find(const wxString &name, const wxString &content, 
+wxXml2Node wxXml2Node::Find(const wxString &name, const wxString &content,
 							int occ, bool bNS, bool recurse) const
 {
 	wxXml2Node tmp;    // this will be automatically removed
@@ -857,18 +857,18 @@ wxXml2Node wxXml2Node::Encapsulate(const wxString &nodename,
 	wxXml2Node tmp;
 	tmp.CreateTemp(wxXML_ELEMENT_NODE, wxXml2EmptyDoc, nodename,
 					content, ns, prop);
-	
-	// insert "tmp" to the 
+
+	// insert "tmp" to the
 	xmlNode *parent = GetObj()->parent;
 	xmlNode *prev = GetObj()->prev;
 	xmlNode *next = GetObj()->next;
 
 	// change the links of this node's SIBLINGS and PARENT/CHILDREN
-	if (parent && parent->children == tmp.GetObj()) 
+	if (parent && parent->children == tmp.GetObj())
 		parent->children = tmp.GetObj();
 	if (prev) prev->next = tmp.GetObj();
 	if (next) next->prev = tmp.GetObj();
-	
+
 	// change the links of the TMP node
 	tmp.GetObj()->prev = prev;
 	tmp.GetObj()->next = next;
@@ -877,12 +877,12 @@ wxXml2Node wxXml2Node::Encapsulate(const wxString &nodename,
 
 	// change the links of THIS node
 	GetObj()->parent = tmp.GetObj();
-	
+
 
 	UnwrappingOld();
 	m_obj = (wxXml2BaseNodeObj*)tmp.GetObj();
 	JustWrappedNew();
-	
+
 	// we should now be linked with "tmp"
 	return *this;
 }
@@ -945,7 +945,7 @@ bool wxXml2Document::Load(wxInputStream &stream, wxString *pErr)
 		if (pErr) *pErr = wxT("Invalid size");
 		return FALSE;
 	}
-		
+
 	wxString buf;
 
     // load everything in a buffer
@@ -981,7 +981,7 @@ bool wxXml2Document::Load(wxInputStream &stream, wxString *pErr)
 	// parse from buffer
 	wxString error;
 	UnwrappingOld();
-	m_doc = xmlSAXParseMemoryWithData(&h, (const char *)buf2, l, 1, &error);	
+	m_doc = xmlSAXParseMemoryWithData(&h, (const char *)buf2, l, 1, &error);
 	JustWrappedNew();
 	buf.UngetWriteBuf();
 
@@ -995,13 +995,13 @@ bool wxXml2Document::Load(wxInputStream &stream, wxString *pErr)
 static int XMLDocumentWrite(void *context, const char *buffer, int len)
 {
 	wxOutputStream *stream = (wxOutputStream *)context;
-	
+
 
 	stream->Write(buffer, len);
 	return stream->LastWrite();
 }
 
-int wxXml2Document::Save(wxOutputStream &stream, const wxString &encoding, 
+int wxXml2Document::Save(wxOutputStream &stream, const wxString &encoding,
 						 long flags, int indentstep) const
 {
 	xmlCharEncodingHandler *encoder = NULL;
@@ -1044,7 +1044,7 @@ void wxXml2Document::SetRoot(wxXml2Node &node)	// not const because its object i
 {
 	// and the old root should be deleted or it is automatically
 	// deleted by libxml2 ?
-	xmlDocSetRootElement(m_doc, node.GetObj()); 
+	xmlDocSetRootElement(m_doc, node.GetObj());
 }
 
 void wxXml2Document::SetDTD(wxXml2DTD &dtd)
@@ -1073,14 +1073,14 @@ void wxXml2Document::SetDTD(wxXml2DTD &dtd)
 	} else {
 		if (doc->type == XML_HTML_DOCUMENT_NODE) {
 			xmlNodePtr prev;
-			
+
 			prev = doc->children;
 			prev->prev = (xmlNodePtr) cur;
 			cur->next = prev;
 			doc->children = (xmlNodePtr) cur;
 		} else {
 			xmlNodePtr next;
-			
+
 			next = doc->children;
 			while ((next != NULL) && (next->type != XML_ELEMENT_NODE))
 				next = next->next;
@@ -1154,17 +1154,17 @@ void wxXml2Document::SetStyleSheet(const wxString &xslfile)
 {
 	wxString content(wxT("type=\"text/xsl\" href=\"") + xslfile + wxT("\""));
 	wxXml2Node root(GetRoot());
-	
+
 	if (root == wxXml2EmptyNode) {
 
-		// we must create a "root" which is then 
+		// we must create a "root" which is then
 		// transformed into a PI node
 		root.CreateRoot(*this, wxT("xml-stylesheet"));
 		root.SetType(wxXML_PI_NODE);
 		root.SetContent(content);
-		
+
 	} else {
-	
+
 		// we can directly use the pre-existing root
 		root.AddPIChild(wxT("xml-stylesheet"), content);
 	}
@@ -1172,18 +1172,18 @@ void wxXml2Document::SetStyleSheet(const wxString &xslfile)
 
 bool wxXml2Document::Load(const wxString &filename, wxString *pErr)
 {
-	wxFileInputStream stream(filename);	
-	if (!stream.IsOk() || !wxFileName::FileExists(filename)) return FALSE;		
+	wxFileInputStream stream(filename);
+	if (!stream.IsOk() || !wxFileName::FileExists(filename)) return FALSE;
 	return Load(stream, pErr);
 }
-	
-bool wxXml2Document::Save(const wxString &filename, const wxString &encoding, 
+
+bool wxXml2Document::Save(const wxString &filename, const wxString &encoding,
 						  long flags, int indentstep) const
 {
 	wxFileOutputStream stream(filename);
 	if (!stream.IsOk()) return FALSE;
 	return (Save(stream, encoding, flags, indentstep) != -1);
-}	
+}
 
 // helper function for wxXml2Document::IsDTDValid
 static void XMLValidationMsg(void *out, const char *pszFormat, ...)
@@ -1214,13 +1214,13 @@ bool wxXml2Document::IsDTDValid(wxString *err, int bUseInternal) const
 
 	// try to validate the document...
 	bool ret = FALSE;
-	
+
 	if (bUseInternal == 1) {
 
 		// use the internal subset; do nothing if it's not available.
 		if (!m_doc->intSubset) return FALSE;
 		ret = xmlValidateDtd(ctxt, m_doc, m_doc->intSubset) != 0;
-	
+
 	} else if (bUseInternal == 0) {
 
 		// use the external subset; do nothing if it's not available.
@@ -1231,7 +1231,7 @@ bool wxXml2Document::IsDTDValid(wxString *err, int bUseInternal) const
 
 		// use subset which is not NULL
 		if (!m_doc->intSubset && !m_doc->extSubset) return FALSE;
-		ret = xmlValidateDtd(ctxt, m_doc, 
+		ret = xmlValidateDtd(ctxt, m_doc,
 			(m_doc->intSubset ? m_doc->intSubset : m_doc->extSubset)) != 0;
 	}
 
@@ -1306,6 +1306,8 @@ size_t wxNativeNewlinesFilterStream::OnSysWrite(const void *buffer, size_t bufsi
 //  wxStringOutputStream
 //-----------------------------------------------------------------------------
 
+#if !wxCHECK_VERSION(2,7,0)
+
 size_t wxStringOutputStream::OnSysWrite(const void *buffer, size_t bufsize)
 {
 	// we will append the given buffer to our wxString,
@@ -1316,3 +1318,4 @@ size_t wxStringOutputStream::OnSysWrite(const void *buffer, size_t bufsize)
 	return bufsize;
 }
 
+#endif

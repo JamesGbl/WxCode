@@ -300,7 +300,7 @@ AC_DEFUN([AC_BAKEFILE_SHARED_LD],
                 AC_TRY_COMPILE([],
                     [
                         #ifndef __INTEL_COMPILER
-                        #error Not icc
+                        This is not ICC
                         #endif
                     ],
                     bakefile_cv_prog_icc=yes,
@@ -322,6 +322,12 @@ AC_DEFUN([AC_BAKEFILE_SHARED_LD],
       ;;
 
       *-*-darwin* )
+        AC_BAKEFILE_CREATE_FILE_SHARED_LD_SH
+        chmod +x shared-ld-sh
+
+        SHARED_LD_MODULE_CC="`pwd`/shared-ld-sh -bundle -headerpad_max_install_names -o"
+        SHARED_LD_MODULE_CXX="$SHARED_LD_MODULE_CC"
+
         dnl Most apps benefit from being fully binded (its faster and static
         dnl variables initialized at startup work).
         dnl This can be done either with the exe linker flag -Wl,-bind_at_load
@@ -329,14 +335,14 @@ AC_DEFUN([AC_BAKEFILE_SHARED_LD],
         dnl "-init _wxWindowsDylibInit" not useful with lazy linking solved
 
         dnl If using newer dev tools then there is a -single_module flag that
-        dnl we can use to do this, otherwise we'll need to use a helper
+        dnl we can use to do this for dylibs, otherwise we'll need to use a helper
         dnl script.  Check the version of gcc to see which way we can go:
         AC_CACHE_CHECK([for gcc 3.1 or later], bakefile_cv_gcc31, [
            AC_TRY_COMPILE([],
                [
                    #if (__GNUC__ < 3) || \
                        ((__GNUC__ == 3) && (__GNUC_MINOR__ < 1))
-                       #error old gcc
+                       This is old gcc
                    #endif
                ],
                [
@@ -348,20 +354,13 @@ AC_DEFUN([AC_BAKEFILE_SHARED_LD],
            )
         ])
         if test "$bakefile_cv_gcc31" = "no"; then
-            AC_BAKEFILE_CREATE_FILE_SHARED_LD_SH
-            chmod +x shared-ld-sh
-
             dnl Use the shared-ld-sh helper script
             SHARED_LD_CC="`pwd`/shared-ld-sh -dynamiclib -headerpad_max_install_names -o"
-            SHARED_LD_MODULE_CC="`pwd`/shared-ld-sh -bundle -headerpad_max_install_names -o"
             SHARED_LD_CXX="$SHARED_LD_CC"
-            SHARED_LD_MODULE_CXX="$SHARED_LD_MODULE_CC"
         else
             dnl Use the -single_module flag and let the linker do it for us
             SHARED_LD_CC="\${CC} -dynamiclib -single_module -headerpad_max_install_names -o"
-            SHARED_LD_MODULE_CC="\${CC} -bundle -single_module -headerpad_max_install_names -o"
             SHARED_LD_CXX="\${CXX} -dynamiclib -single_module -headerpad_max_install_names -o"
-            SHARED_LD_MODULE_CXX="\${CXX} -bundle -single_module -headerpad_max_install_names -o"
         fi
 
         if test "x$GCC" == "xyes"; then
@@ -374,29 +373,29 @@ AC_DEFUN([AC_BAKEFILE_SHARED_LD],
 
       *-*-aix* )
         if test "x$GCC" = "xyes"; then
-	    dnl at least gcc 2.95 warns that -fPIC is ignored when
-	    dnl compiling each and every file under AIX which is annoying,
-	    dnl so don't use it there (it's useless as AIX runs on
-	    dnl position-independent architectures only anyhow)
-	    PIC_FLAG=""
+            dnl at least gcc 2.95 warns that -fPIC is ignored when
+            dnl compiling each and every file under AIX which is annoying,
+            dnl so don't use it there (it's useless as AIX runs on
+            dnl position-independent architectures only anyhow)
+            PIC_FLAG=""
 
-	    dnl -bexpfull is needed by AIX linker to export all symbols (by
-	    dnl default it doesn't export any and even with -bexpall it
-	    dnl doesn't export all C++ support symbols, e.g. vtable
-	    dnl pointers) but it's only available starting from 5.1 (with
-	    dnl maintenance pack 2, whatever this is), see
-	    dnl http://www-128.ibm.com/developerworks/eserver/articles/gnu.html
-	    case "${BAKEFILE_HOST}" in
-		*-*-aix5* )
-		    LD_EXPFULL="-Wl,-bexpfull"
-		    ;;
-	    esac
+            dnl -bexpfull is needed by AIX linker to export all symbols (by
+            dnl default it doesn't export any and even with -bexpall it
+            dnl doesn't export all C++ support symbols, e.g. vtable
+            dnl pointers) but it's only available starting from 5.1 (with
+            dnl maintenance pack 2, whatever this is), see
+            dnl http://www-128.ibm.com/developerworks/eserver/articles/gnu.html
+            case "${BAKEFILE_HOST}" in
+                *-*-aix5* )
+                    LD_EXPFULL="-Wl,-bexpfull"
+                    ;;
+            esac
 
-	    SHARED_LD_CC="\$(CC) -shared $LD_EXPFULL -o"
-	    SHARED_LD_CXX="\$(CXX) -shared $LD_EXPFULL -o"
-	else
-	    dnl FIXME: makeC++SharedLib is obsolete, what should we do for
-	    dnl        recent AIX versions?
+            SHARED_LD_CC="\$(CC) -shared $LD_EXPFULL -o"
+            SHARED_LD_CXX="\$(CXX) -shared $LD_EXPFULL -o"
+        else
+            dnl FIXME: makeC++SharedLib is obsolete, what should we do for
+            dnl        recent AIX versions?
             AC_CHECK_PROG(AIX_CXX_LD, makeC++SharedLib,
                           makeC++SharedLib, /usr/lpp/xlC/bin/makeC++SharedLib)
             SHARED_LD_CC="$AIX_CC_LD -p 0 -o"
@@ -417,7 +416,7 @@ AC_DEFUN([AC_BAKEFILE_SHARED_LD],
             PIC_FLAG="-KPIC"
         fi
       ;;
-      
+
       *-*-cygwin* | *-*-mingw32* )
         PIC_FLAG=""
         SHARED_LD_CC="\$(CC) -shared -o"
@@ -432,7 +431,7 @@ AC_DEFUN([AC_BAKEFILE_SHARED_LD],
         AC_BAKEFILE_CREATE_FILE_DLLAR_SH
         chmod +x dllar.sh
       ;;
-      
+
       powerpc-apple-macos* | \
       *-*-freebsd* | *-*-openbsd* | *-*-netbsd* | *-*-k*bsd*-gnu | \
       *-*-sunos4* | \
@@ -528,50 +527,61 @@ dnl ---------------------------------------------------------------------------
 
 AC_DEFUN([AC_BAKEFILE_DEPS],
 [
+    AC_ARG_ENABLE([dependency-tracking],
+                  AS_HELP_STRING([--disable-dependency-tracking],
+                                 [don't use dependency tracking even if the compiler can]),
+                  [bk_use_trackdeps="$enableval"])
+    
     AC_MSG_CHECKING([for dependency tracking method])
-    DEPS_TRACKING=1
 
-    if test "x$GCC" = "xyes"; then
-        DEPSMODE=gcc
-        case "${BAKEFILE_HOST}" in
-            *-*-darwin* )
-                dnl -cpp-precomp (the default) conflicts with -MMD option
-                dnl used by bk-deps (see also http://developer.apple.com/documentation/Darwin/Conceptual/PortingUnix/compiling/chapter_4_section_3.html)
-                DEPSFLAG="-no-cpp-precomp -MMD"
-            ;;
-            * )
-                DEPSFLAG="-MMD"
-            ;;
-        esac
-        AC_MSG_RESULT([gcc])
-    elif test "x$MWCC" = "xyes"; then
-        DEPSMODE=mwcc
-        DEPSFLAG="-MM"
-        AC_MSG_RESULT([mwcc])
-    elif test "x$SUNCC" = "xyes"; then
-        DEPSMODE=unixcc
-        DEPSFLAG="-xM1"
-        AC_MSG_RESULT([Sun cc])
-    elif test "x$SGICC" = "xyes"; then
-        DEPSMODE=unixcc
-        DEPSFLAG="-M"
-        AC_MSG_RESULT([SGI cc])
-    elif test "x$HPCC" = "xyes"; then
-        DEPSMODE=unixcc
-        DEPSFLAG="+make"
-        AC_MSG_RESULT([HP cc])
-    elif test "x$COMPAQCC" = "xyes"; then
-        DEPSMODE=gcc
-        DEPSFLAG="-MD"
-        AC_MSG_RESULT([Compaq cc])
-    else
+    if test "x$bk_use_trackdeps" = "xno" ; then
         DEPS_TRACKING=0
-        AC_MSG_RESULT([none])
-    fi
+        AC_MSG_RESULT([disabled])
+    else
+        DEPS_TRACKING=1
 
-    if test $DEPS_TRACKING = 1 ; then
-        AC_BAKEFILE_CREATE_FILE_BK_DEPS
-        chmod +x bk-deps
+        if test "x$GCC" = "xyes"; then
+            DEPSMODE=gcc
+            case "${BAKEFILE_HOST}" in
+                *-*-darwin* )
+                    dnl -cpp-precomp (the default) conflicts with -MMD option
+                    dnl used by bk-deps (see also http://developer.apple.com/documentation/Darwin/Conceptual/PortingUnix/compiling/chapter_4_section_3.html)
+                    DEPSFLAG="-no-cpp-precomp -MMD"
+                ;;
+                * )
+                    DEPSFLAG="-MMD"
+                ;;
+            esac
+            AC_MSG_RESULT([gcc])
+        elif test "x$MWCC" = "xyes"; then
+            DEPSMODE=mwcc
+            DEPSFLAG="-MM"
+            AC_MSG_RESULT([mwcc])
+        elif test "x$SUNCC" = "xyes"; then
+            DEPSMODE=unixcc
+            DEPSFLAG="-xM1"
+            AC_MSG_RESULT([Sun cc])
+        elif test "x$SGICC" = "xyes"; then
+            DEPSMODE=unixcc
+            DEPSFLAG="-M"
+            AC_MSG_RESULT([SGI cc])
+        elif test "x$HPCC" = "xyes"; then
+            DEPSMODE=unixcc
+            DEPSFLAG="+make"
+            AC_MSG_RESULT([HP cc])
+        elif test "x$COMPAQCC" = "xyes"; then
+            DEPSMODE=gcc
+            DEPSFLAG="-MD"
+            AC_MSG_RESULT([Compaq cc])
+        else
+            DEPS_TRACKING=0
+            AC_MSG_RESULT([none])
+        fi
+
+        if test $DEPS_TRACKING = 1 ; then
+            AC_BAKEFILE_CREATE_FILE_BK_DEPS
+            chmod +x bk-deps
+        fi
     fi
 
     AC_SUBST(DEPS_TRACKING)
@@ -625,26 +635,20 @@ dnl ---------------------------------------------------------------------------
 
 AC_DEFUN([AC_BAKEFILE_RES_COMPILERS],
 [
-    RESCOMP=
-    SETFILE=
-
     case ${BAKEFILE_HOST} in 
         *-*-cygwin* | *-*-mingw32* )
             dnl Check for win32 resources compiler:
-            if test "$build" != "$host" ; then
-                RESCOMP=$host_alias-windres
-            else
-                AC_CHECK_PROG(RESCOMP, windres, windres, windres)
-            fi
+            AC_CHECK_TOOL(WINDRES, windres)
          ;;
  
       *-*-darwin* | powerpc-apple-macos* )
-            AC_CHECK_PROG(RESCOMP, Rez, Rez, /Developer/Tools/Rez)
+            AC_CHECK_PROG(REZ, Rez, Rez, /Developer/Tools/Rez)
             AC_CHECK_PROG(SETFILE, SetFile, SetFile, /Developer/Tools/SetFile)
         ;;
     esac
 
-    AC_SUBST(RESCOMP)
+    AC_SUBST(WINDRES)
+    AC_SUBST(REZ)
     AC_SUBST(SETFILE)
 ])
 
@@ -663,6 +667,17 @@ AC_DEFUN([AC_BAKEFILE_PRECOMP_HEADERS],
                   [bk_use_pch="$enableval"])
 
     GCC_PCH=0
+    ICC_PCH=0
+    USE_PCH=0
+
+    case ${BAKEFILE_HOST} in 
+        *-*-cygwin* )
+            dnl PCH support is broken in cygwin gcc because of unportable
+            dnl assumptions about mmap() in gcc code which make PCH generation
+            dnl fail erratically; disable PCH completely until this is fixed
+            bk_use_pch="no"
+            ;;
+    esac
 
     if test "x$bk_use_pch" = "x" -o "x$bk_use_pch" = "xyes" ; then
         if test "x$GCC" = "xyes"; then
@@ -671,15 +686,16 @@ AC_DEFUN([AC_BAKEFILE_PRECOMP_HEADERS],
             AC_TRY_COMPILE([],
                 [
                     #if !defined(__GNUC__) || !defined(__GNUC_MINOR__)
-                        #error "no pch support"
+                        There is no PCH support
                     #endif
                     #if (__GNUC__ < 3)
-                        #error "no pch support"
+                        There is no PCH support
                     #endif
                     #if (__GNUC__ == 3) && \
                        ((!defined(__APPLE_CC__) && (__GNUC_MINOR__ < 4)) || \
-                       ( defined(__APPLE_CC__) && (__GNUC_MINOR__ < 3)))
-                        #error "no pch support"
+                       ( defined(__APPLE_CC__) && (__GNUC_MINOR__ < 3))) || \
+                       ( defined(__INTEL_COMPILER) )
+                        There is no PCH support
                     #endif
                 ],
                 [
@@ -687,9 +703,23 @@ AC_DEFUN([AC_BAKEFILE_PRECOMP_HEADERS],
                     GCC_PCH=1
                 ],
                 [
-                    AC_MSG_RESULT([no])
+                    AC_TRY_COMPILE([],
+                        [
+                            #if !defined(__INTEL_COMPILER) || \
+                                (__INTEL_COMPILER < 800)
+                                There is no PCH support
+                            #endif
+                        ],
+                        [
+                            AC_MSG_RESULT([yes])
+                            ICC_PCH=1
+                        ],
+                        [
+                            AC_MSG_RESULT([no])
+                        ])
                 ])
-            if test $GCC_PCH = 1 ; then
+            if test $GCC_PCH = 1 -o $ICC_PCH = 1 ; then
+                USE_PCH=1
                 AC_BAKEFILE_CREATE_FILE_BK_MAKE_PCH
                 chmod +x bk-make-pch
             fi
@@ -697,6 +727,7 @@ AC_DEFUN([AC_BAKEFILE_PRECOMP_HEADERS],
     fi
 
     AC_SUBST(GCC_PCH)
+    AC_SUBST(ICC_PCH)
 ])
 
 
@@ -727,6 +758,10 @@ AC_DEFUN([AC_BAKEFILE],
     AC_PREREQ(2.58)
 
     if test "x$BAKEFILE_HOST" = "x"; then
+               if test "x${host}" = "x" ; then
+                       AC_MSG_ERROR([You must call the autoconf "CANONICAL_HOST" macro in your configure.ac (or .in) file.])
+               fi
+
         BAKEFILE_HOST="${host}"
     fi
 
@@ -742,7 +777,7 @@ AC_DEFUN([AC_BAKEFILE],
     AC_BAKEFILE_DEPS
     AC_BAKEFILE_RES_COMPILERS
 
-    BAKEFILE_BAKEFILE_M4_VERSION="0.1.9"
+    BAKEFILE_BAKEFILE_M4_VERSION="0.2.0"
    
     dnl includes autoconf_inc.m4:
     $1
@@ -1475,9 +1510,11 @@ header="${D}{2}"
 shift
 shift
 
-compiler=
-headerfile=
+compiler=""
+headerfile=""
+
 while test ${D}{#} -gt 0; do
+    add_to_cmdline=1
     case "${D}{1}" in
         -I* )
             incdir=\`echo ${D}{1} | sed -e 's/-I\\(.*\\)/\\1/g'\`
@@ -1485,13 +1522,19 @@ while test ${D}{#} -gt 0; do
                 headerfile="${D}{incdir}/${D}{header}"
             fi
         ;;
+        -use-pch|-use_pch )
+            shift
+            add_to_cmdline=0
+        ;;
     esac
-    compiler="${D}{compiler} ${D}{1}"
+    if test ${D}add_to_cmdline = 1 ; then
+        compiler="${D}{compiler} ${D}{1}"
+    fi
     shift
 done
 
 if test "x${D}{headerfile}" = "x" ; then
-    echo "error: can't find header ${D}{header} in include paths" >2
+    echo "error: can't find header ${D}{header} in include paths" >&2
 else
     if test -f ${D}{outfile} ; then
         rm -f ${D}{outfile}
@@ -1500,201 +1543,25 @@ else
     fi
     depsfile=".deps/\`echo ${D}{outfile} | tr '/.' '__'\`.d"
     mkdir -p .deps
-    # can do this because gcc is >= 3.4:
-    ${D}{compiler} -o ${D}{outfile} -MMD -MF "${D}{depsfile}" "${D}{headerfile}"
+    if test "x${GCC_PCH}" = "x1" ; then
+        # can do this because gcc is >= 3.4:
+        ${D}{compiler} -o ${D}{outfile} -MMD -MF "${D}{depsfile}" "${D}{headerfile}"
+    elif test "x${ICC_PCH}" = "x1" ; then
+        filename=pch_gen-${D}${D}
+        file=${D}{filename}.c
+        dfile=${D}{filename}.d
+        cat > ${D}file <<EOT
+#include "${D}header"
+EOT
+        # using -MF icc complains about differing command lines in creation/use
+        ${D}compiler -c -create_pch ${D}outfile -MMD ${D}file && \\
+          sed -e "s,^.*:,${D}outfile:," -e "s, ${D}file,," < ${D}dfile > ${D}depsfile && \\
+          rm -f ${D}file ${D}dfile ${D}{filename}.o
+    fi
     exit ${D}{?}
 fi
 EOF
 dnl ===================== bk-make-pch ends here =====================
-])
-
-# Configure paths for LIBXML2
-# Mike Hommey 2004-06-19
-# use CPPFLAGS instead of CFLAGS
-# Toshio Kuratomi 2001-04-21
-# Adapted from:
-# Configure paths for GLIB
-# Owen Taylor     97-11-3
-
-dnl AM_PATH_XML2([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]]])
-dnl Test for XML, and define XML_CPPFLAGS and XML_LIBS
-dnl
-AC_DEFUN([AM_PATH_XML2],[ 
-AC_ARG_WITH(xml-prefix,
-            [  --with-xml-prefix=PFX   Prefix where libxml is installed (optional)],
-            xml_config_prefix="$withval", xml_config_prefix="")
-AC_ARG_WITH(xml-exec-prefix,
-            [  --with-xml-exec-prefix=PFX Exec prefix where libxml is installed (optional)],
-            xml_config_exec_prefix="$withval", xml_config_exec_prefix="")
-AC_ARG_ENABLE(xmltest,
-              [  --disable-xmltest       Do not try to compile and run a test LIBXML program],,
-              enable_xmltest=yes)
-
-  if test x$xml_config_exec_prefix != x ; then
-     xml_config_args="$xml_config_args"
-     if test x${XML2_CONFIG+set} != xset ; then
-        XML2_CONFIG=$xml_config_exec_prefix/bin/xml2-config
-     fi
-  fi
-  if test x$xml_config_prefix != x ; then
-     xml_config_args="$xml_config_args --prefix=$xml_config_prefix"
-     if test x${XML2_CONFIG+set} != xset ; then
-        XML2_CONFIG=$xml_config_prefix/bin/xml2-config
-     fi
-  fi
-
-  AC_PATH_PROG(XML2_CONFIG, xml2-config, no)
-  min_xml_version=ifelse([$1], ,2.0.0,[$1])
-  AC_MSG_CHECKING(for libxml - version >= $min_xml_version)
-  no_xml=""
-  if test "$XML2_CONFIG" = "no" ; then
-    no_xml=yes
-  else
-    XML_CPPFLAGS=`$XML2_CONFIG $xml_config_args --cflags`
-    XML_LIBS=`$XML2_CONFIG $xml_config_args --libs`
-    xml_config_major_version=`$XML2_CONFIG $xml_config_args --version | \
-           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
-    xml_config_minor_version=`$XML2_CONFIG $xml_config_args --version | \
-           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\2/'`
-    xml_config_micro_version=`$XML2_CONFIG $xml_config_args --version | \
-           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'`
-    if test "x$enable_xmltest" = "xyes" ; then
-      ac_save_CPPFLAGS="$CPPFLAGS"
-      ac_save_LIBS="$LIBS"
-      CPPFLAGS="$CPPFLAGS $XML_CPPFLAGS"
-      LIBS="$XML_LIBS $LIBS"
-dnl
-dnl Now check if the installed libxml is sufficiently new.
-dnl (Also sanity checks the results of xml2-config to some extent)
-dnl
-      rm -f conf.xmltest
-      AC_TRY_RUN([
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <libxml/xmlversion.h>
-
-int 
-main()
-{
-  int xml_major_version, xml_minor_version, xml_micro_version;
-  int major, minor, micro;
-  char *tmp_version;
-
-  system("touch conf.xmltest");
-
-  /* Capture xml2-config output via autoconf/configure variables */
-  /* HP/UX 9 (%@#!) writes to sscanf strings */
-  tmp_version = (char *)strdup("$min_xml_version");
-  if (sscanf(tmp_version, "%d.%d.%d", &major, &minor, &micro) != 3) {
-     printf("%s, bad version string from xml2-config\n", "$min_xml_version");
-     exit(1);
-   }
-   free(tmp_version);
-
-   /* Capture the version information from the header files */
-   tmp_version = (char *)strdup(LIBXML_DOTTED_VERSION);
-   if (sscanf(tmp_version, "%d.%d.%d", &xml_major_version, &xml_minor_version, &xml_micro_version) != 3) {
-     printf("%s, bad version string from libxml includes\n", "LIBXML_DOTTED_VERSION");
-     exit(1);
-   }
-   free(tmp_version);
-
- /* Compare xml2-config output to the libxml headers */
-  if ((xml_major_version != $xml_config_major_version) ||
-      (xml_minor_version != $xml_config_minor_version) ||
-      (xml_micro_version != $xml_config_micro_version))
-    {
-      printf("*** libxml header files (version %d.%d.%d) do not match\n",
-         xml_major_version, xml_minor_version, xml_micro_version);
-      printf("*** xml2-config (version %d.%d.%d)\n",
-         $xml_config_major_version, $xml_config_minor_version, $xml_config_micro_version);
-      return 1;
-    } 
-/* Compare the headers to the library to make sure we match */
-  /* Less than ideal -- doesn't provide us with return value feedback, 
-   * only exits if there's a serious mismatch between header and library.
-   */
-    LIBXML_TEST_VERSION;
-
-    /* Test that the library is greater than our minimum version */
-    if ((xml_major_version > major) ||
-        ((xml_major_version == major) && (xml_minor_version > minor)) ||
-        ((xml_major_version == major) && (xml_minor_version == minor) &&
-        (xml_micro_version >= micro)))
-      {
-        return 0;
-       }
-     else
-      {
-        printf("\n*** An old version of libxml (%d.%d.%d) was found.\n",
-               xml_major_version, xml_minor_version, xml_micro_version);
-        printf("*** You need a version of libxml newer than %d.%d.%d. The latest version of\n",
-           major, minor, micro);
-        printf("*** libxml is always available from ftp://ftp.xmlsoft.org.\n");
-        printf("***\n");
-        printf("*** If you have already installed a sufficiently new version, this error\n");
-        printf("*** probably means that the wrong copy of the xml2-config shell script is\n");
-        printf("*** being found. The easiest way to fix this is to remove the old version\n");
-        printf("*** of LIBXML, but you can also set the XML2_CONFIG environment to point to the\n");
-        printf("*** correct copy of xml2-config. (In this case, you will have to\n");
-        printf("*** modify your LD_LIBRARY_PATH enviroment variable, or edit /etc/ld.so.conf\n");
-        printf("*** so that the correct libraries are found at run-time))\n");
-    }
-  return 1;
-}
-],, no_xml=yes,[echo $ac_n "cross compiling; assumed OK... $ac_c"])
-       CPPFLAGS="$ac_save_CPPFLAGS"
-       LIBS="$ac_save_LIBS"
-     fi
-  fi
-
-  if test "x$no_xml" = x ; then
-     AC_MSG_RESULT(yes (version $xml_config_major_version.$xml_config_minor_version.$xml_config_micro_version))
-     ifelse([$2], , :, [$2])     
-  else
-     AC_MSG_RESULT(no)
-     if test "$XML2_CONFIG" = "no" ; then
-       echo "*** The xml2-config script installed by LIBXML could not be found"
-       echo "*** If libxml was installed in PREFIX, make sure PREFIX/bin is in"
-       echo "*** your path, or set the XML2_CONFIG environment variable to the"
-       echo "*** full path to xml2-config."
-     else
-       if test -f conf.xmltest ; then
-        :
-       else
-          echo "*** Could not run libxml test program, checking why..."
-          CPPFLAGS="$CPPFLAGS $XML_CPPFLAGS"
-          LIBS="$LIBS $XML_LIBS"
-          AC_TRY_LINK([
-#include <libxml/xmlversion.h>
-#include <stdio.h>
-],      [ LIBXML_TEST_VERSION; return 0;],
-        [ echo "*** The test program compiled, but did not run. This usually means"
-          echo "*** that the run-time linker is not finding LIBXML or finding the wrong"
-          echo "*** version of LIBXML. If it is not finding LIBXML, you'll need to set your"
-          echo "*** LD_LIBRARY_PATH environment variable, or edit /etc/ld.so.conf to point"
-          echo "*** to the installed location  Also, make sure you have run ldconfig if that"
-          echo "*** is required on your system"
-          echo "***"
-          echo "*** If you have an old version installed, it is best to remove it, although"
-          echo "*** you may also be able to get things to work by modifying LD_LIBRARY_PATH" ],
-        [ echo "*** The test program failed to compile or link. See the file config.log for the"
-          echo "*** exact error that occured. This usually means LIBXML was incorrectly installed"
-          echo "*** or that you have moved LIBXML since it was installed. In the latter case, you"
-          echo "*** may want to edit the xml2-config script: $XML2_CONFIG" ])
-          CPPFLAGS="$ac_save_CPPFLAGS"
-          LIBS="$ac_save_LIBS"
-       fi
-     fi
-
-     XML_CPPFLAGS=""
-     XML_LIBS=""
-     ifelse([$3], , :, [$3])
-  fi
-  AC_SUBST(XML_CPPFLAGS)
-  AC_SUBST(XML_LIBS)
-  rm -f conf.xmltest
 ])
 
 dnl ---------------------------------------------------------------------------
@@ -1900,6 +1767,24 @@ AC_DEFUN([AM_PATH_WXCONFIG],
         fi
       fi
 
+      dnl starting with version 2.7.0 wx-config has --rescomp option
+      wx_has_rescomp=""
+      if test $wx_config_major_version -gt 2; then
+        wx_has_rescomp=yes
+      else
+        if test $wx_config_major_version -eq 2; then
+           if test $wx_config_minor_version -ge 7; then
+              wx_has_rescomp=yes
+           fi
+        fi
+      fi
+      if test "x$wx_has_rescomp" = x ; then
+         dnl cannot give any useful info for resource compiler
+         WX_RESCOMP=
+      else
+         WX_RESCOMP=`$WX_CONFIG_WITH_ARGS --rescomp`
+      fi
+
       if test "x$wx_has_cppflags" = x ; then
          dnl no choice but to define all flags like CFLAGS
          WX_CFLAGS=`$WX_CONFIG_WITH_ARGS --cflags`
@@ -1934,6 +1819,7 @@ AC_DEFUN([AM_PATH_WXCONFIG],
        WX_CXXFLAGS=""
        WX_LIBS=""
        WX_LIBS_STATIC=""
+       WX_RESCOMP=""
        ifelse([$3], , :, [$3])
 
     fi
@@ -1944,6 +1830,8 @@ AC_DEFUN([AM_PATH_WXCONFIG],
     WX_CXXFLAGS=""
     WX_LIBS=""
     WX_LIBS_STATIC=""
+    WX_RESCOMP=""
+
     ifelse([$3], , :, [$3])
 
   fi
@@ -1956,6 +1844,7 @@ AC_DEFUN([AM_PATH_WXCONFIG],
   AC_SUBST(WX_LIBS)
   AC_SUBST(WX_LIBS_STATIC)
   AC_SUBST(WX_VERSION)
+  AC_SUBST(WX_RESCOMP)
 ])
 
 dnl ---------------------------------------------------------------------------
@@ -2041,5 +1930,194 @@ AC_DEFUN([AM_PATH_WXRC],
     
     AC_SUBST(WXRC)
   fi
+])
+
+# Configure paths for LIBXML2
+# Mike Hommey 2004-06-19
+# use CPPFLAGS instead of CFLAGS
+# Toshio Kuratomi 2001-04-21
+# Adapted from:
+# Configure paths for GLIB
+# Owen Taylor     97-11-3
+
+dnl AM_PATH_XML2([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]]])
+dnl Test for XML, and define XML_CPPFLAGS and XML_LIBS
+dnl
+AC_DEFUN([AM_PATH_XML2],[ 
+AC_ARG_WITH(xml-prefix,
+            [  --with-xml-prefix=PFX   Prefix where libxml is installed (optional)],
+            xml_config_prefix="$withval", xml_config_prefix="")
+AC_ARG_WITH(xml-exec-prefix,
+            [  --with-xml-exec-prefix=PFX Exec prefix where libxml is installed (optional)],
+            xml_config_exec_prefix="$withval", xml_config_exec_prefix="")
+AC_ARG_ENABLE(xmltest,
+              [  --disable-xmltest       Do not try to compile and run a test LIBXML program],,
+              enable_xmltest=yes)
+
+  if test x$xml_config_exec_prefix != x ; then
+     xml_config_args="$xml_config_args"
+     if test x${XML2_CONFIG+set} != xset ; then
+        XML2_CONFIG=$xml_config_exec_prefix/bin/xml2-config
+     fi
+  fi
+  if test x$xml_config_prefix != x ; then
+     xml_config_args="$xml_config_args --prefix=$xml_config_prefix"
+     if test x${XML2_CONFIG+set} != xset ; then
+        XML2_CONFIG=$xml_config_prefix/bin/xml2-config
+     fi
+  fi
+
+  AC_PATH_PROG(XML2_CONFIG, xml2-config, no)
+  min_xml_version=ifelse([$1], ,2.0.0,[$1])
+  AC_MSG_CHECKING(for libxml - version >= $min_xml_version)
+  no_xml=""
+  if test "$XML2_CONFIG" = "no" ; then
+    no_xml=yes
+  else
+    XML_CPPFLAGS=`$XML2_CONFIG $xml_config_args --cflags`
+    XML_LIBS=`$XML2_CONFIG $xml_config_args --libs`
+    xml_config_major_version=`$XML2_CONFIG $xml_config_args --version | \
+           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
+    xml_config_minor_version=`$XML2_CONFIG $xml_config_args --version | \
+           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\2/'`
+    xml_config_micro_version=`$XML2_CONFIG $xml_config_args --version | \
+           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'`
+    if test "x$enable_xmltest" = "xyes" ; then
+      ac_save_CPPFLAGS="$CPPFLAGS"
+      ac_save_LIBS="$LIBS"
+      CPPFLAGS="$CPPFLAGS $XML_CPPFLAGS"
+      LIBS="$XML_LIBS $LIBS"
+dnl
+dnl Now check if the installed libxml is sufficiently new.
+dnl (Also sanity checks the results of xml2-config to some extent)
+dnl
+      rm -f conf.xmltest
+      AC_TRY_RUN([
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <libxml/xmlversion.h>
+
+int 
+main()
+{
+  int xml_major_version, xml_minor_version, xml_micro_version;
+  int major, minor, micro;
+  char *tmp_version;
+
+  system("touch conf.xmltest");
+
+  /* Capture xml2-config output via autoconf/configure variables */
+  /* HP/UX 9 (%@#!) writes to sscanf strings */
+  tmp_version = (char *)strdup("$min_xml_version");
+  if (sscanf(tmp_version, "%d.%d.%d", &major, &minor, &micro) != 3) {
+     printf("%s, bad version string from xml2-config\n", "$min_xml_version");
+     exit(1);
+   }
+   free(tmp_version);
+
+   /* Capture the version information from the header files */
+   tmp_version = (char *)strdup(LIBXML_DOTTED_VERSION);
+   if (sscanf(tmp_version, "%d.%d.%d", &xml_major_version, &xml_minor_version, &xml_micro_version) != 3) {
+     printf("%s, bad version string from libxml includes\n", "LIBXML_DOTTED_VERSION");
+     exit(1);
+   }
+   free(tmp_version);
+
+ /* Compare xml2-config output to the libxml headers */
+  if ((xml_major_version != $xml_config_major_version) ||
+      (xml_minor_version != $xml_config_minor_version) ||
+      (xml_micro_version != $xml_config_micro_version))
+    {
+      printf("*** libxml header files (version %d.%d.%d) do not match\n",
+         xml_major_version, xml_minor_version, xml_micro_version);
+      printf("*** xml2-config (version %d.%d.%d)\n",
+         $xml_config_major_version, $xml_config_minor_version, $xml_config_micro_version);
+      return 1;
+    } 
+/* Compare the headers to the library to make sure we match */
+  /* Less than ideal -- doesn't provide us with return value feedback, 
+   * only exits if there's a serious mismatch between header and library.
+   */
+    LIBXML_TEST_VERSION;
+
+    /* Test that the library is greater than our minimum version */
+    if ((xml_major_version > major) ||
+        ((xml_major_version == major) && (xml_minor_version > minor)) ||
+        ((xml_major_version == major) && (xml_minor_version == minor) &&
+        (xml_micro_version >= micro)))
+      {
+        return 0;
+       }
+     else
+      {
+        printf("\n*** An old version of libxml (%d.%d.%d) was found.\n",
+               xml_major_version, xml_minor_version, xml_micro_version);
+        printf("*** You need a version of libxml newer than %d.%d.%d. The latest version of\n",
+           major, minor, micro);
+        printf("*** libxml is always available from ftp://ftp.xmlsoft.org.\n");
+        printf("***\n");
+        printf("*** If you have already installed a sufficiently new version, this error\n");
+        printf("*** probably means that the wrong copy of the xml2-config shell script is\n");
+        printf("*** being found. The easiest way to fix this is to remove the old version\n");
+        printf("*** of LIBXML, but you can also set the XML2_CONFIG environment to point to the\n");
+        printf("*** correct copy of xml2-config. (In this case, you will have to\n");
+        printf("*** modify your LD_LIBRARY_PATH enviroment variable, or edit /etc/ld.so.conf\n");
+        printf("*** so that the correct libraries are found at run-time))\n");
+    }
+  return 1;
+}
+],, no_xml=yes,[echo $ac_n "cross compiling; assumed OK... $ac_c"])
+       CPPFLAGS="$ac_save_CPPFLAGS"
+       LIBS="$ac_save_LIBS"
+     fi
+  fi
+
+  if test "x$no_xml" = x ; then
+     AC_MSG_RESULT(yes (version $xml_config_major_version.$xml_config_minor_version.$xml_config_micro_version))
+     ifelse([$2], , :, [$2])     
+  else
+     AC_MSG_RESULT(no)
+     if test "$XML2_CONFIG" = "no" ; then
+       echo "*** The xml2-config script installed by LIBXML could not be found"
+       echo "*** If libxml was installed in PREFIX, make sure PREFIX/bin is in"
+       echo "*** your path, or set the XML2_CONFIG environment variable to the"
+       echo "*** full path to xml2-config."
+     else
+       if test -f conf.xmltest ; then
+        :
+       else
+          echo "*** Could not run libxml test program, checking why..."
+          CPPFLAGS="$CPPFLAGS $XML_CPPFLAGS"
+          LIBS="$LIBS $XML_LIBS"
+          AC_TRY_LINK([
+#include <libxml/xmlversion.h>
+#include <stdio.h>
+],      [ LIBXML_TEST_VERSION; return 0;],
+        [ echo "*** The test program compiled, but did not run. This usually means"
+          echo "*** that the run-time linker is not finding LIBXML or finding the wrong"
+          echo "*** version of LIBXML. If it is not finding LIBXML, you'll need to set your"
+          echo "*** LD_LIBRARY_PATH environment variable, or edit /etc/ld.so.conf to point"
+          echo "*** to the installed location  Also, make sure you have run ldconfig if that"
+          echo "*** is required on your system"
+          echo "***"
+          echo "*** If you have an old version installed, it is best to remove it, although"
+          echo "*** you may also be able to get things to work by modifying LD_LIBRARY_PATH" ],
+        [ echo "*** The test program failed to compile or link. See the file config.log for the"
+          echo "*** exact error that occured. This usually means LIBXML was incorrectly installed"
+          echo "*** or that you have moved LIBXML since it was installed. In the latter case, you"
+          echo "*** may want to edit the xml2-config script: $XML2_CONFIG" ])
+          CPPFLAGS="$ac_save_CPPFLAGS"
+          LIBS="$ac_save_LIBS"
+       fi
+     fi
+
+     XML_CPPFLAGS=""
+     XML_LIBS=""
+     ifelse([$3], , :, [$3])
+  fi
+  AC_SUBST(XML_CPPFLAGS)
+  AC_SUBST(XML_LIBS)
+  rm -f conf.xmltest
 ])
 

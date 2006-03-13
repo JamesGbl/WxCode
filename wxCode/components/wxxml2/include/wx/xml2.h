@@ -38,7 +38,7 @@
 //   1) install libxml2 library binaries or compile them
 //      (you can find all the info at http://xmlsoft.org)
 //   2) add the include and library paths to the compiler
-//   3) links your progrma with the 'libxml2.lib' 
+//   3) links your progrma with the 'libxml2.lib'
 //      (and 'iconv.lib' under Win32)
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
@@ -112,11 +112,11 @@
 enum wxXml2NodeType
 {
     // note: values are synchronized with xmlElementType from libxml2 2.5.x
-	//       
+	//
 
 	//! Container nodes; they are characterized by the NAME, the NAMESPACE
 	//! and the CHILDRENs. They create something like:
-	//!                  <NAME>children</NAME>  
+	//!                  <NAME>children</NAME>
 	//! or (if namespace != wxXml2EmptyNamespace),
 	//!                  <NS:NAME>children</NS:NAME>
 	//! Examples:
@@ -148,7 +148,7 @@ enum wxXml2NodeType
 	//! wxXml2Node::SetContent("property=\"value\"").
 	wxXML_PI_NODE =				7,
 
-	//! Creates a comment node: <!-- content -->.	
+	//! Creates a comment node: <!-- content -->.
     wxXML_COMMENT_NODE =		8,
 
 	//! The value of the "type" member of an xmlDoc structure.
@@ -230,7 +230,7 @@ extern WXDLLIMPEXP_DATA_WXXML2(wxXml2BaseNode) wxXml2EmptyBaseNode;
 // --------------
 
 
-//! Checks if the libxml2 version currently used (when compiling) is 
+//! Checks if the libxml2 version currently used (when compiling) is
 //! newer or match the given version numbers.
 //! The version numbers must be: 1 digit for major & minor; always
 //! 2 digits for release:
@@ -241,7 +241,7 @@ extern WXDLLIMPEXP_DATA_WXXML2(wxXml2BaseNode) wxXml2EmptyBaseNode;
 //!     put here the code for libxml2 < 2.6.10
 //! #endif
 //! \endcode
-//! \note LIBXML_VERSION is in the format 
+//! \note LIBXML_VERSION is in the format
 //!       MAJOR|MAJOR|MINOR|RELEASE|RELEASE
 //!
 #define wxXML2CHECK_VERSION(major,minor,release) \
@@ -269,20 +269,20 @@ public:
 
 	//! Initializes the libxml2 parser.
 	//! Call this function before using a wxXml2Wrapper.
-	static void Init() 
+	static void Init()
 		{ xmlInitMemory(); xmlInitParser(); }
 
 	//! Frees some internal libxml2 structures.
 	//! Call this function after you've finished to work with all
 	//! wxXml2Wrapper objects to avoid memory leaks.
-	static void Cleanup() 
+	static void Cleanup()
 		{ xmlCleanupParser(); }
-		
+
 	//! Returns a string with the libxml2 library version used when
 	//! this source was compiled.
 	static wxString GetLibxml2Version()
 		{ return wxT(LIBXML_DOTTED_VERSION); }
-		
+
 	//! Checks the compiled library version against the include one.
 	//! If something is wrong, a warning or a fatal error is generated.
 	static void TestLibxml2Version()
@@ -331,7 +331,7 @@ protected:
 	/*virtual void Copy(const wxXml2Wrapper &tocopy) = 0;*/
 
 	//! Returns the private member of the wrapped structure.
-	virtual int &GetPrivate() const = 0;	
+	virtual int &GetPrivate() const = 0;
 
 protected:		// reference counting utilities
 
@@ -345,7 +345,7 @@ protected:		// reference counting utilities
 	//! \code
 	//!     wxXml2Document doc;
 	//!     wxXml2Node root(doc, "root_of_doc");
-	//!     
+	//!
 	//!     // copy the root node
 	//!     wxXml2Node copy(root);
 	//!     copy.SetName("myroot");		// modify the copy
@@ -362,8 +362,8 @@ protected:		// reference counting utilities
 	//! This is required since the wrappers around libxml2 structures are
 	//! created on the fly by the wrapper's getters: this is why you'll see
 	//! only functions returning objects and not references to objects.
-	//! 
-	//! Since the underlying libxml2 structures are always shared, 
+	//!
+	//! Since the underlying libxml2 structures are always shared,
 	//! a reference count system is required to \b avoid things like:
 	//! \code
 	//!     wxXml2Node mynode;
@@ -382,7 +382,7 @@ protected:		// reference counting utilities
 	//! Performing a deep-copy in the copy constructor would be a problem:
 	//! XML nodes are all linked together and unlinking a node and then inserting
 	//! a new one is not so easy (especially for all types of nodes).
-	//! 
+	//!
 	//! The only solution is to use a reference count; but
 	//! the reference count must be stored in the wrapped structure.
 	//! How wxXml2Wrapper handle this problem ? Well, all libxml2 structure has
@@ -409,7 +409,7 @@ protected:		// reference counting utilities
 	//!     mynode.AddChild(...);
 	//! \endcode
 	//!
-	//! Anyway there is another thing to consider: libxml2 implements 
+	//! Anyway there is another thing to consider: libxml2 implements
 	//! "recursive destruction".
 	//! When a node is destroyed, all its children are too.
 	//! This means that we must also be careful not to break libxml2 memory
@@ -431,7 +431,7 @@ protected:		// reference counting utilities
 	//!
 	//!         // we are going to create a child of the "root" element...
 	//!         wxXml2Node child(root, ...);
-	//! 
+	//!
 	//!     } // which one of the "root" and "child" element will be destroyed
 	//!       // first ? If the "child" destructor is called before the "root"'s one
 	//!       // then there are no problems: child::IsUnlinked() will return FALSE
@@ -449,7 +449,7 @@ protected:		// reference counting utilities
 	//! How can we solve this problem ?
 	//! One solution could be not only to check if the node is unlinked but also
 	//! to check if all children refcounts are set to zero, in each node destructor.
-	//! However, I did not implement this solution because it can make all 
+	//! However, I did not implement this solution because it can make all
 	//! wxxml2 wrappers very slow: wxXml2Nodes are continuosly created & destroyed.
 	//! The solution I adopted is simply to force the user (you!) to call the
 	//! wxXml2Wrapper::DestroyIfUnlinked() function in the right order.
@@ -465,19 +465,19 @@ protected:		// reference counting utilities
 	//!
 	//!         // we are going to create a child of the "root" element...
 	//!         wxXml2Node child(root, ...);
-	//! 
+	//!
 	//!         // destroy the nodes in the right order:
 	//!         // first children and then the root element
 	//!         // (which will be the only element to do a real call
 	//!         //  to the xmlFreeXXXX function)
 	//!         child.DestroyIfUnlinked();	// this sets "child" as empty
 	//!         root.DestroyIfUnlinked();	// this destroys the tree
-	//! 
+	//!
 	//!         // if we try to access the "child" or "root" element
 	//!         // we'll find that they are set to empty elements: in this
 	//!         // way the order used by the compiler to call the destructors
 	//!         // of the nodes does not care...
-	//!     } 
+	//!     }
 	//! \endcode
 	//! So, as general rule, when using wxXml2Wrapper-derived classes, you
 	//! <B>must always call the wxXmlWrapper::DestroyIfUnlinked functions
@@ -532,7 +532,7 @@ public:
 
 
 //! Represents a node property.
-//! Example: in 
+//! Example: in
 //!                    <img src="hello.gif" id="3"/>
 //! "src" is property with value "hello.gif" and "id" is a property with value "3".
 class WXDLLIMPEXP_WXXML2 wxXml2Property : public wxXml2Wrapper
@@ -564,13 +564,13 @@ public:
 	wxXml2Property() : m_attr(NULL) {}
 
 	//! Constructs a property associated with the given node.
-    wxXml2Property(const wxString &name, 
+    wxXml2Property(const wxString &name,
 					const wxString &value,
 					wxXml2Node &owner = wxXml2EmptyNode) : m_attr(NULL)
 		{ Create(name, value, owner); }
 
 	//! Wraps the given XML structure.
-	wxXml2Property(xmlAttr *pattr) : m_attr(pattr) 
+	wxXml2Property(xmlAttr *pattr) : m_attr(pattr)
 		{ JustWrappedNew(); }
 
 	//! Copies the given wrapper (does not imply the XML structure copy).
@@ -586,7 +586,7 @@ public:		// operators
 	//! Returns TRUE if the two wxXml2Properties have the same name (case insensitive
 	//! comparison is performed) and same values (case sensitive comparison).
 	bool operator==(const wxXml2Property &p) const;
-	
+
 	//! Returns NOT operator==.
 	bool operator!=(const wxXml2Property &p) const		{ return !(*this == p); }
 
@@ -597,10 +597,10 @@ public:		// operators
 public:		// miscellaneous
 
 	//! Builds this XML property.
-	void Create(const wxString &name, 
+	void Create(const wxString &name,
 				const wxString &value,
 				wxXml2Node &owner = wxXml2EmptyNode);
-    
+
     //! Returns TRUE if this property is not linked to any wider XML tree.
 	bool IsUnlinked() const;
 
@@ -626,9 +626,9 @@ public:		// getters
 	//! Returns the XML structure wrapped by this class
 	xmlAttr *GetObj() const
 		{ return m_attr; }
-	
 
-public:		// setters    
+
+public:		// setters
 
     void SetValue(const wxString &value);
     void SetName(const wxString &name);
@@ -718,7 +718,7 @@ public:		// operators
 
 	bool operator==(const wxXml2Namespace &ns) const;
 	bool operator!=(const wxXml2Namespace &p) const		{ return !(*this == p); }
-	
+
 	wxXml2Namespace &operator=(const wxXml2Namespace &n)
 		{ Copy(n); return *this; }
 
@@ -726,7 +726,7 @@ public:		// miscellaneous
 
 	//! Creates a new namespace and eventually attach it to the given node.
 	void Create(const wxString &prefix, const wxString &uri, wxXml2Node &owner);
-	
+
 	//! Returns TRUE if this element is unlinked.
 	//! Since namespace structures does not contain a parent pointer by
 	//! themselves, a wxXml2Namespace also keeps trace of the linked nodes
@@ -740,16 +740,16 @@ public:		// miscellaneous
 
 
 public:		// getters
-    
+
 	wxString GetPrefix() const
 		{ if (m_ns) return XML2WX(m_ns->prefix); return wxEmptyString; }
     wxString GetURI() const
-		{ if (m_ns) return XML2WX(m_ns->href); return wxEmptyString; }	
+		{ if (m_ns) return XML2WX(m_ns->href); return wxEmptyString; }
 
 	//! Returns the associated XML structure
 	xmlNs *GetObj() const
 		{ return m_ns; }
-	
+
 public:		// setters
 
     void SetPrefix(const wxString &p);
@@ -793,18 +793,18 @@ public:
 
 	//! Creates an empty document. Use the #Create function
 	//! before using it.
-    wxXml2Document() 
+    wxXml2Document()
 		{ m_doc = NULL; }
 
 	//! Constructs a document and sets its root to the given node.
 	wxXml2Document(wxXml2Node &root);
 
 	//! Loads the given filename and parse it.
-    wxXml2Document(const wxString &filename) 
+    wxXml2Document(const wxString &filename)
 		{ m_doc = xmlParseFile((const char *)WX2XML(filename)); JustWrappedNew(); }
 
 	//! Wraps the given libxml2 structure.
-	wxXml2Document(xmlDoc *doc) : m_doc(doc) 
+	wxXml2Document(xmlDoc *doc) : m_doc(doc)
 		{ JustWrappedNew(); }
 
 	//! Copies the given wrapper (does not imply the XML structure copy).
@@ -812,12 +812,12 @@ public:
 		{ Copy(doc); }
 
 	//! Destructor.
-    virtual ~wxXml2Document() 
+    virtual ~wxXml2Document()
 		{ DestroyIfUnlinked(); }
 
 
 public:		// operators
-	
+
 	bool operator==(const wxXml2Document &doc) const;
 	bool operator!=(const wxXml2Document &doc) const 	{ return !(*this == doc); }
 
@@ -833,19 +833,19 @@ public:		// create, load & save
     //! Parses the data from the given wxInputStream. See #Load().
     bool Load(wxInputStream &stream, wxString *pErr = NULL);
 
-    //! Parses XML & XHTML file and loads data. Returns TRUE on success. 
-    //! Returns FALSE otherwise & provide an error description if the given  
+    //! Parses XML & XHTML file and loads data. Returns TRUE on success.
+    //! Returns FALSE otherwise & provide an error description if the given
 	//! pointer is not NULL.
     bool Load(const wxString &filename, wxString *pErr = NULL);
-    
+
     //! Saves the XML data in the given stream with the given encoding.
 	//! Returns the number of bytes written: -1 if there were errors.
-    int Save(wxOutputStream &stream, const wxString &encoding = wxT("UTF-8"), 
+    int Save(wxOutputStream &stream, const wxString &encoding = wxT("UTF-8"),
 				long flags = wxXML2DOC_USE_NATIVE_NEWLINES, int indentstep = 4) const;
 
     //! Saves the document as XML or XHTML file in the given encoding format.
 	//! Returns TRUE on success.
-    bool Save(const wxString &filename, const wxString &encoding = wxT("UTF-8"), 
+    bool Save(const wxString &filename, const wxString &encoding = wxT("UTF-8"),
 				long flags = wxXML2DOC_USE_NATIVE_NEWLINES, int indentstep = 4) const;
 
 
@@ -856,7 +856,7 @@ public:		// miscellaneous
 		{ return m_doc != NULL; }
 
 	//! Returns TRUE if everything is okay in the XML tree structure.
-    bool IsOk() const 
+    bool IsOk() const
 		{ return xmlDocGetRootElement(m_doc) != NULL; }
 
 	//! Returns always TRUE since documents are entities which contain
@@ -888,8 +888,8 @@ public:		// getters
 	//! \note The DTD associated with this document could be only a
 	//!       simple line like:
 	//!            <!DOCTYPE mydtd SYSTEM "mydtd.dtd">
-	//!       to intercept this case, you should use the 
-	//!       wxXml2DTD::IsExternalReference() function.	
+	//!       to intercept this case, you should use the
+	//!       wxXml2DTD::IsExternalReference() function.
 	wxXml2DTD GetDTD() const;
 
     //! Returns version of document (may be empty).
@@ -986,7 +986,7 @@ public:
 
 
 public:		// operators
-	
+
 	bool operator==(const wxXml2BaseNode &decl) const;
 	bool operator!=(const wxXml2BaseNode &decl) const 	{ return !(*this == decl); }
 
@@ -997,22 +997,22 @@ public:		// operators
 public:		// getters
 
 	///////////////////////////////////////////////////////////////////////////////////////////////
-    //! \name Getters 
+    //! \name Getters
 	//! These functions wrap on the fly the internal pointers of the libxml2
 	//! structure and then return them (this is why they return objects and not
 	//! references to objects). @{
-    
+
     wxXml2NodeType GetType() const
 		{ return (wxXml2NodeType)((int)m_obj->type); }
     wxXml2BaseNode GetParent() const
 		{ if (m_obj) return wxXml2BaseNode(m_obj->parent); return wxXml2EmptyBaseNode; }
-    wxXml2BaseNode GetChildren() const		
+    wxXml2BaseNode GetChildren() const
 		{ if (m_obj) return wxXml2BaseNode(m_obj->children); return wxXml2EmptyBaseNode; }
-    wxXml2BaseNode GetFirstChild() const	
+    wxXml2BaseNode GetFirstChild() const
 		{ return GetChildren(); }
-    wxXml2BaseNode GetNext() const		
+    wxXml2BaseNode GetNext() const
 		{ if (m_obj) return wxXml2BaseNode(m_obj->next); return wxXml2EmptyBaseNode; }
-	wxXml2BaseNode GetPrevious() const	
+	wxXml2BaseNode GetPrevious() const
 		{ if (m_obj) return wxXml2BaseNode(m_obj->prev); return wxXml2EmptyBaseNode; }
 
 	wxXml2BaseNodeObj *GetObj() const
@@ -1043,7 +1043,7 @@ public:		// setters
 //! Represents a node in XML documents. Node has name and may have content
 //! and properties. Most common node types are wxXML_TEXT_NODE (name and props
 //! are irrelevant) and wxXML_ELEMENT_NODE (e.g. in <title>hi</title> there is
-//! element with name="title" and with irrelevant content and one child 
+//! element with name="title" and with irrelevant content and one child
 //! (of type=wxXML_TEXT_NODE with content="hi").
 //!
 class WXDLLIMPEXP_WXXML2 wxXml2Node : public wxXml2BaseNode
@@ -1058,11 +1058,11 @@ protected:
 	//! the parent document (wxXml2Document), the name & content (wxString).
 	void Build(const wxXml2NodeType type,
 				wxXml2Node &parent,
-				wxXml2Document &document = wxXml2EmptyDoc, 
+				wxXml2Document &document = wxXml2EmptyDoc,
 				wxXml2Namespace &ns = wxXml2EmptyNamespace,
-				const wxString &name = wxEmptyString, 
+				const wxString &name = wxEmptyString,
 				const wxString &content = wxEmptyString,
-				wxXml2Property &props = wxXml2EmptyProperty, 
+				wxXml2Property &props = wxXml2EmptyProperty,
 				wxXml2Node &next = wxXml2EmptyNode,
 				wxXml2Node &previous = wxXml2EmptyNode,
 				wxXml2Node &children = wxXml2EmptyNode);
@@ -1091,14 +1091,14 @@ public:
 	//! destroyed). The root element of a document should have parent,
 	//! next, previous == NULL.
     wxXml2Node(wxXml2Document &doc,
-				const wxString &name = wxEmptyString, 
+				const wxString &name = wxEmptyString,
 				wxXml2Namespace &ns = wxXml2EmptyNamespace)
 		{ CreateRoot(doc, name, ns); }
 
 	//! Builds a new node as child of the given node.
     wxXml2Node(wxXml2NodeType type,
 				wxXml2Node &parent,
-				const wxString &name, 
+				const wxString &name,
 				const wxString &content = wxEmptyString,
 				wxXml2Namespace &ns = wxXml2EmptyNamespace)
 		{ CreateChild(type, parent, name, content, ns);	}
@@ -1106,7 +1106,7 @@ public:
 	//! Builds a new node unlinked from the main tree. This node must be considered
 	//! temporary until it is linked to another node in the main tree.
     wxXml2Node(wxXml2NodeType type, wxXml2Document &doc,
-				const wxString &name = wxEmptyString, 
+				const wxString &name = wxEmptyString,
 				const wxString &content = wxEmptyString,
 				wxXml2Namespace &ns = wxXml2EmptyNamespace)
 		{ CreateTemp(type, doc, name, content, ns);	}
@@ -1128,10 +1128,10 @@ public:
 
 
 public:		// operators
-	
+
 	bool operator==(const wxXml2Node &node) const;
 	bool operator!=(const wxXml2Node &p) const				{ return !(*this == p); }
-	
+
 	wxXml2Node &operator=(const wxXml2Node &n)
 		{ Copy(n); return *this; }
 
@@ -1146,16 +1146,16 @@ public:
 	//! The XML root of a document is the node containing all other nodes.
 	//! It can be preceded only by some special nodes. Consider the following:
 	//! \code
-	//! 
+	//!
 	//!   // this type of node is handled by wxXml2Document
 	//!   <?xml version="1.0" encoding="UTF-8"?>
-	//! 
+	//!
 	//!   // this type of node is a wxXML_PI_NODE
 	//!   <?xml-stylesheet type="text/xsl" href="mathml.xsl"?>
 	//!
 	//!   // this type of node is handled by wxXml2DTD
 	//!   <!DOCTYPE some PUBLIC "URI" "URI2">
-	//! 
+	//!
 	//!   // our ROOT node
 	//!   <root> .... </root>
 	//! \endcode
@@ -1163,42 +1163,42 @@ public:
 	//! It's valid since the ROOT is preceded only by wxXML_PI_NODEs and a
 	//! DTD declaration. If you see something like:
 	//! \code
-	//! 
+	//!
 	//!   <?xml version="1.0" encoding="UTF-8"?>
 	//!   <root>....</root>
 	//!   <anothernode></anothernode>
 	//! \endcode
 	//!
-	//! Then it's wrong: the ROOT node must contain all other container nodes.	
+	//! Then it's wrong: the ROOT node must contain all other container nodes.
 	void CreateRoot(wxXml2Document &doc,
-				const wxString &name = wxEmptyString, 
+				const wxString &name = wxEmptyString,
 				wxXml2Namespace &ns = wxXml2EmptyNamespace,
 				wxXml2Property &props = wxXml2EmptyProperty);
-		
-	//! Creates a node which is attached to the given parent as one of its children.	
+
+	//! Creates a node which is attached to the given parent as one of its children.
 	void CreateChild(wxXml2NodeType type,
 				wxXml2Node &parent,
-				const wxString &name, 
+				const wxString &name,
 				const wxString &content = wxEmptyString,
 				wxXml2Namespace &ns = wxXml2EmptyNamespace,
-				wxXml2Property &props = wxXml2EmptyProperty, 
+				wxXml2Property &props = wxXml2EmptyProperty,
 				wxXml2Node &next = wxXml2EmptyNode);
 
 	//! Creates a temporary node unlinked from any XML tree (the wxXml2Document
 	//! is required but it is not modified) which can be used to temporary
 	//! store some data. Anyway, such node will be destroyed if you don't link
 	//! it to a wider XML tree.
-	void CreateTemp(wxXml2NodeType type, 
+	void CreateTemp(wxXml2NodeType type,
 				wxXml2Document &doc,
-				const wxString &name = wxEmptyString, 
+				const wxString &name = wxEmptyString,
 				const wxString &content = wxEmptyString,
 				wxXml2Namespace &ns = wxXml2EmptyNamespace,
-				wxXml2Property &props = wxXml2EmptyProperty);	
+				wxXml2Property &props = wxXml2EmptyProperty);
 
 	//! Creates a child which can contain other children.
 	wxXml2Node AddContainerChild(const wxString &name);
 
-	//! Creates a container child (named 'name'), which 
+	//! Creates a container child (named 'name'), which
 	//! contains a text child which contains the string 'content'.
 	//! to avoid the creation of the container child and to create
 	//! directly a text node, use wxEmptyString (or "") as name.
@@ -1214,7 +1214,7 @@ public:
 	wxXml2Node AddPIChild(const wxString &name, const wxString &content);
 
 	//! Creates a text node which contains one (or more) break line characters.
-	//! In XML all characters in the content of the document are significant 
+	//! In XML all characters in the content of the document are significant
 	//! including blanks and formatting line breaks, so if you want to add
 	//! a break line you MUST create a text child with '\n' as content.
 	//! The problem is that, if you use this function even once, libxml2 will
@@ -1229,15 +1229,15 @@ public:
 	//! Creates a new wxXml2Namespace with the given prefic & href and sets
 	//! it as the namespace of this node.
 	wxXml2Namespace AddNamespace(const wxString &prefix, const wxString &href);
-	
+
 	//@}
 
 
 	///////////////////////////////////////////////////////////////////////////////////////////////
-    //! \name Raw-creation functions 
+    //! \name Raw-creation functions
 	//! These functions should append the given objects at the end of the
 	//! libxml2 node's list. Avoid them when possible. @{
-    
+
 	//! Links a new property to this node.
 	void AddProperty(wxXml2Property &prop);
 
@@ -1249,20 +1249,20 @@ public:
 
 	//! Links the given node as next node.
 	void AddNext(wxXml2Node &node);
-	
+
 	//@}
-    
+
 public:		// getters
 
     wxXml2Node GetParent() const
 		{ return wxXml2Node(wxXml2BaseNode::GetParent()); }
-    wxXml2Node GetChildren() const		
+    wxXml2Node GetChildren() const
 		{ return wxXml2Node(wxXml2BaseNode::GetChildren()); }
-    wxXml2Node GetFirstChild() const	
+    wxXml2Node GetFirstChild() const
 		{ return wxXml2Node(wxXml2BaseNode::GetFirstChild()); }
     wxXml2Node GetNext() const
 		{ return wxXml2Node(wxXml2BaseNode::GetNext()); }
-	wxXml2Node GetPrevious() const	
+	wxXml2Node GetPrevious() const
 		{ return wxXml2Node(wxXml2BaseNode::GetPrevious()); }
 
 
@@ -1278,7 +1278,7 @@ public:		// getters
 
     wxString GetName() const
 		{ if (GetObj()) return XML2WX(GetObj()->name); return wxEmptyString; }
-    wxString GetContent() const	
+    wxString GetContent() const
 		{ if (GetObj()) return XML2WX(GetObj()->content); return wxEmptyString; }
 
 	//! Returns the libxml2 node structure wrapped by this object. Use this function
@@ -1296,7 +1296,7 @@ public:		// getters
 	//! Returns the n-th child named 'name', or wxXml2EmptyNode if it doesn't exist.
 	wxXml2Node Get(const wxString &name, int n = 0)	const
 		{ return Find(name, wxT(""), n); }
-	
+
     void SetName(const wxString &name)
 		{ xmlNodeSetName(GetObj(), WX2XML(name)); }
     void SetContent(const wxString &cont)
@@ -1310,7 +1310,7 @@ public:		// miscellaneous
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	//! \name Miscellaneous
 	//! Some miscellaneous functions which work on wxXml2Nodes. @{
-	
+
 	//! Returns TRUE if this node contains the given one.
 	//! Obviously the function performs a recursive check.
 	bool Contains(const wxXml2Node &tofind) const
@@ -1334,13 +1334,13 @@ public:		// miscellaneous
 	//! Like Cmp() but this function checks only content, name and type.
 	bool CmpNoNs(const wxXml2Node &node) const;
 
-	//! Unlinks the old node from it's current context, prune the new one 
-	//! at the same place. If cur was already inserted in a document it is 
+	//! Unlinks the old node from it's current context, prune the new one
+	//! at the same place. If cur was already inserted in a document it is
 	//! first unlinked from its existing context.
-	//! \return The new node (that is, *this)	
+	//! \return The new node (that is, *this)
 	wxXml2Node Replace(const wxXml2Node &newnode);
 
-	//! Searches the occ-th occurence of a node with the given name & content, 
+	//! Searches the occ-th occurence of a node with the given name & content,
 	//! among the children of this node. If bNS == TRUE, this function also checks
 	//! the namespace, otherwise the namespace will be irrelevant:
 	//!
@@ -1355,26 +1355,26 @@ public:		// miscellaneous
 	//! nor siblings.
 	//! The \c recurse parameter can be used to disable the recursive behaviour
 	//! (which is the default) of this function. In fact, if \c recurse == FALSE
-	//! only the children of this node will be tested and the function won't 
+	//! only the children of this node will be tested and the function won't
     //! descend into the child nodes.
-	wxXml2Node Find(const wxString &name, 
+	wxXml2Node Find(const wxString &name,
 					const wxString &content = wxEmptyString,
 					int occ = 0, bool bNS = TRUE, bool recurse = TRUE) const;
 
-	//! Searches the occ-th occurrence of a node like the given one among 
+	//! Searches the occ-th occurrence of a node like the given one among
 	//! all the children of this object. Also checks namespace if bNS == TRUE.
 	//! The \c recurse parameter can be used to disable the recursive behaviour
 	//! (which is the default) of this function. In fact, if \c recurse == FALSE
-	//! only the children of this node will be tested and the function won't 
+	//! only the children of this node will be tested and the function won't
     //! descend into the child nodes.
 	wxXml2Node Find(const wxXml2Node &tofind, int occ = 0, bool bNS = TRUE, bool recurse = TRUE) const;
 
 	//! Encapsulates this node in another node with the given name; if the
-	//! 
+	//!
 	//!      mynode.Encapsulate("newtag");
-	//! 
+	//!
 	//! is called, then, mynode is
-	//! 
+	//!
 	//! before:          <mynodetagname>[...]</mynodetagname>
 	//! after:   <newtag><mynodetagname>[...]</mynodetagname></newtag>
 	//!
@@ -1383,7 +1383,7 @@ public:		// miscellaneous
  				const wxString &content = wxEmptyString,
 				wxXml2Namespace &ns = wxXml2EmptyNamespace,
 				wxXml2Property &props = wxXml2EmptyProperty);
-	
+
 	//@}
 };
 
@@ -1412,6 +1412,8 @@ protected:
 };
 
 
+#if !wxCHECK_VERSION(2,7,0)
+
 //! A simple wxOutputStream which outputs everything into a wxString.
 //! The final output can be read using the #GetStr() function.
 //! This class is typically used as an easy way to save a wxXml2Document
@@ -1422,7 +1424,7 @@ protected:
 //!                 No checks will be done to ensure this.
 class WXDLLIMPEXP_WXXML2 wxStringOutputStream : public wxOutputStream
 {
-	wxString m_str;	
+	wxString m_str;
 
 public:
 	wxStringOutputStream() {}
@@ -1433,10 +1435,11 @@ public:
 		{ return m_str; }
 
 protected:
-    
+
 	//! Our overridden function. It writes the given UTF8 buffer into
 	//! our internal wxString.
 	virtual size_t OnSysWrite(const void *buffer, size_t bufsize);
 };
+#endif
 
 #endif // _WX_XML2_H_
