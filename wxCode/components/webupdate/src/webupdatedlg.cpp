@@ -359,8 +359,9 @@ bool wxWebUpdateDlg::InitThreads()
     m_iThread = new wxWebUpdateInstallThread(this);
 
     // translate this only once ;)
-    wxString errMsg = _("Low resources; cannot run the WebUpdate dialog...\n")
-                      _("Close some applications and then retry.");
+    wxString errMsg = wxGetTranslation( 
+                        wxT("Low resources; cannot run the WebUpdate dialog...\n")
+                        wxT("Close some applications and then retry."));
 
     // launch a separate thread for the webupdate script download
     if (m_dThread->Create() != wxTHREAD_NO_ERROR ||
