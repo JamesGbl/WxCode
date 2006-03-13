@@ -9,7 +9,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: ScintillaWX.h,v 1.6 2005-02-12 14:42:29 wyo Exp $
+// RCS-ID:      $Id: ScintillaWX.h,v 1.7 2006-03-13 19:12:50 wyo Exp $
 // Copyright:   (c) 2000 by Total Control Software
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -146,6 +146,7 @@ public:
     int  DoKeyDown(const wxKeyEvent& event, bool* consumed);
     void DoTick() { Tick(); }
     void DoOnIdle(wxIdleEvent& evt);
+    void DoStartDrag();
 
 #if wxUSE_DRAG_AND_DROP
     bool DoDropText(long x, long y, const wxString& data);
@@ -177,7 +178,9 @@ private:
 #if wxUSE_DRAG_AND_DROP
     wxSCIDropTarget*    dropTarget;
     wxDragResult        dragResult;
+    wxTimer*            startDragTimer;
 #endif
+
     int                 wheelRotation;
 
     // For use in creating a system caret
@@ -191,7 +194,7 @@ private:
     int sysCaretHeight;
 #endif
 #endif
-    
+
     friend class wxSCICallTip;
 };
 

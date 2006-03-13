@@ -450,13 +450,13 @@ This searches for the first occurrence of a text string in the target defined by
 <div class="divider2"></div>
 <h4><a name="ReplaceTarget">int ReplaceTarget (const wxString& text)</a></h4>
 <p>
-The return value is the length of the replacement string.
+After replacement, the target range refers to the replacement text. The return value is the length of the replacement string.
 </p>
 
 <div class="divider2"></div>
 <h4><a name="ReplaceTargetRE">int ReplaceTargetRE (const wxString& text)</a></h4>
 <p>
-This replaces the target using regular expressions. The replacement string is formed from the text string with any sequences of <code>\1</code> through <code>\9</code> replaced by tagged matches from the most recent regular expression search. The return value is the length of the replacement string.
+This replaces the target using regular expressions. The replacement string is formed from the text string with any sequences of <code>\1</code> through <code>\9</code> replaced by tagged matches from the most recent regular expression search. After replacement, the target range refers to the replacement text. The return value is the length of the replacement string.
 </p>
 
 <div class="divider1"></div>
@@ -2356,7 +2356,7 @@ Call tips are small windows displaying the arguments to a function and are displ
 Call tips can highlight part of the text within them. You could use this to highlight the current argument to a function by counting the number of commas (or whatever separator your language uses). See <code>SciTEBase::CharAdded()</code> in <code>SciTEBase.cxx</code> for an example of call tip use.
 </p>
 <p>
-The mouse may be clicked on call tips and this causes a <code><a class="message" href="#wxEVT_SCI_CALLTIPCLICK">wxEVT_SCI_CALLTIPCLICK</a></code> notification to be sent to the container. Small up an down arrows may be displayed within a call tip by, respectively, including the characters '\001', or '\002'. This is useful for showing that there are overloaded variants of one function name and that the user can click on the arrows to cycle through the overloads.
+The mouse may be clicked on call tips and this causes a <code><a class="message" href="#wxEVT_SCI_CALLTIP_CLICK">wxEVT_SCI_CALLTIP_CLICK</a></code> notification to be sent to the container. Small up an down arrows may be displayed within a call tip by, respectively, including the characters '\001', or '\002'. This is useful for showing that there are overloaded variants of one function name and that the user can click on the arrows to cycle through the overloads.
 </p>
 <p>
 Alternatively, call tips can be displayed when you leave the mouse pointer for a while over a word in response to the <code><a class="message" href="#wxEVT_SCI_DWELLSTART">wxEVT_SCI_DWELLSTART</a></code> <a class="jump" href="#Notifications">notification</a> and cancelled in response to <code><a class="message" href="#wxEVT_SCI_DWELLEND">wxEVT_SCI_DWELLEND</a></code>. This method could be used in a debugger to give the value of a variable, or during editing to give information about the word under the pointer.
@@ -3000,7 +3000,7 @@ This call allows Windows users to render a range of text into a device context. 
 <code>draw</code> and <code>target</code> should both be set to the device context handle of the output device (usually a printer). If you print to a metafile these will not be the same as Windows metafiles (unlike extended metafiles) do not implement the full API for returning information. In this case, set <code>hdcTarget</code> to the screen DC.<br />
 <code>pageRect</code> is the rectangle <code>{0, 0, maxX, maxY}</code> where <code>maxX+1</code> and <code>maxY+1</code> are the number of physically printable pixels in x and y.<br />
 <code>renderRect</code> is the rectangle to render the text in (which will, of course, fit within the rectangle defined by pageRect).<br />
-<code>startPos</code> and <code>endPos</code> define the start position and maximum position of characters to output.
+<code>startPos</code> and <code>endPos</code> define the start position and maximum position of characters to output. All of each line within this character range is drawn.
 </p>
 <p>
 When printing, the most tedious part is always working out what the margins should be to allow for the non-printable area of the paper and printing a header and footer. If you look at the printing code in SciTE, you will find that most of it is taken up with this. The loop that causes Scintilla to render text is quite simple if you strip out all the margin, non-printable area, header and footer code.
@@ -3088,7 +3088,8 @@ Does the following:<br />
 2. It reduces the reference count of the current document by 1.<br />
 3. If the reference count reaches 0, the document is deleted.<br />
 4. <code>pDoc</code> is set as the new document for the window.<br />
-5. If <code>pDoc</code> was 0, a new, empty document is created and attached to the window.
+5. If <code>pDoc</code> was 0, a new, empty document is created and attached to the window.<br />
+6. If <code>pDoc</code> was not 0, its reference count is increased by 1.
 </p>
 
 <div class="divider2"></div>
@@ -3164,7 +3165,7 @@ The first two mark a range of lines as visible or invisible and then redraw the 
 <h4><a name="SetFoldLevel">void SetFoldLevel (int line, int level)</a><br />
     <a name="GetFoldLevel">int GetFoldLevel (int line)</a></h4>
 <p>
-Set and get a 32-bit value that contains the fold level of a line and some flags associated with folding. The fold level is a number in the range 0 to <code>wxSCI_FOLDLEVELNUMBERMASK</code> (4095). However, the initial fold level is set to <code>wxSCI_FOLDLEVELBASE</code> (1024) to allow unsigned arithmetic on folding levels. There are two addition flag bits. <code>wxSCI_FOLDLEVELWHITEFLAG</code> indicates that the line is blank and allows it to be treated slightly different then its level may indicate. For example, blank lines should generally not be fold points. <code>wxSCI_FOLDLEVELHEADERFLAG</code> indicates that the line is a header (fold point).
+Set and get a 32-bit value that contains the fold level of a line and some flags associated with folding. The fold level is a number in the range 0 to <code>wxSCI_FOLDLEVELNUMBERMASK</code> (4095). However, the initial fold level is set to <code>wxSCI_FOLDLEVELBASE</code> (1024) to allow unsigned arithmetic on folding levels. There are two addition flag bits. <code>wxSCI_FOLDLEVELWHITEFLAG</code> indicates that the line is blank and allows it to be treated slightly different then its level may indicate. For example, blank lines should generally not be fold points and will be considered part of the preceding section even though they may have a lesser fold level. <code>wxSCI_FOLDLEVELHEADERFLAG</code> indicates that the line is a header (fold point).
 </p>
 <p>
 Use <code>GetFoldLevel(line) &amp; wxSCI_FOLDLEVELNUMBERMASK</code> to get the fold level of a line. Likewise, use <code>GetFoldLevel(line) &amp; wxSCI_FOLDLEVEL*FLAG</code> to get the state of the flags. To set the fold level you must or in the associated flags. For instance, to set the level to <code>thisLevel</code> and mark a line as being a fold point use: <code>SetFoldLevel(line, thisLevel | wxSCI_FOLDLEVELHEADERFLAG)</code>.
@@ -3594,6 +3595,7 @@ Notifications are sent (fired) from the Scintilla control to its container when 
 The notification messages that your container can choose to handle and the messages associated with them are:
 </p>
 <ul style="list-style-type:none">
+<li><a class="message" href="#wxEVT_SCI_CHANGE">wxEVT_SCI_CHANGE</a></li>
 <li><a class="message" href="#wxEVT_SCI_STYLENEEDED">wxEVT_SCI_STYLENEEDED</a></li>
 <li><a class="message" href="#wxEVT_SCI_CHARADDED">wxEVT_SCI_CHARADDED</a></li>
 <li><a class="message" href="#wxEVT_SCI_SAVEPOINTREACHED">wxEVT_SCI_SAVEPOINTREACHED</a></li>
@@ -3612,9 +3614,10 @@ The notification messages that your container can choose to handle and the messa
 <li><a class="message" href="#wxEVT_SCI_DWELLSTART">wxEVT_SCI_DWELLSTART</a></li>
 <li><a class="message" href="#wxEVT_SCI_DWELLEND">wxEVT_SCI_DWELLEND</a></li>
 <li><a class="message" href="#wxEVT_SCI_ZOOM">wxEVT_SCI_ZOOM</a></li>
-<li><a class="message" href="#wxEVT_SCI_HOTSPOTCLICK">wxEVT_SCI_HOTSPOTCLICK</a></li>
-<li><a class="message" href="#wxEVT_SCI_HOTSPOTDOUBLECLICK">wxEVT_SCI_HOTSPOTDOUBLECLICK</a></li>
-<li><a class="message" href="#wxEVT_SCI_CALLTIPCLICK">wxEVT_SCI_CALLTIPCLICK</a></li>
+<li><a class="message" href="#wxEVT_SCI_HOTSPOT_CLICK">wxEVT_SCI_HOTSPOT_CLICK</a></li>
+<li><a class="message" href="#wxEVT_SCI_HOTSPOT_DCLICK">wxEVT_SCI_HOTSPOT_DCLICK</a></li>
+<li><a class="message" href="#wxEVT_SCI_CALLTIP_CLICK">wxEVT_SCI_CALLTIP_CLICK</a></li>
+<li><a class="message" href="#wxEVT_SCI_AUTOCOMP_SELECTION">wxEVT_SCI_AUTOCOMP_SELECTION</a></li>
 </ul>
 
 <p>
@@ -3627,6 +3630,7 @@ The following functions are associated with these notifications:
 <li><a class="message" href="#GetMouseDwellTime">int GetMouseDwellTime()</a></li>
 </ul>
 
+<a name="wxEVT_SCI_CHANGE">wxEVT_SCI_CHANGE</a>
 <p>
 The following additional notifications are sent using the <code>WM_COMMAND</code> message on Windows and the "Command" signal on GTK+ to emulate the Windows Edit control:
 </p>
@@ -3649,7 +3653,8 @@ If you used <code><a class="message" href="#SetLexer">SetLexer</a>(wxSCI_LEX_CON
 <div class="divider2"></div>
 <h4><a name="wxEVT_SCI_CHARADDED">wxEVT_SCI_CHARADDED</a></h4>
 <p>
-This is sent when the user types an ordinary text character (as opposed to a command character) that is entered into the text. The container can use this to decide to display a <a class="jump" href="#CallTips">call tip</a> or an <a class="jump" href="#Autocompletion">auto completion list</a>. The character is in <code>SCNotification.ch</code>.
+This is sent when the user types an ordinary text character (as opposed to a command character) that is entered into the text. The container can use this to decide to display a <a class="jump" href="#CallTips">call tip</a> or an <a class="jump" href="#Autocompletion">auto completion list</a>. The character is in <code>SCNotification.ch</code>. This notification is sent before the character has been styled so processing that depends on            styling should instead be performed in the <a class="message" href="#wxEVT_SCI_UPDATEUI"><code>wxEVT_SCI_UPDATEUI</code></a> notification.
+
 </p>
 
 <div class="divider2"></div>
@@ -3715,7 +3720,7 @@ This notification is sent when the text or styling of the document changes or is
   <td align="left">Valid for text changes, not for style changes. If we are collecting undo   information this holds a pointer to the text that is handed to the Undo system, otherwise   it is zero.</td>
 </tr><tr>
   <td align="left"><code>line</code></td>
-  <td align="left">The line number at which a fold level or marker change occurred. This is   0 if unused.</td>
+  <td align="left">The line number at which a fold level or marker change occurred. This is   0 if unused and may be -1 if more than one line changed.</td>
 </tr><tr>
   <td align="left"><code>foldLevelNow</code></td>
   <td align="left">The new fold level applied to the line or 0 if this field is unused.</td>
@@ -3950,17 +3955,37 @@ This notification is generated when the user zooms the display using the keyboar
 </p>
 
 <div class="divider2"></div>
-<h4><a name="wxEVT_SCI_HOTSPOTCLICK">wxEVT_SCI_HOTSPOTCLICK</a><br />
-    <a name="wxEVT_SCI_HOTSPOTDOUBLECLICK">wxEVT_SCI_HOTSPOTDOUBLECLICK</a></h4>
+<h4><a name="wxEVT_SCI_HOTSPOT_CLICK">wxEVT_SCI_HOTSPOT_CLICK</a><br />
+    <a name="wxEVT_SCI_HOTSPOT_DCLICK">wxEVT_SCI_HOTSPOT_DCLICK</a></h4>
 <p>
 These notifications are generated when the user clicks or double clicks on  text that is in a style with the hotspot attribute set. This notification can be used to link to variable definitions or web pages. The <code>position</code> field is set the text position of the click or double click and the <code>modifiers</code> field set to the key modifiers held down in a similar manner to <a class="message" href="#wxEVT_SCI_KEY">wxEVT_SCI_KEY</a>.
 </p>
 
 <div class="divider2"></div>
-<h4><a name="wxEVT_SCI_CALLTIPCLICK">wxEVT_SCI_CALLTIPCLICK</a></h4>
+<h4><a name="wxEVT_SCI_CALLTIP_CLICK">wxEVT_SCI_CALLTIP_CLICK</a></h4>
 <p>
 This notification is generated when the user clicks on a calltip. This notification can be used to display the next function prototype when a function name is overloaded with different arguments. The <code>position</code> field is set to 1 if the click is in an up arrow, 2 if in a down arrow, and 0 if elsewhere.
 </p>
+
+<div class="divider2"></div>
+<h4><a name="wxEVT_SCI_AUTOCOMP_SELECTION">wxEVT_SCI_AUTOCOMP_SELECTION</a></h4>
+<p>
+The user has selected an item in an <a class="jump" href="#Autocompletion">autocompletion list</a>. The notification is sent before the selection is inserted. Automatic insertion can be cancelled by sending a <code><a class="message" href="#AutoCompCancel">AutoCompCancel</a></code> message before returning from the notification. The <code>SCNotification</code> fields used are:
+</p>
+<table cellpadding="1" cellspacing="2" border="0" summary="Autocompletion list notification"><tbody>
+<tr>
+  <th align="left">Field</th>
+  <th align="left">Usage</th>
+</tr>
+</tbody><tbody valign="top">
+<tr>
+  <td align="left"><code>lParam</code></td>
+  <td align="left">The start position of the word being completed.</td>
+</tr><tr>
+  <td align="left"><code>text</code></td>
+  <td align="left">The text of the selection.</td>
+</tr>
+</tbody></table>
 
 [<a href="index.php" target=_top accesskey="H">Home</a>]
 </body>

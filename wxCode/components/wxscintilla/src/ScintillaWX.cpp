@@ -9,7 +9,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: ScintillaWX.cpp,v 1.17 2005-12-06 21:30:05 wyo Exp $
+// RCS-ID:      $Id: ScintillaWX.cpp,v 1.18 2006-03-13 19:12:50 wyo Exp $
 // Copyright:   (c) 2000 by Total Control Software
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -42,6 +42,20 @@ private:
 
 
 #if wxUSE_DRAG_AND_DROP
+class wxStartDragTimer : public wxTimer {
+public:
+    wxStartDragTimer(ScintillaWX* swx) {
+        this->swx = swx;
+    }
+
+    void Notify() {
+        swx->DoStartDrag();
+    }
+
+private:
+    ScintillaWX* swx;
+};
+
 bool wxSCIDropTarget::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
     return swx->DoDropText(x, y, data);
 }
@@ -195,6 +209,9 @@ ScintillaWX::ScintillaWX(wxScintilla* win) {
 
 
 ScintillaWX::~ScintillaWX() {
+#if wxUSE_DRAG_AND_DROP
+    delete startDragTimer;
+#endif
     Finalise();
 }
 
@@ -226,6 +243,15 @@ void ScintillaWX::Finalise() {
 
 
 void ScintillaWX::StartDrag() {
+#if wxUSE_DRAG_AND_DROP
+    // We defer the starting of the DnD, otherwise the LeftUp of a normal
+    // click could be lost and the STC will think it is doing a DnD when the
+    // user just wanted a normal click.
+    startDragTimer->Start (200, true);
+#endif
+}
+
+void ScintillaWX::DoStartDrag() {
 #if wxUSE_DRAG_AND_DROP
     wxString dragText = sci2wx(drag.s, drag.len);
 
@@ -684,7 +710,6 @@ void ScintillaWX::DoPaint(wxDC* dc, wxRect rect) {
     PRectangle rcClient = GetClientRectangle();
     paintingAllText = rcPaint.Contains(rcClient);
 
-    dc->BeginDrawing();
     ClipChildren(*dc, rcPaint);
     Paint(surfaceWindow, rcPaint);
 
@@ -695,7 +720,6 @@ void ScintillaWX::DoPaint(wxDC* dc, wxRect rect) {
         FullPaint();
     }
     paintState = notPainting;
-    dc->EndDrawing();
 }
 
 
@@ -805,6 +829,12 @@ void ScintillaWX::DoLeftButtonDown(Point pt, unsigned int curTime, bool shift, b
 }
 
 void ScintillaWX::DoLeftButtonUp(Point pt, unsigned int curTime, bool ctrl) {
+#if wxUSE_DRAG_AND_DROP
+    if (startDragTimer->IsRunning()) {
+        startDragTimer->Stop();
+        SetEmptySelection(PositionFromLocation(pt));
+    }
+#endif
     ButtonUp(pt, curTime, ctrl);
 }
 

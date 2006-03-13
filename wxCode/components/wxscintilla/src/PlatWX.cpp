@@ -12,6 +12,7 @@
 #include <wx/mstream.h>
 #include <wx/image.h>
 #include <wx/imaglist.h>
+#include <wx/tokenzr.h>
 
 #include "Platform.h"
 #include "PlatWX.h"
@@ -711,7 +712,7 @@ private:
     CallBackAction      doubleClickAction;
     void*               doubleClickActionData;
 public:
-    wxSCIListBoxWin(wxWindow* parent, wxWindowID id) :
+    wxSCIListBoxWin(wxWindow* parent, wxWindowID id, Point WXUNUSED(location)) :
         wxPopupWindow(parent, wxBORDER_NONE)
     {
         SetBackgroundColour(*wxBLACK);  // for our simple border
@@ -835,9 +836,8 @@ private:
     CallBackAction      doubleClickAction;
     void*               doubleClickActionData;
 public:
-    wxSCIListBoxWin(wxWindow* parent, wxWindowID id) :
-        wxWindow(parent, id, wxDefaultPosition, wxSize(0,0), wxSIMPLE_BORDER )
-    {
+    wxSCIListBoxWin(wxWindow* parent, wxWindowID id, Point location) :
+        wxWindow(parent, id, wxPoint(location.x, location.y), wxSize(0,0), wxSIMPLE_BORDER) {
 
         lv = new wxSCIListBox(this, id, wxDefaultPosition, wxDefaultSize,
                               wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_NO_HEADER | wxNO_BORDER);
@@ -868,7 +868,7 @@ public:
 #endif
         if ( !wxPendingDelete.Member(this) )
             wxPendingDelete.Append(this);
-        return TRUE;
+        return true;
     }
 
 
@@ -948,7 +948,8 @@ private:
     bool                unicodeMode;
     int                 desiredVisibleRows;
     int                 aveCharWidth;
-    int                 maxStrWidth;
+    size_t              maxStrWidth;
+    Point               location; // Caret location at which the list is opened
     wxImageList*        imgList;
     wxArrayInt*         imgTypeMap;
 
@@ -957,7 +958,7 @@ public:
     ~ListBoxImpl();
 
     virtual void SetFont(Font &font);
-    virtual void Create(Window &parent, int ctrlID, Point location, int lineHeight_, bool unicodeMode_);
+    virtual void Create(Window &parent, int ctrlID, Point location_, int lineHeight_, bool unicodeMode_);
     virtual void SetAverageCharWidth(int width);
     virtual void SetVisibleRows(int rows);
     virtual int GetVisibleRows() const;
@@ -965,6 +966,7 @@ public:
     virtual int CaretFromEdge();
     virtual void Clear();
     virtual void Append(char *s, int type = -1);
+    virtual void Append(const wxString& text, int type);
     virtual int Length();
     virtual void Select(int n);
     virtual int GetSelection();
@@ -974,7 +976,6 @@ public:
     virtual void ClearRegisteredImages();
     virtual void SetDoubleClickAction(CallBackAction, void *);
     virtual void SetList(const char* list, char separator, char typesep);
-
 };
 
 
@@ -1002,12 +1003,12 @@ void ListBoxImpl::SetFont(Font &font) {
 }
 
 
-void ListBoxImpl::Create (Window &parent, int ctrlID, Point WXUNUSED(location),
+void ListBoxImpl::Create (Window &parent, int ctrlID, Point location_,
                           int lineHeight_, bool unicodeMode_) {
     lineHeight =  lineHeight_;
     unicodeMode = unicodeMode_;
     maxStrWidth = 0;
-    id = new wxSCIListBoxWin (GETWIN(parent.GetID()), ctrlID);
+    id = new wxSCIListBoxWin (GETWIN(parent.GetID()), ctrlID, location_);
     if (imgList != NULL) GETLB(id)->SetImageList (imgList, wxIMAGE_LIST_SMALL);
 }
 
@@ -1030,7 +1031,7 @@ int ListBoxImpl::GetVisibleRows() const {
 PRectangle ListBoxImpl::GetDesiredRect() {
     // wxListCtrl doesn't have a DoGetBestSize, so instead we kept track of
     // the max size in Append and calculate it here...
-    int maxw = maxStrWidth;
+    int maxw = maxStrWidth * aveCharWidth;
     int maxh ;
 
     // give it a default if there are no lines, and/or add a bit more
@@ -1076,13 +1077,13 @@ void ListBoxImpl::Clear() {
 
 
 void ListBoxImpl::Append(char *s, int type) {
-    wxString text = sci2wx(s);
+    Append(sci2wx(s), type);
+}
+void ListBoxImpl::Append(const wxString& text, int type) {
     long count  = GETLB(id)->GetItemCount();
     long itemID  = GETLB(id)->InsertItem(count, wxEmptyString);
     GETLB(id)->SetItem(itemID, 1, text);
-    int itemWidth = 0;
-    GETLB(id)->GetTextExtent(text, &itemWidth, NULL);
-    maxStrWidth = wxMax(maxStrWidth, itemWidth);
+    maxStrWidth = wxMax(maxStrWidth, text.length());
     if (type != -1) {
         wxCHECK_RET(imgTypeMap, wxT("Unexpected NULL imgTypeMap"));
         long idx = imgTypeMap->Item(type);
@@ -1097,7 +1098,7 @@ int ListBoxImpl::Length() {
 
 
 void ListBoxImpl::Select(int n) {
-    bool select = TRUE;
+    bool select = true;
     if (n == -1) {
         n = 0;
         select = FALSE;
@@ -1136,7 +1137,7 @@ void ListBoxImpl::RegisterImage(int type, const char *xpm_data) {
 
     if (! imgList) {
         // assumes all images are the same size
-        imgList = new wxImageList(bmp.GetWidth(), bmp.GetHeight(), TRUE);
+        imgList = new wxImageList(bmp.GetWidth(), bmp.GetHeight(), true);
         imgTypeMap = new wxArrayInt;
     }
 
@@ -1169,30 +1170,20 @@ void ListBoxImpl::SetDoubleClickAction(CallBackAction action, void *data) {
 }
 
 void ListBoxImpl::SetList(const char* list, char separator, char typesep) {
+    GETLB(id)->Freeze();
     Clear();
-    char *words = new char[strlen(list) + 1];
-    if (words) {
-        strcpy (words, list);
-        char *startword = words;
-        char *numword = NULL;
-        int i = 0;
-        for (; words && words[i]; i++) {
-            if (words[i] == separator) {
-                words[i] = '\0';
-                if (numword) *numword = '\0';
-                Append (startword, numword?atoi(numword + 1):-1);
-                startword = words + i + 1;
-                numword = NULL;
-            } else if (words[i] == typesep) {
-                numword = words + i;
-            }
+    wxStringTokenizer tkzr(sci2wx(list), (wxChar)separator);
+    while (tkzr.HasMoreTokens()) {
+        wxString token = tkzr.GetNextToken();
+        long type = -1;
+        int pos = token.Find(typesep);
+        if (pos != -1) {
+            token.Mid(pos+1).ToLong(&type);
+            token.Truncate(pos);
         }
-        if (startword) {
-            if (numword) *numword = '\0';
-            Append(startword, numword?atoi(numword + 1):-1);
-        }
-        delete []words;
+        Append (token, (int)type);
     }
+    GETLB(id)->Thaw();
 }
 
 

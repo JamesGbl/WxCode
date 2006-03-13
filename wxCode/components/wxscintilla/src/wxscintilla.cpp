@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.30 2005-12-21 17:25:58 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.31 2006-03-13 19:12:50 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -95,6 +95,7 @@ DEFINE_EVENT_TYPE( wxEVT_SCI_ZOOM )
 DEFINE_EVENT_TYPE( wxEVT_SCI_HOTSPOT_CLICK )
 DEFINE_EVENT_TYPE( wxEVT_SCI_HOTSPOT_DCLICK )
 DEFINE_EVENT_TYPE( wxEVT_SCI_CALLTIP_CLICK )
+DEFINE_EVENT_TYPE( wxEVT_SCI_AUTOCOMP_SELECTION )
 
 
 
@@ -1632,8 +1633,8 @@ void wxScintilla::SetEndAtLastLine (bool endAtLastLine) {
 
 // Retrieve whether the maximum scroll position has the last
 // line at the bottom of the view.
-int wxScintilla::GetEndAtLastLine() {
-    return SendMsg (SCI_GETENDATLASTLINE, 0, 0);
+bool wxScintilla::GetEndAtLastLine() {
+    return SendMsg (SCI_GETENDATLASTLINE, 0, 0) != 0;
 }
 
 // Retrieve the height of a particular line of text in pixels.
@@ -2512,18 +2513,22 @@ void wxScintilla::SetProperty (const wxString& key, const wxString& value) {
 
 // Retrieve a value that may be used by a lexer for some optional feature.
 wxString wxScintilla::GetProperty (const wxString& key) {
-    wxMemoryBuffer mbuf(256); //? TODO: make size 256 variable
-    char* buf = (char*)mbuf.GetWriteBuf(256+1);
+    int len = SendMsg (SCI_GETPROPERTY, (long)(const char*)wx2sci(key), (long)NULL);
+    if (!len) return wxEmptyString;
+    wxMemoryBuffer mbuf (len+1);
+    char* buf = (char*)mbuf.GetWriteBuf (len+1);
     SendMsg (SCI_GETPROPERTY, (long)(const char*)wx2sci(key), (long)buf);
-    mbuf.UngetWriteBuf(mbuf.GetBufSize());
-    mbuf.AppendByte(0);
+    mbuf.UngetWriteBuf (len);
+    mbuf.AppendByte (0);
     return sci2wx(buf);
 }
 wxString wxScintilla::GetPropertyExpanded (const wxString& key) {
-    wxMemoryBuffer mbuf(256); //? TODO: make size 256 variable
-    char* buf = (char*)mbuf.GetWriteBuf(256+1);
+    int len = SendMsg (SCI_GETPROPERTYEXPANDED, (long)(const char*)wx2sci(key), (long)NULL);
+    if (!len) return wxEmptyString;
+    wxMemoryBuffer mbuf(len+1);
+    char* buf = (char*)mbuf.GetWriteBuf(len+1);
     SendMsg (SCI_GETPROPERTYEXPANDED, (long)(const char*)wx2sci(key), (long)buf);
-    mbuf.UngetWriteBuf(mbuf.GetBufSize());
+    mbuf.UngetWriteBuf (len);
     mbuf.AppendByte(0);
     return sci2wx(buf);
 }
@@ -2699,6 +2704,12 @@ void wxScintilla::StyleSetCharacterSet (int style, int characterSet) {
             break;
         case wxSCI_CHARSET_THAI:
             encoding = wxFONTENCODING_ISO8859_11;
+            break;
+        case wxSCI_CHARSET_CYRILLIC:
+            encoding = wxFONTENCODING_ISO8859_5;
+            break;
+        case wxSCI_CHARSET_8859_15:
+            encoding = wxFONTENCODING_ISO8859_15;
             break;
     }
 
@@ -3230,6 +3241,10 @@ void wxScintilla::NotifyParent (SCNotification* _scn) {
 
     case SCN_CALLTIPCLICK:
         evt.SetEventType (wxEVT_SCI_CALLTIP_CLICK);
+        break;
+
+    case SCN_AUTOCSELECTION:
+        evt.SetEventType (wxEVT_SCI_AUTOCOMP_SELECTION);
         break;
 
     default:
