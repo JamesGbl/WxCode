@@ -505,8 +505,12 @@ uninstall:
 	implib -f ..\lib\webupdate$(WXLIBPOSTFIX) $@
 !endif
 
-xrcscan: 
+i18n: 
 	wxrc ../src/webupdatedlg.xrc -g -c -o ../src/webupdatedlg.xrc.extracted
+	msgmerge locale/it.po locale/webupdater.pot > locale/it.po.new && mv locale/it.po.new locale/it.po
+	msgfmt --statistics -o locale/it.mo locale/it.po
+	msgmerge locale/de.po locale/webupdater.pot > locale/de.po.new && mv locale/de.po.new locale/de.po
+	msgfmt --statistics -o locale/de.mo locale/de.po
 
 ..\src\webupdater.exe: $(WEBUPDATER_OBJECTS) locale  borland\webupdater_app.res $(__webupdate_lib___depname)
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(__DEBUGINFO)  -L$(WX_DIR)$(WXLIBPATH) -L..\lib -L$(HTTPENGINE_DIR)\lib -aa @&&|

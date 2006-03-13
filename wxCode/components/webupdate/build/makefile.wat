@@ -42,6 +42,8 @@ WX_DEBUG = 1
 WX_VERSION = 26
 
 # Use monolithic build of wxWidgets? [0,1]
+#   0 - Multilib
+#   1 - Monolithic
 WX_MONOLITHIC = 0
 
 # If 1 then wxHTTPEngine component will be used for proxy/authentication stuff [1,0]
@@ -572,7 +574,7 @@ docs :
 cleandocs :  
 	-if exist ..\docs\html rmdir /S /Q ..\docs\html
 
-install :  all install-wxheaders
+install : .SYMBOLIC all install-wxheaders
 	copy /Y ..\lib\webupdate$(WXLIBPOSTFIX).lib $(WX_DIR)$(WXLIBPATH)
 	copy /Y ..\lib\webupdate$(WXLIBPOSTFIX).dll $(WX_DIR)$(WXLIBPATH)
 
@@ -581,7 +583,7 @@ install-wxheaders :
 	cd .
 	copy /Y  ..\include\wx\*.h $(WX_DIR)\include\wx
 
-uninstall :  
+uninstall : .SYMBOLIC 
 	-if exist $(WX_DIR)\include\wx\webupdatedef.h \
 	$(WX_DIR)\include\wx\webupdate.h \
 	$(WX_DIR)\include\wx\webupdatedlg.h \
@@ -623,8 +625,12 @@ uninstall :
 	wlib -q -n -b ..\lib\webupdate$(WXLIBPOSTFIX).lib +$^@
 !endif
 
-xrcscan :  
+i18n :  
 	wxrc ../src/webupdatedlg.xrc -g -c -o ../src/webupdatedlg.xrc.extracted
+	msgmerge locale/it.po locale/webupdater.pot > locale/it.po.new && mv locale/it.po.new locale/it.po
+	msgfmt --statistics -o locale/it.mo locale/it.po
+	msgmerge locale/de.po locale/webupdater.pot > locale/de.po.new && mv locale/de.po.new locale/de.po
+	msgfmt --statistics -o locale/de.mo locale/de.po
 
 ..\src\webupdater.exe :  $(WEBUPDATER_OBJECTS) locale watcom\webupdater_app.res $(__webupdate_lib___depname)
 	@%create watcom\webupdater.lbc

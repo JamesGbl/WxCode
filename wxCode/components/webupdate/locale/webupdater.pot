@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-03-01 20:37+0100\n"
+"POT-Creation-Date: 2006-03-13 15:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -74,12 +74,12 @@ msgstr ""
 msgid "Cannot open/init the OUPUT stream [%s]"
 msgstr ""
 
-#: src/webupdatedlg.cpp:498
+#: src/webupdatedlg.cpp:501
 #, c-format
 msgid "Cannot parse the XML update script downloaded as: %s"
 msgstr ""
 
-#: src/webupdatedlg.cpp:1230
+#: src/webupdatedlg.cpp:1233
 msgid "Choose a directory"
 msgstr ""
 
@@ -87,7 +87,11 @@ msgstr ""
 msgid "Choose the folder containing the updated packages"
 msgstr ""
 
-#: src/webupdatedlg.cpp:833
+#: src/webupdatedlg.cpp:363
+msgid "Close some applications and then retry."
+msgstr ""
+
+#: src/webupdatedlg.cpp:836
 #, c-format
 msgid ""
 "Could not download the %s from\n"
@@ -97,7 +101,7 @@ msgid ""
 "URL..."
 msgstr ""
 
-#: src/webupdatedlg.cpp:526
+#: src/webupdatedlg.cpp:529
 #, c-format
 msgid ""
 "Could not find any valid package for %1$s in the WebUpdate script.\n"
@@ -113,11 +117,11 @@ msgstr ""
 msgid "Download"
 msgstr ""
 
-#: src/webupdatedlg.cpp:1115
+#: src/webupdatedlg.cpp:1118
 msgid "Download && install"
 msgstr ""
 
-#: src/webupdatedlg.cpp:830
+#: src/webupdatedlg.cpp:833
 msgid "Download aborted..."
 msgstr ""
 
@@ -126,8 +130,8 @@ msgstr ""
 msgid "Download status:"
 msgstr ""
 
-#: src/webupdatectrl.cpp:417 src/installer.cpp:351 src/webupdatedlg.cpp:335
-#: src/webupdatedlg.cpp:365 src/webupdatedlg.cpp:375
+#: src/webupdatectrl.cpp:417 src/installer.cpp:351 src/webupdatedlg.cpp:338
+#: src/webupdatedlg.cpp:368 src/webupdatedlg.cpp:378
 msgid "Error"
 msgstr ""
 
@@ -135,7 +139,7 @@ msgstr ""
 msgid "For reporting bugs about WebUpdater:"
 msgstr ""
 
-#: src/webupdatedlg.cpp:1117
+#: src/webupdatedlg.cpp:1120
 msgid "Get update list"
 msgstr ""
 
@@ -163,10 +167,8 @@ msgstr ""
 msgid "Local version"
 msgstr ""
 
-#: src/webupdatedlg.cpp:359
-msgid ""
-"Low resources; cannot run the WebUpdate dialog...\n"
-"Close some applications and then retry."
+#: src/webupdatedlg.cpp:362
+msgid "Low resources; cannot run the WebUpdate dialog...\n"
 msgstr ""
 
 #: src/webupdatectrl.cpp:415
@@ -179,12 +181,12 @@ msgstr ""
 msgid "NA"
 msgstr ""
 
-#: src/webupdatedlg.cpp:1034 src/webupdatedlg.cpp:1070
-#: src/webupdatedlg.cpp:1112
+#: src/webupdatedlg.cpp:1037 src/webupdatedlg.cpp:1073
+#: src/webupdatedlg.cpp:1115
 msgid "No downloads running..."
 msgstr ""
 
-#: src/webupdatedlg.cpp:467
+#: src/webupdatedlg.cpp:470
 #, c-format
 msgid ""
 "No updates available for this platform (%s)... exiting the update dialog."
@@ -220,7 +222,7 @@ msgstr ""
 msgid "Restart !!HERE GOES THE APPLICATION NAME!! after the update"
 msgstr ""
 
-#: src/webupdatedlg.cpp:1214
+#: src/webupdatedlg.cpp:1217
 #, c-format
 msgid "Restart %s after the update is finished"
 msgstr ""
@@ -282,7 +284,7 @@ msgstr ""
 msgid "The available package updates are:"
 msgstr ""
 
-#: src/webupdatedlg.cpp:877
+#: src/webupdatedlg.cpp:880
 #, c-format
 msgid ""
 "The downloaded file '%1$s'\n"
@@ -301,7 +303,7 @@ msgstr ""
 msgid "The downloaded files will be saved in:"
 msgstr ""
 
-#: src/webupdatedlg.cpp:963
+#: src/webupdatedlg.cpp:966
 #, c-format
 msgid ""
 "The downloaded package '%s'\n"
@@ -321,7 +323,7 @@ msgid ""
 "is missing (or invalid); please reinstall the program."
 msgstr ""
 
-#: src/webupdatedlg.cpp:951
+#: src/webupdatedlg.cpp:954
 msgid ""
 "The installation of the selected packages has been completed successfully !"
 msgstr ""
@@ -361,19 +363,19 @@ msgstr ""
 msgid "Use the given resource name when loading the XRC"
 msgstr ""
 
-#: src/webupdatedlg.cpp:532 src/webupdatedlg.cpp:830
+#: src/webupdatedlg.cpp:535 src/webupdatedlg.cpp:833
 msgid "Warning"
 msgstr ""
 
-#: src/webupdatedlg.cpp:1265
+#: src/webupdatedlg.cpp:1268
 msgid "WebUpdate authentication settings"
 msgstr ""
 
-#: src/webupdatedlg.cpp:1249
+#: src/webupdatedlg.cpp:1252
 msgid "WebUpdate proxy settings"
 msgstr ""
 
-#: src/webupdatedlg.cpp:1106
+#: src/webupdatedlg.cpp:1109
 msgid "WebUpdate script successfully downloaded"
 msgstr ""
 
@@ -426,7 +428,7 @@ msgstr ""
 msgid "WebUpdaterDlg::OnQuit - quitting"
 msgstr ""
 
-#: src/webupdatedlg.cpp:717
+#: src/webupdatedlg.cpp:720
 msgid "XML WebUpdate script"
 msgstr ""
 
@@ -434,14 +436,15 @@ msgstr ""
 msgid "XXXX"
 msgstr ""
 
-#: src/webupdatedlg.cpp:332
+#: src/webupdatedlg.cpp:335
 msgid ""
 "You are not connected to Internet !\n"
-"WebUpdater needs to download the update list from Internet...\n"
-"Please connect and then retry."
+"                           WebUpdater needs to download the update list from "
+"Internet...\n"
+"                           Please connect and then retry."
 msgstr ""
 
-#: src/webupdatedlg.cpp:402
+#: src/webupdatedlg.cpp:405
 #, c-format
 msgid ""
 "You have the latest version of all packages of %s\n"
@@ -452,21 +455,21 @@ msgstr ""
 msgid "c:\\\temp"
 msgstr ""
 
-#: src/webupdatedlg.cpp:1033
+#: src/webupdatedlg.cpp:1036
 msgid "computing the file hash"
-msgstr ""
-
-#: src/webupdatedlg.cpp:1101
-#, c-format
-msgid "downloaded %1$d package(s) and installed %2$d package(s)"
 msgstr ""
 
 #: src/webupdatedlg.cpp:1104
 #, c-format
+msgid "downloaded %1$d package(s) and installed %2$d package(s)"
+msgstr ""
+
+#: src/webupdatedlg.cpp:1107
+#, c-format
 msgid "downloaded %d package(s)"
 msgstr ""
 
-#: src/webupdatedlg.cpp:1054
+#: src/webupdatedlg.cpp:1057
 #, c-format
 msgid "downloading '%1$s' at %2$s"
 msgstr ""
@@ -491,7 +494,7 @@ msgstr ""
 msgid "http://wxcode.sf.net/components/wxhttpengine"
 msgstr ""
 
-#: src/webupdatedlg.cpp:1068
+#: src/webupdatedlg.cpp:1071
 #, c-format
 msgid "installing '%s'"
 msgstr ""
@@ -516,7 +519,7 @@ msgstr ""
 msgid "not installed"
 msgstr ""
 
-#: src/webupdatedlg.cpp:1108
+#: src/webupdatedlg.cpp:1111
 msgid "waiting WebUpdate script download"
 msgstr ""
 
@@ -636,63 +639,63 @@ msgid ""
 "(maybe it's in PATH)"
 msgstr ""
 
-#: src/webupdatedlg.cpp:341
+#: src/webupdatedlg.cpp:344
 msgid "wxWebUpdateDlg::ConnectionRequired - found a valid connection"
 msgstr ""
 
-#: src/webupdatedlg.cpp:336
+#: src/webupdatedlg.cpp:339
 msgid "wxWebUpdateDlg::ConnectionRequired - not connected to Internet !"
 msgstr ""
 
-#: src/webupdatedlg.cpp:620
+#: src/webupdatedlg.cpp:623
 #, c-format
 msgid "wxWebUpdateDlg::DownloadNextPackage - launching download of [%s]"
 msgstr ""
 
-#: src/webupdatedlg.cpp:639
+#: src/webupdatedlg.cpp:642
 #, c-format
 msgid "wxWebUpdateDlg::InstallNextPackage - launching installation of [%s]"
 msgstr ""
 
-#: src/webupdatedlg.cpp:1235
+#: src/webupdatedlg.cpp:1238
 #, c-format
 msgid "wxWebUpdateDlg::OnBrowse - new output path is [%s]"
 msgstr ""
 
-#: src/webupdatedlg.cpp:750
+#: src/webupdatedlg.cpp:753
 msgid "wxWebUpdateDlg::OnCancel - user hit the cancel button..."
 msgstr ""
 
-#: src/webupdatedlg.cpp:846
+#: src/webupdatedlg.cpp:849
 msgid ""
 "wxWebUpdateDlg::OnDownloadComplete - Download status: successfully completed"
 msgstr ""
 
-#: src/webupdatedlg.cpp:869
+#: src/webupdatedlg.cpp:872
 msgid ""
 "wxWebUpdateDlg::OnDownloadComplete - beginning installation of downloaded "
 "packages"
 msgstr ""
 
-#: src/webupdatedlg.cpp:837
+#: src/webupdatedlg.cpp:840
 msgid ""
 "wxWebUpdateDlg::OnDownloadComplete - failed while downloading the XML "
 "script... aborting dialog"
 msgstr ""
 
-#: src/webupdatedlg.cpp:904
+#: src/webupdatedlg.cpp:907
 #, c-format
 msgid ""
 "wxWebUpdateDlg::OnInstallationComplete - completed installation of [%s]..."
 msgstr ""
 
-#: src/webupdatedlg.cpp:947
+#: src/webupdatedlg.cpp:950
 msgid ""
 "wxWebUpdateDlg::OnInstallationComplete - completed the installation of all "
 "packages"
 msgstr ""
 
-#: src/webupdatedlg.cpp:513
+#: src/webupdatedlg.cpp:516
 msgid "wxWebUpdateDlg::OnScriptDownload - XML script loaded successfully"
 msgstr ""
 
