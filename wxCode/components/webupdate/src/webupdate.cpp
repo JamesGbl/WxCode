@@ -702,6 +702,7 @@ wxWebUpdateArch wxWebUpdatePlatform::GetArch(const wxString &arch)
     wxWebUpdateArch ret = wxWUA_INVALID;
     if (arch.StartsWith(wxT("32"))) ret = wxWUA_32;
     if (arch.StartsWith(wxT("64"))) ret = wxWUA_64;
+    if (arch == wxT("any") || arch.IsEmpty()) ret = wxWUA_ANY;
     return ret;
 }
 
@@ -714,7 +715,7 @@ wxWebUpdatePort wxWebUpdatePlatform::GetPort(const wxString &plat)
     if (plat == wxT("mac")) ret = wxWUP_MAC;
     if (plat == wxT("motif")) ret = wxWUP_MOTIF;
     if (plat == wxT("x11")) ret = wxWUP_X11;
-    if (plat == wxT("any")) ret = wxWUP_ANY;
+    if (plat.IsEmpty() || plat == wxT("any")) ret = wxWUP_ANY;
     return ret;
 }
 

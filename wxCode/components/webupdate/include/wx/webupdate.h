@@ -476,15 +476,14 @@ public:
     // constructor using enums
     wxWebUpdatePlatform(const wxWebUpdatePort &port = wxWUP_ANY,
                         const wxWebUpdateArch &arch = wxWUA_32,
-                        const wxString &id = wxT("*"))
-                        : m_name(port), m_arch(arch), m_strID(id) {}
+                        const wxString &id = wxT(".*"))
+                        : m_name(port), m_arch(arch) { SetID(id); }
 
     // constructor with wxStrings
     wxWebUpdatePlatform(const wxString &portname,
                         const wxString &arch = wxT("32"),
-                        const wxString &id = wxT("*"))
-                        : m_strID(id)
-        { m_name = GetPort(portname); m_arch = GetArch(arch); }
+                        const wxString &id = wxT(".*"))
+        { m_name = GetPort(portname); m_arch = GetArch(arch); SetID(id); }
 
     virtual ~wxWebUpdatePlatform() {}
 
@@ -510,7 +509,7 @@ public:         // getters & setters
     void SetArch(wxWebUpdateArch arch)
         { m_arch = arch; }
     void SetID(const wxString &id)
-        { m_strID = id; }
+        { m_strID = id.IsEmpty() ? wxT(".*") : id; }
 
     //! Returns all the info encoded into this object as a single string.
     wxString GetAsString() const;

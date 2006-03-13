@@ -13,7 +13,7 @@
 // declarations
 // ============================================================================
 
-#define VERSION				wxT("2.0.3")
+#define VERSION				wxT("1.0.0")
 #define APP_NAME			wxT("wxWebUpdate SIMPLE sample")
 
 void wxUpdateWebUpdaterIfRequired();
@@ -317,6 +317,10 @@ void wxUpdateAndExit(wxFrame *caller,
   		opts += wxT(" --xml=") + xml;
  	if (!uri.IsEmpty())
   		opts += wxT(" --uri=") + uri;
+
+#ifdef __WXDEBUG__
+    wxMessageBox(wxT("Calling WebUpdater with options: ") + opts);
+#endif
 
 #ifdef __WXMSW__
 	wxExecute(wxT("webupdater.exe") + opts);

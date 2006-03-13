@@ -354,9 +354,13 @@ void WebUpdaterApp::SetupLocale()
         strLangCanonical = m_locale.GetLanguageInfo(langID)->CanonicalName;
 
     } else {
+    
+        // the configuration file for webupdater does not contain any info about
+        // preferred language... use the default one...
+        strLangCanonical = m_locale.GetLanguageInfo(langID)->CanonicalName;
 
         // write the default language in our config object
-        config->Write(wxT("Language"), m_locale.GetLanguageInfo(langID)->CanonicalName);
+        config->Write(wxT("Language"), strLangCanonical);
     }
 
     // Initialization...
@@ -368,14 +372,14 @@ void WebUpdaterApp::SetupLocale()
     if (::wxDirExists(path)) {
         wxLogAdvMsg(wxT("WebUpdaterApp::SetupLocale - found the LANG subfolder"));
 
-        // .mo-files are located in subdir "lang"...
+        // .mo-files are located in subdir "lang" (on Windows)...
         m_locale.AddCatalogLookupPathPrefix(wxT("lang"));
     }
 
     // Initialize the catalog we'll be using
     if (!strLangCanonical.IsEmpty()) {
 
-        wxString fn = strLangCanonical.Before('_') + wxT(".po");
+        wxString fn = strLangCanonical.Before('_') + wxT(".mo");
         wxLogAdvMsg(wxT("WebUpdaterApp::SetupLocale - loading %s catalog"), fn.c_str());
         if (m_locale.AddCatalog(fn))
             wxLogAdvMsg(wxT("WebUpdaterApp::SetupLocale - successfully set the %s catalog"), fn.c_str());

@@ -201,7 +201,9 @@
 <!ELEMENT platform EMPTY>
 <!ATTLIST platform name (msw|gtk|mac|x11|motif|mgl|os2|any) "any">
 <!ATTLIST platform arch (32|64) "32">	<!-- 32 or 64 bit architecture ? -->
-<!ATTLIST platform id CDATA "*">		<!-- a regexp matching the wxGetOsDescription() for the targeted platform -->
+<!ATTLIST platform id CDATA ".*">		<!-- a regexp matching the wxGetOsDescription() for the targeted 
+											 platform; please note that to match *any* OS description you
+											 must use .* and not * since the last one is not a valid regexp! -->
 
 
 
