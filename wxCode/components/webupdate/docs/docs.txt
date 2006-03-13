@@ -52,7 +52,7 @@ platform which it targets, the description, its <b>dependencies on other package
 
 - The <b>DTD</b>s allows you to easily check your XML files: see \ref localdtd and \ref remotedtd.
 
-- Multilanguage support: currently English, Italian and German.
+- <b>Multilanguage</b> support: currently English, Italian and German.
   Mail <a href="mailto:frm@nospam@users.sourceforge.net">me</a> if you want to help adding a new translation !
 
 <br/>
@@ -358,6 +358,21 @@ wxWebUpdateActionFontInstall.
 
   A typical application of "local updates" is to allow the user to update the program using a removable
   device (CD, DVD, floppy or whatelse). See the \c --ask-uri option in the \ref webupdater page.
+
+
+\subsection faq_linuxproblem 3) How can I provide binary updates safely for Linux platform ?
+
+  First of all, since there are so many Linux distributions out there and building a distro-neutral
+  binary is not easy, I suggest you to use the <tt>platform</tt> tag in the remote XML scripts to
+  be able to limitate the update support only to those platforms where you know that your binary runs fine.
+
+  Second, I suggest you to look at the <b>Autopackage project</b>: http://www.autopackage.org.
+  It contains variuos tools which help you to reduce the dependencies of your ELF thus making a lot
+  easier the creation of distro-neutral binaries for Linux.
+  
+  Autopackage is also linked to the LUAU (http://luau.sourceforge.net) project which have similar
+  aims to WebUpdate but for Linux-only. If you want to release your software for Linux only, or you
+  want to provide update support only there, then I suggest you to take a look at it.
 
 <br/>
 

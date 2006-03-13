@@ -43,7 +43,8 @@
  Change Log
  ----------
 
- 1.1 - added i18n support (thanks to Helmut Giritzer)
+ 1.1 - added i18n support (thanks to Helmut Giritzer for german translation and for
+                           help to learn i18n stuff)
  1.0 - first release
 
 
