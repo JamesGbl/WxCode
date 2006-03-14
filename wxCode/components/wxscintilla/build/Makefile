@@ -3,7 +3,7 @@
 ## Purpose:     wxScintilla
 ## Maintainer:  Otto Wyss
 ## Created:     2004-09-19
-## RCS-ID:      $Id: Makefile,v 1.12 2005-12-17 16:05:43 wyo Exp $
+## RCS-ID:      $Id: Makefile,v 1.13 2006-03-14 19:10:49 wyo Exp $
 ## Copyright:   (c) 2004 wxCode
 ## Licence:     wxWindows
 ##############################################################################
@@ -15,6 +15,7 @@ SRC = PlatWX.cpp \
       AutoComplete.cxx \
       CallTip.cxx \
       CellBuffer.cxx \
+      CharClassify.cxx \
       ContractionState.cxx \
       Document.cxx \
       DocumentAccessor.cxx \
@@ -48,6 +49,7 @@ SRC = PlatWX.cpp \
       LexGui4Cli.cxx \
       LexHaskell.cxx \
       LexHTML.cxx \
+      LexInno.cxx \
       LexKix.cxx \
       LexLisp.cxx \
       LexLout.cxx \
@@ -57,6 +59,7 @@ SRC = PlatWX.cpp \
       LexMMIXAL.cxx \
       LexMPT.cxx \
       LexMSSQL.cxx \
+      LexOpal.cxx \
       LexNsis.cxx \
       LexOthers.cxx \
       LexPascal.cxx \
@@ -72,6 +75,7 @@ SRC = PlatWX.cpp \
       LexSpecman.cxx \
       LexSQL.cxx \
       LexTADS3.cxx \
+      LexTCL.cxx \
       LexTeX.cxx \
       LexVB.cxx \
       LexVerilog.cxx \

@@ -12,7 +12,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.h,v 1.30 2006-03-13 19:12:49 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.h,v 1.31 2006-03-14 19:11:29 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -20,7 +20,7 @@
 #ifndef __WXSCINTILLA_H__
 #define __WXSCINTILLA_H__
 
-#define wxSCINTILLA_VERSION _T("1.67.0")
+#define wxSCINTILLA_VERSION _T("1.68.0")
 
 #include <wx/wx.h>
 #include <wx/dnd.h>
@@ -123,14 +123,15 @@
 #define wxSCI_MARGIN_SYMBOL 0
 #define wxSCI_MARGIN_NUMBER 1
 
-// Styles in range 32..37 are predefined for parts of the UI and are not used as normal styles.
-// Styles 38 and 39 are for future use.
+// Styles in range 32..38 are predefined for parts of the UI and are not used as normal styles.
+// Styles 39 is for future use.
 #define wxSCI_STYLE_DEFAULT 32
 #define wxSCI_STYLE_LINENUMBER 33
 #define wxSCI_STYLE_BRACELIGHT 34
 #define wxSCI_STYLE_BRACEBAD 35
 #define wxSCI_STYLE_CONTROLCHAR 36
 #define wxSCI_STYLE_INDENTGUIDE 37
+#define wxSCI_STYLE_CALLTIP 38
 #define wxSCI_STYLE_LASTPREDEFINED 39
 #define wxSCI_STYLE_MAX 127
 
@@ -168,6 +169,7 @@
 #define wxSCI_INDIC_STRIKE 4
 #define wxSCI_INDIC_HIDDEN 5
 #define wxSCI_INDIC_BOX 6
+#define wxSCI_INDIC_ROUNDBOX 7
 #define wxSCI_INDIC0_MASK 0x20
 #define wxSCI_INDIC1_MASK 0x40
 #define wxSCI_INDIC2_MASK 0x80
@@ -308,6 +310,11 @@
 #define wxSCI_SCMOD_CTRL 2
 #define wxSCI_SCMOD_ALT 4
 
+// Caret line alpha background
+#define wxSCI_ALPHA_TRANSPARENT 0
+#define wxSCI_ALPHA_OPAQUE 255
+#define wxSCI_ALPHA_NOALPHA 256
+
 // For SciLexer.h
 #define wxSCI_LEX_CONTAINER 0
 #define wxSCI_LEX_NULL 1
@@ -383,6 +390,8 @@
 #define wxSCI_LEX_FLAGSHIP 73
 #define wxSCI_LEX_CSOUND 74
 #define wxSCI_LEX_FREEBASIC 75
+#define wxSCI_LEX_INNOSETUP 76
+#define wxSCI_LEX_OPAL 77
 
 // When a lexer specifies its language as SCLEX_AUTOMATIC it receives a
 // value assigned in sequence from SCLEX_AUTOMATIC+1.
@@ -427,6 +436,28 @@
 #define wxSCI_C_COMMENTDOCKEYWORD 17
 #define wxSCI_C_COMMENTDOCKEYWORDERROR 18
 #define wxSCI_C_GLOBALCLASS 19
+
+// Lexical states for SCLEX_TCL
+#define wxSCI_TCL_DEFAULT 0
+#define wxSCI_TCL_COMMENT 1
+#define wxSCI_TCL_COMMENTLINE 2
+#define wxSCI_TCL_NUMBER 3
+#define wxSCI_TCL_WORD_IN_QUOTE 4
+#define wxSCI_TCL_IN_QUOTE 5
+#define wxSCI_TCL_OPERATOR 6
+#define wxSCI_TCL_IDENTIFIER 7
+#define wxSCI_TCL_SUBSTITUTION 8
+#define wxSCI_TCL_SUB_BRACE 9
+#define wxSCI_TCL_MODIFIER 10
+#define wxSCI_TCL_EXPAND 11
+#define wxSCI_TCL_WORD 12
+#define wxSCI_TCL_WORD2 13
+#define wxSCI_TCL_WORD3 14
+#define wxSCI_TCL_WORD4 15
+#define wxSCI_TCL_WORD5 16
+#define wxSCI_TCL_WORD6 17
+#define wxSCI_TCL_WORD7 18
+#define wxSCI_TCL_WORD8 19
 
 // Lexical states for SCLEX_HTML, SCLEX_XML
 #define wxSCI_H_DEFAULT 0
@@ -662,6 +693,7 @@
 #define wxSCI_PROPS_SECTION 2
 #define wxSCI_PROPS_ASSIGNMENT 3
 #define wxSCI_PROPS_DEFVAL 4
+#define wxSCI_PROPS_KEY 5
 
 // Lexical states for SCLEX_LATEX
 #define wxSCI_L_DEFAULT 0
@@ -1443,6 +1475,33 @@
 #define wxSCI_CSOUND_IRATE_VAR 13
 #define wxSCI_CSOUND_GLOBAL_VAR 14
 #define wxSCI_CSOUND_STRINGEOL 15
+
+// Lexical states for SCLEX_INNOSETUP
+#define wxSCI_INNO_DEFAULT 0
+#define wxSCI_INNO_COMMENT 1
+#define wxSCI_INNO_KEYWORD 2
+#define wxSCI_INNO_PARAMETER 3
+#define wxSCI_INNO_SECTION 4
+#define wxSCI_INNO_PREPROC 5
+#define wxSCI_INNO_PREPROC_INLINE 6
+#define wxSCI_INNO_COMMENT_PASCAL 7
+#define wxSCI_INNO_KEYWORD_PASCAL 8
+#define wxSCI_INNO_KEYWORD_USER 9
+#define wxSCI_INNO_STRING_DOUBLE 10
+#define wxSCI_INNO_STRING_SINGLE 11
+#define wxSCI_INNO_IDENTIFIER 12
+
+// Lexical states for SCLEX_OPAL
+#define wxSCI_OPAL_SPACE 0
+#define wxSCI_OPAL_COMMENT_BLOCK 1
+#define wxSCI_OPAL_COMMENT_LINE 2
+#define wxSCI_OPAL_INTEGER 3
+#define wxSCI_OPAL_KEYWORD 4
+#define wxSCI_OPAL_SORT 5
+#define wxSCI_OPAL_STRING 6
+#define wxSCI_OPAL_PAR 7
+#define wxSCI_OPAL_BOOL_CONST 8
+#define wxSCI_OPAL_DEFAULT 32
 
 
 //-----------------------------------------
@@ -2233,6 +2292,12 @@ public:
     // Duplicate the selection. If selection empty duplicate the line containing the caret.
     void SelectionDuplicate ();
 
+    // Get the background alpha of the caret line.
+    int GetCaretLineBackroundAlpha ();
+
+    // Set background alpha of the caret line.
+    void SetCaretLineBackgroundAlpha (int alpha);
+
     // Show or hide the horizontal scroll bar.
     void SetUseHorizontalScrollBar (bool show);
 
@@ -2457,6 +2522,9 @@ public:
 
     // Set the foreground colour for the highlighted part of the call tip.
     void CallTipSetForegroundHighlight (const wxColour& fore);
+
+    // Enable use of STYLE_CALLTIP and set call tip tab size in pixels.
+    void CallTipUseStyle (int tabSize);
 
     // Find the display line of a document line taking hidden lines into account.
     int VisibleFromDocLine (int line);

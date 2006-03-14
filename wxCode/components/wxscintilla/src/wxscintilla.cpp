@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.31 2006-03-13 19:12:50 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.32 2006-03-14 19:13:43 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -1434,6 +1434,11 @@ void wxScintilla::CallTipSetForegroundHighlight (const wxColour& fore) {
     SendMsg (SCI_CALLTIPSETFOREHLT, wxColourAsLong(fore), 0);
 }
 
+// Enable use of STYLE_CALLTIP and set call tip tab size in pixels.
+void wxScintilla::CallTipUseStyle (int tabSize) {
+    SendMsg (SCI_CALLTIPUSESTYLE, tabSize, 0);
+}
+
 // Find the display line of a document line taking hidden lines into account.
 int wxScintilla::VisibleFromDocLine (int line) {
     return SendMsg (SCI_VISIBLEFROMDOCLINE, line, 0);
@@ -2231,6 +2236,7 @@ void wxScintilla::ChooseCaretX() {
     SendMsg (SCI_CHOOSECARETX, 0, 0);
 }
 
+// Set the focus to this Scintilla widget (GTK+ specific)
 // Grab focus (SCI_GRABFOCUS) not supported
 
 // Set the way the caret is kept visible when going sideway.
@@ -2479,6 +2485,16 @@ bool wxScintilla::GetPasteConvertEndings () {
 // Duplicate the selection. If selection empty duplicate the line containing the caret.
 void wxScintilla::SelectionDuplicate () {
     SendMsg (SCI_SELECTIONDUPLICATE, 0, 0);
+}
+
+// Get the background alpha of the caret line.
+int wxScintilla::GetCaretLineBackroundAlpha () {
+    return SendMsg (SCI_GETCARETLINEBACKALPHA, 0, 0);
+}
+
+// Set background alpha of the caret line.
+void wxScintilla::SetCaretLineBackgroundAlpha (int alpha) {
+    SendMsg (SCI_SETCARETLINEBACKALPHA, alpha, 0);
 }
 
 // Start notifying the container of all key presses and commands.

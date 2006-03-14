@@ -295,6 +295,14 @@ SOURCE=..\src\scintilla\src\CallTip.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\scintilla\src\CharClassify.cxx
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\scintilla\src\CharClassify.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\scintilla\src\CellBuffer.cxx
 # End Source File
 # Begin Source File
@@ -463,6 +471,10 @@ SOURCE=..\src\scintilla\src\LexHTML.cxx
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\scintilla\src\LexInno.cxx
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\scintilla\src\LexKix.cxx
 # End Source File
 # Begin Source File
@@ -500,6 +512,10 @@ SOURCE=..\src\scintilla\src\LexMSSQL.cxx
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexNsis.cxx
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\scintilla\src\LexOpal.cxx
 # End Source File
 # Begin Source File
 
@@ -556,6 +572,10 @@ SOURCE=..\src\scintilla\src\LexSQL.cxx
 # Begin Source File
 
 SOURCE=..\src\scintilla\src\LexTads3.cxx
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\scintilla\src\LexTCL.cxx
 # End Source File
 # Begin Source File
 

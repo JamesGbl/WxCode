@@ -45,14 +45,21 @@ wxColour wxColourFromCA(const ColourAllocated& ca) {
 Palette::Palette() {
     used = 0;
     allowRealization = false;
+    size = 100;
+    entries = new ColourPair[size];
 }
 
 Palette::~Palette() {
     Release();
+    delete []entries;
+    entries = 0;
 }
 
 void Palette::Release() {
     used = 0;
+    delete []entries;
+    size = 100;
+    entries = new ColourPair[size];
 }
 
 // This method either adds a colour to the list of wanted colours (want==true)
@@ -65,11 +72,20 @@ void Palette::WantFind(ColourPair &cp, bool want) {
                 return;
         }
 
-        if (used < numEntries) {
-            entries[used].desired = cp.desired;
-            entries[used].allocated.Set(cp.desired.AsLong());
-            used++;
+        if (used >= size) {
+            int sizeNew = size * 2;
+            ColourPair *entriesNew = new ColourPair[sizeNew];
+            for (int j=0; j<size; j++) {
+                entriesNew[j] = entries[j];
+            }
+            delete []entries;
+            entries = entriesNew;
+            size = sizeNew;
         }
+
+        entries[used].desired = cp.desired;
+        entries[used].allocated.Set(cp.desired.AsLong());
+        used++;
     } else {
         for (int i=0; i < used; i++) {
             if (entries[i].desired == cp.desired) {
@@ -83,6 +99,7 @@ void Palette::WantFind(ColourPair &cp, bool want) {
 
 void Palette::Allocate(Window &) {
     if (allowRealization) {
+//? TODO ...
     }
 }
 
@@ -158,6 +175,7 @@ public:
     virtual void FillRectangle(PRectangle rc, ColourAllocated back);
     virtual void FillRectangle(PRectangle rc, Surface &surfacePattern);
     virtual void RoundedRectangle(PRectangle rc, ColourAllocated fore, ColourAllocated back);
+    virtual void AlphaRectangle(PRectangle rc, int cornerSize, ColourAllocated fill, int alphaFill, ColourAllocated outline, int alphaOutline, int flags);
     virtual void Ellipse(PRectangle rc, ColourAllocated fore, ColourAllocated back);
     virtual void Copy(PRectangle rc, Point from, Surface &surfaceSource);
 
@@ -310,6 +328,10 @@ void SurfaceImpl::RoundedRectangle(PRectangle rc, ColourAllocated fore, ColourAl
     PenColour(fore);
     BrushColour(back);
     hdc->DrawRoundedRectangle(wxRectFromPRectangle(rc), 4);
+}
+
+void SurfaceImpl::AlphaRectangle(PRectangle rc, int cornerSize, ColourAllocated fill, int alphaFill, ColourAllocated outline, int alphaOutline, int flags) {
+//? TODO ...
 }
 
 void SurfaceImpl::Ellipse(PRectangle rc, ColourAllocated fore, ColourAllocated back) {

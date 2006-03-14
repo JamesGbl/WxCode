@@ -1357,6 +1357,10 @@ While the style setting mentioned above change the style numbers associated with
   <td>37</td>
   <td>This style sets the foreground and background colours used when drawing the   indentation guides.</td>
 </tr><tr>
+  <th align="left"><code>STYLE_CALLTIP</code></th>
+  <td>38</td>
+  <td> Call tips normally use the font attributes defined by <code>wxSCI_STYLE_DEFAULT</code>. Use of <a class="message" href="#CallTipUseStyle"><code>CallTipUseStyle</code></a> causes call tips to use this style instead. Only the font face name, font size, foreground and background colours and character set attributes are used.</td>
+</tr><tr>
   <th align="left"><code>wxSCI_STYLE_LASTPREDEFINED</code></th>
   <td>39</td>
   <td>To make it easier for client code to discover the range of styles that are   predefined, this is set to the style number of the last predefined style. This is   currently set to 39 and the last style with an identifier is 37, which reserves space for   future predefined styles.</td>
@@ -1516,6 +1520,8 @@ The selection is shown by changing the foreground and/or background colours. If 
 <li><a class="message" href="#GetCaretLineVisible">bool GetCaretLineVisible()</a></li>
 <li><a class="message" href="#SetCaretLineBackground">void SetCaretLineBackground (const wxColour& back)</a></li>
 <li><a class="message" href="#GetCaretLineBackground">wxColour GetCaretLineBackground()</a></li>
+<li><a class="message" href="#SetCaretLineBackgroundAlpha">void SetCaretLineBackgroundAlpha (int alpha)</a></li>
+<li><a class="message" href="#GetCaretLineBackgroundAlpha">int GetCaretLineBackgroundAlpha()</a></li>
 <li><a class="message" href="#SetCaretPeriod">void SetCaretPeriod (int milliseconds)</a></li>
 <li><a class="message" href="#GetCaretPeriod">int GetCaretPeriod()</a></li>
 <li><a class="message" href="#SetCaretWidth">void SetCaretWidth (int pixels)</a></li>
@@ -1550,8 +1556,10 @@ The colour of the caret can be set with <code>SetCaretForeground</code> and retr
     <a name="GetCaretLineVisible">bool GetCaretLineVisible()</a><br />
     <a name="SetCaretLineBackground">void SetCaretLineBackground (const wxColour& back)</a><br />
     <a name="GetCaretLineBackground">wxColour GetCaretLineBackground()</a></h4>
+    <a name="SetCaretLineBackgroundAlpha">void SetCaretLineBackground (int alpha)</a><br />
+    <a name="GetCaretLineBackgroundAlpha">int GetCaretLineBackgroundAlpha()</a></h4>
 <p>
-You can choose to make the background colour of the line containing the caret different. To do this, set the desired background colour with <code>SetCaretLineBackground</code>, then use <code>SetCaretLineVisible (true)</code> to enable the effect. You can cancel the effect with <code>SetCaretLineVisible (false)</code>. The two <code>GetCaret...</code> functions return the state and the colour. This form of background colouring has highest priority when a line has markers that would otherwise change the background colour.
+You can choose to make the background colour of the line containing the caret different. To do this, set the desired background colour with <code>SetCaretLineBackground</code>, then use <code>SetCaretLineVisible (true)</code> to enable the effect. You can cancel the effect with <code>SetCaretLineVisible (false)</code>. The two <code>GetCaret...</code> functions return the state and the colour. This form of background colouring has highest priority when a line has markers that would otherwise change the background colour. The caret line may also be drawn translucently which allows other background colours to show through. This is done by setting the alpha (translucency) value by calling <code>SetCaretLineBackgroundAlpha</code>. When the alpha is not <code>wxSCI_ALPHA_NOALPHA</code>, the caret line is drawn after all other features so will affect the colour of all other features.
 </p>
 
 <div class="divider2"></div>
@@ -2350,7 +2358,7 @@ The <code>listType</code> parameter is returned to the container as the <code>wP
 <h3 id="CallTips">Call tips</h3>
 
 <p>
-Call tips are small windows displaying the arguments to a function and are displayed after the user has typed the name of the function. There is some interaction between call tips and autocompletion lists in that showing a call tip cancels any active autocompletion list, and vice versa.
+Call tips are small windows displaying the arguments to a function and are displayed after the user has typed the name of the function. They normally display characters using the font facename, size and character set defined by <a class="message" href="#StyleDefinition"><code>wxSCI_STYLE_DEFAULT</code></a>. You can choose to use <a class="message" href="#StyleCallTip"><code>wxSCI_STYLE_CALLTIP</code></a> to define the facename, size, foreground and background colours and character set with <a class="message" href="#CallTipUseStyle"><code>CallTipUseStyle</code></a>. This also enables support for Tab characters. There is some interaction between call tips and autocompletion lists in that showing a call tip cancels any active autocompletion list, and vice versa.
 </p>
 <p>
 Call tips can highlight part of the text within them. You could use this to highlight the current argument to a function by counting the number of commas (or whatever separator your language uses). See <code>SciTEBase::CharAdded()</code> in <code>SciTEBase.cxx</code> for an example of call tip use.
@@ -2371,14 +2379,15 @@ Alternatively, call tips can be displayed when you leave the mouse pointer for a
 <li><a class="message" href="#CallTipSetBackground">void CallTipSetBackground (const wxColour& back)</a></li>
 <li><a class="message" href="#CallTipSetForeground">void CallTipSetForeground (const wxColour& fore)</a></li>
 <li><a class="message" href="#CallTipSetForegroundHighlight">void CallTipSetForegroundHighlight (const wxColour& fore)</a></li>
+<li><a class="message" href="#CallTipUseStyle">void CallTipUseStyle (int tabSize)</a></li>
 </ul>
 
 <div class="divider2"></div>
 <h4><a name="CallTipShow">void CallTipShow (int pos, const wxString& definition)</a></h4>
 <p>
 Starts the process by displaying the call tip window. If a call tip is already active, this has no effect.<br />
-<code>posStart</code> is the position in the document at which to align the call tip. The call tip text is aligned to start 1 line below this character.<br />
-<code>definition</code> is the call tip text. This can contain multiple lines separated by '\n' (Line Feed, ASCII code 10) characters.
+<code>posStart</code> is the position in the document at which to align the call tip. The call tip text is aligned to start 1 line below this character unless you have included up and/or down arrows in the call tip text in which case the tip is aligned to the right-hand edge of the rightmost arrow. The assumption is that you will start the text with something like "\001 1 of 3 \002".<br />
+<code>definition</code> is the call tip text. This can contain multiple lines separated by '\n' (Line Feed, ASCII code 10) characters. Do not include '\r' (Carriage Return, ASCII code 13), as this will most likely print as an empty box. '\t' (Tab, ASCII code 9) is supported if you set a tabsize with <a class="message" href="#CallTipUseStyle"><code>CallTipUseStyle</code></a>.
 </p>
 
 <div class="divider2"></div>
@@ -2424,6 +2433,12 @@ The colour of call tip text can be set; the default colour is mid gray.
 <h4><a name="CallTipSetForegroundHighlight">void CallTipSetForegroundHighlight (const wxColour& fore)</a></h4>
 <p>
 The colour of highlighted call tip text can be set; the default colour is dark blue.
+</p>
+
+<div class="divider2"></div>
+<h4><a name="CallTipUseStyle">void CallTipUseStyle (int tabSize)</a></h4>
+<p>
+This message changes the style used for call tips from <code>wxSCI_STYLE_DEFAULT</code> to <code>wxSCI_STYLE_CALLTIP</code> and sets a tab size in screen pixels. If <code>tabSize</code> is less than 1, Tab characters are not treated specially. Once this call has been used, the call tip foreground and background colours are also taken from the style.
 </p>
 
 <div class="divider1"></div>
