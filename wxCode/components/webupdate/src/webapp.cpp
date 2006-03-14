@@ -124,7 +124,7 @@ static const wxCmdLineEntryDesc g_cmdLineDesc[] =
         wxTRANSLATE("Restart the updated application when WebUpdater quits"),
         wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
     { wxCMD_LINE_SWITCH, SWITCH_SAVELOG, wxT("savelog"),
-        wxTRANSLATE("Saves the log messages to '") wxWU_LOGFILENAME wxTRANSLATE("'"),
+        wxTRANSLATE("Saves the log messages to '") wxWU_LOGFILENAME wxT("'"),
         wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
 
     // help
@@ -354,7 +354,7 @@ void WebUpdaterApp::SetupLocale()
         strLangCanonical = m_locale.GetLanguageInfo(langID)->CanonicalName;
 
     } else {
-    
+
         // the configuration file for webupdater does not contain any info about
         // preferred language... use the default one...
         strLangCanonical = m_locale.GetLanguageInfo(langID)->CanonicalName;

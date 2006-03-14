@@ -329,12 +329,7 @@ bool wxWebUpdateDlg::ConnectionRequired()
 
         if (!mng->IsOnline()) {
 
-			// the ugly \n\ form is to
-			// 1) make it compilable with MSVC
-			// 2) make it simple to translate keeping it as single paragraph in PO file
-            wxMessageBox(_("You are not connected to Internet !\n\
-                           WebUpdater needs to download the update list from Internet...\n\
-                           Please connect and then retry."),
+            wxMessageBox(_("You are not connected to Internet !\nWebUpdater needs to download the update list from Internet...\nPlease connect and then retry."),
                         _("Error"), wxOK | wxICON_ERROR);
             wxLogUsrMsg(_("wxWebUpdateDlg::ConnectionRequired - not connected to Internet !"));
             res = FALSE;
