@@ -3,7 +3,7 @@
 // Purpose:     wxHyperLink control
 // Maintainer:  Wyo
 // Created:     2003-04-07
-// RCS-ID:      $Id: hyperlink.cpp,v 1.5 2005-09-06 19:21:54 wyo Exp $
+// RCS-ID:      $Id: hyperlink.cpp,v 1.6 2006-03-16 20:16:17 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -122,11 +122,9 @@ void wxHyperLink::OnLinkActivate (wxMouseEvent &WXUNUSED(event)) {
 
 void wxHyperLink::OnPaint (wxPaintEvent &WXUNUSED(event)) {
     wxPaintDC dc(this);
-    dc.BeginDrawing();
     dc.SetFont (GetFont());
     dc.SetTextForeground (GetForegroundColour());
     dc.DrawText (GetLabel(), 0, 0);
-    dc.EndDrawing();
 }
 
 void wxHyperLink::OnWindowEnter (wxMouseEvent &WXUNUSED(event)) {
