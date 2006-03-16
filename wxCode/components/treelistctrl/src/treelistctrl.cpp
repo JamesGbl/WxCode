@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.93 2006-01-17 20:46:00 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.94 2006-03-16 20:16:45 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -1149,7 +1149,6 @@ void wxTreeListHeaderWindow::OnPaint( wxPaintEvent &WXUNUSED(event) )
 
     PrepareDC( dc );
     AdjustDC( dc );
-    dc.BeginDrawing();
     dc.SetFont( GetFont() );
 
     // width and height of the entire header window
@@ -1234,7 +1233,6 @@ void wxTreeListHeaderWindow::OnPaint( wxPaintEvent &WXUNUSED(event) )
         DoDrawRect (&dc, x, HEADER_OFFSET_Y, more_w, h-2 );
     }
 
-    dc.EndDrawing();
 }
 
 void wxTreeListHeaderWindow::DrawCurrent()
