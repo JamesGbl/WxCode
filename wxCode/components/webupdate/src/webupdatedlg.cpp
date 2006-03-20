@@ -384,9 +384,20 @@ bool wxWebUpdateDlg::CheckForAllUpdated(wxWebUpdatePackageArray &arr, bool force
 {
     bool allupdated = TRUE;
     for (int j=0; j < (int)arr.GetCount(); j++) {
-        if (m_pUpdatesList->IsPackageUp2date(arr[j]) != wxWUCF_UPDATED) {
+        wxWebUpdateCheckFlag f = m_pUpdatesList->IsPackageUp2date(arr[j]);
+        if (f == wxWUCF_OUTOFDATE || f == wxWUCF_NOTINSTALLED) {
             allupdated = FALSE;
             break;      // not all packages are uptodate
+        }
+
+        if (f == wxWUCF_FAILED) {
+            wxWebUpdateInstaller::Get()->ShowNotificationMsg(
+                wxString::Format(
+                    _("Update check for package '%1$s' is failed!\nThis can happen because of a corrupted XML local description file (%2$s)"),
+                    arr[j].GetName().c_str(), m_xmlLocal.GetLocalScriptURI().c_str()));
+
+            AbortDialog();
+            return TRUE;        // TRUE = exit this dialog
         }
     }
 
@@ -1039,6 +1050,10 @@ void wxWebUpdateDlg::OnUpdateUI(wxUpdateUIEvent &)
 
             // update our gauge control
             long value = m_dThread->GetCurrDownloadedBytes();
+
+            // DEBUG - FIXME: I'm sometimes hit by a crash because of 'invalid gauge value';
+            // this line should help me to understand why
+            wxLogDebug(wxT("============== Setting %d/%d gauge value"), value >= 0 ? value : 0, m_pGauge->GetRange());
             m_pGauge->SetValue(value >= 0 ? value : 0);
 
             // update speed meter
