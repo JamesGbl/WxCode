@@ -1,0 +1,28 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual C++ Express 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MyPics", "..\sample\MyPics.vcproj", "{2347782E-AFD5-4BF2-A229-B0624487E0D5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{94951D3A-5EB1-4BCC-B5D9-EB77AD8D59D0} = {94951D3A-5EB1-4BCC-B5D9-EB77AD8D59D0}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxMSWResources", "wxMSWResources.vcproj", "{94951D3A-5EB1-4BCC-B5D9-EB77AD8D59D0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2347782E-AFD5-4BF2-A229-B0624487E0D5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2347782E-AFD5-4BF2-A229-B0624487E0D5}.Debug|Win32.Build.0 = Debug|Win32
+		{2347782E-AFD5-4BF2-A229-B0624487E0D5}.Release|Win32.ActiveCfg = Release|Win32
+		{2347782E-AFD5-4BF2-A229-B0624487E0D5}.Release|Win32.Build.0 = Release|Win32
+		{94951D3A-5EB1-4BCC-B5D9-EB77AD8D59D0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{94951D3A-5EB1-4BCC-B5D9-EB77AD8D59D0}.Debug|Win32.Build.0 = Debug|Win32
+		{94951D3A-5EB1-4BCC-B5D9-EB77AD8D59D0}.Release|Win32.ActiveCfg = Release|Win32
+		{94951D3A-5EB1-4BCC-B5D9-EB77AD8D59D0}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

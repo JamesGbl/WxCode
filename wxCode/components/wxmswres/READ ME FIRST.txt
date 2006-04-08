@@ -1,0 +1,37 @@
+wxMSWResources, by Ernesto Rangel Dallet - midnight_software@yahoo.com.mx
+
+************ Introduction *******************
+
+This is the wxMSWResources class, a convenient way of working with resources with wxWidgets in MSW.
+The main goal of the class is to allow you to create apps that do not require ANY external files, 
+like .mo catalogs, images, etc.
+It automatically creates a unique temp folder, allows you to extract resources of any kind 
+to it from the .exe´s module, and deletes them all when the app is closing.
+It also allows you to access resource data directly.
+Make shure you check out the sample app "MyPics" provided as a Visual Studio.net 2003 
+project to learn its usage.
+
+
+************ IMPORTANT NOTE: READ THIS BEFORE POSTING "IT DOESNT LINK!!" ***************
+
+Both the sample project and the library projects, are configured to use static linking 
+to msvcr71.dll (eg. setting Multi-Threaded (/MT) instead of Multi-Threaded DLL (/MD) in VS.NET 2003),
+if you built wxWidgets using dynamic linking (the default), make shure you change the 
+project settings for both projects accordingly or youll get 1,000,000 linker errors.
+
+Why static linking? well, the main goal of this code is to enable you to write .exe-file-only apps,
+and having to distribute msvcr71.dll along with you app is kinda the oposite thing :)
+NE way, if you prefeer dynamic linking, please change the project settings as described above. 
+
+************* USAGE ***********************
+1.- Open the Visual Studio.NET 2003 solution in the build directory.
+2.- (If appropiate) change the linker settings (SEE ABOVE) for both the library & app projects
+3.-  and compile everything on both release & debug configs
+4.- run the app on debug mode, watch the code, etc.
+5.- to use in your own apps: 
+I created a .lib project to conform to wxCode standards, and you can of course
+use wxMSWResources like this (linking to wxmswres.lib), but since were talking 
+about a single (not too large class), i suggest you just add the files wxmswres.h and 
+wxmswres.cpp to you own projects.
+
+I Hope you find this code usefull.

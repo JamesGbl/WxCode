@@ -1,0 +1,17 @@
+appicon         ICON      "res\\appicon.ico"
+
+logo.jpg        image     "res\\logo.jpg"
+me.jpg          image     "res\\me.jpg"
+mountain.jpg    image     "res\\mountain.jpg"
+tree.jpg        image     "res\\tree.jpg"
+wolf.jpg        image     "res\\wolf.jpg"
+
+langcats        zipfile   "res\\lcats.zip"
+
+wxmswres.h      txtfile   "wx/wxmswres.h"
+wxmswres.cpp    txtfile   "wxmswres.cpp"
+
+#define wxUSE_NO_MANIFEST 1
+
+#include "wx/msw/wx.rc"
+

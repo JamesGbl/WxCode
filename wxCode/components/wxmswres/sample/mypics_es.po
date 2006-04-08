@@ -1,0 +1,155 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MyPics\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2005-12-05 17:22-0600\n"
+"Last-Translator: Ernesto <app_guru@yahoo.com.mx>\n"
+"Language-Team: Ernesto Rangel Dallet <midnight_software@yahoo.com.mx>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Basepath: D:\\desarrollo\\proyectos\\MyPics\n"
+"X-Poedit-SourceCharset: iso-8859-1\n"
+"X-Poedit-SearchPath-0: D:\\desarrollo\\proyectos\\MyPics\n"
+
+# D:\desarrollo\proyectos\MyPics/DlgAbout.cpp:73
+msgid ""
+"MyPics 1.0\n"
+"\n"
+"Sample application for the wxMSWResources class.\n"
+"\n"
+"Ernesto Rangel Dallet\n"
+"midnight_software@yahoo.com.mx\n"
+"\n"
+"This app was Created in about 20 minutes with the \n"
+"coolest piece of software known to man:\n"
+"Anthemion DialogBlocks"
+msgstr ""
+"MyPics 1.0\n"
+"\n"
+"Programa de Demostracion para las clases wxMSWResources.\n"
+"\n"
+"Ernesto Rangel Dallet\n"
+"midnight_software@yahoo.com.mx\n"
+"\n"
+"Este programa fué creado en mas o menos 20 minutos \n"
+"con el mejor software software que exsiste:\n"
+"Anthemion DialogBlocks"
+
+# D:\desarrollo\proyectos\MyPics/DlgAbout.cpp:79
+# D:\desarrollo\proyectos\MyPics/DlgLang.cpp:114
+msgid "&OK"
+msgstr "&Aceptar"
+
+# D:\desarrollo\proyectos\MyPics/DlgLang.cpp:105
+msgid "English"
+msgstr "English"
+
+# D:\desarrollo\proyectos\MyPics/DlgLang.cpp:101
+msgid "Select the language for the application"
+msgstr "Select the language for the application"
+
+# D:\desarrollo\proyectos\MyPics/DlgLang.cpp:106
+msgid "Spanish"
+msgstr "Español"
+
+# D:\desarrollo\proyectos\MyPics/DlgLang.cpp:117
+msgid "&Cancel"
+msgstr "&Cancelar"
+
+# D:\desarrollo\proyectos\MyPics/MyFrame.cpp:94
+msgid "&Exit"
+msgstr "&Salir"
+
+# D:\desarrollo\proyectos\MyPics/MyFrame.cpp:95
+msgid "&File"
+msgstr "&Archivo"
+
+# D:\desarrollo\proyectos\MyPics/MyFrame.cpp:97
+msgid "About this POS App..."
+msgstr "Acerca de esta porquería de programa..."
+
+# D:\desarrollo\proyectos\MyPics/MyFrame.cpp:98
+msgid "&Help"
+msgstr "A&yuda"
+
+# D:\desarrollo\proyectos\MyPics/MyFrame.cpp:110
+msgid "tree"
+msgstr "árbol"
+
+# D:\desarrollo\proyectos\MyPics/MyFrame.cpp:111
+msgid "wolf"
+msgstr "lobo"
+
+# D:\desarrollo\proyectos\MyPics/MyFrame.cpp:112
+msgid "mountain"
+msgstr "montaña"
+
+# D:\desarrollo\proyectos\MyPics/MyFrame.cpp:113
+msgid "me"
+msgstr "yo"
+
+# D:\desarrollo\proyectos\MyPics/MyFrame.cpp:118
+msgid "Description:"
+msgstr "Descripción:"
+
+# D:\desarrollo\proyectos\MyPics/MyFrame.cpp:128
+msgid "Pictures"
+msgstr "Imágenes"
+
+# D:\desarrollo\proyectos\MyPics/MyFrame.cpp:137
+msgid "wxmswres.h"
+msgstr "wxmswres.h"
+
+# D:\desarrollo\proyectos\MyPics/MyFrame.cpp:146
+msgid "wxmswres.cpp"
+msgstr "wxmswres.cpp"
+
+# D:\desarrollo\proyectos\MyPics/MyFrame.cpp:178
+msgid "Some nice Tree in the open"
+msgstr "Un bonito árbol en el campo"
+
+# D:\desarrollo\proyectos\MyPics/MyFrame.cpp:180
+msgid "a wolf thinking about some yummy sheep"
+msgstr "Un lobo pensando en una deliciosa obeja"
+
+# D:\desarrollo\proyectos\MyPics/MyFrame.cpp:182
+msgid "some mountain i climed (LOL yea right!)"
+msgstr "Una montaña que escalé (HAH! si como no!)"
+
+# D:\desarrollo\proyectos\MyPics/MyFrame.cpp:184
+msgid "the guy who did this P.O.S. app at the gym"
+msgstr "El wey que hizo esta proqueria de programa, en el Gym"
+
+# D:\desarrollo\proyectos\MyPics/MyFrame.cpp:209
+msgid "Failed to load the Picutre!"
+msgstr "Error al mostrar la Images!"
+
+# D:\desarrollo\proyectos\MyPics/MyFrame.cpp:209
+msgid "Error"
+msgstr "Error"
+
+# D:\desarrollo\proyectos\MyPics/MyPicsApp.cpp:122
+msgid ""
+"Failed to extract the app´s resources.\n"
+"Terminating app..."
+msgstr ""
+"Error al extraer los recursos.\n"
+"Cerrando la aplicación..."
+
+# D:\desarrollo\proyectos\MyPics/MyPicsApp.cpp:123
+msgid "Fatal Error"
+msgstr "Error Fatal"
+
+# D:\desarrollo\proyectos\MyPics/DlgAbout.h:21
+msgid "About MyPics"
+msgstr "Acerca de MyPics"
+
+# D:\desarrollo\proyectos\MyPics/DlgLang.h:40
+msgid "Choose your Language"
+msgstr "Seleccione su Lenguaje"
+
+# D:\desarrollo\proyectos\MyPics/MyFrame.h:26
+msgid "MyPics sample App"
+msgstr "Aplicacion Demo MyPics"
+
