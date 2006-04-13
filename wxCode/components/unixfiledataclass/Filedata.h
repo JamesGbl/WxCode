@@ -17,8 +17,8 @@ FileData( wxString Filename, bool defererence = false );                    // I
 ~FileData(){ if ( symlinkdestination != NULL ) delete symlinkdestination; delete statstruct; }
 
 bool IsValid(){ return result != -1; }
-wxString GetFilepath(){ return result ? wxString("") : Filepath; }
-wxString GetFilename(){ return result ? wxString("") : Filepath.AfterLast(wxFILE_SEP_PATH); }
+wxString GetFilepath(){ return result ? wxString(wxT("")) : Filepath; }
+wxString GetFilename(){ return result ? wxString(wxT("")) : Filepath.AfterLast(wxFILE_SEP_PATH); }
 wxString GetPath();
 
 bool IsFileExecutable();                                                         // See if the file is executable (by SOMEONE, not necessarily us)

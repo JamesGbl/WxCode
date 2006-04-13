@@ -38,18 +38,18 @@ FileData::FileData( wxString filepath, bool defererence /*=false*/ )  :  Filepat
 statstruct = new struct stat;
 
 if ( ! defererence )
-  {  result = lstat(Filepath, statstruct);                                    // lstat rather than stat as it doesn't dereference symlinks
+  {  result = lstat(Filepath.mb_str(wxConvUTF8), statstruct);  // lstat rather than stat as it doesn't dereference symlinks
     if ( !result && IsSymlink() )                                               // If we have a valid result & it's a symlink
         symlinkdestination = new FileData( filepath, true );     //   load another FileData with its reference
      else symlinkdestination = NULL;
   }
  else
-  {  result = stat(Filepath, statstruct);             // Unless we WANT to dereference, in which case use stat
+  {  result = stat(Filepath.mb_str(wxConvUTF8), statstruct);  // Unless we WANT to dereference, in which case use stat
     if ( result != -1 )
       {              // Strangely, stat/lstat don't return any filepath data.  Here we need it, so we have to use readlink
           char buf[500];          // We have to specify a char buffer.  500 bytes should be long enough: it gets truncated anyway
-          int ans = readlink(Filepath, buf, 500 );                   // Readlink inserts into buf the destination filepath of the symlink
-          if ( ans != -1 ) 	Filepath = wxString( buf, ans );     // If it worked, ans holds the length of the destination filepath. Put it into Filepath
+          int ans = readlink(Filepath.mb_str(wxConvUTF8), buf, 500 );    // Readlink inserts into buf the destination filepath of the symlink
+          if ( ans != -1 ) 	Filepath = wxString( buf, wxConvUTF8, ans );  // If it worked, ans holds the length of the destination filepath. Put it into Filepath
             else 
               {  BrokenlinkName = Filepath;         // If readlink was unsuccessful, store the broken-link name here
                   Filepath = wxEmptyString;           //      and kill the symlink's name
@@ -87,7 +87,7 @@ if ( ! IsValid() ) return false;
        // We can't use access() if this is a symlink, as it reports on the target instead.  This is a particular problem if the symlink is broken!
 if ( IsSymlink() ) return true;                      // All symlinks seem to have global rwx permissions
 
-int result = access(Filepath, R_OK);                 // Use 'access' to see if we have read permission
+int result = access(Filepath.mb_str(wxConvUTF8), R_OK);        // Use 'access' to see if we have read permission
 return ( result==0 ?  true : false );
 }
 
@@ -95,13 +95,13 @@ bool FileData::CanTHISUserWrite()    // Do WE have permission to write to this f
 {
 if ( ! IsValid() ) return false;
        // We can't use access() if this is a symlink, as it reports on the target instead.  This is a particular problem if the symlink is broken!
-if ( IsSymlink() )                                   // All symlinks seem to have global rwx permissions, so no need to check for these
+if ( IsSymlink() )                                      // All symlinks seem to have global rwx permissions, so no need to check for these
   { struct statvfs buf;                              // However we do need to check for a ro filesystem
-    int ans = statvfs( GetPath(), &buf );            // Use the path here, rather than the filepath, as statvfs can't cope with broken symlinks
+    int ans = statvfs( GetPath().mb_str(wxConvUTF8), &buf );   // Use the path here, rather than the filepath, as statvfs can't cope with broken symlinks
     return ( ans==0 && (buf.f_flag & ST_RDONLY)==0 );
   }
 
-int result = access(Filepath, W_OK);                 // Use 'access' to see if we have write permission
+int result = access(Filepath.mb_str(wxConvUTF8), W_OK);    // Use 'access' to see if we have write permission
 return ( result==0 ?  true : false );
 }
 
@@ -109,7 +109,7 @@ bool FileData::CanTHISUserExecute()  // Do WE have permission to execute this fi
 {
 if ( ! IsValid() ) return false;
    // I _am_ using access() here, even for symlinks. Otherwise, as symlinks all have rwx permissions, they'll all appear to be executable, even if the target isn't!
-int result = access(Filepath, X_OK);                 // Use 'access' to see if we have execute permission
+int result = access(Filepath.mb_str(wxConvUTF8), X_OK);   // Use 'access' to see if we have execute permission
 return ( result==0 ?  true : false );
 }
 
@@ -119,7 +119,7 @@ if ( ! IsValid() ) return false;
        // We can't use access() if this is a symlink, as it reports on the target instead.  This is a particular problem if the symlink is broken!
 if ( IsSymlink() ) return CanTHISUserWrite();                 // All symlinks seem to have global rwx permissions, but use CanTHISUserWrite() to check for a ro filesystem
 
-int result = access(Filepath, W_OK | X_OK);                 // Use 'access' to see if we have write/exec permissions
+int result = access(Filepath.mb_str(wxConvUTF8), W_OK | X_OK);    // Use 'access' to see if we have write/exec permissions
 return ( result==0 ?  true : false );
 }
 
@@ -154,7 +154,7 @@ if ( ! CanTHISUserChmod()	) return false;                      // Check we have 
 
 if ( newmode == (statstruct->st_mode & 07777) ) return false;  // Check the new mode isn't identical to the current one!
 
-return (chmod( Filepath, newmode ) == 0);                     // All's well, so do the chmod. Success is flagged by zero return
+return (chmod( Filepath.mb_str(wxConvUTF8), newmode ) == 0);   // All's well, so do the chmod. Success is flagged by zero return
 }
 
 bool FileData::DoChangeOwner( uid_t owner )  // If appropriate, change the file's owner
@@ -164,7 +164,7 @@ if ( ! IsValid() ) return false;
 if ( owner == invalid || owner == OwnerID() )  return false;     // because there's nothing to do
 if ( getuid() != 0 )	return false;                                       // Only root can change ownership
 
-return (lchown( Filepath, owner, invalid ) == 0);               // Try to do the chown (actually lchown as this works on links too).  Zero return means success
+return (lchown( Filepath.mb_str(wxConvUTF8), owner, invalid ) == 0);    // Try to do the chown (actually lchown as this works on links too).  Zero return means success
 }
 
 bool FileData::DoChangeGroup( gid_t group )  // If appropriate, change the file's group
@@ -174,7 +174,7 @@ if ( ! IsValid() ) return false;
 if ( group == invalid || group == GroupID() )  return false;	    // because there's nothing to do
 if ( getuid()!=0 && getuid()!=OwnerID() )  return false;          // Only the file-owner or root can change a group
 
-return (lchown( Filepath, invalid, group ) == 0);               // Try to do the chown (actually lchown as this works on links too).  Zero return means success
+return (lchown( Filepath.mb_str(wxConvUTF8), invalid, group ) == 0);   // Try to do the chown (actually lchown as this works on links too).  Zero return means success
 }
 
 wxString FileData::GetParsedSize()  // Returns the size, but in bytes, KB or MB according to magnitude
@@ -185,7 +185,7 @@ return ParseSize( Size() );                                               // Use
 wxString FileData::PermissionsToText()  // Returns a string describing the filetype & permissions eg -rwxr--r--, just like ls -l does
 {
 wxString text;
-text.Printf("%c%c%c%c%c%c%c%c%c%c", IsRegularFile() ? wxT('-') : wxT('d'),  // To start with, assume all non-regular files are dirs
+text.Printf(wxT("%c%c%c%c%c%c%c%c%c%c"), IsRegularFile() ? wxT('-') : wxT('d'),  // To start with, assume all non-regular files are dirs
     IsUserReadable() ? wxT('r') : wxT('-'), IsUserWriteable() ? wxT('w') : wxT('-'), IsUserExecutable() ? wxT('x') : wxT('-'),
     IsGroupReadable() ? wxT('r') : wxT('-'), IsGroupWriteable() ? wxT('w') : wxT('-'), IsGroupExecutable() ? wxT('x') : wxT('-'),
     IsOtherReadable() ? wxT('r') : wxT('-'), IsOtherWriteable() ? wxT('w') : wxT('-'), IsOtherExecutable() ? wxT('x') : wxT('-')
@@ -225,24 +225,24 @@ return type;
 wxString FileData::GetOwner()  // Returns owner's name as string
 {
 struct passwd* p = getpwuid( OwnerID() );                       // Use getpwuid to fill password struct
- 
-return p == NULL ? wxEmptyString : p->pw_name;
+wxString name(p->pw_name, wxConvUTF8);
+return p == NULL ? wxT("") : name;
 }
 
 wxString FileData::GetGroup()	 // Returns group name as string
 {
 struct group* g=getgrgid( GroupID() );                            // Use getgrgid to fill group struct
- 
-return g == NULL ? wxEmptyString : g->gr_name;
+wxString name(g->gr_name, wxConvUTF8);
+return g == NULL ? wxT("") : name;
 }
 
 wxString FileData::GetUltimateDestination()  // Returns the filepath at the end of a series of symlinks (or the original filepath if not a symlink)
 {
 char buf[500];
 // This function absolutes a relative path, and undoes any symlinks within the path eg /foo/subdir where foo is a symlink for /bar
-if ( realpath( GetFilepath().c_str(), buf ) == NULL ) return wxEmptyString;
+if ( realpath( GetFilepath().mb_str(wxConvUTF8), buf ) == NULL ) return wxEmptyString;
 
-return wxString(buf);
+return wxString(buf, wxConvUTF8);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -254,9 +254,9 @@ wxString ParseSize( size_t bytes )    // Returns a string filled with the size, 
 {
 wxString text;
 
-if ( bytes < 1024 )	text.Printf( "%uB", bytes );
- else if  ( bytes < 1048576 )	text.Printf( "%.1fK", ((float)bytes) / 1024 );
-   else text.Printf( "%.1fM", ((float)bytes) / 1048576 );
+if ( bytes < 1024 )	text.Printf( wxT("%uB"), bytes );
+ else if  ( bytes < 1048576 )	text.Printf( wxT("%.1fK"), ((float)bytes) / 1024 );
+   else text.Printf( wxT("%.1fM"), ((float)bytes) / 1048576 );
 
 return text;
 }
