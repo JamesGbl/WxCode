@@ -3,7 +3,7 @@
 // Purpose:     wxHyperLink control
 // Maintainer:  Wyo
 // Created:     2003-04-07
-// RCS-ID:      $Id: hyperlink.cpp,v 1.6 2006-03-16 20:16:17 wyo Exp $
+// RCS-ID:      $Id: hyperlink.cpp,v 1.7 2006-04-14 18:42:33 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -109,7 +109,7 @@ bool wxHyperLink::Create (wxWindow *parent,
 // event handlers
 
 void wxHyperLink::OnLinkActivate (wxMouseEvent &WXUNUSED(event)) {
-    m_Visited = TRUE;
+    m_Visited = true;
     SetForegroundColour (m_VisitedColour);
     SetBackgroundColour (m_BackgroundColour);
     Refresh();
