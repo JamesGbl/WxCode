@@ -3,7 +3,7 @@
 // Purpose:     splittest application
 // Maintainer:  Otto Wyss
 // Created:     2004-12-21
-// RCS-ID:      $Id: splittest.cpp,v 1.5 2006-01-05 13:01:57 wyo Exp $
+// RCS-ID:      $Id: splittest.cpp,v 1.6 2006-05-07 14:30:30 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -69,6 +69,14 @@ This application is derived from the demo sample of wyoGuide.\
 ");
 const wxString APP_WYOGUIDE = _T("http://wyoguide.sourceforge.net");
 
+// menu id's
+enum {
+    myID_DUMMY = wxID_HIGHEST,
+    myID_SPLIT_VERT,
+    myID_SPLIT_HORZ,
+    myID_UNSPLIT_ONE,
+    myID_UNSPLIT_TWO,
+};
 
 //----------------------------------------------------------------------------
 //! global application name
@@ -139,6 +147,7 @@ public:
     void OnClose (wxCloseEvent &event);
     void OnAbout (wxCommandEvent &event);
     void OnExit (wxCommandEvent &event);
+    void OnView (wxCommandEvent &event);
 
 private:
     //! creates the application menu bar
@@ -176,7 +185,7 @@ bool App::OnInit () {
     g_appname.Append (APP_NAME);
 
     // about box shown for 3 seconds
-    AppAbout (NULL, 3000);
+    //?AppAbout (NULL, 3000);
 
     // create application frame
     m_frame = new AppFrame (APP_NAME);
@@ -288,6 +297,10 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
     // common events
     EVT_CLOSE (                      AppFrame::OnClose)
     // file events
+    EVT_MENU (myID_SPLIT_VERT,       AppFrame::OnView)
+    EVT_MENU (myID_SPLIT_HORZ,       AppFrame::OnView)
+    EVT_MENU (myID_UNSPLIT_ONE,      AppFrame::OnView)
+    EVT_MENU (myID_UNSPLIT_TWO,      AppFrame::OnView)
     EVT_MENU (wxID_EXIT,             AppFrame::OnExit)
     // help events
     EVT_MENU (wxID_ABOUT,            AppFrame::OnAbout)
@@ -305,9 +318,11 @@ AppFrame::AppFrame (const wxString &title)
 
     // create split window
     m_split = new wxSplitWindow (this);
-    m_one = new wxTextCtrl (m_split, -1, _("Window one \nThis tests need some more text \n\nand again more..."));
-    m_two = new wxTextCtrl (m_split, -1, _("Window two \nThis tests need some more text \n\nand again more..."));
-    m_split->Initialize (m_one, m_two, wxVERTICAL, 100, 50); // default halve sized, vertical
+    m_one = new wxTextCtrl (m_split, -1, _("Window one \nThis tests need some more text \n\nand again more..."),
+                            wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE);
+    m_two = new wxTextCtrl (m_split, -1, _("Window two \nThis tests need some more text \n\nand again more..."),
+                            wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE);
+    m_split->Initialize (m_one, m_two); // default halve sized, vertical
 
 }
 
@@ -327,11 +342,30 @@ void AppFrame::OnExit (wxCommandEvent &WXUNUSED(event)) {
     Close (true);
 }
 
+void AppFrame::OnView (wxCommandEvent &event) {
+    int w,h;
+    m_split->GetClientSize(&w,&h);
+    if (event.GetId() == myID_SPLIT_VERT) {
+        m_split->Initialize (m_one, m_two, w/3);
+    }else if (event.GetId() == myID_SPLIT_HORZ){
+        m_split->Initialize (m_one, m_two, h/3, wxSPLIT_HORIZONTAL);
+    }else if (event.GetId() == myID_UNSPLIT_ONE){
+        m_split->Unsplit (m_one);
+    }else if (event.GetId() == myID_UNSPLIT_TWO){
+        m_split->Unsplit (m_two);
+    }
+}
+
 // private functions
 void AppFrame::CreateMenu () {
 
     // File menu
     wxMenu *menuFile = new wxMenu;
+    menuFile->Append (myID_SPLIT_VERT, _("&Split vertical"));
+    menuFile->Append (myID_SPLIT_HORZ, _("&Split horizontal"));
+    menuFile->Append (myID_UNSPLIT_ONE, _("&Unsplit first"));
+    menuFile->Append (myID_UNSPLIT_TWO, _("&Unsplit second"));
+    menuFile->AppendSeparator();
     menuFile->Append (wxID_EXIT, _("&Quit\tCtrl+Q"));
 
     // Help menu
