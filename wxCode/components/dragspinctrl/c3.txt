@@ -1,0 +1,1 @@
+*1a *2b *1b *2c *1c *5t *1c *2d *1d *2e +1C +273K *1C *1.8auxF +0auxF +32F *1N *1kg*m/s^2 *1W *1V*A *1J *1N*m *1W *1J/s *1C *1A*s *1l/s *3600m^3/h *1l/s *1W*K/m^2

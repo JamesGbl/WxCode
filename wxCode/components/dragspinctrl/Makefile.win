@@ -1,0 +1,51 @@
+# Project: spinctrl
+# Makefile created by Dev-C++ 4.9.9.2
+
+CPP  = g++.exe
+CC   = gcc.exe
+WINDRES = windres.exe
+RES  = 
+OBJ  = dragbutt.o dragbutt-gtk.o dragbutt-msw.o fdragspinctrl.o main.o wxconversion.o wxoperandbinarytree.o wxsciunitparser.o $(RES)
+LINKOBJ  = dragbutt.o dragbutt-gtk.o dragbutt-msw.o fdragspinctrl.o main.o wxconversion.o wxoperandbinarytree.o wxsciunitparser.o $(RES)
+LIBS =  -L"C:/Dev-Cpp/lib" -mwindows -mthreads -Wl,--subsystem,windows -mwindows -lwx_mswu-2.6 -lpng -lz -ljpeg -ltiff -lz -lrpcrt4 -loleaut32 -lole32 -luuid -lodbc32 -lole32 -loleaut32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lcomdlg32 -lctl3d32 -ladvapi32 -lwsock32 -lgdi32 
+INCS =  -I"C:/Dev-Cpp/include"  -I"C:/Dev-Cpp/lib/wx/include/msw-unicode-release-static-2.6"  -I"C:/Dev-Cpp/include/wx-2.6" 
+CXXINCS =  -I"C:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"C:/Dev-Cpp/include/c++/3.4.2/backward"  -I"C:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"C:/Dev-Cpp/include/c++/3.4.2"  -I"C:/Dev-Cpp/include"  -I"C:/Dev-Cpp/lib/wx/include/msw-unicode-release-static-2.6"  -I"C:/Dev-Cpp/include/wx-2.6" 
+BIN  = spinctrl.exe
+CXXFLAGS = $(CXXINCS) -I"C:\Dev-Cpp\\include\..\lib\wx\include\msw-unicode-release-static-2.6" -I"C:\Dev-Cpp\\include\wx-2.6" -D__WXMSW__ -mthreads -DNO_GCC_PRAGMA  -fexpensive-optimizations -O3
+CFLAGS = $(INCS) -I"C:\Dev-Cpp\\include\..\lib\wx\include\msw-unicode-release-static-2.6" -I"C:\Dev-Cpp\\include\wx-2.6" -D__WXMSW__ -mthreads -DNO_GCC_PRAGMA  -fexpensive-optimizations -O3
+RM = rm -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before spinctrl.exe all-after
+
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CPP) $(LINKOBJ) -o "spinctrl.exe" $(LIBS)
+
+dragbutt.o: dragbutt.cpp
+	$(CPP) -c dragbutt.cpp -o dragbutt.o $(CXXFLAGS)
+
+dragbutt-gtk.o: dragbutt-gtk.cpp
+	$(CPP) -c dragbutt-gtk.cpp -o dragbutt-gtk.o $(CXXFLAGS)
+
+dragbutt-msw.o: dragbutt-msw.cpp
+	$(CPP) -c dragbutt-msw.cpp -o dragbutt-msw.o $(CXXFLAGS)
+
+fdragspinctrl.o: fdragspinctrl.cpp
+	$(CPP) -c fdragspinctrl.cpp -o fdragspinctrl.o $(CXXFLAGS)
+
+main.o: main.cpp
+	$(CPP) -c main.cpp -o main.o $(CXXFLAGS)
+
+wxconversion.o: wxconversion.cpp
+	$(CPP) -c wxconversion.cpp -o wxconversion.o $(CXXFLAGS)
+
+wxoperandbinarytree.o: wxoperandbinarytree.cpp
+	$(CPP) -c wxoperandbinarytree.cpp -o wxoperandbinarytree.o $(CXXFLAGS)
+
+wxsciunitparser.o: wxsciunitparser.cpp
+	$(CPP) -c wxsciunitparser.cpp -o wxsciunitparser.o $(CXXFLAGS)
