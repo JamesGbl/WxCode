@@ -9,7 +9,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: ScintillaWX.cpp,v 1.22 2006-04-21 16:04:24 wyo Exp $
+// RCS-ID:      $Id: ScintillaWX.cpp,v 1.23 2006-06-05 14:53:08 wyo Exp $
 // Copyright:   (c) 2000 by Total Control Software
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -832,13 +832,15 @@ void ScintillaWX::DoLeftButtonDown(Point pt, unsigned int curTime, bool shift, b
 }
 
 void ScintillaWX::DoLeftButtonUp(Point pt, unsigned int curTime, bool ctrl) {
+    ButtonUp(pt, curTime, ctrl);
 #if wxUSE_DRAG_AND_DROP
     if (startDragTimer->IsRunning()) {
         startDragTimer->Stop();
+        SetDragPosition(invalidPosition);
         SetEmptySelection(PositionFromLocation(pt));
+        ShowCaretAtCurrentPosition();
     }
 #endif
-    ButtonUp(pt, curTime, ctrl);
 }
 
 void ScintillaWX::DoLeftButtonMove(Point pt) {
