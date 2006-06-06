@@ -31,7 +31,7 @@ wxScintilla implements the <a href="http://scintilla.sourceforge.net/" target=_t
 <li><a href="http://prdownloads.sourceforge.net/wxcode/wxscintilla_1.68.1.tar.gz?download" target=_top>wxscintilla_1.68.1.tar.gz</a> Platform in dependent source.</li>
 </ul>
 <p>
-Everything and more can be downloaded from <a href="http://sourceforge.net/project/showfiles.php?group_id=51305" target=_top>sourceforge.net</a> or you can browse the <a href="http://cvs.sourceforge.net/viewcvs.py/wxcode/wxCode/components/wxscintilla/" target=_top>CVS</a> source tree.
+Everything and more can be downloaded from <a href="http://sourceforge.net/project/showfiles.php?group_id=51305" target=_top>sourceforge.net</a> or you can browse the <a href="http://wxcode.cvs.sourceforge.net/wxcode/wxCode/components/wxscintilla/" target=_top>CVS</a> source tree.
 </p>
 
 <h4>Documentation</h4>

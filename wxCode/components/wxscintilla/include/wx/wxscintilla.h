@@ -12,7 +12,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.h,v 1.32 2006-04-18 20:58:17 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.h,v 1.33 2006-06-06 19:16:25 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -20,7 +20,7 @@
 #ifndef __WXSCINTILLA_H__
 #define __WXSCINTILLA_H__
 
-#define wxSCINTILLA_VERSION _T("1.68.1")
+#define wxSCINTILLA_VERSION _T("1.69.0")
 
 #include <wx/wx.h>
 #include <wx/dnd.h>
@@ -392,6 +392,7 @@
 #define wxSCI_LEX_FREEBASIC 75
 #define wxSCI_LEX_INNOSETUP 76
 #define wxSCI_LEX_OPAL 77
+#define wxSCI_LEX_SPICE 78
 
 // When a lexer specifies its language as SCLEX_AUTOMATIC it receives a
 // value assigned in sequence from SCLEX_AUTOMATIC+1.
@@ -458,6 +459,8 @@
 #define wxSCI_TCL_WORD6 17
 #define wxSCI_TCL_WORD7 18
 #define wxSCI_TCL_WORD8 19
+#define wxSCI_TCL_COMMENT_BOX 20
+#define wxSCI_TCL_BLOCK_COMMENT 21
 
 // Lexical states for SCLEX_HTML, SCLEX_XML
 #define wxSCI_H_DEFAULT 0
@@ -1238,6 +1241,7 @@
 #define wxSCI_AU3_SPECIAL 12
 #define wxSCI_AU3_EXPAND 13
 #define wxSCI_AU3_COMOBJ 14
+#define wxSCI_AU3_UDF 15
 
 // Lexical states for SCLEX_APDL
 #define wxSCI_APDL_DEFAULT 0
@@ -1502,6 +1506,17 @@
 #define wxSCI_OPAL_PAR 7
 #define wxSCI_OPAL_BOOL_CONST 8
 #define wxSCI_OPAL_DEFAULT 32
+
+// Lexical states for SCLEX_SPICE
+#define wxSCI_SPICE_DEFAULT 0
+#define wxSCI_SPICE_IDENTIFIER 1
+#define wxSCI_SPICE_KEYWORD 2
+#define wxSCI_SPICE_KEYWORD2 3
+#define wxSCI_SPICE_KEYWORD3 4
+#define wxSCI_SPICE_NUMBER 5
+#define wxSCI_SPICE_DELIMITER 6
+#define wxSCI_SPICE_VALUE 7
+#define wxSCI_SPICE_COMMENTLINE 8
 
 
 //-----------------------------------------
@@ -1996,6 +2011,9 @@ public:
     // Add a set of markers to a line.
     void MarkerAddSet (int line, int markerSet);
 
+    // Set the alpha used for a marker that is drawn in the text area, not the margin.
+    void MarkerSetAlpha (int markerNumber, int alpha);
+
     // Set a margin to be either numeric or symbolic.
     void SetMarginType (int margin, int marginType);
 
@@ -2055,6 +2073,12 @@ public:
 
     // Set a style to be a hotspot or not.
     void StyleSetHotSpot (int style, bool hotspot);
+
+    // Get the alpha of the selection.
+    int GetSelAlpha ();
+
+    // Set the alpha of the selection.
+    void SetSelAlpha (int alpha);
 
     // Set the foreground colour of the selection and whether to use this setting.
     void SetSelForeground (bool useSetting, const wxColour& fore);

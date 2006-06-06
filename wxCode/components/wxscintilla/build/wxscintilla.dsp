@@ -567,6 +567,10 @@ SOURCE=..\src\scintilla\src\LexSpecman.cxx
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\scintilla\src\LexSpice.cxx
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\scintilla\src\LexSQL.cxx
 # End Source File
 # Begin Source File

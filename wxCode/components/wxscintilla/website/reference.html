@@ -1514,6 +1514,8 @@ The selection is shown by changing the foreground and/or background colours. If 
 <ul style="list-style-type:none">
 <li><a class="message" href="#SetSelForeground">void SetSelForeground (bool useSetting, const wxColour& fore)</a></li>
 <li><a class="message" href="#SetSelBackground">void SetSelBackground (bool useSetting, const wxColour& back)</a></li>
+<li><a class="message" href="#SetSelAlpha">void SetSelAlpha (int alpha)</a></li>
+<li><a class="message" href="#GetSelAlpha">int GetSelAlpha()</a></li>
 <li><a class="message" href="#SetCaretForeground">void SetCaretForeground (const wxColour& fore)</a></li>
 <li><a class="message" href="#GetCaretForeground">wxColour GetCaretForeground()</a></li>
 <li><a class="message" href="#SetCaretLineVisible">void SetCaretLineVisible (bool show)</a></li>
@@ -1542,6 +1544,13 @@ The selection is shown by changing the foreground and/or background colours. If 
     <a name="SetSelBackground">void SetSelBackground (bool useSetting, const wxColour& back)</a></h4>
 <p>
 You can choose to override the default selection colouring with these two functions. The colour you provide is used if you set <code>useSetting</code> to <code>true</code>. If it is set to <code>false</code>, the default colour colouring is used and the <code>colour</code> argument has no effect.
+</p>
+
+<div class="divider2"></div>
+<h4><a name="SetSelAlpha">void SetSelAlpha (int alpha)</a><br />
+    <a name="GetSelAlpha">GetSelAlpha()</a></h4>
+<p>
+The selection background can be drawn translucently in the selection background colour by setting an alpha value.
 </p>
 
 <div class="divider2"></div>
@@ -1910,6 +1919,7 @@ The markers are drawn in the order of their numbers, so higher numbered markers 
 <li><a class="message" href="#MarkerDefineBitmap">void MarkerDefineBitmap (int markerNumber, const wxBitmap& bmp)</a></li>
 <li><a class="message" href="#MarkerSetForeground">void MarkerSetForeground (int markerNumber, const wxColour& fore)</a></li>
 <li><a class="message" href="#MarkerSetBackground">void MarkerSetBackground (int markerNumber, const wxColour& back)</a></li>
+<li><a class="message" href="#MarkerSetAlpha">void MarkerSetAlpha (int markerNumber, int alpha)</a></li>
 <li><a class="message" href="#MarkerAdd">int MarkerAdd (int line, int markerNumber)</a></li>
 <li><a class="message" href="#MarkerAddSet">int MarkerAddSet (int line, int markerSet)</a></li>
 <li><a class="message" href="#MarkerDelete">void MarkerDelete (int line, int markerNumber)</a></li>
@@ -2038,6 +2048,12 @@ This table shows which <code>wxSCI_MARK_</code>* symbols should be assigned to w
     <a name="MarkerSetBackground">void MarkerSetBackground (int markerNumber, const wxColour& back)</a></h4>
 <p>
 Set the foreground and background colour of a marker number. Default colours for foreground is <code>black</code>, for background is <code>white</code>. Usually but not always the foreground colour is used to outline a marker symbol and the background colour is used to fill the symbol. Sometimes only one colour is used. The background is also used as the text background when the marker isn't displayed as a margin.
+</p>
+
+<div class="divider2"></div>
+<h4><a name="MarkerSetAlpha">void MarkerSetAlpha (int markerNumber, int alpha)</a></h4>
+<p>
+When markers are drawn in the content area, either because there is no margin for them or they are of <code>wxSCI_MARK_BACKGROUND</code> type, they may be drawn translucently by setting an alpha value.
 </p>
 
 <div class="divider2"></div>

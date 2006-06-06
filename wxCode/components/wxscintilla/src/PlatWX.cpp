@@ -598,13 +598,11 @@ void Window::Show(bool show) {
 
 void Window::InvalidateAll() {
     GETWIN(id)->Refresh(false);
-    wxWakeUpIdle();
 }
 
 void Window::InvalidateRectangle(PRectangle rc) {
     wxRect r = wxRectFromPRectangle(rc);
     GETWIN(id)->Refresh(false, &r);
-    wxWakeUpIdle();
 }
 
 void Window::SetFont(Font &font) {
@@ -1391,20 +1389,20 @@ int Platform::DBCSCharMaxLength() {
 //----------------------------------------------------------------------
 
 ElapsedTime::ElapsedTime() {
-    wxLongLong localTime = wxGetLocalTimeMillis(); 
-    littleBit = localTime.GetLo(); 
-    bigBit = localTime.GetHi(); 
+    wxLongLong localTime = wxGetLocalTimeMillis();
+    littleBit = localTime.GetLo();
+    bigBit = localTime.GetHi();
 }
 
 double ElapsedTime::Duration(bool reset) {
-    wxLongLong prevTime(bigBit, littleBit); 
-    wxLongLong localTime = wxGetLocalTimeMillis(); 
-    if(reset) { 
-        littleBit = localTime.GetLo(); 
-        bigBit = localTime.GetHi(); 
-    } 
-    wxLongLong duration = localTime - prevTime; 
-    double result = duration.ToDouble(); 
+    wxLongLong prevTime(bigBit, littleBit);
+    wxLongLong localTime = wxGetLocalTimeMillis();
+    if(reset) {
+        littleBit = localTime.GetLo();
+        bigBit = localTime.GetHi();
+    }
+    wxLongLong duration = localTime - prevTime;
+    double result = duration.ToDouble();
     result /= 1000.0;
     return result;
 }

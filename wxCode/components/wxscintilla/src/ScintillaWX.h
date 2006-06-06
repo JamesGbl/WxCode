@@ -9,7 +9,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: ScintillaWX.h,v 1.8 2006-03-14 19:13:57 wyo Exp $
+// RCS-ID:      $Id: ScintillaWX.h,v 1.9 2006-06-06 19:16:25 wyo Exp $
 // Copyright:   (c) 2000 by Total Control Software
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -180,6 +180,7 @@ private:
 #if wxUSE_DRAG_AND_DROP
     wxSCIDropTarget*    dropTarget;
     wxDragResult        dragResult;
+    bool                dragRectangle;
     wxTimer*            startDragTimer;
 #endif
 
