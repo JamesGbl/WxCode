@@ -3,15 +3,15 @@
   ////////////////////////////////////////////////////////////////////////////////////////////
   // Author: YOUR_NAME
   // Creation date: someday/somemonth/someyear
-  // RCS-ID: $Id: index.php,v 1.1 2006-06-06 18:45:35 frm Exp $
+  // RCS-ID: $Id: index.php,v 1.2 2006-06-15 13:48:02 pgava Exp $
   // Notes: the index page of the website of this component
   ////////////////////////////////////////////////////////////////////////////////////////////
 ?>
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-AU">
 	<?php
-      $compname = "wxChartNAME";
-      $subdir = "wxChartSUBDIR";
+      $compname = "wxChart";
+      $subdir = "wxchart";
       require("compwebsite.inc.php");
   ?>
 
@@ -27,7 +27,7 @@
 	<!-- NOTE on SCREENSHOTS:
        to write screenshots link with automatic thumbnail-generation, you can write something like:
 
-       <?php writeScreenshotLink("myshot.png", "wxChart running with wxMSW 2.5.3"); ?>
+       <?php writeScreenshotLink("wxchart_samp1.png", "wxChart running with wxMSW 2.6.3"); ?>
 
 	     where the 'myshot.png' file is a file that you have uploaded in
           /home/groups/w/wx/wxcode/htdocs/screenshots/wxChartSUBDIR
@@ -41,9 +41,10 @@
        block...
   -->
 	<br/><?php write_h1("Screenshots"); ?>
-	<p>Description</p>
+	<p>This is a screenshot of the sample application that you can find included in the source project. 
+    Here you can see how Bar &amp; Pie chart looks like in Linux.</p>
   <div class="center">
-    <?php writeScreenshotLink("myshot.png", "description goes here"); ?>
+    <?php writeScreenshotLink("wxchart_samp1.png", "wxchart sample"); ?>
   </div>
 
 
@@ -52,7 +53,7 @@
        that will make your component more appealing: some sample snippet of code,
        docs, bugs & feature requests... -->
   <br/><?php write_h1("Usage sample"); ?>
-  <?php writeSnippet('
+  <!--<?php writeSnippet('
 // sample CPP snippet which shows how to use this component:
 myComp *newcomp = new myComp();
 newcomp->SetAAAA("aaa");
@@ -63,7 +64,7 @@ newcomp->SetBBBB("bbb");
 // escape it in this way: \'
 newcomp->Show();
 '); ?>
-
+-->
 
   <!-- NOTE TO THE DOCUMENTATION: for uploading you component docs in the website,
        see the ReadMe.txt file at wxCode\template... -->
