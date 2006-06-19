@@ -9,7 +9,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: ScintillaWX.cpp,v 1.23 2006-06-05 14:53:08 wyo Exp $
+// RCS-ID:      $Id: ScintillaWX.cpp,v 1.24 2006-06-19 17:47:21 wyo Exp $
 // Copyright:   (c) 2000 by Total Control Software
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -187,6 +187,35 @@ static wxTextFileType wxConvertEOLMode(int scintillaMode)
 }
 #endif // wxUSE_DATAOBJ
 
+
+static int wxCountLines(const char* text, int scintillaMode)
+{
+    char eolchar;
+
+    switch (scintillaMode) {
+        case wxSCI_EOL_CRLF:
+        case wxSCI_EOL_LF:
+            eolchar = '\n';
+            break;
+        case wxSCI_EOL_CR:
+            eolchar = '\r';
+            break;
+        default:
+            return 0;
+    }
+
+    int count = 0;
+    int i     = 0;
+    while (text[i] != 0) {
+        if (text[i] == eolchar) {
+            count++;
+        }
+        i++;
+    }
+
+    return count;
+}
+
 //----------------------------------------------------------------------
 // Constructor/Destructor
 
@@ -228,6 +257,7 @@ void ScintillaWX::Initialise() {
     dropTarget = new wxSCIDropTarget;
     dropTarget->SetScintilla(this);
     sci->SetDropTarget(dropTarget);
+    dragRectangle = false;
 #endif
 #ifdef __WXMAC__
     vs.extraFontFlag = false;  // UseAntiAliasing
@@ -256,30 +286,29 @@ void ScintillaWX::StartDrag() {
 
 void ScintillaWX::DoStartDrag() {
 #if wxUSE_DRAG_AND_DROP
-    wxString dragText = sci2wx(drag.s, drag.len);
+    wxString dragText = sci2wx (drag.s, drag.len);
 
     // Send an event to allow the drag text to be changed
     wxScintillaEvent evt(wxEVT_SCI_START_DRAG, sci->GetId());
-    evt.SetEventObject(sci);
-    evt.SetDragText(dragText);
-    evt.SetDragAllowMove(true);
-    evt.SetPosition(wxMin(sci->GetSelectionStart(),
-                          sci->GetSelectionEnd()));
-    sci->GetEventHandler()->ProcessEvent(evt);
-    dragText = evt.GetDragText();
+    evt.SetEventObject (sci);
+    evt.SetDragText (dragText);
+    evt.SetDragAllowMove (true);
+    evt.SetPosition (wxMin(sci->GetSelectionStart(), sci->GetSelectionEnd()));
+    sci->GetEventHandler()->ProcessEvent (evt);
 
+    dragText = evt.GetDragText();
+    dragRectangle = drag.rectangular;
     if (dragText.Length()) {
-        wxDropSource        source(sci);
-        wxTextDataObject    data(dragText);
-        wxDragResult        result;
+        wxDropSource source(sci);
+        wxTextDataObject data(dragText);
+        wxDragResult result;
 
         source.SetData(data);
         dropWentOutside = true;
         result = source.DoDragDrop(evt.GetDragAllowMove());
-        if (result == wxDragMove && dropWentOutside)
-            ClearSelection();
+        if (result == wxDragMove && dropWentOutside) ClearSelection();
         inDragDrop = false;
-        SetDragPosition(invalidPosition);
+        SetDragPosition (invalidPosition);
     }
 #endif
 }
@@ -450,7 +479,6 @@ void ScintillaWX::CancelModes() {
 }
 
 
-
 void ScintillaWX::Copy() {
     if (currentPos != anchor) {
         SelectionText st;
@@ -465,22 +493,49 @@ void ScintillaWX::Paste() {
     ClearSelection();
 
 #if wxUSE_DATAOBJ
-    wxTextDataObject data;
-    bool gotData = false;
+    wxTextDataObject textData;
+    wxString textString;
+
+    wxWX2MBbuf buf;
+    int   len  = 0;
+    bool  rectangular = false;
 
     if (wxTheClipboard->Open()) {
         wxTheClipboard->UsePrimarySelection(false);
-        gotData = wxTheClipboard->GetData(data);
+        wxCustomDataObject selData(wxDF_PRIVATE);
+        bool gotRectData = wxTheClipboard->GetData(selData);
+
+        if (gotRectData && selData.GetSize()>1) {
+            const char* rectBuf = (const char*)selData.GetData();
+            rectangular = rectBuf[0] == (char)1;
+            len = selData.GetDataSize()-1;
+            char* buffer = new char[len];
+            memcpy (buffer, rectBuf+1, len);
+            textString = sci2wx(buffer, len);
+            delete buffer;
+        } else {
+            bool gotTextData = wxTheClipboard->GetData(textData);
+            if (gotTextData) {
+                textString = wxTextBuffer::Translate (textData.GetText(),
+                                                      wxConvertEOLMode(pdoc->eolMode));
+            }
+        }
         wxTheClipboard->Close();
     }
-    if (gotData) {
-        wxString   text = wxTextBuffer::Translate(data.GetText(),
-                                                  wxConvertEOLMode(pdoc->eolMode));
-        wxWX2MBbuf buf = (wxWX2MBbuf)wx2sci(text);
-        int        len = strlen(buf);
-        pdoc->InsertString(currentPos, buf, len);
-        SetEmptySelection(currentPos + len);
+
+    buf = (wxWX2MBbuf)wx2sci(textString);
+    len  = strlen(buf);
+    int newPos = 0;
+    if (rectangular) {
+        int newLine = pdoc->LineFromPosition (currentPos) + wxCountLines (buf, pdoc->eolMode);
+        int newCol = pdoc->GetColumn(currentPos);
+        PasteRectangular (currentPos, buf, len);
+        newPos = pdoc->FindColumn (newLine, newCol);
+    } else {
+        pdoc->InsertString (currentPos, buf, len);
+        newPos = currentPos + len;
     }
+    SetEmptySelection (newPos);
 #endif // wxUSE_DATAOBJ
 
     pdoc->EndUndoAction();
@@ -489,12 +544,27 @@ void ScintillaWX::Paste() {
 }
 
 
-void ScintillaWX::CopyToClipboard(const SelectionText& st) {
+void ScintillaWX::CopyToClipboard (const SelectionText& st) {
 #if wxUSE_CLIPBOARD
     if (wxTheClipboard->Open()) {
-        wxTheClipboard->UsePrimarySelection(false);
-        wxString text = wxTextBuffer::Translate(sci2wx(st.s, st.len-1));
-        wxTheClipboard->SetData(new wxTextDataObject(text));
+        wxTheClipboard->UsePrimarySelection (false);
+        wxString text = wxTextBuffer::Translate (sci2wx(st.s, st.len-1));
+
+        // composite object will hold "plain text" for pasting in other programs and a custom
+        // object for local use that remembers what kind of selection was made (stream or
+        // rectangular).
+        wxDataObjectComposite* obj = new wxDataObjectComposite();
+        wxCustomDataObject* rectData = new wxCustomDataObject (wxDF_PRIVATE);
+
+        char* buffer = new char[st.len+1];
+        buffer[0] = (st.rectangular)? (char)1 : (char)0;
+        memcpy (buffer+1, st.s, st.len);
+        rectData->SetData (st.len+1, buffer);
+        delete buffer;
+
+        obj->Add (rectData, true);
+        obj->Add (new wxTextDataObject (text));
+        wxTheClipboard->SetData (obj);
         wxTheClipboard->Close();
     }
 #else
@@ -864,8 +934,8 @@ void ScintillaWX::DoMiddleButtonUp(Point pt) {
         wxTheClipboard->Close();
     }
     if (gotData) {
-        wxString   text = wxTextBuffer::Translate(data.GetText(),
-                                                  wxConvertEOLMode(pdoc->eolMode));
+        wxString   text = wxTextBuffer::Translate (data.GetText(),
+                                                   wxConvertEOLMode(pdoc->eolMode));
         wxWX2MBbuf buf = (wxWX2MBbuf)wx2sci(text);
         int        len = strlen(buf);
         pdoc->InsertString(currentPos, buf, len);
@@ -995,8 +1065,7 @@ void ScintillaWX::DoOnIdle(wxIdleEvent& evt) {
 bool ScintillaWX::DoDropText(long x, long y, const wxString& data) {
     SetDragPosition(invalidPosition);
 
-    wxString text = wxTextBuffer::Translate(data,
-                                            wxConvertEOLMode(pdoc->eolMode));
+    wxString text = wxTextBuffer::Translate (data, wxConvertEOLMode(pdoc->eolMode));
 
     // Send an event to allow the drag details to be changed
     wxScintillaEvent evt(wxEVT_SCI_DO_DROP, sci->GetId());
@@ -1013,7 +1082,7 @@ bool ScintillaWX::DoDropText(long x, long y, const wxString& data) {
         DropAt(evt.GetPosition(),
                wx2sci(evt.GetDragText()),
                dragResult == wxDragMove,
-               false); // TODO: rectangular?
+               dragRectangle);
         return true;
     }
     return false;
