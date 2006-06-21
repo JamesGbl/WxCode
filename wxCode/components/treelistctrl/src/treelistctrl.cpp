@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.94 2006-03-16 20:16:45 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.95 2006-06-21 17:32:56 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -105,9 +105,9 @@ class  wxTreeListHeaderWindow : public wxWindow
 {
 protected:
     wxTreeListMainWindow *m_owner;
-    wxCursor             *m_currentCursor;
-    wxCursor             *m_resizeCursor;
-    bool                 m_isDragging;
+    const wxCursor *m_currentCursor;
+    const wxCursor *m_resizeCursor;
+    bool m_isDragging;
 
     // column being resized
     int m_column;
