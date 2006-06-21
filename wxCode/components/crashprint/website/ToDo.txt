@@ -1,6 +1,6 @@
 To do
 =====
-- everything and testing
+- testing
 
 
 Future enhancements
