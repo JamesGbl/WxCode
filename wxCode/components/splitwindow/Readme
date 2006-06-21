@@ -1,7 +1,7 @@
 Component:  wxSplitWindow
-Release:    2005-09-19
+Release:    2006-06-21
 Documents:  http://wxcode.sourceforge.net/components/splitwindow/index.html
-wxWidgets:  2.6.1
+wxWidgets:  2.6.x
 Maintainer: Otto Wyss (wyo)
 Subdir:     splitwindow
 
