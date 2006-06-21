@@ -3,7 +3,7 @@
 // Purpose:     mimetest application
 // Maintainer:  Otto Wyss
 // Created:     2005-03-07
-// RCS-ID:      $Id: mimetest.cpp,v 1.6 2006-01-05 13:01:31 wyo Exp $
+// RCS-ID:      $Id: mimetest.cpp,v 1.7 2006-06-21 17:28:24 wyo Exp $
 // Copyright:   (c) 2005 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -186,7 +186,7 @@ bool App::OnInit () {
     g_appname.Append (APP_NAME);
 
     // about box shown for 3 seconds
-    AppAbout (NULL, 3000);
+    //?AppAbout (NULL, 3000);
 
     // create application frame
     m_frame = new AppFrame (APP_NAME);
@@ -352,27 +352,37 @@ void AppFrame::OnTest (wxCommandEvent &event) {
     data.filename = wxFileName (file).GetFullName();
     data.description = _T("");
     data.appname = _T("");
+    if ((event.GetId() == myID_MATCH) ||
+        (event.GetId() == myID_ISSTANDARD)) {
+        data.appname = wxGetTextFromUser (_T("Enter the application name"));
+    }
 
     // check mime type
     wxString text;
     if (event.GetId() == myID_EXISTS) {
         if (m_mime->Exists (&data)) {
-            text = wxString::Format (_T("Mime type of %s exists\n"), data.extension.c_str());
+            text = wxString::Format (_T("Mime type of %s exists\n\n"), data.extension.c_str());
+        }else{
+            text = wxString::Format (_T("Mime type of %s doesn't exist\n\n"), data.extension.c_str());
         }
     }else if (event.GetId() == myID_MATCH) {
         if (m_mime->Match (&data)) {
-            text = wxString::Format (_T("Mime type of %s matches\n"), data.extension.c_str());
+            text = wxString::Format (_T("Mime type of %s matches\n\n"), data.extension.c_str());
+        }else{
+            text = wxString::Format (_T("Mime type of %s doesn't match\n\n"), data.extension.c_str());
         }
     }else if (event.GetId() == myID_ISSTANDARD) {
         if (m_mime->IsStandard (&data)) {
-            text = wxString::Format (_T("Mime type of %s is standard\n"), data.extension.c_str());
+            text = wxString::Format (_T("Mime type of %s is standard\n\n"), data.extension.c_str());
+        }else{
+            text = wxString::Format (_T("Mime type of %s is not standard\n\n"), data.extension.c_str());
         }
     }else if (event.GetId() == myID_GETDATA) {
         if (m_mime->GetData (&data)) {
-            wxString text = wxString::Format (_T("Extension: %s\nDescription: %s\nAppname: %s\n"),
-                                              data.extension.c_str(),
-                                              data.description.c_str(),
-                                              data.appname.c_str());
+            text = wxString::Format (_T("Extension: %s\nDescription: %s\nAppname: %s\n\n"),
+                                     data.extension.c_str(), data.description.c_str(), data.appname.c_str());
+        }else{
+            text = wxString::Format (_T("Mime type of %s doesn't exist\n\n"), data.extension.c_str());
         }
     }
     m_data->SetValue (text);

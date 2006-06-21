@@ -3,7 +3,7 @@
 // Purpose:     wxMimeType control
 // Maintainer:  Wyo
 // Created:     2005-03-08
-// RCS-ID:      $Id: mimetypes.cpp,v 1.5 2005-09-19 17:54:04 wyo Exp $
+// RCS-ID:      $Id: mimetypes.cpp,v 1.6 2006-06-21 17:29:06 wyo Exp $
 // Copyright:   (c) 2005 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -118,10 +118,12 @@ bool wxMimeType::IsStandard (wxMimeTypeData* data) {
 
 bool wxMimeType::GetData (wxMimeTypeData* data) {
 
+    wxArrayString mimeTypes;
     wxFileType *filetype;
     filetype = wxTheMimeTypesManager->GetFileTypeFromExtension (data->extension);
     if (!filetype) return false;
-    filetype->GetMimeType (&data->mimetype);
+    if (!filetype->GetMimeTypes (mimeTypes)) return false;
+    data->mimetype = mimeTypes[0];
     filetype->GetDescription (&data->description);
     wxFileType::MessageParameters params (data->filename, data->mimetype);
     filetype->GetOpenCommand (&data->appname, params);
