@@ -12,7 +12,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.h,v 1.34 2006-06-19 17:48:26 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.h,v 1.35 2006-06-24 07:38:07 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -20,7 +20,7 @@
 #ifndef __WXSCINTILLA_H__
 #define __WXSCINTILLA_H__
 
-#define wxSCINTILLA_VERSION _T("1.69.1")
+#define wxSCINTILLA_VERSION _T("1.69.2")
 
 #include <wx/wx.h>
 #include <wx/dnd.h>
