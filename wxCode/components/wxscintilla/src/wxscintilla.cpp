@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.33 2006-06-06 19:16:25 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.34 2006-06-24 07:37:29 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -3154,12 +3154,7 @@ void wxScintilla::NotifyChange() {
 
 static void SetEventText (wxScintillaEvent& evt, const char* text, size_t length) {
     if(!text) return;
-    // The unicode conversion MUST have a null byte to terminate the
-    // string so move it into a buffer first and give it one.
-    wxMemoryBuffer buf(length+1);
-    buf.AppendData ((void*)text, length);
-    buf.AppendByte (0);
-    evt.SetText (sci2wx(buf));
+    evt.SetText(sci2wx(text, length));
 }
 
 void wxScintilla::NotifyParent (SCNotification* _scn) {

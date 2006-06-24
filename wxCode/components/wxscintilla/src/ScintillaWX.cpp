@@ -9,7 +9,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: ScintillaWX.cpp,v 1.24 2006-06-19 17:47:21 wyo Exp $
+// RCS-ID:      $Id: ScintillaWX.cpp,v 1.25 2006-06-24 07:37:29 wyo Exp $
 // Copyright:   (c) 2000 by Total Control Software
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -493,7 +493,7 @@ void ScintillaWX::Paste() {
     ClearSelection();
 
 #if wxUSE_DATAOBJ
-    wxTextDataObject textData;
+    wxTextDataObject data;
     wxString textString;
 
     wxWX2MBbuf buf;
@@ -514,12 +514,13 @@ void ScintillaWX::Paste() {
             textString = sci2wx(buffer, len);
             delete buffer;
         } else {
-            bool gotTextData = wxTheClipboard->GetData(textData);
-            if (gotTextData) {
-                textString = wxTextBuffer::Translate (textData.GetText(),
+            bool gotData = wxTheClipboard->GetData(data);
+            if (gotData) {
+                textString = wxTextBuffer::Translate (data.GetText(),
                                                       wxConvertEOLMode(pdoc->eolMode));
             }
         }
+        data.SetText(wxEmptyString); // free the data object content
         wxTheClipboard->Close();
     }
 
@@ -934,9 +935,11 @@ void ScintillaWX::DoMiddleButtonUp(Point pt) {
         wxTheClipboard->Close();
     }
     if (gotData) {
-        wxString   text = wxTextBuffer::Translate (data.GetText(),
-                                                   wxConvertEOLMode(pdoc->eolMode));
+        wxString text = wxTextBuffer::Translate (data.GetText(),
+                                                 wxConvertEOLMode(pdoc->eolMode));
+        data.SetText(wxEmptyString); // free the data object content
         wxWX2MBbuf buf = (wxWX2MBbuf)wx2sci(text);
+//?        text = wxEmptyString; // free text
         int        len = strlen(buf);
         pdoc->InsertString(currentPos, buf, len);
         SetEmptySelection(currentPos + len);
