@@ -172,7 +172,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib winmm.lib wsock32.lib wxbase26ud.lib wxbase26ud_net.lib wxbase26ud_odbc.lib wxbase26ud_xml.lib wxexpatd.lib wxjpegd.lib wxmsw26ud_adv.lib wxmsw26ud_core.lib wxmsw26ud_dbgrid.lib wxmsw26ud_gl.lib wxmsw26ud_html.lib wxpngd.lib wxregexud.lib wxtiffd.lib wxzlibd.lib wxscintillaud_dev.lib /nologo /subsystem:windows /debug /machine:I386 /libpath:"$(WXSTABLE)\lib\vc_lib" /libpath:"..\..\lib"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib winmm.lib wsock32.lib wxbase26ud.lib wxbase26ud_net.lib wxbase26ud_odbc.lib wxbase26ud_xml.lib wxexpatd.lib wxjpegd.lib wxmsw26ud_adv.lib wxmsw26ud_core.lib wxmsw26ud_dbgrid.lib wxmsw26ud_gl.lib wxmsw26ud_html.lib wxpngd.lib wxregexud.lib wxtiffd.lib wxzlibd.lib wxscintillaud.lib /nologo /subsystem:windows /debug /machine:I386 /libpath:"$(WXSTABLE)\lib\vc_lib" /libpath:"..\..\lib"
 # SUBTRACT LINK32 /profile /incremental:no
 
 !ELSEIF  "$(CFG)" == "test - Win32 ReleaseUnicode"
@@ -200,7 +200,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26u.lib wxbase26u_net.lib wxbase26u_odbc.lib wxbase26u_xml.lib wxexpat.lib wxjpeg.lib wxmsw26u_adv.lib wxmsw26u_core.lib wxmsw26u_dbgrid.lib wxmsw26u_gl.lib wxmsw26u_html.lib wxpng.lib wxregexu.lib wxtiff.lib wxzlib.lib wxscintillau_dev.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"LIBCMT.lib" /libpath:"$(WXSTABLE)\lib\vc_lib" /libpath:"..\..\lib"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26u.lib wxbase26u_net.lib wxbase26u_odbc.lib wxbase26u_xml.lib wxexpat.lib wxjpeg.lib wxmsw26u_adv.lib wxmsw26u_core.lib wxmsw26u_dbgrid.lib wxmsw26u_gl.lib wxmsw26u_html.lib wxpng.lib wxregexu.lib wxtiff.lib wxzlib.lib wxscintillau.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"LIBCMT.lib" /libpath:"$(WXSTABLE)\lib\vc_lib" /libpath:"..\..\lib"
 # SUBTRACT LINK32 /profile /map /debug
 
 !ELSEIF  "$(CFG)" == "test - Win32 Debug"
@@ -294,10 +294,6 @@ SOURCE=.\prefs.h
 # Begin Source File
 
 SOURCE=.\test.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\test.ico
 # End Source File
 # Begin Source File
 

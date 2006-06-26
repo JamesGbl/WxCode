@@ -151,8 +151,8 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
-# ADD BASE LIB32 /nologo /out:"..\lib\wxscintillaud_dev.lib"
-# ADD LIB32 /nologo /out:"..\lib\wxscintillaud_dev.lib"
+# ADD BASE LIB32 /nologo /out:"..\lib\wxscintillaud.lib"
+# ADD LIB32 /nologo /out:"..\lib\wxscintillaud.lib"
 
 !ELSEIF  "$(CFG)" == "wxscintilla - Win32 ReleaseUnicode"
 
@@ -175,8 +175,8 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
-# ADD BASE LIB32 /nologo /out:"..\lib\wxscintillau_dev.lib"
-# ADD LIB32 /nologo /out:"..\lib\wxscintillau_dev.lib"
+# ADD BASE LIB32 /nologo /out:"..\lib\wxscintillau.lib"
+# ADD LIB32 /nologo /out:"..\lib\wxscintillau.lib"
 
 !ELSEIF  "$(CFG)" == "wxscintilla - Win32 Debug"
 

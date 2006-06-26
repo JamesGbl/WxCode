@@ -3,7 +3,7 @@
 // Purpose:     wxScintilla test application
 // Maintainer:  Otto Wyss
 // Created:     2003-09-01
-// RCS-ID:      $Id: test.cpp,v 1.7 2006-01-05 13:02:51 wyo Exp $
+// RCS-ID:      $Id: test.cpp,v 1.8 2006-06-26 18:01:26 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows licence
 //////////////////////////////////////////////////////////////////////////////
@@ -29,7 +29,6 @@
 #include <wx/config.h>   // configuration support
 #include <wx/filedlg.h>  // file dialog support
 #include <wx/filename.h> // filename support
-#include <wx/notebook.h> // notebook support
 #include <wx/settings.h> // system settings
 #include <wx/string.h>   // strings support
 #include <wx/image.h>    // images support
@@ -62,9 +61,9 @@ const wxString APP_COPYRIGTH = _T("(C) 2005 Otto Wyss");
 
 #define APP_DESCR _("\
 wxScintilla implements the Scintilla editing control (see \n\
-http://scintilla.sourceforge.net/) with the wxWidgets API. It's \n\
-derived from wxStyledTextCtrl and has the same functionality \n\
-and a rather similar API.\
+http://wxcode.sf.net/components/wxscintilla/website/index.html) \n\
+with the wxWidgets API. It's derived from wxStyledTextCtrl and has the \n\
+same functionality and a rather similar API.\
 ")
 const wxString APP_WEBSITE = _T("http://wxcode.sourceforge.net/");
 const wxString APP_WEBPAGE = _T("components/wxscintilla/website/index.html");
@@ -89,7 +88,6 @@ wxPageSetupData *g_pageSetupData = (wxPageSetupData*) NULL;
 //----------------------------------------------------------------------------
 //! class declarations
 class AppFrame;
-class AppBook;
 
 
 //----------------------------------------------------------------------------
@@ -117,7 +115,6 @@ DECLARE_APP (App);
 //! frame of the application
 class AppFrame: public wxFrame {
     friend class App;
-    friend class AppBook;
     friend class AppAbout;
 
 public:
@@ -309,7 +306,6 @@ AppFrame::AppFrame (const wxString &title)
     // set icon and background
     SetTitle (*g_appname);
     SetIcon (wxICON (mondrian));
-    SetBackgroundColour (_T("WHITE"));
 
     // create menu
     m_menuBar = new wxMenuBar;
