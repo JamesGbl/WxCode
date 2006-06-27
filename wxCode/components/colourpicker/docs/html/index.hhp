@@ -1,0 +1,28 @@
+[OPTIONS]
+Compiled file=..\colourpicker.chm
+Compatibility=1.1
+Full-text search=Yes
+Contents file=index.hhc
+Default Window=main
+Default topic=index.html
+Index file=index.hhk
+Language=0x409 English (United States)
+Title=wxColourPicker
+
+[WINDOWS]
+main="wxColourPicker","index.hhc","index.hhk","index.html","index.html",,,,,0x23520,,0x387e,,,,,,,,0
+
+[FILES]
+index.html
+annotated.html
+functions.html
+functions_func.html
+classwx_colour_picker.html
+classwx_colour_picker-members.html
+classwx_colour_picker_event.html
+classwx_colour_picker_event-members.html
+dir_C_3A_2Fcvsfiles_2Fcolorpicker_2Finclude_2F.html
+dir_C_3A_2Fcvsfiles_2Fcolorpicker_2Fsamples_2F.html
+dir_C_3A_2Fcvsfiles_2Fcolorpicker_2Fsrc_2F.html
+dir_C_3A_2Fcvsfiles_2Fcolorpicker_2Finclude_2Fwx_2F.html
+dirs.html

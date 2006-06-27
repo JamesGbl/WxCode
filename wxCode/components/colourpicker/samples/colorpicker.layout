@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget index="0" />
+	<File name="..\include\wx\colourpicker.h" open="1" top="0" tabpos="7">
+		<Cursor position="2269" topLine="60" />
+	</File>
+	<File name="app.cpp" open="1" top="0" tabpos="4">
+		<Cursor position="102" topLine="0" />
+	</File>
+	<File name="app.h" open="1" top="0" tabpos="1">
+		<Cursor position="241" topLine="0" />
+	</File>
+	<File name="mainframe.cpp" open="1" top="0" tabpos="5">
+		<Cursor position="758" topLine="0" />
+	</File>
+	<File name="mainframe.h" open="1" top="0" tabpos="2">
+		<Cursor position="627" topLine="0" />
+	</File>
+	<File name="recursos.rc" open="1" top="0" tabpos="3">
+		<Cursor position="27" topLine="0" />
+	</File>
+	<File name="..\src\colourpicker.cpp" open="1" top="1" tabpos="6">
+		<Cursor position="6942" topLine="171" />
+	</File>
+</CodeBlocks_layout_file>

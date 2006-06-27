@@ -1,0 +1,20 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML><HEAD></HEAD><BODY>
+<OBJECT type="text/site properties">
+<param name="FrameName" value="right">
+</OBJECT>
+<UL>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classwx_colour_picker.html#5f2bd36d2dbec62b6849c316baf77650"><param name="Name" value="GetColour"></OBJECT>
+  <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classwx_colour_picker.html#5f2bd36d2dbec62b6849c316baf77650"><param name="Name" value="wxColourPicker"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classwx_colour_picker_event.html#5f2bd36d2dbec62b6849c316baf77650"><param name="Name" value="wxColourPickerEvent"></OBJECT>
+  </UL>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classwx_colour_picker.html#86d08ff4f890192d3cc61777599abd31"><param name="Name" value="SetColour"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classwx_colour_picker.html"><param name="Name" value="wxColourPicker"></OBJECT>
+  <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classwx_colour_picker.html#5f2bd36d2dbec62b6849c316baf77650"><param name="Name" value="GetColour"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classwx_colour_picker.html#86d08ff4f890192d3cc61777599abd31"><param name="Name" value="SetColour"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classwx_colour_picker.html#7f16b4439966d04cf35d11ad72766626"><param name="Name" value="wxColourPicker"></OBJECT>
+  </UL>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classwx_colour_picker_event.html"><param name="Name" value="wxColourPickerEvent"></OBJECT>
+</UL>

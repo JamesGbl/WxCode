@@ -1,46 +1,45 @@
  
  wxColourPicker ReadMe
- -------------
+ ---------------------
  
- Website: http://wxcode.sourceforge.net/components/colourpicker
- Author: JuanAntonio Ortega
- Version: 1.0 
+ Website: http://wxcode.sourceforge.net/components/wxcolourpicker
+ Author: Juan Antonio Ortega
+ Version: 0.1
  Description:
- [description of this component]
+ A control to choose colours. It is made up of a button and a drop-down menu, which shows some
+ predefined colours. Also, it is possible to pick a custom colour.
  
  
 
  Installation - win32
  --------------------
  
- When building on win32, you can use the makefiles in the BUILD folder using the
- WX_DIR, WX_DEBUG, WX_UNICODE and WX_SHARED to match your wxWidgets build.
- Examples:
- 
-   > nmake -fmakefile.vc WX_DIR=c:\path\to\my\wxWidgets WX_UNICODE=0/1 WX_DEBUG=0/1 WX_SHARED=0/1
-   > make -fmakefile.bcc WX_DIR=c:\path\to\my\wxWidgets WX_UNICODE=0/1 WX_DEBUG=0/1 WX_SHARED=0/1
+ In order to compile the sample, there is a CodeBlocks project in the samples directory, which
+ has two build targets: one for MSVC and another one for GCC-Mingw. For the project to work,
+ the global variable "wx" must be defined within CodeBlocks. If you want to add the control to
+ your projects, just add wx/colourpicker.h and colourpicker.cpp to them.
 
 
      
  Installation - unix
  -------------------
 
- When building on a Linux/GNU-based system, type
+ The control has not been tested on Linux/Unix, but it *should* work. If there are problems,
+ please let me know and I will try to fix them.
 
-  cd build
-  ./configure
-  make
-
- to build against the default build of wxWidgets (the one listed as 'default' 
- by wx-config --list). Type "./configure --help" for more info.
-
+ 
+ Platform-specific issues
+ ------------------------
+	*The drop shadow effect on the drop-down menu requires Windows XP.
+	*The button looks pressed when the drop-down menu is being shown. This feature is Windows specific.
 
 
  ChangeLog
  ---------
  
- 1.0 - first version of wxColourPicker at wxCode
+ 0.1 - first version of wxColourPicker at wxCode
  
  
- [optionally: Known bugs, Author's info, ... ]
+ Juan Antonio Ortega
+ jortegalalmolda@gmail.com
 

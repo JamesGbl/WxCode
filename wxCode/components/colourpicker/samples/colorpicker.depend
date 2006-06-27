@@ -1,0 +1,5650 @@
+# depslib dependency file v1.0
+1140288761 c:\cvsfiles\zaraftp\mainframe.cpp
+	"mainframe.h"
+	<wx/filename.h>
+	<wx/file.h>
+	<wx/config.h>
+
+1140277007 c:\cvsfiles\zaraftp\mainframe.h
+	<wx/wx.h>
+	<wx/button.h>
+	<wx/panel.h>
+	<wx/menu.h>
+	<wx/menu.h>
+	<wx/menu.h>
+	<wx/spinctrl.h>
+	<wx/protocol/ftp.h>
+	<wx/datetime.h>
+	<wx/taskbar.h>
+
+1115229126 c:\wxwidgets-2.6.1\include\wx\wx.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/dynarray.h"
+	"wx/list.h"
+	"wx/hash.h"
+	"wx/string.h"
+	"wx/intl.h"
+	"wx/log.h"
+	"wx/event.h"
+	"wx/app.h"
+	"wx/utils.h"
+	"wx/stream.h"
+	"wx/window.h"
+	"wx/panel.h"
+	"wx/frame.h"
+	"wx/dc.h"
+	"wx/dcclient.h"
+	"wx/dcmemory.h"
+	"wx/dcprint.h"
+	"wx/dcscreen.h"
+	"wx/button.h"
+	"wx/menu.h"
+	"wx/pen.h"
+	"wx/brush.h"
+	"wx/palette.h"
+	"wx/icon.h"
+	"wx/cursor.h"
+	"wx/dialog.h"
+	"wx/timer.h"
+	"wx/settings.h"
+	"wx/msgdlg.h"
+	"wx/cmndata.h"
+	"wx/control.h"
+	"wx/ctrlsub.h"
+	"wx/bmpbuttn.h"
+	"wx/checkbox.h"
+	"wx/checklst.h"
+	"wx/choice.h"
+	"wx/scrolbar.h"
+	"wx/stattext.h"
+	"wx/statbmp.h"
+	"wx/statbox.h"
+	"wx/listbox.h"
+	"wx/radiobox.h"
+	"wx/radiobut.h"
+	"wx/textctrl.h"
+	"wx/slider.h"
+	"wx/gauge.h"
+	"wx/scrolwin.h"
+	"wx/dirdlg.h"
+	"wx/toolbar.h"
+	"wx/combobox.h"
+	"wx/layout.h"
+	"wx/sizer.h"
+	"wx/memory.h"
+	"wx/mdi.h"
+	"wx/statusbr.h"
+	"wx/scrolbar.h"
+	"wx/choicdlg.h"
+	"wx/textdlg.h"
+	"wx/filedlg.h"
+	"wx/validate.h"
+	"wx/valtext.h"
+
+1117527494 c:\wxwidgets-2.6.1\include\wx\defs.h
+	"wx/platform.h"
+	"wx/features.h"
+	"wx/version.h"
+	"wx/dlimpexp.h"
+	"wx/debug.h"
+	<stddef.h>
+	<sys/types.h>
+	<unistd.h>
+
+1115229122 c:\wxwidgets-2.6.1\include\wx\platform.h
+	<stddef.h>
+	<unistd.h>
+	"wx/mac/carbon/config_xcode.h"
+	"wx/setup.h"
+	"wx/chkconf.h"
+	"wx/msw/wince/libraries.h"
+	<PalmOS.h>
+	"wx/msw/gccpriv.h"
+	<AvailabilityMacros.h>
+
+1117742536 c:\wxwidgets-2.6.1\lib\vc_lib\mswd\wx\setup.h
+
+1115577736 c:\wxwidgets-2.6.1\include\wx\chkconf.h
+	"wx/palmos/chkconf.h"
+	"wx/msw/wince/chkconf.h"
+	"wx/msw/chkconf.h"
+	"wx/mac/chkconf.h"
+	"wx/motif/chkconf.h"
+
+1106246626 c:\wxwidgets-2.6.1\include\wx\palmos\chkconf.h
+
+1116843018 c:\wxwidgets-2.6.1\include\wx\msw\wince\chkconf.h
+
+1116663022 c:\wxwidgets-2.6.1\include\wx\msw\chkconf.h
+
+1111443506 c:\wxwidgets-2.6.1\include\wx\msw\wince\libraries.h
+
+1116607430 c:\wxwidgets-2.6.1\include\wx\msw\gccpriv.h
+	<_mingw.h>
+	<w32api.h>
+
+1116691164 c:\wxwidgets-2.6.1\include\wx\features.h
+
+1117525854 c:\wxwidgets-2.6.1\include\wx\version.h
+
+1111500908 c:\wxwidgets-2.6.1\include\wx\dlimpexp.h
+
+1110020626 c:\wxwidgets-2.6.1\include\wx\debug.h
+	<assert.h>
+	<limits.h>
+	"wx/wxchar.h"
+
+1117457420 c:\wxwidgets-2.6.1\include\wx\wxchar.h
+	"wx/defs.h"
+	<stdarg.h>
+	<sys/types.h>
+	<wchar.h>
+	<wcstr.h>
+	<stdlib.h>
+	<ctype.h>
+	<stddef.h>
+	<string.h>
+	<ctype.h>
+	<tchar.h>
+	<ctype.h>
+	<ctype.h>
+	<stdio.h>
+	<wctype.h>
+	<stdio.h>
+	<stdio.h>
+	<ctype.h>
+	<string.h>
+	<stdio.h>
+	<stdio.h>
+	<time.h>
+	<time.h>
+	<string.h>
+
+1116769814 c:\wxwidgets-2.6.1\include\wx\object.h
+	"wx/defs.h"
+	"wx/memory.h"
+	"wx/xti.h"
+	"wx/msw/msvcrt.h"
+
+1110020642 c:\wxwidgets-2.6.1\include\wx\memory.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/msgout.h"
+	<stddef.h>
+
+1113146118 c:\wxwidgets-2.6.1\include\wx\string.h
+	"wx/defs.h"
+	<ctype.h>
+	<stdio.h>
+	<string.h>
+	<stdarg.h>
+	<limits.h>
+	<string.h>
+	<stdio.h>
+	<stdarg.h>
+	<limits.h>
+	<stdlib.h>
+	<strings.h>
+	<StringMgr.h>
+	"wx/wxchar.h"
+	"wx/buffer.h"
+	"wx/strconv.h"
+	"wx/beforestd.h"
+	<string>
+	"wx/afterstd.h"
+	"wx/arrstr.h"
+	"wx/iosfwrap.h"
+
+1113644252 c:\wxwidgets-2.6.1\include\wx\buffer.h
+	"wx/wxchar.h"
+	<stdlib.h>
+
+1113475756 c:\wxwidgets-2.6.1\include\wx\strconv.h
+	"wx/defs.h"
+	"wx/wxchar.h"
+	"wx/buffer.h"
+	"typeinfo.h"
+	<stdlib.h>
+	"wx/fontenc.h"
+
+1110020634 c:\wxwidgets-2.6.1\include\wx\fontenc.h
+
+1110020618 c:\wxwidgets-2.6.1\include\wx\beforestd.h
+
+1111822300 c:\wxwidgets-2.6.1\include\wx\afterstd.h
+	"wx/msw/winundef.h"
+
+1103109464 c:\wxwidgets-2.6.1\include\wx\msw\winundef.h
+
+1114609876 c:\wxwidgets-2.6.1\include\wx\arrstr.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/dynarray.h"
+
+1111137946 c:\wxwidgets-2.6.1\include\wx\dynarray.h
+	"wx/defs.h"
+	"wx/beforestd.h"
+	<vector>
+	<algorithm>
+	"wx/afterstd.h"
+
+1113412228 c:\wxwidgets-2.6.1\include\wx\iosfwrap.h
+	<iostream.h>
+	<iosfwd>
+	"wx/msw/winundef.h"
+
+1115229120 c:\wxwidgets-2.6.1\include\wx\msgout.h
+	"wx/defs.h"
+	"wx/wxchar.h"
+
+1110489366 c:\wxwidgets-2.6.1\include\wx\xti.h
+	"wx/defs.h"
+	"wx/memory.h"
+	"wx/flags.h"
+	"wx/string.h"
+	"wx/arrstr.h"
+	"wx/hashmap.h"
+	"wx/log.h"
+	"wx/intl.h"
+	<typeinfo>
+	<wx/dynarray.h>
+
+1110020634 c:\wxwidgets-2.6.1\include\wx\flags.h
+
+1116760248 c:\wxwidgets-2.6.1\include\wx\hashmap.h
+	"wx/string.h"
+	<ext/hash_map>
+	<hash_map>
+	<stddef.h>
+
+1112800350 c:\wxwidgets-2.6.1\include\wx\log.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/arrstr.h"
+	<time.h>
+	"wx/dynarray.h"
+	"wx/iosfwrap.h"
+	"wx/generic/logg.h"
+	"wx/cocoa/log.h"
+
+1095324248 c:\wxwidgets-2.6.1\include\wx\generic\logg.h
+
+1117694362 c:\wxwidgets-2.6.1\include\wx\intl.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/fontenc.h"
+
+1090848080 c:\wxwidgets-2.6.1\include\wx\msw\msvcrt.h
+	<stdlib.h>
+	<crtdbg.h>
+
+1112968660 c:\wxwidgets-2.6.1\include\wx\list.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+	"wx/beforestd.h"
+	<algorithm>
+	<iterator>
+	<list>
+	"wx/afterstd.h"
+
+1115229118 c:\wxwidgets-2.6.1\include\wx\hash.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/list.h"
+	"wx/dynarray.h"
+
+1117568164 c:\wxwidgets-2.6.1\include\wx\event.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/clntdata.h"
+	"wx/gdicmn.h"
+	"wx/cursor.h"
+	"wx/thread.h"
+	"wx/dynarray.h"
+
+1110020620 c:\wxwidgets-2.6.1\include\wx\clntdata.h
+	"wx/defs.h"
+	"wx/string.h"
+	<wx/vector.h>
+
+1112427806 c:\wxwidgets-2.6.1\include\wx\vector.h
+	"wx/defs.h"
+
+1115229118 c:\wxwidgets-2.6.1\include\wx\gdicmn.h
+	"wx/defs.h"
+	"wx/list.h"
+	"wx/string.h"
+	"wx/fontenc.h"
+	"wx/hashmap.h"
+
+1116839260 c:\wxwidgets-2.6.1\include\wx\cursor.h
+	"wx/defs.h"
+	"wx/palmos/cursor.h"
+	"wx/msw/cursor.h"
+	"wx/motif/cursor.h"
+	"wx/gtk/cursor.h"
+	"wx/x11/cursor.h"
+	"wx/mgl/cursor.h"
+	"wx/mac/cursor.h"
+	"wx/cocoa/cursor.h"
+	"wx/os2/cursor.h"
+	"wx/utils.h"
+
+1106246626 c:\wxwidgets-2.6.1\include\wx\palmos\cursor.h
+	"wx/palmos/gdiimage.h"
+
+1106246628 c:\wxwidgets-2.6.1\include\wx\palmos\gdiimage.h
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+	"wx/list.h"
+
+1115229118 c:\wxwidgets-2.6.1\include\wx\gdiobj.h
+	"wx/palmos/gdiobj.h"
+	"wx/msw/gdiobj.h"
+	"wx/motif/gdiobj.h"
+	"wx/gtk/gdiobj.h"
+	"wx/x11/gdiobj.h"
+	"wx/mgl/gdiobj.h"
+	"wx/mac/gdiobj.h"
+	"wx/cocoa/gdiobj.h"
+	"wx/os2/gdiobj.h"
+
+1106246628 c:\wxwidgets-2.6.1\include\wx\palmos\gdiobj.h
+	"wx/object.h"
+
+1093770992 c:\wxwidgets-2.6.1\include\wx\msw\gdiobj.h
+	"wx/object.h"
+
+1109498862 c:\wxwidgets-2.6.1\include\wx\msw\cursor.h
+	"wx/msw/gdiimage.h"
+
+1110489368 c:\wxwidgets-2.6.1\include\wx\msw\gdiimage.h
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+	"wx/list.h"
+
+1114278908 c:\wxwidgets-2.6.1\include\wx\utils.h
+	"wx/object.h"
+	"wx/list.h"
+	"wx/filefn.h"
+	"wx/longlong.h"
+	<dirent.h>
+	<unistd.h>
+	<stdio.h>
+
+1116607420 c:\wxwidgets-2.6.1\include\wx\filefn.h
+	"wx/list.h"
+	"wx/arrstr.h"
+	"wx/msw/wince/time.h"
+	"wx/msw/private.h"
+	<time.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<sys/types.h>
+	<utime.h>
+	<sys/stat.h>
+	<unistd.h>
+	<stat.h>
+	<unistd.h>
+	<unix.h>
+	<process.h>
+	"wx/os2/private.h"
+	<io.h>
+	<unistd.h>
+	<unistd.h>
+	<dirent.h>
+	<direct.h>
+	<dos.h>
+	<io.h>
+	<direct.h>
+	<dos.h>
+	<io.h>
+	<io.h>
+	<unistd.h>
+	<dir.h>
+	<dir.h>
+	<unix.h>
+	<fcntl.h>
+	<sys/types.h>
+	"wx/msw/private.h"
+
+1057877138 c:\wxwidgets-2.6.1\include\wx\msw\wince\time.h
+
+1117090922 c:\wxwidgets-2.6.1\include\wx\msw\private.h
+	"wx/msw/wrapwin.h"
+	"wx/msw/microwin.h"
+	"wx/msw/mslu.h"
+	"wx/log.h"
+	<wx/gdicmn.h>
+	<wx/colour.h>
+
+1116839264 c:\wxwidgets-2.6.1\include\wx\msw\wrapwin.h
+	"wx/platform.h"
+	<windows.h>
+	<winbase.h>
+	<wingdi.h>
+	<winuser.h>
+	<shellapi.h>
+	"wx/msw/winundef.h"
+
+1093883016 c:\wxwidgets-2.6.1\include\wx\msw\microwin.h
+
+1109589144 c:\wxwidgets-2.6.1\include\wx\msw\mslu.h
+	"wx/defs.h"
+	"wx/utils.h"
+	"wx/wxchar.h"
+
+1115229116 c:\wxwidgets-2.6.1\include\wx\colour.h
+	"wx/palmos/colour.h"
+	"wx/msw/colour.h"
+	"wx/motif/colour.h"
+	"wx/gtk/colour.h"
+	"wx/mgl/colour.h"
+	"wx/x11/colour.h"
+	"wx/mac/colour.h"
+	"wx/cocoa/colour.h"
+	"wx/os2/colour.h"
+
+1106246626 c:\wxwidgets-2.6.1\include\wx\palmos\colour.h
+	"wx/object.h"
+
+1085341888 c:\wxwidgets-2.6.1\include\wx\msw\colour.h
+	"wx/object.h"
+
+1112968660 c:\wxwidgets-2.6.1\include\wx\longlong.h
+	"wx/defs.h"
+	"wx/string.h"
+	<limits.h>
+	"wx/iosfwrap.h"
+
+1110020652 c:\wxwidgets-2.6.1\include\wx\thread.h
+	"wx/defs.h"
+
+1117527494 c:\wxwidgets-2.6.1\include\wx\app.h
+	"wx/event.h"
+	"wx/window.h"
+	"wx/vidmode.h"
+	"wx/build.h"
+	"wx/init.h"
+	"wx/palmos/app.h"
+	"wx/msw/app.h"
+	"wx/motif/app.h"
+	"wx/mgl/app.h"
+	"wx/gtk/app.h"
+	"wx/x11/app.h"
+	"wx/mac/app.h"
+	"wx/cocoa/app.h"
+	"wx/os2/app.h"
+	"wx/univ/theme.h"
+
+1116607422 c:\wxwidgets-2.6.1\include\wx\window.h
+	"wx/event.h"
+	"wx/list.h"
+	"wx/cursor.h"
+	"wx/font.h"
+	"wx/colour.h"
+	"wx/region.h"
+	"wx/utils.h"
+	"wx/validate.h"
+	"wx/palette.h"
+	"wx/accel.h"
+	"wx/access.h"
+	"wx/palmos/window.h"
+	"wx/msw/window.h"
+	"wx/motif/window.h"
+	"wx/gtk/window.h"
+	"wx/x11/window.h"
+	"wx/mgl/window.h"
+	"wx/mac/window.h"
+	"wx/cocoa/window.h"
+	"wx/os2/window.h"
+	"wx/univ/window.h"
+
+1117527496 c:\wxwidgets-2.6.1\include\wx\font.h
+	"wx/defs.h"
+	"wx/fontenc.h"
+	"wx/gdiobj.h"
+	"wx/palmos/font.h"
+	"wx/msw/font.h"
+	"wx/motif/font.h"
+	"wx/gtk/font.h"
+	"wx/x11/font.h"
+	"wx/mgl/font.h"
+	"wx/mac/font.h"
+	"wx/cocoa/font.h"
+	"wx/os2/font.h"
+
+1106246626 c:\wxwidgets-2.6.1\include\wx\palmos\font.h
+	<wx/gdicmn.h>
+
+1096309532 c:\wxwidgets-2.6.1\include\wx\msw\font.h
+	<wx/gdicmn.h>
+
+1115229122 c:\wxwidgets-2.6.1\include\wx\region.h
+	"wx/colour.h"
+	"wx/palmos/region.h"
+	"wx/msw/region.h"
+	"wx/gtk/region.h"
+	"wx/x11/region.h"
+	"wx/mgl/region.h"
+	"wx/mac/region.h"
+	"wx/cocoa/region.h"
+	"wx/os2/region.h"
+
+1098189588 c:\wxwidgets-2.6.1\include\wx\palmos\region.h
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+
+1095604972 c:\wxwidgets-2.6.1\include\wx\msw\region.h
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+
+1110020654 c:\wxwidgets-2.6.1\include\wx\validate.h
+	"wx/defs.h"
+	"wx/event.h"
+
+1115229120 c:\wxwidgets-2.6.1\include\wx\palette.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/gdiobj.h"
+	"wx/palmos/palette.h"
+	"wx/msw/palette.h"
+	"wx/motif/palette.h"
+	"wx/generic/paletteg.h"
+	"wx/x11/palette.h"
+	"wx/mgl/palette.h"
+	"wx/mac/palette.h"
+	"wx/os2/palette.h"
+
+1106246628 c:\wxwidgets-2.6.1\include\wx\palmos\palette.h
+	"wx/gdiobj.h"
+
+1110020736 c:\wxwidgets-2.6.1\include\wx\msw\palette.h
+	"wx/gdiobj.h"
+
+1102601090 c:\wxwidgets-2.6.1\include\wx\generic\paletteg.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+
+1110020616 c:\wxwidgets-2.6.1\include\wx\accel.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/generic/accel.h"
+	"wx/msw/accel.h"
+	"wx/motif/accel.h"
+	"wx/gtk/accel.h"
+	"wx/mac/accel.h"
+	"wx/generic/accel.h"
+	"wx/os2/accel.h"
+
+1102245614 c:\wxwidgets-2.6.1\include\wx\generic\accel.h
+
+1102856742 c:\wxwidgets-2.6.1\include\wx\msw\accel.h
+
+1110020618 c:\wxwidgets-2.6.1\include\wx\access.h
+	"wx/variant.h"
+	"wx/msw/ole/access.h"
+	"wx/generic/access.h"
+	"wx/generic/access.h"
+	"wx/generic/access.h"
+	"wx/generic/access.h"
+	"wx/generic/access.h"
+	"wx/generic/access.h"
+
+1115229126 c:\wxwidgets-2.6.1\include\wx\variant.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+	"wx/arrstr.h"
+	"wx/list.h"
+	"wx/datetime.h"
+	"wx/db.h"
+	"wx/iosfwrap.h"
+
+1117527494 c:\wxwidgets-2.6.1\include\wx\datetime.h
+	"wx/defs.h"
+	<time.h>
+	"wx/msw/wince/time.h"
+	<limits.h>
+	"wx/longlong.h"
+	"wx/dynarray.h"
+
+1117527494 c:\wxwidgets-2.6.1\include\wx\db.h
+	"wx/defs.h"
+	"wx/string.h"
+	<afxwin.h>
+	<windows.h>
+	"wx/msw/winundef.h"
+	"sql.h"
+	"sqlext.h"
+	"odbcinst.h"
+	<windows.h>
+	"wx/msw/winundef.h"
+	"wx/isql.h"
+	"wx/isqlext.h"
+	<sql.h>
+	<sqlext.h>
+	"wx/object.h"
+
+1113644252 c:\wxwidgets-2.6.1\include\wx\isql.h
+
+1110020640 c:\wxwidgets-2.6.1\include\wx\isqlext.h
+	"wx/isql.h"
+
+1092663976 c:\wxwidgets-2.6.1\include\wx\msw\ole\access.h
+
+1108458286 c:\wxwidgets-2.6.1\include\wx\palmos\window.h
+	"wx/hash.h"
+
+1118932602 c:\wxwidgets-2.6.1\include\wx\msw\window.h
+	"wx/hash.h"
+
+1109766462 c:\wxwidgets-2.6.1\include\wx\univ\window.h
+	"wx/bitmap.h"
+
+1110020618 c:\wxwidgets-2.6.1\include\wx\bitmap.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+	"wx/palmos/bitmap.h"
+	"wx/msw/bitmap.h"
+	"wx/x11/bitmap.h"
+	"wx/gtk/bitmap.h"
+	"wx/x11/bitmap.h"
+	"wx/mgl/bitmap.h"
+	"wx/mac/bitmap.h"
+	"wx/cocoa/bitmap.h"
+	"wx/os2/bitmap.h"
+
+1106246626 c:\wxwidgets-2.6.1\include\wx\palmos\bitmap.h
+	"wx/palmos/gdiimage.h"
+	"wx/gdicmn.h"
+	"wx/palette.h"
+
+1112086630 c:\wxwidgets-2.6.1\include\wx\msw\bitmap.h
+	"wx/msw/gdiimage.h"
+	"wx/gdicmn.h"
+	"wx/palette.h"
+
+1110020654 c:\wxwidgets-2.6.1\include\wx\vidmode.h
+
+1110020620 c:\wxwidgets-2.6.1\include\wx\build.h
+	"wx/version.h"
+
+1110020638 c:\wxwidgets-2.6.1\include\wx\init.h
+	"wx/wxchar.h"
+
+1106246626 c:\wxwidgets-2.6.1\include\wx\palmos\app.h
+	"wx/event.h"
+	"wx/icon.h"
+
+1115229120 c:\wxwidgets-2.6.1\include\wx\icon.h
+	"wx/iconloc.h"
+	"wx/palmos/icon.h"
+	"wx/msw/icon.h"
+	"wx/motif/icon.h"
+	"wx/gtk/icon.h"
+	"wx/x11/icon.h"
+	"wx/mgl/icon.h"
+	"wx/mac/icon.h"
+	"wx/cocoa/icon.h"
+	"wx/os2/icon.h"
+
+1110020638 c:\wxwidgets-2.6.1\include\wx\iconloc.h
+	"wx/string.h"
+
+1106246628 c:\wxwidgets-2.6.1\include\wx\palmos\icon.h
+	"wx/palmos/gdiimage.h"
+
+1095604972 c:\wxwidgets-2.6.1\include\wx\msw\icon.h
+	"wx/msw/gdiimage.h"
+
+1095168530 c:\wxwidgets-2.6.1\include\wx\msw\app.h
+	"wx/event.h"
+	"wx/icon.h"
+	"wx/msw/wrapwin.h"
+
+1106936568 c:\wxwidgets-2.6.1\include\wx\univ\theme.h
+
+1117527498 c:\wxwidgets-2.6.1\include\wx\stream.h
+	"wx/defs.h"
+	<stdio.h>
+	"wx/object.h"
+	"wx/string.h"
+	"wx/filefn.h"
+
+1115229122 c:\wxwidgets-2.6.1\include\wx\panel.h
+	"wx/generic/panelg.h"
+
+1115229152 c:\wxwidgets-2.6.1\include\wx\generic\panelg.h
+	"wx/window.h"
+	"wx/containr.h"
+
+1110020622 c:\wxwidgets-2.6.1\include\wx\containr.h
+
+1110020634 c:\wxwidgets-2.6.1\include\wx\frame.h
+	"wx/toplevel.h"
+	"wx/univ/frame.h"
+	"wx/palmos/frame.h"
+	"wx/msw/frame.h"
+	"wx/gtk/frame.h"
+	"wx/motif/frame.h"
+	"wx/mac/frame.h"
+	"wx/cocoa/frame.h"
+	"wx/os2/frame.h"
+
+1113749364 c:\wxwidgets-2.6.1\include\wx\toplevel.h
+	"wx/window.h"
+	"wx/iconbndl.h"
+	"wx/palmos/toplevel.h"
+	"wx/msw/toplevel.h"
+	"wx/gtk/toplevel.h"
+	"wx/x11/toplevel.h"
+	"wx/mgl/toplevel.h"
+	"wx/mac/toplevel.h"
+	"wx/cocoa/toplevel.h"
+	"wx/os2/toplevel.h"
+	"wx/motif/toplevel.h"
+	"wx/univ/toplevel.h"
+
+1110020638 c:\wxwidgets-2.6.1\include\wx\iconbndl.h
+	"wx/dynarray.h"
+	"wx/gdicmn.h"
+
+1108458286 c:\wxwidgets-2.6.1\include\wx\palmos\toplevel.h
+
+1111234010 c:\wxwidgets-2.6.1\include\wx\msw\toplevel.h
+
+1103625698 c:\wxwidgets-2.6.1\include\wx\univ\toplevel.h
+	"wx/univ/inpcons.h"
+	"wx/univ/inphand.h"
+	"wx/icon.h"
+
+1085341906 c:\wxwidgets-2.6.1\include\wx\univ\inpcons.h
+	"wx/object.h"
+	"wx/event.h"
+
+1092663978 c:\wxwidgets-2.6.1\include\wx\univ\inphand.h
+	"wx/univ/inpcons.h"
+
+1108892108 c:\wxwidgets-2.6.1\include\wx\univ\frame.h
+
+1108458284 c:\wxwidgets-2.6.1\include\wx\palmos\frame.h
+
+1111156008 c:\wxwidgets-2.6.1\include\wx\msw\frame.h
+
+1113749362 c:\wxwidgets-2.6.1\include\wx\dc.h
+	"wx/object.h"
+	"wx/cursor.h"
+	"wx/font.h"
+	"wx/colour.h"
+	"wx/bitmap.h"
+	"wx/brush.h"
+	"wx/pen.h"
+	"wx/palette.h"
+	"wx/list.h"
+	"wx/dynarray.h"
+	"wx/math.h"
+	"wx/palmos/dc.h"
+	"wx/msw/dc.h"
+	"wx/motif/dc.h"
+	"wx/gtk/dc.h"
+	"wx/x11/dc.h"
+	"wx/mgl/dc.h"
+	"wx/mac/dc.h"
+	"wx/cocoa/dc.h"
+	"wx/os2/dc.h"
+
+1115229116 c:\wxwidgets-2.6.1\include\wx\brush.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/gdiobj.h"
+	"wx/palmos/brush.h"
+	"wx/msw/brush.h"
+	"wx/x11/brush.h"
+	"wx/gtk/brush.h"
+	"wx/mgl/brush.h"
+	"wx/mac/brush.h"
+	"wx/cocoa/brush.h"
+	"wx/os2/brush.h"
+
+1106246626 c:\wxwidgets-2.6.1\include\wx\palmos\brush.h
+	"wx/gdicmn.h"
+	"wx/gdiobj.h"
+	"wx/bitmap.h"
+
+1102245620 c:\wxwidgets-2.6.1\include\wx\msw\brush.h
+	"wx/gdicmn.h"
+	"wx/gdiobj.h"
+	"wx/bitmap.h"
+
+1115229122 c:\wxwidgets-2.6.1\include\wx\pen.h
+	"wx/palmos/pen.h"
+	"wx/msw/pen.h"
+	"wx/x11/pen.h"
+	"wx/gtk/pen.h"
+	"wx/mgl/pen.h"
+	"wx/mac/pen.h"
+	"wx/cocoa/pen.h"
+	"wx/os2/pen.h"
+
+1106246628 c:\wxwidgets-2.6.1\include\wx\palmos\pen.h
+	"wx/gdiobj.h"
+	"wx/bitmap.h"
+	"wx/colour.h"
+
+1095604972 c:\wxwidgets-2.6.1\include\wx\msw\pen.h
+	"wx/gdiobj.h"
+	"wx/bitmap.h"
+	"wx/colour.h"
+
+1115219650 c:\wxwidgets-2.6.1\include\wx\math.h
+	"wx/defs.h"
+	<math.h>
+	<float.h>
+
+1106246626 c:\wxwidgets-2.6.1\include\wx\palmos\dc.h
+	"wx/defs.h"
+	"wx/dc.h"
+
+1102601098 c:\wxwidgets-2.6.1\include\wx\msw\dc.h
+	"wx/defs.h"
+
+1115229116 c:\wxwidgets-2.6.1\include\wx\dcclient.h
+	"wx/palmos/dcclient.h"
+	"wx/msw/dcclient.h"
+	"wx/motif/dcclient.h"
+	"wx/gtk/dcclient.h"
+	"wx/x11/dcclient.h"
+	"wx/mgl/dcclient.h"
+	"wx/mac/dcclient.h"
+	"wx/cocoa/dcclient.h"
+	"wx/os2/dcclient.h"
+
+1117527524 c:\wxwidgets-2.6.1\include\wx\palmos\dcclient.h
+	"wx/dc.h"
+	"wx/dynarray.h"
+
+1117527512 c:\wxwidgets-2.6.1\include\wx\msw\dcclient.h
+	"wx/dc.h"
+	"wx/dynarray.h"
+
+1115229116 c:\wxwidgets-2.6.1\include\wx\dcmemory.h
+	"wx/palmos/dcmemory.h"
+	"wx/msw/dcmemory.h"
+	"wx/motif/dcmemory.h"
+	"wx/gtk/dcmemory.h"
+	"wx/x11/dcmemory.h"
+	"wx/mgl/dcmemory.h"
+	"wx/mac/dcmemory.h"
+	"wx/cocoa/dcmemory.h"
+	"wx/os2/dcmemory.h"
+
+1106246626 c:\wxwidgets-2.6.1\include\wx\palmos\dcmemory.h
+	"wx/dcclient.h"
+
+1085341888 c:\wxwidgets-2.6.1\include\wx\msw\dcmemory.h
+	"wx/dcclient.h"
+
+1115229116 c:\wxwidgets-2.6.1\include\wx\dcprint.h
+	"wx/palmos/dcprint.h"
+	"wx/msw/dcprint.h"
+	"wx/os2/dcprint.h"
+	"wx/mac/dcprint.h"
+
+1106246626 c:\wxwidgets-2.6.1\include\wx\palmos\dcprint.h
+	"wx/dc.h"
+	"wx/cmndata.h"
+
+1112427802 c:\wxwidgets-2.6.1\include\wx\cmndata.h
+	"wx/window.h"
+	"wx/font.h"
+	"wx/encinfo.h"
+	"wx/colour.h"
+	"wx/gdicmn.h"
+	"wx/stream.h"
+
+1110020630 c:\wxwidgets-2.6.1\include\wx\encinfo.h
+	"wx/string.h"
+
+1093373892 c:\wxwidgets-2.6.1\include\wx\msw\dcprint.h
+	"wx/dc.h"
+	"wx/cmndata.h"
+
+1115229116 c:\wxwidgets-2.6.1\include\wx\dcscreen.h
+	"wx/palmos/dcscreen.h"
+	"wx/msw/dcscreen.h"
+	"wx/motif/dcscreen.h"
+	"wx/gtk/dcscreen.h"
+	"wx/x11/dcscreen.h"
+	"wx/mgl/dcscreen.h"
+	"wx/mac/dcscreen.h"
+	"wx/cocoa/dcscreen.h"
+	"wx/os2/dcscreen.h"
+
+1106246626 c:\wxwidgets-2.6.1\include\wx\palmos\dcscreen.h
+	"wx/dcclient.h"
+
+1093373892 c:\wxwidgets-2.6.1\include\wx\msw\dcscreen.h
+	"wx/dcclient.h"
+
+1110020620 c:\wxwidgets-2.6.1\include\wx\button.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/button.h"
+	"wx/msw/button.h"
+	"wx/motif/button.h"
+	"wx/gtk/button.h"
+	"wx/mac/button.h"
+	"wx/cocoa/button.h"
+	"wx/os2/button.h"
+	"wx/palmos/button.h"
+
+1113749362 c:\wxwidgets-2.6.1\include\wx\control.h
+	"wx/defs.h"
+	"wx/window.h"
+	"wx/univ/control.h"
+	"wx/palmos/control.h"
+	"wx/msw/control.h"
+	"wx/motif/control.h"
+	"wx/gtk/control.h"
+	"wx/mac/control.h"
+	"wx/cocoa/control.h"
+	"wx/os2/control.h"
+
+1085341906 c:\wxwidgets-2.6.1\include\wx\univ\control.h
+	"wx/univ/inphand.h"
+	"wx/univ/inpcons.h"
+
+1109156566 c:\wxwidgets-2.6.1\include\wx\palmos\control.h
+	"wx/dynarray.h"
+
+1113222446 c:\wxwidgets-2.6.1\include\wx\msw\control.h
+	"wx/dynarray.h"
+
+1093883018 c:\wxwidgets-2.6.1\include\wx\univ\button.h
+	"wx/bitmap.h"
+
+1113146124 c:\wxwidgets-2.6.1\include\wx\msw\button.h
+
+1113146128 c:\wxwidgets-2.6.1\include\wx\palmos\button.h
+
+1110020642 c:\wxwidgets-2.6.1\include\wx\menu.h
+	"wx/defs.h"
+	"wx/list.h"
+	"wx/window.h"
+	"wx/menuitem.h"
+	"wx/univ/menu.h"
+	"wx/palmos/menu.h"
+	"wx/msw/menu.h"
+	"wx/motif/menu.h"
+	"wx/gtk/menu.h"
+	"wx/mac/menu.h"
+	"wx/cocoa/menu.h"
+	"wx/os2/menu.h"
+
+1117527496 c:\wxwidgets-2.6.1\include\wx\menuitem.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/univ/menuitem.h"
+	"wx/palmos/menuitem.h"
+	"wx/msw/menuitem.h"
+	"wx/motif/menuitem.h"
+	"wx/gtk/menuitem.h"
+	"wx/mac/menuitem.h"
+	"wx/cocoa/menuitem.h"
+	"wx/os2/menuitem.h"
+
+1092663978 c:\wxwidgets-2.6.1\include\wx\univ\menuitem.h
+
+1110489370 c:\wxwidgets-2.6.1\include\wx\palmos\menuitem.h
+	"wx/ownerdrw.h"
+
+1110995668 c:\wxwidgets-2.6.1\include\wx\ownerdrw.h
+	"wx/defs.h"
+	"wx/bitmap.h"
+	"wx/colour.h"
+	"wx/font.h"
+
+1093883016 c:\wxwidgets-2.6.1\include\wx\msw\menuitem.h
+	"wx/ownerdrw.h"
+
+1115577748 c:\wxwidgets-2.6.1\include\wx\univ\menu.h
+	"wx/accel.h"
+	"wx/dynarray.h"
+
+1117527524 c:\wxwidgets-2.6.1\include\wx\palmos\menu.h
+	"wx/accel.h"
+	"wx/dynarray.h"
+	"wx/arrstr.h"
+
+1117527512 c:\wxwidgets-2.6.1\include\wx\msw\menu.h
+	"wx/accel.h"
+	"wx/dynarray.h"
+	"wx/arrstr.h"
+
+1112474460 c:\wxwidgets-2.6.1\include\wx\dialog.h
+	"wx/defs.h"
+	"wx/containr.h"
+	"wx/toplevel.h"
+	"wx/univ/dialog.h"
+	"wx/palmos/dialog.h"
+	"wx/msw/dialog.h"
+	"wx/motif/dialog.h"
+	"wx/gtk/dialog.h"
+	"wx/mac/dialog.h"
+	"wx/cocoa/dialog.h"
+	"wx/os2/dialog.h"
+
+1106936568 c:\wxwidgets-2.6.1\include\wx\univ\dialog.h
+
+1108458284 c:\wxwidgets-2.6.1\include\wx\palmos\dialog.h
+	"wx/panel.h"
+
+1111234010 c:\wxwidgets-2.6.1\include\wx\msw\dialog.h
+	"wx/panel.h"
+
+1115229126 c:\wxwidgets-2.6.1\include\wx\timer.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/longlong.h"
+	"wx/event.h"
+	"wx/stopwatch.h"
+	"wx/msw/timer.h"
+	"wx/motif/timer.h"
+	"wx/gtk/timer.h"
+	"wx/generic/timer.h"
+	"wx/cocoa/timer.h"
+	"wx/mac/timer.h"
+	"wx/os2/timer.h"
+
+1115229124 c:\wxwidgets-2.6.1\include\wx\stopwatch.h
+	"wx/defs.h"
+	"wx/longlong.h"
+
+1095168534 c:\wxwidgets-2.6.1\include\wx\msw\timer.h
+
+1087625666 c:\wxwidgets-2.6.1\include\wx\generic\timer.h
+
+1110489366 c:\wxwidgets-2.6.1\include\wx\settings.h
+	"wx/colour.h"
+	"wx/font.h"
+
+1115229120 c:\wxwidgets-2.6.1\include\wx\msgdlg.h
+	"wx/defs.h"
+	"wx/generic/msgdlgg.h"
+	"wx/generic/msgdlgg.h"
+	"wx/palmos/msgdlg.h"
+	"wx/msw/msgdlg.h"
+	"wx/motif/msgdlg.h"
+	"wx/gtk/msgdlg.h"
+	"wx/generic/msgdlgg.h"
+	"wx/mac/msgdlg.h"
+	"wx/generic/msgdlgg.h"
+	"wx/os2/msgdlg.h"
+
+1110735516 c:\wxwidgets-2.6.1\include\wx\generic\msgdlgg.h
+	"wx/setup.h"
+	"wx/dialog.h"
+
+1110735526 c:\wxwidgets-2.6.1\include\wx\palmos\msgdlg.h
+	"wx/setup.h"
+	"wx/dialog.h"
+
+1110735522 c:\wxwidgets-2.6.1\include\wx\msw\msgdlg.h
+	"wx/setup.h"
+	"wx/dialog.h"
+
+1110995668 c:\wxwidgets-2.6.1\include\wx\ctrlsub.h
+	"wx/defs.h"
+	"wx/control.h"
+
+1113146116 c:\wxwidgets-2.6.1\include\wx\bmpbuttn.h
+	"wx/defs.h"
+	"wx/bitmap.h"
+	"wx/button.h"
+	"wx/univ/bmpbuttn.h"
+	"wx/msw/bmpbuttn.h"
+	"wx/motif/bmpbuttn.h"
+	"wx/gtk/bmpbuttn.h"
+	"wx/mac/bmpbuttn.h"
+	"wx/cocoa/bmpbuttn.h"
+	"wx/os2/bmpbuttn.h"
+
+1092663978 c:\wxwidgets-2.6.1\include\wx\univ\bmpbuttn.h
+
+1096972228 c:\wxwidgets-2.6.1\include\wx\msw\bmpbuttn.h
+	"wx/button.h"
+	"wx/bitmap.h"
+	"wx/brush.h"
+
+1110020620 c:\wxwidgets-2.6.1\include\wx\checkbox.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/checkbox.h"
+	"wx/msw/checkbox.h"
+	"wx/motif/checkbox.h"
+	"wx/gtk/checkbox.h"
+	"wx/mac/checkbox.h"
+	"wx/cocoa/checkbox.h"
+	"wx/os2/checkbox.h"
+	"wx/palmos/checkbox.h"
+
+1105535232 c:\wxwidgets-2.6.1\include\wx\univ\checkbox.h
+	"wx/button.h"
+
+1116607430 c:\wxwidgets-2.6.1\include\wx\msw\checkbox.h
+
+1107290174 c:\wxwidgets-2.6.1\include\wx\palmos\checkbox.h
+
+1110020620 c:\wxwidgets-2.6.1\include\wx\checklst.h
+	"wx/listbox.h"
+	"wx/univ/checklst.h"
+	"wx/msw/checklst.h"
+	"wx/motif/checklst.h"
+	"wx/gtk/checklst.h"
+	"wx/mac/checklst.h"
+	"wx/cocoa/checklst.h"
+	"wx/os2/checklst.h"
+
+1112968660 c:\wxwidgets-2.6.1\include\wx\listbox.h
+	"wx/defs.h"
+	"wx/ctrlsub.h"
+	"wx/univ/listbox.h"
+	"wx/msw/listbox.h"
+	"wx/motif/listbox.h"
+	"wx/gtk/listbox.h"
+	"wx/mac/listbox.h"
+	"wx/os2/listbox.h"
+	"wx/cocoa/listbox.h"
+
+1108458286 c:\wxwidgets-2.6.1\include\wx\univ\listbox.h
+	"wx/scrolwin.h"
+	"wx/dynarray.h"
+	"wx/arrstr.h"
+
+1112800350 c:\wxwidgets-2.6.1\include\wx\scrolwin.h
+	"wx/window.h"
+	"wx/gtk/scrolwin.h"
+	"wx/generic/scrolwin.h"
+
+1112253968 c:\wxwidgets-2.6.1\include\wx\generic\scrolwin.h
+	"wx/window.h"
+	"wx/panel.h"
+
+1118932602 c:\wxwidgets-2.6.1\include\wx\msw\listbox.h
+	"wx/dynarray.h"
+
+1092663978 c:\wxwidgets-2.6.1\include\wx\univ\checklst.h
+
+1093373892 c:\wxwidgets-2.6.1\include\wx\msw\checklst.h
+
+1110995668 c:\wxwidgets-2.6.1\include\wx\choice.h
+	"wx/defs.h"
+	"wx/ctrlsub.h"
+	"wx/univ/choice.h"
+	"wx/msw/wince/choicece.h"
+	"wx/msw/choice.h"
+	"wx/motif/choice.h"
+	"wx/gtk/choice.h"
+	"wx/mac/choice.h"
+	"wx/cocoa/choice.h"
+	"wx/os2/choice.h"
+
+1085341906 c:\wxwidgets-2.6.1\include\wx\univ\choice.h
+	"wx/combobox.h"
+
+1110020622 c:\wxwidgets-2.6.1\include\wx\combobox.h
+	"wx/defs.h"
+	"wx/textctrl.h"
+	"wx/ctrlsub.h"
+	"wx/univ/combobox.h"
+	"wx/msw/combobox.h"
+	"wx/motif/combobox.h"
+	"wx/gtk/combobox.h"
+	"wx/mac/combobox.h"
+	"wx/cocoa/combobox.h"
+	"wx/os2/combobox.h"
+
+1115229124 c:\wxwidgets-2.6.1\include\wx\textctrl.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/dynarray.h"
+	"wx/gdicmn.h"
+	"wx/ioswrap.h"
+	"wx/x11/textctrl.h"
+	"wx/univ/textctrl.h"
+	"wx/msw/wince/textctrlce.h"
+	"wx/msw/textctrl.h"
+	"wx/motif/textctrl.h"
+	"wx/gtk/textctrl.h"
+	"wx/mac/textctrl.h"
+	"wx/cocoa/textctrl.h"
+	"wx/os2/textctrl.h"
+
+1113412228 c:\wxwidgets-2.6.1\include\wx\ioswrap.h
+	<iostream.h>
+	<iostream>
+	"wx/msw/winundef.h"
+
+1092993888 c:\wxwidgets-2.6.1\include\wx\univ\textctrl.h
+	"wx/scrolwin.h"
+	"wx/univ/inphand.h"
+
+1106246624 c:\wxwidgets-2.6.1\include\wx\msw\wince\textctrlce.h
+	"wx/dynarray.h"
+
+1113222448 c:\wxwidgets-2.6.1\include\wx\msw\textctrl.h
+
+1108458286 c:\wxwidgets-2.6.1\include\wx\univ\combobox.h
+
+1111319978 c:\wxwidgets-2.6.1\include\wx\msw\combobox.h
+	"wx/choice.h"
+
+1110735524 c:\wxwidgets-2.6.1\include\wx\msw\wince\choicece.h
+	"wx/defs.h"
+	"wx/dynarray.h"
+
+1113222446 c:\wxwidgets-2.6.1\include\wx\msw\choice.h
+
+1115229122 c:\wxwidgets-2.6.1\include\wx\scrolbar.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/scrolbar.h"
+	"wx/msw/scrolbar.h"
+	"wx/motif/scrolbar.h"
+	"wx/gtk/scrolbar.h"
+	"wx/mac/scrolbar.h"
+	"wx/cocoa/scrolbar.h"
+	"wx/os2/scrolbar.h"
+
+1092663978 c:\wxwidgets-2.6.1\include\wx\univ\scrolbar.h
+	"wx/univ/scrarrow.h"
+	"wx/renderer.h"
+
+1092663978 c:\wxwidgets-2.6.1\include\wx\univ\scrarrow.h
+
+1111654264 c:\wxwidgets-2.6.1\include\wx\renderer.h
+	"wx/gdicmn.h"
+
+1117547760 c:\wxwidgets-2.6.1\include\wx\msw\scrolbar.h
+
+1115229124 c:\wxwidgets-2.6.1\include\wx\stattext.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/stattext.h"
+	"wx/msw/stattext.h"
+	"wx/motif/stattext.h"
+	"wx/gtk/stattext.h"
+	"wx/mac/stattext.h"
+	"wx/cocoa/stattext.h"
+	"wx/os2/stattext.h"
+	"wx/palmos/stattext.h"
+
+1105535232 c:\wxwidgets-2.6.1\include\wx\univ\stattext.h
+
+1113146126 c:\wxwidgets-2.6.1\include\wx\msw\stattext.h
+
+1107290176 c:\wxwidgets-2.6.1\include\wx\palmos\stattext.h
+
+1113748548 c:\wxwidgets-2.6.1\include\wx\statbmp.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/bitmap.h"
+	"wx/univ/statbmp.h"
+	"wx/msw/statbmp.h"
+	"wx/motif/statbmp.h"
+	"wx/gtk/statbmp.h"
+	"wx/mac/statbmp.h"
+	"wx/cocoa/statbmp.h"
+	"wx/os2/statbmp.h"
+
+1092663978 c:\wxwidgets-2.6.1\include\wx\univ\statbmp.h
+	"wx/bitmap.h"
+
+1109233606 c:\wxwidgets-2.6.1\include\wx\msw\statbmp.h
+	"wx/control.h"
+	"wx/icon.h"
+	"wx/bitmap.h"
+
+1115229124 c:\wxwidgets-2.6.1\include\wx\statbox.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/statbox.h"
+	"wx/msw/statbox.h"
+	"wx/motif/statbox.h"
+	"wx/gtk/statbox.h"
+	"wx/mac/statbox.h"
+	"wx/cocoa/statbox.h"
+	"wx/os2/statbox.h"
+
+1105535232 c:\wxwidgets-2.6.1\include\wx\univ\statbox.h
+
+1116663024 c:\wxwidgets-2.6.1\include\wx\msw\statbox.h
+
+1115229122 c:\wxwidgets-2.6.1\include\wx\radiobox.h
+	"wx/ctrlsub.h"
+	"wx/univ/radiobox.h"
+	"wx/msw/radiobox.h"
+	"wx/motif/radiobox.h"
+	"wx/gtk/radiobox.h"
+	"wx/mac/radiobox.h"
+	"wx/cocoa/radiobox.h"
+	"wx/os2/radiobox.h"
+	"wx/palmos/radiobox.h"
+
+1109498866 c:\wxwidgets-2.6.1\include\wx\univ\radiobox.h
+	"wx/statbox.h"
+	"wx/dynarray.h"
+
+1113412230 c:\wxwidgets-2.6.1\include\wx\msw\radiobox.h
+	"wx/statbox.h"
+
+1113146128 c:\wxwidgets-2.6.1\include\wx\palmos\radiobox.h
+
+1115229122 c:\wxwidgets-2.6.1\include\wx\radiobut.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/radiobut.h"
+	"wx/msw/radiobut.h"
+	"wx/motif/radiobut.h"
+	"wx/gtk/radiobut.h"
+	"wx/mac/radiobut.h"
+	"wx/cocoa/radiobut.h"
+	"wx/os2/radiobut.h"
+	"wx/palmos/radiobut.h"
+
+1085341906 c:\wxwidgets-2.6.1\include\wx\univ\radiobut.h
+	"wx/checkbox.h"
+
+1113146126 c:\wxwidgets-2.6.1\include\wx\msw\radiobut.h
+
+1113146128 c:\wxwidgets-2.6.1\include\wx\palmos\radiobut.h
+
+1115229124 c:\wxwidgets-2.6.1\include\wx\slider.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/slider.h"
+	"wx/msw/slider95.h"
+	"wx/motif/slider.h"
+	"wx/gtk/slider.h"
+	"wx/mac/slider.h"
+	"wx/cocoa/slider.h"
+	"wx/os2/slider.h"
+	"wx/palmos/slider.h"
+
+1092663978 c:\wxwidgets-2.6.1\include\wx\univ\slider.h
+	"wx/univ/scrthumb.h"
+
+1092663978 c:\wxwidgets-2.6.1\include\wx\univ\scrthumb.h
+	"wx/timer.h"
+
+1117568178 c:\wxwidgets-2.6.1\include\wx\msw\slider95.h
+
+1110489370 c:\wxwidgets-2.6.1\include\wx\palmos\slider.h
+
+1110020634 c:\wxwidgets-2.6.1\include\wx\gauge.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/gauge.h"
+	"wx/msw/gauge95.h"
+	"wx/motif/gauge.h"
+	"wx/gtk/gauge.h"
+	"wx/mac/gauge.h"
+	"wx/cocoa/gauge.h"
+	"wx/os2/gauge.h"
+
+1085341906 c:\wxwidgets-2.6.1\include\wx\univ\gauge.h
+
+1106936562 c:\wxwidgets-2.6.1\include\wx\msw\gauge95.h
+
+1115229118 c:\wxwidgets-2.6.1\include\wx\dirdlg.h
+	"wx/dialog.h"
+	"wx/generic/dirdlgg.h"
+	"wx/generic/dirdlgg.h"
+	"wx/msw/dirdlg.h"
+	"wx/mac/dirdlg.h"
+	"wx/generic/dirdlgg.h"
+
+1112474394 c:\wxwidgets-2.6.1\include\wx\generic\dirdlgg.h
+	"wx/dialog.h"
+
+1093373892 c:\wxwidgets-2.6.1\include\wx\msw\dirdlg.h
+
+1115229126 c:\wxwidgets-2.6.1\include\wx\toolbar.h
+	"wx/defs.h"
+	"wx/tbarbase.h"
+	"wx/univ/toolbar.h"
+	"wx/palmos/toolbar.h"
+	"wx/msw/tbar95.h"
+	"wx/msw/wince/tbarwce.h"
+	"wx/msw/tbarmsw.h"
+	"wx/motif/toolbar.h"
+	"wx/gtk/tbargtk.h"
+	"wx/mac/toolbar.h"
+	"wx/cocoa/toolbar.h"
+	"wx/os2/toolbar.h"
+
+1110020652 c:\wxwidgets-2.6.1\include\wx\tbarbase.h
+	"wx/defs.h"
+	"wx/bitmap.h"
+	"wx/list.h"
+	"wx/control.h"
+
+1092663980 c:\wxwidgets-2.6.1\include\wx\univ\toolbar.h
+	"wx/button.h"
+
+1108458286 c:\wxwidgets-2.6.1\include\wx\palmos\toolbar.h
+	"wx/dynarray.h"
+
+1112086632 c:\wxwidgets-2.6.1\include\wx\msw\tbar95.h
+	"wx/dynarray.h"
+	"wx/imaglist.h"
+
+1115229120 c:\wxwidgets-2.6.1\include\wx\imaglist.h
+	"wx/msw/imaglist.h"
+	"wx/mac/imaglist.h"
+	"wx/generic/imaglist.h"
+
+1109500604 c:\wxwidgets-2.6.1\include\wx\msw\imaglist.h
+	"wx/bitmap.h"
+
+1109589138 c:\wxwidgets-2.6.1\include\wx\generic\imaglist.h
+	"wx/defs.h"
+	"wx/list.h"
+	"wx/icon.h"
+
+1111261910 c:\wxwidgets-2.6.1\include\wx\msw\wince\tbarwce.h
+	"wx/dynarray.h"
+	"wx/msw/tbar95.h"
+
+1106936564 c:\wxwidgets-2.6.1\include\wx\msw\tbarmsw.h
+	"wx/tbarbase.h"
+
+1110020640 c:\wxwidgets-2.6.1\include\wx\layout.h
+	"wx/object.h"
+
+1111574966 c:\wxwidgets-2.6.1\include\wx\sizer.h
+	"wx/defs.h"
+	"wx/button.h"
+	"wx/window.h"
+	"wx/frame.h"
+	"wx/dialog.h"
+	"wx/bookctrl.h"
+
+1113146116 c:\wxwidgets-2.6.1\include\wx\bookctrl.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/dynarray.h"
+	"wx/notebook.h"
+	"wx/choicebk.h"
+
+1115229120 c:\wxwidgets-2.6.1\include\wx\notebook.h
+	"wx/defs.h"
+	"wx/bookctrl.h"
+	"wx/univ/notebook.h"
+	"wx/msw/notebook.h"
+	"wx/generic/notebook.h"
+	"wx/gtk/notebook.h"
+	"wx/mac/notebook.h"
+	"wx/cocoa/notebook.h"
+	"wx/os2/notebook.h"
+
+1105881388 c:\wxwidgets-2.6.1\include\wx\univ\notebook.h
+	"wx/arrstr.h"
+
+1117090922 c:\wxwidgets-2.6.1\include\wx\msw\notebook.h
+	"wx/control.h"
+
+1105881386 c:\wxwidgets-2.6.1\include\wx\generic\notebook.h
+	"wx/event.h"
+	"wx/control.h"
+
+1112818408 c:\wxwidgets-2.6.1\include\wx\choicebk.h
+	"wx/defs.h"
+	"wx/bookctrl.h"
+
+1115229120 c:\wxwidgets-2.6.1\include\wx\mdi.h
+	"wx/defs.h"
+	"wx/generic/mdig.h"
+	"wx/msw/mdi.h"
+	"wx/motif/mdi.h"
+	"wx/gtk/mdi.h"
+	"wx/mac/mdi.h"
+	"wx/cocoa/mdi.h"
+	"wx/generic/mdig.h"
+
+1111500912 c:\wxwidgets-2.6.1\include\wx\generic\mdig.h
+	"wx/frame.h"
+	"wx/panel.h"
+	"wx/notebook.h"
+
+1111500922 c:\wxwidgets-2.6.1\include\wx\msw\mdi.h
+	"wx/frame.h"
+
+1115229124 c:\wxwidgets-2.6.1\include\wx\statusbr.h
+	"wx/window.h"
+	"wx/list.h"
+	"wx/dynarray.h"
+	"wx/univ/statusbr.h"
+	"wx/palmos/statusbr.h"
+	"wx/msw/statbr95.h"
+	"wx/generic/statusbr.h"
+	"wx/mac/statusbr.h"
+	"wx/generic/statusbr.h"
+
+1092663980 c:\wxwidgets-2.6.1\include\wx\univ\statusbr.h
+	"wx/univ/inpcons.h"
+	"wx/arrstr.h"
+
+1106936566 c:\wxwidgets-2.6.1\include\wx\palmos\statusbr.h
+
+1095168534 c:\wxwidgets-2.6.1\include\wx\msw\statbr95.h
+
+1106936556 c:\wxwidgets-2.6.1\include\wx\generic\statusbr.h
+	"wx/pen.h"
+	"wx/font.h"
+	"wx/statusbr.h"
+	"wx/arrstr.h"
+
+1115229116 c:\wxwidgets-2.6.1\include\wx\choicdlg.h
+	"wx/generic/choicdgg.h"
+
+1112474394 c:\wxwidgets-2.6.1\include\wx\generic\choicdgg.h
+	"wx/dynarray.h"
+	"wx/dialog.h"
+
+1110020652 c:\wxwidgets-2.6.1\include\wx\textdlg.h
+	"wx/generic/textdlgg.h"
+	"wx/numdlg.h"
+
+1106936556 c:\wxwidgets-2.6.1\include\wx\generic\textdlgg.h
+	"wx/defs.h"
+	"wx/dialog.h"
+	"wx/valtext.h"
+
+1112800350 c:\wxwidgets-2.6.1\include\wx\valtext.h
+	"wx/defs.h"
+	"wx/textctrl.h"
+	"wx/validate.h"
+
+1115229120 c:\wxwidgets-2.6.1\include\wx\numdlg.h
+	"wx/generic/numdlgg.h"
+
+1085341848 c:\wxwidgets-2.6.1\include\wx\generic\numdlgg.h
+	"wx/defs.h"
+	"wx/dialog.h"
+
+1110995668 c:\wxwidgets-2.6.1\include\wx\filedlg.h
+	"wx/defs.h"
+	"wx/dialog.h"
+	"wx/arrstr.h"
+	"wx/generic/filedlgg.h"
+	"wx/msw/filedlg.h"
+	"wx/motif/filedlg.h"
+	"wx/gtk/filedlg.h"
+	"wx/generic/filedlgg.h"
+	"wx/generic/filedlgg.h"
+	"wx/mac/filedlg.h"
+	"wx/cocoa/filedlg.h"
+	"wx/os2/filedlg.h"
+
+1110489366 c:\wxwidgets-2.6.1\include\wx\generic\filedlgg.h
+	"wx/listctrl.h"
+	"wx/datetime.h"
+
+1110020642 c:\wxwidgets-2.6.1\include\wx\listctrl.h
+	"wx/defs.h"
+	"wx/listbase.h"
+	"wx/msw/listctrl.h"
+	"wx/generic/listctrl.h"
+
+1116760248 c:\wxwidgets-2.6.1\include\wx\listbase.h
+	"wx/defs.h"
+	"wx/colour.h"
+	"wx/font.h"
+	"wx/gdicmn.h"
+	"wx/event.h"
+
+1108892102 c:\wxwidgets-2.6.1\include\wx\msw\listctrl.h
+	"wx/control.h"
+	"wx/event.h"
+	"wx/hash.h"
+	"wx/textctrl.h"
+
+1112189612 c:\wxwidgets-2.6.1\include\wx\generic\listctrl.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/imaglist.h"
+	"wx/generic/imaglist.h"
+	"wx/control.h"
+	"wx/timer.h"
+	"wx/dcclient.h"
+	"wx/scrolwin.h"
+	"wx/settings.h"
+	"wx/listbase.h"
+
+1096446076 c:\wxwidgets-2.6.1\include\wx\msw\filedlg.h
+
+1110995670 c:\wxwidgets-2.6.1\include\wx\spinctrl.h
+	"wx/defs.h"
+	"wx/spinbutt.h"
+	"wx/generic/spinctlg.h"
+	"wx/msw/spinctrl.h"
+	"wx/os2/spinctrl.h"
+	"wx/gtk/spinctrl.h"
+	"wx/generic/spinctlg.h"
+	"wx/mac/spinctrl.h"
+	"wx/generic/spinctlg.h"
+
+1117527498 c:\wxwidgets-2.6.1\include\wx\spinbutt.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/event.h"
+	"wx/univ/spinbutt.h"
+	"wx/msw/spinbutt.h"
+	"wx/motif/spinbutt.h"
+	"wx/gtk/spinbutt.h"
+	"wx/mac/spinbutt.h"
+	"wx/cocoa/spinbutt.h"
+	"wx/os2/spinbutt.h"
+
+1092663978 c:\wxwidgets-2.6.1\include\wx\univ\spinbutt.h
+	"wx/univ/scrarrow.h"
+
+1092663976 c:\wxwidgets-2.6.1\include\wx\msw\spinbutt.h
+	"wx/control.h"
+	"wx/event.h"
+
+1087625666 c:\wxwidgets-2.6.1\include\wx\generic\spinctlg.h
+	"wx/textctrl.h"
+
+1109589144 c:\wxwidgets-2.6.1\include\wx\msw\spinctrl.h
+	"wx/spinbutt.h"
+	"wx/dynarray.h"
+
+1130154619 c:\cvsfiles\zaraftp\app.cpp
+	"app.h"
+	<wx/filename.h>
+	<wx/config.h>
+	<wx/image.h>
+	"mainframe.h"
+	"mainframe.h"
+
+1130152870 c:\cvsfiles\zaraftp\app.h
+	<wx/wxprec.h>
+	<wx/wx.h>
+	<wx/msw/helpchm.h>
+
+1115229126 c:\wxwidgets-2.6.1\include\wx\wxprec.h
+	"wx/defs.h"
+	"wx/wxchar.h"
+	"wx/msw/wrapwin.h"
+	"wx/wx.h"
+
+1093770992 c:\wxwidgets-2.6.1\include\wx\msw\helpchm.h
+	"wx/helpbase.h"
+
+1110020638 c:\wxwidgets-2.6.1\include\wx\helpbase.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+	"wx/gdicmn.h"
+	"wx/frame.h"
+
+1111137948 c:\wxwidgets-2.6.1\include\wx\filename.h
+	"wx/string.h"
+	"wx/arrstr.h"
+	"wx/filefn.h"
+	"wx/datetime.h"
+
+1115229116 c:\wxwidgets-2.6.1\include\wx\config.h
+	"wx/defs.h"
+	"wx/confbase.h"
+	"wx/msw/regconf.h"
+	"wx/msw/iniconf.h"
+	"wx/palmos/prefconf.h"
+	"wx/fileconf.h"
+
+1110020622 c:\wxwidgets-2.6.1\include\wx\confbase.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/string.h"
+
+1097745072 c:\wxwidgets-2.6.1\include\wx\msw\regconf.h
+	"wx/msw/registry.h"
+	"wx/object.h"
+	"wx/confbase.h"
+
+1116607430 c:\wxwidgets-2.6.1\include\wx\msw\registry.h
+
+1093770992 c:\wxwidgets-2.6.1\include\wx\msw\iniconf.h
+
+1104313706 c:\wxwidgets-2.6.1\include\wx\palmos\prefconf.h
+
+1112968660 c:\wxwidgets-2.6.1\include\wx\fileconf.h
+	"wx/defs.h"
+	"wx/textfile.h"
+	"wx/string.h"
+	"wx/confbase.h"
+
+1110020652 c:\wxwidgets-2.6.1\include\wx\textfile.h
+	"wx/defs.h"
+	"wx/textbuf.h"
+	"wx/file.h"
+
+1115219988 c:\wxwidgets-2.6.1\include\wx\textbuf.h
+	"wx/defs.h"
+	"wx/arrstr.h"
+	"wx/string.h"
+	"wx/dynarray.h"
+
+1117527496 c:\wxwidgets-2.6.1\include\wx\file.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/filefn.h"
+	"wx/strconv.h"
+
+1112474768 c:\wxwidgets-2.6.1\include\wx\image.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+	"wx/gdicmn.h"
+	"wx/hashmap.h"
+	"wx/stream.h"
+	"wx/imagbmp.h"
+	"wx/imagpng.h"
+	"wx/imaggif.h"
+	"wx/imagpcx.h"
+	"wx/imagjpeg.h"
+	"wx/imagtiff.h"
+	"wx/imagpnm.h"
+	"wx/imagxpm.h"
+	"wx/imagiff.h"
+
+1110020638 c:\wxwidgets-2.6.1\include\wx\imagbmp.h
+	"wx/image.h"
+
+1110995668 c:\wxwidgets-2.6.1\include\wx\imagpng.h
+	"wx/defs.h"
+	"wx/image.h"
+
+1110020638 c:\wxwidgets-2.6.1\include\wx\imaggif.h
+	"wx/image.h"
+
+1110020638 c:\wxwidgets-2.6.1\include\wx\imagpcx.h
+	"wx/image.h"
+
+1110995668 c:\wxwidgets-2.6.1\include\wx\imagjpeg.h
+	"wx/defs.h"
+	"wx/image.h"
+
+1110995668 c:\wxwidgets-2.6.1\include\wx\imagtiff.h
+	"wx/defs.h"
+	"wx/image.h"
+
+1110020638 c:\wxwidgets-2.6.1\include\wx\imagpnm.h
+	"wx/image.h"
+
+1110020638 c:\wxwidgets-2.6.1\include\wx\imagxpm.h
+	"wx/image.h"
+
+1110020638 c:\wxwidgets-2.6.1\include\wx\imagiff.h
+	"wx/image.h"
+
+1117527528 c:\wxwidgets-2.6.1\include\wx\protocol\ftp.h
+	"wx/defs.h"
+	"wx/sckaddr.h"
+	"wx/protocol/protocol.h"
+	"wx/url.h"
+
+1113146118 c:\wxwidgets-2.6.1\include\wx\sckaddr.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/gsocket.h"
+	<sys/socket.h>
+	<sys/un.h>
+
+1115229118 c:\wxwidgets-2.6.1\include\wx\gsocket.h
+	"wx/defs.h"
+	"wx/dlimpexp.h"
+	<stddef.h>
+	<sys/types.h>
+	<stdlib.h>
+	"wx/msw/gsockmsw.h"
+	"wx/mac/gsockmac.h"
+	"wx/unix/gsockunx.h"
+
+1115229182 c:\wxwidgets-2.6.1\include\wx\msw\gsockmsw.h
+	"wx/setup.h"
+	"wx/gsocket.h"
+	"gsocket.h"
+	"wx/msw/wrapwin.h"
+	<sys/types.h>
+	<winsock.h>
+
+1115229186 c:\wxwidgets-2.6.1\include\wx\unix\gsockunx.h
+	"wx/setup.h"
+	"wx/gsocket.h"
+	"gsocket.h"
+
+1085341904 c:\wxwidgets-2.6.1\include\wx\protocol\protocol.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+	"wx/stream.h"
+	"wx/socket.h"
+
+1110489366 c:\wxwidgets-2.6.1\include\wx\socket.h
+	"wx/defs.h"
+	"wx/event.h"
+	"wx/sckaddr.h"
+	"wx/gsocket.h"
+	"wx/list.h"
+
+1111319976 c:\wxwidgets-2.6.1\include\wx\url.h
+	"wx/defs.h"
+	"wx/uri.h"
+	"wx/protocol/protocol.h"
+	"wx/protocol/http.h"
+
+1115229126 c:\wxwidgets-2.6.1\include\wx\uri.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+
+1085341904 c:\wxwidgets-2.6.1\include\wx\protocol\http.h
+	"wx/defs.h"
+	"wx/hashmap.h"
+	"wx/protocol/protocol.h"
+
+1121694106 c:\wxwidgets-2.6.2\include\wx\wxprec.h
+	"wx/defs.h"
+	"wx/wxchar.h"
+	"wx/msw/wrapwin.h"
+	<PalmOS.h>
+	"wx/wx.h"
+
+1127026440 c:\wxwidgets-2.6.2\include\wx\defs.h
+	"wx/platform.h"
+	"wx/features.h"
+	"wx/version.h"
+	"wx/dlimpexp.h"
+	"wx/debug.h"
+	<stddef.h>
+	<sys/types.h>
+	<unistd.h>
+
+1126272566 c:\wxwidgets-2.6.2\include\wx\platform.h
+	<stddef.h>
+	<unistd.h>
+	"wx/mac/carbon/config_xcode.h"
+	"wx/setup.h"
+	"wx/chkconf.h"
+	"wx/msw/wince/libraries.h"
+	"wx/msw/gccpriv.h"
+	<AvailabilityMacros.h>
+
+1127229390 c:\wxwidgets-2.6.2\lib\vc_lib\mswd\wx\setup.h
+
+1126272564 c:\wxwidgets-2.6.2\include\wx\chkconf.h
+	"wx/palmos/chkconf.h"
+	"wx/msw/wince/chkconf.h"
+	"wx/msw/chkconf.h"
+	"wx/mac/chkconf.h"
+	"wx/motif/chkconf.h"
+
+1106246626 c:\wxwidgets-2.6.2\include\wx\palmos\chkconf.h
+
+1122983414 c:\wxwidgets-2.6.2\include\wx\msw\wince\chkconf.h
+
+1126272574 c:\wxwidgets-2.6.2\include\wx\msw\chkconf.h
+
+1123238704 c:\wxwidgets-2.6.2\include\wx\msw\wince\libraries.h
+
+1116607430 c:\wxwidgets-2.6.2\include\wx\msw\gccpriv.h
+	<_mingw.h>
+	<w32api.h>
+
+1116691164 c:\wxwidgets-2.6.2\include\wx\features.h
+
+1122305712 c:\wxwidgets-2.6.2\include\wx\version.h
+
+1119618282 c:\wxwidgets-2.6.2\include\wx\dlimpexp.h
+
+1122278794 c:\wxwidgets-2.6.2\include\wx\debug.h
+	<assert.h>
+	<limits.h>
+	"wx/wxchar.h"
+
+1126272566 c:\wxwidgets-2.6.2\include\wx\wxchar.h
+	"wx/defs.h"
+	<stdarg.h>
+	<sys/types.h>
+	<wchar.h>
+	<wcstr.h>
+	<stdlib.h>
+	<ctype.h>
+	<stddef.h>
+	<stddef.h>
+	<string.h>
+	<ctype.h>
+	<tchar.h>
+	<ctype.h>
+	<ctype.h>
+	<stdio.h>
+	<wctype.h>
+	<stdio.h>
+	<stdio.h>
+	<ctype.h>
+	<string.h>
+	<stdio.h>
+	<stdio.h>
+	<time.h>
+	<time.h>
+	<string.h>
+
+1118263942 c:\wxwidgets-2.6.2\include\wx\msw\wrapwin.h
+	"wx/platform.h"
+	<windows.h>
+	<winbase.h>
+	<wingdi.h>
+	<winuser.h>
+	<shellapi.h>
+	"wx/msw/winundef.h"
+
+1126272576 c:\wxwidgets-2.6.2\include\wx\msw\winundef.h
+
+1115229126 c:\wxwidgets-2.6.2\include\wx\wx.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/dynarray.h"
+	"wx/list.h"
+	"wx/hash.h"
+	"wx/string.h"
+	"wx/intl.h"
+	"wx/log.h"
+	"wx/event.h"
+	"wx/app.h"
+	"wx/utils.h"
+	"wx/stream.h"
+	"wx/window.h"
+	"wx/panel.h"
+	"wx/frame.h"
+	"wx/dc.h"
+	"wx/dcclient.h"
+	"wx/dcmemory.h"
+	"wx/dcprint.h"
+	"wx/dcscreen.h"
+	"wx/button.h"
+	"wx/menu.h"
+	"wx/pen.h"
+	"wx/brush.h"
+	"wx/palette.h"
+	"wx/icon.h"
+	"wx/cursor.h"
+	"wx/dialog.h"
+	"wx/timer.h"
+	"wx/settings.h"
+	"wx/msgdlg.h"
+	"wx/cmndata.h"
+	"wx/control.h"
+	"wx/ctrlsub.h"
+	"wx/bmpbuttn.h"
+	"wx/checkbox.h"
+	"wx/checklst.h"
+	"wx/choice.h"
+	"wx/scrolbar.h"
+	"wx/stattext.h"
+	"wx/statbmp.h"
+	"wx/statbox.h"
+	"wx/listbox.h"
+	"wx/radiobox.h"
+	"wx/radiobut.h"
+	"wx/textctrl.h"
+	"wx/slider.h"
+	"wx/gauge.h"
+	"wx/scrolwin.h"
+	"wx/dirdlg.h"
+	"wx/toolbar.h"
+	"wx/combobox.h"
+	"wx/layout.h"
+	"wx/sizer.h"
+	"wx/memory.h"
+	"wx/mdi.h"
+	"wx/statusbr.h"
+	"wx/scrolbar.h"
+	"wx/choicdlg.h"
+	"wx/textdlg.h"
+	"wx/filedlg.h"
+	"wx/validate.h"
+	"wx/valtext.h"
+
+1122278794 c:\wxwidgets-2.6.2\include\wx\object.h
+	"wx/defs.h"
+	"wx/memory.h"
+	"wx/xti.h"
+	"wx/msw/msvcrt.h"
+
+1110020642 c:\wxwidgets-2.6.2\include\wx\memory.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/msgout.h"
+	<stddef.h>
+
+1123851830 c:\wxwidgets-2.6.2\include\wx\string.h
+	"wx/defs.h"
+	<ctype.h>
+	<stdio.h>
+	<string.h>
+	<stdarg.h>
+	<limits.h>
+	<string.h>
+	<stdio.h>
+	<stdarg.h>
+	<limits.h>
+	<stdlib.h>
+	<strings.h>
+	<StringMgr.h>
+	"wx/wxchar.h"
+	"wx/buffer.h"
+	"wx/strconv.h"
+	"wx/beforestd.h"
+	<string>
+	"wx/afterstd.h"
+	"wx/arrstr.h"
+	"wx/iosfwrap.h"
+
+1113644252 c:\wxwidgets-2.6.2\include\wx\buffer.h
+	"wx/wxchar.h"
+	<stdlib.h>
+
+1123851830 c:\wxwidgets-2.6.2\include\wx\strconv.h
+	"wx/defs.h"
+	"wx/wxchar.h"
+	"wx/buffer.h"
+	"typeinfo.h"
+	<stdlib.h>
+	"wx/fontenc.h"
+
+1110020634 c:\wxwidgets-2.6.2\include\wx\fontenc.h
+
+1119333586 c:\wxwidgets-2.6.2\include\wx\beforestd.h
+
+1119333586 c:\wxwidgets-2.6.2\include\wx\afterstd.h
+	"wx/msw/winundef.h"
+
+1114609876 c:\wxwidgets-2.6.2\include\wx\arrstr.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/dynarray.h"
+
+1118263932 c:\wxwidgets-2.6.2\include\wx\dynarray.h
+	"wx/defs.h"
+	"wx/beforestd.h"
+	<vector>
+	<algorithm>
+	"wx/afterstd.h"
+
+1113412228 c:\wxwidgets-2.6.2\include\wx\iosfwrap.h
+	<iostream.h>
+	<iosfwd>
+	"wx/msw/winundef.h"
+
+1121694104 c:\wxwidgets-2.6.2\include\wx\msgout.h
+	"wx/defs.h"
+	"wx/wxchar.h"
+
+1110489366 c:\wxwidgets-2.6.2\include\wx\xti.h
+	"wx/defs.h"
+	"wx/memory.h"
+	"wx/flags.h"
+	"wx/string.h"
+	"wx/arrstr.h"
+	"wx/hashmap.h"
+	"wx/log.h"
+	"wx/intl.h"
+	<typeinfo>
+	<wx/dynarray.h>
+
+1110020634 c:\wxwidgets-2.6.2\include\wx\flags.h
+
+1116760248 c:\wxwidgets-2.6.2\include\wx\hashmap.h
+	"wx/string.h"
+	<ext/hash_map>
+	<hash_map>
+	<stddef.h>
+
+1121694104 c:\wxwidgets-2.6.2\include\wx\log.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/arrstr.h"
+	<time.h>
+	"wx/dynarray.h"
+	"wx/iosfwrap.h"
+	"wx/generic/logg.h"
+	"wx/cocoa/log.h"
+
+1095324248 c:\wxwidgets-2.6.2\include\wx\generic\logg.h
+
+1117694362 c:\wxwidgets-2.6.2\include\wx\intl.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/fontenc.h"
+
+1090848080 c:\wxwidgets-2.6.2\include\wx\msw\msvcrt.h
+	<stdlib.h>
+	<crtdbg.h>
+
+1118263932 c:\wxwidgets-2.6.2\include\wx\list.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+	"wx/beforestd.h"
+	<algorithm>
+	<iterator>
+	<list>
+	"wx/afterstd.h"
+
+1118263932 c:\wxwidgets-2.6.2\include\wx\hash.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/list.h"
+	"wx/dynarray.h"
+
+1123144934 c:\wxwidgets-2.6.2\include\wx\event.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/clntdata.h"
+	"wx/gdicmn.h"
+	"wx/cursor.h"
+	"wx/thread.h"
+	"wx/dynarray.h"
+
+1126272564 c:\wxwidgets-2.6.2\include\wx\clntdata.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/hashmap.h"
+	"wx/vector.h"
+
+1123317046 c:\wxwidgets-2.6.2\include\wx\vector.h
+	"wx/defs.h"
+
+1115229118 c:\wxwidgets-2.6.2\include\wx\gdicmn.h
+	"wx/defs.h"
+	"wx/list.h"
+	"wx/string.h"
+	"wx/fontenc.h"
+	"wx/hashmap.h"
+
+1116839260 c:\wxwidgets-2.6.2\include\wx\cursor.h
+	"wx/defs.h"
+	"wx/palmos/cursor.h"
+	"wx/msw/cursor.h"
+	"wx/motif/cursor.h"
+	"wx/gtk/cursor.h"
+	"wx/x11/cursor.h"
+	"wx/mgl/cursor.h"
+	"wx/mac/cursor.h"
+	"wx/cocoa/cursor.h"
+	"wx/os2/cursor.h"
+	"wx/utils.h"
+
+1106246626 c:\wxwidgets-2.6.2\include\wx\palmos\cursor.h
+	"wx/palmos/gdiimage.h"
+
+1106246628 c:\wxwidgets-2.6.2\include\wx\palmos\gdiimage.h
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+	"wx/list.h"
+
+1115229118 c:\wxwidgets-2.6.2\include\wx\gdiobj.h
+	"wx/palmos/gdiobj.h"
+	"wx/msw/gdiobj.h"
+	"wx/motif/gdiobj.h"
+	"wx/gtk/gdiobj.h"
+	"wx/x11/gdiobj.h"
+	"wx/mgl/gdiobj.h"
+	"wx/mac/gdiobj.h"
+	"wx/cocoa/gdiobj.h"
+	"wx/os2/gdiobj.h"
+
+1106246628 c:\wxwidgets-2.6.2\include\wx\palmos\gdiobj.h
+	"wx/object.h"
+
+1093770992 c:\wxwidgets-2.6.2\include\wx\msw\gdiobj.h
+	"wx/object.h"
+
+1109498862 c:\wxwidgets-2.6.2\include\wx\msw\cursor.h
+	"wx/msw/gdiimage.h"
+
+1110489368 c:\wxwidgets-2.6.2\include\wx\msw\gdiimage.h
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+	"wx/list.h"
+
+1123144936 c:\wxwidgets-2.6.2\include\wx\utils.h
+	"wx/object.h"
+	"wx/list.h"
+	"wx/filefn.h"
+	"wx/longlong.h"
+	<dirent.h>
+	<unistd.h>
+	<stdio.h>
+
+1123144934 c:\wxwidgets-2.6.2\include\wx\filefn.h
+	"wx/list.h"
+	"wx/arrstr.h"
+	"wx/msw/wince/time.h"
+	"wx/msw/private.h"
+	<time.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<sys/types.h>
+	<utime.h>
+	<sys/stat.h>
+	<unistd.h>
+	<stat.h>
+	<unistd.h>
+	<unix.h>
+	<process.h>
+	"wx/os2/private.h"
+	<direct.h>
+	<io.h>
+	<unistd.h>
+	<unistd.h>
+	<dirent.h>
+	<direct.h>
+	<dos.h>
+	<io.h>
+	<direct.h>
+	<dos.h>
+	<io.h>
+	<io.h>
+	<unistd.h>
+	<dir.h>
+	<dir.h>
+	<unix.h>
+	<fcntl.h>
+	<sys/types.h>
+	"wx/msw/private.h"
+
+1118931156 c:\wxwidgets-2.6.2\include\wx\msw\wince\time.h
+
+1123238702 c:\wxwidgets-2.6.2\include\wx\msw\private.h
+	"wx/msw/wrapwin.h"
+	"wx/msw/microwin.h"
+	"wx/msw/mslu.h"
+	"wx/log.h"
+	<wx/gdicmn.h>
+	<wx/colour.h>
+
+1093883016 c:\wxwidgets-2.6.2\include\wx\msw\microwin.h
+
+1109589144 c:\wxwidgets-2.6.2\include\wx\msw\mslu.h
+	"wx/defs.h"
+	"wx/utils.h"
+	"wx/wxchar.h"
+
+1115229116 c:\wxwidgets-2.6.2\include\wx\colour.h
+	"wx/palmos/colour.h"
+	"wx/msw/colour.h"
+	"wx/motif/colour.h"
+	"wx/gtk/colour.h"
+	"wx/mgl/colour.h"
+	"wx/x11/colour.h"
+	"wx/mac/colour.h"
+	"wx/cocoa/colour.h"
+	"wx/os2/colour.h"
+
+1106246626 c:\wxwidgets-2.6.2\include\wx\palmos\colour.h
+	"wx/object.h"
+
+1085341888 c:\wxwidgets-2.6.2\include\wx\msw\colour.h
+	"wx/object.h"
+
+1126272566 c:\wxwidgets-2.6.2\include\wx\longlong.h
+	"wx/defs.h"
+	"wx/string.h"
+	<limits.h>
+	"wx/iosfwrap.h"
+
+1110020652 c:\wxwidgets-2.6.2\include\wx\thread.h
+	"wx/defs.h"
+
+1119618282 c:\wxwidgets-2.6.2\include\wx\app.h
+	"wx/event.h"
+	"wx/window.h"
+	"wx/vidmode.h"
+	"wx/build.h"
+	"wx/init.h"
+	"wx/palmos/app.h"
+	"wx/msw/app.h"
+	"wx/motif/app.h"
+	"wx/mgl/app.h"
+	"wx/gtk/app.h"
+	"wx/x11/app.h"
+	"wx/mac/app.h"
+	"wx/cocoa/app.h"
+	"wx/os2/app.h"
+	"wx/univ/theme.h"
+
+1119963634 c:\wxwidgets-2.6.2\include\wx\window.h
+	"wx/event.h"
+	"wx/list.h"
+	"wx/cursor.h"
+	"wx/font.h"
+	"wx/colour.h"
+	"wx/region.h"
+	"wx/utils.h"
+	"wx/validate.h"
+	"wx/palette.h"
+	"wx/accel.h"
+	"wx/access.h"
+	"wx/palmos/window.h"
+	"wx/msw/window.h"
+	"wx/motif/window.h"
+	"wx/gtk/window.h"
+	"wx/x11/window.h"
+	"wx/mgl/window.h"
+	"wx/mac/window.h"
+	"wx/cocoa/window.h"
+	"wx/os2/window.h"
+	"wx/univ/window.h"
+
+1117527496 c:\wxwidgets-2.6.2\include\wx\font.h
+	"wx/defs.h"
+	"wx/fontenc.h"
+	"wx/gdiobj.h"
+	"wx/palmos/font.h"
+	"wx/msw/font.h"
+	"wx/motif/font.h"
+	"wx/gtk/font.h"
+	"wx/x11/font.h"
+	"wx/mgl/font.h"
+	"wx/mac/font.h"
+	"wx/cocoa/font.h"
+	"wx/os2/font.h"
+
+1106246626 c:\wxwidgets-2.6.2\include\wx\palmos\font.h
+	<wx/gdicmn.h>
+
+1096309532 c:\wxwidgets-2.6.2\include\wx\msw\font.h
+	<wx/gdicmn.h>
+
+1115229122 c:\wxwidgets-2.6.2\include\wx\region.h
+	"wx/colour.h"
+	"wx/palmos/region.h"
+	"wx/msw/region.h"
+	"wx/gtk/region.h"
+	"wx/x11/region.h"
+	"wx/mgl/region.h"
+	"wx/mac/region.h"
+	"wx/cocoa/region.h"
+	"wx/os2/region.h"
+
+1098189588 c:\wxwidgets-2.6.2\include\wx\palmos\region.h
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+
+1095604972 c:\wxwidgets-2.6.2\include\wx\msw\region.h
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+
+1110020654 c:\wxwidgets-2.6.2\include\wx\validate.h
+	"wx/defs.h"
+	"wx/event.h"
+
+1115229120 c:\wxwidgets-2.6.2\include\wx\palette.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/gdiobj.h"
+	"wx/palmos/palette.h"
+	"wx/msw/palette.h"
+	"wx/motif/palette.h"
+	"wx/generic/paletteg.h"
+	"wx/x11/palette.h"
+	"wx/mgl/palette.h"
+	"wx/mac/palette.h"
+	"wx/os2/palette.h"
+
+1106246628 c:\wxwidgets-2.6.2\include\wx\palmos\palette.h
+	"wx/gdiobj.h"
+
+1110020736 c:\wxwidgets-2.6.2\include\wx\msw\palette.h
+	"wx/gdiobj.h"
+
+1123144938 c:\wxwidgets-2.6.2\include\wx\generic\paletteg.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+
+1110020616 c:\wxwidgets-2.6.2\include\wx\accel.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/generic/accel.h"
+	"wx/msw/accel.h"
+	"wx/motif/accel.h"
+	"wx/gtk/accel.h"
+	"wx/mac/accel.h"
+	"wx/generic/accel.h"
+	"wx/os2/accel.h"
+
+1102245614 c:\wxwidgets-2.6.2\include\wx\generic\accel.h
+
+1102856742 c:\wxwidgets-2.6.2\include\wx\msw\accel.h
+
+1110020618 c:\wxwidgets-2.6.2\include\wx\access.h
+	"wx/variant.h"
+	"wx/msw/ole/access.h"
+	"wx/generic/access.h"
+	"wx/generic/access.h"
+	"wx/generic/access.h"
+	"wx/generic/access.h"
+	"wx/generic/access.h"
+	"wx/generic/access.h"
+
+1115229126 c:\wxwidgets-2.6.2\include\wx\variant.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+	"wx/arrstr.h"
+	"wx/list.h"
+	"wx/datetime.h"
+	"wx/db.h"
+	"wx/iosfwrap.h"
+
+1126272564 c:\wxwidgets-2.6.2\include\wx\datetime.h
+	"wx/defs.h"
+	<time.h>
+	"wx/msw/wince/time.h"
+	<limits.h>
+	"wx/longlong.h"
+	"wx/dynarray.h"
+
+1126865028 c:\wxwidgets-2.6.2\include\wx\db.h
+	"wx/defs.h"
+	"wx/string.h"
+	<afxwin.h>
+	<windows.h>
+	"wx/msw/winundef.h"
+	"sql.h"
+	"sqlext.h"
+	"odbcinst.h"
+	<windows.h>
+	"wx/msw/winundef.h"
+	"wx/isql.h"
+	"wx/isqlext.h"
+	<sql.h>
+	<sqlext.h>
+	"wx/object.h"
+
+1126944024 c:\wxwidgets-2.6.2\include\wx\isql.h
+
+1110020640 c:\wxwidgets-2.6.2\include\wx\isqlext.h
+	"wx/isql.h"
+
+1092663976 c:\wxwidgets-2.6.2\include\wx\msw\ole\access.h
+
+1121694114 c:\wxwidgets-2.6.2\include\wx\palmos\window.h
+	"wx/hash.h"
+
+1126272576 c:\wxwidgets-2.6.2\include\wx\msw\window.h
+	"wx/hash.h"
+
+1124712114 c:\wxwidgets-2.6.2\include\wx\univ\window.h
+	"wx/bitmap.h"
+
+1110020618 c:\wxwidgets-2.6.2\include\wx\bitmap.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+	"wx/palmos/bitmap.h"
+	"wx/msw/bitmap.h"
+	"wx/x11/bitmap.h"
+	"wx/gtk/bitmap.h"
+	"wx/x11/bitmap.h"
+	"wx/mgl/bitmap.h"
+	"wx/mac/bitmap.h"
+	"wx/cocoa/bitmap.h"
+	"wx/os2/bitmap.h"
+
+1106246626 c:\wxwidgets-2.6.2\include\wx\palmos\bitmap.h
+	"wx/palmos/gdiimage.h"
+	"wx/gdicmn.h"
+	"wx/palette.h"
+
+1112086630 c:\wxwidgets-2.6.2\include\wx\msw\bitmap.h
+	"wx/msw/gdiimage.h"
+	"wx/gdicmn.h"
+	"wx/palette.h"
+
+1110020654 c:\wxwidgets-2.6.2\include\wx\vidmode.h
+
+1110020620 c:\wxwidgets-2.6.2\include\wx\build.h
+	"wx/version.h"
+
+1110020638 c:\wxwidgets-2.6.2\include\wx\init.h
+	"wx/wxchar.h"
+
+1121694114 c:\wxwidgets-2.6.2\include\wx\palmos\app.h
+	"wx/event.h"
+	"wx/icon.h"
+
+1115229120 c:\wxwidgets-2.6.2\include\wx\icon.h
+	"wx/iconloc.h"
+	"wx/palmos/icon.h"
+	"wx/msw/icon.h"
+	"wx/motif/icon.h"
+	"wx/gtk/icon.h"
+	"wx/x11/icon.h"
+	"wx/mgl/icon.h"
+	"wx/mac/icon.h"
+	"wx/cocoa/icon.h"
+	"wx/os2/icon.h"
+
+1110020638 c:\wxwidgets-2.6.2\include\wx\iconloc.h
+	"wx/string.h"
+
+1106246628 c:\wxwidgets-2.6.2\include\wx\palmos\icon.h
+	"wx/palmos/gdiimage.h"
+
+1095604972 c:\wxwidgets-2.6.2\include\wx\msw\icon.h
+	"wx/msw/gdiimage.h"
+
+1095168530 c:\wxwidgets-2.6.2\include\wx\msw\app.h
+	"wx/event.h"
+	"wx/icon.h"
+	"wx/msw/wrapwin.h"
+
+1106936568 c:\wxwidgets-2.6.2\include\wx\univ\theme.h
+
+1119963632 c:\wxwidgets-2.6.2\include\wx\stream.h
+	"wx/defs.h"
+	<stdio.h>
+	"wx/object.h"
+	"wx/string.h"
+	"wx/filefn.h"
+
+1115229122 c:\wxwidgets-2.6.2\include\wx\panel.h
+	"wx/generic/panelg.h"
+
+1115229152 c:\wxwidgets-2.6.2\include\wx\generic\panelg.h
+	"wx/window.h"
+	"wx/containr.h"
+
+1110020622 c:\wxwidgets-2.6.2\include\wx\containr.h
+
+1110020634 c:\wxwidgets-2.6.2\include\wx\frame.h
+	"wx/toplevel.h"
+	"wx/univ/frame.h"
+	"wx/palmos/frame.h"
+	"wx/msw/frame.h"
+	"wx/gtk/frame.h"
+	"wx/motif/frame.h"
+	"wx/mac/frame.h"
+	"wx/cocoa/frame.h"
+	"wx/os2/frame.h"
+
+1119963634 c:\wxwidgets-2.6.2\include\wx\toplevel.h
+	"wx/window.h"
+	"wx/iconbndl.h"
+	"wx/palmos/toplevel.h"
+	"wx/msw/toplevel.h"
+	"wx/gtk/toplevel.h"
+	"wx/x11/toplevel.h"
+	"wx/mgl/toplevel.h"
+	"wx/mac/toplevel.h"
+	"wx/cocoa/toplevel.h"
+	"wx/os2/toplevel.h"
+	"wx/motif/toplevel.h"
+	"wx/univ/toplevel.h"
+
+1110020638 c:\wxwidgets-2.6.2\include\wx\iconbndl.h
+	"wx/dynarray.h"
+	"wx/gdicmn.h"
+
+1121694114 c:\wxwidgets-2.6.2\include\wx\palmos\toplevel.h
+
+1111234010 c:\wxwidgets-2.6.2\include\wx\msw\toplevel.h
+
+1103625698 c:\wxwidgets-2.6.2\include\wx\univ\toplevel.h
+	"wx/univ/inpcons.h"
+	"wx/univ/inphand.h"
+	"wx/icon.h"
+
+1085341906 c:\wxwidgets-2.6.2\include\wx\univ\inpcons.h
+	"wx/object.h"
+	"wx/event.h"
+
+1092663978 c:\wxwidgets-2.6.2\include\wx\univ\inphand.h
+	"wx/univ/inpcons.h"
+
+1108892108 c:\wxwidgets-2.6.2\include\wx\univ\frame.h
+
+1121694114 c:\wxwidgets-2.6.2\include\wx\palmos\frame.h
+
+1111156008 c:\wxwidgets-2.6.2\include\wx\msw\frame.h
+
+1119963630 c:\wxwidgets-2.6.2\include\wx\dc.h
+	"wx/object.h"
+	"wx/cursor.h"
+	"wx/font.h"
+	"wx/colour.h"
+	"wx/bitmap.h"
+	"wx/brush.h"
+	"wx/pen.h"
+	"wx/palette.h"
+	"wx/list.h"
+	"wx/dynarray.h"
+	"wx/math.h"
+	"wx/palmos/dc.h"
+	"wx/msw/dc.h"
+	"wx/motif/dc.h"
+	"wx/gtk/dc.h"
+	"wx/x11/dc.h"
+	"wx/mgl/dc.h"
+	"wx/mac/dc.h"
+	"wx/cocoa/dc.h"
+	"wx/os2/dc.h"
+
+1115229116 c:\wxwidgets-2.6.2\include\wx\brush.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/gdiobj.h"
+	"wx/palmos/brush.h"
+	"wx/msw/brush.h"
+	"wx/x11/brush.h"
+	"wx/gtk/brush.h"
+	"wx/mgl/brush.h"
+	"wx/mac/brush.h"
+	"wx/cocoa/brush.h"
+	"wx/os2/brush.h"
+
+1106246626 c:\wxwidgets-2.6.2\include\wx\palmos\brush.h
+	"wx/gdicmn.h"
+	"wx/gdiobj.h"
+	"wx/bitmap.h"
+
+1102245620 c:\wxwidgets-2.6.2\include\wx\msw\brush.h
+	"wx/gdicmn.h"
+	"wx/gdiobj.h"
+	"wx/bitmap.h"
+
+1115229122 c:\wxwidgets-2.6.2\include\wx\pen.h
+	"wx/palmos/pen.h"
+	"wx/msw/pen.h"
+	"wx/x11/pen.h"
+	"wx/gtk/pen.h"
+	"wx/mgl/pen.h"
+	"wx/mac/pen.h"
+	"wx/cocoa/pen.h"
+	"wx/os2/pen.h"
+
+1106246628 c:\wxwidgets-2.6.2\include\wx\palmos\pen.h
+	"wx/gdiobj.h"
+	"wx/bitmap.h"
+	"wx/colour.h"
+
+1095604972 c:\wxwidgets-2.6.2\include\wx\msw\pen.h
+	"wx/gdiobj.h"
+	"wx/bitmap.h"
+	"wx/colour.h"
+
+1115219650 c:\wxwidgets-2.6.2\include\wx\math.h
+	"wx/defs.h"
+	<math.h>
+	<float.h>
+
+1106246626 c:\wxwidgets-2.6.2\include\wx\palmos\dc.h
+	"wx/defs.h"
+	"wx/dc.h"
+
+1126944032 c:\wxwidgets-2.6.2\include\wx\msw\dc.h
+	"wx/defs.h"
+
+1115229116 c:\wxwidgets-2.6.2\include\wx\dcclient.h
+	"wx/palmos/dcclient.h"
+	"wx/msw/dcclient.h"
+	"wx/motif/dcclient.h"
+	"wx/gtk/dcclient.h"
+	"wx/x11/dcclient.h"
+	"wx/mgl/dcclient.h"
+	"wx/mac/dcclient.h"
+	"wx/cocoa/dcclient.h"
+	"wx/os2/dcclient.h"
+
+1117527524 c:\wxwidgets-2.6.2\include\wx\palmos\dcclient.h
+	"wx/dc.h"
+	"wx/dynarray.h"
+
+1117527512 c:\wxwidgets-2.6.2\include\wx\msw\dcclient.h
+	"wx/dc.h"
+	"wx/dynarray.h"
+
+1115229116 c:\wxwidgets-2.6.2\include\wx\dcmemory.h
+	"wx/palmos/dcmemory.h"
+	"wx/msw/dcmemory.h"
+	"wx/motif/dcmemory.h"
+	"wx/gtk/dcmemory.h"
+	"wx/x11/dcmemory.h"
+	"wx/mgl/dcmemory.h"
+	"wx/mac/dcmemory.h"
+	"wx/cocoa/dcmemory.h"
+	"wx/os2/dcmemory.h"
+
+1106246626 c:\wxwidgets-2.6.2\include\wx\palmos\dcmemory.h
+	"wx/dcclient.h"
+
+1085341888 c:\wxwidgets-2.6.2\include\wx\msw\dcmemory.h
+	"wx/dcclient.h"
+
+1115229116 c:\wxwidgets-2.6.2\include\wx\dcprint.h
+	"wx/palmos/dcprint.h"
+	"wx/msw/dcprint.h"
+	"wx/os2/dcprint.h"
+	"wx/mac/dcprint.h"
+
+1106246626 c:\wxwidgets-2.6.2\include\wx\palmos\dcprint.h
+	"wx/dc.h"
+	"wx/cmndata.h"
+
+1112427802 c:\wxwidgets-2.6.2\include\wx\cmndata.h
+	"wx/window.h"
+	"wx/font.h"
+	"wx/encinfo.h"
+	"wx/colour.h"
+	"wx/gdicmn.h"
+	"wx/stream.h"
+
+1110020630 c:\wxwidgets-2.6.2\include\wx\encinfo.h
+	"wx/string.h"
+
+1093373892 c:\wxwidgets-2.6.2\include\wx\msw\dcprint.h
+	"wx/dc.h"
+	"wx/cmndata.h"
+
+1115229116 c:\wxwidgets-2.6.2\include\wx\dcscreen.h
+	"wx/palmos/dcscreen.h"
+	"wx/msw/dcscreen.h"
+	"wx/motif/dcscreen.h"
+	"wx/gtk/dcscreen.h"
+	"wx/x11/dcscreen.h"
+	"wx/mgl/dcscreen.h"
+	"wx/mac/dcscreen.h"
+	"wx/cocoa/dcscreen.h"
+	"wx/os2/dcscreen.h"
+
+1106246626 c:\wxwidgets-2.6.2\include\wx\palmos\dcscreen.h
+	"wx/dcclient.h"
+
+1093373892 c:\wxwidgets-2.6.2\include\wx\msw\dcscreen.h
+	"wx/dcclient.h"
+
+1110020620 c:\wxwidgets-2.6.2\include\wx\button.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/button.h"
+	"wx/msw/button.h"
+	"wx/motif/button.h"
+	"wx/gtk/button.h"
+	"wx/mac/button.h"
+	"wx/cocoa/button.h"
+	"wx/os2/button.h"
+	"wx/palmos/button.h"
+
+1119963630 c:\wxwidgets-2.6.2\include\wx\control.h
+	"wx/defs.h"
+	"wx/window.h"
+	"wx/univ/control.h"
+	"wx/palmos/control.h"
+	"wx/msw/control.h"
+	"wx/motif/control.h"
+	"wx/gtk/control.h"
+	"wx/mac/control.h"
+	"wx/cocoa/control.h"
+	"wx/os2/control.h"
+
+1085341906 c:\wxwidgets-2.6.2\include\wx\univ\control.h
+	"wx/univ/inphand.h"
+	"wx/univ/inpcons.h"
+
+1121694114 c:\wxwidgets-2.6.2\include\wx\palmos\control.h
+	"wx/dynarray.h"
+
+1113222446 c:\wxwidgets-2.6.2\include\wx\msw\control.h
+	"wx/dynarray.h"
+
+1093883018 c:\wxwidgets-2.6.2\include\wx\univ\button.h
+	"wx/bitmap.h"
+
+1113146124 c:\wxwidgets-2.6.2\include\wx\msw\button.h
+
+1113146128 c:\wxwidgets-2.6.2\include\wx\palmos\button.h
+
+1110020642 c:\wxwidgets-2.6.2\include\wx\menu.h
+	"wx/defs.h"
+	"wx/list.h"
+	"wx/window.h"
+	"wx/menuitem.h"
+	"wx/univ/menu.h"
+	"wx/palmos/menu.h"
+	"wx/msw/menu.h"
+	"wx/motif/menu.h"
+	"wx/gtk/menu.h"
+	"wx/mac/menu.h"
+	"wx/cocoa/menu.h"
+	"wx/os2/menu.h"
+
+1117527496 c:\wxwidgets-2.6.2\include\wx\menuitem.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/univ/menuitem.h"
+	"wx/palmos/menuitem.h"
+	"wx/msw/menuitem.h"
+	"wx/motif/menuitem.h"
+	"wx/gtk/menuitem.h"
+	"wx/mac/menuitem.h"
+	"wx/cocoa/menuitem.h"
+	"wx/os2/menuitem.h"
+
+1092663978 c:\wxwidgets-2.6.2\include\wx\univ\menuitem.h
+
+1110489370 c:\wxwidgets-2.6.2\include\wx\palmos\menuitem.h
+	"wx/ownerdrw.h"
+
+1118263932 c:\wxwidgets-2.6.2\include\wx\ownerdrw.h
+	"wx/defs.h"
+	"wx/bitmap.h"
+	"wx/colour.h"
+	"wx/font.h"
+
+1093883016 c:\wxwidgets-2.6.2\include\wx\msw\menuitem.h
+	"wx/ownerdrw.h"
+
+1115577748 c:\wxwidgets-2.6.2\include\wx\univ\menu.h
+	"wx/accel.h"
+	"wx/dynarray.h"
+
+1123238708 c:\wxwidgets-2.6.2\include\wx\palmos\menu.h
+	"wx/accel.h"
+	"wx/dynarray.h"
+	"wx/arrstr.h"
+
+1123238702 c:\wxwidgets-2.6.2\include\wx\msw\menu.h
+	"wx/accel.h"
+	"wx/dynarray.h"
+	"wx/arrstr.h"
+
+1121694104 c:\wxwidgets-2.6.2\include\wx\dialog.h
+	"wx/defs.h"
+	"wx/containr.h"
+	"wx/toplevel.h"
+	"wx/univ/dialog.h"
+	"wx/palmos/dialog.h"
+	"wx/msw/dialog.h"
+	"wx/motif/dialog.h"
+	"wx/gtk/dialog.h"
+	"wx/mac/dialog.h"
+	"wx/cocoa/dialog.h"
+	"wx/os2/dialog.h"
+
+1106936568 c:\wxwidgets-2.6.2\include\wx\univ\dialog.h
+
+1108458284 c:\wxwidgets-2.6.2\include\wx\palmos\dialog.h
+	"wx/panel.h"
+
+1126944032 c:\wxwidgets-2.6.2\include\wx\msw\dialog.h
+	"wx/panel.h"
+
+1115229126 c:\wxwidgets-2.6.2\include\wx\timer.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/longlong.h"
+	"wx/event.h"
+	"wx/stopwatch.h"
+	"wx/msw/timer.h"
+	"wx/motif/timer.h"
+	"wx/gtk/timer.h"
+	"wx/generic/timer.h"
+	"wx/cocoa/timer.h"
+	"wx/mac/timer.h"
+	"wx/os2/timer.h"
+
+1115229124 c:\wxwidgets-2.6.2\include\wx\stopwatch.h
+	"wx/defs.h"
+	"wx/longlong.h"
+
+1095168534 c:\wxwidgets-2.6.2\include\wx\msw\timer.h
+
+1087625666 c:\wxwidgets-2.6.2\include\wx\generic\timer.h
+
+1110489366 c:\wxwidgets-2.6.2\include\wx\settings.h
+	"wx/colour.h"
+	"wx/font.h"
+
+1115229120 c:\wxwidgets-2.6.2\include\wx\msgdlg.h
+	"wx/defs.h"
+	"wx/generic/msgdlgg.h"
+	"wx/generic/msgdlgg.h"
+	"wx/palmos/msgdlg.h"
+	"wx/msw/msgdlg.h"
+	"wx/motif/msgdlg.h"
+	"wx/gtk/msgdlg.h"
+	"wx/generic/msgdlgg.h"
+	"wx/mac/msgdlg.h"
+	"wx/generic/msgdlgg.h"
+	"wx/os2/msgdlg.h"
+
+1110735516 c:\wxwidgets-2.6.2\include\wx\generic\msgdlgg.h
+	"wx/setup.h"
+	"wx/dialog.h"
+
+1110735526 c:\wxwidgets-2.6.2\include\wx\palmos\msgdlg.h
+	"wx/setup.h"
+	"wx/dialog.h"
+
+1110735522 c:\wxwidgets-2.6.2\include\wx\msw\msgdlg.h
+	"wx/setup.h"
+	"wx/dialog.h"
+
+1110995668 c:\wxwidgets-2.6.2\include\wx\ctrlsub.h
+	"wx/defs.h"
+	"wx/control.h"
+
+1113146116 c:\wxwidgets-2.6.2\include\wx\bmpbuttn.h
+	"wx/defs.h"
+	"wx/bitmap.h"
+	"wx/button.h"
+	"wx/univ/bmpbuttn.h"
+	"wx/msw/bmpbuttn.h"
+	"wx/motif/bmpbuttn.h"
+	"wx/gtk/bmpbuttn.h"
+	"wx/mac/bmpbuttn.h"
+	"wx/cocoa/bmpbuttn.h"
+	"wx/os2/bmpbuttn.h"
+
+1092663978 c:\wxwidgets-2.6.2\include\wx\univ\bmpbuttn.h
+
+1096972228 c:\wxwidgets-2.6.2\include\wx\msw\bmpbuttn.h
+	"wx/button.h"
+	"wx/bitmap.h"
+	"wx/brush.h"
+
+1110020620 c:\wxwidgets-2.6.2\include\wx\checkbox.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/checkbox.h"
+	"wx/msw/checkbox.h"
+	"wx/motif/checkbox.h"
+	"wx/gtk/checkbox.h"
+	"wx/mac/checkbox.h"
+	"wx/cocoa/checkbox.h"
+	"wx/os2/checkbox.h"
+	"wx/palmos/checkbox.h"
+
+1105535232 c:\wxwidgets-2.6.2\include\wx\univ\checkbox.h
+	"wx/button.h"
+
+1116607430 c:\wxwidgets-2.6.2\include\wx\msw\checkbox.h
+
+1107290174 c:\wxwidgets-2.6.2\include\wx\palmos\checkbox.h
+
+1110020620 c:\wxwidgets-2.6.2\include\wx\checklst.h
+	"wx/listbox.h"
+	"wx/univ/checklst.h"
+	"wx/msw/checklst.h"
+	"wx/motif/checklst.h"
+	"wx/gtk/checklst.h"
+	"wx/mac/checklst.h"
+	"wx/cocoa/checklst.h"
+	"wx/os2/checklst.h"
+
+1112968660 c:\wxwidgets-2.6.2\include\wx\listbox.h
+	"wx/defs.h"
+	"wx/ctrlsub.h"
+	"wx/univ/listbox.h"
+	"wx/msw/listbox.h"
+	"wx/motif/listbox.h"
+	"wx/gtk/listbox.h"
+	"wx/mac/listbox.h"
+	"wx/os2/listbox.h"
+	"wx/cocoa/listbox.h"
+
+1108458286 c:\wxwidgets-2.6.2\include\wx\univ\listbox.h
+	"wx/scrolwin.h"
+	"wx/dynarray.h"
+	"wx/arrstr.h"
+
+1112800350 c:\wxwidgets-2.6.2\include\wx\scrolwin.h
+	"wx/window.h"
+	"wx/gtk/scrolwin.h"
+	"wx/generic/scrolwin.h"
+
+1119618286 c:\wxwidgets-2.6.2\include\wx\generic\scrolwin.h
+	"wx/window.h"
+	"wx/panel.h"
+
+1118932602 c:\wxwidgets-2.6.2\include\wx\msw\listbox.h
+	"wx/dynarray.h"
+
+1092663978 c:\wxwidgets-2.6.2\include\wx\univ\checklst.h
+
+1093373892 c:\wxwidgets-2.6.2\include\wx\msw\checklst.h
+
+1110995668 c:\wxwidgets-2.6.2\include\wx\choice.h
+	"wx/defs.h"
+	"wx/ctrlsub.h"
+	"wx/univ/choice.h"
+	"wx/msw/wince/choicece.h"
+	"wx/msw/choice.h"
+	"wx/motif/choice.h"
+	"wx/gtk/choice.h"
+	"wx/mac/choice.h"
+	"wx/cocoa/choice.h"
+	"wx/os2/choice.h"
+
+1085341906 c:\wxwidgets-2.6.2\include\wx\univ\choice.h
+	"wx/combobox.h"
+
+1110020622 c:\wxwidgets-2.6.2\include\wx\combobox.h
+	"wx/defs.h"
+	"wx/textctrl.h"
+	"wx/ctrlsub.h"
+	"wx/univ/combobox.h"
+	"wx/msw/combobox.h"
+	"wx/motif/combobox.h"
+	"wx/gtk/combobox.h"
+	"wx/mac/combobox.h"
+	"wx/cocoa/combobox.h"
+	"wx/os2/combobox.h"
+
+1118678470 c:\wxwidgets-2.6.2\include\wx\textctrl.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/dynarray.h"
+	"wx/gdicmn.h"
+	"wx/ioswrap.h"
+	"wx/x11/textctrl.h"
+	"wx/univ/textctrl.h"
+	"wx/msw/wince/textctrlce.h"
+	"wx/msw/textctrl.h"
+	"wx/motif/textctrl.h"
+	"wx/gtk/textctrl.h"
+	"wx/mac/textctrl.h"
+	"wx/cocoa/textctrl.h"
+	"wx/os2/textctrl.h"
+
+1113412228 c:\wxwidgets-2.6.2\include\wx\ioswrap.h
+	<iostream.h>
+	<iostream>
+	"wx/msw/winundef.h"
+
+1092993888 c:\wxwidgets-2.6.2\include\wx\univ\textctrl.h
+	"wx/scrolwin.h"
+	"wx/univ/inphand.h"
+
+1106246624 c:\wxwidgets-2.6.2\include\wx\msw\wince\textctrlce.h
+	"wx/dynarray.h"
+
+1122719322 c:\wxwidgets-2.6.2\include\wx\msw\textctrl.h
+
+1108458286 c:\wxwidgets-2.6.2\include\wx\univ\combobox.h
+
+1111319978 c:\wxwidgets-2.6.2\include\wx\msw\combobox.h
+	"wx/choice.h"
+
+1110735524 c:\wxwidgets-2.6.2\include\wx\msw\wince\choicece.h
+	"wx/defs.h"
+	"wx/dynarray.h"
+
+1126765886 c:\wxwidgets-2.6.2\include\wx\msw\choice.h
+
+1115229122 c:\wxwidgets-2.6.2\include\wx\scrolbar.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/scrolbar.h"
+	"wx/msw/scrolbar.h"
+	"wx/motif/scrolbar.h"
+	"wx/gtk/scrolbar.h"
+	"wx/mac/scrolbar.h"
+	"wx/cocoa/scrolbar.h"
+	"wx/os2/scrolbar.h"
+
+1092663978 c:\wxwidgets-2.6.2\include\wx\univ\scrolbar.h
+	"wx/univ/scrarrow.h"
+	"wx/renderer.h"
+
+1092663978 c:\wxwidgets-2.6.2\include\wx\univ\scrarrow.h
+
+1111654264 c:\wxwidgets-2.6.2\include\wx\renderer.h
+	"wx/gdicmn.h"
+
+1117547760 c:\wxwidgets-2.6.2\include\wx\msw\scrolbar.h
+
+1124712094 c:\wxwidgets-2.6.2\include\wx\stattext.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/stattext.h"
+	"wx/msw/stattext.h"
+	"wx/motif/stattext.h"
+	"wx/gtk/stattext.h"
+	"wx/mac/stattext.h"
+	"wx/cocoa/stattext.h"
+	"wx/os2/stattext.h"
+	"wx/palmos/stattext.h"
+
+1105535232 c:\wxwidgets-2.6.2\include\wx\univ\stattext.h
+
+1113146126 c:\wxwidgets-2.6.2\include\wx\msw\stattext.h
+
+1107290176 c:\wxwidgets-2.6.2\include\wx\palmos\stattext.h
+
+1113748548 c:\wxwidgets-2.6.2\include\wx\statbmp.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/bitmap.h"
+	"wx/univ/statbmp.h"
+	"wx/msw/statbmp.h"
+	"wx/motif/statbmp.h"
+	"wx/gtk/statbmp.h"
+	"wx/mac/statbmp.h"
+	"wx/cocoa/statbmp.h"
+	"wx/os2/statbmp.h"
+
+1092663978 c:\wxwidgets-2.6.2\include\wx\univ\statbmp.h
+	"wx/bitmap.h"
+
+1126272576 c:\wxwidgets-2.6.2\include\wx\msw\statbmp.h
+	"wx/control.h"
+	"wx/icon.h"
+	"wx/bitmap.h"
+
+1115229124 c:\wxwidgets-2.6.2\include\wx\statbox.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/statbox.h"
+	"wx/msw/statbox.h"
+	"wx/motif/statbox.h"
+	"wx/gtk/statbox.h"
+	"wx/mac/statbox.h"
+	"wx/cocoa/statbox.h"
+	"wx/os2/statbox.h"
+
+1105535232 c:\wxwidgets-2.6.2\include\wx\univ\statbox.h
+
+1116663024 c:\wxwidgets-2.6.2\include\wx\msw\statbox.h
+
+1115229122 c:\wxwidgets-2.6.2\include\wx\radiobox.h
+	"wx/ctrlsub.h"
+	"wx/univ/radiobox.h"
+	"wx/msw/radiobox.h"
+	"wx/motif/radiobox.h"
+	"wx/gtk/radiobox.h"
+	"wx/mac/radiobox.h"
+	"wx/cocoa/radiobox.h"
+	"wx/os2/radiobox.h"
+	"wx/palmos/radiobox.h"
+
+1125040904 c:\wxwidgets-2.6.2\include\wx\univ\radiobox.h
+	"wx/statbox.h"
+	"wx/dynarray.h"
+
+1113412230 c:\wxwidgets-2.6.2\include\wx\msw\radiobox.h
+	"wx/statbox.h"
+
+1113146128 c:\wxwidgets-2.6.2\include\wx\palmos\radiobox.h
+
+1115229122 c:\wxwidgets-2.6.2\include\wx\radiobut.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/radiobut.h"
+	"wx/msw/radiobut.h"
+	"wx/motif/radiobut.h"
+	"wx/gtk/radiobut.h"
+	"wx/mac/radiobut.h"
+	"wx/cocoa/radiobut.h"
+	"wx/os2/radiobut.h"
+	"wx/palmos/radiobut.h"
+
+1085341906 c:\wxwidgets-2.6.2\include\wx\univ\radiobut.h
+	"wx/checkbox.h"
+
+1113146126 c:\wxwidgets-2.6.2\include\wx\msw\radiobut.h
+
+1121694114 c:\wxwidgets-2.6.2\include\wx\palmos\radiobut.h
+
+1115229124 c:\wxwidgets-2.6.2\include\wx\slider.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/slider.h"
+	"wx/msw/slider95.h"
+	"wx/motif/slider.h"
+	"wx/gtk/slider.h"
+	"wx/mac/slider.h"
+	"wx/cocoa/slider.h"
+	"wx/os2/slider.h"
+	"wx/palmos/slider.h"
+
+1126272580 c:\wxwidgets-2.6.2\include\wx\univ\slider.h
+	"wx/univ/scrthumb.h"
+
+1092663978 c:\wxwidgets-2.6.2\include\wx\univ\scrthumb.h
+	"wx/timer.h"
+
+1117568178 c:\wxwidgets-2.6.2\include\wx\msw\slider95.h
+
+1121694114 c:\wxwidgets-2.6.2\include\wx\palmos\slider.h
+
+1110020634 c:\wxwidgets-2.6.2\include\wx\gauge.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/gauge.h"
+	"wx/msw/gauge95.h"
+	"wx/motif/gauge.h"
+	"wx/gtk/gauge.h"
+	"wx/mac/gauge.h"
+	"wx/cocoa/gauge.h"
+	"wx/os2/gauge.h"
+
+1085341906 c:\wxwidgets-2.6.2\include\wx\univ\gauge.h
+
+1106936562 c:\wxwidgets-2.6.2\include\wx\msw\gauge95.h
+
+1115229118 c:\wxwidgets-2.6.2\include\wx\dirdlg.h
+	"wx/dialog.h"
+	"wx/generic/dirdlgg.h"
+	"wx/generic/dirdlgg.h"
+	"wx/msw/dirdlg.h"
+	"wx/mac/dirdlg.h"
+	"wx/generic/dirdlgg.h"
+
+1112474394 c:\wxwidgets-2.6.2\include\wx\generic\dirdlgg.h
+	"wx/dialog.h"
+
+1093373892 c:\wxwidgets-2.6.2\include\wx\msw\dirdlg.h
+
+1115229126 c:\wxwidgets-2.6.2\include\wx\toolbar.h
+	"wx/defs.h"
+	"wx/tbarbase.h"
+	"wx/univ/toolbar.h"
+	"wx/palmos/toolbar.h"
+	"wx/msw/tbar95.h"
+	"wx/msw/wince/tbarwce.h"
+	"wx/msw/tbarmsw.h"
+	"wx/motif/toolbar.h"
+	"wx/gtk/tbargtk.h"
+	"wx/mac/toolbar.h"
+	"wx/cocoa/toolbar.h"
+	"wx/os2/toolbar.h"
+
+1110020652 c:\wxwidgets-2.6.2\include\wx\tbarbase.h
+	"wx/defs.h"
+	"wx/bitmap.h"
+	"wx/list.h"
+	"wx/control.h"
+
+1092663980 c:\wxwidgets-2.6.2\include\wx\univ\toolbar.h
+	"wx/button.h"
+
+1108458286 c:\wxwidgets-2.6.2\include\wx\palmos\toolbar.h
+	"wx/dynarray.h"
+
+1112086632 c:\wxwidgets-2.6.2\include\wx\msw\tbar95.h
+	"wx/dynarray.h"
+	"wx/imaglist.h"
+
+1115229120 c:\wxwidgets-2.6.2\include\wx\imaglist.h
+	"wx/msw/imaglist.h"
+	"wx/mac/imaglist.h"
+	"wx/generic/imaglist.h"
+
+1109500604 c:\wxwidgets-2.6.2\include\wx\msw\imaglist.h
+	"wx/bitmap.h"
+
+1109589138 c:\wxwidgets-2.6.2\include\wx\generic\imaglist.h
+	"wx/defs.h"
+	"wx/list.h"
+	"wx/icon.h"
+
+1111261910 c:\wxwidgets-2.6.2\include\wx\msw\wince\tbarwce.h
+	"wx/dynarray.h"
+	"wx/msw/tbar95.h"
+
+1106936564 c:\wxwidgets-2.6.2\include\wx\msw\tbarmsw.h
+	"wx/tbarbase.h"
+
+1110020640 c:\wxwidgets-2.6.2\include\wx\layout.h
+	"wx/object.h"
+
+1111574966 c:\wxwidgets-2.6.2\include\wx\sizer.h
+	"wx/defs.h"
+	"wx/button.h"
+	"wx/window.h"
+	"wx/frame.h"
+	"wx/dialog.h"
+	"wx/bookctrl.h"
+
+1113146116 c:\wxwidgets-2.6.2\include\wx\bookctrl.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/dynarray.h"
+	"wx/notebook.h"
+	"wx/choicebk.h"
+
+1119963632 c:\wxwidgets-2.6.2\include\wx\notebook.h
+	"wx/defs.h"
+	"wx/bookctrl.h"
+	"wx/univ/notebook.h"
+	"wx/msw/notebook.h"
+	"wx/generic/notebook.h"
+	"wx/gtk/notebook.h"
+	"wx/mac/notebook.h"
+	"wx/cocoa/notebook.h"
+	"wx/os2/notebook.h"
+
+1125040904 c:\wxwidgets-2.6.2\include\wx\univ\notebook.h
+	"wx/arrstr.h"
+
+1117090922 c:\wxwidgets-2.6.2\include\wx\msw\notebook.h
+	"wx/control.h"
+
+1126272568 c:\wxwidgets-2.6.2\include\wx\generic\notebook.h
+	"wx/event.h"
+	"wx/control.h"
+
+1112818408 c:\wxwidgets-2.6.2\include\wx\choicebk.h
+	"wx/defs.h"
+	"wx/bookctrl.h"
+
+1115229120 c:\wxwidgets-2.6.2\include\wx\mdi.h
+	"wx/defs.h"
+	"wx/generic/mdig.h"
+	"wx/msw/mdi.h"
+	"wx/motif/mdi.h"
+	"wx/gtk/mdi.h"
+	"wx/mac/mdi.h"
+	"wx/cocoa/mdi.h"
+	"wx/generic/mdig.h"
+
+1111500912 c:\wxwidgets-2.6.2\include\wx\generic\mdig.h
+	"wx/frame.h"
+	"wx/panel.h"
+	"wx/notebook.h"
+
+1123851838 c:\wxwidgets-2.6.2\include\wx\msw\mdi.h
+	"wx/frame.h"
+
+1115229124 c:\wxwidgets-2.6.2\include\wx\statusbr.h
+	"wx/window.h"
+	"wx/list.h"
+	"wx/dynarray.h"
+	"wx/univ/statusbr.h"
+	"wx/palmos/statusbr.h"
+	"wx/msw/statbr95.h"
+	"wx/generic/statusbr.h"
+	"wx/mac/statusbr.h"
+	"wx/generic/statusbr.h"
+
+1092663980 c:\wxwidgets-2.6.2\include\wx\univ\statusbr.h
+	"wx/univ/inpcons.h"
+	"wx/arrstr.h"
+
+1106936566 c:\wxwidgets-2.6.2\include\wx\palmos\statusbr.h
+
+1126272576 c:\wxwidgets-2.6.2\include\wx\msw\statbr95.h
+
+1106936556 c:\wxwidgets-2.6.2\include\wx\generic\statusbr.h
+	"wx/pen.h"
+	"wx/font.h"
+	"wx/statusbr.h"
+	"wx/arrstr.h"
+
+1115229116 c:\wxwidgets-2.6.2\include\wx\choicdlg.h
+	"wx/generic/choicdgg.h"
+
+1112474394 c:\wxwidgets-2.6.2\include\wx\generic\choicdgg.h
+	"wx/dynarray.h"
+	"wx/dialog.h"
+
+1110020652 c:\wxwidgets-2.6.2\include\wx\textdlg.h
+	"wx/generic/textdlgg.h"
+	"wx/numdlg.h"
+
+1126272568 c:\wxwidgets-2.6.2\include\wx\generic\textdlgg.h
+	"wx/defs.h"
+	"wx/dialog.h"
+	"wx/valtext.h"
+
+1112800350 c:\wxwidgets-2.6.2\include\wx\valtext.h
+	"wx/defs.h"
+	"wx/textctrl.h"
+	"wx/validate.h"
+
+1115229120 c:\wxwidgets-2.6.2\include\wx\numdlg.h
+	"wx/generic/numdlgg.h"
+
+1085341848 c:\wxwidgets-2.6.2\include\wx\generic\numdlgg.h
+	"wx/defs.h"
+	"wx/dialog.h"
+
+1110995668 c:\wxwidgets-2.6.2\include\wx\filedlg.h
+	"wx/defs.h"
+	"wx/dialog.h"
+	"wx/arrstr.h"
+	"wx/generic/filedlgg.h"
+	"wx/msw/filedlg.h"
+	"wx/motif/filedlg.h"
+	"wx/gtk/filedlg.h"
+	"wx/generic/filedlgg.h"
+	"wx/generic/filedlgg.h"
+	"wx/mac/filedlg.h"
+	"wx/cocoa/filedlg.h"
+	"wx/os2/filedlg.h"
+
+1110489366 c:\wxwidgets-2.6.2\include\wx\generic\filedlgg.h
+	"wx/listctrl.h"
+	"wx/datetime.h"
+
+1110020642 c:\wxwidgets-2.6.2\include\wx\listctrl.h
+	"wx/defs.h"
+	"wx/listbase.h"
+	"wx/msw/listctrl.h"
+	"wx/generic/listctrl.h"
+
+1116760248 c:\wxwidgets-2.6.2\include\wx\listbase.h
+	"wx/defs.h"
+	"wx/colour.h"
+	"wx/font.h"
+	"wx/gdicmn.h"
+	"wx/event.h"
+
+1122278806 c:\wxwidgets-2.6.2\include\wx\msw\listctrl.h
+	"wx/control.h"
+	"wx/event.h"
+	"wx/hash.h"
+	"wx/textctrl.h"
+
+1122278798 c:\wxwidgets-2.6.2\include\wx\generic\listctrl.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/imaglist.h"
+	"wx/generic/imaglist.h"
+	"wx/control.h"
+	"wx/timer.h"
+	"wx/dcclient.h"
+	"wx/scrolwin.h"
+	"wx/settings.h"
+	"wx/listbase.h"
+
+1096446076 c:\wxwidgets-2.6.2\include\wx\msw\filedlg.h
+
+1093770992 c:\wxwidgets-2.6.2\include\wx\msw\helpchm.h
+	"wx/helpbase.h"
+
+1110020638 c:\wxwidgets-2.6.2\include\wx\helpbase.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+	"wx/gdicmn.h"
+	"wx/frame.h"
+
+1111137948 c:\wxwidgets-2.6.2\include\wx\filename.h
+	"wx/string.h"
+	"wx/arrstr.h"
+	"wx/filefn.h"
+	"wx/datetime.h"
+
+1115229116 c:\wxwidgets-2.6.2\include\wx\config.h
+	"wx/defs.h"
+	"wx/confbase.h"
+	"wx/msw/regconf.h"
+	"wx/msw/iniconf.h"
+	"wx/palmos/prefconf.h"
+	"wx/fileconf.h"
+
+1110020622 c:\wxwidgets-2.6.2\include\wx\confbase.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/string.h"
+
+1097745072 c:\wxwidgets-2.6.2\include\wx\msw\regconf.h
+	"wx/msw/registry.h"
+	"wx/object.h"
+	"wx/confbase.h"
+
+1116607430 c:\wxwidgets-2.6.2\include\wx\msw\registry.h
+
+1093770992 c:\wxwidgets-2.6.2\include\wx\msw\iniconf.h
+
+1104313706 c:\wxwidgets-2.6.2\include\wx\palmos\prefconf.h
+
+1121694104 c:\wxwidgets-2.6.2\include\wx\fileconf.h
+	"wx/defs.h"
+	"wx/textfile.h"
+	"wx/string.h"
+	"wx/confbase.h"
+
+1110020652 c:\wxwidgets-2.6.2\include\wx\textfile.h
+	"wx/defs.h"
+	"wx/textbuf.h"
+	"wx/file.h"
+
+1115219988 c:\wxwidgets-2.6.2\include\wx\textbuf.h
+	"wx/defs.h"
+	"wx/arrstr.h"
+	"wx/string.h"
+	"wx/dynarray.h"
+
+1118263932 c:\wxwidgets-2.6.2\include\wx\file.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/filefn.h"
+	"wx/strconv.h"
+
+1122719314 c:\wxwidgets-2.6.2\include\wx\image.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+	"wx/gdicmn.h"
+	"wx/hashmap.h"
+	"wx/stream.h"
+	"wx/imagbmp.h"
+	"wx/imagpng.h"
+	"wx/imaggif.h"
+	"wx/imagpcx.h"
+	"wx/imagjpeg.h"
+	"wx/imagtiff.h"
+	"wx/imagpnm.h"
+	"wx/imagxpm.h"
+	"wx/imagiff.h"
+
+1110020638 c:\wxwidgets-2.6.2\include\wx\imagbmp.h
+	"wx/image.h"
+
+1110995668 c:\wxwidgets-2.6.2\include\wx\imagpng.h
+	"wx/defs.h"
+	"wx/image.h"
+
+1110020638 c:\wxwidgets-2.6.2\include\wx\imaggif.h
+	"wx/image.h"
+
+1110020638 c:\wxwidgets-2.6.2\include\wx\imagpcx.h
+	"wx/image.h"
+
+1110995668 c:\wxwidgets-2.6.2\include\wx\imagjpeg.h
+	"wx/defs.h"
+	"wx/image.h"
+
+1110995668 c:\wxwidgets-2.6.2\include\wx\imagtiff.h
+	"wx/defs.h"
+	"wx/image.h"
+
+1110020638 c:\wxwidgets-2.6.2\include\wx\imagpnm.h
+	"wx/image.h"
+
+1110020638 c:\wxwidgets-2.6.2\include\wx\imagxpm.h
+	"wx/image.h"
+
+1110020638 c:\wxwidgets-2.6.2\include\wx\imagiff.h
+	"wx/image.h"
+
+1110995670 c:\wxwidgets-2.6.2\include\wx\spinctrl.h
+	"wx/defs.h"
+	"wx/spinbutt.h"
+	"wx/generic/spinctlg.h"
+	"wx/msw/spinctrl.h"
+	"wx/os2/spinctrl.h"
+	"wx/gtk/spinctrl.h"
+	"wx/generic/spinctlg.h"
+	"wx/mac/spinctrl.h"
+	"wx/generic/spinctlg.h"
+
+1117527498 c:\wxwidgets-2.6.2\include\wx\spinbutt.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/event.h"
+	"wx/univ/spinbutt.h"
+	"wx/msw/spinbutt.h"
+	"wx/motif/spinbutt.h"
+	"wx/gtk/spinbutt.h"
+	"wx/mac/spinbutt.h"
+	"wx/cocoa/spinbutt.h"
+	"wx/os2/spinbutt.h"
+
+1092663978 c:\wxwidgets-2.6.2\include\wx\univ\spinbutt.h
+	"wx/univ/scrarrow.h"
+
+1092663976 c:\wxwidgets-2.6.2\include\wx\msw\spinbutt.h
+	"wx/control.h"
+	"wx/event.h"
+
+1087625666 c:\wxwidgets-2.6.2\include\wx\generic\spinctlg.h
+	"wx/textctrl.h"
+
+1109589144 c:\wxwidgets-2.6.2\include\wx\msw\spinctrl.h
+	"wx/spinbutt.h"
+	"wx/dynarray.h"
+
+1117527528 c:\wxwidgets-2.6.2\include\wx\protocol\ftp.h
+	"wx/defs.h"
+	"wx/sckaddr.h"
+	"wx/protocol/protocol.h"
+	"wx/url.h"
+
+1123144936 c:\wxwidgets-2.6.2\include\wx\sckaddr.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/gsocket.h"
+	<sys/socket.h>
+	<sys/un.h>
+
+1115229118 c:\wxwidgets-2.6.2\include\wx\gsocket.h
+	"wx/defs.h"
+	"wx/dlimpexp.h"
+	<stddef.h>
+	<sys/types.h>
+	<stdlib.h>
+	"wx/msw/gsockmsw.h"
+	"wx/mac/gsockmac.h"
+	"wx/unix/gsockunx.h"
+
+1115229182 c:\wxwidgets-2.6.2\include\wx\msw\gsockmsw.h
+	"wx/setup.h"
+	"wx/gsocket.h"
+	"gsocket.h"
+	"wx/msw/wrapwin.h"
+	<sys/types.h>
+	<winsock.h>
+
+1115229186 c:\wxwidgets-2.6.2\include\wx\unix\gsockunx.h
+	"wx/setup.h"
+	"wx/gsocket.h"
+	"gsocket.h"
+
+1085341904 c:\wxwidgets-2.6.2\include\wx\protocol\protocol.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+	"wx/stream.h"
+	"wx/socket.h"
+
+1110489366 c:\wxwidgets-2.6.2\include\wx\socket.h
+	"wx/defs.h"
+	"wx/event.h"
+	"wx/sckaddr.h"
+	"wx/gsocket.h"
+	"wx/list.h"
+
+1111319976 c:\wxwidgets-2.6.2\include\wx\url.h
+	"wx/defs.h"
+	"wx/uri.h"
+	"wx/protocol/protocol.h"
+	"wx/protocol/http.h"
+
+1115229126 c:\wxwidgets-2.6.2\include\wx\uri.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+
+1085341904 c:\wxwidgets-2.6.2\include\wx\protocol\http.h
+	"wx/defs.h"
+	"wx/hashmap.h"
+	"wx/protocol/protocol.h"
+
+1127225790 c:\wxwidgets-2.6.2\lib\gcc_lib\mswd\wx\setup.h
+
+1140204109 c:\cvsfiles\zaraftp\recursos.rc
+	<wx/msw/wx.rc>
+
+1116171792 c:\wxwidgets-2.6.2\include\wx\msw\wx.rc
+	<winresrc.h>
+	<windows.h>
+	"wx/msw/wince/wince.rc"
+
+1098898634 c:\wxwidgets-2.6.2\include\wx\msw\wince\wince.rc
+	<commctrl.h>
+	"wx/msw/wince/smartphone.rc"
+
+1098898634 c:\wxwidgets-2.6.2\include\wx\msw\wince\smartphone.rc
+	<aygshell.h>
+	"wx/msw/wince/resources.h"
+
+1087363048 c:\wxwidgets-2.6.2\include\wx\msw\wince\resources.h
+
+1115229124 c:\wxwidgets-2.6.2\include\wx\taskbar.h
+	"wx/defs.h"
+	"wx/event.h"
+	"wx/palmos/taskbar.h"
+	"wx/msw/taskbar.h"
+	"wx/unix/taskbarx11.h"
+	"wx/mac/taskbarosx.h"
+	"wx/cocoa/taskbar.h"
+
+1106246630 c:\wxwidgets-2.6.2\include\wx\palmos\taskbar.h
+	"wx/icon.h"
+
+1095168534 c:\wxwidgets-2.6.2\include\wx\msw\taskbar.h
+	"wx/icon.h"
+
+1085910098 c:\wxwidgets-2.6.2\include\wx\unix\taskbarx11.h
+
+1150304358 c:\cvsfiles\colorpicker\mainframe.cpp
+	"mainframe.h"
+	<wx/filename.h>
+	<wx/file.h>
+	<wx/config.h>
+	"colourpicker.h"
+
+1150304387 c:\cvsfiles\colorpicker\mainframe.h
+	<wx/wxprec.h>
+	<wx/wx.h>
+	"colourpicker.h"
+
+1150304492 c:\cvsfiles\colorpicker\recursos.rc
+	<wx/msw/wx.rc>
+
+1150222877 c:\cvsfiles\colorpicker\app.cpp
+	"app.h"
+	"mainframe.h"
+
+1150304614 c:\cvsfiles\colorpicker\app.h
+	<wx/wxprec.h>
+	<wx/wx.h>
+
+1150222172 c:\cvsfiles\colorpicker\colorpicker.cpp
+	"colorpicker.h"
+	<wx/image.h>
+	<wx/dcbuffer.h>
+	<wx/colordlg.h>
+	<wx/msw/wrapwin.h>
+
+1150222143 c:\cvsfiles\colorpicker\colorpicker.h
+	<wx/wxprec.h>
+	<wx/wx.h>
+	<wx/popupwin.h>
+
+1143288770 c:\wxwidgets-2.6.3\lib\vc_lib\mswd\wx\setup.h
+
+1110489364 c:\wxwidgets-2.6.2\include\wx\dcbuffer.h
+	"wx/dcmemory.h"
+	"wx/dcclient.h"
+	"wx/window.h"
+
+1122278794 c:\wxwidgets-2.6.2\include\wx\popupwin.h
+	"wx/defs.h"
+	"wx/window.h"
+	"wx/msw/popupwin.h"
+	"wx/os2/popupwin.h"
+	"wx/gtk/popupwin.h"
+	"wx/x11/popupwin.h"
+	"wx/motif/popupwin.h"
+	"wx/mgl/popupwin.h"
+
+1094192108 c:\wxwidgets-2.6.2\include\wx\msw\popupwin.h
+
+1110020622 c:\wxwidgets-2.6.2\include\wx\colordlg.h
+	"wx/defs.h"
+	"wx/msw/colordlg.h"
+	"wx/mac/colordlg.h"
+	"wx/gtk/colordlg.h"
+	"wx/palmos/colordlg.h"
+	"wx/generic/colrdlgg.h"
+
+1085341888 c:\wxwidgets-2.6.2\include\wx\msw\colordlg.h
+	"wx/setup.h"
+	"wx/dialog.h"
+	"wx/cmndata.h"
+
+1106246626 c:\wxwidgets-2.6.2\include\wx\palmos\colordlg.h
+	"wx/setup.h"
+	"wx/dialog.h"
+	"wx/cmndata.h"
+
+1115229152 c:\wxwidgets-2.6.2\include\wx\generic\colrdlgg.h
+	"wx/setup.h"
+	"wx/gdicmn.h"
+	"wx/dialog.h"
+	"wx/cmndata.h"
+
+1150305997 c:\cvsfiles\colorpicker\colourpicker.cpp
+	"colourpicker.h"
+	<wx/image.h>
+	<wx/dcbuffer.h>
+	<wx/colordlg.h>
+	<wx/msw/wrapwin.h>
+
+1150485654 c:\cvsfiles\colorpicker\colourpicker.h
+	<wx/wxprec.h>
+	<wx/wx.h>
+	<wx/popupwin.h>
+
+1143288770 c:\wxwidgets-2.6.3\lib\gcc_lib\mswd\wx\setup.h
+
+1120243008 c:\wxwidgets-2.6.3\include\wx\wxprec.h
+	"wx/defs.h"
+	"wx/wxchar.h"
+	"wx/msw/wrapwin.h"
+	<PalmOS.h>
+	"wx/wx.h"
+
+1138281348 c:\wxwidgets-2.6.3\include\wx\defs.h
+	"wx/platform.h"
+	"wx/features.h"
+	"wx/version.h"
+	"wx/dlimpexp.h"
+	"wx/debug.h"
+	<stddef.h>
+	<sys/types.h>
+	<unistd.h>
+
+1137579900 c:\wxwidgets-2.6.3\include\wx\platform.h
+	<stddef.h>
+	<unistd.h>
+	"wx/mac/carbon/config_xcode.h"
+	"wx/setup.h"
+	"wx/chkconf.h"
+	"wx/msw/wince/libraries.h"
+	"wx/msw/libraries.h"
+	"wx/msw/gccpriv.h"
+	<AvailabilityMacros.h>
+
+1124878468 c:\wxwidgets-2.6.3\include\wx\chkconf.h
+	"wx/palmos/chkconf.h"
+	"wx/msw/wince/chkconf.h"
+	"wx/msw/chkconf.h"
+	"wx/mac/chkconf.h"
+	"wx/motif/chkconf.h"
+
+1106079264 c:\wxwidgets-2.6.3\include\wx\palmos\chkconf.h
+
+1138207298 c:\wxwidgets-2.6.3\include\wx\msw\wince\chkconf.h
+
+1137862014 c:\wxwidgets-2.6.3\include\wx\msw\chkconf.h
+
+1142507002 c:\wxwidgets-2.6.3\include\wx\msw\wince\libraries.h
+
+1139249462 c:\wxwidgets-2.6.3\include\wx\msw\libraries.h
+
+1116518588 c:\wxwidgets-2.6.3\include\wx\msw\gccpriv.h
+	<_mingw.h>
+	<w32api.h>
+
+1116691164 c:\wxwidgets-2.6.3\include\wx\features.h
+
+1137579900 c:\wxwidgets-2.6.3\include\wx\version.h
+
+1119470328 c:\wxwidgets-2.6.3\include\wx\dlimpexp.h
+
+1121962108 c:\wxwidgets-2.6.3\include\wx\debug.h
+	<assert.h>
+	<limits.h>
+	"wx/wxchar.h"
+
+1142680746 c:\wxwidgets-2.6.3\include\wx\wxchar.h
+	"wx/platform.h"
+	"wx/dlimpexp.h"
+	<stdarg.h>
+	<sys/types.h>
+	<wchar.h>
+	<wcstr.h>
+	<stdlib.h>
+	<ctype.h>
+	<stddef.h>
+	<stddef.h>
+	<string.h>
+	<ctype.h>
+	<tchar.h>
+	<ctype.h>
+	<ctype.h>
+	<stdio.h>
+	<wctype.h>
+	<stdio.h>
+	<stdio.h>
+	<ctype.h>
+	<string.h>
+	<stdio.h>
+	<stdio.h>
+	<time.h>
+	<time.h>
+	<string.h>
+
+1142418608 c:\wxwidgets-2.6.3\include\wx\msw\wrapwin.h
+	"wx/platform.h"
+	<windows.h>
+	"wx/msw/winundef.h"
+
+1125672846 c:\wxwidgets-2.6.3\include\wx\msw\winundef.h
+
+1115229126 c:\wxwidgets-2.6.3\include\wx\wx.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/dynarray.h"
+	"wx/list.h"
+	"wx/hash.h"
+	"wx/string.h"
+	"wx/intl.h"
+	"wx/log.h"
+	"wx/event.h"
+	"wx/app.h"
+	"wx/utils.h"
+	"wx/stream.h"
+	"wx/window.h"
+	"wx/panel.h"
+	"wx/frame.h"
+	"wx/dc.h"
+	"wx/dcclient.h"
+	"wx/dcmemory.h"
+	"wx/dcprint.h"
+	"wx/dcscreen.h"
+	"wx/button.h"
+	"wx/menu.h"
+	"wx/pen.h"
+	"wx/brush.h"
+	"wx/palette.h"
+	"wx/icon.h"
+	"wx/cursor.h"
+	"wx/dialog.h"
+	"wx/timer.h"
+	"wx/settings.h"
+	"wx/msgdlg.h"
+	"wx/cmndata.h"
+	"wx/control.h"
+	"wx/ctrlsub.h"
+	"wx/bmpbuttn.h"
+	"wx/checkbox.h"
+	"wx/checklst.h"
+	"wx/choice.h"
+	"wx/scrolbar.h"
+	"wx/stattext.h"
+	"wx/statbmp.h"
+	"wx/statbox.h"
+	"wx/listbox.h"
+	"wx/radiobox.h"
+	"wx/radiobut.h"
+	"wx/textctrl.h"
+	"wx/slider.h"
+	"wx/gauge.h"
+	"wx/scrolwin.h"
+	"wx/dirdlg.h"
+	"wx/toolbar.h"
+	"wx/combobox.h"
+	"wx/layout.h"
+	"wx/sizer.h"
+	"wx/memory.h"
+	"wx/mdi.h"
+	"wx/statusbr.h"
+	"wx/scrolbar.h"
+	"wx/choicdlg.h"
+	"wx/textdlg.h"
+	"wx/filedlg.h"
+	"wx/validate.h"
+	"wx/valtext.h"
+
+1122047784 c:\wxwidgets-2.6.3\include\wx\object.h
+	"wx/defs.h"
+	"wx/memory.h"
+	"wx/xti.h"
+	"wx/msw/msvcrt.h"
+
+1107981368 c:\wxwidgets-2.6.3\include\wx\memory.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/msgout.h"
+	<stddef.h>
+
+1134741538 c:\wxwidgets-2.6.3\include\wx\string.h
+	"wx/defs.h"
+	<ctype.h>
+	<stdio.h>
+	<string.h>
+	<stdarg.h>
+	<limits.h>
+	<string.h>
+	<stdio.h>
+	<stdarg.h>
+	<limits.h>
+	<stdlib.h>
+	<strings.h>
+	<StringMgr.h>
+	"wx/wxchar.h"
+	"wx/buffer.h"
+	"wx/strconv.h"
+	"wx/beforestd.h"
+	<string>
+	"wx/afterstd.h"
+	"wx/arrstr.h"
+	"wx/iosfwrap.h"
+
+1113620916 c:\wxwidgets-2.6.3\include\wx\buffer.h
+	"wx/wxchar.h"
+	<stdlib.h>
+
+1123535096 c:\wxwidgets-2.6.3\include\wx\strconv.h
+	"wx/defs.h"
+	"wx/wxchar.h"
+	"wx/buffer.h"
+	"typeinfo.h"
+	<stdlib.h>
+	"wx/fontenc.h"
+
+1095160098 c:\wxwidgets-2.6.3\include\wx\fontenc.h
+
+1119221368 c:\wxwidgets-2.6.3\include\wx\beforestd.h
+
+1119221368 c:\wxwidgets-2.6.3\include\wx\afterstd.h
+	"wx/msw/winundef.h"
+
+1114539844 c:\wxwidgets-2.6.3\include\wx\arrstr.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/dynarray.h"
+
+1118240262 c:\wxwidgets-2.6.3\include\wx\dynarray.h
+	"wx/defs.h"
+	"wx/beforestd.h"
+	<vector>
+	<algorithm>
+	"wx/afterstd.h"
+
+1113336364 c:\wxwidgets-2.6.3\include\wx\iosfwrap.h
+	<iostream.h>
+	<iosfwd>
+	"wx/msw/winundef.h"
+
+1121601608 c:\wxwidgets-2.6.3\include\wx\msgout.h
+	"wx/defs.h"
+	"wx/wxchar.h"
+
+1110271880 c:\wxwidgets-2.6.3\include\wx\xti.h
+	"wx/defs.h"
+	"wx/memory.h"
+	"wx/flags.h"
+	"wx/string.h"
+	"wx/arrstr.h"
+	"wx/hashmap.h"
+	"wx/log.h"
+	"wx/intl.h"
+	<typeinfo>
+	<wx/dynarray.h>
+
+1095160098 c:\wxwidgets-2.6.3\include\wx\flags.h
+
+1137601958 c:\wxwidgets-2.6.3\include\wx\hashmap.h
+	"wx/string.h"
+	<ext/hash_map>
+	<hash_map>
+	<stddef.h>
+
+1121601608 c:\wxwidgets-2.6.3\include\wx\log.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/arrstr.h"
+	<time.h>
+	"wx/dynarray.h"
+	"wx/iosfwrap.h"
+	"wx/generic/logg.h"
+	"wx/cocoa/log.h"
+
+1095171320 c:\wxwidgets-2.6.3\include\wx\generic\logg.h
+
+1117656988 c:\wxwidgets-2.6.3\include\wx\intl.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/fontenc.h"
+
+1090770454 c:\wxwidgets-2.6.3\include\wx\msw\msvcrt.h
+	<stdlib.h>
+	<crtdbg.h>
+
+1137573240 c:\wxwidgets-2.6.3\include\wx\list.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+	"wx/beforestd.h"
+	<algorithm>
+	<iterator>
+	<list>
+	"wx/afterstd.h"
+
+1118240262 c:\wxwidgets-2.6.3\include\wx\hash.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/list.h"
+	"wx/dynarray.h"
+
+1123109046 c:\wxwidgets-2.6.3\include\wx\event.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/clntdata.h"
+	"wx/gdicmn.h"
+	"wx/cursor.h"
+	"wx/thread.h"
+	"wx/dynarray.h"
+
+1137601958 c:\wxwidgets-2.6.3\include\wx\clntdata.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/hashmap.h"
+	"wx/vector.h"
+
+1123251818 c:\wxwidgets-2.6.3\include\wx\vector.h
+	"wx/defs.h"
+
+1137601958 c:\wxwidgets-2.6.3\include\wx\gdicmn.h
+	"wx/defs.h"
+	"wx/list.h"
+	"wx/string.h"
+	"wx/fontenc.h"
+	"wx/hashmap.h"
+
+1116767028 c:\wxwidgets-2.6.3\include\wx\cursor.h
+	"wx/defs.h"
+	"wx/palmos/cursor.h"
+	"wx/msw/cursor.h"
+	"wx/motif/cursor.h"
+	"wx/gtk/cursor.h"
+	"wx/x11/cursor.h"
+	"wx/mgl/cursor.h"
+	"wx/mac/cursor.h"
+	"wx/cocoa/cursor.h"
+	"wx/os2/cursor.h"
+	"wx/utils.h"
+
+1106079264 c:\wxwidgets-2.6.3\include\wx\palmos\cursor.h
+	"wx/palmos/gdiimage.h"
+
+1106079266 c:\wxwidgets-2.6.3\include\wx\palmos\gdiimage.h
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+	"wx/list.h"
+
+1115229118 c:\wxwidgets-2.6.3\include\wx\gdiobj.h
+	"wx/palmos/gdiobj.h"
+	"wx/msw/gdiobj.h"
+	"wx/motif/gdiobj.h"
+	"wx/gtk/gdiobj.h"
+	"wx/x11/gdiobj.h"
+	"wx/mgl/gdiobj.h"
+	"wx/mac/gdiobj.h"
+	"wx/cocoa/gdiobj.h"
+	"wx/os2/gdiobj.h"
+
+1106079266 c:\wxwidgets-2.6.3\include\wx\palmos\gdiobj.h
+	"wx/object.h"
+
+1093506376 c:\wxwidgets-2.6.3\include\wx\msw\gdiobj.h
+	"wx/object.h"
+
+1095370572 c:\wxwidgets-2.6.3\include\wx\msw\cursor.h
+	"wx/msw/gdiimage.h"
+
+1110309404 c:\wxwidgets-2.6.3\include\wx\msw\gdiimage.h
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+	"wx/list.h"
+
+1137489344 c:\wxwidgets-2.6.3\include\wx\utils.h
+	"wx/object.h"
+	"wx/list.h"
+	"wx/filefn.h"
+	"wx/longlong.h"
+	<dirent.h>
+	<unistd.h>
+	<stdio.h>
+
+1137489344 c:\wxwidgets-2.6.3\include\wx\filefn.h
+	"wx/list.h"
+	"wx/arrstr.h"
+	"wx/msw/wince/time.h"
+	"wx/msw/private.h"
+	<time.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<sys/types.h>
+	<utime.h>
+	<sys/stat.h>
+	<unistd.h>
+	<stat.h>
+	<unistd.h>
+	<unix.h>
+	<process.h>
+	"wx/os2/private.h"
+	<direct.h>
+	<io.h>
+	<unistd.h>
+	<unistd.h>
+	<dirent.h>
+	<direct.h>
+	<dos.h>
+	<io.h>
+	<direct.h>
+	<dos.h>
+	<io.h>
+	<io.h>
+	<unistd.h>
+	<dir.h>
+	<dir.h>
+	<unix.h>
+	<fcntl.h>
+	<sys/types.h>
+	"wx/msw/private.h"
+
+1118876952 c:\wxwidgets-2.6.3\include\wx\msw\wince\time.h
+
+1123183866 c:\wxwidgets-2.6.3\include\wx\msw\private.h
+	"wx/msw/wrapwin.h"
+	"wx/msw/microwin.h"
+	"wx/msw/mslu.h"
+	"wx/log.h"
+	<wx/gdicmn.h>
+	<wx/colour.h>
+
+1093857524 c:\wxwidgets-2.6.3\include\wx\msw\microwin.h
+
+1109511812 c:\wxwidgets-2.6.3\include\wx\msw\mslu.h
+	"wx/defs.h"
+	"wx/utils.h"
+	"wx/wxchar.h"
+
+1115229116 c:\wxwidgets-2.6.3\include\wx\colour.h
+	"wx/palmos/colour.h"
+	"wx/msw/colour.h"
+	"wx/motif/colour.h"
+	"wx/gtk/colour.h"
+	"wx/mgl/colour.h"
+	"wx/x11/colour.h"
+	"wx/mac/colour.h"
+	"wx/cocoa/colour.h"
+	"wx/os2/colour.h"
+
+1106079264 c:\wxwidgets-2.6.3\include\wx\palmos\colour.h
+	"wx/object.h"
+
+1085341888 c:\wxwidgets-2.6.3\include\wx\msw\colour.h
+	"wx/object.h"
+
+1125185678 c:\wxwidgets-2.6.3\include\wx\longlong.h
+	"wx/defs.h"
+	"wx/string.h"
+	<limits.h>
+	"wx/iosfwrap.h"
+
+1098231498 c:\wxwidgets-2.6.3\include\wx\thread.h
+	"wx/defs.h"
+
+1119344172 c:\wxwidgets-2.6.3\include\wx\app.h
+	"wx/event.h"
+	"wx/window.h"
+	"wx/vidmode.h"
+	"wx/build.h"
+	"wx/init.h"
+	"wx/palmos/app.h"
+	"wx/msw/app.h"
+	"wx/motif/app.h"
+	"wx/mgl/app.h"
+	"wx/gtk/app.h"
+	"wx/x11/app.h"
+	"wx/mac/app.h"
+	"wx/cocoa/app.h"
+	"wx/os2/app.h"
+	"wx/univ/theme.h"
+
+1139249450 c:\wxwidgets-2.6.3\include\wx\window.h
+	"wx/event.h"
+	"wx/list.h"
+	"wx/cursor.h"
+	"wx/font.h"
+	"wx/colour.h"
+	"wx/region.h"
+	"wx/utils.h"
+	"wx/validate.h"
+	"wx/palette.h"
+	"wx/accel.h"
+	"wx/access.h"
+	"wx/palmos/window.h"
+	"wx/msw/window.h"
+	"wx/motif/window.h"
+	"wx/gtk/window.h"
+	"wx/x11/window.h"
+	"wx/mgl/window.h"
+	"wx/mac/window.h"
+	"wx/cocoa/window.h"
+	"wx/os2/window.h"
+	"wx/univ/window.h"
+
+1117527496 c:\wxwidgets-2.6.3\include\wx\font.h
+	"wx/defs.h"
+	"wx/fontenc.h"
+	"wx/gdiobj.h"
+	"wx/palmos/font.h"
+	"wx/msw/font.h"
+	"wx/motif/font.h"
+	"wx/gtk/font.h"
+	"wx/x11/font.h"
+	"wx/mgl/font.h"
+	"wx/mac/font.h"
+	"wx/cocoa/font.h"
+	"wx/os2/font.h"
+
+1106079264 c:\wxwidgets-2.6.3\include\wx\palmos\font.h
+	<wx/gdicmn.h>
+
+1096279324 c:\wxwidgets-2.6.3\include\wx\msw\font.h
+	<wx/gdicmn.h>
+
+1115229122 c:\wxwidgets-2.6.3\include\wx\region.h
+	"wx/colour.h"
+	"wx/palmos/region.h"
+	"wx/msw/region.h"
+	"wx/gtk/region.h"
+	"wx/x11/region.h"
+	"wx/mgl/region.h"
+	"wx/mac/region.h"
+	"wx/cocoa/region.h"
+	"wx/os2/region.h"
+
+1098189588 c:\wxwidgets-2.6.3\include\wx\palmos\region.h
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+
+1095370572 c:\wxwidgets-2.6.3\include\wx\msw\region.h
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+
+1106329702 c:\wxwidgets-2.6.3\include\wx\validate.h
+	"wx/defs.h"
+	"wx/event.h"
+
+1115229120 c:\wxwidgets-2.6.3\include\wx\palette.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/gdiobj.h"
+	"wx/palmos/palette.h"
+	"wx/msw/palette.h"
+	"wx/motif/palette.h"
+	"wx/generic/paletteg.h"
+	"wx/x11/palette.h"
+	"wx/mgl/palette.h"
+	"wx/mac/palette.h"
+	"wx/os2/palette.h"
+
+1106079266 c:\wxwidgets-2.6.3\include\wx\palmos\palette.h
+	"wx/gdiobj.h"
+
+1102524168 c:\wxwidgets-2.6.3\include\wx\msw\palette.h
+	"wx/gdiobj.h"
+
+1123019868 c:\wxwidgets-2.6.3\include\wx\generic\paletteg.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+
+1106329698 c:\wxwidgets-2.6.3\include\wx\accel.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/generic/accel.h"
+	"wx/msw/accel.h"
+	"wx/motif/accel.h"
+	"wx/gtk/accel.h"
+	"wx/mac/accel.h"
+	"wx/generic/accel.h"
+	"wx/os2/accel.h"
+
+1102084716 c:\wxwidgets-2.6.3\include\wx\generic\accel.h
+
+1102674186 c:\wxwidgets-2.6.3\include\wx\msw\accel.h
+
+1097672636 c:\wxwidgets-2.6.3\include\wx\access.h
+	"wx/variant.h"
+	"wx/msw/ole/access.h"
+	"wx/generic/access.h"
+	"wx/generic/access.h"
+	"wx/generic/access.h"
+	"wx/generic/access.h"
+	"wx/generic/access.h"
+	"wx/generic/access.h"
+
+1115229126 c:\wxwidgets-2.6.3\include\wx\variant.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+	"wx/arrstr.h"
+	"wx/list.h"
+	"wx/datetime.h"
+	"wx/db.h"
+	"wx/iosfwrap.h"
+
+1125230794 c:\wxwidgets-2.6.3\include\wx\datetime.h
+	"wx/defs.h"
+	<time.h>
+	"wx/msw/wince/time.h"
+	<limits.h>
+	"wx/longlong.h"
+	"wx/dynarray.h"
+
+1126865028 c:\wxwidgets-2.6.3\include\wx\db.h
+	"wx/defs.h"
+	"wx/string.h"
+	<afxwin.h>
+	<windows.h>
+	"wx/msw/winundef.h"
+	"sql.h"
+	"sqlext.h"
+	"odbcinst.h"
+	<windows.h>
+	"wx/msw/winundef.h"
+	"wx/isql.h"
+	"wx/isqlext.h"
+	<sql.h>
+	<sqlext.h>
+	"wx/object.h"
+
+1126866152 c:\wxwidgets-2.6.3\include\wx\isql.h
+
+1098468666 c:\wxwidgets-2.6.3\include\wx\isqlext.h
+	"wx/isql.h"
+
+1092656740 c:\wxwidgets-2.6.3\include\wx\msw\ole\access.h
+
+1120243012 c:\wxwidgets-2.6.3\include\wx\palmos\window.h
+	"wx/hash.h"
+
+1141133812 c:\wxwidgets-2.6.3\include\wx\msw\window.h
+	"wx/hash.h"
+
+1124220752 c:\wxwidgets-2.6.3\include\wx\univ\window.h
+	"wx/bitmap.h"
+
+1107609442 c:\wxwidgets-2.6.3\include\wx\bitmap.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+	"wx/palmos/bitmap.h"
+	"wx/msw/bitmap.h"
+	"wx/x11/bitmap.h"
+	"wx/gtk/bitmap.h"
+	"wx/x11/bitmap.h"
+	"wx/mgl/bitmap.h"
+	"wx/mac/bitmap.h"
+	"wx/cocoa/bitmap.h"
+	"wx/os2/bitmap.h"
+
+1106079264 c:\wxwidgets-2.6.3\include\wx\palmos\bitmap.h
+	"wx/palmos/gdiimage.h"
+	"wx/gdicmn.h"
+	"wx/palette.h"
+
+1137593498 c:\wxwidgets-2.6.3\include\wx\msw\bitmap.h
+	"wx/msw/gdiimage.h"
+	"wx/gdicmn.h"
+	"wx/palette.h"
+
+1085341826 c:\wxwidgets-2.6.3\include\wx\vidmode.h
+
+1094748150 c:\wxwidgets-2.6.3\include\wx\build.h
+	"wx/version.h"
+
+1105917220 c:\wxwidgets-2.6.3\include\wx\init.h
+	"wx/wxchar.h"
+
+1120243012 c:\wxwidgets-2.6.3\include\wx\palmos\app.h
+	"wx/event.h"
+	"wx/icon.h"
+
+1115229120 c:\wxwidgets-2.6.3\include\wx\icon.h
+	"wx/iconloc.h"
+	"wx/palmos/icon.h"
+	"wx/msw/icon.h"
+	"wx/motif/icon.h"
+	"wx/gtk/icon.h"
+	"wx/x11/icon.h"
+	"wx/mgl/icon.h"
+	"wx/mac/icon.h"
+	"wx/cocoa/icon.h"
+	"wx/os2/icon.h"
+
+1085341824 c:\wxwidgets-2.6.3\include\wx\iconloc.h
+	"wx/string.h"
+
+1106079266 c:\wxwidgets-2.6.3\include\wx\palmos\icon.h
+	"wx/palmos/gdiimage.h"
+
+1095370572 c:\wxwidgets-2.6.3\include\wx\msw\icon.h
+	"wx/msw/gdiimage.h"
+
+1095063400 c:\wxwidgets-2.6.3\include\wx\msw\app.h
+	"wx/event.h"
+	"wx/icon.h"
+	"wx/msw/wrapwin.h"
+
+1106327742 c:\wxwidgets-2.6.3\include\wx\univ\theme.h
+
+1119797168 c:\wxwidgets-2.6.3\include\wx\stream.h
+	"wx/defs.h"
+	<stdio.h>
+	"wx/object.h"
+	"wx/string.h"
+	"wx/filefn.h"
+
+1115229122 c:\wxwidgets-2.6.3\include\wx\panel.h
+	"wx/generic/panelg.h"
+
+1115229152 c:\wxwidgets-2.6.3\include\wx\generic\panelg.h
+	"wx/window.h"
+	"wx/containr.h"
+
+1102765866 c:\wxwidgets-2.6.3\include\wx\containr.h
+
+1106329700 c:\wxwidgets-2.6.3\include\wx\frame.h
+	"wx/toplevel.h"
+	"wx/univ/frame.h"
+	"wx/palmos/frame.h"
+	"wx/msw/frame.h"
+	"wx/gtk/frame.h"
+	"wx/motif/frame.h"
+	"wx/mac/frame.h"
+	"wx/cocoa/frame.h"
+	"wx/os2/frame.h"
+
+1119797168 c:\wxwidgets-2.6.3\include\wx\toplevel.h
+	"wx/window.h"
+	"wx/iconbndl.h"
+	"wx/palmos/toplevel.h"
+	"wx/msw/toplevel.h"
+	"wx/gtk/toplevel.h"
+	"wx/x11/toplevel.h"
+	"wx/mgl/toplevel.h"
+	"wx/mac/toplevel.h"
+	"wx/cocoa/toplevel.h"
+	"wx/os2/toplevel.h"
+	"wx/motif/toplevel.h"
+	"wx/univ/toplevel.h"
+
+1095354806 c:\wxwidgets-2.6.3\include\wx\iconbndl.h
+	"wx/dynarray.h"
+	"wx/gdicmn.h"
+
+1120243012 c:\wxwidgets-2.6.3\include\wx\palmos\toplevel.h
+
+1111230410 c:\wxwidgets-2.6.3\include\wx\msw\toplevel.h
+
+1103485866 c:\wxwidgets-2.6.3\include\wx\univ\toplevel.h
+	"wx/univ/inpcons.h"
+	"wx/univ/inphand.h"
+	"wx/icon.h"
+
+1085341906 c:\wxwidgets-2.6.3\include\wx\univ\inpcons.h
+	"wx/object.h"
+	"wx/event.h"
+
+1092139714 c:\wxwidgets-2.6.3\include\wx\univ\inphand.h
+	"wx/univ/inpcons.h"
+
+1108854718 c:\wxwidgets-2.6.3\include\wx\univ\frame.h
+
+1120243012 c:\wxwidgets-2.6.3\include\wx\palmos\frame.h
+
+1111152408 c:\wxwidgets-2.6.3\include\wx\msw\frame.h
+
+1119797168 c:\wxwidgets-2.6.3\include\wx\dc.h
+	"wx/object.h"
+	"wx/cursor.h"
+	"wx/font.h"
+	"wx/colour.h"
+	"wx/bitmap.h"
+	"wx/brush.h"
+	"wx/pen.h"
+	"wx/palette.h"
+	"wx/list.h"
+	"wx/dynarray.h"
+	"wx/math.h"
+	"wx/palmos/dc.h"
+	"wx/msw/dc.h"
+	"wx/motif/dc.h"
+	"wx/gtk/dc.h"
+	"wx/x11/dc.h"
+	"wx/mgl/dc.h"
+	"wx/mac/dc.h"
+	"wx/cocoa/dc.h"
+	"wx/os2/dc.h"
+
+1115229116 c:\wxwidgets-2.6.3\include\wx\brush.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/gdiobj.h"
+	"wx/palmos/brush.h"
+	"wx/msw/brush.h"
+	"wx/x11/brush.h"
+	"wx/gtk/brush.h"
+	"wx/mgl/brush.h"
+	"wx/mac/brush.h"
+	"wx/cocoa/brush.h"
+	"wx/os2/brush.h"
+
+1106079264 c:\wxwidgets-2.6.3\include\wx\palmos\brush.h
+	"wx/gdicmn.h"
+	"wx/gdiobj.h"
+	"wx/bitmap.h"
+
+1102084162 c:\wxwidgets-2.6.3\include\wx\msw\brush.h
+	"wx/gdicmn.h"
+	"wx/gdiobj.h"
+	"wx/bitmap.h"
+
+1115229122 c:\wxwidgets-2.6.3\include\wx\pen.h
+	"wx/palmos/pen.h"
+	"wx/msw/pen.h"
+	"wx/x11/pen.h"
+	"wx/gtk/pen.h"
+	"wx/mgl/pen.h"
+	"wx/mac/pen.h"
+	"wx/cocoa/pen.h"
+	"wx/os2/pen.h"
+
+1106079266 c:\wxwidgets-2.6.3\include\wx\palmos\pen.h
+	"wx/gdiobj.h"
+	"wx/bitmap.h"
+	"wx/colour.h"
+
+1095370572 c:\wxwidgets-2.6.3\include\wx\msw\pen.h
+	"wx/gdiobj.h"
+	"wx/bitmap.h"
+	"wx/colour.h"
+
+1138106980 c:\wxwidgets-2.6.3\include\wx\math.h
+	"wx/defs.h"
+	<math.h>
+	<float.h>
+
+1106079264 c:\wxwidgets-2.6.3\include\wx\palmos\dc.h
+	"wx/defs.h"
+	"wx/dc.h"
+
+1126871704 c:\wxwidgets-2.6.3\include\wx\msw\dc.h
+	"wx/defs.h"
+
+1115229116 c:\wxwidgets-2.6.3\include\wx\dcclient.h
+	"wx/palmos/dcclient.h"
+	"wx/msw/dcclient.h"
+	"wx/motif/dcclient.h"
+	"wx/gtk/dcclient.h"
+	"wx/x11/dcclient.h"
+	"wx/mgl/dcclient.h"
+	"wx/mac/dcclient.h"
+	"wx/cocoa/dcclient.h"
+	"wx/os2/dcclient.h"
+
+1117527524 c:\wxwidgets-2.6.3\include\wx\palmos\dcclient.h
+	"wx/dc.h"
+	"wx/dynarray.h"
+
+1117527512 c:\wxwidgets-2.6.3\include\wx\msw\dcclient.h
+	"wx/dc.h"
+	"wx/dynarray.h"
+
+1115229116 c:\wxwidgets-2.6.3\include\wx\dcmemory.h
+	"wx/palmos/dcmemory.h"
+	"wx/msw/dcmemory.h"
+	"wx/motif/dcmemory.h"
+	"wx/gtk/dcmemory.h"
+	"wx/x11/dcmemory.h"
+	"wx/mgl/dcmemory.h"
+	"wx/mac/dcmemory.h"
+	"wx/cocoa/dcmemory.h"
+	"wx/os2/dcmemory.h"
+
+1106079264 c:\wxwidgets-2.6.3\include\wx\palmos\dcmemory.h
+	"wx/dcclient.h"
+
+1085341888 c:\wxwidgets-2.6.3\include\wx\msw\dcmemory.h
+	"wx/dcclient.h"
+
+1115229116 c:\wxwidgets-2.6.3\include\wx\dcprint.h
+	"wx/palmos/dcprint.h"
+	"wx/msw/dcprint.h"
+	"wx/os2/dcprint.h"
+	"wx/mac/dcprint.h"
+
+1106079264 c:\wxwidgets-2.6.3\include\wx\palmos\dcprint.h
+	"wx/dc.h"
+	"wx/cmndata.h"
+
+1112369170 c:\wxwidgets-2.6.3\include\wx\cmndata.h
+	"wx/window.h"
+	"wx/font.h"
+	"wx/encinfo.h"
+	"wx/colour.h"
+	"wx/gdicmn.h"
+	"wx/stream.h"
+
+1103543028 c:\wxwidgets-2.6.3\include\wx\encinfo.h
+	"wx/string.h"
+
+1093339894 c:\wxwidgets-2.6.3\include\wx\msw\dcprint.h
+	"wx/dc.h"
+	"wx/cmndata.h"
+
+1115229116 c:\wxwidgets-2.6.3\include\wx\dcscreen.h
+	"wx/palmos/dcscreen.h"
+	"wx/msw/dcscreen.h"
+	"wx/motif/dcscreen.h"
+	"wx/gtk/dcscreen.h"
+	"wx/x11/dcscreen.h"
+	"wx/mgl/dcscreen.h"
+	"wx/mac/dcscreen.h"
+	"wx/cocoa/dcscreen.h"
+	"wx/os2/dcscreen.h"
+
+1106079264 c:\wxwidgets-2.6.3\include\wx\palmos\dcscreen.h
+	"wx/dcclient.h"
+
+1093339894 c:\wxwidgets-2.6.3\include\wx\msw\dcscreen.h
+	"wx/dcclient.h"
+
+1106548728 c:\wxwidgets-2.6.3\include\wx\button.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/button.h"
+	"wx/msw/button.h"
+	"wx/motif/button.h"
+	"wx/gtk/button.h"
+	"wx/mac/button.h"
+	"wx/cocoa/button.h"
+	"wx/os2/button.h"
+	"wx/palmos/button.h"
+
+1119797168 c:\wxwidgets-2.6.3\include\wx\control.h
+	"wx/defs.h"
+	"wx/window.h"
+	"wx/univ/control.h"
+	"wx/palmos/control.h"
+	"wx/msw/control.h"
+	"wx/motif/control.h"
+	"wx/gtk/control.h"
+	"wx/mac/control.h"
+	"wx/cocoa/control.h"
+	"wx/os2/control.h"
+
+1085341906 c:\wxwidgets-2.6.3\include\wx\univ\control.h
+	"wx/univ/inphand.h"
+	"wx/univ/inpcons.h"
+
+1120243012 c:\wxwidgets-2.6.3\include\wx\palmos\control.h
+	"wx/dynarray.h"
+
+1113166512 c:\wxwidgets-2.6.3\include\wx\msw\control.h
+	"wx/dynarray.h"
+
+1093873146 c:\wxwidgets-2.6.3\include\wx\univ\button.h
+	"wx/bitmap.h"
+
+1113142976 c:\wxwidgets-2.6.3\include\wx\msw\button.h
+
+1113142982 c:\wxwidgets-2.6.3\include\wx\palmos\button.h
+
+1106561650 c:\wxwidgets-2.6.3\include\wx\menu.h
+	"wx/defs.h"
+	"wx/list.h"
+	"wx/window.h"
+	"wx/menuitem.h"
+	"wx/univ/menu.h"
+	"wx/palmos/menu.h"
+	"wx/msw/menu.h"
+	"wx/motif/menu.h"
+	"wx/gtk/menu.h"
+	"wx/mac/menu.h"
+	"wx/cocoa/menu.h"
+	"wx/os2/menu.h"
+
+1117527496 c:\wxwidgets-2.6.3\include\wx\menuitem.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/univ/menuitem.h"
+	"wx/palmos/menuitem.h"
+	"wx/msw/menuitem.h"
+	"wx/motif/menuitem.h"
+	"wx/gtk/menuitem.h"
+	"wx/mac/menuitem.h"
+	"wx/cocoa/menuitem.h"
+	"wx/os2/menuitem.h"
+
+1092139714 c:\wxwidgets-2.6.3\include\wx\univ\menuitem.h
+
+1110481138 c:\wxwidgets-2.6.3\include\wx\palmos\menuitem.h
+	"wx/ownerdrw.h"
+
+1118165328 c:\wxwidgets-2.6.3\include\wx\ownerdrw.h
+	"wx/defs.h"
+	"wx/bitmap.h"
+	"wx/colour.h"
+	"wx/font.h"
+
+1093857524 c:\wxwidgets-2.6.3\include\wx\msw\menuitem.h
+	"wx/ownerdrw.h"
+
+1115383352 c:\wxwidgets-2.6.3\include\wx\univ\menu.h
+	"wx/accel.h"
+	"wx/dynarray.h"
+
+1123184110 c:\wxwidgets-2.6.3\include\wx\palmos\menu.h
+	"wx/accel.h"
+	"wx/dynarray.h"
+	"wx/arrstr.h"
+
+1123184108 c:\wxwidgets-2.6.3\include\wx\msw\menu.h
+	"wx/accel.h"
+	"wx/dynarray.h"
+	"wx/arrstr.h"
+
+1137489344 c:\wxwidgets-2.6.3\include\wx\dialog.h
+	"wx/defs.h"
+	"wx/containr.h"
+	"wx/toplevel.h"
+	"wx/univ/dialog.h"
+	"wx/palmos/dialog.h"
+	"wx/msw/dialog.h"
+	"wx/motif/dialog.h"
+	"wx/gtk/dialog.h"
+	"wx/mac/dialog.h"
+	"wx/cocoa/dialog.h"
+	"wx/os2/dialog.h"
+
+1106327742 c:\wxwidgets-2.6.3\include\wx\univ\dialog.h
+
+1108374536 c:\wxwidgets-2.6.3\include\wx\palmos\dialog.h
+	"wx/panel.h"
+
+1126862920 c:\wxwidgets-2.6.3\include\wx\msw\dialog.h
+	"wx/panel.h"
+
+1115229126 c:\wxwidgets-2.6.3\include\wx\timer.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/longlong.h"
+	"wx/event.h"
+	"wx/stopwatch.h"
+	"wx/msw/timer.h"
+	"wx/motif/timer.h"
+	"wx/gtk/timer.h"
+	"wx/generic/timer.h"
+	"wx/cocoa/timer.h"
+	"wx/mac/timer.h"
+	"wx/os2/timer.h"
+
+1115229124 c:\wxwidgets-2.6.3\include\wx\stopwatch.h
+	"wx/defs.h"
+	"wx/longlong.h"
+
+1094533252 c:\wxwidgets-2.6.3\include\wx\msw\timer.h
+
+1087485748 c:\wxwidgets-2.6.3\include\wx\generic\timer.h
+
+1110219042 c:\wxwidgets-2.6.3\include\wx\settings.h
+	"wx/colour.h"
+	"wx/font.h"
+
+1115229120 c:\wxwidgets-2.6.3\include\wx\msgdlg.h
+	"wx/defs.h"
+	"wx/generic/msgdlgg.h"
+	"wx/generic/msgdlgg.h"
+	"wx/palmos/msgdlg.h"
+	"wx/msw/msgdlg.h"
+	"wx/motif/msgdlg.h"
+	"wx/gtk/msgdlg.h"
+	"wx/generic/msgdlgg.h"
+	"wx/mac/msgdlg.h"
+	"wx/generic/msgdlgg.h"
+	"wx/os2/msgdlg.h"
+
+1110551598 c:\wxwidgets-2.6.3\include\wx\generic\msgdlgg.h
+	"wx/setup.h"
+	"wx/dialog.h"
+
+1110551640 c:\wxwidgets-2.6.3\include\wx\palmos\msgdlg.h
+	"wx/setup.h"
+	"wx/dialog.h"
+
+1110551626 c:\wxwidgets-2.6.3\include\wx\msw\msgdlg.h
+	"wx/setup.h"
+	"wx/dialog.h"
+
+1110986298 c:\wxwidgets-2.6.3\include\wx\ctrlsub.h
+	"wx/defs.h"
+	"wx/control.h"
+
+1113142974 c:\wxwidgets-2.6.3\include\wx\bmpbuttn.h
+	"wx/defs.h"
+	"wx/bitmap.h"
+	"wx/button.h"
+	"wx/univ/bmpbuttn.h"
+	"wx/msw/bmpbuttn.h"
+	"wx/motif/bmpbuttn.h"
+	"wx/gtk/bmpbuttn.h"
+	"wx/mac/bmpbuttn.h"
+	"wx/cocoa/bmpbuttn.h"
+	"wx/os2/bmpbuttn.h"
+
+1092139714 c:\wxwidgets-2.6.3\include\wx\univ\bmpbuttn.h
+
+1096807570 c:\wxwidgets-2.6.3\include\wx\msw\bmpbuttn.h
+	"wx/button.h"
+	"wx/bitmap.h"
+	"wx/brush.h"
+
+1106632506 c:\wxwidgets-2.6.3\include\wx\checkbox.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/checkbox.h"
+	"wx/msw/checkbox.h"
+	"wx/motif/checkbox.h"
+	"wx/gtk/checkbox.h"
+	"wx/mac/checkbox.h"
+	"wx/cocoa/checkbox.h"
+	"wx/os2/checkbox.h"
+	"wx/palmos/checkbox.h"
+
+1105113248 c:\wxwidgets-2.6.3\include\wx\univ\checkbox.h
+	"wx/button.h"
+
+1116454604 c:\wxwidgets-2.6.3\include\wx\msw\checkbox.h
+
+1107155078 c:\wxwidgets-2.6.3\include\wx\palmos\checkbox.h
+
+1140797134 c:\wxwidgets-2.6.3\include\wx\checklst.h
+	"wx/listbox.h"
+	"wx/univ/checklst.h"
+	"wx/msw/wince/checklst.h"
+	"wx/msw/checklst.h"
+	"wx/motif/checklst.h"
+	"wx/gtk/checklst.h"
+	"wx/mac/checklst.h"
+	"wx/cocoa/checklst.h"
+	"wx/os2/checklst.h"
+
+1112967236 c:\wxwidgets-2.6.3\include\wx\listbox.h
+	"wx/defs.h"
+	"wx/ctrlsub.h"
+	"wx/univ/listbox.h"
+	"wx/msw/listbox.h"
+	"wx/motif/listbox.h"
+	"wx/gtk/listbox.h"
+	"wx/mac/listbox.h"
+	"wx/os2/listbox.h"
+	"wx/cocoa/listbox.h"
+
+1108310878 c:\wxwidgets-2.6.3\include\wx\univ\listbox.h
+	"wx/scrolwin.h"
+	"wx/dynarray.h"
+	"wx/arrstr.h"
+
+1112681382 c:\wxwidgets-2.6.3\include\wx\scrolwin.h
+	"wx/window.h"
+	"wx/gtk/scrolwin.h"
+	"wx/generic/scrolwin.h"
+
+1119381364 c:\wxwidgets-2.6.3\include\wx\generic\scrolwin.h
+	"wx/window.h"
+	"wx/panel.h"
+
+1118932602 c:\wxwidgets-2.6.3\include\wx\msw\listbox.h
+	"wx/dynarray.h"
+
+1092139714 c:\wxwidgets-2.6.3\include\wx\univ\checklst.h
+
+1140797084 c:\wxwidgets-2.6.3\include\wx\msw\wince\checklst.h
+
+1092999784 c:\wxwidgets-2.6.3\include\wx\msw\checklst.h
+
+1110986298 c:\wxwidgets-2.6.3\include\wx\choice.h
+	"wx/defs.h"
+	"wx/ctrlsub.h"
+	"wx/univ/choice.h"
+	"wx/msw/wince/choicece.h"
+	"wx/msw/choice.h"
+	"wx/motif/choice.h"
+	"wx/gtk/choice.h"
+	"wx/mac/choice.h"
+	"wx/cocoa/choice.h"
+	"wx/os2/choice.h"
+
+1085341906 c:\wxwidgets-2.6.3\include\wx\univ\choice.h
+	"wx/combobox.h"
+
+1108466194 c:\wxwidgets-2.6.3\include\wx\combobox.h
+	"wx/defs.h"
+	"wx/textctrl.h"
+	"wx/ctrlsub.h"
+	"wx/univ/combobox.h"
+	"wx/msw/combobox.h"
+	"wx/motif/combobox.h"
+	"wx/gtk/combobox.h"
+	"wx/mac/combobox.h"
+	"wx/cocoa/combobox.h"
+	"wx/os2/combobox.h"
+
+1118661556 c:\wxwidgets-2.6.3\include\wx\textctrl.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/dynarray.h"
+	"wx/gdicmn.h"
+	"wx/ioswrap.h"
+	"wx/x11/textctrl.h"
+	"wx/univ/textctrl.h"
+	"wx/msw/wince/textctrlce.h"
+	"wx/msw/textctrl.h"
+	"wx/motif/textctrl.h"
+	"wx/gtk/textctrl.h"
+	"wx/mac/textctrl.h"
+	"wx/cocoa/textctrl.h"
+	"wx/os2/textctrl.h"
+
+1113336364 c:\wxwidgets-2.6.3\include\wx\ioswrap.h
+	<iostream.h>
+	<iostream>
+	"wx/msw/winundef.h"
+
+1092918142 c:\wxwidgets-2.6.3\include\wx\univ\textctrl.h
+	"wx/scrolwin.h"
+	"wx/univ/inphand.h"
+
+1106148310 c:\wxwidgets-2.6.3\include\wx\msw\wince\textctrlce.h
+	"wx/dynarray.h"
+
+1122674516 c:\wxwidgets-2.6.3\include\wx\msw\textctrl.h
+
+1108310878 c:\wxwidgets-2.6.3\include\wx\univ\combobox.h
+
+1139249462 c:\wxwidgets-2.6.3\include\wx\msw\combobox.h
+	"wx/choice.h"
+
+1110724342 c:\wxwidgets-2.6.3\include\wx\msw\wince\choicece.h
+	"wx/defs.h"
+	"wx/dynarray.h"
+
+1126696102 c:\wxwidgets-2.6.3\include\wx\msw\choice.h
+
+1115229122 c:\wxwidgets-2.6.3\include\wx\scrolbar.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/scrolbar.h"
+	"wx/msw/scrolbar.h"
+	"wx/motif/scrolbar.h"
+	"wx/gtk/scrolbar.h"
+	"wx/mac/scrolbar.h"
+	"wx/cocoa/scrolbar.h"
+	"wx/os2/scrolbar.h"
+
+1092139714 c:\wxwidgets-2.6.3\include\wx\univ\scrolbar.h
+	"wx/univ/scrarrow.h"
+	"wx/renderer.h"
+
+1092139714 c:\wxwidgets-2.6.3\include\wx\univ\scrarrow.h
+
+1111620122 c:\wxwidgets-2.6.3\include\wx\renderer.h
+	"wx/gdicmn.h"
+
+1117547538 c:\wxwidgets-2.6.3\include\wx\msw\scrolbar.h
+
+1124399740 c:\wxwidgets-2.6.3\include\wx\stattext.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/stattext.h"
+	"wx/msw/stattext.h"
+	"wx/motif/stattext.h"
+	"wx/gtk/stattext.h"
+	"wx/mac/stattext.h"
+	"wx/cocoa/stattext.h"
+	"wx/os2/stattext.h"
+	"wx/palmos/stattext.h"
+
+1105113248 c:\wxwidgets-2.6.3\include\wx\univ\stattext.h
+
+1113142978 c:\wxwidgets-2.6.3\include\wx\msw\stattext.h
+
+1107155080 c:\wxwidgets-2.6.3\include\wx\palmos\stattext.h
+
+1113748446 c:\wxwidgets-2.6.3\include\wx\statbmp.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/bitmap.h"
+	"wx/univ/statbmp.h"
+	"wx/msw/statbmp.h"
+	"wx/motif/statbmp.h"
+	"wx/gtk/statbmp.h"
+	"wx/mac/statbmp.h"
+	"wx/cocoa/statbmp.h"
+	"wx/os2/statbmp.h"
+
+1092139714 c:\wxwidgets-2.6.3\include\wx\univ\statbmp.h
+	"wx/bitmap.h"
+
+1125406464 c:\wxwidgets-2.6.3\include\wx\msw\statbmp.h
+	"wx/control.h"
+	"wx/icon.h"
+	"wx/bitmap.h"
+
+1115229124 c:\wxwidgets-2.6.3\include\wx\statbox.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/statbox.h"
+	"wx/msw/statbox.h"
+	"wx/motif/statbox.h"
+	"wx/gtk/statbox.h"
+	"wx/mac/statbox.h"
+	"wx/cocoa/statbox.h"
+	"wx/os2/statbox.h"
+
+1105113248 c:\wxwidgets-2.6.3\include\wx\univ\statbox.h
+
+1116655502 c:\wxwidgets-2.6.3\include\wx\msw\statbox.h
+
+1115229122 c:\wxwidgets-2.6.3\include\wx\radiobox.h
+	"wx/ctrlsub.h"
+	"wx/univ/radiobox.h"
+	"wx/msw/radiobox.h"
+	"wx/motif/radiobox.h"
+	"wx/gtk/radiobox.h"
+	"wx/mac/radiobox.h"
+	"wx/cocoa/radiobox.h"
+	"wx/os2/radiobox.h"
+	"wx/palmos/radiobox.h"
+
+1125040904 c:\wxwidgets-2.6.3\include\wx\univ\radiobox.h
+	"wx/statbox.h"
+	"wx/dynarray.h"
+
+1113226892 c:\wxwidgets-2.6.3\include\wx\msw\radiobox.h
+	"wx/statbox.h"
+
+1113142982 c:\wxwidgets-2.6.3\include\wx\palmos\radiobox.h
+
+1115229122 c:\wxwidgets-2.6.3\include\wx\radiobut.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/radiobut.h"
+	"wx/msw/radiobut.h"
+	"wx/motif/radiobut.h"
+	"wx/gtk/radiobut.h"
+	"wx/mac/radiobut.h"
+	"wx/cocoa/radiobut.h"
+	"wx/os2/radiobut.h"
+	"wx/palmos/radiobut.h"
+
+1085341906 c:\wxwidgets-2.6.3\include\wx\univ\radiobut.h
+	"wx/checkbox.h"
+
+1113142978 c:\wxwidgets-2.6.3\include\wx\msw\radiobut.h
+
+1120243012 c:\wxwidgets-2.6.3\include\wx\palmos\radiobut.h
+
+1115229124 c:\wxwidgets-2.6.3\include\wx\slider.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/slider.h"
+	"wx/msw/slider95.h"
+	"wx/motif/slider.h"
+	"wx/gtk/slider.h"
+	"wx/mac/slider.h"
+	"wx/cocoa/slider.h"
+	"wx/os2/slider.h"
+	"wx/palmos/slider.h"
+
+1129825978 c:\wxwidgets-2.6.3\include\wx\univ\slider.h
+	"wx/univ/scrthumb.h"
+
+1092139714 c:\wxwidgets-2.6.3\include\wx\univ\scrthumb.h
+	"wx/timer.h"
+
+1117550018 c:\wxwidgets-2.6.3\include\wx\msw\slider95.h
+
+1120243012 c:\wxwidgets-2.6.3\include\wx\palmos\slider.h
+
+1106329700 c:\wxwidgets-2.6.3\include\wx\gauge.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/gauge.h"
+	"wx/msw/gauge95.h"
+	"wx/motif/gauge.h"
+	"wx/gtk/gauge.h"
+	"wx/mac/gauge.h"
+	"wx/cocoa/gauge.h"
+	"wx/os2/gauge.h"
+
+1129825978 c:\wxwidgets-2.6.3\include\wx\univ\gauge.h
+
+1106327472 c:\wxwidgets-2.6.3\include\wx\msw\gauge95.h
+
+1115229118 c:\wxwidgets-2.6.3\include\wx\dirdlg.h
+	"wx/dialog.h"
+	"wx/generic/dirdlgg.h"
+	"wx/generic/dirdlgg.h"
+	"wx/msw/dirdlg.h"
+	"wx/mac/dirdlg.h"
+	"wx/generic/dirdlgg.h"
+
+1112474394 c:\wxwidgets-2.6.3\include\wx\generic\dirdlgg.h
+	"wx/dialog.h"
+
+1093339894 c:\wxwidgets-2.6.3\include\wx\msw\dirdlg.h
+
+1115229126 c:\wxwidgets-2.6.3\include\wx\toolbar.h
+	"wx/defs.h"
+	"wx/tbarbase.h"
+	"wx/univ/toolbar.h"
+	"wx/palmos/toolbar.h"
+	"wx/msw/tbar95.h"
+	"wx/msw/wince/tbarwce.h"
+	"wx/msw/tbarmsw.h"
+	"wx/motif/toolbar.h"
+	"wx/gtk/tbargtk.h"
+	"wx/mac/toolbar.h"
+	"wx/cocoa/toolbar.h"
+	"wx/os2/toolbar.h"
+
+1109607612 c:\wxwidgets-2.6.3\include\wx\tbarbase.h
+	"wx/defs.h"
+	"wx/bitmap.h"
+	"wx/list.h"
+	"wx/control.h"
+
+1092139714 c:\wxwidgets-2.6.3\include\wx\univ\toolbar.h
+	"wx/button.h"
+
+1108374538 c:\wxwidgets-2.6.3\include\wx\palmos\toolbar.h
+	"wx/dynarray.h"
+
+1137593498 c:\wxwidgets-2.6.3\include\wx\msw\tbar95.h
+	"wx/dynarray.h"
+	"wx/imaglist.h"
+
+1115229120 c:\wxwidgets-2.6.3\include\wx\imaglist.h
+	"wx/msw/imaglist.h"
+	"wx/mac/imaglist.h"
+	"wx/generic/imaglist.h"
+
+1109497004 c:\wxwidgets-2.6.3\include\wx\msw\imaglist.h
+	"wx/bitmap.h"
+
+1109498048 c:\wxwidgets-2.6.3\include\wx\generic\imaglist.h
+	"wx/defs.h"
+	"wx/list.h"
+	"wx/icon.h"
+
+1111258310 c:\wxwidgets-2.6.3\include\wx\msw\wince\tbarwce.h
+	"wx/dynarray.h"
+	"wx/msw/tbar95.h"
+
+1106327474 c:\wxwidgets-2.6.3\include\wx\msw\tbarmsw.h
+	"wx/tbarbase.h"
+
+1098075342 c:\wxwidgets-2.6.3\include\wx\layout.h
+	"wx/object.h"
+
+1137489344 c:\wxwidgets-2.6.3\include\wx\sizer.h
+	"wx/defs.h"
+	"wx/button.h"
+	"wx/window.h"
+	"wx/frame.h"
+	"wx/dialog.h"
+	"wx/bookctrl.h"
+
+1113142974 c:\wxwidgets-2.6.3\include\wx\bookctrl.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/dynarray.h"
+	"wx/notebook.h"
+	"wx/choicebk.h"
+
+1119797168 c:\wxwidgets-2.6.3\include\wx\notebook.h
+	"wx/defs.h"
+	"wx/bookctrl.h"
+	"wx/univ/notebook.h"
+	"wx/msw/notebook.h"
+	"wx/generic/notebook.h"
+	"wx/gtk/notebook.h"
+	"wx/mac/notebook.h"
+	"wx/cocoa/notebook.h"
+	"wx/os2/notebook.h"
+
+1125040904 c:\wxwidgets-2.6.3\include\wx\univ\notebook.h
+	"wx/arrstr.h"
+
+1116958692 c:\wxwidgets-2.6.3\include\wx\msw\notebook.h
+	"wx/control.h"
+
+1125212420 c:\wxwidgets-2.6.3\include\wx\generic\notebook.h
+	"wx/event.h"
+	"wx/control.h"
+
+1112818408 c:\wxwidgets-2.6.3\include\wx\choicebk.h
+	"wx/defs.h"
+	"wx/bookctrl.h"
+
+1115229120 c:\wxwidgets-2.6.3\include\wx\mdi.h
+	"wx/defs.h"
+	"wx/generic/mdig.h"
+	"wx/msw/mdi.h"
+	"wx/motif/mdi.h"
+	"wx/gtk/mdi.h"
+	"wx/mac/mdi.h"
+	"wx/cocoa/mdi.h"
+	"wx/generic/mdig.h"
+
+1111404452 c:\wxwidgets-2.6.3\include\wx\generic\mdig.h
+	"wx/frame.h"
+	"wx/panel.h"
+	"wx/notebook.h"
+
+1123763094 c:\wxwidgets-2.6.3\include\wx\msw\mdi.h
+	"wx/frame.h"
+
+1115229124 c:\wxwidgets-2.6.3\include\wx\statusbr.h
+	"wx/window.h"
+	"wx/list.h"
+	"wx/dynarray.h"
+	"wx/univ/statusbr.h"
+	"wx/palmos/statusbr.h"
+	"wx/msw/statbr95.h"
+	"wx/generic/statusbr.h"
+	"wx/mac/statusbr.h"
+	"wx/generic/statusbr.h"
+
+1092139714 c:\wxwidgets-2.6.3\include\wx\univ\statusbr.h
+	"wx/univ/inpcons.h"
+	"wx/arrstr.h"
+
+1106302930 c:\wxwidgets-2.6.3\include\wx\palmos\statusbr.h
+
+1125242496 c:\wxwidgets-2.6.3\include\wx\msw\statbr95.h
+
+1106328362 c:\wxwidgets-2.6.3\include\wx\generic\statusbr.h
+	"wx/pen.h"
+	"wx/font.h"
+	"wx/statusbr.h"
+	"wx/arrstr.h"
+
+1115229116 c:\wxwidgets-2.6.3\include\wx\choicdlg.h
+	"wx/generic/choicdgg.h"
+
+1112474394 c:\wxwidgets-2.6.3\include\wx\generic\choicdgg.h
+	"wx/dynarray.h"
+	"wx/dialog.h"
+
+1085341826 c:\wxwidgets-2.6.3\include\wx\textdlg.h
+	"wx/generic/textdlgg.h"
+	"wx/numdlg.h"
+
+1125528492 c:\wxwidgets-2.6.3\include\wx\generic\textdlgg.h
+	"wx/defs.h"
+	"wx/dialog.h"
+	"wx/valtext.h"
+
+1139249450 c:\wxwidgets-2.6.3\include\wx\valtext.h
+	"wx/defs.h"
+	"wx/textctrl.h"
+	"wx/validate.h"
+
+1115229120 c:\wxwidgets-2.6.3\include\wx\numdlg.h
+	"wx/generic/numdlgg.h"
+
+1085341848 c:\wxwidgets-2.6.3\include\wx\generic\numdlgg.h
+	"wx/defs.h"
+	"wx/dialog.h"
+
+1110986298 c:\wxwidgets-2.6.3\include\wx\filedlg.h
+	"wx/defs.h"
+	"wx/dialog.h"
+	"wx/arrstr.h"
+	"wx/generic/filedlgg.h"
+	"wx/msw/filedlg.h"
+	"wx/motif/filedlg.h"
+	"wx/gtk/filedlg.h"
+	"wx/generic/filedlgg.h"
+	"wx/generic/filedlgg.h"
+	"wx/mac/filedlg.h"
+	"wx/cocoa/filedlg.h"
+	"wx/os2/filedlg.h"
+
+1110238196 c:\wxwidgets-2.6.3\include\wx\generic\filedlgg.h
+	"wx/listctrl.h"
+	"wx/datetime.h"
+
+1106329700 c:\wxwidgets-2.6.3\include\wx\listctrl.h
+	"wx/defs.h"
+	"wx/listbase.h"
+	"wx/msw/listctrl.h"
+	"wx/generic/listctrl.h"
+
+1116760248 c:\wxwidgets-2.6.3\include\wx\listbase.h
+	"wx/defs.h"
+	"wx/colour.h"
+	"wx/font.h"
+	"wx/gdicmn.h"
+	"wx/event.h"
+
+1142197144 c:\wxwidgets-2.6.3\include\wx\msw\listctrl.h
+	"wx/control.h"
+	"wx/event.h"
+	"wx/hash.h"
+	"wx/textctrl.h"
+
+1142197136 c:\wxwidgets-2.6.3\include\wx\generic\listctrl.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/imaglist.h"
+	"wx/generic/imaglist.h"
+	"wx/control.h"
+	"wx/timer.h"
+	"wx/dcclient.h"
+	"wx/scrolwin.h"
+	"wx/settings.h"
+	"wx/listbase.h"
+
+1096441402 c:\wxwidgets-2.6.3\include\wx\msw\filedlg.h
+
+1121962108 c:\wxwidgets-2.6.3\include\wx\popupwin.h
+	"wx/defs.h"
+	"wx/window.h"
+	"wx/msw/popupwin.h"
+	"wx/os2/popupwin.h"
+	"wx/gtk/popupwin.h"
+	"wx/x11/popupwin.h"
+	"wx/motif/popupwin.h"
+	"wx/mgl/popupwin.h"
+
+1093952318 c:\wxwidgets-2.6.3\include\wx\msw\popupwin.h
+
+1137601958 c:\wxwidgets-2.6.3\include\wx\image.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+	"wx/gdicmn.h"
+	"wx/hashmap.h"
+	"wx/stream.h"
+	"wx/imagbmp.h"
+	"wx/imagpng.h"
+	"wx/imaggif.h"
+	"wx/imagpcx.h"
+	"wx/imagjpeg.h"
+	"wx/imagtiff.h"
+	"wx/imagpnm.h"
+	"wx/imagxpm.h"
+	"wx/imagiff.h"
+
+1098075342 c:\wxwidgets-2.6.3\include\wx\imagbmp.h
+	"wx/image.h"
+
+1110986300 c:\wxwidgets-2.6.3\include\wx\imagpng.h
+	"wx/defs.h"
+	"wx/image.h"
+
+1095354806 c:\wxwidgets-2.6.3\include\wx\imaggif.h
+	"wx/image.h"
+
+1095354806 c:\wxwidgets-2.6.3\include\wx\imagpcx.h
+	"wx/image.h"
+
+1110986300 c:\wxwidgets-2.6.3\include\wx\imagjpeg.h
+	"wx/defs.h"
+	"wx/image.h"
+
+1110986300 c:\wxwidgets-2.6.3\include\wx\imagtiff.h
+	"wx/defs.h"
+	"wx/image.h"
+
+1095354806 c:\wxwidgets-2.6.3\include\wx\imagpnm.h
+	"wx/image.h"
+
+1095354806 c:\wxwidgets-2.6.3\include\wx\imagxpm.h
+	"wx/image.h"
+
+1095354806 c:\wxwidgets-2.6.3\include\wx\imagiff.h
+	"wx/image.h"
+
+1110238734 c:\wxwidgets-2.6.3\include\wx\dcbuffer.h
+	"wx/dcmemory.h"
+	"wx/dcclient.h"
+	"wx/window.h"
+
+1106040680 c:\wxwidgets-2.6.3\include\wx\colordlg.h
+	"wx/defs.h"
+	"wx/msw/colordlg.h"
+	"wx/mac/colordlg.h"
+	"wx/gtk/colordlg.h"
+	"wx/palmos/colordlg.h"
+	"wx/generic/colrdlgg.h"
+
+1085341888 c:\wxwidgets-2.6.3\include\wx\msw\colordlg.h
+	"wx/setup.h"
+	"wx/dialog.h"
+	"wx/cmndata.h"
+
+1106079264 c:\wxwidgets-2.6.3\include\wx\palmos\colordlg.h
+	"wx/setup.h"
+	"wx/dialog.h"
+	"wx/cmndata.h"
+
+1115229152 c:\wxwidgets-2.6.3\include\wx\generic\colrdlgg.h
+	"wx/setup.h"
+	"wx/gdicmn.h"
+	"wx/dialog.h"
+	"wx/cmndata.h"
+
+1129825970 c:\wxwidgets-2.6.3\include\wx\filename.h
+	"wx/arrstr.h"
+	"wx/filefn.h"
+	"wx/datetime.h"
+
+1118240262 c:\wxwidgets-2.6.3\include\wx\file.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/filefn.h"
+	"wx/strconv.h"
+
+1115229116 c:\wxwidgets-2.6.3\include\wx\config.h
+	"wx/defs.h"
+	"wx/confbase.h"
+	"wx/msw/regconf.h"
+	"wx/msw/iniconf.h"
+	"wx/palmos/prefconf.h"
+	"wx/fileconf.h"
+
+1097672876 c:\wxwidgets-2.6.3\include\wx\confbase.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/string.h"
+
+1097672660 c:\wxwidgets-2.6.3\include\wx\msw\regconf.h
+	"wx/msw/registry.h"
+	"wx/object.h"
+	"wx/confbase.h"
+
+1116455390 c:\wxwidgets-2.6.3\include\wx\msw\registry.h
+
+1093629574 c:\wxwidgets-2.6.3\include\wx\msw\iniconf.h
+
+1104310106 c:\wxwidgets-2.6.3\include\wx\palmos\prefconf.h
+
+1120237510 c:\wxwidgets-2.6.3\include\wx\fileconf.h
+	"wx/defs.h"
+	"wx/textfile.h"
+	"wx/string.h"
+	"wx/confbase.h"
+
+1085341826 c:\wxwidgets-2.6.3\include\wx\textfile.h
+	"wx/defs.h"
+	"wx/textbuf.h"
+	"wx/file.h"
+
+1115229124 c:\wxwidgets-2.6.3\include\wx\textbuf.h
+	"wx/defs.h"
+	"wx/arrstr.h"
+	"wx/string.h"
+	"wx/dynarray.h"
+
+1134556872 c:\wxwidgets-2.6.3\include\wx\msw\wx.rc
+	<winresrc.h>
+	<windows.h>
+	"wx/msw/wince/wince.rc"
+	"wx/msw/rcdefs.h"
+
+1098281686 c:\wxwidgets-2.6.3\include\wx\msw\wince\wince.rc
+	<commctrl.h>
+	"wx/msw/wince/smartphone.rc"
+
+1098281686 c:\wxwidgets-2.6.3\include\wx\msw\wince\smartphone.rc
+	<aygshell.h>
+	"wx/msw/wince/resources.h"
+
+1087363048 c:\wxwidgets-2.6.3\include\wx\msw\wince\resources.h
+
+1133095356 c:\wxwidgets-2.6.3\include\wx\msw\rcdefs.h
+
+1151143325 c:\cvsfiles\colorpicker\samples\mainframe.cpp
+	"mainframe.h"
+	<wx/filename.h>
+	<wx/file.h>
+	<wx/config.h>
+	<wx/colourpicker.h>
+
+1151143295 c:\cvsfiles\colorpicker\samples\mainframe.h
+	<wx/wxprec.h>
+	<wx/wx.h>
+	<wx/colourpicker.h>
+
+1151143243 c:\cvsfiles\colorpicker\include\wx\colourpicker.h
+	<wx/wxprec.h>
+	<wx/wx.h>
+	<wx/popupwin.h>
+
+1150304492 c:\cvsfiles\colorpicker\samples\recursos.rc
+	<wx/msw/wx.rc>
+
+1150533913 c:\cvsfiles\colorpicker\samples\app.cpp
+	"app.h"
+	"mainframe.h"
+
+1150533926 c:\cvsfiles\colorpicker\samples\app.h
+	<wx/wxprec.h>
+	<wx/wx.h>
+
+1150535520 c:\cvsfiles\colorpicker\src\colourpicker.cpp
+	<wx/colourpicker.h>
+	<wx/image.h>
+	<wx/dcbuffer.h>
+	<wx/colordlg.h>
+	<wx/msw/wrapwin.h>
+

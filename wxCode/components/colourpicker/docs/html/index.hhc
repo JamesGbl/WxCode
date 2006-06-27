@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML><HEAD></HEAD><BODY>
+<OBJECT type="text/site properties">
+<param name="FrameName" value="right">
+</OBJECT>
+<UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="Class List"><param name="Local" value="annotated.html"><param name="ImageNumber" value="1"></OBJECT>
+  <UL>
+  <LI><OBJECT type="text/sitemap"><param name="Name" value="wxColourPicker"><param name="Local" value="classwx_colour_picker.html"><param name="ImageNumber" value="11"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Name" value="wxColourPickerEvent"><param name="Local" value="classwx_colour_picker_event.html"><param name="ImageNumber" value="11"></OBJECT>
+  </UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="Class Members"><param name="Local" value="functions.html"><param name="ImageNumber" value="11"></OBJECT>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="Directories"><param name="Local" value="dirs.html"><param name="ImageNumber" value="1"></OBJECT>
+  <UL>
+  <LI><OBJECT type="text/sitemap"><param name="Name" value="include"><param name="Local" value="dir_C_3A_2Fcvsfiles_2Fcolorpicker_2Finclude_2F.html"><param name="ImageNumber" value="1"></OBJECT>
+    <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="wx"><param name="Local" value="dir_C_3A_2Fcvsfiles_2Fcolorpicker_2Finclude_2Fwx_2F.html"><param name="ImageNumber" value="1"></OBJECT>
+      <UL>
+      </UL>
+    </UL>
+  <LI><OBJECT type="text/sitemap"><param name="Name" value="samples"><param name="Local" value="dir_C_3A_2Fcvsfiles_2Fcolorpicker_2Fsamples_2F.html"><param name="ImageNumber" value="1"></OBJECT>
+    <UL>
+    </UL>
+  <LI><OBJECT type="text/sitemap"><param name="Name" value="src"><param name="Local" value="dir_C_3A_2Fcvsfiles_2Fcolorpicker_2Fsrc_2F.html"><param name="ImageNumber" value="1"></OBJECT>
+    <UL>
+    </UL>
+  </UL>
+</UL>
