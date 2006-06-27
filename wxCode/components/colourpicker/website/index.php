@@ -16,8 +16,8 @@
  
  <table border="0">
 	<tr>
-		<td><img border="0" src="colourpicker1.jpg" /></td>
-		<td><img border="0" src="colourpicker2.jpg" /></td>
+		<td><img border="0" src="http://wxcode.sourceforge.net/screenshots/colourpicker/colourpicker1.jpg" /></td>
+		<td><img border="0" src="http://wxcode.sourceforge.net/screenshots/colourpicker/colourpicker2.jpg" /></td>
 	</tr>
  </table>
  
