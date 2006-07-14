@@ -9,7 +9,7 @@
 ?>
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-AU">
-	<?php       
+	<?php
       $compname = "wxScript";
       $subdir = "wxscript";
       require("compwebsite.inc.php");
@@ -47,16 +47,16 @@ wxString str(result.GetContentString());
 
   <br/><?php write_h1("Documentation"); ?>
   <p>The doxygen-generated documentation for this component is available online
-  <a href="../../docs/keybinder/">here</a>. Please let me know if you think something is missing.</p>
-  
+  <a href="../../docs/wxscript/">here</a>. Please let me know if you think something is missing.</p>
+
 
 	<br/><?php write_h1("Known bugs"); ?>
   <p>None. To submit a bug report please look at <a href="../../faq.php">wxCode FAQ</a>.</p>
 
-    
+
 	<br/><?php write_h1("Future enhancements"); ?>
   <p>None. To submit a feature request please look at <a href="../../faq.php">wxCode FAQ</a>.</p>
-    
+
 
 	<br/><?php require("footer.inc.php"); ?>
 </html>
