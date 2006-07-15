@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: chartctrl.cpp,v 1.1 2006-06-13 12:51:50 pgava Exp $
+// RCS-ID:      $Id: chartctrl.cpp,v 1.2 2006-07-15 01:15:27 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -88,6 +88,7 @@ wxChartCtrl::wxChartCtrl(
 	m_XAxisWin(0),
 	m_YAxisWin(0)
 {
+
 	//-----------------------------------------------------------------------
 	// Create window chart, the only always present
 	//-----------------------------------------------------------------------
@@ -409,18 +410,32 @@ void wxChartCtrl::WriteToFile(
 	// Get the size of the chart
 	//-----------------------------------------------------------------------
     int iMax = static_cast<int>(ceil( m_ChartWin->GetMaxX() ));
-	int h, w;
-	GetClientSize( &w, &h );
+	int h, w, w1;
+	GetClientSize( &w1, &h );
 	if ( iMax > 0 )
 		w = CalWidth( iMax+1, m_Sizes.nbar, m_Sizes.nbar3d, 
 					  m_Sizes.wbar, m_Sizes.wbar3d, m_Sizes.gap );
 
+    //-----------------------------------------------------------------------
+    // Make sure the size of the bitmap is created big enough.
+    // w1 is the size on screen w is the relative size
+    //-----------------------------------------------------------------------
+    w = w1 > w ? w1 : w;
+        
 	//-----------------------------------------------------------------------
 	// add extra size, so legend window can be a bit far from the graph
 	//-----------------------------------------------------------------------
 	const int ENLARGE_WIDTH = 30;	
 	if ( iMax > 0 )
-		w += LEGEND_WIDTH + YAXIS_WIDTH + ENLARGE_WIDTH;
+    {   
+        if ( m_YAxisWin )
+            w += YAXIS_WIDTH;
+        
+        if ( m_LegendWin )
+            w += LEGEND_WIDTH;
+            
+		w += ENLARGE_WIDTH;
+    }      
 
 	//-----------------------------------------------------------------------
 	// Create the bitmap to hold the chart
@@ -433,16 +448,28 @@ void wxChartCtrl::WriteToFile(
 	//-----------------------------------------------------------------------
 	// Draw all
 	//-----------------------------------------------------------------------
-	m_ChartWin->Draw( &memDC, YAXIS_WIDTH, 0 );
+	//m_ChartWin->Draw( &memDC, YAXIS_WIDTH, 0 );
 	if ( m_YAxisWin )
 	{
+        m_ChartWin->Draw( &memDC, YAXIS_WIDTH, 0 );   
 		m_YAxisWin->Draw( &memDC, 0, 0 );
-	}
+	
+        if ( m_XAxisWin )
+        {
+            m_XAxisWin->Draw( &memDC, YAXIS_WIDTH, h - XAXIS_HEIGHT );
+        }
+    }
+    else
+    {
+        m_ChartWin->Draw( &memDC, 0, 0 );
+        
+        if ( m_XAxisWin )
+        {
+            m_XAxisWin->Draw( &memDC, 0, h - XAXIS_HEIGHT );
+        }
+        
+    }   
 
-	if ( m_XAxisWin )
-	{
-		m_XAxisWin->Draw( &memDC, YAXIS_WIDTH, h - XAXIS_HEIGHT );
-	}
 	if ( m_LegendWin )
 	{
 		m_LegendWin->Draw( &memDC, w - LEGEND_WIDTH, 0 );
@@ -450,8 +477,8 @@ void wxChartCtrl::WriteToFile(
 
 	memDC.SelectObject( wxNullBitmap );
   
-	//memChart->SaveFile( file, wxBITMAP_TYPE_PNG, (wxPalette*)NULL );
-	memChart->SaveFile( file, wxBITMAP_TYPE_BMP, (wxPalette*)NULL );
+	memChart->SaveFile( file, wxBITMAP_TYPE_PNG, (wxPalette*)NULL );
+	//memChart->SaveFile( file, wxBITMAP_TYPE_BMP, (wxPalette*)NULL );
   
 	delete memChart;
 }
