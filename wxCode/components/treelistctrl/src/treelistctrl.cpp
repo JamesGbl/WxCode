@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.95 2006-06-21 17:32:56 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.96 2006-07-21 12:57:16 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -150,7 +150,7 @@ public:
     int GetWidth() const { return m_total_col_width; }
 
     // column manipulation
-    int GetColumnCount() const { return m_columns.GetCount(); }
+    int GetColumnCount() const { return (int)m_columns.GetCount(); }
 
     void AddColumn (const wxTreeListColumnInfo& colInfo);
 
@@ -779,7 +779,7 @@ public:
             m_text[column] = text;
         }else if (column < m_owner->GetColumnCount()) {
             int howmany = m_owner->GetColumnCount();
-            for (int i = m_text.GetCount(); i < howmany; ++i) m_text.Add (wxEmptyString);
+            for (int i = (int)m_text.GetCount(); i < howmany; ++i) m_text.Add (wxEmptyString);
             m_text[column] = text;
         }
     }
@@ -792,7 +792,7 @@ public:
             m_col_images[column] = image;
         }else if (column < m_owner->GetColumnCount()) {
             int howmany = m_owner->GetColumnCount();
-            for (int i = m_col_images.GetCount(); i < howmany; ++i) m_col_images.Add (NO_IMAGE);
+            for (int i = (int)m_col_images.GetCount(); i < howmany; ++i) m_col_images.Add (NO_IMAGE);
             m_col_images[column] = image;
         }
     }
@@ -1113,7 +1113,7 @@ void wxTreeListHeaderWindow::DoDrawRect( wxDC *dc, int x, int y, int w, int h )
     dc->DrawRectangle( x, y+h, w+1, 1 );          // bottom (outer)
 
 #if defined( __WXMAC__  )
-    wxPen pen( wxColour( 0x88 , 0x88 , 0x88 ), 1, wxSOLID );
+    pen = wxPen( wxColour( 0x88 , 0x88 , 0x88 ), 1, wxSOLID );
 #endif
     dc->SetPen( pen );
     dc->DrawLine( x+w-m_corner, y, x+w-1, y+h );  // right (inner)
@@ -2053,7 +2053,7 @@ wxTreeItemId wxTreeListMainWindow::GetLastChild (const wxTreeItemId& item,
     wxArrayTreeListItems& children = ((wxTreeListItem*) item.m_pItem)->GetChildren();
     // it's ok to cast cookie to long, we never have indices which overflow "void*"
     long *pIndex = ((long*)&cookie);
-    (*pIndex) = children.Count();
+    (*pIndex) = (long)children.Count();
     return (!children.IsEmpty())? wxTreeItemId(children.Last()): wxTreeItemId();
 }
 
@@ -3967,7 +3967,7 @@ void wxTreeListMainWindow::RefreshSelectedUnder (wxTreeListItem *item) {
     }
 
     const wxArrayTreeListItems& children = item->GetChildren();
-    long count = children.GetCount();
+    long count = (long)children.GetCount();
     for (long n = 0; n < count; n++ ) {
         RefreshSelectedUnder (children[n]);
     }
