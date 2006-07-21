@@ -3,7 +3,7 @@
 ## Purpose:     wxScintilla
 ## Maintainer:  Otto Wyss
 ## Created:     2004-09-19
-## RCS-ID:      $Id: Makefile,v 1.13 2006-03-14 19:10:49 wyo Exp $
+## RCS-ID:      $Id: Makefile,v 1.14 2006-07-21 12:36:27 wyo Exp $
 ## Copyright:   (c) 2004 wxCode
 ## Licence:     wxWindows
 ##############################################################################
@@ -73,6 +73,7 @@ SRC = PlatWX.cpp \
       LexScriptol.cxx \
       LexSmalltalk.cxx \
       LexSpecman.cxx \
+      LexSpice.cxx \
       LexSQL.cxx \
       LexTADS3.cxx \
       LexTCL.cxx \
