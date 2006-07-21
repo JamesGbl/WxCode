@@ -12,7 +12,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.h,v 1.35 2006-06-24 07:38:07 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.h,v 1.36 2006-07-21 12:37:44 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -3213,7 +3213,7 @@ public:
 
     // Set style size, face, bold, italic, and underline attributes from
     // a wxFont's attributes.
-    void StyleSetFont (int styleNum, wxFont& font);
+    void StyleSetFont (int styleNum, const wxFont& font);
 
     // Set all font style attributes at once.
     void StyleSetFontAttr (int styleNum, int size,const wxString& faceName,
