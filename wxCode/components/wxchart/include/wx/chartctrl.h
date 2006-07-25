@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: chartctrl.h,v 1.1 2006-06-13 12:51:49 pgava Exp $
+// RCS-ID:      $Id: chartctrl.h,v 1.2 2006-07-25 10:51:31 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -22,10 +22,10 @@
 
 #include <wx/scrolwin.h>
 
-#include "chartwindow.h"
-#include "legendwindow.h"
-#include "xaxiswindow.h"
-#include "yaxiswindow.h"
+#include "wx/chartwindow.h"
+#include "wx/legendwindow.h"
+#include "wx/xaxiswindow.h"
+#include "wx/yaxiswindow.h"
 
 //----------------------------------------------------------------------------
 // Headers
@@ -33,7 +33,8 @@
     
 // ChartCtrl styles
 //-----------------
-enum STYLE
+
+enum wxChartStyle
 {
     USE_NONE        = 0,
     USE_AXIS_X      = 0x01,
@@ -44,6 +45,15 @@ enum STYLE
     USE_GRID        = 0x20,
     DEFAULT_STYLE   = USE_AXIS_X | USE_AXIS_Y | USE_LEGEND | 
                         USE_ZOOM_BUT | USE_DEPTH_BUT | USE_GRID
+};
+
+// chart image type
+enum wxChartImageType
+{
+    wxCHART_BMP = wxBITMAP_TYPE_BMP,
+    wxCHART_GIF = wxBITMAP_TYPE_GIF,
+    wxCHART_PNG = wxBITMAP_TYPE_PNG,
+    wxCHART_JPEG = wxBITMAP_TYPE_JPEG
 };
 
 //+++-S-cd-------------------------------------------------------------------
@@ -58,7 +68,7 @@ public:
 
 	wxChartCtrl() {};	// for IMPLEMENT_DYNAMIC_CLASS
     wxChartCtrl(wxWindow *parent, wxWindowID id, 
-				 STYLE style = DEFAULT_STYLE,
+				 wxChartStyle style = DEFAULT_STYLE,
 				 const wxPoint &pos = wxDefaultPosition, 
 			     const wxSize &size = wxDefaultSize, 
 				 int flags = wxSIMPLE_BORDER);
@@ -84,11 +94,11 @@ public:
 
 	// Write chart to file
 	//--------------------
-	void WriteToFile(wxString file);
+	void WriteToFile(wxString file, wxChartImageType type);
 
 private:
 	double m_xZoom;
-	STYLE m_Style;
+	wxChartStyle m_Style;
 	ChartSizes m_Sizes;
 	wxChartWindow	*m_ChartWin;
 	wxLegendWindow	*m_LegendWin;
@@ -108,6 +118,9 @@ private:
 	//---------------
 	void SetSizes();
 
+    // Set Image Type
+    void LoadImageHandler(wxChartImageType type);
+    
 	// scroll bar utility
 	//-------------------
 	void ResetScrollbar();

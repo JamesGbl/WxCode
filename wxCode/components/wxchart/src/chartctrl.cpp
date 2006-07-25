@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: chartctrl.cpp,v 1.2 2006-07-15 01:15:27 pgava Exp $
+// RCS-ID:      $Id: chartctrl.cpp,v 1.3 2006-07-25 10:51:31 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -67,7 +67,7 @@ END_EVENT_TABLE()
 //	DESC:		
 //	PARAMETERS:	wxWindow *parent, 
 //				wxWindowID id, 
-//				STYLE style,
+//				wxChartStyle style,
 //				const wxPoint &pos, 
 //				const wxSize &size, 
 //				int flags
@@ -76,7 +76,7 @@ END_EVENT_TABLE()
 wxChartCtrl::wxChartCtrl(
 	wxWindow *parent, 
 	wxWindowID id, 
-	STYLE style,
+	wxChartStyle style,
 	const wxPoint &pos, 
 	const wxSize &size, 
 	int flags
@@ -392,13 +392,51 @@ void wxChartCtrl::Resize()
 }
 
 //+++-S-cf-------------------------------------------------------------------
+//  NAME:       LoadImageHandler()
+//  DESC:       Load Image Handler
+//  PARAMETERS: ChartImageType type
+//  RETURN:     None
+//----------------------------------------------------------------------E-+++
+void wxChartCtrl::LoadImageHandler(
+    wxChartImageType type
+)
+{
+    if ( !wxImage::FindHandler(type) )
+    {
+        switch ( type )
+        {
+        case wxCHART_PNG:
+#if wxUSE_LIBPNG
+            wxImage::AddHandler( new wxPNGHandler );
+#endif
+            break;
+        case wxCHART_GIF:
+#if wxUSE_GIF
+            wxImage::AddHandler( new wxGIFHandler );
+#endif
+            break;
+        case wxCHART_JPEG:
+#if wxUSE_LIBJPEG
+            wxImage::AddHandler( new wxJPEGHandler );
+#endif
+            break;
+        case wxCHART_BMP:
+            // nothing todo
+            break;
+        }
+    }
+}
+
+//+++-S-cf-------------------------------------------------------------------
 //	NAME:		WriteToFile()
 //	DESC:		Write chart to file
 //	PARAMETERS:	wxString file
+//              wxChartImageType type
 //	RETURN:		None
 //----------------------------------------------------------------------E-+++
 void wxChartCtrl::WriteToFile(
-	wxString file
+	wxString file,
+    wxChartImageType type   
 )
 {
 	wxASSERT( m_ChartWin != NULL );
@@ -406,6 +444,11 @@ void wxChartCtrl::WriteToFile(
 	wxBitmap	*memChart;
 	wxMemoryDC	memDC;
 
+    //-----------------------------------------------------------------------
+    // Load handler for image type if not loaded yet
+    //-----------------------------------------------------------------------
+    LoadImageHandler( type );
+    
 	//-----------------------------------------------------------------------
 	// Get the size of the chart
 	//-----------------------------------------------------------------------

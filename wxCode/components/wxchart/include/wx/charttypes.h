@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: charttypes.h,v 1.1 2006-06-13 12:51:49 pgava Exp $
+// RCS-ID:      $Id: charttypes.h,v 1.2 2006-07-25 10:51:31 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -84,5 +84,6 @@ struct ChartSizes
 	int scroll;
 	int s_height;
 };
+
 
 #endif // __CHARTTYPES_H__

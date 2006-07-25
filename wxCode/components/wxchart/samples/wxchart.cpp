@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: wxchart.cpp,v 1.2 2006-07-15 01:15:27 pgava Exp $
+// RCS-ID:      $Id: wxchart.cpp,v 1.3 2006-07-25 10:51:31 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -399,7 +399,7 @@ void MyPanel::CreatePanelLeft2(wxBoxSizer *sizer)
     wxStaticText *lblTitle3 = new wxStaticText(this, 
                                                wxID_ANY, wxT("Bar Chart (L2)"));
     m_ChartCtrlL2 = new wxChartCtrl( this, -1, 
-                                   (STYLE)(USE_AXIS_X | USE_ZOOM_BUT), 
+                                   (wxChartStyle)(USE_AXIS_X | USE_ZOOM_BUT), 
                                    wxDefaultPosition, wxSize(200,200), 
                                    wxSUNKEN_BORDER  );
     
@@ -548,12 +548,16 @@ void MyPanel::WriteChart(
 )
 {
     wxFileDialog dialog(this, _T("Save File As"), wxEmptyString, wxEmptyString,
-                        wxT("*.bmp"),
+                        wxT("*.bmp;*.gif;*.png;*.jpeg"),
                         wxSAVE | wxOVERWRITE_PROMPT);
     
     if (dialog.ShowModal() == wxID_OK)
     {
-        c->WriteToFile( dialog.GetPath() );
+        //-------------------------------------------------------------------
+        // choose here the image type you want.
+        // It can be GIF, JPEG, PNG, BMP
+        //-------------------------------------------------------------------
+        c->WriteToFile( dialog.GetPath(), wxCHART_GIF );
     }
 
 }
