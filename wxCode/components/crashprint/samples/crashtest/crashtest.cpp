@@ -3,7 +3,7 @@
 // Purpose:     CrashTest application
 // Maintainer:  Otto Wyss
 // Created:     2004-10-01
-// RCS-ID:      $Id: crashtest.cpp,v 1.8 2005-09-19 17:47:07 wyo Exp $
+// RCS-ID:      $Id: crashtest.cpp,v 1.9 2006-08-17 20:21:22 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -210,16 +210,18 @@ AppAbout::AppAbout (wxWindow *parent,
 
     // about info
     wxFlexGridSizer *aboutinfo = new wxFlexGridSizer (2, 0, 2);
-    aboutinfo->Add (new wxStaticText(this, -1, _("Vendor: ")),0, wxALIGN_LEFT);
-    aboutinfo->Add (new wxStaticText(this, -1, APP_VENDOR),0, wxALIGN_LEFT);
-    aboutinfo->Add (new wxStaticText(this, -1, _("Version: ")),0, wxALIGN_LEFT);
-    aboutinfo->Add (new wxStaticText(this, -1, APP_VERSION),0, wxALIGN_LEFT);
-    aboutinfo->Add (new wxStaticText(this, -1, _("Written by: ")),0, wxALIGN_LEFT);
-    aboutinfo->Add (new wxStaticText(this, -1, APP_MAINT),0, wxALIGN_LEFT);
-    aboutinfo->Add (new wxStaticText(this, -1, _("Licence type: ")),0, wxALIGN_LEFT);
-    aboutinfo->Add (new wxStaticText(this, -1, APP_LICENCE),0, wxALIGN_LEFT);
-    aboutinfo->Add (new wxStaticText(this, -1, _("Copyright: ")),0, wxALIGN_LEFT);
-    aboutinfo->Add (new wxStaticText(this, -1, APP_COPYRIGTH),0, wxALIGN_LEFT);
+    aboutinfo->Add (new wxStaticText(this, -1, _("Vendor: ")));
+    aboutinfo->Add (new wxStaticText(this, -1, APP_VENDOR));
+    aboutinfo->Add (new wxStaticText(this, -1, _("Version: ")));
+    aboutinfo->Add (new wxStaticText(this, -1, APP_VERSION));
+    aboutinfo->Add (new wxStaticText(this, -1, _("wxWidgets: ")));
+    aboutinfo->Add (new wxStaticText(this, -1, wxVERSION_STRING));
+    aboutinfo->Add (new wxStaticText(this, -1, _("Written by: ")));
+    aboutinfo->Add (new wxStaticText(this, -1, APP_MAINT));
+    aboutinfo->Add (new wxStaticText(this, -1, _("Licence type: ")));
+    aboutinfo->Add (new wxStaticText(this, -1, APP_LICENCE));
+    aboutinfo->Add (new wxStaticText(this, -1, _("Copyright: ")));
+    aboutinfo->Add (new wxStaticText(this, -1, APP_COPYRIGTH));
 
     // about icontitle//info
     wxBoxSizer *aboutpane = new wxBoxSizer (wxHORIZONTAL);
