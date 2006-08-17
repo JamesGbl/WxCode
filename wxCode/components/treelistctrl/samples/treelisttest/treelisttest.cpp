@@ -3,7 +3,7 @@
 // Purpose:     treelisttest application
 // Maintainer:  Otto Wyss
 // Created:     2004-12-21
-// RCS-ID:      $Id: treelisttest.cpp,v 1.24 2006-01-05 13:02:15 wyo Exp $
+// RCS-ID:      $Id: treelisttest.cpp,v 1.25 2006-08-17 20:24:01 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -105,7 +105,8 @@ enum {
     myID_HIDEROOT,
     myID_LINESATROOT,
     myID_LINESCONNECT,
-    myID_ITEMBORDER,
+    myID_COLUMNLINES,
+    myID_ROWLINES,
     myID_ITEMHIGHLIGHT,
     myID_ITEMVARHEIGHT,
     myID_SHOWIMAGES,
@@ -211,7 +212,8 @@ public:
     void OnHideRoot (wxCommandEvent &event);
     void OnLinesAtRoot (wxCommandEvent &event);
     void OnLinesConnect (wxCommandEvent &event);
-    void OnItemBorder (wxCommandEvent &event);
+    void OnColumnLines (wxCommandEvent &event);
+    void OnRowLines (wxCommandEvent &event);
     void OnItemHighlight (wxCommandEvent &event);
     void OnItemVarHeight (wxCommandEvent &event);
     void OnShowImages (wxCommandEvent &event);
@@ -312,16 +314,18 @@ AppAbout::AppAbout (wxWindow *parent,
 
     // about info
     wxFlexGridSizer *aboutinfo = new wxFlexGridSizer (2, 0, 2);
-    aboutinfo->Add (new wxStaticText(this, -1, _("Vendor: ")),0, wxALIGN_LEFT);
-    aboutinfo->Add (new wxStaticText(this, -1, APP_VENDOR),0, wxALIGN_LEFT);
-    aboutinfo->Add (new wxStaticText(this, -1, _("Version: ")),0, wxALIGN_LEFT);
-    aboutinfo->Add (new wxStaticText(this, -1, APP_VERSION),0, wxALIGN_LEFT);
-    aboutinfo->Add (new wxStaticText(this, -1, _("Written by: ")),0, wxALIGN_LEFT);
-    aboutinfo->Add (new wxStaticText(this, -1, APP_MAINT),0, wxALIGN_LEFT);
-    aboutinfo->Add (new wxStaticText(this, -1, _("Licence type: ")),0, wxALIGN_LEFT);
-    aboutinfo->Add (new wxStaticText(this, -1, APP_LICENCE),0, wxALIGN_LEFT);
-    aboutinfo->Add (new wxStaticText(this, -1, _("Copyright: ")),0, wxALIGN_LEFT);
-    aboutinfo->Add (new wxStaticText(this, -1, APP_COPYRIGTH),0, wxALIGN_LEFT);
+    aboutinfo->Add (new wxStaticText(this, -1, _("Vendor: ")));
+    aboutinfo->Add (new wxStaticText(this, -1, APP_VENDOR));
+    aboutinfo->Add (new wxStaticText(this, -1, _("Version: ")));
+    aboutinfo->Add (new wxStaticText(this, -1, APP_VERSION));
+    aboutinfo->Add (new wxStaticText(this, -1, _("wxWidgets: ")));
+    aboutinfo->Add (new wxStaticText(this, -1, wxVERSION_STRING));
+    aboutinfo->Add (new wxStaticText(this, -1, _("Written by: ")));
+    aboutinfo->Add (new wxStaticText(this, -1, APP_MAINT));
+    aboutinfo->Add (new wxStaticText(this, -1, _("Licence type: ")));
+    aboutinfo->Add (new wxStaticText(this, -1, APP_LICENCE));
+    aboutinfo->Add (new wxStaticText(this, -1, _("Copyright: ")));
+    aboutinfo->Add (new wxStaticText(this, -1, APP_COPYRIGTH));
 
     // about icontitle//info
     wxBoxSizer *aboutpane = new wxBoxSizer (wxHORIZONTAL);
@@ -407,7 +411,8 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
     EVT_MENU (myID_HIDEROOT,           AppFrame::OnHideRoot)
     EVT_MENU (myID_LINESATROOT,        AppFrame::OnLinesAtRoot)
     EVT_MENU (myID_LINESCONNECT,       AppFrame::OnLinesConnect)
-    EVT_MENU (myID_ITEMBORDER,         AppFrame::OnItemBorder)
+    EVT_MENU (myID_COLUMNLINES,        AppFrame::OnColumnLines)
+    EVT_MENU (myID_ROWLINES,           AppFrame::OnRowLines)
     EVT_MENU (myID_ITEMHIGHLIGHT,      AppFrame::OnItemHighlight)
     EVT_MENU (myID_ITEMVARHEIGHT,      AppFrame::OnItemVarHeight)
     EVT_MENU (myID_SHOWIMAGES,         AppFrame::OnShowImages)
@@ -456,7 +461,8 @@ AppFrame::AppFrame (const wxString &title)
     CheckStyle (myID_HIDEROOT, wxTR_HIDE_ROOT);
     CheckStyle (myID_LINESATROOT, wxTR_LINES_AT_ROOT);
     CheckStyle (myID_LINESCONNECT, wxTR_NO_LINES);
-    CheckStyle (myID_ITEMBORDER, wxTR_ROW_LINES);
+    CheckStyle (myID_COLUMNLINES, wxTR_COLUMN_LINES);
+    CheckStyle (myID_ROWLINES, wxTR_ROW_LINES);
     CheckStyle (myID_ITEMHIGHLIGHT, wxTR_FULL_ROW_HIGHLIGHT);
     CheckStyle (myID_ITEMVARHEIGHT, wxTR_HAS_VARIABLE_ROW_HEIGHT);
     CheckStyle (myID_ITEMEDIT, wxTR_EDIT_LABELS);
@@ -661,7 +667,11 @@ void AppFrame::OnLinesConnect (wxCommandEvent &event) {
     ToggleStyle (event.GetId(), wxTR_NO_LINES);
 }
 
-void AppFrame::OnItemBorder (wxCommandEvent &event) {
+void AppFrame::OnColumnLines (wxCommandEvent &event) {
+    ToggleStyle (event.GetId(), wxTR_COLUMN_LINES);
+}
+
+void AppFrame::OnRowLines (wxCommandEvent &event) {
     ToggleStyle (event.GetId(), wxTR_ROW_LINES);
 }
 
@@ -834,15 +844,16 @@ void AppFrame::CreateMenu () {
     menuView->AppendCheckItem (myID_HIDEROOT, _("Toggle &hide root"));
     menuView->AppendCheckItem (myID_LINESATROOT, _("Toggle &lines at root"));
     menuView->AppendCheckItem (myID_LINESCONNECT, _("Toggle &connecting lines"));
-    menuView->AppendCheckItem (myID_ITEMBORDER, _("Toggle &item border"));
+    menuView->AppendCheckItem (myID_COLUMNLINES, _("Toggle col&umn lines"));
+    menuView->AppendCheckItem (myID_ROWLINES, _("Toggle r&ow lines"));
     menuView->AppendCheckItem (myID_ITEMHIGHLIGHT, _("Toggle &full row highlight"));
     menuView->AppendCheckItem (myID_ITEMVARHEIGHT, _("Toggle &variable row height"));
     menuView->AppendCheckItem (myID_SHOWIMAGES, _("Toggle show ima&ges"));
     menuView->AppendSeparator();
     menuView->AppendCheckItem (myID_ITEMEDIT, _("Toggle &edit mode"));
     menuView->AppendCheckItem (myID_ITEMVIRTUAL, _("Toggle &virtual mode"));
-    menuView->AppendCheckItem (myID_SELECTMULTIPLE, _("Toggle &select multiple"));
-    menuView->AppendCheckItem (myID_SELECTEXTENDED, _("Toggle &select extended"));
+    menuView->AppendCheckItem (myID_SELECTMULTIPLE, _("Toggle select &multiple"));
+    menuView->AppendCheckItem (myID_SELECTEXTENDED, _("Toggle select &extended"));
     menuView->AppendSeparator();
     menuView->Append (myID_SETATTRIBUTE, _("Set &attribute"), menuAttr);
     menuView->Append (myID_SETALIGNMENT, _("Align &column"), menuAlign);
