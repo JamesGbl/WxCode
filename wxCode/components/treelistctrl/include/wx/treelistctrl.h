@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.32 2005-10-06 19:31:30 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.33 2006-08-17 20:27:13 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -27,7 +27,8 @@ class WXDLLEXPORT wxTreeListItem;
 class WXDLLEXPORT wxTreeListHeaderWindow;
 class WXDLLEXPORT wxTreeListMainWindow;
 
-#define wxTR_VIRTUAL    0x1000    // The application provides items text on demand.
+#define wxTR_COLUMN_LINES 0x1000 // put border around items
+#define wxTR_VIRTUAL      0x4000 // The application provides items text on demand.
 
 // Using this typedef removes an ambiguity when calling Remove()
 #ifdef __WXMSW__

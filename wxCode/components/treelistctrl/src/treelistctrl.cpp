@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.96 2006-07-21 12:57:16 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.97 2006-08-17 20:27:40 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -38,12 +38,15 @@
 #include <wx/dcclient.h>
 #include <wx/dcscreen.h>
 #include <wx/scrolwin.h>
-
-#include "wx/treelistctrl.h"
+#if wxCHECK_VERSION(2, 7, 0)
+#include <wx/renderer.h>
+#endif
 
 #ifdef __WXMAC__
-    #include "wx/mac/private.h"
+#include "wx/mac/private.h"
 #endif
+
+#include "wx/treelistctrl.h"
 
 
 // ---------------------------------------------------------------------------
@@ -62,10 +65,6 @@ WX_DEFINE_ARRAY_PTR(wxTreeListItem *, wxArrayTreeListItems);
 WX_DECLARE_OBJARRAY(wxTreeListColumnInfo, wxArrayTreeListColumnInfo);
 #include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(wxArrayTreeListColumnInfo);
-
-#if !wxCHECK_VERSION(2, 3, 3)
-WX_DEFINE_ARRAY(short, wxArrayShort);
-#endif
 
 
 // --------------------------------------------------------------------------
@@ -150,7 +149,7 @@ public:
     int GetWidth() const { return m_total_col_width; }
 
     // column manipulation
-    int GetColumnCount() const { return (int)m_columns.GetCount(); }
+    int GetColumnCount() const { return m_columns.GetCount(); }
 
     void AddColumn (const wxTreeListColumnInfo& colInfo);
 
@@ -779,7 +778,7 @@ public:
             m_text[column] = text;
         }else if (column < m_owner->GetColumnCount()) {
             int howmany = m_owner->GetColumnCount();
-            for (int i = (int)m_text.GetCount(); i < howmany; ++i) m_text.Add (wxEmptyString);
+            for (int i = m_text.GetCount(); i < howmany; ++i) m_text.Add (wxEmptyString);
             m_text[column] = text;
         }
     }
@@ -792,7 +791,7 @@ public:
             m_col_images[column] = image;
         }else if (column < m_owner->GetColumnCount()) {
             int howmany = m_owner->GetColumnCount();
-            for (int i = (int)m_col_images.GetCount(); i < howmany; ++i) m_col_images.Add (NO_IMAGE);
+            for (int i = m_col_images.GetCount(); i < howmany; ++i) m_col_images.Add (NO_IMAGE);
             m_col_images[column] = image;
         }
     }
@@ -1113,7 +1112,7 @@ void wxTreeListHeaderWindow::DoDrawRect( wxDC *dc, int x, int y, int w, int h )
     dc->DrawRectangle( x, y+h, w+1, 1 );          // bottom (outer)
 
 #if defined( __WXMAC__  )
-    pen = wxPen( wxColour( 0x88 , 0x88 , 0x88 ), 1, wxSOLID );
+    wxPen pen( wxColour( 0x88 , 0x88 , 0x88 ), 1, wxSOLID );
 #endif
     dc->SetPen( pen );
     dc->DrawLine( x+w-m_corner, y, x+w-1, y+h );  // right (inner)
@@ -1180,8 +1179,13 @@ void wxTreeListHeaderWindow::OnPaint( wxPaintEvent &WXUNUSED(event) )
         // inside the column rect
         int cw = wCol - 2;
 
+#if !wxCHECK_VERSION(2, 7, 0)
         dc.SetPen( *wxWHITE_PEN );
         DoDrawRect( &dc, x, HEADER_OFFSET_Y, cw, h-2 );
+#else
+        wxRect rect(x, HEADER_OFFSET_Y, cw, h-2);
+        wxRendererNative::GetDefault().DrawHeaderButton (this, dc, rect);
+#endif
 
         // if we have an image, draw it on the right of the label
         int image = column.GetImage(); //item.m_image;
@@ -1230,7 +1234,12 @@ void wxTreeListHeaderWindow::OnPaint( wxPaintEvent &WXUNUSED(event) )
 
     int more_w = m_owner->GetSize().x - x - HEADER_OFFSET_X;
     if (more_w > 0) {
+#if !wxCHECK_VERSION(2, 7, 0)
         DoDrawRect (&dc, x, HEADER_OFFSET_Y, more_w, h-2 );
+#else
+        wxRect rect (x, HEADER_OFFSET_Y, more_w, h-2);
+        wxRendererNative::GetDefault().DrawHeaderButton (this, dc, rect);
+#endif
     }
 
 }
@@ -2053,7 +2062,7 @@ wxTreeItemId wxTreeListMainWindow::GetLastChild (const wxTreeItemId& item,
     wxArrayTreeListItems& children = ((wxTreeListItem*) item.m_pItem)->GetChildren();
     // it's ok to cast cookie to long, we never have indices which overflow "void*"
     long *pIndex = ((long*)&cookie);
-    (*pIndex) = (long)children.Count();
+    (*pIndex) = children.Count();
     return (!children.IsEmpty())? wxTreeItemId(children.Last()): wxTreeItemId();
 }
 
@@ -2879,6 +2888,7 @@ void wxTreeListMainWindow::PaintItem (wxTreeListItem *item, wxDC& dc) {
     int total_w = m_owner->GetHeaderWindow()->GetWidth();
     int total_h = GetLineHeight(item);
     int off_h = HasFlag(wxTR_ROW_LINES) ? 1 : 0;
+    int off_w = HasFlag(wxTR_COLUMN_LINES) ? 1 : 0;
     wxDCClipper clipper (dc, 0, item->GetY(), total_w, total_h); // only within line
 
     int text_w = 0, text_h = 0;
@@ -2958,12 +2968,12 @@ void wxTreeListMainWindow::PaintItem (wxTreeListItem *item, wxDC& dc) {
             break;
         case wxALIGN_RIGHT:
             dc.GetTextExtent (text, &text_w, NULL);
-            w = col_w - (image_w + text_w + MARGIN);
+            w = col_w - (image_w + text_w + off_w + MARGIN);
             x += (w > 0)? w: 0;
             break;
         case wxALIGN_CENTER:
             dc.GetTextExtent(text, &text_w, NULL);
-            w = (col_w - (image_w + text_w + MARGIN))/2;
+            w = (col_w - (image_w + text_w + off_w + MARGIN))/2;
             x += (w > 0)? w: 0;
             break;
         }
@@ -3000,6 +3010,16 @@ void wxTreeListMainWindow::PaintItem (wxTreeListItem *item, wxDC& dc) {
             }else{
                 dc.SetTextForeground (colText);
             }
+        }
+
+        if (HasFlag(wxTR_COLUMN_LINES)) { // vertical lines between columns
+#if !wxCHECK_VERSION(2, 5, 0)
+            wxPen pen (wxSystemSettings::GetSystemColour (wxSYS_COLOUR_3DLIGHT ), 1, wxSOLID);
+#else
+            wxPen pen (wxSystemSettings::GetColour (wxSYS_COLOUR_3DLIGHT ), 1, wxSOLID);
+#endif
+            dc.SetPen ((GetBackgroundColour() == *wxWHITE)? pen: *wxWHITE_PEN);
+            dc.DrawLine (x_colstart+col_w-1, item->GetY(), x_colstart+col_w-1, item->GetY()+total_h);
         }
 
         dc.SetBackgroundMode (wxTRANSPARENT);
@@ -3065,10 +3085,14 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
             int total_width = m_owner->GetHeaderWindow()->GetWidth();
             // if the background colour is white, choose a
             // contrasting color for the lines
-            dc.SetPen (*((GetBackgroundColour() == *wxWHITE)?
-                        wxMEDIUM_GREY_PEN : wxWHITE_PEN));
-            dc.DrawLine(0, y_top, total_width, y_top);
-            dc.DrawLine(0, y_top+h, total_width, y_top+h);
+#if !wxCHECK_VERSION(2, 5, 0)
+            wxPen pen (wxSystemSettings::GetSystemColour (wxSYS_COLOUR_3DLIGHT ), 1, wxSOLID);
+#else
+            wxPen pen (wxSystemSettings::GetColour (wxSYS_COLOUR_3DLIGHT ), 1, wxSOLID);
+#endif
+            dc.SetPen ((GetBackgroundColour() == *wxWHITE)? pen: *wxWHITE_PEN);
+            dc.DrawLine (0, y_top, total_width, y_top);
+            dc.DrawLine (0, y_top+h, total_width, y_top+h);
         }
 
         // draw item
@@ -3142,6 +3166,7 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
             }else{ // if (HasFlag(wxTR_HAS_BUTTONS))
 
                 // draw the plus sign here
+#if !wxCHECK_VERSION(2, 7, 0)
                 dc.SetPen(*wxGREY_PEN);
                 dc.SetBrush(*wxWHITE_BRUSH);
                 dc.DrawRectangle (x-m_btnWidth2, y_mid-m_btnHeight2, m_btnWidth, m_btnHeight);
@@ -3150,6 +3175,11 @@ void wxTreeListMainWindow::PaintLevel (wxTreeListItem *item, wxDC &dc,
                 if (!item->IsExpanded()) { // change "-" to "+"
                     dc.DrawLine (x, y_mid-(m_btnHeight2-2), x, y_mid+(m_btnHeight2-1));
                 }
+#else
+                wxRect rect (x-m_btnWidth2, y_mid-m_btnHeight2, m_btnWidth, m_btnHeight);
+                int flag = item->IsExpanded()? wxCONTROL_EXPANDED: 0;
+                wxRendererNative::GetDefault().DrawTreeItemButton (this, dc, rect, flag);
+#endif
 
             }
 
@@ -3967,7 +3997,7 @@ void wxTreeListMainWindow::RefreshSelectedUnder (wxTreeListItem *item) {
     }
 
     const wxArrayTreeListItems& children = item->GetChildren();
-    long count = (long)children.GetCount();
+    long count = children.GetCount();
     for (long n = 0; n < count; n++ ) {
         RefreshSelectedUnder (children[n]);
     }
