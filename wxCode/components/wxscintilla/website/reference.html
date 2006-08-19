@@ -1416,7 +1416,7 @@ Sets all styles to have the same attributes as <code>wxSCI_STYLE_DEFAULT</code>.
     <a name="StyleSetBold">void StyleSetBold (int style, bool bold)</a><br />
     <a name="StyleSetItalic">void StyleSetItalic (int style, bool italic)</a></h4>
 <p>
-These (plus <a class="message" href="#StyleSetCharacterSet"><code>StyleSetCharacterSet</code></a>) set the font attributes that are used to match the fonts you request to those available. The <code>fontName</code> is a zero terminated string holding the name of a font. Under Windows, only the first 32 characters of the name are used and the name is not case sensitive. For internal caching, Scintilla tracks fonts by name and does care about the casing of font names, so please be consistent. On GTK+ 2.x, either GDK or Pango can be used to display text. Pango antialiases text and works well with Unicode but GDK is faster. Prepend a '!' character to the font name to use Pango.
+These (plus <a class="message" href="#StyleSetCharacterSet"><code>StyleSetCharacterSet</code></a>) set the font attributes that are used to match the fonts you request to those available. The <code>fontName</code> is a zero terminated string holding the name of a font. Under Windows, only the first 32 characters of the name are used and the name is not case sensitive. For internal caching, Scintilla tracks fonts by name and does care about the casing of font names, so please be consistent. On GTK+ 2.x, either GDK or Pango can be used to display text. Pango antialiases text, works well with Unicode and is better supported in recent versions of GTK+ but GDK is faster. Prepend a '!' character to the font name to use Pango.
 </p>
 
 <div class="divider2"></div>
@@ -1550,7 +1550,7 @@ You can choose to override the default selection colouring with these two functi
 <h4><a name="SetSelAlpha">void SetSelAlpha (int alpha)</a><br />
     <a name="GetSelAlpha">GetSelAlpha()</a></h4>
 <p>
-The selection background can be drawn translucently in the selection background colour by setting an alpha value.
+The selection can be drawn translucently in the selection background colour by setting an alpha value.
 </p>
 
 <div class="divider2"></div>
@@ -1646,7 +1646,7 @@ The margins are numbered 0 to 2. Using a margin number outside the valid range h
 <h4><a name="SetMarginType">void SetMarginType (int margin, int marginType)</a><br />
     <a name="GetMarginType">int GetMarginType (int margin)</a></h4>
 <p>
-These two routines set and get the type of a margin. The margin argument should be 0, 1 or 2. You can use the predefined constants <code>wxSCI_MARGIN_SYMBOL</code> (0) and <code>wxSCI_MARGIN_NUMBER</code> (1) to set a margin as either a line number or a symbol margin. By convention, margin 0 is used for line numbers and the other two are used for symbols.
+These two routines set and get the type of a margin. The margin argument should be 0, 1 or 2. You can use the predefined constants <code>wxSCI_MARGIN_SYMBOL</code> (0) and <code>wxSCI_MARGIN_NUMBER</code> (1) to set a margin as either a line number or a symbol margin. By convention, margin 0 is used for line numbers and the next two are used for symbols. You can  also use the constants <code>wxSCI_MARGIN_BACK</code> (2) and <code>wxSCI_MARGIN_FORE</code> (3) for symbol margins that set their background colour to match the STYLE_DEFAULT background and foreground colours.
 </p>
 
 <div class="divider2"></div>
@@ -1730,24 +1730,25 @@ Two phase drawing is a better but slower way of drawing text. In single phase dr
 <h4><a name="SetCodePage">void SetCodePage (int codePage)</a><br />
     <a name="GetCodePage">int GetCodePage()</a></h4>
 <p>
-Scintilla has some support for Japanese, Chinese and Korean DBCS. Use this with <code>codePage</code> set to the code page number to set Scintilla to use code page information to ensure double byte characters are treated as one character rather than two. This also stops the caret from moving between the two bytes in a double byte character. Call with <code>codePage</code> set to zero to disable DBCS support. The default is <code>SetCodePage (0)</code>.
+Scintilla has some support for Japanese, Chinese and Korean DBCS. Use this with <code>codePage</code> set to the code page number to set Scintilla to use code page information to ensure double byte characters are treated as one character rather than two. This also stops the caret from moving between the two bytes in a double byte character. Do not use this message to choose between different single byte character sets: it doesn't do that. Call with <code>codePage</code> set to zero to disable DBCS support. The default is <code>SetCodePage (0)</code>.
 </p>
 <p>
-Code page <code>wxSCI_CP_UTF8</code> (65001) sets Scintilla into Unicode mode with the document treated as a sequence of characters expressed in UTF-8. The text is converted to the platform's normal Unicode encoding before being drawn by the OS and thus can display Hebrew, Arabic, Cyrillic, and Han characters. Languages which can use two characters stacked vertically in one horizontal space, such as Thai, will mostly work but there are some issues where the characters are drawn separately leading to visual glitches. Bi-directional text is not supported.
+Code page <code>wxSCI_CP_UTF8</code> (65001) sets Scintilla into Unicode mode with the document treated as a sequence of characters expressed in UTF-8. The text is converted to the platform's normal Unicode encoding before being drawn by the OS and thus can display Hebrew, Arabic, Cyrillic, and Han characters. Languages which can use two characters stacked vertically in one horizontal space, such as Thai, will mostly work but there are some issues where the characters are drawn separately leading to visual glitches. Bi-directional text is not supported. Characters outside the Basic Multilingual Plane are unlikely to work.
 </p>
 <p>
-On Windows, code page can be set to 932 (Japanese Shift-JIS), 936 (Simplified Chinese GBK), 949 (Korean), and 950 (Traditional Chinese Big5) although these may require installation of language specific support.
+On Windows, code page can be set to 932 (Japanese Shift-JIS), 936 (Simplified Chinese GBK), 949 (Korean Unified Hangul Code), 950 (Traditional Chinese Big5), or 1361 (Korean Johab) although these may require installation of language specific support.
 </p>
 <p>
 On GTK+, code page <code>wxSCI_CP_DBCS</code> (1) sets Scintilla into multi byte character mode as is required for Japanese language processing with the EUC encoding.
 </p>
 <p>
-For GTK+, the locale should be set to a Unicode locale with a call similar to <code>setlocale (LC_CTYPE, "en_US.UTF-8")</code>. Fonts with an <code>"iso10646"</code> registry should be used in a font set. Font sets are a comma separated list of partial font specifications where each partial font specification can be in the form:<br />
+For GTK+ 1.x, the locale should be set to a Unicode locale with a call similar to <code>setlocale (LC_CTYPE, "en_US.UTF-8")</code>. Fonts with an <code>"iso10646"</code> registry should be used in a font set. Font sets are a comma separated list of partial font specifications where each partial font specification can be in the form:<br />
 <code>foundry-fontface-charsetregistry-encoding</code> or<br />
 <code>fontface-charsetregistry-encoding</code> or <br />
 <code>foundry-fontface</code> or<br />
 <code>fontface</code>.<br />
-An example is <code>"misc-fixed-iso10646-1,*"</code>.
+An example is <code>"misc-fixed-iso10646-1,*"</code>.<br />
+On GTK+ 2.x, Pango fonts should be used rather than font sets.
 </p>
 <p>
 Setting <code>codePage</code> to a non-zero value that is not <code>wxSCI_CP_UTF8</code> is operating system dependent.

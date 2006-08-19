@@ -330,8 +330,9 @@ void SurfaceImpl::RoundedRectangle(PRectangle rc, ColourAllocated fore, ColourAl
     hdc->DrawRoundedRectangle(wxRectFromPRectangle(rc), 4);
 }
 
-void SurfaceImpl::AlphaRectangle(PRectangle rc, int cornerSize, ColourAllocated fill, int alphaFill, ColourAllocated outline, int alphaOutline, int flags) {
-//? TODO ...
+void SurfaceImpl::AlphaRectangle (PRectangle rc, int cornerSize, ColourAllocated fill, int alphaFill, ColourAllocated outline, int alphaOutline, int flags) {
+    //? TODO ...
+    RectangleDraw (rc, outline, fill);
 }
 
 void SurfaceImpl::Ellipse(PRectangle rc, ColourAllocated fore, ColourAllocated back) {

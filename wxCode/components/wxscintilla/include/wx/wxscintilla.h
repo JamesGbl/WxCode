@@ -12,7 +12,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.h,v 1.36 2006-07-21 12:37:44 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.h,v 1.37 2006-08-19 08:28:09 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -20,7 +20,7 @@
 #ifndef __WXSCINTILLA_H__
 #define __WXSCINTILLA_H__
 
-#define wxSCINTILLA_VERSION _T("1.69.2")
+#define wxSCINTILLA_VERSION _T("1.70.0")
 
 #include <wx/wx.h>
 #include <wx/dnd.h>
@@ -122,6 +122,8 @@
 #define wxSCI_MASK_FOLDERS 0xFE000000
 #define wxSCI_MARGIN_SYMBOL 0
 #define wxSCI_MARGIN_NUMBER 1
+#define wxSCI_MARGIN_BACK 2
+#define wxSCI_MARGIN_FORE 3
 
 // Styles in range 32..38 are predefined for parts of the UI and are not used as normal styles.
 // Styles 39 is for future use.
@@ -2317,7 +2319,7 @@ public:
     void SelectionDuplicate ();
 
     // Get the background alpha of the caret line.
-    int GetCaretLineBackroundAlpha ();
+    int GetCaretLineBackgroundAlpha ();
 
     // Set background alpha of the caret line.
     void SetCaretLineBackgroundAlpha (int alpha);
@@ -3213,7 +3215,7 @@ public:
 
     // Set style size, face, bold, italic, and underline attributes from
     // a wxFont's attributes.
-    void StyleSetFont (int styleNum, const wxFont& font);
+    void StyleSetFont (int styleNum, wxFont& font);
 
     // Set all font style attributes at once.
     void StyleSetFontAttr (int styleNum, int size,const wxString& faceName,

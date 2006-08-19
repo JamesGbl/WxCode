@@ -3,7 +3,7 @@
 // Purpose:     wxScintilla test application
 // Maintainer:  Otto Wyss
 // Created:     2003-09-01
-// RCS-ID:      $Id: test.cpp,v 1.9 2006-08-17 20:22:54 wyo Exp $
+// RCS-ID:      $Id: test.cpp,v 1.10 2006-08-19 08:28:09 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows licence
 //////////////////////////////////////////////////////////////////////////////

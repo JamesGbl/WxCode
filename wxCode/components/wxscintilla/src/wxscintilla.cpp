@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.35 2006-07-21 12:39:37 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.36 2006-08-19 08:28:09 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -2503,7 +2503,7 @@ void wxScintilla::SelectionDuplicate () {
 }
 
 // Get the background alpha of the caret line.
-int wxScintilla::GetCaretLineBackroundAlpha () {
+int wxScintilla::GetCaretLineBackgroundAlpha () {
     return SendMsg (SCI_GETCARETLINEBACKALPHA, 0, 0);
 }
 
@@ -2646,7 +2646,7 @@ void wxScintilla::StyleSetSpec (int styleNum, const wxString& spec) {
 
 // Set style size, face, bold, italic, and underline attributes from
 // a wxFont's attributes.
-void wxScintilla::StyleSetFont (int styleNum, const wxFont& font) {
+void wxScintilla::StyleSetFont (int styleNum, wxFont& font) {
 #ifdef __WXGTK__
     // Ensure that the native font is initialized
     int x, y;
