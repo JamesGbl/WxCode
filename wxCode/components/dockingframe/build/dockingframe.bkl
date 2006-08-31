@@ -1,0 +1,225 @@
+<?xml version="1.0" ?>
+
+<!-- RCS-ID: $Id: empty.bkl.template,v 1.13 2006/08/31 05:27:28 jrl1 Exp $ -->
+
+<!--
+    =========================================================================
+    How to customize this file for a particular component.
+
+    The bakefile system is designed to accomodate a component that has source and
+    header files that are meant to be compiled into a library that users can link
+    to as well as up to four sample programs that will make use of the library.
+
+    Directory structure : The dirs in brackets [] can be given any name.
+
+    wxCode/component/MYCOMPONENT_NAME/
+        include/[wx/MYCOMPONENT_NAME/]*.h  : Library header files
+        src/*.cpp                          : Library source files
+        samples/                           : Samples directory
+            [mysample_name/]*.h;*.cpp
+            [mysample_name2/]*.h;*.cpp
+            [mysample_name3/]*.h;*.cpp
+            [mysample_name4/]*.h;*.cpp
+
+    1.) Replace the COMP_NAME variable "MYCOMPONENT_NAME" with the name of your
+        component, eg. wxCode/component/MYCOMPONENT_NAME.
+        Example : for wxCode/components/wxscintilla use just 'wxscintilla' with no
+                  quotes.
+
+    2.) Replace the COMP_SRC variable with the library source files in your
+        component, eg. replace mycomp_src_file[1,2,...].cpp with actual filenames.
+        These are the source files you want to be compiled and linked to create
+        the library with.
+
+    3.) Replace the COMP_HDR variable with the library header files in your
+        component, eg. wx/mycomp_hdr_file[1,2,...].h with actual filenames.
+        These are the header files used by the source files to create the library
+        and will be put into the *.dsp project files for Visual Studio for example.
+
+    4.) Adjust the COMP_SAMPLE_DIR so that it points to the provided sample
+        wxCode/component/MYCOMPONENT_NAME/samples/mysample_name
+
+    5.) Unrem and adjust COMP_SAMPLE_DIR[2,3,4] if you have more than one sample.
+
+    6.) Replace the COMP_SAMPLE_SRC variable with the source files in your sample
+        or make it blank if there are no source files.
+
+    7.) Replace the COMP_SAMPLE_HDR variable with the header files in your sample
+        or make it blank if there are no header files.
+
+    8.) Unrem/add COMP_SAMPLE_SRC[2,3,4] and COMP_SAMPLE_HDR[2,3,4] if you have
+        more than one sample and have set COMP_SAMPLE_DIR[2,3,4].
+
+    9.) Replace the name of the lib to be generated MYCOMPONENT_NAME_lib and
+        MYCOMPONENT_NAME_dll with the actual name of your component,
+        eg. wxscintilla_lib and wxscintilla_dll.
+
+    10.) Remove or add libs to link the library to. Use <wx-lib>name</wx-lib> for
+        libraries from wxWidgets and they will appropriately pre and postfixed
+        based on the build settings (eg. debug, unicode, etc.).
+        Use <library>name</library> for other libraries, they will be used as is.
+        Note that shared libraries need to link to other libraries, but static
+        libraries do not.
+
+    11.) Replace the mysample_name with the name you want the compiled executable
+        to have. Add or remove libraries and include paths as you did for the
+        library in step 10.
+
+    12.) Periodically check to see if the wxCode bakefiles have been updated,
+        including the template empty.bkl.template that this is derived from
+        and regenerate your build files.
+
+    ==========================================================================
+-->
+
+<makefile>
+
+    <!-- Set the defaults for the variables used by wxCode bakefiles -->
+    <set var="WXCODE_BAKEFILEDIR">../../../build/bakefiles</set>
+    <include file="$(WXCODE_BAKEFILEDIR)/defaults.bkl"/>
+
+    <!-- ================================================================= -->
+    <!-- Settings for this component                                       -->
+    <!-- ================================================================= -->
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Set the name of the folder which contains this component and thus
+        should always be in lowercase, wxCode/component/MYCOMPONENT_NAME -->
+    <set var="COMP_NAME">dockingframe</set>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- Library file settings                                             -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <!-- COMP_SRC lists the component's sources with path relative to ../src -->
+    <set var="COMP_SRC">
+        appbar.cpp
+        dockingframe.cpp
+    </set>
+    <!-- COMP_HDR lists the component's headers with path relative to ../include -->
+    <set var="COMP_HDR">
+        wx/dockingframedef.h
+        wx/appbar.h
+        wx/dockingframe.h
+    </set>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- Sample(s) file settings                                           -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <!-- Set the folder where component sample sources and headers are kept. -->
+    <!-- NOTE: *never* use something like "../samples" since some formats (like autoconf)
+               have makefiles which are not placed in the "build" subfolder but directly
+               in the component root folder; to refer to the component's root folder use
+               $(COMP_BASE_PATH) which is set to ".." for win32 makefiles and "." for
+               autoconf -->
+    <set var="COMP_SAMPLE_DIR">$(COMP_BASEPATH)$(DIRSEP)samples</set>
+    <!-- <set var="COMP_SAMPLE_DIR2">$(COMP_BASEPATH)$(DIRSEP)samples$(DIRSEP)mysample_name2</set> -->
+    <!-- <set var="COMP_SAMPLE_DIR3">$(COMP_BASEPATH)$(DIRSEP)samples$(DIRSEP)mysample_name3</set> -->
+    <!-- <set var="COMP_SAMPLE_DIR4">$(COMP_BASEPATH)$(DIRSEP)samples$(DIRSEP)mysample_name4</set> -->
+
+    <!-- The COMP_SAMPLE_SRC and COMP_SAMPLE_HDR lists the sample's files
+         with path relative to COMP_SAMPLE_DIR.
+         Leave the tags empty if you do not have any source or header files -->
+    <set var="COMP_SAMPLE_SRC">
+        minimal.cpp
+    </set>
+    <set var="COMP_SAMPLE_HDR">
+     <!--    sample_hdr_file1.cpp
+        sample_hdr_file2.cpp
+        ... -->
+    </set>
+
+    <!--
+    <set var="COMP_SAMPLE_SRC2"></set>
+    <set var="COMP_SAMPLE_HDR2"></set>
+    <set var="COMP_SAMPLE_SRC3"></set>
+    <set var="COMP_SAMPLE_HDR3"></set>
+    <set var="COMP_SAMPLE_SRC4"></set>
+    <set var="COMP_SAMPLE_HDR4"></set>
+    -->
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- Include the wxCode bakefile after defining the COMP_XXXX vars...  -->
+    <include file="$(WXCODE_BAKEFILEDIR)/wxcode.bkl"/>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- Library settings                                                  -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <!-- Set the real target library: wxcode.bkl does not declare a real target
+         but a template called "complib".
+         In this way modifications are allowed to the basic template. -->
+    <lib id="dockingframe_lib" template="complib" cond="WX_SHARED=='0'">
+        <!-- add any other include paths here and duplicate for the shared lib.
+             The example below will have the compiler use the environment
+             variable $(WXWIN) to specify the include path to the wxWidgets
+             contrib includes -->
+          <include>$(DOLLAR)(WXWIN)/contrib/include</include>
+
+    </lib>
+    <dll id="dockingframe_dll" template="compdll" cond="WX_SHARED=='1'">
+
+        <!-- remove the libraries which are not required by your project
+             Note : the linking order may be important for static objects
+                    to be initialized correctly and even more important for
+                    some linkers like GNU's linker. -->
+        <!-- <wx-lib>dbgrid</wx-lib>
+        <wx-lib>gl</wx-lib>
+        <wx-lib>odbc</wx-lib>
+        <wx-lib>html</wx-lib>
+        <wx-lib>adv</wx-lib>
+
+        <wx-lib>xrc</wx-lib>
+        <wx-lib>xml</wx-lib>
+        <wx-lib>net</wx-lib> -->
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib> <!-- base must be last wx-lib -->
+    </dll>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- this makes the MSVC6 project files much nicer... -->
+    <set var="MSVC6PRJ_MERGED_TARGETS">dockingframe=dockingframe_lib+dockingframe_dll</set>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- Sample(s) settings                                                -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <!-- The sample of the component: as for the LIB target, this exe derives
+         from a template contained in templates.bkl which can be modified here.
+         There are templates compsample, compsample2, compsample3, compsample4
+         defined for up to four samples. The variables used for each sample are
+         COMP_SAMPLE_DIR[2,3,4] for the path to each sample
+         COMP_SAMPLE_HDR[2,3,4] for the header files for each sample
+         COMP_SAMPLE_SRC[2,3,4] for the source files for each sample
+         Each compsample[N] implicitly uses the variables COMP_SAMPLE_XXX[N]
+         with the corresponding sample index N.
+    -->
+
+    <exe id="minimal" template="compsample">
+        <library>dockingframe_lib</library>
+
+        <!-- remove the libraries which are not required by your project
+             Note : the linking order may by important for static objects
+             to be initialized correctly. -->
+        <!-- <wx-lib>dbgrid</wx-lib>
+        <wx-lib>gl</wx-lib>
+        <wx-lib>odbc</wx-lib>
+        <wx-lib>html</wx-lib>
+        <wx-lib>adv</wx-lib>
+
+        <wx-lib>xrc</wx-lib>
+        <wx-lib>xml</wx-lib>
+        <wx-lib>net</wx-lib> -->
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib> <!-- base must be last wx-lib -->
+    </exe>
+
+    <!--
+    <exe id="samplename2" template="compsample2">
+        <library>dockingframe_lib</library>
+        ...
+    </exe>
+    -->
+
+</makefile>

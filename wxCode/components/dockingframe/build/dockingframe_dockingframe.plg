@@ -1,0 +1,25 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: dockingframe - Win32 Unicode Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\Bart\LOCALS~1\Temp\RSP13C.tmp" with contents
+[
+/nologo /MD /w /W0 /GR /O2 /I "E:\wxWidgets-2.6.2\lib\vc_lib\mswu" /I "E:\wxWidgets-2.6.2\include" /I "..\include" /I "E:\wxWidgets-2.6.2\contrib\include" /D "WIN32" /D "_LIB" /D "_UNICODE" /D "__WXMSW__" /Fo"msvc6prj\dockingframe/" /Fd"..\lib\dockingframeu.pdb" /FD /EHsc /c 
+"E:\workspace_softvoice\voicesess\wxcode\components\dockingframe\src\appbar.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\Bart\LOCALS~1\Temp\RSP13C.tmp" 
+<h3>Output Window</h3>
+Compiling...
+appbar.cpp
+
+
+
+<h3>Results</h3>
+appbar.obj - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
