@@ -40,7 +40,7 @@
  Known bugs
  ----------
 
- None of course ;)
+ None
 
 
 
