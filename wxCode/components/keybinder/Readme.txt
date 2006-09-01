@@ -28,7 +28,7 @@
   autoconf
   ./configure [here you should use the same flags you used to configure wxWin]
   make
- 
+
  Type "./configure --help" for more info.
  The autoconf-based systems also support a "make install" target which builds the library and then
  copies the headers of the component to /usr/local/include and the lib to /usr/local/lib.
@@ -40,7 +40,7 @@
  Known bugs
  ----------
 
- None
+ None of course ;)
 
 
 
