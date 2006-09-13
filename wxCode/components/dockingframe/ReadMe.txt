@@ -55,7 +55,7 @@ See the sample minimal for and exemple.
  ---------
  
  1.0 - first version of wxDockingFrame at wxCode
- 
+ 1.1 - Resize of the frame when docked, now resize the desktop area.
  
  [optionally: Known bugs, Author's info, ... ]
 

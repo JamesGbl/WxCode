@@ -3,7 +3,7 @@
 // Purpose:     a docking frame that could be dock on left, right, top, etc..
 // Author:      Bart Rolet
 // Created:     2006/08/01
-// RCS-ID:      $Id: dockingframe.h,v 1.1 2006-08-31 18:02:24 bart59 Exp $
+// RCS-ID:      $Id: dockingframe.h,v 1.2 2006-09-13 17:45:04 bart59 Exp $
 // Copyright:   (c) 2006 SESS Canada Inc.
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
@@ -17,21 +17,29 @@
 
 #include <wx/wx.h>
 
- enum DockingPosition    //De cette façon, ton enum est accessible à tous et pas seulement par l'intermédiaire de ta classe.  
-   {
-      DOCK_LEFT,
-      DOCK_RIGHT,    
-      DOCK_TOP,
-      DOCK_BOTTOM,
-      DOCK_NONE,
-   }; 
+
 
 /**
- * a frame that can be docked on the desktop
+ * @brief Dockable frame.
+ * a frame that can be docked on a side of the desktop (and reduce the desktop size).
  */
 class WXDLLIMPEXP_DOCKINGFRAME wxDockingFrame : public wxFrame
 {
  
+public:
+    /**
+     * @enum DockingPosition
+     * @brief Docking positions.
+     * @see Dock()
+     */
+     enum DockingPosition   
+       {
+          DOCK_LEFT, ///< Dock left
+          DOCK_RIGHT, ///<Dock right     
+          DOCK_TOP, ///<Dock Top
+          DOCK_BOTTOM, ///<Dock Bottom
+          DOCK_NONE, ///< undock
+       }; 
 public :
     
     /**
@@ -62,13 +70,22 @@ public :
  
     virtual ~wxDockingFrame();
     
-    /**Get the Socking position
+    /**Get the Docking position
      * @return the docking position, DOCK_NONE if not docked.
      */
     virtual DockingPosition GetDockingPosition();
     
+    /** is the frame docked ?
+     * @return true if docked
+     */
     virtual BOOL IsDocked();
 
+    /** When the frame has been resized
+     * this will update the docking area if docked
+     * @todo    should prevent from resizing the docked side 
+     * (ie: if docked right, only the left side should be available for resize)
+    */
+    void OnSize( wxSizeEvent& event);
 private:
     CAppBar* m_pAppBar;
     int m_nOrientation; // orientation of the frame

@@ -2,7 +2,7 @@
 
 
 BEGIN_EVENT_TABLE( wxDockingFrame, wxFrame )
-    
+     EVT_SIZE(wxDockingFrame::OnSize)
 END_EVENT_TABLE()
 
 wxDockingFrame::wxDockingFrame(wxWindow * parent, wxWindowID id, const wxString& title,
@@ -114,7 +114,7 @@ void wxDockingFrame::Undock()
     }     
 }
 
-DockingPosition wxDockingFrame::GetDockingPosition()
+wxDockingFrame::DockingPosition wxDockingFrame::GetDockingPosition()
 {
     return m_pDockingPosition;
     
@@ -123,4 +123,26 @@ DockingPosition wxDockingFrame::GetDockingPosition()
 BOOL wxDockingFrame::IsDocked()
 {
     return m_pAppBar->IsDocked();
+}
+
+void wxDockingFrame::OnSize( wxSizeEvent& event)
+{
+    if(m_pAppBar->IsDocked())
+    {
+    RECT rcWindow;
+    POPTIONS pOpt = m_pAppBar->GetAppbarData();
+        
+    // Let the system know the appbar size has changed
+    m_pAppBar->AppBar_Size();
+    
+    GetWindowRect((HWND)(GetHandle()), &rcWindow);
+        
+        
+    if (pOpt->uSide == ABE_TOP || pOpt->uSide == ABE_BOTTOM)
+              pOpt->cyHeight = rcWindow.bottom - rcWindow.top;
+    else
+              pOpt->cxWidth = rcWindow.right - rcWindow.left;
+    }
+              
+    event.Skip();
 }
