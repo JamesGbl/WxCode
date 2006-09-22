@@ -161,18 +161,18 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W4 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /Gi /GR /GX /ZI /Od /I "..\..\include" /I "$(WXSTABLE)\include" /I "$(WXSTABLE)\lib\vc_lib\mswud" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXDEBUG__" /D WXDEBUG=1 /D "__WXMSW__" /D "_UNICODE" /FR /FD /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /Gi /GR /GX /ZI /Od /I "..\..\include" /I "$(WXWIN)\include" /I "$(WXWIN)\lib\vc_lib\mswud" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXDEBUG__" /D WXDEBUG=1 /D "__WXMSW__" /D "_UNICODE" /FR /FD /GZ /c
 # SUBTRACT CPP /Fr /YX
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x807 /d "_DEBUG"
-# ADD RSC /l 0x807 /i "$(WXSTABLE)\include" /d "_DEBUG"
+# ADD RSC /l 0x807 /i "$(WXWIN)\include" /d "_DEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib winmm.lib wsock32.lib wxbase26ud.lib wxbase26ud_net.lib wxbase26ud_odbc.lib wxbase26ud_xml.lib wxexpatd.lib wxjpegd.lib wxmsw26ud_adv.lib wxmsw26ud_core.lib wxmsw26ud_dbgrid.lib wxmsw26ud_gl.lib wxmsw26ud_html.lib wxpngd.lib wxregexud.lib wxtiffd.lib wxzlibd.lib wxscintillaud.lib /nologo /subsystem:windows /debug /machine:I386 /libpath:"$(WXSTABLE)\lib\vc_lib" /libpath:"..\..\lib"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib winmm.lib wsock32.lib wxbase26ud.lib wxbase26ud_net.lib wxbase26ud_odbc.lib wxbase26ud_xml.lib wxexpatd.lib wxjpegd.lib wxmsw26ud_adv.lib wxmsw26ud_core.lib wxmsw26ud_dbgrid.lib wxmsw26ud_gl.lib wxmsw26ud_html.lib wxpngd.lib wxregexud.lib wxtiffd.lib wxzlibd.lib wxscintillaud.lib /nologo /subsystem:windows /debug /machine:I386 /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\..\lib"
 # SUBTRACT LINK32 /profile /incremental:no
 
 !ELSEIF  "$(CFG)" == "test - Win32 ReleaseUnicode"
@@ -189,18 +189,18 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W4 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /MD /W4 /Gi /GR /GX /O2 /I "..\..\include" /I "$(WXSTABLE)\include" /I "$(WXSTABLE)\lib\vc_lib\mswu" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXMSW__" /D "_UNICODE" /FD /c
+# ADD CPP /nologo /MD /W4 /Gi /GR /GX /O2 /I "..\..\include" /I "$(WXWIN)\include" /I "$(WXWIN)\lib\vc_lib\mswu" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXMSW__" /D "_UNICODE" /FD /c
 # SUBTRACT CPP /Fr /YX
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x807 /d "NDEBUG"
-# ADD RSC /l 0x807 /i "$(WXSTABLE)\include" /d "NDEBUG"
+# ADD RSC /l 0x807 /i "$(WXWIN)\include" /d "NDEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26u.lib wxbase26u_net.lib wxbase26u_odbc.lib wxbase26u_xml.lib wxexpat.lib wxjpeg.lib wxmsw26u_adv.lib wxmsw26u_core.lib wxmsw26u_dbgrid.lib wxmsw26u_gl.lib wxmsw26u_html.lib wxpng.lib wxregexu.lib wxtiff.lib wxzlib.lib wxscintillau.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"LIBCMT.lib" /libpath:"$(WXSTABLE)\lib\vc_lib" /libpath:"..\..\lib"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26u.lib wxbase26u_net.lib wxbase26u_odbc.lib wxbase26u_xml.lib wxexpat.lib wxjpeg.lib wxmsw26u_adv.lib wxmsw26u_core.lib wxmsw26u_dbgrid.lib wxmsw26u_gl.lib wxmsw26u_html.lib wxpng.lib wxregexu.lib wxtiff.lib wxzlib.lib wxscintillau.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"LIBCMT.lib" /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\..\lib"
 # SUBTRACT LINK32 /profile /map /debug
 
 !ELSEIF  "$(CFG)" == "test - Win32 Debug"
@@ -217,18 +217,18 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W4 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /Gi /GR /GX /ZI /Od /I "..\..\include" /I "$(WXSTABLE)\include" /I "$(WXSTABLE)\lib\vc_lib\mswd" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXDEBUG__" /D WXDEBUG=1 /D "__WXMSW__" /FR /FD /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /Gi /GR /GX /ZI /Od /I "..\..\include" /I "$(WXWIN)\include" /I "$(WXWIN)\lib\vc_lib\mswd" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXDEBUG__" /D WXDEBUG=1 /D "__WXMSW__" /FR /FD /GZ /c
 # SUBTRACT CPP /Fr /YX
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x807 /d "_DEBUG"
-# ADD RSC /l 0x807 /i "$(WXSTABLE)\include" /d "_DEBUG"
+# ADD RSC /l 0x807 /i "$(WXWIN)\include" /d "_DEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib winmm.lib wsock32.lib wxbase26d.lib wxbase26d_net.lib wxbase26d_odbc.lib wxbase26d_xml.lib wxexpatd.lib wxjpegd.lib wxmsw26d_adv.lib wxmsw26d_core.lib wxmsw26d_dbgrid.lib wxmsw26d_gl.lib wxmsw26d_html.lib wxpngd.lib wxregexd.lib wxtiffd.lib wxzlibd.lib wxscintillad.lib /nologo /subsystem:windows /debug /machine:I386 /libpath:"$(WXSTABLE)\lib\vc_lib" /libpath:"..\..\lib"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib winmm.lib wsock32.lib wxbase26d.lib wxbase26d_net.lib wxbase26d_odbc.lib wxbase26d_xml.lib wxexpatd.lib wxjpegd.lib wxmsw26d_adv.lib wxmsw26d_core.lib wxmsw26d_dbgrid.lib wxmsw26d_gl.lib wxmsw26d_html.lib wxpngd.lib wxregexd.lib wxtiffd.lib wxzlibd.lib wxscintillad.lib /nologo /subsystem:windows /debug /machine:I386 /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\..\lib"
 # SUBTRACT LINK32 /profile /incremental:no
 
 !ELSEIF  "$(CFG)" == "test - Win32 Release"
@@ -245,18 +245,18 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W4 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /MD /W4 /Gi /GR /GX /O2 /I "..\..\include" /I "$(WXSTABLE)\include" /I "$(WXSTABLE)\lib\vc_lib\msw" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXMSW__" /FD /c
+# ADD CPP /nologo /MD /W4 /Gi /GR /GX /O2 /I "..\..\include" /I "$(WXWIN)\include" /I "$(WXWIN)\lib\vc_lib\msw" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXMSW__" /FD /c
 # SUBTRACT CPP /Fr /YX
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x807 /d "NDEBUG"
-# ADD RSC /l 0x807 /i "$(WXSTABLE)\include" /d "NDEBUG"
+# ADD RSC /l 0x807 /i "$(WXWIN)\include" /d "NDEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26.lib wxbase26_net.lib wxbase26_odbc.lib wxbase26_xml.lib wxexpat.lib wxjpeg.lib wxmsw26_adv.lib wxmsw26_core.lib wxmsw26_dbgrid.lib wxmsw26_gl.lib wxmsw26_html.lib wxpng.lib wxregex.lib wxtiff.lib wxzlib.lib wxscintilla.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"LIBCMT.lib" /libpath:"$(WXSTABLE)\lib\vc_lib" /libpath:"..\..\lib"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26.lib wxbase26_net.lib wxbase26_odbc.lib wxbase26_xml.lib wxexpat.lib wxjpeg.lib wxmsw26_adv.lib wxmsw26_core.lib wxmsw26_dbgrid.lib wxmsw26_gl.lib wxmsw26_html.lib wxpng.lib wxregex.lib wxtiff.lib wxzlib.lib wxscintilla.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"LIBCMT.lib" /libpath:"$(WXWIN)\lib\vc_lib" /libpath:"..\..\lib"
 # SUBTRACT LINK32 /profile /map /debug
 
 !ENDIF

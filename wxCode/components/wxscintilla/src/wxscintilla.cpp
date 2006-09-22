@@ -10,7 +10,7 @@
 // Author:      Robin Dunn
 //
 // Created:     13-Jan-2000
-// RCS-ID:      $Id: wxscintilla.cpp,v 1.36 2006-08-19 08:28:09 wyo Exp $
+// RCS-ID:      $Id: wxscintilla.cpp,v 1.37 2006-09-22 19:42:14 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -2646,7 +2646,7 @@ void wxScintilla::StyleSetSpec (int styleNum, const wxString& spec) {
 
 // Set style size, face, bold, italic, and underline attributes from
 // a wxFont's attributes.
-void wxScintilla::StyleSetFont (int styleNum, wxFont& font) {
+void wxScintilla::StyleSetFont (int styleNum, const wxFont& font) {
 #ifdef __WXGTK__
     // Ensure that the native font is initialized
     int x, y;

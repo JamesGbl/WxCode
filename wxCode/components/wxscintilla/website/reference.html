@@ -3621,8 +3621,40 @@ Alternatively, you might use set 0 for general keywords, set 1 for keywords that
 <h3 id="Notifications">Notifications</h3>
 
 <p>
-Notifications are sent (fired) from the Scintilla control to its container when an event has occurred that may interest the container. Notifications are sent using the <code>WM_NOTIFY</code> message on Windows and the "notify" signal on GTK+.
+Notifications are sent (fired) from the Scintilla control to its container when an event has occurred that may interest the container. Notifications are sent using the <code>WM_NOTIFY</code> message on Windows and the "notify" signal on GTK+. The container is passed a <code>SCNotification</code> structure containing information about the event.
 </p>
+<pre id="SCNotification">
+struct NotifyHeader {   // This matches the Win32 NMHDR structure
+    void *hwndFrom;     // environment specific window handle/pointer
+    uptr_t idFrom;      // CtrlID of the window issuing the notification
+    unsigned int code;  // The wxEVT_SCI_* notification code
+};
+
+struct SCNotification {
+    struct NotifyHeader nmhdr;
+    int position;       // wxEVT_SCI_STYLENEEDED, wxEVT_SCI_DOUBLECLICK, wxEVT_SCI_MODIFIED,
+                        // wxEVT_SCI_DWELLSTART, wxEVT_SCI_DWELLEND, wxEVT_SCI_CALLTIPCLICK,
+                        // wxEVT_SCI_HOTSPOTCLICK, wxEVT_SCI_HOTSPOTDOUBLECLICK
+    int ch;             // wxEVT_SCI_CHARADDED, wxEVT_SCI_KEY
+    int modifiers;      // wxEVT_SCI_KEY, wxEVT_SCI_HOTSPOTCLICK,
+                        // wxEVT_SCI_HOTSPOTDOUBLECLICK
+    int modificationType; // wxEVT_SCI_MODIFIED
+    const char *text;   // wxEVT_SCI_MODIFIED, wxEVT_SCI_USERLISTSELECTION,
+                        // wxEVT_SCI_AUTOCSELECTION
+    int length;         // wxEVT_SCI_MODIFIED
+    int linesAdded;     // wxEVT_SCI_MODIFIED
+    int message;        // wxEVT_SCI_MACRORECORD
+    uptr_t wParam;      // wxEVT_SCI_MACRORECORD
+    sptr_t lParam;      // wxEVT_SCI_MACRORECORD
+    int line;           // wxEVT_SCI_MODIFIED, wxEVT_SCI_DOUBLECLICK
+    int foldLevelNow;   // wxEVT_SCI_MODIFIED
+    int foldLevelPrev;  // wxEVT_SCI_MODIFIED
+    int margin;         // wxEVT_SCI_MARGINCLICK
+    int listType;       // wxEVT_SCI_USERLISTSELECTION, wxEVT_SCI_AUTOCSELECTION
+    int x;              // wxEVT_SCI_DWELLSTART, wxEVT_SCI_DWELLEND
+    int y;              // wxEVT_SCI_DWELLSTART, wxEVT_SCI_DWELLEND
+};
+</pre>
 <p>
 The notification messages that your container can choose to handle and the messages associated with them are:
 </p>
@@ -3686,7 +3718,6 @@ If you used <code><a class="message" href="#SetLexer">SetLexer</a>(wxSCI_LEX_CON
 <h4><a name="wxEVT_SCI_CHARADDED">wxEVT_SCI_CHARADDED</a></h4>
 <p>
 This is sent when the user types an ordinary text character (as opposed to a command character) that is entered into the text. The container can use this to decide to display a <a class="jump" href="#CallTips">call tip</a> or an <a class="jump" href="#Autocompletion">auto completion list</a>. The character is in <code>SCNotification.ch</code>. This notification is sent before the character has been styled so processing that depends on            styling should instead be performed in the <a class="message" href="#wxEVT_SCI_UPDATEUI"><code>wxEVT_SCI_UPDATEUI</code></a> notification.
-
 </p>
 
 <div class="divider2"></div>
@@ -3696,7 +3727,7 @@ This is sent when the user types an ordinary text character (as opposed to a com
 Sent to the container when the save point is entered or left, allowing the container to display a "document dirty" indicator and change its menus.
 </p>
 <p>
-See also: <code><a class="message" href="#SetSavePoint">SetSavePoint</a>, <a class="message" href="#GetModify"><code>GetModify</code></a>
+See also: <a class="message" href="#SetSavePoint"><code>SetSavePoint</code></a>, <a class="message" href="#GetModify"><code>GetModify</code></a>
 </p>
 
 <div class="divider2"></div>
@@ -3715,7 +3746,7 @@ Reports all keys pressed. Used on GTK+ because of some problems with keyboard fo
 <div class="divider2"></div>
 <h4><a name="wxEVT_SCI_DOUBLECLICK">wxEVT_SCI_DOUBLECLICK</a></h4>
 <p>
-The mouse button was double clicked in editor. There is no additional information.
+The mouse button was double clicked in editor. The <code>position</code> field is set to the text position of the double click and the <code>line</code> field is set to the line of the double click.
 </p>
 
 <div class="divider2"></div>
