@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # Author: Francesco Montorsi
-# RCS-ID: $Id: acregen.sh,v 1.1 2006-06-14 14:03:24 pgava Exp $
+# RCS-ID: $Id: acregen.sh,v 1.2 2006-09-27 13:34:42 frm Exp $
 # Creation date: 14/9/2005
 #
 # A simple script to generate the configure script for a wxCode component
@@ -43,5 +43,5 @@ me=$(basename $0)
 path=${0%%/$me}        # path from which the script has been launched
 current=$(pwd)
 cd $path
-aclocal -I /usr/local/share/aclocal && autoconf && mv configure ..
+aclocal && autoconf && mv configure ..
 cd $current
