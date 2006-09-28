@@ -20,9 +20,12 @@
 // For compilers that support precompilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
 #include "wx/xml2.h"                // include libxml2 wrapper definitions
-#include "wx/dtd.h"             // include libxml2 wrapper definitions
+#include "wx/dtd.h"                 // include libxml2 wrapper definitions
 #include <wx/sstream.h>
 #include <wx/mstream.h>
+
+// to test if xml2.h header conflicts with wxXML library, include xml.h header
+#include <wx/xml/xml.h>
 
 
 #ifdef __BORLANDC__
@@ -344,9 +347,9 @@ void ParseNode(const wxXml2Node &node, wxString &str, int n)
     toadd = node.GetName();
 
     // if this is a text node, then add also the contents...
-    if (node.GetType() == wxXML_TEXT_NODE ||
-        node.GetType() == wxXML_COMMENT_NODE ||
-        node.GetType() == wxXML_CDATA_SECTION_NODE) {
+    if (node.GetType() == wxXML2_TEXT_NODE ||
+        node.GetType() == wxXML2_COMMENT_NODE ||
+        node.GetType() == wxXML2_CDATA_SECTION_NODE) {
 
         wxString content = node.GetContent();
         if (content.Last() == wxT('\n')) content.RemoveLast();
@@ -625,7 +628,7 @@ void MyFrame::OnSaveAdv(wxCommandEvent &)
 
     // create a node containing a reference to an entity:
     // if everything works good, it will be recognized and embedded into
-    // a wxXML_REFERENCE_NODE by wxXml2
+    // a wxXML2_REFERENCE_NODE by wxXml2
     root.AddTextChild(wxT("refnode"), wxT("&copy;"));
 
 #if wxUSE_UNICODE
@@ -692,23 +695,23 @@ void MyFrame::OnSaveDTD(wxCommandEvent &)
     // create an element declaration and set the root
     // some errors have been experienced with some libxml2 versions previous to 2.6.16
     // (which is the one I use): unfortunately I haven't time to dig into these ones...
-    wxXml2ElemContent content(wxT("myelement"), wxXML_ELEMENT_CONTENT_PCDATA);
-    doc.AddElemDecl(wxT("myelement"), wxXML_ELEMENT_TYPE_ELEMENT, content);
+    wxXml2ElemContent content(wxT("myelement"), wxXML2_ELEMENT_CONTENT_PCDATA);
+    doc.AddElemDecl(wxT("myelement"), wxXML2_ELEMENT_TYPE_ELEMENT, content);
 
-    wxXml2ElemContent content2(wxT("myelement2"), wxXML_ELEMENT_CONTENT_ELEMENT, wxXML_ELEMENT_CONTENT_MULT);
-    doc.AddElemDecl(wxT("myelement2"), wxXML_ELEMENT_TYPE_ELEMENT, content2);
+    wxXml2ElemContent content2(wxT("myelement2"), wxXML2_ELEMENT_CONTENT_ELEMENT, wxXML2_ELEMENT_CONTENT_MULT);
+    doc.AddElemDecl(wxT("myelement2"), wxXML2_ELEMENT_TYPE_ELEMENT, content2);
 
     wxXml2Enumeration values(wxT("text|link"));
     doc.AddAttrDecl(wxT("mydata"), wxT("type"), wxXml2EmptyNamespace,
-                    wxXML_ATTRIBUTE_ENUMERATION, wxXML_ATTRIBUTE_REQUIRED,
+                    wxXML2_ATTRIBUTE_ENUMERATION, wxXML2_ATTRIBUTE_REQUIRED,
                     wxT("default"), values);
 
     wxXml2Enumeration values2(values);
     doc.AddAttrDecl(wxT("mydata"), wxT("data"), wxXml2EmptyNamespace,
-                    wxXML_ATTRIBUTE_ENUMERATION, wxXML_ATTRIBUTE_REQUIRED,
+                    wxXML2_ATTRIBUTE_ENUMERATION, wxXML2_ATTRIBUTE_REQUIRED,
                     wxT("default"), values2);
 
-    doc.AddEntityDecl(wxT("myentity"), wxXML_INTERNAL_GENERAL_ENTITY,
+    doc.AddEntityDecl(wxT("myentity"), wxXML2_INTERNAL_GENERAL_ENTITY,
                         wxT(""), wxT(""), wxT("mycontent"));
 
 
