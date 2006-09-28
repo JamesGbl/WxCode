@@ -186,7 +186,7 @@ enum wxXml2NodeType
 
 
 //! The common part of all XML nodes.
-//! This structure have been copied-and-pasted from line 440 of tree.h
+//! This structure has been copied-and-pasted from line 440 of tree.h
 //! of the libxml2 xmlNode structure.
 typedef struct tagXml2BaseNode {
 
@@ -1260,7 +1260,6 @@ public:        // getters
     wxXml2Node GetPrevious() const
         { return wxXml2Node(wxXml2BaseNode::GetPrevious()); }
 
-
     wxXml2Document GetDoc() const
         { if (GetObj()) return wxXml2Document(GetObj()->doc); return wxXml2EmptyDoc; }
     wxXml2Property GetProperties() const
@@ -1271,10 +1270,34 @@ public:        // getters
     wxXml2Namespace GetNamespaceDecl() const
         { if (GetObj()) return wxXml2Namespace(GetObj()->nsDef, (wxXml2Node &)(*this)); return wxXml2EmptyNamespace; }
 
+    //! Returns the name of this node.
+    //! Note that for nodes of type wxXML2_TEXT_NODE, the name is meaningless;
+    //! see #wxXml2NodeType for more info.
     wxString GetName() const
         { if (GetObj()) return XML2WX(GetObj()->name); return wxEmptyString; }
+
+    //! Returns the content of this node.
+    //! Note that for nodes of type wxXML2_ELEMENT_NODE, the content is meaningless;
+    //! for element nodes use #GetNodeContent; see #wxXml2NodeType for more info.
     wxString GetContent() const
         { if (GetObj()) return XML2WX(GetObj()->content); return wxEmptyString; }
+
+    //! Returns the content of this node; this can be either the text carried
+    //! directly by this node if it's a TEXT node or the aggregate string
+    //! of the values carried by this node child's (TEXT and ENTITY_REF).
+    //! Entity references are substituted.
+    //! This is especially useful for wxXML2_ELEMENT_NODE nodes.
+    wxString GetNodeContent() const
+    {
+        if (GetObj())
+        {
+            xmlChar *str = xmlNodeGetContent(GetObj());
+            wxString ret = XML2WX(str);
+            xmlFree(str);
+            return ret;
+        }
+        return wxEmptyString;
+    }
 
     //! Returns the libxml2 node structure wrapped by this object. Use this function
     //! only if you know what to do with the returned structure.
@@ -1292,8 +1315,11 @@ public:        // getters
     wxXml2Node Get(const wxString &name, int n = 0)    const
         { return Find(name, wxT(""), n); }
 
+    //! Sets the name of this node.
     void SetName(const wxString &name)
         { xmlNodeSetName(GetObj(), WX2XML(name)); }
+
+    //! Sets the content of this node.
     void SetContent(const wxString &cont)
         { xmlNodeSetContent(GetObj(), WX2XML(cont)); }
 
