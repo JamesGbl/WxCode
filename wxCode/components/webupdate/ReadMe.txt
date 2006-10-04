@@ -16,6 +16,32 @@
  For a complete list of the features of WebUpdate, look at the WebUpdate docs.
 
 
+ License
+ -------
+
+ wxWidgets library license applies to WebUpdate code if you use it as
+ a library (for e.g. your custom webupdater); that is you can use both
+ in other open source apps and in other commercial products.
+ If you WebUpdate binaries directly, then the MIT license applies:
+
+   Copyright (c) 2006 Francesco Montorsi
+
+   Permission is hereby granted, free of charge, to any person 
+   obtaining aing a copy of this software and associated documentation 
+   files (the "Software"), to deal in the Software without restriction, 
+   including without limitation the rights to use, copy, modify, merge, 
+   publish, distribute, sublicense, and/or sell copies of the Software, 
+   and to permit persons to whom the Software is furnished to do so, subject 
+   to the following conditions:
+
+   The above copyright notice and this permission notice shall be 
+   included in all copies or substantial portions of the Software.
+
+ (this is because wxWidgets license is for libraries and not for final
+  applications). In any case, both if you WebUpdater in free or commercial
+  products, some credits to the author would be very much appreciated
+  even if not strictly required.
+
 
  Installation
  ------------
