@@ -2,7 +2,7 @@
 // Name:        tarstrm.cpp
 // Purpose:     Streams for Tar files
 // Author:      Mike Wetherell
-// RCS-ID:      $Id: tarstrm.cpp,v 1.6 2006-08-25 16:51:36 mweth Exp $
+// RCS-ID:      $Id: tarstrm.cpp,v 1.7 2006-10-17 11:46:38 mweth Exp $
 // Copyright:   (c) 2004 Mike Wetherell
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -350,10 +350,10 @@ static inline int GroupId()
 static inline wxFileOffset GetDataSize(const wxTarEntry& entry)
 {
     switch (entry.GetTypeFlag()) {
-        wxTAR_CHRTYPE:
-        wxTAR_BLKTYPE:
-        wxTAR_DIRTYPE:
-        wxTAR_FIFOTYPE:
+        case wxTAR_CHRTYPE:
+        case wxTAR_BLKTYPE:
+        case wxTAR_DIRTYPE:
+        case wxTAR_FIFOTYPE:
             return 0;
         default:
             return entry.GetSize();
