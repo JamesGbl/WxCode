@@ -93,21 +93,21 @@ wxServiceDiscoveryTaskBase::~wxServiceDiscoveryTaskBase( void )
 
 bool wxServiceDiscoveryTaskBase::Start( void )
 {
-	wxASSERT( m_rServiceRef EQ NULL );
+	wxASSERT( m_rServiceRef == NULL );
 
 	bool output = DoStart();
 	
 	if ( output )
 	{
-		wxASSERT( m_rServiceRef NE NULL );
+		wxASSERT( m_rServiceRef != NULL );
 		
-		if ( m_rServiceRef NE NULL )
+		if ( m_rServiceRef != NULL )
 		{
 			if ( m_bUseThreads )
 			{
-				wxASSERT( m_pThread EQ NULL );
+				wxASSERT( m_pThread == NULL );
 				
-				if ( m_pThread NE NULL )
+				if ( m_pThread != NULL )
 				{
 					m_pThread->Delete();
 					delete m_pThread;
@@ -116,7 +116,7 @@ bool wxServiceDiscoveryTaskBase::Start( void )
 				
 				m_pThread = new wxServiceDiscoveryServiceHelperThread( m_rServiceRef );
 				
-				if ( m_pThread NE NULL )
+				if ( m_pThread != NULL )
 				{
 					m_pThread->Create();
 					m_pThread->Run();
@@ -221,9 +221,9 @@ bool wxServiceDiscoveryTaskBase::Stop( void )
 	{
 		#ifdef __DARWIN__
 		
-			if ( ( CFRunLoopGetCurrent() NE NULL ) && 
-				 ( source NE NULL ) &&
-				 ( cfsocket NE NULL ) )
+			if ( ( CFRunLoopGetCurrent() != NULL ) && 
+				 ( source != NULL ) &&
+				 ( cfsocket != NULL ) )
 			{
 				// Remove the CFRunLoopSource from the current run loop. 
 				CFRunLoopRemoveSource(CFRunLoopGetCurrent(), source, kCFRunLoopCommonModes); 
@@ -243,7 +243,7 @@ bool wxServiceDiscoveryTaskBase::Stop( void )
 			
 		#elif defined( _WIN32 )
 			
-			if ( wind NE NULL )
+			if ( wind != NULL )
 			{
 				// Clean up. This is not strictly necessary since the normal 
 				// process cleanup will close DNS-SD socket(s) and release memory, 
@@ -259,7 +259,7 @@ bool wxServiceDiscoveryTaskBase::Stop( void )
 	}
 	
 	
-	if ( m_rServiceRef NE NULL )
+	if ( m_rServiceRef != NULL )
 	{
 		// Order is important.  We deallocate the DNSServiceRef *prior* to deleting
 		// the thread.  The thread is blocking permanently for a response on this
@@ -275,7 +275,7 @@ bool wxServiceDiscoveryTaskBase::Stop( void )
 	
 	if ( m_bUseThreads )
 	{
-		if ( m_pThread NE NULL )
+		if ( m_pThread != NULL )
 		{
 			m_pThread->Delete();
 			delete m_pThread;

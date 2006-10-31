@@ -39,7 +39,7 @@
  ChangeLog
  ---------
  
- 1.0 - first version of MYCOMP at wxCode
+ 1.0 - first version of wxServiceDiscovery at wxCode
  
  
  [optionally: Known bugs, Author's info, ... ]

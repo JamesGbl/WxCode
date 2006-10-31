@@ -109,7 +109,7 @@ void wxServiceDiscoveryService::DoHandleRegistrationCallback( DNSServiceRef sdRe
 				wxString( regtype, wxConvUTF8 ).c_str(),
 				wxString( domain, wxConvUTF8 ).c_str() );
 	
-	if ( errorCode NE kDNSServiceErr_NoError )
+	if ( errorCode != kDNSServiceErr_NoError )
 	{
 		wxLogDebug( wxT("Received an error from the bonjour browser:  %d"),
 					errorCode );
@@ -118,9 +118,9 @@ void wxServiceDiscoveryService::DoHandleRegistrationCallback( DNSServiceRef sdRe
 	{
 		m_Name = wxString( name, wxConvUTF8 );
 		
-		if ( m_pListener NE NULL )
+		if ( m_pListener != NULL )
 		{
-			const bool bMoreComing = ( flags bAND kDNSServiceFlagsMoreComing ) NE 0;
+			const bool bMoreComing = ( flags & kDNSServiceFlagsMoreComing ) != 0;
 			
 			wxServiceDiscoveryResult event;
 			

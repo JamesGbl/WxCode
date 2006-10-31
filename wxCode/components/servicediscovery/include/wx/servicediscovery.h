@@ -21,6 +21,9 @@
 
 #include "wx/servicediscoverydef.h"
 
+#ifdef _WIN32
+	#pragma warning( disable: 4068 ) // unknown pragma
+#endif
 
 // Bonjour Headers
 //#include <dns_sd.h>

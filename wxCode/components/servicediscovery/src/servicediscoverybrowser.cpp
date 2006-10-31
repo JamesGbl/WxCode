@@ -59,7 +59,7 @@ bool wxServiceDiscoveryBrowser::DoStart( void )
 					  BrowserCallback, 
 					  this ); 
 	
-	return m_rServiceRef NE NULL;
+	return m_rServiceRef != NULL;
 }
 
 
@@ -98,22 +98,22 @@ void wxServiceDiscoveryBrowser::DoHandleBrowserCallback(	DNSServiceRef WXUNUSED_
 				wxString( regtype, wxConvUTF8 ).c_str(),
 				wxString( replyDomain, wxConvUTF8 ).c_str() );
 	
-	wxASSERT( m_pListener NE NULL );
-	wxASSERT( m_rServiceRef EQ sdRef );
+	wxASSERT( m_pListener != NULL );
+	wxASSERT( m_rServiceRef == sdRef );
 
-	if ( errorCode NE kDNSServiceErr_NoError )
+	if ( errorCode != kDNSServiceErr_NoError )
 	{
 		wxLogDebug( wxT("Received an error from the bonjour browser:  %d"),
 					errorCode );
 	}
 	else
-	if ( m_pListener NE NULL )
+	if ( m_pListener != NULL )
 	{
-		const bool bMoreComing = ( flags bAND kDNSServiceFlagsMoreComing ) NE 0;
+		const bool bMoreComing = ( flags & kDNSServiceFlagsMoreComing ) != 0;
 		
 		wxServiceDiscoveryResult event;
 		
-		if ( ( flags bAND kDNSServiceFlagsAdd ) NE 0 )
+		if ( ( flags & kDNSServiceFlagsAdd ) != 0 )
 		{
 			event.SetEventType( wxEVT_BONJOUR_ADD_SERVICE );
 		}

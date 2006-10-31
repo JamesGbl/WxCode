@@ -11,8 +11,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 
-#ifndef _WX_MYCOMP_DEFS_H_
-#define _WX_MYCOMP_DEFS_H_
+#ifndef _WX_SERVICE_DISCOVERY_DEFS_H_
+#define _WX_SERVICE_DISCOVERY_DEFS_H_
 
 // Defines for component version.
 // The following symbols should be updated for each new component release
@@ -26,9 +26,9 @@
 // users of this component can use the following macro to check if the
 // current version is at least major.minor.release
 #define wxCHECK_SERVICEDISCOVERY_VERSION(major,minor,release) \
-    (wxMYCOMP_MAJOR > (major) || \
-    (wxMYCOMP_MAJOR == (major) && wxMYCOMP_MINOR > (minor)) || \
-    (wxMYCOMP_MAJOR == (major) && wxMYCOMP_MINOR == (minor) && wxMYCOMP_RELEASE >= (release)))
+    (wxSERVICEDISCOVERY_MAJOR > (major) || \
+    (wxSERVICEDISCOVERY_MAJOR == (major) && wxSERVICEDISCOVERY_MINOR > (minor)) || \
+    (wxSERVICEDISCOVERY_MAJOR == (major) && wxSERVICEDISCOVERY_MINOR == (minor) && wxSERVICEDISCOVERY_RELEASE >= (release)))
 
 
 // Defines for shared builds.
@@ -56,5 +56,5 @@
     #define WXDLLIMPEXP_DATA_SERVICEDISCOVERY(type)	    type
 #endif
 
-#endif // _WX_MYCOMP_DEFS_H_
+#endif // _WX_SERVICE_DISCOVERY_DEFS_H_
 

@@ -50,7 +50,7 @@ bool wxServiceDiscoveryResolver::DoStart( void )
 					   ResolveCallback, 
 					   this ); 
 	
-	return m_rServiceRef NE NULL;
+	return m_rServiceRef != NULL;
 }
 
 
@@ -85,14 +85,14 @@ void wxServiceDiscoveryResolver::DoHandleResolveCallback(	DNSServiceRef sdRef,
 														uint16_t WXUNUSED( txtLen ), 
 														const char *txtRecord )
 {
-	wxASSERT( m_pListener NE NULL );
-	wxASSERT( m_rServiceRef EQ sdRef );
+	wxASSERT( m_pListener != NULL );
+	wxASSERT( m_rServiceRef == sdRef );
 	
-	if ( m_pListener NE NULL )
+	if ( m_pListener != NULL )
 	{
 		m_Result.SetEventType( wxEVT_BONJOUR_RESOLVE_SERVICE );
 
-		if ( errorCode NE kDNSServiceErr_NoError )
+		if ( errorCode != kDNSServiceErr_NoError )
 		{
 			wxLogDebug( wxT("Received an error from the bonjour resolver:  %d"),
 						errorCode );
@@ -100,7 +100,7 @@ void wxServiceDiscoveryResolver::DoHandleResolveCallback(	DNSServiceRef sdRef,
 		}
 		else 
 		{
-			const bool bMoreComing = ( flags bAND kDNSServiceFlagsMoreComing ) NE 0;
+			const bool bMoreComing = ( flags & kDNSServiceFlagsMoreComing ) != 0;
 			
 			m_Result.SetMoreComing( bMoreComing );
 			m_Result.SetNetworkInterface( interfaceIndex );

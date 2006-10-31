@@ -104,7 +104,7 @@ void wxServiceDiscoveryResult::SetNetworkInterface	( wxUint32 iIface )
 #ifndef _WIN32
 	static char buffer[IF_NAMESIZE];
 	
-	if ( if_indextoname( m_NetworkInterface, buffer ) NE NULL )
+	if ( if_indextoname( m_NetworkInterface, buffer ) != NULL )
 	{
 		m_InterfaceName = wxString::FromAscii( buffer );
 	}
