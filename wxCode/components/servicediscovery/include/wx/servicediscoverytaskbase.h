@@ -19,6 +19,7 @@
 #include "wx/servicediscovery.h"
 #include "wx/thread.h"
 
+#if wxUSE_SERVICE_DISCOVERY
 
 #include <dns_sd.h>
 
@@ -127,8 +128,10 @@ protected:
 	
 #elif defined( _WIN32 )
 	
-	HINSTANCE							instance; 
-    WNDCLASSEX							wcex; 
+	static	WNDCLASSEX &				GetWndClass( void );
+	
+	static	HINSTANCE					instance; 
+//    WNDCLASSEX							wcex; 
     HWND								wind; 
     MSG									msg; 
     int									err; 	
@@ -146,6 +149,6 @@ protected:
 };
 
 
-
+#endif // wxUSE_SERVICE_DISCOVERY
 
 #endif // _WX_SERVICE_DISCOVERY_TASK_BASE_H_

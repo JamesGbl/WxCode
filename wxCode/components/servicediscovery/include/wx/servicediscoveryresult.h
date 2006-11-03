@@ -17,7 +17,7 @@
 
 #include "wx/servicediscovery.h"
 
-
+#if wxUSE_SERVICE_DISCOVERY
 
 
 #pragma mark  -- class wxServiceDiscoveryResult --
@@ -128,6 +128,6 @@ typedef void (wxEvtHandler::*wxBONJOUR_EVENT_FUNCTION)(wxServiceDiscoveryResult&
 #define EVT_BONJOUR_RESOLVE_SERVICE(func)	wx__DECLARE_EVT0(wxEVT_BONJOUR_RESOLVE_SERVICE,		wxBONJOUR_EVENT_HANDLER(func))
 
 
-
+#endif // wxUSE_SERVICE_DISCOVERY
 
 #endif // _WX_SERVICE_DISCOVERY_RESULT_H_

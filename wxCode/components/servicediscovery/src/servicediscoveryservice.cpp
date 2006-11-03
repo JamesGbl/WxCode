@@ -13,6 +13,9 @@
 #include "wx/wxprec.h"
 
 #include "wx/servicediscoveryservice.h"
+
+#if wxUSE_SERVICE_DISCOVERY
+
 #include "wx/servicediscoveryresult.h"
 
 
@@ -96,7 +99,7 @@ void wxServiceDiscoveryService::RegistrationCallback( DNSServiceRef sdRef,
 }
 
 
-void wxServiceDiscoveryService::DoHandleRegistrationCallback( DNSServiceRef sdRef, 
+void wxServiceDiscoveryService::DoHandleRegistrationCallback( DNSServiceRef WXUNUSED( sdRef ), 
 															  DNSServiceFlags flags, 
 															  DNSServiceErrorType errorCode, 
 															  const char *name, 
@@ -139,4 +142,5 @@ void wxServiceDiscoveryService::DoHandleRegistrationCallback( DNSServiceRef sdRe
 
 
 
+#endif wxUSE_SERVICE_DISCOVERY
 

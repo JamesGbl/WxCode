@@ -13,25 +13,28 @@
 
 
 #include <wx/wxprec.h>
+
+#include "wx/servicediscoverybrowser.h"
+
+#if wxUSE_SERVICE_DISCOVERY
+
+#include "wx/servicediscoveryservice.h"
+
 #include <dns_sd.h>
 
 
-#include "wx/servicediscoverybrowser.h"
-#include "wx/servicediscoveryresult.h"
-#include "wx/servicediscoveryservice.h"
 
 
-
-
-	
 	
 #pragma mark  -- Constructors and Destructors --
 
 wxServiceDiscoveryBrowser::wxServiceDiscoveryBrowser( wxEvtHandler * pListener,
 													  bool bUseThreads,
-													  wxServiceDiscoveryService & rService )
-	: wxServiceDiscoveryTaskBase( pListener, bUseThreads ),
-	m_rService		( rService )
+													  wxServiceDiscoveryService & rService,
+													  bool	bAutoResolve )
+: wxServiceDiscoveryTaskBase( pListener, bUseThreads ),
+m_rService		( rService ),
+m_bAutoResolve ( bAutoResolve )
 {
 }
 
@@ -39,6 +42,10 @@ wxServiceDiscoveryBrowser::wxServiceDiscoveryBrowser( wxEvtHandler * pListener,
 
 wxServiceDiscoveryBrowser::~wxServiceDiscoveryBrowser( void )
 {
+	for( size_t i = 0; i < m_ActiveResolvers.GetCount(); i++ )
+	{
+		m_ActiveResolvers.RemoveAt( 0 );
+	}
 }
 
 
@@ -64,19 +71,25 @@ bool wxServiceDiscoveryBrowser::DoStart( void )
 
 
 
+const wxServiceDiscoveryResultArray & wxServiceDiscoveryBrowser::GetArray( void )
+{
+	return m_ResultsArray;
+}
+
+
 
 #pragma mark						-
 #pragma mark  						-- Browser Callbacks --
 
 
 void wxServiceDiscoveryBrowser::BrowserCallback ( DNSServiceRef sdRef, 
-											   DNSServiceFlags flags, 
-											   uint32_t interfaceIndex, 
-											   DNSServiceErrorType errorCode, 
-											   const char *serviceName, 
-											   const char *regtype, 
-											   const char *replyDomain, 
-											   void *context )
+												  DNSServiceFlags flags, 
+												  uint32_t interfaceIndex, 
+												  DNSServiceErrorType errorCode, 
+												  const char *serviceName, 
+												  const char *regtype, 
+												  const char *replyDomain, 
+												  void *context )
 {
 	static_cast<wxServiceDiscoveryBrowser *>( context )->DoHandleBrowserCallback( sdRef, flags, interfaceIndex, errorCode, serviceName, regtype, replyDomain );
 }
@@ -113,24 +126,68 @@ void wxServiceDiscoveryBrowser::DoHandleBrowserCallback(	DNSServiceRef WXUNUSED_
 		
 		wxServiceDiscoveryResult event;
 		
-		if ( ( flags & kDNSServiceFlagsAdd ) != 0 )
-		{
-			event.SetEventType( wxEVT_BONJOUR_ADD_SERVICE );
-		}
-		else
-		{
-			event.SetEventType( wxEVT_BONJOUR_REMOVE_SERVICE );
-		}
-		
 		event.SetMoreComing( bMoreComing );
 		event.SetServiceName( wxString( serviceName, wxConvUTF8 ) );
 		event.SetNetworkInterface( interfaceIndex );
 		event.SetRegType( wxString( regtype, wxConvUTF8 ) );
 		event.SetDomain( wxString( replyDomain, wxConvUTF8 ) );
-	
+		
+		if ( ( flags & kDNSServiceFlagsAdd ) != 0 )
+		{
+			event.SetEventType( wxEVT_BONJOUR_ADD_SERVICE );
+			
+			m_ResultsArray.Add( event );
+			
+			if ( m_bAutoResolve )
+			{
+				wxServiceDiscoveryResolver * pResolve = new wxServiceDiscoveryResolver( m_pListener, 
+																						m_bUseThreads, // don't use threads
+																						event,
+																						this );
+				
+				pResolve->Start();
+				m_ActiveResolvers.Add( pResolve );
+			}
+		}
+		else
+		{
+			event.SetEventType( wxEVT_BONJOUR_REMOVE_SERVICE );
+			
+			for( unsigned int i = 0; i < m_ResultsArray.Count(); i++ )
+			{
+				if ( m_ResultsArray[i] == event )
+				{
+					// we decrement i here so as to not skip anything when incrementing.
+					m_ResultsArray.RemoveAt( i-- );
+				}
+			}
+			
+			if ( m_bAutoResolve )
+			{
+				
+			}
+		}
+		
 		wxPostEvent( m_pListener, event );
 	}
 }
 
 
+void wxServiceDiscoveryBrowser::ResolutionCompleted( wxServiceDiscoveryResolver * pResolver,
+													 wxServiceDiscoveryResult & rResult )
+{
+	for( unsigned int i = 0; i < m_ResultsArray.Count(); i++ )
+	{
+		if ( m_ResultsArray[i] == rResult )
+		{
+			// we decrement i here so as to not skip anything when incrementing.
+			m_ResultsArray.RemoveAt( i-- );
+		}
+	}
+	
+	m_ResultsArray.Add( rResult );
+}
+
+
+#endif // wxUSE_SERVICE_DISCOVERY
 

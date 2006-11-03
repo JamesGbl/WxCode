@@ -13,8 +13,12 @@
 #include <wx/wxprec.h>
 #include "wx/servicediscoverytaskbase.h"
 
+#if wxUSE_SERVICE_DISCOVERY
+
 #ifdef _WIN32
-	#define DNSSD_EVENT        (WM_USER + 0x100) 
+	#define DNSSD_EVENT        (WM_USER + 0x4000)
+
+	#define PROPNAME wxT("wxServiceDiscoveryTaskBase pointer")
 #endif
 
 	
@@ -67,7 +71,7 @@ void *	wxServiceDiscoveryTaskBase::wxServiceDiscoveryServiceHelperThread::Entry(
 #pragma mark  -- Constructors and Destructors --
 
 wxServiceDiscoveryTaskBase::wxServiceDiscoveryTaskBase( wxEvtHandler * pListener,
-												  bool bUseThreads )
+														bool bUseThreads )
 : m_pListener	( pListener ),
 m_rServiceRef	( NULL ),
 m_bUseThreads	( bUseThreads ),
@@ -149,23 +153,8 @@ bool wxServiceDiscoveryTaskBase::Start( void )
 					// but it demonstrates how to use DNS-SD with Windows GUI 
 					// applications by having DNS-SD events processed as messages 
 					// to a Window. 
-					instance = GetModuleHandle(NULL); 
-					assert(instance); 
-					wcex.cbSize = sizeof(wcex); 
-					wcex.style     = 0; 
-					wcex.lpfnWndProc = (WNDPROC) WndProc; 
-					wcex.cbClsExtra     = 0; 
-					wcex.cbWndExtra     = 0; 
-					wcex.hInstance = instance; 
-					wcex.hIcon     = NULL; 
-					wcex.hCursor = NULL; 
-					wcex.hbrBackground = NULL; 
-					wcex.lpszMenuName = NULL; 
-					wcex.lpszClassName = TEXT("ZeroconfExample"); 
-					wcex.hIconSm = NULL; 
-					RegisterClassEx(&wcex); 
-					wind = CreateWindow(wcex.lpszClassName, 
-										wcex.lpszClassName,
+					wind = CreateWindow(GetWndClass().lpszClassName, 
+										GetWndClass().lpszClassName,
 										0, 
 										CW_USEDEFAULT,
 										0,
@@ -176,8 +165,8 @@ bool wxServiceDiscoveryTaskBase::Start( void )
 										instance,
 										this ); 
 
-					SetProp( wind, wxT("wxServiceDiscoveryTaskBase pointer"), this );
-					
+					BOOL status = SetProp( wind, PROPNAME, this );
+					wxASSERT( status != 0 );
 					
 					// Associate the DNS-SD browser with our window 
 					// using the WSAAsyncSelect mechanism. Whenever something 
@@ -288,6 +277,68 @@ bool wxServiceDiscoveryTaskBase::Stop( void )
 
 
 
+#ifdef _WIN32
+
+HINSTANCE wxServiceDiscoveryTaskBase::instance = NULL; 
+
+
+WNDCLASSEX & wxServiceDiscoveryTaskBase::GetWndClass( void )
+{
+//	static HWND			wind		= NULL;
+	static WNDCLASSEX	wcex;
+//	static HINSTANCE	instance	= NULL;
+	static bool			bRegistered = false;
+
+//	MSG 				msg			= NULL;
+//	int					err			= 0;
+	
+	if ( instance == NULL )
+		instance = GetModuleHandle( NULL );
+	
+	wxASSERT( instance != NULL );
+	
+	if ( !bRegistered )
+	{
+		wcex.cbSize = sizeof(wcex); 
+		wcex.style     = 0; 
+		wcex.lpfnWndProc = (WNDPROC) WndProc; 
+		wcex.cbClsExtra     = 0; 
+		wcex.cbWndExtra     = 0; 
+		wcex.hInstance = instance; 
+		wcex.hIcon     = NULL; 
+		wcex.hCursor = NULL; 
+		wcex.hbrBackground = NULL; 
+		wcex.lpszMenuName = NULL; 
+		wcex.lpszClassName = TEXT("wxServiceDiscoveryTaskBaseEvtHandlerWindow"); 
+		wcex.hIconSm = NULL; 
+		
+		RegisterClassEx(&wcex);
+		
+		bRegistered = true;
+	}
+	
+//	if ( wind == NULL )
+//	{
+//		wind = CreateWindow(wcex.lpszClassName, 
+//							wcex.lpszClassName,
+//							0, 
+//							CW_USEDEFAULT,
+//							0,
+//							CW_USEDEFAULT,
+//							0,
+//							NULL, 
+//							NULL,
+//							instance,
+//							this ); 
+//	}
+	
+	return wcex;
+}
+
+#endif
+
+
+
 #pragma mark						-
 #pragma mark  						-- Handling Socket Data --
 
@@ -296,19 +347,19 @@ bool wxServiceDiscoveryTaskBase::Stop( void )
 
 
 void wxServiceDiscoveryTaskBase::Mac_Socket_Callback( CFSocketRef s, 
-												  CFSocketCallBackType callbackType,
-												  CFDataRef address, 
-												  const void* data, 
-												  void* info )
+													  CFSocketCallBackType callbackType,
+													  CFDataRef address, 
+													  const void* data, 
+													  void* info )
 {
 	static_cast<wxServiceDiscoveryTaskBase *>( info )->Mac_Socket_Callback( s, callbackType, address, data );
 }
 
 
 void wxServiceDiscoveryTaskBase::Mac_Socket_Callback( CFSocketRef WXUNUSED( s ), 
-												   CFSocketCallBackType WXUNUSED( callbackType ),
-												   CFDataRef WXUNUSED( address ), 
-												   const void* WXUNUSED( data ) )
+													  CFSocketCallBackType WXUNUSED( callbackType ),
+													  CFDataRef WXUNUSED( address ), 
+													  const void* WXUNUSED( data ) )
 {
 	wxLogDebug( wxT("Got socket event callback.") );
 	
@@ -323,9 +374,9 @@ void wxServiceDiscoveryTaskBase::Mac_Socket_Callback( CFSocketRef WXUNUSED( s ),
 
 #elif defined( _WIN32 )
 LRESULT CALLBACK wxServiceDiscoveryTaskBase::WndProc(HWND inWindow,
-												  UINT inMsg,
-												  WPARAM inWParam,
-												  LPARAM inLParam ) 
+													 UINT inMsg,
+													 WPARAM inWParam,
+													 LPARAM inLParam ) 
 { 
     LRESULT result; 
     switch(inMsg) 
@@ -334,7 +385,9 @@ LRESULT CALLBACK wxServiceDiscoveryTaskBase::WndProc(HWND inWindow,
 			// Process the DNS-SD event. All DNS-SD callbacks occur from 
 			// within this function. 
 			{
-				wxServiceDiscoveryTaskBase * self = reinterpret_cast<wxServiceDiscoveryTaskBase *>( GetProp( inWindow, wxT("wxServiceDiscoveryTaskBase pointer") ) );
+				void * ptr = GetProp( inWindow, PROPNAME );
+
+				wxServiceDiscoveryTaskBase * self = reinterpret_cast<wxServiceDiscoveryTaskBase *>( ptr );
 
 				if (DNSServiceProcessResult( self->m_rServiceRef ) != kDNSServiceErr_NoError) 
 					result = -1; 
@@ -342,6 +395,12 @@ LRESULT CALLBACK wxServiceDiscoveryTaskBase::WndProc(HWND inWindow,
 					result = 0; 
 			}
 			break; 
+
+		case WM_NCDESTROY:
+
+			RemoveProp( inWindow, PROPNAME );
+			// fall through
+
         default: 
 			result = DefWindowProc(inWindow, inMsg, inWParam, inLParam); 
 			break; 
@@ -393,3 +452,4 @@ bool wxServiceDiscoveryTaskBase::DoIdle( void )
 
 #endif
 
+#endif // wxUSE_SERVICE_DISCOVERY

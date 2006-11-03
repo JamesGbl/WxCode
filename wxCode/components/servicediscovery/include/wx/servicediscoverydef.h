@@ -14,6 +14,13 @@
 #ifndef _WX_SERVICE_DISCOVERY_DEFS_H_
 #define _WX_SERVICE_DISCOVERY_DEFS_H_
 
+#ifdef __WXDEBUG__
+	#define wxUSE_SERVICE_DISCOVERY 1
+#else
+	#define wxUSE_SERVICE_DISCOVERY 0
+#endif
+
+
 // Defines for component version.
 // The following symbols should be updated for each new component release
 // since some kind of tests, like those of AM_WXCODE_CHECKFOR_COMPONENT_VERSION()

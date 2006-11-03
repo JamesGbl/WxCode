@@ -11,20 +11,28 @@
 // --
 
 #include "wx/wxprec.h"
-#include "wx/servicediscoveryresolver.h"
-#include "wx/servicediscoveryresult.h"
+#include "wx/arrimpl.cpp"
 
+#include "wx/servicediscoveryresolver.h"
+
+#if wxUSE_SERVICE_DISCOVERY
+
+#include "wx/servicediscoveryresult.h"
+#include "wx/servicediscoverybrowser.h"
+
+
+WX_DEFINE_USER_EXPORTED_OBJARRAY( wxServiceDiscoveryResolveArray );
 
 
 #pragma mark  -- Constructors and Destructors --
 
 wxServiceDiscoveryResolver::wxServiceDiscoveryResolver( wxEvtHandler * pListener,
-												  bool bUseThreads,
-												  wxServiceDiscoveryResult & rResult,
-												  bool bDeleteWhenDone )
+														bool bUseThreads,
+														wxServiceDiscoveryResult & rResult,
+														wxServiceDiscoveryBrowser * pParentBrowser )
 	: wxServiceDiscoveryTaskBase( pListener, bUseThreads ),
 	m_Result		( rResult ),
-	m_bDeleteWhenDone ( bDeleteWhenDone )
+	m_pParentBrowser ( pParentBrowser )
 {
 }
 
@@ -76,19 +84,20 @@ void wxServiceDiscoveryResolver::ResolveCallback(	DNSServiceRef sdRef,
 
 
 void wxServiceDiscoveryResolver::DoHandleResolveCallback(	DNSServiceRef sdRef, 
-														DNSServiceFlags flags, 
-														uint32_t interfaceIndex, 
-														DNSServiceErrorType errorCode, 
-														const char *fullname, 
-														const char *hosttarget, 
-														uint16_t port, 
-														uint16_t WXUNUSED( txtLen ), 
-														const char *txtRecord )
+															DNSServiceFlags flags, 
+															uint32_t interfaceIndex, 
+															DNSServiceErrorType errorCode, 
+															const char *fullname, 
+															const char *hosttarget, 
+															uint16_t port, 
+															uint16_t WXUNUSED( txtLen ), 
+															const char *txtRecord )
 {
 	wxASSERT( m_pListener != NULL );
 	wxASSERT( m_rServiceRef == sdRef );
 	
-	if ( m_pListener != NULL )
+	if ( ( m_pListener != NULL ) ||
+		 ( m_pParentBrowser != NULL ) )
 	{
 		m_Result.SetEventType( wxEVT_BONJOUR_RESOLVE_SERVICE );
 
@@ -113,11 +122,13 @@ void wxServiceDiscoveryResolver::DoHandleResolveCallback(	DNSServiceRef sdRef,
 			m_Result.SetTextRecord( wxString( txtRecord, wxConvUTF8 ) );
 		}
 		
-		wxPostEvent( m_pListener, m_Result );
+		if ( m_pListener != NULL )
+			wxPostEvent( m_pListener, m_Result );
+		
+		if ( m_pParentBrowser != NULL )
+			m_pParentBrowser->ResolutionCompleted( this, m_Result );
 	}
-
-	if ( m_bDeleteWhenDone )
-		delete this;
 }
 
 
+#endif // wxUSE_SERVICE_DISCOVERY

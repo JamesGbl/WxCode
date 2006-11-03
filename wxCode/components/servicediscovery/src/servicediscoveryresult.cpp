@@ -15,6 +15,8 @@
 
 #include "wx/servicediscoveryresult.h"
 
+#if wxUSE_SERVICE_DISCOVERY
+
 #ifndef _WIN32
 	#include <sys/types.h>
 	#include <sys/socket.h>
@@ -41,9 +43,9 @@ WX_DEFINE_USER_EXPORTED_OBJARRAY( wxServiceDiscoveryResultArray );
 
 wxServiceDiscoveryResult::wxServiceDiscoveryResult( void )
 	: wxEvent(),
-	m_bMoreComing ( false ),
-	m_NetworkInterface ( 0 ),
-	m_bResolved ( false )
+	m_bMoreComing		( false ),
+	m_NetworkInterface	( 0 ),
+	m_bResolved			( false )
 {
 }
 
@@ -123,4 +125,6 @@ void wxServiceDiscoveryResult::SetNetworkInterface	( wxUint32 iIface )
 	}
 }
 
+
+#endif // wxUSE_SERVICE_DISCOVERY
 

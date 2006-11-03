@@ -16,10 +16,14 @@
 #define _WX_SERVICE_DISCOVERY_RESOLVER_H_
 
 #include "wx/servicediscovery.h"
+
+#if wxUSE_SERVICE_DISCOVERY
+
 #include "wx/servicediscoverytaskbase.h"
 #include "wx/servicediscoveryresult.h"
 
 
+class wxServiceDiscoveryBrowser;
 
 	
 #pragma mark  -- class wxServiceDiscoveryResolver --
@@ -31,9 +35,9 @@ public:
 	#pragma mark  						-- Constructors and Destructors --
 
 										wxServiceDiscoveryResolver( wxEvtHandler * pListener,
-																 bool bUseThreads,
-																 wxServiceDiscoveryResult & rResult,
-																 bool bDeleteWhenDone = false );
+																	bool bUseThreads,
+																	wxServiceDiscoveryResult & rResult,
+																	wxServiceDiscoveryBrowser * pParentBrowser = NULL );
 
 	virtual								~wxServiceDiscoveryResolver( void );
 
@@ -76,13 +80,16 @@ protected:
 	#pragma mark  						-- Member Variables --
 
 		
-	wxServiceDiscoveryResult				m_Result;
-	bool								m_bDeleteWhenDone;
+	wxServiceDiscoveryResult			m_Result;
+	wxServiceDiscoveryBrowser *			m_pParentBrowser;
 	
 	DECLARE_NO_COPY_CLASS( wxServiceDiscoveryResolver )
 };
 
 
+WX_DECLARE_USER_EXPORTED_OBJARRAY( wxServiceDiscoveryResolver*, wxServiceDiscoveryResolveArray, WXDLLIMPEXP_SERVICEDISCOVERY );
 
+
+#endif // wxUSE_SERVICE_DISCOVERY
 
 #endif // _WX_SERVICE_DISCOVERY_RESOLVER_H_

@@ -15,11 +15,12 @@
 #ifndef _WX_SERVICE_DISCOVERY_SERVICE_H_
 #define _WX_SERVICE_DISCOVERY_SERVICE_H_
 
+#include "wx/servicediscovery.h"
 
+#if wxUSE_SERVICE_DISCOVERY
 
 #include <dns_sd.h>
 
-#include "wx/servicediscovery.h"
 #include "wx/servicediscoverytaskbase.h"
 
 
@@ -93,6 +94,6 @@ protected:
 };
 
 
-
+#endif // wxUSE_SERVICE_DISCOVERY
 
 #endif // _WX_SERVICE_DISCOVERY_SERVICE_H_
