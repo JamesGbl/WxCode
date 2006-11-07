@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Author: Francesco Montorsi
 # RCS-ID: $Id: acregen.sh,v 1.2 2005/11/21 22:51:20 frm Exp $
