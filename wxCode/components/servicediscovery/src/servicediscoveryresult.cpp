@@ -12,6 +12,7 @@
 
 #include "wx/wxprec.h"
 #include "wx/arrimpl.cpp"
+#include "wx/socket.h"
 
 #include "wx/servicediscoveryresult.h"
 
@@ -21,9 +22,14 @@
 	#include <sys/types.h>
 	#include <sys/socket.h>
 	#include <net/if.h>
+
+	#include <netdb.h>
 #else
 	#include <Iprtrmib.h>
 	#include <Iphlpapi.h>
+
+	#include <process.h>
+	#pragma comment(lib, "WSock32.Lib")
 
 	#pragma comment (lib, "Iphlpapi.lib")
 #endif
@@ -59,6 +65,7 @@ m_RegType			( rhs.m_RegType ),
 m_Domain			( rhs.m_Domain ),
 m_NetworkInterface	( rhs.m_NetworkInterface ),
 m_InterfaceName		( rhs.m_InterfaceName ),
+m_Address			( rhs.m_Address ),
 m_bResolved			( rhs.m_bResolved ),
 m_FullDNSName		( rhs.m_FullDNSName ),
 m_Port				( rhs.m_Port ),
@@ -122,6 +129,46 @@ void wxServiceDiscoveryResult::SetNetworkInterface	( wxUint32 iIface )
 	else
 	{
 		m_InterfaceName = _("unknown");
+	}
+}
+
+
+
+void wxServiceDiscoveryResult::SetPort ( wxUint16 iPort )
+{
+	m_Port = iPort;
+	
+	m_Address.Service( m_Port );
+}
+
+
+
+void wxServiceDiscoveryResult::SetTarget ( wxString iTarget )
+{
+	m_TargetMachine = iTarget;
+	
+	hostent * pHost = gethostbyname( m_TargetMachine.mb_str() );
+
+	if ( pHost != NULL )
+	{
+//#ifdef __WXDEBUG__
+//		wxString host_ip;
+//		
+//		host_ip << static_cast<wxUint8>( pHost->h_addr[0] ) << wxT(".") 
+//				<< static_cast<wxUint8>( pHost->h_addr[1] ) << wxT(".") 
+//				<< static_cast<wxUint8>( pHost->h_addr[2] ) << wxT(".") 
+//				<< static_cast<wxUint8>( pHost->h_addr[3] );
+//		
+//		wxLogDebug( wxT("Got IP: %s"),
+//					host_ip.c_str() );
+//#endif
+		
+		wxUint32 address = wxINT32_SWAP_ON_LE( * reinterpret_cast<wxUint32 *>( pHost->h_addr ) );
+
+		m_Address.Hostname( address );
+		
+		wxLogDebug( wxT("Got IP:  %s"),
+					m_Address.IPAddress().c_str() );
 	}
 }
 

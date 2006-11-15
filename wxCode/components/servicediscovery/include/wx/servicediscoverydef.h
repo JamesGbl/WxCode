@@ -14,10 +14,12 @@
 #ifndef _WX_SERVICE_DISCOVERY_DEFS_H_
 #define _WX_SERVICE_DISCOVERY_DEFS_H_
 
-#ifdef __WXDEBUG__
-	#define wxUSE_SERVICE_DISCOVERY 1
-#else
-	#define wxUSE_SERVICE_DISCOVERY 0
+#ifndef wxUSE_SERVICE_DISCOVERY
+	#ifdef __WXDEBUG__
+		#define wxUSE_SERVICE_DISCOVERY 1
+	#else
+		#define wxUSE_SERVICE_DISCOVERY 0
+	#endif
 #endif
 
 

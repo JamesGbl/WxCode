@@ -68,17 +68,18 @@ bool wxServiceDiscoveryResolver::DoStart( void )
 #pragma mark  						-- Resolution Callbacks --
 
 void wxServiceDiscoveryResolver::ResolveCallback(	DNSServiceRef sdRef, 
-												DNSServiceFlags flags, 
-												uint32_t interfaceIndex, 
-												DNSServiceErrorType errorCode, 
-												const char *fullname, 
-												const char *hosttarget, 
-												uint16_t port, 
-												uint16_t txtLen, 
-												const char *txtRecord, 
-												void *context )
+													DNSServiceFlags flags, 
+													uint32_t interfaceIndex, 
+													DNSServiceErrorType errorCode, 
+													const char *fullname, 
+													const char *hosttarget, 
+													uint16_t port, 
+													uint16_t txtLen, 
+													const char *txtRecord, 
+													void *context )
 {
-	static_cast<wxServiceDiscoveryResolver *>( context )->DoHandleResolveCallback( sdRef, flags, interfaceIndex, errorCode, fullname, hosttarget, port, txtLen, txtRecord );
+	static_cast<wxServiceDiscoveryResolver *>( context )->DoHandleResolveCallback( sdRef, flags, interfaceIndex, errorCode, 
+																				   fullname, hosttarget, port, txtLen, txtRecord );
 }
 
 
@@ -126,7 +127,11 @@ void wxServiceDiscoveryResolver::DoHandleResolveCallback(	DNSServiceRef sdRef,
 			wxPostEvent( m_pListener, m_Result );
 		
 		if ( m_pParentBrowser != NULL )
+		{
+			// Note that the parent could delete us here, so we can't reference
+			// this afterwards
 			m_pParentBrowser->ResolutionCompleted( this, m_Result );
+		}
 	}
 }
 

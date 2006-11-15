@@ -160,10 +160,10 @@ bool wxServiceDiscoveryTaskBase::Start( void )
 										0,
 										CW_USEDEFAULT,
 										0,
-										NULL, 
+										HWND_MESSAGE, // requires 2000/XP http://msdn2.microsoft.com/en-us/library/ms632599.aspx#message_only
 										NULL,
 										instance,
-										this ); 
+										NULL ); 
 
 					BOOL status = SetProp( wind, PROPNAME, this );
 					wxASSERT( status != 0 );
@@ -237,10 +237,13 @@ bool wxServiceDiscoveryTaskBase::Stop( void )
 				// Clean up. This is not strictly necessary since the normal 
 				// process cleanup will close DNS-SD socket(s) and release memory, 
 				// but it's here to demonstrate how to do it. 
-				WSAAsyncSelect( dns_sd_fd,
-								wind, 
-								DNSSD_EVENT,
-								0 ); 
+//				WSAAsyncSelect( dns_sd_fd,
+//								wind, 
+//								DNSSD_EVENT,
+//								0 );
+				
+				DestroyWindow( wind );
+				
 				wind = NULL;
 			}
 			
@@ -284,13 +287,10 @@ HINSTANCE wxServiceDiscoveryTaskBase::instance = NULL;
 
 WNDCLASSEX & wxServiceDiscoveryTaskBase::GetWndClass( void )
 {
-//	static HWND			wind		= NULL;
 	static WNDCLASSEX	wcex;
-//	static HINSTANCE	instance	= NULL;
+	static ATOM			atom;
 	static bool			bRegistered = false;
 
-//	MSG 				msg			= NULL;
-//	int					err			= 0;
 	
 	if ( instance == NULL )
 		instance = GetModuleHandle( NULL );
@@ -309,29 +309,16 @@ WNDCLASSEX & wxServiceDiscoveryTaskBase::GetWndClass( void )
 		wcex.hCursor = NULL; 
 		wcex.hbrBackground = NULL; 
 		wcex.lpszMenuName = NULL; 
-		wcex.lpszClassName = TEXT("wxServiceDiscoveryTaskBaseEvtHandlerWindow"); 
+		wcex.lpszClassName = wxT("wxBonjourEvtHdlrIntWndw"); 
 		wcex.hIconSm = NULL; 
 		
-		RegisterClassEx(&wcex);
+		atom = RegisterClassEx(&wcex);
+
+		wxASSERT( atom != 0 );
 		
 		bRegistered = true;
 	}
-	
-//	if ( wind == NULL )
-//	{
-//		wind = CreateWindow(wcex.lpszClassName, 
-//							wcex.lpszClassName,
-//							0, 
-//							CW_USEDEFAULT,
-//							0,
-//							CW_USEDEFAULT,
-//							0,
-//							NULL, 
-//							NULL,
-//							instance,
-//							this ); 
-//	}
-	
+		
 	return wcex;
 }
 

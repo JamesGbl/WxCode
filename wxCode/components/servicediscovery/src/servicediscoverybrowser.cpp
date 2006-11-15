@@ -44,6 +44,7 @@ wxServiceDiscoveryBrowser::~wxServiceDiscoveryBrowser( void )
 {
 	for( size_t i = 0; i < m_ActiveResolvers.GetCount(); i++ )
 	{
+		delete m_ActiveResolvers[0];
 		m_ActiveResolvers.RemoveAt( 0 );
 	}
 }
@@ -97,12 +98,12 @@ void wxServiceDiscoveryBrowser::BrowserCallback ( DNSServiceRef sdRef,
 
 
 void wxServiceDiscoveryBrowser::DoHandleBrowserCallback(	DNSServiceRef WXUNUSED_UNLESS_DEBUG( sdRef ), 
-														DNSServiceFlags flags, 
-														uint32_t interfaceIndex, 
-														DNSServiceErrorType errorCode, 
-														const char *serviceName, 
-														const char *regtype, 
-														const char *replyDomain )
+															DNSServiceFlags flags, 
+															uint32_t interfaceIndex, 
+															DNSServiceErrorType errorCode, 
+															const char *serviceName, 
+															const char *regtype, 
+															const char *replyDomain )
 {
 	wxLogDebug( wxT("Got browser callback:  error code:  %d  flags:  %x   name:  %s   regtype:  %s   domain:  %s"),
 				int(errorCode),
@@ -141,7 +142,7 @@ void wxServiceDiscoveryBrowser::DoHandleBrowserCallback(	DNSServiceRef WXUNUSED_
 			if ( m_bAutoResolve )
 			{
 				wxServiceDiscoveryResolver * pResolve = new wxServiceDiscoveryResolver( m_pListener, 
-																						m_bUseThreads, // don't use threads
+																						m_bUseThreads, // use threads if the browser already is
 																						event,
 																						this );
 				
@@ -164,7 +165,17 @@ void wxServiceDiscoveryBrowser::DoHandleBrowserCallback(	DNSServiceRef WXUNUSED_
 			
 			if ( m_bAutoResolve )
 			{
-				
+				for( unsigned int j = 0; j < m_ActiveResolvers.Count(); j++ )
+				{
+					if ( m_ActiveResolvers[j]->IsResolvingService( event ) )
+					{
+						// This service was still in the process of being resolved.
+						// Stop that, as it isn't available anymore.
+						delete m_ActiveResolvers[j];
+						m_ActiveResolvers.RemoveAt( j );
+						break;
+					}
+				}
 			}
 		}
 		
@@ -186,6 +197,17 @@ void wxServiceDiscoveryBrowser::ResolutionCompleted( wxServiceDiscoveryResolver 
 	}
 	
 	m_ResultsArray.Add( rResult );
+
+	
+	for( unsigned int j = 0; j < m_ActiveResolvers.Count(); j++ )
+	{
+		if ( m_ActiveResolvers[j] == pResolver )
+		{
+			m_ActiveResolvers.RemoveAt( j );
+			delete pResolver;
+			break;
+		}
+	}
 }
 
 

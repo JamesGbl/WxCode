@@ -45,6 +45,8 @@ public:
 	#pragma mark  						-- Resolving Services --
 
 	virtual	bool						DoStart( void );
+	
+	virtual bool						IsResolvingService( const wxServiceDiscoveryResult & rResult ) const { return m_Result == rResult; }
 
 	
 	

@@ -19,6 +19,8 @@
 
 #if wxUSE_SERVICE_DISCOVERY
 
+#include "wx/socket.h"
+
 
 #pragma mark  -- class wxServiceDiscoveryResult --
 
@@ -70,13 +72,15 @@ public:
 	virtual void				SetFullName			( wxString iName )		{ m_FullDNSName = iName; }
 	
 	virtual wxUint16			Port				( void ) const			{ return m_Port; }
-	virtual void				SetPort				( wxUint16 iPort )		{ m_Port = iPort; }
+	virtual void				SetPort				( wxUint16 iPort );
 	
 	virtual const wxString &	Target				( void ) const			{ return m_TargetMachine; }
-	virtual void				SetTarget			( wxString iTarget )	{ m_TargetMachine = iTarget; }
+	virtual void				SetTarget			( wxString iTarget );
 	
 	virtual	const wxString &	TextRecord			( void ) const			{ return m_TxtRecord; }
 	virtual void				SetTextRecord		( wxString iTxtRecord )	{ m_TxtRecord = iTxtRecord; }
+	
+	virtual const wxIPV4address	GetAddress			( void ) const			{ return m_Address; }
 	
 	
 protected:
@@ -91,6 +95,7 @@ protected:
 			wxUint32			m_NetworkInterface;
 			wxString			m_InterfaceName;
 			
+			wxIPV4address		m_Address;
 			
 			bool				m_bResolved;
 			
