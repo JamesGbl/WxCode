@@ -4,8 +4,12 @@
 //
 // Author:      Cecilio Salmeron
 // RCS-ID:      $Id$
-// Copyright:   (c) 2005 Cecilio Salmeron
+// Copyright:   (c) 2005-2006 Cecilio Salmeron
 // Licence:     wxWidgets licence
+//
+// Changes:
+// 1.2  2006/Aug/18 For internationalization, strings can not be statically initialized.
+//                  Initialization of strings added to wxMidiDatabaseGM constructor.
 //=====================================================================================
 #ifdef __GNUG__
 // #pragma interface
@@ -37,7 +41,7 @@
 
 
 //Constants
-#define wxMIDI_VERSION		_T("1.0")
+#define wxMIDI_VERSION		_T("1.3")
 #define wxMidiDeviceID		PmDeviceID
 #define wxMidiTimestamp		PmTimestamp
 #define wxMidiPmMessage		PmMessage
@@ -336,7 +340,7 @@ public:
 
 
 private:
-	wxMidiDatabaseGM() {}
+	wxMidiDatabaseGM();
 	void	Initialize();
 
 	#define NUM_SECTIONS	16			//number of sections

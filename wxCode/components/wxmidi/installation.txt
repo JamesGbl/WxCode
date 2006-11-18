@@ -1,12 +1,10 @@
- RCS-ID:   $Id$
-
  wxMidi component info
  ======================
  
  Component:  wxMidi
- Release:    1.1
- Date:       03-Jan-2006
- wxWidgets:  2.4.x, 2.5.x, 2.6.x
+ Release:    1.3
+ Date:       18-Nov-2006
+ wxWidgets:  2.4.x, 2.5.x, 2.6.x, 2.7.x, 2.8.0
  Maintainer: Cecilio Salmeron  /  s.cecilio@gmail.com
    
  Description:
@@ -26,9 +24,9 @@
  
     - SysEx messages are not received in chunks with real-time messages interleaved. In wxMidi,
         sysex messages are received completed, in a single string of bytes, and any
-        real-time message embeded is delivered before the sysex message is delivered.
+        real-time message embedded is delivered before the sysex message is delivered.
  
-    - All buffer allocation process for messages is now hiden in the wxMidi clases. User has
+    - All buffer allocation process for messages is now hidden in the wxMidi classes. User has
         not to worry abut this.
 
     - wxMidi also includes an additional feature, class wxMidiDatabaseGM, which provides methods
@@ -39,7 +37,6 @@
     perfectly integrated with wxWidgets and easily extensible since they provide good
     commented code and documentation.
 
-    wxMidi has been tested only in Windows.
  
 
 
@@ -69,15 +66,48 @@
  lib                    library files for using wxMidi
  lib/pm                 portmidi release libraries
  lib/pmd                portmidi debug libraries
+ 
+ locale                 .po and .mo files with current translations
 
  doc                    documentation
 
 
 
 
- wxMidi 1.x Installation
- ========================
+wxMidi Installation
+========================
  
+There are three alternatives:
+
+a) The simplest: Use it as part of your application source code
+---------------------------------------------------------------
+wxMidi wrapper is just two source files and one header file,
+so probably the best way to use wxMidi is to build the source files
+together with the sources of your application: in this case you should just add
+the source & header files to your project and compile them with the
+standard wxWidgets flags.
+
+Obviously you will also require the portmidi library. For win32 the libraries,
+for debug and release, are included in the wxMidi package. For other systems you must
+build the portmidi libraries. For your convenience, the portmidi package is
+included in the wxMidi package.
+
+
+b) Use the included wxmidi pre-built library (win32)
+----------------------------------------------------
+A second alternative is to use the wxMidi pre-buil library, included
+in the wxMidi package. It is pre-built in four
+configurations (for Win32, using xwWidgets 2.8.0rc1):
+
+          lib\wxmidi.lib      release library
+          lib\wxmidiu.lib     release Unicode library
+          lib\wxmidid.lib     Debug library
+          lib\wxmidiud.lib    Debug Unicode library
+
+
+c) Build a wxMidi library or dll and include it in your application
+-------------------------------------------------------------------
+The third alternative is to build yourself the wxMidi library.
 wxMidi has been developed and tested in Windows. Makefiles included in this distribution are only
 for MS Visual Studio 2003 .NET.  Sorry, but I do not have equipment/knowledge to give
 support for other compilers/platforms. Any help with this will be appreciated.
@@ -86,14 +116,14 @@ support for other compilers/platforms. Any help with this will be appreciated.
  =============================================================================
  Step 1: INSTALL PORTMIDI    (For windows is already done. You can skip this step)
 
-   Be aware that the current version of PortMidi (17/nov/04) produces systematically
+   Be aware that the current version of PortMidi (17/Nov/04) produces systematically
    a memory leak. The problem is not serious as the memory leak refers to some small
    fixed blocks of memory (about 20-40 bytes, one block per MIDI device in your machine)
-   allocated on initialization that are not released at termination of the portmidi package.
-   The problem IS FIXED in the PortMidi package included with wxMidi and the patch
+   allocated on initialisation that are not released at termination of the portmidi package.
+   THE PROBLEM IS FIXED in the PortMidi package included with wxMidi and the patch
    has been reported to PortMidi maintainers.
    But take this into account if you decide to download the PortMidi package and install
-   it instead of using the precompiled package included with wxMidi.
+   it instead of using the pre-compiled package included with wxMidi.
  =============================================================================
 
 
@@ -109,9 +139,9 @@ support for other compilers/platforms. Any help with this will be appreciated.
     PM_CHECK_ERRORS IS NOT DEFINED IN THE PORTMIDI PROJECT (check that this definition
     is not included by in the predefined symbols list in the Settings dialog box).
     For Unicode versions, wxMidi takes care of converting portmidi strings to
-    Unicode, so it is not necesary to build a Unicode version of portmidi libraries.
+    Unicode, so it is not necessary to build a Unicode version of portmidi libraries.
 
-3)  After successful compilation, copy the libraries to the appropiate folder (\pm folder
+3)  After successful compilation, copy the libraries to the appropriate folder (\pm folder
     for release version, \pmd folder for debug version) in wxMidi\lib:
 
         wxMidi\src\portmidi\pm_win\Release\pm_dll.dll    -->  wxMidi\lib\pm\pm_dll.dll
@@ -126,19 +156,19 @@ support for other compilers/platforms. Any help with this will be appreciated.
 
 
  =============================================================================
- Setp 2: COMPILE wxMidi    (For windows is already done. You can skip this step)
+ Step 2: COMPILE wxMidi    (For windows is already done. You can skip this step)
  =============================================================================
 
 1)  Compile wxMidi. All makefiles and project are located in build\msw directory.
     After successful compilation you'll find the library in the subdirectory wxMidi\lib. 
-    Name of the compiled library follow this scheme: name begin with "wxmidi" followed by
-    version number and letters indicating if the library is compiled as Unicode ('u') 
+    Name of the compiled library follow this scheme: name begin with "wxmidi" followed 
+    letters indicating if the library is compiled as Unicode ('u') 
     and/or debug build ('d'). Here are some examples:
 
-          lib\wxmidi10.lib  release library
-          lib\wxmidi10u.lib release Unicode library
-          lib\wxmidi10d.lib Debug library
-          lib\wxmidi10ud.lib    Debug Unicode library
+          lib\wxmidi.lib      release library
+          lib\wxmidiu.lib     release Unicode library
+          lib\wxmidid.lib     Debug library
+          lib\wxmidiud.lib    Debug Unicode library
 
 
 2)  IMPORTANT! In Windows, portmidi needs the pm_dll.dll, but there is no simple way
@@ -148,7 +178,7 @@ support for other compilers/platforms. Any help with this will be appreciated.
 
 
  =============================================================================
- Setp 3: COMPILE midisound SAMPLE TEST APPLICATION
+ Step 3: COMPILE midisound SAMPLE TEST APPLICATION
  =============================================================================
 
 For now, only project file for MS VC .NET 2003 !!
