@@ -56,7 +56,7 @@ bool wxServiceDiscoveryService::DoStart( void )
 													m_Type.mb_str( wxConvUTF8 ),
 													NULL, // The OS will use the .local domain, which is what we want
 													NULL, // current host, i.e. our self, not some other machine
-													m_Port,
+													wxUINT16_SWAP_ON_BE( m_Port ),
 													0, // text size
 													NULL, // text ptr
 													RegistrationCallback,
