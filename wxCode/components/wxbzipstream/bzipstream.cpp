@@ -4,7 +4,7 @@
 // Author:      Ryan Norton
 // Modified by:
 // Created:     10/11/03
-// RCS-ID:      $Id: bzipstream.cpp,v 1.2 2006-12-12 17:20:05 ryannpcs Exp $
+// RCS-ID:      $Id: bzipstream.cpp,v 1.3 2006-12-12 17:28:07 ryannpcs Exp $
 // Copyright:   (c) Ryan Norton
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -12,6 +12,7 @@
 #include "wx/wxprec.h"
 
 #ifndef WX_PRECOMP
+    #include "wx/wx.h"
     #include "wx/utils.h"
     #include "wx/intl.h"
     #include "wx/log.h"
