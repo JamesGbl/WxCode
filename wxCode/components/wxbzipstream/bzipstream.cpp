@@ -2,9 +2,9 @@
 // Name:        bzipstream.cpp
 // Purpose:     BZip stream classes
 // Author:      Ryan Norton
-// Modified by:
+// Modified by: David Hart (numerous fixes)
 // Created:     10/11/03
-// RCS-ID:      $Id: bzipstream.cpp,v 1.3 2006-12-12 17:28:07 ryannpcs Exp $
+// RCS-ID:      $Id: bzipstream.cpp,v 1.4 2006-12-13 18:53:39 ryannpcs Exp $
 // Copyright:   (c) Ryan Norton
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -48,7 +48,7 @@
 wxBZipInputStream::wxBZipInputStream(wxInputStream& Stream, 
 									 bool bLessMemory) : 
     wxFilterInputStream(Stream),
-	nBufferPos(0)
+	m_nBufferPos(0)
 {
 	m_hZip = (void*) new bz_stream;
 
@@ -63,7 +63,8 @@ wxBZipInputStream::wxBZipInputStream(wxInputStream& Stream,
 	if (BZ2_bzDecompressInit(hZip, 0, bLessMemory)!= BZ_OK)
 	{
 		delete hZip;
-		wxLogSysError(wxT("Could not initialize bzip decompression engine!"));
+		wxLogSysError(wxT("Could not initialize bzip ")
+                      wxT("decompression engine!"));
 	}
 }
 
@@ -93,21 +94,24 @@ off_t wxBZipInputStream::SeekRawI(off_t pos, wxSeekMode sm)
 size_t wxBZipInputStream::OnSysRead(void* buffer, size_t bufsize)
 {
     bz_stream* hZip = (bz_stream*)m_hZip;
-	wxInt32 nRead = 0;
 
-	hZip->next_out = &(((char*)buffer)[nRead]);
+	hZip->next_out = (char*)buffer;
 	hZip->avail_out = bufsize;
 
 	while (hZip->avail_out != 0)
 	{
-		if (nBufferPos == 0 || nBufferPos == WXBZBS)
+		if (m_nBufferPos == 0 || m_nBufferPos == WXBZBS)
 		{
-			ReadRaw(pBuffer, WXBZBS);
-			nBufferPos = 0;
-			hZip->next_in = &pBuffer[nBufferPos];
-			hZip->avail_in = WXBZBS - nBufferPos;
-			if (m_parent_i_stream->LastRead() != WXBZBS)
+			ReadRaw(m_pBuffer, WXBZBS);
+			
+            m_nBufferPos = 0;
+			hZip->next_in = m_pBuffer;
+			hZip->avail_in = WXBZBS;
+
+            if (m_parent_i_stream->LastRead() != WXBZBS)
 			{
+                // Full amount not read, so do a last
+                // minute tidy up and decompress what is left
 				hZip->avail_in = m_parent_i_stream->LastRead();
 
 				int nRet = BZ2_bzDecompress(hZip);
@@ -118,15 +122,16 @@ size_t wxBZipInputStream::OnSysRead(void* buffer, size_t bufsize)
 					return 0;
 			}
 		}
-		
-        hZip->next_in = &pBuffer[nBufferPos];
-		hZip->avail_in = WXBZBS - nBufferPos;
+
+        // Buffer full, decompress some bytes
+        hZip->next_in = &m_pBuffer[m_nBufferPos];
+		hZip->avail_in = WXBZBS - m_nBufferPos;
 
 		int nRet = BZ2_bzDecompress(hZip);
 
 		if (nRet == BZ_OK)	
 		{
-			nBufferPos = WXBZBS  - hZip->avail_in;
+			m_nBufferPos = WXBZBS - hZip->avail_in;
 		}
 		else if(nRet == BZ_STREAM_END)
 			return bufsize - hZip->avail_out;
@@ -157,10 +162,11 @@ wxBZipOutputStream::wxBZipOutputStream(wxOutputStream& Stream,
 
 	//param 2 - compression factor = 1-9 9 more compression but slower
 	//param 3 - verbosity = 0-4, 4 more stuff to stdio (ignored)
-	//param 4 - workfactor = reliance on standard comp alg, 0-250, 0==30 default
+	//param 4 - workfactor = reliance on standard comp alg, 0-250, 
+    //                                                      0==30 default
 	if (BZ2_bzCompressInit(hZip, nCompressionFactor, 0, 0)!= BZ_OK)
 	{
-		delete m_hZip;
+		delete hZip;
 		wxLogSysError(wxT("Could not initialize bzip compression engine!"));
 	}
 }
@@ -169,7 +175,6 @@ wxBZipOutputStream::~wxBZipOutputStream()
 {
     bz_stream* hZip = (bz_stream*)m_hZip;
 
-    Close();
     BZ2_bzCompressEnd(hZip);
 	delete hZip;
 }
@@ -193,21 +198,21 @@ size_t wxBZipOutputStream::OnSysWrite(const void* buffer, size_t bufsize)
 {
     bz_stream* hZip = (bz_stream*)m_hZip;
 
-    hZip->next_in = &(((char*)buffer)[0]);
+    hZip->next_in = (char*)buffer;
     hZip->avail_in = bufsize;
-	hZip->next_out = &pBuffer[0];
+	hZip->next_out = m_pBuffer;
 	hZip->avail_out = WXBZBS;
 
     size_t nWrote = 0;
     int nRet = BZ_RUN_OK;  // for the 'while' statement
 
-    while( nRet==BZ_RUN_OK && hZip->avail_in > 0 )
+    while( nRet== BZ_RUN_OK && hZip->avail_in > 0 )
     {
         // Compress the data in buffer, resulting data -> pbuffer
         nRet = BZ2_bzCompress(hZip, BZ_RUN);  
         if (nRet != BZ_RUN_OK)
         { 
-            wxLogDebug(wxT("Error:  Was not BZ_RUN_OK")); 
+            wxLogDebug(wxT("Error from BZ2_bzCompress in Write()")); 
             return 0; 
         }
 
@@ -216,7 +221,7 @@ size_t wxBZipOutputStream::OnSysWrite(const void* buffer, size_t bufsize)
         if (nCurWrite != 0)
 		{
             // Deliver the compressed data to the parent stream
-            WriteRaw(pBuffer, nCurWrite);    
+            WriteRaw(m_pBuffer, nCurWrite);    
             if (m_parent_o_stream->LastWrite() != nCurWrite)
             { 
                 wxLogDebug(wxT("Error writing to underlying stream")); 
@@ -225,7 +230,7 @@ size_t wxBZipOutputStream::OnSysWrite(const void* buffer, size_t bufsize)
 
             //Reset the buffer
             hZip->avail_out = WXBZBS;  
-            hZip->next_out = &pBuffer[0];
+            hZip->next_out = m_pBuffer;
             nWrote += nCurWrite;
 		}
 	}
@@ -244,14 +249,14 @@ bool wxBZipOutputStream::Close() // Flushes any remaining compressed data
 
     while ( nRet == BZ_FINISH_OK )
 	{
-		hZip->next_out = &pBuffer[0];
+		hZip->next_out = m_pBuffer;
 		hZip->avail_out = WXBZBS;
 
         // Call BZ2_bzCompress with the parameter BZ_FINISH
 		int nRet = BZ2_bzCompress(hZip, BZ_FINISH);
 		if (nRet != BZ_FINISH_OK && nRet != BZ_STREAM_END)
 		{ 
-            wxLogDebug(wxT("ErrorFK")); 
+            wxLogDebug(wxT("BZ2_bzCompress error in Close()")); 
             break; 
         }
 		
@@ -259,11 +264,12 @@ bool wxBZipOutputStream::Close() // Flushes any remaining compressed data
 
         if (nCurWrite != 0)
 		{
-			WriteRaw(pBuffer, nCurWrite);
+			WriteRaw(m_pBuffer, nCurWrite);
 
 			if (m_parent_o_stream->LastWrite() != nCurWrite)
             { 
-                wxLogDebug(wxT("Error writing to underlying stream during the Finish phase")); 
+                wxLogDebug(wxT("Error writing to underlying ")
+                           wxT("stream during the Close() phase")); 
                 break; 
             }
         }
@@ -274,7 +280,6 @@ bool wxBZipOutputStream::Close() // Flushes any remaining compressed data
 		}
 	}
  
-    wxLogDebug("An error happened in Finish() :(");
     return false;
 }
 
@@ -295,6 +300,8 @@ wxBZipStream::~wxBZipStream(){}
 //
 //---------------------------------------------------------------------------
 
+#if wxVERSION_NUMBER > 2701
+
 IMPLEMENT_DYNAMIC_CLASS(wxBZipClassFactory, wxFilterClassFactory)
 
 static wxBZipClassFactory g_wxBZipClassFactory;
@@ -310,8 +317,10 @@ wxBZipClassFactory::GetProtocols(wxStreamProtocolType type) const
 {
     static const wxChar *protos[] =     
         { _T("bzip"), _T("bzip2"), NULL };
-    static const wxChar *mimes[] =     //http://trac.lighttpd.net/trac/ticket/29
-        { _T("a\application/x-bzip"), _T("application/x-bzip-compressed-tar"), NULL };
+    static const wxChar *mimes[] = 
+        { _T("a\application/x-bzip"), 
+          _T("application/x-bzip-compressed-tar"), 
+          NULL };
     static const wxChar *encs[] = 
         { _T("bzip"), _T("bzip2"), NULL };
     static const wxChar *exts[] =    
@@ -328,5 +337,6 @@ wxBZipClassFactory::GetProtocols(wxStreamProtocolType type) const
     }
 }
 
+#endif // wxVERSION_NUMBER > 2701
 
 #endif  //wxUSE_ZLIB && wxUSE_STREAMS

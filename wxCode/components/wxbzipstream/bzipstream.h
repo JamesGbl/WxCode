@@ -4,7 +4,7 @@
 // Author:      Ryan Norton
 // Modified by:
 // Created:     09/05/03
-// RCS-ID:      $Id: bzipstream.h,v 1.2 2006-12-12 17:20:05 ryannpcs Exp $
+// RCS-ID:      $Id: bzipstream.h,v 1.3 2006-12-13 18:53:39 ryannpcs Exp $
 // Copyright:   (c) Ryan Norton
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -29,7 +29,8 @@
 class wxBZipInputStream : public wxFilterInputStream
 {
 public:
-	//	if bLessMemory is true, uses decompression alg w/less mem, but less speed also
+	// if bLessMemory is true, uses decompression algorithm 
+    // which uses less memory, but is also slower
 	wxBZipInputStream(wxInputStream& stream, bool bLessMemory = false); 
 	virtual ~wxBZipInputStream();
 
@@ -39,11 +40,11 @@ public:
 
 	void* GetHandleI() {return m_hZip;}
 protected:
-	size_t OnSysRead(void *buffer, size_t size);
+	virtual size_t OnSysRead(void *buffer, size_t size);
 
-	void* m_hZip;
-	char pBuffer[WXBZBS];
-	int nBufferPos;
+	void*   m_hZip;
+	char    m_pBuffer[WXBZBS];
+	int     m_nBufferPos;
 };
 
 //---------------------------------------------------------------------------
@@ -53,7 +54,10 @@ protected:
 class wxBZipOutputStream : public wxFilterOutputStream
 {
 public:
-	wxBZipOutputStream(wxOutputStream& stream, wxInt32 nCompressionFactor = 4);
+    // nCompressionFactor is from 1-9; compression is higher but slower
+    // at higher numbers
+	wxBZipOutputStream(wxOutputStream& stream, 
+                       wxInt32 nCompressionFactor = 4);
 	virtual ~wxBZipOutputStream();
 
 	wxOutputStream& WriteRaw(void* pBuffer, size_t size);
@@ -61,13 +65,14 @@ public:
 	off_t SeekRawO(off_t pos, wxSeekMode sm = wxFromStart);
      
 	void* GetHandleO() {return m_hZip;}
-protected:
-	size_t OnSysWrite(const void *buffer, size_t bufsize);
-	
-    bool  Close();
 
-    void* m_hZip;
-	char pBuffer[WXBZBS];
+    virtual bool  Close();
+
+protected:
+	virtual size_t OnSysWrite(const void *buffer, size_t bufsize);
+	
+    void*   m_hZip;
+	char    m_pBuffer[WXBZBS];
 };
 
 //---------------------------------------------------------------------------
@@ -84,6 +89,9 @@ public:
 //---------------------------------------------------------------------------
 //      wxBZipClassFactory - wxArchive integration
 //---------------------------------------------------------------------------
+
+#if wxVERSION_NUMBER > 2701
+
 class WXEXPORT wxBZipClassFactory: public wxFilterClassFactory
 {
 public:
@@ -105,5 +113,7 @@ private:
     DECLARE_DYNAMIC_CLASS(wxBZipClassFactory)
 };
 
-#endif //wxUSE_STREAMS
-#endif 
+#endif // wxVERSION_NUMBER > 2701
+
+#endif // wxUSE_STREAMS
+#endif // _WX_WXBZSTREAM_H__

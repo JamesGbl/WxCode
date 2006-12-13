@@ -9,28 +9,34 @@
 // Author:      Ryan Norton
 // Modified by:
 // Created:     12/12/2006
-// RCS-ID:      $Id: bzipcopy.cpp,v 1.1 2006-12-12 17:20:06 ryannpcs Exp $
+// RCS-ID:      $Id: bzipcopy.cpp,v 1.2 2006-12-13 18:53:39 ryannpcs Exp $
 // Copyright:   (c) Ryan Norton
 // Licence:     None (Public Domain)
 /////////////////////////////////////////////////////////////////////////////
 
+//#define TEST_ARCHIVE
+
 #include <wx/wx.h>
 #include <wx/wfstream.h>
-#include <wx/filesys.h>
-#include <wx/fs_arc.h>
-#include <wx/fs_filter.h>
+
+#ifdef TEST_ARCHIVE
+    #include <wx/filesys.h>
+    #include <wx/fs_arc.h>
+    #include <wx/fs_filter.h>
+#endif
 
 #include "bzipstream.h"
 
-//#define TEST_ARCHIVE
 
 class wxBZipCopyApp : public wxApp
 {
 public:
 	bool OnInit()
 	{
+#ifdef TEST_ARCHIVE
         wxFileSystem::AddHandler(new wxArchiveFSHandler);
         wxFileSystem::AddHandler(new wxFilterFSHandler);
+#endif
 
 		wxFileDialog f(NULL);
 		if (f.ShowModal() == wxID_OK)
@@ -64,10 +70,12 @@ public:
             delete fsfile;
 #else
 			delete zi;
-            delete (wxFileInputStream*) p1;
+            delete p1;
 #endif
+            zo->Close();
+            p2->Close();
 			delete zo;
-            delete (wxFileOutputStream*) p2;
+            delete p2;
 			wxMessageBox("Done!");
 		}
 
