@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.98 2006-09-22 19:49:44 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.99 2006-12-18 21:10:13 wyo Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -1195,7 +1195,7 @@ void wxTreeListHeaderWindow::OnPaint( wxPaintEvent &WXUNUSED(event) )
         if ((image != -1) && imageList)
             params.m_labelBitmap = imageList->GetBitmap(image);
 
-        wxRendererNative::Get().DrawHeaderButton(this, dc, rect, flags, &params);
+        wxRendererNative::Get().DrawHeaderButton(this, dc, rect, flags, wxHDR_SORT_ICON_NONE, &params);
     }
 
     if (x < w) {
