@@ -3,7 +3,7 @@
 // Purpose:     wxSplitWindow
 // Maintainer:  Wyo
 // Created:     2006-04-18
-// RCS-ID:      $Id: splitwindow.cpp,v 1.2 2006-05-07 14:30:30 wyo Exp $
+// RCS-ID:      $Id: splitwindow.cpp,v 1.3 2006-12-18 21:09:41 wyo Exp $
 // Copyright:   (c) 2006 wxCode
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
@@ -97,7 +97,7 @@ BEGIN_EVENT_TABLE (wxSplitWindow, wxWindow)
     WX_EVENT_TABLE_CONTROL_CONTAINER (wxSplitWindow)
 END_EVENT_TABLE()
 
-WX_DELEGATE_TO_CONTROL_CONTAINER(wxSplitWindow);
+WX_DELEGATE_TO_CONTROL_CONTAINER(wxSplitWindow, wxWindow);
 
 bool wxSplitWindow::Create (wxWindow *parent, wxWindowID id,
                             const wxPoint& pos,
@@ -735,8 +735,8 @@ wxSize wxSplitWindow::DoGetBestSize() const {
     // get best sizes of subwindows
     wxSize size1, size2;
     size1.x = 0; size1.y = 0; size2.x = 0; size2.y = 0;
-    if (m_windowOne) size1 = m_windowOne->GetAdjustedBestSize();
-    if (m_windowTwo) size2 = m_windowTwo->GetAdjustedBestSize();
+    if (m_windowOne) size1 = m_windowOne->GetEffectiveMinSize();
+    if (m_windowTwo) size2 = m_windowTwo->GetEffectiveMinSize();
 
     // sum them up
     wxSize sizeBest;
