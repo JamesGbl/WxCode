@@ -7,8 +7,8 @@ Generel building rules
 ======================
 First build or get the wxWidgets libraries however this is done on your platform.
 If the libraries don't use the standard development paths you _have_ to set the
-$WXSTABLE environment variable to point to the base directory of wxWidgets (i.e.
-"/usr/src/wxWidgets" then "WXSTABLE=/usr/src/wxWidgets").
+$WXWIN environment variable to point to the base directory of wxWidgets (i.e.
+"/usr/src/wxWidgets" then "WXWIN=/usr/src/wxWidgets").
 
 
 Building on Unix (wxGTK, wxUniv)
@@ -19,9 +19,9 @@ wxGTK: Use "make" for the release version, "make debug" for the debug version,
 
 Building on Windows (wxMSW, wxUniv)
 ===================================
-There is a VC++ project file which requires the environment variable WXSTABLE
+There is a VC++ project file which requires the environment variable WXWIN
 pointing to the correct locations (i.e. "C:\Devel\wxWidgets" then
-"WXSTABLE=C:\Devel\wxWidgets").
+"WXWIN=C:\Devel\wxWidgets").
 
 
 Building on other ports
