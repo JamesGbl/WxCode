@@ -11,13 +11,13 @@
 // --
 
 #include "wx/wxprec.h"
+#include "wx/wx.h"
 
 #include "wx/servicediscoveryservice.h"
 
 #if wxUSE_SERVICE_DISCOVERY
 
 #include "wx/servicediscoveryresult.h"
-
 
 
 

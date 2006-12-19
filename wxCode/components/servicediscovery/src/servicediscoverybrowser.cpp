@@ -13,6 +13,7 @@
 
 
 #include <wx/wxprec.h>
+#include "wx/wx.h"
 
 #include "wx/servicediscoverybrowser.h"
 
@@ -21,8 +22,6 @@
 #include "wx/servicediscoveryservice.h"
 
 #include <dns_sd.h>
-
-
 
 
 	

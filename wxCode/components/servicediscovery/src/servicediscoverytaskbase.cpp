@@ -11,6 +11,7 @@
 // --
 
 #include <wx/wxprec.h>
+#include "wx/wx.h"
 #include "wx/servicediscoverytaskbase.h"
 
 #if wxUSE_SERVICE_DISCOVERY

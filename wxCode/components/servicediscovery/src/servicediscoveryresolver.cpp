@@ -11,6 +11,7 @@
 // --
 
 #include "wx/wxprec.h"
+#include "wx/wx.h"
 #include "wx/arrimpl.cpp"
 
 #include "wx/servicediscoveryresolver.h"

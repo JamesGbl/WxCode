@@ -36,6 +36,10 @@
 	#include <sys/select.h>
 #endif
 
+#ifdef __DARWIN__
+	#include <CoreFoundation/CoreFoundation.h>
+#endif
+
 //  This is the base class for all service discovery tasks.  There are four
 //  methods implimented in this file (and the accompanying cpp file):
 //
