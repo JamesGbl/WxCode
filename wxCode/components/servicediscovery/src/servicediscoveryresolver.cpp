@@ -84,7 +84,7 @@ void wxServiceDiscoveryResolver::ResolveCallback(	DNSServiceRef sdRef,
 
 
 
-void wxServiceDiscoveryResolver::DoHandleResolveCallback(	DNSServiceRef sdRef, 
+void wxServiceDiscoveryResolver::DoHandleResolveCallback(	DNSServiceRef WXUNUSED_UNLESS_DEBUG( sdRef ), 
 															DNSServiceFlags flags, 
 															uint32_t interfaceIndex, 
 															DNSServiceErrorType errorCode, 
