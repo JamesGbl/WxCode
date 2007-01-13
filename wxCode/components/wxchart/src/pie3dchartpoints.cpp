@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: pie3dchartpoints.cpp,v 1.1 2006-06-13 12:51:50 pgava Exp $
+// RCS-ID:      $Id: pie3dchartpoints.cpp,v 1.2 2007-01-13 07:19:10 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -34,6 +34,7 @@
 
 #include "wx/label.h"
 #include "wx/pie3dchartpoints.h"
+#include "wx/chartsizes.h"
 
 
 //---------------------------------------------------------------------------
@@ -236,7 +237,7 @@ void wxPie3DChartPoints::SetZoom(
 //----------------------------------------------------------------------E-+++
 double wxPie3DChartPoints::GetZoom()
 {
-	return ( m_Zoom );
+    return ( (m_Zoom = m_Sizes->GetXZoom()) );
 }
 
 //+++-S-cf-------------------------------------------------------------------
@@ -246,7 +247,7 @@ double wxPie3DChartPoints::GetZoom()
 //	RETURN:		None
 //----------------------------------------------------------------------E-+++
 void wxPie3DChartPoints::SetSizes(
-	ChartSizes sizes
+	wxChartSizes *sizes
 )
 {
 	m_Sizes = sizes;
@@ -258,9 +259,9 @@ void wxPie3DChartPoints::SetSizes(
 //	PARAMETERS:	None
 //	RETURN:		ChartSizes sizes
 //----------------------------------------------------------------------E-+++
-const ChartSizes& wxPie3DChartPoints::GetSizes() const
+wxChartSizes* wxPie3DChartPoints::GetSizes() const
 {
-	return ( m_Sizes );
+    return ( m_Sizes );
 }
 
 //+++-S-cf-------------------------------------------------------------------
@@ -389,12 +390,13 @@ void wxPie3DChartPoints::Draw(
     //-----------------------------------------------------------------------
     // Get sizes
     //-----------------------------------------------------------------------
-    ChartSizes sizes = GetSizes();
+    wxChartSizes *sizes = GetSizes();
 
     //-----------------------------------------------------------------------
     // Fit Ellisse in window
     //-----------------------------------------------------------------------
-    int r = (int)wxMin( (int)hr->w/2, (int)(hr->h - 2*sizes.s_height*ELLISSE_H)/2 );
+    int r = (int)wxMin( (int)hr->w / 2, 
+        (int)(hr->h - 2 * sizes->GetSizeHeight() * ELLISSE_H) / 2 );
          
     if ( r > 0 )
     {
@@ -525,7 +527,6 @@ void wxPie3DChartPoints::Draw(
                 if (!m_ShowLabel)
                     continue;
 
-#if 1
                 wxString lbl; 
                 wxLabel wxLbl;
                 
@@ -556,7 +557,21 @@ void wxPie3DChartPoints::Draw(
                         EllipsePoint( w, h, x, y, DegToRad( grad ) ).y, 
                         GetColor(iData), lbl, p );
                     break;
-                case NAME:
+                case XVALUE_FLOAT:
+                    lbl.Printf( wxT("%4.1f"), GetXVal(iData) );
+                    wxLbl.Draw( hp, 
+                                EllipsePoint( w, h, x, y, DegToRad( grad ) ).x, 
+                                EllipsePoint( w, h, x, y, DegToRad( grad ) ).y, 
+                                GetColor(iData), lbl, p );
+                    break;
+                case YVALUE_FLOAT:
+                    lbl.Printf( wxT("%4.1f"), GetYVal(iData) );
+                    wxLbl.Draw( hp, 
+                                EllipsePoint( w, h, x, y, DegToRad( grad ) ).x, 
+                                EllipsePoint( w, h, x, y, DegToRad( grad ) ).y, 
+                                GetColor(iData), lbl, p );
+                    break;
+                    case NAME:
                     lbl = GetName(iData).c_str();
                     wxLbl.Draw( hp, 
                         EllipsePoint( w, h, x, y, DegToRad( grad ) ).x, 
@@ -566,7 +581,7 @@ void wxPie3DChartPoints::Draw(
                 default:
                     break;            
                 }
-#endif
+
                 grad = grad1;
 
             }

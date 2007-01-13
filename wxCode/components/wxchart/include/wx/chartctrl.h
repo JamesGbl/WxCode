@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: chartctrl.h,v 1.2 2006-07-25 10:51:31 pgava Exp $
+// RCS-ID:      $Id: chartctrl.h,v 1.3 2007-01-13 07:19:10 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -48,6 +48,8 @@ enum wxChartStyle
 };
 
 // chart image type
+//-----------------
+
 enum wxChartImageType
 {
     wxCHART_BMP = wxBITMAP_TYPE_BMP,
@@ -55,6 +57,11 @@ enum wxChartImageType
     wxCHART_PNG = wxBITMAP_TYPE_PNG,
     wxCHART_JPEG = wxBITMAP_TYPE_JPEG
 };
+
+// Extern classes
+//---------------
+
+class wxChartSizes;
 
 //+++-S-cd-------------------------------------------------------------------
 //	NAME:		wxChartCtrl
@@ -86,6 +93,7 @@ public:
 	void ZoomIn();
 	void ZoomOut();
 	void Resize();
+    void Fit();
 
 	// 3D depth utility
 	//-----------------
@@ -99,11 +107,11 @@ public:
 private:
 	double m_xZoom;
 	wxChartStyle m_Style;
-	ChartSizes m_Sizes;
-	wxChartWindow	*m_ChartWin;
-	wxLegendWindow	*m_LegendWin;
-	wxXAxisWindow	*m_XAxisWin;
-	wxYAxisWindow	*m_YAxisWin;
+	wxChartWindow *m_ChartWin;
+	wxLegendWindow *m_LegendWin;
+	wxXAxisWindow *m_XAxisWin;
+	wxYAxisWindow *m_YAxisWin;
+    wxChartSizes *m_Sizes;
 
 	// Calculate width
 	//----------------
@@ -126,6 +134,7 @@ private:
 	void ResetScrollbar();
 	void RedrawXAxis();
 	void RedrawYAxis();
+    void RedrawLegend();
 	void RedrawEverything();
 
     // events

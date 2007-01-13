@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: xaxis.cpp,v 1.1 2006-06-13 12:51:50 pgava Exp $
+// RCS-ID:      $Id: xaxis.cpp,v 1.2 2007-01-13 07:19:10 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -33,6 +33,7 @@
 #endif
 
 #include "wx/xaxis.h"
+#include "wx/chartsizes.h"
 
 //+++-S-cf-------------------------------------------------------------------
 //	NAME:		Draw()
@@ -54,7 +55,7 @@ void wxXAxis::Draw(
         hp->SetPen( *wxBLACK_PEN );
 		
         int iNodes = static_cast<int>(ceil( GetVirtualMax() ));
-		ChartSizes sizes = GetSizes();
+		wxChartSizes *sizes = GetSizes();
 		
 		double x;
 		
@@ -66,7 +67,7 @@ void wxXAxis::Draw(
 		//-------------------------------------------------------------------
 		if ( hr->x == 0 )
 		{
-			hr->xscroll *= sizes.scroll;
+            hr->xscroll *= sizes->GetScroll();
 			x = 0 - hr->xscroll;
 		}
 		else
@@ -85,9 +86,9 @@ void wxXAxis::Draw(
                 hp->DrawText( label, static_cast<int>(ceil(x)) +
                               hr->x, 20 + hr->y );
 			}
-			x +=  GetZoom() * ( sizes.wbar * sizes.nbar + 
-								sizes.wbar3d * sizes.nbar3d +
-								sizes.gap );
+            x +=  GetZoom() * ( sizes->GetWidthBar() * sizes->GetNumBar() + 
+                    sizes->GetWidthBar3d() * sizes->GetNumBar3d() +
+                    sizes->GetGap() );
 		}
 		
         hp->DrawLine( hr->x, hr->y + 1, hr->x + static_cast<int>(ceil(x)), 

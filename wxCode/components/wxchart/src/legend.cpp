@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: legend.cpp,v 1.1 2006-06-13 12:51:50 pgava Exp $
+// RCS-ID:      $Id: legend.cpp,v 1.2 2007-01-13 07:19:10 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -31,6 +31,10 @@
 
 #include "wx/chartcolors.h"
 #include "wx/legend.h"
+
+//#if !wxUSE_GLCANVAS
+//    #error "OpenGL required: set wxUSE_GLCANVAS to 1 and rebuild the library"
+//#endif
 
 //----------------------------------------------------------------------------
 // Define Array/List of Points

@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: charttypes.h,v 1.2 2006-07-25 10:51:31 pgava Exp $
+// RCS-ID:      $Id: charttypes.h,v 1.3 2007-01-13 07:19:10 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -33,20 +33,6 @@
 
 #include "wx/chartdef.h"
 
-
-//----------------------------------------------------------------------------
-// consts
-//----------------------------------------------------------------------------
-const int DEFAULT_BAR_WIDTH			= 20;		// pixels
-const int DEFAULT_BAR3D_WIDTH		= 25;		// pixels
-const int DEFAULT_GAP_WIDTH			= 20;		// pixels
-const int DEFAULT_SCROLL_STEP		= 30;		// pixels
-const int DEFAULT_SIZE_HEIGHT		= 40;		// pixels
-
-const int MIN_BAR_WIDTH				= 3;		// pixels
-const int MIN_BAR3D_WIDTH			= 5;		// pixels
-const int MIN_GAP_WIDTH				= 3;		// pixels
-
 //----------------------------------------------------------------------------
 // Types
 //----------------------------------------------------------------------------
@@ -69,6 +55,7 @@ typedef wxDC* CHART_HPAINT;
 typedef double ChartValue;
 typedef unsigned long ChartColor;
 
+#if 0
 // Keep track of the size of the charts
 struct ChartSizes
 {
@@ -84,6 +71,6 @@ struct ChartSizes
 	int scroll;
 	int s_height;
 };
-
+#endif
 
 #endif // __CHARTTYPES_H__

@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: chart.h,v 1.1 2006-06-13 12:51:49 pgava Exp $
+// RCS-ID:      $Id: chart.h,v 1.2 2007-01-13 07:19:10 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -31,6 +31,10 @@
 #endif
 
 #include "wx/chartpoints.h"
+
+// External Classes
+//-----------------
+class wxChartSizes;
 
 //----------------------------------------------------------------------------
 // Declare Array/List of Points
@@ -70,8 +74,8 @@ public:
 
 	// Set sizes for drawing
 	//----------------------
-	void SetSizes(ChartSizes sizes);
-    ChartSizes GetSizes() const;
+	void SetSizes(wxChartSizes *sizes);
+    wxChartSizes* GetSizes() const;
 
 	// Draw chart
 	//-----------

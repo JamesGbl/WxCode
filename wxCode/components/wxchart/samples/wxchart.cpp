@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: wxchart.cpp,v 1.3 2006-07-25 10:51:31 pgava Exp $
+// RCS-ID:      $Id: wxchart.cpp,v 1.4 2007-01-13 07:19:10 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -54,6 +54,9 @@ public:
     wxChartCtrl *GetChartL2() {return m_ChartCtrlL2;}
     wxChartCtrl *GetChartR1() {return m_ChartCtrlR1;}
     wxChartCtrl *GetChartR2() {return m_ChartCtrlR2;}
+	void AddPanelLeft1();
+    void FitChart();
+
 private:
 	wxChartCtrl *m_ChartCtrlL1;
     wxChartCtrl *m_ChartCtrlL2;
@@ -231,11 +234,14 @@ void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 
 void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
-	wxString msg = wxString::Format(
-        wxT("Chart for wxWidgets. \n 2006 Paolo Gava. Ver: %d.%d.%d"), 
-        wxCHART_MAJOR, wxCHART_MINOR, wxCHART_RELEASE );
-
-	wxMessageBox( msg, _T("Chart"), wxOK | wxICON_INFORMATION, this );
+	//m_panel->AddPanelLeft1();
+    m_panel->FitChart();
+    
+	//wxString msg = wxString::Format(
+    //    wxT("Chart for wxWidgets. \n 2006 Paolo Gava. Ver: %d.%d.%d"), 
+    //    wxCHART_MAJOR, wxCHART_MINOR, wxCHART_RELEASE );
+	//
+	//wxMessageBox( msg, _T("Chart"), wxOK | wxICON_INFORMATION, this );
 }
 
 //void MyFrame::OnResize(wxCommandEvent& WXUNUSED(event))
@@ -336,7 +342,7 @@ void MyPanel::CreatePanelLeft1(wxBoxSizer *sizer)
     bcpLeft1->Add( wxT("val2"), 15, 2 );
     bcpLeft1->Add( wxT("val5"), 20, 5 );
     bcpLeft1->SetDisplayTag( XVALUE );
-    
+        
     bcpLeft2->Add( wxT("val: 4"), 2, 4 );
     bcpLeft2->Add( wxT("val: 2"), 5, 2 );
     bcpLeft2->Add( wxT("val: 2"), 8, 2);
@@ -375,6 +381,48 @@ void MyPanel::CreatePanelLeft1(wxBoxSizer *sizer)
 }
 
 //+++-S-cf-------------------------------------------------------------------
+//  NAME:       CreatePanelLeft1()
+//  DESC:       Create left Panel first row
+//  PARAMETERS: 
+//      wxBoxSizer *sizer
+//  RETURN:     None
+//----------------------------------------------------------------------E-+++
+void MyPanel::AddPanelLeft1()
+{   
+    // Create Panel Left Row 1
+    wxChartPoints *bcpLeft1;
+    
+    bcpLeft1 = wxBar3DChartPoints::CreateWxBar3DChartPoints( 
+        wxT("Esp") );
+        
+    bcpLeft1->Add( wxT("val3"), 2, 3 );
+    bcpLeft1->Add( wxT("val1"), 5, 1 );
+    bcpLeft1->Add( wxT("val4"), 8, 4);
+    bcpLeft1->Add( wxT("val2"), 15, 2 );
+    bcpLeft1->Add( wxT("val5"), 20, 5 );
+    bcpLeft1->SetDisplayTag( XVALUE );
+ 
+    m_ChartCtrlL1->Add( bcpLeft1 );    
+	
+	m_ChartCtrlL1->Refresh();
+	//m_ChartCtrlL1->Resize();
+	
+}
+
+
+//+++-S-cf-------------------------------------------------------------------
+//  NAME:       CreatePanelLeft1()
+//  DESC:       Create left Panel first row
+//  PARAMETERS: 
+//      wxBoxSizer *sizer
+//  RETURN:     None
+//----------------------------------------------------------------------E-+++
+void MyPanel::FitChart()
+{
+    m_ChartCtrlL2->Fit();
+}
+        
+//+++-S-cf-------------------------------------------------------------------
 //  NAME:       CreatePanelLeft2()
 //  DESC:       Create left Panel second row
 //  PARAMETERS: 
@@ -389,12 +437,12 @@ void MyPanel::CreatePanelLeft2(wxBoxSizer *sizer)
     bcpLeft1 = wxBar3DChartPoints::CreateWxBar3DChartPoints( 
 		wxT("Ita"), wxCHART_NOCOLOR, true );
     
-    bcpLeft1->Add( wxT("val3"), 2, 3 );
-    bcpLeft1->Add( wxT("val1"), 5, 1 );
-    bcpLeft1->Add( wxT("val4"), 8, 4);
-    bcpLeft1->Add( wxT("val2"), 15, 2 );
-    bcpLeft1->Add( wxT("val5"), 20, 5 );
-    bcpLeft1->SetDisplayTag( YVALUE );
+    bcpLeft1->Add( wxT("val3"), 2, 3.5 );
+    bcpLeft1->Add( wxT("val1"), 5, 1.2 );
+    bcpLeft1->Add( wxT("val4"), 8, 4.7);
+    bcpLeft1->Add( wxT("val2"), 15, 2.3 );
+    bcpLeft1->Add( wxT("val5"), 20, 5.0 );
+    bcpLeft1->SetDisplayTag( YVALUE_FLOAT );
         
     wxStaticText *lblTitle3 = new wxStaticText(this, 
                                                wxID_ANY, wxT("Bar Chart (L2)"));
@@ -553,11 +601,29 @@ void MyPanel::WriteChart(
     
     if (dialog.ShowModal() == wxID_OK)
     {
+        wxString file = dialog.GetPath();
+        
         //-------------------------------------------------------------------
         // choose here the image type you want.
         // It can be GIF, JPEG, PNG, BMP
         //-------------------------------------------------------------------
-        c->WriteToFile( dialog.GetPath(), wxCHART_GIF );
+        if ( file.Find( wxT("jpeg") ) != -1 || file.Find( wxT("jpg") ) != -1 )
+        {
+            c->WriteToFile( dialog.GetPath(), wxCHART_JPEG );
+        }
+        else if ( file.Find( wxT("png") ) != -1 )
+        {
+            c->WriteToFile( dialog.GetPath(), wxCHART_PNG );
+        }
+        else if ( file.Find( wxT("bmp") ) != -1 )
+        {
+            c->WriteToFile( dialog.GetPath(), wxCHART_BMP );
+        }
+        else
+        {
+            c->WriteToFile( dialog.GetPath(), wxCHART_GIF );
+        }
+        
     }
 
 }

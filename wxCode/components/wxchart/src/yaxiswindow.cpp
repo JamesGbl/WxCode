@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: yaxiswindow.cpp,v 1.1 2006-06-13 12:51:50 pgava Exp $
+// RCS-ID:      $Id: yaxiswindow.cpp,v 1.2 2007-01-13 07:19:10 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -30,6 +30,7 @@
 #endif
 
 #include "wx/yaxiswindow.h"
+#include "wx/chartsizes.h"
 
 IMPLEMENT_DYNAMIC_CLASS(wxYAxisWindow, wxWindow)
 
@@ -139,7 +140,7 @@ double wxYAxisWindow::GetZoom()
 //	RETURN:		None
 //----------------------------------------------------------------------E-+++
 void wxYAxisWindow::SetSizes(
-	ChartSizes sizes
+	wxChartSizes *sizes
 )
 {
 	m_YAxis.SetSizes( sizes );
@@ -151,7 +152,7 @@ void wxYAxisWindow::SetSizes(
 //	PARAMETERS:	ChartSizes sizes
 //	RETURN:		None
 //----------------------------------------------------------------------E-+++
-const ChartSizes& wxYAxisWindow::GetSizes() const
+const wxChartSizes* wxYAxisWindow::GetSizes() const
 {
 	return ( m_YAxis.GetSizes() );
 }

@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: xaxiswindow.h,v 1.1 2006-06-13 12:51:50 pgava Exp $
+// RCS-ID:      $Id: xaxiswindow.h,v 1.2 2007-01-13 07:19:10 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -23,6 +23,10 @@
 #include <wx/window.h>
 
 #include "wx/xaxis.h"
+
+// External Classes
+//-----------------
+class wxChartSizes;
 
 //----------------------------------------------------------------------------
 // Consts
@@ -53,8 +57,8 @@ public:
 	//---------------------------------------
 	void SetZoom(double z);
 	double GetZoom();
-	void SetSizes(ChartSizes sizes);
-	const ChartSizes& GetSizes() const;
+	void SetSizes(wxChartSizes *sizes);
+	const wxChartSizes* GetSizes() const;
 
 	// Draw y-axis window
 	//-------------------

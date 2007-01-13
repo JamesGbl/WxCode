@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: chart.cpp,v 1.1 2006-06-13 12:51:50 pgava Exp $
+// RCS-ID:      $Id: chart.cpp,v 1.2 2007-01-13 07:19:10 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -25,6 +25,7 @@
 #endif
 
 #include "wx/chart.h"
+#include "wx/chartsizes.h"
 
 //----------------------------------------------------------------------------
 // Define Array/List of Points
@@ -302,7 +303,7 @@ double wxChart::GetZoom() const
 //	RETURN:		None
 //----------------------------------------------------------------------E-+++
 void wxChart::SetSizes(
-	ChartSizes sizes
+	wxChartSizes *sizes
 )
 {
     size_t num = m_LCP.GetCount();
@@ -321,18 +322,18 @@ void wxChart::SetSizes(
 //  PARAMETERS: None
 //  RETURN:     ChartSizes sizes
 //----------------------------------------------------------------------E-+++
-ChartSizes wxChart::GetSizes() const
+wxChartSizes* wxChart::GetSizes() const
 {
     size_t num = m_LCP.GetCount();
     
     for ( size_t loop = 0; 
           loop < num; 
-        ) 
+          loop++ ) 
     {
-        return (m_LCP.Item(loop))->GetSizes();
+        return (m_LCP.Item(loop))->GetSizes( );
     }
-    
-    return ChartSizes();
+
+    return 0;
 }
 
 //+++-S-cf-------------------------------------------------------------------
@@ -362,12 +363,14 @@ void wxChart::Draw(
 		// position x+1*bar_width so just next to the previous one
 		//-------------------------------------------------------------------
         
-        ChartSizes sizes = m_LCP.Item(loop)->GetSizes();
+        wxChartSizes *sizes = m_LCP.Item(loop)->GetSizes();
         hr->x += ( 
             iBarCounter * 
-                static_cast<int>(sizes.wbar * m_LCP.Item(loop)->GetZoom()) +
+                static_cast<int>(sizes->GetWidthBar() * 
+                    m_LCP.Item(loop)->GetZoom()) +
             iBar3DCounter * 
-                static_cast<int>(sizes.wbar3d * m_LCP.Item(loop)->GetZoom())
+                static_cast<int>(sizes->GetWidthBar3d() * 
+                    m_LCP.Item(loop)->GetZoom())
         );
         
 		if ( *(m_LCP.Item(loop)) == wxChartPointsTypes::Bar() )

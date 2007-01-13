@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: axis.h,v 1.1 2006-06-13 12:51:49 pgava Exp $
+// RCS-ID:      $Id: axis.h,v 1.2 2007-01-13 07:19:09 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -16,6 +16,10 @@
 // Headers
 //----------------------------------------------------------------------------
 #include "wx/charttypes.h"
+
+// External Classes
+//-----------------
+class wxChartSizes;
 
 //+++-S-cd-------------------------------------------------------------------
 //	NAME:		wxAxis
@@ -47,14 +51,14 @@ public:
 
 	// Set sizes for drawing
 	//----------------------
-	virtual void SetSizes(ChartSizes sizes);
-	virtual const ChartSizes& GetSizes() const;
+	virtual void SetSizes(wxChartSizes *sizes);
+	virtual wxChartSizes* GetSizes() const;
 
 private:
 	ChartValue m_vMax;
 	ChartValue m_vMin;
 	double m_Zoom;
-	ChartSizes m_Sizes;
+	wxChartSizes *m_Sizes;
 };
 
 #endif // __XAXIS_H__

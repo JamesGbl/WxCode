@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: chartwindow.h,v 1.1 2006-06-13 12:51:49 pgava Exp $
+// RCS-ID:      $Id: chartwindow.h,v 1.2 2007-01-13 07:19:10 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -29,6 +29,11 @@
 #endif
 
 #include "wx/chart.h"
+
+//----------------------------------------------------------------------------
+// Classes
+//----------------------------------------------------------------------------
+class wxChartSizes;
 
 //+++-S-cd-------------------------------------------------------------------
 //	NAME:		CWxChartWindow
@@ -73,8 +78,8 @@ public:
 
     // Set sizes for drawing
     //----------------------
-    void SetSizes(ChartSizes sizes);
-    ChartSizes GetSizes() const;
+    void SetSizes(wxChartSizes *sizes);
+    wxChartSizes *GetSizes() const;
 
 	// Draw chart points
 	//------------------
@@ -227,7 +232,7 @@ inline double wxChartWindow::GetZoom() const
 //	RETURN:		None
 //----------------------------------------------------------------------E-+++
 inline void wxChartWindow::SetSizes(
-    ChartSizes sizes
+    wxChartSizes *sizes
 )
 {
     m_Chart.SetSizes( sizes );
@@ -239,7 +244,7 @@ inline void wxChartWindow::SetSizes(
 //  PARAMETERS: None
 //  RETURN:     ChartSizes sizes
 //----------------------------------------------------------------------E-+++
-inline ChartSizes wxChartWindow::GetSizes() const
+inline wxChartSizes *wxChartWindow::GetSizes() const
 {
     return m_Chart.GetSizes();
 }

@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: chartwindow.cpp,v 1.1 2006-06-13 12:51:50 pgava Exp $
+// RCS-ID:      $Id: chartwindow.cpp,v 1.2 2007-01-13 07:19:10 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -30,6 +30,7 @@
 #endif
 
 #include "wx/chartwindow.h"
+#include "wx/chartsizes.h"
 
 IMPLEMENT_DYNAMIC_CLASS(wxChartWindow, wxWindow)
 
@@ -154,7 +155,7 @@ void wxChartWindow::DrawHLines(
             if (upper+step < end) upper += step;
         }
         
-        ChartSizes sizes = GetSizes();
+        wxChartSizes *sizes = GetSizes();
         
         hp->SetPen( *wxBLACK_DASHED_PEN );
         
@@ -162,13 +163,13 @@ void wxChartWindow::DrawHLines(
         while (current < upper+(step/2))
         {
             int y = (int)( (GetVirtualMaxY()-current) /
-                range * ((double)hr->h - sizes.s_height)) - 1;
-            if ((y > 10) && (y < hr->h - 7 - sizes.s_height))
+                    range * ((double)hr->h - sizes->GetSizeHeight())) - 1;
+            if ((y > 10) && (y < hr->h - 7 - sizes->GetSizeHeight()))
             {
                 hp->DrawLine( hr->x, 
-                    y + sizes.s_height + hr->y, 
+                              y + sizes->GetSizeHeight() + hr->y, 
                     hr->x + static_cast<int>(GetVirtualWidth()), 
-                    y + sizes.s_height + hr->y );
+                    y + sizes->GetSizeHeight() + hr->y );
             }
             
             current += step;
@@ -185,15 +186,15 @@ void wxChartWindow::DrawHLines(
 ChartValue wxChartWindow::GetVirtualWidth() const
 {
     int iNodes = static_cast<int>(ceil( GetVirtualMaxX() ));
-    ChartSizes sizes = GetSizes();
+    wxChartSizes *sizes = GetSizes();
     
     ChartValue x = 0;
 
     for ( int iNode = 0; iNode <= iNodes; ++ iNode )
     {
-        x +=  GetZoom() * ( sizes.wbar * sizes.nbar + 
-                            sizes.wbar3d * sizes.nbar3d +
-                            sizes.gap );
+        x +=  GetZoom() * ( sizes->GetWidthBar() * sizes->GetNumBar() + 
+                sizes->GetWidthBar3d() * sizes->GetNumBar3d() +
+                sizes->GetGap() );
     }
 
     return ( x );

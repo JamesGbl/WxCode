@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: chartpoints.h,v 1.1 2006-06-13 12:51:49 pgava Exp $
+// RCS-ID:      $Id: chartpoints.h,v 1.2 2007-01-13 07:19:10 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -19,6 +19,10 @@
 #include "wx/charttypes.h"
 #include "wx/chartpointstypes.h"
 
+// External Classes
+//-----------------
+class wxChartSizes;
+
 //+++-S-te-------------------------------------------------------------------
 //  NAME:       wxDISPLAY_LABEL
 //  DESC:       Specify how to display Label on Chart.
@@ -26,10 +30,12 @@
 //----------------------------------------------------------------------E-+++
 enum wxDISPLAY_LABEL
 {
-    NONE,   // no label
-    XVALUE, // display x value
-    YVALUE, // display y value
-    NAME    // display custom label
+    NONE,           // no label
+    XVALUE,         // display x value
+    YVALUE,         // display y value
+    XVALUE_FLOAT,   // display x value with 1 decimal number
+    YVALUE_FLOAT,   // display y value with 1 decimal number
+    NAME            // display custom label
 };
 
 
@@ -77,8 +83,8 @@ public:
 	// Set sizes for drawing
 	// pure virtual functions
 	//-----------------------
-	virtual void SetSizes(ChartSizes sizes) = 0;
-	virtual const ChartSizes& GetSizes() const = 0;
+	virtual void SetSizes(wxChartSizes* sizes) = 0;
+	virtual wxChartSizes* GetSizes() const = 0;
 
 	// Get/Set Color
 	// pure virtual functions

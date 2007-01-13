@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: piechartpoints.cpp,v 1.1 2006-06-13 12:51:50 pgava Exp $
+// RCS-ID:      $Id: piechartpoints.cpp,v 1.2 2007-01-13 07:19:10 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -34,6 +34,7 @@
 
 #include "wx/label.h"
 #include "wx/piechartpoints.h"
+#include "wx/chartsizes.h"
 
 //+++-S-cf-------------------------------------------------------------------
 //	NAME:		ctor
@@ -195,7 +196,7 @@ double wxPieChartPoints::GetZoom()
 //	RETURN:		None
 //----------------------------------------------------------------------E-+++
 void wxPieChartPoints::SetSizes(
-	ChartSizes sizes
+	wxChartSizes *sizes
 )
 {
 	m_Sizes = sizes;
@@ -207,7 +208,7 @@ void wxPieChartPoints::SetSizes(
 //	PARAMETERS:	None
 //	RETURN:		ChartSizes sizes
 //----------------------------------------------------------------------E-+++
-const ChartSizes& wxPieChartPoints::GetSizes() const
+wxChartSizes* wxPieChartPoints::GetSizes() const
 {
 	return ( m_Sizes );
 }
@@ -338,9 +339,10 @@ void wxPieChartPoints::Draw(
     //-----------------------------------------------------------------------
     // Get sizes
     //-----------------------------------------------------------------------
-    ChartSizes sizes = GetSizes();
+    wxChartSizes *sizes = GetSizes();
 
-    int r = (int)wxMin( (int)hr->w/2, (int)(hr->h - 2*sizes.s_height)/2 );
+    int r = (int)wxMin( (int)hr->w/2, 
+        (int)(hr->h - 2*sizes->GetSizeHeight())/2 );
 
     if ( r > 0 )
     {
@@ -409,7 +411,15 @@ void wxPieChartPoints::Draw(
                     lbl.Printf( wxT("%d"), static_cast<int>(GetYVal(iData)) );
                     wxLbl.Draw( hp, x2, y2, GetColor(iData), lbl, p );
                     break;
-                case NAME:
+                case XVALUE_FLOAT:
+                    lbl.Printf( wxT("%4.1f"), GetXVal(iData) );
+                    wxLbl.Draw( hp, x2, y2, GetColor(iData), lbl, p );
+                    break;
+                case YVALUE_FLOAT:
+                    lbl.Printf( wxT("%4.1f"), GetYVal(iData) );
+                    wxLbl.Draw( hp, x2, y2, GetColor(iData), lbl, p );
+                    break;
+                    case NAME:
                     lbl = GetName(iData).c_str();
                     wxLbl.Draw( hp, x2, y2, GetColor(iData), lbl, p );
                     break;

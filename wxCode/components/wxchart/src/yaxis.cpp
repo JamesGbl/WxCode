@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: yaxis.cpp,v 1.1 2006-06-13 12:51:50 pgava Exp $
+// RCS-ID:      $Id: yaxis.cpp,v 1.2 2007-01-13 07:19:10 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -33,6 +33,7 @@
 #endif
 
 #include "wx/yaxis.h"
+#include "wx/chartsizes.h"
 
 //+++-S-cf-------------------------------------------------------------------
 //	NAME:		ctor
@@ -97,7 +98,7 @@ void wxYAxis::Draw(
 			if (upper+step < end) upper += step;
 		}
 		
-		ChartSizes sizes = GetSizes();
+		wxChartSizes *sizes = GetSizes();
 		
 		
 		wxFont font(8, wxROMAN, wxNORMAL, wxNORMAL);
@@ -108,11 +109,13 @@ void wxYAxis::Draw(
 		while (current < upper+(step/2))
 		{
 			int y = (int)( (GetVirtualMax()-current) /
-				range * ((double)hr->h - sizes.s_height)) - 1;
-			if ((y > 10) && (y < hr->h - 7 - sizes.s_height))
+                    range * ((double)hr->h - sizes->GetSizeHeight())) - 1;
+            if ((y > 10) && (y < hr->h - 7 - sizes->GetSizeHeight()))
 			{
-                hp->DrawLine( hr->x + hr->w - 15, y + sizes.s_height + hr->y, 
-					hr->x + hr->w - 7, y + sizes.s_height + hr->y );
+                hp->DrawLine( hr->x + hr->w - 15, 
+                              y + sizes->GetSizeHeight() + hr->y, 
+                              hr->x + hr->w - 7, 
+                              y + sizes->GetSizeHeight() + hr->y );
 				wxString label;
 				if (range < 50)
 				{
@@ -124,13 +127,14 @@ void wxYAxis::Draw(
 				}
 				else
 					label.Printf( wxT("%d"), (int)floor(current) );
-                hp->DrawText( label, hr->x + 5, hr->y + y - 7 + sizes.s_height );
+                hp->DrawText( label, hr->x + 5, 
+                              hr->y + y - 7 + sizes->GetSizeHeight() );
 			}
 			
 			current += step;
 		}
 		
-        hp->DrawLine( hr->w - 1, 6 + sizes.s_height, 
+        hp->DrawLine( hr->w - 1, 6 + sizes->GetSizeHeight(), 
 			hr->w - 1, hr->h );
 		
         //hp->DrawLine( hr->w - 7, 6 + sizes.s_height, 

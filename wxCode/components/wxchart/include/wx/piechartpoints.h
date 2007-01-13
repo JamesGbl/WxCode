@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: piechartpoints.h,v 1.1 2006-06-13 12:51:50 pgava Exp $
+// RCS-ID:      $Id: piechartpoints.h,v 1.2 2007-01-13 07:19:10 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -22,6 +22,10 @@
 #include "wx/points.h"
 #include "wx/chartcolors.h"
 #include "wx/chartpoints.h"
+
+// External Classes
+//-----------------
+class wxChartSizes;
 
 //+++-S-cd-------------------------------------------------------------------
 //	NAME:		wxPieChartPoints
@@ -75,8 +79,8 @@ public:
 
 	// Set sizes for drawing
 	//----------------------
-	void SetSizes(ChartSizes sizes);
-	const ChartSizes& GetSizes() const;
+	void SetSizes(wxChartSizes *sizes);
+	wxChartSizes* GetSizes() const;
 
 	// Get/Set Color
 	//--------------
@@ -106,7 +110,7 @@ private:
 	double m_Zoom;
 	wxDISPLAY_LABEL m_PieTag;
     bool m_ShowLabel;   
-	ChartSizes m_Sizes;
+	wxChartSizes *m_Sizes;
     
     // ctor
     // has to be created on the heap!

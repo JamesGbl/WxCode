@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: barchartpoints.cpp,v 1.1 2006-06-13 12:51:50 pgava Exp $
+// RCS-ID:      $Id: barchartpoints.cpp,v 1.2 2007-01-13 07:19:10 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -34,6 +34,7 @@
 
 #include "wx/label.h"
 #include "wx/barchartpoints.h"
+#include "wx/chartsizes.h"
 
 //+++-S-cf-------------------------------------------------------------------
 //	NAME:		ctor
@@ -183,17 +184,17 @@ void wxBarChartPoints::SetZoom(
 //----------------------------------------------------------------------E-+++
 double wxBarChartPoints::GetZoom()
 {
-	return ( m_Zoom );
+    return ( m_Sizes->GetXZoom() );
 }
 
 //+++-S-cf-------------------------------------------------------------------
 //	NAME:		SetSizes
 //	DESC:		Set sizes for drawing
-//	PARAMETERS:	ChartSizes sizes
+//	PARAMETERS:	wxChartSizes sizes
 //	RETURN:		None
 //----------------------------------------------------------------------E-+++
 void wxBarChartPoints::SetSizes(
-	ChartSizes sizes
+	wxChartSizes *sizes
 )
 {
 	m_Sizes = sizes;
@@ -203,9 +204,9 @@ void wxBarChartPoints::SetSizes(
 //	NAME:		GetSizes
 //	DESC:		Get sizes for drawing
 //	PARAMETERS:	None
-//	RETURN:		ChartSizes sizes
+//	RETURN:		wxChartSizes sizes
 //----------------------------------------------------------------------E-+++
-const ChartSizes& wxBarChartPoints::GetSizes() const
+wxChartSizes* wxBarChartPoints::GetSizes() const
 {
 	return ( m_Sizes );
 }
@@ -339,17 +340,17 @@ void wxBarChartPoints::Draw(
     double iNodes = ceil( static_cast<double>(GetCount()) );
 
     //-----------------------------------------------------------------------
-    // get max height
-    //-----------------------------------------------------------------------
-    double ValMax = ceil( GetMaxY() );
-    if ( ValMax == 0 ) 
-        ValMax = 1;
-
-    //-----------------------------------------------------------------------
     // Get sizes
     //-----------------------------------------------------------------------
-    ChartSizes sizes = GetSizes();
+    wxChartSizes *sizes = GetSizes();
 
+    //-----------------------------------------------------------------------
+    // get max height
+    //-----------------------------------------------------------------------
+    double ValMax = ceil( sizes->GetMaxY() );
+    if ( ValMax == 0 ) 
+        ValMax = 1;
+    
     hp->SetBrush( wxBrush(GetColor(), wxSOLID) );
     hp->SetPen( *wxTRANSPARENT_PEN );
 
@@ -360,18 +361,20 @@ void wxBarChartPoints::Draw(
         // Get x-position for iNode bar
         //-------------------------------------------------------------------
         double xVal  = ceil( GetXVal(iNode) );
-        x = hr->x + GetZoom() * xVal * ( sizes.wbar * sizes.nbar + 
-                                         sizes.wbar3d * sizes.nbar3d + 
-                                         sizes.gap);
+        x = hr->x + GetZoom() * xVal * ( sizes->GetWidthBar() * 
+                sizes->GetNumBar() + 
+                sizes->GetWidthBar3d() * sizes->GetNumBar3d() + 
+                sizes->GetGap() );
 
         //-------------------------------------------------------------------
         // Get y-position for iNode bar
         //-------------------------------------------------------------------
-        y = hr->y + ( (hr->h - sizes.s_height)* GetYVal(iNode) ) / ValMax ;
+        y = hr->y + ( (hr->h - sizes->GetSizeHeight())* 
+                GetYVal(iNode) ) / ValMax ;
 
         hp->DrawRectangle( static_cast<int>(ceil(x)),
                            static_cast<int>(ceil(hr->h - y)),
-                           static_cast<int>(sizes.wbar * GetZoom()), 
+                           static_cast<int>(sizes->GetWidthBar() * GetZoom()), 
                            static_cast<int>(ceil(y)) );
         
         //-------------------------------------------------------------------
@@ -384,30 +387,46 @@ void wxBarChartPoints::Draw(
         wxLabel wxLbl;
         switch ( GetDisplayTag() )
         {
-        case XVALUE:
-            lbl.Printf( wxT("%d"), static_cast<int>(xVal));
-            wxLbl.Draw( hp, static_cast<int>(ceil(x)), 
-                        static_cast<int>(ceil(hr->h - y)), 
-                        GetColor(),
-                        lbl,
-                        UP);
-            break;
-        case YVALUE:
-            lbl.Printf( wxT("%d"), static_cast<int>(GetYVal(iNode)));
-            wxLbl.Draw( hp, static_cast<int>(ceil(x)), 
-                        static_cast<int>(ceil(hr->h - y)), 
-                        GetColor(),
-                        lbl,
-                        UP );
-            break;
-        case NAME:
-            lbl = GetName(iNode).c_str();
-            wxLbl.Draw( hp, static_cast<int>(ceil(x)), 
-                        static_cast<int>(ceil(hr->h - y)), 
-                        GetColor(),
-                        lbl,
-                        UP );
-            break;
+            case XVALUE:
+                lbl.Printf( wxT("%d"), static_cast<int>(xVal));
+                wxLbl.Draw( hp, static_cast<int>(ceil(x)), 
+                            static_cast<int>(ceil(hr->h - y)), 
+                            GetColor(),
+                            lbl,
+                            UP);
+                break;
+            case YVALUE:
+                lbl.Printf( wxT("%d"), static_cast<int>(GetYVal(iNode)));
+                wxLbl.Draw( hp, static_cast<int>(ceil(x)), 
+                            static_cast<int>(ceil(hr->h - y)), 
+                            GetColor(),
+                            lbl,
+                            UP );
+                break;
+            case XVALUE_FLOAT:
+                lbl.Printf( wxT("%4.1f"), xVal);
+                wxLbl.Draw( hp, static_cast<int>(ceil(x)), 
+                            static_cast<int>(ceil(hr->h - y)), 
+                            GetColor(),
+                            lbl,
+                            UP);
+                break;
+            case YVALUE_FLOAT:
+                lbl.Printf( wxT("%4.1f"), GetYVal(iNode));
+                wxLbl.Draw( hp, static_cast<int>(ceil(x)), 
+                            static_cast<int>(ceil(hr->h - y)), 
+                            GetColor(),
+                            lbl,
+                            UP );
+                break;
+            case NAME:
+                lbl = GetName(iNode).c_str();
+                wxLbl.Draw( hp, static_cast<int>(ceil(x)), 
+                            static_cast<int>(ceil(hr->h - y)), 
+                            GetColor(),
+                            lbl,
+                            UP );
+                break;
         default:
             break;      
         }

@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: yaxiswindow.h,v 1.1 2006-06-13 12:51:50 pgava Exp $
+// RCS-ID:      $Id: yaxiswindow.h,v 1.2 2007-01-13 07:19:10 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -34,6 +34,10 @@
 
 #include "wx/yaxis.h"
 
+// External Classes
+//-----------------
+class wxChartSizes;
+
 //----------------------------------------------------------------------------
 // Consts
 //----------------------------------------------------------------------------
@@ -59,8 +63,8 @@ public:
 	void SetVirtualMin(ChartValue v);
 	ChartValue GetVirtualMax() const;
 	ChartValue GetVirtualMin() const;
-	void SetSizes(ChartSizes sizes);
-	const ChartSizes& GetSizes() const;
+	void SetSizes(wxChartSizes *sizes);
+	const wxChartSizes* GetSizes() const;
 
 	// access CWxYAxis's Get/Set zoom
 	//---------------------------------------
