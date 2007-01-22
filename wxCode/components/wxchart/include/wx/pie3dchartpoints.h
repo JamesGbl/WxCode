@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: pie3dchartpoints.h,v 1.2 2007-01-13 07:19:10 pgava Exp $
+// RCS-ID:      $Id: pie3dchartpoints.h,v 1.3 2007-01-22 12:59:50 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -16,7 +16,7 @@
 // Headers
 //----------------------------------------------------------------------------
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
-#pragma interface "pie3dcharpoints.h"
+#pragma interface "pie3dchartpoints.h"
 #endif
 
 #include "wx/points.h"

@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: charttypes.h,v 1.3 2007-01-13 07:19:10 pgava Exp $
+// RCS-ID:      $Id: charttypes.h,v 1.4 2007-01-22 12:59:50 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -59,10 +59,10 @@ typedef unsigned long ChartColor;
 // Keep track of the size of the charts
 struct ChartSizes
 {
-	ChartSizes() : nbar(0), nbar3d(0), 
-				   wbar(DEFAULT_BAR_WIDTH), wbar3d(DEFAULT_BAR3D_WIDTH),
-				   gap(DEFAULT_GAP_WIDTH), scroll(DEFAULT_SCROLL_STEP),
-				   s_height(DEFAULT_SIZE_HEIGHT) {};
+	ChartSizes();// : nbar(0), nbar3d(0), 
+				 //  wbar(DEFAULT_BAR_WIDTH), wbar3d(DEFAULT_BAR3D_WIDTH),
+				 //  gap(DEFAULT_GAP_WIDTH), scroll(DEFAULT_SCROLL_STEP),
+				 //  s_height(DEFAULT_SIZE_HEIGHT) {};
 	int nbar;
 	int nbar3d;
 	int wbar;

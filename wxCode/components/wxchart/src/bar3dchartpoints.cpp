@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: bar3dchartpoints.cpp,v 1.2 2007-01-13 07:19:10 pgava Exp $
+// RCS-ID:      $Id: bar3dchartpoints.cpp,v 1.3 2007-01-22 12:56:38 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -36,6 +36,7 @@
 #include "wx/bar3dchartpoints.h"
 #include "wx/chartsizes.h"
 
+
 //+++-S-cf-------------------------------------------------------------------
 //  NAME:       ctor
 //  DESC:       has to be created on the heap!
@@ -52,7 +53,7 @@ wxBar3DChartPoints::wxBar3DChartPoints(
     m_Color(c),
     m_Zoom(1),
     m_BarTag(NONE),
-    m_ShowLabel( showlabel)  
+    m_ShowLabel( showlabel)
 {
 }
 
