@@ -57,9 +57,9 @@
 //!
 #define wxCHECK_NULL_POINTERS(x, y)        \
     if (x == NULL && y == NULL)            \
-        return TRUE;                    \
+        return TRUE;                       \
     if ((x == NULL && y != NULL) ||        \
-        (x != NULL && y == NULL))        \
+        (x != NULL && y == NULL))          \
         return FALSE;
 
 //! Converts from wxStrings to xmlChars.
@@ -88,7 +88,7 @@
 //! Tells wxXml2Document to save the document using the native newline
 //! format; if not specified all newlines will be encoded in unix format
 //! (that is, as simple '\n').
-#define    wxXML2DOC_USE_NATIVE_NEWLINES        1
+#define wxXML2DOC_USE_NATIVE_NEWLINES        1
 
 //! A wxXml2Document::Save flag.
 //! Tells wxXml2Document to save the document using an indentation step.
@@ -1431,36 +1431,5 @@ protected:
     //! with the native newlines for this system.
     virtual size_t OnSysWrite(const void *buffer, size_t bufsize);
 };
-
-
-#if !wxCHECK_VERSION(2,7,0)
-
-//! A simple wxOutputStream which outputs everything into a wxString.
-//! The final output can be read using the #GetStr() function.
-//! This class is typically used as an easy way to save a wxXml2Document
-//! or a wxXml2DTD into a wxString.
-//!
-//! VERY IMPORTANT: the Write() method of this output stream assumes
-//!                 the given data to be a valid UTF8-encoded string.
-//!                 No checks will be done to ensure this.
-class WXDLLIMPEXP_WXXML2 wxStringOutputStream : public wxOutputStream
-{
-    wxString m_str;
-
-public:
-    wxStringOutputStream() {}
-    virtual ~wxStringOutputStream() {}
-
-    //! Returns the internal string used to store the result.
-    wxString GetStr() const
-        { return m_str; }
-
-protected:
-
-    //! Our overridden function. It writes the given UTF8 buffer into
-    //! our internal wxString.
-    virtual size_t OnSysWrite(const void *buffer, size_t bufsize);
-};
-#endif
 
 #endif // _WX_XML2_H_
