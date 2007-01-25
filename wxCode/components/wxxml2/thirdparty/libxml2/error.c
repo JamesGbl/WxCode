@@ -16,12 +16,12 @@
 #include <libxml/xmlmemory.h>
 #include <libxml/globals.h>
 
-void xmlGenericErrorDefaultFunc	(void *ctx ATTRIBUTE_UNUSED,
+void XMLCDECL xmlGenericErrorDefaultFunc	(void *ctx ATTRIBUTE_UNUSED,
 				 const char *msg,
 				 ...);
 
 #define XML_GET_VAR_STR(msg, str) {				\
-    int       size;						\
+    int       size, prev_size = -1;				\
     int       chars;						\
     char      *larger;						\
     va_list   ap;						\
@@ -35,8 +35,13 @@ void xmlGenericErrorDefaultFunc	(void *ctx ATTRIBUTE_UNUSED,
 	va_start(ap, msg);					\
   	chars = vsnprintf(str, size, msg, ap);			\
 	va_end(ap);						\
-	if ((chars > -1) && (chars < size))			\
-	    break;						\
+	if ((chars > -1) && (chars < size)) {			\
+	    if (prev_size == chars) {				\
+		break;						\
+	    } else {						\
+		prev_size = chars;				\
+	    }							\
+	}							\
 	if (chars > -1)						\
 	    size += chars + 1;					\
 	else							\
@@ -62,7 +67,7 @@ void xmlGenericErrorDefaultFunc	(void *ctx ATTRIBUTE_UNUSED,
  * 
  * Default handler for out of context error messages.
  */
-void
+void XMLCDECL
 xmlGenericErrorDefaultFunc(void *ctx ATTRIBUTE_UNUSED, const char *msg, ...) {
     va_list args;
 
@@ -293,8 +298,6 @@ xmlReportError(xmlErrorPtr err, xmlParserCtxtPtr ctxt, const char *str,
     if (name != NULL) {
         channel(data, "element %s: ", name);
     }
-    if (code == XML_ERR_OK)
-        return;
     switch (domain) {
         case XML_FROM_PARSER:
             channel(data, "parser ");
@@ -354,11 +357,12 @@ xmlReportError(xmlErrorPtr err, xmlParserCtxtPtr ctxt, const char *str,
         case XML_FROM_XSLT:
             channel(data, "XSLT ");
             break;
+        case XML_FROM_I18N:
+            channel(data, "encoding ");
+            break;
         default:
             break;
     }
-    if (code == XML_ERR_OK)
-        return;
     switch (level) {
         case XML_ERR_NONE:
             channel(data, ": ");
@@ -373,8 +377,6 @@ xmlReportError(xmlErrorPtr err, xmlParserCtxtPtr ctxt, const char *str,
             channel(data, "error : ");
             break;
     }
-    if (code == XML_ERR_OK)
-        return;
     if (str != NULL) {
         int len;
 	len = xmlStrlen((const xmlChar *)str);
@@ -385,8 +387,6 @@ xmlReportError(xmlErrorPtr err, xmlParserCtxtPtr ctxt, const char *str,
     } else {
         channel(data, "%s\n", "out of memory error");
     }
-    if (code == XML_ERR_OK)
-        return;
 
     if (ctxt != NULL) {
         xmlParserPrintFileContextInternal(input, channel, data);
@@ -437,7 +437,7 @@ xmlReportError(xmlErrorPtr err, xmlParserCtxtPtr ctxt, const char *str,
  * then forward the error message down the parser or generic
  * error callback handler
  */
-void
+void XMLCDECL
 __xmlRaiseError(xmlStructuredErrorFunc schannel,
               xmlGenericErrorFunc channel, void *data, void *ctx,
               void *nod, int domain, int code, xmlErrorLevel level,
@@ -514,7 +514,7 @@ __xmlRaiseError(xmlStructuredErrorFunc schannel,
 
 	if ((node->doc != NULL) && (node->doc->URL != NULL)) {
 	    baseptr = node;
-	    file = (const char *) node->doc->URL;
+/*	    file = (const char *) node->doc->URL; */
 	}
 	for (i = 0;
 	     ((i < 10) && (node != NULL) && (node->type != XML_ELEMENT_NODE));
@@ -560,10 +560,19 @@ __xmlRaiseError(xmlStructuredErrorFunc schannel,
 	    }
 	}
 	if (prev != NULL) {
-	    to->file = (char *) xmlGetProp(prev, BAD_CAST "href");
+	    if (prev->type == XML_XINCLUDE_START) {
+		prev->type = XML_ELEMENT_NODE;
+		to->file = (char *) xmlGetProp(prev, BAD_CAST "href");
+		prev->type = XML_XINCLUDE_START;
+	    } else {
+		to->file = (char *) xmlGetProp(prev, BAD_CAST "href");
+	    }
 	} else
 #endif
 	    to->file = (char *) xmlStrdup(baseptr->doc->URL);
+	if ((to->file == NULL) && (node != NULL) && (node->doc != NULL)) {
+	    to->file = (char *) xmlStrdup(node->doc->URL);
+	}
 	file = to->file;
     }
     to->line = line;
@@ -595,7 +604,9 @@ __xmlRaiseError(xmlStructuredErrorFunc schannel,
 	    schannel = xmlStructuredError;
 	else
 	    channel = xmlGenericError;
+	if (!data) {
 	data = xmlGenericErrorContext;
+    }
     }
     if (schannel != NULL) {
         schannel(data, to);
@@ -655,7 +666,7 @@ __xmlSimpleError(int domain, int code, xmlNodePtr node,
  * Display and format an error messages, gives file, line, position and
  * extra parameters.
  */
-void
+void XMLCDECL
 xmlParserError(void *ctx, const char *msg, ...)
 {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
@@ -698,7 +709,7 @@ xmlParserError(void *ctx, const char *msg, ...)
  * Display and format a warning messages, gives file, line, position and
  * extra parameters.
  */
-void
+void XMLCDECL
 xmlParserWarning(void *ctx, const char *msg, ...)
 {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
@@ -747,7 +758,7 @@ xmlParserWarning(void *ctx, const char *msg, ...)
  * Display and format an validity error messages, gives file,
  * line, position and extra parameters.
  */
-void
+void XMLCDECL
 xmlParserValidityError(void *ctx, const char *msg, ...)
 {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
@@ -791,7 +802,7 @@ xmlParserValidityError(void *ctx, const char *msg, ...)
  * Display and format a validity warning messages, gives file, line,
  * position and extra parameters.
  */
-void
+void XMLCDECL
 xmlParserValidityWarning(void *ctx, const char *msg, ...)
 {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;

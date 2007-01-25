@@ -34,6 +34,8 @@
 #include <libxml/relaxng.h>
 #endif
 
+#define DUMP_TEXT_TYPE 1
+
 typedef struct _xmlDebugCtxt xmlDebugCtxt;
 typedef xmlDebugCtxt *xmlDebugCtxtPtr;
 struct _xmlDebugCtxt {
@@ -46,6 +48,7 @@ struct _xmlDebugCtxt {
     int check;                  /* do just checkings */
     int errors;                 /* number of errors found */
     int nodict;			/* if the document has no dictionnary */
+    int options;		/* options */
 };
 
 static void xmlCtxtDumpNodeList(xmlDebugCtxtPtr ctxt, xmlNodePtr node);
@@ -63,6 +66,7 @@ xmlCtxtDumpInitCtxt(xmlDebugCtxtPtr ctxt)
     ctxt->node = NULL;
     ctxt->dict = NULL;
     ctxt->nodict = 0;
+    ctxt->options = 0;
     for (i = 0; i < 100; i++)
         ctxt->shift[i] = ' ';
     ctxt->shift[100] = 0;
@@ -902,9 +906,18 @@ xmlCtxtDumpOneNode(xmlDebugCtxtPtr ctxt, xmlNodePtr node)
             if (!ctxt->check) {
                 xmlCtxtDumpSpaces(ctxt);
                 if (node->name == (const xmlChar *) xmlStringTextNoenc)
-                    fprintf(ctxt->output, "TEXT no enc\n");
+                    fprintf(ctxt->output, "TEXT no enc");
                 else
-                    fprintf(ctxt->output, "TEXT\n");
+                    fprintf(ctxt->output, "TEXT");
+		if (ctxt->options & DUMP_TEXT_TYPE) {
+		    if (node->content == (xmlChar *) &(node->properties))
+			fprintf(ctxt->output, " compact\n");
+		    else if (xmlDictOwns(ctxt->dict, node->content) == 1)
+			fprintf(ctxt->output, " interned\n");
+		    else
+			fprintf(ctxt->output, "\n");
+		} else
+		    fprintf(ctxt->output, "\n");
             }
             break;
         case XML_CDATA_SECTION_NODE:
@@ -1005,9 +1018,9 @@ xmlCtxtDumpOneNode(xmlDebugCtxtPtr ctxt, xmlNodePtr node)
         fprintf(ctxt->output, "PBM: doc == NULL !!!\n");
     }
     ctxt->depth++;
-    if (node->nsDef != NULL)
+    if ((node->type == XML_ELEMENT_NODE) && (node->nsDef != NULL))
         xmlCtxtDumpNamespaceList(ctxt, node->nsDef);
-    if (node->properties != NULL)
+    if ((node->type == XML_ELEMENT_NODE) && (node->properties != NULL))
         xmlCtxtDumpAttrList(ctxt, node->properties);
     if (node->type != XML_ENTITY_REF_NODE) {
         if ((node->type != XML_ELEMENT_NODE) && (node->content != NULL)) {
@@ -1052,7 +1065,8 @@ xmlCtxtDumpNode(xmlDebugCtxtPtr ctxt, xmlNodePtr node)
         return;
     }
     xmlCtxtDumpOneNode(ctxt, node);
-    if ((node->children != NULL) && (node->type != XML_ENTITY_REF_NODE)) {
+    if ((node->type != XML_NAMESPACE_DECL) && 
+        (node->children != NULL) && (node->type != XML_ENTITY_REF_NODE)) {
         ctxt->depth++;
         xmlCtxtDumpNodeList(ctxt, node->children);
         ctxt->depth--;
@@ -1489,6 +1503,7 @@ xmlDebugDumpDocumentHead(FILE * output, xmlDocPtr doc)
     if (output == NULL)
 	output = stdout;
     xmlCtxtDumpInitCtxt(&ctxt);
+    ctxt.options |= DUMP_TEXT_TYPE;
     ctxt.output = output;
     xmlCtxtDumpDocumentHead(&ctxt, doc);
     xmlCtxtDumpCleanCtxt(&ctxt);
@@ -1509,6 +1524,7 @@ xmlDebugDumpDocument(FILE * output, xmlDocPtr doc)
     if (output == NULL)
 	output = stdout;
     xmlCtxtDumpInitCtxt(&ctxt);
+    ctxt.options |= DUMP_TEXT_TYPE;
     ctxt.output = output;
     xmlCtxtDumpDocument(&ctxt, doc);
     xmlCtxtDumpCleanCtxt(&ctxt);
@@ -1529,6 +1545,7 @@ xmlDebugDumpDTD(FILE * output, xmlDtdPtr dtd)
     if (output == NULL)
 	output = stdout;
     xmlCtxtDumpInitCtxt(&ctxt);
+    ctxt.options |= DUMP_TEXT_TYPE;
     ctxt.output = output;
     xmlCtxtDumpDTD(&ctxt, dtd);
     xmlCtxtDumpCleanCtxt(&ctxt);

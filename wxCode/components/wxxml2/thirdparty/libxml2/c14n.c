@@ -802,7 +802,7 @@ xmlExcC14NProcessNamespacesAxis(xmlC14NCtxPtr ctx, xmlNodePtr cur, int visible)
 	    if(xmlStrlen(attr->ns->prefix) == 0) {
 		has_empty_ns = 1;
 	    }
-	} else if(attr->ns == NULL) {
+	} else if((attr->ns != NULL) && (xmlStrlen(attr->ns->prefix) == 0) && (xmlStrlen(attr->ns->href) == 0)) {
 	    has_visibly_utilized_empty_ns = 1;
 	}
     }
@@ -1139,6 +1139,7 @@ xmlC14NProcessElementNode(xmlC14NCtxPtr ctx, xmlNodePtr cur, int visible)
     /* 
      * Save ns_rendered stack position
      */
+    memset(&state, 0, sizeof(state));
     xmlC14NVisibleNsStackSave(ctx->ns_rendered, &state);
 
     if (visible) {	

@@ -319,8 +319,10 @@ xmlFreeRMutex(xmlRMutexPtr tok ATTRIBUTE_UNUSED)
     if (tok == NULL)
         return;
 #ifdef HAVE_PTHREAD_H
-    if (libxml_is_threaded != 0)
+    if (libxml_is_threaded != 0) {
 	pthread_mutex_destroy(&tok->lock);
+	pthread_cond_destroy(&tok->cv);
+    }
 #elif defined HAVE_WIN32_THREADS
     DeleteCriticalSection(&tok->cs);
 #elif defined HAVE_BEOS_THREADS
@@ -472,7 +474,7 @@ typedef struct _xmlGlobalStateCleanupHelperParams
     void *memory;
 } xmlGlobalStateCleanupHelperParams;
 
-static void xmlGlobalStateCleanupHelper (void *p)
+static void XMLCDECL xmlGlobalStateCleanupHelper (void *p)
 {
     xmlGlobalStateCleanupHelperParams *params = (xmlGlobalStateCleanupHelperParams *) p;
     WaitForSingleObject(params->thread, INFINITE);

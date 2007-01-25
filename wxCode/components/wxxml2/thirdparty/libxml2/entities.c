@@ -31,35 +31,35 @@ static xmlEntity xmlEntityLt = {
     NULL, NULL, NULL, NULL, NULL, NULL, 
     BAD_CAST "<", BAD_CAST "<", 1,
     XML_INTERNAL_PREDEFINED_ENTITY,
-    NULL, NULL, NULL, NULL, 0
+    NULL, NULL, NULL, NULL, 0, 1
 };
 static xmlEntity xmlEntityGt = {
     NULL, XML_ENTITY_DECL, BAD_CAST "gt",
     NULL, NULL, NULL, NULL, NULL, NULL, 
     BAD_CAST ">", BAD_CAST ">", 1,
     XML_INTERNAL_PREDEFINED_ENTITY,
-    NULL, NULL, NULL, NULL, 0
+    NULL, NULL, NULL, NULL, 0, 1
 };
 static xmlEntity xmlEntityAmp = {
     NULL, XML_ENTITY_DECL, BAD_CAST "amp",
     NULL, NULL, NULL, NULL, NULL, NULL, 
     BAD_CAST "&", BAD_CAST "&", 1,
     XML_INTERNAL_PREDEFINED_ENTITY,
-    NULL, NULL, NULL, NULL, 0
+    NULL, NULL, NULL, NULL, 0, 1
 };
 static xmlEntity xmlEntityQuot = {
     NULL, XML_ENTITY_DECL, BAD_CAST "quot",
     NULL, NULL, NULL, NULL, NULL, NULL, 
     BAD_CAST "\"", BAD_CAST "\"", 1,
     XML_INTERNAL_PREDEFINED_ENTITY,
-    NULL, NULL, NULL, NULL, 0
+    NULL, NULL, NULL, NULL, 0, 1
 };
 static xmlEntity xmlEntityApos = {
     NULL, XML_ENTITY_DECL, BAD_CAST "apos",
     NULL, NULL, NULL, NULL, NULL, NULL, 
     BAD_CAST "'", BAD_CAST "'", 1,
     XML_INTERNAL_PREDEFINED_ENTITY,
-    NULL, NULL, NULL, NULL, 0
+    NULL, NULL, NULL, NULL, 0, 1
 };
 
 /**
@@ -182,6 +182,7 @@ xmlAddEntity(xmlDtdPtr dtd, const xmlChar *name, int type,
     }
     memset(ret, 0, sizeof(xmlEntity));
     ret->type = XML_ENTITY_DECL;
+    ret->checked = 0;
 
     /*
      * fill the structure.
@@ -560,7 +561,7 @@ xmlEncodeEntitiesReentrant(xmlDocPtr doc, const xmlChar *input) {
 		    *out++ = xc;
 	        } else
 		 */
-		    *out++ = *cur;
+		*out++ = *cur;
 	    } else {
 		/*
 		 * We assume we have UTF-8 input.
@@ -616,10 +617,7 @@ xmlEncodeEntitiesReentrant(xmlDocPtr doc, const xmlChar *input) {
 		/*
 		 * We could do multiple things here. Just save as a char ref
 		 */
-		if (html)
-		    snprintf(buf, sizeof(buf), "&#%d;", val);
-		else
-		    snprintf(buf, sizeof(buf), "&#x%X;", val);
+		snprintf(buf, sizeof(buf), "&#x%X;", val);
 		buf[sizeof(buf) - 1] = 0;
 		ptr = buf;
 		while (*ptr != 0) *out++ = *ptr++;

@@ -121,10 +121,15 @@ XMLPUBFUN void XMLCALL
  */
 XMLPUBFUN int XMLCALL		
 			xmlTextReaderRead	(xmlTextReaderPtr reader);
+
+#ifdef LIBXML_WRITER_ENABLED
 XMLPUBFUN xmlChar * XMLCALL	
 			xmlTextReaderReadInnerXml	(xmlTextReaderPtr reader);
+			
 XMLPUBFUN xmlChar * XMLCALL	
 			xmlTextReaderReadOuterXml	(xmlTextReaderPtr reader);
+#endif
+
 XMLPUBFUN xmlChar * XMLCALL	
 			xmlTextReaderReadString		(xmlTextReaderPtr reader);
 XMLPUBFUN int XMLCALL		
@@ -279,6 +284,10 @@ XMLPUBFUN int XMLCALL
 XMLPUBFUN int XMLCALL
 		    xmlTextReaderSchemaValidate	(xmlTextReaderPtr reader,
 		    				 const char *xsd);
+XMLPUBFUN int XMLCALL
+		    xmlTextReaderSchemaValidateCtxt(xmlTextReaderPtr reader,
+						 xmlSchemaValidCtxtPtr ctxt,
+						 int options);
 XMLPUBFUN int XMLCALL		
 		    xmlTextReaderSetSchema	(xmlTextReaderPtr reader,
 		    				 xmlSchemaPtr schema);

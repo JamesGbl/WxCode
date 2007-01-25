@@ -87,8 +87,8 @@ typedef xmlSchema *xmlSchemaPtr;
 /**
  * A schemas validation context
  */
-typedef void (*xmlSchemaValidityErrorFunc) (void *ctx, const char *msg, ...);
-typedef void (*xmlSchemaValidityWarningFunc) (void *ctx, const char *msg, ...);
+typedef void (XMLCDECL *xmlSchemaValidityErrorFunc) (void *ctx, const char *msg, ...);
+typedef void (XMLCDECL *xmlSchemaValidityWarningFunc) (void *ctx, const char *msg, ...);
 
 typedef struct _xmlSchemaParserCtxt xmlSchemaParserCtxt;
 typedef xmlSchemaParserCtxt *xmlSchemaParserCtxtPtr;
@@ -112,6 +112,10 @@ XMLPUBFUN void XMLCALL
 	    xmlSchemaSetParserErrors	(xmlSchemaParserCtxtPtr ctxt,
 					 xmlSchemaValidityErrorFunc err,
 					 xmlSchemaValidityWarningFunc warn,
+					 void *ctx);
+XMLPUBFUN void XMLCALL
+	    xmlSchemaSetParserStructuredErrors(xmlSchemaParserCtxtPtr ctxt,
+					 xmlStructuredErrorFunc serror,
 					 void *ctx);
 XMLPUBFUN int XMLCALL
 		xmlSchemaGetParserErrors(xmlSchemaParserCtxtPtr ctxt,
@@ -137,6 +141,10 @@ XMLPUBFUN void XMLCALL
 	    xmlSchemaSetValidErrors	(xmlSchemaValidCtxtPtr ctxt,
 					 xmlSchemaValidityErrorFunc err,
 					 xmlSchemaValidityWarningFunc warn,
+					 void *ctx);
+XMLPUBFUN void XMLCALL
+	    xmlSchemaSetValidStructuredErrors(xmlSchemaValidCtxtPtr ctxt,
+					 xmlStructuredErrorFunc serror,
 					 void *ctx);
 XMLPUBFUN int XMLCALL
 	    xmlSchemaGetValidErrors	(xmlSchemaValidCtxtPtr ctxt,

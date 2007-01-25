@@ -237,6 +237,9 @@ xmlSchemaNewMinLengthFacet(int value)
     xmlSchemaFacetPtr ret;
 
     ret = xmlSchemaNewFacet();
+    if (ret == NULL) {
+        return(NULL);
+    }
     ret->type = XML_SCHEMA_FACET_MINLENGTH;
     ret->val = xmlSchemaNewValue(XML_SCHEMAS_NNINTEGER);
     ret->val->value.decimal.lo = value;
@@ -319,6 +322,63 @@ xmlSchemaInitBasicType(const char *name, xmlSchemaValType type,
 }
 
 /*
+* WARNING: Those type reside normally in xmlschemas.c but are
+* redefined here locally in oder of being able to use them for xs:anyType-
+* TODO: Remove those definition if we move the types to a header file.
+* TODO: Always keep those structs up-to-date with the originals.
+*/
+#define UNBOUNDED (1 << 30)
+
+typedef struct _xmlSchemaTreeItem xmlSchemaTreeItem;
+typedef xmlSchemaTreeItem *xmlSchemaTreeItemPtr;
+struct _xmlSchemaTreeItem {
+    xmlSchemaTypeType type;
+    xmlSchemaAnnotPtr annot;
+    xmlSchemaTreeItemPtr next;
+    xmlSchemaTreeItemPtr children;
+};
+
+typedef struct _xmlSchemaParticle xmlSchemaParticle;
+typedef xmlSchemaParticle *xmlSchemaParticlePtr;
+struct _xmlSchemaParticle {
+    xmlSchemaTypeType type;
+    xmlSchemaAnnotPtr annot;
+    xmlSchemaTreeItemPtr next;
+    xmlSchemaTreeItemPtr children;
+    int minOccurs;
+    int maxOccurs;
+    xmlNodePtr node;
+};
+
+typedef struct _xmlSchemaModelGroup xmlSchemaModelGroup;
+typedef xmlSchemaModelGroup *xmlSchemaModelGroupPtr;
+struct _xmlSchemaModelGroup {
+    xmlSchemaTypeType type;
+    xmlSchemaAnnotPtr annot;
+    xmlSchemaTreeItemPtr next;
+    xmlSchemaTreeItemPtr children;
+    xmlNodePtr node;
+};
+
+static xmlSchemaParticlePtr
+xmlSchemaAddParticle(void)
+{
+    xmlSchemaParticlePtr ret = NULL;
+
+    ret = (xmlSchemaParticlePtr)
+	xmlMalloc(sizeof(xmlSchemaParticle));
+    if (ret == NULL) {
+	xmlSchemaTypeErrMemory(NULL, "allocating particle component");
+	return (NULL);
+    }
+    memset(ret, 0, sizeof(xmlSchemaParticle));
+    ret->type = XML_SCHEMA_TYPE_PARTICLE;
+    ret->minOccurs = 1;
+    ret->maxOccurs = 1;
+    return (ret);
+}
+
+/*
  * xmlSchemaInitTypes:
  *
  * Initialize the default XML Schemas type library
@@ -339,19 +399,59 @@ xmlSchemaInitTypes(void)
 						     NULL);
     xmlSchemaTypeAnyTypeDef->baseType = xmlSchemaTypeAnyTypeDef;
     xmlSchemaTypeAnyTypeDef->contentType = XML_SCHEMA_CONTENT_MIXED;
+    /*
+    * Init the content type.
+    */
+    xmlSchemaTypeAnyTypeDef->contentType = XML_SCHEMA_CONTENT_MIXED;    
     {
+	xmlSchemaParticlePtr particle;
+	xmlSchemaModelGroupPtr sequence;
 	xmlSchemaWildcardPtr wild;
-
+	/* First particle. */
+	particle = xmlSchemaAddParticle();
+	if (particle == NULL)
+	    return;
+	xmlSchemaTypeAnyTypeDef->subtypes = (xmlSchemaTypePtr) particle;
+	/* Sequence model group. */
+	sequence = (xmlSchemaModelGroupPtr)
+	    xmlMalloc(sizeof(xmlSchemaModelGroup));
+	if (sequence == NULL) {
+	    xmlSchemaTypeErrMemory(NULL, "allocating model group component");
+	    return;
+	}
+	memset(sequence, 0, sizeof(xmlSchemaModelGroup));
+	sequence->type = XML_SCHEMA_TYPE_SEQUENCE;	
+	particle->children = (xmlSchemaTreeItemPtr) sequence;
+	/* Second particle. */
+	particle = xmlSchemaAddParticle();
+	if (particle == NULL)
+	    return;
+	particle->minOccurs = 0;
+	particle->maxOccurs = UNBOUNDED;
+	sequence->children = (xmlSchemaTreeItemPtr) particle;
+	/* The wildcard */
 	wild = (xmlSchemaWildcardPtr) xmlMalloc(sizeof(xmlSchemaWildcard));
 	if (wild == NULL) {
-	    xmlSchemaTypeErrMemory(NULL, "could not create an attribute wildcard on anyType");
+	    xmlSchemaTypeErrMemory(NULL, "allocating wildcard component");
+	    return;
+	}
+	memset(wild, 0, sizeof(xmlSchemaWildcard));
+	wild->type = XML_SCHEMA_TYPE_ANY;
+	wild->any = 1;	
+	wild->processContents = XML_SCHEMAS_ANY_LAX;	
+	particle->children = (xmlSchemaTreeItemPtr) wild;    
+	/*
+	* Create the attribute wildcard.
+	*/
+	wild = (xmlSchemaWildcardPtr) xmlMalloc(sizeof(xmlSchemaWildcard));
+	if (wild == NULL) {
+	    xmlSchemaTypeErrMemory(NULL, "could not create an attribute "
+		"wildcard on anyType");
 	    return;
 	}
 	memset(wild, 0, sizeof(xmlSchemaWildcard));
 	wild->any = 1;
-	wild->processContents = XML_SCHEMAS_ANY_LAX;
-	wild->minOccurs = 1;
-	wild->maxOccurs = 1;
+	wild->processContents = XML_SCHEMAS_ANY_LAX;	
 	xmlSchemaTypeAnyTypeDef->attributeWildcard = wild;
     }
     xmlSchemaTypeAnySimpleTypeDef = xmlSchemaInitBasicType("anySimpleType", 
@@ -519,7 +619,24 @@ void
 xmlSchemaCleanupTypes(void) {
     if (xmlSchemaTypesInitialized == 0)
 	return;
-    xmlSchemaFreeWildcard(xmlSchemaTypeAnyTypeDef->attributeWildcard);
+    /*
+    * Free xs:anyType.
+    */
+    {
+	xmlSchemaParticlePtr particle;
+	/* Attribute wildcard. */
+	xmlSchemaFreeWildcard(xmlSchemaTypeAnyTypeDef->attributeWildcard);
+	/* Content type. */
+	particle = (xmlSchemaParticlePtr) xmlSchemaTypeAnyTypeDef->subtypes;
+	/* Wildcard. */
+	xmlSchemaFreeWildcard((xmlSchemaWildcardPtr) 
+	    particle->children->children->children);
+	xmlFree((xmlSchemaParticlePtr) particle->children->children);
+	/* Sequence model group. */
+	xmlFree((xmlSchemaModelGroupPtr) particle->children);
+	xmlFree((xmlSchemaParticlePtr) particle);
+	xmlSchemaTypeAnyTypeDef->subtypes = NULL;	
+    }
     xmlHashFree(xmlSchemaTypesBank, (xmlHashDeallocator) xmlSchemaFreeType);
     xmlSchemaTypesInitialized = 0;
 }
@@ -1276,11 +1393,12 @@ _xmlSchemaParseTime (xmlSchemaValDatePtr dt, const xmlChar **str) {
  */
 static int
 _xmlSchemaParseTimeZone (xmlSchemaValDatePtr dt, const xmlChar **str) {
-    const xmlChar *cur = *str;
+    const xmlChar *cur;
     int ret = 0;
 
     if (str == NULL)
 	return -1;
+    cur = *str;
 
     switch (*cur) {
     case 0:
@@ -1582,7 +1700,7 @@ xmlSchemaValidateDates (xmlSchemaValType type,
     ret = _xmlSchemaParseTimeZone(&(dt->value.date), &cur);
     if (collapse)
 	while IS_WSP_BLANK_CH(*cur) cur++;
-    if ((ret != 0) || (*cur != 0) || !VALID_DATETIME((&(dt->value.date))))
+    if ((ret != 0) || (*cur != 0) || (!(VALID_DATETIME((&(dt->value.date))))))
 	goto error;
 
 
@@ -2130,98 +2248,122 @@ xmlSchemaValAtomicType(xmlSchemaTypePtr type, const xmlChar * value,
             }
         case XML_SCHEMAS_DECIMAL:{
                 const xmlChar *cur = value;
-                unsigned int len, neg = 0;
+                unsigned int len, neg, integ, hasLeadingZeroes;
 		xmlChar cval[25];
-		xmlChar *cptr = cval;
-		int dec = -1;
+		xmlChar *cptr = cval;		
 
-                if (cur == NULL)
+                if ((cur == NULL) || (*cur == 0))
                     goto return1;
 
+		/*
+		* xs:decimal has a whitespace-facet value of 'collapse'.
+		*/
 		if (normOnTheFly)
 		    while IS_WSP_BLANK_CH(*cur) cur++;
 
-		/* First we handle an optional sign */
-                if (*cur == '+')
+		/*
+		* First we handle an optional sign.
+		*/
+		neg = 0;
+                if (*cur == '-') {
+		    neg = 1;
                     cur++;
-                else if (*cur == '-') {
-                    neg = 1;
+		} else if (*cur == '+')
                     cur++;
-                }
+		/*
+		* Disallow: "", "-", "- "
+		*/
+		if (*cur == 0)
+		    goto return1;
 		/*
 		 * Next we "pre-parse" the number, in preparation for calling
 		 * the common routine xmlSchemaParseUInt.  We get rid of any
 		 * leading zeroes (because we have reserved only 25 chars),
-		 * and note the position of any decimal point.
+		 * and note the position of a decimal point.
 		 */
 		len = 0;
+		integ = ~0u;
+		hasLeadingZeroes = 0;
 		/*
 		* Skip leading zeroes.
 		*/
-		while (*cur == '0')
+		while (*cur == '0') {
 		    cur++;
+		    hasLeadingZeroes = 1;
+		}
 		if (*cur != 0) {
-		    while (len < 24) {
+		    do {
 			if ((*cur >= '0') && (*cur <= '9')) {
 			    *cptr++ = *cur++;
 			    len++;
 			} else if (*cur == '.') {
-			    if (dec != -1)
-				goto return1;	/* multiple decimal points */
 			    cur++;
-			    if ((*cur == 0) && (cur -1 == value))
+			    integ = len;
+			    do {
+				if ((*cur >= '0') && (*cur <= '9')) {
+				    *cptr++ = *cur++;
+				    len++;
+				} else
+				    break;
+			    } while (len < 24);
+			    /*
+			    * Disallow "." but allow "00."
+			    */
+			    if ((len == 0) && (!hasLeadingZeroes))
 				goto return1;
-			    
-			    dec = len;
-			    while ((len < 24) && (*cur >= '0') &&
-				(*cur <= '9')) {
-				*cptr++ = *cur++;
-				len++;
-			    }
 			    break;
 			} else
 			    break;
-		    }
+		    } while (len < 24);
 		}
 		if (normOnTheFly)
 		    while IS_WSP_BLANK_CH(*cur) cur++;
 		if (*cur != 0)
-		    goto return1;	/* error if any extraneous chars */
+		    goto return1; /* error if any extraneous chars */
                 if (val != NULL) {
                     v = xmlSchemaNewValue(XML_SCHEMAS_DECIMAL);
                     if (v != NULL) {
 			/*
-		 	* If a mixed decimal, get rid of trailing zeroes
-		 	*/
-			if (dec != -1) {
-			    while ((len > dec) && (cptr > cval) &&
-				(*(cptr-1) == '0')) {
-				cptr--;
-				len--;
-			    }
-			}
-			*cptr = 0;	/* Terminate our (preparsed) string */
-			cptr = cval;
-			/*
 		 	* Now evaluate the significant digits of the number
 		 	*/
-			if (*cptr != 0) 
-			    xmlSchemaParseUInt((const xmlChar **)&cptr,
-					    &v->value.decimal.lo,
-					    &v->value.decimal.mi,
-					    &v->value.decimal.hi);
+			if (len != 0) {
+			    
+			    if (integ != ~0u) {
+				/*
+				* Get rid of trailing zeroes in the
+				* fractional part.
+				*/
+				while ((len != integ) && (*(cptr-1) == '0')) {
+				    cptr--;
+				    len--;
+				}
+			    }
+			    /*
+			    * Terminate the (preparsed) string.
+			    */
+			    if (len != 0) {
+				*cptr = 0; 
+				cptr = cval;
+				
+				xmlSchemaParseUInt((const xmlChar **)&cptr,
+				    &v->value.decimal.lo,
+				    &v->value.decimal.mi,
+				    &v->value.decimal.hi);
+			    }
+			}
 			/*
 			* Set the total digits to 1 if a zero value.
 			*/
-			if (len == 0)
-			    len++;
                         v->value.decimal.sign = neg;
-			if (dec == -1) {
-			    v->value.decimal.frac = 0;
-			    v->value.decimal.total = len;
+			if (len == 0) {
+			    /* Speedup for zero values. */
+			    v->value.decimal.total = 1;
 			} else {
-			    v->value.decimal.frac = len - dec;
 			    v->value.decimal.total = len;
+			    if (integ == ~0u)
+				v->value.decimal.frac = 0;
+			    else
+				v->value.decimal.frac = len - integ;
 			}
                         *val = v;
                     }
@@ -2247,9 +2389,6 @@ xmlSchemaValAtomicType(xmlSchemaTypePtr type, const xmlChar * value,
         case XML_SCHEMAS_DOUBLE:{
                 const xmlChar *cur = value;
                 int neg = 0;
-
-                if (cur == NULL)
-                    goto return1;
 
 		if (normOnTheFly)
 		    while IS_WSP_BLANK_CH(*cur) cur++;
@@ -2405,7 +2544,8 @@ xmlSchemaValAtomicType(xmlSchemaTypePtr type, const xmlChar * value,
 			    ret = 0;
 			} else
 			    goto return1;
-		    }
+		    } else
+			goto return1;
 		    if (*cur != 0) {
 			while IS_WSP_BLANK_CH(*cur) cur++;
 			if (*cur != 0)
@@ -3286,10 +3426,42 @@ xmlSchemaCompareDecimals(xmlSchemaValPtr x, xmlSchemaValPtr y)
      */
     integx = x->value.decimal.total - x->value.decimal.frac;
     integy = y->value.decimal.total - y->value.decimal.frac;
+    /*
+    * NOTE: We changed the "total" for values like "0.1"
+    *   (or "-0.1" or ".1") to be 1, which was 2 previously.
+    *   Therefore the special case, when such values are
+    *   compared with 0, needs to be handled separately;
+    *   otherwise a zero would be recognized incorrectly as
+    *   greater than those values. This has the nice side effect
+    *   that we gain an overall optimized comparison with zeroes.
+    * Note that a "0" has a "total" of 1 already.
+    */
+    if (integx == 1) {
+	if (x->value.decimal.lo == 0) {
+	    if (integy != 1)
+		return -order;
+	    else if (y->value.decimal.lo != 0)
+		return -order;
+	    else
+		return(0);
+	}
+    }
+    if (integy == 1) {
+	if (y->value.decimal.lo == 0) {
+	    if (integx != 1)
+		return order;
+	    else if (x->value.decimal.lo != 0)
+		return order;
+	    else
+		return(0);
+	}
+    }
+
     if (integx > integy)
 	return order;
     else if (integy > integx)
 	return -order;
+
     /*
      * If the number of integral digits is the same for both numbers,
      * then things get a little more complicated.  We need to "normalize"
@@ -3643,10 +3815,18 @@ _xmlSchemaDateAdd (xmlSchemaValPtr dt, xmlSchemaValPtr dur)
 
     while (1) {
         if (tempdays < 1) {
-            long tmon = (long) MODULO_RANGE(r->mon-1, 1, 13);
-            long tyr  = r->year + (long)FQUOTIENT_RANGE(r->mon-1, 1, 13);
+            long tmon = (long) MODULO_RANGE((int)r->mon-1, 1, 13);
+            long tyr  = r->year + (long)FQUOTIENT_RANGE((int)r->mon-1, 1, 13);
             if (tyr == 0)
                 tyr--;
+	    /*
+	     * Coverity detected an overrun in daysInMonth 
+	     * of size 12 at position 12 with index variable "((r)->mon - 1)"
+	     */
+	    if (tmon < 0)
+	        tmon = 0;
+	    if (tmon > 12)
+	        tmon = 12;
             tempdays += MAX_DAYINMONTH(tyr, tmon);
             carry = -1;
         } else if (tempdays > (long) MAX_DAYINMONTH(r->year, r->mon)) {
@@ -4685,6 +4865,8 @@ xmlSchemaCompareValuesInternal(xmlSchemaValType xtype,
                         return(1);
                     else if (ret == 0)
                         return(0);
+		    else
+		        return(-1);
                 }
                 else if (x->value.base64.total > y->value.base64.total)
                     return(1);
@@ -5255,7 +5437,7 @@ xmlSchemaValidateFacetInternal(xmlSchemaFacetPtr facet,
 	case XML_SCHEMA_FACET_FRACTIONDIGITS:
 
 	    if ((facet->val == NULL) ||
-		((facet->val->type != XML_SCHEMAS_DECIMAL) &&
+		((facet->val->type != XML_SCHEMAS_PINTEGER) &&
 		 (facet->val->type != XML_SCHEMAS_NNINTEGER)) ||
 		(facet->val->value.decimal.frac != 0)) {
 		return(-1);
@@ -5533,6 +5715,8 @@ xmlSchemaGetCanonValue(xmlSchemaValPtr val, const xmlChar **retValue)
 		if ((dec.frac == 0) || (dec.frac == dec.total))
 		    bufsize++;
 		buf = xmlMalloc(bufsize);
+		if (buf == NULL)
+		    return(-1);
 		offs = buf;
 		if (dec.sign)
 		    *offs++ = '-';
@@ -5606,6 +5790,8 @@ xmlSchemaGetCanonValue(xmlSchemaValPtr val, const xmlChar **retValue)
 		if (dec.sign)
 		    bufsize++;
 		*retValue = xmlMalloc(bufsize);
+		if (*retValue == NULL)
+		    return(-1);
 		if (dec.hi != 0) {
 		    if (dec.sign)
 			snprintf((char *) *retValue, bufsize,
@@ -5681,7 +5867,9 @@ xmlSchemaGetCanonValue(xmlSchemaValPtr val, const xmlChar **retValue)
 	case XML_SCHEMAS_GMONTH: {
 		/* TODO: Unclear in XML Schema 1.0 */
 		/* TODO: What to do with the timezone? */
-		*retValue = xmlMalloc(5);
+		*retValue = xmlMalloc(6);
+		if (*retValue == NULL)
+		    return(-1);
 		snprintf((char *) *retValue, 6, "--%02u",
 		    val->value.date.mon);
 	    }
@@ -5690,6 +5878,8 @@ xmlSchemaGetCanonValue(xmlSchemaValPtr val, const xmlChar **retValue)
 		/* TODO: Unclear in XML Schema 1.0 */
 		/* TODO: What to do with the timezone? */
 		*retValue = xmlMalloc(6);
+		if (*retValue == NULL)
+		    return(-1);
 		snprintf((char *) *retValue, 6, "---%02u",
 		    val->value.date.day);
 	    }
@@ -5698,6 +5888,8 @@ xmlSchemaGetCanonValue(xmlSchemaValPtr val, const xmlChar **retValue)
 		/* TODO: Unclear in XML Schema 1.0 */
 		/* TODO: What to do with the timezone? */
 		*retValue = xmlMalloc(8);
+		if (*retValue == NULL)
+		    return(-1);
 		snprintf((char *) *retValue, 8, "--%02u-%02u",
 		    val->value.date.mon, val->value.date.day);
 	    }
@@ -5842,6 +6034,8 @@ xmlSchemaGetCanonValue(xmlSchemaValPtr val, const xmlChar **retValue)
 	    *retValue = BAD_CAST xmlStrdup(BAD_CAST "???");
 	    return (1);
     }
+    if (*retValue == NULL)
+	return(-1);
     return (0);
 }
 

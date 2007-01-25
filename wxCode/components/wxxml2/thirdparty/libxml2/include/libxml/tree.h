@@ -55,6 +55,42 @@ typedef xmlEntity *xmlEntityPtr;
 #define BASE_BUFFER_SIZE 4096
 
 /**
+ * LIBXML_NAMESPACE_DICT:
+ *
+ * Defines experimental behaviour:
+ * 1) xmlNs gets an additional field @context (a xmlDoc)
+ * 2) when creating a tree, xmlNs->href is stored in the dict of xmlDoc.
+ */
+/* #define LIBXML_NAMESPACE_DICT */
+
+/**
+ * xmlBufferAllocationScheme:
+ *
+ * A buffer allocation scheme can be defined to either match exactly the
+ * need or double it's allocated size each time it is found too small.
+ */
+
+typedef enum {
+    XML_BUFFER_ALLOC_DOUBLEIT,
+    XML_BUFFER_ALLOC_EXACT,
+    XML_BUFFER_ALLOC_IMMUTABLE
+} xmlBufferAllocationScheme;
+
+/**
+ * xmlBuffer:
+ *
+ * A buffer structure.
+ */
+typedef struct _xmlBuffer xmlBuffer;
+typedef xmlBuffer *xmlBufferPtr;
+struct _xmlBuffer {
+    xmlChar *content;		/* The buffer content UTF8 */
+    unsigned int use;		/* The buffer size used */
+    unsigned int size;		/* The buffer size */
+    xmlBufferAllocationScheme alloc; /* The realloc method */
+};
+
+/**
  * XML_XML_NAMESPACE:
  *
  * This is the namespace for the special xml: prefix predefined in the
@@ -315,6 +351,7 @@ struct _xmlNs {
     const xmlChar *href;	/* URL for the namespace */
     const xmlChar *prefix;	/* prefix for the namespace */
     void           *_private;   /* application data */
+    struct _xmlDoc *context;		/* normally an xmlDoc */
 };
 
 /**
@@ -402,33 +439,6 @@ struct _xmlRef {
 };
 
 /**
- * xmlBufferAllocationScheme:
- *
- * A buffer allocation scheme can be defined to either match exactly the
- * need or double it's allocated size each time it is found too small.
- */
-
-typedef enum {
-    XML_BUFFER_ALLOC_DOUBLEIT,
-    XML_BUFFER_ALLOC_EXACT,
-    XML_BUFFER_ALLOC_IMMUTABLE
-} xmlBufferAllocationScheme;
-
-/**
- * xmlBuffer:
- *
- * A buffer structure.
- */
-typedef struct _xmlBuffer xmlBuffer;
-typedef xmlBuffer *xmlBufferPtr;
-struct _xmlBuffer {
-    xmlChar *content;		/* The buffer content UTF8 */
-    unsigned int use;		/* The buffer size used */
-    unsigned int size;		/* The buffer size */
-    xmlBufferAllocationScheme alloc; /* The realloc method */
-};
-
-/**
  * xmlNode:
  *
  * A node in an XML tree.
@@ -508,10 +518,47 @@ struct _xmlDoc {
     void           *psvi;	/* for type/PSVI informations */
 };
 
+
 typedef struct _xmlDOMWrapCtxt xmlDOMWrapCtxt;
 typedef xmlDOMWrapCtxt *xmlDOMWrapCtxtPtr;
+
+/**
+ * xmlDOMWrapAcquireNsFunction:
+ * @ctxt:  a DOM wrapper context
+ * @node:  the context node (element or attribute) 
+ * @nsName:  the requested namespace name
+ * @nsPrefix:  the requested namespace prefix 
+ *
+ * A function called to acquire namespaces (xmlNs) from the wrapper.
+ *
+ * Returns an xmlNsPtr or NULL in case of an error.
+ */
+typedef xmlNsPtr (*xmlDOMWrapAcquireNsFunction) (xmlDOMWrapCtxtPtr ctxt,
+						 xmlNodePtr node,
+						 const xmlChar *nsName,
+						 const xmlChar *nsPrefix);
+
+/**
+ * xmlDOMWrapCtxt:
+ *
+ * Context for DOM wrapper-operations.
+ */
 struct _xmlDOMWrapCtxt {
     void * _private;
+    /*
+    * The type of this context, just in case we need specialized
+    * contexts in the future.
+    */
+    int type;
+    /*
+    * Internal namespace map used for various operations.
+    */
+    void * namespaceMap;
+    /*
+    * Use this one to acquire an xmlNsPtr intended for node->ns.
+    * (Note that this is not intended for elem->nsDef).
+    */
+    xmlDOMWrapAcquireNsFunction getNsForNodeFunc;
 };
 
 /**
@@ -541,7 +588,7 @@ struct _xmlDOMWrapCtxt {
 /*
  * Some helper functions
  */
-#if defined(LIBXML_TREE_ENABLED) || defined(LIBXML_XPATH_ENABLED) || defined(LIBXML_SCHEMAS_ENABLED) || defined(LIBXML_DEBUG_ENABLED) || defined (LIBXML_HTML_ENABLED)
+#if defined(LIBXML_TREE_ENABLED) || defined(LIBXML_XPATH_ENABLED) || defined(LIBXML_SCHEMAS_ENABLED) || defined(LIBXML_DEBUG_ENABLED) || defined (LIBXML_HTML_ENABLED) || defined(LIBXML_SAX1_ENABLED) || defined(LIBXML_HTML_ENABLED) || defined(LIBXML_WRITER_ENABLED) || defined(LIBXML_DOCB_ENABLED)
 XMLPUBFUN int XMLCALL
 		xmlValidateNCName	(const xmlChar *value,
 					 int space);
@@ -871,7 +918,7 @@ XMLPUBFUN xmlNsPtr XMLCALL
 		xmlSearchNsByHref	(xmlDocPtr doc,
 					 xmlNodePtr node,
 					 const xmlChar *href);
-#if defined(LIBXML_TREE_ENABLED) || defined(LIBXML_XPATH_ENABLED)
+#if defined(LIBXML_TREE_ENABLED) || defined(LIBXML_XPATH_ENABLED) || defined(LIBXML_SCHEMAS_ENABLED)
 XMLPUBFUN xmlNsPtr * XMLCALL	
 		xmlGetNsList		(xmlDocPtr doc,
 					 xmlNodePtr node);
@@ -978,10 +1025,8 @@ XMLPUBFUN void XMLCALL
 /*
  * Removing content.
  */
-#ifdef LIBXML_TREE_ENABLED
 XMLPUBFUN int XMLCALL		
 		xmlRemoveProp		(xmlAttrPtr cur);
-#endif /* LIBXML_TREE_ENABLED */
 #if defined(LIBXML_TREE_ENABLED) || defined(LIBXML_SCHEMAS_ENABLED)
 XMLPUBFUN int XMLCALL		
 		xmlUnsetNsProp		(xmlNodePtr node,
@@ -1141,6 +1186,15 @@ XMLPUBFUN int XMLCALL
 	    xmlDOMWrapRemoveNode	(xmlDOMWrapCtxtPtr ctxt,
 					 xmlDocPtr doc,
 					 xmlNodePtr node,
+					 int options);
+XMLPUBFUN int XMLCALL
+	    xmlDOMWrapCloneNode		(xmlDOMWrapCtxtPtr ctxt,
+					 xmlDocPtr sourceDoc,
+					 xmlNodePtr node,
+					 xmlNodePtr *clonedNode,
+					 xmlDocPtr destDoc,
+					 xmlNodePtr destParent,
+					 int deep,
 					 int options);
 
 #ifdef __cplusplus
