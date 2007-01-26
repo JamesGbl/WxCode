@@ -1,0 +1,44 @@
+lang=Español
+canonicalName=es_ES
+
+&Files=&Archivo
+&New folder (F7)=&Nueva Carpeta (F7)
+&Copy         (F5)=&Copiar       (F5)
+&Delete      (Del)=&Borrar       (Supr)
+&Rename      (F2)=&Renombrar     (F2)
+Execute     (F9)=&Ejecutar       (F9)
+&Exit=&Salir
+&Help=&Ayuda
+About as... (F1)=Acerca de... (F1)
+
+New Folder=Nueva Carpeta
+Copy=Copiar
+Delete=Borrar
+Rename=Renonbrar
+Exec=Ejecutar
+Go=Ir a...
+
+Files=Ficheros
+Size=Tamaño
+Date=Fecha
+
+Do you like DELETE selected files?=¿Desea BORRAR los fichero(s) Seleccionados?
+Delete=Borrando
+There are some files read only=Hay algunos ficheros de solo Lectura
+New name :=Nuevo nombre :
+Rename=Renombrar
+Folder name :=Nombre de la carpeta :
+Create folder=Crear carpeta
+New Folder=Nueva Carpeta
+Write the command for execute in :=Escriba el comando a Ejecutar en :
+Exec command=Ejecutar comando
+Directories and Files=Directorios y Ficheros
+Coping files=Copiando ficheros
+Coping file=Copiando fichero
+of=de
+Finalizing the copy. Wait a moment...=Finalizando la copia. Espere un momento...
+
+&Options=&Opciones
+&Language=&Idioma
+Language selector=Selector de Idioma
+Select your language=Seleccione su Idioma

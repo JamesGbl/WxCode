@@ -1,0 +1,14 @@
+Lista de Tareas
+***************
+- Teclas Lanzadoras
+- Menu contextual
+- Propiedades Ficheros
+- Mostrar Unidades
+- Drag and Drop
+- Portapapeles
+- Barra Proceso (Error Borrado mientras Copia)
+- FTP
+- Borrado de Solo Lectura
+- Copia sobreescribe
+- Guarda Config (Posicion Ventana etc...)
+- Config
