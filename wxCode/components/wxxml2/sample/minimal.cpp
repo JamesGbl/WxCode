@@ -376,7 +376,7 @@ void ParseNode(const wxXml2Node &node, wxString &str, int n, const wxString &fil
         // A reference to an entity. It is like a text node, but this node contains 
         // only an "entity". Entities are strings like: &amp;  &quot;  &lt;  etc
         // A wxXML2_ENTITY_REF_NODE always has a wxXML2_ENTITY_DECL child
-        toadd += wxString::Format(_T(", Reference to external entity &%s;"), node.GetName());
+        toadd += wxString::Format(_T(", Reference to external entity &%s;"), node.GetName().c_str());
 
         // Save the name of the node
         m_fExtEntity = true;
@@ -389,7 +389,7 @@ void ParseNode(const wxXml2Node &node, wxString &str, int n, const wxString &fil
         // to the previously found wxXML2_ENTITY_REF_NODE. 
         wxXml2EntityDecl* pNode = (wxXml2EntityDecl*)&node;
         toadd += wxString::Format(_T(", Entity declaration, name='%s', SystemID='%s'\n"),
-                                  node.GetName(), pNode->GetSystemID() );
+                                  node.GetName().c_str(), pNode->GetSystemID().c_str() );
 
         // if this decalarion is the taht corresponds to the refeneced external entity
         // insert here the referenced xml tree
@@ -423,7 +423,7 @@ void ParseNode(const wxXml2Node &node, wxString &str, int n, const wxString &fil
 
             wxXml2Node oRoot = oDoc.GetRoot();
             toadd += spaces;
-            toadd += wxString::Format(_T("Inserting and processing file %s\n"), sFilename);
+            toadd += wxString::Format(_T("Inserting and processing file %s\n"), sFilename.c_str());
             toadd += spaces + _T("------------------------------------\n");
             wxString sChildTree;
             ParseNodeAndSiblings(oRoot, sChildTree, n, sFilename);
