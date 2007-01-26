@@ -6,6 +6,7 @@
 #include <wx/thread.h>
 #include "wxCommanderUtils.h"
 
+
 typedef void (*onThreadFinishCallBackFunc)(wxThread*, void*);
 
 class wxSimpleThread : public wxThread
