@@ -3,7 +3,7 @@
  ---------------------
 
  Website: http://wxcode.sourceforge.net/components/wxxml2
- Version: 1.7
+ Version: 1.8
 
  Description:
  A simple set of classes, wxXml2Namespace, wxXml2Property, wxXml2Node, wxXml2DTD and
@@ -32,6 +32,16 @@
 
  ChangeLog
  ---------
+
+ 1.8
+
+     - revise source code for better compatibility with wxWidgets 2.8
+     - updated the libxml2 and iconv libraries in the "thirdparty" folder
+       respectively to versions 2.6.27 and 1.11
+     - now WX_UNICODE option defaults to 0 and not 1 
+     - disabled warnings when compiling libxml2 and libiconv; they give ton
+       of warnings under win32 which are harmless (and in any case should be
+       fixed by libxml2 and libiconv's authors, not by me ;))
 
  1.7
      - get rid of GCC #pragmas
@@ -72,3 +82,4 @@
 
  Thanks to the following people for their patches:
  - Scott Fant  for helping with wxXml2Node::Find
+ - Cecilio     for contributions in the minimal sample about external references handling
