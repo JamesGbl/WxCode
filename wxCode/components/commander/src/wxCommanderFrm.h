@@ -101,6 +101,10 @@ class wxCommanderFrm : public wxFrame
       void Mnu_execute_onClick(wxCommandEvent& event);
 	   void MnuLanguage_onClick(wxCommandEvent& event);
 	   void Mnu_hotKeys_onClick(wxCommandEvent& event);
+		void WxListCtrl1EndLabelEdit(wxListEvent& event);
+		void WxListCtrl1BeginLabelEdit(wxListEvent& event);
+		void WxListCtrl2BeginLabelEdit(wxListEvent& event);
+		void WxListCtrl2EndLabelEdit(wxListEvent& event);
 	private:
 		//Do not add custom control declarations
 		//wxDev-C++ will remove them. Add custom code after the block.
@@ -184,6 +188,8 @@ class wxCommanderFrm : public wxFrame
 	      void writeConfig();
 	      void Close();
          void ListCtlUpdate();
+         void WxListCtrlBeginLabelEdit(wxListEvent& event);
+         void WxListCtrlEndLabelEdit(wxListEvent& event);
 };
 
 #endif

@@ -39,6 +39,10 @@ BEGIN_EVENT_TABLE(wxCommanderFrm,wxFrame)
 	EVT_LIST_ITEM_FOCUSED(ID_WXLISTCTRL1,wxCommanderFrm::WxListCtrl1ItemFocused)
 	EVT_LIST_ITEM_SELECTED(ID_WXLISTCTRL1,wxCommanderFrm::WxListCtrl1ItemFocused)
 	EVT_LIST_ITEM_SELECTED(ID_WXLISTCTRL2,wxCommanderFrm::WxListCtrl2ItemFocused)
+	EVT_LIST_BEGIN_LABEL_EDIT(ID_WXLISTCTRL1,wxCommanderFrm::WxListCtrlBeginLabelEdit)
+	EVT_LIST_BEGIN_LABEL_EDIT(ID_WXLISTCTRL2,wxCommanderFrm::WxListCtrlBeginLabelEdit)	
+	EVT_LIST_END_LABEL_EDIT(ID_WXLISTCTRL1,wxCommanderFrm::WxListCtrlEndLabelEdit)
+	EVT_LIST_END_LABEL_EDIT(ID_WXLISTCTRL2,wxCommanderFrm::WxListCtrlEndLabelEdit)
 	////Manual Code End
 	
 	EVT_CLOSE(wxCommanderFrm::OnClose)
@@ -94,9 +98,9 @@ void wxCommanderFrm::CreateGUIControls()
 	WxSplitterWindow1 =new wxSplitterWindow(this, ID_WXSPLITTERWINDOW1, wxPoint(0,0), wxSize(409,920) );
 	WxGridSizer->Add(WxSplitterWindow1,0,wxALIGN_CENTER | wxALL,0);
 
-	WxListCtrl1 = new wxListCtrl(WxSplitterWindow1, ID_WXLISTCTRL1, wxPoint(5,5), wxSize(399,450), wxLC_REPORT);
+	WxListCtrl1 = new wxListCtrl(WxSplitterWindow1, ID_WXLISTCTRL1, wxPoint(5,5), wxSize(399,450), wxLC_REPORT | wxLC_EDIT_LABELS);
 
-	WxListCtrl2 = new wxListCtrl(WxSplitterWindow1, ID_WXLISTCTRL2, wxPoint(414,5), wxSize(399,450), wxLC_REPORT);
+	WxListCtrl2 = new wxListCtrl(WxSplitterWindow1, ID_WXLISTCTRL2, wxPoint(414,5), wxSize(399,450), wxLC_REPORT | wxLC_EDIT_LABELS);
 
 	WxToolBar = new wxToolBar(this, ID_WXTOOLBAR, wxPoint(0,0), wxSize(792,29));
 
@@ -116,7 +120,7 @@ void wxCommanderFrm::CreateGUIControls()
 	
 	wxMenu *ID_MNU_OPTIONS_1063_Mnu_Obj = new wxMenu(0);
 	ID_MNU_OPTIONS_1063_Mnu_Obj->Append(ID_MNU_LANGUAGE_1064, wxT("Language"), wxT(""), wxITEM_NORMAL);
-	//ID_MNU_OPTIONS_1063_Mnu_Obj->Append(ID_MNU_HOTKEYS_1065, wxT("Hot Keys"), wxT(""), wxITEM_NORMAL);
+	ID_MNU_OPTIONS_1063_Mnu_Obj->Append(ID_MNU_HOTKEYS_1065, wxT("Hot Keys"), wxT(""), wxITEM_NORMAL);
 	WxMenuBar1->Append(ID_MNU_OPTIONS_1063_Mnu_Obj, wxT("Options"));
 	
 	wxMenu *ID_MNU_HELP_1006_Mnu_Obj = new wxMenu(0);
@@ -677,3 +681,26 @@ void wxCommanderFrm::Mnu_hotKeys_onClick(wxCommandEvent& event)
    dlgHotKeys->ShowModal();
    delete(dlgHotKeys);
 }
+
+void wxCommanderFrm::WxListCtrlBeginLabelEdit(wxListEvent& event)
+{
+   wxListItem itemCtrl = event.GetItem();
+
+   if (itemCtrl.GetId()==0)
+       event.Veto();
+}
+
+void wxCommanderFrm::WxListCtrlEndLabelEdit(wxListEvent& event)
+{
+   wxString newFileName = event.m_item.m_text.c_str();
+   wxListItem itemCtrl = event.GetItem();
+   wxString itemName = lastListCtrlUsed->GetItemText(itemCtrl.GetId());
+
+   if (!event.IsEditCancelled())
+   {
+	   if (!renameDirFile(*strPathLstCtrl, itemName, newFileName))
+         event.Veto();
+
+   }
+}
+

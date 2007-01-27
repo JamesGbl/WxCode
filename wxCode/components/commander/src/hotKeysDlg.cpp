@@ -42,6 +42,19 @@ hotKeysDlg::hotKeysDlg(wxWindow *parent, wxWindowID id, const wxString &title, c
 
 hotKeysDlg::~hotKeysDlg()
 {
+   delete(wxOpenFileDialog);
+	delete(saveBtn);
+	delete(editCancelBtn);
+	delete(openFileBtn);
+	delete(txtProgram);
+	delete(lblProgram);
+	delete(delBtn);
+	delete(editBtn);
+	delete(addBtn);
+	delete(WxStaticBox1);
+	delete(CancelBtn);
+	delete(okBtn);
+	delete(WxListCtrl);
 }
 
 void hotKeysDlg::CreateGUIControls()

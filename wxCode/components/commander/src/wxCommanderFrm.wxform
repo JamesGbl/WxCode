@@ -216,7 +216,7 @@ object frmNewForm_1: TfrmNewForm
         Wx_GeneralStyle = []
         Wx_IDName = 'ID_WXLISTCTRL1'
         Wx_IDValue = 1061
-        Wx_ListviewStyle = []
+        Wx_ListviewStyle = [wxLC_EDIT_LABELS]
         Wx_ListviewView = wxLC_REPORT
       end
       object WxListCtrl2: TWxListCtrl
@@ -234,7 +234,7 @@ object frmNewForm_1: TfrmNewForm
         Wx_GeneralStyle = []
         Wx_IDName = 'ID_WXLISTCTRL2'
         Wx_IDValue = 1062
-        Wx_ListviewStyle = []
+        Wx_ListviewStyle = [wxLC_EDIT_LABELS]
         Wx_ListviewView = wxLC_REPORT
       end
     end
