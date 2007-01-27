@@ -342,20 +342,9 @@ void wxCommanderFrm::Mnu_delete_onClick(wxCommandEvent& event)
 
 void wxCommanderFrm::Mnu_rename_onClick(wxCommandEvent& event)
 {
-   long item = 0;
-
-   item = lastListCtrlUsed->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+   long item = lastListCtrlUsed->GetNextItem(0, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    if ( item != -1 )
-   {
-      wxString itemName = lastListCtrlUsed->GetItemText(item);
-      wxTextEntryDialog execWnd(this, lang["New name :"], lang["Rename"] + " " + itemName, itemName, wxOK | wxCANCEL | wxCENTRE);
-	   execWnd.ShowModal();
-	   wxString newName = execWnd.GetValue();
-	   if (newName.IsEmpty()) return;
-
-      renameDirFile(*strPathLstCtrl, itemName, newName);
-      ListCtlUpdate();
-   }
+      lastListCtrlUsed->EditLabel(item);
 }
 
 void wxCommanderFrm::Mnu_newFolder_onClick(wxCommandEvent& event)
@@ -700,7 +689,6 @@ void wxCommanderFrm::WxListCtrlEndLabelEdit(wxListEvent& event)
    {
 	   if (!renameDirFile(*strPathLstCtrl, itemName, newFileName))
          event.Veto();
-
    }
 }
 
