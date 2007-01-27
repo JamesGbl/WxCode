@@ -108,13 +108,13 @@
         <if cond="BUILD=='release'">speed</if>
     </set>
 
-    <!-- Level of warnings.  Here we max it out in debug            -->
-    <!-- mode, and turn them off in release mode.                   -->
-    <set var="WARNINGS">
-        <if cond="BUILD=='debug'">max</if>
-        <if cond="BUILD=='release'">no</if>
-    </set>
-
+    <!-- Level of warnings: since libiconv is mainly an Unix library,
+         there are a lot of warnings which are outputted by win32
+         compilers. To avoid an infinite list of those warnings, here
+         we turn them off.
+    -->
+    <set var="WARNINGS">no</set>
+    
     <!-- Set MYCPPFLAGS as empty; maybe it will be filled later...  -->
     <set var="MYCPPFLAGS"></set>
     <if cond="FORMAT=='mingw' or FORMAT=='autoconf'">
