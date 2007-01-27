@@ -72,8 +72,8 @@ LINK32=link.exe
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\libxml2"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\libxml2.pdb /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "_UNICODE" /D "_DEBUG" /D "_DEBUG" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /c
-# ADD CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\libxml2.pdb /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "_UNICODE" /D "_DEBUG" /D "_DEBUG" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /c
+# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /w /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\libxml2.pdb /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "_UNICODE" /D "_DEBUG" /D "_DEBUG" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /c
+# ADD CPP /nologo /FD /MDd /GR /EHsc /w /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\libxml2.pdb /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "_UNICODE" /D "_DEBUG" /D "_DEBUG" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /c
 # ADD BASE MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "_UNICODE" /D "_DEBUG" /D "_DEBUG" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /mktyplib203 /win32
 # ADD MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "_UNICODE" /D "_DEBUG" /D "_DEBUG" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_UNICODE" /d "_DEBUG" /i "..\include" /i "c:\iconv\include" /d "_DEBUG" /d "_REENTRANT" /d "HAVE_WIN32_THREADS" /d "WIN32" /d "_WINDOWS" /d _MBCS
@@ -122,8 +122,8 @@ LINK32=link.exe
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\libxml2"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\libxml2.pdb /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "_DEBUG" /D "_DEBUG" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /c
-# ADD CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\libxml2.pdb /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "_DEBUG" /D "_DEBUG" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /c
+# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /w /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\libxml2.pdb /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "_DEBUG" /D "_DEBUG" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /c
+# ADD CPP /nologo /FD /MDd /GR /EHsc /w /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\libxml2.pdb /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "_DEBUG" /D "_DEBUG" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /c
 # ADD BASE MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "_DEBUG" /D "_DEBUG" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /mktyplib203 /win32
 # ADD MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "_DEBUG" /D "_DEBUG" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG" /i "..\include" /i "c:\iconv\include" /d "_DEBUG" /d "_REENTRANT" /d "HAVE_WIN32_THREADS" /d "WIN32" /d "_WINDOWS" /d _MBCS
@@ -170,8 +170,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\libxml2"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\libxml2.pdb /D "WIN32" /D "_LIB" /D "_UNICODE" /D "_DEBUG" /D "_DEBUG" /D "LIBXML_STATIC" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /c
-# ADD CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\libxml2.pdb /D "WIN32" /D "_LIB" /D "_UNICODE" /D "_DEBUG" /D "_DEBUG" /D "LIBXML_STATIC" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /c
+# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /w /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\libxml2.pdb /D "WIN32" /D "_LIB" /D "_UNICODE" /D "_DEBUG" /D "_DEBUG" /D "LIBXML_STATIC" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /c
+# ADD CPP /nologo /FD /MDd /GR /EHsc /w /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\libxml2.pdb /D "WIN32" /D "_LIB" /D "_UNICODE" /D "_DEBUG" /D "_DEBUG" /D "LIBXML_STATIC" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -216,8 +216,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\lib"
 # PROP Intermediate_Dir "msvc6prj\libxml2"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\libxml2.pdb /D "WIN32" /D "_LIB" /D "_DEBUG" /D "_DEBUG" /D "LIBXML_STATIC" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /c
-# ADD CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\libxml2.pdb /D "WIN32" /D "_LIB" /D "_DEBUG" /D "_DEBUG" /D "LIBXML_STATIC" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /c
+# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /w /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\libxml2.pdb /D "WIN32" /D "_LIB" /D "_DEBUG" /D "_DEBUG" /D "LIBXML_STATIC" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /c
+# ADD CPP /nologo /FD /MDd /GR /EHsc /w /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\lib\libxml2.pdb /D "WIN32" /D "_LIB" /D "_DEBUG" /D "_DEBUG" /D "LIBXML_STATIC" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe

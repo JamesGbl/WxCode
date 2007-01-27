@@ -69,8 +69,8 @@ LINK32=link.exe
 # PROP Output_Dir "..\bin"
 # PROP Intermediate_Dir "msvc6prj\testSax"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\bin\testSax.pdb /D "WIN32" /D "_UNICODE" /D "_DEBUG" /D "_DEBUG" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_CONSOLE" /c
-# ADD CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\bin\testSax.pdb /D "WIN32" /D "_UNICODE" /D "_DEBUG" /D "_DEBUG" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_CONSOLE" /c
+# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /w /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\bin\testSax.pdb /D "WIN32" /D "_UNICODE" /D "_DEBUG" /D "_DEBUG" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_CONSOLE" /c
+# ADD CPP /nologo /FD /MDd /GR /EHsc /w /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\bin\testSax.pdb /D "WIN32" /D "_UNICODE" /D "_DEBUG" /D "_DEBUG" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_CONSOLE" /c
 # ADD BASE RSC /l 0x409 /d "_UNICODE" /d "_DEBUG" /i "..\include" /i "c:\iconv\include" /d "_DEBUG" /d "_REENTRANT" /d "HAVE_WIN32_THREADS" /d "WIN32" /d "_WINDOWS" /d "_MBCS" /d _CONSOLE
 # ADD RSC /l 0x409 /d "_UNICODE" /d "_DEBUG" /i "..\include" /i "c:\iconv\include" /d "_DEBUG" /d "_REENTRANT" /d "HAVE_WIN32_THREADS" /d "WIN32" /d "_WINDOWS" /d "_MBCS" /d _CONSOLE
 BSC32=bscmake.exe
@@ -115,8 +115,8 @@ LINK32=link.exe
 # PROP Output_Dir "..\bin"
 # PROP Intermediate_Dir "msvc6prj\testSax"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\bin\testSax.pdb /D "WIN32" /D "_DEBUG" /D "_DEBUG" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_CONSOLE" /c
-# ADD CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\bin\testSax.pdb /D "WIN32" /D "_DEBUG" /D "_DEBUG" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_CONSOLE" /c
+# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /w /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\bin\testSax.pdb /D "WIN32" /D "_DEBUG" /D "_DEBUG" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_CONSOLE" /c
+# ADD CPP /nologo /FD /MDd /GR /EHsc /w /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\bin\testSax.pdb /D "WIN32" /D "_DEBUG" /D "_DEBUG" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_CONSOLE" /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG" /i "..\include" /i "c:\iconv\include" /d "_DEBUG" /d "_REENTRANT" /d "HAVE_WIN32_THREADS" /d "WIN32" /d "_WINDOWS" /d "_MBCS" /d _CONSOLE
 # ADD RSC /l 0x409 /d "_DEBUG" /i "..\include" /i "c:\iconv\include" /d "_DEBUG" /d "_REENTRANT" /d "HAVE_WIN32_THREADS" /d "WIN32" /d "_WINDOWS" /d "_MBCS" /d _CONSOLE
 BSC32=bscmake.exe
@@ -161,8 +161,8 @@ LINK32=link.exe
 # PROP Output_Dir "..\bin"
 # PROP Intermediate_Dir "msvc6prj\testSax"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\bin\testSax.pdb /D "WIN32" /D "_UNICODE" /D "_DEBUG" /D "_DEBUG" /D "LIBXML_STATIC" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_CONSOLE" /c
-# ADD CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\bin\testSax.pdb /D "WIN32" /D "_UNICODE" /D "_DEBUG" /D "_DEBUG" /D "LIBXML_STATIC" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_CONSOLE" /c
+# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /w /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\bin\testSax.pdb /D "WIN32" /D "_UNICODE" /D "_DEBUG" /D "_DEBUG" /D "LIBXML_STATIC" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_CONSOLE" /c
+# ADD CPP /nologo /FD /MDd /GR /EHsc /w /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\bin\testSax.pdb /D "WIN32" /D "_UNICODE" /D "_DEBUG" /D "_DEBUG" /D "LIBXML_STATIC" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_CONSOLE" /c
 # ADD BASE RSC /l 0x409 /d "_UNICODE" /d "_DEBUG" /i "..\include" /i "c:\iconv\include" /d "_DEBUG" /d "LIBXML_STATIC" /d "_REENTRANT" /d "HAVE_WIN32_THREADS" /d "WIN32" /d "_WINDOWS" /d "_MBCS" /d _CONSOLE
 # ADD RSC /l 0x409 /d "_UNICODE" /d "_DEBUG" /i "..\include" /i "c:\iconv\include" /d "_DEBUG" /d "LIBXML_STATIC" /d "_REENTRANT" /d "HAVE_WIN32_THREADS" /d "WIN32" /d "_WINDOWS" /d "_MBCS" /d _CONSOLE
 BSC32=bscmake.exe
@@ -207,8 +207,8 @@ LINK32=link.exe
 # PROP Output_Dir "..\bin"
 # PROP Intermediate_Dir "msvc6prj\testSax"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\bin\testSax.pdb /D "WIN32" /D "_DEBUG" /D "_DEBUG" /D "LIBXML_STATIC" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_CONSOLE" /c
-# ADD CPP /nologo /FD /MDd /GR /EHsc /W4 /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\bin\testSax.pdb /D "WIN32" /D "_DEBUG" /D "_DEBUG" /D "LIBXML_STATIC" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_CONSOLE" /c
+# ADD BASE CPP /nologo /FD /MDd /GR /EHsc /w /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\bin\testSax.pdb /D "WIN32" /D "_DEBUG" /D "_DEBUG" /D "LIBXML_STATIC" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_CONSOLE" /c
+# ADD CPP /nologo /FD /MDd /GR /EHsc /w /Od /I "..\include" /I "c:\iconv\include" /Zi /Gm /GZ /Fd..\bin\testSax.pdb /D "WIN32" /D "_DEBUG" /D "_DEBUG" /D "LIBXML_STATIC" /D "_REENTRANT" /D "HAVE_WIN32_THREADS" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_CONSOLE" /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG" /i "..\include" /i "c:\iconv\include" /d "_DEBUG" /d "LIBXML_STATIC" /d "_REENTRANT" /d "HAVE_WIN32_THREADS" /d "WIN32" /d "_WINDOWS" /d "_MBCS" /d _CONSOLE
 # ADD RSC /l 0x409 /d "_DEBUG" /i "..\include" /i "c:\iconv\include" /d "_DEBUG" /d "LIBXML_STATIC" /d "_REENTRANT" /d "HAVE_WIN32_THREADS" /d "WIN32" /d "_WINDOWS" /d "_MBCS" /d _CONSOLE
 BSC32=bscmake.exe
