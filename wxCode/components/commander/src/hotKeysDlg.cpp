@@ -23,7 +23,10 @@
 ////Event Table Start
 BEGIN_EVENT_TABLE(hotKeysDlg,wxDialog)
 	////Manual Code Start
+	EVT_LIST_ITEM_SELECTED(ID_WXLISTCTRL,hotKeysDlg::WxListCtrlSelected)
+	EVT_BUTTON(ID_OKBTN,hotKeysDlg::OkBtnClick)
 	////Manual Code End
+	EVT_BUTTON(ID_OKBTN,hotKeysDlg::CancelBtnClick)
 	EVT_BUTTON(ID_SAVEBTN,hotKeysDlg::saveBtnClick)
 	EVT_BUTTON(ID_EDITCANCELBTN,hotKeysDlg::editCancelBtnClick)
 	EVT_BUTTON(ID_OPENFILEBTN,hotKeysDlg::openFileDlgClick)
@@ -34,6 +37,21 @@ BEGIN_EVENT_TABLE(hotKeysDlg,wxDialog)
 END_EVENT_TABLE()
 ////Event Table End
 
+BEGIN_EVENT_TABLE(EventTextCtrl, wxTextCtrl)
+    EVT_CHAR(EventTextCtrl::OnChar)
+END_EVENT_TABLE()
+
+void EventTextCtrl::OnChar(wxKeyEvent& event)
+{
+  wxString key;
+  long keyCode = event.GetKeyCode();
+  
+  key = keyCodeToString(keyCode);
+  SetValue(key.Upper());
+  actualKeyCode = (key.empty()?0:keyCode);
+  event.Skip();
+}
+
 hotKeysDlg::hotKeysDlg(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
 : wxDialog(parent, id, title, position, size, style)
 {
@@ -42,10 +60,11 @@ hotKeysDlg::hotKeysDlg(wxWindow *parent, wxWindowID id, const wxString &title, c
 
 hotKeysDlg::~hotKeysDlg()
 {
-   delete(wxOpenFileDialog);
 	delete(saveBtn);
 	delete(editCancelBtn);
 	delete(openFileBtn);
+	delete(txtHotKey);
+	delete(lblHotKey);
 	delete(txtProgram);
 	delete(lblProgram);
 	delete(delBtn);
@@ -69,9 +88,12 @@ void hotKeysDlg::CreateGUIControls()
 	SetIcon(Self_hotKeysDlg_XPM);
 	SetSize(8,8,468,374);
 	Center();
+	
 
+	okBtn = new wxButton(this, ID_OKBTN, wxT("Ok"), wxPoint(303,312), wxSize(75,25), 0, wxDefaultValidator, wxT("okBtn"));
 
-	wxOpenFileDialog =  new wxFileDialog(this, wxT("Choose a Program"), wxT(""), wxT(""), wxT("*.*"), wxOPEN | wxFILE_MUST_EXIST);
+	lblHotKey = new wxStaticText(this, ID_LBLHOTKEY, wxT("Press Key (Ctrl + ? or F?)"), wxPoint(10,278), wxDefaultSize, 0, wxT("lblHotKey"));
+	lblHotKey->SetFont(wxFont(9, wxSWISS, wxNORMAL,wxNORMAL, FALSE, wxT("Verdana")));
 
 	saveBtn = new wxButton(this, ID_SAVEBTN, wxT("Save"), wxPoint(293,276), wxSize(73,25), 0, wxDefaultValidator, wxT("saveBtn"));
 
@@ -82,7 +104,7 @@ void hotKeysDlg::CreateGUIControls()
 
 	txtProgram = new wxTextCtrl(this, ID_TXTPROGRAM, wxT(""), wxPoint(9,252), wxSize(408,20), 0, wxDefaultValidator, wxT("txtProgram"));
 
-	lblProgram = new wxStaticText(this, ID_LBLPROGRAM, wxT("Program:"), wxPoint(14,227), wxDefaultSize, 0, wxT("lblProgram"));
+	lblProgram = new wxStaticText(this, ID_LBLPROGRAM, wxT("Program:"), wxPoint(11,227), wxDefaultSize, 0, wxT("lblProgram"));
 	lblProgram->SetFont(wxFont(9, wxSWISS, wxNORMAL,wxNORMAL, FALSE, wxT("Verdana")));
 
 	delBtn = new wxButton(this, ID_DELBTN, wxT("-"), wxPoint(417,217), wxSize(27,26), 0, wxDefaultValidator, wxT("delBtn"));
@@ -97,18 +119,18 @@ void hotKeysDlg::CreateGUIControls()
 	addBtn->SetToolTip(wxT("Add"));
 	addBtn->SetFont(wxFont(20, wxSWISS, wxNORMAL,wxNORMAL, FALSE, wxT("Arial Black")));
 
-	WxStaticBox1 = new wxStaticBox(this, ID_WXSTATICBOX1, wxT("Hot Keys for Launch other Programs"), wxPoint(1,200), wxSize(455,107));
+	WxStaticBox1 = new wxStaticBox(this, ID_WXSTATICBOX1, wxT("Hot Keys for Launch other Programs"), wxPoint(2,201), wxSize(455,107));
 	WxStaticBox1->SetFont(wxFont(8, wxSWISS, wxNORMAL,wxNORMAL, FALSE, wxT("Verdana")));
 
-	CancelBtn = new wxButton(this, ID_CANCELBTN, wxT("Cancel"), wxPoint(381,312), wxSize(75,25), 0, wxDefaultValidator, wxT("CancelBtn"));
+	CancelBtn = new wxButton(this, ID_CANCELBTN, wxT("Cancel"), wxPoint(380,312), wxSize(75,25), 0, wxDefaultValidator, wxT("CancelBtn"));
 
-	okBtn = new wxButton(this, ID_OKBTN, wxT("Ok"), wxPoint(304,312), wxSize(73,25), 0, wxDefaultValidator, wxT("okBtn"));
-
-	WxListCtrl = new wxListCtrl(this, ID_WXLISTCTRL, wxPoint(1,1), wxSize(454,192), wxLC_REPORT | wxLC_AUTOARRANGE | wxLC_EDIT_LABELS | wxLC_SINGLE_SEL | wxLC_SORT_ASCENDING);
+	WxListCtrl = new wxListCtrl(this, ID_WXLISTCTRL, wxPoint(0,0), wxSize(454,192), wxLC_REPORT | wxLC_EDIT_LABELS | wxLC_SINGLE_SEL);
 	WxListCtrl->InsertColumn(0,wxT("Keys"),wxLIST_FORMAT_LEFT,125 );
 	WxListCtrl->InsertColumn(0,wxT("Programs"),wxLIST_FORMAT_LEFT,300 );
 	////GUI Items Creation End
 
+	txtHotKey = new EventTextCtrl((wxWindow*)this, ID_WXEDIT, wxT(""), wxPoint(173,277), wxSize(116,19), wxTE_READONLY | wxTE_CENTRE );
+	
 	mode=0;
 	setState();
 }
@@ -118,10 +140,22 @@ void hotKeysDlg::OnClose(wxCloseEvent& /*event*/)
 	Destroy();
 }
 
+void hotKeysDlg::refreshListCtrl()
+{
+   WxListCtrl->DeleteAllItems();
+   hotKeyMap::iterator iter;
+   for( iter = m_keysMap.begin(); iter != m_keysMap.end(); iter++ )
+   {
+      WxListCtrl->InsertItem(iter->first, iter->second.program);
+      WxListCtrl->SetItem(iter->first, 1, keyCodeToString(iter->second.keyCode));
+   }
+}
+
 void hotKeysDlg::setState()
 {
 	openFileBtn->Enable(mode != READ_MODE);
 	txtProgram->Enable(mode != READ_MODE);
+	txtHotKey->Enable(mode != READ_MODE);
    saveBtn->Enable(mode != READ_MODE);
 	editCancelBtn->Enable(mode != READ_MODE);
 
@@ -133,99 +167,90 @@ void hotKeysDlg::setState()
 	WxListCtrl->Enable(mode == READ_MODE);
 }
 
-/*
- * CancelBtnClick
- */
 void hotKeysDlg::CancelBtnClick(wxCommandEvent& event)
 {
-	this->EndDialog(0);
+	this->EndDialog(wxCANCEL);
 }
 
-/*
- * addBtnClick
- */
+void hotKeysDlg::OkBtnClick(wxCommandEvent& event)
+{
+	this->EndDialog(wxID_OK);
+}
+
 void hotKeysDlg::addBtnClick(wxCommandEvent& event)
 {
-	// insert your code here
 	mode = ADD_MODE;
 	setState();
 	txtProgram->SetValue("");
+	txtHotKey->SetValue("");
 }
 
-/*
- * openFileDlgClick
- */
 void hotKeysDlg::openFileDlgClick(wxCommandEvent& event)
 {
-	// insert your code here
-	wxOpenFileDialog->ShowModal();
-	txtProgram->SetValue(wxOpenFileDialog->GetDirectory() + "\\" + wxOpenFileDialog->GetFilename());
+   wxFileDialog fileDialog(this, wxT("Choose a Program"), wxT(""), wxT(""), wxT("*.*"), wxOPEN | wxFILE_MUST_EXIST);
+	fileDialog.ShowModal();
+	txtProgram->SetValue(fileDialog.GetDirectory() + "\\" + fileDialog.GetFilename());
 }
 
-/*
- * editCancelBtnClick
- */
 void hotKeysDlg::editCancelBtnClick(wxCommandEvent& event)
 {
-	// insert your code here
 	mode = READ_MODE;
 	txtProgram->SetValue("");
+	txtHotKey->SetValue("");
 	setState();
 }
 
-/*
- * saveBtnClick
- */
 void hotKeysDlg::saveBtnClick(wxCommandEvent& event)
 {
-	// insert your code here
+   int numItem = -1;
 	if (mode == ADD_MODE)
-	{
-       int numItems = WxListCtrl->GetItemCount();
-       WxListCtrl->InsertItem(numItems, txtProgram->GetValue());
-   }
+       numItem = WxListCtrl->GetItemCount();
 	else
-	{
-      long item = -1;
-      item = WxListCtrl->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
-      if ( item != -1 )
-         WxListCtrl->SetItem(item, 0, txtProgram->GetValue());
-   }
+      numItem = WxListCtrl->GetNextItem(numItem, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+   
+   m_keysMap[numItem].program = txtProgram->GetValue();
+   m_keysMap[numItem].keyCode = txtHotKey->actualKeyCode;
+   
+   refreshListCtrl();
 
 	mode = READ_MODE;
 	setState();
 }
 
-/*
- * editBtnClick
- */
 void hotKeysDlg::editBtnClick(wxCommandEvent& event)
 {
-	// insert your code here
 	mode = EDIT_MODE;
 	setState();
 }
 
-/*
- * WxListCtrlSelected
- */
 void hotKeysDlg::WxListCtrlSelected(wxListEvent& event)
 {
    long item = -1;
    item = WxListCtrl->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
-   txtProgram->SetValue(WxListCtrl->GetItemText(item));
+   wxListItem itemCtrl = event.GetItem();
+   
+   txtProgram->SetValue(m_keysMap[item].program);
+   txtHotKey->SetValue(keyCodeToString(m_keysMap[item].keyCode));
 }
 
-//wxAcceleratorTable
-
-/*
- * delBtnClick
- */
 void hotKeysDlg::delBtnClick(wxCommandEvent& event)
 {
       long item = -1;
       item = WxListCtrl->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
       if (item != -1)
+      {
          WxListCtrl->DeleteItem(item);
+         m_keysMap.erase(item);
+      }
 }
 
+hotKeyMap hotKeysDlg::getKeysMap()
+{
+   return m_keysMap;
+}
+
+void hotKeysDlg::setKeysMap(hotKeyMap keysMap)
+{
+   m_keysMap = keysMap;
+   refreshListCtrl();
+}

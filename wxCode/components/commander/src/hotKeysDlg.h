@@ -25,13 +25,16 @@
 //Header Include Start and Header Include End.
 //wxDev-C++ designer will remove them. Add custom headers after the block.
 ////Header Include Start
-#include <wx/filedlg.h>
 #include <wx/textctrl.h>
 #include <wx/stattext.h>
 #include <wx/statbox.h>
 #include <wx/button.h>
 #include <wx/listctrl.h>
 ////Header Include End
+
+#include <wx/filedlg.h>
+#include "wxCommanderUtils.h"
+#include <map>
 
 ////Dialog Style Start
 #undef hotKeysDlg_STYLE
@@ -41,6 +44,29 @@
 #define READ_MODE 0
 #define ADD_MODE 1
 #define EDIT_MODE 2
+
+struct structHotKeys
+{
+   wxString program;
+   long keyCode;
+};
+
+typedef map <int, structHotKeys, less<int> > hotKeyMap;
+
+class EventTextCtrl : public wxTextCtrl
+{
+public:
+    EventTextCtrl(wxWindow *parent, wxWindowID id, const wxString &value,
+               const wxPoint &pos, const wxSize &size, int style = 0)
+        : wxTextCtrl(parent, id, value, pos, size, style)
+    {
+    }
+
+    void OnChar(wxKeyEvent& event);
+    long actualKeyCode;
+private:
+    DECLARE_EVENT_TABLE()
+};
 
 class hotKeysDlg : public wxDialog
 {
@@ -57,7 +83,6 @@ class hotKeysDlg : public wxDialog
 		void saveBtnClick(wxCommandEvent& event);
 		void editBtnClick(wxCommandEvent& event);
 		void WxListCtrlItemActivated(wxListEvent& event);
-		void WxListCtrlSelected(wxListEvent& event);
 		void delBtnClick(wxCommandEvent& event);
 
 	private:
@@ -65,7 +90,8 @@ class hotKeysDlg : public wxDialog
                 //GUI Control Declaration Start and GUI Control Declaration End.
 		//wxDev-C++ will remove them. Add custom code after the block.
 		////GUI Control Declaration Start
-		wxFileDialog *wxOpenFileDialog;
+		wxButton *okBtn;
+		wxStaticText *lblHotKey;
 		wxButton *saveBtn;
 		wxButton *editCancelBtn;
 		wxButton *openFileBtn;
@@ -76,7 +102,6 @@ class hotKeysDlg : public wxDialog
 		wxButton *addBtn;
 		wxStaticBox *WxStaticBox1;
 		wxButton *CancelBtn;
-		wxButton *okBtn;
 		wxListCtrl *WxListCtrl;
 		////GUI Control Declaration End
 
@@ -88,6 +113,8 @@ class hotKeysDlg : public wxDialog
 		enum
 		{
 			////GUI Enum Control ID Start
+			ID_OKBTN = 1023,
+			ID_LBLHOTKEY = 1022,
 			ID_SAVEBTN = 1021,
 			ID_EDITCANCELBTN = 1020,
 			ID_OPENFILEBTN = 1018,
@@ -98,17 +125,26 @@ class hotKeysDlg : public wxDialog
 			ID_ADDBTN = 1013,
 			ID_WXSTATICBOX1 = 1009,
 			ID_CANCELBTN = 1003,
-			ID_OKBTN = 1002,
 			ID_WXLISTCTRL = 1001,
 			////GUI Enum Control ID End
-			ID_DUMMY_VALUE_ //don't remove this value unless you have other enum values
+			ID_DUMMY_VALUE_, //don't remove this value unless you have other enum values
+			ID_WXEDIT = 2001
 		};
 	private:
       int mode;
+      EventTextCtrl *txtHotKey;
+      hotKeyMap m_keysMap;
 	private:
+      void OkBtnClick(wxCommandEvent& event);
 		void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
 		void setState();
+		void OnChar(wxKeyEvent& event);
+		void WxListCtrlSelected(wxListEvent& event);
+		void refreshListCtrl();
+	public:
+      hotKeyMap getKeysMap();
+      void setKeysMap(hotKeyMap keysMap);
 };
 
 #endif
