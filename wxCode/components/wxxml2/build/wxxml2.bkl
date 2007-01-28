@@ -4,6 +4,7 @@
 
     <!-- Some defaults for the variables used by wxCode bakefiles -->
     <set var="WXCODE_BAKEFILEDIR">../../../build/bakefiles</set>
+    <set var="WX_VERSION_DEFAULT">28</set>
     <include file="$(WXCODE_BAKEFILEDIR)/defaults.bkl"/>
      
 
