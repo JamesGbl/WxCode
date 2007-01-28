@@ -178,6 +178,7 @@ class wxCommanderFrm : public wxFrame
          void OnToolButton(wxCommandEvent& event);
          void OnComboClick(wxCommandEvent& event);
          void OnClose(wxCloseEvent& event);
+         void OnChar(wxKeyEvent& event);
   	      void CreateGUIControls();
 	      void addColumns(wxListCtrl *WxListCtrl);
 	      void addDirsCombo(wxString& strCombo);

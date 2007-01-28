@@ -409,9 +409,13 @@ void wxCommanderFrm::setListCtrl(wxListCtrl *WxListCtrl, wxString &directory)
     WxStatusBar->SetStatusText(numDirFiles + " " + lang["Directories and Files"]);
 }
 
+void OnChar(wxKeyEvent& event)
+{
+   
+}
+
 void wxCommanderFrm::OnListCtlKey(wxListCtrl *WxListCtrl, wxString &directory, wxListEvent& event)
 {
-
     wxString key;
     key << event.GetKeyCode();
     switch (event.GetKeyCode())
