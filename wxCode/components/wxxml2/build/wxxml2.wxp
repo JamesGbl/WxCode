@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wxpackage version="1.1">
+    <basics>
+        <id name="wxXml2" version="1.8.0"/>
+        <description>A simple set of classes, wxXml2Namespace, wxXml2Property, wxXml2Node, wxXml2DTD and wxXml2Document, that interface wxWidgets with libxml2. With this component you can add load/save/edit XML support to your wxWidgets application using all the power of a well-known library like libxml2.
+The full support for DTDs allows you to easily check your XML documents &amp; thus to produce well-formed XML files.
+Unicode is completely supported as well.
+
+By now, these classes wrap only the most important libxml2 features but they are perfectly integrated with wxWidgets and easily extensible since they provide good commented code &amp; doxygen docs.</description>
+        <keywords>xml,xml2,libxml2,wrapper,dtd,namespace,node,html</keywords>
+        <category primary="Import-export" secondary="Wrapper"/>
+        <website href="http://wxcode.sourceforge.net/showcomp.php?name=wxXml2"/>
+        <creation-date>20 December 2004</creation-date>
+    </basics>
+    <packaging>
+        <root>../..</root>
+        <filename>$(name)-$(version).zip</filename>
+        <contents>
+            <exclude directory="file:///wxxml2/build/msvc/"/>
+            <exclude directory="file:///wxxml2/thirdparty/libiconv/build/msvc/"/>
+            <exclude directory="file:///wxxml2/thirdparty/libiconv/lib/"/>
+            <exclude pattern="*.svn*"/>
+            <exclude pattern="*.lib*"/>
+            <exclude pattern="*obj*"/>
+            <exclude pattern="*pdb*"/>
+            <exclude pattern="*ilk*"/>
+            <exclude pattern="*.exe*"/>
+        </contents>
+        <compress>zip</compress>
+        <upload/>
+    </packaging>
+    <licensing>
+        <license name="wxWidgets license" type="Open Source"/>
+        <organization name="wxCode" href="http://wxcode.sourceforge.net"/>
+        <cost/>
+        <credits>Scott Fant  for helping with wxXml2Node::Find
+Cecilio     for contributions in the minimal sample about external references handling</credits>
+        <copyright>(c) 2006-2007 Francesco Montorsi</copyright>
+        <authors>
+            <author name="Francesco Montorsi"/>
+        </authors>
+        <maintainers>
+            <maintainer name="Francesco Montorsi"/>
+        </maintainers>
+    </licensing>
+    <details>
+        <status>Stable</status>
+        <proglanguage>C++</proglanguage>
+        <samples number="1"/>
+        <download/>
+        <logo href="http://wxcode.sourceforge.net/components/wxxml2/image.png" localref="file:///wxxml2/website/image.png"/>
+        <rss/>
+        <screenshots/>
+        <documentation/>
+    </details>
+    <dependencies>
+        <supported-ports>
+            <wxport name="any" versions="2.8.x"/>
+        </supported-ports>
+        <tested-ports>
+            <wxport name="wxMSW" versions="2.8.x"/>
+            <wxport name="wxGTK" versions="2.8.x"/>
+        </tested-ports>
+        <dependency type="required"/>
+        <dependency type="suggested"/>
+    </dependencies>
+    <build-system type="bakefile">
+        <formats>borland,msvc,watcom,mingw,gnu,autoconf</formats>
+        <options presets="wx,compiler">
+        </options>
+        <stages>
+            <build targets="all"/>
+            <install targets="all"/>
+            <uninstall targets="all"/>
+            <clean targets="all"/>
+        
+            <bakefile-stdcmdset winpath="wxxml2/build" unixpath="wxxml2"/>
+        </stages>
+    </build-system>
+</wxpackage>
