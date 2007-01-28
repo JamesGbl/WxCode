@@ -2,11 +2,12 @@
 <wxpackage version="1.1">
     <basics>
         <id name="wxXml2" version="1.8.0"/>
-        <description>A simple set of classes, wxXml2Namespace, wxXml2Property, wxXml2Node, wxXml2DTD and wxXml2Document, that interface wxWidgets with libxml2. With this component you can add load/save/edit XML support to your wxWidgets application using all the power of a well-known library like libxml2.
-The full support for DTDs allows you to easily check your XML documents &amp; thus to produce well-formed XML files.
-Unicode is completely supported as well.
-
-By now, these classes wrap only the most important libxml2 features but they are perfectly integrated with wxWidgets and easily extensible since they provide good commented code &amp; doxygen docs.</description>
+        <description>A simple set of classes, wxXml2Namespace, wxXml2Property, wxXml2Node, wxXml2DTD and wxXml2Document, that interface wxWidgets with &lt;a href="http://xmlsoft.org"&gt;libxml2&lt;/a&gt;. With this component you can add load/save/edit XML support to your wxWidgets application using all the power of a well-known library like &lt;b&gt;libxml2&lt;/b&gt;.&lt;br&gt;
+The full support for &lt;b&gt;DTD&lt;/b&gt;s allows you to easily check your XML documents &amp; thus to produce well-formed XML files.&lt;br&gt;
+&lt;b&gt;Unicode&lt;/b&gt; is completely supported as well.&lt;br&gt;
+&lt;br&gt;
+By now, these classes wrap only the most important libxml2 features but they are perfectly integrated with wxWidgets and easily extensible since they provide good commented code &amp; doxygen docs.
+</description>
         <keywords>xml,xml2,libxml2,wrapper,dtd,namespace,node,html</keywords>
         <category primary="Import-export" secondary="Wrapper"/>
         <website href="http://wxcode.sourceforge.net/showcomp.php?name=wxXml2"/>
