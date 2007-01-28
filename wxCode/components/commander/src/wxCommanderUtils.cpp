@@ -228,3 +228,41 @@ bool renameDirFile(wxString& path, wxString& oldName, wxString& newName)
    return false;
 }
 
+wxString keyCodeToString(long keyCode)
+{
+   wxString key;
+   switch ( keyCode )
+   {
+      case WXK_F1: key = _T("F1"); break;
+      case WXK_F2: key = _T("F2"); break;
+      case WXK_F3: key = _T("F3"); break;
+      case WXK_F4: key = _T("F4"); break;
+      case WXK_F5: key = _T("F5"); break;
+      case WXK_F6: key = _T("F6"); break;
+      case WXK_F7: key = _T("F7"); break;
+      case WXK_F8: key = _T("F8"); break;
+      case WXK_F9: key = _T("F9"); break;
+      case WXK_F10: key = _T("F10"); break;
+      case WXK_F11: key = _T("F11"); break;
+      case WXK_F12: key = _T("F12"); break;
+      case WXK_F13: key = _T("F13"); break;
+      case WXK_F14: key = _T("F14"); break;
+      case WXK_F15: key = _T("F15"); break;
+      case WXK_F16: key = _T("F16"); break;
+      case WXK_F17: key = _T("F17"); break;
+      case WXK_F18: key = _T("F18"); break;
+      case WXK_F19: key = _T("F19"); break;
+      case WXK_F20: key = _T("F20"); break;
+      case WXK_F21: key = _T("F21"); break;
+      case WXK_F22: key = _T("F22"); break;
+      case WXK_F23: key = _T("F23"); break;
+      case WXK_F24: key = _T("F24"); break;
+      default:
+      {
+         if ( keyCode > 0 && keyCode < 27 )
+             key.Printf(_("Ctrl + %c"), _T('A') + keyCode - 1);
+      }
+  }
+  return key;
+}
+

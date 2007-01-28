@@ -127,6 +127,7 @@ class wxCommanderFrm : public wxFrame
       wxSimpleThread* thread;
 	   wxCommanderTaskBar* tray;
 	   multiLang lang;
+	   hotKeyMap keysMap;
 
 	private:
 		//Note: if you receive any error with these enum IDs, then you need to
@@ -190,6 +191,7 @@ class wxCommanderFrm : public wxFrame
          void ListCtlUpdate();
          void WxListCtrlBeginLabelEdit(wxListEvent& event);
          void WxListCtrlEndLabelEdit(wxListEvent& event);
+         void setAcceleratorTable();
 };
 
 #endif

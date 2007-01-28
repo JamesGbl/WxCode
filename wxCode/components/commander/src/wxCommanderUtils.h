@@ -46,5 +46,6 @@ bool deleteDirectory(wxString& path, wxString& item);
 bool renameDirFile(wxString& path, wxString& oldName, wxString& newName);
 bool copyDirFile(wxString& path, wxString& item, wxString& pathNew);
 bool copyDirectory(wxString& path, wxString& item, wxString& pathNew);
+wxString keyCodeToString(long keyCode);
 
 #endif

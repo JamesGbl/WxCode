@@ -40,7 +40,7 @@ BEGIN_EVENT_TABLE(wxCommanderFrm,wxFrame)
 	EVT_LIST_ITEM_SELECTED(ID_WXLISTCTRL1,wxCommanderFrm::WxListCtrl1ItemFocused)
 	EVT_LIST_ITEM_SELECTED(ID_WXLISTCTRL2,wxCommanderFrm::WxListCtrl2ItemFocused)
 	EVT_LIST_BEGIN_LABEL_EDIT(ID_WXLISTCTRL1,wxCommanderFrm::WxListCtrlBeginLabelEdit)
-	EVT_LIST_BEGIN_LABEL_EDIT(ID_WXLISTCTRL2,wxCommanderFrm::WxListCtrlBeginLabelEdit)	
+	EVT_LIST_BEGIN_LABEL_EDIT(ID_WXLISTCTRL2,wxCommanderFrm::WxListCtrlBeginLabelEdit)
 	EVT_LIST_END_LABEL_EDIT(ID_WXLISTCTRL1,wxCommanderFrm::WxListCtrlEndLabelEdit)
 	EVT_LIST_END_LABEL_EDIT(ID_WXLISTCTRL2,wxCommanderFrm::WxListCtrlEndLabelEdit)
 	////Manual Code End
@@ -64,11 +64,11 @@ wxCommanderFrm::wxCommanderFrm(wxWindow *parent, wxWindowID id, const wxString &
 : wxFrame(parent, id, title, position, size, style)
 {
    lang.setLangsDir(".\\lang");
-   //lang.updateLangMap();
 
 	CreateGUIControls();
 
    readConfig();
+   updateControlsLanguage();
 
 	lastListCtrlUsed = WxListCtrl1;
 	strPathLstCtrl = &strPathLstCtrl1;
@@ -180,15 +180,8 @@ void wxCommanderFrm::CreateGUIControls()
     WxToolBar->SetRows(1);
 
     updateControlsLanguage();
-/*
-    stringMap langList = lang.getListLangs();
-    for (stringMap::iterator it = langList.begin() ; it != langList.end(); it++)
-    {
-       wxMessageBox(it->first);
-       wxMessageBox(it->second);
-    }
-*/
 
+    WxSplitterWindow1->SetSashPosition(0);
 }
 
 void wxCommanderFrm::updateControlsLanguage()
@@ -624,6 +617,29 @@ void wxCommanderFrm::readConfig()
 {
    wxString language;
    wxConfig config("wxCommander");
+   
+   // restore frame position and size
+   int x = config.Read(_T("/WindowPosition/X"), 50),
+       y = config.Read(_T("/WindowPosition/Y"), 50),
+       w = config.Read(_T("/WindowPosition/W"), 350),
+       h = config.Read(_T("/WindowPosition/H"), 200);
+   Move(x, y);
+   SetClientSize(w, h);
+  
+   wxString strProgram;
+   long keyCode;
+   config.SetPath("HotKeys");
+   bool bCont = config.GetFirstEntry(strProgram, keyCode);
+   while ( bCont )
+   {
+     int pairNum = keysMap.size();
+     keysMap[pairNum].program = strProgram;
+     keysMap[pairNum].keyCode = keyCode;
+     bCont = config.GetNextEntry(strProgram, keyCode);
+   }
+   
+   config.SetPath("");
+
    config.Read("Language", &language);
    config.Read("LeftPath", &strPathLstCtrl1);
    config.Read("RightPath", &strPathLstCtrl2);
@@ -640,14 +656,32 @@ void wxCommanderFrm::readConfig()
       }
       actualDir = "";
    }
-
+ 
    lang.setActualLang(language);
    lang.updateLangMap();
+   setAcceleratorTable();
 }
 
 void wxCommanderFrm::writeConfig()
 {
    wxConfig config("wxCommander");
+   
+   // save the frame position
+   int x, y, w, h;
+   GetClientSize(&w, &h);
+   GetPosition(&x, &y);
+   config.Write(_T("WindowPosition/X"), (long) x);
+   config.Write(_T("WindowPosition/Y"), (long) y);
+   config.Write(_T("WindowPosition/W"), (long) w);
+   config.Write(_T("WindowPosition/H"), (long) h);
+   
+   config.DeleteGroup("HotKeys");
+   hotKeyMap::iterator iter;
+   for( iter = keysMap.begin(); iter != keysMap.end(); iter++ )
+   {
+      config.Write(_T("HotKeys/" + iter->second.program), (long) iter->second.keyCode);
+   }
+   
    config.Write("Language", lang.getActualLang());
    config.Write("LeftPath", strPathLstCtrl1);
    config.Write("RightPath", strPathLstCtrl2);
@@ -663,12 +697,25 @@ void wxCommanderFrm::writeConfig()
    }
 }
 
-
 void wxCommanderFrm::Mnu_hotKeys_onClick(wxCommandEvent& event)
 {
-   wxDialog* dlgHotKeys = new hotKeysDlg(this);
-   dlgHotKeys->ShowModal();
+   hotKeysDlg* dlgHotKeys = new hotKeysDlg(this);
+   dlgHotKeys->setKeysMap(keysMap);
+   if (dlgHotKeys->ShowModal() == wxID_OK)
+   {
+      keysMap = dlgHotKeys->getKeysMap();
+   }
    delete(dlgHotKeys);
+   setAcceleratorTable();
+   //wxAcceleratorTable
+}
+
+void wxCommanderFrm::setAcceleratorTable()
+{
+   wxAcceleratorEntry entries[0];
+   entries[0].Set(wxACCEL_NORMAL, WXK_F11, ID_MNU_HOTKEYS_1065);
+   wxAcceleratorTable accel(0, entries);
+   this->SetAcceleratorTable(accel);
 }
 
 void wxCommanderFrm::WxListCtrlBeginLabelEdit(wxListEvent& event)
