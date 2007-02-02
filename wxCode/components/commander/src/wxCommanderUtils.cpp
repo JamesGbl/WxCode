@@ -15,7 +15,12 @@ void Exec(wxString& path, wxString& file)
       wxExecute(command);
    else
    {
-      command = "Exec.bat " + path + " " + command;
+      #ifdef __WXMSW__
+        command = "Exec.bat " + path + " " + command;
+      #else
+        command = path + " " + command;  
+      #endif 
+      wxMessageBox(command);
       wxShell(command);
    }
 }

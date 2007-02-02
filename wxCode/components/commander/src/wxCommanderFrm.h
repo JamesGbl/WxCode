@@ -192,7 +192,6 @@ class wxCommanderFrm : public wxFrame
          void ListCtlUpdate();
          void WxListCtrlBeginLabelEdit(wxListEvent& event);
          void WxListCtrlEndLabelEdit(wxListEvent& event);
-         void setAcceleratorTable();
 };
 
 #endif

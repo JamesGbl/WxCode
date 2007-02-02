@@ -154,15 +154,15 @@ void wxCommanderFrm::CreateGUIControls()
 
     WxToolBar->AddSeparator();
 
-    wxBitmap img(".\\Images\\documents.bmp", wxBITMAP_TYPE_BMP);
+    wxBitmap img(".\\Images\\newFolder.bmp", wxBITMAP_TYPE_BMP);
     if ( img.Ok() ) WxToolBar->AddTool(ID_TOOL_NEWFOLDER, lang["New Folder"], img, lang["New Folder"]);
-    img.LoadFile(".\\Images\\globe.bmp", wxBITMAP_TYPE_BMP);
+    img.LoadFile(".\\Images\\copy.bmp", wxBITMAP_TYPE_BMP);
     if ( img.Ok() ) WxToolBar->AddTool(ID_TOOL_COPY, lang["Copy"], img, lang["Copy"]);
-    img.LoadFile(".\\Images\\trash.bmp", wxBITMAP_TYPE_BMP);
+    img.LoadFile(".\\Images\\delete.bmp", wxBITMAP_TYPE_BMP);
     if ( img.Ok() ) WxToolBar->AddTool(ID_TOOL_DELETE, lang["Delete"], img, lang["Delete"]);
-    img.LoadFile(".\\Images\\linux.bmp", wxBITMAP_TYPE_BMP);
+    img.LoadFile(".\\Images\\rename.bmp", wxBITMAP_TYPE_BMP);
     if ( img.Ok() ) WxToolBar->AddTool(ID_TOOL_RENAME, lang["Rename"], img, lang["Rename"]);
-    img.LoadFile(".\\Images\\cmd.bmp", wxBITMAP_TYPE_BMP);
+    img.LoadFile(".\\Images\\exec.bmp", wxBITMAP_TYPE_BMP);
     if ( img.Ok() ) WxToolBar->AddTool(ID_TOOL_EXEC, lang["Exec"], img, lang["Exec"]);
     combo = new wxComboBox(WxToolBar, ID_TOOL_COMBO, wxEmptyString, wxDefaultPosition, wxSize(650,wxDefaultCoord) );
     combo->Append(_T(wxPaths.GetDocumentsDir()));
@@ -170,7 +170,7 @@ void wxCommanderFrm::CreateGUIControls()
 
     WxToolBar->AddSeparator();
 
-    img.LoadFile(".\\Images\\open.bmp", wxBITMAP_TYPE_BMP);
+    img.LoadFile(".\\Images\\add.bmp", wxBITMAP_TYPE_BMP);
     if ( img.Ok() ) WxToolBar->AddTool(ID_TOOL_GO, lang["Go"], img, lang["Go"]);
 
     tray = new wxCommanderTaskBar(this);
@@ -434,7 +434,12 @@ void wxCommanderFrm::OnListCtlKey(wxListCtrl *WxListCtrl, wxString &directory, w
        break;
        case WXK_F2:
           Mnu_rename_onClick(event);
-       break;       
+       break;  
+       #ifdef __WXMSW__
+       case WXK_F4:
+          wxExecute("notepad.exe " + directory + "\\" + event.GetText());
+       break;
+       #endif
        case WXK_F5:
           copyThread();
        break;
@@ -443,8 +448,19 @@ void wxCommanderFrm::OnListCtlKey(wxListCtrl *WxListCtrl, wxString &directory, w
        break;
        case WXK_F9:
           Mnu_execute_onClick(event);
+       break;
        /*default:
-          wxMessageBox(key, "Mal");*/
+       {
+          wxMessageBox(key);
+          hotKeyMap::iterator iter;
+          for( iter = keysMap.begin(); iter != keysMap.end(); iter++ )
+          {
+             key << iter->second.keyCode;
+             wxMessageBox(key);
+             if (iter->second.keyCode == event.GetKeyCode())
+                wxExecute(iter->second.program);
+          }
+       }*/
     }
 }
 
@@ -663,7 +679,6 @@ void wxCommanderFrm::readConfig()
  
    lang.setActualLang(language);
    lang.updateLangMap();
-   setAcceleratorTable();
 }
 
 void wxCommanderFrm::writeConfig()
@@ -710,16 +725,6 @@ void wxCommanderFrm::Mnu_hotKeys_onClick(wxCommandEvent& event)
       keysMap = dlgHotKeys->getKeysMap();
    }
    delete(dlgHotKeys);
-   setAcceleratorTable();
-   //wxAcceleratorTable
-}
-
-void wxCommanderFrm::setAcceleratorTable()
-{
-   wxAcceleratorEntry entries[0];
-   entries[0].Set(wxACCEL_NORMAL, WXK_F11, ID_MNU_HOTKEYS_1065);
-   wxAcceleratorTable accel(0, entries);
-   this->SetAcceleratorTable(accel);
 }
 
 void wxCommanderFrm::WxListCtrlBeginLabelEdit(wxListEvent& event)
