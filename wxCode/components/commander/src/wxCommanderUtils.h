@@ -32,8 +32,15 @@
 #endif
 
 #include <vector>
+#include <map>
+
+#ifdef __WXMSW__
+   #include <windows.h>
+#endif
 
 using namespace std;
+
+typedef map <wxString, int, less<wxString> > driversMap;
 
 void Exec(wxString& path, wxString& file);
 size_t getFileSize(const wxString& fileName);
@@ -46,6 +53,7 @@ bool deleteDirectory(wxString& path, wxString& item);
 bool renameDirFile(wxString& path, wxString& oldName, wxString& newName);
 bool copyDirFile(wxString& path, wxString& item, wxString& pathNew);
 bool copyDirectory(wxString& path, wxString& item, wxString& pathNew);
-wxString keyCodeToString(long keyCode);
+wxString keyCodeToString(int keyCode);
+driversMap wsGetDrives();
 
 #endif

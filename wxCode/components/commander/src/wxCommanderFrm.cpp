@@ -43,6 +43,7 @@ BEGIN_EVENT_TABLE(wxCommanderFrm,wxFrame)
 	EVT_LIST_BEGIN_LABEL_EDIT(ID_WXLISTCTRL2,wxCommanderFrm::WxListCtrlBeginLabelEdit)
 	EVT_LIST_END_LABEL_EDIT(ID_WXLISTCTRL1,wxCommanderFrm::WxListCtrlEndLabelEdit)
 	EVT_LIST_END_LABEL_EDIT(ID_WXLISTCTRL2,wxCommanderFrm::WxListCtrlEndLabelEdit)
+	EVT_CHAR_HOOK(wxCommanderFrm::OnCharHook)
 	////Manual Code End
 	
 	EVT_CLOSE(wxCommanderFrm::OnClose)
@@ -222,11 +223,13 @@ void wxCommanderFrm::addColumns(wxListCtrl *WxListCtrl)
    //icons[3] = wxIcon(icon4_xpm);
    //icons[4] = wxIcon(icon5_xpm);
 
-   wxIcon icons[3];
+   wxIcon icons[6];
    icons[0] = wxIcon(icon1_xpm);
    icons[1] = wxIcon(icon3_xpm);
    icons[2] = wxIcon(icon5_xpm);
-
+   icons[3] = wxIcon(hardDisk_xpm);
+   icons[4] = wxIcon(dvd_xpm);
+   icons[5] = wxIcon(floppy_xpm);
 
    int sizeOrig = icons[0].GetWidth();
    for ( size_t i = 0; i < WXSIZEOF(icons); i++ )
@@ -255,6 +258,7 @@ void wxCommanderFrm::itemExec(wxListCtrl *WxListCtrl, wxString &directory, wxStr
 {
    wxDir dir;
    wxString path;
+   
    if (directory.Right(1) == "\\")
       path = directory + itemName;
    else
@@ -262,14 +266,30 @@ void wxCommanderFrm::itemExec(wxListCtrl *WxListCtrl, wxString &directory, wxStr
 
    if (itemName == "..")
       path = directory.BeforeLast(wxT('\\'));
+      
    if (dir.Exists(path))
    {
      directory=path;
      setListCtrl(WxListCtrl, directory);
      return;
+   }  
+   #ifdef __WXMSW__
+   if (!wxFile::Exists(path))
+   {      
+      driversMap drives = wsGetDrives();
+      if (drives.find(itemName) == drives.end()) 
+         setListCtrl(WxListCtrl, drives);
+      else 
+      {
+         directory=itemName;
+         setListCtrl(WxListCtrl, itemName);
+      }
+      return;
    }
-   if (itemName == "..") return;
-      Exec(directory, itemName);
+   #endif
+   if (itemName == "..") 
+      return;
+   Exec(directory, itemName);
 }
 
 void wxCommanderFrm::OnList1ItemActivated(wxListEvent& event)
@@ -368,7 +388,12 @@ void wxCommanderFrm::setListCtrl(wxListCtrl *WxListCtrl, wxString &directory)
     wxString filename;
     wxString wxStrFileName;
 
-    if (!dir.Exists(directory)) return;
+    if (!dir.Exists(directory)) 
+    {
+       WxListCtrl->DeleteAllItems();
+       WxListCtrl->InsertItem(0, "..",2);       
+       return;
+    }
     dir.Open(directory);
     if (!dir.IsOpened()) return;
 
@@ -409,15 +434,54 @@ void wxCommanderFrm::setListCtrl(wxListCtrl *WxListCtrl, wxString &directory)
     WxStatusBar->SetStatusText(numDirFiles + " " + lang["Directories and Files"]);
 }
 
-void OnChar(wxKeyEvent& event)
+void wxCommanderFrm::setListCtrl(wxListCtrl *WxListCtrl, driversMap &drives)
 {
+   int numItems = 0;
+   
+   WxListCtrl->DeleteAllItems();
+
+   driversMap::iterator iter;
+   for( iter = drives.begin(); iter != drives.end(); iter++ )
+   {
+     numItems = WxListCtrl->GetItemCount();
+     switch (iter->second)
+     {
+    	  case DRIVE_REMOVABLE:
+           if (iter->first == "A:\\" || iter->first == "B:\\")
+              WxListCtrl->InsertItem(numItems, iter->first, 5);
+           else
+              WxListCtrl->InsertItem(numItems, iter->first, 3);  
+           WxListCtrl->SetItem(numItems, 1, lang["Removable"]);          
+        break;
+    	  case DRIVE_CDROM:
+           WxListCtrl->InsertItem(numItems, iter->first, 4);
+           WxListCtrl->SetItem(numItems, 1, lang["CD/DVD"]);          
+        break;
+        default:
+           WxListCtrl->InsertItem(numItems, iter->first, 3);
+           WxListCtrl->SetItem(numItems, 1, lang["Hard Disk"]);          
+     }
+   }
+}
+
+void wxCommanderFrm::OnCharHook(wxKeyEvent& event)
+{
+   wxString key;
+  
+   hotKeyMap::iterator iter;
+   for( iter = keysMap.begin(); iter != keysMap.end(); iter++ )
+   {
+     if (iter->second.keyCode == event.GetKeyCode())
+     {
+        wxExecute(iter->second.program);
+     }
+   }
+   
    
 }
 
 void wxCommanderFrm::OnListCtlKey(wxListCtrl *WxListCtrl, wxString &directory, wxListEvent& event)
 {
-    wxString key;
-    key << event.GetKeyCode();
     switch (event.GetKeyCode())
     {
        case WXK_BACK:
@@ -449,18 +513,12 @@ void wxCommanderFrm::OnListCtlKey(wxListCtrl *WxListCtrl, wxString &directory, w
        case WXK_F9:
           Mnu_execute_onClick(event);
        break;
-       /*default:
+       default:
        {
+          wxString key;
+          key << event.GetKeyCode();
           wxMessageBox(key);
-          hotKeyMap::iterator iter;
-          for( iter = keysMap.begin(); iter != keysMap.end(); iter++ )
-          {
-             key << iter->second.keyCode;
-             wxMessageBox(key);
-             if (iter->second.keyCode == event.GetKeyCode())
-                wxExecute(iter->second.program);
-          }
-       }*/
+       }
     }
 }
 

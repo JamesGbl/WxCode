@@ -57,8 +57,8 @@
 	<Expand folder="/Others"/>
 </CodeBlocks_layout_file>
 [Editors]
-Order=
-Focused=11
+Order=4,5,3
+Focused=4
 [Editor_0]
 Open=0
 Top=0
@@ -77,23 +77,23 @@ CursorRow=1
 TopLine=1
 LeftChar=1
 [Editor_3]
-Open=0
+Open=1
 Top=0
-CursorCol=58
-CursorRow=194
+CursorCol=27
+CursorRow=116
 <<<<<<< wxCommander.layout
-TopLine=152
+TopLine=99
 =======
 TopLine=166
 >>>>>>> 1.6
 LeftChar=1
 [Editor_4]
 <<<<<<< wxCommander.layout
-Open=0
-Top=0
-CursorCol=14
-CursorRow=441
-TopLine=413
+Open=1
+Top=1
+CursorCol=11
+CursorRow=518
+TopLine=490
 =======
 Open=0
 Top=0
@@ -103,7 +103,7 @@ TopLine=427
 >>>>>>> 1.6
 LeftChar=1
 [Editor_5]
-Open=0
+Open=1
 Top=0
 CursorCol=1
 CursorRow=1
@@ -112,16 +112,16 @@ LeftChar=1
 [Editor_6]
 Open=0
 Top=0
-CursorCol=2
-CursorRow=38
-TopLine=34
+CursorCol=46
+CursorRow=22
+TopLine=1
 LeftChar=1
 [Editor_7]
 Open=0
 Top=0
-CursorCol=1
-CursorRow=23
-TopLine=1
+CursorCol=24
+CursorRow=3
+TopLine=2
 LeftChar=1
 [Editor_8]
 Open=0
@@ -140,17 +140,17 @@ LeftChar=1
 [Editor_10]
 Open=0
 Top=0
-CursorCol=1
-CursorRow=34
-TopLine=27
+CursorCol=29
+CursorRow=56
+TopLine=19
 LeftChar=1
 [Editor_11]
 Open=0
 Top=0
 <<<<<<< wxCommander.layout
-CursorCol=21
-CursorRow=10
-TopLine=1
+CursorCol=44
+CursorRow=263
+TopLine=241
 =======
 CursorCol=8
 CursorRow=261
@@ -178,9 +178,9 @@ LeftChar=1
 Open=0
 Top=0
 <<<<<<< wxCommander.layout
-CursorCol=29
-CursorRow=129
-TopLine=112
+CursorCol=3
+CursorRow=48
+TopLine=19
 =======
 CursorCol=31
 CursorRow=3

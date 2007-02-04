@@ -76,6 +76,9 @@
 #include "Images/icon3.xpm"
 //#include "Images/icon4.xpm"
 #include "Images/icon5.xpm"
+#include "Images/hardDisk.xpm"
+#include "Images/dvd.xpm"
+#include "Images/floppy.xpm"
 
 ////Dialog Style Start
 #undef wxCommanderFrm_STYLE
@@ -178,11 +181,12 @@ class wxCommanderFrm : public wxFrame
          void OnToolButton(wxCommandEvent& event);
          void OnComboClick(wxCommandEvent& event);
          void OnClose(wxCloseEvent& event);
-         void OnChar(wxKeyEvent& event);
+         void OnCharHook(wxKeyEvent& event);
   	      void CreateGUIControls();
 	      void addColumns(wxListCtrl *WxListCtrl);
 	      void addDirsCombo(wxString& strCombo);
 	      void setListCtrl(wxListCtrl *WxListCtrl, wxString &directory);
+	      void setListCtrl(wxListCtrl *WxListCtrl, driversMap &drives);
 	      void itemExec(wxListCtrl *WxListCtrl, wxString &directory, wxString &itemName);
 	      void updateControlsLanguage();
 	      void copyThread();

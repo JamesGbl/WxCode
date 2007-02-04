@@ -44,7 +44,7 @@ END_EVENT_TABLE()
 void EventTextCtrl::OnChar(wxKeyEvent& event)
 {
   wxString key;
-  long keyCode = event.GetKeyCode();
+  int keyCode = event.GetKeyCode();
   
   key = keyCodeToString(keyCode);
   SetValue(key.Upper());

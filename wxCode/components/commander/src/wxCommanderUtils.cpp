@@ -20,7 +20,6 @@ void Exec(wxString& path, wxString& file)
       #else
         command = path + " " + command;  
       #endif 
-      wxMessageBox(command);
       wxShell(command);
    }
 }
@@ -233,7 +232,7 @@ bool renameDirFile(wxString& path, wxString& oldName, wxString& newName)
    return false;
 }
 
-wxString keyCodeToString(long keyCode)
+wxString keyCodeToString(int keyCode)
 {
    wxString key;
    switch ( keyCode )
@@ -271,3 +270,18 @@ wxString keyCodeToString(long keyCode)
   return key;
 }
 
+driversMap wsGetDrives()
+{
+   driversMap drives;
+ #ifdef __WXMSW__    
+   char drive[4] = "?:\\";
+   for(int c = 'A'; c <= 'Z'; c++)
+   {
+      *drive = c;
+      int n = GetDriveType(drive);
+      if(n == DRIVE_NO_ROOT_DIR || *drive == 'B') continue;
+      drives[drive] = n;
+   }
+ #endif
+   return drives;
+}
