@@ -33,6 +33,8 @@ BEGIN_EVENT_TABLE(wxCommanderFrm,wxFrame)
 	EVT_TOOL(ID_TOOL_NEWFOLDER, wxCommanderFrm::OnToolButton)
 	EVT_TOOL(ID_TOOL_EXEC, wxCommanderFrm::OnToolButton)
 	EVT_TOOL(ID_TOOL_GO	, wxCommanderFrm::OnToolButton)
+	EVT_TOOL(ID_TOOL_ADD	, wxCommanderFrm::OnToolButton)
+   EVT_TOOL(ID_TOOL_REMOVE	, wxCommanderFrm::OnToolButton)
 	EVT_COMBOBOX(ID_TOOL_COMBO, wxCommanderFrm::OnComboClick)
 	EVT_TEXT_ENTER(ID_TOOL_COMBO, wxCommanderFrm::OnComboClick)
 	EVT_LIST_ITEM_FOCUSED(ID_WXLISTCTRL2,wxCommanderFrm::WxListCtrl2ItemFocused)
@@ -43,7 +45,7 @@ BEGIN_EVENT_TABLE(wxCommanderFrm,wxFrame)
 	EVT_LIST_BEGIN_LABEL_EDIT(ID_WXLISTCTRL2,wxCommanderFrm::WxListCtrlBeginLabelEdit)
 	EVT_LIST_END_LABEL_EDIT(ID_WXLISTCTRL1,wxCommanderFrm::WxListCtrlEndLabelEdit)
 	EVT_LIST_END_LABEL_EDIT(ID_WXLISTCTRL2,wxCommanderFrm::WxListCtrlEndLabelEdit)
-	EVT_CHAR_HOOK(wxCommanderFrm::OnCharHook)
+	//EVT_CHAR_HOOK(wxCommanderFrm::OnCharHook)
 	////Manual Code End
 	
 	EVT_CLOSE(wxCommanderFrm::OnClose)
@@ -109,23 +111,23 @@ void wxCommanderFrm::CreateGUIControls()
 
 	WxMenuBar1 = new wxMenuBar();
 	wxMenu *ID_MNU_FILES_1004_Mnu_Obj = new wxMenu(0);
-	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_NEWFOLDER_1049, wxT("&New folder (F7)"), wxT(""), wxITEM_NORMAL);
-	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_COPY_1046, wxT("&Copy         (F5)"), wxT(""), wxITEM_NORMAL);
-	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_DELETE_1047, wxT("&Delete      (Del)"), wxT(""), wxITEM_NORMAL);
-	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_RENAME_1048, wxT("&Rename      (F2)"), wxT(""), wxITEM_NORMAL);
+	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_NEWFOLDER_1049, wxT("&New folder"), wxT(""), wxITEM_NORMAL);
+	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_COPY_1046, wxT("&Copy"), wxT(""), wxITEM_NORMAL);
+	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_DELETE_1047, wxT("&Delete"), wxT(""), wxITEM_NORMAL);
+	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_RENAME_1048, wxT("&Rename"), wxT(""), wxITEM_NORMAL);
 	ID_MNU_FILES_1004_Mnu_Obj->AppendSeparator();
-	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_EXECUTE_1051, wxT("Execute     (F9)"), wxT(""), wxITEM_NORMAL);
+	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_EXECUTE_1051, wxT("&Execute"), wxT(""), wxITEM_NORMAL);
 	ID_MNU_FILES_1004_Mnu_Obj->AppendSeparator();
 	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_EXIT_1005, wxT("&Exit"), wxT(""), wxITEM_NORMAL);
 	WxMenuBar1->Append(ID_MNU_FILES_1004_Mnu_Obj, wxT("&Files"));
 	
 	wxMenu *ID_MNU_OPTIONS_1063_Mnu_Obj = new wxMenu(0);
-	ID_MNU_OPTIONS_1063_Mnu_Obj->Append(ID_MNU_LANGUAGE_1064, wxT("Language"), wxT(""), wxITEM_NORMAL);
-	ID_MNU_OPTIONS_1063_Mnu_Obj->Append(ID_MNU_HOTKEYS_1065, wxT("Hot Keys"), wxT(""), wxITEM_NORMAL);
+	ID_MNU_OPTIONS_1063_Mnu_Obj->Append(ID_MNU_LANGUAGE_1064, wxT("&Language"), wxT(""), wxITEM_NORMAL);
+	ID_MNU_OPTIONS_1063_Mnu_Obj->Append(ID_MNU_HOTKEYS_1065, wxT("&Hot Keys"), wxT(""), wxITEM_NORMAL);
 	WxMenuBar1->Append(ID_MNU_OPTIONS_1063_Mnu_Obj, wxT("Options"));
 	
 	wxMenu *ID_MNU_HELP_1006_Mnu_Obj = new wxMenu(0);
-	ID_MNU_HELP_1006_Mnu_Obj->Append(ID_MNU_ABOUT_1007, wxT("About as... (F1)"), wxT(""), wxITEM_NORMAL);
+	ID_MNU_HELP_1006_Mnu_Obj->Append(ID_MNU_ABOUT_1007, wxT("About as..."), wxT(""), wxITEM_NORMAL);
 	WxMenuBar1->Append(ID_MNU_HELP_1006_Mnu_Obj, wxT("&Help"));
 	SetMenuBar(WxMenuBar1);
 
@@ -165,14 +167,18 @@ void wxCommanderFrm::CreateGUIControls()
     if ( img.Ok() ) WxToolBar->AddTool(ID_TOOL_RENAME, lang["Rename"], img, lang["Rename"]);
     img.LoadFile(".\\Images\\exec.bmp", wxBITMAP_TYPE_BMP);
     if ( img.Ok() ) WxToolBar->AddTool(ID_TOOL_EXEC, lang["Exec"], img, lang["Exec"]);
-    combo = new wxComboBox(WxToolBar, ID_TOOL_COMBO, wxEmptyString, wxDefaultPosition, wxSize(650,wxDefaultCoord) );
+    combo = new wxComboBox(WxToolBar, ID_TOOL_COMBO, wxEmptyString, wxDefaultPosition, wxSize(600,wxDefaultCoord) );
     combo->Append(_T(wxPaths.GetDocumentsDir()));
     WxToolBar->AddControl(combo);
 
     WxToolBar->AddSeparator();
 
-    img.LoadFile(".\\Images\\add.bmp", wxBITMAP_TYPE_BMP);
+    img.LoadFile(".\\Images\\refresh.bmp", wxBITMAP_TYPE_BMP);
     if ( img.Ok() ) WxToolBar->AddTool(ID_TOOL_GO, lang["Go"], img, lang["Go"]);
+    img.LoadFile(".\\Images\\add.bmp", wxBITMAP_TYPE_BMP);
+    if ( img.Ok() ) WxToolBar->AddTool(ID_TOOL_ADD, lang["Add"], img, lang["Add"]);
+    img.LoadFile(".\\Images\\remove.bmp", wxBITMAP_TYPE_BMP);
+    if ( img.Ok() ) WxToolBar->AddTool(ID_TOOL_REMOVE, lang["Remove"], img, lang["Remove"]);
 
     tray = new wxCommanderTaskBar(this);
     tray->SetIcon(Self_wxCommanderFrm_XPM, wxT("wxCommander"));
@@ -189,18 +195,18 @@ void wxCommanderFrm::updateControlsLanguage()
 {
    wxMenu* optMenu = WxMenuBar1->GetMenu(0);
    WxMenuBar1->Replace(0, optMenu, lang["&Files"]);
-   WxMenuBar1->SetLabel(ID_MNU_NEWFOLDER_1049, lang["&New folder (F7)"]);
-   WxMenuBar1->SetLabel(ID_MNU_COPY_1046, lang["&Copy         (F5)"]);
-   WxMenuBar1->SetLabel(ID_MNU_DELETE_1047, lang["&Delete      (Del)"]);
-   WxMenuBar1->SetLabel(ID_MNU_RENAME_1048, lang["&Rename      (F2)"]);
-   WxMenuBar1->SetLabel(ID_MNU_EXECUTE_1051, lang["Execute     (F9)"]);
+   WxMenuBar1->SetLabel(ID_MNU_NEWFOLDER_1049, lang["&New folder"] + " (F7)");
+   WxMenuBar1->SetLabel(ID_MNU_COPY_1046, lang["&Copy"] + "         (F5)");
+   WxMenuBar1->SetLabel(ID_MNU_DELETE_1047, lang["&Delete"] + "      (Del)");
+   WxMenuBar1->SetLabel(ID_MNU_RENAME_1048, lang["&Rename"] + "      (F2)");
+   WxMenuBar1->SetLabel(ID_MNU_EXECUTE_1051, lang["&Execute"] + "     (F9)");
    WxMenuBar1->SetLabel(ID_MNU_EXIT_1005, lang["&Exit"]);
    optMenu = WxMenuBar1->GetMenu(1);
    WxMenuBar1->Replace(1, optMenu, lang["&Options"]);
    WxMenuBar1->SetLabel(ID_MNU_LANGUAGE_1064, lang["&Language"]);
    optMenu = WxMenuBar1->GetMenu(2);
    WxMenuBar1->Replace(2, optMenu, lang["&Help"]);
-   WxMenuBar1->SetLabel(ID_MNU_ABOUT_1007, lang["About as... (F1)"]);
+   WxMenuBar1->SetLabel(ID_MNU_ABOUT_1007, lang["About as..."] + " (F1)");
    addColumns(WxListCtrl1);
    addColumns(WxListCtrl2);
 }
@@ -317,13 +323,13 @@ void wxCommanderFrm::Mnu_about_onClick(wxCommandEvent& event)
    info.AddArtist(_T("\n\nwxWidgets (Library)"));
    info.AddArtist(_T("\n\nMingW (C++ Compiler)"));
    info.SetLicence(wxString::FromAscii(
-         "                GNU GENERAL PUBLIC LICENSE Version 2, June 1991\n"
-         "                ===============================================\n"
+         "                wxWIDGETS License\n"
+         "                =================\n"
          "\n"
          "  Everyone is permitted to copy and distribute copies\n"
          "  of this program.\n"
          "\n"
-         "                GNU GENERAL PUBLIC LICENSE Version 2 \n"
+         "                wxWIDGETS GENERAL PUBLIC LICENSE\n"
          "     TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION\n"
          "\n"
              ));
@@ -463,23 +469,30 @@ void wxCommanderFrm::setListCtrl(wxListCtrl *WxListCtrl, driversMap &drives)
      }
    }
 }
-
+/*
 void wxCommanderFrm::OnCharHook(wxKeyEvent& event)
-{
-   wxString key;
-  
+{  
+   
    hotKeyMap::iterator iter;
    for( iter = keysMap.begin(); iter != keysMap.end(); iter++ )
    {
      if (iter->second.keyCode == event.GetKeyCode())
      {
+   wxString key;
+   key << event.GetKeyCode();
+   wxMessageBox(key);
+   
         wxExecute(iter->second.program);
      }
    }
    
-   
+   {
+     wxListEvent listEvent = wxListEvent();
+     listEvent.SetEventObject(&event);
+     OnListCtlKey(lastListCtrlUsed, *strPathLstCtrl, listEvent);
+   }
 }
-
+*/
 void wxCommanderFrm::OnListCtlKey(wxListCtrl *WxListCtrl, wxString &directory, wxListEvent& event)
 {
     switch (event.GetKeyCode())
@@ -499,11 +512,6 @@ void wxCommanderFrm::OnListCtlKey(wxListCtrl *WxListCtrl, wxString &directory, w
        case WXK_F2:
           Mnu_rename_onClick(event);
        break;  
-       #ifdef __WXMSW__
-       case WXK_F4:
-          wxExecute("notepad.exe " + directory + "\\" + event.GetText());
-       break;
-       #endif
        case WXK_F5:
           copyThread();
        break;
@@ -515,9 +523,21 @@ void wxCommanderFrm::OnListCtlKey(wxListCtrl *WxListCtrl, wxString &directory, w
        break;
        default:
        {
-          wxString key;
-          key << event.GetKeyCode();
-          wxMessageBox(key);
+          //wxString key;
+          //key << event.GetKeyCode();
+          //wxMessageBox(key);
+          hotKeyMap::iterator iter;
+          for ( iter = keysMap.begin(); iter != keysMap.end(); iter++ )
+          {
+             if (iter->second.keyCode == event.GetKeyCode())
+             {
+                wxString strCommand = iter->second.program;
+                if (strPathLstCtrl->Right(1) != "\\") directory += "\\";
+                strCommand.Replace("%1", directory, true);
+                strCommand.Replace("%2", event.GetText(), true);
+                wxExecute(strCommand);
+             }
+          }
        }
     }
 }
@@ -554,10 +574,23 @@ void wxCommanderFrm::OnToolButton(wxCommandEvent& event)
       case ID_TOOL_GO:
         OnComboClick(event);
         break;
+      case ID_TOOL_ADD:
+        comboClick(event, true);
+        break;
+      case ID_TOOL_REMOVE:
+         wxString strValue = combo->GetValue();
+         combo->Delete(combo->GetCurrentSelection());
+         combo->SetValue(strValue);
+        break;
    }
 }
 
 void wxCommanderFrm::OnComboClick(wxCommandEvent& event)
+{
+   comboClick(event, false);
+}
+
+void wxCommanderFrm::comboClick(wxCommandEvent& event, bool add)
 {
    wxString strCombo = combo->GetValue();
    if (strCombo.Right(1) == "\\")
@@ -568,7 +601,7 @@ void wxCommanderFrm::OnComboClick(wxCommandEvent& event)
    if (!dir.Exists(strCombo)) return;
    *strPathLstCtrl = strCombo;
    setListCtrl(lastListCtrlUsed, strCombo);
-   addDirsCombo(strCombo);
+   if (add) addDirsCombo(strCombo);
 }
 
 void wxCommanderFrm::addDirsCombo(wxString& strCombo)
@@ -705,15 +738,16 @@ void wxCommanderFrm::readConfig()
    SetClientSize(w, h);
   
    wxString strProgram;
-   long keyCode;
+   long index;
    config.SetPath("HotKeys");
-   bool bCont = config.GetFirstEntry(strProgram, keyCode);
+   bool bCont = config.GetFirstEntry(strProgram, index);
    while ( bCont )
    {
      int pairNum = keysMap.size();
+     int intCode = config.Read(_T("/HotKeys/" + strProgram), 50);
      keysMap[pairNum].program = strProgram;
-     keysMap[pairNum].keyCode = keyCode;
-     bCont = config.GetNextEntry(strProgram, keyCode);
+     keysMap[pairNum].keyCode = intCode;
+     bCont = config.GetNextEntry(strProgram, index);
    }
    
    config.SetPath("");
@@ -777,6 +811,7 @@ void wxCommanderFrm::writeConfig()
 void wxCommanderFrm::Mnu_hotKeys_onClick(wxCommandEvent& event)
 {
    hotKeysDlg* dlgHotKeys = new hotKeysDlg(this);
+   dlgHotKeys->setLanguage(lang);
    dlgHotKeys->setKeysMap(keysMap);
    if (dlgHotKeys->ShowModal() == wxID_OK)
    {

@@ -135,6 +135,29 @@ void hotKeysDlg::CreateGUIControls()
 	setState();
 }
 
+void hotKeysDlg::setLanguage(multiLang parent_lang)
+{
+   lang = parent_lang;
+   
+   SetTitle(lang["Hot Keys Dialog"]);
+	okBtn->SetLabel(lang["Ok"]);
+	lblHotKey->SetLabel(lang["Press Key (Ctrl + ? or F?)"]);
+	saveBtn->SetLabel(lang["Save"]);
+	editCancelBtn->SetLabel(lang["Cancel"]);
+	lblProgram->SetLabel(lang["Programs:"]);
+	delBtn->SetToolTip(lang["Delete"]);
+	editBtn->SetLabel(lang["Edit"]);
+	editBtn->SetToolTip(lang["Edit"]);
+	addBtn->SetToolTip(lang["Add"]);
+	WxStaticBox1->SetLabel(lang["Hot Keys for Launch other Programs"]);
+	CancelBtn->SetLabel(lang["Cancel"]);
+	
+	while (WxListCtrl->GetColumnCount()>0) WxListCtrl->DeleteColumn(0);
+	WxListCtrl->InsertColumn(0,lang["Keys"],wxLIST_FORMAT_LEFT,125 );
+	WxListCtrl->InsertColumn(0,lang["Programs"],wxLIST_FORMAT_LEFT,300 );
+	
+}
+
 void hotKeysDlg::OnClose(wxCloseEvent& /*event*/)
 {
 	Destroy();

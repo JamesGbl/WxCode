@@ -2,14 +2,14 @@ lang=Español
 canonicalName=es_ES
 
 &Files=&Archivo
-&New folder (F7)=&Nueva Carpeta (F7)
-&Copy         (F5)=&Copiar       (F5)
-&Delete      (Del)=&Borrar       (Supr)
-&Rename      (F2)=&Renombrar     (F2)
-Execute     (F9)=&Ejecutar       (F9)
+&New folder=&Nueva Carpeta
+&Copy=&Copiar
+&Delete=&Borrar
+&Rename=&Renombrar
+Execute=&Ejecutar
 &Exit=&Salir
 &Help=&Ayuda
-About as... (F1)=Acerca de... (F1)
+About as...=Acerca de...
 
 New Folder=Nueva Carpeta
 Copy=Copiar
@@ -40,3 +40,16 @@ Finalizing the copy. Wait a moment...=Finalizando la copia. Espere un momento...
 &Language=&Idioma
 Language selector=Selector de Idioma
 Select your language=Seleccione su Idioma
+
+Hot Keys Dialog=Configuración teclas rápidas
+Keys=Teclas
+Programs=Programas
+Ok=Aceptar
+Press Key (Ctrl + ? or F?)=Pulse (Ctrl + ? o F?)
+Save=Guardar
+Cancel=Cancelar
+Programs:=Programas:
+Delete=Borrar
+Edit=Edit
+Add=Añadir
+Hot Keys for Launch other Programs=Teclas rápidas para lanzar otros programas

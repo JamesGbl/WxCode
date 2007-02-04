@@ -166,6 +166,8 @@ class wxCommanderFrm : public wxFrame
 			ID_TOOL_NEWFOLDER = 10003,
 			ID_TOOL_EXEC = 10004,
 			ID_TOOL_GO = 10005,
+			ID_TOOL_ADD = 10006,
+			ID_TOOL_REMOVE = 10007,
          ID_TOOL_COMBO = 10100
 		};
 
@@ -181,7 +183,8 @@ class wxCommanderFrm : public wxFrame
          void OnToolButton(wxCommandEvent& event);
          void OnComboClick(wxCommandEvent& event);
          void OnClose(wxCloseEvent& event);
-         void OnCharHook(wxKeyEvent& event);
+         //void OnCharHook(wxKeyEvent& event);
+         void comboClick(wxCommandEvent& event, bool add = false);
   	      void CreateGUIControls();
 	      void addColumns(wxListCtrl *WxListCtrl);
 	      void addDirsCombo(wxString& strCombo);

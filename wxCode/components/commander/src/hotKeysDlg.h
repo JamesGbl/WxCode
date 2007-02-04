@@ -34,6 +34,8 @@
 
 #include <wx/filedlg.h>
 #include "wxCommanderUtils.h"
+#include "multiLang.h"
+
 #include <map>
 
 ////Dialog Style Start
@@ -134,6 +136,7 @@ class hotKeysDlg : public wxDialog
       int mode;
       EventTextCtrl *txtHotKey;
       hotKeyMap m_keysMap;
+      multiLang lang;
 	private:
       void OkBtnClick(wxCommandEvent& event);
 		void OnClose(wxCloseEvent& event);
@@ -145,6 +148,7 @@ class hotKeysDlg : public wxDialog
 	public:
       hotKeyMap getKeysMap();
       void setKeysMap(hotKeyMap keysMap);
+      void setLanguage(multiLang parent_lang);
 };
 
 #endif
