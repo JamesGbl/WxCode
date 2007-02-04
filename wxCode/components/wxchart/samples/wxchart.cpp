@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: wxchart.cpp,v 1.4 2007-01-13 07:19:10 pgava Exp $
+// RCS-ID:      $Id: wxchart.cpp,v 1.5 2007-02-04 10:06:29 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -235,13 +235,13 @@ void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
 	//m_panel->AddPanelLeft1();
-    m_panel->FitChart();
-    
-	//wxString msg = wxString::Format(
-    //    wxT("Chart for wxWidgets. \n 2006 Paolo Gava. Ver: %d.%d.%d"), 
-    //    wxCHART_MAJOR, wxCHART_MINOR, wxCHART_RELEASE );
-	//
-	//wxMessageBox( msg, _T("Chart"), wxOK | wxICON_INFORMATION, this );
+    //m_panel->FitChart();
+
+	wxString msg = wxString::Format(
+        wxT("Chart for wxWidgets. \n 2006 Paolo Gava. Ver: %d.%d.%d"), 
+        wxCHART_MAJOR, wxCHART_MINOR, wxCHART_RELEASE );
+	
+	wxMessageBox( msg, _T("Chart"), wxOK | wxICON_INFORMATION, this );
 }
 
 //void MyFrame::OnResize(wxCommandEvent& WXUNUSED(event))
