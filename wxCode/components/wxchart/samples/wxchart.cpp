@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: wxchart.cpp,v 1.5 2007-02-04 10:06:29 pgava Exp $
+// RCS-ID:      $Id: wxchart.cpp,v 1.6 2007-02-05 12:12:43 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -28,6 +28,7 @@
 #ifndef WX_PRECOMP
     #include <wx/wx.h>
 #endif
+#include <wx/image.h>
 
 #include "wx/points.h"
 #include "wx/barchartpoints.h"

@@ -143,6 +143,9 @@
 				RelativePath="..\..\src\chartctrl.cpp">
 			</File>
 			<File
+				RelativePath="..\..\src\chartsizes.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\chartwindow.cpp">
 			</File>
 			<File
@@ -209,6 +212,9 @@
 			</File>
 			<File
 				RelativePath="..\..\include\wx\chartpointstypes.h">
+			</File>
+			<File
+				RelativePath="..\..\include\wx\chartsizes.h">
 			</File>
 			<File
 				RelativePath="..\..\include\wx\charttypes.h">

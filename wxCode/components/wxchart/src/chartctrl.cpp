@@ -5,7 +5,7 @@
 // Modified by:
 // Created:
 // Copyright:   (C) 2006, Paolo Gava
-// RCS-ID:      $Id: chartctrl.cpp,v 1.4 2007-01-13 07:19:10 pgava Exp $
+// RCS-ID:      $Id: chartctrl.cpp,v 1.5 2007-02-05 12:12:58 pgava Exp $
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -29,8 +29,9 @@
 #endif
 
 #ifndef WX_PRECOMP
-#include <wx/wx.h>
+	#include <wx/wx.h>
 #endif
+#include <wx/image.h>
 
 #include "wx/chartctrl.h"
 #include "wx/chartsizes.h"
@@ -555,6 +556,8 @@ void wxChartCtrl::WriteToFile(
     int iMax = static_cast<int>(ceil( m_ChartWin->GetMaxX() ));
 	int h, w, w1;
 	GetClientSize( &w1, &h );
+
+	w = 0;
 	if ( iMax > 0 )
         w = CalWidth( iMax+1, m_Sizes->GetNumBar(), m_Sizes->GetNumBar3d(), 
             m_Sizes->GetWidthBar(), m_Sizes->GetWidthBar(), m_Sizes->GetGap() );
