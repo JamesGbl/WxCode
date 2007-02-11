@@ -285,3 +285,10 @@ driversMap wsGetDrives()
  #endif
    return drives;
 }
+
+wxString getLastDir(wxString directory)
+{
+   if (directory.Right(1) == "\\")
+      directory = directory.Left(directory.Length()-1);
+   return directory.AfterLast(wxT('\\'));
+}

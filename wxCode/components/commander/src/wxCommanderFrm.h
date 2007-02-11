@@ -27,11 +27,11 @@
 //wxDev-C++ designer will remove them
 ////Header Include Start
 #include <wx/menu.h>
-#include <wx/statusbr.h>
-#include <wx/toolbar.h>
-#include <wx/listctrl.h>
+#include <wx/notebook.h>
 #include <wx/splitter.h>
 #include <wx/sizer.h>
+#include <wx/statusbr.h>
+#include <wx/toolbar.h>
 ////Header Include End
 
 #include "wxCommanderUtils.h"
@@ -49,9 +49,12 @@
 #include <wx/imaglist.h>
 #include <wx/image.h>
 #include <wx/bitmap.h>
-#include <wx/listctrl.h>
 #include <wx/settings.h>
 #include <wx/datetime.h>
+
+#include <wx/listctrl.h>
+
+#include <wx/clipbrd.h>
 
 #include <wx/choicdlg.h>
 
@@ -70,6 +73,8 @@
 #include "CThread.h"
 
 #include <vector>
+
+typedef vector<wxString> vectorString;
 
 #include "Images/icon1.xpm"
 //#include "Images/icon2.xpm"
@@ -108,19 +113,29 @@ class wxCommanderFrm : public wxFrame
 		void WxListCtrl1BeginLabelEdit(wxListEvent& event);
 		void WxListCtrl2BeginLabelEdit(wxListEvent& event);
 		void WxListCtrl2EndLabelEdit(wxListEvent& event);
+		void WxNotebook1PageChanging(wxNotebookEvent& event);
+		void WxNotebook2PageChanging(wxNotebookEvent& event);
+		void WxNotebook1PageChanged(wxNotebookEvent& event);
+		void WxNotebook2PageChanged(wxNotebookEvent& event);
+	void Mnu_addTab_onClick(wxCommandEvent& event);
+	void Mnu_removeTab_onClick(wxCommandEvent& event);
 	private:
 		//Do not add custom control declarations
 		//wxDev-C++ will remove them. Add custom code after the block.
 		////GUI Control Declaration Start
 		wxMenuBar *WxMenuBar1;
-		wxStatusBar *WxStatusBar;
-		wxToolBar *WxToolBar;
-		wxListCtrl *WxListCtrl2;
-		wxListCtrl *WxListCtrl1;
+		wxNotebook *WxNotebook2;
+		wxNotebook *WxNotebook1;
 		wxSplitterWindow *WxSplitterWindow1;
 		wxGridSizer *WxGridSizer;
+		wxStatusBar *WxStatusBar;
+		wxToolBar *WxToolBar;
 		////GUI Control Declaration End
+		wxListCtrl* WxListCtrl1;
+		wxListCtrl* WxListCtrl2;
 		wxListCtrl* lastListCtrlUsed;
+		wxNotebook* lastNoteBookUsed;
+		vectorString* lastVectorStringUsed;
 		wxString* strPathLstCtrl;
 		wxComboBox* combo;
 		wxString strPathLstCtrl1;
@@ -131,7 +146,9 @@ class wxCommanderFrm : public wxFrame
 	   wxCommanderTaskBar* tray;
 	   multiLang lang;
 	   hotKeyMap keysMap;
-
+	   vectorString aPaths1;
+	   vectorString aPaths2;
+	   
 	private:
 		//Note: if you receive any error with these enum IDs, then you need to
 		//change your old form code that are based on the #define control IDs.
@@ -141,6 +158,8 @@ class wxCommanderFrm : public wxFrame
 		{
 			////GUI Enum Control ID Start
 			ID_MNU_FILES_1004 = 1004,
+			ID_MNU_ADDTAB_1080 = 1080,
+			ID_MNU_REMOVETAB_1082 = 1082,
 			ID_MNU_NEWFOLDER_1049 = 1049,
 			ID_MNU_COPY_1046 = 1046,
 			ID_MNU_DELETE_1047 = 1047,
@@ -153,13 +172,15 @@ class wxCommanderFrm : public wxFrame
 			ID_MNU_HELP_1006 = 1006,
 			ID_MNU_ABOUT_1007 = 1007,
 			
+			ID_WXNOTEBOOK2 = 1079,
+			ID_WXNOTEBOOK1 = 1077,
+			ID_WXSPLITTERWINDOW1 = 1076,
 			ID_WXSTATUSBAR = 1044,
 			ID_WXTOOLBAR = 1043,
-			ID_WXLISTCTRL2 = 1062,
-			ID_WXLISTCTRL1 = 1061,
-			ID_WXSPLITTERWINDOW1 = 1058,
 			////GUI Enum Control ID End
 			ID_DUMMY_VALUE_, //don't remove this value unless you have other enum values
+			ID_WXLISTCTRL1 = 9998,
+			ID_WXLISTCTRL2 = 9999,			
 			ID_TOOL_COPY = 10000,
 			ID_TOOL_DELETE = 10001,
 			ID_TOOL_RENAME = 10002,
@@ -183,7 +204,8 @@ class wxCommanderFrm : public wxFrame
          void OnToolButton(wxCommandEvent& event);
          void OnComboClick(wxCommandEvent& event);
          void OnClose(wxCloseEvent& event);
-         //void OnCharHook(wxKeyEvent& event);
+         void OnWxListCtrl1MouseLeftDown(wxMouseEvent& event);
+         void OnWxListCtrl2MouseLeftDown(wxMouseEvent& event);         
          void comboClick(wxCommandEvent& event, bool add = false);
   	      void CreateGUIControls();
 	      void addColumns(wxListCtrl *WxListCtrl);
@@ -196,9 +218,24 @@ class wxCommanderFrm : public wxFrame
 	      void readConfig();
 	      void writeConfig();
 	      void Close();
-         void ListCtlUpdate();
          void WxListCtrlBeginLabelEdit(wxListEvent& event);
          void WxListCtrlEndLabelEdit(wxListEvent& event);
+         void WxListCtrlBeginDrag(wxListEvent& event);
+         void copyToClipboard();
+         void pasteFromClipboard();
+   public:
+         void ListCtlUpdate();
+         void copyThread(wxString& strPathDest,  const wxArrayString& fileNames);
+};
+
+class DragAndDropFile : public wxFileDropTarget
+{
+  public:
+    DragAndDropFile(wxCommanderFrm& theWindow, wxString& strPathDest) : wxFileDropTarget(), m_strPathDest(strPathDest), m_wxFrame(theWindow) {}
+    virtual bool OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& fileNames);
+  private:
+   wxString& m_strPathDest;
+   wxCommanderFrm& m_wxFrame;
 };
 
 #endif

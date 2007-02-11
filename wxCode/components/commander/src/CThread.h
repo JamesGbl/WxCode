@@ -7,7 +7,7 @@
 #include "wxCommanderUtils.h"
 
 
-typedef void (*onThreadFinishCallBackFunc)(wxThread*, void*);
+typedef void (*onThreadFinishCallBackFunc)(wxThread*, void*, void*);
 
 class wxSimpleThread : public wxThread
 {
@@ -22,6 +22,7 @@ private:
    vector<copyParams> m_copyParamsVector;
    onThreadFinishCallBackFunc onFinishCallBackFunc;
    void* finishParam;
+   void* m_parent;
 public:
     wxSimpleThread() : wxThread()
     {
@@ -53,15 +54,16 @@ public:
     void OnExit()
     {
        if (onFinishCallBackFunc != NULL)
-          onFinishCallBackFunc(this, finishParam);
+          onFinishCallBackFunc(this, finishParam, m_parent);
 
        this->Exit();
        delete(this);
     }
-    void setFinishCallBackFunc(onThreadFinishCallBackFunc callBackFunc, void* yourParam)
+    void setFinishCallBackFunc(onThreadFinishCallBackFunc callBackFunc, void* yourParam, void* parent)
     {
        onFinishCallBackFunc = callBackFunc;
        finishParam = yourParam;
+       m_parent = parent;
     }
 };
 #endif

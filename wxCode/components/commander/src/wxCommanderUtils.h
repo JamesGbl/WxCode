@@ -31,6 +31,9 @@
     #define EXEC(cmd) system(cmd)
 #endif
 
+#include <wx/listctrl.h>
+#include <wx/dnd.h>
+
 #include <vector>
 #include <map>
 
@@ -55,5 +58,5 @@ bool copyDirFile(wxString& path, wxString& item, wxString& pathNew);
 bool copyDirectory(wxString& path, wxString& item, wxString& pathNew);
 wxString keyCodeToString(int keyCode);
 driversMap wsGetDrives();
-
+wxString getLastDir(wxString directory);
 #endif

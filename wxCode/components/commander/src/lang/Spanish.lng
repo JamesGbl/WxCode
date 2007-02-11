@@ -2,6 +2,8 @@ lang=Español
 canonicalName=es_ES
 
 &Files=&Archivo
+&Add Tab=&Añadir Pestaña
+Re&move Tab=E&liminar Pestaña
 &New folder=&Nueva Carpeta
 &Copy=&Copiar
 &Delete=&Borrar
@@ -22,6 +24,9 @@ Files=Ficheros
 Size=Tamaño
 Date=Fecha
 
+Removable=Extraible
+Hard Disk=Disco duro
+
 Do you like DELETE selected files?=¿Desea BORRAR los fichero(s) Seleccionados?
 Delete=Borrando
 There are some files read only=Hay algunos ficheros de solo Lectura
@@ -38,6 +43,7 @@ Finalizing the copy. Wait a moment...=Finalizando la copia. Espere un momento...
 
 &Options=&Opciones
 &Language=&Idioma
+Hot Keys=&Teclas Rápidas
 Language selector=Selector de Idioma
 Select your language=Seleccione su Idioma
 
