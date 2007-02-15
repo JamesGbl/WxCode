@@ -18,9 +18,8 @@
 
 #include "wx/sizer.h"
 
-//---------------------------------------------------------------------------
-// classes
-//---------------------------------------------------------------------------
+
+
 
 //---------------------------------------------------------------------------
 // wxBorderItemHandle
@@ -30,15 +29,36 @@ class WXDLLEXPORT wxBorderItemHandle: public wxObject
 {
     DECLARE_CLASS(wxBorderItemHandle);
 protected:
-    wxString          m_location;
-    unsigned long     m_code;
+    wxString          location_string;
+    unsigned long     location_id;
 
 public:
     wxBorderItemHandle( wxString location );
+	wxBorderItemHandle( int location );
+		
     wxString          GetLocationName();
     unsigned long     GetLocationCode();
 
 };
+
+namespace Location
+{
+enum
+{
+	ID_North = 0,
+	ID_South = 1,
+	ID_West = 2,
+	ID_East = 3,
+	ID_Center = 4
+};
+
+wxObject* North();
+wxObject* South();
+wxObject* West();
+wxObject* East();
+wxObject* Center();
+
+}
 
 //---------------------------------------------------------------------------
 // wxBorderSizer

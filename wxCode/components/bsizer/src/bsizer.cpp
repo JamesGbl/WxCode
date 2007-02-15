@@ -19,7 +19,10 @@
 // For compilers that support precompilation, includes "wx.h".
 #include "wx/wxprec.h"
 
-#include "wx/bsizer.h"
+#include <iostream>
+
+#include "bsizer.h"
+
 
 //---------------------------------------------------------------------------
 
@@ -32,47 +35,99 @@ IMPLEMENT_ABSTRACT_CLASS(wxBorderItemHandle, wxObject);
 
 wxBorderItemHandle::wxBorderItemHandle( wxString ln )
 {
-    if (ln.CmpNoCase("North") == 0) {
-        m_location = wxString("North");
-        m_code = 0;
-    } else if (ln.CmpNoCase("South") == 0) {
-        m_location = wxString("South");
-        m_code = 1;
-    } else if (ln.CmpNoCase("West") == 0) {
-        m_location = wxString("West");
-        m_code = 2;
-    } else if (ln.CmpNoCase("East") == 0) {
-        m_location = wxString("East");
-        m_code = 3;
-    } else {
-        m_location = wxString("Center");
-        m_code = 4;
+    if (ln.CmpNoCase(wxT("North")) == 0)
+	{
+        location_string = wxT("North");
+        location_id = Location::ID_North;
     }
+	else if (ln.CmpNoCase(wxT("South")) == 0)
+	{
+        location_string = wxT("South");
+        location_id = Location::ID_South;
+    }
+	else if (ln.CmpNoCase(wxT("West")) == 0)
+	{
+        location_string = wxT("West");
+        location_id = Location::ID_West;
+    }
+	else if (ln.CmpNoCase(wxT("East")) == 0)
+	{
+        location_string = wxT("East");
+        location_id = Location::ID_East;
+    }
+	else if (ln.CmpNoCase(wxT("Center")) == 0)
+	{
+        location_string = wxT("Center");
+        location_id = Location::ID_Center;
+    }
+	else
+	{
+		std::cerr << "wxBorderSizer - Invalid location: " << (char*)( ln.c_str() ) << std::endl;	
+	}
+	
+}
+
+wxBorderItemHandle::wxBorderItemHandle( int ln )
+{
+
+    if (ln == Location::ID_North)
+	{
+        location_string = wxT("North");
+        location_id = Location::ID_North;
+    }
+	else if (ln == Location::ID_South)
+	{
+        location_string = wxT("South");
+        location_id = Location::ID_South;
+    }
+	else if (ln == Location::ID_West)
+	{
+        location_string = wxT("West");
+        location_id = Location::ID_West;
+    }
+	else if (ln == Location::ID_East)
+	{
+        location_string = wxT("East");
+        location_id = Location::ID_East;
+    }
+	else if (ln == Location::ID_Center)
+	{
+        location_string = wxT("Center");
+        location_id = Location::ID_Center;
+    }
+	else
+	{
+		std::cerr << "wxBorderSizer - Invalid location: " << ln << std::endl;	
+	}
+
 }
 //---------------------------------------------------------------------------
 wxString wxBorderItemHandle::GetLocationName()
 {
-    return m_location;
+    return location_string;
 } 
 //---------------------------------------------------------------------------
 unsigned long wxBorderItemHandle::GetLocationCode()
 {
-    return m_code;
+    return location_id;
 } 
-//---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
 // wxBorderSizer
 //---------------------------------------------------------------------------
+
 wxBorderSizer::wxBorderSizer()
 {
 }
-//---------------------------------------------------------------------------
+
 wxBorderSizer::~wxBorderSizer()
 {
     m_children.DeleteContents(TRUE);
 }
-//---------------------------------------------------------------------------
+
+/*
+ * This method calculates the size and lcoation of objects.
+ */
 void wxBorderSizer::RecalcSizes()
 {
     wxPoint  c_point;
@@ -91,171 +146,239 @@ void wxBorderSizer::RecalcSizes()
     // m_children list must be sorted before layouting
     m_children.Sort(SortFunction);
 
-    current = m_children.GetFirst();
-    while (current != NULL) {
-        wxSizerItem *item = (wxSizerItem*) current->Data();
+	// iterate through all children
+    current = (wxNode*)m_children.GetFirst();
+    while (current != NULL)
+	{
+        wxSizerItem *item = (wxSizerItem*) current->GetData();
+		
+		// Retrieve location information given by user 
         wxBorderItemHandle* location;
-        if (item != NULL && (location = (wxBorderItemHandle *)item->GetUserData()) != NULL) {
-            wxSize old_size = item->CalcMin();
+        if (item != NULL && (location = (wxBorderItemHandle *)item->GetUserData()) != NULL)
+		{
+			// what is the minimal size for this component
+            wxSize minimal_needed_size = item->CalcMin();
 
-            if (item->IsWindow() && item->GetWindow()->GetSizer() != NULL) {
+			// if the object we are sizing now is a component and has children, ask its sizer how much space it needs.
+			// if to show all its children it needs more space than the bare minimal, we will give it.
+            if (item->IsWindow() && item->GetWindow()->GetSizer() != NULL)
+			{
                 wxSize min_size = item->GetWindow()->GetSizer()->CalcMin();
-                if (old_size.GetWidth() < min_size.GetWidth()
-                    || old_size.GetHeight() < min_size.GetHeight()) {
-                    old_size = min_size;
+                if (minimal_needed_size.GetWidth() < min_size.GetWidth() ||
+					minimal_needed_size.GetHeight() < min_size.GetHeight())
+				{
+                    minimal_needed_size = min_size;
                 }
             }
 
             // North
-            if (location->GetLocationCode() == 0) {
+            if (location->GetLocationCode() == Location::ID_North)
+			{
+				// minimal x and y
                 c_point.x = pos.x;
                 c_point.y = pos.y;
+				
+				// maximal width, minimal height
                 c_size.SetWidth(size.GetWidth());
-                c_size.SetHeight(old_size.GetHeight());
-                north_offset = old_size.GetHeight();
+                c_size.SetHeight(minimal_needed_size.GetHeight());
+				
+				// remember some space is taken at North
+                north_offset = minimal_needed_size.GetHeight();
             }
 
             // South
-            if (location->GetLocationCode() == 1) {
+            if (location->GetLocationCode() == Location::ID_South)
+			{
+				// minimal x, maximal y
                 c_point.x = pos.x;
-                c_point.y = pos.y + size.GetHeight() - old_size.GetHeight(); 
+                c_point.y = pos.y + size.GetHeight() - minimal_needed_size.GetHeight();
+				
+				// maximal width, minimal height
                 c_size.SetWidth(size.GetWidth());
-                c_size.SetHeight(old_size.GetHeight());
-                south_offset = old_size.GetHeight();
+                c_size.SetHeight(minimal_needed_size.GetHeight());
+				
+				// remember some space is taken at South
+                south_offset = minimal_needed_size.GetHeight();
             }
 
             // West
-            if (location->GetLocationCode() == 2) {
+            if (location->GetLocationCode() == Location::ID_West)
+			{
+				// minimal x and y
                 c_point.x = pos.x;
-                c_point.y = pos.y + north_offset; 
-                c_size.SetWidth(old_size.GetWidth());
+                c_point.y = pos.y + north_offset;
+				
+				// minimal width, maximal height
+                c_size.SetWidth(minimal_needed_size.GetWidth());
                 c_size.SetHeight(size.GetHeight() - (north_offset + south_offset));
-                west_offset = old_size.GetWidth();
+				
+				// remember some space is taken at West
+                west_offset = minimal_needed_size.GetWidth();
             }
 
             // East
-            if (location->GetLocationCode() == 3) {
-                c_point.x = pos.x + size.GetWidth() - old_size.GetWidth();
-                c_point.y = pos.y + north_offset; 
-                c_size.SetWidth(old_size.GetWidth());
+            if (location->GetLocationCode() == Location::ID_East)
+			{
+				// maximal x, minimal y
+                c_point.x = pos.x + size.GetWidth() - minimal_needed_size.GetWidth();
+                c_point.y = pos.y + north_offset;
+				
+				// minimal width, maximal height
+                c_size.SetWidth(minimal_needed_size.GetWidth());
                 c_size.SetHeight(size.GetHeight() - (north_offset + south_offset));
-                east_offset = old_size.GetWidth();
+				
+				// remember some space is taken at East
+                east_offset = minimal_needed_size.GetWidth();
             }
 
             // Center
-            if (location->GetLocationCode() == 4) {
+            if (location->GetLocationCode() == Location::ID_Center)
+			{
+				// minimal x and y
                 c_point.x = pos.x + west_offset;
-                c_point.y = pos.y + north_offset; 
+                c_point.y = pos.y + north_offset;
+				
+				// maximal width and height
                 c_size.SetWidth(size.GetWidth() - (west_offset + east_offset));
                 c_size.SetHeight(size.GetHeight() - (north_offset + south_offset));
             }
 
+			// apply new dimensions to object
             item->SetDimension(c_point, c_size);
         }
-        current = current->Next();
+		// continue with next item
+        current = current->GetNext();
     }
 
 }
-//---------------------------------------------------------------------------
+
+/*
+ * Calculates what is the minimal needed size to display eveything
+ */
 wxSize wxBorderSizer::CalcMin()
 {
-    unsigned long width1 = 0;
-    unsigned long width2 = 0;
+    unsigned long width_north = 0;
+    unsigned long width_south = 0;
     unsigned long min_width = 0;
 
-    unsigned long height1 = 0;
-    unsigned long height2 = 0;
+    unsigned long height_west = 0;
+    unsigned long height_east = 0;
     unsigned long min_height = 0;
 
-    wxNode        *current;
+    wxNode *current;
 
-    if (m_children.GetCount() == 0)
-        return wxSize(2,2);
+	// no children, return minimal size
+    if (m_children.GetCount() == 0) return wxSize(2,2);
 
     // m_children list must be sorted before calculating
     m_children.Sort(SortFunction);
 
-    current = m_children.GetFirst();
-    while (current != NULL) {
-        wxSizerItem *item = (wxSizerItem*) current->Data();
+	// iterate through all children
+    current = (wxNode*)m_children.GetFirst();
+    while (current != NULL)
+	{
+        wxSizerItem *item = (wxSizerItem*) current->GetData();
         wxBorderItemHandle* location;
-        if (item != NULL && (location = (wxBorderItemHandle *)item->GetUserData()) != NULL) {
-            wxSize old_size = item->CalcMin();
+		
+		// Retrieve location information given by user
+        if (item != NULL && (location = (wxBorderItemHandle *)item->GetUserData()) != NULL)
+		{
+            wxSize minimal_needed_size = item->CalcMin();
 
-            if (item->IsWindow() && item->GetWindow()->GetSizer() != NULL) {
+			// if the object we are sizing now is a component and has children, ask its sizer how much space it needs.
+			// if to show all its children it needs more space than the bare minimal, we will give it.
+            if (item->IsWindow() && item->GetWindow()->GetSizer() != NULL)
+			{
                 wxSize min_size = item->GetWindow()->GetSizer()->CalcMin();
-                if (old_size.GetWidth() < min_size.GetWidth()
-                    || old_size.GetHeight() < min_size.GetHeight()) {
-                    old_size = min_size;
+                if (minimal_needed_size.GetWidth() < min_size.GetWidth() ||
+					minimal_needed_size.GetHeight() < min_size.GetHeight())
+				{
+                    minimal_needed_size = min_size;
                 }
             }
 
+			/*
+			 * There can only be one North component, only one South component, etc.
+			 * Therefore, adding the height of the northern component + the height of the southern component will give minimal needed height.
+			 * Same thing goes horizontally.
+			 */
+			
             // North 
-            if (location->GetLocationCode() == 0) {
-                min_height += old_size.GetHeight();
-                width1 = old_size.GetWidth();
+            if (location->GetLocationCode() == Location::ID_North)
+			{
+                min_height += minimal_needed_size.GetHeight();
+                width_north = minimal_needed_size.GetWidth();
             }
 
             // South
-            if (location->GetLocationCode() == 1) {
-                min_height += old_size.GetHeight();
-                width2 = old_size.GetWidth();
+            if (location->GetLocationCode() == Location::ID_South)
+			{
+                min_height += minimal_needed_size.GetHeight();
+                width_south = minimal_needed_size.GetWidth();
             }
 
             // West
-            if (location->GetLocationCode() == 2) {
-                height1 = old_size.GetHeight();
-                min_width += old_size.GetWidth();
+            if (location->GetLocationCode() == Location::ID_West)
+			{
+                height_west = minimal_needed_size.GetHeight();
+                min_width += minimal_needed_size.GetWidth();
             }
 
             // East
-            if (location->GetLocationCode() == 3) {
-                height2 = old_size.GetHeight();
-                min_width += old_size.GetWidth();
+            if (location->GetLocationCode() == Location::ID_East)
+			{
+                height_east = minimal_needed_size.GetHeight();
+                min_width += minimal_needed_size.GetWidth();
             }
 
         }
-        current = current->Next();
+        current = current->GetNext();
     }
 
-    if (width1 > width2 ) {
-        if (width1 > min_width) {
-            min_width = width1;
-        }
-    } else {
-        if (width2 > min_width) {
-            min_width = width2;
-        }
+	// use largest width between north and south (unless current minimal size is already large enough for both)
+    if (width_north > width_south )
+	{
+        if (width_north > min_width) min_width = width_north;
     }
-    if (height1 > height2) {
-        min_height += height1;
-    } else {
-        min_height += height2;
+	else
+	{
+        if (width_south > min_width) min_width = width_south;
     }
+	
+	// height currently holds the needed space for north and south.
+	// Add the minimal amount to hold that largest of east/west.
+	// Then it will be high enough to contain everything.
+    if (height_west > height_east) min_height += height_west;
+    else  min_height += height_east;
 
     return wxSize( min_width, min_height );
 }
 //---------------------------------------------------------------------------
-int wxBorderSizer::SortFunction(const void* arg1, const void* arg2) {
+int wxBorderSizer::SortFunction(const void* arg1, const void* arg2)
+{
     wxSizerItem** item1 = (wxSizerItem**)arg1;
     wxSizerItem** item2 = (wxSizerItem**)arg2;
 
     wxBorderItemHandle* ih1 = (wxBorderItemHandle*)(*item1)->GetUserData();
     wxBorderItemHandle* ih2 = (wxBorderItemHandle*)(*item2)->GetUserData();
 
-    if (ih1 == NULL || ih2 == NULL) {
-        return 0;
-    }
+    if (ih1 == NULL || ih2 == NULL) return 0;
 
-    if (ih1->GetLocationCode() == ih2->GetLocationCode()) {
-        return 0;
-    }
+    if (ih1->GetLocationCode() == ih2->GetLocationCode()) return 0;
 
-    if (ih1->GetLocationCode() > ih2->GetLocationCode()) {
-        return 1;
-    } else {
-        return -1;
-    }
+    if (ih1->GetLocationCode() > ih2->GetLocationCode()) return 1;
+    else return -1;
+
 }
 //---------------------------------------------------------------------------
 
+namespace Location
+{
+
+wxObject* North(){ return (wxObject*)(new wxBorderItemHandle(Location::ID_North)); }
+wxObject* South(){ return (wxObject*)(new wxBorderItemHandle(Location::ID_South)); }
+wxObject* West(){ return (wxObject*)(new wxBorderItemHandle(Location::ID_West)); }
+wxObject* East(){ return (wxObject*)(new wxBorderItemHandle(Location::ID_East)); }
+wxObject* Center(){ return (wxObject*)(new wxBorderItemHandle(Location::ID_Center)); }
+	
+}
