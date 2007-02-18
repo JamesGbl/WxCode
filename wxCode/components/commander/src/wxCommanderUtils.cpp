@@ -12,7 +12,7 @@ void Exec(wxString& path, wxString& file)
    if (command.Right(1)=="*")
       command = command.Left(command.Length()-1);
    if (ext.Upper() != ".BAT")
-      wxExecute(command);
+      wxExecute(command,wxEXEC_ASYNC);
    else
    {
       #ifdef __WXMSW__
@@ -20,7 +20,7 @@ void Exec(wxString& path, wxString& file)
       #else
         command = path + " " + command;  
       #endif 
-      wxShell(command);
+       wxExecute(command,wxEXEC_ASYNC);
    }
 }
 
@@ -105,7 +105,7 @@ wxString getModificationTime(wxString& fileName)
    day << tmDateFile->tm_mday;
    month << tmDateFile->tm_mon+1;
    year << tmDateFile->tm_year+1900;
-   hour << tmDateFile->tm_hour;
+   hour << tmDateFile->tm_hour+1;
    min << tmDateFile->tm_min;
    if (tmDateFile->tm_mday < 10) day = "0" + day;
    if (tmDateFile->tm_mon+1 < 10) month = "0" + month;

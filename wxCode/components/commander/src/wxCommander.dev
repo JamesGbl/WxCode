@@ -1,7 +1,7 @@
 [Project]
 FileName=wxCommander.dev
 Name=wxCommander
-UnitCount=17
+UnitCount=19
 PchHead=-1
 PchSource=-1
 Ver=3
@@ -72,7 +72,7 @@ BuildCmd=
 Major=0
 Minor=1
 Release=1
-Build=1252
+Build=1288
 LanguageID=1034
 CharsetID=1252
 CompanyName=Armando Urdiales González
@@ -248,6 +248,26 @@ FileName=hotKeysDlg.wxform
 Folder=resources
 Compile=0
 Link=0
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit18]
+FileName=CThread.cpp
+CompileCpp=1
+Folder=cpp
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit19]
+FileName=CTimer.cpp
+CompileCpp=1
+Folder=cpp
+Compile=1
+Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=

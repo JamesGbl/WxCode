@@ -142,7 +142,7 @@ class wxCommanderFrm : public wxFrame
 		wxString strPathLstCtrl2;
 		wxImageList* imageList;
 		CTimer* timer;
-      wxSimpleThread* thread;
+      CThread* thread;
 	   wxCommanderTaskBar* tray;
 	   multiLang lang;
 	   hotKeyMap keysMap;
@@ -166,6 +166,9 @@ class wxCommanderFrm : public wxFrame
 			ID_MNU_RENAME_1048 = 1048,
 			ID_MNU_EXECUTE_1051 = 1051,
 			ID_MNU_EXIT_1005 = 1005,
+			ID_MNU_EDIT_1083 = 1083,
+			ID_MNU_COPY_1084 = 1084,
+			ID_MNU_PASTE_1085 = 1085,
 			ID_MNU_OPTIONS_1063 = 1063,
 			ID_MNU_LANGUAGE_1064 = 1064,
 			ID_MNU_HOTKEYS_1065 = 1065,
@@ -226,6 +229,8 @@ class wxCommanderFrm : public wxFrame
    public:
          void ListCtlUpdate();
          void copyThread(wxString& strPathDest,  const wxArrayString& fileNames);
+	void Mnu_Copy_onClick1(wxCommandEvent& event);
+	void Mnu_paste_onClick(wxCommandEvent& event);
 };
 
 class DragAndDropFile : public wxFileDropTarget
