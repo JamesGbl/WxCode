@@ -58,8 +58,8 @@
 </CodeBlocks_layout_file>
 [Editors]
 <<<<<<< wxCommander.layout
-Order=17,18
-Focused=18
+Order=
+Focused=4
 =======
 Order=
 Focused=4
@@ -85,15 +85,15 @@ LeftChar=1
 Open=0
 Top=0
 <<<<<<< wxCommander.layout
-CursorCol=14
-CursorRow=145
+CursorCol=26
+CursorRow=200
 =======
 CursorCol=63
 CursorRow=208
 >>>>>>> 1.10
 <<<<<<< wxCommander.layout
 <<<<<<< wxCommander.layout
-TopLine=121
+TopLine=190
 =======
 TopLine=189
 >>>>>>> 1.10
@@ -106,9 +106,9 @@ LeftChar=1
 <<<<<<< wxCommander.layout
 Open=0
 Top=0
-CursorCol=31
-CursorRow=768
-TopLine=754
+CursorCol=1
+CursorRow=559
+TopLine=521
 =======
 Open=0
 Top=0
@@ -162,18 +162,18 @@ LeftChar=1
 [Editor_10]
 Open=0
 Top=0
-CursorCol=41
-CursorRow=61
-TopLine=19
+CursorCol=74
+CursorRow=56
+TopLine=20
 LeftChar=1
 [Editor_11]
 Open=0
 Top=0
 <<<<<<< wxCommander.layout
 <<<<<<< wxCommander.layout
-CursorCol=5
-CursorRow=24
-TopLine=52
+CursorCol=1
+CursorRow=131
+TopLine=70
 =======
 CursorCol=2
 CursorRow=294
@@ -253,7 +253,7 @@ CursorRow=1
 TopLine=1
 LeftChar=1
 [Editor_17]
-Open=1
+Open=0
 =======
 Open=0
 >>>>>>> 1.10
@@ -263,8 +263,8 @@ CursorRow=4
 TopLine=1
 LeftChar=1
 [Editor_18]
-Open=1
-Top=1
+Open=0
+Top=0
 CursorCol=1
 CursorRow=3
 TopLine=1

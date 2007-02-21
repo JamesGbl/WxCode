@@ -530,7 +530,7 @@ void wxCommanderFrm::OnListCtlKey(wxListCtrl *WxListCtrl, wxString &directory, w
    for ( iter = keysMap.begin(); iter != keysMap.end(); iter++ )
    {
       long keyCode = iter->second.keyCode;
-      if (keyCode >= WXK_F1 && keyCode <= WXK_F24 && wxGetKeyState(WXK_ALT))
+      if (keyCode >= WXK_F1 && keyCode <= WXK_F24 && (wxGetKeyState(WXK_ALT) || wxGetKeyState(WXK_CONTROL)))
          continue;
       else
       {
@@ -553,6 +553,12 @@ void wxCommanderFrm::OnListCtlKey(wxListCtrl *WxListCtrl, wxString &directory, w
           wxString itemName = "..";
           itemExec(WxListCtrl, directory, itemName);
        }
+       break;
+       case WXK_RIGHT:
+          WxListCtrl2->SetFocus();
+       break;
+       case WXK_LEFT:
+          WxListCtrl1->SetFocus();
        break;
        case WXK_DELETE:
           Mnu_delete_onClick(event);
@@ -591,12 +597,13 @@ void wxCommanderFrm::OnListCtlKey(wxListCtrl *WxListCtrl, wxString &directory, w
             if (wxGetKeyState(WXK_CONTROL))
                pasteFromClipboard();
        break;
-       //default:
-       //{
-          //wxString key;
-          //key << event.GetKeyCode();
-          //wxMessageBox(key);
-       //}
+       /*
+       default:
+       {
+          wxString key;
+          key << event.GetKeyCode();
+          wxMessageBox(key);
+       }*/
     }
 }
 
@@ -684,7 +691,6 @@ void wxCommanderFrm::WxListCtrl1ItemFocused(wxListEvent& event)
    wxString numDirFiles;
    numDirFiles << lastListCtrlUsed->GetItemCount()-1;
    WxStatusBar->SetStatusText(numDirFiles + " " + lang["Directories and Files"]);
-   
 }
 
 void wxCommanderFrm::WxListCtrl2ItemFocused(wxListEvent& event)
@@ -1027,7 +1033,7 @@ void wxCommanderFrm::WxNotebook1PageChanged(wxNotebookEvent& event)
    
    if (oldTab != -1)
       aPaths1[oldTab] = strPathLstCtrl1;
-
+      
    lastListCtrlUsed = WxListCtrl1;
 	lastNoteBookUsed = WxNotebook1;
 	strPathLstCtrl = &strPathLstCtrl1;
@@ -1044,14 +1050,14 @@ void wxCommanderFrm::WxNotebook2PageChanged(wxNotebookEvent& event)
 
    if (oldTab != -1)
       aPaths2[oldTab] = strPathLstCtrl2;
-   
+      
    lastListCtrlUsed = WxListCtrl2;
 	lastNoteBookUsed = WxNotebook2;
 	strPathLstCtrl = &strPathLstCtrl2;
    lastVectorStringUsed = &aPaths2;
 
    (*strPathLstCtrl) = (*lastVectorStringUsed)[actualTab];
-   setListCtrl(lastListCtrlUsed, *strPathLstCtrl);   
+   setListCtrl(lastListCtrlUsed, *strPathLstCtrl); 
 }
 
 void wxCommanderFrm::WxListCtrlBeginDrag(wxListEvent& event)

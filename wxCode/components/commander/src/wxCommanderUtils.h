@@ -59,4 +59,6 @@ bool copyDirectory(wxString& path, wxString& item, wxString& pathNew);
 wxString keyCodeToString(int keyCode);
 driversMap wsGetDrives();
 wxString getLastDir(wxString directory);
+
+int get_file_attrib(char *filename);
 #endif

@@ -72,7 +72,7 @@ BuildCmd=
 Major=0
 Minor=1
 Release=1
-Build=1288
+Build=1347
 LanguageID=1034
 CharsetID=1252
 CompanyName=Armando Urdiales González
@@ -86,6 +86,7 @@ ProductName=wxCommander
 ProductVersion=0.1
 AutoIncBuildNrOnRebuild=0
 AutoIncBuildNrOnCompile=1
+UnitCount=19
 
 [Profile1]
 ProfileName=MingW 3.4.2

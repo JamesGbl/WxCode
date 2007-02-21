@@ -96,20 +96,20 @@ wxString formatFileSize(size_t st_size)
 }
 
 wxString getModificationTime(wxString& fileName)
-{
+{  
    struct tm* tmDateFile;
    struct stat attrib;
    stat(fileName, &attrib);
    tmDateFile = gmtime(&(attrib.st_mtime));
    wxString min, hour, day, month, year;
    day << tmDateFile->tm_mday;
-   month << tmDateFile->tm_mon+1;
-   year << tmDateFile->tm_year+1900;
-   hour << tmDateFile->tm_hour+1;
+   month << (tmDateFile->tm_mon+1);
+   year << (tmDateFile->tm_year+1900);
+   hour << (tmDateFile->tm_hour+1);
    min << tmDateFile->tm_min;
    if (tmDateFile->tm_mday < 10) day = "0" + day;
    if (tmDateFile->tm_mon+1 < 10) month = "0" + month;
-   if (tmDateFile->tm_hour < 10) hour = "0" + hour;
+   if (tmDateFile->tm_hour+1 < 10) hour = "0" + hour;
    if (tmDateFile->tm_min < 10) min = "0" + min;
    return day + "/" + month + "/" + year + " " + hour + ":" + min;
 }
