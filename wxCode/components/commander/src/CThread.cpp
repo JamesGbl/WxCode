@@ -19,12 +19,12 @@ void* CThread::Entry()
 
 void CThread::copy(wxString& path, wxString& item, wxString& pathNew)
 {
- action = 1;
- copyParams copyPaths;
- copyPaths.sourcePath = path;
- copyPaths.item = item;
- copyPaths.newPath = pathNew;
- m_copyParamsVector.push_back(copyPaths);
+  action = COPY;
+  copyParams copyPaths;
+  copyPaths.sourcePath = path;
+  copyPaths.item = item;
+  copyPaths.newPath = pathNew;
+  m_copyParamsVector.push_back(copyPaths);
 }
 
 void CThread::OnExit()

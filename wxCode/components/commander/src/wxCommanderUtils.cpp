@@ -3,6 +3,11 @@
 
 void Exec(wxString& path, wxString& file)
 {
+   
+
+      
+   
+   
    wxString ext = file.Mid(file.Length()-4,file.Length());
    wxFileType* mimeFile = wxTheMimeTypesManager->GetFileTypeFromExtension(ext);
    if (!mimeFile) return;
@@ -100,6 +105,7 @@ wxString getModificationTime(wxString& fileName)
    struct tm* tmDateFile;
    struct stat attrib;
    stat(fileName, &attrib);
+
    tmDateFile = gmtime(&(attrib.st_mtime));
    wxString min, hour, day, month, year;
    day << tmDateFile->tm_mday;
@@ -124,7 +130,10 @@ bool deleteDirFile(wxString& path, wxString& item)
       return deleteDirectory(path, item);
 
    if (file.Exists(filePath))
+   {
+	   SetFileAttributes(filePath.c_str(), FILE_ATTRIBUTE_NORMAL); // Make it not read only, so we can delete it
       return wxRemoveFile(filePath);
+   }
 
    return false;
 }
@@ -142,10 +151,12 @@ bool deleteDirectory(wxString& path, wxString& item)
          cont = dir.GetFirst(&file);
       while (cont)
       {
-         if (dir.Exists(filePath + "\\" + file))
+         wxString strFile = filePath + "\\" + file;
+         
+         if (dir.Exists(strFile))
             deleteDirectory(filePath, file);
 
-         wxString strFile = filePath + "\\" + file;
+         SetFileAttributes(strFile.c_str(), FILE_ATTRIBUTE_NORMAL); // Make it not read only, so we can delete it
          wxRemoveFile(strFile);
 
          cont = dir.GetNext(&file);
@@ -223,13 +234,7 @@ bool renameDirFile(wxString& path, wxString& oldName, wxString& newName)
    wxString oldFilePath = path + "\\" + oldName;
    wxString newFilePath = path + "\\" + newName;
 
-   if (dir.Exists(oldFilePath))
-      return false;
-
-   if (file.Exists(oldFilePath))
-      return wxRenameFile(oldFilePath, newFilePath, true);
-
-   return false;
+   return (rename(oldFilePath, newFilePath)==0);
 }
 
 wxString keyCodeToString(int keyCode)

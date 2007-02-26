@@ -6,6 +6,7 @@
 #include <wx/thread.h>
 #include "wxCommanderUtils.h"
 
+#define COPY 1
 
 typedef void (*onThreadFinishCallBackFunc)(wxThread*, void*, void*);
 

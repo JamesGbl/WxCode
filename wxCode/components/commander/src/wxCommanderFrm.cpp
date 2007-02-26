@@ -922,7 +922,7 @@ void wxCommanderFrm::readConfig()
 
    wxString strCombo;
    wxString actualDir;
-   for (int i=15; i > 0; i--)
+   for (int i=50; i > 0; i--)
    {
       actualDir << i;
       if (config.Exists("DirCombo/History" + actualDir))
@@ -988,6 +988,7 @@ void wxCommanderFrm::writeConfig()
    config.DeleteGroup("DirCombo");
    for (int i=combo->GetCount()-1; i > 0; i--)
    {
+      actualDir << i;
       config.Write("DirCombo/History" + actualDir, combo->GetString(i));
       actualDir = "";
    }
