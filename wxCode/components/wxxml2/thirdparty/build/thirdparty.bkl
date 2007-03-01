@@ -5,27 +5,26 @@
 <!-- RCS-ID: $Id$    -->
 
 <makefile>
-	<set var="WXCODE_BAKEFILEDIR">../../../../build/bakefiles</set>
-	<include file="$(WXCODE_BAKEFILEDIR)/utils.bkl"/>
-	
-	<option name="BUILD"/>
-	<option name="SHARED"/>
-	<option name="UNICODE"/>
-	<option name="ICONV_DIR"/>
-	<force-opt-presence id="BUILD"/>
-	<force-opt-presence id="SHARED"/>
-	<force-opt-presence id="UNICODE"/>
-	<force-opt-presence id="ICONV_DIR"/>
-	
-	<subproject id="libiconv">
-		<dependency-of>all</dependency-of>
-		<dir>../libiconv/build</dir>
-		<target/>
-	</subproject>
-	<subproject id="libxml2">
-		<dependency-of>all</dependency-of>
-		<dir>../libxml2/build</dir>
-		<target>libonly</target>
-	</subproject>
+    <include file="presets/wxcode.bkl"/>
+
+    <option name="BUILD"/>
+    <option name="SHARED"/>
+    <option name="UNICODE"/>
+    <option name="ICONV_DIR"/>
+    <force-opt-presence id="BUILD"/>
+    <force-opt-presence id="SHARED"/>
+    <force-opt-presence id="UNICODE"/>
+    <force-opt-presence id="ICONV_DIR"/>
+
+    <subproject id="libiconv">
+        <dependency-of>all</dependency-of>
+        <dir>../libiconv/build</dir>
+        <target/>
+    </subproject>
+    <subproject id="libxml2">
+        <dependency-of>all</dependency-of>
+        <dir>../libxml2/build</dir>
+        <target>libonly</target>
+    </subproject>
 
 </makefile>

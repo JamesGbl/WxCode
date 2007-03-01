@@ -22,9 +22,10 @@ By now, these classes wrap only the most important libxml2 features but they are
             <exclude directory="file:///wxxml2/thirdparty/libiconv/lib/"/>
             <exclude pattern="*.svn*"/>
             <exclude pattern="*.lib*"/>
-            <exclude pattern="*obj*"/>
-            <exclude pattern="*pdb*"/>
-            <exclude pattern="*ilk*"/>
+            <exclude pattern="*.a*"/>
+            <exclude pattern="*.o*"/>
+            <exclude pattern="*.pdb*"/>
+            <exclude pattern="*.ilk*"/>
             <exclude pattern="*.exe*"/>
         </contents>
         <compress>zip</compress>

@@ -19,11 +19,6 @@
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
-#include "wx/xml2.h"                // include libxml2 wrapper definitions
-#include "wx/dtd.h"                 // include libxml2 wrapper definitions
-#include "wx/filename.h"
-#include "wx/mstream.h"
-#include "wx/sstream.h"
 
 // to test if xml2.h header conflicts with wxXML library, include xml.h header
 //#include <wx/xml/xml.h>
@@ -37,6 +32,14 @@
 #ifndef WX_PRECOMP
     #include "wx/wx.h"
 #endif
+
+#include <wx/filename.h>
+#include <wx/mstream.h>
+#include <wx/sstream.h>
+
+#include "wx/xml2.h"                // include libxml2 wrapper definitions
+#include "wx/dtd.h"                 // include libxml2 wrapper definitions
+
 
 // ----------------------------------------------------------------------------
 // resources
