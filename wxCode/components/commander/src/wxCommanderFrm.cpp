@@ -63,6 +63,7 @@ BEGIN_EVENT_TABLE(wxCommanderFrm,wxFrame)
 	EVT_MENU(ID_MNU_PASTE_1085, wxCommanderFrm::Mnu_paste_onClick)
 	EVT_MENU(ID_MNU_LANGUAGE_1064, wxCommanderFrm::MnuLanguage_onClick)
 	EVT_MENU(ID_MNU_HOTKEYS_1065, wxCommanderFrm::Mnu_hotKeys_onClick)
+	EVT_MENU(ID_MNU_CHECKUPDATES_1086, wxCommanderFrm::Mnu_checkUpdates_onClick)
 	EVT_MENU(ID_MNU_ABOUT_1007, wxCommanderFrm::Mnu_about_onClick)
 	
 	EVT_NOTEBOOK_PAGE_CHANGED(ID_WXNOTEBOOK2,wxCommanderFrm::WxNotebook2PageChanged)
@@ -152,6 +153,7 @@ void wxCommanderFrm::CreateGUIControls()
 	WxMenuBar1->Append(ID_MNU_OPTIONS_1063_Mnu_Obj, wxT("&Options"));
 	
 	wxMenu *ID_MNU_HELP_1006_Mnu_Obj = new wxMenu(0);
+	ID_MNU_HELP_1006_Mnu_Obj->Append(ID_MNU_CHECKUPDATES_1086, wxT("&Check updates"), wxT(""), wxITEM_NORMAL);
 	ID_MNU_HELP_1006_Mnu_Obj->Append(ID_MNU_ABOUT_1007, wxT("About as... (F1)"), wxT(""), wxITEM_NORMAL);
 	WxMenuBar1->Append(ID_MNU_HELP_1006_Mnu_Obj, wxT("&Help"));
 	SetMenuBar(WxMenuBar1);
@@ -252,6 +254,7 @@ void wxCommanderFrm::updateControlsLanguage()
    WxMenuBar1->SetLabel(ID_MNU_HOTKEYS_1065, lang["Hot Keys"]);
    optMenu = WxMenuBar1->GetMenu(3);
    WxMenuBar1->Replace(3, optMenu, lang["&Help"]);
+   WxMenuBar1->SetLabel(ID_MNU_CHECKUPDATES_1086, lang["&Check updates"]);
    WxMenuBar1->SetLabel(ID_MNU_ABOUT_1007, lang["About as..."] + " (F1)");
    addColumns(WxListCtrl1);
    addColumns(WxListCtrl2);
@@ -1136,4 +1139,12 @@ void wxCommanderFrm::Mnu_Copy_onClick1(wxCommandEvent& event)
 void wxCommanderFrm::Mnu_paste_onClick(wxCommandEvent& event)
 {
    pasteFromClipboard();
+}
+
+void wxCommanderFrm::Mnu_checkUpdates_onClick(wxCommandEvent& event)
+{
+   wxString path = ".";
+   wxString program = "webupdater.exe";
+   
+	Exec(path, program);
 }

@@ -173,6 +173,7 @@ class wxCommanderFrm : public wxFrame
 			ID_MNU_LANGUAGE_1064 = 1064,
 			ID_MNU_HOTKEYS_1065 = 1065,
 			ID_MNU_HELP_1006 = 1006,
+			ID_MNU_CHECKUPDATES_1086 = 1086,
 			ID_MNU_ABOUT_1007 = 1007,
 			
 			ID_WXNOTEBOOK2 = 1079,
@@ -231,6 +232,7 @@ class wxCommanderFrm : public wxFrame
          void copyThread(wxString& strPathDest,  const wxArrayString& fileNames);
 	void Mnu_Copy_onClick1(wxCommandEvent& event);
 	void Mnu_paste_onClick(wxCommandEvent& event);
+	void Mnu_checkUpdates_onClick(wxCommandEvent& event);
 };
 
 class DragAndDropFile : public wxFileDropTarget

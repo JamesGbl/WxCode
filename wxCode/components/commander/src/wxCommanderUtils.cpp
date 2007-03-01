@@ -16,17 +16,15 @@ void Exec(wxString& path, wxString& file)
    if (!command) return;
    if (command.Right(1)=="*")
       command = command.Left(command.Length()-1);
-   if (ext.Upper() != ".BAT")
-      wxExecute(command,wxEXEC_ASYNC);
-   else
+   if (ext.Upper() == ".BAT")
    {
       #ifdef __WXMSW__
         command = "Exec.bat " + path + " " + command;
       #else
         command = path + " " + command;  
       #endif 
-       wxExecute(command,wxEXEC_ASYNC);
-   }
+   }   
+   wxExecute(command, wxEXEC_ASYNC);
 }
 
 size_t getDirSize(wxString& directoryFile)
