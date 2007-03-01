@@ -12,6 +12,22 @@
 #ifndef _WX_KEYBINDER_DEFS_H_
 #define _WX_KEYBINDER_DEFS_H_
 
+// Defines for component version.
+// The following symbols should be updated for each new component release
+// since some kind of tests, like those of AM_WXCODE_CHECKFOR_COMPONENT_VERSION()
+// for "configure" scripts under unix, use them.
+#define wxKEYBINDER_MAJOR          2
+#define wxKEYBINDER_MINOR          1
+#define wxKEYBINDER_RELEASE        0
+
+// For non-Unix systems (i.e. when building without a configure script),
+// users of this component can use the following macro to check if the
+// current version is at least major.minor.release
+#define wxCHECK_KEYBINDER_VERSION(major,minor,release) \
+    (wxKEYBINDER_MAJOR > (major) || \
+    (wxKEYBINDER_MAJOR == (major) && wxKEYBINDER_MINOR > (minor)) || \
+    (wxKEYBINDER_MAJOR == (major) && wxKEYBINDER_MINOR == (minor) && wxKEYBINDER_RELEASE >= (release)))
+
 // for shared builds
 #ifdef WXMAKINGDLL_KEYBINDER
     #define WXDLLIMPEXP_KEYBINDER                  WXEXPORT
