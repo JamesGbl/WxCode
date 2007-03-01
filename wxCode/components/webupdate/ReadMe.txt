@@ -3,13 +3,14 @@
  ------------------------
 
  Website: http://wxcode.sourceforge.net/components/webupdate
- Version: 1.0
+ Version: 1.2
 
  Description:
  A complete, open source, cross-platform update solution for any type of application.
  Provides a easily-integrable, small application which connects to a web server and
  shows the updated packages to the user (supports multiple packages) and let him download
  and install them.
+
  Reliable downloads are granted using MD5 checksums. Local updates (e.g. updates to be taken
  from a CD-ROM or any other device) are supported, too.
  The program is highly configurable using XML and XRC files.
@@ -22,7 +23,7 @@
  wxWidgets library license applies to WebUpdate code if you use it as
  a library (for e.g. your custom webupdater); that is you can use both
  in other open source apps and in other commercial products.
- If you WebUpdate binaries directly, then the MIT license applies:
+ If you use WebUpdate binaries directly, then the MIT license applies:
 
    Copyright (c) 2006 Francesco Montorsi
 
@@ -59,8 +60,6 @@
  Type "./configure --help" for more info.
  The --with-httpengine/--without-httpengine option can be used to compile
  with/without the wxHttpEngine component.
- NOTE: linux version requires wx2.7 or higher due to a bug in wx networking
-       code which affects all wx2.6 versions.
 
  For any problem, feel free to contact frm@users.sourceforge.net
 
@@ -68,6 +67,8 @@
 
  Change Log
  ----------
+
+ 1.2 - completely revised the build system;
 
  1.1 - added i18n support (thanks to Helmut Giritzer for german translation and for
                            help to learn i18n stuff)

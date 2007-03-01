@@ -12,15 +12,13 @@
 
 # Init this configure script with basic info about the component
 # (DON'T PUT ANYTHING BEFORE AC_INIT, JUST COMMENTS)
-AC_INIT([webupdate], [1.0], [frm@sourceforge.net])
-
-# ENABLES/DISABLES THE DEBUG MODE FOR THIS CONFIGURE SCRIPT
-#DBG_CONFIGURE=1
+AC_INIT([WebUpdate], [1.2], [frm@sourceforge.net])
+AC_CONFIG_AUX_DIR(build)
 
 # you need the wxCode/build/bakefiles in your local repository to generate a configure
 # script from this configure.ac file since wxcode.m4 is required....
 m4_include(../../../build/autoconf/wxcode.m4)
-AM_WXCODE_INIT
+WXCODE_INIT
 
 
 
@@ -34,10 +32,10 @@ AM_WXCODE_INIT
 ## component's bakefile, then you can leave this section as is
 #####################################################################
 
-AM_OPTIONS_WXCONFIG
-AM_OPTIONS_WXPRESETS
+WX_CODE_OPTIONS([debug,unicode,shared,toolkit,wxshared,wxversion])
 
-AM_WXCODE_ARG_ENABLE([httpengine], [Enables the proxy and authentication support; requires the wxHttpEngine component], [yes])
+WXCODE_ARG_ENABLE([httpengine],
+                  [Enables the proxy and authentication support; requires the wxHttpEngine component], [yes])
 
 AC_MSG_CHECKING([for the --with-httpengine option])
 if test "$with_httpengine" = "yes"; then
@@ -61,24 +59,24 @@ fi
 #####################################################################
 
 # unfortunately wx2.6 has a  bug with net support under unix and thus is unsupported
-AM_WXCODE_CHECKS([2.7.0], [xrc,xml,net])
+WXCODE_CHECKS([2.8.0], [xrc,xml,net,core,base])
 if test "$USE_HTTPENGINE" = "1"; then
 
     # check for wxHTTPEngine presence, eventually disabling it if the
     # test program cannot be linked...
     AM_WXCODE_CHECKFOR_COMPONENT([wxHTTPEngine], [wx/httpbuilder.h],
-                                [httpengine], [wxHTTPBuilder test;],
-                                [USE_HTTPENGINE=1],     # action if found
-                                [USE_HTTPENGINE=0])     # action if not found
+                                 [httpengine], [wxHTTPBuilder test;],
+                                 [USE_HTTPENGINE=1],     # action if found
+                                 [USE_HTTPENGINE=0])     # action if not found
 fi
 
 
 # end in a nice way the configure script
-AM_WXCODE_END_PART1
+WXCODE_END_PART1
 if test "$USE_HTTPENGINE" = "1"; then
 echo "  - wxHTTPEngine enabled"
 else
 echo "  - wxHTTPEngine disabled"
 fi
-AM_WXCODE_END_PART2
+WXCODE_END_PART2
 
