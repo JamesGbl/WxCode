@@ -9,13 +9,12 @@
 # ======================================================================================
 
 
-# ENABLES/DISABLES THE DEBUG MODE FOR THIS CONFIGURE SCRIPT
-#DBG_CONFIGURE=1
-
 # Init this configure script with basic info about the component
-AC_INIT([wxExtMiniFrame], [1.5], [frm@sourceforge.net])
+AC_INIT([wxExtMiniFrame], [1.6], [frm@sourceforge.net])
+AC_CONFIG_AUX_DIR(build)
+
 m4_include(../../../build/autoconf/wxcode.m4)
-AM_WXCODE_INIT
+WXCODE_INIT
 
 
 
@@ -29,8 +28,7 @@ AM_WXCODE_INIT
 ## component's bakefile, then you can leave this section as is
 #####################################################################
 
-AM_OPTIONS_WXCONFIG
-AM_OPTIONS_WXPRESETS
+WXCODE_OPTIONS([debug,unicode,shared,toolkit,wxshared,wxversion])
 
 
 
@@ -44,10 +42,9 @@ AM_OPTIONS_WXPRESETS
 ## required options (version, build settings, etc)
 #####################################################################
 
-AM_WXCODE_CHECKS([2.4.0])       # 2.4.0 is the minimum required version of wx
-
+WXCODE_CHECKS([2.8.0], [core,base])      # we need at least wxWidgets 2.8 to work
 
 
 
 # end in a nice way the configure script
-AM_WXCODE_END
+WXCODE_END

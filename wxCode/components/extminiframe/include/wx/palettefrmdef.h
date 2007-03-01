@@ -12,6 +12,22 @@
 #ifndef _WX_PALETTEFRM_DEFS_H_
 #define _WX_PALETTEFRM_DEFS_H_
 
+// Defines for component version.
+// The following symbols should be updated for each new component release
+// since some kind of tests, like those of AM_WXCODE_CHECKFOR_COMPONENT_VERSION()
+// for "configure" scripts under unix, use them.
+#define wxEXTMINIFRAME_MAJOR          1
+#define wxEXTMINIFRAME_MINOR          6
+#define wxEXTMINIFRAME_RELEASE        0
+
+// For non-Unix systems (i.e. when building without a configure script),
+// users of this component can use the following macro to check if the
+// current version is at least major.minor.release
+#define wxCHECK_EXTMINIFRAME_VERSION(major,minor,release) \
+    (wxEXTMINIFRAME_MAJOR > (major) || \
+    (wxEXTMINIFRAME_MAJOR == (major) && wxEXTMINIFRAME_MINOR > (minor)) || \
+    (wxEXTMINIFRAME_MAJOR == (major) && wxEXTMINIFRAME_MINOR == (minor) && wxEXTMINIFRAME_RELEASE >= (release)))
+
 // Defines for shared builds.
 // Simple reference for using these macros and for writin components
 // which support shared builds:

@@ -2,8 +2,8 @@
  wxExtMiniFrame component info
  -----------------------------
 
- Website: http://wxcode.sourceforge.net/components/wxextminiframe 
- Version: 1.5 
+ Website: http://wxcode.sourceforge.net/components/wxextminiframe
+ Version: 1.6
  Description:
  This component provides a wxMainFrame window which is able to handle one or more
  wxExtMiniframes. wxExtMiniFrame extends the wxWidgets' standard wxMiniFrame adding 
@@ -37,33 +37,31 @@
 
  wxExtMiniFrame sample
  ---------------------
- 
+
  This is a little application (a modified version of the minimal sample taken from
  the wxWidgets library) that uses the wxExtMiniFrame class showing its features.
 
  For information about wxExtMiniFrame design, please read the sections below.
 
 
- 
+
 
  Installation
  ------------
 
  When building on win32, you can use the makefiles in the BUILD folder.
- In particular, when building wxscript on an autoconf-based system (like Linux/GNU-based systems),
- you have to create the makefile doing:
+ When building wxExtMiniFrame on Unix/Linux do:
 
-  cd build
   ./configure
   make
-        make install
- 
+  make install
+
  Type "./configure --help" for more info.
  For any problem, feel free to contact frm@users.sourceforge.net
 
- 
- 
- 
+
+
+
  DESIGN issues (that is, "How I wasted my time trying various approaches")
  -------------------------------------------------------------------------
  
@@ -78,13 +76,13 @@
                       of the top level window appearance to the "Window managers"; the
                          typical window managers are KDE, Gnome, Motif... the application have
                          no control over the toplevel window appearance including their titlebars)
- 
+
  Another first approach could also be to avoid accepting the focus on the 
  palette window and, even while the user is dragging/resizing the window,
  continuosly transfer focus from the palette to the main frame: like the
  previous solution, in this way flickering would produce a very nasty
  effect... (at least on Win32 where I tried it)
- 
+
 
 
 
@@ -153,6 +151,6 @@
  -------------
 
  Francesco Montorsi          frm@users.sourceforge.net
- 
+
  Thanks to Ajitha Pai <ajithapai@users.sourceforge.net> for the help.
 
