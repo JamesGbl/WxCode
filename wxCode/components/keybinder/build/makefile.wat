@@ -38,7 +38,7 @@ WX_UNICODE = 0
 WX_DEBUG = 1
 
 # Version of the wx library to build against. 
-WX_VERSION = 290
+WX_VERSION = 29
 
 # Use monolithic build of wxWidgets? [0,1]
 #   0 - Multilib
@@ -85,12 +85,12 @@ _BUILDDIR_SHARED_SUFFIX = _dll
 __keybinder_lib___depname =
 !ifeq WX_SHARED 0
 __keybinder_lib___depname = &
-	..\lib\wat_$(VAR_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_keybinder.lib
+	..\lib\wat_$(____keybinder_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_keybinder.lib
 !endif
 __keybinder_dll___depname =
 !ifeq WX_SHARED 1
 __keybinder_dll___depname = &
-	..\lib\wat_$(VAR_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_keybinder.dll
+	..\lib\wat_$(____keybinder_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_keybinder.dll
 !endif
 ____WX_SHARED =
 !ifeq WX_SHARED 0
@@ -144,12 +144,12 @@ VAR_1 =
 !ifeq WX_DEBUG 1
 VAR_1 = debug all
 !endif
-VAR_2 =
+____keybinder_3 =
 !ifeq WX_SHARED 0
-VAR_2 = lib
+____keybinder_3 = lib
 !endif
 !ifeq WX_SHARED 1
-VAR_2 = dll
+____keybinder_3 = dll
 !endif
 __WXLIB_CORE_NAME_p =
 !ifeq WX_DEBUG 0
@@ -252,15 +252,15 @@ KEYBINDER_LIB_CXXFLAGS = $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include $(VAR) &
 	$(VAR_0) -i=..\include $(CPPFLAGS) $(CXXFLAGS)
 KEYBINDER_LIB_OBJECTS =  &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\keybinder_lib_menuutils.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\keybinder_lib_keybinder.obj
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\keybinder_lib_keybinder.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\keybinder_lib_menuutils.obj
 KEYBINDER_DLL_CXXFLAGS = -bd $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include $(VAR) &
 	$(VAR_0) -i=..\include -dWXMAKINGDLL_KEYBINDER $(CPPFLAGS) $(CXXFLAGS)
 KEYBINDER_DLL_OBJECTS =  &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\keybinder_dll_menuutils.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\keybinder_dll_keybinder.obj
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\keybinder_dll_keybinder.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\keybinder_dll_menuutils.obj
 MINIMAL_CXXFLAGS = $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include $(VAR) &
@@ -283,9 +283,9 @@ clean : .SYMBOLIC
 	-if exist watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.lbc del watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.lbc
 	-if exist watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.ilk del watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.ilk
 	-if exist watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.pch del watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.pch
-	-if exist ..\lib\wat_$(VAR_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_keybinder.lib del ..\lib\wat_$(VAR_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_keybinder.lib
-	-if exist ..\lib\wat_$(VAR_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_keybinder.dll del ..\lib\wat_$(VAR_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_keybinder.dll
-	-if exist ..\lib\wat_$(VAR_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_keybinder.lib del ..\lib\wat_$(VAR_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_keybinder.lib
+	-if exist ..\lib\wat_$(____keybinder_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_keybinder.lib del ..\lib\wat_$(____keybinder_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_keybinder.lib
+	-if exist ..\lib\wat_$(____keybinder_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_keybinder.dll del ..\lib\wat_$(____keybinder_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_keybinder.dll
+	-if exist ..\lib\wat_$(____keybinder_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_keybinder.lib del ..\lib\wat_$(____keybinder_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_keybinder.lib
 	-if exist ..\sample\minimal.exe del ..\sample\minimal.exe
 
 test_for_selected_wxbuild :  
@@ -301,17 +301,17 @@ test_for_selected_wxbuild :
 	exit 1
 
 !ifeq WX_SHARED 0
-..\lib\wat_$(VAR_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_keybinder.lib :  $(KEYBINDER_LIB_OBJECTS) make_lib_dir_keybinder_lib
+..\lib\wat_$(____keybinder_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_keybinder.lib :  make_lib_dir_keybinder_lib  $(KEYBINDER_LIB_OBJECTS)
 	@%create watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\keybinder_lib.lbc
 	@for %i in ($(KEYBINDER_LIB_OBJECTS)) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\keybinder_lib.lbc +%i
 	wlib -q -p4096 -n -b $^@ @watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\keybinder_lib.lbc
 !endif
 
 make_lib_dir_keybinder_lib :  
-	if not exist ../lib/wat_$(VAR_2) mkdir ../lib/wat_$(VAR_2)
+	if not exist ..\lib\wat_$(____keybinder_3) mkdir ..\lib\wat_$(____keybinder_3)
 
 !ifeq WX_SHARED 1
-..\lib\wat_$(VAR_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_keybinder.dll :  $(KEYBINDER_DLL_OBJECTS) make_lib_dir_keybinder_dll
+..\lib\wat_$(____keybinder_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_keybinder.dll :  make_lib_dir_keybinder_dll  $(KEYBINDER_DLL_OBJECTS)
 	@%create watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\keybinder_dll.lbc
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\keybinder_dll.lbc option quiet
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\keybinder_dll.lbc name $^@
@@ -322,11 +322,11 @@ make_lib_dir_keybinder_lib :
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\keybinder_dll.lbc
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\keybinder_dll.lbc system nt_dll
 	wlink @watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\keybinder_dll.lbc
-	wlib -q -n -b ..\lib\wat_$(VAR_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_keybinder.lib +$^@
+	wlib -q -n -b ..\lib\wat_$(____keybinder_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_keybinder.lib +$^@
 !endif
 
 make_lib_dir_keybinder_dll :  
-	if not exist ../lib/wat_$(VAR_2) mkdir ../lib/wat_$(VAR_2)
+	if not exist ..\lib\wat_$(____keybinder_3) mkdir ..\lib\wat_$(____keybinder_3)
 
 ..\sample\minimal.exe :  $(MINIMAL_OBJECTS) make_sample_dir_minimal  $(__keybinder_lib___depname)
 	@%create watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\minimal.lbc
@@ -335,7 +335,7 @@ make_lib_dir_keybinder_dll :
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\minimal.lbc option caseexact
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\minimal.lbc $(LDFLAGS) libpath $(WX_DIR)$(WXLIBPATH) $(VAR_1) libpath ..$(WXLIBPATH) system nt_win ref '_WinMain@16'
 	@for %i in ($(MINIMAL_OBJECTS)) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\minimal.lbc file %i
-	@for %i in ( ..\lib\wat_$(VAR_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_keybinder.lib $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\minimal.lbc library %i
+	@for %i in ( ..\lib\wat_$(____keybinder_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_keybinder.lib $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\minimal.lbc library %i
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\minimal.lbc option resource=
 	@for %i in () do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\minimal.lbc option stack=%i
 	wlink @watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\minimal.lbc
@@ -343,16 +343,16 @@ make_lib_dir_keybinder_dll :
 make_sample_dir_minimal :  
 	if not exist ../sample mkdir../sample
 
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\keybinder_lib_menuutils.obj :  .AUTODEPEND ..\src\menuutils.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(KEYBINDER_LIB_CXXFLAGS) $<
-
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\keybinder_lib_keybinder.obj :  .AUTODEPEND ..\src\keybinder.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(KEYBINDER_LIB_CXXFLAGS) $<
 
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\keybinder_dll_menuutils.obj :  .AUTODEPEND ..\src\menuutils.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(KEYBINDER_DLL_CXXFLAGS) $<
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\keybinder_lib_menuutils.obj :  .AUTODEPEND ..\src\menuutils.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(KEYBINDER_LIB_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\keybinder_dll_keybinder.obj :  .AUTODEPEND ..\src\keybinder.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(KEYBINDER_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\keybinder_dll_menuutils.obj :  .AUTODEPEND ..\src\menuutils.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(KEYBINDER_DLL_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\minimal_minimal.obj :  .AUTODEPEND ..\sample\minimal.cpp

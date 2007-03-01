@@ -72,14 +72,22 @@ WX_CONFIG_FLAGS = $(WX_CONFIG_DEBUG_FLAG) $(WX_CONFIG_UNICODE_FLAG) \
 KEYBINDER_LIB_CXXFLAGS = $(VAR) $(VAR_1) -I../include `$(WX_CONFIG) --cxxflags \
 	$(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 KEYBINDER_LIB_OBJECTS =  \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/keybinder_lib_menuutils.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/keybinder_lib_keybinder.o
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/keybinder_lib_keybinder.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/keybinder_lib_menuutils.o
+KEYBINDER_LIB_HEADERS =  \
+	include/wx/keybinder.h \
+	include/wx/keybinderdef.h \
+	include/wx/menuutils.h
 KEYBINDER_DLL_CXXFLAGS = $(VAR) $(VAR_1) -I../include -DWXMAKINGDLL_KEYBINDER \
 	-fPIC -DPIC `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) \
 	$(CXXFLAGS)
 KEYBINDER_DLL_OBJECTS =  \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/keybinder_dll_menuutils.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/keybinder_dll_keybinder.o
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/keybinder_dll_keybinder.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/keybinder_dll_menuutils.o
+KEYBINDER_DLL_HEADERS =  \
+	include/wx/keybinder.h \
+	include/wx/keybinderdef.h \
+	include/wx/menuutils.h
 MINIMAL_CXXFLAGS = $(VAR) $(VAR_1) -I../include `$(WX_CONFIG) --cxxflags \
 	$(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
@@ -189,7 +197,7 @@ test_for_selected_wxbuild:
 	@$(WX_CONFIG) $(WX_CONFIG_FLAGS)
 
 ifeq ($(WX_SHARED),0)
-../lib/gcc_$(__keybinder)/libwxcode_$(WX_PORT)_keybinder-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a: $(KEYBINDER_LIB_OBJECTS) make_lib_dir_keybinder_lib
+../lib/gcc_$(__keybinder)/libwxcode_$(WX_PORT)_keybinder-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a: make_lib_dir_keybinder_lib  $(KEYBINDER_LIB_OBJECTS)
 	rm -f $@
 	$(AR) rcu $@ $(KEYBINDER_LIB_OBJECTS)
 	$(RANLIB) $@
@@ -212,7 +220,7 @@ make_lib_dir_keybinder_lib:
 ifeq ($(WX_SHARED),0)
 install_keybinder_lib_headers: 
 	$(INSTALL) -d $(DESTDIR)$(prefix)
-	for f in  include/wx/keybinder.h include/wx/keybinderdef.h include/wx/menuutils.h; do \
+	for f in $(KEYBINDER_LIB_HEADERS); do \
 	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
 	$(INSTALL) -d $(DESTDIR)$(prefix)/`dirname $$f`; \
 	fi; \
@@ -222,13 +230,13 @@ endif
 
 ifeq ($(WX_SHARED),0)
 uninstall_keybinder_lib_headers: 
-	for f in  include/wx/keybinder.h include/wx/keybinderdef.h include/wx/menuutils.h; do \
+	for f in $(KEYBINDER_LIB_HEADERS); do \
 	rm -f $(DESTDIR)$(prefix)/$$f; \
 	done
 endif
 
 ifeq ($(WX_SHARED),1)
-../lib/gcc_$(__keybinder)/libwxcode_$(WX_PORT)_keybinder-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so: $(KEYBINDER_DLL_OBJECTS) make_lib_dir_keybinder_dll
+../lib/gcc_$(__keybinder)/libwxcode_$(WX_PORT)_keybinder-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so: make_lib_dir_keybinder_dll  $(KEYBINDER_DLL_OBJECTS)
 	$(CXX) -shared -fPIC -o $@ $(KEYBINDER_DLL_OBJECTS) $(LDFLAGS) $(VAR_1) -L../lib  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs core,base`
 endif
 
@@ -251,7 +259,7 @@ make_lib_dir_keybinder_dll:
 ifeq ($(WX_SHARED),1)
 install_keybinder_dll_headers: 
 	$(INSTALL) -d $(DESTDIR)$(prefix)
-	for f in  include/wx/keybinder.h include/wx/keybinderdef.h include/wx/menuutils.h; do \
+	for f in $(KEYBINDER_DLL_HEADERS); do \
 	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
 	$(INSTALL) -d $(DESTDIR)$(prefix)/`dirname $$f`; \
 	fi; \
@@ -261,7 +269,7 @@ endif
 
 ifeq ($(WX_SHARED),1)
 uninstall_keybinder_dll_headers: 
-	for f in  include/wx/keybinder.h include/wx/keybinderdef.h include/wx/menuutils.h; do \
+	for f in $(KEYBINDER_DLL_HEADERS); do \
 	rm -f $(DESTDIR)$(prefix)/$$f; \
 	done
 endif
@@ -272,16 +280,16 @@ endif
 make_sample_dir_minimal: 
 	@mkdir -p ../sample
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/keybinder_lib_menuutils.o: ../src/menuutils.cpp
-	$(CXX) -c -o $@ $(KEYBINDER_LIB_CXXFLAGS) $(CPPDEPS) $<
-
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/keybinder_lib_keybinder.o: ../src/keybinder.cpp
 	$(CXX) -c -o $@ $(KEYBINDER_LIB_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/keybinder_dll_menuutils.o: ../src/menuutils.cpp
-	$(CXX) -c -o $@ $(KEYBINDER_DLL_CXXFLAGS) $(CPPDEPS) $<
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/keybinder_lib_menuutils.o: ../src/menuutils.cpp
+	$(CXX) -c -o $@ $(KEYBINDER_LIB_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/keybinder_dll_keybinder.o: ../src/keybinder.cpp
+	$(CXX) -c -o $@ $(KEYBINDER_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/keybinder_dll_menuutils.o: ../src/menuutils.cpp
 	$(CXX) -c -o $@ $(KEYBINDER_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/minimal_minimal.o: ../sample/minimal.cpp

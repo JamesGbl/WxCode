@@ -4,6 +4,6 @@
 <!-- Date: 9/10/2004                                                -->
 
 <bakefile-gen>
-    <include file="../../../build/bakefiles/wxcode.bkgen"/>
+    <include file="../../../build/bakefiles/presets/wxcode.bkgen"/>
     <input>keybinder.bkl</input>
 </bakefile-gen>

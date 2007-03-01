@@ -50,13 +50,21 @@ DESTDIR =
 KEYBINDER_LIB_CXXFLAGS = -I$(srcdir)/include $(WX_CXXFLAGS) $(CPPFLAGS) \
 	$(CXXFLAGS)
 KEYBINDER_LIB_OBJECTS =  \
-	keybinder_lib_menuutils.o \
-	keybinder_lib_keybinder.o
+	keybinder_lib_keybinder.o \
+	keybinder_lib_menuutils.o
+KEYBINDER_LIB_HEADERS =  \
+	include/wx/keybinder.h \
+	include/wx/keybinderdef.h \
+	include/wx/menuutils.h
 KEYBINDER_DLL_CXXFLAGS = -I$(srcdir)/include -DWXMAKINGDLL_KEYBINDER \
 	$(PIC_FLAG) $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 KEYBINDER_DLL_OBJECTS =  \
-	keybinder_dll_menuutils.o \
-	keybinder_dll_keybinder.o
+	keybinder_dll_keybinder.o \
+	keybinder_dll_menuutils.o
+KEYBINDER_DLL_HEADERS =  \
+	include/wx/keybinder.h \
+	include/wx/keybinderdef.h \
+	include/wx/menuutils.h
 MINIMAL_CXXFLAGS = -I$(srcdir)/include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	minimal_minimal.o \
@@ -185,7 +193,7 @@ distclean: clean
 
 @COND_WX_SHARED_0@install_keybinder_lib_headers: 
 @COND_WX_SHARED_0@	$(INSTALL_DIR) $(DESTDIR)$(prefix)
-@COND_WX_SHARED_0@	for f in  include/wx/keybinder.h include/wx/keybinderdef.h include/wx/menuutils.h; do \
+@COND_WX_SHARED_0@	for f in $(KEYBINDER_LIB_HEADERS); do \
 @COND_WX_SHARED_0@	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
 @COND_WX_SHARED_0@	$(INSTALL_DIR) $(DESTDIR)$(prefix)/`dirname $$f`; \
 @COND_WX_SHARED_0@	fi; \
@@ -193,7 +201,7 @@ distclean: clean
 @COND_WX_SHARED_0@	done
 
 @COND_WX_SHARED_0@uninstall_keybinder_lib_headers: 
-@COND_WX_SHARED_0@	for f in  include/wx/keybinder.h include/wx/keybinderdef.h include/wx/menuutils.h; do \
+@COND_WX_SHARED_0@	for f in $(KEYBINDER_LIB_HEADERS); do \
 @COND_WX_SHARED_0@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_WX_SHARED_0@	done
 
@@ -215,7 +223,7 @@ distclean: clean
 
 @COND_WX_SHARED_1@install_keybinder_dll_headers: 
 @COND_WX_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(prefix)
-@COND_WX_SHARED_1@	for f in  include/wx/keybinder.h include/wx/keybinderdef.h include/wx/menuutils.h; do \
+@COND_WX_SHARED_1@	for f in $(KEYBINDER_DLL_HEADERS); do \
 @COND_WX_SHARED_1@	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
 @COND_WX_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(prefix)/`dirname $$f`; \
 @COND_WX_SHARED_1@	fi; \
@@ -223,7 +231,7 @@ distclean: clean
 @COND_WX_SHARED_1@	done
 
 @COND_WX_SHARED_1@uninstall_keybinder_dll_headers: 
-@COND_WX_SHARED_1@	for f in  include/wx/keybinder.h include/wx/keybinderdef.h include/wx/menuutils.h; do \
+@COND_WX_SHARED_1@	for f in $(KEYBINDER_DLL_HEADERS); do \
 @COND_WX_SHARED_1@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_WX_SHARED_1@	done
 
@@ -236,17 +244,17 @@ $(srcdir)/sample/minimal$(EXEEXT): $(MINIMAL_OBJECTS) make_sample_dir_minimal  $
 make_sample_dir_minimal: 
 	@mkdir -p $(srcdir)/sample
 
-keybinder_lib_menuutils.o: $(srcdir)/src/menuutils.cpp
-	$(CXXC) -c -o $@ $(KEYBINDER_LIB_CXXFLAGS) $(srcdir)/src/menuutils.cpp
-
 keybinder_lib_keybinder.o: $(srcdir)/src/keybinder.cpp
 	$(CXXC) -c -o $@ $(KEYBINDER_LIB_CXXFLAGS) $(srcdir)/src/keybinder.cpp
 
-keybinder_dll_menuutils.o: $(srcdir)/src/menuutils.cpp
-	$(CXXC) -c -o $@ $(KEYBINDER_DLL_CXXFLAGS) $(srcdir)/src/menuutils.cpp
+keybinder_lib_menuutils.o: $(srcdir)/src/menuutils.cpp
+	$(CXXC) -c -o $@ $(KEYBINDER_LIB_CXXFLAGS) $(srcdir)/src/menuutils.cpp
 
 keybinder_dll_keybinder.o: $(srcdir)/src/keybinder.cpp
 	$(CXXC) -c -o $@ $(KEYBINDER_DLL_CXXFLAGS) $(srcdir)/src/keybinder.cpp
+
+keybinder_dll_menuutils.o: $(srcdir)/src/menuutils.cpp
+	$(CXXC) -c -o $@ $(KEYBINDER_DLL_CXXFLAGS) $(srcdir)/src/menuutils.cpp
 
 minimal_minimal.o: $(srcdir)/sample/minimal.cpp
 	$(CXXC) -c -o $@ $(MINIMAL_CXXFLAGS) $(srcdir)/sample/minimal.cpp
