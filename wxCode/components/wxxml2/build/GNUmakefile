@@ -69,8 +69,9 @@ WX_VERSION_MINOR = $(shell echo $(WX_VERSION) | cut -c2,2)
 WX_CONFIG_FLAGS = $(WX_CONFIG_DEBUG_FLAG) $(WX_CONFIG_UNICODE_FLAG) \
 	$(WX_CONFIG_SHARED_FLAG) --toolkit=$(WX_PORT) \
 	--version=$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)
-WXXML2_LIB_CXXFLAGS = $(VAR) $(VAR_1) -I../include `$(WX_CONFIG) --cxxflags \
-	$(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
+WXXML2_LIB_CXXFLAGS = $(VAR) $(VAR_1) -I../include \
+	-I../thirdparty/libxml2/include -I../thirdparty/libiconv/include \
+	`$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 WXXML2_LIB_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxxml2_lib_dtd.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxxml2_lib_xml2.o
@@ -78,7 +79,8 @@ WXXML2_LIB_HEADERS =  \
 	include/wx/xml2def.h \
 	include/wx/dtd.h \
 	include/wx/xml2.h
-WXXML2_DLL_CXXFLAGS = $(VAR) $(VAR_1) -I../include -DWXMAKINGDLL_WXXML2 -fPIC \
+WXXML2_DLL_CXXFLAGS = $(VAR) $(VAR_1) -I../include -DWXMAKINGDLL_WXXML2 \
+	-I../thirdparty/libxml2/include -I../thirdparty/libiconv/include -fPIC \
 	-DPIC `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 WXXML2_DLL_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxxml2_dll_dtd.o \
@@ -87,7 +89,8 @@ WXXML2_DLL_HEADERS =  \
 	include/wx/xml2def.h \
 	include/wx/dtd.h \
 	include/wx/xml2.h
-MINIMAL_CXXFLAGS = $(VAR) $(VAR_1) -I../include `$(WX_CONFIG) --cxxflags \
+MINIMAL_CXXFLAGS = $(VAR) $(VAR_1) -I../include -I../thirdparty/libxml2/include \
+	-I../thirdparty/libiconv/include `$(WX_CONFIG) --cxxflags \
 	$(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/minimal_minimal.o
@@ -196,7 +199,7 @@ test_for_selected_wxbuild:
 setupdep: 
 
 ifeq ($(WX_SHARED),0)
-../lib/gcc_$(__wxxml2)/libwxcode_$(WX_PORT)_wxxml2-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a: $(WXXML2_LIB_OBJECTS) make_lib_dir_wxxml2_lib
+../lib/gcc_$(__wxxml2)/libwxcode_$(WX_PORT)_wxxml2-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a: $(WXXML2_LIB_OBJECTS) make_lib_dir_wxxml2_lib setupdep
 	rm -f $@
 	$(AR) rcu $@ $(WXXML2_LIB_OBJECTS)
 	$(RANLIB) $@
@@ -235,8 +238,8 @@ uninstall_wxxml2_lib_headers:
 endif
 
 ifeq ($(WX_SHARED),1)
-../lib/gcc_$(__wxxml2)/libwxcode_$(WX_PORT)_wxxml2-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so: $(WXXML2_DLL_OBJECTS) make_lib_dir_wxxml2_dll
-	$(CXX) -shared -fPIC -o $@ $(WXXML2_DLL_OBJECTS) $(LDFLAGS) $(VAR_1) -L../lib  -llibxml2 -liconv `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs core,base`
+../lib/gcc_$(__wxxml2)/libwxcode_$(WX_PORT)_wxxml2-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so: $(WXXML2_DLL_OBJECTS) make_lib_dir_wxxml2_dll setupdep
+	$(CXX) -shared -fPIC -o $@ $(WXXML2_DLL_OBJECTS) $(LDFLAGS) $(VAR_1) -L../lib -L../thirdparty/libxml2/lib -L../thirdparty/libiconv/lib  -lxml2 `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs core,base`
 endif
 
 ifeq ($(WX_SHARED),1)
@@ -273,8 +276,8 @@ uninstall_wxxml2_dll_headers:
 	done
 endif
 
-../sample/minimal: $(MINIMAL_OBJECTS) make_sample_dir_minimal $(__wxxml2_lib___depname)
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) $(VAR_1) -L../lib   ../lib/gcc_$(__wxxml2)/libwxcode_$(WX_PORT)_wxxml2-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a -llibxml2 -liconv `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs core,base`
+../sample/minimal: $(MINIMAL_OBJECTS) setupdep make_sample_dir_minimal $(__wxxml2_lib___depname)
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) $(VAR_1) -L../lib  -L../thirdparty/libxml2/lib -L../thirdparty/libiconv/lib  ../lib/gcc_$(__wxxml2)/libwxcode_$(WX_PORT)_wxxml2-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a -lxml2  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs core,base`
 
 make_sample_dir_minimal: 
 	@mkdir -p ../sample

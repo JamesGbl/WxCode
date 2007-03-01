@@ -68,7 +68,7 @@
     </set>
 
     <template id="xmlbasic">
-        <if cond="FORMAT not in ['autoconf', 'gnu']">
+        <if cond="FORMAT not in ['autoconf']">
             <depends>setupdep</depends>
             <stdlib>$(LIBXML2_DIR)</stdlib>
             <stdlib>$(ICONV_DIR)</stdlib>
@@ -78,9 +78,9 @@
 
     <!-- the libraries required by wxXml2 -->
     <define-tag name="xml2libs" rules="lib,dll,exe">
-        <if cond="FORMAT=='mingw' or FORMAT=='autoconf'"><sys-lib>xml2</sys-lib></if>
-        <if cond="FORMAT!='mingw' and FORMAT!='autoconf'"><sys-lib>libxml2</sys-lib></if>
-        <if cond="FORMAT!='autoconf'"><sys-lib>iconv</sys-lib></if>
+        <if cond="FORMAT=='mingw' or FORMAT=='autoconf' or FORMAT=='gnu'"><sys-lib>xml2</sys-lib></if>
+        <if cond="FORMAT!='mingw' and FORMAT!='autoconf' and FORMAT!='gnu'"><sys-lib>libxml2</sys-lib></if>
+        <if cond="FORMAT!='autoconf' and FORMAT!='gnu'"><sys-lib>iconv</sys-lib></if>
     </define-tag>
 
     <!-- the wxXml2 library -->
