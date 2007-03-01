@@ -57,13 +57,8 @@
 	<Expand folder="/Others"/>
 </CodeBlocks_layout_file>
 [Editors]
-<<<<<<< wxCommander.layout
-Order=
+Order=4,5,3
 Focused=4
-=======
-Order=
-Focused=4
->>>>>>> 1.10
 [Editor_0]
 Open=0
 Top=0
@@ -82,50 +77,21 @@ CursorRow=1
 TopLine=1
 LeftChar=1
 [Editor_3]
-Open=0
+Open=1
 Top=0
-<<<<<<< wxCommander.layout
-CursorCol=1
-CursorRow=37
-=======
-CursorCol=63
-CursorRow=208
->>>>>>> 1.10
-<<<<<<< wxCommander.layout
-<<<<<<< wxCommander.layout
-TopLine=169
-=======
+CursorCol=28
+CursorRow=176
 TopLine=189
->>>>>>> 1.10
-=======
-TopLine=166
->>>>>>> 1.6
 LeftChar=1
 [Editor_4]
-<<<<<<< wxCommander.layout
-<<<<<<< wxCommander.layout
-Open=0
-Top=0
-CursorCol=33
-CursorRow=168
-TopLine=157
-=======
-Open=0
-Top=0
+Open=1
+Top=1
 CursorCol=1
-CursorRow=1111
-TopLine=1
->>>>>>> 1.10
-=======
-Open=0
-Top=0
-CursorCol=20
-CursorRow=443
-TopLine=427
->>>>>>> 1.6
+CursorRow=1133
+TopLine=1103
 LeftChar=1
 [Editor_5]
-Open=0
+Open=1
 Top=0
 CursorCol=1
 CursorRow=1
@@ -169,83 +135,32 @@ LeftChar=1
 [Editor_11]
 Open=0
 Top=0
-<<<<<<< wxCommander.layout
-<<<<<<< wxCommander.layout
-CursorCol=30
-CursorRow=115
-TopLine=100
-=======
-CursorCol=2
-CursorRow=294
-TopLine=246
->>>>>>> 1.10
-=======
 CursorCol=8
 CursorRow=261
 TopLine=236
->>>>>>> 1.6
 LeftChar=1
 [Editor_12]
 Open=0
 Top=0
-<<<<<<< wxCommander.layout
 CursorCol=1
 CursorRow=9
 TopLine=1
-LeftChar=1
-=======
-CursorCol=1
-CursorRow=9
-TopLine=1
-LeftChar=1
->>>>>>> 1.10
-[Editor_13]
-Open=0
-Top=0
-<<<<<<< wxCommander.layout
-CursorCol=8
-CursorRow=9
-TopLine=1
-=======
-CursorCol=53
-CursorRow=57
-TopLine=1
->>>>>>> 1.10
 LeftChar=1
 [Editor_14]
 Open=0
 Top=0
-<<<<<<< wxCommander.layout
 CursorCol=6
 CursorRow=53
 TopLine=30
-=======
-CursorCol=95
-CursorRow=79
-TopLine=3
->>>>>>> 1.10
 LeftChar=1
 [Editor_15]
 Open=0
 Top=0
-<<<<<<< wxCommander.layout
-<<<<<<< wxCommander.layout
 CursorCol=26
 CursorRow=15
 TopLine=49
-=======
-CursorCol=14
-CursorRow=157
-TopLine=1
->>>>>>> 1.10
-=======
-CursorCol=31
-CursorRow=3
-TopLine=1
->>>>>>> 1.6
 LeftChar=1
 [Editor_16]
-<<<<<<< wxCommander.layout
 Open=0
 Top=0
 CursorCol=1
@@ -254,9 +169,6 @@ TopLine=1
 LeftChar=1
 [Editor_17]
 Open=0
-=======
-Open=0
->>>>>>> 1.10
 Top=0
 CursorCol=2
 CursorRow=21
@@ -269,3 +181,6 @@ CursorCol=4
 CursorRow=41
 TopLine=1
 LeftChar=1
+[Editor_13]
+Open=0
+Top=0
