@@ -619,7 +619,8 @@ MyDialog::MyDialog(wxKeyProfileArray &prof,
 	// 2) we can use wxKeyConfigPanel::ImportKeyBinderCmd
 
 	// STEP #1: create a simple wxKeyConfigPanel
-	m_p = new wxKeyConfigPanel(this, mode);
+	m_p = new wxKeyConfigPanel(this, wxID_ANY, wxDefaultPosition, 
+                               wxDefaultSize, wxTAB_TRAVERSAL|mode);
 
 	// STEP #2: add a profile array to the wxKeyConfigPanel
 	m_p->AddProfiles(prof);
