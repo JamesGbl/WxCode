@@ -34,6 +34,20 @@
 
 
 
+ ChangeLog
+ ---------
+
+ 2.1
+
+     - updated to the new bakefile build system,
+     - revised code for compatibility with wxWidgets 2.8
+     - now wxKeyConfigPanel does not use any "build mode" but rather stores
+       the wxKEYBINDER_* flags into the wxWindow style
+     - now debug messages are logged only if wxKEYBINDER_DEBUG_MSG is defined to 1
+     - now wxKeyConfigPanel provides a regular Create() function like all other
+       wxWidgets GUI controls/windows.
+
+
 
  Known bugs
  ----------
