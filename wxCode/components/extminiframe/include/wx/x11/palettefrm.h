@@ -8,15 +8,8 @@
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 
-
-
 #ifndef _WX_PALETTEFRM_H_
 #define _WX_PALETTEFRM_H_
-
-#if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
-    #pragma interface "palettefrm.h"
-#endif
-
 
 // X11 stuff
 // ------------------
@@ -67,59 +60,59 @@ void wxCreateWMClientLeader(Display *, int);
 // A extminiframe window
 class WXDLLEXPORT wxExtMiniFrame : public wxExtMiniFrameBase
 {
-protected:		// internal utilities
+protected:      // internal utilities
 
-	// TRUE if the user is moving the window
-	bool m_bDragging;
-	
-	// if m_bDragging is TRUE, this is the point, in window's coord., where the user
-	// clicked on the title to drag the window.
-	wxPoint m_ptDragAnchor;
-	
-	// the most important function: this one does all the hard work
-	// setting special X11 atoms and properties which allow this
-	// window to draw the decorations itself (usually they are
-	// drawn by the Window Manager).
-	// NOTE: this cannot be a global/static function nor it can take
-	//       the window to set as toolbar as argument because it
-	//       needs to access some protected variables stored in
-	//       wxTopLevelWindowX11
-	void SetAsToolbar(Display *d, Window wnd, int screen);
+    // TRUE if the user is moving the window
+    bool m_bDragging;
+
+    // if m_bDragging is TRUE, this is the point, in window's coord., where the user
+    // clicked on the title to drag the window.
+    wxPoint m_ptDragAnchor;
+
+    // the most important function: this one does all the hard work
+    // setting special X11 atoms and properties which allow this
+    // window to draw the decorations itself (usually they are
+    // drawn by the Window Manager).
+    // NOTE: this cannot be a global/static function nor it can take
+    //       the window to set as toolbar as argument because it
+    //       needs to access some protected variables stored in
+    //       wxTopLevelWindowX11
+    void SetAsToolbar(Display *d, Window wnd, int screen);
 
 public:
 
-	// Default constructor.
-	wxExtMiniFrame() {}
-	wxExtMiniFrame(
-		wxMainFrameBase *parent,
-		wxWindowID id,
-		const wxString &title = wxT("wxExtMiniFrame"),
-		const wxPoint& pos = wxDefaultPosition,
-		const wxSize& size = wxDefaultSize,
-		long style = wxEXTMINIFRM_DEFAULT_STYLE,
-		const wxString& name = wxT("wxExtMiniFrame"));
+    // Default constructor.
+    wxExtMiniFrame() {}
+    wxExtMiniFrame(
+        wxMainFrameBase *parent,
+        wxWindowID id,
+        const wxString &title = wxT("wxExtMiniFrame"),
+        const wxPoint& pos = wxDefaultPosition,
+        const wxSize& size = wxDefaultSize,
+        long style = wxEXTMINIFRM_DEFAULT_STYLE,
+        const wxString& name = wxT("wxExtMiniFrame"));
 
-	bool Create(wxMainFrameBase *parent,
-			wxWindowID id,
-			const wxString& title,
-			const wxPoint& pos = wxDefaultPosition,
-			const wxSize& size = wxDefaultSize,
-			long style = wxEXTMINIFRM_DEFAULT_STYLE,
-			const wxString& name = wxT("wxExtMiniFrame"));
+    bool Create(wxMainFrameBase *parent,
+            wxWindowID id,
+            const wxString& title,
+            const wxPoint& pos = wxDefaultPosition,
+            const wxSize& size = wxDefaultSize,
+            long style = wxEXTMINIFRM_DEFAULT_STYLE,
+            const wxString& name = wxT("wxExtMiniFrame"));
 
-	
-	// these three functions are required to implement ex-novo
-	// the drag system to allow the user to move the paletteframe
-	virtual bool OnPosLeftDown(const wxPoint &pos);
-	virtual bool OnPosLeftUp(const wxPoint &pos);
-	virtual void OnMotion(wxMouseEvent &event);	
-	
-	// this function requires some 'hacking'
-	virtual void Roll();
-	
+
+    // these three functions are required to implement ex-novo
+    // the drag system to allow the user to move the paletteframe
+    virtual bool OnPosLeftDown(const wxPoint &pos);
+    virtual bool OnPosLeftUp(const wxPoint &pos);
+    virtual void OnMotion(wxMouseEvent &event);	
+
+    // this function requires some 'hacking'
+    virtual void Roll();
+
 private:
-	DECLARE_DYNAMIC_CLASS( wxExtMiniFrame )
+    DECLARE_DYNAMIC_CLASS( wxExtMiniFrame )
 };
 
 
-#endif		// _WX_PALETTEFRM_BASE_H_
+#endif      // _WX_PALETTEFRM_BASE_H_

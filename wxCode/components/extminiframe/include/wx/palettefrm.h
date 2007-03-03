@@ -8,11 +8,8 @@
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 
-
-
 #ifndef _WX_PALETTEFRM_BASE_H_
 #define _WX_PALETTEFRM_BASE_H_
-
 
 // required includes
 #include "wx/palettefrmdef.h"
@@ -20,19 +17,8 @@
 #include <wx/frame.h>
 
 
-
 // wxExtMiniFrame defines
 // ----------------------
-
-// this is done to ensure compability with wxWidgets < 2.5.1
-#ifndef wxCLOSE_BOX
-#define wxCLOSE_BOX                     wxSYSTEM_MENU
-#endif
-
-#ifndef wxFULL_REPAINT_ON_RESIZE
-#define wxFULL_REPAINT_ON_RESIZE        0 /* expand to nothing */
-#endif
-
 
 // the space left between two minibuttons in a wxExtMiniFrame caption
 #define wxEXTMINIFRM_BTN_GAP            2

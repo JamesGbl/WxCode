@@ -10,12 +10,6 @@
 /////////////////////////////////////////////////////////////////////////////
 
 
-
-
-#if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
-    #pragma implementation "palettefrm.h"
-#endif
-
 // Include some wxWidgets headers
 #include "wx/frame.h"
 #include "wx/log.h"
@@ -31,8 +25,6 @@
 #include <gdk/gdk.h>
 #include <gdk/gdkprivate.h>
 #include <gdk/gdkx.h>
-
-
 
 
 // wxWidgets RTTI system

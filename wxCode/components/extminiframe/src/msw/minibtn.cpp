@@ -54,9 +54,9 @@ IMPLEMENT_DYNAMIC_CLASS(wxCollapseBox, wxMiniButton)
 
 void wxCloseBox::Draw(wxDC &dc, int x, int y)
 {
-	wxEXTMF_LOG(wxT("wxCloseBox::Draw() at %d;%d"), x, y);
+    wxEXTMF_LOG(wxT("wxCloseBox::Draw() at %d;%d"), x, y);
 
-	DrawMSWStdButton(dc, x, y, DFCS_CAPTIONCLOSE);
+    DrawMSWStdButton(dc, x, y, DFCS_CAPTIONCLOSE);
 }
 
 
@@ -66,11 +66,11 @@ void wxCloseBox::Draw(wxDC &dc, int x, int y)
 
 void wxMaximizeBox::Draw(wxDC &dc, int x, int y)
 {
-	wxEXTMF_LOG(wxT("wxMaximizeBox::Draw()"));
-	
-	// draw the maximize or restore box...
-	DrawMSWStdButton(dc, x, y, (GetParent()->IsRolled() ?
-					DFCS_CAPTIONRESTORE : DFCS_CAPTIONMAX));
+    wxEXTMF_LOG(wxT("wxMaximizeBox::Draw()"));
+    
+    // draw the maximize or restore box...
+    DrawMSWStdButton(dc, x, y, (GetParent()->IsRolled() ?
+                    DFCS_CAPTIONRESTORE : DFCS_CAPTIONMAX));
 }
 
 
@@ -80,9 +80,9 @@ void wxMaximizeBox::Draw(wxDC &dc, int x, int y)
 
 void wxMinimizeBox::Draw(wxDC &dc, int x, int y)
 {
-	wxEXTMF_LOG(wxT("wxMinimizeBox::Draw()"));
+    wxEXTMF_LOG(wxT("wxMinimizeBox::Draw()"));
 
-	DrawMSWStdButton(dc, x, y, DFCS_CAPTIONMIN);
+    DrawMSWStdButton(dc, x, y, DFCS_CAPTIONMIN);
 }
 
 

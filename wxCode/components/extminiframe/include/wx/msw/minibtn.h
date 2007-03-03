@@ -9,7 +9,6 @@
 /////////////////////////////////////////////////////////////////////////////
 
 
-
 #ifndef _WX_MINIBTN_H_
 #define _WX_MINIBTN_H_
 
@@ -21,17 +20,17 @@
 class WXDLLIMPEXP_WXEXTMINIFRAME wxCloseBox : public wxCloseBoxBase
 {
 protected:
-	void Draw(wxDC &, int, int);
+    void Draw(wxDC &, int, int);
 
 public:
 
-	wxCloseBox() {}		// required by wxWidgets RTTI system
-	wxCloseBox(wxExtMiniFrameBase *parent, int bSmall = -1) :
-	  wxCloseBoxBase(parent, bSmall) {}
-	virtual ~wxCloseBox() {}
+    wxCloseBox() {}     // required by wxWidgets RTTI system
+    wxCloseBox(wxExtMiniFrameBase *parent, int bSmall = -1) :
+        wxCloseBoxBase(parent, bSmall) {}
+    virtual ~wxCloseBox() {}
 
 private:
-	DECLARE_DYNAMIC_CLASS( wxCloseBox )
+    DECLARE_DYNAMIC_CLASS( wxCloseBox )
 };
 
 
@@ -42,17 +41,17 @@ private:
 class WXDLLIMPEXP_WXEXTMINIFRAME wxMaximizeBox : public wxMaximizeBoxBase
 {
 protected:
-	void Draw(wxDC &, int, int);
+    void Draw(wxDC &, int, int);
 
 public:
 
-	wxMaximizeBox() {}		// required by wxWidgets RTTI system
-	wxMaximizeBox(wxExtMiniFrameBase *parent, int bSmall = -1) :
-	  wxMaximizeBoxBase(parent, bSmall) {}
-	virtual ~wxMaximizeBox() {}
+    wxMaximizeBox() {}      // required by wxWidgets RTTI system
+    wxMaximizeBox(wxExtMiniFrameBase *parent, int bSmall = -1) :
+        wxMaximizeBoxBase(parent, bSmall) {}
+    virtual ~wxMaximizeBox() {}
 
 private:
-	DECLARE_DYNAMIC_CLASS( wxMaximizeBox )
+    DECLARE_DYNAMIC_CLASS( wxMaximizeBox )
 };
 
 
@@ -63,17 +62,17 @@ private:
 class WXDLLIMPEXP_WXEXTMINIFRAME wxMinimizeBox : public wxMinimizeBoxBase
 {
 protected:
-	void Draw(wxDC &, int, int);
+    void Draw(wxDC &, int, int);
 
 public:
 
-	wxMinimizeBox() {}		// required by wxWidgets RTTI system
-	wxMinimizeBox(wxExtMiniFrameBase *parent, int bSmall = -1) :
-	  wxMinimizeBoxBase(parent, bSmall) {}
-	virtual ~wxMinimizeBox() {}
+    wxMinimizeBox() {}      // required by wxWidgets RTTI system
+    wxMinimizeBox(wxExtMiniFrameBase *parent, int bSmall = -1) :
+        wxMinimizeBoxBase(parent, bSmall) {}
+    virtual ~wxMinimizeBox() {}
 
 private:
-	DECLARE_DYNAMIC_CLASS( wxMinimizeBox )
+    DECLARE_DYNAMIC_CLASS( wxMinimizeBox )
 };
 
 
@@ -89,22 +88,22 @@ class WXDLLIMPEXP_WXEXTMINIFRAME wxCollapseBox : public wxCollapseBoxBase
 {
 protected:
 
-	// wxCollapseBox under MSW uses the same common Draw() function
-	// defined in src/common/minibtncmn.cpp
-	//  void Draw(wxDC &, int, int);
+    // wxCollapseBox under MSW uses the same common Draw() function
+    // defined in src/common/minibtncmn.cpp
+    //  void Draw(wxDC &, int, int);
 
 public:
 
-	wxCollapseBox() {}		// required by wxWidgets RTTI system
-	wxCollapseBox(wxExtMiniFrameBase *parent, int bSmall = -1) :
-	  wxCollapseBoxBase(parent, bSmall) {}
-	virtual ~wxCollapseBox() {}
+    wxCollapseBox() {}      // required by wxWidgets RTTI system
+    wxCollapseBox(wxExtMiniFrameBase *parent, int bSmall = -1) :
+        wxCollapseBoxBase(parent, bSmall) {}
+    virtual ~wxCollapseBox() {}
 
 private:
-	DECLARE_DYNAMIC_CLASS( wxCollapseBox )
+    DECLARE_DYNAMIC_CLASS( wxCollapseBox )
 };
 
 
-#endif			// wxEXTMINIFRM_USE_MINIBTN
+#endif          // wxEXTMINIFRM_USE_MINIBTN
 
-#endif			// _WX_MINIBTN_H_
+#endif          // _WX_MINIBTN_H_

@@ -56,10 +56,13 @@
     </template>
 
     <lib id="extminiframe_lib" template="wxcode-lib,extmf" cond="WX_SHARED=='0'">
-        <!-- we cannot add to msvc6prj the sources of the other ports without 
-             making them "compilable"... -->
         <sources>$(PORT_SPECIFIC_SOURCES)</sources>
         <headers>$(PORT_SPECIFIC_HEADERS)</headers>
+
+        <!-- NOTE: we cannot add to msvc6prj the sources of the other ports without 
+                   making them "compilable"... so other source files won't simply
+                   appear in MSVC IDEs...
+        -->
     </lib>
     <dll id="extminiframe_dll" template="wxcode-dll,extmf" cond="WX_SHARED=='1'">
         <sources>$(PORT_SPECIFIC_SOURCES)</sources>
