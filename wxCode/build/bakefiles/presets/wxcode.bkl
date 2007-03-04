@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+
+<!-- Created by: Francesco Montorsi <frm@users.sourceforge.net>     -->
+<!-- Creation date: 9/10/2004                                       -->
+<!-- RCS-ID: $Id: wxcode.bkl,v 1.1 2007/03/01 11:33:22 frm Exp $    -->
+
+<makefile>
+
+    <!-- Always try to use the very latest bakefile, possibly even
+         the SVN version ;) -->
+    <requires version="0.2.2"/>
+
+
+    <!-- include the wxpresets and check that they are recent enough -->
+    <include file="wx.bkl" once="1"/>
+    <if cond="not isdefined('WX_PRESETS_VERSION') or WX_PRESETS_VERSION not in [ '5' ]">
+        <error>The included wxWidgets presets are too old!</error>
+    </if>
+
+    <!-- Our defaults -->
+    <include file="defaults.bkl" once="1"/>
+
+    <!-- This is a set of some useful new (generic, not wxCode-specific) tags/rules -->
+    <include file="utils.bkl" once="1"/>
+
+    <!-- The wxCode templates/rules -->
+    <include file="templates.bkl" once="1"/>
+
+    <!-- Some optional targets -->
+    <include file="targets.bkl" once="1"/>
+
+</makefile>
