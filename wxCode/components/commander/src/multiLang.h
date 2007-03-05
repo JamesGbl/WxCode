@@ -21,8 +21,6 @@
 using namespace std;
 
 typedef map <wxString, wxString, less<wxString> > stringMap;
-//typedef vector<wxString> stringVector;
-
 
 class multiLang
 {

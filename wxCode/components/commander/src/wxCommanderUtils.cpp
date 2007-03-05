@@ -3,11 +3,6 @@
 
 void Exec(wxString& path, wxString& file)
 {
-   
-
-      
-   
-   
    wxString ext = file.Mid(file.Length()-4,file.Length());
    wxFileType* mimeFile = wxTheMimeTypesManager->GetFileTypeFromExtension(ext);
    if (!mimeFile) return;
@@ -273,7 +268,7 @@ wxString keyCodeToString(int keyCode)
   return key;
 }
 
-driversMap wsGetDrives()
+driversMap wxGetDrives()
 {
    driversMap drives;
  #ifdef __WXMSW__    

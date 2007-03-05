@@ -76,23 +76,25 @@ using namespace std;
 
 bool DragAndDropFile::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& fileNames)
 {
-   m_wxFrame.copyThread(m_strPathDest, fileNames);
+   wxString pathDest = m_cCommanderDest.getActualPath();
+   m_wxFrame.copyThread(pathDest, fileNames);
    return true;
 }
 
 wxCommanderFrm::wxCommanderFrm(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
 : wxFrame(parent, id, title, position, size, style)
-{   
+{  
+
 	CreateGUIControls();
+
+	lastListCtrlUsed = WxListCtrl1;
+	lastNoteBookUsed = WxNotebook1;
+	lastCCommanderUsed = &cCommander1;
+	
 
    lang.setLangsDir(".\\lang");
    readConfig();
    updateControlsLanguage();
-
-	lastListCtrlUsed = WxListCtrl1;
-	lastNoteBookUsed = WxNotebook1;
-	strPathLstCtrl = &strPathLstCtrl1;
-	lastVectorStringUsed = &aPaths1;
 
 	WxStatusBar->SetStatusText("wxCommander");
 
@@ -123,7 +125,7 @@ void wxCommanderFrm::CreateGUIControls()
 	WxSplitterWindow1 =new wxSplitterWindow(this, ID_WXSPLITTERWINDOW1, wxPoint(0,0), wxSize(299,406) );
 	WxGridSizer->Add(WxSplitterWindow1,0,wxALIGN_CENTER | wxALL,0);
 
-	WxNotebook1 = new wxNotebook(WxSplitterWindow1, ID_WXNOTEBOOK1, wxPoint(5,5),wxSize(289,193));
+	WxNotebook1 = new wxNotebook(WxSplitterWindow1, ID_WXNOTEBOOK1, wxPoint(5,5),wxSize(289,195));
 
 	WxNotebook2 = new wxNotebook(WxSplitterWindow1, ID_WXNOTEBOOK2, wxPoint(304,5),wxSize(289,193));
 
@@ -172,15 +174,10 @@ void wxCommanderFrm::CreateGUIControls()
 	
 	////GUI Items Creation End
 	
-	 WxListCtrl1 = new wxListCtrl(WxNotebook1, ID_WXLISTCTRL1, wxDefaultPosition, wxSize(399,450), wxLC_REPORT | wxLC_EDIT_LABELS);
-    WxListCtrl2 = new wxListCtrl(WxNotebook2, ID_WXLISTCTRL2, wxDefaultPosition, wxSize(399,450), wxLC_REPORT | wxLC_EDIT_LABELS);
+	 WxListCtrl1 = new wxCommanderListCtrl(WxNotebook1, ID_WXLISTCTRL1, wxDefaultPosition, wxSize(399,450), wxLC_REPORT | wxLC_VIRTUAL | wxLC_EDIT_LABELS, &cCommander1, &lang);
+    WxListCtrl2 = new wxCommanderListCtrl(WxNotebook2, ID_WXLISTCTRL2, wxDefaultPosition, wxSize(399,450), wxLC_REPORT | wxLC_VIRTUAL | wxLC_EDIT_LABELS, &cCommander2, &lang);
 
 	 WxSplitterWindow1->SplitVertically(WxNotebook1,WxNotebook2,385);
-
-	 wxStandardPaths wxPaths;
-
-    if (strPathLstCtrl1.IsEmpty()) strPathLstCtrl1 = wxPaths.GetDocumentsDir();
-    if (strPathLstCtrl2.IsEmpty()) strPathLstCtrl2 = wxPaths.GetDocumentsDir();
         
     WxListCtrl1->SetSingleStyle(wxLB_MULTIPLE);
     WxListCtrl2->SetSingleStyle(wxLB_MULTIPLE);
@@ -188,6 +185,8 @@ void wxCommanderFrm::CreateGUIControls()
     addColumns(WxListCtrl2);
 
     WxToolBar->AddSeparator();
+    
+    wxStandardPaths wxPaths;
 
     wxBitmap img(".\\Images\\newFolder.bmp", wxBITMAP_TYPE_BMP);
     if ( img.Ok() ) WxToolBar->AddTool(ID_TOOL_NEWFOLDER, lang["New Folder"], img, lang["New Folder"]);
@@ -219,10 +218,10 @@ void wxCommanderFrm::CreateGUIControls()
     WxToolBar->SetRows(1);
     
     WxListCtrl1->DragAcceptFiles(true);
-    WxListCtrl1->SetDropTarget(new DragAndDropFile(*this, strPathLstCtrl1));
+    WxListCtrl1->SetDropTarget(new DragAndDropFile(*this, cCommander1));
 
     WxListCtrl2->DragAcceptFiles(true);
-    WxListCtrl2->SetDropTarget(new DragAndDropFile(*this, strPathLstCtrl2));
+    WxListCtrl2->SetDropTarget(new DragAndDropFile(*this, cCommander2));
     
     updateControlsLanguage();
     
@@ -309,11 +308,11 @@ void wxCommanderFrm::Close()
    Destroy();
 }
 
-void wxCommanderFrm::itemExec(wxListCtrl *WxListCtrl, wxString &directory, wxString &itemName)
-{
+void wxCommanderFrm::itemExec(wxListCtrl *WxListCtrl, cCommander& CCommander, wxString &directory, wxString &itemName)
+{  
    wxDir dir;
    wxString path;
-   
+      
    if (directory.Right(1) == "\\")
       path = directory + itemName;
    else
@@ -325,19 +324,19 @@ void wxCommanderFrm::itemExec(wxListCtrl *WxListCtrl, wxString &directory, wxStr
    if (dir.Exists(path))
    {
      directory=path;
-     setListCtrl(WxListCtrl, directory);
+     setListCtrl(WxListCtrl, CCommander, directory);
      return;
    }  
    #ifdef __WXMSW__
    if (!wxFile::Exists(path))
    {      
-      driversMap drives = wsGetDrives();
+      driversMap drives = wxGetDrives();
       if (drives.find(itemName) == drives.end()) 
-         setListCtrl(WxListCtrl, drives);
+         setListCtrlDevices(WxListCtrl, CCommander);
       else 
       {
          directory=itemName;
-         setListCtrl(WxListCtrl, itemName);
+         setListCtrl(WxListCtrl, CCommander, itemName);
       }
       return;
    }
@@ -350,17 +349,19 @@ void wxCommanderFrm::itemExec(wxListCtrl *WxListCtrl, wxString &directory, wxStr
 void wxCommanderFrm::OnList1ItemActivated(wxListEvent& event)
 {
    wxString itemName = event.GetText();
-   itemExec(WxListCtrl1, strPathLstCtrl1, itemName);
+   wxString lastPath = cCommander1.getActualPath();
+   itemExec(WxListCtrl1, cCommander1, lastPath, itemName);
 
-   WxNotebook1->SetPageText(WxNotebook1->GetSelection(), getLastDir(strPathLstCtrl1));
+   WxNotebook1->SetPageText(WxNotebook1->GetSelection(), getLastDir(lastPath));
 }
 
 void wxCommanderFrm::OnList2ItemActivated(wxListEvent& event)
 {
    wxString itemName = event.GetText();
-   itemExec(WxListCtrl2, strPathLstCtrl2, itemName);
+   wxString lastPath = cCommander2.getActualPath();
+   itemExec(WxListCtrl2, cCommander2, lastPath, itemName);
 
-   WxNotebook2->SetPageText(WxNotebook2->GetSelection(), getLastDir(strPathLstCtrl2));
+   WxNotebook2->SetPageText(WxNotebook2->GetSelection(), getLastDir(lastPath));
 }
 
 void wxCommanderFrm::Mnu_about_onClick(wxCommandEvent& event)
@@ -405,7 +406,8 @@ void wxCommanderFrm::Mnu_delete_onClick(wxCommandEvent& event)
       {
          wxString itemName = lastListCtrlUsed->GetItemText(item);
          WxStatusBar->SetStatusText(lang["Delete"] + " " + itemName + "...");
-         if (!deleteDirFile(*strPathLstCtrl, itemName)) wxMessageBox(lang["There are some files read only"], "wxCommander", wxOK | wxICON_ERROR , this);
+         wxString strPath = lastCCommanderUsed->getActualPath();
+         if (!deleteDirFile(strPath, itemName)) wxMessageBox(lang["There are some files read only"], "wxCommander", wxOK | wxICON_ERROR , this);
       }
    }
    ListCtlUpdate();
@@ -424,7 +426,7 @@ void wxCommanderFrm::Mnu_newFolder_onClick(wxCommandEvent& event)
 	execWnd.ShowModal();
 	wxString folderName = execWnd.GetValue();
 	if (folderName.IsEmpty() || folderName==lang["New Folder"]) return;
-	folderName = (*strPathLstCtrl) + "\\" + folderName;
+	folderName = lastCCommanderUsed->getActualPath() + "\\" + folderName;
    wxMkdir(folderName);
    ListCtlUpdate();
 }
@@ -436,94 +438,43 @@ void wxCommanderFrm::Mnu_exit_onClick(wxCommandEvent& event)
 
 void wxCommanderFrm::ListCtlUpdate()
 {
-   setListCtrl(WxListCtrl1, strPathLstCtrl1);
-   setListCtrl(WxListCtrl2, strPathLstCtrl2);
+   wxString lastPath;
    
-   WxNotebook1->SetPageText(WxNotebook1->GetSelection(), getLastDir(strPathLstCtrl1));
-   WxNotebook2->SetPageText(WxNotebook2->GetSelection(), getLastDir(strPathLstCtrl2));
+   lastPath = cCommander1.getActualPath();  
+   setListCtrl(WxListCtrl1, cCommander1, lastPath);
+   WxNotebook1->SetPageText(WxNotebook1->GetSelection(), getLastDir(lastPath));
+   
+   lastPath = cCommander2.getActualPath();
+   setListCtrl(WxListCtrl2, cCommander2, lastPath);
+   WxNotebook2->SetPageText(WxNotebook2->GetSelection(), getLastDir(lastPath));
 }
 
-void wxCommanderFrm::setListCtrl(wxListCtrl *WxListCtrl, wxString &directory)
-{
-    wxDir dir;
-    wxString filename;
-    wxString wxStrFileName;
+void wxCommanderFrm::setListCtrl(wxListCtrl *WxListCtrl, cCommander& CCommander, wxString &directory)
+{   
+   CCommander.setActualPath(directory);
+   WxListCtrl->SetItemCount(CCommander.getFileDirCount());
+   WxListCtrl->Refresh();
+   
+   if (directory.Right(1) == "\\")
+      combo->SetValue(directory);
+   else
+      combo->SetValue(directory + "\\");
 
-    if (!dir.Exists(directory)) 
-    {
-       WxListCtrl->DeleteAllItems();
-       WxListCtrl->InsertItem(0, "..",2);       
-       return;
-    }
-    dir.Open(directory);
-    if (!dir.IsOpened()) return;
+    lastNoteBookUsed->SetPageText(lastNoteBookUsed->GetSelection(), getLastDir(directory));
 
-    bool cont = dir.GetFirst(&filename);
-    WxListCtrl->DeleteAllItems();
-    WxListCtrl->InsertItem(0, "..",2);
-    vector<wxString> aFiles;
-    int numItems = 0;
-    while (cont)
-    {
-       wxStrFileName = directory + "\\" + filename;
-       if (dir.Exists(wxStrFileName))
-       {
-          numItems = WxListCtrl->GetItemCount();
-          WxListCtrl->InsertItem(numItems, filename, 1);
-          WxListCtrl->SetItem(numItems, 1, "<DIR>");
-          WxListCtrl->SetItem(numItems, 2, getModificationTime(wxStrFileName));
-       }
-       else
-         aFiles.push_back(filename);
-       cont = dir.GetNext(&filename);
-    }
-    for (size_t i = 0 ; i < aFiles.size(); i++)
-    {
-       numItems = WxListCtrl->GetItemCount();
-       wxStrFileName = directory + "\\" + aFiles[i];
-       WxListCtrl->InsertItem(numItems, aFiles[i], 0);
-       WxListCtrl->SetItem(numItems, 1, formatFileSize(getFileSize(wxStrFileName)));
-       WxListCtrl->SetItem(numItems, 2, getModificationTime(wxStrFileName));
-    }
-
-    if (strPathLstCtrl->Right(1) == "\\")
-       combo->SetValue(*strPathLstCtrl);
-    else
-       combo->SetValue(*strPathLstCtrl + "\\");
     wxString numDirFiles;
-    numDirFiles << numItems;
+    numDirFiles << CCommander.getFileDirCount() - 1;
+
     WxStatusBar->SetStatusText(numDirFiles + " " + lang["Directories and Files"]);
-    lastNoteBookUsed->SetPageText(lastNoteBookUsed->GetSelection(), getLastDir(*strPathLstCtrl));
 }
 
-void wxCommanderFrm::setListCtrl(wxListCtrl *WxListCtrl, driversMap &drives)
+void wxCommanderFrm::setListCtrlDevices(wxListCtrl *WxListCtrl, cCommander& CCommander)
 {
-   int numItems = 0;
+   driversMap devices = wxGetDrives();
    
-   WxListCtrl->DeleteAllItems();
-
-   driversMap::iterator iter;
-   for( iter = drives.begin(); iter != drives.end(); iter++ )
-   {
-     numItems = WxListCtrl->GetItemCount();
-     switch (iter->second)
-     {
-    	  case DRIVE_REMOVABLE:
-           if (iter->first == "A:\\" || iter->first == "B:\\")
-              WxListCtrl->InsertItem(numItems, iter->first, 5);
-           else
-              WxListCtrl->InsertItem(numItems, iter->first, 3);  
-           WxListCtrl->SetItem(numItems, 1, lang["Removable"]);          
-        break;
-    	  case DRIVE_CDROM:
-           WxListCtrl->InsertItem(numItems, iter->first, 4);
-           WxListCtrl->SetItem(numItems, 1, lang["CD/DVD"]);          
-        break;
-        default:
-           WxListCtrl->InsertItem(numItems, iter->first, 3);
-           WxListCtrl->SetItem(numItems, 1, lang["Hard Disk"]);          
-     }
-   }
+   CCommander.setDevices(true);
+   WxListCtrl->SetItemCount(devices.size());
+   WxListCtrl->Refresh();
 }
 
 void wxCommanderFrm::OnListCtlKey(wxListCtrl *WxListCtrl, wxString &directory, wxListEvent& event)
@@ -540,7 +491,7 @@ void wxCommanderFrm::OnListCtlKey(wxListCtrl *WxListCtrl, wxString &directory, w
          if (keyCode == event.GetKeyCode())
          {
             wxString strCommand = iter->second.program;
-            if (strPathLstCtrl->Right(1) != "\\") directory += "\\";
+            if (directory.Right(1) != "\\") directory += "\\";
             strCommand.Replace("%1", directory, true);
             strCommand.Replace("%2", event.GetText(), true);
             wxExecute(strCommand);
@@ -554,7 +505,7 @@ void wxCommanderFrm::OnListCtlKey(wxListCtrl *WxListCtrl, wxString &directory, w
        case WXK_BACK:
        {
           wxString itemName = "..";
-          itemExec(WxListCtrl, directory, itemName);
+          itemExec(WxListCtrl, *lastCCommanderUsed, directory, itemName);  
        }
        break;
        case WXK_RIGHT:
@@ -612,12 +563,16 @@ void wxCommanderFrm::OnListCtlKey(wxListCtrl *WxListCtrl, wxString &directory, w
 
 void wxCommanderFrm::WxListCtrl1KeyDown(wxListEvent& event)
 {
-	OnListCtlKey(WxListCtrl1, strPathLstCtrl1, event);
+   wxString lastPath = cCommander1.getActualPath();
+   lastCCommanderUsed = &cCommander1;
+	OnListCtlKey(WxListCtrl1, lastPath, event);
 }
 
 void wxCommanderFrm::WxListCtrl2KeyDown(wxListEvent& event)
 {
-	OnListCtlKey(WxListCtrl2, strPathLstCtrl2, event);
+   wxString lastPath = cCommander2.getActualPath();
+   lastCCommanderUsed = &cCommander2;
+	OnListCtlKey(WxListCtrl2, lastPath, event);
 }
 
 void wxCommanderFrm::OnToolButton(wxCommandEvent& event)
@@ -664,11 +619,12 @@ void wxCommanderFrm::comboClick(wxCommandEvent& event, bool add)
    if (strCombo.Right(1) == "\\")
       strCombo = strCombo.Left(strCombo.Length()-1);
 
-   if (strCombo.IsEmpty()) return setListCtrl(lastListCtrlUsed, *strPathLstCtrl);
+   wxString strPath = lastCCommanderUsed->getActualPath();
+   if (strCombo.IsEmpty()) return setListCtrl(lastListCtrlUsed, *lastCCommanderUsed, strPath);
    wxDir dir;
    if (!dir.Exists(strCombo)) return;
-   *strPathLstCtrl = strCombo;
-   setListCtrl(lastListCtrlUsed, strCombo);
+   lastCCommanderUsed->setActualPath(strCombo);
+   setListCtrl(lastListCtrlUsed, *lastCCommanderUsed, strCombo);
    if (add) addDirsCombo(strCombo);
 }
 
@@ -685,12 +641,11 @@ void wxCommanderFrm::WxListCtrl1ItemFocused(wxListEvent& event)
 {
 	lastListCtrlUsed = WxListCtrl1;
 	lastNoteBookUsed = WxNotebook1;
-	strPathLstCtrl = &strPathLstCtrl1;
-	lastVectorStringUsed = &aPaths1;
-   if (strPathLstCtrl->Right(1) == "\\")
-      combo->SetValue(*strPathLstCtrl);
+	wxString strPath = cCommander1.getActualPath();
+   if (strPath.Right(1) == "\\")
+      combo->SetValue(strPath);
    else
-      combo->SetValue(*strPathLstCtrl + "\\");
+      combo->SetValue(strPath + "\\");
    wxString numDirFiles;
    numDirFiles << lastListCtrlUsed->GetItemCount()-1;
    WxStatusBar->SetStatusText(numDirFiles + " " + lang["Directories and Files"]);
@@ -700,12 +655,11 @@ void wxCommanderFrm::WxListCtrl2ItemFocused(wxListEvent& event)
 {
 	lastListCtrlUsed = WxListCtrl2;
 	lastNoteBookUsed = WxNotebook2;
-	strPathLstCtrl = &strPathLstCtrl2;
-	lastVectorStringUsed = &aPaths2;
-   if (strPathLstCtrl->Right(1) == "\\")
-      combo->SetValue(*strPathLstCtrl);
+   wxString strPath = cCommander2.getActualPath();
+   if (strPath.Right(1) == "\\")
+      combo->SetValue(strPath);
    else
-      combo->SetValue(*strPathLstCtrl + "\\");
+      combo->SetValue(strPath + "\\");
    wxString numDirFiles;
    numDirFiles << lastListCtrlUsed->GetItemCount()-1;
    WxStatusBar->SetStatusText(numDirFiles + " " + lang["Directories and Files"]);
@@ -717,21 +671,22 @@ void wxCommanderFrm::Mnu_execute_onClick(wxCommandEvent& event)
    wxString strLastExecCmd;
    config.Read("LastExecCommand", &strLastExecCmd);
    config.Write("Language", lang.getActualLang());
-	wxTextEntryDialog execWnd(this, lang["Write the command for execute in :"] + *strPathLstCtrl + "\\", lang["Exec command"], strLastExecCmd, wxOK | wxCANCEL | wxCENTRE);
+
+	wxTextEntryDialog execWnd(this, lang["Write the command for execute in :"] + lastCCommanderUsed->getActualPath() + "\\", lang["Exec command"], strLastExecCmd, wxOK | wxCANCEL | wxCENTRE);
 	execWnd.ShowModal();
 	wxString command = execWnd.GetValue();
 	if (command.IsEmpty()) return;
-	wxString execCommand = "Exec.bat " + *strPathLstCtrl + " " + command;
+	wxString execCommand = "Exec.bat " + lastCCommanderUsed->getActualPath() + " " + command;
    wxShell(execCommand);
    config.Write("LastExecCommand", command);
 }
 
 void wxCommanderFrm::Mnu_addTab_onClick(wxCommandEvent& event)
 {
-   lastVectorStringUsed->push_back(*strPathLstCtrl);
+   lastCCommanderUsed->addPath(lastCCommanderUsed->getActualPath());
    lastNoteBookUsed->AddPage(lastListCtrlUsed, "");
    lastNoteBookUsed->AdvanceSelection(false);
-   lastNoteBookUsed->SetPageText(lastNoteBookUsed->GetPageCount()-1, getLastDir(*strPathLstCtrl));
+   lastNoteBookUsed->SetPageText(lastNoteBookUsed->GetPageCount()-1, getLastDir(lastCCommanderUsed->getActualPath()));
    lastListCtrlUsed->SetFocus();
 }
 
@@ -739,7 +694,7 @@ void wxCommanderFrm::Mnu_removeTab_onClick(wxCommandEvent& event)
 {
    if (lastNoteBookUsed->GetPageCount() > 1)
    {
-      lastVectorStringUsed->erase(lastVectorStringUsed->begin()+lastNoteBookUsed->GetSelection());
+      lastCCommanderUsed->removePath(lastNoteBookUsed->GetSelection());
       lastNoteBookUsed->RemovePage(lastNoteBookUsed->GetSelection());
       lastNoteBookUsed->AdvanceSelection(true);
       lastListCtrlUsed->SetFocus();
@@ -799,17 +754,19 @@ void wxCommanderFrm::copyThread()
          areItems = true;
          wxString itemName = lastListCtrlUsed->GetItemText(item);
          wxString filePath;
+         wxString strPath1 = cCommander1.getActualPath();
+         wxString strPath2 = cCommander2.getActualPath();
          if (lastListCtrlUsed == WxListCtrl1)
          {
-            thread->copy(strPathLstCtrl1, itemName, strPathLstCtrl2);
-            timer->addDir(strPathLstCtrl2, itemName);
-            filePath = strPathLstCtrl1 + "\\" + itemName;
+            thread->copy(strPath1, itemName, strPath2);
+            timer->addDir(strPath2, itemName);
+            filePath = strPath1 + "\\" + itemName;
          }
          else
          {
-            thread->copy(strPathLstCtrl2, itemName, strPathLstCtrl1);
-            timer->addDir(strPathLstCtrl1, itemName);
-            filePath = strPathLstCtrl2 + "\\" + itemName;
+            thread->copy(strPath2, itemName, strPath1);
+            timer->addDir(strPath2, itemName);
+            filePath = strPath2 + "\\" + itemName;
          }
          totalSize+=getDirSize(filePath, numFiles);
       }
@@ -849,6 +806,8 @@ void wxCommanderFrm::MnuLanguage_onClick(wxCommandEvent& event)
 void wxCommanderFrm::readConfig()
 {
    wxString language;
+	wxStandardPaths wxPaths;
+       
    wxConfig config("wxCommander");
    
    // restore frame position and size
@@ -879,15 +838,17 @@ void wxCommanderFrm::readConfig()
    bool blnExist = config.Exists("Tabs/Left/Dir" + nameNum);
    if (!blnExist) 
    {
-     aPaths1.push_back(strPathLstCtrl1);
-     WxNotebook1->AddPage(WxListCtrl1, getLastDir(strPathLstCtrl1), true);
+     cCommander1.addPath(wxPaths.GetDocumentsDir());
+     cCommander1.setActualPath(0);
+     strPath = cCommander1.getActualPath();
+     WxNotebook1->AddPage(WxListCtrl1, getLastDir(strPath), true);
 	  WxNotebook1->AdvanceSelection(false);
    }
    while (blnExist)
    {
       config.Read("Tabs/Left/Dir" + nameNum, &strPath);
-      aPaths1.push_back(strPath);
-      strPathLstCtrl1=(j>0 ? aPaths1[j-1] : aPaths1[j]);
+      cCommander1.addPath(strPath);
+      //strPathLstCtrl1=(j>0 ? aPaths1[j-1] : aPaths1[j]);
       WxNotebook1->AddPage(WxListCtrl1, getLastDir(strPath));
       WxNotebook1->AdvanceSelection(false);
       nameNum = "";
@@ -902,15 +863,17 @@ void wxCommanderFrm::readConfig()
    blnExist = config.Exists("Tabs/Right/Dir" + nameNum);
    if (!blnExist)
    {
-     aPaths2.push_back(strPathLstCtrl2);
-	  WxNotebook2->AddPage(WxListCtrl2, getLastDir(strPathLstCtrl2), true);
+     cCommander2.addPath(wxPaths.GetDocumentsDir());
+     cCommander2.setActualPath(0);
+     strPath = cCommander2.getActualPath();
+	  WxNotebook2->AddPage(WxListCtrl2, getLastDir(strPath), true);
      WxNotebook2->AdvanceSelection(false);
    }
    while (blnExist)
    {
       config.Read("Tabs/Right/Dir" + nameNum, &strPath);
-      aPaths2.push_back(strPath);
-      strPathLstCtrl2=(j>0 ? aPaths2[j-1] : aPaths2[j]);
+      cCommander2.addPath(strPath);
+      //strPathLstCtrl2=(j>0 ? aPaths2[j-1] : aPaths2[j]);
       WxNotebook2->AddPage(WxListCtrl2, getLastDir(strPath));
       WxNotebook2->AdvanceSelection(false);
       nameNum = "";
@@ -960,30 +923,19 @@ void wxCommanderFrm::writeConfig()
       config.Write(_T("HotKeys/" + iter->second.program), (long) iter->second.keyCode);
    }
    
-   wxString actualDir;
-   int intTabSelLeft = WxNotebook1->GetSelection();
-   int intTabSelRight = WxNotebook2->GetSelection();
-
-   aPaths1[intTabSelLeft] =  strPathLstCtrl1;
-   aPaths2[intTabSelRight] =  strPathLstCtrl2;
-   
+   wxString actualDir;   
    config.DeleteGroup("Tabs");
-   vectorString::iterator iterTab;
-   int j = 0;
-   for (iterTab = aPaths1.begin(); iterTab != aPaths1.end(); iterTab++)
+   for (int j = 0; j <= cCommander1.getPathsCount()-1; j++)
    {
       actualDir << j;
-      config.Write("Tabs/Left/Dir" + actualDir, aPaths1[j]);
+      config.Write("Tabs/Left/Dir" + actualDir, cCommander1.getPath(j));
       actualDir = "";
-      j++;
    }
-   j = 0;
-   for (iterTab = aPaths2.begin(); iterTab != aPaths2.end(); iterTab++)
+   for (int i = 0; i <= cCommander2.getPathsCount()-1; i++)
    {
-      actualDir << j;
-      config.Write("Tabs/Right/Dir" + actualDir, aPaths2[j]);
+      actualDir << i;
+      config.Write("Tabs/Right/Dir" + actualDir, cCommander2.getPath(i));
       actualDir = "";
-      j++;
    }
    
    config.Write("Language", lang.getActualLang());
@@ -1025,43 +977,43 @@ void wxCommanderFrm::WxListCtrlEndLabelEdit(wxListEvent& event)
 
    if (!event.IsEditCancelled())
    {
-	   if (!renameDirFile(*strPathLstCtrl, itemName, newFileName))
+      wxString strPath = lastCCommanderUsed->getActualPath();
+	   if (!renameDirFile(strPath, itemName, newFileName))
          event.Veto();
+      else
+      {
+         lastCCommanderUsed->refreshFileDir();
+         lastListCtrlUsed->RefreshItem(itemCtrl.GetId());
+      }
    }
 }
 
 void wxCommanderFrm::WxNotebook1PageChanged(wxNotebookEvent& event)
 {
-   int oldTab = event.GetOldSelection();
    int actualTab = event.GetSelection();
-   
-   if (oldTab != -1)
-      aPaths1[oldTab] = strPathLstCtrl1;
-      
+
    lastListCtrlUsed = WxListCtrl1;
 	lastNoteBookUsed = WxNotebook1;
-	strPathLstCtrl = &strPathLstCtrl1;
-   lastVectorStringUsed = &aPaths1;
-   
-   (*strPathLstCtrl) = (*lastVectorStringUsed)[actualTab];
-   setListCtrl(lastListCtrlUsed, *strPathLstCtrl);
+   lastCCommanderUsed = &cCommander1;
+
+   cCommander1.setActualPath(actualTab);
+   wxString strPath = cCommander1.getActualPath();
+   lastListCtrlUsed->DeleteAllItems();
+   setListCtrl(lastListCtrlUsed, cCommander1, strPath);
 }
 
 void wxCommanderFrm::WxNotebook2PageChanged(wxNotebookEvent& event)
 {
-   int oldTab = event.GetOldSelection();
    int actualTab = event.GetSelection();
-
-   if (oldTab != -1)
-      aPaths2[oldTab] = strPathLstCtrl2;
       
    lastListCtrlUsed = WxListCtrl2;
 	lastNoteBookUsed = WxNotebook2;
-	strPathLstCtrl = &strPathLstCtrl2;
-   lastVectorStringUsed = &aPaths2;
-
-   (*strPathLstCtrl) = (*lastVectorStringUsed)[actualTab];
-   setListCtrl(lastListCtrlUsed, *strPathLstCtrl); 
+	lastCCommanderUsed = &cCommander2;
+   
+   lastListCtrlUsed->DeleteAllItems();
+   cCommander2.setActualPath(actualTab);
+   wxString strPath = cCommander2.getActualPath();
+   setListCtrl(lastListCtrlUsed, cCommander2, strPath); 
 }
 
 void wxCommanderFrm::WxListCtrlBeginDrag(wxListEvent& event)
@@ -1074,7 +1026,8 @@ void wxCommanderFrm::WxListCtrlBeginDrag(wxListEvent& event)
       if ( item != -1 )
       {
          wxString itemName = lastListCtrlUsed->GetItemText(item);
-         fileDataObject.AddFile(*strPathLstCtrl + "\\" + itemName);
+         wxString strPath = lastCCommanderUsed->getActualPath();
+         fileDataObject.AddFile(strPath + "\\" + itemName);
       }
    }
 	wxDropSource dragSource( this );
@@ -1095,7 +1048,8 @@ void wxCommanderFrm::copyToClipboard()
          if ( item != -1 )
          {
             wxString itemName = lastListCtrlUsed->GetItemText(item);
-            pFileDataObject->AddFile(*strPathLstCtrl + "\\" + itemName);
+            wxString strPath = lastCCommanderUsed->getActualPath();
+            pFileDataObject->AddFile(strPath + "\\" + itemName);
          }
       }
       wxTheClipboard->SetData( pFileDataObject );
@@ -1111,7 +1065,8 @@ void wxCommanderFrm::pasteFromClipboard()
 	   wxFileDataObject fileDataObject;
       if (wxTheClipboard->GetData(fileDataObject))
       {
-         copyThread(*strPathLstCtrl, fileDataObject.GetFilenames());
+         wxString strPath = lastCCommanderUsed->getActualPath();
+         copyThread(strPath, fileDataObject.GetFilenames());
       }
       wxTheClipboard->Close();
    }  
@@ -1147,4 +1102,5 @@ void wxCommanderFrm::Mnu_checkUpdates_onClick(wxCommandEvent& event)
    wxString program = "webupdater.exe";
    
 	Exec(path, program);
+	Close();
 }

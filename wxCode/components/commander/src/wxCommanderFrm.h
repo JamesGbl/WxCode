@@ -52,7 +52,8 @@
 #include <wx/settings.h>
 #include <wx/datetime.h>
 
-#include <wx/listctrl.h>
+//#include <wx/listctrl.h>
+#include "wxCommanderListCtrl.h"
 
 #include <wx/clipbrd.h>
 
@@ -71,6 +72,7 @@
 #include "multiLang.h"
 #include "CTimer.h"
 #include "CThread.h"
+#include "CCommander.h"
 
 #include <vector>
 
@@ -131,23 +133,20 @@ class wxCommanderFrm : public wxFrame
 		wxStatusBar *WxStatusBar;
 		wxToolBar *WxToolBar;
 		////GUI Control Declaration End
-		wxListCtrl* WxListCtrl1;
-		wxListCtrl* WxListCtrl2;
-		wxListCtrl* lastListCtrlUsed;
+		wxCommanderListCtrl* WxListCtrl1;
+		wxCommanderListCtrl* WxListCtrl2;
+		wxCommanderListCtrl* lastListCtrlUsed;
 		wxNotebook* lastNoteBookUsed;
-		vectorString* lastVectorStringUsed;
-		wxString* strPathLstCtrl;
 		wxComboBox* combo;
-		wxString strPathLstCtrl1;
-		wxString strPathLstCtrl2;
 		wxImageList* imageList;
 		CTimer* timer;
       CThread* thread;
 	   wxCommanderTaskBar* tray;
 	   multiLang lang;
 	   hotKeyMap keysMap;
-	   vectorString aPaths1;
-	   vectorString aPaths2;
+	   cCommander cCommander1;
+	   cCommander cCommander2;
+	   cCommander* lastCCommanderUsed;
 	   
 	private:
 		//Note: if you receive any error with these enum IDs, then you need to
@@ -214,9 +213,9 @@ class wxCommanderFrm : public wxFrame
   	      void CreateGUIControls();
 	      void addColumns(wxListCtrl *WxListCtrl);
 	      void addDirsCombo(wxString& strCombo);
-	      void setListCtrl(wxListCtrl *WxListCtrl, wxString &directory);
-	      void setListCtrl(wxListCtrl *WxListCtrl, driversMap &drives);
-	      void itemExec(wxListCtrl *WxListCtrl, wxString &directory, wxString &itemName);
+	      void setListCtrl(wxListCtrl *WxListCtrl, cCommander& CCommander, wxString &directory);
+	      void setListCtrlDevices(wxListCtrl *WxListCtrl, cCommander& CCommander);
+	      void itemExec(wxListCtrl *WxListCtrl, cCommander& CCommander, wxString &directory, wxString &itemName);
 	      void updateControlsLanguage();
 	      void copyThread();
 	      void readConfig();
@@ -230,18 +229,18 @@ class wxCommanderFrm : public wxFrame
    public:
          void ListCtlUpdate();
          void copyThread(wxString& strPathDest,  const wxArrayString& fileNames);
-	void Mnu_Copy_onClick1(wxCommandEvent& event);
-	void Mnu_paste_onClick(wxCommandEvent& event);
-	void Mnu_checkUpdates_onClick(wxCommandEvent& event);
+       	void Mnu_Copy_onClick1(wxCommandEvent& event);
+	      void Mnu_paste_onClick(wxCommandEvent& event);
+	      void Mnu_checkUpdates_onClick(wxCommandEvent& event);
 };
 
 class DragAndDropFile : public wxFileDropTarget
 {
   public:
-    DragAndDropFile(wxCommanderFrm& theWindow, wxString& strPathDest) : wxFileDropTarget(), m_strPathDest(strPathDest), m_wxFrame(theWindow) {}
+    DragAndDropFile(wxCommanderFrm& theWindow, cCommander& cCommanderDest) : wxFileDropTarget(), m_cCommanderDest(cCommanderDest), m_wxFrame(theWindow) {}
     virtual bool OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& fileNames);
   private:
-   wxString& m_strPathDest;
+   cCommander& m_cCommanderDest;
    wxCommanderFrm& m_wxFrame;
 };
 
