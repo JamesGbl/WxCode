@@ -111,7 +111,15 @@ public:		// supported version for the local & remote XML scripts
 		{ return wxWUI_VERSION_STRING; }
 
 	//! Does the version check for the given wxVersion object.
-	wxWebUpdateCheckFlag VersionCheck(const wxVersion &v) const;
+	wxWebUpdateCheckFlag VersionCheck(const wxVersion &v) const
+    { 
+        wxVersion curr(wxWUI_VERSION_MAJOR, wxWUI_VERSION_MINOR, wxWUI_VERSION_RELEASE);
+        if (curr == v)
+            return wxWUCF_UPDATED;
+        else if (curr > v)
+            return wxWUCF_OUTOFDATE;
+        return wxWUCF_FAILED;
+    }
 
 public:		// action hashmap
 
@@ -187,7 +195,7 @@ private:
 };
 
 
-//! The thread used to install the packages.
+//! The thread used to install the packages (a joinable thread).
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateInstallThread : public wxThread
 {
 protected:		// these are written by this thread and they must be only read
@@ -206,6 +214,9 @@ public:		// to avoid setters/getters (these vars are only read by this thread;
 
 	//! The wxEvtHandler which will receive our wxDT_NOTIFICATION events.
 	wxEvtHandler *m_pHandler;
+
+    //! The ID of the events which are sent.
+    int m_nID;
 
 	//! The downloaded file which is our update package.
 	wxString m_strUpdateFile;
@@ -228,8 +239,8 @@ protected:		// these are vars protected by mutexes...
 	int m_nCurrentIndex;
 
 public:
-	wxWebUpdateInstallThread(wxEvtHandler *dlg = NULL)
-		: wxThread(wxTHREAD_JOINABLE), m_pHandler(dlg)
+	wxWebUpdateInstallThread(wxEvtHandler *dlg = NULL, int id = -1)
+		: wxThread(wxTHREAD_JOINABLE), m_pHandler(dlg), m_nID(id)
 		{ m_bSuccess=TRUE; m_nInstallationCount=0; m_nCurrentIndex=0;
 		  m_nStatus = wxWUITS_WAITING; m_pDownload=NULL; }
 

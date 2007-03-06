@@ -1,8 +1,0 @@
-lang
-*.exe
-*log*
-*.xrc
-addon*
-test.txt
-advanced
-webupdater

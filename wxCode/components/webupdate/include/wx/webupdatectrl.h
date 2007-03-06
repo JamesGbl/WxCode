@@ -80,7 +80,9 @@ protected:		// event handlers
 	// for event raised by our wxCacheSizerThread....
 	void OnCacheSizeComplete(wxCommandEvent &);
 
-	//! Launches our thread for caching the sizes of the packages shown
+protected:      // utilities
+
+    //! Launches our thread for caching the sizes of the packages shown
 	//! in this listctrl.	
 	//! You need to call #RebuildPackageList after this function.
 	void CacheDownloadSizes();
@@ -95,7 +97,7 @@ protected:		// event handlers
 	//! using the idx-th item of the local package array for retrieving
 	//! the version string.
 	//! Uses the given remote package for checking its update state.
-	wxWebUpdateCheckFlag SetLocalVersionFor(int idx, wxWebUpdatePackage &curr);
+	void SetLocalVersionFor(int idx, const wxWebUpdatePackage &curr);
 
 	//! Returns TRUE if the item-idx item shown in the listctrl is to discard
 	//! when applying the current filter.
@@ -153,12 +155,6 @@ public:			// miscellaneous
 	//! the version strings stored in the local package array.
 	void UpdatePackagesVersions(wxWebUpdateListCtrlFilter);
 
-	//! Returns a wxWebUpdateCheckFlag for the given package
-	//! (both the remote & local package arrays are used, obviously!).
-	wxWebUpdateCheckFlag IsPackageUp2date(const wxString &name)
-		{ return IsPackageUp2date(GetRemotePackage(name)); }
-	wxWebUpdateCheckFlag IsPackageUp2date(const wxWebUpdatePackage &p);
-
 	//! Returns the first remote package which is checked and which has not
 	//! been marked as already downloaded.
 	wxWebUpdatePackage *GetNextPackageToDownload();
@@ -167,7 +163,11 @@ public:			// miscellaneous
 	//! been marked as downloaded, has not been marked as installed yet
  	//! and whose requirements are all met.
 	wxWebUpdatePackage *GetNextPackageToInstall();
-	
+
+    //! Compares the given package with the relative local package and returns
+    //! a wxWebUpdateCheckFlag describing the result of the comparison.
+    wxWebUpdateCheckFlag CompareVersion(const wxWebUpdatePackage &curr) const;
+
 	//! Returns TRUE if the n-th item of the remote package array
 	//! (not the n-th item of the listctrl!) is ready to be installed.
 	bool IsReadyForInstallation(int n);
@@ -193,11 +193,11 @@ public:		// getters
 
 	//! Returns a reference to the local package with the given name or 
  	//! wxEmptyWebUpdateLocalPackage if such package could not be found.
-	wxWebUpdateLocalPackage &GetLocalPackage(const wxString &name);
+	const wxWebUpdateLocalPackage &GetLocalPackage(const wxString &name) const;
 
 	//! Returns the remote package with the given name or 
  	//! wxEmptyWebUpdatePackage if such package could not be found.
-	wxWebUpdatePackage &GetRemotePackage(const wxString &name);
+	const wxWebUpdatePackage &GetRemotePackage(const wxString &name) const ;
 	
 	//! Returns the download status for the given package.
 	bool IsDownloaded(const wxWebUpdatePackage &) const;

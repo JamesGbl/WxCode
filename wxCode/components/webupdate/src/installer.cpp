@@ -9,8 +9,6 @@
 /////////////////////////////////////////////////////////////////////////////
 
 
-
-
 // For compilers that support precompilation, includes "wx.h".
 #include "wx/wxprec.h"
 
@@ -320,23 +318,6 @@ int wxWebUpdateInstaller::ParsePairValueList(const wxString &str, wxArrayString 
 
     wxASSERT(names.GetCount() == values.GetCount());
     return names.GetCount();
-}
-
-wxWebUpdateCheckFlag wxWebUpdateInstaller::VersionCheck(const wxVersion &ver) const
-{
-    int maj, min, rel;
-    if (!wxWebUpdatePackage::ExtractVersionNumbers(ver, &maj, &min, &rel)) {
-
-        wxLogUsrMsg(_("wxWebUpdateInstaller::VersionCheck - invalid version format [%s] !"),
-                    ver.c_str());
-        return wxWUCF_FAILED;
-    }
-
-    int r = wxWebUpdatePackage::StdVersionCheck(maj, min, rel,
-            wxWUI_VERSION_MAJOR, wxWUI_VERSION_MINOR, wxWUI_VERSION_RELEASE);
-    if (r == 1) return wxWUCF_FAILED;
-    if (r == 0) return wxWUCF_UPDATED;
-    return wxWUCF_OUTOFDATE;
 }
 
 void wxWebUpdateInstaller::ShowErrorMsg(const wxString &str)

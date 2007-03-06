@@ -313,13 +313,15 @@ void WebUpdaterApp::CreateFileLogger()
     if (m_bLoggerInstalled)
         return;     // already installed !
 
+    // it automatically installs itself as the new logger
+
     wxLogDebug(wxT("WebUpdaterApp::CreateFileLogger - creating the logfile [") +
             wxString(wxWU_LOGFILENAME) + wxT("]"));
     m_log->WriteAllMsgAlsoToFile(wxWU_LOGFILENAME);
     wxLogNewSection(wxT(" LOG OF WEBUPDATER ") +
                     wxWebUpdateInstaller::Get()->GetVersion() +
                     wxT(" SESSION BEGAN AT ") +
-                    wxDateTime::Now().Format(wxT("%x %X")));        // it automatically installs itself as the new logger
+                    wxDateTime::Now().Format(wxT("%x %X")));
     m_bLoggerInstalled = TRUE;
 }
 
@@ -415,7 +417,8 @@ bool WebUpdaterApp::OnPreInit()
     wxString xml, xrc, res, uri, askuri;
 
     if (parser.Found(SWITCH_SAVELOG))
-        CreateFileLogger();             // if this switch is in the command line, create the logger immediately
+        CreateFileLogger();             // if this switch is in the command line, 
+                                        // create the logger immediately
     if (!parser.Found(OPTION_XMLSCRIPT, &xml))
         xml = wxWU_LOCAL_XMLSCRIPT;
 
@@ -494,7 +497,7 @@ bool WebUpdaterApp::OnPreInit()
         wxFileName newremotexml(file);
         wxLogAdvMsg(wxT("WebUpdaterApp::OnPreInit - overriding <remoteuri> with [") +
                 newremotexml.GetFullPath() + wxT("]"));
-        uri = wxMakeFileURI(newremotexml);
+        uri = wxFileSystem::FileNameToURL(newremotexml);
     }
 
     // now set the option values
@@ -579,7 +582,7 @@ bool WebUpdaterApp::OnInit()
 
     // to test wxWebUpdateAdvPanel alone
     m_dlg = new wxDialog(NULL, -1, wxT(""), wxDefaultPosition, wxDefaultSize,
-        wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
+                         wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
     wxBoxSizer *sz = new wxBoxSizer(wxVERTICAL);
     sz->Add(new wxWebUpdateAdvPanel(m_dlg, m_script), 1, 5, wxGROW);
     sz->SetSizeHints(m_dlg);
@@ -618,6 +621,10 @@ int WebUpdaterApp::OnExit()
     }
 
     wxLogAdvMsg(wxT("WebUpdaterApp::OnExit - calling wxApp::OnExit"));
+
+    // before stopping do log an end-of-session message
+    wxLogNewSection(wxT(" END OF LOG SESSION"));
+
     return wxApp::OnExit();
 }
 

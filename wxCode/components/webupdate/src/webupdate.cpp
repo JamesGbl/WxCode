@@ -11,8 +11,6 @@
 /////////////////////////////////////////////////////////////////////////////
 
 
-
-
 // For compilers that support precompilation, includes "wx.h".
 #include "wx/wxprec.h"
 
@@ -85,6 +83,245 @@ void wxUninitializeWebUpdate()
     wxWebUpdateInstaller *old = wxWebUpdateInstaller::Set(NULL);
     if (old) delete old;
 }
+
+bool wxIsFileProtocol(const wxString &uri)
+{
+    // file: is the signature of a file URI...
+    return uri.StartsWith(wxT("file:"));
+}
+
+bool wxIsHTTPProtocol(const wxString &uri)
+{
+    // http: is the signature of a file URI...
+    return uri.StartsWith(wxT("http:"));
+}
+
+bool wxIsWebProtocol(const wxString &uri)
+{
+    // AFAIK the only protocol which does not require an internet connection is file:
+    return !wxIsFileProtocol(uri);
+}
+
+//! Creates an input stream tied to the URL given in the constructor.
+//! This helper class provides a system to keep the wxURL which produces
+//! the wxHTTPStream alive until the stream is needed.
+//! The following code in fact
+//! \code
+//!     wxInputStream *in;
+//!         {
+//!     wxURL url(wxT("http://www.google.com"));
+//!     in = url.GetInputStream();
+//!     }
+//!     in->Read(somewhere, somebytes);
+//! \endcode
+//! will fail because wxURL (which contains the wxProtocol which estabilishes
+//! the socket connection) is gone out of scope when the wxInputStream is used.
+//! This class makes such code:
+//! \code
+//!     wxInputStream *in;
+//!         {
+//!     in = new wxURLInputStream(wxT("http://www.google.com"));
+//!     }
+//!     in->Read(somewhere, somebytes);
+//! \endcode
+//! possible.
+//! NOTE: various hacks are required also to get around the fact that the wxStreamBase::IsOk()
+//!       function is not virtual and thus we always have to set our error variable accordingly
+//!       after each operation.
+class wxURLInputStream : public wxInputStream
+{
+protected:
+    wxURL m_url;
+    wxInputStream *m_pStream;
+
+public:
+    wxURLInputStream(const wxString &url)
+        : m_url(url), m_pStream(NULL) { InitStream(); }
+    virtual ~wxURLInputStream() { wxDELETE(m_pStream); }
+
+    wxFileOffset SeekI( wxFileOffset pos, wxSeekMode mode )
+        { wxASSERT(m_pStream); wxFileOffset fo = m_pStream->SeekI(pos, mode);
+            Synch(); return fo; }
+    wxFileOffset TellI() const
+        { wxASSERT(m_pStream); return m_pStream->TellI(); }
+
+    bool IsOk() const
+        { if (m_pStream == NULL) return FALSE; return m_pStream->IsOk(); }
+    size_t GetSize() const
+        { wxASSERT(m_pStream); return m_pStream->GetSize(); }
+    bool Eof() const
+        { wxASSERT(m_pStream); return m_pStream->Eof(); }
+
+protected:
+
+    bool InitStream() {
+        if (m_url.GetError() != wxURL_NOERR) {
+            m_lasterror = wxSTREAM_READ_ERROR;
+            wxLogDebug(wxT("wxURLInputStream - error with given URL..."));
+            return FALSE;
+        }
+
+        wxLogDebug(wxT("wxURLInputStream - no URL parsing errors..."));
+
+        m_url.GetProtocol().SetTimeout(30);         // 30 sec are much better rather than 10 min !!!
+        wxLogDebug(wxT("wxURLInputStream - calling wxURL::GetInputStream"));
+        m_pStream = m_url.GetInputStream();
+        wxLogDebug(wxT("wxURLInputStream - call was successful"));
+        Synch();
+
+        return IsOk();
+    }
+
+    void Synch() {
+        if (m_pStream)
+            m_lasterror = m_pStream->GetLastError();
+        else
+            m_lasterror = wxSTREAM_READ_ERROR;
+    }
+
+    size_t OnSysRead(void *buffer, size_t bufsize)
+        { wxASSERT(m_pStream); size_t ret = m_pStream->Read(buffer, bufsize).LastRead(); Synch(); return ret; }
+};
+
+#if wxUSE_HTTPENGINE
+
+// exactly like wxURLInputStream just for wxHTTPEngine
+class wxSafeHTTPEngineInputStream : public wxInputStream
+{
+protected:
+    wxHTTPBuilder m_http;
+    wxInputStream *m_pStream;
+
+public:
+    wxSafeHTTPEngineInputStream(const wxString &url,
+                    const wxProxySettings &proxy,
+                    const wxHTTPAuthSettings &auth)
+                    : m_pStream(NULL) {
+        m_http.SetProxySettings(proxy);
+        m_http.SetAuthentication(auth);
+        InitStream(url);
+    }
+
+    virtual ~wxSafeHTTPEngineInputStream() { wxDELETE(m_pStream); }
+
+
+    wxFileOffset SeekI( wxFileOffset pos, wxSeekMode mode )
+        { wxASSERT(m_pStream); wxFileOffset fo = m_pStream->SeekI(pos, mode);
+            Synch(); return fo; }
+    wxFileOffset TellI() const
+        { wxASSERT(m_pStream); return m_pStream->TellI(); }
+
+    bool IsOk() const
+        { if (m_pStream == NULL) return FALSE; return m_pStream->IsOk(); }
+    size_t GetSize() const
+        { wxASSERT(m_pStream); return m_pStream->GetSize(); }
+    bool Eof() const
+        { wxASSERT(m_pStream); return m_pStream->Eof(); }
+
+protected:
+
+    bool InitStream(const wxString &url) {
+        m_http.SetTimeout(30);      // 30 sec are much better rather than 10 min !!!
+        m_pStream = m_http.GetInputStream(url);
+        Synch();
+
+        return (m_pStream != NULL);
+    }
+
+    void Synch() {
+        if (m_pStream)
+            m_lasterror = m_pStream->GetLastError();
+        else
+            m_lasterror = wxSTREAM_READ_ERROR;
+    }
+
+    size_t OnSysRead(void *buffer, size_t bufsize)
+        { wxASSERT(m_pStream); size_t ret = m_pStream->Read(buffer, bufsize).LastRead(); Synch(); return ret; }
+};
+
+#endif
+
+wxInputStream *wxGetInputStreamFromURI(const wxString &uri)
+{
+    wxInputStream *in;
+
+    if (wxIsFileProtocol(uri)) {
+
+        // we can handle file:// protocols ourselves
+        wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using wxFileInputStream"));
+        wxURI u(uri);
+        in = new wxFileInputStream(u.GetPath());
+
+    } else {
+
+#if wxUSE_HTTPENGINE_FIXME_FIXME
+        wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using wxHTTPBuilder"));
+        in = new wxSafeHTTPEngineInputStream(uri,
+                wxDownloadThread::m_proxy, wxDownloadThread::m_auth);
+
+        // NOTES:
+        // 1) we use the static proxy & auth settings of wxDownloadThread
+        //    because this function is an helper function of wxDownloadThread
+        // 2) the proxy & auth settings should have been initialized by the
+        //    user of wxDownloadThread
+        // 3) the wx*Settings classes contain a boolean switch which allows
+        //    wxHTTPBuilder to understand if they are marked as "used" or not;
+        //    thus, setting them with the Set*() functions below does not
+        //    necessarily mean that they will be used.
+
+        // just to help debugging....
+        if (wxDownloadThread::m_proxy.m_bUseProxy)
+            wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using the proxy settings"));
+        if (wxDownloadThread::m_auth.m_authType != wxHTTPAuthSettings::wxHTTP_AUTH_NONE)
+            wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using the basic authentication settings"));
+#else
+
+        // we won't directly use wxURL because it must be alive together with
+        // the wxInputStream it generates... wxURLInputStream solves this problem
+        wxLogAdvMsg(wxT("wxGetInputStreamFromURI - using wxURL"));
+        in = new wxURLInputStream(uri);
+#endif
+    }
+
+    return in;
+}
+
+unsigned long wxGetSizeOfURI(const wxString &uri)
+{
+    wxLogDebug(wxT("wxGetSizeOfURI - getting size of [") + uri + wxT("]"));
+    wxInputStream *is = wxGetInputStreamFromURI(uri);
+    if (is == NULL) {
+        wxLogDebug(wxT("wxGetSizeOfURI - aborting; invalid URL !"));
+        return 0;
+    }
+
+    if (!is->IsOk()) {
+        wxLogDebug(wxT("wxGetSizeOfURI - aborting; invalid URL !"));
+        delete is;          // be sure to avoid leaks
+        return 0;
+    }
+
+    // intercept the 302 HTTP "return code"
+#if 0
+    wxProtocol &p = u.GetProtocol();
+    wxHTTP *http = wxDynamicCast(&p, wxHTTP);
+    if (http != NULL && http->GetResponse() == 302) {
+        wxLogUsrMsg(_("wxGetSizeOfURI - can't get the size of the resource located at [%s]" \
+                      " because the request has been redirected... update your URL"), uri);
+        return 0;
+    }
+#endif
+
+    size_t sz = is->GetSize();
+    delete is;
+
+    // see wxHTTP::GetInputStream docs
+    if (sz == (size_t)-1)
+        sz = 0;
+    return sz;
+}
+
+
 
 
 
@@ -188,13 +425,13 @@ void wxWebUpdateLog::StopFileLog()
 // generic log function
 extern void wxVLogGeneric(wxLogLevel level, const wxChar *szFormat, va_list argptr);
 
-#define IMPLEMENT_LOG_FUNCTION(level)                   \
+#define IMPLEMENT_LOG_FUNCTION(level)                     \
 void wxLog##level(const wxChar *szFormat, ...)            \
-{                                 \
-    va_list argptr;                         \
-    va_start(argptr, szFormat);                     \
-    wxVLogGeneric(wxLOG_##level, szFormat, argptr);         \
-    va_end(argptr);                         \
+{                                                         \
+    va_list argptr;                                       \
+    va_start(argptr, szFormat);                           \
+    wxVLogGeneric(wxLOG_##level, szFormat, argptr);       \
+    va_end(argptr);                                       \
 }
 
 IMPLEMENT_LOG_FUNCTION(UsrMsg)
@@ -305,8 +542,7 @@ bool wxWebUpdateLocalXMLScript::Load(const wxString &uri)
         return FALSE;
 
     // look at the version
-    if (wxWebUpdateXMLScript::GetWebUpdateVersion(GetRoot(),
-        m_strWebUpdateVersion) == wxWUCF_FAILED)
+    if (wxWebUpdateXMLScript::GetWebUpdateVersion(GetRoot(), m_verWebUpdate) == wxWUCF_FAILED)
         return FALSE;
 
     // save the URI of this local XML script.
@@ -316,7 +552,7 @@ bool wxWebUpdateLocalXMLScript::Load(const wxString &uri)
     wxWebUpdateInstaller::Get()->SetKeywordValue(wxT("localxml"), uri);
 
     // save also the folders
-    wxFileName f(wxGetFileNameFromURI(m_strLocalURI));
+    wxFileName f(wxFileSystem::URLToFileName(m_strLocalURI));
     wxWebUpdateInstaller::Get()->SetKeywordValue(wxT("localdir"),
                         f.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR));
 
@@ -399,7 +635,7 @@ void wxWebUpdateLocalXMLScript::SetRemoteScriptURI(const wxString &uri)
     if (wxIsFileProtocol(m_strRemoteURI)) {
 
         // is this a relative path ?
-        wxFileName fn = wxGetFileNameFromURI(m_strRemoteURI);
+        wxFileName fn = wxFileSystem::FileNameToURL(m_strRemoteURI);
         if (fn.IsRelative()) {
 
             // <remoteuri> tag should specify relative paths
@@ -411,13 +647,13 @@ void wxWebUpdateLocalXMLScript::SetRemoteScriptURI(const wxString &uri)
         }
 
         // replace our file URI with the wxFileName-filtered uri.
-        m_strRemoteURI = wxMakeFileURI(fn);
+        m_strRemoteURI = wxFileSystem::FileNameToURL(fn);
     }
 
     // save the URI of the remote XML script.
     wxWebUpdateInstaller::Get()->SetKeywordValue(wxT("remotexml"), m_strRemoteURI);
 
-    wxFileName f(wxGetFileNameFromURI(m_strRemoteURI));
+    wxFileName f(wxFileSystem::FileNameToURL(m_strRemoteURI));
     wxWebUpdateInstaller::Get()->SetKeywordValue(wxT("remotedir"),
                         f.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR));
 }
@@ -585,13 +821,13 @@ long wxWebUpdateAction::wxExecute(const wxString &command, int flags) const
 bool wxWebUpdatePlatform::Matches(const wxWebUpdatePlatform &plat) const
 {
     // check port name
-    if (m_name != plat.m_name &&
-        (m_name != wxWUP_ANY && plat.m_name != wxWUP_ANY))
+    if (GetPortId() != plat.GetPortId() &&
+        (GetPortId() != wxPORT_ANY && plat.GetPortId() != wxPORT_ANY))
         return FALSE;
 
     // check architecture
-    if (m_arch != plat.m_arch &&
-        (m_arch != wxWUA_ANY && plat.m_arch != wxWUA_ANY))
+    if (GetArchitecture() != plat.GetArchitecture() &&
+        (GetArchitecture() != wxARCH_ANY && plat.GetArchitecture() != wxARCH_ANY))
         return FALSE;
 
     // check platform ID using regexp
@@ -610,86 +846,18 @@ bool wxWebUpdatePlatform::Matches(const wxWebUpdatePlatform &plat) const
 wxString wxWebUpdatePlatform::GetAsString() const
 {
     // concatenate all our info
-    return GetPortString(m_name) + wxT(" - ") + GetArchString(m_arch) +
+    return GetPortIdName(GetPortId(), false) + wxT(" - ") + 
+           GetArchName(GetArchitecture()) +
            wxT(" - ") + m_strID;
 }
-
-// some helpers for wxWebUpdatePlatform
-#if defined( __WXMSW__ )
-bool Is64BitOS()        // taken from http://blogs.msdn.com/oldnewthing/archive/2005/02/01/364563.aspx
-{
-#if defined(_WIN64)
-    return TRUE;  // 64-bit programs run only on Win64
-#elif defined(_WIN32)
-    // 32-bit programs run on both 32-bit and 64-bit Windows
-    // so must sniff
-    BOOL f64 = FALSE;
-    return IsWow64Process(GetCurrentProcess(), &f64) && f64;
-#else
-    return FALSE; // Win64 does not support Win16
-#endif
-}
-#else
-bool Is64BitOS()
-{
-    return wxGetOsDescription().Contains(wxT("AMD64")) ||
-           wxGetOsDescription().Contains(wxT("IA64")) ||
-           wxGetOsDescription().Contains(wxT("x64")) ||
-           wxGetOsDescription().Contains(wxT("X64"));
-}
-#endif
 
 // static
 wxWebUpdatePlatform wxWebUpdatePlatform::GetThisPlatform()
 {
     wxWebUpdatePlatform plat;
 
-    // get port name
-    switch ( wxGetOsVersion() )
-    {
-    case wxMOTIF_X:
-        plat.SetPort(wxWUP_MOTIF);
-        break;
-
-    case wxMAC:
-    case wxMAC_DARWIN:
-        plat.SetPort(wxWUP_MAC);
-        break;
-
-    case wxGTK:
-    case wxGTK_WIN32:
-    case wxGTK_OS2:
-    case wxGTK_BEOS:
-        plat.SetPort(wxWUP_GTK);
-        break;
-
-    case wxWINDOWS:
-    case wxPENWINDOWS:
-    case wxWINDOWS_NT:
-    case wxWIN32S:
-    case wxWIN95:
-    case wxWIN386:
-        plat.SetPort(wxWUP_MSW);
-        break;
-
-    case wxMGL_UNIX:
-    case wxMGL_X:
-    case wxMGL_WIN32:
-    case wxMGL_OS2:
-        plat.SetPort(wxWUP_MGL);
-        break;
-
-    case wxWINDOWS_OS2:
-    case wxOS2_PM:
-        plat.SetPort(wxWUP_OS2);
-        break;
-
-    default:
-        plat.SetPort(wxWUP_INVALID);
-    }
-
-    // get architecture
-    plat.SetArch(Is64BitOS() ? wxWUA_64 : wxWUA_32);
+    plat.SetPortId(wxPlatformInfo::Get().GetPortId());
+    plat.SetArchitecture(wxPlatformInfo::Get().GetArchitecture());
 
     // get ID
     plat.SetID(wxGetOsDescription());
@@ -697,85 +865,6 @@ wxWebUpdatePlatform wxWebUpdatePlatform::GetThisPlatform()
     return plat;
 }
 
-wxWebUpdateArch wxWebUpdatePlatform::GetArch(const wxString &arch)
-{
-    wxWebUpdateArch ret = wxWUA_INVALID;
-    if (arch.StartsWith(wxT("32"))) ret = wxWUA_32;
-    if (arch.StartsWith(wxT("64"))) ret = wxWUA_64;
-    if (arch == wxT("any") || arch.IsEmpty()) ret = wxWUA_ANY;
-    return ret;
-}
-
-wxWebUpdatePort wxWebUpdatePlatform::GetPort(const wxString &plat)
-{
-    wxWebUpdatePort ret = wxWUP_INVALID;
-    if (plat == wxT("msw")) ret = wxWUP_MSW;
-    if (plat == wxT("gtk")) ret = wxWUP_GTK;
-    if (plat == wxT("os2")) ret = wxWUP_OS2;
-    if (plat == wxT("mac")) ret = wxWUP_MAC;
-    if (plat == wxT("motif")) ret = wxWUP_MOTIF;
-    if (plat == wxT("x11")) ret = wxWUP_X11;
-    if (plat.IsEmpty() || plat == wxT("any")) ret = wxWUP_ANY;
-    return ret;
-}
-
-wxString wxWebUpdatePlatform::GetPortString(wxWebUpdatePort code)
-{
-    wxString ret;
-    switch (code) {
-    case wxWUP_MSW:
-        ret = wxT("msw");
-        break;
-    case wxWUP_GTK:
-        ret = wxT("gtk");
-        break;
-    case wxWUP_OS2:
-        ret = wxT("os2");
-        break;
-    case wxWUP_MAC:
-        ret = wxT("mac");
-        break;
-    case wxWUP_MOTIF:
-        ret = wxT("motif");
-        break;
-    case wxWUP_X11:
-        ret = wxT("x11");
-        break;
-    case wxWUP_ANY:
-        ret = wxT("any");
-        break;
-    case wxWUP_INVALID:
-        ret = wxT("invalid");
-        break;
-    default:
-        return wxEmptyString;
-    }
-
-    return ret;
-}
-
-wxString wxWebUpdatePlatform::GetArchString(wxWebUpdateArch code)
-{
-    wxString ret;
-    switch (code) {
-    case wxWUA_32:
-        ret = wxT("32bit");
-        break;
-    case wxWUA_64:
-        ret = wxT("64bit");
-        break;
-    case wxWUA_ANY:
-        ret = wxT("any");
-        break;
-    case wxWUA_INVALID:
-        ret = wxT("invalid");
-        break;
-    default:
-        return wxEmptyString;
-    }
-
-    return ret;
-}
 
 
 
@@ -819,9 +908,9 @@ unsigned long wxWebUpdateDownload::GetDownloadSize(bool forceRecalc)
 
 wxString wxWebUpdateDownload::GetFileName() const
 {
-    return wxGetFileNameFromURI(m_urlDownload).GetFullName();
+    return wxFileSystem::URLToFileName(m_urlDownload).GetFullName();
 }
-
+/*
 bool wxWebUpdateDownload::DownloadSynch(const wxString &path
 #if wxUSE_HTTPENGINE
                                         , const wxProxySettings &
@@ -894,7 +983,7 @@ wxDownloadThread *wxWebUpdateDownload::DownloadAsynch(const wxString &path,
     thread->BeginNewDownload();
 
     return thread;
-}
+}*/
 
 bool wxWebUpdateDownload::Install() const
 {
@@ -937,88 +1026,6 @@ wxWebUpdateDownload &wxWebUpdatePackage::GetDownload(wxWebUpdatePlatform plat) c
 
     // could not find a download for the given platform....
     return wxEmptyWebUpdateDownload;
-}
-
-wxWebUpdateCheckFlag wxWebUpdatePackage::Check(const wxString &localversion) const
-{
-    // get the version of the installed (local) program
-    int lmaj, lmin, lrel;
-    if (!ExtractVersionNumbers(localversion, &lmaj, &lmin, &lrel))
-        return wxWUCF_FAILED;
-
-    return Check(lmaj, lmin, lrel);
-}
-
-wxWebUpdateCheckFlag wxWebUpdatePackage::Check(int lmaj, int lmin, int lrel) const
-{
-    // get the version of the package hosted in the webserver
-    int maj, min, rel;
-    if (!ExtractVersionNumbers(m_strLatestVersion, &maj, &min, &rel))
-        return wxWUCF_FAILED;
-
-    int res = StdVersionCheck(maj, min, rel,        // remote package
-                            lmaj, lmin, lrel);          // local package
-
-    // catch invalid cases
-    // i.e. when local version is greater than latest available version
-    if (res == -1) return wxWUCF_FAILED;
-
-    // catch other cases
-    if (res == 0) return wxWUCF_UPDATED;
-    if (res == 1) return wxWUCF_OUTOFDATE;
-
-    wxASSERT_MSG(0, wxT("All cases should have been handled... "));
-    return wxWUCF_FAILED;
-}
-
-// static
-int wxWebUpdatePackage::StdVersionCheck(int maj1, int min1, int rel1,
-                                        int maj2, int min2, int rel2)
-{
-    // package 1 < package 2 ?
-    if (maj1 < maj2) return -1;
-    if (maj1 == maj2 && min1 < min2) return -1;
-    if (maj1 == maj2 && min1 == min2 && rel1 < rel2) return -1;
-
-    // package 1 > package 2 ?
-    if (maj1 > maj2) return 1;
-    if (maj1 == maj2 && min1 > min2) return 1;
-    if (maj1 == maj2 && min1 == min2 && rel1 > rel2) return 1;
-
-    // package 1 == package 2 ?
-    wxASSERT(maj1 == maj2 && min1 == min2 && rel1 == rel2);
-    return 0;
-}
-
-// static
-bool wxWebUpdatePackage::ExtractVersionNumbers(const wxString &str, int *maj,
-                                            int *min, int *rel)
-{
-    unsigned long n;
-
-    // extract the single version numbers in string format
-    wxString major = str.BeforeFirst(wxT('.'));
-    wxString minor = str.AfterFirst(wxT('.')).BeforeFirst(wxT('.'));
-    wxString release = str.AfterFirst(wxT('.')).AfterFirst(wxT('.'));
-
-    if (major.IsEmpty() || !major.IsNumber() ||
-        (!minor.IsEmpty() && !minor.IsNumber()) ||
-        (!release.IsEmpty() && !release.IsNumber()))
-        return FALSE;           // invalid version format !
-    if (minor.IsEmpty())
-        minor = wxT("0");                   // allow version formats of the type "1" = "1.0.0"
-    if (release.IsEmpty())
-        release = wxT("0");             // allow version formats of the type "1.2" = "1.2.0"
-
-    // then convert them in numbers
-    major.ToULong(&n);
-    if (maj) *maj = (int)n;
-    minor.ToULong(&n);
-    if (min) *min = (int)n;
-    release.ToULong(&n);
-    if (rel) *rel = (int)n;
-
-    return TRUE;
 }
 
 void wxWebUpdatePackage::CacheDownloadSizes()
@@ -1188,7 +1195,7 @@ wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdow
             // this keyword will be removed when exiting from this XML node
             list[wxT("thisfile")] = list[wxT("downloaddir")] +
                 wxFileName::GetPathSeparator() +
-                wxGetFileNameFromURI(uri).GetFullName();
+                wxFileSystem::URLToFileName(uri).GetFullName();
 
         } else if (child->GetName() == wxT("md5")) {
 
@@ -1258,11 +1265,11 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) c
         } else if (child->GetName() == wxT("latest-version")) {
 
             // get the version string
-            ret->m_strLatestVersion = GetNodeContent(child);
+            ret->m_verLatest = GetNodeContent(child);
             ret->m_importance = wxWUPI_NORMAL;          // by default
 
             // add the "latest-version" keyword
-            list[wxT("latest-version")] = ret->m_strLatestVersion;      // will be removed when exiting
+            list[wxT("latest-version")] = ret->m_verLatest;  // will be removed when exiting
 
             // and this version's importance (if available)
             wxXmlProperty *prop = child->GetProperties();

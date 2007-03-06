@@ -9,8 +9,6 @@
 /////////////////////////////////////////////////////////////////////////////
 
 
-
-
 // For compilers that support precompilation, includes "wx.h".
 #include "wx/wxprec.h"
 
@@ -154,24 +152,41 @@ void wxWebUpdateListCtrl::SetRemotePackages(const wxWebUpdatePackageArray &arr)
     CacheDownloadSizes();
 }
 
-wxWebUpdateCheckFlag wxWebUpdateListCtrl::SetLocalVersionFor(int idx, wxWebUpdatePackage &curr)
+wxWebUpdateCheckFlag wxWebUpdateListCtrl::CompareVersion(const wxWebUpdatePackage &curr) const
+{
+    const wxWebUpdateLocalPackage &local = GetLocalPackage(curr.GetName());
+
+    if (!local.IsOk())
+        return wxWUCF_NOTINSTALLED;
+
+    if (!local.GetVersion().IsOk() ||
+        !curr.GetLatestVersion().IsOk())
+        return wxWUCF_FAILED;
+
+    if (local.GetVersion() < curr.GetLatestVersion())
+        return wxWUCF_OUTOFDATE;
+
+    wxASSERT(local.GetVersion() >= curr.GetLatestVersion());
+    return wxWUCF_UPDATED;
+}
+
+void wxWebUpdateListCtrl::SetLocalVersionFor(int idx, const wxWebUpdatePackage &curr)
 {
     // here we need some further work to find if this package
     // is already installed...
-    wxWebUpdateLocalPackage &local = GetLocalPackage(curr.GetName());
+    const wxWebUpdateLocalPackage &local = GetLocalPackage(curr.GetName());
 
     if (!local.IsOk()) {
 
         // a matching local package does not exist...
         SetItem(idx, 2, _("not installed"));
-        return wxWUCF_NOTINSTALLED;
+        return;
     }
 
     SetItem(idx, 2, local.GetVersion());
 
     // compare versions
-    wxWebUpdateCheckFlag f = curr.Check(local.GetVersion());
-    if (f == wxWUCF_OUTOFDATE) {
+    if (curr.GetLatestVersion() > local.GetVersion()) {
 
         // build a bold font
         wxFont font(GetFont());
@@ -185,9 +200,6 @@ wxWebUpdateCheckFlag wxWebUpdateListCtrl::SetLocalVersionFor(int idx, wxWebUpdat
         li.SetTextColour(*wxRED);
         SetItem(li);
     }
-
-    // let the caller handle this flag
-    return f;
 }
 
 void wxWebUpdateListCtrl::RebuildPackageList(wxWebUpdateListCtrlFilter filter)
@@ -219,8 +231,10 @@ void wxWebUpdateListCtrl::RebuildPackageList(wxWebUpdateListCtrlFilter filter)
         // set the properties for the third column (LOCAL VERSION)
         // -------------------------------------------------------
 
-        // tocheck is TRUE for outdated items
-        wxWebUpdateCheckFlag f = SetLocalVersionFor(idx, curr);
+        SetLocalVersionFor(idx, curr);
+
+        // tocheck will be TRUE for outdated items:
+        wxWebUpdateCheckFlag f = CompareVersion(curr);
         bool tocheck = (f == wxWUCF_OUTOFDATE || f == wxWUCF_NOTINSTALLED);
 
         if (IsToDiscard(filter, idx, curr, f)) {
@@ -281,7 +295,7 @@ void wxWebUpdateListCtrl::RebuildPackageList(wxWebUpdateListCtrlFilter filter)
         SetItemState(0, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
 }
 
-wxWebUpdateLocalPackage &wxWebUpdateListCtrl::GetLocalPackage(const wxString &name)
+const wxWebUpdateLocalPackage &wxWebUpdateListCtrl::GetLocalPackage(const wxString &name) const
 {
     for (int j=0; j < (int)m_arrLocalPackages.GetCount(); j++)
         if (m_arrLocalPackages[j].GetName() == name)
@@ -289,7 +303,7 @@ wxWebUpdateLocalPackage &wxWebUpdateListCtrl::GetLocalPackage(const wxString &na
     return wxEmptyWebUpdateLocalPackage;
 }
 
-wxWebUpdatePackage &wxWebUpdateListCtrl::GetRemotePackage(const wxString &name)
+const wxWebUpdatePackage &wxWebUpdateListCtrl::GetRemotePackage(const wxString &name) const
 {
     for (int j=0; j<(int)m_arrRemotePackages.GetCount(); j++)
         if (m_arrRemotePackages[j].GetName() == name)
@@ -369,7 +383,7 @@ void wxWebUpdateListCtrl::OnCacheSizeComplete(wxCommandEvent &ev)
     // modify the items currently shown
     for (int j=0; j < GetItemCount(); j++) {
 
-        wxWebUpdatePackage &p = GetRemotePackage(GetItemText(j));
+        const wxWebUpdatePackage &p = GetRemotePackage(GetItemText(j));
         wxASSERT_MSG(p.GetDownload().IsDownloadSizeCached(),
                     wxT("Why does this item has not a cached size ?"));
         unsigned long bytesize = p.GetDownload().GetDownloadSize();
@@ -418,24 +432,6 @@ void wxWebUpdateListCtrl::CacheDownloadSizes()
 #endif
 }
 
-wxWebUpdateCheckFlag wxWebUpdateListCtrl::IsPackageUp2date(const wxWebUpdatePackage &remote)
-{
-    // check the packages
-    if (!remote.IsOk()) {
-
-        wxLogAdvMsg(wxT("wxWebUpdateListCtrl::IsPackageUp2date - the ") +
-                    remote.GetName() +
-                    wxT(" package does not exist !"));
-        return wxWUCF_FAILED;
-    }
-
-    wxWebUpdateLocalPackage &local = GetLocalPackage(remote.GetName());
-    if (!local.IsOk())
-        return wxWUCF_NOTINSTALLED;
-
-    return remote.Check(local.GetVersion());
-}
-
 bool wxWebUpdateListCtrl::IsToDiscard(wxWebUpdateListCtrlFilter filter,
                                       int, const wxWebUpdatePackage &pkg,
                                       wxWebUpdateCheckFlag f) const
@@ -458,9 +454,10 @@ void wxWebUpdateListCtrl::UpdatePackagesVersions(wxWebUpdateListCtrlFilter filte
 {
     for (int j=0; j < GetItemCount(); j++) {
 
-        wxWebUpdatePackage &curr = m_arrRemotePackages[GetPackageIndexForItem(j)];
-        wxWebUpdateCheckFlag f = SetLocalVersionFor(j, curr);
+        const wxWebUpdatePackage &curr = m_arrRemotePackages[GetPackageIndexForItem(j)];
+        SetLocalVersionFor(j, curr);
 
+        wxWebUpdateCheckFlag f = CompareVersion(curr);
         if (IsToDiscard(filter, j, curr, f)) {
 
             DeleteItem(j);
@@ -482,7 +479,7 @@ bool wxWebUpdateListCtrl::CanBeChecked(int n)
     if (m_bLocked) return FALSE;        // discard user interaction in any case.
 
     // cannot check packages which are already up-to-date...
-    wxWebUpdateCheckFlag f = IsPackageUp2date(m_arrRemotePackages[GetPackageIndexForItem(n)]);
+    wxWebUpdateCheckFlag f = CompareVersion(m_arrRemotePackages[GetPackageIndexForItem(n)]);
     if (f == wxWUCF_UPDATED || f == wxWUCF_FAILED)
         return FALSE;
     return TRUE;
@@ -496,7 +493,7 @@ bool wxWebUpdateListCtrl::CanBeUnchecked(int n)
 #ifdef __WXDEBUG__
     wxWebUpdateCheckFlag f =
 #endif
-        IsPackageUp2date(m_arrRemotePackages[GetPackageIndexForItem(n)]);
+        CompareVersion(m_arrRemotePackages[GetPackageIndexForItem(n)]);
     wxASSERT_MSG(f != wxWUCF_UPDATED && f != wxWUCF_FAILED,
                 wxT("That item should not have been checked !"));
     return TRUE;
@@ -539,7 +536,7 @@ bool wxWebUpdateListCtrl::IsReadyForInstallation(int n)
 
     // are all packages installed & up2date ?
     for (int i=0; i < (int)str.GetCount(); i++)
-        if (IsPackageUp2date(str[i]) != wxWUCF_UPDATED)
+        if (CompareVersion(str[i]) != wxWUCF_UPDATED)
             return FALSE;
 
     return TRUE;

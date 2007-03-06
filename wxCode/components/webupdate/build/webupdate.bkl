@@ -12,7 +12,7 @@
     <!-- =========================== -->
 
     <set var="USE_HTTPENGINE_DEFAULT">1</set>
-    <set var="HTTPENGINE_DIR_DEFAULT">1</set>
+    <set var="HTTPENGINE_DIR_DEFAULT">$(nativePaths('../../httpengine'))</set>
 
     <if cond="FORMAT_SUPPORTS_CONDITIONS=='1'">
         <option name="USE_HTTPENGINE">
@@ -29,7 +29,7 @@
     </if>
     <if cond="FORMAT_SUPPORTS_CONDITIONS=='0'">
         <set var="USE_HTTPENGINE">$(USE_HTTPENGINE_DEFAULT)</set>
-        <set var="HTTPENGINE_DIR">$(nativePaths('../../httpengine'))</set>
+        <set var="HTTPENGINE_DIR">$(HTTPENGINE_DIR_DEFAULT)</set>
     </if>
 
     <!-- handle the HTTPENGINE optional dependency -->
@@ -115,6 +115,7 @@
             <wx-lib>html</wx-lib>
         </if>
 
+        <wx-lib>adv</wx-lib>
         <wx-lib>xrc</wx-lib>
         <wx-lib>xml</wx-lib>
         <wx-lib>net</wx-lib>
@@ -162,10 +163,16 @@
 
         <!-- the WebUpdater utility... -->
         <exe id="webupdater" template="wx,wxlike,wxcode-basic,webupdatecommon">
-            <depends>locale</depends>
+            <if cond="FORMAT=='autoconf'">
+                <depends>i18n</depends>
+            </if>
+
+            <!-- NOTE: it's important to put the EXE in the src folder
+                       as it's required by the 'copy' rules later
+            -->
+            <dirname>$(SRCDIR)/src</dirname>
 
             <app-type>gui</app-type>
-            <dirname>$(SRCDIR)</dirname>
             <res-include>$(SRCDIR)/src</res-include>
 
             <msvc-file-group>XRC:*.xrc</msvc-file-group>
@@ -184,12 +191,12 @@
     <!--             Our SAMPLES             -->
     <!-- =================================== -->
 
-    <set var="COMP_SAMPLE1_DIR"></set>
-    <set var="COMP_SAMPLE1_UPDATED_DIR">$(SRCDIR)/samples/simple/v2.0.3</set>
-    <set var="COMP_SAMPLE2_DIR">$(SRCDIR)/samples/advanced/v0.0.1</set>
-    <set var="COMP_SAMPLE2_UPDATED_DIR">$(SRCDIR)/samples/advanced/v1.5.0</set>
+    <set var="COMP_SAMPLE1_DIR">samples/simple/v1.0.0</set>
+    <set var="COMP_SAMPLE1_UPDATED_DIR">samples/simple/v2.0.3</set>
+    <set var="COMP_SAMPLE2_DIR">samples/advanced/v0.0.1</set>
+    <set var="COMP_SAMPLE2_UPDATED_DIR">samples/advanced/v1.5.0</set>
 
-    <!-- after the creation of the EXE, put the WebUpdater XRC file and
+    <!-- after the creation of the exe, put the WebUpdater XRC file and
          the LANG/ folder in all samples folders -->
     <if cond="TARGETING_IDE=='0'">
 
@@ -210,7 +217,7 @@
                 <dependency-of>all</dependency-of>
             </template>
             <define-tag name="dst">
-                <dstdir>$(value)</dstdir>
+                <dstdir>$(SRCDIR)/$(value)</dstdir>
                 <clean-files>$(FILE1)</clean-files>
                 <clean-files>$(FILE2)</clean-files>
             </define-tag>
@@ -222,7 +229,7 @@
                 <dependency-of>all</dependency-of>
             </template>
             <define-tag name="dst">
-                <dstdir>$(value)/lang</dstdir>
+                <dstdir>$(SRCDIR)/$(value)/lang</dstdir>
             </define-tag>
         </define-rule>
 
@@ -277,33 +284,29 @@ $(TAB)copy "$(DOLLAR)(InputPath)" "$(_output)"
     <define-tag name="samplestuff" rules="exe">
         <msvc-file-group>WebUpdater stuff:*.xrc *.exe</msvc-file-group>
         <msvc-copy-xrc>$(value)</msvc-copy-xrc>
-
-        <dirname>$(value)</dirname>
-        <res-include>$(value)</res-include>
-        <win32-res>$(value)/minimal.rc</win32-res>
     </define-tag>
 
 
     <!-- use '_' instead of '-' or '.' because MSVC6 does not like these chars -->
-    <exe id="simple_1_0_0" template="webupdatecompsample">
+    <wxcode-sample id="simple_1_0_0" template="webupdatecompsample">
+        <dir>$(COMP_SAMPLE1_DIR)</dir>
+        <samplestuff>$(COMP_SAMPLE1_DIR)</samplestuff>
         <exename>simple</exename>
-        <sources>$(fileList('samples/simple/v1.0.0/*.cpp'))</sources>
-        <samplestuff>samples/simple/v1.0.0</samplestuff>
-    </exe>
-    <exe id="simple_2_0_3" template="webupdatecompsample">
+    </wxcode-sample>
+    <wxcode-sample id="simple_2_0_3" template="webupdatecompsample">
+        <dir>$(COMP_SAMPLE1_UPDATED_DIR)</dir>
+        <samplestuff>$(COMP_SAMPLE1_UPDATED_DIR)</samplestuff>
         <exename>simple</exename>
-        <sources>$(fileList('samples/simple/v2.0.3/*.cpp'))</sources>
-        <samplestuff>samples/simple/v2.0.3</samplestuff>
-    </exe>
-    <exe id="advanced_0_0_1" template="webupdatecompsample">
+    </wxcode-sample>
+    <wxcode-sample id="advanced_0_0_1" template="webupdatecompsample">
+        <dir>$(COMP_SAMPLE2_DIR)</dir>
+        <samplestuff>$(COMP_SAMPLE2_DIR)</samplestuff>
         <exename>advanced</exename>
-        <sources>$(fileList('samples/advanced/v0.0.1/*.cpp'))</sources>
-        <samplestuff>samples/advanced/v0.0.1</samplestuff>
-    </exe>
-    <exe id="advanced_1_5_0" template="webupdatecompsample">
+    </wxcode-sample>
+    <wxcode-sample id="advanced_1_5_0" template="webupdatecompsample">
+        <dir>$(COMP_SAMPLE2_UPDATED_DIR)</dir>
+        <samplestuff>$(COMP_SAMPLE2_UPDATED_DIR)</samplestuff>
         <exename>advanced</exename>
-        <sources>$(fileList('samples/advanced/v1.5.0/*.cpp'))</sources>
-        <samplestuff>samples/advanced/v1.5.0</samplestuff>
-    </exe>
+    </wxcode-sample>
 
 </makefile>

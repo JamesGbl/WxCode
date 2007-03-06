@@ -21,6 +21,11 @@
 #include <wx/panel.h>
 #include <wx/checkbox.h>
 #include <wx/textctrl.h>
+#include <wx/wfstream.h>
+
+#if wxUSE_HTTPENGINE
+    #include "wx/httpbuilder.h"
+#endif
 
 // defined later
 class wxStaticText;
@@ -59,6 +64,9 @@ class wxGauge;
 //! The ID of the XML webupdate resource script.
 #define wxWUD_XMLSCRIPT_ID				wxT("XMLSCRIPT")
 
+//! The ID of the threads
+#define wxWUD_INSTALL_THREAD_ID         654321
+#define wxWUD_DOWNLOAD_THREAD_ID        123456
 
 
 //! wxWebUpdateDlg and related classes are very flexible when loading the XRC resources:
@@ -303,8 +311,9 @@ protected:		// XML scripts
 
 protected:		// remote-related stuff
 
-	//! The thread we use to download the webupdate script & packages.
-	wxDownloadThread *m_dThread;
+    //! This variable is continuosly checked by our download thread and
+    //! we use it to communicate to it the PAUSE/CONTINUE/ABORT commands.
+    wxDownloadThreadFlag m_dThreadFlag;
 
 	//! The thread we use to install the packages.
 	wxWebUpdateInstallThread *m_iThread;
@@ -320,12 +329,31 @@ protected:		// wxWebUpdateDlg-internals
 
 	//! TRUE if we intentionally called wxDownloadThread::AbortDownload
 	//! because user asked us to do so.
-	bool m_bUserAborted;
+//	bool m_bUserAborted;
 
 	//! The current status of the dialog. Used by the dialog functions to
 	//! let #OnUpdateUI event handler know which label must be set in the
 	//! various static text controls of the dialog.
 	wxWebUpdateDlgStatus m_nStatus;
+
+protected:      // properties of the file being downloaded
+
+    // the name of the file being downloaded
+    wxString m_strOutput;
+
+    // the URI of the file being downloaded
+    wxString m_strURI;
+    
+    // a descriptive name for the file being downloaded
+    wxString m_strResName;
+    
+    wxString m_strID, m_strMD5;
+
+    // the correct ID
+    //wxString m_strRealID;
+
+    // put the downloaded stuff directly on a file on the hard disk:
+    wxFileOutputStream *m_pOutputFile;
 
 protected:		// init helpers
 
@@ -381,12 +409,15 @@ protected:		// event handlers
 	void OnAbout(wxCommandEvent &);
 	void OnShowFilter(wxCommandEvent &);
 	void OnShowHideAdv(wxCommandEvent &);
-	void OnUpdateUI(wxUpdateUIEvent &);
+	//void OnUpdateUI(wxUpdateUIEvent &);
 	void OnTextURL(wxTextUrlEvent &);
 	void OnSize(wxSizeEvent &);
 
 	// for event raised by our wxDownloadThread....
-	void OnDownloadComplete(wxCommandEvent &);
+    void OnDownloadComplete(wxDownloadEvent &);
+    void OnDownloadUpdate(wxDownloadEvent &);
+    void OnDownloadAbort(wxDownloadEvent &);
+    void OnDownloadUserAbort(wxDownloadEvent &);
 
 	// for event raised by our wxWebUpdateInstallThread...
 	void OnInstallationComplete(wxCommandEvent &);
@@ -421,8 +452,7 @@ public:
         { return m_ok; }
 
 	virtual ~wxWebUpdateDlg()
-		{ if (m_dThread) delete m_dThread;
-			if (m_iThread) delete m_iThread;}
+		{ wxDELETE(m_iThread); }
 
 
 public:		// main functions

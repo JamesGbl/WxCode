@@ -18,6 +18,7 @@
 #include "wx/url.h"
 #include "wx/log.h"
 #include "wx/textfile.h"
+#include "wx/versionrange.h"        // for wxVersion
 
 
 // defined later
@@ -38,27 +39,6 @@ extern WXDLLIMPEXP_DATA_WEBUPDATE(wxWebUpdateLocalPackage) wxEmptyWebUpdateLocal
 
 WXDLLIMPEXP_WEBUPDATE void wxUninitializeWebUpdate();
 
-//! The possible values of the "port" attribute of a wxWebUpdatePlatform object.
-enum wxWebUpdatePort {
-    wxWUP_INVALID = -1,         //!< Unrecognized platform.
-    wxWUP_MSW,                  //!< wxMSW.
-    wxWUP_GTK,                  //!< wxGTK.
-    wxWUP_OS2,                  //!< wxOS2.
-    wxWUP_MAC,                  //!< wxMac.
-    wxWUP_MOTIF,                //!< wxMotif.
-    wxWUP_X11,                  //!< wxX11.
-    wxWUP_MGL,                  //!< wxMGL.
-    wxWUP_ANY                   //!< platform-indepedent.
-};
-
-//! The possible values of the "architecture" attribute of a wxWebUpdatePlatform object.
-enum wxWebUpdateArch {
-    wxWUA_INVALID = -1,         //!< Unrecognized architecture.
-    wxWUA_32,                   //!< 32 bit.
-    wxWUA_64,                   //!< 64 bit.
-    wxWUA_ANY                   //!< architecture-indepedent.
-};
-
 //! This is a possible result from wxUpdateCheck::Check function.
 enum wxWebUpdateCheckFlag {
 
@@ -71,7 +51,6 @@ enum wxWebUpdateCheckFlag {
     wxWUCF_NOTINSTALLED  //!< The package is not installed on the user's PC.
 };
 
-
 //! The possible values of the "IMPORTANCE" attribute of the <LATEST-VERSION>
 //! tag of a wxWebUpdatePackage XML script.
 enum wxWebUpdatePackageImportance {
@@ -81,26 +60,18 @@ enum wxWebUpdatePackageImportance {
     wxWUPI_LOW,                 //!< Do not download it if you have a slow connection !
 };
 
-
-//! This is the most generic way to handle the 'version' of something.
-//! Currently wxWebUpdate classes support only the version format
-//! MAJOR.MINOR.RELEASE (in each field only numbers are allowed);
-//! if you need to support some other version format (maybe 1.23.4.4a
-//! or 1.2b or v4.3 ...) then you need to overload the following functions:
-//! - wxWebUpdate
-typedef wxString        wxVersion;
-#define wxEmptyVersion  wxEmptyString
-
-
-
 // the message sent to wxApp by wxWebUpdateAction::wxExecute
 DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_WEBUPDATE, wxEVT_COMMAND_EXECUTE, -1);
+#define EVT_EXECUTE(id, func) EVT_COMMAND(id, wxEVT_COMMAND_EXECUTE, func)
 
-#define EVT_EXECUTE(id, func)                         \
-    EVT_COMMAND(id, wxEVT_COMMAND_EXECUTE, func)
+// a port "id" which means all ports are valid
+#define wxPORT_ANY          ((wxPortId)0xFFFF)
 
+// an arch "id" which means all archs are valid
+#define wxARCH_ANY          ((wxArchitecture)0xFFFF)
 
-
+// invalid:
+#define wxPORT_INVALID       wxPORT_UNKNOWN
 
 
 // --------------------------------
@@ -175,7 +146,7 @@ public:
 
 
     bool IsOk() const
-        { return !m_strName.IsEmpty() && !m_version.IsEmpty(); }
+        { return !m_strName.IsEmpty() && m_version.IsOk(); }
 
     wxVersion GetVersion() const
         { return m_version; }
@@ -217,7 +188,7 @@ protected:
     //! The version of this WebUpdate XML script.
     //! This is different from the XML version (which should always be "1.0");
     //! this is the version of the WebUpdate DTD which is followed by this doc.
-    wxVersion m_strWebUpdateVersion;
+    wxVersion m_verWebUpdate;
 
     //! The name of the application whose packages must be updated.
     wxString m_strAppName;
@@ -447,50 +418,36 @@ private:
 WX_DECLARE_USER_EXPORTED_OBJARRAY(wxWebUpdateAction*, wxWebUpdateActionArray, WXDLLIMPEXP_WEBUPDATE);
 
 
+
 //! Identifies uniquely a platform.
-class WXDLLIMPEXP_WEBUPDATE wxWebUpdatePlatform : public wxObject
+class WXDLLIMPEXP_WEBUPDATE wxWebUpdatePlatform : public wxPlatformInfo
 {
 protected:
-
-    //! An enum indicating the name of the wx port targeted.
-    wxWebUpdatePort m_name;
-
-    //! An enum indicating the architecture targeted.
-    wxWebUpdateArch m_arch;
 
     //! The ID of the platform targeted (see wxGetOsDescription()).
     wxString m_strID;
 
-protected:      // string -> enum conversions
-
-    static wxWebUpdatePort GetPort(const wxString &portname);
-    static wxWebUpdateArch GetArch(const wxString &arch);
-
-protected:      // enum -> string conversions
-
-    static wxString GetPortString(wxWebUpdatePort);
-    static wxString GetArchString(wxWebUpdateArch);
-
 public:
 
     // constructor using enums
-    wxWebUpdatePlatform(const wxWebUpdatePort &port = wxWUP_ANY,
-                        const wxWebUpdateArch &arch = wxWUA_32,
+    wxWebUpdatePlatform(const wxPortId &port = wxPORT_ANY,
+                        const wxArchitecture &arch = wxARCH_32,
                         const wxString &id = wxT(".*"))
-                        : m_name(port), m_arch(arch) { SetID(id); }
+                : wxPlatformInfo(port, -1, -1, wxOS_UNKNOWN, -1, -1, arch)
+        { SetID(id); }
 
     // constructor with wxStrings
     wxWebUpdatePlatform(const wxString &portname,
                         const wxString &arch = wxT("32"),
                         const wxString &id = wxT(".*"))
-        { m_name = GetPort(portname); m_arch = GetArch(arch); SetID(id); }
+        { SetPortId(GetPortId(portname)); SetArchitecture(GetArch(arch)); SetID(id); }
 
     virtual ~wxWebUpdatePlatform() {}
 
 
     //! Returns TRUE if all contained data is valid.
     bool IsOk() const
-        { return (m_name != wxWUP_INVALID && m_arch != wxWUA_INVALID && !m_strID.IsEmpty()); }
+        { return (wxPlatformInfo::IsOk() && !m_strID.IsEmpty()); }
 
     //! Returns TRUE if this platform is compatible with the given one.
     bool Matches(const wxWebUpdatePlatform &) const;
@@ -498,16 +455,8 @@ public:
 
 public:         // getters & setters
 
-    wxWebUpdateArch GetArchitecture() const
-        { return m_arch; }
     wxString GetID() const
         { return m_strID; }
-    wxWebUpdatePort GetPort() const
-        { return m_name; }
-    void SetPort(wxWebUpdatePort port)
-        { m_name = port; }
-    void SetArch(wxWebUpdateArch arch)
-        { m_arch = arch; }
     void SetID(const wxString &id)
         { m_strID = id.IsEmpty() ? wxT(".*") : id; }
 
@@ -517,7 +466,8 @@ public:         // getters & setters
 public:         // operators
 
     bool operator ==(const wxWebUpdatePlatform &a) const
-        { return (m_name == a.m_name && m_arch == a.m_arch && m_strID == a.m_strID); }
+        { return ((const wxPlatformInfo&)(*this) == (const wxPlatformInfo&)a) &&
+                 m_strID == a.m_strID; }
     bool operator !=(const wxWebUpdatePlatform &a) const
         { return !(*this == a); }
 
@@ -528,6 +478,7 @@ public:         // static platform utilities
     //! is currently running on.
     static wxWebUpdatePlatform GetThisPlatform();
 };
+
 
 //! Contains the info about an available download.
 class WXDLLIMPEXP_WEBUPDATE wxWebUpdateDownload : public wxObject
@@ -576,10 +527,10 @@ protected:
 
 public:
     wxWebUpdateDownload(const wxString &url,
-                        const wxWebUpdatePlatform &plat = wxWUP_INVALID,
+                        const wxWebUpdatePlatform &plat = wxPORT_INVALID,
                         const wxString &md5 = wxEmptyString,
                         const wxWebUpdateActionArray *actions = NULL)
-    : m_platform(wxWUP_INVALID), m_strMD5(md5), m_urlDownload(url)
+    : m_platform(wxPORT_INVALID), m_strMD5(md5), m_urlDownload(url)
         { SetPlatform(plat); m_size=1; if (actions) m_arrActions = *actions; }
 
     virtual ~wxWebUpdateDownload();
@@ -613,7 +564,7 @@ public:         // miscellaneous
     bool IsOk() const
         { return wxURL(m_urlDownload).GetError() == wxURL_NOERR &&
                     (m_strMD5.IsEmpty() || m_strMD5.Len() == 32) &&
-                    m_platform != wxWUP_INVALID; }
+                    m_platform != wxPORT_INVALID; }
 
     //! Like #IsOk() but returns TRUE only if this download is designed for
     //! the platform where the program is currently running on.
@@ -641,7 +592,7 @@ public:         // miscellaneous
     virtual wxString GetFileName() const;
 
 public:         // main functions
-
+/*
     //! Downloads this package using wxDownloadThread and put it in the given path.
     //! The given event handler will receive a wxDT_DOWNLOAD_COMPLETE event when
     //! the download has been completed.
@@ -662,7 +613,7 @@ public:         // main functions
                                 , const wxProxySettings &proxy
 #endif
                                 );
-
+*/
     //! Installs this download using the global wxWebUpdateInstaller class
     //! (see wxWebUpdateInstaller::Get).
     virtual bool Install() const;
@@ -679,7 +630,7 @@ public:     // setters
     //! Sets the platform targeted by this download.
     bool SetPlatform(const wxWebUpdatePlatform &plat) {
         m_platform = plat;
-        if (m_platform == wxWUP_INVALID)
+        if (m_platform == wxPORT_INVALID)
             return FALSE;
         return TRUE;
     }
@@ -721,7 +672,7 @@ protected:              // member variables
     //! version available on the webserver.
     //! This is stored as a wxVersion so that it's easy to override the #Check functions
     //! and use another parser (rather than #ExtractVersionNumbers) to do the check.
-    wxVersion m_strLatestVersion;
+    wxVersion m_verLatest;
 
     //! The description for this package.
     wxString m_strDescription;
@@ -738,18 +689,6 @@ protected:              // member variables
     //! This list should contain only the IDs of other existing packages.
     wxString m_strPrerequisites;
 
-public:         // utilities
-
-    //! Returns in the given int* the parsed version numbers of the given wxVersion.
-    static bool ExtractVersionNumbers(const wxVersion &str, int *maj, int *min, int *rel);
-
-    //! Returns
-    //!   1 when the package 1 is more updated than package 2
-    //!   0 when the package 1 has the same version of package 2
-    //!  -1 when the package 1 is older than package 2
-    static int StdVersionCheck(int maj1, int min1, int rel1,
-                            int maj2, int min2, int rel2);
-
 public:
     wxWebUpdatePackage(const wxString &id = wxEmptyString) : m_strID(id) {}
     virtual ~wxWebUpdatePackage() { m_arrWebUpdates.Clear(); }
@@ -758,8 +697,8 @@ public:         // package utilities
 
     //! Returns TRUE if this package was correctly initialized.
     bool IsOk() const
-        { return !m_strID.IsEmpty() && !m_strLatestVersion.IsEmpty() &&
-                m_arrWebUpdates.GetCount() > 0; }
+        { return !m_strID.IsEmpty() && m_verLatest.IsOk() &&
+                 m_arrWebUpdates.GetCount() > 0; }
 
     //! Adds the given download package to the array.
     virtual void AddDownload(const wxWebUpdateDownload &toadd)
@@ -770,23 +709,10 @@ public:         // package utilities
     //! so the returned object should be the only item which is designed for the
     //! given platform.
     virtual wxWebUpdateDownload &GetDownload(
-                wxWebUpdatePlatform plat = wxWUP_INVALID) const;
+                wxWebUpdatePlatform plat = wxPORT_INVALID) const;
 
     //! Caches the download sizes of all contained packages.
     virtual void CacheDownloadSizes();
-
-public:         // version check
-
-    //! Checks if the webserver holds a more recent version of the given package.
-    //! This function never returns the wxWUCF_NOTINSTALLED symbol since it's assumed
-    //! that the version you give is the version of the same package installed on
-    //! the user's PC.
-    //! \param strURL The URL of the XML file stored in the web server which holds
-    //!    the informations to parse.
-    //! \param version The string version of the package which is being tested.
-    //! \param packagename The name of the package whose version must be tested.
-    virtual wxWebUpdateCheckFlag Check(const wxVersion &localversion) const;
-    virtual wxWebUpdateCheckFlag Check(int maj, int min, int rel) const;
 
 public:         // getters
 
@@ -795,8 +721,8 @@ public:         // getters
         { return m_strID; }
 
     //! Returns the latest available version for this package.
-    wxString GetLatestVersion() const
-        { return m_strLatestVersion; }
+    wxVersion GetLatestVersion() const
+        { return m_verLatest; }
 
     //! Returns the description for this package.
     wxString GetDescription() const
