@@ -33,7 +33,7 @@
 ////Header Include End
 
 #include <wx/filedlg.h>
-#include "wxCommanderUtils.h"
+#include "wxOpenCommanderUtils.h"
 #include "multiLang.h"
 
 #include <map>

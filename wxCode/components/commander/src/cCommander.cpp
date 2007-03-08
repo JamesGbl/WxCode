@@ -53,6 +53,11 @@ void cCommander::setDevices(bool listDevices)
    blnDevices = listDevices;
 }
 
+bool cCommander::getListDevices()
+{
+   return blnDevices;
+}
+
 wxString cCommander::getActualPath()
 {
    return aPaths[actualPath];
@@ -74,14 +79,15 @@ wxString cCommander::getFileDirActualPath(long itemPos, long itemCol)
       break;
       case 1:
       {
-          if (wxDir::Exists(dirFileMap[itemPos]))
+          if (wxDir::Exists(getActualPath() + "//" + dirFileMap[itemPos]))
              return "<DIR>";
           else
-             return formatFileSize(getFileSize(dirFileMap[itemPos]));
+             return formatFileSize(getFileSize(getActualPath() + "//" + dirFileMap[itemPos]));
       }
       break;
       case 2:
-         return getModificationTime(dirFileMap[itemPos]);
+         wxString strFile = getActualPath() + "//" + dirFileMap[itemPos];
+         return getModificationTime(strFile);
       break;
    }   
 }
@@ -123,7 +129,7 @@ int cCommander::getIcon(long itemPos, long itemCol)
 {
    if (blnDevices) return getIconDevice(itemPos, itemCol);   
    if (itemPos == 0) return 1;
-   if (wxDir::Exists(dirFileMap[itemPos]))
+   if (wxDir::Exists(getActualPath() + "//" + dirFileMap[itemPos]))
       return 1;
    else
       return 0;
@@ -184,9 +190,9 @@ void cCommander::refreshFileDir()
     {
        wxStrFileName = directory + "\\" + filename;
        if (dir.Exists(wxStrFileName))
-          dirFileMap.push_back(wxStrFileName);
+          dirFileMap.push_back(filename);
        else
-          aFiles.push_back(wxStrFileName);
+          aFiles.push_back(filename);
        cont = dir.GetNext(&filename);
     }
     for (size_t i = 0 ; i < aFiles.size(); i++)

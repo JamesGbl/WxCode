@@ -8,7 +8,7 @@ Re&move Tab=E&liminar Pestaña
 &Copy=&Copiar
 &Delete=&Borrar
 &Rename=&Renombrar
-Execute=&Ejecutar
+&Execute=&Ejecutar
 &Exit=&Salir
 &Help=&Ayuda
 About as...=Acerca de...
@@ -19,11 +19,14 @@ Copy=Copiar
 Delete=Borrar
 Rename=Renonbrar
 Exec=Ejecutar
-Go=Ir a...
+Refresh=Refrescar...
 
 Files=Ficheros
 Size=Tamaño
 Date=Fecha
+
+&Restore wxOpenCommander=Mostrar wxOpenCommander
+&Hide wxOpenCommander=Ocultar wxOpenCommander
 
 Removable=Extraible
 Hard Disk=Disco duro

@@ -4,7 +4,7 @@
 
 
 #include <wx/string.h>
-#include "wxCommanderUtils.h"
+#include "wxOpenCommanderUtils.h"
 
 using namespace std;
 
@@ -32,6 +32,7 @@ class cCommander
       int getIconDevice(long itemPos, long itemCol);
       void refreshFileDir();
       void setDevices(bool listDevices);
+      bool getListDevices();
 
    private:
       bool blnDevices;

@@ -4,7 +4,7 @@
 
 #include <wx/progdlg.h>
 #include <wx/thread.h>
-#include "wxCommanderUtils.h"
+#include "wxOpenCommanderUtils.h"
 
 #define COPY 1
 

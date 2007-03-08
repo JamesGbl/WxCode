@@ -5,7 +5,7 @@
 #include <wx/timer.h>
 #include <wx/progdlg.h>
 #include "multiLang.h"
-#include "wxCommanderUtils.h"
+#include "wxOpenCommanderUtils.h"
 #include "CThread.h"
 
 class CTimer : wxTimer

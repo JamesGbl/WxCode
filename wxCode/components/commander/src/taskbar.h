@@ -1,20 +1,23 @@
 
 #include <wx/taskbar.h>
+#include "multiLang.h"
 
-class wxCommanderTaskBar: public wxTaskBarIcon
+class wxOpenCommanderTaskBar: public wxTaskBarIcon
 {
 public:
 #if defined(__WXCOCOA__)
-    wxCommanderTaskBar(wxFrame* window, wxTaskBarIconType iconType = DEFAULT_TYPE)   :   wxTaskBarIcon(iconType)
+    wxOpenCommanderTaskBar(wxFrame* window, wxTaskBarIconType iconType = DEFAULT_TYPE, multiLang* langMap)   :   wxTaskBarIcon(iconType)
     {
        isVisible = true;
        dialog = window;
+       lang = langMap;
     }
 #else
-    wxCommanderTaskBar(wxFrame* window)
+    wxOpenCommanderTaskBar(wxFrame* window, multiLang* langMap)
     {
        isVisible = true;
        dialog = window;
+       lang = langMap;
     }
 #endif
 
@@ -26,6 +29,7 @@ public:
 
   private:
     wxFrame* dialog;
+    multiLang* lang;
     bool isVisible;
 
 DECLARE_EVENT_TABLE()
