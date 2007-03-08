@@ -1,6 +1,6 @@
 /* XPM */
-static char *Self_wxCommanderFrm_XPM[]={
-/* Self_wxCommanderFrm */
+static char *Self_wxOpenCommanderFrm_XPM[]={
+/* Self_wxOpenCommanderFrm */
 "32 32 19 1",
 "      c None",
 "0     c #868686",
