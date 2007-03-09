@@ -10,7 +10,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-AU">
     <?php
       $compname = "wxExtMiniFrame";
-      $subdir = "wxextminiframe";
+      $subdir = "extminiframe";
       require("compwebsite.inc.php");
   ?>
 
@@ -22,8 +22,11 @@
   <p>Please note that, even if the cursor and the focus is given to the wxExtMiniFrame #2, also the wxMainFrame
   is drawn with an active titlebar: this is a trick which was hard to implement but it is quite common in the
   Win32 toolbars.<br/>
-  This is the same sample running on Red Hat 9.0 with KDE as the window manager:</p>
-  <div align="center"><?php writeScreenshotLink("kde.png", "The wxExtMiniFrame on wxX11"); ?></div>
+  This is the same sample running on Ubuntu under KDE/wxX11:</p>
+  <div align="center"><?php writeScreenshotLink("x11.png", "The wxExtMiniFrame on wxX11"); ?></div>
+
+  This is the same sample running on Ubuntu under KDE/wxGTK:</p>
+  <div align="center"><?php writeScreenshotLink("gtk.png", "The wxExtMiniFrame on wxGTK"); ?></div>
 
   <br/><?php write_h1("Future enhancements"); ?>
   <p>The wxExtMiniFrame component is complete under wxMSW, wxGTK and wxX11. The only feature missing in the
@@ -37,7 +40,7 @@
 
 
   <br/><?php write_h1("Known bugs"); ?>
-  <p>None. To submit a bug report please look at <a href="../../faq.php">wxCode FAQ</a>.</p>
+  <p>Look at the Readme. To submit a bug report please look at <a href="../../faq.php">wxCode FAQ</a>.</p>
 
 
   <br/><?php write_h1("Future enhancements"); ?>
