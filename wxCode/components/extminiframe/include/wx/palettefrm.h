@@ -23,6 +23,16 @@
 // the space left between two minibuttons in a wxExtMiniFrame caption
 #define wxEXTMINIFRM_BTN_GAP            2
 
+// the miniframe's title height:
+#ifdef __WXMSW__
+    #define wxEXTMINIFRM_TITLE_HEIGHT       17
+#else
+    #define wxEXTMINIFRM_TITLE_HEIGHT       20
+#endif
+
+// the border size
+#define wxEXTMINIFRM_BORDER_SIZE        2
+
 // button height is calculated as:
 //        wxEXTMINIFRM_BTN_HEIGHT_MULT * GetParent()->GetTitleHeight()
 #define wxEXTMINIFRM_BTN_HEIGHT_MULT    0.8
@@ -33,12 +43,6 @@
 // NOTE: this value should be near 1.0 because the button's Draw() functions
 //       expect the button to be similar to a square
 #define wxEXTMINIFRM_BTN_RATIO          1.2
-
-// under Win32 this is the DWORD which is attached to each wxExtMiniFrame
-// with the wxSetWindowUserData() to be able to identify it through the
-// wxGetWindowUserData()...
-#define wxEXTMINIFRM_MARKER             0xF0F0F0F0
-
 
 
 
@@ -90,7 +94,7 @@
 // the mask which is used to filter out unsupported window style
 // while creating wxExtMiniFrame windows
 #define wxEXTMINIFRM_STYLE_MASK         0xFFFFFFFFFFFFFFFF
-/*(wxCAPTION | wxRESIZE_BORDER |        \
+                                        /*(wxCAPTION | wxRESIZE_BORDER |        \
                                         wxFULL_REPAINT_ON_RESIZE |          \
                                         wxPOPUP_WINDOW |                    \
                                         wxCLOSE_BOX | wxMINIMIZE_BOX |      \

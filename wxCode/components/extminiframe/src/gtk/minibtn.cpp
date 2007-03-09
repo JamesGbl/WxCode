@@ -25,7 +25,6 @@
 // include GTK headers
 #include "gtk/gtk.h"
 #include "wx/gtk/win_gtk.h"
-//#include "wx/gtk/private.h"
 #include <gdk/gdk.h>
 #include <gdk/gdkprivate.h>
 #include <gdk/gdkx.h>
@@ -210,11 +209,11 @@ void wxCollapseBox::CreateButtonWidget(char **xpm)
 {
     // create the pixmap & its mask
     GdkBitmap *mask = (GdkBitmap*) NULL;
-    GdkPixmap *pixmap = gdk_pixmap_create_from_xpm_d(
-        wxGetRootWindow()->window,
-        &mask,
-        NULL,
-        (char **)xpm);
+    GdkPixmap *pixmap =
+        gdk_pixmap_create_from_xpm_d(wxGetRootWindow()->window,
+                                     &mask,
+                                     NULL,
+                                     (char **)xpm);
 
     // WARNING: this is very different from a wxMiniButton::CreateButtonWidget;
     //          a GtkPixmap cannot be modified after its creation, a GtkImage
@@ -224,7 +223,7 @@ void wxCollapseBox::CreateButtonWidget(char **xpm)
     gdk_bitmap_unref( mask );
     gdk_pixmap_unref( pixmap );
     gtk_widget_show( pw );
-    
+
     // create a GtkButton widget containing the GtkImage widget
     m_button = gtk_button_new();
     gtk_container_add( GTK_CONTAINER(m_button), pw );
@@ -235,22 +234,22 @@ void wxCollapseBox::UpdatePixmap()
     bool rolled = isParentRolled();
     if ((rolled && !m_bShowingRolled) ||
         (!rolled && m_bShowingRolled))
-        m_bShowingRolled = !m_bShowingRolled;		// update is required
+        m_bShowingRolled = !m_bShowingRolled;       // update is required
     else
-        return;				// no update is required	
+        return;                                     // no update is required
 
     GtkWidget *image = gtk_bin_get_child((GtkBin*)m_button);
     if (image == NULL || !GTK_IS_IMAGE(image)) return;
-    
+
     wxEXTMF_LOG(wxT("wxCollapseBox::UpdatePixmap - updating the button pixmap"));
     GdkBitmap *mask = (GdkBitmap*) NULL;
-    GdkPixmap *pix = gdk_pixmap_create_from_xpm_d(
-        wxGetRootWindow()->window,
-        &mask,
-        NULL,
-        (char **)(m_bShowingRolled ? m_pixmapRolled : m_pixmapUnrolled));
-    
-    gtk_image_set_from_pixmap( (GtkImage*)image, pix, mask);
+    GdkPixmap *pix =
+        gdk_pixmap_create_from_xpm_d(wxGetRootWindow()->window,
+                                     &mask,
+                                     NULL,
+                                     (char **)(m_bShowingRolled ? m_pixmapRolled : m_pixmapUnrolled));
+
+    gtk_image_set_from_pixmap( (GtkImage*)image, pix, mask );
     gdk_bitmap_unref( mask );
     gdk_bitmap_unref( pix );
 }
@@ -259,15 +258,15 @@ bool wxCollapseBox::Exec()
 {
     wxEXTMF_LOG(wxT("wxCollapseBoxGTK::Exec - parent rollstate: %d"), isParentRolled());
     bool ret = wxCollapseBoxBase::Exec();
-    
+
     // maybe we need to change the GdkPixmap used for this button...
     UpdatePixmap();
     return ret;
 }
 
 void wxCollapseBox::Draw(wxDC &, int, int)
-{ 
+{
     // when the minibutton must be updated, this function is often called...
-    UpdatePixmap(); 	
+    UpdatePixmap();
 }
 

@@ -21,10 +21,14 @@
 // include GTK headers
 #include "gtk/gtk.h"
 #include "wx/gtk/win_gtk.h"
-//#include "wx/gtk/private.h"
 #include <gdk/gdk.h>
 #include <gdk/gdkprivate.h>
 #include <gdk/gdkx.h>
+
+
+#ifndef __WXGTK20__
+    #error Only wxGTK builds against GTK+ 2.0 or higher are supported!
+#endif
 
 
 // wxWidgets RTTI system
@@ -40,8 +44,6 @@ BEGIN_EVENT_TABLE(wxExtMiniFrame, wxFrame)
     EVT_COLLAPSEBOX_CLICKED( -1, wxExtMiniFrameBase::OnCollapseBox )
 
 END_EVENT_TABLE()
-
-
 
 
 //-----------------------------------------------------------------------------
@@ -76,7 +78,10 @@ static void DrawFrame( GtkWidget *widget, int x, int y, int w, int h )
     gdk_gc_set_subwindow( gc, GDK_INCLUDE_INFERIORS );
     gdk_gc_set_function( gc, GDK_INVERT );
 
-    gdk_draw_rectangle( GDK_ROOT_PARENT(), gc, FALSE, x, y, w, h );
+    // NOTE: the -1 in the following line are _very_ important as otherwise the
+    //       XOR rectangle will be drawn over other windows and when the extminiframe
+    //       is moved around, it will leave traces over them.
+    gdk_draw_rectangle( GDK_ROOT_PARENT(), gc, FALSE, x, y, w-1, h-1 );
     gdk_gc_unref( gc );
 }
 
@@ -85,7 +90,7 @@ static void DrawFrame( GtkWidget *widget, int x, int y, int w, int h )
 //-----------------------------------------------------------------------------
 
 static void gtk_window_own_expose_callback( GtkWidget *widget,
-                                           GdkEventExpose *gdk_event, wxExtMiniFrame *win )
+                                            GdkEventExpose *gdk_event, wxExtMiniFrame *win )
 {
     wxEXTMF_LOG(wxT("gtk_window_own_expose_callback"));
     if (g_isIdle) wxapp_install_idle_handler();
@@ -97,19 +102,17 @@ static void gtk_window_own_expose_callback( GtkWidget *widget,
 
     // draw the borders
     gtk_draw_shadow( widget->style,
-        pizza->bin_window,
-        GTK_STATE_NORMAL,
-        GTK_SHADOW_OUT,
-        0, 0,
-        win->m_width, win->m_height );
+                     pizza->bin_window,
+                     GTK_STATE_NORMAL,
+                     GTK_SHADOW_OUT,
+                     0, 0,
+                     win->m_width, win->m_height );
 
     if (!win->GetTitle().IsEmpty() &&
-        ((win->GetWindowStyle() & wxCAPTION) ||
-        (win->GetWindowStyle() & wxTINY_CAPTION_HORIZ) ||
-        (win->GetWindowStyle() & wxTINY_CAPTION_VERT)))
+        (win->HasFlag(wxCAPTION) || win->HasFlag(wxTINY_CAPTION_HORIZ) || win->HasFlag(wxTINY_CAPTION_VERT)))
     {
         wxClientDC dc(win);
-        dc.SetFont( *wxSMALL_FONT );
+        dc.SetFont( win->GetFont() );
 
         // get the metrics of the paletteframe involved:
         // some adjustments are hardcoded to make the extminiframe looks better
@@ -117,72 +120,30 @@ static void gtk_window_own_expose_callback( GtkWidget *widget,
 
         GdkGC *gc = gdk_gc_new( pizza->bin_window );
         gdk_gc_set_foreground( gc, &widget->style->bg[GTK_STATE_SELECTED] );
+
+        // gdk_draw_rectangle requires the width & height of rect here
         gdk_draw_rectangle( pizza->bin_window, gc, TRUE,
-            bs*2, bs+1,
-            win->m_width - bs*4, height );      // gdk_draw_rectangle requires the width & height of rect here
+                            bs*2, bs+1,
+                            win->m_width - bs*4, height );
         gdk_gc_unref( gc );
 
         // Hack alert
         dc.m_window = pizza->bin_window;
         dc.SetTextForeground( *wxWHITE );
-        dc.DrawText( win->GetTitle(), bs*3, bs*2 );
+
+        // center the title of the miniframe inside a box which starts at y = bs*2
+        // and is win->GetTitleHeight() tall
+        dc.DrawText( win->GetTitle(), bs*3, bs*2 + (win->GetTitleHeight()-dc.GetCharHeight())/2 );
     }
 }
 
-//-----------------------------------------------------------------------------
-// "draw" of m_mainWidget
-//-----------------------------------------------------------------------------
-
-#ifndef __WXGTK20__
-static void gtk_window_own_draw_callback( GtkWidget *widget,
-                                         GdkRectangle *WXUNUSED(rect), wxFrame *win )
-{
-    wxEXTMF_LOG(wxT("gtk_window_own_draw_callback"));
-    if (g_isIdle) wxapp_install_idle_handler();
-
-    if (!win->m_hasVMT) return;
-
-    GtkPizza *pizza = GTK_PIZZA(widget);
-
-    gtk_draw_shadow( widget->style,
-        pizza->bin_window,
-        GTK_STATE_NORMAL,
-        GTK_SHADOW_OUT,
-        0, 0,
-        win->m_width, win->m_height );
-
-    if (!win->m_title.IsEmpty() &&
-        ((win->GetWindowStyle() & wxCAPTION) ||
-        (win->GetWindowStyle() & wxTINY_CAPTION_HORIZ) ||
-        (win->GetWindowStyle() & wxTINY_CAPTION_VERT)))
-    {
-        wxClientDC dc(win);
-        dc.SetFont( *wxSMALL_FONT );
-        int height = dc.GetCharHeight();
-
-        GdkGC *gc = gdk_gc_new( pizza->bin_window );
-        gdk_gc_set_foreground( gc, &widget->style->bg[GTK_STATE_SELECTED] );
-        gdk_draw_rectangle( pizza->bin_window, gc, TRUE,
-            3,
-            3,
-            win->m_width - 7,
-            height+1 );
-        gdk_gc_unref( gc );
-
-        // Hack alert
-        dc.m_window = pizza->bin_window;
-        dc.SetTextForeground( *wxWHITE );
-        dc.DrawText( win->GetTitle(), 6, 3 );
-    }
-}
-#endif
 
 //-----------------------------------------------------------------------------
 // "button_press_event" of m_mainWidget
 //-----------------------------------------------------------------------------
 
 static gint gtk_window_button_press_callback( GtkWidget *widget,
-                                             GdkEventButton *gdk_event, wxExtMiniFrame *win )
+                                              GdkEventButton *gdk_event, wxExtMiniFrame *win )
 {
     wxEXTMF_LOG(wxT("gtk_window_button_press_callback"));
     if (g_isIdle) wxapp_install_idle_handler();
@@ -198,8 +159,8 @@ static gint gtk_window_button_press_callback( GtkWidget *widget,
     if (gdk_event->button == 3) {
 
         wxEXTMF_LOG(wxT("gtk_window_button_press_callback - handling a right click at [%d;%d] for [%d]; ")
-            wxT("palettefrm label window is [%d]"),
-            (int)gdk_event->x, (int)gdk_event->y, gdk_event->window, win->m_gdkLabelWnd);
+                    wxT("palettefrm label window is [%d]"),
+                    (int)gdk_event->x, (int)gdk_event->y, gdk_event->window, win->m_gdkLabelWnd);
         wxPoint pt((int)gdk_event->x, (int)gdk_event->y);// + win->GetTitleHeight());
 
         if (win &&
@@ -212,6 +173,7 @@ static gint gtk_window_button_press_callback( GtkWidget *widget,
 
         } else
             wxEXTMF_LOG(wxT("gtk_window_button_press_callback - skipping this right click"));
+
         return TRUE;
     }
 #endif
@@ -219,25 +181,27 @@ static gint gtk_window_button_press_callback( GtkWidget *widget,
     GtkPizza *pizza = GTK_PIZZA(widget);
     if (gdk_event->window != pizza->bin_window) return TRUE;
 
+    // discard this event if the click has not been done hover the title bar
+    // (see also the gtk_window_own_expose_callback to see how the geometry is computed)
+    int bs = win->GetBorderSize();
+    if (gdk_event->y > bs + 1 + win->GetTitleHeight()) return TRUE;
+
     wxClientDC dc(win);
     dc.SetFont( *wxSMALL_FONT );
-    int height = dc.GetCharHeight() + 1;
-
-    if (gdk_event->y > height) return TRUE;
 
     gdk_window_raise( win->m_widget->window );
 
     gdk_pointer_grab( widget->window, FALSE,
-        (GdkEventMask)
-        (GDK_BUTTON_PRESS_MASK |
-        GDK_BUTTON_RELEASE_MASK |
-        GDK_POINTER_MOTION_MASK        |
-        GDK_POINTER_MOTION_HINT_MASK  |
-        GDK_BUTTON_MOTION_MASK        |
-        GDK_BUTTON1_MOTION_MASK),
-        (GdkWindow *) NULL,
-        (GdkCursor *) NULL,
-        (unsigned int) GDK_CURRENT_TIME );
+                    (GdkEventMask)
+                    (GDK_BUTTON_PRESS_MASK |
+                    GDK_BUTTON_RELEASE_MASK |
+                    GDK_POINTER_MOTION_MASK        |
+                    GDK_POINTER_MOTION_HINT_MASK  |
+                    GDK_BUTTON_MOTION_MASK        |
+                    GDK_BUTTON1_MOTION_MASK),
+                    (GdkWindow *) NULL,
+                    (GdkCursor *) NULL,
+                    (unsigned int) GDK_CURRENT_TIME );
 
     win->m_diffX = (int)gdk_event->x;
     win->m_diffY = (int)gdk_event->y;
@@ -254,7 +218,8 @@ static gint gtk_window_button_press_callback( GtkWidget *widget,
 // "button_release_event" of m_mainWidget
 //-----------------------------------------------------------------------------
 
-static gint gtk_window_button_release_callback( GtkWidget *widget, GdkEventButton *gdk_event, wxExtMiniFrame *win )
+static gint gtk_window_button_release_callback( GtkWidget *widget,
+                                                GdkEventButton *gdk_event, wxExtMiniFrame *win )
 {
     wxEXTMF_LOG(wxT("gtk_window_button_release_callback"));
     if (g_isIdle) wxapp_install_idle_handler();
@@ -288,7 +253,8 @@ static gint gtk_window_button_release_callback( GtkWidget *widget, GdkEventButto
 // "motion_notify_event" of m_mainWidget
 //-----------------------------------------------------------------------------
 
-static gint gtk_window_motion_notify_callback( GtkWidget *widget, GdkEventMotion *gdk_event, wxExtMiniFrame *win )
+static gint gtk_window_motion_notify_callback( GtkWidget *widget,
+                                               GdkEventMotion *gdk_event, wxExtMiniFrame *win )
 {
     if (g_isIdle) wxapp_install_idle_handler();
 
@@ -327,8 +293,8 @@ static gint gtk_window_motion_notify_callback( GtkWidget *widget, GdkEventMotion
 //-----------------------------------------------------------------------------
 
 bool wxExtMiniFrame::Create( wxMainFrame *parent, wxWindowID id, const wxString &title,
-                            const wxPoint &pos, const wxSize &size,
-                            long style, const wxString &name )
+                             const wxPoint &pos, const wxSize &size,
+                             long style, const wxString &name )
 {
     if ((style & wxCAPTION) || (style & wxTINY_CAPTION_HORIZ) || (style & wxTINY_CAPTION_VERT))
         m_miniTitle = GetTitleHeight();
@@ -348,19 +314,13 @@ bool wxExtMiniFrame::Create( wxMainFrame *parent, wxWindowID id, const wxString 
     // this let us to be placed over the parent...
     if (m_parent && (GTK_IS_WINDOW(m_parent->m_widget))) {
         gtk_window_set_transient_for( GTK_WINDOW(m_widget), GTK_WINDOW(parent->m_widget) );
-#ifdef __WXGTK20__
         gtk_window_set_skip_taskbar_hint(GTK_WINDOW(m_widget), TRUE);
-#endif
     }
 
     // these are called when the borders are drawn
     gtk_signal_connect( GTK_OBJECT(m_mainWidget), "expose_event",
         GTK_SIGNAL_FUNC(gtk_window_own_expose_callback), (gpointer)this );
-
-#ifndef __WXGTK20__
-    gtk_signal_connect( GTK_OBJECT(m_mainWidget), "draw",
-        GTK_SIGNAL_FUNC(gtk_window_own_draw_callback), (gpointer)this );
-#endif
+    // WARNING: should we attach also the "draw" event?
 
     // these are required for dragging the mini frame around
     gtk_signal_connect( GTK_OBJECT(m_mainWidget), "button_press_event",
@@ -417,11 +377,10 @@ void wxMiniButton::CreateButtonWidget(char **xpm)
 {
     // create the pixmap & its mask
     GdkBitmap *mask = (GdkBitmap*) NULL;
-    GdkPixmap *pixmap = gdk_pixmap_create_from_xpm_d(
-        wxGetRootWindow()->window,
-        &mask,
-        NULL,
-        (char **)xpm);
+    GdkPixmap *pixmap = gdk_pixmap_create_from_xpm_d(wxGetRootWindow()->window,
+                                                     &mask,
+                                                     NULL,
+                                                     (char **)xpm);
 
     // create a GtkPixmap widget
     GtkWidget *pw = gtk_pixmap_new( pixmap, mask );
@@ -443,10 +402,11 @@ void wxMiniButton::CreatePixmap(char **xpm)
 
     // attach this GtkButton to our parent
     wxEXTMF_LOG(wxT("wxMiniButton::CreatePixmap - creating a pixmap placed at [%d;%d]"),
-                        GetPos().x, GetPos().y);
+                GetPos().x, GetPos().y);
     gtk_pizza_put( GTK_PIZZA(parent->m_mainWidget),
-        m_button,
-        GetPos().x, GetPos().y, GetSize().GetWidth(), GetSize().GetHeight() );
+                   m_button,
+                   GetPos().x, GetPos().y, 
+                   GetSize().GetWidth(), GetSize().GetHeight() );
     gtk_widget_show( m_button );
 
     // handle the click sent to the widget
@@ -456,17 +416,15 @@ void wxMiniButton::CreatePixmap(char **xpm)
 
 void wxMiniButton::Move(int x, int y)
 {
-    wxEXTMF_LOG(wxT("wxMiniButton::Move - moving at %d;%d"), x, y);
+    wxLogDebug(wxT("wxMiniButton::Move - moving at %d;%d"), x, y);
     wxASSERT(GetParent() != NULL);
 
     // move the button widget
-    //gtk_widget_set_uposition(m_button, x, y);
-    gtk_pizza_move(GTK_PIZZA(GetParent()->m_mainWidget), m_button, x, y);
+    gtk_pizza_set_size( GTK_PIZZA(GetParent()->m_mainWidget), m_button,
+                        x, y, GetSize().GetWidth(), GetSize().GetHeight() );
 
     // update also our internal variables
     wxMiniButtonBase::Move(x, y);
 }
-
-
 
 

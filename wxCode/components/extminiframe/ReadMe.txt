@@ -60,22 +60,32 @@
  For any problem, feel free to contact frm@users.sourceforge.net
 
 
+ ChangeLog
+ ---------
+
+ 1.6
+
+     - updated to the new bakefile build system,
+     - revised code for compatibility with wxWidgets 2.8
+     - fixed rendering of wxExtMiniFrame under wxGTK 2 (in particular like
+       the ext miniframe title, the minibutton rendering, the XOR rectangle
+       drawn when the miniframe is moved)
 
 
  DESIGN issues (that is, "How I wasted my time trying various approaches")
  -------------------------------------------------------------------------
- 
+
  Another approach for the implementation of a window such as wxExtMiniFrame
  could be to derive a class from wxFrame and then, as I tried, to emulate the
  active state of the mainframe drawing a fake title bar over the real bar.
  This approach has two problems:
-         1) under Win32 it generates some flickering, specially for big palettes
+ 1) under Win32 it generates some flickering, specially for big palettes
  2) under GTK it cannot be implemented because there's no way to draw the
-            mainframe's titlebar as active when it is not
-                     (this is a more generic problem: X windowing system gives the control
-                      of the top level window appearance to the "Window managers"; the
-                         typical window managers are KDE, Gnome, Motif... the application have
-                         no control over the toplevel window appearance including their titlebars)
+    mainframe's titlebar as active when it is not
+    (this is a more generic problem: X windowing system gives the control
+     of the top level window appearance to the "Window managers"; the
+     typical window managers are KDE, Gnome, Motif... the application have
+     no control over the toplevel window appearance including their titlebars)
 
  Another first approach could also be to avoid accepting the focus on the 
  palette window and, even while the user is dragging/resizing the window,
@@ -114,7 +124,7 @@
                  [0] = another app or a child of [1], which is not [2]
                  [1] = the wxMainFrame which owns [2]
                  [2] = a wxExtMiniFrame owned by [1]
- 
+
 
   focus   |            what must be done            | the function which
   change  |                                         |       does it
@@ -144,6 +154,8 @@
 
  -> under wxMSW, there is some flickering when minibuttons are redrawn
  -> under wxX11, there is some problem with wxConfig... this is a wxWidgets bug
+ -> under wxGTK, there is a strange line of pixels drawn with wrong colour immediately
+    under the minibuttons
 
 
 

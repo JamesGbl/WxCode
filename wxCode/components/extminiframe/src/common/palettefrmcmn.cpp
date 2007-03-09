@@ -373,12 +373,12 @@ void wxExtMiniFrameBase::DrawCaption(wxExtMiniFrameBase *pwnd, wxDC& dc, const w
 
 int wxExtMiniFrameBase::GetTitleHeight() const
 {
-    return 17;		// hardcoded :-(
+    return wxEXTMINIFRM_TITLE_HEIGHT;
 }
 
 int wxExtMiniFrameBase::GetBorderSize() const
 {
-    return 2;		// see wxExtMiniFrameBase::DrawSunkenBorders
+    return wxEXTMINIFRM_BORDER_SIZE;      // see wxExtMiniFrameBase::DrawSunkenBorders
 }
 
 #ifdef wxEXTMINIFRM_USE_MINIBTN

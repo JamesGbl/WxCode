@@ -219,15 +219,15 @@ bool wxExtMiniFrame::Create(wxMainFrame *parent,
 
 int wxExtMiniFrame::GetTitleHeight() const
 {
-    if (GetWindowStyle() & wxFRAME_TOOL_WINDOW)
+    if (HasFlag(wxFRAME_TOOL_WINDOW))
         return GetSystemMetrics(SM_CYSMCAPTION);//-GetBorderSize();
     return GetSystemMetrics(SM_CYCAPTION);//-GetBorderSize();
 }
 
 int wxExtMiniFrame::GetBorderSize() const
 {
-    if ((GetWindowStyle() & wxRESIZE_BORDER) ||
-        (GetWindowStyle() & wxSUNKEN_BORDER))
+    if (HasFlag(wxRESIZE_BORDER) ||
+        HasFlag(wxSUNKEN_BORDER))
         return 2;
     return 1;
 }
@@ -575,7 +575,7 @@ void wxExtMiniFrame::Roll()
 #endif
 }
 
-#endif		// wxEXTMINIFRM_USE_EXTMINIFRM
+#endif      // wxEXTMINIFRM_USE_EXTMINIFRM
 
 
 

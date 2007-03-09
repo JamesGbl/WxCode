@@ -12,6 +12,10 @@
 #ifndef _WX_PALETTEFRM_
 #define _WX_PALETTEFRM_
 
+// under Win32 this is the DWORD which is attached to each wxExtMiniFrame
+// with the wxSetWindowUserData() to be able to identify it through the
+// wxGetWindowUserData()...
+#define wxEXTMINIFRM_MARKER             0xF0F0F0F0
 
 // this is required under Win32 because wxExtMiniFrame and wxMiniButton,
 // under Win32, use some Win32 APIs to draw faster and with the Win32
