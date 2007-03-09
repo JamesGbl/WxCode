@@ -58,7 +58,7 @@ EXTMINIFRAME_LIB_HEADERS =  \
 	include/wx/minibtn.h \
 	include/wx/palettefrmdef.h \
 	$(PORT_SPECIFIC_HEADERS)
-EXTMINIFRAME_DLL_CXXFLAGS = -I$(srcdir)/include -DWXMAKINGDLL_WXEXTMINIFRAME \
+EXTMINIFRAME_DLL_CXXFLAGS = -I$(srcdir)/include -DWXMAKINGDLL_EXTMINIFRAME \
 	$(VAR) $(PIC_FLAG) $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 EXTMINIFRAME_DLL_OBJECTS =  \
 	extminiframe_dll_palettefrmcmn.o \
@@ -88,7 +88,7 @@ MINIMAL_OBJECTS =  \
 @COND_WX_PORT_MSW@	include/wx/msw/palettefrm.h include/wx/msw/minibtn.h
 @COND_WX_PORT_X11@PORT_SPECIFIC_HEADERS = include/wx/x11/palettefrm.h
 COND_WX_SHARED_0___extminiframe_lib___depname = \
-	$(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
+	$(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
 @COND_WX_SHARED_0@__extminiframe_lib___depname = $(COND_WX_SHARED_0___extminiframe_lib___depname)
 @COND_WX_SHARED_0@__install_extminiframe_lib___depname = \
 @COND_WX_SHARED_0@	install_extminiframe_lib
@@ -107,20 +107,20 @@ COND_WX_SHARED_0___extminiframe_lib___depname = \
 @COND_WX_SHARED_0@__uninstall_extminiframe_lib_headers___depname \
 @COND_WX_SHARED_0@	= uninstall_extminiframe_lib_headers
 COND_WX_SHARED_1___extminiframe_dll___depname = \
-	$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf3)
+	$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf3)
 @COND_WX_SHARED_1@__extminiframe_dll___depname = $(COND_WX_SHARED_1___extminiframe_dll___depname)
 @COND_WX_SHARED_1@__install_extminiframe_dll___depname = \
 @COND_WX_SHARED_1@	install_extminiframe_dll
 @COND_WX_SHARED_1@__uninstall_extminiframe_dll___depname \
 @COND_WX_SHARED_1@	= uninstall_extminiframe_dll
 COND_PLATFORM_MACOSX_1___extminiframe_dll___macinstnamecmd = -install_name \
-	$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf2)
+	$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf2)
 @COND_PLATFORM_MACOSX_1@__extminiframe_dll___macinstnamecmd = $(COND_PLATFORM_MACOSX_1___extminiframe_dll___macinstnamecmd)
 COND_PLATFORM_OS2_1___extminiframe_dll___importlib = -import \
-	$(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
+	$(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
 @COND_PLATFORM_OS2_1@__extminiframe_dll___importlib = $(COND_PLATFORM_OS2_1___extminiframe_dll___importlib)
 COND_WINDOWS_IMPLIB_1___extminiframe_dll___importlib = \
-	-Wl,--out-implib=$(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
+	-Wl,--out-implib=$(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
 @COND_WINDOWS_IMPLIB_1@__extminiframe_dll___importlib = $(COND_WINDOWS_IMPLIB_1___extminiframe_dll___importlib)
 @COND_PLATFORM_MACOSX_0_USE_SOVERSION_1@__extminiframe_dll___targetsuf2 \
 @COND_PLATFORM_MACOSX_0_USE_SOVERSION_1@	= .$(SO_SUFFIX).0
@@ -136,35 +136,35 @@ COND_WINDOWS_IMPLIB_1___extminiframe_dll___importlib = \
 @COND_USE_SOVERCYGWIN_1_USE_SOVERSION_1@	= -0.$(SO_SUFFIX)
 @COND_USE_SOVERSION_0@__extminiframe_dll___targetsuf3 = .$(SO_SUFFIX)
 COND_USE_SOVERLINUX_1___extminiframe_dll___soname_flags = \
-	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf2)
+	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf2)
 @COND_USE_SOVERLINUX_1@__extminiframe_dll___soname_flags = $(COND_USE_SOVERLINUX_1___extminiframe_dll___soname_flags)
 COND_USE_SOVERSOLARIS_1___extminiframe_dll___soname_flags = \
-	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf3)
+	$(SONAME_FLAG)$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf3)
 @COND_USE_SOVERSOLARIS_1@__extminiframe_dll___soname_flags = $(COND_USE_SOVERSOLARIS_1___extminiframe_dll___soname_flags)
 COND_USE_SOSYMLINKS_1___extminiframe_dll___so_symlinks_cmd = (cd \
 	$(srcdir)/lib/; rm -f \
-	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) \
-	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf2); \
+	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf2); \
 	$(LN_S) \
-	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf3) \
-	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf2); \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf3) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf2); \
 	$(LN_S) \
-	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf2) \
-	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX))
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf2) \
+	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX))
 @COND_USE_SOSYMLINKS_1@__extminiframe_dll___so_symlinks_cmd = $(COND_USE_SOSYMLINKS_1___extminiframe_dll___so_symlinks_cmd)
 COND_USE_SOSYMLINKS_1___extminiframe_dll___so_symlinks_inst_cmd = rm -f \
-	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) \
-	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf2); \
+	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf2); \
 	$(LN_S) \
-	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf3) \
-	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf2); \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf3) \
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf2); \
 	$(LN_S) \
-	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf2) \
-	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf2) \
+	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
 @COND_USE_SOSYMLINKS_1@__extminiframe_dll___so_symlinks_inst_cmd = $(COND_USE_SOSYMLINKS_1___extminiframe_dll___so_symlinks_inst_cmd)
 COND_USE_SOSYMLINKS_1___extminiframe_dll___so_symlinks_uninst_cmd = rm -f \
-	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf2) \
-	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
+	$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf2) \
+	$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
 @COND_USE_SOSYMLINKS_1@__extminiframe_dll___so_symlinks_uninst_cmd = $(COND_USE_SOSYMLINKS_1___extminiframe_dll___so_symlinks_uninst_cmd)
 @COND_WX_PORT_GTK2@__PORT_SPECIFIC_SOURCES_OBJECTS_1 = \
 @COND_WX_PORT_GTK2@	extminiframe_dll_palettefrm.o \
@@ -195,31 +195,31 @@ install: all $(__install_extminiframe_lib___depname) $(__install_extminiframe_li
 uninstall: $(__uninstall_extminiframe_lib___depname) $(__uninstall_extminiframe_lib_headers___depname) $(__uninstall_extminiframe_dll___depname) $(__uninstall_extminiframe_dll_headers___depname)
 
 install-strip: install
-	$(STRIP) $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf3)
+	$(STRIP) $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf3)
 
 clean: 
 	rm -rf ./.deps ./.pch
 	rm -f ./*.o
-	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
-	rm -f $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf3)
-	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
-	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf2)
+	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
+	rm -f $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf3)
+	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
+	rm -f $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf2)
 	rm -f $(srcdir)/sample/minimal$(EXEEXT)
 
 distclean: clean
 	rm -f config.cache config.log config.status bk-deps bk-make-pch shared-ld-sh Makefile
 
-@COND_WX_SHARED_0@$(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT): $(EXTMINIFRAME_LIB_OBJECTS)
+@COND_WX_SHARED_0@$(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT): $(EXTMINIFRAME_LIB_OBJECTS)
 @COND_WX_SHARED_0@	rm -f $@
 @COND_WX_SHARED_0@	$(AR) $(AROPTIONS) $@ $(EXTMINIFRAME_LIB_OBJECTS)
 @COND_WX_SHARED_0@	$(RANLIB) $@
 
 @COND_WX_SHARED_0@install_extminiframe_lib: 
 @COND_WX_SHARED_0@	$(INSTALL_DIR) $(DESTDIR)$(libdir)
-@COND_WX_SHARED_0@	$(INSTALL_DATA) $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT) $(DESTDIR)$(libdir)
+@COND_WX_SHARED_0@	$(INSTALL_DATA) $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT) $(DESTDIR)$(libdir)
 
 @COND_WX_SHARED_0@uninstall_extminiframe_lib: 
-@COND_WX_SHARED_0@	rm -f $(DESTDIR)$(libdir)/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
+@COND_WX_SHARED_0@	rm -f $(DESTDIR)$(libdir)/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(LIBEXT)
 
 @COND_WX_SHARED_0@install_extminiframe_lib_headers: 
 @COND_WX_SHARED_0@	$(INSTALL_DIR) $(DESTDIR)$(prefix)
@@ -235,20 +235,20 @@ distclean: clean
 @COND_WX_SHARED_0@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_WX_SHARED_0@	done
 
-@COND_WX_SHARED_1@$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf3): $(EXTMINIFRAME_DLL_OBJECTS)
+@COND_WX_SHARED_1@$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf3): $(EXTMINIFRAME_DLL_OBJECTS)
 @COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(EXTMINIFRAME_DLL_OBJECTS) $(LDFLAGS) -L$(srcdir)/lib $(__extminiframe_dll___macinstnamecmd) $(__extminiframe_dll___importlib) $(__extminiframe_dll___soname_flags)  $(LIBS) $(WX_LIBS)
 @COND_WX_SHARED_1@	
 @COND_WX_SHARED_1@	$(__extminiframe_dll___so_symlinks_cmd)
 
 @COND_WX_SHARED_1@install_extminiframe_dll: 
 @COND_WX_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(libdir)
-@COND_WX_SHARED_1@	$(INSTALL_DATA) $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(DESTDIR)$(libdir)
-@COND_WX_SHARED_1@	$(INSTALL_PROGRAM) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf3) $(DESTDIR)$(libdir)
+@COND_WX_SHARED_1@	$(INSTALL_DATA) $(srcdir)/lib/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX) $(DESTDIR)$(libdir)
+@COND_WX_SHARED_1@	$(INSTALL_PROGRAM) $(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf3) $(DESTDIR)$(libdir)
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__extminiframe_dll___so_symlinks_inst_cmd))
 
 @COND_WX_SHARED_1@uninstall_extminiframe_dll: 
-@COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
-@COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf3)
+@COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(LIBPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).$(DLLIMP_SUFFIX)
+@COND_WX_SHARED_1@	rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__extminiframe_dll___targetsuf3)
 @COND_WX_SHARED_1@	(cd $(DESTDIR)$(libdir) ; $(__extminiframe_dll___so_symlinks_uninst_cmd))
 
 @COND_WX_SHARED_1@install_extminiframe_dll_headers: 
@@ -266,13 +266,20 @@ distclean: clean
 @COND_WX_SHARED_1@	done
 
 $(srcdir)/sample/minimal$(EXEEXT): $(MINIMAL_OBJECTS) make_sample_dir_minimal  $(__extminiframe_lib___depname)
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) -L$(srcdir)/lib $(LDFLAGS) -L$(srcdir)/lib $(LDFLAGS_GUI)  $(LIBS) -lwxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR) $(WX_LIBS)
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) -L$(srcdir)/lib $(LDFLAGS) -L$(srcdir)/lib $(LDFLAGS_GUI)  $(LIBS) -lwxcode_$(WX_PORT)$(WXLIBPOSTFIX)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR) $(WX_LIBS)
 	
 	$(__minimal___mac_setfilecmd)
 	$(__minimal___os2_emxbindcmd)
 
 make_sample_dir_minimal: 
 	@mkdir -p $(srcdir)/sample
+
+tarball: 
+	make distclean
+	( cd $(srcdir)/.. && tar -cvzf extminiframe.tar.gz --exclude="*~" --exclude="*.log" --exclude="*.o*" --exclude="*.a" --exclude=".svn" --exclude="autom4te.cache" extminiframe/* )
+
+zip: 
+	( cd $(srcdir)/.. && zip -r9 extminiframe.zip extminiframe -x "*.pdb" -x "*.log" -x "*.o*" )
 
 extminiframe_lib_palettefrmcmn.o: $(srcdir)/src/common/palettefrmcmn.cpp
 	$(CXXC) -c -o $@ $(EXTMINIFRAME_LIB_CXXFLAGS) $(srcdir)/src/common/palettefrmcmn.cpp

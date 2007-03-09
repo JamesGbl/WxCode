@@ -81,7 +81,7 @@ EXTMINIFRAME_LIB_HEADERS =  \
 	include/wx/palettefrmdef.h \
 	$(PORT_SPECIFIC_HEADERS)
 EXTMINIFRAME_DLL_CXXFLAGS = $(VAR) $(VAR_2) -I../include \
-	-DWXMAKINGDLL_WXEXTMINIFRAME $(VAR_1) -fPIC -DPIC `$(WX_CONFIG) --cxxflags \
+	-DWXMAKINGDLL_EXTMINIFRAME $(VAR_1) -fPIC -DPIC `$(WX_CONFIG) --cxxflags \
 	$(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 EXTMINIFRAME_DLL_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/extminiframe_dll_palettefrmcmn.o \
@@ -134,7 +134,7 @@ PORT_SPECIFIC_HEADERS = include/wx/x11/palettefrm.h
 endif
 ifeq ($(WX_SHARED),0)
 __extminiframe_lib___depname = \
-	../lib/gcc_$(__extminiframe)/libwxcode_$(WX_PORT)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a
+	../lib/gcc_$(__extminiframe)/libwxcode_$(WX_PORT)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a
 endif
 ifeq ($(WX_SHARED),0)
 __install_extminiframe_lib___depname = install_extminiframe_lib
@@ -166,7 +166,7 @@ __uninstall_extminiframe_lib_headers___depname = \
 endif
 ifeq ($(WX_SHARED),1)
 __extminiframe_dll___depname = \
-	../lib/gcc_$(__extminiframe)/libwxcode_$(WX_PORT)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
+	../lib/gcc_$(__extminiframe)/libwxcode_$(WX_PORT)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
 endif
 ifeq ($(WX_SHARED),1)
 __install_extminiframe_dll___depname = install_extminiframe_dll
@@ -237,16 +237,16 @@ uninstall: $(__uninstall_extminiframe_lib___depname) $(__uninstall_extminiframe_
 clean: 
 	rm -f gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/*.o
 	rm -f gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/*.d
-	rm -f ../lib/gcc_$(__extminiframe)/libwxcode_$(WX_PORT)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a
-	rm -f ../lib/gcc_$(__extminiframe)/libwxcode_$(WX_PORT)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
-	rm -f ../lib/gcc_$(__extminiframe)/libwxcode_$(WX_PORT)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
+	rm -f ../lib/gcc_$(__extminiframe)/libwxcode_$(WX_PORT)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a
+	rm -f ../lib/gcc_$(__extminiframe)/libwxcode_$(WX_PORT)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
+	rm -f ../lib/gcc_$(__extminiframe)/libwxcode_$(WX_PORT)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
 	rm -f ../sample/minimal
 
 test_for_selected_wxbuild: 
 	@$(WX_CONFIG) $(WX_CONFIG_FLAGS)
 
 ifeq ($(WX_SHARED),0)
-../lib/gcc_$(__extminiframe)/libwxcode_$(WX_PORT)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a: $(EXTMINIFRAME_LIB_OBJECTS) make_lib_dir_extminiframe_lib
+../lib/gcc_$(__extminiframe)/libwxcode_$(WX_PORT)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a: make_lib_dir_extminiframe_lib  $(EXTMINIFRAME_LIB_OBJECTS)
 	rm -f $@
 	$(AR) rcu $@ $(EXTMINIFRAME_LIB_OBJECTS)
 	$(RANLIB) $@
@@ -255,12 +255,12 @@ endif
 ifeq ($(WX_SHARED),0)
 install_extminiframe_lib: 
 	$(INSTALL) -d $(DESTDIR)$(prefix)/lib
-	$(INSTALL) -m 644 ../lib/gcc_$(__extminiframe)/libwxcode_$(WX_PORT)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a $(DESTDIR)$(prefix)/lib
+	$(INSTALL) -m 644 ../lib/gcc_$(__extminiframe)/libwxcode_$(WX_PORT)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a $(DESTDIR)$(prefix)/lib
 endif
 
 ifeq ($(WX_SHARED),0)
 uninstall_extminiframe_lib: 
-	rm -f $(DESTDIR)$(prefix)/lib/libwxcode_$(WX_PORT)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a
+	rm -f $(DESTDIR)$(prefix)/lib/libwxcode_$(WX_PORT)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a
 endif
 
 make_lib_dir_extminiframe_lib: 
@@ -285,21 +285,21 @@ uninstall_extminiframe_lib_headers:
 endif
 
 ifeq ($(WX_SHARED),1)
-../lib/gcc_$(__extminiframe)/libwxcode_$(WX_PORT)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so: $(EXTMINIFRAME_DLL_OBJECTS) make_lib_dir_extminiframe_dll
+../lib/gcc_$(__extminiframe)/libwxcode_$(WX_PORT)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so: make_lib_dir_extminiframe_dll  $(EXTMINIFRAME_DLL_OBJECTS)
 	$(CXX) -shared -fPIC -o $@ $(EXTMINIFRAME_DLL_OBJECTS) $(LDFLAGS) $(VAR_2) -L../lib  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs core,base`
 endif
 
 ifeq ($(WX_SHARED),1)
 install_extminiframe_dll: 
 	$(INSTALL) -d $(DESTDIR)$(prefix)/lib
-	$(INSTALL) -m 644 ../lib/gcc_$(__extminiframe)/libwxcode_$(WX_PORT)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so $(DESTDIR)$(prefix)/lib
-	install -c ../lib/gcc_$(__extminiframe)/libwxcode_$(WX_PORT)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so $(DESTDIR)$(prefix)/lib
+	$(INSTALL) -m 644 ../lib/gcc_$(__extminiframe)/libwxcode_$(WX_PORT)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so $(DESTDIR)$(prefix)/lib
+	install -c ../lib/gcc_$(__extminiframe)/libwxcode_$(WX_PORT)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so $(DESTDIR)$(prefix)/lib
 endif
 
 ifeq ($(WX_SHARED),1)
 uninstall_extminiframe_dll: 
-	rm -f $(DESTDIR)$(prefix)/lib/libwxcode_$(WX_PORT)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
-	rm -f $(DESTDIR)$(prefix)/lib/libwxcode_$(WX_PORT)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
+	rm -f $(DESTDIR)$(prefix)/lib/libwxcode_$(WX_PORT)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
+	rm -f $(DESTDIR)$(prefix)/lib/libwxcode_$(WX_PORT)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
 endif
 
 make_lib_dir_extminiframe_dll: 
@@ -324,10 +324,17 @@ uninstall_extminiframe_dll_headers:
 endif
 
 ../sample/minimal: $(MINIMAL_OBJECTS) make_sample_dir_minimal $(__extminiframe_lib___depname)
-	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) $(VAR_2) -L../lib   ../lib/gcc_$(__extminiframe)/libwxcode_$(WX_PORT)_wxextminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs core,base`
+	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) $(VAR_2) -L../lib   ../lib/gcc_$(__extminiframe)/libwxcode_$(WX_PORT)_extminiframe-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs core,base`
 
 make_sample_dir_minimal: 
 	@mkdir -p ../sample
+
+tarball: 
+	make distclean
+	( cd ../.. && tar -cvzf extminiframe.tar.gz --exclude="*~" --exclude="*.log" --exclude="*.o*" --exclude="*.a" --exclude=".svn" --exclude="autom4te.cache" extminiframe/* )
+
+zip: 
+	( cd ../.. && zip -r9 extminiframe.zip extminiframe -x "*.pdb" -x "*.log" -x "*.o*" )
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/extminiframe_lib_palettefrmcmn.o: ../src/common/palettefrmcmn.cpp
 	$(CXX) -c -o $@ $(EXTMINIFRAME_LIB_CXXFLAGS) $(CPPDEPS) $<

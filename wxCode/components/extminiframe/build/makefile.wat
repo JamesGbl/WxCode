@@ -38,7 +38,7 @@ WX_UNICODE = 0
 WX_DEBUG = 1
 
 # Version of the wx library to build against. 
-WX_VERSION = 290
+WX_VERSION = 28
 
 # Use monolithic build of wxWidgets? [0,1]
 #   0 - Multilib
@@ -85,12 +85,12 @@ _BUILDDIR_SHARED_SUFFIX = _dll
 __extminiframe_lib___depname =
 !ifeq WX_SHARED 0
 __extminiframe_lib___depname = &
-	..\lib\wat_$(VAR_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxextminiframe.lib
+	..\lib\wat_$(____extminiframe_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_extminiframe.lib
 !endif
 __extminiframe_dll___depname =
 !ifeq WX_SHARED 1
 __extminiframe_dll___depname = &
-	..\lib\wat_$(VAR_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxextminiframe.dll
+	..\lib\wat_$(____extminiframe_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_extminiframe.dll
 !endif
 ____WX_SHARED =
 !ifeq WX_SHARED 0
@@ -144,12 +144,12 @@ VAR_1 =
 !ifeq WX_DEBUG 1
 VAR_1 = debug all
 !endif
-VAR_2 =
+____extminiframe_3 =
 !ifeq WX_SHARED 0
-VAR_2 = lib
+____extminiframe_3 = lib
 !endif
 !ifeq WX_SHARED 1
-VAR_2 = dll
+____extminiframe_3 = dll
 !endif
 __WXLIB_CORE_NAME_p =
 !ifeq WX_DEBUG 0
@@ -259,7 +259,7 @@ EXTMINIFRAME_LIB_OBJECTS =  &
 EXTMINIFRAME_DLL_CXXFLAGS = -bd $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include $(VAR) &
-	$(VAR_0) -i=..\include -dWXMAKINGDLL_WXEXTMINIFRAME $(CPPFLAGS) $(CXXFLAGS)
+	$(VAR_0) -i=..\include -dWXMAKINGDLL_EXTMINIFRAME $(CPPFLAGS) $(CXXFLAGS)
 EXTMINIFRAME_DLL_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\extminiframe_dll_palettefrmcmn.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\extminiframe_dll_minibtncmn.obj &
@@ -287,16 +287,16 @@ clean : .SYMBOLIC
 	-if exist watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.lbc del watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.lbc
 	-if exist watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.ilk del watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.ilk
 	-if exist watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.pch del watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.pch
-	-if exist ..\lib\wat_$(VAR_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxextminiframe.lib del ..\lib\wat_$(VAR_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxextminiframe.lib
-	-if exist ..\lib\wat_$(VAR_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxextminiframe.dll del ..\lib\wat_$(VAR_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxextminiframe.dll
-	-if exist ..\lib\wat_$(VAR_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxextminiframe.lib del ..\lib\wat_$(VAR_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxextminiframe.lib
+	-if exist ..\lib\wat_$(____extminiframe_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_extminiframe.lib del ..\lib\wat_$(____extminiframe_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_extminiframe.lib
+	-if exist ..\lib\wat_$(____extminiframe_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_extminiframe.dll del ..\lib\wat_$(____extminiframe_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_extminiframe.dll
+	-if exist ..\lib\wat_$(____extminiframe_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_extminiframe.lib del ..\lib\wat_$(____extminiframe_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_extminiframe.lib
 	-if exist ..\sample\minimal.exe del ..\sample\minimal.exe
 
 test_for_selected_wxbuild :  
 	@if not exist $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX)\wx\setup.h \
 	echo ----------------------------------------------------------------------------
 	@if not exist $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX)\wx\setup.h \
-	echo Selected wxWidgets build is not available!
+	echo The selected wxWidgets build is not available!
 	@if not exist $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX)\wx\setup.h \
 	echo Please use the options prefixed with WX_ to select another wxWidgets build.
 	@if not exist $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX)\wx\setup.h \
@@ -305,17 +305,17 @@ test_for_selected_wxbuild :
 	exit 1
 
 !ifeq WX_SHARED 0
-..\lib\wat_$(VAR_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxextminiframe.lib :  $(EXTMINIFRAME_LIB_OBJECTS) make_lib_dir_extminiframe_lib
+..\lib\wat_$(____extminiframe_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_extminiframe.lib :  make_lib_dir_extminiframe_lib  $(EXTMINIFRAME_LIB_OBJECTS)
 	@%create watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\extminiframe_lib.lbc
 	@for %i in ($(EXTMINIFRAME_LIB_OBJECTS)) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\extminiframe_lib.lbc +%i
 	wlib -q -p4096 -n -b $^@ @watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\extminiframe_lib.lbc
 !endif
 
 make_lib_dir_extminiframe_lib :  
-	if not exist ../lib/wat_$(VAR_2) mkdir ../lib/wat_$(VAR_2)
+	if not exist ..\lib\wat_$(____extminiframe_3) mkdir ..\lib\wat_$(____extminiframe_3)
 
 !ifeq WX_SHARED 1
-..\lib\wat_$(VAR_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxextminiframe.dll :  $(EXTMINIFRAME_DLL_OBJECTS) make_lib_dir_extminiframe_dll
+..\lib\wat_$(____extminiframe_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_extminiframe.dll :  make_lib_dir_extminiframe_dll  $(EXTMINIFRAME_DLL_OBJECTS)
 	@%create watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\extminiframe_dll.lbc
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\extminiframe_dll.lbc option quiet
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\extminiframe_dll.lbc name $^@
@@ -326,11 +326,11 @@ make_lib_dir_extminiframe_lib :
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\extminiframe_dll.lbc
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\extminiframe_dll.lbc system nt_dll
 	wlink @watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\extminiframe_dll.lbc
-	wlib -q -n -b ..\lib\wat_$(VAR_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxextminiframe.lib +$^@
+	wlib -q -n -b ..\lib\wat_$(____extminiframe_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_extminiframe.lib +$^@
 !endif
 
 make_lib_dir_extminiframe_dll :  
-	if not exist ../lib/wat_$(VAR_2) mkdir ../lib/wat_$(VAR_2)
+	if not exist ..\lib\wat_$(____extminiframe_3) mkdir ..\lib\wat_$(____extminiframe_3)
 
 ..\sample\minimal.exe :  $(MINIMAL_OBJECTS) make_sample_dir_minimal  $(__extminiframe_lib___depname)
 	@%create watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\minimal.lbc
@@ -339,13 +339,22 @@ make_lib_dir_extminiframe_dll :
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\minimal.lbc option caseexact
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\minimal.lbc $(LDFLAGS) libpath $(WX_DIR)$(WXLIBPATH) $(VAR_1) libpath ..$(WXLIBPATH) system nt_win ref '_WinMain@16'
 	@for %i in ($(MINIMAL_OBJECTS)) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\minimal.lbc file %i
-	@for %i in ( ..\lib\wat_$(VAR_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxextminiframe.lib $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\minimal.lbc library %i
+	@for %i in ( ..\lib\wat_$(____extminiframe_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_extminiframe.lib $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\minimal.lbc library %i
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\minimal.lbc option resource=
 	@for %i in () do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\minimal.lbc option stack=%i
 	wlink @watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\minimal.lbc
 
 make_sample_dir_minimal :  
 	if not exist ../sample mkdir../sample
+
+tarball :  
+	make distclean
+	-cd ..\..
+	-tar -cvzf extminiframe.tar.gz --exclude="*~" --exclude="*.log" --exclude="*.o*" --exclude="*.a" --exclude=".svn" --exclude="autom4te.cache" extminiframe\*
+
+zip :  
+	-cd ..\..
+	-zip -r9 extminiframe.zip extminiframe -x "*.pdb" -x "*.log" -x "*.o*"
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\extminiframe_lib_palettefrmcmn.obj :  .AUTODEPEND ..\src\common\palettefrmcmn.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(EXTMINIFRAME_LIB_CXXFLAGS) $<
