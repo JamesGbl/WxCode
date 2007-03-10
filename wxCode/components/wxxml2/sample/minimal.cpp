@@ -105,11 +105,6 @@ public:
     void OnQuit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
 
-    wxTextCtrl *m_text;
-    
-    void LoadXML(const wxString &filename);
-    void LoadDTD(const wxString &filename);
-
     void OnLoadXML(wxCommandEvent& event);
     void OnLoadDTD(wxCommandEvent& event);
     void OnValid(wxCommandEvent& event);
@@ -118,12 +113,20 @@ public:
     void OnSaveAdv(wxCommandEvent& event);
     void OnSaveDTD(wxCommandEvent& event);
 
+
+    // helpers
+    void LoadXML(const wxString &filename);
+    void LoadDTD(const wxString &filename);
+    void ParseNodeAndSiblings(const wxXml2Node &node, wxString &str, int n, const wxString &filename);
+    void ParseNode(const wxXml2Node &node, wxString &str, int n, const wxString &filename);
+
 private:
+    wxTextCtrl *m_text;
+    
     // any class wishing to process wxWindows events must use this macro
     DECLARE_EVENT_TABLE()
 };
 
-void ParseNodeAndSiblings(const wxXml2Node &node, wxString &str, int n, const wxString &filename);
 
 // ----------------------------------------------------------------------------
 // event tables and other macros for wxWindows
@@ -155,61 +158,11 @@ IMPLEMENT_APP(MyApp)
 // implementation
 // ============================================================================
 
-// first of all, decide if we can use the system...
-#if defined(__VISUALC__)
-    #define mcDETECT_MEMORY_LEAKS
-#endif
-
-
-#ifdef mcDETECT_MEMORY_LEAKS
-
-    // "crtdbg.h" is included only with MSVC++ and Borland, I think...
-    // "stackwalker.h" instead, contains a set of stack walker functions
-    // created by Jochen Kalmbach (thanks !!!) which allow to read the
-    // intercept unhandled exceptions and memory-leaks. 
-    // To be used, the file must be part of the project; this is why
-    // it's contained (with its CPP counterpart) in the folder of this
-    // test program. Anyway,  you can find it also online at:
-    //     http://www.codeproject.com/tools/leakfinder.asp
-    #include <crtdbg.h>
-
-    // define some useful macros
-    #define new                 new(_NORMAL_BLOCK, THIS_FILE, __LINE__)
-    #define mcDUMP_ON_EXIT      { _CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF); }
-
-    
-    #undef THIS_FILE
-    static char THIS_FILE[] = __FILE__;
-
-
-    // this little class is used to access Stackwalker functions
-    // without changing a line of code...
-    class mcLeakDetector {
-
-    public:
-        mcLeakDetector() { mcDUMP_ON_EXIT; }
-        ~mcLeakDetector() {}
-    };
-
-    // ...infact, instancing a STATIC mcLeakDetector class, we
-    // can start memory-leak detection at the very beginning of
-    // the program (when the main() or winmain() has not been
-    // called yet, that is, when the framework is creating the
-    // static variables of the program) and end it at the very
-    // end of the program (when, after the main() or winmain(),
-    // the framework removes the static variables).
-    static mcLeakDetector detector;
-
-#endif
-
-
-
-
 // ----------------------------------------------------------------------------
 // the application class
 // ----------------------------------------------------------------------------
 
-// wxT('Main program') equivalent: the program execution "starts" here
+// 'Main program' equivalent: the program execution "starts" here
 bool MyApp::OnInit()
 {
     // create the main application window
@@ -228,8 +181,6 @@ bool MyApp::OnInit()
 
     // init libxml2 library
     wxXml2::Init();
-
-
 
     // success: wxApp::OnRun() will be called which will enter the main message
     // loop and the application will run. If we returned false here, the
@@ -277,15 +228,24 @@ MyFrame::MyFrame(const wxString& title)
     wxMenu *helpMenu = new wxMenu;
     helpMenu->Append(Minimal_About, _T("&About...\tF1"), _T("Show about dialog"));
 
-    menuFile->Append(Minimal_LoadXML, _T("Load XML..."), _T("Loads the given file and tries to parse it..."));
-    menuFile->Append(Minimal_LoadDTD, _T("Load DTD..."), _T("Loads the given file and tries to parse it..."));
+    menuFile->Append(Minimal_LoadXML, _T("Load XML..."), 
+                     _T("Loads the given file and tries to parse it..."));
+    menuFile->Append(Minimal_LoadDTD, _T("Load DTD..."), 
+                     _T("Loads the given file and tries to parse it..."));
     menuFile->AppendSeparator();
-    menuFile->Append(Minimal_SaveSimple, _T("Save a simple HTML file"), _T("Creates a sample HTML file and saves it in the given location."));  
-    menuFile->Append(Minimal_SaveAdv, _T("Save an advanced XHTML file"), _T("Creates a sample XHTML file and saves it in the given location."));    
-    menuFile->Append(Minimal_SaveDTD, _T("Save a DTD file"), _T("Creates a sample DTD file and saves it in the given location."));  
+    
+    menuFile->Append(Minimal_SaveSimple, _T("Save a simple HTML file"), 
+                     _T("Creates a sample HTML file and saves it in the given location."));  
+    menuFile->Append(Minimal_SaveAdv, _T("Save an advanced XHTML file"), 
+                     _T("Creates a sample XHTML file and saves it in the given location."));    
+    menuFile->Append(Minimal_SaveDTD, _T("Save a DTD file"), 
+                     _T("Creates a sample DTD file and saves it in the given location."));  
     menuFile->AppendSeparator();
-    menuFile->Append(Minimal_Valid, _T("Validate against DTD"), _T("Validates an XML file against a DTD."));    
+    
+    menuFile->Append(Minimal_Valid, _T("Validate against DTD"), 
+                     _T("Validates an XML file against a DTD."));    
     menuFile->AppendSeparator();
+    
     menuFile->Append(Minimal_Quit, _T("E&xit\tAlt-X"), _T("Quit this program"));    
 
     // now append the freshly created menu to the menu bar...
@@ -310,40 +270,18 @@ MyFrame::~MyFrame()
 
 
 
-// event handlers
-
-void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
-{
-    // true is to force the frame to close
-    Close(true);
-}
-
-void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
-{
-    wxString msg;
-    msg.Printf( wxT("This is a little demonstration of wxXml2 wrappers for libxml2.\n\n")
-                wxT("They are based on original Vaclav Slavik's design but they\n")
-                wxT("use libxml2 (which is a widely-used, powerful cross-platform\n")
-                wxT("library) instead of EXPAT.\n\n")
-                wxT("The classes were rewritten by Francesco Montorsi (frm@users.sourceforge.net)\n")
-                wxT("and this sample is a modified version of the minimal sample of wxWidgets.\n\n")
-                wxT("This sample program was compiled with libxml2 version %s."),
-                    wxXml2::GetLibxml2Version().c_str());
-
-    wxMessageBox(msg, _T("About Minimal"), wxOK | wxICON_INFORMATION, this);
-}
-
-
+// ----------------------------------------------------------------------------
+// XML helpers
+// ----------------------------------------------------------------------------
 
 #define STEP            4
-
 
 // helper recursive function: THIS IS ONLY A "DIDACTIVE" EXAMPLE OF A
 // RECURSIVE FUNCTION WHICH CAN BE USED TO WALK AN XML TREE... 
 // IF YOU JUST NEED TO OUTPUT THE CONTENTS OF AN XML TREE YOU CAN USE
 // THE wxXml2Document::Save FUNCTION ON A wxMemoryOutputStream AS
 // MyFrame::LoadDTD DOES TO SHOW TO THE USER THE STRUCTURE OF AN XML DTD.
-void ParseNode(const wxXml2Node &node, wxString &str, int n, const wxString &filename)
+void MyFrame::ParseNode(const wxXml2Node &node, wxString &str, int n, const wxString &filename)
 {
     static bool m_fExtEntity=false;             //processing an external entity
     static wxString m_sExtEntityName;           // the anem of the external entity
@@ -402,12 +340,12 @@ void ParseNode(const wxXml2Node &node, wxString &str, int n, const wxString &fil
             wxXml2Document oDoc;
             wxString sError;
 
-            //TODO:
-            //In this sample I am assuming that the external entity URL is just
-            //"filename.ext", that is, it is located at the same folder than
-            //main XML file.
-            //In general, this is a non-valid assuption and so, more code must be
-            //inserted to compose the rigth URL.
+            // TODO:
+            // In this sample I am assuming that the external entity URL is just
+            // "filename.ext", that is, it is located at the same folder than
+            // main XML file.
+            // In general, this is a non-valid assuption and so, more code must be
+            // inserted to compose the right URL.
             //----------------------------------------------
             wxFileName oFN(filename);
             oFN.SetFullName(pNode->GetSystemID());
@@ -428,9 +366,11 @@ void ParseNode(const wxXml2Node &node, wxString &str, int n, const wxString &fil
             toadd += spaces;
             toadd += wxString::Format(_T("Inserting and processing file %s\n"), sFilename.c_str());
             toadd += spaces + _T("------------------------------------\n");
+            
             wxString sChildTree;
             ParseNodeAndSiblings(oRoot, sChildTree, n, sFilename);
             toadd += sChildTree;
+            
             toadd += spaces + _T("------------------------------------\n");
             toadd += spaces + _T("Returning to previous file\n");
             toadd += spaces + _T("------------------------------------\n");
@@ -450,8 +390,8 @@ void ParseNode(const wxXml2Node &node, wxString &str, int n, const wxString &fil
         
     str += spaces;
 
-//#define SHOW_ANNOYING_NEWLINES
-#ifdef SHOW_ANNOYING_NEWLINES   
+#define SHOW_ANNOYING_NEWLINES      0
+#if SHOW_ANNOYING_NEWLINES   
 
     // text nodes with newlines and/or spaces will be shown as [null]
     str += toadd;
@@ -481,8 +421,8 @@ void ParseNode(const wxXml2Node &node, wxString &str, int n, const wxString &fil
     if (bClose) str += wxString(wxT(' '), n) + wxT("/") + node.GetName() + wxT("\n");
 }
 
-// another helper function
-void ParseNodeAndSiblings(const wxXml2Node &node, wxString &str, int n, const wxString &filename)
+void MyFrame::ParseNodeAndSiblings(const wxXml2Node &node, wxString &str, int n, 
+                                    const wxString &filename)
 {
     wxXml2Node curr(node);
 
@@ -491,9 +431,6 @@ void ParseNodeAndSiblings(const wxXml2Node &node, wxString &str, int n, const wx
         curr = curr.GetNext();
     } while (curr != wxXml2EmptyNode);
 }
-
-
-
 
 void MyFrame::LoadXML(const wxString &filename)
 {
@@ -570,6 +507,33 @@ void MyFrame::LoadDTD(const wxString &filename)
     doc.DestroyIfUnlinked();
 }
 
+
+
+// ----------------------------------------------------------------------------
+// event handlers
+// ----------------------------------------------------------------------------
+
+void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
+{
+    // true is to force the frame to close
+    Close(true);
+}
+
+void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
+{
+    wxString msg;
+    msg.Printf( wxT("This is a little demonstration of wxXml2 wrappers for libxml2.\n\n")
+                wxT("They are based on original Vaclav Slavik's design but they\n")
+                wxT("use libxml2 (which is a widely-used, powerful cross-platform\n")
+                wxT("library) instead of EXPAT.\n\n")
+                wxT("The classes were rewritten by Francesco Montorsi (frm@users.sourceforge.net)\n")
+                wxT("and this sample is a modified version of the minimal sample of wxWidgets.\n\n")
+                wxT("This sample program was compiled with libxml2 version %s."),
+                wxXml2::GetLibxml2Version().c_str());
+
+    wxMessageBox(msg, _T("About Minimal"), wxOK | wxICON_INFORMATION, this);
+}
+
 void MyFrame::OnLoadXML(wxCommandEvent& WXUNUSED(event))
 {
     // ask the user which file we must load...
@@ -580,15 +544,20 @@ void MyFrame::OnLoadXML(wxCommandEvent& WXUNUSED(event))
 
     LoadXML(fd.GetPath());
 
-    // ask the user which file we must load...
+#define DO_TEST_SAVE 0
+#if DO_TEST_SAVE
+    // ask the user where to save it now
     wxFileDialog fd2(this, wxT("Choose the XML file to save on"), wxT(""), wxT(""),
         wxT("XML and HTML files|*.xml;*.html;*.xhtml|All files|*.*"), wxSAVE);
     if (fd2.ShowModal() == wxID_CANCEL)
         return;
+#endif
 
     wxXml2Document tmpDoc;
     tmpDoc.Load(fd.GetPath());
+#if DO_TEST_SAVE
     tmpDoc.Save(fd2.GetPath());//, wxT("UTF-8"), 0);
+#endif
 }
 
 void MyFrame::OnLoadDTD(wxCommandEvent& WXUNUSED(event))
@@ -665,7 +634,7 @@ void MyFrame::OnSaveSimple(wxCommandEvent& WXUNUSED(event))
     doc.DestroyIfUnlinked();
 }
 
-void MyFrame::OnSaveAdv(wxCommandEvent &)
+void MyFrame::OnSaveAdv(wxCommandEvent& WXUNUSED(event))
 {
     wxXml2Document doc;
     wxString err;
@@ -743,7 +712,7 @@ void MyFrame::OnSaveAdv(wxCommandEvent &)
     doc.DestroyIfUnlinked();
 }
 
-void MyFrame::OnSaveDTD(wxCommandEvent &)
+void MyFrame::OnSaveDTD(wxCommandEvent& WXUNUSED(event))
 {
     wxXml2DTD doc;
     wxString err;
@@ -803,7 +772,7 @@ void MyFrame::OnSaveDTD(wxCommandEvent &)
     doc.DestroyIfUnlinked();
 }
 
-void MyFrame::OnValid(wxCommandEvent &)
+void MyFrame::OnValid(wxCommandEvent& WXUNUSED(event))
 {
     // ask the user which file we must load...
     wxFileDialog fd(this, wxT("Choose the XML file to validate"), wxT(""), wxT(""), 

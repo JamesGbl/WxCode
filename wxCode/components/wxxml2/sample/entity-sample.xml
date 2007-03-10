@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<node1>
+    <node2>This is an external entity, which is automatically included into the extentity-sample.xml file when it's loaded by libxml2.</node2>
+</node1>

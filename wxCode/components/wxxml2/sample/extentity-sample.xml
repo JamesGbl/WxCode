@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE myrootnode [
+    <!ELEMENT myrootnode (node1,node2)>
+    <!ENTITY myEntity SYSTEM "entity-sample.xml">
+]>
+<myrootnode>
+    &myEntity;
+</myrootnode>
