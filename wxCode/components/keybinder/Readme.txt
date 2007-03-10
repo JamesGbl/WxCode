@@ -14,8 +14,8 @@
  load/save system based on wxConfig is present.
 
  Integrates with your applications with few modifications and allows the
- users to customize all the commands he wants, bypassing the limitation of a
- single keybind to each command.
+ users to customize all the commands they want, bypassing the limitation of a
+ single key-shortcut to each command.
 
 
 

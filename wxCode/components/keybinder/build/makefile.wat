@@ -343,6 +343,16 @@ make_lib_dir_keybinder_dll :
 make_sample_dir_minimal :  
 	if not exist ../sample mkdir../sample
 
+tarball :  
+	make distclean
+	-cd ..\..
+	-tar -cvzf keybinder.tar.gz --exclude="*~" --exclude="*.log" --exclude="*.o*" --exclude="*.a" --exclude=".svn" --exclude="autom4te.cache" keybinder\*
+
+zip :  clean
+	del ..\..\keybinder.zip
+	-cd ..\..
+	-zip -r9 keybinder.zip keybinder -x "*.pdb" -x "*.log" -x "*.o*"
+
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\keybinder_lib_keybinder.obj :  .AUTODEPEND ..\src\keybinder.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(KEYBINDER_LIB_CXXFLAGS) $<
 

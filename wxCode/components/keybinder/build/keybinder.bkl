@@ -24,7 +24,10 @@
         keybinder=keybinder_lib+keybinder_dll
     </set>
 
+
     <!-- The sample -->
+    <!-- ========== -->
+
     <wxcode-sample id="minimal">
         <dir>sample</dir>
         <has-win32-res/>
@@ -34,5 +37,12 @@
         <wx-lib>base</wx-lib>
     </wxcode-sample>
 
+
+    <!-- Auxiliary targets -->
+    <!-- ================= -->
+    
+    <make-tarball/>
+    <make-zip/>
+    
 </makefile>
 

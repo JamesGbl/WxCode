@@ -280,6 +280,14 @@ endif
 make_sample_dir_minimal: 
 	@mkdir -p ../sample
 
+tarball: 
+	make distclean
+	( cd ../.. && tar -cvzf keybinder.tar.gz --exclude="*~" --exclude="*.log" --exclude="*.o*" --exclude="*.a" --exclude=".svn" --exclude="autom4te.cache" keybinder/* )
+
+zip: clean
+	del ../../keybinder.zip
+	( cd ../.. && zip -r9 keybinder.zip keybinder -x "*.pdb" -x "*.log" -x "*.o*" )
+
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/keybinder_lib_keybinder.o: ../src/keybinder.cpp
 	$(CXX) -c -o $@ $(KEYBINDER_LIB_CXXFLAGS) $(CPPDEPS) $<
 
