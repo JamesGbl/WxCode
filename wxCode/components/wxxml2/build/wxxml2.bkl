@@ -108,4 +108,12 @@
         <wx-lib>base</wx-lib>
     </wxcode-sample>
 
+
+
+    <!-- Auxiliary targets -->
+    <!-- ================= -->
+
+    <make-tarball/>
+    <make-zip/>
+
 </makefile>
