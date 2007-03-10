@@ -20,10 +20,8 @@ wxString wxOpenCommanderListCtrl::OnGetItemText(long item, long column) const
 
 int wxOpenCommanderListCtrl::OnGetItemColumnImage(long item, long column) const
 {
-    if (!column)
-        return m_cCommander->getIcon(item, column);
-
-    return -1;
+   if (column) return -1;
+   return m_cCommander->getIcon(item, column);
 }
 
 wxListItemAttr *wxOpenCommanderListCtrl::OnGetItemAttr(long item) const

@@ -15,6 +15,7 @@
 #include <wx/dir.h>
 #include <wx/filefn.h>
 #include <wx/file.h>
+#include <wx/filename.h>
 
 #include <wx/utils.h>
 #include <wx/mimetype.h>
@@ -59,6 +60,7 @@ bool copyDirectory(wxString& path, wxString& item, wxString& pathNew);
 wxString keyCodeToString(int keyCode);
 driversMap wxGetDrives();
 wxString getLastDir(wxString directory);
+wxString getFileExtension(const wxString& strFileName);
 
 int get_file_attrib(char *filename);
 #endif

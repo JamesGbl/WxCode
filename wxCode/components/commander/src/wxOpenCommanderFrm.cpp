@@ -84,7 +84,6 @@ bool DragAndDropFile::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& fil
 bool DragAndDropButton::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& fileNames)
 {
    wxMessageBox("Not yet implemented", "wxOpenCommander");
-   
    return true;
 }
 
@@ -586,14 +585,14 @@ void wxOpenCommanderFrm::OnListCtlKey(wxListCtrl *WxListCtrl, wxString &director
 void wxOpenCommanderFrm::WxListCtrl1KeyDown(wxListEvent& event)
 {
    wxString lastPath = cCommander1.getActualPath();
-   lastCCommanderUsed = &cCommander1;
+   //lastCCommanderUsed = &cCommander1;
 	OnListCtlKey(WxListCtrl1, lastPath, event);
 }
 
 void wxOpenCommanderFrm::WxListCtrl2KeyDown(wxListEvent& event)
 {
    wxString lastPath = cCommander2.getActualPath();
-   lastCCommanderUsed = &cCommander2;
+   //lastCCommanderUsed = &cCommander2;
 	OnListCtlKey(WxListCtrl2, lastPath, event);
 }
 
@@ -709,7 +708,7 @@ void wxOpenCommanderFrm::Mnu_addTab_onClick(wxCommandEvent& event)
 {
    lastCCommanderUsed->addPath(lastCCommanderUsed->getActualPath());
    lastNoteBookUsed->AddPage(lastListCtrlUsed, getLastDir(lastCCommanderUsed->getActualPath()));
-   lastNoteBookUsed->AdvanceSelection(true);
+   lastNoteBookUsed->ChangeSelection(lastNoteBookUsed->GetPageCount()-1);
    lastListCtrlUsed->SetFocus();
 }
 
@@ -1005,7 +1004,7 @@ void wxOpenCommanderFrm::WxListCtrlEndLabelEdit(wxListEvent& event)
       else
       {
          lastCCommanderUsed->refreshFileDir();
-         lastListCtrlUsed->RefreshItem(itemCtrl.GetId());
+         lastListCtrlUsed->Refresh();
       }
    }
 }

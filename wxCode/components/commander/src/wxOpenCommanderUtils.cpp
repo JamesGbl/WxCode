@@ -3,7 +3,7 @@
 
 void Exec(wxString& path, wxString& file)
 {
-   wxString ext = file.Mid(file.Length()-4,file.Length());
+   wxString ext = getFileExtension(path  + "\\" + file);
    wxFileType* mimeFile = wxTheMimeTypesManager->GetFileTypeFromExtension(ext);
    if (!mimeFile) return;
    wxString command = mimeFile->GetOpenCommand(path + "\\" + file);
@@ -289,4 +289,10 @@ wxString getLastDir(wxString directory)
    if (directory.Right(1) == "\\")
       directory = directory.Left(directory.Length()-1);
    return directory.AfterLast(wxT('\\'));
+}
+
+wxString getFileExtension(const wxString& strFileName)
+{
+   wxFileName fileName(strFileName);
+   return fileName.GetExt();
 }

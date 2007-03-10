@@ -18,6 +18,7 @@
 
 #include "cCommander.h"
 #include "multiLang.h"
+#include "wxOpenCommanderUtils.h"
 
 class wxOpenCommanderListCtrl : public wxListCtrl
 {
