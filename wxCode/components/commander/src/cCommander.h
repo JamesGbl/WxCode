@@ -28,8 +28,6 @@ class cCommander
       long getFileDirCount();
       wxString getFileDirActualPath(long itemPos, long itemCol);
       wxString getDrive(long itemPos, long itemCol);
-      int getIcon(long itemPos, long itemCol);
-      int getIconDevice(long itemPos, long itemCol);
       void refreshFileDir();
       void setDevices(bool listDevices);
       bool getListDevices();

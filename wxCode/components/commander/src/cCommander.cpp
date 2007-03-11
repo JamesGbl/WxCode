@@ -125,46 +125,6 @@ wxString cCommander::getDrive(long itemPos, long itemCol)
    #endif
 }
 
-int cCommander::getIcon(long itemPos, long itemCol)
-{
-   if (blnDevices) return getIconDevice(itemPos, itemCol);   
-   if (itemPos == 0) return 1;
-   if (wxDir::Exists(getActualPath() + "//" + dirFileMap[itemPos]))
-      return 1;
-   else
-      return 0;
-}
-
-int cCommander::getIconDevice(long itemPos, long itemCol)
-{
-    #ifdef __WXMSW__
-     driversMap drives = wxGetDrives();
-     driversMap::iterator iter;
-     long i=0;
-     for (iter = drives.begin(); iter != drives.end(); iter++)
-     {
-        if (i == itemPos)
-        {
-           switch (iter->second)
-           {
-              case DRIVE_REMOVABLE:
-              {
-                 if (iter->first == "A:\\" || iter->first == "B:\\")
-                    return 5;
-                 else
-                    return 3;
-              }
-     	        case DRIVE_CDROM:
-                 return 4;
-              default:
-                 return 3;
-           }
-        }
-        i++;
-     }
-   #endif
-}
-
 void cCommander::refreshFileDir()
 {
     if (blnDevices) return;

@@ -78,15 +78,6 @@
 
 typedef vector<wxString> vectorString;
 
-#include "Images/icon1.xpm"
-//#include "Images/icon2.xpm"
-#include "Images/icon3.xpm"
-//#include "Images/icon4.xpm"
-#include "Images/icon5.xpm"
-#include "Images/hardDisk.xpm"
-#include "Images/dvd.xpm"
-#include "Images/floppy.xpm"
-
 ////Dialog Style Start
 #undef wxOpenCommanderFrm_STYLE
 #define wxOpenCommanderFrm_STYLE wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU | wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxCLOSE_BOX
@@ -138,7 +129,6 @@ class wxOpenCommanderFrm : public wxFrame
 		wxOpenCommanderListCtrl* lastListCtrlUsed;
 		wxNotebook* lastNoteBookUsed;
 		wxComboBox* combo;
-		wxImageList* imageList;
 		CTimer* timer;
       CThread* thread;
 	   wxOpenCommanderTaskBar* tray;
@@ -172,6 +162,7 @@ class wxOpenCommanderFrm : public wxFrame
 			ID_MNU_LANGUAGE_1064 = 1064,
 			ID_MNU_HOTKEYS_1065 = 1065,
 			ID_MNU_HELP_1006 = 1006,
+			ID_MNU_HELP_1087 = 1087,
 			ID_MNU_CHECKUPDATES_1086 = 1086,
 			ID_MNU_ABOUT_1007 = 1007,
 			
@@ -203,7 +194,7 @@ class wxOpenCommanderFrm : public wxFrame
          void OnList1ItemActivated(wxListEvent& event);
          void OnList2ItemActivated(wxListEvent& event);
          void OnTaskBarClick(wxTaskBarIconEvent& event);
-         void OnListCtlKey(wxListCtrl *WxListCtrl, wxString &directory, wxListEvent& event);
+         void OnListCtlKey(cCommander* CCommander, wxNotebook* WxNotebook, wxListCtrl *WxListCtrl, wxString &directory, wxListEvent& event);
          void OnToolButton(wxCommandEvent& event);
          void OnComboClick(wxCommandEvent& event);
          void OnClose(wxCloseEvent& event);
@@ -211,11 +202,10 @@ class wxOpenCommanderFrm : public wxFrame
          void OnWxListCtrl2MouseLeftDown(wxMouseEvent& event);         
          void comboClick(wxCommandEvent& event, bool add = false);
   	      void CreateGUIControls();
-	      void addColumns(wxListCtrl *WxListCtrl);
 	      void addDirsCombo(wxString& strCombo);
-	      void setListCtrl(wxListCtrl *WxListCtrl, cCommander& CCommander, wxString &directory);
-	      void setListCtrlDevices(wxListCtrl *WxListCtrl, cCommander& CCommander);
-	      void itemExec(wxListCtrl *WxListCtrl, cCommander& CCommander, wxString &directory, wxString &itemName);
+	      void setListCtrl(cCommander *CCommander, wxNotebook* WxNotebook, wxListCtrl *WxListCtrl, wxString &directory);
+	      void setListCtrlDevices(cCommander *CCommander, wxListCtrl *WxListCtrl);
+	      void itemExec(cCommander *CCommander, wxNotebook* WxNotebook, wxListCtrl *WxListCtrl, wxString &directory, wxString &itemName);
 	      void updateControlsLanguage();
 	      void copyThread();
 	      void readConfig();
@@ -232,6 +222,7 @@ class wxOpenCommanderFrm : public wxFrame
        	void Mnu_Copy_onClick1(wxCommandEvent& event);
 	      void Mnu_paste_onClick(wxCommandEvent& event);
 	      void Mnu_checkUpdates_onClick(wxCommandEvent& event);
+	void Mnu_Help_onClick(wxCommandEvent& event);
 };
 
 class DragAndDropFile : public wxFileDropTarget
@@ -240,8 +231,8 @@ class DragAndDropFile : public wxFileDropTarget
     DragAndDropFile(wxOpenCommanderFrm& theWindow, cCommander& cCommanderDest) : wxFileDropTarget(), m_cCommanderDest(cCommanderDest), m_wxFrame(theWindow) {}
     virtual bool OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& fileNames);
   private:
-   cCommander& m_cCommanderDest;
-   wxOpenCommanderFrm& m_wxFrame;
+    cCommander& m_cCommanderDest;
+    wxOpenCommanderFrm& m_wxFrame;
 };
 
 class DragAndDropButton : public wxFileDropTarget

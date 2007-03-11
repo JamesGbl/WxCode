@@ -22,13 +22,13 @@ void Exec(wxString& path, wxString& file)
    wxExecute(command, wxEXEC_ASYNC);
 }
 
-size_t getDirSize(wxString& directoryFile)
+__int64 getDirSize(wxString& directoryFile)
 {
    long numFiles;
    return getDirSize(directoryFile, numFiles);
 }
 
-size_t getDirSize(wxString& directoryFile, long& numFiles)
+__int64 getDirSize(wxString& directoryFile, long& numFiles)
 {
    wxDir dir;
    wxString filename;
@@ -56,38 +56,74 @@ size_t getDirSize(wxString& directoryFile, long& numFiles)
    return totalSize;
 }
 
-size_t getFileSize(const wxString& fileName)
+wxString Int64TowxString(__int64 const& ri64, int iRadix=10) // Author: George Anescu - www.codeproject.com
 {
-   struct stat fileStat;
-   int err = stat( fileName, &fileStat );
-   if (0 != err) return 0;
+    bool bNeg = (ri64 < 0);
+    __int64 i64 = ri64;
+    wxString ostrRes;
+    bool bSpecial = false;
+    if(true == bNeg)
+    {
+        i64 = -i64;
+        if(i64 < 0)
+        // Special case number -9223372036854775808 or 
+        // 0x8000000000000000
+        bSpecial = true;
+        ostrRes.append(1, '-');
+    }
+    int iR;
+    do
+    {
+        iR = i64 % iRadix;
+        if(true == bSpecial)
+            iR = -iR;
+        if(iR < 10)
+            ostrRes.append(1, '0' + iR);
+        else
+            ostrRes.append(1, 'A' + iR - 10);
+        i64 /= iRadix;
+    }
+    while(i64 != 0);
+    //Reverse the string
+    wxString::iterator it = ostrRes.begin();
+    if(bNeg)
+        it++;
+    reverse(it, ostrRes.end());
+    return ostrRes;
+}
+
+__int64 getFileSize(const wxString& fileName)
+{
+   struct _stati64 fileStat;
+   int err = _stati64( fileName, &fileStat );
+   if (err != 0) return 0;
    return fileStat.st_size;
 }
 
-wxString formatFileSize(size_t st_size)
+wxString formatFileSize(__int64 st_size)
 {
    wxString size;
    if (st_size >= 1000000000)
    {
-     size << (st_size/10000000);
+     size = Int64TowxString(st_size/10000000);
      size = size.Left(size.Len()-2) + "," + size.Right(2);
      size+=" Gb";
      return size;
    }
    if (st_size >= 1000000)
    {
-     size << (st_size/10000);
+     size = Int64TowxString(st_size/10000);
      size = size.Left(size.Len()-2) + "," + size.Right(2);
      size+=" Mb";
      return size;
    }
    if (st_size >= 1000)
    {
-     size << (st_size/1000);
+     size = Int64TowxString(st_size/1000);
      size+=" Kb";
      return size;
    }
-   size << (st_size);
+   size = Int64TowxString(st_size);
    size+=" Bytes";
 
    return size;

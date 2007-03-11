@@ -20,6 +20,15 @@
 #include "multiLang.h"
 #include "wxOpenCommanderUtils.h"
 
+#include "Images/icon1.xpm"
+//#include "Images/icon2.xpm"
+#include "Images/icon3.xpm"
+//#include "Images/icon4.xpm"
+#include "Images/icon5.xpm"
+#include "Images/hardDisk.xpm"
+#include "Images/dvd.xpm"
+#include "Images/floppy.xpm"
+
 class wxOpenCommanderListCtrl : public wxListCtrl
 {
    public:
@@ -34,15 +43,20 @@ class wxOpenCommanderListCtrl : public wxListCtrl
    {
       m_cCommander = theCCommander;
       lang = langMap;
+      imageList=NULL;
    };
 
+   void addColumns();
    wxString wxOpenCommanderListCtrl::OnGetItemText(long item, long column) const;
    int wxOpenCommanderListCtrl::OnGetItemColumnImage(long item, long column) const;
    wxListItemAttr *wxOpenCommanderListCtrl::OnGetItemAttr(long item) const;
+   int getIcon(long itemPos, long itemCol) const;
+   int getIconDevice(long itemPos, long itemCol) const;
 
    private:
    wxListItemAttr m_attr;
    cCommander* m_cCommander;
    multiLang* lang;
+   wxImageList* imageList;
 };
 #endif
