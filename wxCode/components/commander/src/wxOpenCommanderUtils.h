@@ -47,11 +47,11 @@ using namespace std;
 typedef map <wxString, int, less<wxString> > driversMap;
 
 void Exec(wxString& path, wxString& file);
-wxString Int64TowxString(__int64 const& ri64, int iRadix);
-__int64 getFileSize(const wxString& fileName);
-__int64 getDirSize(wxString& directoryFile);
-__int64 getDirSize(wxString& directoryFile, long& numFiles);
-wxString formatFileSize(__int64 st_size);
+wxString LongLongTowxString(long long const& size);
+long long getFileSize(const wxString& fileName);
+long long getDirSize(wxString& directoryFile);
+long long getDirSize(wxString& directoryFile, long& numFiles);
+wxString formatFileSize(long long st_size);
 wxString getModificationTime(wxString& fileName);
 bool deleteDirFile(wxString& path, wxString& item);
 bool deleteDirectory(wxString& path, wxString& item);
