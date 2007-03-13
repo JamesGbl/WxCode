@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <?php
   ////////////////////////////////////////////////////////////////////////////////////////////
-  // Author: YOUR_NAME
-  // Creation date: someday/somemonth/someyear
+  // Author: Gräfe Christian
+  // Creation date: 13/03/2007
   // RCS-ID: $Id: index.php,v 1.7 2005/09/01 22:26:16 frm Exp $
   // Notes: the index page of the website of this component
   ////////////////////////////////////////////////////////////////////////////////////////////
@@ -10,8 +10,8 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-AU">
 	<?php
-      $compname = "MYCOMPNAME";
-      $subdir = "MYCOMPSUBDIR";
+      $compname = "wxLEDPanel";
+      $subdir = "wxledpanel";
       require("compwebsite.inc.php");
   ?>
 
@@ -41,9 +41,8 @@
        block...
   -->
 	<br/><?php write_h1("Screenshots"); ?>
-	<p>Description</p>
   <div class="center">
-    <?php writeScreenshotLink("myshot.png", "description goes here"); ?>
+   <?php writeScreenshotLink("sampel.png", "wxLEDPanel sampel"); ?>
   </div>
 
 
@@ -54,9 +53,14 @@
   <br/><?php write_h1("Usage sample"); ?>
   <?php writeSnippet('
 // sample CPP snippet which shows how to use this component:
-myComp *newcomp = new myComp();
-newcomp->SetAAAA("aaa");
-newcomp->SetBBBB("bbb");
+// LEDPanel with LED-size 4x4 and Panel with 10x23 LEDs, no padding between the LEDs
+wxLEDPanel *ledpanel = new wxLEDPanel(this,wxID_ANY,wxSize(4,4),wxSize(65,9),0);
+ledpanel->SetLEDColour(wxLED_COLOUR_GREEN);	// Green LEDs
+ledpanel->SetText(wxT("WXLEDPANEL"),wxALIGN_CENTER);
+// Thats all, if you want the text to scroll, then add this
+ledpanel->SetScrollDirection(wxLED_SCROLL_LEFT);
+ledpanel->SetScrollspeed(100);
+
 
 // inside this section we can use any character we want except
 // for the single quote char: if you need to use it you should
@@ -75,10 +79,10 @@ newcomp->Show();
 	<br/><?php write_h1("Known bugs"); ?>
   <p>None. To submit a bug report please look at <a href="../../support.php">wxCode support page</a>.</p>
 
-    
+
 	<br/><?php write_h1("Future enhancements"); ?>
   <p>None. To submit a feature request please look at <a href="../../support.php">wxCode support page</a>.</p>
-    
+
 
 	<br/><?php require("footer.inc.php"); ?>
 </html>
