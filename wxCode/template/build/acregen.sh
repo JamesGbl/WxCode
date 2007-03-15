@@ -43,5 +43,10 @@ me=$(basename $0)
 path=${0%%/$me}        # path from which the script has been launched
 current=$(pwd)
 cd $path
-aclocal && autoconf && mv configure ..
+
+# NOTE: we add /usr/local/share/aclocal include path to the "aclocal" call
+#       because usually bakefile gets installed into /usr/local prefix but
+#       by default aclocal only looks into /usr/share/aclocal
+#       (you can test this doing `aclocal --print-ac-dir`)
+aclocal -I /usr/local/share/aclocal && autoconf && mv configure ..
 cd $current
