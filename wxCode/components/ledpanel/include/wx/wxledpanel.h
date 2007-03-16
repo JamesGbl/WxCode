@@ -119,6 +119,14 @@ class wxLEDPanel : public wxControl
 		void SetText(const wxString& text, int align=-1);	// align e.g. "wxLEFT|wxTOP", align=-1 -> Use corrent align
 		const wxString& GetText() const {return m_text;}
 
+		// TextPadding
+		void SetTextPaddingLeft(int padLeft);
+		void SetTextPaddingRight(int padRight);
+		int GetTextPaddingLeft() const {return m_padLeft;}
+		int GetTextPaddingRight() const {return m_padRight;}
+
+
+
 	protected:
 		// Das MatrixObject zeichnen
 		void DrawField(wxDC& dc);
@@ -130,6 +138,8 @@ class wxLEDPanel : public wxControl
 		wxSize m_pointsize;
         int m_padding;
         int m_textalign;
+        int m_padLeft;
+        int m_padRight;
         wxLEDColour m_activ_colour_id;
 
         // Scroll-Properties

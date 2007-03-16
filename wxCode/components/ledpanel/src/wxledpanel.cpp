@@ -18,7 +18,7 @@
     #include <wx/dcbuffer.h>
 #endif
 
-#include "wxLEDPanel.h"
+#include "wx/wxledpanel.h"
 
 #define TIMER_SCROLL_ID 1000
 
@@ -32,6 +32,8 @@ END_EVENT_TABLE()
 
 wxLEDPanel::wxLEDPanel() :
 	m_textalign(wxALIGN_LEFT|wxALIGN_TOP),
+	m_padLeft(0),
+	m_padRight(0),
 	m_scrollspeed(0),
 	m_scrolldirection(wxLED_SCROLL_NONE)
 {
@@ -41,6 +43,8 @@ wxLEDPanel::wxLEDPanel(wxWindow* parent, wxWindowID id, const wxSize& pointsize,
 					const wxSize& fieldsize, int padding, const wxPoint& pos,
 					long style, const wxValidator& validator) :
 	m_textalign(wxALIGN_LEFT|wxALIGN_TOP),
+	m_padLeft(1),
+	m_padRight(1),
 	m_scrollspeed(0),
 	m_scrolldirection(wxLED_SCROLL_NONE)
 {
@@ -124,46 +128,45 @@ void wxLEDPanel::DrawField(wxDC& dc)
 
 void wxLEDPanel::SetLEDColour(wxLEDColour colourID)
 {
-	// zum Zeichnen
+	// for drawing
 	wxBrush brush;
 	wxPen pen;
 
-	// FarbID speichern
+	// colourID speichern
 	m_activ_colour_id=colourID;
 
-	// Bitmaps für "LED an" und "LED aus" erzeugen
+	// create Bitmaps for "LED on" und "LED off"
 	m_bmp_led_on.Create(m_pointsize.GetWidth()+m_padding,m_pointsize.GetHeight()+m_padding);
 	m_bmp_led_off.Create(m_pointsize.GetWidth()+m_padding,m_pointsize.GetHeight()+m_padding);
 
-	// zeichne "LED an"
-	// memdc erzeugen
+	// draw "LED on"
 	wxMemoryDC dc_on(m_bmp_led_on);
 
-	// hintergrund leer
+	// Clear Background
 	dc_on.SetBackground(this->GetBackgroundColour());
     dc_on.Clear();
 
-	// ganzer Punkt
+	// complete point
     pen.SetColour(s_colour_dark[colourID-1]);
     brush.SetColour(s_colour[colourID-1]);
     dc_on.SetPen(pen);
     dc_on.SetBrush(brush);
     dc_on.DrawEllipse(wxPoint(0,0),m_pointsize);
 
-	// Linke obere ecke heller
-    pen.SetColour(s_colour_light[colourID-1]);
+	// left top corner in lighter colour
+	pen.SetColour(s_colour_light[colourID-1]);
 	dc_on.SetPen(pen);
 	dc_on.DrawEllipticArc(0,0,m_pointsize.GetWidth(),m_pointsize.GetHeight(),75.0,195.0);
 
-	// zeichne "LED aus"
-	// memdc erzeugen
+
+	// draw "LED off"
 	wxMemoryDC dc_off(m_bmp_led_off);
 
-	// hintergrund leer
+	// cleare Background
 	dc_off.SetBackground(this->GetBackgroundColour());
     dc_off.Clear();
 
-    // ganze Punkt
+    // complete point
     pen.SetColour(s_colour_dark[colourID-1]);
     brush.SetColour(s_colour_verydark[colourID-1]);
     dc_off.SetPen(pen);
@@ -247,6 +250,32 @@ void wxLEDPanel::SetTextAlign(int a)
 	m_field.SetDatesAt(m_text_pos,m_text_mo);
 }
 
+void wxLEDPanel::SetTextPaddingLeft(int padLeft)
+{
+	// Save value
+	m_padLeft=padLeft;
+
+	// Reset the text position
+	ResetTextPos();
+
+	// Reinit the field
+	m_field.Clear();
+	m_field.SetDatesAt(m_text_pos,m_text_mo);
+}
+
+void wxLEDPanel::SetTextPaddingRight(int padRight)
+{
+	// Save the Value
+	m_padRight=padRight;
+
+	// Reset the text position
+	ResetTextPos();
+
+	// Reinit the field
+	m_field.Clear();
+	m_field.SetDatesAt(m_text_pos,m_text_mo);
+}
+
 void wxLEDPanel::SetScrollSpeed(int speed)
 {
 	// the save way
@@ -281,11 +310,11 @@ void wxLEDPanel::ResetTextPos()
 	if(m_scrolldirection!=wxLED_SCROLL_LEFT && m_scrolldirection!=wxLED_SCROLL_RIGHT)
 	{
 		if(m_textalign & wxALIGN_RIGHT)
-			m_text_pos.x=m_field.GetWidth()-m_text_mo.GetWidth();
+			m_text_pos.x=m_field.GetWidth()-m_text_mo.GetWidth()-m_padRight;
 		else if(m_textalign & wxALIGN_CENTER_HORIZONTAL)
 			m_text_pos.x=(m_field.GetWidth()-m_text_mo.GetWidth())/2;
 		else // wxALING_LEFT
-			m_text_pos.x=0;
+			m_text_pos.x=m_padLeft;
 	}
 	else if(m_scrolldirection==wxLED_SCROLL_LEFT)
 		m_text_pos.x=m_field.GetWidth();

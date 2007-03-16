@@ -7,8 +7,7 @@
  * License:	  wxWindows licence
  **************************************************************/
 
-#include "advancedmatrixobject.h"
-
+#include "wx/advancedmatrixobject.h"
 
 AdvancedMatrixObject::AdvancedMatrixObject() :
 	MatrixObject()

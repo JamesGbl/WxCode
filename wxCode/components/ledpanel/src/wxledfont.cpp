@@ -17,7 +17,7 @@
     #include <wx/wx.h>
 #endif
 
-#include "wxledfont.h"
+#include "wx/wxledfont.h"
 
 wxLEDFont::wxLEDFont() :
 	m_letterspace(1),
@@ -78,7 +78,7 @@ AdvancedMatrixObject* wxLEDFont::GetMOForText(const wxString& text, wxAlignment 
 	// create matrixobject for the text
 	AdvancedMatrixObject* mo_forText=new AdvancedMatrixObject(
 					0,w*(m_maxLetterWidth+m_letterspace),
-					h*(m_maxLetterHeight+m_letterspace)-1);
+					h*(m_maxLetterHeight+m_letterspace)-m_letterspace);
 
 	// create array for the textlines
 	AdvancedMatrixObject** mo_lines=new AdvancedMatrixObject*[h+1];
@@ -141,7 +141,7 @@ AdvancedMatrixObject* wxLEDFont::GetMOForText(const wxString& text, wxAlignment 
 	// Fit the right, left and bottom border
 	mo_forText->FitLeft();
 	mo_forText->FitRight();
-	mo_forText->FitBottom();
+	//mo_forText->FitBottom();
 
 	// free the array for the lines
 	delete mo_lines;

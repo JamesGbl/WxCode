@@ -17,7 +17,7 @@
     #include <wx/wx.h>
 #endif
 
-#include "matrixobject.h"
+#include "wx/matrixobject.h"
 
 MatrixObject::MatrixObject() :
 	m_data(0), m_width(0), m_height(0), m_length(0)

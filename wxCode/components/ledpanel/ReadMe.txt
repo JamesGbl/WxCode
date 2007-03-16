@@ -12,16 +12,15 @@
  Installation - win32
  --------------------
 
- sorry no buildfile
+ build-file but I don't now if it is realy working
 
 
 
  Installation - unix
  -------------------
 
- I don't now, is corrently only testet on WinXP.
-
-
+ Build-file but I don't now if it is realy working.
+ 
 
  ChangeLog
  ---------
