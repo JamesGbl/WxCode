@@ -1,33 +1,24 @@
 <?xml version="1.0" ?>
 
-<!-- RCS-ID: $Id: Bakefiles.bkgen,v 1.0 2007/03/16 22:45:27 frm Exp $ -->
+<!-- RCS-ID: $Id: Bakefiles.bkgen,v 1.8 2007/03/04 08:57:20 frm Exp $ -->
 
 <bakefile-gen>
+    <include file="../../../build/bakefiles/presets/wxcode.bkgen"/>
 
-	<!-- you probably need to edit only this tag -->
+    <!-- you probably need to edit only this tag -->
     <input>wxledpanel.bkl</input>
 
+    <!--
+        The wxCode's wxcode.bkgen file will enable some default formats.
+        If you don't want a format declared there to be generated for
+        your project, just use:
 
-    <disable-formats>dmars,dmars_smake,cbx_unix,cbuilderx,msevc4prj</disable-formats>
-    <add-formats>autoconf,borland,mingw,msvc,msvc6prj,msevc4prj,watcom</add-formats>
+             <disable-formats>xxx</disable-formats>
 
-    <!-- required since wxCode uses wx presets stored in wxWidgets subfolders...
-	     NOTE: *always* use '/' instead of '\' in paths and bakefile will translate them
-		       to the right path separator for the platform it's running on -->
-    <add-flags>-I%WXWIN%/build/bakefiles/wxpresets</add-flags>
+        Instead, if you want to generate a format not declared there,
+        use:
 
-	<!-- since it's standard on Unix to have Makefile.in and the configure script in
-	     the root folder of the component to build, we put Makefile.in one directory up... -->
-    <add-flags formats="autoconf">
-        -o../Makefile.in
-    </add-flags>
-    
-    <!-- ...anyway, we don't want to fill the component's root with files which are 
-	     useless for the user and just make the component looks "messy"; thus all
-		 autoconf files are still kept in build\; only "configure" and "Makefile.in"
-		 will go in the component's root -->
-    <add-flags formats="autoconf">
-        -DAUTOCONF_MACROS_FILE=autoconf_inc.m4
-    </add-flags>
-    
+             <add-formats>yyy</add-formats>
+    -->
+
 </bakefile-gen>
