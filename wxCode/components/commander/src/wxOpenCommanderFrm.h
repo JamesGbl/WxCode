@@ -216,6 +216,7 @@ class wxOpenCommanderFrm : public wxFrame
          void WxListCtrlBeginDrag(wxListEvent& event);
          void copyToClipboard();
          void pasteFromClipboard();
+         void onRigthClick(wxListEvent& event);
    public:
          void ListCtlUpdate();
          void copyThread(wxString& strPathDest,  const wxArrayString& fileNames);

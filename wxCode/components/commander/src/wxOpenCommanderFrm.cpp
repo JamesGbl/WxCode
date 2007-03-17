@@ -47,6 +47,8 @@ BEGIN_EVENT_TABLE(wxOpenCommanderFrm,wxFrame)
 	EVT_LIST_END_LABEL_EDIT(ID_WXLISTCTRL2,wxOpenCommanderFrm::WxListCtrlEndLabelEdit)
 	EVT_LIST_BEGIN_DRAG(ID_WXLISTCTRL1,wxOpenCommanderFrm::WxListCtrlBeginDrag)
 	EVT_LIST_BEGIN_DRAG(ID_WXLISTCTRL2,wxOpenCommanderFrm::WxListCtrlBeginDrag)
+	EVT_LIST_ITEM_RIGHT_CLICK(ID_WXLISTCTRL1, wxOpenCommanderFrm::onRigthClick) 
+	EVT_LIST_ITEM_RIGHT_CLICK(ID_WXLISTCTRL2, wxOpenCommanderFrm::onRigthClick)
 	//EVT_CHAR_HOOK(wxOpenCommanderFrm::OnCharHook)
 	////Manual Code End
 	
@@ -1091,4 +1093,17 @@ void wxOpenCommanderFrm::Mnu_Help_onClick(wxCommandEvent& event)
    wxString program = "index.chm";
 
 	Exec(path, program);	
+}
+
+void wxOpenCommanderFrm::onRigthClick(wxListEvent& event)
+{    
+    wxMenu* menu = new wxMenu;
+	menu->Append(ID_MNU_NEWFOLDER_1049, wxT("&New folder"), wxT(""), wxITEM_NORMAL);
+	menu->Append(ID_MNU_COPY_1046, wxT("&Copy to..."), wxT(""), wxITEM_NORMAL);
+	menu->Append(ID_MNU_DELETE_1047, wxT("&Delete"), wxT(""), wxITEM_NORMAL);
+	menu->Append(ID_MNU_RENAME_1048, wxT("&Rename"), wxT(""), wxITEM_NORMAL);
+	menu->AppendSeparator();
+	menu->Append(ID_MNU_COPY_1084, wxT("&Copy"), wxT(""), wxITEM_NORMAL);
+	menu->Append(ID_MNU_PASTE_1085, wxT("&Paste"), wxT(""), wxITEM_NORMAL);
+    this->PopupMenu(menu, event.GetPoint());    
 }
