@@ -35,12 +35,12 @@ ledpanelFrame::ledpanelFrame(wxFrame *frame, const wxString& title)
 
 	// The first LEDPanel -> Static text
 	wxLEDPanel* lp1=new wxLEDPanel(this,wxID_ANY,wxSize(4,4),wxSize(63,9),0);
-	lp1->SetText("WXLEDPANEL",wxALIGN_CENTER);	// Set the LED-Text
+	lp1->SetText(wxT("wxLEDPanel"),wxALIGN_CENTER);	// Set the LED-Text
 	sizer->Add(lp1,0,wxALIGN_CENTER|wxALL,5);
 
 	// The 2nd LEDPanel
 	wxLEDPanel* lp2=new wxLEDPanel(this,wxID_ANY,wxSize(4,4),wxSize(63,9),0);
-	lp2->SetText("WXLEDPANEL");
+	lp2->SetText(wxT("wxLEDPanel"));
 	lp2->SetTextAlign(wxALIGN_CENTER_VERTICAL);	// Center the text vertical
 	lp2->SetLEDColour(wxLED_COLOUR_GREEN); // Set the LEDColour (default colour is red)
 	lp2->SetScrollDirection(wxLED_SCROLL_LEFT);	// Set the Scrolldirection
@@ -49,7 +49,7 @@ ledpanelFrame::ledpanelFrame(wxFrame *frame, const wxString& title)
 
 	// The 3rd LEDPanel
 	wxLEDPanel* lp3=new wxLEDPanel(this,wxID_ANY,wxSize(4,4),wxSize(63,9),0);
-	lp3->SetText("WXLEDPANEL\n2ND LINE\n3RD LINE",wxALIGN_RIGHT);  // multiple lines text
+	lp3->SetText(wxT("wxLEDPanel\n2nd Line\n3rd Line\n4th Line"),wxALIGN_RIGHT);  // multi-line text
 	lp3->SetTextAlign(wxALIGN_CENTER_HORIZONTAL); // Center the text horizontal
 	lp3->SetLEDColour(wxLED_COLOUR_BLUE); // Set the LEDColour (default colour is red)
 	lp3->SetScrollDirection(wxLED_SCROLL_UP);	// Set the Scrolldirection
@@ -59,9 +59,10 @@ ledpanelFrame::ledpanelFrame(wxFrame *frame, const wxString& title)
 	// The 4th LEDPanel
 	// Bigger LEDs and space (1px) between the leds
 	wxLEDPanel* lp4=new wxLEDPanel(this,wxID_ANY,wxSize(5,5),wxSize(63,9),1);
-	lp4->SetText("WXLEDPANEL",wxALIGN_CENTER);
+	lp4->SetText(wxT("wxLEDPanel"),wxALIGN_CENTER);
 	lp4->SetLEDColour(wxLED_COLOUR_CYAN); // Set the LEDColour (default colour is red)
 	sizer->Add(lp4,0,wxALIGN_CENTER|wxALL,5);
+
 	// Sizer for the Panel
 	this->SetSizerAndFit(sizer);
 }

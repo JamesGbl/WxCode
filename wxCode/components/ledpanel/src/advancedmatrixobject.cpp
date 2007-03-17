@@ -33,12 +33,8 @@ AdvancedMatrixObject::~AdvancedMatrixObject()
 ////////////////////////////////////////////////////////////////
 void AdvancedMatrixObject::RotateLeft()
 {
-	// is init?
-	if(!m_data)
-	{
-		wxFAIL_MSG(wxT("AdvancedMatrixObject has no data to rotate!"));
-		return;
-	}
+	// has data to rotate
+	if(IsEmpty()) return;
 
 	// create tmp-object
 	MatrixObject tmp=MatrixObject(0,m_height,m_width);
@@ -57,12 +53,8 @@ void AdvancedMatrixObject::RotateLeft()
 
 void AdvancedMatrixObject::RotateRight()
 {
-	// is init?
-	if(!m_data)
-	{
-		wxFAIL_MSG(wxT("AdvancedMatrixObject has no data to rotate!"));
-		return;
-	}
+	// has data to rotate
+	if(IsEmpty()) return;
 
 	// create tmp-object
 	MatrixObject tmp=MatrixObject(0,m_height,m_width);
@@ -84,12 +76,8 @@ void AdvancedMatrixObject::RotateRight()
 ////////////////////////////////////////////////////////////////
 void AdvancedMatrixObject::ShiftLeft()
 {
-	// is init?
-	if(!m_data)
-	{
-		wxFAIL_MSG(wxT("AdvancedMatrixObject has no data to shift!"));
-		return;
-	}
+	// has data to shift
+	if(IsEmpty()) return;
 
 	// alles nach links verschieben
 	char* tmp=m_data;
@@ -103,12 +91,8 @@ void AdvancedMatrixObject::ShiftLeft()
 
 void AdvancedMatrixObject::ShiftRight()
 {
-	// is init?
-	if(!m_data)
-	{
-		wxFAIL_MSG(wxT("AdvancedMatrixObject has no data to shift!"));
-		return;
-	}
+	// has data to shift
+	if(IsEmpty()) return;
 
 	// alles nach rechts verschieben
 	char* tmp=m_data;
@@ -122,12 +106,8 @@ void AdvancedMatrixObject::ShiftRight()
 
 void AdvancedMatrixObject::ShiftUp()
 {
-	// is init?
-	if(!m_data)
-	{
-		wxFAIL_MSG(wxT("AdvancedMatrixObject has no data to shift!"));
-		return;
-	}
+	// has data to shift
+	if(IsEmpty()) return;
 
 	// alles nach oben verschieben
 	char* tmp=m_data;
@@ -141,12 +121,8 @@ void AdvancedMatrixObject::ShiftUp()
 
 void AdvancedMatrixObject::ShiftDown()
 {
-	// is init?
-	if(!m_data)
-	{
-		wxFAIL_MSG(wxT("AdvancedMatrixObject has no data to shift!"));
-		return;
-	}
+	// has data to shift
+	if(IsEmpty()) return;
 
 	// alles nach rechts verschieben
 	char* tmp=m_data;
@@ -163,10 +139,11 @@ void AdvancedMatrixObject::ShiftDown()
 ////////////////////////////////////////////////////////////////
 void AdvancedMatrixObject::FitLeft()
 {
-	// is init?
-	if(!m_data)
+	// has data to Fit
+	if(IsEmpty())
 	{
-		wxFAIL_MSG(wxT("AdvancedMatrixObject has no data to fit!"));
+		// no Data left after Fit
+		this->Destroy();
 		return;
 	}
 
@@ -206,10 +183,11 @@ void AdvancedMatrixObject::FitLeft()
 
 void AdvancedMatrixObject::FitRight()
 {
-	// is init?
-	if(!m_data)
+	// has data to Fit
+	if(IsEmpty())
 	{
-		wxFAIL_MSG(wxT("AdvancedMatrixObject has no data to fit!"));
+		// no Data left after Fit
+		this->Destroy();
 		return;
 	}
 
@@ -248,10 +226,11 @@ void AdvancedMatrixObject::FitRight()
 
 void AdvancedMatrixObject::FitTop()
 {
-	// is init?
-	if(!m_data)
+	// has data to Fit
+	if(IsEmpty())
 	{
-		wxFAIL_MSG(wxT("AdvancedMatrixObject has no data to fit!"));
+		// no Data left after Fit
+		this->Destroy();
 		return;
 	}
 
@@ -287,10 +266,11 @@ void AdvancedMatrixObject::FitTop()
 
 void AdvancedMatrixObject::FitBottom()
 {
-	// is init?
-	if(!m_data)
+	// has data to Fit
+	if(IsEmpty())
 	{
-		wxFAIL_MSG(wxT("AdvancedMatrixObject has no data to fit!"));
+		// no Data left after Fit
+		this->Destroy();
 		return;
 	}
 

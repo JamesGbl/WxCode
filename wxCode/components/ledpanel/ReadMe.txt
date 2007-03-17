@@ -24,6 +24,9 @@
 
  ChangeLog
  ---------
+ 0.2 - 7x5 lowercase letters
+	better scrolling
+	some changes in "matrixobject" to prevent crashes (test if object is empty)
 
  0.1 - first version of wxLEDPanel at wxCode
 		only 7x5 letters and only uppercase

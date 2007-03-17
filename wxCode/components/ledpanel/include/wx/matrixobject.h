@@ -36,21 +36,24 @@ class MatrixObject
         char GetDataFrom(int x, int y) const;
         char GetDataFrom(int p) const;
 
-        // Den pointer zu den Daten
+        // the pointer to the Data
         const char* GetData() const {return m_data;}
 
-        // Inhalt löschen (null setzen)
+        // Has Data
+        bool HasData() const {return ((m_data==0)?(false):(true));}
+
+		// all fields null?
+        bool IsEmpty() const;
+
+        // set all fields 0
         void Clear();
 
-        // Daten
+        // Data
 		bool SetDataAt(int x, int y, char data);
 		bool SetDataAt(int p, char data);
 		bool SetDataAt(const wxPoint& punkt, char data) {return SetDataAt(punkt.x,punkt.y,data);}
 		bool SetDatesAt(int x, int y, const MatrixObject &mo);
 		bool SetDatesAt(const wxPoint& punkt, const MatrixObject &mo) {return SetDatesAt(punkt.x,punkt.y,mo);}
-
-		// Einfärben
-		void SetColor(char nr);
 
     protected:
 		// Deinitialisieren

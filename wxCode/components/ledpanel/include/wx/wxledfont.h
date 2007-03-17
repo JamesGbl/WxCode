@@ -42,7 +42,7 @@ class wxLEDFont
 		int m_maxLetterWidth;
 		int m_maxLetterHeight;
 
-		static const char ms_standartLettersData[69][35];
+		static const char ms_standartLettersData[95][35];
 		static const wxString ms_standartLettersChar;
 		static const int ms_slWidth;
 		static const int ms_slHeight;

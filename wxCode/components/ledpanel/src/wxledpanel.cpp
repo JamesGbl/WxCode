@@ -32,8 +32,8 @@ END_EVENT_TABLE()
 
 wxLEDPanel::wxLEDPanel() :
 	m_textalign(wxALIGN_LEFT|wxALIGN_TOP),
-	m_padLeft(0),
-	m_padRight(0),
+	m_padLeft(1),
+	m_padRight(1),
 	m_scrollspeed(0),
 	m_scrolldirection(wxLED_SCROLL_NONE)
 {
@@ -210,7 +210,10 @@ void wxLEDPanel::OnScrollTimer(wxTimerEvent& event)
 
 void wxLEDPanel::SetText(const wxString& text, int align)
 {
-	// get the MO for the Text
+	// String emtpy
+	if(text.IsEmpty()) return;
+
+	// the MO for the Text
 	MatrixObject* tmp=NULL;
 
 	// save the align

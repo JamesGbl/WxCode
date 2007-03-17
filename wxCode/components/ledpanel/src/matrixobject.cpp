@@ -68,6 +68,9 @@ void MatrixObject::Init(const char* data, int width, int height)
     m_height=height;
     m_length=width*height;
 
+    // space for data?
+    if(m_length==0) return; // nothing to do
+
 	// Array zum internen Speichern erzeugen
     m_data=new char[m_length];
 
@@ -138,7 +141,7 @@ bool MatrixObject::SetDatesAt(int x, int y, const MatrixObject &mo)
 	if(!m_data) return false;
 
 	// has mo data?
-	if(!mo.GetData()) return false ;
+	if(mo.IsEmpty()) return false ;
 
     int dx=0,dy=0;
     char data;
@@ -182,12 +185,10 @@ bool MatrixObject::SetDatesAt(int x, int y, const MatrixObject &mo)
     return true;
 }
 
-void MatrixObject::SetColor(char nr)
+bool MatrixObject::IsEmpty() const
 {
-	// gibt es die Farbe überhaupt?
-	if(nr<1 || nr>7) return;
-
-	// Einfärben
 	for(int i=0;i<m_length;++i)
-		if(m_data[i]>0) m_data[i]=nr;
+		if(m_data[i]!=0) return false;
+
+	return true;
 }

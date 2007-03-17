@@ -29,7 +29,7 @@ wxLEDFont::wxLEDFont() :
 	m_letters[ms_standartLettersChar[0]]= new MatrixObject(ms_standartLettersData[0],ms_slWidth,ms_slHeight);
 	// all the other letters
 	AdvancedMatrixObject* tmp=0;
-	for(int i=1;i<69;++i)
+	for(int i=1;i<95;++i)
 	{
 		tmp=new AdvancedMatrixObject(ms_standartLettersData[i],ms_slWidth,ms_slHeight);
 		tmp=tmp;
@@ -51,7 +51,7 @@ wxLEDFont::~wxLEDFont()
     }
 }
 
-const MatrixObject* wxLEDFont::GetLetter(char l)
+const MatrixObject* wxLEDFont::GetLetter(wxChar l)
 {
 	// suchen
 	wxLEDFontHashMap::iterator it=m_letters.find(l);
@@ -61,6 +61,8 @@ const MatrixObject* wxLEDFont::GetLetter(char l)
 
 AdvancedMatrixObject* wxLEDFont::GetMOForText(const wxString& text, wxAlignment a)
 {
+	// string empty?
+	if(text.IsEmpty()) return NULL;
 
 	// ausmase des matrix_object suchen
 	wxString s_tmp=text;
@@ -94,7 +96,7 @@ AdvancedMatrixObject* wxLEDFont::GetMOForText(const wxString& text, wxAlignment 
 	const MatrixObject* mo_tmp=0;
 	for(i=0; i<text.Length(); ++i)
 	{
-		char c=text.GetChar(i);
+		wxChar c=text.GetChar(i);
 		if(c=='\n')
 		{
 			++line;
@@ -103,7 +105,7 @@ AdvancedMatrixObject* wxLEDFont::GetMOForText(const wxString& text, wxAlignment 
 		else
 		{
 			mo_tmp=this->GetLetter(c);
-			if(mo_tmp)
+			if(mo_tmp!=NULL)
 			{
 				// Save Letter in the line for the text
 				mo_lines[line]->SetDatesAt(x,0,*mo_tmp);
@@ -118,18 +120,21 @@ AdvancedMatrixObject* wxLEDFont::GetMOForText(const wxString& text, wxAlignment 
 	int y=0;
 	for(i=0;i<=h;++i)
 	{
-		mo_lines[i]->FitRight();
+		if(mo_lines[i]->IsEmpty()==false)
+		{
+			mo_lines[i]->FitRight();
 
-		// find x pos
-		if(a==wxALIGN_RIGHT)
-			x=mo_forText->GetWidth()-mo_lines[i]->GetWidth();
-		else if(a==wxALIGN_CENTER_HORIZONTAL)
-			x=(mo_forText->GetWidth()-mo_lines[i]->GetWidth())/2;
-		else  // wxALIGN_LEFT
-			x=0;
+			// find x pos
+			if(a==wxALIGN_RIGHT)
+				x=mo_forText->GetWidth()-mo_lines[i]->GetWidth();
+			else if(a==wxALIGN_CENTER_HORIZONTAL)
+				x=(mo_forText->GetWidth()-mo_lines[i]->GetWidth())/2;
+			else  // wxALIGN_LEFT
+				x=0;
 
-		// set the line
-		mo_forText->SetDatesAt(x,y,*mo_lines[i]);
+			// set the line
+			mo_forText->SetDatesAt(x,y,*mo_lines[i]);
+		}
 
 		// find y pos for next line
 		y+=m_maxLetterHeight+m_letterspace;
@@ -138,10 +143,9 @@ AdvancedMatrixObject* wxLEDFont::GetMOForText(const wxString& text, wxAlignment 
 		wxDELETE(mo_lines[i])
 	}
 
-	// Fit the right, left and bottom border
+	// Fit the right and left border
 	mo_forText->FitLeft();
 	mo_forText->FitRight();
-	//mo_forText->FitBottom();
 
 	// free the array for the lines
 	delete mo_lines;
@@ -152,8 +156,8 @@ AdvancedMatrixObject* wxLEDFont::GetMOForText(const wxString& text, wxAlignment 
 
 const int wxLEDFont::ms_slWidth=5;
 const int wxLEDFont::ms_slHeight=7;
-const wxString wxLEDFont::ms_standartLettersChar = wxT(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`{|}~");
-const char wxLEDFont::ms_standartLettersData[69][35] = {
+const wxString wxLEDFont::ms_standartLettersChar = wxT(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~");
+const char wxLEDFont::ms_standartLettersData[95][35] = {
 	{	//' ',		// 0 -> SPACE
 		0,0,0,0,0,
 		0,0,0,0,0,
@@ -741,7 +745,241 @@ const char wxLEDFont::ms_standartLettersData[69][35] = {
 	},
 /////////////////////////////
 // a - z
-////////////////////////////
+/////////////////////////////
+	{	//'a',		// 65 -> a
+		0,0,0,0,0,
+		0,0,0,0,0,
+		0,1,1,1,0,
+		0,0,0,0,1,
+		0,1,1,1,1,
+		1,0,0,0,1,
+		0,1,1,1,1
+	},
+	{	//'b',		// 66 -> b
+		1,0,0,0,0,
+		1,0,0,0,0,
+		1,1,1,1,0,
+		1,0,0,0,1,
+		1,0,0,0,1,
+		1,0,0,0,1,
+		1,1,1,1,0
+	},
+	{	//'c',		// 67 -> c
+		0,0,0,0,0,
+		0,0,0,0,0,
+		0,1,1,1,1,
+		1,0,0,0,0,
+		1,0,0,0,0,
+		1,0,0,0,0,
+		0,1,1,1,1
+	},
+	{	//'d',		// 68 -> d
+		0,0,0,0,1,
+		0,0,0,0,1,
+		0,1,1,1,1,
+		1,0,0,0,1,
+		1,0,0,0,1,
+		1,0,0,0,1,
+		0,1,1,1,1
+	},
+	{	//'e',		// 69 -> e
+		0,0,0,0,0,
+		0,0,0,0,0,
+		0,1,1,1,0,
+		1,0,0,0,1,
+		1,1,1,1,1,
+		1,0,0,0,0,
+		0,1,1,1,0
+	},
+	{	//'f',		// 70 -> f
+		0,0,1,1,0,
+		0,1,0,0,0,
+		0,1,0,0,0,
+		1,1,1,0,0,
+		0,1,0,0,0,
+		0,1,0,0,0,
+		0,1,0,0,0
+	},
+	{	//'g',		// 71 -> g
+		0,0,0,0,0,
+		0,1,1,1,0,
+		1,0,0,0,1,
+		1,0,0,0,1,
+		0,1,1,1,1,
+		0,0,0,0,1,
+		0,1,1,1,0
+	},
+	{	//'h',		// 72 -> h
+		1,0,0,0,0,
+		1,0,0,0,0,
+		1,0,1,1,0,
+		1,1,0,0,1,
+		1,0,0,0,1,
+		1,0,0,0,1,
+		1,0,0,0,1
+	},
+	{	//'i',		// 73 -> i
+		0,0,1,0,0,
+		0,0,0,0,0,
+		0,1,1,0,0,
+		0,0,1,0,0,
+		0,0,1,0,0,
+		0,0,1,0,0,
+		0,1,1,1,0
+	},
+	{	//'j',		// 74 -> j
+		0,0,0,1,0,
+		0,0,0,0,0,
+		0,0,1,1,0,
+		0,0,0,1,0,
+		0,0,0,1,0,
+		0,1,0,1,0,
+		0,0,1,0,0
+	},
+	{	//'k',		// 75 -> k
+		1,0,0,0,0,
+		1,0,0,0,0,
+		1,0,0,1,0,
+		1,0,1,0,0,
+		1,1,0,0,0,
+		1,0,1,0,0,
+		1,0,0,1,0
+	},
+	{	//'l',		// 76 -> l
+		0,1,1,0,0,
+		0,0,1,0,0,
+		0,0,1,0,0,
+		0,0,1,0,0,
+		0,0,1,0,0,
+		0,0,1,0,0,
+		0,1,1,1,0
+	},
+	{	//'m',		// 77 -> m
+		0,0,0,0,0,
+		0,0,0,0,0,
+		1,1,0,1,0,
+		1,0,1,0,1,
+		1,0,1,0,1,
+		1,0,1,0,1,
+		1,0,1,0,1
+	},
+	{	//'n',		// 78 -> n
+		0,0,0,0,0,
+		0,0,0,0,0,
+		1,0,1,1,0,
+		1,1,0,0,1,
+		1,0,0,0,1,
+		1,0,0,0,1,
+		1,0,0,0,1
+	},
+	{	//'o',		// 79 -> o
+		0,0,0,0,0,
+		0,0,0,0,0,
+		0,1,1,1,0,
+		1,0,0,0,1,
+		1,0,0,0,1,
+		1,0,0,0,1,
+		0,1,1,1,0
+	},
+	{	//'p',		// 80 -> p
+		0,0,0,0,0,
+		0,0,0,0,0,
+		1,1,1,0,0,
+		1,0,0,1,0,
+		1,0,0,1,0,
+		1,1,1,0,0,
+		1,0,0,0,0
+	},
+	{	//'q',		// 81 -> q
+		0,0,0,0,0,
+		0,0,0,0,0,
+		0,1,1,1,0,
+		1,0,0,1,0,
+		1,0,0,1,0,
+		0,1,1,1,0,
+		0,0,0,1,0
+	},
+	{	//'r',		// 82 -> r
+		0,0,0,0,0,
+		0,0,0,0,0,
+		1,0,1,1,0,
+		1,1,0,0,0,
+		1,0,0,0,0,
+		1,0,0,0,0,
+		1,0,0,0,0
+	},
+	{	//'s',		// 83 -> s
+		0,0,0,0,0,
+		0,0,0,0,0,
+		0,1,1,1,0,
+		1,0,0,0,0,
+		0,1,1,1,0,
+		0,0,0,0,1,
+		0,1,1,1,0
+	},
+	{	//'t',		// 84 -> t
+		0,1,0,0,0,
+		0,1,0,0,0,
+		1,1,1,0,0,
+		0,1,0,0,0,
+		0,1,0,0,0,
+		0,1,0,1,0,
+		0,0,1,0,0
+	},
+	{	//'u',		// 85 -> u
+		0,0,0,0,0,
+		0,0,0,0,0,
+		1,0,0,0,1,
+		1,0,0,0,1,
+		1,0,0,0,1,
+		1,0,0,0,1,
+		0,1,1,1,0
+	},
+	{	//'v',		// 86 -> v
+		0,0,0,0,0,
+		0,0,0,0,0,
+		1,0,0,0,1,
+		1,0,0,0,1,
+		1,0,0,0,1,
+		0,1,0,1,0,
+		0,0,1,0,0
+	},
+	{	//'w',		// 87 -> w
+		0,0,0,0,0,
+		0,0,0,0,0,
+		1,0,0,0,1,
+		1,0,0,0,1,
+		1,0,1,0,1,
+		1,0,1,0,1,
+		0,1,0,1,0
+	},
+	{	//'x',		// 88 -> x
+		0,0,0,0,0,
+		0,0,0,0,0,
+		1,0,0,0,1,
+		0,1,0,1,0,
+		0,0,1,0,0,
+		0,1,0,1,0,
+		1,0,0,0,1
+	},
+	{	//'y',		// 89 -> y
+		0,0,0,0,0,
+		0,0,0,0,0,
+		1,0,0,0,1,
+		0,1,0,1,0,
+		0,0,1,0,0,
+		0,0,1,0,0,
+		0,0,1,0,0
+	},
+	{	//'z',		// 90 -> z
+		0,0,0,0,0,
+		0,0,0,0,0,
+		1,1,1,1,1,
+		0,0,0,1,0,
+		0,0,1,0,0,
+		0,1,0,0,0,
+		1,1,1,1,1
+	},
 	{	//'{',		// 91 -> {
 		0,0,0,1,0,
 		0,0,1,0,0,

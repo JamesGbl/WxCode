@@ -11,7 +11,7 @@
 
 # Init this configure script with basic info about the component
 # (DON'T PUT ANYTHING BEFORE AC_INIT, JUST COMMENTS)
-AC_INIT([wxledpanel], [0.1], [graefe@mcs-soft.de])
+AC_INIT([wxledpanel], [0.2], [graefe@mcs-soft.de])
 
 # ENABLES/DISABLES THE DEBUG MODE FOR THIS CONFIGURE SCRIPT
 #WX_DEBUG_CONFIGURE=1
