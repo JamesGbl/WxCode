@@ -110,8 +110,12 @@ class wxOpenCommanderFrm : public wxFrame
 		void WxNotebook2PageChanging(wxNotebookEvent& event);
 		void WxNotebook1PageChanged(wxNotebookEvent& event);
 		void WxNotebook2PageChanged(wxNotebookEvent& event);
-	void Mnu_addTab_onClick(wxCommandEvent& event);
-	void Mnu_removeTab_onClick(wxCommandEvent& event);
+   	void Mnu_addTab_onClick(wxCommandEvent& event);
+	   void Mnu_removeTab_onClick(wxCommandEvent& event);
+      void Mnu_Copy_onClick1(wxCommandEvent& event);
+	   void Mnu_paste_onClick(wxCommandEvent& event);
+	   void Mnu_checkUpdates_onClick(wxCommandEvent& event);
+      void Mnu_Help_onClick(wxCommandEvent& event);
 	private:
 		//Do not add custom control declarations
 		//wxDev-C++ will remove them. Add custom code after the block.
@@ -216,14 +220,10 @@ class wxOpenCommanderFrm : public wxFrame
          void WxListCtrlBeginDrag(wxListEvent& event);
          void copyToClipboard();
          void pasteFromClipboard();
-         void onRigthClick(wxListEvent& event);
+         void onContextMenu(wxContextMenuEvent& event);
    public:
          void ListCtlUpdate();
          void copyThread(wxString& strPathDest,  const wxArrayString& fileNames);
-       	void Mnu_Copy_onClick1(wxCommandEvent& event);
-	      void Mnu_paste_onClick(wxCommandEvent& event);
-	      void Mnu_checkUpdates_onClick(wxCommandEvent& event);
-	void Mnu_Help_onClick(wxCommandEvent& event);
 };
 
 class DragAndDropFile : public wxFileDropTarget

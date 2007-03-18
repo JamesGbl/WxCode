@@ -13,6 +13,12 @@
 //wxDev-C++ designer will remove them
 ////Header Include Start
 #include "Images/Self_wxOpenCommanderFrm_XPM.xpm"
+#include "Images/wxOpenCommanderFrm_ID_MNU_NEWFOLDER_1049_XPM.xpm"
+#include "Images/wxOpenCommanderFrm_ID_MNU_COPY_1046_XPM.xpm"
+#include "Images/wxOpenCommanderFrm_ID_MNU_DELETE_1047_XPM.xpm"
+#include "Images/wxOpenCommanderFrm_ID_MNU_RENAME_1048_XPM.xpm"
+#include "Images/wxOpenCommanderFrm_ID_MNU_EXECUTE_1051_XPM.xpm"
+
 ////Header Include End
 
 //----------------------------------------------------------------------------
@@ -47,8 +53,7 @@ BEGIN_EVENT_TABLE(wxOpenCommanderFrm,wxFrame)
 	EVT_LIST_END_LABEL_EDIT(ID_WXLISTCTRL2,wxOpenCommanderFrm::WxListCtrlEndLabelEdit)
 	EVT_LIST_BEGIN_DRAG(ID_WXLISTCTRL1,wxOpenCommanderFrm::WxListCtrlBeginDrag)
 	EVT_LIST_BEGIN_DRAG(ID_WXLISTCTRL2,wxOpenCommanderFrm::WxListCtrlBeginDrag)
-	EVT_LIST_ITEM_RIGHT_CLICK(ID_WXLISTCTRL1, wxOpenCommanderFrm::onRigthClick) 
-	EVT_LIST_ITEM_RIGHT_CLICK(ID_WXLISTCTRL2, wxOpenCommanderFrm::onRigthClick)
+	EVT_CONTEXT_MENU(wxOpenCommanderFrm::onContextMenu)
 	//EVT_CHAR_HOOK(wxOpenCommanderFrm::OnCharHook)
 	////Manual Code End
 	
@@ -143,12 +148,27 @@ void wxOpenCommanderFrm::CreateGUIControls()
 	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_ADDTAB_1080, wxT("&Add Tab"), wxT(""), wxITEM_NORMAL);
 	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_REMOVETAB_1082, wxT("Re&move Tab"), wxT(""), wxITEM_NORMAL);
 	ID_MNU_FILES_1004_Mnu_Obj->AppendSeparator();
-	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_NEWFOLDER_1049, wxT("&New folder"), wxT(""), wxITEM_NORMAL);
-	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_COPY_1046, wxT("&Copy"), wxT(""), wxITEM_NORMAL);
-	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_DELETE_1047, wxT("&Delete"), wxT(""), wxITEM_NORMAL);
-	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_RENAME_1048, wxT("&Rename"), wxT(""), wxITEM_NORMAL);
+	wxMenuItem * ID_MNU_NEWFOLDER_1049_mnuItem_obj = new wxMenuItem (ID_MNU_FILES_1004_Mnu_Obj, ID_MNU_NEWFOLDER_1049, wxT("&New folder"), wxT(""), wxITEM_NORMAL);
+	wxBitmap ID_MNU_NEWFOLDER_1049_mnuItem_obj_BMP(wxOpenCommanderFrm_ID_MNU_NEWFOLDER_1049_XPM);
+	ID_MNU_NEWFOLDER_1049_mnuItem_obj->SetBitmap(ID_MNU_NEWFOLDER_1049_mnuItem_obj_BMP);
+	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_NEWFOLDER_1049_mnuItem_obj);
+	wxMenuItem * ID_MNU_COPY_1046_mnuItem_obj = new wxMenuItem (ID_MNU_FILES_1004_Mnu_Obj, ID_MNU_COPY_1046, wxT("&Copy"), wxT(""), wxITEM_NORMAL);
+	wxBitmap ID_MNU_COPY_1046_mnuItem_obj_BMP(wxOpenCommanderFrm_ID_MNU_COPY_1046_XPM);
+	ID_MNU_COPY_1046_mnuItem_obj->SetBitmap(ID_MNU_COPY_1046_mnuItem_obj_BMP);
+	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_COPY_1046_mnuItem_obj);
+	wxMenuItem * ID_MNU_DELETE_1047_mnuItem_obj = new wxMenuItem (ID_MNU_FILES_1004_Mnu_Obj, ID_MNU_DELETE_1047, wxT("&Delete"), wxT(""), wxITEM_NORMAL);
+	wxBitmap ID_MNU_DELETE_1047_mnuItem_obj_BMP(wxOpenCommanderFrm_ID_MNU_DELETE_1047_XPM);
+	ID_MNU_DELETE_1047_mnuItem_obj->SetBitmap(ID_MNU_DELETE_1047_mnuItem_obj_BMP);
+	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_DELETE_1047_mnuItem_obj);
+	wxMenuItem * ID_MNU_RENAME_1048_mnuItem_obj = new wxMenuItem (ID_MNU_FILES_1004_Mnu_Obj, ID_MNU_RENAME_1048, wxT("&Rename"), wxT(""), wxITEM_NORMAL);
+	wxBitmap ID_MNU_RENAME_1048_mnuItem_obj_BMP(wxOpenCommanderFrm_ID_MNU_RENAME_1048_XPM);
+	ID_MNU_RENAME_1048_mnuItem_obj->SetBitmap(ID_MNU_RENAME_1048_mnuItem_obj_BMP);
+	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_RENAME_1048_mnuItem_obj);
 	ID_MNU_FILES_1004_Mnu_Obj->AppendSeparator();
-	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_EXECUTE_1051, wxT("E&xecute"), wxT(""), wxITEM_NORMAL);
+	wxMenuItem * ID_MNU_EXECUTE_1051_mnuItem_obj = new wxMenuItem (ID_MNU_FILES_1004_Mnu_Obj, ID_MNU_EXECUTE_1051, wxT("E&xecute"), wxT(""), wxITEM_NORMAL);
+	wxBitmap ID_MNU_EXECUTE_1051_mnuItem_obj_BMP(wxOpenCommanderFrm_ID_MNU_EXECUTE_1051_XPM);
+	ID_MNU_EXECUTE_1051_mnuItem_obj->SetBitmap(ID_MNU_EXECUTE_1051_mnuItem_obj_BMP);
+	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_EXECUTE_1051_mnuItem_obj);
 	ID_MNU_FILES_1004_Mnu_Obj->AppendSeparator();
 	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_EXIT_1005, wxT("&Exit"), wxT(""), wxITEM_NORMAL);
 	WxMenuBar1->Append(ID_MNU_FILES_1004_Mnu_Obj, wxT("&Files"));
@@ -353,7 +373,7 @@ void wxOpenCommanderFrm::Mnu_about_onClick(wxCommandEvent& event)
    wxAboutDialogInfo info;
    info.SetName(_T("wxOpenCommander "));
    info.SetVersion("0.1 (BETA)");
-   info.SetCopyright(wxString::FromAscii("(C) 2006 wxOpenCommander wxWidgets License \n"));
+   info.SetCopyright(wxString::FromAscii("(C) 2007 wxOpenCommander GNU License \n"));
    info.AddDeveloper(_T("Armando Urdiales González"));
    info.SetWebSite(_T("http://www.wxOpenCommander.com/"), _T("wxOpenCommander web site"));
    info.AddArtist(_T("Developed with"));
@@ -361,13 +381,13 @@ void wxOpenCommanderFrm::Mnu_about_onClick(wxCommandEvent& event)
    info.AddArtist(_T("\n\nwxWidgets (Library)"));
    info.AddArtist(_T("\n\nMingW (C++ Compiler)"));
    info.SetLicence(wxString::FromAscii(
-         "                wxWIDGETS License\n"
+         "                GNU License\n"
          "                =================\n"
          "\n"
          "  Everyone is permitted to copy and distribute copies\n"
          "  of this program.\n"
          "\n"
-         "                wxWIDGETS GENERAL PUBLIC LICENSE\n"
+         "                GNU GENERAL PUBLIC LICENSE\n"
          "     TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION\n"
          "\n"
              ));
@@ -382,6 +402,7 @@ void wxOpenCommanderFrm::Mnu_copy_onClick(wxCommandEvent& event)
 void wxOpenCommanderFrm::Mnu_delete_onClick(wxCommandEvent& event)
 {
    long item = 0;
+   bool blnErr=false;
    if (wxMessageBox(lang["Do you like DELETE selected files?"], "wxOpenCommander", wxYES_NO, this)!=wxYES) return;
    while (item != -1)
    {
@@ -391,9 +412,10 @@ void wxOpenCommanderFrm::Mnu_delete_onClick(wxCommandEvent& event)
          wxString itemName = lastListCtrlUsed->GetItemText(item);
          WxStatusBar->SetStatusText(lang["Delete"] + " " + itemName + "...");
          wxString strPath = lastCCommanderUsed->getActualPath();
-         if (!deleteDirFile(strPath, itemName)) wxMessageBox(lang["There are some files read only"], "wxOpenCommander", wxOK | wxICON_ERROR , this);
+         if (!deleteDirFile(strPath, itemName)) blnErr = true;
       }
    }
+   if (blnErr) wxMessageBox(lang["There are some files read only"], "wxOpenCommander", wxOK | wxICON_ERROR , this);
    ListCtlUpdate();
 }
 
@@ -1095,15 +1117,33 @@ void wxOpenCommanderFrm::Mnu_Help_onClick(wxCommandEvent& event)
 	Exec(path, program);	
 }
 
-void wxOpenCommanderFrm::onRigthClick(wxListEvent& event)
+void wxOpenCommanderFrm::onContextMenu(wxContextMenuEvent& event)
 {    
-    wxMenu* menu = new wxMenu;
-	menu->Append(ID_MNU_NEWFOLDER_1049, wxT("&New folder"), wxT(""), wxITEM_NORMAL);
-	menu->Append(ID_MNU_COPY_1046, wxT("&Copy to..."), wxT(""), wxITEM_NORMAL);
-	menu->Append(ID_MNU_DELETE_1047, wxT("&Delete"), wxT(""), wxITEM_NORMAL);
-	menu->Append(ID_MNU_RENAME_1048, wxT("&Rename"), wxT(""), wxITEM_NORMAL);
+   wxMenu* menu = new wxMenu;
+   
+   wxMenuItem itemNewFolfer(menu,ID_MNU_NEWFOLDER_1049, wxT(lang["&New folder"]), wxT(""), wxITEM_NORMAL);
+   wxBitmap img(".\\Images\\newFolder.bmp", wxBITMAP_TYPE_BMP);
+   if (img.Ok()) itemNewFolfer.SetBitmap(img);
+   menu->Append(&itemNewFolfer);
+   
+   wxMenuItem itemCopy(menu,ID_MNU_COPY_1046, wxT(lang["Copy to..."]), wxT(""), wxITEM_NORMAL);
+   img.LoadFile(".\\Images\\copy.bmp", wxBITMAP_TYPE_BMP);
+   if (img.Ok()) itemCopy.SetBitmap(img);
+   menu->Append(&itemCopy);
+
+   wxMenuItem itemDel(menu,ID_MNU_DELETE_1047, wxT(lang["&Delete"]), wxT(""), wxITEM_NORMAL);
+   img.LoadFile(".\\Images\\delete.bmp", wxBITMAP_TYPE_BMP);
+   if (img.Ok()) itemDel.SetBitmap(img);
+   menu->Append(&itemDel);
+
+   wxMenuItem itemRen(menu,ID_MNU_RENAME_1048, wxT(lang["&Rename"]), wxT(""), wxITEM_NORMAL);
+   img.LoadFile(".\\Images\\rename.bmp", wxBITMAP_TYPE_BMP);
+   if (img.Ok()) itemRen.SetBitmap(img);
+   menu->Append(&itemRen);
+
 	menu->AppendSeparator();
-	menu->Append(ID_MNU_COPY_1084, wxT("&Copy"), wxT(""), wxITEM_NORMAL);
-	menu->Append(ID_MNU_PASTE_1085, wxT("&Paste"), wxT(""), wxITEM_NORMAL);
-    this->PopupMenu(menu, event.GetPoint());    
+	menu->Append(ID_MNU_COPY_1084, wxT(lang["&Copy"]), wxT(""), wxITEM_NORMAL);
+	menu->Append(ID_MNU_PASTE_1085, wxT(lang["&Paste"]), wxT(""), wxITEM_NORMAL);
+   wxPoint point(wxGetMousePosition());
+   this->PopupMenu(menu, point.x, point.y-50);
 }
