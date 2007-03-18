@@ -35,8 +35,6 @@
 #include <wx/listctrl.h>
 #include <wx/dnd.h>
 
-#include <shlobj.h>
-
 #include <vector>
 #include <map>
 
