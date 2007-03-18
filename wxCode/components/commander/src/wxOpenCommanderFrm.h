@@ -60,9 +60,7 @@
 
 // Read/Write Config
 #include <wx/config.h>
-#include <wx/confbase.h>
 #include <wx/fileconf.h>
-#include <wx/msw/regconf.h>
 //
 
 #include "hotKeysDlg.h"

@@ -811,10 +811,11 @@ void wxOpenCommanderFrm::MnuLanguage_onClick(wxCommandEvent& event)
 void wxOpenCommanderFrm::readConfig()
 {
    wxString language;
-	wxStandardPaths wxPaths;
-       
-   wxConfig config("wxOpenCommander");
-   
+   wxStandardPaths wxPaths;
+   wxString stdConfPath(wxPaths.GetUserDataDir());
+
+   wxFileConfig config("wxOpenCommander", "wxOpenCommander", stdConfPath + "\\config.ini", stdConfPath + "\\config.ini", wxCONFIG_USE_LOCAL_FILE);
+ 
    // restore frame position and size
    int x = config.Read(_T("/WindowPosition/X"), 10),
        y = config.Read(_T("/WindowPosition/Y"), 10),
@@ -910,7 +911,11 @@ void wxOpenCommanderFrm::readConfig()
 
 void wxOpenCommanderFrm::writeConfig()
 {
-   wxConfig config("wxOpenCommander");
+   wxStandardPaths wxPaths;
+   wxString stdConfPath(wxPaths.GetUserDataDir());
+   if (!wxDir::Exists(stdConfPath)) wxMkdir(stdConfPath);
+
+   wxFileConfig config("wxOpenCommander", "wxOpenCommander", stdConfPath + "\\config.ini", stdConfPath + "\\config.ini", wxCONFIG_USE_LOCAL_FILE);
    
    // save the frame position
    int x, y, w, h;
