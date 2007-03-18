@@ -9,13 +9,20 @@
 
 #include "wxOpenCommanderListCtrl.h"
 
+wxOpenCommanderListCtrl::wxOpenCommanderListCtrl(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size, long style, cCommander* theCCommander, multiLang& langMap)
+: lang(langMap) , wxListCtrl(parent, id, pos, size, style)
+{
+   m_cCommander = theCCommander;
+   imageList=NULL;
+}
+
 void wxOpenCommanderListCtrl::addColumns()
 {
    while (GetColumnCount()>0) DeleteColumn(0);
 
-   InsertColumn(0, (*lang)["Files"], wxLIST_FORMAT_LEFT, 212);
-   InsertColumn(1, (*lang)["Size"], wxLIST_FORMAT_RIGHT, 65);
-   InsertColumn(2, (*lang)["Date"], wxLIST_FORMAT_RIGHT, 100);
+   InsertColumn(0, lang["Files"], wxLIST_FORMAT_LEFT, 212);
+   InsertColumn(1, lang["Size"], wxLIST_FORMAT_RIGHT, 65);
+   InsertColumn(2, lang["Date"], wxLIST_FORMAT_RIGHT, 100);
 
    int size = 20;
    //if (imageList != NULL) delete(imageList); 
@@ -45,7 +52,7 @@ wxString wxOpenCommanderListCtrl::OnGetItemText(long item, long column) const
 {
     wxString itemText = m_cCommander->getFileDirActualPath(item, column);
     if (m_cCommander->getListDevices())
-       return (*lang)[itemText];
+       return lang[itemText];
     else
        return itemText;
 } 

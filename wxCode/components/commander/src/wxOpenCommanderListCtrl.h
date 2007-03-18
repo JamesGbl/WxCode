@@ -30,6 +30,7 @@
 #include "Images/floppy.xpm"
 
 class wxOpenCommanderListCtrl : public wxListCtrl
+
 {
    public:
    wxOpenCommanderListCtrl(wxWindow *parent,
@@ -38,13 +39,7 @@ class wxOpenCommanderListCtrl : public wxListCtrl
                const wxSize& size,
                long style,
                cCommander* theCCommander,
-               multiLang* langMap)
-        : wxListCtrl(parent, id, pos, size, style)
-   {
-      m_cCommander = theCCommander;
-      lang = langMap;
-      imageList=NULL;
-   };
+               multiLang& langMap);
 
    void addColumns();
    wxString wxOpenCommanderListCtrl::OnGetItemText(long item, long column) const;
@@ -56,7 +51,7 @@ class wxOpenCommanderListCtrl : public wxListCtrl
    private:
    wxListItemAttr m_attr;
    cCommander* m_cCommander;
-   multiLang* lang;
+   multiLang& lang;
    wxImageList* imageList;
 };
 #endif

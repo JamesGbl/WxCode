@@ -44,10 +44,10 @@ wxMenu *wxOpenCommanderTaskBar::CreatePopupMenu()
 {
     wxMenu* menu = new wxMenu;
 #ifndef __WXMAC_OSX__ /*Mac has built-in quit menu*/
-    menu->Append(PU_RESTORE, _T((*lang)["&Restore wxOpenCommander"]));
-    menu->Append(PU_HIDE, _T((*lang)["&Hide wxOpenCommander"]));
+    menu->Append(PU_RESTORE, _T(lang["&Restore wxOpenCommander"]));
+    menu->Append(PU_HIDE, _T(lang["&Hide wxOpenCommander"]));
     menu->AppendSeparator();
-    menu->Append(PU_EXIT,    _T((*lang)["&Exit"]));
+    menu->Append(PU_EXIT,    _T(lang["&Exit"]));
 #endif
     return menu;
 }

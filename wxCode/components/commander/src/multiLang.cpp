@@ -10,6 +10,16 @@ multiLang::multiLang()
    m_actualLang = m_systemLangName;
 }
 
+
+multiLang::multiLang(const multiLang& copyLang)
+{
+   langMap=copyLang.langMap;
+   langList=copyLang.langList;
+   m_langsDir=copyLang.m_langsDir;
+   m_systemLangName=copyLang.m_systemLangName;
+   m_actualLang=copyLang.m_actualLang;   
+}
+
 multiLang::~multiLang()
 {
 }
@@ -88,6 +98,20 @@ bool multiLang::updateLangMap()
    }  
    return true;
 }
+
+multiLang& multiLang::operator=(const multiLang& copyLang)
+{
+   if (this != &copyLang)
+   {
+      langMap=copyLang.langMap;
+      langList=copyLang.langList;
+      m_langsDir=copyLang.m_langsDir;
+      m_systemLangName=copyLang.m_systemLangName;
+      m_actualLang=copyLang.m_actualLang;
+   }
+   return *this;
+}
+
 
 wxString multiLang::operator[](wxString index)
 {

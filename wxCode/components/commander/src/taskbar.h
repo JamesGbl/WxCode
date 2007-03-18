@@ -6,18 +6,16 @@ class wxOpenCommanderTaskBar: public wxTaskBarIcon
 {
 public:
 #if defined(__WXCOCOA__)
-    wxOpenCommanderTaskBar(wxFrame* window, wxTaskBarIconType iconType = DEFAULT_TYPE, multiLang* langMap)   :   wxTaskBarIcon(iconType)
+    wxOpenCommanderTaskBar(wxFrame* window, wxTaskBarIconType iconType = DEFAULT_TYPE, multiLang& langMap) : lang(langMap) : wxTaskBarIcon(iconType)
     {
        isVisible = true;
        dialog = window;
-       lang = langMap;
     }
 #else
-    wxOpenCommanderTaskBar(wxFrame* window, multiLang* langMap)
+    wxOpenCommanderTaskBar(wxFrame* window, multiLang& langMap) : lang(langMap)
     {
        isVisible = true;
        dialog = window;
-       lang = langMap;
     }
 #endif
 
@@ -29,7 +27,7 @@ public:
 
   private:
     wxFrame* dialog;
-    multiLang* lang;
+    multiLang& lang;
     bool isVisible;
 
 DECLARE_EVENT_TABLE()

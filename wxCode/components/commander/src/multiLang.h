@@ -26,6 +26,7 @@ class multiLang
 {
    public:
       multiLang();
+      multiLang(const multiLang& copyLang);
       ~multiLang();
       
       void setActualLang(wxString language);
@@ -37,6 +38,7 @@ class multiLang
       bool updateLangMap();
       
       wxString operator[](wxString index);
+      multiLang& operator=(const multiLang& copyLang);
    private:
       stringMap langMap;
       wxArrayString langList;

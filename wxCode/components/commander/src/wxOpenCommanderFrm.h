@@ -52,7 +52,6 @@
 #include <wx/settings.h>
 #include <wx/datetime.h>
 
-//#include <wx/listctrl.h>
 #include "wxOpenCommanderListCtrl.h"
 
 #include <wx/clipbrd.h>
@@ -191,6 +190,7 @@ class wxOpenCommanderFrm : public wxFrame
 		};
 
 	private:
+         void Mnu_user_onClick(wxCommandEvent& event);
          void Mnu_copy_onClick(wxCommandEvent& event);
          void Mnu_delete_onClick(wxCommandEvent& event);
          void Mnu_rename_onClick(wxCommandEvent& event);

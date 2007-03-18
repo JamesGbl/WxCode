@@ -204,13 +204,13 @@ void wxOpenCommanderFrm::CreateGUIControls()
 	
 	////GUI Items Creation End
 	
-	 WxListCtrl1 = new wxOpenCommanderListCtrl(WxNotebook1, ID_WXLISTCTRL1, wxDefaultPosition, wxSize(399,450), wxLC_REPORT | wxLC_VIRTUAL | wxLC_EDIT_LABELS, &cCommander1, &lang);
-    WxListCtrl2 = new wxOpenCommanderListCtrl(WxNotebook2, ID_WXLISTCTRL2, wxDefaultPosition, wxSize(399,450), wxLC_REPORT | wxLC_VIRTUAL | wxLC_EDIT_LABELS, &cCommander2, &lang);
+	 WxListCtrl1 = new wxOpenCommanderListCtrl(WxNotebook1, ID_WXLISTCTRL1, wxDefaultPosition, wxSize(399,450), wxLC_REPORT | wxLC_VIRTUAL | wxLC_EDIT_LABELS, &cCommander1, lang);
+    WxListCtrl2 = new wxOpenCommanderListCtrl(WxNotebook2, ID_WXLISTCTRL2, wxDefaultPosition, wxSize(399,450), wxLC_REPORT | wxLC_VIRTUAL | wxLC_EDIT_LABELS, &cCommander2, lang);
 
 	 WxSplitterWindow1->SplitVertically(WxNotebook1,WxNotebook2,385);
         
-    WxListCtrl1->SetSingleStyle(wxLB_MULTIPLE);
-    WxListCtrl2->SetSingleStyle(wxLB_MULTIPLE);
+    WxListCtrl1->SetSingleStyle(wxLB_EXTENDED);
+    WxListCtrl2->SetSingleStyle(wxLB_EXTENDED);
 
     WxToolBar->AddSeparator();
     
@@ -239,7 +239,7 @@ void wxOpenCommanderFrm::CreateGUIControls()
     img.LoadFile(".\\Images\\remove.bmp", wxBITMAP_TYPE_BMP);
     if ( img.Ok() ) WxToolBar->AddTool(ID_TOOL_REMOVE, lang["Remove"], img, lang["Delete"]);
 
-    tray = new wxOpenCommanderTaskBar(this, &lang);
+    tray = new wxOpenCommanderTaskBar(this, lang);
     tray->SetIcon(Self_wxOpenCommanderFrm_XPM, wxT("wxOpenCommander"));
 
     WxToolBar->Realize();
@@ -380,6 +380,7 @@ void wxOpenCommanderFrm::Mnu_about_onClick(wxCommandEvent& event)
    info.AddArtist(_T("\n\n\nwxDev-C++ (C++ IDE)"));
    info.AddArtist(_T("\n\nwxWidgets (Library)"));
    info.AddArtist(_T("\n\nMingW (C++ Compiler)"));
+   info.AddArtist(_T("\n\nNSIS (Nullsoft Scriptable Install System)"));
    info.SetLicence(wxString::FromAscii(
          "                GNU License\n"
          "                =================\n"
@@ -1118,7 +1119,7 @@ void wxOpenCommanderFrm::Mnu_Help_onClick(wxCommandEvent& event)
 }
 
 void wxOpenCommanderFrm::onContextMenu(wxContextMenuEvent& event)
-{    
+{   
    wxMenu* menu = new wxMenu;
    
    wxMenuItem itemNewFolfer(menu,ID_MNU_NEWFOLDER_1049, wxT(lang["&New folder"]), wxT(""), wxITEM_NORMAL);
@@ -1144,6 +1145,7 @@ void wxOpenCommanderFrm::onContextMenu(wxContextMenuEvent& event)
 	menu->AppendSeparator();
 	menu->Append(ID_MNU_COPY_1084, wxT(lang["&Copy"]), wxT(""), wxITEM_NORMAL);
 	menu->Append(ID_MNU_PASTE_1085, wxT(lang["&Paste"]), wxT(""), wxITEM_NORMAL);
+	
    wxPoint point(wxGetMousePosition());
    this->PopupMenu(menu, point.x, point.y-50);
 }
