@@ -184,6 +184,7 @@ class wxOpenCommanderFrm : public wxFrame
 			ID_TOOL_GO = 10005,
 			ID_TOOL_ADD = 10006,
 			ID_TOOL_REMOVE = 10007,
+			ID_TOOL_DRIVES = 10008,
          ID_TOOL_COMBO = 10100
 		};
 
