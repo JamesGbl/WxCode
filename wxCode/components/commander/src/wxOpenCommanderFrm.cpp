@@ -284,9 +284,9 @@ void wxOpenCommanderFrm::updateControlsLanguage()
    WxMenuBar1->SetLabel(ID_MNU_HOTKEYS_1065, lang["Hot Keys"]);
    optMenu = WxMenuBar1->GetMenu(3);
    WxMenuBar1->Replace(3, optMenu, lang["&Help"]);
-   WxMenuBar1->SetLabel(ID_MNU_HELP_1087, lang["&Help"]);
+   WxMenuBar1->SetLabel(ID_MNU_HELP_1087, lang["&Help"] + " (F1)");
    WxMenuBar1->SetLabel(ID_MNU_CHECKUPDATES_1086, lang["&Check updates"]);
-   WxMenuBar1->SetLabel(ID_MNU_ABOUT_1007, lang["About as..."] + " (F1)");
+   WxMenuBar1->SetLabel(ID_MNU_ABOUT_1007, lang["About as..."]);
    
    WxToolBar->SetToolShortHelp(ID_TOOL_NEWFOLDER, lang["New Folder"]);
    WxToolBar->SetToolShortHelp(ID_TOOL_COPY, lang["Copy"]);
@@ -525,7 +525,7 @@ void wxOpenCommanderFrm::OnListCtlKey(cCommander* CCommander, wxNotebook* WxNote
           Mnu_delete_onClick(event);
        break;
        case WXK_F1:
-          Mnu_about_onClick(event);
+          Mnu_Help_onClick(event);
        break;
        case WXK_F2:
           Mnu_rename_onClick(event);
