@@ -123,7 +123,6 @@ wxOpenCommanderFrm::~wxOpenCommanderFrm()
 {
    tray->RemoveIcon();
    delete(tray);
-   delete(&lang);
 }
 
 void wxOpenCommanderFrm::CreateGUIControls()
