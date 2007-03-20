@@ -39,12 +39,12 @@
           <div class="center">...</div>
 
        block...
-  -->
+  
 	<br/><?php write_h1("Screenshots"); ?>
   <div class="center">
    <?php writeScreenshotLink("sampel.png", "wxLEDPanel sampel"); ?>
   </div>
-
+-->
 
 
   <!-- NOTE ON THE SECTIONS TO INSERT HERE: you are free to add anything you think
@@ -53,28 +53,22 @@
   <br/><?php write_h1("Usage sample"); ?>
   <?php writeSnippet('
 // sample CPP snippet which shows how to use this component:
-// LEDPanel with LED-size 4x4 and Panel with 10x23 LEDs, no padding between the LEDs
+// LEDPanel with LED-size 4x4 and Panel with 65x9 LEDs, no padding between the LEDs
 wxLEDPanel *ledpanel = new wxLEDPanel(this,wxID_ANY,wxSize(4,4),wxSize(65,9),0);
 ledpanel->SetLEDColour(wxLED_COLOUR_GREEN);	// Green LEDs
 ledpanel->SetText(wxT("WXLEDPANEL"),wxALIGN_CENTER);
 // Thats all, if you want the text to scroll, then add this
 ledpanel->SetScrollDirection(wxLED_SCROLL_LEFT);
 ledpanel->SetScrollspeed(100);
-
-
-// inside this section we can use any character we want except
-// for the single quote char: if you need to use it you should
-// escape it in this way: \'
-newcomp->Show();
 '); ?>
 
 
   <!-- NOTE TO THE DOCUMENTATION: for uploading you component docs in the website,
-       see the ReadMe.txt file at wxCode\template... -->
+       see the ReadMe.txt file at wxCode\template... 
   <br/><?php write_h1("Documentation"); ?>
   <p>The documentation for this component is available online
   <a href="../../docs/MYCOMPSUBDIR/">here</a>.</p>
-
+-->
 
 	<br/><?php write_h1("Known bugs"); ?>
   <p>None. To submit a bug report please look at <a href="../../support.php">wxCode support page</a>.</p>

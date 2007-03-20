@@ -237,6 +237,7 @@ void wxLEDPanel::SetText(const wxString& text, int align)
 	ResetTextPos();
 
 	// Set in field
+	m_field.Clear();
 	m_field.SetDatesAt(m_text_pos,m_text_mo);
 }
 
