@@ -302,6 +302,7 @@ void wxInitRequiredXmlHandlers()
     p->AddHandler(new wxStaticLineXmlHandler);
 #endif
     p->AddHandler(new wxUnknownWidgetXmlHandler);
+    p->AddHandler(new wxHyperlinkCtrlXmlHandler);
 
     // our custom handlers
     p->AddHandler(new wxWebUpdateListCtrlXmlHandler);

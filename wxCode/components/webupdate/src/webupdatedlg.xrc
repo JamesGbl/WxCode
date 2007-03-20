@@ -765,74 +765,92 @@ This program uses the Message Digest Algorithm (MD5) by RSA Data Security.
       <object class="sizeritem">
         <flag>wxGROW|wxALL</flag>
         <option>0</option>
-        <border>5</border>
+        <border>15</border>
         <object class="wxStaticBoxSizer">
           <orient>wxVERTICAL</orient>
-          <label>Links</label>
+          <label>Links and credits</label>
           <object class="sizeritem">
-            <flag>wxALL</flag>
+            <option>1</option>
+            <flag>wxALL|wxGROW</flag>
             <border>5</border>
-            <object class="wxGridSizer">
+            <object class="wxFlexGridSizer">
               <cols>2</cols>
               <rows>0</rows>
               <vgap>0</vgap>
               <hgap>0</hgap>
+              <growablecols>1</growablecols>
+
               <object class="sizeritem">
                 <flag>wxALIGN_CENTER|wxALL</flag>
-                <border>5</border>
-                <object class="wxStaticText" name="IDWUAD_TEXT2">
-                  <label>WebUpdater homepage:</label>
+                <border>2</border>
+                <object class="wxStaticText" name="IDWUAD_TEXTHEADER1">
+                  <label>Project</label>
+                  <font><weight>bold</weight><underlined>1</underlined></font>
                 </object>
               </object>
               <object class="sizeritem">
                 <flag>wxALIGN_CENTER|wxALL</flag>
+                <border>2</border>
+                <object class="wxStaticText" name="IDWUAD_TEXTHEADER2">
+                  <label>Author(s)</label>
+                  <font><weight>bold</weight><underlined>1</underlined></font>
+                </object>
+              </object>
+
+              <object class="sizeritem">
+                <flag>wxALIGN_CENTER|wxALL</flag>
                 <border>5</border>
-                <object class="wxStaticText" name="IDWUAD_WEBUPDATE_LINK">
-                  <label>http://wxcode.sf.net/components/webupdate</label>
+                <object class="wxHyperlinkCtrl" name="IDWUAD_TEXT2">
+                  <label>WebUpdater</label>
+                  <url>http://wxcode.sourceforge.net/components/webupdate</url>
                 </object>
               </object>
               <object class="sizeritem">
                 <flag>wxALIGN_CENTER|wxALL</flag>
                 <border>5</border>
                 <object class="wxStaticText" name="IDWUAD_TEXT3">
-                  <label>For reporting bugs about WebUpdater:</label>
+                  <style>wxALIGN_CENTRE</style>
+                  <label>Francesco Montorsi (main developer, italian translator), 
+Ulrich Telle (testing and design help), 
+Helmut Giritzer (german translator)</label>
                 </object>
               </object>
+
               <object class="sizeritem">
                 <flag>wxALIGN_CENTER|wxALL</flag>
                 <border>5</border>
-                <object class="wxStaticText" name="IDWUAD_WEBUPDATEBUGS_LINK">
-                  <label>http://sourceforge.net/projects/wxcode</label>
-                </object>
-              </object>
-              <object class="sizeritem">
-                <flag>wxALIGN_CENTER|wxALL</flag>
-                <border>5</border>
-                <object class="wxStaticText" name="IDWUAD_TEXT4">
-                  <label>wxWidgets homepage:</label>
-                </object>
-              </object>
-              <object class="sizeritem">
-                <flag>wxALIGN_CENTER|wxALL</flag>
-                <border>5</border>
-                <object class="wxStaticText" name="IDWUAD_WXWIDGETS_LINK">
-                  <label>http://www.wxwidgets.org</label>
+                <object class="wxHyperlinkCtrl" name="IDWUAD_TEXT4">
+                  <label>wxHTTPEngine</label>
+                  <url>http://wxcode.sourceforge.net/components/httpengine</url>
                 </object>
               </object>
               <object class="sizeritem">
                 <flag>wxALIGN_CENTER|wxALL</flag>
                 <border>5</border>
                 <object class="wxStaticText" name="IDWUAD_TEXT5">
-                  <label>wxHTTPEngine homepage:</label>
+                  <style>wxALIGN_CENTRE</style>
+                  <label>Angelo Mandato</label>
+                </object>
+              </object>
+
+              <object class="sizeritem">
+                <flag>wxALIGN_CENTER|wxALL</flag>
+                <border>5</border>
+                <object class="wxHyperlinkCtrl" name="IDWUAD_TEXT6">
+                  <label>wxWidgets</label>
+                  <url>http://www.wxwidgets.org</url>
                 </object>
               </object>
               <object class="sizeritem">
                 <flag>wxALIGN_CENTER|wxALL</flag>
                 <border>5</border>
-                <object class="wxStaticText" name="IDWUAD_WXHTTPENGINE_LINK">
-                  <label>http://wxcode.sf.net/components/wxhttpengine</label>
+                <object class="wxStaticText" name="IDWUAD_TEXT7">
+                  <style>wxALIGN_CENTRE</style>
+                  <label>Julian Smart, Robert Roebling, Vadim Zeitlin, 
+Robin Dunn, and many, many others!</label>
                 </object>
               </object>
+
             </object>
           </object>
         </object>
