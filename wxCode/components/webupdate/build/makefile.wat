@@ -38,7 +38,7 @@ WX_UNICODE = 0
 WX_DEBUG = 1
 
 # Version of the wx library to build against. 
-WX_VERSION = 29
+WX_VERSION = 28
 
 # Use monolithic build of wxWidgets? [0,1]
 #   0 - Multilib
@@ -422,10 +422,8 @@ WEBUPDATE_LIB_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_md5.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_stdactions.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_versionrange.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_webapp.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_webupdate.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_webupdatectrl.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_webupdatedlg.obj
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_webupdatectrl.obj
 WEBUPDATE_DLL_CXXFLAGS = -bd $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include $(VAR) &
@@ -438,17 +436,16 @@ WEBUPDATE_DLL_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_md5.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_stdactions.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_versionrange.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_webapp.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_webupdate.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_webupdatectrl.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_webupdatedlg.obj
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_webupdatectrl.obj
 WEBUPDATER_CXXFLAGS = $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include $(VAR) &
 	-i=..\include -i=$(HTTPENGINE_DIR)\include -dwxUSE_HTTPENGINE=1 &
 	$(__MYOPTIMIZEFLAG) $(CPPFLAGS) $(CXXFLAGS)
 WEBUPDATER_OBJECTS =  &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdater_webapp.obj
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdater_webapp.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdater_webupdatedlg.obj
 SIMPLE_1_0_0_CXXFLAGS = $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include $(VAR_4) &
@@ -481,7 +478,7 @@ watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX) :
 
 ### Targets: ###
 
-all : .SYMBOLIC test_for_selected_wxbuild $(__webupdate_lib___depname) $(__webupdate_dll___depname) ..\src\webupdater.exe rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150 po_simple100 po_simple203 po_adv001 po_adv150 ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
+all : .SYMBOLIC test_for_selected_wxbuild $(__webupdate_lib___depname) $(__webupdate_dll___depname) ..\app\webupdater.exe rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150 po_simple100 po_simple203 po_adv001 po_adv150 ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
 
 clean : .SYMBOLIC 
 	-if exist watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.obj del watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.obj
@@ -492,7 +489,7 @@ clean : .SYMBOLIC
 	-if exist ..\lib\wat_$(____webupdate_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_webupdate.lib del ..\lib\wat_$(____webupdate_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_webupdate.lib
 	-if exist ..\lib\wat_$(____webupdate_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_webupdate.dll del ..\lib\wat_$(____webupdate_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_webupdate.dll
 	-if exist ..\lib\wat_$(____webupdate_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_webupdate.lib del ..\lib\wat_$(____webupdate_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_webupdate.lib
-	-if exist ..\src\webupdater.exe del ..\src\webupdater.exe
+	-if exist ..\app\webupdater.exe del ..\app\webupdater.exe
 	-if exist webupdater.exe del webupdater.exe
 	-if exist webupdatedlg.xrc del webupdatedlg.xrc
 	-if exist webupdater.exe del webupdater.exe
@@ -558,7 +555,7 @@ i18n :
 	msgmerge locale/de.po locale/webupdater.pot > locale/de.po.new && mv locale/de.po.new locale/de.po
 	msgfmt --statistics -o locale/de.mo locale/de.po
 
-..\src\webupdater.exe :  $(WEBUPDATER_OBJECTS) watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdater_app.res $(__webupdate_lib___depname)
+..\app\webupdater.exe :  $(WEBUPDATER_OBJECTS) watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdater_app.res $(__webupdate_lib___depname)
 	@%create watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdater.lbc
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdater.lbc option quiet
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdater.lbc name $^@
@@ -572,19 +569,19 @@ i18n :
 
 rep4_simple100 : .SYMBOLIC 
 	if not exist ..\samples\simple\v1.0.0 mkdir ..\samples\simple\v1.0.0
-	for %f in (webupdater.exe webupdatedlg.xrc) do copy ..\src\%f ..\samples\simple\v1.0.0
+	for %f in (webupdater.exe webupdatedlg.xrc) do copy ..\app\%f ..\samples\simple\v1.0.0
 
 rep4_simple203 : .SYMBOLIC 
 	if not exist ..\samples\simple\v2.0.3 mkdir ..\samples\simple\v2.0.3
-	for %f in (webupdater.exe webupdatedlg.xrc) do copy ..\src\%f ..\samples\simple\v2.0.3
+	for %f in (webupdater.exe webupdatedlg.xrc) do copy ..\app\%f ..\samples\simple\v2.0.3
 
 rep4_adv001 : .SYMBOLIC 
 	if not exist ..\samples\advanced\v0.0.1 mkdir ..\samples\advanced\v0.0.1
-	for %f in (webupdater.exe webupdatedlg.xrc) do copy ..\src\%f ..\samples\advanced\v0.0.1
+	for %f in (webupdater.exe webupdatedlg.xrc) do copy ..\app\%f ..\samples\advanced\v0.0.1
 
 rep4_adv150 : .SYMBOLIC 
 	if not exist ..\samples\advanced\v1.5.0 mkdir ..\samples\advanced\v1.5.0
-	for %f in (webupdater.exe webupdatedlg.xrc) do copy ..\src\%f ..\samples\advanced\v1.5.0
+	for %f in (webupdater.exe webupdatedlg.xrc) do copy ..\app\%f ..\samples\advanced\v1.5.0
 
 po_simple100 : .SYMBOLIC 
 	if not exist ..\samples\simple\v1.0.0\lang mkdir ..\samples\simple\v1.0.0\lang
@@ -602,7 +599,7 @@ po_adv150 : .SYMBOLIC
 	if not exist ..\samples\advanced\v1.5.0\lang mkdir ..\samples\advanced\v1.5.0\lang
 	for %f in (it.mo de.mo) do if not exist ..\samples\advanced\v1.5.0\lang\%f copy ..\locale\%f ..\samples\advanced\v1.5.0\lang
 
-..\samples\simple\v1.0.0\simple.exe :  $(SIMPLE_1_0_0_OBJECTS) ..\src\webupdater.exe make_sample_dir_simple_1_0_0
+..\samples\simple\v1.0.0\simple.exe :  $(SIMPLE_1_0_0_OBJECTS) ..\app\webupdater.exe make_sample_dir_simple_1_0_0
 	@%create watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simple_1_0_0.lbc
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simple_1_0_0.lbc option quiet
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simple_1_0_0.lbc name $^@
@@ -617,7 +614,7 @@ po_adv150 : .SYMBOLIC
 make_sample_dir_simple_1_0_0 :  
 	if not exist ../samples/simple/v1.0.0 mkdir../samples/simple/v1.0.0
 
-..\samples\simple\v2.0.3\simple.exe :  $(SIMPLE_2_0_3_OBJECTS) ..\src\webupdater.exe make_sample_dir_simple_2_0_3
+..\samples\simple\v2.0.3\simple.exe :  $(SIMPLE_2_0_3_OBJECTS) ..\app\webupdater.exe make_sample_dir_simple_2_0_3
 	@%create watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simple_2_0_3.lbc
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simple_2_0_3.lbc option quiet
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simple_2_0_3.lbc name $^@
@@ -632,7 +629,7 @@ make_sample_dir_simple_1_0_0 :
 make_sample_dir_simple_2_0_3 :  
 	if not exist ../samples/simple/v2.0.3 mkdir../samples/simple/v2.0.3
 
-..\samples\advanced\v0.0.1\advanced.exe :  $(ADVANCED_0_0_1_OBJECTS) ..\src\webupdater.exe make_sample_dir_advanced_0_0_1
+..\samples\advanced\v0.0.1\advanced.exe :  $(ADVANCED_0_0_1_OBJECTS) ..\app\webupdater.exe make_sample_dir_advanced_0_0_1
 	@%create watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\advanced_0_0_1.lbc
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\advanced_0_0_1.lbc option quiet
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\advanced_0_0_1.lbc name $^@
@@ -647,7 +644,7 @@ make_sample_dir_simple_2_0_3 :
 make_sample_dir_advanced_0_0_1 :  
 	if not exist ../samples/advanced/v0.0.1 mkdir../samples/advanced/v0.0.1
 
-..\samples\advanced\v1.5.0\advanced.exe :  $(ADVANCED_1_5_0_OBJECTS) ..\src\webupdater.exe make_sample_dir_advanced_1_5_0
+..\samples\advanced\v1.5.0\advanced.exe :  $(ADVANCED_1_5_0_OBJECTS) ..\app\webupdater.exe make_sample_dir_advanced_1_5_0
 	@%create watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\advanced_1_5_0.lbc
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\advanced_1_5_0.lbc option quiet
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\advanced_1_5_0.lbc name $^@
@@ -680,16 +677,10 @@ watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_stdactions.obj :  
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_versionrange.obj :  .AUTODEPEND ..\src\versionrange.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
 
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_webapp.obj :  .AUTODEPEND ..\src\webapp.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
-
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_webupdate.obj :  .AUTODEPEND ..\src\webupdate.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_webupdatectrl.obj :  .AUTODEPEND ..\src\webupdatectrl.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_webupdatedlg.obj :  .AUTODEPEND ..\src\webupdatedlg.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_LIB_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_checkedlistctrl.obj :  .AUTODEPEND ..\src\checkedlistctrl.cpp
@@ -710,23 +701,20 @@ watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_stdactions.obj :  
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_versionrange.obj :  .AUTODEPEND ..\src\versionrange.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
 
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_webapp.obj :  .AUTODEPEND ..\src\webapp.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
-
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_webupdate.obj :  .AUTODEPEND ..\src\webupdate.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_webupdatectrl.obj :  .AUTODEPEND ..\src\webupdatectrl.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
 
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_webupdatedlg.obj :  .AUTODEPEND ..\src\webupdatedlg.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATE_DLL_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdater_webapp.obj :  .AUTODEPEND ..\src\webapp.cpp
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdater_webapp.obj :  .AUTODEPEND ..\app\webapp.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATER_CXXFLAGS) $<
 
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdater_app.res :  .AUTODEPEND ..\src\app.rc
-	wrc -q -ad -bt=nt -r -fo=$^@  $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=$(HTTPENGINE_DIR)\include -dwxUSE_HTTPENGINE=1  -i=..\src $<
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdater_webupdatedlg.obj :  .AUTODEPEND ..\app\webupdatedlg.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WEBUPDATER_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdater_app.res :  .AUTODEPEND ..\app\app.rc
+	wrc -q -ad -bt=nt -r -fo=$^@  $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=$(HTTPENGINE_DIR)\include -dwxUSE_HTTPENGINE=1  -i=..\app $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simple_1_0_0_minimal.obj :  .AUTODEPEND ..\samples\simple\v1.0.0\minimal.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(SIMPLE_1_0_0_CXXFLAGS) $<

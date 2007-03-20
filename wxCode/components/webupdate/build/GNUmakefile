@@ -82,10 +82,8 @@ WEBUPDATE_LIB_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_lib_md5.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_lib_stdactions.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_lib_versionrange.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_lib_webapp.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_lib_webupdate.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_lib_webupdatectrl.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_lib_webupdatedlg.o
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_lib_webupdatectrl.o
 WEBUPDATE_LIB_HEADERS =  \
 	include/wx/checkedlistctrl.h \
 	include/wx/download.h \
@@ -95,8 +93,7 @@ WEBUPDATE_LIB_HEADERS =  \
 	include/wx/versionrange.h \
 	include/wx/webupdate.h \
 	include/wx/webupdatectrl.h \
-	include/wx/webupdatedef.h \
-	include/wx/webupdatedlg.h
+	include/wx/webupdatedef.h
 WEBUPDATE_DLL_CXXFLAGS = $(VAR) -I../include -DWXMAKINGDLL_WEBUPDATE \
 	-DwxUSE_HTTPENGINE=0 $(__MYOPTIMIZEFLAG) -fPIC -DPIC `$(WX_CONFIG) --cxxflags \
 	$(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
@@ -107,10 +104,8 @@ WEBUPDATE_DLL_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_dll_md5.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_dll_stdactions.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_dll_versionrange.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_dll_webapp.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_dll_webupdate.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_dll_webupdatectrl.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_dll_webupdatedlg.o
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_dll_webupdatectrl.o
 WEBUPDATE_DLL_HEADERS =  \
 	include/wx/checkedlistctrl.h \
 	include/wx/download.h \
@@ -120,13 +115,13 @@ WEBUPDATE_DLL_HEADERS =  \
 	include/wx/versionrange.h \
 	include/wx/webupdate.h \
 	include/wx/webupdatectrl.h \
-	include/wx/webupdatedef.h \
-	include/wx/webupdatedlg.h
+	include/wx/webupdatedef.h
 WEBUPDATER_CXXFLAGS = $(VAR) -I../include -DwxUSE_HTTPENGINE=0 \
 	$(__MYOPTIMIZEFLAG) `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) \
 	$(CXXFLAGS)
 WEBUPDATER_OBJECTS =  \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdater_webapp.o
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdater_webapp.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdater_webupdatedlg.o
 SIMPLE_1_0_0_CXXFLAGS = $(VAR_1) $(VAR) -I../include `$(WX_CONFIG) --cxxflags \
 	$(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 SIMPLE_1_0_0_OBJECTS =  \
@@ -240,7 +235,7 @@ gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX):
 
 ### Targets: ###
 
-all: test_for_selected_wxbuild $(__webupdate_lib___depname) $(__webupdate_dll___depname) ../src/webupdater rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150 po_simple100 po_simple203 po_adv001 po_adv150 ../samples/simple/v1.0.0/simple ../samples/simple/v2.0.3/simple ../samples/advanced/v0.0.1/advanced ../samples/advanced/v1.5.0/advanced
+all: test_for_selected_wxbuild $(__webupdate_lib___depname) $(__webupdate_dll___depname) ../app/webupdater rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150 po_simple100 po_simple203 po_adv001 po_adv150 ../samples/simple/v1.0.0/simple ../samples/simple/v2.0.3/simple ../samples/advanced/v0.0.1/advanced ../samples/advanced/v1.5.0/advanced
 
 install: all $(__install_webupdate_lib___depname) $(__install_webupdate_lib_headers___depname) $(__install_webupdate_dll___depname) $(__install_webupdate_dll_headers___depname)
 
@@ -252,7 +247,7 @@ clean:
 	rm -f ../lib/gcc_$(__webupdate)/libwxcode_$(WX_PORT)_webupdate-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a
 	rm -f ../lib/gcc_$(__webupdate)/libwxcode_$(WX_PORT)_webupdate-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
 	rm -f ../lib/gcc_$(__webupdate)/libwxcode_$(WX_PORT)_webupdate-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
-	rm -f ../src/webupdater
+	rm -f ../app/webupdater
 	rm -f webupdater
 	rm -f webupdatedlg.xrc
 	rm -f webupdater
@@ -359,31 +354,31 @@ i18n:
 	msgmerge locale/de.po locale/webupdater.pot > locale/de.po.new && mv locale/de.po.new locale/de.po
 	msgfmt --statistics -o locale/de.mo locale/de.po
 
-../src/webupdater: $(WEBUPDATER_OBJECTS) $(__webupdate_lib___depname)
+../app/webupdater: $(WEBUPDATER_OBJECTS) $(__webupdate_lib___depname)
 	$(CXX) -o $@ $(WEBUPDATER_OBJECTS) $(LDFLAGS) $(VAR) -L../lib   ../lib/gcc_$(__webupdate)/libwxcode_$(WX_PORT)_webupdate-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a $(__HTTPENGINEDEP_LIB_p) `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs adv,html,adv,xrc,xml,net,core,base`
 
 rep4_simple100: 
 	@mkdir -p ../samples/simple/v1.0.0
 	@for f in webupdater webupdatedlg.xrc; do \
-	cp -pRf ../src/$$f ../samples/simple/v1.0.0 ; \
+	cp -pRf ../app/$$f ../samples/simple/v1.0.0 ; \
 	done
 
 rep4_simple203: 
 	@mkdir -p ../samples/simple/v2.0.3
 	@for f in webupdater webupdatedlg.xrc; do \
-	cp -pRf ../src/$$f ../samples/simple/v2.0.3 ; \
+	cp -pRf ../app/$$f ../samples/simple/v2.0.3 ; \
 	done
 
 rep4_adv001: 
 	@mkdir -p ../samples/advanced/v0.0.1
 	@for f in webupdater webupdatedlg.xrc; do \
-	cp -pRf ../src/$$f ../samples/advanced/v0.0.1 ; \
+	cp -pRf ../app/$$f ../samples/advanced/v0.0.1 ; \
 	done
 
 rep4_adv150: 
 	@mkdir -p ../samples/advanced/v1.5.0
 	@for f in webupdater webupdatedlg.xrc; do \
-	cp -pRf ../src/$$f ../samples/advanced/v1.5.0 ; \
+	cp -pRf ../app/$$f ../samples/advanced/v1.5.0 ; \
 	done
 
 po_simple100: 
@@ -434,25 +429,25 @@ po_adv150:
 	esac; \
 	done
 
-../samples/simple/v1.0.0/simple: $(SIMPLE_1_0_0_OBJECTS) ../src/webupdater make_sample_dir_simple_1_0_0
+../samples/simple/v1.0.0/simple: $(SIMPLE_1_0_0_OBJECTS) ../app/webupdater make_sample_dir_simple_1_0_0
 	$(CXX) -o $@ $(SIMPLE_1_0_0_OBJECTS) $(LDFLAGS) $(VAR) -L../lib   `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs core,base`
 
 make_sample_dir_simple_1_0_0: 
 	@mkdir -p ../samples/simple/v1.0.0
 
-../samples/simple/v2.0.3/simple: $(SIMPLE_2_0_3_OBJECTS) ../src/webupdater make_sample_dir_simple_2_0_3
+../samples/simple/v2.0.3/simple: $(SIMPLE_2_0_3_OBJECTS) ../app/webupdater make_sample_dir_simple_2_0_3
 	$(CXX) -o $@ $(SIMPLE_2_0_3_OBJECTS) $(LDFLAGS) $(VAR) -L../lib   `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs core,base`
 
 make_sample_dir_simple_2_0_3: 
 	@mkdir -p ../samples/simple/v2.0.3
 
-../samples/advanced/v0.0.1/advanced: $(ADVANCED_0_0_1_OBJECTS) ../src/webupdater make_sample_dir_advanced_0_0_1
+../samples/advanced/v0.0.1/advanced: $(ADVANCED_0_0_1_OBJECTS) ../app/webupdater make_sample_dir_advanced_0_0_1
 	$(CXX) -o $@ $(ADVANCED_0_0_1_OBJECTS) $(LDFLAGS) $(VAR) -L../lib   `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs core,base`
 
 make_sample_dir_advanced_0_0_1: 
 	@mkdir -p ../samples/advanced/v0.0.1
 
-../samples/advanced/v1.5.0/advanced: $(ADVANCED_1_5_0_OBJECTS) ../src/webupdater make_sample_dir_advanced_1_5_0
+../samples/advanced/v1.5.0/advanced: $(ADVANCED_1_5_0_OBJECTS) ../app/webupdater make_sample_dir_advanced_1_5_0
 	$(CXX) -o $@ $(ADVANCED_1_5_0_OBJECTS) $(LDFLAGS) $(VAR) -L../lib   `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs core,base`
 
 make_sample_dir_advanced_1_5_0: 
@@ -476,16 +471,10 @@ gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_lib_stdactions.o: ../src/stdac
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_lib_versionrange.o: ../src/versionrange.cpp
 	$(CXX) -c -o $@ $(WEBUPDATE_LIB_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_lib_webapp.o: ../src/webapp.cpp
-	$(CXX) -c -o $@ $(WEBUPDATE_LIB_CXXFLAGS) $(CPPDEPS) $<
-
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_lib_webupdate.o: ../src/webupdate.cpp
 	$(CXX) -c -o $@ $(WEBUPDATE_LIB_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_lib_webupdatectrl.o: ../src/webupdatectrl.cpp
-	$(CXX) -c -o $@ $(WEBUPDATE_LIB_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_lib_webupdatedlg.o: ../src/webupdatedlg.cpp
 	$(CXX) -c -o $@ $(WEBUPDATE_LIB_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_dll_checkedlistctrl.o: ../src/checkedlistctrl.cpp
@@ -506,19 +495,16 @@ gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_dll_stdactions.o: ../src/stdac
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_dll_versionrange.o: ../src/versionrange.cpp
 	$(CXX) -c -o $@ $(WEBUPDATE_DLL_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_dll_webapp.o: ../src/webapp.cpp
-	$(CXX) -c -o $@ $(WEBUPDATE_DLL_CXXFLAGS) $(CPPDEPS) $<
-
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_dll_webupdate.o: ../src/webupdate.cpp
 	$(CXX) -c -o $@ $(WEBUPDATE_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_dll_webupdatectrl.o: ../src/webupdatectrl.cpp
 	$(CXX) -c -o $@ $(WEBUPDATE_DLL_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdate_dll_webupdatedlg.o: ../src/webupdatedlg.cpp
-	$(CXX) -c -o $@ $(WEBUPDATE_DLL_CXXFLAGS) $(CPPDEPS) $<
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdater_webapp.o: ../app/webapp.cpp
+	$(CXX) -c -o $@ $(WEBUPDATER_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdater_webapp.o: ../src/webapp.cpp
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/webupdater_webupdatedlg.o: ../app/webupdatedlg.cpp
 	$(CXX) -c -o $@ $(WEBUPDATER_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/simple_1_0_0_minimal.o: ../samples/simple/v1.0.0/minimal.cpp

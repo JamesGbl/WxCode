@@ -357,7 +357,10 @@ public:
     wxULongLong GetDownloadSpeed() const;
     double GetDownloadProgress() const;
 
-    wxString GetHumanReadableDownloadSpeed() const;
+    wxString GetHumanReadableDownloadSpeed(const wxString &invalid = _("Not available")) const;
+
+    wxString GetURL() const
+        { return GetString(); }
 
     wxTimeSpan GetElapsedTime() const;
     wxTimeSpan GetEstimatedTime() const;

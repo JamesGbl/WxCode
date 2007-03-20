@@ -856,8 +856,7 @@ wxWebUpdatePlatform wxWebUpdatePlatform::GetThisPlatform()
 {
     wxWebUpdatePlatform plat;
 
-    plat.SetPortId(wxPlatformInfo::Get().GetPortId());
-    plat.SetArchitecture(wxPlatformInfo::Get().GetArchitecture());
+    ((wxPlatformInfo&)plat) = wxPlatformInfo::Get();
 
     // get ID
     plat.SetID(wxGetOsDescription());
@@ -1055,10 +1054,10 @@ wxString wxWebUpdateXMLScript::GetNodeContent(const wxXmlNode *node)
 
     while (n)
     {
-    if (n->GetType() == wxXML_TEXT_NODE ||
-        n->GetType() == wxXML_CDATA_SECTION_NODE)
-        return n->GetContent();
-    n = n->GetNext();
+        if (n->GetType() == wxXML_TEXT_NODE ||
+            n->GetType() == wxXML_CDATA_SECTION_NODE)
+            return n->GetContent();
+        n = n->GetNext();
     }
 
     return wxEmptyString;
@@ -1068,10 +1067,7 @@ wxString wxWebUpdateXMLScript::GetNodeContent(const wxXmlNode *node)
 bool wxWebUpdateXMLScript::IsLangPropertyMatching(const wxXmlNode *n, const wxString &lang)
 {
     // look for the LANG property of this tag...
-    wxXmlProperty *prop = n->GetProperties();
-    while (prop && prop->GetName() != wxT("lang"))
-        prop = prop->GetNext();
-    wxString l = prop ? prop->GetValue() : wxT("en");    // english is the default
+    wxString l = n->GetPropVal(wxT("lang"), wxT("en"));    // english is the default
 
     // does the LANG property match the given language name ?
     if (l.IsSameAs(lang, FALSE) ||
@@ -1205,16 +1201,9 @@ wxWebUpdateDownload wxWebUpdateXMLScript::GetDownload(const wxXmlNode *latestdow
         } else if (child->GetName() == wxT("platform")) {
 
             // search the known properties
-            wxXmlProperty *prop = child->GetProperties();
-            while (prop) {
-                if (prop->GetName() == wxT("name"))
-                    platform = prop->GetValue();
-                if (prop->GetName() == wxT("arch"))
-                    arch = prop->GetValue();
-                if (prop->GetName() == wxT("id"))
-                    id = prop->GetValue();
-                prop = prop->GetNext();
-            }
+            platform = child->GetPropVal(wxT("name"), wxT("invalid"));
+            arch = child->GetPropVal(wxT("arch"), wxT("any"));
+            id = child->GetPropVal(wxT("id"), wxT(""));
 
         } else if (child->GetName() == wxT("actions")) {
 
@@ -1272,15 +1261,10 @@ wxWebUpdatePackage *wxWebUpdateXMLScript::GetPackage(const wxXmlNode *package) c
             list[wxT("latest-version")] = ret->m_verLatest;  // will be removed when exiting
 
             // and this version's importance (if available)
-            wxXmlProperty *prop = child->GetProperties();
-            while (prop && prop->GetName() != wxT("importance"))
-                prop = prop->GetNext();
-            if (prop) {
-                wxString imp = prop->GetValue();
-                if (imp == wxT("high")) ret->m_importance = wxWUPI_HIGH;
-                if (imp == wxT("normal")) ret->m_importance = wxWUPI_NORMAL;
-                if (imp == wxT("low")) ret->m_importance = wxWUPI_LOW;
-            }
+            wxString imp = child->GetPropVal(wxT("importance"), wxT(""));
+            if (imp == wxT("high")) ret->m_importance = wxWUPI_HIGH;
+            if (imp == wxT("normal")) ret->m_importance = wxWUPI_NORMAL;
+            if (imp == wxT("low")) ret->m_importance = wxWUPI_LOW;
 
         } else if (child->GetName() == wxT("latest-download")) {
 

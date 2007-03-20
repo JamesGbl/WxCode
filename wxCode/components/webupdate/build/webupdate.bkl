@@ -93,7 +93,7 @@
         <if cond="MODDED=='1'">MODDED</if>
         <if cond="MODDED=='0'"></if>
     </set>
-
+    
     <template id="webupdatecommon">
         <if cond="TARGETING_WIN32=='1'">
             <!-- for wxHttpEngine dependency  (on unix they should be installed in system paths)-->
@@ -170,16 +170,17 @@
             <!-- NOTE: it's important to put the EXE in the src folder
                        as it's required by the 'copy' rules later
             -->
-            <dirname>$(SRCDIR)/src</dirname>
+            <dirname>$(SRCDIR)/app</dirname>
 
             <app-type>gui</app-type>
-            <res-include>$(SRCDIR)/src</res-include>
+            <res-include>$(SRCDIR)/app</res-include>
 
             <msvc-file-group>XRC:*.xrc</msvc-file-group>
             <msvc-project-files>..\src\webupdatedlg.xrc</msvc-project-files>
 
-            <sources>src/webapp.cpp</sources>
-            <win32-res>src/app.rc</win32-res>
+            <sources>$(fileList('app/*.cpp'))</sources>
+            <headers>$(fileList('app/*.h'))</headers>
+            <win32-res>app/app.rc</win32-res>
 
             <library>webupdate_lib</library>
             <webupdatelibs/>
@@ -198,7 +199,7 @@
 
     <!-- after the creation of the exe, put the WebUpdater XRC file and
          the LANG/ folder in all samples folders -->
-    <if cond="TARGETING_IDE=='0'">
+    <if cond="FORMAT_SUPPORTS_ACTIONS=='1'">
 
         <if cond="TARGETING_WIN32=='1'">
             <set var="FILE1">webupdater.exe</set>
@@ -212,7 +213,7 @@
 
         <define-rule name="copyrep" extends="force-copy-files">
             <template>
-                <srcdir>$(SRCDIR)/src</srcdir>
+                <srcdir>$(SRCDIR)/app</srcdir>
                 <files>$(FILE1) $(FILE2)</files>
                 <dependency-of>all</dependency-of>
             </template>

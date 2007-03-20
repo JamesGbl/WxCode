@@ -69,9 +69,14 @@
  ----------
 
  1.2 - completely revised the build system;
+       revised the download code to be more thread-safe and more reliable;
+       revised a bit the GUI (e.g. now it uses wxHyperlinkCtrl in the about dialog);
+       separed library sources from the webupdater app sources (it's cleaner this way);
+       
 
  1.1 - added i18n support (thanks to Helmut Giritzer for german translation and for
                            help to learn i18n stuff)
+
  1.0 - first release
 
 

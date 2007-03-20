@@ -64,10 +64,10 @@ enum wxWebUpdatePackageImportance {
 DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_WEBUPDATE, wxEVT_COMMAND_EXECUTE, -1);
 #define EVT_EXECUTE(id, func) EVT_COMMAND(id, wxEVT_COMMAND_EXECUTE, func)
 
-// a port "id" which means all ports are valid
+// this is a port "id" which means all ports are valid
 #define wxPORT_ANY          ((wxPortId)0xFFFF)
 
-// an arch "id" which means all archs are valid
+// this is an arch "id" which means all archs are valid
 #define wxARCH_ANY          ((wxArchitecture)0xFFFF)
 
 // invalid:
@@ -440,7 +440,7 @@ public:
     wxWebUpdatePlatform(const wxString &portname,
                         const wxString &arch = wxT("32"),
                         const wxString &id = wxT(".*"))
-        { SetPortId(GetPortId(portname)); SetArchitecture(GetArch(arch)); SetID(id); }
+        { SetPortId(portname); SetArchitecture(arch); SetID(id); }
 
     virtual ~wxWebUpdatePlatform() {}
 
@@ -459,6 +459,24 @@ public:         // getters & setters
         { return m_strID; }
     void SetID(const wxString &id)
         { m_strID = id.IsEmpty() ? wxT(".*") : id; }
+
+        // add support for wxARCH_ANY
+    void SetArchitecture(const wxString &str)
+    {
+        if (str.CmpNoCase(wxT("any")) == 0)
+            m_arch = wxARCH_ANY;
+        else
+            wxPlatformInfo::SetArchitecture(GetArch(str));
+    }
+
+        // add support for wxPORT_ANY
+    void SetPortId(const wxString &str)
+    {
+        if (str.CmpNoCase(wxT("any")) == 0)
+            m_port = wxPORT_ANY;
+        else
+            wxPlatformInfo::SetPortId(GetPortId(str));
+    }
 
     //! Returns all the info encoded into this object as a single string.
     wxString GetAsString() const;
@@ -655,7 +673,8 @@ private:
 
 
 // a container of wxWebUpdateDownload used by wxWebUpdatePackage
-WX_DECLARE_USER_EXPORTED_OBJARRAY(wxWebUpdateDownload, wxWebUpdateDownloadArray, WXDLLIMPEXP_WEBUPDATE);
+WX_DECLARE_USER_EXPORTED_OBJARRAY(wxWebUpdateDownload, 
+                                  wxWebUpdateDownloadArray, WXDLLIMPEXP_WEBUPDATE);
 
 
 //! Contains the info about a package update.
@@ -815,7 +834,11 @@ public:         // main functions
 
     //! Returns TRUE if at least the root of this document is valid.
     bool IsOk() const
-        { if (!GetRoot() || GetRoot()->GetName() != wxT("webupdate")) return FALSE; return TRUE; }
+    { 
+        if (!GetRoot() || GetRoot()->GetName() != wxT("webupdate")) 
+            return FALSE; 
+        return TRUE; 
+    }
 
     //! Parses the XML script located at the given URI.
     //! This function can open any resource which can be handled

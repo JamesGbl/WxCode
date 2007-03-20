@@ -513,11 +513,11 @@ wxULongLong wxDownloadEvent::GetDownloadSpeed() const
     return (wxULongLong_t)(m_curr.ToDouble() / sec.GetSeconds().ToDouble());
 }
 
-wxString wxDownloadEvent::GetHumanReadableDownloadSpeed() const
+wxString wxDownloadEvent::GetHumanReadableDownloadSpeed(const wxString &invalid) const
 {
     wxULongLong speed = GetDownloadSpeed();
     if (speed == 0)
-        return _("Not available");
+        return invalid;
 
     return wxFileName::GetHumanReadableSize(speed) + wxT("/s");
 }

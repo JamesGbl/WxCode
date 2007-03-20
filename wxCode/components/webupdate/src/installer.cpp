@@ -24,7 +24,6 @@
 
 #include "wx/installer.h"
 #include "wx/webupdate.h"
-#include "wx/webupdatedlg.h"
 #include "wx/stdactions.h"
 #include <wx/wfstream.h>
 #include <wx/filesys.h>

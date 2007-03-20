@@ -20,9 +20,9 @@
 //! The version of the supported local & remote XML scripts.
 //! This version is also the version of the WebUpdater application.
 #define wxWUI_VERSION_MAJOR			1
-#define wxWUI_VERSION_MINOR			1
+#define wxWUI_VERSION_MINOR			2
 #define wxWUI_VERSION_RELEASE		0		// should always be zero (not used)
-#define wxWUI_VERSION_STRING		wxT("1.1")
+#define wxWUI_VERSION_STRING		wxT("1.2")
 
 // defined later
 class WXDLLIMPEXP_WEBUPDATE wxDownloadThread;

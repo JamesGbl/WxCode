@@ -56,7 +56,7 @@ WX_DEBUG = 1
 
 # Version of the wx library to build against. 
 !ifndef WX_VERSION
-WX_VERSION = 29
+WX_VERSION = 28
 !endif
 
 # Use monolithic build of wxWidgets? [0,1]
@@ -99,10 +99,8 @@ WEBUPDATE_LIB_OBJECTS =  \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_md5.obj \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_stdactions.obj \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_versionrange.obj \
-	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_webapp.obj \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_webupdate.obj \
-	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_webupdatectrl.obj \
-	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_webupdatedlg.obj
+	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_webupdatectrl.obj
 WEBUPDATE_DLL_CXXFLAGS = -I$(BCCDIR)\include $(____WX_SHARED) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
@@ -115,17 +113,16 @@ WEBUPDATE_DLL_OBJECTS =  \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_md5.obj \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_stdactions.obj \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_versionrange.obj \
-	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_webapp.obj \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_webupdate.obj \
-	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_webupdatectrl.obj \
-	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_webupdatedlg.obj
+	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_webupdatectrl.obj
 WEBUPDATER_CXXFLAGS = -I$(BCCDIR)\include $(____WX_SHARED) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
 	-I..\include -I$(HTTPENGINE_DIR)\include -DwxUSE_HTTPENGINE=1 \
 	$(__MYOPTIMIZEFLAG) $(CPPFLAGS) $(CXXFLAGS)
 WEBUPDATER_OBJECTS =  \
-	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdater_webapp.obj
+	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdater_webapp.obj \
+	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdater_webupdatedlg.obj
 SIMPLE_1_0_0_CXXFLAGS = -I$(BCCDIR)\include $(____WX_SHARED) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR_1) \
@@ -341,7 +338,7 @@ bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX):
 
 ### Targets: ###
 
-all: test_for_selected_wxbuild $(__webupdate_lib___depname) $(__webupdate_dll___depname) ..\src\webupdater.exe rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150 po_simple100 po_simple203 po_adv001 po_adv150 ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
+all: test_for_selected_wxbuild $(__webupdate_lib___depname) $(__webupdate_dll___depname) ..\app\webupdater.exe rep4_simple100 rep4_simple203 rep4_adv001 rep4_adv150 po_simple100 po_simple203 po_adv001 po_adv150 ..\samples\simple\v1.0.0\simple.exe ..\samples\simple\v2.0.3\simple.exe ..\samples\advanced\v0.0.1\advanced.exe ..\samples\advanced\v1.5.0\advanced.exe
 
 clean: 
 	-if exist bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.obj del bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.obj
@@ -355,12 +352,12 @@ clean:
 	-if exist ..\lib\bcc_$(____webupdate_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_webupdate.ilf del ..\lib\bcc_$(____webupdate_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_webupdate.ilf
 	-if exist ..\lib\bcc_$(____webupdate_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_webupdate.ils del ..\lib\bcc_$(____webupdate_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_webupdate.ils
 	-if exist ..\lib\bcc_$(____webupdate_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_webupdate.lib del ..\lib\bcc_$(____webupdate_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_webupdate.lib
-	-if exist ..\src\webupdater.exe del ..\src\webupdater.exe
-	-if exist ..\src\webupdater.tds del ..\src\webupdater.tds
-	-if exist ..\src\webupdater.ilc del ..\src\webupdater.ilc
-	-if exist ..\src\webupdater.ild del ..\src\webupdater.ild
-	-if exist ..\src\webupdater.ilf del ..\src\webupdater.ilf
-	-if exist ..\src\webupdater.ils del ..\src\webupdater.ils
+	-if exist ..\app\webupdater.exe del ..\app\webupdater.exe
+	-if exist ..\app\webupdater.tds del ..\app\webupdater.tds
+	-if exist ..\app\webupdater.ilc del ..\app\webupdater.ilc
+	-if exist ..\app\webupdater.ild del ..\app\webupdater.ild
+	-if exist ..\app\webupdater.ilf del ..\app\webupdater.ilf
+	-if exist ..\app\webupdater.ils del ..\app\webupdater.ils
 	-if exist webupdater.exe del webupdater.exe
 	-if exist webupdatedlg.xrc del webupdatedlg.xrc
 	-if exist webupdater.exe del webupdater.exe
@@ -440,26 +437,26 @@ i18n:
 	msgmerge locale/de.po locale/webupdater.pot > locale/de.po.new && mv locale/de.po.new locale/de.po
 	msgfmt --statistics -o locale/de.mo locale/de.po
 
-..\src\webupdater.exe: $(WEBUPDATER_OBJECTS)  bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdater_app.res $(__webupdate_lib___depname)
+..\app\webupdater.exe: $(WEBUPDATER_OBJECTS)  bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdater_app.res $(__webupdate_lib___depname)
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -L$(WX_DIR)$(WXLIBPATH) $(VAR) -L..$(WXLIBPATH) -L$(HTTPENGINE_DIR)\lib -aa @&&|
 	c0w32.obj $(WEBUPDATER_OBJECTS),$@,, ..\lib\bcc_$(____webupdate_2)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_webupdate.lib $(__HTTPENGINEDEP_LIB_p) $(__WXLIB_ADV_NAME_p) $(__WXLIB_HTML_NAME_p) $(__WXLIB_ADV_NAME_p) $(__WXLIB_XRC_NAME_p) $(__WXLIB_XML_NAME_p) $(__WXLIB_NET_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32.lib,, bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdater_app.res
 |
 
 rep4_simple100: 
 	if not exist ..\samples\simple\v1.0.0 mkdir ..\samples\simple\v1.0.0
-	for %f in (webupdater.exe webupdatedlg.xrc) do copy ..\src\%f ..\samples\simple\v1.0.0
+	for %f in (webupdater.exe webupdatedlg.xrc) do copy ..\app\%f ..\samples\simple\v1.0.0
 
 rep4_simple203: 
 	if not exist ..\samples\simple\v2.0.3 mkdir ..\samples\simple\v2.0.3
-	for %f in (webupdater.exe webupdatedlg.xrc) do copy ..\src\%f ..\samples\simple\v2.0.3
+	for %f in (webupdater.exe webupdatedlg.xrc) do copy ..\app\%f ..\samples\simple\v2.0.3
 
 rep4_adv001: 
 	if not exist ..\samples\advanced\v0.0.1 mkdir ..\samples\advanced\v0.0.1
-	for %f in (webupdater.exe webupdatedlg.xrc) do copy ..\src\%f ..\samples\advanced\v0.0.1
+	for %f in (webupdater.exe webupdatedlg.xrc) do copy ..\app\%f ..\samples\advanced\v0.0.1
 
 rep4_adv150: 
 	if not exist ..\samples\advanced\v1.5.0 mkdir ..\samples\advanced\v1.5.0
-	for %f in (webupdater.exe webupdatedlg.xrc) do copy ..\src\%f ..\samples\advanced\v1.5.0
+	for %f in (webupdater.exe webupdatedlg.xrc) do copy ..\app\%f ..\samples\advanced\v1.5.0
 
 po_simple100: 
 	if not exist ..\samples\simple\v1.0.0\lang mkdir ..\samples\simple\v1.0.0\lang
@@ -477,7 +474,7 @@ po_adv150:
 	if not exist ..\samples\advanced\v1.5.0\lang mkdir ..\samples\advanced\v1.5.0\lang
 	for %f in (it.mo de.mo) do if not exist ..\samples\advanced\v1.5.0\lang\%f copy ..\locale\%f ..\samples\advanced\v1.5.0\lang
 
-..\samples\simple\v1.0.0\simple.exe: $(SIMPLE_1_0_0_OBJECTS) ..\src\webupdater.exe make_sample_dir_simple_1_0_0
+..\samples\simple\v1.0.0\simple.exe: $(SIMPLE_1_0_0_OBJECTS) ..\app\webupdater.exe make_sample_dir_simple_1_0_0
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -L$(WX_DIR)$(WXLIBPATH) $(VAR) -L..$(WXLIBPATH) -aa @&&|
 	c0w32.obj $(SIMPLE_1_0_0_OBJECTS),$@,, $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32.lib,,
 |
@@ -485,7 +482,7 @@ po_adv150:
 make_sample_dir_simple_1_0_0: 
 	if not exist ../samples/simple/v1.0.0 mkdir../samples/simple/v1.0.0
 
-..\samples\simple\v2.0.3\simple.exe: $(SIMPLE_2_0_3_OBJECTS) ..\src\webupdater.exe make_sample_dir_simple_2_0_3
+..\samples\simple\v2.0.3\simple.exe: $(SIMPLE_2_0_3_OBJECTS) ..\app\webupdater.exe make_sample_dir_simple_2_0_3
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -L$(WX_DIR)$(WXLIBPATH) $(VAR) -L..$(WXLIBPATH) -aa @&&|
 	c0w32.obj $(SIMPLE_2_0_3_OBJECTS),$@,, $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32.lib,,
 |
@@ -493,7 +490,7 @@ make_sample_dir_simple_1_0_0:
 make_sample_dir_simple_2_0_3: 
 	if not exist ../samples/simple/v2.0.3 mkdir../samples/simple/v2.0.3
 
-..\samples\advanced\v0.0.1\advanced.exe: $(ADVANCED_0_0_1_OBJECTS) ..\src\webupdater.exe make_sample_dir_advanced_0_0_1
+..\samples\advanced\v0.0.1\advanced.exe: $(ADVANCED_0_0_1_OBJECTS) ..\app\webupdater.exe make_sample_dir_advanced_0_0_1
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -L$(WX_DIR)$(WXLIBPATH) $(VAR) -L..$(WXLIBPATH) -aa @&&|
 	c0w32.obj $(ADVANCED_0_0_1_OBJECTS),$@,, $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32.lib,,
 |
@@ -501,7 +498,7 @@ make_sample_dir_simple_2_0_3:
 make_sample_dir_advanced_0_0_1: 
 	if not exist ../samples/advanced/v0.0.1 mkdir../samples/advanced/v0.0.1
 
-..\samples\advanced\v1.5.0\advanced.exe: $(ADVANCED_1_5_0_OBJECTS) ..\src\webupdater.exe make_sample_dir_advanced_1_5_0
+..\samples\advanced\v1.5.0\advanced.exe: $(ADVANCED_1_5_0_OBJECTS) ..\app\webupdater.exe make_sample_dir_advanced_1_5_0
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -L$(WX_DIR)$(WXLIBPATH) $(VAR) -L..$(WXLIBPATH) -aa @&&|
 	c0w32.obj $(ADVANCED_1_5_0_OBJECTS),$@,, $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32.lib,,
 |
@@ -527,16 +524,10 @@ bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_stdactions.obj: ..
 bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_versionrange.obj: ..\src\versionrange.cpp
 	$(CXX) -q -c -P -o$@ $(WEBUPDATE_LIB_CXXFLAGS) $**
 
-bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_webapp.obj: ..\src\webapp.cpp
-	$(CXX) -q -c -P -o$@ $(WEBUPDATE_LIB_CXXFLAGS) $**
-
 bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_webupdate.obj: ..\src\webupdate.cpp
 	$(CXX) -q -c -P -o$@ $(WEBUPDATE_LIB_CXXFLAGS) $**
 
 bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_webupdatectrl.obj: ..\src\webupdatectrl.cpp
-	$(CXX) -q -c -P -o$@ $(WEBUPDATE_LIB_CXXFLAGS) $**
-
-bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_lib_webupdatedlg.obj: ..\src\webupdatedlg.cpp
 	$(CXX) -q -c -P -o$@ $(WEBUPDATE_LIB_CXXFLAGS) $**
 
 bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_checkedlistctrl.obj: ..\src\checkedlistctrl.cpp
@@ -557,23 +548,20 @@ bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_stdactions.obj: ..
 bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_versionrange.obj: ..\src\versionrange.cpp
 	$(CXX) -q -c -P -o$@ $(WEBUPDATE_DLL_CXXFLAGS) $**
 
-bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_webapp.obj: ..\src\webapp.cpp
-	$(CXX) -q -c -P -o$@ $(WEBUPDATE_DLL_CXXFLAGS) $**
-
 bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_webupdate.obj: ..\src\webupdate.cpp
 	$(CXX) -q -c -P -o$@ $(WEBUPDATE_DLL_CXXFLAGS) $**
 
 bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_webupdatectrl.obj: ..\src\webupdatectrl.cpp
 	$(CXX) -q -c -P -o$@ $(WEBUPDATE_DLL_CXXFLAGS) $**
 
-bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdate_dll_webupdatedlg.obj: ..\src\webupdatedlg.cpp
-	$(CXX) -q -c -P -o$@ $(WEBUPDATE_DLL_CXXFLAGS) $**
-
-bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdater_webapp.obj: ..\src\webapp.cpp
+bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdater_webapp.obj: ..\app\webapp.cpp
 	$(CXX) -q -c -P -o$@ $(WEBUPDATER_CXXFLAGS) $**
 
-bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdater_app.res: ..\src\app.rc
-	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include  $(____WX_SHARED_9_p_1) $(__WXUNICODE_DEFINE_p_4) $(__WXDEBUG_DEFINE_p_4) -d__WXMSW__ -i$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i$(HTTPENGINE_DIR)\include -dwxUSE_HTTPENGINE=1  -i..\src $**
+bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdater_webupdatedlg.obj: ..\app\webupdatedlg.cpp
+	$(CXX) -q -c -P -o$@ $(WEBUPDATER_CXXFLAGS) $**
+
+bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\webupdater_app.res: ..\app\app.rc
+	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include  $(____WX_SHARED_9_p_1) $(__WXUNICODE_DEFINE_p_4) $(__WXDEBUG_DEFINE_p_4) -d__WXMSW__ -i$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i$(HTTPENGINE_DIR)\include -dwxUSE_HTTPENGINE=1  -i..\app $**
 
 bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\simple_1_0_0_minimal.obj: ..\samples\simple\v1.0.0\minimal.cpp
 	$(CXX) -q -c -P -o$@ $(SIMPLE_1_0_0_CXXFLAGS) $**
