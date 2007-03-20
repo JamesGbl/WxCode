@@ -35,6 +35,7 @@ void wxOpenCommanderListCtrl::addColumns()
    icons[3] = wxIcon(hardDisk_xpm);
    icons[4] = wxIcon(dvd_xpm);
    icons[5] = wxIcon(floppy_xpm);
+   icons[6] = wxIcon(usb_xpm);
 
    int sizeOrig = icons[0].GetWidth();
    for ( size_t i = 0; i < WXSIZEOF(icons); i++ )

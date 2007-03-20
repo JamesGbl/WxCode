@@ -28,6 +28,8 @@
 #include "Images/hardDisk.xpm"
 #include "Images/dvd.xpm"
 #include "Images/floppy.xpm"
+#include "Images/usb.xpm"
+
 
 class wxOpenCommanderListCtrl : public wxListCtrl
 
