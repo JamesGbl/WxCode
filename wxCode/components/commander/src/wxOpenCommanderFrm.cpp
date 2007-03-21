@@ -148,6 +148,7 @@ void wxOpenCommanderFrm::CreateGUIControls()
 	WxNotebook2 = new wxNotebook(WxSplitterWindow1, ID_WXNOTEBOOK2, wxPoint(304,6),wxSize(289,193));
 
 	WxMenuBar1 = new wxMenuBar();
+	
 	wxMenu *ID_MNU_FILES_1004_Mnu_Obj = new wxMenu(0);
 	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_ADDTAB_1080, wxT("&Add Tab"), wxT(""), wxITEM_NORMAL);
 	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_REMOVETAB_1082, wxT("Re&move Tab"), wxT(""), wxITEM_NORMAL);
@@ -178,7 +179,7 @@ void wxOpenCommanderFrm::CreateGUIControls()
 	ID_MNU_HELP_1006_Mnu_Obj->Append(ID_MNU_ABOUT_1007, wxT("About as... (F1)"), wxT(""), wxITEM_NORMAL);
 	WxMenuBar1->Append(ID_MNU_HELP_1006_Mnu_Obj, wxT("&Help"));
 	SetMenuBar(WxMenuBar1);
-
+   
 	WxSplitterWindow1->SplitVertically(WxNotebook1,WxNotebook2,289);
 
 	SetStatusBar(WxStatusBar);
@@ -201,10 +202,9 @@ void wxOpenCommanderFrm::CreateGUIControls()
     WxListCtrl1->SetSingleStyle(wxLB_EXTENDED);
     WxListCtrl2->SetSingleStyle(wxLB_EXTENDED);
 
-    WxToolBar->AddSeparator();
-    
     wxStandardPaths wxPaths;
-        
+
+    WxToolBar->AddSeparator();
     WxToolBar->AddTool(ID_TOOL_NEWFOLDER, lang["New Folder"], newFolder_xpm, lang["New Folder"]);
     WxToolBar->AddTool(ID_TOOL_COPY, lang["Copy"], copy_xpm, lang["Copy"]);
     WxToolBar->AddTool(ID_TOOL_DELETE, lang["Delete"], delete_xpm, lang["Delete"]);
@@ -212,6 +212,7 @@ void wxOpenCommanderFrm::CreateGUIControls()
     WxToolBar->AddTool(ID_TOOL_EXEC, lang["Exec"], exec_xpm, lang["Exec"]);
     combo = new wxComboBox(WxToolBar, ID_TOOL_COMBO, wxEmptyString, wxDefaultPosition, wxSize(600,wxDefaultCoord) );
     combo->Append(_T(wxPaths.GetDocumentsDir()));
+    
     WxToolBar->AddControl(combo);
 
     WxToolBar->AddSeparator();
@@ -221,6 +222,7 @@ void wxOpenCommanderFrm::CreateGUIControls()
     WxToolBar->AddTool(ID_TOOL_REMOVE, lang["Delete"], remove_xpm, lang["Delete"]);
     WxToolBar->AddTool(ID_TOOL_DRIVES, lang["Devices"], computer_xpm, lang["Devices"]);
 
+    
     wxMenu* optMenu = WxMenuBar1->GetMenu(0);
     wxMenuItem* subItem = optMenu->FindItem(ID_MNU_NEWFOLDER_1049);
     subItem->SetBitmap(newFolder_xpm);
@@ -232,6 +234,7 @@ void wxOpenCommanderFrm::CreateGUIControls()
     subItem->SetBitmap(edit_xpm);
     subItem = optMenu->FindItem(ID_MNU_EXECUTE_1051);
     subItem->SetBitmap(exec_xpm);
+
 
     tray = new wxOpenCommanderTaskBar(this, lang);
     tray->SetIcon(Self_wxOpenCommanderFrm_XPM, wxT("wxOpenCommander"));
@@ -1155,4 +1158,5 @@ void wxOpenCommanderFrm::onContextMenu(wxContextMenuEvent& event)
 	
    wxPoint point(wxGetMousePosition());
    this->PopupMenu(menu, point.x, point.y-50);
+   
 }

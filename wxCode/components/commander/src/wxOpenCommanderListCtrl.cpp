@@ -28,7 +28,7 @@ void wxOpenCommanderListCtrl::addColumns()
    //if (imageList != NULL) delete(imageList); 
    imageList = new wxImageList(size, size, true);
 
-   wxIcon icons[6];
+   wxIcon icons[7];
    icons[0] = wxIcon(icon1_xpm);
    icons[1] = wxIcon(icon3_xpm);
    icons[2] = wxIcon(icon5_xpm);
