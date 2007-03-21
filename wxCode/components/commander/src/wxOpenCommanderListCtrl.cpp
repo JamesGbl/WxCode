@@ -96,7 +96,7 @@ int wxOpenCommanderListCtrl::getIconDevice(long itemPos, long itemCol) const
                  if (iter->first == "A:\\" || iter->first == "B:\\")
                     return 5;
                  else
-                    return 3;
+                    return 6;
               }
      	        case DRIVE_CDROM:
                  return 4;

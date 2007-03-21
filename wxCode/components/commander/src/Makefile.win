@@ -1,7 +1,7 @@
 # Project: wxOpenCommander
 # Compiler: Default GCC compiler
 # Compiler Type: MingW 3
-# Makefile created by wxDev-C++ 6.10.1 on 21/03/07 20:53
+# Makefile created by wxDev-C++ 6.10.1 on 21/03/07 22:59
 
 CPP       = g++.exe
 CC        = gcc.exe
@@ -29,34 +29,34 @@ clean: clean-custom
 $(BIN): $(OBJ)
 	$(LINK) $(LINKOBJ) -o "Output\MingW\wxOpenCommander.exe" $(LIBS)
 
-Output/MingW/wxOpenCommanderApp.o: $(GLOBALDEPS) wxOpenCommanderApp.cpp wxOpenCommanderApp.h wxOpenCommanderFrm.h wxOpenCommanderUtils.h wxOpenCommanderListCtrl.h cCommander.h wxOpenCommanderUtils.h multiLang.h wxOpenCommanderUtils.h Images/icon1.xpm Images/icon3.xpm Images/icon5.xpm Images/hardDisk.xpm Images/dvd.xpm Images/floppy.xpm Images/usb.xpm hotKeysDlg.h wxOpenCommanderUtils.h multiLang.h taskbar.h multiLang.h multiLang.h CTimer.h multiLang.h wxOpenCommanderUtils.h CThread.h wxOpenCommanderUtils.h CThread.h CCommander.h
+Output/MingW/wxOpenCommanderApp.o: $(GLOBALDEPS) wxOpenCommanderApp.cpp
 	$(CPP) -c wxOpenCommanderApp.cpp -o Output/MingW/wxOpenCommanderApp.o $(CXXFLAGS)
 
-Output/MingW/wxOpenCommanderFrm.o: $(GLOBALDEPS) wxOpenCommanderFrm.cpp wxOpenCommanderFrm.h wxOpenCommanderUtils.h wxOpenCommanderListCtrl.h cCommander.h wxOpenCommanderUtils.h multiLang.h wxOpenCommanderUtils.h Images/icon1.xpm Images/icon3.xpm Images/icon5.xpm Images/hardDisk.xpm Images/dvd.xpm Images/floppy.xpm Images/usb.xpm hotKeysDlg.h wxOpenCommanderUtils.h multiLang.h taskbar.h multiLang.h multiLang.h CTimer.h multiLang.h wxOpenCommanderUtils.h CThread.h wxOpenCommanderUtils.h CThread.h CCommander.h Images/Self_wxOpenCommanderFrm_XPM.xpm Images/add.xpm Images/copy.xpm Images/delete.xpm Images/edit.xpm Images/exec.xpm Images/newFolder.xpm Images/refresh.xpm Images/remove.xpm Images/computer.xpm
+Output/MingW/wxOpenCommanderFrm.o: $(GLOBALDEPS) wxOpenCommanderFrm.cpp
 	$(CPP) -c wxOpenCommanderFrm.cpp -o Output/MingW/wxOpenCommanderFrm.o $(CXXFLAGS)
 
-Output/MingW/multiLang.o: $(GLOBALDEPS) multiLang.cpp multiLang.h
+Output/MingW/multiLang.o: $(GLOBALDEPS) multiLang.cpp
 	$(CPP) -c multiLang.cpp -o Output/MingW/multiLang.o $(CXXFLAGS)
 
-Output/MingW/taskbar.o: $(GLOBALDEPS) taskbar.cpp taskbar.h multiLang.h
+Output/MingW/taskbar.o: $(GLOBALDEPS) taskbar.cpp
 	$(CPP) -c taskbar.cpp -o Output/MingW/taskbar.o $(CXXFLAGS)
 
-Output/MingW/wxOpenCommanderUtils.o: $(GLOBALDEPS) wxOpenCommanderUtils.cpp wxOpenCommanderUtils.h
+Output/MingW/wxOpenCommanderUtils.o: $(GLOBALDEPS) wxOpenCommanderUtils.cpp
 	$(CPP) -c wxOpenCommanderUtils.cpp -o Output/MingW/wxOpenCommanderUtils.o $(CXXFLAGS)
 
-Output/MingW/hotKeysDlg.o: $(GLOBALDEPS) hotKeysDlg.cpp hotKeysDlg.h wxOpenCommanderUtils.h multiLang.h Images/Self_hotKeysDlg_XPM.xpm
+Output/MingW/hotKeysDlg.o: $(GLOBALDEPS) hotKeysDlg.cpp
 	$(CPP) -c hotKeysDlg.cpp -o Output/MingW/hotKeysDlg.o $(CXXFLAGS)
 
-Output/MingW/CThread.o: $(GLOBALDEPS) CThread.cpp CThread.h wxOpenCommanderUtils.h
+Output/MingW/CThread.o: $(GLOBALDEPS) CThread.cpp
 	$(CPP) -c CThread.cpp -o Output/MingW/CThread.o $(CXXFLAGS)
 
-Output/MingW/CTimer.o: $(GLOBALDEPS) CTimer.cpp CTimer.h multiLang.h wxOpenCommanderUtils.h CThread.h wxOpenCommanderUtils.h
+Output/MingW/CTimer.o: $(GLOBALDEPS) CTimer.cpp
 	$(CPP) -c CTimer.cpp -o Output/MingW/CTimer.o $(CXXFLAGS)
 
-Output/MingW/cCommander.o: $(GLOBALDEPS) cCommander.cpp cCommander.h wxOpenCommanderUtils.h
+Output/MingW/cCommander.o: $(GLOBALDEPS) cCommander.cpp
 	$(CPP) -c cCommander.cpp -o Output/MingW/cCommander.o $(CXXFLAGS)
 
-Output/MingW/wxOpenCommanderListCtrl.o: $(GLOBALDEPS) wxOpenCommanderListCtrl.cpp wxOpenCommanderListCtrl.h cCommander.h wxOpenCommanderUtils.h multiLang.h wxOpenCommanderUtils.h Images/icon1.xpm Images/icon3.xpm Images/icon5.xpm Images/hardDisk.xpm Images/dvd.xpm Images/floppy.xpm Images/usb.xpm
+Output/MingW/wxOpenCommanderListCtrl.o: $(GLOBALDEPS) wxOpenCommanderListCtrl.cpp
 	$(CPP) -c wxOpenCommanderListCtrl.cpp -o Output/MingW/wxOpenCommanderListCtrl.o $(CXXFLAGS)
 
 Output/MingW/wxOpenCommander_private.res: Output/MingW/wxOpenCommander_private.rc wxOpenCommanderApp.rc 

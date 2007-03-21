@@ -1156,7 +1156,5 @@ void wxOpenCommanderFrm::onContextMenu(wxContextMenuEvent& event)
    itemRen.SetBitmap(imgRen);
    menu->Append(&itemRen);
 	
-   wxPoint point(wxGetMousePosition());
-   this->PopupMenu(menu, point.x, point.y-50);
-   
+   this->PopupMenu(menu);   
 }
