@@ -6,6 +6,7 @@
  * Copyright: Christian Gräfe (www.mcs-soft.de)
  * License:	  wxWindows licence
  **************************************************************/
+
 // For compilers that support precompilation, includes "wx.h".
 #include "wx/wxprec.h"
 
@@ -15,9 +16,9 @@
 
 #ifndef WX_PRECOMP
     #include <wx/wx.h>
-    #include <wx/dcbuffer.h>
 #endif
 
+#include <wx/dcbuffer.h>
 #include "wx/wxledpanel.h"
 
 #define TIMER_SCROLL_ID 1000
