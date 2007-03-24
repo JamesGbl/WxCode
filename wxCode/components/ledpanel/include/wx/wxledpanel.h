@@ -48,10 +48,6 @@ enum wxLEDTextVAlign
 	wxLED_TEXTVALIGN_CENTER = 2
 };
 
-BEGIN_DECLARE_EVENT_TYPES()
-	DECLARE_EVENT_TYPE(wxEVT_LEDPANEL_SCROLLED_OUT,-1)
-END_DECLARE_EVENT_TYPES()
-
 class wxLEDPanel : public wxControl
 {
 	DECLARE_EVENT_TABLE()
@@ -72,10 +68,6 @@ class wxLEDPanel : public wxControl
 					const wxPoint& pos = wxDefaultPosition,
 					long style = wxNO_BORDER,
 					const wxValidator& validator = wxDefaultValidator);
-
-		// Element zeichnen
-		void OnEraseBackground(wxEraseEvent& event) {}
-		void OnPaint(wxPaintEvent &event);
 
 		// Größe des Elements
 		wxSize DoGetBestSize() const;
@@ -111,6 +103,12 @@ class wxLEDPanel : public wxControl
 		void SetScrollDirection(wxLEDScrollDirection d);
 		wxLEDScrollDirection GetScrollDirection() const {return m_scrolldirection;}
 
+		// Draw Invertet (default behavior is false)
+		void DrawInvertet(bool invert=true) {m_invert=invert;}
+
+		// Show inactiv LEDs? (default behavior is true)
+		void ShowInactivLEDs(bool show_inactivs=true) {m_show_inactivs=show_inactivs;}
+
 		// Text Alignment if wxLED_SCROLL_NONE
 		void SetTextAlign(int a);	// a -> wxAlignment e.g. wxALIGN_TOP|wxALIGN_RIGHT
 		int GetTextAlign() const {return m_textalign;}
@@ -125,11 +123,11 @@ class wxLEDPanel : public wxControl
 		int GetTextPaddingLeft() const {return m_padLeft;}
 		int GetTextPaddingRight() const {return m_padRight;}
 
-
-
 	protected:
-		// Das MatrixObject zeichnen
+		// Drawing
 		void DrawField(wxDC& dc);
+		void OnEraseBackground(wxEraseEvent& event) {}
+		void OnPaint(wxPaintEvent &event);
 
 		// Das Angezeigte feld
 		AdvancedMatrixObject m_field;
@@ -141,6 +139,8 @@ class wxLEDPanel : public wxControl
         int m_padLeft;
         int m_padRight;
         wxLEDColour m_activ_colour_id;
+        bool m_invert;
+        bool m_show_inactivs;
 
         // Scroll-Properties
         int m_scrollspeed;
