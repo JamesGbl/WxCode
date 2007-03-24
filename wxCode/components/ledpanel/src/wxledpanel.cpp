@@ -23,8 +23,6 @@
 
 #define TIMER_SCROLL_ID 1000
 
-DEFINE_EVENT_TYPE(wxEVT_LEDPANEL_SCROLLED_OUT)
-
 BEGIN_EVENT_TABLE(wxLEDPanel, wxControl)
 	EVT_PAINT(wxLEDPanel::OnPaint)
 	EVT_ERASE_BACKGROUND(wxLEDPanel::OnEraseBackground)
@@ -35,6 +33,8 @@ wxLEDPanel::wxLEDPanel() :
 	m_textalign(wxALIGN_LEFT|wxALIGN_TOP),
 	m_padLeft(1),
 	m_padRight(1),
+	m_invert(false),
+	m_show_inactivs(true),
 	m_scrollspeed(0),
 	m_scrolldirection(wxLED_SCROLL_NONE)
 {
@@ -46,6 +46,8 @@ wxLEDPanel::wxLEDPanel(wxWindow* parent, wxWindowID id, const wxSize& pointsize,
 	m_textalign(wxALIGN_LEFT|wxALIGN_TOP),
 	m_padLeft(1),
 	m_padRight(1),
+	m_invert(false),
+	m_show_inactivs(true),
 	m_scrollspeed(0),
 	m_scrolldirection(wxLED_SCROLL_NONE)
 {
@@ -97,14 +99,14 @@ void wxLEDPanel::OnPaint(wxPaintEvent &event)
 void wxLEDPanel::DrawField(wxDC& dc)
 {
 	wxPoint point;
-	wxMemoryDC mdc_on(m_bmp_led_on);
-	wxMemoryDC mdc_off(m_bmp_led_off);
-	int width=mdc_on.GetSize().GetWidth();
-	int height=mdc_on.GetSize().GetHeight();
 	char data;
 
 	// Zähler für Zeile und Spalte
     int x=0,y=0;
+
+    // Pointer to avoid unnesecerie if blocks in the for block
+    wxBitmap* p_bmp_data=((m_invert)?((m_show_inactivs)?(&m_bmp_led_off):(NULL)):(&m_bmp_led_on));
+    wxBitmap* p_bmp_nodata=((m_invert)?(&m_bmp_led_on):((m_show_inactivs)?(&m_bmp_led_off):(NULL)));
 
     for(int i=0;i<m_field.GetLength();++i)
     {
@@ -117,9 +119,13 @@ void wxLEDPanel::DrawField(wxDC& dc)
 
     	// zeichnen
     	if(data<1 || data>7)
-			dc.Blit(point.x,point.y,width,height,&mdc_off,0,0);
+    	{
+    	    if(p_bmp_nodata) dc.DrawBitmap(*p_bmp_nodata,point.x,point.y,false);
+    	}
         else
-			dc.Blit(point.x,point.y,width,height,&mdc_on,0,0);
+        {
+            if(p_bmp_data) dc.DrawBitmap(*p_bmp_data,point.x,point.y,false);
+        }
 
     	// hochzählen
         ++x;
