@@ -148,7 +148,6 @@ void wxOpenCommanderFrm::CreateGUIControls()
 	WxNotebook2 = new wxNotebook(WxSplitterWindow1, ID_WXNOTEBOOK2, wxPoint(304,6),wxSize(289,193));
 
 	WxMenuBar1 = new wxMenuBar();
-	
 	wxMenu *ID_MNU_FILES_1004_Mnu_Obj = new wxMenu(0);
 	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_ADDTAB_1080, wxT("&Add Tab"), wxT(""), wxITEM_NORMAL);
 	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_REMOVETAB_1082, wxT("Re&move Tab"), wxT(""), wxITEM_NORMAL);
@@ -179,7 +178,7 @@ void wxOpenCommanderFrm::CreateGUIControls()
 	ID_MNU_HELP_1006_Mnu_Obj->Append(ID_MNU_ABOUT_1007, wxT("About as... (F1)"), wxT(""), wxITEM_NORMAL);
 	WxMenuBar1->Append(ID_MNU_HELP_1006_Mnu_Obj, wxT("&Help"));
 	SetMenuBar(WxMenuBar1);
-   
+
 	WxSplitterWindow1->SplitVertically(WxNotebook1,WxNotebook2,289);
 
 	SetStatusBar(WxStatusBar);
