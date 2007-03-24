@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="sample" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin\Debug\sample.exe" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Debug\" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-g" />
+					<Add directory="D:\wxWidgets\lib\gcc_dll\msw" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="D:\wxWidgets\lib\gcc_dll\msw" />
+				</ResourceCompiler>
+				<Linker>
+					<Add library="libwxmsw28.a" />
+					<Add directory="D:\wxWidgets\lib\gcc_dll" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin\Release\sample.exe" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release\" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add directory="D:\wxWidgets\lib\gcc_dll\msw" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="D:\wxWidgets\lib\gcc_dll\msw" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="libwxmsw28.a" />
+					<Add directory="D:\wxWidgets\lib\gcc_dll" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-pipe" />
+			<Add option="-mthreads" />
+			<Add option="-D__GNUWIN32__" />
+			<Add option="-D__WXMSW__" />
+			<Add option="-DWXUSINGDLL" />
+			<Add directory="D:\wxWidgets\include" />
+			<Add directory="D:\wxWidgets\contrib\include" />
+			<Add directory="..\include" />
+		</Compiler>
+		<ResourceCompiler>
+			<Add directory="D:\wxWidgets\include" />
+		</ResourceCompiler>
+		<Unit filename="..\include\wx\advancedmatrixobject.h" />
+		<Unit filename="..\include\wx\matrixobject.h" />
+		<Unit filename="..\include\wx\wxledfont.h" />
+		<Unit filename="..\include\wx\wxledpanel.h" />
+		<Unit filename="sample.cpp" />
+		<Unit filename="sample.h" />
+		<Unit filename="..\src\advancedmatrixobject.cpp" />
+		<Unit filename="..\src\matrixobject.cpp" />
+		<Unit filename="..\src\wxledfont.cpp" />
+		<Unit filename="..\src\wxledpanel.cpp" />
+		<Extensions>
+			<code_completion />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
