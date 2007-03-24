@@ -208,7 +208,7 @@ void wxOpenCommanderFrm::CreateGUIControls()
     WxToolBar->AddTool(ID_TOOL_NEWFOLDER, lang["New Folder"], newFolder_xpm, lang["New Folder"]);
     WxToolBar->AddTool(ID_TOOL_COPY, lang["Copy"], copy_xpm, lang["Copy"]);
     WxToolBar->AddTool(ID_TOOL_DELETE, lang["Delete"], delete_xpm, lang["Delete"]);
-    WxToolBar->AddTool(ID_TOOL_RENAME, lang["Rename"], remove_xpm, lang["Rename"]);
+    WxToolBar->AddTool(ID_TOOL_RENAME, lang["Rename"], edit_xpm, lang["Rename"]);
     WxToolBar->AddTool(ID_TOOL_EXEC, lang["Exec"], exec_xpm, lang["Exec"]);
     combo = new wxComboBox(WxToolBar, ID_TOOL_COMBO, wxEmptyString, wxDefaultPosition, wxSize(600,wxDefaultCoord) );
     combo->Append(_T(wxPaths.GetDocumentsDir()));
