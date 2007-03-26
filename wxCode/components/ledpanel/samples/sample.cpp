@@ -73,8 +73,20 @@ ledpanelFrame::ledpanelFrame(wxFrame *frame, const wxString& title)
 	wxLEDPanel* lp6=new wxLEDPanel(this,wxID_ANY,wxSize(4,4),wxSize(63,9),0);
 	lp6->SetText(wxT("wxLEDPanel"),wxALIGN_CENTER);	// Set the LED-Text
 	lp6->SetLEDColour(wxLED_COLOUR_GREEN);
+	lp6->SetScrollDirection(wxLED_SCROLL_LEFT);	// Set the Scrolldirection
+	lp6->SetScrollSpeed(80); // Set the Scrollspeed
 	lp6->ShowInactivLEDs(false);    // Don't draw inactiv LEDs
 	sizer->Add(lp6,0,wxALIGN_CENTER|wxALL,5);
+
+	// The 7th LEDPanel
+	wxLEDPanel* lp7=new wxLEDPanel(this,wxID_ANY,wxSize(4,4),wxSize(63,9),0);
+	lp7->SetText(wxT("wxLEDPanel\n2nd Line\n3rd Line\n4th Line"),wxALIGN_RIGHT);	// Set the LED-Text
+	lp7->SetLEDColour(wxLED_COLOUR_BLUE);
+	lp7->SetScrollDirection(wxLED_SCROLL_UP);	// Set the Scrolldirection
+	lp7->SetScrollSpeed(120); // Set the Scrollspeed
+	lp7->ShowInactivLEDs(false);    // Don't draw inactiv LEDs
+	lp7->DrawInvertet(true);    // Draw the LEDs invertet
+	sizer->Add(lp7,0,wxALIGN_CENTER|wxALL,5);
 
 	// Sizer for the Panel
 	this->SetSizerAndFit(sizer);
