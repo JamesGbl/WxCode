@@ -1,0 +1,84 @@
+<?xml version="1.0" ?>
+<makefile>
+
+    <include file="presets/wxcode.bkl" once="1"/>
+
+
+    <!-- The wxCurl settings -->
+    <!-- =================== -->
+
+    <set-comp-name>wxcurl</set-comp-name>
+    
+    <template id="curlbasic">
+        <if cond="TARGETING_WIN32=='0'">
+            <include>`curl-config --include`</include>
+            <lib-path>`curl-config --libs`</lib-path>
+        </if>
+        <if cond="TARGETING_WIN32=='1'">
+            <include>$(SRCDIR)\thirdparty\curl\include</include>
+            <lib-path>$(SRCDIR)\thirdparty\curl\lib</lib-path>
+        </if>
+    </template>
+
+    <if cond="TARGETING_WIN32=='1'">
+        <smart-subproject id="thirdparty">
+            <dependency-of>all</dependency-of>
+            <dir>$(SRCDIR)/thirdparty/curl/build</dir>
+            <set-makeargs>
+                 WX_SHARED="$(WX_SHARED)" WX_DEBUG="$(WX_DEBUG)"
+            </set-makeargs>
+        </smart-subproject>
+    </if>
+
+
+
+    <!-- The wxCurl lib/dll  -->
+    <!-- =================== -->
+    
+    <set var="COMP_HDR">$(fileList('include/wx/curl/*.h'))</set>
+
+    <!-- the libraries required by wxCurl -->
+    <define-tag name="curlib" rules="lib,dll,exe">
+        <if cond="FORMAT=='mingw' or FORMAT=='autoconf' or FORMAT=='gnu'"><sys-lib>curl</sys-lib></if>
+        <if cond="FORMAT!='mingw' and FORMAT!='autoconf' and FORMAT!='gnu'"><sys-lib>libcurl</sys-lib></if>
+    </define-tag>
+
+    <!-- the wxCurl library -->
+    <lib id="wxcurl_lib" template="wxcode-lib,curlbasic" cond="WX_SHARED=='0'"/>
+    <dll id="wxcurl_dll" template="wxcode-dll,curlbasic" cond="WX_SHARED=='1'">
+        <curlib/>
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib>
+    </dll>
+    <set var="MSVC6PRJ_MERGED_TARGETS">wxcurl=wxcurl_lib+wxcurl_dll</set>
+
+
+
+    <!-- The sample of wxCurl -->
+    <!-- ==================== -->
+
+    <wxcode-sample id="wxcurl_tester" template="curlbasic">
+        <dir>sample</dir>
+        <has-win32-res/>
+
+        <!-- lib list: -->
+        <library>wxcurl_lib</library>
+        <curlib/>
+
+        <wx-lib>xrc</wx-lib>        
+        <wx-lib>html</wx-lib>        
+        <wx-lib>adv</wx-lib>        
+        <wx-lib>xml</wx-lib>
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib>
+    </wxcode-sample>
+
+
+
+    <!-- Auxiliary targets -->
+    <!-- ================= -->
+
+    <make-tarball/>
+    <make-zip/>
+
+</makefile>

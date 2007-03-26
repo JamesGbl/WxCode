@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<!-- $Id: Bakefiles.bkgen 210 2005-08-09 12:50:24Z frm $ -->
+
+<bakefile-gen>
+    
+    <input>curl.bkl</input>
+
+    <!-- List of output formats to generate: -->
+    <add-formats>
+        borland,mingw,msvc,watcom,gnu,msvc6prj,msvs2005prj
+    </add-formats>
+
+</bakefile-gen>

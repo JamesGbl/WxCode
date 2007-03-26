@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<resource xmlns="http://www.wxwindows.org/wxxrc" version="2.3.0.1">
+	<object class="wxDialog" name="put_text_dialog">
+		<title>libCURL PUT Text</title>
+		<style>wxCAPTION|wxSYSTEM_MENU|wxCLOSE_BOX|wxRESIZE_BORDER</style>
+		<centered>1</centered>
+		<border>10</border>
+		<flag>wxALL|wxGROW</flag>
+		<object class="wxFlexGridSizer">
+			<rows>4</rows>
+			<cols>1</cols>
+			<vgap>10</vgap>
+			<hgap>10</hgap>
+			<growablecols>0</growablecols>
+			<growablerows>2</growablerows>
+			<object class="sizeritem">
+				<flag>wxALL|wxGROW</flag>
+				<object class="wxFlexGridSizer">
+					<cols>2</cols>
+					<rows>1</rows>
+					<vgap>10</vgap>
+					<hgap>10</hgap>
+					<growablecols>0</growablecols>
+					<object class="sizeritem">
+						<flag>wxALL|wxGROW</flag>
+						<object class="wxTextCtrl" name="dest_text_ctrl">
+							<value>destination</value>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<object class="wxButton" name="put_button">
+							<label>PUT</label>
+						</object>
+					</object>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<flag>wxALL|wxGROW</flag>
+				<object class="wxGridSizer">
+					<rows>1</rows>
+					<cols>2</cols>
+					<object class="sizeritem">
+						<flag>wxALL|wxGROW</flag>
+						<object class="wxTextCtrl" name="user_text_ctrl">
+							<value>username</value>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<flag>wxALL|wxGROW</flag>
+						<object class="wxTextCtrl" name="pass_text_ctrl">
+							<value>password</value>
+							<style>wxTE_PASSWORD</style>
+						</object>
+					</object>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<flag>wxALL|wxGROW</flag>
+				<object class="wxGridSizer">
+					<rows>2</rows>
+					<cols>1</cols>
+					<object class="sizeritem">
+						<flag>wxALL|wxGROW</flag>
+						<object class="wxTextCtrl" name="data_text_ctrl">
+							<style>wxTE_MULTILINE</style>
+							<value>data</value>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<flag>wxALL|wxGROW</flag>
+						<object class="wxTextCtrl" name="response_text_ctrl">
+							<style>wxTE_MULTILINE|wxTE_READONLY|wxTE_DONTWRAP</style>
+						</object>
+					</object>
+				</object>
+			</object>
+		</object>
+	</object>
+</resource>

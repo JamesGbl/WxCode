@@ -1,0 +1,130 @@
+<?xml version="1.0" ?>
+
+<!-- Author: Francesco Montorsi <frm@users.sourceforge.net>         -->
+<!-- Creation date: 26/3/2007                                       -->
+<!-- $Id -->
+
+
+<!--                                                                -->
+<!--                      cURL BAKEFILE                             -->
+<!--                                                                -->
+
+<makefile>
+
+    <using module="datafiles"/>
+    <requires version="0.2.2"/>
+    
+
+    <!-- This is a bakefile, that is, a generic template used to    -->
+    <!-- generate makefiles ALL supported compilers.                -->
+    <!-- To use this project file you need Bakefile installed.      -->
+    <!-- With the command "bakefile_gen" you can regen all the      -->
+    <!-- makefiles and project files.                               -->
+    <!-- See http://bakefile.sourceforge.net for more info.         -->
+
+
+    <!--                                                            -->
+    <!--                      GENERIC OPTIONS                       -->
+    <!--                                                            -->
+
+    
+    <!--    This is a standard option that determines               -->
+    <!--    whether the user wants to build this library as         -->
+    <!--    a dll or as a static library.                           -->
+    <option name="WX_SHARED">
+        <values>0,1</values>
+        <values-description>,DLL</values-description>
+        <default-value>0</default-value>
+        <description>If set to zero a STATIC libxml library will be built</description>
+    </option>
+
+    <!-- There are several options that deal with build             -->
+    <!-- types. First, there's this one, BUILD.                     -->
+    <!--                                                            -->
+    <!-- BUILD determines whether or not we want to build           -->
+    <!-- in release or debug mode.  Note that in practice           -->
+    <!-- this means modifying the optimize tag, which by            -->
+    <!-- default is set to off.  In this case debug means           -->
+    <!-- off (no optimizations), and release means speed            -->
+    <!-- (fast with inlining).  There is also a size option         -->
+    <!-- that is not addressed in this example bakefile.            -->
+    <option name="WX_DEBUG">
+        <values>0,1</values>
+        <values-description>Debug,Release</values-description>
+        <default-value>0</default-value>
+        <description>
+            Type of compiled binaries
+        </description>
+    </option>
+
+
+
+    <!--                                                            -->
+    <!--                          TEMPLATES                         -->
+    <!--                                                            -->   
+    
+    <set var="LIBCURL_VERSION">7.16.1</set>
+    
+    <set-srcdir>..</set-srcdir>
+    <set var="BUILDDIR">$(FORMAT)</set>
+
+    <template id="base">
+        <!-- WX_DEBUG-dependent -->
+        <set var="_OPT">
+            <if cond="WX_DEBUG=='1'">off</if>
+            <if cond="WX_DEBUG=='0'">speed</if>
+        </set>
+        <set var="_DEBUGINFO">
+            <if cond="WX_DEBUG=='1'">on</if>
+            <if cond="WX_DEBUG=='0'">off</if>
+        </set>
+
+        <if cond="FORMAT!='autoconf'">
+            <optimize>$(_OPT)</optimize>
+            <debug-info>$(_DEBUGINFO)</debug-info>
+        </if>
+    </template>
+    
+    <template id="curl" template="base">
+        <!-- output folder -->
+        <dirname>$(SRCDIR)/lib</dirname>
+        
+        <include>$(SRCDIR)/include</include>
+        <include>$(SRCDIR)/lib</include>
+        
+        <!-- The output name must be "libcurl.lib" with all compilers.
+            Since mingw format autoadds the "lib" prefix to the library
+            name, we must intercept that case to avoid to get "liblibcurl.a" -->
+        <if cond="FORMAT!='mingw'">
+            <libname>libcurl</libname>
+        </if>
+        <if cond="FORMAT=='mingw'">
+            <libname>curl</libname>
+        </if>
+  
+        <!-- add all sources found in our subfolders -->
+        <sources>$(fileList('lib/*.c'))</sources>
+        <headers>$(fileList(['include/curl/*.h', 'lib/*.h']))</headers>
+
+        <!-- defines based on the user options -->
+        <define>$(substituteFromDict(WX_SHARED,{'0':'CURL_STATICLIB', '1':'BUILDING_LIBCURL'}))</define>
+        <define>$(substituteFromDict(WX_DEBUG,{'0':'NDEBUG', '1':''}))</define>
+    </template>
+
+
+
+    <!--                                                            -->
+    <!--                  LIBXML2 LIBRARY TARGET                    -->
+    <!--                                                            -->  
+
+    <lib id="libcurl_lib" template="curl" cond="WX_SHARED=='0'"/>
+    <dll id="libcurl_dll" template="curl" cond="WX_SHARED=='1'">
+        <version>$(LIBCURL_VERSION)</version>
+        <dllname>libcurl</dllname>
+        
+        <sys-lib>wsock32</sys-lib>
+        <sys-lib>winmm</sys-lib>
+    </dll>
+    <set var="MSVC6PRJ_MERGED_TARGETS">libcurl=libcurl_lib+libcurl_dll</set>
+
+</makefile>

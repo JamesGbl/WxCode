@@ -1,0 +1,10 @@
+borland*
+msvc*
+mingw*
+watcom*
+*.vcproj
+*.user
+*.ncb
+*.suo
+*.opt
+*.obj

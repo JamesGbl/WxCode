@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+
+<!-- Created by: Francesco Montorsi <frm@users.sourceforge.net>     -->
+<!-- Date: 9/10/2004                                                -->
+
+
+<bakefile-gen>
+
+    <include file="../../../build/bakefiles/presets/wxcode.bkgen"/>
+    <input>
+        wxcurl.bkl
+    </input>
+
+</bakefile-gen>
