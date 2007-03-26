@@ -166,7 +166,7 @@ bool deleteDirectory(wxString& path, wxString& item)
    return wxRmdir(path + "\\" + item);
 }
 
-bool copyDirFile(wxString& path, wxString& item, wxString& pathNew)
+bool copyDirFile(wxString& path, wxString& item, wxString& pathNew, void* parent, onThreadBeginCopyFileCallBackFunc onBeginCopyFile = NULL, onThreadEndCopyFileCallBackFunc onEndCopyFile = NULL)
 {
    wxString filePath = path + "\\" + item;
 
@@ -177,11 +177,18 @@ bool copyDirFile(wxString& path, wxString& item, wxString& pathNew)
    }
 
    if (blnIsDirectory)
-      return copyDirectory(path, item, pathNew);
+      return copyDirectory(path, item, pathNew, parent, onBeginCopyFile, onEndCopyFile);
 
    wxFile file;
    if (file.Exists(filePath))
-      return wxCopyFile(path + "\\" + item, pathNew + "\\" + item, true);
+   {
+      bool blnCopy = true;
+      wxString itemNew = (path == pathNew ? "Copy of " + item : item);
+      if (onBeginCopyFile) blnCopy = onBeginCopyFile(parent, path + "\\" + item, pathNew + "\\" + itemNew);
+      if (blnCopy) blnCopy = wxCopyFile(path + "\\" + item, pathNew + "\\" + itemNew, true);
+      if (onEndCopyFile) onEndCopyFile(parent, blnCopy, path + "\\" + item, pathNew + "\\" + itemNew);
+      return blnCopy;
+   }
 
    return false;
 }
@@ -189,7 +196,13 @@ bool copyDirFile(wxString& path, wxString& item, wxString& pathNew)
 class wxDirTraverserSimple : public wxDirTraverser
 {
    public:
-      wxDirTraverserSimple(wxString& path, wxString& pathNew, wxString& item) : path(path), pathNew(pathNew), item(item) { }
+      wxDirTraverserSimple(wxString& path, wxString& pathNew, wxString& item, void* parent, onThreadBeginCopyFileCallBackFunc onBeginCopyFile = NULL, onThreadEndCopyFileCallBackFunc onEndCopyFile = NULL) : path(path), pathNew(pathNew), item(item)
+      {  
+         m_onBeginCopyFile = onBeginCopyFile;
+         m_onEndCopyFile = onEndCopyFile;
+         m_parent = parent;
+      }
+         
       virtual wxDirTraverseResult OnFile(const wxString& filename)
       {
          if (path+"\\"+item == pathNew.Left(path.Len()))
@@ -198,9 +211,14 @@ class wxDirTraverserSimple : public wxDirTraverser
          newFile.Replace(path, pathNew);
          if (newFile == filename.Left(newFile.Len()))
             return wxDIR_CONTINUE;
-
-         wxCopyFile(filename, newFile, true);
-         return wxDIR_CONTINUE;
+         
+         bool blnCopy = true;
+         // wxString itemNew (path == pathNew ) "Copy of " + item : item);
+         if (m_onBeginCopyFile) blnCopy = m_onBeginCopyFile(m_parent, filename, newFile);
+         if (blnCopy) blnCopy = wxCopyFile(filename, newFile, true);
+         if (m_onBeginCopyFile) m_onEndCopyFile(m_parent, blnCopy, filename, newFile);
+         
+         return (blnCopy ? wxDIR_CONTINUE : wxDIR_STOP);
       }
 
       virtual wxDirTraverseResult OnDir(const wxString& dirname)
@@ -210,22 +228,36 @@ class wxDirTraverserSimple : public wxDirTraverser
             return wxDIR_CONTINUE;
          wxString newDir = dirname;
          newDir.Replace(path, pathNew);
-         wxMkdir(newDir);
+         if (!wxDir::Exists(newDir))
+            wxMkdir(newDir);
          return wxDIR_CONTINUE;
       }
    private:
       wxString& path;
       wxString& pathNew;
       wxString& item;
+      void* m_parent;
+      onThreadBeginCopyFileCallBackFunc m_onBeginCopyFile; 
+      onThreadEndCopyFileCallBackFunc m_onEndCopyFile;
 };
 
-bool copyDirectory(wxString& path, wxString& item, wxString& pathNew)
+bool copyDirectory(wxString& path, wxString& item, wxString& pathNew, void* parent, onThreadBeginCopyFileCallBackFunc onBeginCopyFile = NULL, onThreadEndCopyFileCallBackFunc onEndCopyFile = NULL)
 {
-    wxDirTraverserSimple traverser(path, pathNew, item);
-    wxMkdir(pathNew + "\\" + item);
-    wxDir dir(path + "\\" + item);
-    dir.Traverse(traverser);
-    return true;
+    wxString newItem = (path == pathNew ? "Copy of " + item : item);
+
+   if (wxDir::Exists(pathNew + "\\" + newItem))
+   {
+      wxMessageBox("The source directory is the same of the destination directory.","Error", wxOK | wxCENTRE | wxICON_ERROR );
+      return false;
+   }
+   else
+      wxMkdir(pathNew + "\\" + newItem);
+   
+      
+   wxDir dir(pathNew + "\\" + newItem);
+   wxDirTraverserSimple traverser(path, pathNew, item, parent, onBeginCopyFile, onEndCopyFile);
+   dir.Traverse(traverser);
+   return true;
 }
 
 bool renameDirFile(wxString& path, wxString& oldName, wxString& newName)

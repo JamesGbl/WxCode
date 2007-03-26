@@ -8,27 +8,36 @@
 
 #define COPY 1
 
-typedef void (*onThreadFinishCallBackFunc)(wxThread*, void*, void*);
+struct copyParams
+{
+   wxString sourcePath;
+   wxString item;
+   wxString newPath;
+};
+
+typedef vector<copyParams> vectorCopyParams;
 
 class CThread : public wxThread
 {
 private:
-   struct copyParams
-   {
-      wxString sourcePath;
-      wxString item;
-      wxString newPath;
-   };
+
    int action;
-   vector<copyParams> m_copyParamsVector;
+   vectorCopyParams m_copyParamsVector;
    onThreadFinishCallBackFunc onFinishCallBackFunc;
+   onThreadBeginCopyFileCallBackFunc onBeginCopyFileCallBackFunc;
+   onThreadEndCopyFileCallBackFunc onEndCopyFileCallBackFunc;
    void* finishParam;
    void* m_parent;
 public:
-    CThread() : wxThread() { }
+    CThread() : wxThread() {}
     void* Entry();
     void copy(wxString& path, wxString& item, wxString& pathNew);
     void OnExit();
-    void setFinishCallBackFunc(onThreadFinishCallBackFunc callBackFunc, void* yourParam, void* parent);
+    void setParent(void* parent);
+    void setFinishCallBackFunc(onThreadFinishCallBackFunc callBackFunc, void* yourParam);
+    void setBeginCopyFileCallBackFunc(onThreadBeginCopyFileCallBackFunc callBackFunc);
+    void setEndCopyFileCallBackFunc(onThreadEndCopyFileCallBackFunc callBackFunc);
+    void setVectorCopyParams(const vectorCopyParams& copyParamsVector);
+
 };
 #endif

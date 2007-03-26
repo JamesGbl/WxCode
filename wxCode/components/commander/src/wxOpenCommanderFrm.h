@@ -64,6 +64,7 @@
 //
 
 #include "hotKeysDlg.h"
+#include "CopyDlg.h"
 
 #include "taskbar.h"
 #include "multiLang.h"

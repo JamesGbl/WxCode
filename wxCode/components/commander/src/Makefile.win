@@ -1,13 +1,13 @@
 # Project: wxOpenCommander
 # Compiler: Default GCC compiler
 # Compiler Type: MingW 3
-# Makefile created by wxDev-C++ 6.10.1 on 24/03/07 12:31
+# Makefile created by wxDev-C++ 6.10.1 on 27/03/07 00:10
 
 CPP       = g++.exe
 CC        = gcc.exe
 WINDRES   = windres.exe
-OBJ       = Output/MingW/wxOpenCommanderApp.o Output/MingW/wxOpenCommanderFrm.o Output/MingW/multiLang.o Output/MingW/taskbar.o Output/MingW/wxOpenCommanderUtils.o Output/MingW/hotKeysDlg.o Output/MingW/CThread.o Output/MingW/CTimer.o Output/MingW/cCommander.o Output/MingW/wxOpenCommanderListCtrl.o Output/MingW/wxOpenCommander_private.res
-LINKOBJ   = Output/MingW/wxOpenCommanderApp.o Output/MingW/wxOpenCommanderFrm.o Output/MingW/multiLang.o Output/MingW/taskbar.o Output/MingW/wxOpenCommanderUtils.o Output/MingW/hotKeysDlg.o Output/MingW/CThread.o Output/MingW/CTimer.o Output/MingW/cCommander.o Output/MingW/wxOpenCommanderListCtrl.o Output/MingW/wxOpenCommander_private.res
+OBJ       = Output/MingW/wxOpenCommanderApp.o Output/MingW/wxOpenCommanderFrm.o Output/MingW/multiLang.o Output/MingW/taskbar.o Output/MingW/wxOpenCommanderUtils.o Output/MingW/hotKeysDlg.o Output/MingW/CThread.o Output/MingW/CTimer.o Output/MingW/cCommander.o Output/MingW/wxOpenCommanderListCtrl.o Output/MingW/CopyDlg.o Output/MingW/wxOpenCommander_private.res
+LINKOBJ   = Output/MingW/wxOpenCommanderApp.o Output/MingW/wxOpenCommanderFrm.o Output/MingW/multiLang.o Output/MingW/taskbar.o Output/MingW/wxOpenCommanderUtils.o Output/MingW/hotKeysDlg.o Output/MingW/CThread.o Output/MingW/CTimer.o Output/MingW/cCommander.o Output/MingW/wxOpenCommanderListCtrl.o Output/MingW/CopyDlg.o Output/MingW/wxOpenCommander_private.res
 LIBS      = -L"C:/Archivos de programa/Dev-Cpp/Lib" -mwindows -lwxmsw28 -lwxmsw28_gl -lwxtiff -lwxjpeg -lwxpng -lwxzlib -lwxregex -lwxexpat -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32  -s 
 INCS      = -I"C:/Archivos de programa/Dev-Cpp/Include"
 CXXINCS   = -I"C:/Archivos de programa/Dev-Cpp/lib/gcc/mingw32/3.4.2/include" -I"C:/Archivos de programa/Dev-Cpp/include/c++/3.4.2/backward" -I"C:/Archivos de programa/Dev-Cpp/include/c++/3.4.2/mingw32" -I"C:/Archivos de programa/Dev-Cpp/include/c++/3.4.2" -I"C:/Archivos de programa/Dev-Cpp/include" -I"C:/Archivos de programa/Dev-Cpp/" -I"C:/Archivos de programa/Dev-Cpp/include/common/wx/msw" -I"C:/Archivos de programa/Dev-Cpp/include/common/wx/generic" -I"C:/Archivos de programa/Dev-Cpp/include/common/wx/fl" -I"C:/Archivos de programa/Dev-Cpp/include/common/wx/gizmos" -I"C:/Archivos de programa/Dev-Cpp/include/common/wx/html" -I"C:/Archivos de programa/Dev-Cpp/include/common/wx/mmedia" -I"C:/Archivos de programa/Dev-Cpp/include/common/wx/net" -I"C:/Archivos de programa/Dev-Cpp/include/common/wx/ogl" -I"C:/Archivos de programa/Dev-Cpp/include/common/wx/plot" -I"C:/Archivos de programa/Dev-Cpp/include/common/wx/protocol" -I"C:/Archivos de programa/Dev-Cpp/include/common/wx/stc" -I"C:/Archivos de programa/Dev-Cpp/include/common/wx/svg" -I"C:/Archivos de programa/Dev-Cpp/include/common/wx/xml" -I"C:/Archivos de programa/Dev-Cpp/include/common/wx/xrc" -I"C:/Archivos de programa/Dev-Cpp/include/common/wx" -I"C:/Archivos de programa/Dev-Cpp/include/common"
@@ -29,10 +29,10 @@ clean: clean-custom
 $(BIN): $(OBJ)
 	$(LINK) $(LINKOBJ) -o "Output\MingW\wxOpenCommander.exe" $(LIBS)
 
-Output/MingW/wxOpenCommanderApp.o: $(GLOBALDEPS) wxOpenCommanderApp.cpp wxOpenCommanderApp.h wxOpenCommanderFrm.h wxOpenCommanderUtils.h wxOpenCommanderListCtrl.h cCommander.h wxOpenCommanderUtils.h multiLang.h wxOpenCommanderUtils.h Images/icon1.xpm Images/icon3.xpm Images/icon5.xpm Images/hardDisk.xpm Images/dvd.xpm Images/floppy.xpm Images/usb.xpm hotKeysDlg.h wxOpenCommanderUtils.h multiLang.h taskbar.h multiLang.h multiLang.h CTimer.h multiLang.h wxOpenCommanderUtils.h CThread.h wxOpenCommanderUtils.h CThread.h CCommander.h
+Output/MingW/wxOpenCommanderApp.o: $(GLOBALDEPS) wxOpenCommanderApp.cpp wxOpenCommanderApp.h wxOpenCommanderFrm.h wxOpenCommanderUtils.h wxOpenCommanderListCtrl.h cCommander.h wxOpenCommanderUtils.h multiLang.h wxOpenCommanderUtils.h hotKeysDlg.h wxOpenCommanderUtils.h multiLang.h CopyDlg.h CThread.h wxOpenCommanderUtils.h wxOpenCommanderFrm.h wxOpenCommanderUtils.h taskbar.h multiLang.h multiLang.h CTimer.h multiLang.h wxOpenCommanderUtils.h CThread.h CThread.h CCommander.h
 	$(CPP) -c wxOpenCommanderApp.cpp -o Output/MingW/wxOpenCommanderApp.o $(CXXFLAGS)
 
-Output/MingW/wxOpenCommanderFrm.o: $(GLOBALDEPS) wxOpenCommanderFrm.cpp wxOpenCommanderFrm.h wxOpenCommanderUtils.h wxOpenCommanderListCtrl.h cCommander.h wxOpenCommanderUtils.h multiLang.h wxOpenCommanderUtils.h Images/icon1.xpm Images/icon3.xpm Images/icon5.xpm Images/hardDisk.xpm Images/dvd.xpm Images/floppy.xpm Images/usb.xpm hotKeysDlg.h wxOpenCommanderUtils.h multiLang.h taskbar.h multiLang.h multiLang.h CTimer.h multiLang.h wxOpenCommanderUtils.h CThread.h wxOpenCommanderUtils.h CThread.h CCommander.h Images/Self_wxOpenCommanderFrm_XPM.xpm Images/add.xpm Images/copy.xpm Images/delete.xpm Images/edit.xpm Images/exec.xpm Images/newFolder.xpm Images/refresh.xpm Images/remove.xpm Images/computer.xpm
+Output/MingW/wxOpenCommanderFrm.o: $(GLOBALDEPS) wxOpenCommanderFrm.cpp wxOpenCommanderFrm.h wxOpenCommanderUtils.h wxOpenCommanderListCtrl.h cCommander.h wxOpenCommanderUtils.h multiLang.h wxOpenCommanderUtils.h hotKeysDlg.h wxOpenCommanderUtils.h multiLang.h CopyDlg.h CThread.h wxOpenCommanderUtils.h wxOpenCommanderFrm.h wxOpenCommanderUtils.h taskbar.h multiLang.h multiLang.h CTimer.h multiLang.h wxOpenCommanderUtils.h CThread.h CThread.h CCommander.h Images/Self_wxOpenCommanderFrm_XPM.xpm Images/add.xpm Images/copy.xpm Images/delete.xpm Images/edit.xpm Images/exec.xpm Images/newFolder.xpm Images/refresh.xpm Images/remove.xpm Images/computer.xpm
 	$(CPP) -c wxOpenCommanderFrm.cpp -o Output/MingW/wxOpenCommanderFrm.o $(CXXFLAGS)
 
 Output/MingW/multiLang.o: $(GLOBALDEPS) multiLang.cpp multiLang.h
@@ -56,8 +56,11 @@ Output/MingW/CTimer.o: $(GLOBALDEPS) CTimer.cpp CTimer.h multiLang.h wxOpenComma
 Output/MingW/cCommander.o: $(GLOBALDEPS) cCommander.cpp cCommander.h wxOpenCommanderUtils.h
 	$(CPP) -c cCommander.cpp -o Output/MingW/cCommander.o $(CXXFLAGS)
 
-Output/MingW/wxOpenCommanderListCtrl.o: $(GLOBALDEPS) wxOpenCommanderListCtrl.cpp wxOpenCommanderListCtrl.h cCommander.h wxOpenCommanderUtils.h multiLang.h wxOpenCommanderUtils.h Images/icon1.xpm Images/icon3.xpm Images/icon5.xpm Images/hardDisk.xpm Images/dvd.xpm Images/floppy.xpm Images/usb.xpm
+Output/MingW/wxOpenCommanderListCtrl.o: $(GLOBALDEPS) wxOpenCommanderListCtrl.cpp Images/icon1.xpm Images/icon3.xpm Images/icon5.xpm Images/hardDisk.xpm Images/dvd.xpm Images/floppy.xpm Images/usb.xpm wxOpenCommanderListCtrl.h cCommander.h wxOpenCommanderUtils.h multiLang.h wxOpenCommanderUtils.h
 	$(CPP) -c wxOpenCommanderListCtrl.cpp -o Output/MingW/wxOpenCommanderListCtrl.o $(CXXFLAGS)
+
+Output/MingW/CopyDlg.o: $(GLOBALDEPS) CopyDlg.cpp CopyDlg.h CThread.h wxOpenCommanderUtils.h wxOpenCommanderFrm.h wxOpenCommanderUtils.h wxOpenCommanderListCtrl.h cCommander.h wxOpenCommanderUtils.h multiLang.h wxOpenCommanderUtils.h hotKeysDlg.h wxOpenCommanderUtils.h multiLang.h CopyDlg.h taskbar.h multiLang.h multiLang.h CTimer.h multiLang.h wxOpenCommanderUtils.h CThread.h CThread.h CCommander.h wxOpenCommanderUtils.h Images/Self_CopyDlg_XPM.xpm Images/icon1.xpm
+	$(CPP) -c CopyDlg.cpp -o Output/MingW/CopyDlg.o $(CXXFLAGS)
 
 Output/MingW/wxOpenCommander_private.res: Output/MingW/wxOpenCommander_private.rc wxOpenCommanderApp.rc 
 	$(WINDRES) --input-format=rc -o Output/MingW/wxOpenCommander_private.res $(RCINCS) Output/MingW/WXOPEN~1.RC -O coff

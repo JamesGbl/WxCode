@@ -721,12 +721,38 @@ void onThreadFinish(wxThread* thread, void* contextParam, void* parent)
 
 void wxOpenCommanderFrm::copyThread(wxString& strPathDest,  const wxArrayString& fileNames)
 {
+   if (lastCCommanderUsed->getListDevices()) return;
+
    size_t nFiles = fileNames.GetCount();
    if (nFiles < 1) return;
    
+   vectorCopyParams copyParamsVector;
+   
+   for (size_t n = 0; n < nFiles; n++ )
+   {
+      wxString& actualFile(fileNames[n]);
+      copyParams copyPaths;
+      copyPaths.sourcePath = actualFile.BeforeLast(wxT('\\'));
+      copyPaths.item = actualFile.AfterLast(wxT('\\'));
+      copyPaths.newPath = strPathDest;
+      copyParamsVector.push_back(copyPaths);
+   }
+
+
+   CopyDlg copyDlg(this);
+   copyDlg.setAutoInit(true);
+   copyDlg.setAutoClose(true);
+   copyDlg.setPathsToCopy(copyParamsVector);
+   copyDlg.ShowModal();
+   this->ListCtlUpdate();
+   wxWakeUpIdle();
+   
+   
+   /*
    size_t totalSize = 0;
    long numFiles = 0;
-   thread = new CThread();
+   CThread* thread = new CThread();
+   thread->setParent((void*) this);
    timer = new CTimer(lang);
    
    for (size_t n = 0; n < nFiles; n++ )
@@ -741,19 +767,18 @@ void wxOpenCommanderFrm::copyThread(wxString& strPathDest,  const wxArrayString&
    }
    timer->totalSize = totalSize;
    timer->numFiles = numFiles;
-   thread->setFinishCallBackFunc(onThreadFinish, (void*)timer, (void*)this);
+   thread->setFinishCallBackFunc(onThreadFinish, (void*)timer);
    thread->Create();
    thread->Run();
+   */
 }
 
 void wxOpenCommanderFrm::copyThread()
 {
    long item = 0;
    bool areItems=false;
-   thread = new CThread();
-   timer = new CTimer(lang);
-   size_t totalSize = 0;
-   long numFiles = 0;
+   vectorCopyParams copyParamsVector;
+
    while (item != -1)
    {
       item = lastListCtrlUsed->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
@@ -764,36 +789,32 @@ void wxOpenCommanderFrm::copyThread()
          wxString filePath;
          wxString strPath1 = cCommander1.getActualPath();
          wxString strPath2 = cCommander2.getActualPath();
+         copyParams copyPaths;
          if (lastListCtrlUsed == WxListCtrl1)
          {
-            thread->copy(strPath1, itemName, strPath2);
-            timer->addDir(strPath2, itemName);
-            filePath = strPath1 + "\\" + itemName;
+            copyPaths.sourcePath = strPath1;
+            copyPaths.item = itemName;
+            copyPaths.newPath = strPath2;
+            copyParamsVector.push_back(copyPaths);
          }
          else
          {
-            thread->copy(strPath2, itemName, strPath1);
-            timer->addDir(strPath2, itemName);
-            filePath = strPath2 + "\\" + itemName;
+            copyPaths.sourcePath = strPath2;
+            copyPaths.item = itemName;
+            copyPaths.newPath = strPath1;
+            copyParamsVector.push_back(copyPaths);
          }
-         totalSize+=getDirSize(filePath, numFiles);
+
       }
    }
    if (areItems)
    {
-      timer->totalSize = totalSize;
-      timer->numFiles = numFiles;
-      thread->setFinishCallBackFunc(onThreadFinish, (void*)timer, (void*)this);
-      thread->Create();
-      thread->Run();
-   }
-   else
-   {
-      delete(thread);
-      delete(timer);
+      CopyDlg copyDlg(this);
+      copyDlg.setPathsToCopy(copyParamsVector);
+      copyDlg.ShowModal();
+      this->ListCtlUpdate();
    }
    wxWakeUpIdle();
-   //ListCtlUpdate();
 }
 
 /*

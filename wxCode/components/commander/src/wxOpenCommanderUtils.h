@@ -27,7 +27,7 @@
 #include <time.h>
 
 #ifdef USE_EXECUTE
-    #define EXEC(cmd) wxExecute((cmd), wxEXEC_SYNC)
+    #define EXEC(cmd) wxExecute((cmd), wxEXEC_ASYNC)
 #else
     #define EXEC(cmd) system(cmd)
 #endif
@@ -46,6 +46,10 @@ using namespace std;
 
 typedef map <wxString, int, less<wxString> > driversMap;
 
+typedef void (*onThreadFinishCallBackFunc)(wxThread*, void*, void*);
+typedef bool (*onThreadBeginCopyFileCallBackFunc)(void*, const wxString&, const wxString&);
+typedef void (*onThreadEndCopyFileCallBackFunc)(void*, bool, const wxString&, const wxString&);
+
 void Exec(wxString& path, wxString& file);
 wxString LongLongTowxString(long long const& size);
 long long getFileSize(const wxString& fileName);
@@ -56,8 +60,8 @@ wxString getModificationTime(wxString& fileName);
 bool deleteDirFile(wxString& path, wxString& item);
 bool deleteDirectory(wxString& path, wxString& item);
 bool renameDirFile(wxString& path, wxString& oldName, wxString& newName);
-bool copyDirFile(wxString& path, wxString& item, wxString& pathNew);
-bool copyDirectory(wxString& path, wxString& item, wxString& pathNew);
+bool copyDirFile(wxString& path, wxString& item, wxString& pathNew, void* parent ,onThreadBeginCopyFileCallBackFunc onBeginCopyFile, onThreadEndCopyFileCallBackFunc onEndCopyFile);
+bool copyDirectory(wxString& path, wxString& item, wxString& pathNew, void* parent, onThreadBeginCopyFileCallBackFunc onBeginCopyFile, onThreadEndCopyFileCallBackFunc onEndCopyFile);
 wxString keyCodeToString(int keyCode);
 driversMap wxGetDrives();
 wxString getLastDir(wxString directory);

@@ -7,6 +7,16 @@
 //
 //---------------------------------------------------------------------------
 
+#include "Images/icon1.xpm"
+//#include "Images/icon2.xpm"
+#include "Images/icon3.xpm"
+//#include "Images/icon4.xpm"
+#include "Images/icon5.xpm"
+#include "Images/hardDisk.xpm"
+#include "Images/dvd.xpm"
+#include "Images/floppy.xpm"
+#include "Images/usb.xpm"
+
 #include "wxOpenCommanderListCtrl.h"
 
 wxOpenCommanderListCtrl::wxOpenCommanderListCtrl(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size, long style, cCommander* theCCommander, multiLang& langMap)
@@ -26,7 +36,7 @@ void wxOpenCommanderListCtrl::addColumns()
 
    int size = 20;
    //if (imageList != NULL) delete(imageList); 
-   imageList = new wxImageList(size, size, true);
+   imageList = new wxImageList(size, size, true); // MEMORY LEAK
 
    wxIcon icons[7];
    icons[0] = wxIcon(icon1_xpm);
