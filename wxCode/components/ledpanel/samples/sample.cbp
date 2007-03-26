@@ -65,14 +65,8 @@
 		<Unit filename="sample.cpp" />
 		<Unit filename="sample.h" />
 		<Unit filename="..\src\advancedmatrixobject.cpp" />
-		<Unit filename="..\src\font75.cpp">
-			<Option compile="0" />
-			<Option link="0" />
-		</Unit>
-		<Unit filename="..\src\font77.cpp">
-			<Option compile="0" />
-			<Option link="0" />
-		</Unit>
+		<Unit filename="..\src\font75.cpp" />
+		<Unit filename="..\src\font77.cpp" />
 		<Unit filename="..\src\matrixobject.cpp" />
 		<Unit filename="..\src\wxledfont.cpp" />
 		<Unit filename="..\src\wxledpanel.cpp" />
