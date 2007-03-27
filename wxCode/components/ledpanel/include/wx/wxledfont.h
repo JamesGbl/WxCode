@@ -43,8 +43,8 @@ class wxLEDFont
 		void SetLetterSpace(int letterspace) {m_letterspace=letterspace;}
 		int GetLetterSpace() const {return m_letterspace;}
 
-		int GetMaxLetterWidth() const {return m_LetterWidth;}
-		int GetMaxLetterHeight() const {return m_LetterHeight;}
+		int GetLetterWidth() const {return m_LetterWidth;}
+		int GetLetterHeight() const {return m_LetterHeight;}
 
 	private:
 		void Destroy();

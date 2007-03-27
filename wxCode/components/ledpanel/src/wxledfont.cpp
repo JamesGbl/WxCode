@@ -47,19 +47,18 @@ void wxLEDFont::SetFontType(wxLEDFontType t)
 	m_LetterHeight=((t==wxLEDFont7x5)?(font75_letterHeight):(font77_letterHeight));
 
 	// set parameters for loading
-	//char* lettersData;
-	//lettersData=((t==wxLEDFont7x5)?(font75_LettersData):(font75_LettersData));
+	const char* lettersData=((t==wxLEDFont7x5)?(font75_LettersData):(font77_LettersData));
 
 	// set standartletters
-	m_letters[ms_LettersChar[0]]= new MatrixObject(font75_LettersData[0],m_LetterWidth,m_LetterHeight);
+	// SPACE without fit
+	m_letters[ms_LettersChar[0]]= new MatrixObject(lettersData,m_LetterWidth,m_LetterHeight);
 	// all the other letters
 	AdvancedMatrixObject* tmp=0;
-	for(int i=1;i<ms_LettersChar.Length();++i)
+	for(unsigned int i=1;i<ms_LettersChar.Length();++i)
 	{
-		tmp=new AdvancedMatrixObject(font75_LettersData[i],m_LetterWidth,m_LetterHeight);
-		tmp=tmp;
-		tmp->FitLeft();
-		tmp->FitRight();
+		tmp=new AdvancedMatrixObject(lettersData+i*m_LetterWidth*m_LetterHeight*sizeof(char),m_LetterWidth,m_LetterHeight);
+		//tmp->FitLeft();
+		//tmp->FitRight();
 		m_letters[ms_LettersChar[i]]= new MatrixObject(*tmp);
 		wxDELETE(tmp);
 	}
