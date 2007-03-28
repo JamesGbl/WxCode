@@ -57,8 +57,8 @@ void wxLEDFont::SetFontType(wxLEDFontType t)
 	for(unsigned int i=1;i<ms_LettersChar.Length();++i)
 	{
 		tmp=new AdvancedMatrixObject(lettersData+i*m_LetterWidth*m_LetterHeight*sizeof(char),m_LetterWidth,m_LetterHeight);
-		//tmp->FitLeft();
-		//tmp->FitRight();
+		tmp->FitLeft();
+		tmp->FitRight();
 		m_letters[ms_LettersChar[i]]= new MatrixObject(*tmp);
 		wxDELETE(tmp);
 	}

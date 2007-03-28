@@ -123,6 +123,10 @@ class wxLEDPanel : public wxControl
 		int GetTextPaddingLeft() const {return m_padLeft;}
 		int GetTextPaddingRight() const {return m_padRight;}
 
+		// Space Between the Letters
+		void SetLetterSpace(int letterSpace) {m_font.SetLetterSpace(letterSpace);}
+		int GetLetterSpace() const {return m_font.GetLetterSpace();}
+
 		// FontType
 		void SetFontType(wxLEDFontType t) {m_font.SetFontType(t);}
 		wxLEDFontType GetFontType() const {return m_font.GetFontType();}

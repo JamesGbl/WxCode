@@ -64,15 +64,16 @@ ledpanelFrame::ledpanelFrame(wxFrame *frame, const wxString& title)
 	sizer->Add(lp4,0,wxALIGN_CENTER|wxALL,5);
 
 	// The 5th LEDPanel -> Static text, invertet
-	wxLEDPanel* lp5=new wxLEDPanel(this,wxID_ANY,wxSize(4,4),wxSize(63,9),0);
+	wxLEDPanel* lp5=new wxLEDPanel(this,wxID_ANY,wxSize(4,4),wxSize(76,9),0);
+	lp5->SetLetterSpace(2);
 	lp5->SetText(wxT("wxLEDPanel"),wxALIGN_CENTER);	// Set the LED-Text
 	lp5->DrawInvertet(true);    // Draw the LEDs invertet
 	sizer->Add(lp5,0,wxALIGN_CENTER|wxALL,5);
 
 	// The 6th LEDPanel
-	wxLEDPanel* lp6=new wxLEDPanel(this,wxID_ANY,wxSize(4,4),wxSize(63,9),0);
+	wxLEDPanel* lp6=new wxLEDPanel(this,wxID_ANY,wxSize(4,4),wxSize(76,9),0);
 	lp6->SetFontType(wxLEDFont7x7);
-	lp6->SetText(wxT(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"),wxALIGN_CENTER);	// Set the LED-Text
+	lp6->SetText(wxT("wxLEDPanel"),wxALIGN_CENTER);	// Set the LED-Text
 	lp6->SetLEDColour(wxLED_COLOUR_GREEN);
 	lp6->SetScrollDirection(wxLED_SCROLL_LEFT);	// Set the Scrolldirection
 	lp6->SetScrollSpeed(80); // Set the Scrollspeed
@@ -80,7 +81,8 @@ ledpanelFrame::ledpanelFrame(wxFrame *frame, const wxString& title)
 	sizer->Add(lp6,0,wxALIGN_CENTER|wxALL,5);
 
 	// The 7th LEDPanel
-	wxLEDPanel* lp7=new wxLEDPanel(this,wxID_ANY,wxSize(4,4),wxSize(63,9),0);
+	wxLEDPanel* lp7=new wxLEDPanel(this,wxID_ANY,wxSize(4,4),wxSize(76,9),0);
+	lp7->SetFontType(wxLEDFont7x7);
 	lp7->SetText(wxT("wxLEDPanel\n2nd Line\n3rd Line\n4th Line"),wxALIGN_RIGHT);	// Set the LED-Text
 	lp7->SetLEDColour(wxLED_COLOUR_BLUE);
 	lp7->SetScrollDirection(wxLED_SCROLL_UP);	// Set the Scrolldirection
