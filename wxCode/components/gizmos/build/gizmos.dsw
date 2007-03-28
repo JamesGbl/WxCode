@@ -1,0 +1,106 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+Project: "gizmos"=gizmos_gizmos.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "gizmos"=gizmos_gizmos.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+Begin Project Dependency
+Project_Dep_Name gizmos
+End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "gizmos2"=gizmos_gizmos2.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+Begin Project Dependency
+Project_Dep_Name gizmos
+End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "gizmos3"=gizmos_gizmos3.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+Begin Project Dependency
+Project_Dep_Name gizmos
+End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "gizmos4"=gizmos_gizmos4.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+Begin Project Dependency
+Project_Dep_Name gizmos
+End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "gizmos5"=gizmos_gizmos5.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+Begin Project Dependency
+Project_Dep_Name gizmos
+End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "gizmos6"=gizmos_gizmos6.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+Begin Project Dependency
+Project_Dep_Name gizmos
+End Project Dependency
+}}}
+
+###############################################################################
+
