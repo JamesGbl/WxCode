@@ -175,7 +175,7 @@ bool copyDirFile(wxString& path, wxString& item, wxString& pathNew, void* parent
      wxDir dir;
      blnIsDirectory = dir.Exists(filePath);
    }
-
+   
    if (blnIsDirectory)
       return copyDirectory(path, item, pathNew, parent, onBeginCopyFile, onEndCopyFile);
 
@@ -213,7 +213,7 @@ class wxDirTraverserSimple : public wxDirTraverser
             return wxDIR_CONTINUE;
          
          bool blnCopy = true;
-         // wxString itemNew (path == pathNew ) "Copy of " + item : item);
+         //wxString itemNew (path == pathNew ) "Copy of " + item : item);
          if (m_onBeginCopyFile) blnCopy = m_onBeginCopyFile(m_parent, filename, newFile);
          if (blnCopy) blnCopy = wxCopyFile(filename, newFile, true);
          if (m_onBeginCopyFile) m_onEndCopyFile(m_parent, blnCopy, filename, newFile);
@@ -232,6 +232,12 @@ class wxDirTraverserSimple : public wxDirTraverser
             wxMkdir(newDir);
          return wxDIR_CONTINUE;
       }
+      
+      virtual wxDirTraverseResult OnOpenError(const wxString& openErrorName)
+      {
+         wxMessageBox(openErrorName);
+      }
+      
    private:
       wxString& path;
       wxString& pathNew;
@@ -244,7 +250,7 @@ class wxDirTraverserSimple : public wxDirTraverser
 bool copyDirectory(wxString& path, wxString& item, wxString& pathNew, void* parent, onThreadBeginCopyFileCallBackFunc onBeginCopyFile = NULL, onThreadEndCopyFileCallBackFunc onEndCopyFile = NULL)
 {
     wxString newItem = (path == pathNew ? "Copy of " + item : item);
-
+    
    if (wxDir::Exists(pathNew + "\\" + newItem))
    {
       wxMessageBox("The source directory is the same of the destination directory.","Error", wxOK | wxCENTRE | wxICON_ERROR );
@@ -252,9 +258,9 @@ bool copyDirectory(wxString& path, wxString& item, wxString& pathNew, void* pare
    }
    else
       wxMkdir(pathNew + "\\" + newItem);
-   
-      
-   wxDir dir(pathNew + "\\" + newItem);
+        
+   wxDir dir(path + "\\" + newItem);
+  
    wxDirTraverserSimple traverser(path, pathNew, item, parent, onBeginCopyFile, onEndCopyFile);
    dir.Traverse(traverser);
    return true;
