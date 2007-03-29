@@ -71,7 +71,7 @@ protected:
 	wxString		m_szContentType;
 };
 
-WX_DECLARE_OBJARRAY(wxCurlDAVFs, wxArrayDAVFs);
+WX_DECLARE_USER_EXPORTED_OBJARRAY(wxCurlDAVFs, wxArrayDAVFs, WXDLLIMPEXP_CURL);
 
 // davtool.h: interface for the wxCurlDAVTool class.
 //

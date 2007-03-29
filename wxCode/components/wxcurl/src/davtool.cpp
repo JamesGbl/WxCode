@@ -423,4 +423,4 @@ bool wxCurlDAVTool::ParsePropsXml(wxCurlDAVFs& fsItem, wxXmlNode* pNode)
 // wxArrayDAVFs Implementation
 //////////////////////////////////////////////////////////////////////
 #include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
-WX_DEFINE_OBJARRAY(wxArrayDAVFs);
+WX_DEFINE_USER_EXPORTED_OBJARRAY(wxArrayDAVFs);

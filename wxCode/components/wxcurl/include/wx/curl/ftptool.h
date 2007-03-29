@@ -67,7 +67,7 @@ protected:
 	long			m_iContentLength;
 };
 
-WX_DECLARE_OBJARRAY(wxCurlFTPFs, wxArrayFTPFs);
+WX_DECLARE_USER_EXPORTED_OBJARRAY(wxCurlFTPFs, wxArrayFTPFs, WXDLLIMPEXP_CURL);
 
 // ftptool.h: interface for the wxCurlFTPTool class.
 //

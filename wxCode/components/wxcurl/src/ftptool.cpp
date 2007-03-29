@@ -189,7 +189,7 @@ wxString wxCurlFTPTool::GetFileSuffix(const wxString& szRemoteLoc /*= wxEmptyStr
 // wxArrayDAVFs Implementation
 //////////////////////////////////////////////////////////////////////
 #include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
-WX_DEFINE_OBJARRAY(wxArrayFTPFs);
+WX_DEFINE_USER_EXPORTED_OBJARRAY(wxArrayFTPFs);
 
 
 
