@@ -18,7 +18,7 @@
 #pragma interface "curl/base.h"
 #endif
 
-#ifdef WXMAKINGDLL_CURL
+#ifdef WXMAKINGDLL_WXCURL
     #define WXDLLIMPEXP_CURL WXEXPORT
 #elif defined(WXUSINGDLL)
     #define WXDLLIMPEXP_CURL WXIMPORT
@@ -32,7 +32,10 @@
 #include <wx/stream.h>
 #include <wx/mstream.h>
 
-#include <curl/curl.h>
+extern "C"
+{
+    #include <curl/curl.h>
+}
 
 // base.h: wxWidgets Declarations for Event Types.
 //

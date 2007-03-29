@@ -47,9 +47,8 @@ WX_PORT = @WX_PORT@
 ### Variables: ###
 
 DESTDIR = 
-WXCURL_LIB_CXXFLAGS = -I$(srcdir)/include \
-	-IW:\wxCodeSVN\components\curl\include $(WX_CXXFLAGS) $(CPPFLAGS) \
-	$(CXXFLAGS)
+WXCURL_LIB_CXXFLAGS = -I$(srcdir)/include -I`curl-config --include` \
+	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 WXCURL_LIB_OBJECTS =  \
 	wxcurl_lib_base.o \
 	wxcurl_lib_dav.o \
@@ -67,9 +66,8 @@ WXCURL_LIB_HEADERS =  \
 	include/wx/curl/ftptool.h \
 	include/wx/curl/http.h \
 	include/wx/curl/telnet.h
-WXCURL_DLL_CXXFLAGS = -I$(srcdir)/include -DWXMAKINGDLL_WXCURL \
-	-IW:\wxCodeSVN\components\curl\include $(PIC_FLAG) $(WX_CXXFLAGS) \
-	$(CPPFLAGS) $(CXXFLAGS)
+WXCURL_DLL_CXXFLAGS = -I$(srcdir)/include -DWXMAKINGDLL_WXCURL -I`curl-config \
+	--include` $(PIC_FLAG) $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 WXCURL_DLL_OBJECTS =  \
 	wxcurl_dll_base.o \
 	wxcurl_dll_dav.o \
@@ -87,9 +85,8 @@ WXCURL_DLL_HEADERS =  \
 	include/wx/curl/ftptool.h \
 	include/wx/curl/http.h \
 	include/wx/curl/telnet.h
-WXCURL_TESTER_CXXFLAGS = -I$(srcdir)/include \
-	-IW:\wxCodeSVN\components\curl\include $(WX_CXXFLAGS) $(CPPFLAGS) \
-	$(CXXFLAGS)
+WXCURL_TESTER_CXXFLAGS = -I$(srcdir)/include -I`curl-config --include` \
+	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 WXCURL_TESTER_OBJECTS =  \
 	wxcurl_tester_wxCURLApp.o \
 	wxcurl_tester_wxCURLDlg.o \
@@ -255,7 +252,7 @@ distclean: clean
 @COND_WX_SHARED_0@	done
 
 @COND_WX_SHARED_1@$(srcdir)/lib/$(DLLPREFIX)wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxcurl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)$(__wxcurl_dll___targetsuf3): $(WXCURL_DLL_OBJECTS)
-@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(WXCURL_DLL_OBJECTS) $(LDFLAGS) -L$(srcdir)/lib $(__wxcurl_dll___macinstnamecmd) $(__wxcurl_dll___importlib) $(__wxcurl_dll___soname_flags) -LW:\wxCodeSVN\components\curl\lib  $(LIBS) -lcurl $(WX_LIBS)
+@COND_WX_SHARED_1@	$(SHARED_LD_CXX) $@ $(WXCURL_DLL_OBJECTS) $(LDFLAGS) -L$(srcdir)/lib $(__wxcurl_dll___macinstnamecmd) $(__wxcurl_dll___importlib) $(__wxcurl_dll___soname_flags) -L`curl-config --libs`  $(LIBS) -lcurl $(WX_LIBS)
 @COND_WX_SHARED_1@	
 @COND_WX_SHARED_1@	$(__wxcurl_dll___so_symlinks_cmd)
 
@@ -285,7 +282,7 @@ distclean: clean
 @COND_WX_SHARED_1@	done
 
 $(srcdir)/sample/wxcurl_tester$(EXEEXT): $(WXCURL_TESTER_OBJECTS) make_sample_dir_wxcurl_tester  $(__wxcurl_lib___depname)
-	$(CXX) -o $@ $(WXCURL_TESTER_OBJECTS) -L$(srcdir)/lib $(LDFLAGS) -L$(srcdir)/lib $(LDFLAGS_GUI) -LW:\wxCodeSVN\components\curl\lib  $(LIBS) -lwxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxcurl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR) -lcurl $(WX_LIBS)
+	$(CXX) -o $@ $(WXCURL_TESTER_OBJECTS) -L$(srcdir)/lib $(LDFLAGS) -L$(srcdir)/lib $(LDFLAGS_GUI) -L`curl-config --libs`  $(LIBS) -lwxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxcurl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR) -lcurl $(WX_LIBS)
 	
 	$(__wxcurl_tester___mac_setfilecmd)
 	$(__wxcurl_tester___os2_emxbindcmd)

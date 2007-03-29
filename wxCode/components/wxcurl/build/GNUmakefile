@@ -69,9 +69,9 @@ WX_VERSION_MINOR = $(shell echo $(WX_VERSION) | cut -c2,2)
 WX_CONFIG_FLAGS = $(WX_CONFIG_DEBUG_FLAG) $(WX_CONFIG_UNICODE_FLAG) \
 	$(WX_CONFIG_SHARED_FLAG) --toolkit=$(WX_PORT) \
 	--version=$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)
-WXCURL_LIB_CXXFLAGS = $(____wxcurl) $(____wxcurl_3) -I../include \
-	-IW:\wxCodeSVN\components\curl\include `$(WX_CONFIG) --cxxflags \
-	$(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
+WXCURL_LIB_CXXFLAGS = $(____wxcurl) $(____wxcurl_3) -I../include -I`curl-config \
+	--include` `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) \
+	$(CXXFLAGS)
 WXCURL_LIB_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_base.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_dav.o \
@@ -90,8 +90,8 @@ WXCURL_LIB_HEADERS =  \
 	include/wx/curl/http.h \
 	include/wx/curl/telnet.h
 WXCURL_DLL_CXXFLAGS = $(____wxcurl) $(____wxcurl_3) -I../include \
-	-DWXMAKINGDLL_WXCURL -IW:\wxCodeSVN\components\curl\include -fPIC -DPIC \
-	`$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
+	-DWXMAKINGDLL_WXCURL -I`curl-config --include` -fPIC -DPIC `$(WX_CONFIG) \
+	--cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 WXCURL_DLL_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_base.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_dav.o \
@@ -110,8 +110,8 @@ WXCURL_DLL_HEADERS =  \
 	include/wx/curl/http.h \
 	include/wx/curl/telnet.h
 WXCURL_TESTER_CXXFLAGS = $(____wxcurl) $(____wxcurl_3) -I../include \
-	-IW:\wxCodeSVN\components\curl\include `$(WX_CONFIG) --cxxflags \
-	$(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
+	-I`curl-config --include` `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` \
+	$(CPPFLAGS) $(CXXFLAGS)
 WXCURL_TESTER_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxCURLApp.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxCURLDlg.o \
@@ -282,7 +282,7 @@ endif
 
 ifeq ($(WX_SHARED),1)
 ../lib/gcc_$(__wxcurl)/libwxcode_$(WX_PORT)_wxcurl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so: make_lib_dir_wxcurl_dll  $(WXCURL_DLL_OBJECTS)
-	$(CXX) -shared -fPIC -o $@ $(WXCURL_DLL_OBJECTS) $(LDFLAGS) $(____wxcurl_3) -L../lib -LW:\wxCodeSVN\components\curl\lib  -lcurl `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs core,base`
+	$(CXX) -shared -fPIC -o $@ $(WXCURL_DLL_OBJECTS) $(LDFLAGS) $(____wxcurl_3) -L../lib -L`curl-config --libs`  -lcurl `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs xml,core,base`
 endif
 
 ifeq ($(WX_SHARED),1)
@@ -320,7 +320,7 @@ uninstall_wxcurl_dll_headers:
 endif
 
 ../sample/wxcurl_tester: $(WXCURL_TESTER_OBJECTS) make_sample_dir_wxcurl_tester $(__wxcurl_lib___depname)
-	$(CXX) -o $@ $(WXCURL_TESTER_OBJECTS) $(LDFLAGS) $(____wxcurl_3) -L../lib  -LW:\wxCodeSVN\components\curl\lib  ../lib/gcc_$(__wxcurl)/libwxcode_$(WX_PORT)_wxcurl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a -lcurl `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs xrc,xml,core,base`
+	$(CXX) -o $@ $(WXCURL_TESTER_OBJECTS) $(LDFLAGS) $(____wxcurl_3) -L../lib  -L`curl-config --libs`  ../lib/gcc_$(__wxcurl)/libwxcode_$(WX_PORT)_wxcurl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a -lcurl `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs xrc,html,adv,xml,core,base`
 
 make_sample_dir_wxcurl_tester: 
 	@mkdir -p ../sample

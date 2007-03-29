@@ -20,7 +20,7 @@
         </if>
     </template>
 
-    <if cond="TARGETING_WIN32=='1'">
+    <if cond="TARGETING_WIN32=='1' and FORMAT_SUPPORTS_ACTIONS=='1'">
         <smart-subproject id="thirdparty">
             <dependency-of>all</dependency-of>
             <dir>$(SRCDIR)/thirdparty/curl/build</dir>
@@ -47,6 +47,7 @@
     <lib id="wxcurl_lib" template="wxcode-lib,curlbasic" cond="WX_SHARED=='0'"/>
     <dll id="wxcurl_dll" template="wxcode-dll,curlbasic" cond="WX_SHARED=='1'">
         <curlib/>
+        <wx-lib>xml</wx-lib>
         <wx-lib>core</wx-lib>
         <wx-lib>base</wx-lib>
     </dll>

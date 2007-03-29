@@ -10,8 +10,14 @@
 # These are configurable options:
 # -------------------------------------------------------------------------
 
+# C compiler 
+CC := gcc
+
 # C++ compiler 
 CXX := g++
+
+# Standard flags for CC 
+CFLAGS := 
 
 # Standard flags for C++ 
 CXXFLAGS := 
@@ -48,12 +54,15 @@ WX_DIR := $(WXWIN)
 
 ### Variables: ###
 
+MAKEARGS = CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" \
+	CPPFLAGS="$(CPPFLAGS)" LDFLAGS="$(LDFLAGS)" WX_SHARED="$(WX_SHARED)" \
+	WX_DEBUG="$(WX_DEBUG)"
 CPPDEPS = -MT$@ -MF$@.d -MD
 WXCURL_LIB_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
-	$(____wxcurl) $(____wxcurl_6) -I..\include \
-	-IW:\wxCodeSVN\components\curl\include $(CPPFLAGS) $(CXXFLAGS)
+	$(____wxcurl) $(____wxcurl_6) -I..\include -I..\thirdparty\curl\include \
+	$(CPPFLAGS) $(CXXFLAGS)
 WXCURL_LIB_OBJECTS =  \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_base.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_dav.o \
@@ -67,7 +76,7 @@ WXCURL_DLL_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
 	$(____wxcurl) $(____wxcurl_6) -I..\include -DWXMAKINGDLL_WXCURL \
-	-IW:\wxCodeSVN\components\curl\include $(CPPFLAGS) $(CXXFLAGS)
+	-I..\thirdparty\curl\include $(CPPFLAGS) $(CXXFLAGS)
 WXCURL_DLL_OBJECTS =  \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_base.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_dav.o \
@@ -80,8 +89,8 @@ WXCURL_DLL_OBJECTS =  \
 WXCURL_TESTER_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
-	$(____wxcurl) $(____wxcurl_6) -I..\include \
-	-IW:\wxCodeSVN\components\curl\include $(CPPFLAGS) $(CXXFLAGS)
+	$(____wxcurl) $(____wxcurl_6) -I..\include -I..\thirdparty\curl\include \
+	$(CPPFLAGS) $(CXXFLAGS)
 WXCURL_TESTER_OBJECTS =  \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxCURLApp.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxCURLDlg.o \
@@ -160,28 +169,56 @@ endif
 ifeq ($(WX_DEBUG),0)
 ifeq ($(WX_MONOLITHIC),0)
 ifeq ($(WX_UNICODE),0)
-__WXLIB_XML_NAME_p = -lwxbase$(WX_VERSION)_xml
+__WXLIB_HTML_NAME_p = -lwxmsw$(WX_VERSION)_html
 endif
 endif
 endif
 ifeq ($(WX_DEBUG),0)
 ifeq ($(WX_MONOLITHIC),0)
 ifeq ($(WX_UNICODE),1)
-__WXLIB_XML_NAME_p = -lwxbase$(WX_VERSION)u_xml
+__WXLIB_HTML_NAME_p = -lwxmsw$(WX_VERSION)u_html
 endif
 endif
 endif
 ifeq ($(WX_DEBUG),1)
 ifeq ($(WX_MONOLITHIC),0)
 ifeq ($(WX_UNICODE),0)
-__WXLIB_XML_NAME_p = -lwxbase$(WX_VERSION)d_xml
+__WXLIB_HTML_NAME_p = -lwxmsw$(WX_VERSION)d_html
 endif
 endif
 endif
 ifeq ($(WX_DEBUG),1)
 ifeq ($(WX_MONOLITHIC),0)
 ifeq ($(WX_UNICODE),1)
-__WXLIB_XML_NAME_p = -lwxbase$(WX_VERSION)ud_xml
+__WXLIB_HTML_NAME_p = -lwxmsw$(WX_VERSION)ud_html
+endif
+endif
+endif
+ifeq ($(WX_DEBUG),0)
+ifeq ($(WX_MONOLITHIC),0)
+ifeq ($(WX_UNICODE),0)
+__WXLIB_ADV_NAME_p = -lwxmsw$(WX_VERSION)_adv
+endif
+endif
+endif
+ifeq ($(WX_DEBUG),0)
+ifeq ($(WX_MONOLITHIC),0)
+ifeq ($(WX_UNICODE),1)
+__WXLIB_ADV_NAME_p = -lwxmsw$(WX_VERSION)u_adv
+endif
+endif
+endif
+ifeq ($(WX_DEBUG),1)
+ifeq ($(WX_MONOLITHIC),0)
+ifeq ($(WX_UNICODE),0)
+__WXLIB_ADV_NAME_p = -lwxmsw$(WX_VERSION)d_adv
+endif
+endif
+endif
+ifeq ($(WX_DEBUG),1)
+ifeq ($(WX_MONOLITHIC),0)
+ifeq ($(WX_UNICODE),1)
+__WXLIB_ADV_NAME_p = -lwxmsw$(WX_VERSION)ud_adv
 endif
 endif
 endif
@@ -223,6 +260,34 @@ ____wxcurl_5 = lib
 endif
 ifeq ($(WX_SHARED),1)
 ____wxcurl_5 = dll
+endif
+ifeq ($(WX_DEBUG),0)
+ifeq ($(WX_MONOLITHIC),0)
+ifeq ($(WX_UNICODE),0)
+__WXLIB_XML_NAME_p = -lwxbase$(WX_VERSION)_xml
+endif
+endif
+endif
+ifeq ($(WX_DEBUG),0)
+ifeq ($(WX_MONOLITHIC),0)
+ifeq ($(WX_UNICODE),1)
+__WXLIB_XML_NAME_p = -lwxbase$(WX_VERSION)u_xml
+endif
+endif
+endif
+ifeq ($(WX_DEBUG),1)
+ifeq ($(WX_MONOLITHIC),0)
+ifeq ($(WX_UNICODE),0)
+__WXLIB_XML_NAME_p = -lwxbase$(WX_VERSION)d_xml
+endif
+endif
+endif
+ifeq ($(WX_DEBUG),1)
+ifeq ($(WX_MONOLITHIC),0)
+ifeq ($(WX_UNICODE),1)
+__WXLIB_XML_NAME_p = -lwxbase$(WX_VERSION)ud_xml
+endif
+endif
 endif
 ifeq ($(WX_DEBUG),0)
 ifeq ($(WX_MONOLITHIC),0)
@@ -328,11 +393,12 @@ gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX):
 
 ### Targets: ###
 
-all: test_for_selected_wxbuild $(__wxcurl_lib___depname) $(__wxcurl_dll___depname) ..\sample\wxcurl_tester.exe
+all: test_for_selected_wxbuild thirdparty $(__wxcurl_lib___depname) $(__wxcurl_dll___depname) ..\sample\wxcurl_tester.exe
 
 clean: 
 	-if exist gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.o del gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.o
 	-if exist gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.d del gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\*.d
+	$(MAKE) -C ..\thirdparty\curl\build -f makefile.gcc $(MAKEARGS) clean
 	-if exist ..\lib\gcc_$(____wxcurl_5)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.a del ..\lib\gcc_$(____wxcurl_5)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.a
 	-if exist ..\lib\gcc_$(____wxcurl_5)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.dll del ..\lib\gcc_$(____wxcurl_5)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.dll
 	-if exist ..\lib\gcc_$(____wxcurl_5)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.a del ..\lib\gcc_$(____wxcurl_5)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.a
@@ -350,6 +416,9 @@ test_for_selected_wxbuild:
 	@if not exist $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX)\wx\setup.h \
 	exit 1
 
+thirdparty: 
+	$(MAKE) -C ..\thirdparty\curl\build -f makefile.gcc $(MAKEARGS) all
+
 ifeq ($(WX_SHARED),0)
 ..\lib\gcc_$(____wxcurl_5)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.a: make_lib_dir_wxcurl_lib  $(WXCURL_LIB_OBJECTS)
 	if exist $@ del $@
@@ -362,17 +431,17 @@ make_lib_dir_wxcurl_lib:
 
 ifeq ($(WX_SHARED),1)
 ..\lib\gcc_$(____wxcurl_5)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.dll: make_lib_dir_wxcurl_dll  $(WXCURL_DLL_OBJECTS)
-	$(CXX) -shared -fPIC -o $@ $(WXCURL_DLL_OBJECTS) $(LDFLAGS) -mthreads -L$(WX_DIR)$(WXLIBPATH) $(____wxcurl_6) -L..$(WXLIBPATH) -Wl,--out-implib=..\lib\gcc_$(____wxcurl_5)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.a -LW:\wxCodeSVN\components\curl\lib  -lcurl $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+	$(CXX) -shared -fPIC -o $@ $(WXCURL_DLL_OBJECTS) $(LDFLAGS) -mthreads -L$(WX_DIR)$(WXLIBPATH) $(____wxcurl_6) -L..$(WXLIBPATH) -Wl,--out-implib=..\lib\gcc_$(____wxcurl_5)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.a -L..\thirdparty\curl\lib  -lcurl $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 endif
 
 make_lib_dir_wxcurl_dll: 
 	if not exist ..\lib\gcc_$(____wxcurl_5) mkdir ..\lib\gcc_$(____wxcurl_5)
 
 ..\sample\wxcurl_tester.exe: $(WXCURL_TESTER_OBJECTS) make_sample_dir_wxcurl_tester  $(__wxcurl_lib___depname)
-	$(CXX) -o $@ $(WXCURL_TESTER_OBJECTS) $(LDFLAGS) -mthreads -L$(WX_DIR)$(WXLIBPATH) $(____wxcurl_6) -L..$(WXLIBPATH) -Wl,--subsystem,windows -mwindows -LW:\wxCodeSVN\components\curl\lib  ..\lib\gcc_$(____wxcurl_5)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.a -lcurl $(__WXLIB_XRC_NAME_p) $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+	$(CXX) -o $@ $(WXCURL_TESTER_OBJECTS) $(LDFLAGS) -mthreads -L$(WX_DIR)$(WXLIBPATH) $(____wxcurl_6) -L..$(WXLIBPATH) -Wl,--subsystem,windows -mwindows -L..\thirdparty\curl\lib  ..\lib\gcc_$(____wxcurl_5)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.a -lcurl $(__WXLIB_XRC_NAME_p) $(__WXLIB_HTML_NAME_p) $(__WXLIB_ADV_NAME_p) $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
 make_sample_dir_wxcurl_tester: 
-	if not exist ../sample mkdir../sample
+	if not exist ..\sample mkdir ..\sample
 
 tarball: 
 	make distclean
@@ -508,7 +577,7 @@ gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxPutTextDialog.o:
 gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxTraceDialog.o: ../sample/wxTraceDialog.cpp
 	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
 
-.PHONY: all clean
+.PHONY: all clean thirdparty
 
 
 # Dependencies tracking:
