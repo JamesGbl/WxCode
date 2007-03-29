@@ -24,7 +24,14 @@
     #define WXDLLIMPEXP_CURL WXIMPORT
 #else // not making nor using DLL
     #define WXDLLIMPEXP_CURL
+    
+    // if we do not define this symbol, cURL header will assume
+    // a DLL build is being done and will export symbols:
+    #ifndef CURL_STATICLIB
+        #define CURL_STATICLIB
+    #endif
 #endif
+
 
 #include <wx/event.h>
 #include <wx/string.h>
@@ -32,10 +39,10 @@
 #include <wx/stream.h>
 #include <wx/mstream.h>
 
-extern "C"
-{
-    #include <curl/curl.h>
-}
+// The cURL library header:
+#include <curl/curl.h>
+
+
 
 // base.h: wxWidgets Declarations for Event Types.
 //
