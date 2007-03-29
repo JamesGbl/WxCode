@@ -1,0 +1,57 @@
+ wxCTB component info
+ --------------------
+ 
+ Website: http://wxcode.sourceforge.net/components/wxctb
+ Version: 0.9
+
+ or for additional support and tools:
+ http://www.iftools.com/extras.en.html
+
+
+ Linux GCC compiliation
+ ----------------------------------------------------------------
+
+ Type 'make DEBUG=x GPIB=x' or 'make -f GNUmakefile DEBUG=x GPIB=x'
+
+
+
+ Microsoft Visual C++ compilation
+ ----------------------------------------------------------------
+
+ Type 'nmake -f makefile.vc DEBUG=x GPIB=x'
+
+
+
+ Borland C++ 5.0/5.5 compilation
+ ----------------------------------------------------------------
+
+ Type 'make -f makefile.bcc DEBUG=x GPIB=x'
+ 
+
+
+ Watcom C++ 10.6/11 and OpenWatcom compilation
+ ----------------------------------------------------------------
+
+ Type 'wmake -f makefile.wat'
+
+
+
+ ChangeLog
+ ---------
+ 0.9
+	- added python support for both, serial and gpib 
+
+ 0.8
+     - added bakefile support
+	 
+ 0.7 
+     - added GPIB (Nation Instruments GPIB cards) support
+	 
+
+ Authors' info
+ -------------
+
+ Joachim Buermann          jbuermann@iftools.com
+
+ Thanks to the following people for their hints and patches:
+ - 
