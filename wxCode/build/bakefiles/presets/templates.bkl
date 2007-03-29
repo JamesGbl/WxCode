@@ -137,7 +137,7 @@
                         @mkdir -p $(SRCDIR)/$(value)
                     </command>
                     <command cond="TOOLSET in ['win32','os2','dos']">
-                        if not exist $(SRCDIR)/$(value) mkdir$(SRCDIR)/$(value)
+                        if not exist $(SRCDIR)\$(nativePaths(value)) mkdir $(SRCDIR)\$(nativePaths(value))
                     </command>
                     <dependency-of>$(id)</dependency-of>
                 </modify-target>
