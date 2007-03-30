@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!-- $Id: wx.bkl,v 1.7 2007/03/30 15:43:25 frm Exp $ -->
+<!-- $Id: wx.bkl,v 1.8 2007/03/30 16:22:57 frm Exp $ -->
 
 <!--
     Presets for building wxWidgets applications.
@@ -473,25 +473,52 @@
                 mymodule
             </set-wxlike>
 
-         This is useful for conditional linking against a wx-based library:
+         This tag also supports a 'cond' attribute making it very powerful
+         for conditional linking a wx-based library:
 
-            <set var="MYMODULE_DEP">
-                <if cond="USE_MYMODULE=='1'">$(MYMODULE_LIBNAME)</if>
-            </set>
+            <option name="USE_MYMODULE">
+                <values>0,1</values>
+            </option>
+            <set-wxlike var='MYMODULE_DEP'
+                        prefix='mylib'
+                        cond="USE_MYMODULE=='1'">
+                mymodule
+            </set-wxlike>
             ...
             <exe id="myexe">
                 <sys-lib>$(MYMODULE_DEP)</sys-lib>
             </exe>
     -->
     <define-global-tag name="set-wxlike">
-        <set var="$(attributes['var'])">
-            <if cond="FORMAT!='autoconf' and FORMAT!='gnu'">
-                $(attributes['prefix'])_$(WX_PORT)$(WX_VERSION)$(WXLIBPOSTFIX)_$(value)
+        <if cond="FORMAT!='autoconf' and FORMAT!='gnu'">
+            <if cond="'cond' not in attributes">
+                <set var="$(attributes['var'])">
+                    $(attributes['prefix'])_$(WX_PORT)$(WX_VERSION)$(WXLIBPOSTFIX)_$(value)
+                </set>
             </if>
-            <if cond="FORMAT=='autoconf' or FORMAT=='gnu'">
-                $(attributes['prefix'])_$(WX_PORT)$(WXLIBPOSTFIX)_$(value)-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)
+            <if cond="'cond' in attributes">
+                <set var="$(attributes['var'])">
+                    <if cond="$(attributes['cond'])">
+                        $(attributes['prefix'])_$(WX_PORT)$(WX_VERSION)$(WXLIBPOSTFIX)_$(value)
+                    </if>
+                </set>
             </if>
-        </set>
+        </if>
+
+        <if cond="FORMAT=='autoconf' or FORMAT=='gnu'">
+            <if cond="'cond' not in attributes">
+                <set var="$(attributes['var'])">
+                    $(attributes['prefix'])_$(WX_PORT)$(WXLIBPOSTFIX)_$(value)-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)
+                </set>
+            </if>
+            <if cond="'cond' in attributes">
+                <set var="$(attributes['var'])">
+                    <if cond="$(attributes['cond'])">
+                        $(attributes['prefix'])_$(WX_PORT)$(WXLIBPOSTFIX)_$(value)-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)
+                    </if>
+                </set>
+            </if>
+        </if>
     </define-global-tag>
 
 </makefile>
