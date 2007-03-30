@@ -3,18 +3,14 @@
   ////////////////////////////////////////////////////////////////////////////////////////////
   // Author: Armando Urdiales González
   // Creation date: 27/01/2007
-  // RCS-ID: $Id: index.php,v 1.3 2007-02-18 17:44:16 aurgo Exp $
+  // RCS-ID: $Id: index.php,v 1.4 2007-03-30 15:54:51 aurgo Exp $
   // Notes: the index page of the website of this component
   ////////////////////////////////////////////////////////////////////////////////////////////
 ?>
 
-<?php
-header('http:\\vdoble.host.sk');
-?>
-
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-AU">
 	<?php
-      $compname = "wxCommander";
+      $compname = "wxOpenCommander";
       $subdir = "commander";
       require("compwebsite.inc.php");
   ?>
