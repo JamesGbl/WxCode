@@ -3,7 +3,7 @@
   ////////////////////////////////////////////////////////////////////////////////////////////
   // Author: Armando Urdiales González
   // Creation date: 27/01/2007
-  // RCS-ID: $Id: index.php,v 1.4 2007-03-30 15:54:51 aurgo Exp $
+  // RCS-ID: $Id: index.php,v 1.5 2007-03-30 16:17:08 aurgo Exp $
   // Notes: the index page of the website of this component
   ////////////////////////////////////////////////////////////////////////////////////////////
 ?>
@@ -43,7 +43,7 @@
 	<br/><?php write_h1("Screenshots"); ?>
 	<p>Description</p>
   <div class="center">
-    <?php writeScreenshotLink("wxCommander.png", "The GNU File Explorer."); ?>
+    <?php writeScreenshotLink("wxOpenCommander.jpg", "wxOpenCommander") ?>
   </div>
 
 
