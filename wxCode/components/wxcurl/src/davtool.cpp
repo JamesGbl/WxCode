@@ -24,12 +24,7 @@
 #endif
 
 #include <wx/mstream.h>
-
-#if wxCHECK_VERSION(2, 5, 2)
-#include <wx/xml/xml.h> //in 2.5.2 the XML/XRC stuff got rolled into core (from contrib)
-#else
-#include <wx/xrc/xml.h> 
-#endif
+#include <wx/xml/xml.h>
 
 #include <wx/curl/davtool.h>
 

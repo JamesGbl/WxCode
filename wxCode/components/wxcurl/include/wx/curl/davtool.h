@@ -15,10 +15,6 @@
 #ifndef _WXCURLDAVTOOL_H__INCLUDED_
 #define _WXCURLDAVTOOL_H__INCLUDED_
 
-#if defined(__GNUG__) && !defined(__APPLE__)
-#pragma interface "curl/davtool.h"
-#endif
-
 #include <wx/curl/dav.h>
 
 // davtool.h: interface for the wxCurlDAVFs class.

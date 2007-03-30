@@ -11,10 +11,6 @@
 #ifndef _WXCURLFTPTOOL_H__INCLUDED_
 #define _WXCURLFTPTOOL_H__INCLUDED_
 
-#if defined(__GNUG__) && !defined(__APPLE__)
-#pragma interface "curl/ftptool.h"
-#endif
-
 #include <wx/curl/ftp.h>
 
 // C Function Declarations for LibCURL

@@ -15,10 +15,6 @@
 #ifndef _WXCURLDAV_H__INCLUDED_
 #define _WXCURLDAV_H__INCLUDED_
 
-#if defined(__GNUG__) && !defined(__APPLE__)
-#pragma interface "curl/dav.h"
-#endif
-
 #include <stddef.h>
 
 #include <wx/event.h>

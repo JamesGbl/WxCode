@@ -15,10 +15,6 @@
 #ifndef _WXCURLTELNET_H__INCLUDED_
 #define _WXCURLTELNET_H__INCLUDED_
 
-#if defined(__GNUG__) && !defined(__APPLE__)
-#pragma interface "curl/telnet.h"
-#endif
-
 #include <wx/curl/base.h>
 
 class WXDLLIMPEXP_CURL wxCurlTelnet : public wxCurlBase

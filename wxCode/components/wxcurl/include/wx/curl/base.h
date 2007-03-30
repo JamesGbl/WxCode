@@ -14,10 +14,6 @@
 #ifndef _WXCURLBASE_H__INCLUDED_
 #define _WXCURLBASE_H__INCLUDED_
 
-#if defined(__GNUG__) && !defined(__APPLE__)
-#pragma interface "curl/base.h"
-#endif
-
 #ifdef WXMAKINGDLL_WXCURL
     #define WXDLLIMPEXP_CURL WXEXPORT
 #elif defined(WXUSINGDLL)

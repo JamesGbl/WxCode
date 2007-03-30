@@ -11,10 +11,6 @@
 #ifndef _WXCURLHTTP_H__INCLUDED_
 #define _WXCURLHTTP_H__INCLUDED_
 
-#if defined(__GNUG__) && !defined(__APPLE__)
-#pragma interface "curl/http.h"
-#endif
-
 #include <wx/curl/base.h>
 
 // C Function Declarations for LibCURL
