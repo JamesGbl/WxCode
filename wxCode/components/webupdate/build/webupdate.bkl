@@ -43,20 +43,11 @@
         <if cond="PLATFORM_WIN32=='1'">wxUSE_HTTPENGINE=1</if>
         <if cond="PLATFORM_WIN32=='0'">wxUSE_HTTPENGINE=0</if>
     </set>
-
-    <!-- FIXME: we shouldn't be forced to use the wx.bkl's private tag __setlibname! -->
-    <set var="__temp">
-        <if cond="FORMAT!='autoconf' and FORMAT!='gnu'">
-            wxcode_$(WX_PORT)$(WX_VERSION)$(WXLIBPOSTFIX)_httpengine
-        </if>
-        <if cond="FORMAT=='autoconf' or FORMAT=='gnu'">
-            wxcode_$(WX_PORT)$(WXLIBPOSTFIX)_httpengine-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)
-        </if>
-    </set>
-    <set var="HTTPENGINEDEP_LIB">
-        <if cond="USE_HTTPENGINE=='1'">$(__temp)</if>
-    </set>
-
+    <set-wxlike var="HTTPENGINEDEP_LIB"
+                prefix="wxcode"
+                cond="USE_HTTPENGINE=='1'">
+        httpengine
+    </set-wxlike>
 
 
 
