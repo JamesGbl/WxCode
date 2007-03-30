@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!-- $Id: wx.bkl,v 1.3 2007/03/07 09:06:53 frm Exp $ -->
+<!-- $Id: wx.bkl,v 1.7 2007/03/30 15:43:25 frm Exp $ -->
 
 <!--
     Presets for building wxWidgets applications.
@@ -59,11 +59,11 @@
                     wxWidgets and some other wx-based library, which in turn
                     follows the wxWidgets naming conventions, then this tag is
                     what you need to reference the wx-based additional library.
-                      
-    - <wxlike-libdirname>: sets the output directory for the current target to $(value)
-                           when on Unix and to e.g. $(value)/vc_lib when on Windows,
-                           i.e. acts like <dirname> just following wxWidgets naming rules.
-                           Useful to allow multiple builds of the 
+
+    - <wxlike-dirname>: sets the output directory for the current target to $(value)
+                        when on Unix and to e.g. $(value)/vc_lib when on Windows,
+                        i.e. acts like <dirname> just following wxWidgets naming rules.
+                        Useful to allow multiple builds of the 
 
     - <wxlike-paths>: if your library/application needs to compile & link with both
                       wxWidgets and some other wx-based library, which in turn
@@ -77,6 +77,9 @@
     - <set-wxlike-builddir>: sets BUILDDIR using wxWidgets naming rules to help
                              to keep object files compiled with different
                              settings separate.
+
+    - <set-wxlike>: sets a variable with the name of a library named with the same
+                    wxWidgets rules.
 
 
  NOTE: as a reference here is a list of all wxWidgets libraries satisfying
@@ -184,7 +187,7 @@
             <values-description>Static,DLL</values-description>
             <default-value>$(WX_SHARED_DEFAULT)</default-value>
             <description>
-                Use DLL build of wx library to use?
+                Use DLL build of wx library?
             </description>
         </option>
     </if>
@@ -198,7 +201,7 @@
             <values-description>ANSI,Unicode</values-description>
             <default-value>$(WX_UNICODE_DEFAULT)</default-value>
             <description>
-                Compile Unicode build of wxWidgets?
+                Use Unicode build of wxWidgets?
             </description>
         </option>
     </if>
@@ -320,8 +323,11 @@
     <!--                       UTILITY TAGS                         -->
     <!--                                                            -->
 
-    <!-- private helper tag -->
-    <define-tag name="__setlibname" rules="lib,dll,module">
+    <!-- private helper tag: does the same thing as for <set-wxlike> except that:
+         - the variable created is always named "__temp"
+         - can be used (only) inside targets as this is a non-global tag
+    -->
+    <define-tag name="__setlibname" rules="lib,dll,module,exe">
         <set var="__temp">
             <if cond="FORMAT!='autoconf' and FORMAT!='gnu'">
                 $(attributes['prefix'])_$(WX_PORT)$(WX_VERSION)$(WXLIBPOSTFIX)_$(value)
@@ -359,12 +365,12 @@
         <sys-lib>$(__temp)</sys-lib>
     </define-tag>
 
-    <!-- Sets as output folder for the generated lib/dll a directory
-         called "lib/$(COMPILER)_lib|dll", just like wxWidgets does.
-         This makes it possible to keep separed the libraries compiled with
+    <!-- Sets as output folder for the current target a directory
+         called "$(value)/$(COMPILER)_lib|dll", just like wxWidgets does.
+         This makes it possible to keep separed the libraries/exes compiled with
          different compilers and with a different value for WX_SHARED.
     -->
-    <define-tag name="wxlike-libdirname" rules="lib,dll">
+    <define-tag name="wxlike-dirname" rules="lib,dll,exe,module">
         <if cond="FORMAT!='autoconf'">
             <set var="_DIRNAME_SHARED_SUFFIX">
                 <if cond="WX_SHARED=='0'">lib</if>
@@ -377,8 +383,8 @@
             <dirname>$(_DIRNAME)</dirname>
 
             <if cond="FORMAT_SUPPORTS_ACTIONS=='1'">
-                <set var="__mkdir_tgt">make_lib_dir_$(id)</set>
-            
+                <set var="__mkdir_tgt">make_dir_$(id)</set>
+
                 <add-target target="$(__mkdir_tgt)" type="action"/>
                 <modify-target target="$(__mkdir_tgt)">
                     <command cond="TOOLSET=='unix'">
@@ -387,17 +393,17 @@
                     <command cond="TOOLSET in ['win32','os2','dos']">
                         if not exist $(nativePaths(_DIRNAME)) mkdir $(nativePaths(_DIRNAME))
                     </command>
-                </modify-target>
+            </modify-target>
 
                 <!-- the following code is mostly equivalent to a:
                           <dependency-of>$(id)</dependency-of>
                      put into the __mkdir_tgt target, except that it does _prepend_
                      the __mkdir_tgt dependency instead of appending it.
-                     
+
                      This is required because some compilers (e.g. MSVC) need to store in the
                      output folder some files (e.g. the PDB file) while compiling and thus
-                     the output folder must have been created before _any_ source file is
-                     compiled, not just before the library is linked.
+                     the library output folder must have been created before _any_ source file
+                     is compiled, not just before the library is linked.
                 -->
                 <modify-target target="$(id)">
                     <set var="__deps" prepend="1">
@@ -413,7 +419,7 @@
     </define-tag>
 
     <!-- Adds to the compiler & linker flags the path for the "include" and the
-         "lib" folders of a library following wxWidgets conventions which is
+         "lib" folders of a library following wxWidgets conventions which is 
          located in $(value).
     -->
     <define-tag name="wxlike-paths" rules="exe,lib,dll,module">
@@ -436,6 +442,11 @@
         -->
     </define-tag>
 
+
+
+    <!--                   UTILITY GLOBAL TAGS                      -->
+    <!--                                                            -->
+
     <!-- Sets the BUILDDIR variable using the same rules used by wxWidgets itself.
          This makes it possible to keep separed the object files compiled with
          different configuration settings.
@@ -452,6 +463,35 @@
                 $(COMPILER)$(WX_PORT)$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)
             </set>
         </if>
+    </define-global-tag>
+
+    <!-- Sets a variable with the name of the 'var' attribute value using the
+         same rules used for wxWidgets library naming.
+         E.g.
+
+            <set-wxlike var='MYMODULE_LIBNAME' prefix='mylib'>
+                mymodule
+            </set-wxlike>
+
+         This is useful for conditional linking against a wx-based library:
+
+            <set var="MYMODULE_DEP">
+                <if cond="USE_MYMODULE=='1'">$(MYMODULE_LIBNAME)</if>
+            </set>
+            ...
+            <exe id="myexe">
+                <sys-lib>$(MYMODULE_DEP)</sys-lib>
+            </exe>
+    -->
+    <define-global-tag name="set-wxlike">
+        <set var="$(attributes['var'])">
+            <if cond="FORMAT!='autoconf' and FORMAT!='gnu'">
+                $(attributes['prefix'])_$(WX_PORT)$(WX_VERSION)$(WXLIBPOSTFIX)_$(value)
+            </if>
+            <if cond="FORMAT=='autoconf' or FORMAT=='gnu'">
+                $(attributes['prefix'])_$(WX_PORT)$(WXLIBPOSTFIX)_$(value)-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)
+            </if>
+        </set>
     </define-global-tag>
 
 </makefile>
