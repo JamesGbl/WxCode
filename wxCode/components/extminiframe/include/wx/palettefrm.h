@@ -15,6 +15,7 @@
 #include "wx/palettefrmdef.h"
 #include <wx/config.h>
 #include <wx/frame.h>
+#include <wx/dcclient.h>
 
 
 // wxExtMiniFrame defines

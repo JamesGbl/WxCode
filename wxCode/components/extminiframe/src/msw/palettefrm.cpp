@@ -426,7 +426,7 @@ long wxExtMiniFrame::MSWGetHitTest(WXLPARAM lParam)
         debug = wxT("TWO BORDERS JUNCTION");
     }
     
-    wxEXTMF_LOG(wxT("wxExtMiniFrame::OnHitTest - %s"), debug);
+    wxEXTMF_LOG(wxT("wxExtMiniFrame::OnHitTest - %s"), debug.c_str());
 #endif
 
     return r;

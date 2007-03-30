@@ -42,7 +42,7 @@
 //    variable:
 //          WXDLLIMPEXP_DATA_PALETTEFRM(int) myGlobalIntVar;
 //
-#ifdef WXMAKINGDLL_WXEXTMINIFRAME
+#ifdef WXMAKINGDLL_EXTMINIFRAME
     #define WXDLLIMPEXP_WXEXTMINIFRAME                  WXEXPORT
     #define WXDLLIMPEXP_DATA_WXEXTMINIFRAME(type)       WXEXPORT type
 #elif defined(WXUSINGDLL)

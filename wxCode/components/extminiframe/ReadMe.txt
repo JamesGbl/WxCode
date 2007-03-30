@@ -2,7 +2,7 @@
  wxExtMiniFrame component info
  -----------------------------
 
- Website: http://wxcode.sourceforge.net/components/wxextminiframe
+ Website: http://wxcode.sourceforge.net/components/extminiframe
  Version: 1.6
  Description:
  This component provides a wxMainFrame window which is able to handle one or more
