@@ -28,12 +28,12 @@ CPPFLAGS =
 # Standard linker flags 
 LDFLAGS = 
 
-# Use DLL build of wx library to use? [0,1]
+# Use DLL build of wx library? [0,1]
 #   0 - Static
 #   1 - DLL
 WX_SHARED = 0
 
-# Compile Unicode build of wxWidgets? [0,1]
+# Use Unicode build of wxWidgets? [0,1]
 #   0 - ANSI
 #   1 - Unicode
 WX_UNICODE = 0
@@ -378,60 +378,60 @@ WXCURL_LIB_CXXFLAGS = $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(____wxcurl) $(____wxcurl_2) -i=..\include -i=..\thirdparty\curl\include &
 	$(CPPFLAGS) $(CXXFLAGS)
 WXCURL_LIB_OBJECTS =  &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_base.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_dav.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_davtool.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_ftp.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_ftpparse.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_ftptool.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_http.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_telnet.obj
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_ftpparse.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_ftp.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_ftptool.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_base.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_telnet.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_davtool.obj
 WXCURL_DLL_CXXFLAGS = -bd $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include &
 	$(____wxcurl) $(____wxcurl_2) -i=..\include -dWXMAKINGDLL_WXCURL &
 	-i=..\thirdparty\curl\include $(CPPFLAGS) $(CXXFLAGS)
 WXCURL_DLL_OBJECTS =  &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_base.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_dav.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_davtool.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_ftp.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_ftpparse.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_ftptool.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_http.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_telnet.obj
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_ftpparse.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_ftp.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_ftptool.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_base.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_telnet.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_davtool.obj
 WXCURL_TESTER_CXXFLAGS = $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include &
 	$(____wxcurl) $(____wxcurl_2) -i=..\include -i=..\thirdparty\curl\include &
 	$(CPPFLAGS) $(CXXFLAGS)
 WXCURL_TESTER_OBJECTS =  &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxCURLApp.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxCURLDlg.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxDeleteDialog.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxFTPDeleteDialog.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxFTPMkdirDialog.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxFTPRenameDialog.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxFTPRmdirDialog.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxGetDialog.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxGetFSDialog.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxGetFSFTPDialog.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxGetFTPDialog.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxGetFTPFileDialog.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxGetFileDialog.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxHeadDialog.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxInfoFTPDialog.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxListFTPDialog.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxMkcolDialog.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxNlstFTPDialog.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxOptionsDialog.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxPostDialog.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxPropfindDialog.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxPutDialog.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxPutFTPDialog.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxPutFTPTextDialog.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxPutTextDialog.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxTraceDialog.obj
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxGetDialog.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxPropfindDialog.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxPostDialog.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxCURLDlg.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxInfoFTPDialog.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxTraceDialog.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxGetFSDialog.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxFTPDeleteDialog.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxPutDialog.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxMkcolDialog.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxGetFTPDialog.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxPutFTPTextDialog.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxOptionsDialog.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxGetFTPFileDialog.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxFTPRenameDialog.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxGetFSFTPDialog.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxNlstFTPDialog.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxFTPMkdirDialog.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxHeadDialog.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxFTPRmdirDialog.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxListFTPDialog.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxCURLApp.obj
 
 
 all : watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)
@@ -474,17 +474,17 @@ thirdparty : .SYMBOLIC
 	cd $(WATCOM_CWD)
 
 !ifeq WX_SHARED 0
-..\lib\wat_$(____wxcurl_5)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.lib :  make_lib_dir_wxcurl_lib  $(WXCURL_LIB_OBJECTS)
+..\lib\wat_$(____wxcurl_5)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.lib :  make_dir_wxcurl_lib  $(WXCURL_LIB_OBJECTS)
 	@%create watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib.lbc
 	@for %i in ($(WXCURL_LIB_OBJECTS)) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib.lbc +%i
 	wlib -q -p4096 -n -b $^@ @watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib.lbc
 !endif
 
-make_lib_dir_wxcurl_lib :  
+make_dir_wxcurl_lib :  
 	if not exist ..\lib\wat_$(____wxcurl_5) mkdir ..\lib\wat_$(____wxcurl_5)
 
 !ifeq WX_SHARED 1
-..\lib\wat_$(____wxcurl_5)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.dll :  make_lib_dir_wxcurl_dll  $(WXCURL_DLL_OBJECTS)
+..\lib\wat_$(____wxcurl_5)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.dll :  make_dir_wxcurl_dll  $(WXCURL_DLL_OBJECTS)
 	@%create watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll.lbc
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll.lbc option quiet
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll.lbc name $^@
@@ -498,7 +498,7 @@ make_lib_dir_wxcurl_lib :
 	wlib -q -n -b ..\lib\wat_$(____wxcurl_5)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.lib +$^@
 !endif
 
-make_lib_dir_wxcurl_dll :  
+make_dir_wxcurl_dll :  
 	if not exist ..\lib\wat_$(____wxcurl_5) mkdir ..\lib\wat_$(____wxcurl_5)
 
 ..\sample\wxcurl_tester.exe :  $(WXCURL_TESTER_OBJECTS) make_sample_dir_wxcurl_tester  $(__wxcurl_lib___depname)
@@ -514,7 +514,7 @@ make_lib_dir_wxcurl_dll :
 	wlink @watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester.lbc
 
 make_sample_dir_wxcurl_tester :  
-	if not exist ..\sample mkdir ..\sample
+	if not exist ../sample mkdir../sample
 
 tarball :  
 	make distclean
@@ -526,129 +526,129 @@ zip :  clean
 	-cd ..\..
 	-zip -r9 wxcurl.zip wxcurl -x "*.pdb" -x "*.log" -x "*.o*"
 
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_base.obj :  .AUTODEPEND ..\src\base.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_LIB_CXXFLAGS) $<
-
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_dav.obj :  .AUTODEPEND ..\src\dav.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_LIB_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_davtool.obj :  .AUTODEPEND ..\src\davtool.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_LIB_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_ftp.obj :  .AUTODEPEND ..\src\ftp.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_LIB_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_ftpparse.obj :  .AUTODEPEND ..\src\ftpparse.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_LIB_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_ftptool.obj :  .AUTODEPEND ..\src\ftptool.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_LIB_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_http.obj :  .AUTODEPEND ..\src\http.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_LIB_CXXFLAGS) $<
 
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_ftpparse.obj :  .AUTODEPEND ..\src\ftpparse.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_ftp.obj :  .AUTODEPEND ..\src\ftp.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_ftptool.obj :  .AUTODEPEND ..\src\ftptool.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_LIB_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_base.obj :  .AUTODEPEND ..\src\base.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_LIB_CXXFLAGS) $<
+
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_telnet.obj :  .AUTODEPEND ..\src\telnet.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_LIB_CXXFLAGS) $<
 
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_base.obj :  .AUTODEPEND ..\src\base.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_DLL_CXXFLAGS) $<
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_davtool.obj :  .AUTODEPEND ..\src\davtool.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_LIB_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_dav.obj :  .AUTODEPEND ..\src\dav.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_DLL_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_davtool.obj :  .AUTODEPEND ..\src\davtool.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_DLL_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_ftp.obj :  .AUTODEPEND ..\src\ftp.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_DLL_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_ftpparse.obj :  .AUTODEPEND ..\src\ftpparse.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_DLL_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_ftptool.obj :  .AUTODEPEND ..\src\ftptool.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_DLL_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_http.obj :  .AUTODEPEND ..\src\http.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_DLL_CXXFLAGS) $<
 
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_ftpparse.obj :  .AUTODEPEND ..\src\ftpparse.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_ftp.obj :  .AUTODEPEND ..\src\ftp.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_ftptool.obj :  .AUTODEPEND ..\src\ftptool.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_base.obj :  .AUTODEPEND ..\src\base.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_DLL_CXXFLAGS) $<
+
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_telnet.obj :  .AUTODEPEND ..\src\telnet.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_DLL_CXXFLAGS) $<
 
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxCURLApp.obj :  .AUTODEPEND ..\sample\wxCURLApp.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxCURLDlg.obj :  .AUTODEPEND ..\sample\wxCURLDlg.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_davtool.obj :  .AUTODEPEND ..\src\davtool.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_DLL_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxDeleteDialog.obj :  .AUTODEPEND ..\sample\wxDeleteDialog.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxFTPDeleteDialog.obj :  .AUTODEPEND ..\sample\wxFTPDeleteDialog.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxFTPMkdirDialog.obj :  .AUTODEPEND ..\sample\wxFTPMkdirDialog.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxFTPRenameDialog.obj :  .AUTODEPEND ..\sample\wxFTPRenameDialog.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxFTPRmdirDialog.obj :  .AUTODEPEND ..\sample\wxFTPRmdirDialog.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxGetDialog.obj :  .AUTODEPEND ..\sample\wxGetDialog.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxGetFSDialog.obj :  .AUTODEPEND ..\sample\wxGetFSDialog.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxGetFSFTPDialog.obj :  .AUTODEPEND ..\sample\wxGetFSFTPDialog.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxGetFTPDialog.obj :  .AUTODEPEND ..\sample\wxGetFTPDialog.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxGetFTPFileDialog.obj :  .AUTODEPEND ..\sample\wxGetFTPFileDialog.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxGetFileDialog.obj :  .AUTODEPEND ..\sample\wxGetFileDialog.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
 
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxHeadDialog.obj :  .AUTODEPEND ..\sample\wxHeadDialog.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxInfoFTPDialog.obj :  .AUTODEPEND ..\sample\wxInfoFTPDialog.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxListFTPDialog.obj :  .AUTODEPEND ..\sample\wxListFTPDialog.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxMkcolDialog.obj :  .AUTODEPEND ..\sample\wxMkcolDialog.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxNlstFTPDialog.obj :  .AUTODEPEND ..\sample\wxNlstFTPDialog.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxOptionsDialog.obj :  .AUTODEPEND ..\sample\wxOptionsDialog.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxPostDialog.obj :  .AUTODEPEND ..\sample\wxPostDialog.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxPropfindDialog.obj :  .AUTODEPEND ..\sample\wxPropfindDialog.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxPutDialog.obj :  .AUTODEPEND ..\sample\wxPutDialog.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
-
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxPutFTPDialog.obj :  .AUTODEPEND ..\sample\wxPutFTPDialog.cpp
-	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
-
-watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxPutFTPTextDialog.obj :  .AUTODEPEND ..\sample\wxPutFTPTextDialog.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxPutTextDialog.obj :  .AUTODEPEND ..\sample\wxPutTextDialog.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
 
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxGetDialog.obj :  .AUTODEPEND ..\sample\wxGetDialog.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxPropfindDialog.obj :  .AUTODEPEND ..\sample\wxPropfindDialog.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxPostDialog.obj :  .AUTODEPEND ..\sample\wxPostDialog.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxCURLDlg.obj :  .AUTODEPEND ..\sample\wxCURLDlg.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxInfoFTPDialog.obj :  .AUTODEPEND ..\sample\wxInfoFTPDialog.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
+
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxTraceDialog.obj :  .AUTODEPEND ..\sample\wxTraceDialog.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxGetFSDialog.obj :  .AUTODEPEND ..\sample\wxGetFSDialog.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxFTPDeleteDialog.obj :  .AUTODEPEND ..\sample\wxFTPDeleteDialog.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxPutDialog.obj :  .AUTODEPEND ..\sample\wxPutDialog.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxMkcolDialog.obj :  .AUTODEPEND ..\sample\wxMkcolDialog.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxGetFTPDialog.obj :  .AUTODEPEND ..\sample\wxGetFTPDialog.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxPutFTPTextDialog.obj :  .AUTODEPEND ..\sample\wxPutFTPTextDialog.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxOptionsDialog.obj :  .AUTODEPEND ..\sample\wxOptionsDialog.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxGetFTPFileDialog.obj :  .AUTODEPEND ..\sample\wxGetFTPFileDialog.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxFTPRenameDialog.obj :  .AUTODEPEND ..\sample\wxFTPRenameDialog.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxGetFSFTPDialog.obj :  .AUTODEPEND ..\sample\wxGetFSFTPDialog.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxNlstFTPDialog.obj :  .AUTODEPEND ..\sample\wxNlstFTPDialog.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxFTPMkdirDialog.obj :  .AUTODEPEND ..\sample\wxFTPMkdirDialog.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxHeadDialog.obj :  .AUTODEPEND ..\sample\wxHeadDialog.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxFTPRmdirDialog.obj :  .AUTODEPEND ..\sample\wxFTPRmdirDialog.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxListFTPDialog.obj :  .AUTODEPEND ..\sample\wxListFTPDialog.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxCURLApp.obj :  .AUTODEPEND ..\sample\wxCURLApp.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_TESTER_CXXFLAGS) $<
 

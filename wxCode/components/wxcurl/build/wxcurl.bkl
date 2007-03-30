@@ -11,8 +11,8 @@
     
     <template id="curlbasic">
         <if cond="TARGETING_WIN32=='0'">
-            <include>`curl-config --include`</include>
-            <lib-path>`curl-config --libs`</lib-path>
+            <cppflags>`curl-config --cflags`</cppflags>
+            <ldflags>`curl-config --libs`</ldflags>
         </if>
         <if cond="TARGETING_WIN32=='1'">
             <include>$(SRCDIR)\thirdparty\curl\include</include>

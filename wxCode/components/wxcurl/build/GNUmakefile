@@ -69,76 +69,60 @@ WX_VERSION_MINOR = $(shell echo $(WX_VERSION) | cut -c2,2)
 WX_CONFIG_FLAGS = $(WX_CONFIG_DEBUG_FLAG) $(WX_CONFIG_UNICODE_FLAG) \
 	$(WX_CONFIG_SHARED_FLAG) --toolkit=$(WX_PORT) \
 	--version=$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)
-WXCURL_LIB_CXXFLAGS = $(____wxcurl) $(____wxcurl_3) -I../include -I`curl-config \
-	--include` `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) \
+WXCURL_LIB_CXXFLAGS = $(____wxcurl) $(____wxcurl_3) -I../include `curl-config \
+	--cflags` `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) \
 	$(CXXFLAGS)
 WXCURL_LIB_OBJECTS =  \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_base.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_dav.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_davtool.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_ftp.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_ftpparse.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_ftptool.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_http.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_telnet.o
-WXCURL_LIB_HEADERS =  \
-	include/wx/curl/base.h \
-	include/wx/curl/dav.h \
-	include/wx/curl/davtool.h \
-	include/wx/curl/ftp.h \
-	include/wx/curl/ftptool.h \
-	include/wx/curl/http.h \
-	include/wx/curl/telnet.h
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_ftpparse.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_ftp.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_ftptool.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_base.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_telnet.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_davtool.o
 WXCURL_DLL_CXXFLAGS = $(____wxcurl) $(____wxcurl_3) -I../include \
-	-DWXMAKINGDLL_WXCURL -I`curl-config --include` -fPIC -DPIC `$(WX_CONFIG) \
+	-DWXMAKINGDLL_WXCURL `curl-config --cflags` -fPIC -DPIC `$(WX_CONFIG) \
 	--cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 WXCURL_DLL_OBJECTS =  \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_base.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_dav.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_davtool.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_ftp.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_ftpparse.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_ftptool.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_http.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_telnet.o
-WXCURL_DLL_HEADERS =  \
-	include/wx/curl/base.h \
-	include/wx/curl/dav.h \
-	include/wx/curl/davtool.h \
-	include/wx/curl/ftp.h \
-	include/wx/curl/ftptool.h \
-	include/wx/curl/http.h \
-	include/wx/curl/telnet.h
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_ftpparse.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_ftp.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_ftptool.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_base.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_telnet.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_davtool.o
 WXCURL_TESTER_CXXFLAGS = $(____wxcurl) $(____wxcurl_3) -I../include \
-	-I`curl-config --include` `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` \
+	`curl-config --cflags` `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` \
 	$(CPPFLAGS) $(CXXFLAGS)
 WXCURL_TESTER_OBJECTS =  \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxCURLApp.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxCURLDlg.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxDeleteDialog.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxFTPDeleteDialog.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxFTPMkdirDialog.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxFTPRenameDialog.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxFTPRmdirDialog.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxGetDialog.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxGetFSDialog.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxGetFSFTPDialog.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxGetFTPDialog.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxGetFTPFileDialog.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxGetFileDialog.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxHeadDialog.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxInfoFTPDialog.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxListFTPDialog.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxMkcolDialog.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxNlstFTPDialog.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxOptionsDialog.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxPostDialog.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxPropfindDialog.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxPutDialog.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxPutFTPDialog.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxPutFTPTextDialog.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxPutTextDialog.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxTraceDialog.o
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxGetDialog.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxPropfindDialog.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxPostDialog.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxCURLDlg.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxInfoFTPDialog.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxTraceDialog.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxGetFSDialog.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxFTPDeleteDialog.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxPutDialog.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxMkcolDialog.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxGetFTPDialog.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxPutFTPTextDialog.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxOptionsDialog.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxGetFTPFileDialog.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxFTPRenameDialog.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxGetFSFTPDialog.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxNlstFTPDialog.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxFTPMkdirDialog.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxHeadDialog.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxFTPRmdirDialog.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxListFTPDialog.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxCURLApp.o
 
 ### Conditionally set variables: ###
 
@@ -242,7 +226,7 @@ test_for_selected_wxbuild:
 	@$(WX_CONFIG) $(WX_CONFIG_FLAGS)
 
 ifeq ($(WX_SHARED),0)
-../lib/gcc_$(__wxcurl)/libwxcode_$(WX_PORT)_wxcurl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a: make_lib_dir_wxcurl_lib  $(WXCURL_LIB_OBJECTS)
+../lib/gcc_$(__wxcurl)/libwxcode_$(WX_PORT)_wxcurl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a: make_dir_wxcurl_lib  $(WXCURL_LIB_OBJECTS)
 	rm -f $@
 	$(AR) rcu $@ $(WXCURL_LIB_OBJECTS)
 	$(RANLIB) $@
@@ -259,13 +243,13 @@ uninstall_wxcurl_lib:
 	rm -f $(DESTDIR)$(prefix)/lib/libwxcode_$(WX_PORT)_wxcurl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a
 endif
 
-make_lib_dir_wxcurl_lib: 
+make_dir_wxcurl_lib: 
 	@mkdir -p ../lib/gcc_$(__wxcurl)
 
 ifeq ($(WX_SHARED),0)
 install_wxcurl_lib_headers: 
 	$(INSTALL) -d $(DESTDIR)$(prefix)
-	for f in $(WXCURL_LIB_HEADERS); do \
+	for f in  include/wx/curl/dav.h include/wx/curl/ftp.h include/wx/curl/telnet.h include/wx/curl/base.h include/wx/curl/ftptool.h include/wx/curl/http.h include/wx/curl/davtool.h; do \
 	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
 	$(INSTALL) -d $(DESTDIR)$(prefix)/`dirname $$f`; \
 	fi; \
@@ -275,14 +259,14 @@ endif
 
 ifeq ($(WX_SHARED),0)
 uninstall_wxcurl_lib_headers: 
-	for f in $(WXCURL_LIB_HEADERS); do \
+	for f in  include/wx/curl/dav.h include/wx/curl/ftp.h include/wx/curl/telnet.h include/wx/curl/base.h include/wx/curl/ftptool.h include/wx/curl/http.h include/wx/curl/davtool.h; do \
 	rm -f $(DESTDIR)$(prefix)/$$f; \
 	done
 endif
 
 ifeq ($(WX_SHARED),1)
-../lib/gcc_$(__wxcurl)/libwxcode_$(WX_PORT)_wxcurl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so: make_lib_dir_wxcurl_dll  $(WXCURL_DLL_OBJECTS)
-	$(CXX) -shared -fPIC -o $@ $(WXCURL_DLL_OBJECTS) $(LDFLAGS) $(____wxcurl_3) -L../lib -L`curl-config --libs`  -lcurl `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs xml,core,base`
+../lib/gcc_$(__wxcurl)/libwxcode_$(WX_PORT)_wxcurl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so: make_dir_wxcurl_dll  $(WXCURL_DLL_OBJECTS)
+	$(CXX) -shared -fPIC -o $@ $(WXCURL_DLL_OBJECTS) $(LDFLAGS) $(____wxcurl_3) -L../lib `curl-config --libs`  -lcurl `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs xml,core,base`
 endif
 
 ifeq ($(WX_SHARED),1)
@@ -298,13 +282,13 @@ uninstall_wxcurl_dll:
 	rm -f $(DESTDIR)$(prefix)/lib/libwxcode_$(WX_PORT)_wxcurl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
 endif
 
-make_lib_dir_wxcurl_dll: 
+make_dir_wxcurl_dll: 
 	@mkdir -p ../lib/gcc_$(__wxcurl)
 
 ifeq ($(WX_SHARED),1)
 install_wxcurl_dll_headers: 
 	$(INSTALL) -d $(DESTDIR)$(prefix)
-	for f in $(WXCURL_DLL_HEADERS); do \
+	for f in  include/wx/curl/dav.h include/wx/curl/ftp.h include/wx/curl/telnet.h include/wx/curl/base.h include/wx/curl/ftptool.h include/wx/curl/http.h include/wx/curl/davtool.h; do \
 	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
 	$(INSTALL) -d $(DESTDIR)$(prefix)/`dirname $$f`; \
 	fi; \
@@ -314,13 +298,13 @@ endif
 
 ifeq ($(WX_SHARED),1)
 uninstall_wxcurl_dll_headers: 
-	for f in $(WXCURL_DLL_HEADERS); do \
+	for f in  include/wx/curl/dav.h include/wx/curl/ftp.h include/wx/curl/telnet.h include/wx/curl/base.h include/wx/curl/ftptool.h include/wx/curl/http.h include/wx/curl/davtool.h; do \
 	rm -f $(DESTDIR)$(prefix)/$$f; \
 	done
 endif
 
 ../sample/wxcurl_tester: $(WXCURL_TESTER_OBJECTS) make_sample_dir_wxcurl_tester $(__wxcurl_lib___depname)
-	$(CXX) -o $@ $(WXCURL_TESTER_OBJECTS) $(LDFLAGS) $(____wxcurl_3) -L../lib  -L`curl-config --libs`  ../lib/gcc_$(__wxcurl)/libwxcode_$(WX_PORT)_wxcurl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a -lcurl `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs xrc,html,adv,xml,core,base`
+	$(CXX) -o $@ $(WXCURL_TESTER_OBJECTS) $(LDFLAGS) $(____wxcurl_3) -L../lib  `curl-config --libs`  ../lib/gcc_$(__wxcurl)/libwxcode_$(WX_PORT)_wxcurl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a -lcurl `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs xrc,html,adv,xml,core,base`
 
 make_sample_dir_wxcurl_tester: 
 	@mkdir -p ../sample
@@ -333,130 +317,130 @@ zip: clean
 	del ../../wxcurl.zip
 	( cd ../.. && zip -r9 wxcurl.zip wxcurl -x "*.pdb" -x "*.log" -x "*.o*" )
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_base.o: ../src/base.cpp
-	$(CXX) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(CPPDEPS) $<
-
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_dav.o: ../src/dav.cpp
-	$(CXX) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_davtool.o: ../src/davtool.cpp
-	$(CXX) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_ftp.o: ../src/ftp.cpp
-	$(CXX) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_ftpparse.o: ../src/ftpparse.cpp
-	$(CXX) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_ftptool.o: ../src/ftptool.cpp
 	$(CXX) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_http.o: ../src/http.cpp
 	$(CXX) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(CPPDEPS) $<
 
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_ftpparse.o: ../src/ftpparse.cpp
+	$(CXX) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_ftp.o: ../src/ftp.cpp
+	$(CXX) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_ftptool.o: ../src/ftptool.cpp
+	$(CXX) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_base.o: ../src/base.cpp
+	$(CXX) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_telnet.o: ../src/telnet.cpp
 	$(CXX) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_base.o: ../src/base.cpp
-	$(CXX) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(CPPDEPS) $<
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_davtool.o: ../src/davtool.cpp
+	$(CXX) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_dav.o: ../src/dav.cpp
-	$(CXX) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_davtool.o: ../src/davtool.cpp
-	$(CXX) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_ftp.o: ../src/ftp.cpp
-	$(CXX) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_ftpparse.o: ../src/ftpparse.cpp
-	$(CXX) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_ftptool.o: ../src/ftptool.cpp
 	$(CXX) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_http.o: ../src/http.cpp
 	$(CXX) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(CPPDEPS) $<
 
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_ftpparse.o: ../src/ftpparse.cpp
+	$(CXX) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_ftp.o: ../src/ftp.cpp
+	$(CXX) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_ftptool.o: ../src/ftptool.cpp
+	$(CXX) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_base.o: ../src/base.cpp
+	$(CXX) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_telnet.o: ../src/telnet.cpp
 	$(CXX) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxCURLApp.o: ../sample/wxCURLApp.cpp
-	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxCURLDlg.o: ../sample/wxCURLDlg.cpp
-	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_davtool.o: ../src/davtool.cpp
+	$(CXX) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxDeleteDialog.o: ../sample/wxDeleteDialog.cpp
-	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxFTPDeleteDialog.o: ../sample/wxFTPDeleteDialog.cpp
-	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxFTPMkdirDialog.o: ../sample/wxFTPMkdirDialog.cpp
-	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxFTPRenameDialog.o: ../sample/wxFTPRenameDialog.cpp
-	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxFTPRmdirDialog.o: ../sample/wxFTPRmdirDialog.cpp
-	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxGetDialog.o: ../sample/wxGetDialog.cpp
-	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxGetFSDialog.o: ../sample/wxGetFSDialog.cpp
-	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxGetFSFTPDialog.o: ../sample/wxGetFSFTPDialog.cpp
-	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxGetFTPDialog.o: ../sample/wxGetFTPDialog.cpp
-	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxGetFTPFileDialog.o: ../sample/wxGetFTPFileDialog.cpp
 	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxGetFileDialog.o: ../sample/wxGetFileDialog.cpp
 	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxHeadDialog.o: ../sample/wxHeadDialog.cpp
-	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxInfoFTPDialog.o: ../sample/wxInfoFTPDialog.cpp
-	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxListFTPDialog.o: ../sample/wxListFTPDialog.cpp
-	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxMkcolDialog.o: ../sample/wxMkcolDialog.cpp
-	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxNlstFTPDialog.o: ../sample/wxNlstFTPDialog.cpp
-	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxOptionsDialog.o: ../sample/wxOptionsDialog.cpp
-	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxPostDialog.o: ../sample/wxPostDialog.cpp
-	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxPropfindDialog.o: ../sample/wxPropfindDialog.cpp
-	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxPutDialog.o: ../sample/wxPutDialog.cpp
-	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
-
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxPutFTPDialog.o: ../sample/wxPutFTPDialog.cpp
-	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxPutFTPTextDialog.o: ../sample/wxPutFTPTextDialog.cpp
 	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxPutTextDialog.o: ../sample/wxPutTextDialog.cpp
 	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
 
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxGetDialog.o: ../sample/wxGetDialog.cpp
+	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxPropfindDialog.o: ../sample/wxPropfindDialog.cpp
+	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxPostDialog.o: ../sample/wxPostDialog.cpp
+	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxCURLDlg.o: ../sample/wxCURLDlg.cpp
+	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxInfoFTPDialog.o: ../sample/wxInfoFTPDialog.cpp
+	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
+
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxTraceDialog.o: ../sample/wxTraceDialog.cpp
+	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxGetFSDialog.o: ../sample/wxGetFSDialog.cpp
+	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxFTPDeleteDialog.o: ../sample/wxFTPDeleteDialog.cpp
+	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxPutDialog.o: ../sample/wxPutDialog.cpp
+	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxMkcolDialog.o: ../sample/wxMkcolDialog.cpp
+	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxGetFTPDialog.o: ../sample/wxGetFTPDialog.cpp
+	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxPutFTPTextDialog.o: ../sample/wxPutFTPTextDialog.cpp
+	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxOptionsDialog.o: ../sample/wxOptionsDialog.cpp
+	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxGetFTPFileDialog.o: ../sample/wxGetFTPFileDialog.cpp
+	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxFTPRenameDialog.o: ../sample/wxFTPRenameDialog.cpp
+	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxGetFSFTPDialog.o: ../sample/wxGetFSFTPDialog.cpp
+	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxNlstFTPDialog.o: ../sample/wxNlstFTPDialog.cpp
+	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxFTPMkdirDialog.o: ../sample/wxFTPMkdirDialog.cpp
+	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxHeadDialog.o: ../sample/wxHeadDialog.cpp
+	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxFTPRmdirDialog.o: ../sample/wxFTPRmdirDialog.cpp
+	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxListFTPDialog.o: ../sample/wxListFTPDialog.cpp
+	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxCURLApp.o: ../sample/wxCURLApp.cpp
 	$(CXX) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(CPPDEPS) $<
 
 .PHONY: all install uninstall clean install_wxcurl_lib uninstall_wxcurl_lib install_wxcurl_lib_headers uninstall_wxcurl_lib_headers install_wxcurl_dll uninstall_wxcurl_dll install_wxcurl_dll_headers uninstall_wxcurl_dll_headers
