@@ -2,7 +2,7 @@
  wxCode bakefiles ReadMe
  -----------------------
  
- RCS-ID: $Id: ReadMe.txt,v 1.8 2005/10/29 14:10:50 frm Exp $
+ RCS-ID: $Id$
 
  The content of this readme have been moved to this page:
 

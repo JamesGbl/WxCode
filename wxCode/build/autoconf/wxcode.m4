@@ -1,7 +1,7 @@
 dnl ---------------------------------------------------------------------------
 dnl Author:          Francesco Montorsi
 dnl Creation date:   14/9/2005
-dnl RCS-ID:          $Id: wxcode.m4,v 1.12 2007/03/28 14:28:23 frm Exp $
+dnl RCS-ID:          $Id$
 dnl Purpose:         Some M4 macros specific for wxCode components
 dnl ---------------------------------------------------------------------------
 

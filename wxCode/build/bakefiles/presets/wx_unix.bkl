@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!-- $Id: wx_unix.bkl,v 1.1 2007/03/01 11:33:22 frm Exp $ -->
+<!-- $Id$ -->
 
 <!--
 Presents for building wxWidgets applications using Autoconf or GNU toosets.
