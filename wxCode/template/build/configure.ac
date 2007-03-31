@@ -1,6 +1,6 @@
 # ======================================================================================
 # Author: Francesco Montorsi
-# RCS-ID: $Id: configure.ac,v 1.8 2007/03/04 08:57:20 frm Exp $
+# RCS-ID: $Id$
 #
 # A basic "configure.ac" for a wxCode component.
 # See 
@@ -12,6 +12,7 @@
 # Init this configure script with basic info about the component
 # (DON'T PUT ANYTHING BEFORE AC_INIT, JUST COMMENTS)
 AC_INIT([MYCOMP], [1.0], [mymail@myserver.com])
+AC_CONFIG_AUX_DIR(build)
 
 # ENABLES/DISABLES THE DEBUG MODE FOR THIS CONFIGURE SCRIPT
 #WX_DEBUG_CONFIGURE=1
@@ -71,6 +72,9 @@ WXCODE_OPTIONS([debug,unicode,shared,toolkit,wxshared,wxversion])
 WXCODE_CHECKS([2.8.0], [core,base])      # we need at least wxWidgets 2.8 to work
 
 
+# Other things which can be useful to add here can be:
+AC_PROG_CC          # if you want to compile .c sources and not only .cpp ones
+CPPFLAGS="$CPPFLAGS `pkg-config gtk+-2.0 --cflags`"     # if you want to use GTK+ 2 headers directly
 
 # end in a nice way the configure script
 WXCODE_END

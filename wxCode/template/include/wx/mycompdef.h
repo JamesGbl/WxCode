@@ -3,7 +3,7 @@
 // Purpose:     shared build defines
 // Author:      Name Surname
 // Created:     someyear/somemonth/someday
-// RCS-ID:      $Id: mycompdef.h,v 1.4 2006/03/07 18:53:42 frm Exp $
+// RCS-ID:      $Id$
 // Copyright:   (c) YEAR Name Surname
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
