@@ -1,7 +1,7 @@
 dnl ---------------------------------------------------------------------------
 dnl Author:          Francesco Montorsi
 dnl Creation date:   14/9/2005
-dnl RCS-ID:          $Id: wxcode.m4,v 1.11 2007/03/01 11:27:10 frm Exp $
+dnl RCS-ID:          $Id: wxcode.m4,v 1.12 2007/03/28 14:28:23 frm Exp $
 dnl Purpose:         Some M4 macros specific for wxCode components
 dnl ---------------------------------------------------------------------------
 
@@ -24,6 +24,13 @@ AC_DEFUN([WXCODE_INIT],
 
             m4_include(../../../build/autoconf/wxwin.m4)
             AC_LANG(C++)
+
+            dnl wxCode components usually keep the install.sh and config.{guess|sub}
+            dnl scripts in the "build" folder; however we cannot add this line:
+            dnl     AC_CONFIG_AUX_DIR(build)
+            dnl inside this macro as otherwise autoconf would not get the "build"
+            dnl relative path correctly. The line above must be _directly_ written
+            dnl in the component's configure.ac!
 
             dnl required by Bakefile:
             AC_CANONICAL_SYSTEM
@@ -92,6 +99,9 @@ dnl options defined by WXCODE_OPTIONS
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([WXCODE_CHECKS],
         [
+            # required when compiling C files:
+            AC_PROG_CC
+
             WX_CONVERT_STANDARD_OPTIONS_TO_WXCONFIG_FLAGS
             WX_CONFIG_CHECK([$1],,,[$2],[$WXCONFIG_FLAGS])
             WX_DETECT_STANDARD_OPTION_VALUES

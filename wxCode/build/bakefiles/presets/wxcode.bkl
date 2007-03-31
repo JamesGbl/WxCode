@@ -2,7 +2,7 @@
 
 <!-- Created by: Francesco Montorsi <frm@users.sourceforge.net>     -->
 <!-- Creation date: 9/10/2004                                       -->
-<!-- RCS-ID: $Id: wxcode.bkl,v 1.1 2007/03/01 11:33:22 frm Exp $    -->
+<!-- RCS-ID: $Id: wxcode.bkl,v 1.2 2007/03/22 12:36:42 frm Exp $    -->
 
 <makefile>
 
@@ -18,7 +18,7 @@
     </if>
     <if cond="WX_VERSION_DEFAULT!='28' and FORMAT!='gnu'">
         <!-- this is to avoid that I (Francesco) erraneously commit presets with 29 as def version -->
-        <error>Please use the current stable branch as WX_VERSION option default!</error>
+        <error>Please use the current stable branch as WX_VERSION option default and not $(WX_VERSION_DEFAULT)!</error>
     </if>
 
     <!-- Our defaults -->

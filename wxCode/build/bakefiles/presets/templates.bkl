@@ -2,7 +2,7 @@
 
 <!-- Created by: Francesco Montorsi <frm@users.sourceforge.net>     -->
 <!-- Creation date: 9/10/2004                                       -->
-<!-- RCS-ID: $Id: templates.bkl,v 1.2 2007/03/04 09:16:09 frm Exp $ -->
+<!-- RCS-ID: $Id: templates.bkl,v 1.4 2007/03/29 21:30:55 frm Exp $ -->
 
 <makefile>
 
@@ -50,7 +50,7 @@
         <install-to>$(LIBDIR)</install-to>
         <install-headers-to>$(PREFIX)</install-headers-to>
 
-        <wxlike-libdirname>$(SRCDIR)/lib</wxlike-libdirname>
+        <wxlike-dirname>$(SRCDIR)/lib</wxlike-dirname>
         <wxlike-libname prefix="wxcode">$(COMP_NAME)</wxlike-libname>
 
         <sources>$(COMP_SRC)</sources>
@@ -61,7 +61,7 @@
         <install-to>$(LIBDIR)</install-to>
         <install-headers-to>$(PREFIX)</install-headers-to>
 
-        <wxlike-libdirname>$(SRCDIR)/lib</wxlike-libdirname>
+        <wxlike-dirname>$(SRCDIR)/lib</wxlike-dirname>
         <wxlike-dllname prefix="wxcode">$(COMP_NAME)</wxlike-dllname>
 
         <version>1.0</version>
