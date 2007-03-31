@@ -29,12 +29,14 @@
 #include <wx/button.h>
 #include <wx/gauge.h>
 #include <wx/stattext.h>
-#include <wx/listctrl.h>
 ////Header Include End
+
+#include <wx/splash.h>
 
 #include "CThread.h"
 #include "wxOpenCommanderFrm.h"
 #include "wxOpenCommanderUtils.h"
+#include "wxOpenCommanderListCtrl.h"
 
 ////Dialog Style Start
 #undef CopyDlg_STYLE
@@ -49,7 +51,7 @@ class CopyDlg : public wxDialog
 		void btnCancelClick(wxCommandEvent& event);
 		void btnCopyClick(wxCommandEvent& event);
 	public:
-		CopyDlg(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("wxOpenCommander"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = CopyDlg_STYLE);
+		CopyDlg(wxWindow *parent,  multiLang& language, wxWindowID id = 1, const wxString &title = wxT("wxOpenCommander"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = CopyDlg_STYLE);
 		virtual ~CopyDlg();
 	
 	private:
@@ -66,11 +68,11 @@ class CopyDlg : public wxDialog
 		wxButton *btnCancel;
 		wxButton *btnCopy;
 		wxStaticText *lblDestination;
-		wxListCtrl *WxListCtrl2;
 		wxGauge *WxGauge1;
 		wxStaticText *lblSource;
-		wxListCtrl *WxListCtrl1;
 		////GUI Control Declaration End
+		wxOpenCommanderListCtrl* WxListCtrl1;
+		wxListCtrl* WxListCtrl2;
 		vectorCopyParams m_pathsCopy;
 		long long totalSize;
 		long long actualSize;
@@ -80,6 +82,8 @@ class CopyDlg : public wxDialog
 		bool blnCopping;
 		bool autoInit;
 		bool autoClose;
+	   multiLang& lang;
+	   cCommander cCommander1;
 		
 	private:
 		//Note: if you receive any error with these enum IDs, then you need to
@@ -98,22 +102,22 @@ class CopyDlg : public wxDialog
 			ID_BTNCANCEL = 1008,
 			ID_BTNCOPY = 1007,
 			ID_LBLDESTINATION = 1006,
-			ID_WXLISTCTRL2 = 1005,
 			ID_WXGAUGE1 = 1003,
 			ID_LBLSOURCE = 1002,
-			ID_WXLISTCTRL1 = 1001,
 			////GUI Enum Control ID End
-			ID_DUMMY_VALUE_ //don't remove this value unless you have other enum values
+			ID_DUMMY_VALUE_, //don't remove this value unless you have other enum values
+			ID_WXLISTCTRL1 = 1100,
+			ID_WXLISTCTRL2 = 1101,
 		};
 	
 	private:
 		void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
-		void addFilesInSourceList(const wxString& filePath);
       void updateSourceListCtrl();
+      void addColumns(wxListCtrl* WxListCtrl);
 
 	public:
-      void setPathsToCopy(vectorCopyParams pathsCopy);
+      void showModal(vectorCopyParams pathsCopy);
       bool onBeginCopyFile(const wxString& sourcePath, const wxString& destinationPath);
       void onEndCopyFile(bool copy, const wxString& sourcePath, const wxString& destinationPath);
       void onCopyThreadFinish();

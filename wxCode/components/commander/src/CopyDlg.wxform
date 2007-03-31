@@ -1,4 +1,4 @@
-object frmNewForm: TfrmNewForm
+object frmNewForm_1: TfrmNewForm
   Left = 8
   Top = 8
   AutoScroll = False
@@ -166,24 +166,6 @@ object frmNewForm: TfrmNewForm
   Wx_BorderAlignment = []
   PixelsPerInch = 96
   TextHeight = 13
-  object WxListCtrl1: TWxListCtrl
-    Left = 7
-    Top = 25
-    Width = 724
-    Height = 168
-    Columns = <>
-    TabOrder = 0
-    ViewStyle = vsReport
-    Wx_BGColor = clBlack
-    Wx_Class = 'wxListCtrl'
-    Wx_ControlOrientation = wxControlVertical
-    Wx_FGColor = clBlack
-    Wx_GeneralStyle = []
-    Wx_IDName = 'ID_WXLISTCTRL1'
-    Wx_IDValue = 1001
-    Wx_ListviewStyle = []
-    Wx_ListviewView = wxLC_REPORT
-  end
   object lblSource: TWxStaticText
     Left = 9
     Top = 3
@@ -197,7 +179,7 @@ object frmNewForm: TfrmNewForm
     Font.Name = 'MS Sans Serif'
     Font.Style = []
     ParentFont = False
-    TabOrder = 1
+    TabOrder = 0
     Wx_BGColor = clBlack
     Wx_Class = 'wxStaticText'
     Wx_ControlOrientation = wxControlVertical
@@ -215,7 +197,7 @@ object frmNewForm: TfrmNewForm
     Height = 21
     Min = 0
     Max = 100
-    TabOrder = 2
+    TabOrder = 1
     Wx_BGColor = clBlack
     Wx_ControlOrientation = wxControlHorizontal
     Wx_Class = 'wxGauge'
@@ -226,24 +208,6 @@ object frmNewForm: TfrmNewForm
     LastOrientation = wxGA_HORIZONTAL
     Wx_IDName = 'ID_WXGAUGE1'
     Wx_IDValue = 1003
-  end
-  object WxListCtrl2: TWxListCtrl
-    Left = 8
-    Top = 282
-    Width = 724
-    Height = 170
-    Columns = <>
-    TabOrder = 3
-    ViewStyle = vsReport
-    Wx_BGColor = clBlack
-    Wx_Class = 'wxListCtrl'
-    Wx_ControlOrientation = wxControlVertical
-    Wx_FGColor = clBlack
-    Wx_GeneralStyle = []
-    Wx_IDName = 'ID_WXLISTCTRL2'
-    Wx_IDValue = 1005
-    Wx_ListviewStyle = []
-    Wx_ListviewView = wxLC_REPORT
   end
   object lblDestination: TWxStaticText
     Left = 9
@@ -258,7 +222,7 @@ object frmNewForm: TfrmNewForm
     Font.Name = 'MS Sans Serif'
     Font.Style = []
     ParentFont = False
-    TabOrder = 4
+    TabOrder = 2
     Wx_BGColor = clBlack
     Wx_Class = 'wxStaticText'
     Wx_ControlOrientation = wxControlVertical
@@ -275,7 +239,7 @@ object frmNewForm: TfrmNewForm
     Width = 98
     Height = 28
     Caption = 'Copy'
-    TabOrder = 5
+    TabOrder = 3
     EVT_BUTTON = 'btnCopyClick'
     Wx_BKColor = clBlack
     Wx_ButtonStyle = []
@@ -299,7 +263,7 @@ object frmNewForm: TfrmNewForm
     Width = 98
     Height = 28
     Caption = '&Cancel'
-    TabOrder = 6
+    TabOrder = 4
     EVT_BUTTON = 'btnCancelClick'
     Wx_BKColor = clBlack
     Wx_ButtonStyle = []
@@ -320,9 +284,9 @@ object frmNewForm: TfrmNewForm
   object lblDetails: TWxStaticText
     Left = 7
     Top = 199
-    Width = 723
-    Height = 17
-    TabOrder = 7
+    Width = 4
+    Height = 4
+    TabOrder = 5
     Wx_BGColor = clBlack
     Wx_Class = 'wxStaticText'
     Wx_ControlOrientation = wxControlVertical
@@ -341,7 +305,7 @@ object frmNewForm: TfrmNewForm
     Caption = 'Overwrite Read only files'
     Checked = True
     State = cbChecked
-    TabOrder = 8
+    TabOrder = 6
     Wx_BGColor = clBlack
     Wx_CheckBoxStyle = []
     Wx_Class = 'wxCheckBox'
@@ -361,7 +325,7 @@ object frmNewForm: TfrmNewForm
     Caption = 'Overwrite existing files'
     Checked = True
     State = cbChecked
-    TabOrder = 9
+    TabOrder = 7
     Wx_BGColor = clBlack
     Wx_CheckBoxStyle = []
     Wx_Class = 'wxCheckBox'
@@ -376,9 +340,9 @@ object frmNewForm: TfrmNewForm
   object lblDetails2: TWxStaticText
     Left = 6
     Top = 216
-    Width = 352
-    Height = 18
-    TabOrder = 10
+    Width = 4
+    Height = 4
+    TabOrder = 8
     Wx_BGColor = clBlack
     Wx_Class = 'wxStaticText'
     Wx_ControlOrientation = wxControlVertical
@@ -392,9 +356,9 @@ object frmNewForm: TfrmNewForm
   object lblDetails3: TWxStaticText
     Left = 359
     Top = 214
-    Width = 182
-    Height = 20
-    TabOrder = 11
+    Width = 4
+    Height = 4
+    TabOrder = 9
     Wx_BGColor = clBlack
     Wx_Class = 'wxStaticText'
     Wx_ControlOrientation = wxControlVertical
@@ -408,9 +372,9 @@ object frmNewForm: TfrmNewForm
   object lblDetails4: TWxStaticText
     Left = 543
     Top = 215
-    Width = 186
-    Height = 20
-    TabOrder = 12
+    Width = 4
+    Height = 4
+    TabOrder = 10
     Wx_BGColor = clBlack
     Wx_Class = 'wxStaticText'
     Wx_ControlOrientation = wxControlVertical

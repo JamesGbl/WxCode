@@ -24,7 +24,7 @@ class wxOpenCommanderListCtrl : public wxListCtrl
 
 {
    public:
-   wxOpenCommanderListCtrl(wxWindow *parent,
+     wxOpenCommanderListCtrl(wxWindow *parent,
                const wxWindowID id,
                const wxPoint& pos,
                const wxSize& size,
@@ -32,17 +32,17 @@ class wxOpenCommanderListCtrl : public wxListCtrl
                cCommander* theCCommander,
                multiLang& langMap);
 
-   void addColumns();
-   wxString wxOpenCommanderListCtrl::OnGetItemText(long item, long column) const;
-   int wxOpenCommanderListCtrl::OnGetItemColumnImage(long item, long column) const;
-   wxListItemAttr *wxOpenCommanderListCtrl::OnGetItemAttr(long item) const;
-   int getIcon(long itemPos, long itemCol) const;
-   int getIconDevice(long itemPos, long itemCol) const;
+     wxString wxOpenCommanderListCtrl::OnGetItemText(long item, long column) const;
+     int wxOpenCommanderListCtrl::OnGetItemColumnImage(long item, long column) const;
+     wxListItemAttr *wxOpenCommanderListCtrl::OnGetItemAttr(long item) const;
+     int getIcon(long itemPos, long itemCol) const;
+     int getIconDevice(long itemPos, long itemCol) const;
 
    private:
-   wxListItemAttr m_attr;
-   cCommander* m_cCommander;
-   multiLang& lang;
-   wxImageList* imageList;
+     wxListItemAttr m_attr;
+     cCommander* m_cCommander;
+     multiLang& lang;
+   public:
+     bool showPathAndFile;
 };
 #endif

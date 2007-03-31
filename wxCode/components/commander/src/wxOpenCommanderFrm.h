@@ -221,6 +221,8 @@ class wxOpenCommanderFrm : public wxFrame
          void copyToClipboard();
          void pasteFromClipboard();
          void onContextMenu(wxContextMenuEvent& event);
+         void addColumns(wxListCtrl* WxListCtrl);
+
    public:
          void ListCtlUpdate();
          void copyThread(wxString& strPathDest,  const wxArrayString& fileNames);

@@ -25,6 +25,16 @@
 #include "Images/remove.xpm"
 #include "Images/computer.xpm"
 
+#include "Images/icon1.xpm"
+//#include "Images/icon2.xpm"
+#include "Images/icon3.xpm"
+//#include "Images/icon4.xpm"
+#include "Images/icon5.xpm"
+#include "Images/hardDisk.xpm"
+#include "Images/dvd.xpm"
+#include "Images/floppy.xpm"
+#include "Images/usb.xpm"
+
 //----------------------------------------------------------------------------
 // wxOpenCommanderFrm
 //----------------------------------------------------------------------------
@@ -293,8 +303,41 @@ void wxOpenCommanderFrm::updateControlsLanguage()
    WxToolBar->SetToolShortHelp(ID_TOOL_ADD, lang["Add"]);
    WxToolBar->SetToolShortHelp(ID_TOOL_REMOVE, lang["Delete"]);
    
-   WxListCtrl1->addColumns();
-   WxListCtrl2->addColumns();
+   addColumns(WxListCtrl1);
+   addColumns(WxListCtrl2);
+}
+
+void wxOpenCommanderFrm::addColumns(wxListCtrl* WxListCtrl)
+{
+   while (WxListCtrl->GetColumnCount()>0) WxListCtrl->DeleteColumn(0);
+
+   WxListCtrl->InsertColumn(0, lang["Files"], wxLIST_FORMAT_LEFT, 212);
+   WxListCtrl->InsertColumn(1, lang["Size"], wxLIST_FORMAT_RIGHT, 65);
+   WxListCtrl->InsertColumn(2, lang["Date"], wxLIST_FORMAT_RIGHT, 100);
+   
+   int size = 20;
+   //if (imageList != NULL) delete(imageList);
+   wxImageList* imageList = new wxImageList(size, size, true); // MEMORY LEAK
+
+   wxIcon icons[7];
+   icons[0] = wxIcon(icon1_xpm);
+   icons[1] = wxIcon(icon3_xpm);
+   icons[2] = wxIcon(icon5_xpm);
+   icons[3] = wxIcon(hardDisk_xpm);
+   icons[4] = wxIcon(dvd_xpm);
+   icons[5] = wxIcon(floppy_xpm);
+   icons[6] = wxIcon(usb_xpm);
+
+   int sizeOrig = icons[0].GetWidth();
+   for ( size_t i = 0; i < WXSIZEOF(icons); i++ )
+   {
+       if ( size == sizeOrig )
+           imageList->Add(icons[i]);
+       else
+           imageList->Add(wxBitmap(wxBitmap(icons[i]).ConvertToImage().Rescale(size, size)));
+   }
+
+   WxListCtrl->AssignImageList(imageList, wxIMAGE_LIST_SMALL);
 }
 
 void wxOpenCommanderFrm::OnClose(wxCloseEvent& event)
@@ -739,11 +782,11 @@ void wxOpenCommanderFrm::copyThread(wxString& strPathDest,  const wxArrayString&
    }
 
 
-   CopyDlg copyDlg(this);
+   CopyDlg copyDlg(NULL, lang);
    copyDlg.setAutoInit(true);
    copyDlg.setAutoClose(true);
-   copyDlg.setPathsToCopy(copyParamsVector);
-   copyDlg.ShowModal();
+   copyDlg.showModal(copyParamsVector);
+   //copyDlg.ShowModal();
    this->ListCtlUpdate();
    wxWakeUpIdle();
    
@@ -809,9 +852,9 @@ void wxOpenCommanderFrm::copyThread()
    }
    if (areItems)
    {
-      CopyDlg copyDlg(this);
-      copyDlg.setPathsToCopy(copyParamsVector);
-      copyDlg.ShowModal();
+      CopyDlg copyDlg(this, lang);
+      copyDlg.showModal(copyParamsVector);
+      //copyDlg.ShowModal();
       this->ListCtlUpdate();
    }
    wxWakeUpIdle();

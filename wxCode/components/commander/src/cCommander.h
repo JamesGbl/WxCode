@@ -32,7 +32,12 @@ class cCommander
       void setDevices(bool listDevices);
       bool getListDevices();
 
+      void addPathsRecursive(const wxArrayString& aFilesPath);
+      void removeFileDir(const wxString& item);
+
    private:
+      void addPathRecursive(const wxString& filePath);
+      
       bool blnDevices;
 	   vectorString aPaths;
 	   vectorString dirFileMap;

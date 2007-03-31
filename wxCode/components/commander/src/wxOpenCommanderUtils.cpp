@@ -211,7 +211,7 @@ class wxDirTraverserSimple : public wxDirTraverser
          newFile.Replace(path, pathNew);
          if (newFile == filename.Left(newFile.Len()))
             return wxDIR_CONTINUE;
-         
+  
          bool blnCopy = true;
          //wxString itemNew (path == pathNew ) "Copy of " + item : item);
          if (m_onBeginCopyFile) blnCopy = m_onBeginCopyFile(m_parent, filename, newFile);
@@ -233,11 +233,6 @@ class wxDirTraverserSimple : public wxDirTraverser
          return wxDIR_CONTINUE;
       }
       
-      virtual wxDirTraverseResult OnOpenError(const wxString& openErrorName)
-      {
-         wxMessageBox(openErrorName);
-      }
-      
    private:
       wxString& path;
       wxString& pathNew;
@@ -251,13 +246,8 @@ bool copyDirectory(wxString& path, wxString& item, wxString& pathNew, void* pare
 {
     wxString newItem = (path == pathNew ? "Copy of " + item : item);
     
-   if (wxDir::Exists(pathNew + "\\" + newItem))
-   {
-      wxMessageBox("The source directory is the same of the destination directory.","Error", wxOK | wxCENTRE | wxICON_ERROR );
-      return false;
-   }
-   else
-      wxMkdir(pathNew + "\\" + newItem);
+   if (!wxDir::Exists(pathNew + "\\" + newItem))
+      wxMkdir(pathNew + "\\" + newItem);      
         
    wxDir dir(path + "\\" + newItem);
   

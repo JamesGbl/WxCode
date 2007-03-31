@@ -7,61 +7,19 @@
 //
 //---------------------------------------------------------------------------
 
-#include "Images/icon1.xpm"
-//#include "Images/icon2.xpm"
-#include "Images/icon3.xpm"
-//#include "Images/icon4.xpm"
-#include "Images/icon5.xpm"
-#include "Images/hardDisk.xpm"
-#include "Images/dvd.xpm"
-#include "Images/floppy.xpm"
-#include "Images/usb.xpm"
-
 #include "wxOpenCommanderListCtrl.h"
 
 wxOpenCommanderListCtrl::wxOpenCommanderListCtrl(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size, long style, cCommander* theCCommander, multiLang& langMap)
 : lang(langMap) , wxListCtrl(parent, id, pos, size, style)
 {
    m_cCommander = theCCommander;
-   imageList=NULL;
-}
-
-void wxOpenCommanderListCtrl::addColumns()
-{
-   while (GetColumnCount()>0) DeleteColumn(0);
-
-   InsertColumn(0, lang["Files"], wxLIST_FORMAT_LEFT, 212);
-   InsertColumn(1, lang["Size"], wxLIST_FORMAT_RIGHT, 65);
-   InsertColumn(2, lang["Date"], wxLIST_FORMAT_RIGHT, 100);
-
-   int size = 20;
-   //if (imageList != NULL) delete(imageList); 
-   imageList = new wxImageList(size, size, true); // MEMORY LEAK
-
-   wxIcon icons[7];
-   icons[0] = wxIcon(icon1_xpm);
-   icons[1] = wxIcon(icon3_xpm);
-   icons[2] = wxIcon(icon5_xpm);
-   icons[3] = wxIcon(hardDisk_xpm);
-   icons[4] = wxIcon(dvd_xpm);
-   icons[5] = wxIcon(floppy_xpm);
-   icons[6] = wxIcon(usb_xpm);
-
-   int sizeOrig = icons[0].GetWidth();
-   for ( size_t i = 0; i < WXSIZEOF(icons); i++ )
-   {
-       if ( size == sizeOrig )
-           imageList->Add(icons[i]);
-       else
-           imageList->Add(wxBitmap(wxBitmap(icons[i]).ConvertToImage().Rescale(size, size)));
-   }
-
-   AssignImageList(imageList, wxIMAGE_LIST_SMALL);
+   showPathAndFile = false;
 }
 
 wxString wxOpenCommanderListCtrl::OnGetItemText(long item, long column) const
 {
     wxString itemText = m_cCommander->getFileDirActualPath(item, column);
+    if (column == 0 && !showPathAndFile) itemText = getLastDir(itemText);
     if (m_cCommander->getListDevices())
        return lang[itemText];
     else
@@ -82,8 +40,7 @@ wxListItemAttr *wxOpenCommanderListCtrl::OnGetItemAttr(long item) const
 int wxOpenCommanderListCtrl::getIcon(long itemPos, long itemCol) const
 {
    if (m_cCommander->getListDevices()) return getIconDevice(itemPos, itemCol);
-   if (itemPos == 0) return 1;
-   if (wxDir::Exists(m_cCommander->getActualPath() + "//" + m_cCommander->getFileDirActualPath(itemPos, itemCol)))
+   if (wxDir::Exists(m_cCommander->getFileDirActualPath(itemPos, itemCol)))
       return 1;
    else
       return 0;

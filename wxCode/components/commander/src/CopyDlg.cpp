@@ -15,7 +15,7 @@
 #include "Images/Self_CopyDlg_XPM.xpm"
 ////Header Include End
 #include "Images/icon1.xpm"
-
+#include "Images/icon3.xpm"
 
 //----------------------------------------------------------------------------
 // CopyDlg
@@ -33,8 +33,8 @@ BEGIN_EVENT_TABLE(CopyDlg,wxDialog)
 END_EVENT_TABLE()
 ////Event Table End
 
-CopyDlg::CopyDlg(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
-: wxDialog(parent, id, title, position, size, style)
+CopyDlg::CopyDlg(wxWindow *parent, multiLang& language, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
+: wxDialog(parent, id, title, position, size, style) , lang(language)
 {
 	CreateGUIControls();
 	//m_parent = parent;
@@ -98,17 +98,16 @@ void CopyDlg::CreateGUIControls()
 	lblDestination = new wxStaticText(this, ID_LBLDESTINATION, wxT("Destination"), wxPoint(9,261), wxDefaultSize, wxALIGN_CENTRE, wxT("lblDestination"));
 	lblDestination->SetFont(wxFont(11, wxSWISS, wxNORMAL,wxNORMAL, FALSE));
 
-	WxListCtrl2 = new wxListCtrl(this, ID_WXLISTCTRL2, wxPoint(8,282), wxSize(724,170), wxLC_REPORT);
-
 	WxGauge1 = new wxGauge(this, ID_WXGAUGE1, 100, wxPoint(9,236), wxSize(721,21), wxGA_HORIZONTAL, wxDefaultValidator, wxT("WxGauge1"));
 	WxGauge1->SetRange(100);
 	WxGauge1->SetValue(0);
 
 	lblSource = new wxStaticText(this, ID_LBLSOURCE, wxT("Source"), wxPoint(9,3), wxDefaultSize, wxALIGN_CENTRE, wxT("lblSource"));
 	lblSource->SetFont(wxFont(11, wxSWISS, wxNORMAL,wxNORMAL, FALSE));
-
-	WxListCtrl1 = new wxListCtrl(this, ID_WXLISTCTRL1, wxPoint(7,25), wxSize(724,168), wxLC_REPORT);
 	////GUI Items Creation End
+	
+	WxListCtrl1 = new wxOpenCommanderListCtrl(this, ID_WXLISTCTRL1, wxPoint(7,25), wxSize(724,168), wxLC_REPORT | wxLC_VIRTUAL, &cCommander1, lang);
+   WxListCtrl2 = new wxListCtrl(this, ID_WXLISTCTRL2, wxPoint(8,282), wxSize(724,170), wxLC_REPORT);
 
 	autoInit = false;
 	autoClose = false;
@@ -117,58 +116,63 @@ void CopyDlg::CreateGUIControls()
 	actualSize=0;
 	numTotaFiles=0;
 	numActualFile=0;
-	WxListCtrl1->InsertColumn(0, "Files", wxLIST_FORMAT_LEFT, 1000);
-   WxListCtrl2->InsertColumn(0, "Files", wxLIST_FORMAT_LEFT, 1000);
-   
+
+   addColumns(WxListCtrl1);
+   addColumns(WxListCtrl2);
+}
+
+void CopyDlg::addColumns(wxListCtrl* WxListCtrl)
+{
+   while (WxListCtrl->GetColumnCount()>0) WxListCtrl->DeleteColumn(0);
+
+   WxListCtrl->InsertColumn(0, lang["Files"], wxLIST_FORMAT_LEFT, 1000);
+   //WxListCtrl->InsertColumn(1, lang["Size"], wxLIST_FORMAT_RIGHT, 65);
+   //WxListCtrl->InsertColumn(2, lang["Date"], wxLIST_FORMAT_RIGHT, 100);
    
    int size = 20;
-   wxImageList* imageList1 = new wxImageList(size, size, true);
-   wxImageList* imageList2 = new wxImageList(size, size, true);
+   //if (imageList != NULL) delete(imageList);
+   wxImageList* imageList = new wxImageList(size, size, true); // MEMORY LEAK
 
-   wxIcon icons[1];
+   wxIcon icons[2];
    icons[0] = wxIcon(icon1_xpm);
+   icons[1] = wxIcon(icon3_xpm);
+
 
    int sizeOrig = icons[0].GetWidth();
    for ( size_t i = 0; i < WXSIZEOF(icons); i++ )
    {
        if ( size == sizeOrig )
-       {
-          imageList1->Add(icons[i]);
-          imageList2->Add(icons[i]);
-       }
+           imageList->Add(icons[i]);
        else
-       {
-          imageList1->Add(wxBitmap(wxBitmap(icons[i]).ConvertToImage().Rescale(size, size)));
-          imageList2->Add(wxBitmap(wxBitmap(icons[i]).ConvertToImage().Rescale(size, size)));
-       }
+           imageList->Add(wxBitmap(wxBitmap(icons[i]).ConvertToImage().Rescale(size, size)));
    }
 
-   WxListCtrl1->AssignImageList(imageList1, wxIMAGE_LIST_SMALL);
-   WxListCtrl2->AssignImageList(imageList2, wxIMAGE_LIST_SMALL);
+   WxListCtrl->AssignImageList(imageList, wxIMAGE_LIST_SMALL);
 }
 
 void CopyDlg::OnClose(wxCloseEvent& /*event*/)
 {
-   //wxOpenCommanderFrm* parent = (wxOpenCommanderFrm*)m_parent;
-   //parent->ListCtlUpdate();
 	Destroy();
 }
 
 bool CopyDlg::onBeginCopyFile(const wxString& sourcePath, const wxString& destinationPath)
 {
    wxFileName file(sourcePath);
+
    long long fileSize = getFileSize(sourcePath);
    numActualFile++;
-   
+
    // Avance the gauge the haft size of the actual file. 
    long long estimatedSize = actualSize + (fileSize/2);
-   int percent = (estimatedSize * 100) / totalSize;
+   int percent;
+   if (totalSize) percent = (estimatedSize * 100) / totalSize;
+
    WxGauge1->SetValue(percent);
-   
    lblDetails->SetLabel("Path: " + file.GetPath());
    lblDetails2->SetLabel("File: " + file.GetFullName());
    lblDetails3->SetLabel("Size: " + formatFileSize(actualSize) + " / " + formatFileSize(totalSize));
    lblDetails4->SetLabel("File: " + LongLongTowxString(numActualFile) + " / " + LongLongTowxString(numTotaFiles));
+
    return !blnCanceled;
 }
 
@@ -176,8 +180,10 @@ void CopyDlg::onEndCopyFile(bool copy, const wxString& sourcePath, const wxStrin
 {
    if (!copy) return;
    
-   long itemPos = WxListCtrl1->FindItem(-1, sourcePath);
-   WxListCtrl1->DeleteItem(itemPos);
+   cCommander1.removeFileDir(sourcePath);
+   WxListCtrl1->SetItemCount(cCommander1.getFileDirCount());
+   WxListCtrl1->Refresh();
+
    int item = WxListCtrl2->GetItemCount();
    WxListCtrl2->InsertItem(item, destinationPath,0);
    
@@ -265,8 +271,15 @@ void CopyDlg::setAutoClose(bool close)
    autoClose = close;
 }
 
-void CopyDlg::setPathsToCopy(vectorCopyParams pathsCopy)
+void CopyDlg::showModal(vectorCopyParams pathsCopy)
 {
+   Show();
+   wxString title = GetTitle();
+   SetTitle("Loading files (Please wait...)");
+   Refresh();
+
+   wxBeginBusyCursor();
+   
    m_pathsCopy = pathsCopy;
    updateSourceListCtrl();
    if (autoInit) 
@@ -274,51 +287,35 @@ void CopyDlg::setPathsToCopy(vectorCopyParams pathsCopy)
       wxCommandEvent event;
       btnCopyClick(event);
    }
+   wxEndBusyCursor();
+   
+   SetTitle(title);
+   ShowModal();
 }
 
 void CopyDlg::updateSourceListCtrl()
 {
-   WxListCtrl1->DeleteAllItems();  
+   wxArrayString aFilesPath;
    
    for (size_t i = 0 ; i < m_pathsCopy.size(); i++)
    {
-      addFilesInSourceList(m_pathsCopy[i].sourcePath + "\\" + m_pathsCopy[i].item);
+      wxString filePath = m_pathsCopy[i].sourcePath + "\\" + m_pathsCopy[i].item;
+      aFilesPath.Add(filePath);
+      totalSize = totalSize + getDirSize(filePath);
    }
+   
+   cCommander1.addPathsRecursive(aFilesPath);
+   
+   numTotaFiles = cCommander1.getFileDirCount();
+   WxListCtrl1->showPathAndFile = true;
+   WxListCtrl1->SetItemCount(numTotaFiles);
+   
    if (m_pathsCopy.size())
       lblDestination->SetLabel("Destination: " + m_pathsCopy[0].newPath + "\\");
    lblDetails->SetLabel("");
    lblDetails2->SetLabel("");
    lblDetails3->SetLabel("Size: 0 / " + formatFileSize(totalSize));
    lblDetails4->SetLabel("File: 0 / " + LongLongTowxString(numTotaFiles));
-}
 
-void CopyDlg::addFilesInSourceList(const wxString& filePath)
-{
-   if (wxDir::Exists(filePath))
-   {
-      wxDir dir;
-      wxString filename;
-      wxString wxStrFileName;
-
-      dir.Open(filePath);
-      if (!dir.IsOpened()) return;
-      bool cont = dir.GetFirst(&filename);
-      while (cont)
-      {
-         wxStrFileName = filePath + "\\" + filename;
-         addFilesInSourceList(wxStrFileName);
-         cont = dir.GetNext(&filename);
-      }
-   }
-   else
-   {
-      if (wxFile::Exists(filePath))
-      {
-         int item = WxListCtrl1->GetItemCount();
-         WxListCtrl1->InsertItem(item,filePath, 0);
-         totalSize = totalSize + getFileSize(filePath);
-         numTotaFiles++;
-      }
-   }
 }
 

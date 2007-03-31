@@ -72,21 +72,22 @@ wxString cCommander::getFileDirActualPath(long itemPos, long itemCol)
 {
    if (blnDevices) return getDrive(itemPos, itemCol);
    
+ 
    switch (itemCol)
    {
       case 0:
-         return getLastDir(dirFileMap[itemPos]);
+         return dirFileMap[itemPos];
       break;
       case 1:
       {
-          if (wxDir::Exists(getActualPath() + "//" + dirFileMap[itemPos]))
+          if (wxDir::Exists(dirFileMap[itemPos]))
              return "<DIR>";
           else
-             return formatFileSize(getFileSize(getActualPath() + "//" + dirFileMap[itemPos]));
+             return formatFileSize(getFileSize(dirFileMap[itemPos]));
       }
       break;
       case 2:
-         wxString strFile = getActualPath() + "//" + dirFileMap[itemPos];
+         wxString strFile = dirFileMap[itemPos];
          return getModificationTime(strFile);
       break;
    }   
@@ -131,7 +132,7 @@ void cCommander::refreshFileDir()
    
     wxDir dir;
     wxString filename;
-    wxString wxStrFileName;
+    wxString pathFileName;
     
     wxString directory = getActualPath();
 
@@ -148,16 +149,60 @@ void cCommander::refreshFileDir()
 
     while (cont)
     {
-       wxStrFileName = directory + "\\" + filename;
-       if (dir.Exists(wxStrFileName))
-          dirFileMap.push_back(filename);
+       pathFileName = directory + "\\" + filename;
+       if (dir.Exists(pathFileName))
+          dirFileMap.push_back(pathFileName);
        else
-          aFiles.push_back(filename);
+          aFiles.push_back(pathFileName);
        cont = dir.GetNext(&filename);
     }
     for (size_t i = 0 ; i < aFiles.size(); i++)
     {
        dirFileMap.push_back(aFiles[i]);
     }
+}
+
+void cCommander::addPathsRecursive(const wxArrayString& aFilesPath)
+{
+   dirFileMap.clear();
+   for (size_t i = 0 ; i < aFilesPath.Count(); i++)
+   {
+      addPathRecursive(aFilesPath[i]);
+   }
+   setDevices(false);
+}
+
+void cCommander::addPathRecursive(const wxString& filePath)
+{
+   if (wxDir::Exists(filePath))
+   {
+      wxDir dir;
+      wxString filename;
+      wxString wxStrFileName;
+
+      dir.Open(filePath);
+      if (!dir.IsOpened()) return;
+      bool cont = dir.GetFirst(&filename);
+      while (cont)
+      {
+         wxStrFileName = filePath + "\\" + filename;
+         dirFileMap.push_back(wxStrFileName);
+         addPathRecursive(wxStrFileName);
+         cont = dir.GetNext(&filename);
+      }
+   }
+   else
+   {
+      if (wxFile::Exists(filePath))
+         dirFileMap.push_back(filePath);
+   }
+}
+
+void cCommander::removeFileDir(const wxString& item)
+{
+   vectorString::iterator iter;
+   for (iter = dirFileMap.begin(); *iter != item && iter != dirFileMap.end(); iter++);
+   if (iter != dirFileMap.end()) 
+      dirFileMap.erase(iter);
 }
 
