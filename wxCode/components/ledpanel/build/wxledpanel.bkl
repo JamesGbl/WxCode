@@ -133,8 +133,9 @@
         <!-- if you use win32 resources for your sample and you are lazy and
              don't want to use the <win32-res>myresfile.rc</win32-res> tag,
              you can just write:
-        -->
+
         <has-win32-res/>
+		-->
 
         <!-- Remove the libraries which are not required by your project.
              Note : the linking order may by important for static objects
