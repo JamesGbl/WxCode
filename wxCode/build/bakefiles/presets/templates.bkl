@@ -29,13 +29,19 @@
     <!--                                               -->
 
     <template id="wxcode-basic">
-
         <!-- most if not all templates derived from wxcode-basic needs to have COMP_NAME
              variable correctly set:
         -->
         <if cond="not isdefined('COMP_NAME')">
             <error>Before using this template please set the COMP_NAME variable</error>
         </if>
+
+        <!-- in both debug and release builds, we want maximum warnings to be able
+             to spot as many hidden errors as possible!
+             NOTE: you can use <warnings>default</warnings> in your own bakefile to
+                   restore the default warning level if you don't like this setting
+        -->
+        <warnings>max</warnings>
 
         <if cond="FORMAT=='gnu' or FORMAT=='autoconf'">
             <lib-path>$(SRCDIR)/lib</lib-path>
