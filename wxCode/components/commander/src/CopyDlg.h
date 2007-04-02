@@ -40,7 +40,7 @@
 
 ////Dialog Style Start
 #undef CopyDlg_STYLE
-#define CopyDlg_STYLE wxCAPTION | wxSYSTEM_MENU | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxCLOSE_BOX
+#define CopyDlg_STYLE wxCAPTION | wxSYSTEM_MENU | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX
 ////Dialog Style End
 
 class CopyDlg : public wxDialog
@@ -121,12 +121,15 @@ class CopyDlg : public wxDialog
       bool onBeginCopyFile(const wxString& sourcePath, const wxString& destinationPath);
       void onEndCopyFile(bool copy, const wxString& sourcePath, const wxString& destinationPath);
       void onCopyThreadFinish();
+      void onDirRecursiveFinish(long long totalSizeRecursive);
+      
       void setAutoInit(bool init);
       void setAutoClose(bool close);
+      void setTotalSize(long long size);
 
 };
-
-void onThreadCopyFinish(wxThread* thread, void* contextParam, void* parent);
+void onThreadDirRecursiveFinish(void* thread, void* contextParam, void* parent);
+void onThreadCopyFinish(void* thread, void* contextParam, void* parent);
 bool onThreadBeginCopyFile(const wxString& sourcePath, const wxString& destinationPath);
 void onThreadEndCopyFile(bool copy, const wxString& sourcePath, const wxString& destinationPath);
 

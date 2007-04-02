@@ -214,7 +214,16 @@ void CopyDlg::onCopyThreadFinish()
    #endif
 }
 
-void onThreadCopyFinish(wxThread* thread, void* contextParam, void* parent)
+void onThreadDirRecursiveFinish(void* thread, void* contextParam, void* parent)
+{
+   CopyDlg* parentWindow;
+   parentWindow = (CopyDlg*)parent;
+   CThread* cThread = (CThread*)thread;
+   long long totalSize = cThread->totalSizeRecursive;
+   return parentWindow->onDirRecursiveFinish(totalSize);
+}
+
+void onThreadCopyFinish(void* thread, void* contextParam, void* parent)
 {
    CopyDlg* parentWindow;
    parentWindow = (CopyDlg*)parent;
@@ -271,25 +280,18 @@ void CopyDlg::setAutoClose(bool close)
    autoClose = close;
 }
 
+void CopyDlg::setTotalSize(long long size)
+{
+   totalSize = size;
+}
+
 void CopyDlg::showModal(vectorCopyParams pathsCopy)
 {
    Show();
-   wxString title = GetTitle();
    SetTitle("Loading files (Please wait...)");
-   Refresh();
 
-   wxBeginBusyCursor();
-   
    m_pathsCopy = pathsCopy;
    updateSourceListCtrl();
-   if (autoInit) 
-   {
-      wxCommandEvent event;
-      btnCopyClick(event);
-   }
-   wxEndBusyCursor();
-   
-   SetTitle(title);
    ShowModal();
 }
 
@@ -301,21 +303,45 @@ void CopyDlg::updateSourceListCtrl()
    {
       wxString filePath = m_pathsCopy[i].sourcePath + "\\" + m_pathsCopy[i].item;
       aFilesPath.Add(filePath);
-      totalSize = totalSize + getDirSize(filePath);
    }
    
-   cCommander1.addPathsRecursive(aFilesPath);
+   //Calculating number and size of files
+   CThread* thread = new CThread();
+   thread->setParent((void*) this);
    
+   thread->addPathsRecursive(&cCommander1, aFilesPath);
+   thread->setFinishCallBackFunc(onThreadDirRecursiveFinish, NULL);
+   thread->Create();
+   thread->Run();
+
+   wxBeginBusyCursor();
+
+   btnCopy->Enable(false);
+   btnCancel->Enable(false);
+}
+
+void CopyDlg::onDirRecursiveFinish(long long totalSizeRecursive)
+{
+   SetTitle("Copy Files (wxOpenCommander)");
+   totalSize = totalSizeRecursive;
    numTotaFiles = cCommander1.getFileDirCount();
    WxListCtrl1->showPathAndFile = true;
    WxListCtrl1->SetItemCount(numTotaFiles);
-   
+
    if (m_pathsCopy.size())
       lblDestination->SetLabel("Destination: " + m_pathsCopy[0].newPath + "\\");
    lblDetails->SetLabel("");
    lblDetails2->SetLabel("");
    lblDetails3->SetLabel("Size: 0 / " + formatFileSize(totalSize));
-   lblDetails4->SetLabel("File: 0 / " + LongLongTowxString(numTotaFiles));
+   lblDetails4->SetLabel("File: 0 / " + LongLongTowxString(numTotaFiles));  
+   
+   wxEndBusyCursor();
+   btnCopy->Enable(true);
+   btnCancel->Enable(true);
 
+   if (autoInit)
+   {
+      wxCommandEvent event;
+      btnCopyClick(event);
+   } 
 }
-

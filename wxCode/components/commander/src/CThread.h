@@ -4,9 +4,11 @@
 
 #include <wx/progdlg.h>
 #include <wx/thread.h>
-#include "wxOpenCommanderUtils.h"
+//#include "wxOpenCommanderUtils.h"
+#include "cCommander.h"
 
 #define COPY 1
+#define ADD_PATH_RECURSIVE 2
 
 struct copyParams
 {
@@ -28,16 +30,20 @@ private:
    onThreadEndCopyFileCallBackFunc onEndCopyFileCallBackFunc;
    void* finishParam;
    void* m_parent;
+   cCommander* m_cCommanderAct;
+   wxArrayString m_aFilesPath;
+public:
+   long long totalSizeRecursive;
 public:
     CThread() : wxThread() {}
     void* Entry();
-    void copy(wxString& path, wxString& item, wxString& pathNew);
     void OnExit();
     void setParent(void* parent);
     void setFinishCallBackFunc(onThreadFinishCallBackFunc callBackFunc, void* yourParam);
     void setBeginCopyFileCallBackFunc(onThreadBeginCopyFileCallBackFunc callBackFunc);
     void setEndCopyFileCallBackFunc(onThreadEndCopyFileCallBackFunc callBackFunc);
     void setVectorCopyParams(const vectorCopyParams& copyParamsVector);
+    void addPathsRecursive(cCommander* cCommanderAct, wxArrayString aFilesPath);
 
 };
 #endif

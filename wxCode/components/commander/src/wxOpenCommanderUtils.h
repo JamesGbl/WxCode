@@ -46,9 +46,9 @@ using namespace std;
 
 typedef map <wxString, int, less<wxString> > driversMap;
 
-typedef void (*onThreadFinishCallBackFunc)(wxThread*, void*, void*);
 typedef bool (*onThreadBeginCopyFileCallBackFunc)(void*, const wxString&, const wxString&);
 typedef void (*onThreadEndCopyFileCallBackFunc)(void*, bool, const wxString&, const wxString&);
+typedef void (*onThreadFinishCallBackFunc)(void*, void*, void*);
 
 void Exec(wxString& path, wxString& file);
 wxString LongLongTowxString(long long const& size);

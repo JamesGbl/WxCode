@@ -13,18 +13,18 @@ void* CThread::Entry()
       }
    }
    break;
+   case ADD_PATH_RECURSIVE:
+   {
+      m_cCommanderAct->addPathsRecursive(m_aFilesPath); 
+      totalSizeRecursive = 0;
+      for (size_t i = 0 ; i < m_aFilesPath.Count(); i++)
+      {
+         totalSizeRecursive = totalSizeRecursive + getDirSize(m_aFilesPath[i]);
+      }
+   }
+   break;
  }
  return NULL;
-}
-
-void CThread::copy(wxString& path, wxString& item, wxString& pathNew)
-{
-  action = COPY;
-  copyParams copyPaths;
-  copyPaths.sourcePath = path;
-  copyPaths.item = item;
-  copyPaths.newPath = pathNew;
-  m_copyParamsVector.push_back(copyPaths);
 }
 
 void CThread::setParent(void* parent)
@@ -38,10 +38,17 @@ void CThread::setVectorCopyParams(const vectorCopyParams& copyParamsVector)
    m_copyParamsVector = copyParamsVector;
 }
 
+void CThread::addPathsRecursive(cCommander* cCommanderAct, wxArrayString aFilesPath)
+{
+   action = ADD_PATH_RECURSIVE;
+   m_cCommanderAct = cCommanderAct;
+   m_aFilesPath = aFilesPath;
+}
+
 void CThread::OnExit()
 {
    if (onFinishCallBackFunc != NULL)
-      onFinishCallBackFunc(this, finishParam, m_parent);
+      onFinishCallBackFunc((void*)this, finishParam, m_parent);
       
    this->Exit();
    delete(this);
