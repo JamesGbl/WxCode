@@ -39,8 +39,12 @@ extern "C"
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-wxCurlHTTP::wxCurlHTTP(const wxString& szURL /*= wxEmptyString*/, const wxString& szUserName /*= wxEmptyString*/, const wxString& szPassword /*= wxEmptyString*/, wxEvtHandler* pEvtHandler /*= NULL*/, const bool& bSendUpdateEvents /*= false*/, const bool& bSendBeginEndEvents /*= false*/)
-: wxCurlBase(szURL, szUserName, szPassword, pEvtHandler, bSendUpdateEvents, bSendBeginEndEvents),
+wxCurlHTTP::wxCurlHTTP(const wxString& szURL /*= wxEmptyString*/, 
+                       const wxString& szUserName /*= wxEmptyString*/, 
+                       const wxString& szPassword /*= wxEmptyString*/, 
+                       wxEvtHandler* pEvtHandler /*= NULL*/, 
+                       long flags /*= wxCURL_DEFAULT_FLAGS*/)
+: wxCurlBase(szURL, szUserName, szPassword, pEvtHandler, flags),
   m_pPostHead(NULL), m_pPostTail(NULL), m_bUseCookies(false), m_szCookieFile(wxT("-")),
   m_pszPostFieldsData(NULL), m_iPostDataSize(0)
 {

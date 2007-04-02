@@ -35,8 +35,12 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-wxCurlDAV::wxCurlDAV(const wxString& szURL /*= wxEmptyString*/, const wxString& szUserName /*= wxEmptyString*/, const wxString& szPassword /*= wxEmptyString*/, wxEvtHandler* pEvtHandler /*= NULL*/, const bool& bSendUpdateEvents /*= false*/, const bool& bSendBeginEndEvents /*= false*/)
-: wxCurlHTTP(szURL, szUserName, szPassword, pEvtHandler, bSendUpdateEvents, bSendBeginEndEvents)
+wxCurlDAV::wxCurlDAV(const wxString& szURL /*= wxEmptyString*/, 
+                     const wxString& szUserName /*= wxEmptyString*/, 
+                     const wxString& szPassword /*= wxEmptyString*/, 
+                     wxEvtHandler* pEvtHandler /*= NULL*/, 
+                     long flags /*=wxCURL_DEFAULT_FLAGS*/)
+: wxCurlHTTP(szURL, szUserName, szPassword, pEvtHandler, flags)
 {
 }
 

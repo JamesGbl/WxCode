@@ -30,7 +30,11 @@ class wxXmlNode;
 class WXDLLIMPEXP_CURL wxCurlDAV : public wxCurlHTTP
 {
 public:
-	wxCurlDAV(const wxString& szURL = wxEmptyString, const wxString& szUserName = wxEmptyString, const wxString& szPassword = wxEmptyString, wxEvtHandler* pEvtHandler = NULL, const bool& bSendUpdateEvents = false, const bool& bSendBeginEndEvents = false);
+	wxCurlDAV(const wxString& szURL = wxEmptyString, 
+              const wxString& szUserName = wxEmptyString, 
+              const wxString& szPassword = wxEmptyString, 
+              wxEvtHandler* pEvtHandler = NULL, 
+              long flags = wxCURL_DEFAULT_FLAGS);
 	virtual ~wxCurlDAV();
 
 	// Action Methods - These All Make Calls To: curl_easy_perform()

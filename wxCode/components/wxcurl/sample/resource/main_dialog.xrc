@@ -11,9 +11,11 @@
 				<flag>wxALL|wxGROW</flag>
 				<object class="wxFlexGridSizer">
 					<rows>3</rows>
-					<cols>1</cols>
+					<cols>2</cols>
 					<vgap>10</vgap>
 					<hgap>10</hgap>
+                    <growablecols>0,1</growablecols>
+                    <growablerows>0,1</growablerows>
 					<object class="sizeritem">
 						<object class="wxStaticBoxSizer">
 							<orient>wxVERTICAL</orient>

@@ -39,8 +39,12 @@ extern "C"
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-wxCurlFTP::wxCurlFTP(const wxString& szURL /*= wxEmptyString*/, const wxString& szUserName /*= wxEmptyString*/, const wxString& szPassword /*= wxEmptyString*/, wxEvtHandler* pEvtHandler /*= NULL*/, const bool& bSendUpdateEvents /*= false*/, const bool& bSendBeginEndEvents /*= false*/)
-: wxCurlBase(szURL, szUserName, szPassword, pEvtHandler, bSendUpdateEvents, bSendBeginEndEvents),
+wxCurlFTP::wxCurlFTP(const wxString& szURL /*= wxEmptyString*/, 
+                     const wxString& szUserName /*= wxEmptyString*/, 
+                     const wxString& szPassword /*= wxEmptyString*/, 
+                     wxEvtHandler* pEvtHandler /*= NULL*/, 
+                     long flags /*= wxCURL_DEFAULT_FLAGS*/)
+: wxCurlBase(szURL, szUserName, szPassword, pEvtHandler, flags),
   m_pQuote(NULL), m_pPreQuote(NULL), m_pPostQuote(NULL),
   m_bCreateMissingDirs(true), m_bUsePortOption(false), m_bUseEPRT(false), m_bUseEPSV(false), m_bAppend(false),
   m_tmMode(kASCII),

@@ -28,12 +28,18 @@ extern "C"
 class WXDLLIMPEXP_CURL wxCurlHTTP : public wxCurlBase
 {
 public:
-	wxCurlHTTP(const wxString& szURL = wxEmptyString, const wxString& szUserName = wxEmptyString, const wxString& szPassword = wxEmptyString, wxEvtHandler* pEvtHandler = NULL, const bool& bSendUpdateEvents = false, const bool& bSendBeginEndEvents = false);
+	wxCurlHTTP(const wxString& szURL = wxEmptyString,
+               const wxString& szUserName = wxEmptyString,
+               const wxString& szPassword = wxEmptyString,
+               wxEvtHandler* pEvtHandler = NULL,
+               long flags = wxCURL_DEFAULT_FLAGS);
 	virtual ~wxCurlHTTP();
 
 	// Post Data Methods
-	bool	AddForm(const bool& bClear, const wxString& szName, struct curl_forms* pForms, CURLFORMcode* outErr=NULL);
-    bool    AddBufferToForm(const bool& bClear, const wxString& szName, char* buffer, size_t len, CURLFORMcode* outErr=NULL);
+	bool	AddForm(const bool& bClear, const wxString& szName,
+                    struct curl_forms* pForms, CURLFORMcode* outErr=NULL);
+    bool    AddBufferToForm(const bool& bClear, const wxString& szName,
+                            char* buffer, size_t len, CURLFORMcode* outErr=NULL);
 
 	// Member Data Access Methods (MDA)
 

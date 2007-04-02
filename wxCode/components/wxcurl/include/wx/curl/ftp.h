@@ -34,7 +34,11 @@ public:
 		kBINARY
 	};
 
-	wxCurlFTP(const wxString& szURL = wxEmptyString, const wxString& szUserName = wxEmptyString, const wxString& szPassword = wxEmptyString, wxEvtHandler* pEvtHandler = NULL, const bool& bSendUpdateEvents = false, const bool& bSendBeginEndEvents = false);
+	wxCurlFTP(const wxString& szURL = wxEmptyString, 
+              const wxString& szUserName = wxEmptyString, 
+              const wxString& szPassword = wxEmptyString, 
+              wxEvtHandler* pEvtHandler = NULL, 
+              long flags = wxCURL_DEFAULT_FLAGS);
 	virtual ~wxCurlFTP();
 
 	// Member Data Access Methods (MDA)

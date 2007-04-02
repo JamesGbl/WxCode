@@ -76,7 +76,11 @@ WX_DECLARE_USER_EXPORTED_OBJARRAY(wxCurlDAVFs, wxArrayDAVFs, WXDLLIMPEXP_CURL);
 class WXDLLIMPEXP_CURL wxCurlDAVTool : public wxCurlDAV  
 {
 public:
-	wxCurlDAVTool(const wxString& szURL = wxEmptyString, const wxString& szUserName = wxEmptyString, const wxString& szPassword = wxEmptyString, wxEvtHandler* pEvtHandler = NULL, const bool& bSendUpdateEvents = false, const bool& bSendBeginEndEvents = false);
+	wxCurlDAVTool(const wxString& szURL = wxEmptyString, 
+                  const wxString& szUserName = wxEmptyString, 
+                  const wxString& szPassword = wxEmptyString,
+                  wxEvtHandler* pEvtHandler = NULL, 
+                  long flags = wxCURL_DEFAULT_FLAGS);
 	virtual ~wxCurlDAVTool();
 
 	// More Complex Action Methods - These All Make Calls To: curl_easy_perform()

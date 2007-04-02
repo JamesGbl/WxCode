@@ -72,8 +72,12 @@ wxCurlFTPFs::~wxCurlFTPFs()
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-wxCurlFTPTool::wxCurlFTPTool(const wxString& szURL /*= wxEmptyString*/, const wxString& szUserName /*= wxEmptyString*/, const wxString& szPassword /*= wxEmptyString*/, wxEvtHandler* pEvtHandler /*= NULL*/, const bool& bSendUpdateEvents /*= false*/, const bool& bSendBeginEndEvents /*= false*/)
-: wxCurlFTP(szURL, szUserName, szPassword, pEvtHandler, bSendUpdateEvents, bSendBeginEndEvents)
+wxCurlFTPTool::wxCurlFTPTool(const wxString& szURL /*= wxEmptyString*/, 
+                             const wxString& szUserName /*= wxEmptyString*/, 
+                             const wxString& szPassword /*= wxEmptyString*/, 
+                             wxEvtHandler* pEvtHandler /*= NULL*/, 
+                             long flags/*= wxCURL_DEFAULT_FLAGS*/)
+: wxCurlFTP(szURL, szUserName, szPassword, pEvtHandler, flags)
 {
 }
 

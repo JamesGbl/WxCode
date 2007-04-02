@@ -34,7 +34,8 @@
 
 extern "C"
 {
-	int wxcurl_evt_progress_func(void* ptr, double rDlTotal, double rDlNow, double rUlTotal, double rUlNow)
+	int wxcurl_evt_progress_func(void* ptr, double rDlTotal, double rDlNow, 
+                                 double rUlTotal, double rUlNow)
 	{
 		if(ptr)
 		{
@@ -46,7 +47,8 @@ extern "C"
 		return 0;
 	}
 
-    int wxcurl_verbose_stream_write(CURL * crlptr , curl_infotype info, char * cStrMessage, size_t msgSize, void * buffer)
+    int wxcurl_verbose_stream_write(CURL * crlptr, curl_infotype info, 
+                                    char * cStrMessage, size_t msgSize, void * buffer)
     {
 		wxString szMessage((wxChar*)cStrMessage, msgSize);
 		wxString szVerboseMessage;
@@ -192,7 +194,9 @@ wxCurlProgressEvent::wxCurlProgressEvent()
 {
 }
 
-wxCurlProgressEvent::wxCurlProgressEvent(const double& rDownloadTotal, const double& rDownloadNow, const double& rUploadTotal, const double& rUploadNow, const wxString& szURL /*= wxEmptyString*/)
+wxCurlProgressEvent::wxCurlProgressEvent(const double& rDownloadTotal, const double& rDownloadNow, 
+                                         const double& rUploadTotal, const double& rUploadNow, 
+                                         const wxString& szURL /*= wxEmptyString*/)
 : wxEvent(-1, wxCURL_PROGRESS_EVENT),
   m_szURL(szURL),
   m_rDownloadTotal(rDownloadTotal), m_rDownloadNow(rDownloadNow),
@@ -281,12 +285,17 @@ wxCurlEndPerformEvent::wxCurlEndPerformEvent(const wxCurlEndPerformEvent& event)
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-wxCurlBase::wxCurlBase(const wxString& szURL /*= wxEmptyString*/, const wxString& szUserName /*= wxEmptyString*/, const wxString& szPassword /*= wxEmptyString*/, wxEvtHandler* pEvtHandler /*= NULL*/, const bool& bSendUpdateEvents /*= false*/, const bool& bSendBeginEndEvents /*= false*/)
-: m_szBaseURL(szURL), m_szCurrFullURL(szURL), m_szUsername(szUserName), m_szPassword(szPassword),
+wxCurlBase::wxCurlBase(const wxString& szURL /*= wxEmptyString*/,
+                       const wxString& szUserName /*= wxEmptyString*/,
+                       const wxString& szPassword /*= wxEmptyString*/,
+                       wxEvtHandler* pEvtHandler /*= NULL*/,
+                       long flags /*=wxCURL_DEFAULT_FLAGS*/)
+: m_szBaseURL(szURL), m_szCurrFullURL(szURL), m_szUsername(szUserName), 
+  m_szPassword(szPassword),
   m_iHostPort(-1), m_iResponseCode(-1),
   m_bUseProxy(false), m_iProxyPort(-1),
   m_pCURL(NULL), m_pHeaders(NULL), m_pEvtHandler(pEvtHandler),
-  m_bSendUpdateEvts(bSendUpdateEvents), m_bSendBeginEndEvts(bSendBeginEndEvents),
+  m_nFlags(flags),
   m_bVerbose(false)
 {
 	m_szErrorBuffer[0] = '\0';
@@ -342,6 +351,7 @@ bool wxCurlBase::SetOpt(CURLoption option, ...)
 
 	va_end(arg);
 
+    DumpErrorIfNeed(res);
 	return (res == CURLE_OK);
 }
 
@@ -357,6 +367,7 @@ bool wxCurlBase::GetInfo(CURLINFO info, ...)
 
 	res = curl_easy_getinfo(m_pCURL, info, pParam);
 
+    DumpErrorIfNeed(res);
 	return (res == CURLE_OK);
 }
 
@@ -364,7 +375,7 @@ bool wxCurlBase::Perform()
 {
 	CURLcode res = CURLE_OK;
 
-	if(m_bSendBeginEndEvts && m_pEvtHandler)
+	if((m_nFlags & wxCURL_SEND_BEGINEND_EVENTS) && m_pEvtHandler)
 	{
 		wxCurlBeginPerformEvent bgnEvent(m_szCurrFullURL);
 
@@ -373,13 +384,14 @@ bool wxCurlBase::Perform()
 
 	res = curl_easy_perform(m_pCURL);
 
-	if(m_bSendBeginEndEvts && m_pEvtHandler)
+	if((m_nFlags & wxCURL_SEND_BEGINEND_EVENTS) && m_pEvtHandler)
 	{
 		wxCurlEndPerformEvent endEvent(m_szCurrFullURL, m_iResponseCode);
 
 		wxPostEvent(m_pEvtHandler, endEvent);
 	}
 
+    DumpErrorIfNeed(res);
 	return (res == CURLE_OK);
 }
 
@@ -417,6 +429,16 @@ bool wxCurlBase::ResetHandle()
 	return true;
 }
 
+void wxCurlBase::DumpErrorIfNeed(CURLcode error)
+{
+    if (m_bVerbose && error != CURLE_OK)
+    {
+        wxString errStr = wxT("wxCURL: ") + wxString(curl_easy_strerror(error));
+
+        m_mosVerbose.Write(errStr.c_str(), errStr.Len());
+    }
+}
+
 //////////////////////////////////////////////////////////////////////
 // Member Data Access Methods
 //////////////////////////////////////////////////////////////////////
@@ -433,14 +455,14 @@ wxEvtHandler* wxCurlBase::GetEvtHandler() const
 	return m_pEvtHandler;
 }
 
-void wxCurlBase::SendUpdateEvents(const bool& bSendEvts)
+void wxCurlBase::SetFlags(long flags)
 {
-	m_bSendUpdateEvts = bSendEvts;
+	m_nFlags = flags;
 }
 
-bool wxCurlBase::SendUpdateEvents() const
+long wxCurlBase::GetFlags() const
 {
-	return m_bSendUpdateEvts;
+	return m_nFlags;
 }
 
 void wxCurlBase::SetBaseURL(const wxString& szBaseURL)
@@ -553,7 +575,7 @@ long wxCurlBase::GetProxyPort() const
 	return m_iProxyPort;
 }
 
-void wxCurlBase::Verbose(const bool& bVerbose)
+void wxCurlBase::SetVerbose(const bool& bVerbose)
 {
 	m_bVerbose = bVerbose;
 }
@@ -576,6 +598,8 @@ bool wxCurlBase::GetVerboseStream(wxOutputStream& destStream)
 				m_mosVerbose.CopyTo(pBuffer, m_mosVerbose.GetSize());
 
 				destStream.Write(pBuffer, m_mosVerbose.GetSize());
+
+                delete [] pBuffer;
 
 				return destStream.IsOk();
 			}
@@ -622,7 +646,7 @@ void wxCurlBase::SetCurlHandleToDefaults()
 		SetOpt(CURLOPT_WRITEHEADER, &m_szResponseHeader);
 		SetOpt(CURLOPT_ERRORBUFFER, m_szErrorBuffer);
 
-		if(m_pEvtHandler && m_bSendUpdateEvts)
+		if(m_pEvtHandler && (m_nFlags & wxCURL_SEND_PROGRESS_EVENTS))
 		{
 			SetOpt(CURLOPT_NOPROGRESS, FALSE);
 			SetOpt(CURLOPT_PROGRESSFUNCTION, wxcurl_evt_progress_func);

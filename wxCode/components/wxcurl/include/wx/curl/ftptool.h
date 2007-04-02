@@ -72,7 +72,11 @@ WX_DECLARE_USER_EXPORTED_OBJARRAY(wxCurlFTPFs, wxArrayFTPFs, WXDLLIMPEXP_CURL);
 class WXDLLIMPEXP_CURL wxCurlFTPTool : public wxCurlFTP
 {
 public:
-	wxCurlFTPTool(const wxString& szURL = wxEmptyString, const wxString& szUserName = wxEmptyString, const wxString& szPassword = wxEmptyString, wxEvtHandler* pEvtHandler = NULL, const bool& bSendUpdateEvents = false, const bool& bSendBeginEndEvents = false);
+	wxCurlFTPTool(const wxString& szURL = wxEmptyString, 
+                  const wxString& szUserName = wxEmptyString, 
+                  const wxString& szPassword = wxEmptyString, 
+                  wxEvtHandler* pEvtHandler = NULL, 
+                  long flags = wxCURL_DEFAULT_FLAGS);
 	virtual ~wxCurlFTPTool();
 
 	// More Complex Action Methods - These All Make Calls To: curl_easy_perform()

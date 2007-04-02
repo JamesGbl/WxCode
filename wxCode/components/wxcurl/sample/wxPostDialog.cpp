@@ -103,7 +103,7 @@ void wxPostDialog::OnPost(wxCommandEvent& WXUNUSED(event))
 			// Do It!
 			wxCurlHTTP http(szDest, szUser, szPass);
 
-			http.Verbose(true);
+			http.SetVerbose(true);
 
 /*			struct curl_forms testform[2];
 

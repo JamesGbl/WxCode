@@ -70,8 +70,12 @@ wxCurlDAVFs::~wxCurlDAVFs()
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-wxCurlDAVTool::wxCurlDAVTool(const wxString& szURL /*= wxEmptyString*/, const wxString& szUserName /*= wxEmptyString*/, const wxString& szPassword /*= wxEmptyString*/, wxEvtHandler* pEvtHandler /*= NULL*/, const bool& bSendUpdateEvents /*= false*/, const bool& bSendBeginEndEvents /*= false*/)
-: wxCurlDAV(szURL, szUserName, szPassword, pEvtHandler, bSendUpdateEvents, bSendBeginEndEvents)
+wxCurlDAVTool::wxCurlDAVTool(const wxString& szURL /*= wxEmptyString*/, 
+                             const wxString& szUserName /*= wxEmptyString*/, 
+                             const wxString& szPassword /*= wxEmptyString*/, 
+                             wxEvtHandler* pEvtHandler /*= NULL*/, 
+                             long flags/*= wxCURL_DEFAULT_FLAGS*/)
+: wxCurlDAV(szURL, szUserName, szPassword, pEvtHandler, flags)
 {
 }
 
