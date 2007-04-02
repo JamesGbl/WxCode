@@ -102,6 +102,9 @@ AC_DEFUN([WXCODE_CHECKS],
             # required when compiling C files:
             AC_PROG_CC
 
+            # required when compiling C++ files:
+            AC_PROG_CXX
+
             WX_CONVERT_STANDARD_OPTIONS_TO_WXCONFIG_FLAGS
             WX_CONFIG_CHECK([$1],,,[$2],[$WXCONFIG_FLAGS])
             WX_DETECT_STANDARD_OPTION_VALUES

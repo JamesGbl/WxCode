@@ -8,12 +8,12 @@ dnl ---------------------------------------------------------------------------
 
 
 dnl ---------------------------------------------------------------------------
-dnl AM_SAVE_COREVAR()
+dnl WXCODE_SAVE_COREVAR()
 dnl
 dnl Saves the CPPFLAGS, CXXFLAGS, CFLAGS and LIBS variables in some helper
 dnl variables which are used to restore them later (see AM_RESTORE_COREVAR)
 dnl ---------------------------------------------------------------------------
-AC_DEFUN([AM_SAVE_COREVAR],
+AC_DEFUN([WXCODE_SAVE_COREVAR],
         [
         SAVED_CPPFLAGS="$CPPFLAGS"
         SAVED_CXXFLAGS="$CXXFLAGS"
@@ -23,12 +23,12 @@ AC_DEFUN([AM_SAVE_COREVAR],
 
 
 dnl ---------------------------------------------------------------------------
-dnl AM_RESTORE_COREVAR()
+dnl WXCODE_RESTORE_COREVAR()
 dnl
 dnl Loads into the CPPFLAGS, CXXFLAGS, CFLAGS and LIBS variables the values
 dnl of the helper variables set by AM_SAVE_COREVAR
 dnl ---------------------------------------------------------------------------
-AC_DEFUN([AM_RESTORE_COREVAR],
+AC_DEFUN([WXCODE_RESTORE_COREVAR],
         [
         CPPFLAGS="$SAVED_CPPFLAGS"
         CXXFLAGS="$SAVED_CXXFLAGS"
@@ -39,7 +39,7 @@ AC_DEFUN([AM_RESTORE_COREVAR],
 
 
 dnl ---------------------------------------------------------------------------
-dnl AM_WXCODE_CHECKFOR_COMPONENT(
+dnl WXCODE_CHECKFOR_COMPONENT(
 dnl         [name (mixed case) of the component to check],
 dnl         [name of a header of the component to check (with 'wx/' prefix and '.h' suffix)],
 dnl         [name of the library of the component to check (without 'lib' prefix and without .a/.so suffix)],
@@ -51,10 +51,10 @@ dnl Creates a little test program to check for presence of a wxCode component.
 dnl Note that this macro does not automatically adds anything to the CPPFLAGS,
 dnl CFLAGS or LIBS variables.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN([AM_WXCODE_CHECKFOR_COMPONENT],
+AC_DEFUN([WXCODE_CHECKFOR_COMPONENT],
         [
             dnl save original flags into support variables
-            AM_SAVE_COREVAR()
+            WXCODE_SAVE_COREVAR()
 
             dnl add to the compilation & link flags the wxWidgets flags
             dnl (we assume they have been set by AM_WXPRESETS)
@@ -98,12 +98,12 @@ AC_DEFUN([AM_WXCODE_CHECKFOR_COMPONENT],
             fi
 
             dnl restore the original flags
-            AM_RESTORE_COREVAR()
+            WXCODE_RESTORE_COREVAR()
         ])
 
 
 dnl ---------------------------------------------------------------------------
-dnl AM_WXCODE_CHECKFOR_COMPONENT_VERSION(
+dnl WXCODE_CHECKFOR_COMPONENT_VERSION(
 dnl         [name (mixed case) of the component to check],
 dnl         [name of a header of the component to check (with 'wx/' prefix and '.h' suffix)],
 dnl         [name of the library of the component to check (without 'lib' prefix and without .a/.so suffix)],
@@ -126,7 +126,7 @@ dnl
 dnl where *MAJOR*, *MINOR* and *RELEASE* are three symbols which should have
 dnl been #defined in the compdef.h header file (see template/include/wx/mycompdef.h).
 dnl ---------------------------------------------------------------------------
-AC_DEFUN([AM_WXCODE_CHECKFOR_COMPONENT_VERSION],
+AC_DEFUN([WXCODE_CHECKFOR_COMPONENT_VERSION],
         [
             dnl break version string in single digits
             major=`echo $5 | sed 's/\([[0-9]]\).\([[0-9]]\).\([[0-9]]\)/\1/'`
@@ -140,7 +140,7 @@ AC_DEFUN([AM_WXCODE_CHECKFOR_COMPONENT_VERSION],
 
             dnl call our base macro adding the version check
             COMPCHECK_MSG="if $1 (version >= $5) is available"
-            AM_WXCODE_CHECKFOR_COMPONENT([$1], [$2], [$3],
+            WXCODE_CHECKFOR_COMPONENT([$1], [$2], [$3],
                 [
                     $4
 
@@ -159,3 +159,14 @@ AC_DEFUN([AM_WXCODE_CHECKFOR_COMPONENT_VERSION],
                 ],
                 [$8], [$9])
         ])
+
+
+dnl ---------------------------------------------------------------------------
+dnl Deprecated macro wrappers
+dnl ---------------------------------------------------------------------------
+
+AC_DEFUN([AM_SAVE_COREVAR], [WXCODE_SAVE_COREVAR])
+AC_DEFUN([AM_RESTORE_COREVAR], [WXCODE_RESTORE_COREVAR])
+AC_DEFUN([AM_WXCODE_CHECKFOR_COMPONENT], [WXCODE_CHECKFOR_COMPONENT])
+AC_DEFUN([AM_WXCODE_CHECKFOR_COMPONENT_VERSION], [WXCODE_CHECKFOR_COMPONENT_VERSION])
+
