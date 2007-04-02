@@ -359,7 +359,7 @@ bool wxCurlBase::SetOpt(CURLoption option, ...)
 	return (res == CURLE_OK);
 }
 
-bool wxCurlBase::GetInfo(CURLINFO info, ...)
+bool wxCurlBase::GetInfo(CURLINFO info, ...) const
 {
 	va_list arg;
 	void* pParam;
@@ -595,7 +595,7 @@ bool wxCurlBase::IsVerbose() const
 	return m_bVerbose;
 }
 
-bool wxCurlBase::GetVerboseStream(wxOutputStream& destStream)
+bool wxCurlBase::GetVerboseStream(wxOutputStream& destStream) const
 {
 	if(m_bVerbose)
 	{
@@ -619,7 +619,7 @@ bool wxCurlBase::GetVerboseStream(wxOutputStream& destStream)
 	return false;
 }
 
-bool wxCurlBase::GetVerboseString(wxString& szStream)
+bool wxCurlBase::GetVerboseString(wxString& szStream) const
 {
 	if(m_bVerbose)
 	{

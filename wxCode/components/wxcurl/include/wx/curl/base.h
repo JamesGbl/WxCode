@@ -85,7 +85,7 @@ public:
 	double UploadTotal() const { return m_rUploadTotal; }
 
     //! Returns the URL you are transfering from/to.
-	wxString GetURL() { return m_szURL; }
+	wxString GetURL() const { return m_szURL; }
 
     //! Returns a number in [0;100] range indicating how much has been downloaded so far.
 	double DownloadPercent() const { return (100.0 * (m_rDownloadNow/m_rDownloadTotal)); }
@@ -127,7 +127,7 @@ public:
 	virtual wxEvent* Clone() const { return new wxCurlBeginPerformEvent(*this); }
 
     //! Returns the URL you are going to transfering from/to.
-	wxString GetURL() { return m_szURL; }
+	wxString GetURL() const { return m_szURL; }
 
 protected:
 	wxString m_szURL;
@@ -244,7 +244,7 @@ public:
 
     //! Gets an info from this libCURL session instance.
     //! See the curl_easy_getinfo() function call for more info.
-	bool GetInfo(CURLINFO info, ...);
+	bool GetInfo(CURLINFO info, ...) const;
 
     //! Start the operation as described by the options set previously with #SetOpt.
     //! If you set CURLOPT_UPLOAD to zero and the CURLOPT_WRITEFUNCTION and CURLOPT_WRITEDATA
@@ -345,10 +345,10 @@ public:
 	bool		IsVerbose() const;
 
     //! Writes into the given stream the verbose messages collected so far.
-    bool		GetVerboseStream(wxOutputStream& destStream);
+    bool		GetVerboseStream(wxOutputStream& destStream) const;
 
     //! Appends to the given stream the verbose messages collected so far.
-	bool		GetVerboseString(wxString& szStream);
+	bool		GetVerboseString(wxString& szStream) const;
     
 	// Static LibCURL Initialization Methods - Call At Program Init and Close...
 
