@@ -46,7 +46,7 @@ IMPLEMENT_CLASS(wxGetFileDialog, wxDialog)
 BEGIN_EVENT_TABLE(wxGetFileDialog, wxDialog)
 	EVT_BUTTON(XRCID("get_button"), wxGetFileDialog::OnGet)
 	EVT_BUTTON(XRCID("dest_button"), wxGetFileDialog::OnBrowseDest)
-	EVT_CURL_PROGRESS(wxGetFileDialog::OnProgress)
+	EVT_CURL_PROGRESS(wxID_ANY, wxGetFileDialog::OnProgress)
 END_EVENT_TABLE()
 
 //////////////////////////////////////////////////////////////////////

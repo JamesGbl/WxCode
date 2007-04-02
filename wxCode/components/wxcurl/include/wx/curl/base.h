@@ -44,31 +44,26 @@
 //////////////////////////////////////////////////////////////////////
 
 BEGIN_DECLARE_EVENT_TYPES()
-	DECLARE_EVENT_TYPE(wxCURL_PROGRESS_EVENT, 6579)
-	DECLARE_EVENT_TYPE(wxCURL_BEGIN_PERFORM_EVENT, 6580)
-	DECLARE_EVENT_TYPE(wxCURL_END_PERFORM_EVENT, 6581)
+	DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_CURL, wxCURL_PROGRESS_EVENT, 6579)
+	DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_CURL, wxCURL_BEGIN_PERFORM_EVENT, 6580)
+	DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_CURL, wxCURL_END_PERFORM_EVENT, 6581)
 END_DECLARE_EVENT_TYPES()
 
 // base.h: interface for the wxCurlProgressEvent class.
 //
 //////////////////////////////////////////////////////////////////////
 
-#define EVT_CURL_PROGRESS(fn) \
-	DECLARE_EVENT_TABLE_ENTRY( \
-		wxCURL_PROGRESS_EVENT, wxID_ANY, wxID_ANY, \
-		(wxObjectEventFunction) (wxEventFunction) &fn, \
-		(wxObject *) NULL \
-	),
-
 //! This event gets posted by wxCURL with a frequent interval during operation
 //! (roughly once per second) no matter if data is being transfered or not.
 //! Unknown/unused argument values passed to the callback will be set to zero 
 //! (like if you only download data, the upload size will remain 0).
+//! Use the EVT_CURL_PROGRESS(id, function) macro to intercept this event.
 class WXDLLIMPEXP_CURL wxCurlProgressEvent : public wxEvent
 {
 public:
 	wxCurlProgressEvent();
-	wxCurlProgressEvent(const double& rDownloadTotal, const double& rDownloadNow, 
+	wxCurlProgressEvent(int id,
+                        const double& rDownloadTotal, const double& rDownloadNow, 
                         const double& rUploadTotal, const double& rUploadNow, 
                         const wxString& szURL = wxEmptyString);
 	wxCurlProgressEvent(const wxCurlProgressEvent& event);
@@ -107,23 +102,26 @@ private:
 	DECLARE_DYNAMIC_CLASS(wxCurlProgressEvent);
 };
 
+typedef void (wxEvtHandler::*wxCurlProgressEventFunction)(wxCurlProgressEvent&);
+
+#define wxCurlProgressEventHandler(func) \
+    (wxObjectEventFunction)(wxEventFunction)wxStaticCastEvent(wxCurlProgressEventFunction, &func)
+
+#define EVT_CURL_PROGRESS(id, fn) \
+    wx__DECLARE_EVT1(wxCURL_PROGRESS_EVENT, id, wxCurlProgressEventHandler(fn))
+
+
 // base.h: interface for the wxCurlBeginPerformEvent class.
 //
 //////////////////////////////////////////////////////////////////////
 
-#define EVT_CURL_BEGIN_PERFORM(fn) \
-	DECLARE_EVENT_TABLE_ENTRY( \
-		wxCURL_BEGIN_PERFORM_EVENT, wxID_ANY, wxID_ANY, \
-		(wxObjectEventFunction) (wxEventFunction) &fn, \
-		(wxObject *) NULL\
-	),
-
 //! This event get posted before the beginning of any tranfer operation.
+//! Use the EVT_CURL_BEGIN_PERFORM(id, function) macro to intercept this event.
 class WXDLLIMPEXP_CURL wxCurlBeginPerformEvent : public wxEvent
 {
 public:
 	wxCurlBeginPerformEvent();
-	wxCurlBeginPerformEvent(const wxString& szURL);
+	wxCurlBeginPerformEvent(int id, const wxString& szURL);
 	wxCurlBeginPerformEvent(const wxCurlBeginPerformEvent& event);
 
 	virtual wxEvent* Clone() const { return new wxCurlBeginPerformEvent(*this); }
@@ -138,29 +136,36 @@ private:
 	DECLARE_DYNAMIC_CLASS(wxCurlBeginPerformEvent);
 };
 
+typedef void (wxEvtHandler::*wxCurlBeginPerformEventFunction)(wxCurlBeginPerformEvent&);
+
+#define wxCurlBeginPerformEventHandler(func) \
+    (wxObjectEventFunction)(wxEventFunction)wxStaticCastEvent(wxCurlBeginPerformEventFunction, &func)
+
+#define EVT_CURL_BEGIN_PERFORM(id, fn) \
+    wx__DECLARE_EVT1(wxCURL_BEGIN_PERFORM_EVENT, id, wxCurlBeginPerformEventHandler(fn))
+
+
+
 // base.h: interface for the wxCurlEndPerformEvent class.
 //
 //////////////////////////////////////////////////////////////////////
 
-#define EVT_CURL_END_PERFORM(fn) \
-	DECLARE_EVENT_TABLE_ENTRY( \
-		wxCURL_END_PERFORM_EVENT, wxID_ANY, wxID_ANY, \
-		(wxObjectEventFunction) (wxEventFunction) &fn, \
-		(wxObject *) NULL\
-	),
-
 //! This event get posted at the end of any tranfer operation.
+//! Use the EVT_CURL_END_PERFORM(id, function) macro to intercept this event.
 class WXDLLIMPEXP_CURL wxCurlEndPerformEvent : public wxEvent
 {
 public:
 	wxCurlEndPerformEvent();
-	wxCurlEndPerformEvent(const wxString& szURL, const long& iResponseCode);
+	wxCurlEndPerformEvent(int id, const wxString& szURL, const long& iResponseCode);
 	wxCurlEndPerformEvent(const wxCurlEndPerformEvent& event);
 
 	virtual wxEvent* Clone() const { return new wxCurlEndPerformEvent(*this); }
 
     //! Returns the URL you are going to transfering from/to.
-	wxString GetURL() { return m_szURL; }
+	wxString GetURL() const { return m_szURL; }
+
+    //! Returns the response code for the operation.
+    long GetResponseCode() const { return m_iResponseCode; }
 
 protected:
 	wxString	m_szURL;
@@ -169,6 +174,15 @@ protected:
 private:
 	DECLARE_DYNAMIC_CLASS(wxCurlEndPerformEvent);
 };
+
+typedef void (wxEvtHandler::*wxCurlEndPerformEventFunction)(wxCurlEndPerformEvent&);
+
+#define wxCurlEndPerformEventHandler(func) \
+    (wxObjectEventFunction)(wxEventFunction)wxStaticCastEvent(wxCurlEndPerformEventFunction, &func)
+
+#define EVT_CURL_END_PERFORM(id, fn) \
+    wx__DECLARE_EVT1(wxCURL_END_PERFORM_EVENT, id, wxCurlEndPerformEventHandler(fn))
+
 
 // C Function Declarations for LibCURL
 //
@@ -264,8 +278,9 @@ public:
 
 	//! Sets the event handler to which the wxCurlProgressEvent, wxCurlBeginPerformEvent and
     //! wxCurlEndPerformEvent will be sent if they are enabled (see #SetFlags).
-	bool			SetEvtHandler(wxEvtHandler* pParent);
+	bool			SetEvtHandler(wxEvtHandler* pParent, int id = wxID_ANY);
 	wxEvtHandler*	GetEvtHandler() const;
+    int             GetId() const;
 
 	//! Sets the "event policy" of wxCURL: if you pass zero, then no events will ever be sent.
     //! The wxCURL_SEND_PROGRESS_EVENTS and wxCURL_SEND_BEGINEND_EVENTS flags instead tell
@@ -394,6 +409,7 @@ protected:
 
     // for events:
 	wxEvtHandler*			m_pEvtHandler;
+    int                     m_nId;
 	long                    m_nFlags;
 
 

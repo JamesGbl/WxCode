@@ -37,11 +37,12 @@ extern "C"
 	int wxcurl_evt_progress_func(void* ptr, double rDlTotal, double rDlNow, 
                                  double rUlTotal, double rUlNow)
 	{
-		if(ptr)
+        wxCurlBase *curl = wx_static_cast(wxCurlBase*, ptr);
+		if(curl)
 		{
-			wxCurlProgressEvent evt(rDlTotal, rDlNow, rUlTotal, rUlNow);
+			wxCurlProgressEvent evt(curl->GetId(), rDlTotal, rDlNow, rUlTotal, rUlNow);
 
-			wxPostEvent((wxEvtHandler*)ptr, evt);
+			wxPostEvent(curl->GetEvtHandler(), evt);
 		}
 
 		return 0;
@@ -194,10 +195,11 @@ wxCurlProgressEvent::wxCurlProgressEvent()
 {
 }
 
-wxCurlProgressEvent::wxCurlProgressEvent(const double& rDownloadTotal, const double& rDownloadNow, 
+wxCurlProgressEvent::wxCurlProgressEvent(int id,
+                                         const double& rDownloadTotal, const double& rDownloadNow, 
                                          const double& rUploadTotal, const double& rUploadNow, 
                                          const wxString& szURL /*= wxEmptyString*/)
-: wxEvent(-1, wxCURL_PROGRESS_EVENT),
+: wxEvent(id, wxCURL_PROGRESS_EVENT),
   m_szURL(szURL),
   m_rDownloadTotal(rDownloadTotal), m_rDownloadNow(rDownloadNow),
   m_rUploadTotal(rUploadTotal), m_rUploadNow(rUploadNow)
@@ -233,8 +235,8 @@ wxCurlBeginPerformEvent::wxCurlBeginPerformEvent()
 {
 }
 
-wxCurlBeginPerformEvent::wxCurlBeginPerformEvent(const wxString& szURL)
-: wxEvent(-1, wxCURL_BEGIN_PERFORM_EVENT),
+wxCurlBeginPerformEvent::wxCurlBeginPerformEvent(int id, const wxString& szURL)
+: wxEvent(id, wxCURL_BEGIN_PERFORM_EVENT),
   m_szURL(szURL)
 {
 }
@@ -263,8 +265,8 @@ wxCurlEndPerformEvent::wxCurlEndPerformEvent()
 {
 }
 
-wxCurlEndPerformEvent::wxCurlEndPerformEvent(const wxString& szURL, const long& iResponseCode)
-: wxEvent(-1, wxCURL_END_PERFORM_EVENT),
+wxCurlEndPerformEvent::wxCurlEndPerformEvent(int id, const wxString& szURL, const long& iResponseCode)
+: wxEvent(id, wxCURL_END_PERFORM_EVENT),
   m_szURL(szURL),
   m_iResponseCode(iResponseCode)
 {
@@ -377,7 +379,7 @@ bool wxCurlBase::Perform()
 
 	if((m_nFlags & wxCURL_SEND_BEGINEND_EVENTS) && m_pEvtHandler)
 	{
-		wxCurlBeginPerformEvent bgnEvent(m_szCurrFullURL);
+		wxCurlBeginPerformEvent bgnEvent(m_nId, m_szCurrFullURL);
 
 		wxPostEvent(m_pEvtHandler, bgnEvent);
 	}
@@ -386,7 +388,7 @@ bool wxCurlBase::Perform()
 
 	if((m_nFlags & wxCURL_SEND_BEGINEND_EVENTS) && m_pEvtHandler)
 	{
-		wxCurlEndPerformEvent endEvent(m_szCurrFullURL, m_iResponseCode);
+		wxCurlEndPerformEvent endEvent(m_nId, m_szCurrFullURL, m_iResponseCode);
 
 		wxPostEvent(m_pEvtHandler, endEvent);
 	}
@@ -443,9 +445,10 @@ void wxCurlBase::DumpErrorIfNeed(CURLcode error)
 // Member Data Access Methods
 //////////////////////////////////////////////////////////////////////
 
-bool wxCurlBase::SetEvtHandler(wxEvtHandler* pEvtHandler)
+bool wxCurlBase::SetEvtHandler(wxEvtHandler* pEvtHandler, int id)
 {
 	m_pEvtHandler = pEvtHandler;
+    m_nId = id;
 
 	return true;
 }
@@ -453,6 +456,11 @@ bool wxCurlBase::SetEvtHandler(wxEvtHandler* pEvtHandler)
 wxEvtHandler* wxCurlBase::GetEvtHandler() const
 {
 	return m_pEvtHandler;
+}
+
+int wxCurlBase::GetId() const
+{
+    return m_nId;
 }
 
 void wxCurlBase::SetFlags(long flags)
@@ -650,7 +658,7 @@ void wxCurlBase::SetCurlHandleToDefaults()
 		{
 			SetOpt(CURLOPT_NOPROGRESS, FALSE);
 			SetOpt(CURLOPT_PROGRESSFUNCTION, wxcurl_evt_progress_func);
-			SetOpt(CURLOPT_PROGRESSDATA, m_pEvtHandler);
+			SetOpt(CURLOPT_PROGRESSDATA, this);
 		}
 
 		if(!m_szUsername.IsEmpty() || !m_szPassword.IsEmpty())
