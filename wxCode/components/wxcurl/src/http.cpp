@@ -43,8 +43,9 @@ wxCurlHTTP::wxCurlHTTP(const wxString& szURL /*= wxEmptyString*/,
                        const wxString& szUserName /*= wxEmptyString*/, 
                        const wxString& szPassword /*= wxEmptyString*/, 
                        wxEvtHandler* pEvtHandler /*= NULL*/, 
+                       int id /*= wxID_ANY*/,
                        long flags /*= wxCURL_DEFAULT_FLAGS*/)
-: wxCurlBase(szURL, szUserName, szPassword, pEvtHandler, flags),
+: wxCurlBase(szURL, szUserName, szPassword, pEvtHandler, id, flags),
   m_pPostHead(NULL), m_pPostTail(NULL), m_bUseCookies(false), m_szCookieFile(wxT("-")),
   m_pszPostFieldsData(NULL), m_iPostDataSize(0)
 {

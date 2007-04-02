@@ -42,11 +42,13 @@ extern "C"
 wxCurlFTP::wxCurlFTP(const wxString& szURL /*= wxEmptyString*/, 
                      const wxString& szUserName /*= wxEmptyString*/, 
                      const wxString& szPassword /*= wxEmptyString*/, 
-                     wxEvtHandler* pEvtHandler /*= NULL*/, 
+                     wxEvtHandler* pEvtHandler /*= NULL*/,
+                     int id /*= wxID_ANY*/,
                      long flags /*= wxCURL_DEFAULT_FLAGS*/)
-: wxCurlBase(szURL, szUserName, szPassword, pEvtHandler, flags),
+: wxCurlBase(szURL, szUserName, szPassword, pEvtHandler, id, flags),
   m_pQuote(NULL), m_pPreQuote(NULL), m_pPostQuote(NULL),
-  m_bCreateMissingDirs(true), m_bUsePortOption(false), m_bUseEPRT(false), m_bUseEPSV(false), m_bAppend(false),
+  m_bCreateMissingDirs(true), m_bUsePortOption(false), 
+  m_bUseEPRT(false), m_bUseEPSV(false), m_bAppend(false),
   m_tmMode(kASCII),
   m_szPortParam(wxT("-"))
 {
@@ -426,7 +428,8 @@ bool wxCurlFTP::Delete(const wxString& szRemoteLoc /*= wxEmptyString*/)
 	return false;
 }
 
-bool wxCurlFTP::Rename(const wxString& szRemoteLocName, const wxString& szRemoteFile /*= wxEmptyString*/)
+bool wxCurlFTP::Rename(const wxString& szRemoteLocName, 
+                       const wxString& szRemoteFile /*= wxEmptyString*/)
 {
 	if(m_pCURL)
 	{

@@ -291,12 +291,14 @@ wxCurlBase::wxCurlBase(const wxString& szURL /*= wxEmptyString*/,
                        const wxString& szUserName /*= wxEmptyString*/,
                        const wxString& szPassword /*= wxEmptyString*/,
                        wxEvtHandler* pEvtHandler /*= NULL*/,
+                       int id /*= wxID_ANY*/,
                        long flags /*=wxCURL_DEFAULT_FLAGS*/)
 : m_szBaseURL(szURL), m_szCurrFullURL(szURL), m_szUsername(szUserName), 
   m_szPassword(szPassword),
   m_iHostPort(-1), m_iResponseCode(-1),
   m_bUseProxy(false), m_iProxyPort(-1),
-  m_pCURL(NULL), m_pHeaders(NULL), m_pEvtHandler(pEvtHandler),
+  m_pCURL(NULL), m_pHeaders(NULL), 
+  m_pEvtHandler(pEvtHandler), m_nId(id),
   m_nFlags(flags),
   m_bVerbose(false)
 {

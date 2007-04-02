@@ -37,7 +37,7 @@ public:
 	wxCurlFTP(const wxString& szURL = wxEmptyString, 
               const wxString& szUserName = wxEmptyString, 
               const wxString& szPassword = wxEmptyString, 
-              wxEvtHandler* pEvtHandler = NULL, 
+              wxEvtHandler* pEvtHandler = NULL, int id = wxID_ANY,
               long flags = wxCURL_DEFAULT_FLAGS);
 	virtual ~wxCurlFTP();
 

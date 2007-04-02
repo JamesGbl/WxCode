@@ -227,8 +227,10 @@ extern "C"
 class WXDLLIMPEXP_CURL wxCurlBase
 {
 public:
-	wxCurlBase(const wxString& szURL = wxEmptyString, const wxString& szUserName = wxEmptyString,
-               const wxString& szPassword = wxEmptyString, wxEvtHandler* pEvtHandler = NULL,
+	wxCurlBase(const wxString& szURL = wxEmptyString, 
+               const wxString& szUserName = wxEmptyString,
+               const wxString& szPassword = wxEmptyString, 
+               wxEvtHandler* pEvtHandler = NULL, int id = wxID_ANY,
                long flags = wxCURL_DEFAULT_FLAGS);
 
 	virtual ~wxCurlBase();

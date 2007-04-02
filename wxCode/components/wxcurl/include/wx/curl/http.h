@@ -31,7 +31,7 @@ public:
 	wxCurlHTTP(const wxString& szURL = wxEmptyString,
                const wxString& szUserName = wxEmptyString,
                const wxString& szPassword = wxEmptyString,
-               wxEvtHandler* pEvtHandler = NULL,
+               wxEvtHandler* pEvtHandler = NULL, int id = wxID_ANY,
                long flags = wxCURL_DEFAULT_FLAGS);
 	virtual ~wxCurlHTTP();
 
@@ -96,9 +96,6 @@ protected:
 
 	const char*				m_pszPostFieldsData;
 	size_t					m_iPostDataSize;
-
-private:
-
 };
 
 #endif // _WXCURLHTTP_H__INCLUDED_
