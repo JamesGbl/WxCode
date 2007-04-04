@@ -28,12 +28,12 @@ CPPFLAGS =
 # Standard linker flags 
 LDFLAGS = 
 
-# Use DLL build of wx library to use? [0,1]
+# Use DLL build of wx library? [0,1]
 #   0 - Static
 #   1 - DLL
 WX_SHARED = 0
 
-# Compile Unicode build of wxWidgets? [0,1]
+# Use Unicode build of wxWidgets? [0,1]
 #   0 - ANSI
 #   1 - Unicode
 WX_UNICODE = 0
@@ -267,7 +267,7 @@ MAKEARGS = CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" &
 WXXML2_LIB_CXXFLAGS = $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include $(VAR) &
-	$(VAR_0) -i=..\include -i=..\thirdparty\libxml2\include &
+	$(VAR_0) -wx -i=..\include -i=..\thirdparty\libxml2\include &
 	-i=..\thirdparty\libiconv\include $(CPPFLAGS) $(CXXFLAGS)
 WXXML2_LIB_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxml2_lib_dtd.obj &
@@ -275,7 +275,7 @@ WXXML2_LIB_OBJECTS =  &
 WXXML2_DLL_CXXFLAGS = -bd $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include $(VAR) &
-	$(VAR_0) -i=..\include -dWXMAKINGDLL_WXXML2 &
+	$(VAR_0) -wx -i=..\include -dWXMAKINGDLL_WXXML2 &
 	-i=..\thirdparty\libxml2\include -i=..\thirdparty\libiconv\include &
 	$(CPPFLAGS) $(CXXFLAGS)
 WXXML2_DLL_OBJECTS =  &
@@ -284,7 +284,7 @@ WXXML2_DLL_OBJECTS =  &
 MINIMAL_CXXFLAGS = $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include $(VAR) &
-	$(VAR_0) -i=..\include -i=..\thirdparty\libxml2\include &
+	$(VAR_0) -wx -i=..\include -i=..\thirdparty\libxml2\include &
 	-i=..\thirdparty\libiconv\include $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\minimal_minimal.obj
@@ -338,17 +338,17 @@ setupdep :  thirdparty
 	-copy ..\thirdparty\libiconv\lib\*.dll ..\lib
 
 !ifeq WX_SHARED 0
-..\lib\wat_$(____wxxml2_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxml2.lib :  make_lib_dir_wxxml2_lib  $(WXXML2_LIB_OBJECTS) setupdep
+..\lib\wat_$(____wxxml2_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxml2.lib :  make_dir_wxxml2_lib  $(WXXML2_LIB_OBJECTS) setupdep
 	@%create watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxml2_lib.lbc
 	@for %i in ($(WXXML2_LIB_OBJECTS)) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxml2_lib.lbc +%i
 	wlib -q -p4096 -n -b $^@ @watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxml2_lib.lbc
 !endif
 
-make_lib_dir_wxxml2_lib :  
+make_dir_wxxml2_lib :  
 	if not exist ..\lib\wat_$(____wxxml2_3) mkdir ..\lib\wat_$(____wxxml2_3)
 
 !ifeq WX_SHARED 1
-..\lib\wat_$(____wxxml2_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxml2.dll :  make_lib_dir_wxxml2_dll  $(WXXML2_DLL_OBJECTS) setupdep
+..\lib\wat_$(____wxxml2_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxml2.dll :  make_dir_wxxml2_dll  $(WXXML2_DLL_OBJECTS) setupdep
 	@%create watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxml2_dll.lbc
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxml2_dll.lbc option quiet
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxml2_dll.lbc name $^@
@@ -362,7 +362,7 @@ make_lib_dir_wxxml2_lib :
 	wlib -q -n -b ..\lib\wat_$(____wxxml2_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxml2.lib +$^@
 !endif
 
-make_lib_dir_wxxml2_dll :  
+make_dir_wxxml2_dll :  
 	if not exist ..\lib\wat_$(____wxxml2_3) mkdir ..\lib\wat_$(____wxxml2_3)
 
 ..\sample\minimal.exe :  $(MINIMAL_OBJECTS) setupdep make_sample_dir_minimal  $(__wxxml2_lib___depname)
@@ -378,7 +378,7 @@ make_lib_dir_wxxml2_dll :
 	wlink @watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\minimal.lbc
 
 make_sample_dir_minimal :  
-	if not exist ../sample mkdir../sample
+	if not exist ..\sample mkdir ..\sample
 
 tarball :  
 	make distclean

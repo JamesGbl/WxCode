@@ -52,19 +52,11 @@ WXXML2_LIB_CXXFLAGS = -I$(srcdir)/include $(WX_CXXFLAGS) $(CPPFLAGS) \
 WXXML2_LIB_OBJECTS =  \
 	wxxml2_lib_dtd.o \
 	wxxml2_lib_xml2.o
-WXXML2_LIB_HEADERS =  \
-	include/wx/dtd.h \
-	include/wx/xml2.h \
-	include/wx/xml2def.h
 WXXML2_DLL_CXXFLAGS = -I$(srcdir)/include -DWXMAKINGDLL_WXXML2 $(PIC_FLAG) \
 	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 WXXML2_DLL_OBJECTS =  \
 	wxxml2_dll_dtd.o \
 	wxxml2_dll_xml2.o
-WXXML2_DLL_HEADERS =  \
-	include/wx/dtd.h \
-	include/wx/xml2.h \
-	include/wx/xml2def.h
 MINIMAL_CXXFLAGS = -I$(srcdir)/include $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	minimal_minimal.o \
@@ -193,7 +185,7 @@ setupdep:
 
 @COND_WX_SHARED_0@install_wxxml2_lib_headers: 
 @COND_WX_SHARED_0@	$(INSTALL_DIR) $(DESTDIR)$(prefix)
-@COND_WX_SHARED_0@	for f in $(WXXML2_LIB_HEADERS); do \
+@COND_WX_SHARED_0@	for f in  include/wx/xml2def.h include/wx/dtd.h include/wx/xml2.h; do \
 @COND_WX_SHARED_0@	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
 @COND_WX_SHARED_0@	$(INSTALL_DIR) $(DESTDIR)$(prefix)/`dirname $$f`; \
 @COND_WX_SHARED_0@	fi; \
@@ -201,7 +193,7 @@ setupdep:
 @COND_WX_SHARED_0@	done
 
 @COND_WX_SHARED_0@uninstall_wxxml2_lib_headers: 
-@COND_WX_SHARED_0@	for f in $(WXXML2_LIB_HEADERS); do \
+@COND_WX_SHARED_0@	for f in  include/wx/xml2def.h include/wx/dtd.h include/wx/xml2.h; do \
 @COND_WX_SHARED_0@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_WX_SHARED_0@	done
 
@@ -223,7 +215,7 @@ setupdep:
 
 @COND_WX_SHARED_1@install_wxxml2_dll_headers: 
 @COND_WX_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(prefix)
-@COND_WX_SHARED_1@	for f in $(WXXML2_DLL_HEADERS); do \
+@COND_WX_SHARED_1@	for f in  include/wx/xml2def.h include/wx/dtd.h include/wx/xml2.h; do \
 @COND_WX_SHARED_1@	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
 @COND_WX_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(prefix)/`dirname $$f`; \
 @COND_WX_SHARED_1@	fi; \
@@ -231,7 +223,7 @@ setupdep:
 @COND_WX_SHARED_1@	done
 
 @COND_WX_SHARED_1@uninstall_wxxml2_dll_headers: 
-@COND_WX_SHARED_1@	for f in $(WXXML2_DLL_HEADERS); do \
+@COND_WX_SHARED_1@	for f in  include/wx/xml2def.h include/wx/dtd.h include/wx/xml2.h; do \
 @COND_WX_SHARED_1@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_WX_SHARED_1@	done
 

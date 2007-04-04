@@ -28,12 +28,12 @@ CPPFLAGS =
 # Standard linker flags 
 LDFLAGS = 
 
-# Use DLL build of wx library to use? [0,1]
+# Use DLL build of wx library? [0,1]
 #   0 - Static
 #   1 - DLL
 WX_SHARED = 0
 
-# Compile Unicode build of wxWidgets? [0,1]
+# Use Unicode build of wxWidgets? [0,1]
 #   0 - ANSI
 #   1 - Unicode
 WX_UNICODE = 0
@@ -71,7 +71,7 @@ WXXML2_LIB_CXXFLAGS = /MD$(VAR_3) /DWIN32 $(____WX_SHARED) \
 	/I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) /I$(WX_DIR)\include $(VAR) \
 	$(VAR_0) $(VAR_2) \
 	/Fd..\lib\vc_$(____wxxml2_4)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxml2.pdb \
-	/I..\include /I..\thirdparty\libxml2\include \
+	/W4 /I..\include /I..\thirdparty\libxml2\include \
 	/I..\thirdparty\libiconv\include /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
 WXXML2_LIB_OBJECTS =  \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxml2_lib_dtd.obj \
@@ -81,7 +81,7 @@ WXXML2_DLL_CXXFLAGS = /MD$(VAR_3) /DWIN32 $(____WX_SHARED) \
 	/I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) /I$(WX_DIR)\include $(VAR) \
 	$(VAR_0) $(VAR_2) \
 	/Fd..\lib\vc_$(____wxxml2_4)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxml2.pdb \
-	/I..\include /DWXMAKINGDLL_WXXML2 /I..\thirdparty\libxml2\include \
+	/W4 /I..\include /DWXMAKINGDLL_WXXML2 /I..\thirdparty\libxml2\include \
 	/I..\thirdparty\libiconv\include /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
 WXXML2_DLL_OBJECTS =  \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxml2_dll_dtd.obj \
@@ -89,7 +89,7 @@ WXXML2_DLL_OBJECTS =  \
 MINIMAL_CXXFLAGS = /MD$(VAR_3) /DWIN32 $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
 	/I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) /I$(WX_DIR)\include $(VAR) \
-	$(VAR_0) $(VAR_2) /Fd..\sample\minimal.pdb /I..\include /D_WINDOWS \
+	$(VAR_0) $(VAR_2) /Fd..\sample\minimal.pdb /W4 /I..\include /D_WINDOWS \
 	/I..\thirdparty\libxml2\include /I..\thirdparty\libiconv\include /GR /EHsc \
 	$(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
@@ -271,24 +271,24 @@ setupdep: sub_thirdparty
 	-copy ..\thirdparty\libiconv\lib\*.dll ..\lib
 
 !if "$(WX_SHARED)" == "0"
-..\lib\vc_$(____wxxml2_4)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxml2.lib: make_lib_dir_wxxml2_lib  $(WXXML2_LIB_OBJECTS) setupdep
+..\lib\vc_$(____wxxml2_4)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxml2.lib: make_dir_wxxml2_lib  $(WXXML2_LIB_OBJECTS) setupdep
 	if exist $@ del $@
 	link /LIB /NOLOGO /OUT:$@ @<<
 	$(WXXML2_LIB_OBJECTS)
 <<
 !endif
 
-make_lib_dir_wxxml2_lib: 
+make_dir_wxxml2_lib: 
 	if not exist ..\lib\vc_$(____wxxml2_4) mkdir ..\lib\vc_$(____wxxml2_4)
 
 !if "$(WX_SHARED)" == "1"
-..\lib\vc_$(____wxxml2_4)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxml2.dll: make_lib_dir_wxxml2_dll  $(WXXML2_DLL_OBJECTS) setupdep
+..\lib\vc_$(____wxxml2_4)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxml2.dll: make_dir_wxxml2_dll  $(WXXML2_DLL_OBJECTS) setupdep
 	link /DLL /NOLOGO /OUT:$@ $(LDFLAGS) /LIBPATH:$(WX_DIR)$(WXLIBPATH) $(VAR_1) /LIBPATH:..$(WXLIBPATH) /LIBPATH:..\thirdparty\libxml2\lib /LIBPATH:..\thirdparty\libiconv\lib @<<
 	$(WXXML2_DLL_OBJECTS)  libxml2.lib iconv.lib $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /IMPLIB:..\lib\vc_$(____wxxml2_4)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxml2.lib
 <<
 !endif
 
-make_lib_dir_wxxml2_dll: 
+make_dir_wxxml2_dll: 
 	if not exist ..\lib\vc_$(____wxxml2_4) mkdir ..\lib\vc_$(____wxxml2_4)
 
 ..\sample\minimal.exe: $(MINIMAL_OBJECTS) setupdep make_sample_dir_minimal  $(__wxxml2_lib___depname)
@@ -297,7 +297,7 @@ make_lib_dir_wxxml2_dll:
 <<
 
 make_sample_dir_minimal: 
-	if not exist ../sample mkdir../sample
+	if not exist ..\sample mkdir ..\sample
 
 tarball: 
 	make distclean

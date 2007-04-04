@@ -49,12 +49,12 @@ CPPFLAGS = -a8 -g0
 LDFLAGS = 
 !endif
 
-# Use DLL build of wx library to use? [0,1]
+# Use DLL build of wx library? [0,1]
 !ifndef WX_SHARED
 WX_SHARED = 0
 !endif
 
-# Compile Unicode build of wxWidgets? [0,1]
+# Use Unicode build of wxWidgets? [0,1]
 !ifndef WX_UNICODE
 WX_UNICODE = 0
 !endif
@@ -281,25 +281,25 @@ setupdep: thirdparty
 	-copy ..\thirdparty\libiconv\lib\*.dll ..\lib
 
 !if "$(WX_SHARED)" == "0"
-..\lib\bcc_$(____wxxml2_4)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxml2.lib: make_lib_dir_wxxml2_lib  $(WXXML2_LIB_OBJECTS) setupdep
+..\lib\bcc_$(____wxxml2_4)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxml2.lib: make_dir_wxxml2_lib  $(WXXML2_LIB_OBJECTS) setupdep
 	if exist $@ del $@
 	tlib /a /p4096 $@ @&&|
 	$(WXXML2_LIB_OBJECTS)
 |
 !endif
 
-make_lib_dir_wxxml2_lib: 
+make_dir_wxxml2_lib: 
 	if not exist ..\lib\bcc_$(____wxxml2_4) mkdir ..\lib\bcc_$(____wxxml2_4)
 
 !if "$(WX_SHARED)" == "1"
-..\lib\bcc_$(____wxxml2_4)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxml2.dll: make_lib_dir_wxxml2_dll  $(WXXML2_DLL_OBJECTS) setupdep
+..\lib\bcc_$(____wxxml2_4)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxml2.dll: make_dir_wxxml2_dll  $(WXXML2_DLL_OBJECTS) setupdep
 	ilink32 -Tpd -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -L$(WX_DIR)$(WXLIBPATH) $(VAR_1) -L..$(WXLIBPATH) -L..\thirdparty\libxml2\lib -L..\thirdparty\libiconv\lib @&&|
 	c0d32.obj $(WXXML2_DLL_OBJECTS),$@,, libxml2.lib iconv.lib $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32.lib,,
 |
 	implib -f ..\lib\bcc_$(____wxxml2_4)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxml2 $@
 !endif
 
-make_lib_dir_wxxml2_dll: 
+make_dir_wxxml2_dll: 
 	if not exist ..\lib\bcc_$(____wxxml2_4) mkdir ..\lib\bcc_$(____wxxml2_4)
 
 ..\sample\minimal.exe: $(MINIMAL_OBJECTS) setupdep make_sample_dir_minimal   $(__wxxml2_lib___depname)
@@ -308,7 +308,7 @@ make_lib_dir_wxxml2_dll:
 |
 
 make_sample_dir_minimal: 
-	if not exist ../sample mkdir../sample
+	if not exist ..\sample mkdir ..\sample
 
 tarball: 
 	make distclean

@@ -69,29 +69,21 @@ WX_VERSION_MINOR = $(shell echo $(WX_VERSION) | cut -c2,2)
 WX_CONFIG_FLAGS = $(WX_CONFIG_DEBUG_FLAG) $(WX_CONFIG_UNICODE_FLAG) \
 	$(WX_CONFIG_SHARED_FLAG) --toolkit=$(WX_PORT) \
 	--version=$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)
-WXXML2_LIB_CXXFLAGS = $(VAR) $(VAR_1) -I../include \
+WXXML2_LIB_CXXFLAGS = $(VAR) $(VAR_1) -W -Wall -I../include \
 	-I../thirdparty/libxml2/include -I../thirdparty/libiconv/include \
 	`$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 WXXML2_LIB_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxxml2_lib_dtd.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxxml2_lib_xml2.o
-WXXML2_LIB_HEADERS =  \
-	include/wx/dtd.h \
-	include/wx/xml2.h \
-	include/wx/xml2def.h
-WXXML2_DLL_CXXFLAGS = $(VAR) $(VAR_1) -I../include -DWXMAKINGDLL_WXXML2 \
+WXXML2_DLL_CXXFLAGS = $(VAR) $(VAR_1) -W -Wall -I../include -DWXMAKINGDLL_WXXML2 \
 	-I../thirdparty/libxml2/include -I../thirdparty/libiconv/include -fPIC \
 	-DPIC `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 WXXML2_DLL_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxxml2_dll_dtd.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxxml2_dll_xml2.o
-WXXML2_DLL_HEADERS =  \
-	include/wx/dtd.h \
-	include/wx/xml2.h \
-	include/wx/xml2def.h
-MINIMAL_CXXFLAGS = $(VAR) $(VAR_1) -I../include -I../thirdparty/libxml2/include \
-	-I../thirdparty/libiconv/include `$(WX_CONFIG) --cxxflags \
-	$(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
+MINIMAL_CXXFLAGS = $(VAR) $(VAR_1) -W -Wall -I../include \
+	-I../thirdparty/libxml2/include -I../thirdparty/libiconv/include \
+	`$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/minimal_minimal.o
 
@@ -199,7 +191,7 @@ test_for_selected_wxbuild:
 setupdep: 
 
 ifeq ($(WX_SHARED),0)
-../lib/gcc_$(__wxxml2)/libwxcode_$(WX_PORT)_wxxml2-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a: make_lib_dir_wxxml2_lib  $(WXXML2_LIB_OBJECTS) setupdep
+../lib/gcc_$(__wxxml2)/libwxcode_$(WX_PORT)_wxxml2-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a: make_dir_wxxml2_lib  $(WXXML2_LIB_OBJECTS) setupdep
 	rm -f $@
 	$(AR) rcu $@ $(WXXML2_LIB_OBJECTS)
 	$(RANLIB) $@
@@ -216,13 +208,13 @@ uninstall_wxxml2_lib:
 	rm -f $(DESTDIR)$(prefix)/lib/libwxcode_$(WX_PORT)_wxxml2-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a
 endif
 
-make_lib_dir_wxxml2_lib: 
+make_dir_wxxml2_lib: 
 	@mkdir -p ../lib/gcc_$(__wxxml2)
 
 ifeq ($(WX_SHARED),0)
 install_wxxml2_lib_headers: 
 	$(INSTALL) -d $(DESTDIR)$(prefix)
-	for f in $(WXXML2_LIB_HEADERS); do \
+	for f in  include/wx/xml2def.h include/wx/dtd.h include/wx/xml2.h; do \
 	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
 	$(INSTALL) -d $(DESTDIR)$(prefix)/`dirname $$f`; \
 	fi; \
@@ -232,13 +224,13 @@ endif
 
 ifeq ($(WX_SHARED),0)
 uninstall_wxxml2_lib_headers: 
-	for f in $(WXXML2_LIB_HEADERS); do \
+	for f in  include/wx/xml2def.h include/wx/dtd.h include/wx/xml2.h; do \
 	rm -f $(DESTDIR)$(prefix)/$$f; \
 	done
 endif
 
 ifeq ($(WX_SHARED),1)
-../lib/gcc_$(__wxxml2)/libwxcode_$(WX_PORT)_wxxml2-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so: make_lib_dir_wxxml2_dll  $(WXXML2_DLL_OBJECTS) setupdep
+../lib/gcc_$(__wxxml2)/libwxcode_$(WX_PORT)_wxxml2-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so: make_dir_wxxml2_dll  $(WXXML2_DLL_OBJECTS) setupdep
 	$(CXX) -shared -fPIC -o $@ $(WXXML2_DLL_OBJECTS) $(LDFLAGS) $(VAR_1) -L../lib -L../thirdparty/libxml2/lib -L../thirdparty/libiconv/lib  -lxml2 `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs core,base`
 endif
 
@@ -255,13 +247,13 @@ uninstall_wxxml2_dll:
 	rm -f $(DESTDIR)$(prefix)/lib/libwxcode_$(WX_PORT)_wxxml2-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
 endif
 
-make_lib_dir_wxxml2_dll: 
+make_dir_wxxml2_dll: 
 	@mkdir -p ../lib/gcc_$(__wxxml2)
 
 ifeq ($(WX_SHARED),1)
 install_wxxml2_dll_headers: 
 	$(INSTALL) -d $(DESTDIR)$(prefix)
-	for f in $(WXXML2_DLL_HEADERS); do \
+	for f in  include/wx/xml2def.h include/wx/dtd.h include/wx/xml2.h; do \
 	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
 	$(INSTALL) -d $(DESTDIR)$(prefix)/`dirname $$f`; \
 	fi; \
@@ -271,7 +263,7 @@ endif
 
 ifeq ($(WX_SHARED),1)
 uninstall_wxxml2_dll_headers: 
-	for f in $(WXXML2_DLL_HEADERS); do \
+	for f in  include/wx/xml2def.h include/wx/dtd.h include/wx/xml2.h; do \
 	rm -f $(DESTDIR)$(prefix)/$$f; \
 	done
 endif

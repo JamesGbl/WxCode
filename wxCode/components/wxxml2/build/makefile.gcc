@@ -28,10 +28,10 @@ CPPFLAGS :=
 # Standard linker flags 
 LDFLAGS := 
 
-# Use DLL build of wx library to use? [0,1]
+# Use DLL build of wx library? [0,1]
 WX_SHARED := 0
 
-# Compile Unicode build of wxWidgets? [0,1]
+# Use Unicode build of wxWidgets? [0,1]
 WX_UNICODE := 0
 
 # Use debug build of wxWidgets (define __WXDEBUG__)? [0,1]
@@ -62,7 +62,7 @@ CPPDEPS = -MT$@ -MF$@.d -MD
 WXXML2_LIB_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
-	$(VAR_1) -I..\include -I..\thirdparty\libxml2\include \
+	$(VAR_1) -W -Wall -I..\include -I..\thirdparty\libxml2\include \
 	-I..\thirdparty\libiconv\include $(CPPFLAGS) $(CXXFLAGS)
 WXXML2_LIB_OBJECTS =  \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxml2_lib_dtd.o \
@@ -70,15 +70,16 @@ WXXML2_LIB_OBJECTS =  \
 WXXML2_DLL_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
-	$(VAR_1) -I..\include -DWXMAKINGDLL_WXXML2 -I..\thirdparty\libxml2\include \
-	-I..\thirdparty\libiconv\include $(CPPFLAGS) $(CXXFLAGS)
+	$(VAR_1) -W -Wall -I..\include -DWXMAKINGDLL_WXXML2 \
+	-I..\thirdparty\libxml2\include -I..\thirdparty\libiconv\include \
+	$(CPPFLAGS) $(CXXFLAGS)
 WXXML2_DLL_OBJECTS =  \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxml2_dll_dtd.o \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxxml2_dll_xml2.o
 MINIMAL_CXXFLAGS = -DHAVE_W32API_H $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
 	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include $(VAR) \
-	$(VAR_1) -I..\include -I..\thirdparty\libxml2\include \
+	$(VAR_1) -W -Wall -I..\include -I..\thirdparty\libxml2\include \
 	-I..\thirdparty\libiconv\include $(CPPFLAGS) $(CXXFLAGS)
 MINIMAL_OBJECTS =  \
 	gccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\minimal_minimal.o
@@ -286,28 +287,28 @@ setupdep: thirdparty
 	-copy ..\thirdparty\libiconv\lib\*.dll ..\lib
 
 ifeq ($(WX_SHARED),0)
-..\lib\gcc_$(____wxxml2_4)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxml2.a: make_lib_dir_wxxml2_lib  $(WXXML2_LIB_OBJECTS) setupdep
+..\lib\gcc_$(____wxxml2_4)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxml2.a: make_dir_wxxml2_lib  $(WXXML2_LIB_OBJECTS) setupdep
 	if exist $@ del $@
 	ar rcu $@ $(WXXML2_LIB_OBJECTS)
 	ranlib $@
 endif
 
-make_lib_dir_wxxml2_lib: 
+make_dir_wxxml2_lib: 
 	if not exist ..\lib\gcc_$(____wxxml2_4) mkdir ..\lib\gcc_$(____wxxml2_4)
 
 ifeq ($(WX_SHARED),1)
-..\lib\gcc_$(____wxxml2_4)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxml2.dll: make_lib_dir_wxxml2_dll  $(WXXML2_DLL_OBJECTS) setupdep
+..\lib\gcc_$(____wxxml2_4)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxml2.dll: make_dir_wxxml2_dll  $(WXXML2_DLL_OBJECTS) setupdep
 	$(CXX) -shared -fPIC -o $@ $(WXXML2_DLL_OBJECTS) $(LDFLAGS) -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_1) -L..$(WXLIBPATH) -Wl,--out-implib=..\lib\gcc_$(____wxxml2_4)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxml2.a -L..\thirdparty\libxml2\lib -L..\thirdparty\libiconv\lib  -lxml2 -liconv $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 endif
 
-make_lib_dir_wxxml2_dll: 
+make_dir_wxxml2_dll: 
 	if not exist ..\lib\gcc_$(____wxxml2_4) mkdir ..\lib\gcc_$(____wxxml2_4)
 
 ..\sample\minimal.exe: $(MINIMAL_OBJECTS) setupdep make_sample_dir_minimal  $(__wxxml2_lib___depname)
 	$(CXX) -o $@ $(MINIMAL_OBJECTS) $(LDFLAGS) -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_1) -L..$(WXLIBPATH) -Wl,--subsystem,windows -mwindows -L..\thirdparty\libxml2\lib -L..\thirdparty\libiconv\lib  ..\lib\gcc_$(____wxxml2_4)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxxml2.a -lxml2 -liconv $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 
 make_sample_dir_minimal: 
-	if not exist ../sample mkdir../sample
+	if not exist ..\sample mkdir ..\sample
 
 tarball: 
 	make distclean

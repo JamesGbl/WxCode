@@ -538,7 +538,7 @@ void MyFrame::OnLoadXML(wxCommandEvent& WXUNUSED(event))
 {
     // ask the user which file we must load...
     wxFileDialog fd(this, wxT("Choose the XML file to load"), wxT(""), wxT(""), 
-        wxT("XML and HTML files|*.xml;*.html;*.xhtml|All files|*.*"), wxOPEN);
+                    wxT("XML and HTML files|*.xml;*.html;*.xhtml|All files|*.*"), wxFD_OPEN);
     if (fd.ShowModal() == wxID_CANCEL)
         return;
 
@@ -548,7 +548,7 @@ void MyFrame::OnLoadXML(wxCommandEvent& WXUNUSED(event))
 #if DO_TEST_SAVE
     // ask the user where to save it now
     wxFileDialog fd2(this, wxT("Choose the XML file to save on"), wxT(""), wxT(""),
-        wxT("XML and HTML files|*.xml;*.html;*.xhtml|All files|*.*"), wxSAVE);
+                     wxT("XML and HTML files|*.xml;*.html;*.xhtml|All files|*.*"), wxFD_SAVE);
     if (fd2.ShowModal() == wxID_CANCEL)
         return;
 #endif
@@ -564,7 +564,7 @@ void MyFrame::OnLoadDTD(wxCommandEvent& WXUNUSED(event))
 {
     // ask the user which file we must load...
     wxFileDialog fd(this, wxT("Choose the DTD to load"), wxT(""), wxT(""), 
-        wxT("DTD files|*.dtd|All files|*.*"), wxOPEN);
+                    wxT("DTD files|*.dtd|All files|*.*"), wxFD_OPEN);
     if (fd.ShowModal() == wxID_CANCEL)
         return;
 
@@ -578,8 +578,8 @@ void MyFrame::OnSaveSimple(wxCommandEvent& WXUNUSED(event))
 
     // ask the user where we must save
     wxFileDialog fd(this, wxT("Save simple HTML example file as..."), wxT(""), wxT(""), 
-        wxT("XML and HTML files|*.xml;*.html;*.xhtml|All files|*.*"),
-        wxSAVE | wxOVERWRITE_PROMPT );
+                    wxT("XML and HTML files|*.xml;*.html;*.xhtml|All files|*.*"),
+                    wxFD_SAVE | wxFD_OVERWRITE_PROMPT );
     if (fd.ShowModal() == wxID_CANCEL)
         return;
 
@@ -619,7 +619,7 @@ void MyFrame::OnSaveSimple(wxCommandEvent& WXUNUSED(event))
     if (doc.Save(fd.GetPath())) {
         
         int ret = wxMessageBox(wxT("File correctly saved. Do you want to load it ?"), 
-            wxT("Question"), wxYES_NO | wxICON_QUESTION);
+                               wxT("Question"), wxYES_NO | wxICON_QUESTION);
         
         if (ret == wxYES) LoadXML(fd.GetPath());
 
@@ -641,8 +641,8 @@ void MyFrame::OnSaveAdv(wxCommandEvent& WXUNUSED(event))
 
     // ask the user where we must save
     wxFileDialog fd(this, wxT("Save advanced XHTML example file as..."), wxT(""), wxT(""), 
-        wxT("XML and HTML files|*.xml;*.html;*.xhtml|All files|*.*"),
-        wxSAVE | wxOVERWRITE_PROMPT );
+                    wxT("XML and HTML files|*.xml;*.html;*.xhtml|All files|*.*"),
+                    wxFD_SAVE | wxFD_OVERWRITE_PROMPT );
     if (fd.ShowModal() == wxID_CANCEL)
         return;
 
@@ -719,8 +719,8 @@ void MyFrame::OnSaveDTD(wxCommandEvent& WXUNUSED(event))
 
     // ask the user where we must save
     wxFileDialog fd(this, wxT("Save DTD example file as..."), wxT(""), wxT(""), 
-        wxT("DTD files|*.dtd|All files|*.*"),
-        wxSAVE | wxOVERWRITE_PROMPT );
+                    wxT("DTD files|*.dtd|All files|*.*"),
+                    wxFD_SAVE | wxFD_OVERWRITE_PROMPT );
     if (fd.ShowModal() == wxID_CANCEL)
         return;
 
@@ -776,7 +776,7 @@ void MyFrame::OnValid(wxCommandEvent& WXUNUSED(event))
 {
     // ask the user which file we must load...
     wxFileDialog fd(this, wxT("Choose the XML file to validate"), wxT(""), wxT(""), 
-        wxT("XML and HTML files|*.xml;*.html;*.xhtml|All files|*.*"), wxOPEN);
+                    wxT("XML and HTML files|*.xml;*.html;*.xhtml|All files|*.*"), wxFD_OPEN);
     if (fd.ShowModal() == wxID_CANCEL)
         return;
     
@@ -796,7 +796,7 @@ void MyFrame::OnValid(wxCommandEvent& WXUNUSED(event))
         
         // ...ask the user which DTD we must load...
         wxFileDialog dlg(this, wxT("Choose the DTD to use"), wxT(""), wxT(""), 
-            wxT("DTD files|*.dtd|All files|*.*"), wxOPEN);
+                         wxT("DTD files|*.dtd|All files|*.*"), wxFD_OPEN);
         if (dlg.ShowModal() == wxID_CANCEL)
             return;
         
