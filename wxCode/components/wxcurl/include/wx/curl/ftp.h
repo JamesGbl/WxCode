@@ -25,6 +25,7 @@ extern "C"
 //
 //////////////////////////////////////////////////////////////////////
 
+//! A specialized interface to FTP derived from wxCurlBase.
 class WXDLLIMPEXP_CURL wxCurlFTP : public wxCurlBase
 {
 public:

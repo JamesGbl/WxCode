@@ -23,6 +23,7 @@
 #include <stdarg.h>
 
 #include <wx/curl/base.h>
+#include <wx/filename.h>
 
 //////////////////////////////////////////////////////////////////////
 // Constants
@@ -40,9 +41,19 @@ extern "C"
         wxCurlBase *curl = wx_static_cast(wxCurlBase*, ptr);
 		if(curl)
 		{
-			wxCurlProgressEvent evt(curl->GetId(), rDlTotal, rDlNow, rUlTotal, rUlNow);
+            if (rUlTotal == 0 || rUlNow == 0)
+            {
+                /* should be a download event */
+                wxCurlDownloadEvent evt(curl->GetId(), curl, rDlTotal, rDlNow);
+                wxPostEvent(curl->GetEvtHandler(), evt);
+            }
 
-			wxPostEvent(curl->GetEvtHandler(), evt);
+            if (rDlTotal == 0 || rDlNow == 0)
+            {
+                /* should be an upload event */
+                wxCurlDownloadEvent evt(curl->GetId(), curl, rUlTotal, rUlNow);
+                wxPostEvent(curl->GetEvtHandler(), evt);
+            }
 		}
 
 		return 0;
@@ -176,7 +187,60 @@ extern "C"
 	}
 }
 
+
 // base.cpp: implementation of the wxCurlProgressEvent class.
+//
+//////////////////////////////////////////////////////////////////////
+
+wxTimeSpan wxCurlProgressEvent::GetElapsedTime() const
+{
+    // NOTE: even if docs say that this info can be retrieved only at the end of the
+    //       transfer, this is not really true (as explained by libCURL's authors!)
+    //       so that the following is perfectly working:
+    double secs;
+    m_pCURL->GetInfo(CURLINFO_TOTAL_TIME, &secs);
+
+    // convert from seconds to a wxTimeSpan (which the user can easily convert
+    // to a wxString using wxTimeSpan::Format)
+    return wxTimeSpan(int(secs/3600.0),     // hours
+                      int(secs/60) % 60,    // minutes
+                      int(secs) % 60,       // seconds
+                      0);                   // milliseconds
+}
+
+wxTimeSpan wxCurlProgressEvent::GetEstimatedTime() const
+{
+    double nBytesPerSec = GetSpeed();
+    if (nBytesPerSec == 0)
+        return 0;       // avoid division by zero
+
+    // compute remaining seconds; here we assume that the current
+    // download speed will be constant also in future
+    double secs = GetTotalBytes() / nBytesPerSec;
+
+    return wxTimeSpan(int(secs/3600.0),     // hours
+                      int(secs/60) % 60,    // minutes
+                      int(secs) % 60,       // seconds
+                      0);                   // milliseconds
+}
+
+wxTimeSpan wxCurlProgressEvent::GetEstimatedRemainingTime() const
+{
+    return GetEstimatedTime() - GetElapsedTime();
+}
+
+wxString wxCurlProgressEvent::GetHumanReadableSpeed(const wxString &invalid) const
+{
+    double speed = GetSpeed();
+    if (speed == 0)
+        return invalid;
+
+    wxULongLong ull((wxULongLong_t)speed);
+    return wxFileName::GetHumanReadableSize(ull) + wxT("/s");
+}
+
+
+// base.cpp: implementation of the wxCurlDownloadEvent class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -184,39 +248,95 @@ extern "C"
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-DEFINE_EVENT_TYPE(wxCURL_PROGRESS_EVENT);
+DEFINE_EVENT_TYPE(wxCURL_DOWNLOAD_EVENT);
 
-IMPLEMENT_DYNAMIC_CLASS(wxCurlProgressEvent, wxEvent);
+IMPLEMENT_DYNAMIC_CLASS(wxCurlDownloadEvent, wxEvent);
 
-wxCurlProgressEvent::wxCurlProgressEvent()
-: wxEvent(-1, wxCURL_PROGRESS_EVENT),
-  m_rDownloadNow(0.0), m_rDownloadTotal(0.0),
-  m_rUploadNow(0.0), m_rUploadTotal(0.0)
+wxCurlDownloadEvent::wxCurlDownloadEvent()
+: wxCurlProgressEvent(-1, wxCURL_DOWNLOAD_EVENT, NULL),
+  m_rDownloadNow(0.0), m_rDownloadTotal(0.0)
 {
 }
 
-wxCurlProgressEvent::wxCurlProgressEvent(int id,
+wxCurlDownloadEvent::wxCurlDownloadEvent(int id, wxCurlBase *originator,
                                          const double& rDownloadTotal, const double& rDownloadNow, 
-                                         const double& rUploadTotal, const double& rUploadNow, 
                                          const wxString& szURL /*= wxEmptyString*/)
-: wxEvent(id, wxCURL_PROGRESS_EVENT),
+: wxCurlProgressEvent(id, wxCURL_DOWNLOAD_EVENT, originator),
   m_szURL(szURL),
-  m_rDownloadTotal(rDownloadTotal), m_rDownloadNow(rDownloadNow),
-  m_rUploadTotal(rUploadTotal), m_rUploadNow(rUploadNow)
+  m_rDownloadTotal(rDownloadTotal), m_rDownloadNow(rDownloadNow)
 {
 }
 
-wxCurlProgressEvent::wxCurlProgressEvent(const wxCurlProgressEvent& event)
-: wxEvent(event)
+wxCurlDownloadEvent::wxCurlDownloadEvent(const wxCurlDownloadEvent& event)
+: wxCurlProgressEvent(event)
 {
 	m_szURL = event.m_szURL;
 
 	m_rDownloadNow = event.m_rDownloadNow;
 	m_rDownloadTotal = event.m_rDownloadTotal;
-
-	m_rUploadNow = event.m_rUploadNow;
-	m_rUploadTotal = event.m_rUploadTotal;
 }
+
+double wxCurlDownloadEvent::GetSpeed() const
+{
+    // NOTE: even if docs say that this info can be retrieved only at the end of the
+    //       transfer, this is not really true (as explained by libCURL's authors!)
+    //       so that the following is perfectly working:
+
+    double ret;
+    m_pCURL->GetInfo(CURLINFO_SPEED_DOWNLOAD, &ret);
+    return ret;
+}
+
+
+
+// base.cpp: implementation of the wxCurlUploadEvent class.
+//
+//////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////
+// Construction/Destruction
+//////////////////////////////////////////////////////////////////////
+
+DEFINE_EVENT_TYPE(wxCURL_UPLOAD_EVENT);
+
+IMPLEMENT_DYNAMIC_CLASS(wxCurlUploadEvent, wxEvent);
+
+wxCurlUploadEvent::wxCurlUploadEvent()
+: wxCurlProgressEvent(-1, wxCURL_UPLOAD_EVENT, NULL),
+  m_rUploadNow(0.0), m_rUploadTotal(0.0)
+{
+}
+
+wxCurlUploadEvent::wxCurlUploadEvent(int id, wxCurlBase *originator,
+                                         const double& rUploadTotal, const double& rUploadNow, 
+                                         const wxString& szURL /*= wxEmptyString*/)
+: wxCurlProgressEvent(id, wxCURL_UPLOAD_EVENT, originator),
+  m_szURL(szURL),
+  m_rUploadTotal(rUploadTotal), m_rUploadNow(rUploadNow)
+{
+}
+
+wxCurlUploadEvent::wxCurlUploadEvent(const wxCurlUploadEvent& event)
+: wxCurlProgressEvent(event)
+{
+    m_szURL = event.m_szURL;
+
+    m_rUploadNow = event.m_rUploadNow;
+    m_rUploadTotal = event.m_rUploadTotal;
+}
+
+double wxCurlUploadEvent::GetSpeed() const
+{
+    // NOTE: even if docs say that this info can be retrieved only at the end of the
+    //       transfer, this is not really true (as explained by libCURL's authors!)
+    //       so that the following is perfectly working:
+
+    double ret;
+    m_pCURL->GetInfo(CURLINFO_SPEED_UPLOAD, &ret);
+    return ret;
+}
+
+
 
 // wxCurlBase.cpp: implementation of the wxCurlBeginPerformEvent class.
 //
@@ -433,13 +553,14 @@ bool wxCurlBase::ResetHandle()
 	return true;
 }
 
-void wxCurlBase::DumpErrorIfNeed(CURLcode error)
+void wxCurlBase::DumpErrorIfNeed(CURLcode error) const
 {
     if (m_bVerbose && error != CURLE_OK)
     {
         wxString errStr = wxT("wxCURL: ") + wxString(curl_easy_strerror(error));
 
-        m_mosVerbose.Write(errStr.c_str(), errStr.Len());
+        wxCurlBase *us = wx_const_cast(wxCurlBase*, this);
+        us->m_mosVerbose.Write(errStr.c_str(), errStr.Len());
     }
 }
 
@@ -803,4 +924,9 @@ wxString wxCurlBase::GetStringFromURLEncoded(const wxString& szData)
 	}
 
 	return wxEmptyString;
+}
+
+wxString wxCurlBase::GetCURLVersion()
+{
+    return wxString(curl_version(), wxConvUTF8);
 }
