@@ -10,9 +10,8 @@
 #ifndef WXLEDFONT_H
 #define WXLEDFONT_H
 
-#include <wx/wx.h>
-
 #include "advancedmatrixobject.h"
+#include <wx/wx.h>
 
 enum wxLEDFontType
 {

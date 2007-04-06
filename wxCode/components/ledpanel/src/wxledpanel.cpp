@@ -54,6 +54,10 @@ wxLEDPanel::wxLEDPanel(wxWindow* parent, wxWindowID id, const wxSize& pointsize,
 	Create(parent,id,pointsize,fieldsize,padding,pos,style,validator);
 }
 
+wxLEDPanel::~wxLEDPanel()
+{
+}
+
 bool wxLEDPanel::Create(wxWindow* parent, wxWindowID id, const wxSize& pointsize,
 					const wxSize& fieldsize, int padding, const wxPoint& pos,
 					long style, const wxValidator& validator)
@@ -87,50 +91,32 @@ bool wxLEDPanel::Create(wxWindow* parent, wxWindowID id, const wxSize& pointsize
 	return true;
 }
 
-// Element zeichnen
-void wxLEDPanel::OnPaint(wxPaintEvent &event)
+wxSize wxLEDPanel::DoGetBestSize() const
 {
-    wxBufferedPaintDC dc(this);
-    dc.SetBackground(this->GetBackgroundColour());
-    dc.Clear();
-    DrawField(dc);
+	wxSize size;
+	size.SetWidth((m_pointsize.GetWidth()+m_padding)*m_field.GetWidth()+m_padding);
+    size.SetHeight((m_pointsize.GetHeight()+m_padding)*m_field.GetHeight()+m_padding);
+    return size;
 }
 
-void wxLEDPanel::DrawField(wxDC& dc)
+void wxLEDPanel::Clear()
 {
-	wxPoint point;
-	char data;
+    m_field.Clear();
+}
 
-	// Zähler für Zeile und Spalte
-    int x=0,y=0;
+void wxLEDPanel::Reset()
+{
+    SetText(m_text);
+}
 
-    // Pointer to avoid unnesecerie if blocks in the for block
-    wxBitmap* p_bmp_data=((m_invert)?((m_show_inactivs)?(&m_bmp_led_off):(NULL)):(&m_bmp_led_on));
-    wxBitmap* p_bmp_nodata=((m_invert)?(&m_bmp_led_on):((m_show_inactivs)?(&m_bmp_led_off):(NULL)));
+wxSize wxLEDPanel::GetFieldsize() const
+{
+    return m_field.GetSize();
+}
 
-    for(int i=0;i<m_field.GetLength();++i)
-    {
-    	// Daten des Feldes
-    	data=m_field.GetDataFrom(i);
-
-		// Koordinaten
-    	point.x=x*(m_pointsize.GetWidth()+m_padding)+m_padding;
-    	point.y=y*(m_pointsize.GetHeight()+m_padding)+m_padding;
-
-    	// zeichnen
-    	if(data<1 || data>7)
-    	{
-    	    if(p_bmp_nodata) dc.DrawBitmap(*p_bmp_nodata,point.x,point.y,false);
-    	}
-        else
-        {
-            if(p_bmp_data) dc.DrawBitmap(*p_bmp_data,point.x,point.y,false);
-        }
-
-    	// hochzählen
-        ++x;
-        if(x==m_field.GetWidth()) {++y; x=0;}
-    }
+wxSize wxLEDPanel::GetPointsize() const
+{
+    return m_pointsize;
 }
 
 void wxLEDPanel::SetLEDColour(wxLEDColour colourID)
@@ -182,37 +168,72 @@ void wxLEDPanel::SetLEDColour(wxLEDColour colourID)
 
 }
 
-wxSize wxLEDPanel::DoGetBestSize() const
+const wxColour& wxLEDPanel::GetLEDColour() const
 {
-	wxSize size;
-	size.SetWidth((m_pointsize.GetWidth()+m_padding)*m_field.GetWidth()+m_padding);
-    size.SetHeight((m_pointsize.GetHeight()+m_padding)*m_field.GetHeight()+m_padding);
-    return size;
+    return s_colour[m_activ_colour_id];
 }
 
-void wxLEDPanel::OnScrollTimer(wxTimerEvent& event)
+void wxLEDPanel::SetScrollSpeed(int speed)
 {
-	if(m_scrollspeed==0) return;
-
 	// the save way
 	m_scrollTimer.Stop();
 
-	// Scroll
-	switch(m_scrolldirection)
-	{
-		case wxLED_SCROLL_NONE: return;
-		case wxLED_SCROLL_LEFT: this->ShiftLeft(); break;
-		case wxLED_SCROLL_RIGHT: this->ShiftRight(); break;
-		case wxLED_SCROLL_DOWN: this->ShiftDown(); break;
-		case wxLED_SCROLL_UP: this->ShiftUp(); break;
-		default: return;
-	}
+	// save speed
+	m_scrollspeed=speed;
 
-	// Repaint
-	this->Refresh();
+	// start timer
+	if(m_scrollspeed>0 && m_scrolldirection!=wxLED_SCROLL_NONE)
+		m_scrollTimer.Start(speed);
+}
 
-	// start timer again
-	m_scrollTimer.Start(m_scrollspeed);
+int wxLEDPanel::GetScrollSpeed() const
+{
+    return m_scrollspeed;
+}
+
+void wxLEDPanel::SetScrollDirection(wxLEDScrollDirection d)
+{
+	// the save way
+	m_scrollTimer.Stop();
+
+	// save direction
+	m_scrolldirection=d;
+
+	if(m_scrollspeed>0 && m_scrolldirection!=wxLED_SCROLL_NONE)
+		m_scrollTimer.Start(m_scrollspeed);
+}
+
+wxLEDScrollDirection wxLEDPanel::GetScrollDirection() const
+{
+    return m_scrolldirection;
+}
+
+void wxLEDPanel::ShowInvertet(bool invert)
+{
+    m_invert=invert;
+}
+
+void wxLEDPanel::ShowInactivLEDs(bool show_inactivs)
+{
+    m_show_inactivs=show_inactivs;
+}
+
+void wxLEDPanel::SetTextAlign(int a)
+{
+	// save value
+	m_textalign=a;
+
+	// Reset the Horizontal text position
+	ResetTextPos();
+
+	// Reinit the field
+	m_field.Clear();
+	m_field.SetDatesAt(m_text_pos,m_text_mo);
+}
+
+int wxLEDPanel::GetTextAlign() const
+{
+    return m_textalign;
 }
 
 void wxLEDPanel::SetText(const wxString& text, int align)
@@ -248,17 +269,9 @@ void wxLEDPanel::SetText(const wxString& text, int align)
 	m_field.SetDatesAt(m_text_pos,m_text_mo);
 }
 
-void wxLEDPanel::SetTextAlign(int a)
+const wxString& wxLEDPanel::GetText() const
 {
-	// save value
-	m_textalign=a;
-
-	// Reset the Horizontal text position
-	ResetTextPos();
-
-	// Reinit the field
-	m_field.Clear();
-	m_field.SetDatesAt(m_text_pos,m_text_mo);
+    return m_text;
 }
 
 void wxLEDPanel::SetTextPaddingLeft(int padLeft)
@@ -274,6 +287,11 @@ void wxLEDPanel::SetTextPaddingLeft(int padLeft)
 	m_field.SetDatesAt(m_text_pos,m_text_mo);
 }
 
+int wxLEDPanel::GetTextPaddingLeft() const
+{
+    return m_padLeft;
+}
+
 void wxLEDPanel::SetTextPaddingRight(int padRight)
 {
 	// Save the Value
@@ -287,65 +305,95 @@ void wxLEDPanel::SetTextPaddingRight(int padRight)
 	m_field.SetDatesAt(m_text_pos,m_text_mo);
 }
 
-void wxLEDPanel::SetScrollSpeed(int speed)
+int wxLEDPanel::GetTextPaddingRight() const
 {
-	// the save way
-	m_scrollTimer.Stop();
-
-	// save speed
-	m_scrollspeed=speed;
-
-	// start timer
-	if(m_scrollspeed>0 && m_scrolldirection!=wxLED_SCROLL_NONE)
-		m_scrollTimer.Start(speed);
+    return m_padRight;
 }
 
-void wxLEDPanel::SetScrollDirection(wxLEDScrollDirection d)
+void wxLEDPanel::SetLetterSpace(int letterSpace)
 {
-	// the save way
-	m_scrollTimer.Stop();
+    // is already this size?
+    if(m_font.GetLetterSpace()==letterSpace) return;
 
-	// save direction
-	m_scrolldirection=d;
-
-	if(m_scrollspeed>0 && m_scrolldirection!=wxLED_SCROLL_NONE)
-		m_scrollTimer.Start(m_scrollspeed);
+    m_font.SetLetterSpace(letterSpace);
+    Reset();
 }
 
-void wxLEDPanel::ResetTextPos()
+int wxLEDPanel::GetLetterSpace() const
 {
-	// has a text?
-	if(m_text_mo.GetData()==NULL) return;
+    return m_font.GetLetterSpace();
+}
 
-	// horizontal text pos
-	if(m_scrolldirection!=wxLED_SCROLL_LEFT && m_scrolldirection!=wxLED_SCROLL_RIGHT)
-	{
-		if(m_textalign & wxALIGN_RIGHT)
-			m_text_pos.x=m_field.GetWidth()-m_text_mo.GetWidth()-m_padRight;
-		else if(m_textalign & wxALIGN_CENTER_HORIZONTAL)
-			m_text_pos.x=(m_field.GetWidth()-m_text_mo.GetWidth())/2;
-		else // wxALING_LEFT
-			m_text_pos.x=m_padLeft;
-	}
-	else if(m_scrolldirection==wxLED_SCROLL_LEFT)
-		m_text_pos.x=m_field.GetWidth();
-	else if(m_scrolldirection==wxLED_SCROLL_RIGHT)
-		m_text_pos.x=-m_text_mo.GetWidth();
+void wxLEDPanel::SetFontTypeWide()
+{
+    // is already Wide
+    if(!IsFontTypeSmall()) return;
 
-	// vertical text pos
-	if(m_scrolldirection!=wxLED_SCROLL_UP && m_scrolldirection!=wxLED_SCROLL_DOWN)
-	{
-		if(m_textalign & wxALIGN_BOTTOM)
-			m_text_pos.y=m_field.GetHeight()-m_text_mo.GetHeight();
-		else if(m_textalign & wxALIGN_CENTER_VERTICAL)
-			m_text_pos.y=(m_field.GetHeight()-m_text_mo.GetHeight())/2;
-		else // wxALIGN TOP
-			m_text_pos.y=0;
-	}
-	else if(m_scrolldirection==wxLED_SCROLL_UP)
-		m_text_pos.y=m_field.GetHeight();
-	else if(m_scrolldirection==wxLED_SCROLL_DOWN)
-		m_text_pos.y=-m_text_mo.GetHeight();
+    m_font.SetFontType(wxLEDFont7x7);
+    Reset();
+}
+
+void wxLEDPanel::SetFontTypeSmall()
+{
+    // is already Small
+    if(IsFontTypeSmall()) return;
+
+    m_font.SetFontType(wxLEDFont7x5);
+    Reset();
+}
+
+bool wxLEDPanel::IsFontTypeSmall() const
+{
+    return (m_font.GetFontType()==wxLEDFont7x5);
+}
+
+void wxLEDPanel::DrawField(wxDC& dc)
+{
+	wxPoint point;
+	char data;
+
+	// Zähler für Zeile und Spalte
+    int x=0,y=0;
+
+    // Pointer to avoid unnesecerie if blocks in the for block
+    wxBitmap* p_bmp_data=((m_invert)?((m_show_inactivs)?(&m_bmp_led_off):(NULL)):(&m_bmp_led_on));
+    wxBitmap* p_bmp_nodata=((m_invert)?(&m_bmp_led_on):((m_show_inactivs)?(&m_bmp_led_off):(NULL)));
+
+    for(int i=0;i<m_field.GetLength();++i)
+    {
+    	// Daten des Feldes
+    	data=m_field.GetDataFrom(i);
+
+		// Koordinaten
+    	point.x=x*(m_pointsize.GetWidth()+m_padding)+m_padding;
+    	point.y=y*(m_pointsize.GetHeight()+m_padding)+m_padding;
+
+    	// zeichnen
+    	if(data<1 || data>7)
+    	{
+    	    if(p_bmp_nodata) dc.DrawBitmap(*p_bmp_nodata,point.x,point.y,false);
+    	}
+        else
+        {
+            if(p_bmp_data) dc.DrawBitmap(*p_bmp_data,point.x,point.y,false);
+        }
+
+    	// hochzählen
+        ++x;
+        if(x==m_field.GetWidth()) {++y; x=0;}
+    }
+}
+
+void wxLEDPanel::OnEraseBackground(wxEraseEvent& event)
+{
+}
+
+void wxLEDPanel::OnPaint(wxPaintEvent &event)
+{
+    wxBufferedPaintDC dc(this);
+    dc.SetBackground(this->GetBackgroundColour());
+    dc.Clear();
+    DrawField(dc);
 }
 
 void wxLEDPanel::ShiftLeft()
@@ -399,6 +447,67 @@ void wxLEDPanel::ShiftDown()
 	m_field.Clear();
 	m_field.SetDatesAt(m_text_pos,m_text_mo);
 
+}
+
+void wxLEDPanel::OnScrollTimer(wxTimerEvent& event)
+{
+	if(m_scrollspeed==0) return;
+
+	// the save way
+	m_scrollTimer.Stop();
+
+	// Scroll
+	switch(m_scrolldirection)
+	{
+		case wxLED_SCROLL_NONE: return;
+		case wxLED_SCROLL_LEFT: this->ShiftLeft(); break;
+		case wxLED_SCROLL_RIGHT: this->ShiftRight(); break;
+		case wxLED_SCROLL_DOWN: this->ShiftDown(); break;
+		case wxLED_SCROLL_UP: this->ShiftUp(); break;
+		default: return;
+	}
+
+	// Repaint
+	this->Refresh();
+
+	// start timer again
+	m_scrollTimer.Start(m_scrollspeed);
+}
+
+void wxLEDPanel::ResetTextPos()
+{
+	// has a text?
+	if(m_text_mo.GetData()==NULL) return;
+
+	// horizontal text pos
+	if(m_scrolldirection!=wxLED_SCROLL_LEFT && m_scrolldirection!=wxLED_SCROLL_RIGHT)
+	{
+		if(m_textalign & wxALIGN_RIGHT)
+			m_text_pos.x=m_field.GetWidth()-m_text_mo.GetWidth()-m_padRight;
+		else if(m_textalign & wxALIGN_CENTER_HORIZONTAL)
+			m_text_pos.x=(m_field.GetWidth()-m_text_mo.GetWidth())/2;
+		else // wxALING_LEFT
+			m_text_pos.x=m_padLeft;
+	}
+	else if(m_scrolldirection==wxLED_SCROLL_LEFT)
+		m_text_pos.x=m_field.GetWidth();
+	else if(m_scrolldirection==wxLED_SCROLL_RIGHT)
+		m_text_pos.x=-m_text_mo.GetWidth();
+
+	// vertical text pos
+	if(m_scrolldirection!=wxLED_SCROLL_UP && m_scrolldirection!=wxLED_SCROLL_DOWN)
+	{
+		if(m_textalign & wxALIGN_BOTTOM)
+			m_text_pos.y=m_field.GetHeight()-m_text_mo.GetHeight();
+		else if(m_textalign & wxALIGN_CENTER_VERTICAL)
+			m_text_pos.y=(m_field.GetHeight()-m_text_mo.GetHeight())/2;
+		else // wxALIGN TOP
+			m_text_pos.y=0;
+	}
+	else if(m_scrolldirection==wxLED_SCROLL_UP)
+		m_text_pos.y=m_field.GetHeight();
+	else if(m_scrolldirection==wxLED_SCROLL_DOWN)
+		m_text_pos.y=-m_text_mo.GetHeight();
 }
 
 // Red, Green, Blue, Yellow, Magenta, Cyan, Grey

@@ -9,10 +9,10 @@
 #ifndef WXLEDPANEL_H
 #define WXLEDPANEL_H
 
+#include "wx/advancedmatrixobject.h"
+#include "wx/wxledfont.h"
+#include "wx/wxledpaneldef.h"
 #include <wx/wx.h>
-
-#include "advancedmatrixobject.h"
-#include "wxledfont.h"
 
 enum wxLEDColour
 {
@@ -50,9 +50,8 @@ enum wxLEDTextVAlign
 
 class wxLEDPanel : public wxControl
 {
-	DECLARE_EVENT_TABLE()
 	public:
-		// Konstruktor
+		// Ctor
 		wxLEDPanel();
 		wxLEDPanel(wxWindow* parent, wxWindowID id,
 					const wxSize& pointsize, const wxSize& fieldsize, int padding=0,
@@ -60,84 +59,83 @@ class wxLEDPanel : public wxControl
 					long style = wxNO_BORDER,
 					const wxValidator& validator = wxDefaultValidator);
 
-		virtual ~wxLEDPanel() {}
+        // Dtor
+		virtual ~wxLEDPanel();
 
-		// Element erzeugen
+		// Create the Element
 		bool Create(wxWindow* parent, wxWindowID id,
 					const wxSize& pointsize, const wxSize& fieldsize, int padding=0,
 					const wxPoint& pos = wxDefaultPosition,
 					long style = wxNO_BORDER,
 					const wxValidator& validator = wxDefaultValidator);
 
-		// Größe des Elements
+		// Size of the element
 		wxSize DoGetBestSize() const;
 
-		// Daten Setzen
-		bool SetDataAt(int x, int y, char data) {return m_field.SetDataAt(x,y,data);}
-		bool SetDataAt(const wxPoint& punkt, char data) {return m_field.SetDataAt(punkt.x,punkt.y,data);}
-		bool SetDatesAt(int x, int y, const MatrixObject& to) {return m_field.SetDatesAt(x,y,to);}
-		bool SetDatesAt(const wxPoint& punkt, const MatrixObject& to) {return m_field.SetDatesAt(punkt.x,punkt.y,to);}
+		// Clear the Context
+		void Clear();
 
-		// Feld leeren
-		void Clear() {m_field.Clear();}
+		// Reset the Context
+		void Reset();
 
-		// Inhalt bewegen
+		// Größenangaben
+		wxSize GetFieldsize() const;
+		wxSize GetPointsize() const;
+
+		// Set the Colour of the LEDs
+		void SetLEDColour(wxLEDColour colourID);
+		const wxColour& GetLEDColour() const;
+
+		// ScrollSpeed
+		void SetScrollSpeed(int speed);
+		int GetScrollSpeed() const;
+
+		// Scrolldirection
+		void SetScrollDirection(wxLEDScrollDirection d);
+		wxLEDScrollDirection GetScrollDirection() const;
+
+		// Draw Invertet (default behavior is false)
+		void ShowInvertet(bool invert=true);
+
+		// Show inactiv LEDs? (default behavior is true)
+		void ShowInactivLEDs(bool show_inactivs=true);
+
+		// Text Alignment if wxLED_SCROLL_NONE
+		void SetTextAlign(int a);	// a -> wxAlignment e.g. wxALIGN_TOP|wxALIGN_RIGHT
+		int GetTextAlign() const;
+
+		// Text to show
+		void SetText(const wxString& text, int align=-1);	// align e.g. "wxLEFT|wxTOP", align=-1 -> Use corrent align
+		const wxString& GetText() const;
+
+		// TextPadding (only used when wxALIGN_LEFT or wxALIGN_RIGHT)
+		void SetTextPaddingLeft(int padLeft);
+		void SetTextPaddingRight(int padRight);
+		int GetTextPaddingLeft() const;
+		int GetTextPaddingRight() const;
+
+		// Space Between the Letters
+		void SetLetterSpace(int letterSpace);
+		int GetLetterSpace() const;
+
+		// FontType
+		void SetFontTypeWide();
+		void SetFontTypeSmall();
+		bool IsFontTypeSmall() const;
+
+    protected:
+		// Drawing
+		void DrawField(wxDC& dc);
+		void OnEraseBackground(wxEraseEvent& event);
+		void OnPaint(wxPaintEvent &event);
+
+		// Move the Content
 		void ShiftLeft();
 		void ShiftRight();
 		void ShiftUp();
 		void ShiftDown();
 
-		// Größenangaben
-		wxSize GetFieldsize() const {return m_field.GetSize();}
-		wxSize GetPointsize() const {return m_pointsize;}
-
-		// Die Farbe einstellen
-		void SetLEDColour(wxLEDColour colourID);
-		const wxColour& GetLEDColour() const {return s_colour[m_activ_colour_id];}
-
-		// Geschwindigkeit setzen
-		void SetScrollSpeed(int speed);
-		int GetScrollSpeed() const {return m_scrollspeed;}
-
-		// Scrollrichtung
-		void SetScrollDirection(wxLEDScrollDirection d);
-		wxLEDScrollDirection GetScrollDirection() const {return m_scrolldirection;}
-
-		// Draw Invertet (default behavior is false)
-		void DrawInvertet(bool invert=true) {m_invert=invert;}
-
-		// Show inactiv LEDs? (default behavior is true)
-		void ShowInactivLEDs(bool show_inactivs=true) {m_show_inactivs=show_inactivs;}
-
-		// Text Alignment if wxLED_SCROLL_NONE
-		void SetTextAlign(int a);	// a -> wxAlignment e.g. wxALIGN_TOP|wxALIGN_RIGHT
-		int GetTextAlign() const {return m_textalign;}
-
-		// Text setzen
-		void SetText(const wxString& text, int align=-1);	// align e.g. "wxLEFT|wxTOP", align=-1 -> Use corrent align
-		const wxString& GetText() const {return m_text;}
-
-		// TextPadding
-		void SetTextPaddingLeft(int padLeft);
-		void SetTextPaddingRight(int padRight);
-		int GetTextPaddingLeft() const {return m_padLeft;}
-		int GetTextPaddingRight() const {return m_padRight;}
-
-		// Space Between the Letters
-		void SetLetterSpace(int letterSpace) {m_font.SetLetterSpace(letterSpace);}
-		int GetLetterSpace() const {return m_font.GetLetterSpace();}
-
-		// FontType
-		void SetFontType(wxLEDFontType t) {m_font.SetFontType(t);}
-		wxLEDFontType GetFontType() const {return m_font.GetFontType();}
-
-	protected:
-		// Drawing
-		void DrawField(wxDC& dc);
-		void OnEraseBackground(wxEraseEvent& event) {}
-		void OnPaint(wxPaintEvent &event);
-
-		// Das Angezeigte feld
+		// the data for the LED-field
 		AdvancedMatrixObject m_field;
 
 		// Control-Properties
@@ -154,6 +152,8 @@ class wxLEDPanel : public wxControl
         int m_scrollspeed;
 		wxLEDScrollDirection m_scrolldirection;
         wxTimer m_scrollTimer;
+
+        // Scroll-function
         void OnScrollTimer(wxTimerEvent& event);
 
 		// Bitmaps with "LED on" and "LED off"
@@ -164,13 +164,18 @@ class wxLEDPanel : public wxControl
         wxString m_text;
         MatrixObject m_text_mo;
         wxPoint m_text_pos;
-        void ResetTextPos();
         wxLEDFont m_font;
 
+        void ResetTextPos();
+
+        // Colours
         static const wxColour s_colour[7];
         static const wxColour s_colour_dark[7];
         static const wxColour s_colour_verydark[7];
         static const wxColour s_colour_light[7];
+
+        // The Event Table
+        DECLARE_EVENT_TABLE()
 };
 
 

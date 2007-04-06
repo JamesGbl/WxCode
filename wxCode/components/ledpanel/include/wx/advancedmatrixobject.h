@@ -10,7 +10,7 @@
 #ifndef ADVANCEDMATRIXOBJECT_H
 #define ADVANCEDMATRIXOBJECT_H
 
-#include "matrixobject.h"
+#include "wx/matrixobject.h"
 
 class AdvancedMatrixObject : public MatrixObject
 {
