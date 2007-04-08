@@ -186,7 +186,8 @@ void cCommander::addPathRecursive(const wxString& filePath)
       while (cont)
       {
          wxStrFileName = filePath + "\\" + filename;
-         dirFileMap.push_back(wxStrFileName);
+         //if (wxDir::Exists(wxStrFileName))
+         //   dirFileMap.push_back(wxStrFileName);
          addPathRecursive(wxStrFileName);
          cont = dir.GetNext(&filename);
       }

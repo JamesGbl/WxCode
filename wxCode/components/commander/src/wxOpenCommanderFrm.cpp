@@ -125,6 +125,9 @@ wxOpenCommanderFrm::wxOpenCommanderFrm(wxWindow *parent, wxWindowID id, const wx
    updateControlsLanguage();
 
 	WxStatusBar->SetStatusText("wxOpenCommander");
+	
+	WxListCtrl1->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_INFOBK));
+   WxListCtrl2->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
 
    ListCtlUpdate();
 }
@@ -359,7 +362,7 @@ void wxOpenCommanderFrm::itemExec(cCommander *CCommander, wxNotebook* WxNotebook
    if (directory.Right(1) == "\\")
       path = directory + itemName;
    else
-      path = directory + "\\" + itemName;
+      path = directory + "\\" + itemName;  
 
    if (itemName == "..")
       path = directory.BeforeLast(wxT('\\'));
@@ -393,6 +396,11 @@ void wxOpenCommanderFrm::OnList1ItemActivated(wxListEvent& event)
 {
    wxString itemName = event.GetText();
    wxString lastPath = cCommander1.getActualPath();
+   if (cCommander1.getListDevices())
+   {
+      lastPath = itemName;
+      itemName = "";
+   }
    itemExec(&cCommander1, WxNotebook1, WxListCtrl1, lastPath, itemName);
 
    WxNotebook1->SetPageText(WxNotebook1->GetSelection(), getLastDir(lastPath));
@@ -402,6 +410,11 @@ void wxOpenCommanderFrm::OnList2ItemActivated(wxListEvent& event)
 {
    wxString itemName = event.GetText();
    wxString lastPath = cCommander2.getActualPath();
+   if (cCommander2.getListDevices()) 
+   {
+      lastPath = itemName;
+      itemName = "";
+   }
    itemExec(&cCommander2, WxNotebook2, WxListCtrl2, lastPath, itemName);
 
    WxNotebook2->SetPageText(WxNotebook2->GetSelection(), getLastDir(lastPath));
@@ -701,6 +714,11 @@ void wxOpenCommanderFrm::WxListCtrl1ItemFocused(wxListEvent& event)
    wxString numDirFiles;
    numDirFiles << lastListCtrlUsed->GetItemCount()-1;
    WxStatusBar->SetStatusText(numDirFiles + " " + lang["Directories and Files"]);
+   
+   WxListCtrl1->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_INFOBK));
+   WxListCtrl2->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
+   WxListCtrl1->Refresh();
+   WxListCtrl2->Refresh();
 }
 
 void wxOpenCommanderFrm::WxListCtrl2ItemFocused(wxListEvent& event)
@@ -716,6 +734,12 @@ void wxOpenCommanderFrm::WxListCtrl2ItemFocused(wxListEvent& event)
    wxString numDirFiles;
    numDirFiles << lastListCtrlUsed->GetItemCount()-1;
    WxStatusBar->SetStatusText(numDirFiles + " " + lang["Directories and Files"]);
+   
+   WxListCtrl1->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
+   WxListCtrl2->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_INFOBK));
+   WxListCtrl1->Refresh();
+   WxListCtrl2->Refresh();
+   
 }
 
 void wxOpenCommanderFrm::Mnu_execute_onClick(wxCommandEvent& event)
@@ -774,6 +798,7 @@ void wxOpenCommanderFrm::copyThread(wxString& strPathDest,  const wxArrayString&
    for (size_t n = 0; n < nFiles; n++ )
    {
       wxString& actualFile(fileNames[n]);
+
       copyParams copyPaths;
       copyPaths.sourcePath = actualFile.BeforeLast(wxT('\\'));
       copyPaths.item = actualFile.AfterLast(wxT('\\'));
@@ -831,7 +856,12 @@ void wxOpenCommanderFrm::copyThread()
          wxString itemName = lastListCtrlUsed->GetItemText(item);
          wxString filePath;
          wxString strPath1 = cCommander1.getActualPath();
+         if (strPath1.Right(1) == "\\")
+            strPath1 = strPath1.BeforeLast(wxT('\\'));
          wxString strPath2 = cCommander2.getActualPath();
+         if (strPath2.Right(1) == "\\")
+            strPath2 = strPath2.BeforeLast(wxT('\\'));
+
          copyParams copyPaths;
          if (lastListCtrlUsed == WxListCtrl1)
          {
@@ -1104,6 +1134,8 @@ void wxOpenCommanderFrm::WxListCtrlBeginDrag(wxListEvent& event)
       {
          wxString itemName = lastListCtrlUsed->GetItemText(item);
          wxString strPath = lastCCommanderUsed->getActualPath();
+         if (strPath.Right(1) == "\\")
+            strPath = strPath.BeforeLast(wxT('\\'));
          fileDataObject.AddFile(strPath + "\\" + itemName);
       }
    }
@@ -1126,6 +1158,8 @@ void wxOpenCommanderFrm::copyToClipboard()
          {
             wxString itemName = lastListCtrlUsed->GetItemText(item);
             wxString strPath = lastCCommanderUsed->getActualPath();
+            if (strPath.Right(1) == "\\")
+               strPath = strPath.BeforeLast(wxT('\\'));
             pFileDataObject->AddFile(strPath + "\\" + itemName);
          }
       }

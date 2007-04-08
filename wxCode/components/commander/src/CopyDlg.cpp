@@ -37,7 +37,8 @@ CopyDlg::CopyDlg(wxWindow *parent, multiLang& language, wxWindowID id, const wxS
 : wxDialog(parent, id, title, position, size, style) , lang(language)
 {
 	CreateGUIControls();
-	//m_parent = parent;
+	
+	thread = NULL;
 }
 
 CopyDlg::~CopyDlg()
@@ -45,6 +46,11 @@ CopyDlg::~CopyDlg()
    //delete(WxListCtrl1->GetImageList(wxIMAGE_LIST_SMALL)); // MEMORY LEAK
    //delete(WxListCtrl1->GetImageList(wxIMAGE_LIST_SMALL));// MEMORY LEAK
 
+   if (thread != NULL)
+   {
+      if (thread->IsRunning()) thread->Delete();
+      //delete(thread);
+   }
    delete(ckExistFiles);
    delete(ckReadFiles);
    delete(lblDetails);
@@ -125,9 +131,7 @@ void CopyDlg::addColumns(wxListCtrl* WxListCtrl)
 {
    while (WxListCtrl->GetColumnCount()>0) WxListCtrl->DeleteColumn(0);
 
-   WxListCtrl->InsertColumn(0, lang["Files"], wxLIST_FORMAT_LEFT, 1000);
-   //WxListCtrl->InsertColumn(1, lang["Size"], wxLIST_FORMAT_RIGHT, 65);
-   //WxListCtrl->InsertColumn(2, lang["Date"], wxLIST_FORMAT_RIGHT, 100);
+   WxListCtrl->InsertColumn(0, lang["Files"], wxLIST_FORMAT_LEFT, 700);
    
    int size = 20;
    //if (imageList != NULL) delete(imageList);
@@ -180,13 +184,14 @@ void CopyDlg::onEndCopyFile(bool copy, const wxString& sourcePath, const wxStrin
 {
    if (!copy) return;
    
+   //wxString strDir = sourcePath.BeforeLast(wxT('\\'));
+   //cCommander1.removeFileDir(strDir);
    cCommander1.removeFileDir(sourcePath);
    WxListCtrl1->SetItemCount(cCommander1.getFileDirCount());
    WxListCtrl1->Refresh();
-
+ 
    int item = WxListCtrl2->GetItemCount();
    WxListCtrl2->InsertItem(item, destinationPath,0);
-   
    // Update the wxGauge.
    long long fileSize = getFileSize(destinationPath);
    actualSize = actualSize + fileSize;
@@ -212,6 +217,9 @@ void CopyDlg::onCopyThreadFinish()
    #ifdef __WXMSW__
       if (autoClose && !item) SendMessage((HWND)GetHWND(), WM_CLOSE, (WPARAM)TRUE, (LPARAM)NULL);
    #endif
+   
+   thread->Delete();
+   thread = NULL;
 }
 
 void onThreadDirRecursiveFinish(void* thread, void* contextParam, void* parent)
@@ -245,11 +253,12 @@ void onThreadEndCopyFile(void* parent, bool copy, const wxString& sourcePath, co
 }
 
 void CopyDlg::btnCopyClick(wxCommandEvent& event)
-{
+{   
 	size_t nFiles = m_pathsCopy.size();
    if (nFiles < 0) return;
    
-   CThread* thread = new CThread();
+   CThread* threadCopy = new CThread();
+   thread = new CThread();
    thread->setParent((void*) this);
 
    thread->setVectorCopyParams(m_pathsCopy);
@@ -301,12 +310,17 @@ void CopyDlg::updateSourceListCtrl()
    
    for (size_t i = 0 ; i < m_pathsCopy.size(); i++)
    {
-      wxString filePath = m_pathsCopy[i].sourcePath + "\\" + m_pathsCopy[i].item;
+      wxString filePath = m_pathsCopy[i].sourcePath;
+     // if (filePath.Right(1) == "\\")
+     //   filePath = m_pathsCopy[i].sourcePath + m_pathsCopy[i].item;
+     // else
+        filePath = m_pathsCopy[i].sourcePath + "\\" + m_pathsCopy[i].item;
       aFilesPath.Add(filePath);
    }
    
    //Calculating number and size of files
-   CThread* thread = new CThread();
+   //CThread* thread = new CThread();
+   thread = new CThread();
    thread->setParent((void*) this);
    
    thread->addPathsRecursive(&cCommander1, aFilesPath);
@@ -314,7 +328,7 @@ void CopyDlg::updateSourceListCtrl()
    thread->Create();
    thread->Run();
 
-   wxBeginBusyCursor();
+   //wxBeginBusyCursor();
 
    btnCopy->Enable(false);
    btnCancel->Enable(false);
@@ -335,7 +349,7 @@ void CopyDlg::onDirRecursiveFinish(long long totalSizeRecursive)
    lblDetails3->SetLabel("Size: 0 / " + formatFileSize(totalSize));
    lblDetails4->SetLabel("File: 0 / " + LongLongTowxString(numTotaFiles));  
    
-   wxEndBusyCursor();
+   //wxEndBusyCursor();
    btnCopy->Enable(true);
    btnCancel->Enable(true);
 
@@ -344,4 +358,7 @@ void CopyDlg::onDirRecursiveFinish(long long totalSizeRecursive)
       wxCommandEvent event;
       btnCopyClick(event);
    } 
+
+   thread->Delete();
+   thread = NULL;
 }

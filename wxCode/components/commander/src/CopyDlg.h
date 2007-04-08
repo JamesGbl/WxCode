@@ -84,6 +84,7 @@ class CopyDlg : public wxDialog
 		bool autoClose;
 	   multiLang& lang;
 	   cCommander cCommander1;
+	   CThread* thread;
 		
 	private:
 		//Note: if you receive any error with these enum IDs, then you need to
