@@ -126,8 +126,8 @@ wxOpenCommanderFrm::wxOpenCommanderFrm(wxWindow *parent, wxWindowID id, const wx
 
 	WxStatusBar->SetStatusText("wxOpenCommander");
 	
-	WxListCtrl1->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_INFOBK));
-   WxListCtrl2->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
+	WxListCtrl1->SetBackgroundColour(wxColour(255, 255, 240));
+   WxListCtrl2->SetBackgroundColour(wxColour(255, 255, 255));
 
    ListCtlUpdate();
 }
@@ -571,9 +571,11 @@ void wxOpenCommanderFrm::OnListCtlKey(cCommander* CCommander, wxNotebook* WxNote
        break;
        case WXK_RIGHT:
           WxListCtrl2->SetFocus();
+          WxListCtrl2ItemFocused(event);
        break;
        case WXK_LEFT:
           WxListCtrl1->SetFocus();
+          WxListCtrl1ItemFocused(event);
        break;
        case WXK_DELETE:
           Mnu_delete_onClick(event);
@@ -715,10 +717,10 @@ void wxOpenCommanderFrm::WxListCtrl1ItemFocused(wxListEvent& event)
    numDirFiles << lastListCtrlUsed->GetItemCount()-1;
    WxStatusBar->SetStatusText(numDirFiles + " " + lang["Directories and Files"]);
    
-   WxListCtrl1->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_INFOBK));
-   WxListCtrl2->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
-   WxListCtrl1->Refresh();
+   WxListCtrl2->SetBackgroundColour(wxColour(255, 255, 255));
+   WxListCtrl1->SetBackgroundColour(wxColour(255, 255, 240));
    WxListCtrl2->Refresh();
+   WxListCtrl1->Refresh();
 }
 
 void wxOpenCommanderFrm::WxListCtrl2ItemFocused(wxListEvent& event)
@@ -735,11 +737,10 @@ void wxOpenCommanderFrm::WxListCtrl2ItemFocused(wxListEvent& event)
    numDirFiles << lastListCtrlUsed->GetItemCount()-1;
    WxStatusBar->SetStatusText(numDirFiles + " " + lang["Directories and Files"]);
    
-   WxListCtrl1->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
-   WxListCtrl2->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_INFOBK));
+   WxListCtrl1->SetBackgroundColour(wxColour(255, 255, 255));
+   WxListCtrl2->SetBackgroundColour(wxColour(255, 255, 240));
    WxListCtrl1->Refresh();
    WxListCtrl2->Refresh();
-   
 }
 
 void wxOpenCommanderFrm::Mnu_execute_onClick(wxCommandEvent& event)
@@ -1177,6 +1178,8 @@ void wxOpenCommanderFrm::pasteFromClipboard()
       if (wxTheClipboard->GetData(fileDataObject))
       {
          wxString strPath = lastCCommanderUsed->getActualPath();
+         if (strPath.Right(1) == "\\")
+            strPath = strPath.BeforeLast(wxT('\\'));
          copyThread(strPath, fileDataObject.GetFilenames());
       }
       wxTheClipboard->Close();
