@@ -182,10 +182,12 @@ bool copyDirFile(wxString& path, wxString& item, wxString& pathNew, void* parent
    wxFile file;
    if (file.Exists(filePath))
    {
-      bool blnCopy = true;
+      bool blnCopy = false;
+      int intCopy = COPY_FILE_OK;
+      
       wxString itemNew = (path == pathNew ? "Copy of " + item : item);
-      if (onBeginCopyFile) blnCopy = onBeginCopyFile(parent, path + "\\" + item, pathNew + "\\" + itemNew);
-      if (blnCopy) blnCopy = wxCopyFile(path + "\\" + item, pathNew + "\\" + itemNew, true);
+      if (onBeginCopyFile) intCopy = onBeginCopyFile(parent, path + "\\" + item, pathNew + "\\" + itemNew);
+      if (intCopy == COPY_FILE_OK) blnCopy = wxCopyFile(path + "\\" + item, pathNew + "\\" + itemNew, true);
       if (onEndCopyFile) onEndCopyFile(parent, blnCopy, path + "\\" + item, pathNew + "\\" + itemNew);
       return blnCopy;
    }
@@ -212,13 +214,14 @@ class wxDirTraverserSimple : public wxDirTraverser
          if (newFile == filename.Left(newFile.Len()))
             return wxDIR_CONTINUE;
   
-         bool blnCopy = true;
+         bool blnCopy = false;
+         int intCopy = COPY_FILE_OK;
+
          //wxString itemNew (path == pathNew ) "Copy of " + item : item);
-         if (m_onBeginCopyFile) blnCopy = m_onBeginCopyFile(m_parent, filename, newFile);
-         if (blnCopy) blnCopy = wxCopyFile(filename, newFile, true);
-         if (m_onBeginCopyFile) m_onEndCopyFile(m_parent, blnCopy, filename, newFile);
-         
-         return (blnCopy ? wxDIR_CONTINUE : wxDIR_STOP);
+         if (m_onBeginCopyFile) intCopy = m_onBeginCopyFile(m_parent, filename, newFile);
+         if (intCopy == COPY_FILE_OK) blnCopy = wxCopyFile(filename, newFile, true);
+         if (m_onBeginCopyFile) m_onEndCopyFile(m_parent, blnCopy, filename, newFile);         
+         return (intCopy != ABORT_COPY_PROCESS ? wxDIR_CONTINUE : wxDIR_STOP);
       }
 
       virtual wxDirTraverseResult OnDir(const wxString& dirname)

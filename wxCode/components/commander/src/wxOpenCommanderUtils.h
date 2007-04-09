@@ -44,9 +44,14 @@
 
 using namespace std;
 
+#define COPY_FILE_OK 0
+#define ABORT_COPY_FILE 1
+#define ABORT_COPY_PROCESS 2
+
+
 typedef map <wxString, int, less<wxString> > driversMap;
 
-typedef bool (*onThreadBeginCopyFileCallBackFunc)(void*, const wxString&, const wxString&);
+typedef int (*onThreadBeginCopyFileCallBackFunc)(void*, const wxString&, const wxString&);
 typedef void (*onThreadEndCopyFileCallBackFunc)(void*, bool, const wxString&, const wxString&);
 typedef void (*onThreadFinishCallBackFunc)(void*, void*, void*);
 

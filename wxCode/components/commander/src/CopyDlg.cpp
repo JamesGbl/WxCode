@@ -25,6 +25,8 @@
 ////Event Table Start
 BEGIN_EVENT_TABLE(CopyDlg,wxDialog)
 	////Manual Code Start
+	EVT_LIST_ITEM_SELECTED(ID_WXLISTCTRL1, CopyDlg::WxListCtrl1ItemSelected)
+	EVT_LIST_ITEM_SELECTED(ID_WXLISTCTRL2, CopyDlg::WxListCtrl2ItemSelected)
 	////Manual Code End
 	
 	EVT_CLOSE(CopyDlg::OnClose)
@@ -63,8 +65,7 @@ CopyDlg::~CopyDlg()
    delete(WxGauge1);
    delete(lblSource);
    delete(WxListCtrl1);
-   delete(WxListCtrl2);
-   //delete(this);
+   delete(WxListCtrl2);   
 } 
 
 void CopyDlg::CreateGUIControls()
@@ -87,13 +88,9 @@ void CopyDlg::CreateGUIControls()
 
 	lblDetails2 = new wxStaticText(this, ID_LBLDETAILS2, wxT(""), wxPoint(6,216), wxDefaultSize, 0, wxT("lblDetails2"));
 
-	ckExistFiles = new wxCheckBox(this, ID_CKEXISTFILES, wxT("Overwrite existing files"), wxPoint(176,464), wxSize(146,17), 0, wxDefaultValidator, wxT("ckExistFiles"));
-	ckExistFiles->Enable(false);
-	ckExistFiles->SetValue(true);
+	ckExistFiles = new wxCheckBox(this, ID_CKEXISTFILES, wxT("Overwrite existing files"), wxPoint(11,464), wxSize(223,17), 0, wxDefaultValidator, wxT("ckExistFiles"));
 
-	ckReadFiles = new wxCheckBox(this, ID_CKREADFILES, wxT("Overwrite Read only files"), wxPoint(6,463), wxSize(138,17), 0, wxDefaultValidator, wxT("ckReadFiles"));
-	ckReadFiles->Enable(false);
-	ckReadFiles->SetValue(true);
+	ckReadFiles = new wxCheckBox(this, ID_CKREADFILES, wxT("Overwrite Read only files"), wxPoint(275,464), wxSize(248,17), 0, wxDefaultValidator, wxT("ckReadFiles"));
 
 	lblDetails = new wxStaticText(this, ID_LBLDETAILS, wxT(""), wxPoint(7,199), wxDefaultSize, 0, wxT("lblDetails"));
 
@@ -112,12 +109,21 @@ void CopyDlg::CreateGUIControls()
 	lblSource->SetFont(wxFont(11, wxSWISS, wxNORMAL,wxNORMAL, FALSE));
 	////GUI Items Creation End
 	
+	SetTitle(lang["Copy Files"] + " (wxOpenCommander)");
+	ckReadFiles->SetLabel(lang["Overwrite Read only files"]);
+	ckExistFiles->SetLabel(lang["Overwrite existing files"]);
+   lblDestination->SetLabel(lang["Destination"]);
+   lblSource->SetLabel(lang["Source"] + ":");
+	btnCancel->SetLabel(lang["Cancel"]);
+	btnCopy->SetLabel(lang["Copy"]);
+	
 	WxListCtrl1 = new wxOpenCommanderListCtrl(this, ID_WXLISTCTRL1, wxPoint(7,25), wxSize(724,168), wxLC_REPORT | wxLC_VIRTUAL, &cCommander1, lang);
    WxListCtrl2 = new wxListCtrl(this, ID_WXLISTCTRL2, wxPoint(8,282), wxSize(724,170), wxLC_REPORT);
 
 	autoInit = false;
 	autoClose = false;
 	blnCopping = false;
+	blnCanceled = false;
 	totalSize=0;
 	actualSize=0;
 	numTotaFiles=0;
@@ -159,12 +165,34 @@ void CopyDlg::OnClose(wxCloseEvent& /*event*/)
 	Destroy();
 }
 
-bool CopyDlg::onBeginCopyFile(const wxString& sourcePath, const wxString& destinationPath)
+int CopyDlg::onBeginCopyFile(const wxString& sourcePath, const wxString& destinationPath)
 {
+   bool blnExistFile = wxFile::Exists(destinationPath);
+   if (blnExistFile)
+   {
+      if (!ckExistFiles->GetValue()) 
+      {
+         errors[sourcePath] = lang["File already exist in destination"];
+         return ABORT_COPY_FILE;      
+      }
+      if (ckReadFiles->GetValue())
+      {
+         SetFileAttributes(destinationPath.c_str(), FILE_ATTRIBUTE_NORMAL); // Make it not read only, so we can overwrite it
+      }
+      else
+      {
+        DWORD dwFileAttributes = GetFileAttributes(destinationPath.c_str());        
+        if (dwFileAttributes & FILE_ATTRIBUTE_READONLY) 
+        {
+           errors[sourcePath] = lang["File is Read only in destination"];
+           return ABORT_COPY_FILE;
+        }
+      }
+   }  
+   
    wxFileName file(sourcePath);
 
    long long fileSize = getFileSize(sourcePath);
-   numActualFile++;
 
    // Avance the gauge the haft size of the actual file. 
    long long estimatedSize = actualSize + (fileSize/2);
@@ -172,12 +200,12 @@ bool CopyDlg::onBeginCopyFile(const wxString& sourcePath, const wxString& destin
    if (totalSize) percent = (estimatedSize * 100) / totalSize;
 
    WxGauge1->SetValue(percent);
-   lblDetails->SetLabel("Path: " + file.GetPath());
-   lblDetails2->SetLabel("File: " + file.GetFullName());
-   lblDetails3->SetLabel("Size: " + formatFileSize(actualSize) + " / " + formatFileSize(totalSize));
-   lblDetails4->SetLabel("File: " + LongLongTowxString(numActualFile) + " / " + LongLongTowxString(numTotaFiles));
-
-   return !blnCanceled;
+   lblDetails->SetLabel(lang["Path"] + ": " + file.GetPath());
+   lblDetails2->SetLabel(lang["File"] + ": " + file.GetFullName());
+   lblDetails3->SetLabel(lang["Size"] + ": " + formatFileSize(actualSize) + " / " + formatFileSize(totalSize));
+   lblDetails4->SetLabel(lang["File"] + ": " + LongLongTowxString(numActualFile+1) + " / " + LongLongTowxString(numTotaFiles));
+   
+   return (blnCanceled? ABORT_COPY_PROCESS : COPY_FILE_OK);
 }
 
 void CopyDlg::onEndCopyFile(bool copy, const wxString& sourcePath, const wxString& destinationPath)
@@ -194,6 +222,7 @@ void CopyDlg::onEndCopyFile(bool copy, const wxString& sourcePath, const wxStrin
    WxListCtrl2->InsertItem(item, destinationPath,0);
    // Update the wxGauge.
    long long fileSize = getFileSize(destinationPath);
+   numActualFile++;
    actualSize = actualSize + fileSize;
    int percent = (actualSize * 100) / totalSize;
    WxGauge1->SetValue(percent);
@@ -203,16 +232,23 @@ void CopyDlg::onEndCopyFile(bool copy, const wxString& sourcePath, const wxStrin
 
 void CopyDlg::onCopyThreadFinish()
 {
+   int item = WxListCtrl1->GetItemCount();
+   
+   if (!item)
+      lblDetails2->SetLabel("");
+   else
+   {
+      lblDetails2->SetLabel(lang["Copy finished with some errors"]);
+      wxBell();
+   }
    lblDetails->SetLabel("");
-   lblDetails2->SetLabel("");
+   //lblDetails2->SetLabel("");
 
    if (actualSize == totalSize) WxGauge1->SetValue(100);
 
-   int item = WxListCtrl1->GetItemCount();
-
    btnCopy->Enable(!blnCanceled && item != 0);
    blnCopping = false;
-   btnCancel->SetLabel("Close");
+   btnCancel->SetLabel(lang["Close"]);
    
    #ifdef __WXMSW__
       if (autoClose && !item) SendMessage((HWND)GetHWND(), WM_CLOSE, (WPARAM)TRUE, (LPARAM)NULL);
@@ -238,7 +274,7 @@ void onThreadCopyFinish(void* thread, void* contextParam, void* parent)
    return parentWindow->onCopyThreadFinish();   
 }
 
-bool onThreadBeginCopyFile(void* parent, const wxString& sourcePath, const wxString& destinationPath)
+int onThreadBeginCopyFile(void* parent, const wxString& sourcePath, const wxString& destinationPath)
 {
    CopyDlg* parentWindow;
    parentWindow = (CopyDlg*)parent;
@@ -297,7 +333,7 @@ void CopyDlg::setTotalSize(long long size)
 void CopyDlg::showModal(vectorCopyParams pathsCopy)
 {
    Show();
-   SetTitle("Loading files (Please wait...)");
+   SetTitle(lang["Loading files (Please wait...)"]);
 
    m_pathsCopy = pathsCopy;
    updateSourceListCtrl();
@@ -315,6 +351,7 @@ void CopyDlg::updateSourceListCtrl()
      //   filePath = m_pathsCopy[i].sourcePath + m_pathsCopy[i].item;
      // else
         filePath = m_pathsCopy[i].sourcePath + "\\" + m_pathsCopy[i].item;
+
       aFilesPath.Add(filePath);
    }
    
@@ -336,18 +373,18 @@ void CopyDlg::updateSourceListCtrl()
 
 void CopyDlg::onDirRecursiveFinish(long long totalSizeRecursive)
 {
-   SetTitle("Copy Files (wxOpenCommander)");
+   SetTitle(lang["Copy Files"] + " (wxOpenCommander)");
    totalSize = totalSizeRecursive;
    numTotaFiles = cCommander1.getFileDirCount();
    WxListCtrl1->showPathAndFile = true;
    WxListCtrl1->SetItemCount(numTotaFiles);
 
    if (m_pathsCopy.size())
-      lblDestination->SetLabel("Destination: " + m_pathsCopy[0].newPath + "\\");
+      lblDestination->SetLabel(lang["Destination"] + ": " + m_pathsCopy[0].newPath + "\\");
    lblDetails->SetLabel("");
    lblDetails2->SetLabel("");
-   lblDetails3->SetLabel("Size: 0 / " + formatFileSize(totalSize));
-   lblDetails4->SetLabel("File: 0 / " + LongLongTowxString(numTotaFiles));  
+   lblDetails3->SetLabel(lang["Size"] + ": 0 / " + formatFileSize(totalSize));
+   lblDetails4->SetLabel(lang["File"] + ": 0 / " + LongLongTowxString(numTotaFiles));  
    
    //wxEndBusyCursor();
    btnCopy->Enable(true);
@@ -361,4 +398,16 @@ void CopyDlg::onDirRecursiveFinish(long long totalSizeRecursive)
 
    thread->Delete();
    thread = NULL;
+}
+
+void CopyDlg::WxListCtrl1ItemSelected(wxListEvent& event)
+{
+   if (!blnCopping)
+   lblDetails->SetLabel(errors[event.GetText()]);
+}
+
+void CopyDlg::WxListCtrl2ItemSelected(wxListEvent& event)
+{
+   if (!blnCopping)
+   lblDetails->SetLabel(lang["File copied sucessfuly"]);
 }

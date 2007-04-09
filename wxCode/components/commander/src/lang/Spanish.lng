@@ -68,3 +68,18 @@ Delete=Borrar
 Edit=Edit
 Add=Añadir
 Hot Keys for Launch other Programs=Teclas rápidas para lanzar otros programas
+
+Copy Files=Copiar Archivos
+Source=Origen
+Destination=Destino
+Loading files (Please wait...)=Cargando archivos (Por favor espere...)
+Copy finished with some errors=Copia finalizada con errores
+File copied sucessfuly=Archivo copiado correctamente
+File already exist in destination=El archivo ya existe en el destino
+File is Read only in destination=El archivo esta marcado como Solo Lectura en el destino
+Path=Ruta
+File=Archivo
+Overwrite Read only files=Reemplazar archivos de solo Lectura
+Overwrite existing files=Reemplazar archivos existentes
+Close=Cerrar
+

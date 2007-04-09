@@ -1,4 +1,4 @@
-object frmNewForm_1: TfrmNewForm
+object frmNewForm: TfrmNewForm
   Left = 8
   Top = 8
   AutoScroll = False
@@ -298,19 +298,16 @@ object frmNewForm_1: TfrmNewForm
     Wx_LabelStyle = []
   end
   object ckReadFiles: TWxCheckBox
-    Left = 6
-    Top = 463
-    Width = 138
+    Left = 275
+    Top = 464
+    Width = 248
     Height = 17
     Caption = 'Overwrite Read only files'
-    Checked = True
-    State = cbChecked
     TabOrder = 6
     Wx_BGColor = clBlack
     Wx_CheckBoxStyle = []
     Wx_Class = 'wxCheckBox'
     Wx_ControlOrientation = wxControlVertical
-    Wx_Enabled = False
     Wx_FGColor = clBlack
     Wx_GeneralStyle = []
     Wx_Hidden = False
@@ -318,19 +315,16 @@ object frmNewForm_1: TfrmNewForm
     Wx_IDValue = 1010
   end
   object ckExistFiles: TWxCheckBox
-    Left = 176
+    Left = 11
     Top = 464
-    Width = 146
+    Width = 223
     Height = 17
     Caption = 'Overwrite existing files'
-    Checked = True
-    State = cbChecked
     TabOrder = 7
     Wx_BGColor = clBlack
     Wx_CheckBoxStyle = []
     Wx_Class = 'wxCheckBox'
     Wx_ControlOrientation = wxControlVertical
-    Wx_Enabled = False
     Wx_FGColor = clBlack
     Wx_GeneralStyle = []
     Wx_Hidden = False

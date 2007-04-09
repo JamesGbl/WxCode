@@ -1226,6 +1226,33 @@ void wxOpenCommanderFrm::Mnu_Help_onClick(wxCommandEvent& event)
 
 void wxOpenCommanderFrm::onContextMenu(wxContextMenuEvent& event)
 {   
+   
+   wxWindow* menuWindow = wxFindWindowAtPoint(event.GetPosition());
+   int winId = menuWindow->GetId();
+   
+   if (winId == ID_WXNOTEBOOK1 || winId == ID_WXLISTCTRL1)
+   {
+      wxListEvent event;
+      WxListCtrl1ItemFocused(event);
+   }
+   
+   if (winId == ID_WXNOTEBOOK2 || winId == ID_WXLISTCTRL2 )
+   {
+      wxListEvent event;
+      WxListCtrl2ItemFocused(event);
+   }
+   
+   if (menuWindow->GetId() == ID_WXNOTEBOOK1 || menuWindow->GetId() == ID_WXNOTEBOOK2)
+   {
+      wxMenu* menu = new wxMenu;
+
+	   menu->Append(ID_MNU_ADDTAB_1080, wxT(lang["&Add Tab"] + " (Ctrl + T)"), wxT(""), wxITEM_NORMAL);
+	   menu->Append(ID_MNU_REMOVETAB_1082, wxT(lang["Re&move Tab"] + " (Ctrl + F4)"), wxT(""), wxITEM_NORMAL);
+      
+      this->PopupMenu(menu);
+      return;
+   } 		
+
    wxMenu* menu = new wxMenu;
    
 	menu->Append(ID_MNU_COPY_1084, wxT(lang["&Copy"] + " (Ctrl + C)"), wxT(""), wxITEM_NORMAL);

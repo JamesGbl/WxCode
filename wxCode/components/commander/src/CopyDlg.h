@@ -31,8 +31,6 @@
 #include <wx/stattext.h>
 ////Header Include End
 
-#include <wx/splash.h>
-
 #include "CThread.h"
 #include "wxOpenCommanderFrm.h"
 #include "wxOpenCommanderUtils.h"
@@ -42,6 +40,8 @@
 #undef CopyDlg_STYLE
 #define CopyDlg_STYLE wxCAPTION | wxSYSTEM_MENU | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX
 ////Dialog Style End
+
+typedef map <wxString, wxString, less<wxString> > errorsMap;
 
 class CopyDlg : public wxDialog
 {
@@ -85,6 +85,7 @@ class CopyDlg : public wxDialog
 	   multiLang& lang;
 	   cCommander cCommander1;
 	   CThread* thread;
+	   errorsMap errors;
 		
 	private:
 		//Note: if you receive any error with these enum IDs, then you need to
@@ -116,10 +117,12 @@ class CopyDlg : public wxDialog
 		void CreateGUIControls();
       void updateSourceListCtrl();
       void addColumns(wxListCtrl* WxListCtrl);
+      void WxListCtrl1ItemSelected(wxListEvent& event);
+      void WxListCtrl2ItemSelected(wxListEvent& event);
 
 	public:
       void showModal(vectorCopyParams pathsCopy);
-      bool onBeginCopyFile(const wxString& sourcePath, const wxString& destinationPath);
+      int onBeginCopyFile(const wxString& sourcePath, const wxString& destinationPath);
       void onEndCopyFile(bool copy, const wxString& sourcePath, const wxString& destinationPath);
       void onCopyThreadFinish();
       void onDirRecursiveFinish(long long totalSizeRecursive);
@@ -131,7 +134,7 @@ class CopyDlg : public wxDialog
 };
 void onThreadDirRecursiveFinish(void* thread, void* contextParam, void* parent);
 void onThreadCopyFinish(void* thread, void* contextParam, void* parent);
-bool onThreadBeginCopyFile(const wxString& sourcePath, const wxString& destinationPath);
+int onThreadBeginCopyFile(const wxString& sourcePath, const wxString& destinationPath);
 void onThreadEndCopyFile(bool copy, const wxString& sourcePath, const wxString& destinationPath);
 
 #endif
