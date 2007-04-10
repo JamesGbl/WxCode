@@ -1,0 +1,55 @@
+<?xml version="1.0" ?>
+
+<!-- Created by: Emilien Kia <cursorstar@users.sourceforge.net>     -->
+<!-- RCS-ID: $Id: wxAvahi.bkl,v 1.2 2007/03/04 08:57:20 frm Exp $ -->
+
+<makefile>
+
+    <include file="presets/wxcode.bkl"/>
+
+
+    <!-- ================================================================= -->
+    <!-- Settings for this component                                       -->
+    <!-- ================================================================= -->
+
+    <set-comp-name>avahi</set-comp-name>
+
+	<template id="avahicommon">
+		<cppflags>`pkg-config --cflags avahi-client`</cppflags>
+		<ldflags>`pkg-config --libs avahi-client`</ldflags>
+	</template>	
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- Library settings                                                  -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <lib id="wxavahi_lib" template="wxcode-lib,avahicommon" cond="WX_SHARED=='0'">
+        <sources>$(fileList('src/*.cpp'))</sources>
+        <headers>$(fileList('include/wx/avahi/*.h'))</headers>
+    </lib>
+    <dll id="wxavahi_dll" template="wxcode-dll,avahicommon" cond="WX_SHARED=='1'">
+        <sources>$(fileList('src/*.cpp'))</sources>
+        <headers>$(fileList('include/wx/avahi/*.h'))</headers>
+        <wx-lib>net</wx-lib>
+        <wx-lib>base</wx-lib>
+    </dll>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- Sample(s) settings                                                -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <wxcode-sample id="avahi" template="avahicommon">
+        <dir>sample</dir>
+
+        <library>wxavahi_lib</library>
+        <wx-lib>net</wx-lib>
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib>
+    </wxcode-sample>
+
+    <!-- Auxiliary targets -->
+    <!-- ================= -->
+
+    <make-tarball/>
+
+</makefile>

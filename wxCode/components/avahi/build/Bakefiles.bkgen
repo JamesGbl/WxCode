@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+
+<!-- RCS-ID: $Id: Bakefiles.bkgen,v 1.8 2007/03/04 08:57:20 frm Exp $ -->
+
+<bakefile-gen>
+    <include file="../../../build/bakefiles/presets/wxcode.bkgen"/>
+
+    <input>wxavahi.bkl</input>
+
+	<disable-formats>borland,cbuilderx,dmars,dmars_smake,mingw,msevc4prj,msvc,msvc6prj,msvs2005prj,symbian,watcom,xcode2</disable-formats>
+
+</bakefile-gen>
