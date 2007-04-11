@@ -126,8 +126,8 @@ wxOpenCommanderFrm::wxOpenCommanderFrm(wxWindow *parent, wxWindowID id, const wx
 
 	WxStatusBar->SetStatusText("wxOpenCommander");
 	
-	WxListCtrl1->SetBackgroundColour(wxColour(255, 255, 240));
-   WxListCtrl2->SetBackgroundColour(wxColour(255, 255, 255));
+	WxListCtrl1->SetBackgroundColour(wxColour(255, 255, 255));
+   WxListCtrl2->SetBackgroundColour(wxColour(240, 240, 240));
 
    ListCtlUpdate();
 }
@@ -717,8 +717,8 @@ void wxOpenCommanderFrm::WxListCtrl1ItemFocused(wxListEvent& event)
    numDirFiles << lastListCtrlUsed->GetItemCount()-1;
    WxStatusBar->SetStatusText(numDirFiles + " " + lang["Directories and Files"]);
    
-   WxListCtrl2->SetBackgroundColour(wxColour(255, 255, 255));
-   WxListCtrl1->SetBackgroundColour(wxColour(255, 255, 240));
+   WxListCtrl2->SetBackgroundColour(wxColour(240, 240, 240));
+   WxListCtrl1->SetBackgroundColour(wxColour(255, 255, 255));
    WxListCtrl2->Refresh();
    WxListCtrl1->Refresh();
 }
@@ -737,8 +737,8 @@ void wxOpenCommanderFrm::WxListCtrl2ItemFocused(wxListEvent& event)
    numDirFiles << lastListCtrlUsed->GetItemCount()-1;
    WxStatusBar->SetStatusText(numDirFiles + " " + lang["Directories and Files"]);
    
-   WxListCtrl1->SetBackgroundColour(wxColour(255, 255, 255));
-   WxListCtrl2->SetBackgroundColour(wxColour(255, 255, 240));
+   WxListCtrl1->SetBackgroundColour(wxColour(240, 240, 240));
+   WxListCtrl2->SetBackgroundColour(wxColour(255, 255, 255));
    WxListCtrl1->Refresh();
    WxListCtrl2->Refresh();
 }
