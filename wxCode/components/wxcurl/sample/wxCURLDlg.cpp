@@ -98,9 +98,12 @@ END_EVENT_TABLE()
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-wxCURLDialog::wxCURLDialog(const wxString& title, const wxPoint& WXUNUSED(pos), const wxSize& WXUNUSED(size))
+wxCURLDialog::wxCURLDialog(const wxString& title, const wxPoint& WXUNUSED(pos),
+                           const wxSize& WXUNUSED(size))
 {
-	wxXmlResource::Get()->LoadDialog(this, NULL, "main_dialog");
+	if (!wxXmlResource::Get()->LoadDialog(this, NULL, "main_dialog"))
+        wxExit();
+
 	SetTitle(title);
 
 	// set the Dialog icon

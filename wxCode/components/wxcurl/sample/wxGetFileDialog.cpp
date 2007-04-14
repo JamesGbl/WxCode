@@ -46,7 +46,7 @@ IMPLEMENT_CLASS(wxGetFileDialog, wxDialog)
 BEGIN_EVENT_TABLE(wxGetFileDialog, wxDialog)
 	EVT_BUTTON(XRCID("get_button"), wxGetFileDialog::OnGet)
 	EVT_BUTTON(XRCID("dest_button"), wxGetFileDialog::OnBrowseDest)
-	EVT_CURL_PROGRESS(wxID_ANY, wxGetFileDialog::OnProgress)
+	EVT_CURL_DOWNLOAD(wxID_ANY, wxGetFileDialog::OnProgress)
 END_EVENT_TABLE()
 
 //////////////////////////////////////////////////////////////////////
@@ -158,10 +158,10 @@ void wxGetFileDialog::OnBrowseDest(wxCommandEvent& WXUNUSED(event))
 	}
 }
 
-void wxGetFileDialog::OnProgress(wxCurlProgressEvent& event)
+void wxGetFileDialog::OnProgress(wxCurlDownloadEvent& event)
 {
 	if(m_pDlGauge)
 	{
-		m_pDlGauge->SetValue(event.DownloadPercent());
+		m_pDlGauge->SetValue((int)event.GetPercent());
 	}
 }

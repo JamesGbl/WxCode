@@ -3,7 +3,7 @@
  ---------------------
 
  Website: http://wxcode.sourceforge.net/components/wxcurl
- Version: 0.3
+ Version: 1.0
 
  Description:
  wxCURL is a simplified and integrated interface between LibCURL and wxWidgets.
@@ -30,7 +30,7 @@
  ChangeLog
  ---------
 
- 0.3
+ 1.0
      - first release of wxCurl since it was moved to wxCode
      - new bakefile-based build system which supports all possible wxWidgets build modes
        and allows an easy-build of libCURL also on Windows keeping a copy in thirdparty\libcurl
@@ -41,6 +41,10 @@
        events should be sent but rather the wxCURL_SEND_PROGRESS/BEGIN/END_EVENTS symbols which
        allow users to write more readable code
      - doxyfied the documentation of wxCURL
+     - splitted wxCurlProgressEvent into wxCurlDownloadEvent and wxCurlUploadEvent classes
+       and added more getters GUI-oriented (e.g. GetHumanReadableSpeed, GetEstimatedTime, etc)
+     - added a wxCurlDownloadThread and a wxCurlUploadThread to ease non-blocking downloads/uploads
+
 
  Authors' info
  -------------

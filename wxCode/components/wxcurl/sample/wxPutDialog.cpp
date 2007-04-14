@@ -46,7 +46,7 @@ IMPLEMENT_CLASS(wxPutDialog, wxDialog)
 BEGIN_EVENT_TABLE(wxPutDialog, wxDialog)
 	EVT_BUTTON(XRCID("source_button"), wxPutDialog::OnBrowse)
 	EVT_BUTTON(XRCID("put_button"), wxPutDialog::OnPutFile)
-	EVT_CURL_PROGRESS(wxID_ANY, wxPutDialog::OnProgress)
+	EVT_CURL_UPLOAD(wxID_ANY, wxPutDialog::OnProgress)
 END_EVENT_TABLE()
 
 //////////////////////////////////////////////////////////////////////
@@ -164,11 +164,11 @@ void wxPutDialog::OnPutFile(wxCommandEvent& WXUNUSED(event))
 	}
 }
 
-void wxPutDialog::OnProgress(wxCurlProgressEvent& event)
+void wxPutDialog::OnProgress(wxCurlUploadEvent& event)
 {
 	if(m_pGauge)
 	{
-		m_pGauge->SetValue((int)event.UploadPercent());
+		m_pGauge->SetValue((int)event.GetPercent());
 		m_pGauge->Refresh();
 	}
 }

@@ -30,7 +30,7 @@ public:
 	void OnGet(wxCommandEvent& event);
 	void OnBrowseDest(wxCommandEvent& event);
 	
-	void OnProgress(wxCurlProgressEvent& event);
+	void OnProgress(wxCurlDownloadEvent& event);
 
 protected:
 	wxTextCtrl*		m_pDestCtrl;

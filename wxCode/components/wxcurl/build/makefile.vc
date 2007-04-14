@@ -70,7 +70,8 @@ WXCURL_LIB_CXXFLAGS = /MD$(____wxcurl_5) /DWIN32 $(____WX_SHARED) \
 	/I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) /I$(WX_DIR)\include \
 	$(____wxcurl) $(____wxcurl_3) $(______wxcurl) \
 	/Fd..\lib\vc_$(____wxcurl_7)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.pdb \
-	/I..\include /I..\thirdparty\curl\include /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
+	/W4 /I..\include /I..\thirdparty\curl\include /GR /EHsc $(CPPFLAGS) \
+	$(CXXFLAGS)
 WXCURL_LIB_OBJECTS =  \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_dav.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_http.obj \
@@ -79,13 +80,14 @@ WXCURL_LIB_OBJECTS =  \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_ftptool.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_base.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_telnet.obj \
-	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_davtool.obj
+	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_davtool.obj \
+	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_thread.obj
 WXCURL_DLL_CXXFLAGS = /MD$(____wxcurl_5) /DWIN32 $(____WX_SHARED) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
 	/I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) /I$(WX_DIR)\include \
 	$(____wxcurl) $(____wxcurl_3) $(______wxcurl) \
 	/Fd..\lib\vc_$(____wxcurl_7)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.pdb \
-	/I..\include /DWXMAKINGDLL_WXCURL /I..\thirdparty\curl\include /GR /EHsc \
+	/W4 /I..\include /DWXMAKINGDLL_WXCURL /I..\thirdparty\curl\include /GR /EHsc \
 	$(CPPFLAGS) $(CXXFLAGS)
 WXCURL_DLL_OBJECTS =  \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_dav.obj \
@@ -95,12 +97,13 @@ WXCURL_DLL_OBJECTS =  \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_ftptool.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_base.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_telnet.obj \
-	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_davtool.obj
+	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_davtool.obj \
+	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_thread.obj
 WXCURL_TESTER_CXXFLAGS = /MD$(____wxcurl_5) /DWIN32 $(____WX_SHARED) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
 	/I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) /I$(WX_DIR)\include \
 	$(____wxcurl) $(____wxcurl_3) $(______wxcurl) \
-	/Fd..\sample\wxcurl_tester.pdb /I..\include /D_WINDOWS \
+	/Fd..\sample\wxcurl_tester.pdb /W4 /I..\include /D_WINDOWS \
 	/I..\thirdparty\curl\include /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
 WXCURL_TESTER_OBJECTS =  \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxDeleteDialog.obj \
@@ -366,7 +369,7 @@ make_dir_wxcurl_dll:
 <<
 
 make_sample_dir_wxcurl_tester: 
-	if not exist ../sample mkdir../sample
+	if not exist ..\sample mkdir ..\sample
 
 tarball: 
 	make distclean
@@ -400,6 +403,9 @@ vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_telnet.obj: ..\src\tel
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_davtool.obj: ..\src\davtool.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_LIB_CXXFLAGS) $**
 
+vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_thread.obj: ..\src\thread.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_LIB_CXXFLAGS) $**
+
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_dav.obj: ..\src\dav.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) $**
 
@@ -422,6 +428,9 @@ vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_telnet.obj: ..\src\tel
 	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) $**
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_davtool.obj: ..\src\davtool.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) $**
+
+vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_thread.obj: ..\src\thread.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) $**
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxDeleteDialog.obj: ..\sample\wxDeleteDialog.cpp

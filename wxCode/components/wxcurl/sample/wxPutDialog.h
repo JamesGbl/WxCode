@@ -30,7 +30,7 @@ public:
 	void OnBrowse(wxCommandEvent& event);
 	void OnPutFile(wxCommandEvent& event);
 
-	void OnProgress(wxCurlProgressEvent& event);
+	void OnProgress(wxCurlUploadEvent& event);
 
 protected:
 	wxTextCtrl*	m_pSourceCtrl;

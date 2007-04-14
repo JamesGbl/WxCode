@@ -27,6 +27,8 @@
 
 class wxXmlNode;
 
+
+//! A specialized interface to WebDAV derived from wxCurlBase.
 class WXDLLIMPEXP_CURL wxCurlDAV : public wxCurlHTTP
 {
 public:

@@ -46,7 +46,7 @@ IMPLEMENT_CLASS(wxPutFTPDialog, wxDialog)
 BEGIN_EVENT_TABLE(wxPutFTPDialog, wxDialog)
 	EVT_BUTTON(XRCID("source_button"), wxPutFTPDialog::OnBrowse)
 	EVT_BUTTON(XRCID("put_button"), wxPutFTPDialog::OnPutFile)
-	EVT_CURL_PROGRESS(wxID_ANY, wxPutFTPDialog::OnProgress)
+	EVT_CURL_UPLOAD(wxID_ANY, wxPutFTPDialog::OnProgress)
 END_EVENT_TABLE()
 
 //////////////////////////////////////////////////////////////////////
@@ -164,11 +164,11 @@ void wxPutFTPDialog::OnPutFile(wxCommandEvent& WXUNUSED(event))
 	}
 }
 
-void wxPutFTPDialog::OnProgress(wxCurlProgressEvent& event)
+void wxPutFTPDialog::OnProgress(wxCurlUploadEvent& event)
 {
 	if(m_pGauge)
 	{
-		m_pGauge->SetValue((int)event.UploadPercent());
+		m_pGauge->SetValue((int)event.GetPercent());
 		m_pGauge->Refresh();
 	}
 }

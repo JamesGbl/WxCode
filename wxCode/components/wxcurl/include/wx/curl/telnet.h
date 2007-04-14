@@ -17,6 +17,7 @@
 
 #include <wx/curl/base.h>
 
+//! A specialized interface to TELNET derived from wxCurlBase.
 class WXDLLIMPEXP_CURL wxCurlTelnet : public wxCurlBase
 {
 public:

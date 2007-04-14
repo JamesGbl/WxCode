@@ -310,6 +310,7 @@ bool wxCurlHTTP::Get(wxOutputStream& buffer, const wxString& szRemoteFile /*=wxE
 
 		SetOpt(CURLOPT_URL, m_szCurrFullURL.c_str());
 		SetOpt(CURLOPT_HTTPGET, TRUE);
+
 		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_stream_write);
 		SetOpt(CURLOPT_WRITEDATA, (void*)&buffer);
 

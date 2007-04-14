@@ -375,8 +375,8 @@ MAKEARGS = CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" &
 WXCURL_LIB_CXXFLAGS = $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include &
-	$(____wxcurl) $(____wxcurl_2) -i=..\include -i=..\thirdparty\curl\include &
-	$(CPPFLAGS) $(CXXFLAGS)
+	$(____wxcurl) $(____wxcurl_2) -wx -i=..\include &
+	-i=..\thirdparty\curl\include $(CPPFLAGS) $(CXXFLAGS)
 WXCURL_LIB_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_dav.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_http.obj &
@@ -385,11 +385,12 @@ WXCURL_LIB_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_ftptool.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_base.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_telnet.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_davtool.obj
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_davtool.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_thread.obj
 WXCURL_DLL_CXXFLAGS = -bd $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include &
-	$(____wxcurl) $(____wxcurl_2) -i=..\include -dWXMAKINGDLL_WXCURL &
+	$(____wxcurl) $(____wxcurl_2) -wx -i=..\include -dWXMAKINGDLL_WXCURL &
 	-i=..\thirdparty\curl\include $(CPPFLAGS) $(CXXFLAGS)
 WXCURL_DLL_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_dav.obj &
@@ -399,12 +400,13 @@ WXCURL_DLL_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_ftptool.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_base.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_telnet.obj &
-	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_davtool.obj
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_davtool.obj &
+	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_thread.obj
 WXCURL_TESTER_CXXFLAGS = $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) &
 	$(__WXDEBUG_DEFINE_p) -d__WXMSW__ &
 	-i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include &
-	$(____wxcurl) $(____wxcurl_2) -i=..\include -i=..\thirdparty\curl\include &
-	$(CPPFLAGS) $(CXXFLAGS)
+	$(____wxcurl) $(____wxcurl_2) -wx -i=..\include &
+	-i=..\thirdparty\curl\include $(CPPFLAGS) $(CXXFLAGS)
 WXCURL_TESTER_OBJECTS =  &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxDeleteDialog.obj &
 	watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxGetFileDialog.obj &
@@ -514,7 +516,7 @@ make_dir_wxcurl_dll :
 	wlink @watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester.lbc
 
 make_sample_dir_wxcurl_tester :  
-	if not exist ../sample mkdir../sample
+	if not exist ..\sample mkdir ..\sample
 
 tarball :  
 	make distclean
@@ -550,6 +552,9 @@ watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_telnet.obj :  .AUTODE
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_davtool.obj :  .AUTODEPEND ..\src\davtool.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_LIB_CXXFLAGS) $<
 
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_thread.obj :  .AUTODEPEND ..\src\thread.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_LIB_CXXFLAGS) $<
+
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_dav.obj :  .AUTODEPEND ..\src\dav.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_DLL_CXXFLAGS) $<
 
@@ -572,6 +577,9 @@ watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_telnet.obj :  .AUTODE
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_DLL_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_davtool.obj :  .AUTODEPEND ..\src\davtool.cpp
+	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_DLL_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_thread.obj :  .AUTODEPEND ..\src\thread.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(WXCURL_DLL_CXXFLAGS) $<
 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_tester_wxDeleteDialog.obj :  .AUTODEPEND ..\sample\wxDeleteDialog.cpp

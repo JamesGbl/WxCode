@@ -57,7 +57,18 @@ WXCURL_LIB_OBJECTS =  \
 	wxcurl_lib_ftptool.o \
 	wxcurl_lib_base.o \
 	wxcurl_lib_telnet.o \
-	wxcurl_lib_davtool.o
+	wxcurl_lib_davtool.o \
+	wxcurl_lib_thread.o
+WXCURL_LIB_HEADERS =  \
+	include/wx/curl/dav.h \
+	include/wx/curl/ftp.h \
+	include/wx/curl/telnet.h \
+	include/wx/curl/base.h \
+	include/wx/curl/ftptool.h \
+	include/wx/curl/http.h \
+	include/wx/curl/utils.h \
+	include/wx/curl/thread.h \
+	include/wx/curl/davtool.h
 WXCURL_DLL_CXXFLAGS = -I$(srcdir)/include -DWXMAKINGDLL_WXCURL `curl-config \
 	--cflags` $(PIC_FLAG) $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 WXCURL_DLL_OBJECTS =  \
@@ -68,7 +79,18 @@ WXCURL_DLL_OBJECTS =  \
 	wxcurl_dll_ftptool.o \
 	wxcurl_dll_base.o \
 	wxcurl_dll_telnet.o \
-	wxcurl_dll_davtool.o
+	wxcurl_dll_davtool.o \
+	wxcurl_dll_thread.o
+WXCURL_DLL_HEADERS =  \
+	include/wx/curl/dav.h \
+	include/wx/curl/ftp.h \
+	include/wx/curl/telnet.h \
+	include/wx/curl/base.h \
+	include/wx/curl/ftptool.h \
+	include/wx/curl/http.h \
+	include/wx/curl/utils.h \
+	include/wx/curl/thread.h \
+	include/wx/curl/davtool.h
 WXCURL_TESTER_CXXFLAGS = -I$(srcdir)/include `curl-config --cflags` \
 	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 WXCURL_TESTER_OBJECTS =  \
@@ -223,7 +245,7 @@ distclean: clean
 
 @COND_WX_SHARED_0@install_wxcurl_lib_headers: 
 @COND_WX_SHARED_0@	$(INSTALL_DIR) $(DESTDIR)$(prefix)
-@COND_WX_SHARED_0@	for f in  include/wx/curl/dav.h include/wx/curl/ftp.h include/wx/curl/telnet.h include/wx/curl/base.h include/wx/curl/ftptool.h include/wx/curl/http.h include/wx/curl/davtool.h; do \
+@COND_WX_SHARED_0@	for f in $(WXCURL_LIB_HEADERS); do \
 @COND_WX_SHARED_0@	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
 @COND_WX_SHARED_0@	$(INSTALL_DIR) $(DESTDIR)$(prefix)/`dirname $$f`; \
 @COND_WX_SHARED_0@	fi; \
@@ -231,7 +253,7 @@ distclean: clean
 @COND_WX_SHARED_0@	done
 
 @COND_WX_SHARED_0@uninstall_wxcurl_lib_headers: 
-@COND_WX_SHARED_0@	for f in  include/wx/curl/dav.h include/wx/curl/ftp.h include/wx/curl/telnet.h include/wx/curl/base.h include/wx/curl/ftptool.h include/wx/curl/http.h include/wx/curl/davtool.h; do \
+@COND_WX_SHARED_0@	for f in $(WXCURL_LIB_HEADERS); do \
 @COND_WX_SHARED_0@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_WX_SHARED_0@	done
 
@@ -253,7 +275,7 @@ distclean: clean
 
 @COND_WX_SHARED_1@install_wxcurl_dll_headers: 
 @COND_WX_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(prefix)
-@COND_WX_SHARED_1@	for f in  include/wx/curl/dav.h include/wx/curl/ftp.h include/wx/curl/telnet.h include/wx/curl/base.h include/wx/curl/ftptool.h include/wx/curl/http.h include/wx/curl/davtool.h; do \
+@COND_WX_SHARED_1@	for f in $(WXCURL_DLL_HEADERS); do \
 @COND_WX_SHARED_1@	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
 @COND_WX_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(prefix)/`dirname $$f`; \
 @COND_WX_SHARED_1@	fi; \
@@ -261,7 +283,7 @@ distclean: clean
 @COND_WX_SHARED_1@	done
 
 @COND_WX_SHARED_1@uninstall_wxcurl_dll_headers: 
-@COND_WX_SHARED_1@	for f in  include/wx/curl/dav.h include/wx/curl/ftp.h include/wx/curl/telnet.h include/wx/curl/base.h include/wx/curl/ftptool.h include/wx/curl/http.h include/wx/curl/davtool.h; do \
+@COND_WX_SHARED_1@	for f in $(WXCURL_DLL_HEADERS); do \
 @COND_WX_SHARED_1@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_WX_SHARED_1@	done
 
@@ -306,6 +328,9 @@ wxcurl_lib_telnet.o: $(srcdir)/src/telnet.cpp
 wxcurl_lib_davtool.o: $(srcdir)/src/davtool.cpp
 	$(CXXC) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(srcdir)/src/davtool.cpp
 
+wxcurl_lib_thread.o: $(srcdir)/src/thread.cpp
+	$(CXXC) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(srcdir)/src/thread.cpp
+
 wxcurl_dll_dav.o: $(srcdir)/src/dav.cpp
 	$(CXXC) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(srcdir)/src/dav.cpp
 
@@ -329,6 +354,9 @@ wxcurl_dll_telnet.o: $(srcdir)/src/telnet.cpp
 
 wxcurl_dll_davtool.o: $(srcdir)/src/davtool.cpp
 	$(CXXC) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(srcdir)/src/davtool.cpp
+
+wxcurl_dll_thread.o: $(srcdir)/src/thread.cpp
+	$(CXXC) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(srcdir)/src/thread.cpp
 
 wxcurl_tester_wxDeleteDialog.o: $(srcdir)/sample/wxDeleteDialog.cpp
 	$(CXXC) -c -o $@ $(WXCURL_TESTER_CXXFLAGS) $(srcdir)/sample/wxDeleteDialog.cpp

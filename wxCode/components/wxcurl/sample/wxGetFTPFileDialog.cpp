@@ -46,7 +46,7 @@ IMPLEMENT_CLASS(wxGetFTPFileDialog, wxDialog)
 BEGIN_EVENT_TABLE(wxGetFTPFileDialog, wxDialog)
 	EVT_BUTTON(XRCID("get_button"), wxGetFTPFileDialog::OnGet)
 	EVT_BUTTON(XRCID("dest_button"), wxGetFTPFileDialog::OnBrowseDest)
-	EVT_CURL_PROGRESS(wxID_ANY, wxGetFTPFileDialog::OnProgress)
+	EVT_CURL_DOWNLOAD(wxID_ANY, wxGetFTPFileDialog::OnProgress)
 END_EVENT_TABLE()
 
 //////////////////////////////////////////////////////////////////////
@@ -158,10 +158,10 @@ void wxGetFTPFileDialog::OnBrowseDest(wxCommandEvent& WXUNUSED(event))
 	}
 }
 
-void wxGetFTPFileDialog::OnProgress(wxCurlProgressEvent& event)
+void wxGetFTPFileDialog::OnProgress(wxCurlDownloadEvent& event)
 {
 	if(m_pDlGauge)
 	{
-		m_pDlGauge->SetValue((int)event.DownloadPercent());
+		m_pDlGauge->SetValue((int)event.GetPercent());
 	}
 }

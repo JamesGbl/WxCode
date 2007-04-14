@@ -44,14 +44,14 @@ extern "C"
             if (rUlTotal == 0 || rUlNow == 0)
             {
                 /* should be a download event */
-                wxCurlDownloadEvent evt(curl->GetId(), curl, rDlTotal, rDlNow);
+                wxCurlDownloadEvent evt(curl->GetId(), curl, rDlTotal, rDlNow, curl->GetCurrentFullURL());
                 wxPostEvent(curl->GetEvtHandler(), evt);
             }
 
             if (rDlTotal == 0 || rDlNow == 0)
             {
                 /* should be an upload event */
-                wxCurlDownloadEvent evt(curl->GetId(), curl, rUlTotal, rUlNow);
+                wxCurlDownloadEvent evt(curl->GetId(), curl, rUlTotal, rUlNow, curl->GetCurrentFullURL());
                 wxPostEvent(curl->GetEvtHandler(), evt);
             }
 		}
@@ -205,14 +205,14 @@ wxTimeSpan wxCurlProgressEvent::GetElapsedTime() const
     return wxTimeSpan(int(secs/3600.0),     // hours
                       int(secs/60) % 60,    // minutes
                       int(secs) % 60,       // seconds
-                      0);                   // milliseconds
+                      (long)((secs - floor(secs))*1000));                   // milliseconds
 }
 
 wxTimeSpan wxCurlProgressEvent::GetEstimatedTime() const
 {
     double nBytesPerSec = GetSpeed();
     if (nBytesPerSec == 0)
-        return 0;       // avoid division by zero
+        return wxTimeSpan(0);       // avoid division by zero
 
     // compute remaining seconds; here we assume that the current
     // download speed will be constant also in future
@@ -226,7 +226,12 @@ wxTimeSpan wxCurlProgressEvent::GetEstimatedTime() const
 
 wxTimeSpan wxCurlProgressEvent::GetEstimatedRemainingTime() const
 {
-    return GetEstimatedTime() - GetElapsedTime();
+    wxTimeSpan est = GetEstimatedTime(),
+               elapsed = GetElapsedTime();
+
+    if (est.IsLongerThan(elapsed))
+        return est - elapsed;
+    return wxTimeSpan(0);       // probably est==0 because GetTotalBytes()==0
 }
 
 wxString wxCurlProgressEvent::GetHumanReadableSpeed(const wxString &invalid) const
@@ -253,7 +258,7 @@ DEFINE_EVENT_TYPE(wxCURL_DOWNLOAD_EVENT);
 IMPLEMENT_DYNAMIC_CLASS(wxCurlDownloadEvent, wxEvent);
 
 wxCurlDownloadEvent::wxCurlDownloadEvent()
-: wxCurlProgressEvent(-1, wxCURL_DOWNLOAD_EVENT, NULL),
+: wxCurlProgressEvent(-1, wxCURL_DOWNLOAD_EVENT),
   m_rDownloadNow(0.0), m_rDownloadTotal(0.0)
 {
 }
@@ -261,8 +266,7 @@ wxCurlDownloadEvent::wxCurlDownloadEvent()
 wxCurlDownloadEvent::wxCurlDownloadEvent(int id, wxCurlBase *originator,
                                          const double& rDownloadTotal, const double& rDownloadNow, 
                                          const wxString& szURL /*= wxEmptyString*/)
-: wxCurlProgressEvent(id, wxCURL_DOWNLOAD_EVENT, originator),
-  m_szURL(szURL),
+: wxCurlProgressEvent(id, wxCURL_DOWNLOAD_EVENT, originator, szURL),
   m_rDownloadTotal(rDownloadTotal), m_rDownloadNow(rDownloadNow)
 {
 }
@@ -270,8 +274,6 @@ wxCurlDownloadEvent::wxCurlDownloadEvent(int id, wxCurlBase *originator,
 wxCurlDownloadEvent::wxCurlDownloadEvent(const wxCurlDownloadEvent& event)
 : wxCurlProgressEvent(event)
 {
-	m_szURL = event.m_szURL;
-
 	m_rDownloadNow = event.m_rDownloadNow;
 	m_rDownloadTotal = event.m_rDownloadTotal;
 }
@@ -302,7 +304,7 @@ DEFINE_EVENT_TYPE(wxCURL_UPLOAD_EVENT);
 IMPLEMENT_DYNAMIC_CLASS(wxCurlUploadEvent, wxEvent);
 
 wxCurlUploadEvent::wxCurlUploadEvent()
-: wxCurlProgressEvent(-1, wxCURL_UPLOAD_EVENT, NULL),
+: wxCurlProgressEvent(-1, wxCURL_UPLOAD_EVENT),
   m_rUploadNow(0.0), m_rUploadTotal(0.0)
 {
 }
@@ -310,8 +312,7 @@ wxCurlUploadEvent::wxCurlUploadEvent()
 wxCurlUploadEvent::wxCurlUploadEvent(int id, wxCurlBase *originator,
                                          const double& rUploadTotal, const double& rUploadNow, 
                                          const wxString& szURL /*= wxEmptyString*/)
-: wxCurlProgressEvent(id, wxCURL_UPLOAD_EVENT, originator),
-  m_szURL(szURL),
+: wxCurlProgressEvent(id, wxCURL_UPLOAD_EVENT, originator, szURL),
   m_rUploadTotal(rUploadTotal), m_rUploadNow(rUploadNow)
 {
 }
@@ -319,8 +320,6 @@ wxCurlUploadEvent::wxCurlUploadEvent(int id, wxCurlBase *originator,
 wxCurlUploadEvent::wxCurlUploadEvent(const wxCurlUploadEvent& event)
 : wxCurlProgressEvent(event)
 {
-    m_szURL = event.m_szURL;
-
     m_rUploadNow = event.m_rUploadNow;
     m_rUploadTotal = event.m_rUploadTotal;
 }
@@ -557,7 +556,7 @@ void wxCurlBase::DumpErrorIfNeed(CURLcode error) const
 {
     if (m_bVerbose && error != CURLE_OK)
     {
-        wxString errStr = wxT("wxCURL: ") + wxString(curl_easy_strerror(error));
+        wxString errStr = wxT("wxCURL: ") + wxString(curl_easy_strerror(error), wxConvLocal);
 
         wxCurlBase *us = wx_const_cast(wxCurlBase*, this);
         us->m_mosVerbose.Write(errStr.c_str(), errStr.Len());

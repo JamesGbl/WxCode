@@ -69,9 +69,9 @@ WX_VERSION_MINOR = $(shell echo $(WX_VERSION) | cut -c2,2)
 WX_CONFIG_FLAGS = $(WX_CONFIG_DEBUG_FLAG) $(WX_CONFIG_UNICODE_FLAG) \
 	$(WX_CONFIG_SHARED_FLAG) --toolkit=$(WX_PORT) \
 	--version=$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)
-WXCURL_LIB_CXXFLAGS = $(____wxcurl) $(____wxcurl_3) -I../include `curl-config \
-	--cflags` `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) \
-	$(CXXFLAGS)
+WXCURL_LIB_CXXFLAGS = $(____wxcurl) $(____wxcurl_3) -W -Wall -I../include \
+	`curl-config --cflags` `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` \
+	$(CPPFLAGS) $(CXXFLAGS)
 WXCURL_LIB_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_dav.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_http.o \
@@ -80,8 +80,19 @@ WXCURL_LIB_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_ftptool.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_base.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_telnet.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_davtool.o
-WXCURL_DLL_CXXFLAGS = $(____wxcurl) $(____wxcurl_3) -I../include \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_davtool.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_thread.o
+WXCURL_LIB_HEADERS =  \
+	include/wx/curl/dav.h \
+	include/wx/curl/ftp.h \
+	include/wx/curl/telnet.h \
+	include/wx/curl/base.h \
+	include/wx/curl/ftptool.h \
+	include/wx/curl/http.h \
+	include/wx/curl/utils.h \
+	include/wx/curl/thread.h \
+	include/wx/curl/davtool.h
+WXCURL_DLL_CXXFLAGS = $(____wxcurl) $(____wxcurl_3) -W -Wall -I../include \
 	-DWXMAKINGDLL_WXCURL `curl-config --cflags` -fPIC -DPIC `$(WX_CONFIG) \
 	--cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 WXCURL_DLL_OBJECTS =  \
@@ -92,8 +103,19 @@ WXCURL_DLL_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_ftptool.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_base.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_telnet.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_davtool.o
-WXCURL_TESTER_CXXFLAGS = $(____wxcurl) $(____wxcurl_3) -I../include \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_davtool.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_thread.o
+WXCURL_DLL_HEADERS =  \
+	include/wx/curl/dav.h \
+	include/wx/curl/ftp.h \
+	include/wx/curl/telnet.h \
+	include/wx/curl/base.h \
+	include/wx/curl/ftptool.h \
+	include/wx/curl/http.h \
+	include/wx/curl/utils.h \
+	include/wx/curl/thread.h \
+	include/wx/curl/davtool.h
+WXCURL_TESTER_CXXFLAGS = $(____wxcurl) $(____wxcurl_3) -W -Wall -I../include \
 	`curl-config --cflags` `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` \
 	$(CPPFLAGS) $(CXXFLAGS)
 WXCURL_TESTER_OBJECTS =  \
@@ -249,7 +271,7 @@ make_dir_wxcurl_lib:
 ifeq ($(WX_SHARED),0)
 install_wxcurl_lib_headers: 
 	$(INSTALL) -d $(DESTDIR)$(prefix)
-	for f in  include/wx/curl/dav.h include/wx/curl/ftp.h include/wx/curl/telnet.h include/wx/curl/base.h include/wx/curl/ftptool.h include/wx/curl/http.h include/wx/curl/davtool.h; do \
+	for f in $(WXCURL_LIB_HEADERS); do \
 	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
 	$(INSTALL) -d $(DESTDIR)$(prefix)/`dirname $$f`; \
 	fi; \
@@ -259,7 +281,7 @@ endif
 
 ifeq ($(WX_SHARED),0)
 uninstall_wxcurl_lib_headers: 
-	for f in  include/wx/curl/dav.h include/wx/curl/ftp.h include/wx/curl/telnet.h include/wx/curl/base.h include/wx/curl/ftptool.h include/wx/curl/http.h include/wx/curl/davtool.h; do \
+	for f in $(WXCURL_LIB_HEADERS); do \
 	rm -f $(DESTDIR)$(prefix)/$$f; \
 	done
 endif
@@ -288,7 +310,7 @@ make_dir_wxcurl_dll:
 ifeq ($(WX_SHARED),1)
 install_wxcurl_dll_headers: 
 	$(INSTALL) -d $(DESTDIR)$(prefix)
-	for f in  include/wx/curl/dav.h include/wx/curl/ftp.h include/wx/curl/telnet.h include/wx/curl/base.h include/wx/curl/ftptool.h include/wx/curl/http.h include/wx/curl/davtool.h; do \
+	for f in $(WXCURL_DLL_HEADERS); do \
 	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
 	$(INSTALL) -d $(DESTDIR)$(prefix)/`dirname $$f`; \
 	fi; \
@@ -298,7 +320,7 @@ endif
 
 ifeq ($(WX_SHARED),1)
 uninstall_wxcurl_dll_headers: 
-	for f in  include/wx/curl/dav.h include/wx/curl/ftp.h include/wx/curl/telnet.h include/wx/curl/base.h include/wx/curl/ftptool.h include/wx/curl/http.h include/wx/curl/davtool.h; do \
+	for f in $(WXCURL_DLL_HEADERS); do \
 	rm -f $(DESTDIR)$(prefix)/$$f; \
 	done
 endif
@@ -341,6 +363,9 @@ gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_telnet.o: ../src/telnet.cpp
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_davtool.o: ../src/davtool.cpp
 	$(CXX) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(CPPDEPS) $<
 
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_thread.o: ../src/thread.cpp
+	$(CXX) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_dav.o: ../src/dav.cpp
 	$(CXX) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(CPPDEPS) $<
 
@@ -363,6 +388,9 @@ gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_telnet.o: ../src/telnet.cpp
 	$(CXX) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_davtool.o: ../src/davtool.cpp
+	$(CXX) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_thread.o: ../src/thread.cpp
 	$(CXX) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_tester_wxDeleteDialog.o: ../sample/wxDeleteDialog.cpp

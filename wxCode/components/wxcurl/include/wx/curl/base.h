@@ -33,6 +33,7 @@
 #include <wx/datetime.h>
 #include <wx/stream.h>
 #include <wx/mstream.h>
+#include <wx/intl.h>        // for _()
 
 // The cURL library header:
 #include <curl/curl.h>
@@ -58,8 +59,12 @@ class WXDLLIMPEXP_CURL wxCurlBase;
 class WXDLLIMPEXP_CURL wxCurlProgressEvent : public wxEvent
 {
 public:
-    wxCurlProgressEvent(int id, wxEventType type, wxCurlBase *p)
-        : wxEvent(id, type) { m_pCURL = p; }
+    wxCurlProgressEvent(int id, wxEventType type,
+                        wxCurlBase *p = NULL, const wxString &url = wxEmptyString)
+        : wxEvent(id, type) { m_pCURL = p; m_szURL = url; }
+
+    //! Returns the URL you are transfering from.
+    wxString GetURL() const { return m_szURL; }
 
     //! Returns the time elapsed since the beginning of the download up
     //! to the time this function is called.
@@ -79,6 +84,7 @@ public:
 
 protected:
     wxCurlBase *m_pCURL;
+    wxString m_szURL;
 };
 
 
@@ -103,9 +109,6 @@ public:
     virtual wxEvent* Clone() const { return new wxCurlDownloadEvent(*this); }
 
 
-    //! Returns the URL you are transfering from.
-    wxString GetURL() const { return m_szURL; }
-
     //! Returns the number of bytes downloaded so far.
     double GetDownloadedBytes() const { return m_rDownloadNow; }
 
@@ -113,7 +116,8 @@ public:
     double GetTotalBytes() const { return m_rDownloadTotal; }
 
     //! Returns a number in [0;100] range indicating how much has been downloaded so far.
-    double GetPercent() const { return (100.0 * (m_rDownloadNow/m_rDownloadTotal)); }
+    double GetPercent() const 
+        { return m_rDownloadTotal == 0 ? 0 : (100.0 * (m_rDownloadNow/m_rDownloadTotal)); }
 
     //! Returns the current download speed in bytes/second.
     double GetSpeed() const;
@@ -121,7 +125,6 @@ public:
 
 protected:
     double m_rDownloadTotal, m_rDownloadNow;
-    wxString m_szURL;
 
 private:
     DECLARE_DYNAMIC_CLASS(wxCurlDownloadEvent);
@@ -153,9 +156,6 @@ public:
     virtual wxEvent* Clone() const { return new wxCurlUploadEvent(*this); }
 
 
-    //! Returns the URL you are transfering to.
-    wxString GetURL() const { return m_szURL; }
-
     //! Returns the number of bytes uploaded so far.
     double GetUploadedBytes() const { return m_rUploadNow; }
 
@@ -163,14 +163,14 @@ public:
     double GetTotalBytes() const { return m_rUploadTotal; }
 
     //! Returns a number in [0;100] range indicating how much has been uploaded so far.
-    double GetPercent() const { return (100.0 * (m_rUploadNow/m_rUploadTotal)); }
+    double GetPercent() const 
+        { return m_rUploadTotal == 0 ? 0 : (100.0 * (m_rUploadNow/m_rUploadTotal)); }
 
     //! Returns the current upload speed in bytes/second.
     double GetSpeed() const;
 
 protected:
     double m_rUploadTotal, m_rUploadNow;
-    wxString m_szURL;
 
 private:
     DECLARE_DYNAMIC_CLASS(wxCurlUploadEvent);
@@ -297,16 +297,16 @@ extern "C"
 //! To use this interface you should:
 //! - create an instance of wxCurlBase
 //! - use #SetOpt to set libCURL options you're interested to
-//!   or else the other various Set*() functions
+//!   or alternatively the other various Set*() functions
 //! - call #Perform to perform the operation
 class WXDLLIMPEXP_CURL wxCurlBase
 {
 public:
     wxCurlBase(const wxString& szURL = wxEmptyString, 
-            const wxString& szUserName = wxEmptyString,
-            const wxString& szPassword = wxEmptyString, 
-            wxEvtHandler* pEvtHandler = NULL, int id = wxID_ANY,
-            long flags = wxCURL_DEFAULT_FLAGS);
+               const wxString& szUserName = wxEmptyString,
+               const wxString& szPassword = wxEmptyString, 
+               wxEvtHandler* pEvtHandler = NULL, int id = wxID_ANY,
+               long flags = wxCURL_DEFAULT_FLAGS);
 
     virtual ~wxCurlBase();
 
@@ -370,6 +370,9 @@ public:
     //! are performing multiple actions.
     void		SetBaseURL(const wxString& szBaseURL);
     wxString	GetBaseURL() const;
+
+    //! Returns the current 'full' URL. I.e. the real URL being used for the transfer.
+    wxString    GetCurrentFullURL() const { return m_szCurrFullURL; }
 
     //! Sets the host Port.  This allows you to specify a specific (non-
     //! default port) if you like.  The value -1 means that the default port

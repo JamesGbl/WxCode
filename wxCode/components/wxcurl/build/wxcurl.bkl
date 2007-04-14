@@ -66,14 +66,13 @@
         <library>wxcurl_lib</library>
         <curlib/>
 
-        <wx-lib>xrc</wx-lib>        
-        <wx-lib>html</wx-lib>        
-        <wx-lib>adv</wx-lib>        
+        <wx-lib>xrc</wx-lib>
+        <wx-lib>html</wx-lib>
+        <wx-lib>adv</wx-lib>
         <wx-lib>xml</wx-lib>
         <wx-lib>core</wx-lib>
         <wx-lib>base</wx-lib>
     </wxcode-sample>
-
 
 
     <!-- Auxiliary targets -->
