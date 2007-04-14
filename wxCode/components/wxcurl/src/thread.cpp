@@ -24,7 +24,7 @@
 #include <wx/wfstream.h>
 #include <wx/filename.h>
 
-#include "wx/curl/dthread.h"
+#include "wx/curl/thread.h"
 #include "wx/curl/http.h"
 #include "wx/curl/ftp.h"
 
@@ -107,7 +107,6 @@ wxCurlThreadError wxCurlBaseThread::Wait()
 }
 
 
-
 // -----------------------------------
 // wxCurlDownloadThreadOutputFilter
 // -----------------------------------
@@ -129,6 +128,7 @@ size_t wxCurlDownloadThreadOutputFilter::OnSysWrite(const void *buffer, size_t b
 
     return m_stream->Write(buffer, bufsize).LastWrite();
 }
+
 
 // ---------------------
 // wxCurlDownloadThread

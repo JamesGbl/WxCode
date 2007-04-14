@@ -428,6 +428,14 @@ public:
     //! Appends to the given stream the verbose messages collected so far.
     bool		GetVerboseString(wxString& szStream) const;
 
+    //! Sets a custom callback as the progress callback.
+    //! Note that using this function you'll break the dispatching of
+    //! wxCurlDownloadEvent and wxCurlUploadEvent unless your own callback
+    //! does dispatch the events itself.
+    //! wxCURL users should never need to use this function.
+    void OverrideProgressCallback(curl_progress_callback newcallback, void *data)
+        { m_progressCallback=newcallback; m_progressData=data; }
+
     // Static LibCURL Initialization Methods - Call At Program Init and Close...
 
     //! Initializes the libCURL. Call this only once at the beginning of your program.
@@ -435,6 +443,7 @@ public:
 
     //! Clean up libCURL. Call this only once at the end of your program.
     static void Shutdown();
+
 
     // Static LibCURL Utility Methods
 
@@ -494,6 +503,10 @@ protected:
     wxEvtHandler*			m_pEvtHandler;
     int                     m_nId;
     long                    m_nFlags;
+
+    // callbacks which can be overridden by the user:
+    curl_progress_callback  m_progressCallback;
+    void*                   m_progressData;
 
 
 protected:      // internal functions

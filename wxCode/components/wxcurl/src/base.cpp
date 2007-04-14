@@ -422,6 +422,8 @@ wxCurlBase::wxCurlBase(const wxString& szURL /*= wxEmptyString*/,
   m_bVerbose(false)
 {
 	m_szErrorBuffer[0] = '\0';
+    m_progressCallback = wxcurl_evt_progress_func;
+    m_progressData = this;
 
 	InitHandle();
 }
@@ -779,8 +781,8 @@ void wxCurlBase::SetCurlHandleToDefaults()
 		if(m_pEvtHandler && (m_nFlags & wxCURL_SEND_PROGRESS_EVENTS))
 		{
 			SetOpt(CURLOPT_NOPROGRESS, FALSE);
-			SetOpt(CURLOPT_PROGRESSFUNCTION, wxcurl_evt_progress_func);
-			SetOpt(CURLOPT_PROGRESSDATA, this);
+			SetOpt(CURLOPT_PROGRESSFUNCTION, m_progressCallback);
+			SetOpt(CURLOPT_PROGRESSDATA, m_progressData);
 		}
 
 		if(!m_szUsername.IsEmpty() || !m_szPassword.IsEmpty())
