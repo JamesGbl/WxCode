@@ -225,7 +225,7 @@ class wxOpenCommanderFrm : public wxFrame
 
    public:
          void ListCtlUpdate();
-         void copyThread(wxString& strPathDest,  const wxArrayString& fileNames);
+         void copyThread(wxString& strPathDest,  const wxArrayString& fileNames, const cCommander* pCCommanderDest);
 };
 
 class DragAndDropFile : public wxFileDropTarget

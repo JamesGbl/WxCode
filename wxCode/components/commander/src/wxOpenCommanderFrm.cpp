@@ -100,7 +100,7 @@ using namespace std;
 bool DragAndDropFile::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& fileNames)
 {
    wxString pathDest = m_cCommanderDest.getActualPath();
-   m_wxFrame.copyThread(pathDest, fileNames);
+   m_wxFrame.copyThread(pathDest, fileNames, &m_cCommanderDest);
    return true;
 }
 
@@ -116,9 +116,9 @@ wxOpenCommanderFrm::wxOpenCommanderFrm(wxWindow *parent, wxWindowID id, const wx
 
 	CreateGUIControls();
 
-	lastListCtrlUsed = WxListCtrl1;
-	lastNoteBookUsed = WxNotebook1;
-	lastCCommanderUsed = &cCommander1;
+	lastListCtrlUsed = WxListCtrl2;
+	lastNoteBookUsed = WxNotebook2;
+	lastCCommanderUsed = &cCommander2;
 	
    lang.setLangsDir(".\\lang");
    readConfig();
@@ -126,8 +126,8 @@ wxOpenCommanderFrm::wxOpenCommanderFrm(wxWindow *parent, wxWindowID id, const wx
 
 	WxStatusBar->SetStatusText("wxOpenCommander");
 	
-	WxListCtrl1->SetBackgroundColour(wxColour(255, 255, 255));
-   WxListCtrl2->SetBackgroundColour(wxColour(240, 240, 240));
+	WxListCtrl2->SetBackgroundColour(wxColour(255, 255, 255));
+   WxListCtrl1->SetBackgroundColour(wxColour(240, 240, 240));
 
    ListCtlUpdate();
 }
@@ -705,6 +705,8 @@ void wxOpenCommanderFrm::addDirsCombo(wxString& strCombo)
 
 void wxOpenCommanderFrm::WxListCtrl1ItemFocused(wxListEvent& event)
 {
+   if (lastCCommanderUsed == &cCommander1 && lastNoteBookUsed == WxNotebook1 && lastListCtrlUsed == WxListCtrl1) return;
+      
 	lastListCtrlUsed = WxListCtrl1;
 	lastNoteBookUsed = WxNotebook1;
 	lastCCommanderUsed = &cCommander1;
@@ -716,7 +718,7 @@ void wxOpenCommanderFrm::WxListCtrl1ItemFocused(wxListEvent& event)
    wxString numDirFiles;
    numDirFiles << lastListCtrlUsed->GetItemCount()-1;
    WxStatusBar->SetStatusText(numDirFiles + " " + lang["Directories and Files"]);
-   
+
    WxListCtrl2->SetBackgroundColour(wxColour(240, 240, 240));
    WxListCtrl1->SetBackgroundColour(wxColour(255, 255, 255));
    WxListCtrl2->Refresh();
@@ -725,6 +727,8 @@ void wxOpenCommanderFrm::WxListCtrl1ItemFocused(wxListEvent& event)
 
 void wxOpenCommanderFrm::WxListCtrl2ItemFocused(wxListEvent& event)
 {
+   if (lastCCommanderUsed == &cCommander2 && lastNoteBookUsed == WxNotebook2 && lastListCtrlUsed == WxListCtrl2) return;
+   
 	lastListCtrlUsed = WxListCtrl2;
 	lastNoteBookUsed = WxNotebook2;
 	lastCCommanderUsed = &cCommander2;
@@ -787,9 +791,10 @@ void onThreadFinish(wxThread* thread, void* contextParam, void* parent)
    delete(finishTimer);
 }
 
-void wxOpenCommanderFrm::copyThread(wxString& strPathDest,  const wxArrayString& fileNames)
+void wxOpenCommanderFrm::copyThread(wxString& strPathDest,  const wxArrayString& fileNames, const cCommander* pCCommanderDest = NULL)
 {
-   if (lastCCommanderUsed->getListDevices()) return;
+   if (lastCCommanderUsed==pCCommanderDest) return; // If you move the file into the same List don't copy
+   if (lastCCommanderUsed->getListDevices()) return; 
 
    size_t nFiles = fileNames.GetCount();
    if (nFiles < 1) return;
@@ -806,7 +811,6 @@ void wxOpenCommanderFrm::copyThread(wxString& strPathDest,  const wxArrayString&
       copyPaths.newPath = strPathDest;
       copyParamsVector.push_back(copyPaths);
    }
-
 
    CopyDlg copyDlg(NULL, lang);
    copyDlg.setAutoInit(true);

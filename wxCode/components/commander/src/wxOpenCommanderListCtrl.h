@@ -37,6 +37,8 @@ class wxOpenCommanderListCtrl : public wxListCtrl
      wxListItemAttr *wxOpenCommanderListCtrl::OnGetItemAttr(long item) const;
      int getIcon(long itemPos, long itemCol) const;
      int getIconDevice(long itemPos, long itemCol) const;
+     void OnSort(wxListEvent& event);
+
 
    private:
      wxListItemAttr m_attr;
