@@ -22,6 +22,8 @@ BEGIN_DECLARE_EVENT_TYPES()
     DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_CURL, wxCURL_SIZE_QUERY_EVENT, 66987)
 END_DECLARE_EVENT_TYPES()
 
+//! This event gets posted by wxCurlSizeQueryThread. Use the EVT_CURL_SIZE_QUERY(id, func)
+//! macro to intercept it.
 class WXDLLIMPEXP_CURL wxCurlSizeEvent : public wxEvent
 {
 protected:
@@ -75,10 +77,20 @@ public:
                           int id = wxID_ANY)
         : wxCurlBaseThread(handler, id) { }
 
+    //! Creates the thread for querying the size of given array of urls.
+    //! After calling the Run() function, the given event handler will get
+    //! a wxCurlSizeEvent for each URL passed in the list.
     wxCurlSizeQueryThread(wxEvtHandler *handler,
                           int id,
-                          wxArrayString urls)
+                          const wxArrayString& urls)
         : wxCurlBaseThread(handler, id) { m_urls=urls; }
+
+    //! Sets the list of URLs to query the size for.
+    void SetURLs(const wxArrayString &urls)
+        { 
+            wxCHECK_RET(!IsAlive(), wxT("Call this function before creating the thread!")); 
+            m_urls=urls; 
+        }
 
 protected:
 

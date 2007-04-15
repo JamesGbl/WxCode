@@ -84,7 +84,8 @@ wxString wxCurlHTTP::GetCookieFile() const
 // Post Data Methods
 //////////////////////////////////////////////////////////////////////
 
-bool wxCurlHTTP::AddForm(const bool& bClear, const wxString& szName, struct curl_forms* pForms, CURLFORMcode* outErr)
+bool wxCurlHTTP::AddForm(const bool& bClear, const wxString& szName, 
+                         struct curl_forms* pForms, CURLFORMcode* outErr)
 {
 	if(bClear)
 		ResetPostData();
@@ -92,7 +93,8 @@ bool wxCurlHTTP::AddForm(const bool& bClear, const wxString& szName, struct curl
 	CURLFORMcode res = CURL_FORMADD_OK;
 
 	//FormAdd
-	res = curl_formadd(&m_pPostHead, &m_pPostTail, CURLFORM_COPYNAME, szName.c_str(), CURLFORM_ARRAY, pForms, CURLFORM_END);
+	res = curl_formadd(&m_pPostHead, &m_pPostTail, CURLFORM_COPYNAME, (const wxChar*)szName.c_str(), 
+                       CURLFORM_ARRAY, pForms, CURLFORM_END);
 
     if (outErr != NULL)
         *outErr = res;  //sometimes you want to/need to see what's going on.
@@ -100,7 +102,8 @@ bool wxCurlHTTP::AddForm(const bool& bClear, const wxString& szName, struct curl
 	return (res == CURL_FORMADD_OK);
 }
 
-bool wxCurlHTTP::AddBufferToForm(const bool& bClear, const wxString& szName, char* buffer, size_t len, CURLFORMcode* outErr)
+bool wxCurlHTTP::AddBufferToForm(const bool& bClear, const wxString& szName, 
+                                 char* buffer, size_t len, CURLFORMcode* outErr)
 {
 	if(bClear)
 		ResetPostData();
@@ -108,7 +111,8 @@ bool wxCurlHTTP::AddBufferToForm(const bool& bClear, const wxString& szName, cha
 	CURLFORMcode res = CURL_FORMADD_OK;
 
 	//FormAdd
-	res = curl_formadd(&m_pPostHead, &m_pPostTail, CURLFORM_COPYNAME, szName.c_str(), CURLFORM_COPYCONTENTS, buffer, CURLFORM_CONTENTSLENGTH, len, CURLFORM_END);
+	res = curl_formadd(&m_pPostHead, &m_pPostTail, CURLFORM_COPYNAME, (const wxChar*)szName.c_str(), 
+                       CURLFORM_COPYCONTENTS, buffer, CURLFORM_CONTENTSLENGTH, len, CURLFORM_END);
 
     if (outErr != NULL)
         *outErr = res;  //sometimes you want to/need to see what's going on.
@@ -130,15 +134,13 @@ bool wxCurlHTTP::Options(const wxString& szRemoteFile /*= wxEmptyString*/)
 
 		m_szCurrFullURL = m_szBaseURL + szRemoteFile;
 
-		SetOpt(CURLOPT_URL, m_szCurrFullURL.c_str());
+		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_CUSTOMREQUEST, "OPTIONS");
 		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
 		SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
 
 		if(Perform())
 		{
-			GetInfo(CURLINFO_RESPONSE_CODE, &m_iResponseCode);
-
 			return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
 		}
 	}
@@ -154,14 +156,12 @@ bool wxCurlHTTP::Head(const wxString& szRemoteFile /*= wxEmptyString*/)
 
 		m_szCurrFullURL = m_szBaseURL + szRemoteFile;
 
-		SetOpt(CURLOPT_URL, m_szCurrFullURL.c_str());
+		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_HTTPGET, TRUE);
 		SetOpt(CURLOPT_NOBODY, TRUE);
 		
 		if(Perform())
 		{
-			GetInfo(CURLINFO_RESPONSE_CODE, &m_iResponseCode);
-
 			return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
 		}
 	}
@@ -191,7 +191,7 @@ bool wxCurlHTTP::Post(wxInputStream& buffer, const wxString& szRemoteFile /*= wx
 
 		m_szCurrFullURL = m_szBaseURL + szRemoteFile;
 
-		SetOpt(CURLOPT_URL, m_szCurrFullURL.c_str());
+		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_POST, TRUE);
 		SetOpt(CURLOPT_POSTFIELDSIZE_LARGE, iSize);
 		SetOpt(CURLOPT_READFUNCTION, wxcurl_stream_read);
@@ -201,8 +201,6 @@ bool wxCurlHTTP::Post(wxInputStream& buffer, const wxString& szRemoteFile /*= wx
 
 		if(Perform())
 		{
-			GetInfo(CURLINFO_RESPONSE_CODE, &m_iResponseCode);
-
 			return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
 		}
 	}
@@ -218,7 +216,7 @@ bool wxCurlHTTP::Post(const wxString& szRemoteFile /*= wxEmptyString*/)
 
 		m_szCurrFullURL = m_szBaseURL + szRemoteFile;
 
-		SetOpt(CURLOPT_URL, m_szCurrFullURL.c_str());
+		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_POST, TRUE);
 		SetOpt(CURLOPT_HTTPPOST, m_pPostHead);
 		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
@@ -226,8 +224,6 @@ bool wxCurlHTTP::Post(const wxString& szRemoteFile /*= wxEmptyString*/)
 
 		if(Perform())
 		{
-			GetInfo(CURLINFO_RESPONSE_CODE, &m_iResponseCode);
-
 			return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
 		}
 	}
@@ -247,15 +243,13 @@ bool wxCurlHTTP::Trace(const wxString& szRemoteFile /*= wxEmptyString*/)
 
 		m_szCurrFullURL = m_szBaseURL + szRemoteFile;
 
-		SetOpt(CURLOPT_URL, m_szCurrFullURL.c_str());
+		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_CUSTOMREQUEST, "TRACE");
 		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
 		SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
 
 		if(Perform())
 		{
-			GetInfo(CURLINFO_RESPONSE_CODE, &m_iResponseCode);
-
 			ResetHeaders();
 
 			return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
@@ -308,7 +302,7 @@ bool wxCurlHTTP::Get(wxOutputStream& buffer, const wxString& szRemoteFile /*=wxE
 
 		m_szCurrFullURL = m_szBaseURL + szRemoteFile;
 
-		SetOpt(CURLOPT_URL, m_szCurrFullURL.c_str());
+		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_HTTPGET, TRUE);
 
 		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_stream_write);
@@ -316,8 +310,6 @@ bool wxCurlHTTP::Get(wxOutputStream& buffer, const wxString& szRemoteFile /*=wxE
 
 		if(Perform())
 		{
-			GetInfo(CURLINFO_RESPONSE_CODE, &m_iResponseCode);
-
 			return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
 		}
 	}
@@ -356,7 +348,7 @@ bool wxCurlHTTP::Put(wxInputStream& buffer, const wxString& szRemoteFile /*= wxE
 
 		SetOpt(CURLOPT_UPLOAD, TRUE);
 		SetOpt(CURLOPT_PUT, TRUE);
-		SetOpt(CURLOPT_URL, m_szCurrFullURL.c_str());
+		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_READFUNCTION, wxcurl_stream_read);
 		SetOpt(CURLOPT_READDATA, (void*)&buffer);
 		SetOpt(CURLOPT_INFILESIZE_LARGE, (curl_off_t)iSize);
@@ -365,8 +357,6 @@ bool wxCurlHTTP::Put(wxInputStream& buffer, const wxString& szRemoteFile /*= wxE
 
 		if(Perform())
 		{
-			GetInfo(CURLINFO_RESPONSE_CODE, &m_iResponseCode);
-
 			return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
 		}
 	}
@@ -382,15 +372,13 @@ bool wxCurlHTTP::Delete(const wxString& szRemoteLoc /*= wxEmptyString*/)
 
 		m_szCurrFullURL = m_szBaseURL + szRemoteLoc;
 
-		SetOpt(CURLOPT_URL, m_szCurrFullURL.c_str());
+		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_CUSTOMREQUEST, "DELETE");
 		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
 		SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
 
 		if(Perform())
 		{
-			GetInfo(CURLINFO_RESPONSE_CODE, &m_iResponseCode);
-
 			return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
 		}
 	}
@@ -422,7 +410,7 @@ void wxCurlHTTP::SetCurlHandleToDefaults()
 
 	if(m_bUseCookies)
 	{
-		SetOpt(CURLOPT_COOKIEJAR, m_szCookieFile.c_str());
+		SetStringOpt(CURLOPT_COOKIEJAR, m_szCookieFile);
 	}
 }
 

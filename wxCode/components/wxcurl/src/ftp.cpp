@@ -265,14 +265,12 @@ bool wxCurlFTP::Get(wxOutputStream& buffer, const wxString& szRemoteFile /*= wxE
 
 		m_szCurrFullURL = m_szBaseURL + szRemoteFile;
 
-		SetOpt(CURLOPT_URL, m_szCurrFullURL.c_str());
+		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_stream_write);
 		SetOpt(CURLOPT_WRITEDATA, (void*)&buffer);
 
 		if(Perform())
 		{
-			GetInfo(CURLINFO_RESPONSE_CODE, &m_iResponseCode);
-
 			return ((m_iResponseCode > 199) && (m_iResponseCode < 299));
 		}
 	}
@@ -310,15 +308,13 @@ bool wxCurlFTP::Put(wxInputStream& buffer, const wxString& szRemoteFile /*= wxEm
 		m_szCurrFullURL = m_szBaseURL + szRemoteFile;
 
 		SetOpt(CURLOPT_UPLOAD, TRUE);
-		SetOpt(CURLOPT_URL, m_szCurrFullURL.c_str());
+		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_READFUNCTION, wxcurl_stream_read);
 		SetOpt(CURLOPT_READDATA, (void*)&buffer);
 		SetOpt(CURLOPT_INFILESIZE_LARGE, iSize);
 
 		if(Perform())
 		{
-			GetInfo(CURLINFO_RESPONSE_CODE, &m_iResponseCode);
-
 			return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
 		}
 	}
@@ -338,13 +334,11 @@ bool wxCurlFTP::MkDir(const wxString& szRemoteLoc /*= wxEmptyString*/)
 			m_szCurrFullURL += wxT("/");
 
 		SetOpt(CURLOPT_FTP_CREATE_MISSING_DIRS, TRUE);
-		SetOpt(CURLOPT_URL, m_szCurrFullURL.c_str());
+		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_NOBODY, TRUE);
 
 		if(Perform())
 		{
-			GetInfo(CURLINFO_RESPONSE_CODE, &m_iResponseCode);
-
 			return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
 		}
 	}
@@ -374,14 +368,12 @@ bool wxCurlFTP::RmDir(const wxString& szRemoteLoc /*= wxEmptyString*/)
 
 		SetCurlHandleQuoteOpts();
 
-		SetOpt(CURLOPT_URL, m_szCurrFullPath.c_str());
+		SetStringOpt(CURLOPT_URL, m_szCurrFullPath);
 		SetOpt(CURLOPT_NOBODY, TRUE);
 
 		if(Perform())
 		{
 			ResetAllQuoteLists();
-
-			GetInfo(CURLINFO_RESPONSE_CODE, &m_iResponseCode);
 
 			return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
 		}
@@ -410,14 +402,12 @@ bool wxCurlFTP::Delete(const wxString& szRemoteLoc /*= wxEmptyString*/)
 
 		SetCurlHandleQuoteOpts();
 
-		SetOpt(CURLOPT_URL, m_szCurrFullPath.c_str());
+		SetStringOpt(CURLOPT_URL, m_szCurrFullPath);
 		SetOpt(CURLOPT_NOBODY, TRUE);
 
 		if(Perform())
 		{
 			ResetAllQuoteLists();
-
-			GetInfo(CURLINFO_RESPONSE_CODE, &m_iResponseCode);
 
 			return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
 		}
@@ -448,14 +438,12 @@ bool wxCurlFTP::Rename(const wxString& szRemoteLocName,
 
 		SetCurlHandleQuoteOpts();
 
-		SetOpt(CURLOPT_URL, m_szCurrFullPath.c_str());
+		SetStringOpt(CURLOPT_URL, m_szCurrFullPath);
 		SetOpt(CURLOPT_NOBODY, TRUE);
 
 		if(Perform())
 		{
 			ResetAllQuoteLists();
-
-			GetInfo(CURLINFO_RESPONSE_CODE, &m_iResponseCode);
 
 			return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
 		}
@@ -474,15 +462,13 @@ bool wxCurlFTP::List(const wxString& szRemoteLoc /*= wxEmptyString*/)
 
 		m_szCurrFullURL = m_szBaseURL + szRemoteLoc;
 
-		SetOpt(CURLOPT_URL, m_szCurrFullURL.c_str());
+		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_CUSTOMREQUEST, "LIST");
 		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
 		SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
 
 		if(Perform())
 		{
-			GetInfo(CURLINFO_RESPONSE_CODE, &m_iResponseCode);
-
 			return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
 		}
 	}
@@ -498,15 +484,13 @@ bool wxCurlFTP::Nlst(const wxString& szRemoteLoc /*= wxEmptyString*/)
 
 		m_szCurrFullURL = m_szBaseURL + szRemoteLoc;
 
-		SetOpt(CURLOPT_URL, m_szCurrFullURL.c_str());
+		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_CUSTOMREQUEST, "NLST");
 		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
 		SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
 
 		if(Perform())
 		{
-			GetInfo(CURLINFO_RESPONSE_CODE, &m_iResponseCode);
-
 			return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
 		}
 	}
@@ -524,14 +508,12 @@ bool wxCurlFTP::Info(const wxString& szRemoteLoc /*= wxEmptyString*/)
 
 		SetOpt(CURLOPT_HEADER, TRUE);
 		SetOpt(CURLOPT_NOBODY, TRUE);
-		SetOpt(CURLOPT_URL, m_szCurrFullURL.c_str());
+		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
 		SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
 
 		if(Perform())
 		{
-			GetInfo(CURLINFO_RESPONSE_CODE, &m_iResponseCode);
-
 			return ((m_iResponseCode > 199) && (m_iResponseCode < 299));
 		}
 	}
@@ -552,7 +534,7 @@ void wxCurlFTP::SetCurlHandleToDefaults()
 
 	if(m_bUsePortOption)
 	{
-		SetOpt(CURLOPT_FTPPORT, m_szPortParam.c_str());
+		SetStringOpt(CURLOPT_FTPPORT, m_szPortParam);
 	}
 
 	if(m_bUseEPRT)

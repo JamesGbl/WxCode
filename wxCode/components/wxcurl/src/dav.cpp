@@ -64,15 +64,13 @@ bool wxCurlDAV::Mkcol(const wxString& szRemoteCol /*= wxEmptyString*/)
 
 		m_szCurrFullURL = m_szBaseURL + szRemoteCol;
 
-		SetOpt(CURLOPT_URL, m_szCurrFullURL.c_str());
+		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_CUSTOMREQUEST, "MKCOL");
 		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
 		SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
 
 		if(Perform())
 		{
-			GetInfo(CURLINFO_RESPONSE_CODE, &m_iResponseCode);
-
 			return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
 		}
 	}
@@ -117,7 +115,7 @@ bool wxCurlDAV::Propfind(wxInputStream& buffer, const wxString& szRemoteLoc /*= 
 
 		m_szCurrFullURL = m_szBaseURL + szRemoteLoc;
 
-		SetOpt(CURLOPT_URL, m_szCurrFullURL.c_str());
+		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 
 		if(iSize > 0)
 		{
@@ -133,8 +131,6 @@ bool wxCurlDAV::Propfind(wxInputStream& buffer, const wxString& szRemoteLoc /*= 
 
 		if(Perform())
 		{
-			GetInfo(CURLINFO_RESPONSE_CODE, &m_iResponseCode);
-
 			ResetHeaders();
 
 			return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
@@ -170,7 +166,7 @@ bool wxCurlDAV::Proppatch(wxInputStream& buffer, const wxString& szRemoteLoc /*=
 
 		m_szCurrFullURL = m_szBaseURL + szRemoteLoc;
 
-		SetOpt(CURLOPT_URL, m_szCurrFullURL.c_str());
+		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 
 		if(iSize > 0)
 		{
@@ -186,8 +182,6 @@ bool wxCurlDAV::Proppatch(wxInputStream& buffer, const wxString& szRemoteLoc /*=
 
 		if(Perform())
 		{
-			GetInfo(CURLINFO_RESPONSE_CODE, &m_iResponseCode);
-
 			ResetHeaders();
 
 			return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
@@ -214,15 +208,13 @@ bool wxCurlDAV::Copy(const wxString& szRemoteLocDest, const bool& bOverwrite /*=
 
 		m_szCurrFullURL = m_szBaseURL + szRemoteLocSrc;
 
-		SetOpt(CURLOPT_URL, m_szCurrFullURL.c_str());
+		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_CUSTOMREQUEST, "COPY");
 		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
 		SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
 
 		if(Perform())
 		{
-			GetInfo(CURLINFO_RESPONSE_CODE, &m_iResponseCode);
-
 			ResetHeaders();
 
 			return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
@@ -249,15 +241,13 @@ bool wxCurlDAV::Move(const wxString& szRemoteLocDest, const bool& bOverwrite /*=
 
 		m_szCurrFullURL = m_szBaseURL + szRemoteLocSrc;
 
-		SetOpt(CURLOPT_URL, m_szCurrFullURL.c_str());
+		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_CUSTOMREQUEST, "MOVE");
 		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
 		SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
 
 		if(Perform())
 		{
-			GetInfo(CURLINFO_RESPONSE_CODE, &m_iResponseCode);
-
 			ResetHeaders();
 
 			return ((m_iResponseCode > 199) && (m_iResponseCode < 300));

@@ -24,6 +24,7 @@
 #endif
 
 #include <wx/mstream.h>
+#include <wx/sstream.h>
 #include <wx/xml/xml.h>
 
 #include <wx/curl/davtool.h>
@@ -103,7 +104,7 @@ bool wxCurlDAVTool::GetDAVFs(wxArrayDAVFs& fs, const wxString& szRemoteLoc /*= w
 	if(Propfind(arrProps, szRemoteLoc))
 	{
 		// Construct Input Source...
-		wxMemoryInputStream inStream(m_szResponseBody, m_szResponseBody.Len());
+		wxStringInputStream inStream(m_szResponseBody);
 
 		if(inStream.IsOk())
 		{

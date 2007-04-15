@@ -27,6 +27,7 @@
 
 #include <wx/txtstrm.h>
 #include <wx/mstream.h>
+#include <wx/sstream.h>
 
 #include "ftpparse.h"
 
@@ -98,7 +99,7 @@ bool wxCurlFTPTool::GetFTPFs(wxArrayFTPFs& fs, const wxString& szRemoteLoc /*= w
 {
 	if(List(szRemoteLoc))
 	{
-		wxMemoryInputStream inStream(m_szResponseBody, m_szResponseBody.Len() * sizeof(wxChar));
+		wxStringInputStream inStream(m_szResponseBody);
 
 		if(inStream.IsOk())
 		{

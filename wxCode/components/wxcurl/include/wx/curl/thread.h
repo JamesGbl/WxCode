@@ -97,6 +97,9 @@ public:     // thread execution management
             m_bAbort = true;
         }
 
+        if (IsPaused())
+            Resume();
+
         Wait();     // should always return wxCTE_ABORTED in this case
     }
 

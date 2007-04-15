@@ -34,6 +34,7 @@
 #include <wx/stream.h>
 #include <wx/mstream.h>
 #include <wx/intl.h>        // for _()
+#include <wx/filename.h>
 
 // The cURL library header:
 #include <curl/curl.h>
@@ -122,6 +123,13 @@ public:
     //! Returns the current download speed in bytes/second.
     double GetSpeed() const;
 
+    //! Returns the currently downloaded bytes in a human-readable format.
+    wxString GetHumanReadableDownloadedBytes() const
+        { return wxFileName::GetHumanReadableSize(wxULongLong((unsigned long)m_rDownloadNow)); }
+
+    //! Returns the total bytes to download in a human-readable format.
+    wxString GetHumanReadableTotalBytes() const
+        { return wxFileName::GetHumanReadableSize(wxULongLong((unsigned long)m_rDownloadTotal)); }
 
 protected:
     double m_rDownloadTotal, m_rDownloadNow;
@@ -168,6 +176,14 @@ public:
 
     //! Returns the current upload speed in bytes/second.
     double GetSpeed() const;
+
+    //! Returns the currently uploaded bytes in a human-readable format.
+    wxString GetHumanReadableUploadedBytes() const
+        { return wxFileName::GetHumanReadableSize(wxULongLong((unsigned long)m_rUploadNow)); }
+
+    //! Returns the total bytes to upload in a human-readable format.
+    wxString GetHumanReadableTotalBytes() const
+        { return wxFileName::GetHumanReadableSize(wxULongLong((unsigned long)m_rUploadTotal)); }
 
 protected:
     double m_rUploadTotal, m_rUploadNow;
@@ -241,6 +257,9 @@ public:
 
     //! Returns the response code for the operation.
     long GetResponseCode() const { return m_iResponseCode; }
+
+    //! Returns true if the response code indicates a valid transfer.
+    bool IsSuccessful() const { return ((m_iResponseCode > 199) && (m_iResponseCode < 300)); }
 
 protected:
     wxString	m_szURL;
@@ -316,6 +335,10 @@ public:
     //! Sets a transfer option for this libCURL session instance.
     //! See the curl_easy_setopt() function call for more info.
     bool SetOpt(CURLoption option, ...);
+
+    //! Like #SetOpt but this function is specific for string options.
+    bool SetStringOpt(CURLoption option, const wxString &str)
+        { SetOpt(option, (const wxChar*)str); }     // need explicit cast in wx 2.9
 
     //! Gets an info from this libCURL session instance.
     //! See the curl_easy_getinfo() function call for more info.

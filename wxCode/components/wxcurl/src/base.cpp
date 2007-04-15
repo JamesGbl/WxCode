@@ -95,7 +95,7 @@ extern "C"
 				break;
         }
         
-        pBuf->Write(szVerboseMessage, szVerboseMessage.Len() * sizeof(wxChar));
+        pBuf->Write((const wxChar*)szVerboseMessage, szVerboseMessage.Len() * sizeof(wxChar));
 
         return 0;
     }
@@ -511,6 +511,7 @@ bool wxCurlBase::Perform()
 
 	if((m_nFlags & wxCURL_SEND_BEGINEND_EVENTS) && m_pEvtHandler)
 	{
+        GetInfo(CURLINFO_RESPONSE_CODE, &m_iResponseCode);
 		wxCurlEndPerformEvent endEvent(m_nId, m_szCurrFullURL, m_iResponseCode);
 
 		wxPostEvent(m_pEvtHandler, endEvent);
@@ -789,7 +790,7 @@ void wxCurlBase::SetCurlHandleToDefaults()
 		{
 			m_szUserPass = m_szUsername + wxT(":") + m_szPassword;
 
-			SetOpt(CURLOPT_USERPWD, m_szUserPass.c_str());
+			SetStringOpt(CURLOPT_USERPWD, m_szUserPass);
 			SetOpt(CURLOPT_HTTPAUTH, CURLAUTH_ANY);
 		}
 
@@ -800,7 +801,7 @@ void wxCurlBase::SetCurlHandleToDefaults()
 
 		if(m_bUseProxy && !m_szProxyHost.IsEmpty())
 		{
-			SetOpt(CURLOPT_PROXY, m_szProxyHost.c_str());
+			SetStringOpt(CURLOPT_PROXY, m_szProxyHost);
 		}
 
 		if(m_bUseProxy && (m_iProxyPort != -1))
@@ -812,7 +813,7 @@ void wxCurlBase::SetCurlHandleToDefaults()
 		{
 			m_szProxyUserPass = m_szProxyUsername + wxT(":") + m_szProxyPassword;
 
-			SetOpt(CURLOPT_PROXYUSERPWD, m_szProxyUserPass.c_str());
+			SetStringOpt(CURLOPT_PROXYUSERPWD, m_szProxyUserPass);
 		}
 
 		if(m_bVerbose)
