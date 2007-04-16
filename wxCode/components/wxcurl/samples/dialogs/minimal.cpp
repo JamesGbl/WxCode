@@ -42,6 +42,7 @@
 
 
 #include "wx/filename.h"
+#include "wx/wfstream.h"
 #include "wx/curl/dialog.h"
 #include "www.xpm"
 
@@ -95,7 +96,9 @@ enum
     Minimal_Can_abort,
     Minimal_Can_start,
     Minimal_Can_pause,
-    Minimal_Auto_close
+    Minimal_Auto_close,
+
+    Minimal_Bitmap
 };
 
 // Define a new frame type: this is going to be our main frame
@@ -113,6 +116,14 @@ public:
     // add here event handlers
     void OnDownload(wxCommandEvent &ev);
     void OnUpload(wxCommandEvent &ev);
+
+    int GetStyle() const;
+
+    void LogResult(wxCurlDialogReturnFlag flag);
+
+protected:
+
+    wxMenu *menuDialog;
 
 private:
     // any class wishing to process wxWindows events must use this macro
@@ -200,20 +211,22 @@ MyFrame::MyFrame(const wxString& title)
     menuFile->AppendSeparator();
     menuFile->Append(Minimal_Quit, _T("E&xit\tAlt-X"), _T("Quit this program"));	
 
-    wxMenu *menuDialog = new wxMenu;
+    menuDialog = new wxMenu;
     menuDialog->AppendCheckItem(Minimal_Elapsed_time, _T("Show elapsed time"));
-    menuDialog->AppendCheckItem(Minimal_Estimated_time, _T("Show elapsed time"));
-    menuDialog->AppendCheckItem(Minimal_Remaining_time, _T("Show elapsed time"));
+    menuDialog->AppendCheckItem(Minimal_Estimated_time, _T("Show estimated total time"));
+    menuDialog->AppendCheckItem(Minimal_Remaining_time, _T("Show estimated remaining time"));
     menuDialog->AppendSeparator();
-    menuDialog->AppendCheckItem(Minimal_Speed, _T("Show elapsed time"));
-    menuDialog->AppendCheckItem(Minimal_Size, _T("Show elapsed time"));
-    menuDialog->AppendCheckItem(Minimal_Url, _T("Show elapsed time"));
+    menuDialog->AppendCheckItem(Minimal_Speed, _T("Show transfer speed"));
+    menuDialog->AppendCheckItem(Minimal_Size, _T("Show how much was transferred so far"));
+    menuDialog->AppendCheckItem(Minimal_Url, _T("Show the URL of the transfer"));
     menuDialog->AppendSeparator();
-    menuDialog->AppendCheckItem(Minimal_Can_abort, _T("Show elapsed time"));
-    menuDialog->AppendCheckItem(Minimal_Can_start, _T("Show elapsed time"));
-    menuDialog->AppendCheckItem(Minimal_Can_pause, _T("Show elapsed time"));
+    menuDialog->AppendCheckItem(Minimal_Can_abort, _T("Transfer can be aborted"));
+    menuDialog->AppendCheckItem(Minimal_Can_start, _T("Transfer do not start automatically"));
+    menuDialog->AppendCheckItem(Minimal_Can_pause, _T("Transfer can be paused"));
     menuDialog->AppendSeparator();
-    menuDialog->AppendCheckItem(Minimal_Auto_close, _T("Show elapsed time"));
+    menuDialog->AppendCheckItem(Minimal_Auto_close, _T("Auto-close dialog at completion"));
+    menuDialog->AppendSeparator();
+    menuDialog->AppendCheckItem(Minimal_Bitmap, _T("Show bitmap in the dialog"));
 
     // now append the freshly created menu to the menu bar...
     wxMenuBar *menuBar = new wxMenuBar();
@@ -236,6 +249,34 @@ MyFrame::~MyFrame()
 {
 }
 
+int MyFrame::GetStyle() const
+{
+    int ret = 0;
+
+    if (menuDialog->IsChecked(Minimal_Elapsed_time)) ret |= wxCDS_ELAPSED_TIME;
+    if (menuDialog->IsChecked(Minimal_Estimated_time)) ret |= wxCDS_ESTIMATED_TIME;
+    if (menuDialog->IsChecked(Minimal_Remaining_time)) ret |= wxCDS_REMAINING_TIME;
+    if (menuDialog->IsChecked(Minimal_Speed)) ret |= wxCDS_SPEED;
+    if (menuDialog->IsChecked(Minimal_Size)) ret |= wxCDS_SIZE;
+    if (menuDialog->IsChecked(Minimal_Url)) ret |= wxCDS_URL;
+    if (menuDialog->IsChecked(Minimal_Can_abort)) ret |= wxCDS_CAN_ABORT;
+    if (menuDialog->IsChecked(Minimal_Can_start)) ret |= wxCDS_CAN_START;
+    if (menuDialog->IsChecked(Minimal_Can_pause)) ret |= wxCDS_CAN_PAUSE;
+    if (menuDialog->IsChecked(Minimal_Auto_close)) ret |= wxCDS_AUTO_CLOSE;
+
+    return ret;
+}
+
+void MyFrame::LogResult(wxCurlDialogReturnFlag flag)
+{
+    switch (flag)
+    {
+        case wxCDRF_SUCCESS: wxLogMessage(wxT("Transfer was successful!")); break;
+        case wxCDRF_USER_ABORTED: wxLogMessage(wxT("Transfer has been user-aborted.")); break;
+        case wxCDRF_FAILED: wxLogMessage(wxT("Transfer was failed.")); break;
+    }
+}
+
 
 
 // event handlers
@@ -255,38 +296,71 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 
 void MyFrame::OnDownload(wxCommandEvent& WXUNUSED(event))
 {
-    wxCurlDownloadDialog dlg(wxT("http://switch.dl.sourceforge.net/sourceforge/bakefile/bakefile-0.2.2-setup.exe"),
-                            NULL,
-                            wxT("Downloading"),
-                            wxT("asdfasfdsafdas asd fads fasd fasdfas fasd fsad "),
-                            wxBitmap(www_xpm),
-                            this,
-                    wxDLD_CAN_START|wxDLD_CAN_PAUSE|wxDLD_CAN_ABORT|wxDLD_SHOW_ALL);
-    switch (dlg.StartModal())
-    {
-    case wxDRF_SUCCESS: wxLogDebug(wxT("success")); break;
-    case wxDRF_USER_ABORTED: wxLogDebug(wxT("user aborted")); break;
-    case wxDRF_FAILED: wxLogDebug(wxT("failed")); break;
-    }
+    wxString url = wxGetTextFromUser(
+                      wxT("Please the enter the URL of the resource to download:"), wxT("Type an URL"),
+                      wxT("http://kent.dl.sourceforge.net/sourceforge/wxcode/wxCode.tar.bz2"), this);
 
-    wxLogDebug(wxT("download event!\n\t")
-            wxT("URL: %s\n\t")
-            wxT("Speed: %s\n\t")
-            wxT("Bytes downloaded: %lu/%lu (%s/%s)\n\t")
-            wxT("Percent: %.4f%%\n\t")
-            wxT("Elapsed time: %s\n\t")
-            wxT("Estimated total time: %s\n\t")
-            wxT("Estimated remaining time: %s"),
-            ev.GetURL().c_str(),
-            ev.GetHumanReadableSpeed().c_str(),
-            (unsigned long)ev.GetDownloadedBytes(),
-            (unsigned long)ev.GetTotalBytes(),
-            ev.GetHumanReadableDownloadedBytes().c_str(),
-            ev.GetHumanReadableTotalBytes().c_str(),
-            ev.GetPercent(),
-            ev.GetElapsedTime().Format().c_str(),
-            ev.GetEstimatedTime().Format().c_str(),
-            ev.GetEstimatedRemainingTime().Format().c_str());
+    wxBitmap bmp;
+    if (menuDialog->IsChecked(Minimal_Bitmap))
+        bmp = wxBitmap(www_xpm);
+
+    wxFileOutputStream fos(wxT("downloaded_stuff"));
+    wxCurlDownloadDialog dlg(url, &fos,
+                             wxT("Download dialog title"),
+                             wxT("Your message goes here... Note that the bitmap below can be hidden/customized."),
+                             bmp,
+                             this,
+                             GetStyle());
+    if (!dlg.IsOk())
+        return;
+
+    wxCurlDialogReturnFlag flag = dlg.StartModal();
+    LogResult(flag);
+
+    if (flag == wxCDRF_SUCCESS && fos.GetLength() < 10000)
+    {
+        fos.Close();
+
+        int reply = wxMessageBox(wxT("Do you want to open the downloaded file with your default browser?"),
+                                 wxT("Open it?"), wxYES_NO, this);
+        if (reply == wxYES)
+            wxLaunchDefaultBrowser(wxT("downloaded_stuff"));
+    }
+}
+
+void MyFrame::OnUpload(wxCommandEvent& WXUNUSED(event))
+{
+    wxFileDialog dlg(this, "Choose a file to upload", "", "", "All files (*.*)|*.*", wxFD_OPEN);
+
+    if (dlg.ShowModal()!=wxID_OK)
+        return;
+
+    wxString file = dlg.GetPath();
+    wxString url = wxGetTextFromUser(
+                      wxT("Please the enter the URL where the previously-selected file should go:"),
+                      wxT("Type an URL"),
+                      wxT("http://"), this);
+
+    wxFileInputStream is(file);
+    if (!is.IsOk())
+        return;
+
+    wxLogDebug(wxT("Going to update %d bytes"), is.GetSize());
+
+    wxBitmap bmp;
+    if (menuDialog->IsChecked(Minimal_Bitmap))
+        bmp = wxBitmap(www_xpm);
+
+    wxCurlUploadDialog dlg2(url, &is,
+                             wxT("Upload dialog title"),
+                             wxT("Your message goes here... Note that the bitmap below can be hidden/customized."),
+                             bmp,
+                             this,
+                             GetStyle());
+    if (!dlg2.IsOk())
+        return;
+
+    LogResult(dlg2.StartModal());
 }
 
 

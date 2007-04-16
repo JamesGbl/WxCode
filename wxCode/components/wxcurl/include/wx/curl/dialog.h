@@ -72,6 +72,7 @@ public:
         m_pURL = NULL;
         m_pGauge = NULL;
         m_pLastEvent = NULL;
+        m_pThread = NULL;
     }
 
     bool Create(const wxString &url,
@@ -80,10 +81,13 @@ public:
                 const wxString& sizeLabel = _("Transferred:"),
                 const wxBitmap& bitmap = wxNullBitmap,
                 wxWindow *parent = NULL,
-                int style = wxCDS_DEFAULT_STYLE);
+                long style = wxCDS_DEFAULT_STYLE);
 
     ~wxCurlBaseDialog()
-        { wxDELETE(m_pLastEvent); }
+        {
+            wxDELETE(m_pLastEvent);
+            wxDELETE(m_pThread);
+        }
 
 
     //! Shows the dialog as modal. If the wxCDS_CAN_START flag was not given,
@@ -92,7 +96,10 @@ public:
     wxCurlDialogReturnFlag StartModal();
 
     //! Shows the dialog as modeless.
-    bool Show(const bool show);
+//    bool Show(const bool show);
+
+    //! Returns true if the creation of the dialog was successful.
+    bool IsOk() const { return m_pThread != NULL; }
 
 
 protected:     // internal utils
@@ -100,8 +107,17 @@ protected:     // internal utils
     virtual void EndModal(wxCurlDialogReturnFlag retCode);
 
     wxStaticText *AddSizerRow(wxSizer *sz, const wxString &name);
-    void CreateControls(const wxString &msg, const wxString& sizeLabel, const wxBitmap &bitmap);
+    void CreateControls(const wxString &url, const wxString &msg, 
+                        const wxString& sizeLabel, const wxBitmap &bitmap);
     void UpdateLabels(wxCurlProgressBaseEvent *ev);
+
+    // returns true if the error can be ignored
+    bool HandleCurlThreadError(wxCurlThreadError err, wxCurlBaseThread *p, 
+                               const wxString &url = wxEmptyString);
+
+    bool HasFlag(wxCurlDialogStyle flag) const
+        { return (m_nStyle & flag) != 0; }
+
 
     // change access policy:
 
@@ -120,11 +136,17 @@ public:     // event handlers
     void OnStartUpdateUI(wxUpdateUIEvent &);
     void OnPauseResumeUpdateUI(wxUpdateUIEvent &);
 
+    void OnClose(wxCloseEvent &ev);
+
 protected:
 
     wxCurlBaseThread *m_pThread;
     wxCurlProgressBaseEvent *m_pLastEvent;
     bool m_bTransferComplete;
+
+    // wxWindow's style member is too small for all our flags and wxWindow/wxDialog ones.
+    // So we use our own...
+    long m_nStyle;
 
 protected:      // controls
 
@@ -159,7 +181,7 @@ public:
                         const wxString& message = wxEmptyString,
                         const wxBitmap& bitmap = wxNullBitmap,
                         wxWindow *parent = NULL,
-                        int style = wxCDS_DEFAULT_STYLE)
+                        long style = wxCDS_DEFAULT_STYLE)
         { Create(url, out, title, message, bitmap, parent, style); }
 
     bool Create(const wxString &url,
@@ -168,8 +190,12 @@ public:
                 const wxString& message = wxEmptyString,
                 const wxBitmap& bitmap = wxNullBitmap,
                 wxWindow *parent = NULL,
-                int style = wxCDS_DEFAULT_STYLE);
+                long style = wxCDS_DEFAULT_STYLE);
 
+    //! Returns the output stream where data has been downloaded.
+    //! This function can be used only when the download has been completed.
+    wxOutputStream *GetOutputStream() const
+        { return wx_static_cast(wxCurlDownloadThread*, m_pThread)->GetOutputStream(); }
 
 public:     // event handlers
 
@@ -197,7 +223,7 @@ public:
                         const wxString& message = wxEmptyString,
                         const wxBitmap& bitmap = wxNullBitmap,
                         wxWindow *parent = NULL,
-                        int style = wxCDS_DEFAULT_STYLE)
+                        long style = wxCDS_DEFAULT_STYLE)
         { Create(url, in, title, message, bitmap, parent, style); }
 
     bool Create(const wxString &url,
@@ -206,7 +232,7 @@ public:
                 const wxString& message = wxEmptyString,
                 const wxBitmap& bitmap = wxNullBitmap,
                 wxWindow *parent = NULL,
-                int style = wxCDS_DEFAULT_STYLE);
+                long style = wxCDS_DEFAULT_STYLE);
 
 
 public:     // event handlers

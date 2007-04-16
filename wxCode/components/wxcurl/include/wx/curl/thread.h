@@ -215,6 +215,12 @@ public:
 
     wxOutputStream *GetRealStream() const
         { return m_stream; }
+
+    wxFileOffset GetLength() const 
+        { return m_stream->GetLength(); }
+
+    bool Close()
+        { return m_stream->Close(); }
 };
 
 
@@ -303,6 +309,12 @@ public:
 
     wxInputStream *GetRealStream() const
         { return m_stream; }
+
+    wxFileOffset GetLength() const 
+        { return m_stream->GetLength(); }
+
+    char Peek() 
+        { return m_stream->Peek(); }
 };
 
 
