@@ -1,0 +1,182 @@
+<?xml version="1.0" ?>
+
+<makefile>
+
+  <include file="presets/wx.bkl"/>
+  <include file="presets/simple.bkl"/>
+  <using module="datafiles"/>
+
+  <!-- the actual awx library version -->
+  <set var="VERSION">0.2</set>
+
+  <!-- The directory where wxWidgets is installed: -->
+  <set var="ENV_VAR">
+    <if cond="FORMAT=='watcom'">%</if>
+    <if cond="FORMAT!='watcom'"></if>
+  </set>
+
+  <option name="WXDIR">
+    <default-value>$(DOLLAR)($(ENV_VAR)WXWIN)</default-value>
+  </option>
+  <option name="INSTALLDIR">
+    <default-value>$(DOLLAR)($(ENV_VAR)WXWIN)</default-value>
+  </option>
+
+  <set var="OUTPUT">
+    <if cond="DEBUG=='1'">debug</if>
+    <if cond="DEBUG=='0'">release</if>
+  </set>
+
+  <set var="BUILDDIR">$(OUTPUT)</set>
+
+  <set var="LIBFLAG">
+    <if cond="DEBUG=='1'">d</if>
+  </set>
+
+  <!-- This is only for UNIX like OS -->
+  <data-files-tree id="install-headers">
+    <srcdir>..$(DIRSEP)include$(DIRSEP)wx$(DIRSEP)awx</srcdir>
+    <files>
+	 awx.h
+	 button.h
+	 choice.h
+	 led.h
+	 obdlg.h
+	 outbar.h
+	 toolbar.h
+    </files>
+    <install-to>$(INCLUDEDIR)$(DIRSEP)wx$(DIRSEP)awx</install-to>
+  </data-files-tree>
+
+  <!-- UNIX NOTES: If you are using wxpresets on Unix, and you are -->
+  <!-- linking against third-party wx components, or if you are    -->
+  <!-- using multi-lib builds and link against non-core libs (e.g. -->
+  <!-- media, gl, adv), you currently need to take special steps   -->
+  <!-- on Unix. (see bakefile_quickstart.txt in the wxpresets dir) -->
+  <set var="BEFORE_WX_LIBS">
+    <if cond="DEBUG=='1' and PLATFORM_UNIX=='1'">
+	 `$(DOLLAR)(WX_CONFIG) --libs core,base  --debug=yes`
+    </if>
+    <if cond="DEBUG=='0' and PLATFORM_UNIX=='1'">
+	 `$(DOLLAR)(WX_CONFIG) --libs core,base  --debug=no`
+    </if>
+  </set>
+
+  <lib id="awx_lib" template="wx-lib" template_append="simple">
+    <dirname>../lib</dirname>
+    <libname>wxawx$(LIBFLAG)-$(VERSION)</libname>
+    <threading>multi</threading>
+    <runtime-libs>static</runtime-libs>
+    <include>../include</include>
+    <sources>
+	 ../src/button.cpp
+	 ../src/choice.cpp
+	 ../src/led.cpp
+	 ../src/obdlg.cpp
+	 ../src/outbar.cpp
+	 ../src/toolbar.cpp
+    </sources>
+    <install-to>$(LIBDIR)</install-to>
+  </lib>
+
+  <set var="LIBNAME">
+    <if cond="FORMAT=='msvc'">vc</if>
+    <if cond="FORMAT!='msvc'">$(FORMAT)</if>
+  </set>
+  
+  <action id="wxinstall" cond="PLATFORM_WIN32=='1'">
+    <command>
+	 <!-- copy the libraries (lib,dll) -->
+	 @copy ..\lib\wxawx$(LIBFLAG)-$(VERSION).lib $(INSTALLDIR)\lib\$(LIBNAME)_lib
+	 <!-- copy the header files -->
+	 @if not exist $(INSTALLDIR)\include\wx\awx mkdir $(INSTALLDIR)\include\wx\awx
+	 @copy ..\include\wx\awx\*.h $(INSTALLDIR)\include\wx\awx
+    </command>
+  </action>
+
+  <!-- The sample of awx -->
+  <!-- ================= -->
+  <exe id="awxtest" template="wx" template_append="simple">
+    <app-type>gui</app-type>
+    <include>../include</include>
+    <sources>
+	 ../samples/main.cpp
+	 ../samples/menu.cpp
+	 ../samples/prefs.cpp
+	 ../samples/prefs_wdr.cpp
+    </sources>
+    <runtime-libs>static</runtime-libs>
+    <threading>multi</threading>
+    <sys-lib>wxawx$(LIBFLAG)-$(VERSION)</sys-lib>
+    <ldlibs>$(BEFORE_WX_LIBS)</ldlibs>
+    <!-- the normal way to linking against third party wx          -->
+    <!-- components. Unfortunately this doesn't work right with    -->
+    <!-- Linux makefiles created by bakefile (see note above).     -->
+    <if cond="PLATFORM_WIN32=='1'">
+	 <wx-lib>base</wx-lib>
+	 <wx-lib>core</wx-lib>
+    </if>
+    <lib-path>../lib</lib-path>
+    <ldflags-msvc>/NODEFAULTLIB:libc</ldflags-msvc>
+    <win32-res>../samples/awxtest.rc</win32-res>
+  </exe>
+
+  <action id="tip-linux" cond="PLATFORM_UNIX=='1'">
+    <dependency-of>all</dependency-of>
+    <command>
+	 @echo " "
+	 @echo "================================================================"
+	 @echo " The building of awx is finished. On Linux you'll now"
+	 @echo " have to run (as root):"
+	 @echo " "
+	 @echo " make DEBUG=$(DEBUG) install"
+	 @echo " "
+	 @echo " to install the libraries in $(LIBDIR)"
+	 @echo " and the header files in $(INCLUDEDIR)/wx/awx"
+	 @echo " "
+	 @echo " Don't forget to run ldconfig (also as root)"
+	 @echo " "
+	 @echo " awx comes with no guarantees and doesn't claim"
+	 @echo " to be suitable for any purpose."
+	 @echo "================================================================"
+	 @echo " "
+    </command>
+  </action>
+
+  <action id="tip-win32" cond="PLATFORM_WIN32=='1'">
+    <dependency-of>all</dependency-of>
+    <command>
+	 @echo "                                                                "
+	 @echo "================================================================"
+	 @echo " The building of awx is finished. If you have an installed      "
+	 @echo " wxWidget package (WXWIN must be defined in the enviroment),    "
+	 @echo " you'll now have to run:                                        "
+	 @echo "                                                                "
+	 @echo " make -f makefile.vc DEBUG=$(DEBUG) WX_DEBUG=$(DEBUG) wxinstall "
+	 @echo "                                                                "
+	 @echo " to install the libraries in:                                   "
+	 @echo " $(INSTALLDIR)$(DIRSEP)lib$(DIRSEP)$(LIBNAME)_lib               "
+	 @echo " and the header files in $(INSTALLDIR)$(DIRSEP)wx$(DIRSEP)awx   "
+	 @echo "                                                                "
+	 @echo " If you are using another compiler (Borland, Watcom, mingw,...) "
+	 @echo " take a look in the README in this directory!                   "
+	 @echo "                                                                "
+	 @echo " awx comes with no guarantees and doesn't claim                 "
+	 @echo " to be suitable for any purpose.                                "
+	 @echo "================================================================"
+	 @echo "                                                                "
+    </command>
+  </action>
+
+</makefile>
+
+<!-- IMPORTANT HINTS -->
+<!-- To build the awx library for WINDOWS:                         -->
+<!-- nmake -a -f makefile.vc DEBUG=1 WX_DEBUG=1 (debug version)    -->
+<!-- nmake -a -f makefile.vc DEBUG=0 WX_DEBUG=0 (release)          -->
+<!-- and for LINUX (debug):                                        -->
+<!-- make DEBUG=1 WX_DEBUG='- -debug=yes'                          -->
+<!-- LINUX (release):                                              -->
+<!-- make DEBUG=0 WX_DEBUG='- -debug=no'                           -->
+<!-- Note! The example will be build automatically after create    -->
+<!--       the library!                                            -->
