@@ -188,11 +188,11 @@ extern "C"
 }
 
 
-// base.cpp: implementation of the wxCurlProgressEvent class.
+// base.cpp: implementation of the wxCurlProgressBaseEvent class.
 //
 //////////////////////////////////////////////////////////////////////
 
-wxTimeSpan wxCurlProgressEvent::GetElapsedTime() const
+wxTimeSpan wxCurlProgressBaseEvent::GetElapsedTime() const
 {
     // NOTE: even if docs say that this info can be retrieved only at the end of the
     //       transfer, this is not really true (as explained by libCURL's authors!)
@@ -208,7 +208,7 @@ wxTimeSpan wxCurlProgressEvent::GetElapsedTime() const
                       (long)((secs - floor(secs))*1000));                   // milliseconds
 }
 
-wxTimeSpan wxCurlProgressEvent::GetEstimatedTime() const
+wxTimeSpan wxCurlProgressBaseEvent::GetEstimatedTime() const
 {
     double nBytesPerSec = GetSpeed();
     if (nBytesPerSec == 0)
@@ -224,7 +224,7 @@ wxTimeSpan wxCurlProgressEvent::GetEstimatedTime() const
                       0);                   // milliseconds
 }
 
-wxTimeSpan wxCurlProgressEvent::GetEstimatedRemainingTime() const
+wxTimeSpan wxCurlProgressBaseEvent::GetEstimatedRemainingTime() const
 {
     wxTimeSpan est = GetEstimatedTime(),
                elapsed = GetElapsedTime();
@@ -234,14 +234,14 @@ wxTimeSpan wxCurlProgressEvent::GetEstimatedRemainingTime() const
     return wxTimeSpan(0);       // probably est==0 because GetTotalBytes()==0
 }
 
-wxString wxCurlProgressEvent::GetHumanReadableSpeed(const wxString &invalid) const
+wxString wxCurlProgressBaseEvent::GetHumanReadableSpeed(const wxString &invalid, int precision) const
 {
     double speed = GetSpeed();
     if (speed == 0)
         return invalid;
 
     wxULongLong ull((wxULongLong_t)speed);
-    return wxFileName::GetHumanReadableSize(ull) + wxT("/s");
+    return wxFileName::GetHumanReadableSize(ull, invalid, precision) + wxT("/s");
 }
 
 
@@ -258,7 +258,7 @@ DEFINE_EVENT_TYPE(wxCURL_DOWNLOAD_EVENT);
 IMPLEMENT_DYNAMIC_CLASS(wxCurlDownloadEvent, wxEvent);
 
 wxCurlDownloadEvent::wxCurlDownloadEvent()
-: wxCurlProgressEvent(-1, wxCURL_DOWNLOAD_EVENT),
+: wxCurlProgressBaseEvent(-1, wxCURL_DOWNLOAD_EVENT),
   m_rDownloadNow(0.0), m_rDownloadTotal(0.0)
 {
 }
@@ -266,13 +266,13 @@ wxCurlDownloadEvent::wxCurlDownloadEvent()
 wxCurlDownloadEvent::wxCurlDownloadEvent(int id, wxCurlBase *originator,
                                          const double& rDownloadTotal, const double& rDownloadNow, 
                                          const wxString& szURL /*= wxEmptyString*/)
-: wxCurlProgressEvent(id, wxCURL_DOWNLOAD_EVENT, originator, szURL),
+: wxCurlProgressBaseEvent(id, wxCURL_DOWNLOAD_EVENT, originator, szURL),
   m_rDownloadTotal(rDownloadTotal), m_rDownloadNow(rDownloadNow)
 {
 }
 
 wxCurlDownloadEvent::wxCurlDownloadEvent(const wxCurlDownloadEvent& event)
-: wxCurlProgressEvent(event)
+: wxCurlProgressBaseEvent(event)
 {
 	m_rDownloadNow = event.m_rDownloadNow;
 	m_rDownloadTotal = event.m_rDownloadTotal;
@@ -304,7 +304,7 @@ DEFINE_EVENT_TYPE(wxCURL_UPLOAD_EVENT);
 IMPLEMENT_DYNAMIC_CLASS(wxCurlUploadEvent, wxEvent);
 
 wxCurlUploadEvent::wxCurlUploadEvent()
-: wxCurlProgressEvent(-1, wxCURL_UPLOAD_EVENT),
+: wxCurlProgressBaseEvent(-1, wxCURL_UPLOAD_EVENT),
   m_rUploadNow(0.0), m_rUploadTotal(0.0)
 {
 }
@@ -312,13 +312,13 @@ wxCurlUploadEvent::wxCurlUploadEvent()
 wxCurlUploadEvent::wxCurlUploadEvent(int id, wxCurlBase *originator,
                                          const double& rUploadTotal, const double& rUploadNow, 
                                          const wxString& szURL /*= wxEmptyString*/)
-: wxCurlProgressEvent(id, wxCURL_UPLOAD_EVENT, originator, szURL),
+: wxCurlProgressBaseEvent(id, wxCURL_UPLOAD_EVENT, originator, szURL),
   m_rUploadTotal(rUploadTotal), m_rUploadNow(rUploadNow)
 {
 }
 
 wxCurlUploadEvent::wxCurlUploadEvent(const wxCurlUploadEvent& event)
-: wxCurlProgressEvent(event)
+: wxCurlProgressBaseEvent(event)
 {
     m_rUploadNow = event.m_rUploadNow;
     m_rUploadTotal = event.m_rUploadTotal;

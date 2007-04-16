@@ -57,15 +57,20 @@ class WXDLLIMPEXP_CURL wxCurlBase;
 
 
 //! Private internal class used as base class for wxCurlDownloadEvent and wxCurlUploadEvent.
-class WXDLLIMPEXP_CURL wxCurlProgressEvent : public wxEvent
+class WXDLLIMPEXP_CURL wxCurlProgressBaseEvent : public wxEvent
 {
 public:
-    wxCurlProgressEvent(int id, wxEventType type,
+    wxCurlProgressBaseEvent(int id, wxEventType type,
                         wxCurlBase *p = NULL, const wxString &url = wxEmptyString)
         : wxEvent(id, type) { m_pCURL = p; m_szURL = url; }
 
-    //! Returns the URL you are transfering from.
-    wxString GetURL() const { return m_szURL; }
+
+    //! Returns a number in [0;100] range indicating how much has been transferred so far.
+    double GetPercent() const 
+        { return GetTotalBytes() == 0 ? 0 : (100.0 * (GetTransferredBytes()/GetTotalBytes())); }
+
+
+public:     // wxTimeSpan getters
 
     //! Returns the time elapsed since the beginning of the download up
     //! to the time this function is called.
@@ -77,11 +82,34 @@ public:
     //! Returns the estimated remaining time to the completion of the download.
     virtual wxTimeSpan GetEstimatedRemainingTime() const;
 
-    //! Returns the current download/upload speed in a human readable format.
-    wxString GetHumanReadableSpeed(const wxString &invalid = _("Not available")) const;
 
+public:     // wxString getters
+
+    //! Returns the URL you are transfering from.
+    wxString GetURL() const { return m_szURL; }
+
+    //! Returns the current download/upload speed in a human readable format.
+    wxString GetHumanReadableSpeed(const wxString &inv = _("Not available"), int prec = 1) const;
+
+    //! Returns the total bytes to download in a human-readable format.
+    wxString GetHumanReadableTotalBytes(const wxString &inv = _("Not available"), int prec = 1) const
+        { return wxFileName::GetHumanReadableSize(wxULongLong((unsigned long)GetTotalBytes()), inv, prec); }
+
+    //! Returns the currently transferred bytes in a human-readable format.
+    wxString GetHumanReadableTransferredBytes(const wxString &inv = _("Not available"), int prec = 1) const
+        { return wxFileName::GetHumanReadableSize(wxULongLong((unsigned long)GetTransferredBytes()), inv, prec); }
+
+
+public:     // pure virtual functions
+
+    //! Returns the current transfer speed.
     virtual double GetSpeed() const = 0;
+
+    //! Returns the total bytes to transfer.
     virtual double GetTotalBytes() const = 0;
+
+    //! Returns the bytes transferred so far.
+    virtual double GetTransferredBytes() const = 0;
 
 protected:
     wxCurlBase *m_pCURL;
@@ -98,7 +126,7 @@ protected:
 //! Unknown/unused argument values passed to the callback will be set to zero 
 //! (like if you only download data, the upload size will remain 0).
 //! Use the EVT_CURL_PROGRESS(id, function) macro to intercept this event.
-class WXDLLIMPEXP_CURL wxCurlDownloadEvent : public wxCurlProgressEvent
+class WXDLLIMPEXP_CURL wxCurlDownloadEvent : public wxCurlProgressBaseEvent
 {
 public:
     wxCurlDownloadEvent();
@@ -112,24 +140,18 @@ public:
 
     //! Returns the number of bytes downloaded so far.
     double GetDownloadedBytes() const { return m_rDownloadNow; }
+    double GetTransferredBytes() const { return m_rDownloadNow; }
 
     //! Returns the total number of bytes to download.
     double GetTotalBytes() const { return m_rDownloadTotal; }
-
-    //! Returns a number in [0;100] range indicating how much has been downloaded so far.
-    double GetPercent() const 
-        { return m_rDownloadTotal == 0 ? 0 : (100.0 * (m_rDownloadNow/m_rDownloadTotal)); }
 
     //! Returns the current download speed in bytes/second.
     double GetSpeed() const;
 
     //! Returns the currently downloaded bytes in a human-readable format.
-    wxString GetHumanReadableDownloadedBytes() const
-        { return wxFileName::GetHumanReadableSize(wxULongLong((unsigned long)m_rDownloadNow)); }
+    wxString GetHumanReadableDownloadedBytes(const wxString &inv = _("Not available"), int prec = 1) const
+        { return wxFileName::GetHumanReadableSize(wxULongLong((unsigned long)m_rDownloadNow), inv, prec); }
 
-    //! Returns the total bytes to download in a human-readable format.
-    wxString GetHumanReadableTotalBytes() const
-        { return wxFileName::GetHumanReadableSize(wxULongLong((unsigned long)m_rDownloadTotal)); }
 
 protected:
     double m_rDownloadTotal, m_rDownloadNow;
@@ -152,7 +174,7 @@ typedef void (wxEvtHandler::*wxCurlDownloadEventFunction)(wxCurlDownloadEvent&);
 //! Unknown/unused argument values passed to the callback will be set to zero 
 //! (like if you only download data, the upload size will remain 0).
 //! Use the EVT_CURL_PROGRESS(id, function) macro to intercept this event.
-class WXDLLIMPEXP_CURL wxCurlUploadEvent : public wxCurlProgressEvent
+class WXDLLIMPEXP_CURL wxCurlUploadEvent : public wxCurlProgressBaseEvent
 {
 public:
     wxCurlUploadEvent();
@@ -166,24 +188,17 @@ public:
 
     //! Returns the number of bytes uploaded so far.
     double GetUploadedBytes() const { return m_rUploadNow; }
+    double GetTransferredBytes() const { return m_rUploadNow; }
 
     //! Returns the total number of bytes to upload.
     double GetTotalBytes() const { return m_rUploadTotal; }
-
-    //! Returns a number in [0;100] range indicating how much has been uploaded so far.
-    double GetPercent() const 
-        { return m_rUploadTotal == 0 ? 0 : (100.0 * (m_rUploadNow/m_rUploadTotal)); }
 
     //! Returns the current upload speed in bytes/second.
     double GetSpeed() const;
 
     //! Returns the currently uploaded bytes in a human-readable format.
-    wxString GetHumanReadableUploadedBytes() const
-        { return wxFileName::GetHumanReadableSize(wxULongLong((unsigned long)m_rUploadNow)); }
-
-    //! Returns the total bytes to upload in a human-readable format.
-    wxString GetHumanReadableTotalBytes() const
-        { return wxFileName::GetHumanReadableSize(wxULongLong((unsigned long)m_rUploadTotal)); }
+    wxString GetHumanReadableUploadedBytes(const wxString &inv = _("Not available"), int prec = 1) const
+        { return wxFileName::GetHumanReadableSize(wxULongLong((unsigned long)m_rUploadNow), inv, prec); }
 
 protected:
     double m_rUploadTotal, m_rUploadNow;

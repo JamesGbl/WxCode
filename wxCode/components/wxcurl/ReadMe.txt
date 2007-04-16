@@ -51,7 +51,7 @@
        and added more getters GUI-oriented (e.g. GetHumanReadableSpeed, GetEstimatedTime, etc)
      - added a wxCurlDownloadThread and a wxCurlUploadThread to ease non-blocking downloads/uploads
      - added a wxCurlSizeQueryThread to query file sizes before downloading them
-     - added a wxCurlDownloadDialog for easier downloading
+     - added a wxCurlDownloadDialog and wxCurlUploadDialog for easier downloading/uploading
 
 
  Authors' info
@@ -62,5 +62,5 @@
  Contributions by:
    Marcio Valerio        mvalerio@users.sourceforge.net
    Ryan Wilcox           ryanwilcox@users.sourceforge.net
-   Francesco Montorsi    frm@users.sourceforge.net      (wxCurl*Thread, wxCurlDownloadDialog)
+   Francesco Montorsi    frm@users.sourceforge.net      (wxCurl*Thread, wxCurl*Dialog)
 

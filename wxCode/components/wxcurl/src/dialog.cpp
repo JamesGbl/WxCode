@@ -41,7 +41,7 @@
 
 
 // ----------------------------------------------------------------------------
-// wxCurlDownloadDialog
+// wxCurlBaseDialog
 // ----------------------------------------------------------------------------
 
 enum
@@ -53,68 +53,52 @@ enum
     ThreadId
 };
 
-IMPLEMENT_DYNAMIC_CLASS( wxCurlDownloadDialog, wxDialog )
-BEGIN_EVENT_TABLE( wxCurlDownloadDialog, wxDialog )
+BEGIN_EVENT_TABLE( wxCurlBaseDialog, wxDialog )
 
     // network events
-    EVT_CURL_DOWNLOAD( ThreadId, wxCurlDownloadDialog::OnDownload )
-    EVT_CURL_END_PERFORM( ThreadId, wxCurlDownloadDialog::OnEndPerform )
+    EVT_CURL_END_PERFORM( ThreadId, wxCurlBaseDialog::OnEndPerform )
 
     // user events
-    EVT_BUTTON( AbortButtonId, wxCurlDownloadDialog::OnAbort )
-    EVT_BUTTON( PauseResumeButtonId, wxCurlDownloadDialog::OnPauseResume )
-    EVT_BUTTON( StartButtonId, wxCurlDownloadDialog::OnStart )
+    EVT_BUTTON( AbortButtonId, wxCurlBaseDialog::OnAbort )
+    EVT_BUTTON( PauseResumeButtonId, wxCurlBaseDialog::OnPauseResume )
+    EVT_BUTTON( StartButtonId, wxCurlBaseDialog::OnStart )
 
     // update UI
-    EVT_UPDATE_UI( AbortButtonId, wxCurlDownloadDialog::OnAbortUpdateUI )
-    EVT_UPDATE_UI( PauseResumeButtonId, wxCurlDownloadDialog::OnPauseResumeUpdateUI )
-    EVT_UPDATE_UI( StartButtonId, wxCurlDownloadDialog::OnStartUpdateUI )
+    EVT_UPDATE_UI( AbortButtonId, wxCurlBaseDialog::OnAbortUpdateUI )
+    EVT_UPDATE_UI( PauseResumeButtonId, wxCurlBaseDialog::OnPauseResumeUpdateUI )
+    EVT_UPDATE_UI( StartButtonId, wxCurlBaseDialog::OnStartUpdateUI )
 
 END_EVENT_TABLE()
 
-bool wxCurlDownloadDialog::Create(const wxString &url, wxOutputStream *out,
-                                  const wxString& title, const wxString& message,
-                                  const wxBitmap& bitmap,
-                                  wxWindow * parent, int style)
+bool wxCurlBaseDialog::Create(const wxString &url, const wxString& title, const wxString& message,
+                              const wxString &sizeLabel, const wxBitmap& bitmap, wxWindow *parent, int style)
 {
     if (!wxDialog::Create(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize,
                           (wxDEFAULT_DIALOG_STYLE |wxRESIZE_BORDER) | style))
         return false;
 
-    // some of these may remain NULL...
-    m_pElapsedTime = m_pEstimatedTime = m_pRemainingTime = NULL;
-    m_pSpeed = m_pSize = NULL;
-    m_lastEvent = NULL;
-    m_pBitmap = NULL;
-    m_bDownloadComplete = false;
-
     // set up our controls
-    CreateControls(message, bitmap);
+    CreateControls(message, sizeLabel, bitmap);
     m_pURL->SetValue(url);
-
-    // register as the thread's event handler
-    m_thread.SetEvtHandler(this, ThreadId);
-    m_thread.SetURL(url);
-    m_thread.SetOutputStream(out);
 
     return true;
 }
 
-wxDownloadReturnFlag wxCurlDownloadDialog::StartModal()
+wxCurlDialogReturnFlag wxCurlBaseDialog::StartModal()
 {
-    if (!HasFlag(wxDLD_CAN_START))
-        m_thread.Download();        // start immediately
+    if (!HasFlag(wxCDS_CAN_START))
+        m_pThread->StartTransfer();        // start immediately
 
     CenterOnScreen();
 
-    return (wxDownloadReturnFlag)wxDialog::ShowModal();
+    return (wxCurlDialogReturnFlag)wxDialog::ShowModal();
 }
 
 #define OUTER_BORDER    12
 #define BORDER          5
 #define MINWIDTH        300
 
-wxStaticText *wxCurlDownloadDialog::AddSizerRow(wxSizer *sz, const wxString &name)
+wxStaticText *wxCurlBaseDialog::AddSizerRow(wxSizer *sz, const wxString &name)
 {
     // the static text
     wxStaticText *st = new wxStaticText( this, wxID_STATIC, name, wxDefaultPosition, wxDefaultSize );
@@ -134,7 +118,7 @@ wxStaticText *wxCurlDownloadDialog::AddSizerRow(wxSizer *sz, const wxString &nam
     return ret;
 }
 
-void wxCurlDownloadDialog::CreateControls(const wxString &msg, const wxBitmap &bitmap)
+void wxCurlBaseDialog::CreateControls(const wxString &msg, const wxString &sizeLabel, const wxBitmap &bitmap)
 {
     wxBoxSizer* main = new wxBoxSizer(wxVERTICAL);
 
@@ -147,7 +131,7 @@ void wxCurlDownloadDialog::CreateControls(const wxString &msg, const wxBitmap &b
     }
 
     // URL row
-    if (HasFlag(wxDLD_URL))
+    if (HasFlag(wxCDS_URL))
     {
         wxBoxSizer* downloading = new wxBoxSizer(wxHORIZONTAL);
 
@@ -168,20 +152,20 @@ void wxCurlDownloadDialog::CreateControls(const wxString &msg, const wxBitmap &b
     wxSizer *leftcolumn = new wxBoxSizer(wxVERTICAL);
 
     // speed & size row
-    if (HasFlag(wxDLD_SPEED))
+    if (HasFlag(wxCDS_SPEED))
         m_pSpeed = AddSizerRow(leftcolumn, _T("Speed:"));
-    if (HasFlag(wxDLD_SIZE))
-        m_pSize = AddSizerRow(leftcolumn, _T("Downloaded:"));
+    if (HasFlag(wxCDS_SIZE))
+        m_pSize = AddSizerRow(leftcolumn, sizeLabel);
 
     // a spacer
     leftcolumn->AddSpacer(5);
 
     // the time rows
-    if (HasFlag(wxDLD_ELAPSED_TIME))
+    if (HasFlag(wxCDS_ELAPSED_TIME))
         m_pElapsedTime = AddSizerRow(leftcolumn, _T("Elapsed time:"));
-    if (HasFlag(wxDLD_ESTIMATED_TIME))
+    if (HasFlag(wxCDS_ESTIMATED_TIME))
         m_pEstimatedTime = AddSizerRow(leftcolumn, _T("Estimated total time:"));
-    if (HasFlag(wxDLD_REMAINING_TIME))
+    if (HasFlag(wxCDS_REMAINING_TIME))
         m_pRemainingTime = AddSizerRow(leftcolumn, _T("Estimated remaining time:"));
 
     if (bitmap.IsOk())
@@ -216,14 +200,14 @@ void wxCurlDownloadDialog::CreateControls(const wxString &msg, const wxBitmap &b
     // the button row
     wxBoxSizer *btn = new wxBoxSizer(wxHORIZONTAL);
 
-    if (HasFlag(wxDLD_CAN_ABORT))
+    if (HasFlag(wxCDS_CAN_ABORT))
         btn->Add(new wxButton( this, AbortButtonId, _("Abort") ), 0);
 
     btn->AddStretchSpacer(1);
 
-    if (HasFlag(wxDLD_CAN_PAUSE))
+    if (HasFlag(wxCDS_CAN_PAUSE))
         btn->Add(new wxButton( this, PauseResumeButtonId, _("Pause") ), 0);
-    if (HasFlag(wxDLD_CAN_START))
+    if (HasFlag(wxCDS_CAN_START))
         btn->Add(new wxButton( this, StartButtonId, _("Start") ), 0, wxLEFT, BORDER);
 
     main->Add(btn, 0, wxGROW|wxLEFT|wxRIGHT|wxTOP|wxBOTTOM, OUTER_BORDER);
@@ -232,7 +216,7 @@ void wxCurlDownloadDialog::CreateControls(const wxString &msg, const wxBitmap &b
     main->SetSizeHints(this);
 }
 
-void wxCurlDownloadDialog::EndModal(wxDownloadReturnFlag retCode)
+void wxCurlBaseDialog::EndModal(wxCurlDialogReturnFlag retCode)
 {
     wxDialog::EndModal(retCode);
 
@@ -240,19 +224,19 @@ void wxCurlDownloadDialog::EndModal(wxDownloadReturnFlag retCode)
     // otherwise it will try to send events to a non-existent handler
     // NB: this must be done *after* calling wxDialog::EndModal
     //     so that while we wait we are hidden
-    if (m_thread.IsAlive())
-        m_thread.Wait();
+    if (m_pThread->IsAlive())
+        m_pThread->Wait();
 #ifdef __WXDEBUG__
     else
-        wxASSERT(HasFlag(wxDLD_CAN_START));
+        wxASSERT(HasFlag(wxCDS_CAN_START));
             // thread is not alive: means the user has not
             // clicked on Start button yet
 #endif
 }
 
-void wxCurlDownloadDialog::ForceUpdate(wxCurlDownloadEvent &ev)
+void wxCurlBaseDialog::UpdateLabels(wxCurlProgressBaseEvent *ev)
 {
-    double fraction = ev.GetPercent();
+    double fraction = ev->GetPercent();
     if (fraction != 0)
     {
         m_pGauge->SetValue((int)fraction);
@@ -264,112 +248,142 @@ void wxCurlDownloadDialog::ForceUpdate(wxCurlDownloadEvent &ev)
     }
 
     if (m_pElapsedTime)
-        m_pElapsedTime->SetLabel(ev.GetElapsedTime().Format());
+        m_pElapsedTime->SetLabel(ev->GetElapsedTime().Format());
     if (m_pRemainingTime)
-        m_pRemainingTime->SetLabel(ev.GetEstimatedRemainingTime().Format());
+        m_pRemainingTime->SetLabel(ev->GetEstimatedRemainingTime().Format());
     if (m_pEstimatedTime)
-        m_pEstimatedTime->SetLabel(ev.GetEstimatedTime().Format());
+        m_pEstimatedTime->SetLabel(ev->GetEstimatedTime().Format());
 
     if (m_pSize)
     {
-        wxString currsize = ev.GetHumanReadableDownloadedBytes(),
-                totalsize = ev.GetHumanReadableTotalBytes();
+        wxString currsize = ev->GetHumanReadableTransferredBytes(),
+                totalsize = ev->GetHumanReadableTotalBytes();
         m_pSize->SetLabel(
             wxString::Format(wxT("%s / %s  (%0.1f%%)"), 
-                                currsize.c_str(), totalsize.c_str(), ev.GetPercent()));
+                                currsize.c_str(), totalsize.c_str(), ev->GetPercent()));
     }
 
     if (m_pSpeed)
-        m_pSpeed->SetLabel(ev.GetHumanReadableSpeed());
+        m_pSpeed->SetLabel(ev->GetHumanReadableSpeed());
 }
 
 
 // ----------------------------------------------------------------------------
-// wxCurlDownloadDialog - button events
+// wxCurlBaseDialog - button events
 // ----------------------------------------------------------------------------
 
-void wxCurlDownloadDialog::OnAbort(wxCommandEvent &WXUNUSED(ev))
+void wxCurlBaseDialog::OnAbort(wxCommandEvent &WXUNUSED(ev))
 {
-    wxASSERT(HasFlag(wxDLD_CAN_ABORT));
+    wxASSERT(HasFlag(wxCDS_CAN_ABORT));
 
-    if (m_thread.IsAlive())
+    if (m_pThread->IsAlive())
     {
-        m_thread.Abort();
-        EndModal(wxDRF_USER_ABORTED);
+        m_pThread->Abort();
+        EndModal(wxCDRF_USER_ABORTED);
     }
     else
     {
-        wxASSERT(HasFlag(wxDLD_CAN_START) || !HasFlag(wxDLD_AUTO_CLOSE));
+        wxASSERT(HasFlag(wxCDS_CAN_START) || !HasFlag(wxCDS_AUTO_CLOSE));
             // thread is not alive: means the user has not
             // clicked on Start button yet or the download is complete
             // and the dialog does not auto close
 
-        EndModal(m_bDownloadComplete ? wxDRF_SUCCESS : wxDRF_USER_ABORTED);
+        EndModal(m_bTransferComplete ? wxCDRF_SUCCESS : wxCDRF_USER_ABORTED);
     }
 }
 
-void wxCurlDownloadDialog::OnAbortUpdateUI(wxUpdateUIEvent &ev)
+void wxCurlBaseDialog::OnAbortUpdateUI(wxUpdateUIEvent &ev)
 {
-    ev.SetText(m_thread.IsAlive() ? wxT("Abort") : wxT("Close"));
+    ev.SetText(m_pThread->IsAlive() ? wxT("Abort") : wxT("Close"));
 }
 
-void wxCurlDownloadDialog::OnPauseResume(wxCommandEvent &WXUNUSED(ev))
+void wxCurlBaseDialog::OnPauseResume(wxCommandEvent &WXUNUSED(ev))
 {
-    wxASSERT(HasFlag(wxDLD_CAN_PAUSE));
+    wxASSERT(HasFlag(wxCDS_CAN_PAUSE));
 
-    if (m_thread.IsRunning())
+    if (m_pThread->IsRunning())
     {
-        m_thread.Pause();
+        m_pThread->Pause();
         FindWindowById(PauseResumeButtonId)->SetLabel(wxT("Resume"));
     }
     else
     {
-        m_thread.Resume();
+        m_pThread->Resume();
         FindWindowById(PauseResumeButtonId)->SetLabel(wxT("Pause"));
     }
 }
 
-void wxCurlDownloadDialog::OnPauseResumeUpdateUI(wxUpdateUIEvent &ev)
+void wxCurlBaseDialog::OnPauseResumeUpdateUI(wxUpdateUIEvent &ev)
 {
-    ev.Enable(m_thread.IsAlive());
+    ev.Enable(m_pThread->IsAlive());
 }
 
-void wxCurlDownloadDialog::OnStart(wxCommandEvent &WXUNUSED(ev))
+void wxCurlBaseDialog::OnStart(wxCommandEvent &WXUNUSED(ev))
 {
-    wxASSERT(HasFlag(wxDLD_CAN_START));
+    wxASSERT(HasFlag(wxCDS_CAN_START));
 
-    m_thread.Download();
+    m_pThread->StartTransfer();
 }
 
-void wxCurlDownloadDialog::OnStartUpdateUI(wxUpdateUIEvent &ev)
+void wxCurlBaseDialog::OnStartUpdateUI(wxUpdateUIEvent &ev)
 {
-    ev.Enable(!m_thread.IsAlive() && !m_bDownloadComplete);
+    ev.Enable(!m_pThread->IsAlive() && !m_bTransferComplete);
 }
 
 
 
 // ----------------------------------------------------------------------------
-// wxCurlDownloadDialog - network events
+// wxCurlBaseDialog - network events
 // ----------------------------------------------------------------------------
 
-void wxCurlDownloadDialog::OnEndPerform(wxCurlEndPerformEvent &ev)
+void wxCurlBaseDialog::OnEndPerform(wxCurlEndPerformEvent &ev)
 {
-    // in case the very last download update event was skipped because
+    // in case the very last transfer update event was skipped because
     // of our anti-flickering label update policy, force the update with
     // that event now (otherwise the dialog may remain open showing data
     // related not to the end of the download!)
-    ForceUpdate(*m_lastEvent);
+    UpdateLabels(m_pLastEvent);
 
     // now we're sure the transfer has completed: make the gauge
     // completely "filled"
     m_pGauge->SetValue(101);
 
     // this flag is used for updating labels etc:
-    m_bDownloadComplete = true;
+    m_bTransferComplete = true;
 
     // transfer has completed
-    if (HasFlag(wxDLD_AUTO_CLOSE))
-        EndModal(ev.IsSuccessful() ? wxDRF_SUCCESS : wxDRF_FAILED);
+    if (HasFlag(wxCDS_AUTO_CLOSE))
+        EndModal(ev.IsSuccessful() ? wxCDRF_SUCCESS : wxCDRF_FAILED);
+}
+
+
+
+
+// ----------------------------------------------------------------------------
+// wxCurlDownloadDialog
+// ----------------------------------------------------------------------------
+
+IMPLEMENT_DYNAMIC_CLASS( wxCurlDownloadDialog, wxDialog )
+BEGIN_EVENT_TABLE( wxCurlDownloadDialog, wxDialog )
+    EVT_CURL_DOWNLOAD( ThreadId, wxCurlDownloadDialog::OnDownload )
+END_EVENT_TABLE()
+
+bool wxCurlDownloadDialog::Create(const wxString &url, wxOutputStream *out,
+                                  const wxString& title, const wxString& message,
+                                  const wxBitmap& bitmap,
+                                  wxWindow *parent, int style)
+{
+    if (!wxCurlBaseDialog::Create(url, title, message, _T("Downloaded:"), bitmap, parent, style))
+        return false;
+
+    // register as the thread's event handler
+    wxCurlDownloadThread *thread = new wxCurlDownloadThread(this, ThreadId);
+    thread->SetURL(url);
+    thread->SetOutputStream(out);
+
+    m_pThread = thread;     // downcast our pointer for usage by wxCurlBaseDialog
+
+    return true;
 }
 
 void wxCurlDownloadDialog::OnDownload(wxCurlDownloadEvent &ev)
@@ -377,14 +391,59 @@ void wxCurlDownloadDialog::OnDownload(wxCurlDownloadEvent &ev)
     static wxDateTime lastLabelUpdate(0, 0, 0, 0);      // zero is to force always at least an update
     if ((wxDateTime::Now() - lastLabelUpdate).GetMilliseconds() > 200)   // avoid flickering
     {
-        ForceUpdate(ev);
+        UpdateLabels(&ev);
 
         lastLabelUpdate = wxDateTime::Now();
     }
 
     // see OnEndPerform for more info.
-    if (m_lastEvent)
-        delete m_lastEvent;
-    m_lastEvent = wx_static_cast(wxCurlDownloadEvent*, ev.Clone());
+    if (m_pLastEvent)
+        delete m_pLastEvent;
+    m_pLastEvent = wx_static_cast(wxCurlProgressBaseEvent*, ev.Clone());
+}
+
+
+
+// ----------------------------------------------------------------------------
+// wxCurlUploadDialog
+// ----------------------------------------------------------------------------
+
+IMPLEMENT_DYNAMIC_CLASS( wxCurlUploadDialog, wxDialog )
+BEGIN_EVENT_TABLE( wxCurlUploadDialog, wxDialog )
+    EVT_CURL_UPLOAD( ThreadId, wxCurlUploadDialog::OnUpload )
+END_EVENT_TABLE()
+
+bool wxCurlUploadDialog::Create(const wxString &url, wxInputStream *in,
+                                  const wxString& title, const wxString& message,
+                                  const wxBitmap& bitmap,
+                                  wxWindow *parent, int style)
+{
+    if (!wxCurlBaseDialog::Create(url, title, message, _T("Uploaded:"), bitmap, parent, style))
+        return false;
+
+    // register as the thread's event handler
+    wxCurlUploadThread *thread = new wxCurlUploadThread(this, ThreadId);
+    thread->SetURL(url);
+    thread->SetInputStream(in);
+
+    m_pThread = thread;     // downcast our pointer for usage by wxCurlBaseDialog
+
+    return true;
+}
+
+void wxCurlUploadDialog::OnUpload(wxCurlUploadEvent &ev)
+{
+    static wxDateTime lastLabelUpdate(0, 0, 0, 0);      // zero is to force always at least an update
+    if ((wxDateTime::Now() - lastLabelUpdate).GetMilliseconds() > 200)   // avoid flickering
+    {
+        UpdateLabels(&ev);
+
+        lastLabelUpdate = wxDateTime::Now();
+    }
+
+    // see OnEndPerform for more info.
+    if (m_pLastEvent)
+        delete m_pLastEvent;
+    m_pLastEvent = wx_static_cast(wxCurlProgressBaseEvent*, ev.Clone());
 }
 

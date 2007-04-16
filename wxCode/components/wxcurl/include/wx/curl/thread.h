@@ -63,7 +63,7 @@ protected:
     //! The protocol being used for the transfer.
     wxCurlProtocol m_protocol;
 
-    //! The event handler which gets m_pCurl events.
+    //! The event handler which gets m_pCurl's events.
     wxEvtHandler *m_pHandler;
     int m_nId;
 
@@ -108,6 +108,8 @@ public:     // thread execution management
 
     // other functions you can use to manage the thread execution: Pause(), Resume(), Kill()
     // and obviously the wxCurlThreadBase-derived class' functions
+
+    virtual wxCurlThreadError StartTransfer() = 0;
 
 public:     // setters
 
@@ -267,6 +269,9 @@ public:     // public API
 
 protected:
 
+    virtual wxCurlThreadError StartTransfer()
+        { return Download(); }
+
     virtual void *Entry();
 };
 
@@ -351,6 +356,9 @@ public:     // public API
     wxCurlThreadError Upload();
 
 protected:
+
+    virtual wxCurlThreadError StartTransfer()
+        { return Upload(); }
 
     virtual void *Entry();
 };
