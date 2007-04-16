@@ -92,7 +92,7 @@ wxPutDialog::~wxPutDialog()
 
 void wxPutDialog::OnBrowse(wxCommandEvent& WXUNUSED(event))
 {
-	wxFileDialog dlg(this, "Choose a file", "", "", "All files (*.*)|*.*", wxOPEN);
+	wxFileDialog dlg(this, "Choose a file", "", "", "All files (*.*)|*.*", wxFD_OPEN);
 
 	if(dlg.ShowModal()==wxID_OK)
 	{

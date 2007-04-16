@@ -145,7 +145,7 @@ void wxGetFTPFileDialog::OnGet(wxCommandEvent& WXUNUSED(event))
 
 void wxGetFTPFileDialog::OnBrowseDest(wxCommandEvent& WXUNUSED(event))
 {
-	wxFileDialog dlg(this, "Choose a file", "", "", "All files (*.*)|*.*", wxSAVE|wxOVERWRITE_PROMPT);
+	wxFileDialog dlg(this, "Choose a file", "", "", "All files (*.*)|*.*", wxFD_SAVE|wxFD_OVERWRITE_PROMPT);
 
 	if(dlg.ShowModal()==wxID_OK)
 	{
