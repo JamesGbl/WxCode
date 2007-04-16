@@ -295,17 +295,21 @@
 			<File RelativePath="..\src\base.cpp"/>
 			<File RelativePath="..\src\dav.cpp"/>
 			<File RelativePath="..\src\davtool.cpp"/>
+			<File RelativePath="..\src\dialog.cpp"/>
 			<File RelativePath="..\src\ftp.cpp"/>
 			<File RelativePath="..\src\ftpparse.cpp"/>
 			<File RelativePath="..\src\ftptool.cpp"/>
 			<File RelativePath="..\src\http.cpp"/>
+			<File RelativePath="..\src\internetfiletransfer.c"/>
 			<File RelativePath="..\src\telnet.cpp"/>
 			<File RelativePath="..\src\thread.cpp"/>
+			<File RelativePath="..\src\utils.cpp"/>
 		</Filter>
 		<Filter Filter="h;hpp;hxx;hm;inl;inc;xsd" Name="Header Files" UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File RelativePath="..\include\wx\curl\base.h"/>
 			<File RelativePath="..\include\wx\curl\dav.h"/>
 			<File RelativePath="..\include\wx\curl\davtool.h"/>
+			<File RelativePath="..\include\wx\curl\dialog.h"/>
 			<File RelativePath="..\include\wx\curl\ftp.h"/>
 			<File RelativePath="..\include\wx\curl\ftptool.h"/>
 			<File RelativePath="..\include\wx\curl\http.h"/>

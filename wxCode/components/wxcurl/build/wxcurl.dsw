@@ -14,7 +14,22 @@ Package=<4>
 
 ###############################################################################
 
-Project: "wxcurl_tester"=wxcurl_wxcurl_tester.dsp - Package Owner=<4>
+Project: "protocols"=wxcurl_protocols.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+Begin Project Dependency
+Project_Dep_Name wxcurl
+End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "dialogs"=wxcurl_dialogs.dsp - Package Owner=<4>
 
 Package=<5>
 {{{

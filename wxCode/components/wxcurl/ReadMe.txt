@@ -41,6 +41,7 @@
      - new bakefile-based build system which supports all possible wxWidgets build modes
        and allows an easy-build of libCURL also on Windows keeping a copy in thirdparty\libcurl
      - removed #pragma interface for GCC which are not used anymore
+     - revised the code to make it compile against wxWidgets 2.9
      - now EVT_CURL_* macros also take an ID which allows the same event handler to process
        events coming from different wxCurlBase sessions
      - now wxCurlBase do not use anymore a boolean parameter to register if progress/begin/end

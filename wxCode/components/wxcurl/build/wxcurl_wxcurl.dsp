@@ -464,6 +464,10 @@ SOURCE=..\src\davtool.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\dialog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\ftp.cpp
 # End Source File
 # Begin Source File
@@ -480,11 +484,19 @@ SOURCE=..\src\http.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\internetfiletransfer.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\telnet.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\thread.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\utils.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -501,6 +513,10 @@ SOURCE=..\include\wx\curl\dav.h
 # Begin Source File
 
 SOURCE=..\include\wx\curl\davtool.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\curl\dialog.h
 # End Source File
 # Begin Source File
 

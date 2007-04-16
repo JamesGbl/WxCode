@@ -58,8 +58,7 @@
     <!-- The sample of wxCurl -->
     <!-- ==================== -->
 
-    <wxcode-sample id="wxcurl_tester" template="curlbasic">
-        <dir>sample</dir>
+    <template id="curlsample" template="curlbasic">
         <has-win32-res/>
 
         <!-- lib list: -->
@@ -72,6 +71,14 @@
         <wx-lib>xml</wx-lib>
         <wx-lib>core</wx-lib>
         <wx-lib>base</wx-lib>
+    </template>
+
+    <wxcode-sample id="protocols" template="curlsample">
+        <dir>samples/protocols</dir>
+    </wxcode-sample>
+
+    <wxcode-sample id="dialogs" template="curlsample">
+        <dir>samples/dialogs</dir>
     </wxcode-sample>
 
 
