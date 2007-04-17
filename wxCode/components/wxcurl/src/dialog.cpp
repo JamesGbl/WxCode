@@ -464,7 +464,7 @@ bool wxCurlDownloadDialog::Create(const wxString &url, wxOutputStream *out,
 
     m_pThread = thread;     // downcast our pointer for usage by wxCurlBaseDialog
 
-    if (!HandleCurlThreadError(thread->SetURL(url), thread))
+    if (!HandleCurlThreadError(thread->SetURL(url), thread, url))
         return false;
     if (!HandleCurlThreadError(thread->SetOutputStream(out), thread))
         return false;

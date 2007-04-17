@@ -98,7 +98,10 @@ enum
     Minimal_Can_pause,
     Minimal_Auto_close,
 
-    Minimal_Bitmap
+    Minimal_Bitmap,
+
+    Minimal_CheckAll,
+    Minimal_UnCheckAll
 };
 
 // Define a new frame type: this is going to be our main frame
@@ -112,13 +115,11 @@ public:
     // event handlers (these functions should _not_ be virtual)
     void OnQuit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
-
-    // add here event handlers
     void OnDownload(wxCommandEvent &ev);
     void OnUpload(wxCommandEvent &ev);
+    void OnCheckAll(wxCommandEvent& event);
 
     int GetStyle() const;
-
     void LogResult(wxCurlDialogReturnFlag flag);
 
 protected:
@@ -142,6 +143,10 @@ BEGIN_EVENT_TABLE(MyFrame, wxFrame)
     EVT_MENU(Minimal_About, MyFrame::OnAbout)
     EVT_MENU(Minimal_Download, MyFrame::OnDownload)
     EVT_MENU(Minimal_Upload, MyFrame::OnUpload)
+
+    EVT_MENU(Minimal_CheckAll, MyFrame::OnCheckAll)
+    EVT_MENU(Minimal_UnCheckAll, MyFrame::OnCheckAll)
+
 END_EVENT_TABLE()
 
 // Create a new application object: this macro will allow wxWindows to create
@@ -227,6 +232,9 @@ MyFrame::MyFrame(const wxString& title)
     menuDialog->AppendCheckItem(Minimal_Auto_close, _T("Auto-close dialog at completion"));
     menuDialog->AppendSeparator();
     menuDialog->AppendCheckItem(Minimal_Bitmap, _T("Show bitmap in the dialog"));
+    menuDialog->AppendSeparator();
+    menuDialog->Append(Minimal_CheckAll, _T("Check all"), _T("check all previous menu items"));    
+    menuDialog->Append(Minimal_UnCheckAll, _T("Uncheck all"), _T("uncheck all previous menu items"));    
 
     // now append the freshly created menu to the menu bar...
     wxMenuBar *menuBar = new wxMenuBar();
@@ -292,6 +300,12 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
     wxString msg;
     msg.Printf( wxT("This is a little demonstration of wxCurl dialogs by Francesco Montorsi.\n"));
     wxMessageBox(msg, _T("About Minimal"), wxOK | wxICON_INFORMATION, this);
+}
+
+void MyFrame::OnCheckAll(wxCommandEvent& event)
+{
+    for (int id = Minimal_Elapsed_time; id <= Minimal_Auto_close; id++)
+        menuDialog->Check(id, event.GetId() == Minimal_CheckAll);
 }
 
 void MyFrame::OnDownload(wxCommandEvent& WXUNUSED(event))

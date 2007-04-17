@@ -92,7 +92,8 @@ wxCurlThreadError wxCurlBaseThread::SetURL(const wxString &url)
 
 void wxCurlBaseThread::OnExit()
 {
-    wxLogDebug(wxT("wxCurlBaseThread - exiting"));
+    if (m_pCurl->IsVerbose())
+        wxLogDebug(wxT("wxCurlBaseThread - exiting"));
 }
 
 wxCurlThreadError wxCurlBaseThread::Wait()
@@ -101,8 +102,12 @@ wxCurlThreadError wxCurlBaseThread::Wait()
     bool ret = (bool)(wxThread::Wait() != 0);
 
     if (m_bAbort)
+        // ret is false but that's not due to a network error:
+        // user stopped the thread through an Abort() call
         return wxCTE_ABORTED;
 
+    // if it was not user-aborted but ret is still false, then
+    // a network error occurred:
     return ret ? wxCTE_NO_ERROR : wxCTE_CURL_ERROR;
 }
 
@@ -118,6 +123,9 @@ size_t wxCurlDownloadThreadOutputFilter::OnSysWrite(const void *buffer, size_t b
 
     if (m_thread->TestDestroy())
     {
+        if (m_thread->m_pCurl->IsVerbose())
+            wxLogDebug(wxT("[wxCURL] a wxCurlDownloadThread has been aborted - ignore following message:"));
+
         // returning a size != bufsize we tell libcurl to stop the tranfer
         // and thus the wxCurlBase::Perform() call done (indirectly) by wxCurlDownloadThread::Entry()
         // will immediately complete and we'll exit the thread.
@@ -197,7 +205,8 @@ void *wxCurlDownloadThread::Entry()
     // NOTE: the TestDestroy() function will still be called in this thread
     //       context by the m_output's OnSysWrite function which in turn is
     //       called from libcurl whenever some new data arrives
-    wxLogDebug(wxT("wxCurlDownloadThread - downloading from %s"), m_url.c_str());
+    if (m_pCurl->IsVerbose())
+        wxLogDebug(wxT("wxCurlDownloadThread - downloading from %s"), m_url.c_str());
     switch (m_protocol)
     {
         case wxCP_HTTP:
@@ -223,6 +232,9 @@ size_t wxCurlUploadThreadInputFilter::OnSysRead(void *buffer, size_t bufsize)
 
     if (m_thread->TestDestroy())
     {
+        if (m_thread->m_pCurl->IsVerbose())
+            wxLogDebug(wxT("[wxCURL] a wxCurlUploadThread has been aborted - ignore following message:"));
+
         // returning a size != bufsize we tell libcurl to stop the tranfer
         // and thus the wxCurlBase::Perform() call done (indirectly) by wxCurlUploadThread::Entry()
         // will immediately complete and we'll exit the thread.
@@ -286,7 +298,8 @@ void *wxCurlUploadThread::Entry()
     // NOTE: the TestDestroy() function will still be called in this thread
     //       context by the m_output's OnSysWrite function which in turn is
     //       called from libcurl whenever some new data arrives
-    wxLogDebug(wxT("wxCurlUploadThread - uploading to %s"), m_url.c_str());
+    if (m_pCurl->IsVerbose())
+        wxLogDebug(wxT("wxCurlUploadThread - uploading to %s"), m_url.c_str());
     switch (m_protocol)
     {
         case wxCP_HTTP:
