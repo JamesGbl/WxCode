@@ -96,6 +96,15 @@ void wxCurlBaseThread::OnExit()
         wxLogDebug(wxT("wxCurlBaseThread - exiting"));
 }
 
+bool wxCurlBaseThread::TestDestroy()
+{
+    if (wxThread::TestDestroy())
+        return true;
+
+    wxMutexLocker lock(m_bAbortMutex);
+    return m_bAbort;
+}
+
 wxCurlThreadError wxCurlBaseThread::Wait()
 {
     // Entry() returns 1 for success, 0 for failure
@@ -109,6 +118,35 @@ wxCurlThreadError wxCurlBaseThread::Wait()
     // if it was not user-aborted but ret is still false, then
     // a network error occurred:
     return ret ? wxCTE_NO_ERROR : wxCTE_CURL_ERROR;
+}
+
+void wxCurlBaseThread::Abort()
+{
+    {
+        wxMutexLocker lock(m_bAbortMutex);
+        m_bAbort = true;
+    }
+
+    if (IsPaused())
+        Resume();
+
+    Wait();     // should always return wxCTE_ABORTED in this case
+}
+
+wxCurlThreadError wxCurlBaseThread::Pause()
+{
+    if (m_pCurl)
+        m_pCurl->EndTransferSpan();
+
+    return (wxCurlThreadError)wxThread::Pause();
+}
+
+wxCurlThreadError wxCurlBaseThread::Resume()
+{
+    if (m_pCurl)
+        m_pCurl->BeginTransferSpan();
+
+    return (wxCurlThreadError)wxThread::Resume();
 }
 
 

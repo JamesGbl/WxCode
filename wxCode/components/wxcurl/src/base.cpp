@@ -194,18 +194,14 @@ extern "C"
 
 wxTimeSpan wxCurlProgressBaseEvent::GetElapsedTime() const
 {
-    // NOTE: even if docs say that this info can be retrieved only at the end of the
-    //       transfer, this is not really true (as explained by libCURL's authors!)
-    //       so that the following is perfectly working:
-    double secs;
-    m_pCURL->GetInfo(CURLINFO_TOTAL_TIME, &secs);
+    // NOTE: we cannot trust libCURL's CURLINFO_TOTAL_TIME as the transfer may have
+    //       been paused in one of libCURL's callbacks (and thus libCURL ignores it
+    //       and won't remove the paused span from the return value).
+    wxTimeSpan elapsed = m_dt - m_pCURL->GetBeginTransferSpan();
 
-    // convert from seconds to a wxTimeSpan (which the user can easily convert
-    // to a wxString using wxTimeSpan::Format)
-    return wxTimeSpan(int(secs/3600.0),     // hours
-                      int(secs/60) % 60,    // minutes
-                      int(secs) % 60,       // seconds
-                      (long)((secs - floor(secs))*1000));                   // milliseconds
+    // the elapsed time offset takes in count eventually-existing previous time spans
+    // where the transfer took place (
+    return elapsed + m_pCURL->GetElapsedTimeOffset();
 }
 
 wxTimeSpan wxCurlProgressBaseEvent::GetEstimatedTime() const
@@ -278,17 +274,6 @@ wxCurlDownloadEvent::wxCurlDownloadEvent(const wxCurlDownloadEvent& event)
 	m_rDownloadTotal = event.m_rDownloadTotal;
 }
 
-double wxCurlDownloadEvent::GetSpeed() const
-{
-    // NOTE: even if docs say that this info can be retrieved only at the end of the
-    //       transfer, this is not really true (as explained by libCURL's authors!)
-    //       so that the following is perfectly working:
-
-    double ret;
-    m_pCURL->GetInfo(CURLINFO_SPEED_DOWNLOAD, &ret);
-    return ret;
-}
-
 
 
 // base.cpp: implementation of the wxCurlUploadEvent class.
@@ -322,17 +307,6 @@ wxCurlUploadEvent::wxCurlUploadEvent(const wxCurlUploadEvent& event)
 {
     m_rUploadNow = event.m_rUploadNow;
     m_rUploadTotal = event.m_rUploadTotal;
-}
-
-double wxCurlUploadEvent::GetSpeed() const
-{
-    // NOTE: even if docs say that this info can be retrieved only at the end of the
-    //       transfer, this is not really true (as explained by libCURL's authors!)
-    //       so that the following is perfectly working:
-
-    double ret;
-    m_pCURL->GetInfo(CURLINFO_SPEED_UPLOAD, &ret);
-    return ret;
 }
 
 
@@ -500,13 +474,18 @@ bool wxCurlBase::Perform()
 {
 	CURLcode res = CURLE_OK;
 
-	if((m_nFlags & wxCURL_SEND_BEGINEND_EVENTS) && m_pEvtHandler)
+    if((m_nFlags & wxCURL_SEND_BEGINEND_EVENTS) && m_pEvtHandler)
 	{
 		wxCurlBeginPerformEvent bgnEvent(m_nId, m_szCurrFullURL);
 
 		wxPostEvent(m_pEvtHandler, bgnEvent);
 	}
 
+    // reset time-related vars:
+    m_tsElapsedOffset = 0;
+    m_dtBeginTransferSpan = wxDateTime::Now();
+
+    // perform the operation:
 	res = curl_easy_perform(m_pCURL);
 
 	if((m_nFlags & wxCURL_SEND_BEGINEND_EVENTS) && m_pEvtHandler)

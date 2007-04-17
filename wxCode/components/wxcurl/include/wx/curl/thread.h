@@ -89,33 +89,25 @@ public:
 
 public:     // thread execution management
 
-    //! Aborts this thread.
-    virtual void Abort()
-    {
-        {
-            wxMutexLocker lock(m_bAbortMutex);
-            m_bAbort = true;
-        }
-
-        if (IsPaused())
-            Resume();
-
-        Wait();     // should always return wxCTE_ABORTED in this case
-    }
-
-    //! Waits for the completion of the transfer.
-    virtual wxCurlThreadError Wait();
-
-    // other functions you can use to manage the thread execution: Pause(), Resume(), Kill()
-    // and obviously the wxCurlThreadBase-derived class' functions
+    //! Returns true if this thread is ready to be started using e.g. #StartTransfer.
+    virtual bool IsOk() const
+        { return !m_url.empty() && m_pCurl!=NULL; }
 
     //! Starts the transfer. This is equivalent to call wxCurlDownloadThread::Download or
     //! wxCurlUploadThread::Upload.
     virtual wxCurlThreadError StartTransfer() = 0;
 
-    //! Returns true if this thread is ready to be started using e.g. #StartTransfer.
-    virtual bool IsOk() const
-        { return !m_url.empty() && m_pCurl!=NULL; }
+    //! Aborts this thread.
+    virtual void Abort();
+
+    //! Waits for the completion of the transfer.
+    virtual wxCurlThreadError Wait();
+
+    //! Pauses the transfer.
+    virtual wxCurlThreadError Pause();
+
+    //! Resumes the transfer.
+    virtual wxCurlThreadError Resume();
 
 
 public:     // setters
@@ -171,15 +163,7 @@ public:     // public utils
 
 protected:
 
-    virtual bool TestDestroy()
-    {
-        if (wxThread::TestDestroy())
-            return true;
-
-        wxMutexLocker lock(m_bAbortMutex);
-        return m_bAbort;
-    }
-
+    virtual bool TestDestroy();
     virtual void OnExit();
 
 

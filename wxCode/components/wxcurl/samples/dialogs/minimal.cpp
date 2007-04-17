@@ -81,7 +81,7 @@ enum
     // (where it is special and put into the "Apple" menu)
     Minimal_About = wxID_ABOUT,
 
-    Minimal_Verbose,
+    Minimal_Verbose = wxID_HIGHEST+1,
     Minimal_Download,
     Minimal_Upload,
 
@@ -100,8 +100,8 @@ enum
 
     Minimal_Bitmap,
 
-    Minimal_CheckAll,
-    Minimal_UnCheckAll
+    Minimal_CheckAll = wxID_APPLY,
+    Minimal_UnCheckAll = wxID_CANCEL
 };
 
 // Define a new frame type: this is going to be our main frame
@@ -213,7 +213,8 @@ MyFrame::MyFrame(const wxString& title)
 
     m_menuFile = new wxMenu;
 #ifdef __WXDEBUG__
-    m_menuFile->AppendCheckItem(Minimal_Verbose, _T("Be verbose"), _T("Does something only in debug builds!"));    
+    m_menuFile->AppendCheckItem(Minimal_Verbose, _T("Be verbose"), _T("Does something only in debug builds!"));
+    m_menuFile->Check(Minimal_Verbose);
 #endif
     m_menuFile->AppendSeparator();
     m_menuFile->Append(Minimal_Download, _T("Download dialog..."), _T("Shows wxCurlDownloadDialog."));	

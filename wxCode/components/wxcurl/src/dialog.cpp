@@ -370,16 +370,20 @@ void wxCurlBaseDialog::OnPauseResume(wxCommandEvent &WXUNUSED(ev))
 
     if (m_pThread->IsRunning())
     {
-        m_pThread->Pause();
-        FindWindowById(PauseResumeButtonId)->SetLabel(wxT("Resume"));
+        if (HandleCurlThreadError(m_pThread->Pause(), m_pThread))
+        {
+            FindWindowById(PauseResumeButtonId)->SetLabel(wxT("Resume"));
 
-        if (m_pSpeed)
-            m_pSpeed->SetLabel(wxT("0 (transfer paused)"));
+            if (m_pSpeed)
+                m_pSpeed->SetLabel(wxT("0 (transfer paused)"));
+        }
     }
     else
     {
-        m_pThread->Resume();
-        FindWindowById(PauseResumeButtonId)->SetLabel(wxT("Pause"));
+        if (HandleCurlThreadError(m_pThread->Resume(), m_pThread))
+        {
+            FindWindowById(PauseResumeButtonId)->SetLabel(wxT("Pause"));
+        }
     }
 }
 
@@ -395,7 +399,7 @@ void wxCurlBaseDialog::OnStart(wxCommandEvent &WXUNUSED(ev))
     wxCurlThreadError err = m_pThread->StartTransfer();
     if (err != wxCTE_NO_ERROR)
     {
-        HandleCurlThreadError(err, m_pThread);     // show a message to the user
+        HandleCurlThreadError(err, m_pThread);     // shows a message to the user
         m_pThread->Abort();
         EndModal(wxCDRF_FAILED);
     }
@@ -436,7 +440,7 @@ void wxCurlBaseDialog::OnEndPerform(wxCurlEndPerformEvent &ev)
     if (retCode == wxCDRF_FAILED)
     {
         // show the user a message...
-        wxLogError(wxT("The transfer failed: %s (%s)"), 
+        wxLogError(wxT("The transfer failed: %s (%s)"),
                    m_pThread->GetCurlSession()->GetErrorString().c_str(),
                    m_pThread->GetCurlSession()->GetDetailedErrorString().c_str());
     }
@@ -445,7 +449,12 @@ void wxCurlBaseDialog::OnEndPerform(wxCurlEndPerformEvent &ev)
     if (HasFlag(wxCDS_AUTO_CLOSE))
         EndModal(retCode);
     else
+    {
         SetReturnCode(retCode);     // will exit later in OnAbort()
+
+        if (m_pSpeed)
+            m_pSpeed->SetLabel(wxT("0 (transfer completed)"));
+    }
 }
 
 

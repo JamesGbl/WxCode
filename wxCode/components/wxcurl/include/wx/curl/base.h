@@ -62,12 +62,24 @@ class WXDLLIMPEXP_CURL wxCurlProgressBaseEvent : public wxEvent
 public:
     wxCurlProgressBaseEvent(int id, wxEventType type,
                         wxCurlBase *p = NULL, const wxString &url = wxEmptyString)
-        : wxEvent(id, type) { m_pCURL = p; m_szURL = url; }
+        : wxEvent(id, type) { m_pCURL = p; m_szURL = url; m_dt = wxDateTime::Now(); }
 
+
+public:     // misc getters
+
+    //! Returns the curl session which generated this event.
+    wxCurlBase *GetCurlSession() const { return m_pCURL; }
+
+    //! Returns the date & time at which this event was generated.
+    wxDateTime GetDateTime() const { return m_dt; }
 
     //! Returns a number in [0;100] range indicating how much has been transferred so far.
     double GetPercent() const 
         { return GetTotalBytes() == 0 ? 0 : (100.0 * (GetTransferredBytes()/GetTotalBytes())); }
+
+    //! Returns the current transfer speed in bytes/second.
+    virtual double GetSpeed() const
+        { return GetTransferredBytes()/GetElapsedTime().GetSeconds().ToDouble(); }
 
 
 public:     // wxTimeSpan getters
@@ -102,9 +114,6 @@ public:     // wxString getters
 
 public:     // pure virtual functions
 
-    //! Returns the current transfer speed.
-    virtual double GetSpeed() const = 0;
-
     //! Returns the total bytes to transfer.
     virtual double GetTotalBytes() const = 0;
 
@@ -114,6 +123,11 @@ public:     // pure virtual functions
 protected:
     wxCurlBase *m_pCURL;
     wxString m_szURL;
+
+    // NOTE: we need to store this date time to use it in GetElapsedTime:
+    //       we cannot use wxDateTime::Now() there because once the event is constructed,
+    //       GetElapsedTime() needs to return always the same value!
+    wxDateTime m_dt;
 };
 
 
@@ -144,9 +158,6 @@ public:
 
     //! Returns the total number of bytes to download.
     double GetTotalBytes() const { return m_rDownloadTotal; }
-
-    //! Returns the current download speed in bytes/second.
-    double GetSpeed() const;
 
     //! Returns the currently downloaded bytes in a human-readable format.
     wxString GetHumanReadableDownloadedBytes(const wxString &inv = _("Not available"), int prec = 1) const
@@ -192,9 +203,6 @@ public:
 
     //! Returns the total number of bytes to upload.
     double GetTotalBytes() const { return m_rUploadTotal; }
-
-    //! Returns the current upload speed in bytes/second.
-    double GetSpeed() const;
 
     //! Returns the currently uploaded bytes in a human-readable format.
     wxString GetHumanReadableUploadedBytes(const wxString &inv = _("Not available"), int prec = 1) const
@@ -473,13 +481,6 @@ public:
     //! end users of your application (and e.g. show only in log files).
     wxString    GetDetailedErrorString() const;
 
-    //! Sets a custom callback as the progress callback.
-    //! Note that using this function you'll break the dispatching of
-    //! wxCurlDownloadEvent and wxCurlUploadEvent unless your own callback
-    //! does dispatch the events itself.
-    //! wxCURL users should never need to use this function.
-    void OverrideProgressCallback(curl_progress_callback newcallback, void *data)
-        { m_progressCallback=newcallback; m_progressData=data; }
 
     // Static LibCURL Initialization Methods - Call At Program Init and Close...
 
@@ -497,6 +498,43 @@ public:
     static wxString GetStringFromURLEncoded(const wxString& szData);
 
     static wxString GetCURLVersion();
+
+
+protected:      // protected utils used by wxCurl*Thread classes
+
+    friend class wxCurlBaseThread;
+    friend class wxCurlSizeQueryThread;
+    friend class wxCurlProgressBaseEvent;
+
+    //! Sets a custom callback as the progress callback.
+    //! Note that using this function you'll break the dispatching of
+    //! wxCurlDownloadEvent and wxCurlUploadEvent unless your own callback
+    //! does dispatch the events itself.
+    //! wxCURL users should never need to use this function.
+    void OverrideProgressCallback(curl_progress_callback newcallback, void *data)
+        { m_progressCallback=newcallback; m_progressData=data; }
+
+    //! Returns the time at which started the last transfer "span".
+    wxDateTime GetBeginTransferSpan() const
+        { return m_dtBeginTransferSpan; }
+
+    //! Returns the current time offset, i.e. the time elapsed in all previous
+    //! transfer spans.
+    wxTimeSpan GetElapsedTimeOffset() const
+        { return m_tsElapsedOffset; }
+
+    //! A transfer span has been completed (i.e. the user paused the transfer).
+    void EndTransferSpan()
+    {
+        wxDateTime now = wxDateTime::Now();
+        m_tsElapsedOffset += now - m_dtBeginTransferSpan;
+    }
+
+    //! A new transfer span has begun (i.e. the user resumed the transfer).
+    void BeginTransferSpan()
+    {
+        m_dtBeginTransferSpan = wxDateTime::Now();
+    }
 
 protected:
 
@@ -553,6 +591,26 @@ protected:
     // callbacks which can be overridden by the user:
     curl_progress_callback  m_progressCallback;
     void*                   m_progressData;
+
+    // these two are required in order to be able to support PAUSE/RESUME
+    // features in wxCurl*Thread classes. In fact, since the pausing happens
+    // is not directly supported by libCURL needs to happen at wxThread::Entry
+    // level. This also means that the events which wxCurlBase's callbacks
+    // post to the event handler cannot trust libCURL's TOTAL_TIME as reported
+    // by easy_curl_getinfo. Rather we need to keep our own timing mechanism.
+    //
+    // It's very simple: a single transfer session may be divided in one or more
+    // transfer "spans" and idle periods.
+    // Resuming from idle means start a new transfer span. Pausing means ending
+    // the current transfer span.
+    // When a new transfer span starts (from Perform() if it's the first span or
+    // from BeginTransferSpan when resuming), its beginning is registered into
+    // m_dtBeginTransferSpan. When a transfer span ends, its length is added to
+    // the "elapsed time offset" m_tsElapsedOffset.
+    // This allows wxCurlProgressEvents to calculate the elapsed time just as:
+    //    wxDateTime::Now() - m_dtBeginTransferSpan + m_tsElapsedOffset
+    wxDateTime              m_dtBeginTransferSpan;
+    wxTimeSpan              m_tsElapsedOffset;
 
 
 protected:      // internal functions
