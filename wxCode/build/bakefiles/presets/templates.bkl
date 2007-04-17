@@ -122,6 +122,9 @@
                 You'll need also some <wx-lib> tags to indicate the required wx libs.
             -->
             <app-type>gui</app-type>
+            
+            <!-- the dir where is located the sample -->
+            <set var="__dir"/>
         </template>
 
         <define-tag name="dir">
@@ -130,6 +133,8 @@
                 <error>Don't prefix the directory name with SRCDIR - it's done automatically</error>
             </if>
 
+            <set var="__dir">$(value)</set>
+            
             <dirname>$(SRCDIR)/$(value)</dirname>
             <res-include>$(SRCDIR)/$(value)</res-include>
 
@@ -151,7 +156,7 @@
         </define-tag>
 
         <define-tag name="has-win32-res">
-            <win32-res>$(fileList(value + '/*.rc'))</win32-res>
+            <win32-res>$(fileList(__dir + '/*.rc'))</win32-res>
         </define-tag>
     </define-rule>
 
