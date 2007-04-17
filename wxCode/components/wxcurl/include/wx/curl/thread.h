@@ -109,7 +109,14 @@ public:     // thread execution management
     // other functions you can use to manage the thread execution: Pause(), Resume(), Kill()
     // and obviously the wxCurlThreadBase-derived class' functions
 
+    //! Starts the transfer. This is equivalent to call wxCurlDownloadThread::Download or
+    //! wxCurlUploadThread::Upload.
     virtual wxCurlThreadError StartTransfer() = 0;
+
+    //! Returns true if this thread is ready to be started using e.g. #StartTransfer.
+    virtual bool IsOk() const
+        { return !m_url.empty() && m_pCurl!=NULL; }
+
 
 public:     // setters
 
@@ -265,6 +272,10 @@ public:     // public API
             return m_output.GetRealStream();
         }
 
+    //! Returns true if this thread is ready to be started using #Download.
+    virtual bool IsOk() const
+        { return wxCurlBaseThread::IsOk() && m_output.IsOk(); }
+
     //! Creates and runs this thread for download of the given URL in the given
     //! output stream (internally calls #SetURL and #SetOutputStream).
     wxCurlThreadError Download(const wxString &url, wxOutputStream *out = NULL);
@@ -275,6 +286,7 @@ public:     // public API
 
 protected:
 
+    // change access policy to force the user of the better-readable Download() method:
     virtual wxCurlThreadError StartTransfer()
         { return Download(); }
 
@@ -359,6 +371,10 @@ public:     // public API
             return m_input.GetRealStream();
         }
 
+    //! Returns true if this thread is ready to be started using #Upload.
+    virtual bool IsOk() const
+        { return wxCurlBaseThread::IsOk() && m_input.IsOk(); }
+
     //! Creates and runs this thread for upload to the given URL of the given
     //! input stream (internally calls #SetURL and #SetOutputStream).
     wxCurlThreadError Upload(const wxString &url, wxInputStream *in = NULL);
@@ -369,6 +385,7 @@ public:     // public API
 
 protected:
 
+    // change access policy to force the user of the better-readable Upload() method:
     virtual wxCurlThreadError StartTransfer()
         { return Upload(); }
 

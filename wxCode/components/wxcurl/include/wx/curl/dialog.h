@@ -99,8 +99,10 @@ public:
 //    bool Show(const bool show);
 
     //! Returns true if the creation of the dialog was successful.
-    bool IsOk() const { return m_pThread != NULL; }
+    bool IsOk() const { return m_pThread != NULL && m_pThread->IsOk(); }
 
+    virtual wxCurlDialogReturnFlag GetReturnCode() const
+        { return (wxCurlDialogReturnFlag)wxDialog::GetReturnCode(); }
 
 protected:     // internal utils
 
@@ -123,6 +125,9 @@ protected:     // internal utils
 
     virtual int ShowModal()
         { return wxDialog::ShowModal(); }
+
+    virtual void SetReturnCode(wxCurlDialogReturnFlag ret)
+        { wxDialog::SetReturnCode(ret); }
 
 public:     // event handlers
 

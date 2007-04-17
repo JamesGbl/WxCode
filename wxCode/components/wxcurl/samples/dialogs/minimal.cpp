@@ -273,7 +273,7 @@ void MyFrame::LogResult(wxCurlDialogReturnFlag flag)
     {
         case wxCDRF_SUCCESS: wxLogMessage(wxT("Transfer was successful!")); break;
         case wxCDRF_USER_ABORTED: wxLogMessage(wxT("Transfer has been user-aborted.")); break;
-        case wxCDRF_FAILED: wxLogMessage(wxT("Transfer was failed.")); break;
+        case wxCDRF_FAILED: wxLogMessage(wxT("Transfer was failed - you should have already been advised.")); break;
     }
 }
 

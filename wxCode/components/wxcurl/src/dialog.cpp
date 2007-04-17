@@ -347,7 +347,9 @@ void wxCurlBaseDialog::OnAbort(wxCommandEvent &WXUNUSED(ev))
             // clicked on Start button yet or the download is complete
             // and the dialog does not auto close
 
-        EndModal(m_bTransferComplete ? wxCDRF_SUCCESS : wxCDRF_USER_ABORTED);
+        // if the transfer has been completed, then the OnEndPerform event handler
+        // has already set the return code to a valid value:
+        EndModal(m_bTransferComplete ? GetReturnCode() : wxCDRF_USER_ABORTED);
     }
 }
 
@@ -420,9 +422,21 @@ void wxCurlBaseDialog::OnEndPerform(wxCurlEndPerformEvent &ev)
     // this flag is used for updating labels etc:
     m_bTransferComplete = true;
 
-    // transfer has completed
+    // transfer has completed...
+    wxCurlDialogReturnFlag retCode = ev.IsSuccessful() ? wxCDRF_SUCCESS : wxCDRF_FAILED;
+    if (retCode == wxCDRF_FAILED)
+    {
+        // show the user a message...
+        wxLogError(wxT("The transfer failed: %s (%s)"), 
+                   m_pThread->GetCurlSession()->GetErrorString().c_str(),
+                   m_pThread->GetCurlSession()->GetDetailedErrorString().c_str());
+    }
+
+    // do we need to close this window?
     if (HasFlag(wxCDS_AUTO_CLOSE))
-        EndModal(ev.IsSuccessful() ? wxCDRF_SUCCESS : wxCDRF_FAILED);
+        EndModal(retCode);
+    else
+        SetReturnCode(retCode);     // will exit later in OnAbort()
 }
 
 
@@ -448,12 +462,12 @@ bool wxCurlDownloadDialog::Create(const wxString &url, wxOutputStream *out,
     // register as the thread's event handler
     wxCurlDownloadThread *thread = new wxCurlDownloadThread(this, ThreadId);
 
+    m_pThread = thread;     // downcast our pointer for usage by wxCurlBaseDialog
+
     if (!HandleCurlThreadError(thread->SetURL(url), thread))
         return false;
     if (!HandleCurlThreadError(thread->SetOutputStream(out), thread))
         return false;
-
-    m_pThread = thread;     // downcast our pointer for usage by wxCurlBaseDialog
 
     return true;
 }
@@ -496,12 +510,12 @@ bool wxCurlUploadDialog::Create(const wxString &url, wxInputStream *in,
     // register as the thread's event handler
     wxCurlUploadThread *thread = new wxCurlUploadThread(this, ThreadId);
 
+    m_pThread = thread;     // downcast our pointer for usage by wxCurlBaseDialog
+
     if (!HandleCurlThreadError(thread->SetURL(url), thread, url))
         return false;
     if (!HandleCurlThreadError(thread->SetInputStream(in), thread))
         return false;
-
-    m_pThread = thread;     // downcast our pointer for usage by wxCurlBaseDialog
 
     return true;
 }

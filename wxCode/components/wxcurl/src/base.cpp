@@ -421,7 +421,7 @@ wxCurlBase::wxCurlBase(const wxString& szURL /*= wxEmptyString*/,
   m_nFlags(flags),
   m_bVerbose(false)
 {
-	m_szErrorBuffer[0] = '\0';
+	m_szDetailedErrorBuffer[0] = '\0';
     m_progressCallback = wxcurl_evt_progress_func;
     m_progressData = this;
 
@@ -557,15 +557,14 @@ bool wxCurlBase::ResetHandle()
 
 void wxCurlBase::DumpErrorIfNeed(CURLcode error) const
 {
+    // save the error description:
+    wx_const_cast(wxCurlBase*, this)->m_szLastError =
+            wxString(curl_easy_strerror(error), wxConvLocal);
+
     if (m_bVerbose && error != CURLE_OK)
     {
-        wxString errStr = wxT("[wxCURL] ") + wxString(curl_easy_strerror(error), wxConvLocal);
-
-        // NOTE: we won't touch nor the verbose stream (which is touched
-        //       by our registered libcurl callbacks) nor the error buffer
-        //       (which is again touched by libcurl).
-        // This function exist only to do this wxLogDebug:
-        wxLogDebug(errStr);
+        // dump the error if needed:
+        wxLogDebug(wxT("[wxCURL] ") + m_szLastError);
     }
 }
 
@@ -656,9 +655,14 @@ long wxCurlBase::GetResponseCode() const
 	return m_iResponseCode;
 }
 
+wxString wxCurlBase::GetDetailedErrorString() const
+{
+	return wxString((const wxChar*)m_szDetailedErrorBuffer);
+}
+
 wxString wxCurlBase::GetErrorString() const
 {
-	return wxString((const wxChar*)m_szErrorBuffer);
+    return m_szLastError;
 }
 
 void wxCurlBase::UseProxy(const bool& bUseProxy)
@@ -780,7 +784,7 @@ void wxCurlBase::SetCurlHandleToDefaults()
 
 		SetOpt(CURLOPT_HEADERFUNCTION, wxcurl_header_func);
 		SetOpt(CURLOPT_WRITEHEADER, &m_szResponseHeader);
-		SetOpt(CURLOPT_ERRORBUFFER, m_szErrorBuffer);
+		SetOpt(CURLOPT_ERRORBUFFER, m_szDetailedErrorBuffer);
 
 		if(m_pEvtHandler && (m_nFlags & wxCURL_SEND_PROGRESS_EVENTS))
 		{

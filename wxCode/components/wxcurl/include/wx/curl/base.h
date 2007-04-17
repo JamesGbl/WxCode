@@ -432,7 +432,6 @@ public:
     wxString	GetResponseHeader() const;
     wxString	GetResponseBody() const;		// May only contain data on NON-GET calls.
     long		GetResponseCode() const;
-    wxString	GetErrorString() const;
 
     //! Should the proxy be used?
     void		UseProxy(const bool& bUseProxy);
@@ -465,6 +464,14 @@ public:
 
     //! Appends to the given stream the verbose messages collected so far.
     bool		GetVerboseString(wxString& szStream) const;
+
+    //! Returns a generic, short string describing the last occurred error.
+    wxString    GetErrorString() const;
+
+    //! Returns a short string with a detailed description of last occurred error.
+    //! This is typically something technical which you may want to hide from the
+    //! end users of your application (and e.g. show only in log files).
+    wxString    GetDetailedErrorString() const;
 
     //! Sets a custom callback as the progress callback.
     //! Note that using this function you'll break the dispatching of
@@ -535,7 +542,8 @@ protected:
     bool					m_bVerbose;
     wxMemoryOutputStream	m_mosVerbose;
 
-    char					m_szErrorBuffer[CURL_ERROR_SIZE];
+    char					m_szDetailedErrorBuffer[CURL_ERROR_SIZE];
+    wxString                m_szLastError;
 
     // for events:
     wxEvtHandler*			m_pEvtHandler;
