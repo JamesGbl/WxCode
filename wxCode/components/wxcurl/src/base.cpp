@@ -559,10 +559,13 @@ void wxCurlBase::DumpErrorIfNeed(CURLcode error) const
 {
     if (m_bVerbose && error != CURLE_OK)
     {
-        wxString errStr = wxT("wxCURL: ") + wxString(curl_easy_strerror(error), wxConvLocal);
+        wxString errStr = wxT("[wxCURL] ") + wxString(curl_easy_strerror(error), wxConvLocal);
 
-        wxCurlBase *us = wx_const_cast(wxCurlBase*, this);
-        us->m_mosVerbose.Write(errStr.c_str(), errStr.Len());
+        // NOTE: we won't touch nor the verbose stream (which is touched
+        //       by our registered libcurl callbacks) nor the error buffer
+        //       (which is again touched by libcurl).
+        // This function exist only to do this wxLogDebug:
+        wxLogDebug(errStr);
     }
 }
 
