@@ -91,11 +91,9 @@ bool wxCurlBaseDialog::Create(const wxString &url, const wxString& title, const 
     return true;
 }
 
-wxCurlDialogReturnFlag wxCurlBaseDialog::StartModal()
+wxCurlDialogReturnFlag wxCurlBaseDialog::RunModal()
 {
-#ifdef __WXDEBUG__
-    m_pThread->GetCurlSession()->SetVerbose(true);
-#endif
+    m_pThread->GetCurlSession()->SetVerbose(m_bVerbose);
 
     if (!HasFlag(wxCDS_CAN_START))
         m_pThread->StartTransfer();        // start immediately
@@ -246,6 +244,14 @@ void wxCurlBaseDialog::EndModal(wxCurlDialogReturnFlag retCode)
 
 void wxCurlBaseDialog::UpdateLabels(wxCurlProgressBaseEvent *ev)
 {
+    // ignore this update if the thread has been paused
+    // since this event was generated...
+    if (m_pThread->IsPaused())
+        return;
+
+    // NOTE: we need instead to process this update if the thread has completed
+    //       but that's for another reason: see m_pLastEvent stuff
+
     double fraction = ev->GetPercent();
     if (fraction != 0)
     {
@@ -366,6 +372,9 @@ void wxCurlBaseDialog::OnPauseResume(wxCommandEvent &WXUNUSED(ev))
     {
         m_pThread->Pause();
         FindWindowById(PauseResumeButtonId)->SetLabel(wxT("Resume"));
+
+        if (m_pSpeed)
+            m_pSpeed->SetLabel(wxT("0 (transfer paused)"));
     }
     else
     {

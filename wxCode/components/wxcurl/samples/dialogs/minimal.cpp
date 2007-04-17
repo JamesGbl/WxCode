@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////
 // Name:        minimal.cpp
-// Purpose:     Minimal wxWindows sample
+// Purpose:     Minimal wxCURL sample
 // Author:      Francesco Montorsi
 // Modified by:
 // Created:     04/01/07
@@ -81,7 +81,7 @@ enum
     // (where it is special and put into the "Apple" menu)
     Minimal_About = wxID_ABOUT,
 
-    // add here new menu IDs
+    Minimal_Verbose,
     Minimal_Download,
     Minimal_Upload,
 
@@ -124,7 +124,7 @@ public:
 
 protected:
 
-    wxMenu *menuDialog;
+    wxMenu *m_menuDialog, *m_menuFile;
 
 private:
     // any class wishing to process wxWindows events must use this macro
@@ -141,6 +141,7 @@ private:
 BEGIN_EVENT_TABLE(MyFrame, wxFrame)
     EVT_MENU(Minimal_Quit,  MyFrame::OnQuit)
     EVT_MENU(Minimal_About, MyFrame::OnAbout)
+
     EVT_MENU(Minimal_Download, MyFrame::OnDownload)
     EVT_MENU(Minimal_Upload, MyFrame::OnUpload)
 
@@ -210,36 +211,40 @@ MyFrame::MyFrame(const wxString& title)
     wxMenu *helpMenu = new wxMenu;
     helpMenu->Append(Minimal_About, _T("&About...\tF1"), _T("Show about dialog"));
 
-    wxMenu *menuFile = new wxMenu;
-    menuFile->Append(Minimal_Download, _T("Download dialog..."), _T("Shows wxCurlDownloadDialog."));	
-    menuFile->Append(Minimal_Upload, _T("Upload dialog..."), _T("Shows wxCurlUploadDialog."));
-    menuFile->AppendSeparator();
-    menuFile->Append(Minimal_Quit, _T("E&xit\tAlt-X"), _T("Quit this program"));	
+    m_menuFile = new wxMenu;
+#ifdef __WXDEBUG__
+    m_menuFile->AppendCheckItem(Minimal_Verbose, _T("Be verbose"), _T("Does something only in debug builds!"));    
+#endif
+    m_menuFile->AppendSeparator();
+    m_menuFile->Append(Minimal_Download, _T("Download dialog..."), _T("Shows wxCurlDownloadDialog."));	
+    m_menuFile->Append(Minimal_Upload, _T("Upload dialog..."), _T("Shows wxCurlUploadDialog."));
+    m_menuFile->AppendSeparator();
+    m_menuFile->Append(Minimal_Quit, _T("E&xit\tAlt-X"), _T("Quit this program"));	
 
-    menuDialog = new wxMenu;
-    menuDialog->AppendCheckItem(Minimal_Elapsed_time, _T("Show elapsed time"));
-    menuDialog->AppendCheckItem(Minimal_Estimated_time, _T("Show estimated total time"));
-    menuDialog->AppendCheckItem(Minimal_Remaining_time, _T("Show estimated remaining time"));
-    menuDialog->AppendSeparator();
-    menuDialog->AppendCheckItem(Minimal_Speed, _T("Show transfer speed"));
-    menuDialog->AppendCheckItem(Minimal_Size, _T("Show how much was transferred so far"));
-    menuDialog->AppendCheckItem(Minimal_Url, _T("Show the URL of the transfer"));
-    menuDialog->AppendSeparator();
-    menuDialog->AppendCheckItem(Minimal_Can_abort, _T("Transfer can be aborted"));
-    menuDialog->AppendCheckItem(Minimal_Can_start, _T("Transfer do not start automatically"));
-    menuDialog->AppendCheckItem(Minimal_Can_pause, _T("Transfer can be paused"));
-    menuDialog->AppendSeparator();
-    menuDialog->AppendCheckItem(Minimal_Auto_close, _T("Auto-close dialog at completion"));
-    menuDialog->AppendSeparator();
-    menuDialog->AppendCheckItem(Minimal_Bitmap, _T("Show bitmap in the dialog"));
-    menuDialog->AppendSeparator();
-    menuDialog->Append(Minimal_CheckAll, _T("Check all"), _T("check all previous menu items"));    
-    menuDialog->Append(Minimal_UnCheckAll, _T("Uncheck all"), _T("uncheck all previous menu items"));    
+    m_menuDialog = new wxMenu;
+    m_menuDialog->AppendCheckItem(Minimal_Elapsed_time, _T("Show elapsed time"));
+    m_menuDialog->AppendCheckItem(Minimal_Estimated_time, _T("Show estimated total time"));
+    m_menuDialog->AppendCheckItem(Minimal_Remaining_time, _T("Show estimated remaining time"));
+    m_menuDialog->AppendSeparator();
+    m_menuDialog->AppendCheckItem(Minimal_Speed, _T("Show transfer speed"));
+    m_menuDialog->AppendCheckItem(Minimal_Size, _T("Show how much was transferred so far"));
+    m_menuDialog->AppendCheckItem(Minimal_Url, _T("Show the URL of the transfer"));
+    m_menuDialog->AppendSeparator();
+    m_menuDialog->AppendCheckItem(Minimal_Can_abort, _T("Transfer can be aborted"));
+    m_menuDialog->AppendCheckItem(Minimal_Can_start, _T("Transfer do not start automatically"));
+    m_menuDialog->AppendCheckItem(Minimal_Can_pause, _T("Transfer can be paused"));
+    m_menuDialog->AppendSeparator();
+    m_menuDialog->AppendCheckItem(Minimal_Auto_close, _T("Auto-close dialog at completion"));
+    m_menuDialog->AppendSeparator();
+    m_menuDialog->AppendCheckItem(Minimal_Bitmap, _T("Show bitmap in the dialog"));
+    m_menuDialog->AppendSeparator();
+    m_menuDialog->Append(Minimal_CheckAll, _T("Check all"), _T("check all previous menu items"));    
+    m_menuDialog->Append(Minimal_UnCheckAll, _T("Uncheck all"), _T("uncheck all previous menu items"));    
 
     // now append the freshly created menu to the menu bar...
     wxMenuBar *menuBar = new wxMenuBar();
-    menuBar->Append(menuFile, _T("&File"));
-    menuBar->Append(menuDialog, _T("&Dialog style"));
+    menuBar->Append(m_menuFile, _T("&File"));
+    menuBar->Append(m_menuDialog, _T("&Dialog style"));
     menuBar->Append(helpMenu, _T("&Help"));
 
     // ... and attach this menu bar to the frame
@@ -261,16 +266,16 @@ int MyFrame::GetStyle() const
 {
     int ret = 0;
 
-    if (menuDialog->IsChecked(Minimal_Elapsed_time)) ret |= wxCDS_ELAPSED_TIME;
-    if (menuDialog->IsChecked(Minimal_Estimated_time)) ret |= wxCDS_ESTIMATED_TIME;
-    if (menuDialog->IsChecked(Minimal_Remaining_time)) ret |= wxCDS_REMAINING_TIME;
-    if (menuDialog->IsChecked(Minimal_Speed)) ret |= wxCDS_SPEED;
-    if (menuDialog->IsChecked(Minimal_Size)) ret |= wxCDS_SIZE;
-    if (menuDialog->IsChecked(Minimal_Url)) ret |= wxCDS_URL;
-    if (menuDialog->IsChecked(Minimal_Can_abort)) ret |= wxCDS_CAN_ABORT;
-    if (menuDialog->IsChecked(Minimal_Can_start)) ret |= wxCDS_CAN_START;
-    if (menuDialog->IsChecked(Minimal_Can_pause)) ret |= wxCDS_CAN_PAUSE;
-    if (menuDialog->IsChecked(Minimal_Auto_close)) ret |= wxCDS_AUTO_CLOSE;
+    if (m_menuDialog->IsChecked(Minimal_Elapsed_time)) ret |= wxCDS_ELAPSED_TIME;
+    if (m_menuDialog->IsChecked(Minimal_Estimated_time)) ret |= wxCDS_ESTIMATED_TIME;
+    if (m_menuDialog->IsChecked(Minimal_Remaining_time)) ret |= wxCDS_REMAINING_TIME;
+    if (m_menuDialog->IsChecked(Minimal_Speed)) ret |= wxCDS_SPEED;
+    if (m_menuDialog->IsChecked(Minimal_Size)) ret |= wxCDS_SIZE;
+    if (m_menuDialog->IsChecked(Minimal_Url)) ret |= wxCDS_URL;
+    if (m_menuDialog->IsChecked(Minimal_Can_abort)) ret |= wxCDS_CAN_ABORT;
+    if (m_menuDialog->IsChecked(Minimal_Can_start)) ret |= wxCDS_CAN_START;
+    if (m_menuDialog->IsChecked(Minimal_Can_pause)) ret |= wxCDS_CAN_PAUSE;
+    if (m_menuDialog->IsChecked(Minimal_Auto_close)) ret |= wxCDS_AUTO_CLOSE;
 
     return ret;
 }
@@ -305,7 +310,7 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 void MyFrame::OnCheckAll(wxCommandEvent& event)
 {
     for (int id = Minimal_Elapsed_time; id <= Minimal_Bitmap; id++)
-        menuDialog->Check(id, event.GetId() == Minimal_CheckAll);
+        m_menuDialog->Check(id, event.GetId() == Minimal_CheckAll);
 }
 
 void MyFrame::OnDownload(wxCommandEvent& WXUNUSED(event))
@@ -315,7 +320,7 @@ void MyFrame::OnDownload(wxCommandEvent& WXUNUSED(event))
                       wxT("http://kent.dl.sourceforge.net/sourceforge/wxcode/wxCode.tar.bz2"), this);
 
     wxBitmap bmp;
-    if (menuDialog->IsChecked(Minimal_Bitmap))
+    if (m_menuDialog->IsChecked(Minimal_Bitmap))
         bmp = wxBitmap(www_xpm);
 
     wxFileOutputStream fos(wxT("downloaded_stuff"));
@@ -325,10 +330,12 @@ void MyFrame::OnDownload(wxCommandEvent& WXUNUSED(event))
                              bmp,
                              this,
                              GetStyle());
+    dlg.SetVerbose(m_menuFile->IsChecked(Minimal_Verbose));
+
     if (!dlg.IsOk())
         return;
 
-    wxCurlDialogReturnFlag flag = dlg.StartModal();
+    wxCurlDialogReturnFlag flag = dlg.RunModal();
     LogResult(flag);
 
     if (flag == wxCDRF_SUCCESS && fos.GetLength() < 10000)
@@ -362,7 +369,7 @@ void MyFrame::OnUpload(wxCommandEvent& WXUNUSED(event))
     wxLogDebug(wxT("Going to update %d bytes"), is.GetSize());
 
     wxBitmap bmp;
-    if (menuDialog->IsChecked(Minimal_Bitmap))
+    if (m_menuDialog->IsChecked(Minimal_Bitmap))
         bmp = wxBitmap(www_xpm);
 
     wxCurlUploadDialog dlg2(url, &is,
@@ -371,10 +378,12 @@ void MyFrame::OnUpload(wxCommandEvent& WXUNUSED(event))
                              bmp,
                              this,
                              GetStyle());
+    dlg2.SetVerbose(m_menuFile->IsChecked(Minimal_Verbose));
+
     if (!dlg2.IsOk())
         return;
 
-    LogResult(dlg2.StartModal());
+    LogResult(dlg2.RunModal());
 }
 
 

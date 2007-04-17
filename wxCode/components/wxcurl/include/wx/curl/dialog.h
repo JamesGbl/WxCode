@@ -64,6 +64,11 @@ public:
     wxCurlBaseDialog() 
     {
         m_bTransferComplete = false;
+#ifdef __WXDEBUG__
+        m_bVerbose = true;
+#else
+        m_bVerbose = false;
+#endif
 
         // some of these may remain NULL:
         m_pElapsedTime = m_pEstimatedTime = m_pRemainingTime = NULL;
@@ -93,7 +98,7 @@ public:
     //! Shows the dialog as modal. If the wxCDS_CAN_START flag was not given,
     //! then the transfer starts automatically.
     //! Note that you should use this function instead of wxDialog::ShowModal().
-    wxCurlDialogReturnFlag StartModal();
+    wxCurlDialogReturnFlag RunModal();
 
     //! Shows the dialog as modeless.
 //    bool Show(const bool show);
@@ -101,8 +106,17 @@ public:
     //! Returns true if the creation of the dialog was successful.
     bool IsOk() const { return m_pThread != NULL && m_pThread->IsOk(); }
 
+    //! Returns the exit code of the dialog (call after #RunModal).
     virtual wxCurlDialogReturnFlag GetReturnCode() const
         { return (wxCurlDialogReturnFlag)wxDialog::GetReturnCode(); }
+
+    //! Sets the internal wxCurlBase object to be verbose.
+    void SetVerbose(bool enable)
+        { m_bVerbose=enable; }
+    
+    //! Returns true if the internal wxCurlBase is verbose (on by default in debug builds).
+    bool IsVerbose() const
+        { return m_bVerbose; }
 
 protected:     // internal utils
 
@@ -152,6 +166,9 @@ protected:
     // wxWindow's style member is too small for all our flags and wxWindow/wxDialog ones.
     // So we use our own...
     long m_nStyle;
+
+    // should we be verbose?
+    bool m_bVerbose;
 
 protected:      // controls
 
