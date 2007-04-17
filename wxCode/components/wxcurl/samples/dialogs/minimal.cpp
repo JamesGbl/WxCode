@@ -214,7 +214,7 @@ MyFrame::MyFrame(const wxString& title)
     m_menuFile = new wxMenu;
 #ifdef __WXDEBUG__
     m_menuFile->AppendCheckItem(Minimal_Verbose, _T("Be verbose"), _T("Does something only in debug builds!"));
-    m_menuFile->Check(Minimal_Verbose);
+    m_menuFile->Check(Minimal_Verbose, true);
 #endif
     m_menuFile->AppendSeparator();
     m_menuFile->Append(Minimal_Download, _T("Download dialog..."), _T("Shows wxCurlDownloadDialog."));	

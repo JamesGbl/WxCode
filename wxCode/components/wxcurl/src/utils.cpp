@@ -36,8 +36,8 @@ DEFINE_EVENT_TYPE(wxCURL_SIZE_QUERY_EVENT)
 
 extern "C"
 {
-    int wxcurl_size_query_progress_func(void* ptr, double rDlTotal, double rDlNow,
-                                        double rUlTotal, double rUlNow)
+    int wxcurl_size_query_progress_func(void* ptr, double rDlTotal, double WXUNUSED(rDlNow),
+                                        double WXUNUSED(rUlTotal), double WXUNUSED(rUlNow))
     {
         unsigned long *p = (unsigned long *)ptr;
         if (p) *p = (unsigned long)rDlTotal;

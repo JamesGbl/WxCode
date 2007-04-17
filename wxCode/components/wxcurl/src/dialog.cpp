@@ -30,13 +30,13 @@
         #include <wx/msgdlg.h>
         #include <wx/settings.h>
         #include <wx/button.h>
-        #include <wx/statline.h>
         #include <wx/statbmp.h>
     #endif
 #endif
 
 #include <wx/wfstream.h>
 #include <wx/filename.h>
+#include <wx/statline.h>
 #include "wx/curl/dialog.h"
 
 

@@ -484,10 +484,6 @@ SOURCE=..\src\http.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\internetfiletransfer.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\telnet.cpp
 # End Source File
 # Begin Source File

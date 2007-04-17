@@ -361,7 +361,7 @@ public:
 
     //! Like #SetOpt but this function is specific for string options.
     bool SetStringOpt(CURLoption option, const wxString &str)
-        { SetOpt(option, (const wxChar*)str); }     // need explicit cast in wx 2.9
+        { return SetOpt(option, (const wxChar*)str); }     // need explicit cast in wx 2.9
 
     //! Gets an info from this libCURL session instance.
     //! See the curl_easy_getinfo() function call for more info.
