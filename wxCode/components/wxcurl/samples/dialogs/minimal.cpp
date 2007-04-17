@@ -4,7 +4,7 @@
 // Author:      Francesco Montorsi
 // Modified by:
 // Created:     04/01/07
-// RCS-ID:      $Id: minimal.cpp,v 1.2 2005/11/08 11:23:59 frm Exp $
+// RCS-ID:      $Id$
 // Copyright:   (c) Francesco Montorsi
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -304,7 +304,7 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 
 void MyFrame::OnCheckAll(wxCommandEvent& event)
 {
-    for (int id = Minimal_Elapsed_time; id <= Minimal_Auto_close; id++)
+    for (int id = Minimal_Elapsed_time; id <= Minimal_Bitmap; id++)
         menuDialog->Check(id, event.GetId() == Minimal_CheckAll);
 }
 
