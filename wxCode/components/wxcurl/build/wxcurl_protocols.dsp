@@ -468,6 +468,10 @@ LINK32=link.exe
 # PROP Default_Filter ""
 # Begin Source File
 
+SOURCE=..\samples\protocols\curl_app.rc
+# End Source File
+# Begin Source File
+
 SOURCE=..\samples\protocols\wxCURLApp.cpp
 # End Source File
 # Begin Source File

@@ -192,20 +192,23 @@ ____WX_SHARED =
 !if "$(WX_SHARED)" == "1"
 ____WX_SHARED = -DWXUSINGDLL
 !endif
+!if "$(WX_SHARED)" == "0"
+____WX_SHARED_1 = 
+!endif
+!if "$(WX_SHARED)" == "1"
+____WX_SHARED_1 = -dWXUSINGDLL
+!endif
 !if "$(WX_UNICODE)" == "1"
 __WXUNICODE_DEFINE_p = -D_UNICODE
+!endif
+!if "$(WX_UNICODE)" == "1"
+__WXUNICODE_DEFINE_p_0 = -d_UNICODE
 !endif
 !if "$(WX_DEBUG)" == "1"
 __WXDEBUG_DEFINE_p = -D__WXDEBUG__
 !endif
-!if "$(WX_DEBUG)" == "0" && "$(WX_UNICODE)" == "1"
-WXLIBPOSTFIX = u
-!endif
-!if "$(WX_DEBUG)" == "1" && "$(WX_UNICODE)" == "0"
-WXLIBPOSTFIX = d
-!endif
-!if "$(WX_DEBUG)" == "1" && "$(WX_UNICODE)" == "1"
-WXLIBPOSTFIX = ud
+!if "$(WX_DEBUG)" == "1"
+__WXDEBUG_DEFINE_p_0 = -d__WXDEBUG__
 !endif
 !if "$(WX_DEBUG)" == "0"
 VAR = -O2
@@ -296,6 +299,15 @@ __WXLIB_BASE_NAME_p = wxmsw$(WX_VERSION)d.lib
 !endif
 !if "$(WX_DEBUG)" == "1" && "$(WX_MONOLITHIC)" == "1" && "$(WX_UNICODE)" == "1"
 __WXLIB_BASE_NAME_p = wxmsw$(WX_VERSION)ud.lib
+!endif
+!if "$(WX_DEBUG)" == "0" && "$(WX_UNICODE)" == "1"
+WXLIBPOSTFIX = u
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_UNICODE)" == "0"
+WXLIBPOSTFIX = d
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_UNICODE)" == "1"
+WXLIBPOSTFIX = ud
 !endif
 !if "$(WX_SHARED)" == "0"
 WXLIBPATH = \lib\bcc_lib
@@ -388,17 +400,17 @@ make_dir_wxcurl_lib:
 make_dir_wxcurl_dll: 
 	if not exist ..\lib\bcc_$(____wxcurl_4) mkdir ..\lib\bcc_$(____wxcurl_4)
 
-..\samples\protocols\protocols.exe: $(PROTOCOLS_OBJECTS) $(__wxcurl_lib___depname) make_sample_dir_protocols
+..\samples\protocols\protocols.exe: $(PROTOCOLS_OBJECTS) $(__wxcurl_lib___depname) make_sample_dir_protocols  bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_curl_app.res
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -L$(WX_DIR)$(WXLIBPATH) $(VAR_3) -L..$(WXLIBPATH) -aa -L..\thirdparty\curl\lib @&&|
-	c0w32.obj $(PROTOCOLS_OBJECTS),$@,, ..\lib\bcc_$(____wxcurl_4)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.lib libcurl.lib $(__WXLIB_XRC_NAME_p) $(__WXLIB_HTML_NAME_p) $(__WXLIB_ADV_NAME_p) $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32.lib,,
+	c0w32.obj $(PROTOCOLS_OBJECTS),$@,, ..\lib\bcc_$(____wxcurl_4)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.lib libcurl.lib $(__WXLIB_XRC_NAME_p) $(__WXLIB_HTML_NAME_p) $(__WXLIB_ADV_NAME_p) $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32.lib,, bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_curl_app.res
 |
 
 make_sample_dir_protocols: 
 	if not exist ..\samples\protocols mkdir ..\samples\protocols
 
-..\samples\dialogs\dialogs.exe: $(DIALOGS_OBJECTS) $(__wxcurl_lib___depname) make_sample_dir_dialogs
+..\samples\dialogs\dialogs.exe: $(DIALOGS_OBJECTS) $(__wxcurl_lib___depname) make_sample_dir_dialogs  bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs_minimal.res
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -L$(WX_DIR)$(WXLIBPATH) $(VAR_3) -L..$(WXLIBPATH) -aa -L..\thirdparty\curl\lib @&&|
-	c0w32.obj $(DIALOGS_OBJECTS),$@,, ..\lib\bcc_$(____wxcurl_4)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.lib libcurl.lib $(__WXLIB_XRC_NAME_p) $(__WXLIB_HTML_NAME_p) $(__WXLIB_ADV_NAME_p) $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32.lib,,
+	c0w32.obj $(DIALOGS_OBJECTS),$@,, ..\lib\bcc_$(____wxcurl_4)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.lib libcurl.lib $(__WXLIB_XRC_NAME_p) $(__WXLIB_HTML_NAME_p) $(__WXLIB_ADV_NAME_p) $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32.lib,, bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs_minimal.res
 |
 
 make_sample_dir_dialogs: 
@@ -558,6 +570,12 @@ bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxPutTextDialog.obj: .
 bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxTraceDialog.obj: ..\samples\protocols\wxTraceDialog.cpp
 	$(CXX) -q -c -P -o$@ $(PROTOCOLS_CXXFLAGS) $**
 
+bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_curl_app.res: ..\samples\protocols\curl_app.rc
+	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include  $(____WX_SHARED_1) $(__WXUNICODE_DEFINE_p_0) $(__WXDEBUG_DEFINE_p_0) -d__WXMSW__ -i$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\thirdparty\curl\include -i..\samples\protocols $**
+
 bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs_minimal.obj: ..\samples\dialogs\minimal.cpp
 	$(CXX) -q -c -P -o$@ $(DIALOGS_CXXFLAGS) $**
+
+bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs_minimal.res: ..\samples\dialogs\minimal.rc
+	brcc32 -32 -r -fo$@ -i$(BCCDIR)\include  $(____WX_SHARED_1) $(__WXUNICODE_DEFINE_p_0) $(__WXDEBUG_DEFINE_p_0) -d__WXMSW__ -i$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i$(WX_DIR)\include -i..\include -i..\thirdparty\curl\include -i..\samples\dialogs $**
 

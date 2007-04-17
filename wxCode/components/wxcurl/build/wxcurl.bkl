@@ -59,8 +59,6 @@
     <!-- ==================== -->
 
     <template id="curlsample" template="curlbasic">
-        <has-win32-res/>
-
         <!-- lib list: -->
         <library>wxcurl_lib</library>
         <curlib/>
@@ -75,10 +73,12 @@
 
     <wxcode-sample id="protocols" template="curlsample">
         <dir>samples/protocols</dir>
+        <has-win32-res/>
     </wxcode-sample>
 
     <wxcode-sample id="dialogs" template="curlsample">
         <dir>samples/dialogs</dir>
+        <has-win32-res/>
     </wxcode-sample>
 
 

@@ -40,6 +40,7 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 WX_CXXFLAGS = @WX_CXXFLAGS@
 WX_LIBS = @WX_LIBS@
+WX_RESCOMP = @WX_RESCOMP@
 WX_VERSION_MAJOR = @WX_VERSION_MAJOR@
 WX_VERSION_MINOR = @WX_VERSION_MINOR@
 WX_PORT = @WX_PORT@
@@ -217,12 +218,14 @@ COND_USE_SOSYMLINKS_1___wxcurl_dll___so_symlinks_uninst_cmd = rm -f \
 COND_PLATFORM_OS2_1___protocols___os2_emxbindcmd = $(NM) protocols$(EXEEXT) | \
 	if grep -q pmwin.763 ; then emxbind -ep protocols$(EXEEXT) ; fi
 @COND_PLATFORM_OS2_1@__protocols___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___protocols___os2_emxbindcmd)
+@COND_PLATFORM_WIN32_1@__protocols___win32rc = protocols_curl_app_rc.o
 @COND_PLATFORM_MAC_1@__dialogs___mac_setfilecmd = \
 @COND_PLATFORM_MAC_1@	$(SETFILE) -t APPL \
 @COND_PLATFORM_MAC_1@	$(srcdir)/samples/dialogs/dialogs$(EXEEXT)
 COND_PLATFORM_OS2_1___dialogs___os2_emxbindcmd = $(NM) dialogs$(EXEEXT) | if \
 	grep -q pmwin.763 ; then emxbind -ep dialogs$(EXEEXT) ; fi
 @COND_PLATFORM_OS2_1@__dialogs___os2_emxbindcmd = $(COND_PLATFORM_OS2_1___dialogs___os2_emxbindcmd)
+@COND_PLATFORM_WIN32_1@__dialogs___win32rc = dialogs_minimal_rc.o
 
 ### Targets: ###
 
@@ -304,7 +307,7 @@ distclean: clean
 @COND_WX_SHARED_1@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_WX_SHARED_1@	done
 
-$(srcdir)/samples/protocols/protocols$(EXEEXT): $(PROTOCOLS_OBJECTS) $(__wxcurl_lib___depname) make_sample_dir_protocols
+$(srcdir)/samples/protocols/protocols$(EXEEXT): $(PROTOCOLS_OBJECTS) $(__wxcurl_lib___depname) make_sample_dir_protocols $(__protocols___win32rc)
 	$(CXX) -o $@ $(PROTOCOLS_OBJECTS) -L$(srcdir)/lib $(LDFLAGS) -L$(srcdir)/lib $(LDFLAGS_GUI) `curl-config --libs`  $(LIBS) -lwxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxcurl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR) -lcurl $(WX_LIBS)
 	
 	$(__protocols___mac_setfilecmd)
@@ -313,7 +316,7 @@ $(srcdir)/samples/protocols/protocols$(EXEEXT): $(PROTOCOLS_OBJECTS) $(__wxcurl_
 make_sample_dir_protocols: 
 	@mkdir -p $(srcdir)/samples/protocols
 
-$(srcdir)/samples/dialogs/dialogs$(EXEEXT): $(DIALOGS_OBJECTS) $(__wxcurl_lib___depname) make_sample_dir_dialogs
+$(srcdir)/samples/dialogs/dialogs$(EXEEXT): $(DIALOGS_OBJECTS) $(__wxcurl_lib___depname) make_sample_dir_dialogs $(__dialogs___win32rc)
 	$(CXX) -o $@ $(DIALOGS_OBJECTS) -L$(srcdir)/lib $(LDFLAGS) -L$(srcdir)/lib $(LDFLAGS_GUI) `curl-config --libs`  $(LIBS) -lwxcode_$(WX_PORT)$(WXLIBPOSTFIX)_wxcurl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR) -lcurl $(WX_LIBS)
 	
 	$(__dialogs___mac_setfilecmd)
@@ -474,8 +477,14 @@ protocols_wxPutTextDialog.o: $(srcdir)/samples/protocols/wxPutTextDialog.cpp
 protocols_wxTraceDialog.o: $(srcdir)/samples/protocols/wxTraceDialog.cpp
 	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxTraceDialog.cpp
 
+protocols_curl_app_rc.o: $(srcdir)/samples/protocols/curl_app.rc
+	$(WX_RESCOMP) -i$< -o$@  --include-dir $(srcdir)/include --include-dir $(srcdir)/samples/protocols
+
 dialogs_minimal.o: $(srcdir)/samples/dialogs/minimal.cpp
 	$(CXXC) -c -o $@ $(DIALOGS_CXXFLAGS) $(srcdir)/samples/dialogs/minimal.cpp
+
+dialogs_minimal_rc.o: $(srcdir)/samples/dialogs/minimal.rc
+	$(WX_RESCOMP) -i$< -o$@  --include-dir $(srcdir)/include --include-dir $(srcdir)/samples/dialogs
 
 
 # Include dependency info, if present:

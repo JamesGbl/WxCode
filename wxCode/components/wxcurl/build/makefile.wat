@@ -105,37 +105,6 @@ ____wxcurl_3 = lib
 !ifeq WX_SHARED 1
 ____wxcurl_3 = dll
 !endif
-____WX_SHARED =
-!ifeq WX_SHARED 0
-____WX_SHARED = 
-!endif
-!ifeq WX_SHARED 1
-____WX_SHARED = -dWXUSINGDLL
-!endif
-__WXUNICODE_DEFINE_p =
-!ifeq WX_UNICODE 1
-__WXUNICODE_DEFINE_p = -d_UNICODE
-!endif
-__WXDEBUG_DEFINE_p =
-!ifeq WX_DEBUG 1
-__WXDEBUG_DEFINE_p = -d__WXDEBUG__
-!endif
-WXLIBPOSTFIX =
-!ifeq WX_DEBUG 0
-!ifeq WX_UNICODE 1
-WXLIBPOSTFIX = u
-!endif
-!endif
-!ifeq WX_DEBUG 1
-!ifeq WX_UNICODE 0
-WXLIBPOSTFIX = d
-!endif
-!endif
-!ifeq WX_DEBUG 1
-!ifeq WX_UNICODE 1
-WXLIBPOSTFIX = ud
-!endif
-!endif
 VAR =
 !ifeq WX_DEBUG 0
 VAR = -ot -ox
@@ -359,6 +328,37 @@ __WXLIB_BASE_NAME_p = wxmsw$(WX_VERSION)ud.lib
 !endif
 !endif
 !endif
+____WX_SHARED =
+!ifeq WX_SHARED 0
+____WX_SHARED = 
+!endif
+!ifeq WX_SHARED 1
+____WX_SHARED = -dWXUSINGDLL
+!endif
+__WXUNICODE_DEFINE_p =
+!ifeq WX_UNICODE 1
+__WXUNICODE_DEFINE_p = -d_UNICODE
+!endif
+__WXDEBUG_DEFINE_p =
+!ifeq WX_DEBUG 1
+__WXDEBUG_DEFINE_p = -d__WXDEBUG__
+!endif
+WXLIBPOSTFIX =
+!ifeq WX_DEBUG 0
+!ifeq WX_UNICODE 1
+WXLIBPOSTFIX = u
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_UNICODE 0
+WXLIBPOSTFIX = d
+!endif
+!endif
+!ifeq WX_DEBUG 1
+!ifeq WX_UNICODE 1
+WXLIBPOSTFIX = ud
+!endif
+!endif
 WXLIBPATH =
 !ifeq WX_SHARED 0
 WXLIBPATH = \lib\wat_lib
@@ -515,7 +515,7 @@ make_dir_wxcurl_lib :
 make_dir_wxcurl_dll :  
 	if not exist ..\lib\wat_$(____wxcurl_3) mkdir ..\lib\wat_$(____wxcurl_3)
 
-..\samples\protocols\protocols.exe :  $(PROTOCOLS_OBJECTS) $(__wxcurl_lib___depname) make_sample_dir_protocols
+..\samples\protocols\protocols.exe :  $(PROTOCOLS_OBJECTS) $(__wxcurl_lib___depname) make_sample_dir_protocols watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_curl_app.res
 	@%create watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols.lbc
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols.lbc option quiet
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols.lbc name $^@
@@ -523,14 +523,14 @@ make_dir_wxcurl_dll :
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols.lbc $(LDFLAGS) libpath $(WX_DIR)$(WXLIBPATH) $(VAR_3) libpath ..$(WXLIBPATH) system nt_win ref '_WinMain@16' libpath ..\thirdparty\curl\lib
 	@for %i in ($(PROTOCOLS_OBJECTS)) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols.lbc file %i
 	@for %i in ( ..\lib\wat_$(____wxcurl_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.lib libcurl.lib $(__WXLIB_XRC_NAME_p) $(__WXLIB_HTML_NAME_p) $(__WXLIB_ADV_NAME_p) $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols.lbc library %i
-	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols.lbc option resource=
+	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols.lbc option resource=watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_curl_app.res
 	@for %i in () do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols.lbc option stack=%i
 	wlink @watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols.lbc
 
 make_sample_dir_protocols :  
 	if not exist ..\samples\protocols mkdir ..\samples\protocols
 
-..\samples\dialogs\dialogs.exe :  $(DIALOGS_OBJECTS) $(__wxcurl_lib___depname) make_sample_dir_dialogs
+..\samples\dialogs\dialogs.exe :  $(DIALOGS_OBJECTS) $(__wxcurl_lib___depname) make_sample_dir_dialogs watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs_minimal.res
 	@%create watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs.lbc
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs.lbc option quiet
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs.lbc name $^@
@@ -538,7 +538,7 @@ make_sample_dir_protocols :
 	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs.lbc $(LDFLAGS) libpath $(WX_DIR)$(WXLIBPATH) $(VAR_3) libpath ..$(WXLIBPATH) system nt_win ref '_WinMain@16' libpath ..\thirdparty\curl\lib
 	@for %i in ($(DIALOGS_OBJECTS)) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs.lbc file %i
 	@for %i in ( ..\lib\wat_$(____wxcurl_3)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.lib libcurl.lib $(__WXLIB_XRC_NAME_p) $(__WXLIB_HTML_NAME_p) $(__WXLIB_ADV_NAME_p) $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs.lbc library %i
-	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs.lbc option resource=
+	@%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs.lbc option resource=watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs_minimal.res
 	@for %i in () do @%append watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs.lbc option stack=%i
 	wlink @watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs.lbc
 
@@ -699,6 +699,12 @@ watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxPutTextDialog.obj : 
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxTraceDialog.obj :  .AUTODEPEND ..\samples\protocols\wxTraceDialog.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(PROTOCOLS_CXXFLAGS) $<
 
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_curl_app.res :  .AUTODEPEND ..\samples\protocols\curl_app.rc
+	wrc -q -ad -bt=nt -r -fo=$^@  $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\thirdparty\curl\include -i=..\samples\protocols $<
+
 watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs_minimal.obj :  .AUTODEPEND ..\samples\dialogs\minimal.cpp
 	$(CXX) -bt=nt -zq -fo=$^@ $(DIALOGS_CXXFLAGS) $<
+
+watmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs_minimal.res :  .AUTODEPEND ..\samples\dialogs\minimal.rc
+	wrc -q -ad -bt=nt -r -fo=$^@  $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) -d__WXMSW__ -i=$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -i=$(WX_DIR)\include -i=..\include -i=..\thirdparty\curl\include -i=..\samples\dialogs $<
 

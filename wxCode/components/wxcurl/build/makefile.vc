@@ -134,14 +134,16 @@ PROTOCOLS_OBJECTS =  \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxPutFTPDialog.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxPutFTPTextDialog.obj \
 	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxPutTextDialog.obj \
-	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxTraceDialog.obj
+	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxTraceDialog.obj \
+	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_curl_app.res
 DIALOGS_CXXFLAGS = /MD$(VAR_7) /DWIN32 $(____WX_SHARED) $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
 	/I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) /I$(WX_DIR)\include $(VAR) \
 	$(VAR_4) $(VAR_6) /Fd..\samples\dialogs\dialogs.pdb /W4 /I..\include \
 	/D_WINDOWS /I..\thirdparty\curl\include /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
 DIALOGS_OBJECTS =  \
-	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs_minimal.obj
+	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs_minimal.obj \
+	vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs_minimal.res
 
 ### Conditionally set variables: ###
 
@@ -174,20 +176,23 @@ ____WX_SHARED =
 !if "$(WX_SHARED)" == "1"
 ____WX_SHARED = /DWXUSINGDLL
 !endif
+!if "$(WX_SHARED)" == "0"
+____WX_SHARED_0 = 
+!endif
+!if "$(WX_SHARED)" == "1"
+____WX_SHARED_0 = /d WXUSINGDLL
+!endif
 !if "$(WX_UNICODE)" == "1"
 __WXUNICODE_DEFINE_p = /D_UNICODE
+!endif
+!if "$(WX_UNICODE)" == "1"
+__WXUNICODE_DEFINE_p_0 = /d _UNICODE
 !endif
 !if "$(WX_DEBUG)" == "1"
 __WXDEBUG_DEFINE_p = /D__WXDEBUG__
 !endif
-!if "$(WX_DEBUG)" == "0" && "$(WX_UNICODE)" == "1"
-WXLIBPOSTFIX = u
-!endif
-!if "$(WX_DEBUG)" == "1" && "$(WX_UNICODE)" == "0"
-WXLIBPOSTFIX = d
-!endif
-!if "$(WX_DEBUG)" == "1" && "$(WX_UNICODE)" == "1"
-WXLIBPOSTFIX = ud
+!if "$(WX_DEBUG)" == "1"
+__WXDEBUG_DEFINE_p_0 = /d __WXDEBUG__
 !endif
 !if "$(WX_DEBUG)" == "0"
 VAR = /O2
@@ -212,6 +217,12 @@ VAR_6 =
 !endif
 !if "$(WX_DEBUG)" == "1"
 VAR_6 = /D_DEBUG
+!endif
+!if "$(WX_DEBUG)" == "0"
+p_1 = 
+!endif
+!if "$(WX_DEBUG)" == "1"
+p_1 = /d _DEBUG
 !endif
 !if "$(WX_DEBUG)" == "0"
 VAR_7 = 
@@ -303,6 +314,15 @@ __WXLIB_BASE_NAME_p = wxmsw$(WX_VERSION)d.lib
 !if "$(WX_DEBUG)" == "1" && "$(WX_MONOLITHIC)" == "1" && "$(WX_UNICODE)" == "1"
 __WXLIB_BASE_NAME_p = wxmsw$(WX_VERSION)ud.lib
 !endif
+!if "$(WX_DEBUG)" == "0" && "$(WX_UNICODE)" == "1"
+WXLIBPOSTFIX = u
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_UNICODE)" == "0"
+WXLIBPOSTFIX = d
+!endif
+!if "$(WX_DEBUG)" == "1" && "$(WX_UNICODE)" == "1"
+WXLIBPOSTFIX = ud
+!endif
 !if "$(WX_SHARED)" == "0"
 WXLIBPATH = \lib\vc_lib
 !endif
@@ -376,7 +396,7 @@ make_dir_wxcurl_lib:
 make_dir_wxcurl_dll: 
 	if not exist ..\lib\vc_$(____wxcurl_4) mkdir ..\lib\vc_$(____wxcurl_4)
 
-..\samples\protocols\protocols.exe: $(PROTOCOLS_OBJECTS) $(__wxcurl_lib___depname) make_sample_dir_protocols
+..\samples\protocols\protocols.exe: $(PROTOCOLS_OBJECTS) $(__wxcurl_lib___depname) make_sample_dir_protocols vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_curl_app.res
 	link /NOLOGO /OUT:$@ $(LDFLAGS) /LIBPATH:$(WX_DIR)$(WXLIBPATH) $(VAR_5) /LIBPATH:..$(WXLIBPATH) /SUBSYSTEM:WINDOWS /LIBPATH:..\thirdparty\curl\lib @<<
 	$(PROTOCOLS_OBJECTS)  ..\lib\vc_$(____wxcurl_4)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.lib libcurl.lib $(__WXLIB_XRC_NAME_p) $(__WXLIB_HTML_NAME_p) $(__WXLIB_ADV_NAME_p) $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
@@ -384,7 +404,7 @@ make_dir_wxcurl_dll:
 make_sample_dir_protocols: 
 	if not exist ..\samples\protocols mkdir ..\samples\protocols
 
-..\samples\dialogs\dialogs.exe: $(DIALOGS_OBJECTS) $(__wxcurl_lib___depname) make_sample_dir_dialogs
+..\samples\dialogs\dialogs.exe: $(DIALOGS_OBJECTS) $(__wxcurl_lib___depname) make_sample_dir_dialogs vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs_minimal.res
 	link /NOLOGO /OUT:$@ $(LDFLAGS) /LIBPATH:$(WX_DIR)$(WXLIBPATH) $(VAR_5) /LIBPATH:..$(WXLIBPATH) /SUBSYSTEM:WINDOWS /LIBPATH:..\thirdparty\curl\lib @<<
 	$(DIALOGS_OBJECTS)  ..\lib\vc_$(____wxcurl_4)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.lib libcurl.lib $(__WXLIB_XRC_NAME_p) $(__WXLIB_HTML_NAME_p) $(__WXLIB_ADV_NAME_p) $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
@@ -544,6 +564,12 @@ vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxPutTextDialog.obj: ..
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxTraceDialog.obj: ..\samples\protocols\wxTraceDialog.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
 
+vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_curl_app.res: ..\samples\protocols\curl_app.rc
+	rc /fo$@  /d WIN32 $(____WX_SHARED_0) $(__WXUNICODE_DEFINE_p_0) $(__WXDEBUG_DEFINE_p_0) /d __WXMSW__ /i $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include $(p_1) /i ..\include /d _WINDOWS /i ..\thirdparty\curl\include /i ..\samples\protocols $**
+
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs_minimal.obj: ..\samples\dialogs\minimal.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(DIALOGS_CXXFLAGS) $**
+
+vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs_minimal.res: ..\samples\dialogs\minimal.rc
+	rc /fo$@  /d WIN32 $(____WX_SHARED_0) $(__WXUNICODE_DEFINE_p_0) $(__WXDEBUG_DEFINE_p_0) /d __WXMSW__ /i $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include $(p_1) /i ..\include /d _WINDOWS /i ..\thirdparty\curl\include /i ..\samples\dialogs $**
 
