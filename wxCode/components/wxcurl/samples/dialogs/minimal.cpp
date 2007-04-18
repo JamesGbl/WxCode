@@ -319,6 +319,8 @@ void MyFrame::OnDownload(wxCommandEvent& WXUNUSED(event))
     wxString url = wxGetTextFromUser(
                       wxT("Please the enter the URL of the resource to download:"), wxT("Type an URL"),
                       wxT("http://kent.dl.sourceforge.net/sourceforge/wxcode/wxCode.tar.bz2"), this);
+    if (url.empty())
+        return;     // user hit cancel
 
     wxBitmap bmp;
     if (m_menuDialog->IsChecked(Minimal_Bitmap))
@@ -327,7 +329,7 @@ void MyFrame::OnDownload(wxCommandEvent& WXUNUSED(event))
     wxFileOutputStream fos(wxT("downloaded_stuff"));
     wxCurlDownloadDialog dlg(url, &fos,
                              wxT("Download dialog title"),
-                             wxT("Your message goes here... Note that the bitmap below can be hidden/customized."),
+                             wxT("Your message goes here...\nNote that the bitmap below can be hidden/customized."),
                              bmp,
                              this,
                              GetStyle());
@@ -362,6 +364,8 @@ void MyFrame::OnUpload(wxCommandEvent& WXUNUSED(event))
                       wxT("Please the enter the URL where the previously-selected file should go:"),
                       wxT("Type an URL"),
                       wxT("http://"), this);
+    if (url.empty())
+        return;     // user hit cancel
 
     wxFileInputStream is(file);
     if (!is.IsOk())
@@ -375,7 +379,7 @@ void MyFrame::OnUpload(wxCommandEvent& WXUNUSED(event))
 
     wxCurlUploadDialog dlg2(url, &is,
                              wxT("Upload dialog title"),
-                             wxT("Your message goes here... Note that the bitmap below can be hidden/customized."),
+                             wxT("Your message goes here...\nNote that the bitmap below can be hidden/customized."),
                              bmp,
                              this,
                              GetStyle());
