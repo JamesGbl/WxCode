@@ -51,7 +51,7 @@ END_EVENT_TABLE()
 
 wxNlstFTPDialog::wxNlstFTPDialog(wxWindow* pParent)
 {
-	wxXmlResource::Get()->LoadDialog(this, pParent, "nlst_ftp_dialog");
+	wxXmlResource::Get()->LoadDialog(this, pParent, wxT("nlst_ftp_dialog"));
 
 	SetSize(400,400);
 
@@ -99,10 +99,10 @@ void wxNlstFTPDialog::OnNlst(wxCommandEvent& WXUNUSED(event))
 
 		if(ftp.Nlst())
 		{
-			szResponse = "SUCCESS!\n\n";
-			szResponse += wxString::Format("\nResponse Code: %d\n\n", ftp.GetResponseCode());
+			szResponse = wxT("SUCCESS!\n\n");
+			szResponse += wxString::Format(wxT("\nResponse Code: %d\n\n"), ftp.GetResponseCode());
 			szResponse += ftp.GetResponseHeader();
-			szResponse += "\n\n";
+			szResponse += wxT("\n\n");
 			szResponse += ftp.GetResponseBody();
 
 			if(m_pTextCtrl)
@@ -110,12 +110,12 @@ void wxNlstFTPDialog::OnNlst(wxCommandEvent& WXUNUSED(event))
 		}
 		else
 		{
-			szResponse = "FAILURE!\n\n";
-			szResponse += wxString::Format("\nResponse Code: %d\n\n", ftp.GetResponseCode());
+			szResponse = wxT("FAILURE!\n\n");
+			szResponse += wxString::Format(wxT("\nResponse Code: %d\n\n"), ftp.GetResponseCode());
 			szResponse += ftp.GetResponseHeader();
-			szResponse += "\n\n";
+			szResponse += wxT("\n\n");
 			szResponse += ftp.GetResponseBody();
-			szResponse += "\n\n";
+			szResponse += wxT("\n\n");
 			szResponse += ftp.GetErrorString();
 
 			if(m_pTextCtrl)

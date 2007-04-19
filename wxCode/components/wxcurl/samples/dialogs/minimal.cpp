@@ -354,7 +354,8 @@ void MyFrame::OnDownload(wxCommandEvent& WXUNUSED(event))
 
 void MyFrame::OnUpload(wxCommandEvent& WXUNUSED(event))
 {
-    wxFileDialog dlg(this, "Choose a file to upload", "", "", "All files (*.*)|*.*", wxFD_OPEN);
+    wxFileDialog dlg(this, wxT("Choose a file to upload"), wxT(""), wxT(""), 
+                     wxT("All files (*.*)|*.*"), wxFD_OPEN);
 
     if (dlg.ShowModal()!=wxID_OK)
         return;

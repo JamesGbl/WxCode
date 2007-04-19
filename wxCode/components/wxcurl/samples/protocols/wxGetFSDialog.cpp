@@ -51,7 +51,7 @@ END_EVENT_TABLE()
 
 wxGetFSDialog::wxGetFSDialog(wxWindow* pParent)
 {
-	wxXmlResource::Get()->LoadDialog(this, pParent, "getfs_dialog");
+	wxXmlResource::Get()->LoadDialog(this, pParent, wxT("getfs_dialog"));
 
 	SetSize(400,400);
 
@@ -101,19 +101,19 @@ void wxGetFSDialog::OnGetFS(wxCommandEvent& WXUNUSED(event))
 
 		if(dav.GetDAVFs(fsResponse))
 		{
-			szResponse = "SUCCESS!\n\n";
-			szResponse += wxString::Format("\nResponse Code: %d\n\n", dav.GetResponseCode());
+			szResponse = wxT("SUCCESS!\n\n");
+			szResponse += wxString::Format(wxT("\nResponse Code: %d\n\n"), dav.GetResponseCode());
 
 			for(unsigned int i = 0; i < fsResponse.Count(); i++)
 			{
 				const wxCurlDAVFs& fsItem = fsResponse[i];
 
 				szResponse += fsItem.GetHREF();
-				szResponse += "\n";
+				szResponse += wxT("\n");
 				szResponse += fsItem.GetStatus();
-				szResponse += "\n";
+				szResponse += wxT("\n");
 				szResponse += fsItem.GetContentType();
-				szResponse += "\n\n";
+				szResponse += wxT("\n\n");
 			}
 
 			if(m_pTextCtrl)
@@ -121,12 +121,12 @@ void wxGetFSDialog::OnGetFS(wxCommandEvent& WXUNUSED(event))
 		}
 		else
 		{
-			szResponse = "FAILURE!\n\n";
-			szResponse += wxString::Format("\nResponse Code: %d\n\n", dav.GetResponseCode());
+			szResponse = wxT("FAILURE!\n\n");
+			szResponse += wxString::Format(wxT("\nResponse Code: %d\n\n"), dav.GetResponseCode());
 			szResponse += dav.GetResponseHeader();
-			szResponse += "\n\n";
+			szResponse += wxT("\n\n");
 			szResponse += dav.GetResponseBody();
-			szResponse += "\n\n";
+			szResponse += wxT("\n\n");
 			szResponse += dav.GetErrorString();
 
 			if(m_pTextCtrl)

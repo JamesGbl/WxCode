@@ -52,7 +52,7 @@ END_EVENT_TABLE()
 
 wxOptionsDialog::wxOptionsDialog(wxWindow* pParent)
 {
-	wxXmlResource::Get()->LoadDialog(this, pParent, "options_dialog");
+	wxXmlResource::Get()->LoadDialog(this, pParent, wxT("options_dialog"));
 
 	SetSize(400,400);
 

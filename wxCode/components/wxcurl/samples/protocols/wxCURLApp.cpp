@@ -47,31 +47,31 @@ wxCURLApp::~wxCURLApp()
 bool wxCURLApp::OnInit()
 {
 	wxXmlResource::Get()->InitAllHandlers();
-	wxXmlResource::Get()->Load("resource/main_dialog.xrc");
-	wxXmlResource::Get()->Load("resource/get_dialog.xrc");
-	wxXmlResource::Get()->Load("resource/get_file_dialog.xrc");
-	wxXmlResource::Get()->Load("resource/put_dialog.xrc");
-	wxXmlResource::Get()->Load("resource/put_text_dialog.xrc");
-	wxXmlResource::Get()->Load("resource/mkcol_dialog.xrc");
-	wxXmlResource::Get()->Load("resource/delete_dialog.xrc");
-	wxXmlResource::Get()->Load("resource/propfind_dialog.xrc");
-	wxXmlResource::Get()->Load("resource/getfs_dialog.xrc");
-	wxXmlResource::Get()->Load("resource/options_dialog.xrc");
-	wxXmlResource::Get()->Load("resource/head_dialog.xrc");
-	wxXmlResource::Get()->Load("resource/trace_dialog.xrc");
-	wxXmlResource::Get()->Load("resource/post_dialog.xrc");
-	wxXmlResource::Get()->Load("resource/get_ftp_dialog.xrc");
-	wxXmlResource::Get()->Load("resource/get_file_ftp_dialog.xrc");
-	wxXmlResource::Get()->Load("resource/put_ftp_dialog.xrc");
-	wxXmlResource::Get()->Load("resource/put_text_ftp_dialog.xrc");
-	wxXmlResource::Get()->Load("resource/mkdir_ftp_dialog.xrc");
-	wxXmlResource::Get()->Load("resource/rmdir_ftp_dialog.xrc");
-	wxXmlResource::Get()->Load("resource/delete_ftp_dialog.xrc");
-	wxXmlResource::Get()->Load("resource/rename_ftp_dialog.xrc");
-	wxXmlResource::Get()->Load("resource/info_ftp_dialog.xrc");
-	wxXmlResource::Get()->Load("resource/list_ftp_dialog.xrc");
-	wxXmlResource::Get()->Load("resource/nlst_ftp_dialog.xrc");
-	wxXmlResource::Get()->Load("resource/getfs_ftp_dialog.xrc");
+	wxXmlResource::Get()->Load(wxT("resource/main_dialog.xrc"));
+	wxXmlResource::Get()->Load(wxT("resource/get_dialog.xrc"));
+	wxXmlResource::Get()->Load(wxT("resource/get_file_dialog.xrc"));
+	wxXmlResource::Get()->Load(wxT("resource/put_dialog.xrc"));
+	wxXmlResource::Get()->Load(wxT("resource/put_text_dialog.xrc"));
+	wxXmlResource::Get()->Load(wxT("resource/mkcol_dialog.xrc"));
+	wxXmlResource::Get()->Load(wxT("resource/delete_dialog.xrc"));
+	wxXmlResource::Get()->Load(wxT("resource/propfind_dialog.xrc"));
+	wxXmlResource::Get()->Load(wxT("resource/getfs_dialog.xrc"));
+	wxXmlResource::Get()->Load(wxT("resource/options_dialog.xrc"));
+	wxXmlResource::Get()->Load(wxT("resource/head_dialog.xrc"));
+	wxXmlResource::Get()->Load(wxT("resource/trace_dialog.xrc"));
+	wxXmlResource::Get()->Load(wxT("resource/post_dialog.xrc"));
+	wxXmlResource::Get()->Load(wxT("resource/get_ftp_dialog.xrc"));
+	wxXmlResource::Get()->Load(wxT("resource/get_file_ftp_dialog.xrc"));
+	wxXmlResource::Get()->Load(wxT("resource/put_ftp_dialog.xrc"));
+	wxXmlResource::Get()->Load(wxT("resource/put_text_ftp_dialog.xrc"));
+	wxXmlResource::Get()->Load(wxT("resource/mkdir_ftp_dialog.xrc"));
+	wxXmlResource::Get()->Load(wxT("resource/rmdir_ftp_dialog.xrc"));
+	wxXmlResource::Get()->Load(wxT("resource/delete_ftp_dialog.xrc"));
+	wxXmlResource::Get()->Load(wxT("resource/rename_ftp_dialog.xrc"));
+	wxXmlResource::Get()->Load(wxT("resource/info_ftp_dialog.xrc"));
+	wxXmlResource::Get()->Load(wxT("resource/list_ftp_dialog.xrc"));
+	wxXmlResource::Get()->Load(wxT("resource/nlst_ftp_dialog.xrc"));
+	wxXmlResource::Get()->Load(wxT("resource/getfs_ftp_dialog.xrc"));
 
 	// create the main application window
 	wxCURLDialog *dialog = new wxCURLDialog(_("wxCURL"),

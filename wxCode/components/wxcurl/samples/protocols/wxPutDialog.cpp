@@ -55,7 +55,7 @@ END_EVENT_TABLE()
 
 wxPutDialog::wxPutDialog(wxWindow* pParent)
 {
-	wxXmlResource::Get()->LoadDialog(this, pParent, "put_dialog");
+	wxXmlResource::Get()->LoadDialog(this, pParent, wxT("put_dialog"));
 
 	SetSize(400, -1);
 
@@ -92,7 +92,8 @@ wxPutDialog::~wxPutDialog()
 
 void wxPutDialog::OnBrowse(wxCommandEvent& WXUNUSED(event))
 {
-	wxFileDialog dlg(this, "Choose a file", "", "", "All files (*.*)|*.*", wxFD_OPEN);
+	wxFileDialog dlg(this, wxT("Choose a file"), wxEmptyString, wxEmptyString,
+                     wxT("All files (*.*)|*.*"), wxFD_OPEN);
 
 	if(dlg.ShowModal()==wxID_OK)
 	{
@@ -118,11 +119,11 @@ void wxPutDialog::OnPutFile(wxCommandEvent& WXUNUSED(event))
 
 		if((szSource == m_szDefaultSource) || (szDest == m_szDefaultDest))
 		{
-			wxMessageBox("Please change the source and destination locations.", "Error...", wxICON_INFORMATION|wxOK, this);
+			wxMessageBox(wxT("Please change the source and destination locations."), wxT("Error..."), wxICON_INFORMATION|wxOK, this);
 		}
 		else if((szUser == m_szDefaultUser) && (szPass == m_szDefaultPass))
 		{
-			wxMessageBox("Please change the username or password.", "Error...", wxICON_INFORMATION|wxOK, this);
+			wxMessageBox(wxT("Please change the username or password."), wxT("Error..."), wxICON_INFORMATION|wxOK, this);
 		}
 		else
 		{
@@ -133,10 +134,10 @@ void wxPutDialog::OnPutFile(wxCommandEvent& WXUNUSED(event))
 
 				if(http.Put(szSource))
 				{
-					szResponse = "SUCCESS!\n\n";
-					szResponse += wxString::Format("\nResponse Code: %d\n\n", http.GetResponseCode());
+					szResponse = wxT("SUCCESS!\n\n");
+					szResponse += wxString::Format(wxT("\nResponse Code: %d\n\n"), http.GetResponseCode());
 					szResponse += http.GetResponseHeader();
-					szResponse += "\n\n";
+					szResponse += wxT("\n\n");
 					szResponse += http.GetResponseBody();
 
 					if(m_pResponseCtrl)
@@ -144,12 +145,12 @@ void wxPutDialog::OnPutFile(wxCommandEvent& WXUNUSED(event))
 				}
 				else
 				{
-					szResponse = "FAILURE!\n\n";
-					szResponse += wxString::Format("\nResponse Code: %d\n\n", http.GetResponseCode());
+					szResponse = wxT("FAILURE!\n\n");
+					szResponse += wxString::Format(wxT("\nResponse Code: %d\n\n"), http.GetResponseCode());
 					szResponse += http.GetResponseHeader();
-					szResponse += "\n\n";
+					szResponse += wxT("\n\n");
 					szResponse += http.GetResponseBody();
-					szResponse += "\n\n";
+					szResponse += wxT("\n\n");
 					szResponse += http.GetErrorString();
 
 					if(m_pResponseCtrl)
@@ -158,7 +159,7 @@ void wxPutDialog::OnPutFile(wxCommandEvent& WXUNUSED(event))
 			}
 			else
 			{
-				wxMessageBox("File Could Not Be Found.", "Error...", wxICON_ERROR|wxOK, this);
+				wxMessageBox(wxT("File Could Not Be Found."), wxT("Error..."), wxICON_ERROR|wxOK, this);
 			}
 		}
 	}

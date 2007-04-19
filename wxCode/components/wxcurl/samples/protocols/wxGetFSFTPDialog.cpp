@@ -51,7 +51,7 @@ END_EVENT_TABLE()
 
 wxGetFSFTPDialog::wxGetFSFTPDialog(wxWindow* pParent)
 {
-	wxXmlResource::Get()->LoadDialog(this, pParent, "getfs_ftp_dialog");
+	wxXmlResource::Get()->LoadDialog(this, pParent, wxT("getfs_ftp_dialog"));
 
 	SetSize(400,400);
 
@@ -103,17 +103,17 @@ void wxGetFSFTPDialog::OnGetFS(wxCommandEvent& WXUNUSED(event))
 
 		if(ftp.GetFTPFs(fsResponse))
 		{
-			szResponse = "SUCCESS!\n\n";
-			szResponse += wxString::Format("\nResponse Code: %d\n\n", ftp.GetResponseCode());
+			szResponse = wxT("SUCCESS!\n\n");
+			szResponse += wxString::Format(wxT("\nResponse Code: %d\n\n"), ftp.GetResponseCode());
 
 			for(unsigned int i = 0; i < fsResponse.Count(); i++)
 			{
 				const wxCurlFTPFs& fsItem = fsResponse[i];
 
 				szResponse += fsItem.GetName();
-				szResponse += "\n";
+				szResponse += wxT("\n");
 				szResponse += fsItem.GetFileSuffix();
-				szResponse += "\n\n";
+				szResponse += wxT("\n\n");
 			}
 
 			if(m_pTextCtrl)
@@ -121,12 +121,12 @@ void wxGetFSFTPDialog::OnGetFS(wxCommandEvent& WXUNUSED(event))
 		}
 		else
 		{
-			szResponse = "FAILURE!\n\n";
-			szResponse += wxString::Format("\nResponse Code: %d\n\n", ftp.GetResponseCode());
+			szResponse = wxT("FAILURE!\n\n");
+			szResponse += wxString::Format(wxT("\nResponse Code: %d\n\n"), ftp.GetResponseCode());
 			szResponse += ftp.GetResponseHeader();
-			szResponse += "\n\n";
+			szResponse += wxT("\n\n");
 			szResponse += ftp.GetResponseBody();
-			szResponse += "\n\n";
+			szResponse += wxT("\n\n");
 			szResponse += ftp.GetErrorString();
 
 			if(m_pTextCtrl)

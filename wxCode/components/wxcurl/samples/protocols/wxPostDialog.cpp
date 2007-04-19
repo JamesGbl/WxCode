@@ -52,7 +52,7 @@ END_EVENT_TABLE()
 
 wxPostDialog::wxPostDialog(wxWindow* pParent)
 {
-	wxXmlResource::Get()->LoadDialog(this, pParent, "post_dialog");
+	wxXmlResource::Get()->LoadDialog(this, pParent, wxT("post_dialog"));
 
 	SetSize(400, -1);
 
@@ -92,11 +92,11 @@ void wxPostDialog::OnPost(wxCommandEvent& WXUNUSED(event))
 
 		if((szUser == m_szDefaultUser) && (szPass == m_szDefaultPass))
 		{
-			wxMessageBox("Please change the username or password.", "Error...", wxICON_INFORMATION|wxOK, this);
+			wxMessageBox(wxT("Please change the username or password."), wxT("Error..."), wxICON_INFORMATION|wxOK, this);
 		}
 		else if(szData.IsEmpty())
 		{
-			wxMessageBox("Please enter some data into the data control.", "Error...", wxICON_INFORMATION|wxOK, this);
+			wxMessageBox(wxT("Please enter some data into the data control."), wxT("Error..."), wxICON_INFORMATION|wxOK, this);
 		}
 		else
 		{
@@ -107,15 +107,15 @@ void wxPostDialog::OnPost(wxCommandEvent& WXUNUSED(event))
 
 /*			struct curl_forms testform[2];
 
-			wxString szValue = "My Name is Bob the Builder";
+			wxString szValue = wxT("My Name is Bob the Builder");
 			testform[0].option = CURLFORM_COPYCONTENTS;
 			testform[0].value = szValue.c_str();
 			testform[1].option = CURLFORM_END;
 
-			if(!http.AddForm(false, _T("firstname"), testform))
+			if(!http.AddForm(false, _T(wxT("firstname")), testform))
 				return;*/
 
-			if(http.Post(szData, szData.Len() * sizeof(char)))
+			if(http.Post(szData.ToAscii(), szData.Len()))
 //			if(http.Post())
 			{
 				wxMemoryOutputStream outStream;
@@ -123,9 +123,9 @@ void wxPostDialog::OnPost(wxCommandEvent& WXUNUSED(event))
 				wxString szVerbose;
 				http.GetVerboseString(szVerbose);
 
-				szResponse = "SUCCESS!\n\n";
+				szResponse = wxT("SUCCESS!\n\n");
 				szResponse += http.GetResponseBody();
-				szResponse += "\n\nVERBOSE DATA:\n";
+				szResponse += wxT("\n\nVERBOSE DATA:\n");
 				szResponse += szVerbose;
 
 				if(m_pRespCtrl)
@@ -133,12 +133,12 @@ void wxPostDialog::OnPost(wxCommandEvent& WXUNUSED(event))
 			}
 			else
 			{
-				szResponse = "FAILURE!\n\n";
-				szResponse += wxString::Format("\nResponse Code: %d\n\n", http.GetResponseCode());
+				szResponse = wxT("FAILURE!\n\n");
+				szResponse += wxString::Format(wxT("\nResponse Code: %d\n\n"), http.GetResponseCode());
 				szResponse += http.GetResponseHeader();
-				szResponse += "\n\n";
+				szResponse += wxT("\n\n");
 				szResponse += http.GetResponseBody();
-				szResponse += "\n\n";
+				szResponse += wxT("\n\n");
 				szResponse += http.GetErrorString();
 
 				if(m_pRespCtrl)

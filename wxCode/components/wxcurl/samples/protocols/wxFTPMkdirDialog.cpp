@@ -51,7 +51,7 @@ END_EVENT_TABLE()
 
 wxFTPMkdirDialog::wxFTPMkdirDialog(wxWindow* pParent)
 {
-	wxXmlResource::Get()->LoadDialog(this, pParent, "mkdir_ftp_dialog");
+	wxXmlResource::Get()->LoadDialog(this, pParent, wxT("mkdir_ftp_dialog"));
 
 	SetSize(400, -1);
 
@@ -90,11 +90,11 @@ void wxFTPMkdirDialog::OnMkdir(wxCommandEvent& WXUNUSED(event))
 
 		if((szMkdir == m_szDefaultMkdir))
 		{
-			wxMessageBox("Please change the MKDIR location.", "Error...", wxICON_INFORMATION|wxOK, this);
+			wxMessageBox(wxT("Please change the MKDIR location."), wxT("Error..."), wxICON_INFORMATION|wxOK, this);
 		}
 		else if((szUser == m_szDefaultUser) && (szPass == m_szDefaultPass))
 		{
-			wxMessageBox("Please change the username or password.", "Error...", wxICON_INFORMATION|wxOK, this);
+			wxMessageBox(wxT("Please change the username or password."), wxT("Error..."), wxICON_INFORMATION|wxOK, this);
 		}
 		else
 		{
@@ -103,10 +103,10 @@ void wxFTPMkdirDialog::OnMkdir(wxCommandEvent& WXUNUSED(event))
 
 			if(ftp.MkDir())
 			{
-					szResponse = "SUCCESS!\n\n";
-					szResponse += wxString::Format("\nResponse Code: %d\n\n", ftp.GetResponseCode());
+					szResponse = wxT("SUCCESS!\n\n");
+					szResponse += wxString::Format(wxT("\nResponse Code: %d\n\n"), ftp.GetResponseCode());
 					szResponse += ftp.GetResponseHeader();
-					szResponse += "\n\n";
+					szResponse += wxT("\n\n");
 					szResponse += ftp.GetResponseBody();
 
 					if(m_pResponseCtrl)
@@ -114,12 +114,12 @@ void wxFTPMkdirDialog::OnMkdir(wxCommandEvent& WXUNUSED(event))
 			}
 			else
 			{
-					szResponse = "FAILURE!\n\n";
-					szResponse += wxString::Format("\nResponse Code: %d\n\n", ftp.GetResponseCode());
+					szResponse = wxT("FAILURE!\n\n");
+					szResponse += wxString::Format(wxT("\nResponse Code: %d\n\n"), ftp.GetResponseCode());
 					szResponse += ftp.GetResponseHeader();
-					szResponse += "\n\n";
+					szResponse += wxT("\n\n");
 					szResponse += ftp.GetResponseBody();
-					szResponse += "\n\n";
+					szResponse += wxT("\n\n");
 					szResponse += ftp.GetErrorString();
 
 					if(m_pResponseCtrl)

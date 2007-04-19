@@ -52,7 +52,7 @@ END_EVENT_TABLE()
 
 wxGetFTPDialog::wxGetFTPDialog(wxWindow* pParent)
 {
-	wxXmlResource::Get()->LoadDialog(this, pParent, "get_ftp_dialog");
+	wxXmlResource::Get()->LoadDialog(this, pParent, wxT("get_ftp_dialog"));
 
 	SetSize(400,400);
 
@@ -102,7 +102,7 @@ void wxGetFTPDialog::OnGetUrl(wxCommandEvent& WXUNUSED(event))
 		{
 			if(m_pTextCtrl && szBuffer)
 			{
-				m_pTextCtrl->SetValue(szBuffer);
+				m_pTextCtrl->SetValue(wxString(szBuffer, wxConvUTF8));
 				free(szBuffer);
 			}
 		}

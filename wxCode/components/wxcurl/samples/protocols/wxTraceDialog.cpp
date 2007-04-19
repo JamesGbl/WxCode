@@ -52,7 +52,7 @@ END_EVENT_TABLE()
 
 wxTraceDialog::wxTraceDialog(wxWindow* pParent)
 {
-	wxXmlResource::Get()->LoadDialog(this, pParent, "trace_dialog");
+	wxXmlResource::Get()->LoadDialog(this, pParent, wxT("trace_dialog"));
 
 	SetSize(400, -1);
 

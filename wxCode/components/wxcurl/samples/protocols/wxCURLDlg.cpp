@@ -101,7 +101,7 @@ END_EVENT_TABLE()
 wxCURLDialog::wxCURLDialog(const wxString& title, const wxPoint& WXUNUSED(pos),
                            const wxSize& WXUNUSED(size))
 {
-	if (!wxXmlResource::Get()->LoadDialog(this, NULL, "main_dialog"))
+	if (!wxXmlResource::Get()->LoadDialog(this, NULL, wxT("main_dialog")))
         wxExit();
 
 	SetTitle(title);

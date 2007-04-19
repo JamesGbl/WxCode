@@ -51,7 +51,7 @@ END_EVENT_TABLE()
 
 wxMkcolDialog::wxMkcolDialog(wxWindow* pParent)
 {
-	wxXmlResource::Get()->LoadDialog(this, pParent, "mkcol_dialog");
+	wxXmlResource::Get()->LoadDialog(this, pParent, wxT("mkcol_dialog"));
 
 	SetSize(400, -1);
 
@@ -90,11 +90,11 @@ void wxMkcolDialog::OnMkcol(wxCommandEvent& WXUNUSED(event))
 
 		if((szMkcol == m_szDefaultMkcol))
 		{
-			wxMessageBox("Please change the MKCOL location.", "Error...", wxICON_INFORMATION|wxOK, this);
+			wxMessageBox(wxT("Please change the MKCOL location."), wxT("Error..."), wxICON_INFORMATION|wxOK, this);
 		}
 		else if((szUser == m_szDefaultUser) && (szPass == m_szDefaultPass))
 		{
-			wxMessageBox("Please change the username or password.", "Error...", wxICON_INFORMATION|wxOK, this);
+			wxMessageBox(wxT("Please change the username or password."), wxT("Error..."), wxICON_INFORMATION|wxOK, this);
 		}
 		else
 		{
@@ -103,10 +103,10 @@ void wxMkcolDialog::OnMkcol(wxCommandEvent& WXUNUSED(event))
 
 			if(dav.Mkcol())
 			{
-					szResponse = "SUCCESS!\n\n";
-					szResponse += wxString::Format("\nResponse Code: %d\n\n", dav.GetResponseCode());
+					szResponse = wxT("SUCCESS!\n\n");
+					szResponse += wxString::Format(wxT("\nResponse Code: %d\n\n"), dav.GetResponseCode());
 					szResponse += dav.GetResponseHeader();
-					szResponse += "\n\n";
+					szResponse += wxT("\n\n");
 					szResponse += dav.GetResponseBody();
 
 					if(m_pResponseCtrl)
@@ -114,12 +114,12 @@ void wxMkcolDialog::OnMkcol(wxCommandEvent& WXUNUSED(event))
 			}
 			else
 			{
-					szResponse = "FAILURE!\n\n";
-					szResponse += wxString::Format("\nResponse Code: %d\n\n", dav.GetResponseCode());
+					szResponse = wxT("FAILURE!\n\n");
+					szResponse += wxString::Format(wxT("\nResponse Code: %d\n\n"), dav.GetResponseCode());
 					szResponse += dav.GetResponseHeader();
-					szResponse += "\n\n";
+					szResponse += wxT("\n\n");
 					szResponse += dav.GetResponseBody();
-					szResponse += "\n\n";
+					szResponse += wxT("\n\n");
 					szResponse += dav.GetErrorString();
 
 					if(m_pResponseCtrl)
