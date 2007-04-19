@@ -112,6 +112,7 @@
         </define-tag>
     </define-rule>
 
+
     <!-- the rule for wxCode components' samples -->
     <define-rule name="wxcode-sample" extends="exe">
         <template template="wx,wxlike,wxcode-basic">
@@ -122,7 +123,7 @@
                 You'll need also some <wx-lib> tags to indicate the required wx libs.
             -->
             <app-type>gui</app-type>
-            
+
             <!-- the dir where is located the sample -->
             <set var="__dir"/>
         </template>
@@ -132,14 +133,38 @@
                 <!-- don't do <dir>$(SRCDIR)/mysample</dir> but rather <dir>mysample</dir>  -->
                 <error>Don't prefix the directory name with SRCDIR - it's done automatically</error>
             </if>
+            <if cond="value.startswith('/') or value.endswith('/')">
+                <error>Don't prefix or postfix the directory name with slashes</error>
+            </if>
+            <if cond="value.find('\\')!=-1">
+                <error>Don't use Windows directory separators - always use forward slashes</error>
+            </if>
 
             <set var="__dir">$(value)</set>
-            
+
+            <!-- __topdir is the root folder of the sample as a relative path -->
+            <set var="__topdir">$('../'*(__dir.count('/')+1))</set>
+
             <dirname>$(SRCDIR)/$(value)</dirname>
             <res-include>$(SRCDIR)/$(value)</res-include>
 
             <sources>$(fileList(value + '/*.c*'))</sources>
             <headers>$(fileList(value + '/*.h*'))</headers>
+
+
+            <!-- unlike win compilers, Unix's LD linker supports the -rpath option to insert
+                in the generated ELF files an hint to the OS about where to search the required
+                shared libraries. This means the user under Unix will be able to run samples
+                also before installing the component system-wide:
+            -->
+            <set var="RPATH">
+                <if cond="FORMAT=='gnu' and WX_SHARED=='1'">-Wl,-rpath,$(__topdir)lib/gcc_dll</if>
+                <if cond="FORMAT=='autoconf' and WX_SHARED=='1'">-Wl,-rpath,$(__topdir)lib</if>
+            </set>
+
+            <!-- for autoconf&gnu only (see comments above): -->
+            <ldflags>$(RPATH)</ldflags>
+
 
             <if cond="FORMAT_SUPPORTS_ACTIONS=='1'">
                 <add-target target="make_sample_dir_$(id)" type="action"/>
