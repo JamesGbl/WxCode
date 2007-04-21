@@ -46,7 +46,7 @@ wxCurlHTTP::wxCurlHTTP(const wxString& szURL /*= wxEmptyString*/,
                        int id /*= wxID_ANY*/,
                        long flags /*= wxCURL_DEFAULT_FLAGS*/)
 : wxCurlBase(szURL, szUserName, szPassword, pEvtHandler, id, flags),
-  m_pPostHead(NULL), m_pPostTail(NULL), m_bUseCookies(false), m_szCookieFile(wxT("-")),
+  m_pPostHead(NULL), m_pPostTail(NULL), m_bUseCookies(false), m_szCookieFile("-"),
   m_pszPostFieldsData(NULL), m_iPostDataSize(0)
 {
 }
@@ -72,12 +72,12 @@ bool wxCurlHTTP::UseCookies() const
 
 void wxCurlHTTP::SetCookieFile(const wxString& szFilePath)
 {
-	m_szCookieFile = szFilePath;
+	m_szCookieFile = wxCURL_STRING2BUF(szFilePath);
 }
 
 wxString wxCurlHTTP::GetCookieFile() const
 {
-	return m_szCookieFile;
+	return wxCURL_BUF2STRING(m_szCookieFile);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -130,11 +130,8 @@ bool wxCurlHTTP::Options(const wxString& szRemoteFile /*= wxEmptyString*/)
 {
 	if(m_pCURL)
 	{
-		SetCurlHandleToDefaults();
+		SetCurlHandleToDefaults(szRemoteFile);
 
-		m_szCurrFullURL = m_szBaseURL + szRemoteFile;
-
-		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_CUSTOMREQUEST, "OPTIONS");
 		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
 		SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
@@ -152,11 +149,8 @@ bool wxCurlHTTP::Head(const wxString& szRemoteFile /*= wxEmptyString*/)
 {
 	if(m_pCURL)
 	{
-		SetCurlHandleToDefaults();
+		SetCurlHandleToDefaults(szRemoteFile);
 
-		m_szCurrFullURL = m_szBaseURL + szRemoteFile;
-
-		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_HTTPGET, TRUE);
 		SetOpt(CURLOPT_NOBODY, TRUE);
 		
@@ -182,16 +176,13 @@ bool wxCurlHTTP::Post(wxInputStream& buffer, const wxString& szRemoteFile /*= wx
 
 	if(m_pCURL && buffer.IsOk())
 	{
-		SetCurlHandleToDefaults();
+		SetCurlHandleToDefaults(szRemoteFile);
 
 		iSize = buffer.GetSize();
 
 		if(iSize == (~(size_t)0))	// wxCurlHTTP does not know how to upload unknown length streams.
 			return false;
 
-		m_szCurrFullURL = m_szBaseURL + szRemoteFile;
-
-		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_POST, TRUE);
 		SetOpt(CURLOPT_POSTFIELDSIZE_LARGE, iSize);
 		SetOpt(CURLOPT_READFUNCTION, wxcurl_stream_read);
@@ -212,11 +203,8 @@ bool wxCurlHTTP::Post(const wxString& szRemoteFile /*= wxEmptyString*/)
 {
 	if(m_pCURL && m_pPostHead && m_pPostTail)
 	{
-		SetCurlHandleToDefaults();
+		SetCurlHandleToDefaults(szRemoteFile);
 
-		m_szCurrFullURL = m_szBaseURL + szRemoteFile;
-
-		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_POST, TRUE);
 		SetOpt(CURLOPT_HTTPPOST, m_pPostHead);
 		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
@@ -235,15 +223,12 @@ bool wxCurlHTTP::Trace(const wxString& szRemoteFile /*= wxEmptyString*/)
 {
 	if(m_pCURL)
 	{
-		SetCurlHandleToDefaults();
+		SetCurlHandleToDefaults(szRemoteFile);
 
 		m_arrHeaders.Add(wxT("Content-type: message/http"));
 
 		SetHeaders();
 
-		m_szCurrFullURL = m_szBaseURL + szRemoteFile;
-
-		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_CUSTOMREQUEST, "TRACE");
 		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
 		SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
@@ -298,11 +283,8 @@ bool wxCurlHTTP::Get(wxOutputStream& buffer, const wxString& szRemoteFile /*=wxE
 {
 	if(m_pCURL && buffer.IsOk())
 	{
-		SetCurlHandleToDefaults();
+		SetCurlHandleToDefaults(szRemoteFile);
 
-		m_szCurrFullURL = m_szBaseURL + szRemoteFile;
-
-		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_HTTPGET, TRUE);
 
 		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_stream_write);
@@ -337,18 +319,15 @@ bool wxCurlHTTP::Put(wxInputStream& buffer, const wxString& szRemoteFile /*= wxE
 
 	if(m_pCURL && buffer.IsOk())
 	{
-		SetCurlHandleToDefaults();
+		SetCurlHandleToDefaults(szRemoteFile);
 
 		iSize = buffer.GetSize();
 
 		if(iSize == (~(size_t)0))	// wxCurlHTTP does not know how to upload unknown length streams.
 			return false;
 
-		m_szCurrFullURL = m_szBaseURL + szRemoteFile;
-
 		SetOpt(CURLOPT_UPLOAD, TRUE);
 		SetOpt(CURLOPT_PUT, TRUE);
-		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_READFUNCTION, wxcurl_stream_read);
 		SetOpt(CURLOPT_READDATA, (void*)&buffer);
 		SetOpt(CURLOPT_INFILESIZE_LARGE, (curl_off_t)iSize);
@@ -368,11 +347,8 @@ bool wxCurlHTTP::Delete(const wxString& szRemoteLoc /*= wxEmptyString*/)
 {
 	if(m_pCURL)
 	{
-		SetCurlHandleToDefaults();
+		SetCurlHandleToDefaults(szRemoteLoc);
 
-		m_szCurrFullURL = m_szBaseURL + szRemoteLoc;
-
-		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_CUSTOMREQUEST, "DELETE");
 		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
 		SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
@@ -404,9 +380,9 @@ void wxCurlHTTP::ResetPostData()
 	}
 }
 
-void wxCurlHTTP::SetCurlHandleToDefaults()
+void wxCurlHTTP::SetCurlHandleToDefaults(const wxString& relativeURL)
 {
-	wxCurlBase::SetCurlHandleToDefaults();
+	wxCurlBase::SetCurlHandleToDefaults(relativeURL);
 
 	if(m_bUseCookies)
 	{

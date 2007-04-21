@@ -60,11 +60,8 @@ bool wxCurlDAV::Mkcol(const wxString& szRemoteCol /*= wxEmptyString*/)
 {
 	if(m_pCURL)
 	{
-		SetCurlHandleToDefaults();
-
-		m_szCurrFullURL = m_szBaseURL + szRemoteCol;
-
-		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
+        SetCurlHandleToDefaults(szRemoteCol);
+		
 		SetOpt(CURLOPT_CUSTOMREQUEST, "MKCOL");
 		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
 		SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
@@ -106,16 +103,12 @@ bool wxCurlDAV::Propfind(wxInputStream& buffer, const wxString& szRemoteLoc /*= 
 		if(iSize == (~(size_t)0))	// wxCurlDAV does not know how to upload unknown length streams.
 			return false;
 
-		SetCurlHandleToDefaults();
+		SetCurlHandleToDefaults(szRemoteLoc);
 
 		m_arrHeaders.Add(wxT("Depth: 1"));
 		m_arrHeaders.Add(wxT("Content-Type: text/xml; charset=\"utf-8\""));
 
 		SetHeaders();
-
-		m_szCurrFullURL = m_szBaseURL + szRemoteLoc;
-
-		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 
 		if(iSize > 0)
 		{
@@ -158,15 +151,11 @@ bool wxCurlDAV::Proppatch(wxInputStream& buffer, const wxString& szRemoteLoc /*=
 		if(iSize == (~(size_t)0))	// wxCurlDAV does not know how to upload unknown length streams.
 			return false;
 
-		SetCurlHandleToDefaults();
+		SetCurlHandleToDefaults(szRemoteLoc);
 
 		m_arrHeaders.Add(wxT("Content-Type: text/xml; charset=\"utf-8\""));
 
 		SetHeaders();
-
-		m_szCurrFullURL = m_szBaseURL + szRemoteLoc;
-
-		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 
 		if(iSize > 0)
 		{
@@ -193,11 +182,12 @@ bool wxCurlDAV::Proppatch(wxInputStream& buffer, const wxString& szRemoteLoc /*=
 	return false;
 }
 
-bool wxCurlDAV::Copy(const wxString& szRemoteLocDest, const bool& bOverwrite /*= true*/, const wxString& szRemoteLocSrc /*= wxEmptyString*/)
+bool wxCurlDAV::Copy(const wxString& szRemoteLocDest, const bool& bOverwrite /*= true*/, 
+                     const wxString& szRemoteLocSrc /*= wxEmptyString*/)
 {
 	if(m_pCURL)
 	{
-		SetCurlHandleToDefaults();
+		SetCurlHandleToDefaults(szRemoteLocSrc);
 
 		m_arrHeaders.Add(wxT("Destination: ") + szRemoteLocDest);
 		
@@ -206,9 +196,6 @@ bool wxCurlDAV::Copy(const wxString& szRemoteLocDest, const bool& bOverwrite /*=
 
 		SetHeaders();
 
-		m_szCurrFullURL = m_szBaseURL + szRemoteLocSrc;
-
-		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_CUSTOMREQUEST, "COPY");
 		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
 		SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
@@ -226,11 +213,12 @@ bool wxCurlDAV::Copy(const wxString& szRemoteLocDest, const bool& bOverwrite /*=
 	return false;
 }
 
-bool wxCurlDAV::Move(const wxString& szRemoteLocDest, const bool& bOverwrite /*= true*/, const wxString& szRemoteLocSrc /*= wxEmptyString*/)
+bool wxCurlDAV::Move(const wxString& szRemoteLocDest, const bool& bOverwrite /*= true*/, 
+                     const wxString& szRemoteLocSrc /*= wxEmptyString*/)
 {
 	if(m_pCURL)
 	{
-		SetCurlHandleToDefaults();
+		SetCurlHandleToDefaults(szRemoteLocSrc);
 
 		m_arrHeaders.Add(wxT("Destination: ") + szRemoteLocDest);
 		
@@ -239,9 +227,6 @@ bool wxCurlDAV::Move(const wxString& szRemoteLocDest, const bool& bOverwrite /*=
 
 		SetHeaders();
 
-		m_szCurrFullURL = m_szBaseURL + szRemoteLocSrc;
-
-		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_CUSTOMREQUEST, "MOVE");
 		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
 		SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);

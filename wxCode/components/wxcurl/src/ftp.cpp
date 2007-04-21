@@ -50,7 +50,7 @@ wxCurlFTP::wxCurlFTP(const wxString& szURL /*= wxEmptyString*/,
   m_bCreateMissingDirs(true), m_bUsePortOption(false), 
   m_bUseEPRT(false), m_bUseEPSV(false), m_bAppend(false),
   m_tmMode(kASCII),
-  m_szPortParam(wxT("-"))
+  m_szPortParam("-")
 {
 }
 
@@ -105,12 +105,12 @@ bool wxCurlFTP::UsePortOption() const
 
 void wxCurlFTP::SetPortParam(const wxString& szParam /*= _T("-")*/)
 {
-	m_szPortParam = szParam;
+	m_szPortParam = wxCURL_STRING2BUF(szParam);
 }
 
 wxString wxCurlFTP::GetPortParam() const
 {
-	return m_szPortParam;
+	return wxCURL_BUF2STRING(m_szPortParam);
 }
 
 void wxCurlFTP::UseEPRT(const bool& bUseEPRT)
@@ -261,11 +261,8 @@ bool wxCurlFTP::Get(wxOutputStream& buffer, const wxString& szRemoteFile /*= wxE
 {
 	if(m_pCURL && buffer.IsOk())
 	{
-		SetCurlHandleToDefaults();
+		SetCurlHandleToDefaults(szRemoteFile);
 
-		m_szCurrFullURL = m_szBaseURL + szRemoteFile;
-
-		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_stream_write);
 		SetOpt(CURLOPT_WRITEDATA, (void*)&buffer);
 
@@ -298,17 +295,14 @@ bool wxCurlFTP::Put(wxInputStream& buffer, const wxString& szRemoteFile /*= wxEm
 
 	if(m_pCURL && buffer.IsOk())
 	{
-		SetCurlHandleToDefaults();
+		SetCurlHandleToDefaults(szRemoteFile);
 
 		iSize = buffer.GetSize();
 
 		if(iSize == (~(size_t)0))
 			return false;
 
-		m_szCurrFullURL = m_szBaseURL + szRemoteFile;
-
 		SetOpt(CURLOPT_UPLOAD, TRUE);
-		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_READFUNCTION, wxcurl_stream_read);
 		SetOpt(CURLOPT_READDATA, (void*)&buffer);
 		SetOpt(CURLOPT_INFILESIZE_LARGE, iSize);
@@ -326,15 +320,13 @@ bool wxCurlFTP::MkDir(const wxString& szRemoteLoc /*= wxEmptyString*/)
 {
 	if(m_pCURL)
 	{
-		SetCurlHandleToDefaults();
+		wxString str(szRemoteLoc);
+		if(str.Last() != '/')
+			str += wxT("/");
 
-		m_szCurrFullURL = m_szBaseURL + szRemoteLoc;
-
-		if(m_szCurrFullURL.Last() != '/')
-			m_szCurrFullURL += wxT("/");
+        SetCurlHandleToDefaults(str);
 
 		SetOpt(CURLOPT_FTP_CREATE_MISSING_DIRS, TRUE);
-		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_NOBODY, TRUE);
 
 		if(Perform())
@@ -350,16 +342,15 @@ bool wxCurlFTP::RmDir(const wxString& szRemoteLoc /*= wxEmptyString*/)
 {
 	if(m_pCURL)
 	{
-		SetCurlHandleToDefaults();
+        wxString str(szRemoteLoc);
+		if(str.Last() != wxT('/'))
+			str += wxT("/");
+        SetCurlHandleToDefaults(str);
 
-		m_szCurrFullURL = m_szBaseURL + szRemoteLoc;
-
-		if(m_szCurrFullURL.Last() != '/')
-			m_szCurrFullURL += wxT("/");
-
-		m_szCurrFullPath = m_szCurrFullURL.Left(m_szCurrFullURL.Len() - 1).BeforeLast('/');
+        wxString url(GetURL());
+		m_szCurrFullPath = url.Left(url.Len() - 1).BeforeLast(wxT('/'));
 		m_szCurrFullPath += wxT("/");
-		m_szCurrFilename = m_szCurrFullURL.Left(m_szCurrFullURL.Len() - 1).AfterLast('/');
+		m_szCurrFilename = url.Left(url.Len() - 1).AfterLast(wxT('/'));
 
 		if(m_szCurrFilename.IsEmpty())
 			return false;
@@ -367,8 +358,6 @@ bool wxCurlFTP::RmDir(const wxString& szRemoteLoc /*= wxEmptyString*/)
 		AppendPostQuote(wxT("RMD ") + m_szCurrFilename, true);
 
 		SetCurlHandleQuoteOpts();
-
-		SetStringOpt(CURLOPT_URL, m_szCurrFullPath);
 		SetOpt(CURLOPT_NOBODY, TRUE);
 
 		if(Perform())
@@ -388,12 +377,12 @@ bool wxCurlFTP::Delete(const wxString& szRemoteLoc /*= wxEmptyString*/)
 {
 	if(m_pCURL)
 	{
-		SetCurlHandleToDefaults();
+		SetCurlHandleToDefaults(szRemoteLoc);
 
-		m_szCurrFullURL = m_szBaseURL + szRemoteLoc;
-		m_szCurrFullPath = m_szCurrFullURL.BeforeLast('/');
+        wxString url(GetURL());
+		m_szCurrFullPath = url.BeforeLast('/');
 		m_szCurrFullPath += wxT("/");
-		m_szCurrFilename = m_szCurrFullURL.AfterLast('/');
+		m_szCurrFilename = url.AfterLast('/');
 
 		if(m_szCurrFilename.IsEmpty())
 			return RmDir(szRemoteLoc);
@@ -401,8 +390,6 @@ bool wxCurlFTP::Delete(const wxString& szRemoteLoc /*= wxEmptyString*/)
 		AppendPostQuote(wxT("DELE ") + m_szCurrFilename, true);
 
 		SetCurlHandleQuoteOpts();
-
-		SetStringOpt(CURLOPT_URL, m_szCurrFullPath);
 		SetOpt(CURLOPT_NOBODY, TRUE);
 
 		if(Perform())
@@ -423,12 +410,12 @@ bool wxCurlFTP::Rename(const wxString& szRemoteLocName,
 {
 	if(m_pCURL)
 	{
-		SetCurlHandleToDefaults();
+		SetCurlHandleToDefaults(szRemoteFile);
 
-		m_szCurrFullURL = m_szBaseURL + szRemoteFile;
-		m_szCurrFullPath = m_szCurrFullURL.BeforeLast('/');
+        wxString url(GetURL());
+		m_szCurrFullPath = url.BeforeLast('/');
 		m_szCurrFullPath += wxT("/");
-		m_szCurrFilename = m_szCurrFullURL.AfterLast('/');
+		m_szCurrFilename = url.AfterLast('/');
 
 		if(m_szCurrFilename.IsEmpty())
 			return false;
@@ -437,8 +424,6 @@ bool wxCurlFTP::Rename(const wxString& szRemoteLocName,
 		AppendPostQuote(wxT("RNTO ") + szRemoteLocName);
 
 		SetCurlHandleQuoteOpts();
-
-		SetStringOpt(CURLOPT_URL, m_szCurrFullPath);
 		SetOpt(CURLOPT_NOBODY, TRUE);
 
 		if(Perform())
@@ -458,11 +443,8 @@ bool wxCurlFTP::List(const wxString& szRemoteLoc /*= wxEmptyString*/)
 {
 	if(m_pCURL)
 	{
-		SetCurlHandleToDefaults();
+		SetCurlHandleToDefaults(szRemoteLoc);
 
-		m_szCurrFullURL = m_szBaseURL + szRemoteLoc;
-
-		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_CUSTOMREQUEST, "LIST");
 		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
 		SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
@@ -480,11 +462,8 @@ bool wxCurlFTP::Nlst(const wxString& szRemoteLoc /*= wxEmptyString*/)
 {
 	if(m_pCURL)
 	{
-		SetCurlHandleToDefaults();
+		SetCurlHandleToDefaults(szRemoteLoc);
 
-		m_szCurrFullURL = m_szBaseURL + szRemoteLoc;
-
-		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_CUSTOMREQUEST, "NLST");
 		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
 		SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
@@ -502,13 +481,10 @@ bool wxCurlFTP::Info(const wxString& szRemoteLoc /*= wxEmptyString*/)
 {
 	if(m_pCURL)
 	{
-		SetCurlHandleToDefaults();
-
-		m_szCurrFullURL = m_szBaseURL + szRemoteLoc;
+		SetCurlHandleToDefaults(szRemoteLoc);
 
 		SetOpt(CURLOPT_HEADER, TRUE);
 		SetOpt(CURLOPT_NOBODY, TRUE);
-		SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
 		SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
 
@@ -525,9 +501,9 @@ bool wxCurlFTP::Info(const wxString& szRemoteLoc /*= wxEmptyString*/)
 // Helper Methods
 //////////////////////////////////////////////////////////////////////
 
-void wxCurlFTP::SetCurlHandleToDefaults()
+void wxCurlFTP::SetCurlHandleToDefaults(const wxString& relativeURL)
 {
-	wxCurlBase::SetCurlHandleToDefaults();
+	wxCurlBase::SetCurlHandleToDefaults(relativeURL);
 
 	m_szCurrFilename = wxEmptyString;
 	m_szCurrFullPath = wxEmptyString;

@@ -122,7 +122,7 @@ public:
 
 protected:
 
-	virtual void SetCurlHandleToDefaults();
+	virtual void SetCurlHandleToDefaults(const wxString& relativeURL);
 	virtual void SetCurlHandleQuoteOpts();
 
 	void	ResetAllQuoteLists();
@@ -147,7 +147,7 @@ protected:
 	bool				m_bUseEPRT;
 	bool				m_bUseEPSV;
 
-	wxString			m_szPortParam;
+	wxCharBuffer		m_szPortParam;
 
 private:
 

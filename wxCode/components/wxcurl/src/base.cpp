@@ -44,14 +44,14 @@ extern "C"
             if (rUlTotal == 0 || rUlNow == 0)
             {
                 /* should be a download event */
-                wxCurlDownloadEvent evt(curl->GetId(), curl, rDlTotal, rDlNow, curl->GetCurrentFullURL());
+                wxCurlDownloadEvent evt(curl->GetId(), curl, rDlTotal, rDlNow, curl->GetURL());
                 wxPostEvent(curl->GetEvtHandler(), evt);
             }
 
             if (rDlTotal == 0 || rDlNow == 0)
             {
                 /* should be an upload event */
-                wxCurlDownloadEvent evt(curl->GetId(), curl, rUlTotal, rUlNow, curl->GetCurrentFullURL());
+                wxCurlDownloadEvent evt(curl->GetId(), curl, rUlTotal, rUlNow, curl->GetURL());
                 wxPostEvent(curl->GetEvtHandler(), evt);
             }
 		}
@@ -103,12 +103,12 @@ extern "C"
 	size_t wxcurl_header_func(void *ptr, size_t size, size_t nmemb, void *stream)
 	{
 		size_t iRealSize = size * nmemb;
-
-		wxString* pStr = (wxString*) stream;
+		wxCharBuffer* pStr = (wxCharBuffer*) stream;
 
 		if(pStr)
 		{
-			(*pStr) += ((wxChar*)(char*)ptr);
+            wxString str = wxCURL_BUF2STRING(*pStr) + wxString((const char*)ptr, wxConvLibc);
+            *pStr = wxCURL_STRING2BUF(str);
 		}
 
 		return iRealSize;
@@ -117,12 +117,12 @@ extern "C"
 	size_t wxcurl_str_write(void* ptr, size_t size, size_t nmemb, void* stream)
 	{
 		size_t iRealSize = size * nmemb;
-
-		wxString* pStr = (wxString*) stream;
+		wxCharBuffer* pStr = (wxCharBuffer*) stream;
 
 		if(pStr)
 		{
-			*pStr += (wxChar*)(char*)ptr;
+            wxString str = wxCURL_BUF2STRING(*pStr) + wxString((const char*)ptr, wxConvLibc);
+            *pStr = wxCURL_STRING2BUF(str);
 		}
 
 		return iRealSize;
@@ -386,8 +386,10 @@ wxCurlBase::wxCurlBase(const wxString& szURL /*= wxEmptyString*/,
                        wxEvtHandler* pEvtHandler /*= NULL*/,
                        int id /*= wxID_ANY*/,
                        long flags /*=wxCURL_DEFAULT_FLAGS*/)
-: m_szBaseURL(szURL), m_szCurrFullURL(szURL), m_szUsername(szUserName), 
-  m_szPassword(szPassword),
+: m_szBaseURL(wxCURL_STRING2BUF(szURL)),
+  m_szCurrFullURL(wxCURL_STRING2BUF(szURL)),
+  m_szUsername(wxCURL_STRING2BUF(szUserName)),
+  m_szPassword(wxCURL_STRING2BUF(szPassword)),
   m_iHostPort(-1), m_iResponseCode(-1),
   m_bUseProxy(false), m_iProxyPort(-1),
   m_pCURL(NULL), m_pHeaders(NULL), 
@@ -453,6 +455,27 @@ bool wxCurlBase::SetOpt(CURLoption option, ...)
     DumpErrorIfNeed(res);
 	return (res == CURLE_OK);
 }
+/*
+bool wxCurlBase::SetStringOpt(CURLoption option, const wxString &str)
+{
+    /*  FIXME: converting to plain ASCII is not always the Best Thing. E.g.
+               for CURLOPT_USERPWD, we'd need to consult RFC2616 (HTTP) or 
+               another RFC depending on the authentication system in use, etc etc
+               For now we convert to pure ASCII which in 99% of the cases will
+               Just Do the Work
+    *
+
+    wxCharBuffer buf = wxCURL_STRING2BUF(str);
+    return SetOpt(option, (const char*)buf);
+}*/
+
+bool wxCurlBase::SetStringOpt(CURLoption option, const wxCharBuffer &str)
+{
+    // VERY IMPORTANT: the caller must ensure given wxCharBuffer is valid
+    //                 for all the time it's owned by libCURL
+
+    return SetOpt(option, (const char*)str);
+}
 
 bool wxCurlBase::GetInfo(CURLINFO info, ...) const
 {
@@ -476,7 +499,7 @@ bool wxCurlBase::Perform()
 
     if((m_nFlags & wxCURL_SEND_BEGINEND_EVENTS) && m_pEvtHandler)
 	{
-		wxCurlBeginPerformEvent bgnEvent(m_nId, m_szCurrFullURL);
+		wxCurlBeginPerformEvent bgnEvent(m_nId, wxCURL_BUF2STRING(m_szCurrFullURL));
 
 		wxPostEvent(m_pEvtHandler, bgnEvent);
 	}
@@ -491,7 +514,7 @@ bool wxCurlBase::Perform()
 	if((m_nFlags & wxCURL_SEND_BEGINEND_EVENTS) && m_pEvtHandler)
 	{
         GetInfo(CURLINFO_RESPONSE_CODE, &m_iResponseCode);
-		wxCurlEndPerformEvent endEvent(m_nId, m_szCurrFullURL, m_iResponseCode);
+		wxCurlEndPerformEvent endEvent(m_nId, wxCURL_BUF2STRING(m_szCurrFullURL), m_iResponseCode);
 
 		wxPostEvent(m_pEvtHandler, endEvent);
 	}
@@ -537,13 +560,12 @@ bool wxCurlBase::ResetHandle()
 void wxCurlBase::DumpErrorIfNeed(CURLcode error) const
 {
     // save the error description:
-    wx_const_cast(wxCurlBase*, this)->m_szLastError =
-            wxString(curl_easy_strerror(error), wxConvLocal);
+    wx_const_cast(wxCurlBase*, this)->m_szLastError = curl_easy_strerror(error);
 
     if (m_bVerbose && error != CURLE_OK)
     {
         // dump the error if needed:
-        wxLogDebug(wxT("[wxCURL] ") + m_szLastError);
+        wxLogDebug(wxT("[wxCURL] %hs"), (const char*)m_szLastError);
     }
 }
 
@@ -581,12 +603,23 @@ long wxCurlBase::GetFlags() const
 
 void wxCurlBase::SetBaseURL(const wxString& szBaseURL)
 {
-	m_szBaseURL = szBaseURL;
+	m_szBaseURL = wxCURL_STRING2BUF(szBaseURL);
 }
 
 wxString wxCurlBase::GetBaseURL() const
 {
-	return m_szBaseURL;
+	return wxCURL_BUF2STRING(m_szBaseURL);
+}
+
+void wxCurlBase::SetURL(const wxString& szRelativeURL)
+{
+    wxString str = wxCURL_BUF2STRING(m_szCurrFullURL) + szRelativeURL;
+    m_szCurrFullURL = wxCURL_STRING2BUF(str);
+}
+
+wxString wxCurlBase::GetURL() const
+{ 
+    return wxCURL_BUF2STRING(m_szCurrFullURL);
 }
 
 void wxCurlBase::SetPort(const long& iPort)
@@ -601,32 +634,32 @@ long wxCurlBase::GetPort() const
 
 void wxCurlBase::SetUsername(const wxString& szUsername)
 {
-	m_szUsername = szUsername;
+	m_szUsername = wxCURL_STRING2BUF(szUsername);
 }
 
 wxString wxCurlBase::GetUsername() const
 {
-	return m_szUsername;
+	return wxCURL_BUF2STRING(m_szUsername);
 }
 
 void wxCurlBase::SetPassword(const wxString& szPassword)
 {
-	m_szPassword = szPassword;
+	m_szPassword = wxCURL_STRING2BUF(szPassword);
 }
 
 wxString wxCurlBase::GetPassword() const
 {
-	return m_szPassword;
+	return wxCURL_BUF2STRING(m_szPassword);
 }
 
 wxString wxCurlBase::GetResponseHeader() const
 {
-	return m_szResponseHeader;
+	return wxCURL_BUF2STRING(m_szResponseHeader);
 }
 
 wxString wxCurlBase::GetResponseBody() const
 {
-	return m_szResponseBody;
+	return wxCURL_BUF2STRING(m_szResponseBody);
 }
 
 long wxCurlBase::GetResponseCode() const
@@ -641,7 +674,7 @@ wxString wxCurlBase::GetDetailedErrorString() const
 
 wxString wxCurlBase::GetErrorString() const
 {
-    return m_szLastError;
+    return wxCURL_BUF2STRING(m_szLastError);
 }
 
 void wxCurlBase::UseProxy(const bool& bUseProxy)
@@ -656,32 +689,32 @@ bool wxCurlBase::UseProxy() const
 
 void wxCurlBase::SetProxyHost(const wxString& szProxyHost)
 {
-	m_szProxyHost = szProxyHost;
+	m_szProxyHost = wxCURL_STRING2BUF(szProxyHost);
 }
 
 wxString wxCurlBase::GetProxyHost() const
 {
-	return m_szProxyHost;
+	return wxCURL_BUF2STRING(m_szProxyHost);
 }
 
 void wxCurlBase::SetProxyUsername(const wxString& szProxyUsername)
 {
-	m_szProxyUsername = szProxyUsername;
+	m_szProxyUsername = wxCURL_STRING2BUF(szProxyUsername);
 }
 
 wxString wxCurlBase::GetProxyUsername() const
 {
-	return m_szProxyUsername;
+	return wxCURL_BUF2STRING(m_szProxyUsername);
 }
 
 void wxCurlBase::SetProxyPassword(const wxString& szProxyPassword)
 {
-	m_szProxyPassword = szProxyPassword;
+	m_szProxyPassword = wxCURL_STRING2BUF(szProxyPassword);
 }
 
 wxString wxCurlBase::GetProxyPassword() const
 {
-	return m_szProxyPassword;
+	return wxCURL_BUF2STRING(m_szProxyPassword);
 }
 
 void wxCurlBase::SetProxyPort(const long& iProxyPort)
@@ -755,15 +788,22 @@ bool wxCurlBase::GetVerboseString(wxString& szStream) const
 // Helper Methods
 //////////////////////////////////////////////////////////////////////
 
-void wxCurlBase::SetCurlHandleToDefaults()
+void wxCurlBase::SetCurlHandleToDefaults(const wxString& relativeURL)
 {
+    if (!relativeURL.empty())
+        SetURL(relativeURL);        // update the m_szCurrFullURL string
+
 	if(m_pCURL && ResetHandle())
 	{
 		ResetResponseVars();
 
+        SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
+        //printf("%s\n", (const char*)m_szCurrFullURL);
+        //fflush(stdout);
+
 		SetOpt(CURLOPT_HEADERFUNCTION, wxcurl_header_func);
 		SetOpt(CURLOPT_WRITEHEADER, &m_szResponseHeader);
-		SetOpt(CURLOPT_ERRORBUFFER, m_szDetailedErrorBuffer);
+//		SetOpt(CURLOPT_ERRORBUFFER, m_szDetailedErrorBuffer);
 
 		if(m_pEvtHandler && (m_nFlags & wxCURL_SEND_PROGRESS_EVENTS))
 		{
@@ -772,11 +812,13 @@ void wxCurlBase::SetCurlHandleToDefaults()
 			SetOpt(CURLOPT_PROGRESSDATA, m_progressData);
 		}
 
-		if(!m_szUsername.IsEmpty() || !m_szPassword.IsEmpty())
+		if(!wxCURL_BUF_ISEMPTY(m_szUsername) || !wxCURL_BUF_ISEMPTY(m_szPassword))
 		{
-			m_szUserPass = m_szUsername + wxT(":") + m_szPassword;
+			wxString str = wxCURL_BUF2STRING(m_szUsername) + wxT(":") + wxCURL_BUF2STRING(m_szPassword);
 
+            m_szUserPass = wxCURL_STRING2BUF(str);
 			SetStringOpt(CURLOPT_USERPWD, m_szUserPass);
+
 			SetOpt(CURLOPT_HTTPAUTH, CURLAUTH_ANY);
 		}
 
@@ -785,7 +827,7 @@ void wxCurlBase::SetCurlHandleToDefaults()
 			SetOpt(CURLOPT_PORT, m_iHostPort);
 		}
 
-		if(m_bUseProxy && !m_szProxyHost.IsEmpty())
+		if(m_bUseProxy && !wxCURL_BUF_ISEMPTY(m_szProxyHost))
 		{
 			SetStringOpt(CURLOPT_PROXY, m_szProxyHost);
 		}
@@ -795,10 +837,11 @@ void wxCurlBase::SetCurlHandleToDefaults()
 			SetOpt(CURLOPT_PROXYPORT, m_iProxyPort);
 		}
 
-		if(m_bUseProxy && (!m_szProxyUsername.IsEmpty() || !m_szProxyPassword.IsEmpty()))
+		if(m_bUseProxy && (!wxCURL_BUF_ISEMPTY(m_szProxyUsername) || !wxCURL_BUF_ISEMPTY(m_szProxyPassword)))
 		{
-			m_szProxyUserPass = m_szProxyUsername + wxT(":") + m_szProxyPassword;
+            wxString str = wxCURL_BUF2STRING(m_szProxyUsername) + wxT(":") + wxCURL_BUF2STRING(m_szProxyPassword);
 
+            m_szProxyUserPass = wxCURL_STRING2BUF(str);
 			SetStringOpt(CURLOPT_PROXYUSERPWD, m_szProxyUserPass);
 		}
 
@@ -849,10 +892,9 @@ void wxCurlBase::ResetHeaders()
 
 void wxCurlBase::ResetResponseVars()
 {
-	m_szResponseHeader = wxEmptyString;
-	m_szResponseBody = wxEmptyString;
+	m_szResponseHeader = NULL;
+	m_szResponseBody = NULL;
 	m_iResponseCode = -1;
-	m_szCurrFullURL = wxEmptyString;
 }
 
 //////////////////////////////////////////////////////////////////////

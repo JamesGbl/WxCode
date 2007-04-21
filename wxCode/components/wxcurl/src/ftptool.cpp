@@ -99,7 +99,8 @@ bool wxCurlFTPTool::GetFTPFs(wxArrayFTPFs& fs, const wxString& szRemoteLoc /*= w
 {
 	if(List(szRemoteLoc))
 	{
-		wxStringInputStream inStream(m_szResponseBody);
+        wxString str = wxCURL_BUF2STRING(m_szResponseBody);
+		wxStringInputStream inStream(str);
 
 		if(inStream.IsOk())
 		{
@@ -110,9 +111,12 @@ bool wxCurlFTPTool::GetFTPFs(wxArrayFTPFs& fs, const wxString& szRemoteLoc /*= w
 			{
 				struct ftpparse ftppItem;
 
-				if(ftpparse(&ftppItem, (char*)szCurrentLine.GetWriteBuf(szCurrentLine.Len()), szCurrentLine.Len()) != 0)
+				if(ftpparse(&ftppItem, (char*)szCurrentLine.GetWriteBuf(
+                        szCurrentLine.Len()), szCurrentLine.Len()) != 0)
 				{					
-					fs.Add(wxCurlFTPFs((wxChar*)ftppItem.name,(ftppItem.flagtrycwd == 1),(ftppItem.flagtryretr == 1),ftppItem.mtime,ftppItem.size));
+					fs.Add(wxCurlFTPFs((wxChar*)ftppItem.name, 
+                            (ftppItem.flagtrycwd == 1),(ftppItem.flagtryretr == 1),
+                                ftppItem.mtime,ftppItem.size));
 				}
 
 				szCurrentLine.UngetWriteBuf();

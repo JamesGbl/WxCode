@@ -86,14 +86,14 @@ public:
 protected:
 
 	virtual void ResetPostData();
-	virtual void SetCurlHandleToDefaults();
+	virtual void SetCurlHandleToDefaults(const wxString& relativeURL);
 
 	struct curl_httppost*	m_pPostHead;
 	struct curl_httppost*	m_pPostTail;
 
 	bool					m_bUseCookies;
 
-	wxString				m_szCookieFile;
+	wxCharBuffer			m_szCookieFile;
 
 	const char*				m_pszPostFieldsData;
 	size_t					m_iPostDataSize;

@@ -104,7 +104,7 @@ bool wxCurlDAVTool::GetDAVFs(wxArrayDAVFs& fs, const wxString& szRemoteLoc /*= w
 	if(Propfind(arrProps, szRemoteLoc))
 	{
 		// Construct Input Source...
-		wxStringInputStream inStream(m_szResponseBody);
+		wxStringInputStream inStream(wxCURL_BUF2STRING(m_szResponseBody));
 
 		if(inStream.IsOk())
 		{

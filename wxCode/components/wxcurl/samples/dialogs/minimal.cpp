@@ -215,8 +215,8 @@ MyFrame::MyFrame(const wxString& title)
 #ifdef __WXDEBUG__
     m_menuFile->AppendCheckItem(Minimal_Verbose, _T("Be verbose"), _T("Does something only in debug builds!"));
     m_menuFile->Check(Minimal_Verbose, true);
-#endif
     m_menuFile->AppendSeparator();
+#endif
     m_menuFile->Append(Minimal_Download, _T("Download dialog..."), _T("Shows wxCurlDownloadDialog."));	
     m_menuFile->Append(Minimal_Upload, _T("Upload dialog..."), _T("Shows wxCurlUploadDialog."));
     m_menuFile->AppendSeparator();
@@ -257,6 +257,10 @@ MyFrame::MyFrame(const wxString& title)
     CreateStatusBar(2);
     SetStatusText(_T("Welcome to wxWindows!"));
 #endif // wxUSE_STATUSBAR
+
+    // start with all possible styles checked
+    wxCommandEvent fake(wxEVT_COMMAND_MENU_SELECTED, Minimal_CheckAll);
+    OnCheckAll(fake);
 }
 
 MyFrame::~MyFrame()

@@ -360,8 +360,7 @@ public:
     bool SetOpt(CURLoption option, ...);
 
     //! Like #SetOpt but this function is specific for string options.
-    bool SetStringOpt(CURLoption option, const wxString &str)
-        { return SetOpt(option, (const wxChar*)str); }     // need explicit cast in wx 2.9
+    //bool SetStringOpt(CURLoption option, const wxString &str);
 
     //! Gets an info from this libCURL session instance.
     //! See the curl_easy_getinfo() function call for more info.
@@ -417,8 +416,11 @@ public:
     void		SetBaseURL(const wxString& szBaseURL);
     wxString	GetBaseURL() const;
 
+    //! Sets the current URL. The 'base url' will be prepended to the given string.
+    void        SetURL(const wxString &szRelativeURL);
+
     //! Returns the current 'full' URL. I.e. the real URL being used for the transfer.
-    wxString    GetCurrentFullURL() const { return m_szCurrFullURL; }
+    wxString    GetURL() const;
 
     //! Sets the host Port.  This allows you to specify a specific (non-
     //! default port) if you like.  The value -1 means that the default port
@@ -541,24 +543,45 @@ protected:
     // The internal pointer to the libCURL session.
     CURL*                   m_pCURL;
 
-    // VERY IMPORTANT: all these wxString are passed to curl_easy_setopt()
+
+    // libCURL <-> wxString conversions helpers (see below)
+
+    #define wxCURL_BUF2STRING(x)         wxString((const char*)x, wxConvLibc)
+
+#if wxUSE_UNICODE
+    #define wxCURL_STRING2BUF(x)         ((x).ToAscii())
+#else
+    #define wxCURL_STRING2BUF(x)         wxCharBuffer(x)
+#endif
+
+    #define wxCURL_BUF_ISEMPTY(x)        (strlen(x) > 0)
+
+
+
+    // VERY IMPORTANT: all these wxCharBuffers are passed to curl_easy_setopt()
     //                 which does not take ownership of them. Thus we need
-    //                 to keep them alive here for all the time m_pCURL is valid:
+    //                 to keep them alive here for all the time m_pCURL handle
+    //                 is valid. Also note that we don't use wxStrings to store
+    //                 them as libCURL always take char* and doesn't like wchar_t*
+    //                 and thus we always need wxCharBuffer storage while wxString
+    //                 in wxWidgets Unicode builds would use a wxWCharBuffer internally.
+    //                 wxCharBuffer is basically a thin class which handles auto-delete
+    //                 of a char[] array.
 
     // basic connection settings:
 
-    wxString				m_szBaseURL;
-    wxString				m_szCurrFullURL;
-    wxString				m_szUsername;
-    wxString				m_szPassword;
-    wxString				m_szUserPass;
+    wxCharBuffer				m_szBaseURL;
+    wxCharBuffer				m_szCurrFullURL;
+    wxCharBuffer				m_szUsername;
+    wxCharBuffer				m_szPassword;
+    wxCharBuffer				m_szUserPass;
 
     long					m_iHostPort;
 
     // about received headers:
 
-    wxString				m_szResponseHeader;
-    wxString				m_szResponseBody;
+    wxCharBuffer				m_szResponseHeader;
+    wxCharBuffer				m_szResponseBody;
     long					m_iResponseCode;
 
     // about headers to send:
@@ -569,10 +592,10 @@ protected:
     // proxy:
 
     bool					m_bUseProxy;
-    wxString				m_szProxyHost;
-    wxString				m_szProxyUsername;
-    wxString				m_szProxyPassword;
-    wxString				m_szProxyUserPass;
+    wxCharBuffer				m_szProxyHost;
+    wxCharBuffer				m_szProxyUsername;
+    wxCharBuffer				m_szProxyPassword;
+    wxCharBuffer				m_szProxyUserPass;
     long					m_iProxyPort;
 
     // debugging/verbose mode:
@@ -581,7 +604,7 @@ protected:
     wxMemoryOutputStream	m_mosVerbose;
 
     char					m_szDetailedErrorBuffer[CURL_ERROR_SIZE];
-    wxString                m_szLastError;
+    wxCharBuffer                m_szLastError;
 
     // for events:
     wxEvtHandler*			m_pEvtHandler;
@@ -616,10 +639,13 @@ protected:
 protected:      // internal functions
 
     // CURL Handle Initialization Helper Method
-    virtual void	SetCurlHandleToDefaults();
+    virtual void	SetCurlHandleToDefaults(const wxString& relativeURL);
     virtual void	SetHeaders();
     virtual void	ResetHeaders();
     virtual void	ResetResponseVars();
+
+    // handy overload for char buffers
+    bool SetStringOpt(CURLoption option, const wxCharBuffer &str);
 
     // Output additional warnings/errors when in verbose mode.
     void DumpErrorIfNeed(CURLcode error) const;
