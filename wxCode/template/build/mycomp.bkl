@@ -6,20 +6,14 @@
     =========================================================================
     How to customize this file for a particular component.
 
-    The bakefile system is designed to accomodate a component that has source and
-    header files that are meant to be compiled into a library that users can link
-    to as well as sample programs that will make use of the library.
+    The wxCode presets are designed to accomodate a component that has:
+        - source and header files that are meant to be compiled into 1 library
+          (as a static lib when WX_SHARED=='0' and as a DLL when WX_SHARED=='1')
+        - one or more sample programs that will make use of the library
+    Nonetheless it can still be used for components with more than one library.
 
-    Directory structure : The dirs in brackets [] can be given any name.
-
-    wxCode/component/MYCOMPONENT_NAME/
-        include/[wx/MYCOMPONENT_NAME/]*.h  : Library header files
-        src/*.cpp                          : Library source files
-        samples/                           : Samples directory
-            [mysample_name/]*.h;*.cpp
-            [mysample_name2/]*.h;*.cpp
-            [mysample_name3/]*.h;*.cpp
-            [mysample_name4/]*.h;*.cpp
+    Step-by-step guide to adapt this bakefile to a component which builds as
+    a library and has one or more samples as described above:
 
     1.) Replace the contents of the "set-comp-name" tag with the name of your
         component, eg. wxCode/component/MYCOMPONENT_NAME.
@@ -34,21 +28,22 @@
         you've set previously. eg. wxscintilla=wxscintilla_lib+wxscintilla_dll
 
     4.) Remove or add libs to link the library to. Use <wx-lib>name</wx-lib> for
-        libraries from wxWidgets and they will appropriately pre and postfixed
+        libraries from wxWidgets and they will be appropriately pre and postfixed
         based on the build settings (eg. debug, unicode, etc.).
-        Use <library>name</library> for other libraries declared into this bakefile,
-        they will be used as is.
+
+        Use <library>libID</library> for other libraries declared into this bakefile
+        (e.g. your component's library: <library>wxscintilla_lib</library>)
+
         Finally, use <sys-lib>name</sys-lib> for other libraries coming from 3rd party
-        packages.
-        Note that shared libraries (<dll>) need to link to other libraries, but static
-        libraries (<lib>) do not.
+        packages. Note that shared libraries (<dll>) need to link to other libraries, 
+        but static libraries (<lib>) do not.
 
     5.) Replace the MYSAMPLE_NAME with the name you want the compiled executable
         to have. Add or remove libraries and include paths as you did for the
         library.
 
     6.) Periodically check to see if the wxCode bakefiles have been updated,
-        including the template empty.bkl.template that this is derived from
+        including the template MYCOMP.bkl that this is derived from
         and regenerate your build files.
 
     ==========================================================================
@@ -56,16 +51,14 @@
 
 <makefile>
 
+    <!-- the following line tells Bakefile that this component uses the wxCode presets
+         (internally wxCode presets use in turn the wxWidgets presets)
+    -->
     <include file="presets/wxcode.bkl"/>
 
-
-    <!-- ================================================================= -->
-    <!-- Settings for this component                                       -->
-    <!-- ================================================================= -->
-
-    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        Sets the name of the folder which contains this component and thus
-        should always be in lowercase, wxCode/component/MYCOMPONENT_NAME -->
+    <!-- sets the name of the folder which contains this component and thus
+         should always be in lowercase, wxCode/component/MYCOMPONENT_NAME 
+    -->
     <set-comp-name>mycomp_name</set-comp-name>
 
 
@@ -81,21 +74,22 @@
                targets below.
 
                In case however you don't have the sources/headers in those
-               folders, you'll want to 'manually' set the list:
+               folders, you'll want to 'manually' set the list. E.g. use
 
                 <set var="COMP_SRC">$(fileList('my_src_dir/*.cpp'))</set>
                 <set var="COMP_HDR">$(fileList('my_header_dir/*.h'))</set>
 
-               NOTE2: the folders you reference are always referred to the root
-                      of your component and must always be relative paths.
+               if you have the sources in wxCode/components/yourcomp/my_src_dir
+               and the headers in wxCode/components/yourcomp/my_header_dir
+
+               This is because the folders you reference are always referred to 
+               the root of your component and must always be relative paths.
     -->
 
     <lib id="MYCOMPONENT_NAME_lib" template="wxcode-lib" cond="WX_SHARED=='0'">
-        <!-- Add any other include paths here and duplicate for the shared lib.
-             The example below will have the compiler use the environment
-             variable $(WXWIN) to specify the include path to the wxWidgets
-             contrib includes -->
-        <!-- <include>$(DOLLAR)(WXWIN)/contrib/include</include> -->
+        <!-- here you can use any standard Bakefile tag. E.g. you may want to
+             use <include> tag to add additional compiler include paths.
+        -->
     </lib>
     <dll id="MYCOMPONENT_NAME_dll" template="wxcode-dll" cond="WX_SHARED=='1'">
         <!-- Remove the libraries which are not required by your project.
@@ -118,11 +112,11 @@
         <wx-lib>base</wx-lib> <!-- base must be last wx-lib -->
     </dll>
 
-    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- This makes the MSVC6 project files much nicer... -->
     <set var="MSVC6PRJ_MERGED_TARGETS">
         MYCOMPONENT_NAME=MYCOMPONENT_NAME_lib+MYCOMPONENT_NAME_dll
     </set>
+
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- Sample(s) settings                                                -->
@@ -167,5 +161,24 @@
         <wx-lib>core</wx-lib>
         <wx-lib>base</wx-lib> <!-- base must be last wx-lib -->
     </wxcode-sample>
+
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- Additional utilities                                              -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <!-- Put here one or more of the following tags if you need them:
+
+            <make-tarball/>    => for adding a "tarball" target on your Unix
+                                  makefiles. Very very useful to make clean tarballs
+                                  of your component at release-time.
+
+            <make-zip>         => for adding a "zip" target on your Win makefiles.
+                                  Very very useful  to make clean zip archives
+                                  of your component at release-time.
+
+            <make-docs>        => for adding a "docs" target on your makefiles
+                                  which runs "doxygen" in yourCompFolder/docs
+    -->
 
 </makefile>
