@@ -33,6 +33,7 @@
 #include <wx/datetime.h>
 #include <wx/stream.h>
 #include <wx/mstream.h>
+#include <wx/sstream.h>
 #include <wx/intl.h>        // for _()
 #include <wx/filename.h>
 
@@ -546,15 +547,15 @@ protected:
 
     // libCURL <-> wxString conversions helpers (see below)
 
-    #define wxCURL_BUF2STRING(x)         wxString((const char*)x, wxConvLibc)
+    #define wxCURL_BUF2STRING(x)         wxString((const char*)(x), wxConvLibc)
 
 #if wxUSE_UNICODE
     #define wxCURL_STRING2BUF(x)         ((x).ToAscii())
 #else
-    #define wxCURL_STRING2BUF(x)         wxCharBuffer(x)
+    #define wxCURL_STRING2BUF(x)         wxCharBuffer((x).c_str())
 #endif
 
-    #define wxCURL_BUF_ISEMPTY(x)        (strlen(x) > 0)
+    #define wxCURL_BUF_ISEMPTY(x)        (strlen(x) == 0)
 
 
 
@@ -570,19 +571,19 @@ protected:
 
     // basic connection settings:
 
-    wxCharBuffer				m_szBaseURL;
-    wxCharBuffer				m_szCurrFullURL;
-    wxCharBuffer				m_szUsername;
-    wxCharBuffer				m_szPassword;
-    wxCharBuffer				m_szUserPass;
+    wxCharBuffer            m_szBaseURL;
+    wxCharBuffer            m_szCurrFullURL;
+    wxCharBuffer            m_szUsername;
+    wxCharBuffer            m_szPassword;
+    wxCharBuffer            m_szUserPass;
 
-    long					m_iHostPort;
+    long                    m_iHostPort;
 
     // about received headers:
 
-    wxCharBuffer				m_szResponseHeader;
-    wxCharBuffer				m_szResponseBody;
-    long					m_iResponseCode;
+    wxCharBuffer            m_szResponseHeader;
+    wxCharBuffer            m_szResponseBody;
+    long                    m_iResponseCode;
 
     // about headers to send:
 
@@ -591,23 +592,23 @@ protected:
 
     // proxy:
 
-    bool					m_bUseProxy;
-    wxCharBuffer				m_szProxyHost;
-    wxCharBuffer				m_szProxyUsername;
-    wxCharBuffer				m_szProxyPassword;
-    wxCharBuffer				m_szProxyUserPass;
-    long					m_iProxyPort;
+    bool                    m_bUseProxy;
+    wxCharBuffer            m_szProxyHost;
+    wxCharBuffer            m_szProxyUsername;
+    wxCharBuffer            m_szProxyPassword;
+    wxCharBuffer            m_szProxyUserPass;
+    long                    m_iProxyPort;
 
     // debugging/verbose mode:
 
-    bool					m_bVerbose;
-    wxMemoryOutputStream	m_mosVerbose;
+    bool                    m_bVerbose;
+    wxStringOutputStream    m_mosVerbose;
 
-    char					m_szDetailedErrorBuffer[CURL_ERROR_SIZE];
-    wxCharBuffer                m_szLastError;
+    char                    m_szDetailedErrorBuffer[CURL_ERROR_SIZE];
+    wxCharBuffer            m_szLastError;
 
     // for events:
-    wxEvtHandler*			m_pEvtHandler;
+    wxEvtHandler*           m_pEvtHandler;
     int                     m_nId;
     long                    m_nFlags;
 
