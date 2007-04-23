@@ -308,14 +308,16 @@ typedef void (wxEvtHandler::*wxCurlEndPerformEventFunction)(wxCurlEndPerformEven
 
 extern "C"
 {
-    int wxcurl_evt_progress_func(void* ptr, double rDlTotal, double rDlNow, 
-                                double rUlTotal, double rUlNow);
-    int wxcurl_verbose_stream_write (CURL * crlptr , curl_infotype info, char * cStrMessage, 
-                                    size_t msgSize, void * buffer);
+    int wxcurl_evt_progress_func(void* ptr, double rDlTotal, double rDlNow,
+                                 double rUlTotal, double rUlNow);
+    int wxcurl_verbose_stream_write (CURL * crlptr , curl_infotype info, char * cStrMessage,
+                                     size_t msgSize, void * buffer);
     size_t wxcurl_header_func(void *ptr, size_t size, size_t nmemb, void *stream);
-    size_t wxcurl_str_write(void* ptr, size_t size, size_t nmemb, void* stream);
+
+    size_t wxcurl_string_write(void* ptr, size_t size, size_t nmemb, void* stream);
     size_t wxcurl_stream_write(void* ptr, size_t size, size_t nmemb, void* stream);
-    size_t wxcurl_str_read(void* ptr, size_t size, size_t nmemb, void* stream);
+
+    size_t wxcurl_string_read(void* ptr, size_t size, size_t nmemb, void* stream);
     size_t wxcurl_stream_read(void* ptr, size_t size, size_t nmemb, void* stream);
 }
 
@@ -359,9 +361,6 @@ public:
     //! Sets a transfer option for this libCURL session instance.
     //! See the curl_easy_setopt() function call for more info.
     bool SetOpt(CURLoption option, ...);
-
-    //! Like #SetOpt but this function is specific for string options.
-    //bool SetStringOpt(CURLoption option, const wxString &str);
 
     //! Gets an info from this libCURL session instance.
     //! See the curl_easy_getinfo() function call for more info.
@@ -645,11 +644,38 @@ protected:      // internal functions
     virtual void	ResetHeaders();
     virtual void	ResetResponseVars();
 
+    // Output additional warnings/errors when in verbose mode.
+    void DumpErrorIfNeed(CURLcode error) const;
+
+protected:      // specialized safe SetOpt-like functions
+
     // handy overload for char buffers
     bool SetStringOpt(CURLoption option, const wxCharBuffer &str);
 
-    // Output additional warnings/errors when in verbose mode.
-    void DumpErrorIfNeed(CURLcode error) const;
+
+    bool SetStringWriteFunction(const wxCharBuffer& str)
+    {
+        SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_string_write);
+        SetOpt(CURLOPT_WRITEDATA, (void*)&str);
+    }
+
+    bool SetStreamWriteFunction(const wxOutputStream& buf)
+    {
+        SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_stream_write);
+        SetOpt(CURLOPT_WRITEDATA, (void*)&buf);
+    }
+
+    bool SetStringReadFunction(const wxCharBuffer& str)
+    {
+        SetOpt(CURLOPT_READFUNCTION, wxcurl_string_read);
+        SetOpt(CURLOPT_READDATA, (void*)&str);
+    }
+
+    bool SetStreamReadFunction(const wxInputStream& buf)
+    {
+        SetOpt(CURLOPT_READFUNCTION, wxcurl_stream_read);
+        SetOpt(CURLOPT_READDATA, (void*)&buf);
+    }
 };
 
 #endif // _WXCURLBASE_H__INCLUDED_

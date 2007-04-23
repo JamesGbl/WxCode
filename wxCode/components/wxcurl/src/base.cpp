@@ -36,7 +36,7 @@
 extern "C"
 {
     int wxcurl_evt_progress_func(void* ptr, double rDlTotal, double rDlNow, 
-                                double rUlTotal, double rUlNow)
+                                 double rUlTotal, double rUlNow)
     {
         wxCurlBase *curl = wx_static_cast(wxCurlBase*, ptr);
         if(curl)
@@ -63,9 +63,8 @@ extern "C"
                                     char * cStrMessage, size_t msgSize, void * buffer)
     {
         wxString szMessage((const char*)cStrMessage, wxConvLibc, msgSize);
-        wxString szVerboseMessage;
-
         wxStringOutputStream* pBuf = (wxStringOutputStream*)buffer;
+        wxString szVerboseMessage;
 
         switch (info)
         {
@@ -115,7 +114,8 @@ extern "C"
         return iRealSize;
     }
 
-    size_t wxcurl_str_write(void* ptr, size_t size, size_t nmemb, void* stream)
+    /* writes to a string */
+    size_t wxcurl_string_write(void* ptr, size_t size, size_t nmemb, void* stream)
     {
         size_t iRealSize = size * nmemb;
         wxCharBuffer* pStr = (wxCharBuffer*) stream;
@@ -129,6 +129,7 @@ extern "C"
         return iRealSize;
     }
 
+    /* writes to a stream */
     size_t wxcurl_stream_write(void* ptr, size_t size, size_t nmemb, void* stream)
     {
         size_t iRealSize = size * nmemb;
@@ -145,7 +146,8 @@ extern "C"
         return 0;
     }
 
-    size_t wxcurl_str_read(void* ptr, size_t size, size_t nmemb, void* stream)
+    /* reads from a string */
+    size_t wxcurl_string_read(void* ptr, size_t size, size_t nmemb, void* stream)
     {
         size_t iRealSize = size * nmemb;
         size_t iRetVal = 0;
@@ -171,6 +173,7 @@ extern "C"
         return iRetVal;
     }
 
+    /* reads from a stream */
     size_t wxcurl_stream_read(void* ptr, size_t size, size_t nmemb, void* stream)
     {
         size_t iRealSize = size * nmemb;

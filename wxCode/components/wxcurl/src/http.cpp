@@ -56,6 +56,11 @@ wxCurlHTTP::~wxCurlHTTP()
     ResetPostData();
 }
 
+bool wxCurlHTTP::IsResponseOk() const
+{
+    return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
+}
+
 //////////////////////////////////////////////////////////////////////
 // Member Data Access Methods
 //////////////////////////////////////////////////////////////////////
@@ -134,12 +139,11 @@ bool wxCurlHTTP::Options(const wxString& szRemoteFile /*= wxEmptyString*/)
         SetCurlHandleToDefaults(szRemoteFile);
 
         SetOpt(CURLOPT_CUSTOMREQUEST, "OPTIONS");
-        SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
-        SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
+        SetStringWriteFunction(m_szResponseBody);
 
         if(Perform())
         {
-            return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
+            return IsResponseOk();
         }
     }
 
@@ -157,7 +161,7 @@ bool wxCurlHTTP::Head(const wxString& szRemoteFile /*= wxEmptyString*/)
         
         if(Perform())
         {
-            return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
+            return IsResponseOk();
         }
     }
 
@@ -186,14 +190,12 @@ bool wxCurlHTTP::Post(wxInputStream& buffer, const wxString& szRemoteFile /*= wx
 
         SetOpt(CURLOPT_POST, TRUE);
         SetOpt(CURLOPT_POSTFIELDSIZE_LARGE, iSize);
-        SetOpt(CURLOPT_READFUNCTION, wxcurl_stream_read);
-        SetOpt(CURLOPT_READDATA, (void*)&buffer);
-        SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
-        SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
+        SetStreamReadFunction(buffer);
+        SetStringWriteFunction(m_szResponseBody);
 
         if(Perform())
         {
-            return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
+            return IsResponseOk();
         }
     }
 
@@ -208,12 +210,11 @@ bool wxCurlHTTP::Post(const wxString& szRemoteFile /*= wxEmptyString*/)
 
         SetOpt(CURLOPT_POST, TRUE);
         SetOpt(CURLOPT_HTTPPOST, m_pPostHead);
-        SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
-        SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
+        SetStringWriteFunction(m_szResponseBody);
 
         if(Perform())
         {
-            return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
+            return IsResponseOk();
         }
     }
 
@@ -231,14 +232,13 @@ bool wxCurlHTTP::Trace(const wxString& szRemoteFile /*= wxEmptyString*/)
         SetHeaders();
 
         SetOpt(CURLOPT_CUSTOMREQUEST, "TRACE");
-        SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
-        SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
+        SetStringWriteFunction(m_szResponseBody);
 
         if(Perform())
         {
             ResetHeaders();
 
-            return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
+            return IsResponseOk();
         }
 
         ResetHeaders();
@@ -287,13 +287,11 @@ bool wxCurlHTTP::Get(wxOutputStream& buffer, const wxString& szRemoteFile /*=wxE
         SetCurlHandleToDefaults(szRemoteFile);
 
         SetOpt(CURLOPT_HTTPGET, TRUE);
-
-        SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_stream_write);
-        SetOpt(CURLOPT_WRITEDATA, (void*)&buffer);
+        SetStreamWriteFunction(buffer);
 
         if(Perform())
         {
-            return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
+            return IsResponseOk();
         }
     }
     
@@ -329,15 +327,13 @@ bool wxCurlHTTP::Put(wxInputStream& buffer, const wxString& szRemoteFile /*= wxE
 
         SetOpt(CURLOPT_UPLOAD, TRUE);
         SetOpt(CURLOPT_PUT, TRUE);
-        SetOpt(CURLOPT_READFUNCTION, wxcurl_stream_read);
-        SetOpt(CURLOPT_READDATA, (void*)&buffer);
+        SetStreamReadFunction(buffer);
         SetOpt(CURLOPT_INFILESIZE_LARGE, (curl_off_t)iSize);
-        SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
-        SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
+        SetStringWriteFunction(m_szResponseBody);
 
         if(Perform())
         {
-            return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
+            return IsResponseOk();
         }
     }
 
@@ -351,12 +347,11 @@ bool wxCurlHTTP::Delete(const wxString& szRemoteLoc /*= wxEmptyString*/)
         SetCurlHandleToDefaults(szRemoteLoc);
 
         SetOpt(CURLOPT_CUSTOMREQUEST, "DELETE");
-        SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
-        SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
+        SetStringWriteFunction(m_szResponseBody);
 
         if(Perform())
         {
-            return ((m_iResponseCode > 199) && (m_iResponseCode < 300));
+            return IsResponseOk();
         }
     }
 

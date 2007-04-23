@@ -63,8 +63,7 @@ bool wxCurlDAV::Mkcol(const wxString& szRemoteCol /*= wxEmptyString*/)
         SetCurlHandleToDefaults(szRemoteCol);
 		
 		SetOpt(CURLOPT_CUSTOMREQUEST, "MKCOL");
-		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
-		SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
+		SetStringWriteFunction(m_szResponseBody);
 
 		if(Perform())
 		{
@@ -114,13 +113,11 @@ bool wxCurlDAV::Propfind(wxInputStream& buffer, const wxString& szRemoteLoc /*= 
 		{
 			SetOpt(CURLOPT_UPLOAD, TRUE);
 			SetOpt(CURLOPT_INFILESIZE_LARGE, iSize);
-			SetOpt(CURLOPT_READFUNCTION, wxcurl_stream_read);
-			SetOpt(CURLOPT_READDATA, (void*)&buffer);
+			SetStreamReadFunction(buffer);
 		}
 
 		SetOpt(CURLOPT_CUSTOMREQUEST, "PROPFIND");
-		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
-		SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
+		SetStringWriteFunction(m_szResponseBody);
 
 		if(Perform())
 		{
@@ -161,13 +158,11 @@ bool wxCurlDAV::Proppatch(wxInputStream& buffer, const wxString& szRemoteLoc /*=
 		{
 			SetOpt(CURLOPT_UPLOAD, TRUE);
 			SetOpt(CURLOPT_INFILESIZE_LARGE, iSize);
-			SetOpt(CURLOPT_READFUNCTION, wxcurl_stream_read);
-			SetOpt(CURLOPT_READDATA, (void*)&buffer);
+			SetStreamReadFunction(buffer);
 		}
 
 		SetOpt(CURLOPT_CUSTOMREQUEST, "PROPPATCH");
-		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
-		SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
+		SetStringWriteFunction(m_szResponseBody);
 
 		if(Perform())
 		{
@@ -197,8 +192,7 @@ bool wxCurlDAV::Copy(const wxString& szRemoteLocDest, const bool& bOverwrite /*=
 		SetHeaders();
 
 		SetOpt(CURLOPT_CUSTOMREQUEST, "COPY");
-		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
-		SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
+		SetStringWriteFunction(m_szResponseBody);
 
 		if(Perform())
 		{
@@ -228,8 +222,7 @@ bool wxCurlDAV::Move(const wxString& szRemoteLocDest, const bool& bOverwrite /*=
 		SetHeaders();
 
 		SetOpt(CURLOPT_CUSTOMREQUEST, "MOVE");
-		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
-		SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
+		SetStringWriteFunction(m_szResponseBody);
 
 		if(Perform())
 		{

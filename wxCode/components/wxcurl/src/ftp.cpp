@@ -263,8 +263,7 @@ bool wxCurlFTP::Get(wxOutputStream& buffer, const wxString& szRemoteFile /*= wxE
 	{
 		SetCurlHandleToDefaults(szRemoteFile);
 
-		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_stream_write);
-		SetOpt(CURLOPT_WRITEDATA, (void*)&buffer);
+		SetStreamWriteFunction(buffer);
 
 		if(Perform())
 		{
@@ -303,8 +302,7 @@ bool wxCurlFTP::Put(wxInputStream& buffer, const wxString& szRemoteFile /*= wxEm
 			return false;
 
 		SetOpt(CURLOPT_UPLOAD, TRUE);
-		SetOpt(CURLOPT_READFUNCTION, wxcurl_stream_read);
-		SetOpt(CURLOPT_READDATA, (void*)&buffer);
+		SetStreamReadFunction(buffer);
 		SetOpt(CURLOPT_INFILESIZE_LARGE, iSize);
 
 		if(Perform())
@@ -446,8 +444,7 @@ bool wxCurlFTP::List(const wxString& szRemoteLoc /*= wxEmptyString*/)
 		SetCurlHandleToDefaults(szRemoteLoc);
 
 		SetOpt(CURLOPT_CUSTOMREQUEST, "LIST");
-		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
-		SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
+		SetStringWriteFunction(m_szResponseBody);
 
 		if(Perform())
 		{
@@ -465,8 +462,7 @@ bool wxCurlFTP::Nlst(const wxString& szRemoteLoc /*= wxEmptyString*/)
 		SetCurlHandleToDefaults(szRemoteLoc);
 
 		SetOpt(CURLOPT_CUSTOMREQUEST, "NLST");
-		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
-		SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
+		SetStringWriteFunction(m_szResponseBody);
 
 		if(Perform())
 		{
@@ -485,8 +481,7 @@ bool wxCurlFTP::Info(const wxString& szRemoteLoc /*= wxEmptyString*/)
 
 		SetOpt(CURLOPT_HEADER, TRUE);
 		SetOpt(CURLOPT_NOBODY, TRUE);
-		SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_str_write);
-		SetOpt(CURLOPT_WRITEDATA, (void*)&m_szResponseBody);
+		SetStringWriteFunction(m_szResponseBody);
 
 		if(Perform())
 		{

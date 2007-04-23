@@ -170,14 +170,14 @@ bool MyApp::OnInit()
 {
     // create the main application window
     MyFrame *frame = new MyFrame(_T("Minimal wxWindows App"));
-/*
-#if 1
+
+#ifdef __WXDEBUG__
     // create an useful log window
-    wxLogWindow *pwindow = new wxLogWindow(frame, wxT("log"));
+    wxLogWindow *pwindow = new wxLogWindow(frame, wxT("Log messages from wxCURL"));
     pwindow->GetFrame()->Move(50, 50+350);
     pwindow->GetFrame()->SetSize(800, 300);
 #endif
-*/
+
 
     // and show it (the frames, unlike simple controls, are not shown when
     // created initially)
