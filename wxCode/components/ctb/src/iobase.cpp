@@ -94,7 +94,7 @@ int wxIOBase::ReadUntilEOS(char*& readbuf,
     while(!timeout) {
 	   if(des >= &buf[bufsize]) {
 		  // buffer full, realloc more memory
-		  char* tmp = new char[bufsize + DELTA_BUFSIZE];
+		  char* tmp = new char[bufsize + DELTA_BUFSIZE + 1];
 		  memcpy(tmp,buf,bufsize);
 		  delete buf;
 		  buf = tmp;
