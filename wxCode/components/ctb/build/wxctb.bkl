@@ -13,7 +13,7 @@
   </option>
 
   <!-- the actual ctb library version -->
-  <set var="VERSION">0.9</set>
+  <set var="VERSION">0.10</set>
 
   <!-- The directory where wxWidgets is installed: -->
   <set var="ENV_VAR">
@@ -138,7 +138,7 @@
 	 serportx.h
 	 timer.h
     </files>
-    <install-to>$(INCLUDEDIR)$(DIRSEP)wx$(DIRSEP)ctb</install-to>
+    <install-to>$(INCLUDEDIR)$(DIRSEP)wx$(DIRSEP)ctb-$(VERSION)</install-to>
   </data-files-tree>
 
   <lib id="wxctb_lib" template="simple">
@@ -201,9 +201,9 @@
 	 @copy ..\lib\wxctb$(LIBFLAG)-$(VERSION).lib $(INSTALLDIR)\lib\$(LIBNAME)_lib
 	 @copy ..\lib\wxctb$(LIBFLAG)-$(VERSION).dll $(INSTALLDIR)\lib\$(LIBNAME)_lib
 	 <!-- copy the header files -->
-	 @if not exist $(INSTALLDIR)\include\wx\ctb\win32 mkdir $(INSTALLDIR)\include\wx\ctb\win32
-	 @copy ..\include\wx\ctb\*.h $(INSTALLDIR)\include\wx\ctb
-	 @copy ..\include\wx\ctb\win32\*.h $(INSTALLDIR)\include\wx\ctb\win32
+	 @if not exist $(INSTALLDIR)\include\wx\ctb-$(VERSION)\win32 mkdir $(INSTALLDIR)\include\wx\ctb-$(VERSION)\win32
+	 @copy ..\include\wx\ctb\*.h $(INSTALLDIR)\include\wx\ctb-$(VERSION)
+	 @copy ..\include\wx\ctb\win32\*.h $(INSTALLDIR)\include\wx\ctb-$(VERSION)\win32
     </command>
   </action>
 
@@ -218,7 +218,7 @@
 	 @echo " make DEBUG=$(DEBUG) GPIB=$(GPIB) install"
 	 @echo " "
 	 @echo " to install the libraries in $(LIBDIR)"
-	 @echo " and the header files in $(INCLUDEDIR)/wx/ctb"
+	 @echo " and the header files in $(INCLUDEDIR)/wx/ctb-$(VERSION)"
 	 @echo " "
 	 @echo " Don't forget to run ldconfig (also as root)"
 	 @echo " "
@@ -242,7 +242,8 @@
 	 @echo "                                                                "
 	 @echo " to install the libraries in:                                   "
 	 @echo " $(INSTALLDIR)$(DIRSEP)lib$(DIRSEP)$(LIBNAME)_lib               "
-	 @echo " and the header files in $(INSTALLDIR)$(DIRSEP)wx$(DIRSEP)ctb   "
+	 @echo " and the header files in"
+	 @echo " $(INSTALLDIR)$(DIRSEP)wx$(DIRSEP)ctb-$(VERSION)"
 	 @echo "                                                                "
 	 @echo " If you are using another compiler (Borland, Watcom, mingw,...) "
 	 @echo " take a look in the README in this directory!                   "
