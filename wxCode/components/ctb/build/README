@@ -2,7 +2,7 @@
  --------------------
  
  Website: http://wxcode.sourceforge.net/components/wxctb
- Version: 0.9
+ Version: 0.11
 
  or for additional support and tools:
  http://www.iftools.com/extras.en.html
@@ -13,14 +13,21 @@
 
  Type 'make DEBUG=x GPIB=x' or 'make -f GNUmakefile DEBUG=x GPIB=x'
 
+ You can also type: ./buildall.sh in the build folder to compile
+ and link all variants (debug/release with and without gpib support)
+ and install the headers and libs in the allocated space.
+ Note! You must root, to do this, or just input:
+ sudo ./buildall.sh
 
-
+	
  Microsoft Visual C++ compilation
  ----------------------------------------------------------------
 
  Type 'nmake -f makefile.vc DEBUG=x GPIB=x'
 
-
+ To create all libs (debug/release with and without gpib support)
+ just input: ./buildall.bat in the build folder.
+	
 
  Borland C++ 5.0/5.5 compilation
  ----------------------------------------------------------------
@@ -35,9 +42,22 @@
  Type 'wmake -f makefile.wat'
 
 
-
  ChangeLog
  ---------
+ 0.11
+     - the gpib sources are no longer depending on the OS. They are
+	  identical for linux and windows.  
+ 
+ 0.10
+     - replace the former gpib async io access with the standard
+	  NI-488 functions (ibrd,ibwrt). To avoid blocking, the internal
+	  gpib timeout was set to the lowest value, whereas the wxIOBase
+	  methods handles the timeout in a global and transparent manner.
+	- add a FindListener method in the wxGPIB class to look for all
+	  connected gpib devices (listeners).
+     - The Read and Readv method of the python wxIOBase class returns
+	  additional zero bytes, fixed. 
+
  0.9
 	- added python support for both, serial and gpib 
 
