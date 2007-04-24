@@ -6,7 +6,7 @@ GPIB_SUPPORT=''
 
 if [ "$1" = "GPIB=1" ]
 then
-    GPIB_SOURCES='../../src/linux/gpib.cpp ../../src/gpibx.cpp' 
+    GPIB_SOURCES='../../src/gpib.cpp' 
     GPIB_LIB='-lgpib'
     GPIB_SUPPORT='Yes'
 else

@@ -20,7 +20,7 @@ const char* helpMessage =
     "(SCPI command for identify the connected device)\n"
     "ctbtest [options]\n"
     "available options are:\n"
-    "-a     : GPIB device address, default is 1\n"
+    "-a     : GPIB device address, default is first listener\n"
     "-b     : baudrate [1200...115200], default is 38400\n"
     "-d     : connected device, default is COM1\n"
     "-h     : print this\n"
@@ -34,7 +34,7 @@ int timeout = 1000;
 
 int main(int argc,char* argv[])
 {
-    int adr = 1;
+    int adr = 0;
     char buf[1024];
     int quit = 0;
     int val;
@@ -69,6 +69,8 @@ int main(int argc,char* argv[])
 		  for(int i=1;i<31;i++) {
 			 if(listeners & (1 << i)) {
 				printf("Found listener at address: %i\n",i);
+				// take the first address for the tests
+				adr = i;
 			 }
 		  }
 	   }
@@ -107,24 +109,34 @@ int main(int argc,char* argv[])
 #endif
     // ok, device is ready for communication
     
-    // we are using a timer for timeout test. After the given timeout
-    // is reached, the to value will be set to 1
-
-    int to = 0;
-    timer t(timeout,&to,NULL);
-    t.start();
-
     char* receivedString = NULL;
     size_t readedBytes = 0;
-    dev->Writev("*idn?\n",6,&to);
+    dev->Writev("*idn?\n",6,timeout);
     int state = dev->ReadUntilEOS(receivedString,
 						    &readedBytes,
 						    "\n",
 						    timeout);
     if(readedBytes > 0) {
-	   receivedString[readedBytes] = 0;
 	   printf("answer (%i): %s\n",readedBytes,receivedString);
     }
+    delete receivedString;
+
+#if ( USE_ZES_POWER_METER )
+    // only for internal tests with a ZES PowerMeter, don't use it!
+    char* cmd = ":syst:lang zes;actn;var? (0:0);utrms?;itrms?;p?\ncont on\n"; 
+    dev->Writev(cmd,strlen(cmd),timeout);
+
+    for(int loop=0;loop<100;loop++) {
+	   int state = dev->ReadUntilEOS(receivedString,
+							   &readedBytes,
+							   "\n",
+							   timeout);
+	   if(readedBytes > 0) {
+		  printf("answer:%03i (%i): %s\n",loop,readedBytes,receivedString);
+	   }
+	   delete receivedString;
+    }
+#endif
 
     dev->Close();
     delete dev;

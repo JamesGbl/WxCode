@@ -1,8 +1,13 @@
 %{
-#include "wx/ctb/gpibx.h"
+#include "wx/ctb/gpib.h"
 %}
 
 %include iobase.i
+
+%typemap(in) void * dcs (wxGPIB_DCS tmp) {
+	/* dont check for list */
+	$1 = &tmp;
+}
 
 enum wxGPIB_Timeout
 {
@@ -51,7 +56,7 @@ enum {
     CTB_GPIB_RESET_BUS
 };
 
-class wxGPIB_x : public wxIOBase
+class wxGPIB : public wxIOBase
 {
 protected:
     int m_board;
@@ -61,9 +66,11 @@ protected:
     int m_count;
     int m_asyncio;
     wxGPIB_DCS m_dcs;
+    int CloseDevice();
+    int OpenDevice(const char* devname, void* dcs);
 public:
-    wxGPIB_x();
-    virtual ~wxGPIB_x();
+    wxGPIB();
+    virtual ~wxGPIB();
     const char* ClassName();
     virtual int GetError(char* buf,size_t buflen);
     int Ibrd(char* buf,size_t len);

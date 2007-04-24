@@ -13,7 +13,7 @@
   </option>
 
   <!-- the actual ctb library version -->
-  <set var="VERSION">0.10</set>
+  <set var="VERSION">0.11</set>
 
   <!-- The directory where wxWidgets is installed: -->
   <set var="ENV_VAR">
@@ -68,8 +68,7 @@
 
   <set var="GPIBSRC">
     <if cond="GPIB=='1'">
-	 ../src/$(OS)/gpib.cpp
-	 ../src/gpibx.cpp
+	 ../src/gpib.cpp
     </if>
   </set>
 
@@ -128,7 +127,6 @@
 	 fifo.h
 	 getopt.h
 	 gpib.h
-	 gpibx.h
 	 iobase.h
 	 linux/gpib.h
 	 linux/serport.h
