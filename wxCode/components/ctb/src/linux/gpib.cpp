@@ -44,7 +44,7 @@ int wxGPIB::OpenDevice(const char* devname, void* dcs)
     }
     // check for a valid timeout
     if((unsigned int)m_dcs.m_timeout > wxGPIB_TO_1000s) {
-	   m_dcs.m_timeout = wxGPIB_TO_1000s;
+	   m_dcs.m_timeout = wxGPIB_TO_10us;
     }
     m_hd = ibdev(m_board,
 			  m_dcs.m_address1,
@@ -64,10 +64,6 @@ int wxGPIB::OpenDevice(const char* devname, void* dcs)
  	   CloseDevice();
  	   return -3;
     }
-    // the default length of time the driver waits for a seriel poll 
-    // response is set to 1s (T1s = 11). Because we doesn't want to
-    // block for this time, we reduce it to (T10ms = 7)
-    ibconfig(m_hd,IbcSPollTime,T10ms);
     // reset device
     ibclr(m_hd);
     // save state, error and count

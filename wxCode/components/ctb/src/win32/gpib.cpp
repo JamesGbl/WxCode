@@ -14,14 +14,10 @@
 int wxGPIB::CloseDevice()
 {
     if(m_hd != -1) {
-	   if(1) {
-		  // this doesn't work with Python (generate an read exception),
-		  // I don't know why?
-		  // goto local...
-		  ibloc(m_hd);
-		  // ...and switch device offline
-		  ibonl(m_hd,0);
-	   }
+	   // goto local...
+	   ibloc(m_hd);
+	   // ...and switch device offline
+	   ibonl(m_hd,0);
 	   m_hd = -1;
 	   m_board = -1;
     }
@@ -48,7 +44,7 @@ int wxGPIB::OpenDevice(const char* devname, void* dcs)
     }
     // check for a valid timeout
     if((unsigned int)m_dcs.m_timeout > wxGPIB_TO_1000s) {
-	   m_dcs.m_timeout = wxGPIB_TO_1000s;
+	   m_dcs.m_timeout = wxGPIB_TO_10us;
     }
     m_hd = ibdev(m_board,
 			  m_dcs.m_address1,

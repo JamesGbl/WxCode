@@ -60,7 +60,11 @@ struct wxGPIB_DCS
 	   /*! set default device address to 1 */
 	   m_address1 = 1;
 	   m_address2 = 0;
-	   m_timeout = wxGPIB_TO_3s;
+	   /*! 
+		set the timeout to a very short value to avoid blocking
+		(default are 10usec)
+	   */
+	   m_timeout = wxGPIB_TO_10us;
 	   m_eot = true;
 	   m_eosChar = 0;//'\n';
 	   m_eosMode = 0;
@@ -138,13 +142,11 @@ protected:
     int m_state;
     int m_error;
     int m_count;
-    int m_asyncio;
     wxGPIB_DCS m_dcs;
 public:
     wxGPIB_x() {
 	   m_board = -1;
 	   m_hd = -1;
-	   m_asyncio = 0;
 	   m_state = m_count = m_error = 0;
     };
     virtual ~wxGPIB_x() {};

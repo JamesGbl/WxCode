@@ -18,9 +18,6 @@
 # include <gpib/ib.h>
 #endif
 
-#define ASYNCRD 0x01
-#define ASYNCWR 0x02
-
 struct gpibErr_t {
     int m_errno;
     const char* m_err;
@@ -70,10 +67,6 @@ char* wxGPIB_DCS::GetSettings(char* buf,size_t bufsize) {
 
 int wxGPIB_x::GetError(char* buf,size_t buflen)
 {
-    if(m_asyncio) {
-	   m_asyncio = 0;
-	   ibstop(m_hd);
-    }
     for(size_t i=0;i<(sizeof(gpibErrors)/sizeof(gpibErr_t));i++) {
 	   if(gpibErrors[i].m_errno == m_error) {
 		  return snprintf(buf,buflen,"%s",gpibErrors[i].m_err);
@@ -99,10 +92,6 @@ int wxGPIB_x::Ioctl(int cmd,void* args)
     switch(cmd) {
     case CTB_RESET:
 	   if(m_hd >= 0) {
-		  if(m_asyncio) {
-			 ibstop(m_hd);
-			 m_asyncio = 0;
-		  }
 		  ibclr(m_hd);
 		  return 0;
 	   }
@@ -181,82 +170,14 @@ int wxGPIB_x::Ioctl(int cmd,void* args)
     return -1;
 };
 
-int wxGPIB_x::Read(char* buf,size_t len)
-{
-    static char* rdbuf;
-    if(m_fifo->items() > 0) {
-	   return m_fifo->read(buf,len);
-    }
-    if(!m_asyncio) {
-	   char spr = 0;
-	   // ask the device if it is ready (this call blocks with Linux,
-	   // so we reduced the serial poll timeout in the OpenDevice
-	   // member function (look there)
-	   ibrsp(m_hd,&spr);
-	   if(spr & 0x10) {
-		  // MAV Bit is set (message available), allocate memory on 
-		  // heap. (Because the data transfer is asynchrone, the allocated
-		  // memory must exist until the transfer finished. The GPIB
-		  // device driver copy the data in it's interrupt service
-		  // routine!!!)
-		  m_asyncio = ASYNCRD;
-		  rdbuf = new char[len];
-		  memset(rdbuf,0,len);
-		  // start the asynchron data transfer
-		  ibrda(m_hd,rdbuf,len);
- 	   }
-    }
-    if(m_asyncio == ASYNCRD ) {
-	   ibwait(m_hd,0);
-	   int state = ThreadIbsta();
- 	   if((state & CMPL+ERR) == 0) {
-		  return 0;
-	   }
-	   // asynchrone I/O was finished
-	   m_asyncio = 0;
-	   // save state, error and count
-	   m_state = m_count = m_error = 0;
-	   m_state = ThreadIbsta();
-	   m_count = ThreadIbcnt();
-	   m_error = ThreadIberr();
-	   memcpy(buf,rdbuf,len);
-	   delete rdbuf;
-	   return m_count;
-    }
-    return 0;
-};
-
-int wxGPIB_x::Write(char* buf,size_t len)
-{
-    if(!m_asyncio) {
-	   m_asyncio = ASYNCWR;
-	   // start the asynchron data transfer
-	   ibwrta(m_hd,buf,len);
-    }
-    if(m_asyncio == ASYNCWR) {
-	   ibwait(m_hd,0);
-	   int state = ThreadIbsta();
-	   if((state & CMPL+ERR) == 0) {
-		  return 0;
-	   }
-	   m_asyncio = 0;
-	   // save state, error and count
-	   m_state = m_count = m_error = 0;
-	   m_state = ThreadIbsta();
-	   m_count = ThreadIbcnt();
-	   m_error = ThreadIberr();
-	   return m_count;
-    }
-    // at this time, return 0 Bytes
-    return 0;
-};
-
 int wxGPIB_x::FindListeners(int board)
 {
     int listeners = 0;
     if((unsigned int)board > 1) {
 	   return -1;
     }
+    // reset the GPIB, otherwise no connected device is found (linux)
+    SendIFC(board);
     // list of primary addresses to searching for. Must be terminated
     // with NOADDR.
     Addr4882_t addrlist[31];
@@ -277,5 +198,21 @@ int wxGPIB_x::FindListeners(int board)
 	   } 
     }
     return listeners;
+};
+
+int wxGPIB_x::Read(char* buf,size_t len)
+{
+    m_state = ibrd(m_hd,buf,len);
+    m_error = ThreadIberr();
+    m_count = ThreadIbcnt();
+    return m_count;
+};
+
+int wxGPIB_x::Write(char* buf,size_t len)
+{
+    m_state = ibwrt(m_hd,buf,len);
+    m_error = ThreadIberr();
+    m_count = ThreadIbcnt();
+    return m_count;
 };
 
