@@ -189,8 +189,8 @@ wxinstall:
 	@copy ..\lib\wxctb$(LIBFLAG)-0.11.dll $(INSTALLDIR)\lib\vc_lib
 	
 	@if not exist $(INSTALLDIR)\include\wx\ctb-0.11\win32 mkdir $(INSTALLDIR)\include\wx\ctb-0.11\win32
-	@copy ..\include\wx\ctb\*.h $(INSTALLDIR)\include\wx\ctb-0.11
-	@copy ..\include\wx\ctb\win32\*.h $(INSTALLDIR)\include\wx\ctb-0.11\win32
+	@copy ..\include\wx\ctb-0.11\*.h $(INSTALLDIR)\include\wx\ctb-0.11
+	@copy ..\include\wx\ctb-0.11\win32\*.h $(INSTALLDIR)\include\wx\ctb-0.11\win32
 
 tip-win32: 
 	@echo "                                                                "

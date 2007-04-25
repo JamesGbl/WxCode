@@ -150,7 +150,7 @@ install: all install_wxctb_lib install_wxctb_dll
 	if test ! -d $(prefix)/include/wx/ctb-0.11/`dirname $$f` ; then \
 	$(INSTALL) -d $(prefix)/include/wx/ctb-0.11/`dirname $$f`; \
 	fi; \
-	$(INSTALL) -m 644 ../include/wx/ctb//$$f $(prefix)/include/wx/ctb-0.11/$$f; \
+	$(INSTALL) -m 644 ../include/wx/ctb-0.11//$$f $(prefix)/include/wx/ctb-0.11/$$f; \
 	done
 
 uninstall: 

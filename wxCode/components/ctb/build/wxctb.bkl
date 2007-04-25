@@ -121,7 +121,7 @@
 
   <!-- This is only for UNIX like OS -->
   <data-files-tree id="install-headers">
-    <srcdir>..$(DIRSEP)include$(DIRSEP)wx$(DIRSEP)ctb</srcdir>
+    <srcdir>..$(DIRSEP)include$(DIRSEP)wx$(DIRSEP)ctb-$(VERSION)</srcdir>
     <files>
 	 expect.h
 	 fifo.h
@@ -200,8 +200,8 @@
 	 @copy ..\lib\wxctb$(LIBFLAG)-$(VERSION).dll $(INSTALLDIR)\lib\$(LIBNAME)_lib
 	 <!-- copy the header files -->
 	 @if not exist $(INSTALLDIR)\include\wx\ctb-$(VERSION)\win32 mkdir $(INSTALLDIR)\include\wx\ctb-$(VERSION)\win32
-	 @copy ..\include\wx\ctb\*.h $(INSTALLDIR)\include\wx\ctb-$(VERSION)
-	 @copy ..\include\wx\ctb\win32\*.h $(INSTALLDIR)\include\wx\ctb-$(VERSION)\win32
+	 @copy ..\include\wx\ctb-$(VERSION)\*.h $(INSTALLDIR)\include\wx\ctb-$(VERSION)
+	 @copy ..\include\wx\ctb-$(VERSION)\win32\*.h $(INSTALLDIR)\include\wx\ctb-$(VERSION)\win32
     </command>
   </action>
 
