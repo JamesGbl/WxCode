@@ -11,7 +11,7 @@
 #define _WX_SERIALPORT_X_H
 
 #include <stdio.h>
-#include "wx/ctb/iobase.h"
+#include "wx/ctb-0.11/iobase.h"
 
 #if defined (WIN32)
 # define snprintf _snprintf

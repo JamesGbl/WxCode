@@ -7,12 +7,12 @@
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
-#include "wx/ctb/gpib.h"
-#include "wx/ctb/timer.h"
+#include "wx/ctb-0.11/gpib.h"
+#include "wx/ctb-0.11/timer.h"
 #include <stdio.h>
 #include <string.h>
 #ifdef WIN32
-# include "wx/ctb/win32/gpib-32.h"
+# include "wx/ctb-0.11/win32/gpib-32.h"
 # define snprintf _snprintf
 #elif __GNUG__
 # include <gpib/ib.h>

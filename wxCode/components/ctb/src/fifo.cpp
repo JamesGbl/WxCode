@@ -7,7 +7,7 @@
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
-#include "wx/ctb/fifo.h"
+#include "wx/ctb-0.11/fifo.h"
 
 fifo::fifo(size_t size) :
     m_size(size)

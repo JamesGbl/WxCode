@@ -10,8 +10,8 @@
 #if !defined ( __EXPECT_H )
 #define __EXPECT_H
 
-#include "wx/ctb/iobase.h"
-#include "wx/ctb/match.h"
+#include "wx/ctb-0.11/iobase.h"
+#include "wx/ctb-0.11/match.h"
 
 /*!
   \class Expect

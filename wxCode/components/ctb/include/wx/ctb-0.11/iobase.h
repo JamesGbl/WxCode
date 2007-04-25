@@ -10,7 +10,7 @@
 #ifndef _WX_IOBASE_H
 #define _WX_IOBASE_H
 
-#include "wx/ctb/fifo.h"
+#include "wx/ctb-0.11/fifo.h"
 #include <sys/types.h>
 //#include <stddef.h>
 

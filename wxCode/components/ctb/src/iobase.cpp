@@ -9,8 +9,8 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "wx/ctb/iobase.h"
-#include "wx/ctb/timer.h"
+#include "wx/ctb-0.11/iobase.h"
+#include "wx/ctb-0.11/timer.h"
 
 #define DELTA_BUFSIZE 512 
 
