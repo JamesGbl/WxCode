@@ -47,7 +47,10 @@
  0.11
      - the gpib sources are no longer depending on the OS. They are
 	  identical for linux and windows.  
- 
+	- add the current version to the ctb include path, so you can
+	  handle a parallel installation of different versions.
+	  For instance: The header path wx/ctb is replaced by wx/ctb-0.11
+
  0.10
      - replace the former gpib async io access with the standard
 	  NI-488 functions (ibrd,ibwrt). To avoid blocking, the internal
