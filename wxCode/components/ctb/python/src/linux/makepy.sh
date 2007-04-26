@@ -6,7 +6,7 @@ GPIB_SUPPORT=''
 
 if [ "$1" = "GPIB=1" ]
 then
-    GPIB_SOURCES='../../src/gpib.cpp' 
+    GPIB_SOURCES='../../../src/gpib.cpp' 
     GPIB_LIB='-lgpib'
     GPIB_SUPPORT='Yes'
 else
@@ -24,16 +24,18 @@ swig -c++ -Wall -nodefault -python -keyword -new_repr -modern wxctb.i
 
 echo "create shared library wxctb with GPIB=$GPIB_SUPPORT for python 2.4..."
 g++ -Wall -g -shared -I /usr/include/python2.4/ \
-    -I ../../include \
-    ../../SWIG/linux/wxctb_wrap.cxx  \
-    ../../src/linux/timer.cpp \
-    ../../src/linux/serport.cpp \
-    ../../src/kbhit.cpp \
-    ../../src/iobase.cpp \
-    ../../src/fifo.cpp \
+    -I ../../../include \
+    wxctb_wrap.cxx  \
+    ../../../src/linux/timer.cpp \
+    ../../../src/linux/serport.cpp \
+    ../../../src/kbhit.cpp \
+    ../../../src/iobase.cpp \
+    ../../../src/fifo.cpp \
     $GPIB_SOURCES \
     $GPIB_LIB \
     -o _wxctb.so
 
-echo "copy wxctb.py and _wxctb.so to the linux/samples folder..."
-cp wxctb.py _wxctb.so samples
+echo "copy ctb.py, wxctb.py and _wxctb.so to the module/linux folder..."
+cp ../ctb.py ../../module/linux/
+cp wxctb.py ../../module/linux/
+cp _wxctb.so ../../module/linux/
