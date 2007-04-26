@@ -183,7 +183,7 @@
     </sources>
     <include>../include</include>
     <lib-path>../lib</lib-path>
-    <sys-lib>wxctb$(LIBFLAG)-$(VERSION)</sys-lib>
+    <library>wxctb_lib</library>
     <sys-lib>$(SYSLIB1)</sys-lib>
     <sys-lib>$(SYSLIB2)</sys-lib>
   </exe>

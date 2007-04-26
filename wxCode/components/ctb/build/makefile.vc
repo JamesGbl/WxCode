@@ -179,9 +179,9 @@ clean:
 	$(WXCTB_DLL_OBJECTS)  winmm.lib $(__SYSLIB2_p) /IMPLIB:..\lib\wxctb$(LIBFLAG)-0.11.lib
 <<
 
-$(OUTPUT)\ctbtest.exe: $(CTBTEST_OBJECTS)
+$(OUTPUT)\ctbtest.exe: $(CTBTEST_OBJECTS) ..\lib\wxctb$(LIBFLAG)-0.11.lib
 	link /NOLOGO /OUT:$@ $(LDFLAGS) $(____DEBUG_3) /LIBPATH:..\lib @<<
-	$(CTBTEST_OBJECTS)  wxctb$(LIBFLAG)-0.11.lib winmm.lib $(__SYSLIB2_p)
+	$(CTBTEST_OBJECTS)  ..\lib\wxctb$(LIBFLAG)-0.11.lib winmm.lib $(__SYSLIB2_p)
 <<
 
 wxinstall: 

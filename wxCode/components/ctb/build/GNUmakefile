@@ -203,8 +203,8 @@ install_wxctb_dll:
 	$(INSTALL) -m 644 ../lib/libwxctb$(LIBFLAG)-0.11.so $(prefix)/lib
 	install -c ../lib/libwxctb$(LIBFLAG)-0.11.so $(prefix)/lib
 
-$(OUTPUT)/ctbtest: $(CTBTEST_OBJECTS)
-	$(CXX) -o $@ $(CTBTEST_OBJECTS) $(LDFLAGS) $(____DEBUG_1) -L../lib  -lwxctb$(LIBFLAG)-0.11 -lpthread $(__SYSLIB2_p)
+$(OUTPUT)/ctbtest: $(CTBTEST_OBJECTS) ../lib/libwxctb$(LIBFLAG)-0.11.a
+	$(CXX) -o $@ $(CTBTEST_OBJECTS) $(LDFLAGS) $(____DEBUG_1) -L../lib  ../lib/libwxctb$(LIBFLAG)-0.11.a -lpthread $(__SYSLIB2_p)
 
 tip-linux: 
 	@echo " "
