@@ -64,10 +64,10 @@ struct wxGPIB_DCS
 	   m_address1 = 1;
 	   m_address2 = 0;
 	   /*! 
-		set the timeout to a very short value to avoid blocking
-		(default are 10usec)
+		set the timeout to a short value to avoid blocking
+		(default are 1msec)
 	   */
-	   m_timeout = wxGPIB_TO_10us;
+	   m_timeout = wxGPIB_TO_1ms;
 	   m_eot = true;
 	   m_eosChar = 0;//'\n';
 	   m_eosMode = 0;
