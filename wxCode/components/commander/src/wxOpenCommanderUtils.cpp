@@ -112,7 +112,10 @@ wxString getModificationTime(wxString& fileName)
    day << tmDateFile->tm_mday;
    month << (tmDateFile->tm_mon+1);
    year << (tmDateFile->tm_year+1900);
-   hour << (tmDateFile->tm_hour+1);
+   if ((tmDateFile->tm_hour) == 23)
+     hour = "00";
+   else  
+     hour << (tmDateFile->tm_hour+1);
    min << tmDateFile->tm_min;
    if (tmDateFile->tm_mday < 10) day = "0" + day;
    if (tmDateFile->tm_mon+1 < 10) month = "0" + month;

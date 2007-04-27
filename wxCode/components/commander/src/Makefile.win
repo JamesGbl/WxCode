@@ -1,7 +1,7 @@
 # Project: wxOpenCommander
 # Compiler: Default GCC compiler
 # Compiler Type: MingW 3
-# Makefile created by wxDev-C++ 6.10.1 on 15/04/07 22:52
+# Makefile created by wxDev-C++ 6.10.1 on 27/04/07 20:20
 
 CPP       = g++.exe
 CC        = gcc.exe

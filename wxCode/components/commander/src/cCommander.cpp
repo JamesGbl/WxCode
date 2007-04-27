@@ -80,13 +80,19 @@ wxString cCommander::getFileDirActualPath(long itemPos, long itemCol)
       break;
       case 1:
       {
+         wxString wxExt = getFileExtension(dirFileMap[itemPos]);
+         return wxExt.Upper();
+         break;
+      }
+      case 2:
+      {
           if (wxDir::Exists(dirFileMap[itemPos]))
              return "<DIR>";
           else
              return formatFileSize(getFileSize(dirFileMap[itemPos]));
       }
       break;
-      case 2:
+      case 3:
          wxString strFile = dirFileMap[itemPos];
          return getModificationTime(strFile);
       break;

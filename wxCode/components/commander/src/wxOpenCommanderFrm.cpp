@@ -315,8 +315,9 @@ void wxOpenCommanderFrm::addColumns(wxListCtrl* WxListCtrl)
    while (WxListCtrl->GetColumnCount()>0) WxListCtrl->DeleteColumn(0);
 
    WxListCtrl->InsertColumn(0, lang["Files"], wxLIST_FORMAT_LEFT, 212);
-   WxListCtrl->InsertColumn(1, lang["Size"], wxLIST_FORMAT_RIGHT, 65);
-   WxListCtrl->InsertColumn(2, lang["Date"], wxLIST_FORMAT_RIGHT, 100);
+   WxListCtrl->InsertColumn(1, lang["Extension"], wxLIST_FORMAT_LEFT, 65);
+   WxListCtrl->InsertColumn(2, lang["Size"], wxLIST_FORMAT_RIGHT, 65);
+   WxListCtrl->InsertColumn(3, lang["Date"], wxLIST_FORMAT_RIGHT, 100);
    
    int size = 20;
    //if (imageList != NULL) delete(imageList);
