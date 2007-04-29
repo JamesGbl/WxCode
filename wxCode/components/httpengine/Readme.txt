@@ -6,3 +6,5 @@
  Version: 2.0
  Description:
  wxHTTPEngine is a library of classes to easily allow your wxWidgets software to work with web sites.
+ 
+ This is a Subversion access test.
