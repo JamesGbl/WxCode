@@ -13,7 +13,7 @@
   </option>
 
   <!-- the actual ctb library version -->
-  <set var="VERSION">0.11</set>
+  <set var="VERSION">0.12</set>
 
   <!-- The directory where wxWidgets is installed: -->
   <set var="ENV_VAR">
