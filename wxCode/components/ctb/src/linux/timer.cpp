@@ -87,12 +87,6 @@ int timer::stop()
     return 0;
 };
 
-// this function is waste, DON'T USE it
-void kill_all_timer()
-{
-    pthread_kill_other_threads_np();
-};
-
 void sleepms(unsigned int ms)
 {
     usleep(ms * 1000);
