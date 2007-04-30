@@ -134,9 +134,4 @@ void kill_all_timer();
 */
 void sleepms(unsigned int ms);
 
-/*! \example ttimer.cpp
-  This is a simple example of how to use the timer class. You will find it
-  in examples/timer01.cpp.
- */
-
 #endif
