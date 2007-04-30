@@ -20,49 +20,49 @@
 
 struct gpibErr_t {
     int m_errno;
-    const char* m_err;
+    const char* m_notation;
+    const char* m_description;
 };
 
 static gpibErr_t gpibErrors[] = {
-    {0,"EDVR"},			  // DOS Error
-    {1,"ECIC"},			  // Specified  GPIB Interface Board is Not 
-						  // Active Controller
-    {2,"ENOL"},			  // No present listing device
-    {3,"EADR"},			  // GPIB Board has not been addressed properly
-    {4,"EARG"},			  // Invalid argument
-    {5,"ESAC"},			  // Specified GPIB Interface Board is not 
-                                // System Controller
-    {6,"EABO"},			  // I/O operation aborted (time-out)
-    {7,"ENEB"},			  // Non-existent GPIB board
-    {10,"EOIP"},			  // Routine not allowed during asynchronous 
-                                // I/O operation
-    {11,"ECAP"},			  // No capability for operation
-    {12,"EFSO"},			  // File System Error
-    {14,"EBUS"},			  // Command byte transfer error
-    {15,"ESTB"},			  // Serial poll status byte lost
-    {16,"ESQR"},			  // SRQ stuck in ON position
-    {20,"ETAB"},			  // Table problem
-    {247,"EINT"},			  // No interrupt configured on board
-    {248,"EWMD"},			  // Windows is not in Enhanced mode
-    {249,"EVDD"},			  // GPIB driver is not installed
-    {250,"EOVR"},			  // Buffer Overflow
-    {251,"ESML"},			  // Two library calls running simultaneously
-    {252,"ECFG"},			  // Board type does not match GPIB.CFG
-    {253,"ETMR"},			  // No Windows timers available
-    {254,"ESLC"},			  // No Windows selectors available
-    {255,"EBRK"}			  // Control-Break pressed
+    {0,"EDVR","DOS Error"},
+    {1,"ECIC","Specified GPIB Interface Board is Not Active Controller"},
+    {2,"ENOL","No present listing device"},
+    {3,"EADR","GPIB Board has not been addressed properly"},
+    {4,"EARG","Invalid argument"},
+    {5,"ESAC","Specified GPIB Interface Board is not System Controller"},
+    {6,"EABO","I/O operation aborted (time-out)"},
+    {7,"ENEB","Non-existent GPIB board"},
+    {10,"EOIP","Routine not allowed during asynchronous I/O operation"},
+    {11,"ECAP","No capability for operation"},
+    {12,"EFSO","File System Error"},
+    {14,"EBUS","Command byte transfer error"},
+    {15,"ESTB","Serial poll status byte lost"},
+    {16,"ESQR","SRQ stuck in ON position"},
+    {20,"ETAB","Table problem"},
+    {247,"EINT","No interrupt configured on board"},
+    {248,"EWMD","Windows is not in Enhanced mode"},
+    {249,"EVDD","GPIB driver is not installed"},
+    {250,"EOVR","Buffer Overflow"},
+    {251,"ESML","Two library calls running simultaneously"},
+    {252,"ECFG","Board type does not match GPIB.CFG"},
+    {253,"ETMR","No Windows timers available"},
+    {254,"ESLC","No Windows selectors available"},
+    {255,"EBRK","Control-Break pressed"}
 };
 
-char* wxGPIB_DCS::GetSettings(char* buf,size_t bufsize) {
+char* wxGPIB_DCS::GetSettings()
+{
     const char* to[] = {
 	   "None","10us","30us","100us","300us","1ms","3ms","10ms","30ms", 
 	   "100ms","300ms","1s","3s","10s","30s","100s","300s","1000s"
     };
-    snprintf(buf,bufsize,"Adr: (%i,%i) to:%s",
+    memset(m_buf,0,sizeof(m_buf));
+    snprintf(m_buf,sizeof(m_buf)-1,"Adr: (%i,%i) to:%s",
 		   m_address1,
 		   m_address2,
 		   to[m_timeout]);
-    return buf;
+    return m_buf;
 };
 
 int wxGPIB::CloseDevice()
@@ -78,22 +78,19 @@ int wxGPIB::CloseDevice()
     return 0;
 };
 
-int wxGPIB::GetError(char* buf,size_t buflen)
+const char* wxGPIB::GetErrorString(int error,bool detailed)
 {
     for(size_t i=0;i<(sizeof(gpibErrors)/sizeof(gpibErr_t));i++) {
-	   if(gpibErrors[i].m_errno == m_error) {
-		  return snprintf(buf,buflen,"%s",gpibErrors[i].m_err);
+	   if(gpibErrors[i].m_errno == error) {
+		  if(detailed) {
+			 return gpibErrors[i].m_description;
+		  }
+		  else {
+			 return gpibErrors[i].m_notation;
+		  }
 	   }
     }
     return 0;
-};
-
-int wxGPIB::GetSettingsAsString(char* buf, size_t bufsize)
-{
-    char tmpbuf[32];
-    return snprintf(buf,bufsize,"%s /dev/gpib%i",
-		   m_dcs.GetSettings(tmpbuf,sizeof(tmpbuf)),
-		   m_board);
 };
 
 // This is only for internal usage
@@ -265,10 +262,22 @@ int wxGPIB::OpenDevice(const char* devname, void* dcs)
 
 int wxGPIB::Read(char* buf,size_t len)
 {
-    m_state = ibrd(m_hd,buf,len);
-    m_error = ThreadIberr();
-    m_count = ThreadIbcnt();
-    return m_count;
+    char spr = 0;
+    // if something is in the fifo, first read that
+    if(m_fifo->items() > 0) {
+	   return m_fifo->read(buf,len);
+    }
+    // ask the device if it is ready (this call blocks with Linux,
+    // but we reduced the serial poll timeout in the OpenDevice
+    // member function (look there)
+    ibrsp(m_hd,&spr);
+    if(spr & 0x10) {
+	   m_state = ibrd(m_hd,buf,len);
+	   m_error = ThreadIberr();
+	   m_count = ThreadIbcnt();
+	   return m_count;
+    }
+    return 0;
 };
 
 int wxGPIB::Write(char* buf,size_t len)
