@@ -70,7 +70,7 @@ protected:
     */
     timer_control control;
     /*!
-      \var stopped will be set by calling the stop() method.
+      stopped will be set by calling the stop() method.
       Internaly the timer thread steadily tests the state of 
       this variable. If stopped not zero, the thread will be
       finished.
@@ -124,24 +124,12 @@ public:
 };
 
 /*!
-  \fn kill_all_timer()
-  \warning This function only works under linux and will be removed next
-  time. So don't use that!
-*/
-void kill_all_timer();
-
-/*!
-  \fn
+  \brief sleepms
   A plattform independent function, to go to sleep for the given
   time interval.
   \param ms time interval in milli seconds
 */
 void sleepms(unsigned int ms);
-
-/*! \example ttimer.cpp
-  This is a simple example of how to use the timer class. You will find it
-  in examples/timer01.cpp.
- */
 
 #endif
 
