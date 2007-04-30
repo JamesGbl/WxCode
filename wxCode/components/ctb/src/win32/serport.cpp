@@ -108,17 +108,6 @@ int wxSerialPort::GetLineState()
     return flags;
 };
 
-int wxSerialPort::GetSettingsAsString(char* str, size_t size)
-{
-    const char ac[5] = {'N','O','E','M','S'};
-    return _snprintf(str,size,"%i%c%i %i %s",
-				 m_dcs.wordlen,
-				 ac[m_dcs.parity],
-				 m_dcs.stopbits,
-				 m_dcs.baud,
-				 m_devname);
-};
-
 int wxSerialPort::Ioctl(int cmd,void* args)
 {
     COMSTAT comstat;
