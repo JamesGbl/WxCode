@@ -41,7 +41,7 @@ struct wxGPIB_DCS
     unsigned char m_eosMode;
     wxGPIB_DCS();
     ~wxGPIB_DCS();
-    char* GetSettings(char* buf,size_t bufsize);
+    char* GetSettings();
 }; 
 
 enum {
@@ -68,11 +68,14 @@ protected:
     wxGPIB_DCS m_dcs;
     int CloseDevice();
     int OpenDevice(const char* devname, void* dcs);
+    virtual const char* GetErrorString(int error,bool detailed);
 public:
     wxGPIB();
     virtual ~wxGPIB();
     const char* ClassName();
-    virtual int GetError(char* buf,size_t buflen);
+    virtual const char* GetErrorDescription(int error);
+    virtual const char* GetErrorNotation(int error);
+    virtual char* GetSettingsAsString();
     int Ibrd(char* buf,size_t len);
     int Ibwrt(char* buf,size_t len);
     virtual int Ioctl(int cmd,void* args);
