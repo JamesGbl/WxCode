@@ -3,7 +3,7 @@
 // Purpose:
 // Author:      Joachim Buermann
 // Id:          $Id$
-// Copyright:   (c) 2006 Joachim Buermann
+// Copyright:   (c) 2006,2007 Joachim Buermann
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
@@ -42,23 +42,23 @@ int fifo::get(char* ch)
 size_t fifo::items()
 {
     char* tmp_wrptr = m_wrptr;
-    // der rdptr wird sich normalerweise waehrend Aufruf
-    // von ncount() nicht aendern, da ncount() nur vom
-    // Lesetask aufgerufen wird.
+    // the rdptr will only changed by the reader. If we suppose, that
+    // the caller of the items() method is identical with the reader,
+    // this should be thread save.
     char* tmp_rdptr = m_rdptr;
 
-    // beide gleich, kein Zeichen in der fifo
+    // if the write pointer is identical with the read, there are no
+    // more data in the fifo
     if(tmp_wrptr == tmp_rdptr) {
 	   return 0;
     }
-    // wrptr steht vor rdptr, einfache Differenz ergibt
-    // Anzahl der noch in der fifo stehenden Zeichen
+    // the write pointer is greater as the read pointer, so we just
+    // can calculate the difference for the remaining data
     if(tmp_wrptr > tmp_rdptr) {
 	   return (tmp_wrptr - tmp_rdptr);
     }
-    // wrptr steht hinter rdptr, ist also einmal rund
-    // gelaufen, fifo Groesse abzueglich Differenz beider
-    // Zeiger ist dann Anzahl der Zeichen in der fifo
+    // the write pointer has circulate and stands against the read
+    // pointer
     else {
 	   return (m_size - (tmp_rdptr - tmp_wrptr));
     }
@@ -66,9 +66,11 @@ size_t fifo::items()
 
 int fifo::put(char ch)
 {
-    // wrptr temporaerem Zeiger zuweisen, der dann in
-    // Ruhe verglichen und vorallem MODIFIZIERT werden
-    // kann, ohne get() zu beeinflussen
+    // for a thread safe operation, the write of a data byte must be
+    // atomic. So we first assign the current position of the write
+    // pointer to a temporary pointer.
+    // Increment it for the comparison with the end of the internal 
+    // buffer and the read pointer
     char* tmp_wrptr = m_wrptr + 1;
     if(tmp_wrptr >= m_end) {
 	   tmp_wrptr = m_begin;
@@ -76,11 +78,10 @@ int fifo::put(char ch)
     if(tmp_wrptr == m_rdptr) {
 	   return 0;
     }
+    // this don't changes the write pointer!
     *m_wrptr = ch;
-    // hier liegt der Trick, um fifo thread fest zu machen.
-    // Aenderung des wrptr nach Vergleich und Schreiben mit
-    // temporaerem Zeiger tmp_wrptr ist atomic und kann
-    // dadurch von get() nicht mehr unterbrochen werden.
+    // that's the trick! The following assignment is atomic and cannot
+    // interrupted within a read access by the read thread
     m_wrptr = tmp_wrptr;
     return 1;
 };
@@ -89,6 +90,7 @@ int fifo::read(char* data,int n)
 {
     int nresult = 0;
     while(n--) {
+	   // the same as get()
 	   if(m_rdptr != m_wrptr) {
 		  *data = *m_rdptr++;
 		  if(m_rdptr >= m_end) {
@@ -108,9 +110,7 @@ int fifo::write(char* data,int n)
 {
     int nresult = 0;
     while(n--) {
-	   // wrptr temporaerem Zeiger zuweisen, der dann in
-	   // Ruhe verglichen und vorallem MODIFIZIERT werden
-	   // kann, ohne get() zu beeinflussen
+	   // the same as put()
 	   char* tmp_wrptr = m_wrptr + 1;
 	   if(tmp_wrptr >= m_end) {
 		  tmp_wrptr = m_begin;
@@ -119,10 +119,6 @@ int fifo::write(char* data,int n)
 		  break;
 	   }
 	   *m_wrptr = *data++;
-	   // hier liegt der Trick, um fifo thread fest zu machen.
-	   // Aenderung des wrptr nach Vergleich und Schreiben mit
-	   // temporaerem Zeiger tmp_wrptr ist atomic und kann
-	   // dadurch von get() nicht mehr unterbrochen werden.
 	   m_wrptr = tmp_wrptr;
 	   nresult++;
     }
