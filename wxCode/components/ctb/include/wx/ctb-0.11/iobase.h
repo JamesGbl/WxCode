@@ -12,7 +12,6 @@
 
 #include "wx/ctb-0.11/fifo.h"
 #include <sys/types.h>
-//#include <stddef.h>
 
 #define CTB_COMMON 0x0000
 #define CTB_SERIAL 0x0100
@@ -21,12 +20,12 @@
 const unsigned int wxTIMEOUT_INFINITY = 0xFFFFFFFF; 
 
 /*!
-\enum IOCTL calls for derivated classes
+  \enum wxIOBaseIoctls
 
-The following Ioctl calls are valid for all from wxIOBase
-derivated classes.
+  Defines the ioctl calls for derivated classes. The following Ioctl 
+  calls are valid for all from wxIOBase derivated classes.
 */
-enum {
+enum wxIOBaseIoctls {
     /*!
       Reset the connected device. For a serial (RS232) connection,
       a break is send. For GPIB the IFC (Interface Clear) line is
@@ -53,7 +52,17 @@ enum {
 class wxIOBase
 {
 protected:
+    /*!
+	 \brief internal fifo (first in, first out queue) to put back
+	 already readed bytes into the reading stream. After put back a single
+	 byte or sequence of characters, you can read them again with the
+	 next Read call.
+	*/
     fifo* m_fifo;
+    enum {
+	   /// fifosize of the putback fifo 
+	   fifoSize = 256
+    };
     /*!
       Close the interface (internally the file descriptor, which was
       connected with the interface).
@@ -83,7 +92,7 @@ public:
       Default constructor
     */
     wxIOBase() {
-	   m_fifo = new fifo(256);
+	   m_fifo = new fifo(fifoSize);
     };
 
     /*!
@@ -92,7 +101,10 @@ public:
     virtual ~wxIOBase() {
 	   delete m_fifo;
     };
-
+    /*!
+	 \brief A little helper function to detect the class name
+	 \return the name of the class
+	*/
     virtual const char* ClassName() {return "wxIOBase";};
     /*!
       Closed the interface. Internally it calls the CloseDevice()
@@ -114,8 +126,8 @@ public:
       Ioctl methode for doing this, independent of the real type of
       the connection.
       \param cmd a command identifier, (under Posix such as TIOCMBIS
-      for RS232 interfaces)
-      \param an typeless parameter pointer for the command above.
+      for RS232 interfaces), \ref wxIOBaseIoctls
+      \param args typeless parameter pointer for the command above.
       \return zero on success, or -1 if an error occurred.
     */    
     virtual int Ioctl(int cmd,void* args) {return -1;};
@@ -141,6 +153,19 @@ public:
     */
     int Open(const char* devname,void* dcs=0L) {
 	return OpenDevice(devname,dcs);
+    };
+
+    /*!
+	 \brief In some circumstances you want to put back a already
+	 readed byte (for instance, you have overreaded it and like to
+	 parse the recieving bytes again).
+	 The internal fifo stores fifoSize characters until you
+	 have to read again.
+	 \param ch the character to put back in the input stream
+	 \return 1, if successful, otherwise 0
+	*/
+    int PutBack(char ch) {
+	   return m_fifo->put(ch);
     };
 
     /*!
@@ -187,7 +212,7 @@ public:
 	 timeout in milliseconds was reached.
       \param buf starting address of the buffer
       \param len count bytes, we want to read
-      \param timeout in milliseconds. If you don't want any timeout,
+      \param timeout_in_ms in milliseconds. If you don't want any timeout,
 	 you give the wxTIMEOUT_INFINITY here. 
 	 But think of it: In this case, this function comes never 
 	 back, if there a not enough bytes to read.
@@ -204,18 +229,14 @@ public:
       \param buf starting adress of the buffer
       \param len count bytes, we want to read
       \param timeout_flag a pointer to an integer. If you don't want
-             any timeout, you given a null pointer here.
-                   But think of it: In this case, this function comes never
-                   back, if there a not enough bytes to read.
-         \param nice if true go to sleep for one ms (reduce CPU last),
-                if there is no byte available (default is false)
+	 any timeout, you given a null pointer here.
+	 But think of it: In this case, this function comes never
+	 back, if there a not enough bytes to read.
+	 \param nice if true go to sleep for one ms (reduce CPU last),
+	 if there is no byte available (default is false)
     */
     int Readv(char* buf,size_t len,int* timeout_flag,bool nice=false);
-
-    int PutBack(char ch) {
-	   return m_fifo->put(ch);
-    };
-
+    
     /*!
       Write writes up to len bytes from the buffer starting with buf
       into the interface.
@@ -233,8 +254,9 @@ public:
 	 timeout in milliseconds was reached.
       \param buf starting address of the buffer
       \param len count bytes, we want to write
-      \param timeout timeout in milliseconds. If you give wxTIMEOUT_INFINITY
-	 here, the function blocks, till all data was written.
+      \param timeout_in_ms timeout in milliseconds. If you give 
+	 wxTIMEOUT_INFINITY here, the function blocks, till all data was
+	 written.
 	 \return the number of data bytes successfully written.
     */
     int Writev(char* buf,size_t len,unsigned int timeout_in_ms);
