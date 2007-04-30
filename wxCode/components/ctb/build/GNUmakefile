@@ -142,15 +142,15 @@ $(OUTPUT):
 
 ### Targets: ###
 
-all: ../lib/libwxctb$(LIBFLAG)-0.11.a ../lib/libwxctb$(LIBFLAG)-0.11.so $(OUTPUT)/ctbtest tip-linux
+all: ../lib/libwxctb$(LIBFLAG)-0.12.a ../lib/libwxctb$(LIBFLAG)-0.12.so $(OUTPUT)/ctbtest tip-linux
 
 install: all install_wxctb_lib install_wxctb_dll
-	$(INSTALL) -d $(prefix)/include/wx/ctb-0.11
+	$(INSTALL) -d $(prefix)/include/wx/ctb-0.12
 	for f in expect.h fifo.h getopt.h gpib.h iobase.h linux/gpib.h linux/serport.h linux/timer.h match.h serport.h serportx.h timer.h; do \
-	if test ! -d $(prefix)/include/wx/ctb-0.11/`dirname $$f` ; then \
-	$(INSTALL) -d $(prefix)/include/wx/ctb-0.11/`dirname $$f`; \
+	if test ! -d $(prefix)/include/wx/ctb-0.12/`dirname $$f` ; then \
+	$(INSTALL) -d $(prefix)/include/wx/ctb-0.12/`dirname $$f`; \
 	fi; \
-	$(INSTALL) -m 644 ../include/wx/ctb-0.11//$$f $(prefix)/include/wx/ctb-0.11/$$f; \
+	$(INSTALL) -m 644 ../include/wx/ctb-0.12//$$f $(prefix)/include/wx/ctb-0.12/$$f; \
 	done
 
 uninstall: 
@@ -158,13 +158,13 @@ uninstall:
 clean: 
 	rm -f $(OUTPUT)/*.o
 	rm -f $(OUTPUT)/*.d
-	rm -f ../lib/libwxctb$(LIBFLAG)-0.11.a
-	rm -f ../lib/libwxctb$(LIBFLAG)-0.11.so
-	rm -f ../lib/libwxctb$(LIBFLAG)-0.11.so
+	rm -f ../lib/libwxctb$(LIBFLAG)-0.12.a
+	rm -f ../lib/libwxctb$(LIBFLAG)-0.12.so
+	rm -f ../lib/libwxctb$(LIBFLAG)-0.12.so
 	rm -f $(OUTPUT)/ctbtest
 
 tarball: 
-	(cd ..; tar -cvzf wxctb-0.11.tar.gz \
+	(cd ..; tar -cvzf wxctb-0.12.tar.gz \
 	--exclude=ctbtest \
 	--exclude=ctbtest.exe \
 	--exclude=*.a \
@@ -173,7 +173,7 @@ tarball:
 	--exclude=*.dll \
 	--exclude=docs \
 	--exclude=*.ilk \
-	--exclude=*0.11* \
+	--exclude=*0.12* \
 	--exclude=*.log \
 	--exclude=*.o* \
 	--exclude=*.pdb \
@@ -186,25 +186,25 @@ tarball:
 	--exclude=*.___\
 	--exclude=*.o* *)
 
-../lib/libwxctb$(LIBFLAG)-0.11.a: $(WXCTB_LIB_OBJECTS)
+../lib/libwxctb$(LIBFLAG)-0.12.a: $(WXCTB_LIB_OBJECTS)
 	rm -f $@
 	$(AR) rcu $@ $(WXCTB_LIB_OBJECTS)
 	$(RANLIB) $@
 
 install_wxctb_lib: 
 	$(INSTALL) -d $(prefix)/lib
-	$(INSTALL) -m 644 ../lib/libwxctb$(LIBFLAG)-0.11.a $(prefix)/lib
+	$(INSTALL) -m 644 ../lib/libwxctb$(LIBFLAG)-0.12.a $(prefix)/lib
 
-../lib/libwxctb$(LIBFLAG)-0.11.so: $(WXCTB_DLL_OBJECTS)
+../lib/libwxctb$(LIBFLAG)-0.12.so: $(WXCTB_DLL_OBJECTS)
 	$(CXX) -shared -fPIC -o $@ $(WXCTB_DLL_OBJECTS) $(LDFLAGS) $(____DEBUG_1) -pthread -L../lib  -lpthread $(__SYSLIB2_p)
 
 install_wxctb_dll: 
 	$(INSTALL) -d $(prefix)/lib
-	$(INSTALL) -m 644 ../lib/libwxctb$(LIBFLAG)-0.11.so $(prefix)/lib
-	install -c ../lib/libwxctb$(LIBFLAG)-0.11.so $(prefix)/lib
+	$(INSTALL) -m 644 ../lib/libwxctb$(LIBFLAG)-0.12.so $(prefix)/lib
+	install -c ../lib/libwxctb$(LIBFLAG)-0.12.so $(prefix)/lib
 
-$(OUTPUT)/ctbtest: $(CTBTEST_OBJECTS) ../lib/libwxctb$(LIBFLAG)-0.11.a
-	$(CXX) -o $@ $(CTBTEST_OBJECTS) $(LDFLAGS) $(____DEBUG_1) -L../lib  ../lib/libwxctb$(LIBFLAG)-0.11.a -lpthread $(__SYSLIB2_p)
+$(OUTPUT)/ctbtest: $(CTBTEST_OBJECTS) ../lib/libwxctb$(LIBFLAG)-0.12.a
+	$(CXX) -o $@ $(CTBTEST_OBJECTS) $(LDFLAGS) $(____DEBUG_1) -L../lib  ../lib/libwxctb$(LIBFLAG)-0.12.a -lpthread $(__SYSLIB2_p)
 
 tip-linux: 
 	@echo " "
@@ -215,7 +215,7 @@ tip-linux:
 	@echo " make DEBUG=$(DEBUG) GPIB=$(GPIB) install"
 	@echo " "
 	@echo " to install the libraries in $(prefix)/lib"
-	@echo " and the header files in $(prefix)/include/wx/ctb-0.11"
+	@echo " and the header files in $(prefix)/include/wx/ctb-0.12"
 	@echo " "
 	@echo " Don't forget to run ldconfig (also as root)"
 	@echo " "
