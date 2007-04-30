@@ -14,8 +14,8 @@
 
 /*!
   \class fifo
-  A simple fifo to realize a put back mechanism for the wxIOBase
-  and it's derivated classes.
+  A simple thread safe fifo to realize a put back mechanism for the 
+  wxIOBase and it's derivated classes.
  */
 class fifo
 {
@@ -46,6 +46,9 @@ public:
     /*!
 	 \brief clear all internal memory and set the read and write
 	 pointers to the start of the internal memory.
+	 \Note This function is not thread safe! Don't use it, if another 
+	 thread takes access to the fifo instance. Use a looping get() or
+	 read() call instead of this.
 	*/
     virtual void clear();
     /*!
