@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // Name:        fifo.cpp
 // Purpose:
-// Author:      Joachim Buermann
+// Author:      Joachim Buermann, Michael Hungershausen
 // Id:          $Id$
 // Copyright:   (c) 2006,2007 Joachim Buermann
 // Licence:     wxWindows licence
