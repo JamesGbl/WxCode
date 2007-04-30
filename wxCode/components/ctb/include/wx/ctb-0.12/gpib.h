@@ -10,7 +10,7 @@
 #ifndef __WX_GPIBX_H
 #define __WX_GPIBX_H
 
-#include "wx/ctb-0.11/iobase.h"
+#include "wx/ctb-0.12/iobase.h"
 
 /*!
    \file gpib.h

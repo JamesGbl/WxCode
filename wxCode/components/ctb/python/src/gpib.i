@@ -1,5 +1,5 @@
 %{
-#include "wx/ctb-0.11/gpib.h"
+#include "wx/ctb-0.12/gpib.h"
 %}
 
 %include iobase.i

@@ -12,7 +12,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "wx/ctb-0.11/iobase.h"
+#include "wx/ctb-0.12/iobase.h"
 
 #if defined (WIN32)
 # define snprintf _snprintf

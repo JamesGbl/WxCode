@@ -10,8 +10,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "wx/ctb-0.11/expect.h"
-#include "wx/ctb-0.11/timer.h"
+#include "wx/ctb-0.12/expect.h"
+#include "wx/ctb-0.12/timer.h"
 
 //#define DEBUG
 

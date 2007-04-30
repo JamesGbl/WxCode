@@ -10,7 +10,7 @@
 #ifndef _WX_IOBASE_H
 #define _WX_IOBASE_H
 
-#include "wx/ctb-0.11/fifo.h"
+#include "wx/ctb-0.12/fifo.h"
 #include <sys/types.h>
 
 #define CTB_COMMON 0x0000

@@ -12,7 +12,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "wx/ctb-0.11/match.h"
+#include "wx/ctb-0.12/match.h"
 
 static int denotes_range(S_MATCH*,char**);
 static int quoted_char(S_MATCH*,char**);

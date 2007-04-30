@@ -1,5 +1,5 @@
 %{
-#include "wx/ctb-0.11/win32/serport.h"	
+#include "wx/ctb-0.12/win32/serport.h"	
 %}
 
 %include ../serportx.i

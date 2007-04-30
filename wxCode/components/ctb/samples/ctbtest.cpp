@@ -1,10 +1,10 @@
-#include "wx/ctb-0.11/getopt.h"
+#include "wx/ctb-0.12/getopt.h"
 #if ( GPIB )
-# include "wx/ctb-0.11/gpib.h"
+# include "wx/ctb-0.12/gpib.h"
 #endif
-#include "wx/ctb-0.11/iobase.h"
-#include "wx/ctb-0.11/serport.h"
-#include "wx/ctb-0.11/timer.h"
+#include "wx/ctb-0.12/iobase.h"
+#include "wx/ctb-0.12/serport.h"
+#include "wx/ctb-0.12/timer.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
