@@ -50,9 +50,10 @@ struct wxSerialPort_DCS
     unsigned char stopbits;
     bool rtscts;
     bool xonxoff;
+    char buf[16];
     wxSerialPort_DCS();
     ~wxSerialPort_DCS();
-    char* GetSettings(char* buf,size_t bufsize);
+    char* GetSettings();
 }; 
 
 struct wxSerialPort_EINFO
@@ -84,9 +85,8 @@ public:
     const char* ClassName();
     virtual int ChangeLineState(wxSerialLineState flags) = 0;
     virtual int ClrLineState(wxSerialLineState flags) = 0;
-//    virtual int GetLineState(wxSerialLineState* flags) = 0;
     virtual int GetLineState() = 0;
-    virtual int GetSettingsAsString(char* str, size_t size) = 0;
+    virtual char* GetSettingsAsString();
     virtual int Ioctl(int cmd,void* args);
     virtual int SendBreak(int duration) = 0;
     virtual int SetBaudRate(wxBaud baudrate) = 0;
