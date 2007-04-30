@@ -34,9 +34,7 @@ public:
 
     int ChangeLineState(wxSerialLineState flags);
     int ClrLineState(wxSerialLineState flags);
-//    int GetLineState(wxSerialLineState* flags);
     int GetLineState();
-    int GetSettingsAsString(char* str, size_t size);
     int Ioctl(int cmd,void* args);
     int IsOpen();
     int Read(char* buf,size_t len);
@@ -44,8 +42,4 @@ public:
     int SetBaudRate(wxBaud baudrate);
     int SetLineState(wxSerialLineState flags);
     int Write(char* buf,size_t len);
-
-//    static char* GetSettingsFromDCS(char* buf,
-//						size_t bufsize,
-//						wxSerialPort_DCS& dcs);
 };
