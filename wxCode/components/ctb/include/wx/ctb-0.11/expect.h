@@ -143,9 +143,4 @@ public:
     int Timeout(int msecs);
 };
 
-/*! \example texpect.cpp
-  This is a simple example of how to use the expect class. You will find it
-  in examples/texpect.cpp.
- */
-
 #endif
