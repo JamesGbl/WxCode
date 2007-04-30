@@ -4,7 +4,7 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 PROJECT_NAME           = libwxctb
-PROJECT_NUMBER         = 0.11
+PROJECT_NUMBER         = 0.12
 OUTPUT_DIRECTORY       = docs
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
@@ -83,8 +83,8 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 INPUT                  = src \
                          src/linux \
-                         include/wx/ctb-0.11 \
-                         include/wx/ctb-0.11/linux
+                         include/wx/ctb-0.12 \
+                         include/wx/ctb-0.12/linux
 FILE_PATTERNS          = *.cpp \
                          *.h
 RECURSIVE              = NO
