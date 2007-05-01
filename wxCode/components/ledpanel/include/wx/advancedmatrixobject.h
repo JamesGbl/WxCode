@@ -35,6 +35,18 @@ class AdvancedMatrixObject : public MatrixObject
 		void FitRight();
 		void FitTop();
 		void FitBottom();
+
+		// Füllfunktionen
+		void FillLine(int y, char d);
+		void FillRow(int x, char d);
+		void FillAll(char d);
+
+		// Löschfunktionen
+		void ClearLine(int y);
+		void ClearRow(int x);
+
+		//
+
 };
 
 

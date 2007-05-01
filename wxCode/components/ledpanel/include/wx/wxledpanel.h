@@ -11,7 +11,7 @@
 
 #include "wx/advancedmatrixobject.h"
 #include "wx/wxledfont.h"
-#include "wx/wxledpaneldef.h"
+//#include "wx/wxledpaneldef.h"
 #include <wx/wx.h>
 
 enum wxLEDColour

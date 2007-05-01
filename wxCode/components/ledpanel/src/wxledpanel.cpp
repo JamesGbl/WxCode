@@ -400,13 +400,24 @@ void wxLEDPanel::ShiftLeft()
 {
 	// new text Pos
 	m_text_pos.x--;
+
 	// out of bound
 	if(m_text_pos.x+m_text_mo.GetWidth()<=0)
+	{
 		m_text_pos.x=m_field.GetWidth();
+		return;
+	}
 
-	// TODO optimize with shift
-	m_field.Clear();
-	m_field.SetDatesAt(m_text_pos,m_text_mo);
+	// Shift
+	m_field.ShiftLeft();
+
+	// TODO check bounds!
+	// data for the new line
+	for(int i=0;i<m_text_mo.GetHeight();++i)
+	{
+		char d=m_text_mo.GetDataFrom(abs(m_text_pos.x-m_field.GetWidth()+1),i);
+		if(d>0) m_field.SetDataAt(m_field.GetWidth()-1,m_text_pos.y+i,d);
+	}
 }
 
 void wxLEDPanel::ShiftRight()
@@ -414,12 +425,23 @@ void wxLEDPanel::ShiftRight()
 	// new text Pos
 	m_text_pos.x++;
 	// out of bound
-	if(m_text_pos.x>m_field.GetWidth())
-		m_text_pos.x=-m_text_mo.GetWidth()+1;	// TODO without +1 error (in SetDatesAt??)
+	if(m_text_pos.x>=m_field.GetWidth())
+	{
+		m_text_pos.x=-m_text_mo.GetWidth();	// TODO without +1 error (in SetDatesAt??)
+		return;
+	}
 
-	// TODO optimize with shift
-	m_field.Clear();
-	m_field.SetDatesAt(m_text_pos,m_text_mo);
+	// Shift
+	m_field.ShiftRight();
+
+	// TODO check bounds!
+	// TODO at first run -> false y-pos!
+	// data for the new line
+	for(int i=0;i<m_text_mo.GetHeight();++i)
+	{
+		char d=m_text_mo.GetDataFrom(abs(m_text_pos.x-m_field.GetWidth()+1),i);
+		if(d>0) m_field.SetDataAt(0,m_text_pos.y+i,d);
+	}
 }
 
 void wxLEDPanel::ShiftUp()
@@ -451,7 +473,7 @@ void wxLEDPanel::ShiftDown()
 
 void wxLEDPanel::OnScrollTimer(wxTimerEvent& event)
 {
-	if(m_scrollspeed==0) return;
+	if(m_scrollspeed==0||m_text.IsEmpty()) return;
 
 	// the save way
 	m_scrollTimer.Stop();

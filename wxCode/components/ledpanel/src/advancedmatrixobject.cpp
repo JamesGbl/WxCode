@@ -115,8 +115,9 @@ void AdvancedMatrixObject::ShiftUp()
 	memmove(m_data,tmp,(m_length-1-m_width)*sizeof(char));
 
 	// unterer rand muss jetzt leer sein
-	for(int i=0;i<m_width;++i)
-		SetDataAt(i,m_height-1,0);
+	//for(int i=0;i<m_width;++i)
+	//	SetDataAt(i,m_height-1,0);
+	ClearLine(m_height-1);
 }
 
 void AdvancedMatrixObject::ShiftDown()
@@ -130,8 +131,9 @@ void AdvancedMatrixObject::ShiftDown()
 	memmove(tmp,m_data,(m_length-1-m_width)*sizeof(char));
 
 	// oberer rand muss jetzt leer sein
-	for(int i=0;i<m_width;++i)
-		SetDataAt(i,0,0);
+	//for(int i=0;i<m_width;++i)
+		//SetDataAt(i,0,0);
+	ClearLine(0);
 }
 
 ////////////////////////////////////////////////////////////////
@@ -302,4 +304,38 @@ void AdvancedMatrixObject::FitBottom()
 		m_height=new_height;
 		m_length=new_length;
 	}
+}
+
+void AdvancedMatrixObject::FillLine(int y, char d)
+{
+	// Gibt es die Linie überhaupt
+	if(y<0 || y>=m_height) return;
+
+	// Linie auf Null setzen
+	void* y_pos=m_data+m_width*y*sizeof(char);
+	memset(y_pos,d,m_width*sizeof(char));
+}
+void AdvancedMatrixObject::FillRow(int x, char d)
+{
+	// Gibt es die Spalte überhaupt
+	if(x<0 || x>=m_width) return;
+
+	// Spalte auf null
+	for(int i=0;i<m_height;++i)
+		m_data[x+i*m_width]=d;
+}
+
+void AdvancedMatrixObject::FillAll(char d)
+{
+	memset(m_data,d,m_length*sizeof(char));
+}
+
+void AdvancedMatrixObject::ClearLine(int y)
+{
+	FillLine(y,0);
+}
+
+void AdvancedMatrixObject::ClearRow(int x)
+{
+	FillRow(x,0);
 }
