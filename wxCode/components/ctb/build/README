@@ -55,10 +55,43 @@
    and version 1.3.25 (Windows)
  - the develop files for python (means the header and the library
    files). I tested it with Python 2.3 and 2.4.
- 
+ - if you want to communicate via GPIB, a GPIB installation (GPIB 
+   controller and software, for instance a Nation Instruments or 
+   Keithley card). On Linux the libgpib.
+
  Like the building of the wxctb C++ library, you also can choose
  between GPIB and non GPIB (default) support.
+
+ Compile the python module
  
+ Linux
+ cd in the python/src/linux folder and type:
+ ./makepy.sh USE_GPIB
+ or
+ ./makepy.sh
+ if you don't need any GPIB support
+
+ Windows
+ cd in the python/src/windows folder. Open the makepy.bat with your
+ favorite editor and set the commented enviroment variables. See the
+ makepy.bat file for more information, how you can do that.
+ After that, just type:
+
+ ./makepy.sh USE_GPIB
+ (for GPIB support) or
+ ./makepy.sh
+ if you don't need any GPIB support
+
+ At last set the python modul path to the wxctb-0.12/python/module
+ path.
+ On linux:
+
+ export PYTHONPATH=somepath/wxctb-0.12/python/module/linux
+
+ On Windows:
+
+ set PYTHONPATH=drive:\somepath\wxctb-0.12\python\module\win32
+
 
  ChangeLog
  ---------
