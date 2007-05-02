@@ -4,7 +4,7 @@ GPIB_SOURCES=''
 GPIB_LIB=''
 GPIB_SUPPORT=''
 
-if [ "$1" = "GPIB=1" ]
+if [ "$1" = "USE_GPIB" ]
 then
     GPIB_SOURCES='../../../src/gpib.cpp' 
     GPIB_LIB='-lgpib'
