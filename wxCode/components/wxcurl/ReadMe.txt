@@ -53,6 +53,7 @@
      - added a wxCurlDownloadThread and a wxCurlUploadThread to ease non-blocking downloads/uploads
      - added a wxCurlSizeQueryThread to query file sizes before downloading them
      - added a wxCurlDownloadDialog and wxCurlUploadDialog for easier downloading/uploading
+     - added a wxCurlConnectionSettings[Panel|Dialog] to present stock connection options to the user
 
 
  Authors' info

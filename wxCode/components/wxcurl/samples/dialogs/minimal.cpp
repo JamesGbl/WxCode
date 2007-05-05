@@ -94,6 +94,9 @@ enum
     Minimal_Speed,
     Minimal_Size,
     Minimal_Url,
+    Minimal_ConnSettingsAuth,
+    Minimal_ConnSettingsPort,
+    Minimal_ConnSettingsProxy,
 
     Minimal_Can_abort,
     Minimal_Can_start,
@@ -240,6 +243,10 @@ MyFrame::MyFrame(const wxString& title)
     m_menuTransferDlg->AppendCheckItem(Minimal_Size, _T("Show how much was transferred so far"));
     m_menuTransferDlg->AppendCheckItem(Minimal_Url, _T("Show the URL of the transfer"));
     m_menuTransferDlg->AppendSeparator();
+    m_menuTransferDlg->AppendCheckItem(Minimal_ConnSettingsAuth, _T("Allow the user to change authentication settings"));
+    m_menuTransferDlg->AppendCheckItem(Minimal_ConnSettingsPort, _T("Allow the user to change port for the transfer"));
+    m_menuTransferDlg->AppendCheckItem(Minimal_ConnSettingsProxy, _T("Allow the user to change proxy settings"));
+    m_menuTransferDlg->AppendSeparator();
     m_menuTransferDlg->AppendCheckItem(Minimal_Can_abort, _T("Transfer can be aborted"));
     m_menuTransferDlg->AppendCheckItem(Minimal_Can_start, _T("Transfer do not start automatically"));
     m_menuTransferDlg->AppendCheckItem(Minimal_Can_pause, _T("Transfer can be paused"));
@@ -300,6 +307,9 @@ int MyFrame::GetTransferStyle() const
     if (m_menuTransferDlg->IsChecked(Minimal_Speed)) ret |= wxCTDS_SPEED;
     if (m_menuTransferDlg->IsChecked(Minimal_Size)) ret |= wxCTDS_SIZE;
     if (m_menuTransferDlg->IsChecked(Minimal_Url)) ret |= wxCTDS_URL;
+    if (m_menuTransferDlg->IsChecked(Minimal_ConnSettingsAuth)) ret |= wxCTDS_CONN_SETTINGS_AUTH;
+    if (m_menuTransferDlg->IsChecked(Minimal_ConnSettingsPort)) ret |= wxCTDS_CONN_SETTINGS_PORT;
+    if (m_menuTransferDlg->IsChecked(Minimal_ConnSettingsProxy)) ret |= wxCTDS_CONN_SETTINGS_PROXY;
     if (m_menuTransferDlg->IsChecked(Minimal_Can_abort)) ret |= wxCTDS_CAN_ABORT;
     if (m_menuTransferDlg->IsChecked(Minimal_Can_start)) ret |= wxCTDS_CAN_START;
     if (m_menuTransferDlg->IsChecked(Minimal_Can_pause)) ret |= wxCTDS_CAN_PAUSE;

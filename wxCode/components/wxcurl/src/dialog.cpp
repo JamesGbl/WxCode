@@ -49,6 +49,7 @@ enum
     AbortButtonId = wxID_HIGHEST+1,
     PauseResumeButtonId,
     StartButtonId,
+    ConnSettingsButtonId,
 
     ThreadId
 };
@@ -60,11 +61,13 @@ BEGIN_EVENT_TABLE( wxCurlTransferDialog, wxDialog )
 
     // user events
     EVT_BUTTON( AbortButtonId, wxCurlTransferDialog::OnAbort )
+    EVT_BUTTON( ConnSettingsButtonId, wxCurlTransferDialog::OnConnSettings )
     EVT_BUTTON( PauseResumeButtonId, wxCurlTransferDialog::OnPauseResume )
     EVT_BUTTON( StartButtonId, wxCurlTransferDialog::OnStart )
 
     // update UI
     EVT_UPDATE_UI( AbortButtonId, wxCurlTransferDialog::OnAbortUpdateUI )
+    EVT_UPDATE_UI( ConnSettingsButtonId, wxCurlTransferDialog::OnConnSettingsUpdateUI )
     EVT_UPDATE_UI( PauseResumeButtonId, wxCurlTransferDialog::OnPauseResumeUpdateUI )
     EVT_UPDATE_UI( StartButtonId, wxCurlTransferDialog::OnStartUpdateUI )
 
@@ -82,8 +85,16 @@ bool wxCurlTransferDialog::Create(const wxString &url, const wxString& title, co
 
     // save&check our style
     m_nStyle = style;
-    /*wxASSERT_MSG(HasFlag(wxCTDS_AUTO_CLOSE) || HasFlag(wxCTDS_CAN_ABORT),
-             wxT("If both these flags are missing the user will be unable to close the dialog window!"));*/
+    wxASSERT_MSG(HasFlag(wxCTDS_AUTO_CLOSE) || HasFlag(wxCTDS_CAN_ABORT),
+             wxT("If both these flags are missing the user will be unable to close the dialog window!"));
+
+    // do we need to use wxCurlConnectionSettingsDialog?
+    bool needsConnSettings = HasFlag(wxCTDS_CONN_SETTINGS_AUTH) ||
+                             HasFlag(wxCTDS_CONN_SETTINGS_PORT) ||
+                             HasFlag(wxCTDS_CONN_SETTINGS_PROXY);
+    wxASSERT_MSG(!needsConnSettings || HasFlag(wxCTDS_CAN_START),
+             wxT("the connection settings may only be changed before the transfer starts; if wxCTDS_CAN_START ")
+             wxT("is missing the user will be unable to use the connection settings button!"));
 
     // set up our controls
     CreateControls(url, message, sizeLabel, bitmap);
@@ -96,7 +107,10 @@ wxCurlDialogReturnFlag wxCurlTransferDialog::RunModal()
     m_pThread->GetCurlSession()->SetVerbose(m_bVerbose);
 
     if (!HasFlag(wxCTDS_CAN_START))
-        m_pThread->StartTransfer();        // start immediately
+    {
+        wxCommandEvent fake;
+        OnStart(fake);        // start immediately
+    }
 
     CenterOnScreen();
 
@@ -203,8 +217,14 @@ void wxCurlTransferDialog::CreateControls(const wxString &url, const wxString &m
     main->AddSpacer(5);
     main->Add(m_pGauge, 0, wxGROW|wxLEFT|wxRIGHT|wxTOP, OUTER_BORDER);
 
-    // an horizontal line
-    if (HasFlag(wxCTDS_CAN_ABORT) || HasFlag(wxCTDS_CAN_PAUSE) || HasFlag(wxCTDS_CAN_START))
+    // do we need to use wxCurlConnectionSettingsDialog?
+    bool needsConnSettings = HasFlag(wxCTDS_CONN_SETTINGS_AUTH) ||
+                             HasFlag(wxCTDS_CONN_SETTINGS_PORT) ||
+                             HasFlag(wxCTDS_CONN_SETTINGS_PROXY);
+
+    // an horizontal line of buttons
+    if (HasFlag(wxCTDS_CAN_ABORT) || HasFlag(wxCTDS_CAN_PAUSE) || HasFlag(wxCTDS_CAN_START) ||
+        needsConnSettings)
     {
         main->AddStretchSpacer(1);
         main->AddSpacer(BORDER*2);
@@ -214,7 +234,9 @@ void wxCurlTransferDialog::CreateControls(const wxString &url, const wxString &m
         wxBoxSizer *btn = new wxBoxSizer(wxHORIZONTAL);
 
         if (HasFlag(wxCTDS_CAN_ABORT))
-            btn->Add(new wxButton( this, AbortButtonId, _("Abort") ), 0);
+            btn->Add(new wxButton( this, AbortButtonId, _("Abort") ), 0, wxRIGHT, BORDER);
+        if (needsConnSettings)
+            btn->Add(new wxButton( this, ConnSettingsButtonId, _("Settings") ), 0);
 
         btn->AddStretchSpacer(1);
 
@@ -410,6 +432,29 @@ void wxCurlTransferDialog::OnStartUpdateUI(wxUpdateUIEvent &ev)
     ev.Enable(!m_pThread->IsAlive() && !m_bTransferComplete);
 }
 
+void wxCurlTransferDialog::OnConnSettings(wxCommandEvent &WXUNUSED(ev))
+{
+    long style = 0;
+
+    // convert our style into wxCurlConnectionSettingsDialog style:
+    if (HasFlag(wxCTDS_CONN_SETTINGS_AUTH))
+        style |= wxCCSP_AUTHENTICATION_OPTIONS;
+    if (HasFlag(wxCTDS_CONN_SETTINGS_PORT))
+        style |= wxCCSP_PORT_OPTION;
+    if (HasFlag(wxCTDS_CONN_SETTINGS_PROXY))
+        style |= wxCCSP_PROXY_OPTIONS;
+
+    wxCurlConnectionSettingsDialog
+        dlg(_("Connection settings"), _("Connection settings used for the transfer:"),
+            this, style);
+
+    dlg.RunModal(m_pThread->GetCurlSession());
+}
+
+void wxCurlTransferDialog::OnConnSettingsUpdateUI(wxUpdateUIEvent &ev)
+{
+    ev.Enable(!m_pThread->IsAlive() && !m_bTransferComplete);
+}
 
 
 // ----------------------------------------------------------------------------
@@ -577,9 +622,8 @@ bool wxCurlConnectionSettingsDialog::Create(const wxString& title,
     wxSizer *main = new wxBoxSizer(wxVERTICAL);
     wxSizer *buttons = CreateSeparatedButtonSizer(wxOK|wxCANCEL);
 
-    main->Add(m_pPanel, 1, wxGROW|wxALL, 5);
-    main->AddSpacer(10);
-    main->Add(buttons, 0, wxGROW|wxALL, 5);
+    main->Add(m_pPanel, 1, wxGROW|wxALL, 10);
+    main->Add(buttons, 0, wxGROW|wxALL, 10);
 
     SetSizerAndFit(main);
 

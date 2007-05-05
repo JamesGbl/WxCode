@@ -32,14 +32,22 @@ enum wxCurlTransferDialogStyle
     wxCTDS_SIZE = 0x0010,               //!< The dialog shows the size of the resource to download/upload.
     wxCTDS_URL = 0x0020,                //!< The dialog shows the URL involved in the transfer.
 
+    // styles related to the use of wxCurlConnectionSettingsDialog:
+
+    wxCTDS_CONN_SETTINGS_AUTH = 0x0040,  //!< The dialog allows the user to change the authentication settings.
+    wxCTDS_CONN_SETTINGS_PORT = 0x0080,  //!< The dialog allows the user to change the port for the transfer.
+    wxCTDS_CONN_SETTINGS_PROXY = 0x0100, //!< The dialog allows the user to change the proxy settings.
+
+    wxCTDS_CONN_SETTINGS_ALL = wxCTDS_CONN_SETTINGS_AUTH|wxCTDS_CONN_SETTINGS_PORT|wxCTDS_CONN_SETTINGS_PROXY,
+
     wxCTDS_SHOW_ALL = wxCTDS_ELAPSED_TIME|wxCTDS_ESTIMATED_TIME|wxCTDS_REMAINING_TIME|
-                     wxCTDS_SPEED|wxCTDS_SIZE|wxCTDS_URL,
+                     wxCTDS_SPEED|wxCTDS_SIZE|wxCTDS_URL|wxCTDS_CONN_SETTINGS_ALL,
 
-    wxCTDS_CAN_ABORT = 0x0040,          //!< The transfer can be aborted by the user.
-    wxCTDS_CAN_START = 0x0080,          //!< The transfer won't start automatically. The user needs to start it.
-    wxCTDS_CAN_PAUSE = 0x0100,          //!< The transfer can be paused.
+    wxCTDS_CAN_ABORT = 0x0200,          //!< The transfer can be aborted by the user.
+    wxCTDS_CAN_START = 0x0400,          //!< The transfer won't start automatically. The user needs to start it.
+    wxCTDS_CAN_PAUSE = 0x0800,          //!< The transfer can be paused.
 
-    wxCTDS_AUTO_CLOSE = 0x0200,         //!< The dialog auto closes when transfer is complete.
+    wxCTDS_AUTO_CLOSE = 0x1000,         //!< The dialog auto closes when transfer is complete.
 
     // by default all available features are enabled:
     wxCTDS_DEFAULT_STYLE = wxCTDS_CAN_START|wxCTDS_CAN_PAUSE|wxCTDS_CAN_ABORT|wxCTDS_SHOW_ALL|wxCTDS_AUTO_CLOSE
@@ -101,8 +109,10 @@ public:
     //! Note that you should use this function instead of wxDialog::ShowModal().
     wxCurlDialogReturnFlag RunModal();
 
+/* not yet tested
     //! Shows the dialog as modeless.
-//    bool Show(const bool show);
+    bool Show(const bool show);
+*/
 
     //! Returns true if the creation of the dialog was successful.
     bool IsOk() const { return m_pThread != NULL && m_pThread->IsOk(); }
@@ -114,7 +124,7 @@ public:
     //! Sets the internal wxCurlBase object to be verbose.
     void SetVerbose(bool enable)
         { m_bVerbose=enable; }
-    
+
     //! Returns true if the internal wxCurlBase is verbose (on by default in debug builds).
     bool IsVerbose() const
         { return m_bVerbose; }
@@ -149,10 +159,12 @@ public:     // event handlers
     void OnEndPerform(wxCurlEndPerformEvent &);
 
     void OnAbort(wxCommandEvent &);
+    void OnConnSettings(wxCommandEvent &);
     void OnPauseResume(wxCommandEvent &);
     void OnStart(wxCommandEvent &);
 
     void OnAbortUpdateUI(wxUpdateUIEvent &);
+    void OnConnSettingsUpdateUI(wxUpdateUIEvent &);
     void OnStartUpdateUI(wxUpdateUIEvent &);
     void OnPauseResumeUpdateUI(wxUpdateUIEvent &);
 
