@@ -139,14 +139,16 @@ void wxCurlConnectionSettingsPanel::CreateControls(const wxString &msg)
         m_pProxyPassword = AddSizerRow(gs, _("Proxy password:"));
         m_pProxyPort = AddSizerRow(gs, _("Proxy port:"), false);
         m_pProxyPort->SetValue(wxT("-1"));
-        proxy->Add(gs, 1, wxGROW|wxALL, BORDER);
+        proxy->Add(gs, 0, wxGROW|wxALL, BORDER);
 
         // column 1 contains the text controls:
         gs->AddGrowableCol(1);
 
         main->AddSpacer(10);
         main->Add(proxy, 0, wxGROW|wxLEFT|wxRIGHT, BORDER);
+#if wxCHECK_VERSION(2,9,0)
         main->AddStretchSpacer(1);
+#endif
 
         // be default disable the proxy controls
         wxCommandEvent fake;
