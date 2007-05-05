@@ -97,6 +97,7 @@ WXCURL_LIB_CXXFLAGS = -I$(BCCDIR)\include $(____WX_SHARED) \
 WXCURL_LIB_OBJECTS =  \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_dav.obj \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_http.obj \
+	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_panel.obj \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_ftpparse.obj \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_dialog.obj \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_ftp.obj \
@@ -114,6 +115,7 @@ WXCURL_DLL_CXXFLAGS = -I$(BCCDIR)\include $(____WX_SHARED) \
 WXCURL_DLL_OBJECTS =  \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_dav.obj \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_http.obj \
+	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_panel.obj \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_ftpparse.obj \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_dialog.obj \
 	bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_ftp.obj \
@@ -432,6 +434,9 @@ bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_dav.obj: ..\src\dav.c
 bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_http.obj: ..\src\http.cpp
 	$(CXX) -q -c -P -o$@ $(WXCURL_LIB_CXXFLAGS) $**
 
+bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_panel.obj: ..\src\panel.cpp
+	$(CXX) -q -c -P -o$@ $(WXCURL_LIB_CXXFLAGS) $**
+
 bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_ftpparse.obj: ..\src\ftpparse.cpp
 	$(CXX) -q -c -P -o$@ $(WXCURL_LIB_CXXFLAGS) $**
 
@@ -463,6 +468,9 @@ bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_dav.obj: ..\src\dav.c
 	$(CXX) -q -c -P -o$@ $(WXCURL_DLL_CXXFLAGS) $**
 
 bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_http.obj: ..\src\http.cpp
+	$(CXX) -q -c -P -o$@ $(WXCURL_DLL_CXXFLAGS) $**
+
+bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_panel.obj: ..\src\panel.cpp
 	$(CXX) -q -c -P -o$@ $(WXCURL_DLL_CXXFLAGS) $**
 
 bccmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_ftpparse.obj: ..\src\ftpparse.cpp

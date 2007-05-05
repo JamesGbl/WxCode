@@ -84,8 +84,10 @@ enum
     Minimal_Verbose = wxID_HIGHEST+1,
     Minimal_Download,
     Minimal_Upload,
+    Minimal_ConnSettings,
 
-    // styles:
+
+    // transfer styles:
     Minimal_Elapsed_time,
     Minimal_Estimated_time,
     Minimal_Remaining_time,
@@ -101,7 +103,13 @@ enum
     Minimal_Bitmap,
 
     Minimal_CheckAll = wxID_APPLY,
-    Minimal_UnCheckAll = wxID_CANCEL
+    Minimal_UnCheckAll = wxID_CANCEL,
+
+
+    // conn settings styles:
+    Minimal_Authentication,
+    Minimal_Port,
+    Minimal_Proxy
 };
 
 // Define a new frame type: this is going to be our main frame
@@ -117,14 +125,17 @@ public:
     void OnAbout(wxCommandEvent& event);
     void OnDownload(wxCommandEvent &ev);
     void OnUpload(wxCommandEvent &ev);
+    void OnConnSettings(wxCommandEvent &ev);
     void OnCheckAll(wxCommandEvent& event);
 
-    int GetStyle() const;
+    int GetTransferStyle() const;
+    int GetConnSettingsStyle() const;
+
     void LogResult(wxCurlDialogReturnFlag flag);
 
 protected:
 
-    wxMenu *m_menuDialog, *m_menuFile;
+    wxMenu *m_menuTransferDlg, *m_menuFile, *m_menuConnSettingsDlg;
 
 private:
     // any class wishing to process wxWindows events must use this macro
@@ -144,6 +155,7 @@ BEGIN_EVENT_TABLE(MyFrame, wxFrame)
 
     EVT_MENU(Minimal_Download, MyFrame::OnDownload)
     EVT_MENU(Minimal_Upload, MyFrame::OnUpload)
+    EVT_MENU(Minimal_ConnSettings, MyFrame::OnConnSettings)
 
     EVT_MENU(Minimal_CheckAll, MyFrame::OnCheckAll)
     EVT_MENU(Minimal_UnCheckAll, MyFrame::OnCheckAll)
@@ -217,35 +229,43 @@ MyFrame::MyFrame(const wxString& title)
     m_menuFile->Check(Minimal_Verbose, true);
     m_menuFile->AppendSeparator();
 #endif
-    m_menuFile->Append(Minimal_Download, _T("Download dialog..."), _T("Shows wxCurlDownloadDialog."));	
-    m_menuFile->Append(Minimal_Upload, _T("Upload dialog..."), _T("Shows wxCurlUploadDialog."));
-    m_menuFile->AppendSeparator();
     m_menuFile->Append(Minimal_Quit, _T("E&xit\tAlt-X"), _T("Quit this program"));	
 
-    m_menuDialog = new wxMenu;
-    m_menuDialog->AppendCheckItem(Minimal_Elapsed_time, _T("Show elapsed time"));
-    m_menuDialog->AppendCheckItem(Minimal_Estimated_time, _T("Show estimated total time"));
-    m_menuDialog->AppendCheckItem(Minimal_Remaining_time, _T("Show estimated remaining time"));
-    m_menuDialog->AppendSeparator();
-    m_menuDialog->AppendCheckItem(Minimal_Speed, _T("Show transfer speed"));
-    m_menuDialog->AppendCheckItem(Minimal_Size, _T("Show how much was transferred so far"));
-    m_menuDialog->AppendCheckItem(Minimal_Url, _T("Show the URL of the transfer"));
-    m_menuDialog->AppendSeparator();
-    m_menuDialog->AppendCheckItem(Minimal_Can_abort, _T("Transfer can be aborted"));
-    m_menuDialog->AppendCheckItem(Minimal_Can_start, _T("Transfer do not start automatically"));
-    m_menuDialog->AppendCheckItem(Minimal_Can_pause, _T("Transfer can be paused"));
-    m_menuDialog->AppendSeparator();
-    m_menuDialog->AppendCheckItem(Minimal_Auto_close, _T("Auto-close dialog at completion"));
-    m_menuDialog->AppendSeparator();
-    m_menuDialog->AppendCheckItem(Minimal_Bitmap, _T("Show bitmap in the dialog"));
-    m_menuDialog->AppendSeparator();
-    m_menuDialog->Append(Minimal_CheckAll, _T("Check all"), _T("check all previous menu items"));    
-    m_menuDialog->Append(Minimal_UnCheckAll, _T("Uncheck all"), _T("uncheck all previous menu items"));    
+    m_menuTransferDlg = new wxMenu;
+    m_menuTransferDlg->AppendCheckItem(Minimal_Elapsed_time, _T("Show elapsed time"));
+    m_menuTransferDlg->AppendCheckItem(Minimal_Estimated_time, _T("Show estimated total time"));
+    m_menuTransferDlg->AppendCheckItem(Minimal_Remaining_time, _T("Show estimated remaining time"));
+    m_menuTransferDlg->AppendSeparator();
+    m_menuTransferDlg->AppendCheckItem(Minimal_Speed, _T("Show transfer speed"));
+    m_menuTransferDlg->AppendCheckItem(Minimal_Size, _T("Show how much was transferred so far"));
+    m_menuTransferDlg->AppendCheckItem(Minimal_Url, _T("Show the URL of the transfer"));
+    m_menuTransferDlg->AppendSeparator();
+    m_menuTransferDlg->AppendCheckItem(Minimal_Can_abort, _T("Transfer can be aborted"));
+    m_menuTransferDlg->AppendCheckItem(Minimal_Can_start, _T("Transfer do not start automatically"));
+    m_menuTransferDlg->AppendCheckItem(Minimal_Can_pause, _T("Transfer can be paused"));
+    m_menuTransferDlg->AppendSeparator();
+    m_menuTransferDlg->AppendCheckItem(Minimal_Auto_close, _T("Auto-close dialog at completion"));
+    m_menuTransferDlg->AppendSeparator();
+    m_menuTransferDlg->AppendCheckItem(Minimal_Bitmap, _T("Show bitmap in the dialog"));
+    m_menuTransferDlg->AppendSeparator();
+    m_menuTransferDlg->Append(Minimal_CheckAll, _T("Check all"), _T("check all previous menu items"));    
+    m_menuTransferDlg->Append(Minimal_UnCheckAll, _T("Uncheck all"), _T("uncheck all previous menu items"));    
+    m_menuTransferDlg->AppendSeparator();
+    m_menuTransferDlg->Append(Minimal_Download, _T("Download dialog..."), _T("Shows wxCurlDownloadDialog."));  
+    m_menuTransferDlg->Append(Minimal_Upload, _T("Upload dialog..."), _T("Shows wxCurlUploadDialog."));
+
+    m_menuConnSettingsDlg = new wxMenu;
+    m_menuConnSettingsDlg->AppendCheckItem(Minimal_Authentication, _T("Show authentication fields"));
+    m_menuConnSettingsDlg->AppendCheckItem(Minimal_Port, _T("Show port field"));
+    m_menuConnSettingsDlg->AppendCheckItem(Minimal_Proxy, _T("Show proxy fields"));
+    m_menuConnSettingsDlg->AppendSeparator();
+    m_menuConnSettingsDlg->Append(Minimal_ConnSettings, _T("Connection settings..."), _T("Shows wxCurlConnectionSettingsDialog."));
 
     // now append the freshly created menu to the menu bar...
     wxMenuBar *menuBar = new wxMenuBar();
     menuBar->Append(m_menuFile, _T("&File"));
-    menuBar->Append(m_menuDialog, _T("&Dialog style"));
+    menuBar->Append(m_menuTransferDlg, _T("&Transfer dialogs"));
+    menuBar->Append(m_menuConnSettingsDlg, _T("&Connection settings dialog"));
     menuBar->Append(helpMenu, _T("&Help"));
 
     // ... and attach this menu bar to the frame
@@ -261,26 +281,40 @@ MyFrame::MyFrame(const wxString& title)
     // start with all possible styles checked
     wxCommandEvent fake(wxEVT_COMMAND_MENU_SELECTED, Minimal_CheckAll);
     OnCheckAll(fake);
+
+    for (int id = Minimal_Authentication; id <= Minimal_Proxy; id++)
+        m_menuConnSettingsDlg->Check(id, true);
 }
 
 MyFrame::~MyFrame()
 {
 }
 
-int MyFrame::GetStyle() const
+int MyFrame::GetTransferStyle() const
 {
     int ret = 0;
 
-    if (m_menuDialog->IsChecked(Minimal_Elapsed_time)) ret |= wxCDS_ELAPSED_TIME;
-    if (m_menuDialog->IsChecked(Minimal_Estimated_time)) ret |= wxCDS_ESTIMATED_TIME;
-    if (m_menuDialog->IsChecked(Minimal_Remaining_time)) ret |= wxCDS_REMAINING_TIME;
-    if (m_menuDialog->IsChecked(Minimal_Speed)) ret |= wxCDS_SPEED;
-    if (m_menuDialog->IsChecked(Minimal_Size)) ret |= wxCDS_SIZE;
-    if (m_menuDialog->IsChecked(Minimal_Url)) ret |= wxCDS_URL;
-    if (m_menuDialog->IsChecked(Minimal_Can_abort)) ret |= wxCDS_CAN_ABORT;
-    if (m_menuDialog->IsChecked(Minimal_Can_start)) ret |= wxCDS_CAN_START;
-    if (m_menuDialog->IsChecked(Minimal_Can_pause)) ret |= wxCDS_CAN_PAUSE;
-    if (m_menuDialog->IsChecked(Minimal_Auto_close)) ret |= wxCDS_AUTO_CLOSE;
+    if (m_menuTransferDlg->IsChecked(Minimal_Elapsed_time)) ret |= wxCTDS_ELAPSED_TIME;
+    if (m_menuTransferDlg->IsChecked(Minimal_Estimated_time)) ret |= wxCTDS_ESTIMATED_TIME;
+    if (m_menuTransferDlg->IsChecked(Minimal_Remaining_time)) ret |= wxCTDS_REMAINING_TIME;
+    if (m_menuTransferDlg->IsChecked(Minimal_Speed)) ret |= wxCTDS_SPEED;
+    if (m_menuTransferDlg->IsChecked(Minimal_Size)) ret |= wxCTDS_SIZE;
+    if (m_menuTransferDlg->IsChecked(Minimal_Url)) ret |= wxCTDS_URL;
+    if (m_menuTransferDlg->IsChecked(Minimal_Can_abort)) ret |= wxCTDS_CAN_ABORT;
+    if (m_menuTransferDlg->IsChecked(Minimal_Can_start)) ret |= wxCTDS_CAN_START;
+    if (m_menuTransferDlg->IsChecked(Minimal_Can_pause)) ret |= wxCTDS_CAN_PAUSE;
+    if (m_menuTransferDlg->IsChecked(Minimal_Auto_close)) ret |= wxCTDS_AUTO_CLOSE;
+
+    return ret;
+}
+
+int MyFrame::GetConnSettingsStyle() const
+{
+    int ret = 0;
+
+    if (m_menuConnSettingsDlg->IsChecked(Minimal_Authentication)) ret |= wxCCSP_AUTHENTICATION_OPTIONS;
+    if (m_menuConnSettingsDlg->IsChecked(Minimal_Port)) ret |= wxCCSP_PORT_OPTION;
+    if (m_menuConnSettingsDlg->IsChecked(Minimal_Proxy)) ret |= wxCCSP_PROXY_OPTIONS;
 
     return ret;
 }
@@ -315,7 +349,7 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 void MyFrame::OnCheckAll(wxCommandEvent& event)
 {
     for (int id = Minimal_Elapsed_time; id <= Minimal_Bitmap; id++)
-        m_menuDialog->Check(id, event.GetId() == Minimal_CheckAll);
+        m_menuTransferDlg->Check(id, event.GetId() == Minimal_CheckAll);
 }
 
 void MyFrame::OnDownload(wxCommandEvent& WXUNUSED(event))
@@ -327,7 +361,7 @@ void MyFrame::OnDownload(wxCommandEvent& WXUNUSED(event))
         return;     // user hit cancel
 
     wxBitmap bmp;
-    if (m_menuDialog->IsChecked(Minimal_Bitmap))
+    if (m_menuTransferDlg->IsChecked(Minimal_Bitmap))
         bmp = wxBitmap(www_xpm);
 
     wxFileOutputStream fos(wxT("downloaded_stuff"));
@@ -336,7 +370,7 @@ void MyFrame::OnDownload(wxCommandEvent& WXUNUSED(event))
                              wxT("Your message goes here...\nNote that the bitmap below can be hidden/customized."),
                              bmp,
                              this,
-                             GetStyle());
+                             GetTransferStyle());
     dlg.SetVerbose(m_menuFile->IsChecked(Minimal_Verbose));
 
     if (!dlg.IsOk())
@@ -379,7 +413,7 @@ void MyFrame::OnUpload(wxCommandEvent& WXUNUSED(event))
     wxLogDebug(wxT("Going to update %d bytes"), is.GetSize());
 
     wxBitmap bmp;
-    if (m_menuDialog->IsChecked(Minimal_Bitmap))
+    if (m_menuTransferDlg->IsChecked(Minimal_Bitmap))
         bmp = wxBitmap(www_xpm);
 
     wxCurlUploadDialog dlg2(url, &is,
@@ -387,7 +421,7 @@ void MyFrame::OnUpload(wxCommandEvent& WXUNUSED(event))
                              wxT("Your message goes here...\nNote that the bitmap below can be hidden/customized."),
                              bmp,
                              this,
-                             GetStyle());
+                             GetTransferStyle());
     dlg2.SetVerbose(m_menuFile->IsChecked(Minimal_Verbose));
 
     if (!dlg2.IsOk())
@@ -396,4 +430,21 @@ void MyFrame::OnUpload(wxCommandEvent& WXUNUSED(event))
     LogResult(dlg2.RunModal());
 }
 
+void MyFrame::OnConnSettings(wxCommandEvent& WXUNUSED(event))
+{
+    wxCurlConnectionSettingsDialog 
+        dlg(wxT("Connection settings"),
+            wxT("Your message goes here..."),
+            this, GetConnSettingsStyle());
+
+    wxCurlBase curl;
+    dlg.RunModal(&curl);
+
+    wxLogMessage(wxT("Summary of the connection settings:\nUsername is '%s'\nPassword is '%s'\n")
+                 wxT("Port is '%d'\nUse proxy is '%d'\nProxy host is '%s'\nProxy username is '%s'\n")
+                 wxT("Proxy password is '%s'\nProxy port is '%d'"),
+                 curl.GetUsername().c_str(), curl.GetPassword().c_str(), curl.GetPort(),
+                 (int)curl.UseProxy(), curl.GetProxyHost().c_str(), curl.GetProxyUsername().c_str(),
+                 curl.GetProxyPassword().c_str(), curl.GetProxyPort());
+}
 

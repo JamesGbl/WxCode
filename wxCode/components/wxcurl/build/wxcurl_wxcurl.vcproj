@@ -300,6 +300,7 @@
 			<File RelativePath="..\src\ftpparse.cpp"/>
 			<File RelativePath="..\src\ftptool.cpp"/>
 			<File RelativePath="..\src\http.cpp"/>
+			<File RelativePath="..\src\panel.cpp"/>
 			<File RelativePath="..\src\telnet.cpp"/>
 			<File RelativePath="..\src\thread.cpp"/>
 			<File RelativePath="..\src\utils.cpp"/>
@@ -312,6 +313,7 @@
 			<File RelativePath="..\include\wx\curl\ftp.h"/>
 			<File RelativePath="..\include\wx\curl\ftptool.h"/>
 			<File RelativePath="..\include\wx\curl\http.h"/>
+			<File RelativePath="..\include\wx\curl\panel.h"/>
 			<File RelativePath="..\include\wx\curl\telnet.h"/>
 			<File RelativePath="..\include\wx\curl\thread.h"/>
 			<File RelativePath="..\include\wx\curl\utils.h"/>

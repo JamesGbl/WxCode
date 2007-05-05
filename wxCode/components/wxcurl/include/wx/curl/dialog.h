@@ -13,6 +13,7 @@
 
 #include "wx/dialog.h"
 #include "wx/curl/thread.h"
+#include "wx/curl/panel.h"
 
 // forward declarations
 class WXDLLIMPEXP_CORE wxStaticText;
@@ -21,27 +22,27 @@ class WXDLLIMPEXP_CORE wxGauge;
 class WXDLLIMPEXP_CORE wxStaticBitmap;
 
 
-//! Possible wxCurlDownloadDialog styles.
-enum wxCurlDialogStyle
+//! Possible wxCurlTransferDialog styles.
+enum wxCurlTransferDialogStyle
 {
-    wxCDS_ELAPSED_TIME = 0x0001,       //!< The dialog shows the elapsed time.
-    wxCDS_ESTIMATED_TIME = 0x0002,     //!< The dialog shows the estimated total time.
-    wxCDS_REMAINING_TIME = 0x0004,     //!< The dialog shows the remaining time.
-    wxCDS_SPEED = 0x0008,              //!< The dialog shows the transfer speed.
-    wxCDS_SIZE = 0x0010,               //!< The dialog shows the size of the resource to download/upload.
-    wxCDS_URL = 0x0020,                //!< The dialog shows the URL involved in the transfer.
+    wxCTDS_ELAPSED_TIME = 0x0001,       //!< The dialog shows the elapsed time.
+    wxCTDS_ESTIMATED_TIME = 0x0002,     //!< The dialog shows the estimated total time.
+    wxCTDS_REMAINING_TIME = 0x0004,     //!< The dialog shows the remaining time.
+    wxCTDS_SPEED = 0x0008,              //!< The dialog shows the transfer speed.
+    wxCTDS_SIZE = 0x0010,               //!< The dialog shows the size of the resource to download/upload.
+    wxCTDS_URL = 0x0020,                //!< The dialog shows the URL involved in the transfer.
 
-    wxCDS_SHOW_ALL = wxCDS_ELAPSED_TIME|wxCDS_ESTIMATED_TIME|wxCDS_REMAINING_TIME|
-                     wxCDS_SPEED|wxCDS_SIZE|wxCDS_URL,
+    wxCTDS_SHOW_ALL = wxCTDS_ELAPSED_TIME|wxCTDS_ESTIMATED_TIME|wxCTDS_REMAINING_TIME|
+                     wxCTDS_SPEED|wxCTDS_SIZE|wxCTDS_URL,
 
-    wxCDS_CAN_ABORT = 0x0040,          //!< The transfer can be aborted by the user.
-    wxCDS_CAN_START = 0x0080,          //!< The transfer won't start automatically. The user needs to start it.
-    wxCDS_CAN_PAUSE = 0x0100,          //!< The transfer can be paused.
+    wxCTDS_CAN_ABORT = 0x0040,          //!< The transfer can be aborted by the user.
+    wxCTDS_CAN_START = 0x0080,          //!< The transfer won't start automatically. The user needs to start it.
+    wxCTDS_CAN_PAUSE = 0x0100,          //!< The transfer can be paused.
 
-    wxCDS_AUTO_CLOSE = 0x0200,         //!< The dialog auto closes when transfer is complete.
+    wxCTDS_AUTO_CLOSE = 0x0200,         //!< The dialog auto closes when transfer is complete.
 
     // by default all available features are enabled:
-    wxCDS_DEFAULT_STYLE = wxCDS_CAN_START|wxCDS_CAN_PAUSE|wxCDS_CAN_ABORT|wxCDS_SHOW_ALL|wxCDS_AUTO_CLOSE
+    wxCTDS_DEFAULT_STYLE = wxCTDS_CAN_START|wxCTDS_CAN_PAUSE|wxCTDS_CAN_ABORT|wxCTDS_SHOW_ALL|wxCTDS_AUTO_CLOSE
 };
 
 //! The return flag of .
@@ -54,14 +55,14 @@ enum wxCurlDialogReturnFlag
 
 
 // ----------------------------------------------------------------------------
-// wxCurlBaseDialog
+// wxCurlTransferDialog
 // ----------------------------------------------------------------------------
 
 //! The base class for wxCurlDownloadDialog and wxCurlUploadDialog.
-class WXDLLIMPEXP_CURL wxCurlBaseDialog : public wxDialog
+class WXDLLIMPEXP_CURL wxCurlTransferDialog : public wxDialog
 {
 public:
-    wxCurlBaseDialog() 
+    wxCurlTransferDialog() 
     {
         m_bTransferComplete = false;
 #ifdef __WXDEBUG__
@@ -86,16 +87,16 @@ public:
                 const wxString& sizeLabel = _("Transferred:"),
                 const wxBitmap& bitmap = wxNullBitmap,
                 wxWindow *parent = NULL,
-                long style = wxCDS_DEFAULT_STYLE);
+                long style = wxCTDS_DEFAULT_STYLE);
 
-    ~wxCurlBaseDialog()
+    ~wxCurlTransferDialog()
         {
             wxDELETE(m_pLastEvent);
             wxDELETE(m_pThread);
         }
 
 
-    //! Shows the dialog as modal. If the wxCDS_CAN_START flag was not given,
+    //! Shows the dialog as modal. If the wxCTDS_CAN_START flag was not given,
     //! then the transfer starts automatically.
     //! Note that you should use this function instead of wxDialog::ShowModal().
     wxCurlDialogReturnFlag RunModal();
@@ -131,7 +132,7 @@ protected:     // internal utils
     bool HandleCurlThreadError(wxCurlThreadError err, wxCurlBaseThread *p, 
                                const wxString &url = wxEmptyString);
 
-    bool HasFlag(wxCurlDialogStyle flag) const
+    bool HasFlag(wxCurlTransferDialogStyle flag) const
         { return (m_nStyle & flag) != 0; }
 
 
@@ -192,7 +193,7 @@ private:
 // ----------------------------------------------------------------------------
 
 //! An highly-configurable dialog which shows progress about a download.
-class WXDLLIMPEXP_CURL wxCurlDownloadDialog : public wxCurlBaseDialog
+class WXDLLIMPEXP_CURL wxCurlDownloadDialog : public wxCurlTransferDialog
 {
 public:
     wxCurlDownloadDialog() { }
@@ -203,7 +204,7 @@ public:
                         const wxString& message = wxEmptyString,
                         const wxBitmap& bitmap = wxNullBitmap,
                         wxWindow *parent = NULL,
-                        long style = wxCDS_DEFAULT_STYLE)
+                        long style = wxCTDS_DEFAULT_STYLE)
         { Create(url, out, title, message, bitmap, parent, style); }
 
     bool Create(const wxString &url,
@@ -212,7 +213,7 @@ public:
                 const wxString& message = wxEmptyString,
                 const wxBitmap& bitmap = wxNullBitmap,
                 wxWindow *parent = NULL,
-                long style = wxCDS_DEFAULT_STYLE);
+                long style = wxCTDS_DEFAULT_STYLE);
 
     //! Returns the output stream where data has been downloaded.
     //! This function can be used only when the download has been completed.
@@ -234,7 +235,7 @@ private:
 // ----------------------------------------------------------------------------
 
 //! An highly-configurable dialog which shows progress about an upload.
-class WXDLLIMPEXP_CURL wxCurlUploadDialog : public wxCurlBaseDialog
+class WXDLLIMPEXP_CURL wxCurlUploadDialog : public wxCurlTransferDialog
 {
 public:
     wxCurlUploadDialog() { }
@@ -245,7 +246,7 @@ public:
                         const wxString& message = wxEmptyString,
                         const wxBitmap& bitmap = wxNullBitmap,
                         wxWindow *parent = NULL,
-                        long style = wxCDS_DEFAULT_STYLE)
+                        long style = wxCTDS_DEFAULT_STYLE)
         { Create(url, in, title, message, bitmap, parent, style); }
 
     bool Create(const wxString &url,
@@ -254,7 +255,7 @@ public:
                 const wxString& message = wxEmptyString,
                 const wxBitmap& bitmap = wxNullBitmap,
                 wxWindow *parent = NULL,
-                long style = wxCDS_DEFAULT_STYLE);
+                long style = wxCTDS_DEFAULT_STYLE);
 
 
 public:     // event handlers
@@ -264,6 +265,48 @@ public:     // event handlers
 private:
     DECLARE_EVENT_TABLE()
     DECLARE_DYNAMIC_CLASS(wxCurlUploadDialog)
+};
+
+
+// ----------------------------------------------------------------------------
+// wxCurlConnectionSettingsDialog
+// ----------------------------------------------------------------------------
+
+//! A dialog which simply wraps a wxCurlConnectionSettingsPanel.
+//! For a list of supported styles, please see wxCurlConnectionSettingsPanel.
+class WXDLLIMPEXP_CURL wxCurlConnectionSettingsDialog : public wxDialog
+{
+public:
+    wxCurlConnectionSettingsDialog() { }
+
+    wxCurlConnectionSettingsDialog(const wxString& title,
+                                   const wxString& message = wxEmptyString,
+                                   wxWindow *parent = NULL,
+                                   long style = wxCCSP_DEFAULT_STYLE)
+        { Create(title, message, parent, style); }
+
+    bool Create(const wxString& title = wxT("Connection settings..."),
+                const wxString& message = wxEmptyString,
+                wxWindow *parent = NULL,
+                long style = wxCCSP_DEFAULT_STYLE);
+
+public:
+
+    //! Runs this dialog as modal and updates the given wxCurlBase instance if needed
+    //! (i.e. if the user hits OK and not Cancel).
+    void RunModal(wxCurlBase *pcurl);
+
+protected:
+
+    wxCurlConnectionSettingsPanel *m_pPanel;
+
+    // change access policy:
+
+    virtual int ShowModal()
+        { return wxDialog::ShowModal(); }
+
+private:
+    DECLARE_DYNAMIC_CLASS(wxCurlConnectionSettingsDialog)
 };
 
 

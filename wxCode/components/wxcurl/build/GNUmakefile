@@ -74,6 +74,7 @@ WXCURL_LIB_CXXFLAGS = $(VAR) $(VAR_3) -W -Wall -I../include `curl-config --cflag
 WXCURL_LIB_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_dav.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_http.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_panel.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_ftpparse.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_dialog.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_ftp.o \
@@ -92,6 +93,7 @@ WXCURL_LIB_HEADERS =  \
 	include/wx/curl/ftptool.h \
 	include/wx/curl/http.h \
 	include/wx/curl/utils.h \
+	include/wx/curl/panel.h \
 	include/wx/curl/thread.h \
 	include/wx/curl/davtool.h
 WXCURL_DLL_CXXFLAGS = $(VAR) $(VAR_3) -W -Wall -I../include -DWXMAKINGDLL_WXCURL \
@@ -100,6 +102,7 @@ WXCURL_DLL_CXXFLAGS = $(VAR) $(VAR_3) -W -Wall -I../include -DWXMAKINGDLL_WXCURL
 WXCURL_DLL_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_dav.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_http.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_panel.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_ftpparse.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_dialog.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_ftp.o \
@@ -118,6 +121,7 @@ WXCURL_DLL_HEADERS =  \
 	include/wx/curl/ftptool.h \
 	include/wx/curl/http.h \
 	include/wx/curl/utils.h \
+	include/wx/curl/panel.h \
 	include/wx/curl/thread.h \
 	include/wx/curl/davtool.h
 PROTOCOLS_CXXFLAGS = $(VAR) $(VAR_3) -W -Wall -I../include `curl-config --cflags` \
@@ -363,6 +367,9 @@ gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_dav.o: ../src/dav.cpp
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_http.o: ../src/http.cpp
 	$(CXX) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(CPPDEPS) $<
 
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_panel.o: ../src/panel.cpp
+	$(CXX) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(CPPDEPS) $<
+
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_lib_ftpparse.o: ../src/ftpparse.cpp
 	$(CXX) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(CPPDEPS) $<
 
@@ -394,6 +401,9 @@ gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_dav.o: ../src/dav.cpp
 	$(CXX) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_http.o: ../src/http.cpp
+	$(CXX) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_panel.o: ../src/panel.cpp
 	$(CXX) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxcurl_dll_ftpparse.o: ../src/ftpparse.cpp

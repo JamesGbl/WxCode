@@ -7,6 +7,7 @@
 *
 *  Contributions and Assistance:
 *  Ryan Wilcox - Verbose Options
+*  Francesco Montorsi - Unicode compatibility mode, misc other changes
 *
 *	Licence: wxWidgets Licence
 */

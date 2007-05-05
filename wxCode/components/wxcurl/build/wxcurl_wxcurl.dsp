@@ -484,6 +484,10 @@ SOURCE=..\src\http.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\panel.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\telnet.cpp
 # End Source File
 # Begin Source File
@@ -525,6 +529,10 @@ SOURCE=..\include\wx\curl\ftptool.h
 # Begin Source File
 
 SOURCE=..\include\wx\curl\http.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\wx\curl\panel.h
 # End Source File
 # Begin Source File
 

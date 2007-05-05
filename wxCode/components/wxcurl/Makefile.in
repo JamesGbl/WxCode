@@ -53,6 +53,7 @@ WXCURL_LIB_CXXFLAGS = -I$(srcdir)/include `curl-config --cflags` $(WX_CXXFLAGS) 
 WXCURL_LIB_OBJECTS =  \
 	wxcurl_lib_dav.o \
 	wxcurl_lib_http.o \
+	wxcurl_lib_panel.o \
 	wxcurl_lib_ftpparse.o \
 	wxcurl_lib_dialog.o \
 	wxcurl_lib_ftp.o \
@@ -71,6 +72,7 @@ WXCURL_LIB_HEADERS =  \
 	include/wx/curl/ftptool.h \
 	include/wx/curl/http.h \
 	include/wx/curl/utils.h \
+	include/wx/curl/panel.h \
 	include/wx/curl/thread.h \
 	include/wx/curl/davtool.h
 WXCURL_DLL_CXXFLAGS = -I$(srcdir)/include -DWXMAKINGDLL_WXCURL `curl-config \
@@ -78,6 +80,7 @@ WXCURL_DLL_CXXFLAGS = -I$(srcdir)/include -DWXMAKINGDLL_WXCURL `curl-config \
 WXCURL_DLL_OBJECTS =  \
 	wxcurl_dll_dav.o \
 	wxcurl_dll_http.o \
+	wxcurl_dll_panel.o \
 	wxcurl_dll_ftpparse.o \
 	wxcurl_dll_dialog.o \
 	wxcurl_dll_ftp.o \
@@ -96,6 +99,7 @@ WXCURL_DLL_HEADERS =  \
 	include/wx/curl/ftptool.h \
 	include/wx/curl/http.h \
 	include/wx/curl/utils.h \
+	include/wx/curl/panel.h \
 	include/wx/curl/thread.h \
 	include/wx/curl/davtool.h
 PROTOCOLS_CXXFLAGS = -I$(srcdir)/include `curl-config --cflags` $(WX_CXXFLAGS) \
@@ -340,6 +344,9 @@ wxcurl_lib_dav.o: $(srcdir)/src/dav.cpp
 wxcurl_lib_http.o: $(srcdir)/src/http.cpp
 	$(CXXC) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(srcdir)/src/http.cpp
 
+wxcurl_lib_panel.o: $(srcdir)/src/panel.cpp
+	$(CXXC) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(srcdir)/src/panel.cpp
+
 wxcurl_lib_ftpparse.o: $(srcdir)/src/ftpparse.cpp
 	$(CXXC) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(srcdir)/src/ftpparse.cpp
 
@@ -372,6 +379,9 @@ wxcurl_dll_dav.o: $(srcdir)/src/dav.cpp
 
 wxcurl_dll_http.o: $(srcdir)/src/http.cpp
 	$(CXXC) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(srcdir)/src/http.cpp
+
+wxcurl_dll_panel.o: $(srcdir)/src/panel.cpp
+	$(CXXC) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(srcdir)/src/panel.cpp
 
 wxcurl_dll_ftpparse.o: $(srcdir)/src/ftpparse.cpp
 	$(CXXC) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(srcdir)/src/ftpparse.cpp

@@ -43,7 +43,8 @@ extern "C"
         if (p) *p = (unsigned long)rDlTotal;
 
         // a non-zero value means to abort the transfer
-        // and that's what we want as we already got what we wanted (rDlTotal)
+        // and that's what we want as we don't want to download the
+        // entire file but just get the rDlTotal info from the server
         return 1;
     }
 }

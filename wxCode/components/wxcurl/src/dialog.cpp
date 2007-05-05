@@ -41,7 +41,7 @@
 
 
 // ----------------------------------------------------------------------------
-// wxCurlBaseDialog
+// wxCurlTransferDialog
 // ----------------------------------------------------------------------------
 
 enum
@@ -53,27 +53,27 @@ enum
     ThreadId
 };
 
-BEGIN_EVENT_TABLE( wxCurlBaseDialog, wxDialog )
+BEGIN_EVENT_TABLE( wxCurlTransferDialog, wxDialog )
 
     // network events
-    EVT_CURL_END_PERFORM( ThreadId, wxCurlBaseDialog::OnEndPerform )
+    EVT_CURL_END_PERFORM( ThreadId, wxCurlTransferDialog::OnEndPerform )
 
     // user events
-    EVT_BUTTON( AbortButtonId, wxCurlBaseDialog::OnAbort )
-    EVT_BUTTON( PauseResumeButtonId, wxCurlBaseDialog::OnPauseResume )
-    EVT_BUTTON( StartButtonId, wxCurlBaseDialog::OnStart )
+    EVT_BUTTON( AbortButtonId, wxCurlTransferDialog::OnAbort )
+    EVT_BUTTON( PauseResumeButtonId, wxCurlTransferDialog::OnPauseResume )
+    EVT_BUTTON( StartButtonId, wxCurlTransferDialog::OnStart )
 
     // update UI
-    EVT_UPDATE_UI( AbortButtonId, wxCurlBaseDialog::OnAbortUpdateUI )
-    EVT_UPDATE_UI( PauseResumeButtonId, wxCurlBaseDialog::OnPauseResumeUpdateUI )
-    EVT_UPDATE_UI( StartButtonId, wxCurlBaseDialog::OnStartUpdateUI )
+    EVT_UPDATE_UI( AbortButtonId, wxCurlTransferDialog::OnAbortUpdateUI )
+    EVT_UPDATE_UI( PauseResumeButtonId, wxCurlTransferDialog::OnPauseResumeUpdateUI )
+    EVT_UPDATE_UI( StartButtonId, wxCurlTransferDialog::OnStartUpdateUI )
 
     // misc
-    EVT_CLOSE( wxCurlBaseDialog::OnClose )
+    EVT_CLOSE( wxCurlTransferDialog::OnClose )
 
 END_EVENT_TABLE()
 
-bool wxCurlBaseDialog::Create(const wxString &url, const wxString& title, const wxString& message,
+bool wxCurlTransferDialog::Create(const wxString &url, const wxString& title, const wxString& message,
                               const wxString &sizeLabel, const wxBitmap& bitmap, wxWindow *parent, long style)
 {
     if (!wxDialog::Create(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize,
@@ -82,7 +82,7 @@ bool wxCurlBaseDialog::Create(const wxString &url, const wxString& title, const 
 
     // save&check our style
     m_nStyle = style;
-    /*wxASSERT_MSG(HasFlag(wxCDS_AUTO_CLOSE) || HasFlag(wxCDS_CAN_ABORT),
+    /*wxASSERT_MSG(HasFlag(wxCTDS_AUTO_CLOSE) || HasFlag(wxCTDS_CAN_ABORT),
              wxT("If both these flags are missing the user will be unable to close the dialog window!"));*/
 
     // set up our controls
@@ -91,11 +91,11 @@ bool wxCurlBaseDialog::Create(const wxString &url, const wxString& title, const 
     return true;
 }
 
-wxCurlDialogReturnFlag wxCurlBaseDialog::RunModal()
+wxCurlDialogReturnFlag wxCurlTransferDialog::RunModal()
 {
     m_pThread->GetCurlSession()->SetVerbose(m_bVerbose);
 
-    if (!HasFlag(wxCDS_CAN_START))
+    if (!HasFlag(wxCTDS_CAN_START))
         m_pThread->StartTransfer();        // start immediately
 
     CenterOnScreen();
@@ -107,7 +107,7 @@ wxCurlDialogReturnFlag wxCurlBaseDialog::RunModal()
 #define BORDER          5
 #define MINWIDTH        300
 
-wxStaticText *wxCurlBaseDialog::AddSizerRow(wxSizer *sz, const wxString &name)
+wxStaticText *wxCurlTransferDialog::AddSizerRow(wxSizer *sz, const wxString &name)
 {
     // the static text
     wxStaticText *st = new wxStaticText( this, wxID_STATIC, name, wxDefaultPosition, wxDefaultSize );
@@ -127,7 +127,7 @@ wxStaticText *wxCurlBaseDialog::AddSizerRow(wxSizer *sz, const wxString &name)
     return ret;
 }
 
-void wxCurlBaseDialog::CreateControls(const wxString &url, const wxString &msg, 
+void wxCurlTransferDialog::CreateControls(const wxString &url, const wxString &msg, 
                                       const wxString &sizeLabel, const wxBitmap &bitmap)
 {
     wxBoxSizer* main = new wxBoxSizer(wxVERTICAL);
@@ -141,7 +141,7 @@ void wxCurlBaseDialog::CreateControls(const wxString &url, const wxString &msg,
     }
 
     // URL row
-    if (HasFlag(wxCDS_URL))
+    if (HasFlag(wxCTDS_URL))
     {
         wxBoxSizer* downloading = new wxBoxSizer(wxHORIZONTAL);
 
@@ -163,20 +163,20 @@ void wxCurlBaseDialog::CreateControls(const wxString &url, const wxString &msg,
     wxSizer *leftcolumn = new wxBoxSizer(wxVERTICAL);
 
     // speed & size row
-    if (HasFlag(wxCDS_SPEED))
+    if (HasFlag(wxCTDS_SPEED))
         m_pSpeed = AddSizerRow(leftcolumn, _T("Speed:"));
-    if (HasFlag(wxCDS_SIZE))
+    if (HasFlag(wxCTDS_SIZE))
         m_pSize = AddSizerRow(leftcolumn, sizeLabel);
 
     // a spacer
     leftcolumn->AddSpacer(5);
 
     // the time rows
-    if (HasFlag(wxCDS_ELAPSED_TIME))
+    if (HasFlag(wxCTDS_ELAPSED_TIME))
         m_pElapsedTime = AddSizerRow(leftcolumn, _T("Elapsed time:"));
-    if (HasFlag(wxCDS_ESTIMATED_TIME))
+    if (HasFlag(wxCTDS_ESTIMATED_TIME))
         m_pEstimatedTime = AddSizerRow(leftcolumn, _T("Estimated total time:"));
-    if (HasFlag(wxCDS_REMAINING_TIME))
+    if (HasFlag(wxCTDS_REMAINING_TIME))
         m_pRemainingTime = AddSizerRow(leftcolumn, _T("Estimated remaining time:"));
 
     if (bitmap.IsOk())
@@ -204,7 +204,7 @@ void wxCurlBaseDialog::CreateControls(const wxString &url, const wxString &msg,
     main->Add(m_pGauge, 0, wxGROW|wxLEFT|wxRIGHT|wxTOP, OUTER_BORDER);
 
     // an horizontal line
-    if (HasFlag(wxCDS_CAN_ABORT) || HasFlag(wxCDS_CAN_PAUSE) || HasFlag(wxCDS_CAN_START))
+    if (HasFlag(wxCTDS_CAN_ABORT) || HasFlag(wxCTDS_CAN_PAUSE) || HasFlag(wxCTDS_CAN_START))
     {
         main->AddStretchSpacer(1);
         main->AddSpacer(BORDER*2);
@@ -213,14 +213,14 @@ void wxCurlBaseDialog::CreateControls(const wxString &url, const wxString &msg,
         // the button row
         wxBoxSizer *btn = new wxBoxSizer(wxHORIZONTAL);
 
-        if (HasFlag(wxCDS_CAN_ABORT))
+        if (HasFlag(wxCTDS_CAN_ABORT))
             btn->Add(new wxButton( this, AbortButtonId, _("Abort") ), 0);
 
         btn->AddStretchSpacer(1);
 
-        if (HasFlag(wxCDS_CAN_PAUSE))
+        if (HasFlag(wxCTDS_CAN_PAUSE))
             btn->Add(new wxButton( this, PauseResumeButtonId, _("Pause") ), 0);
-        if (HasFlag(wxCDS_CAN_START))
+        if (HasFlag(wxCTDS_CAN_START))
             btn->Add(new wxButton( this, StartButtonId, _("Start") ), 0, wxLEFT, BORDER);
 
         main->Add(btn, 0, wxGROW|wxLEFT|wxRIGHT|wxTOP|wxBOTTOM, OUTER_BORDER);
@@ -230,7 +230,7 @@ void wxCurlBaseDialog::CreateControls(const wxString &url, const wxString &msg,
     main->SetSizeHints(this);
 }
 
-void wxCurlBaseDialog::EndModal(wxCurlDialogReturnFlag retCode)
+void wxCurlTransferDialog::EndModal(wxCurlDialogReturnFlag retCode)
 {
     wxDialog::EndModal(retCode);
 
@@ -242,7 +242,7 @@ void wxCurlBaseDialog::EndModal(wxCurlDialogReturnFlag retCode)
         HandleCurlThreadError(m_pThread->Wait(), m_pThread);
 }
 
-void wxCurlBaseDialog::UpdateLabels(wxCurlProgressBaseEvent *ev)
+void wxCurlTransferDialog::UpdateLabels(wxCurlProgressBaseEvent *ev)
 {
     // ignore this update if the thread has been paused
     // since this event was generated...
@@ -283,7 +283,7 @@ void wxCurlBaseDialog::UpdateLabels(wxCurlProgressBaseEvent *ev)
         m_pSpeed->SetLabel(ev->GetHumanReadableSpeed());
 }
 
-bool wxCurlBaseDialog::HandleCurlThreadError(wxCurlThreadError err, wxCurlBaseThread *p, const wxString &url)
+bool wxCurlTransferDialog::HandleCurlThreadError(wxCurlThreadError err, wxCurlBaseThread *p, const wxString &url)
 {
     switch (err)
     {
@@ -328,18 +328,18 @@ bool wxCurlBaseDialog::HandleCurlThreadError(wxCurlThreadError err, wxCurlBaseTh
 
 
 // ----------------------------------------------------------------------------
-// wxCurlBaseDialog - button events
+// wxCurlTransferDialog - button events
 // ----------------------------------------------------------------------------
 
-void wxCurlBaseDialog::OnClose(wxCloseEvent &WXUNUSED(ev))
+void wxCurlTransferDialog::OnClose(wxCloseEvent &WXUNUSED(ev))
 {
     wxCommandEvent fake;
     OnAbort(fake);
 }
 
-void wxCurlBaseDialog::OnAbort(wxCommandEvent &WXUNUSED(ev))
+void wxCurlTransferDialog::OnAbort(wxCommandEvent &WXUNUSED(ev))
 {
-    // NOTE: the wxCDS_ABORT flag may be absent if the user wxASSERT(HasFlag(wxCDS_CAN_ABORT));
+    // NOTE: the wxCTDS_ABORT flag may be absent if the user wxASSERT(HasFlag(wxCTDS_CAN_ABORT));
 
     if (m_pThread->IsAlive())
     {
@@ -348,7 +348,7 @@ void wxCurlBaseDialog::OnAbort(wxCommandEvent &WXUNUSED(ev))
     }
     else
     {
-        wxASSERT(HasFlag(wxCDS_CAN_START) || !HasFlag(wxCDS_AUTO_CLOSE));
+        wxASSERT(HasFlag(wxCTDS_CAN_START) || !HasFlag(wxCTDS_AUTO_CLOSE));
             // thread is not alive: means the user has not
             // clicked on Start button yet or the download is complete
             // and the dialog does not auto close
@@ -359,14 +359,14 @@ void wxCurlBaseDialog::OnAbort(wxCommandEvent &WXUNUSED(ev))
     }
 }
 
-void wxCurlBaseDialog::OnAbortUpdateUI(wxUpdateUIEvent &ev)
+void wxCurlTransferDialog::OnAbortUpdateUI(wxUpdateUIEvent &ev)
 {
     ev.SetText(m_pThread->IsAlive() ? wxT("Abort") : wxT("Close"));
 }
 
-void wxCurlBaseDialog::OnPauseResume(wxCommandEvent &WXUNUSED(ev))
+void wxCurlTransferDialog::OnPauseResume(wxCommandEvent &WXUNUSED(ev))
 {
-    wxASSERT(HasFlag(wxCDS_CAN_PAUSE));
+    wxASSERT(HasFlag(wxCTDS_CAN_PAUSE));
 
     if (m_pThread->IsRunning())
     {
@@ -387,14 +387,14 @@ void wxCurlBaseDialog::OnPauseResume(wxCommandEvent &WXUNUSED(ev))
     }
 }
 
-void wxCurlBaseDialog::OnPauseResumeUpdateUI(wxUpdateUIEvent &ev)
+void wxCurlTransferDialog::OnPauseResumeUpdateUI(wxUpdateUIEvent &ev)
 {
     ev.Enable(m_pThread->IsAlive());
 }
 
-void wxCurlBaseDialog::OnStart(wxCommandEvent &WXUNUSED(ev))
+void wxCurlTransferDialog::OnStart(wxCommandEvent &WXUNUSED(ev))
 {
-    wxASSERT(HasFlag(wxCDS_CAN_START));
+    wxASSERT(HasFlag(wxCTDS_CAN_START));
 
     wxCurlThreadError err = m_pThread->StartTransfer();
     if (err != wxCTE_NO_ERROR)
@@ -405,7 +405,7 @@ void wxCurlBaseDialog::OnStart(wxCommandEvent &WXUNUSED(ev))
     }
 }
 
-void wxCurlBaseDialog::OnStartUpdateUI(wxUpdateUIEvent &ev)
+void wxCurlTransferDialog::OnStartUpdateUI(wxUpdateUIEvent &ev)
 {
     ev.Enable(!m_pThread->IsAlive() && !m_bTransferComplete);
 }
@@ -413,12 +413,12 @@ void wxCurlBaseDialog::OnStartUpdateUI(wxUpdateUIEvent &ev)
 
 
 // ----------------------------------------------------------------------------
-// wxCurlBaseDialog - network events
+// wxCurlTransferDialog - network events
 // ----------------------------------------------------------------------------
 
-void wxCurlBaseDialog::OnEndPerform(wxCurlEndPerformEvent &ev)
+void wxCurlTransferDialog::OnEndPerform(wxCurlEndPerformEvent &ev)
 {
-    wxLogDebug(wxT("wxCurlBaseDialog::OnEndPerform"));
+    wxLogDebug(wxT("wxCurlTransferDialog::OnEndPerform"));
 
     // in case the very last transfer update event was skipped because
     // of our anti-flickering label update policy, force the update with
@@ -446,7 +446,7 @@ void wxCurlBaseDialog::OnEndPerform(wxCurlEndPerformEvent &ev)
     }
 
     // do we need to close this window?
-    if (HasFlag(wxCDS_AUTO_CLOSE))
+    if (HasFlag(wxCTDS_AUTO_CLOSE))
         EndModal(retCode);
     else
     {
@@ -464,8 +464,8 @@ void wxCurlBaseDialog::OnEndPerform(wxCurlEndPerformEvent &ev)
 // wxCurlDownloadDialog
 // ----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS( wxCurlDownloadDialog, wxCurlBaseDialog )
-BEGIN_EVENT_TABLE( wxCurlDownloadDialog, wxCurlBaseDialog )
+IMPLEMENT_DYNAMIC_CLASS( wxCurlDownloadDialog, wxCurlTransferDialog )
+BEGIN_EVENT_TABLE( wxCurlDownloadDialog, wxCurlTransferDialog )
     EVT_CURL_DOWNLOAD( ThreadId, wxCurlDownloadDialog::OnDownload )
 END_EVENT_TABLE()
 
@@ -474,13 +474,13 @@ bool wxCurlDownloadDialog::Create(const wxString &url, wxOutputStream *out,
                                   const wxBitmap& bitmap,
                                   wxWindow *parent, long style)
 {
-    if (!wxCurlBaseDialog::Create(url, title, message, _T("Downloaded:"), bitmap, parent, style))
+    if (!wxCurlTransferDialog::Create(url, title, message, _T("Downloaded:"), bitmap, parent, style))
         return false;
 
     // register as the thread's event handler
     wxCurlDownloadThread *thread = new wxCurlDownloadThread(this, ThreadId);
 
-    m_pThread = thread;     // downcast our pointer for usage by wxCurlBaseDialog
+    m_pThread = thread;     // downcast our pointer for usage by wxCurlTransferDialog
 
     if (!HandleCurlThreadError(thread->SetURL(url), thread, url))
         return false;
@@ -512,8 +512,8 @@ void wxCurlDownloadDialog::OnDownload(wxCurlDownloadEvent &ev)
 // wxCurlUploadDialog
 // ----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS( wxCurlUploadDialog, wxCurlBaseDialog )
-BEGIN_EVENT_TABLE( wxCurlUploadDialog, wxCurlBaseDialog )
+IMPLEMENT_DYNAMIC_CLASS( wxCurlUploadDialog, wxCurlTransferDialog )
+BEGIN_EVENT_TABLE( wxCurlUploadDialog, wxCurlTransferDialog )
     EVT_CURL_UPLOAD( ThreadId, wxCurlUploadDialog::OnUpload )
 END_EVENT_TABLE()
 
@@ -522,13 +522,13 @@ bool wxCurlUploadDialog::Create(const wxString &url, wxInputStream *in,
                                   const wxBitmap& bitmap,
                                   wxWindow *parent, long style)
 {
-    if (!wxCurlBaseDialog::Create(url, title, message, _T("Uploaded:"), bitmap, parent, style))
+    if (!wxCurlTransferDialog::Create(url, title, message, _T("Uploaded:"), bitmap, parent, style))
         return false;
 
     // register as the thread's event handler
     wxCurlUploadThread *thread = new wxCurlUploadThread(this, ThreadId);
 
-    m_pThread = thread;     // downcast our pointer for usage by wxCurlBaseDialog
+    m_pThread = thread;     // downcast our pointer for usage by wxCurlTransferDialog
 
     if (!HandleCurlThreadError(thread->SetURL(url), thread, url))
         return false;
@@ -552,5 +552,43 @@ void wxCurlUploadDialog::OnUpload(wxCurlUploadEvent &ev)
     if (m_pLastEvent)
         delete m_pLastEvent;
     m_pLastEvent = wx_static_cast(wxCurlProgressBaseEvent*, ev.Clone());
+}
+
+
+
+// ----------------------------------------------------------------------------
+// wxCurlConnectionSettingsDialog
+// ----------------------------------------------------------------------------
+
+IMPLEMENT_DYNAMIC_CLASS( wxCurlConnectionSettingsDialog, wxDialog )
+
+bool wxCurlConnectionSettingsDialog::Create(const wxString& title,
+                                            const wxString& message,
+                                            wxWindow *parent,
+                                            long style)
+{
+    if (!wxDialog::Create(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, 
+                          wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER))
+        return false;
+
+    m_pPanel = new wxCurlConnectionSettingsPanel(this, wxID_ANY, message, wxDefaultPosition,
+                                                 wxDefaultSize, style);
+
+    wxSizer *main = new wxBoxSizer(wxVERTICAL);
+    wxSizer *buttons = CreateSeparatedButtonSizer(wxOK|wxCANCEL);
+
+    main->Add(m_pPanel, 1, wxGROW|wxALL, 5);
+    main->AddSpacer(10);
+    main->Add(buttons, 0, wxGROW|wxALL, 5);
+
+    SetSizerAndFit(main);
+
+    return true;
+}
+
+void wxCurlConnectionSettingsDialog::RunModal(wxCurlBase *pCURL)
+{
+    if (ShowModal() == wxID_OK)
+        m_pPanel->SetCURLOptions(pCURL);
 }
 
