@@ -656,26 +656,34 @@ protected:      // specialized safe SetOpt-like functions
 
     bool SetStringWriteFunction(const wxCharBuffer& str)
     {
-        SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_string_write);
-        SetOpt(CURLOPT_WRITEDATA, (void*)&str);
+        bool ret = true;
+        ret &= SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_string_write);
+        ret &= SetOpt(CURLOPT_WRITEDATA, (void*)&str);
+        return ret;
     }
 
     bool SetStreamWriteFunction(const wxOutputStream& buf)
     {
-        SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_stream_write);
-        SetOpt(CURLOPT_WRITEDATA, (void*)&buf);
+        bool ret = true;
+        ret &= SetOpt(CURLOPT_WRITEFUNCTION, wxcurl_stream_write);
+        ret &= SetOpt(CURLOPT_WRITEDATA, (void*)&buf);
+        return ret;
     }
 
     bool SetStringReadFunction(const wxCharBuffer& str)
     {
-        SetOpt(CURLOPT_READFUNCTION, wxcurl_string_read);
-        SetOpt(CURLOPT_READDATA, (void*)&str);
+        bool ret = true;
+        ret &= SetOpt(CURLOPT_READFUNCTION, wxcurl_string_read);
+        ret &= SetOpt(CURLOPT_READDATA, (void*)&str);
+        return ret;
     }
 
     bool SetStreamReadFunction(const wxInputStream& buf)
     {
-        SetOpt(CURLOPT_READFUNCTION, wxcurl_stream_read);
-        SetOpt(CURLOPT_READDATA, (void*)&buf);
+        bool ret = true;
+        ret &= SetOpt(CURLOPT_READFUNCTION, wxcurl_stream_read);
+        ret &= SetOpt(CURLOPT_READDATA, (void*)&buf);
+        return ret;
     }
 };
 
