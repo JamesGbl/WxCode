@@ -28,45 +28,45 @@
 wxMidiDatabaseGM
 Methods to load and manage midi instruments names and codes
 
-The General MIDI (GM) Specification, published by the International MIDI Association, 
-defines a set of general capabilities for General MIDI Instruments. The General MIDI 
+The General MIDI (GM) Specification, published by the International MIDI Association,
+defines a set of general capabilities for General MIDI Instruments. The General MIDI
 Specification includes the definition of a General MIDI Sound Set (a patch map), a General
 MIDI Percussion map (mapping of percussion sounds to note numbers), and a set of General
 MIDI Performance capabilities (number of voices, types of MIDI messages recognized, etc.).
 A MIDI sequence which has been generated for use on a General MIDI Instrument should play
-correctly on any General MIDI synthesizer or sound module. 
+correctly on any General MIDI synthesizer or sound module.
 
 The General MIDI system utilizes MIDI channels 1-9 and 11-16 for chromatic instrument sounds,
-while channel number 10 is utilized for "key-based" percussion sounds. 
+while channel number 10 is utilized for "key-based" percussion sounds.
 The General MIDI Sound set for channels 1-9 and 11-16 is given in table 1.
 These instrument sounds are grouped into "sets" of related sounds. For example, program
 numbers 1-8 are piano sounds, 6-16 are chromatic percussion sounds, 17-24 are organ sounds,
-25-32 are guitar sounds, etc. 
+25-32 are guitar sounds, etc.
 
 For the instrument sounds on channels 1-9 and 11-16, the note number in a Note On message
 is used to select the pitch of the sound which will be played. For example if the Vibraphone
 instrument (program number 12) has been selected on channel 3, then playing note number 60
 on channel 3 would play the middle C note (this would be the default note to pitch assignment
-on most instruments), and note number 59 on channel 3 would play B below middle C. 
-Both notes would be played using the Vibraphone sound. 
+on most instruments), and note number 59 on channel 3 would play B below middle C.
+Both notes would be played using the Vibraphone sound.
 
 The General MIDI percussion map used for channel 10 is given in table 2. For these "key-based"
 sounds, the note number data in a Note On message is used differently. Note numbers on
 channel 10 are used to select which drum sound will be played. For example, a Note On
 message on channel 10 with note number 60 will play a Hi Bongo drum sound. Note number 59
-on channel 10 will play the Ride Cymbal 2 sound. 
+on channel 10 will play the Ride Cymbal 2 sound.
 
 It should be noted that the General MIDI system specifies sounds using program numbers 1
 through 128. The MIDI Program Change message used to select these sounds uses an 8-bit byte,
-which corresponds to decimal numbering from 0 through 127, to specify the desired program 
+which corresponds to decimal numbering from 0 through 127, to specify the desired program
 number. Thus, to select GM sound number 10, the Glockenspiel, the Program Change message
-will have a data byte with the decimal value 9. 
+will have a data byte with the decimal value 9.
 
 The General MIDI system specifies which instrument or sound corresponds with each
 program/patch number, but General MIDI does not specify how these sounds are produced.
 Thus, program number 1 should select the Acoustic Grand Piano sound on any General MIDI
 instrument. However, the Acoustic Grand Piano sound on two General MIDI synthesizers
-which use different synthesis techniques may sound quite different. 
+which use different synthesis techniques may sound quite different.
 
 */
 
@@ -94,7 +94,7 @@ wxMidiDatabaseGM::wxMidiDatabaseGM()
 	    m_sInstrName[4] = _("Electric Piano 1");
 	    m_sInstrName[5] = _("Electric Piano 2");
 	    m_sInstrName[6] = _("Harpsichord");
-	    m_sInstrName[7] = _("Clavinet");          
+	    m_sInstrName[7] = _("Clavinet");
 	    m_sInstrName[8] = _("Celesta");
 	    m_sInstrName[9] = _("Glockenspiel");
 	    m_sInstrName[10] = _("Music Box");
@@ -287,7 +287,7 @@ void wxMidiDatabaseGM::PopulateWithInstruments(wxControlWithItems* pCtrol, int n
         }
     }
     pCtrol->SetStringSelection( pCtrol->GetString(iSel) );
-    
+
 }
 
 void wxMidiDatabaseGM::PopulateWithAllInstruments(wxControlWithItems* pCtrol, int nInstr)
@@ -307,7 +307,7 @@ void wxMidiDatabaseGM::PopulateWithAllInstruments(wxControlWithItems* pCtrol, in
         pCtrol->Append( m_sInstrName[i] );
     }
     pCtrol->SetStringSelection( pCtrol->GetString(iSel) );
-    
+
 }
 
 int wxMidiDatabaseGM::PopulateWithSections(wxControlWithItems* pCtrol, int nSelInstr)
@@ -321,12 +321,12 @@ int wxMidiDatabaseGM::PopulateWithSections(wxControlWithItems* pCtrol, int nSelI
 
 	Returns the number of the section selected
 	*/
-    
+
     //load section names
 	for (int i=0; i < NUM_SECTIONS; i++) {
         pCtrol->Append( m_sSectName[i] );
     }
-    
+
     //Find section for instrument nSelInstr
     ;
 	int iSel = 0;
@@ -343,7 +343,7 @@ int wxMidiDatabaseGM::PopulateWithSections(wxControlWithItems* pCtrol, int nSelI
         }
     }
     pCtrol->SetStringSelection( pCtrol->GetString(iSel) );
-   
+
     return iSel;
 
 }
@@ -398,12 +398,12 @@ void wxMidiDatabaseGM::PopulateWithPercusionInstr(wxControlWithItems* pCtrol, in
 	pCtrol->Append( _("79-Open Cuica") );
 	pCtrol->Append( _("80-Mute Triangle") );
 	pCtrol->Append( _("81-Open Triangle") );
-    
+
 	//select item
     int i = iSel - 35;
     if (i < 0 || i > 46)  i=0;
     pCtrol->SetStringSelection( pCtrol->GetString(i) );
-    
+
 }
 
 void wxMidiDatabaseGM::Initialize()
@@ -432,53 +432,53 @@ void wxMidiDatabaseGM::Initialize()
 	m_sSectName[1] = _("Chromatic percussion");
 	m_nSectInstr[1][0] = 8; 			//8  - Celesta");			//"Celesta"
 	m_nSectInstr[1][1] = 9; 			//9  - Glockenspiel");		//"Glockenspiel"
-	m_nSectInstr[1][2] = 10;			//10 - Music Box");			//"Caja de m鷖ica"
-	m_nSectInstr[1][3] = 11;			//11 - Vibraphone");		//"Vibr醘ono"
+	m_nSectInstr[1][2] = 10;			//10 - Music Box");			//"Caja de m煤sica"
+	m_nSectInstr[1][3] = 11;			//11 - Vibraphone");		//"Vibr谩fono"
 	m_nSectInstr[1][4] = 12;			//12 - Marimba");			//"Marimba"
-	m_nSectInstr[1][5] = 13;			//13 - Xylophone");			//"Xil骹ono"
+	m_nSectInstr[1][5] = 13;			//13 - Xylophone");			//"Xil贸fono"
 	m_nSectInstr[1][6] = 14;			//14 - Tubular Bells");		//"Campanas"
-	m_nSectInstr[1][7] = 15;			//15 - Dulcimer");			//"Dulcemer (salterio alem醤)"
+	m_nSectInstr[1][7] = 15;			//15 - Dulcimer");			//"Dulcemer (salterio alem谩n)"
 	m_nNumInstrInSection[1] = 8;		//number of instruments in this section
-        
+
     //section "Organs and harmonicas"
 	m_sSectName[2] = _("Organs and harmonicas");
     m_nSectInstr[2][0] = 16;			//16 - Drawbar Organ");		//"Organo Hammond"
-    m_nSectInstr[2][1] = 17;			//17 - Percussive Organ");	//"Organo de percusi髇"
+    m_nSectInstr[2][1] = 17;			//17 - Percussive Organ");	//"Organo de percusi贸n"
     m_nSectInstr[2][2] = 18;			//18 - Rock Organ");			//"Organo de rock"
     m_nSectInstr[2][3] = 19;			//19 - Church Organ");		//"Organo de iglesia"
     m_nSectInstr[2][4] = 20;			//20 - Reed Organ");			//"Armonio"
-    m_nSectInstr[2][5] = 21;			//21 - Accordion");			//"Acorde髇"
-    m_nSectInstr[2][6] = 22;			//22 - Harmonica");			//"Arm髇ica"
-    m_nSectInstr[2][7] = 23;			//23 - Tango Accordion");    //"Bandone髇"
+    m_nSectInstr[2][5] = 21;			//21 - Accordion");			//"Acorde贸n"
+    m_nSectInstr[2][6] = 22;			//22 - Harmonica");			//"Arm贸nica"
+    m_nSectInstr[2][7] = 23;			//23 - Tango Accordion");    //"Bandone贸n"
 	m_nNumInstrInSection[2] = 8;		//number of instruments in this section
-        
+
     //section "Guitars"
 	m_sSectName[3] = _("Guitars");
     m_nSectInstr[3][0] = 24;			//24 - Acoustic Guitar (nylon)");    //"Guitarra cuerdas de nylon"
-	m_nSectInstr[3][1] = 25;			//25 - Acoustic Guitar (steel)");    //"Guitarra cuerdas met醠icas"
-    m_nSectInstr[3][2] = 26;			//26 - Electric Guitar (jazz)");     //"Guitarra el閏trica de jazz"
-    m_nSectInstr[3][3] = 27;			//27 - Electric Guitar (clean)");    //"Guitarra el閏trica"
-    m_nSectInstr[3][4] = 28;			//28 - Electric Guitar (muted)");    //"Guitarra el閏trica (con sordina)"
-    m_nSectInstr[3][5] = 29;			//29 - Overdriven Guitar");			//"Guitarra el閏trica (overdriven)"
-    m_nSectInstr[3][6] = 30;			//30 - Distortion Guitar");			//"Guitarra el閏trica (con distorsi髇)"
-    m_nSectInstr[3][7] = 31;			//31 - Guitar harmonics");			//"Guitarra de arm髇icos"
+	m_nSectInstr[3][1] = 25;			//25 - Acoustic Guitar (steel)");    //"Guitarra cuerdas met谩licas"
+    m_nSectInstr[3][2] = 26;			//26 - Electric Guitar (jazz)");     //"Guitarra el茅ctrica de jazz"
+    m_nSectInstr[3][3] = 27;			//27 - Electric Guitar (clean)");    //"Guitarra el茅ctrica"
+    m_nSectInstr[3][4] = 28;			//28 - Electric Guitar (muted)");    //"Guitarra el茅ctrica (con sordina)"
+    m_nSectInstr[3][5] = 29;			//29 - Overdriven Guitar");			//"Guitarra el茅ctrica (overdriven)"
+    m_nSectInstr[3][6] = 30;			//30 - Distortion Guitar");			//"Guitarra el茅ctrica (con distorsi贸n)"
+    m_nSectInstr[3][7] = 31;			//31 - Guitar harmonics");			//"Guitarra de arm贸nicos"
 	m_nNumInstrInSection[3] = 8;		//number of instruments in this section
-        
+
     //section "Bass"
 	m_sSectName[4] = _("Basses");
-    m_nSectInstr[4][0] = 32;			//32 - Acoustic Bass");				//"Bajo ac鷖tico"
-    m_nSectInstr[4][1] = 33;			//33 - Electric Bass (finger)");     //"Bajo el閏trico (finger)"
-    m_nSectInstr[4][2] = 34;			//34 - Electric Bass (pick)");	    //"Bajo el閏trico (pick)"
+    m_nSectInstr[4][0] = 32;			//32 - Acoustic Bass");				//"Bajo ac煤stico"
+    m_nSectInstr[4][1] = 33;			//33 - Electric Bass (finger)");     //"Bajo el茅ctrico (finger)"
+    m_nSectInstr[4][2] = 34;			//34 - Electric Bass (pick)");	    //"Bajo el茅ctrico (pick)"
     m_nSectInstr[4][3] = 35;			//35 - Fretless Bass");				//"Bajo sin trastes"
     m_nSectInstr[4][4] = 36;			//36 - Slap Bass 1");				//"Slap Bass 1"
     m_nSectInstr[4][5] = 37;			//37 - Slap Bass 2");				//"Slap Bass 2"
     m_nSectInstr[4][6] = 38;			//38 - Synth Bass 1");				//"Synth Bass 1"
     m_nSectInstr[4][7] = 39;			//39 - Synth Bass 2");				//"Synth Bass 2"
 	m_nNumInstrInSection[4] = 8;		//number of instruments in this section
-        
+
     //section "Strings"
 	m_sSectName[5] = _("Strings");
-    m_nSectInstr[5][0] = 40;			//40 - Violin");				//"Viol韓"
+    m_nSectInstr[5][0] = 40;			//40 - Violin");				//"Viol铆n"
     m_nSectInstr[5][1] = 41;			//41 - Viola");				//"Viola"
     m_nSectInstr[5][2] = 42;			//42 - Cello");				//"Violoncelo"
     m_nSectInstr[5][3] = 43;			//43 - Contrabass");			//"Contrabajo"
@@ -487,23 +487,23 @@ void wxMidiDatabaseGM::Initialize()
     m_nSectInstr[5][6] = 46;			//46 - Orchestral Harp");	//"Arpa"
     m_nSectInstr[5][7] = 47;			//47 - Timpani");			//"Timbales"
 	m_nNumInstrInSection[5] = 8;		//number of instruments in this section
-        
+
     //section "Ensembles"
 	m_sSectName[6] = _("Ensembles");
     m_nSectInstr[6][0] = 48;			//48 - String Ensemble 1");     //"Cuerdas"
     m_nSectInstr[6][1] = 49;			//49 - String Ensemble 2");     //"Slow Str."
     m_nSectInstr[6][2] = 50;			//50 - SynthStrings 1");     //"Syn Str. 1"
     m_nSectInstr[6][3] = 51;			//51 - SynthStrings 2");     //"Syn Str. 2"
-    m_nSectInstr[6][4] = 52;			//52 - Choir Aahs");     //"Coro de ahs!"
+    m_nSectInstr[6][4] = 52;			//52 - Choir Aahs");     //"Coro de 隆aahs!"
     m_nSectInstr[6][5] = 53;			//53 - Voice Oohs");     //"Coro de Oohs"
     m_nSectInstr[6][6] = 54;			//54 - Synth Voice");     //"Voces sintetizadas"
     m_nSectInstr[6][7] = 55;			//55 - Orchestra Hit");     //"Orchestra Hit"
 	m_nNumInstrInSection[6] = 8;		//number of instruments in this section
-        
+
     //section "Brass"
 	m_sSectName[7] = _("Brass");
     m_nSectInstr[7][0] = 56;			//56 - Trumpet");     //"Trompeta"
-    m_nSectInstr[7][1] = 57;			//57 - Trombone");     //"Tromb髇"
+    m_nSectInstr[7][1] = 57;			//57 - Trombone");     //"Tromb贸n"
     m_nSectInstr[7][2] = 58;			//58 - Tuba");     //"Tuba"
     m_nSectInstr[7][3] = 59;			//59 - Muted Trumpet");     //"Trompeta con sordina"
     m_nSectInstr[7][4] = 60;			//60 - French Horn");     //"Trompa"
@@ -511,22 +511,22 @@ void wxMidiDatabaseGM::Initialize()
     m_nSectInstr[7][6] = 62;			//62 - SynthBrass 1");     //"Synth Br.1"
     m_nSectInstr[7][7] = 63;			//63 - SynthBrass 2");     //"Synth Br.2"
 	m_nNumInstrInSection[7] = 8;		//number of instruments in this section
-       
+
     //section "Reed"
 	m_sSectName[8] = _("Reed");
-    m_nSectInstr[8][0] = 64;			//64 - Soprano Sax");     //"Saxof髇 soprano"
-    m_nSectInstr[8][1] = 65;			//65 - Alto Sax");     //"Saxof髇 contralto"
-    m_nSectInstr[8][2] = 66;			//66 - Tenor Sax");     //"Saxof髇 tenor"
-    m_nSectInstr[8][3] = 67;			//67 - Baritone Sax");     //"Saxof髇 bar韙ono"
+    m_nSectInstr[8][0] = 64;			//64 - Soprano Sax");     //"Saxof贸n soprano"
+    m_nSectInstr[8][1] = 65;			//65 - Alto Sax");     //"Saxof贸n contralto"
+    m_nSectInstr[8][2] = 66;			//66 - Tenor Sax");     //"Saxof贸n tenor"
+    m_nSectInstr[8][3] = 67;			//67 - Baritone Sax");     //"Saxof贸n bar铆tono"
     m_nSectInstr[8][4] = 68;			//68 - Oboe");     //"Oboe"
     m_nSectInstr[8][5] = 69;			//69 - English Horn");     //"Corno ingles"
     m_nSectInstr[8][6] = 70;			//70 - Bassoon");     //"Fagot"
     m_nSectInstr[8][7] = 71;			//71 - Clarinet");     //"Clarinete"
 	m_nNumInstrInSection[8] = 8;		//number of instruments in this section
-       
+
     //section "Pipe"
 	m_sSectName[9] = _("Pipe");
-    m_nSectInstr[9][0] = 72;			//72 - Piccolo");     //"Falut韓"
+    m_nSectInstr[9][0] = 72;			//72 - Piccolo");     //"Falut铆n"
     m_nSectInstr[9][1] = 73;			//73 - Flute");     //"Flauta travesera"
     m_nSectInstr[9][2] = 74;			//74 - Recorder");     //"Flauta dulce"
     m_nSectInstr[9][3] = 75;			//75 - Pan Flute");     //"Flauta de Pan"
@@ -535,7 +535,7 @@ void wxMidiDatabaseGM::Initialize()
     m_nSectInstr[9][6] = 78;			//78 - Whistle");     //"Silbato"
     m_nSectInstr[9][7] = 79;			//79 - Ocarina");     //"Ocarina"
 	m_nNumInstrInSection[9] = 8;		//number of instruments in this section
-        
+
     //section "Synth. lead"
 	m_sSectName[10] = _("Synth. lead");
     m_nSectInstr[10][0] = 80;			//80 - Lead 1 (square)");     //"Onda cuadrada"
@@ -547,7 +547,7 @@ void wxMidiDatabaseGM::Initialize()
     m_nSectInstr[10][6] = 86;			//86 - Lead 7 (fifths)");     //"Quintas"
     m_nSectInstr[10][7] = 87;			//87 - Lead 8 (bass + lead)");     //"Bass& Lead"
 	m_nNumInstrInSection[10] = 8;		//number of instruments in this section
-        
+
     //section "Synth. pad"
 	m_sSectName[11] = _("Synth. pad");
     m_nSectInstr[11][0] = 88;			//88 - Pad 1 (new age)");     //"Fantasia"
@@ -559,7 +559,7 @@ void wxMidiDatabaseGM::Initialize()
     m_nSectInstr[11][6] = 94;			//94 - Pad 7 (halo)");     //"Halo Pad"
     m_nSectInstr[11][7] = 95;			//95 - Pad 8 (sweep)");     //"Sweep Pad"
 	m_nNumInstrInSection[11] = 8;		//number of instruments in this section
-        
+
     //section "Synth. F/X"
 	m_sSectName[12] = _("Synth. F/X");
     m_nSectInstr[12][0] = 96;			//96 - FX 1 (rain)");     //"Ice Rain"
@@ -583,7 +583,7 @@ void wxMidiDatabaseGM::Initialize()
     m_nSectInstr[13][6] = 110;			//110 - Fiddle");    //"Fiddle"
     m_nSectInstr[13][7] = 111;			//111 - Shanai");    //"Shanai"
 	m_nNumInstrInSection[13] = 8;		//number of instruments in this section
-        
+
     //section "Percussive"
 	m_sSectName[14] = _("Percussive");
     m_nSectInstr[14][0] = 112;			//112 - Tinkle Bell");    //"Tinkle Bell"
@@ -616,7 +616,7 @@ The Roland General Synthesizer (GS) Standard
 The Roland General Synthesizer (GS) functions are a superset of those specified for
 General MIDI. The GS system includes all of the GM sounds (which are referred to as
 "capital instrument" sounds), and adds new sounds which are organized as variations
-of the capital instruments. 
+of the capital instruments.
 
 Variations are selected using the MIDI Control Change message in conjunction with the
 Program Change message. The Control Change message is sent first, and it is used to set
@@ -629,12 +629,12 @@ a Control Change message which sets controller number 0 to a value of 8, followe
 program change message on the same channel which selects program number 25. Sending
 the Program change message alone would select the capital instrument, the Nylon String
 Guitar. Note also that a Control Change of controller number 0 to a value of 0 followed
-by a Program Change message would also select the capital instrument. 
+by a Program Change message would also select the capital instrument.
 
 The GS system also includes adjustable reverberation and chorus effects. The effects
 depth for both reverb and chorus may be adjusted on an individual MIDI channel basis
 using Control Change messages. The type of reverb and chorus sounds employed may also
-be selected using System Exclusive messages. 
+be selected using System Exclusive messages.
 
 
 */

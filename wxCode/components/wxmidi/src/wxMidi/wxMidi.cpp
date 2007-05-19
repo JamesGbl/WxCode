@@ -144,7 +144,7 @@ const wxString wxMidiDevice::InterfaceUsed()
 
 bool wxMidiDevice::IsInputPort()
 {
-	if (m_pInfo) 
+	if (m_pInfo)
 		return (m_pInfo->input != 0);
 	else
 		return false;
@@ -152,7 +152,7 @@ bool wxMidiDevice::IsInputPort()
 
 bool wxMidiDevice::IsOutputPort()
 {
-	if (m_pInfo) 
+	if (m_pInfo)
 		return (m_pInfo->output != 0);
 	else
 		return false;
@@ -195,21 +195,21 @@ wxMidiError wxMidiOutDevice::Write(wxByte* msg, wxMidiTimestamp when)
 
 wxMidiError	wxMidiOutDevice::NoteOff(int channel, int note, int velocity)
 {
-	//0x80–0x8F		Note off
+	//0x80?0x8F		Note off
 	wxMidiShortMessage msg(0x80+channel, note, velocity);
 	return Write(&msg);
 }
 
 wxMidiError	wxMidiOutDevice::NoteOn(int channel, int note, int velocity)
 {
-    //0x90–0x9F		Note on
+    //0x90?0x9F		Note on
 	wxMidiShortMessage msg(0x90+channel, note, velocity);
 	return Write(&msg);
 }
 
 wxMidiError	wxMidiOutDevice::ProgramChange(int channel, int instrument)
 {
-    //0xC0–0xCF		Program change
+    //0xC0?0xCF		Program change
 	wxMidiShortMessage msg(0xC0+channel, instrument, 0);
 	return Write(&msg);
 }
@@ -262,7 +262,7 @@ wxMidiError wxMidiInDevice::Open(void *DriverInfo)
 wxMidiError wxMidiInDevice::Read(wxMidiPmEvent *buffer, long* length )
 {
 	/*
-	If no error, the real number of buffers read is returned in "length" and  
+	If no error, the real number of buffers read is returned in "length" and
 	value PmNoError is returned.
 	In case of error, the error type is returned.
 	*/
@@ -271,7 +271,7 @@ wxMidiError wxMidiInDevice::Read(wxMidiPmEvent *buffer, long* length )
 	/* Pm_Read() retrieves midi data into a buffer, and returns the number
     of events read. Result is a non-negative number unless an error occurs,
     in which case a wxMidiError value will be returned. */
-	if (nErr < 0) 
+	if (nErr < 0)
 		//error
 		return (wxMidiError)nErr;
 	else {
@@ -284,14 +284,14 @@ wxMidiError wxMidiInDevice::Read(wxMidiPmEvent *buffer, long* length )
 wxMidiMessage* wxMidiInDevice::Read(wxMidiError* pError)
 {
 	/*
-	According to pormidi documentation, portmidi is allowed to pass real-time MIDI 
+	According to pormidi documentation, portmidi is allowed to pass real-time MIDI
 	messages embedded within the chunks of a sysex message, and it is up to the client
 	to detect, process, and	remove these messages as they arrive.
 
 	To deal with this, xMidiInDevice will maintain buffers with data not yet delivered.
 	Flag m_fReadingSysex will signal that a sysex message was interrupted by a real-time one
 	Flag m_fEventPending will signal that there is a PmEvent pending to be processed and
-	delivered, as consecuence of a previous truncated sysex message. 
+	delivered, as consecuence of a previous truncated sysex message.
 
 	*/
 
@@ -322,7 +322,7 @@ wxMidiMessage* wxMidiInDevice::Read(wxMidiError* pError)
 	// check what type of message we are receiving
 	if (m_fReadingSysex || (Pm_MessageStatus( buffer.message ) == 0xF0))
 	{
-		// Start or continuation of a Sysex message. Move data to buffer and 
+		// Start or continuation of a Sysex message. Move data to buffer and
 		// continue reading until end of message
 
 		//create the message object
@@ -375,7 +375,7 @@ wxMidiMessage* wxMidiInDevice::Read(wxMidiError* pError)
 			*/
 
 			// lets check if there is a status byte different from end-of-sysex
-			if (Pm_MessageStatus( buffer.message ) != 0xF7 && 
+			if (Pm_MessageStatus( buffer.message ) != 0xF7 &&
 				Pm_MessageStatus( buffer.message ) & 0x80 )
 			{
 				//The systex message is somehow truncated. Return the sysex message
@@ -483,7 +483,7 @@ bool wxMidiInDevice::MoveDataToSysExBuffer(PmMessage message)
 		// WARNING: Is this true? Shouldn't portmidi send the status byte
 		// in a new PmEvent? See portmidi/pm_test/sysex.c function receive_sysex()
 		//
-		// TODO: if we break without doing anything else, the status byte and 
+		// TODO: if we break without doing anything else, the status byte and
 		// remaining bytes will be lost !!!
         if (data & 0x80 && data != 0xF0 && data != 0xF7) break;
 	}
@@ -540,7 +540,7 @@ wxMidiError wxMidiInDevice::StopListening()
 // Class wxMidiThread implementation
 //================================================================================
 
-// In MSWin32 all threads are joinable. So for platform independence I will 
+// In MSWin32 all threads are joinable. So for platform independence I will
 // always use joinable threads
 wxMidiThread::wxMidiThread(wxMidiInDevice* pDev, wxWindow* pWindow, unsigned long milliseconds)
 	: wxThread(wxTHREAD_JOINABLE)
@@ -584,7 +584,7 @@ void* wxMidiThread::Entry()
 //	Acording to documentation Pm_Initialize and Pm_Terminate return a error code, but
 //	looking at the source code they always return pmNoError. So it is useless to
 //	try to preserve the return code by forcing the user to explicitly call
-//	these methods. It is easier to initialize and terminate in 
+//	these methods. It is easier to initialize and terminate in
 //	the constructor and destructor, respectively
 //================================================================================
 
