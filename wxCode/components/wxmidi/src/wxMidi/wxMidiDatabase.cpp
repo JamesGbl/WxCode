@@ -3,8 +3,7 @@
 // --------------------------------------------------------------------------------
 //
 // Author:      Cecilio Salmeron
-// RCS-ID:      $Id$
-// Copyright:   (c) 2005-2006 Cecilio Salmeron
+// Copyright:   (c) 2005-2007 Cecilio Salmeron
 // Licence:     wxWidgets licence
 //
 // Changes:
