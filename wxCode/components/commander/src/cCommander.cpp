@@ -159,7 +159,17 @@ void cCommander::refreshFileDir()
        if (dir.Exists(pathFileName))
           dirFileMap.push_back(pathFileName);
        else
-          aFiles.push_back(pathFileName);
+       {
+         /*
+         wxString strFilter = ".exe";
+         wxRegEx filter(strFilter);
+         if ( filter.Matches(filename) )
+         {
+            aFiles.push_back(pathFileName);
+         }
+         */
+         aFiles.push_back(pathFileName);
+       }
        cont = dir.GetNext(&filename);
     }
     for (size_t i = 0 ; i < aFiles.size(); i++)

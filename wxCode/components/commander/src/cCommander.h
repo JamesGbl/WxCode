@@ -6,6 +6,8 @@
 #include <wx/string.h>
 #include "wxOpenCommanderUtils.h"
 
+//#include <wx/regex.h>
+
 using namespace std;
 
 #include <vector>
