@@ -8,6 +8,7 @@ Re&move Tab=E&liminar Pestaña
 &Copy=&Copiar
 &Delete=&Borrar
 &Rename=&Renombrar
+&Filter=&Filtro
 &Execute=&Ejecutar
 &Exit=&Salir
 &Help=&Ayuda
@@ -20,8 +21,10 @@ Copy to...=Copiar a...
 Delete=Borrar
 Rename=Renonbrar
 Exec=Ejecutar
+Go=Ir
 Refresh=Refrescar...
 Devices=Dispositivos
+Filter=Filtro
 
 Files=Ficheros
 Extension=Extensión
@@ -83,4 +86,5 @@ File=Archivo
 Overwrite Read only files=Reemplazar archivos de solo Lectura
 Overwrite existing files=Reemplazar archivos existentes
 Close=Cerrar
-
+Enter the text for filter the files : Example (*.EXE)=Introduzca el texto para filtar los archivos : Ejemplo (*.EXE)
+Filter dialog=Ventana de Filtro

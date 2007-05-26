@@ -6,7 +6,7 @@
 #include <wx/string.h>
 #include "wxOpenCommanderUtils.h"
 
-//#include <wx/regex.h>
+#include <wx/regex.h>
 
 using namespace std;
 
@@ -25,7 +25,9 @@ class cCommander
       int getPathsCount();
       void setActualPath(int numPath);
       void setActualPath(wxString path);
+      void setActualFilter(wxString filter);
       wxString getActualPath();
+      wxString getActualFilter();
       
       long getFileDirCount();
       wxString getFileDirActualPath(long itemPos, long itemCol);
@@ -41,6 +43,7 @@ class cCommander
       void addPathRecursive(const wxString& filePath);
       
       bool blnDevices;
+      vectorString aFilters;
 	   vectorString aPaths;
 	   vectorString dirFileMap;
       int actualPath;

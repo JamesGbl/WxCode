@@ -1,7 +1,7 @@
 # Project: wxOpenCommander
 # Compiler: Default GCC compiler
 # Compiler Type: MingW 3
-# Makefile created by wxDev-C++ 6.10.1 on 20/05/07 13:06
+# Makefile created by wxDev-C++ 6.10.1 on 26/05/07 21:13
 
 CPP       = g++.exe
 CC        = gcc.exe
@@ -32,7 +32,7 @@ $(BIN): $(OBJ)
 Output/MingW/wxOpenCommanderApp.o: $(GLOBALDEPS) wxOpenCommanderApp.cpp wxOpenCommanderApp.h wxOpenCommanderFrm.h wxOpenCommanderUtils.h wxOpenCommanderListCtrl.h cCommander.h wxOpenCommanderUtils.h multiLang.h wxOpenCommanderUtils.h hotKeysDlg.h wxOpenCommanderUtils.h multiLang.h CopyDlg.h CThread.h cCommander.h wxOpenCommanderFrm.h wxOpenCommanderUtils.h wxOpenCommanderListCtrl.h taskbar.h multiLang.h multiLang.h CTimer.h multiLang.h wxOpenCommanderUtils.h CThread.h CThread.h CCommander.h
 	$(CPP) -c wxOpenCommanderApp.cpp -o Output/MingW/wxOpenCommanderApp.o $(CXXFLAGS)
 
-Output/MingW/wxOpenCommanderFrm.o: $(GLOBALDEPS) wxOpenCommanderFrm.cpp wxOpenCommanderFrm.h wxOpenCommanderUtils.h wxOpenCommanderListCtrl.h cCommander.h wxOpenCommanderUtils.h multiLang.h wxOpenCommanderUtils.h hotKeysDlg.h wxOpenCommanderUtils.h multiLang.h CopyDlg.h CThread.h cCommander.h wxOpenCommanderFrm.h wxOpenCommanderUtils.h wxOpenCommanderListCtrl.h taskbar.h multiLang.h multiLang.h CTimer.h multiLang.h wxOpenCommanderUtils.h CThread.h CThread.h CCommander.h Images/Self_wxOpenCommanderFrm_XPM.xpm Images/add.xpm Images/copy.xpm Images/delete.xpm Images/edit.xpm Images/exec.xpm Images/newFolder.xpm Images/refresh.xpm Images/remove.xpm Images/computer.xpm Images/icon1.xpm Images/icon3.xpm Images/icon5.xpm Images/hardDisk.xpm Images/dvd.xpm Images/floppy.xpm Images/usb.xpm
+Output/MingW/wxOpenCommanderFrm.o: $(GLOBALDEPS) wxOpenCommanderFrm.cpp wxOpenCommanderFrm.h wxOpenCommanderUtils.h wxOpenCommanderListCtrl.h cCommander.h wxOpenCommanderUtils.h multiLang.h wxOpenCommanderUtils.h hotKeysDlg.h wxOpenCommanderUtils.h multiLang.h CopyDlg.h CThread.h cCommander.h wxOpenCommanderFrm.h wxOpenCommanderUtils.h wxOpenCommanderListCtrl.h taskbar.h multiLang.h multiLang.h CTimer.h multiLang.h wxOpenCommanderUtils.h CThread.h CThread.h CCommander.h Images/Self_wxOpenCommanderFrm_XPM.xpm Images/add.xpm Images/copy.xpm Images/delete.xpm Images/edit.xpm Images/exec.xpm Images/newFolder.xpm Images/refresh.xpm Images/remove.xpm Images/computer.xpm Images/filter.xpm Images/icon1.xpm Images/icon3.xpm Images/icon5.xpm Images/hardDisk.xpm Images/dvd.xpm Images/floppy.xpm Images/usb.xpm
 	$(CPP) -c wxOpenCommanderFrm.cpp -o Output/MingW/wxOpenCommanderFrm.o $(CXXFLAGS)
 
 Output/MingW/multiLang.o: $(GLOBALDEPS) multiLang.cpp multiLang.h

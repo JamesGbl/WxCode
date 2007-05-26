@@ -155,6 +155,7 @@ class wxOpenCommanderFrm : public wxFrame
 			ID_MNU_COPY_1046 = 1046,
 			ID_MNU_DELETE_1047 = 1047,
 			ID_MNU_RENAME_1048 = 1048,
+			ID_MNU_FILTER_1088 = 1088,
 			ID_MNU_EXECUTE_1051 = 1051,
 			ID_MNU_EXIT_1005 = 1005,
 			ID_MNU_EDIT_1083 = 1083,
@@ -186,6 +187,7 @@ class wxOpenCommanderFrm : public wxFrame
 			ID_TOOL_ADD = 10006,
 			ID_TOOL_REMOVE = 10007,
 			ID_TOOL_DRIVES = 10008,
+			ID_TOOL_FILTER = 10009,
          ID_TOOL_COMBO = 10100
 		};
 
@@ -195,6 +197,7 @@ class wxOpenCommanderFrm : public wxFrame
          void Mnu_delete_onClick(wxCommandEvent& event);
          void Mnu_rename_onClick(wxCommandEvent& event);
          void Mnu_newFolder_onClick(wxCommandEvent& event);
+         void Mnu_filter_onClick(wxCommandEvent& event);
          void OnList1ItemActivated(wxListEvent& event);
          void OnList2ItemActivated(wxListEvent& event);
          void OnTaskBarClick(wxTaskBarIconEvent& event);

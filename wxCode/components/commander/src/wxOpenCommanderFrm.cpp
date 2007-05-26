@@ -24,6 +24,7 @@
 #include "Images/refresh.xpm"
 #include "Images/remove.xpm"
 #include "Images/computer.xpm"
+#include "Images/filter.xpm"
 
 #include "Images/icon1.xpm"
 //#include "Images/icon2.xpm"
@@ -56,6 +57,7 @@ BEGIN_EVENT_TABLE(wxOpenCommanderFrm,wxFrame)
 	EVT_TOOL(ID_TOOL_ADD	, wxOpenCommanderFrm::OnToolButton)
 	EVT_TOOL(ID_TOOL_REMOVE	, wxOpenCommanderFrm::OnToolButton)
 	EVT_TOOL(ID_TOOL_DRIVES	, wxOpenCommanderFrm::OnToolButton)
+	EVT_TOOL(ID_TOOL_FILTER	, wxOpenCommanderFrm::OnToolButton)
 	EVT_COMBOBOX(ID_TOOL_COMBO, wxOpenCommanderFrm::OnComboClick)
 	EVT_TEXT_ENTER(ID_TOOL_COMBO, wxOpenCommanderFrm::OnComboClick)
 	EVT_LIST_ITEM_FOCUSED(ID_WXLISTCTRL2,wxOpenCommanderFrm::WxListCtrl2ItemFocused)
@@ -79,6 +81,7 @@ BEGIN_EVENT_TABLE(wxOpenCommanderFrm,wxFrame)
 	EVT_MENU(ID_MNU_COPY_1046, wxOpenCommanderFrm::Mnu_copy_onClick)
 	EVT_MENU(ID_MNU_DELETE_1047, wxOpenCommanderFrm::Mnu_delete_onClick)
 	EVT_MENU(ID_MNU_RENAME_1048, wxOpenCommanderFrm::Mnu_rename_onClick)
+	EVT_MENU(ID_MNU_FILTER_1088, wxOpenCommanderFrm::Mnu_filter_onClick)
 	EVT_MENU(ID_MNU_EXECUTE_1051, wxOpenCommanderFrm::Mnu_execute_onClick)
 	EVT_MENU(ID_MNU_EXIT_1005, wxOpenCommanderFrm::Mnu_exit_onClick)
 	EVT_MENU(ID_MNU_COPY_1084, wxOpenCommanderFrm::Mnu_Copy_onClick1)
@@ -169,6 +172,7 @@ void wxOpenCommanderFrm::CreateGUIControls()
 	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_COPY_1046, wxT("&Copy"), wxT(""), wxITEM_NORMAL);
 	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_DELETE_1047, wxT("&Delete"), wxT(""), wxITEM_NORMAL);
 	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_RENAME_1048, wxT("&Rename"), wxT(""), wxITEM_NORMAL);
+	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_FILTER_1088, wxT("&Filter"), wxT(""), wxITEM_NORMAL);
 	ID_MNU_FILES_1004_Mnu_Obj->AppendSeparator();
 	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_EXECUTE_1051, wxT("E&xecute"), wxT(""), wxITEM_NORMAL);
 	ID_MNU_FILES_1004_Mnu_Obj->AppendSeparator();
@@ -233,6 +237,7 @@ void wxOpenCommanderFrm::CreateGUIControls()
     WxToolBar->AddTool(ID_TOOL_ADD, lang["Add"], add_xpm, lang["Add"]);
     WxToolBar->AddTool(ID_TOOL_REMOVE, lang["Delete"], remove_xpm, lang["Delete"]);
     WxToolBar->AddTool(ID_TOOL_DRIVES, lang["Devices"], computer_xpm, lang["Devices"]);
+    WxToolBar->AddTool(ID_TOOL_FILTER, lang["Filter"], filter_xpm, lang["Filter"]);
 
     
     wxMenu* optMenu = WxMenuBar1->GetMenu(0);
@@ -244,6 +249,8 @@ void wxOpenCommanderFrm::CreateGUIControls()
     subItem->SetBitmap(delete_xpm);
     subItem = optMenu->FindItem(ID_MNU_RENAME_1048);
     subItem->SetBitmap(edit_xpm);
+    subItem = optMenu->FindItem(ID_MNU_FILTER_1088);
+    subItem->SetBitmap(filter_xpm);    
     subItem = optMenu->FindItem(ID_MNU_EXECUTE_1051);
     subItem->SetBitmap(exec_xpm);
 
@@ -281,6 +288,7 @@ void wxOpenCommanderFrm::updateControlsLanguage()
    WxMenuBar1->SetLabel(ID_MNU_COPY_1046, lang["&Copy"] + " (F5)");
    WxMenuBar1->SetLabel(ID_MNU_DELETE_1047, lang["&Delete"] + " (Del)");
    WxMenuBar1->SetLabel(ID_MNU_RENAME_1048, lang["&Rename"] + " (F2)");
+   WxMenuBar1->SetLabel(ID_MNU_FILTER_1088, lang["&Filter"] + " (F8)");
    WxMenuBar1->SetLabel(ID_MNU_EXECUTE_1051, lang["&Execute"] + " (F9)");
    WxMenuBar1->SetLabel(ID_MNU_EXIT_1005, lang["&Exit"]);
    optMenu = WxMenuBar1->GetMenu(1);
@@ -305,7 +313,13 @@ void wxOpenCommanderFrm::updateControlsLanguage()
    WxToolBar->SetToolShortHelp(ID_TOOL_GO, lang["Refresh"]);
    WxToolBar->SetToolShortHelp(ID_TOOL_ADD, lang["Add"]);
    WxToolBar->SetToolShortHelp(ID_TOOL_REMOVE, lang["Delete"]);
-   
+
+   WxToolBar->SetToolShortHelp(ID_TOOL_GO, lang["Go"]);
+   WxToolBar->SetToolShortHelp(ID_TOOL_ADD, lang["Add"]);
+   WxToolBar->SetToolShortHelp(ID_TOOL_REMOVE, lang["Delete"]);
+   WxToolBar->SetToolShortHelp(ID_TOOL_DRIVES, lang["Devices"]);
+   WxToolBar->SetToolShortHelp(ID_TOOL_FILTER, lang["Filter"]);
+
    addColumns(WxListCtrl1);
    addColumns(WxListCtrl2);
 }
@@ -517,6 +531,11 @@ void wxOpenCommanderFrm::setListCtrl(cCommander* CCommander, wxNotebook* WxNoteb
    WxListCtrl->SetItemCount(CCommander->getFileDirCount());
    WxListCtrl->Refresh();
    
+   if (CCommander->getActualFilter() == "")
+      WxListCtrl->SetTextColour(wxColour(0,0,0));
+   else
+      WxListCtrl->SetTextColour(wxColour(0,0,255));
+   
    if (directory.Right(1) == "\\")
       combo->SetValue(directory);
    else
@@ -593,6 +612,9 @@ void wxOpenCommanderFrm::OnListCtlKey(cCommander* CCommander, wxNotebook* WxNote
        case WXK_F7:
           Mnu_newFolder_onClick(event);
        break;
+       case WXK_F8:
+          Mnu_filter_onClick(event);
+       break;       
        case WXK_F9:
           Mnu_execute_onClick(event);
        break;
@@ -671,6 +693,9 @@ void wxOpenCommanderFrm::OnToolButton(wxCommandEvent& event)
         break;
       case ID_TOOL_DRIVES:
          setListCtrlDevices(lastCCommanderUsed, lastListCtrlUsed);
+        break;
+      case ID_TOOL_FILTER:
+         Mnu_filter_onClick(event);
         break;
    }
 }
@@ -762,6 +787,16 @@ void wxOpenCommanderFrm::Mnu_execute_onClick(wxCommandEvent& event)
 	wxString execCommand = "Exec.bat " + lastCCommanderUsed->getActualPath() + " " + command;
    wxShell(execCommand);
    config.Write("LastExecCommand", command);
+}
+
+void wxOpenCommanderFrm::Mnu_filter_onClick(wxCommandEvent& event)
+{
+   wxTextEntryDialog execWnd(this, lang["Enter the text for filter the files : Example (*.EXE)"], lang["Filter dialog"], lastCCommanderUsed->getActualFilter(), wxOK | wxCANCEL | wxCENTRE);
+	if (execWnd.ShowModal() == wxID_CANCEL) return;
+	wxString filter = execWnd.GetValue();
+   filter = (filter == "*.*" || filter == "*" ? "" : filter); 
+	lastCCommanderUsed->setActualFilter(filter);
+	ListCtlUpdate();
 }
 
 void wxOpenCommanderFrm::Mnu_addTab_onClick(wxCommandEvent& event)
@@ -1105,24 +1140,22 @@ void wxOpenCommanderFrm::WxNotebook1PageChanged(wxNotebookEvent& event)
 {
    int actualTab = event.GetSelection();
 
-   lastListCtrlUsed = WxListCtrl1;
-	lastNoteBookUsed = WxNotebook1;
-   lastCCommanderUsed = &cCommander1;
+   wxListEvent listEvent;
+   WxListCtrl1ItemFocused(listEvent);
 
    cCommander1.setActualPath(actualTab);
    wxString strPath = cCommander1.getActualPath();
    lastListCtrlUsed->DeleteAllItems();
-   setListCtrl(&cCommander1, WxNotebook1, WxListCtrl1, strPath);
+   setListCtrl(&cCommander1, WxNotebook1, WxListCtrl1, strPath);   
 }
 
 void wxOpenCommanderFrm::WxNotebook2PageChanged(wxNotebookEvent& event)
 {
    int actualTab = event.GetSelection();
-      
-   lastListCtrlUsed = WxListCtrl2;
-	lastNoteBookUsed = WxNotebook2;
-	lastCCommanderUsed = &cCommander2;
    
+   wxListEvent listEvent;
+   WxListCtrl2ItemFocused(listEvent);
+      
    lastListCtrlUsed->DeleteAllItems();
    cCommander2.setActualPath(actualTab);
    wxString strPath = cCommander2.getActualPath();
@@ -1287,6 +1320,11 @@ void wxOpenCommanderFrm::onContextMenu(wxContextMenuEvent& event)
    wxBitmap imgRen(edit_xpm);
    itemRen.SetBitmap(imgRen);
    menu->Append(&itemRen);
+
+   wxMenuItem itemFil(menu,ID_MNU_FILTER_1088, wxT(lang["&Filter"]), wxT(""), wxITEM_NORMAL);
+   wxBitmap imgFil(filter_xpm);
+   itemFil.SetBitmap(imgFil);
+   menu->Append(&itemFil);
 	
    this->PopupMenu(menu);   
 }

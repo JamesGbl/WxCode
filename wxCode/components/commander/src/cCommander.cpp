@@ -9,6 +9,7 @@ cCommander::cCommander()
 int cCommander::addPath(wxString path)
 {   
    aPaths.push_back(path);
+   aFilters.push_back("");
    setActualPath(aPaths.size()-1);
    return actualPath;
 }
@@ -26,6 +27,7 @@ void cCommander::setPath(int numPath, wxString& path)
 void cCommander::removePath(int numPath)
 {
    aPaths.erase(aPaths.begin()+numPath);
+   aFilters.erase(aPaths.begin()+numPath);
    if (actualPath >= aPaths.size()) setActualPath(aPaths.size() - 1);
 }
 
@@ -48,6 +50,12 @@ void cCommander::setActualPath(wxString path)
    refreshFileDir();
 }
 
+void cCommander::setActualFilter(wxString filter)
+{
+   aFilters[actualPath] = filter;
+   refreshFileDir();
+}
+
 void cCommander::setDevices(bool listDevices)
 {
    blnDevices = listDevices;
@@ -61,6 +69,11 @@ bool cCommander::getListDevices()
 wxString cCommander::getActualPath()
 {
    return aPaths[actualPath];
+}
+
+wxString cCommander::getActualFilter()
+{
+   return aFilters[actualPath];
 }
 
 long cCommander::getFileDirCount()
@@ -160,15 +173,17 @@ void cCommander::refreshFileDir()
           dirFileMap.push_back(pathFileName);
        else
        {
-         /*
-         wxString strFilter = ".exe";
-         wxRegEx filter(strFilter);
-         if ( filter.Matches(filename) )
+         wxString strFilter = aFilters[actualPath];
+         if (!strFilter.IsEmpty())
          {
-            aFiles.push_back(pathFileName);
-         }
-         */
-         aFiles.push_back(pathFileName);
+            strFilter.Replace("*", "");
+            wxRegEx filter(strFilter);
+            if ( filter.Matches(filename) )
+            {
+               aFiles.push_back(pathFileName);
+            }
+         } 
+         else aFiles.push_back(pathFileName);
        }
        cont = dir.GetNext(&filename);
     }
