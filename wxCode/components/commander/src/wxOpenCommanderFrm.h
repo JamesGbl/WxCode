@@ -139,6 +139,7 @@ class wxOpenCommanderFrm : public wxFrame
 	   cCommander cCommander1;
 	   cCommander cCommander2;
 	   cCommander* lastCCommanderUsed;
+	   bool isReadingConfig;
 	   
 	private:
 		//Note: if you receive any error with these enum IDs, then you need to

@@ -3,14 +3,14 @@
 
 cCommander::cCommander()
 {
-   actualPath = 0;
+   actualPath = -1;
 }
 
 int cCommander::addPath(wxString path)
 {   
    aPaths.push_back(path);
    aFilters.push_back("");
-   setActualPath(aPaths.size()-1);
+   //setActualPath(aPaths.size()-1);
    return actualPath;
 }
 
@@ -39,6 +39,7 @@ int cCommander::getPathsCount()
 void cCommander::setActualPath(int numPath)
 {
    blnDevices = false;
+   if (actualPath == numPath) return;
    actualPath = numPath;
    refreshFileDir();
 }
@@ -46,6 +47,7 @@ void cCommander::setActualPath(int numPath)
 void cCommander::setActualPath(wxString path)
 {
    blnDevices = false;
+   if (aPaths[actualPath] == path) return;
    aPaths[actualPath] = path;
    refreshFileDir();
 }
@@ -148,7 +150,7 @@ wxString cCommander::getDrive(long itemPos, long itemCol)
 void cCommander::refreshFileDir()
 {
     if (blnDevices) return;
-   
+
     wxDir dir;
     wxString filename;
     wxString pathFileName;

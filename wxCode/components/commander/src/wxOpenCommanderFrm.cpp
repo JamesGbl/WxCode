@@ -124,7 +124,9 @@ wxOpenCommanderFrm::wxOpenCommanderFrm(wxWindow *parent, wxWindowID id, const wx
 	lastCCommanderUsed = &cCommander2;
 	
    lang.setLangsDir(".\\lang");
+   isReadingConfig=true;
    readConfig();
+   isReadingConfig=false;
    updateControlsLanguage();
 
 	WxStatusBar->SetStatusText("wxOpenCommander");
@@ -983,7 +985,6 @@ void wxOpenCommanderFrm::readConfig()
    if (!blnExist) 
    {
      cCommander1.addPath(wxPaths.GetDocumentsDir());
-     cCommander1.setActualPath(0);
      strPath = cCommander1.getActualPath();
      WxNotebook1->AddPage(WxListCtrl1, getLastDir(strPath), true);
 	  WxNotebook1->AdvanceSelection(false);
@@ -992,7 +993,6 @@ void wxOpenCommanderFrm::readConfig()
    {
       config.Read("Tabs/Left/Dir" + nameNum, &strPath);
       cCommander1.addPath(strPath);
-      //strPathLstCtrl1=(j>0 ? aPaths1[j-1] : aPaths1[j]);
       WxNotebook1->AddPage(WxListCtrl1, getLastDir(strPath));
       WxNotebook1->AdvanceSelection(false);
       nameNum = "";
@@ -1000,6 +1000,7 @@ void wxOpenCommanderFrm::readConfig()
       nameNum << j;
       blnExist = config.Exists("Tabs/Left/Dir" + nameNum);
    }
+   cCommander1.setActualPath(WxNotebook1->GetSelection());
 
    j = 0;
    nameNum = "0";
@@ -1008,7 +1009,6 @@ void wxOpenCommanderFrm::readConfig()
    if (!blnExist)
    {
      cCommander2.addPath(wxPaths.GetDocumentsDir());
-     cCommander2.setActualPath(0);
      strPath = cCommander2.getActualPath();
 	  WxNotebook2->AddPage(WxListCtrl2, getLastDir(strPath), true);
      WxNotebook2->AdvanceSelection(false);
@@ -1017,7 +1017,6 @@ void wxOpenCommanderFrm::readConfig()
    {
       config.Read("Tabs/Right/Dir" + nameNum, &strPath);
       cCommander2.addPath(strPath);
-      //strPathLstCtrl2=(j>0 ? aPaths2[j-1] : aPaths2[j]);
       WxNotebook2->AddPage(WxListCtrl2, getLastDir(strPath));
       WxNotebook2->AdvanceSelection(false);
       nameNum = "";
@@ -1025,6 +1024,7 @@ void wxOpenCommanderFrm::readConfig()
       nameNum << j;
       blnExist = config.Exists("Tabs/Right/Dir" + nameNum);
    }
+   cCommander2.setActualPath(WxNotebook2->GetSelection());
    
    config.SetPath("");
 
@@ -1138,11 +1138,12 @@ void wxOpenCommanderFrm::WxListCtrlEndLabelEdit(wxListEvent& event)
 
 void wxOpenCommanderFrm::WxNotebook1PageChanged(wxNotebookEvent& event)
 {
+   if (isReadingConfig) return; // The program init Now then we don't catch event because the program load all tabs...
    int actualTab = event.GetSelection();
 
    wxListEvent listEvent;
    WxListCtrl1ItemFocused(listEvent);
-
+   
    cCommander1.setActualPath(actualTab);
    wxString strPath = cCommander1.getActualPath();
    lastListCtrlUsed->DeleteAllItems();
@@ -1151,6 +1152,7 @@ void wxOpenCommanderFrm::WxNotebook1PageChanged(wxNotebookEvent& event)
 
 void wxOpenCommanderFrm::WxNotebook2PageChanged(wxNotebookEvent& event)
 {
+   if (isReadingConfig) return; // The program init Now then we don't catch event because the program load all tabs...
    int actualTab = event.GetSelection();
    
    wxListEvent listEvent;
