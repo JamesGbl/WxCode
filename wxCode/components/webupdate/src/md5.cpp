@@ -51,6 +51,21 @@
 #include <stdlib.h>
 
 
+#define uint32 wxInt32
+
+/*
+ * Note: this code is harmless on little-endian machines.
+ */
+static void byteReverse(unsigned char *buf, unsigned longs)
+{
+    uint32 t;
+    do {
+    t = (uint32) ((unsigned) buf[3] << 8 | buf[2]) << 16 |
+        ((unsigned) buf[1] << 8 | buf[0]);
+    *(uint32 *) buf = t;
+    buf += 4;
+    } while (--longs);
+}
 
 
 // ----------------
@@ -104,7 +119,7 @@ void MD5Final(unsigned char digest[16], MD5_CTX *ctx)
     if (count < 8) {
         /* Two lots of padding:  Pad the first block to 64 bytes */
         memset(p, 0, count);
-        //[TCC] byteReverse(ctx->in, 16);
+        byteReverse(ctx->in, 16);
         MD5Transform(ctx->buf, (unsigned int *) ctx->in);
 
         /* Now fill the next block with 56 bytes */
@@ -113,14 +128,14 @@ void MD5Final(unsigned char digest[16], MD5_CTX *ctx)
         /* Pad block to 56 bytes */
         memset(p, 0, count - 8);
     }
-    //[TCC] byteReverse(ctx->in, 14);
+    byteReverse(ctx->in, 14);
 
     /* Append length in bits and transform */
     ((unsigned int *) ctx->in)[14] = ctx->bits[0];
     ((unsigned int *) ctx->in)[15] = ctx->bits[1];
 
     MD5Transform(ctx->buf, (unsigned int *) ctx->in);
-    //[TCC] byteReverse((unsigned char *) ctx->buf, 4);
+    byteReverse((unsigned char *) ctx->buf, 4);
     memcpy(digest, ctx->buf, 16);
     memset((char *) ctx, 0, sizeof(ctx));       /* In case it's sensitive */
 }
@@ -160,7 +175,7 @@ void MD5Update(MD5_CTX *ctx, unsigned char const *buf, unsigned len)
             return;
         }
         memcpy(p, buf, t);
-        //[TCC] byteReverse(ctx->in, 16);
+        byteReverse(ctx->in, 16);
         MD5Transform(ctx->buf, (unsigned int *) ctx->in);
         buf += t;
         len -= t;
@@ -169,7 +184,7 @@ void MD5Update(MD5_CTX *ctx, unsigned char const *buf, unsigned len)
 
     while (len >= 64) {
         memcpy(ctx->in, buf, 64);
-        //[TCC] byteReverse(ctx->in, 16);
+        byteReverse(ctx->in, 16);
         MD5Transform(ctx->buf, (unsigned int *) ctx->in);
         buf += 64;
         len -= 64;
@@ -278,27 +293,6 @@ void MD5Transform(unsigned int buf[4], unsigned int const in[16])
     buf[2] += c;
     buf[3] += d;
 }
-
-
-#ifndef REVERSEBYTE
-#define byteReverse(buf, len)   /* Nothing */
-#else
-void byteReverse(unsigned char *buf, unsigned longs);
-
-/*
-* Note: this code is harmless on little-endian machines.
-*/
-void byteReverse(unsigned char *buf, unsigned longs)
-{
-    unsigned int t;
-    do {
-        t = (unsigned int) ((unsigned) buf[3] << 8 | buf[2]) << 16 |
-            ((unsigned) buf[1] << 8 | buf[0]);
-        *(unsigned int *) buf = t;
-        buf += 4;
-    } while (--longs);
-}
-#endif
 
 
 
