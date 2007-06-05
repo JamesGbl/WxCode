@@ -134,7 +134,7 @@ wxOpenCommanderFrm::wxOpenCommanderFrm(wxWindow *parent, wxWindowID id, const wx
 	WxListCtrl2->SetBackgroundColour(wxColour(255, 255, 255));
    WxListCtrl1->SetBackgroundColour(wxColour(240, 240, 240));
 
-   ListCtlUpdate();
+   ListCtlUpdate();   
 }
 
 wxOpenCommanderFrm::~wxOpenCommanderFrm()
@@ -1000,7 +1000,7 @@ void wxOpenCommanderFrm::readConfig()
       nameNum << j;
       blnExist = config.Exists("Tabs/Left/Dir" + nameNum);
    }
-   cCommander1.setActualPath(WxNotebook1->GetSelection());
+   cCommander1.setActualPath(WxNotebook1->GetSelection(), false);
 
    j = 0;
    nameNum = "0";
@@ -1024,7 +1024,7 @@ void wxOpenCommanderFrm::readConfig()
       nameNum << j;
       blnExist = config.Exists("Tabs/Right/Dir" + nameNum);
    }
-   cCommander2.setActualPath(WxNotebook2->GetSelection());
+   cCommander2.setActualPath(WxNotebook2->GetSelection(), false);
    
    config.SetPath("");
 

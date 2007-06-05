@@ -119,7 +119,7 @@ wxString getModificationTime(wxString& fileName)
    min << tmDateFile->tm_min;
    if (tmDateFile->tm_mday < 10) day = "0" + day;
    if (tmDateFile->tm_mon+1 < 10) month = "0" + month;
-   if (tmDateFile->tm_hour+1 < 10) hour = "0" + hour;
+   if (tmDateFile->tm_hour+2 < 10) hour = "0" + hour;
    if (tmDateFile->tm_min < 10) min = "0" + min;
    return day + "/" + month + "/" + year + " " + hour + ":" + min;
 }

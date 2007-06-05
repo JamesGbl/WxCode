@@ -23,8 +23,8 @@ class cCommander
       void setPath(int numPath, wxString& path);
       void removePath(int numPath);
       int getPathsCount();
-      void setActualPath(int numPath);
-      void setActualPath(wxString path);
+      void setActualPath(int numPath, bool blnRefresh = true);
+      void setActualPath(wxString path, bool blnRefresh = true);
       void setActualFilter(wxString filter);
       wxString getActualPath();
       wxString getActualFilter();

@@ -27,7 +27,7 @@ void cCommander::setPath(int numPath, wxString& path)
 void cCommander::removePath(int numPath)
 {
    aPaths.erase(aPaths.begin()+numPath);
-   aFilters.erase(aPaths.begin()+numPath);
+   aFilters.erase(aFilters.begin()+numPath);
    if (actualPath >= aPaths.size()) setActualPath(aPaths.size() - 1);
 }
 
@@ -36,20 +36,18 @@ int cCommander::getPathsCount()
    return aPaths.size();
 }
 
-void cCommander::setActualPath(int numPath)
+void cCommander::setActualPath(int numPath, bool blnRefresh)
 {
    blnDevices = false;
-   if (actualPath == numPath) return;
    actualPath = numPath;
-   refreshFileDir();
+   if (blnRefresh) refreshFileDir();
 }
 
-void cCommander::setActualPath(wxString path)
+void cCommander::setActualPath(wxString path, bool blnRefresh)
 {
    blnDevices = false;
-   if (aPaths[actualPath] == path) return;
    aPaths[actualPath] = path;
-   refreshFileDir();
+   if (blnRefresh) refreshFileDir();
 }
 
 void cCommander::setActualFilter(wxString filter)
@@ -179,8 +177,8 @@ void cCommander::refreshFileDir()
          if (!strFilter.IsEmpty())
          {
             strFilter.Replace("*", "");
-            wxRegEx filter(strFilter);
-            if ( filter.Matches(filename) )
+            wxRegEx filter(strFilter.Upper());
+            if ( filter.Matches(filename.Upper()) )
             {
                aFiles.push_back(pathFileName);
             }
