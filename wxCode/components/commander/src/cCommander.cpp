@@ -10,7 +10,6 @@ int cCommander::addPath(wxString path)
 {   
    aPaths.push_back(path);
    aFilters.push_back("");
-   //setActualPath(aPaths.size()-1);
    return actualPath;
 }
 
@@ -106,8 +105,10 @@ wxString cCommander::getFileDirActualPath(long itemPos, long itemCol)
       }
       break;
       case 3:
-         wxString strFile = dirFileMap[itemPos];
-         return getModificationTime(strFile);
+         if (itemPos == 0)
+            return "";
+         else
+            return getModificationTime(dirFileMap[itemPos]);
       break;
    }   
 }

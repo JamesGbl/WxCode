@@ -240,6 +240,7 @@ void CopyDlg::onCopyThreadFinish()
    {
       lblDetails2->SetLabel(lang["Copy finished with some errors"]);
       wxBell();
+      wxMessageBox(lang["Copy finished with some errors"], lang["Copy finished with some errors"], wxICON_ERROR | wxCENTRE);
    }
    lblDetails->SetLabel("");
    //lblDetails2->SetLabel("");

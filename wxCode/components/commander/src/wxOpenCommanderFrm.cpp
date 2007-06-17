@@ -442,24 +442,24 @@ void wxOpenCommanderFrm::Mnu_about_onClick(wxCommandEvent& event)
    wxAboutDialogInfo info;
    info.SetName(_T("wxOpenCommander "));
    info.SetVersion("0.1 (BETA)");
-   info.SetCopyright(wxString::FromAscii("(C) 2007 wxOpenCommander GNU License \n"));
+   info.SetCopyright(wxString::FromAscii("(C) 2007 wxOpenCommander GPL License \n"));
    info.AddDeveloper(_T("Armando Urdiales González"));
    info.SetWebSite(_T("http://www.wxOpenCommander.com/"), _T("wxOpenCommander web site"));
-   info.AddArtist(_T("Developed with"));
+   info.AddArtist(_T("Developed with:"));
    info.AddArtist(_T("\n\n\nwxDev-C++ (C++ IDE)"));
    info.AddArtist(_T("\n\nwxWidgets (Library)"));
    info.AddArtist(_T("\n\nMingW (C++ Compiler)"));
    info.AddArtist(_T("\n\nNSIS (Nullsoft Scriptable Install System)"));
-   info.AddArtist(_T("\n\nGraphic Designer Silvestre Herrera (Gnome Themes Gion and Neu)"));
+   info.AddArtist(_T("\n\nGraphic Designer Silvestre Herrera (Gnome Themes - Gion and Neu)"));
 
    info.SetLicence(wxString::FromAscii(
-         "                GNU License\n"
+         "                GPL License\n"
          "                =================\n"
          "\n"
          "  Everyone is permitted to copy and distribute copies\n"
          "  of this program.\n"
          "\n"
-         "                GNU GENERAL PUBLIC LICENSE\n"
+         "                GPL GENERAL PUBLIC LICENSE\n"
          "     TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION\n"
          "\n"
              ));
@@ -804,6 +804,9 @@ void wxOpenCommanderFrm::Mnu_filter_onClick(wxCommandEvent& event)
 void wxOpenCommanderFrm::Mnu_addTab_onClick(wxCommandEvent& event)
 {
    lastCCommanderUsed->addPath(lastCCommanderUsed->getActualPath());
+   lastCCommanderUsed->setActualPath(lastCCommanderUsed->getPathsCount()-1, false);
+   wxString strPath = lastCCommanderUsed->getActualPath();
+   setListCtrl(lastCCommanderUsed, lastNoteBookUsed, lastListCtrlUsed, strPath);
    lastNoteBookUsed->AddPage(lastListCtrlUsed, getLastDir(lastCCommanderUsed->getActualPath()));
    lastNoteBookUsed->ChangeSelection(lastNoteBookUsed->GetPageCount()-1);
    lastListCtrlUsed->SetFocus();
