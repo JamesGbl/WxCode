@@ -10,6 +10,7 @@ int cCommander::addPath(wxString path)
 {   
    aPaths.push_back(path);
    aFilters.push_back("");
+   actualPath = getPathsCount() - 1;
    return actualPath;
 }
 
@@ -67,6 +68,8 @@ bool cCommander::getListDevices()
 
 wxString cCommander::getActualPath()
 {
+   if (actualPath < 0 || actualPath > getPathsCount() - 1) actualPath = getPathsCount() - 1;
+   if (actualPath < 0) return "";
    return aPaths[actualPath];
 }
 

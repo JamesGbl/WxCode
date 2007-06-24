@@ -12,32 +12,18 @@ void Exec(wxString& path, wxString& file)
    if (command.Right(1)=="*")
       command = command.Left(command.Length()-1);
    
-   
-   //if (ext.Upper() == "BAT" /*|| ext.Upper() == "EXE"*/)
-   /*{
-      #ifdef __WXMSW__
-        command = "Exec.bat \"" + path + "\" \"" + file + "\"";
-      #else
-        command = path + "\\" + file;  
-      #endif 
-   } */  
-   
    #ifdef __WXMSW__
-      if (ext.Upper() == "BAT")
-         command = "Exec.bat \"" + path + "\" \"" + file + "\"";
-      else
-      { 
-         if (ext.Upper() == "EXE")   
-            command = path + "\\" + file; 
-      }
       
+      if (ext.Upper() == "EXE" || ext.Upper() == "BAT")
+         command = path + "\\" + file; 
+            
       STARTUPINFO sinfo;
       PROCESS_INFORMATION pinfo;
       memset(&sinfo,0,sizeof(STARTUPINFO));
       memset(&pinfo,0,sizeof(PROCESS_INFORMATION));
       sinfo.cb = sizeof(STARTUPINFO);
 
-      CreateProcess(0, (char*)command.mb_str(), 0, 0, 0, 0, 0, 0, &sinfo, &pinfo);
+      CreateProcess(0, (char*)command.mb_str(), 0, 0, 0, 0, 0, (char*)path.mb_str(), &sinfo, &pinfo);
 
    #else
 	   wxExecute(command, wxEXEC_ASYNC);
