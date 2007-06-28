@@ -37,8 +37,14 @@ WX_DEBUG = 1
 # Version of the wx library to build against. 
 WX_VERSION = 26
 
+# Use monolithic build of wxWidgets? [0,1]
+WX_MONOLITHIC = 0
+
 # Set to 1 to build debug version [0,1]
 DEBUG = 0
+
+#  
+INSTALLDIR = $(WXWIN)
 
 
 
@@ -56,26 +62,27 @@ AWX_LIB_CXXFLAGS = -DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) \
 	$(CXXFLAGS)
 AWX_LIB_OBJECTS =  \
 	$(OUTPUT)\awx_lib_button.o \
+	$(OUTPUT)\awx_lib_choice.o \
 	$(OUTPUT)\awx_lib_led.o \
 	$(OUTPUT)\awx_lib_obdlg.o \
 	$(OUTPUT)\awx_lib_outbar.o \
 	$(OUTPUT)\awx_lib_toolbar.o
 AWXTEST_CXXFLAGS = -DHAVE_W32API_H $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) -D__WXMSW__ \
-	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include -mthreads \
-	-I..\include $(____DEBUG) $(____DEBUG_0) $(____DEBUG_1) $(CPPFLAGS) \
+	-I$(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) -I$(WX_DIR)\include \
+	-I..\include -mthreads $(____DEBUG) $(____DEBUG_0) $(____DEBUG_1) $(CPPFLAGS) \
 	$(CXXFLAGS)
 AWXTEST_OBJECTS =  \
-	$(OUTPUT)\awxtest_awxtest_rc.o \
 	$(OUTPUT)\awxtest_main.o \
 	$(OUTPUT)\awxtest_menu.o \
 	$(OUTPUT)\awxtest_prefs.o \
-	$(OUTPUT)\awxtest_prefs_wdr.o
+	$(OUTPUT)\awxtest_prefs_wdr.o \
+	$(OUTPUT)\awxtest_awxtest_rc.o
 
 ### Conditionally set variables: ###
 
 ifeq ($(WX_DEBUG),1)
-WX3RDPARTLIBPOSTFIX = d
+WX3RDPARTYLIBPOSTFIX = d
 endif
 ifeq ($(DEBUG),0)
 OUTPUT = release
@@ -91,6 +98,90 @@ __WXUNICODE_DEFINE_p_2 = --define _UNICODE
 endif
 ifeq ($(WX_DEBUG),1)
 __WXDEBUG_DEFINE_p_2 = --define __WXDEBUG__
+endif
+ifeq ($(WX_DEBUG),0)
+ifeq ($(WX_MONOLITHIC),0)
+ifeq ($(WX_UNICODE),0)
+__WXLIB_BASE_NAME_p = -lwxbase$(WX_VERSION)
+endif
+endif
+endif
+ifeq ($(WX_DEBUG),1)
+ifeq ($(WX_MONOLITHIC),0)
+ifeq ($(WX_UNICODE),0)
+__WXLIB_BASE_NAME_p = -lwxbase$(WX_VERSION)d
+endif
+endif
+endif
+ifeq ($(WX_DEBUG),0)
+ifeq ($(WX_MONOLITHIC),0)
+ifeq ($(WX_UNICODE),1)
+__WXLIB_BASE_NAME_p = -lwxbase$(WX_VERSION)u
+endif
+endif
+endif
+ifeq ($(WX_DEBUG),1)
+ifeq ($(WX_MONOLITHIC),0)
+ifeq ($(WX_UNICODE),1)
+__WXLIB_BASE_NAME_p = -lwxbase$(WX_VERSION)ud
+endif
+endif
+endif
+ifeq ($(WX_DEBUG),0)
+ifeq ($(WX_MONOLITHIC),1)
+ifeq ($(WX_UNICODE),0)
+__WXLIB_BASE_NAME_p = -lwxmsw$(WX_VERSION)
+endif
+endif
+endif
+ifeq ($(WX_DEBUG),1)
+ifeq ($(WX_MONOLITHIC),1)
+ifeq ($(WX_UNICODE),0)
+__WXLIB_BASE_NAME_p = -lwxmsw$(WX_VERSION)d
+endif
+endif
+endif
+ifeq ($(WX_DEBUG),0)
+ifeq ($(WX_MONOLITHIC),1)
+ifeq ($(WX_UNICODE),1)
+__WXLIB_BASE_NAME_p = -lwxmsw$(WX_VERSION)u
+endif
+endif
+endif
+ifeq ($(WX_DEBUG),1)
+ifeq ($(WX_MONOLITHIC),1)
+ifeq ($(WX_UNICODE),1)
+__WXLIB_BASE_NAME_p = -lwxmsw$(WX_VERSION)ud
+endif
+endif
+endif
+ifeq ($(WX_DEBUG),0)
+ifeq ($(WX_MONOLITHIC),0)
+ifeq ($(WX_UNICODE),0)
+__WXLIB_CORE_NAME_p = -lwxmsw$(WX_VERSION)_core
+endif
+endif
+endif
+ifeq ($(WX_DEBUG),1)
+ifeq ($(WX_MONOLITHIC),0)
+ifeq ($(WX_UNICODE),0)
+__WXLIB_CORE_NAME_p = -lwxmsw$(WX_VERSION)d_core
+endif
+endif
+endif
+ifeq ($(WX_DEBUG),0)
+ifeq ($(WX_MONOLITHIC),0)
+ifeq ($(WX_UNICODE),1)
+__WXLIB_CORE_NAME_p = -lwxmsw$(WX_VERSION)u_core
+endif
+endif
+endif
+ifeq ($(WX_DEBUG),1)
+ifeq ($(WX_MONOLITHIC),0)
+ifeq ($(WX_UNICODE),1)
+__WXLIB_CORE_NAME_p = -lwxmsw$(WX_VERSION)ud_core
+endif
+endif
 endif
 ifeq ($(WX_UNICODE),1)
 __WXUNICODE_DEFINE_p = -D_UNICODE
@@ -145,23 +236,53 @@ $(OUTPUT):
 
 ### Targets: ###
 
-all: ..\lib\libawx$(LIBFLAG)-0.2.a $(OUTPUT)\awxtest.exe
+all: ..\lib\libwxawx$(LIBFLAG)-0.2.a $(OUTPUT)\awxtest.exe tip-win32
 
 clean: 
 	-if exist $(OUTPUT)\*.o del $(OUTPUT)\*.o
 	-if exist $(OUTPUT)\*.d del $(OUTPUT)\*.d
-	-if exist ..\lib\libawx$(LIBFLAG)-0.2.a del ..\lib\libawx$(LIBFLAG)-0.2.a
+	-if exist ..\lib\libwxawx$(LIBFLAG)-0.2.a del ..\lib\libwxawx$(LIBFLAG)-0.2.a
 	-if exist $(OUTPUT)\awxtest.exe del $(OUTPUT)\awxtest.exe
 
-..\lib\libawx$(LIBFLAG)-0.2.a: $(AWX_LIB_OBJECTS)
+..\lib\libwxawx$(LIBFLAG)-0.2.a: $(AWX_LIB_OBJECTS)
 	if exist $@ del $@
 	ar rcu $@ $(AWX_LIB_OBJECTS)
 	ranlib $@
 
-$(OUTPUT)\awxtest.exe: $(AWXTEST_OBJECTS) $(OUTPUT)\awxtest_awxtest_rc.o
-	$(CXX) -o $@ $(AWXTEST_OBJECTS) $(LDFLAGS) -mthreads -L$(WX_DIR)$(WXLIBPATH) -Wl,--subsystem,windows -mwindows -mthreads -L..\lib $(____DEBUG_1)  -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX) -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core -lwxtiff$(WX3RDPARTLIBPOSTFIX) -lwxjpeg$(WX3RDPARTLIBPOSTFIX) -lwxpng$(WX3RDPARTLIBPOSTFIX) -lwxzlib$(WX3RDPARTLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32 -lawx$(LIBFLAG)-0.2
+wxinstall: 
+	@copy ..\lib\wxawx$(LIBFLAG)-0.2.lib $(INSTALLDIR)\lib\mingw_lib
+	
+	@if not exist $(INSTALLDIR)\include\wx\awx mkdir $(INSTALLDIR)\include\wx\awx
+	@copy ..\include\wx\awx\*.h $(INSTALLDIR)\include\wx\awx
+
+$(OUTPUT)\awxtest.exe: $(AWXTEST_OBJECTS) ..\lib\libwxawx$(LIBFLAG)-0.2.a $(OUTPUT)\awxtest_awxtest_rc.o
+	$(CXX) -o $@ $(AWXTEST_OBJECTS) $(LDFLAGS) -mthreads -L$(WX_DIR)$(WXLIBPATH) -Wl,--subsystem,windows -mwindows -mthreads -L..\lib $(____DEBUG_1)  ..\lib\libwxawx$(LIBFLAG)-0.2.a  $(__WXLIB_BASE_NAME_p) $(__WXLIB_CORE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+
+tip-win32: 
+	@echo "                                                                "
+	@echo "================================================================"
+	@echo " The building of awx is finished. If you have an installed      "
+	@echo " wxWidget package (WXWIN must be defined in the enviroment),    "
+	@echo " you'll now have to run:                                        "
+	@echo "                                                                "
+	@echo " make -f makefile.vc DEBUG=$(DEBUG) WX_DEBUG=$(DEBUG) wxinstall "
+	@echo "                                                                "
+	@echo " to install the libraries in:                                   "
+	@echo " $(INSTALLDIR)\lib\mingw_lib               "
+	@echo " and the header files in $(INSTALLDIR)\wx\awx   "
+	@echo "                                                                "
+	@echo " If you are using another compiler (Borland, Watcom, mingw,...) "
+	@echo " take a look in the README in this directory!                   "
+	@echo "                                                                "
+	@echo " awx comes with no guarantees and doesn't claim                 "
+	@echo " to be suitable for any purpose.                                "
+	@echo "================================================================"
+	@echo "                                                                "
 
 $(OUTPUT)\awx_lib_button.o: ./../src/button.cpp
+	$(CXX) -c -o $@ $(AWX_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+$(OUTPUT)\awx_lib_choice.o: ./../src/choice.cpp
 	$(CXX) -c -o $@ $(AWX_LIB_CXXFLAGS) $(CPPDEPS) $<
 
 $(OUTPUT)\awx_lib_led.o: ./../src/led.cpp
@@ -176,9 +297,6 @@ $(OUTPUT)\awx_lib_outbar.o: ./../src/outbar.cpp
 $(OUTPUT)\awx_lib_toolbar.o: ./../src/toolbar.cpp
 	$(CXX) -c -o $@ $(AWX_LIB_CXXFLAGS) $(CPPDEPS) $<
 
-$(OUTPUT)\awxtest_awxtest_rc.o: ./../samples/awxtest.rc
-	windres --use-temp-file -i$< -o$@ --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_2) $(__WXDEBUG_DEFINE_p_2) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include
-
 $(OUTPUT)\awxtest_main.o: ./../samples/main.cpp
 	$(CXX) -c -o $@ $(AWXTEST_CXXFLAGS) $(CPPDEPS) $<
 
@@ -190,6 +308,9 @@ $(OUTPUT)\awxtest_prefs.o: ./../samples/prefs.cpp
 
 $(OUTPUT)\awxtest_prefs_wdr.o: ./../samples/prefs_wdr.cpp
 	$(CXX) -c -o $@ $(AWXTEST_CXXFLAGS) $(CPPDEPS) $<
+
+$(OUTPUT)\awxtest_awxtest_rc.o: ./../samples/awxtest.rc
+	windres --use-temp-file -i$< -o$@ --define HAVE_W32API_H $(__WXUNICODE_DEFINE_p_2) $(__WXDEBUG_DEFINE_p_2) --define __WXMSW__ --include-dir $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) --include-dir $(WX_DIR)/include --include-dir ../include
 
 .PHONY: all clean
 

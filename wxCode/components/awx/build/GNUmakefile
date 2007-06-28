@@ -38,7 +38,10 @@ LDFLAGS =
 WX_CONFIG = wx-config
 
 # C++ flags to use with wxWidgets code 
-WX_CXXFLAGS = `$(WX_CONFIG) --cxxflags $(WX_DEBUG)`
+WX_CXXFLAGS = `$(WX_CONFIG) --cxxflags`
+
+# wxWidgets libraries to link against 
+WX_LIBS = `$(WX_CONFIG) --libs`
 
 # Set to 1 to build debug version [0,1]
 DEBUG = 0
@@ -140,8 +143,8 @@ install_awx_lib:
 	$(INSTALL) -d $(prefix)/lib
 	$(INSTALL) -m 644 ../lib/libwxawx$(LIBFLAG)-0.2.a $(prefix)/lib
 
-$(OUTPUT)/awxtest: $(AWXTEST_OBJECTS)
-	$(CXX) -o $@ $(AWXTEST_OBJECTS) $(LDFLAGS)  -pthread -L../lib $(____DEBUG_1)  -lwxawx$(LIBFLAG)-0.2 $(BEFORE_WX_LIBS)
+$(OUTPUT)/awxtest: $(AWXTEST_OBJECTS) ../lib/libwxawx$(LIBFLAG)-0.2.a
+	$(CXX) -o $@ $(AWXTEST_OBJECTS) $(LDFLAGS)  -pthread -L../lib $(____DEBUG_1) ../lib/libwxawx$(LIBFLAG)-0.2.a $(BEFORE_WX_LIBS)
 
 tip-linux: 
 	@echo " "

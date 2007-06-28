@@ -107,7 +107,7 @@
     </sources>
     <runtime-libs>static</runtime-libs>
     <threading>multi</threading>
-    <sys-lib>wxawx$(LIBFLAG)-$(VERSION)</sys-lib>
+    <library>awx_lib</library>
     <ldlibs>$(BEFORE_WX_LIBS)</ldlibs>
     <!-- the normal way to linking against third party wx          -->
     <!-- components. Unfortunately this doesn't work right with    -->
