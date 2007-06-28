@@ -62,6 +62,9 @@
     </if>
   </set>
 
+  <!-- After defining the BEFORE_WX_LIBS we  don't need the WX_LIBS -->
+  <!-- to avoid an addition wx-config -libs call without any libs   -->
+  <!-- in the linux GNU makefile.                                   -->
   <set var="WX_LIBS">
     <if cond="DEBUG=='1' and PLATFORM_UNIX=='1'"></if>
   </set>
@@ -178,8 +181,8 @@
 <!-- nmake -a -f makefile.vc DEBUG=1 WX_DEBUG=1 (debug version)    -->
 <!-- nmake -a -f makefile.vc DEBUG=0 WX_DEBUG=0 (release)          -->
 <!-- and for LINUX (debug):                                        -->
-<!-- make DEBUG=1 WX_DEBUG='- -debug=yes'                          -->
+<!-- make DEBUG=1 WX_DEBUG=1                                       -->
 <!-- LINUX (release):                                              -->
-<!-- make DEBUG=0 WX_DEBUG='- -debug=no'                           -->
+<!-- make DEBUG=0 WX_DEBUG=0                                       -->
 <!-- Note! The example will be build automatically after create    -->
 <!--       the library!                                            -->
