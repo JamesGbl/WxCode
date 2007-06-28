@@ -213,13 +213,13 @@ $(OUTPUT):
 
 ### Targets: ###
 
-all: ..\lib\wxawx$(LIBFLAG)-0.2.lib $(OUTPUT)\awxtest.exe tip-win32
+all: ..\lib\wxawx$(LIBFLAG)-0.3.lib $(OUTPUT)\awxtest.exe tip-win32
 
 clean: 
 	-if exist $(OUTPUT)\*.obj del $(OUTPUT)\*.obj
 	-if exist $(OUTPUT)\*.res del $(OUTPUT)\*.res
 	-if exist $(OUTPUT)\*.csm del $(OUTPUT)\*.csm
-	-if exist ..\lib\wxawx$(LIBFLAG)-0.2.lib del ..\lib\wxawx$(LIBFLAG)-0.2.lib
+	-if exist ..\lib\wxawx$(LIBFLAG)-0.3.lib del ..\lib\wxawx$(LIBFLAG)-0.3.lib
 	-if exist $(OUTPUT)\awxtest.exe del $(OUTPUT)\awxtest.exe
 	-if exist $(OUTPUT)\awxtest.tds del $(OUTPUT)\awxtest.tds
 	-if exist $(OUTPUT)\awxtest.ilc del $(OUTPUT)\awxtest.ilc
@@ -227,21 +227,21 @@ clean:
 	-if exist $(OUTPUT)\awxtest.ilf del $(OUTPUT)\awxtest.ilf
 	-if exist $(OUTPUT)\awxtest.ils del $(OUTPUT)\awxtest.ils
 
-..\lib\wxawx$(LIBFLAG)-0.2.lib: $(AWX_LIB_OBJECTS)
+..\lib\wxawx$(LIBFLAG)-0.3.lib: $(AWX_LIB_OBJECTS)
 	if exist $@ del $@
 	tlib /a /p4096 $@ @&&|
 	$(AWX_LIB_OBJECTS)
 |
 
 wxinstall: 
-	@copy ..\lib\wxawx$(LIBFLAG)-0.2.lib $(INSTALLDIR)\lib\borland_lib
+	@copy ..\lib\wxawx$(LIBFLAG)-0.3.lib $(INSTALLDIR)\lib\borland_lib
 	
 	@if not exist $(INSTALLDIR)\include\wx\awx mkdir $(INSTALLDIR)\include\wx\awx
 	@copy ..\include\wx\awx\*.h $(INSTALLDIR)\include\wx\awx
 
-$(OUTPUT)\awxtest.exe: $(AWXTEST_OBJECTS) ..\lib\wxawx$(LIBFLAG)-0.2.lib  $(OUTPUT)\awxtest_awxtest.res
+$(OUTPUT)\awxtest.exe: $(AWXTEST_OBJECTS) ..\lib\wxawx$(LIBFLAG)-0.3.lib  $(OUTPUT)\awxtest_awxtest.res
 	ilink32 -Tpe -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk -L$(WX_DIR)$(__WXLIBPATH_FILENAMES) -aa  -L..\lib $(____DEBUG_2) @&&|
-	c0w32.obj $(AWXTEST_OBJECTS),$@,, ..\lib\wxawx$(LIBFLAG)-0.2.lib  $(__WXLIB_BASE_NAME_p) $(__WXLIB_CORE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32mt.lib,, $(OUTPUT)\awxtest_awxtest.res
+	c0w32.obj $(AWXTEST_OBJECTS),$@,, ..\lib\wxawx$(LIBFLAG)-0.3.lib $(__WXLIB_BASE_NAME_p) $(__WXLIB_CORE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib ole2w32.lib odbc32.lib oleacc.lib import32.lib cw32mt.lib,, $(OUTPUT)\awxtest_awxtest.res
 |
 
 tip-win32: 

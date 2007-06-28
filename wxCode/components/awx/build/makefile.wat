@@ -260,7 +260,7 @@ $(OUTPUT) :
 
 ### Targets: ###
 
-all : .SYMBOLIC ..\lib\wxawx$(LIBFLAG)-0.2.lib $(OUTPUT)\awxtest.exe tip-win32
+all : .SYMBOLIC ..\lib\wxawx$(LIBFLAG)-0.3.lib $(OUTPUT)\awxtest.exe tip-win32
 
 clean : .SYMBOLIC 
 	-if exist $(OUTPUT)\*.obj del $(OUTPUT)\*.obj
@@ -268,28 +268,28 @@ clean : .SYMBOLIC
 	-if exist $(OUTPUT)\*.lbc del $(OUTPUT)\*.lbc
 	-if exist $(OUTPUT)\*.ilk del $(OUTPUT)\*.ilk
 	-if exist $(OUTPUT)\*.pch del $(OUTPUT)\*.pch
-	-if exist ..\lib\wxawx$(LIBFLAG)-0.2.lib del ..\lib\wxawx$(LIBFLAG)-0.2.lib
+	-if exist ..\lib\wxawx$(LIBFLAG)-0.3.lib del ..\lib\wxawx$(LIBFLAG)-0.3.lib
 	-if exist $(OUTPUT)\awxtest.exe del $(OUTPUT)\awxtest.exe
 
-..\lib\wxawx$(LIBFLAG)-0.2.lib :  $(AWX_LIB_OBJECTS)
+..\lib\wxawx$(LIBFLAG)-0.3.lib :  $(AWX_LIB_OBJECTS)
 	@%create $(OUTPUT)\awx_lib.lbc
 	@for %i in ($(AWX_LIB_OBJECTS)) do @%append $(OUTPUT)\awx_lib.lbc +%i
 	wlib -q -p4096 -n -b $^@ @$(OUTPUT)\awx_lib.lbc
 
 wxinstall :  
-	@copy ..\lib\wxawx$(LIBFLAG)-0.2.lib $(INSTALLDIR)\lib\watcom_lib
+	@copy ..\lib\wxawx$(LIBFLAG)-0.3.lib $(INSTALLDIR)\lib\watcom_lib
 	
 	@if not exist $(INSTALLDIR)\include\wx\awx mkdir $(INSTALLDIR)\include\wx\awx
 	@copy ..\include\wx\awx\*.h $(INSTALLDIR)\include\wx\awx
 
-$(OUTPUT)\awxtest.exe :  $(AWXTEST_OBJECTS) ..\lib\wxawx$(LIBFLAG)-0.2.lib $(OUTPUT)\awxtest_awxtest.res
+$(OUTPUT)\awxtest.exe :  $(AWXTEST_OBJECTS) ..\lib\wxawx$(LIBFLAG)-0.3.lib $(OUTPUT)\awxtest_awxtest.res
 	@%create $(OUTPUT)\awxtest.lbc
 	@%append $(OUTPUT)\awxtest.lbc option quiet
 	@%append $(OUTPUT)\awxtest.lbc name $^@
 	@%append $(OUTPUT)\awxtest.lbc option caseexact
 	@%append $(OUTPUT)\awxtest.lbc $(LDFLAGS) libpath $(WX_DIR)$(__WXLIBPATH_FILENAMES) system nt_win ref '_WinMain@16'  libpath ..\lib $(____DEBUG_18_20)
 	@for %i in ($(AWXTEST_OBJECTS)) do @%append $(OUTPUT)\awxtest.lbc file %i
-	@for %i in ( ..\lib\wxawx$(LIBFLAG)-0.2.lib  $(__WXLIB_BASE_NAME_p) $(__WXLIB_CORE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append $(OUTPUT)\awxtest.lbc library %i
+	@for %i in ( ..\lib\wxawx$(LIBFLAG)-0.3.lib $(__WXLIB_BASE_NAME_p) $(__WXLIB_CORE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib) do @%append $(OUTPUT)\awxtest.lbc library %i
 	@%append $(OUTPUT)\awxtest.lbc option resource=$(OUTPUT)\awxtest_awxtest.res
 	wlink @$(OUTPUT)\awxtest.lbc
 

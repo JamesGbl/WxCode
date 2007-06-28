@@ -7,7 +7,7 @@
   <using module="datafiles"/>
 
   <!-- the actual awx library version -->
-  <set var="VERSION">0.2</set>
+  <set var="VERSION">0.3</set>
 
   <!-- The directory where wxWidgets is installed: -->
   <set var="ENV_VAR">
@@ -62,6 +62,10 @@
     </if>
   </set>
 
+  <set var="WX_LIBS">
+    <if cond="DEBUG=='1' and PLATFORM_UNIX=='1'"></if>
+  </set>
+
   <lib id="awx_lib" template="wx-lib" template_append="simple">
     <dirname>../lib</dirname>
     <libname>wxawx$(LIBFLAG)-$(VERSION)</libname>
@@ -108,7 +112,6 @@
     <runtime-libs>static</runtime-libs>
     <threading>multi</threading>
     <library>awx_lib</library>
-    <ldlibs>$(BEFORE_WX_LIBS)</ldlibs>
     <!-- the normal way to linking against third party wx          -->
     <!-- components. Unfortunately this doesn't work right with    -->
     <!-- Linux makefiles created by bakefile (see note above).     -->
