@@ -131,6 +131,29 @@ clean:
 	rm -f ../lib/libwxawx$(LIBFLAG)-0.3.a
 	rm -f $(OUTPUT)/awxtest
 
+tarball: 
+	(cd ..; tar -cvzf awx-0.3.tar.gz \
+	--exclude=awxtest \
+	--exclude=awxtest.exe \
+	--exclude=*.a \
+	--exclude=*.d \
+	--exclude=debug \
+	--exclude=*.dll \
+	--exclude=docs \
+	--exclude=*.ilk \
+	--exclude=*0.3* \
+	--exclude=*.log \
+	--exclude=*.o* \
+	--exclude=*.pdb \
+	--exclude=*.pyc \
+	--exclude=release \
+	--exclude=*.so \
+	--exclude=SVN* \
+	--exclude=.svn \
+	--exclude=*~ \
+	--exclude=*.___\
+	--exclude=*.o* *)
+
 ../lib/libwxawx$(LIBFLAG)-0.3.a: $(AWX_LIB_OBJECTS)
 	rm -f $@
 	$(AR) rcu $@ $(AWX_LIB_OBJECTS)

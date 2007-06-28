@@ -33,6 +33,38 @@
     <if cond="DEBUG=='1'">d</if>
   </set>
 
+  <define-tag name="run-tarball" rules="action">
+    <command>
+	 (cd ..; tar -cvzf $(value) \
+	 --exclude=awxtest \
+	 --exclude=awxtest.exe \
+	 --exclude=*.a \
+	 --exclude=*.d \
+	 --exclude=debug \
+	 --exclude=*.dll \
+	 --exclude=docs \
+	 --exclude=*.ilk \
+	 --exclude=*$(VERSION)* \
+	 --exclude=*.log \
+	 --exclude=*.o* \
+	 --exclude=*.pdb \
+	 --exclude=*.pyc \
+	 --exclude=release \
+	 --exclude=*.so \
+	 --exclude=SVN* \
+	 --exclude=.svn \
+	 --exclude=*~ \
+	 --exclude=*.___\
+	 --exclude=*.o* *)
+    </command>
+  </define-tag>
+
+  <if cond="PLATFORM_UNIX=='1'">
+    <action id="tarball">
+	 <run-tarball>awx-$(VERSION).tar.gz</run-tarball>
+    </action>
+  </if>
+
   <!-- This is only for UNIX like OS -->
   <data-files-tree id="install-headers">
     <srcdir>..$(DIRSEP)include$(DIRSEP)wx$(DIRSEP)awx</srcdir>
