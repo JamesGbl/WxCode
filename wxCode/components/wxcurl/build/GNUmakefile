@@ -25,6 +25,9 @@ AR := ar
 #  
 RANLIB := ranlib
 
+# Compiler flags to link shared library 
+LINK_DLL_FLAGS := -shared
+
 # C++ compiler 
 CXX := g++
 
@@ -304,7 +307,7 @@ endif
 
 ifeq ($(WX_SHARED),1)
 ../lib/gcc_$(__wxcurl)/libwxcode_$(WX_PORT)_wxcurl-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so: make_dir_wxcurl_dll  $(WXCURL_DLL_OBJECTS)
-	$(CXX) -shared -fPIC -o $@ $(WXCURL_DLL_OBJECTS) $(LDFLAGS) $(VAR_3) -L../lib `curl-config --libs`  -lcurl `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs xml,core,base`
+	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(WXCURL_DLL_OBJECTS) $(LDFLAGS) $(VAR_3) -L../lib `curl-config --libs`  -lcurl `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs xml,core,base`
 endif
 
 ifeq ($(WX_SHARED),1)

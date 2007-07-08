@@ -390,7 +390,7 @@ make_dir_wxcurl_lib:
 
 !if "$(WX_SHARED)" == "1"
 ..\lib\vc_$(____wxcurl_4)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.dll: make_dir_wxcurl_dll  $(WXCURL_DLL_OBJECTS)
-	link /DLL /NOLOGO /OUT:$@ $(LDFLAGS) /LIBPATH:$(WX_DIR)$(WXLIBPATH) $(VAR_5) /LIBPATH:..$(WXLIBPATH) /LIBPATH:..\thirdparty\curl\lib @<<
+	link /DLL /NOLOGO /OUT:$@ $(LDFLAGS) /LIBPATH:$(WX_DIR)$(WXLIBPATH) $(VAR_5) /pdb:"..\lib\vc_$(____wxcurl_4)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.pdb" /LIBPATH:..$(WXLIBPATH) /LIBPATH:..\thirdparty\curl\lib @<<
 	$(WXCURL_DLL_OBJECTS)  libcurl.lib $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib /IMPLIB:..\lib\vc_$(____wxcurl_4)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.lib
 <<
 !endif
@@ -399,7 +399,7 @@ make_dir_wxcurl_dll:
 	if not exist ..\lib\vc_$(____wxcurl_4) mkdir ..\lib\vc_$(____wxcurl_4)
 
 ..\samples\protocols\protocols.exe: $(PROTOCOLS_OBJECTS) $(__wxcurl_lib___depname) make_sample_dir_protocols vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_curl_app.res
-	link /NOLOGO /OUT:$@ $(LDFLAGS) /LIBPATH:$(WX_DIR)$(WXLIBPATH) $(VAR_5) /LIBPATH:..$(WXLIBPATH) /SUBSYSTEM:WINDOWS /LIBPATH:..\thirdparty\curl\lib  @<<
+	link /NOLOGO /OUT:$@ $(LDFLAGS) /LIBPATH:$(WX_DIR)$(WXLIBPATH) $(VAR_5) /pdb:"..\samples\protocols\protocols.pdb" /LIBPATH:..$(WXLIBPATH) /SUBSYSTEM:WINDOWS /LIBPATH:..\thirdparty\curl\lib  @<<
 	$(PROTOCOLS_OBJECTS)  ..\lib\vc_$(____wxcurl_4)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.lib libcurl.lib $(__WXLIB_XRC_NAME_p) $(__WXLIB_HTML_NAME_p) $(__WXLIB_ADV_NAME_p) $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
 
@@ -407,7 +407,7 @@ make_sample_dir_protocols:
 	if not exist ..\samples\protocols mkdir ..\samples\protocols
 
 ..\samples\dialogs\dialogs.exe: $(DIALOGS_OBJECTS) $(__wxcurl_lib___depname) make_sample_dir_dialogs vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs_minimal.res
-	link /NOLOGO /OUT:$@ $(LDFLAGS) /LIBPATH:$(WX_DIR)$(WXLIBPATH) $(VAR_5) /LIBPATH:..$(WXLIBPATH) /SUBSYSTEM:WINDOWS /LIBPATH:..\thirdparty\curl\lib  @<<
+	link /NOLOGO /OUT:$@ $(LDFLAGS) /LIBPATH:$(WX_DIR)$(WXLIBPATH) $(VAR_5) /pdb:"..\samples\dialogs\dialogs.pdb" /LIBPATH:..$(WXLIBPATH) /SUBSYSTEM:WINDOWS /LIBPATH:..\thirdparty\curl\lib  @<<
 	$(DIALOGS_OBJECTS)  ..\lib\vc_$(____wxcurl_4)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.lib libcurl.lib $(__WXLIB_XRC_NAME_p) $(__WXLIB_HTML_NAME_p) $(__WXLIB_ADV_NAME_p) $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib oleacc.lib
 <<
 
@@ -423,161 +423,161 @@ zip: clean
 	( cd ..\.. && zip -r9 wxcurl.zip wxcurl -x "*.pdb" -x "*.log" -x "*.o*" )
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_dav.obj: ..\src\dav.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_LIB_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_LIB_CXXFLAGS) ..\src\dav.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_http.obj: ..\src\http.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_LIB_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_LIB_CXXFLAGS) ..\src\http.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_panel.obj: ..\src\panel.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_LIB_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_LIB_CXXFLAGS) ..\src\panel.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_ftpparse.obj: ..\src\ftpparse.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_LIB_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_LIB_CXXFLAGS) ..\src\ftpparse.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_dialog.obj: ..\src\dialog.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_LIB_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_LIB_CXXFLAGS) ..\src\dialog.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_ftp.obj: ..\src\ftp.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_LIB_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_LIB_CXXFLAGS) ..\src\ftp.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_ftptool.obj: ..\src\ftptool.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_LIB_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_LIB_CXXFLAGS) ..\src\ftptool.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_base.obj: ..\src\base.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_LIB_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_LIB_CXXFLAGS) ..\src\base.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_telnet.obj: ..\src\telnet.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_LIB_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_LIB_CXXFLAGS) ..\src\telnet.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_davtool.obj: ..\src\davtool.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_LIB_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_LIB_CXXFLAGS) ..\src\davtool.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_thread.obj: ..\src\thread.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_LIB_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_LIB_CXXFLAGS) ..\src\thread.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_lib_utils.obj: ..\src\utils.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_LIB_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_LIB_CXXFLAGS) ..\src\utils.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_dav.obj: ..\src\dav.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) ..\src\dav.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_http.obj: ..\src\http.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) ..\src\http.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_panel.obj: ..\src\panel.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) ..\src\panel.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_ftpparse.obj: ..\src\ftpparse.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) ..\src\ftpparse.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_dialog.obj: ..\src\dialog.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) ..\src\dialog.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_ftp.obj: ..\src\ftp.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) ..\src\ftp.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_ftptool.obj: ..\src\ftptool.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) ..\src\ftptool.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_base.obj: ..\src\base.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) ..\src\base.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_telnet.obj: ..\src\telnet.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) ..\src\telnet.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_davtool.obj: ..\src\davtool.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) ..\src\davtool.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_thread.obj: ..\src\thread.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) ..\src\thread.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\wxcurl_dll_utils.obj: ..\src\utils.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(WXCURL_DLL_CXXFLAGS) ..\src\utils.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxDeleteDialog.obj: ..\samples\protocols\wxDeleteDialog.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) ..\samples\protocols\wxDeleteDialog.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxGetFileDialog.obj: ..\samples\protocols\wxGetFileDialog.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) ..\samples\protocols\wxGetFileDialog.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxPutFTPDialog.obj: ..\samples\protocols\wxPutFTPDialog.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) ..\samples\protocols\wxPutFTPDialog.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxPutTextDialog.obj: ..\samples\protocols\wxPutTextDialog.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) ..\samples\protocols\wxPutTextDialog.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxGetDialog.obj: ..\samples\protocols\wxGetDialog.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) ..\samples\protocols\wxGetDialog.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxPropfindDialog.obj: ..\samples\protocols\wxPropfindDialog.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) ..\samples\protocols\wxPropfindDialog.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxPostDialog.obj: ..\samples\protocols\wxPostDialog.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) ..\samples\protocols\wxPostDialog.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxCURLDlg.obj: ..\samples\protocols\wxCURLDlg.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) ..\samples\protocols\wxCURLDlg.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxInfoFTPDialog.obj: ..\samples\protocols\wxInfoFTPDialog.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) ..\samples\protocols\wxInfoFTPDialog.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxTraceDialog.obj: ..\samples\protocols\wxTraceDialog.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) ..\samples\protocols\wxTraceDialog.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxGetFSDialog.obj: ..\samples\protocols\wxGetFSDialog.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) ..\samples\protocols\wxGetFSDialog.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxFTPDeleteDialog.obj: ..\samples\protocols\wxFTPDeleteDialog.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) ..\samples\protocols\wxFTPDeleteDialog.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxPutDialog.obj: ..\samples\protocols\wxPutDialog.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) ..\samples\protocols\wxPutDialog.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxMkcolDialog.obj: ..\samples\protocols\wxMkcolDialog.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) ..\samples\protocols\wxMkcolDialog.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxGetFTPDialog.obj: ..\samples\protocols\wxGetFTPDialog.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) ..\samples\protocols\wxGetFTPDialog.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxPutFTPTextDialog.obj: ..\samples\protocols\wxPutFTPTextDialog.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) ..\samples\protocols\wxPutFTPTextDialog.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxOptionsDialog.obj: ..\samples\protocols\wxOptionsDialog.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) ..\samples\protocols\wxOptionsDialog.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxGetFTPFileDialog.obj: ..\samples\protocols\wxGetFTPFileDialog.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) ..\samples\protocols\wxGetFTPFileDialog.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxFTPRenameDialog.obj: ..\samples\protocols\wxFTPRenameDialog.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) ..\samples\protocols\wxFTPRenameDialog.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxGetFSFTPDialog.obj: ..\samples\protocols\wxGetFSFTPDialog.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) ..\samples\protocols\wxGetFSFTPDialog.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxNlstFTPDialog.obj: ..\samples\protocols\wxNlstFTPDialog.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) ..\samples\protocols\wxNlstFTPDialog.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxFTPMkdirDialog.obj: ..\samples\protocols\wxFTPMkdirDialog.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) ..\samples\protocols\wxFTPMkdirDialog.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxHeadDialog.obj: ..\samples\protocols\wxHeadDialog.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) ..\samples\protocols\wxHeadDialog.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxFTPRmdirDialog.obj: ..\samples\protocols\wxFTPRmdirDialog.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) ..\samples\protocols\wxFTPRmdirDialog.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxListFTPDialog.obj: ..\samples\protocols\wxListFTPDialog.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) ..\samples\protocols\wxListFTPDialog.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_wxCURLApp.obj: ..\samples\protocols\wxCURLApp.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(PROTOCOLS_CXXFLAGS) ..\samples\protocols\wxCURLApp.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\protocols_curl_app.res: ..\samples\protocols\curl_app.rc
-	rc /fo$@  /d WIN32 $(____WX_SHARED_0) $(__WXUNICODE_DEFINE_p_0) $(__WXDEBUG_DEFINE_p_0) /d __WXMSW__ /i $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include $(p_1) /i ..\include /d _WINDOWS /i ..\thirdparty\curl\include /i ..\samples\protocols $**
+	rc /fo$@  /d WIN32 $(____WX_SHARED_0) $(__WXUNICODE_DEFINE_p_0) $(__WXDEBUG_DEFINE_p_0) /d __WXMSW__ /i $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include $(p_1) /i ..\include /d _WINDOWS /i ..\thirdparty\curl\include /i ..\samples\protocols ..\samples\protocols\curl_app.rc
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs_minimal.obj: ..\samples\dialogs\minimal.cpp
-	$(CXX) /c /nologo /TP /Fo$@ $(DIALOGS_CXXFLAGS) $**
+	$(CXX) /c /nologo /TP /Fo$@ $(DIALOGS_CXXFLAGS) ..\samples\dialogs\minimal.cpp
 
 vcmsw$(WXLIBPOSTFIX)$(_BUILDDIR_SHARED_SUFFIX)\dialogs_minimal.res: ..\samples\dialogs\minimal.rc
-	rc /fo$@  /d WIN32 $(____WX_SHARED_0) $(__WXUNICODE_DEFINE_p_0) $(__WXDEBUG_DEFINE_p_0) /d __WXMSW__ /i $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include $(p_1) /i ..\include /d _WINDOWS /i ..\thirdparty\curl\include /i ..\samples\dialogs $**
+	rc /fo$@  /d WIN32 $(____WX_SHARED_0) $(__WXUNICODE_DEFINE_p_0) $(__WXDEBUG_DEFINE_p_0) /d __WXMSW__ /i $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include $(p_1) /i ..\include /d _WINDOWS /i ..\thirdparty\curl\include /i ..\samples\dialogs ..\samples\dialogs\minimal.rc
 

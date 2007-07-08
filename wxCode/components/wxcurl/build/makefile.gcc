@@ -10,6 +10,9 @@
 # These are configurable options:
 # -------------------------------------------------------------------------
 
+# Compiler flags to link shared library 
+LINK_DLL_FLAGS := -shared
+
 # C compiler 
 CC := gcc
 
@@ -461,7 +464,7 @@ make_dir_wxcurl_lib:
 
 ifeq ($(WX_SHARED),1)
 ..\lib\gcc_$(____wxcurl_4)\wxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.dll: make_dir_wxcurl_dll  $(WXCURL_DLL_OBJECTS)
-	$(CXX) -shared -fPIC -o $@ $(WXCURL_DLL_OBJECTS) $(LDFLAGS) -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_3) -L..$(WXLIBPATH) -Wl,--out-implib=..\lib\gcc_$(____wxcurl_4)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.a -L..\thirdparty\curl\lib  -lcurl $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
+	$(CXX) $(LINK_DLL_FLAGS) -fPIC -o $@ $(WXCURL_DLL_OBJECTS) $(LDFLAGS) -mthreads -L$(WX_DIR)$(WXLIBPATH) $(VAR_3) -L..$(WXLIBPATH) -Wl,--out-implib=..\lib\gcc_$(____wxcurl_4)\libwxcode_msw$(WX_VERSION)$(WXLIBPOSTFIX)_wxcurl.a -L..\thirdparty\curl\lib  -lcurl $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) -lwxtiff$(WX3RDPARTYLIBPOSTFIX) -lwxjpeg$(WX3RDPARTYLIBPOSTFIX) -lwxpng$(WX3RDPARTYLIBPOSTFIX) -lwxzlib$(WX3RDPARTYLIBPOSTFIX) -lwxregex$(WXLIBPOSTFIX) -lwxexpat$(WX3RDPARTYLIBPOSTFIX) -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lwsock32 -lodbc32
 endif
 
 make_dir_wxcurl_dll: 

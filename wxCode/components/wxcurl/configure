@@ -2868,6 +2868,10 @@ echo "$as_me: error:
         fi
 
 
+            # VERY IMPORTANT: these AC_PROG_C* checks must go after WX_DEBUG
+            #                 option handling or they'll add automatically "-g -O0"
+            #                 flags to the CXXFLAGS and CPPFLAGS:
+
             # required when compiling C files:
             ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
@@ -4659,8 +4663,6 @@ _ACEOF
   unset _libcurl_with
 
 
-echo "LIBCURL_CPPFLAGS is $LIBCURL_CPPFLAGS"
-
 
 # add all XML stuff that we've found...
 CXXFLAGS="$CXXFLAGS $LIBCURL_CPPFLAGS"
@@ -5455,71 +5457,17 @@ fi
       ;;
 
       *-*-linux* )
-        if test "x$GCC" != "xyes"; then
-            { echo "$as_me:$LINENO: checking for Intel compiler" >&5
-echo $ECHO_N "checking for Intel compiler... $ECHO_C" >&6; }
-if test "${bakefile_cv_prog_icc+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-
-                cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-
-int
-main ()
-{
-
-                        #ifndef __INTEL_COMPILER
-                        This is not ICC
-                        #endif
-
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext
-if { (ac_try="$ac_compile"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_compile") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } && {
-	 test -z "$ac_cxx_werror_flag" ||
-	 test ! -s conftest.err
-       } && test -s conftest.$ac_objext; then
-  bakefile_cv_prog_icc=yes
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-	bakefile_cv_prog_icc=no
-
-fi
-
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-
-fi
-{ echo "$as_me:$LINENO: result: $bakefile_cv_prog_icc" >&5
-echo "${ECHO_T}$bakefile_cv_prog_icc" >&6; }
-            if test "$bakefile_cv_prog_icc" = "yes"; then
-                PIC_FLAG="-KPIC"
-            fi
+        if test "$INTELCC" = "yes"; then
+            PIC_FLAG="-KPIC"
+        elif test "x$SUNCXX" = "xyes"; then
+            SHARED_LD_CC="${CC} -G -o"
+            SHARED_LD_CXX="${CXX} -G -o"
+            PIC_FLAG="-KPIC"
         fi
       ;;
 
       *-*-solaris2* )
-        if test "x$GCC" != xyes ; then
+        if test "x$SUNCXX" = xyes ; then
             SHARED_LD_CC="${CC} -G -o"
             SHARED_LD_CXX="${CXX} -G -o"
             PIC_FLAG="-KPIC"
@@ -6319,7 +6267,11 @@ echo "$as_me: error: unknown system type $BAKEFILE_HOST." >&2;}
 
     case "${BAKEFILE_HOST}" in
       *-*-linux* | *-*-freebsd* | *-*-k*bsd*-gnu )
-        SONAME_FLAG="-Wl,-soname,"
+        if test "x$SUNCXX" = "xyes"; then
+            SONAME_FLAG="-h "
+        else
+            SONAME_FLAG="-Wl,-soname,"
+        fi
         USE_SOVERSION=1
         USE_SOVERLINUX=1
         USE_SOSYMLINKS=1
@@ -6433,10 +6385,8 @@ mkdir -p ${D}DEPSDIR
 if test ${D}DEPSMODE = gcc ; then
     ${D}* ${D}{DEPSFLAG}
     status=${D}?
-    if test ${D}{status} != 0 ; then
-        exit ${D}{status}
-    fi
-    # move created file to the location we want it in:
+
+    # determine location of created files:
     while test ${D}# -gt 0; do
         case "${D}1" in
             -o )
@@ -6453,6 +6403,14 @@ if test ${D}DEPSMODE = gcc ; then
     done
     depfile=\`basename ${D}srcfile | sed -e 's/\\..*${D}/.d/g'\`
     depobjname=\`echo ${D}depfile |sed -e 's/\\.d/.o/g'\`
+
+    # if the compiler failed, we're done:
+    if test ${D}{status} != 0 ; then
+        rm -f ${D}depfile
+        exit ${D}{status}
+    fi
+
+    # move created file to the location we want it in:
     if test -f ${D}depfile ; then
         sed -e "s,${D}depobjname:,${D}objfile:,g" ${D}depfile >${D}{DEPSDIR}/${D}{objfile}.d
         rm -f ${D}depfile
