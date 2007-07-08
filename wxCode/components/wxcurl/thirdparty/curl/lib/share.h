@@ -21,7 +21,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: share.h,v 1.11 2006-04-26 17:11:05 giva Exp $
+ * $Id$
  ***************************************************************************/
 
 #include "setup.h"

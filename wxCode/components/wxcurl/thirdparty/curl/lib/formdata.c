@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: formdata.c,v 1.97 2007-01-27 03:43:06 yangtse Exp $
+ * $Id$
  ***************************************************************************/
 
 /*

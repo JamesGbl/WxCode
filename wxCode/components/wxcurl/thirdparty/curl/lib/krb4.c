@@ -37,7 +37,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: krb4.c,v 1.45 2007-01-03 23:04:43 bagder Exp $
+ * $Id$
  */
 
 #include "setup.h"

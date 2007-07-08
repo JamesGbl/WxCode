@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: hostsyn.c,v 1.10 2006-07-25 13:49:50 yangtse Exp $
+ * $Id$
  ***************************************************************************/
 
 #include "setup.h"

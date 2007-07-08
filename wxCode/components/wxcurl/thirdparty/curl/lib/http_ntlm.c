@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: http_ntlm.c,v 1.58 2007-01-23 22:57:42 bagder Exp $
+ * $Id$
  ***************************************************************************/
 #include "setup.h"
 

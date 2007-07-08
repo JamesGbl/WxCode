@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: select.c,v 1.23 2007-01-05 15:56:28 giva Exp $
+ * $Id$
  ***************************************************************************/
 
 #include "setup.h"

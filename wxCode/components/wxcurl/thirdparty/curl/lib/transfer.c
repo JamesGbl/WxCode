@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: transfer.c,v 1.332 2007-01-26 17:50:06 danf Exp $
+ * $Id$
  ***************************************************************************/
 
 #include "setup.h"

@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: parsedate.c,v 1.23 2006-12-05 14:57:43 bagder Exp $
+ * $Id$
  ***************************************************************************/
 /*
   A brief summary of the date string formats this parser groks:

@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: strdup.h,v 1.1 2006-07-11 17:02:06 danf Exp $
+ * $Id$
  ***************************************************************************/
 
 #ifndef _CURL_STRDUP_H

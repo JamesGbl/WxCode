@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: sslgen.c,v 1.18 2007-01-25 21:00:03 bagder Exp $
+ * $Id$
  ***************************************************************************/
 
 /* This file is for "generic" SSL functions that all libcurl internals should

@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: easy.c,v 1.93 2007-01-28 12:58:13 bagder Exp $
+ * $Id$
  ***************************************************************************/
 
 #include "setup.h"

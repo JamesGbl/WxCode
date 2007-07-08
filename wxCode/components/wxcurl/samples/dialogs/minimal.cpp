@@ -420,7 +420,7 @@ void MyFrame::OnUpload(wxCommandEvent& WXUNUSED(event))
     if (!is.IsOk())
         return;
 
-    wxLogDebug(wxT("Going to update %d bytes"), is.GetSize());
+    wxLogDebug(wxT("Going to upload %d bytes"), is.GetSize());
 
     wxBitmap bmp;
     if (m_menuTransferDlg->IsChecked(Minimal_Bitmap))

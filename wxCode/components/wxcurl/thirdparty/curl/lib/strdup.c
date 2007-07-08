@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: strdup.c,v 1.2 2006-07-17 15:25:37 yangtse Exp $
+ * $Id$
  ***************************************************************************/
 
 #include "setup.h"

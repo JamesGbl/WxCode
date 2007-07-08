@@ -20,7 +20,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: http_ntlm.h,v 1.11 2005/11/23 11:51:31 bagder Exp $
+ * $Id$
  ***************************************************************************/
 
 typedef enum {

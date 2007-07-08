@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: netrc.c,v 1.35 2005/05/02 14:33:07 bagder Exp $
+ * $Id$
  ***************************************************************************/
 
 #include "setup.h"

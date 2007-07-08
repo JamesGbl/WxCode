@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: if2ip.c,v 1.49 2006-10-25 07:19:45 bagder Exp $
+ * $Id$
  ***************************************************************************/
 
 #include "setup.h"

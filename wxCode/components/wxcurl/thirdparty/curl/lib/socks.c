@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: socks.c,v 1.4 2006-10-27 02:18:29 yangtse Exp $
+ * $Id$
  ***************************************************************************/
 
 #include "setup.h"

@@ -19,7 +19,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: memdebug.c,v 1.49 2006-11-05 12:42:50 yangtse Exp $
+ * $Id$
  ***************************************************************************/
 
 #include "setup.h"

@@ -115,10 +115,10 @@ extern "C"
     }
 
     /* writes to a string */
-    size_t wxcurl_string_write(void* ptr, size_t size, size_t nmemb, void* stream)
+    size_t wxcurl_string_write(void* ptr, size_t size, size_t nmemb, void* pcharbuf)
     {
         size_t iRealSize = size * nmemb;
-        wxCharBuffer* pStr = (wxCharBuffer*) stream;
+        wxCharBuffer* pStr = (wxCharBuffer*) pcharbuf;
 
         if(pStr)
         {
@@ -147,27 +147,29 @@ extern "C"
     }
 
     /* reads from a string */
-    size_t wxcurl_string_read(void* ptr, size_t size, size_t nmemb, void* stream)
+    size_t wxcurl_string_read(void* ptr, size_t size, size_t nmemb, void* pcharbuf)
     {
         size_t iRealSize = size * nmemb;
         size_t iRetVal = 0;
 
-        wxString* pStr = (wxString*) stream;
+        wxCharBuffer* pStr = (wxCharBuffer*) pcharbuf;
+        size_t len = strlen(*pStr);
 
         if(pStr)
         {
-            if(pStr->Len() >= iRealSize)
+            if(len >= iRealSize)
             {
-                strncpy((char*)ptr, (const char*)(pStr->c_str()), iRealSize);
+                strncpy((char*)ptr, (const char*)(*pStr), iRealSize);
                 iRetVal = iRealSize;
             }
             else
             {
-                strncpy((char*)ptr, (const char*)(pStr->c_str()), pStr->Len());
-                iRetVal = pStr->Len();
+                strncpy((char*)ptr, (const char*)(*pStr), len);
+                iRetVal = len;
             }
 
-            *pStr = pStr->Right(pStr->Len() - iRetVal);
+            wxString remaining = wxCURL_BUF2STRING(pStr).Right(len - iRetVal);
+            *pStr = wxCURL_STRING2BUF(remaining);
         }
 
         return iRetVal;

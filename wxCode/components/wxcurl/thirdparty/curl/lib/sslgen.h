@@ -20,7 +20,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: sslgen.h,v 1.9 2007-01-25 21:00:03 bagder Exp $
+ * $Id$
  ***************************************************************************/
 
 bool Curl_ssl_config_matches(struct ssl_config_data* data,

@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: strerror.c,v 1.41 2007-01-08 11:24:12 linus Exp $
+ * $Id$
  ***************************************************************************/
 
 #include "setup.h"

@@ -20,7 +20,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: setup_once.h,v 1.11 2007-01-27 01:56:20 yangtse Exp $
+ * $Id$
  ***************************************************************************/
 
 

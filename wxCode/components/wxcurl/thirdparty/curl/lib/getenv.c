@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: getenv.c,v 1.28 2006/01/09 13:17:14 bagder Exp $
+ * $Id$
  ***************************************************************************/
 
 #include "setup.h"

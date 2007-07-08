@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: splay.c,v 1.4 2006-09-04 22:19:13 bagder Exp $
+ * $Id$
  ***************************************************************************/
 
 #include <stdio.h>

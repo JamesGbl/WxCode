@@ -18,7 +18,7 @@
 * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
 * KIND, either express or implied.
 *
-* $Id: ssh.c,v 1.14 2007-01-28 22:36:23 bagder Exp $
+* $Id$
 ***************************************************************************/
 
 /* #define CURL_LIBSSH2_DEBUG */

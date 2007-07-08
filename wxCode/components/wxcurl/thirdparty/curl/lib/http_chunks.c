@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: http_chunks.c,v 1.33 2007-01-16 22:26:50 bagder Exp $
+ * $Id$
  ***************************************************************************/
 #include "setup.h"
 

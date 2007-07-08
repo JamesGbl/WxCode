@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: dict.c,v 1.47 2006-10-11 16:01:17 yangtse Exp $
+ * $Id$
  ***************************************************************************/
 
 #include "setup.h"

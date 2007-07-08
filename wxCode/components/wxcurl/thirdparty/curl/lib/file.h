@@ -21,7 +21,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: file.h,v 1.14 2007-01-16 22:22:23 bagder Exp $
+ * $Id$
  ***************************************************************************/
 #ifndef CURL_DISABLE_FILE
 CURLcode Curl_file(struct connectdata *, bool *done);

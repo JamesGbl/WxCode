@@ -20,7 +20,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: base64.h,v 1.18 2007-01-03 23:04:41 bagder Exp $
+ * $Id$
  ***************************************************************************/
 size_t Curl_base64_encode(struct SessionHandle *data,
                           const char *input, size_t size, char **str);

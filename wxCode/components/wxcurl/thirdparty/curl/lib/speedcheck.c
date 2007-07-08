@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: speedcheck.c,v 1.22 2006-10-17 09:05:44 bagder Exp $
+ * $Id$
  ***************************************************************************/
 
 #include "setup.h"

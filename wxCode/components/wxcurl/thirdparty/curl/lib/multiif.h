@@ -20,7 +20,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: multiif.h,v 1.6 2006-09-28 21:26:07 bagder Exp $
+ * $Id$
  ***************************************************************************/
 
 /*

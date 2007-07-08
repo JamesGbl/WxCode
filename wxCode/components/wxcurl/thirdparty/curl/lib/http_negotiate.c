@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: http_negotiate.c,v 1.18 2007-01-03 23:04:42 bagder Exp $
+ * $Id$
  ***************************************************************************/
 #include "setup.h"
 

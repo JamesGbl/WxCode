@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: strequal.c,v 1.29 2006-10-27 03:47:58 yangtse Exp $
+ * $Id$
  ***************************************************************************/
 
 #include "setup.h"

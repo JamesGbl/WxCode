@@ -125,6 +125,10 @@ void wxGetFileDialog::OnGet(wxCommandEvent& WXUNUSED(event))
 
 					if(m_pRespCtrl)
 						m_pRespCtrl->SetValue(szResponse);
+
+                    wxString ret;
+                    http.GetVerboseString(ret);
+                    wxLogMessage(ret);
 			}
 			else
 			{

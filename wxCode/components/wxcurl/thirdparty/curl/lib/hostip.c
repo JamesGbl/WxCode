@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: hostip.c,v 1.180 2006-08-21 22:28:19 danf Exp $
+ * $Id$
  ***************************************************************************/
 
 #include "setup.h"

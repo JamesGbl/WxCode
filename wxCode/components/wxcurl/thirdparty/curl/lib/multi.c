@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: multi.c,v 1.125 2007-01-27 03:14:25 yangtse Exp $
+ * $Id$
  ***************************************************************************/
 
 #include "setup.h"

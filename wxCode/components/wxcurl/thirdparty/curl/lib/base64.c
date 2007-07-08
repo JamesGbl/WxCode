@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: base64.c,v 1.38 2007-01-03 23:04:41 bagder Exp $
+ * $Id$
  ***************************************************************************/
 
 /* Base64 encoding/decoding

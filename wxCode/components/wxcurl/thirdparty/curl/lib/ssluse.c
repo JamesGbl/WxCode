@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: ssluse.c,v 1.164 2007-01-10 21:21:53 danf Exp $
+ * $Id$
  ***************************************************************************/
 
 /*

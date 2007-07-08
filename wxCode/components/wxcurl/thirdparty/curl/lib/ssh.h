@@ -21,7 +21,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: ssh.h,v 1.3 2007-01-16 22:22:24 bagder Exp $
+ * $Id$
  ***************************************************************************/
 
 #ifdef USE_LIBSSH2

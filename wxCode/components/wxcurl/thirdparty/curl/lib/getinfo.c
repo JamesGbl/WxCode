@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: getinfo.c,v 1.54 2006-12-22 13:44:10 bagder Exp $
+ * $Id$
  ***************************************************************************/
 
 #include "setup.h"

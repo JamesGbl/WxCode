@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: hostthre.c,v 1.43 2006-10-17 20:34:11 bagder Exp $
+ * $Id$
  ***************************************************************************/
 
 #include "setup.h"

@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: version.c,v 1.52 2006-11-24 22:14:40 bagder Exp $
+ * $Id$
  ***************************************************************************/
 
 #include "setup.h"

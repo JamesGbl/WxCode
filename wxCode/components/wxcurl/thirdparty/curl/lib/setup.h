@@ -20,7 +20,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: setup.h,v 1.124 2007-01-29 00:51:02 gknauf Exp $
+ * $Id$
  ***************************************************************************/
 
 #ifdef HTTP_ONLY

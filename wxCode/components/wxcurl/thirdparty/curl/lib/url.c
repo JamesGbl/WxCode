@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: url.c,v 1.579 2007-01-28 22:45:22 bagder Exp $
+ * $Id$
  ***************************************************************************/
 
 /* -- WIN32 approved -- */
