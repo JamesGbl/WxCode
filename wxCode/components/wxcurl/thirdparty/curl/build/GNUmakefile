@@ -16,6 +16,9 @@ AR := ar
 #  
 RANLIB := ranlib
 
+# Compiler flags to link shared library 
+LINK_DLL_FLAGS := -shared
+
 # C compiler 
 CC := gcc
 
@@ -43,134 +46,132 @@ WX_DEBUG := 0
 ### Variables: ###
 
 CPPDEPS = -MT$@ -MF`echo $@ | sed -e 's,\.o$$,.d,'` -MD
-LIBCURL_LIB_CFLAGS = $(____WX_SHARED) $(____WX_DEBUG) -I../include -I../lib \
-	$(CPPFLAGS) $(CFLAGS)
+LIBCURL_LIB_CFLAGS = $(____libcurl) $(____libcurl_1) -I../include -I../lib \
+	$(____WX_SHARED) $(____WX_DEBUG) $(CPPFLAGS) $(CFLAGS)
 LIBCURL_LIB_OBJECTS =  \
-	libcurl_lib_base64.o \
-	libcurl_lib_connect.o \
-	libcurl_lib_content_encoding.o \
-	libcurl_lib_cookie.o \
-	libcurl_lib_dict.o \
-	libcurl_lib_easy.o \
-	libcurl_lib_escape.o \
-	libcurl_lib_file.o \
-	libcurl_lib_formdata.o \
-	libcurl_lib_ftp.o \
-	libcurl_lib_getenv.o \
-	libcurl_lib_getinfo.o \
-	libcurl_lib_gtls.o \
-	libcurl_lib_hash.o \
-	libcurl_lib_hostares.o \
-	libcurl_lib_hostasyn.o \
-	libcurl_lib_hostip.o \
-	libcurl_lib_hostip4.o \
-	libcurl_lib_hostip6.o \
-	libcurl_lib_hostsyn.o \
-	libcurl_lib_hostthre.o \
-	libcurl_lib_http.o \
-	libcurl_lib_http_chunks.o \
-	libcurl_lib_http_digest.o \
-	libcurl_lib_http_negotiate.o \
-	libcurl_lib_http_ntlm.o \
-	libcurl_lib_if2ip.o \
-	libcurl_lib_inet_ntop.o \
-	libcurl_lib_inet_pton.o \
-	libcurl_lib_krb4.o \
-	libcurl_lib_ldap.o \
-	libcurl_lib_llist.o \
-	libcurl_lib_md5.o \
-	libcurl_lib_memdebug.o \
-	libcurl_lib_mprintf.o \
-	libcurl_lib_multi.o \
-	libcurl_lib_netrc.o \
-	libcurl_lib_nwlib.o \
-	libcurl_lib_parsedate.o \
-	libcurl_lib_progress.o \
-	libcurl_lib_security.o \
-	libcurl_lib_select.o \
-	libcurl_lib_sendf.o \
-	libcurl_lib_share.o \
-	libcurl_lib_socks.o \
-	libcurl_lib_speedcheck.o \
-	libcurl_lib_splay.o \
-	libcurl_lib_ssh.o \
-	libcurl_lib_sslgen.o \
-	libcurl_lib_ssluse.o \
-	libcurl_lib_strdup.o \
-	libcurl_lib_strequal.o \
-	libcurl_lib_strerror.o \
-	libcurl_lib_strtok.o \
-	libcurl_lib_strtoofft.o \
-	libcurl_lib_telnet.o \
-	libcurl_lib_tftp.o \
-	libcurl_lib_timeval.o \
-	libcurl_lib_transfer.o \
-	libcurl_lib_url.o \
-	libcurl_lib_version.o
-LIBCURL_DLL_CFLAGS = $(____WX_SHARED) $(____WX_DEBUG) -I../include -I../lib \
-	-fPIC -DPIC $(CPPFLAGS) $(CFLAGS)
+	gnu/libcurl_lib_base64.o \
+	gnu/libcurl_lib_connect.o \
+	gnu/libcurl_lib_content_encoding.o \
+	gnu/libcurl_lib_cookie.o \
+	gnu/libcurl_lib_dict.o \
+	gnu/libcurl_lib_easy.o \
+	gnu/libcurl_lib_escape.o \
+	gnu/libcurl_lib_file.o \
+	gnu/libcurl_lib_formdata.o \
+	gnu/libcurl_lib_ftp.o \
+	gnu/libcurl_lib_getenv.o \
+	gnu/libcurl_lib_getinfo.o \
+	gnu/libcurl_lib_gtls.o \
+	gnu/libcurl_lib_hash.o \
+	gnu/libcurl_lib_hostares.o \
+	gnu/libcurl_lib_hostasyn.o \
+	gnu/libcurl_lib_hostip.o \
+	gnu/libcurl_lib_hostip4.o \
+	gnu/libcurl_lib_hostip6.o \
+	gnu/libcurl_lib_hostsyn.o \
+	gnu/libcurl_lib_hostthre.o \
+	gnu/libcurl_lib_http.o \
+	gnu/libcurl_lib_http_chunks.o \
+	gnu/libcurl_lib_http_digest.o \
+	gnu/libcurl_lib_http_negotiate.o \
+	gnu/libcurl_lib_http_ntlm.o \
+	gnu/libcurl_lib_if2ip.o \
+	gnu/libcurl_lib_inet_ntop.o \
+	gnu/libcurl_lib_inet_pton.o \
+	gnu/libcurl_lib_krb4.o \
+	gnu/libcurl_lib_ldap.o \
+	gnu/libcurl_lib_llist.o \
+	gnu/libcurl_lib_md5.o \
+	gnu/libcurl_lib_memdebug.o \
+	gnu/libcurl_lib_mprintf.o \
+	gnu/libcurl_lib_multi.o \
+	gnu/libcurl_lib_netrc.o \
+	gnu/libcurl_lib_parsedate.o \
+	gnu/libcurl_lib_progress.o \
+	gnu/libcurl_lib_security.o \
+	gnu/libcurl_lib_select.o \
+	gnu/libcurl_lib_sendf.o \
+	gnu/libcurl_lib_share.o \
+	gnu/libcurl_lib_socks.o \
+	gnu/libcurl_lib_speedcheck.o \
+	gnu/libcurl_lib_splay.o \
+	gnu/libcurl_lib_ssh.o \
+	gnu/libcurl_lib_sslgen.o \
+	gnu/libcurl_lib_ssluse.o \
+	gnu/libcurl_lib_strdup.o \
+	gnu/libcurl_lib_strequal.o \
+	gnu/libcurl_lib_strerror.o \
+	gnu/libcurl_lib_strtok.o \
+	gnu/libcurl_lib_strtoofft.o \
+	gnu/libcurl_lib_telnet.o \
+	gnu/libcurl_lib_tftp.o \
+	gnu/libcurl_lib_timeval.o \
+	gnu/libcurl_lib_transfer.o \
+	gnu/libcurl_lib_url.o \
+	gnu/libcurl_lib_version.o
+LIBCURL_DLL_CFLAGS = $(____libcurl) $(____libcurl_1) -I../include -I../lib \
+	$(____WX_SHARED) $(____WX_DEBUG) -fPIC -DPIC $(CPPFLAGS) $(CFLAGS)
 LIBCURL_DLL_OBJECTS =  \
-	libcurl_dll_base64.o \
-	libcurl_dll_connect.o \
-	libcurl_dll_content_encoding.o \
-	libcurl_dll_cookie.o \
-	libcurl_dll_dict.o \
-	libcurl_dll_easy.o \
-	libcurl_dll_escape.o \
-	libcurl_dll_file.o \
-	libcurl_dll_formdata.o \
-	libcurl_dll_ftp.o \
-	libcurl_dll_getenv.o \
-	libcurl_dll_getinfo.o \
-	libcurl_dll_gtls.o \
-	libcurl_dll_hash.o \
-	libcurl_dll_hostares.o \
-	libcurl_dll_hostasyn.o \
-	libcurl_dll_hostip.o \
-	libcurl_dll_hostip4.o \
-	libcurl_dll_hostip6.o \
-	libcurl_dll_hostsyn.o \
-	libcurl_dll_hostthre.o \
-	libcurl_dll_http.o \
-	libcurl_dll_http_chunks.o \
-	libcurl_dll_http_digest.o \
-	libcurl_dll_http_negotiate.o \
-	libcurl_dll_http_ntlm.o \
-	libcurl_dll_if2ip.o \
-	libcurl_dll_inet_ntop.o \
-	libcurl_dll_inet_pton.o \
-	libcurl_dll_krb4.o \
-	libcurl_dll_ldap.o \
-	libcurl_dll_llist.o \
-	libcurl_dll_md5.o \
-	libcurl_dll_memdebug.o \
-	libcurl_dll_mprintf.o \
-	libcurl_dll_multi.o \
-	libcurl_dll_netrc.o \
-	libcurl_dll_nwlib.o \
-	libcurl_dll_parsedate.o \
-	libcurl_dll_progress.o \
-	libcurl_dll_security.o \
-	libcurl_dll_select.o \
-	libcurl_dll_sendf.o \
-	libcurl_dll_share.o \
-	libcurl_dll_socks.o \
-	libcurl_dll_speedcheck.o \
-	libcurl_dll_splay.o \
-	libcurl_dll_ssh.o \
-	libcurl_dll_sslgen.o \
-	libcurl_dll_ssluse.o \
-	libcurl_dll_strdup.o \
-	libcurl_dll_strequal.o \
-	libcurl_dll_strerror.o \
-	libcurl_dll_strtok.o \
-	libcurl_dll_strtoofft.o \
-	libcurl_dll_telnet.o \
-	libcurl_dll_tftp.o \
-	libcurl_dll_timeval.o \
-	libcurl_dll_transfer.o \
-	libcurl_dll_url.o \
-	libcurl_dll_version.o
+	gnu/libcurl_dll_base64.o \
+	gnu/libcurl_dll_connect.o \
+	gnu/libcurl_dll_content_encoding.o \
+	gnu/libcurl_dll_cookie.o \
+	gnu/libcurl_dll_dict.o \
+	gnu/libcurl_dll_easy.o \
+	gnu/libcurl_dll_escape.o \
+	gnu/libcurl_dll_file.o \
+	gnu/libcurl_dll_formdata.o \
+	gnu/libcurl_dll_ftp.o \
+	gnu/libcurl_dll_getenv.o \
+	gnu/libcurl_dll_getinfo.o \
+	gnu/libcurl_dll_gtls.o \
+	gnu/libcurl_dll_hash.o \
+	gnu/libcurl_dll_hostares.o \
+	gnu/libcurl_dll_hostasyn.o \
+	gnu/libcurl_dll_hostip.o \
+	gnu/libcurl_dll_hostip4.o \
+	gnu/libcurl_dll_hostip6.o \
+	gnu/libcurl_dll_hostsyn.o \
+	gnu/libcurl_dll_hostthre.o \
+	gnu/libcurl_dll_http.o \
+	gnu/libcurl_dll_http_chunks.o \
+	gnu/libcurl_dll_http_digest.o \
+	gnu/libcurl_dll_http_negotiate.o \
+	gnu/libcurl_dll_http_ntlm.o \
+	gnu/libcurl_dll_if2ip.o \
+	gnu/libcurl_dll_inet_ntop.o \
+	gnu/libcurl_dll_inet_pton.o \
+	gnu/libcurl_dll_krb4.o \
+	gnu/libcurl_dll_ldap.o \
+	gnu/libcurl_dll_llist.o \
+	gnu/libcurl_dll_md5.o \
+	gnu/libcurl_dll_memdebug.o \
+	gnu/libcurl_dll_mprintf.o \
+	gnu/libcurl_dll_multi.o \
+	gnu/libcurl_dll_netrc.o \
+	gnu/libcurl_dll_parsedate.o \
+	gnu/libcurl_dll_progress.o \
+	gnu/libcurl_dll_security.o \
+	gnu/libcurl_dll_select.o \
+	gnu/libcurl_dll_sendf.o \
+	gnu/libcurl_dll_share.o \
+	gnu/libcurl_dll_socks.o \
+	gnu/libcurl_dll_speedcheck.o \
+	gnu/libcurl_dll_splay.o \
+	gnu/libcurl_dll_ssh.o \
+	gnu/libcurl_dll_sslgen.o \
+	gnu/libcurl_dll_ssluse.o \
+	gnu/libcurl_dll_strdup.o \
+	gnu/libcurl_dll_strequal.o \
+	gnu/libcurl_dll_strerror.o \
+	gnu/libcurl_dll_strtok.o \
+	gnu/libcurl_dll_strtoofft.o \
+	gnu/libcurl_dll_telnet.o \
+	gnu/libcurl_dll_tftp.o \
+	gnu/libcurl_dll_timeval.o \
+	gnu/libcurl_dll_transfer.o \
+	gnu/libcurl_dll_url.o \
+	gnu/libcurl_dll_version.o
 
 ### Conditionally set variables: ###
 
@@ -180,11 +181,17 @@ endif
 ifeq ($(WX_SHARED),1)
 __libcurl_dll___depname = ../lib/liblibcurl.so
 endif
+ifeq ($(WX_DEBUG),0)
+____libcurl = -O2
+endif
+ifeq ($(WX_DEBUG),1)
+____libcurl = -O0
+endif
 ifeq ($(WX_SHARED),0)
 ____WX_SHARED = -DCURL_STATICLIB
 endif
 ifeq ($(WX_SHARED),1)
-____WX_SHARED = 
+____WX_SHARED = -DBUILDING_LIBCURL
 endif
 ifeq ($(WX_DEBUG),0)
 ____WX_DEBUG = -DNDEBUG
@@ -192,7 +199,17 @@ endif
 ifeq ($(WX_DEBUG),1)
 ____WX_DEBUG = 
 endif
+ifeq ($(WX_DEBUG),0)
+____libcurl_1 = 
+endif
+ifeq ($(WX_DEBUG),1)
+____libcurl_1 = -g
+endif
 
+
+all: gnu
+gnu:
+	@mkdir -p gnu
 
 ### Targets: ###
 
@@ -203,8 +220,8 @@ install: all
 uninstall: 
 
 clean: 
-	rm -f ./*.o
-	rm -f ./*.d
+	rm -f gnu/*.o
+	rm -f gnu/*.d
 	rm -f ../lib/liblibcurl.a
 	rm -f ../lib/liblibcurl.so
 	rm -f ../lib/liblibcurl.so
@@ -218,377 +235,371 @@ endif
 
 ifeq ($(WX_SHARED),1)
 ../lib/liblibcurl.so: $(LIBCURL_DLL_OBJECTS)
-	$(CC) -shared -fPIC -o $@ $(LIBCURL_DLL_OBJECTS) $(LDFLAGS)
+	$(CC) $(LINK_DLL_FLAGS) -fPIC -o $@ $(LIBCURL_DLL_OBJECTS) $(LDFLAGS) $(____libcurl_1)  -lwsock32 -lwinmm
 endif
 
-libcurl_lib_base64.o: ../lib/base64.c
+gnu/libcurl_lib_base64.o: ../lib/base64.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_connect.o: ../lib/connect.c
+gnu/libcurl_lib_connect.o: ../lib/connect.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_content_encoding.o: ../lib/content_encoding.c
+gnu/libcurl_lib_content_encoding.o: ../lib/content_encoding.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_cookie.o: ../lib/cookie.c
+gnu/libcurl_lib_cookie.o: ../lib/cookie.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_dict.o: ../lib/dict.c
+gnu/libcurl_lib_dict.o: ../lib/dict.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_easy.o: ../lib/easy.c
+gnu/libcurl_lib_easy.o: ../lib/easy.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_escape.o: ../lib/escape.c
+gnu/libcurl_lib_escape.o: ../lib/escape.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_file.o: ../lib/file.c
+gnu/libcurl_lib_file.o: ../lib/file.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_formdata.o: ../lib/formdata.c
+gnu/libcurl_lib_formdata.o: ../lib/formdata.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_ftp.o: ../lib/ftp.c
+gnu/libcurl_lib_ftp.o: ../lib/ftp.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_getenv.o: ../lib/getenv.c
+gnu/libcurl_lib_getenv.o: ../lib/getenv.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_getinfo.o: ../lib/getinfo.c
+gnu/libcurl_lib_getinfo.o: ../lib/getinfo.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_gtls.o: ../lib/gtls.c
+gnu/libcurl_lib_gtls.o: ../lib/gtls.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_hash.o: ../lib/hash.c
+gnu/libcurl_lib_hash.o: ../lib/hash.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_hostares.o: ../lib/hostares.c
+gnu/libcurl_lib_hostares.o: ../lib/hostares.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_hostasyn.o: ../lib/hostasyn.c
+gnu/libcurl_lib_hostasyn.o: ../lib/hostasyn.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_hostip.o: ../lib/hostip.c
+gnu/libcurl_lib_hostip.o: ../lib/hostip.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_hostip4.o: ../lib/hostip4.c
+gnu/libcurl_lib_hostip4.o: ../lib/hostip4.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_hostip6.o: ../lib/hostip6.c
+gnu/libcurl_lib_hostip6.o: ../lib/hostip6.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_hostsyn.o: ../lib/hostsyn.c
+gnu/libcurl_lib_hostsyn.o: ../lib/hostsyn.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_hostthre.o: ../lib/hostthre.c
+gnu/libcurl_lib_hostthre.o: ../lib/hostthre.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_http.o: ../lib/http.c
+gnu/libcurl_lib_http.o: ../lib/http.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_http_chunks.o: ../lib/http_chunks.c
+gnu/libcurl_lib_http_chunks.o: ../lib/http_chunks.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_http_digest.o: ../lib/http_digest.c
+gnu/libcurl_lib_http_digest.o: ../lib/http_digest.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_http_negotiate.o: ../lib/http_negotiate.c
+gnu/libcurl_lib_http_negotiate.o: ../lib/http_negotiate.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_http_ntlm.o: ../lib/http_ntlm.c
+gnu/libcurl_lib_http_ntlm.o: ../lib/http_ntlm.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_if2ip.o: ../lib/if2ip.c
+gnu/libcurl_lib_if2ip.o: ../lib/if2ip.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_inet_ntop.o: ../lib/inet_ntop.c
+gnu/libcurl_lib_inet_ntop.o: ../lib/inet_ntop.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_inet_pton.o: ../lib/inet_pton.c
+gnu/libcurl_lib_inet_pton.o: ../lib/inet_pton.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_krb4.o: ../lib/krb4.c
+gnu/libcurl_lib_krb4.o: ../lib/krb4.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_ldap.o: ../lib/ldap.c
+gnu/libcurl_lib_ldap.o: ../lib/ldap.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_llist.o: ../lib/llist.c
+gnu/libcurl_lib_llist.o: ../lib/llist.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_md5.o: ../lib/md5.c
+gnu/libcurl_lib_md5.o: ../lib/md5.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_memdebug.o: ../lib/memdebug.c
+gnu/libcurl_lib_memdebug.o: ../lib/memdebug.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_mprintf.o: ../lib/mprintf.c
+gnu/libcurl_lib_mprintf.o: ../lib/mprintf.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_multi.o: ../lib/multi.c
+gnu/libcurl_lib_multi.o: ../lib/multi.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_netrc.o: ../lib/netrc.c
+gnu/libcurl_lib_netrc.o: ../lib/netrc.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_nwlib.o: ../lib/nwlib.c
+gnu/libcurl_lib_parsedate.o: ../lib/parsedate.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_parsedate.o: ../lib/parsedate.c
+gnu/libcurl_lib_progress.o: ../lib/progress.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_progress.o: ../lib/progress.c
+gnu/libcurl_lib_security.o: ../lib/security.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_security.o: ../lib/security.c
+gnu/libcurl_lib_select.o: ../lib/select.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_select.o: ../lib/select.c
+gnu/libcurl_lib_sendf.o: ../lib/sendf.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_sendf.o: ../lib/sendf.c
+gnu/libcurl_lib_share.o: ../lib/share.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_share.o: ../lib/share.c
+gnu/libcurl_lib_socks.o: ../lib/socks.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_socks.o: ../lib/socks.c
+gnu/libcurl_lib_speedcheck.o: ../lib/speedcheck.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_speedcheck.o: ../lib/speedcheck.c
+gnu/libcurl_lib_splay.o: ../lib/splay.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_splay.o: ../lib/splay.c
+gnu/libcurl_lib_ssh.o: ../lib/ssh.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_ssh.o: ../lib/ssh.c
+gnu/libcurl_lib_sslgen.o: ../lib/sslgen.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_sslgen.o: ../lib/sslgen.c
+gnu/libcurl_lib_ssluse.o: ../lib/ssluse.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_ssluse.o: ../lib/ssluse.c
+gnu/libcurl_lib_strdup.o: ../lib/strdup.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_strdup.o: ../lib/strdup.c
+gnu/libcurl_lib_strequal.o: ../lib/strequal.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_strequal.o: ../lib/strequal.c
+gnu/libcurl_lib_strerror.o: ../lib/strerror.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_strerror.o: ../lib/strerror.c
+gnu/libcurl_lib_strtok.o: ../lib/strtok.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_strtok.o: ../lib/strtok.c
+gnu/libcurl_lib_strtoofft.o: ../lib/strtoofft.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_strtoofft.o: ../lib/strtoofft.c
+gnu/libcurl_lib_telnet.o: ../lib/telnet.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_telnet.o: ../lib/telnet.c
+gnu/libcurl_lib_tftp.o: ../lib/tftp.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_tftp.o: ../lib/tftp.c
+gnu/libcurl_lib_timeval.o: ../lib/timeval.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_timeval.o: ../lib/timeval.c
+gnu/libcurl_lib_transfer.o: ../lib/transfer.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_transfer.o: ../lib/transfer.c
+gnu/libcurl_lib_url.o: ../lib/url.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_url.o: ../lib/url.c
+gnu/libcurl_lib_version.o: ../lib/version.c
 	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
 
-libcurl_lib_version.o: ../lib/version.c
-	$(CC) -c -o $@ $(LIBCURL_LIB_CFLAGS) $(CPPDEPS) $<
-
-libcurl_dll_base64.o: ../lib/base64.c
+gnu/libcurl_dll_base64.o: ../lib/base64.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_connect.o: ../lib/connect.c
+gnu/libcurl_dll_connect.o: ../lib/connect.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_content_encoding.o: ../lib/content_encoding.c
+gnu/libcurl_dll_content_encoding.o: ../lib/content_encoding.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_cookie.o: ../lib/cookie.c
+gnu/libcurl_dll_cookie.o: ../lib/cookie.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_dict.o: ../lib/dict.c
+gnu/libcurl_dll_dict.o: ../lib/dict.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_easy.o: ../lib/easy.c
+gnu/libcurl_dll_easy.o: ../lib/easy.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_escape.o: ../lib/escape.c
+gnu/libcurl_dll_escape.o: ../lib/escape.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_file.o: ../lib/file.c
+gnu/libcurl_dll_file.o: ../lib/file.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_formdata.o: ../lib/formdata.c
+gnu/libcurl_dll_formdata.o: ../lib/formdata.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_ftp.o: ../lib/ftp.c
+gnu/libcurl_dll_ftp.o: ../lib/ftp.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_getenv.o: ../lib/getenv.c
+gnu/libcurl_dll_getenv.o: ../lib/getenv.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_getinfo.o: ../lib/getinfo.c
+gnu/libcurl_dll_getinfo.o: ../lib/getinfo.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_gtls.o: ../lib/gtls.c
+gnu/libcurl_dll_gtls.o: ../lib/gtls.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_hash.o: ../lib/hash.c
+gnu/libcurl_dll_hash.o: ../lib/hash.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_hostares.o: ../lib/hostares.c
+gnu/libcurl_dll_hostares.o: ../lib/hostares.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_hostasyn.o: ../lib/hostasyn.c
+gnu/libcurl_dll_hostasyn.o: ../lib/hostasyn.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_hostip.o: ../lib/hostip.c
+gnu/libcurl_dll_hostip.o: ../lib/hostip.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_hostip4.o: ../lib/hostip4.c
+gnu/libcurl_dll_hostip4.o: ../lib/hostip4.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_hostip6.o: ../lib/hostip6.c
+gnu/libcurl_dll_hostip6.o: ../lib/hostip6.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_hostsyn.o: ../lib/hostsyn.c
+gnu/libcurl_dll_hostsyn.o: ../lib/hostsyn.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_hostthre.o: ../lib/hostthre.c
+gnu/libcurl_dll_hostthre.o: ../lib/hostthre.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_http.o: ../lib/http.c
+gnu/libcurl_dll_http.o: ../lib/http.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_http_chunks.o: ../lib/http_chunks.c
+gnu/libcurl_dll_http_chunks.o: ../lib/http_chunks.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_http_digest.o: ../lib/http_digest.c
+gnu/libcurl_dll_http_digest.o: ../lib/http_digest.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_http_negotiate.o: ../lib/http_negotiate.c
+gnu/libcurl_dll_http_negotiate.o: ../lib/http_negotiate.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_http_ntlm.o: ../lib/http_ntlm.c
+gnu/libcurl_dll_http_ntlm.o: ../lib/http_ntlm.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_if2ip.o: ../lib/if2ip.c
+gnu/libcurl_dll_if2ip.o: ../lib/if2ip.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_inet_ntop.o: ../lib/inet_ntop.c
+gnu/libcurl_dll_inet_ntop.o: ../lib/inet_ntop.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_inet_pton.o: ../lib/inet_pton.c
+gnu/libcurl_dll_inet_pton.o: ../lib/inet_pton.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_krb4.o: ../lib/krb4.c
+gnu/libcurl_dll_krb4.o: ../lib/krb4.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_ldap.o: ../lib/ldap.c
+gnu/libcurl_dll_ldap.o: ../lib/ldap.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_llist.o: ../lib/llist.c
+gnu/libcurl_dll_llist.o: ../lib/llist.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_md5.o: ../lib/md5.c
+gnu/libcurl_dll_md5.o: ../lib/md5.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_memdebug.o: ../lib/memdebug.c
+gnu/libcurl_dll_memdebug.o: ../lib/memdebug.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_mprintf.o: ../lib/mprintf.c
+gnu/libcurl_dll_mprintf.o: ../lib/mprintf.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_multi.o: ../lib/multi.c
+gnu/libcurl_dll_multi.o: ../lib/multi.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_netrc.o: ../lib/netrc.c
+gnu/libcurl_dll_netrc.o: ../lib/netrc.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_nwlib.o: ../lib/nwlib.c
+gnu/libcurl_dll_parsedate.o: ../lib/parsedate.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_parsedate.o: ../lib/parsedate.c
+gnu/libcurl_dll_progress.o: ../lib/progress.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_progress.o: ../lib/progress.c
+gnu/libcurl_dll_security.o: ../lib/security.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_security.o: ../lib/security.c
+gnu/libcurl_dll_select.o: ../lib/select.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_select.o: ../lib/select.c
+gnu/libcurl_dll_sendf.o: ../lib/sendf.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_sendf.o: ../lib/sendf.c
+gnu/libcurl_dll_share.o: ../lib/share.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_share.o: ../lib/share.c
+gnu/libcurl_dll_socks.o: ../lib/socks.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_socks.o: ../lib/socks.c
+gnu/libcurl_dll_speedcheck.o: ../lib/speedcheck.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_speedcheck.o: ../lib/speedcheck.c
+gnu/libcurl_dll_splay.o: ../lib/splay.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_splay.o: ../lib/splay.c
+gnu/libcurl_dll_ssh.o: ../lib/ssh.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_ssh.o: ../lib/ssh.c
+gnu/libcurl_dll_sslgen.o: ../lib/sslgen.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_sslgen.o: ../lib/sslgen.c
+gnu/libcurl_dll_ssluse.o: ../lib/ssluse.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_ssluse.o: ../lib/ssluse.c
+gnu/libcurl_dll_strdup.o: ../lib/strdup.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_strdup.o: ../lib/strdup.c
+gnu/libcurl_dll_strequal.o: ../lib/strequal.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_strequal.o: ../lib/strequal.c
+gnu/libcurl_dll_strerror.o: ../lib/strerror.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_strerror.o: ../lib/strerror.c
+gnu/libcurl_dll_strtok.o: ../lib/strtok.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_strtok.o: ../lib/strtok.c
+gnu/libcurl_dll_strtoofft.o: ../lib/strtoofft.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_strtoofft.o: ../lib/strtoofft.c
+gnu/libcurl_dll_telnet.o: ../lib/telnet.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_telnet.o: ../lib/telnet.c
+gnu/libcurl_dll_tftp.o: ../lib/tftp.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_tftp.o: ../lib/tftp.c
+gnu/libcurl_dll_timeval.o: ../lib/timeval.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_timeval.o: ../lib/timeval.c
+gnu/libcurl_dll_transfer.o: ../lib/transfer.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_transfer.o: ../lib/transfer.c
+gnu/libcurl_dll_url.o: ../lib/url.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
-libcurl_dll_url.o: ../lib/url.c
-	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
-
-libcurl_dll_version.o: ../lib/version.c
+gnu/libcurl_dll_version.o: ../lib/version.c
 	$(CC) -c -o $@ $(LIBCURL_DLL_CFLAGS) $(CPPDEPS) $<
 
 .PHONY: all install uninstall clean
 
 
 # Dependencies tracking:
--include ./*.d
+-include gnu/*.d

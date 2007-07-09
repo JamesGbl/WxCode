@@ -7,9 +7,15 @@
 <bakefile-gen>
 
     <include file="../../../build/bakefiles/presets/wxcode.bkgen"/>
-    <add-formats>xcode2</add-formats>
+<!--    <add-formats>xcode2</add-formats> -->
     <input>
         wxcurl.bkl
+        ../thirdparty/curl/build/curl.bkl
     </input>
+
+
+    <del-formats files="../thirdparty/curl/build/curl.bkl">
+        autoconf
+    </del-formats>
 
 </bakefile-gen>

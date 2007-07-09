@@ -43,130 +43,130 @@ LIBCURL_LIB_CFLAGS = /MD$(____libcurl_1) /DWIN32 $(____libcurl) \
 	$(____libcurl_0) $(______libcurl) /Fd..\lib\libcurl.pdb /I..\include \
 	/I..\lib $(____WX_SHARED) $(____WX_DEBUG) $(CPPFLAGS) $(CFLAGS)
 LIBCURL_LIB_OBJECTS =  \
-	objfiles\libcurl_lib_base64.obj \
-	objfiles\libcurl_lib_connect.obj \
-	objfiles\libcurl_lib_content_encoding.obj \
-	objfiles\libcurl_lib_cookie.obj \
-	objfiles\libcurl_lib_dict.obj \
-	objfiles\libcurl_lib_easy.obj \
-	objfiles\libcurl_lib_escape.obj \
-	objfiles\libcurl_lib_file.obj \
-	objfiles\libcurl_lib_formdata.obj \
-	objfiles\libcurl_lib_ftp.obj \
-	objfiles\libcurl_lib_getenv.obj \
-	objfiles\libcurl_lib_getinfo.obj \
-	objfiles\libcurl_lib_gtls.obj \
-	objfiles\libcurl_lib_hash.obj \
-	objfiles\libcurl_lib_hostares.obj \
-	objfiles\libcurl_lib_hostasyn.obj \
-	objfiles\libcurl_lib_hostip.obj \
-	objfiles\libcurl_lib_hostip4.obj \
-	objfiles\libcurl_lib_hostip6.obj \
-	objfiles\libcurl_lib_hostsyn.obj \
-	objfiles\libcurl_lib_hostthre.obj \
-	objfiles\libcurl_lib_http.obj \
-	objfiles\libcurl_lib_http_chunks.obj \
-	objfiles\libcurl_lib_http_digest.obj \
-	objfiles\libcurl_lib_http_negotiate.obj \
-	objfiles\libcurl_lib_http_ntlm.obj \
-	objfiles\libcurl_lib_if2ip.obj \
-	objfiles\libcurl_lib_inet_ntop.obj \
-	objfiles\libcurl_lib_inet_pton.obj \
-	objfiles\libcurl_lib_krb4.obj \
-	objfiles\libcurl_lib_ldap.obj \
-	objfiles\libcurl_lib_llist.obj \
-	objfiles\libcurl_lib_md5.obj \
-	objfiles\libcurl_lib_memdebug.obj \
-	objfiles\libcurl_lib_mprintf.obj \
-	objfiles\libcurl_lib_multi.obj \
-	objfiles\libcurl_lib_netrc.obj \
-	objfiles\libcurl_lib_parsedate.obj \
-	objfiles\libcurl_lib_progress.obj \
-	objfiles\libcurl_lib_security.obj \
-	objfiles\libcurl_lib_select.obj \
-	objfiles\libcurl_lib_sendf.obj \
-	objfiles\libcurl_lib_share.obj \
-	objfiles\libcurl_lib_socks.obj \
-	objfiles\libcurl_lib_speedcheck.obj \
-	objfiles\libcurl_lib_splay.obj \
-	objfiles\libcurl_lib_ssh.obj \
-	objfiles\libcurl_lib_sslgen.obj \
-	objfiles\libcurl_lib_ssluse.obj \
-	objfiles\libcurl_lib_strdup.obj \
-	objfiles\libcurl_lib_strequal.obj \
-	objfiles\libcurl_lib_strerror.obj \
-	objfiles\libcurl_lib_strtok.obj \
-	objfiles\libcurl_lib_strtoofft.obj \
-	objfiles\libcurl_lib_telnet.obj \
-	objfiles\libcurl_lib_tftp.obj \
-	objfiles\libcurl_lib_timeval.obj \
-	objfiles\libcurl_lib_transfer.obj \
-	objfiles\libcurl_lib_url.obj \
-	objfiles\libcurl_lib_version.obj
+	msvc\libcurl_lib_base64.obj \
+	msvc\libcurl_lib_connect.obj \
+	msvc\libcurl_lib_content_encoding.obj \
+	msvc\libcurl_lib_cookie.obj \
+	msvc\libcurl_lib_dict.obj \
+	msvc\libcurl_lib_easy.obj \
+	msvc\libcurl_lib_escape.obj \
+	msvc\libcurl_lib_file.obj \
+	msvc\libcurl_lib_formdata.obj \
+	msvc\libcurl_lib_ftp.obj \
+	msvc\libcurl_lib_getenv.obj \
+	msvc\libcurl_lib_getinfo.obj \
+	msvc\libcurl_lib_gtls.obj \
+	msvc\libcurl_lib_hash.obj \
+	msvc\libcurl_lib_hostares.obj \
+	msvc\libcurl_lib_hostasyn.obj \
+	msvc\libcurl_lib_hostip.obj \
+	msvc\libcurl_lib_hostip4.obj \
+	msvc\libcurl_lib_hostip6.obj \
+	msvc\libcurl_lib_hostsyn.obj \
+	msvc\libcurl_lib_hostthre.obj \
+	msvc\libcurl_lib_http.obj \
+	msvc\libcurl_lib_http_chunks.obj \
+	msvc\libcurl_lib_http_digest.obj \
+	msvc\libcurl_lib_http_negotiate.obj \
+	msvc\libcurl_lib_http_ntlm.obj \
+	msvc\libcurl_lib_if2ip.obj \
+	msvc\libcurl_lib_inet_ntop.obj \
+	msvc\libcurl_lib_inet_pton.obj \
+	msvc\libcurl_lib_krb4.obj \
+	msvc\libcurl_lib_ldap.obj \
+	msvc\libcurl_lib_llist.obj \
+	msvc\libcurl_lib_md5.obj \
+	msvc\libcurl_lib_memdebug.obj \
+	msvc\libcurl_lib_mprintf.obj \
+	msvc\libcurl_lib_multi.obj \
+	msvc\libcurl_lib_netrc.obj \
+	msvc\libcurl_lib_parsedate.obj \
+	msvc\libcurl_lib_progress.obj \
+	msvc\libcurl_lib_security.obj \
+	msvc\libcurl_lib_select.obj \
+	msvc\libcurl_lib_sendf.obj \
+	msvc\libcurl_lib_share.obj \
+	msvc\libcurl_lib_socks.obj \
+	msvc\libcurl_lib_speedcheck.obj \
+	msvc\libcurl_lib_splay.obj \
+	msvc\libcurl_lib_ssh.obj \
+	msvc\libcurl_lib_sslgen.obj \
+	msvc\libcurl_lib_ssluse.obj \
+	msvc\libcurl_lib_strdup.obj \
+	msvc\libcurl_lib_strequal.obj \
+	msvc\libcurl_lib_strerror.obj \
+	msvc\libcurl_lib_strtok.obj \
+	msvc\libcurl_lib_strtoofft.obj \
+	msvc\libcurl_lib_telnet.obj \
+	msvc\libcurl_lib_tftp.obj \
+	msvc\libcurl_lib_timeval.obj \
+	msvc\libcurl_lib_transfer.obj \
+	msvc\libcurl_lib_url.obj \
+	msvc\libcurl_lib_version.obj
 LIBCURL_DLL_CFLAGS = /MD$(____libcurl_1) /DWIN32 $(____libcurl) \
 	$(____libcurl_0) $(______libcurl) /Fd..\lib\libcurl.pdb /I..\include \
 	/I..\lib $(____WX_SHARED) $(____WX_DEBUG) $(CPPFLAGS) $(CFLAGS)
 LIBCURL_DLL_OBJECTS =  \
-	objfiles\libcurl_dll_base64.obj \
-	objfiles\libcurl_dll_connect.obj \
-	objfiles\libcurl_dll_content_encoding.obj \
-	objfiles\libcurl_dll_cookie.obj \
-	objfiles\libcurl_dll_dict.obj \
-	objfiles\libcurl_dll_easy.obj \
-	objfiles\libcurl_dll_escape.obj \
-	objfiles\libcurl_dll_file.obj \
-	objfiles\libcurl_dll_formdata.obj \
-	objfiles\libcurl_dll_ftp.obj \
-	objfiles\libcurl_dll_getenv.obj \
-	objfiles\libcurl_dll_getinfo.obj \
-	objfiles\libcurl_dll_gtls.obj \
-	objfiles\libcurl_dll_hash.obj \
-	objfiles\libcurl_dll_hostares.obj \
-	objfiles\libcurl_dll_hostasyn.obj \
-	objfiles\libcurl_dll_hostip.obj \
-	objfiles\libcurl_dll_hostip4.obj \
-	objfiles\libcurl_dll_hostip6.obj \
-	objfiles\libcurl_dll_hostsyn.obj \
-	objfiles\libcurl_dll_hostthre.obj \
-	objfiles\libcurl_dll_http.obj \
-	objfiles\libcurl_dll_http_chunks.obj \
-	objfiles\libcurl_dll_http_digest.obj \
-	objfiles\libcurl_dll_http_negotiate.obj \
-	objfiles\libcurl_dll_http_ntlm.obj \
-	objfiles\libcurl_dll_if2ip.obj \
-	objfiles\libcurl_dll_inet_ntop.obj \
-	objfiles\libcurl_dll_inet_pton.obj \
-	objfiles\libcurl_dll_krb4.obj \
-	objfiles\libcurl_dll_ldap.obj \
-	objfiles\libcurl_dll_llist.obj \
-	objfiles\libcurl_dll_md5.obj \
-	objfiles\libcurl_dll_memdebug.obj \
-	objfiles\libcurl_dll_mprintf.obj \
-	objfiles\libcurl_dll_multi.obj \
-	objfiles\libcurl_dll_netrc.obj \
-	objfiles\libcurl_dll_parsedate.obj \
-	objfiles\libcurl_dll_progress.obj \
-	objfiles\libcurl_dll_security.obj \
-	objfiles\libcurl_dll_select.obj \
-	objfiles\libcurl_dll_sendf.obj \
-	objfiles\libcurl_dll_share.obj \
-	objfiles\libcurl_dll_socks.obj \
-	objfiles\libcurl_dll_speedcheck.obj \
-	objfiles\libcurl_dll_splay.obj \
-	objfiles\libcurl_dll_ssh.obj \
-	objfiles\libcurl_dll_sslgen.obj \
-	objfiles\libcurl_dll_ssluse.obj \
-	objfiles\libcurl_dll_strdup.obj \
-	objfiles\libcurl_dll_strequal.obj \
-	objfiles\libcurl_dll_strerror.obj \
-	objfiles\libcurl_dll_strtok.obj \
-	objfiles\libcurl_dll_strtoofft.obj \
-	objfiles\libcurl_dll_telnet.obj \
-	objfiles\libcurl_dll_tftp.obj \
-	objfiles\libcurl_dll_timeval.obj \
-	objfiles\libcurl_dll_transfer.obj \
-	objfiles\libcurl_dll_url.obj \
-	objfiles\libcurl_dll_version.obj
+	msvc\libcurl_dll_base64.obj \
+	msvc\libcurl_dll_connect.obj \
+	msvc\libcurl_dll_content_encoding.obj \
+	msvc\libcurl_dll_cookie.obj \
+	msvc\libcurl_dll_dict.obj \
+	msvc\libcurl_dll_easy.obj \
+	msvc\libcurl_dll_escape.obj \
+	msvc\libcurl_dll_file.obj \
+	msvc\libcurl_dll_formdata.obj \
+	msvc\libcurl_dll_ftp.obj \
+	msvc\libcurl_dll_getenv.obj \
+	msvc\libcurl_dll_getinfo.obj \
+	msvc\libcurl_dll_gtls.obj \
+	msvc\libcurl_dll_hash.obj \
+	msvc\libcurl_dll_hostares.obj \
+	msvc\libcurl_dll_hostasyn.obj \
+	msvc\libcurl_dll_hostip.obj \
+	msvc\libcurl_dll_hostip4.obj \
+	msvc\libcurl_dll_hostip6.obj \
+	msvc\libcurl_dll_hostsyn.obj \
+	msvc\libcurl_dll_hostthre.obj \
+	msvc\libcurl_dll_http.obj \
+	msvc\libcurl_dll_http_chunks.obj \
+	msvc\libcurl_dll_http_digest.obj \
+	msvc\libcurl_dll_http_negotiate.obj \
+	msvc\libcurl_dll_http_ntlm.obj \
+	msvc\libcurl_dll_if2ip.obj \
+	msvc\libcurl_dll_inet_ntop.obj \
+	msvc\libcurl_dll_inet_pton.obj \
+	msvc\libcurl_dll_krb4.obj \
+	msvc\libcurl_dll_ldap.obj \
+	msvc\libcurl_dll_llist.obj \
+	msvc\libcurl_dll_md5.obj \
+	msvc\libcurl_dll_memdebug.obj \
+	msvc\libcurl_dll_mprintf.obj \
+	msvc\libcurl_dll_multi.obj \
+	msvc\libcurl_dll_netrc.obj \
+	msvc\libcurl_dll_parsedate.obj \
+	msvc\libcurl_dll_progress.obj \
+	msvc\libcurl_dll_security.obj \
+	msvc\libcurl_dll_select.obj \
+	msvc\libcurl_dll_sendf.obj \
+	msvc\libcurl_dll_share.obj \
+	msvc\libcurl_dll_socks.obj \
+	msvc\libcurl_dll_speedcheck.obj \
+	msvc\libcurl_dll_splay.obj \
+	msvc\libcurl_dll_ssh.obj \
+	msvc\libcurl_dll_sslgen.obj \
+	msvc\libcurl_dll_ssluse.obj \
+	msvc\libcurl_dll_strdup.obj \
+	msvc\libcurl_dll_strequal.obj \
+	msvc\libcurl_dll_strerror.obj \
+	msvc\libcurl_dll_strtok.obj \
+	msvc\libcurl_dll_strtoofft.obj \
+	msvc\libcurl_dll_telnet.obj \
+	msvc\libcurl_dll_tftp.obj \
+	msvc\libcurl_dll_timeval.obj \
+	msvc\libcurl_dll_transfer.obj \
+	msvc\libcurl_dll_url.obj \
+	msvc\libcurl_dll_version.obj
 
 ### Conditionally set variables: ###
 
@@ -220,18 +220,18 @@ ____WX_DEBUG =
 !endif
 
 
-all: objfiles
-objfiles:
-	-if not exist objfiles mkdir objfiles
+all: msvc
+msvc:
+	-if not exist msvc mkdir msvc
 
 ### Targets: ###
 
 all: $(__libcurl_lib___depname) $(__libcurl_dll___depname)
 
 clean: 
-	-if exist objfiles\*.obj del objfiles\*.obj
-	-if exist objfiles\*.res del objfiles\*.res
-	-if exist objfiles\*.pch del objfiles\*.pch
+	-if exist msvc\*.obj del msvc\*.obj
+	-if exist msvc\*.res del msvc\*.res
+	-if exist msvc\*.pch del msvc\*.pch
 	-if exist ..\lib\libcurl.lib del ..\lib\libcurl.lib
 	-if exist ..\lib\libcurl.dll del ..\lib\libcurl.dll
 	-if exist ..\lib\libcurl.ilk del ..\lib\libcurl.ilk
@@ -248,368 +248,368 @@ clean:
 
 !if "$(WX_SHARED)" == "1"
 ..\lib\libcurl.dll: $(LIBCURL_DLL_OBJECTS)
-	link /DLL /NOLOGO /OUT:$@ $(LDFLAGS) $(____libcurl_dll__DEBUGINFO_14) @<<
+	link /DLL /NOLOGO /OUT:$@ $(LDFLAGS) $(____libcurl_dll__DEBUGINFO_14) /pdb:"..\lib\libcurl.pdb" @<<
 	$(LIBCURL_DLL_OBJECTS)  wsock32.lib winmm.lib /IMPLIB:..\lib\libcurl.lib
 <<
 !endif
 
-objfiles\libcurl_lib_base64.obj: ..\lib\base64.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_base64.obj: ..\lib\base64.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\base64.c
 
-objfiles\libcurl_lib_connect.obj: ..\lib\connect.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_connect.obj: ..\lib\connect.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\connect.c
 
-objfiles\libcurl_lib_content_encoding.obj: ..\lib\content_encoding.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_content_encoding.obj: ..\lib\content_encoding.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\content_encoding.c
 
-objfiles\libcurl_lib_cookie.obj: ..\lib\cookie.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_cookie.obj: ..\lib\cookie.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\cookie.c
 
-objfiles\libcurl_lib_dict.obj: ..\lib\dict.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_dict.obj: ..\lib\dict.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\dict.c
 
-objfiles\libcurl_lib_easy.obj: ..\lib\easy.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_easy.obj: ..\lib\easy.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\easy.c
 
-objfiles\libcurl_lib_escape.obj: ..\lib\escape.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_escape.obj: ..\lib\escape.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\escape.c
 
-objfiles\libcurl_lib_file.obj: ..\lib\file.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_file.obj: ..\lib\file.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\file.c
 
-objfiles\libcurl_lib_formdata.obj: ..\lib\formdata.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_formdata.obj: ..\lib\formdata.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\formdata.c
 
-objfiles\libcurl_lib_ftp.obj: ..\lib\ftp.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_ftp.obj: ..\lib\ftp.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\ftp.c
 
-objfiles\libcurl_lib_getenv.obj: ..\lib\getenv.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_getenv.obj: ..\lib\getenv.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\getenv.c
 
-objfiles\libcurl_lib_getinfo.obj: ..\lib\getinfo.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_getinfo.obj: ..\lib\getinfo.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\getinfo.c
 
-objfiles\libcurl_lib_gtls.obj: ..\lib\gtls.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_gtls.obj: ..\lib\gtls.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\gtls.c
 
-objfiles\libcurl_lib_hash.obj: ..\lib\hash.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_hash.obj: ..\lib\hash.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\hash.c
 
-objfiles\libcurl_lib_hostares.obj: ..\lib\hostares.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_hostares.obj: ..\lib\hostares.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\hostares.c
 
-objfiles\libcurl_lib_hostasyn.obj: ..\lib\hostasyn.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_hostasyn.obj: ..\lib\hostasyn.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\hostasyn.c
 
-objfiles\libcurl_lib_hostip.obj: ..\lib\hostip.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_hostip.obj: ..\lib\hostip.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\hostip.c
 
-objfiles\libcurl_lib_hostip4.obj: ..\lib\hostip4.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_hostip4.obj: ..\lib\hostip4.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\hostip4.c
 
-objfiles\libcurl_lib_hostip6.obj: ..\lib\hostip6.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_hostip6.obj: ..\lib\hostip6.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\hostip6.c
 
-objfiles\libcurl_lib_hostsyn.obj: ..\lib\hostsyn.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_hostsyn.obj: ..\lib\hostsyn.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\hostsyn.c
 
-objfiles\libcurl_lib_hostthre.obj: ..\lib\hostthre.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_hostthre.obj: ..\lib\hostthre.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\hostthre.c
 
-objfiles\libcurl_lib_http.obj: ..\lib\http.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_http.obj: ..\lib\http.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\http.c
 
-objfiles\libcurl_lib_http_chunks.obj: ..\lib\http_chunks.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_http_chunks.obj: ..\lib\http_chunks.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\http_chunks.c
 
-objfiles\libcurl_lib_http_digest.obj: ..\lib\http_digest.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_http_digest.obj: ..\lib\http_digest.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\http_digest.c
 
-objfiles\libcurl_lib_http_negotiate.obj: ..\lib\http_negotiate.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_http_negotiate.obj: ..\lib\http_negotiate.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\http_negotiate.c
 
-objfiles\libcurl_lib_http_ntlm.obj: ..\lib\http_ntlm.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_http_ntlm.obj: ..\lib\http_ntlm.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\http_ntlm.c
 
-objfiles\libcurl_lib_if2ip.obj: ..\lib\if2ip.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_if2ip.obj: ..\lib\if2ip.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\if2ip.c
 
-objfiles\libcurl_lib_inet_ntop.obj: ..\lib\inet_ntop.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_inet_ntop.obj: ..\lib\inet_ntop.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\inet_ntop.c
 
-objfiles\libcurl_lib_inet_pton.obj: ..\lib\inet_pton.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_inet_pton.obj: ..\lib\inet_pton.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\inet_pton.c
 
-objfiles\libcurl_lib_krb4.obj: ..\lib\krb4.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_krb4.obj: ..\lib\krb4.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\krb4.c
 
-objfiles\libcurl_lib_ldap.obj: ..\lib\ldap.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_ldap.obj: ..\lib\ldap.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\ldap.c
 
-objfiles\libcurl_lib_llist.obj: ..\lib\llist.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_llist.obj: ..\lib\llist.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\llist.c
 
-objfiles\libcurl_lib_md5.obj: ..\lib\md5.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_md5.obj: ..\lib\md5.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\md5.c
 
-objfiles\libcurl_lib_memdebug.obj: ..\lib\memdebug.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_memdebug.obj: ..\lib\memdebug.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\memdebug.c
 
-objfiles\libcurl_lib_mprintf.obj: ..\lib\mprintf.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_mprintf.obj: ..\lib\mprintf.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\mprintf.c
 
-objfiles\libcurl_lib_multi.obj: ..\lib\multi.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_multi.obj: ..\lib\multi.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\multi.c
 
-objfiles\libcurl_lib_netrc.obj: ..\lib\netrc.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_netrc.obj: ..\lib\netrc.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\netrc.c
 
-objfiles\libcurl_lib_parsedate.obj: ..\lib\parsedate.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_parsedate.obj: ..\lib\parsedate.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\parsedate.c
 
-objfiles\libcurl_lib_progress.obj: ..\lib\progress.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_progress.obj: ..\lib\progress.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\progress.c
 
-objfiles\libcurl_lib_security.obj: ..\lib\security.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_security.obj: ..\lib\security.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\security.c
 
-objfiles\libcurl_lib_select.obj: ..\lib\select.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_select.obj: ..\lib\select.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\select.c
 
-objfiles\libcurl_lib_sendf.obj: ..\lib\sendf.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_sendf.obj: ..\lib\sendf.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\sendf.c
 
-objfiles\libcurl_lib_share.obj: ..\lib\share.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_share.obj: ..\lib\share.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\share.c
 
-objfiles\libcurl_lib_socks.obj: ..\lib\socks.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_socks.obj: ..\lib\socks.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\socks.c
 
-objfiles\libcurl_lib_speedcheck.obj: ..\lib\speedcheck.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_speedcheck.obj: ..\lib\speedcheck.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\speedcheck.c
 
-objfiles\libcurl_lib_splay.obj: ..\lib\splay.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_splay.obj: ..\lib\splay.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\splay.c
 
-objfiles\libcurl_lib_ssh.obj: ..\lib\ssh.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_ssh.obj: ..\lib\ssh.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\ssh.c
 
-objfiles\libcurl_lib_sslgen.obj: ..\lib\sslgen.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_sslgen.obj: ..\lib\sslgen.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\sslgen.c
 
-objfiles\libcurl_lib_ssluse.obj: ..\lib\ssluse.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_ssluse.obj: ..\lib\ssluse.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\ssluse.c
 
-objfiles\libcurl_lib_strdup.obj: ..\lib\strdup.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_strdup.obj: ..\lib\strdup.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\strdup.c
 
-objfiles\libcurl_lib_strequal.obj: ..\lib\strequal.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_strequal.obj: ..\lib\strequal.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\strequal.c
 
-objfiles\libcurl_lib_strerror.obj: ..\lib\strerror.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_strerror.obj: ..\lib\strerror.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\strerror.c
 
-objfiles\libcurl_lib_strtok.obj: ..\lib\strtok.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_strtok.obj: ..\lib\strtok.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\strtok.c
 
-objfiles\libcurl_lib_strtoofft.obj: ..\lib\strtoofft.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_strtoofft.obj: ..\lib\strtoofft.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\strtoofft.c
 
-objfiles\libcurl_lib_telnet.obj: ..\lib\telnet.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_telnet.obj: ..\lib\telnet.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\telnet.c
 
-objfiles\libcurl_lib_tftp.obj: ..\lib\tftp.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_tftp.obj: ..\lib\tftp.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\tftp.c
 
-objfiles\libcurl_lib_timeval.obj: ..\lib\timeval.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_timeval.obj: ..\lib\timeval.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\timeval.c
 
-objfiles\libcurl_lib_transfer.obj: ..\lib\transfer.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_transfer.obj: ..\lib\transfer.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\transfer.c
 
-objfiles\libcurl_lib_url.obj: ..\lib\url.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_url.obj: ..\lib\url.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\url.c
 
-objfiles\libcurl_lib_version.obj: ..\lib\version.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) $**
+msvc\libcurl_lib_version.obj: ..\lib\version.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_LIB_CFLAGS) ..\lib\version.c
 
-objfiles\libcurl_dll_base64.obj: ..\lib\base64.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_base64.obj: ..\lib\base64.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\base64.c
 
-objfiles\libcurl_dll_connect.obj: ..\lib\connect.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_connect.obj: ..\lib\connect.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\connect.c
 
-objfiles\libcurl_dll_content_encoding.obj: ..\lib\content_encoding.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_content_encoding.obj: ..\lib\content_encoding.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\content_encoding.c
 
-objfiles\libcurl_dll_cookie.obj: ..\lib\cookie.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_cookie.obj: ..\lib\cookie.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\cookie.c
 
-objfiles\libcurl_dll_dict.obj: ..\lib\dict.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_dict.obj: ..\lib\dict.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\dict.c
 
-objfiles\libcurl_dll_easy.obj: ..\lib\easy.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_easy.obj: ..\lib\easy.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\easy.c
 
-objfiles\libcurl_dll_escape.obj: ..\lib\escape.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_escape.obj: ..\lib\escape.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\escape.c
 
-objfiles\libcurl_dll_file.obj: ..\lib\file.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_file.obj: ..\lib\file.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\file.c
 
-objfiles\libcurl_dll_formdata.obj: ..\lib\formdata.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_formdata.obj: ..\lib\formdata.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\formdata.c
 
-objfiles\libcurl_dll_ftp.obj: ..\lib\ftp.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_ftp.obj: ..\lib\ftp.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\ftp.c
 
-objfiles\libcurl_dll_getenv.obj: ..\lib\getenv.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_getenv.obj: ..\lib\getenv.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\getenv.c
 
-objfiles\libcurl_dll_getinfo.obj: ..\lib\getinfo.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_getinfo.obj: ..\lib\getinfo.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\getinfo.c
 
-objfiles\libcurl_dll_gtls.obj: ..\lib\gtls.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_gtls.obj: ..\lib\gtls.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\gtls.c
 
-objfiles\libcurl_dll_hash.obj: ..\lib\hash.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_hash.obj: ..\lib\hash.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\hash.c
 
-objfiles\libcurl_dll_hostares.obj: ..\lib\hostares.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_hostares.obj: ..\lib\hostares.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\hostares.c
 
-objfiles\libcurl_dll_hostasyn.obj: ..\lib\hostasyn.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_hostasyn.obj: ..\lib\hostasyn.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\hostasyn.c
 
-objfiles\libcurl_dll_hostip.obj: ..\lib\hostip.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_hostip.obj: ..\lib\hostip.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\hostip.c
 
-objfiles\libcurl_dll_hostip4.obj: ..\lib\hostip4.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_hostip4.obj: ..\lib\hostip4.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\hostip4.c
 
-objfiles\libcurl_dll_hostip6.obj: ..\lib\hostip6.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_hostip6.obj: ..\lib\hostip6.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\hostip6.c
 
-objfiles\libcurl_dll_hostsyn.obj: ..\lib\hostsyn.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_hostsyn.obj: ..\lib\hostsyn.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\hostsyn.c
 
-objfiles\libcurl_dll_hostthre.obj: ..\lib\hostthre.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_hostthre.obj: ..\lib\hostthre.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\hostthre.c
 
-objfiles\libcurl_dll_http.obj: ..\lib\http.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_http.obj: ..\lib\http.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\http.c
 
-objfiles\libcurl_dll_http_chunks.obj: ..\lib\http_chunks.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_http_chunks.obj: ..\lib\http_chunks.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\http_chunks.c
 
-objfiles\libcurl_dll_http_digest.obj: ..\lib\http_digest.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_http_digest.obj: ..\lib\http_digest.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\http_digest.c
 
-objfiles\libcurl_dll_http_negotiate.obj: ..\lib\http_negotiate.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_http_negotiate.obj: ..\lib\http_negotiate.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\http_negotiate.c
 
-objfiles\libcurl_dll_http_ntlm.obj: ..\lib\http_ntlm.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_http_ntlm.obj: ..\lib\http_ntlm.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\http_ntlm.c
 
-objfiles\libcurl_dll_if2ip.obj: ..\lib\if2ip.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_if2ip.obj: ..\lib\if2ip.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\if2ip.c
 
-objfiles\libcurl_dll_inet_ntop.obj: ..\lib\inet_ntop.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_inet_ntop.obj: ..\lib\inet_ntop.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\inet_ntop.c
 
-objfiles\libcurl_dll_inet_pton.obj: ..\lib\inet_pton.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_inet_pton.obj: ..\lib\inet_pton.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\inet_pton.c
 
-objfiles\libcurl_dll_krb4.obj: ..\lib\krb4.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_krb4.obj: ..\lib\krb4.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\krb4.c
 
-objfiles\libcurl_dll_ldap.obj: ..\lib\ldap.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_ldap.obj: ..\lib\ldap.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\ldap.c
 
-objfiles\libcurl_dll_llist.obj: ..\lib\llist.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_llist.obj: ..\lib\llist.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\llist.c
 
-objfiles\libcurl_dll_md5.obj: ..\lib\md5.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_md5.obj: ..\lib\md5.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\md5.c
 
-objfiles\libcurl_dll_memdebug.obj: ..\lib\memdebug.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_memdebug.obj: ..\lib\memdebug.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\memdebug.c
 
-objfiles\libcurl_dll_mprintf.obj: ..\lib\mprintf.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_mprintf.obj: ..\lib\mprintf.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\mprintf.c
 
-objfiles\libcurl_dll_multi.obj: ..\lib\multi.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_multi.obj: ..\lib\multi.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\multi.c
 
-objfiles\libcurl_dll_netrc.obj: ..\lib\netrc.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_netrc.obj: ..\lib\netrc.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\netrc.c
 
-objfiles\libcurl_dll_parsedate.obj: ..\lib\parsedate.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_parsedate.obj: ..\lib\parsedate.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\parsedate.c
 
-objfiles\libcurl_dll_progress.obj: ..\lib\progress.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_progress.obj: ..\lib\progress.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\progress.c
 
-objfiles\libcurl_dll_security.obj: ..\lib\security.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_security.obj: ..\lib\security.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\security.c
 
-objfiles\libcurl_dll_select.obj: ..\lib\select.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_select.obj: ..\lib\select.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\select.c
 
-objfiles\libcurl_dll_sendf.obj: ..\lib\sendf.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_sendf.obj: ..\lib\sendf.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\sendf.c
 
-objfiles\libcurl_dll_share.obj: ..\lib\share.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_share.obj: ..\lib\share.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\share.c
 
-objfiles\libcurl_dll_socks.obj: ..\lib\socks.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_socks.obj: ..\lib\socks.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\socks.c
 
-objfiles\libcurl_dll_speedcheck.obj: ..\lib\speedcheck.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_speedcheck.obj: ..\lib\speedcheck.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\speedcheck.c
 
-objfiles\libcurl_dll_splay.obj: ..\lib\splay.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_splay.obj: ..\lib\splay.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\splay.c
 
-objfiles\libcurl_dll_ssh.obj: ..\lib\ssh.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_ssh.obj: ..\lib\ssh.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\ssh.c
 
-objfiles\libcurl_dll_sslgen.obj: ..\lib\sslgen.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_sslgen.obj: ..\lib\sslgen.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\sslgen.c
 
-objfiles\libcurl_dll_ssluse.obj: ..\lib\ssluse.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_ssluse.obj: ..\lib\ssluse.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\ssluse.c
 
-objfiles\libcurl_dll_strdup.obj: ..\lib\strdup.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_strdup.obj: ..\lib\strdup.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\strdup.c
 
-objfiles\libcurl_dll_strequal.obj: ..\lib\strequal.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_strequal.obj: ..\lib\strequal.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\strequal.c
 
-objfiles\libcurl_dll_strerror.obj: ..\lib\strerror.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_strerror.obj: ..\lib\strerror.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\strerror.c
 
-objfiles\libcurl_dll_strtok.obj: ..\lib\strtok.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_strtok.obj: ..\lib\strtok.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\strtok.c
 
-objfiles\libcurl_dll_strtoofft.obj: ..\lib\strtoofft.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_strtoofft.obj: ..\lib\strtoofft.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\strtoofft.c
 
-objfiles\libcurl_dll_telnet.obj: ..\lib\telnet.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_telnet.obj: ..\lib\telnet.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\telnet.c
 
-objfiles\libcurl_dll_tftp.obj: ..\lib\tftp.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_tftp.obj: ..\lib\tftp.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\tftp.c
 
-objfiles\libcurl_dll_timeval.obj: ..\lib\timeval.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_timeval.obj: ..\lib\timeval.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\timeval.c
 
-objfiles\libcurl_dll_transfer.obj: ..\lib\transfer.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_transfer.obj: ..\lib\transfer.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\transfer.c
 
-objfiles\libcurl_dll_url.obj: ..\lib\url.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_url.obj: ..\lib\url.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\url.c
 
-objfiles\libcurl_dll_version.obj: ..\lib\version.c
-	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) $**
+msvc\libcurl_dll_version.obj: ..\lib\version.c
+	$(CC) /c /nologo /TC /Fo$@ $(LIBCURL_DLL_CFLAGS) ..\lib\version.c
 

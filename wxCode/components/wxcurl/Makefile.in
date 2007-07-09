@@ -51,86 +51,86 @@ DESTDIR =
 WXCURL_LIB_CXXFLAGS = -I$(srcdir)/include `curl-config --cflags` $(WX_CXXFLAGS) \
 	$(CPPFLAGS) $(CXXFLAGS)
 WXCURL_LIB_OBJECTS =  \
+	wxcurl_lib_base.o \
 	wxcurl_lib_dav.o \
-	wxcurl_lib_http.o \
-	wxcurl_lib_panel.o \
-	wxcurl_lib_ftpparse.o \
+	wxcurl_lib_davtool.o \
 	wxcurl_lib_dialog.o \
 	wxcurl_lib_ftp.o \
+	wxcurl_lib_ftpparse.o \
 	wxcurl_lib_ftptool.o \
-	wxcurl_lib_base.o \
+	wxcurl_lib_http.o \
+	wxcurl_lib_panel.o \
 	wxcurl_lib_telnet.o \
-	wxcurl_lib_davtool.o \
 	wxcurl_lib_thread.o \
 	wxcurl_lib_utils.o
 WXCURL_LIB_HEADERS =  \
-	include/wx/curl/dialog.h \
-	include/wx/curl/dav.h \
-	include/wx/curl/ftp.h \
-	include/wx/curl/telnet.h \
 	include/wx/curl/base.h \
+	include/wx/curl/dav.h \
+	include/wx/curl/davtool.h \
+	include/wx/curl/dialog.h \
+	include/wx/curl/ftp.h \
 	include/wx/curl/ftptool.h \
 	include/wx/curl/http.h \
-	include/wx/curl/utils.h \
 	include/wx/curl/panel.h \
+	include/wx/curl/telnet.h \
 	include/wx/curl/thread.h \
-	include/wx/curl/davtool.h
+	include/wx/curl/utils.h
 WXCURL_DLL_CXXFLAGS = -I$(srcdir)/include -DWXMAKINGDLL_WXCURL `curl-config \
 	--cflags` $(PIC_FLAG) $(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 WXCURL_DLL_OBJECTS =  \
+	wxcurl_dll_base.o \
 	wxcurl_dll_dav.o \
-	wxcurl_dll_http.o \
-	wxcurl_dll_panel.o \
-	wxcurl_dll_ftpparse.o \
+	wxcurl_dll_davtool.o \
 	wxcurl_dll_dialog.o \
 	wxcurl_dll_ftp.o \
+	wxcurl_dll_ftpparse.o \
 	wxcurl_dll_ftptool.o \
-	wxcurl_dll_base.o \
+	wxcurl_dll_http.o \
+	wxcurl_dll_panel.o \
 	wxcurl_dll_telnet.o \
-	wxcurl_dll_davtool.o \
 	wxcurl_dll_thread.o \
 	wxcurl_dll_utils.o
 WXCURL_DLL_HEADERS =  \
-	include/wx/curl/dialog.h \
-	include/wx/curl/dav.h \
-	include/wx/curl/ftp.h \
-	include/wx/curl/telnet.h \
 	include/wx/curl/base.h \
+	include/wx/curl/dav.h \
+	include/wx/curl/davtool.h \
+	include/wx/curl/dialog.h \
+	include/wx/curl/ftp.h \
 	include/wx/curl/ftptool.h \
 	include/wx/curl/http.h \
-	include/wx/curl/utils.h \
 	include/wx/curl/panel.h \
+	include/wx/curl/telnet.h \
 	include/wx/curl/thread.h \
-	include/wx/curl/davtool.h
+	include/wx/curl/utils.h
 PROTOCOLS_CXXFLAGS = -I$(srcdir)/include `curl-config --cflags` $(WX_CXXFLAGS) \
 	$(CPPFLAGS) $(CXXFLAGS)
 PROTOCOLS_OBJECTS =  \
-	protocols_wxDeleteDialog.o \
-	protocols_wxGetFileDialog.o \
-	protocols_wxPutFTPDialog.o \
-	protocols_wxPutTextDialog.o \
-	protocols_wxGetDialog.o \
-	protocols_wxPropfindDialog.o \
-	protocols_wxPostDialog.o \
-	protocols_wxCURLDlg.o \
-	protocols_wxInfoFTPDialog.o \
-	protocols_wxTraceDialog.o \
-	protocols_wxGetFSDialog.o \
-	protocols_wxFTPDeleteDialog.o \
-	protocols_wxPutDialog.o \
-	protocols_wxMkcolDialog.o \
-	protocols_wxGetFTPDialog.o \
-	protocols_wxPutFTPTextDialog.o \
-	protocols_wxOptionsDialog.o \
-	protocols_wxGetFTPFileDialog.o \
-	protocols_wxFTPRenameDialog.o \
-	protocols_wxGetFSFTPDialog.o \
-	protocols_wxNlstFTPDialog.o \
-	protocols_wxFTPMkdirDialog.o \
-	protocols_wxHeadDialog.o \
-	protocols_wxFTPRmdirDialog.o \
-	protocols_wxListFTPDialog.o \
 	protocols_wxCURLApp.o \
+	protocols_wxCURLDlg.o \
+	protocols_wxDeleteDialog.o \
+	protocols_wxFTPDeleteDialog.o \
+	protocols_wxFTPMkdirDialog.o \
+	protocols_wxFTPRenameDialog.o \
+	protocols_wxFTPRmdirDialog.o \
+	protocols_wxGetDialog.o \
+	protocols_wxGetFileDialog.o \
+	protocols_wxGetFSDialog.o \
+	protocols_wxGetFSFTPDialog.o \
+	protocols_wxGetFTPDialog.o \
+	protocols_wxGetFTPFileDialog.o \
+	protocols_wxHeadDialog.o \
+	protocols_wxInfoFTPDialog.o \
+	protocols_wxListFTPDialog.o \
+	protocols_wxMkcolDialog.o \
+	protocols_wxNlstFTPDialog.o \
+	protocols_wxOptionsDialog.o \
+	protocols_wxPostDialog.o \
+	protocols_wxPropfindDialog.o \
+	protocols_wxPutDialog.o \
+	protocols_wxPutFTPDialog.o \
+	protocols_wxPutFTPTextDialog.o \
+	protocols_wxPutTextDialog.o \
+	protocols_wxTraceDialog.o \
 	$(__protocols___win32rc)
 DIALOGS_CXXFLAGS = -I$(srcdir)/include `curl-config --cflags` $(WX_CXXFLAGS) \
 	$(CPPFLAGS) $(CXXFLAGS)
@@ -338,17 +338,14 @@ zip: clean
 	del ../$(srcdir)/wxcurl.zip
 	( cd $(srcdir)/.. && zip -r9 wxcurl.zip wxcurl -x "*.pdb" -x "*.log" -x "*.o*" )
 
+wxcurl_lib_base.o: $(srcdir)/src/base.cpp
+	$(CXXC) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(srcdir)/src/base.cpp
+
 wxcurl_lib_dav.o: $(srcdir)/src/dav.cpp
 	$(CXXC) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(srcdir)/src/dav.cpp
 
-wxcurl_lib_http.o: $(srcdir)/src/http.cpp
-	$(CXXC) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(srcdir)/src/http.cpp
-
-wxcurl_lib_panel.o: $(srcdir)/src/panel.cpp
-	$(CXXC) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(srcdir)/src/panel.cpp
-
-wxcurl_lib_ftpparse.o: $(srcdir)/src/ftpparse.cpp
-	$(CXXC) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(srcdir)/src/ftpparse.cpp
+wxcurl_lib_davtool.o: $(srcdir)/src/davtool.cpp
+	$(CXXC) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(srcdir)/src/davtool.cpp
 
 wxcurl_lib_dialog.o: $(srcdir)/src/dialog.cpp
 	$(CXXC) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(srcdir)/src/dialog.cpp
@@ -356,17 +353,20 @@ wxcurl_lib_dialog.o: $(srcdir)/src/dialog.cpp
 wxcurl_lib_ftp.o: $(srcdir)/src/ftp.cpp
 	$(CXXC) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(srcdir)/src/ftp.cpp
 
+wxcurl_lib_ftpparse.o: $(srcdir)/src/ftpparse.cpp
+	$(CXXC) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(srcdir)/src/ftpparse.cpp
+
 wxcurl_lib_ftptool.o: $(srcdir)/src/ftptool.cpp
 	$(CXXC) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(srcdir)/src/ftptool.cpp
 
-wxcurl_lib_base.o: $(srcdir)/src/base.cpp
-	$(CXXC) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(srcdir)/src/base.cpp
+wxcurl_lib_http.o: $(srcdir)/src/http.cpp
+	$(CXXC) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(srcdir)/src/http.cpp
+
+wxcurl_lib_panel.o: $(srcdir)/src/panel.cpp
+	$(CXXC) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(srcdir)/src/panel.cpp
 
 wxcurl_lib_telnet.o: $(srcdir)/src/telnet.cpp
 	$(CXXC) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(srcdir)/src/telnet.cpp
-
-wxcurl_lib_davtool.o: $(srcdir)/src/davtool.cpp
-	$(CXXC) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(srcdir)/src/davtool.cpp
 
 wxcurl_lib_thread.o: $(srcdir)/src/thread.cpp
 	$(CXXC) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(srcdir)/src/thread.cpp
@@ -374,17 +374,14 @@ wxcurl_lib_thread.o: $(srcdir)/src/thread.cpp
 wxcurl_lib_utils.o: $(srcdir)/src/utils.cpp
 	$(CXXC) -c -o $@ $(WXCURL_LIB_CXXFLAGS) $(srcdir)/src/utils.cpp
 
+wxcurl_dll_base.o: $(srcdir)/src/base.cpp
+	$(CXXC) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(srcdir)/src/base.cpp
+
 wxcurl_dll_dav.o: $(srcdir)/src/dav.cpp
 	$(CXXC) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(srcdir)/src/dav.cpp
 
-wxcurl_dll_http.o: $(srcdir)/src/http.cpp
-	$(CXXC) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(srcdir)/src/http.cpp
-
-wxcurl_dll_panel.o: $(srcdir)/src/panel.cpp
-	$(CXXC) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(srcdir)/src/panel.cpp
-
-wxcurl_dll_ftpparse.o: $(srcdir)/src/ftpparse.cpp
-	$(CXXC) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(srcdir)/src/ftpparse.cpp
+wxcurl_dll_davtool.o: $(srcdir)/src/davtool.cpp
+	$(CXXC) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(srcdir)/src/davtool.cpp
 
 wxcurl_dll_dialog.o: $(srcdir)/src/dialog.cpp
 	$(CXXC) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(srcdir)/src/dialog.cpp
@@ -392,17 +389,20 @@ wxcurl_dll_dialog.o: $(srcdir)/src/dialog.cpp
 wxcurl_dll_ftp.o: $(srcdir)/src/ftp.cpp
 	$(CXXC) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(srcdir)/src/ftp.cpp
 
+wxcurl_dll_ftpparse.o: $(srcdir)/src/ftpparse.cpp
+	$(CXXC) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(srcdir)/src/ftpparse.cpp
+
 wxcurl_dll_ftptool.o: $(srcdir)/src/ftptool.cpp
 	$(CXXC) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(srcdir)/src/ftptool.cpp
 
-wxcurl_dll_base.o: $(srcdir)/src/base.cpp
-	$(CXXC) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(srcdir)/src/base.cpp
+wxcurl_dll_http.o: $(srcdir)/src/http.cpp
+	$(CXXC) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(srcdir)/src/http.cpp
+
+wxcurl_dll_panel.o: $(srcdir)/src/panel.cpp
+	$(CXXC) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(srcdir)/src/panel.cpp
 
 wxcurl_dll_telnet.o: $(srcdir)/src/telnet.cpp
 	$(CXXC) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(srcdir)/src/telnet.cpp
-
-wxcurl_dll_davtool.o: $(srcdir)/src/davtool.cpp
-	$(CXXC) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(srcdir)/src/davtool.cpp
 
 wxcurl_dll_thread.o: $(srcdir)/src/thread.cpp
 	$(CXXC) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(srcdir)/src/thread.cpp
@@ -410,83 +410,83 @@ wxcurl_dll_thread.o: $(srcdir)/src/thread.cpp
 wxcurl_dll_utils.o: $(srcdir)/src/utils.cpp
 	$(CXXC) -c -o $@ $(WXCURL_DLL_CXXFLAGS) $(srcdir)/src/utils.cpp
 
-protocols_wxDeleteDialog.o: $(srcdir)/samples/protocols/wxDeleteDialog.cpp
-	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxDeleteDialog.cpp
-
-protocols_wxGetFileDialog.o: $(srcdir)/samples/protocols/wxGetFileDialog.cpp
-	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxGetFileDialog.cpp
-
-protocols_wxPutFTPDialog.o: $(srcdir)/samples/protocols/wxPutFTPDialog.cpp
-	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxPutFTPDialog.cpp
-
-protocols_wxPutTextDialog.o: $(srcdir)/samples/protocols/wxPutTextDialog.cpp
-	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxPutTextDialog.cpp
-
-protocols_wxGetDialog.o: $(srcdir)/samples/protocols/wxGetDialog.cpp
-	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxGetDialog.cpp
-
-protocols_wxPropfindDialog.o: $(srcdir)/samples/protocols/wxPropfindDialog.cpp
-	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxPropfindDialog.cpp
-
-protocols_wxPostDialog.o: $(srcdir)/samples/protocols/wxPostDialog.cpp
-	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxPostDialog.cpp
+protocols_wxCURLApp.o: $(srcdir)/samples/protocols/wxCURLApp.cpp
+	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxCURLApp.cpp
 
 protocols_wxCURLDlg.o: $(srcdir)/samples/protocols/wxCURLDlg.cpp
 	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxCURLDlg.cpp
 
-protocols_wxInfoFTPDialog.o: $(srcdir)/samples/protocols/wxInfoFTPDialog.cpp
-	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxInfoFTPDialog.cpp
-
-protocols_wxTraceDialog.o: $(srcdir)/samples/protocols/wxTraceDialog.cpp
-	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxTraceDialog.cpp
-
-protocols_wxGetFSDialog.o: $(srcdir)/samples/protocols/wxGetFSDialog.cpp
-	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxGetFSDialog.cpp
+protocols_wxDeleteDialog.o: $(srcdir)/samples/protocols/wxDeleteDialog.cpp
+	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxDeleteDialog.cpp
 
 protocols_wxFTPDeleteDialog.o: $(srcdir)/samples/protocols/wxFTPDeleteDialog.cpp
 	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxFTPDeleteDialog.cpp
 
-protocols_wxPutDialog.o: $(srcdir)/samples/protocols/wxPutDialog.cpp
-	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxPutDialog.cpp
-
-protocols_wxMkcolDialog.o: $(srcdir)/samples/protocols/wxMkcolDialog.cpp
-	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxMkcolDialog.cpp
-
-protocols_wxGetFTPDialog.o: $(srcdir)/samples/protocols/wxGetFTPDialog.cpp
-	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxGetFTPDialog.cpp
-
-protocols_wxPutFTPTextDialog.o: $(srcdir)/samples/protocols/wxPutFTPTextDialog.cpp
-	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxPutFTPTextDialog.cpp
-
-protocols_wxOptionsDialog.o: $(srcdir)/samples/protocols/wxOptionsDialog.cpp
-	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxOptionsDialog.cpp
-
-protocols_wxGetFTPFileDialog.o: $(srcdir)/samples/protocols/wxGetFTPFileDialog.cpp
-	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxGetFTPFileDialog.cpp
+protocols_wxFTPMkdirDialog.o: $(srcdir)/samples/protocols/wxFTPMkdirDialog.cpp
+	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxFTPMkdirDialog.cpp
 
 protocols_wxFTPRenameDialog.o: $(srcdir)/samples/protocols/wxFTPRenameDialog.cpp
 	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxFTPRenameDialog.cpp
 
+protocols_wxFTPRmdirDialog.o: $(srcdir)/samples/protocols/wxFTPRmdirDialog.cpp
+	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxFTPRmdirDialog.cpp
+
+protocols_wxGetDialog.o: $(srcdir)/samples/protocols/wxGetDialog.cpp
+	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxGetDialog.cpp
+
+protocols_wxGetFileDialog.o: $(srcdir)/samples/protocols/wxGetFileDialog.cpp
+	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxGetFileDialog.cpp
+
+protocols_wxGetFSDialog.o: $(srcdir)/samples/protocols/wxGetFSDialog.cpp
+	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxGetFSDialog.cpp
+
 protocols_wxGetFSFTPDialog.o: $(srcdir)/samples/protocols/wxGetFSFTPDialog.cpp
 	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxGetFSFTPDialog.cpp
 
-protocols_wxNlstFTPDialog.o: $(srcdir)/samples/protocols/wxNlstFTPDialog.cpp
-	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxNlstFTPDialog.cpp
+protocols_wxGetFTPDialog.o: $(srcdir)/samples/protocols/wxGetFTPDialog.cpp
+	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxGetFTPDialog.cpp
 
-protocols_wxFTPMkdirDialog.o: $(srcdir)/samples/protocols/wxFTPMkdirDialog.cpp
-	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxFTPMkdirDialog.cpp
+protocols_wxGetFTPFileDialog.o: $(srcdir)/samples/protocols/wxGetFTPFileDialog.cpp
+	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxGetFTPFileDialog.cpp
 
 protocols_wxHeadDialog.o: $(srcdir)/samples/protocols/wxHeadDialog.cpp
 	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxHeadDialog.cpp
 
-protocols_wxFTPRmdirDialog.o: $(srcdir)/samples/protocols/wxFTPRmdirDialog.cpp
-	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxFTPRmdirDialog.cpp
+protocols_wxInfoFTPDialog.o: $(srcdir)/samples/protocols/wxInfoFTPDialog.cpp
+	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxInfoFTPDialog.cpp
 
 protocols_wxListFTPDialog.o: $(srcdir)/samples/protocols/wxListFTPDialog.cpp
 	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxListFTPDialog.cpp
 
-protocols_wxCURLApp.o: $(srcdir)/samples/protocols/wxCURLApp.cpp
-	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxCURLApp.cpp
+protocols_wxMkcolDialog.o: $(srcdir)/samples/protocols/wxMkcolDialog.cpp
+	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxMkcolDialog.cpp
+
+protocols_wxNlstFTPDialog.o: $(srcdir)/samples/protocols/wxNlstFTPDialog.cpp
+	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxNlstFTPDialog.cpp
+
+protocols_wxOptionsDialog.o: $(srcdir)/samples/protocols/wxOptionsDialog.cpp
+	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxOptionsDialog.cpp
+
+protocols_wxPostDialog.o: $(srcdir)/samples/protocols/wxPostDialog.cpp
+	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxPostDialog.cpp
+
+protocols_wxPropfindDialog.o: $(srcdir)/samples/protocols/wxPropfindDialog.cpp
+	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxPropfindDialog.cpp
+
+protocols_wxPutDialog.o: $(srcdir)/samples/protocols/wxPutDialog.cpp
+	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxPutDialog.cpp
+
+protocols_wxPutFTPDialog.o: $(srcdir)/samples/protocols/wxPutFTPDialog.cpp
+	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxPutFTPDialog.cpp
+
+protocols_wxPutFTPTextDialog.o: $(srcdir)/samples/protocols/wxPutFTPTextDialog.cpp
+	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxPutFTPTextDialog.cpp
+
+protocols_wxPutTextDialog.o: $(srcdir)/samples/protocols/wxPutTextDialog.cpp
+	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxPutTextDialog.cpp
+
+protocols_wxTraceDialog.o: $(srcdir)/samples/protocols/wxTraceDialog.cpp
+	$(CXXC) -c -o $@ $(PROTOCOLS_CXXFLAGS) $(srcdir)/samples/protocols/wxTraceDialog.cpp
 
 protocols_curl_app_rc.o: $(srcdir)/samples/protocols/curl_app.rc
 	$(WX_RESCOMP) -i$< -o$@  --include-dir $(srcdir)/include --include-dir $(srcdir)/samples/protocols

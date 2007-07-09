@@ -14,71 +14,71 @@
 		
 	</ToolFiles>
 	<Configurations>
-		<Configuration ATLMinimizesCRunTimeLibraryUsage="false" ConfigurationType="2" IntermediateDirectory=".\Release\libcurl" Name="DLL Release|Win32" OutputDirectory=".\..\lib" UseOfMFC="0">
+		<Configuration ATLMinimizesCRunTimeLibraryUsage="false" ConfigurationType="2" IntermediateDirectory="msvs2005prj\libcurl" Name="DLL Release|Win32" OutputDirectory="..\lib" UseOfMFC="0">
 			<Tool Name="VCPreBuildEventTool"/>
 			<Tool Name="VCCustomBuildTool"/>
 			<Tool Name="VCXMLDataGeneratorTool"/>
 			<Tool Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool Name="VCIDLTool"/>
-			<Tool AdditionalIncludeDirectories="..\include,..\lib" AdditionalOptions=" /MD" AssemblerListingLocation=".\Release\libcurl\" BasicRuntimeChecks="0" BufferSecurityCheck="false" DebugInformationFormat="0" ExceptionHandling="1" InlineFunctionExpansion="1" Name="VCCLCompilerTool" ObjectFile=".\Release\libcurl\" Optimization="0" PreprocessorDefinitions="_USRDLL;DLL_EXPORTS" ProgramDataBaseFileName="..\lib\libcurl.pdb" RuntimeLibrary="2" RuntimeTypeInfo="true" SuppressStartupBanner="true" WarningLevel="1"/>
+			<Tool AdditionalIncludeDirectories="..\include,..\lib" AdditionalOptions=" /MDd" AssemblerListingLocation="msvs2005prj\libcurl\" BasicRuntimeChecks="3" DebugInformationFormat="3" Detect64BitPortabilityProblems="true" ExceptionHandling="1" InlineFunctionExpansion="1" Name="VCCLCompilerTool" ObjectFile="msvs2005prj\libcurl\" Optimization="0" PreprocessorDefinitions="_USRDLL;DLL_EXPORTS;BUILDING_LIBCURL;_DEBUG" ProgramDataBaseFileName="..\lib\libcurl.pdb" RuntimeLibrary="3" RuntimeTypeInfo="true" SuppressStartupBanner="true" WarningLevel="1"/>
 			<Tool Name="VCManagedResourceCompilerTool"/>
-			<Tool AdditionalIncludeDirectories="..\include,..\lib" Culture="1033" Name="VCResourceCompilerTool" PreprocessorDefinitions=""/>
+			<Tool AdditionalIncludeDirectories="..\include,..\lib" Culture="1033" Name="VCResourceCompilerTool" PreprocessorDefinitions="BUILDING_LIBCURL;_DEBUG"/>
 			<Tool Name="VCPreLinkEventTool"/>
-			<Tool AdditionalDependencies="" AdditionalLibraryDirectories="" AdditionalOptions="" GenerateManifest="true" ImportLibrary=".\..\lib\\libcurl.lib" LinkIncremental="1" Name="VCLinkerTool" OutputFile="..\lib\libcurl.dll" ProgramDatabaseFile="..\lib\libcurl.pdb" SuppressStartupBanner="true" TargetMachine="1"/>
+			<Tool AdditionalDependencies="wsock32.lib winmm.lib" AdditionalLibraryDirectories="" AdditionalOptions="" GenerateDebugInformation="true" GenerateManifest="true" ImportLibrary="..\lib\libcurl.lib" LinkIncremental="2" Name="VCLinkerTool" OutputFile="..\lib\libcurl.dll" ProgramDatabaseFile="..\lib\libcurl.pdb" SuppressStartupBanner="true" TargetMachine="1"/>
 			<Tool Name="VCALinkTool"/>
 			<Tool Name="VCXDCMakeTool"/>
-			<Tool Name="VCBscMakeTool" OutputFile=".\..\lib\curl.bsc" SuppressStartupBanner="true"/>
+			<Tool Name="VCBscMakeTool" OutputFile="..\lib\curl.bsc" SuppressStartupBanner="true"/>
 			<Tool Name="VCFxCopTool"/>
 			<Tool Name="VCPostBuildEventTool"/>
 		</Configuration>
-		<Configuration ATLMinimizesCRunTimeLibraryUsage="false" ConfigurationType="2" IntermediateDirectory=".\Release\libcurl" Name="DLL Debug|Win32" OutputDirectory=".\..\lib" UseOfMFC="0">
+		<Configuration ATLMinimizesCRunTimeLibraryUsage="false" ConfigurationType="2" IntermediateDirectory="msvs2005prj\libcurl" Name="DLL Debug|Win32" OutputDirectory="..\lib" UseOfMFC="0">
 			<Tool Name="VCPreBuildEventTool"/>
 			<Tool Name="VCCustomBuildTool"/>
 			<Tool Name="VCXMLDataGeneratorTool"/>
 			<Tool Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool Name="VCIDLTool"/>
-			<Tool AdditionalIncludeDirectories="..\include,..\lib" AdditionalOptions=" /MD" AssemblerListingLocation=".\Release\libcurl\" BasicRuntimeChecks="0" BufferSecurityCheck="false" DebugInformationFormat="0" ExceptionHandling="1" InlineFunctionExpansion="1" Name="VCCLCompilerTool" ObjectFile=".\Release\libcurl\" Optimization="0" PreprocessorDefinitions="_USRDLL;DLL_EXPORTS;NDEBUG" ProgramDataBaseFileName="..\lib\libcurl.pdb" RuntimeLibrary="2" RuntimeTypeInfo="true" SuppressStartupBanner="true" WarningLevel="1"/>
+			<Tool AdditionalIncludeDirectories="..\include,..\lib" AdditionalOptions=" /MD" AssemblerListingLocation="msvs2005prj\libcurl\" BasicRuntimeChecks="0" BufferSecurityCheck="false" DebugInformationFormat="0" ExceptionHandling="1" InlineFunctionExpansion="1" Name="VCCLCompilerTool" ObjectFile="msvs2005prj\libcurl\" Optimization="2" PreprocessorDefinitions="_USRDLL;DLL_EXPORTS;BUILDING_LIBCURL;NDEBUG" ProgramDataBaseFileName="..\lib\libcurl.pdb" RuntimeLibrary="2" RuntimeTypeInfo="true" SuppressStartupBanner="true" WarningLevel="1"/>
 			<Tool Name="VCManagedResourceCompilerTool"/>
-			<Tool AdditionalIncludeDirectories="..\include,..\lib" Culture="1033" Name="VCResourceCompilerTool" PreprocessorDefinitions="NDEBUG"/>
+			<Tool AdditionalIncludeDirectories="..\include,..\lib" Culture="1033" Name="VCResourceCompilerTool" PreprocessorDefinitions="BUILDING_LIBCURL;NDEBUG"/>
 			<Tool Name="VCPreLinkEventTool"/>
-			<Tool AdditionalDependencies="" AdditionalLibraryDirectories="" AdditionalOptions="" GenerateManifest="true" ImportLibrary=".\..\lib\\libcurl.lib" LinkIncremental="1" Name="VCLinkerTool" OutputFile="..\lib\libcurl.dll" ProgramDatabaseFile="..\lib\libcurl.pdb" SuppressStartupBanner="true" TargetMachine="1"/>
+			<Tool AdditionalDependencies="wsock32.lib winmm.lib" AdditionalLibraryDirectories="" AdditionalOptions="" GenerateManifest="true" ImportLibrary="..\lib\libcurl.lib" LinkIncremental="1" Name="VCLinkerTool" OutputFile="..\lib\libcurl.dll" ProgramDatabaseFile="..\lib\libcurl.pdb" SuppressStartupBanner="true" TargetMachine="1"/>
 			<Tool Name="VCALinkTool"/>
 			<Tool Name="VCXDCMakeTool"/>
-			<Tool Name="VCBscMakeTool" OutputFile=".\..\lib\curl.bsc" SuppressStartupBanner="true"/>
+			<Tool Name="VCBscMakeTool" OutputFile="..\lib\curl.bsc" SuppressStartupBanner="true"/>
 			<Tool Name="VCFxCopTool"/>
 			<Tool Name="VCPostBuildEventTool"/>
 		</Configuration>
-		<Configuration ATLMinimizesCRunTimeLibraryUsage="false" ConfigurationType="4" IntermediateDirectory=".\Release\libcurl" Name="Release|Win32" OutputDirectory=".\..\lib" UseOfMFC="0">
+		<Configuration ATLMinimizesCRunTimeLibraryUsage="false" ConfigurationType="4" IntermediateDirectory="msvs2005prj\libcurl" Name="Release|Win32" OutputDirectory="..\lib" UseOfMFC="0">
 			<Tool Name="VCPreBuildEventTool"/>
 			<Tool Name="VCCustomBuildTool"/>
 			<Tool Name="VCXMLDataGeneratorTool"/>
 			<Tool Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool Name="VCIDLTool"/>
-			<Tool AdditionalIncludeDirectories="..\include,..\lib" AdditionalOptions=" /MD" AssemblerListingLocation=".\Release\libcurl\" BasicRuntimeChecks="0" BufferSecurityCheck="false" DebugInformationFormat="0" ExceptionHandling="1" InlineFunctionExpansion="1" Name="VCCLCompilerTool" ObjectFile=".\Release\libcurl\" Optimization="0" PreprocessorDefinitions="_LIB;CURL_STATICLIB" ProgramDataBaseFileName="..\lib\libcurl.pdb" RuntimeLibrary="2" RuntimeTypeInfo="true" SuppressStartupBanner="true" WarningLevel="1"/>
+			<Tool AdditionalIncludeDirectories="..\include,..\lib" AdditionalOptions=" /MDd" AssemblerListingLocation="msvs2005prj\libcurl\" BasicRuntimeChecks="3" DebugInformationFormat="3" Detect64BitPortabilityProblems="true" ExceptionHandling="1" InlineFunctionExpansion="1" Name="VCCLCompilerTool" ObjectFile="msvs2005prj\libcurl\" Optimization="0" PreprocessorDefinitions="_LIB;_DEBUG;CURL_STATICLIB" ProgramDataBaseFileName="..\lib\libcurl.pdb" RuntimeLibrary="3" RuntimeTypeInfo="true" SuppressStartupBanner="true" WarningLevel="1"/>
 			<Tool Name="VCManagedResourceCompilerTool"/>
-			<Tool AdditionalIncludeDirectories="..\include,..\lib" Culture="1033" Name="VCResourceCompilerTool" PreprocessorDefinitions="CURL_STATICLIB"/>
+			<Tool AdditionalIncludeDirectories="..\include,..\lib" Culture="1033" Name="VCResourceCompilerTool" PreprocessorDefinitions="_DEBUG;CURL_STATICLIB"/>
 			<Tool Name="VCPreLinkEventTool"/>
 			<Tool Name="VCLibrarianTool" OutputFile="..\lib\libcurl.lib" SuppressStartupBanner="true"/>
 			<Tool Name="VCALinkTool"/>
 			<Tool Name="VCXDCMakeTool"/>
-			<Tool Name="VCBscMakeTool" OutputFile=".\..\lib\curl.bsc" SuppressStartupBanner="true"/>
+			<Tool Name="VCBscMakeTool" OutputFile="..\lib\curl.bsc" SuppressStartupBanner="true"/>
 			<Tool Name="VCFxCopTool"/>
 			<Tool Name="VCPostBuildEventTool"/>
 		</Configuration>
-		<Configuration ATLMinimizesCRunTimeLibraryUsage="false" ConfigurationType="4" IntermediateDirectory=".\Release\libcurl" Name="Debug|Win32" OutputDirectory=".\..\lib" UseOfMFC="0">
+		<Configuration ATLMinimizesCRunTimeLibraryUsage="false" ConfigurationType="4" IntermediateDirectory="msvs2005prj\libcurl" Name="Debug|Win32" OutputDirectory="..\lib" UseOfMFC="0">
 			<Tool Name="VCPreBuildEventTool"/>
 			<Tool Name="VCCustomBuildTool"/>
 			<Tool Name="VCXMLDataGeneratorTool"/>
 			<Tool Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool Name="VCIDLTool"/>
-			<Tool AdditionalIncludeDirectories="..\include,..\lib" AdditionalOptions=" /MD" AssemblerListingLocation=".\Release\libcurl\" BasicRuntimeChecks="0" BufferSecurityCheck="false" DebugInformationFormat="0" ExceptionHandling="1" InlineFunctionExpansion="1" Name="VCCLCompilerTool" ObjectFile=".\Release\libcurl\" Optimization="0" PreprocessorDefinitions="_LIB;CURL_STATICLIB;NDEBUG" ProgramDataBaseFileName="..\lib\libcurl.pdb" RuntimeLibrary="2" RuntimeTypeInfo="true" SuppressStartupBanner="true" WarningLevel="1"/>
+			<Tool AdditionalIncludeDirectories="..\include,..\lib" AdditionalOptions=" /MD" AssemblerListingLocation="msvs2005prj\libcurl\" BasicRuntimeChecks="0" BufferSecurityCheck="false" DebugInformationFormat="0" ExceptionHandling="1" InlineFunctionExpansion="1" Name="VCCLCompilerTool" ObjectFile="msvs2005prj\libcurl\" Optimization="2" PreprocessorDefinitions="_LIB;CURL_STATICLIB;NDEBUG" ProgramDataBaseFileName="..\lib\libcurl.pdb" RuntimeLibrary="2" RuntimeTypeInfo="true" SuppressStartupBanner="true" WarningLevel="1"/>
 			<Tool Name="VCManagedResourceCompilerTool"/>
 			<Tool AdditionalIncludeDirectories="..\include,..\lib" Culture="1033" Name="VCResourceCompilerTool" PreprocessorDefinitions="CURL_STATICLIB;NDEBUG"/>
 			<Tool Name="VCPreLinkEventTool"/>
 			<Tool Name="VCLibrarianTool" OutputFile="..\lib\libcurl.lib" SuppressStartupBanner="true"/>
 			<Tool Name="VCALinkTool"/>
 			<Tool Name="VCXDCMakeTool"/>
-			<Tool Name="VCBscMakeTool" OutputFile=".\..\lib\curl.bsc" SuppressStartupBanner="true"/>
+			<Tool Name="VCBscMakeTool" OutputFile="..\lib\curl.bsc" SuppressStartupBanner="true"/>
 			<Tool Name="VCFxCopTool"/>
 			<Tool Name="VCPostBuildEventTool"/>
 		</Configuration>
@@ -125,7 +125,6 @@
 			<File RelativePath="..\lib\mprintf.c"/>
 			<File RelativePath="..\lib\multi.c"/>
 			<File RelativePath="..\lib\netrc.c"/>
-			<File RelativePath="..\lib\nwlib.c"/>
 			<File RelativePath="..\lib\parsedate.c"/>
 			<File RelativePath="..\lib\progress.c"/>
 			<File RelativePath="..\lib\security.c"/>

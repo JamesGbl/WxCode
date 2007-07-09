@@ -34,67 +34,67 @@ RSC=rc.exe
 !IF  "$(CFG)" == "libcurl - Win32 DLL Release"
 
 # PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Use_Debug_Libraries 1
 # PROP BASE Output_Dir "..\lib"
-# PROP BASE Intermediate_Dir "Release\libcurl"
+# PROP BASE Intermediate_Dir "msvc6prj\libcurl"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
-# PROP Use_Debug_Libraries 0
+# PROP Use_Debug_Libraries 1
 # PROP Output_Dir "..\lib"
-# PROP Intermediate_Dir "Release\libcurl"
+# PROP Intermediate_Dir "msvc6prj\libcurl"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /W1 /GR /EHsc /I "..\include" /I "..\lib" /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /c
-# ADD CPP /nologo /FD /MD /W1 /GR /EHsc /I "..\include" /I "..\lib" /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /c
-# ADD BASE MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /mktyplib203 /win32
-# ADD MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /mktyplib203 /win32
-# ADD BASE RSC /l 0x409 /i "..\include" /i ..\lib
-# ADD RSC /l 0x409 /i "..\include" /i ..\lib
+# ADD BASE CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /I "..\include" /I "..\lib" /Zi /Gm /GZ /Fd..\lib\libcurl.pdb /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "BUILDING_LIBCURL" /D "_DEBUG" /c
+# ADD CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /I "..\include" /I "..\lib" /Zi /Gm /GZ /Fd..\lib\libcurl.pdb /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "BUILDING_LIBCURL" /D "_DEBUG" /c
+# ADD BASE MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "BUILDING_LIBCURL" /D "_DEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "BUILDING_LIBCURL" /D "_DEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /i "..\include" /i "..\lib" /d "BUILDING_LIBCURL" /d _DEBUG
+# ADD RSC /l 0x409 /i "..\include" /i "..\lib" /d "BUILDING_LIBCURL" /d _DEBUG
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 /nologo /dll /machine:i386 /out:"..\lib\libcurl.dll" /implib:"..\lib\libcurl.lib"
-# ADD LINK32 /nologo /dll /machine:i386 /out:"..\lib\libcurl.dll" /implib:"..\lib\libcurl.lib"
+# ADD BASE LINK32 wsock32.lib winmm.lib /nologo /dll /machine:i386 /out:"..\lib\libcurl.dll" /implib:"..\lib\libcurl.lib" /debug /pdb:"..\lib\libcurl.pdb"
+# ADD LINK32 wsock32.lib winmm.lib /nologo /dll /machine:i386 /out:"..\lib\libcurl.dll" /implib:"..\lib\libcurl.lib" /debug /pdb:"..\lib\libcurl.pdb"
 
 !ELSEIF  "$(CFG)" == "libcurl - Win32 DLL Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
 # PROP BASE Output_Dir "..\lib"
-# PROP BASE Intermediate_Dir "Release\libcurl"
+# PROP BASE Intermediate_Dir "msvc6prj\libcurl"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
 # PROP Output_Dir "..\lib"
-# PROP Intermediate_Dir "Release\libcurl"
+# PROP Intermediate_Dir "msvc6prj\libcurl"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /W1 /GR /EHsc /I "..\include" /I "..\lib" /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "NDEBUG" /c
-# ADD CPP /nologo /FD /MD /W1 /GR /EHsc /I "..\include" /I "..\lib" /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "NDEBUG" /c
-# ADD BASE MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "NDEBUG" /mktyplib203 /win32
-# ADD MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "NDEBUG" /mktyplib203 /win32
-# ADD BASE RSC /l 0x409 /d "NDEBUG" /i "..\include" /i ..\lib
-# ADD RSC /l 0x409 /d "NDEBUG" /i "..\include" /i ..\lib
+# ADD BASE CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /I "..\include" /I "..\lib" /Fd..\lib\libcurl.pdb /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "BUILDING_LIBCURL" /D "NDEBUG" /c
+# ADD CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /I "..\include" /I "..\lib" /Fd..\lib\libcurl.pdb /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "BUILDING_LIBCURL" /D "NDEBUG" /c
+# ADD BASE MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "BUILDING_LIBCURL" /D "NDEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "WIN32" /D "_USRDLL" /D "DLL_EXPORTS" /D "BUILDING_LIBCURL" /D "NDEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /i "..\include" /i "..\lib" /d "BUILDING_LIBCURL" /d NDEBUG
+# ADD RSC /l 0x409 /i "..\include" /i "..\lib" /d "BUILDING_LIBCURL" /d NDEBUG
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 /nologo /dll /machine:i386 /out:"..\lib\libcurl.dll" /implib:"..\lib\libcurl.lib"
-# ADD LINK32 /nologo /dll /machine:i386 /out:"..\lib\libcurl.dll" /implib:"..\lib\libcurl.lib"
+# ADD BASE LINK32 wsock32.lib winmm.lib /nologo /dll /machine:i386 /out:"..\lib\libcurl.dll" /implib:"..\lib\libcurl.lib" /pdb:"..\lib\libcurl.pdb"
+# ADD LINK32 wsock32.lib winmm.lib /nologo /dll /machine:i386 /out:"..\lib\libcurl.dll" /implib:"..\lib\libcurl.lib" /pdb:"..\lib\libcurl.pdb"
 
 !ELSEIF  "$(CFG)" == "libcurl - Win32 Release"
 
 # PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Use_Debug_Libraries 1
 # PROP BASE Output_Dir "..\lib"
-# PROP BASE Intermediate_Dir "Release\libcurl"
+# PROP BASE Intermediate_Dir "msvc6prj\libcurl"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
-# PROP Use_Debug_Libraries 0
+# PROP Use_Debug_Libraries 1
 # PROP Output_Dir "..\lib"
-# PROP Intermediate_Dir "Release\libcurl"
+# PROP Intermediate_Dir "msvc6prj\libcurl"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /W1 /GR /EHsc /I "..\include" /I "..\lib" /D "WIN32" /D "_LIB" /D "CURL_STATICLIB" /c
-# ADD CPP /nologo /FD /MD /W1 /GR /EHsc /I "..\include" /I "..\lib" /D "WIN32" /D "_LIB" /D "CURL_STATICLIB" /c
+# ADD BASE CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /I "..\include" /I "..\lib" /Zi /Gm /GZ /Fd..\lib\libcurl.pdb /D "WIN32" /D "_LIB" /D "_DEBUG" /D "CURL_STATICLIB" /c
+# ADD CPP /nologo /FD /MDd /W1 /GR /EHsc /Od /I "..\include" /I "..\lib" /Zi /Gm /GZ /Fd..\lib\libcurl.pdb /D "WIN32" /D "_LIB" /D "_DEBUG" /D "CURL_STATICLIB" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -109,15 +109,15 @@ LIB32=link.exe -lib
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
 # PROP BASE Output_Dir "..\lib"
-# PROP BASE Intermediate_Dir "Release\libcurl"
+# PROP BASE Intermediate_Dir "msvc6prj\libcurl"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
 # PROP Output_Dir "..\lib"
-# PROP Intermediate_Dir "Release\libcurl"
+# PROP Intermediate_Dir "msvc6prj\libcurl"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /FD /MD /W1 /GR /EHsc /I "..\include" /I "..\lib" /D "WIN32" /D "_LIB" /D "CURL_STATICLIB" /D "NDEBUG" /c
-# ADD CPP /nologo /FD /MD /W1 /GR /EHsc /I "..\include" /I "..\lib" /D "WIN32" /D "_LIB" /D "CURL_STATICLIB" /D "NDEBUG" /c
+# ADD BASE CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /I "..\include" /I "..\lib" /Fd..\lib\libcurl.pdb /D "WIN32" /D "_LIB" /D "CURL_STATICLIB" /D "NDEBUG" /c
+# ADD CPP /nologo /FD /MD /W1 /GR /EHsc /O2 /I "..\include" /I "..\lib" /Fd..\lib\libcurl.pdb /D "WIN32" /D "_LIB" /D "CURL_STATICLIB" /D "NDEBUG" /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -285,10 +285,6 @@ SOURCE=..\lib\multi.c
 # Begin Source File
 
 SOURCE=..\lib\netrc.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\lib\nwlib.c
 # End Source File
 # Begin Source File
 

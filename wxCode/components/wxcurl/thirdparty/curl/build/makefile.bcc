@@ -57,134 +57,132 @@ WX_DEBUG = 0
 
 ### Variables: ###
 
-LIBCURL_LIB_CFLAGS = -I$(BCCDIR)\include $(____WX_SHARED) $(____WX_DEBUG) \
-	-I..\include -I..\lib $(CPPFLAGS) $(CFLAGS)
+LIBCURL_LIB_CFLAGS = -I$(BCCDIR)\include $(____libcurl) $(____libcurl_1) \
+	-I..\include -I..\lib $(____WX_SHARED) $(____WX_DEBUG) $(CPPFLAGS) $(CFLAGS)
 LIBCURL_LIB_OBJECTS =  \
-	libcurl_lib_base64.obj \
-	libcurl_lib_connect.obj \
-	libcurl_lib_content_encoding.obj \
-	libcurl_lib_cookie.obj \
-	libcurl_lib_dict.obj \
-	libcurl_lib_easy.obj \
-	libcurl_lib_escape.obj \
-	libcurl_lib_file.obj \
-	libcurl_lib_formdata.obj \
-	libcurl_lib_ftp.obj \
-	libcurl_lib_getenv.obj \
-	libcurl_lib_getinfo.obj \
-	libcurl_lib_gtls.obj \
-	libcurl_lib_hash.obj \
-	libcurl_lib_hostares.obj \
-	libcurl_lib_hostasyn.obj \
-	libcurl_lib_hostip.obj \
-	libcurl_lib_hostip4.obj \
-	libcurl_lib_hostip6.obj \
-	libcurl_lib_hostsyn.obj \
-	libcurl_lib_hostthre.obj \
-	libcurl_lib_http.obj \
-	libcurl_lib_http_chunks.obj \
-	libcurl_lib_http_digest.obj \
-	libcurl_lib_http_negotiate.obj \
-	libcurl_lib_http_ntlm.obj \
-	libcurl_lib_if2ip.obj \
-	libcurl_lib_inet_ntop.obj \
-	libcurl_lib_inet_pton.obj \
-	libcurl_lib_krb4.obj \
-	libcurl_lib_ldap.obj \
-	libcurl_lib_llist.obj \
-	libcurl_lib_md5.obj \
-	libcurl_lib_memdebug.obj \
-	libcurl_lib_mprintf.obj \
-	libcurl_lib_multi.obj \
-	libcurl_lib_netrc.obj \
-	libcurl_lib_nwlib.obj \
-	libcurl_lib_parsedate.obj \
-	libcurl_lib_progress.obj \
-	libcurl_lib_security.obj \
-	libcurl_lib_select.obj \
-	libcurl_lib_sendf.obj \
-	libcurl_lib_share.obj \
-	libcurl_lib_socks.obj \
-	libcurl_lib_speedcheck.obj \
-	libcurl_lib_splay.obj \
-	libcurl_lib_ssh.obj \
-	libcurl_lib_sslgen.obj \
-	libcurl_lib_ssluse.obj \
-	libcurl_lib_strdup.obj \
-	libcurl_lib_strequal.obj \
-	libcurl_lib_strerror.obj \
-	libcurl_lib_strtok.obj \
-	libcurl_lib_strtoofft.obj \
-	libcurl_lib_telnet.obj \
-	libcurl_lib_tftp.obj \
-	libcurl_lib_timeval.obj \
-	libcurl_lib_transfer.obj \
-	libcurl_lib_url.obj \
-	libcurl_lib_version.obj
-LIBCURL_DLL_CFLAGS = -I$(BCCDIR)\include $(____WX_SHARED) $(____WX_DEBUG) \
-	-I..\include -I..\lib $(CPPFLAGS) $(CFLAGS)
+	borland\libcurl_lib_base64.obj \
+	borland\libcurl_lib_connect.obj \
+	borland\libcurl_lib_content_encoding.obj \
+	borland\libcurl_lib_cookie.obj \
+	borland\libcurl_lib_dict.obj \
+	borland\libcurl_lib_easy.obj \
+	borland\libcurl_lib_escape.obj \
+	borland\libcurl_lib_file.obj \
+	borland\libcurl_lib_formdata.obj \
+	borland\libcurl_lib_ftp.obj \
+	borland\libcurl_lib_getenv.obj \
+	borland\libcurl_lib_getinfo.obj \
+	borland\libcurl_lib_gtls.obj \
+	borland\libcurl_lib_hash.obj \
+	borland\libcurl_lib_hostares.obj \
+	borland\libcurl_lib_hostasyn.obj \
+	borland\libcurl_lib_hostip.obj \
+	borland\libcurl_lib_hostip4.obj \
+	borland\libcurl_lib_hostip6.obj \
+	borland\libcurl_lib_hostsyn.obj \
+	borland\libcurl_lib_hostthre.obj \
+	borland\libcurl_lib_http.obj \
+	borland\libcurl_lib_http_chunks.obj \
+	borland\libcurl_lib_http_digest.obj \
+	borland\libcurl_lib_http_negotiate.obj \
+	borland\libcurl_lib_http_ntlm.obj \
+	borland\libcurl_lib_if2ip.obj \
+	borland\libcurl_lib_inet_ntop.obj \
+	borland\libcurl_lib_inet_pton.obj \
+	borland\libcurl_lib_krb4.obj \
+	borland\libcurl_lib_ldap.obj \
+	borland\libcurl_lib_llist.obj \
+	borland\libcurl_lib_md5.obj \
+	borland\libcurl_lib_memdebug.obj \
+	borland\libcurl_lib_mprintf.obj \
+	borland\libcurl_lib_multi.obj \
+	borland\libcurl_lib_netrc.obj \
+	borland\libcurl_lib_parsedate.obj \
+	borland\libcurl_lib_progress.obj \
+	borland\libcurl_lib_security.obj \
+	borland\libcurl_lib_select.obj \
+	borland\libcurl_lib_sendf.obj \
+	borland\libcurl_lib_share.obj \
+	borland\libcurl_lib_socks.obj \
+	borland\libcurl_lib_speedcheck.obj \
+	borland\libcurl_lib_splay.obj \
+	borland\libcurl_lib_ssh.obj \
+	borland\libcurl_lib_sslgen.obj \
+	borland\libcurl_lib_ssluse.obj \
+	borland\libcurl_lib_strdup.obj \
+	borland\libcurl_lib_strequal.obj \
+	borland\libcurl_lib_strerror.obj \
+	borland\libcurl_lib_strtok.obj \
+	borland\libcurl_lib_strtoofft.obj \
+	borland\libcurl_lib_telnet.obj \
+	borland\libcurl_lib_tftp.obj \
+	borland\libcurl_lib_timeval.obj \
+	borland\libcurl_lib_transfer.obj \
+	borland\libcurl_lib_url.obj \
+	borland\libcurl_lib_version.obj
+LIBCURL_DLL_CFLAGS = -I$(BCCDIR)\include $(____libcurl) $(____libcurl_1) \
+	-I..\include -I..\lib $(____WX_SHARED) $(____WX_DEBUG) $(CPPFLAGS) $(CFLAGS)
 LIBCURL_DLL_OBJECTS =  \
-	libcurl_dll_base64.obj \
-	libcurl_dll_connect.obj \
-	libcurl_dll_content_encoding.obj \
-	libcurl_dll_cookie.obj \
-	libcurl_dll_dict.obj \
-	libcurl_dll_easy.obj \
-	libcurl_dll_escape.obj \
-	libcurl_dll_file.obj \
-	libcurl_dll_formdata.obj \
-	libcurl_dll_ftp.obj \
-	libcurl_dll_getenv.obj \
-	libcurl_dll_getinfo.obj \
-	libcurl_dll_gtls.obj \
-	libcurl_dll_hash.obj \
-	libcurl_dll_hostares.obj \
-	libcurl_dll_hostasyn.obj \
-	libcurl_dll_hostip.obj \
-	libcurl_dll_hostip4.obj \
-	libcurl_dll_hostip6.obj \
-	libcurl_dll_hostsyn.obj \
-	libcurl_dll_hostthre.obj \
-	libcurl_dll_http.obj \
-	libcurl_dll_http_chunks.obj \
-	libcurl_dll_http_digest.obj \
-	libcurl_dll_http_negotiate.obj \
-	libcurl_dll_http_ntlm.obj \
-	libcurl_dll_if2ip.obj \
-	libcurl_dll_inet_ntop.obj \
-	libcurl_dll_inet_pton.obj \
-	libcurl_dll_krb4.obj \
-	libcurl_dll_ldap.obj \
-	libcurl_dll_llist.obj \
-	libcurl_dll_md5.obj \
-	libcurl_dll_memdebug.obj \
-	libcurl_dll_mprintf.obj \
-	libcurl_dll_multi.obj \
-	libcurl_dll_netrc.obj \
-	libcurl_dll_nwlib.obj \
-	libcurl_dll_parsedate.obj \
-	libcurl_dll_progress.obj \
-	libcurl_dll_security.obj \
-	libcurl_dll_select.obj \
-	libcurl_dll_sendf.obj \
-	libcurl_dll_share.obj \
-	libcurl_dll_socks.obj \
-	libcurl_dll_speedcheck.obj \
-	libcurl_dll_splay.obj \
-	libcurl_dll_ssh.obj \
-	libcurl_dll_sslgen.obj \
-	libcurl_dll_ssluse.obj \
-	libcurl_dll_strdup.obj \
-	libcurl_dll_strequal.obj \
-	libcurl_dll_strerror.obj \
-	libcurl_dll_strtok.obj \
-	libcurl_dll_strtoofft.obj \
-	libcurl_dll_telnet.obj \
-	libcurl_dll_tftp.obj \
-	libcurl_dll_timeval.obj \
-	libcurl_dll_transfer.obj \
-	libcurl_dll_url.obj \
-	libcurl_dll_version.obj
+	borland\libcurl_dll_base64.obj \
+	borland\libcurl_dll_connect.obj \
+	borland\libcurl_dll_content_encoding.obj \
+	borland\libcurl_dll_cookie.obj \
+	borland\libcurl_dll_dict.obj \
+	borland\libcurl_dll_easy.obj \
+	borland\libcurl_dll_escape.obj \
+	borland\libcurl_dll_file.obj \
+	borland\libcurl_dll_formdata.obj \
+	borland\libcurl_dll_ftp.obj \
+	borland\libcurl_dll_getenv.obj \
+	borland\libcurl_dll_getinfo.obj \
+	borland\libcurl_dll_gtls.obj \
+	borland\libcurl_dll_hash.obj \
+	borland\libcurl_dll_hostares.obj \
+	borland\libcurl_dll_hostasyn.obj \
+	borland\libcurl_dll_hostip.obj \
+	borland\libcurl_dll_hostip4.obj \
+	borland\libcurl_dll_hostip6.obj \
+	borland\libcurl_dll_hostsyn.obj \
+	borland\libcurl_dll_hostthre.obj \
+	borland\libcurl_dll_http.obj \
+	borland\libcurl_dll_http_chunks.obj \
+	borland\libcurl_dll_http_digest.obj \
+	borland\libcurl_dll_http_negotiate.obj \
+	borland\libcurl_dll_http_ntlm.obj \
+	borland\libcurl_dll_if2ip.obj \
+	borland\libcurl_dll_inet_ntop.obj \
+	borland\libcurl_dll_inet_pton.obj \
+	borland\libcurl_dll_krb4.obj \
+	borland\libcurl_dll_ldap.obj \
+	borland\libcurl_dll_llist.obj \
+	borland\libcurl_dll_md5.obj \
+	borland\libcurl_dll_memdebug.obj \
+	borland\libcurl_dll_mprintf.obj \
+	borland\libcurl_dll_multi.obj \
+	borland\libcurl_dll_netrc.obj \
+	borland\libcurl_dll_parsedate.obj \
+	borland\libcurl_dll_progress.obj \
+	borland\libcurl_dll_security.obj \
+	borland\libcurl_dll_select.obj \
+	borland\libcurl_dll_sendf.obj \
+	borland\libcurl_dll_share.obj \
+	borland\libcurl_dll_socks.obj \
+	borland\libcurl_dll_speedcheck.obj \
+	borland\libcurl_dll_splay.obj \
+	borland\libcurl_dll_ssh.obj \
+	borland\libcurl_dll_sslgen.obj \
+	borland\libcurl_dll_ssluse.obj \
+	borland\libcurl_dll_strdup.obj \
+	borland\libcurl_dll_strequal.obj \
+	borland\libcurl_dll_strerror.obj \
+	borland\libcurl_dll_strtok.obj \
+	borland\libcurl_dll_strtoofft.obj \
+	borland\libcurl_dll_telnet.obj \
+	borland\libcurl_dll_tftp.obj \
+	borland\libcurl_dll_timeval.obj \
+	borland\libcurl_dll_transfer.obj \
+	borland\libcurl_dll_url.obj \
+	borland\libcurl_dll_version.obj
 
 ### Conditionally set variables: ###
 
@@ -194,11 +192,17 @@ __libcurl_lib___depname = ..\lib\libcurl.lib
 !if "$(WX_SHARED)" == "1"
 __libcurl_dll___depname = ..\lib\libcurl.dll
 !endif
+!if "$(WX_DEBUG)" == "0"
+____libcurl = -O2
+!endif
+!if "$(WX_DEBUG)" == "1"
+____libcurl = -Od
+!endif
 !if "$(WX_SHARED)" == "0"
 ____WX_SHARED = -DCURL_STATICLIB
 !endif
 !if "$(WX_SHARED)" == "1"
-____WX_SHARED = 
+____WX_SHARED = -DBUILDING_LIBCURL
 !endif
 !if "$(WX_DEBUG)" == "0"
 ____WX_DEBUG = -DNDEBUG
@@ -206,16 +210,26 @@ ____WX_DEBUG = -DNDEBUG
 !if "$(WX_DEBUG)" == "1"
 ____WX_DEBUG = 
 !endif
+!if "$(WX_DEBUG)" == "0"
+____libcurl_1 = -v-
+!endif
+!if "$(WX_DEBUG)" == "1"
+____libcurl_1 = -v
+!endif
 
+
+all: borland
+borland:
+	-if not exist borland mkdir borland
 
 ### Targets: ###
 
 all: $(__libcurl_lib___depname) $(__libcurl_dll___depname)
 
 clean: 
-	-if exist .\*.obj del .\*.obj
-	-if exist .\*.res del .\*.res
-	-if exist .\*.csm del .\*.csm
+	-if exist borland\*.obj del borland\*.obj
+	-if exist borland\*.res del borland\*.res
+	-if exist borland\*.csm del borland\*.csm
 	-if exist ..\lib\libcurl.lib del ..\lib\libcurl.lib
 	-if exist ..\lib\libcurl.dll del ..\lib\libcurl.dll
 	-if exist ..\lib\libcurl.tds del ..\lib\libcurl.tds
@@ -235,375 +249,369 @@ clean:
 
 !if "$(WX_SHARED)" == "1"
 ..\lib\libcurl.dll: $(LIBCURL_DLL_OBJECTS)
-	ilink32 -Tpd -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk @&&|
-	c0d32.obj $(LIBCURL_DLL_OBJECTS),$@,, import32.lib cw32.lib,,
+	ilink32 -Tpd -q $(LDFLAGS) -L$(BCCDIR)\lib -L$(BCCDIR)\lib\psdk $(____libcurl_1) @&&|
+	c0d32.obj $(LIBCURL_DLL_OBJECTS),$@,, wsock32.lib winmm.lib import32.lib cw32.lib,,
 |
 	implib -f ..\lib\libcurl $@
 !endif
 
-libcurl_lib_base64.obj: ..\lib\base64.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_base64.obj: ..\lib\base64.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\base64.c
 
-libcurl_lib_connect.obj: ..\lib\connect.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_connect.obj: ..\lib\connect.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\connect.c
 
-libcurl_lib_content_encoding.obj: ..\lib\content_encoding.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_content_encoding.obj: ..\lib\content_encoding.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\content_encoding.c
 
-libcurl_lib_cookie.obj: ..\lib\cookie.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_cookie.obj: ..\lib\cookie.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\cookie.c
 
-libcurl_lib_dict.obj: ..\lib\dict.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_dict.obj: ..\lib\dict.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\dict.c
 
-libcurl_lib_easy.obj: ..\lib\easy.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_easy.obj: ..\lib\easy.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\easy.c
 
-libcurl_lib_escape.obj: ..\lib\escape.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_escape.obj: ..\lib\escape.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\escape.c
 
-libcurl_lib_file.obj: ..\lib\file.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_file.obj: ..\lib\file.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\file.c
 
-libcurl_lib_formdata.obj: ..\lib\formdata.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_formdata.obj: ..\lib\formdata.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\formdata.c
 
-libcurl_lib_ftp.obj: ..\lib\ftp.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_ftp.obj: ..\lib\ftp.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\ftp.c
 
-libcurl_lib_getenv.obj: ..\lib\getenv.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_getenv.obj: ..\lib\getenv.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\getenv.c
 
-libcurl_lib_getinfo.obj: ..\lib\getinfo.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_getinfo.obj: ..\lib\getinfo.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\getinfo.c
 
-libcurl_lib_gtls.obj: ..\lib\gtls.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_gtls.obj: ..\lib\gtls.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\gtls.c
 
-libcurl_lib_hash.obj: ..\lib\hash.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_hash.obj: ..\lib\hash.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\hash.c
 
-libcurl_lib_hostares.obj: ..\lib\hostares.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_hostares.obj: ..\lib\hostares.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\hostares.c
 
-libcurl_lib_hostasyn.obj: ..\lib\hostasyn.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_hostasyn.obj: ..\lib\hostasyn.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\hostasyn.c
 
-libcurl_lib_hostip.obj: ..\lib\hostip.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_hostip.obj: ..\lib\hostip.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\hostip.c
 
-libcurl_lib_hostip4.obj: ..\lib\hostip4.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_hostip4.obj: ..\lib\hostip4.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\hostip4.c
 
-libcurl_lib_hostip6.obj: ..\lib\hostip6.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_hostip6.obj: ..\lib\hostip6.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\hostip6.c
 
-libcurl_lib_hostsyn.obj: ..\lib\hostsyn.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_hostsyn.obj: ..\lib\hostsyn.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\hostsyn.c
 
-libcurl_lib_hostthre.obj: ..\lib\hostthre.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_hostthre.obj: ..\lib\hostthre.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\hostthre.c
 
-libcurl_lib_http.obj: ..\lib\http.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_http.obj: ..\lib\http.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\http.c
 
-libcurl_lib_http_chunks.obj: ..\lib\http_chunks.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_http_chunks.obj: ..\lib\http_chunks.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\http_chunks.c
 
-libcurl_lib_http_digest.obj: ..\lib\http_digest.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_http_digest.obj: ..\lib\http_digest.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\http_digest.c
 
-libcurl_lib_http_negotiate.obj: ..\lib\http_negotiate.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_http_negotiate.obj: ..\lib\http_negotiate.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\http_negotiate.c
 
-libcurl_lib_http_ntlm.obj: ..\lib\http_ntlm.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_http_ntlm.obj: ..\lib\http_ntlm.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\http_ntlm.c
 
-libcurl_lib_if2ip.obj: ..\lib\if2ip.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_if2ip.obj: ..\lib\if2ip.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\if2ip.c
 
-libcurl_lib_inet_ntop.obj: ..\lib\inet_ntop.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_inet_ntop.obj: ..\lib\inet_ntop.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\inet_ntop.c
 
-libcurl_lib_inet_pton.obj: ..\lib\inet_pton.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_inet_pton.obj: ..\lib\inet_pton.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\inet_pton.c
 
-libcurl_lib_krb4.obj: ..\lib\krb4.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_krb4.obj: ..\lib\krb4.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\krb4.c
 
-libcurl_lib_ldap.obj: ..\lib\ldap.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_ldap.obj: ..\lib\ldap.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\ldap.c
 
-libcurl_lib_llist.obj: ..\lib\llist.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_llist.obj: ..\lib\llist.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\llist.c
 
-libcurl_lib_md5.obj: ..\lib\md5.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_md5.obj: ..\lib\md5.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\md5.c
 
-libcurl_lib_memdebug.obj: ..\lib\memdebug.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_memdebug.obj: ..\lib\memdebug.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\memdebug.c
 
-libcurl_lib_mprintf.obj: ..\lib\mprintf.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_mprintf.obj: ..\lib\mprintf.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\mprintf.c
 
-libcurl_lib_multi.obj: ..\lib\multi.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_multi.obj: ..\lib\multi.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\multi.c
 
-libcurl_lib_netrc.obj: ..\lib\netrc.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_netrc.obj: ..\lib\netrc.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\netrc.c
 
-libcurl_lib_nwlib.obj: ..\lib\nwlib.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_parsedate.obj: ..\lib\parsedate.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\parsedate.c
 
-libcurl_lib_parsedate.obj: ..\lib\parsedate.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_progress.obj: ..\lib\progress.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\progress.c
 
-libcurl_lib_progress.obj: ..\lib\progress.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_security.obj: ..\lib\security.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\security.c
 
-libcurl_lib_security.obj: ..\lib\security.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_select.obj: ..\lib\select.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\select.c
 
-libcurl_lib_select.obj: ..\lib\select.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_sendf.obj: ..\lib\sendf.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\sendf.c
 
-libcurl_lib_sendf.obj: ..\lib\sendf.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_share.obj: ..\lib\share.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\share.c
 
-libcurl_lib_share.obj: ..\lib\share.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_socks.obj: ..\lib\socks.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\socks.c
 
-libcurl_lib_socks.obj: ..\lib\socks.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_speedcheck.obj: ..\lib\speedcheck.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\speedcheck.c
 
-libcurl_lib_speedcheck.obj: ..\lib\speedcheck.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_splay.obj: ..\lib\splay.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\splay.c
 
-libcurl_lib_splay.obj: ..\lib\splay.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_ssh.obj: ..\lib\ssh.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\ssh.c
 
-libcurl_lib_ssh.obj: ..\lib\ssh.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_sslgen.obj: ..\lib\sslgen.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\sslgen.c
 
-libcurl_lib_sslgen.obj: ..\lib\sslgen.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_ssluse.obj: ..\lib\ssluse.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\ssluse.c
 
-libcurl_lib_ssluse.obj: ..\lib\ssluse.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_strdup.obj: ..\lib\strdup.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\strdup.c
 
-libcurl_lib_strdup.obj: ..\lib\strdup.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_strequal.obj: ..\lib\strequal.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\strequal.c
 
-libcurl_lib_strequal.obj: ..\lib\strequal.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_strerror.obj: ..\lib\strerror.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\strerror.c
 
-libcurl_lib_strerror.obj: ..\lib\strerror.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_strtok.obj: ..\lib\strtok.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\strtok.c
 
-libcurl_lib_strtok.obj: ..\lib\strtok.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_strtoofft.obj: ..\lib\strtoofft.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\strtoofft.c
 
-libcurl_lib_strtoofft.obj: ..\lib\strtoofft.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_telnet.obj: ..\lib\telnet.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\telnet.c
 
-libcurl_lib_telnet.obj: ..\lib\telnet.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_tftp.obj: ..\lib\tftp.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\tftp.c
 
-libcurl_lib_tftp.obj: ..\lib\tftp.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_timeval.obj: ..\lib\timeval.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\timeval.c
 
-libcurl_lib_timeval.obj: ..\lib\timeval.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_transfer.obj: ..\lib\transfer.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\transfer.c
 
-libcurl_lib_transfer.obj: ..\lib\transfer.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_url.obj: ..\lib\url.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\url.c
 
-libcurl_lib_url.obj: ..\lib\url.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_lib_version.obj: ..\lib\version.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) ..\lib\version.c
 
-libcurl_lib_version.obj: ..\lib\version.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_LIB_CFLAGS) $**
+borland\libcurl_dll_base64.obj: ..\lib\base64.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\base64.c
 
-libcurl_dll_base64.obj: ..\lib\base64.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_connect.obj: ..\lib\connect.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\connect.c
 
-libcurl_dll_connect.obj: ..\lib\connect.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_content_encoding.obj: ..\lib\content_encoding.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\content_encoding.c
 
-libcurl_dll_content_encoding.obj: ..\lib\content_encoding.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_cookie.obj: ..\lib\cookie.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\cookie.c
 
-libcurl_dll_cookie.obj: ..\lib\cookie.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_dict.obj: ..\lib\dict.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\dict.c
 
-libcurl_dll_dict.obj: ..\lib\dict.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_easy.obj: ..\lib\easy.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\easy.c
 
-libcurl_dll_easy.obj: ..\lib\easy.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_escape.obj: ..\lib\escape.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\escape.c
 
-libcurl_dll_escape.obj: ..\lib\escape.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_file.obj: ..\lib\file.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\file.c
 
-libcurl_dll_file.obj: ..\lib\file.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_formdata.obj: ..\lib\formdata.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\formdata.c
 
-libcurl_dll_formdata.obj: ..\lib\formdata.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_ftp.obj: ..\lib\ftp.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\ftp.c
 
-libcurl_dll_ftp.obj: ..\lib\ftp.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_getenv.obj: ..\lib\getenv.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\getenv.c
 
-libcurl_dll_getenv.obj: ..\lib\getenv.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_getinfo.obj: ..\lib\getinfo.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\getinfo.c
 
-libcurl_dll_getinfo.obj: ..\lib\getinfo.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_gtls.obj: ..\lib\gtls.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\gtls.c
 
-libcurl_dll_gtls.obj: ..\lib\gtls.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_hash.obj: ..\lib\hash.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\hash.c
 
-libcurl_dll_hash.obj: ..\lib\hash.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_hostares.obj: ..\lib\hostares.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\hostares.c
 
-libcurl_dll_hostares.obj: ..\lib\hostares.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_hostasyn.obj: ..\lib\hostasyn.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\hostasyn.c
 
-libcurl_dll_hostasyn.obj: ..\lib\hostasyn.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_hostip.obj: ..\lib\hostip.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\hostip.c
 
-libcurl_dll_hostip.obj: ..\lib\hostip.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_hostip4.obj: ..\lib\hostip4.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\hostip4.c
 
-libcurl_dll_hostip4.obj: ..\lib\hostip4.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_hostip6.obj: ..\lib\hostip6.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\hostip6.c
 
-libcurl_dll_hostip6.obj: ..\lib\hostip6.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_hostsyn.obj: ..\lib\hostsyn.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\hostsyn.c
 
-libcurl_dll_hostsyn.obj: ..\lib\hostsyn.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_hostthre.obj: ..\lib\hostthre.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\hostthre.c
 
-libcurl_dll_hostthre.obj: ..\lib\hostthre.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_http.obj: ..\lib\http.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\http.c
 
-libcurl_dll_http.obj: ..\lib\http.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_http_chunks.obj: ..\lib\http_chunks.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\http_chunks.c
 
-libcurl_dll_http_chunks.obj: ..\lib\http_chunks.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_http_digest.obj: ..\lib\http_digest.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\http_digest.c
 
-libcurl_dll_http_digest.obj: ..\lib\http_digest.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_http_negotiate.obj: ..\lib\http_negotiate.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\http_negotiate.c
 
-libcurl_dll_http_negotiate.obj: ..\lib\http_negotiate.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_http_ntlm.obj: ..\lib\http_ntlm.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\http_ntlm.c
 
-libcurl_dll_http_ntlm.obj: ..\lib\http_ntlm.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_if2ip.obj: ..\lib\if2ip.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\if2ip.c
 
-libcurl_dll_if2ip.obj: ..\lib\if2ip.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_inet_ntop.obj: ..\lib\inet_ntop.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\inet_ntop.c
 
-libcurl_dll_inet_ntop.obj: ..\lib\inet_ntop.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_inet_pton.obj: ..\lib\inet_pton.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\inet_pton.c
 
-libcurl_dll_inet_pton.obj: ..\lib\inet_pton.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_krb4.obj: ..\lib\krb4.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\krb4.c
 
-libcurl_dll_krb4.obj: ..\lib\krb4.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_ldap.obj: ..\lib\ldap.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\ldap.c
 
-libcurl_dll_ldap.obj: ..\lib\ldap.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_llist.obj: ..\lib\llist.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\llist.c
 
-libcurl_dll_llist.obj: ..\lib\llist.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_md5.obj: ..\lib\md5.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\md5.c
 
-libcurl_dll_md5.obj: ..\lib\md5.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_memdebug.obj: ..\lib\memdebug.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\memdebug.c
 
-libcurl_dll_memdebug.obj: ..\lib\memdebug.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_mprintf.obj: ..\lib\mprintf.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\mprintf.c
 
-libcurl_dll_mprintf.obj: ..\lib\mprintf.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_multi.obj: ..\lib\multi.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\multi.c
 
-libcurl_dll_multi.obj: ..\lib\multi.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_netrc.obj: ..\lib\netrc.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\netrc.c
 
-libcurl_dll_netrc.obj: ..\lib\netrc.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_parsedate.obj: ..\lib\parsedate.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\parsedate.c
 
-libcurl_dll_nwlib.obj: ..\lib\nwlib.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_progress.obj: ..\lib\progress.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\progress.c
 
-libcurl_dll_parsedate.obj: ..\lib\parsedate.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_security.obj: ..\lib\security.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\security.c
 
-libcurl_dll_progress.obj: ..\lib\progress.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_select.obj: ..\lib\select.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\select.c
 
-libcurl_dll_security.obj: ..\lib\security.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_sendf.obj: ..\lib\sendf.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\sendf.c
 
-libcurl_dll_select.obj: ..\lib\select.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_share.obj: ..\lib\share.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\share.c
 
-libcurl_dll_sendf.obj: ..\lib\sendf.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_socks.obj: ..\lib\socks.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\socks.c
 
-libcurl_dll_share.obj: ..\lib\share.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_speedcheck.obj: ..\lib\speedcheck.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\speedcheck.c
 
-libcurl_dll_socks.obj: ..\lib\socks.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_splay.obj: ..\lib\splay.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\splay.c
 
-libcurl_dll_speedcheck.obj: ..\lib\speedcheck.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_ssh.obj: ..\lib\ssh.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\ssh.c
 
-libcurl_dll_splay.obj: ..\lib\splay.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_sslgen.obj: ..\lib\sslgen.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\sslgen.c
 
-libcurl_dll_ssh.obj: ..\lib\ssh.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_ssluse.obj: ..\lib\ssluse.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\ssluse.c
 
-libcurl_dll_sslgen.obj: ..\lib\sslgen.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_strdup.obj: ..\lib\strdup.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\strdup.c
 
-libcurl_dll_ssluse.obj: ..\lib\ssluse.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_strequal.obj: ..\lib\strequal.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\strequal.c
 
-libcurl_dll_strdup.obj: ..\lib\strdup.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_strerror.obj: ..\lib\strerror.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\strerror.c
 
-libcurl_dll_strequal.obj: ..\lib\strequal.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_strtok.obj: ..\lib\strtok.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\strtok.c
 
-libcurl_dll_strerror.obj: ..\lib\strerror.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_strtoofft.obj: ..\lib\strtoofft.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\strtoofft.c
 
-libcurl_dll_strtok.obj: ..\lib\strtok.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_telnet.obj: ..\lib\telnet.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\telnet.c
 
-libcurl_dll_strtoofft.obj: ..\lib\strtoofft.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_tftp.obj: ..\lib\tftp.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\tftp.c
 
-libcurl_dll_telnet.obj: ..\lib\telnet.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_timeval.obj: ..\lib\timeval.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\timeval.c
 
-libcurl_dll_tftp.obj: ..\lib\tftp.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_transfer.obj: ..\lib\transfer.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\transfer.c
 
-libcurl_dll_timeval.obj: ..\lib\timeval.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_url.obj: ..\lib\url.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\url.c
 
-libcurl_dll_transfer.obj: ..\lib\transfer.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
-
-libcurl_dll_url.obj: ..\lib\url.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
-
-libcurl_dll_version.obj: ..\lib\version.c
-	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) $**
+borland\libcurl_dll_version.obj: ..\lib\version.c
+	$(CC) -q -c -P- -o$@ $(LIBCURL_DLL_CFLAGS) ..\lib\version.c
 

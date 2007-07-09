@@ -62,12 +62,33 @@ __libcurl_dll___depname =
 !ifeq WX_SHARED 1
 __libcurl_dll___depname = ..\lib\libcurl.dll
 !endif
+____libcurl_dll__DEBUGINFO_8 =
+!ifeq WX_DEBUG 0
+____libcurl_dll__DEBUGINFO_8 = 
+!endif
+!ifeq WX_DEBUG 1
+____libcurl_dll__DEBUGINFO_8 = debug all
+!endif
+____libcurl =
+!ifeq WX_DEBUG 0
+____libcurl = -ot -ox
+!endif
+!ifeq WX_DEBUG 1
+____libcurl = -od
+!endif
+____libcurl_0 =
+!ifeq WX_DEBUG 0
+____libcurl_0 = -d0
+!endif
+!ifeq WX_DEBUG 1
+____libcurl_0 = -d2
+!endif
 ____WX_SHARED =
 !ifeq WX_SHARED 0
 ____WX_SHARED = -dCURL_STATICLIB
 !endif
 !ifeq WX_SHARED 1
-____WX_SHARED = 
+____WX_SHARED = -dBUILDING_LIBCURL
 !endif
 ____WX_DEBUG =
 !ifeq WX_DEBUG 0
@@ -79,535 +100,531 @@ ____WX_DEBUG =
 
 ### Variables: ###
 
-LIBCURL_LIB_CFLAGS = $(____WX_SHARED) $(____WX_DEBUG) -i=..\include -i=..\lib &
-	$(CPPFLAGS) $(CFLAGS)
+LIBCURL_LIB_CFLAGS = $(____libcurl) $(____libcurl_0) -i=..\include -i=..\lib &
+	$(____WX_SHARED) $(____WX_DEBUG) $(CPPFLAGS) $(CFLAGS)
 LIBCURL_LIB_OBJECTS =  &
-	libcurl_lib_base64.obj &
-	libcurl_lib_connect.obj &
-	libcurl_lib_content_encoding.obj &
-	libcurl_lib_cookie.obj &
-	libcurl_lib_dict.obj &
-	libcurl_lib_easy.obj &
-	libcurl_lib_escape.obj &
-	libcurl_lib_file.obj &
-	libcurl_lib_formdata.obj &
-	libcurl_lib_ftp.obj &
-	libcurl_lib_getenv.obj &
-	libcurl_lib_getinfo.obj &
-	libcurl_lib_gtls.obj &
-	libcurl_lib_hash.obj &
-	libcurl_lib_hostares.obj &
-	libcurl_lib_hostasyn.obj &
-	libcurl_lib_hostip.obj &
-	libcurl_lib_hostip4.obj &
-	libcurl_lib_hostip6.obj &
-	libcurl_lib_hostsyn.obj &
-	libcurl_lib_hostthre.obj &
-	libcurl_lib_http.obj &
-	libcurl_lib_http_chunks.obj &
-	libcurl_lib_http_digest.obj &
-	libcurl_lib_http_negotiate.obj &
-	libcurl_lib_http_ntlm.obj &
-	libcurl_lib_if2ip.obj &
-	libcurl_lib_inet_ntop.obj &
-	libcurl_lib_inet_pton.obj &
-	libcurl_lib_krb4.obj &
-	libcurl_lib_ldap.obj &
-	libcurl_lib_llist.obj &
-	libcurl_lib_md5.obj &
-	libcurl_lib_memdebug.obj &
-	libcurl_lib_mprintf.obj &
-	libcurl_lib_multi.obj &
-	libcurl_lib_netrc.obj &
-	libcurl_lib_nwlib.obj &
-	libcurl_lib_parsedate.obj &
-	libcurl_lib_progress.obj &
-	libcurl_lib_security.obj &
-	libcurl_lib_select.obj &
-	libcurl_lib_sendf.obj &
-	libcurl_lib_share.obj &
-	libcurl_lib_socks.obj &
-	libcurl_lib_speedcheck.obj &
-	libcurl_lib_splay.obj &
-	libcurl_lib_ssh.obj &
-	libcurl_lib_sslgen.obj &
-	libcurl_lib_ssluse.obj &
-	libcurl_lib_strdup.obj &
-	libcurl_lib_strequal.obj &
-	libcurl_lib_strerror.obj &
-	libcurl_lib_strtok.obj &
-	libcurl_lib_strtoofft.obj &
-	libcurl_lib_telnet.obj &
-	libcurl_lib_tftp.obj &
-	libcurl_lib_timeval.obj &
-	libcurl_lib_transfer.obj &
-	libcurl_lib_url.obj &
-	libcurl_lib_version.obj
-LIBCURL_DLL_CFLAGS = -bd $(____WX_SHARED) $(____WX_DEBUG) -i=..\include &
-	-i=..\lib $(CPPFLAGS) $(CFLAGS)
+	watcom\libcurl_lib_base64.obj &
+	watcom\libcurl_lib_connect.obj &
+	watcom\libcurl_lib_content_encoding.obj &
+	watcom\libcurl_lib_cookie.obj &
+	watcom\libcurl_lib_dict.obj &
+	watcom\libcurl_lib_easy.obj &
+	watcom\libcurl_lib_escape.obj &
+	watcom\libcurl_lib_file.obj &
+	watcom\libcurl_lib_formdata.obj &
+	watcom\libcurl_lib_ftp.obj &
+	watcom\libcurl_lib_getenv.obj &
+	watcom\libcurl_lib_getinfo.obj &
+	watcom\libcurl_lib_gtls.obj &
+	watcom\libcurl_lib_hash.obj &
+	watcom\libcurl_lib_hostares.obj &
+	watcom\libcurl_lib_hostasyn.obj &
+	watcom\libcurl_lib_hostip.obj &
+	watcom\libcurl_lib_hostip4.obj &
+	watcom\libcurl_lib_hostip6.obj &
+	watcom\libcurl_lib_hostsyn.obj &
+	watcom\libcurl_lib_hostthre.obj &
+	watcom\libcurl_lib_http.obj &
+	watcom\libcurl_lib_http_chunks.obj &
+	watcom\libcurl_lib_http_digest.obj &
+	watcom\libcurl_lib_http_negotiate.obj &
+	watcom\libcurl_lib_http_ntlm.obj &
+	watcom\libcurl_lib_if2ip.obj &
+	watcom\libcurl_lib_inet_ntop.obj &
+	watcom\libcurl_lib_inet_pton.obj &
+	watcom\libcurl_lib_krb4.obj &
+	watcom\libcurl_lib_ldap.obj &
+	watcom\libcurl_lib_llist.obj &
+	watcom\libcurl_lib_md5.obj &
+	watcom\libcurl_lib_memdebug.obj &
+	watcom\libcurl_lib_mprintf.obj &
+	watcom\libcurl_lib_multi.obj &
+	watcom\libcurl_lib_netrc.obj &
+	watcom\libcurl_lib_parsedate.obj &
+	watcom\libcurl_lib_progress.obj &
+	watcom\libcurl_lib_security.obj &
+	watcom\libcurl_lib_select.obj &
+	watcom\libcurl_lib_sendf.obj &
+	watcom\libcurl_lib_share.obj &
+	watcom\libcurl_lib_socks.obj &
+	watcom\libcurl_lib_speedcheck.obj &
+	watcom\libcurl_lib_splay.obj &
+	watcom\libcurl_lib_ssh.obj &
+	watcom\libcurl_lib_sslgen.obj &
+	watcom\libcurl_lib_ssluse.obj &
+	watcom\libcurl_lib_strdup.obj &
+	watcom\libcurl_lib_strequal.obj &
+	watcom\libcurl_lib_strerror.obj &
+	watcom\libcurl_lib_strtok.obj &
+	watcom\libcurl_lib_strtoofft.obj &
+	watcom\libcurl_lib_telnet.obj &
+	watcom\libcurl_lib_tftp.obj &
+	watcom\libcurl_lib_timeval.obj &
+	watcom\libcurl_lib_transfer.obj &
+	watcom\libcurl_lib_url.obj &
+	watcom\libcurl_lib_version.obj
+LIBCURL_DLL_CFLAGS = -bd $(____libcurl) $(____libcurl_0) -i=..\include -i=..\lib &
+	$(____WX_SHARED) $(____WX_DEBUG) $(CPPFLAGS) $(CFLAGS)
 LIBCURL_DLL_OBJECTS =  &
-	libcurl_dll_base64.obj &
-	libcurl_dll_connect.obj &
-	libcurl_dll_content_encoding.obj &
-	libcurl_dll_cookie.obj &
-	libcurl_dll_dict.obj &
-	libcurl_dll_easy.obj &
-	libcurl_dll_escape.obj &
-	libcurl_dll_file.obj &
-	libcurl_dll_formdata.obj &
-	libcurl_dll_ftp.obj &
-	libcurl_dll_getenv.obj &
-	libcurl_dll_getinfo.obj &
-	libcurl_dll_gtls.obj &
-	libcurl_dll_hash.obj &
-	libcurl_dll_hostares.obj &
-	libcurl_dll_hostasyn.obj &
-	libcurl_dll_hostip.obj &
-	libcurl_dll_hostip4.obj &
-	libcurl_dll_hostip6.obj &
-	libcurl_dll_hostsyn.obj &
-	libcurl_dll_hostthre.obj &
-	libcurl_dll_http.obj &
-	libcurl_dll_http_chunks.obj &
-	libcurl_dll_http_digest.obj &
-	libcurl_dll_http_negotiate.obj &
-	libcurl_dll_http_ntlm.obj &
-	libcurl_dll_if2ip.obj &
-	libcurl_dll_inet_ntop.obj &
-	libcurl_dll_inet_pton.obj &
-	libcurl_dll_krb4.obj &
-	libcurl_dll_ldap.obj &
-	libcurl_dll_llist.obj &
-	libcurl_dll_md5.obj &
-	libcurl_dll_memdebug.obj &
-	libcurl_dll_mprintf.obj &
-	libcurl_dll_multi.obj &
-	libcurl_dll_netrc.obj &
-	libcurl_dll_nwlib.obj &
-	libcurl_dll_parsedate.obj &
-	libcurl_dll_progress.obj &
-	libcurl_dll_security.obj &
-	libcurl_dll_select.obj &
-	libcurl_dll_sendf.obj &
-	libcurl_dll_share.obj &
-	libcurl_dll_socks.obj &
-	libcurl_dll_speedcheck.obj &
-	libcurl_dll_splay.obj &
-	libcurl_dll_ssh.obj &
-	libcurl_dll_sslgen.obj &
-	libcurl_dll_ssluse.obj &
-	libcurl_dll_strdup.obj &
-	libcurl_dll_strequal.obj &
-	libcurl_dll_strerror.obj &
-	libcurl_dll_strtok.obj &
-	libcurl_dll_strtoofft.obj &
-	libcurl_dll_telnet.obj &
-	libcurl_dll_tftp.obj &
-	libcurl_dll_timeval.obj &
-	libcurl_dll_transfer.obj &
-	libcurl_dll_url.obj &
-	libcurl_dll_version.obj
+	watcom\libcurl_dll_base64.obj &
+	watcom\libcurl_dll_connect.obj &
+	watcom\libcurl_dll_content_encoding.obj &
+	watcom\libcurl_dll_cookie.obj &
+	watcom\libcurl_dll_dict.obj &
+	watcom\libcurl_dll_easy.obj &
+	watcom\libcurl_dll_escape.obj &
+	watcom\libcurl_dll_file.obj &
+	watcom\libcurl_dll_formdata.obj &
+	watcom\libcurl_dll_ftp.obj &
+	watcom\libcurl_dll_getenv.obj &
+	watcom\libcurl_dll_getinfo.obj &
+	watcom\libcurl_dll_gtls.obj &
+	watcom\libcurl_dll_hash.obj &
+	watcom\libcurl_dll_hostares.obj &
+	watcom\libcurl_dll_hostasyn.obj &
+	watcom\libcurl_dll_hostip.obj &
+	watcom\libcurl_dll_hostip4.obj &
+	watcom\libcurl_dll_hostip6.obj &
+	watcom\libcurl_dll_hostsyn.obj &
+	watcom\libcurl_dll_hostthre.obj &
+	watcom\libcurl_dll_http.obj &
+	watcom\libcurl_dll_http_chunks.obj &
+	watcom\libcurl_dll_http_digest.obj &
+	watcom\libcurl_dll_http_negotiate.obj &
+	watcom\libcurl_dll_http_ntlm.obj &
+	watcom\libcurl_dll_if2ip.obj &
+	watcom\libcurl_dll_inet_ntop.obj &
+	watcom\libcurl_dll_inet_pton.obj &
+	watcom\libcurl_dll_krb4.obj &
+	watcom\libcurl_dll_ldap.obj &
+	watcom\libcurl_dll_llist.obj &
+	watcom\libcurl_dll_md5.obj &
+	watcom\libcurl_dll_memdebug.obj &
+	watcom\libcurl_dll_mprintf.obj &
+	watcom\libcurl_dll_multi.obj &
+	watcom\libcurl_dll_netrc.obj &
+	watcom\libcurl_dll_parsedate.obj &
+	watcom\libcurl_dll_progress.obj &
+	watcom\libcurl_dll_security.obj &
+	watcom\libcurl_dll_select.obj &
+	watcom\libcurl_dll_sendf.obj &
+	watcom\libcurl_dll_share.obj &
+	watcom\libcurl_dll_socks.obj &
+	watcom\libcurl_dll_speedcheck.obj &
+	watcom\libcurl_dll_splay.obj &
+	watcom\libcurl_dll_ssh.obj &
+	watcom\libcurl_dll_sslgen.obj &
+	watcom\libcurl_dll_ssluse.obj &
+	watcom\libcurl_dll_strdup.obj &
+	watcom\libcurl_dll_strequal.obj &
+	watcom\libcurl_dll_strerror.obj &
+	watcom\libcurl_dll_strtok.obj &
+	watcom\libcurl_dll_strtoofft.obj &
+	watcom\libcurl_dll_telnet.obj &
+	watcom\libcurl_dll_tftp.obj &
+	watcom\libcurl_dll_timeval.obj &
+	watcom\libcurl_dll_transfer.obj &
+	watcom\libcurl_dll_url.obj &
+	watcom\libcurl_dll_version.obj
 
+
+all : watcom
+watcom :
+	-if not exist watcom mkdir watcom
 
 ### Targets: ###
 
 all : .SYMBOLIC $(__libcurl_lib___depname) $(__libcurl_dll___depname)
 
 clean : .SYMBOLIC 
-	-if exist .\*.obj del .\*.obj
-	-if exist .\*.res del .\*.res
-	-if exist .\*.lbc del .\*.lbc
-	-if exist .\*.ilk del .\*.ilk
-	-if exist .\*.pch del .\*.pch
+	-if exist watcom\*.obj del watcom\*.obj
+	-if exist watcom\*.res del watcom\*.res
+	-if exist watcom\*.lbc del watcom\*.lbc
+	-if exist watcom\*.ilk del watcom\*.ilk
+	-if exist watcom\*.pch del watcom\*.pch
 	-if exist ..\lib\libcurl.lib del ..\lib\libcurl.lib
 	-if exist ..\lib\libcurl.dll del ..\lib\libcurl.dll
 	-if exist ..\lib\libcurl.lib del ..\lib\libcurl.lib
 
 !ifeq WX_SHARED 0
 ..\lib\libcurl.lib :  $(LIBCURL_LIB_OBJECTS)
-	@%create libcurl_lib.lbc
-	@for %i in ($(LIBCURL_LIB_OBJECTS)) do @%append libcurl_lib.lbc +%i
-	wlib -q -p4096 -n -b $^@ @libcurl_lib.lbc
+	@%create watcom\libcurl_lib.lbc
+	@for %i in ($(LIBCURL_LIB_OBJECTS)) do @%append watcom\libcurl_lib.lbc +%i
+	wlib -q -p4096 -n -b $^@ @watcom\libcurl_lib.lbc
 !endif
 
 !ifeq WX_SHARED 1
 ..\lib\libcurl.dll :  $(LIBCURL_DLL_OBJECTS)
-	@%create libcurl_dll.lbc
-	@%append libcurl_dll.lbc option quiet
-	@%append libcurl_dll.lbc name $^@
-	@%append libcurl_dll.lbc option caseexact
-	@%append libcurl_dll.lbc $(LDFLAGS)
-	@for %i in ($(LIBCURL_DLL_OBJECTS)) do @%append libcurl_dll.lbc file %i
-	@for %i in () do @%append libcurl_dll.lbc library %i
-	@%append libcurl_dll.lbc
-	@%append libcurl_dll.lbc system nt_dll
-	wlink @libcurl_dll.lbc
+	@%create watcom\libcurl_dll.lbc
+	@%append watcom\libcurl_dll.lbc option quiet
+	@%append watcom\libcurl_dll.lbc name $^@
+	@%append watcom\libcurl_dll.lbc option caseexact
+	@%append watcom\libcurl_dll.lbc $(LDFLAGS) $(____libcurl_dll__DEBUGINFO_8)
+	@for %i in ($(LIBCURL_DLL_OBJECTS)) do @%append watcom\libcurl_dll.lbc file %i
+	@for %i in ( wsock32.lib winmm.lib) do @%append watcom\libcurl_dll.lbc library %i
+	@%append watcom\libcurl_dll.lbc
+	@%append watcom\libcurl_dll.lbc system nt_dll
+	wlink @watcom\libcurl_dll.lbc
 	wlib -q -n -b ..\lib\libcurl.lib +$^@
 !endif
 
-libcurl_lib_base64.obj :  .AUTODEPEND ..\lib\base64.c
+watcom\libcurl_lib_base64.obj :  .AUTODEPEND ..\lib\base64.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_connect.obj :  .AUTODEPEND ..\lib\connect.c
+watcom\libcurl_lib_connect.obj :  .AUTODEPEND ..\lib\connect.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_content_encoding.obj :  .AUTODEPEND ..\lib\content_encoding.c
+watcom\libcurl_lib_content_encoding.obj :  .AUTODEPEND ..\lib\content_encoding.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_cookie.obj :  .AUTODEPEND ..\lib\cookie.c
+watcom\libcurl_lib_cookie.obj :  .AUTODEPEND ..\lib\cookie.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_dict.obj :  .AUTODEPEND ..\lib\dict.c
+watcom\libcurl_lib_dict.obj :  .AUTODEPEND ..\lib\dict.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_easy.obj :  .AUTODEPEND ..\lib\easy.c
+watcom\libcurl_lib_easy.obj :  .AUTODEPEND ..\lib\easy.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_escape.obj :  .AUTODEPEND ..\lib\escape.c
+watcom\libcurl_lib_escape.obj :  .AUTODEPEND ..\lib\escape.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_file.obj :  .AUTODEPEND ..\lib\file.c
+watcom\libcurl_lib_file.obj :  .AUTODEPEND ..\lib\file.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_formdata.obj :  .AUTODEPEND ..\lib\formdata.c
+watcom\libcurl_lib_formdata.obj :  .AUTODEPEND ..\lib\formdata.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_ftp.obj :  .AUTODEPEND ..\lib\ftp.c
+watcom\libcurl_lib_ftp.obj :  .AUTODEPEND ..\lib\ftp.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_getenv.obj :  .AUTODEPEND ..\lib\getenv.c
+watcom\libcurl_lib_getenv.obj :  .AUTODEPEND ..\lib\getenv.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_getinfo.obj :  .AUTODEPEND ..\lib\getinfo.c
+watcom\libcurl_lib_getinfo.obj :  .AUTODEPEND ..\lib\getinfo.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_gtls.obj :  .AUTODEPEND ..\lib\gtls.c
+watcom\libcurl_lib_gtls.obj :  .AUTODEPEND ..\lib\gtls.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_hash.obj :  .AUTODEPEND ..\lib\hash.c
+watcom\libcurl_lib_hash.obj :  .AUTODEPEND ..\lib\hash.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_hostares.obj :  .AUTODEPEND ..\lib\hostares.c
+watcom\libcurl_lib_hostares.obj :  .AUTODEPEND ..\lib\hostares.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_hostasyn.obj :  .AUTODEPEND ..\lib\hostasyn.c
+watcom\libcurl_lib_hostasyn.obj :  .AUTODEPEND ..\lib\hostasyn.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_hostip.obj :  .AUTODEPEND ..\lib\hostip.c
+watcom\libcurl_lib_hostip.obj :  .AUTODEPEND ..\lib\hostip.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_hostip4.obj :  .AUTODEPEND ..\lib\hostip4.c
+watcom\libcurl_lib_hostip4.obj :  .AUTODEPEND ..\lib\hostip4.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_hostip6.obj :  .AUTODEPEND ..\lib\hostip6.c
+watcom\libcurl_lib_hostip6.obj :  .AUTODEPEND ..\lib\hostip6.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_hostsyn.obj :  .AUTODEPEND ..\lib\hostsyn.c
+watcom\libcurl_lib_hostsyn.obj :  .AUTODEPEND ..\lib\hostsyn.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_hostthre.obj :  .AUTODEPEND ..\lib\hostthre.c
+watcom\libcurl_lib_hostthre.obj :  .AUTODEPEND ..\lib\hostthre.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_http.obj :  .AUTODEPEND ..\lib\http.c
+watcom\libcurl_lib_http.obj :  .AUTODEPEND ..\lib\http.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_http_chunks.obj :  .AUTODEPEND ..\lib\http_chunks.c
+watcom\libcurl_lib_http_chunks.obj :  .AUTODEPEND ..\lib\http_chunks.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_http_digest.obj :  .AUTODEPEND ..\lib\http_digest.c
+watcom\libcurl_lib_http_digest.obj :  .AUTODEPEND ..\lib\http_digest.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_http_negotiate.obj :  .AUTODEPEND ..\lib\http_negotiate.c
+watcom\libcurl_lib_http_negotiate.obj :  .AUTODEPEND ..\lib\http_negotiate.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_http_ntlm.obj :  .AUTODEPEND ..\lib\http_ntlm.c
+watcom\libcurl_lib_http_ntlm.obj :  .AUTODEPEND ..\lib\http_ntlm.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_if2ip.obj :  .AUTODEPEND ..\lib\if2ip.c
+watcom\libcurl_lib_if2ip.obj :  .AUTODEPEND ..\lib\if2ip.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_inet_ntop.obj :  .AUTODEPEND ..\lib\inet_ntop.c
+watcom\libcurl_lib_inet_ntop.obj :  .AUTODEPEND ..\lib\inet_ntop.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_inet_pton.obj :  .AUTODEPEND ..\lib\inet_pton.c
+watcom\libcurl_lib_inet_pton.obj :  .AUTODEPEND ..\lib\inet_pton.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_krb4.obj :  .AUTODEPEND ..\lib\krb4.c
+watcom\libcurl_lib_krb4.obj :  .AUTODEPEND ..\lib\krb4.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_ldap.obj :  .AUTODEPEND ..\lib\ldap.c
+watcom\libcurl_lib_ldap.obj :  .AUTODEPEND ..\lib\ldap.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_llist.obj :  .AUTODEPEND ..\lib\llist.c
+watcom\libcurl_lib_llist.obj :  .AUTODEPEND ..\lib\llist.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_md5.obj :  .AUTODEPEND ..\lib\md5.c
+watcom\libcurl_lib_md5.obj :  .AUTODEPEND ..\lib\md5.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_memdebug.obj :  .AUTODEPEND ..\lib\memdebug.c
+watcom\libcurl_lib_memdebug.obj :  .AUTODEPEND ..\lib\memdebug.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_mprintf.obj :  .AUTODEPEND ..\lib\mprintf.c
+watcom\libcurl_lib_mprintf.obj :  .AUTODEPEND ..\lib\mprintf.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_multi.obj :  .AUTODEPEND ..\lib\multi.c
+watcom\libcurl_lib_multi.obj :  .AUTODEPEND ..\lib\multi.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_netrc.obj :  .AUTODEPEND ..\lib\netrc.c
+watcom\libcurl_lib_netrc.obj :  .AUTODEPEND ..\lib\netrc.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_nwlib.obj :  .AUTODEPEND ..\lib\nwlib.c
+watcom\libcurl_lib_parsedate.obj :  .AUTODEPEND ..\lib\parsedate.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_parsedate.obj :  .AUTODEPEND ..\lib\parsedate.c
+watcom\libcurl_lib_progress.obj :  .AUTODEPEND ..\lib\progress.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_progress.obj :  .AUTODEPEND ..\lib\progress.c
+watcom\libcurl_lib_security.obj :  .AUTODEPEND ..\lib\security.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_security.obj :  .AUTODEPEND ..\lib\security.c
+watcom\libcurl_lib_select.obj :  .AUTODEPEND ..\lib\select.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_select.obj :  .AUTODEPEND ..\lib\select.c
+watcom\libcurl_lib_sendf.obj :  .AUTODEPEND ..\lib\sendf.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_sendf.obj :  .AUTODEPEND ..\lib\sendf.c
+watcom\libcurl_lib_share.obj :  .AUTODEPEND ..\lib\share.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_share.obj :  .AUTODEPEND ..\lib\share.c
+watcom\libcurl_lib_socks.obj :  .AUTODEPEND ..\lib\socks.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_socks.obj :  .AUTODEPEND ..\lib\socks.c
+watcom\libcurl_lib_speedcheck.obj :  .AUTODEPEND ..\lib\speedcheck.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_speedcheck.obj :  .AUTODEPEND ..\lib\speedcheck.c
+watcom\libcurl_lib_splay.obj :  .AUTODEPEND ..\lib\splay.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_splay.obj :  .AUTODEPEND ..\lib\splay.c
+watcom\libcurl_lib_ssh.obj :  .AUTODEPEND ..\lib\ssh.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_ssh.obj :  .AUTODEPEND ..\lib\ssh.c
+watcom\libcurl_lib_sslgen.obj :  .AUTODEPEND ..\lib\sslgen.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_sslgen.obj :  .AUTODEPEND ..\lib\sslgen.c
+watcom\libcurl_lib_ssluse.obj :  .AUTODEPEND ..\lib\ssluse.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_ssluse.obj :  .AUTODEPEND ..\lib\ssluse.c
+watcom\libcurl_lib_strdup.obj :  .AUTODEPEND ..\lib\strdup.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_strdup.obj :  .AUTODEPEND ..\lib\strdup.c
+watcom\libcurl_lib_strequal.obj :  .AUTODEPEND ..\lib\strequal.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_strequal.obj :  .AUTODEPEND ..\lib\strequal.c
+watcom\libcurl_lib_strerror.obj :  .AUTODEPEND ..\lib\strerror.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_strerror.obj :  .AUTODEPEND ..\lib\strerror.c
+watcom\libcurl_lib_strtok.obj :  .AUTODEPEND ..\lib\strtok.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_strtok.obj :  .AUTODEPEND ..\lib\strtok.c
+watcom\libcurl_lib_strtoofft.obj :  .AUTODEPEND ..\lib\strtoofft.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_strtoofft.obj :  .AUTODEPEND ..\lib\strtoofft.c
+watcom\libcurl_lib_telnet.obj :  .AUTODEPEND ..\lib\telnet.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_telnet.obj :  .AUTODEPEND ..\lib\telnet.c
+watcom\libcurl_lib_tftp.obj :  .AUTODEPEND ..\lib\tftp.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_tftp.obj :  .AUTODEPEND ..\lib\tftp.c
+watcom\libcurl_lib_timeval.obj :  .AUTODEPEND ..\lib\timeval.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_timeval.obj :  .AUTODEPEND ..\lib\timeval.c
+watcom\libcurl_lib_transfer.obj :  .AUTODEPEND ..\lib\transfer.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_transfer.obj :  .AUTODEPEND ..\lib\transfer.c
+watcom\libcurl_lib_url.obj :  .AUTODEPEND ..\lib\url.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_url.obj :  .AUTODEPEND ..\lib\url.c
+watcom\libcurl_lib_version.obj :  .AUTODEPEND ..\lib\version.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
 
-libcurl_lib_version.obj :  .AUTODEPEND ..\lib\version.c
-	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_LIB_CFLAGS) $<
-
-libcurl_dll_base64.obj :  .AUTODEPEND ..\lib\base64.c
+watcom\libcurl_dll_base64.obj :  .AUTODEPEND ..\lib\base64.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_connect.obj :  .AUTODEPEND ..\lib\connect.c
+watcom\libcurl_dll_connect.obj :  .AUTODEPEND ..\lib\connect.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_content_encoding.obj :  .AUTODEPEND ..\lib\content_encoding.c
+watcom\libcurl_dll_content_encoding.obj :  .AUTODEPEND ..\lib\content_encoding.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_cookie.obj :  .AUTODEPEND ..\lib\cookie.c
+watcom\libcurl_dll_cookie.obj :  .AUTODEPEND ..\lib\cookie.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_dict.obj :  .AUTODEPEND ..\lib\dict.c
+watcom\libcurl_dll_dict.obj :  .AUTODEPEND ..\lib\dict.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_easy.obj :  .AUTODEPEND ..\lib\easy.c
+watcom\libcurl_dll_easy.obj :  .AUTODEPEND ..\lib\easy.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_escape.obj :  .AUTODEPEND ..\lib\escape.c
+watcom\libcurl_dll_escape.obj :  .AUTODEPEND ..\lib\escape.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_file.obj :  .AUTODEPEND ..\lib\file.c
+watcom\libcurl_dll_file.obj :  .AUTODEPEND ..\lib\file.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_formdata.obj :  .AUTODEPEND ..\lib\formdata.c
+watcom\libcurl_dll_formdata.obj :  .AUTODEPEND ..\lib\formdata.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_ftp.obj :  .AUTODEPEND ..\lib\ftp.c
+watcom\libcurl_dll_ftp.obj :  .AUTODEPEND ..\lib\ftp.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_getenv.obj :  .AUTODEPEND ..\lib\getenv.c
+watcom\libcurl_dll_getenv.obj :  .AUTODEPEND ..\lib\getenv.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_getinfo.obj :  .AUTODEPEND ..\lib\getinfo.c
+watcom\libcurl_dll_getinfo.obj :  .AUTODEPEND ..\lib\getinfo.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_gtls.obj :  .AUTODEPEND ..\lib\gtls.c
+watcom\libcurl_dll_gtls.obj :  .AUTODEPEND ..\lib\gtls.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_hash.obj :  .AUTODEPEND ..\lib\hash.c
+watcom\libcurl_dll_hash.obj :  .AUTODEPEND ..\lib\hash.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_hostares.obj :  .AUTODEPEND ..\lib\hostares.c
+watcom\libcurl_dll_hostares.obj :  .AUTODEPEND ..\lib\hostares.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_hostasyn.obj :  .AUTODEPEND ..\lib\hostasyn.c
+watcom\libcurl_dll_hostasyn.obj :  .AUTODEPEND ..\lib\hostasyn.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_hostip.obj :  .AUTODEPEND ..\lib\hostip.c
+watcom\libcurl_dll_hostip.obj :  .AUTODEPEND ..\lib\hostip.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_hostip4.obj :  .AUTODEPEND ..\lib\hostip4.c
+watcom\libcurl_dll_hostip4.obj :  .AUTODEPEND ..\lib\hostip4.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_hostip6.obj :  .AUTODEPEND ..\lib\hostip6.c
+watcom\libcurl_dll_hostip6.obj :  .AUTODEPEND ..\lib\hostip6.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_hostsyn.obj :  .AUTODEPEND ..\lib\hostsyn.c
+watcom\libcurl_dll_hostsyn.obj :  .AUTODEPEND ..\lib\hostsyn.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_hostthre.obj :  .AUTODEPEND ..\lib\hostthre.c
+watcom\libcurl_dll_hostthre.obj :  .AUTODEPEND ..\lib\hostthre.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_http.obj :  .AUTODEPEND ..\lib\http.c
+watcom\libcurl_dll_http.obj :  .AUTODEPEND ..\lib\http.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_http_chunks.obj :  .AUTODEPEND ..\lib\http_chunks.c
+watcom\libcurl_dll_http_chunks.obj :  .AUTODEPEND ..\lib\http_chunks.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_http_digest.obj :  .AUTODEPEND ..\lib\http_digest.c
+watcom\libcurl_dll_http_digest.obj :  .AUTODEPEND ..\lib\http_digest.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_http_negotiate.obj :  .AUTODEPEND ..\lib\http_negotiate.c
+watcom\libcurl_dll_http_negotiate.obj :  .AUTODEPEND ..\lib\http_negotiate.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_http_ntlm.obj :  .AUTODEPEND ..\lib\http_ntlm.c
+watcom\libcurl_dll_http_ntlm.obj :  .AUTODEPEND ..\lib\http_ntlm.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_if2ip.obj :  .AUTODEPEND ..\lib\if2ip.c
+watcom\libcurl_dll_if2ip.obj :  .AUTODEPEND ..\lib\if2ip.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_inet_ntop.obj :  .AUTODEPEND ..\lib\inet_ntop.c
+watcom\libcurl_dll_inet_ntop.obj :  .AUTODEPEND ..\lib\inet_ntop.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_inet_pton.obj :  .AUTODEPEND ..\lib\inet_pton.c
+watcom\libcurl_dll_inet_pton.obj :  .AUTODEPEND ..\lib\inet_pton.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_krb4.obj :  .AUTODEPEND ..\lib\krb4.c
+watcom\libcurl_dll_krb4.obj :  .AUTODEPEND ..\lib\krb4.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_ldap.obj :  .AUTODEPEND ..\lib\ldap.c
+watcom\libcurl_dll_ldap.obj :  .AUTODEPEND ..\lib\ldap.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_llist.obj :  .AUTODEPEND ..\lib\llist.c
+watcom\libcurl_dll_llist.obj :  .AUTODEPEND ..\lib\llist.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_md5.obj :  .AUTODEPEND ..\lib\md5.c
+watcom\libcurl_dll_md5.obj :  .AUTODEPEND ..\lib\md5.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_memdebug.obj :  .AUTODEPEND ..\lib\memdebug.c
+watcom\libcurl_dll_memdebug.obj :  .AUTODEPEND ..\lib\memdebug.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_mprintf.obj :  .AUTODEPEND ..\lib\mprintf.c
+watcom\libcurl_dll_mprintf.obj :  .AUTODEPEND ..\lib\mprintf.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_multi.obj :  .AUTODEPEND ..\lib\multi.c
+watcom\libcurl_dll_multi.obj :  .AUTODEPEND ..\lib\multi.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_netrc.obj :  .AUTODEPEND ..\lib\netrc.c
+watcom\libcurl_dll_netrc.obj :  .AUTODEPEND ..\lib\netrc.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_nwlib.obj :  .AUTODEPEND ..\lib\nwlib.c
+watcom\libcurl_dll_parsedate.obj :  .AUTODEPEND ..\lib\parsedate.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_parsedate.obj :  .AUTODEPEND ..\lib\parsedate.c
+watcom\libcurl_dll_progress.obj :  .AUTODEPEND ..\lib\progress.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_progress.obj :  .AUTODEPEND ..\lib\progress.c
+watcom\libcurl_dll_security.obj :  .AUTODEPEND ..\lib\security.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_security.obj :  .AUTODEPEND ..\lib\security.c
+watcom\libcurl_dll_select.obj :  .AUTODEPEND ..\lib\select.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_select.obj :  .AUTODEPEND ..\lib\select.c
+watcom\libcurl_dll_sendf.obj :  .AUTODEPEND ..\lib\sendf.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_sendf.obj :  .AUTODEPEND ..\lib\sendf.c
+watcom\libcurl_dll_share.obj :  .AUTODEPEND ..\lib\share.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_share.obj :  .AUTODEPEND ..\lib\share.c
+watcom\libcurl_dll_socks.obj :  .AUTODEPEND ..\lib\socks.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_socks.obj :  .AUTODEPEND ..\lib\socks.c
+watcom\libcurl_dll_speedcheck.obj :  .AUTODEPEND ..\lib\speedcheck.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_speedcheck.obj :  .AUTODEPEND ..\lib\speedcheck.c
+watcom\libcurl_dll_splay.obj :  .AUTODEPEND ..\lib\splay.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_splay.obj :  .AUTODEPEND ..\lib\splay.c
+watcom\libcurl_dll_ssh.obj :  .AUTODEPEND ..\lib\ssh.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_ssh.obj :  .AUTODEPEND ..\lib\ssh.c
+watcom\libcurl_dll_sslgen.obj :  .AUTODEPEND ..\lib\sslgen.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_sslgen.obj :  .AUTODEPEND ..\lib\sslgen.c
+watcom\libcurl_dll_ssluse.obj :  .AUTODEPEND ..\lib\ssluse.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_ssluse.obj :  .AUTODEPEND ..\lib\ssluse.c
+watcom\libcurl_dll_strdup.obj :  .AUTODEPEND ..\lib\strdup.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_strdup.obj :  .AUTODEPEND ..\lib\strdup.c
+watcom\libcurl_dll_strequal.obj :  .AUTODEPEND ..\lib\strequal.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_strequal.obj :  .AUTODEPEND ..\lib\strequal.c
+watcom\libcurl_dll_strerror.obj :  .AUTODEPEND ..\lib\strerror.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_strerror.obj :  .AUTODEPEND ..\lib\strerror.c
+watcom\libcurl_dll_strtok.obj :  .AUTODEPEND ..\lib\strtok.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_strtok.obj :  .AUTODEPEND ..\lib\strtok.c
+watcom\libcurl_dll_strtoofft.obj :  .AUTODEPEND ..\lib\strtoofft.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_strtoofft.obj :  .AUTODEPEND ..\lib\strtoofft.c
+watcom\libcurl_dll_telnet.obj :  .AUTODEPEND ..\lib\telnet.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_telnet.obj :  .AUTODEPEND ..\lib\telnet.c
+watcom\libcurl_dll_tftp.obj :  .AUTODEPEND ..\lib\tftp.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_tftp.obj :  .AUTODEPEND ..\lib\tftp.c
+watcom\libcurl_dll_timeval.obj :  .AUTODEPEND ..\lib\timeval.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_timeval.obj :  .AUTODEPEND ..\lib\timeval.c
+watcom\libcurl_dll_transfer.obj :  .AUTODEPEND ..\lib\transfer.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_transfer.obj :  .AUTODEPEND ..\lib\transfer.c
+watcom\libcurl_dll_url.obj :  .AUTODEPEND ..\lib\url.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
-libcurl_dll_url.obj :  .AUTODEPEND ..\lib\url.c
-	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
-
-libcurl_dll_version.obj :  .AUTODEPEND ..\lib\version.c
+watcom\libcurl_dll_version.obj :  .AUTODEPEND ..\lib\version.c
 	$(CC) -bt=nt -zq -fo=$^@ $(LIBCURL_DLL_CFLAGS) $<
 
