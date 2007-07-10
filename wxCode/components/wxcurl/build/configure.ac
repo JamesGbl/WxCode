@@ -47,8 +47,19 @@ WXCODE_CHECKS([2.6.0], [xrc,html,adv,xml,core,base])
 
 
 # check for the libcurl library
-LIBCURL_CHECK_CONFIG
+LIBCURL_CHECK_CONFIG([yes], [7.15.0], [curlOk=1], [curlOk=0])
+if [[ $curlOk = 0 ]]; then
+    AC_MSG_ERROR([
+    Could not find a valid libCURL installation on your system.
 
+    If you do not have libCURL installed or you have an old version
+    then please install the latest version from 
+      http://curl.haxx.se/libcurl/
+
+    If you have a valid libCURL installed, then please check the config.log
+    file for more details about the failure of this check.
+    ])
+fi
 
 # add all XML stuff that we've found...
 CXXFLAGS="$CXXFLAGS $LIBCURL_CPPFLAGS"

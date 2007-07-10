@@ -4356,11 +4356,11 @@ fi
 echo "${ECHO_T}$libcurl_cv_lib_curl_version" >&6; }
 
 	_libcurl_version=`echo $libcurl_cv_lib_curl_version | $_libcurl_version_parse`
-	_libcurl_wanted=`echo 0 | $_libcurl_version_parse`
+	_libcurl_wanted=`echo 7.15.0 | $_libcurl_version_parse`
 
         if test $_libcurl_wanted -gt 0 ; then
-	   { echo "$as_me:$LINENO: checking for libcurl >= version " >&5
-echo $ECHO_N "checking for libcurl >= version ... $ECHO_C" >&6; }
+	   { echo "$as_me:$LINENO: checking for libcurl >= version 7.15.0" >&5
+echo $ECHO_N "checking for libcurl >= version 7.15.0... $ECHO_C" >&6; }
 if test "${libcurl_cv_lib_version_ok+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
@@ -4654,15 +4654,37 @@ _ACEOF
 
   if test x$_libcurl_with = xno || test x$libcurl_cv_lib_curl_usable != xyes ; then
      # This is the IF-NO path
-     :
+     curlOk=0
   else
      # This is the IF-YES path
-     :
+     curlOk=1
   fi
 
   unset _libcurl_with
 
+if [ $curlOk = 0 ]; then
+    { { echo "$as_me:$LINENO: error:
+    Could not find a valid libCURL installation on your system.
 
+    If you do not have libCURL installed or you have an old version
+    then please install the latest version from
+      http://curl.haxx.se/libcurl/
+
+    If you have a valid libCURL installed, then please check the config.log
+    file for more details about the failure of this check.
+    " >&5
+echo "$as_me: error:
+    Could not find a valid libCURL installation on your system.
+
+    If you do not have libCURL installed or you have an old version
+    then please install the latest version from
+      http://curl.haxx.se/libcurl/
+
+    If you have a valid libCURL installed, then please check the config.log
+    file for more details about the failure of this check.
+    " >&2;}
+   { (exit 1); exit 1; }; }
+fi
 
 # add all XML stuff that we've found...
 CXXFLAGS="$CXXFLAGS $LIBCURL_CPPFLAGS"
