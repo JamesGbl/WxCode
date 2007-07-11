@@ -1,29 +1,34 @@
 #!/bin/bash
 
+CFLAG=''
 GPIB_SOURCES=''
 GPIB_LIB=''
 GPIB_SUPPORT=''
 
-if [ "$1" = "USE_GPIB" ]
-then
-    GPIB_SOURCES='../../../src/gpib.cpp' 
-    GPIB_LIB='-lgpib'
-    GPIB_SUPPORT='Yes'
-else
-    echo '============================================================'
-    echo 'You run makepy.sh without GPIB support.'
-    echo 'If you want to create the python wxctb library with'
-    echo 'GPIB support, rerun the command with:'
-    echo 'makepy.sh USE_GPIB=1' 
-    echo '============================================================'
-    GPIB_SUPPORT='No'
-fi
+for arg in $*; do
+    if [ "$arg" = "USE_GPIB" ]; then
+	   GPIB_SOURCES='../../../src/gpib.cpp' 
+	   GPIB_LIB='-lgpib'
+	   GPIB_SUPPORT='Yes'
+    else
+	   echo '============================================================'
+	   echo 'You run makepy.sh without GPIB support.'
+	   echo 'If you want to create the python wxctb library with'
+	   echo 'GPIB support, rerun the command with:'
+	   echo 'makepy.sh USE_GPIB=1' 
+	   echo '============================================================'
+	   GPIB_SUPPORT='No'
+    fi
+    if [ "$arg" = "USE_DEBUG" ]; then
+	   CFLAG='-g'
+    fi
+done
 
 echo "swig generates python wrapper files..."
 swig -c++ -Wall -nodefault -python -keyword -new_repr -modern wxctb.i
 
 echo "create shared library wxctb with GPIB=$GPIB_SUPPORT for python 2.4..."
-g++ -Wall -g -shared -I /usr/include/python2.4/ \
+g++ -Wall $CFLAG -shared -I /usr/include/python2.4/ \
     -I ../../../include \
     wxctb_wrap.cxx  \
     ../../../src/linux/timer.cpp \
