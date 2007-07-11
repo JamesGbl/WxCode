@@ -24,6 +24,11 @@
         keybinder=keybinder_lib+keybinder_dll
     </set>
 
+    <set var="COMPONENT_LIB">
+        <if cond="WX_SHARED=='0'">keybinder_lib</if>
+        <if cond="WX_SHARED=='1'">keybinder_dll</if>
+    </set>
+
 
     <!-- The sample -->
     <!-- ========== -->
@@ -32,7 +37,7 @@
         <dir>sample</dir>
         <has-win32-res/>
 
-        <library>keybinder_lib</library>
+        <library>$(COMPONENT_LIB)</library>
         <wx-lib>core</wx-lib>
         <wx-lib>base</wx-lib>
     </wxcode-sample>

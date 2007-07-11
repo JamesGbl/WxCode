@@ -42,7 +42,16 @@
 #if wxKEYBINDER_DEBUG_MSG
     #define wxKBLogDebug    wxLogDebug
 #else
-    inline void wxKBLogDebug(const wxChar *WXUNUSED(fmt), ...) { /* do nothing */ }
+    inline void wxKBLogDebug(const wxChar *WXUNUSED(fmt))
+        { /* do nothing */ }
+    inline void wxKBLogDebug(const wxChar *WXUNUSED(fmt), const wxChar *WXUNUSED(arg))
+        { /* do nothing */ }
+    inline void wxKBLogDebug(const wxChar *WXUNUSED(fmt), int WXUNUSED(arg))
+        { /* do nothing */ }
+    inline void wxKBLogDebug(const wxChar *WXUNUSED(fmt), const wxChar *WXUNUSED(arg), int WXUNUSED(arg2))
+        { /* do nothing */ }
+    inline void wxKBLogDebug(const wxChar *WXUNUSED(fmt), const wxChar *WXUNUSED(arg), int WXUNUSED(arg2), int WXUNUSED(arg3))
+        { /* do nothing */ }
 #endif
 
 
