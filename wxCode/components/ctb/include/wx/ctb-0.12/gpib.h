@@ -86,9 +86,23 @@ struct wxGPIB_DCS
     wxGPIB_Timeout m_timeout;
     /*! EOT enable */
     bool m_eot;
-    /*! EOS character */
+    /*!
+	 Defines the EOS character.
+	 Note! Defining an EOS byte does not cause the driver to
+	 automatically send that byte at the end of write I/O
+	 operations. The application is responsible for placing the
+	 EOS byte at the end of the data strings that it defines.
+	 (National Instruments NI-488.2M Function Reference Manual)
+    */
     unsigned char m_eosChar;
-    /*! EOS handling */
+    /*! 
+	 Set the EOS mode (handling).m_eosMode may be a combination 
+	 of bits ORed together. The following bits can be used:
+	 0x04: Terminate read when EOS is detected.
+	 0x08: Set EOI (End or identify line) with EOS on write function
+	 0x10: Compare all 8 bits of EOS byte rather than low 7 bits
+	       (all read and write functions).
+	*/
     unsigned char m_eosMode;
     /*! buffer for internal use */
     char m_buf[32];
@@ -109,7 +123,9 @@ struct wxGPIB_DCS
 	   */
 	   m_timeout = wxGPIB_TO_1ms;
 	   m_eot = true;
+	   /*! EOS character, see above! */
 	   m_eosChar = 0;//'\n';
+	   /*! EOS mode, see above! */
 	   m_eosMode = 0;
     };
     /*!
@@ -174,6 +190,32 @@ enum wxGPIBIoctls {
 	 For a device reset you should use the CTB_RESET command above.
     */
     CTB_GPIB_RESET_BUS,
+    /*!
+	 Configure the end-of-string (EOS) termination character.
+	 Note! Defining an EOS byte does not cause the driver to
+	 automatically send that byte at the end of write I/O
+	 operations. The application is responsible for placing the
+	 EOS byte at the end of the data strings that it defines.
+	 (National Instruments NI-488.2M Function Reference Manual)
+    */
+    CTB_GPIB_SET_EOS_CHAR,
+    /*!
+	 Get the internal EOS termination character (see above).
+    */
+    CTB_GPIB_GET_EOS_CHAR,
+    /*! 
+	 Set the EOS mode (handling).m_eosMode may be a combination 
+	 of bits ORed together. The following bits can be used:
+	 0x04: Terminate read when EOS is detected.
+	 0x08: Set EOI (End or identify line) with EOS on write function
+	 0x10: Compare all 8 bits of EOS byte rather than low 7 bits
+	       (all read and write functions).
+    */
+    CTB_GPIB_SET_EOS_MODE,
+    /*!
+	 Get the internal EOS mode (see above).
+    */
+    CTB_GPIB_GET_EOS_MODE,
 };
 
 /*!
