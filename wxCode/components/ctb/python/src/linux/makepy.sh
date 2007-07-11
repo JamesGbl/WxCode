@@ -14,7 +14,7 @@ else
     echo 'You run makepy.sh without GPIB support.'
     echo 'If you want to create the python wxctb library with'
     echo 'GPIB support, rerun the command with:'
-    echo 'makepy.sh GPIB=1' 
+    echo 'makepy.sh USE_GPIB=1' 
     echo '============================================================'
     GPIB_SUPPORT='No'
 fi
