@@ -295,7 +295,33 @@ class wxGPIB(wxIOBase):
             if listeners & (1 << i):
                 result.append(i)
         return result
-    
+
+    def GetEosChar(self):
+        """
+        Get the internal EOS termination character (see SetEosChar).
+        For example:
+        g = wxGPIB()
+        g.Open(\"gpib1\",1)
+        eos = g.GetEosChar()
+        """
+        eos = wxctb.new_intp()
+        wxctb.intp_assign(eos, 0)
+        self.device.Ioctl(wxctb.CTB_GPIB_GET_EOS_CHAR,eos)
+        return wxctb.intp_value(eos)
+        
+    def GetEosMode(self):
+        """
+        Get the internal EOS mode (see SetEosMode).
+        For example:
+        g = wxGPIB()
+        g.Open(\"gpib1\",1)
+        eos = g.GetEosMode()
+        """
+        mode = wxctb.new_intp()
+        wxctb.intp_assign(mode, 0)
+        self.device.Ioctl(wxctb.CTB_GPIB_GET_EOS_MODE,mode)
+        return wxctb.intp_value(mode)
+
     def GetError(self):
         errorString = " "*256
         self.device.GetError(errorString,256)
@@ -320,20 +346,30 @@ class wxGPIB(wxIOBase):
     def Ibwrt(self,string):
         return self.device.Ibwrt(string,len(string))
 
-    def Open(self,devname,adr):
+    def Open(self,devname,adr,eosChar=10,eosMode=0x08|0x04):
         """
-        Open(gpibdevice,address)
+        Open(gpibdevice,address,eosChar,eosMode)
         Opens a connected device at the GPIB bus. gpibdevice means the
         controller, (mostly \"gpib1\"), address the address of the desired
-        device in the range 1...31. For example:
+        device in the range 1...31. The eosChar defines the EOS character
+        (default is linefeed), eosMode may be a combination of bits ORed
+        together. The following bits can be used:
+        0x04: Terminate read when EOS is detected.
+        0x08: Set EOI (End or identify line) with EOS on write function
+        0x10: Compare all 8 bits of EOS byte rather than low 7 bits
+              (all read and write functions). Default is 0x12
+        For example:
         dev = wxGPIB()
         dev.Open(\"gpib1\",17)
-        Opens the device with the address 17.
+        Opens the device with the address 17, linefeed as EOS (default)
+        and eos mode with 0x04 and 0x08.
         Open returns >= 0 or a negativ value, if something going wrong.
         """
         self.device = wxctb.wxGPIB()
         dcs = wxctb.wxGPIB_DCS()
         dcs.m_address1 = adr
+        dcs.m_eosChar = eosChar
+        dcs.m_eosMode = eosMode
         result = self.device.Open(devname,dcs)
         return result
     
@@ -356,6 +392,39 @@ class wxGPIB(wxIOBase):
         For a device reset you should use the Reset() command above.
         """
         self.device.Ioctl(wxctb.CTB_GPIB_RESET_BUS,None)
+
+    def SetEosChar(self,eos):
+        """
+        Configure the end-of-string (EOS) termination character.
+        Note! Defining an EOS byte does not cause the driver to
+        automatically send that byte at the end of write I/O
+        operations. The application is responsible for placing the
+        EOS byte at the end of the data strings that it defines.
+        (National Instruments NI-488.2M Function Reference Manual)
+        For example:
+        g = wxGPIB()
+        g.Open(\"gpib1\",1)
+        eos = g.GetEosChar(0x10)
+        """
+        intp = wxctb.new_intp()
+        wxctb.intp_assign(intp, eos)
+        return self.device.Ioctl(wxctb.CTB_GPIB_SET_EOS_CHAR,intp)
+        
+    def SetEosMode(self,mode):
+        """
+        Set the EOS mode (handling).m_eosMode may be a combination 
+        of bits ORed together. The following bits can be used:
+        0x04: Terminate read when EOS is detected.
+        0x08: Set EOI (End or identify line) with EOS on write function
+        0x10: Compare all 8 bits of EOS byte rather than low 7 bits
+        (all read and write functions). For example:
+        g = wxGPIB()
+        g.Open(\"gpib1\",1)
+        eos = g.GetEosMode(0x04 | 0x08)
+        """
+        intp = wxctb.new_intp()
+        wxctb.intp_assign(intp, mode)
+        return self.device.Ioctl(wxctb.CTB_GPIB_SET_EOS_MODE,intp)
         
 def GetKey():
     """
@@ -366,3 +435,12 @@ def GetKey():
 
     """
     return wxctb.GetKey()
+
+def GetVersion():
+    """
+    Returns the version of the wxctb python module. The numbering
+    has the following format: x.y.z
+    x.y means the version of the underlaying ctb lib, z the version
+    of the python port.
+    """
+    return "0.12.3"
