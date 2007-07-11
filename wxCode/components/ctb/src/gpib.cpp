@@ -143,18 +143,18 @@ int wxGPIB::Ioctl(int cmd,void* args)
 		  // convert the timeout in ms (given by args) into the
 		  // traditional NI-488.2 timeout period 
 		  if(to > 1000000) timeout = wxGPIB_TO_1000s;
-		  else if(to > 300000) timeout = wxGPIB_TO_300s;
-		  else if(to > 100000) timeout = wxGPIB_TO_100s;
-		  else if(to > 30000) timeout = wxGPIB_TO_30s;
-		  else if(to > 10000) timeout = wxGPIB_TO_10s;
-		  else if(to > 3000) timeout = wxGPIB_TO_3s;
-		  else if(to > 1000) timeout = wxGPIB_TO_1s;
-		  else if(to > 300) timeout = wxGPIB_TO_300ms;
-		  else if(to > 100) timeout = wxGPIB_TO_100ms;
-		  else if(to > 30) timeout = wxGPIB_TO_30ms;
-		  else if(to > 10) timeout = wxGPIB_TO_10ms;
-		  else if(to > 3) timeout = wxGPIB_TO_3ms;
-		  else if(to > 1) timeout = wxGPIB_TO_1ms;
+		  else if(to >= 300000) timeout = wxGPIB_TO_300s;
+		  else if(to >= 100000) timeout = wxGPIB_TO_100s;
+		  else if(to >= 30000) timeout = wxGPIB_TO_30s;
+		  else if(to >= 10000) timeout = wxGPIB_TO_10s;
+		  else if(to >= 3000) timeout = wxGPIB_TO_3s;
+		  else if(to >= 1000) timeout = wxGPIB_TO_1s;
+		  else if(to >= 300) timeout = wxGPIB_TO_300ms;
+		  else if(to >= 100) timeout = wxGPIB_TO_100ms;
+		  else if(to >= 30) timeout = wxGPIB_TO_30ms;
+		  else if(to >= 10) timeout = wxGPIB_TO_10ms;
+		  else if(to >= 3) timeout = wxGPIB_TO_3ms;
+		  else if(to >= 1) timeout = wxGPIB_TO_1ms;
 		  else timeout = wxGPIB_TO_NONE;
 		  ibtmo(m_hd,timeout);
 		  return 0; 
@@ -183,6 +183,38 @@ int wxGPIB::Ioctl(int cmd,void* args)
     case CTB_GPIB_RESET_BUS:
 	   ibsic(m_board);
 	   return 0;
+    case CTB_GPIB_GET_EOS_CHAR:
+	   if( m_hd ) {
+		  *(int*)args = (int)m_dcs.m_eosChar;
+		  return 0;
+	   }
+	   return -1;
+    case CTB_GPIB_SET_EOS_CHAR:
+#ifdef __GNUG__
+	   // FIXME!
+	   // Doesn't work with linux-gpib-3.2.08. All EOS beside 0x00
+	   // are blocking during sending data to the device. (Look at 
+	   // function my_ibwrt in linux-gpib-3.2.08/lib/ibWrt.c
+	   if( m_hd ) {
+		  m_dcs.m_eosChar = (char)*(int*)args;
+		  ibeos(m_hd,(m_dcs.m_eosMode << 8) | m_dcs.m_eosChar);
+		  return 0;
+	   }
+#endif
+	   return -1;
+    case CTB_GPIB_GET_EOS_MODE:
+	   if( m_hd ) {
+		  *(int*)args = (int)m_dcs.m_eosMode;
+		  return 0;
+	   }
+	   return -1;
+    case CTB_GPIB_SET_EOS_MODE:
+	   if( m_hd ) {
+		  m_dcs.m_eosMode = (char)*(int*)args;
+		  ibeos(m_hd,(m_dcs.m_eosMode << 8) | m_dcs.m_eosChar);
+		  return 0;
+	   }
+	   return -1;
     }
     // error or unknown command
     return -1;
@@ -232,12 +264,22 @@ int wxGPIB::OpenDevice(const char* devname, void* dcs)
     if((unsigned int)m_dcs.m_timeout > wxGPIB_TO_1000s) {
 	   m_dcs.m_timeout = wxGPIB_TO_10us;
     }
+
     m_hd = ibdev(m_board,
 			  m_dcs.m_address1,
 			  m_dcs.m_address2,
 			  m_dcs.m_timeout,
 			  m_dcs.m_eot,
-			  (m_dcs.m_eosMode << 8) | m_dcs.m_eosChar);
+#ifdef __GNUG__
+			  // FIXME!
+			  // linux-gpib-3.2.08 doesn't work with any EOS (blocks). 
+			  // Because we always has to add an EOS on the message 
+			  // (independent of the m_eosChar setting), we can ignore it! 
+			  0
+#else
+			  (m_dcs.m_eosMode << 8) | m_dcs.m_eosChar
+#endif
+	   );
     if(m_hd < 0) {
 	   // no gpib controller installed (not found)
 	   return -2;
@@ -262,22 +304,14 @@ int wxGPIB::OpenDevice(const char* devname, void* dcs)
 
 int wxGPIB::Read(char* buf,size_t len)
 {
-    char spr = 0;
     // if something is in the fifo, first read that
     if(m_fifo->items() > 0) {
 	   return m_fifo->read(buf,len);
     }
-    // ask the device if it is ready (this call blocks with Linux,
-    // but we reduced the serial poll timeout in the OpenDevice
-    // member function (look there)
-    ibrsp(m_hd,&spr);
-    if(spr & 0x10) {
-	   m_state = ibrd(m_hd,buf,len);
-	   m_error = ThreadIberr();
-	   m_count = ThreadIbcnt();
-	   return m_count;
-    }
-    return 0;
+    m_state = ibrd(m_hd,buf,len);
+    m_error = ThreadIberr();
+    m_count = ThreadIbcnt();
+    return m_count;
 };
 
 int wxGPIB::Write(char* buf,size_t len)
