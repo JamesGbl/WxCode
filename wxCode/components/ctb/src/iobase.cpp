@@ -118,9 +118,19 @@ int wxIOBase::ReadUntilEOS(char*& readbuf,
 	   // byte doesn't match the next eos character, we handle the
 	   // readed byte as a normal char (and not an eos)
 	   if((eos != eosString) && (ch != *eos)) {
-		  // because the following character isn't in the eos
-		  // string, we must 'reset' the eos match
+		  // FIXME!
+		  // write all characters, which was matched the eos string
+		  // until now (with the first wrong character all received
+		  // eos characters are invalid and must handled as normal
+		  // characters).
+
+		  // This doesn't work right and is only a little workaround
+		  // because the received eos chars are lost
+		  PutBack(ch);
+		  // because we doesn't match the eos string, we must 'reset' 
+		  // the eos match
 		  eos = eosString;
+		  continue;
 	   }
 	   else {
 		  if((ch == *eos) && !quoted) {
