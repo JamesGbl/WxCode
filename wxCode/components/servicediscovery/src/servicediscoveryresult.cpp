@@ -148,7 +148,13 @@ void wxServiceDiscoveryResult::SetTarget ( wxString iTarget )
 {
 	m_TargetMachine = iTarget;
 	
+	wxASSERT( iTarget != wxEmptyString );
+	
+#ifndef _WIN32
+	hostent * pHost = gethostbyname2( m_TargetMachine.mb_str(), AF_INET );
+#else
 	hostent * pHost = gethostbyname( m_TargetMachine.mb_str() );
+#endif
 
 	if ( pHost != NULL )
 	{
@@ -172,6 +178,50 @@ void wxServiceDiscoveryResult::SetTarget ( wxString iTarget )
 					m_Address.IPAddress().c_str() );
 	}
 }
+
+
+void wxServiceDiscoveryResult::SetTarget ( const char * iTarget )
+{
+	m_TargetMachine = wxString( iTarget, wxConvUTF8 );
+	
+	wxASSERT( m_TargetMachine != wxEmptyString );
+	
+	if ( ! m_Address.Hostname( m_TargetMachine ) )
+	{	
+	#ifndef _WIN32
+		int error = 0;
+		hostent * pHost = getipnodebyname( iTarget, AF_INET, 0, &error );
+	#else
+		hostent * pHost = gethostbyname( iTarget );
+	#endif
+		if ( pHost != NULL )
+		{
+			//#ifdef __WXDEBUG__
+			//		wxString host_ip;
+			//		
+			//		host_ip << static_cast<wxUint8>( pHost->h_addr[0] ) << wxT(".") 
+			//				<< static_cast<wxUint8>( pHost->h_addr[1] ) << wxT(".") 
+			//				<< static_cast<wxUint8>( pHost->h_addr[2] ) << wxT(".") 
+			//				<< static_cast<wxUint8>( pHost->h_addr[3] );
+			//		
+			//		wxLogDebug( wxT("Got IP: %s"),
+			//					host_ip.c_str() );
+			//#endif
+			
+			wxUint32 address = wxINT32_SWAP_ON_LE( * reinterpret_cast<wxUint32 *>( pHost->h_addr ) );
+			
+			m_Address.Hostname( address );
+			
+			wxLogDebug( wxT("Got IP:  %s"),
+						m_Address.IPAddress().c_str() );
+		}
+	}
+	else
+		wxLogDebug( wxT("Got IP:  %s"),
+					m_Address.IPAddress().c_str() );
+
+}
+
 
 
 #endif // wxUSE_SERVICE_DISCOVERY

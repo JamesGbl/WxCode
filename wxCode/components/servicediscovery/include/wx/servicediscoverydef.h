@@ -54,6 +54,22 @@
 //    variable:
 //          WXDLLIMPEXP_DATA_MYCOMP(int) myGlobalIntVar;
 //
+
+
+#if ( defined(__WXMAC__) || defined(__WXCOCOA__) ) && defined( __GNUC__ )
+#    ifdef WXEXPORT
+#        undef WXEXPORT
+#    endif
+#    ifdef WXIMPORT
+#        undef WXIMPORT
+#    endif
+#    define WXEXPORT __attribute__((__visibility__("default")))
+#    define WXIMPORT __attribute__((__visibility__("default")))
+#endif
+
+
+
+
 #ifdef WXMAKINGDLL_SERVICEDISCOVERY
     #define WXDLLIMPEXP_SERVICEDISCOVERY                  WXEXPORT
     #define WXDLLIMPEXP_DATA_SERVICEDISCOVERY(type)       WXEXPORT type

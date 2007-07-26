@@ -120,7 +120,7 @@ void wxServiceDiscoveryResolver::DoHandleResolveCallback(	DNSServiceRef WXUNUSED
 			
 			m_Result.SetFullName( wxString( fullname, wxConvUTF8 ) );
 			m_Result.SetPort( wxUINT16_SWAP_ON_BE( port ) );
-			m_Result.SetTarget( wxString( hosttarget, wxConvUTF8 ) );
+			m_Result.SetTarget( hosttarget );
 			m_Result.SetTextRecord( wxString( txtRecord, wxConvUTF8 ) );
 		}
 		

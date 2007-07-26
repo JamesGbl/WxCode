@@ -76,6 +76,7 @@ public:
 	
 	virtual const wxString &	Target				( void ) const			{ return m_TargetMachine; }
 	virtual void				SetTarget			( wxString iTarget );
+	virtual void				SetTarget			( const char * iTarget );
 	
 	virtual	const wxString &	TextRecord			( void ) const			{ return m_TxtRecord; }
 	virtual void				SetTextRecord		( wxString iTxtRecord )	{ m_TxtRecord = iTxtRecord; }
