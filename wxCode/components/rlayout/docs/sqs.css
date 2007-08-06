@@ -1,0 +1,73 @@
+table {
+	background: White;
+	font-family: Verdana, Arial, Helvetica, "MS Sans Serif", sans-serif;
+	font-size: 80%;
+    border-collapse: collapse;
+}
+
+h2 {
+   border-bottom: dotted #8080ff;
+   font-size: 150%;
+	margin-top: 0.7em;
+	margin-bottom: 1.0em;
+}
+
+h3 {
+   border-bottom: solid #8080ff;
+   font-size: 100%;
+	margin-top: 1.0em;
+	margin-bottom: 0.7em;
+}
+
+h4 {
+   font-size: 100%;
+	margin-top: 1.0em;
+	margin-bottom: 0.5em;
+}
+
+td {
+    padding-left: 0.3em;
+    padding-top: 0.3em;solid
+    padding-bottom: 0.3em;
+    border: 1px solid gray;
+}
+
+.code {
+   background-color: #E0E0FF;
+	font-family: "Courier New",monospace;
+	font-size: 90%;
+	padding-left: 1em;
+	padding-top: 0.3em;
+	padding-bottom: 0.3em;
+}
+
+td.code {
+    white-space:nowrap;
+    padding-left: 0.3em;
+	font-size: 125%;
+}
+
+td.contents {
+    padding-left: 0.5em;
+    padding-right: 1em;
+    with: 452px;
+    text-align: justify;
+}
+
+table.cmdhelp {
+    margin-left: 0.7em;
+    text-align: left;
+    border: 1px solid black;
+}
+
+a.navig {
+	background: #e0e0ff;
+	font-family: Verdana, Arial, Helvetica, "MS Sans Serif", sans-serif;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: small;
+    color: #000060;
+}
+
+a.navig:hover { color: #4040C0 }
+

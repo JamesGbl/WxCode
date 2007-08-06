@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+  <meta name="generator" content="HTML Tidy for Windows (vers 14 February 2006), see www.w3.org">
+
+  <title>wxRercursiveLayout - Algorithm...</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+  <meta content="MSHTML 6.00.2900.2963" name="GENERATOR">
+  <link rel="stylesheet" type="text/css" href="sqs.css">
+</head>
+
+<body>
+  <table summary="" style="width: 600px; height: text-align: left;" border="1" cellpadding="2" cellspacing="2">
+    <tbody>
+      <tr>
+        <td style="vertical-align: top;"><br>
+        <br>
+        <a class="navig" href="wxRL-intro.html">Introduction</a><br>
+        <br>
+        <a class="navig" href="wxRL-example.html">An example</a><br>
+        <br>
+        <a class="navig" href="wxRL-build.html">Building</a><br>
+        <br>
+        <a class="navig" href="wxRL-misc.html">Algorithm &amp; Misc</a><br>
+        <br>
+        <a class="navig" href="wxRL-notes.html">Notes</a><br>
+        <br>
+        </td>
+
+        <td class="contents">  <br>
+          <h2>
+              Algorithm and Misc Notes
+            </h2>
+            We will look at the algorithm and some concepts used in <em>wxRecursiveLayout</em>. To use the layout manager it is not strictly needed but some understanding is useful.
+            <br><br>
+            
+          <h3>Sizer-items, sizers and windows</h3>
+          A sizer-item is really only a managed rectangular area. What it manages is up to the item itself, it can be a window or a sub-sizer or empty space (a spacer). It can be queried for minimum size requirement and one can set its size from outside (equal to or larger than requested min size).<br><br>
+          A sizer contains any number of sizer-items and it enforces a certain geometry on them. The box-sizer put all children in a vertical or horizontally divided box. A grid sizer puts its children in a grid (like a table). <br><br>
+          Generic windows can also be put inside sizer-items. They are 'heavy-weight' objects since they have message queues and all sorts of possibilities, including that of painting itself. From the point of view of sizers and sizer-items, windows (and spacers) form end points (leafs) in a layout.
+          <br><br>
+          A layout based on nested sizers can respond to resizing events by applying the constraints of each nested sizer, so it will scale in a 'clever' way.
+          <br><br>
+          A sizer based layout is also usually 'packed', meaning all area is used, and all items bound exactly to another area, and there is no overlap of areas. In contrast, the layout of a generic window is free, and child windows may overlap.
+          <br><br>
+          Since a spacer is usually part of a sizer, it cannot determine its size by itself. However, it can specify how big it is relative its neighbours using the <em>proportion</em> attribute. In a horizontal box sizer it says how much of the total horizontal extent the item wants (actually, after first seing how much space there is left when all items have had their minimum size requests granted). So sometimes the <em>proportion</em> attribute refers to horizontal extent, sometimes to vertical extent.<br><br>
+          There is also a flag field that determines how an item is aligned if it cannot fill up the area given by the parent sizer.<br><br>
+          
+          <h3>What <em>wxRecursiveLayout</em> adds</h3>
+          <em>wxRlItem</em> represents a sizer item, but it adds the ability to be painted, to respond to mouse events and it has a type (such as <em>RlCaption, RlButton, RlPaneEdge, RlToolPane</em>, ...etc).<br><br>
+          So <em>wxRlItem</em> fits the space where a full window is too heavy-weight but where some ability to handle resizing, customized painting and mouse events is required.<br><br> 
+          A sizer is also a <em>wxRlItem</em> so it can paint itself as well. This can be used for example if the children don't fill all the space, or to provide a background when the children have transparent parts.<br><br> 
+
+          Together with a set of <em>capability</em> flags it is easy to use them as layout components. <br><br>
+          <h3>An example - Pane Caption</h3>
+          Consider a window caption:<br>
+          <IMG src="Caption.png" width="188" height="24" vspace="5" align="middle" border="0"><br>
+          This can be described as:
+          <ul>
+          <li>A horizontal background with blue color (and a raised border)
+              <ul>
+              <li>The text: <em>Test Pane1</em> (left aligned)</li>
+              <li>Some empty space</li>
+              <li>Button 1 (menu) (right aligned)</li>
+              <li>Button 2 (close) (right aligned)</li>
+              </ul>
+          </li>
+          </ul>
+          As a tree of <em>wxRlItems</em>, it becomes:
+          <ul>
+          <li><strong>RlSizer</strong>: An item owning a horizontal sizer, painting the background.
+              <ul>
+              <li><strong>RlCaptionText</strong>: A left aligned item with text</li>
+              <li><strong>RlSpace</strong>: stretchable space</li>
+              <li><strong>RlButton</strong>: Button 1</li>
+              <li><strong>RlButton</strong>: Button 2</li>
+              </ul>
+          </li>
+          </ul>
+          In addition to this, we want the buttons to send an event to the parent window when clicked, and possibly to be repainted when the mouse is over them (hovering). When someone clicks on the text we want to activate the pane and including changing background colour.<br><br>
+          Finally when a user holds down the left mouse button and starts to move the mouse, we want to start dragging the pane inside the layout.<br><br>
+          On its own a <em>wxSizerItem</em> cannot do this.<br><br>
+
+          <h3>Capabilities</h3>
+          A wxRlItem has a set of capablities defining how it behaves. They include:<br><br>
+          <table summary="" class="cmdhelp">
+            <tbody>
+              <tr>
+                <td class="code">RL_CAPAB_MOUSE<br>_WXEVENT</td>
+                <td><big>An item that has this bit set generates a wxEvent to the parent window when the mouse is active in its area. <em>The two buttons in the caption above has this cabability.</em>
+                </big></td>
+              </tr>
+              <tr>
+                <td class="code">RL_CAPAB_REPAINT<br>_ON_ENTER_LEAVE</td>
+                <td><big>An item with this flag will be repainted each time the mouse enters/leaves the area. 
+                </big></td>
+              </tr>
+              <tr>
+                <td class="code">RL_CAPAB_GRIPPER</td>
+                <td><big>This flag states that the item is a <strong>gripper</strong>, i.e. it can start a move operation of its parent (window pane, toolbar, ...). <em>The blue background area of the caption has this capability</em>.
+                </big></td>
+              </tr>
+              <tr>
+                <td class="code">RL_CAPAB_ENTITY</td>
+                <td><big>This denotes that the item is the root of a group that other items cannot be moved into. To disable that a window is positioned <em>inside</em> the caption, we set this flag. It forms a boundary towards items higher up in the layout tree.
+                </big></td>
+              </tr>
+            </tbody>
+          </table>
+          <br>
+          Many layout items can be handled in this way, specifying a cabability mask and providing a <em>Render</em> function. It reduces the need to declare new classes and is resource efficient. It is also well suited to being themed, using external painting code.<br><br>
+      </tr>
+    </tbody>
+  </table><br>
+</body>
+</html>

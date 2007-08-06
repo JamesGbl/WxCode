@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+  <meta name="generator" content="HTML Tidy for Windows (vers 14 February 2006), see www.w3.org">
+
+  <title>wxRecursiveLayout - Intro</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+  <meta content="MSHTML 6.00.2900.2963" name="GENERATOR">
+  <link rel="stylesheet" type="text/css" href="sqs.css">
+</head>
+
+<body>
+  <table summary="" style="width: 600px; height: text-align: left;" border="1" cellpadding="2" cellspacing="2">
+    <tbody>
+      <tr>
+        <td style="vertical-align: top;"><br>
+        <br>
+        <a class="navig" href="wxRL-intro.html">Introduction</a><br>
+        <br>
+        <a class="navig" href="wxRL-example.html">An example</a><br>
+        <br>
+        <a class="navig" href="wxRL-build.html">Building</a><br>
+        <br>
+        <a class="navig" href="wxRL-misc.html">Algorithm &amp; Misc</a><br>
+        <br>
+        <a class="navig" href="wxRL-notes.html">Notes</a><br>
+        <br>
+        </td>
+
+        <td class="contents">  <br>
+          <h2>Introduction</h2>
+          <h3>What is wxRecursiveLayout</h3>
+            <em>wxRecursiveLayout</em> (or <em>wxRL</em>) is a window layout manager for wxWidgets built around a central (yes, recursive) algorithm. It divides the window into rectangular non-overlapping areas. 
+            <br>
+            <br>
+            It is based on the observation that almost all layout items (from the smallest decoration to full application windows) are rectangular and follow a few simple rules in interacting with the larger layout. 
+            <br>
+            <br>
+             It is generic enough to be used both for main frame layouts and in dialog layouts. This document is mostly related to using it for frame layouts. <br><br>
+            <em>An example:</em><br>
+             <A href="Ex-MaMgr.png" target="_parent"><IMG src="Ex-MaMgr-s.png" width="350" height="215" align="middle" border="0"></A><br><br>
+             wxRL does not add any new geometry to the layout. The layout is based on  <em>wxSizer</em> derived classes (with <em>wxBoxSizer</em> being the most common one) which basically allows to pack areas vertically or horizontally. However you can do that in many nested levels, so a lot is possible. The result is a layout that is packed, without a default 'center' or 'document' area. One can arrange such layouts, but it is not enforced. 
+            <br>
+            <br>
+             One could say of this approach that it does not use <em>wxSizers</em> for doing the layout, <em>wxSizers</em> <strong>are</strong> the layout. 
+            <br><br>
+            
+          <h3>What does wxRecursiveLayout provide?</h3>
+          These are the areas where wxRecursiveLayout does a lot of work to simplify for the application:
+          <ul>
+          <li>Providing a generic way of arranging a window layout based on <em>wxSizers</em>.</li>
+          <li>It can be applied both on main windows and in dialogs (to move / position items interactively).</li>
+         <li>It gives a way to paint decorations, backgrounds, edges, ...etc in a resource-efficient way. Decoration types can be added / modified by an application. </li> 
+          <li>It automatically adds and removes edges between components as needed.</li>
+         <li>Dynamic resizing of areas using the mouse.</li>
+          <li>A layout can be saved to an XML file and later be reloaded (perspectives).</li>
+          <li>It provides application panes with caption and optional caption buttons (and small local toolbars).</li>
+         <li>Panes and toolbars can be dragged and repositioned inside the managed window.</li>
+          <li>Support for floating and docking layout parts.</li>
+          </ul>
+          <br>
+
+            <h3>wxRlItem</h3>
+            The class that does most work is <em>wxRlItem</em>. It represents a rectangular area which is automatically positioned and resized, it can paint itself, and it can respond to mouse events. It can also contain any subset of <em>wxWindows</em> and <em>wxRlItems</em>. It can be thought of as a very lightweight window class (on its own it is not though, it needs to be 'powered' by the layout manager). 
+            <br><br>From the wxWidgets perspective <em>wxRlItem</em> inherits from <em>wxSizerItem</em>. To this it adds a type field and the ability to render itself, together with a 'capability' and 'state' field. It also integrates part of the <em>wxSizer</em> functionality by providing access functions to children, parent, siblings and the root item. Items can also be accessed via their address in the layout. As <em>wxSizerItem</em> it can contain other sizers, windows and <em>wxRlItems</em>. 
+           <br><br> 
+            <em>wxRlItem</em> is used directly by the application and therefore have simple functions like <em>Insert, Detach, Replace, Destroy, Enclose</em> to handle items. These functions do work in the background such as inserting/removing edges and creating/removing subsizers. <br><br> 
+
+            <h3>wxRlManager</h3>
+            A layout is a tree of <em>wxRlItems</em> managed by a <em>wxRlManager</em> class. <em>wxRlManager </em>has a <em>wxWindow</em> instance (the managed window), where the layout is shown /rendered to. <em>wxRlManager</em> can manage any type of window, including frames, child windows, panels and dalogs.  
+            <br><br>
+            <em>wxRlManager</em> derives from <em>wxEvtHandler</em>. When given a window to manage, it listens to the events of the window and passes them down the hierarchy of <em>wxRlItems</em>. Mouse, sizing, activation and paint events are handled.  <br><br>
+            <em>wxRlManager</em> will do the layout in the client area of the window and it will fill up the entire client area with the layout. Therefore an application usually does not paint in the client area of a managed window. 
+            <br><br>
+            
+            <h3>Rendering and wxRlPainter</h3>
+             There are two different ways for a wxRlItem to render itself, both handled through: 
+            <p class="code">virtual void wxRlItem::Render( wxDC *dc );<br></p>
+             The default implementation simply calls the function: 
+            <p class="code">virtual void wxRlPainter::Render( wxDC *dc, wxRlItem *item, const wxRect &amp;r );<br></p> 
+            <em>wxRlPainter</em> is a class that can draw any (most) <em>wxRlItems</em> to a wxDC. By changing to another <em>wxRlPainter</em> one can have a different 'theme'. <br><br>
+            However, a derived <em>wxRlItem</em> can also implement its own version of <em>wxRlItem::Render</em>, then it will paint itself without using the active <em>wxRlPainter</em>. 
+            <br>
+            <br>
+          </td>
+      </tr>
+    </tbody>
+  </table><br>
+</body>
+</html>

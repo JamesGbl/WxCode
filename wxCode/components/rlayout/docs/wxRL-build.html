@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+  <meta name="generator" content="HTML Tidy for Windows (vers 14 February 2006), see www.w3.org">
+
+  <title>wxRecursiveLayout - Building</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+  <meta content="MSHTML 6.00.2900.2963" name="GENERATOR">
+  <link rel="stylesheet" type="text/css" href="sqs.css">
+</head>
+
+<body>
+  <table summary="" style="width: 600px; height: text-align: left;" border="1" cellpadding="2" cellspacing="2">
+    <tbody>
+      <tr>
+        <td style="vertical-align: top;"><br>
+        <br>
+        <a class="navig" href="wxRL-intro.html">Introduction</a><br>
+        <br>
+        <a class="navig" href="wxRL-example.html">An example</a><br>
+        <br>
+        <a class="navig" href="wxRL-build.html">Building</a><br>
+        <br>
+        <a class="navig" href="wxRL-misc.html">Algorithm &amp; Misc</a><br>
+        <br>
+        <a class="navig" href="wxRL-notes.html">Notes</a><br>
+        <br>
+        </td>
+
+        <td class="contents">  <br>
+          <h2>Building</h2>
+          <h3>Overview</h3>
+          To build <em>wxRL</em> you need wxWidgets version 2.8.4 or later. Earlier versions of wxWidgets did have some issues with <em>wxBoxSizer</em> making it impossible to precisely specify position and size / proportion for an item. <br><br>
+
+          The samples can be built from <A href="http://www.cmake.org">CMake</A> (supporting gcc and other major Unix compilers and many Windows IDE:s / compilers, including Visual Studio 6/7/8 and Borland C). 
+          <br><br>
+          CMake generates makefiles or project files which you then build. 
+         <br><br>
+          There is also a hand made GNU makefile that compiles with g++ on both 32-bit X86 Linux and MinGW on Win32.
+          <br><br>
+          <em>wxRL</em> has been tested with Windows (Visual Studio Express 8.0 and MingGW) and Linux (wxGTK). So far no experience from Macintosh. If anyone tries it out, please inform then.
+           <br><br>
+          <h3>Directory layout</h3>
+          <ul>
+          <LI><strong>build</strong> - build directory</LI>
+          <LI><strong>docs</strong> - this documentation</LI>
+          <LI><strong>include</strong> - headers
+          <ul>
+          <LI><strong>utils</strong> - General, non wxWidgets headers</LI>
+          <LI><strong>wx</strong> - wxWidgets related headers (including <em>wxRlLayout.h</em> and friends)</LI>
+          </ul> 
+          </LI>
+          <LI><strong>samples</strong> - the samples 
+          <ul>
+          <LI><strong>main</strong> - Main sample, shows many aspects of <em>wxRL</em></LI>
+          <LI><strong>minimal</strong> - Bare bones sample, as simple as it gets
+          </ul> 
+          </LI>
+          <LI><strong>src</strong> - source files
+          <ul>
+          <LI><strong>rl</strong> - <em>wxRL</em> source files </LI>
+          <LI><strong>utils</strong> - Generic functionality, not specific to wxWidgets</LI>
+          <LI><strong>utils-wx</strong> - wxWidgets utilities source files </LI>
+          </ul> 
+          </LI>
+          </ul> 
+          <br>
+          <h3>Samples</h3>
+          In this package there are two samples showing how to use <em>wxRL</em>:<br>
+          <ul>
+          <LI><strong>Minimal</strong> - It shows how to use <em>wxRL</em> in a basic way for a <em>wxFrame</em> </LI>
+          <LI><strong>Main</strong> - This larger sample shows several uses of <em>wxRL</em>, including:
+          <ul>
+          <li>Using caption buttons</li>
+          <li>Handling messages from <em>wxRlManager</em></li>
+          <li>Floating and docking components </li>
+          <li>Integrating parts with fixed horizontal/vertical size with other items with flexible (proportional) size</li>
+          <li>How to save and later restore layouts and layout contents </li>
+          <li>Floating and docking frames </li>
+          <li>Using application panes, including compound sub layouts </li>
+          <li>Defining a new custom <em>RlItem</em> derived class, giving a content holding 'quad-window'</li>
+          <li>Global and local toolbars (a local toolbar is one inside a pane)</li>
+         </ul>
+          </LI>
+          </ul>
+          <br>
+          <h3>Building with CMake</h3>
+          CMake generates quite a few files and subdirectories. Therefore it is best to run CMake from a subdirectory of the source folder (the directory <em>cbuild</em> is for that).
+          <br><br>
+          <h4>Unix and Unix-like systems <small>(including MinGW &amp; CygWin, Mac-OS/X(?))</small></h4>
+          One must first generate the makefiles using ccmake like this:
+         <p class="code">
+          ats# pwd <br>
+          /proj/wx-rl/build <br>
+          ats# cd ../samples/main/cbuild/ <br>
+          ats# ccmake ../ <br>
+          </p>
+          and then run them using:
+          <p class="code">
+          ats# make <br>
+          [ 25%] Built target utils <br>
+          [ 66%] Built target rl <br>
+          [ 91%] Built target utils_wx <br>
+          [100%] Built target rlmain <br>
+          ats# <br>
+          </p>
+          and run the sample:
+          <p class="code">
+              ats# rlmain & 
+              <br>
+          [1] 1441
+          </p><br>
+          <h4>On Windows (Win32)</h4>
+          Building on Windows is similar, the differnce being the GUI used to generate the project files. 
+          <br><br></td>
+      </tr>
+    </tbody>
+  </table><br>
+</body>
+</html>

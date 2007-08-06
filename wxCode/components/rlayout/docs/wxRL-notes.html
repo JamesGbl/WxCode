@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+  <meta name="generator" content="HTML Tidy for Windows (vers 14 February 2006), see www.w3.org">
+
+  <title>wxRecursiveLayout - Intro</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+  <meta content="MSHTML 6.00.2900.2963" name="GENERATOR">
+  <link rel="stylesheet" type="text/css" href="sqs.css">
+</head>
+
+<body>
+  <table summary="" style="width: 600px; height: text-align: left;" border="1" cellpadding="2" cellspacing="2">
+    <tbody>
+      <tr>
+        <td style="vertical-align: top;"><br>
+        <br>
+        <a class="navig" href="wxRL-intro.html">Introduction</a><br>
+        <br>
+        <a class="navig" href="wxRL-example.html">An example</a><br>
+        <br>
+        <a class="navig" href="wxRL-build.html">Building</a><br>
+        <br>
+        <a class="navig" href="wxRL-misc.html">Algorithm &amp; Misc</a><br>
+        <br>
+        <a class="navig" href="wxRL-notes.html">Notes</a><br>
+        <br>
+        </td>
+
+        <td class="contents">  <br>
+          <h2>Notes</h2>
+          <h3>Developing with wxRL</h3>
+          The main sample shows much of the functionality and illustrates how to use the library. Most relevant information is in <em>wxRlLayout.h</em> and in <em>wxRlDefs.h</em>. Currently there is no separate class/function level documentation.  
+          <br><br>
+          In general it is not good to use the <em>wxSizerItem</em> or <em>wxSizer</em> classes directly from the app. It is better to go through the <em>wxRlItem</em> class to keep the internal state consistent.
+          <br><br>
+          After doing several modifications to a layout, one should call <em>wxRlLayout::Update</em> which will both verify the layout and redraw it.
+          <br><br>
+          To see the structure of a layout, one can use <em>wxRlItem::Dump()</em> or <em>wxRlItem::ToXml()</em>.
+          <br><br>
+          All parts of a layout (that are not decorations) are addressable by a sequence of integers. To get the 3rd item in the 2nd sizer from the root of the layout, one would do (note: this way of addressing skips past edges and other decorations): 
+          <p class="code">
+          m_rl_mgr.GetRoot().Part(2).Part(3)
+          </p>
+          One can also locate parts by name:
+          <p class="code">
+          m_rl_mgr.FindAppPane(_T("My Pane"));<br>
+          m_rl_mgr.FindItem(_T("GeneralItem"));<br>
+          m_rl_mgr.FindToolBar(_T("Main ToolBar"));<br>
+          </p><br>
+          <h4>
+          wxRlItem Types and Capabilities
+          </h4>
+          Each wxRlItem has a type that defines its role in the layout. Examples include <em>RlCaption, RlPaneEdge, RlButton, RlBgHint, RlFrameBg</em>, ...etc. 
+          <br><br>
+          An item is painted based on its type. Usually they don't correspond to separate C++ classes (unless they need to store additional info or do very specific things). The type can be extracted through <em>wxRlItem::GetType()</em>.
+          <br><br>
+          The type will also determine the capabilities of the item (a flag field named <em>m_capab</em>). Various bits says how the item responds to the mouse, when it triggers events, if it is a drag handle and other details, if items can be added or if it is 'sealed' and so on. The capability mask can be modified in a constructor but not after that.
+          <br><br>
+          <h4>Enclosing items</h4>
+          When a layout is first initialized, it usually contains an item representing empty grey background area (a <em>RlFrameBg</em> item). To start putting things inside the layout, there must be a sizer available. To do that one '<em>encloses</em>' a plain item into a new horizontal or vertical sizer (<em>wxRlItem::Enclose</em>). After that one can insert items.
+          <br><br>
+          This can be applied at any position in the layout, so one can build a layout top-to-bottom in this way. 
+          <br><br>
+          <h4>With dialogs</h4>
+          There are some different reasons to use a layout manager on a dialog:
+          <ul>
+          <LI>To show edges/grippers and allow moving items (such as in dialog designer
+          Currently when using a managed dialog, one can press <strong>Ctrl-Shift-S</strong> and <strong>Ctrl-Shift-H</strong> to show / hide edges. 
+          </LI>
+          <LI>To create a dialog based on a simple 'dialog script'. The main sample does this for a wxPanel. Currently there is no docs for it.
+          </LI>
+          <LI>To manipulate the layout at run-time, before or after showing it. For example, it is simple to do some string substitutions in the dialog script before displaying it, avoiding deriving classes and tedious initialization code.
+          </LI>
+          </ul>
+          The file <em>wxRlDialog.h</em> contains an interface for loading dialogs based on XML scripts. (Work in progress to formalize this).
+          <br><br>
+          <h3>Contact</h3>
+          The author can be reached at<em> arst at users.sourceforge.net </em>. 
+          <br><br>
+          Feedback, including suggestions for improvement and bug reports (if you a have patch, all the better...) are welcome. 
+          <br><br>
+          </td>
+      </tr>
+    </tbody>
+  </table><br>
+</body>
+</html>
