@@ -86,10 +86,13 @@
           </ul>
           <br>
           <h3>Building with CMake</h3>
-          CMake generates quite a few files and subdirectories. Therefore it is best to run CMake from a subdirectory of the source folder (the directory <em>cbuild</em> is for that).
-          <br><br>
+          CMake generates quite a few files and subdirectories. Therefore it is best to run CMake from a subdirectory of the source folder. This avoids mixing sources with intermediate files. The directory <em>cbuild</em> is for that). 
+            <br>
+            <br>
+            <strong>Note</strong>: The executable/binaries are output in the <em>samples</em> directory.
+            <br>
           <h4>Unix and Unix-like systems <small>(including MinGW &amp; CygWin, Mac-OS/X(?))</small></h4>
-          One must first generate the makefiles using ccmake like this:
+          One must first generate the makefiles using ccmake:
          <p class="code">
           ats# pwd <br>
           /proj/wx-rl/build <br>
@@ -107,13 +110,46 @@
           </p>
           and run the sample:
           <p class="code">
-              ats# rlmain & 
+              ats# ../../rlmain & 
               <br>
           [1] 1441
           </p><br>
           <h4>On Windows (Win32)</h4>
-          Building on Windows is similar, the differnce being the GUI used to generate the project files. 
-          <br><br></td>
+             Building on Windows is similar, the difference being the GUI used to generate the project files. <br><br>Open the <em>cmake.exe</em> application and point it at one of the sample directories, configure and generate the project files (again, it is best to generate in the sub-directory <em>cbuild</em>).
+            <br><br>
+          <h4>CMake resources</h4>
+          <ul>
+          <li>
+          <a href="http://www.wxwidgets.org/wiki/index.php/CMake">Getting started with CMake on wxWidgets</a><br></li>
+          <li><a href="http://www.cmake.org/Wiki/CMake">CMake Wiki</a></li>
+          <li><a href="http://www.linuxjournal.com/article/6700">Article in Linux Journal</a></li>
+	  </ul>
+          <br>
+          <h3>Building with the custom makefile</h3>
+          In both of <em>samples/main</em> and <em>samples/minimal</em>
+          there is a custom made 'cross platform' makefile that works under both Linux and Win32 MinGW. It might need some tweaking to fit with your installed version of wxWidgets.<br><br>
+          <h3>Compiler defines</h3>
+          There are a couple of preprocessor switches that can be used:
+          <table summary="" class="cmdhelp">
+            <tbody>
+              <tr>
+                <td class="code">RL_NO_STATE</td>
+                <td><big>Defining this constant disables loading/saving of layouts to XML. There are a few files that can be left out then (RlDialog.cpp, RlFromXml.cpp, XmlParse.cpp, StrUtils.cpp). </big></td>
+              </tr>
+              <tr>
+                <td class="code">RL_NO_DYNAMIC_CAST</td>
+                <td><big>This disables the use of C++ <em>dynamic_cast&lt;&gt;</em>
+                operator. It is used in one place to detect interference between the wxWidgets GUI logger and mouse capture. Define it to the suppress use of <em>dynamic_cast&lt;&gt;</em>.</big></td>
+              </tr>
+            </tbody>
+          </table><br>
+          <h3>Linking</h3>
+          <em>wxRL</em> links against the wxWidgets <strong>Core</strong> and <strong>Gui</strong> libraries. If one want to save/load layouts (perspectives) one have to link against the <strong>Xrc</strong> library also, which requires <strong>Adv</strong> and <strong>Xml</strong> also.
+            <br><br>
+            <br>
+
+          </td>
+
       </tr>
     </tbody>
   </table><br>
