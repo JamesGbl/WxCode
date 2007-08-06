@@ -35,6 +35,6 @@ inform me.
 Author:
 -------
 Arne Steinarson. Questions & suggestions to:
-   asteinarson at gmail dot com    (yes, do change at and dot)
+   asteinarson at gmail dot com
    
    
