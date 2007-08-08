@@ -10,7 +10,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-AU">
 	<?php
-      $compname = "RecursiveLayout";
+      $compname = "wxRL";
       $subdir = "rlayout";
       require("compwebsite.inc.php");
   ?>
