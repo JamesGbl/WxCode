@@ -37,7 +37,7 @@ public:
 										wxServiceDiscoveryService( wxEvtHandler *	pListener,
 																   bool				bUseThreads,
 																   wxString			type,
-																   wxUint32			port );
+																   wxUint16			port );
 	
 	virtual								~wxServiceDiscoveryService( void );	
 	
@@ -54,7 +54,7 @@ public:
 	#pragma mark  						-- Server Info --
 	
 	virtual	wxString					GetServiceType( void ) const { return m_Type; }
-	virtual	wxUint32					GetServicePort( void ) const { return m_Port; }
+	virtual	wxUint16					GetServicePort( void ) const { return m_Port; }
 	
 	virtual	wxString					GetServiceName( void ) const { return m_Name; }
 
@@ -87,7 +87,7 @@ protected:
 
 	const	wxString					m_Type;
 			wxString					m_Name;
-	const	wxUint32					m_Port;
+	const	wxUint16					m_Port;
 	
 		
 	DECLARE_NO_COPY_CLASS( wxServiceDiscoveryService )

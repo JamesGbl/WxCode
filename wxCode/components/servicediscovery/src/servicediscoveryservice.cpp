@@ -28,7 +28,7 @@
 wxServiceDiscoveryService::wxServiceDiscoveryService( wxEvtHandler *	pListener,
 													  bool				bUseThreads,
 													  wxString			type,
-													  wxUint32			port )
+													  wxUint16			port )
 : wxServiceDiscoveryTaskBase( pListener, bUseThreads ),
 m_Type ( type ),
 m_Port ( port )
