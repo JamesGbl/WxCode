@@ -115,12 +115,12 @@ $(OUTPUT):
 all: ../lib/libwxawx$(LIBFLAG)-0.3.a $(OUTPUT)/awxtest tip-linux
 
 install: all install_awx_lib
-	$(INSTALL) -d $(prefix)/include/wx/awx
+	$(INSTALL) -d $(prefix)/include/wx/awx-0.3
 	for f in awx.h button.h choice.h led.h obdlg.h outbar.h toolbar.h; do \
-	if test ! -d $(prefix)/include/wx/awx/`dirname $$f` ; then \
-	$(INSTALL) -d $(prefix)/include/wx/awx/`dirname $$f`; \
+	if test ! -d $(prefix)/include/wx/awx-0.3/`dirname $$f` ; then \
+	$(INSTALL) -d $(prefix)/include/wx/awx-0.3/`dirname $$f`; \
 	fi; \
-	$(INSTALL) -m 644 ../include/wx/awx//$$f $(prefix)/include/wx/awx/$$f; \
+	$(INSTALL) -m 644 ../include/wx/awx-0.3//$$f $(prefix)/include/wx/awx-0.3/$$f; \
 	done
 
 uninstall: 

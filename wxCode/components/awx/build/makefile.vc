@@ -221,8 +221,8 @@ clean:
 wxinstall: 
 	@copy ..\lib\wxawx$(LIBFLAG)-0.3.lib $(INSTALLDIR)\lib\vc_lib
 	
-	@if not exist $(INSTALLDIR)\include\wx\awx mkdir $(INSTALLDIR)\include\wx\awx
-	@copy ..\include\wx\awx\*.h $(INSTALLDIR)\include\wx\awx
+	@if not exist $(INSTALLDIR)\include\wx\awx-0.3 mkdir $(INSTALLDIR)\include\wx\awx-0.3
+	@copy ..\include\wx\awx-0.3\*.h $(INSTALLDIR)\include\wx\awx-0.3\
 
 $(OUTPUT)\awxtest.exe: $(AWXTEST_OBJECTS) ..\lib\wxawx$(LIBFLAG)-0.3.lib $(OUTPUT)\awxtest_awxtest.res
 	link /NOLOGO /OUT:$@ $(LDFLAGS) /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES) /SUBSYSTEM:WINDOWS  /LIBPATH:..\lib /NODEFAULTLIB:libc $(____DEBUG_25_27) @<<

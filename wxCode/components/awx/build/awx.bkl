@@ -67,7 +67,7 @@
 
   <!-- This is only for UNIX like OS -->
   <data-files-tree id="install-headers">
-    <srcdir>..$(DIRSEP)include$(DIRSEP)wx$(DIRSEP)awx</srcdir>
+    <srcdir>..$(DIRSEP)include$(DIRSEP)wx$(DIRSEP)awx-$(VERSION)</srcdir>
     <files>
 	 awx.h
 	 button.h
@@ -77,7 +77,7 @@
 	 outbar.h
 	 toolbar.h
     </files>
-    <install-to>$(INCLUDEDIR)$(DIRSEP)wx$(DIRSEP)awx</install-to>
+    <install-to>$(INCLUDEDIR)$(DIRSEP)wx$(DIRSEP)awx-$(VERSION)</install-to>
   </data-files-tree>
 
   <!-- UNIX NOTES: If you are using wxpresets on Unix, and you are -->
@@ -128,8 +128,8 @@
 	 <!-- copy the libraries (lib,dll) -->
 	 @copy ..\lib\wxawx$(LIBFLAG)-$(VERSION).lib $(INSTALLDIR)\lib\$(LIBNAME)_lib
 	 <!-- copy the header files -->
-	 @if not exist $(INSTALLDIR)\include\wx\awx mkdir $(INSTALLDIR)\include\wx\awx
-	 @copy ..\include\wx\awx\*.h $(INSTALLDIR)\include\wx\awx
+	 @if not exist $(INSTALLDIR)\include\wx\awx-$(VERSION) mkdir $(INSTALLDIR)\include\wx\awx-$(VERSION)
+	 @copy ..\include\wx\awx-$(VERSION)\*.h $(INSTALLDIR)\include\wx\awx-$(VERSION)\
     </command>
   </action>
 
