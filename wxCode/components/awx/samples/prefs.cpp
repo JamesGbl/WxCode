@@ -8,7 +8,7 @@
 
 #include "prefs.h"
 #include "prefs_wdr.h"
-#include <wx/awx/obdlg.h>
+#include <wx/awx-0.3/obdlg.h>
 
 #include "icons/48x48/group.xpm"
 #include "icons/48x48/user.xpm"

@@ -8,8 +8,8 @@
 
 #include <wx/cmdline.h>
 
-#include <wx/awx/button.h>
-#include <wx/awx/choice.h>
+#include <wx/awx-0.3/button.h>
+#include <wx/awx-0.3/choice.h>
 #include "main.h"
 #include "menu.h"
 // program icon

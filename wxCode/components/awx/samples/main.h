@@ -15,7 +15,7 @@
 #include "wx/wx.h"
 #endif
 
-#include <wx/awx/toolbar.h>
+#include <wx/awx-0.3/toolbar.h>
 #include "prefs.h"
 
 ////////////////////////////////////////////////////////////
