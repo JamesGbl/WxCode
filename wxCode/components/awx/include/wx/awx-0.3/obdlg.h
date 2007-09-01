@@ -11,7 +11,7 @@
 #define __PREFDLG_H
 
 #include <wx/wx.h>
-#include <wx/awx/outbar.h>
+#include <wx/awx-0.3/outbar.h>
 
 #define wxOB_DEFAULT_STYLE 0
 #define wxOB_APPLY_BUTTON 1

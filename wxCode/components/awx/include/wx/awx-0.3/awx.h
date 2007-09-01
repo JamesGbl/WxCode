@@ -60,10 +60,10 @@
 #ifndef __AWX_H
 #define __AWX_H
 
-#include "wx/awx/button.h"
-#include "wx/awx/led.h"
-#include "wx/awx/obdlg.h"
-#include "wx/awx/outbar.h"
-#include "wx/awx/toolbar.h"
+#include "wx/awx-0.3/button.h"
+#include "wx/awx-0.3/led.h"
+#include "wx/awx-0.3/obdlg.h"
+#include "wx/awx-0.3/outbar.h"
+#include "wx/awx-0.3/toolbar.h"
 
 #endif
