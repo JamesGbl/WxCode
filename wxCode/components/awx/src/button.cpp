@@ -12,8 +12,8 @@
 #include <wx/image.h>
 #include <wx/settings.h>
 
-#include "wx/awx/button.h"
-#include "wx/awx/toolbar.h"
+#include "wx/awx-0.3/button.h"
+#include "wx/awx-0.3/toolbar.h"
 
 IMPLEMENT_DYNAMIC_CLASS(awxButton, wxWindow)
 

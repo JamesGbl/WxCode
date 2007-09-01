@@ -1,4 +1,4 @@
-#include "wx/awx/choice.h"
+#include "wx/awx-0.3/choice.h"
 
 BEGIN_EVENT_TABLE(awxChoice, wxChoice)
     EVT_CHAR(awxChoice::OnChar)

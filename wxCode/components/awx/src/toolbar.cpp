@@ -7,7 +7,7 @@
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
 
-#include "wx/awx/toolbar.h"
+#include "wx/awx-0.3/toolbar.h"
 
 const static wxColour kdetheme[14] =
 {

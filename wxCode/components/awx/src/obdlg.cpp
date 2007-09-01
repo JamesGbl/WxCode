@@ -7,7 +7,7 @@
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
 
-#include "wx/awx/obdlg.h"
+#include "wx/awx-0.3/obdlg.h"
 #include <wx/statline.h>
 
 const int ID_FIRST = wxID_HIGHEST+1;
