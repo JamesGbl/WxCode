@@ -24,6 +24,16 @@ for arg in $*; do
     fi
 done
 
+echo "// This file is created automatically, don't change it!" > wxctb.i
+echo "%module wxctb" >> wxctb.i
+echo "typedef int size_t;" >> wxctb.i
+echo "%include timer.i" >> wxctb.i
+echo "%include serport.i" >> wxctb.i
+echo "%include ../kbhit.i" >> wxctb.i
+if [ "$arg" = "USE_GPIB" ]; then
+    echo "%include ../gpib.i" >> wxctb.i
+fi
+
 echo "swig generates python wrapper files..."
 swig -c++ -Wall -nodefault -python -keyword -new_repr -modern wxctb.i
 
