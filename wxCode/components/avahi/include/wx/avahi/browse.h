@@ -22,7 +22,7 @@
 
 #include <wx/avahi/pool.h>
 #include <wx/avahi/strlst.h>
-#include <wx/avahi/address.h>
+#include <wx/avahi/utils.h>
 #include <wx/avahi/client.h>
 
 class wxAvahiDomainBrowser;
@@ -36,7 +36,7 @@ class wxAvahiServiceBrowserEvent;
 class wxAvahiRecordBrowserEvent;
 
 /**
- * Client domain browser.
+ * Domain browser.
  */
 class WXDLLIMPEXP_AVAHI wxAvahiDomainBrowser : public wxEvtHandler{
 private:
@@ -56,7 +56,8 @@ public:
 };
 
 /**
- * Client domain browser event
+ * Domain browser event
+ * Event sent by wxAvahiDomainBrowser each time a new domain is available.
  */
 
 class WXDLLIMPEXP_AVAHI wxAvahiDomainBrowserEvent: public wxEvent{
@@ -131,6 +132,7 @@ public:
 
 /**
  * Service type browser event
+ * Event sent by wxAvahiServiceTypeBrowser each time a new service type is available.
  */
 class WXDLLIMPEXP_AVAHI wxAvahiServiceTypeBrowserEvent: public wxEvent{
 private:
@@ -206,6 +208,7 @@ public:
 
 /**
  * Service browser event
+ * Event sent by wxAvahiServiceBrowser each time a new service is available.
  */
 class WXDLLIMPEXP_AVAHI wxAvahiServiceBrowserEvent: public wxEvent{
 private:
@@ -284,6 +287,7 @@ public:
 
 /**
  * Record browser event
+ * Event sent by wxAvahiRecordBrowser each time a new record is available.
  */
 class WXDLLIMPEXP_AVAHI wxAvahiRecordBrowserEvent: public wxEvent{
 private:

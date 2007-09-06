@@ -10,17 +10,20 @@
 
 
 # Init this configure script with basic info about the component
-AC_INIT([wxAvahi], [0.6.0], [cursorstar@sourceforge.net])
+AC_INIT([wxAvahi], [0.1.0], [emilien.kia@free.fr])
 AC_CONFIG_AUX_DIR(build)
 
 # ENABLES/DISABLES THE DEBUG MODE FOR THIS CONFIGURE SCRIPT
 WX_DEBUG_CONFIGURE=1
 
-
 m4_include(../../../build/autoconf/wxcode.m4)
 WXCODE_INIT
 
 
+PKG_PROG_PKG_CONFIG
+PKG_CHECK_MODULES([AVAHICLIENT], [avahi-client])
+LIBS="$AVAHICLIENT_LIBS $LIBS"
+CFLAGS="$AVAHICLIENT_CFLAGS $CFLAGS"
 
 
 ## CONFIGURE OPTIONS

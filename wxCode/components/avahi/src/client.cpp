@@ -23,6 +23,9 @@
 #include <iostream>
 #include <typeinfo>
 
+#include "avahi-common/alternative.h"
+#include "avahi-common/malloc.h"
+
 //
 // wxAvahiClient
 //
@@ -53,19 +56,19 @@ void wxAvahiClient::Create(wxAvahiPool* pool, AvahiClientFlags flags, int* error
 
 
 wxString wxAvahiClient::GetVersion(){
-    return wxString(avahi_client_get_version_string(m_client), *wxConvCurrent);
+    return wxString(avahi_client_get_version_string(m_client), wxConvUTF8);
 }
 
 wxString wxAvahiClient::GetHostName(){
-    return wxString(avahi_client_get_host_name(m_client), *wxConvCurrent);
+    return wxString(avahi_client_get_host_name(m_client), wxConvUTF8);
 }
 
 wxString wxAvahiClient::GetDomainName(){
-    return wxString(avahi_client_get_domain_name(m_client), *wxConvCurrent);
+    return wxString(avahi_client_get_domain_name(m_client), wxConvUTF8);
 }
 
 wxString wxAvahiClient::GetFullQualifiedDomainName(){
-    return wxString(avahi_client_get_host_name_fqdn(m_client), *wxConvCurrent);
+    return wxString(avahi_client_get_host_name_fqdn(m_client), wxConvUTF8);
 }
 
 AvahiClientState wxAvahiClient::GetClientState(){
@@ -91,6 +94,13 @@ void wxAvahiClient_AvahiClientCallback(AvahiClient *s, AvahiClientState state, v
         event.SetEventObject(client);
         client->ProcessEvent(event);
     }
+}
+
+wxString wxAvahiClient::GetAlternativeHostName(const wxString& hostName){
+	char* temp = avahi_alternative_host_name((const char*)hostName.mb_str(wxConvUTF8));
+	wxString str(temp, wxConvUTF8);
+	avahi_free(temp);
+	return str;
 }
 
 
@@ -211,26 +221,36 @@ wxAvahiClient* wxAvahiEntryGroup::GetClient(){
 int wxAvahiEntryGroup::AddService(AvahiIfIndex interface, AvahiProtocol protocol, AvahiPublishFlags flags, const wxString& name, const wxString& type, const wxString& domain, const wxString& host, short port, wxAvahiStringList* strlst){
 	return avahi_entry_group_add_service_strlst(m_entryGroup, 
 				interface, protocol, flags,
-				name.mb_str(*wxConvCurrent), type.mb_str(*wxConvCurrent),
-				(domain.IsEmpty()?NULL:(const char*)domain.mb_str(*wxConvCurrent)), 
-				(host.IsEmpty()?NULL:(const char*)host.mb_str(*wxConvCurrent)),
+				name.mb_str(wxConvUTF8), type.mb_str(wxConvUTF8),
+				(domain.IsEmpty()?NULL:(const char*)domain.mb_str(wxConvUTF8)), 
+				(host.IsEmpty()?NULL:(const char*)host.mb_str(wxConvUTF8)),
     			port, (AvahiStringList*)((strlst!=NULL)?strlst->GetStringList():NULL));
 }
 
 int wxAvahiEntryGroup::AddServiceSubtype(AvahiIfIndex interface, AvahiProtocol protocol, AvahiPublishFlags flags, const wxString& name, const wxString& type, const wxString& domain, const wxString& subtype){
 	return avahi_entry_group_add_service_subtype(m_entryGroup, 
 				interface, protocol, flags,
-				(const char*)name.mb_str(*wxConvCurrent), (const char*)type.mb_str(*wxConvCurrent),
-				(domain.IsEmpty()?NULL:(const char*)domain.mb_str(*wxConvCurrent)), 
-				(const char*)subtype.mb_str(*wxConvCurrent));
+				(const char*)name.mb_str(wxConvUTF8), (const char*)type.mb_str(wxConvUTF8),
+				(domain.IsEmpty()?NULL:(const char*)domain.mb_str(wxConvUTF8)), 
+				(const char*)subtype.mb_str(wxConvUTF8));
 }
 
 int wxAvahiEntryGroup::UpdateServiceTxt(AvahiIfIndex interface, AvahiProtocol protocol, AvahiPublishFlags flags, const wxString& name, const wxString& type, const wxString& domain, wxAvahiStringList* strlst){
 	return avahi_entry_group_update_service_txt_strlst(m_entryGroup, 
 				interface, protocol, flags,
-				(const char*)name.mb_str(*wxConvCurrent), (const char*)type.mb_str(*wxConvCurrent),
-				(domain.IsEmpty()?NULL:(const char*)domain.mb_str(*wxConvCurrent)), 
+				(const char*)name.mb_str(wxConvUTF8), (const char*)type.mb_str(wxConvUTF8),
+				(domain.IsEmpty()?NULL:(const char*)domain.mb_str(wxConvUTF8)), 
 				(AvahiStringList*)((strlst!=NULL)?strlst->GetStringList():NULL));
+}
+
+int wxAvahiEntryGroup::AddAddress(AvahiIfIndex interface, AvahiProtocol protocol, AvahiPublishFlags flags, const wxString& name, const wxIPaddress& addr)
+{
+	AvahiAddress a;
+	wxAddressToAvahi(&addr, &a);
+	return avahi_entry_group_add_address(m_entryGroup, 
+				interface, protocol, flags,
+				(const char*)name.mb_str(wxConvUTF8),
+				&a);
 }
 
 void wxAvahiClientEntryGroup_Callback(AvahiEntryGroup *g, AvahiEntryGroupState state, void* userdata){
@@ -240,6 +260,13 @@ void wxAvahiClientEntryGroup_Callback(AvahiEntryGroup *g, AvahiEntryGroupState s
         event.SetEventObject(group);
         group->ProcessEvent(event);
     }
+}
+
+wxString wxAvahiEntryGroup::GetAlternativeServiceName(const wxString& serviceName){
+	char* temp = avahi_alternative_service_name((const char*)serviceName.mb_str(wxConvUTF8));
+	wxString str(temp, wxConvUTF8);
+	avahi_free(temp);
+	return str;
 }
 
 //

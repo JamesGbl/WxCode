@@ -51,7 +51,7 @@ wxAvahiDomainBrowser::~wxAvahiDomainBrowser(){
 
 void wxAvahiDomainBrowser::Create(wxAvahiClient* client, AvahiIfIndex interface, AvahiProtocol protocol, const wxString& domain, AvahiDomainBrowserType btype, AvahiLookupFlags flags){
     m_browser = avahi_domain_browser_new(client->GetClient(),
-            interface, protocol, (const char*)domain.mb_str(*wxConvCurrent), btype, flags, wxAvahiDomainBrowser_Callback, this); 
+            interface, protocol, (const char*)domain.mb_str(wxConvUTF8), btype, flags, wxAvahiDomainBrowser_Callback, this); 
 }
 
 wxAvahiClient* wxAvahiDomainBrowser::GetClient(){
@@ -65,7 +65,7 @@ wxAvahiClient* wxAvahiDomainBrowser::GetClient(){
 void wxAvahiDomainBrowser_Callback(AvahiDomainBrowser *b, AvahiIfIndex interface, AvahiProtocol protocol, AvahiBrowserEvent event, const char *domain, AvahiLookupResultFlags flags, void *userdata){
     wxAvahiDomainBrowser* browser =(wxAvahiDomainBrowser*)userdata;
     if(browser!=NULL){
-        wxAvahiDomainBrowserEvent evt(browser, interface, protocol, event, wxString(domain, *wxConvCurrent), flags);
+        wxAvahiDomainBrowserEvent evt(browser, interface, protocol, event, wxString(domain, wxConvUTF8), flags);
         evt.SetEventObject(browser);
         browser->ProcessEvent(evt);
     } 
@@ -159,7 +159,7 @@ m_client(NULL)
 
 void wxAvahiServiceTypeBrowser::Create(wxAvahiClient* client, AvahiIfIndex interface, AvahiProtocol protocol, const wxString &domain, AvahiLookupFlags flags){
     m_client = client;
-    m_browser = avahi_service_type_browser_new(client->GetClient(), interface, protocol, (const char*)domain.mb_str(*wxConvCurrent), flags, wxAvahiClientServiceTypeBrowser_Callback, (void*)this);
+    m_browser = avahi_service_type_browser_new(client->GetClient(), interface, protocol, (const char*)domain.mb_str(wxConvUTF8), flags, wxAvahiClientServiceTypeBrowser_Callback, (void*)this);
 }
 
 wxAvahiClient* wxAvahiServiceTypeBrowser::GetClient(){
@@ -172,7 +172,7 @@ wxAvahiClient* wxAvahiServiceTypeBrowser::GetClient(){
 void wxAvahiClientServiceTypeBrowser_Callback(AvahiServiceTypeBrowser *b, AvahiIfIndex interface, AvahiProtocol protocol, AvahiBrowserEvent event, const char *type, const char *domain, AvahiLookupResultFlags flags, void *userdata){
     wxAvahiServiceTypeBrowser* browser =(wxAvahiServiceTypeBrowser*)userdata;
     if(browser!=NULL){
-        wxAvahiServiceTypeBrowserEvent evt(browser, interface, protocol, event, wxString(type, *wxConvCurrent), wxString(domain, *wxConvCurrent), flags);
+        wxAvahiServiceTypeBrowserEvent evt(browser, interface, protocol, event, wxString(type, wxConvUTF8), wxString(domain, wxConvUTF8), flags);
         evt.SetEventObject(browser);
         browser->ProcessEvent(evt);
     } 
@@ -269,7 +269,7 @@ m_client(NULL)
 void wxAvahiServiceBrowser::Create(wxAvahiClient* client, AvahiIfIndex interface, AvahiProtocol protocol, const wxString &type, const wxString &domain, AvahiLookupFlags flags){
     m_client = client;
     m_browser = avahi_service_browser_new(client->GetClient(), interface, protocol, 
-                            (const char*)type.mb_str(*wxConvCurrent), (const char*)domain.mb_str(*wxConvCurrent),
+                            (const char*)type.mb_str(wxConvUTF8), (const char*)domain.mb_str(wxConvUTF8),
                             flags, wxAvahiClientServiceBrowser_Callback, (void*)this);
 }
 
@@ -283,7 +283,7 @@ wxAvahiClient* wxAvahiServiceBrowser::GetClient(){
 void wxAvahiClientServiceBrowser_Callback(AvahiServiceBrowser *b, AvahiIfIndex interface, AvahiProtocol protocol, AvahiBrowserEvent event, const char *name, const char *type, const char *domain, AvahiLookupResultFlags flags, void *userdata){
     wxEvtHandler* handler = (wxEvtHandler*)  userdata;
     if(handler!=NULL){
-        wxAvahiServiceBrowserEvent evt((wxAvahiServiceBrowser*)userdata, interface, protocol, event, wxString(name, *wxConvCurrent), wxString(type, *wxConvCurrent), wxString(domain, *wxConvCurrent), flags);
+        wxAvahiServiceBrowserEvent evt((wxAvahiServiceBrowser*)userdata, interface, protocol, event, wxString(name, wxConvUTF8), wxString(type, wxConvUTF8), wxString(domain, wxConvUTF8), flags);
         evt.SetEventObject(handler);
         handler->ProcessEvent(evt);
     }
@@ -380,7 +380,7 @@ m_client(NULL)
 void wxAvahiRecordBrowser::Create(wxAvahiClient* client, AvahiIfIndex interface, AvahiProtocol protocol, const wxString &name, uint16_t clazz, uint16_t type, AvahiLookupFlags flags){
     m_client = client;
     m_browser = avahi_record_browser_new(client->GetClient(), interface, protocol,
-                        (const char*)name.mb_str(*wxConvCurrent), clazz, type, flags, wxAvahiClientRecordBrowser_Callback, (void*)this);
+                        (const char*)name.mb_str(wxConvUTF8), clazz, type, flags, wxAvahiClientRecordBrowser_Callback, (void*)this);
 }
 
 wxAvahiClient* wxAvahiRecordBrowser::GetClient(){
@@ -393,7 +393,7 @@ wxAvahiClient* wxAvahiRecordBrowser::GetClient(){
 void wxAvahiClientRecordBrowser_Callback(AvahiRecordBrowser *b, AvahiIfIndex interface, AvahiProtocol protocol, AvahiBrowserEvent event, const char *name, uint16_t clazz, uint16_t type, const void *rdata, size_t size, AvahiLookupResultFlags flags, void *userdata){
     wxAvahiRecordBrowser* browser = (wxAvahiRecordBrowser*)userdata;
     if(browser!=NULL){
-        wxAvahiRecordBrowserEvent evt(browser, interface, protocol, event, wxString(name, *wxConvCurrent), clazz, type, rdata, size, flags);
+        wxAvahiRecordBrowserEvent evt(browser, interface, protocol, event, wxString(name, wxConvUTF8), clazz, type, rdata, size, flags);
         evt.SetEventObject(browser);
         browser->ProcessEvent(evt);
     }

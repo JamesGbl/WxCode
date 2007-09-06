@@ -21,6 +21,7 @@
 
 #include "wx/avahi/strlst.h"
 #include <avahi-common/malloc.h>
+#include <stdarg.h>
 
 //
 // wxAvahiStringListIterator
@@ -29,8 +30,8 @@ int wxAvahiStringListIterator::GetPair(wxString& key, wxString& value, size_t* s
     char* _key;
     char* _value;
     int ret = avahi_string_list_get_pair(m_stringlist, &_key, &_value, size);
-    key = wxString(_key, *wxConvCurrent);
-    value = wxString(_value, *wxConvCurrent);
+    key = wxString(_key, wxConvUTF8);
+    value = wxString(_value, wxConvUTF8);
     avahi_free(_key);
     avahi_free(_value);
     return ret;
@@ -76,7 +77,9 @@ m_stringlist(NULL){
 wxAvahiStringList::wxAvahiStringList(const wxString* txt, ...):
 m_stringlist(NULL)
 {
-	/** @todo */
+	va_list va;
+	m_stringlist = avahi_string_list_new((const char*)txt->mb_str(wxConvUTF8));
+	AddMany(va);
 }
 
 
@@ -110,8 +113,8 @@ wxAvahiStringList::~wxAvahiStringList()
 		avahi_string_list_free(m_stringlist.GetAvahiStringList());
 }
 
-void wxAvahiStringList::Add(const wxString& txt){
-	m_stringlist = avahi_string_list_add(m_stringlist.GetAvahiStringList(), (const char*)txt.GetData());
+void wxAvahiStringList::Add(const wxString* txt){
+	m_stringlist = avahi_string_list_add(m_stringlist.GetAvahiStringList(), (const char*)txt->mb_str(wxConvUTF8));
 }
 
 void wxAvahiStringList::Add(const wxString& format, va_list va){
@@ -134,7 +137,9 @@ wxAvahiStringListIterator wxAvahiStringList::AddAnonymous(size_t size){
 }
 
 void wxAvahiStringList::AddMany(const wxString* txt, ...){
-	/** @todo */
+	va_list va;
+	Add(*txt);
+	m_stringlist = avahi_string_list_add_many_va(m_stringlist.GetAvahiStringList(), va);
 }
 
 void wxAvahiStringList::AddMany(va_list va){
@@ -152,7 +157,7 @@ void wxAvahiStringList::AddPair(const wxString& name, const uint8_t *text, size_
 
 wxString wxAvahiStringList::ListToString(){
 	char* txt = avahi_string_list_to_string(m_stringlist.GetAvahiStringList());
-	wxString str(txt, *wxConvCurrent);
+	wxString str(txt, wxConvUTF8);
 	avahi_free(txt);
 	return str;
 }
@@ -161,7 +166,7 @@ wxString wxAvahiStringList::Serialize(){
 	char buff[256];
 	int size = avahi_string_list_serialize(m_stringlist.GetAvahiStringList(), buff, 255);
 	buff[255] = 0;
-	return wxString(buff, *wxConvCurrent, size); 
+	return wxString(buff, wxConvUTF8, size); 
 }
 
 bool wxAvahiStringList::Equal(const wxAvahiStringList& list)const{

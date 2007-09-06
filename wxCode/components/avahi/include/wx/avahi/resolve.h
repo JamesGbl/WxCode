@@ -22,7 +22,7 @@
 
 #include <wx/avahi/pool.h>
 #include <wx/avahi/strlst.h>
-#include <wx/avahi/address.h>
+#include <wx/avahi/utils.h>
 #include <wx/avahi/client.h>
 
 class wxAvahiServiceResolver;
@@ -57,6 +57,7 @@ public:
 
 /**
  * Service resolver event
+ * Event sent by wxAvahiServiceResolver each time a service is resolved.
  */
 class WXDLLIMPEXP_AVAHI wxAvahiServiceResolverEvent: public wxEvent{
 private:
@@ -68,13 +69,13 @@ private:
     wxString m_type;
     wxString m_domain;
     wxString m_hostName;
-    AvahiAddress m_a;
+    wxString m_a;
     uint16_t m_port;
     wxAvahiStringList m_strlst;
     AvahiLookupResultFlags m_flags;
 public:
     wxAvahiServiceResolverEvent(const wxAvahiServiceResolverEvent& event);
-    wxAvahiServiceResolverEvent(wxAvahiServiceResolver* resolver, AvahiIfIndex interface, AvahiProtocol protocol, AvahiResolverEvent event, const wxString &name, const wxString &type, const wxString &domain, const wxString &host_name, const wxIPaddress& a, uint16_t port, AvahiStringList *txt, AvahiLookupResultFlags flags);
+    wxAvahiServiceResolverEvent(wxAvahiServiceResolver* resolver, AvahiIfIndex interface, AvahiProtocol protocol, AvahiResolverEvent event, const wxString &name, const wxString &type, const wxString &domain, const wxString &host_name, const wxString& a, uint16_t port, AvahiStringList *txt, AvahiLookupResultFlags flags);
     virtual ~wxAvahiServiceResolverEvent();
     
     virtual wxEvent* Clone() const;
@@ -87,7 +88,7 @@ public:
     wxString            GetType()const{return m_type;}
     wxString            GetDomain()const{return m_domain;}
     wxString            GetHostName()const{return m_hostName;}
-    wxIPaddress*        GetAddress()const{return wxAvahiToWxAddress(&m_a);}
+    wxString            GetAddress()const{return m_a;}
     uint16_t            GetPort()const{return m_port;}
     wxAvahiStringList   GetStringList()const{return m_strlst;}
     AvahiLookupResultFlags GetFlag()const{return m_flags;}
@@ -133,6 +134,7 @@ public:
 
 /**
  * Host name resolver event
+ * Event sent by wxAvahiHostNameResolver each time an host name is resolved.
  */
 class WXDLLIMPEXP_AVAHI wxAvahiHostNameResolverEvent: public wxEvent{
 private:
@@ -141,11 +143,11 @@ private:
     AvahiProtocol m_protocol;
     AvahiResolverEvent m_event;
     wxString m_name;
-    AvahiAddress m_a;
+    wxString m_a;
     AvahiLookupResultFlags m_flags;
 public:
     wxAvahiHostNameResolverEvent(const wxAvahiHostNameResolverEvent& event);
-    wxAvahiHostNameResolverEvent(wxAvahiHostNameResolver* resolver, AvahiIfIndex interface, AvahiProtocol protocol, AvahiResolverEvent event, const wxString &name, wxIPaddress& a, AvahiLookupResultFlags flags);
+    wxAvahiHostNameResolverEvent(wxAvahiHostNameResolver* resolver, AvahiIfIndex interface, AvahiProtocol protocol, AvahiResolverEvent event, const wxString &name, const wxString& a, AvahiLookupResultFlags flags);
     virtual ~wxAvahiHostNameResolverEvent();
     
     virtual wxEvent* Clone() const;
@@ -155,7 +157,7 @@ public:
     AvahiProtocol       GetProtocol()const{return m_protocol;}
     AvahiResolverEvent  GetEvent()const{return m_event;}
     wxString            GetName()const{return m_name;}
-    wxIPaddress*        GetAddress()const{return wxAvahiToWxAddress(&m_a);}
+    wxString            GetAddress()const{return m_a;}
     AvahiLookupResultFlags GetFlag()const{return m_flags;}
 };
 
@@ -199,6 +201,7 @@ public:
 
 /**
  * Address resolver event
+ * Event sent by wxAvahiAddressResolver each time an address is resolved.
  */
 class WXDLLIMPEXP_AVAHI wxAvahiAddressResolverEvent: public wxEvent{
 private:
@@ -206,12 +209,12 @@ private:
     AvahiIfIndex m_interface;
     AvahiProtocol m_protocol;
     AvahiResolverEvent m_event;
-    AvahiAddress m_a;
+    wxString m_a;
     wxString m_name;
     AvahiLookupResultFlags m_flags;
 public:
     wxAvahiAddressResolverEvent(const wxAvahiAddressResolverEvent& event);
-    wxAvahiAddressResolverEvent(wxAvahiAddressResolver* resolver, AvahiIfIndex interface, AvahiProtocol protocol, AvahiResolverEvent event, wxIPaddress &a, const wxString &name, AvahiLookupResultFlags flags);
+    wxAvahiAddressResolverEvent(wxAvahiAddressResolver* resolver, AvahiIfIndex interface, AvahiProtocol protocol, AvahiResolverEvent event, const wxString &a, const wxString &name, AvahiLookupResultFlags flags);
     virtual ~wxAvahiAddressResolverEvent();
     
     virtual wxEvent* Clone() const;
@@ -221,7 +224,7 @@ public:
     AvahiProtocol       GetProtocol()const{return m_protocol;}
     AvahiResolverEvent  GetEvent()const{return m_event;}
     wxString            GetName()const{return m_name;}
-    wxIPaddress*        GetAddress()const{return wxAvahiToWxAddress(&m_a);}
+    wxString            GetAddress()const{return m_a;}
     AvahiLookupResultFlags GetFlag()const{return m_flags;}
 };
 

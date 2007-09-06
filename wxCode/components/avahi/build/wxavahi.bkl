@@ -14,22 +14,15 @@
 
     <set-comp-name>avahi</set-comp-name>
 
-	<template id="avahicommon">
-		<cppflags>`pkg-config --cflags avahi-client`</cppflags>
-		<ldflags>`pkg-config --libs avahi-client`</ldflags>
-	</template>	
+    <set var="COMP_HDR">$(fileList('include/wx/avahi/*.h'))</set>
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- Library settings                                                  -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-    <lib id="wxavahi_lib" template="wxcode-lib,avahicommon" cond="WX_SHARED=='0'">
-        <sources>$(fileList('src/*.cpp'))</sources>
-        <headers>$(fileList('include/wx/avahi/*.h'))</headers>
+    <lib id="wxavahi_lib" template="wxcode-lib" cond="WX_SHARED=='0'">
     </lib>
-    <dll id="wxavahi_dll" template="wxcode-dll,avahicommon" cond="WX_SHARED=='1'">
-        <sources>$(fileList('src/*.cpp'))</sources>
-        <headers>$(fileList('include/wx/avahi/*.h'))</headers>
+    <dll id="wxavahi_dll" template="wxcode-dll" cond="WX_SHARED=='1'">
         <wx-lib>net</wx-lib>
         <wx-lib>base</wx-lib>
     </dll>
@@ -38,7 +31,7 @@
     <!-- Sample(s) settings                                                -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-    <wxcode-sample id="avahi" template="avahicommon">
+    <wxcode-sample id="avahi">
         <dir>sample</dir>
 
         <library>wxavahi_lib</library>

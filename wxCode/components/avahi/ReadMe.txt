@@ -1,35 +1,28 @@
  
- MYCOMP ReadMe
+ wxAvahi ReadMe
  -------------
  
- Website: http://wxcode.sourceforge.net/components/mycomp
- Author: Name Surname
- Version: 1.0 
+ Website: http://wxcode.sourceforge.net/components/wxavahi
+ Author: Kia Emilien
+ Version: 0.1.0 
  Description:
- [description of this component]
+ wxAvahi is a wrapping of Avahi features for wxWidgets.
+ It handles Zeroconf publishing and discovery with wxWidgets features (wxString and wxEvent-base).
  
  
 
  Installation - win32
  --------------------
- 
- When building on win32, you can use the makefiles in the BUILD folder using the
- WX_DIR, WX_DEBUG, WX_UNICODE and WX_SHARED to match your wxWidgets build.
- Examples:
- 
-   > nmake -fmakefile.vc WX_DIR=c:\path\to\my\wxWidgets WX_UNICODE=0/1 WX_DEBUG=0/1 WX_SHARED=0/1
-   > make -fmakefile.bcc WX_DIR=c:\path\to\my\wxWidgets WX_UNICODE=0/1 WX_DEBUG=0/1 WX_SHARED=0/1
-
-
+ wxAvahi is not available on Windows yet.
      
  Installation - unix
  -------------------
 
  When building on a Linux/GNU-based system, type
 
-  cd build
   ./configure
   make
+  make install
 
  to build against the default build of wxWidgets (the one listed as 'default' 
  by wx-config --list). Type "./configure --help" for more info.
@@ -39,8 +32,6 @@
  ChangeLog
  ---------
  
- 1.0 - first version of MYCOMP at wxCode
+ 0.1.0
  
- 
- [optionally: Known bugs, Author's info, ... ]
-
+     - first version of wxAvahi at wxCode

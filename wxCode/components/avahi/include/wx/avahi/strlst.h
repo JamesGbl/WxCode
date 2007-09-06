@@ -68,7 +68,7 @@ public:
     wxAvahiStringListIterator begin()const{return m_stringlist;}
     wxAvahiStringListIterator end(){return wxAvahiStringListIterator(NULL);}
 	
-	void Add(const wxString& txt);
+	void Add(const wxString* txt);
 	void Add(const wxString& format, va_list va);
 	void Add(const wxString& format, ...);
 	void AddArbitrary(const uint8_t *text, size_t size);

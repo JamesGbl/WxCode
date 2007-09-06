@@ -52,8 +52,8 @@ m_client(NULL)
 void wxAvahiServiceResolver::Create(wxAvahiClient* client, AvahiIfIndex interface, AvahiProtocol protocol, const wxString &name, const wxString &type, const wxString &domain, AvahiProtocol aprotocol, AvahiLookupFlags flags){
     m_client = client;
     m_resolver = avahi_service_resolver_new(client->GetClient(), interface, protocol,
-                        (const char*)name.mb_str(*wxConvCurrent), (const char*)type.mb_str(*wxConvCurrent),
-                        (const char*)domain.mb_str(*wxConvCurrent), aprotocol, flags, wxAvahiClientServiceResolver_Callback, (void*)this);
+                        (const char*)name.mb_str(wxConvUTF8), (const char*)type.mb_str(wxConvUTF8),
+                        (const char*)domain.mb_str(wxConvUTF8), aprotocol, flags, wxAvahiClientServiceResolver_Callback, (void*)this);
 }
 
 wxAvahiClient* wxAvahiServiceResolver::GetClient(){
@@ -66,11 +66,9 @@ wxAvahiClient* wxAvahiServiceResolver::GetClient(){
 void wxAvahiClientServiceResolver_Callback(AvahiServiceResolver *r, AvahiIfIndex interface, AvahiProtocol protocol, AvahiResolverEvent event, const char *name, const char *type, const char *domain, const char *host_name, const AvahiAddress *a, uint16_t port, AvahiStringList *txt, AvahiLookupResultFlags flags, void *userdata){
     wxAvahiServiceResolver* resolver = (wxAvahiServiceResolver*)userdata;
     if(resolver!=NULL){
-        wxIPaddress* wxaddr = wxAvahiToWxAddress(a);
-        wxAvahiServiceResolverEvent evt(resolver, interface, protocol, event, wxString(name, *wxConvCurrent), wxString(type, *wxConvCurrent), wxString(domain, *wxConvCurrent), wxString(host_name, *wxConvCurrent), *wxaddr, port, txt, flags);
+        wxAvahiServiceResolverEvent evt(resolver, interface, protocol, event, wxString(name, wxConvUTF8), wxString(type, wxConvUTF8), wxString(domain, wxConvUTF8), wxString(host_name, wxConvUTF8), wxAvahiAddressToString(a), port, txt, flags);
         evt.SetEventObject(resolver);
         resolver->ProcessEvent(evt);
-        delete wxaddr;
     }
 }
 
@@ -98,7 +96,7 @@ m_flags(event.m_flags)
 {
 }
 
-wxAvahiServiceResolverEvent::wxAvahiServiceResolverEvent(wxAvahiServiceResolver* resolver, AvahiIfIndex interface, AvahiProtocol protocol, AvahiResolverEvent event, const wxString &name, const wxString &type, const wxString &domain, const wxString &host_name, const wxIPaddress& a, uint16_t port, AvahiStringList *txt, AvahiLookupResultFlags flags):
+wxAvahiServiceResolverEvent::wxAvahiServiceResolverEvent(wxAvahiServiceResolver* resolver, AvahiIfIndex interface, AvahiProtocol protocol, AvahiResolverEvent event, const wxString &name, const wxString &type, const wxString &domain, const wxString &host_name, const wxString& a, uint16_t port, AvahiStringList *txt, AvahiLookupResultFlags flags):
 wxEvent(),
 m_resolver(resolver),
 m_interface(interface),
@@ -108,14 +106,11 @@ m_name(name),
 m_type(type),
 m_domain(domain),
 m_hostName(host_name),
-//m_a(*a),
-//m_address
+m_a(a),
 m_port(port),
 m_strlst(txt),
 m_flags(flags)
 {
-    /* todo translate address from wx to avahi */
-    
     switch(event){
         case AVAHI_RESOLVER_FOUND:
             SetEventType(wxEVT_AVAHI_SERVICE_RESOLVER_FOUND);
@@ -164,7 +159,7 @@ m_client(NULL)
 void wxAvahiHostNameResolver::Create(wxAvahiClient* client, AvahiIfIndex interface, AvahiProtocol protocol, const wxString &name, AvahiProtocol aprotocol, AvahiLookupFlags flags){
     m_client = client;
     m_resolver = avahi_host_name_resolver_new(client->GetClient(), interface, protocol,
-                        (const char*)name.mb_str(*wxConvCurrent), aprotocol, flags, wxAvahiClientHostNameResolver_Callback, (void*)this);
+                        (const char*)name.mb_str(wxConvUTF8), aprotocol, flags, wxAvahiClientHostNameResolver_Callback, (void*)this);
 }
 
 wxAvahiClient* wxAvahiHostNameResolver::GetClient(){
@@ -177,11 +172,9 @@ wxAvahiClient* wxAvahiHostNameResolver::GetClient(){
 void wxAvahiClientHostNameResolver_Callback(AvahiHostNameResolver *r, AvahiIfIndex interface, AvahiProtocol protocol, AvahiResolverEvent event, const char *name, const AvahiAddress *a, AvahiLookupResultFlags flags, void *userdata){
     wxAvahiHostNameResolver* resolver = (wxAvahiHostNameResolver*)userdata;
     if(resolver!=NULL){
-        wxIPaddress* wxaddr = wxAvahiToWxAddress(a);
-        wxAvahiHostNameResolverEvent evt(resolver, interface, protocol, event, wxString(name, *wxConvCurrent), *wxaddr, flags);
+        wxAvahiHostNameResolverEvent evt(resolver, interface, protocol, event, wxString(name, wxConvUTF8), wxAvahiAddressToString(a), flags);
         evt.SetEventObject(resolver);
         resolver->ProcessEvent(evt);
-        delete wxaddr;
     }
 }
 
@@ -204,16 +197,16 @@ m_flags(event.m_flags)
 {
 }
 
-wxAvahiHostNameResolverEvent::wxAvahiHostNameResolverEvent(wxAvahiHostNameResolver* resolver, AvahiIfIndex interface, AvahiProtocol protocol, AvahiResolverEvent event, const wxString &name, wxIPaddress& a, AvahiLookupResultFlags flags):
+wxAvahiHostNameResolverEvent::wxAvahiHostNameResolverEvent(wxAvahiHostNameResolver* resolver, AvahiIfIndex interface, AvahiProtocol protocol, AvahiResolverEvent event, const wxString &name, const wxString& a, AvahiLookupResultFlags flags):
 wxEvent(),
 m_resolver(resolver),
 m_interface(interface),
 m_protocol(protocol),
 m_event(event),
 m_name(name),
+m_a(a),
 m_flags(flags)
 {
-    wxAddressToAvahi(&a, &m_a);
     switch(event){
         case AVAHI_RESOLVER_FOUND:
             SetEventType(wxEVT_AVAHI_HOST_NAME_RESOLVER_FOUND);
@@ -277,11 +270,9 @@ wxAvahiClient* wxAvahiAddressResolver::GetClient(){
 void wxAvahiClientAddressResolver_Callback(AvahiAddressResolver *r, AvahiIfIndex interface, AvahiProtocol protocol, AvahiResolverEvent event, const AvahiAddress *a, const char *name, AvahiLookupResultFlags flags, void *userdata){
     wxAvahiAddressResolver* resolver = (wxAvahiAddressResolver*)userdata;
     if(resolver!=NULL){
-        wxIPaddress* wxaddr = wxAvahiToWxAddress(a);
-        wxAvahiAddressResolverEvent evt(resolver, interface, protocol, event, *wxaddr, wxString(name, *wxConvCurrent), flags);
+        wxAvahiAddressResolverEvent evt(resolver, interface, protocol, event, wxAvahiAddressToString(a), wxString(name, wxConvUTF8), flags);
         evt.SetEventObject(resolver);
         resolver->ProcessEvent(evt);
-        delete wxaddr;
     }
 }
 
@@ -304,16 +295,16 @@ m_flags(event.m_flags)
 {
 }
 
-wxAvahiAddressResolverEvent::wxAvahiAddressResolverEvent(wxAvahiAddressResolver* resolver, AvahiIfIndex interface, AvahiProtocol protocol, AvahiResolverEvent event, wxIPaddress &a, const wxString &name, AvahiLookupResultFlags flags):
+wxAvahiAddressResolverEvent::wxAvahiAddressResolverEvent(wxAvahiAddressResolver* resolver, AvahiIfIndex interface, AvahiProtocol protocol, AvahiResolverEvent event, const wxString &a, const wxString &name, AvahiLookupResultFlags flags):
 wxEvent(),
 m_resolver(resolver),
 m_interface(interface),
 m_protocol(protocol),
 m_event(event),
 m_name(name),
+m_a(a),
 m_flags(flags)
 {
-    wxAddressToAvahi(&a, &m_a);
     switch(event){
         case AVAHI_RESOLVER_FOUND:
             SetEventType(wxEVT_AVAHI_ADDRESS_RESOLVER_FOUND);

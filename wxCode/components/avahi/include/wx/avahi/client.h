@@ -22,7 +22,7 @@
 
 #include <wx/avahi/pool.h>
 #include <wx/avahi/strlst.h>
-#include <wx/avahi/address.h>
+#include <wx/avahi/utils.h>
 
 class wxAvahiClient;
 class wxAvahiEntryGroup;
@@ -60,6 +60,7 @@ public:
     int GetError();
     int GetLocalServiceCookie();
     static bool HasNSSSupport();
+    static wxString GetAlternativeHostName(const wxString& hostName);
 };
 
 /**
@@ -134,10 +135,11 @@ public:
     wxAvahiClient* GetClient();
     int AddService(AvahiIfIndex interface, AvahiProtocol protocol, AvahiPublishFlags flags, const wxString& name, const wxString& type, const wxString& domain, const wxString& host, short port, wxAvahiStringList* strlst=NULL);
     int AddServiceSubtype(AvahiIfIndex interface, AvahiProtocol protocol, AvahiPublishFlags flags, const wxString& name, const wxString& type, const wxString& domain, const wxString& subtype);
+    int AddAddress(AvahiIfIndex interface, AvahiProtocol protocol, AvahiPublishFlags flags, const wxString& name, const wxIPaddress& addr);
     int UpdateServiceTxt(AvahiIfIndex interface, AvahiProtocol protocol, AvahiPublishFlags flags, const wxString& name, const wxString& type, const wxString& domain, wxAvahiStringList* strlst=NULL);
-
-
-	/** \todo add wrapping for avahi_entry_group_add_address and avahi_entry_group_add_record. */
+	/** \todo add wrapping for avahi_entry_group_add_record but not documented in avahi doxygen. */
+    
+    static wxString GetAlternativeServiceName(const wxString& serviceName);
 };
 
 
