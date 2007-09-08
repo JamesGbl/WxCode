@@ -6,7 +6,7 @@
 // Copyright:   (c) 2001 Joachim Buermann
 /////////////////////////////////////////////////////////////////////////////
 
-#include "wx/awx/led.h"
+#include "wx/awx-0.3/led.h"
 #include "leds.xpm"
 
 BEGIN_EVENT_TABLE(awxLed, wxWindow)
