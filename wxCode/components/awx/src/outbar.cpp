@@ -7,7 +7,8 @@
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
 
-#include "wx/awx/outbar.h"
+#include "wx/awx-0.3/outbar.h"
+#include "wx/awx-0.3/grayimage.h"
 
 BEGIN_EVENT_TABLE(wxOutBarItem, wxWindow)
     EVT_ERASE_BACKGROUND(wxOutBarItem::OnErase)
@@ -22,35 +23,54 @@ wxOutBarItem::wxOutBarItem(wxWindow* parent,
 					  const wxPoint& pos,
 					  const wxSize& size,
 					  char** xpmimage,
-					  const wxChar* label) :
-    wxWindow(parent,id,pos,wxSize(120,70))
+					  const wxString& label) :
+    wxWindow(parent,id,pos,wxSize(32,32))
 {
     SetName(label);
-    m_bitmap = new wxBitmap(120,70);
-    m_icon = new wxIcon((const char **)xpmimage);
+    m_bitmap = new wxBitmap(32,32);
+
+    wxGrayImage* gray = new wxGrayImage(wxBitmap((const char **)xpmimage));
+    gray->SetMaskColour(1, 1, 1);
+    // a gray icon for the disabled state
+    m_icon[0] = new wxBitmap(gray);
+    // the enabled state shows the normal icon
+    m_icon[1] = new wxBitmap((const char **)xpmimage);
+
     m_font = new wxFont(10,wxDEFAULT,wxNORMAL,wxBOLD);
     m_label = label;
     m_check = 0;
+
+    int labelHeight = 0;
+
+    if( ! label.IsEmpty() ) {
+	   labelHeight = m_font->GetPointSize() << 1;
+    }
+    SetMinSize( wxSize( m_icon[1]->GetWidth(), 
+				    m_icon[1]->GetHeight() + labelHeight + 2) );
 };
 
 wxOutBarItem::~wxOutBarItem()
 {
-    delete m_icon;
     delete m_bitmap;
     delete m_font;
+    delete m_icon[0];
+    delete m_icon[1];
 };
 
 void wxOutBarItem::DrawItem(wxDC& dc)
 {
     wxCoord w,h;
-    dc.DrawIcon(*m_icon,28,2);
+    
+    dc.DrawBitmap(*m_icon[IsEnabled()],
+			   (GetSize().GetWidth() - m_icon[1]->GetWidth()) >> 1, 2,true);
     dc.SetFont(*m_font);
     dc.GetTextExtent(m_label,&w,&h);
-    int dx = (104 - w) >> 1;
+    int dx = (GetSize().GetWidth() - w) >> 1;
     if(dx < 0) dx = 0;
-    int dy = (20 - h) >> 1;
-    if(dy < 0) dy = 0;
-    dc.DrawText(m_label,dx,50+dy);
+
+    dc.DrawText(m_label,dx,GetSize().GetHeight() - 
+			 (m_font->GetPointSize() << 1));
+
 };
 
 void wxOutBarItem::DrawOnBitmap()
@@ -110,7 +130,6 @@ wxOutBar::wxOutBar(wxWindow* parent,
     wxScrolledWindow(parent,id,pos,wxSize(120,-1),wxVSCROLL|wxSUNKEN_BORDER)
 {
     SetBackgroundColour(*wxWHITE);
-//    SetName(wxString("wxOutBar"));
     m_sizer = new wxBoxSizer(wxVERTICAL);
     m_items = 0;
     SetAutoLayout(true);
@@ -124,11 +143,33 @@ wxOutBar::~wxOutBar()
 
 void wxOutBar::Add(wxOutBarItem* item)
 {
+    wxCoord w,h;
+    wxMemoryDC dc;
+    wxBitmap tmpBitmap(100,100);
+    dc.SelectObject(tmpBitmap);
+
+    dc.SetFont(item->GetFont());
+    dc.GetTextExtent(item->GetLabel(),&w,&h);
+    w += 8;
+
+    wxSize itemSize = item->GetSize();
+
+    if ( itemSize.GetWidth() > m_itemSize.GetWidth() ) {
+	   m_itemSize.SetWidth(itemSize.GetWidth() + GetMargins().GetWidth() );
+    }
+    if ( w > m_itemSize.GetWidth() ) { 
+	   m_itemSize.SetWidth( w );
+    }
+    if ( itemSize.GetHeight() > m_itemSize.GetHeight() ) {
+	   m_itemSize.SetHeight(itemSize.GetHeight() );
+    }
+    m_sizer->SetMinSize(m_itemSize);
+
     // uncheck the last item (if it exists)
     if(m_selected) m_selected->Check(false);
     m_sizer->Add(item,0,wxGROW|wxALL,0);
     m_sizer->Layout();
-    SetScrollbars(0,1,1,++m_items*70);
+    SetScrollbars(0,1,1,++m_items * m_itemSize.GetHeight());
     m_selected = item;
     // the new added item will be selected automatically
     m_selected->Check(true);
