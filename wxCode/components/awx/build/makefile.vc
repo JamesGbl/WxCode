@@ -57,12 +57,13 @@ INSTALLDIR = $(WXWIN)
 AWX_LIB_CXXFLAGS = /MT$(____DEBUG_2) /DWIN32 $(__WXUNICODE_DEFINE_p) \
 	$(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
 	/I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
-	/I$(WX_DIR)\include /I..\include $(____DEBUG) $(____DEBUG_0) $(____DEBUG_1) \
+	 /I..\include /I$(WX_DIR)\include $(____DEBUG) $(____DEBUG_0) $(____DEBUG_1) \
 	$(______DEBUG) /Fd..\lib\wxawx$(LIBFLAG)-0.3.pdb /GR /EHsc $(CPPFLAGS) \
 	$(CXXFLAGS)
 AWX_LIB_OBJECTS =  \
 	$(OUTPUT)\awx_lib_button.obj \
 	$(OUTPUT)\awx_lib_choice.obj \
+	$(OUTPUT)\awx_lib_grayimage.obj \
 	$(OUTPUT)\awx_lib_led.obj \
 	$(OUTPUT)\awx_lib_obdlg.obj \
 	$(OUTPUT)\awx_lib_outbar.obj \
@@ -254,6 +255,9 @@ $(OUTPUT)\awx_lib_button.obj: .\..\src\button.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(AWX_LIB_CXXFLAGS) $**
 
 $(OUTPUT)\awx_lib_choice.obj: .\..\src\choice.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(AWX_LIB_CXXFLAGS) $**
+
+$(OUTPUT)\awx_lib_grayimage.obj: .\..\src\grayimage.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(AWX_LIB_CXXFLAGS) $**
 
 $(OUTPUT)\awx_lib_led.obj: .\..\src\led.cpp

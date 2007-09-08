@@ -57,6 +57,7 @@ AWX_LIB_CXXFLAGS = -D_THREAD_SAFE -pthread -I../include $(____DEBUG) \
 AWX_LIB_OBJECTS =  \
 	$(OUTPUT)/awx_lib_button.o \
 	$(OUTPUT)/awx_lib_choice.o \
+	$(OUTPUT)/awx_lib_grayimage.o \
 	$(OUTPUT)/awx_lib_led.o \
 	$(OUTPUT)/awx_lib_obdlg.o \
 	$(OUTPUT)/awx_lib_outbar.o \
@@ -188,6 +189,9 @@ $(OUTPUT)/awx_lib_button.o: ./../src/button.cpp
 	$(CXX) -c -o $@ $(AWX_LIB_CXXFLAGS) $(CPPDEPS) $<
 
 $(OUTPUT)/awx_lib_choice.o: ./../src/choice.cpp
+	$(CXX) -c -o $@ $(AWX_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+$(OUTPUT)/awx_lib_grayimage.o: ./../src/grayimage.cpp
 	$(CXX) -c -o $@ $(AWX_LIB_CXXFLAGS) $(CPPDEPS) $<
 
 $(OUTPUT)/awx_lib_led.o: ./../src/led.cpp

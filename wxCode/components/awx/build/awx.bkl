@@ -110,6 +110,7 @@
     <sources>
 	 ../src/button.cpp
 	 ../src/choice.cpp
+	 ../src/grayimage.cpp
 	 ../src/led.cpp
 	 ../src/obdlg.cpp
 	 ../src/outbar.cpp
