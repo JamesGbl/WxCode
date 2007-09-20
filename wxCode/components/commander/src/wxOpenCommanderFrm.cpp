@@ -445,7 +445,9 @@ void wxOpenCommanderFrm::Mnu_about_onClick(wxCommandEvent& event)
    info.SetCopyright(wxString::FromAscii("(C) 2007 wxOpenCommander GPL License \n"));
    info.AddDeveloper(_T("Armando Urdiales González"));
    info.SetWebSite(_T("http://www.wxOpenCommander.com/"), _T("wxOpenCommander web site"));
-   info.AddArtist(_T("Developed with:"));
+   info.AddArtist(_T("Translate by:"));
+   info.AddArtist(_T("\n\n\Jens Saathoff     (German/Deutsch)"));
+   info.AddArtist(_T("\n\n\n\n\Developed with:"));
    info.AddArtist(_T("\n\n\nwxDev-C++ (C++ IDE)"));
    info.AddArtist(_T("\n\nwxWidgets (Library)"));
    info.AddArtist(_T("\n\nMingW (C++ Compiler)"));

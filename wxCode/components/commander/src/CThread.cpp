@@ -49,8 +49,10 @@ void CThread::OnExit()
 {
    if (onFinishCallBackFunc != NULL)
       onFinishCallBackFunc((void*)this, finishParam, m_parent);
-      
+   
+   this->Wait();   
    this->Exit();
+   this->Delete();
    delete(this);
 }
 

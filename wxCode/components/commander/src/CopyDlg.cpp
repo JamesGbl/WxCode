@@ -47,12 +47,10 @@ CopyDlg::~CopyDlg()
 {
    //delete(WxListCtrl1->GetImageList(wxIMAGE_LIST_SMALL)); // MEMORY LEAK
    //delete(WxListCtrl1->GetImageList(wxIMAGE_LIST_SMALL));// MEMORY LEAK
-
-   if (thread != NULL)
-   {
-      if (thread->IsRunning()) thread->Delete();
-      //delete(thread);
-   }
+   
+   // Memory LEAK -- Prox Ver...
+   //destroyThread();
+   
    delete(ckExistFiles);
    delete(ckReadFiles);
    delete(lblDetails);
@@ -254,9 +252,6 @@ void CopyDlg::onCopyThreadFinish()
    #ifdef __WXMSW__
       if (autoClose && !item) SendMessage((HWND)GetHWND(), WM_CLOSE, (WPARAM)TRUE, (LPARAM)NULL);
    #endif
-   
-   thread->Delete();
-   thread = NULL;
 }
 
 void onThreadDirRecursiveFinish(void* thread, void* contextParam, void* parent)
@@ -272,7 +267,8 @@ void onThreadCopyFinish(void* thread, void* contextParam, void* parent)
 {
    CopyDlg* parentWindow;
    parentWindow = (CopyDlg*)parent;
-   return parentWindow->onCopyThreadFinish();   
+   parentWindow->onCopyThreadFinish();   
+   return;
 }
 
 int onThreadBeginCopyFile(void* parent, const wxString& sourcePath, const wxString& destinationPath)
@@ -289,12 +285,24 @@ void onThreadEndCopyFile(void* parent, bool copy, const wxString& sourcePath, co
    return parentWindow->onEndCopyFile(copy, sourcePath, destinationPath);
 }
 
+/*
+void CopyDlg::destroyThread()
+{
+   if (thread != NULL)
+   {
+      thread->TestDestroy();
+      thread->Wait();
+      thread = NULL;
+   }
+}
+*/
+
 void CopyDlg::btnCopyClick(wxCommandEvent& event)
 {   
 	size_t nFiles = m_pathsCopy.size();
    if (nFiles < 0) return;
    
-   CThread* threadCopy = new CThread();
+   //destroyThread();
    thread = new CThread();
    thread->setParent((void*) this);
 
@@ -358,6 +366,7 @@ void CopyDlg::updateSourceListCtrl()
    
    //Calculating number and size of files
    //CThread* thread = new CThread();
+   //destroyThread();
    thread = new CThread();
    thread->setParent((void*) this);
    
@@ -396,9 +405,6 @@ void CopyDlg::onDirRecursiveFinish(long long totalSizeRecursive)
       wxCommandEvent event;
       btnCopyClick(event);
    } 
-
-   thread->Delete();
-   thread = NULL;
 }
 
 void CopyDlg::WxListCtrl1ItemSelected(wxListEvent& event)

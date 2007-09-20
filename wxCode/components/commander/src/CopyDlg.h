@@ -119,6 +119,7 @@ class CopyDlg : public wxDialog
       void addColumns(wxListCtrl* WxListCtrl);
       void WxListCtrl1ItemSelected(wxListEvent& event);
       void WxListCtrl2ItemSelected(wxListEvent& event);
+      void destroyThread();
 
 	public:
       void showModal(vectorCopyParams pathsCopy);
