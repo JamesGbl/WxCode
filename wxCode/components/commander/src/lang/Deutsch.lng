@@ -1,0 +1,90 @@
+lang=Deutsch
+canonicalName=de_DE
+
+&Files=&Dateien
+&Add Tab=&Reiter hinzufügen
+Re&move Tab=R&eiter schließen
+&New folder=&Neuer Ordner
+&Copy=&Kopieren
+&Delete=&Löschen
+&Rename=&Umbenennen
+&Filter=&Filter
+&Execute=&Ausführen
+&Exit=&Beenden
+&Help=&Hilfe
+About as...=Über...
+&Check updates=Auf Updates prüfen
+
+New Folder=Neuer Ordner
+Copy=Kopieren
+Copy to...=Kopieren nach...
+Delete=Löschen
+Rename=Umbennen
+Exec=Ausführen
+Go=Los
+Refresh=Aktualisieren...
+Devices=Geräte
+Filter=Filter
+
+Files=Dateien
+Extension=Erweiterung
+Size=Größe
+Date=Datum
+
+&Restore wxOpenCommander=wxOpenCommander wiederherstellen
+&Hide wxOpenCommander=wxOpenCommander ausblenden
+
+Removable=Wechseldatenträger
+Hard Disk=Festplatte
+
+Do you like DELETE selected files?=Wollen Sie die selektierten Dateien löschen?
+Delete=Löschen
+There are some files read only=Einige Dateien sind nicht beschreibbar
+Folder name :=Name des Ordners :
+Create folder=Ordner erstellen
+New Folder=Neuer Ordner
+Write the command for execute in :=Kommando für die Ausführung :
+Exec command=Kommando ausführen
+Directories and Files=Verzeichniss und Dateien
+Coping files=Kopiere Dateien
+Coping file=Kopiere Datei
+of=aus
+Finalizing the copy. Wait a moment...=Kopieren wird fertig gestellt. Bitte warten...
+
+&Edit=&Bearbeiten
+&Paste=&Einfügen
+
+&Options=&Optionen
+&Language=&Sprache
+Hot Keys=&Spezialtasten
+Language selector=Sprachauswahl
+Select your language=Wählen Sie ihre Sprache
+
+Hot Keys Dialog=Konfiguration für Spezialtasten
+Keys=Tasten
+Programs=Programme
+Ok=Akzeptieren
+Press Key (Ctrl + ? or F?)=Drücken Sie die Tasten (Strg + ? und F?)
+Save=Speichern
+Cancel=Abbrechen
+Programs:=Programme:
+Delete=Löschen
+Edit=Bearbeiten
+Add=Hinzufügen
+Hot Keys for Launch other Programs=Spezialtasten für andere Programme
+
+Copy Files=Kopiere Dateien
+Source=Quelle
+Destination=Ziel
+Loading files (Please wait...)=Lade Dateien (Bitte warten...)
+Copy finished with some errors=Dateien mit Fehlern kopiert
+File copied sucessfuly=Datei erfolgreich kopiert
+File already exist in destination=Die Datei existiert bereits im Zielverzeichnis
+File is Read only in destination=Die Datei im Zielverzeichnis ist schreibgeschützt
+Path=Pfad
+File=Datei
+Overwrite Read only files=Schreibgeschützte Dateien überschreiben
+Overwrite existing files=Bereits existierende Dateien überschreiben
+Close=Schließen
+Enter the text for filter the files : Example (*.EXE)=Geben sie den Text für den Filter an : Beispiel (*.EXE)
+Filter dialog=Filter-Dialog
