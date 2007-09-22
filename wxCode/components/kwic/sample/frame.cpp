@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-// Name:        Frame.cpp
+// Name:        frame.cpp
 // Purpose:     wxIndustrialControls test
 // Author:      Ettl Martin - ettl@fs.wettzell.de
 // Copyright:   (C)2007 Copyright Ettl Martin
@@ -102,8 +102,15 @@ void MyFrame::vSetUpBmpSwitcher(void)
 	m_GreenLight = new wxBitmap();
 	m_RedLight	 = new wxBitmap();
 
-	m_GreenLight->LoadFile("res/true.xpm",wxBITMAP_TYPE_XPM);
-	m_RedLight->LoadFile("res/false.xpm",wxBITMAP_TYPE_XPM);
+#ifdef __VISUALC__
+    // when running samples from MSVC, the working directory is not
+    // the sample directory:
+    const wxString prefix = wxT("../sample/");
+#else
+    const wxString prefix = wxEmptyString;
+#endif
+	m_GreenLight->LoadFile(prefix + "res/true.xpm",wxBITMAP_TYPE_XPM);
+	m_RedLight->LoadFile(prefix + "res/false.xpm",wxBITMAP_TYPE_XPM);
 
 	// add the bitmaps
 	m_BmpSwitcher->AddBitmap(m_GreenLight);

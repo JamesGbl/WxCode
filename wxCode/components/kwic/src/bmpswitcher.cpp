@@ -74,10 +74,8 @@ kwxBmpSwitcher::kwxBmpSwitcher(wxWindow* parent,
 	m_nState = 0 ;
 	membitmap = new wxBitmap(size.GetWidth(), size.GetHeight()) ;
 	
-	
 	m_style = style;
 	m_label = label;
-
 }
 
 
@@ -123,7 +121,6 @@ void kwxBmpSwitcher::OnPaint(wxPaintEvent &WXUNUSED(event))
     dc.SetPen( *wxBLACK_PEN );
     dc.SetBrush( *wxBLACK_BRUSH );
 
-
     dc.DrawCircle((int)dx, (int)dy, (int)dr);
 
 	if (m_nCount == 1)
@@ -131,8 +128,6 @@ void kwxBmpSwitcher::OnPaint(wxPaintEvent &WXUNUSED(event))
 		CBmpList::Node *node = m_bmplist.GetFirst();
 
 		pCurrent = node->GetData() ;
-
-		dc.DrawBitmap(*pCurrent, 0, 0, TRUE);
 	}
 	else
 	{
@@ -140,20 +135,14 @@ void kwxBmpSwitcher::OnPaint(wxPaintEvent &WXUNUSED(event))
 			m_nState = 0 ;
 
 		CBmpList::Node *node = m_bmplist.Item(m_nState);
-		pCurrent = node->GetData() ;
-
-		dc.DrawBitmap(*pCurrent, 0, 0, TRUE);
-
+		pCurrent = node->GetData();
 	}
-	
-	
 
-	
+    if (pCurrent->IsOk())
+		dc.DrawBitmap(*pCurrent, 0, 0, TRUE);
 	
 	old_dc.Blit(0, 0, w, h, &dc, 0, 0);
-
 }
-
 
 
 void kwxBmpSwitcher::IncState()

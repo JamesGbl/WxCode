@@ -82,10 +82,10 @@ kwxAngularMeter::kwxAngularMeter(wxWindow* parent,
 
 
 	/////////////// TODO : Test for BMP image loading /////////////////
-/*
 
 	m_pPreviewBmp = NULL ;
 
+/*
     wxBitmap bitmap( 300, 300 );
     wxImage image = bitmap.ConvertToImage();
 
