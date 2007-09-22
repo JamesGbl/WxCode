@@ -475,6 +475,38 @@ SOURCE=..\src\regulatorbase.cpp
 SOURCE=..\src\slider.cpp
 # End Source File
 # End Group
+# Begin Group "Header Files"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=..\include\kwic\angularmeter.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\kwic\angularregulator.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\kwic\bmpswitcher.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\kwic\kwicdef.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\kwic\lcdwindow.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\kwic\regulatorbase.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\kwic\slider.h
+# End Source File
+# End Group
 # End Target
 # End Project
 
