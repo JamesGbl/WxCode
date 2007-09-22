@@ -1,0 +1,36 @@
+Change list - KWIC kwxIndControlSource
+========================================
+
+version     0.3.1
+date        22/9/2007
+changes
+Reorganized the component as a standard wxCode
+component which builds its own DLL/static lib,
+has its sample and its headers organized for
+easy reuse, uses bakefile build system.
+Work done by Francesco Montorsi.
+
+-----------------------------------------
+
+version		0.3.0
+date		20/06/2007 
+changes
+Ported to wxGTK - Version 2.8.4 by Ettl Martin
+actually committed 21/09/2007
+
+-----------------------------------------
+
+version		0.2.0
+date		12/01/2005
+changes		:
+Solved kwxAngularMeter wrong behavior with background bitmap.
+
+-----------------------------------------
+
+version		alpha 0.1
+date		05/01/2005
+changes		:
+first release (C)2005-2007 Marco Cavallini et al 
+KWIC is a project created and mantained by KoanSoftware.com
+
+KWIC - Koan wxWidgets Industrial Controls

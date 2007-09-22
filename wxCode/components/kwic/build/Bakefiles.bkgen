@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+
+<!-- Created by: Francesco Montorsi <frm@users.sourceforge.net>     -->
+<!-- Date: 9/10/2004                                                -->
+
+<bakefile-gen>
+    <include file="../../../build/bakefiles/presets/wxcode.bkgen"/>
+    <disable-formats>msvs2005prj</disable-formats>
+    <input>kwic.bkl</input>
+</bakefile-gen>
