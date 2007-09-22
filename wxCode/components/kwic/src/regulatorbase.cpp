@@ -262,7 +262,7 @@ void kwxRegulatorBase::OnKeyDown(wxKeyEvent& rEvent) {
     						m_strCurrent=" ";
     					break;	
     	default: 		if(!m_bEditing){
-	    					  std::cout << "unprocessable key pressed : " << iKeycode << std::endl;
+	    					  wxLogDebug("unprocessable key pressed : %d", iKeycode);
 	    					  return;
     					}
     					if(isdigit(iKeycode)|| iKeycode=='.'|| iKeycode==','){								// if numeric input process..
@@ -270,7 +270,7 @@ void kwxRegulatorBase::OnKeyDown(wxKeyEvent& rEvent) {
     						m_strCurrent[m_iCaretPosition++] = iKeycode;	// insert key, move caret right
     																		// if caret at end
     						if( m_iCaretPosition >= (int)m_strCurrent.Length() ){
-    								int iMaxCaretPos = (int)log10(m_iMax);	// calculate max caret length
+    								int iMaxCaretPos = (int)log10((double)m_iMax);	// calculate max caret length
     								if(m_iCaretPosition <= iMaxCaretPos)	// if caret not at end..
     									m_strCurrent.Append(" ");			// ..append blank to end of edit str
     								else
@@ -279,7 +279,7 @@ void kwxRegulatorBase::OnKeyDown(wxKeyEvent& rEvent) {
     						Refresh();
     					}
     					else {
-    						std::cout << "key " << iKeycode<< " "<< strGetKey( iKeycode ) << " pressed\n";
+    						wxLogDebug("key %d %s pressed", iKeycode, strGetKey( iKeycode ).c_str());
     					}
     					return;
     }
