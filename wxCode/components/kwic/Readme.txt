@@ -1,22 +1,16 @@
 
- Keybinder component info
+ KWIC component info
  ------------------------
 
  Website: http://wxcode.sourceforge.net/components/kwic
  Version: 0.3.1
  Description:
 
- A generic system to bind one or more keyshortcut to the commands you want
- (menu commands or whatever you like).
-
- A pre-built panel and a complete system to view/remove/add/edit command
- shortcuts is included. Also key profiles are supported and a complete
- load/save system based on wxConfig is present.
-
- Integrates with your applications with few modifications and allows the
- users to customize all the commands they want, bypassing the limitation of a
- single key-shortcut to each command.
-
+ These are the Koan wxIndustrialControls [KWIC].
+ KWIC library provide a set of graphical widgets for showing 
+ digital and analogic values.
+ Available objects are: Angular Meter, Linear Meter, Angular Regulator, 
+ Linear Regulator, Bitmap Switcher, Bitmap Check Box, LCD Display, LCD Clock.
 
 
  Installation

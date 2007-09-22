@@ -55,6 +55,14 @@ KWIC_LIB_OBJECTS =  \
 	kwic_lib_regulatorbase.o \
 	kwic_lib_angularregulator.o \
 	kwic_lib_lcdwindow.o
+KWIC_LIB_HEADERS =  \
+	include/kwic/angularregulator.h \
+	include/kwic/angularmeter.h \
+	include/kwic/bmpswitcher.h \
+	include/kwic/regulatorbase.h \
+	include/kwic/slider.h \
+	include/kwic/kwicdef.h \
+	include/kwic/lcdwindow.h
 KWIC_DLL_CXXFLAGS = -I$(srcdir)/include -DWXMAKINGDLL_KWIC $(PIC_FLAG) \
 	$(WX_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 KWIC_DLL_OBJECTS =  \
@@ -64,6 +72,14 @@ KWIC_DLL_OBJECTS =  \
 	kwic_dll_regulatorbase.o \
 	kwic_dll_angularregulator.o \
 	kwic_dll_lcdwindow.o
+KWIC_DLL_HEADERS =  \
+	include/kwic/angularregulator.h \
+	include/kwic/angularmeter.h \
+	include/kwic/bmpswitcher.h \
+	include/kwic/regulatorbase.h \
+	include/kwic/slider.h \
+	include/kwic/kwicdef.h \
+	include/kwic/lcdwindow.h
 KWIC_SAMPLE_CXXFLAGS = -I$(srcdir)/include $(WX_CXXFLAGS) $(CPPFLAGS) \
 	$(CXXFLAGS)
 KWIC_SAMPLE_OBJECTS =  \
@@ -204,7 +220,7 @@ distclean: clean
 
 @COND_WX_SHARED_0@install_kwic_lib_headers: 
 @COND_WX_SHARED_0@	$(INSTALL_DIR) $(DESTDIR)$(prefix)
-@COND_WX_SHARED_0@	for f in ; do \
+@COND_WX_SHARED_0@	for f in $(KWIC_LIB_HEADERS); do \
 @COND_WX_SHARED_0@	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
 @COND_WX_SHARED_0@	$(INSTALL_DIR) $(DESTDIR)$(prefix)/`dirname $$f`; \
 @COND_WX_SHARED_0@	fi; \
@@ -212,7 +228,7 @@ distclean: clean
 @COND_WX_SHARED_0@	done
 
 @COND_WX_SHARED_0@uninstall_kwic_lib_headers: 
-@COND_WX_SHARED_0@	for f in ; do \
+@COND_WX_SHARED_0@	for f in $(KWIC_LIB_HEADERS); do \
 @COND_WX_SHARED_0@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_WX_SHARED_0@	done
 
@@ -234,7 +250,7 @@ distclean: clean
 
 @COND_WX_SHARED_1@install_kwic_dll_headers: 
 @COND_WX_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(prefix)
-@COND_WX_SHARED_1@	for f in ; do \
+@COND_WX_SHARED_1@	for f in $(KWIC_DLL_HEADERS); do \
 @COND_WX_SHARED_1@	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
 @COND_WX_SHARED_1@	$(INSTALL_DIR) $(DESTDIR)$(prefix)/`dirname $$f`; \
 @COND_WX_SHARED_1@	fi; \
@@ -242,7 +258,7 @@ distclean: clean
 @COND_WX_SHARED_1@	done
 
 @COND_WX_SHARED_1@uninstall_kwic_dll_headers: 
-@COND_WX_SHARED_1@	for f in ; do \
+@COND_WX_SHARED_1@	for f in $(KWIC_DLL_HEADERS); do \
 @COND_WX_SHARED_1@	rm -f $(DESTDIR)$(prefix)/$$f; \
 @COND_WX_SHARED_1@	done
 

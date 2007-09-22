@@ -81,6 +81,14 @@ KWIC_LIB_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/kwic_lib_regulatorbase.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/kwic_lib_angularregulator.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/kwic_lib_lcdwindow.o
+KWIC_LIB_HEADERS =  \
+	include/kwic/angularregulator.h \
+	include/kwic/angularmeter.h \
+	include/kwic/bmpswitcher.h \
+	include/kwic/regulatorbase.h \
+	include/kwic/slider.h \
+	include/kwic/kwicdef.h \
+	include/kwic/lcdwindow.h
 KWIC_DLL_CXXFLAGS = $(____kwic) $(____kwic_3) -W -Wall -I../include \
 	-DWXMAKINGDLL_KWIC -fPIC -DPIC `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` \
 	$(CPPFLAGS) $(CXXFLAGS)
@@ -91,6 +99,14 @@ KWIC_DLL_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/kwic_dll_regulatorbase.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/kwic_dll_angularregulator.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/kwic_dll_lcdwindow.o
+KWIC_DLL_HEADERS =  \
+	include/kwic/angularregulator.h \
+	include/kwic/angularmeter.h \
+	include/kwic/bmpswitcher.h \
+	include/kwic/regulatorbase.h \
+	include/kwic/slider.h \
+	include/kwic/kwicdef.h \
+	include/kwic/lcdwindow.h
 KWIC_SAMPLE_CXXFLAGS = $(____kwic) $(____kwic_3) -W -Wall -I../include \
 	`$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 KWIC_SAMPLE_OBJECTS =  \
@@ -239,7 +255,7 @@ make_dir_kwic_lib:
 ifeq ($(WX_SHARED),0)
 install_kwic_lib_headers: 
 	$(INSTALL) -d $(DESTDIR)$(prefix)
-	for f in ; do \
+	for f in $(KWIC_LIB_HEADERS); do \
 	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
 	$(INSTALL) -d $(DESTDIR)$(prefix)/`dirname $$f`; \
 	fi; \
@@ -249,7 +265,7 @@ endif
 
 ifeq ($(WX_SHARED),0)
 uninstall_kwic_lib_headers: 
-	for f in ; do \
+	for f in $(KWIC_LIB_HEADERS); do \
 	rm -f $(DESTDIR)$(prefix)/$$f; \
 	done
 endif
@@ -278,7 +294,7 @@ make_dir_kwic_dll:
 ifeq ($(WX_SHARED),1)
 install_kwic_dll_headers: 
 	$(INSTALL) -d $(DESTDIR)$(prefix)
-	for f in ; do \
+	for f in $(KWIC_DLL_HEADERS); do \
 	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
 	$(INSTALL) -d $(DESTDIR)$(prefix)/`dirname $$f`; \
 	fi; \
@@ -288,7 +304,7 @@ endif
 
 ifeq ($(WX_SHARED),1)
 uninstall_kwic_dll_headers: 
-	for f in ; do \
+	for f in $(KWIC_DLL_HEADERS); do \
 	rm -f $(DESTDIR)$(prefix)/$$f; \
 	done
 endif

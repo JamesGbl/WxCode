@@ -1,8 +1,8 @@
 <?xml version="1.0" ?>
 
 <!-- Created by: Francesco Montorsi <frm@users.sourceforge.net>       -->
-<!-- Creation date: 9/10/2004                                         -->
-<!-- RCS-ID: $Id: keybinder.bkl 649 2007-07-11 19:09:57Z frm $        -->
+<!-- Creation date: 22/09/2007                                        -->
+<!-- RCS-ID: $Id$                                                     -->
 
 <makefile>
 
@@ -13,6 +13,10 @@
     <!-- =========================== -->
 
     <set-comp-name>kwic</set-comp-name>
+
+    <!-- wxCode bakefiles expect the headers to be in include/wx, our
+         headers are in include/kwic -->
+    <set var="COMP_HDR">$(fileList('include/kwic/*.h'))</set>
 
     <lib id="kwic_lib" template="wxcode-lib" cond="WX_SHARED=='0'"/>
     <dll id="kwic_dll" template="wxcode-dll" cond="WX_SHARED=='1'">
