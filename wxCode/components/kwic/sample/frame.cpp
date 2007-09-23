@@ -342,9 +342,9 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 
  
  	wxAboutDialogInfo AboutDialogInfo;
-	AboutDialogInfo.AddDeveloper(wxT("Ettl Martin ettl@fs.wettzell.de\nLeidig Andreas leidig@fs.wettzell.de\nThis demo is based in part\non the work of the KWIC project\n(http://www.koansoftware.com/kwic/index.htm)."));
-	AboutDialogInfo.SetDescription(wxT("wxIndustrialControl Demo\nby\nEttl Martin\nLeidig Andreas"));
-	AboutDialogInfo.SetName(wxT("wxIndustrialControl"));
+	AboutDialogInfo.AddDeveloper(wxT("Ettl Martin ettl@fs.wettzell.de\nLeidig Andreas leidig@fs.wettzell.de\nThis demo is based\non KWIC library project\n(http://www.koansoftware.com/kwic/index.htm)."));
+	AboutDialogInfo.SetDescription(wxT("KWIC wxIndustrialControl Demo\nby\nEttl Martin\nLeidig Andreas"));
+	AboutDialogInfo.SetName(wxT("KWIC | wxIndustrialControl"));
 	AboutDialogInfo.SetVersion(wxT("v22.06.2007"));
  
  	wxAboutBox(AboutDialogInfo);
