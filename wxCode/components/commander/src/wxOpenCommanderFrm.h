@@ -156,6 +156,7 @@ class wxOpenCommanderFrm : public wxFrame
 			ID_MNU_COPY_1046 = 1046,
 			ID_MNU_DELETE_1047 = 1047,
 			ID_MNU_RENAME_1048 = 1048,
+			ID_MNU_MASSIVERENAME_1089 = 1089,
 			ID_MNU_FILTER_1088 = 1088,
 			ID_MNU_EXECUTE_1051 = 1051,
 			ID_MNU_EXIT_1005 = 1005,
@@ -199,6 +200,7 @@ class wxOpenCommanderFrm : public wxFrame
          void Mnu_rename_onClick(wxCommandEvent& event);
          void Mnu_newFolder_onClick(wxCommandEvent& event);
          void Mnu_filter_onClick(wxCommandEvent& event);
+         void Mnu_MassiveRename_onClick(wxCommandEvent& event);
          void OnList1ItemActivated(wxListEvent& event);
          void OnList2ItemActivated(wxListEvent& event);
          void OnTaskBarClick(wxTaskBarIconEvent& event);

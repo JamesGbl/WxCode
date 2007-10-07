@@ -88,3 +88,12 @@ Overwrite existing files=Reemplazar archivos existentes
 Close=Cerrar
 Enter the text for filter the files : Example (*.EXE)=Introduzca el texto para filtar los archivos : Ejemplo (*.EXE)
 Filter dialog=Ventana de Filtro
+
+Massive rename=Renombrado Masivo
+Rename ALL SELECTED files=Renombra TODOS LOS ficheros SELECCIONADOS
+Example:=Ejemplo
+NewFileName (%n).ext=NuevoNombreFichero (%n).ext
+%n - Number of order=%n - Número de orden
+You must put the order number '%n'=Debes de poner el número de orden '%n'
+Error=Error
+

@@ -81,6 +81,7 @@ BEGIN_EVENT_TABLE(wxOpenCommanderFrm,wxFrame)
 	EVT_MENU(ID_MNU_COPY_1046, wxOpenCommanderFrm::Mnu_copy_onClick)
 	EVT_MENU(ID_MNU_DELETE_1047, wxOpenCommanderFrm::Mnu_delete_onClick)
 	EVT_MENU(ID_MNU_RENAME_1048, wxOpenCommanderFrm::Mnu_rename_onClick)
+	EVT_MENU(ID_MNU_MASSIVERENAME_1089, wxOpenCommanderFrm::Mnu_MassiveRename_onClick)
 	EVT_MENU(ID_MNU_FILTER_1088, wxOpenCommanderFrm::Mnu_filter_onClick)
 	EVT_MENU(ID_MNU_EXECUTE_1051, wxOpenCommanderFrm::Mnu_execute_onClick)
 	EVT_MENU(ID_MNU_EXIT_1005, wxOpenCommanderFrm::Mnu_exit_onClick)
@@ -154,11 +155,11 @@ void wxOpenCommanderFrm::CreateGUIControls()
 
 	WxStatusBar = new wxStatusBar(this, ID_WXSTATUSBAR);
 
-	WxGridSizer = new wxGridSizer(1, 1, 0, 0);
+	WxGridSizer = new wxGridSizer(0, 1, 0, 0);
 	this->SetSizer(WxGridSizer);
 	this->SetAutoLayout(true);
 
-	WxSplitterWindow1 =new wxSplitterWindow(this, ID_WXSPLITTERWINDOW1, wxPoint(0,0), wxSize(299,408) );
+	WxSplitterWindow1 = new wxSplitterWindow(this, ID_WXSPLITTERWINDOW1, wxPoint(0,0), wxSize(608,205));
 	WxGridSizer->Add(WxSplitterWindow1,0,wxALIGN_CENTER | wxALL,0);
 
 	WxNotebook1 = new wxNotebook(WxSplitterWindow1, ID_WXNOTEBOOK1, wxPoint(5,5),wxSize(289,195));
@@ -174,6 +175,7 @@ void wxOpenCommanderFrm::CreateGUIControls()
 	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_COPY_1046, wxT("&Copy"), wxT(""), wxITEM_NORMAL);
 	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_DELETE_1047, wxT("&Delete"), wxT(""), wxITEM_NORMAL);
 	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_RENAME_1048, wxT("&Rename"), wxT(""), wxITEM_NORMAL);
+	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_MASSIVERENAME_1089, wxT("Massive rename"), wxT(""), wxITEM_NORMAL);
 	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_FILTER_1088, wxT("&Filter"), wxT(""), wxITEM_NORMAL);
 	ID_MNU_FILES_1004_Mnu_Obj->AppendSeparator();
 	ID_MNU_FILES_1004_Mnu_Obj->Append(ID_MNU_EXECUTE_1051, wxT("E&xecute"), wxT(""), wxITEM_NORMAL);
@@ -206,6 +208,7 @@ void wxOpenCommanderFrm::CreateGUIControls()
 	SetTitle(wxT("wxOpenCommander"));
 	SetIcon(Self_wxOpenCommanderFrm_XPM);
 	
+	GetSizer()->Layout();
 	GetSizer()->Fit(this);
 	GetSizer()->SetSizeHints(this);
 	Center();
@@ -290,6 +293,8 @@ void wxOpenCommanderFrm::updateControlsLanguage()
    WxMenuBar1->SetLabel(ID_MNU_COPY_1046, lang["&Copy"] + " (F5)");
    WxMenuBar1->SetLabel(ID_MNU_DELETE_1047, lang["&Delete"] + " (Del)");
    WxMenuBar1->SetLabel(ID_MNU_RENAME_1048, lang["&Rename"] + " (F2)");
+   WxMenuBar1->SetLabel(ID_MNU_MASSIVERENAME_1089, lang["Massive rename"]);
+   
    WxMenuBar1->SetLabel(ID_MNU_FILTER_1088, lang["&Filter"] + " (F8)");
    WxMenuBar1->SetLabel(ID_MNU_EXECUTE_1051, lang["&Execute"] + " (F9)");
    WxMenuBar1->SetLabel(ID_MNU_EXIT_1005, lang["&Exit"]);
@@ -508,6 +513,44 @@ void wxOpenCommanderFrm::Mnu_newFolder_onClick(wxCommandEvent& event)
 	if (folderName.IsEmpty() || folderName==lang["New Folder"]) return;
 	folderName = lastCCommanderUsed->getActualPath() + "\\" + folderName;
    wxMkdir(folderName);
+   ListCtlUpdate();
+}
+
+void wxOpenCommanderFrm::Mnu_MassiveRename_onClick(wxCommandEvent& event)
+{
+   wxString massiveName;
+   wxString caption = lang["Rename ALL SELECTED files"] + "\n" + lang["Example:"] + "\n   " + lang["NewFileName (%n).ext"] + "\n      " + lang["%n - Number of order"];
+   wxTextEntryDialog execWnd(this, caption, lang["Rename ALL SELECTED files"], lang["NewFileName (%n).ext"], wxOK | wxCANCEL | wxCENTRE);
+   do 
+   {
+	   if (execWnd.ShowModal()==wxID_CANCEL) return;
+	   massiveName = execWnd.GetValue();
+	   if (massiveName.IsEmpty() || massiveName==lang["NewFileName (%n).ext"]) return;
+	   if (massiveName.Find('%n')== -1) wxMessageBox(lang["You must put the order number '%n'"], lang["Error"]);
+   }
+	while (massiveName.Find('%n') < 0);
+	
+	massiveName.Replace("%n", "%d", true);
+	
+   long item = 0;
+   long fileNum = 0;
+   bool blnErr = false;
+   wxString itemName;
+   wxString strPath;
+   wxString newFileName;
+   while (item != -1)
+   {
+      item = lastListCtrlUsed->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+      if ( item != -1 )
+      {
+         fileNum++;
+         itemName = lastListCtrlUsed->GetItemText(item);
+         strPath = lastCCommanderUsed->getActualPath();
+         newFileName = massiveName.Format(massiveName, fileNum);
+         if (!renameDirFile(strPath, itemName, newFileName)) blnErr = true;
+      }
+   }
+   if (blnErr) wxMessageBox(lang["There are some files read only"], "wxOpenCommander", wxOK | wxICON_ERROR , this);
    ListCtlUpdate();
 }
 
@@ -788,7 +831,7 @@ void wxOpenCommanderFrm::Mnu_execute_onClick(wxCommandEvent& event)
 	execWnd.ShowModal();
 	wxString command = execWnd.GetValue();
 	if (command.IsEmpty()) return;
-	wxString execCommand = "Exec.bat " + lastCCommanderUsed->getActualPath() + " " + command;
+	wxString execCommand = lastCCommanderUsed->getActualPath() + " " + command;
    wxShell(execCommand);
    config.Write("LastExecCommand", command);
 }
@@ -1273,8 +1316,7 @@ void wxOpenCommanderFrm::Mnu_Help_onClick(wxCommandEvent& event)
 }
 
 void wxOpenCommanderFrm::onContextMenu(wxContextMenuEvent& event)
-{   
-   
+{      
    wxWindow* menuWindow = wxFindWindowAtPoint(event.GetPosition());
    int winId = menuWindow->GetId();
    
@@ -1334,4 +1376,6 @@ void wxOpenCommanderFrm::onContextMenu(wxContextMenuEvent& event)
    menu->Append(&itemFil);
 	
    this->PopupMenu(menu);   
+
 }
+
