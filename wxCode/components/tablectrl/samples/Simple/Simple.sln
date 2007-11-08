@@ -1,0 +1,32 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleTable", "Simple.vcproj", "{C7F158C8-3379-4E4B-976B-69C2E497C57A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3F6AB70B-7A54-40C6-9701-ACA71678CF56} = {3F6AB70B-7A54-40C6-9701-ACA71678CF56}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TableCtrl", "..\..\build\TableCtrl.vcproj", "{3F6AB70B-7A54-40C6-9701-ACA71678CF56}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{C7F158C8-3379-4E4B-976B-69C2E497C57A}.Debug.ActiveCfg = Debug|Win32
+		{C7F158C8-3379-4E4B-976B-69C2E497C57A}.Debug.Build.0 = Debug|Win32
+		{C7F158C8-3379-4E4B-976B-69C2E497C57A}.Release.ActiveCfg = Release|Win32
+		{C7F158C8-3379-4E4B-976B-69C2E497C57A}.Release.Build.0 = Release|Win32
+		{3F6AB70B-7A54-40C6-9701-ACA71678CF56}.Debug.ActiveCfg = Debug|Win32
+		{3F6AB70B-7A54-40C6-9701-ACA71678CF56}.Debug.Build.0 = Debug|Win32
+		{3F6AB70B-7A54-40C6-9701-ACA71678CF56}.Release.ActiveCfg = Release|Win32
+		{3F6AB70B-7A54-40C6-9701-ACA71678CF56}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

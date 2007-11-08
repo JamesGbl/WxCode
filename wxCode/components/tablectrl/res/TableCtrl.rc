@@ -1,0 +1,24 @@
+////////////////////////////////////////////////////////////////////////////////
+// SDG!                                                                       //
+//                                                                            //
+// Name:        TableCtrl.rc                                                  //
+// Purpose:                                                                   //
+// Author:      Jan Knepper                                                   //
+// Created:     1998                                                          //
+// Copyright:   (c) 1998-2007 Jan Knepper                                     //
+// Licence:     wxWidgets licence                                             //
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+#include <commctrl.h>
+#include <wx/TableCtrl.h>
+
+
+
+RNS_RESIZELR                     CURSOR      "ResizeLR.CUR"
+RNS_RESIZETB                     CURSOR      "ResizeTB.CUR"
+
+RNS_TABLE_CHECKBOX_UNCHECKED     BITMAP      "Table Checkbox Unchecked.bmp"
+RNS_TABLE_CHECKBOX_CHECKED       BITMAP      "Table Checkbox Checked.bmp"
+
