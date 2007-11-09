@@ -936,6 +936,7 @@ template < class  T >
 wxTable :: GenericSet < T > :: GenericSet ()
    : Set ()
 {
+   inverted = false;
 }
 
 
