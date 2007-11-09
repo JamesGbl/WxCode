@@ -14,8 +14,6 @@
 ////Header Include Start
 #include "Images/Self_CopyDlg_XPM.xpm"
 ////Header Include End
-#include "Images/icon1.xpm"
-#include "Images/icon3.xpm"
 
 //----------------------------------------------------------------------------
 // CopyDlg
@@ -138,22 +136,13 @@ void CopyDlg::addColumns(wxListCtrl* WxListCtrl)
    WxListCtrl->InsertColumn(0, lang["Files"], wxLIST_FORMAT_LEFT, 700);
    
    int size = 20;
-   //if (imageList != NULL) delete(imageList);
-   wxImageList* imageList = new wxImageList(size, size, true); // MEMORY LEAK
+   wxImageList* imageList; //= WxListCtrl->GetImageList(wxIMAGE_LIST_SMALL);
+   //if (imageList != NULL) delete(imageList); // MEMORY LEAK
+   imageList = new wxImageList(size, size, true); // MEMORY LEAK
 
-   wxIcon icons[2];
-   icons[0] = wxIcon(icon1_xpm);
-   icons[1] = wxIcon(icon3_xpm);
-
-
-   int sizeOrig = icons[0].GetWidth();
-   for ( size_t i = 0; i < WXSIZEOF(icons); i++ )
-   {
-       if ( size == sizeOrig )
-           imageList->Add(icons[i]);
-       else
-           imageList->Add(wxBitmap(wxBitmap(icons[i]).ConvertToImage().Rescale(size, size)));
-   }
+   imageList->Add(wxArtProvider::GetIcon(wxART_NORMAL_FILE, wxART_CMN_DIALOG, wxSize(size, size)));
+   imageList->Add(wxArtProvider::GetIcon(wxART_FOLDER, wxART_CMN_DIALOG, wxSize(size, size)));
+   imageList->Add(wxArtProvider::GetIcon(wxART_EXECUTABLE_FILE , wxART_CMN_DIALOG, wxSize(size, size)));
 
    WxListCtrl->AssignImageList(imageList, wxIMAGE_LIST_SMALL);
 }

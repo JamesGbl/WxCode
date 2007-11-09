@@ -10,6 +10,10 @@
 
 using namespace std;
 
+#define REMOVABLE "Removable"
+#define CDROM "CD/DVD"
+#define HARDDISK "Hard Disk"
+
 #include <vector>
 
 typedef vector<wxString> vectorString;

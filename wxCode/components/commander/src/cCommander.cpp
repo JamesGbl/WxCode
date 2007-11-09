@@ -135,11 +135,11 @@ wxString cCommander::getDrive(long itemPos, long itemCol)
               switch (iter->second)
               {
     	           case DRIVE_REMOVABLE:
-                    return "Removable";
+                    return REMOVABLE;
          	     case DRIVE_CDROM:
-                    return "CD/DVD";
+                    return CDROM;
                  default:
-                    return "Hard Disk";
+                    return HARDDISK;
               }
            }
            else return "";

@@ -20,6 +20,14 @@
 #include "multiLang.h"
 #include "wxOpenCommanderUtils.h"
 
+#define ICON_NORMAL_FILE 0
+#define ICON_DIRECTORY 1
+#define ICON_EXEC_FILE 2
+#define ICON_HARD_DISK 3
+#define ICON_DVD 4
+#define ICON_FLOPPY 5
+#define ICON_REMOVABLE 6
+
 class wxOpenCommanderListCtrl : public wxListCtrl
 
 {

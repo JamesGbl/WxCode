@@ -26,15 +26,6 @@
 #include "Images/computer.xpm"
 #include "Images/filter.xpm"
 
-#include "Images/icon1.xpm"
-//#include "Images/icon2.xpm"
-#include "Images/icon3.xpm"
-//#include "Images/icon4.xpm"
-#include "Images/icon5.xpm"
-#include "Images/hardDisk.xpm"
-#include "Images/dvd.xpm"
-#include "Images/floppy.xpm"
-#include "Images/usb.xpm"
 
 //----------------------------------------------------------------------------
 // wxOpenCommanderFrm
@@ -117,7 +108,7 @@ bool DragAndDropButton::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& f
 wxOpenCommanderFrm::wxOpenCommanderFrm(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
 : wxFrame(parent, id, title, position, size, style)
 {  
-
+   
 	CreateGUIControls();
 
 	lastListCtrlUsed = WxListCtrl2;
@@ -341,27 +332,19 @@ void wxOpenCommanderFrm::addColumns(wxListCtrl* WxListCtrl)
    WxListCtrl->InsertColumn(3, lang["Date"], wxLIST_FORMAT_RIGHT, 100);
    
    int size = 20;
-   //if (imageList != NULL) delete(imageList);
-   wxImageList* imageList = new wxImageList(size, size, true); // MEMORY LEAK
-
-   wxIcon icons[7];
-   icons[0] = wxIcon(icon1_xpm);
-   icons[1] = wxIcon(icon3_xpm);
-   icons[2] = wxIcon(icon5_xpm);
-   icons[3] = wxIcon(hardDisk_xpm);
-   icons[4] = wxIcon(dvd_xpm);
-   icons[5] = wxIcon(floppy_xpm);
-   icons[6] = wxIcon(usb_xpm);
-
-   int sizeOrig = icons[0].GetWidth();
-   for ( size_t i = 0; i < WXSIZEOF(icons); i++ )
-   {
-       if ( size == sizeOrig )
-           imageList->Add(icons[i]);
-       else
-           imageList->Add(wxBitmap(wxBitmap(icons[i]).ConvertToImage().Rescale(size, size)));
-   }
-
+   
+   wxImageList* imageList; // = WxListCtrl->GetImageList(wxIMAGE_LIST_SMALL);
+   //if (imageList != NULL) delete(imageList); // MEMORY LEAK
+   imageList = new wxImageList(size, size, true); // MEMORY LEAK
+   
+   imageList->Add(wxArtProvider::GetIcon(wxART_NORMAL_FILE, wxART_CMN_DIALOG, wxSize(size, size)));
+   imageList->Add(wxArtProvider::GetIcon(wxART_FOLDER, wxART_CMN_DIALOG, wxSize(size, size)));
+   imageList->Add(wxArtProvider::GetIcon(wxART_EXECUTABLE_FILE , wxART_CMN_DIALOG, wxSize(size, size)));
+   imageList->Add(wxArtProvider::GetIcon(wxART_HARDDISK, wxART_CMN_DIALOG, wxSize(size, size)));
+   imageList->Add(wxArtProvider::GetIcon(wxART_CDROM, wxART_CMN_DIALOG, wxSize(size, size)));
+   imageList->Add(wxArtProvider::GetIcon(wxART_FLOPPY, wxART_CMN_DIALOG, wxSize(size, size)));
+   imageList->Add(wxArtProvider::GetIcon(wxART_REMOVABLE, wxART_CMN_DIALOG, wxSize(size, size)));
+   
    WxListCtrl->AssignImageList(imageList, wxIMAGE_LIST_SMALL);
 }
 
@@ -831,8 +814,25 @@ void wxOpenCommanderFrm::Mnu_execute_onClick(wxCommandEvent& event)
 	execWnd.ShowModal();
 	wxString command = execWnd.GetValue();
 	if (command.IsEmpty()) return;
-	wxString execCommand = lastCCommanderUsed->getActualPath() + " " + command;
-   wxShell(execCommand);
+	wxString path =lastCCommanderUsed->getActualPath();
+   
+   wxString pathCommand = path + "\\" + command;  
+   #ifdef __WXMSW__
+   
+      if (!wxFile::Exists(pathCommand)) pathCommand = command;
+
+      STARTUPINFO sinfo;
+      PROCESS_INFORMATION pinfo;
+      memset(&sinfo,0,sizeof(STARTUPINFO));
+      memset(&pinfo,0,sizeof(PROCESS_INFORMATION));
+      sinfo.cb = sizeof(STARTUPINFO);
+
+      CreateProcess(0, (char*)pathCommand.mb_str(), 0, 0, 0, 0, 0, (char*)path.mb_str(), &sinfo, &pinfo);
+
+   #else
+      wxExecute(pathCommand, wxEXEC_ASYNC);
+   #endif
+
    config.Write("LastExecCommand", command);
 }
 

@@ -155,6 +155,7 @@ bool deleteDirectory(wxString& path, wxString& item)
    {
       wxDir dir;
       wxString filePath = path + "\\" + item;
+      
       wxString file;
       dir.Open(filePath);
       if (!dir.IsOpened()) return false;

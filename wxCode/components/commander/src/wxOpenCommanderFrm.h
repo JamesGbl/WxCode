@@ -46,6 +46,7 @@
 #if wxUSE_ABOUTDLG
     #include <wx/aboutdlg.h>
 #endif // wxUSE_ABOUTDLG
+#include <wx/artprov.h>
 #include <wx/imaglist.h>
 #include <wx/image.h>
 #include <wx/bitmap.h>

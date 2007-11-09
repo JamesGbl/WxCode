@@ -39,11 +39,19 @@ wxListItemAttr *wxOpenCommanderListCtrl::OnGetItemAttr(long item) const
 
 int wxOpenCommanderListCtrl::getIcon(long itemPos, long itemCol) const
 {
+   wxString actualFileDir = m_cCommander->getFileDirActualPath(itemPos, itemCol);
    if (m_cCommander->getListDevices()) return getIconDevice(itemPos, itemCol);
-   if (wxDir::Exists(m_cCommander->getFileDirActualPath(itemPos, itemCol)))
-      return 1;
+   if (wxDir::Exists(actualFileDir))
+      return ICON_DIRECTORY;
    else
-      return 0;
+   {
+      wxString ext = getFileExtension(actualFileDir);
+      ext.UpperCase();
+      if (ext != "EXE" && ext != "BAT" && ext != "COM")
+         return ICON_NORMAL_FILE;
+      else
+         return ICON_EXEC_FILE;
+   }
 }
 
 int wxOpenCommanderListCtrl::getIconDevice(long itemPos, long itemCol) const
@@ -61,14 +69,14 @@ int wxOpenCommanderListCtrl::getIconDevice(long itemPos, long itemCol) const
               case DRIVE_REMOVABLE:
               {
                  if (iter->first == "A:\\" || iter->first == "B:\\")
-                    return 5;
+                    return ICON_FLOPPY;
                  else
-                    return 6;
+                    return ICON_REMOVABLE;
               }
      	        case DRIVE_CDROM:
-                 return 4;
+                 return ICON_DVD;
               default:
-                 return 3;
+                 return ICON_HARD_DISK;
            }
         }
         i++;
