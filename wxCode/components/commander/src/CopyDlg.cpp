@@ -153,7 +153,7 @@ void CopyDlg::OnClose(wxCloseEvent& /*event*/)
 }
 
 int CopyDlg::onBeginCopyFile(const wxString& sourcePath, const wxString& destinationPath)
-{
+{  
    bool blnExistFile = wxFile::Exists(destinationPath);
    if (blnExistFile)
    {

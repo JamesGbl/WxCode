@@ -68,7 +68,7 @@ int wxOpenCommanderListCtrl::getIconDevice(long itemPos, long itemCol) const
            {
               case DRIVE_REMOVABLE:
               {
-                 if (iter->first == "A:\\" || iter->first == "B:\\")
+                 if (iter->first == "A:" || iter->first == "B:")
                     return ICON_FLOPPY;
                  else
                     return ICON_REMOVABLE;

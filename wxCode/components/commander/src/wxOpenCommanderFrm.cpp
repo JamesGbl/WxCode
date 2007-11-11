@@ -362,16 +362,19 @@ void wxOpenCommanderFrm::Close()
 void wxOpenCommanderFrm::itemExec(cCommander *CCommander, wxNotebook* WxNotebook, wxListCtrl *WxListCtrl, wxString &directory, wxString &itemName)
 {  
    wxDir dir;
-   wxString path;
-      
+   wxString path = directory;
+         
    if (directory.Right(1) == "\\")
       path = directory + itemName;
-   else
-      path = directory + "\\" + itemName;  
-
+   else 
+   {
+      if (itemName != "")
+        path = directory + "\\" + itemName;  
+   }
+   
    if (itemName == "..")
       path = directory.BeforeLast(wxT('\\'));
-      
+   
    if (dir.Exists(path))
    {
      directory=path;
@@ -805,11 +808,15 @@ void wxOpenCommanderFrm::WxListCtrl2ItemFocused(wxListEvent& event)
 
 void wxOpenCommanderFrm::Mnu_execute_onClick(wxCommandEvent& event)
 {
-   wxConfig config("wxOpenCommander");
+   wxStandardPaths wxPaths;
+   wxString stdConfPath(wxPaths.GetUserDataDir());
+   if (!wxDir::Exists(stdConfPath)) wxMkdir(stdConfPath);
+
+   wxFileConfig config("wxOpenCommander", "wxOpenCommander", stdConfPath + "\\config.ini", stdConfPath + "\\config.ini", wxCONFIG_USE_LOCAL_FILE);
+
    wxString strLastExecCmd;
    config.Read("LastExecCommand", &strLastExecCmd);
-   config.Write("Language", lang.getActualLang());
-
+   
 	wxTextEntryDialog execWnd(this, lang["Write the command for execute in :"] + lastCCommanderUsed->getActualPath() + "\\", lang["Exec command"], strLastExecCmd, wxOK | wxCANCEL | wxCENTRE);
 	execWnd.ShowModal();
 	wxString command = execWnd.GetValue();

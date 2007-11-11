@@ -323,7 +323,7 @@ driversMap wxGetDrives()
 {
    driversMap drives;
  #ifdef __WXMSW__    
-   char drive[4] = "?:\\";
+   char drive[4] = "?:";
    for(int c = 'A'; c <= 'Z'; c++)
    {
       *drive = c;
