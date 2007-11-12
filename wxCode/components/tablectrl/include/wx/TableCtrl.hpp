@@ -96,22 +96,26 @@ BEGIN_DECLARE_EVENT_TYPES  ()
    DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_UPDATE              , 1036 )
    DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_DELETE              , 1037 )
 
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_INSERTING           , 1038 )
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_UPDATING            , 1039 )
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_DELETING            , 1040 )
-
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_INSERTED            , 1041 )
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_UPDATED             , 1042 )
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_DELETED             , 1043 )
-
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_COPY                , 1044 )
-
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_SORT                , 1045 )
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_SORT_ASCENDING      , 1046 )
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_SORT_DESCENDING     , 1047 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_COPY                , 1038 )
    
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_FIND                , 1048 )
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_SEARCH              , 1049 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_INSERTING           , 1039 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_UPDATING            , 1040 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_DELETING            , 1041 )
+
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_COPYING             , 1042 )
+
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_INSERTED            , 1043 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_UPDATED             , 1044 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_DELETED             , 1045 )
+
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_COPIED              , 1046 )
+
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_SORT                , 1047 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_SORT_ASCENDING      , 1048 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_SORT_DESCENDING     , 1049 )
+   
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_FIND                , 1050 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_SEARCH              , 1051 )
 END_DECLARE_EVENT_TYPES    ()
 
 
@@ -163,15 +167,19 @@ END_DECLARE_EVENT_TYPES    ()
 #define EVT_TABLE_UPDATE(id, fn)                         wx__DECLARE_TABLEEVT(UPDATE               , id, fn)
 #define EVT_TABLE_DELETE(id, fn)                         wx__DECLARE_TABLEEVT(DELETE               , id, fn)
 
+#define EVT_TABLE_COPY(id, fn)                           wx__DECLARE_TABLEEVT(COPY                 , id, fn)
+
 #define EVT_TABLE_INSERTING(id, fn)                      wx__DECLARE_TABLEEVT(INSERTING            , id, fn)
 #define EVT_TABLE_UPDATING(id, fn)                       wx__DECLARE_TABLEEVT(UPDATING             , id, fn)
 #define EVT_TABLE_DELETING(id, fn)                       wx__DECLARE_TABLEEVT(DELETING             , id, fn)
+
+#define EVT_TABLE_COPYING(id, fn)                        wx__DECLARE_TABLEEVT(COPYING              , id, fn)
 
 #define EVT_TABLE_INSERTED(id, fn)                       wx__DECLARE_TABLEEVT(INSERTED             , id, fn)
 #define EVT_TABLE_UPDATED(id, fn)                        wx__DECLARE_TABLEEVT(UPDATED              , id, fn)
 #define EVT_TABLE_DELETED(id, fn)                        wx__DECLARE_TABLEEVT(DELETED              , id, fn)
 
-#define EVT_TABLE_COPY(id, fn)                           wx__DECLARE_TABLEEVT(COPY                 , id, fn)
+#define EVT_TABLE_COPIED(id, fn)                         wx__DECLARE_TABLEEVT(COPIED               , id, fn)
 
 #define EVT_TABLE_SORT(id, fn)                           wx__DECLARE_TABLEEVT(SORT                 , id, fn)
 #define EVT_TABLE_SORT_ASCENDING(id, fn)                 wx__DECLARE_TABLEEVT(SORT_ASCENDING       , id, fn)

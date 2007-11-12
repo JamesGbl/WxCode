@@ -213,11 +213,13 @@ DEFINE_EVENT_TYPE ( wxEVT_COMMAND_TABLE_INSERTING              )
 DEFINE_EVENT_TYPE ( wxEVT_COMMAND_TABLE_UPDATING               )
 DEFINE_EVENT_TYPE ( wxEVT_COMMAND_TABLE_DELETING               )
 
+DEFINE_EVENT_TYPE ( wxEVT_COMMAND_TABLE_COPYING                )
+
 DEFINE_EVENT_TYPE ( wxEVT_COMMAND_TABLE_INSERTED               )
 DEFINE_EVENT_TYPE ( wxEVT_COMMAND_TABLE_UPDATED                )
 DEFINE_EVENT_TYPE ( wxEVT_COMMAND_TABLE_DELETED                )
 
-DEFINE_EVENT_TYPE ( wxEVT_COMMAND_TABLE_COPY                   )
+DEFINE_EVENT_TYPE ( wxEVT_COMMAND_TABLE_COPIED                 )
 
 DEFINE_EVENT_TYPE ( wxEVT_COMMAND_TABLE_SORT                   )
 DEFINE_EVENT_TYPE ( wxEVT_COMMAND_TABLE_SORT_ASCENDING         )
@@ -3855,12 +3857,21 @@ bool  wxTableCtrl :: Body :: DeleteRecord ()
 
 bool  wxTableCtrl :: Body :: CopyRecord ()
 {
-   if ( record -> Insert () == wxTable :: Record :: Result_OK )
+   wxTableEvent   te ( control, wxEVT_COMMAND_TABLE_COPYING, 0, DEFAULTPOSITION, table, record, record -> CursorCurrent (), false );
+   
+   ProcessEvent   ( te );
+
+   if ( ! te.IsAllowed () )
+      return ( false );
+      
+   if ( record -> Insert () == iTable :: Record :: Result_OK )
    {
       *cursor = *record -> CursorCurrent ();
 
       DoPaintFill    ();
       RelationSync   ();
+
+      ProcessEvent   ( wxTableEvent ( control, wxEVT_COMMAND_TABLE_COPIED, 0, DEFAULTPOSITION, table, record, cursor, false ) );
 
       return ( true );
    }
