@@ -7,6 +7,15 @@
 
 
 
+class  wxODBCEnv;
+class  wxODBCDbc;
+class  wxODBCColumn;
+class  wxODBCColumnArray;
+class  wxODBCTable;
+class  wxODBCTableArray;
+
+
+
 class  ODBCTable;
 
 

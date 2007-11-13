@@ -7,6 +7,7 @@
 
 
 
+#include "ODBCTable.hpp"
 #include "MainFrame.h"
 
 
@@ -17,20 +18,6 @@ class  MainFrame : public  wxMDIParentFrame
       typedef wxMDIParentFrame
                            super;
       
-   private   :
-#if 0   
-      class  Session : public  CTSession
-      {
-         private   :
-            typedef CTSession    super;
-            
-         public    :
-            Session  ();
-            ~Session ();
-      };
-#endif      
-      
-      
    public    :
       static const long    DEFAULTSTYLE;
       
@@ -38,9 +25,8 @@ class  MainFrame : public  wxMDIParentFrame
       DECLARE_EVENT_TABLE  ()
       
    private   :
-#if 0   
-      Session *            session;
-#endif      
+      wxODBCEnv            env;
+      wxODBCDbc *          dbc;
       
    private   :
       void                 OnMenuOpen  ( wxCommandEvent & );

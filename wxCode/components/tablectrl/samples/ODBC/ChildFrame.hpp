@@ -33,7 +33,7 @@ class  ChildFrame : public  wxMDIChildFrame
       
       NADCTreeTable *      t;
 #endif      
-      wxDb *               db;
+      wxODBCDbc *          dbc;
       ODBCTable *          table;
       
       wxSizer *            sizer;
@@ -47,7 +47,7 @@ class  ChildFrame : public  wxMDIChildFrame
 #if 0      
       bool                 Open  ( CTSession *, const wxString & );
 #endif
-      bool                 Open  ( wxDb *, ODBCTable * );    
+      bool                 Open  ( wxODBCDbc *, ODBCTable * );    
 };
 
 

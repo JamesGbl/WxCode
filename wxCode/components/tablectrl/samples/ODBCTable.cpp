@@ -4,92 +4,413 @@
 
 #include <wx/wxprec.h>
 
+#include <wx/arrimpl.cpp>
+
 #include "ODBCTable.hpp"
 
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// wxDbTableEx                                                                //
+// wxODBCEnv                                                                  //
 ////////////////////////////////////////////////////////////////////////////////
 
 
 
-wxDbTableEx :: wxDbTableEx ( wxDb *  _db, const wxString &  _table, const wxUint16  _cols, const wxString &  _query, bool  _only, const wxString &  _path )
-   : wxDbTable ( _db, _table, _cols, _query, _only, _path )
+wxODBCEnv :: wxODBCEnv ()
+   : wxObject ()
 {
+   if ( SQLAllocEnv ( &env ) != SQL_SUCCESS )
+      wxLogDebug ( "Could not SQLAllocEnv" );
 }
 
 
-   
-bool  wxDbTableEx :: UpdateColumns ( HSTMT  cursor )
+
+wxODBCEnv :: ~wxODBCEnv ()
 {
-   // Bind each column of the table to a memory address for fetching data
+   if ( SQLFreeEnv ( env ) != SQL_SUCCESS )
+      wxLogDebug ( "Could not SQLFreeEnv" );
+}
 
-   const wxUint16    COLS     = GetNumberOfColumns ();
-   wxDbColDef *      coldefs  = GetColDefs ();
-   wxDb *            db       = GetDb ();
-   RETCODE           rc;
+
+
+bool  wxODBCEnv :: DataSources ( wxString &  dsn, wxString &  desc, const Fetch &  fetch )
+{
+   const size_t   DESC  = 1024;
+   SWORD          dsnl;
+   SWORD          descl;
+   const bool     rc    = SQLDataSources ( env, fetch, reinterpret_cast < SQLCHAR * > ( dsn.GetWriteBuf ( SQL_MAX_DSN_LENGTH + 1 ) ), SQL_MAX_DSN_LENGTH, &dsnl, reinterpret_cast < SQLCHAR * > ( desc.GetWriteBuf ( DESC + 1 ) ), DESC, &descl ) == SQL_SUCCESS;
    
-   for ( wxUint16  i = 0 ; i < COLS ; ++i )
+   if ( rc )
    {
-      wxDbColDef &   cd = coldefs [ i ];
-
-      if ( ( rc = SQLBindCol ( cursor, i + 1, cd.SqlCtype, static_cast < UCHAR * > ( cd.PtrDataObj ), cd.SzDataObj, &cd.CbValue ) ) != SQL_SUCCESS )
-         return ( db -> DispAllErrors ( db -> GetHENV (), db -> GetHDBC (), cursor ) );
+      dsn .UngetWriteBuf ( dsnl  );
+      desc.UngetWriteBuf ( descl );
    }
+   else
+   {
+      dsn .UngetWriteBuf ();
+      desc.UngetWriteBuf ();
+   }
+   
+   return ( rc );
+}
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// wxODBCDbc                                                                  //
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+wxODBCDbc :: wxODBCDbc ( wxODBCEnv &  _env )
+   : wxObject (),
+   env   ( _env )
+{
+   if ( SQLAllocConnect ( env, &dbc ) != SQL_SUCCESS )
+      wxLogDebug ( "Could not SQLAllocConnect" );
+}
+
+
+
+wxODBCDbc :: ~wxODBCDbc ()
+{
+   if ( SQLFreeConnect ( dbc ) != SQL_SUCCESS )
+      wxLogDebug ( "Could not SQLFreeConnect" );
+}
+
+
+
+bool  wxODBCDbc :: Connect ( const wxString &  dsn, const wxString &  userid, const wxString &  passwd )
+{
+   SQLRETURN   rc = SQLSetConnectOption ( dbc, SQL_ODBC_CURSORS, SQL_CUR_USE_IF_NEEDED );
+   
+   return ( SQLConnect ( dbc, reinterpret_cast < SQLCHAR * > ( const_cast < wxChar * > ( dsn.c_str () ) ), SQL_NTS, reinterpret_cast < SQLCHAR * > ( const_cast < wxChar * > ( userid.c_str () ) ), SQL_NTS, reinterpret_cast < SQLCHAR * > ( const_cast < wxChar * > ( passwd.c_str () ) ), SQL_NTS ) == SQL_SUCCESS );
+}
+
+
+
+bool  wxODBCDbc :: GetTables ( wxODBCTableArray &  ta )
+{
+   ta.Empty ();
+   
+   wxODBCStatement   stmt  ( *this );
+  
+   if ( ! stmt.Tables () )
+      return ( false );
+      
+   wxString    name;
+   wxString    type;
+   wxString    remarks;
+   
+   while ( stmt.Fetch () )
+   {
+      stmt.GetData ( 3, name    );
+      stmt.GetData ( 4, type    );
+      stmt.GetData ( 5, remarks );
+      
+      ta.Add ( wxODBCTable ( name, type, remarks ) );
+   }
+   
    return ( true );
 }
 
 
 
-bool  wxDbTableEx :: SetPos ( wxInt16  pos )
+bool  wxODBCDbc :: GetColumns ( wxODBCColumnArray &  ca, const wxString &  table )
 {
-   wxDb *      db       = GetDb ();
-   RETCODE     rc;
+   ca.Empty ();
    
-   if ( ( rc = SQLSetPos ( GetCursor (), pos, SQL_REFRESH, SQL_LOCK_NO_CHANGE ) ) != SQL_SUCCESS )
-   {
-      wxLogDebug ( "SetPos : %d failed %d", pos, rc );
-      return ( db -> DispAllErrors ( db -> GetHENV (), db -> GetHDBC (), GetCursor () ) );
-   }
+   wxODBCStatement   stmt  ( *this );
+  
+   if ( ! stmt.Columns ( table ) )
+      return ( false );
       
-   wxLogDebug ( "SetPos: %d OK", pos );
-// UpdateColumns ( GetCursor () );
+   wxString    name;
+   short       type;
+   wxString    typestr;
+   long        length;
+   short       buffer;
+   short       decimals;
+   short       radix;
+   short       nullable;
+   wxString    remarks;   
+   
+   while ( stmt.Fetch () )
+   {
+      stmt.GetData (  4, name     );
+      stmt.GetData (  5, type     );
+      stmt.GetData (  6, typestr  );
+      stmt.GetData (  7, length   );
+      stmt.GetData (  8, buffer   );
+      stmt.GetData (  9, decimals );
+      stmt.GetData ( 10, radix    );
+      stmt.GetData ( 11, nullable );
+      stmt.GetData ( 12, remarks  );
+      
+      ca.Add ( wxODBCColumn ( name, type, typestr, length, buffer, decimals, radix, nullable, remarks ) );
+   }
 
-   return ( true );      
+#if 0
+   SQLRETURN   rc;
+   wxString    cmd   ( "SELECT * FROM " );
+   
+   cmd  += "\"" + table + "\"";
+   cmd  += " WHERE 1 = 2";
+   
+   rc  = SQLPrepare ( stmt, reinterpret_cast < SQLCHAR * > ( const_cast < wxChar * > ( cmd.c_str () ) ), cmd.Length () );
+   
+   short    cols;
+   
+   if ( ( rc = SQLNumResultCols ( stmt, &cols ) ) != SQL_SUCCESS )
+      return ( false );
+      
+   for ( short  c = 0 ; c < cols ; ++c )
+   {
+   }
+#endif
+   
+   return ( true );
 }
 
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// ODBCTable :: ODBCCursor                                                    //
+// wxODBCStatement                                                            //
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+bool  wxODBCStatement :: ExecDirect ( const wxString &  cmd )
+{
+   return ( SQLExecDirect ( stmt, reinterpret_cast < SQLCHAR * > ( const_cast < wxChar * > ( cmd.c_str () ) ), SQL_NTS ) == SQL_SUCCESS );
+}
+
+
+
+wxODBCStatement :: wxODBCStatement ( wxODBCDbc &  _dbc )
+   : wxObject (),
+   dbc   ( _dbc )
+{
+   if ( SQLAllocStmt ( dbc, &stmt ) != SQL_SUCCESS )
+      wxLogDebug ( "Could not SQLAllocStmt" );
+}
+
+
+
+wxODBCStatement :: ~wxODBCStatement ()
+{
+   if ( SQLFreeStmt ( stmt, SQL_CLOSE ) != SQL_SUCCESS )
+      wxLogDebug ( "Could not SQLFreeStmt" );
+}
+
+
+
+bool  wxODBCStatement :: Tables ()
+{
+   return ( SQLTables ( stmt, 0, 0, 0, 0, 0, 0, 0, 0 ) == SQL_SUCCESS );
+}
+
+
+
+bool  wxODBCStatement :: Columns ( const wxString &  table )
+{
+   return ( SQLColumns ( stmt, 0, 0, 0, 0, reinterpret_cast < SQLCHAR * > ( const_cast < wxChar * > ( table.c_str () ) ), SQL_NTS, 0, 0 ) == SQL_SUCCESS );
+// return ( SQLColumns ( stmt, reinterpret_cast < SQLCHAR * > ( "" ), 0, 0, 0, 0, 0, 0, 0 ) == SQL_SUCCESS );
+}
+
+
+
+bool  wxODBCStatement :: SelectAll ( const wxString &  table )
+{
+   return ( ExecDirect ( "SELECT * FROM " + table ) );
+}
+
+
+
+wxUint32  wxODBCStatement :: CountAll ( const wxString &  table )
+{
+   wxODBCStatement   count ( dbc );
+   
+   if ( ! count.ExecDirect ( "SELECT COUNT(*) FROM " + table ) )
+      return (  0 );
+
+   if ( ! count.Fetch () )
+      return (  0 );
+      
+   wxUint32    r;
+   
+   if ( ! count.GetData ( 1, r ) )
+      return (  0 );
+      
+   return ( r );
+}
+
+
+
+bool  wxODBCStatement :: Fetch ()
+{
+   SQLRETURN   rc = SQLFetch ( stmt );
+   
+   return ( ( rc == SQL_SUCCESS ) || ( rc == SQL_SUCCESS_WITH_INFO ) );
+}
+
+
+
+bool  wxODBCStatement :: FetchScroll ( const Orientation &  orientation )
+{
+   SQLRETURN   rc = SQLFetchScroll ( stmt, orientation, 0 );
+   
+   return ( ( rc == SQL_SUCCESS ) || ( rc == SQL_SUCCESS_WITH_INFO ) );
+}
+
+
+
+bool  wxODBCStatement :: GetData ( size_t  c, wxString &  str )
+{
+   SQLLEN   l;
+   bool     r  = SQLGetData ( stmt, c, SQL_C_CHAR, str.GetWriteBuf ( 1024 ), 1024, &l ) == SQL_SUCCESS;
+
+   if ( l >= 0 )   
+      str.UngetWriteBuf ( l );
+   else
+      str.UngetWriteBuf ( 0 );
+   
+   return ( r );
+}
+
+
+
+bool  wxODBCStatement :: GetData ( size_t  c, short &  v )
+{
+   SQLLEN   l;
+   bool     r  = SQLGetData ( stmt, c, SQL_C_SSHORT, &v, 0, &l ) == SQL_SUCCESS;
+
+   return ( r );
+}
+
+
+
+bool  wxODBCStatement :: GetData ( size_t  c, long &  v )
+{
+   SQLLEN   l;
+   bool     r  = SQLGetData ( stmt, c, SQL_C_SLONG, &v, 0, &l ) == SQL_SUCCESS;
+
+   return ( r );
+}
+
+
+
+bool  wxODBCStatement :: GetData ( size_t  c, wxUint32 &  v )
+{
+   SQLLEN   l;
+   bool     r  = SQLGetData ( stmt, c, SQL_C_ULONG, &v, sizeof ( v ), &l ) == SQL_SUCCESS;
+
+   return ( r );
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// wxODBCColumn                                                               //
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+wxODBCColumn :: wxODBCColumn ()
+   : wxObject ()
+{
+}
+
+
+
+wxODBCColumn :: wxODBCColumn ( const wxString &  _name, short  _type, const wxString &  _typestr, long  _length, short  _buffer, short  _decimals, short  _radix, short  _nullable, const wxString &  _remarks )
+   : wxObject ()
+{
+   name     = _name;
+   type     = _type;
+   typestr  = _typestr;
+   length   = _length;
+   buffer   = _buffer;
+   decimals = _decimals;
+   radix    = _radix;
+   nullable = _nullable;
+   
+   remarks  = _remarks;
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// wxODBCColumnArray                                                          //
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+WX_DEFINE_OBJARRAY   ( wxODBCColumnArray );
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// wxODBCTable                                                                //
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+wxODBCTable :: wxODBCTable ()
+   : wxObject ()
+{
+}
+
+
+
+wxODBCTable :: wxODBCTable ( const wxString &  _name, const wxString &  _type, const wxString &  _remarks )
+   : wxObject ()
+{
+   name     = _name;
+   type     = _type;
+   remarks  = _remarks;
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// wxODBCTableArray                                                           //
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+WX_DEFINE_OBJARRAY   ( wxODBCTableArray   );
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// ODBCTable :: CursorEx                                                      //
 ////////////////////////////////////////////////////////////////////////////////
 
 
 #if 0
-const bool  ODBCTable :: ODBCCursor :: IsValid () const
+const bool  ODBCTable :: CursorEx :: IsValid () const
 {
    return ( super :: IsValid () && ( offset != 0 ) );
 }
 
 
 
-ODBCTable :: ODBCCursor :: ODBCCursor ()
+ODBCTable :: CursorEx :: CursorEx ()
    : GenericCursor < HSTMT > ()
 {
 }
 
 
    
-ODBCTable :: ODBCCursor :: ODBCCursor ( HSTMT  _stmt )
+ODBCTable :: CursorEx :: CursorEx ( HSTMT  _stmt )
    : GenericCursor < HSTMT > ( _stmt )
 {
 }
 
 
    
-ODBCTable :: ODBCCursor &  ODBCTable :: ODBCCursor :: operator = ( const ODBCCursor &  that )
+ODBCTable :: CursorEx &  ODBCTable :: CursorEx :: operator = ( const CursorEx &  that )
 {
    memcpy ( offset, that.offset, sizeof ( HSTMT ) );
    
@@ -100,7 +421,7 @@ ODBCTable :: ODBCCursor &  ODBCTable :: ODBCCursor :: operator = ( const ODBCCur
 
 
 
-HSTMT *  ODBCTable :: ODBCCursor :: Statement ()
+HSTMT *  ODBCTable :: CursorEx :: Statement ()
 {
    return ( &offset );
 }
@@ -108,37 +429,37 @@ HSTMT *  ODBCTable :: ODBCCursor :: Statement ()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// ODBCTable :: ODBCRecord                                                    //
+// ODBCTable :: RecordEx                                                    //
 ////////////////////////////////////////////////////////////////////////////////
 
 
 
-void  ODBCTable :: ODBCRecord :: _Index ( int  _index )
+void  ODBCTable :: RecordEx :: _Index ( int  _index )
 {
    super :: _Index ( _index );
 }
 
 
 
-const size_t  ODBCTable :: ODBCRecord :: __NumberOfRecords () const
+const size_t  ODBCTable :: RecordEx :: __NumberOfRecords () const
 {
-   return ( dbtable.Count () );
+   return ( rows );
 }
 
 
 
-const size_t  ODBCTable :: ODBCRecord :: __NumberOfKeys ( int ) const
+const size_t  ODBCTable :: RecordEx :: __NumberOfKeys ( int ) const
 {
    return ( 0 );
 }
 
 
 
-ODBCTable :: ODBCRecord :: Result  ODBCTable :: ODBCRecord :: __GetFst ( int )
+ODBCTable :: RecordEx :: Result  ODBCTable :: RecordEx :: __GetFst ( int )
 {
-   if ( dbtable.GetFirst () )
+   if ( stmt.FetchScroll ( wxODBCStatement :: Orientation_FST ) )
    {
-      row   = 1;
+      row   = 0;
       
       return ( Result_OK );
    }
@@ -148,98 +469,72 @@ ODBCTable :: ODBCRecord :: Result  ODBCTable :: ODBCRecord :: __GetFst ( int )
 
 
 
-ODBCTable :: ODBCRecord :: Result  ODBCTable :: ODBCRecord :: __GetNxt ()
+ODBCTable :: RecordEx :: Result  ODBCTable :: RecordEx :: __GetNxt ()
 {
-   if ( dbtable.GetNext () )
+   if ( stmt.FetchScroll ( wxODBCStatement :: Orientation_NXT ) )
    {
       ++row;
       
       return ( Result_OK );
    }
-   
+      
    return ( Result_EOT );
 }
 
 
 
-long  ODBCTable :: ODBCRecord :: __GetNxtEx ( long  count )
+long  ODBCTable :: RecordEx :: __GetNxtEx ( long  count )
 {
-   if ( ( row + 1 ) <= dbtable.Count () )
-   {
-   long     c  = 0;
-   
-   while ( ( c < count ) && ( dbtable.GetNext () ) )
-      {
-         ++row;
-      ++c;
-      }
-      
-   return ( c );
-   }
-   
    return (  0 );
 }
 
 
 
-ODBCTable :: ODBCRecord :: Result  ODBCTable :: ODBCRecord :: __GetPrv ()
+ODBCTable :: RecordEx :: Result  ODBCTable :: RecordEx :: __GetPrv ()
 {
-   if ( dbtable.GetPrev () )
+   if ( stmt.FetchScroll ( wxODBCStatement :: Orientation_PRV ) )
    {
       --row;
       
       return ( Result_OK );
    }
-   
+      
    return ( Result_EOT );
 }
 
 
 
-long  ODBCTable :: ODBCRecord :: __GetPrvEx ( long  count )
+long  ODBCTable :: RecordEx :: __GetPrvEx ( long  count )
 {
-   if ( ( row - 1 ) >= 1 )
-   {
-   long     c  = 0;
-   
-   while ( ( c < count ) && ( dbtable.GetPrev () ) )
-      {
-         --row;
-      ++c;
-      }
-      
-   return ( c );
-   }
-   
    return (  0 );
 }
 
 
 
-ODBCTable :: ODBCRecord :: Result  ODBCTable :: ODBCRecord :: __GetLst ( int )
+ODBCTable :: RecordEx :: Result  ODBCTable :: RecordEx :: __GetLst ( int )
 {
-   if ( dbtable.GetLast () )
+   if ( stmt.FetchScroll ( wxODBCStatement :: Orientation_LST ) )
    {
-      row   = dbtable.Count ();
+      row   = rows - 1;
       
       return ( Result_OK );
    }
-   
+      
    return ( Result_EOT );
 }
 
 
 
-ODBCTable :: ODBCRecord :: Result  ODBCTable :: ODBCRecord :: __Get ( const Find & )
+ODBCTable :: RecordEx :: Result  ODBCTable :: RecordEx :: __Get ( const Find & )
 {
    return ( Result_KEY_VALUE_NOT_FOUND );
 }
 
 
 
-ODBCTable :: Cursor *  ODBCTable :: ODBCRecord :: __CursorCreate ()
+ODBCTable :: Cursor *  ODBCTable :: RecordEx :: __CursorCreate ()
 {
-// return ( new  ODBCCursor ( dbtable.GetCursor () ) );
+// return ( new  CursorEx ( dbtable.GetCursor () ) );
    DefaultCursor *   dc = new  DefaultCursor ( row );
    
    if ( row <= 0 )
@@ -250,7 +545,7 @@ ODBCTable :: Cursor *  ODBCTable :: ODBCRecord :: __CursorCreate ()
 
 
 
-const ODBCTable :: Cursor *  ODBCTable :: ODBCRecord :: __CursorCurrent ()
+const ODBCTable :: Cursor *  ODBCTable :: RecordEx :: __CursorCurrent ()
 {
    cursor.Offset ( row );
    
@@ -259,14 +554,14 @@ const ODBCTable :: Cursor *  ODBCTable :: ODBCRecord :: __CursorCurrent ()
 
 
 
-void  ODBCTable :: ODBCRecord :: __CursorInvalidate ()
+void  ODBCTable :: RecordEx :: __CursorInvalidate ()
 {
    cursor.Invalidate ();
 }
 
 
 
-ODBCTable :: ODBCRecord :: Result  ODBCTable :: ODBCRecord :: __CursorSet ( const Cursor *  _cursor )
+ODBCTable :: RecordEx :: Result  ODBCTable :: RecordEx :: __CursorSet ( const Cursor *  _cursor )
 {
    const DefaultCursor *   dc = static_cast < const DefaultCursor * > ( _cursor );
    
@@ -275,7 +570,7 @@ ODBCTable :: ODBCRecord :: Result  ODBCTable :: ODBCRecord :: __CursorSet ( cons
    {
       cursor   = *dc;
       
-      dbtable.SetPos    ( cursor.Offset () );
+//    dbtable.SetPos    ( cursor.Offset () );
       
       return ( Result_OK );
    }
@@ -285,32 +580,34 @@ ODBCTable :: ODBCRecord :: Result  ODBCTable :: ODBCRecord :: __CursorSet ( cons
 
 
 
-ODBCTable :: ODBCRecord :: Result  ODBCTable :: ODBCRecord :: __ScrollGetByPos ( long  pos )
+ODBCTable :: RecordEx :: Result  ODBCTable :: RecordEx :: __ScrollGetByPos ( long  pos )
 {
    return ( Result_EOT );
 }
 
 
 
-long  ODBCTable :: ODBCRecord :: __ScrollPosByCursor  ( const Cursor *  cursor )
+long  ODBCTable :: RecordEx :: __ScrollPosByCursor  ( const Cursor *  cursor )
 {
    return ( static_cast < const DefaultCursor * > ( cursor ) -> Offset () );
 }
 
 
 
-ODBCTable :: ODBCRecord :: ODBCRecord ( ODBCTable *  _table )
+ODBCTable :: RecordEx :: RecordEx ( ODBCTable *  _table )
    : Record ( _table ),
-   dbtable  ( _table -> dbtable )
+   cols  ( _table -> cols ),
+   rows  ( _table -> rows ),
+   stmt  ( _table -> stmt )
 {
-   row      = -1;
+   row   = -1;
    cursor   .Offset     ( row );
    cursor   .Invalidate ();
 }
 
 
 #if 0   
-const wxChar *  ODBCTable :: ODBCRecord :: FieldString ( size_t  c )
+const wxChar *  ODBCTable :: RecordEx :: FieldString ( size_t  c )
 {
 // table -> GetDbTable () -> GetColumn ( c ).GetValue ();
 }
@@ -325,21 +622,21 @@ const wxChar *  ODBCTable :: ODBCRecord :: FieldString ( size_t  c )
 
 const wxChar *  ODBCTable :: Name () const
 {
-   return ( dbtable.GetTableName () );
+   return ( name );
 }
 
 
 
 const wxChar *  ODBCTable :: Desc () const
 {
-   return ( dbtable.GetTableName () );
+   return ( name );
 }
 
 
 
 size_t  ODBCTable :: NumberOfColumns ()
 {
-   return ( dbtable.GetNumberOfColumns () );
+   return ( cols );
 }
 
 
@@ -354,7 +651,7 @@ ODBCTable :: Column *  ODBCTable :: At ( size_t )
 const wxChar *  ODBCTable :: FieldName ( size_t  i )
 {
 // return ( dbtable.GetColumn ( i ).GetName () );
-   return ( coldefs [ i ].ColName );
+   return ( ca [ i ].GetName () );
 }
 
 
@@ -364,7 +661,7 @@ const wxChar *  ODBCTable :: FieldFullName ( size_t  i )
    static wxString   str;
 
 // str.Printf ( "%s.%s", Name (), dbtable.GetColumn ( i ).GetName () );
-   str.Printf ( "%s.%s", Name (), coldefs [ i ].ColName );
+   str.Printf ( "%s.%s", Name (), ca [ i ].GetName () );
       
    return ( str );
 }
@@ -374,7 +671,7 @@ const wxChar *  ODBCTable :: FieldFullName ( size_t  i )
 const wxChar *  ODBCTable :: HeaderString ( size_t  i )
 {
 // return ( dbtable.GetColumn ( i ).GetName () );
-   return ( coldefs [ i ].ColName );
+   return ( ca [ i ].GetName () );
 }
 
 
@@ -398,16 +695,7 @@ const wxChar *  ODBCTable :: FieldString ( size_t  i )
    static wxString   str;
    
 // return ( record -> FieldString ( i ) );
-   if ( coldefs [ i ].PtrDataObj != 0 )
-   {
-      wxVariant   v  = dbtable.GetColumn ( i );
-      
-      if ( v.IsNull () )
-         str   = wxEmptyString;
-      else
-         str   = v.GetString ();
-   }
-   else
+   if ( ! stmt.GetData ( i, str ) )
       str.Empty ();
             
    return ( str );
@@ -422,69 +710,45 @@ wxUint32  ODBCTable :: FieldDrawTextFormat ( size_t )
      
 
 
-ODBCTable :: ODBCTable ( wxDb *  _db, const wxString &  _name, const wxUint16  _cols, const wxString &  _directory )
-   : wxTable ( record = new  ODBCRecord ( this ) ),
-   dbtable  ( _db, _name, _cols, wxEmptyString, ! wxDB_QUERY_ONLY, _directory )
+ODBCTable :: ODBCTable ( wxODBCDbc *  _dbc, const wxString &  _name )
+   : wxTable ( record = new  RecordEx ( this ) ),
+   stmt  ( *_dbc )
 {
-// dbtable  .SetWhereClause   ( wxEmptyString );
-// dbtable  .SetOrderByClause ( wxEmptyString );
-// dbtable  .SetFromClause    ( wxEmptyString );
-// dbtable  .Query            ();
-   wxUint16    cols  = _cols;
+   dbc   = _dbc;
+   name  = _name;
+   
+   dbc   -> GetColumns ( ca, name );
 
-   dbtable  .SetColDefs       ( _db -> GetColumns ( _name, &cols ), cols );
-   dbtable  .Open             ( false, false );
-   dbtable  .QueryBySqlStmt   ( "SELECT * from " + _name );
+   cols  = ca.Count ();
+   rows  = stmt.CountAll   ( name );
+  
+   stmt.SelectAll ( name );
+
+   SQLINTEGER  v;
+
+   SQLGetInfo ( *dbc, SQL_FETCH_DIRECTION, &v, sizeof ( v ), 0 );
    
+   bool     stat;
+   size_t   r     = 0;
    
+   stat  = stmt.FetchScroll ( wxODBCStatement :: Orientation_NXT );
+   stat  = stmt.FetchScroll ( wxODBCStatement :: Orientation_NXT );
+   stat  = stmt.FetchScroll ( wxODBCStatement :: Orientation_PRV );
+   while ( ( stat ) && ( ++r < rows ) )
+   {
+      for ( size_t  c = 0 ; c < cols ; ++c )
+         wxLogDebug ( "%s", FieldString ( c ) ); 
+         
+      stat  = stmt.FetchScroll ( wxODBCStatement :: Orientation_NXT );
+   }
    
-   HSTMT ** t  = new ( HSTMT * [ dbtable.Count () ] );
-   size_t   i  = 0;
-   
-   coldefs  = dbtable.GetColDefs ();
-   
-   wxLogDebug ( "==================" );
-   bool  stat  = dbtable.GetFirst ();
+   stat  = stmt.FetchScroll ( wxODBCStatement :: Orientation_FST );
    while ( stat )
    {
-      t  [ i ] = dbtable.GetNewCursor ();
-      *t [ i ] = dbtable.GetCursor (); 
-      ++i;
-      
-      wxLogDebug ( "%3d ============", i - 1 );
       for ( size_t  c = 0 ; c < cols ; ++c )
-         if ( coldefs [ c ].PtrDataObj != 0 )
-            wxLogDebug ( "%d %s", c, dbtable.GetColumn ( c ).GetString ().c_str () );
-         else
-            wxLogDebug ( "%d <NULL>", c );
+         wxLogDebug ( "%s", FieldString ( c ) ); 
          
-      stat  = dbtable.GetNext ();
+      stat  = stmt.FetchScroll ( wxODBCStatement :: Orientation_NXT );
    }
-#if 0
-   dbtable.GetFirst ();
-   
-   dbtable.SetPos ( 2 );
-   for ( int  i = 1 ; i <= dbtable.Count () ; ++i )
-      dbtable.SetPos ( i );
-#endif
-   wxLogDebug ( "=== Random Lookup ===" );   
-   
-   for ( size_t  x = 0 ; x < 4 ; ++x )
-   {
-      i  = rand () % dbtable.Count ();
-      
-      dbtable.SetCursor       ( t [ i ] );
-      if ( dbtable.GetNext () )
-//    if ( dbtable.UpdateColumns ( t [ i ] ) )
-      {
-         wxLogDebug ( "%3d ============", i );
-         for ( size_t  c = 0 ; c < cols ; ++c )
-            if ( coldefs [ c ].PtrDataObj != 0 )
-               wxLogDebug ( "%d %s", c, dbtable.GetColumn ( c ).GetString ().c_str () );
-            else
-               wxLogDebug ( "%d <NULL>", c );
-      }
-   }
-   
-   wxLogDebug ( "%d", dbtable.Count () );
 }
+

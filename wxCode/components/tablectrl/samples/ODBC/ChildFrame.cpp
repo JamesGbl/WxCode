@@ -82,9 +82,9 @@ bool  ChildFrame :: Open ( CTSession *  session, const wxString &  file )
 
 
 
-bool  ChildFrame :: Open ( wxDb *  _db, ODBCTable *  _table )
+bool  ChildFrame :: Open ( wxODBCDbc *  _dbc, ODBCTable *  _table )
 {  
-   db    = _db;
+   dbc   = _dbc;
    table = _table;
    
    tc    -> Table ( table );

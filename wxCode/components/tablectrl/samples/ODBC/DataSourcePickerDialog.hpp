@@ -9,6 +9,8 @@
 
 #include <wx/dialog.h>
 
+#include <ODBCTable.h>
+
 
 
 class  DataSourcePickerDialog : public  wxDialog
@@ -23,6 +25,8 @@ class  DataSourcePickerDialog : public  wxDialog
 //    wxDbConnectInf &     connect;
       
    private   :
+      wxODBCEnv &          env;
+      
       wxSizer *            sizer;
       wxSizer *            input;
       wxSizer *            button;
@@ -39,7 +43,12 @@ class  DataSourcePickerDialog : public  wxDialog
       void                 LoadDataSources   ();
       
    public    :
-      DataSourcePickerDialog  ( wxWindow * );
+      DataSourcePickerDialog  ( wxWindow *, wxODBCEnv & );
+      
+      const wxString       GetDSN            () const;
+      const wxString       GetUserId         () const;
+      const wxString       GetPasswd         () const;
+      const wxString       GetDirectory      () const;
 };
 
 

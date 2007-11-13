@@ -4,6 +4,7 @@
 	Version="7.10"
 	Name="ODBC"
 	ProjectGUID="{A5254F4F-7F7B-440E-AF02-3A801C2A91BC}"
+	RootNamespace="ODBC"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -24,7 +25,7 @@
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="wx/wxprec.h"
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="FALSE"
@@ -74,7 +75,7 @@
 				AdditionalIncludeDirectories=".;..;&quot;$(WXWIN)/include/msvc&quot;;&quot;$(WXWIN)/include&quot;;../../include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="wx/wxprec.h"
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="FALSE"
@@ -134,6 +135,12 @@
 			<File
 				RelativePath=".\ODBC.cpp">
 			</File>
+			<File
+				RelativePath="..\ODBCTable.cpp">
+			</File>
+			<File
+				RelativePath=".\TablePickerDialog.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -159,6 +166,15 @@
 			</File>
 			<File
 				RelativePath=".\ODBC.hpp">
+			</File>
+			<File
+				RelativePath="..\ODBCTable.h">
+			</File>
+			<File
+				RelativePath="..\ODBCTable.hpp">
+			</File>
+			<File
+				RelativePath=".\TablePickerDialog.hpp">
 			</File>
 		</Filter>
 		<Filter

@@ -8,6 +8,7 @@
 #include <wx/dbtable.h>
 
 #include "DataSourcePickerDialog.hpp"
+#include "TablePickerDialog.hpp"
 #include "ODBCTable.hpp"
 #include "ChildFrame.hpp"
 #include "MainFrame.hpp"
@@ -45,11 +46,52 @@ END_EVENT_TABLE   ()
 
 void  MainFrame :: OnMenuOpen ( wxCommandEvent &  ce )
 {
-// wxDbConnectInf          connect;
-   DataSourcePickerDialog  dlg   ( this );
+   DataSourcePickerDialog  dlg   ( this, env );
    
    if ( dlg.ShowModal () != wxID_OK )
       return;
+      
+   dbc   = new  wxODBCDbc  ( env );
+   
+   if ( ! dbc -> Connect ( dlg.GetDSN (), dlg.GetUserId (), dlg.GetPasswd () ) )
+   {
+      delete  dbc;
+      
+      dbc   = 0;
+      
+      wxLogMessage ( "Could not open %s (%s/%s) %s", dlg.GetDSN ().c_str (), dlg.GetUserId ().c_str (), dlg.GetPasswd ().c_str () );
+   }
+
+   wxODBCTableArray        ta;
+   
+   if ( ! dbc -> GetTables ( ta ) )
+   {
+      wxLogMessage ( "Could not get tables" );
+      
+      return;
+   }
+   
+   TablePickerDialog       tlg   ( this, *dbc, ta );
+   
+   if ( tlg.ShowModal () != wxID_OK )
+      return;
+      
+   const wxString          table = tlg.GetTable ();
+// const wxString          table = "bestuurders";   
+   wxODBCColumnArray       ca;
+   
+   if ( ! dbc -> GetColumns ( ca, table ) )
+   {
+      wxLogMessage ( "Could not get columns" );
+      
+      return;
+   }
+   
+   ODBCTable *             t     = new  ODBCTable  ( dbc, table );
+   ChildFrame *            child = new  ChildFrame ( this, wxID_ANY, wxString ( dlg.GetDSN () ) + "/" + table );
+   
+   child -> Open  ( dbc, t ); 
+   
 #if 0
    wxDb *   db = new  wxDb ( connect.GetHenv (), false );
    
@@ -91,8 +133,11 @@ void  MainFrame :: OnMenuOpen ( wxCommandEvent &  ce )
 
 
 MainFrame :: MainFrame ()
-   : wxMDIParentFrame ( 0, wxID_ANY, "ODBC (iTableCtrl)", wxDefaultPosition, wxSize ( 600, 400 ) )
+   : wxMDIParentFrame ( 0, wxID_ANY, "ODBC (iTableCtrl)", wxDefaultPosition, wxSize ( 600, 400 ) ),
+   env   ()
 {
+   dbc   = 0;
+   
    SetIcon ( wxIcon ( "ICON" ) );
    
    wxMenuBar *    menubar  = new  wxMenuBar  ();

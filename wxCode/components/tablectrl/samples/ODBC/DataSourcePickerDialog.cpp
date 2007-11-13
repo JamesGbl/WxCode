@@ -8,6 +8,7 @@
 #include <sqlext.h>
 #include <odbcinst.h>
 
+#include "ODBCTable.hpp"
 #include "DataSourcePickerDialog.hpp"
 
 
@@ -37,28 +38,18 @@ void  DataSourcePickerDialog :: OnOK ( wxCommandEvent &  ce )
 
 void  DataSourcePickerDialog :: LoadDataSources ()
 {
-   const size_t   DESC  = 255;
+   wxString    dsn;
+   wxString    desc;
    
-   SQLCHAR     dsn   [ SQL_MAX_DSN_LENGTH + 1 ];
-   SQLCHAR     desc  [ DESC + 1 ];
-   wxInt16     ldsn;
-   wxInt16     ldesc;
-   SQLHENV     env;
-   SQLRETURN   rc;
-   
-   if ( SQLAllocHandle ( SQL_HANDLE_ENV, SQL_NULL_HANDLE, &env ) != SQL_SUCCESS )
-      return;
-      
-   while ( ( rc = SQLDataSources ( env, SQL_FETCH_FIRST, dsn, SQL_MAX_DSN_LENGTH, &ldsn, desc, DESC, &ldesc ) ) == SQL_SUCCESS )
+   while ( env.DataSources ( dsn, desc ) )
       sources -> Append ( dsn );
-      
-   SQLFreeHandle ( SQL_HANDLE_ENV, env );
 }
 
 
 
-DataSourcePickerDialog :: DataSourcePickerDialog ( wxWindow *  _window )
-   : wxDialog ( _window, wxID_ANY, "Select ODBC Data Source" )
+DataSourcePickerDialog :: DataSourcePickerDialog ( wxWindow *  _window, wxODBCEnv &  _env )
+   : wxDialog ( _window, wxID_ANY, "Select ODBC Data Source" ),
+   env   ( _env )
 {
    sizer    = new  wxBoxSizer       ( wxVERTICAL );
    
@@ -85,3 +76,31 @@ DataSourcePickerDialog :: DataSourcePickerDialog ( wxWindow *  _window )
    SetSizer ( sizer );
    Fit      ();
 }   
+
+
+
+const wxString  DataSourcePickerDialog :: GetDSN () const
+{
+   return ( sources -> GetString ( sources -> GetSelection () ) );
+}
+
+
+
+const wxString  DataSourcePickerDialog :: GetUserId () const
+{
+   return ( userid -> GetValue () );
+}
+
+
+
+const wxString  DataSourcePickerDialog :: GetPasswd () const
+{
+   return ( passwd -> GetValue () );
+}
+
+
+
+const wxString  DataSourcePickerDialog :: GetDirectory () const
+{
+   return ( directory -> GetValue () );
+}
