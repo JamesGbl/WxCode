@@ -34,8 +34,8 @@
         <if cond="FORMAT!='autoconf' and FORMAT!='gnu'">1</if>
     </set>
     <set var="TARGETING_IDE">
-        <if cond="FORMAT=='msvc6prj' or FORMAT=='cbuilderx'">1</if>
-        <if cond="FORMAT!='msvc6prj' and FORMAT!='cbuilderx'">0</if>
+        <if cond="FORMAT in ['msvc6prj','cbuilderx','msvs2005prj','msvs2003prj']">1</if>
+        <if cond="FORMAT not in ['msvc6prj','cbuilderx','msvs2005prj','msvs2003prj']">0</if>
     </set>
 
 </makefile>

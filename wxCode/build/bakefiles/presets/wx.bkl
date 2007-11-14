@@ -168,7 +168,7 @@
     </if>
 
     <!-- 'gnu' format needs to redefine the following options later in wx_unix.bkl -->
-    <if cond="FORMAT=='gnu'">
+    <if cond="FORMAT=='gnu' or FORMAT=='xcode2'">
         <set var="WX_UNICODE"/>
         <set var="WX_DEBUG"/>
         <set var="WX_SHARED"/>
@@ -272,7 +272,7 @@
 
     <set var="__wx_included_impl">0</set>
 
-    <if cond="FORMAT in ['autoconf','gnu']">
+    <if cond="FORMAT in ['autoconf','gnu','xcode2']">
         <include file="wx_unix.bkl"/>
         <set var="__wx_included_impl">1</set>
     </if>
@@ -423,7 +423,7 @@
          located in $(value).
     -->
     <define-tag name="wxlike-paths" rules="exe,lib,dll,module">
-        <if cond="FORMAT!='autoconf' and FORMAT!='gnu'">
+        <if cond="FORMAT!='autoconf' and FORMAT!='gnu' and FORMAT!='xcode2'">
             <!-- WXLIBPATH is a path like "/lib/vc_lib"
                  NOTE: even if this template is going to be used for a "lib"
                        target (which does not uses lib-paths at all), we can still

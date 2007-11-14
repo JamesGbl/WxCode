@@ -16,7 +16,7 @@
     <if cond="not isdefined('WX_PRESETS_VERSION') or WX_PRESETS_VERSION not in [ '5' ]">
         <error>The included wxWidgets presets are too old!</error>
     </if>
-    <if cond="WX_VERSION_DEFAULT!='28' and FORMAT!='gnu'">
+    <if cond="WX_VERSION_DEFAULT!='28' and FORMAT!='gnu' and FORMAT!='xcode2'">
         <!-- this is to avoid that I (Francesco) erraneously commit presets with 29 as def version -->
         <error>Please use the current stable branch as WX_VERSION option default and not $(WX_VERSION_DEFAULT)!</error>
     </if>

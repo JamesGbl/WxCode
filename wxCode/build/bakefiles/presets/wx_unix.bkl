@@ -59,7 +59,7 @@ Format-specific notes:
     <!--                   GNU makefiles for Unix                       -->
     <!-- ============================================================== -->
 
-    <if cond="FORMAT=='gnu'">
+    <if cond="FORMAT=='gnu' or FORMAT=='xcode2'">
 
         <!-- remove those WX_* vars which were created just to avoid the definition
              of the WX_* options in wx.bkl -->
@@ -221,7 +221,7 @@ Format-specific notes:
     <!--                          Common code                           -->
     <!-- ============================================================== -->
 
-    <if cond="FORMAT not in ['gnu','autoconf']">
+    <if cond="FORMAT not in ['gnu','autoconf','xcode2']">
         <error>
             Don't include presets/wx_unix.bkl directly, use presets/wx.bkl.
         </error>

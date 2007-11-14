@@ -166,6 +166,9 @@
             <ldflags>$(RPATH)</ldflags>
 
 
+            <!-- this is for autoconf format when BUILDDIR!=SRCDIR; without it
+                 the Makefile would try to put the generated binaries in folders
+                 which do not exist -->
             <if cond="FORMAT_SUPPORTS_ACTIONS=='1'">
                 <add-target target="make_sample_dir_$(id)" type="action"/>
                 <modify-target target="make_sample_dir_$(id)">
