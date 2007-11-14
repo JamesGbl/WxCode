@@ -282,10 +282,11 @@ bool  wxODBCStatement :: FetchScroll ( const Orientation &  orientation, wxInt32
 
 bool  wxODBCStatement :: GetData ( size_t  c, wxString &  str )
 {
-   SQLLEN   l;
-   bool     r  = SQLGetData ( stmt, c, SQL_C_CHAR, str.GetWriteBuf ( 1024 ), 1024, &l ) == SQL_SUCCESS;
+   const SQLLEN   L  = 1024;
+   SQLLEN         l;
+   bool           r  = SQLGetData ( stmt, c, SQL_C_CHAR, str.GetWriteBuf ( L ), L, &l ) == SQL_SUCCESS;
 
-   if ( l >= 0 )   
+   if ( ( l >= 0 ) && ( l < L ) )
       str.UngetWriteBuf ( l );
    else
       str.UngetWriteBuf ( 0 );
@@ -767,12 +768,19 @@ ODBCTable :: Capability  ODBCTable :: GetCapability () const
 
 
 
+wxUint32  ODBCTable :: FieldFlag ( size_t ) const
+{
+   return ( TFF_SHOW | TFF_SHOW_TOOLTIP );
+}
+
+
+
 const wxChar *  ODBCTable :: FieldString ( size_t  i )
 {
    static wxString   str;
    
 // return ( record -> FieldString ( i ) );
-   if ( ! stmt.GetData ( i, str ) )
+   if ( ! stmt.GetData ( i + 1, str ) )
       str.Empty ();
             
    return ( str );

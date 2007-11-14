@@ -285,6 +285,8 @@ class  ODBCTable : public  wxTable
       wxUint32          HeaderDrawTextFormat ( size_t );
       
       Capability        GetCapability        () const;
+      
+      wxUint32          FieldFlag            ( size_t ) const;
 
       const wxChar *    FieldString          ( size_t );
       wxUint32          FieldDrawTextFormat  ( size_t );
