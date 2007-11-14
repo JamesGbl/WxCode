@@ -1,9 +1,18 @@
-// Soli Deo Gloria!
+////////////////////////////////////////////////////////////////////////////////
+// SDG!                                                                       //
+//                                                                            //
+// Name:        DataSourcePickerDialog.hpp                                    //
+// Purpose:                                                                   //
+// Author:      Jan Knepper                                                   //
+// Created:     2007                                                          //
+// Copyright:   (c) 2007 Jan Knepper                                          //
+// Licence:     wxWidgets licence                                             //
+////////////////////////////////////////////////////////////////////////////////
 
 
 
-#ifndef ODBCDATASOURCEPICKERDIALOG_HPP
-#define ODBCDATASOURCEPICKERDIALOG_HPP
+#ifndef DATASOURCEPICKERDIALOG_HPP
+#define DATASOURCEPICKERDIALOG_HPP
 
 
 

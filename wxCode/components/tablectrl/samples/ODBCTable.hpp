@@ -1,4 +1,13 @@
-// Soli Deo Gloria!
+////////////////////////////////////////////////////////////////////////////////
+// SDG!                                                                       //
+//                                                                            //
+// Name:        ODBCTable.hpp                                                 //
+// Purpose:                                                                   //
+// Author:      Jan Knepper                                                   //
+// Created:     2007                                                          //
+// Copyright:   (c) 2007 Jan Knepper                                          //
+// Licence:     wxWidgets licence                                             //
+////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -68,47 +77,63 @@ class  wxODBCDbc : public  wxObject
 class  wxODBCStatement : public  wxObject
 {
    private   :
-      typedef wxObject     super;
+      typedef wxObject        super;
 
    public    :
       enum  Orientation
       {
-         Orientation_NXT      = SQL_FETCH_NEXT     ,
-         Orientation_FST      = SQL_FETCH_FIRST    ,
-         Orientation_LST      = SQL_FETCH_LAST     ,
-         Orientation_PRV      = SQL_FETCH_PRIOR    ,
-         Orientation_ABSOLUTE = SQL_FETCH_ABSOLUTE ,
-         Orientation_RELATIVE = SQL_FETCH_RELATIVE ,
-         Orientation_BOOKMARK = SQL_FETCH_BOOKMARK ,
+         Orientation_NXT            = SQL_FETCH_NEXT           ,
+         Orientation_FST            = SQL_FETCH_FIRST          ,
+         Orientation_LST            = SQL_FETCH_LAST           ,
+         Orientation_PRV            = SQL_FETCH_PRIOR          ,
+         Orientation_ABSOLUTE       = SQL_FETCH_ABSOLUTE       ,
+         Orientation_RELATIVE       = SQL_FETCH_RELATIVE       ,
+         Orientation_BOOKMARK       = SQL_FETCH_BOOKMARK       ,
+      };
+      
+      
+      
+      enum  CursorType
+      {
+         CursorType_FORWARD_ONLY    = SQL_CURSOR_FORWARD_ONLY  ,
+         CursorType_KEYSET_DRIVEN   = SQL_CURSOR_KEYSET_DRIVEN ,
+         CursorType_CURSOR_DYNAMIC  = SQL_CURSOR_DYNAMIC       ,
+         CursorType_STATIC          = SQL_CURSOR_STATIC        ,
+         
+         CursorType_DEFAULT         = SQL_CURSOR_TYPE_DEFAULT  ,
       };
       
       
       
    private   :
-      wxODBCDbc &          dbc;
-      SQLHSTMT             stmt;
+      wxODBCDbc &             dbc;
+      SQLHSTMT                stmt;
       
    protected :
-      bool                 ExecDirect  ( const wxString & );
+      bool                    ExecDirect     ( const wxString & );
       
    public    :
       wxODBCStatement   ( wxODBCDbc & );
       ~wxODBCStatement  ();
 
-      operator             SQLHSTMT    ()          { return ( stmt ); }
+      operator                SQLHSTMT       ()          { return ( stmt ); }
       
-      bool                 Tables      ();
-      bool                 Columns     ( const wxString & );
-      bool                 SelectAll   ( const wxString & );
-      wxUint32             CountAll    ( const wxString & );
+      bool                    Tables         ();
+      bool                    Columns        ( const wxString & );
+      bool                    SelectAll      ( const wxString & );
+      wxUint32                CountAll       ( const wxString & );
       
-      bool                 Fetch       ();
-      bool                 FetchScroll ( const Orientation & );
+      bool                    Fetch          ();
+      bool                    FetchScroll    ( const Orientation &, wxInt32 = 0 );
       
-      bool                 GetData     ( size_t, wxString & );
-      bool                 GetData     ( size_t, short & );
-      bool                 GetData     ( size_t, long & );
-      bool                 GetData     ( size_t, wxUint32 & );
+      bool                    GetData        ( size_t, wxString & );
+      bool                    GetData        ( size_t, short & );
+      bool                    GetData        ( size_t, long & );
+      bool                    GetData        ( size_t, wxUint32 & );
+      
+      bool                    SetCursorType  ( const CursorType & );
+      
+      static const wxChar *   GetString      ( const Orientation & );
 };
 
 

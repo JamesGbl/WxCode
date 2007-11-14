@@ -1,4 +1,13 @@
-// Soli Deo Gloria!
+////////////////////////////////////////////////////////////////////////////////
+// SDG!                                                                       //
+//                                                                            //
+// Name:        MainFrame.cpp                                                 //
+// Purpose:                                                                   //
+// Author:      Jan Knepper                                                   //
+// Created:     2007                                                          //
+// Copyright:   (c) 2007 Jan Knepper                                          //
+// Licence:     wxWidgets licence                                             //
+////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -83,6 +92,13 @@ void  MainFrame :: OnMenuOpen ( wxCommandEvent &  ce )
    if ( ! dbc -> GetColumns ( ca, table ) )
    {
       wxLogMessage ( "Could not get columns" );
+      
+      return;
+   }
+   
+   if ( ca.Count () == 0 )
+   {
+      wxLogMessage ( "Could not determine columns in table" );
       
       return;
    }

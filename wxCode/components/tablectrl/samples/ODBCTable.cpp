@@ -1,4 +1,13 @@
-// Soli Deo Gloria!
+////////////////////////////////////////////////////////////////////////////////
+// SDG!                                                                       //
+//                                                                            //
+// Name:        ODBCTable.cpp                                                 //
+// Purpose:                                                                   //
+// Author:      Jan Knepper                                                   //
+// Created:     2007                                                          //
+// Copyright:   (c) 2007 Jan Knepper                                          //
+// Licence:     wxWidgets licence                                             //
+////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -256,9 +265,15 @@ bool  wxODBCStatement :: Fetch ()
 
 
 
-bool  wxODBCStatement :: FetchScroll ( const Orientation &  orientation )
+bool  wxODBCStatement :: FetchScroll ( const Orientation &  orientation, wxInt32  offset )
 {
-   SQLRETURN   rc = SQLFetchScroll ( stmt, orientation, 0 );
+   if ( ( orientation == Orientation_RELATIVE ) || ( orientation == Orientation_ABSOLUTE ) )
+      wxASSERT ( offset > 0 );
+   
+   SQLRETURN   rc = SQLFetchScroll ( stmt, orientation, offset );
+   
+// if ( rc != SQL_SUCCESS )
+      wxLogDebug ( "%s %s (%d) %ld", __FUNCTION__, GetString ( orientation ), rc, offset );
    
    return ( ( rc == SQL_SUCCESS ) || ( rc == SQL_SUCCESS_WITH_INFO ) );
 }
@@ -306,6 +321,32 @@ bool  wxODBCStatement :: GetData ( size_t  c, wxUint32 &  v )
    bool     r  = SQLGetData ( stmt, c, SQL_C_ULONG, &v, sizeof ( v ), &l ) == SQL_SUCCESS;
 
    return ( r );
+}
+
+
+
+bool  wxODBCStatement :: SetCursorType ( const CursorType &  cursortype )
+{
+   return ( SQLSetStmtAttr ( stmt, SQL_ATTR_CURSOR_TYPE, reinterpret_cast < SQLPOINTER > ( cursortype ), 0 ) == SQL_SUCCESS );
+}
+
+
+
+const wxChar *  wxODBCStatement :: GetString ( const Orientation &  orientation )
+{
+   static const wxChar *   ORIENTATION [] =
+   {
+      "?"         ,
+      "NXT"       ,
+      "FST"       ,
+      "LST"       ,
+      "PRV"       ,
+      "ABSOLUTE"  ,
+      "RELATIVE"  ,
+      "BOOKMARK"  ,
+   };
+   
+   return ( ORIENTATION [ orientation ] );
 }
 
 
@@ -475,6 +516,8 @@ ODBCTable :: RecordEx :: Result  ODBCTable :: RecordEx :: __GetNxt ()
    {
       ++row;
       
+      wxASSERT ( row < rows );
+      
       return ( Result_OK );
    }
       
@@ -485,7 +528,17 @@ ODBCTable :: RecordEx :: Result  ODBCTable :: RecordEx :: __GetNxt ()
 
 long  ODBCTable :: RecordEx :: __GetNxtEx ( long  count )
 {
-   return (  0 );
+   long     c  = 0;
+   
+   while ( ( c < count ) && ( stmt.FetchScroll ( wxODBCStatement :: Orientation_NXT ) ) )
+   {
+      ++row;
+      ++c;
+   }
+      
+   wxLogDebug  ( "%s %d/%d", __FUNCTION__, c, count );
+   
+   return ( c );
 }
 
 
@@ -495,6 +548,8 @@ ODBCTable :: RecordEx :: Result  ODBCTable :: RecordEx :: __GetPrv ()
    if ( stmt.FetchScroll ( wxODBCStatement :: Orientation_PRV ) )
    {
       --row;
+      
+      wxASSERT ( row >= 0 );
       
       return ( Result_OK );
    }
@@ -506,7 +561,17 @@ ODBCTable :: RecordEx :: Result  ODBCTable :: RecordEx :: __GetPrv ()
 
 long  ODBCTable :: RecordEx :: __GetPrvEx ( long  count )
 {
-   return (  0 );
+   long  c  = 0;
+   
+   while ( ( c < count ) && ( stmt.FetchScroll ( wxODBCStatement :: Orientation_PRV ) ) )
+   {
+      --row;
+      ++c;
+   }
+   
+   wxLogDebug  ( "%s %d/%d", __FUNCTION__, c, count );
+   
+   return ( c );
 }
 
 
@@ -535,9 +600,9 @@ ODBCTable :: RecordEx :: Result  ODBCTable :: RecordEx :: __Get ( const Find & )
 ODBCTable :: Cursor *  ODBCTable :: RecordEx :: __CursorCreate ()
 {
 // return ( new  CursorEx ( dbtable.GetCursor () ) );
-   DefaultCursor *   dc = new  DefaultCursor ( row );
+   DefaultCursor *   dc = new  DefaultCursor ( row + 1 );
    
-   if ( row <= 0 )
+   if ( row < 0 )
       dc -> Invalidate ();
       
    return ( dc );
@@ -547,7 +612,7 @@ ODBCTable :: Cursor *  ODBCTable :: RecordEx :: __CursorCreate ()
 
 const ODBCTable :: Cursor *  ODBCTable :: RecordEx :: __CursorCurrent ()
 {
-   cursor.Offset ( row );
+   cursor.Offset ( row + 1 );
    
    return ( &cursor );
 }
@@ -569,10 +634,22 @@ ODBCTable :: RecordEx :: Result  ODBCTable :: RecordEx :: __CursorSet ( const Cu
         ( dc -> IsValid () )    )
    {
       cursor   = *dc;
+   
+      // (SQL)FetchScroll is funny. It will not return data when used with 
+      // SQL_FETCH_RELATIVE if the cursor is not with in the set, i.e. past 
+      // GetLst!
+      // So, try to fetch the record, if it fails, try to do a GetFst and than
+      // try to fetch again.
       
-//    dbtable.SetPos    ( cursor.Offset () );
-      
-      return ( Result_OK );
+      if ( stmt.FetchScroll ( wxODBCStatement :: Orientation_ABSOLUTE, cursor.Offset () ) )
+//    if ( (   stmt.FetchScroll ( wxODBCStatement :: Orientation_ABSOLUTE, cursor.Offset ()   )    ) ||
+//         ( ( stmt.FetchScroll ( wxODBCStatement :: Orientation_FST )                        ) &&
+//           ( stmt.FetchScroll ( wxODBCStatement :: Orientation_ABSOLUTE, cursor.Offset () ) )    )    )
+      {
+         row   = cursor.Offset () - 1;
+         
+         return ( Result_OK );
+      }
    }
    
    return ( Result_EOT );
@@ -600,8 +677,8 @@ ODBCTable :: RecordEx :: RecordEx ( ODBCTable *  _table )
    rows  ( _table -> rows ),
    stmt  ( _table -> stmt )
 {
-   row   = -1;
-   cursor   .Offset     ( row );
+   row   =  0;
+   cursor   .Offset     ( row + 1 );
    cursor   .Invalidate ();
 }
 
@@ -722,19 +799,18 @@ ODBCTable :: ODBCTable ( wxODBCDbc *  _dbc, const wxString &  _name )
    cols  = ca.Count ();
    rows  = stmt.CountAll   ( name );
   
-   stmt.SelectAll ( name );
+   stmt.SetCursorType   ( wxODBCStatement :: CursorType_STATIC );
+   stmt.SelectAll       ( name );
 
    SQLINTEGER  v;
 
    SQLGetInfo ( *dbc, SQL_FETCH_DIRECTION, &v, sizeof ( v ), 0 );
-   
+
+#if 0   
    bool     stat;
-   size_t   r     = 0;
    
-   stat  = stmt.FetchScroll ( wxODBCStatement :: Orientation_NXT );
-   stat  = stmt.FetchScroll ( wxODBCStatement :: Orientation_NXT );
-   stat  = stmt.FetchScroll ( wxODBCStatement :: Orientation_PRV );
-   while ( ( stat ) && ( ++r < rows ) )
+   stat  = stmt.FetchScroll ( wxODBCStatement :: Orientation_FST );
+   while ( stat )
    {
       for ( size_t  c = 0 ; c < cols ; ++c )
          wxLogDebug ( "%s", FieldString ( c ) ); 
@@ -750,5 +826,6 @@ ODBCTable :: ODBCTable ( wxODBCDbc *  _dbc, const wxString &  _name )
          
       stat  = stmt.FetchScroll ( wxODBCStatement :: Orientation_NXT );
    }
+#endif   
 }
 

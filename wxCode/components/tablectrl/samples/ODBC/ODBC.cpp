@@ -1,3 +1,16 @@
+////////////////////////////////////////////////////////////////////////////////
+// SDG!                                                                       //
+//                                                                            //
+// Name:        ODBC.cpp                                                      //
+// Purpose:                                                                   //
+// Author:      Jan Knepper                                                   //
+// Created:     2007                                                          //
+// Copyright:   (c) 2007 Jan Knepper                                          //
+// Licence:     wxWidgets licence                                             //
+////////////////////////////////////////////////////////////////////////////////
+
+
+
 #include <wx/wxprec.h>
 
 #include <wx/TableCtrl.hpp>
