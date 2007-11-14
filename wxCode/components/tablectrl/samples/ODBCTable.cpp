@@ -809,31 +809,10 @@ ODBCTable :: ODBCTable ( wxODBCDbc *  _dbc, const wxString &  _name )
   
    stmt.SetCursorType   ( wxODBCStatement :: CursorType_STATIC );
    stmt.SelectAll       ( name );
-
+#if 0
    SQLINTEGER  v;
 
    SQLGetInfo ( *dbc, SQL_FETCH_DIRECTION, &v, sizeof ( v ), 0 );
-
-#if 0   
-   bool     stat;
-   
-   stat  = stmt.FetchScroll ( wxODBCStatement :: Orientation_FST );
-   while ( stat )
-   {
-      for ( size_t  c = 0 ; c < cols ; ++c )
-         wxLogDebug ( "%s", FieldString ( c ) ); 
-         
-      stat  = stmt.FetchScroll ( wxODBCStatement :: Orientation_NXT );
-   }
-   
-   stat  = stmt.FetchScroll ( wxODBCStatement :: Orientation_FST );
-   while ( stat )
-   {
-      for ( size_t  c = 0 ; c < cols ; ++c )
-         wxLogDebug ( "%s", FieldString ( c ) ); 
-         
-      stat  = stmt.FetchScroll ( wxODBCStatement :: Orientation_NXT );
-   }
 #endif   
 }
 
