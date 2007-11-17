@@ -2,7 +2,7 @@
 
 <!-- RCS-ID: $Id$ -->
 
-<bakefile-gen>
+<bakefile-gen xmlns="http://www.bakefile.org/schema/bakefile-gen">
 
     <!-- this tag tells bakefile_gen that the user bakefile wants to use the 
          default wxCode settings found in wxCode/build/bakefiles/presets/wxcode.bkgen.
