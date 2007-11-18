@@ -3,7 +3,7 @@
 <!-- Created by: Francesco Montorsi <frm@users.sourceforge.net>     -->
 <!-- Date: 9/10/2004                                                -->
 
-<bakefile-gen>
+<bakefile-gen xmlns="http://www.bakefile.org/schema/bakefile-gen">
     <include file="../../../build/bakefiles/presets/wxcode.bkgen"/>
     <input>wxextminiframe.bkl</input>
 </bakefile-gen>
