@@ -22,6 +22,25 @@
 #include "wx/avahi/utils.h"
 #include <avahi-common/domain.h>
 
+
+//
+// wxAvahi tests
+//
+
+int wxAvahi()
+{
+	return wxAVAHI_MAJOR << 16 + wxAVAHI_MINOR << 8 + wxAVAHI_RELEASE;
+}
+
+#if USE_GUI == 1
+int wxAvahiGui()
+{
+	return wxAvahi();
+}
+#endif /* USE_GUI == 1 */
+
+
+
 //
 // Address
 //

@@ -55,6 +55,9 @@ WX_DEBUG := $(shell $(WX_CONFIG) --selected-config | cut -d '-' -f 3 | sed 's/de
 # Version of the wx library to build against. 
 WX_VERSION := $(shell $(WX_CONFIG) --selected-config | sed -e 's/.*-\([0-9]*\)\.\([0-9]*\)$$/\1\2/')
 
+# Does wxAvahi use GUI components [0,1]
+USE_GUI := 1
+
 
 
 # -------------------------------------------------------------------------
@@ -69,57 +72,82 @@ WX_VERSION_MINOR = $(shell echo $(WX_VERSION) | cut -c2,2)
 WX_CONFIG_FLAGS = $(WX_CONFIG_DEBUG_FLAG) $(WX_CONFIG_UNICODE_FLAG) \
 	$(WX_CONFIG_SHARED_FLAG) --toolkit=$(WX_PORT) \
 	--version=$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR)
-WXAVAHI_LIB_CXXFLAGS = $(VAR) $(VAR_1) -W -Wall -I../include `$(WX_CONFIG) \
-	--cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
+WXAVAHI_LIB_CXXFLAGS = -DUSE_GUI=$(USE_GUI) $(VAR) $(VAR_1) -W -Wall -I../include \
+	`$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 WXAVAHI_LIB_OBJECTS =  \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_resolve.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_browse.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_pool.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_listctrl.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_typedb.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_client.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_art.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_resolve.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_utils.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_browse.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_listctrl.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_pool.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_strlst.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_utils.o
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_art.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_typedb.o
 WXAVAHI_LIB_HEADERS =  \
-	include/wx/avahi/art.h \
-	include/wx/avahi/typedb.h \
-	include/wx/avahi/listctrl.h \
-	include/wx/avahi/browse.h \
-	include/wx/avahi/tools.h \
-	include/wx/avahi/avahidef.h \
 	include/wx/avahi/pool.h \
-	include/wx/avahi/utils.h \
-	include/wx/avahi/resolve.h \
 	include/wx/avahi/strlst.h \
-	include/wx/avahi/client.h
-WXAVAHI_DLL_CXXFLAGS = $(VAR) $(VAR_1) -W -Wall -I../include -DWXMAKINGDLL_AVAHI \
-	-fPIC -DPIC `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) \
-	$(CXXFLAGS)
+	include/wx/avahi/client.h \
+	include/wx/avahi/resolve.h \
+	include/wx/avahi/utils.h \
+	include/wx/avahi/browse.h \
+	include/wx/avahi/listctrl.h \
+	include/wx/avahi/avahidef.h \
+	include/wx/avahi/tools.h \
+	include/wx/avahi/art.h \
+	include/wx/avahi/typedb.h
+WXAVAHI_DLL_CXXFLAGS = -DUSE_GUI=$(USE_GUI) $(VAR) $(VAR_1) -W -Wall -I../include \
+	-DWXMAKINGDLL_AVAHI -fPIC -DPIC `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` \
+	$(CPPFLAGS) $(CXXFLAGS)
 WXAVAHI_DLL_OBJECTS =  \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_resolve.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_browse.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_pool.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_listctrl.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_typedb.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_client.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_art.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_resolve.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_utils.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_browse.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_listctrl.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_pool.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_strlst.o \
-	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_utils.o
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_art.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_typedb.o
 WXAVAHI_DLL_HEADERS =  \
-	include/wx/avahi/art.h \
-	include/wx/avahi/typedb.h \
-	include/wx/avahi/listctrl.h \
-	include/wx/avahi/browse.h \
-	include/wx/avahi/tools.h \
-	include/wx/avahi/avahidef.h \
 	include/wx/avahi/pool.h \
-	include/wx/avahi/utils.h \
-	include/wx/avahi/resolve.h \
 	include/wx/avahi/strlst.h \
-	include/wx/avahi/client.h
-AVAHI_CXXFLAGS = $(VAR) $(VAR_1) -W -Wall -I../include `$(WX_CONFIG) --cxxflags \
+	include/wx/avahi/client.h \
+	include/wx/avahi/resolve.h \
+	include/wx/avahi/utils.h \
+	include/wx/avahi/browse.h \
+	include/wx/avahi/listctrl.h \
+	include/wx/avahi/avahidef.h \
+	include/wx/avahi/tools.h \
+	include/wx/avahi/art.h \
+	include/wx/avahi/typedb.h
+WXAVAHIGUI_DLL_CXXFLAGS = -DUSE_GUI=$(USE_GUI) $(VAR) $(VAR_1) -W -Wall \
+	-I../include -DWXMAKINGDLL_AVAHI -fPIC -DPIC `$(WX_CONFIG) --cxxflags \
 	$(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
+WXAVAHIGUI_DLL_OBJECTS =  \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahigui_dll_client.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahigui_dll_resolve.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahigui_dll_utils.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahigui_dll_browse.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahigui_dll_listctrl.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahigui_dll_pool.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahigui_dll_strlst.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahigui_dll_art.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahigui_dll_typedb.o
+WXAVAHIGUI_DLL_HEADERS =  \
+	include/wx/avahi/pool.h \
+	include/wx/avahi/strlst.h \
+	include/wx/avahi/client.h \
+	include/wx/avahi/resolve.h \
+	include/wx/avahi/utils.h \
+	include/wx/avahi/browse.h \
+	include/wx/avahi/listctrl.h \
+	include/wx/avahi/avahidef.h \
+	include/wx/avahi/tools.h \
+	include/wx/avahi/art.h \
+	include/wx/avahi/typedb.h
+AVAHI_CXXFLAGS = $(VAR) $(VAR_1) -W -Wall -I../include -DUSE_GUI=$(USE_GUI) \
+	`$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) $(CXXFLAGS)
 AVAHI_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/avahi_avahi.o
 
@@ -165,21 +193,58 @@ endif
 ifeq ($(WX_SHARED),0)
 __uninstall_wxavahi_lib_headers___depname = uninstall_wxavahi_lib_headers
 endif
+ifeq ($(USE_GUI),0)
 ifeq ($(WX_SHARED),1)
 __wxavahi_dll___depname = \
 	../lib/gcc_$(__wxavahi)/libwxcode_$(WX_PORT)_avahi-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
 endif
+endif
+ifeq ($(USE_GUI),0)
 ifeq ($(WX_SHARED),1)
 __install_wxavahi_dll___depname = install_wxavahi_dll
 endif
+endif
+ifeq ($(USE_GUI),0)
 ifeq ($(WX_SHARED),1)
 __uninstall_wxavahi_dll___depname = uninstall_wxavahi_dll
 endif
+endif
+ifeq ($(USE_GUI),0)
 ifeq ($(WX_SHARED),1)
 __install_wxavahi_dll_headers___depname = install_wxavahi_dll_headers
 endif
+endif
+ifeq ($(USE_GUI),0)
 ifeq ($(WX_SHARED),1)
 __uninstall_wxavahi_dll_headers___depname = uninstall_wxavahi_dll_headers
+endif
+endif
+ifeq ($(USE_GUI),1)
+ifeq ($(WX_SHARED),1)
+__wxavahigui_dll___depname = \
+	../lib/gcc_$(__wxavahi)/libwxcode_$(WX_PORT)_avahi-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
+endif
+endif
+ifeq ($(USE_GUI),1)
+ifeq ($(WX_SHARED),1)
+__install_wxavahigui_dll___depname = install_wxavahigui_dll
+endif
+endif
+ifeq ($(USE_GUI),1)
+ifeq ($(WX_SHARED),1)
+__uninstall_wxavahigui_dll___depname = uninstall_wxavahigui_dll
+endif
+endif
+ifeq ($(USE_GUI),1)
+ifeq ($(WX_SHARED),1)
+__install_wxavahigui_dll_headers___depname = install_wxavahigui_dll_headers
+endif
+endif
+ifeq ($(USE_GUI),1)
+ifeq ($(WX_SHARED),1)
+__uninstall_wxavahigui_dll_headers___depname = \
+	uninstall_wxavahigui_dll_headers
+endif
 endif
 ifeq ($(WX_SHARED),1)
 __avahi_RPATH = -Wl,-rpath,../lib/gcc_dll
@@ -210,16 +275,18 @@ gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX):
 
 ### Targets: ###
 
-all: test_for_selected_wxbuild $(__wxavahi_lib___depname) $(__wxavahi_dll___depname) ../sample/avahi
+all: test_for_selected_wxbuild $(__wxavahi_lib___depname) $(__wxavahi_dll___depname) $(__wxavahigui_dll___depname) ../sample/avahi
 
-install: all $(__install_wxavahi_lib___depname) $(__install_wxavahi_lib_headers___depname) $(__install_wxavahi_dll___depname) $(__install_wxavahi_dll_headers___depname)
+install: all $(__install_wxavahi_lib___depname) $(__install_wxavahi_lib_headers___depname) $(__install_wxavahi_dll___depname) $(__install_wxavahi_dll_headers___depname) $(__install_wxavahigui_dll___depname) $(__install_wxavahigui_dll_headers___depname)
 
-uninstall: $(__uninstall_wxavahi_lib___depname) $(__uninstall_wxavahi_lib_headers___depname) $(__uninstall_wxavahi_dll___depname) $(__uninstall_wxavahi_dll_headers___depname)
+uninstall: $(__uninstall_wxavahi_lib___depname) $(__uninstall_wxavahi_lib_headers___depname) $(__uninstall_wxavahi_dll___depname) $(__uninstall_wxavahi_dll_headers___depname) $(__uninstall_wxavahigui_dll___depname) $(__uninstall_wxavahigui_dll_headers___depname)
 
 clean: 
 	rm -f gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/*.o
 	rm -f gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/*.d
 	rm -f ../lib/gcc_$(__wxavahi)/libwxcode_$(WX_PORT)_avahi-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).a
+	rm -f ../lib/gcc_$(__wxavahi)/libwxcode_$(WX_PORT)_avahi-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
+	rm -f ../lib/gcc_$(__wxavahi)/libwxcode_$(WX_PORT)_avahi-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
 	rm -f ../lib/gcc_$(__wxavahi)/libwxcode_$(WX_PORT)_avahi-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
 	rm -f ../lib/gcc_$(__wxavahi)/libwxcode_$(WX_PORT)_avahi-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
 	rm -f ../sample/avahi
@@ -266,27 +333,34 @@ uninstall_wxavahi_lib_headers:
 	done
 endif
 
+ifeq ($(USE_GUI),0)
 ifeq ($(WX_SHARED),1)
 ../lib/gcc_$(__wxavahi)/libwxcode_$(WX_PORT)_avahi-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so: make_dir_wxavahi_dll  $(WXAVAHI_DLL_OBJECTS)
 	$(CXX) -shared -fPIC -o $@ $(WXAVAHI_DLL_OBJECTS) $(LDFLAGS) $(VAR_1) -L../lib  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs net,base`
 endif
+endif
 
+ifeq ($(USE_GUI),0)
 ifeq ($(WX_SHARED),1)
 install_wxavahi_dll: 
 	$(INSTALL) -d $(DESTDIR)$(prefix)/lib
 	$(INSTALL) -m 644 ../lib/gcc_$(__wxavahi)/libwxcode_$(WX_PORT)_avahi-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so $(DESTDIR)$(prefix)/lib
 	install -c ../lib/gcc_$(__wxavahi)/libwxcode_$(WX_PORT)_avahi-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so $(DESTDIR)$(prefix)/lib
 endif
+endif
 
+ifeq ($(USE_GUI),0)
 ifeq ($(WX_SHARED),1)
 uninstall_wxavahi_dll: 
 	rm -f $(DESTDIR)$(prefix)/lib/libwxcode_$(WX_PORT)_avahi-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
 	rm -f $(DESTDIR)$(prefix)/lib/libwxcode_$(WX_PORT)_avahi-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
 endif
+endif
 
 make_dir_wxavahi_dll: 
 	@mkdir -p ../lib/gcc_$(__wxavahi)
 
+ifeq ($(USE_GUI),0)
 ifeq ($(WX_SHARED),1)
 install_wxavahi_dll_headers: 
 	$(INSTALL) -d $(DESTDIR)$(prefix)
@@ -297,12 +371,64 @@ install_wxavahi_dll_headers:
 	$(INSTALL) -m 644 ../$$f $(DESTDIR)$(prefix)/$$f; \
 	done
 endif
+endif
 
+ifeq ($(USE_GUI),0)
 ifeq ($(WX_SHARED),1)
 uninstall_wxavahi_dll_headers: 
 	for f in $(WXAVAHI_DLL_HEADERS); do \
 	rm -f $(DESTDIR)$(prefix)/$$f; \
 	done
+endif
+endif
+
+ifeq ($(USE_GUI),1)
+ifeq ($(WX_SHARED),1)
+../lib/gcc_$(__wxavahi)/libwxcode_$(WX_PORT)_avahi-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so: make_dir_wxavahigui_dll  $(WXAVAHIGUI_DLL_OBJECTS)
+	$(CXX) -shared -fPIC -o $@ $(WXAVAHIGUI_DLL_OBJECTS) $(LDFLAGS) $(VAR_1) -L../lib  `$(WX_CONFIG) $(WX_CONFIG_FLAGS) --libs net,base`
+endif
+endif
+
+ifeq ($(USE_GUI),1)
+ifeq ($(WX_SHARED),1)
+install_wxavahigui_dll: 
+	$(INSTALL) -d $(DESTDIR)$(prefix)/lib
+	$(INSTALL) -m 644 ../lib/gcc_$(__wxavahi)/libwxcode_$(WX_PORT)_avahi-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so $(DESTDIR)$(prefix)/lib
+	install -c ../lib/gcc_$(__wxavahi)/libwxcode_$(WX_PORT)_avahi-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so $(DESTDIR)$(prefix)/lib
+endif
+endif
+
+ifeq ($(USE_GUI),1)
+ifeq ($(WX_SHARED),1)
+uninstall_wxavahigui_dll: 
+	rm -f $(DESTDIR)$(prefix)/lib/libwxcode_$(WX_PORT)_avahi-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
+	rm -f $(DESTDIR)$(prefix)/lib/libwxcode_$(WX_PORT)_avahi-$(WX_VERSION_MAJOR).$(WX_VERSION_MINOR).so
+endif
+endif
+
+make_dir_wxavahigui_dll: 
+	@mkdir -p ../lib/gcc_$(__wxavahi)
+
+ifeq ($(USE_GUI),1)
+ifeq ($(WX_SHARED),1)
+install_wxavahigui_dll_headers: 
+	$(INSTALL) -d $(DESTDIR)$(prefix)
+	for f in $(WXAVAHIGUI_DLL_HEADERS); do \
+	if test ! -d $(DESTDIR)$(prefix)/`dirname $$f` ; then \
+	$(INSTALL) -d $(DESTDIR)$(prefix)/`dirname $$f`; \
+	fi; \
+	$(INSTALL) -m 644 ../$$f $(DESTDIR)$(prefix)/$$f; \
+	done
+endif
+endif
+
+ifeq ($(USE_GUI),1)
+ifeq ($(WX_SHARED),1)
+uninstall_wxavahigui_dll_headers: 
+	for f in $(WXAVAHIGUI_DLL_HEADERS); do \
+	rm -f $(DESTDIR)$(prefix)/$$f; \
+	done
+endif
 endif
 
 ../sample/avahi: $(AVAHI_OBJECTS) make_sample_dir_avahi $(__wxavahi_lib___depname)
@@ -315,64 +441,91 @@ tarball:
 	make distclean
 	( cd ../.. && tar -cvzf avahi.tar.gz --exclude="*~" --exclude="*.log" --exclude="*.o*" --exclude="*.a" --exclude=".svn" --exclude="autom4te.cache" avahi/* )
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_resolve.o: ../src/resolve.cpp
-	$(CXX) -c -o $@ $(WXAVAHI_LIB_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_browse.o: ../src/browse.cpp
-	$(CXX) -c -o $@ $(WXAVAHI_LIB_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_pool.o: ../src/pool.cpp
-	$(CXX) -c -o $@ $(WXAVAHI_LIB_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_listctrl.o: ../src/listctrl.cpp
-	$(CXX) -c -o $@ $(WXAVAHI_LIB_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_typedb.o: ../src/typedb.cpp
-	$(CXX) -c -o $@ $(WXAVAHI_LIB_CXXFLAGS) $(CPPDEPS) $<
-
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_client.o: ../src/client.cpp
 	$(CXX) -c -o $@ $(WXAVAHI_LIB_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_art.o: ../src/art.cpp
-	$(CXX) -c -o $@ $(WXAVAHI_LIB_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_strlst.o: ../src/strlst.cpp
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_resolve.o: ../src/resolve.cpp
 	$(CXX) -c -o $@ $(WXAVAHI_LIB_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_utils.o: ../src/utils.cpp
 	$(CXX) -c -o $@ $(WXAVAHI_LIB_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_resolve.o: ../src/resolve.cpp
-	$(CXX) -c -o $@ $(WXAVAHI_DLL_CXXFLAGS) $(CPPDEPS) $<
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_browse.o: ../src/browse.cpp
+	$(CXX) -c -o $@ $(WXAVAHI_LIB_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_browse.o: ../src/browse.cpp
-	$(CXX) -c -o $@ $(WXAVAHI_DLL_CXXFLAGS) $(CPPDEPS) $<
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_listctrl.o: ../src/listctrl.cpp
+	$(CXX) -c -o $@ $(WXAVAHI_LIB_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_pool.o: ../src/pool.cpp
-	$(CXX) -c -o $@ $(WXAVAHI_DLL_CXXFLAGS) $(CPPDEPS) $<
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_pool.o: ../src/pool.cpp
+	$(CXX) -c -o $@ $(WXAVAHI_LIB_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_listctrl.o: ../src/listctrl.cpp
-	$(CXX) -c -o $@ $(WXAVAHI_DLL_CXXFLAGS) $(CPPDEPS) $<
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_strlst.o: ../src/strlst.cpp
+	$(CXX) -c -o $@ $(WXAVAHI_LIB_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_typedb.o: ../src/typedb.cpp
-	$(CXX) -c -o $@ $(WXAVAHI_DLL_CXXFLAGS) $(CPPDEPS) $<
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_art.o: ../src/art.cpp
+	$(CXX) -c -o $@ $(WXAVAHI_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_typedb.o: ../src/typedb.cpp
+	$(CXX) -c -o $@ $(WXAVAHI_LIB_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_client.o: ../src/client.cpp
 	$(CXX) -c -o $@ $(WXAVAHI_DLL_CXXFLAGS) $(CPPDEPS) $<
 
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_art.o: ../src/art.cpp
-	$(CXX) -c -o $@ $(WXAVAHI_DLL_CXXFLAGS) $(CPPDEPS) $<
-
-gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_strlst.o: ../src/strlst.cpp
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_resolve.o: ../src/resolve.cpp
 	$(CXX) -c -o $@ $(WXAVAHI_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_utils.o: ../src/utils.cpp
 	$(CXX) -c -o $@ $(WXAVAHI_DLL_CXXFLAGS) $(CPPDEPS) $<
 
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_browse.o: ../src/browse.cpp
+	$(CXX) -c -o $@ $(WXAVAHI_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_listctrl.o: ../src/listctrl.cpp
+	$(CXX) -c -o $@ $(WXAVAHI_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_pool.o: ../src/pool.cpp
+	$(CXX) -c -o $@ $(WXAVAHI_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_strlst.o: ../src/strlst.cpp
+	$(CXX) -c -o $@ $(WXAVAHI_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_art.o: ../src/art.cpp
+	$(CXX) -c -o $@ $(WXAVAHI_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_typedb.o: ../src/typedb.cpp
+	$(CXX) -c -o $@ $(WXAVAHI_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahigui_dll_client.o: ../src/client.cpp
+	$(CXX) -c -o $@ $(WXAVAHIGUI_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahigui_dll_resolve.o: ../src/resolve.cpp
+	$(CXX) -c -o $@ $(WXAVAHIGUI_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahigui_dll_utils.o: ../src/utils.cpp
+	$(CXX) -c -o $@ $(WXAVAHIGUI_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahigui_dll_browse.o: ../src/browse.cpp
+	$(CXX) -c -o $@ $(WXAVAHIGUI_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahigui_dll_listctrl.o: ../src/listctrl.cpp
+	$(CXX) -c -o $@ $(WXAVAHIGUI_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahigui_dll_pool.o: ../src/pool.cpp
+	$(CXX) -c -o $@ $(WXAVAHIGUI_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahigui_dll_strlst.o: ../src/strlst.cpp
+	$(CXX) -c -o $@ $(WXAVAHIGUI_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahigui_dll_art.o: ../src/art.cpp
+	$(CXX) -c -o $@ $(WXAVAHIGUI_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahigui_dll_typedb.o: ../src/typedb.cpp
+	$(CXX) -c -o $@ $(WXAVAHIGUI_DLL_CXXFLAGS) $(CPPDEPS) $<
+
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/avahi_avahi.o: ../sample/avahi.cpp
 	$(CXX) -c -o $@ $(AVAHI_CXXFLAGS) $(CPPDEPS) $<
 
-.PHONY: all install uninstall clean install_wxavahi_lib uninstall_wxavahi_lib install_wxavahi_lib_headers uninstall_wxavahi_lib_headers install_wxavahi_dll uninstall_wxavahi_dll install_wxavahi_dll_headers uninstall_wxavahi_dll_headers
+.PHONY: all install uninstall clean install_wxavahi_lib uninstall_wxavahi_lib install_wxavahi_lib_headers uninstall_wxavahi_lib_headers install_wxavahi_dll uninstall_wxavahi_dll install_wxavahi_dll_headers uninstall_wxavahi_dll_headers install_wxavahigui_dll uninstall_wxavahigui_dll install_wxavahigui_dll_headers uninstall_wxavahigui_dll_headers
 
 
 # Dependencies tracking:

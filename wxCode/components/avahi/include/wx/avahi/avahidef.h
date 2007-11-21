@@ -16,7 +16,7 @@
 // since some kind of tests, like those of AM_WXCODE_CHECKFOR_COMPONENT_VERSION()
 // for "configure" scripts under unix, use them.
 #define wxAVAHI_MAJOR          0
-#define wxAVAHI_MINOR          6
+#define wxAVAHI_MINOR          2
 #define wxAVAHI_RELEASE        0
 
 // For non-Unix systems (i.e. when building without a configure script),

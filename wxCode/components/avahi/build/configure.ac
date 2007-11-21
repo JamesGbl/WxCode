@@ -10,7 +10,7 @@
 
 
 # Init this configure script with basic info about the component
-AC_INIT([wxAvahi], [0.1.0], [emilien.kia@free.fr])
+AC_INIT([wxAvahi], [0.2.0], [emilien.kia@free.fr])
 AC_CONFIG_AUX_DIR(build)
 
 # ENABLES/DISABLES THE DEBUG MODE FOR THIS CONFIGURE SCRIPT
@@ -39,7 +39,21 @@ CFLAGS="$AVAHICLIENT_CFLAGS $CFLAGS"
 WXCODE_OPTIONS([debug,unicode,shared,toolkit,wxshared,wxversion])
 
 
-
+# Check for Plugins
+AC_ARG_ENABLE([wxavahigui],
+	AC_HELP_STRING([--disable-wxavahigui],[disable wxAvahi GUI classes (like wxAvahiServiceTypeListCtrl)]),
+	[case "${enableval}" in
+	  yes) with_wxavahigui="yes" ;;
+	  no)  with_wxavahigui="no" ;;
+	  *) AC_MSG_ERROR(bad value ${enableval} for --disable-wxavahigui) ;;
+	esac],
+	[with_wxavahigui="yes"])
+if test "$with_wxavahigui" = "yes" ; then
+  USE_GUI="1"
+else
+  USE_GUI="0"
+fi
+AC_SUBST(USE_GUI)
 
 
 ## CONFIGURE CHECKS

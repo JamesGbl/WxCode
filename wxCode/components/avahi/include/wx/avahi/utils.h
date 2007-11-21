@@ -20,6 +20,23 @@
 #include <wx/wx.h>
 #include <wx/socket.h>
 
+/**
+ * Test to know if wxAvahi is present.
+ * Do nothing.
+ * Can be used in configure.ac to test if wxAvahi is linkable.
+ * \return wxAvahi numeric version.
+ */
+WXDLLIMPEXP_AVAHI int wxAvahi();
+
+/**
+ * Test to know if wxAvahiGui is present.
+ * Do nothing.
+ * Can be used in configure.ac to test if wxAvahiGui is linkable.
+ * \return wxAvahi numeric version.
+ */ 
+WXDLLIMPEXP_AVAHI int wxAvahiGui();
+
+
 /** 
  * Convert an Avahi address to a readable string.
  * Usable with wxIPAdresses.

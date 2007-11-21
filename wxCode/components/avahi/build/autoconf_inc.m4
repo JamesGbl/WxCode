@@ -54,6 +54,18 @@ dnl ### begin block 20_COND_PLATFORM_OS2_1[wxavahi.bkl] ###
         COND_PLATFORM_OS2_1=""
     fi
     AC_SUBST(COND_PLATFORM_OS2_1)
+dnl ### begin block 20_COND_USE_GUI_0_WX_SHARED_1[wxavahi.bkl] ###
+    COND_USE_GUI_0_WX_SHARED_1="#"
+    if test "x$USE_GUI" = "x0" -a "x$WX_SHARED" = "x1" ; then
+        COND_USE_GUI_0_WX_SHARED_1=""
+    fi
+    AC_SUBST(COND_USE_GUI_0_WX_SHARED_1)
+dnl ### begin block 20_COND_USE_GUI_1_WX_SHARED_1[wxavahi.bkl] ###
+    COND_USE_GUI_1_WX_SHARED_1="#"
+    if test "x$USE_GUI" = "x1" -a "x$WX_SHARED" = "x1" ; then
+        COND_USE_GUI_1_WX_SHARED_1=""
+    fi
+    AC_SUBST(COND_USE_GUI_1_WX_SHARED_1)
 dnl ### begin block 20_COND_USE_SOSYMLINKS_1[wxavahi.bkl] ###
     COND_USE_SOSYMLINKS_1="#"
     if test "x$USE_SOSYMLINKS" = "x1" ; then

@@ -20,6 +20,8 @@
 	#include <wx/module.h>
 #endif
 
+#if USE_GUI == 1
+
 #include "wx/avahi/art.h"
 
 //
@@ -98,3 +100,5 @@ void wxAvahiArtProvider::RegisterServiceStockName(const wxString& service, const
 	m_stockmap[wxT("zeroconf-servicetype-")+service] = stock;
 }
 
+
+#endif /* #if USE_GUI == 1 */

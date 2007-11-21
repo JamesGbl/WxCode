@@ -197,8 +197,7 @@ END_EVENT_TABLE()
 bool MyApp::OnInit(){
     client.Create(&pool, AVAHI_CLIENT_NO_FAIL, NULL);
     pool.Start();
-    
-    
+
     MyFrame *frame = new MyFrame(_T("wxAvahi sample"));
     frame->Show(true);
     return true;
@@ -222,14 +221,16 @@ MyFrame::MyFrame(const wxString& title)
 
     wxSizer *sz = new wxBoxSizer(wxHORIZONTAL);
     sz->Add(m_tree, 1, wxEXPAND);
+
+#if USE_GUI == 1
     wxAvahiServiceTypeListCtrl* list1 = new wxAvahiServiceTypeListCtrl(this, wxID_ANY, wxGetApp().GetAvahiClient(), wxT(""), 0, wxDefaultPosition, wxDefaultSize, wxLC_SMALL_ICON);
     wxAvahiServiceListCtrl*     list2 = new wxAvahiServiceListCtrl(this, wxID_ANY, wxGetApp().GetAvahiClient(), wxT(""), 0, wxDefaultPosition, wxDefaultSize, wxLC_ICON); 
-
     list2->AddServiceType(wxT("_ssh._tcp"));
     list2->AddServiceType(wxT("_workstation._tcp"));
-    
     sz->Add(list1, 1, wxEXPAND);
     sz->Add(list2, 1, wxEXPAND);
+#endif
+
     SetSizer(sz);
     
     CreateStatusBar(1);

@@ -24,6 +24,9 @@
 	#include <wx/regex.h>
 #endif
 
+// Compile wxAvahi*ListCtrl only if wanted
+#if USE_GUI == 1
+
 #include "wx/avahi/listctrl.h"
 
 //
@@ -483,4 +486,6 @@ void wxAvahiServiceListCtrl::OnRemService(wxAvahiServiceBrowserEvent& event)
 		m_map.erase(id);
 	}
 }
+
+#endif /* USE_GUI == 1 */
 

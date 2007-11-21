@@ -32,6 +32,11 @@
  ChangeLog
  ---------
  
- 0.1.0
+ 0.2.0
+     - Fix some bugs
+     - Add service type database reader
+     - Add service type icon provider
+     - Add list widgets to easily browse services types and providers
  
+ 0.1.0
      - first version of wxAvahi at wxCode
