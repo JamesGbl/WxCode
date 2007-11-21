@@ -37,6 +37,8 @@ void wxAddressToAvahi(const wxIPaddress* addr, AvahiAddress* avahiAddress){
 }
 
 wxString wxAvahiAddressToString(const AvahiAddress* avahiAddress){
+	if(!avahiAddress)
+		return wxT("");
 	char buffer[AVAHI_ADDRESS_STR_MAX];
 	avahi_address_snprint(buffer, AVAHI_ADDRESS_STR_MAX, avahiAddress);
 	return wxString(buffer, wxConvUTF8);

@@ -75,7 +75,7 @@ public:
     
     virtual wxEvent* Clone() const;
     
-    wxAvahiDomainBrowser* GetDomainBrowser()const;
+    wxAvahiDomainBrowser* GetDomainBrowser()const{return m_browser;}
     AvahiIfIndex    GetInterface()const{return m_interface;}
     AvahiProtocol   GetProtocol()const{return m_protocol;}
     AvahiBrowserEvent GetEvent()const{return m_event;}
@@ -150,7 +150,7 @@ public:
     
     virtual wxEvent* Clone() const;
     
-    wxAvahiServiceTypeBrowser* GetServiceTypeBrowser()const;
+    wxAvahiServiceTypeBrowser* GetServiceTypeBrowser()const{return m_browser;}
     AvahiIfIndex    GetInterface()const{return m_interface;}
     AvahiProtocol   GetProtocol()const{return m_protocol;}
     AvahiBrowserEvent GetEvent()const{return m_event;}
@@ -227,7 +227,7 @@ public:
     
     virtual wxEvent* Clone() const;
     
-    wxAvahiServiceBrowser* GetServiceBrowser()const;
+    wxAvahiServiceBrowser* GetServiceBrowser()const{return m_browser;}
     AvahiIfIndex    GetInterface()const{return m_interface;}
     AvahiProtocol   GetProtocol()const{return m_protocol;}
     AvahiBrowserEvent GetEvent()const{return m_event;}
@@ -307,7 +307,7 @@ public:
     
     virtual wxEvent* Clone() const;
     
-    wxAvahiServiceBrowser* GetServiceBrowser()const;
+    wxAvahiRecordBrowser* GetServiceBrowser()const{return m_browser;}
     AvahiIfIndex    GetInterface()const{return m_interface;}
     AvahiProtocol   GetProtocol()const{return m_protocol;}
     AvahiBrowserEvent GetEvent()const{return m_event;}

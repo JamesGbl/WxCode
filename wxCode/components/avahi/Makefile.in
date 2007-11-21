@@ -53,11 +53,18 @@ WXAVAHI_LIB_OBJECTS =  \
 	wxavahi_lib_resolve.o \
 	wxavahi_lib_browse.o \
 	wxavahi_lib_pool.o \
+	wxavahi_lib_listctrl.o \
+	wxavahi_lib_typedb.o \
 	wxavahi_lib_client.o \
+	wxavahi_lib_art.o \
 	wxavahi_lib_strlst.o \
 	wxavahi_lib_utils.o
 WXAVAHI_LIB_HEADERS =  \
+	include/wx/avahi/art.h \
+	include/wx/avahi/typedb.h \
+	include/wx/avahi/listctrl.h \
 	include/wx/avahi/browse.h \
+	include/wx/avahi/tools.h \
 	include/wx/avahi/avahidef.h \
 	include/wx/avahi/pool.h \
 	include/wx/avahi/utils.h \
@@ -70,11 +77,18 @@ WXAVAHI_DLL_OBJECTS =  \
 	wxavahi_dll_resolve.o \
 	wxavahi_dll_browse.o \
 	wxavahi_dll_pool.o \
+	wxavahi_dll_listctrl.o \
+	wxavahi_dll_typedb.o \
 	wxavahi_dll_client.o \
+	wxavahi_dll_art.o \
 	wxavahi_dll_strlst.o \
 	wxavahi_dll_utils.o
 WXAVAHI_DLL_HEADERS =  \
+	include/wx/avahi/art.h \
+	include/wx/avahi/typedb.h \
+	include/wx/avahi/listctrl.h \
 	include/wx/avahi/browse.h \
+	include/wx/avahi/tools.h \
 	include/wx/avahi/avahidef.h \
 	include/wx/avahi/pool.h \
 	include/wx/avahi/utils.h \
@@ -271,8 +285,17 @@ wxavahi_lib_browse.o: $(srcdir)/src/browse.cpp
 wxavahi_lib_pool.o: $(srcdir)/src/pool.cpp
 	$(CXXC) -c -o $@ $(WXAVAHI_LIB_CXXFLAGS) $(srcdir)/src/pool.cpp
 
+wxavahi_lib_listctrl.o: $(srcdir)/src/listctrl.cpp
+	$(CXXC) -c -o $@ $(WXAVAHI_LIB_CXXFLAGS) $(srcdir)/src/listctrl.cpp
+
+wxavahi_lib_typedb.o: $(srcdir)/src/typedb.cpp
+	$(CXXC) -c -o $@ $(WXAVAHI_LIB_CXXFLAGS) $(srcdir)/src/typedb.cpp
+
 wxavahi_lib_client.o: $(srcdir)/src/client.cpp
 	$(CXXC) -c -o $@ $(WXAVAHI_LIB_CXXFLAGS) $(srcdir)/src/client.cpp
+
+wxavahi_lib_art.o: $(srcdir)/src/art.cpp
+	$(CXXC) -c -o $@ $(WXAVAHI_LIB_CXXFLAGS) $(srcdir)/src/art.cpp
 
 wxavahi_lib_strlst.o: $(srcdir)/src/strlst.cpp
 	$(CXXC) -c -o $@ $(WXAVAHI_LIB_CXXFLAGS) $(srcdir)/src/strlst.cpp
@@ -289,8 +312,17 @@ wxavahi_dll_browse.o: $(srcdir)/src/browse.cpp
 wxavahi_dll_pool.o: $(srcdir)/src/pool.cpp
 	$(CXXC) -c -o $@ $(WXAVAHI_DLL_CXXFLAGS) $(srcdir)/src/pool.cpp
 
+wxavahi_dll_listctrl.o: $(srcdir)/src/listctrl.cpp
+	$(CXXC) -c -o $@ $(WXAVAHI_DLL_CXXFLAGS) $(srcdir)/src/listctrl.cpp
+
+wxavahi_dll_typedb.o: $(srcdir)/src/typedb.cpp
+	$(CXXC) -c -o $@ $(WXAVAHI_DLL_CXXFLAGS) $(srcdir)/src/typedb.cpp
+
 wxavahi_dll_client.o: $(srcdir)/src/client.cpp
 	$(CXXC) -c -o $@ $(WXAVAHI_DLL_CXXFLAGS) $(srcdir)/src/client.cpp
+
+wxavahi_dll_art.o: $(srcdir)/src/art.cpp
+	$(CXXC) -c -o $@ $(WXAVAHI_DLL_CXXFLAGS) $(srcdir)/src/art.cpp
 
 wxavahi_dll_strlst.o: $(srcdir)/src/strlst.cpp
 	$(CXXC) -c -o $@ $(WXAVAHI_DLL_CXXFLAGS) $(srcdir)/src/strlst.cpp

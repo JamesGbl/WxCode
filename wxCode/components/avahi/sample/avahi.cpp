@@ -1,3 +1,25 @@
+/////////////////////////////////////////////////////////////////////////////
+// Name:        avahi.cpp
+// Purpose:     Avahi sample.
+// Author:      Kia Emilien
+// Created:     2006/10/20
+// RCS-ID:      $Id$
+// Copyright:   (c) 2006-2007 Kia Emilien
+// Licence:     wxWidgets licence
+/////////////////////////////////////////////////////////////////////////////
+
+// For compilers that support precompilation, includes "wx.h".
+#include "wx/wxprec.h"
+
+#ifdef __BORLANDC__
+#pragma hdrstop
+#endif
+
+// includes
+#ifndef WX_PRECOMP
+	#include <wx/wx.h>
+#endif
+
 #include <wx/wx.h>
 #include <wx/treectrl.h>
 #include <wx/hashmap.h>
@@ -7,6 +29,9 @@
 
 #include "wx/avahi/resolve.h"
 #include "wx/avahi/browse.h"
+
+#include "wx/avahi/listctrl.h"
+#include "wx/avahi/typedb.h"
 
 class MyApp : public wxApp
 {
@@ -36,6 +61,7 @@ protected:
 };
 
 
+
 class MyTreeItemData : public wxTreeItemData{
 public:
     AvahiIfIndex m_interface;
@@ -59,33 +85,40 @@ public:
 WX_DECLARE_STRING_HASH_MAP(wxTreeItemId, wxTreeItemIdMap);
 class MyServiceBrowser : public wxAvahiServiceBrowser{
 public:
-    MyServiceBrowser(const wxString &type, wxTreeCtrl *tree, wxTreeItemId rootItem):
+    MyServiceBrowser(const wxString &type, wxTreeCtrl *tree, wxTreeItemId serviceItem):
     wxAvahiServiceBrowser(wxGetApp().GetAvahiClient(), 
        AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, type,
        wxT(""), (AvahiLookupFlags) 0),
-    m_tree(tree)
+    m_tree(tree),
+    m_serviceItem(serviceItem)
     {
-        m_parentItem = tree->AppendItem(rootItem, type);
     }
 private:
     wxTreeCtrl *m_tree;
-    wxTreeItemId m_parentItem;
+    wxTreeItemId m_serviceItem;
     wxTreeItemIdMap m_items;
 protected:
     DECLARE_EVENT_TABLE()
     void onNewService(wxAvahiServiceBrowserEvent& event){
-        wxTreeItemId item = m_tree->AppendItem(m_parentItem, event.GetName(), -1, -1, (wxTreeItemData*)new MyTreeItemData(event.GetInterface(), event.GetProtocol(), event.GetName(), event.GetType(), event.GetDomain()));
+    	wxMutexGuiEnter();
+        wxTreeItemId item = m_tree->AppendItem(m_serviceItem, event.GetName(), -1, -1, (wxTreeItemData*)new MyTreeItemData(event.GetInterface(), event.GetProtocol(), event.GetName(), event.GetType(), event.GetDomain()));
+        wxMutexGuiLeave();
         m_items[event.GetName()] = item;
     }
     void onRemService(wxAvahiServiceBrowserEvent& event){
         wxTreeItemId item = m_items[event.GetName()];
         if(item){
+        	wxMutexGuiEnter();
             m_tree->Delete(item);
+            wxMutexGuiLeave();
             m_items.erase(event.GetName());
         }
     }
 };
 
+/**
+ * 
+ */
 class MyServiceResolver : public wxAvahiServiceResolver{
 public:
     MyServiceResolver(wxAvahiClient* client, AvahiIfIndex interface, AvahiProtocol protocol, const wxString &name, const wxString &type, const wxString &domain):
@@ -95,31 +128,39 @@ public:
 protected:
     DECLARE_EVENT_TABLE()
     void onResolve(wxAvahiServiceResolverEvent& event){
+    	wxMutexGuiEnter();
         wxLogStatus(wxT("%s:%d - %s"), event.GetHostName().GetData(), event.GetPort(), event.GetStringList().ListToString().GetData()); 
+    	wxMutexGuiLeave();
         delete this;
     }
     void onFailure(wxAvahiServiceResolverEvent& event){
+    	wxMutexGuiEnter();
         wxMessageBox(wxT("Failed !"));
+    	wxMutexGuiLeave();
     }
 };
 
+/**
+ * Browser for listing all service types.
+ */
 class MyServiceTypeBrowser : public wxAvahiServiceTypeBrowser{
 public:
     wxTreeCtrl *m_tree;
-    wxTreeItemId m_rootItem;
-    MyServiceTypeBrowser(wxTreeCtrl *tree, wxTreeItemId rootItem):
+    MyServiceTypeBrowser(wxTreeCtrl *tree):
     wxAvahiServiceTypeBrowser(wxGetApp().GetAvahiClient(),
         AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC,wxT(""), (AvahiLookupFlags) 0),
-    m_tree(tree),
-    m_rootItem(rootItem)
+    m_tree(tree)
     {
     }
 protected:
     DECLARE_EVENT_TABLE()
     void OnNewServiceType(wxAvahiServiceTypeBrowserEvent& event)
     {
-        new MyServiceBrowser(event.GetType(), m_tree, m_rootItem);
-    }    
+    	wxMutexGuiEnter();    	
+        wxTreeItemId serviceItem = m_tree->AppendItem(m_tree->GetRootItem(), event.GetType());
+    	wxMutexGuiLeave();        
+        new MyServiceBrowser(event.GetType(), m_tree, serviceItem);
+    }
 };
 
 
@@ -154,8 +195,8 @@ END_EVENT_TABLE()
 
 
 bool MyApp::OnInit(){
-    pool.Start();
     client.Create(&pool, AVAHI_CLIENT_NO_FAIL, NULL);
+    pool.Start();
     
     
     MyFrame *frame = new MyFrame(_T("wxAvahi sample"));
@@ -175,13 +216,26 @@ MyFrame::MyFrame(const wxString& title)
     menuBar->Append(menuFile, _T("&File"));    
     SetMenuBar(menuBar);
 
+
     m_tree = new wxTreeCtrl(this, wxID_ANY);
     m_rootItem = m_tree->AddRoot(wxT("Avahi discovery"));
 
+    wxSizer *sz = new wxBoxSizer(wxHORIZONTAL);
+    sz->Add(m_tree, 1, wxEXPAND);
+    wxAvahiServiceTypeListCtrl* list1 = new wxAvahiServiceTypeListCtrl(this, wxID_ANY, wxGetApp().GetAvahiClient(), wxT(""), 0, wxDefaultPosition, wxDefaultSize, wxLC_SMALL_ICON);
+    wxAvahiServiceListCtrl*     list2 = new wxAvahiServiceListCtrl(this, wxID_ANY, wxGetApp().GetAvahiClient(), wxT(""), 0, wxDefaultPosition, wxDefaultSize, wxLC_ICON); 
+
+    list2->AddServiceType(wxT("_ssh._tcp"));
+    list2->AddServiceType(wxT("_workstation._tcp"));
+    
+    sz->Add(list1, 1, wxEXPAND);
+    sz->Add(list2, 1, wxEXPAND);
+    SetSizer(sz);
+    
     CreateStatusBar(1);
     SetStatusText(_T("Welcome to wxWidgets!"));
 
-    new MyServiceTypeBrowser(m_tree, m_rootItem);
+    new MyServiceTypeBrowser(m_tree);
 }
 
 void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))

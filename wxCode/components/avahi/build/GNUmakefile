@@ -75,11 +75,18 @@ WXAVAHI_LIB_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_resolve.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_browse.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_pool.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_listctrl.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_typedb.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_client.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_art.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_strlst.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_utils.o
 WXAVAHI_LIB_HEADERS =  \
+	include/wx/avahi/art.h \
+	include/wx/avahi/typedb.h \
+	include/wx/avahi/listctrl.h \
 	include/wx/avahi/browse.h \
+	include/wx/avahi/tools.h \
 	include/wx/avahi/avahidef.h \
 	include/wx/avahi/pool.h \
 	include/wx/avahi/utils.h \
@@ -93,11 +100,18 @@ WXAVAHI_DLL_OBJECTS =  \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_resolve.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_browse.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_pool.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_listctrl.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_typedb.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_client.o \
+	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_art.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_strlst.o \
 	gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_utils.o
 WXAVAHI_DLL_HEADERS =  \
+	include/wx/avahi/art.h \
+	include/wx/avahi/typedb.h \
+	include/wx/avahi/listctrl.h \
 	include/wx/avahi/browse.h \
+	include/wx/avahi/tools.h \
 	include/wx/avahi/avahidef.h \
 	include/wx/avahi/pool.h \
 	include/wx/avahi/utils.h \
@@ -310,7 +324,16 @@ gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_browse.o: ../src/browse.cpp
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_pool.o: ../src/pool.cpp
 	$(CXX) -c -o $@ $(WXAVAHI_LIB_CXXFLAGS) $(CPPDEPS) $<
 
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_listctrl.o: ../src/listctrl.cpp
+	$(CXX) -c -o $@ $(WXAVAHI_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_typedb.o: ../src/typedb.cpp
+	$(CXX) -c -o $@ $(WXAVAHI_LIB_CXXFLAGS) $(CPPDEPS) $<
+
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_client.o: ../src/client.cpp
+	$(CXX) -c -o $@ $(WXAVAHI_LIB_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_art.o: ../src/art.cpp
 	$(CXX) -c -o $@ $(WXAVAHI_LIB_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_lib_strlst.o: ../src/strlst.cpp
@@ -328,7 +351,16 @@ gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_browse.o: ../src/browse.cpp
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_pool.o: ../src/pool.cpp
 	$(CXX) -c -o $@ $(WXAVAHI_DLL_CXXFLAGS) $(CPPDEPS) $<
 
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_listctrl.o: ../src/listctrl.cpp
+	$(CXX) -c -o $@ $(WXAVAHI_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_typedb.o: ../src/typedb.cpp
+	$(CXX) -c -o $@ $(WXAVAHI_DLL_CXXFLAGS) $(CPPDEPS) $<
+
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_client.o: ../src/client.cpp
+	$(CXX) -c -o $@ $(WXAVAHI_DLL_CXXFLAGS) $(CPPDEPS) $<
+
+gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_art.o: ../src/art.cpp
 	$(CXX) -c -o $@ $(WXAVAHI_DLL_CXXFLAGS) $(CPPDEPS) $<
 
 gcc$(WX_PORT)$(_BUILDDIR_SHARED_SUFFIX)/wxavahi_dll_strlst.o: ../src/strlst.cpp
