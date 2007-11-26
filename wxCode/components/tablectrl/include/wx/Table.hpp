@@ -254,6 +254,9 @@ class  wxTable
             typedef GenericCursor < T >
                               This;
             
+         public    :
+            typedef T         Type;
+            
          protected :
             This &            Assign      ( const Cursor &  _that )
             {
@@ -343,7 +346,7 @@ class  wxTable
             
             
             GenericCursor < T > &
-                              operator =  ( const GenericCursor < T > *  that )
+                              operator =  ( const GenericCursor < T > &  that )
             {
                offset   = that.offset;
                valid    = that.valid;
@@ -623,6 +626,8 @@ class  wxTable
             virtual long            __ScrollPosMax       ()                               { return ( NumberOfKeys ( index ) - 1 ); }
 // TODO: __KeySpan
 //???       virtual long            __KeySpan            ( iRecord *, iRecord *, int )    = 0;
+
+            virtual void            __Synchronize        ();
 
          public    :
             Record            ( wxTable * );  

@@ -1002,6 +1002,12 @@ wxTable :: Record :: Result  wxTable :: Record :: __Delete ()
 }
 
 
+void  wxTable :: Record :: __Synchronize ()
+{
+}
+
+
+
 wxTable :: Record :: Record ( wxTable *  _table )
 {
    table          = _table;
@@ -1273,7 +1279,7 @@ long  wxTable :: Record :: ScrollPosByCursor ( const Cursor *  cursor )
 
 void  wxTable :: Record :: Synchronize ()
 {
-   // TODO: Synchronize
+   __Synchronize  ();
 }
 
 
