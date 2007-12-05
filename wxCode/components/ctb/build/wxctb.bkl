@@ -98,7 +98,6 @@
 	 --exclude=*.dll \
 	 --exclude=docs \
 	 --exclude=*.ilk \
-	 --exclude=*$(VERSION)* \
 	 --exclude=*.log \
 	 --exclude=*.o* \
 	 --exclude=*.pdb \
@@ -107,9 +106,10 @@
 	 --exclude=*.so \
 	 --exclude=SVN* \
 	 --exclude=.svn \
+	 --exclude=*.gz \
 	 --exclude=*~ \
 	 --exclude=*.___\
-	 --exclude=*.o* *)
+	 --exclude=*.o* ./)
     </command>
   </define-tag>
 
