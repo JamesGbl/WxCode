@@ -1,0 +1,865 @@
+<HTML>
+<head><title>wxLatexDC</title></head>
+
+<BODY BGCOLOR=#FFFFFF>
+<FONT FACE="Arial, Lucida, Helvetica">
+
+<H2>wxLatexDC</H2>
+<P>
+wxLatexDC is a device context that will generate a LaTeX2e file from graphics and text that
+were drawn onto it. It makes use of PSTricks (http://tug.org/PSTricks) to create Tex-compatible
+PostScript macros. I've shamelessly copied large parts of the code from the wxSVGFileDC and
+wxPostScriptDC classes. You can create a wxLatexDC in exactly the same way as a wxSVGFileDC.
+At present, only a small part of the DC drawing functions have been implemented. 
+The major advantage of using LaTeX output rather than directly writing PostScript is that 
+typesetting can be done in LaTeX, so that graphics seamlessly integrate into documents. A 
+positive side effect is that the PSTricks macros are more easily readable than plain PostScript.
+The obvious disadvantage is that wxLatexDC can't know which font type and size will be used in
+the final document, so that all the functions that try to retrieve information about text size
+will not work (see comment in <A HREF="index.html#wxlatexdcgetcharheight">GetCharHeight</A>). To still be able to
+position text precisely at the location that you want to have it in your final LaTeX document, you 
+can make use of <A HREF="index.html#wxlatexdcdrawlabellatex">wxLatexDC::DrawLabelLatex</A> which uses the same syntax as 
+wxDC::DrawLabel(). This allows you to set your text alignment (left, right, top, bottom, horizontal 
+and vertical center) relative to the wxRect that is passed as an argument.<P>
+<B><FONT COLOR="#FF0000">Derived from</FONT></B><P>
+wxDC <BR>
+ <BR>
+
+<B><FONT COLOR="#FF0000">Include files</FONT></B><P>
+&lt;wx/dclatex.h&gt;<P>
+<B><FONT COLOR="#FF0000">Library</FONT></B><P>
+None (wxCode) <BR>
+ <BR>
+
+
+<B><FONT COLOR="#FF0000">Members</FONT></B><P>
+<A HREF="#wxlatexdcctor">wxLatexDC::wxLatexDC</A><BR>
+<A HREF="#wxlatexdcdtor">wxLatexDC::~wxLatexDC</A><BR>
+<A HREF="#wxlatexdcbegindrawing">wxLatexDC::BeginDrawing</A><BR>
+<A HREF="#wxlatexdcblit">wxLatexDC::Blit</A><BR>
+<A HREF="#wxlatexdccalcboundingbox">wxLatexDC::CalcBoundingBox</A><BR>
+<A HREF="#wxlatexdcclear">wxLatexDC::Clear</A><BR>
+<A HREF="#wxlatexdccrosshair">wxLatexDC::CrossHair</A><BR>
+<A HREF="#wxlatexdcdestroyclippingregion">wxLatexDC::DestroyClippingRegion</A><BR>
+<A HREF="#wxlatexdcdevicetologicalx">wxLatexDC::DeviceToLogicalX</A><BR>
+<A HREF="#wxlatexdcdevicetologicalxrel">wxLatexDC::DeviceToLogicalXRel</A><BR>
+<A HREF="#wxlatexdcdevicetologicaly">wxLatexDC::DeviceToLogicalY</A><BR>
+<A HREF="#wxlatexdcdevicetologicalyrel">wxLatexDC::DeviceToLogicalYRel</A><BR>
+<A HREF="#wxlatexdcdrawarc">wxLatexDC::DrawArc</A><BR>
+<A HREF="#wxlatexdcdrawbitmap">wxLatexDC::DrawBitmap</A><BR>
+<A HREF="#wxlatexdcdrawcheckmark">wxLatexDC::DrawCheckMark</A><BR>
+<A HREF="#wxlatexdcdrawcircle">wxLatexDC::DrawCircle</A><BR>
+<A HREF="#wxlatexdcdrawellipse">wxLatexDC::DrawEllipse</A><BR>
+<A HREF="#wxlatexdcdrawellipticarc">wxLatexDC::DrawEllipticArc</A><BR>
+<A HREF="#wxlatexdcdrawicon">wxLatexDC::DrawIcon</A><BR>
+<A HREF="#wxlatexdcdrawlabellatex">wxLatexDC::DrawLabelLatex</A><BR>
+<A HREF="#wxlatexdcdrawline">wxLatexDC::DrawLine</A><BR>
+<A HREF="#wxlatexdcdrawlines">wxLatexDC::DrawLines</A><BR>
+<A HREF="#wxlatexdcdrawpolygon">wxLatexDC::DrawPolygon</A><BR>
+<A HREF="#wxlatexdcdrawpoint">wxLatexDC::DrawPoint</A><BR>
+<A HREF="#wxlatexdcdrawrectangle">wxLatexDC::DrawRectangle</A><BR>
+<A HREF="#wxlatexdcdrawrotatedtext">wxLatexDC::DrawRotatedText</A><BR>
+<A HREF="#wxlatexdcdrawroundedrectangle">wxLatexDC::DrawRoundedRectangle</A><BR>
+<A HREF="#wxlatexdcdrawspline">wxLatexDC::DrawSpline</A><BR>
+<A HREF="#wxlatexdcdrawtext">wxLatexDC::DrawText</A><BR>
+<A HREF="#wxlatexdcenddoc">wxLatexDC::EndDoc</A><BR>
+<A HREF="#wxlatexdcenddrawing">wxLatexDC::EndDrawing</A><BR>
+<A HREF="#wxlatexdcendpage">wxLatexDC::EndPage</A><BR>
+<A HREF="#wxlatexdcfloodfill">wxLatexDC::FloodFill</A><BR>
+<A HREF="#wxlatexdcgetbackground">wxLatexDC::GetBackground</A><BR>
+<A HREF="#wxlatexdcgetbackgroundmode">wxLatexDC::GetBackgroundMode</A><BR>
+<A HREF="#wxlatexdcgetbrush">wxLatexDC::GetBrush</A><BR>
+<A HREF="#wxlatexdcgetcharheight">wxLatexDC::GetCharHeight</A><BR>
+<A HREF="#wxlatexdcgetcharwidth">wxLatexDC::GetCharWidth</A><BR>
+<A HREF="#wxlatexdcgetclippingbox">wxLatexDC::GetClippingBox</A><BR>
+<A HREF="#wxlatexdcgetfont">wxLatexDC::GetFont</A><BR>
+<A HREF="#wxlatexdcgetlogicalfunction">wxLatexDC::GetLogicalFunction</A><BR>
+<A HREF="#wxlatexdcgetmapmode">wxLatexDC::GetMapMode</A><BR>
+<A HREF="#wxlatexdcgetpen">wxLatexDC::GetPen</A><BR>
+<A HREF="#wxlatexdcgetpixel">wxLatexDC::GetPixel</A><BR>
+<A HREF="#wxlatexdcgetsize">wxLatexDC::GetSize</A><BR>
+<A HREF="#wxlatexdcgettextbackground">wxLatexDC::GetTextBackground</A><BR>
+<A HREF="#wxlatexdcgettextextent">wxLatexDC::GetTextExtent</A><BR>
+<A HREF="#wxlatexdcgettextforeground">wxLatexDC::GetTextForeground</A><BR>
+<A HREF="#wxlatexdcgetuserscale">wxLatexDC::GetUserScale</A><BR>
+<A HREF="#wxlatexdclogicaltodevicex">wxLatexDC::LogicalToDeviceX</A><BR>
+<A HREF="#wxlatexdclogicaltodevicexrel">wxLatexDC::LogicalToDeviceXRel</A><BR>
+<A HREF="#wxlatexdclogicaltodevicey">wxLatexDC::LogicalToDeviceY</A><BR>
+<A HREF="#wxlatexdclogicaltodeviceyrel">wxLatexDC::LogicalToDeviceYRel</A><BR>
+<A HREF="#wxlatexdcmaxx">wxLatexDC::MaxX</A><BR>
+<A HREF="#wxlatexdcmaxy">wxLatexDC::MaxY</A><BR>
+<A HREF="#wxlatexdcminx">wxLatexDC::MinX</A><BR>
+<A HREF="#wxlatexdcminy">wxLatexDC::MinY</A><BR>
+<A HREF="#wxlatexdcok">wxLatexDC::Ok</A><BR>
+<A HREF="#wxlatexdcresetboundingbox">wxLatexDC::ResetBoundingBox</A><BR>
+<A HREF="#wxlatexdcsetaxisorientation">wxLatexDC::SetAxisOrientation</A><BR>
+<A HREF="#wxlatexdcsetdeviceorigin">wxLatexDC::SetDeviceOrigin</A><BR>
+<A HREF="#wxlatexdcsetbackground">wxLatexDC::SetBackground</A><BR>
+<A HREF="#wxlatexdcsetbackgroundmode">wxLatexDC::SetBackgroundMode</A><BR>
+<A HREF="#wxlatexdcsetclippingregion">wxLatexDC::SetClippingRegion</A><BR>
+<A HREF="#wxlatexdcsetpalette">wxLatexDC::SetPalette</A><BR>
+<A HREF="#wxlatexdcsetbrush">wxLatexDC::SetBrush</A><BR>
+<A HREF="#wxlatexdcsetfont">wxLatexDC::SetFont</A><BR>
+<A HREF="#wxlatexdcsetlogicalfunction">wxLatexDC::SetLogicalFunction</A><BR>
+<A HREF="#wxlatexdcsetmapmode">wxLatexDC::SetMapMode</A><BR>
+<A HREF="#wxlatexdcsetpen">wxLatexDC::SetPen</A><BR>
+<A HREF="#wxlatexdcsettextbackground">wxLatexDC::SetTextBackground</A><BR>
+<A HREF="#wxlatexdcsettextforeground">wxLatexDC::SetTextForeground</A><BR>
+<A HREF="#wxlatexdcsetuserscale">wxLatexDC::SetUserScale</A><BR>
+<A HREF="#wxlatexdcstartdoc">wxLatexDC::StartDoc</A><BR>
+<A HREF="#wxlatexdcstartpage">wxLatexDC::StartPage</A><BR>
+<P>
+
+<HR>
+<A NAME="wxlatexdcctor"></A>
+<H3>wxLatexDC::wxLatexDC</H3>
+<P>
+Constructors:<P>
+<B></B> <B>wxLatexDC</B>(<B>wxString</B><I> filename</I>)<P>
+Creates a file (<I>filename)</I> with default size 340x240 at 72.0 dots per inch (a frequent screen resolution).<P>
+<B></B> <B>wxLatexDC</B>(<B>wxString</B><I> filename</I>, <B>int</B><I> Width</I>,<B>int</B><I> Height</I>)<P>
+Creates a file (<I>filename)</I> with size <I>Width</I> by <I>Height</I> at 72.0 dots per inch <P>
+<B></B> <B>wxLatexDC</B>(<B>wxString</B><I> filename</I>, <B>int</B><I> Width</I>,<B>int</B><I> Height</I>,<B>float</B><I> dpi</I>)<P>
+Creates a file (<I>filename)</I> with size <I>Width</I> by <I>Height</I> at <I>dpi</I> resolution.<P>
+
+<HR>
+<A NAME="wxlatexdcdtor"></A>
+<H3>wxLatexDC::~wxLatexDC</H3>
+<P>
+<B></B> <B>~wxLatexDC</B>()<P>
+Destructor.<P>
+
+<HR>
+<A NAME="wxlatexdcbegindrawing"></A>
+<H3>wxLatexDC::BeginDrawing</H3>
+<P>
+Does nothing<P>
+
+<HR>
+<A NAME="wxlatexdcblit"></A>
+<H3>wxLatexDC::Blit</H3>
+<P>
+<B>bool</B> <B>Blit</B>(<B>wxCoord</B><I> xdest</I>, <B>wxCoord</B><I> ydest</I>, <B>wxCoord</B><I> width</I>, <B>wxCoord</B><I> height</I>,
+  <B><A HREF="latexdc_wxlatexdc.html#wxlatexdc">wxLatexDC</A>* </B></B><I>source</I>, <B>wxCoord</B><I> xsrc</I>, <B>wxCoord</B><I> ysrc</I>, <B>int</B><I> logicalFunc = wxCOPY</I>,
+  <B>bool </B><I>useMask = FALSE</I>, <B>wxCoord</B><I> xsrcMask = -1</I>, <B>wxCoord</B><I> ysrcMask = -1</I>)<P>
+Not implemented yet.<P>
+
+<HR>
+<A NAME="wxlatexdccalcboundingbox"></A>
+<H3>wxLatexDC::CalcBoundingBox</H3>
+<P>
+<B>void</B> <B>CalcBoundingBox</B>(<B>wxCoord </B><I>x</I>, <B>wxCoord </B><I>y</I>)<P>
+Adds the specified point to the bounding box which can be retrieved with 
+<A HREF="index.html#wxlatexdcminx">MinX</A>, <A HREF="index.html#wxlatexdcmaxx">MaxX</A> and 
+<A HREF="index.html#wxlatexdcminy">MinY</A>, <A HREF="index.html#wxlatexdcmaxy">MaxY</A> functions.<P>
+Note that the size and type of the fonts that will be used in the final
+document are not known when a wxLatexDC is created. Therefore, the extent
+of any text in the drawing will not be accounted for when the bounding
+box is calculated.
+ 
+
+<HR>
+<A NAME="wxlatexdcclear"></A>
+<H3>wxLatexDC::Clear</H3>
+<P>
+<B>void</B> <B>Clear</B>()<P>
+Does nothing.<P>
+
+
+<HR>
+<A NAME="wxlatexdccrosshair"></A>
+<H3>wxLatexDC::CrossHair</H3>
+<P>
+<B>void</B> <B>CrossHair</B>(<B>wxCoord</B><I> x</I>, <B>wxCoord</B><I> y</I>)<P>
+Not Implemented<P>
+
+<HR>
+<A NAME="wxlatexdcdestroyclippingregion"></A>
+<H3>wxLatexDC::DestroyClippingRegion</H3>
+<P>
+<B>void</B> <B>DestroyClippingRegion</B>()<P>
+Not Implemented<P>
+
+<HR>
+<A NAME="wxlatexdcdevicetologicalx"></A>
+<H3>wxLatexDC::DeviceToLogicalX</H3>
+<P>
+<B>wxCoord</B> <B>DeviceToLogicalX</B>(<B>wxCoord</B><I> x</I>)<P>
+Convert device X coordinate to logical coordinate, using the current
+mapping mode.<P>
+
+<HR>
+<A NAME="wxlatexdcdevicetologicalxrel"></A>
+<H3>wxLatexDC::DeviceToLogicalXRel</H3>
+<P>
+<B>wxCoord</B> <B>DeviceToLogicalXRel</B>(<B>wxCoord</B><I> x</I>)<P>
+Convert device X coordinate to relative logical coordinate, using the current
+mapping mode but ignoring the x axis orientation.
+Use this function for converting a width, for example.<P>
+
+<HR>
+<A NAME="wxlatexdcdevicetologicaly"></A>
+<H3>wxLatexDC::DeviceToLogicalY</H3>
+<P>
+<B>wxCoord</B> <B>DeviceToLogicalY</B>(<B>wxCoord</B><I> y</I>)<P>
+Converts device Y coordinate to logical coordinate, using the current
+mapping mode.<P>
+
+<HR>
+<A NAME="wxlatexdcdevicetologicalyrel"></A>
+<H3>wxLatexDC::DeviceToLogicalYRel</H3>
+<P>
+<B>wxCoord</B> <B>DeviceToLogicalYRel</B>(<B>wxCoord</B><I> y</I>)<P>
+Convert device Y coordinate to relative logical coordinate, using the current
+mapping mode but ignoring the y axis orientation.
+Use this function for converting a height, for example.<P>
+
+<HR>
+<A NAME="wxlatexdcdrawarc"></A>
+<H3>wxLatexDC::DrawArc</H3>
+<P>
+<B>void</B> <B>DrawArc</B>(<B>wxCoord</B><I> x1</I>, <B>wxCoord</B><I> y1</I>, <B>wxCoord</B><I> x2</I>, <B>wxCoord</B><I> y2</I>, <B>wxCoord</B><I> xc</I>, <B>wxCoord</B><I> yc</I>)<P>
+Draws an arc of a circle, centred on (<I>xc, yc</I>), with starting point (<I>x1, y1</I>)
+and ending at (<I>x2, y2</I>).   The current pen is used for the outline
+and the current brush for filling the shape.<P>
+The arc is drawn in an anticlockwise direction from the start point to the end point.<P>
+
+<HR>
+<A NAME="wxlatexdcdrawbitmap"></A>
+<H3>wxLatexDC::DrawBitmap</H3>
+<P>
+<B>void</B> <B>DrawBitmap</B>(<B>const wxBitmap&amp;</B><I> bitmap</I>, <B>wxCoord</B><I> x</I>, <B>wxCoord</B><I> y</I>, <B>bool</B><I> transparent</I>)<P>
+Not implemented. Would require converting the bitmap into an eps, I believe.
+Feel free to implement that.<P>
+
+<HR>
+<A NAME="wxlatexdcdrawcheckmark"></A>
+<H3>wxLatexDC::DrawCheckMark</H3>
+<P>
+<B>void</B> <B>DrawCheckMark</B>(<B>wxCoord</B><I> x</I>, <B>wxCoord</B><I> y</I>, <B>wxCoord</B><I> width</I>, <B>wxCoord</B><I> height</I>)<P>
+<B>void</B> <B>DrawCheckMark</B>(<B>const wxRect &amp;</B><I>rect</I>)<P>
+Draws a check mark inside the given rectangle.<P>
+
+<HR>
+<A NAME="wxlatexdcdrawcircle"></A>
+<H3>wxLatexDC::DrawCircle</H3>
+<P>
+<B>void</B> <B>DrawCircle</B>(<B>wxCoord</B><I> x</I>, <B>wxCoord</B><I> y</I>, <B>wxCoord</B><I> radius</I>)<P>
+<B>void</B> <B>DrawCircle</B>(<B>const wxPoint&amp;</B><I> pt</I>, <B>wxCoord</B><I> radius</I>)<P>
+Draws a circle with the given centre and radius.<P>
+<B><FONT COLOR="#FF0000">See also</FONT></B><P>
+<A HREF="index.html#wxlatexdcdrawellipse">DrawEllipse</A><P>
+
+<HR>
+<A NAME="wxlatexdcdrawellipse"></A>
+<H3>wxLatexDC::DrawEllipse</H3>
+<P>
+<B>void</B> <B>DrawEllipse</B>(<B>wxCoord</B><I> x</I>, <B>wxCoord</B><I> y</I>, <B>wxCoord</B><I> width</I>, <B>wxCoord</B><I> height</I>)<P>
+<B>void</B> <B>DrawEllipse</B>(<B>const wxPoint&amp;</B><I> pt</I>, <B>const wxSize&amp;</B><I> size</I>)<P>
+<B>void</B> <B>DrawEllipse</B>(<B>const wxRect&amp;</B><I> rect</I>)<P>
+Draws an ellipse contained in the rectangle specified either with the given top
+left corner and the given size or directly. The current pen is used for the
+outline and the current brush for filling the shape.<P>
+<B><FONT COLOR="#FF0000">See also</FONT></B><P>
+<A HREF="index.html#wxlatexdcdrawcircle">DrawCircle</A><P>
+
+<HR>
+<A NAME="wxlatexdcdrawellipticarc"></A>
+<H3>wxLatexDC::DrawEllipticArc</H3>
+<P>
+<B>void</B> <B>DrawEllipticArc</B>(<B>wxCoord</B><I> x</I>, <B>wxCoord</B><I> y</I>, <B>wxCoord</B><I> width</I>, <B>wxCoord</B><I> height</I>,
+ <B>double</B><I> start</I>, <B>double</B><I> end</I>)<P>
+Draws an arc of an ellipse. The current pen is used for drawing the arc and
+the current brush is used for drawing the pie.<P>
+<I>x</I> and <I>y</I> specify the x and y coordinates of the upper-left corner of the rectangle that contains
+the ellipse.<P>
+<I>width</I> and <I>height</I> specify the width and height of the rectangle that contains
+the ellipse.<P>
+<I>start</I> and <I>end</I> specify the start and end of the arc relative to the three-o'clock
+position from the center of the rectangle. Angles are specified
+in degrees (360 is a complete circle). Positive values mean
+counter-clockwise motion. If <I>start</I> is equal to <I>end</I>, a
+complete ellipse will be drawn.<P>
+
+<HR>
+<A NAME="wxlatexdcdrawicon"></A>
+<H3>wxLatexDC::DrawIcon</H3>
+<P>
+<B>void</B> <B>DrawIcon</B>(<B>const wxIcon&amp;</B><I> icon</I>, <B>wxCoord</B><I> x</I>, <B>wxCoord</B><I> y</I>)<P>
+Not implemented yet. See comment in <A HREF="index.html#wxlatexdcdrawbitmap">DrawBitmap</A>.<P>
+
+<HR>
+<A NAME="wxlatexdcdrawlabellatex"></A>
+<H3>wxLatexDC::DrawLabelLatex</H3>
+<P>
+<B>void</B> <B>DrawLabelLatex</B>(<B>const wxString&amp;</B><I> text</I>, <B>const wxRect&amp;</B><I> rect</I>, <B>int</B><I> alignment = <TT>wxALIGN_LEFT | wxALIGN_TOP</TT></I>, <B>int</B><I> indexAccel = -1</I>)<P>
+Draws text with the specified <I>alignment</I> relative to the <I>rect.</I> The rationale for having this function is
+that you can precisely position the <I>rect</I> on your drawing, and then align your text using this rectangle as
+a reference. The alignment will be kept even in your final document, independent of which font you will use in
+LaTeX.
+I couldn't find a way of overriding wxDC::DrawLabel to do exactly that, please notify me if you find a solution.<P>
+<B><FONT COLOR="#FF0000">See also</FONT></B><P>
+<A HREF="index.html#wxlatexdcdrawtext">DrawText</A>, <A HREF="index.html#wxlatexdcdrawrotatedtext">DrawRotatedText</A><P>
+
+<HR>
+<A NAME="wxlatexdcdrawline"></A>
+<H3>wxLatexDC::DrawLine</H3>
+<P>
+<B>void</B> <B>DrawLine</B>(<B>wxCoord</B><I> x1</I>, <B>wxCoord</B><I> y1</I>, <B>wxCoord</B><I> x2</I>, <B>wxCoord</B><I> y2</I>)<P>
+Draws a line from the first point to the second. The current pen is used
+for drawing the line.<P>
+
+<HR>
+<A NAME="wxlatexdcdrawlines"></A>
+<H3>wxLatexDC::DrawLines</H3>
+<P>
+<B>void</B> <B>DrawLines</B>(<B>int</B><I> n</I>, <B>wxPoint</B><I> points[]</I>, <B>wxCoord</B><I> xoffset = 0</I>, <B>wxCoord</B><I> yoffset = 0</I>)<P>
+<B>void</B> <B>DrawLines</B>(<B>wxList *</B><I>points</I>, <B>wxCoord</B><I> xoffset = 0</I>, <B>wxCoord</B><I> yoffset = 0</I>)<P>
+Draws lines using an array of <I>points</I> of size <I>n</I>, or list of
+pointers to points, adding the optional offset coordinate. The current
+pen is used for drawing the lines.  The programmer is responsible for
+deleting the list of points.<P>
+
+<HR>
+<A NAME="wxlatexdcdrawpolygon"></A>
+<H3>wxLatexDC::DrawPolygon</H3>
+<P>
+<B>void</B> <B>DrawPolygon</B>(<B>int</B><I> n</I>, <B>wxPoint</B><I> points[]</I>, <B>wxCoord</B><I> xoffset = 0</I>, <B>wxCoord</B><I> yoffset = 0</I>,<BR>
+
+  <B>int </B><I>fill_style = wxODDEVEN_RULE</I>)<P>
+<B>void</B> <B>DrawPolygon</B>(<B>wxList *</B><I>points</I>, <B>wxCoord</B><I> xoffset = 0</I>, <B>wxCoord</B><I> yoffset = 0</I>,<BR>
+
+  <B>int </B><I>fill_style = wxODDEVEN_RULE</I>)<P>
+Draws a filled polygon using an array of <I>points</I> of size <I>n</I>,
+or list of pointers to points, adding the optional offset coordinate.<P>
+The last argument specifies the fill rule: <B>wxODDEVEN_RULE</B> (the
+default) or <B>wxWINDING_RULE</B>.<P>
+The current pen is used for drawing the outline, and the current brush
+for filling the shape.  Using a transparent brush suppresses filling.
+The programmer is responsible for deleting the list of points.<P>
+Note that wxWindows automatically closes the first and last points.<P>
+Only few filling styles have been implemented yet.<P>
+
+
+<HR>
+<A NAME="wxlatexdcdrawpoint"></A>
+<H3>wxLatexDC::DrawPoint</H3>
+<P>
+<B>void</B> <B>DrawPoint</B>(<B>wxCoord</B><I> x</I>, <B>wxCoord</B><I> y</I>)<P>
+Draws a point using the current pen.<P>
+
+<HR>
+<A NAME="wxlatexdcdrawrectangle"></A>
+<H3>wxLatexDC::DrawRectangle</H3>
+<P>
+<B>void</B> <B>DrawRectangle</B>(<B>wxCoord</B><I> x</I>, <B>wxCoord</B><I> y</I>, <B>wxCoord</B><I> width</I>, <B>wxCoord</B><I> height</I>)<P>
+Draws a rectangle with the given top left corner, and with the given
+size.  The current pen is used for the outline and the current brush
+for filling the shape.<P>
+
+<HR>
+<A NAME="wxlatexdcdrawrotatedtext"></A>
+<H3>wxLatexDC::DrawRotatedText</H3>
+<P>
+<B>void</B> <B>DrawRotatedText</B>(<B>const wxString&amp; </B><I>text</I>, <B>wxCoord</B><I> x</I>, <B>wxCoord</B><I> y</I>, <B>double</B><I> angle</I>)<P>
+Draws the text rotated by <I>angle</I> degrees. See comments in <A HREF="index.html#wxlatexdcdrawlabellatex">DrawLabelLatex</A>, 
+<A HREF="index.html#wxlatexdccalcboundingbox">CalcBoundingBox</A> and <A HREF="index.html#wxlatexdcdrawtext">DrawText</A> if you want
+to have better control of text positioning in your final LaTeX document.<P>
+<B><FONT COLOR="#FF0000">See also</FONT></B><P>
+<A HREF="index.html#wxlatexdcdrawlabellatex">DrawLabelLatex</A>, <A HREF="index.html#wxlatexdcdrawtext">DrawText</A><P>
+
+<HR>
+<A NAME="wxlatexdcdrawroundedrectangle"></A>
+<H3>wxLatexDC::DrawRoundedRectangle</H3>
+<P>
+<B>void</B> <B>DrawRoundedRectangle</B>(<B>wxCoord</B><I> x</I>, <B>wxCoord</B><I> y</I>, <B>wxCoord</B><I> width</I>, <B>wxCoord</B><I> height</I>, <B>double</B><I> radius = 20</I>)<P>
+Draws a rectangle with the given top left corner, and with the given
+size.  The corners are quarter-circles using the given radius. The
+current pen is used for the outline and the current brush for filling
+the shape.<P>
+If <I>radius</I> is positive, the value is assumed to be the
+radius of the rounded corner. If <I>radius</I> is negative,
+the absolute value is assumed to be the <I>proportion</I> of the smallest
+dimension of the rectangle. This means that the corner can be
+a sensible size relative to the size of the rectangle, and also avoids
+the strange effects X produces when the corners are too big for
+the rectangle.<P>
+
+<HR>
+<A NAME="wxlatexdcdrawspline"></A>
+<H3>wxLatexDC::DrawSpline</H3>
+<P>
+<B>void</B> <B>DrawSpline</B>(<B>wxList *</B><I>points</I>)<P>
+This uses the base class implementation to draw a spline, which
+doesn't give nice results at present. <P>
+<B>void</B> <B>DrawSpline</B>(<B>wxCoord</B><I> x1</I>, <B>wxCoord</B><I> y1</I>, <B>wxCoord</B><I> x2</I>, <B>wxCoord</B><I> y2</I>, <B>wxCoord</B><I> x3</I>, <B>wxCoord</B><I> y3</I>)<P>
+This uses the base class implementation to draw a spline, which
+doesn't give nice results at present. <P>
+
+<HR>
+<A NAME="wxlatexdcdrawtext"></A>
+<H3>wxLatexDC::DrawText</H3>
+<P>
+<B>void</B> <B>DrawText</B>(<B>const wxString&amp; </B><I>text</I>, <B>wxCoord</B><I> x</I>, <B>wxCoord</B><I> y</I>)<P>
+Draws a text string at the specified point, using the current text font,
+and the current text foreground and background colours.<P>
+The coordinates refer to the top-left corner of the rectangle bounding
+the string. Note that wxLatexDC has no idea which font you will use in
+your final LaTeX document, so there is no way how to find out the extent
+of the text. See <A HREF="index.html#wxlatexdcdrawlabellatex">DrawLabelLatex</A>
+if you want to have better control of text positioning in your final LaTeX document.<P>
+<B><FONT COLOR="#FF0000">See also</FONT></B><P>
+<A HREF="index.html#wxlatexdcdrawlabellatex">DrawLabelLatex</A>, <A HREF="index.html#wxlatexdcdrawrotatedtext">DrawRotatedText</A><P>
+
+<HR>
+<A NAME="wxlatexdcenddoc"></A>
+<H3>wxLatexDC::EndDoc</H3>
+<P>
+<B>void</B> <B>EndDoc</B>()<P>
+Does nothing<P>
+
+<HR>
+<A NAME="wxlatexdcenddrawing"></A>
+<H3>wxLatexDC::EndDrawing</H3>
+<P>
+<B>void</B> <B>EndDrawing</B>()<P>
+Does nothing<P>
+
+<HR>
+<A NAME="wxlatexdcendpage"></A>
+<H3>wxLatexDC::EndPage</H3>
+<P>
+<B>void</B> <B>EndPage</B>()<P>
+Does nothing<P>
+
+<HR>
+<A NAME="wxlatexdcfloodfill"></A>
+<H3>wxLatexDC::FloodFill</H3>
+<P>
+<B>void</B> <B>FloodFill</B>(<B>wxCoord</B><I> x</I>, <B>wxCoord</B><I> y</I>, <B>const wxColour&amp;</B><I> colour</I>, <B>int</B><I> style=wxFLOOD_SURFACE</I>)<P>
+Not implemented<P>
+
+<HR>
+<A NAME="wxlatexdcgetbackground"></A>
+<H3>wxLatexDC::GetBackground</H3>
+<P>
+<B>wxBrush&amp;</B> <B>GetBackground</B>()<P>
+<B>const wxBrush&amp;</B> <B>GetBackground</B>() <B>const</B><P>
+Not implemented.<P>
+
+<HR>
+<A NAME="wxlatexdcgetbackgroundmode"></A>
+<H3>wxLatexDC::GetBackgroundMode</H3>
+<P>
+<B>int</B> <B>GetBackgroundMode</B>() <B>const</B><P>
+Not implemented.<P>
+<B><FONT COLOR="#FF0000">See also</FONT></B><P>
+<A HREF="index.html#wxlatexdcsetbackgroundmode">SetBackgroundMode</A><P>
+
+<HR>
+<A NAME="wxlatexdcgetbrush"></A>
+<H3>wxLatexDC::GetBrush</H3>
+<P>
+<B>wxBrush&amp;</B> <B>GetBrush</B>()<P>
+<B>const wxBrush&amp;</B> <B>GetBrush</B>() <B>const</B><P>
+Gets the current brush (see <A HREF="index.html#wxlatexdcsetbrush">wxLatexDC::SetBrush</A>).<P>
+
+<HR>
+<A NAME="wxlatexdcgetcharheight"></A>
+<H3>wxLatexDC::GetCharHeight</H3>
+<P>
+<B>wxCoord</B> <B>GetCharHeight</B>()<P>
+Not implemented:
+Since wxLatexDC has no idea which font you will use in
+your final LaTeX document, there is no way to find out anything
+about character size and font style.<P>
+
+<HR>
+<A NAME="wxlatexdcgetcharwidth"></A>
+<H3>wxLatexDC::GetCharWidth</H3>
+<P>
+<B>wxCoord</B> <B>GetCharWidth</B>()<P>
+Not implemented: See <A HREF="index.html#wxlatexdcgetcharheight">GetCharHeight</A> for reasons.<P>
+
+<HR>
+<A NAME="wxlatexdcgetclippingbox"></A>
+<H3>wxLatexDC::GetClippingBox</H3>
+<P>
+<B>void</B> <B>GetClippingBox</B>(<B>wxCoord</B><I> *x</I>, <B>wxCoord</B><I> *y</I>, <B>wxCoord</B><I> *width</I>, <B>wxCoord</B><I> *height</I>)<P>
+Not implemented<P>
+
+<HR>
+<A NAME="wxlatexdcgetfont"></A>
+<H3>wxLatexDC::GetFont</H3>
+<P>
+<B>wxFont&amp;</B> <B>GetFont</B>()<P>
+<B>const wxFont&amp;</B> <B>GetFont</B>() <B>const</B><P>
+Not implemented: See <A HREF="index.html#wxlatexdcgetcharheight">GetCharHeight</A> for reasons.<P>
+
+<HR>
+<A NAME="wxlatexdcgetlogicalfunction"></A>
+<H3>wxLatexDC::GetLogicalFunction</H3>
+<P>
+<B>int</B> <B>GetLogicalFunction</B>()<P>
+Gets the current logical function (see <A HREF="index.html#wxlatexdcsetlogicalfunction">wxLatexDC::SetLogicalFunction</A>).<P>
+
+<HR>
+<A NAME="wxlatexdcgetmapmode"></A>
+<H3>wxLatexDC::GetMapMode</H3>
+<P>
+<B>int</B> <B>GetMapMode</B>()<P>
+Gets the <I>mapping mode</I> for the device context (see <A HREF="index.html#wxlatexdcsetmapmode">wxLatexDC::SetMapMode</A>).<P>
+
+<HR>
+<A NAME="wxlatexdcgetpen"></A>
+<H3>wxLatexDC::GetPen</H3>
+<P>
+<B>wxPen&amp;</B> <B>GetPen</B>()<P>
+<B>const wxPen&amp;</B> <B>GetPen</B>() <B>const</B><P>
+Gets the current pen (see <A HREF="index.html#wxlatexdcsetpen">wxLatexDC::SetPen</A>).<P>
+
+<HR>
+<A NAME="wxlatexdcgetpixel"></A>
+<H3>wxLatexDC::GetPixel</H3>
+<P>
+<B>bool</B> <B>GetPixel</B>(<B>wxCoord</B><I> x</I>, <B>wxCoord</B><I> y</I>, <B>wxColour *</B><I>colour</I>)<P>
+Not implemented<P>
+
+<HR>
+<A NAME="wxlatexdcgetsize"></A>
+<H3>wxLatexDC::GetSize</H3>
+<P>
+<B>void</B> <B>GetSize</B>(<B>wxCoord *</B><I>width</I>, <B>wxCoord *</B><I>height</I>)<P>
+
+For a Windows printer device context, this gets the horizontal and vertical
+resolution. <P>
+
+<HR>
+<A NAME="wxlatexdcgettextbackground"></A>
+<H3>wxLatexDC::GetTextBackground</H3>
+<P>
+<B>wxColour&amp;</B> <B>GetTextBackground</B>()<P>
+<B>const wxColour&amp;</B> <B>GetTextBackground</B>() <B>const</B><P>
+Gets the current text background colour (see <A HREF="index.html#wxlatexdcsettextbackground">wxLatexDC::SetTextBackground</A>).<P>
+
+<HR>
+<A NAME="wxlatexdcgettextextent"></A>
+<H3>wxLatexDC::GetTextExtent</H3>
+<P>
+<B>void</B> <B>GetTextExtent</B>(<B>const wxString&amp; </B><I>string</I>, <B>wxCoord *</B><I>w</I>, <B>wxCoord *</B><I>h</I>,<BR>
+
+  <B>wxCoord *</B><I>descent = NULL</I>, <B>wxCoord *</B><I>externalLeading = NULL</I>, <B>wxFont *</B><I>font = NULL</I>)<P>
+Not implemented: See <A HREF="index.html#wxlatexdcgetcharheight">GetCharHeight</A> for reasons.<P>
+See also <A HREF="index.html#wxlatexdcsetfont">wxLatexDC::SetFont</A>.
+
+<HR>
+<A NAME="wxlatexdcgettextforeground"></A>
+<H3>wxLatexDC::GetTextForeground</H3>
+<P>
+<B>wxColour&amp;</B> <B>GetTextForeground</B>()<P>
+<B>const wxColour&amp;</B> <B>GetTextForeground</B>() <B>const</B><P>
+Gets the current text foreground colour (see <A HREF="index.html#wxlatexdcsettextforeground">wxLatexDC::SetTextForeground</A>).<P>
+
+
+<HR>
+<A NAME="wxlatexdcgetuserscale"></A>
+<H3>wxLatexDC::GetUserScale</H3>
+<P>
+<B>void</B> <B>GetUserScale</B>(<B>double</B><I> *x</I>, <B>double</B><I> *y</I>)<P>
+Gets the current user scale factor (set by <A HREF="index.html#wxlatexdcsetuserscale">SetUserScale</A>).<P>
+
+<HR>
+<A NAME="wxlatexdclogicaltodevicex"></A>
+<H3>wxLatexDC::LogicalToDeviceX</H3>
+<P>
+<B>wxCoord</B> <B>LogicalToDeviceX</B>(<B>wxCoord</B><I> x</I>)<P>
+Converts logical X coordinate to device coordinate, using the current
+mapping mode.<P>
+
+<HR>
+<A NAME="wxlatexdclogicaltodevicexrel"></A>
+<H3>wxLatexDC::LogicalToDeviceXRel</H3>
+<P>
+<B>wxCoord</B> <B>LogicalToDeviceXRel</B>(<B>wxCoord</B><I> x</I>)<P>
+Converts logical X coordinate to relative device coordinate, using the current
+mapping mode but ignoring the x axis orientation.
+Use this for converting a width, for example.<P>
+
+<HR>
+<A NAME="wxlatexdclogicaltodevicey"></A>
+<H3>wxLatexDC::LogicalToDeviceY</H3>
+<P>
+<B>wxCoord</B> <B>LogicalToDeviceY</B>(<B>wxCoord</B><I> y</I>)<P>
+Converts logical Y coordinate to device coordinate, using the current
+mapping mode.<P>
+
+<HR>
+<A NAME="wxlatexdclogicaltodeviceyrel"></A>
+<H3>wxLatexDC::LogicalToDeviceYRel</H3>
+<P>
+<B>wxCoord</B> <B>LogicalToDeviceYRel</B>(<B>wxCoord</B><I> y</I>)<P>
+Converts logical Y coordinate to relative device coordinate, using the current
+mapping mode but ignoring the y axis orientation.
+Use this for converting a height, for example.<P>
+
+<HR>
+<A NAME="wxlatexdcmaxx"></A>
+<H3>wxLatexDC::MaxX</H3>
+<P>
+<B>wxCoord</B> <B>MaxX</B>()<P>
+Gets the maximum horizontal extent used in drawing commands so far.<P>
+
+<HR>
+<A NAME="wxlatexdcmaxy"></A>
+<H3>wxLatexDC::MaxY</H3>
+<P>
+<B>wxCoord</B> <B>MaxY</B>()<P>
+Gets the maximum vertical extent used in drawing commands so far.<P>
+
+<HR>
+<A NAME="wxlatexdcminx"></A>
+<H3>wxLatexDC::MinX</H3>
+<P>
+<B>wxCoord</B> <B>MinX</B>()<P>
+Gets the minimum horizontal extent used in drawing commands so far.<P>
+
+<HR>
+<A NAME="wxlatexdcminy"></A>
+<H3>wxLatexDC::MinY</H3>
+<P>
+<B>wxCoord</B> <B>MinY</B>()<P>
+Gets the minimum vertical extent used in drawing commands so far.<P>
+
+<HR>
+<A NAME="wxlatexdcok"></A>
+<H3>wxLatexDC::Ok</H3>
+<P>
+<B>bool</B> <B>Ok</B>()<P>
+Returns true if the DC is ok to use; False values arise from being unable to 
+write the file<P>
+
+<HR>
+<A NAME="wxlatexdcresetboundingbox"></A>
+<H3>wxLatexDC::ResetBoundingBox</H3>
+<P>
+<B>void</B> <B>ResetBoundingBox</B>()<P>
+Resets the bounding box: after a call to this function, the bounding box
+doesn't contain anything.<P>
+<B><FONT COLOR="#FF0000">See also</FONT></B><P>
+<A HREF="index.html#wxlatexdccalcboundingbox">CalcBoundingBox</A><P>
+
+<HR>
+<A NAME="wxlatexdcsetaxisorientation"></A>
+<H3>wxLatexDC::SetAxisOrientation</H3>
+<P>
+<B>void</B> <B>SetAxisOrientation</B>(<B>bool</B><I> xLeftRight</I>,
+                                <B>bool</B><I> yBottomUp</I>)<P>
+Sets the x and y axis orientation (i.e., the direction from lowest to
+highest values on the axis). The default orientation is the natural
+orientation, e.g. x axis from left to right and y axis from bottom up.<P>
+<B><FONT COLOR="#FF0000">Parameters</FONT></B><P>
+<I>xLeftRight</I><UL><UL>
+True to set the x axis orientation to the natural
+left to right orientation, false to invert it.</UL></UL>
+<P>
+<I>yBottomUp</I><UL><UL>
+True to set the y axis orientation to the natural
+bottom up orientation, false to invert it.</UL></UL>
+<P>
+
+<HR>
+<A NAME="wxlatexdcsetdeviceorigin"></A>
+<H3>wxLatexDC::SetDeviceOrigin</H3>
+<P>
+<B>void</B> <B>SetDeviceOrigin</B>(<B>wxCoord</B><I> x</I>, <B>wxCoord</B><I> y</I>)<P>
+Sets the device origin (i.e., the origin in pixels after scaling has been
+applied).<P>
+This function may be useful in Windows printing
+operations for placing a graphic on a page.<P>
+
+<HR>
+<A NAME="wxlatexdcsetbackground"></A>
+<H3>wxLatexDC::SetBackground</H3>
+<P>
+<B>void</B> <B>SetBackground</B>(<B>const wxBrush&amp; </B><I>brush</I>)<P>
+Sets the current background brush for the DC.<P>
+
+<HR>
+<A NAME="wxlatexdcsetbackgroundmode"></A>
+<H3>wxLatexDC::SetBackgroundMode</H3>
+<P>
+<B>void</B> <B>SetBackgroundMode</B>(<B>int</B><I> mode</I>)<P>
+<I>mode</I> may be one of wxSOLID and wxTRANSPARENT. This setting determines
+whether text will be drawn with a background colour or not.<P>
+
+<HR>
+<A NAME="wxlatexdcsetclippingregion"></A>
+<H3>wxLatexDC::SetClippingRegion</H3>
+<P>
+<B>void</B> <B>SetClippingRegion</B>(<B>wxCoord</B><I> x</I>, <B>wxCoord</B><I> y</I>, <B>wxCoord</B><I> width</I>, <B>wxCoord</B><I> height</I>)<P>
+<B>void</B> <B>SetClippingRegion</B>(<B>const wxPoint&amp; </B><I>pt</I>, <B>const wxSize&amp; </B><I>sz</I>)<P>
+<B>void</B> <B>SetClippingRegion</B>(<B>const wxRect&amp;</B><I> rect</I>)<P>
+<B>void</B> <B>SetClippingRegion</B>(<B>const wxRegion&amp;</B><I> region</I>)<P>
+Not implemented <P>
+
+
+<HR>
+<A NAME="wxlatexdcsetpalette"></A>
+<H3>wxLatexDC::SetPalette</H3>
+<P>
+<B>void</B> <B>SetPalette</B>(<B>const wxPalette&amp; </B><I>palette</I>)<P>
+Not implemented <P>
+
+<HR>
+<A NAME="wxlatexdcsetbrush"></A>
+<H3>wxLatexDC::SetBrush</H3>
+<P>
+<B>void</B> <B>SetBrush</B>(<B>const wxBrush&amp; </B><I>brush</I>)<P>
+Sets the current brush for the DC.<P>
+If the argument is wxNullBrush, the current brush is selected out of the device
+context, and the original brush restored, allowing the current brush to
+be destroyed safely.<P>
+
+<HR>
+<A NAME="wxlatexdcsetfont"></A>
+<H3>wxLatexDC::SetFont</H3>
+<P>
+<B>void</B> <B>SetFont</B>(<B>const wxFont&amp; </B><I>font</I>)<P>
+Not implemented: See <A HREF="index.html#wxlatexdcgetcharheight">GetCharHeight</A> for reasons.<P>
+
+<HR>
+<A NAME="wxlatexdcsetlogicalfunction"></A>
+<H3>wxLatexDC::SetLogicalFunction</H3>
+<P>
+<B>void</B> <B>SetLogicalFunction</B>(<B>int</B><I> function</I>)<P>
+
+Only wxCOPY is avalaible; trying to set one of the other values will fail<P>
+
+<HR>
+<A NAME="wxlatexdcsetmapmode"></A>
+<H3>wxLatexDC::SetMapMode</H3>
+<P>
+<B>void</B> <B>SetMapMode</B>(<B>int</B><I> int</I>)<P>
+The <I>mapping mode</I> of the device context defines the unit of
+measurement used to convert logical units to device units. Note that
+in X, text drawing isn't handled consistently with the mapping mode; a
+font is always specified in point size. However, setting the <I>
+user scale</I> (see <A HREF="index.html#wxlatexdcsetuserscale">wxLatexDC::SetUserScale</A>) scales the text appropriately. In
+Windows, scaleable TrueType fonts are always used; in X, results depend
+on availability of fonts, but usually a reasonable match is found.<P>
+Note that the coordinate origin should ideally be selectable, but for
+now is always at the top left of the screen/printer.<P>
+Drawing to a Windows printer device context under UNIX
+uses the current mapping mode, but mapping mode is currently ignored for
+PostScript output.<P>
+The mapping mode can be one of the following:<P>
+
+<TABLE>
+
+
+<TR><TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxMM_TWIPS
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Each logical unit is 1/20 of a point, or 1/1440 of
+  an inch.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxMM_POINTS
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Each logical unit is a point, or 1/72 of an inch.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxMM_METRIC
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Each logical unit is 1 mm.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxMM_LOMETRIC
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Each logical unit is 1/10 of a mm.
+</FONT></TD></TR>
+
+
+<TR><TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+wxMM_TEXT
+</FONT></TD>
+
+<TD VALIGN=TOP>
+<FONT FACE="Arial, Lucida, Helvetica">
+Each logical unit is 1 pixel.
+</FONT></TD></TR>
+
+
+</TABLE>
+<P>
+
+<HR>
+<A NAME="wxlatexdcsetpen"></A>
+<H3>wxLatexDC::SetPen</H3>
+<P>
+<B>void</B> <B>SetPen</B>(<B>const wxPen&amp; </B><I>pen</I>)<P>
+Sets the current pen for the DC.<P>
+If the argument is wxNullPen, the current pen is selected out of the device
+context, and the original pen restored.<P>
+
+<HR>
+<A NAME="wxlatexdcsettextbackground"></A>
+<H3>wxLatexDC::SetTextBackground</H3>
+<P>
+<B>void</B> <B>SetTextBackground</B>(<B>const wxColour&amp; </B><I>colour</I>)<P>
+Sets the current text background colour for the DC.<P>
+
+<HR>
+<A NAME="wxlatexdcsettextforeground"></A>
+<H3>wxLatexDC::SetTextForeground</H3>
+<P>
+<B>void</B> <B>SetTextForeground</B>(<B>const wxColour&amp; </B><I>colour</I>)<P>
+Sets the current text foreground colour for the DC.<P>
+
+<HR>
+<A NAME="wxlatexdcsetuserscale"></A>
+<H3>wxLatexDC::SetUserScale</H3>
+<P>
+<B>void</B> <B>SetUserScale</B>(<B>double</B><I> xScale</I>, <B>double</B><I> yScale</I>)<P>
+Sets the user scaling factor, useful for applications which require
+`zooming'.<P>
+
+<HR>
+<A NAME="wxlatexdcstartdoc"></A>
+<H3>wxLatexDC::StartDoc</H3>
+<P>
+<B>bool</B> <B>StartDoc</B>(<B>const wxString&amp; </B><I>message</I>)<P>
+Does nothing<P>
+
+<HR>
+<A NAME="wxlatexdcstartpage"></A>
+<H3>wxLatexDC::StartPage</H3>
+<P>
+<B>bool</B> <B>StartPage</B>()<P>
+Does nothing
+
+
+</FONT></BODY></HTML>

@@ -1,0 +1,749 @@
+% CSH \section{\class{wxLatexDC}}\label{wxlatexdc}
+
+\section{wxLatexDC}
+
+wxLatexDC is a device context that will generate a LaTeX2e file from graphics and text that
+were drawn onto it. It makes use of PSTricks (http://tug.org/PSTricks) to create Tex-compatible
+PostScript macros. I've shamelessly copied large parts of the code from the wxSVGFileDC and
+wxPostScriptDC classes. You can create a wxLatexDC in exactly the same way as a wxSVGFileDC.
+At present, only a small part of the DC drawing functions have been implemented. 
+The major advantage of using LaTeX output rather than directly writing PostScript is that 
+typesetting can be done in LaTeX, so that graphics seamlessly integrate into documents. A 
+positive side effect is that the PSTricks macros are more easily readable than plain PostScript.
+The obvious disadvantage is that wxLatexDC can't know which font type and size will be used in
+the final document, so that all the functions that try to retrieve information about text size
+will not work (see comment in \helpref{GetCharHeight}{wxlatexdcgetcharheight}). To still be able to
+position text precisely at the location that you want to have it in your final LaTeX document, you 
+can make use of \helpref{wxLatexDC::DrawLabelLatex}{wxlatexdcdrawlabellatex} which uses the same syntax as 
+wxDC::DrawLabel(). This allows you to set your text alignment (left, right, top, bottom, horizontal 
+and vertical center) relative to the wxRect that is passed as an argument.
+
+\wxheading{Derived from}
+
+wxDC \\ \\
+% CSH \helpref{wxDC}{wxlatexdc}
+
+\wxheading{Include files}
+
+<wx/dclatex.h>
+
+\wxheading{Library}
+
+None (wxCode) \\ \\
+% CSH \helpref{wxCore}{librarieslist}
+
+% CSH \wxheading{See also}
+
+%\helpref{Overview}{dcoverview}
+
+
+\latexignore{\rtfignore{\wxheading{Members}}}
+
+\membersection{wxLatexDC::wxLatexDC}\label{wxlatexdcctor}
+
+Constructors:
+
+\func{}{wxLatexDC}{\param{wxString}{ filename}}
+
+Creates a file (\it filename) with default size 340x240 at 72.0 dots per inch (a frequent screen resolution).
+
+\func{}{wxLatexDC}{\param{wxString}{ filename}, \param{int}{ Width},\param{int}{ Height}}
+
+Creates a file (\it filename) with size {\it Width} by {\it Height} at 72.0 dots per inch 
+
+\func{}{wxLatexDC}{\param{wxString}{ filename}, \param{int}{ Width},\param{int}{ Height},\param{float}{ dpi}}
+
+Creates a file (\it filename) with size {\it Width} by {\it Height} at {\it dpi} resolution.
+
+\membersection{wxLatexDC::\destruct{wxLatexDC}}\label{wxlatexdcdtor}
+
+\func{}{\destruct{wxLatexDC}}{\void}
+
+Destructor.
+
+\membersection{wxLatexDC::BeginDrawing}\label{wxlatexdcbegindrawing}
+
+Does nothing
+
+\membersection{wxLatexDC::Blit}\label{wxlatexdcblit}
+
+\func{bool}{Blit}{\param{wxCoord}{ xdest}, \param{wxCoord}{ ydest}, \param{wxCoord}{ width}, \param{wxCoord}{ height},
+  \param{wxLatexDC* }{source}, \param{wxCoord}{ xsrc}, \param{wxCoord}{ ysrc}, \param{int}{ logicalFunc = wxCOPY},
+  \param{bool }{useMask = FALSE}, \param{wxCoord}{ xsrcMask = -1}, \param{wxCoord}{ ysrcMask = -1}}
+
+% As wxDC: Copy from a source DC to this DC, specifying the destination
+% coordinates, size of area to copy, source DC, source coordinates,
+% logical function, whether to use a bitmap mask, and mask source position.
+
+Not implemented yet.
+
+\membersection{wxLatexDC::CalcBoundingBox}\label{wxlatexdccalcboundingbox}
+
+\func{void}{CalcBoundingBox}{\param{wxCoord }{x}, \param{wxCoord }{y}}
+
+Adds the specified point to the bounding box which can be retrieved with 
+\helpref{MinX}{wxlatexdcminx}, \helpref{MaxX}{wxlatexdcmaxx} and 
+\helpref{MinY}{wxlatexdcminy}, \helpref{MaxY}{wxlatexdcmaxy} functions.
+
+Note that the size and type of the fonts that will be used in the final
+document are not known when a wxLatexDC is created. Therefore, the extent
+of any text in the drawing will not be accounted for when the bounding
+box is calculated.
+ 
+\membersection{wxLatexDC::Clear}\label{wxlatexdcclear}
+
+\func{void}{Clear}{\void}
+
+Does nothing.
+
+
+\membersection{wxLatexDC::CrossHair}\label{wxlatexdccrosshair}
+
+\func{void}{CrossHair}{\param{wxCoord}{ x}, \param{wxCoord}{ y}}
+
+Not Implemented
+
+\membersection{wxLatexDC::DestroyClippingRegion}\label{wxlatexdcdestroyclippingregion}
+
+\func{void}{DestroyClippingRegion}{\void}
+
+Not Implemented
+
+\membersection{wxLatexDC::DeviceToLogicalX}\label{wxlatexdcdevicetologicalx}
+
+\func{wxCoord}{DeviceToLogicalX}{\param{wxCoord}{ x}}
+
+Convert device X coordinate to logical coordinate, using the current
+mapping mode.
+
+\membersection{wxLatexDC::DeviceToLogicalXRel}\label{wxlatexdcdevicetologicalxrel}
+
+\func{wxCoord}{DeviceToLogicalXRel}{\param{wxCoord}{ x}}
+
+Convert device X coordinate to relative logical coordinate, using the current
+mapping mode but ignoring the x axis orientation.
+Use this function for converting a width, for example.
+
+\membersection{wxLatexDC::DeviceToLogicalY}\label{wxlatexdcdevicetologicaly}
+
+\func{wxCoord}{DeviceToLogicalY}{\param{wxCoord}{ y}}
+
+Converts device Y coordinate to logical coordinate, using the current
+mapping mode.
+
+\membersection{wxLatexDC::DeviceToLogicalYRel}\label{wxlatexdcdevicetologicalyrel}
+
+\func{wxCoord}{DeviceToLogicalYRel}{\param{wxCoord}{ y}}
+
+Convert device Y coordinate to relative logical coordinate, using the current
+mapping mode but ignoring the y axis orientation.
+Use this function for converting a height, for example.
+
+\membersection{wxLatexDC::DrawArc}\label{wxlatexdcdrawarc}
+
+\func{void}{DrawArc}{\param{wxCoord}{ x1}, \param{wxCoord}{ y1}, \param{wxCoord}{ x2}, \param{wxCoord}{ y2}, \param{wxCoord}{ xc}, \param{wxCoord}{ yc}}
+
+Draws an arc of a circle, centred on ({\it xc, yc}), with starting point ({\it x1, y1})
+and ending at ({\it x2, y2}).   The current pen is used for the outline
+and the current brush for filling the shape.
+
+The arc is drawn in an anticlockwise direction from the start point to the end point.
+
+\membersection{wxLatexDC::DrawBitmap}\label{wxlatexdcdrawbitmap}
+
+\func{void}{DrawBitmap}{\param{const wxBitmap\&}{ bitmap}, \param{wxCoord}{ x}, \param{wxCoord}{ y}, \param{bool}{ transparent}}
+
+%Draw a bitmap on the device context at the specified point. If {\it transparent} is true and the bitmap has
+%a transparency mask, the bitmap will be drawn transparently.
+
+%When drawing a mono-bitmap, the current text foreground colour will be used to draw the foreground
+%of the bitmap (all bits set to 1), and the current text background colour to draw the background
+%(all bits set to 0). See also \helpref{SetTextForeground}{wxlatexdcsettextforeground}, 
+
+% \helpref{SetTextBackground}{wxlatexdcsettextbackground} and \helpref{wxMemoryDC}{wxmemorydc}.
+
+Not implemented. Would require converting the bitmap into an eps, I believe.
+Feel free to implement that.
+
+\membersection{wxLatexDC::DrawCheckMark}\label{wxlatexdcdrawcheckmark}
+
+\func{void}{DrawCheckMark}{\param{wxCoord}{ x}, \param{wxCoord}{ y}, \param{wxCoord}{ width}, \param{wxCoord}{ height}}
+
+\func{void}{DrawCheckMark}{\param{const wxRect \&}{rect}}
+
+Draws a check mark inside the given rectangle.
+
+\membersection{wxLatexDC::DrawCircle}\label{wxlatexdcdrawcircle}
+
+\func{void}{DrawCircle}{\param{wxCoord}{ x}, \param{wxCoord}{ y}, \param{wxCoord}{ radius}}
+
+\func{void}{DrawCircle}{\param{const wxPoint\&}{ pt}, \param{wxCoord}{ radius}}
+
+Draws a circle with the given centre and radius.
+
+\wxheading{See also}
+
+\helpref{DrawEllipse}{wxlatexdcdrawellipse}
+
+\membersection{wxLatexDC::DrawEllipse}\label{wxlatexdcdrawellipse}
+
+\func{void}{DrawEllipse}{\param{wxCoord}{ x}, \param{wxCoord}{ y}, \param{wxCoord}{ width}, \param{wxCoord}{ height}}
+
+\func{void}{DrawEllipse}{\param{const wxPoint\&}{ pt}, \param{const wxSize\&}{ size}}
+
+\func{void}{DrawEllipse}{\param{const wxRect\&}{ rect}}
+
+Draws an ellipse contained in the rectangle specified either with the given top
+left corner and the given size or directly. The current pen is used for the
+outline and the current brush for filling the shape.
+
+\wxheading{See also}
+
+\helpref{DrawCircle}{wxlatexdcdrawcircle}
+
+\membersection{wxLatexDC::DrawEllipticArc}\label{wxlatexdcdrawellipticarc}
+
+\func{void}{DrawEllipticArc}{\param{wxCoord}{ x}, \param{wxCoord}{ y}, \param{wxCoord}{ width}, \param{wxCoord}{ height},
+ \param{double}{ start}, \param{double}{ end}}
+
+Draws an arc of an ellipse. The current pen is used for drawing the arc and
+the current brush is used for drawing the pie.
+
+{\it x} and {\it y} specify the x and y coordinates of the upper-left corner of the rectangle that contains
+the ellipse.
+
+{\it width} and {\it height} specify the width and height of the rectangle that contains
+the ellipse.
+
+{\it start} and {\it end} specify the start and end of the arc relative to the three-o'clock
+position from the center of the rectangle. Angles are specified
+in degrees (360 is a complete circle). Positive values mean
+counter-clockwise motion. If {\it start} is equal to {\it end}, a
+complete ellipse will be drawn.
+
+\membersection{wxLatexDC::DrawIcon}\label{wxlatexdcdrawicon}
+
+\func{void}{DrawIcon}{\param{const wxIcon\&}{ icon}, \param{wxCoord}{ x}, \param{wxCoord}{ y}}
+
+% Draw an icon on the display (does nothing if the device context is PostScript).
+% This can be the simplest way of drawing bitmaps on a window.
+Not implemented yet. See comment in \helpref{DrawBitmap}{wxlatexdcdrawbitmap}.
+
+\membersection{wxLatexDC::DrawLabelLatex}\label{wxlatexdcdrawlabellatex}
+
+\func{void}{DrawLabelLatex}{\param{const wxString\&}{ text}, \param{const wxRect\&}{ rect}, \param{int}{ alignment = \texttt{wxALIGN\_LEFT \| wxALIGN\_TOP}}, \param{int}{ indexAccel = -1}}
+
+Draws text with the specified \it alignment relative to the \it rect. The rationale for having this function is
+that you can precisely position the \it rect on your drawing, and then align your text using this rectangle as
+a reference. The alignment will be kept even in your final document, independent of which font you will use in
+LaTeX.
+I couldn't find a way of overriding wxDC::DrawLabel to do exactly that, please notify me if you find a solution.
+
+\wxheading{See also}
+
+\helpref{DrawText}{wxlatexdcdrawtext}, \helpref{DrawRotatedText}{wxlatexdcdrawrotatedtext}
+
+\membersection{wxLatexDC::DrawLine}\label{wxlatexdcdrawline}
+
+\func{void}{DrawLine}{\param{wxCoord}{ x1}, \param{wxCoord}{ y1}, \param{wxCoord}{ x2}, \param{wxCoord}{ y2}}
+
+Draws a line from the first point to the second. The current pen is used
+for drawing the line.
+
+\membersection{wxLatexDC::DrawLines}\label{wxlatexdcdrawlines}
+
+\func{void}{DrawLines}{\param{int}{ n}, \param{wxPoint}{ points[]}, \param{wxCoord}{ xoffset = 0}, \param{wxCoord}{ yoffset = 0}}
+
+\func{void}{DrawLines}{\param{wxList *}{points}, \param{wxCoord}{ xoffset = 0}, \param{wxCoord}{ yoffset = 0}}
+
+Draws lines using an array of {\it points} of size {\it n}, or list of
+pointers to points, adding the optional offset coordinate. The current
+pen is used for drawing the lines.  The programmer is responsible for
+deleting the list of points.
+
+\membersection{wxLatexDC::DrawPolygon}\label{wxlatexdcdrawpolygon}
+
+\func{void}{DrawPolygon}{\param{int}{ n}, \param{wxPoint}{ points[]}, \param{wxCoord}{ xoffset = 0}, \param{wxCoord}{ yoffset = 0},\\
+  \param{int }{fill\_style = wxODDEVEN\_RULE}}
+
+\func{void}{DrawPolygon}{\param{wxList *}{points}, \param{wxCoord}{ xoffset = 0}, \param{wxCoord}{ yoffset = 0},\\
+  \param{int }{fill\_style = wxODDEVEN\_RULE}}
+
+Draws a filled polygon using an array of {\it points} of size {\it n},
+or list of pointers to points, adding the optional offset coordinate.
+
+The last argument specifies the fill rule: {\bf wxODDEVEN\_RULE} (the
+default) or {\bf wxWINDING\_RULE}.
+
+The current pen is used for drawing the outline, and the current brush
+for filling the shape.  Using a transparent brush suppresses filling.
+The programmer is responsible for deleting the list of points.
+
+Note that wxWindows automatically closes the first and last points.
+
+Only few filling styles have been implemented yet.
+
+
+\membersection{wxLatexDC::DrawPoint}\label{wxlatexdcdrawpoint}
+
+\func{void}{DrawPoint}{\param{wxCoord}{ x}, \param{wxCoord}{ y}}
+
+Draws a point using the current pen.
+
+\membersection{wxLatexDC::DrawRectangle}\label{wxlatexdcdrawrectangle}
+
+\func{void}{DrawRectangle}{\param{wxCoord}{ x}, \param{wxCoord}{ y}, \param{wxCoord}{ width}, \param{wxCoord}{ height}}
+
+Draws a rectangle with the given top left corner, and with the given
+size.  The current pen is used for the outline and the current brush
+for filling the shape.
+
+\membersection{wxLatexDC::DrawRotatedText}\label{wxlatexdcdrawrotatedtext}
+
+\func{void}{DrawRotatedText}{\param{const wxString\& }{text}, \param{wxCoord}{ x}, \param{wxCoord}{ y}, \param{double}{ angle}}
+
+Draws the text rotated by {\it angle} degrees. See comments in \helpref{DrawLabelLatex}{wxlatexdcdrawlabellatex}, 
+\helpref{CalcBoundingBox}{wxlatexdccalcboundingbox} and \helpref{DrawText}{wxlatexdcdrawtext} if you want
+to have better control of text positioning in your final LaTeX document.
+
+%The wxMSW wxDC and wxLatexDC rotate the text around slightly different points, depending on the size of the font
+\wxheading{See also}
+
+\helpref{DrawLabelLatex}{wxlatexdcdrawlabellatex}, \helpref{DrawText}{wxlatexdcdrawtext}
+
+\membersection{wxLatexDC::DrawRoundedRectangle}\label{wxlatexdcdrawroundedrectangle}
+
+\func{void}{DrawRoundedRectangle}{\param{wxCoord}{ x}, \param{wxCoord}{ y}, \param{wxCoord}{ width}, \param{wxCoord}{ height}, \param{double}{ radius = 20}}
+
+Draws a rectangle with the given top left corner, and with the given
+size.  The corners are quarter-circles using the given radius. The
+current pen is used for the outline and the current brush for filling
+the shape.
+
+If {\it radius} is positive, the value is assumed to be the
+radius of the rounded corner. If {\it radius} is negative,
+the absolute value is assumed to be the {\it proportion} of the smallest
+dimension of the rectangle. This means that the corner can be
+a sensible size relative to the size of the rectangle, and also avoids
+the strange effects X produces when the corners are too big for
+the rectangle.
+
+\membersection{wxLatexDC::DrawSpline}\label{wxlatexdcdrawspline}
+
+\func{void}{DrawSpline}{\param{wxList *}{points}}
+
+% Draws a spline between all given control points, using the current
+% pen.  Doesn't delete the wxList and contents. The spline is drawn
+% using a series of lines, using an algorithm taken from the X drawing
+% program `XFIG'.
+
+This uses the base class implementation to draw a spline, which
+doesn't give nice results at present. 
+
+\func{void}{DrawSpline}{\param{wxCoord}{ x1}, \param{wxCoord}{ y1}, \param{wxCoord}{ x2}, \param{wxCoord}{ y2}, \param{wxCoord}{ x3}, \param{wxCoord}{ y3}}
+
+% Draws a three-point spline using the current pen.
+This uses the base class implementation to draw a spline, which
+doesn't give nice results at present. 
+
+\membersection{wxLatexDC::DrawText}\label{wxlatexdcdrawtext}
+
+\func{void}{DrawText}{\param{const wxString\& }{text}, \param{wxCoord}{ x}, \param{wxCoord}{ y}}
+
+Draws a text string at the specified point, using the current text font,
+and the current text foreground and background colours.
+
+The coordinates refer to the top-left corner of the rectangle bounding
+the string. Note that wxLatexDC has no idea which font you will use in
+your final LaTeX document, so there is no way how to find out the extent
+of the text. See \helpref{DrawLabelLatex}{wxlatexdcdrawlabellatex}
+if you want to have better control of text positioning in your final LaTeX document.
+
+\wxheading{See also}
+
+\helpref{DrawLabelLatex}{wxlatexdcdrawlabellatex}, \helpref{DrawRotatedText}{wxlatexdcdrawrotatedtext}
+
+\membersection{wxLatexDC::EndDoc}\label{wxlatexdcenddoc}
+
+\func{void}{EndDoc}{\void}
+
+Does nothing
+
+\membersection{wxLatexDC::EndDrawing}\label{wxlatexdcenddrawing}
+
+\func{void}{EndDrawing}{\void}
+
+Does nothing
+
+\membersection{wxLatexDC::EndPage}\label{wxlatexdcendpage}
+
+\func{void}{EndPage}{\void}
+
+Does nothing
+
+\membersection{wxLatexDC::FloodFill}\label{wxlatexdcfloodfill}
+
+\func{void}{FloodFill}{\param{wxCoord}{ x}, \param{wxCoord}{ y}, \param{const wxColour\&}{ colour}, \param{int}{ style=wxFLOOD\_SURFACE}}
+
+Not implemented
+
+\membersection{wxLatexDC::GetBackground}\label{wxlatexdcgetbackground}
+
+\func{wxBrush\&}{GetBackground}{\void}
+
+\constfunc{const wxBrush\&}{GetBackground}{\void}
+
+% Gets the brush used for painting the background (see \helpref{wxLatexDC::SetBackground}{wxlatexdcsetbackground}).
+Not implemented.
+
+\membersection{wxLatexDC::GetBackgroundMode}\label{wxlatexdcgetbackgroundmode}
+
+\constfunc{int}{GetBackgroundMode}{\void}
+
+% Returns the current background mode: {\tt wxSOLID} or {\tt wxTRANSPARENT}.
+Not implemented.
+
+\wxheading{See also}
+
+\helpref{SetBackgroundMode}{wxlatexdcsetbackgroundmode}
+
+\membersection{wxLatexDC::GetBrush}\label{wxlatexdcgetbrush}
+
+\func{wxBrush\&}{GetBrush}{\void}
+
+\constfunc{const wxBrush\&}{GetBrush}{\void}
+
+Gets the current brush (see \helpref{wxLatexDC::SetBrush}{wxlatexdcsetbrush}).
+
+\membersection{wxLatexDC::GetCharHeight}\label{wxlatexdcgetcharheight}
+
+\func{wxCoord}{GetCharHeight}{\void}
+
+Not implemented:
+Since wxLatexDC has no idea which font you will use in
+your final LaTeX document, there is no way to find out anything
+about character size and font style.
+
+\membersection{wxLatexDC::GetCharWidth}\label{wxlatexdcgetcharwidth}
+
+\func{wxCoord}{GetCharWidth}{\void}
+
+Not implemented: See \helpref{GetCharHeight}{wxlatexdcgetcharheight} for reasons.
+
+\membersection{wxLatexDC::GetClippingBox}\label{wxlatexdcgetclippingbox}
+
+\func{void}{GetClippingBox}{\param{wxCoord}{ *x}, \param{wxCoord}{ *y}, \param{wxCoord}{ *width}, \param{wxCoord}{ *height}}
+
+Not implemented
+
+\membersection{wxLatexDC::GetFont}\label{wxlatexdcgetfont}
+
+\func{wxFont\&}{GetFont}{\void}
+
+\constfunc{const wxFont\&}{GetFont}{\void}
+
+Not implemented: See \helpref{GetCharHeight}{wxlatexdcgetcharheight} for reasons.
+
+\membersection{wxLatexDC::GetLogicalFunction}\label{wxlatexdcgetlogicalfunction}
+
+\func{int}{GetLogicalFunction}{\void}
+
+Gets the current logical function (see \helpref{wxLatexDC::SetLogicalFunction}{wxlatexdcsetlogicalfunction}).
+
+\membersection{wxLatexDC::GetMapMode}\label{wxlatexdcgetmapmode}
+
+\func{int}{GetMapMode}{\void}
+
+Gets the {\it mapping mode} for the device context (see \helpref{wxLatexDC::SetMapMode}{wxlatexdcsetmapmode}).
+
+\membersection{wxLatexDC::GetPen}\label{wxlatexdcgetpen}
+
+\func{wxPen\&}{GetPen}{\void}
+
+\constfunc{const wxPen\&}{GetPen}{\void}
+
+Gets the current pen (see \helpref{wxLatexDC::SetPen}{wxlatexdcsetpen}).
+
+\membersection{wxLatexDC::GetPixel}\label{wxlatexdcgetpixel}
+
+\func{bool}{GetPixel}{\param{wxCoord}{ x}, \param{wxCoord}{ y}, \param{wxColour *}{colour}}
+
+Not implemented
+
+\membersection{wxLatexDC::GetSize}\label{wxlatexdcgetsize}
+
+\func{void}{GetSize}{\param{wxCoord *}{width}, \param{wxCoord *}{height}}
+
+
+For a Windows printer device context, this gets the horizontal and vertical
+resolution. 
+
+\membersection{wxLatexDC::GetTextBackground}\label{wxlatexdcgettextbackground}
+
+\func{wxColour\&}{GetTextBackground}{\void}
+
+\constfunc{const wxColour\&}{GetTextBackground}{\void}
+
+Gets the current text background colour (see \helpref{wxLatexDC::SetTextBackground}{wxlatexdcsettextbackground}).
+
+\membersection{wxLatexDC::GetTextExtent}\label{wxlatexdcgettextextent}
+
+\func{void}{GetTextExtent}{\param{const wxString\& }{string}, \param{wxCoord *}{w}, \param{wxCoord *}{h},\\
+  \param{wxCoord *}{descent = NULL}, \param{wxCoord *}{externalLeading = NULL}, \param{wxFont *}{font = NULL}}
+
+Not implemented: See \helpref{GetCharHeight}{wxlatexdcgetcharheight} for reasons.
+
+See also \helpref{wxLatexDC::SetFont}{wxlatexdcsetfont}.
+% CSH \helpref{wxFont}{wxfont}, 
+
+\membersection{wxLatexDC::GetTextForeground}\label{wxlatexdcgettextforeground}
+
+\func{wxColour\&}{GetTextForeground}{\void}
+
+\constfunc{const wxColour\&}{GetTextForeground}{\void}
+
+Gets the current text foreground colour (see \helpref{wxLatexDC::SetTextForeground}{wxlatexdcsettextforeground}).
+
+
+\membersection{wxLatexDC::GetUserScale}\label{wxlatexdcgetuserscale}
+
+\func{void}{GetUserScale}{\param{double}{ *x}, \param{double}{ *y}}
+
+Gets the current user scale factor (set by \helpref{SetUserScale}{wxlatexdcsetuserscale}).
+
+\membersection{wxLatexDC::LogicalToDeviceX}\label{wxlatexdclogicaltodevicex}
+
+\func{wxCoord}{LogicalToDeviceX}{\param{wxCoord}{ x}}
+
+Converts logical X coordinate to device coordinate, using the current
+mapping mode.
+
+\membersection{wxLatexDC::LogicalToDeviceXRel}\label{wxlatexdclogicaltodevicexrel}
+
+\func{wxCoord}{LogicalToDeviceXRel}{\param{wxCoord}{ x}}
+
+Converts logical X coordinate to relative device coordinate, using the current
+mapping mode but ignoring the x axis orientation.
+Use this for converting a width, for example.
+
+\membersection{wxLatexDC::LogicalToDeviceY}\label{wxlatexdclogicaltodevicey}
+
+\func{wxCoord}{LogicalToDeviceY}{\param{wxCoord}{ y}}
+
+Converts logical Y coordinate to device coordinate, using the current
+mapping mode.
+
+\membersection{wxLatexDC::LogicalToDeviceYRel}\label{wxlatexdclogicaltodeviceyrel}
+
+\func{wxCoord}{LogicalToDeviceYRel}{\param{wxCoord}{ y}}
+
+Converts logical Y coordinate to relative device coordinate, using the current
+mapping mode but ignoring the y axis orientation.
+Use this for converting a height, for example.
+
+\membersection{wxLatexDC::MaxX}\label{wxlatexdcmaxx}
+
+\func{wxCoord}{MaxX}{\void}
+
+Gets the maximum horizontal extent used in drawing commands so far.
+
+\membersection{wxLatexDC::MaxY}\label{wxlatexdcmaxy}
+
+\func{wxCoord}{MaxY}{\void}
+
+Gets the maximum vertical extent used in drawing commands so far.
+
+\membersection{wxLatexDC::MinX}\label{wxlatexdcminx}
+
+\func{wxCoord}{MinX}{\void}
+
+Gets the minimum horizontal extent used in drawing commands so far.
+
+\membersection{wxLatexDC::MinY}\label{wxlatexdcminy}
+
+\func{wxCoord}{MinY}{\void}
+
+Gets the minimum vertical extent used in drawing commands so far.
+
+\membersection{wxLatexDC::Ok}\label{wxlatexdcok}
+
+\func{bool}{Ok}{\void}
+
+Returns true if the DC is ok to use; False values arise from being unable to 
+write the file
+
+\membersection{wxLatexDC::ResetBoundingBox}\label{wxlatexdcresetboundingbox}
+
+\func{void}{ResetBoundingBox}{\void}
+
+Resets the bounding box: after a call to this function, the bounding box
+doesn't contain anything.
+
+\wxheading{See also}
+
+\helpref{CalcBoundingBox}{wxlatexdccalcboundingbox}
+
+\membersection{wxLatexDC::SetAxisOrientation}\label{wxlatexdcsetaxisorientation}
+
+\func{void}{SetAxisOrientation}{\param{bool}{ xLeftRight},
+                                \param{bool}{ yBottomUp}}
+
+Sets the x and y axis orientation (i.e., the direction from lowest to
+highest values on the axis). The default orientation is the natural
+orientation, e.g. x axis from left to right and y axis from bottom up.
+
+\wxheading{Parameters}
+
+\docparam{xLeftRight}{True to set the x axis orientation to the natural
+left to right orientation, false to invert it.}
+
+\docparam{yBottomUp}{True to set the y axis orientation to the natural
+bottom up orientation, false to invert it.}
+
+\membersection{wxLatexDC::SetDeviceOrigin}\label{wxlatexdcsetdeviceorigin}
+
+\func{void}{SetDeviceOrigin}{\param{wxCoord}{ x}, \param{wxCoord}{ y}}
+
+Sets the device origin (i.e., the origin in pixels after scaling has been
+applied).
+
+This function may be useful in Windows printing
+operations for placing a graphic on a page.
+
+\membersection{wxLatexDC::SetBackground}\label{wxlatexdcsetbackground}
+
+\func{void}{SetBackground}{\param{const wxBrush\& }{brush}}
+
+Sets the current background brush for the DC.
+
+\membersection{wxLatexDC::SetBackgroundMode}\label{wxlatexdcsetbackgroundmode}
+
+\func{void}{SetBackgroundMode}{\param{int}{ mode}}
+
+{\it mode} may be one of wxSOLID and wxTRANSPARENT. This setting determines
+whether text will be drawn with a background colour or not.
+
+\membersection{wxLatexDC::SetClippingRegion}\label{wxlatexdcsetclippingregion}
+
+\func{void}{SetClippingRegion}{\param{wxCoord}{ x}, \param{wxCoord}{ y}, \param{wxCoord}{ width}, \param{wxCoord}{ height}}
+
+\func{void}{SetClippingRegion}{\param{const wxPoint\& }{pt}, \param{const wxSize\& }{sz}}
+
+\func{void}{SetClippingRegion}{\param{const wxRect\&}{ rect}}
+
+\func{void}{SetClippingRegion}{\param{const wxRegion\&}{ region}}
+
+Not implemented 
+
+
+\membersection{wxLatexDC::SetPalette}\label{wxlatexdcsetpalette}
+
+\func{void}{SetPalette}{\param{const wxPalette\& }{palette}}
+
+Not implemented 
+
+\membersection{wxLatexDC::SetBrush}\label{wxlatexdcsetbrush}
+
+\func{void}{SetBrush}{\param{const wxBrush\& }{brush}}
+
+Sets the current brush for the DC.
+
+If the argument is wxNullBrush, the current brush is selected out of the device
+context, and the original brush restored, allowing the current brush to
+be destroyed safely.
+
+% See also \helpref{wxBrush}{wxbrush}.
+
+% See also \helpref{wxMemoryDC}{wxmemorydc} for the interpretation of colours
+% when drawing into a monochrome bitmap.
+
+\membersection{wxLatexDC::SetFont}\label{wxlatexdcsetfont}
+
+\func{void}{SetFont}{\param{const wxFont\& }{font}}
+
+Not implemented: See \helpref{GetCharHeight}{wxlatexdcgetcharheight} for reasons.
+
+% CSH See also \helpref{wxFont}{wxfont}.
+
+\membersection{wxLatexDC::SetLogicalFunction}\label{wxlatexdcsetlogicalfunction}
+
+\func{void}{SetLogicalFunction}{\param{int}{ function}}
+
+
+Only wxCOPY is avalaible; trying to set one of the other values will fail
+
+\membersection{wxLatexDC::SetMapMode}\label{wxlatexdcsetmapmode}
+
+\func{void}{SetMapMode}{\param{int}{ int}}
+
+The {\it mapping mode} of the device context defines the unit of
+measurement used to convert logical units to device units. Note that
+in X, text drawing isn't handled consistently with the mapping mode; a
+font is always specified in point size. However, setting the {\it
+user scale} (see \helpref{wxLatexDC::SetUserScale}{wxlatexdcsetuserscale}) scales the text appropriately. In
+Windows, scaleable TrueType fonts are always used; in X, results depend
+on availability of fonts, but usually a reasonable match is found.
+
+Note that the coordinate origin should ideally be selectable, but for
+now is always at the top left of the screen/printer.
+
+Drawing to a Windows printer device context under UNIX
+uses the current mapping mode, but mapping mode is currently ignored for
+PostScript output.
+
+The mapping mode can be one of the following:
+
+\begin{twocollist}\itemsep=0pt
+\twocolitem{wxMM\_TWIPS}{Each logical unit is 1/20 of a point, or 1/1440 of
+  an inch.}
+\twocolitem{wxMM\_POINTS}{Each logical unit is a point, or 1/72 of an inch.}
+\twocolitem{wxMM\_METRIC}{Each logical unit is 1 mm.}
+\twocolitem{wxMM\_LOMETRIC}{Each logical unit is 1/10 of a mm.}
+\twocolitem{wxMM\_TEXT}{Each logical unit is 1 pixel.}
+\end{twocollist}
+
+\membersection{wxLatexDC::SetPen}\label{wxlatexdcsetpen}
+
+\func{void}{SetPen}{\param{const wxPen\& }{pen}}
+
+Sets the current pen for the DC.
+
+If the argument is wxNullPen, the current pen is selected out of the device
+context, and the original pen restored.
+
+% See also \helpref{wxMemoryDC}{wxmemorydc} for the interpretation of colours
+% when drawing into a monochrome bitmap.
+
+\membersection{wxLatexDC::SetTextBackground}\label{wxlatexdcsettextbackground}
+
+\func{void}{SetTextBackground}{\param{const wxColour\& }{colour}}
+
+Sets the current text background colour for the DC.
+
+\membersection{wxLatexDC::SetTextForeground}\label{wxlatexdcsettextforeground}
+
+\func{void}{SetTextForeground}{\param{const wxColour\& }{colour}}
+
+Sets the current text foreground colour for the DC.
+
+% See also \helpref{wxMemoryDC}{wxmemorydc} for the interpretation of colours
+% when drawing into a monochrome bitmap.
+
+\membersection{wxLatexDC::SetUserScale}\label{wxlatexdcsetuserscale}
+
+\func{void}{SetUserScale}{\param{double}{ xScale}, \param{double}{ yScale}}
+
+Sets the user scaling factor, useful for applications which require
+`zooming'.
+
+\membersection{wxLatexDC::StartDoc}\label{wxlatexdcstartdoc}
+
+\func{bool}{StartDoc}{\param{const wxString\& }{message}}
+
+Does nothing
+
+\membersection{wxLatexDC::StartPage}\label{wxlatexdcstartpage}
+
+\func{bool}{StartPage}{\void}
+
+Does nothing
