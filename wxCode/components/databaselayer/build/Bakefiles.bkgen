@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+
+
+
+<!-- RCS-ID: $Id: Bakefiles.bkgen,v 1.2 2007/03/31 01:23:59 jblough Exp $ -->
+
+
+
+<bakefile-gen>
+
+	<include file="../../../build/bakefiles/presets/wxcode.bkgen"/>
+
+	<input>databaselayer2.bkl</input>
+
+	
+
+	<disable-formats>msvs2005prj,dmars,dmars_smake,cbx_unix,cbuilderx,msevc4prj</disable-formats>
+
+    <add-formats>autoconf,borland,mingw,msvc,msvc6prj,msevc4prj,watcom</add-formats>
+
+    
+
+</bakefile-gen>

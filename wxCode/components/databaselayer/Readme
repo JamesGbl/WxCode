@@ -1,0 +1,9 @@
+Component: DatabaseLayer
+
+wxWidgets: Only tested on 2.5.x and 2.6.x so far
+
+Description: DatabaseLayer provides a JDBC-like interface to database I/O.
+So far only SQLite3, Firebird, MySQL, Postgresql, and ODBC database backends are supported.
+MiniCppUnit unit tests are used to make it easier to add more database backends in the future.
+
+

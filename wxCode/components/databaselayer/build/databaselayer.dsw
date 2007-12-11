@@ -1,0 +1,208 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+Project: "databaselayer_sqlite"=databaselayer_databaselayer_sqlite.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "databaselayer_firebird"=databaselayer_databaselayer_firebird.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "databaselayer_mysql"=databaselayer_databaselayer_mysql.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "databaselayer_postgresql"=databaselayer_databaselayer_postgresql.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "databaselayer_oracle"=databaselayer_databaselayer_oracle.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "databaselayer_odbc"=databaselayer_databaselayer_odbc.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "databaselayer_tds"=databaselayer_databaselayer_tds.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "test_sqlite"=databaselayer_test_sqlite.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+Begin Project Dependency
+Project_Dep_Name databaselayer_sqlite
+End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "test_firebird"=databaselayer_test_firebird.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+Begin Project Dependency
+Project_Dep_Name databaselayer_firebird
+End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "test_firebird_embedded"=databaselayer_test_firebird_embedded.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+Begin Project Dependency
+Project_Dep_Name databaselayer_firebird
+End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "test_mysql"=databaselayer_test_mysql.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+Begin Project Dependency
+Project_Dep_Name databaselayer_mysql
+End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "test_postgresql"=databaselayer_test_postgresql.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+Begin Project Dependency
+Project_Dep_Name databaselayer_postgresql
+End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "test_oracle"=databaselayer_test_oracle.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+Begin Project Dependency
+Project_Dep_Name databaselayer_oracle
+End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "test_odbc"=databaselayer_test_odbc.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+Begin Project Dependency
+Project_Dep_Name databaselayer_odbc
+End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "test_tds"=databaselayer_test_tds.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+Begin Project Dependency
+Project_Dep_Name databaselayer_tds
+End Project Dependency
+}}}
+
+###############################################################################
+

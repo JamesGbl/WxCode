@@ -1,0 +1,58 @@
+<html>
+<head>
+  <title>Building DatabaseLayer with wxDev-Cpp</title>
+</head>
+<body>
+(The steps described here worked for me to build the Firebird DatabaseLayer library and unit test using <a ref="http://wxdsgn.sourceforge.net/">wxDev-Cpp Beta 6.9</a>.)<br>
+<p>
+<h2>Compiling the Library</h2>
+<ul>
+<li>Select the menu item "File -&gt; Import -&gt; Import Visual C++ Project"</li>
+<li>Select the databaselayer_databaselayer_firebird.dsp project file and the "Win32 Release" configuration</li>
+</ul>
+<img src="images/library_import.png" alt="Import Library Project">
+<ul>
+<li>Select the menu item "Project -&gt; Project Options"</li>
+<li>Change the imported settings to be consistent with the following</li>
+</ul>
+<img src="images/library_general.png" alt="Library Project General Options"><p>
+<img src="images/library_parameters.png" alt="Library Project Parameter Options"><p>
+<img src="images/library_include_directories.png" alt="Library Project Include Directories"><br>
+(If you have the WXWIN environmental variable defined and you are using the pre-compiled wxDev-Cpp wxWidgets libraries, then you may wish to remove the WXWIN paths from the include directories to avoid conflicts.)<p>
+<img src="images/library_options.png" alt="Library Project Build Options"><br>
+<p>
+Save the project through the menu "File -&gt; Save All" and then attempt to compile the project via the menu "Execute -&gt; Compile"
+<p>
+If all goes well, a static library file name libdatabaselayer_firebird.a should now be in the databaselayer\lib directory.  Before attempting to make your own project work with DatabaseLayer, it may be worthwhile to practice by setting up the unit test project.<p>
+<h2>Compiling the unit test executable</h2>
+<ul>
+<li>Select the menu item "File -&gt; Import -&gt; Import Visual C++ Project"</li>
+<li>Select the databaselayer_test_firebird.dsp project file and the "Win32 Release" configuration</li>
+</ul>
+<img src="images/test_import.png" alt="Import Test Project">
+<ul>
+<li>Select the menu item "Project -&gt; Project Options"</li>
+<li>Change the imported settings to be consistent with the following</li>
+</ul>
+<img src="images/test_general.png" alt="Test Project General Options"><p>
+<img src="images/test_parameters.png" alt="Test Project Parameter Options"><br>
+Make sure to change "-lwxbase26" to "-lwxmsw26" in the Linker list on the above dialog<p>
+<img src="images/test_library_directories.png" alt="Test Project Library Directories"><p>
+<img src="images/test_include_directories.png" alt="Test Project Include Directories"><br>
+(If you have the WXWIN environmental variable defined and you are using the pre-compiled wxDev-Cpp wxWidgets libraries, then you may wish to remove the WXWIN paths from the library and include directories to avoid conflicts.)<p>
+<img src="images/test_options.png" alt="Test Project Build Options"><br>
+<p>
+If all goes well, an executable named runner_firebird.exe should now be in the databaselayer\tests directory.  The test application has dependencies on DLL files that can be found in one of the Firebird installation directories.  You will also need to copy the "settings.sample file (in the tests directory) to "settings.conf" and edit the "[Firebird]" section to have values that work for your Firebird installation (server, username, password, ...) and then you can finally run the runner_firebird.exe to see if everything worked.
+<hr>
+<h2>Additional Notes:</h2>
+ODBC:<br>
+If you link against the ODBC DatabaseLayer, then be sure to move the -ldatabaselayer_odbc linker option to the top of the linker list.  Otherwise, you may get unresolved definition errors on wxVariant.<p>
+MySQL:<br>
+The libmysql.lib that ships with MySQL seems to only be compatible with MS compilers.  This is documented on the following sites: <a href="http://dev.mysql.com/doc/refman/5.0/en/windows-client-compiling.html">http://dev.mysql.com/doc/refman/5.0/en/windows-client-compiling.html</a> and <a href="http://www.dvrsol.com/programming.html#mymingw">http://www.dvrsol.com/programming.html#mymingw</a><p>
+Firebird:<br>
+While the Linux Firebird DatabaesLayer code links against "fbclient", the Win32 version links fine against "fbclient_ms"<p>
+-DUSE_XXXXXX:<br>
+The -DUSE_FIREBIRD shown in the compiler options is just for the unit test.  Your code should NOT need this declaration for any of the DatabaseLayer backends.
+</body>
+</html>
+

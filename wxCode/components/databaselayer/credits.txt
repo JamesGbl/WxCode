@@ -1,0 +1,15 @@
+Scott Fant - ODBC backend, various MySQL, Firebird, Fixes affecting all database backends
+Armin Kurz - MySQL bug hunter
+Urlich Telli - Unicode fixes
+Damir Tesanovic - Unicode fixes
+Raul Lopez - wxDevCpp compatibility research
+Guru Kathiresan - Added database single result retrieval API and Oracle backend rewrite
+M. Szeftel (author of wxActiveRecordGenerator) - API enhancements
+Manianis (from wxForum) - MySQL testing on opening and closing the database which resulted in memory leak fixes
+TbirdBear (from wxForum) - MySQL testing of stored procedures returning result sets
+vbproger (from wxForum) - Date/Timestamp patches
+E.Bevz - Firebird blob patch
+Juergen Geltinger - PostgreSQL blob patch
+Viacheslav Tararin - ODBC construction fix
+Dieter Kopp - ODBC patch
+Francisco J. Morosini Eguren - Patch to handle cursors (unfortunately the patch hasn't been committed into source control yet)
