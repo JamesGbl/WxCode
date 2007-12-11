@@ -10,8 +10,8 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-AU">
 	<?php
-      $compname = "MYCOMPNAME";
-      $subdir = "MYCOMPSUBDIR";
+      $compname = "wxLatexDC";
+      $subdir = "latexdc";
       require("compwebsite.inc.php");
   ?>
 
@@ -40,10 +40,10 @@
 
        block...
   -->
-	<br/><?php write_h1("Screenshots"); ?>
-	<p>Description</p>
+	<br/><?php write_h1("Example"); ?>
+	<p>Integrate drawings into LaTeX documents</p>
   <div class="center">
-    <?php writeScreenshotLink("myshot.png", "description goes here"); ?>
+    <?php writeScreenshotLink("example.png", "A wxDC drawing integrated into a document with wxLatexDC"); ?>
   </div>
 
 
@@ -53,15 +53,19 @@
        docs, bugs & feature requests... -->
   <br/><?php write_h1("Usage sample"); ?>
   <?php writeSnippet('
-// sample CPP snippet which shows how to use this component:
-myComp *newcomp = new myComp();
-newcomp->SetAAAA("aaa");
-newcomp->SetBBBB("bbb");
+// Usage of wxLatexDC is similar to other DCs (such as wxSVGFileDC):
+// ...
+wxLatexDC latexDC(filename,GetRect().width,GetRect().height,72.0);
+Draw(latexDC);
+// ...
 
-// inside this section we can use any character we want except
-// for the single quote char: if you need to use it you should
-// escape it in this way: \'
-newcomp->Show();
+
+% You can then include the output in a LaTeX document
+% In your header, you need to include PSTricks:
+\usepackage{pstricks}
+
+% In your document, you simply integrate the tex file:
+\input{./filename}
 '); ?>
 
 
@@ -69,7 +73,7 @@ newcomp->Show();
        see the ReadMe.txt file at wxCode\template... -->
   <br/><?php write_h1("Documentation"); ?>
   <p>The documentation for this component is available online
-  <a href="../../docs/MYCOMPSUBDIR/">here</a>.</p>
+  <a href="../../docs/latexdc/docs/index.html">here</a>.</p>
 
 
 	<br/><?php write_h1("Known bugs"); ?>
