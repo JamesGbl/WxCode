@@ -2,7 +2,7 @@
  --------------------
  
  Website: http://wxcode.sourceforge.net/components/wxctb
- Version: 0.12
+ Version: 0.13
 
  or for additional support and tools:
  http://www.iftools.com/extras.en.html
@@ -95,6 +95,12 @@
 
  ChangeLog
  ---------
+ 0.13
+     - remove the expect and match mechanism. They didn't work very
+	  well, and a future implementation should be done as a
+       independent library. If someone missed this functions, please
+       let me know.
+
  0.12
      - more documentation for doxygen
 	- replace the ugly GetSettingsAsString methods by a more intuitive
