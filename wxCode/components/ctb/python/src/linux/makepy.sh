@@ -5,6 +5,10 @@ GPIB_SOURCES=''
 GPIB_LIB=''
 GPIB_SUPPORT=''
 
+# the python develop version. Please check the right version of your
+# python developent enviroment
+PYTHON_VERSION='2.3'
+
 for arg in $*; do
     if [ "$arg" = "USE_GPIB" ]; then
 	   GPIB_SOURCES='../../../src/gpib.cpp' 
@@ -37,8 +41,9 @@ fi
 echo "swig generates python wrapper files..."
 swig -c++ -Wall -nodefault -python -keyword -new_repr -modern wxctb.i
 
-echo "create shared library wxctb with GPIB=$GPIB_SUPPORT for python 2.4..."
-g++ -Wall $CFLAG -shared -I /usr/include/python2.4/ \
+echo "create shared library wxctb with GPIB=$GPIB_SUPPORT for python"\
+     "$PYTHON_VERSION ..."
+g++ -Wall $CFLAG -shared -I /usr/include/python$PYTHON_VERSION/ \
     -I ../../../include \
     wxctb_wrap.cxx  \
     ../../../src/linux/timer.cpp \
