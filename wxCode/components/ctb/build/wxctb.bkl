@@ -78,11 +78,9 @@
   </set>
 
   <set var="FILES">
-    ../src/expect.cpp
     ../src/fifo.cpp
     ../src/getopt.cpp
     ../src/iobase.cpp
-    ../src/match.cpp
     ../src/$(OS)/serport.cpp
     ../src/$(OS)/timer.cpp
   </set>
