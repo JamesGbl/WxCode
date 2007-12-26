@@ -284,6 +284,21 @@ double FirebirdResultSet::GetResultDouble(int nField)
     {
 		  dblReturn = *(double *) (pVar->sqldata);
     }
+    else if (nType == SQL_LONG)
+    {
+    	dblReturn = *(long *) (pVar->sqldata);
+    	for(int i = 0; i < -pVar->sqlscale; dblReturn /= 10, i++);
+    }
+    else if (nType == SQL_INT64)
+    {
+    	dblReturn = *(ISC_INT64 *) (pVar->sqldata);
+    	for(int i = 0; i < -pVar->sqlscale; dblReturn /= 10, i++);
+    }
+    else if (nType == SQL_SHORT)
+    {
+    	dblReturn = *(short *) (pVar->sqldata);
+    	for(int i = 0; i < -pVar->sqlscale; dblReturn /= 10, i++);
+    }
     else
     {
       // Incompatible field type

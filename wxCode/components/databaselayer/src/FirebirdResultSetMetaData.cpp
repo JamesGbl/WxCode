@@ -18,7 +18,10 @@ int FirebirdResultSetMetaData::GetColumnType(int i)
       case SQL_SHORT:
       case SQL_INT64:
       case SQL_LONG:
-        returnType = COLUMN_INTEGER;
+	if(pVar->sqlscale == 0)
+		returnType = COLUMN_INTEGER;
+	else
+        	returnType = COLUMN_DOUBLE;
         break;
       case SQL_TEXT:
       case SQL_VARYING:
