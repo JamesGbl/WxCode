@@ -8,7 +8,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 
-#include "wx/ctb-0.12/timer.h"
+#include "wx/ctb-0.13/timer.h"
 #include <unistd.h>
 
 // a dummy function, see below

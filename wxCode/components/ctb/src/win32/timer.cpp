@@ -17,7 +17,7 @@
 # endif
 #endif
 
-#include "wx/ctb-0.12/timer.h"
+#include "wx/ctb-0.13/timer.h"
 
 static void WINAPI timer_fnc(UINT uTimerID, 
 					    UINT uMsg, 

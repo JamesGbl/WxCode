@@ -8,7 +8,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include <string.h>
-#include "wx/ctb-0.12/serport.h"
+#include "wx/ctb-0.13/serport.h"
 
 #define wxSERIALPORT_BUFSIZE 4096
 
