@@ -11,9 +11,9 @@
 #define _WX_SERIALPORT_BASE_H
 
 #if defined (WIN32)
-# include "wx/ctb-0.12/win32/serport.h"
+# include "wx/ctb-0.13/win32/serport.h"
 #else
-# include "wx/ctb-0.12/linux/serport.h"
+# include "wx/ctb-0.13/linux/serport.h"
 #endif
 
 #endif

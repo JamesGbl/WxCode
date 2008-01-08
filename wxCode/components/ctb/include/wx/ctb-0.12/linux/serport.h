@@ -10,7 +10,7 @@
 #ifndef _WX_SERIALPORT_LINUX_H
 #define _WX_SERIALPORT_LINUX_H
 
-#include "wx/ctb-0.12/serportx.h"
+#include "wx/ctb-0.13/serportx.h"
 #include <linux/serial.h>
 #include <termios.h>
 
