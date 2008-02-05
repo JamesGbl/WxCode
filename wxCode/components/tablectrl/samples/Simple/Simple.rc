@@ -12,3 +12,5 @@
 
 
 #include "TableCtrl.rc"
+
+#include <wx/msw/wx.rc>
