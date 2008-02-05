@@ -13,6 +13,9 @@
 
 #include <wx/wxprec.h>
 
+#include <wx/msw/uxtheme.h>
+
+#include <Tmschema.h>
 #include <algorithm>
 
 #if 0
@@ -111,14 +114,28 @@ void  FillSolidRect ( wxDC *  dc, const wxRect &  rect, const wxColour &  color 
 }
 
 
-
+#if 0
 bool  DrawState ( wxDC *  dc, const wxPoint &  point, const wxSize &  size, wxBitmap *  bitmap, UINT  flag )
 {
-   HDC         hdc   = ( HDC ) dc -> GetHDC ();
+   wxUxThemeEngine *    te = wxUxThemeEngine :: GetIfActive ();
+   
+   if ( te != 0 )
+   {
+      wxUxThemeHandle   t  ( dc -> GetWindow (), L"BUTTON" );
+      RECT              r;
+      
+      :: SetRect ( &r, point.x, point.y, point.x + size.GetWidth  (), point.y + size.GetHeight () );
+      
+      te -> DrawThemeBackground ( t, static_cast < HDC > ( dc -> GetHDC () ), BP_CHECKBOX, CBS_UNCHECKEDNORMAL, &r, 0 );
+   }
+   else
+   {
+      HDC         hdc   = ( HDC ) dc -> GetHDC ();
 
-   return ( :: DrawState ( hdc, 0, 0, reinterpret_cast < LPARAM > ( bitmap -> GetHBITMAP () ), 0, point.x, point.y, size.GetWidth (), size.GetHeight (), flag ) != FALSE );
+      return ( :: DrawState ( hdc, 0, 0, reinterpret_cast < LPARAM > ( bitmap -> GetHBITMAP () ), 0, point.x, point.y, size.GetWidth (), size.GetHeight (), flag ) != FALSE );
+   }
 }
-
+#endif
 
 
 wxString  ResourceNameString ( const wxString &  name )
@@ -1128,7 +1145,8 @@ void  wxTableCtrl :: Body :: DoPaintDC ( wxDC  *dc, int  row, const Fill &  fill
                         result;
    wxTable :: Cursor *  help        = 0;
 
-   bdc.SetFont ( *font );
+   bdc.SetFont    ( *font );
+   bdc.SetWindow  ( dc -> GetWindow () );
 
    rows        = ( text_height != 0 ) ? rect.GetHeight () / text_height : 0;
    cursor_row  = -1;                             // Reset 'cursor_row'.
@@ -1476,7 +1494,8 @@ void  wxTableCtrl :: Body :: DoPaintLineDC ( wxDC *  dc, int  row, int  index )
       }
          
       FillSolidRect  ( dc, wxRect  ( 0, row * text_height, 16, text_height ), back );
-      DrawState      ( dc, wxPoint ( 0, row * text_height ), wxSize ( 16, 16 ), checked ? checkbox_checked : checkbox_unchecked, DST_BITMAP | DSS_NORMAL );
+//    DrawState      ( dc, wxPoint ( 0, row * text_height ), wxSize ( 16, 16 ), checked ? checkbox_checked : checkbox_unchecked, DST_BITMAP | DSS_NORMAL );
+      DrawCheckBox   ( dc, wxRect ( 0, row * text_height, 16, 16 ), checked );
    }
 
    // Check if the 'cursor' is the visible row just drawn.
@@ -1508,7 +1527,8 @@ void  wxTableCtrl :: Body :: DoPaintLine ( int  row )
    wxClientDC  dc    ( this );
    wxBitmapDC  bdc   ( &dc, wxRect ( 0, row * text_height, rect.GetWidth (), text_height ) );
 
-   bdc.SetFont ( *font );
+   bdc.SetFont    ( *font );
+   bdc.SetWindow  ( dc.GetWindow () );
 
    DoPaintLineDC ( &bdc, 0, row );
 
@@ -1529,6 +1549,33 @@ void  wxTableCtrl :: Body :: DoFocusRect ( wxDC *  dc, int  row )
 // :: DrawFocusRect  ( ( HDC ) dc -> GetHDC (), &temp );
 
    :: DrawFocusRect  ( dc, wxRect (  0, row * text_height, rect.GetWidth (), text_height ) );
+}
+
+
+
+void  wxTableCtrl :: Body :: DrawCheckBox ( wxDC *  dc, const wxRect &  rect, bool  checked )
+{
+#ifdef __WXMSW__   
+   wxUxThemeEngine *    te = wxUxThemeEngine :: GetIfActive ();
+   
+   if ( te != 0 )
+   {
+      wxUxThemeHandle   t  ( dc -> GetWindow (), L"BUTTON" );
+      RECT              r;
+      
+      :: SetRect ( &r, rect.x, rect.y, rect.GetRight  (), rect.GetBottom () );
+      
+      te -> DrawThemeBackground ( t, static_cast < HDC > ( dc -> GetHDC () ), BP_CHECKBOX, checked ? CBS_CHECKEDNORMAL : CBS_UNCHECKEDNORMAL, &r, 0 );
+   }
+   else
+   {
+      HDC         hdc   = ( HDC ) dc -> GetHDC ();
+
+      :: DrawState ( hdc, 0, 0, reinterpret_cast < LPARAM > ( checked ? checkbox_checked -> GetHBITMAP () : checkbox_unchecked -> GetHBITMAP () ), 0, rect.x, rect.y, rect.GetWidth (), rect.GetHeight (), DST_BITMAP | DSS_NORMAL );
+   }
+#else
+   #error "Checkbox drawing code to insert here"
+#endif   
 }
 
 
@@ -2685,7 +2732,8 @@ void  wxTableCtrl :: Body :: OnLeftDown ( wxMouseEvent &  me )
                      checked  = te.IsChecked ();
                      
 //?               dc.DrawState   ( iPoint ( 0, row * text_height ), iSize ( 16, 16 ), ( table -> Check ().Find ( visible [ row ] ) ) ? checkbox_checked : checkbox_unchecked, DST_BITMAP | DSS_NORMAL );
-                  DrawState   ( &dc, wxPoint ( 0, row * text_height ), wxSize ( 16, 16 ), checked ? checkbox_checked : checkbox_unchecked, DST_BITMAP | DSS_NORMAL );
+//                DrawState   ( &dc, wxPoint ( 0, row * text_height ), wxSize ( 16, 16 ), checked ? checkbox_checked : checkbox_unchecked, DST_BITMAP | DSS_NORMAL );
+                  DrawCheckBox   ( &dc, wxRect ( 0, row * text_height, 16, 16 ), checked );
                }
 
                return;

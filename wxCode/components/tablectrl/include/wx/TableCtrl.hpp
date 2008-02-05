@@ -417,6 +417,8 @@ class  wxTableCtrl : public  wxControl
             void                       DoPaint              ();
             void                       DoPaintLine          ( int );
             void                       DoFocusRect          ( wxDC *, int );
+            
+            void                       DrawCheckBox         ( wxDC *, const wxRect &, bool );
 
             void                       SyncScrollBar        ();
 
