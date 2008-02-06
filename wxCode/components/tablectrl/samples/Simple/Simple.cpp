@@ -15,6 +15,7 @@
 
 #include <wx/TableCtrl.hpp>
 
+#include "TableMenu.h"
 #include "FakeTable.hpp"
 
 
@@ -50,7 +51,7 @@ class  MainFrame : public  wxFrame
 };
 
 
-
+#if 0
 static const wxWindowID    IDM_BEGIN            = 1000;
 
 static const wxWindowID    IDM_MULTISELECT      = 1000;
@@ -69,7 +70,7 @@ static const wxWindowID    IDM_SWITCH_MERGE     = IDM_SWITCH + wxTableCtrl :: Bo
 static const wxWindowID    IDM_SWITCH_ROLL      = IDM_SWITCH + wxTableCtrl :: Body :: Mode_ROLL;
 
 static const wxWindowID    IDM_END              = 2000;
-
+#endif
 
 
 BEGIN_EVENT_TABLE ( MainFrame , wxFrame   )
