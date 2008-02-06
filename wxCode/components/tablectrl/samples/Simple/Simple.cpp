@@ -61,6 +61,8 @@ static const wxWindowID    IDM_CHECKBOXES       = 1004;
 static const wxWindowID    IDM_FOCUSRECT        = 1005;
 static const wxWindowID    IDM_TOOLTIPS         = 1006;
 
+static const wxWindowID    IDM_NATIVEHEADER     = 1007;
+
 static const wxWindowID    IDM_SWITCH           = 1011;
 static const wxWindowID    IDM_SWITCH_FAST      = IDM_SWITCH + wxTableCtrl :: Body :: Mode_FAST;
 static const wxWindowID    IDM_SWITCH_MERGE     = IDM_SWITCH + wxTableCtrl :: Body :: Mode_MERGE;
@@ -123,6 +125,12 @@ void  MainFrame :: OnMenu ( wxCommandEvent &  ce )
          
          break;
 
+      case IDM_NATIVEHEADER      :
+         tablectrl -> SetNativeHeader  ( ce.IsChecked () );
+         tablectrl -> RefreshLayout    ();
+         
+         break;
+
       case IDM_SWITCH_FAST       :
       case IDM_SWITCH_MERGE      :
       case IDM_SWITCH_ROLL       :
@@ -144,23 +152,25 @@ MainFrame :: MainFrame ()
    wxMenu *       tablemenu   = new  wxMenu     ();
    wxMenu *       switchmenu  = new  wxMenu     ();
    
-   filemenu    -> Append         ( wxID_EXIT          , "E&xit"            , wxEmptyString );
+   filemenu    -> Append            ( wxID_EXIT          , "E&xit"            , wxEmptyString );
 
-   switchmenu  -> Append         ( IDM_SWITCH_FAST    , "&Fast"            , "Switch columns in \"FAST\" mode"                         , wxITEM_RADIO );
-   switchmenu  -> Append         ( IDM_SWITCH_MERGE   , "&Merge"           , "Switch columns in \"MERGE\" mode"                        , wxITEM_RADIO );
-   switchmenu  -> Append         ( IDM_SWITCH_ROLL    , "&Roll"            , "Switch columns in \"ROLL\" mode"                         , wxITEM_RADIO );
+   switchmenu  -> Append            ( IDM_SWITCH_FAST    , "&Fast"            , "Switch columns in \"FAST\" mode"                         , wxITEM_RADIO );
+   switchmenu  -> Append            ( IDM_SWITCH_MERGE   , "&Merge"           , "Switch columns in \"MERGE\" mode"                        , wxITEM_RADIO );
+   switchmenu  -> Append            ( IDM_SWITCH_ROLL    , "&Roll"            , "Switch columns in \"ROLL\" mode"                         , wxITEM_RADIO );
    
-   tablemenu   -> Append         ( IDM_MULTISELECT    , "&Multi Select"    , "Allow Multi Select (selection of more than one record)"  , wxITEM_CHECK );
-   tablemenu   -> Append         ( IDM_DRAGANDDROP    , "&Drag && Drop"    , "Allow Drag & Drop of the selected record(s)"             , wxITEM_CHECK );
-   tablemenu   -> Append         ( IDM_GRIDHORIZONTAL , "Grid &Horizontal" , "Show Horizontal Grid Lines"                              , wxITEM_CHECK );
-   tablemenu   -> Append         ( IDM_GRIDVERTICAL   , "Grid &Vertical"   , "Show Vertical Grid Lines"                                , wxITEM_CHECK );
-   tablemenu   -> Append         ( IDM_CHECKBOXES     , "&CheckBoxes"      , "Show Check Boxes"                                        , wxITEM_CHECK );
-   tablemenu   -> Append         ( IDM_FOCUSRECT      , "&FocusRect"       , "Show a focus rectangle around the wxTableCtrl"           , wxITEM_CHECK );
-   tablemenu   -> AppendSubMenu  ( switchmenu         , "&Switch"          );
-   tablemenu   -> Append         ( IDM_TOOLTIPS       , "&ToolTips"        , "Show Tooltips"                                           , wxITEM_CHECK );
+   tablemenu   -> Append            ( IDM_MULTISELECT    , "&Multi Select"    , "Allow Multi Select (selection of more than one record)"  , wxITEM_CHECK );
+   tablemenu   -> Append            ( IDM_DRAGANDDROP    , "&Drag && Drop"    , "Allow Drag & Drop of the selected record(s)"             , wxITEM_CHECK );
+   tablemenu   -> Append            ( IDM_GRIDHORIZONTAL , "Grid &Horizontal" , "Show Horizontal Grid Lines"                              , wxITEM_CHECK );
+   tablemenu   -> Append            ( IDM_GRIDVERTICAL   , "Grid &Vertical"   , "Show Vertical Grid Lines"                                , wxITEM_CHECK );
+   tablemenu   -> Append            ( IDM_CHECKBOXES     , "&CheckBoxes"      , "Show Check Boxes"                                        , wxITEM_CHECK );
+   tablemenu   -> Append            ( IDM_FOCUSRECT      , "&FocusRect"       , "Show a focus rectangle around the wxTableCtrl"           , wxITEM_CHECK );
+   tablemenu   -> AppendSubMenu     ( switchmenu         , "&Switch"          );
+   tablemenu   -> Append            ( IDM_TOOLTIPS       , "&ToolTips"        , "Show Tooltips"                                           , wxITEM_CHECK );
+   tablemenu   -> AppendSeparator   ();
+   tablemenu   -> Append            ( IDM_NATIVEHEADER   , "&Native Header"   , "Native Header"                                           , wxITEM_CHECK );
    
-   menubar     -> Append         ( filemenu           , "&File"            );
-   menubar     -> Append         ( tablemenu          , "&Table"           );
+   menubar     -> Append            ( filemenu           , "&File"            );
+   menubar     -> Append            ( tablemenu          , "&Table"           );
    
    SetMenuBar     ( menubar );
    SetStatusBar   ( new  wxStatusBar   ( this ) );
