@@ -13,6 +13,7 @@
 
 #include <wx/wxprec.h>
 
+#include <wx/renderer.h>
 #include <wx/msw/uxtheme.h>
 
 #include <Tmschema.h>
@@ -255,6 +256,422 @@ const int               CHECKBOXWIDTH  =  16;
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// wxNativeHeaderCtrl                                                         //
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+class  wxNativeHeaderCtrl : public  wxControl
+{
+   private   :
+      typedef wxControl    super;
+      
+   protected :
+      wxSize               DoGetBestSize     () const;
+      void                 DoSetSize         ( int, int, int, int, int );
+      
+   public    :                            // wxWindowMSW
+      bool                 MSWOnNotify       ( int, WXLPARAM, WXLPARAM * );
+   
+   private   :
+      int                  height;
+      
+   public    :
+      wxNativeHeaderCtrl   ( wxWindow *, wxWindowID, const wxPoint & = wxDefaultPosition, const wxSize & = wxDefaultSize, const wxString & = wxT ( "wxNativeHeaderCtrl" ) );
+      
+      bool                 Create            ( wxWindow *, wxWindowID, const wxPoint &, const wxSize &, const wxString & );
+
+   public    :
+      void *               GetParam          ( NMHEADER * ) const;
+      void *               GetParam          ( wxUint32 ) const;
+      void *               GetParamByOrder   ( wxInt32 ) const;
+      wxInt32              GetOrder          ( wxUint32 ) const;
+};
+
+
+
+wxSize  wxNativeHeaderCtrl :: DoGetBestSize () const
+{
+   return ( wxSize ( DEFAULT_ITEM_WIDTH, height + 2 ) );
+}
+
+
+
+void  wxNativeHeaderCtrl :: DoSetSize ( int  x, int  y, int  w, int  h, int  flags )
+{
+   super :: DoSetSize ( x, y, w, h, flags );
+}
+
+
+
+bool  wxNativeHeaderCtrl :: MSWOnNotify ( int  id, WXLPARAM  lparam, WXLPARAM *  result )
+{
+   if ( ! super :: MSWOnNotify ( id, lparam, result ) )
+      if ( GetParent () != 0 )
+         return ( GetParent () -> MSWOnNotify ( id, lparam, result ) );
+
+   return ( true );
+}
+
+
+
+wxNativeHeaderCtrl :: wxNativeHeaderCtrl ( wxWindow *  _window, wxWindowID  _id, const wxPoint &  _point, const wxSize &  _size, const wxString &  _title )
+   : wxControl ()
+{
+   Create ( _window, _id, _point, _size, _title );
+}
+
+
+   
+bool  wxNativeHeaderCtrl :: Create ( wxWindow *  _window, wxWindowID  _id, const wxPoint &  _point, const wxSize &  _size, const wxString &  _title )
+{
+   height   = wxRendererNative :: Get ().GetHeaderButtonHeight ( this );
+
+   if ( ! CreateControl ( _window, _id, _point, _size, wxBORDER_NONE, wxDefaultValidator, _title ) )
+      return ( false );
+      
+   if ( ! MSWCreateControl ( WC_HEADER, WS_CHILD | HDS_DRAGDROP | HDS_BUTTONS | HDS_HORZ | HDS_HOTTRACK | HDS_FULLDRAG, _point, _size, _title ) )
+      return ( false );
+      
+   return ( true );   
+}
+
+
+
+void *  wxNativeHeaderCtrl :: GetParam ( NMHEADER *  header ) const
+{
+   if ( header == 0 )
+      return (  0 );
+      
+   if ( header -> pitem == 0 )
+      return (  0 );
+      
+   if ( ( header -> pitem -> mask & HDI_LPARAM ) != 0 )
+      return ( reinterpret_cast < void * > ( header -> pitem -> lParam ) );
+      
+   return ( GetParam ( header -> iItem ) );
+}
+
+
+
+void *  wxNativeHeaderCtrl :: GetParam ( wxUint32  index ) const
+{
+   HDITEM   item;
+   
+   item.mask   = HDI_LPARAM;
+   
+   Header_GetItem ( static_cast < HWND > ( m_hWnd ), index, &item );
+   
+   return ( reinterpret_cast < void * > ( item.lParam ) );
+}
+
+
+
+void *  wxNativeHeaderCtrl :: GetParamByOrder ( wxInt32  order ) const
+{
+   HWND           hwnd  = static_cast < HWND > ( m_hWnd );
+   const size_t   ITEMS = Header_GetItemCount ( hwnd );
+   HDITEM         item;
+   
+   for ( size_t  i = 0 ; i < ITEMS ; ++i )
+   {
+      item.mask   = HDI_LPARAM | HDI_ORDER;
+      
+      if ( ( Header_GetItem ( hwnd, i, &item ) != FALSE ) &&
+           ( item.iOrder                       == order )    )
+         return ( reinterpret_cast < void * > ( item.lParam ) );
+   }
+   
+   return (  0 );
+}
+
+
+
+wxInt32  wxNativeHeaderCtrl :: GetOrder ( wxUint32  index ) const
+{
+   HDITEM   item;
+   
+   item.mask   = HDI_ORDER;
+   
+   Header_GetItem ( static_cast < HWND > ( m_hWnd ), index, &item );
+   
+   return ( item.iOrder );
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// wxTableCtrl :: HeaderCtrl                                                  //
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+class  wxTableCtrl :: HeaderCtrl : public  wxControl
+{
+   private   :
+      typedef wxControl    super;
+      
+   private   :
+      DECLARE_EVENT_TABLE  ()
+      
+   public    :
+      void                 Refresh           ( bool = true, const wxRect * = 0 );
+      
+   protected :
+      wxSize               DoGetBestSize     () const;
+//    void                 DoSetSize         ( int, int, int, int, int );
+//    
+   public    :                            // wxWindowMSW
+      bool                 MSWOnNotify       ( int, WXLPARAM, WXLPARAM * );
+   
+   private   :
+      wxTableCtrl *        control;
+      wxNativeHeaderCtrl * header;
+   
+   private   :
+      void                 OnSize            ( wxSizeEvent & );
+         
+   private   :
+      Column *             GetColumn         ( NMHEADER * ) const;
+      Column *             GetColumn         ( wxUint32 ) const;
+      Column *             GetColumnByOrder  ( wxInt32 ) const;
+      
+   public    :
+      HeaderCtrl  ( wxTableCtrl *, wxWindowID, const wxPoint & = wxDefaultPosition, const wxSize & = wxDefaultSize, const wxString & = wxT ( "wxTableCtrl :: HeaderCtrl" ) );
+      
+      bool                 Create            ( wxTableCtrl *, wxWindowID, const wxPoint &, const wxSize &, const wxString & );
+      
+      void                 Load              ( Header * );
+      void                 Left              ( int );
+};
+
+
+
+BEGIN_EVENT_TABLE ( wxTableCtrl :: HeaderCtrl, wxControl )
+   EVT_SIZE ( wxTableCtrl :: HeaderCtrl :: OnSize  )
+END_EVENT_TABLE   ()
+
+
+
+void  wxTableCtrl :: HeaderCtrl :: Refresh ( bool  erase, const wxRect *  rect )
+{
+   if ( header != 0 )
+      header -> Refresh ( erase, rect );
+}
+
+
+
+wxSize  wxTableCtrl :: HeaderCtrl :: DoGetBestSize () const
+{
+   if ( header != 0 )
+      return ( header -> GetBestSize () );
+      
+   return ( super :: DoGetBestSize () );
+}
+
+
+
+bool  wxTableCtrl :: HeaderCtrl :: MSWOnNotify ( int  id, WXLPARAM  lparam, WXLPARAM *  result )
+{
+   NMHDR *     nmhdr    = reinterpret_cast < NMHDR * > ( lparam );
+   
+   if ( nmhdr -> hwndFrom != header -> GetHWND () )
+      return ( super :: MSWOnNotify ( id, lparam, result ) );
+   
+   if ( ( nmhdr -> code < HDN_LAST ) || ( nmhdr -> code > HDN_FIRST ) )
+      return ( super :: MSWOnNotify ( id, lparam, result ) );
+      
+   NMHEADER *  nmheader = reinterpret_cast < NMHEADER * > ( nmhdr );
+   HDITEM *    item     = nmheader -> pitem;
+   Column *    column   = GetColumn ( nmheader );
+   
+   switch ( nmhdr -> code )
+   {
+      case HDN_BEGINTRACK  :
+         {
+            wxTableEvent   te ( control, wxEVT_COMMAND_TABLE_COLUMN_BEGIN_SIZE, column );
+
+            ProcessEvent   ( te );
+
+            if ( ! te.IsAllowed () )
+               *result = TRUE;
+         }
+         
+         break;
+         
+      case HDN_ENDTRACK    :
+//    case HDN_ITEMCHANGED :
+         if ( ( column != 0 ) && ( ( item -> mask & HDI_WIDTH ) != 0 ) )
+         {
+            column -> Width ( item -> cxy );
+            
+            control -> ColumnSized ( column );
+         }
+         
+         break;
+         
+      case HDN_BEGINDRAG   :
+         {
+            wxTableEvent   te ( control, wxEVT_COMMAND_TABLE_COLUMN_BEGIN_MOVE, column );
+
+            ProcessEvent   ( te );
+
+            if ( ! te.IsAllowed () )
+               *result = TRUE;
+         }
+         
+         break;
+         
+      case HDN_ENDDRAG     :
+         if ( column != 0 )
+         {
+            const wxUint32    ORDER    = nmheader -> pitem -> iOrder;
+            Column *          help     = GetColumnByOrder ( ORDER );
+            bool              before   = ORDER <= header -> GetOrder ( nmheader -> iItem );
+
+            if ( help == 0 )
+            {
+               help     = GetColumnByOrder ( ORDER - 1 );
+               before   = false;
+            }
+            
+            control -> header.Exchange ( column, help, before );
+            
+            control -> ColumnMoved ( column );
+         }
+         
+         break;
+         
+      default              :
+         return ( super :: MSWOnNotify ( id, lparam, result ) );
+   }
+   
+   return ( true );
+}
+
+
+
+void  wxTableCtrl :: HeaderCtrl :: OnSize ( wxSizeEvent &  se )
+{
+   if ( header != 0 )
+      header -> SetSize ( - control -> left, 0, se.GetSize ().GetWidth () + control -> left, se.GetSize ().GetHeight (), wxSIZE_FORCE );
+   
+   se.Skip  ();
+}
+
+
+
+wxTableCtrl :: Column *  wxTableCtrl :: HeaderCtrl :: GetColumn ( NMHEADER *  nmh ) const
+{
+   if ( header != 0 )
+      return ( static_cast < Column * > ( header -> GetParam ( nmh ) ) );
+   else
+      return (  0 );
+}
+
+
+
+wxTableCtrl :: Column *  wxTableCtrl :: HeaderCtrl :: GetColumn ( wxUint32  index ) const
+{
+   if ( header != 0 )
+      return ( static_cast < Column * > ( header -> GetParam ( index ) ) );
+   else
+      return (  0 );
+}
+
+
+
+wxTableCtrl :: Column *  wxTableCtrl :: HeaderCtrl :: GetColumnByOrder ( wxInt32  order ) const
+{
+   if ( header != 0 )
+      return ( static_cast < Column * > ( header -> GetParamByOrder ( order ) ) );
+   else
+      return (  0 );
+}
+
+
+
+wxTableCtrl :: HeaderCtrl :: HeaderCtrl ( wxTableCtrl *  _window, wxWindowID  _id, const wxPoint &  _point, const wxSize &  _size, const wxString &  _title )
+   : wxControl ()
+{
+   control  = 0;
+   header   = 0;
+   
+   Create ( _window, _id, _point, _size, _title );
+}
+
+
+   
+bool  wxTableCtrl :: HeaderCtrl :: Create ( wxTableCtrl *  _window, wxWindowID  _id, const wxPoint &  _point, const wxSize &  _size, const wxString &  _title )
+{
+   control  = _window;
+   
+   if ( ! CreateControl ( _window, _id, _point, _size, wxBORDER_NONE, wxDefaultValidator, _title ) )
+      return ( false );
+      
+   if ( ! MSWCreateControl ( WC_STATIC, WS_CHILD, _point, _size, _title ) )
+      return ( false );
+      
+   header   = new  wxNativeHeaderCtrl  ( this, wxID_ANY );
+   
+   // Hook the wxNativeHeaderCtrl's event handler to use wxTableCtrl :: HeaderCtrl's event hander as the next.
+   
+   header   -> SetNextHandler ( this );
+
+   return ( true );   
+}
+
+
+
+void  wxTableCtrl :: HeaderCtrl :: Load ( Header *  _header )
+{
+   HWND  hwnd  = static_cast < HWND > ( header -> GetHWND () );
+   int   count = 0;
+   
+   while ( Header_GetItemCount ( hwnd ) > 0 )
+      Header_DeleteItem ( hwnd, 0 );
+
+   for ( Header :: iterator  i = _header -> begin () ; i != _header -> end () ; ++i )
+   {
+      Column *    c  = *i;
+      
+      if ( ! c -> Show () )
+         continue;
+         
+      HDITEM      item;
+      
+      ZeroMemory ( &item, sizeof ( HDITEM ) );
+      
+      item.mask         = HDI_TEXT | HDI_FORMAT | HDI_WIDTH | HDI_LPARAM;
+      item.pszText      = const_cast < wxChar * > ( c -> Desc ().c_str () );
+      item.cchTextMax   = c -> Desc ().Length ();
+      item.cxy          = c -> Rect ().GetWidth ();
+      item.fmt          = HDF_LEFT | HDF_STRING;
+
+      if      ( c -> AlignHeader () & DT_CENTER ) 
+         item.fmt |= HDF_CENTER;
+      else if ( c -> AlignHeader () & DT_RIGHT  )
+         item.fmt |= HDF_RIGHT;
+
+      item.lParam       = reinterpret_cast < LPARAM > ( c );
+      
+      if ( Header_InsertItem ( hwnd, count++, &item ) == -1 )
+         wxLogDebug ( "Error: %d", :: GetLastError () );
+   }
+}
+
+
+
+void  wxTableCtrl :: HeaderCtrl :: Left ( int  left )
+{
+   const wxRect   rect  = GetClientRect ();
+   
+   header -> SetSize ( - left, 0, rect.GetWidth () + left, rect.GetHeight (), wxSIZE_FORCE );
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 // wxTableCtrl :: Column                                                      //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -422,6 +839,14 @@ void  wxTableCtrl :: Column :: Height ( long  height )
 {
    if ( height >= 0 )
       rect.SetHeight ( height );
+}
+
+
+
+void  wxTableCtrl :: Column :: Width ( long  width )
+{
+   if ( width >= 0 )
+      rect.SetWidth ( width );
 }
 
 
@@ -673,6 +1098,9 @@ void  wxTableCtrl :: Header :: SortByPosition ()
 
 void  wxTableCtrl :: Header :: Exchange ( Column *  move, Column *  part, bool  before )
 {
+   if ( move == part )
+      return;
+      
    iterator   i0 = find ( begin (), end (), move );
    iterator   i1 = find ( begin (), end (), part );
 
@@ -1555,6 +1983,9 @@ void  wxTableCtrl :: Body :: DoFocusRect ( wxDC *  dc, int  row )
 
 void  wxTableCtrl :: Body :: DrawCheckBox ( wxDC *  dc, const wxRect &  rect, bool  checked )
 {
+   wxRendererNative :: Get ().DrawCheckBox ( dc -> GetWindow (), *dc, rect, checked ? wxCONTROL_CHECKED : 0 );
+   
+#if 0   
 #ifdef __WXMSW__   
    wxUxThemeEngine *    te = wxUxThemeEngine :: GetIfActive ();
    
@@ -1576,6 +2007,7 @@ void  wxTableCtrl :: Body :: DrawCheckBox ( wxDC *  dc, const wxRect &  rect, bo
 #else
    #error "Checkbox drawing code to insert here"
 #endif   
+#endif
 }
 
 
@@ -3429,6 +3861,8 @@ void  wxTableCtrl :: Body :: Exchange ( const wxRect &  _r0, const wxRect &  _r1
    wxClientDC  dc    ( this );
    wxBitmapDC  bdc   ( &dc, rect.GetSize () );
    
+   bdc.SetWindow  ( dc.GetWindow () );
+   
    DoPaintDC ( &bdc );
 
    if ( ( cursor_row = visible.IndexOf ( *cursor ) ) >= 0 )
@@ -4088,6 +4522,9 @@ void  wxTableCtrl :: DoSize ()
 //    scroller -> MoveWindow ( wxRect ( rect.W () - w, rect.Y () + height, w, rect.H () - height ), FALSE );
    }
 
+   if ( nativeheader != 0 )
+      nativeheader -> SetSize ( head.GetSize () );
+      
    if ( body != 0 )
       body -> SetSize ( r );
 //    body -> MoveWindow  ( r, FALSE );
@@ -4235,6 +4672,8 @@ void  wxTableCtrl :: DrawColumn ( wxDC *  dc, const DrawHeaderFlag &  flag, cons
    int                     bkmode      = wxSOLID;  // OPAQUE;
    wxBitmapDC              bdc         ( dc, rect.GetSize () );
 
+   bdc.SetWindow  ( dc -> GetWindow () );
+   
    dc -> SetPen   ( black );
 
 // rect = wxPoint ( 0, 0 );
@@ -4422,6 +4861,21 @@ void  wxTableCtrl :: DrawColumn ( wxDC *  dc, const DrawHeaderFlag &  flag, cons
 
 void  wxTableCtrl :: DrawHeader ( wxDC *  dc )
 {
+   const int         DXY         = ( styleex & ITCS_FOCUSRECT  ) ? FOCUSRECTTHICK : 0;
+   const int         DX          = ( styleex & ITCS_CHECKBOXES ) ? CHECKBOXWIDTH  : 0;
+
+   if ( nativeheader != 0 )
+   {  
+      if ( ( styleex & ITCS_CHECKBOXES ) == 0 )
+         return;
+         
+      const wxRect   r  ( DXY, DXY, DX, head.GetHeight () );
+         
+      wxRendererNative :: Get ().DrawHeaderButton ( this, *dc, r, 0 );
+      
+      return;
+   }
+      
    wxRect            back        = GetClientRectEx ();   // Get client rect - focus rect.
    const wxFont &    prev_font   = dc -> GetFont ();
    const wxPen &     prev_pen    = dc -> GetPen  ();
@@ -4446,8 +4900,6 @@ void  wxTableCtrl :: DrawHeader ( wxDC *  dc )
    
    tooltipvector.Clear  ();
 
-   const int                  DXY      = ( styleex & ITCS_FOCUSRECT  ) ? FOCUSRECTTHICK : 0;
-   const int                  DX       = ( styleex & ITCS_CHECKBOXES ) ? CHECKBOXWIDTH  : 0;
    const Header :: Iterator   END      = header.end  ();
    Column *                   part     = 0;
    wxRect                     rect;
@@ -4531,13 +4983,32 @@ void  wxTableCtrl :: DrawHeader ( wxDC *  dc )
 void  wxTableCtrl :: DrawHeader ()
 {
    const int   DXY   = ( styleex & ITCS_FOCUSRECT  ) ? FOCUSRECTTHICK : 0;
-// const int   DX    = ( styleex & ITCS_CHECKBOXES ) ? CHECKBOXWIDTH  : 0;
-   wxClientDC  dc    ( this );
-   wxBitmapDC  bdc   ( &dc, head.GetWidth () + DXY + DXY, head.GetHeight () + DXY );
+   
+   if ( nativeheader != 0 )
+   {
+      const int   DX = ( styleex & ITCS_CHECKBOXES ) ? CHECKBOXWIDTH : 0;
+      
+      nativeheader -> Move    ( DXY + DX, DXY );
+      nativeheader -> Left    ( left );
+      nativeheader -> Refresh ();
+      nativeheader -> Update  ();
+      
+      wxClientDC  dc ( this );
+      
+      DrawHeader ( &dc );
+   }
+   else
+   {      
+   // const int   DX    = ( styleex & ITCS_CHECKBOXES ) ? CHECKBOXWIDTH  : 0;
+      wxClientDC  dc    ( this );
+      wxBitmapDC  bdc   ( &dc, head.GetWidth () + DXY + DXY, head.GetHeight () + DXY );
 
-   DrawHeader ( &bdc );
+      bdc.SetWindow  ( dc.GetWindow () );
+      
+      DrawHeader ( &bdc );
 
-   bdc.Update ();
+      bdc.Update ();
+   }
 }
 
 
@@ -4654,6 +5125,40 @@ void  wxTableCtrl :: SizeColumn ( Column *  column, const wxPoint &  point )
 
 
 
+void  wxTableCtrl :: ColumnMoved ( Column *  column )
+{
+   header.RedoSize   ();
+
+   if ( body != 0 )
+   {
+      body -> Refresh    ();
+      body -> DoSize     ( false );
+   }
+
+   wxTableEvent   te ( this, wxEVT_COMMAND_TABLE_COLUMN_MOVED, column );
+
+   ProcessEvent   ( te );
+}
+
+
+
+void  wxTableCtrl :: ColumnSized ( Column *  column )
+{
+   header.RedoSize   ();
+   
+   if ( body != 0 )
+   {
+      body -> Refresh    ();
+      body -> DoSize     ( false );
+   }
+
+   wxTableEvent   te ( this, wxEVT_COMMAND_TABLE_COLUMN_SIZED, column );
+
+   ProcessEvent   ( te );
+}
+
+
+
 void  wxTableCtrl :: DrawBody ()
 {
    if ( body != 0 )
@@ -4748,6 +5253,8 @@ void  wxTableCtrl :: OnPaint ( wxPaintEvent &  pe )
    const int      DXY   = ( styleex & ITCS_FOCUSRECT ) ? FOCUSRECTTHICK : 0;
    wxPaintDC      dc    ( this );
    wxBitmapDC     bdc   ( &dc, head.GetWidth () + DXY + DXY, head.GetHeight () + DXY );
+   
+   bdc.SetWindow  ( dc.GetWindow () );
    
    DrawBackground ( &bdc );
    DrawHeader     ( &bdc );
@@ -4988,18 +5495,7 @@ void  wxTableCtrl :: OnLeftUp ( wxMouseEvent &  me )
       }
 
       if ( cursortype == CursorType_SIZE_LEFT_RIGHT )
-      {
-         if ( body != 0 )
-         {
-//          body -> Invalidate ();
-            body -> Refresh    ();
-            body -> DoSize     ( FALSE );
-         }
-
-         wxTableEvent   te ( this, wxEVT_COMMAND_TABLE_COLUMN_SIZED, column, me.GetPosition () );
-
-         ProcessEvent   ( te );
-      }
+         ColumnSized ( column );
    }
 
    if ( cursortype == CursorType_SIZE_TOP_BOTTOM )
@@ -5357,6 +5853,30 @@ wxRect  wxTableCtrl :: GetClientRectEx () const
 
 
 
+void  wxTableCtrl :: CreateHeader ()
+{
+   if ( nativeheader != 0 )
+      return;
+   
+   nativeheader   = new  HeaderCtrl ( this, wxID_ANY );
+   
+   nativeheader   -> Load  ( &header );
+}
+
+
+
+void  wxTableCtrl :: DeleteHeader ()
+{
+   if ( nativeheader == 0 )
+      return;
+      
+   delete  nativeheader;
+   
+   nativeheader   = 0;   
+}
+
+
+
 void  wxTableCtrl :: CreateBody ()
 {
    body  = new  Body ( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, Body :: DEFAULTSTYLE, wxEmptyString, &header );
@@ -5371,6 +5891,7 @@ void  wxTableCtrl :: Init ()
 {
    table          = 0;
    record         = 0;
+   nativeheader   = 0;
 
    column         = 0;
    columnmove     = 0;
@@ -5483,7 +6004,8 @@ bool  wxTableCtrl :: Create ( wxWindow *  _window, wxWindowID  _id, const wxPoin
 
    header.Init   ( 0, head.GetHeight () );
 
-   CreateBody ();
+   CreateHeader   ();
+   CreateBody     ();
 
    return ( true );
 }
@@ -5662,6 +6184,9 @@ void  wxTableCtrl :: Table ( wxTable *  _table )
       record   = 0;
 
    head.SetHeight ( header.Init ( table, head.GetHeight () ) );
+   
+   if ( nativeheader != 0 )
+      nativeheader -> Load ( &header );
 
    if ( body != 0 )
       body -> Table ( table );
@@ -5763,6 +6288,25 @@ wxTableCtrl &  wxTableCtrl :: SetToolTip ( const bool &  flag )
       
    if ( body != 0 )
       body  -> SetToolTip ( flag );
+      
+   return ( *this );
+}
+
+
+
+const bool  wxTableCtrl :: GetNativeHeader () const
+{
+   return ( false );
+}
+
+
+
+wxTableCtrl &  wxTableCtrl :: SetNativeHeader ( bool  flag )
+{
+   if ( flag )
+      CreateHeader ();
+   else
+      DeleteHeader ();
       
    return ( *this );
 }

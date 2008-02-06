@@ -250,6 +250,7 @@ class  wxTableCtrl : public  wxControl
             void                 Move           ( const wxPoint & );
             void                 Size           ( const wxSize & );
             void                 Height         ( long );
+            void                 Width          ( long );
       };
 
 
@@ -320,6 +321,10 @@ class  wxTableCtrl : public  wxControl
 
 
    public    :
+      class  HeaderCtrl;
+      
+      
+      
       class  Body : public  wxWindow
       {
          private   :
@@ -558,6 +563,7 @@ class  wxTableCtrl : public  wxControl
       friend class               Property;
       friend class               SearchDialog;
       friend class               wxTableEvent;
+      friend class               HeaderCtrl;
 
 
 
@@ -607,6 +613,7 @@ class  wxTableCtrl : public  wxControl
       wxTable :: Record *        record;
       wxRect                     head;
       Header                     header;
+      HeaderCtrl *               nativeheader;
 
       Column *                   column;
       Column *                   columnmove;
@@ -659,6 +666,9 @@ class  wxTableCtrl : public  wxControl
       void                       DrawHeader           ();
       void                       MoveColumn           ( Column *, const wxPoint & );
       void                       SizeColumn           ( Column *, const wxPoint & );
+      
+      void                       ColumnMoved          ( Column * );
+      void                       ColumnSized          ( Column * );
 
       void                       DrawBody             ();
 
@@ -716,6 +726,8 @@ class  wxTableCtrl : public  wxControl
 
       wxRect                     GetClientRectEx      () const;
 
+      void                       CreateHeader         ();
+      void                       DeleteHeader         ();
       void                       CreateBody           ();
       void                       Init                 ();
 
@@ -775,6 +787,9 @@ class  wxTableCtrl : public  wxControl
       
       const bool                 GetToolTip           () const;
       wxTableCtrl &              SetToolTip           ( const bool & );
+      
+      const bool                 GetNativeHeader      () const;
+      wxTableCtrl &              SetNativeHeader      ( bool );
 
       bool                       Lock                 () const;
       void                       Lock                 ( bool );
