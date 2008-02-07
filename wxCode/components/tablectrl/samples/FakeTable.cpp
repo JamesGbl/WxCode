@@ -190,13 +190,40 @@ long  FakeTable :: FakeRecord :: __ScrollPosByCursor  ( const Cursor *  cursor )
 
 
 
+const bool  FakeTable :: FakeRecord :: CanSort ( size_t  i ) const
+{
+   return ( i == 0 );
+}
+
+
+
+const FakeTable :: FakeRecord :: Sequence  FakeTable :: FakeRecord :: GetSort ( size_t  i ) const
+{
+   if ( i == 0 )
+      return ( GetSequence () );
+   
+   return ( Sequence_NONE );
+}
+
+
+
+void  FakeTable :: FakeRecord :: SetSort ( size_t  i, const Sequence &  _sequence )
+{
+   if ( i == 0 )
+      SetSequence ( _sequence );
+}
+
+
+
 FakeTable :: FakeRecord :: FakeRecord ( FakeTable *  _table, size_t  _r, size_t  _c )
    : Record ( _table )
 {
-   r  = _r;
-   c  = _c;
+   r        = _r;
+   c        = _c;
    
-   i  =  0;
+   i        =  0;
+   
+   sequence = Sequence_ASCENDING;
 }
 
 

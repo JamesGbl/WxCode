@@ -57,6 +57,11 @@ class  FakeTable : public  wxTable
             Result            __ScrollGetByPos     ( long );
             long              __ScrollPosByCursor  ( const Cursor * );
 
+         public    :
+            const bool        CanSort              ( size_t ) const;
+            const Sequence    GetSort              ( size_t ) const;
+            void              SetSort              ( size_t, const Sequence & );
+            
          private   :
             size_t            r;
             size_t            c;
