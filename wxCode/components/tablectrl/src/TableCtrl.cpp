@@ -562,7 +562,7 @@ bool  wxTableCtrl :: HeaderCtrl :: MSWOnNotify ( int  id, WXLPARAM  lparam, WXLP
                Header_GetItem ( hwnd, nmheader -> iItem, &item );
          
                item.fmt &= ~( HDF_SORTUP | HDF_SORTDOWN );
-               item.fmt |= ( sort == wxTable :: Record :: Sequence_ASCENDING ) ? HDF_SORTUP : HDF_SORTDOWN;
+               item.fmt |= ( sort == wxTable :: Record :: Sequence_ASCENDING ) ? HDF_SORTDOWN : HDF_SORTUP;
                
                Header_SetItem ( hwnd, nmheader -> iItem, &item );
                
@@ -703,7 +703,7 @@ void  wxTableCtrl :: HeaderCtrl :: Load ( Header *  _header )
                   sort  = control -> record -> GetSort ( c -> Reference () );
                   
       if ( sort != wxTable :: Record :: Sequence_NONE )
-         item.fmt |= ( sort == wxTable :: Record :: Sequence_ASCENDING ) ? HDF_SORTUP : HDF_SORTDOWN;
+         item.fmt |= ( sort == wxTable :: Record :: Sequence_ASCENDING ) ? HDF_SORTDOWN : HDF_SORTUP;
                            
       if ( Header_InsertItem ( hwnd, count++, &item ) == -1 )
          wxLogDebug ( "Error: %d", :: GetLastError () );
@@ -6353,7 +6353,7 @@ wxTableCtrl &  wxTableCtrl :: SetToolTip ( const bool &  flag )
 
 const bool  wxTableCtrl :: GetNativeHeader () const
 {
-   return ( false );
+   return ( nativeheader != 0 );
 }
 
 
