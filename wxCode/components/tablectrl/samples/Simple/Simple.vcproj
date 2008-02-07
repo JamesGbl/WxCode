@@ -20,7 +20,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;..;&quot;$(WXWIN)/include/msvc&quot;;&quot;$(WXWIN)/include&quot;;../../include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;_DEBUG;"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -72,7 +72,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories=".;..;&quot;$(WXWIN)/include/msvc&quot;;&quot;$(WXWIN)/include&quot;;../../include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;NDEBUG;"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="wx/wxprec.h"
