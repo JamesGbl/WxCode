@@ -669,6 +669,8 @@ class  wxTableCtrl : public  wxControl
       
       void                       ColumnMoved          ( Column * );
       void                       ColumnSized          ( Column * );
+      
+      void                       SortColumn           ( Column * );
 
       void                       DrawBody             ();
 

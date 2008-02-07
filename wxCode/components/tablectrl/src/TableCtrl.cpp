@@ -16,7 +16,6 @@
 #include <wx/renderer.h>
 #include <wx/msw/uxtheme.h>
 
-#include <Tmschema.h>
 #include <algorithm>
 
 #if 0
@@ -474,8 +473,9 @@ wxSize  wxTableCtrl :: HeaderCtrl :: DoGetBestSize () const
 bool  wxTableCtrl :: HeaderCtrl :: MSWOnNotify ( int  id, WXLPARAM  lparam, WXLPARAM *  result )
 {
    NMHDR *     nmhdr    = reinterpret_cast < NMHDR * > ( lparam );
+   HWND        hwnd     = static_cast < HWND > ( header -> GetHWND () );
    
-   if ( nmhdr -> hwndFrom != header -> GetHWND () )
+   if ( nmhdr -> hwndFrom != hwnd )
       return ( super :: MSWOnNotify ( id, lparam, result ) );
    
    if ( ( nmhdr -> code < HDN_LAST ) || ( nmhdr -> code > HDN_FIRST ) )
@@ -538,6 +538,46 @@ bool  wxTableCtrl :: HeaderCtrl :: MSWOnNotify ( int  id, WXLPARAM  lparam, WXLP
             control -> header.Exchange ( column, help, before );
             
             control -> ColumnMoved ( column );
+         }
+         
+         break;
+         
+      case HDN_ITEMCLICK   :
+         if ( column == 0 )
+            column   = GetColumn ( nmheader -> iItem );
+         
+         if ( column != 0 )
+         {
+            control -> SortColumn ( column );
+            
+            const wxTable :: Record :: Sequence
+                        sort  = control -> record -> GetSort ( column -> Reference () );
+                        
+            if ( sort != wxTable :: Record :: Sequence_NONE )
+            {
+               HDITEM   item;
+               
+               item.mask   = HDI_FORMAT;
+               
+               Header_GetItem ( hwnd, nmheader -> iItem, &item );
+         
+               item.fmt &= ~( HDF_SORTUP | HDF_SORTDOWN );
+               item.fmt |= ( sort == wxTable :: Record :: Sequence_ASCENDING ) ? HDF_SORTUP : HDF_SORTDOWN;
+               
+               Header_SetItem ( hwnd, nmheader -> iItem, &item );
+               
+               const size_t   COLS  = Header_GetItemCount ( hwnd );
+               
+               for ( size_t  i = 0 ; i < COLS ; ++i )
+               {
+                  if ( i == nmheader -> iItem )
+                     continue;
+                     
+                  Header_GetItem ( hwnd, i, &item );
+                  item.fmt &= ~( HDF_SORTUP | HDF_SORTDOWN );
+                  Header_SetItem ( hwnd, i, &item );
+               }
+            }
          }
          
          break;
@@ -633,7 +673,7 @@ void  wxTableCtrl :: HeaderCtrl :: Load ( Header *  _header )
 
    for ( Header :: iterator  i = _header -> begin () ; i != _header -> end () ; ++i )
    {
-      Column *    c  = *i;
+      Column *    c     = *i;
       
       if ( ! c -> Show () )
          continue;
@@ -653,8 +693,18 @@ void  wxTableCtrl :: HeaderCtrl :: Load ( Header *  _header )
       else if ( c -> AlignHeader () & DT_RIGHT  )
          item.fmt |= HDF_RIGHT;
 
+      // Hook the Column up via lParam.
+      
       item.lParam       = reinterpret_cast < LPARAM > ( c );
       
+      // Sort.
+      
+      const wxTable :: Record :: Sequence    
+                  sort  = control -> record -> GetSort ( c -> Reference () );
+                  
+      if ( sort != wxTable :: Record :: Sequence_NONE )
+         item.fmt |= ( sort == wxTable :: Record :: Sequence_ASCENDING ) ? HDF_SORTUP : HDF_SORTDOWN;
+                           
       if ( Header_InsertItem ( hwnd, count++, &item ) == -1 )
          wxLogDebug ( "Error: %d", :: GetLastError () );
    }
@@ -5159,6 +5209,48 @@ void  wxTableCtrl :: ColumnSized ( Column *  column )
 
 
 
+void  wxTableCtrl :: SortColumn ( Column *  column )
+{
+   const size_t          ref      = column -> Reference ();
+// wxTable :: Sequence   sequence = table -> Sort ( ref );
+
+   if ( record -> CanSort ( ref ) )
+   {
+      switch ( record -> GetSort ( ref ) )
+      {
+         case wxTable :: Record :: Sequence_ASCENDING    :
+            record -> SetSort ( ref, wxTable :: Record :: Sequence_DESCENDING );
+
+            break;
+
+         case wxTable :: Record :: Sequence_DESCENDING   :
+            record -> SetSort ( ref, wxTable :: Record :: Sequence_ASCENDING  );
+
+            break;
+
+         default                                         :
+            if ( styleex & ITCS_MULTISELECT )
+               body  -> SelectRangeStop   ();
+
+            record -> SetSort ( ref, wxTable :: Record :: Sequence_ASCENDING  );
+
+            break;
+      }
+
+      index = record -> GetIndex ();
+
+      wxClientDC  dc ( this );
+      
+      DrawHeader ( &dc );
+
+      if ( body != 0 )
+         body -> DoPaintSort ();
+//    body -> DoPaintFill ();
+   }
+}
+
+
+
 void  wxTableCtrl :: DrawBody ()
 {
    if ( body != 0 )
@@ -5447,42 +5539,7 @@ void  wxTableCtrl :: OnLeftUp ( wxMouseEvent &  me )
             ProcessEvent   ( te );
          }
          else
-         {
-            DWORD                 ref      = column -> Reference ();
-//          wxTable :: Sequence   sequence = table -> Sort ( ref );
-
-            if ( record -> CanSort ( ref ) )
-            {
-               switch ( record -> GetSort ( ref ) )
-               {
-                  case wxTable :: Record :: Sequence_ASCENDING    :
-                     record -> SetSort ( ref, wxTable :: Record :: Sequence_DESCENDING );
-
-                     break;
-
-                  case wxTable :: Record :: Sequence_DESCENDING   :
-                     record -> SetSort ( ref, wxTable :: Record :: Sequence_ASCENDING  );
-
-                     break;
-
-                  default                                         :
-                     if ( styleex & ITCS_MULTISELECT )
-                        body  -> SelectRangeStop   ();
-
-                     record -> SetSort ( ref, wxTable :: Record :: Sequence_ASCENDING  );
-
-                     break;
-               }
-
-               index = record -> GetIndex ();
-
-               DrawHeader ( &dc );
-
-               if ( body != 0 )
-                  body -> DoPaintSort ();
-//                body -> DoPaintFill ();
-            }
-         }
+            SortColumn ( column );
 
    //    dc.SetROP2 ( R2_NOTXORPEN );
          DrawColumn ( &dc, DrawHeaderFlag_HIDE, column );
@@ -6004,7 +6061,7 @@ bool  wxTableCtrl :: Create ( wxWindow *  _window, wxWindowID  _id, const wxPoin
 
    header.Init   ( 0, head.GetHeight () );
 
-   CreateHeader   ();
+// CreateHeader   ();
    CreateBody     ();
 
    return ( true );
