@@ -16,7 +16,7 @@
 
 
 
-#include "ODBCTable.hpp"
+#include "wx/ODBC/ODBCTable.hpp"
 #include "MainFrame.h"
 
 

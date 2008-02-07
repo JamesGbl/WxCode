@@ -15,7 +15,7 @@
 
 #include <wx/arrimpl.cpp>
 
-#include "ODBCTable.hpp"
+#include "wx/ODBC/ODBCTable.hpp"
 
 
 

@@ -17,7 +17,8 @@
 #include <sqlext.h>
 #include <odbcinst.h>
 
-#include "ODBCTable.hpp"
+#include "wx/ODBC/ODBCTable.hpp"
+
 #include "DataSourcePickerDialog.hpp"
 
 

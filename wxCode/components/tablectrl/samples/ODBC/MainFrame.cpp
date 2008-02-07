@@ -16,9 +16,10 @@
 #include <wx/filedlg.h>
 #include <wx/dbtable.h>
 
+#include "wx/ODBC/ODBCTable.hpp"
+
 #include "DataSourcePickerDialog.hpp"
 #include "TablePickerDialog.hpp"
-#include "ODBCTable.hpp"
 #include "ChildFrame.hpp"
 #include "MainFrame.hpp"
 

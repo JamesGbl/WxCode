@@ -13,7 +13,7 @@
 
 #include <wx/wxprec.h>
 
-#include "cTreeTable.hpp"
+#include "wx/cTreePlus/cTreeTable.hpp"
 
 
 

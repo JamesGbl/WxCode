@@ -18,7 +18,8 @@
 
 #include <wx/TableCtrl.h>
 
-#include "ODBCTable.h"
+#include "wx/ODBC/ODBCTable.h"
+
 #include "MainFrame.h"
 #include "ChildFrame.h"
 

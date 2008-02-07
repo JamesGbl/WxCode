@@ -16,7 +16,7 @@
 #include <wx/filename.h>
 
 #include <wx/TableCtrl.hpp>
-#include <cTreeTable.hpp>
+#include <wx/cTreePlus/cTreeTable.hpp>
 
 #include "TableMenu.h"
 #include "MainFrame.hpp"

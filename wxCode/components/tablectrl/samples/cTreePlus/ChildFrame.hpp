@@ -17,10 +17,10 @@
 
 
 #include <wx/TableCtrl.h>
+#include <wx/cTreePlus/cTreeTable.hpp>
 
-#include <ctdbsdk.hpp>                    // cTreePlus DB SDK.
+//#include <ctdbsdk.hpp>                    // cTreePlus DB SDK.
 
-#include "cTreeTable.h"
 #include "MainFrame.h"
 #include "ChildFrame.h"
 

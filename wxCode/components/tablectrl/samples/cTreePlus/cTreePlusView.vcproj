@@ -131,9 +131,6 @@
 				RelativePath=".\cTreePlusView.cpp">
 			</File>
 			<File
-				RelativePath="..\cTreeTable.cpp">
-			</File>
-			<File
 				RelativePath=".\MainFrame.cpp">
 			</File>
 		</Filter>
@@ -152,12 +149,6 @@
 			</File>
 			<File
 				RelativePath=".\cTreePlusView.hpp">
-			</File>
-			<File
-				RelativePath="..\cTreeTable.h">
-			</File>
-			<File
-				RelativePath="..\cTreeTable.hpp">
 			</File>
 			<File
 				RelativePath=".\MainFrame.h">

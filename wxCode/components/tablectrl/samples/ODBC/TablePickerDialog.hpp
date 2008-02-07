@@ -19,7 +19,7 @@
 #include <wx/listctrl.h>
 #include <wx/dialog.h>
 
-#include "ODBCTable.h"
+#include "wx/ODBC/ODBCTable.h"
 
 
 
