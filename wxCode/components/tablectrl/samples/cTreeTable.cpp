@@ -44,8 +44,9 @@ const size_t  cTreeTable :: RecordEx :: __NumberOfKeys ( int )  const
 
 wxTable :: Record :: Result  cTreeTable :: RecordEx :: __GetFst ( int  index )
 {
-   if ( ( ( GetSequence () == Sequence_ASCENDING  ) && record.First () ) ||
-        ( ( GetSequence () == Sequence_DESCENDING ) && record.Last  () )    )
+// record.SetDefaultIndex ( index );
+   
+   if ( record.First () )
       return ( Result_OK );
 
    return ( Result_EOT );
@@ -55,8 +56,7 @@ wxTable :: Record :: Result  cTreeTable :: RecordEx :: __GetFst ( int  index )
 
 wxTable :: Record :: Result  cTreeTable :: RecordEx :: __GetNxt ()
 {
-   if ( ( ( GetSequence () == Sequence_ASCENDING  ) && record.Next  () ) ||
-        ( ( GetSequence () == Sequence_DESCENDING ) && record.Prev  () )    )
+   if ( record.Next  () )
       return ( Result_OK );
 
    return ( Result_EOT );
@@ -68,14 +68,9 @@ long  cTreeTable :: RecordEx :: __GetNxtEx ( long  count )
 {
    long     result   = 0;
 
-   if ( GetSequence () == Sequence_ASCENDING )
-      while ( ( result < count ) &&
-              ( record.Next () )    )
-         ++result;
-   else
-      while ( ( result < count ) &&
-              ( record.Prev () )    )
-         ++result;
+   while ( ( result < count ) &&
+           ( record.Next () )    )
+      ++result;
 
    return ( result );
 }
@@ -84,8 +79,7 @@ long  cTreeTable :: RecordEx :: __GetNxtEx ( long  count )
 
 wxTable :: Record :: Result  cTreeTable :: RecordEx :: __GetPrv ()
 {
-   if ( ( ( GetSequence () == Sequence_ASCENDING  ) && record.Prev  () ) ||
-        ( ( GetSequence () == Sequence_DESCENDING ) && record.Next  () )    )
+   if ( record.Prev  () )
       return ( Result_OK );
 
    return ( Result_EOT );
@@ -97,14 +91,9 @@ long  cTreeTable :: RecordEx :: __GetPrvEx ( long  count )
 {
    long     result   = 0;
 
-   if ( GetSequence () == Sequence_ASCENDING )
-      while ( ( result < count ) &&
-              ( record.Prev () )    )
-         ++result;
-   else
-      while ( ( result < count ) &&
-              ( record.Next () )    )
-         ++result;
+   while ( ( result < count ) &&
+           ( record.Prev () )    )
+      ++result;
    
    return ( result );
 }
@@ -113,8 +102,9 @@ long  cTreeTable :: RecordEx :: __GetPrvEx ( long  count )
 
 wxTable :: Record :: Result  cTreeTable :: RecordEx :: __GetLst ( int  index )
 {
-   if ( ( ( GetSequence () == Sequence_ASCENDING  ) && record.Last  () ) ||
-        ( ( GetSequence () == Sequence_DESCENDING ) && record.First () )    )
+// record.SetDefaultIndex ( index );
+   
+   if ( record.Last  () )
       return ( Result_OK );
 
    return ( Result_EOT );
