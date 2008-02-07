@@ -67,14 +67,14 @@ MainFrame :: MainFrame ()
 {
    SetIcon ( wxIcon ( "ICON" ) );
    
-   wxMenuBar *    menubar  = new  wxMenuBar  ();
-   wxMenu *       filemenu = new  wxMenu     ();
+   wxMenuBar *    menubar     = new  wxMenuBar  ();
+   wxMenu *       filemenu    = new  wxMenu     ();
    
    filemenu -> Append            ( wxID_OPEN    , "&Open..."   , wxEmptyString );
    filemenu -> AppendSeparator   ();
    filemenu -> Append            ( wxID_EXIT    , "E&xit"      , wxEmptyString );
    
-   menubar  -> Append            ( filemenu     , "&File"      );
+   menubar     -> Append            ( filemenu           , "&File"            );
    
    SetMenuBar  ( menubar );
    

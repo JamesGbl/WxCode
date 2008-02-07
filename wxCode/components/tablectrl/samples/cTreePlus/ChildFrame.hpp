@@ -36,6 +36,9 @@ class  ChildFrame : public  wxMDIChildFrame
       static const long    DEFAULTSTYLE;
                            
    private   :
+      DECLARE_EVENT_TABLE  ()
+      
+   private   :
       CTSession *          session;
       CTTable *            table;
       CTRecord *           record;
@@ -46,11 +49,14 @@ class  ChildFrame : public  wxMDIChildFrame
       
       wxTableCtrl *        tc;
       
+   private   :
+      void                 OnMenu   ( wxCommandEvent & );
+      
    public    :
       ChildFrame  ( MainFrame *, wxWindowID = wxID_ANY, const wxString & = wxEmptyString, const wxPoint & = wxDefaultPosition, const wxSize & = wxDefaultSize, long = DEFAULTSTYLE );
       ~ChildFrame ();
       
-      bool                 Open  ( CTSession *, const wxString & );
+      bool                 Open     ( CTSession *, const wxString & );
 };
 
 
