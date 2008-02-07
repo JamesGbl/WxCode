@@ -20,6 +20,8 @@
 
 #include <ctdbsdk.hpp>                    // cTreePlus DB SDK.
 
+#undef SIZEOF
+
 #include "cTreeTable.h"
 
 
