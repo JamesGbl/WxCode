@@ -137,90 +137,15 @@ ____keybinder_3 = lib
 ____keybinder_3 = dll
 !endif
 __WXLIB_CORE_NAME_p =
-!ifeq WX_DEBUG 0
 !ifeq WX_MONOLITHIC 0
-!ifeq WX_UNICODE 0
-__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)_core.lib
-!endif
-!endif
-!endif
-!ifeq WX_DEBUG 0
-!ifeq WX_MONOLITHIC 0
-!ifeq WX_UNICODE 1
-__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)u_core.lib
-!endif
-!endif
-!endif
-!ifeq WX_DEBUG 1
-!ifeq WX_MONOLITHIC 0
-!ifeq WX_UNICODE 0
-__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)d_core.lib
-!endif
-!endif
-!endif
-!ifeq WX_DEBUG 1
-!ifeq WX_MONOLITHIC 0
-!ifeq WX_UNICODE 1
-__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)ud_core.lib
-!endif
-!endif
+__WXLIB_CORE_NAME_p = wxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core.lib
 !endif
 __WXLIB_BASE_NAME_p =
-!ifeq WX_DEBUG 0
 !ifeq WX_MONOLITHIC 0
-!ifeq WX_UNICODE 0
-__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION).lib
+__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)$(WXLIBPOSTFIX).lib
 !endif
-!endif
-!endif
-!ifeq WX_DEBUG 0
-!ifeq WX_MONOLITHIC 0
-!ifeq WX_UNICODE 1
-__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)u.lib
-!endif
-!endif
-!endif
-!ifeq WX_DEBUG 0
 !ifeq WX_MONOLITHIC 1
-!ifeq WX_UNICODE 0
-__WXLIB_BASE_NAME_p = wxmsw$(WX_VERSION).lib
-!endif
-!endif
-!endif
-!ifeq WX_DEBUG 0
-!ifeq WX_MONOLITHIC 1
-!ifeq WX_UNICODE 1
-__WXLIB_BASE_NAME_p = wxmsw$(WX_VERSION)u.lib
-!endif
-!endif
-!endif
-!ifeq WX_DEBUG 1
-!ifeq WX_MONOLITHIC 0
-!ifeq WX_UNICODE 0
-__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)d.lib
-!endif
-!endif
-!endif
-!ifeq WX_DEBUG 1
-!ifeq WX_MONOLITHIC 0
-!ifeq WX_UNICODE 1
-__WXLIB_BASE_NAME_p = wxbase$(WX_VERSION)ud.lib
-!endif
-!endif
-!endif
-!ifeq WX_DEBUG 1
-!ifeq WX_MONOLITHIC 1
-!ifeq WX_UNICODE 0
-__WXLIB_BASE_NAME_p = wxmsw$(WX_VERSION)d.lib
-!endif
-!endif
-!endif
-!ifeq WX_DEBUG 1
-!ifeq WX_MONOLITHIC 1
-!ifeq WX_UNICODE 1
-__WXLIB_BASE_NAME_p = wxmsw$(WX_VERSION)ud.lib
-!endif
-!endif
+__WXLIB_BASE_NAME_p = wxmsw$(WX_VERSION)$(WXLIBPOSTFIX).lib
 !endif
 ____WX_SHARED =
 !ifeq WX_SHARED 0

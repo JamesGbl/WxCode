@@ -158,89 +158,14 @@ endif
 ifeq ($(WX_SHARED),1)
 ____keybinder_4 = dll
 endif
-ifeq ($(WX_DEBUG),0)
 ifeq ($(WX_MONOLITHIC),0)
-ifeq ($(WX_UNICODE),0)
-__WXLIB_CORE_NAME_p = -lwxmsw$(WX_VERSION)_core
+__WXLIB_CORE_NAME_p = -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)_core
 endif
-endif
-endif
-ifeq ($(WX_DEBUG),0)
 ifeq ($(WX_MONOLITHIC),0)
-ifeq ($(WX_UNICODE),1)
-__WXLIB_CORE_NAME_p = -lwxmsw$(WX_VERSION)u_core
+__WXLIB_BASE_NAME_p = -lwxbase$(WX_VERSION)$(WXLIBPOSTFIX)
 endif
-endif
-endif
-ifeq ($(WX_DEBUG),1)
-ifeq ($(WX_MONOLITHIC),0)
-ifeq ($(WX_UNICODE),0)
-__WXLIB_CORE_NAME_p = -lwxmsw$(WX_VERSION)d_core
-endif
-endif
-endif
-ifeq ($(WX_DEBUG),1)
-ifeq ($(WX_MONOLITHIC),0)
-ifeq ($(WX_UNICODE),1)
-__WXLIB_CORE_NAME_p = -lwxmsw$(WX_VERSION)ud_core
-endif
-endif
-endif
-ifeq ($(WX_DEBUG),0)
-ifeq ($(WX_MONOLITHIC),0)
-ifeq ($(WX_UNICODE),0)
-__WXLIB_BASE_NAME_p = -lwxbase$(WX_VERSION)
-endif
-endif
-endif
-ifeq ($(WX_DEBUG),0)
-ifeq ($(WX_MONOLITHIC),0)
-ifeq ($(WX_UNICODE),1)
-__WXLIB_BASE_NAME_p = -lwxbase$(WX_VERSION)u
-endif
-endif
-endif
-ifeq ($(WX_DEBUG),0)
 ifeq ($(WX_MONOLITHIC),1)
-ifeq ($(WX_UNICODE),0)
-__WXLIB_BASE_NAME_p = -lwxmsw$(WX_VERSION)
-endif
-endif
-endif
-ifeq ($(WX_DEBUG),0)
-ifeq ($(WX_MONOLITHIC),1)
-ifeq ($(WX_UNICODE),1)
-__WXLIB_BASE_NAME_p = -lwxmsw$(WX_VERSION)u
-endif
-endif
-endif
-ifeq ($(WX_DEBUG),1)
-ifeq ($(WX_MONOLITHIC),0)
-ifeq ($(WX_UNICODE),0)
-__WXLIB_BASE_NAME_p = -lwxbase$(WX_VERSION)d
-endif
-endif
-endif
-ifeq ($(WX_DEBUG),1)
-ifeq ($(WX_MONOLITHIC),0)
-ifeq ($(WX_UNICODE),1)
-__WXLIB_BASE_NAME_p = -lwxbase$(WX_VERSION)ud
-endif
-endif
-endif
-ifeq ($(WX_DEBUG),1)
-ifeq ($(WX_MONOLITHIC),1)
-ifeq ($(WX_UNICODE),0)
-__WXLIB_BASE_NAME_p = -lwxmsw$(WX_VERSION)d
-endif
-endif
-endif
-ifeq ($(WX_DEBUG),1)
-ifeq ($(WX_MONOLITHIC),1)
-ifeq ($(WX_UNICODE),1)
-__WXLIB_BASE_NAME_p = -lwxmsw$(WX_VERSION)ud
-endif
-endif
+__WXLIB_BASE_NAME_p = -lwxmsw$(WX_VERSION)$(WXLIBPOSTFIX)
 endif
 ifeq ($(WX_SHARED),0)
 WXLIBPATH = \lib\gcc_lib
