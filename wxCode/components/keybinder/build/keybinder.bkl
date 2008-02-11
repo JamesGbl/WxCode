@@ -25,8 +25,9 @@
     </set>
 
     <set var="COMPONENT_LIB">
-        <if cond="WX_SHARED=='0'">keybinder_lib</if>
-        <if cond="WX_SHARED=='1'">keybinder_dll</if>
+        <if cond="FORMAT_SUPPORTS_CONDITIONS=='1' and WX_SHARED=='0'">keybinder_lib</if>
+        <if cond="FORMAT_SUPPORTS_CONDITIONS=='1' and WX_SHARED=='1'">keybinder_dll</if>
+		<if cond="FORMAT_SUPPORTS_CONDITIONS=='0'">keybinder_lib</if>
     </set>
 
 
