@@ -9,8 +9,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="keybinder"
-	ProjectGUID="{BDA73A91-3E74-5741-BBA6-C8590C792E53}"
+	Name="minimal"
+	ProjectGUID="{FBD1DE74-8B6A-5789-AAC3-1CCB6D439EC3}"
 	>
 	<Platforms>
 		<Platform
@@ -23,9 +23,9 @@
 	<Configurations>
 		<Configuration
 			Name="DLL Unicode Debug Monolithic|Win32"
-			OutputDirectory="..\lib\vc_dll"
-			IntermediateDirectory="vcmswud_dll\keybinder"
-			ConfigurationType="2"
+			OutputDirectory="..\sample"
+			IntermediateDirectory="vcmswud_dll\minimal"
+			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -54,14 +54,14 @@
 				ExceptionHandling="1"
 				AdditionalOptions=""
 				RuntimeLibrary="3"
-				PreprocessorDefinitions="_USRDLL;DLL_EXPORTS;WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_KEYBINDER"
+				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 				BasicRuntimeChecks="3"
 				DebugInformationFormat="3"
 				Detect64BitPortabilityProblems="true"
 				RuntimeTypeInfo="true"
-				AssemblerListingLocation="vcmswud_dll\keybinder\"
-				ObjectFile="vcmswud_dll\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28ud_keybinder.pdb"
+				AssemblerListingLocation="vcmswud_dll\minimal\"
+				ObjectFile="vcmswud_dll\minimal\"
+				ProgramDataBaseFileName="..\sample\minimal.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -71,24 +71,24 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\include"
-				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_KEYBINDER"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\include;..\sample"
+				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28ud_keybinder.lib  wxmsw28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
 				AdditionalOptions=""
-				OutputFile="..\lib\vc_dll\wxcode_msw28ud_keybinder.dll"
+				OutputFile="..\sample\minimal.exe"
 				LinkIncremental="2"
-				ImportLibrary="..\lib\vc_dll\wxcode_msw28ud_keybinder.lib"
+				SubSystem="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw28ud_keybinder.pdb"
+				ProgramDatabaseFile="..\sample\minimal.pdb"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -99,11 +99,17 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_dll\keybinder_keybinder.bsc"
+				OutputFile="..\sample\keybinder_vc8_minimal.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -111,9 +117,9 @@
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Debug Multilib|Win32"
-			OutputDirectory="..\lib\vc_dll"
-			IntermediateDirectory="vcmswud_dll\keybinder"
-			ConfigurationType="2"
+			OutputDirectory="..\sample"
+			IntermediateDirectory="vcmswud_dll\minimal"
+			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -142,14 +148,14 @@
 				ExceptionHandling="1"
 				AdditionalOptions=""
 				RuntimeLibrary="3"
-				PreprocessorDefinitions="_USRDLL;DLL_EXPORTS;WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_KEYBINDER"
+				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 				BasicRuntimeChecks="3"
 				DebugInformationFormat="3"
 				Detect64BitPortabilityProblems="true"
 				RuntimeTypeInfo="true"
-				AssemblerListingLocation="vcmswud_dll\keybinder\"
-				ObjectFile="vcmswud_dll\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28ud_keybinder.pdb"
+				AssemblerListingLocation="vcmswud_dll\minimal\"
+				ObjectFile="vcmswud_dll\minimal\"
+				ProgramDataBaseFileName="..\sample\minimal.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -159,24 +165,24 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\include"
-				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_KEYBINDER"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\include;..\sample"
+				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28ud_core.lib wxbase28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28ud_keybinder.lib wxmsw28ud_core.lib wxbase28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
 				AdditionalOptions=""
-				OutputFile="..\lib\vc_dll\wxcode_msw28ud_keybinder.dll"
+				OutputFile="..\sample\minimal.exe"
 				LinkIncremental="2"
-				ImportLibrary="..\lib\vc_dll\wxcode_msw28ud_keybinder.lib"
+				SubSystem="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw28ud_keybinder.pdb"
+				ProgramDatabaseFile="..\sample\minimal.pdb"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -187,11 +193,17 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_dll\keybinder_keybinder.bsc"
+				OutputFile="..\sample\keybinder_vc8_minimal.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -199,9 +211,9 @@
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Release Monolithic|Win32"
-			OutputDirectory="..\lib\vc_dll"
-			IntermediateDirectory="vcmswu_dll\keybinder"
-			ConfigurationType="2"
+			OutputDirectory="..\sample"
+			IntermediateDirectory="vcmswu_dll\minimal"
+			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -230,14 +242,14 @@
 				ExceptionHandling="1"
 				AdditionalOptions=""
 				RuntimeLibrary="2"
-				PreprocessorDefinitions="_USRDLL;DLL_EXPORTS;WXUSINGDLL;_UNICODE;__WXMSW__;WXMAKINGDLL_KEYBINDER"
+				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXMSW__;_WINDOWS"
 				BasicRuntimeChecks="0"
 				DebugInformationFormat="0"
 				BufferSecurityCheck="false"
 				RuntimeTypeInfo="true"
-				AssemblerListingLocation="vcmswu_dll\keybinder\"
-				ObjectFile="vcmswu_dll\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28u_keybinder.pdb"
+				AssemblerListingLocation="vcmswu_dll\minimal\"
+				ObjectFile="vcmswu_dll\minimal\"
+				ProgramDataBaseFileName="..\sample\minimal.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -247,23 +259,23 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;..\include"
-				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXMSW__;WXMAKINGDLL_KEYBINDER"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;..\include;..\sample"
+				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXMSW__;_WINDOWS"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28u_keybinder.lib  wxmsw28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
 				AdditionalOptions=""
-				OutputFile="..\lib\vc_dll\wxcode_msw28u_keybinder.dll"
+				OutputFile="..\sample\minimal.exe"
 				LinkIncremental="1"
-				ImportLibrary="..\lib\vc_dll\wxcode_msw28u_keybinder.lib"
+				SubSystem="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw28u_keybinder.pdb"
+				ProgramDatabaseFile="..\sample\minimal.pdb"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -274,11 +286,17 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_dll\keybinder_keybinder.bsc"
+				OutputFile="..\sample\keybinder_vc8_minimal.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -286,9 +304,9 @@
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Release Multilib|Win32"
-			OutputDirectory="..\lib\vc_dll"
-			IntermediateDirectory="vcmswu_dll\keybinder"
-			ConfigurationType="2"
+			OutputDirectory="..\sample"
+			IntermediateDirectory="vcmswu_dll\minimal"
+			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -317,14 +335,14 @@
 				ExceptionHandling="1"
 				AdditionalOptions=""
 				RuntimeLibrary="2"
-				PreprocessorDefinitions="_USRDLL;DLL_EXPORTS;WXUSINGDLL;_UNICODE;__WXMSW__;WXMAKINGDLL_KEYBINDER"
+				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXMSW__;_WINDOWS"
 				BasicRuntimeChecks="0"
 				DebugInformationFormat="0"
 				BufferSecurityCheck="false"
 				RuntimeTypeInfo="true"
-				AssemblerListingLocation="vcmswu_dll\keybinder\"
-				ObjectFile="vcmswu_dll\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28u_keybinder.pdb"
+				AssemblerListingLocation="vcmswu_dll\minimal\"
+				ObjectFile="vcmswu_dll\minimal\"
+				ProgramDataBaseFileName="..\sample\minimal.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -334,23 +352,23 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;..\include"
-				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXMSW__;WXMAKINGDLL_KEYBINDER"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;..\include;..\sample"
+				PreprocessorDefinitions="WXUSINGDLL;_UNICODE;__WXMSW__;_WINDOWS"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28u_core.lib wxbase28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28u_keybinder.lib wxmsw28u_core.lib wxbase28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
 				AdditionalOptions=""
-				OutputFile="..\lib\vc_dll\wxcode_msw28u_keybinder.dll"
+				OutputFile="..\sample\minimal.exe"
 				LinkIncremental="1"
-				ImportLibrary="..\lib\vc_dll\wxcode_msw28u_keybinder.lib"
+				SubSystem="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw28u_keybinder.pdb"
+				ProgramDatabaseFile="..\sample\minimal.pdb"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -361,11 +379,17 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_dll\keybinder_keybinder.bsc"
+				OutputFile="..\sample\keybinder_vc8_minimal.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -373,9 +397,9 @@
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Debug Monolithic|Win32"
-			OutputDirectory="..\lib\vc_dll"
-			IntermediateDirectory="vcmswd_dll\keybinder"
-			ConfigurationType="2"
+			OutputDirectory="..\sample"
+			IntermediateDirectory="vcmswd_dll\minimal"
+			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -403,14 +427,14 @@
 				ExceptionHandling="1"
 				AdditionalOptions=""
 				RuntimeLibrary="3"
-				PreprocessorDefinitions="_USRDLL;DLL_EXPORTS;WXUSINGDLL;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_KEYBINDER"
+				PreprocessorDefinitions="WXUSINGDLL;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 				BasicRuntimeChecks="3"
 				DebugInformationFormat="3"
 				Detect64BitPortabilityProblems="true"
 				RuntimeTypeInfo="true"
-				AssemblerListingLocation="vcmswd_dll\keybinder\"
-				ObjectFile="vcmswd_dll\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28d_keybinder.pdb"
+				AssemblerListingLocation="vcmswd_dll\minimal\"
+				ObjectFile="vcmswd_dll\minimal\"
+				ProgramDataBaseFileName="..\sample\minimal.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -420,24 +444,24 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include;..\include"
-				PreprocessorDefinitions="WXUSINGDLL;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_KEYBINDER"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include;..\include;..\sample"
+				PreprocessorDefinitions="WXUSINGDLL;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28d_keybinder.lib  wxmsw28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
 				AdditionalOptions=""
-				OutputFile="..\lib\vc_dll\wxcode_msw28d_keybinder.dll"
+				OutputFile="..\sample\minimal.exe"
 				LinkIncremental="2"
-				ImportLibrary="..\lib\vc_dll\wxcode_msw28d_keybinder.lib"
+				SubSystem="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw28d_keybinder.pdb"
+				ProgramDatabaseFile="..\sample\minimal.pdb"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -448,11 +472,17 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_dll\keybinder_keybinder.bsc"
+				OutputFile="..\sample\keybinder_vc8_minimal.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -460,9 +490,9 @@
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Debug Multilib|Win32"
-			OutputDirectory="..\lib\vc_dll"
-			IntermediateDirectory="vcmswd_dll\keybinder"
-			ConfigurationType="2"
+			OutputDirectory="..\sample"
+			IntermediateDirectory="vcmswd_dll\minimal"
+			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -490,14 +520,14 @@
 				ExceptionHandling="1"
 				AdditionalOptions=""
 				RuntimeLibrary="3"
-				PreprocessorDefinitions="_USRDLL;DLL_EXPORTS;WXUSINGDLL;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_KEYBINDER"
+				PreprocessorDefinitions="WXUSINGDLL;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 				BasicRuntimeChecks="3"
 				DebugInformationFormat="3"
 				Detect64BitPortabilityProblems="true"
 				RuntimeTypeInfo="true"
-				AssemblerListingLocation="vcmswd_dll\keybinder\"
-				ObjectFile="vcmswd_dll\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28d_keybinder.pdb"
+				AssemblerListingLocation="vcmswd_dll\minimal\"
+				ObjectFile="vcmswd_dll\minimal\"
+				ProgramDataBaseFileName="..\sample\minimal.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -507,24 +537,24 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include;..\include"
-				PreprocessorDefinitions="WXUSINGDLL;__WXDEBUG__;__WXMSW__;_DEBUG;WXMAKINGDLL_KEYBINDER"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\mswd;$(WXWIN)\include;..\include;..\sample"
+				PreprocessorDefinitions="WXUSINGDLL;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28d_core.lib wxbase28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28d_keybinder.lib wxmsw28d_core.lib wxbase28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
 				AdditionalOptions=""
-				OutputFile="..\lib\vc_dll\wxcode_msw28d_keybinder.dll"
+				OutputFile="..\sample\minimal.exe"
 				LinkIncremental="2"
-				ImportLibrary="..\lib\vc_dll\wxcode_msw28d_keybinder.lib"
+				SubSystem="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw28d_keybinder.pdb"
+				ProgramDatabaseFile="..\sample\minimal.pdb"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -535,11 +565,17 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_dll\keybinder_keybinder.bsc"
+				OutputFile="..\sample\keybinder_vc8_minimal.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -547,9 +583,9 @@
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Release Monolithic|Win32"
-			OutputDirectory="..\lib\vc_dll"
-			IntermediateDirectory="vcmsw_dll\keybinder"
-			ConfigurationType="2"
+			OutputDirectory="..\sample"
+			IntermediateDirectory="vcmsw_dll\minimal"
+			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -577,14 +613,14 @@
 				ExceptionHandling="1"
 				AdditionalOptions=""
 				RuntimeLibrary="2"
-				PreprocessorDefinitions="_USRDLL;DLL_EXPORTS;WXUSINGDLL;__WXMSW__;WXMAKINGDLL_KEYBINDER"
+				PreprocessorDefinitions="WXUSINGDLL;__WXMSW__;_WINDOWS"
 				BasicRuntimeChecks="0"
 				DebugInformationFormat="0"
 				BufferSecurityCheck="false"
 				RuntimeTypeInfo="true"
-				AssemblerListingLocation="vcmsw_dll\keybinder\"
-				ObjectFile="vcmsw_dll\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28_keybinder.pdb"
+				AssemblerListingLocation="vcmsw_dll\minimal\"
+				ObjectFile="vcmsw_dll\minimal\"
+				ProgramDataBaseFileName="..\sample\minimal.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -594,23 +630,23 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\msw;$(WXWIN)\include;..\include"
-				PreprocessorDefinitions="WXUSINGDLL;__WXMSW__;WXMAKINGDLL_KEYBINDER"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\msw;$(WXWIN)\include;..\include;..\sample"
+				PreprocessorDefinitions="WXUSINGDLL;__WXMSW__;_WINDOWS"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28_keybinder.lib  wxmsw28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
 				AdditionalOptions=""
-				OutputFile="..\lib\vc_dll\wxcode_msw28_keybinder.dll"
+				OutputFile="..\sample\minimal.exe"
 				LinkIncremental="1"
-				ImportLibrary="..\lib\vc_dll\wxcode_msw28_keybinder.lib"
+				SubSystem="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw28_keybinder.pdb"
+				ProgramDatabaseFile="..\sample\minimal.pdb"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -621,11 +657,17 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_dll\keybinder_keybinder.bsc"
+				OutputFile="..\sample\keybinder_vc8_minimal.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -633,9 +675,9 @@
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Release Multilib|Win32"
-			OutputDirectory="..\lib\vc_dll"
-			IntermediateDirectory="vcmsw_dll\keybinder"
-			ConfigurationType="2"
+			OutputDirectory="..\sample"
+			IntermediateDirectory="vcmsw_dll\minimal"
+			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -663,14 +705,14 @@
 				ExceptionHandling="1"
 				AdditionalOptions=""
 				RuntimeLibrary="2"
-				PreprocessorDefinitions="_USRDLL;DLL_EXPORTS;WXUSINGDLL;__WXMSW__;WXMAKINGDLL_KEYBINDER"
+				PreprocessorDefinitions="WXUSINGDLL;__WXMSW__;_WINDOWS"
 				BasicRuntimeChecks="0"
 				DebugInformationFormat="0"
 				BufferSecurityCheck="false"
 				RuntimeTypeInfo="true"
-				AssemblerListingLocation="vcmsw_dll\keybinder\"
-				ObjectFile="vcmsw_dll\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28_keybinder.pdb"
+				AssemblerListingLocation="vcmsw_dll\minimal\"
+				ObjectFile="vcmsw_dll\minimal\"
+				ProgramDataBaseFileName="..\sample\minimal.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -680,23 +722,23 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\msw;$(WXWIN)\include;..\include"
-				PreprocessorDefinitions="WXUSINGDLL;__WXMSW__;WXMAKINGDLL_KEYBINDER"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_dll\msw;$(WXWIN)\include;..\include;..\sample"
+				PreprocessorDefinitions="WXUSINGDLL;__WXMSW__;_WINDOWS"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28_core.lib wxbase28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				AdditionalDependencies="..\lib\vc_dll\wxcode_msw28_keybinder.lib wxmsw28_core.lib wxbase28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
 				AdditionalOptions=""
-				OutputFile="..\lib\vc_dll\wxcode_msw28_keybinder.dll"
+				OutputFile="..\sample\minimal.exe"
 				LinkIncremental="1"
-				ImportLibrary="..\lib\vc_dll\wxcode_msw28_keybinder.lib"
+				SubSystem="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw28_keybinder.pdb"
+				ProgramDatabaseFile="..\sample\minimal.pdb"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -707,11 +749,17 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_dll\keybinder_keybinder.bsc"
+				OutputFile="..\sample\keybinder_vc8_minimal.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -719,9 +767,9 @@
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Debug Monolithic|Win32"
-			OutputDirectory="..\lib\vc_lib"
-			IntermediateDirectory="vcmswud\keybinder"
-			ConfigurationType="4"
+			OutputDirectory="..\sample"
+			IntermediateDirectory="vcmswud\minimal"
+			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -750,14 +798,14 @@
 				ExceptionHandling="1"
 				AdditionalOptions=""
 				RuntimeLibrary="3"
-				PreprocessorDefinitions="_LIB;_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG"
+				PreprocessorDefinitions="_UNICODE;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 				BasicRuntimeChecks="3"
 				DebugInformationFormat="3"
 				Detect64BitPortabilityProblems="true"
 				RuntimeTypeInfo="true"
-				AssemblerListingLocation="vcmswud\keybinder\"
-				ObjectFile="vcmswud\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28ud_keybinder.pdb"
+				AssemblerListingLocation="vcmswud\minimal\"
+				ObjectFile="vcmswud\minimal\"
+				ProgramDataBaseFileName="..\sample\minimal.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -767,16 +815,25 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswud;$(WXWIN)\include;..\include"
-				PreprocessorDefinitions="_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswud;$(WXWIN)\include;..\include;..\sample"
+				PreprocessorDefinitions="_UNICODE;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="..\lib\vc_lib\wxcode_msw28ud_keybinder.lib"
+				Name="VCLinkerTool"
+				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28ud_keybinder.lib  wxmsw28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				AdditionalOptions=""
+				OutputFile="..\sample\minimal.exe"
+				LinkIncremental="2"
+				SubSystem="2"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
+				GenerateManifest="true"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="..\sample\minimal.pdb"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -786,11 +843,17 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_lib\keybinder_keybinder.bsc"
+				OutputFile="..\sample\keybinder_vc8_minimal.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -798,9 +861,9 @@
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Debug Multilib|Win32"
-			OutputDirectory="..\lib\vc_lib"
-			IntermediateDirectory="vcmswud\keybinder"
-			ConfigurationType="4"
+			OutputDirectory="..\sample"
+			IntermediateDirectory="vcmswud\minimal"
+			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -829,14 +892,14 @@
 				ExceptionHandling="1"
 				AdditionalOptions=""
 				RuntimeLibrary="3"
-				PreprocessorDefinitions="_LIB;_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG"
+				PreprocessorDefinitions="_UNICODE;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 				BasicRuntimeChecks="3"
 				DebugInformationFormat="3"
 				Detect64BitPortabilityProblems="true"
 				RuntimeTypeInfo="true"
-				AssemblerListingLocation="vcmswud\keybinder\"
-				ObjectFile="vcmswud\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28ud_keybinder.pdb"
+				AssemblerListingLocation="vcmswud\minimal\"
+				ObjectFile="vcmswud\minimal\"
+				ProgramDataBaseFileName="..\sample\minimal.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -846,16 +909,25 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswud;$(WXWIN)\include;..\include"
-				PreprocessorDefinitions="_UNICODE;__WXDEBUG__;__WXMSW__;_DEBUG"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswud;$(WXWIN)\include;..\include;..\sample"
+				PreprocessorDefinitions="_UNICODE;__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="..\lib\vc_lib\wxcode_msw28ud_keybinder.lib"
+				Name="VCLinkerTool"
+				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28ud_keybinder.lib wxmsw28ud_core.lib wxbase28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				AdditionalOptions=""
+				OutputFile="..\sample\minimal.exe"
+				LinkIncremental="2"
+				SubSystem="2"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
+				GenerateManifest="true"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="..\sample\minimal.pdb"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -865,11 +937,17 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_lib\keybinder_keybinder.bsc"
+				OutputFile="..\sample\keybinder_vc8_minimal.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -877,9 +955,9 @@
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Release Monolithic|Win32"
-			OutputDirectory="..\lib\vc_lib"
-			IntermediateDirectory="vcmswu\keybinder"
-			ConfigurationType="4"
+			OutputDirectory="..\sample"
+			IntermediateDirectory="vcmswu\minimal"
+			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -908,14 +986,14 @@
 				ExceptionHandling="1"
 				AdditionalOptions=""
 				RuntimeLibrary="2"
-				PreprocessorDefinitions="_LIB;_UNICODE;__WXMSW__"
+				PreprocessorDefinitions="_UNICODE;__WXMSW__;_WINDOWS"
 				BasicRuntimeChecks="0"
 				DebugInformationFormat="0"
 				BufferSecurityCheck="false"
 				RuntimeTypeInfo="true"
-				AssemblerListingLocation="vcmswu\keybinder\"
-				ObjectFile="vcmswu\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28u_keybinder.pdb"
+				AssemblerListingLocation="vcmswu\minimal\"
+				ObjectFile="vcmswu\minimal\"
+				ProgramDataBaseFileName="..\sample\minimal.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -925,16 +1003,24 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu;$(WXWIN)\include;..\include"
-				PreprocessorDefinitions="_UNICODE;__WXMSW__"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu;$(WXWIN)\include;..\include;..\sample"
+				PreprocessorDefinitions="_UNICODE;__WXMSW__;_WINDOWS"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="..\lib\vc_lib\wxcode_msw28u_keybinder.lib"
+				Name="VCLinkerTool"
+				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28u_keybinder.lib  wxmsw28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				AdditionalOptions=""
+				OutputFile="..\sample\minimal.exe"
+				LinkIncremental="1"
+				SubSystem="2"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
+				GenerateManifest="true"
+				ProgramDatabaseFile="..\sample\minimal.pdb"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -944,11 +1030,17 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_lib\keybinder_keybinder.bsc"
+				OutputFile="..\sample\keybinder_vc8_minimal.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -956,9 +1048,9 @@
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Release Multilib|Win32"
-			OutputDirectory="..\lib\vc_lib"
-			IntermediateDirectory="vcmswu\keybinder"
-			ConfigurationType="4"
+			OutputDirectory="..\sample"
+			IntermediateDirectory="vcmswu\minimal"
+			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -987,14 +1079,14 @@
 				ExceptionHandling="1"
 				AdditionalOptions=""
 				RuntimeLibrary="2"
-				PreprocessorDefinitions="_LIB;_UNICODE;__WXMSW__"
+				PreprocessorDefinitions="_UNICODE;__WXMSW__;_WINDOWS"
 				BasicRuntimeChecks="0"
 				DebugInformationFormat="0"
 				BufferSecurityCheck="false"
 				RuntimeTypeInfo="true"
-				AssemblerListingLocation="vcmswu\keybinder\"
-				ObjectFile="vcmswu\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28u_keybinder.pdb"
+				AssemblerListingLocation="vcmswu\minimal\"
+				ObjectFile="vcmswu\minimal\"
+				ProgramDataBaseFileName="..\sample\minimal.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -1004,16 +1096,24 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu;$(WXWIN)\include;..\include"
-				PreprocessorDefinitions="_UNICODE;__WXMSW__"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu;$(WXWIN)\include;..\include;..\sample"
+				PreprocessorDefinitions="_UNICODE;__WXMSW__;_WINDOWS"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="..\lib\vc_lib\wxcode_msw28u_keybinder.lib"
+				Name="VCLinkerTool"
+				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28u_keybinder.lib wxmsw28u_core.lib wxbase28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				AdditionalOptions=""
+				OutputFile="..\sample\minimal.exe"
+				LinkIncremental="1"
+				SubSystem="2"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
+				GenerateManifest="true"
+				ProgramDatabaseFile="..\sample\minimal.pdb"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -1023,11 +1123,17 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_lib\keybinder_keybinder.bsc"
+				OutputFile="..\sample\keybinder_vc8_minimal.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1035,9 +1141,9 @@
 		</Configuration>
 		<Configuration
 			Name="Static ANSI Debug Monolithic|Win32"
-			OutputDirectory="..\lib\vc_lib"
-			IntermediateDirectory="vcmswd\keybinder"
-			ConfigurationType="4"
+			OutputDirectory="..\sample"
+			IntermediateDirectory="vcmswd\minimal"
+			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -1065,14 +1171,14 @@
 				ExceptionHandling="1"
 				AdditionalOptions=""
 				RuntimeLibrary="3"
-				PreprocessorDefinitions="_LIB;__WXDEBUG__;__WXMSW__;_DEBUG"
+				PreprocessorDefinitions="__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 				BasicRuntimeChecks="3"
 				DebugInformationFormat="3"
 				Detect64BitPortabilityProblems="true"
 				RuntimeTypeInfo="true"
-				AssemblerListingLocation="vcmswd\keybinder\"
-				ObjectFile="vcmswd\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28d_keybinder.pdb"
+				AssemblerListingLocation="vcmswd\minimal\"
+				ObjectFile="vcmswd\minimal\"
+				ProgramDataBaseFileName="..\sample\minimal.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -1082,16 +1188,25 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswd;$(WXWIN)\include;..\include"
-				PreprocessorDefinitions="__WXDEBUG__;__WXMSW__;_DEBUG"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswd;$(WXWIN)\include;..\include;..\sample"
+				PreprocessorDefinitions="__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="..\lib\vc_lib\wxcode_msw28d_keybinder.lib"
+				Name="VCLinkerTool"
+				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28d_keybinder.lib  wxmsw28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				AdditionalOptions=""
+				OutputFile="..\sample\minimal.exe"
+				LinkIncremental="2"
+				SubSystem="2"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
+				GenerateManifest="true"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="..\sample\minimal.pdb"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -1101,11 +1216,17 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_lib\keybinder_keybinder.bsc"
+				OutputFile="..\sample\keybinder_vc8_minimal.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1113,9 +1234,9 @@
 		</Configuration>
 		<Configuration
 			Name="Static ANSI Debug Multilib|Win32"
-			OutputDirectory="..\lib\vc_lib"
-			IntermediateDirectory="vcmswd\keybinder"
-			ConfigurationType="4"
+			OutputDirectory="..\sample"
+			IntermediateDirectory="vcmswd\minimal"
+			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -1143,14 +1264,14 @@
 				ExceptionHandling="1"
 				AdditionalOptions=""
 				RuntimeLibrary="3"
-				PreprocessorDefinitions="_LIB;__WXDEBUG__;__WXMSW__;_DEBUG"
+				PreprocessorDefinitions="__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 				BasicRuntimeChecks="3"
 				DebugInformationFormat="3"
 				Detect64BitPortabilityProblems="true"
 				RuntimeTypeInfo="true"
-				AssemblerListingLocation="vcmswd\keybinder\"
-				ObjectFile="vcmswd\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28d_keybinder.pdb"
+				AssemblerListingLocation="vcmswd\minimal\"
+				ObjectFile="vcmswd\minimal\"
+				ProgramDataBaseFileName="..\sample\minimal.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -1160,16 +1281,25 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswd;$(WXWIN)\include;..\include"
-				PreprocessorDefinitions="__WXDEBUG__;__WXMSW__;_DEBUG"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswd;$(WXWIN)\include;..\include;..\sample"
+				PreprocessorDefinitions="__WXDEBUG__;__WXMSW__;_WINDOWS;_DEBUG"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="..\lib\vc_lib\wxcode_msw28d_keybinder.lib"
+				Name="VCLinkerTool"
+				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28d_keybinder.lib wxmsw28d_core.lib wxbase28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				AdditionalOptions=""
+				OutputFile="..\sample\minimal.exe"
+				LinkIncremental="2"
+				SubSystem="2"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
+				GenerateManifest="true"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="..\sample\minimal.pdb"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -1179,11 +1309,17 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_lib\keybinder_keybinder.bsc"
+				OutputFile="..\sample\keybinder_vc8_minimal.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1191,9 +1327,9 @@
 		</Configuration>
 		<Configuration
 			Name="Static ANSI Release Monolithic|Win32"
-			OutputDirectory="..\lib\vc_lib"
-			IntermediateDirectory="vcmsw\keybinder"
-			ConfigurationType="4"
+			OutputDirectory="..\sample"
+			IntermediateDirectory="vcmsw\minimal"
+			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -1221,14 +1357,14 @@
 				ExceptionHandling="1"
 				AdditionalOptions=""
 				RuntimeLibrary="2"
-				PreprocessorDefinitions="_LIB;__WXMSW__"
+				PreprocessorDefinitions="__WXMSW__;_WINDOWS"
 				BasicRuntimeChecks="0"
 				DebugInformationFormat="0"
 				BufferSecurityCheck="false"
 				RuntimeTypeInfo="true"
-				AssemblerListingLocation="vcmsw\keybinder\"
-				ObjectFile="vcmsw\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28_keybinder.pdb"
+				AssemblerListingLocation="vcmsw\minimal\"
+				ObjectFile="vcmsw\minimal\"
+				ProgramDataBaseFileName="..\sample\minimal.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -1238,16 +1374,24 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\include;..\include"
-				PreprocessorDefinitions="__WXMSW__"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\include;..\include;..\sample"
+				PreprocessorDefinitions="__WXMSW__;_WINDOWS"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="..\lib\vc_lib\wxcode_msw28_keybinder.lib"
+				Name="VCLinkerTool"
+				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28_keybinder.lib  wxmsw28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				AdditionalOptions=""
+				OutputFile="..\sample\minimal.exe"
+				LinkIncremental="1"
+				SubSystem="2"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
+				GenerateManifest="true"
+				ProgramDatabaseFile="..\sample\minimal.pdb"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -1257,11 +1401,17 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_lib\keybinder_keybinder.bsc"
+				OutputFile="..\sample\keybinder_vc8_minimal.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1269,9 +1419,9 @@
 		</Configuration>
 		<Configuration
 			Name="Static ANSI Release Multilib|Win32"
-			OutputDirectory="..\lib\vc_lib"
-			IntermediateDirectory="vcmsw\keybinder"
-			ConfigurationType="4"
+			OutputDirectory="..\sample"
+			IntermediateDirectory="vcmsw\minimal"
+			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -1299,14 +1449,14 @@
 				ExceptionHandling="1"
 				AdditionalOptions=""
 				RuntimeLibrary="2"
-				PreprocessorDefinitions="_LIB;__WXMSW__"
+				PreprocessorDefinitions="__WXMSW__;_WINDOWS"
 				BasicRuntimeChecks="0"
 				DebugInformationFormat="0"
 				BufferSecurityCheck="false"
 				RuntimeTypeInfo="true"
-				AssemblerListingLocation="vcmsw\keybinder\"
-				ObjectFile="vcmsw\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28_keybinder.pdb"
+				AssemblerListingLocation="vcmsw\minimal\"
+				ObjectFile="vcmsw\minimal\"
+				ProgramDataBaseFileName="..\sample\minimal.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -1316,16 +1466,24 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\include;..\include"
-				PreprocessorDefinitions="__WXMSW__"
+				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\msw;$(WXWIN)\include;..\include;..\sample"
+				PreprocessorDefinitions="__WXMSW__;_WINDOWS"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="..\lib\vc_lib\wxcode_msw28_keybinder.lib"
+				Name="VCLinkerTool"
+				AdditionalDependencies="..\lib\vc_lib\wxcode_msw28_keybinder.lib wxmsw28_core.lib wxbase28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				AdditionalOptions=""
+				OutputFile="..\sample\minimal.exe"
+				LinkIncremental="1"
+				SubSystem="2"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib;..\lib\vc_lib"
+				GenerateManifest="true"
+				ProgramDatabaseFile="..\sample\minimal.pdb"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -1335,11 +1493,17 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="..\lib\vc_lib\keybinder_keybinder.bsc"
+				OutputFile="..\sample\keybinder_vc8_minimal.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1356,25 +1520,16 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			>
 			<File
-				RelativePath="..\src\keybinder.cpp"
-			/>
-			<File
-				RelativePath="..\src\menuutils.cpp"
+				RelativePath="..\sample\minimal.cpp"
 			/>
 		</Filter>
 		<Filter
-			Name="Header Files"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			Name="Resource Files"
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			>
 			<File
-				RelativePath="..\include\wx\keybinder.h"
-			/>
-			<File
-				RelativePath="..\include\wx\keybinderdef.h"
-			/>
-			<File
-				RelativePath="..\include\wx\menuutils.h"
+				RelativePath="..\sample\minimal.rc"
 			/>
 		</Filter>
 	</Files>
