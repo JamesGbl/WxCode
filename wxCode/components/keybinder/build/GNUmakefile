@@ -56,7 +56,7 @@ WX_UNICODE := $(shell $(WX_CONFIG) --selected-config | cut -d '-' -f 2 | sed 's/
 WX_DEBUG := $(shell $(WX_CONFIG) --selected-config | cut -d '-' -f 3 | sed 's/debug/1/;s/release/0/')
 
 # Version of the wx library to build against. 
-WX_VERSION := $(shell $(WX_CONFIG) --selected-config | sed -e 's/.*-\([0-9]*\)\.\([0-9]*\)$$/\1\2/')
+WX_VERSION := 29
 
 
 

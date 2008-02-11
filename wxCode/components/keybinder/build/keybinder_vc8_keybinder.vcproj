@@ -61,7 +61,7 @@
 				RuntimeTypeInfo="true"
 				AssemblerListingLocation="vcmswud_dll\keybinder\"
 				ObjectFile="vcmswud_dll\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28ud_keybinder.pdb"
+				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw29ud_keybinder.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -79,16 +79,16 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				AdditionalDependencies="wxmsw29ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
 				AdditionalOptions=""
-				OutputFile="..\lib\vc_dll\wxcode_msw28ud_keybinder.dll"
+				OutputFile="..\lib\vc_dll\wxcode_msw29ud_keybinder.dll"
 				LinkIncremental="2"
-				ImportLibrary="..\lib\vc_dll\wxcode_msw28ud_keybinder.lib"
+				ImportLibrary="..\lib\vc_dll\wxcode_msw29ud_keybinder.lib"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw28ud_keybinder.pdb"
+				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw29ud_keybinder.pdb"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -149,7 +149,7 @@
 				RuntimeTypeInfo="true"
 				AssemblerListingLocation="vcmswud_dll\keybinder\"
 				ObjectFile="vcmswud_dll\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28ud_keybinder.pdb"
+				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw29ud_keybinder.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -167,16 +167,16 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28ud_core.lib wxbase28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				AdditionalDependencies="wxmsw29ud_core.lib wxbase29ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
 				AdditionalOptions=""
-				OutputFile="..\lib\vc_dll\wxcode_msw28ud_keybinder.dll"
+				OutputFile="..\lib\vc_dll\wxcode_msw29ud_keybinder.dll"
 				LinkIncremental="2"
-				ImportLibrary="..\lib\vc_dll\wxcode_msw28ud_keybinder.lib"
+				ImportLibrary="..\lib\vc_dll\wxcode_msw29ud_keybinder.lib"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw28ud_keybinder.pdb"
+				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw29ud_keybinder.pdb"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -237,7 +237,7 @@
 				RuntimeTypeInfo="true"
 				AssemblerListingLocation="vcmswu_dll\keybinder\"
 				ObjectFile="vcmswu_dll\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28u_keybinder.pdb"
+				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw29u_keybinder.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -255,15 +255,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				AdditionalDependencies="wxmsw29u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
 				AdditionalOptions=""
-				OutputFile="..\lib\vc_dll\wxcode_msw28u_keybinder.dll"
+				OutputFile="..\lib\vc_dll\wxcode_msw29u_keybinder.dll"
 				LinkIncremental="1"
-				ImportLibrary="..\lib\vc_dll\wxcode_msw28u_keybinder.lib"
+				ImportLibrary="..\lib\vc_dll\wxcode_msw29u_keybinder.lib"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw28u_keybinder.pdb"
+				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw29u_keybinder.pdb"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -324,7 +324,7 @@
 				RuntimeTypeInfo="true"
 				AssemblerListingLocation="vcmswu_dll\keybinder\"
 				ObjectFile="vcmswu_dll\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28u_keybinder.pdb"
+				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw29u_keybinder.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -342,15 +342,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28u_core.lib wxbase28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				AdditionalDependencies="wxmsw29u_core.lib wxbase29u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
 				AdditionalOptions=""
-				OutputFile="..\lib\vc_dll\wxcode_msw28u_keybinder.dll"
+				OutputFile="..\lib\vc_dll\wxcode_msw29u_keybinder.dll"
 				LinkIncremental="1"
-				ImportLibrary="..\lib\vc_dll\wxcode_msw28u_keybinder.lib"
+				ImportLibrary="..\lib\vc_dll\wxcode_msw29u_keybinder.lib"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw28u_keybinder.pdb"
+				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw29u_keybinder.pdb"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -410,7 +410,7 @@
 				RuntimeTypeInfo="true"
 				AssemblerListingLocation="vcmswd_dll\keybinder\"
 				ObjectFile="vcmswd_dll\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28d_keybinder.pdb"
+				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw29d_keybinder.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -428,16 +428,16 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				AdditionalDependencies="wxmsw29d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
 				AdditionalOptions=""
-				OutputFile="..\lib\vc_dll\wxcode_msw28d_keybinder.dll"
+				OutputFile="..\lib\vc_dll\wxcode_msw29d_keybinder.dll"
 				LinkIncremental="2"
-				ImportLibrary="..\lib\vc_dll\wxcode_msw28d_keybinder.lib"
+				ImportLibrary="..\lib\vc_dll\wxcode_msw29d_keybinder.lib"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw28d_keybinder.pdb"
+				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw29d_keybinder.pdb"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -497,7 +497,7 @@
 				RuntimeTypeInfo="true"
 				AssemblerListingLocation="vcmswd_dll\keybinder\"
 				ObjectFile="vcmswd_dll\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28d_keybinder.pdb"
+				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw29d_keybinder.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -515,16 +515,16 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28d_core.lib wxbase28d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				AdditionalDependencies="wxmsw29d_core.lib wxbase29d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
 				AdditionalOptions=""
-				OutputFile="..\lib\vc_dll\wxcode_msw28d_keybinder.dll"
+				OutputFile="..\lib\vc_dll\wxcode_msw29d_keybinder.dll"
 				LinkIncremental="2"
-				ImportLibrary="..\lib\vc_dll\wxcode_msw28d_keybinder.lib"
+				ImportLibrary="..\lib\vc_dll\wxcode_msw29d_keybinder.lib"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw28d_keybinder.pdb"
+				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw29d_keybinder.pdb"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -584,7 +584,7 @@
 				RuntimeTypeInfo="true"
 				AssemblerListingLocation="vcmsw_dll\keybinder\"
 				ObjectFile="vcmsw_dll\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28_keybinder.pdb"
+				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw29_keybinder.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -602,15 +602,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				AdditionalDependencies="wxmsw29.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
 				AdditionalOptions=""
-				OutputFile="..\lib\vc_dll\wxcode_msw28_keybinder.dll"
+				OutputFile="..\lib\vc_dll\wxcode_msw29_keybinder.dll"
 				LinkIncremental="1"
-				ImportLibrary="..\lib\vc_dll\wxcode_msw28_keybinder.lib"
+				ImportLibrary="..\lib\vc_dll\wxcode_msw29_keybinder.lib"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw28_keybinder.pdb"
+				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw29_keybinder.pdb"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -670,7 +670,7 @@
 				RuntimeTypeInfo="true"
 				AssemblerListingLocation="vcmsw_dll\keybinder\"
 				ObjectFile="vcmsw_dll\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw28_keybinder.pdb"
+				ProgramDataBaseFileName="..\lib\vc_dll\wxcode_msw29_keybinder.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -688,15 +688,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28_core.lib wxbase28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
+				AdditionalDependencies="wxmsw29_core.lib wxbase29.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib odbc32.lib"
 				AdditionalOptions=""
-				OutputFile="..\lib\vc_dll\wxcode_msw28_keybinder.dll"
+				OutputFile="..\lib\vc_dll\wxcode_msw29_keybinder.dll"
 				LinkIncremental="1"
-				ImportLibrary="..\lib\vc_dll\wxcode_msw28_keybinder.lib"
+				ImportLibrary="..\lib\vc_dll\wxcode_msw29_keybinder.lib"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll;..\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw28_keybinder.pdb"
+				ProgramDatabaseFile="..\lib\vc_dll\wxcode_msw29_keybinder.pdb"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -757,7 +757,7 @@
 				RuntimeTypeInfo="true"
 				AssemblerListingLocation="vcmswud\keybinder\"
 				ObjectFile="vcmswud\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28ud_keybinder.pdb"
+				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw29ud_keybinder.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -775,7 +775,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\lib\vc_lib\wxcode_msw28ud_keybinder.lib"
+				OutputFile="..\lib\vc_lib\wxcode_msw29ud_keybinder.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -836,7 +836,7 @@
 				RuntimeTypeInfo="true"
 				AssemblerListingLocation="vcmswud\keybinder\"
 				ObjectFile="vcmswud\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28ud_keybinder.pdb"
+				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw29ud_keybinder.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -854,7 +854,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\lib\vc_lib\wxcode_msw28ud_keybinder.lib"
+				OutputFile="..\lib\vc_lib\wxcode_msw29ud_keybinder.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -915,7 +915,7 @@
 				RuntimeTypeInfo="true"
 				AssemblerListingLocation="vcmswu\keybinder\"
 				ObjectFile="vcmswu\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28u_keybinder.pdb"
+				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw29u_keybinder.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -933,7 +933,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\lib\vc_lib\wxcode_msw28u_keybinder.lib"
+				OutputFile="..\lib\vc_lib\wxcode_msw29u_keybinder.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -994,7 +994,7 @@
 				RuntimeTypeInfo="true"
 				AssemblerListingLocation="vcmswu\keybinder\"
 				ObjectFile="vcmswu\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28u_keybinder.pdb"
+				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw29u_keybinder.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -1012,7 +1012,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\lib\vc_lib\wxcode_msw28u_keybinder.lib"
+				OutputFile="..\lib\vc_lib\wxcode_msw29u_keybinder.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1072,7 +1072,7 @@
 				RuntimeTypeInfo="true"
 				AssemblerListingLocation="vcmswd\keybinder\"
 				ObjectFile="vcmswd\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28d_keybinder.pdb"
+				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw29d_keybinder.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -1090,7 +1090,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\lib\vc_lib\wxcode_msw28d_keybinder.lib"
+				OutputFile="..\lib\vc_lib\wxcode_msw29d_keybinder.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1150,7 +1150,7 @@
 				RuntimeTypeInfo="true"
 				AssemblerListingLocation="vcmswd\keybinder\"
 				ObjectFile="vcmswd\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28d_keybinder.pdb"
+				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw29d_keybinder.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -1168,7 +1168,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\lib\vc_lib\wxcode_msw28d_keybinder.lib"
+				OutputFile="..\lib\vc_lib\wxcode_msw29d_keybinder.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1228,7 +1228,7 @@
 				RuntimeTypeInfo="true"
 				AssemblerListingLocation="vcmsw\keybinder\"
 				ObjectFile="vcmsw\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28_keybinder.pdb"
+				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw29_keybinder.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -1246,7 +1246,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\lib\vc_lib\wxcode_msw28_keybinder.lib"
+				OutputFile="..\lib\vc_lib\wxcode_msw29_keybinder.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1306,7 +1306,7 @@
 				RuntimeTypeInfo="true"
 				AssemblerListingLocation="vcmsw\keybinder\"
 				ObjectFile="vcmsw\keybinder\"
-				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw28_keybinder.pdb"
+				ProgramDataBaseFileName="..\lib\vc_lib\wxcode_msw29_keybinder.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -1324,7 +1324,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\lib\vc_lib\wxcode_msw28_keybinder.lib"
+				OutputFile="..\lib\vc_lib\wxcode_msw29_keybinder.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool

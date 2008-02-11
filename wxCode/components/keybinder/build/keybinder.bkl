@@ -6,6 +6,9 @@
 
 <makefile>
 
+	<set var="USE_UNSTABLE_VERSION">1</set>
+	<set var="WX_VERSION_DEFAULT">29</set>
+	
     <include file="presets/wxcode.bkl"/>
 
 
