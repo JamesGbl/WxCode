@@ -8,7 +8,9 @@
 
     <!-- Always try to use the very latest bakefile, possibly even
          the SVN version ;) -->
-    <requires version="0.2.2"/>
+    <requires version="0.2.3"/>
+
+	<set var="USE_UNSTABLE_VERSION" overwrite="0">0</set>
 
 
     <!-- include the wxpresets and check that they are recent enough -->
@@ -16,7 +18,7 @@
     <if cond="not isdefined('WX_PRESETS_VERSION') or WX_PRESETS_VERSION not in [ '5' ]">
         <error>The included wxWidgets presets are too old!</error>
     </if>
-    <if cond="WX_VERSION_DEFAULT!='28' and FORMAT!='gnu' and FORMAT!='xcode2'">
+    <if cond="USE_UNSTABLE_VERSION=='0' and WX_VERSION_DEFAULT!='28'">
         <!-- this is to avoid that I (Francesco) erraneously commit presets with 29 as def version -->
         <error>Please use the current stable branch as WX_VERSION option default and not $(WX_VERSION_DEFAULT)!</error>
     </if>
