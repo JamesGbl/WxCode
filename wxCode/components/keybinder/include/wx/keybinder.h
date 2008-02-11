@@ -38,7 +38,7 @@
 #endif
 
 // define the following to true to enable lots of debug messages
-#define wxKEYBINDER_DEBUG_MSG            0
+#define wxKEYBINDER_DEBUG_MSG            1
 #if wxKEYBINDER_DEBUG_MSG
     #define wxKBLogDebug    wxLogDebug
 #else
@@ -202,7 +202,7 @@ protected:
 
     //! The shortcuts.
     wxKeyBind m_keyShortcut[wxCMD_MAX_SHORTCUTS];
-    int m_nShortcuts;       //!< The numner of valid entries of m_keyShortcut.
+    int m_nShortcuts;       //!< The number of valid entries of m_keyShortcut.
 
     //! The name of this command. This should be a short string.
     wxString m_strName;
@@ -438,7 +438,7 @@ public:
 
     void DeepCopy(const wxCmdArray &arr) {
         Clear();
-        for (int i=0; i < arr.GetCount(); i++)
+        for (size_t i=0; i < arr.GetCount(); i++)
             Add(arr.Item(i)->Clone());
     }
 
@@ -448,11 +448,11 @@ public:
     }
 
     void Add(wxCmd *p)          { m_arr.Add(p); }
-    void Remove(int n);
+    void Remove(size_t n);
     void Clear();
 
-    int GetCount() const        { return m_arr.GetCount(); }
-    wxCmd *Item(int n) const    { return (wxCmd *)m_arr.Item(n); }
+    size_t GetCount() const        { return m_arr.GetCount(); }
+    wxCmd *Item(size_t n) const    { return (wxCmd *)m_arr.Item(n); }
 };
 
 
@@ -749,11 +749,11 @@ public:     // miscellaneous
     // Getters
     // -------------------
 
-    int GetCmdCount() const {
+    size_t GetCmdCount() const {
         return m_arrCmd.GetCount();
     }
 
-    int GetAttachedWndCount() const {
+    size_t GetAttachedWndCount() const {
         return m_arrHandlers.GetCount();
     }
 
@@ -908,17 +908,17 @@ public:
     //! a virtual destructor) and so we are forced to re-implement the
     //! wxArray functions... @{
 
-    int GetCount() const            { return m_arr.GetCount(); }
+    size_t GetCount() const         { return m_arr.GetCount(); }
     int GetSelProfileIdx() const    { return m_nSelected; }
-    wxKeyProfile *Item(int n)       { return (wxKeyProfile*)m_arr.Item(n); }
-    wxKeyProfile *GetSelProfile()   { wxASSERT(m_nSelected >= 0 && m_nSelected < GetCount()); return Item(m_nSelected); }
+    wxKeyProfile *Item(size_t n)    { return (wxKeyProfile*)m_arr.Item(n); }
+    wxKeyProfile *GetSelProfile()   { wxASSERT(m_nSelected >= 0 && m_nSelected < (int)GetCount()); return Item(m_nSelected); }
     void Add(wxKeyProfile *p)       { m_arr.Add(p); }
     void Clear()                    { m_arr.Clear(); }
     void Remove(wxKeyProfile *p)    { m_arr.Remove(p); }
-    void SetSelProfile(int n)       { wxASSERT(n < GetCount()); m_nSelected = n; }
+    void SetSelProfile(int n)       { wxASSERT(n < (int)GetCount()); m_nSelected = n; }
     bool IsEmpty() const            { return m_arr.IsEmpty(); }
 
-    const wxKeyProfile *Item(int n) const           { return (wxKeyProfile*)m_arr.Item(n); }
+    const wxKeyProfile *Item(size_t n) const        { return (wxKeyProfile*)m_arr.Item(n); }
     const wxKeyProfile *GetSelProfile() const       { return Item(m_nSelected); }
     void RemoveAt(size_t i, size_t count = 1)       { m_arr.RemoveAt(i, count); }
     void Insert(wxKeyProfile *p, int n)             { m_arr.Insert(p, n); }
@@ -929,7 +929,7 @@ public:
     //! Copies the given array.
     void DeepCopy(const wxKeyProfileArray &p) {
         Cleanup();
-        for (int i=0; i < p.GetCount(); i++)
+        for (size_t i=0; i < p.GetCount(); i++)
             Add(new wxKeyProfile(*p.Item(i)));
         m_nSelected = p.m_nSelected;
     }
@@ -943,7 +943,7 @@ public:
     //! Unlike #Clear() this function also deletes the objects and
     //! does not only detach them from this array.
     void Cleanup() {
-        for (int i=0; i < GetCount(); i++)
+        for (size_t i=0; i < GetCount(); i++)
             delete Item(i);
         Clear();
     }
@@ -953,31 +953,31 @@ public:
     //!       If all the keybinders are attached to the same window
     //!
     void AttachAllTo(wxWindow *w) {
-        for (int i=0; i<GetCount(); i++)
+        for (size_t i=0; i<GetCount(); i++)
             Item(i)->Attach(w);
     }
 
     //! Enables/disables all the wxKeyProfiles. See wxKeyBinder::Enable.
     void EnableAll(bool bEnable = TRUE) {
-        for (int i=0; i<GetCount(); i++)
+        for (size_t i=0; i<GetCount(); i++)
             Item(i)->Enable(bEnable);
     }
 
     //! Detaches all the wxKeyProfiles from the given window.
     void DetachAllFrom(wxWindow *w) {
-        for (int i=0; i<GetCount(); i++)
+        for (size_t i=0; i<GetCount(); i++)
             Item(i)->Detach(w);
     }
 
     //! Detaches all the wxKeyProfiles from *all* their attached windows.
     void DetachAll() {
-        for (int i=0; i<GetCount(); i++)
+        for (size_t i=0; i<GetCount(); i++)
             Item(i)->DetachAll();
     }
 
     //! Updates all the wxCmds contained.
     void UpdateAllCmd() {
-        for (int i=0; i<GetCount(); i++)
+        for (size_t i=0; i<GetCount(); i++)
             Item(i)->UpdateAllCmd();
     }
 
@@ -1223,8 +1223,8 @@ public:     // keyprofile utilities (to call BEFORE ShowModal):
 public:     // output-access utilities (to call AFTER ShowModal)
 
     //! Returns the n-th key profile of the profile combo box.
-    wxKeyProfile *GetProfile(int n) const
-        { wxASSERT(m_pKeyProfiles); return (wxKeyProfile *)m_pKeyProfiles->GetClientData(n); }
+    wxKeyProfile *GetProfile(size_t n) const
+        { wxASSERT(m_pKeyProfiles); return (wxKeyProfile *)m_pKeyProfiles->GetClientData((unsigned int)n); }
 
     //! Returns the currently selected key profile using #GetSelProfileIdx().
     //! This is the profile owned by the profile combo box.
