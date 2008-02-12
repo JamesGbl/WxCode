@@ -5,7 +5,7 @@
 // Purpose:                                                                   //
 // Author:      Jan Knepper                                                   //
 // Created:     1998                                                          //
-// Copyright:   (c) 1998-2007 Jan Knepper                                     //
+// Copyright:   (c) 1998-2008 Jan Knepper                                     //
 // Licence:     wxWidgets licence                                             //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -19,6 +19,6 @@
 RNS_RESIZELR                     CURSOR      "ResizeLR.CUR"
 RNS_RESIZETB                     CURSOR      "ResizeTB.CUR"
 
-RNS_TABLE_CHECKBOX_UNCHECKED     BITMAP      "Table Checkbox Unchecked.bmp"
-RNS_TABLE_CHECKBOX_CHECKED       BITMAP      "Table Checkbox Checked.bmp"
+//RNS_TABLE_CHECKBOX_UNCHECKED     BITMAP      "Table Checkbox Unchecked.bmp"
+//RNS_TABLE_CHECKBOX_CHECKED       BITMAP      "Table Checkbox Checked.bmp"
 

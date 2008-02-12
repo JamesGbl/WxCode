@@ -5,7 +5,7 @@
 // Purpose:                                                                   //
 // Author:      Jan Knepper                                                   //
 // Created:     1998                                                          //
-// Copyright:   (c) 1998-2007 Jan Knepper                                     //
+// Copyright:   (c) 1998-2008 Jan Knepper                                     //
 // Licence:     wxWidgets licence                                             //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -41,8 +41,8 @@
 #define RNS_RESIZELR                      "ResizeLR"
 #define RNS_RESIZETB                      "ResizeTB"
 
-#define RNS_TABLE_CHECKBOX_UNCHECKED      "Table_CheckBox_Unchecked"
-#define RNS_TABLE_CHECKBOX_CHECKED        "Table_CheckBox_Checked"
+//#define RNS_TABLE_CHECKBOX_UNCHECKED      "Table_CheckBox_Unchecked"
+//#define RNS_TABLE_CHECKBOX_CHECKED        "Table_CheckBox_Checked"
 
 #define RNS_TABLETOOLBAR                  "TableToolBar"
 
