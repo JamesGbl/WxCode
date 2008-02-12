@@ -5,7 +5,7 @@
 // Purpose:                                                                   //
 // Author:      Jan Knepper                                                   //
 // Created:     1998                                                          //
-// Copyright:   (c) 1998-2007 Jan Knepper                                     //
+// Copyright:   (c) 1998-2008 Jan Knepper                                     //
 // Licence:     wxWidgets licence                                             //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -14,43 +14,8 @@
 #include <wx/wxprec.h>
 
 #include <wx/renderer.h>
-#include <wx/msw/uxtheme.h>
 
 #include <algorithm>
-
-#if 0
-#include "RGB.h"
-#include "StringEx.hpp"
-#include "Color.hpp"
-#include "Pen.hpp"
-#include "DC.hpp"
-#include "CDC.hpp"
-#include "ClientDC.hpp"
-#include "PaintDC.hpp"
-#include "WindowSet.hpp"
-#include "WXW.h"
-#include "WindowPath.hpp"
-#include "MessageBox.hpp"
-#include "Timer.hpp"
-//#include "Type/TableRelation.hpp"
-//#include "MapDialogRectEx.hpp"
-//#include "Table/TableCtrl.h"
-#include "General.hpp"
-//#include "Font.hpp"
-#include "Menu.hpp"
-//#include "Registry.hpp"
-//#include "Scroller.hpp"
-//#include "ToolTipManager.hpp"
-//#include "ToolTipCtrl.hpp"
-#include "Win32/ResourceNameString.h"
-//#include "Table/TableCtrl_Body.hpp"
-//#include "Table/TableCtrl_SearchDialog.hpp"
-#ifdef __JAK_VSQL__
-//#   include "Table/TableCtrl_Property.hpp"
-//#   include "Table/VisualSQLDialog.hpp"
-#endif
-//#include "Table/CollectionTableBrowseDialog.hpp"
-#endif
 
 #include "wx/BitmapDC.hpp"
 #include "wx/TableCtrl.hpp"
@@ -246,6 +211,9 @@ DEFINE_EVENT_TYPE ( wxEVT_COMMAND_TABLE_SORT_DESCENDING        )
 
 DEFINE_EVENT_TYPE ( wxEVT_COMMAND_TABLE_FIND                   )
 DEFINE_EVENT_TYPE ( wxEVT_COMMAND_TABLE_SEARCH                 )
+
+DEFINE_EVENT_TYPE ( wxEVT_COMMAND_TABLE_DRAW_COLUMN_HEADER     )
+DEFINE_EVENT_TYPE ( wxEVT_COMMAND_TABLE_DRAW_COLUMN_DATA       )
 
 
 
@@ -1885,74 +1853,78 @@ void  wxTableCtrl :: Body :: DoPaintLineDC ( wxDC *  dc, int  row, int  index )
 
       if ( rect.Intersects ( text ) )
       {
-         DWORD   ref             = ( *i ) -> Reference ();
-         UINT    drawtextformat  = table -> FieldDrawTextFormat   ( ref );
-         DWORD   type            = table -> FieldType             ( ref );
-
-         if ( ( type == TFT_NULL ) || ( type & TFT_TEXT ) )
+         bool  processed   = false;
+         
+         if ( control -> drawevents )
+            processed   = ProcessEvent ( wxTableEvent ( control, wxEVT_COMMAND_TABLE_DRAW_COLUMN_DATA, dc, column, text, table, record, cursor, focusrect ) );
+            
+         if ( ! processed )
          {
-//          RECT     rect;
-//
-//          :: SetRect  ( &rect, text.X (), text.Y (), text.R (), text.B () );
-//          :: DrawText ( ( HDC ) dc -> GetHDC (), table -> FieldString ( ref ), -1, &rect, drawtextformat | DT_NOPREFIX );
-            DrawText ( dc, table -> FieldString ( ref ), -1, text, drawtextformat | DT_NOPREFIX );
-         }
-         else
-            if ( type & TFT_BITMAP )
-               ;
+            DWORD   ref             = ( *i ) -> Reference ();
+            UINT    drawtextformat  = table -> FieldDrawTextFormat   ( ref );
+            DWORD   type            = table -> FieldType             ( ref );
+
+            if ( ( type == TFT_NULL ) || ( type & TFT_TEXT ) )
+            {
+               DrawText ( dc, table -> FieldString ( ref ), -1, text, drawtextformat | DT_NOPREFIX );
+            }
             else
-               if ( type & TFT_ENHMETAFILE )
-               {
-/*
-                  const BYTE       *data     = table -> FieldData     ( ref, 0 );
-                  const DWORD       size     = table -> FieldDataSize ( ref );
-
-                  if ( data != 0 )
+               if ( type & TFT_BITMAP )
+                  ;
+               else
+                  if ( type & TFT_ENHMETAFILE )
                   {
-   //                iEnhMetaFile     *metafile = new  iEnhMetaFile ( AfxGetResourceHandle (), MAKEINTRESOURCE ( 840 ) );
-   //                iEnhMetaFile     *metafile = ( iEnhMetaFile * ) table -> FieldData ( ref, 0 );
-                     iEnhMetaFile     *metafile = new  iEnhMetaFile ( data, size );
+   /*
+                     const BYTE       *data     = table -> FieldData     ( ref, 0 );
+                     const DWORD       size     = table -> FieldDataSize ( ref );
 
-                     if ( ( metafile != 0 ) && ( ! text.IsRectEmpty () ) )
+                     if ( data != 0 )
                      {
-                        wxRect    bounds   ( metafile -> Bounds () );
+      //                iEnhMetaFile     *metafile = new  iEnhMetaFile ( AfxGetResourceHandle (), MAKEINTRESOURCE ( 840 ) );
+      //                iEnhMetaFile     *metafile = ( iEnhMetaFile * ) table -> FieldData ( ref, 0 );
+                        iEnhMetaFile     *metafile = new  iEnhMetaFile ( data, size );
 
-                        if ( bounds.IsRectEmpty () )
-                           dc -> PlayMetaFile ( *metafile, text );
-                        else
+                        if ( ( metafile != 0 ) && ( ! text.IsRectEmpty () ) )
                         {
-                           double   dx = ( double ) text.W () / ( double ) bounds.W ();
-                           double   dy = ( double ) text.H () / ( double ) bounds.H ();
-                           long     x  = text.X ();
-                           long     y  = text.Y ();
-                           long     w  = text.W ();
-                           long     h  = text.H ();
+                           wxRect    bounds   ( metafile -> Bounds () );
 
-                           if ( dx >= dy )
-                              w = ( double ) bounds.W () * dy;
+                           if ( bounds.IsRectEmpty () )
+                              dc -> PlayMetaFile ( *metafile, text );
                            else
-                              h = ( double ) bounds.H () * dx;
+                           {
+                              double   dx = ( double ) text.W () / ( double ) bounds.W ();
+                              double   dy = ( double ) text.H () / ( double ) bounds.H ();
+                              long     x  = text.X ();
+                              long     y  = text.Y ();
+                              long     w  = text.W ();
+                              long     h  = text.H ();
 
-                           if ( drawtextformat & DT_CENTER )
-                              x = text.X () + ( text.W () - w ) / 2;
-                           else
-                              if ( drawtextformat & DT_RIGHT )
-                                 x = text.X () + text.W () - w;
+                              if ( dx >= dy )
+                                 w = ( double ) bounds.W () * dy;
+                              else
+                                 h = ( double ) bounds.H () * dx;
 
-                           if ( drawtextformat & DT_VCENTER )
-                              y = text.Y () + ( text.H () - h ) / 2;
-                           else
-                              if ( drawtextformat & DT_BOTTOM )
-                                 y = text.Y () + text.H () - h;
+                              if ( drawtextformat & DT_CENTER )
+                                 x = text.X () + ( text.W () - w ) / 2;
+                              else
+                                 if ( drawtextformat & DT_RIGHT )
+                                    x = text.X () + text.W () - w;
 
-                           dc -> PlayMetaFile ( *metafile, &wxRect ( x, y, w, h ) );
+                              if ( drawtextformat & DT_VCENTER )
+                                 y = text.Y () + ( text.H () - h ) / 2;
+                              else
+                                 if ( drawtextformat & DT_BOTTOM )
+                                    y = text.Y () + text.H () - h;
+
+                              dc -> PlayMetaFile ( *metafile, &wxRect ( x, y, w, h ) );
+                           }
+
+                           delete  metafile;
                         }
-
-                        delete  metafile;
                      }
+   */
                   }
-*/
-               }
+         }
       }
    }
 
@@ -3783,7 +3755,7 @@ wxTableCtrl :: Body :: Body ( wxWindow *  _window, wxWindowID  _id, const wxPoin
 
    dropsource           = new  wxDropSource  ( this );
    dataobject           = new  DataObject    ();
-
+#if 0
 #ifdef __WXMSW__
    checkbox_unchecked   = new  wxBitmap ( ResourceNameString ( RNS_TABLE_CHECKBOX_UNCHECKED ) );
    checkbox_checked     = new  wxBitmap ( ResourceNameString ( RNS_TABLE_CHECKBOX_CHECKED   ) );
@@ -3791,7 +3763,7 @@ wxTableCtrl :: Body :: Body ( wxWindow *  _window, wxWindowID  _id, const wxPoin
    checkbox_unchecked   = 0;
    checkbox_checked     = 0;
 #endif
-
+#endif
    lock                 = false;
 // fill                 = Fill_NORMAL;
    fill                 = Fill_RESET;
@@ -3805,8 +3777,8 @@ wxTableCtrl :: Body :: ~Body ()
 {
 // delete  imagelist;
 
-   delete  checkbox_unchecked;
-   delete  checkbox_checked;
+// delete  checkbox_unchecked;
+// delete  checkbox_checked;
 
    delete  dataobject;
    delete  dropsource;
@@ -4826,20 +4798,14 @@ void  wxTableCtrl :: DrawColumn ( wxDC *  dc, const DrawHeaderFlag &  flag, cons
       // Sort arrow requires at least 16 points.
       // Free this space from the text rectangle.
 
-//    This moves the CRect!!!
-//    I guess this is MFC and so Microsoft logic???
-//    text -= CSize ( ARROWWIDTH, 0 );
-//    text.Deflate ( ARROWWIDTH, 0 );    // Thus, decrease width.
       text.SetRight ( text.GetRight () - ARROWWIDTH );
 
       // If the text is right aligned, move the text rectangle.
 
       if ( column -> AlignHeader () & DT_RIGHT  )
          text.Offset ( ARROWWIDTH, 0 );            // Move it.
-//       text.OffsetRect ( ARROWWIDTH, 0 );        // Move it.
    }
 
-// text.DeflateRect ( 4, 4 );
    text.Deflate   ( 4, 4 );
 
    switch ( state )
@@ -4848,13 +4814,11 @@ void  wxTableCtrl :: DrawColumn ( wxDC *  dc, const DrawHeaderFlag &  flag, cons
          break;
 
       case Column :: State_DOWN  :
-//       text += wxPoint ( 1, 1 );
          text.SetPosition ( wxPoint ( text.GetX () + 1, text.GetY () + 1 ) );
 
          break;
 
       case Column :: State_MOVE  :
-//       text -= wxPoint ( 2, 0 );
          text.SetPosition ( wxPoint ( text.GetX () - 2, text.GetY () ) );
 
          break;
@@ -5994,6 +5958,8 @@ void  wxTableCtrl :: Init ()
 
    tooltip        = 0;
    tooltipindex   = ~0UL;     
+   
+   drawevents     = false;
 
 // relation       = 0;
 }
@@ -6365,6 +6331,22 @@ wxTableCtrl &  wxTableCtrl :: SetNativeHeader ( bool  flag )
    else
       DeleteHeader ();
       
+   return ( *this );
+}
+
+
+
+const bool  wxTableCtrl :: GetDrawEvents () const
+{
+   return ( drawevents );
+}
+
+
+
+wxTableCtrl &  wxTableCtrl :: SetDrawEvents ( const bool &  _drawevents )
+{
+   drawevents  = _drawevents;
+   
    return ( *this );
 }
 
@@ -6872,8 +6854,9 @@ wxTableEvent *  wxTableEvent :: Clone () const
 
 void  wxTableEvent :: Init ()
 {
+   dc       =  0;
    column   =  0;
-   point    = wxDefaultPosition;
+   rect     = wxRect ( wxDefaultPosition, wxDefaultSize );
    table    =  0;
    record   =  0;
    cursor   =  0;
@@ -6894,8 +6877,9 @@ wxTableEvent :: wxTableEvent ( const wxTableEvent &  that )
 {
    Init  ();
    
+   dc          = that.dc;
    column      = that.column;
-   point       = that.point;
+   rect        = that.rect; 
    table       = that.table;
    record      = that.record;
    cursor      = that.cursor;
@@ -6913,8 +6897,9 @@ wxTableEvent :: wxTableEvent ( wxTableCtrl *  _window, const wxEventType &  _typ
 
    Init  ();
 
+   dc          = 0;
    column      = _column;
-   point       = _point;
+   rect        = wxRect ( _point, wxDefaultSize );
    table       = _table;
    record      = _record;
    cursor      = _cursor;
@@ -6932,8 +6917,9 @@ wxTableEvent :: wxTableEvent ( wxTableCtrl *  _window, const wxEventType &  _typ
 
    Init  ();
 
+   dc          = 0;
    column      = 0;
-   point       = _point;
+   rect        = wxRect ( _point, wxDefaultSize );
    table       = _table;
    record      = _record;
    cursor      = _cursor;
@@ -6941,6 +6927,26 @@ wxTableEvent :: wxTableEvent ( wxTableCtrl *  _window, const wxEventType &  _typ
    background  = wxSystemSettings :: GetColour ( wxSYS_COLOUR_3DFACE        );
    foreground  = wxSystemSettings :: GetColour ( wxSYS_COLOUR_WINDOWTEXT    );
    keyevent    = _keyevent;
+}
+
+
+
+wxTableEvent :: wxTableEvent ( wxTableCtrl *  _window, const wxEventType &  _type, wxDC *  _dc, const wxTableCtrl :: Column *  _column, const wxRect &  _rect, wxTable *  _table, wxTable :: Record *  _record, const wxTable :: Cursor *  _cursor, const bool &  _focus )
+   : wxNotifyEvent ( _type, _window -> GetId () )
+{
+   SetEventObject ( _window );
+
+   Init  ();
+
+   dc          = _dc;
+   column      = _column;
+   rect        = _rect;
+   table       = _table;
+   record      = _record;
+   cursor      = _cursor;
+   focus       = _focus;
+   background  = wxSystemSettings :: GetColour ( wxSYS_COLOUR_3DFACE        );
+   foreground  = wxSystemSettings :: GetColour ( wxSYS_COLOUR_WINDOWTEXT    );
 }
 
 
@@ -6960,7 +6966,7 @@ wxTableCtrl *  wxTableEvent :: GetControl () const
 
 void  wxTableEvent :: SetPoint ( const wxPoint &  _point )
 {
-   point    = _point;
+   rect     = wxRect ( _point, wxDefaultSize );
 }
 
 

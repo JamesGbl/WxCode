@@ -5,7 +5,7 @@
 // Purpose:                                                                   //
 // Author:      Jan Knepper                                                   //
 // Created:     1998                                                          //
-// Copyright:   (c) 1998-2007 Jan Knepper                                     //
+// Copyright:   (c) 1998-2008 Jan Knepper                                     //
 // Licence:     wxWidgets licence                                             //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -116,6 +116,9 @@ BEGIN_DECLARE_EVENT_TYPES  ()
    
    DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_FIND                , 1050 )
    DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_SEARCH              , 1051 )
+   
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_DRAW_COLUMN_HEADER  , 1052 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_DRAW_COLUMN_DATA    , 1053 )
 END_DECLARE_EVENT_TYPES    ()
 
 
@@ -187,6 +190,9 @@ END_DECLARE_EVENT_TYPES    ()
 
 #define EVT_TABLE_FIND(id, fn)                           wx__DECLARE_TABLEEVT(FIND                 , id, fn)
 #define EVT_TABLE_SEARCH(id, fn)                         wx__DECLARE_TABLEEVT(SEARCH               , id, fn)
+
+#define EVT_TABLE_DRAW_COLUMN_HEADER(id, fn)             wx__DECLARE_TABLEEVT(DRAW_COLUMN_HEADER   , id, fn)
+#define EVT_TABLE_DRAW_COLUMN_DATA(id, fn)               wx__DECLARE_TABLEEVT(DRAW_COLUMN_DATA     , id, fn)
 
 
 
@@ -409,8 +415,8 @@ class  wxTableCtrl : public  wxControl
             wxDropSource *             dropsource;
             DataObject *               dataobject;
 
-            wxBitmap *                 checkbox_unchecked;
-            wxBitmap *                 checkbox_checked;
+//          wxBitmap *                 checkbox_unchecked;
+//          wxBitmap *                 checkbox_checked;
 
             bool                       lock;
             Fill                       fill;
@@ -649,6 +655,8 @@ class  wxTableCtrl : public  wxControl
       wxToolTip *                tooltip;
       size_t                     tooltipindex;
       ToolTipVector              tooltipvector;
+      
+      bool                       drawevents;
 
 //    iWindowSet *               relation;
 
@@ -790,6 +798,9 @@ class  wxTableCtrl : public  wxControl
       const bool                 GetToolTip           () const;
       wxTableCtrl &              SetToolTip           ( const bool & );
       
+      const bool                 GetDrawEvents        () const;
+      wxTableCtrl &              SetDrawEvents        ( const bool & );
+      
       const bool                 GetNativeHeader      () const;
       wxTableCtrl &              SetNativeHeader      ( bool );
 
@@ -864,7 +875,8 @@ class  wxTableEvent : public  wxNotifyEvent
       wxTableEvent *    Clone             () const;
 
    private   :
-      wxPoint           point; 
+      wxRect            rect;
+      wxDC *            dc;
       const wxTableCtrl :: Column *  
                         column;
       wxTable *         table;
@@ -887,13 +899,21 @@ class  wxTableEvent : public  wxNotifyEvent
       wxTableEvent   ( const wxTableEvent & );
       wxTableEvent   ( wxTableCtrl *, const wxEventType &, const wxTableCtrl :: Column * = 0, const wxPoint & = wxDefaultPosition, wxTable * = 0, wxTable :: Record * = 0, const wxTable :: Cursor * = 0, const bool & = false );
       wxTableEvent   ( wxTableCtrl *, const wxEventType &, const wxKeyEvent &, const wxPoint &, wxTable *, wxTable :: Record *, const wxTable :: Cursor *, const bool & = false );
+      wxTableEvent   ( wxTableCtrl *, const wxEventType &, wxDC *, const wxTableCtrl :: Column *, const wxRect &, wxTable * = 0, wxTable :: Record * = 0, const wxTable :: Cursor * = 0, const bool & = false );
       ~wxTableEvent  ();
 
       wxTableCtrl *     GetControl        () const;
       
+      const wxRect &    GetRect           () const                               { return ( rect ); }
+      void              SetRect           ( const wxRect & );
       void              SetPoint          ( const wxPoint & );
-      void              SetColumn         ( const wxTableCtrl :: Column * );
       
+      wxDC *            GetDC             () const                               { return ( dc ); }
+      
+      const wxTableCtrl :: Column *      
+                        GetColumn         () const                               { return ( column ); }
+      void              SetColumn         ( const wxTableCtrl :: Column * );
+                        
       wxTable *         GetTable          () const;
       wxTable :: Record *    
                         GetRecord         () const;
