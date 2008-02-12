@@ -188,7 +188,6 @@ public:     // static utilities
 //! This is an abstract class so it cannot be allocated directly: it
 //! is used instead as base class for specific type of wxCmd.
 //!
-//!
 //! The command has up to wxCMD_MAX_SHORTCUTS associated key shortcuts.
 //! Besides, the command has three other properties: a description string,
 //! a name string and an ID which should be unique for each wxKeyBinder.
@@ -236,6 +235,8 @@ public:     // static
 
     //! Creates a new command of the given type with the given ID.
     //! This function is used mainly in wxCmd::Load.
+    //! @param type The command type
+    //! @param id The command ID
     static wxCmd *CreateNew(int type, int id);
 
     //! Adds a new command type to our static list.
