@@ -21,6 +21,7 @@
 #include <ctdbsdk.hpp>                    // cTreePlus DB SDK.
 
 #undef SIZEOF
+#undef GetRecord
 
 #include "cTreeTable.h"
 
