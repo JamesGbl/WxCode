@@ -122,7 +122,7 @@ dnl wx_ver_ok=yes if it is:
 AC_DEFUN([_WX_PRIVATE_CHECK_VERSION],
 [
     wx_ver_ok=""
-    if test "x$WX_VERSION_FULL" != x ; then
+    if test "x$WX_VERSION" != x ; then
       if test $wx_config_major_version -gt $1; then
         wx_ver_ok=yes
       else
@@ -202,7 +202,7 @@ AC_DEFUN([WX_CONFIG_CHECK],
   fi
 
   if test "$WX_CONFIG_PATH" != "no" ; then
-    WX_VERSION_FULL=""
+    WX_VERSION=""
 
     min_wx_version=ifelse([$1], ,2.2.1,$1)
     if test -z "$5" ; then
@@ -211,14 +211,16 @@ AC_DEFUN([WX_CONFIG_CHECK],
       AC_MSG_CHECKING([for wxWidgets version >= $min_wx_version ($5)])
     fi
 
-    WX_CONFIG_WITH_ARGS="$WX_CONFIG_PATH $wx_config_args $5 $4"
+    dnl don't add the libraries ($4) to this variable as this would result in
+    dnl an error when it's used with --version below
+    WX_CONFIG_WITH_ARGS="$WX_CONFIG_PATH $wx_config_args $5"
 
-    WX_VERSION_FULL=`$WX_CONFIG_WITH_ARGS --version 2>/dev/null`
-    wx_config_major_version=`echo $WX_VERSION_FULL | \
+    WX_VERSION=`$WX_CONFIG_WITH_ARGS --version 2>/dev/null`
+    wx_config_major_version=`echo $WX_VERSION | \
            sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
-    wx_config_minor_version=`echo $WX_VERSION_FULL | \
+    wx_config_minor_version=`echo $WX_VERSION | \
            sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\2/'`
-    wx_config_micro_version=`echo $WX_VERSION_FULL | \
+    wx_config_micro_version=`echo $WX_VERSION | \
            sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'`
 
     wx_requested_major_version=`echo $min_wx_version | \
@@ -233,16 +235,15 @@ AC_DEFUN([WX_CONFIG_CHECK],
                               [$wx_requested_micro_version])
 
     if test -n "$wx_ver_ok"; then
-
-      AC_MSG_RESULT(yes (version $WX_VERSION_FULL))
-      WX_LIBS=`$WX_CONFIG_WITH_ARGS --libs`
+      AC_MSG_RESULT(yes (version $WX_VERSION))
+      WX_LIBS=`$WX_CONFIG_WITH_ARGS --libs $4`
 
       dnl is this even still appropriate?  --static is a real option now
       dnl and WX_CONFIG_WITH_ARGS is likely to contain it if that is
       dnl what the user actually wants, making this redundant at best.
       dnl For now keep it in case anyone actually used it in the past.
       AC_MSG_CHECKING([for wxWidgets static library])
-      WX_LIBS_STATIC=`$WX_CONFIG_WITH_ARGS --static --libs 2>/dev/null`
+      WX_LIBS_STATIC=`$WX_CONFIG_WITH_ARGS --static --libs $4 2>/dev/null`
       if test "x$WX_LIBS_STATIC" = "x"; then
         AC_MSG_RESULT(no)
       else
@@ -287,7 +288,7 @@ AC_DEFUN([WX_CONFIG_CHECK],
 
       if test "x$wx_has_cppflags" = x ; then
          dnl no choice but to define all flags like CFLAGS
-         WX_CFLAGS=`$WX_CONFIG_WITH_ARGS --cflags`
+         WX_CFLAGS=`$WX_CONFIG_WITH_ARGS --cflags $4`
          WX_CPPFLAGS=$WX_CFLAGS
          WX_CXXFLAGS=$WX_CFLAGS
 
@@ -295,9 +296,9 @@ AC_DEFUN([WX_CONFIG_CHECK],
          WX_CXXFLAGS_ONLY=$WX_CFLAGS
       else
          dnl we have CPPFLAGS included in CFLAGS included in CXXFLAGS
-         WX_CPPFLAGS=`$WX_CONFIG_WITH_ARGS --cppflags`
-         WX_CXXFLAGS=`$WX_CONFIG_WITH_ARGS --cxxflags`
-         WX_CFLAGS=`$WX_CONFIG_WITH_ARGS --cflags`
+         WX_CPPFLAGS=`$WX_CONFIG_WITH_ARGS --cppflags $4`
+         WX_CXXFLAGS=`$WX_CONFIG_WITH_ARGS --cxxflags $4`
+         WX_CFLAGS=`$WX_CONFIG_WITH_ARGS --cflags $4`
 
          WX_CFLAGS_ONLY=`echo $WX_CFLAGS | sed "s@^$WX_CPPFLAGS *@@"`
          WX_CXXFLAGS_ONLY=`echo $WX_CXXFLAGS | sed "s@^$WX_CFLAGS *@@"`
@@ -307,11 +308,11 @@ AC_DEFUN([WX_CONFIG_CHECK],
 
     else
 
-       if test "x$WX_VERSION_FULL" = x; then
+       if test "x$WX_VERSION" = x; then
           dnl no wx-config at all
           AC_MSG_RESULT(no)
        else
-          AC_MSG_RESULT(no (version $WX_VERSION_FULL is not new enough))
+          AC_MSG_RESULT(no (version $WX_VERSION is not new enough))
        fi
 
        WX_CFLAGS=""
@@ -368,7 +369,7 @@ AC_DEFUN([WX_CONFIG_CHECK],
   AC_SUBST(WX_CXXFLAGS_ONLY)
   AC_SUBST(WX_LIBS)
   AC_SUBST(WX_LIBS_STATIC)
-  AC_SUBST(WX_VERSION_FULL)
+  AC_SUBST(WX_VERSION)
   AC_SUBST(WX_RESCOMP)
 
   dnl need to export also WX_VERSION_MINOR and WX_VERSION_MAJOR symbols
@@ -571,13 +572,14 @@ AC_DEFUN([WX_STANDARD_OPTIONS],
         dnl the following lines will expand to WX_ARG_ENABLE_YESNOAUTO calls if and only if
         dnl the $1 argument contains respectively the debug,unicode or shared options.
 
-        ifelse(index([$1], [debug]), [-1],,
+        dnl be careful here not to set debug flag if only "wxdebug" was specified
+        ifelse(regexp([$1], [\bdebug]), [-1],,
                [WX_ARG_ENABLE_YESNOAUTO([debug], [DEBUG], [Build in debug mode], [auto])])
 
         ifelse(index([$1], [unicode]), [-1],,
                [WX_ARG_ENABLE_YESNOAUTO([unicode], [UNICODE], [Build in Unicode mode], [auto])])
 
-        ifelse(index([$1], [shared]), [-1],,
+        ifelse(regexp([$1], [\bshared]), [-1],,
                [WX_ARG_ENABLE_YESNOAUTO([shared], [SHARED], [Build as shared library], [auto])])
 
         dnl WX_ARG_WITH_YESNOAUTO cannot be used for --with-toolkit since it's an option
@@ -803,7 +805,7 @@ AC_DEFUN([WX_DETECT_STANDARD_OPTION_VALUES],
 
             AC_MSG_ERROR([
     Cannot detect the wxWidgets configuration for the selected wxWidgets build
-    since its version is $WX_VERSION_FULL < 2.6.0; please install a newer
+    since its version is $WX_VERSION < 2.6.0; please install a newer
     version of wxWidgets.
                          ])
         fi
@@ -997,7 +999,7 @@ AC_DEFUN([WX_STANDARD_OPTIONS_SUMMARY_MSG],
         WX_BOOLOPT_SUMMARY([WX_DEBUG],   ["  - DEBUG build"],  ["  - RELEASE build"])
         WX_BOOLOPT_SUMMARY([WX_UNICODE], ["  - UNICODE mode"], ["  - ANSI mode"])
         WX_BOOLOPT_SUMMARY([WX_SHARED],  ["  - SHARED mode"],  ["  - STATIC mode"])
-        echo "  - VERSION: $WX_VERSION_FULL"
+        echo "  - VERSION: $WX_VERSION"
         echo "  - PORT: $WX_PORT"
     ])
 
@@ -1042,6 +1044,8 @@ dnl Deprecated macro wrappers
 dnl ---------------------------------------------------------------------------
 
 AC_DEFUN([AM_OPTIONS_WXCONFIG], [WX_CONFIG_OPTIONS])
-AC_DEFUN([AM_PATH_WXCONFIG], [WX_CONFIG_CHECK])
+AC_DEFUN([AM_PATH_WXCONFIG], [
+    WX_CONFIG_CHECK([$1],[$2],[$3],[$4],[$5])
+])
 
 
