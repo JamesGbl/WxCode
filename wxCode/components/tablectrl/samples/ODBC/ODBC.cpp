@@ -30,5 +30,28 @@ bool  ODBC :: OnInit ()
    
    mainframe   -> Show  ();
    
+   SetTopWindow   ( mainframe );
+   
    return ( true );
+}
+
+
+
+int  ODBC :: OnExit ()
+{
+   return ( super :: OnExit () );
+}
+
+
+
+ODBC :: ODBC ()
+   : wxApp ()
+{
+   mainframe   = 0;
+}
+
+
+
+ODBC :: ~ODBC ()
+{
 }

@@ -46,7 +46,7 @@ class  ChildFrame : public  wxMDIChildFrame
       ChildFrame  ( MainFrame *, wxWindowID = wxID_ANY, const wxString & = wxEmptyString, const wxPoint & = wxDefaultPosition, const wxSize & = wxDefaultSize, long = DEFAULTSTYLE );
       ~ChildFrame ();
 
-      bool                 Open  ( wxODBCDbc *, ODBCTable * );    
+      bool                 Open  ( wxODBCDbc *, const wxString & );    
 };
 
 

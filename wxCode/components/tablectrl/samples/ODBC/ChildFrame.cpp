@@ -29,12 +29,6 @@ const long              ChildFrame :: DEFAULTSTYLE = wxDEFAULT_FRAME_STYLE;
 ChildFrame :: ChildFrame ( MainFrame *  _window, wxWindowID  _id, const wxString &  _title, const wxPoint &  _point, const wxSize &  _size, long  _style )
    : wxMDIChildFrame ( _window, _id, _title, _point, _size, _style )
 {
-#if 0
-   session  = 0;
-   table    = 0;
-   t        = 0;
-#endif
-   
    sizer    = new  wxBoxSizer ( wxVERTICAL );
    
    sizer    -> Add   ( tc  = new  wxTableCtrl   ( this ), 1, wxALL | wxEXPAND, 0 );
@@ -49,17 +43,17 @@ ChildFrame :: ChildFrame ( MainFrame *  _window, wxWindowID  _id, const wxString
 
 ChildFrame :: ~ChildFrame ()
 {
-   tc       -> Table          ( 0 );
+   tc    -> Table ( 0 );
    
    delete  table;
 }
 
 
 
-bool  ChildFrame :: Open ( wxODBCDbc *  _dbc, ODBCTable *  _table )
-{  
+bool  ChildFrame :: Open ( wxODBCDbc *  _dbc, const wxString &  name )
+{
    dbc   = _dbc;
-   table = _table;
+   table = new  ODBCTable  ( dbc, name );
    
    tc    -> Table ( table );
    

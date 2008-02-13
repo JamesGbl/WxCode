@@ -42,8 +42,6 @@ void  MainFrame :: OnMenuOpen ( wxCommandEvent &  ce )
    if ( dlg.ShowModal () != wxID_OK )
       return;
       
-   dbc   = new  wxODBCDbc  ( env );
-   
    if ( ! dbc -> Connect ( dlg.GetDSN (), dlg.GetUserId (), dlg.GetPasswd () ) )
    {
       delete  dbc;
@@ -85,10 +83,9 @@ void  MainFrame :: OnMenuOpen ( wxCommandEvent &  ce )
       return;
    }
    
-   ODBCTable *             t     = new  ODBCTable  ( dbc, table );
    ChildFrame *            child = new  ChildFrame ( this, wxID_ANY, wxString ( dlg.GetDSN () ) + "/" + table );
    
-   child -> Open  ( dbc, t ); 
+   child -> Open  ( dbc, table ); 
 }
 
 
@@ -97,8 +94,6 @@ MainFrame :: MainFrame ()
    : wxMDIParentFrame ( 0, wxID_ANY, "ODBC (iTableCtrl)", wxDefaultPosition, wxSize ( 600, 400 ) ),
    env   ()
 {
-   dbc   = 0;
-   
    SetIcon ( wxIcon ( "ICON" ) );
    
    wxMenuBar *    menubar  = new  wxMenuBar  ();
@@ -111,6 +106,8 @@ MainFrame :: MainFrame ()
    menubar  -> Append            ( filemenu     , "&File"      );
    
    SetMenuBar  ( menubar );
+
+   dbc   = new  wxODBCDbc  ( env );
 }
 
 

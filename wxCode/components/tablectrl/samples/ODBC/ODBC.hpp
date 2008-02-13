@@ -26,11 +26,17 @@ class  ODBC : public  wxApp
    private   :
       typedef wxApp     super;
    
-   private   :
-      MainFrame *       mainframe;
-         
    public    :
       bool              OnInit   ();
+      int               OnExit   ();
+
+   private   :
+      MainFrame *       mainframe;
+      
+   public    :
+      ODBC  ();
+      ~ODBC ();
+      
 };
 
 
