@@ -380,6 +380,9 @@ class  wxTableCtrl : public  wxControl
          public    :
             static const long          DEFAULTSTYLE;
             
+         public    :
+            static const size_t        nrow;
+            
          private   :
             wxTableCtrl *              control;                      // The parent window!
 
@@ -399,9 +402,9 @@ class  wxTableCtrl : public  wxControl
             wxRect                     rect;                         // For GetClientRect.
             wxPoint                    down;                         // Cursor position.
             wxPoint                    move;                         // Maximum the cursor moved from 'point'.
-            int                        text_height;                  // Height of 1 line.
-            int                        rows;                         // rect.H () / text_height;
-            int                        cursor_row;                   // Row for 'cursor'.
+            size_t                     text_height;                  // Height of 1 line.
+            size_t                     rows;                         // rect.H () / text_height;
+            size_t                     cursor_row;                   // Row for 'cursor'.
             bool                       focus;
             wxTable :: Cursor *        begin;                        // For range selection VK_SHIFT+MK_LBUTTON.
             wxTable :: Cursor *        end;                          //
@@ -423,10 +426,10 @@ class  wxTableCtrl : public  wxControl
 
          private   :
             void                       DoSize               ( bool );
-            void                       DoPaintDC            ( wxDC *, int = -1, const Fill & = Fill_NORMAL );
-            void                       DoPaintLineDC        ( wxDC *, int, int = -1 );
+            void                       DoPaintDC            ( wxDC *, size_t = nrow, const Fill & = Fill_NORMAL );
+            void                       DoPaintLineDC        ( wxDC *, size_t, int = -1 );
             void                       DoPaint              ();
-            void                       DoPaintLine          ( int );
+            void                       DoPaintLine          ( size_t );
             void                       DoFocusRect          ( wxDC *, int );
             
             void                       DrawCheckBox         ( wxDC *, const wxRect &, bool );

@@ -538,7 +538,7 @@ bool  wxTableCtrl :: HeaderCtrl :: MSWOnNotify ( int  id, WXLPARAM  lparam, WXLP
                
                for ( size_t  i = 0 ; i < COLS ; ++i )
                {
-                  if ( i == nmheader -> iItem )
+                  if ( i == static_cast < size_t > ( nmheader -> iItem ) )
                      continue;
                      
                   Header_GetItem ( hwnd, i, &item );
@@ -915,7 +915,7 @@ long  wxTableCtrl :: Header :: Init ( wxTable *  _table, long  h )
 
    for ( size_t  i = 0 ; i < numberofcolumns ; ++i )
    {
-      wxTable :: Column *  tc = table -> At ( i );
+//    wxTable :: Column *  tc = table -> At ( i );
       
       // Only include in header list when visible!
 
@@ -1304,12 +1304,16 @@ const int               IDM_EXCHANGE_END     = IDM_EXCHANGE_SQUASH;
 
 
 
+const size_t            wxTableCtrl :: Body :: nrow   = ~0U;
+
+
+
 void  wxTableCtrl :: Body :: DataObject :: LoadData ()
 {
    const wxTable :: Cursor *  current  = record -> CursorCurrent  ();
    const int                  COLUMNS  = table -> NumberOfColumns ();
 // LPTSTR                     string   = ( LPTSTR ) GlobalLock ( *hglobal );
-   int                        index    = 0;
+// int                        index    = 0;
    int                        count    = 0;
    wxString                   text;
 
@@ -1579,7 +1583,7 @@ void  wxTableCtrl :: Body :: DoSize ( bool  reset )
 
 
 
-void  wxTableCtrl :: Body :: DoPaintDC ( wxDC  *dc, int  row, const Fill &  fill )
+void  wxTableCtrl :: Body :: DoPaintDC ( wxDC  *dc, size_t  row, const Fill &  fill )
 {
    if ( lock )
       return;
@@ -1595,7 +1599,7 @@ void  wxTableCtrl :: Body :: DoPaintDC ( wxDC  *dc, int  row, const Fill &  fill
    bdc.SetWindow  ( dc -> GetWindow () );
 
    rows        = ( text_height != 0 ) ? rect.GetHeight () / text_height : 0;
-   cursor_row  = -1;                             // Reset 'cursor_row'.
+   cursor_row  = nrow;                           // Reset 'cursor_row'.
 
    // row : The cursor row. This can exceed the available rows after a resize!
    //
@@ -1605,12 +1609,12 @@ void  wxTableCtrl :: Body :: DoPaintDC ( wxDC  *dc, int  row, const Fill &  fill
    // B   : The number of requested rows below the cursor.
    // b   : The number of available rows below the cursor.
 
-   const int            ROWS        = rows - 1;
-   const int            A           = ( ( row != -1 ) && ( row <= ROWS ) ) ? row : 0;
+   const size_t         ROWS        = rows - 1;
+   const int            A           = ( ( row != nrow ) && ( row <= ROWS ) ) ? row : 0;
    const int            B           = ROWS - A;
-   int                  a           = 0;
-   int                  b           = 0;
-   int                  r           = 0;
+   size_t               a           = 0;
+   size_t               b           = 0;
+   size_t               r           = 0;
 
    FillSolidRect  ( &bdc, wxRect ( 0, 0, rect.GetWidth (), rect.GetHeight () ), backgroundcolor );
    bdc.SetTextBackground   ( backgroundcolor );
@@ -1645,7 +1649,7 @@ void  wxTableCtrl :: Body :: DoPaintDC ( wxDC  *dc, int  row, const Fill &  fill
          case Fill_SORT    :
             // Go by 'cursor' if visible, otherwise to by 'visible.Top ()'.
 
-            if ( ( help -> IsValid () ) && ( visible.IndexOf ( *help ) >= 0 ) )
+            if ( ( help -> IsValid () ) && ( visible.IndexOf ( *help ) != wxTable :: CursorVector :: npos ) )
                ;
             else
                *help = *visible.Top ();
@@ -1689,7 +1693,8 @@ void  wxTableCtrl :: Body :: DoPaintDC ( wxDC  *dc, int  row, const Fill &  fill
          if ( ( ( r = ( a - 1 ) ) >= 0 ) && ( record -> CursorSet ( help ) == wxTable :: Record :: Result_OK ) )
          {
             result = record -> GetPrv ();
-            while ( ( r >= 0 ) && ( result == wxTable :: Record :: Result_OK ) )
+//          while ( ( r >= 0 ) && ( result == wxTable :: Record :: Result_OK ) )
+            while ( ( r != nrow ) && ( result == wxTable :: Record :: Result_OK ) )
             {
                DoPaintLineDC  ( &bdc, r-- );
 
@@ -1757,7 +1762,7 @@ void  wxTableCtrl :: Body :: DoPaintDC ( wxDC  *dc, int  row, const Fill &  fill
 
       if ( control -> styleex & ITCS_GRIDHORIZONTAL )
       {
-         for ( int  r = 0 ; r < rows ; r++ )
+         for ( size_t  r = 0 ; r < rows ; ++r )
          {
             int   y  = ( r + 1 ) * text_height;
 
@@ -1775,7 +1780,7 @@ void  wxTableCtrl :: Body :: DoPaintDC ( wxDC  *dc, int  row, const Fill &  fill
 
 
 
-void  wxTableCtrl :: Body :: DoPaintLineDC ( wxDC *  dc, int  row, int  index )
+void  wxTableCtrl :: Body :: DoPaintLineDC ( wxDC *  dc, size_t  row, int  index )
 {
    if ( index == -1 )
       index = row;
@@ -1972,7 +1977,7 @@ void  wxTableCtrl :: Body :: DoPaint ()
 
 
 
-void  wxTableCtrl :: Body :: DoPaintLine ( int  row )
+void  wxTableCtrl :: Body :: DoPaintLine ( size_t  row )
 {
    wxClientDC  dc    ( this );
    wxBitmapDC  bdc   ( &dc, wxRect ( 0, row * text_height, rect.GetWidth (), text_height ) );
@@ -2341,9 +2346,9 @@ bool  wxTableCtrl :: Body :: _CursorTo ( long  row, bool  controldown )
 
          if ( *cursor != *c )
          {
-            int         tmp;
+            size_t      tmp;
 
-            if ( ( tmp = visible.IndexOf ( *cursor ) ) >= 0 )
+            if ( ( tmp = visible.IndexOf ( *cursor ) ) != wxTable :: CursorVector :: npos )
             {
                record   -> CursorSet   ( cursor );
 
@@ -2402,7 +2407,7 @@ void  wxTableCtrl :: Body :: OnKillFocus ( wxFocusEvent & )
    if ( control -> styleex & ITCS_MULTISELECT )
       DoPaint  ();
    else
-      if ( ( cursor_row = visible.IndexOf ( *cursor ) ) >= 0 )
+      if ( ( cursor_row = visible.IndexOf ( *cursor ) ) != wxTable :: CursorVector :: npos )
          DoPaintLine ( cursor_row );
 
 // super :: OnKillFocus ( window );
@@ -2420,7 +2425,7 @@ void  wxTableCtrl :: Body :: OnPaint ( wxPaintEvent & )
 {
    wxPaintDC   dc ( this );
 
-   DoPaintDC ( &dc, -1, fill );
+   DoPaintDC ( &dc, nrow, fill );
 
    fill  = Fill_NORMAL;
 
@@ -2440,7 +2445,7 @@ void  wxTableCtrl :: Body :: OnSetFocus ( wxFocusEvent & )
    if ( control -> styleex & ITCS_MULTISELECT )
       DoPaint  ();
    else
-      if ( ( cursor_row = visible.IndexOf ( *cursor ) ) >= 0 )
+      if ( ( cursor_row = visible.IndexOf ( *cursor ) ) != wxTable :: CursorVector :: npos )
          DoPaintLine ( cursor_row );
 
 // super :: OnSetFocus ( window );
@@ -3549,7 +3554,7 @@ bool  wxTableCtrl :: Body :: KeyCursor ( const wxKeyEvent &  ke )
       {
          // Is 'cursor' visible?
 
-         if ( visible.IndexOf ( *cursor ) >= 0 )
+         if ( visible.IndexOf ( *cursor ) != wxTable :: CursorVector :: npos )
          {
             // Should be able to 'Set' to cursor.
             // If so, return false so the calling member handles the movement.
@@ -3741,7 +3746,7 @@ wxTableCtrl :: Body :: Body ( wxWindow *  _window, wxWindowID  _id, const wxPoin
 
 // left                 =  0;             // Not horizontal scrolled yet!
    text_height          =  0;             // Calculated.
-   cursor_row           = -1;             // No active cursor yet.
+   cursor_row           = nrow;           // No active cursor yet.
    focus                = false;          // Doesn't have the focus yet!
 // keydown              =  0;             // No <Ctrl> <Shift> or <Alt> down yet!
    begin                =  0;             // No range selection active yet!
@@ -3881,7 +3886,7 @@ void  wxTableCtrl :: Body :: Exchange ( const wxRect &  _r0, const wxRect &  _r1
    
    DoPaintDC ( &bdc );
 
-   if ( ( cursor_row = visible.IndexOf ( *cursor ) ) >= 0 )
+   if ( ( cursor_row = visible.IndexOf ( *cursor ) ) != wxTable :: CursorVector :: npos )
       DoFocusRect ( &dc, cursor_row );
 
    // Output Device Context.
