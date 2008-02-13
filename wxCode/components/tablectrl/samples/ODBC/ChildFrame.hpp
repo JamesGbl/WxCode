@@ -35,14 +35,6 @@ class  ChildFrame : public  wxMDIChildFrame
       static const long    DEFAULTSTYLE;
                                  
    private   :
-      
-#if 0
-      CTSession *          session;
-      CTTable *            table;
-      CTRecord *           record;
-      
-      NADCTreeTable *      t;
-#endif      
       wxODBCDbc *          dbc;
       ODBCTable *          table;
       
@@ -54,9 +46,6 @@ class  ChildFrame : public  wxMDIChildFrame
       ChildFrame  ( MainFrame *, wxWindowID = wxID_ANY, const wxString & = wxEmptyString, const wxPoint & = wxDefaultPosition, const wxSize & = wxDefaultSize, long = DEFAULTSTYLE );
       ~ChildFrame ();
 
-#if 0      
-      bool                 Open  ( CTSession *, const wxString & );
-#endif
       bool                 Open  ( wxODBCDbc *, ODBCTable * );    
 };
 

@@ -50,45 +50,9 @@ ChildFrame :: ChildFrame ( MainFrame *  _window, wxWindowID  _id, const wxString
 ChildFrame :: ~ChildFrame ()
 {
    tc       -> Table          ( 0 );
-
-#if 0   
-   delete  t;
-   
-   table    -> Close          ();
    
    delete  table;
-#endif   
 }
-
-
-#if 0
-bool  ChildFrame :: Open ( CTSession *  session, const wxString &  file )
-{
-   const wxFileName     fn    ( file );
-   const wxString       PATH  ( fn.GetPath () );
-   const wxString       NAME  ( fn.GetName () );
-   
-   try
-   {
-      table    = new  CTTable    ( session );
-
-      table    -> SetPath        ( PATH.c_str () );
-      table    -> Open           ( NAME.c_str (), CTOPEN_NORMAL );
-      
-      record   = new  CTRecord   ( table );
-      
-      t        = new  NADCTreeTable ( *table, *record );
-   
-      tc       -> Table ( t );
-   }
-   catch ( CTException &  e )
-   {
-      wxNADMessageBox :: Error ( wxNADMessageBox :: ButtonOk, "Error", this, "%d: %s %s:%d", e.GetErrorCode (), e.GetErrorMsg (), e.GetSourceFile (), e.GetLineNbr () );
-   }
-      
-   return ( true );
-}
-#endif
 
 
 
