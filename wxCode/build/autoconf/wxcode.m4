@@ -99,15 +99,19 @@ dnl options defined by WXCODE_OPTIONS
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([WXCODE_CHECKS],
         [
+            WX_CONVERT_STANDARD_OPTIONS_TO_WXCONFIG_FLAGS
+            WX_CONFIG_CHECK([$1],,,[$2],[$WXCONFIG_FLAGS])
+            WX_DETECT_STANDARD_OPTION_VALUES
+
+            # VERY IMPORTANT: these AC_PROG_C* checks must go after WX_DEBUG
+            #                 option handling or they'll add automatically "-g -O0"
+            #                 flags to the CXXFLAGS and CPPFLAGS:
+
             # required when compiling C files:
             AC_PROG_CC
 
             # required when compiling C++ files:
             AC_PROG_CXX
-
-            WX_CONVERT_STANDARD_OPTIONS_TO_WXCONFIG_FLAGS
-            WX_CONFIG_CHECK([$1],,,[$2],[$WXCONFIG_FLAGS])
-            WX_DETECT_STANDARD_OPTION_VALUES
         ])
 
 
