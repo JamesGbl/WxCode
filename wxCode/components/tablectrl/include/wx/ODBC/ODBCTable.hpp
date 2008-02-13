@@ -181,7 +181,7 @@ class  wxODBCTable : public  wxObject
       wxString             type;
       wxString             remarks;
       
-      wxODBCColumnArray *  columns;
+//    wxODBCColumnArray *  columns;
       
    public    :
       wxODBCTable ();
@@ -302,6 +302,7 @@ class  ODBCTable : public  wxTable
       
    public    :
       ODBCTable   ( wxODBCDbc *, const wxString & );
+      ~ODBCTable  ();
 };
 
 

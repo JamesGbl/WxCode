@@ -600,7 +600,6 @@ ODBCTable :: RecordEx :: Result  ODBCTable :: RecordEx :: __Get ( const Find & )
 
 ODBCTable :: Cursor *  ODBCTable :: RecordEx :: __CursorCreate ()
 {
-// return ( new  CursorEx ( dbtable.GetCursor () ) );
    DefaultCursor *   dc = new  DefaultCursor ( row + 1 );
    
    if ( row < 0 )
@@ -816,3 +815,9 @@ ODBCTable :: ODBCTable ( wxODBCDbc *  _dbc, const wxString &  _name )
 #endif   
 }
 
+
+
+ODBCTable :: ~ODBCTable ()
+{
+   delete  record;
+}
