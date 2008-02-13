@@ -340,3 +340,10 @@ FakeTable :: FakeTable ( size_t  _r, size_t  _c )
    r  = _r;
    c  = _c;
 }
+
+
+
+FakeTable :: ~FakeTable ()
+{
+   delete  record;
+}

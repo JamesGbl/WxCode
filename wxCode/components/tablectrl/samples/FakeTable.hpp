@@ -105,6 +105,7 @@ class  FakeTable : public  wxTable
       
    public    :
       FakeTable   ( size_t, size_t );
+      ~FakeTable  ();
 };
 
 

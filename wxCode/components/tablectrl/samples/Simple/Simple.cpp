@@ -48,6 +48,7 @@ class  MainFrame : public  wxFrame
       
    public    :
       MainFrame   ();
+      ~MainFrame  ();
 };
 
 
@@ -191,6 +192,15 @@ MainFrame :: MainFrame ()
    table -> Check  ().Use  ( &check  );
    
    SetSizer ( sizer );
+}
+
+
+
+MainFrame :: ~MainFrame ()
+{
+   tablectrl -> Table   ( 0 );
+   
+   delete  table;
 }
 
 
