@@ -216,7 +216,6 @@ wxTable :: Record :: Result  cTreeTable :: RecordEx :: __Unlock ( const Cursor *
 
 wxTable :: Cursor *  cTreeTable :: RecordEx :: __CursorCreate ()
 {
-// return ( new  DefaultCursor ( *CursorCurrent () ) );
    return ( CursorCurrent () -> Clone () );
 }
 
