@@ -154,6 +154,7 @@ ChildFrame :: ~ChildFrame ()
    
    table    -> Close          ();
    
+   delete  record;
    delete  table;
 }
 
