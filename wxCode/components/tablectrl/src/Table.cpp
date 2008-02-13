@@ -181,6 +181,10 @@ wxTable :: Cursor :: ~Cursor ()
 
 
 
+const wxTable :: CursorVector :: size_type   wxTable :: CursorVector :: npos  = ~0U;
+
+
+
 wxTable :: CursorVector :: CursorVector ()
    : std :: vector < Cursor * > ()
 {
@@ -191,24 +195,24 @@ wxTable :: CursorVector :: CursorVector ()
 
 wxTable :: CursorVector :: ~CursorVector ()
 {
-   const int   s = size ();
+   const size_t   s = size ();
 
-   for ( int  i = 0 ; i < s ; i++ )
+   for ( size_t  i = 0 ; i < s ; ++i )
       delete  at ( i );
 }
 
 
 
-void  wxTable :: CursorVector :: Allocate ( int  _size, const Cursor *  cursor )
+void  wxTable :: CursorVector :: Allocate ( size_type  _size, const Cursor *  cursor )
 {
-   const int   SIZE  = size ();
-   const int   size  = _size + 1;
+   const size_type   SIZE  = size ();
+   const size_type   size  = _size + 1;
 
    if ( SIZE < size )
    {
       reserve ( size );
 
-      for ( int  i = SIZE ; i < size ; i++ )
+      for ( size_type  i = SIZE ; i < size ; ++i )
       {
          Cursor *    tmp   = cursor -> Clone ();
          
@@ -223,7 +227,7 @@ void  wxTable :: CursorVector :: Allocate ( int  _size, const Cursor *  cursor )
 
 
 
-const wxTable :: Cursor *  wxTable :: CursorVector :: operator [] ( size_t  index ) const
+const wxTable :: Cursor *  wxTable :: CursorVector :: operator [] ( size_type  index ) const
 {
    if ( ( index >= size () ) || ( index >= active ) )
       return (  0 );
@@ -233,9 +237,9 @@ const wxTable :: Cursor *  wxTable :: CursorVector :: operator [] ( size_t  inde
 
 
 
-wxTable :: Cursor *  wxTable :: CursorVector :: operator [] ( size_t  index )
+wxTable :: Cursor *  wxTable :: CursorVector :: operator [] ( size_type  index )
 {
-   if ( ( index < 0 ) || ( index >= size () ) || ( index >= active ) )
+   if ( ( index >= size () ) || ( index >= active ) )
       return (  0 );
 
    return ( at ( index ) );
@@ -243,7 +247,7 @@ wxTable :: Cursor *  wxTable :: CursorVector :: operator [] ( size_t  index )
 
 
 
-int  wxTable :: CursorVector :: IndexOf ( const wxTable :: Cursor &  cursor )
+wxTable :: CursorVector :: size_type  wxTable :: CursorVector :: IndexOf ( const wxTable :: Cursor &  cursor )
 {
    iterator   i     = begin ();
    int        index = 0;
@@ -257,14 +261,14 @@ int  wxTable :: CursorVector :: IndexOf ( const wxTable :: Cursor &  cursor )
       ++index;
    }
 
-   return ( -1 );
+   return ( npos );
 }
 
 
 
 bool  wxTable :: CursorVector :: Find ( const wxTable :: Cursor &  cursor )
 {
-   return ( ( IndexOf ( cursor ) >= 0 ) );
+   return ( ( IndexOf ( cursor ) != npos ) );
 }
 
 

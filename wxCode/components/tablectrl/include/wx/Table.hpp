@@ -382,6 +382,14 @@ class  wxTable
       class  CursorVector : private  std :: vector < Cursor * >
       {
          private   :
+            typedef std :: vector < Cursor * >
+                              super;
+                              
+         public    :
+            static const size_type  
+                              npos;
+            
+         private   :
             size_type         active;              // Active number of 'Cursor *'.
 
          private   :                               // Not Implemented!
@@ -391,12 +399,12 @@ class  wxTable
             CursorVector           ();
             virtual  ~CursorVector ();
 
-            void              Allocate    ( int, const Cursor * );
+            void              Allocate    ( size_type, const Cursor * );
             int               Active      () const                         { return ( active ); }
 
-            const Cursor *    operator [] ( size_t ) const;
-            Cursor *          operator [] ( size_t );
-            int               IndexOf     ( const Cursor & );
+            const Cursor *    operator [] ( size_type ) const;
+            Cursor *          operator [] ( size_type );
+            size_type         IndexOf     ( const Cursor & );
             bool              Find        ( const Cursor & );
 
             const Cursor *    Top         () const;
