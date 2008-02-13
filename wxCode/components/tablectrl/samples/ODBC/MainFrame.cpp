@@ -44,11 +44,9 @@ void  MainFrame :: OnMenuOpen ( wxCommandEvent &  ce )
       
    if ( ! dbc -> Connect ( dlg.GetDSN (), dlg.GetUserId (), dlg.GetPasswd () ) )
    {
-      delete  dbc;
-      
-      dbc   = 0;
-      
       wxLogMessage ( "Could not open %s (%s/%s) %s", dlg.GetDSN ().c_str (), dlg.GetUserId ().c_str (), dlg.GetPasswd ().c_str () );
+      
+      return;
    }
 
    wxODBCTableArray        ta;
