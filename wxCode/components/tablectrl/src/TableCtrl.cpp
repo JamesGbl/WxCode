@@ -908,7 +908,8 @@ long  wxTableCtrl :: Header :: Init ( wxTable *  _table, long  h )
    FreeContents ();
 
    if ( ( table = _table ) == 0 )
-      return ( Height () );
+//    return ( Height () );
+      return ( h );
 
    const size_t   numberofcolumns   = table -> NumberOfColumns ();
    int            X                 =   0;
@@ -4503,27 +4504,12 @@ void  wxTableCtrl :: DoSize ()
    const wxRect   rect    = GetClientRectEx ();
    long           height;
 
-   if ( head.IsEmpty () )                  // Not used before?
+   if ( head.IsEmpty () )                 // Not used before?
    {
       wxClientDC     dc ( this );
 
       height         = dc.GetCharHeight   () + 8;
       min_height     = height                - 4;
-/*
-      TEXTMETRIC     tm;
-
-      if ( dc.GetTextMetrics ( &tm ) )
-      {
-//       height      = tm.tmHeight * 2 + 8;
-         height      = tm.tmHeight     + 8;
-         min_height  = tm.tmHeight     + 4;
-      }
-      else
-      {
-         height      = 16;
-         min_height  =  8;
-      }
-*/
    }
    else
       height = head.GetHeight ();         // Use head height, it might be
@@ -5632,7 +5618,6 @@ void  wxTableCtrl :: OnMotion ( wxMouseEvent &  me )
 
    if ( point.y < head.GetHeight () )
    {
-//    if ( headerlist.PointSize ( point, GetSystemMetrics ( SM_CXDRAG ) ) != 0 )
       if ( header.PointSize ( point, wxSystemSettings :: GetMetric ( wxSYS_ICON_X ) / 4 ) != 0 )
       {
 //       if ( cursortype != CursorType_SIZE_LEFT_RIGHT )
