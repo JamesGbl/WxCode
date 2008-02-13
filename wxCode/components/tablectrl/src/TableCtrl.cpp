@@ -1466,6 +1466,13 @@ END_EVENT_TABLE   ()
 
 
 
+void  wxTableCtrl :: Body :: Refresh ( bool  erase, const wxRect *  rect )
+{
+   super :: Refresh ( erase, rect );
+}
+
+
+
 void  wxTableCtrl :: Body :: DoSize ( bool  reset )
 {
    if ( table == 0 )
@@ -3129,12 +3136,20 @@ void  wxTableCtrl :: Body :: OnLeftDClick ( wxMouseEvent &  me )
    if ( ( table == 0 ) || ( text_height <= 0 ) )
       return;
 
+   const wxPoint  pos      = me.GetPosition ();
    wxTable :: Cursor *
-               tmp   = GetCursorAtPoint ( me.GetPosition () );
-   const bool  focus = IsFocus ( tmp );
+                  c        = GetCursorAtPoint ( pos );
+   const bool     focus    = IsFocus ( c );
+   Column *       column   = control -> FindColumn ( pos );
             
-   ProcessEvent ( wxTableEvent ( control, wxEVT_COMMAND_TABLE_RECORD_LEFT_DCLICK , 0, me.GetPosition (), table, record, tmp, focus ) );
-   ProcessEvent ( wxTableEvent ( control, wxEVT_COMMAND_TABLE_RECORD_ACTIVATED   , 0, me.GetPosition (), table, record, tmp, focus ) );
+   // See if there is a valid record at the position on screen.
+   // If there is, read it!
+   
+   if ( c != 0 )
+      record -> CursorSet ( c );
+   
+   ProcessEvent ( wxTableEvent ( control, wxEVT_COMMAND_TABLE_RECORD_LEFT_DCLICK , column, me.GetPosition (), table, record, c, focus ) );
+   ProcessEvent ( wxTableEvent ( control, wxEVT_COMMAND_TABLE_RECORD_ACTIVATED   , column, me.GetPosition (), table, record, c, focus ) );
 }
 
 
@@ -3146,6 +3161,22 @@ void  wxTableCtrl :: Body :: OnLeftDown ( wxMouseEvent &  me )
 
    if ( table == 0 )
       return;
+      
+   const wxPoint  pos      = me.GetPosition ();
+   wxTable :: Cursor *
+                  c        = GetCursorAtPoint ( pos );
+   const bool     focus    = IsFocus ( c );
+   Column *       column   = control -> FindColumn ( pos );
+   const int      row      = pos.y / text_height;
+   
+   // See if there is a valid record at the position on screen.
+   // If there is, read it!
+   
+   if ( c != 0 )
+      record -> CursorSet ( c );
+   
+   if ( ProcessEvent ( wxTableEvent ( control, wxEVT_COMMAND_TABLE_RECORD_LEFT_CLICK, column, me.GetPosition (), table, record, c, focus ) ) )
+      return;
 
    // Remember where the left button went down.
 
@@ -3153,14 +3184,14 @@ void  wxTableCtrl :: Body :: OnLeftDown ( wxMouseEvent &  me )
    down  = me.GetPosition  ();
    move  = wxPoint ( 0, 0 );              // Not moved relative to 'point' yet!
 
-   const int   row   = me.GetY () / text_height;
-   wxTable :: Cursor *    
-               c     = visible [ row ];
+// const int   row   = me.GetY () / text_height;
+// wxTable :: Cursor *    
+//             c     = visible [ row ];
 
    // Check if the left button has been clicked on a row that actually
    // contains record. If not, do nothing!
 
-   if ( ( c != 0 ) && ( c -> IsValid () ) )
+   if ( c != 0 )
    {
 //    if ( flag & MK_LBUTTON )
 //    {
@@ -3170,7 +3201,7 @@ void  wxTableCtrl :: Body :: OnLeftDown ( wxMouseEvent &  me )
             {
                // Check box is being clicked! Read the record associated with the checkbox!
                
-               record   -> CursorSet ( c );
+//             record   -> CursorSet ( c );
                
                wxTableEvent   te ( control, wxEVT_COMMAND_TABLE_CHECKBOX_CLICKED, 0, down, table, record, c, IsFocus ( c ) );
 
@@ -4450,6 +4481,18 @@ bool  wxTableCtrl :: Body :: CursorTo ( long  row )
 
 
 
+void  wxTableCtrl :: Body :: Refresh ( const wxTable :: Cursor &  cursor )
+{
+   const size_t   row   = visible.IndexOf ( cursor );
+   
+   if ( row == nrow )
+      return;
+      
+   DoPaintLine ( row );
+}
+
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // wxTableCtrl                                                                //
 ///////////////////////////////////////////////////////////////////////////////
@@ -5195,6 +5238,13 @@ void  wxTableCtrl :: SortColumn ( Column *  column )
          body -> DoPaintSort ();
 //    body -> DoPaintFill ();
    }
+}
+
+
+
+wxTableCtrl :: Column *  wxTableCtrl :: FindColumn ( const wxPoint &  point )
+{
+   return ( header.Find ( point.x + left, true ) );
 }
 
 
@@ -6178,6 +6228,13 @@ void  wxTableCtrl :: Refresh ( const DWORD &  flag )
       body  -> SetFill  ( wxTableCtrl :: Body :: Fill_RESET );
       
    super :: Refresh  ();
+}
+
+
+
+void  wxTableCtrl :: Refresh ( const wxTable :: Cursor &  cursor )
+{
+   body -> Refresh ( cursor );
 }
 
 

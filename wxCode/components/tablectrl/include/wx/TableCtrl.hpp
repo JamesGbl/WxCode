@@ -383,6 +383,9 @@ class  wxTableCtrl : public  wxControl
          public    :
             static const size_t        nrow;
             
+         public    :                            // wxWindow
+            void                       Refresh              ( bool = true, const wxRect * = 0 );
+
          private   :
             wxTableCtrl *              control;                      // The parent window!
 
@@ -558,6 +561,8 @@ class  wxTableCtrl : public  wxControl
             
             long                       HitTest              ( const wxPoint & ) const;
             bool                       CursorTo             ( long );
+            
+            void                       Refresh              ( const wxTable :: Cursor & );
       };
 
 
@@ -682,6 +687,8 @@ class  wxTableCtrl : public  wxControl
       void                       ColumnSized          ( Column * );
       
       void                       SortColumn           ( Column * );
+      
+      Column *                   FindColumn           ( const wxPoint & );
 
       void                       DrawBody             ();
 
@@ -785,6 +792,7 @@ class  wxTableCtrl : public  wxControl
       wxTableCtrl &              FocusRect            ( bool );
 
       void                       Refresh              ( const DWORD & );
+      void                       Refresh              ( const wxTable :: Cursor & );
 
       void                       Table                ( wxTable * );
       const wxTable *            Table                () const;
