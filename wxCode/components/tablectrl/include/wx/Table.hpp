@@ -131,7 +131,6 @@ class  wxTable
 
 
 
-//    class  Column : public  iTypeVectorItem
       class  Column
       {
          private   :
