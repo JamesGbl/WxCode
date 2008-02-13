@@ -3775,14 +3775,8 @@ wxTableCtrl :: Body :: Body ( wxWindow *  _window, wxWindowID  _id, const wxPoin
 
 wxTableCtrl :: Body :: ~Body ()
 {
-// delete  imagelist;
-
-// delete  checkbox_unchecked;
-// delete  checkbox_checked;
-
    delete  dataobject;
    delete  dropsource;
-// delete  tooltip;
 
    delete  end;
    delete  begin;
@@ -4056,7 +4050,6 @@ void  wxTableCtrl :: Body :: Table ( wxTable *  _table )
          delete  cursor;
 
       cursor  = record -> CursorCreate  ();
-//    *cursor = *table -> CursorCurrent ();  // JAK 19990729
 
       if ( control -> styleex & ITCS_MULTISELECT )
          if ( table -> Select ().Size () == 0 )
