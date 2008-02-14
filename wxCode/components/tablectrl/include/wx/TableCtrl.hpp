@@ -87,38 +87,39 @@ BEGIN_DECLARE_EVENT_TYPES  ()
    DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_RECORD_ATTRIBUTES   , 1030 )
    
    DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_KEY_DOWN            , 1031 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_KEY_UP              , 1032 )
 
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_COLUMN_LEFT_CLICK   , 1032 )
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_COLUMN_RIGHT_CLICK  , 1033 )
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_COLUMN_MIDDLE_CLICK , 1034 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_COLUMN_LEFT_CLICK   , 1033 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_COLUMN_RIGHT_CLICK  , 1034 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_COLUMN_MIDDLE_CLICK , 1035 )
 
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_INSERT              , 1035 )
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_UPDATE              , 1036 )
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_DELETE              , 1037 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_INSERT              , 1036 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_UPDATE              , 1037 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_DELETE              , 1038 )
 
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_COPY                , 1038 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_COPY                , 1039 )
    
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_INSERTING           , 1039 )
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_UPDATING            , 1040 )
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_DELETING            , 1041 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_INSERTING           , 1040 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_UPDATING            , 1041 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_DELETING            , 1042 )
 
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_COPYING             , 1042 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_COPYING             , 1043 )
 
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_INSERTED            , 1043 )
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_UPDATED             , 1044 )
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_DELETED             , 1045 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_INSERTED            , 1044 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_UPDATED             , 1045 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_DELETED             , 1046 )
 
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_COPIED              , 1046 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_COPIED              , 1047 )
 
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_SORT                , 1047 )
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_SORT_ASCENDING      , 1048 )
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_SORT_DESCENDING     , 1049 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_SORT                , 1048 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_SORT_ASCENDING      , 1049 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_SORT_DESCENDING     , 1050 )
    
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_FIND                , 1050 )
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_SEARCH              , 1051 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_FIND                , 1051 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_SEARCH              , 1052 )
    
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_DRAW_COLUMN_HEADER  , 1052 )
-   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_DRAW_COLUMN_DATA    , 1053 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_DRAW_COLUMN_HEADER  , 1053 )
+   DECLARE_EVENT_TYPE   ( wxEVT_COMMAND_TABLE_DRAW_COLUMN_DATA    , 1054 )
 END_DECLARE_EVENT_TYPES    ()
 
 
@@ -161,6 +162,7 @@ END_DECLARE_EVENT_TYPES    ()
 #define EVT_TABLE_RECORD_ATTRIBUTES(id, fn)              wx__DECLARE_TABLEEVT(RECORD_ATTRIBUTES    , id, fn)
 
 #define EVT_TABLE_KEY_DOWN(id, fn)                       wx__DECLARE_TABLEEVT(KEY_DOWN             , id, fn)
+#define EVT_TABLE_KEY_UP(id, fn)                         wx__DECLARE_TABLEEVT(KEY_UP               , id, fn)
 
 #define EVT_TABLE_COLUMN_LEFT_CLICK(id, fn)              wx__DECLARE_TABLEEVT(COLUMN_LEFT_CLICK    , id, fn)
 #define EVT_TABLE_COLUMN_RIGHT_CLICK(id, fn)             wx__DECLARE_TABLEEVT(COLUMN_RIGHT_CLICK   , id, fn)
@@ -472,7 +474,7 @@ class  wxTableCtrl : public  wxControl
             void                       OnHScroll            ( const wxScrollWinEvent & );
             void                       OnVScroll            ( const wxScrollWinEvent & );
             void                       OnKeyDown            ( wxKeyEvent & );
-      //    void                       OnKeyUp              ( UINT, UINT, UINT );
+            void                       OnKeyUp              ( wxKeyEvent & );
 
             void                       OnLeftDClick         ( wxMouseEvent & );
             void                       OnLeftDown           ( wxMouseEvent & );
@@ -899,6 +901,7 @@ class  wxTableEvent : public  wxNotifyEvent
       bool              focus;                        
       wxColor           background;
       wxColor           foreground;
+      wxFont            font;
       
       wxKeyEvent        keyevent;
 
@@ -937,6 +940,8 @@ class  wxTableEvent : public  wxNotifyEvent
       void              SetTextBackground ( const wxColor & );
       const wxColor &   GetTextForeground () const                               { return ( foreground ); }
       void              SetTextForeground ( const wxColor & );
+      wxFont            GetFont           () const                               { return ( font ); }
+      void              SetFont           ( const wxFont & );
       
       const wxKeyEvent &   
                         GetKeyEvent       () const                               { return ( keyevent ); }

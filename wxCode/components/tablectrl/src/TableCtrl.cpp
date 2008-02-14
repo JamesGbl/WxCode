@@ -182,6 +182,7 @@ DEFINE_EVENT_TYPE ( wxEVT_COMMAND_TABLE_CHECKBOX_CHECKED       )
 DEFINE_EVENT_TYPE ( wxEVT_COMMAND_TABLE_RECORD_ATTRIBUTES      )
 
 DEFINE_EVENT_TYPE ( wxEVT_COMMAND_TABLE_KEY_DOWN               )
+DEFINE_EVENT_TYPE ( wxEVT_COMMAND_TABLE_KEY_UP                 )
 
 DEFINE_EVENT_TYPE ( wxEVT_COMMAND_TABLE_COLUMN_LEFT_CLICK      )
 DEFINE_EVENT_TYPE ( wxEVT_COMMAND_TABLE_COLUMN_RIGHT_CLICK     )
@@ -1448,6 +1449,7 @@ BEGIN_EVENT_TABLE ( wxTableCtrl :: Body , wxWindow  )
    EVT_SCROLLWIN        ( wxTableCtrl :: Body :: OnScroll          )
 // EVT_COMMAND_SCROLL   ( wxTableCtrl :: Body :: OnScroll          )
    EVT_KEY_DOWN         ( wxTableCtrl :: Body :: OnKeyDown         )
+   EVT_KEY_UP           ( wxTableCtrl :: Body :: OnKeyUp           )
 
    EVT_LEFT_DCLICK      ( wxTableCtrl :: Body :: OnLeftDClick      )
    EVT_LEFT_DOWN        ( wxTableCtrl :: Body :: OnLeftDown        )
@@ -1797,6 +1799,7 @@ void  wxTableCtrl :: Body :: DoPaintLineDC ( wxDC *  dc, size_t  row, int  index
    bool                 focusrect   = ( ( *( visible [ index ] ) = *record -> CursorCurrent () ) == *cursor );
    wxColor              fore        = foregroundcolor;
    wxColor              back        = backgroundcolor;
+// const wxFont &       font        = dc -> GetFont ();
 
 // record   -> GetBLOb     ();
    record   -> Synchronize ();
@@ -1836,11 +1839,15 @@ void  wxTableCtrl :: Body :: DoPaintLineDC ( wxDC *  dc, size_t  row, int  index
    
    te.SetTextBackground ( back );
    te.SetTextForeground ( fore );
+   te.SetFont           ( *font );
    
    if ( ProcessEvent ( te ) )
    {
       back  = te.GetTextBackground  ();
       fore  = te.GetTextForeground  ();
+      
+      if ( te.GetFont () != *font )
+         dc -> SetFont ( te.GetFont () );
    }
 
    dc -> SetTextBackground ( back );
@@ -1970,6 +1977,7 @@ void  wxTableCtrl :: Body :: DoPaintLineDC ( wxDC *  dc, size_t  row, int  index
       cursor_row  = index;
    }
 
+   dc -> SetFont           ( *font );
    dc -> SetTextBackground ( backgroundcolor );
    dc -> SetTextForeground ( foregroundcolor );
 }
@@ -3127,6 +3135,16 @@ void  wxTableCtrl :: Body :: OnKeyDown ( wxKeyEvent &  ke ) /*UINT  keycode, UIN
    }
 
 // iWnd :: OnKeyDown ( keycode, repeat, flag );
+}
+
+
+
+void  wxTableCtrl :: Body :: OnKeyUp ( wxKeyEvent &  ke )
+{
+   if ( ProcessEvent ( wxTableEvent ( control, wxEVT_COMMAND_TABLE_KEY_UP, ke, ke.GetPosition (), table, record, cursor ) ) )
+      return;
+      
+   ke.Skip  ();
 }
 
 
@@ -7049,4 +7067,11 @@ void  wxTableEvent :: SetTextBackground ( const wxColor &  _background )
 void  wxTableEvent :: SetTextForeground ( const wxColor &  _foreground )
 {
    foreground  = _foreground;
+}
+
+
+
+void  wxTableEvent :: SetFont ( const wxFont &  _font )
+{
+   font  = _font;
 }
