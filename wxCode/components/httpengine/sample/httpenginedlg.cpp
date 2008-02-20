@@ -382,7 +382,7 @@ void wxHTTPEngineDialog::OnGo(wxCommandEvent &)
     return;
   }
 
-	wxString szSaveAs = "";
+	wxString szSaveAs = wxT("");
 	if( m_bSaveResults )
 	{
 		szSaveAs = wxFileSelector( wxT("Save downloaded content as"), wxT(""), wxT(""), wxT(""), wxT("*.*"), wxSAVE|wxOVERWRITE_PROMPT, this );
@@ -937,7 +937,7 @@ void wxHTTPEngineDialog::OnDownloadComplete(wxHTTPBuilderEvent &)
 		file.Close();
 
 		wxRemoveFile(m_szTempFileName);
-		m_szTempFileName = "";
+		m_szTempFileName = wxT("");
 
 		// Display dialog here:
 		//wxGetInputFromUser dlg(this, wxT("Results"), wxPoint(-1, -1), wxSize(400, 300) );
