@@ -1632,7 +1632,7 @@ void  wxTableCtrl :: Body :: DoPaintDC ( wxDC  *dc, size_t  row, const Fill &  f
 // bdc.DrawRectangle       ( wxRect ( 0, 0, rect.GetWidth (), rect.GetHeight () ) );
 // bdc.Clear               ();
 
-   if ( table != 0 )
+   if ( ( table != 0 ) && ( cursor != 0 ) )
    {
       help  = record -> CursorCreate    ();
       *help = *cursor;
@@ -1738,7 +1738,6 @@ void  wxTableCtrl :: Body :: DoPaintDC ( wxDC  *dc, size_t  row, const Fill &  f
       if ( cursor -> IsValid () )
          record -> CursorSet ( cursor );
    }
-
 
 
 
@@ -2288,7 +2287,7 @@ wxTable :: Cursor *  wxTableCtrl :: Body :: GetCursorAtPoint ( const wxPoint &  
 
 const bool  wxTableCtrl :: Body :: IsFocus ( const wxTable :: Cursor *  check ) const
 {
-   if ( check == 0 )
+   if ( ( cursor == 0 ) || ( check == 0 ) )
       return ( false );
       
    return ( *cursor == *check );
@@ -2423,8 +2422,9 @@ void  wxTableCtrl :: Body :: OnKillFocus ( wxFocusEvent & )
    if ( control -> styleex & ITCS_MULTISELECT )
       DoPaint  ();
    else
-      if ( ( cursor_row = visible.IndexOf ( *cursor ) ) != wxTable :: CursorVector :: npos )
+      if ( ( cursor != 0 ) && ( ( cursor_row = visible.IndexOf ( *cursor ) ) != wxTable :: CursorVector :: npos ) )
          DoPaintLine ( cursor_row );
+         
 
 // super :: OnKillFocus ( window );
 }
@@ -2461,7 +2461,7 @@ void  wxTableCtrl :: Body :: OnSetFocus ( wxFocusEvent & )
    if ( control -> styleex & ITCS_MULTISELECT )
       DoPaint  ();
    else
-      if ( ( cursor_row = visible.IndexOf ( *cursor ) ) != wxTable :: CursorVector :: npos )
+      if ( ( cursor != 0 ) && ( ( cursor_row = visible.IndexOf ( *cursor ) ) != wxTable :: CursorVector :: npos ) )
          DoPaintLine ( cursor_row );
 
 // super :: OnSetFocus ( window );
@@ -2861,7 +2861,7 @@ void  wxTableCtrl :: Body :: OnKeyDown ( wxKeyEvent &  ke ) /*UINT  keycode, UIN
    if ( ProcessEvent ( wxTableEvent ( control, wxEVT_COMMAND_TABLE_KEY_DOWN, ke, ke.GetPosition (), table, record, cursor ) ) )
       return;
       
-   if ( table == 0 )
+   if ( ( table == 0 ) || ( cursor == 0 ) )
       return;
 
 // int   row;
@@ -3177,7 +3177,7 @@ void  wxTableCtrl :: Body :: OnLeftDown ( wxMouseEvent &  me )
    if ( FindFocus () != this )
       SetFocus ();
 
-   if ( table == 0 )
+   if ( ( table == 0 ) || ( cursor == 0 ) )
       return;
       
    const wxPoint  pos      = me.GetPosition ();
@@ -4104,8 +4104,10 @@ void  wxTableCtrl :: Body :: Table ( wxTable *  _table )
       if ( cursor != 0 )
          delete  cursor;
 
-      cursor  = record -> CursorCreate  ();
-
+      cursor   = record -> CursorCreate  ();
+      
+      visible  .Clear   ();
+      
       if ( control -> styleex & ITCS_MULTISELECT )
          if ( table -> Select ().Size () == 0 )
             table -> Select ().Insert ( cursor );
@@ -4119,6 +4121,8 @@ void  wxTableCtrl :: Body :: Table ( wxTable *  _table )
 
       cursor   = 0;
 
+      visible  .Clear   ();
+      
       if ( control -> styleex & ITCS_MULTISELECT )
          table -> Select ().All ( false );
    }
