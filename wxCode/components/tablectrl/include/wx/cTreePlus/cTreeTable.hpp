@@ -38,6 +38,10 @@ class  cTreeTable : public  wxTable
          private   :
             typedef Record       super;
 
+         private   :
+            typedef DefaultLargeCursor
+                                 CursorEx;
+                                 
          public    :
             friend class         cTreeTable;
 
@@ -85,7 +89,7 @@ class  cTreeTable : public  wxTable
          
          private   :
             CTRecord &           record;
-            DefaultCursor        cursor;
+            CursorEx             cursor;
             
          private   :
             const int            GetIndexId4          ( size_t ) const;

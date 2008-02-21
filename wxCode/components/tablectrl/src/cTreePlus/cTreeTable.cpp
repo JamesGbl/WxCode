@@ -223,8 +223,11 @@ wxTable :: Cursor *  cTreeTable :: RecordEx :: __CursorCreate ()
 
 const wxTable :: Cursor *  cTreeTable :: RecordEx :: __CursorCurrent ()
 {
-   if ( ! record.IsNew () )
-      cursor.Offset ( record.GetRecordPos () );
+   const CTOFFSET    offset   = record.GetRecordPos ();
+   
+// if ( ( ! record.IsNew () ) && ( offset != 0 ) )
+   if ( offset != 0 )                     // 0 means no offset, offset always > 0! FairCom 3.5.12.3
+      cursor.Offset ( offset );
    else
       cursor.Invalidate ();
 
@@ -239,7 +242,7 @@ wxTable :: Record :: Result  cTreeTable :: RecordEx :: __CursorSet ( const Curso
    {
       try
       {
-         record.SeekRecord  ( static_cast < const DefaultCursor * > ( cursor ) -> Offset () );
+         record.SeekRecord  ( static_cast < const CursorEx * > ( cursor ) -> Offset () );
          
          return ( Result_OK );
       }
@@ -313,7 +316,7 @@ long  cTreeTable :: RecordEx :: __ScrollPosByCursor ( const Cursor *  cursor )
                record.Last  ();
                
             record.BuildTargetKey   ( CTFIND_EQ, first, &firstlen );
-            record.SeekRecord       ( static_cast < const DefaultCursor * > ( cursor ) -> Offset () );
+            record.SeekRecord       ( static_cast < const CursorEx * > ( cursor ) -> Offset () );
             record.BuildTargetKey   ( CTFIND_EQ, key  , &keylen   );
 
             if ( ( keylen == firstlen ) && ( memcmp ( key, first, keylen ) == 0 ) )
