@@ -195,10 +195,7 @@ wxTable :: CursorVector :: CursorVector ()
 
 wxTable :: CursorVector :: ~CursorVector ()
 {
-   const size_t   s = size ();
-
-   for ( size_t  i = 0 ; i < s ; ++i )
-      delete  at ( i );
+   Clear ();
 }
 
 
@@ -223,6 +220,20 @@ void  wxTable :: CursorVector :: Allocate ( size_type  _size, const Cursor *  cu
    }
 
    active = size;
+}
+
+
+
+void  wxTable :: CursorVector :: Clear ()
+{
+   const size_t   s = size ();
+
+   for ( size_t  i = 0 ; i < s ; ++i )
+      delete  at ( i );
+      
+   super :: clear ();
+   
+   active = 0;
 }
 
 

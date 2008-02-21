@@ -263,7 +263,7 @@ class  wxTable
                offset   = that.offset;
 //             valid    = true;
                valid    = that.valid;
-               
+
                return ( *this );
             }
             
@@ -307,7 +307,8 @@ class  wxTable
             
             void              Invalidate  ()
             {
-               valid = false;
+               offset   = 0;
+               valid    = false;
             }
             
             
@@ -399,6 +400,7 @@ class  wxTable
             virtual  ~CursorVector ();
 
             void              Allocate    ( size_type, const Cursor * );
+            void              Clear       ();
             int               Active      () const                         { return ( active ); }
 
             const Cursor *    operator [] ( size_type ) const;
