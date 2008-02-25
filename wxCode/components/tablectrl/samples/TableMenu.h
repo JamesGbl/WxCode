@@ -15,6 +15,8 @@ const wxWindowID        IDM_TOOLTIPS         = 1006;
 
 const wxWindowID        IDM_NATIVEHEADER     = 1007;
 
+const wxWindowID        IDM_COLUMNRESIZING   = 1008;
+
 const wxWindowID        IDM_SWITCH           = 1011;
 const wxWindowID        IDM_SWITCH_FAST      = IDM_SWITCH + wxTableCtrl :: Body :: Mode_FAST;
 const wxWindowID        IDM_SWITCH_MERGE     = IDM_SWITCH + wxTableCtrl :: Body :: Mode_MERGE;
