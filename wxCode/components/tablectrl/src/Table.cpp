@@ -43,7 +43,7 @@ wxTable :: Column :: Column ()
    header   = DT_LEFT;
    field    = DT_LEFT;
 
-   tff      = TFF_SHOW | TFF_SHOW_TOOLTIP;
+   tff      = TFF_SHOW | TFF_SHOW_TOOLTIP | TFF_SIZE;
 }
 
 
