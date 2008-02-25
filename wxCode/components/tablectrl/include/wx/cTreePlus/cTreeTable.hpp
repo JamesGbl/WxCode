@@ -119,6 +119,7 @@ class  cTreeTable : public  wxTable
 
       Capability        GetCapability        () const;
 
+      wxUint32          FieldFlag            ( size_t ) const;
       const wxChar *    FieldString          ( size_t );
       UINT              FieldDrawTextFormat  ( size_t );
 

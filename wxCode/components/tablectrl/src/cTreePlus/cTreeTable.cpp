@@ -528,6 +528,13 @@ wxTable :: Capability  cTreeTable :: GetCapability () const
 
 
 
+wxUint32  cTreeTable :: FieldFlag ( size_t  i ) const
+{  
+   return ( TFF_SHOW | TFF_SIZE );
+}
+
+
+
 const wxChar *  cTreeTable :: FieldString ( size_t  i )
 {
    static wxString   str;
