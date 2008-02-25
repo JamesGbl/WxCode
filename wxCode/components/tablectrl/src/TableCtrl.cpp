@@ -456,7 +456,8 @@ bool  wxTableCtrl :: HeaderCtrl :: MSWOnNotify ( int  id, WXLPARAM  lparam, WXLP
    
    switch ( nmhdr -> code )
    {
-      case HDN_BEGINTRACK  :
+      case HDN_BEGINTRACK     :
+         if ( ( column != 0 ) && ( column -> Resize () ) )
          {
             wxTableEvent   te ( control, wxEVT_COMMAND_TABLE_COLUMN_BEGIN_SIZE, column );
 
@@ -465,11 +466,13 @@ bool  wxTableCtrl :: HeaderCtrl :: MSWOnNotify ( int  id, WXLPARAM  lparam, WXLP
             if ( ! te.IsAllowed () )
                *result = TRUE;
          }
+         else
+            *result = TRUE;
          
          break;
          
-      case HDN_ENDTRACK    :
-//    case HDN_ITEMCHANGED :
+      case HDN_ENDTRACK       :
+//    case HDN_ITEMCHANGED    :
          if ( ( column != 0 ) && ( ( item -> mask & HDI_WIDTH ) != 0 ) )
          {
             column -> Width ( item -> cxy );
@@ -478,8 +481,21 @@ bool  wxTableCtrl :: HeaderCtrl :: MSWOnNotify ( int  id, WXLPARAM  lparam, WXLP
          }
          
          break;
+      
+      case HDN_TRACK          :
+      case HDN_ITEMCHANGING   :
+         {
+            wxTableEvent   te ( control, wxEVT_COMMAND_TABLE_COLUMN_SIZING, column );
+            
+            ProcessEvent   ( te );
+            
+            if ( ! te.IsAllowed () )
+               *result  = TRUE;
+         }
          
-      case HDN_BEGINDRAG   :
+         break;
+            
+      case HDN_BEGINDRAG      :
          {
             wxTableEvent   te ( control, wxEVT_COMMAND_TABLE_COLUMN_BEGIN_MOVE, column );
 
@@ -487,16 +503,20 @@ bool  wxTableCtrl :: HeaderCtrl :: MSWOnNotify ( int  id, WXLPARAM  lparam, WXLP
 
             if ( ! te.IsAllowed () )
                *result = TRUE;
+            else
+               column -> SetState ( Column :: State_DOWN );
          }
          
          break;
          
-      case HDN_ENDDRAG     :
+      case HDN_ENDDRAG        :
          if ( column != 0 )
          {
             const wxUint32    ORDER    = nmheader -> pitem -> iOrder;
             Column *          help     = GetColumnByOrder ( ORDER );
             bool              before   = ORDER <= header -> GetOrder ( nmheader -> iItem );
+            
+            column -> SetState ( Column :: State_UP );
 
             if ( help == 0 )
             {
@@ -511,47 +531,65 @@ bool  wxTableCtrl :: HeaderCtrl :: MSWOnNotify ( int  id, WXLPARAM  lparam, WXLP
          
          break;
          
-      case HDN_ITEMCLICK   :
-         if ( column == 0 )
-            column   = GetColumn ( nmheader -> iItem );
-         
-         if ( column != 0 )
+      case HDN_ITEMCLICK      :
          {
-            control -> SortColumn ( column );
-            
-            const wxTable :: Record :: Sequence
-                        sort  = control -> record -> GetSort ( column -> Reference () );
-                        
-            if ( sort != wxTable :: Record :: Sequence_NONE )
+            static wxEventType    ET   [] =
             {
-               HDITEM   item;
-               
-               item.mask   = HDI_FORMAT;
-               
-               Header_GetItem ( hwnd, nmheader -> iItem, &item );
-         
-               item.fmt &= ~( HDF_SORTUP | HDF_SORTDOWN );
-               item.fmt |= ( sort == wxTable :: Record :: Sequence_ASCENDING ) ? HDF_SORTDOWN : HDF_SORTUP;
-               
-               Header_SetItem ( hwnd, nmheader -> iItem, &item );
-               
-               const size_t   COLS  = Header_GetItemCount ( hwnd );
-               
-               for ( size_t  i = 0 ; i < COLS ; ++i )
+               wxEVT_COMMAND_TABLE_COLUMN_LEFT_CLICK  ,
+               wxEVT_COMMAND_TABLE_COLUMN_RIGHT_CLICK ,
+               wxEVT_COMMAND_TABLE_COLUMN_MIDDLE_CLICK,
+            };
+            
+            wxTableEvent   te ( control, ET [ nmheader -> iButton ], column );
+            
+            ProcessEvent   ( te );
+            
+            if ( ! te.IsAllowed () )
+               *result  = TRUE;
+            else
+            {   
+               if ( column == 0 )
+                  column   = GetColumn ( nmheader -> iItem );
+
+               if ( column != 0 )
                {
-                  if ( i == static_cast < size_t > ( nmheader -> iItem ) )
-                     continue;
+                  control -> SortColumn ( column );
+                  
+                  const wxTable :: Record :: Sequence
+                              sort  = control -> record -> GetSort ( column -> Reference () );
+                              
+                  if ( sort != wxTable :: Record :: Sequence_NONE )
+                  {
+                     HDITEM   item;
                      
-                  Header_GetItem ( hwnd, i, &item );
-                  item.fmt &= ~( HDF_SORTUP | HDF_SORTDOWN );
-                  Header_SetItem ( hwnd, i, &item );
+                     item.mask   = HDI_FORMAT;
+                     
+                     Header_GetItem ( hwnd, nmheader -> iItem, &item );
+               
+                     item.fmt &= ~( HDF_SORTUP | HDF_SORTDOWN );
+                     item.fmt |= ( sort == wxTable :: Record :: Sequence_ASCENDING ) ? HDF_SORTDOWN : HDF_SORTUP;
+                     
+                     Header_SetItem ( hwnd, nmheader -> iItem, &item );
+                     
+                     const size_t   COLS  = Header_GetItemCount ( hwnd );
+                     
+                     for ( size_t  i = 0 ; i < COLS ; ++i )
+                     {
+                        if ( i == static_cast < size_t > ( nmheader -> iItem ) )
+                           continue;
+                           
+                        Header_GetItem ( hwnd, i, &item );
+                        item.fmt &= ~( HDF_SORTUP | HDF_SORTDOWN );
+                        Header_SetItem ( hwnd, i, &item );
+                     }
+                  }
                }
             }
          }
-         
+                  
          break;
          
-      default              :
+      default                 :
          return ( super :: MSWOnNotify ( id, lparam, result ) );
    }
    
@@ -709,6 +747,7 @@ wxTableCtrl :: Column :: Column ()
    aligncolumn = 0;
    show        = false;
    tooltip     = false;
+   resize      = false;
 }
 
 
@@ -726,6 +765,7 @@ wxTableCtrl :: Column :: Column ( const Column &  that )
    aligncolumn = that.aligncolumn;
    show        = that.show;
    tooltip     = that.tooltip;
+   resize      = that.resize;
 }
 
 
@@ -743,6 +783,7 @@ wxTableCtrl :: Column :: Column ( const wxString &  _name, const wxString &  _de
    aligncolumn = _alignheader;
    show        = false;
    tooltip     = false;
+   resize      = false;
 }
 
 
@@ -834,6 +875,13 @@ void  wxTableCtrl :: Column :: Show ( bool  _show )
 void  wxTableCtrl :: Column :: ToolTip ( bool  _tooltip )
 {
    tooltip  = _tooltip;
+}
+
+
+
+void  wxTableCtrl :: Column :: Resize ( bool  _resize )
+{
+   resize   = _resize;
 }
 
 
@@ -944,6 +992,8 @@ long  wxTableCtrl :: Header :: Init ( wxTable *  _table, long  h )
          }
          else
             column -> Show ( false );
+
+         column -> Resize ( table -> FieldFlag ( i ) & TFF_SIZE );            
       }
    }
 
@@ -1876,7 +1926,7 @@ void  wxTableCtrl :: Body :: DoPaintLineDC ( wxDC *  dc, size_t  row, int  index
          
          if ( control -> drawevents )
             processed   = ProcessEvent ( wxTableEvent ( control, wxEVT_COMMAND_TABLE_DRAW_COLUMN_DATA, dc, column, text, table, record, cursor, focusrect ) );
-            
+
          if ( ! processed )
          {
             DWORD   ref             = ( *i ) -> Reference ();
@@ -5436,7 +5486,7 @@ void  wxTableCtrl :: OnLeftDown ( wxMouseEvent &  me )
       {
          column   = header.PointSize ( point, wxSystemSettings :: GetMetric ( wxSYS_ICON_X ) / 4 );
 
-         if ( column != 0 )
+         if ( ( column != 0 ) && ( column -> Resize () ) )
          {
             wxTableEvent   te ( this, wxEVT_COMMAND_TABLE_COLUMN_BEGIN_SIZE, column, me.GetPosition () );
 
@@ -5455,6 +5505,8 @@ void  wxTableCtrl :: OnLeftDown ( wxMouseEvent &  me )
             else
                column   = 0;
          }
+         else
+            column   = 0;
 
 //       super :: OnLButtonDown ( flag, _point );
 

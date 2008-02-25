@@ -130,7 +130,7 @@ END_DECLARE_EVENT_TYPES    ()
 
 
 #define EVT_TABLE_COLUMN_BEGIN_SIZE(id, fn)              wx__DECLARE_TABLEEVT(COLUMN_BEGIN_SIZE    , id, fn)
-#define EVT_TABLE_COLUMN_SIZING(id, fn)                  wx__DECLARE_TABLEEVT(COLUMN_SIZEING       , id, fn)
+#define EVT_TABLE_COLUMN_SIZING(id, fn)                  wx__DECLARE_TABLEEVT(COLUMN_SIZING        , id, fn)
 #define EVT_TABLE_COLUMN_SIZED(id, fn)                   wx__DECLARE_TABLEEVT(COLUMN_SIZED         , id, fn)
 #define EVT_TABLE_COLUMN_BEGIN_MOVE(id, fn)              wx__DECLARE_TABLEEVT(COLUMN_BEGIN_MOVE    , id, fn)
 #define EVT_TABLE_COLUMN_MOVING(id, fn)                  wx__DECLARE_TABLEEVT(COLUMN_MOVING        , id, fn)
@@ -229,6 +229,7 @@ class  wxTableCtrl : public  wxControl
             int                  aligncolumn;
             bool                 show;
             bool                 tooltip;
+            bool                 resize;
 
          public    :
             Column   ();
@@ -252,6 +253,8 @@ class  wxTableCtrl : public  wxControl
             const bool           Show           () const                   { return ( show );      }
             void                 ToolTip        ( bool );
             const bool           ToolTip        () const                   { return ( tooltip );   }
+            void                 Resize         ( bool );
+            const bool           Resize         () const                   { return ( resize );    }
             
             
 
