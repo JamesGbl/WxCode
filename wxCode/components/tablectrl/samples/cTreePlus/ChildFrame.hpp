@@ -48,15 +48,20 @@ class  ChildFrame : public  wxMDIChildFrame
       wxSizer *            sizer;
       
       wxTableCtrl *        tc;
+      wxTextCtrl *         log;
+      wxLog *              old;
+      
+      bool                 columnresizing;
       
    private   :
-      void                 OnMenu   ( wxCommandEvent & );
+      void                 OnMenu         ( wxCommandEvent & );
+      void                 OnTableColumn  ( wxTableEvent & );
       
    public    :
       ChildFrame  ( MainFrame *, wxWindowID = wxID_ANY, const wxString & = wxEmptyString, const wxPoint & = wxDefaultPosition, const wxSize & = wxDefaultSize, long = DEFAULTSTYLE );
       ~ChildFrame ();
       
-      bool                 Open     ( CTSession *, const wxString & );
+      bool                 Open           ( CTSession *, const wxString & );
 };
 
 
