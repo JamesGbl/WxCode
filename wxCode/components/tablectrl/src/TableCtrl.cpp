@@ -678,6 +678,11 @@ void  wxTableCtrl :: HeaderCtrl :: Load ( Header *  _header )
    while ( Header_GetItemCount ( hwnd ) > 0 )
       Header_DeleteItem ( hwnd, 0 );
 
+   if ( control -> headerimagelist != 0 )      
+      Header_SetImageList ( hwnd, control -> headerimagelist -> GetHIMAGELIST () );
+   else
+      Header_SetImageList ( hwnd, 0 );
+
    for ( Header :: iterator  i = _header -> begin () ; i != _header -> end () ; ++i )
    {
       Column *    c     = *i;
@@ -696,14 +701,25 @@ void  wxTableCtrl :: HeaderCtrl :: Load ( Header *  _header )
       item.fmt          = HDF_LEFT | HDF_STRING;
 
       if      ( c -> AlignHeader () & DT_CENTER ) 
-         item.fmt |= HDF_CENTER;
+         item.fmt   |= HDF_CENTER;
       else if ( c -> AlignHeader () & DT_RIGHT  )
-         item.fmt |= HDF_RIGHT;
+         item.fmt   |= HDF_RIGHT;
 
       // Hook the Column up via lParam.
       
       item.lParam       = reinterpret_cast < LPARAM > ( c );
       
+      // Image?
+      
+      if ( ( item.iImage = c -> Image () ) != -1 )
+      {
+         item.mask  |= HDI_IMAGE;
+         item.fmt   |= HDF_IMAGE;
+      }
+      
+//    if ( control -> drawevents )
+//       item.fmt |= HDF_OWNERDRAW;
+         
       // Sort.
       
       const wxTable :: Record :: Sequence    
@@ -748,6 +764,7 @@ wxTableCtrl :: Column :: Column ()
    show        = false;
    tooltip     = false;
    resize      = false;
+   image       = -1;
 }
 
 
@@ -766,6 +783,7 @@ wxTableCtrl :: Column :: Column ( const Column &  that )
    show        = that.show;
    tooltip     = that.tooltip;
    resize      = that.resize;
+   image       = that.image;
 }
 
 
@@ -784,6 +802,7 @@ wxTableCtrl :: Column :: Column ( const wxString &  _name, const wxString &  _de
    show        = false;
    tooltip     = false;
    resize      = false;
+   image       = -1;
 }
 
 
@@ -882,6 +901,13 @@ void  wxTableCtrl :: Column :: ToolTip ( bool  _tooltip )
 void  wxTableCtrl :: Column :: Resize ( bool  _resize )
 {
    resize   = _resize;
+}
+
+
+
+void  wxTableCtrl :: Column :: Image ( int  _image )
+{
+   image    = _image;
 }
 
 
@@ -4923,15 +4949,23 @@ void  wxTableCtrl :: DrawColumn ( wxDC *  dc, const DrawHeaderFlag &  flag, cons
          break;
    }
 
-   DrawText ( &bdc, column -> Desc (), -1, text, ( column -> AlignHeader () | DT_NOPREFIX | DT_WORDBREAK ) & ~DT_SINGLELINE );
-// wxLogDebug ( "%d,%d-%d,%d %s", text.GetX (), text.GetY (), text.GetWidth (), text.GetHeight (), column -> Name ().c_str () );
+   bool  processed   = false;
+   
+   if ( drawevents )
+      processed   = ProcessEvent ( wxTableEvent ( this, wxEVT_COMMAND_TABLE_DRAW_COLUMN_HEADER, &bdc, column, text, table ) );
+      
+   if ( ! processed )
+   {
+      DrawText ( &bdc, column -> Desc (), -1, text, ( column -> AlignHeader () | DT_NOPREFIX | DT_WORDBREAK ) & ~DT_SINGLELINE );
+//    wxLogDebug ( "%d,%d-%d,%d %s", text.GetX (), text.GetY (), text.GetWidth (), text.GetHeight (), column -> Name ().c_str () );
 
-// DrawSortArrow ( &bdc, state, column -> Reference (), rect.Height (), CPoint ( rect.Right  () - rect.Height  () / 2, rect.Top    () + rect.Height  () / 4 ) );
+//    DrawSortArrow ( &bdc, state, column -> Reference (), rect.Height (), CPoint ( rect.Right  () - rect.Height  () / 2, rect.Top    () + rect.Height  () / 4 ) );
+   }
 
    if ( ( sort == wxTable :: Record :: Sequence_ASCENDING  ) ||
-        ( sort == wxTable :: Record :: Sequence_DESCENDING )    )
+         ( sort == wxTable :: Record :: Sequence_DESCENDING )    )
       DrawSortArrow ( &bdc, state, sort, rect, ( column -> AlignHeader () & DT_RIGHT ) == DT_RIGHT );
-
+   
    switch ( flag )
    {
       case DrawHeaderFlag_INIT :
@@ -6017,56 +6051,61 @@ void  wxTableCtrl :: CreateBody ()
 
 void  wxTableCtrl :: Init ()
 {
-   table          = 0;
-   record         = 0;
-   nativeheader   = 0;
+   table                = 0;
+   record               = 0;
+   nativeheader         = 0;
 
-   column         = 0;
-   columnmove     = 0;
+   column               = 0;
+   columnmove           = 0;
 
-   left           = 0;
-   min_height     = 8;
+   left                 = 0;
+   min_height           = 8;
 
-   body           = 0; //new  Body ( &headerlist );
-   font           = new  wxFont ( wxSystemSettings :: GetFont ( wxSYS_DEFAULT_GUI_FONT ) );
+   body                 = 0; //new  Body ( &headerlist );
+   font                 = new  wxFont ( wxSystemSettings :: GetFont ( wxSYS_DEFAULT_GUI_FONT ) );
 
-   cursortype     = CursorType_ARROW;
-   cursorarrow    = *wxSTANDARD_CURSOR;
+   cursortype           = CursorType_ARROW;
+   cursorarrow          = *wxSTANDARD_CURSOR;
 #ifdef __WXMSW__
-   cursorsizelr   = wxCursor ( ResourceNameString ( RNS_RESIZELR ) );
-   cursorsizetb   = wxCursor ( ResourceNameString ( RNS_RESIZETB ) );
+   cursorsizelr         = wxCursor ( ResourceNameString ( RNS_RESIZELR ) );
+   cursorsizetb         = wxCursor ( ResourceNameString ( RNS_RESIZETB ) );
 #else
-   cursorsizelr   = wxCursor ( iCursor :: Cursor_SIZEWE   ); // LoadCursor ( AfxGetInstanceHandle (), _T ( "ResizeLR" ) );
-   cursorsizetb   = wxCursor ( iCursor :: Cursor_SIZENS   ); // LoadCursor ( AfxGetInstanceHandle (), _T ( "ResizeTB" ) );
+   cursorsizelr         = wxCursor ( iCursor :: Cursor_SIZEWE   ); // LoadCursor ( AfxGetInstanceHandle (), _T ( "ResizeLR" ) );
+   cursorsizetb         = wxCursor ( iCursor :: Cursor_SIZENS   ); // LoadCursor ( AfxGetInstanceHandle (), _T ( "ResizeTB" ) );
 #endif
 
-   styleex        = 0;  // ITCS_DRAGANDDROP;
+   styleex              = 0;  // ITCS_DRAGANDDROP;
 
-// index          = -1;                   // JAK 20020813
-   index          =  0;                   // JAK 20020813
-   sequence       = wxTable :: Record :: Sequence_ASCENDING;
+// index                = -1;                   // JAK 20020813
+   index                =  0;                   // JAK 20020813
+   sequence             = wxTable :: Record :: Sequence_ASCENDING;
 
-// dblclkobject   = 0;
-// dblclkmember   = 0;
+// dblclkobject         = 0;
+// dblclkmember         = 0;
 
-// insertobject   = 0;
-// insertmember   = 0;
+// insertobject         = 0;
+// insertmember         = 0;
 
-// updateobject   = 0;
-// updatemember   = 0;
+// updateobject         = 0;
+// updatemember         = 0;
 
-// deleteobject   = 0;
-// deletemember   = 0;
+// deleteobject         = 0;
+// deletemember         = 0;
 
-//?search         = 0;
+//?search               = 0;
 
-   scroll_timer   = 0;
-   scroll_point   = wxPoint ( 0, 0 );
+   scroll_timer         = 0;
+   scroll_point         = wxPoint ( 0, 0 );
 
-   tooltip        = 0;
-   tooltipindex   = ~0UL;     
+   tooltip              = 0;
+   tooltipindex         = ~0UL;     
    
-   drawevents     = false;
+   drawevents           = false;
+   
+   imagelist            = 0;
+   imagelistowned       = false;
+   headerimagelist      = 0;
+   headerimagelistowned = false;
 
 // relation       = 0;
 }
@@ -6113,6 +6152,9 @@ wxTableCtrl :: ~wxTableCtrl ()
       tooltip  = 0;
    }
 */
+   if ( imagelistowned )
+      delete  imagelist;
+      
    delete  font;
 
    delete  body;
@@ -6138,6 +6180,14 @@ bool  wxTableCtrl :: Create ( wxWindow *  _window, wxWindowID  _id, const wxPoin
    CreateBody     ();
 
    return ( true );
+}
+
+
+
+void  wxTableCtrl :: LoadHeader ()
+{
+   if ( nativeheader != 0 )
+      nativeheader -> Load ( &header );
 }
 
 
@@ -6322,8 +6372,7 @@ void  wxTableCtrl :: Table ( wxTable *  _table )
 
    head.SetHeight ( header.Init ( table, head.GetHeight () ) );
    
-   if ( nativeheader != 0 )
-      nativeheader -> Load ( &header );
+   LoadHeader  ();
 
    if ( body != 0 )
       body -> Table ( table );
@@ -6832,6 +6881,28 @@ void  wxTableCtrl :: CommandSearch ()
    }
 ?*/
 }
+
+
+void  wxTableCtrl :: SetImageList ( wxImageList *  _imagelist, bool  _imagelistowned )
+{
+   if ( imagelistowned )
+      delete  imagelist;
+      
+   imagelist      = _imagelist;
+   imagelistowned = _imagelistowned;
+}
+
+
+
+void  wxTableCtrl :: SetHeaderImageList ( wxImageList *  _headerimagelist, bool  _headerimagelistowned )
+{
+   if ( headerimagelistowned )
+      delete  headerimagelist;
+      
+   headerimagelist      = _headerimagelist;
+   headerimagelistowned = _headerimagelistowned;
+}
+
 
 
 #if 0

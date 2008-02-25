@@ -230,6 +230,7 @@ class  wxTableCtrl : public  wxControl
             bool                 show;
             bool                 tooltip;
             bool                 resize;
+            int                  image;
 
          public    :
             Column   ();
@@ -255,6 +256,8 @@ class  wxTableCtrl : public  wxControl
             const bool           ToolTip        () const                   { return ( tooltip );   }
             void                 Resize         ( bool );
             const bool           Resize         () const                   { return ( resize );    }
+            void                 Image          ( int );
+            const int            Image          () const                   { return ( image );     }
             
             
 
@@ -671,6 +674,10 @@ class  wxTableCtrl : public  wxControl
       
       bool                       drawevents;
 
+      wxImageList *              imagelist;
+      bool                       imagelistowned;
+      wxImageList *              headerimagelist;
+      bool                       headerimagelistowned;
 //    iWindowSet *               relation;
 
    private   :
@@ -764,6 +771,7 @@ class  wxTableCtrl : public  wxControl
       bool                       Create               ( wxWindow *, wxWindowID = wxID_ANY, const wxPoint & = wxDefaultPosition, const wxSize & = wxDefaultSize, long = DEFAULTSTYLE, const wxString & = wxEmptyString );
       
       Header &                   GetHeader            ()                      { return ( header ); }
+      void                       LoadHeader           ();
       
       const int                  GetLeft              () const                { return ( left ); }
       void                       SetLeft              ( const int &  _left )  { left   = _left; }
@@ -868,6 +876,10 @@ class  wxTableCtrl : public  wxControl
       void                       CommandFind          ();
 
       void                       CommandSearch        ();
+      
+      void                       SetImageList         ( wxImageList *, bool = false );
+      void                       SetHeaderImageList   ( wxImageList *, bool = false );
+      
 #if 0
       iMenu *                    CreateSortMenu       ( UINT );
       iMenu *                    CreateSubTableMenu   ();
