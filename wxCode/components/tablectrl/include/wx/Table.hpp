@@ -46,12 +46,13 @@ const wxUint32          TFT_ENHMETAFILE   = 0x00000008L;
 const wxUint32          TFF_NULL          = 0x00000000L;
 const wxUint32          TFF_SHOW          = 0x00000001L;
 const wxUint32          TFF_SHOW_TOOLTIP  = 0x00000002L;
-const wxUint32          TFF_USER_0        = 0x00000004L;
-const wxUint32          TFF_USER_1        = 0x00000008L;
-const wxUint32          TFF_USER_2        = 0x00000010L;
-const wxUint32          TFF_USER_3        = 0x00000020L;
-const wxUint32          TFF_USER_4        = 0x00000040L;
-const wxUint32          TFF_USER_5        = 0x00000080L;
+const wxUint32          TFF_SIZE          = 0x00000004L;
+const wxUint32          TFF_USER_0        = 0x00000008L;
+const wxUint32          TFF_USER_1        = 0x00000010L;
+const wxUint32          TFF_USER_2        = 0x00000020L;
+const wxUint32          TFF_USER_3        = 0x00000040L;
+const wxUint32          TFF_USER_4        = 0x00000080L;
+const wxUint32          TFF_USER_5        = 0x00000100L;
 
 
 
@@ -152,7 +153,7 @@ class  wxTable
          public    :
             Column            ();
 //          Column            ( const Column & );
-            Column            ( const wxString &, const wxString &, wxUint32 = TFF_SHOW );
+            Column            ( const wxString &, const wxString &, wxUint32 = TFF_SHOW  | TFF_SIZE );
             virtual  ~Column  ();
 
             const wxString &        Name                 () const                            { return ( name ); }
