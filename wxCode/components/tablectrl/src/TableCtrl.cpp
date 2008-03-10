@@ -2447,7 +2447,7 @@ bool  wxTableCtrl :: Body :: _CursorTo ( long  row, bool  controldown )
 
                DoPaintLine    ( tmp );
                
-               ProcessEvent   ( wxTableEvent ( control, wxEVT_COMMAND_TABLE_RECORD_DESELECTED, 0, down ) );
+               ProcessEvent   ( wxTableEvent ( control, wxEVT_COMMAND_TABLE_RECORD_DESELECTED, 0, down, table, record, cursor ) );
             }
 
             *cursor = *visible [ cursor_row = row ];
@@ -2457,7 +2457,7 @@ bool  wxTableCtrl :: Body :: _CursorTo ( long  row, bool  controldown )
 
             RelationSync   ();
             
-            ProcessEvent   ( wxTableEvent ( control, wxEVT_COMMAND_TABLE_RECORD_SELECTED, 0, down ) );
+            ProcessEvent   ( wxTableEvent ( control, wxEVT_COMMAND_TABLE_RECORD_SELECTED, 0, down, table, record, cursor ) );
          }
 
          if ( control -> styleex & ITCS_MULTISELECT )
