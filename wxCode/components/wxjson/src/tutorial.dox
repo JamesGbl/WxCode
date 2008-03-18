@@ -1,0 +1,1347 @@
+
+/*! \page wxjson_tutorial wxJSON - A brief tutorial
+
+This page is a simple tutorial which describes how to use the
+wxJSON library in order to store data in JSON format, reading
+them, changing the values and how to generate JSON text that
+can be saved in a file, a stream or sent over a network
+connection.
+
+
+\section wxjson_tutorial_toc Table of contents
+
+
+
+\li \ref wxjson_tutorial_intro
+\li \ref wxjson_tutorial_ex1
+\li \ref wxjson_tutorial_ex2
+\li \ref wxjson_tutorial_ex3
+\li \ref wxjson_tutorial_get
+\li \ref wxjson_tutorial_comment
+\li \ref wxjson_tutorial_unicode
+
+
+\section wxjson_tutorial_intro Introduction
+
+
+JSON is a text format and it is completely platform-independent.
+You do not need to worry about computer's architecture, endianness
+or operating system.
+It is very easy for humans to read and write and easy for
+machines to parse and generate.
+It is also light-weight and much more compact than other
+data-interchange formats.
+
+We will learn how to use the wxJSON library by examining some
+simple examples.
+JSON is a data format; it is not suitable for describing complex
+documents or to store images, audio and video streams.
+For these purposes, there are many other formats which are by
+far more appropriate than JSON.
+ 
+If you are new to JSON it is better than you first read the 
+following pages, which describes the JSON syntax, its advantages
+and its disadvantages:
+
+ \li <A href="http://www.json.org">Introducing JSON</A>
+ \li <A href="http://www.json.org/fatfree.html">The Fat-Free Alternative to XML</A>
+
+
+\section wxjson_tutorial_ex1 Example 1: a simple example
+
+Let's look an example on how to read and write JSON data
+using the wxWidgets implementation of the JSON value class.
+Suppose we have the following text stored in a wxString object
+(but you can also read it from a stream class):
+
+\code
+ /***************************
+  This is a C-style comment
+ ***************************/
+ {
+   // this is a comment line in C++ style
+   "wxWidgets" :
+   {
+     "Description" : "Cross-platform GUI framework",
+     "License" : "wxWidgets",
+     "Version" :
+     {
+       "Major" : 2,
+       "Minor" : 8,
+       "Stable" : true
+     },
+     "Languages" :
+     [
+       "C++",
+       "Phyton",
+       "Perl",
+       "C#/Net"
+     ]
+   }
+ }
+\endcode
+
+We can retrieve the values using several access methods as
+explained in the following code fragment:
+
+\code
+  // the JSON text, stored in a wxString object
+  wxString document( _T( "/************\n  This is a ...... "));
+
+  // construct the JSON root object
+  wxJSONValue  root;
+
+  // construct a JSON parser
+  wxJSONReader reader;
+
+  // now read the JSON text and store it in the 'root' structure
+  // check for errors before retreiving values...
+  int numErrors = reader.Parse( document, root );
+  if ( numErrors > 0 )  {
+    cout << "ERROR: the JSON document is not well-formed" << endl;
+    const wxArrayString& errors = reader.GetErrors();
+    // now print the errors array
+    ...
+    return;
+  }
+
+  // get the 'License' value
+  wxString license  = root["wxWidgets"]["License"].AsString();
+
+  // check if a 'Version' value is present
+  bool hasMember = root["wxWidgets"].HasMember( "Version" );
+
+  // get the major version value as an integer
+  int majorVer = root["wxWidgets"]["Version"]["Major"].AsInt();
+
+  // get the minor version; if the value does not exists, the
+  // default value of ZERO is returned
+  wxJSONValue defaultValue( 0 );
+  int minorVer = root["wxWidgets"]["Version"].Get( "Minor", defaultValue).AsInt();
+
+  // the same as above, but directly constructing the default value
+  int minorVer = root["wxWidgets"]["Version"].Get( "Minor", wxJSONValue( 0)).AsInt();
+
+  // now retrive the array of supported languages
+  wxJSONValue languages = root["wxWidgets"]["Languages"];
+
+  // before obtaining the array of strings, we check that the type
+  // of the 'language' object is an array
+  // NOTE: this is not strictly necessary.
+  bool isArray = languages.IsArray();
+
+  wxArrayString supportedLanguages;
+  for ( int i = 0; i < languages.Size() i++ ) {
+    supportedLanguages.Add( languages[i].AsString());
+  }
+
+  // finally, we get an array of all member's names of the 'wxWidgets'
+  // item. The array will contain (maybe not in this order):
+  // 
+  //   Description
+  //   License
+  //   Version
+  //   Languages
+  //
+  wxArrayString memberNames = root["wxWidgets"].GetMemberNames();
+\endcode
+
+The wxJSONReader class's constructor has some parameters that control
+how much error-tolerant should the parser be. By default, the parser
+is very tolerant about non fatal errors which are reported as \e warnings.
+For more information see the wxJSONReader class's description.
+
+Adding new values or changing the value of existing JSON-value objects
+is also very simple.
+The following code fragment shows some examples:
+
+\code
+  // upgrade the minor version
+  root["wxWidgets"]["Version"]["Minor"] = 9;
+
+  // create the new 'URL' item
+  root["wxWidgets"]["URL"] = "http://www.wxwidgets.org";
+
+  // append a new supported language in the 'Language' array
+  root["wxWidgets"]["Languages"].Append( "Java" );
+
+  // creates the new 'Authors' array.
+  // creating an array is just as simple as using the 'Append()'
+  // member function.
+  root["wxWidgets"]["Authors"].Append( "J. Smart" );
+  root["wxWidgets"]["Authors"].Append( "V. Zeitling" );
+  root["wxWidgets"]["Authors"].Append( "R. Roebling" );
+  ... and many others...
+
+  // you can also use subscripts to obtain the same result:
+  root["wxWidgets"]["Authors"][0] = "J. Smart";
+  root["wxWidgets"]["Authors"][1] = "V. Zeitling";
+  root["wxWidgets"]["Authors"][2] = "R. Roebling";
+  ... and many others...
+
+  // after the changes, we have to write the JSON object back
+  // to its text representation
+  wxJSONWriter writer;
+  wxString     str;
+  writer.Write( root, str );
+
+  // if you use the default writer constructor the JSON text
+  // output is human-readable (indented) but does not contain
+  // the comment lines
+  // if you want to keep the comment lines you have to pass
+  // some parameters to the wxJSONWriter constructor
+  wxJSONWriter writer2( wxJSONWRITER_STYLED | wxJSONWRITER_WRITE_COMMENTS );
+  wxString     str2;
+  writer2.Write( root, str2 );
+\endcode
+
+The writer class's constructor has some parameters that allow you to
+control the \e style of the output.
+By default, the writer produces human-readable output with
+a three-space indentation for objects / arrays sub-items
+(as shown in the example text above) but it does not write
+comment lines.
+You can suppress indentation if, for example, the
+JSON text has to be sent over a network connection.
+
+Also note that in order to actually have comment lines written
+back to the JSON text document, you also have to store comments
+when reading the JSON text document.
+By default, the parser is error-tolerant and recognizes C/C++
+comments but it does not store them in the value they refer to.
+This means that you cannot rewrite them back regardless the
+flags used in the writer class.
+To know more about comment lines in JSONvalue objects, see
+\ref wxjson_tutorial_comment.
+
+
+\subsection wxjson_tutorial_jsonpower The power and simplicity of JSON
+
+I do not know much about XML but I think that JSON is really
+a valid alternative to it if you just need a simple format for
+data interchange.
+JSON is not suitable for describing complex documents: it can
+only handle data and it is specialized in handling
+progamming language's variables.
+
+ 
+I only would like to let you know how much simple is wxJSON:
+the subscript operators used to access JSON values returns
+a reference to the JSON value itself thus allowing to
+have multiple subscripts.
+Moreover, if the accessed value does not exists, it will be
+created and a reference to the newly created value is
+returned.
+This feature lets you use constructs such as the following:
+
+\code
+  wxJSONValue value;
+  value["key-1"]["key-2"]["key-3"][4] = 12;
+\endcode
+
+Because \c value does not contain any of the specified
+keys (for objects) and elements (for the array), they will be created.
+The JSON output of the code fragment seen above is as follows:
+
+\code
+  {
+    "key-1" :  {
+       "key-2" :  {
+          "key-3" : [
+             null,
+             null,
+             null,
+             null,
+             12
+          ]
+        }
+     }
+  }
+\endcode
+
+
+\section wxjson_tutorial_ex2 Example 2: a configuration file
+
+We start by using JSON for an application's configuration file.
+There are many formats for storing application's configuration data.
+I remember when there was MS-DOS: each application used its
+own, unreadable and proprietary format (it was a nightmare).
+Next came Windows 3: it had a better way for storing
+application's configuration data; they were
+kept in an .INI file which contains simple ASCII text.
+This was a good thing because it was easier for humans to
+fine-tuning application's behaviour.
+
+In this example we use JSON to store the configuration data
+of a simple web server application.
+If you take a look at the Apache config file you will notice that
+our example looks very similar (but much more human readable).
+
+Our server is a neverending application and it is not interactive:
+it reads its configuration at startup and when a signal is
+sent to it.
+Using JSON for the configuration data is a good choice because
+it is easy for humans to write the JSON text document.
+Below we find our webserver's configuration file:
+
+\code
+ {
+   // global configuration
+   "Global" :  {
+     "DocumentRoot"  : "/var/www/html",
+     "MaxClients"    : 250,
+     "ServerPort"    : 80,
+     "ServerAddress" : 0.0.0.00
+     "MaxRequestsPerClient"  : 1000
+   }
+
+   // an array of objects that describes the modules that has to
+   // be loaded at startup
+   "Modules" : [
+      {
+        "Name"    : "auth_basic",
+        "File"    : "modules/mod_auth_basic.so",
+        "OnStart" : true
+      },
+      {
+        "Name"    : "auth_digest",
+        "File"    : "modules/mod_auth_digest.so",
+        "OnStart" : true
+      },
+      {
+        "Name"    : "auth_file",
+        "File"    : "modules/mod_auth_file.so",
+        "OnStart" : false
+      },
+   ]
+
+   // Main server configuration
+   "Server" :       {
+      "Admin" : "root@localhost.localdomain"
+      "Name"  : "www.example.com"
+   },
+
+   // The description of directories and their access permissions
+   "Diretory"  : [
+      {
+         "Path"       : "/var/www/html",
+         "AllowFrom"  : "ALL",
+         "DenyFrom"   : null,
+         "Options" :     {
+            "Multiviews"    : false,
+            "Indexes"       : true,
+            "FollowSymLink" : false
+         }
+      }
+   ]
+ }
+\endcode
+
+I think that the file is self-explanatory. I do not want to write
+the code of the whole web-server application: I only want to show
+you how to read the configuration data.
+
+When the application starts, it calls a function that reads the
+configuration file and returns ZERO if there was no error or an
+exit status code if the file is not correct.
+The function may be similar to the following one:
+
+\code
+  int ReadConfig( wxInputStream& jsonStream )
+  {
+    // comment lines are recognized by the wxJSON library and
+    // can also be stored in the JSON value objects they refer to
+    // but this is not needed by our application because the
+    // config file is written by hand by the website admin
+    // so we use the default ctor of the parser which recognizes
+    // comment lines but do not store them
+    wxJSONReader reader;
+    wxJSONvalue  root;
+    int numErrors = reader.Parse( jsonStream, root );
+    if ( numErrors > 0 )  {
+      // if there are errors in the JSON document, print the
+      // errors and return a non-ZERO value
+      const wxArrayString& errors = reader.GetErrors();
+      for ( int i = 0; i < numErrors; i++ )  {
+        cout << errors[i] << endl;
+      }
+      return 1;
+    }
+
+    // if the config file is syntactically correct, we retrieve
+    // the values and store them in application's variables
+    gs_docRoot = root["Global"]["DocumentRoot"].AsString();
+
+    // we use the Get() memberfunction to get the port on which
+    // the server listens. If the parameter does not exist in the
+    // JSON value, the default port 80 is returned
+    wxJSONvalue defaultPort = 80;
+    gs_serverPort = root["Global"].Get( "ServerPort", defaultPort ).AsInt();
+
+    // the array of modules is processed in a different way: for
+    // every module we print its name and the 'OnStart' flag.
+    // if the flag is TRUE, we load it.
+    wxJSONValue modules = root["Modules"];
+
+    // check that the 'Modules' value is of type ARRAY
+    if ( !modules.IsArray() ) {
+      cout << "ERROR: \'modules\' must be a JSON array" << endl;
+      return 1;
+    }
+
+    for ( int i = 0; i < modules.Size(); i++ )  {
+      cout << "Processing module: " << modules[i]["Name"].AsString() << endl;
+      bool load =  modules[i]["OnStart"].AsBool();
+      cout << "Load module? " << ( load ? "YES" : "NO" ) << endl;
+      if ( load )  {
+        LoadModule( modules[i]["File"].Asstring());
+      }
+    }
+    // return a ZERO value: it means success.
+    return 0;
+  }
+\endcode
+
+
+\section wxjson_tutorial_ex3 Example 3: Describing a table
+
+How many times did you use a table in your application? I know
+the answer: many times.
+So the best thing would be to write a general-purpose panel window that
+is capable to show every possible table and table's format.
+
+It is not hard to write a similar panel: we only need to implement
+some basic data that will be passed as parameters to the panel
+window:
+
+\li the column's names
+\li the column's alignment, if not implicit in the data type
+\li the type of data in each column
+\li the border thickness, if any
+\li the column's width in pixels or in panel's width percentage, if needed
+\li a bidimensional array that contains the actual data that has
+	to be displayed
+
+A more complex work is to define a good data structure that holds
+this informations and the table's data themselves.
+Because we have to show many different tables in our application,
+there is not a general structure suitable for our needs because 
+the data type of each column may vary from table to table.
+But we need something to pass as a parameter to our general-purpose
+table-viewer panel.
+
+The answer could be: use a JSON formatted wxString object.
+We define a JSON object that contains two main objects:
+
+\li a description of the columns
+\li the content of the rows
+
+Below you find the format of the JSON text that describes a table
+containing three columns and three rows:
+
+\code
+ {
+   "Border"  : 1,
+
+   "Columns" : [ 
+     {
+       "Name"   : "City",
+       "Width"  : 50,
+       "Unit"   : "Percentage"
+     },
+     {
+       "Name"      : "Temperature",
+       "Width"     : 20,
+       "Unit"      : "Percentage"
+     },
+     {
+       "Name"      : "Date",
+       "Width"     : 30,
+       "Unit"      : "Percentage"
+       "Alignment" : "center"
+     }
+  ]
+
+   "Rows" : [
+     [ "Baltimora", 20, "20 july" ],
+     [ "New York", 25, "23 july" ],
+     [ "Los Angeles", 29, "25 july" ]
+   ]
+ }
+\endcode
+
+Note that there is no need to specify the type of the
+data contained in each column because the JSON value object
+already carries it.
+
+The code for displaying a table that is described in the
+above JSON text is similar to this one:
+
+\code
+ void DisplayTable( const wxString& jsonText )
+ {
+   wxJSONReader reader;
+   wxJSONvalue  root;
+   int numErrors = reader.Parse( jsonText, root );
+   if ( numErrors > 0 )  {
+     // if there are errors in the JSON document return
+     return;
+   {
+
+   // now display the column names
+   wxJSONvalue columns = root["Columns"];
+   int border = root["Border"].AsInt();
+   int width; string align;
+   for ( int i = 0; i < columns.Size(); i++ )  {
+     width = columns[i]["Width"].AsInt();
+     DisplayColName( columns[i]["Name"].AsString(), width );
+   }
+
+   // and now we display the data in the rows
+   // note that we use a predefined alignment for data
+   // unless a specific alignment is set:
+   //
+   //  left for strings
+   //  right for numbers
+
+   // the bidimensional array
+   wxJSONValue rows = root["Rows"];
+
+   // the string that has to be displayed in the table's cell
+   string valueString;
+
+   // the default alignment: it is set depending on the data type
+   wxJSONValue defaultAlign;
+
+   // for all rows ...
+   for ( int x = 0; x < rows.Size(); x++ )  {
+
+     // .. and for all columns in the row
+     for ( int y = 0; y < rows[x].Size(); y++ )  {
+       // get the width of the column
+       width = columns[y]["Width"].AsInt();
+
+       // get the value object
+       wxJSONValue value = rows[x][y];
+
+       // check the type of the data
+       wxJSONValue::wxJSONType type = value.GetType();
+       switch ( type )  {
+         case wxJSONTYPE_NULL :
+           // display an empty string
+           valueString.clear();;
+           break;
+         case wxJSONTYPE_INT :
+         case wxJSONTYPE_UINT :
+         case wxJSONTYPE_DOUBLE :
+           // numeric values are right-aligned
+           defaulAlign = "right";
+           align = columns[y].Get( "Align", defaultAlign ).AsString();
+           valueString = value.AsString();
+           break;
+         case wxJSONTYPE_STRING :
+         case wxJSONTYPE_CSTRING :
+           defaulAlign = "left";
+           align = columns[y].Get( "Align", defaultAlign ).AsString();
+           valueString = value.AsString();
+           break;
+         case wxJSONTYPE_BOOL :
+           defaulAlign = "center";
+           align = columns[y].Get( "Align", defaultAlign ).AsString();
+           valueString = value.AsString();
+           break;
+       }
+       // now that we have the alignment, the column's width and the 
+       // value of the data as a string:
+       // note that numeric data are converted to a decimal string
+       // and boolean values are converted to 'TRUE' or 'FALSE' when you
+       // use the wxJSONValue::AsString() memberfunction
+       DisplayValue( valueString, width, align );
+
+     }   // continue for all columns
+   }     // continue for all rows
+ }
+\endcode
+
+JSON format is very flexible: in future we can add new
+features to the application.
+For example we may decide that our general-purpose table-viewer
+panel will let the user to change the values in the table rows but
+only for some specific columns.
+
+We add a new item in the \b Columns array descriptors: the \b Editable
+flag which is a boolean type. Example:
+
+\code
+   "Columns" : [ 
+     {
+       "Name"   : "Temperature",
+       "Width"  : 50,
+       "Unit"   : "Percentage",
+       "Editable" : true
+     },
+\endcode
+
+Note that this new format of our table description is compatible
+in \e both \e directions: it is normal that a new version of the
+application can read and handle \e old-style data but it is not very
+easy to maintain the old application compatible with a new data
+format that was introduced in a new version.
+
+In our example, the simplicity and flexibility of JSON make the old
+application capable of reading the new format of JSON data.
+Of course, the data are not editable because the old application
+does not permit this operation.
+The old version of the application simply ignores the existance of
+the new \b Editable flag so that the JSON text can be read and processed
+as in the previous version.
+
+
+\section wxjson_tutorial_get Obtaining values from JSON value class
+
+The wxJSONValue class defines functions for getting the value stored
+in the class. The value can be obtained in the same type it was stored
+or in another (compatible) type.
+You can know the type stored by a JSON value class using the \b IsXxxxx()
+functions. For example, to know if a value contains an integer type you
+use the wxJSONValue::IsInt() function:
+
+\code
+  wxJSONValue value( 100 );
+  bool r = value.IsInt();   // return TRUE
+\endcode
+
+You can also use the wxJSONValue::GetType() function to get directly
+the type of the value which returns a \b wxJSONType type that can be used
+in a \b switch statement:
+
+\code
+  wxJSONValue value( 100 );
+  wxJSONType type = value.GetType();
+  switch ( type )  {
+    case wxJSONTYPE_INT :
+    case wxJSONTYPE_UINT :
+    ...
+  }
+\endcode
+
+For obtaining the value there are functions in the form: \b AsXxxxxxx()
+where \b Xxxxxx is the desired type.
+For example, if you want the value as an integer you call the
+\c wxJSONValue::AsInt() function.
+A problem is that the class may hold many types of value and that not
+all of these types are compatible with the one you want.
+Let's look at an example:
+\code
+  wxJSONValue v1( 120 );
+  int i      = v1.AsInt();
+  wxString s = v1.AsString();
+\endcode
+
+The above code fragment does not make problems: we can get an integer
+value as an int or as a string: in fact, the \c AsString() function 
+uses \c wxString::Format() to represent the integer as a string.
+
+Let's look another example:
+\code
+  wxJSONValue v1( 120.20 );
+  int i      = v1.AsInt();
+  wxString s = v1.AsString();
+\endcode
+
+As explained above, there is no problem in getting a string representation
+of a double numeric data: the \c wxString::Format() is called for this
+purpose.
+The problem is the \b AsInt() function call: note that the value stored
+can be converted to an integer with little precision loss but what
+happens if the numeric value is too big (i.e. 9.1+E16)? It cannot be
+represented as an integer.
+Moreover, maybe the user made a mistake and what he wanted
+is the double value:
+
+\code
+  wxJSONValue v1( 120.20 );
+
+  // this is what the user wanted
+  double d = v1.AsDouble();
+
+  // these are mistakes the user may make
+  int i    = v1.AsInt();
+  int i    = v1.AsDouble();
+\endcode
+
+The second mistake is catched by the compiler which warns you that you
+are trying to assign to an integer a double. But if you use \c AsInt()
+the compiler could not catch the mistake.
+In order to help the user to catch errors, the wxJSONValue class does
+not try to convert types that cannot (or should not) be converted.
+This also apply to maps an arrays: they cannot even be converted to
+strings.
+
+All functions that returns a specific type of value, will return that
+type only if the stored value \b can be converted to the desired type
+without loss of informations. Otherwise, the function just returns the
+content of the \c m_value union which is, probably, garbage.
+Let look at an example:
+
+\code
+  wxJSONValue value( _T("A string"));
+  int i = value.AsInt();
+\endcode
+
+In the above example, the wxJSONValue::AsInt() function cannot convert
+the string to a number so what the function returns is the content of
+the \c m_value union as an integer.
+Because the data member of the JSON value object contains a pointer
+to a wxString object, the value returned is the pointer to the string
+as an integer value which is, surely, garbage (see \ref pg_json_internals
+for more info on the internal representation of JSON values).
+
+In debug builds, however, all \c AsXxxxxx() functions also ASSERT that the
+actual type stored in the JSON value class is of the correct type
+for the function or it is of a type that can be converted without
+loss of informations.
+So, for example, the \c wxJSONValue::AsString() function returns an empty string
+if the object's type is \b wxJSONTYPE_ARRAY or \b wxJSONTYPE_OBJECT.
+All other types can be converted to a string.
+
+A final note about the \c wxJSONValue::AsCString() function. This returns a pointer
+to a (hopefully) statically allocated string.
+I know that all types that can be converted to a \b wxString object
+can also be converted to a (static?) wxChar* buffer but the problem
+is: where store the buffer? Statically? What should its size be?
+The answers are not simple.
+
+For this reason, the \c wxJSONValue::AsCString() function always returns the
+content of the \c m_value union: a NULL pointer is returned if the
+type of the value is not \c wxJSONTYPE_CSTRING.
+Also note that if wxJSON was compiled without the WXJSON_USE_CSTRING symbol,
+the \c AsCString() function always returns a NULL pointer.
+
+
+\section wxjson_tutorial_comment Using comment lines in wxJSON
+
+Comments are not supported by the JSON syntax specifications but
+many JSON implementations do recognize and store comment lines in
+the JSON value objects.
+Starting by version 0.2, the wxJSON library do recognize and store
+C/C++ comment lines in the JSON input text and can also write
+comments to the JSON output text.
+
+Why should we use comments in JSON formatted text?
+
+There are several reasons: in an application's configuration 
+file like the one we have seen in \ref wxjson_tutorial_ex2 
+comments are very usefull to help the user to understand the meaning of 
+each configuration option.
+
+On the other hand, if a data structure is sent over a network
+connection, it is most likely that comments are not really
+needed but they may still be usefull for debugging purposes or
+for explaining the value, as in the following example:
+
+\code
+ {
+   "Person" :  {
+   {
+     "Name"    : "John Smith",
+     "Height"  : 190,   // expressed in centimeters
+     "Birthday" :  {
+       "Year"  : 1965,
+       "Month" : 8,
+       "Day"   : 18
+     }
+   }
+ }
+\endcode
+
+\subsection wxjson_tutorial_comment_funct Adding comments to JSON values
+
+The wxJSONValue class defines some functions for adding and retrieving 
+comment lines in a JSON value. The function for adding comments is the
+wxJSONValue::AddComment() function which takes two parameters:
+
+\li the string that has to be added as comment
+\li the position of the comment line when the value is written to JSON text
+
+The possible values for the \c position parameter are:
+
+\li wxJSONVALUE_COMMENT_BEFORE: the comment will be written before the
+	value it refers to
+\li wxJSONVALUE_COMMENT_AFTER: the comment will be written after the
+	value it refers to
+\li wxJSONVALUE_COMMENT_INLINE: the comment will be written on the same
+	line as the value it refers to
+
+Here is an example:
+
+\code
+{
+  // comment before 'key-1'
+  "key-1" : "value-1",
+  "key-2" : "value-2", // comment inline 'key-2'
+  "key-3" : "value-3"
+  // comment after 'key-3'
+}
+\endcode
+
+To get the above output use the following code fragment:
+
+\code
+  wxJSONValue root;
+  root["key-1"] = "value-1";
+  root["key-2"] = "value-2";
+  root["key-3"] = "value-3";
+
+  root["key-1"].AddComment( "// comment before", wxJSONVALUE_COMMENT_BEFORE );
+  root["key-2"].AddComment( "// comment inline", wxJSONVALUE_COMMENT_INLINE );
+  root["key-3"].AddComment( "// comment after", wxJSONVALUE_COMMENT_AFTER );
+\endcode
+
+You have to note that comment lines are kept as an array of strings in a data
+member of the wxJSONValue object: this means that you can add more than one
+comment line to a JSON value object but remember that there is only one
+data member for storing the position of all comment lines.
+In other words, the position at which the comment lines are written in the
+JSON output text in the same position as the one specified in the last
+call to the wxJSONValue::AddComment() function.
+
+In order to prevent that the comment's position have to be set in the
+last call to the \c AddComment() function, you can specify the
+\c wxJSONVALUE_COMMENT_DEFAULT constant as the position parameter.
+This constant causes the function to not modify the actual position
+value. If you use this constant in the first call to the \c AddComment()
+function, it is interpreted as \c wxJSONVALUE_COMMENT_BEFORE.
+Below you find an example:
+
+\code
+  wxJSONValue root;
+  root.AddComment( "// comment for root (line 1)", wxJSONVALUE_COMMENT_BEFORE );
+
+  // no need to specify the comment position in subsequent calls to AddComment()
+  // the old position is not modified
+  root.AddComment( "// comment for root (line 2)" );
+
+  // set the value for 'key-1'
+  root["key-1"] = "value1";
+
+  // now we add a comment line for 'key-1'. We do not specify the comment
+  // position so it defaults to wxJSONVALUE_COMMENT_DEFAULT which cause
+  // the AddCommnen() function to maintan the old position.
+  // As the comment position was never set before, the wxJSONVALUE_COMMENT_BEFORE
+  // will be set
+  root["key-1"].AddComment( "// comment before key-1" );
+
+  // set the value of 'key-4' an an empty object.
+  // note that we cannot use the default wxJSONValue constructor to get an
+  // empty object type: the default ctor constructs a NULL value object.
+  root["key-4"] = wxJSONValue( wxJSONTYPE_OBJECT );
+
+  // now we add an inline comment to 'key-4'
+  root["key-4"].AddComment( "// comment inline key-4",
+					 wxJSONVALUE_COMMENT_BEFORE );
+
+  // now we write the JSON 'root' value to a JSON formatted string
+  // object. Note that we have to specify some flags in the wxJSONWriter
+  // constructor
+  wxJSONWriter writer( wxJSONWRITER_STYLED | wxJSONWRITER_WRITE_COMMENTS );
+  wxString  jsonText;
+  writer.Write( root, jsonText );
+\endcode
+
+Below is the output text:
+
+\code
+ // comment for root (line 1)
+ // comment for root (line 2)
+ {
+   // comment before 'key2'
+   "key-1" : "value1",
+   "key-4" : {   // comment inline key-4
+   }
+ }
+\endcode
+
+\subsection wxjson_tutorial_comment_inline Adding inline comments
+
+You should be carefull when adding inline comments.
+Comment lines are stored in an array of string, thus allowing to have
+more than one line of comments.
+This is good for comments that apear \e before or \e after the value
+they refer to but for \e inline comments, the output is not easy to read.
+Look at the following example:
+
+\code
+  wxJSONValue root;
+  root["key-1"] = "value1";
+  root["key-1"].AddComment( " // comment inline (1)", wxJSONVALUE_COMMENT_INLINE );
+  root["key-1"].AddComment( " // comment inline (2)" );
+  root["key-1"].AddComment( " // comment inline (3)" );
+
+  // this is the JSON formatted output:
+
+{
+   "key-1" : "value1", // comment inline (1)
+// comment inline (2)
+// comment inline (3)
+}
+\endcode
+
+Note that only the first line is really printed \b inline.
+The other two lines are printed after the value they refer to 
+and without indentation: this is not very readable.
+For this reason, you should use \b inline comments only when you
+have only one line of comments.
+If you need more than one line of comment use the \b before or the
+\b after comment's position.
+
+\subsection wxjson_tutorial_comment_syntax Syntax checks for comment lines
+
+The wxJSONValue::AddComment() function checks that the string that
+you are adding as a comment to the JSONvalue object is a correct
+C/C++ comment.
+In other words, if you want to add a C++ comment string, the
+string passed as a parameter to the wxJSONValue::AddComment() function must
+start with two slash characters and must end with a LF.
+If the LF character is missing, the function adds it for you.
+The following code fragment shows some examples:
+
+\code
+  wxJSONValue v1( 10 );
+  v1.AddComment( "// A C++ comment line\n" );     // this is OK
+  v1.AddComment( "// Another C++ comment line" ); // this is OK
+  v1.AddComment( "/*  A C-style comment */");     // OK
+
+  wxJSONValue v2( 20 );
+  v2.AddComment( "A C++ comment line\n" );   // Error: does not start with '//'
+  v2.AddComment( "/ A C++ comment line\n" ); // Error: does not start with '//'
+  v2.AddComment( "/*** comment **" );        // Error: the close-comment is missing
+
+  // the following is OK: new-line characters may follow
+  // the end-comment characters of a C-style comment
+  wxJSONValue v3( 30 );
+  v2.AddComment( "/*** C comment ***/\n\n\n" );
+\endcode
+
+Note that the function cannot trap all possible errors because
+the checks that are done by the function are very simple:
+
+\li for C++ comments checks that the string starts with two slash characters and ends with
+	a LF char: the LF har is automatically added if it is
+	missing
+\li for C-style comments check that the string start with the slash-asterisk character
+	couple and ends with the asterisk-slash caracters
+	(trailing LF chars are permitted)
+
+Note that the following examples are considered OK by the function
+but if you add those strings to some values and write them
+to a JSON text stream you end up with a incorrect JSON text.
+
+\code
+  // the following is not correct: the AddComment() function only
+  // appends the final LF char 
+  wxJSONValue v1( 10 );
+  v1.AddComment( "// Line 1\nLine2" );
+
+  // this is the JSON output (it is not OK)
+  ...
+  // Line 1
+  Line 2
+  10
+  ...
+\endcode
+
+You would have to write:
+
+\code
+  wxJSONValue v1( 10 );
+  v1.AddComment( "// Line 1" );
+  v1.AddComment( "// Line 2" );
+\endcode
+
+Nested C-style comments are not handled correctly by the wxJSON parser:
+
+\code
+  wxJSONValue v2( 20 );
+  v2.AddComment( "/* comment1 /* comment2 */ */" );
+
+  // this is the JSON text output:
+  ...
+  /* comment1 /* comment2 */ */
+  20
+  ...
+\endcode
+
+The parser will report an error when it reads the last
+close-comment characters because when a C-style comment
+starts, all characters until the first close-comment
+chars are ignored by the parser.
+
+
+\subsection wxjson_tutorial_comment_parser Reading comment lines from JSON text
+
+As already written above, comment lines are a wxJSON extension to the JSON
+format specification.
+Comments may be directly added to wxJSONValue objects using memberfunctions or
+they can be stored in the values when a JSON formatted text input is read
+by the parser.
+Note that by default the wxJSONReader class recognizes C/C++ comments in the
+input text but simply ignores them: if you wanr to store the comments in the
+value they refer to you have to pass some flags to the parser's constructor:
+
+\code
+  // this ctor is error tolerant and stores comments
+  wxJSONReader reader1( wxJSONREADER_TOLERANT | wxJSONREADER_STORE_COMMENTS );
+
+  // this ctor is not error tolerant: wxJSON extensions are off
+  wxJSONReader reader2( wxJSONREADER_STRICT );
+
+  // this ctor is error tolerant but does not store comments
+  wxJSONReader reader3;
+
+  // this ctor recognizes all wxJSON extensions except the
+  // 'multiline string' feature which is reported as an error
+  // the parser also stores comments
+  wxJSONReader reader1( wxJSONREADER_ALLOW_COMMENTS
+                      | wxJSONREADER_CASE
+                      | wxJSONREADER_MISSING
+                      | wxJSONREADER_STORE_COMMENTS  );
+
+  // parser is tolerant and stores comments but comments apear AFTER
+  // the value they refer to
+  wxJSONReader reader1( wxJSONREADER_TOLERANT | wxJSONREADER_STORE_COMMENTS );
+                      | wxJSONREADER_COMMENTS_AFTER  );
+\endcode 
+
+See the wxJSONReader class's description for more informations about the
+wxJSON parser's extensions.
+Also note that comment's related constructor's flags are only meaningfull
+if the main flags are also specified.
+In other words, the \c wxJSONREADER_STORE_COMMENTS flag is only meaningfull
+if \c wxJSONREADER_ALLOW_COMMENTS is also set (or the \c wxJSONREADER_TOLERANT
+constant which includes it).
+Moreover the \c wxJSONREADER_COMMENTS_AFTER is only meaningfull if
+\c wxJSONREADER_STORE_COMMENTS is also set: if comments are not stored,
+there is no need for the parser to know the position of the comments with
+respect to the value.
+
+Below you find a JSON text with many comment lines and the description
+of which value the comments refer to. The parser is constructed with the
+\c wxJSONREADER_STORE_COMMENT flag set.
+
+\code
+// comment for root (line 1)
+// comment for root (line 2)
+{
+   "key-1" : "value1",
+
+   // comment before 'key2'
+   "key-2" : "value2",
+   // comment before 'key3' (1)
+   // comment before 'key3' (2)
+
+   "key-3" : {
+      "key3-1" : "value3-1",
+
+      // comment before key3-2
+      "key3-2" : "value3-2"
+   },
+
+   "key-4" : {   // comment inline key4
+      // this comment does not refer to anything
+   }
+
+   "key-5" : [ // comment inline key5
+
+      // comment before item 5-1
+      "item5-1",
+      "item5-2", // comment inline 5-2
+      "item5-3"  // comment inline 5-3
+
+      // this comment does not refer to anything
+   ],
+
+   "key-6"
+      :        // comment inline key-6
+        "value",
+
+   "key-7" : {
+      "key-7-1" : "value-7-1"
+   },        // comment inline key-7
+
+   "key-8"     // comment inline key-8(1)
+      :        // comment inline key-8(2)
+      "value", // comment inline key-8(3)
+
+   "key-9" : {
+      "key9-1" : 91,
+      "key9-2" : 92
+   }
+
+
+   "key-10" : [
+   ]            // comment inline key-10
+
+   // this comment does not refer to anything
+}
+// this comment does not refer to anything
+// if COMMENT_BEFORE.
+
+This non-JSON text is ignored by the parser because
+it apears after the top-level close-object character
+\endcode
+
+
+
+\section wxjson_tutorial_unicode Unicode support in wxJSON
+
+
+Until version 0.2.2, the wxJSON library does not compile in
+UNICODE mode because some string constants were not enclosed
+in the \b _T() macro.
+I released in january 2008 version 0.2.3 which fixed the
+compilation problems but, in fact, the wxJSONWriter and the
+wxJSONReader class do not work properly so you cannot use
+the wxJSON library in UNICODE builds.
+Also note that the test application runs correctly until
+its normal termination but the output is not as expected.
+Version 0.2.3 was never released on SF; in fact, the library
+does not work in Unicode build so it is wise to also let it fail
+to compile.
+
+At time of writing (january 2008), the wxWidgets community is
+about to release version 3.0 of the GUI which will introduce
+a major change in unicode support.
+I read in the forum that the new version will no more support
+ANSI builds: \b wxWidgets will only compile in Unicode mode.
+From the point of view of the \b wxJSON library this change does
+not have side effects: the only conseguence is that what I wrote
+for ANSI builds will no more apply.
+
+The JSON syntax states that JSON string values are in Unicode
+format and the encoding of a JSON text is by default UTF-8.
+The wxJSON library follows this rule but because wxJSON (and
+wxWidgets itself) may be compiled in two different modes we
+have to distinguish two situations:
+
+\li Unicode builds
+\li ANSI builds
+
+
+\subsection wxjson_tutorial_unicode_uni Unicode builds
+
+
+When \b wxJSON and \b wxWidgets are built in Unicode mode, there
+is no problem at all.
+You can read JSON text from a \b wxString object or from a
+\b wxInputStream in the same way because both string object
+and stream object support Unicode.
+If the input is from a \b wxString object, unicode characters
+are encoded in the platform dependent format but the read
+operation is done char-by-char.
+The \b wxString::GetChar() function returns wide characters
+that are processed by the parser class.
+On the other hand, writing to a stream always produces a
+UTF-8 encoded text. This format has full support for
+Unicode characters.
+
+When using Unicode builds you can directly hardcode JSON values
+in all character sets as, for example:
+
+
+\code
+  wxJSONValue  value;
+  value[_T("us-ascii")] = _T(""abcABC");
+  value[_T("latin1")]   = _T("àèì©®");
+  value[_T("greek")]    = _T("αβγδ");
+  value[_T("cyrillic")] = _T("ФХЦЧ");
+
+  wxMemoryOutputStream os;
+  wxJSONWriter writer;
+  writer.Write( value, os );
+\endcode
+
+The above code fragment contains characters from various european
+languages which are incompatible in a locale depended environment.
+The stream produced is a UTF-8 encoded text.
+
+Note that when writing to a stream object, you cannot use a different
+encoding format.
+If you want to encode the JSON text to a different format you have to
+go through the \b wxString output object:
+
+\li write the JSON values to a string object
+\li convert the wxString buffer to whatever format you want
+
+For example, if you want to encode the output JSON text to UCS-4
+Little Endian, you may use the following code:
+
+\code
+  wxJSONValue  value;
+
+  wxString     jsonText;
+  wxJSONWriter writer;
+  writer.Write( value, jsonText );
+
+  // instantiate the conversion object
+  wxCSConv  conv( _T("UCS-4LE"));
+ 
+  // compute the length of the needed buffer
+  size_t len = conv.ToWChar( 0, 0, jsonText.wc_str());
+
+  // allocate the buffer
+  char* buffer = new char[len + 4];
+
+  // do the conversion and finally write the buffer to a file or
+  // whatever you want
+  len = conv.ToWChar( buffer, len + 4, jsonText.wc_str());
+\endcode
+
+
+Note that the above code fragment should work fine because the selected
+encoding format has full support for Unicode characters.
+On the other hand, you \e cannot convert the wide character string
+to whatever format you want; in other words, you cannot convert
+it to a locale dependent charset because the string contains characters
+from different languages which are encoded in different locale dependent
+charsets (precisely, the charsets that have to be used are
+ISO-8859-1 for Latin1, ISO-8859-7 for greek and ISO-8859-5 for cyrillic).
+For example, the following code does not work:
+
+\code
+  wxJSONValue  value;
+
+  wxString     jsonText;
+  wxJSONWriter writer;
+
+  // write to a string object
+  writer.Write( value, jsonText );
+
+  // instantiate the conversion object: we want to encode in Latin-1
+  wxCSConv  conv( _T("ISO-8859-1"));
+ 
+  // compute the length of the needed buffer
+  // what we get is the wxCONV_FAILED error code
+  size_t len = conv.ToWChar( 0, 0, jsonText.wc_str());
+\endcode
+
+The better solution, however, is to get a UTF-8 encoded buffer
+which is  compatible with all other JSON implementation.
+Also note that UTF-8 has full support for wide character encoding:
+
+\code
+  wxJSONValue  value;
+  wxString     jsonText;
+  wxJSONWriter writer;
+
+  // write to a string object
+  writer.Write( value, jsonText );
+
+  // convert to UTF-8
+  wxCharBuffer buffer = jsonText.utf8_str();
+\endcode
+
+
+Is there a mean to exchange JSON data from a Unicode mode application
+to an ANSI one (and viceversa)?
+The answer is: YES but you cannot use the wxString object as the
+JSON text output: you have to use streams which produce 
+UTF-8 encoded JSON text (or, if you use strings, you have to encode
+the output in UTF-8 format using the \c wxString::utf8_str() function).
+If you want to know more about this topic, continue read.
+
+
+\subsection wxjson_tutorial_unicode_ansi ANSI builds
+
+When \b wxJSON and \b wxWidgets are compiled in ANSI mode, there
+is no Unicode support at all, \b wxString objects only contain
+one-byte characters and the actual character represented is
+locale dependent.
+In ANSI builds, you can encode the string object to whatever
+format you want; in addition, you can also ignore the encoding
+format and directly write the string buffer:
+
+\code
+  wxJSONValue  value;
+
+  wxString     jsonText;
+  wxJSONWriter writer;
+
+  // write to a string object
+  writer.Write( value, jsonText );
+
+  // write the output JSON text to a file in ANSI format:
+  wxFFile f( "myfile", "w" );
+  bool success = f.Write( jsonText.c_str(), jsonText.Length());
+\endcode
+
+
+In addition to writing to a string object, you can also write the
+JSON value object to a stream, as in Unicode builds.
+When writing to streams, the encoding format is UTF-8 even if the
+application is built in ANSI mode.
+This permits the data to be sent to an Unicode version of the same
+application (or another application built in Unicode mode).
+
+When reading from JSON text, you have to same options: you can read
+from a \b wxString object which may be constructed by directly
+reading a file: this is exactly as writing the string output to
+a file.
+You can also read JSON values from a stream: the difference between
+reading from a stream and from a string is that the stream must be
+encoded in UTF-8 format.
+
+What? But we are in ANSI mode and do not have wide char support!!!
+What happens when the latin1, greek and cyrillic characters are read?
+
+There is the big difference between reading from a string and a
+stream.
+When reading from a stream, the input JSON text is read char-by-char
+and converted char-by-char to a wide character.
+Then, the wide character is converted to the corresponding locale
+dependent character if available.
+If the wide character cannot be represented in the current locale
+dependent charset, than the
+wxJSON reader will store the \e unicode \e escaped \e sequence of
+the wide character.
+For example, consider the following JSON text contained in a file
+encoded in UTF-8 format:
+
+\code
+{
+  "us-ascii" : "abcABC",
+  "latin1"   : "àèì©®",
+  "greek"    : "αβγδ",
+  "cyrillic" : "ФХЦЧ"
+}
+\endcode
+
+We read the UTF-8 file in an ANSI application which is localized in
+West Europa thus using the ISO-8859-1 (Latin-1) character set.
+The JSON value object will contain the following values:
+
+\code
+{
+  "us-ascii" : "abcABC",
+  "latin1"   : "àèì©®",
+  "greek"    : "\u03B1\u03B2\u03B3\u03B4",
+  "cyrillic" : "\u0424\u0425\u0426\u0427"
+}
+\endcode
+
+As you can see, the greek and cyrillic characters that cannot
+be represented as latin characters are preserved in their original
+meaning.
+Moreover, if the data is resent to a Unicode application, the
+strings will be correctly reconverted to their original wide
+character encoding.
+Also, if the data will be sent to another ANSI application
+which has a different locale, for example ISO-8859-7 (greek),
+the latin-1 characters will be stored as \e unicode \e escaped
+\e sequences while the greek sequences will be converted to
+the corresponding greek letters.
+
+
+
+*/
+

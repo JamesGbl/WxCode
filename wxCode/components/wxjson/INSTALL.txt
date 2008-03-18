@@ -1,0 +1,121 @@
+wxJSON INSTALL
+--------------
+JSON (JavaScript Object Notation) is a lightweight data-interchange format.
+It is easy for humans to read and write. It is easy for machines to parse
+and generate. It is based on a subset of the JavaScript Programming Language,
+Standard ECMA-262 3rd Edition - December 1999. JSON is a text format that is
+completely language independent but uses conventions that are familiar to
+programmers of the C-family of languages, including C, C++, C#, Java,
+JavaScript, Perl, Python, and many others. These properties make JSON an
+ideal data-interchange language.
+
+
+Installation - win32
+--------------------
+
+When building on win32, you can use the makefiles in the 'build/' folder using the
+WX_DIR, WX_DEBUG, WX_UNICODE and WX_SHARED to match your wxWidgets build.
+Examples:
+
+> nmake -fmakefile.vc WX_DIR=c:\path\to\my\wxWidgets WX_UNICODE=0/1 WX_DEBUG=0/1 WX_SHARED=0/1
+> make -fmakefile.bcc WX_DIR=c:\path\to\my\wxWidgets WX_UNICODE=0/1 WX_DEBUG=0/1 WX_SHARED=0/1
+
+
+Installation - borland BCC 5.5
+------------------------------
+
+For building the library using the free command-line tools from Borland
+use the following commands:
+
+> set BCCDIR=c:\path_to_your_bcc55_installation 
+> set WXWIN=c:\path_to_your_wxWidgets_installation
+> make -fmakefile.bcc WX_UNICODE=0/1 WX_DEBUG=0/1 WX_SHARED=0/1
+
+you have to set the WX_UNICODE, WX_DEBUG and WX_SHARED variables in order
+to meet your wxWidgets installation.
+
+To run the test application you have to copy or move the 'test.exe' file
+in the top-level directory.
+The 'test.exe' file should be located in a subfolder of the 'build/'
+folder; its name depends on the build type.
+For example, it could be 'build/bccmsw/' or 'build/bccmswd/'
+After you have copied or moved the file, type:
+
+> test.exe
+
+
+Installation - unix
+-------------------
+When building on a Linux/GNU-based system, type the usual:
+
+  ./configure
+  make
+
+to build against the default build of wxWidgets (the one listed as 'default'
+by wx-config --list). Type "./configure --help" for more info.
+
+In order to run the test application you may need to specify the
+path to the wxJSON library. If the test app cannot be run for linker's
+errors not founding the 'libwxjson-(some_version).so' file then
+you have to set the library path:
+
+# export LD_LIBRARY_PATH=./lib
+
+Next, type the test command:
+
+# ./test
+
+
+Installation - unix-like systems
+--------------------------------
+
+If you own a unix-like system and all other build systems fail, you can try
+the 'last resort'.
+In the top level directory of the wxJSON distribution you will find the
+'makefile.unx' file which was edited by hand and extensively commented.
+You have to edit this file in order to meet your system.
+
+
+Installation - checked-out sources
+----------------------------------
+
+If you do not want to wait until the official release of the library, and
+want to be always up-to-date you can get the wxJSON sources by
+directly accessing the CVS repository on SF.
+You can use the following command:
+
+ $ cvs -d:ext:anonymous@wxcode.cvs.sourceforge.net:/cvsroot/wxcode'
+ $ cvs checkout wxCode/componenrs/wxjson
+
+Note that you have to create your own project file or makefile in order
+to compile the library or you can use the 'bakefile' tool to create
+some of them. See the documentation on the wxCode website:
+http://wxcode.sourceforge.net
+
+
+Installation - Do you really need it?
+-------------------------------------
+
+The wxJSON is made of only three source files and four header files.
+If you want to install the library and also want to build it for the
+standard options shared/static, debug/release, UTF8/unicode you end
+up with several different builds.
+Worse, if you distribute your application dynamically linked you have
+to supply a binary copy of the library or have to let your user to 
+build it in addition to build wxWidgets itself.
+This makes your app to depend on another external library in addition
+to wxWidgets.
+
+The library itself is only 124 KB in release mode and 420 KB in debug
+mode so it is more simple to just include it in your own sources and
+let the compiler of your application to compile the library itself.
+You just have to copy the three source files located in the 'src/'
+subfolder in your own source folder and the four header files
+located in the 'include/' subfolder in your own header folder.
+Be sure to preserve the 'wx/' folder under the 'include/'.
+Next add the three source '.cpp' files to your project and you are done.
+
+This way, your application does not depend on wxJSON because it is
+embedded in your app and you do not need to deal with 'makefiles',
+'bakefiles', 'configs' and so on.
+

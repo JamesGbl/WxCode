@@ -1,0 +1,6 @@
+{
+"greek" : "αβγδ",
+"cyrillic" : "ФХЦЧ",
+"latin1" : "àèì©®",
+"us-ascii" : "abcABC"
+}

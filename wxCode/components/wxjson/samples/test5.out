@@ -1,0 +1,198 @@
+Test #1 - START
+[
+   "a string",
+   12,
+   true,
+   null,
+   90.980000
+]
+ERRORS: count=0
+WARNINGS: count=3
+Warning: line 2, col 3 - Comments may be tolerated in JSON text but they are not part of JSON syntax
+Warning: line 6, col 3 - Comments may be tolerated in JSON text but they are not part of JSON syntax
+Warning: line 9, col 18 - Comments may be tolerated in JSON text but they are not part of JSON syntax
+Test #1 - END
+Test #2 - START
+{
+   "boolean" : true,
+   "double" : 90.980000,
+   "string" : "a string",
+   "null" : null,
+   "integer" : 12
+}
+ERRORS: count=0
+WARNINGS: count=2
+Warning: line 2, col 3 - Comments may be tolerated in JSON text but they are not part of JSON syntax
+Warning: line 5, col 30 - Comments may be tolerated in JSON text but they are not part of JSON syntax
+Test #2 - END
+Test #3 - START
+[
+   {
+      "carriage-ret" : "string with \r (CR)"
+   },
+   "string with \\ (backslash)",
+   "string with \n (linefeed)",
+   "string with \/ (slash)",
+   "string with \t (tab)",
+   "string with \b (backspace)",
+   {
+      "quotes" : "string with \" (quotes)"
+   }
+]
+ERRORS: count=0
+WARNINGS: count=0
+Test #3 - END
+Test #4 - START
+{
+   "book" : {
+      "price" : 30.300000,
+      "author" : "Captain Hook",
+      "pages" : 300,
+      "translations" : [
+         "italian",
+         "german",
+         "spanish"
+      ],
+      "title" : "The title"
+   }
+}
+ERRORS: count=0
+WARNINGS: count=0
+Test #4 - END
+Test #5 - START
+{
+}
+ERRORS: count=13
+Error: line 3, col 6 - Strange '/' (did you want to insert a comment?)
+Error: line 5, col 33 - value is missing for JSON object type
+Error: line 7, col 14 - Value 'pages' cannot follow a value - ',' or ':' missing?
+Error: line 7, col 20 - ':' not allowed where a 'name' string was already available
+Error: line 7, col 25 - Value '300' cannot follow a value - ',' or ':' missing?
+Error: line 8, col 26 - Unrecognized literal 'abc300' (did you forget quotes?)
+Error: line 8, col 26 - value is missing for JSON object type
+Error: line 10, col 28 - Value '30.30abc' is incorrect (do you forgot quotes?)
+Error: line 10, col 28 - value is missing for JSON object type
+Error: line 11, col 21 - Value '30' cannot follow a value - ',' or ':' missing?
+Error: line 11, col 21 - 'key' is missing for JSON object type
+Error: line 14, col 23 - value is missing for JSON array type
+Error: line 17, col 24 - ':' cannot be used in array's values
+WARNINGS: count=2
+Warning: line 18, col 10 - Trying to close an array using the '}' (close-object) char
+Warning: line 21, col 2 - '}' missing at end of file
+Test #5 - END
+Test #6 - START
+{
+   "array" : [
+      30,
+      40,
+      true,
+      false,
+      30.400000,
+      "static string 2",
+      "wxString 2",
+      {
+         "key" : "value"
+      }
+   ],
+   "escaped" : {
+      "quotes" : "string with \" (quotes)",
+      "multiline" : "line 1 of a nultiline string value\nline 2 of a nultiline string value\nline 3 of a nultiline string value\nline 4 of a nultiline string value\n",
+      "linefeed" : "string with \n (linefeed)",
+      "backslash" : "string with \\ (backslash)",
+      "3 CR string" : "string with 3 CR\r1-\r 2-\r",
+      "carriage-ret" : "string with \r (CR)",
+      "slash" : "string with \/ (slash)",
+      "tab" : "string with \t (tab)",
+      "backspace" : "string with \b (backspace)"
+   },
+   "object" : {
+      "null" : null,
+      "integer" : 20,
+      "wxString" : "wxString 1",
+      "double" : 20.300000,
+      "C string" : "static string 1",
+      "unsigned int" : 30,
+      "bool-f" : false,
+      "bool-t" : true
+   },
+   "void-array" : [
+   ],
+   "array2" : [
+      {
+         "item" : 1
+      },
+      {
+         "item" : 2
+      },
+      {
+         "item" : 3
+      },
+      {
+         "item" : 4
+      },
+      {
+         "item" : 5
+      }
+   ],
+   "void-object" : {
+   },
+   "escaped-array" : [
+      "string with \\ (backslash)",
+      "string with \n (linefeed)",
+      "string with \/ (slash)",
+      "string with \r (CR)",
+      "string with \t (tab)",
+      "string with \b (backspace)",
+      "string with \" (quotes)",
+      "string with 3 CR\r1-\r 2-\r"
+   ]
+}
+ERRORS: count=0
+WARNINGS: count=17
+Warning: line 1, col 3 - Comments may be tolerated in JSON text but they are not part of JSON syntax
+Warning: line 8, col 6 - Comments may be tolerated in JSON text but they are not part of JSON syntax
+Warning: line 22, col 6 - Comments may be tolerated in JSON text but they are not part of JSON syntax
+Warning: line 23, col 6 - Comments may be tolerated in JSON text but they are not part of JSON syntax
+Warning: line 34, col 9 - Comments may be tolerated in JSON text but they are not part of JSON syntax
+Warning: line 35, col 9 - Comments may be tolerated in JSON text but they are not part of JSON syntax
+Warning: line 36, col 9 - Comments may be tolerated in JSON text but they are not part of JSON syntax
+Warning: line 37, col 9 - Comments may be tolerated in JSON text but they are not part of JSON syntax
+Warning: line 44, col 6 - Comments may be tolerated in JSON text but they are not part of JSON syntax
+Warning: line 56, col 6 - Comments may be tolerated in JSON text but they are not part of JSON syntax
+Warning: line 57, col 6 - Comments may be tolerated in JSON text but they are not part of JSON syntax
+Warning: line 58, col 6 - Comments may be tolerated in JSON text but they are not part of JSON syntax
+Warning: line 62, col 6 - Comments may be tolerated in JSON text but they are not part of JSON syntax
+Warning: line 81, col 6 - Comments may be tolerated in JSON text but they are not part of JSON syntax
+Warning: line 82, col 6 - Comments may be tolerated in JSON text but they are not part of JSON syntax
+Warning: line 83, col 6 - Comments may be tolerated in JSON text but they are not part of JSON syntax
+Warning: line 87, col 6 - Comments may be tolerated in JSON text but they are not part of JSON syntax
+Test #6 - END
+Test #8 - START
+{
+}
+ERRORS: count=0
+WARNINGS: count=3
+Warning: line 13, col 2 - ']' missing at end of file
+Warning: line 13, col 2 - '}' missing at end of file
+Warning: line 13, col 2 - '}' missing at end of file
+Test #8 - END
+Test #9 - START
+{
+   "book" : {
+      "price" : 30.300000,
+      "author" : "Captain Hook",
+      "pages" : 300,
+      "translations" : [
+         "italian",
+         "german",
+         "spanish"
+      ],
+      "title" : "The title"
+   }
+}
+ERRORS: count=0
+WARNINGS: count=0
+Test #9 - END
+
+'test5' successfully completed
+

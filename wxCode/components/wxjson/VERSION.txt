@@ -1,0 +1,33 @@
+VERSIONS
+--------
+
+The versioning scheme of the wxJSON library is much like the standard
+one used for Linux applications/libraries.
+
+Version number is made of three decimal digits that represents:
+
+- the major release
+- the minor release
+- the bug-fix release
+
+For example: '0.2.1' stands for:
+
+ major: 0
+ minor: 2
+ bug-fix: 1
+
+A change in the major release introduces incompatibility between the library
+and the applications that use it.
+In other words, when the major version changes, the author had
+introduced a change in the API: it could be a change in the function
+names or in the type and number of function's parameters.
+
+The minor release changes when a new class or a new function is added
+to the library but it remains compatible with the past.
+Applications can upgrade to any later minor-version without need to
+change the sources.
+
+The bug-fix release is done when some bugs are fixed.
+The library remains compatible with the past and no new feature
+was added.
+

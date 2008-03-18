@@ -1,0 +1,862 @@
+
+Flag: COMMENTS_BEFORE 
+
+
+
+ 1 // comment for root (1)
+ 2 // comment for root (2)
+ 3 {
+ 4   "key-1" : "value1",
+ 5
+ 6   // comment before 'key2'
+ 7   "key-2" : "value2",
+ 8   // comment before 'key3' (1)
+ 9   // comment before 'key3' (2)
+10
+11   "key-3" : {
+12      "key3-1" : "value3-1",
+13
+14      // comment before key3-2
+15      "key3-2" : "value3-2"
+16   },
+17
+18   "key-4" : {   // comment inline key4
+19      // this comment does not refer to anything (19)
+20   }
+21
+22   "key-5" : [ // comment inline key5
+23
+24      // comment before item 5-1
+25      "item5-1",
+26      "item5-2", // comment inline 5-2
+27      "item5-3"  // comment inline 5-3
+28
+29      // this comment does not refer to anything (29)
+30   ],
+31
+32   "key-6"
+33      :        // comment inline key-6
+34        "value",
+35
+36   "key-7" : {
+37      "key-7-1" : "value-7-1"
+38   },        // comment inline key-7
+39
+40   "key-8"     // comment inline key-8(1)
+41      :        // comment inline key-8(2)
+42       value,  // comment inline key-8(3)     // ERROR: value not quoted
+43
+44   "key-8"     // comment inline key-8(1)
+45      :        // comment inline key-8(2)
+46      "value", // comment inline key-8(3)
+47
+48   "key-9" : {
+49      "key9-1" : 91,
+50      "key9-2" : 92
+51   }
+52
+53
+54   "key-10" : [
+55   ]            // comment inline key-10
+56
+57   // this comment does not refer to anything (57)
+58 }
+59 // this comment is not stored in the root value
+60 // if COMMENT_BEFORE. If should be if COMMENT_AFTER.
+61
+62 This non-JSON text is ignored by the parser because
+63 it apears after the top-level close-object character
+64
+
+
+
+Il commento viene memorizzato quando il parser incontra il commento
+stesso. La memorizzazione dipende dal flag BEFORE o AFTER e dal
+contenuto di tre puntatori:
+
+m_current: punta il valore corrente ciò quello che è stato letto
+           adesso, può essere una chiave oppure un valore
+m_next:    punta il valore prossimo da leggere; di solito questo
+           puntatore punta a 'value' che è sullo stack della
+           funzione DoRead()
+m_lastStored: punta l'ultimo valore aggiunto al 'parent'. 
+
+
+Ogni valore contiene un membro dati 'lineNo' che indica il numero
+di riga dove è stato letto: il commento che il trova sulla stessa
+riga verrà ovviamente assegnato a quel valore.
+Se la riga del commento non si trova sulla riga del valore, allora
+esso viene assegnato al valore 'm_lastStored' se COMMENT_AFTER
+oppure al successivo da legge se COMMENT_BEFORE
+
+Questa è la analisi della StoreComment() per ogni commento di cui
+abbiamo visto il test sopra:
+
+
+ 1 // comment for root (1)
+ 2 // comment for root (2)
+ 3 {
+
+
+The first comment is read in the GetStart() function which searches
+for the first '{' or '[' characters.
+
+  m_current    = NULL
+  m_next       = the 'root' value
+  m_lastStored = NULL
+
+Because the flag is COMMENT_BEFORE, the comment is added to the m_next
+value.
+
+-----
+
+ 3 {
+ 4   "key-1" : "value1",
+ 5
+ 6   // comment before 'key2'
+ 7   "key-2" : "value2",
+
+  m_current    = NULL
+  m_next       = the 'value' which will contain 'key-2'
+  m_lastStored = key-1
+
+The comment line is not equal to any of the two pointed-to values
+and COMMENT_BEFORE force the function to store in m_next
+
+
+-----
+
+ 8   // comment before 'key3' (1)
+ 9   // comment before 'key3' (2)
+10
+11   "key-3" : {
+
+  m_current    = NULL
+  m_next       = the 'value' which will contain 'key-3'
+  m_lastStored = key-2
+
+This is the same as above.
+
+-----
+
+11   "key-3" : {
+12      "key3-1" : "value3-1",
+13
+14      // comment before key3-2
+15      "key3-2" : "value3-2"
+16   },
+
+  m_current    = NULL
+  m_next       = the 'value' which will contain 'key3-2'
+  m_lastStored = key3-1
+
+This is similar to the above
+
+-----
+
+
+17
+18   "key-4" : {   // comment inline key4
+19      // this comment does not refer to anything
+20   }
+21
+
+  m_current    = key-4
+  m_next       = the 'value' which will contain a value in the called DoRead()
+  m_lastStored = NULL
+
+  When the two comments are read, the three pointers contains the same
+  values.
+  - for the first comment, the StoreComment() function compares the comment line
+    against the value line and as a match is found for 'key-4' the comment will
+    be stored as a INLINE comment for 'm_current'.
+
+  - for the second comment, the comment line does not match any value's lineNo
+    and it will be stored in the m_next pointer.
+    The close-object char will cause the doRead() function to return but the
+    'value' object on the stack will not be stored in the 'aprent' because it
+    is EMPTY so the comment is lost. 
+
+-----
+
+
+22   "key-5" : [ // comment inline key5
+23
+
+
+  m_current    = 'key5'
+  m_next       = 'value' on the stack
+  m_lastStored = NULL
+
+The StoreComment() stores the comment line in 'm_current' because
+it is on the same line
+
+-----
+
+23
+24      // comment before item 5-1
+25      "item5-1",
+
+  m_current    = key-5
+  m_next       = item5-1
+  m_lastStored = NULL
+
+The 'm_next' is the only available value to which we can add the
+comment. For COMMENT_BEFORE this is OK.
+If the flag was COMMENT_AFTER, the comment is lost because no other
+value is good for that flag.
+
+-----
+
+
+26      "item5-2", // comment inline 5-2
+
+  m_current    = NULL 
+  m_next       = 'value' which will get 'item5-3' string
+  m_lastStored = 'item5-2'
+
+The comment will be added to m_lastStored because on the same line
+
+-----
+
+27      "item5-3"  // comment inline 5-3
+28
+29      // this comment does not refer to anything
+30   ],
+
+  m_current    = item5-3 
+  m_next       = NULL
+  m_lastStored = 'item5-2'
+
+The comment will be added to m_current because on the same line.
+Note that the value 'item5-3 is not yet stored because there is not
+a comma character.
+It will be stored when the close-array character will be encontered
+in the line XXX.
+Also note that 'm_next' is, actually, the same value as 'item5-3'
+because it was copied from the 'value' object on the stack.
+But the 'value' object has a lineNo of -1 so that the function cannot
+add the comment to 'm_next'
+
+The comment on line XXX will have the same pointer's values. It will not
+be stored in m_current nor m_lastStored beacuse the line is not the same.
+So it is stored in m_next because the flag is COMMENT_BEFORE.
+It will be lost because the 'value' object on the stack will not be
+saved when the close-array char is encontered.
+
+-----
+
+31
+32   "key-6"
+33      :        // comment inline key-6
+34        "value",
+35
+
+  m_current    = 'value' which contains 'key-6'
+  m_next       = NULL
+  m_lastStored = 'key-5'
+
+  The comment is stored in m_current because it is on the same line
+
+-----
+
+35
+36   "key-7" : {
+37      "key-7-1" : "value-7-1"
+38   },        // comment inline key-7
+
+
+  m_current    = NULL
+  m_next       = 'value' which will contain 'key-8'
+  m_lastStored = 'key-7'
+
+  The comment will be stored in 'key-7' because it is on the same line
+
+-----
+
+39
+40   "key-8"     // comment inline key-8(1)
+41      :        // comment inline key-8(2)
+42       value,  // comment inline key-8(3)     // ERROR: value not quoted
+43
+
+  m_current    = NULL
+  m_next       = 'value' which is empty
+  m_lastStored = NULL
+
+  The three comment lines will all be added to 'key-8' because they
+  are on the same line of m_current in lines 40 and 41 and on the
+  same line as 'm_lastStored' in line 42.
+  But note that 'key-8' is not really stored because the value
+  string is wrong.
+  As a conseguence, the comment will be added to 'm_next' and this
+  is an error. 
+
+-----
+
+43
+44   "key-8"     // comment inline key-8(1-1)
+45      :        // comment inline key-8(1-2)
+46      "value", // comment inline key-8(1-3)
+47
+
+  m_current    = NULL
+  m_next       = 'value' which is empty
+  m_lastStored = key-8
+
+  Same as above but on line 46, the 'm_lastStored' pointer points to
+  'key-8' so all three comments are correctly added to 'key-8'
+
+-----
+
+47
+48   "key-9" : {
+49      "key9-1" : 91,
+50      "key9-2" : 92
+51   }
+52
+
+  m_current    = 
+  m_next       = 
+  m_lastStored = 
+
+  The value does not have comments.
+
+-----
+
+53
+54   "key-10" : [
+55   ]            // comment inline key-10
+56
+
+  m_current    = key-10
+  m_next       = 'value' 
+  m_lastStored = NULL
+
+
+-----
+
+56
+57   // this comment does not refer to anything
+58 }
+
+  m_current    = key-10
+  m_next       = 'value'
+  m_lastStored = NULL
+
+  The comment is stored in 'm_next' which is discarded when the
+  close-object character is encontered on line 58.
+
+
+-----
+
+
+58 }
+59 // this comment is not stored in the root value
+60 // if COMMENT_BEFORE. If should be if COMMENT_AFTER.
+61
+62 This non-JSON text is ignored by the parser because
+63 it apears after the top-level close-object character
+64
+
+
+  m_current    = NULL
+  m_next       = NULL
+  m_lastStored = the root value
+
+ Because the DoRead() function returned in line 58,
+ all text after that is ignored by the parser.
+ For COMMENTS_BEFORE this is OK but if the flag was
+ COMMENT_AFTER, the two comment lines no. 59 and 60
+ should be stored in the root value.
+
+ This is not a bug; the comments are not stored even if
+ COMMENT_AFTER because when the top-level DoRead()
+ function returns, the parsing process ends.
+
+-----
+
+
+
+// The flags for the writer
+BIT= 9 8 7 6 5 4 3 2 1 0
+           | | | | | | |
+           | | | | | |  -> 1=styled (indentation), 0=not styled (other bits ignored)
+           | | | | |  ---> 0=do not store comments, 1=store comments
+           | | | |  -----> 0=comments as they were read/stored, 1=force a comment pos.
+           | | |  -------> 0=comments all before, 1=comments all after
+           | |  ---------> 0=do not split strings, 1=split strings
+           |  -----------> 
+            -------------> 
+
+ 
+
+enum {
+  wxJSONWRITER_NONE   = 0,
+  wxJSONWRITER_STYLED = 1,             // indentation
+  wxJSONWRITER_STORE_COMMENTS  = 2,    // store comments as they are
+  wxJSONWRITER_COMMENTS_BEFORE = 4,    // force all comments before
+  wxJSONWRITER_COMMENTS_AFTER  = 8,    // force all comments after
+  wxJSONWRITER_SPLIT_STRINGS   = 16
+}
+
+ 
+
+---------- *************** --------------
+
+
+ Flag: COMMENTS_AFTER 
+
+
+
+ 1 // this comment does not refer to any value (1)
+ 2 // this comment does not refer to any value (2)
+ 3 {
+ 4   // this comment does not refer to anything (4)
+ 5   "key-1" : "value1",
+ 6   "key-2" : "value2",
+ 7   // comment after 'key2'
+ 8
+ 9   "key-3" : {
+10      "key3-1" : "value3-1",
+11
+12      "key3-2" : "value3-2"
+13      // comment after key3-2
+14   },
+15   // comment after 'key3' (1)
+16   // comment after 'key3' (2)
+17
+18   "key-4" : {   // comment inline key4
+19      // this comment does not refer to anything (19)
+20   },
+21
+22   "key-5" : [ // comment inline key5
+23      // this comment does not refer to anything (23)
+24      "item5-1",
+25
+26      // comment after item 5-1
+27      "item5-2", // comment inline 5-2
+28      "item5-3", // comment inline 5-3
+29      "item5-4"
+30      // comment after item 5-4
+31   ],
+32   "key-6"
+33      :        // comment inline key-6
+34        "value",
+35
+36   "key-7" : {
+37      "key-7-1" : "value-7-1"
+38   },        // comment inline key-7
+39
+40   "key-8"     // comment inline key-8(1)
+41      :        // comment inline key-8(2)
+42       value,  // comment inline key-8(3)     // ERROR: value not quoted
+43
+44   "key-8"     // comment inline key-8(1)
+45      :        // comment inline key-8(2)
+46      "value", // comment inline key-8(3)
+47
+48   "key-9" : {
+49      "key9-1" :
+50      // this comment line is not BEFORE nor AFTER nor INLINE (50)
+51                 91,
+52      "key9-2" : 92
+53   }
+54
+55
+56   "key-10" : [
+57   ],            // comment inline key-10
+58
+59   // comment after key-10
+60
+61   "key-20" : [ "20-1", "20-2"   ] // comment inline key-20
+62
+63   "key-21" : [ "21-1",            // comment inline 21-1
+64                "21-2"   ] 
+65
+66   "key-22" : [ "22-1",
+67                "22-2"   ]    // comment inline key-22
+68
+69 }
+70 // comment for root (1)
+71 // comment for root (2)
+72
+73 This non-JSON text is ignored by the parser because
+74 it apears after the top-level close-object character
+75
+
+
+
+---------
+
+ 1 // this comment does not refer to any value (1)
+ 2 // this comment does not refer to any value (2)
+ 3 {
+
+  m_current    = NULL
+  m_next       = the root value
+  m_lastStored = NULL
+
+ The comment is read in the GetStart() function which searches for the
+ first open-object / open-array character.
+ There is no inline comment so m_lastStored should be used but as it is
+ NULL, the comments are lost.
+
+--------
+
+ 3 {
+ 4   // this comment does not refer to anything
+ 5   "key-1" : "value1",
+
+  m_current    = 'parent'
+  m_next       = 'value' on the stack
+  m_lastStored = NULL
+
+ The open-object function cause a DoRead() to be called so that 'parent'
+ is the root value object.
+  'm_current' points to the parent object.
+
+ If the comment was on line 3 then an INLINE for 'm_current' will be
+ stored.
+ There is no inline comment so the AFTER flag force the function to store
+ the comment in m_lastStored which is NULL.
+ The function tries to add the comment to m_current provided that it
+ is not empty and it is not equal to 'parent'.
+ Because 'm_current' is equal to 'parent' the comment is lost
+
+--------
+
+ 6   "key-2" : "value2",
+ 7   // comment after 'key2'
+ 8
+
+  m_current    = NULL
+  m_next       = 'value' which is empty
+  m_lastStored = 'key-2'
+
+ The comment is stored in 'm_lastStored'
+--------
+
+ 9   "key-3" : {
+10      "key3-1" : "value3-1",
+11
+12      "key3-2" : "value3-2"
+13      // comment after key3-2
+14   },
+
+  m_current    = 'key3-2'
+  m_next       = 'value' which is the same as 'm_current'
+  m_lastStored = NULL
+
+ This is a special case; 'key3-2' is not stored because it will be
+ when the close-object is encontered on line 14.
+ Because 'm_lastStored' is NULL, the comment will be added to
+ 'm_current'.
+ The StoreFunction() checks that the value 'm_current' is not empty
+ before storing the comment or it is not equal to 'parent'
+ If it is empty, the comment is lost (see line 19).
+
+----------
+
+14   },
+15   // comment after 'key3' (1)
+16   // comment after 'key3' (2)
+17
+
+  m_current    = NULL
+  m_next       = 'value' which is empty
+  m_lastStored = 'key-3'
+
+ The close-object function cause the DoRead() to return in the top-level
+ DoRead() which has 'root' as the parent and 'value' is a OBJECT type.
+ The comma character on line 14 cause the 'value' to be stored in the
+ root and the comments to be stored in 'm_lastStored'
+
+----------
+
+
+18   "key-4" : {   // comment inline key4
+
+  m_current    = 'key-4'
+  m_next       = 'value' which is empty
+  m_lastStored = NULL
+
+ The comment is added to 'm_current' because INLINE.
+
+----------
+
+19      // this comment does not refer to anything
+20   }
+21
+
+  m_current    = 'key-4
+  m_next       = 'value' which is empty
+  m_lastStored = NULL
+
+ The comment is lost because it should be stored in 'm_lastStored' or 
+ in 'm_current' if the value is not empty.
+ Becuase the 'key-4' value is not an EMPTY type but an empty OBJECT type,
+ the StoreFunction() will add the comment to 'key-4' but this is a bug.
+
+ To prevent this, the StoreFunction() checks that 'm_current' is not
+ equal to 'parent'. Because 'key-4' is the parent, the comment is not
+ stored, and it is lost.
+
+----------
+
+
+20   }
+21
+22   "key-5" : [ // comment inline key5
+
+  m_current    = 'key-5' (is the 'parent')
+  m_next       = ' value' which is empty
+  m_lastStored = NULL
+
+ The comment is added to m_current as INLINE
+
+----------
+
+
+23      // this comment does not refer to anything
+24      "item5-1",
+25
+
+  m_current    = 'key-5' (is the parent)
+  m_next       = 'value' which is empty
+  m_lastStored = NULL
+
+ The comment is lost. The StoreFunction() stores the comments in
+ 'm_lastStored' if not NULL or in 'm_current' if:
+
+ - it is not equal to 'parent'
+ - it is not EMPTY.
+
+
+----------
+
+
+24      "item5-1",
+25
+26      // comment after item 5-1
+
+  m_current    = NULL
+  m_next       = 'value' which is empty
+  m_lastStored = 'item5-1'
+
+ The comment is added to m_lastStored.
+
+----------
+
+27      "item5-2", // comment inline 5-2
+28      "item5-3", // comment inline 5-3
+
+ This is equal as COMMENTS_BEFORE
+
+----------
+
+
+29      "item5-4"
+30      // comment after item 5-4
+31   ],
+
+  m_current    = 'value' which contains 'item5-4'
+  m_next       = NULL
+  m_lastStored = 'item5-3'
+
+ The comment must be added to 'm_current' because it is not empty
+ and not equal to 'parent'.
+ Note that the comment on line 30 must not be added to m_lastStored.
+
+----------
+
+32   "key-6"
+33      :        // comment inline key-6
+34        "value",
+35
+36   "key-7" : {
+37      "key-7-1" : "value-7-1"
+38   },        // comment inline key-7
+39
+40   "key-8"     // comment inline key-8(1)
+41      :        // comment inline key-8(2)
+42       value,  // comment inline key-8(3)     // ERROR: value not quoted
+43
+44   "key-8"     // comment inline key-8(1)
+45      :        // comment inline key-8(2)
+46      "value", // comment inline key-8(3)
+47
+
+  m_current    = 
+  m_next       = 
+  m_lastStored = 
+
+ Comments inline are the same as we see for the COMMENT_BEFORE flag
+
+----------
+
+
+48   "key-9" : {
+49      "key9-1" :
+50      // this comment line is not BEFORE nor AFTER nor INLINE
+51                 91,
+52      "key9-2" : 92
+53   }
+54
+
+  m_current    = 'key9-1'
+  m_next       = NULL
+  m_lastStored = NULL
+
+ The comment is lost because the storeComment() checks that
+ the value of m_current is not of EMPTY type.
+
+----------
+
+
+55
+56   "key-10" : [
+57   ],           // comment inline key-10
+58
+
+  m_current    = NULL
+  m_next       = 'value' which is empty
+  m_lastStored = key-10
+
+ The comment is inline to 'm_lastStored'. 
+
+----------
+
+
+58
+59   // comment after key-10
+60 }
+
+  m_current    = NULL
+  m_next       = 'value' which is empty
+  m_lastStored = key-10
+
+
+ The comment is added to m_lastStored in AFTER position, this
+ will force the inline comment on line 57 to be in the same
+ position (AFTER).
+----------
+
+
+60
+61   "key-20" : [ "20-1", "20-2"   ], // comment inline key-20
+62
+
+  m_current    = NULL
+  m_next       = 'value' which is empty
+  m_lastStored = 'key-20'
+
+----------
+
+
+63   "key-21" : [ "21-1",            // comment inline 21-1
+64                "21-2"   ] 
+65
+
+  m_current    = NULL 
+  m_next       = 'value' which is empty
+  m_lastStored = '21-1'
+
+----------
+
+
+66   "key-22" : [ "22-1",
+67                "22-2"   ]    // comment inline key-22
+68
+69 }
+
+  m_current    = 'value' which is 'key-22'
+  m_next       = NULL
+  m_lastStored = NULL
+
+----------
+
+
+
+70 // comment for root (1)
+71 // comment for root (2)
+72
+
+  m_current    = 
+  m_next       = 
+  m_lastStored = 
+
+
+ The comment is not stored because the top-level DoRead() function
+ returned. This is a bug.
+
+----------
+
+
+73 This non-JSON text is ignored by the parser because
+74 it apears after the top-level close-object character
+75
+
+----------
+
+
+
+
+
+
+case '{' :
+
+ set m_current = value and m_next = 0 m_lastStored = 0
+
+case '}' :
+
+ set m_current = parent, m_next = 0, m_lastStored = 0
+
+case '[' :
+
+ set m_current = value and m_next = 0 m_lastStored = 0
+
+case ']' :
+
+ set m_current = parent, m_next = 0, m_lastStored = 0
+
+case ',' :
+
+ calls StoreValue() which stores the value. If the
+ value is correctly stored, m_lastStored = last stored
+ otherwise m_lastStored = NULL
+ m_current = NULL
+ m_next = value
+
+
+case ':' :
+ sets the m_current = value and m_current->lineNo =
+ the current lineNo
+
+case '\"' :
+
+ sets the m_current = value and m_current->lineNo =
+ the current lineNo
+
+// no special chars, is it a value
+default :
+
+ sets the m_current = value and m_current->lineNo =
+ the current lineNo
+
+
+
+Da provare:
+
+
+   "key-10" : [ "10", "20"   ] // comment inline key-10
+
+   "key-11" : [ 11,           // comment inline '11'
+                21   ] 
+
+   "key-12" : [ 12,
+                22   ]        // comment inline 'key-12'
+
+
+
+

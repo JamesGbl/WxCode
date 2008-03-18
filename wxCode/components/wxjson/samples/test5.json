@@ -1,0 +1,98 @@
+/*************************************************
+  This JSON text is used for testing the
+  wxJSONReader class
+  C/C++ comments are recognized by wxJSON
+  implementation but they are not (yet) stored
+*************************************************/
+{
+   // a well-formed array
+   "array" : [
+      30,
+      40,
+      true,
+      false,
+      30.400000,
+      "static string 2",
+      "wxString 2",
+      {
+         "key" : "value"
+      }
+   ],
+
+   // an array of strings that contains all escaped characters
+   // with the exception of unicode four-hex-digits sequences
+   "escaped" : {
+      "quotes" : "string with \" (quotes)",
+      "backslash" : "string with \\ (backslash)",
+      "carriage-ret" : "string with \r (CR)",
+      "backspace" : "string with \b (backspace)",
+      "tab" : "string with \t (tab)",
+      "3 CR string" : "string with 3 CR\r1-\r 2-\r",
+      "linefeed" : "string with \n (linefeed)",
+      "slash" : "string with \/ (slash)",
+
+      // a string value that splits across multiple lines
+      // the wxJSONReader recognizes this becasue of the
+      // absence of the end-value character (,)
+      // this is a wxJSON extension
+      "multiline" : "line 1 of a nultiline string value\n"
+                    "line 2 of a nultiline string value\n"
+                    "line 3 of a nultiline string value\n"
+                    "line 4 of a nultiline string value\n"
+   },
+
+   // an object that holds all value types
+   "object" : {
+      "C string" : "static string 1",
+      "double"   : 20.300000,
+      "bool-f"   : false,
+      "wxString" : "wxString 1",
+      "null"     : null,
+      "bool-t"   : true,
+      "unsigned int" : 30,
+      "integer" : 20
+   },
+
+   // an empty array: note that the reader will read a
+   // 'empty-array' value and not an 'empty' value which
+   // is an error
+   "void-array" : [
+   ],
+
+   // an array of objects: this is well-formed
+   "array2" : [
+      {
+         "item" : 1
+      },
+      {
+         "item" : 2
+      },
+      {
+         "item" : 3
+      },
+      {
+         "item" : 4
+      },
+      {
+         "item" : 5
+      }
+   ],
+
+   // an empty map: note that the reader will read a
+   // 'empty-map' value and not an 'empty' value which
+   // is an error
+   "void-object" : {
+   },
+
+   // an array of strings that contains escaped chars
+   "escaped-array" : [
+      "string with \\ (backslash)",
+      "string with \n (linefeed)",
+      "string with \/ (slash)",
+      "string with \r (CR)",
+      "string with \t (tab)",
+      "string with \b (backspace)",
+      "string with \" (quotes)",
+      "string with 3 CR\r1-\r 2-\r"
+   ]
+}

@@ -1,0 +1,4 @@
+{
+"latin1" : "ΰθμ©®",
+"us-ascii" : "abcABC"
+}

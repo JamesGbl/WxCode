@@ -1,0 +1,208 @@
+
+/*! \mainpage wxJSON - The wxWidgets implementation of JSON 
+
+<center><b>version 0.3</b></center>
+
+<center>http://lnx.mauriziovettorato.it/public/json/home.html</center>
+
+\section main_intro Introduction
+
+JSON (JavaScript Object Notation) is a lightweight data-interchange format.
+It is easy for humans to read and write. It is easy for machines to parse
+and generate. It is based on a subset of the JavaScript Programming Language,
+Standard ECMA-262 3rd Edition - December 1999. JSON is a text format that
+is completely language independent but uses conventions that are familiar
+to programmers of the C-family of languages, including C, C++, C#, Java,
+JavaScript, Perl, Python, and many others. These properties make JSON an 
+ideal data-interchange language.
+
+Here is an example of JSON formatted data:
+
+\code
+ {
+   "book":
+   {
+     "title"  : "How to catch Peter Pan",
+     "author" : "Captain Hook",
+     "pages"  : 285,
+     "price"  : 29.95,
+     "translations" :
+     [
+       "german",
+       "french",
+       "spanish",
+       "italian"
+     ]
+   }
+ }
+\endcode
+
+And this is the same data in XML format:
+
+\code
+ <book title="How to catch Peter Pan" author="Captain Hook" pages=285 price=29.95>
+   <translations>
+     <item "german"/>
+     <item "french"/>
+     <item "spanish"/>
+     <item "italian"/>
+   </translations>
+ </book>
+\endcode
+
+As you can see, JSON format is much more readable by humans and
+uses a syntax similar to many C-like languages.
+Someone may say that XML is object-oriented and JSON in not.
+The answer is that none of the two formats is really
+object-oriented.
+In fact, XML is a document-oriented format while JSON is
+a data-oriented format.
+
+
+\section main_struct JSON data format
+
+JSON handles data. There are the following data types in JSON:
+
+\li strings: a string is a sequence of ZERO or more unicode characters
+	wrapped in double quotes, using backslash escapes
+
+\li numbers: a number is very much like a C or Java number, except
+	that the octal and hexadecimal formats are not used
+
+\li the following three literals: \b null, \b true and \b false
+
+\li objects: a JSON object is a collection of name/value pairs
+
+\li arrays: an array is an ordered collection of values
+
+
+JSON is built on two structures:
+
+\li the \b object: a collection of name/value pairs. In various languages,
+	this is realized as an object, record, struct, dictionary, hash table,
+	keyed list,	or associative array. 
+\li the \b array: an ordered list of values. In most languages, this is
+	realized as an array, vector, list, or sequence.
+
+\subsection main_intro_object The JSON object
+
+The JSON object is an unordered collection of key/value pairs (or
+name/value pairs).
+The keys are strings and the values are any of the JSON types including
+object and array. A colon separates
+the keys from the values, and comma separates the pairs. The whole thing
+is wrapped in curly braces. It maps directly onto objects, structs, records,
+and hashtables. This is an example of a JSON object:
+
+\code
+{
+    "name": "Jack (\"Bee\") Nimble", 
+    "format": {
+        "type":       "rect",
+        "size" :
+        { 
+          "width":      1920, 
+          "height":     1080, 
+        },
+        "interlace":  false, 
+        "frame rate": 24
+    }
+}
+\endcode
+
+\subsection main_intro_array The JSON array
+
+The JSON array is an ordered collection of values separated by commas.
+The whole thing is wrapped in square brackets. It maps directly onto arrays,
+vectors, and lists.
+These are examples of JSON arrays:
+
+\code
+  ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+  [
+    [0, -1, 0],
+    [1, 0, 0],
+    [0, 0, 1]
+  ]
+\endcode
+
+
+\section main_classes The JSON implementation for wxWidgets
+
+The wxJSON library is a JSON implementation for wxWidgets and it is composed
+of only three
+classes which uses the \b wxBase library: the only needed classes
+are: \b wxString, \b wxObjArray, \b wxHashMap, \b wxInputStream, \b wxOutputStream,
+\b wxArrayString and the \b wxMBConv -derived classes.
+wxJSON does not depend on the \b std::string class nor on STL
+containers.
+
+The following three classes are defined in wxJSON:
+
+\li wxJSONValue this class holds the JSON value which can be 
+	an integer, a double, a boolean, a string, an array
+      of JSON values or a map of key/value pairs
+
+\li wxJSONReader the parser of a JSON-formatted text
+
+\li wxJSONWriter the generator of a JSON formatted text 
+
+You can know more about the internals of this JSON implementation
+by looking at \ref pg_json_internals
+
+\section main_install Installation
+
+The \b wxJSON library only consists of three source files and their
+related header files:
+
+\code
+ jsonvalue.cpp
+ jsonreader.cpp
+ jsonwriter.cpp
+\endcode
+
+For info about installation of the library read the INSTALL
+text file in the top-level directory.
+You can download this library in the following ways:
+
+ \li using anonymous access to the CVS repository of the
+	<A href="http://wxcode.sf.net">wxCode project</a> on SourceForge.
+	You will need the <A href="http://bakefile.sf.net">bakefile</a> tools in
+	order to generate the \e makefiles for your system / compiler to
+	actually compile the library unless you write it yourself.
+
+ \li download the tarball which contains the \e makefiles for the most
+	common systems / compilers by clikking
+	<A href="https://sourceforge.net/project/showfiles.php?group_id=51305&package_id=45182">
+	here</a>
+
+You can know more about wxJSON by reading the \ref wxjson_tutorial
+
+\section main_links Usefull links:
+
+
+ \li <A href="http://www.json.org">Introducing JSON</A>
+ \li <A href="http://www.json.org/fatfree.html">The Fat-Free Alternative to XML</A>
+ \li <A href="http://www.infoq.com/news/2006/12/json-vs-xml-debate">
+	The JSON vs. XML debate</A>
+ \li <A href="http://simonwillison.net/2006/Dec/20/json/">
+	Why JSON jsn't just for JavaScript</A>
+
+\section main_limits Limitations
+
+The \b wxJSON library is a complete implementation of the
+JSON data-interchange format.
+All JSON specifications are implemented in this library plus
+some extensions in the writer and in the parser class.
+However, this version has still to be considered a beta release
+because some optimization is missing.
+One of the most important feature that will be added in a
+future release (version 0.4) is the \e copy-on-write tecnique.
+JSON value objects may be very complex and the copy constructor and
+assignment operator should implement COW in order to speed up
+the process.
+
+
+
+*/
+

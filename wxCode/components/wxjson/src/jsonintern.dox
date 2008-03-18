@@ -1,0 +1,469 @@
+
+/*! \page pg_json_internals wxJSON internals
+
+
+\li \ref json_internals_intro
+\li \ref json_internals_cstring
+\li \ref json_internals_array
+\li \ref json_internals_map.
+\li \ref json_internals_compare
+\li \ref json_multiline_string
+\li \ref json_comment
+\li \ref json_symbols
+
+
+
+\section json_internals_intro Introduction
+
+The wxJSONValue class is much like a \b variant type which can hold
+various types (see the documentation of the wxWidgets' \b wxVariant class).
+The JSON value class is a bit different from wxVariant because it cannot hold
+whatever type you want but only the following:
+
+\li a NULL value
+\li an integer value
+\li an unsigned integer
+\li a double
+\li a boolean
+\li a C string
+\li a wxString object
+\li an array of wxJSONValue objects
+\li an map of key/value pairs where \e value can be any wxJSONValue object
+
+In order to do its job, the class just uses a \b union of all the
+handled types and stores it in a data member along with the type of
+the held value:
+
+\code
+  wxJSONType  m_type     // the type of the stored value
+  ValueHolder m_value;   // the stored value itself
+\endcode
+
+The wxJSONValue::m_type data member is a simple enumerator. Note that
+it is not an unnamed enum but it has a type: \b wxJSONType.
+This is because the class wxJSONValue has many overloaded constructors:
+one for every type it stores (including the \b integer type) 
+plus one for the type:
+
+\code
+ enum wxJSONType {
+    wxJSONTYPE_EMPTY = 0,
+    wxJSONTYPE_NULL,
+    wxJSONTYPE_INT,
+    wxJSONTYPE_UINT,
+    wxJSONTYPE_DOUBLE,
+    wxJSONTYPE_STRING,
+    wxJSONTYPE_CSTRING,
+    wxJSONTYPE_BOOL,
+    wxJSONTYPE_ARRAY,
+    wxJSONTYPE_OBJECT
+ };
+\endcode
+
+There is no need to specify the type of a wxJSONValue object: it is
+automatically set when you construct the object or when a value is
+assigned to it. For example:
+
+\code
+ wxJSONValue v1( 10 );     // integer type
+ wxJSONValue v2( 12.90);   // double type
+ v1 = "some string";       // now 'v1' is of type string
+
+ wxJSONValue v3;           // an 'empty' value (=not initialized)
+ v3.Append( 10 );          // 'v3' is now of type wxJSONTYPE_ARRAY
+\endcode
+
+The only exception to this is when you want to set the wxJSONTYPE_EMPTY.
+Note that you should cast the wxJSONTYPE_EMPTY constant to a wxJSONType type
+because some compilers may call the overloaded wxJSONValue(int)
+constructor:
+
+\code
+ wxJSONValue value( (wxJSONType) wxJSONTYPE_EMPTY );
+\endcode
+
+
+The \b wxJSONValue::m_value data member is the union of all supported types:
+
+\code
+  union ValueHolder  {
+    int                  m_valInt;
+    unsigned             m_valUInt;
+    double               m_valDouble;
+    const wxChar*        m_valCString;
+    bool                 m_valBool;
+    wxString            *m_valString;
+    wxJSONInternalArray *m_valArray;
+    wxJSONInternalMap   *m_valMap;
+  };
+\endcode
+
+Note that only the primitive types are actually stored in the \b m_value
+data member;
+complex objects are stored as \b pointers to dynamically allocated instances
+because ANSI C++ does not permit to include in an union structs that have
+constructors.
+
+\section json_internals_cstring wxJSON internals: the C string type
+
+You may ask yourself why there are 2 different constructors for strings.
+For convenience, you may think, in order to save an implicit conversion
+from \b const \b wxChar* to \b wxString.
+The answer is: NO. The two constructors store the string in a very
+different way:
+
+\code
+  wxJSONValue( const wxChar* str );
+  wxJSONValue( const wxString& str );
+\endcode
+
+Both two ctors store strings and they could be
+stored just as \b wxString objects. In fact, this is the default
+behaviour of the class if the \c WXJSON_USE_CSTRING macro is not defined.
+
+If this macro is defined, however, the first ctor stores the pointer in the
+\c wxJSONValue::m_value data member assuming that the string is statically
+allocated and it does NOT copy the string.
+This behaviour saves a string's copy which can be time-consuming
+but, on the other hand, you must be sure that the pointed-to
+buffer is not freed / deallocated for the lifetime of the wxJSONValue
+object (this is always true for static strings).
+The following code fragment is an example on how to use the static
+string type:
+
+\code
+  wxJSONValue aString( _T("This is a static string"));
+\endcode
+
+The code above is correct, because the pointed-to string is really
+statically allocated (and it cannot even change).
+
+The following code is not correct and it would probably result
+in a SEGFAULT when you try to access the wxJSONValue data.
+The problem is that the string is constructed on the stack which
+will be deallocated when the function returns.
+So, the returned JSON object contains a pointer to a deallocated
+memory area.
+
+\code
+  // Example 1
+  wxJSONValue MyFunction()
+  {
+    char buffer[128];
+    snprintf( buffer, 128, "This is a string constructed on the stack");
+    wxJSONValue aString( buffer );
+    return aString;
+  }
+\endcode
+
+The code above should be written as follows:
+
+\code
+  // Example 2
+  wxJSONValue MyFunction()
+  {
+    char buffer[128];
+    snprintf( buffer, 128, "This is a string constructed on the stack");
+    wxJSONValue aString( wxString( buffer));
+    return aString;
+  }
+\endcode
+
+Now it is correct because the \b wxString object holds a \b copy of the
+string buffer.
+Note that if the \c WXJSON_USE_CSTRING macro is not defined, there is no need
+to actually construct a temporary wxString object in order to force the
+wxJSONValue class to create an instance of the wxString object: it is
+automaticlly created by the wxJSONValue( const wxChar*) ctor.
+This mean that you can use use the code in \b Example \b 1 without
+worry about C-strings.
+By default, the wxJSON_USE_CSTRING macro is \b not defined.
+
+If your application uses many static strings that never changes,
+you can save time by defining the symbol when compiling the wxJSON library
+
+\b NOTES: the static C-string type value is, probably, useless and, in
+fact, it is never used in wxJSONValue by default.
+The C string value is useless because the only reason for using it
+is speed: time is saved when no string-copy operation is performed.
+But the \b wxString object uses \e copy-on-write to avoid unnecessary
+copies so it is much more wisely (and SAFE) to never use C-strings.
+
+
+\section json_internals_array The array of values.
+
+An object of this type holds an array of \c wxJSONValue objects.
+This means that you can have an array of integers, doubles,
+strings, arrays and key/value maps, too
+Moreover, the array can contain all these types. In other
+words, the first element can be an integer, the second element
+is another array, and the third one a key/value map.
+
+The type is implemented using a \b wxObjArray class which stores
+\c wxJSONValue objects.
+The declaration of this type follows the wxWidget's container
+classes declaration for arrays of objects:
+
+\code
+  class wxJSONValue;
+  WX_DECLARE_OBJARRAY( wxJSONValue, wxJSONInternalArray )
+\endcode
+
+Note that the name of the type contains the word \e internal.
+This means that the type is used internally by the wxJSONValue
+class and should not be used by the application.
+However, the class's API defines a member function that can
+be used to get the internal array:
+
+\code
+  const wxJSONInternalArray* AsArray() const;
+\endcode
+
+which returns the pointer of the array, stored in the
+\c wxJSONValue::m_value.m_valArray data member.
+There is no need for the application to access the internal
+representation of the JSON array-type.
+Use the wxJSONValue::Item(unsigned), wxJSONValue::ItemAt and the
+subscript operator for retreiving array's values.
+
+
+\section json_internals_map The map of key/value pairs.
+
+An object of this type is a map of key / value pairs where
+the \b key is a string and the value is a wxJSONValue object:
+it can hold bools, integers, strings, arrays and key/value maps,
+too.
+
+This type is implemented using the \b wxHashMap class which is
+a simple, type-safe, and reasonably efficient hash map class
+whose interface is a subset of the interface of STL containers.
+
+The definition of the hashmap for wxJSONValue objects is as
+follows:
+
+\code
+  WX_DECLARE_STRING_HASH_MAP( wxJSONValue, wxJSONInternalMap );
+\endcode
+
+Note that the name of the type contains the word \e internal.
+This means that the type is used internally by the wxJSONvalue
+class and should not be used by the application.
+However, the wxJSONValue API defines a member function that can
+be used to get this object:
+
+\code
+  const wxJSONInternalMap* AsMap() const;
+\endcode
+
+There is no need for the application to access the internal
+representation of the JSON hashmap-type.
+Use the wxJSONValue::Item(const wxString&), wxJSONValue::ItemAt
+and the subscript operator for retreiving hashmap's values.
+
+
+\section json_internals_compare The comparison function and operator
+
+You may noticed that the wxJSONValue class does not define a
+comparison operator (the \b operator==() function).
+This is not a forgetfullness but a precise design choice
+because comparing wxJSON Value objects may be time-consuming 
+and the meaning of \b equal is not applicable to JSON objects.
+Consider the following two JSON objects:
+
+\code
+ // first object
+ {
+   "font" : {
+     "size" = 12,
+     "face" = "Arial",
+     "bold" = true
+   }
+ }
+
+ // second object
+ {
+   "font" : {
+     "face" = "Arial",
+     "bold" = true
+     "size" = 12,
+   }
+ }
+\endcode
+
+You hav to note that the two objects are not \b equal because the
+order of the key/value pairs is not the same.
+Althrough, the values that the two objects contain are \b the
+\b same.
+
+For this reason the wxJSONValue class does not define the
+comparison operator but a similar function: the \c wxJSONValue::IsSameAs()
+which returns TRUE if the two objects contain the same values
+even if they are not in the same order.
+
+The comparison function is much time-consuming: for key/value
+maps, the function first compares the number of elements in the
+two objects and, if it is equal, for every key in the first
+object it searches the second object and compares the values.
+
+The job of comparing arrays is even worse: the comparison function
+has to first compare the number of elements then, because the order
+of the elements is unimportant, for each element in the first 
+array the function iterates through all elements in the second
+array searching for a matching element.
+
+If the two objects are very complex, the comparison function
+is very slow and you are discouraged to use it unless it is
+strictly necessary.
+I have defined this function only for debugging purposes.
+
+\subsection json_internals_compare_convert Comparing different types
+
+A problem in the interpretation of \b IsSameAs arise when comparing
+different types that can be converted or promoted to another type.
+Consider the two following JSON values:
+
+\code
+  wxJSONValue v1( 100 );
+  wxJSONValue v2( 100.0 );
+  bool r = v1.IsSameAs( v2 );  // should return TRUE
+\endcode
+
+The above values will be stored as different types: the first
+as an integer and the second as a double but they are, in
+fact, \b the \b same value and the function should
+return TRUE.
+Until the release 0.2.1 included, the wxJSON library had a
+bug that cause the \c IsSameAs() function to return FALSE in
+the above example.
+This was due to the fact that the function first compared the
+types and if they differ, FALSE was immediatly returned without
+trying a type conversion.
+
+Starting from release 0.2.2, this bug was fixed and the
+wxJSONValue::IsSameAs() function now correctly compares compatible types:
+by now, they only are the numeric types.
+In other words, a string that contains the same value as a
+numeric one is not the same.
+Example:
+\code
+  wxJSONValue v1( 100 );
+  wxJSONValue v2( _T("100"));
+  bool r = v1.IsSameAs( v2 );  // returns FALSE
+\endcode
+
+The comparison function compares different numeric types
+by promoting them to \b double an then comparing the double
+values.
+In this way the function correctly handles this situation:
+
+\code
+  wxJSONValue v1( -1 );            // this is -1
+  wxJSONValue v2( (unsigned) -1);  // this is 4.294.967.296
+  bool r = v1.IsSameAs( v2 );      // returns FALSE
+\endcode
+
+
+
+\section json_multiline_string The multiline string 
+
+This feature allows a JSON string to be splitted in two or more lines
+in the input JSON test:
+
+\code
+ {
+    "copyright" : "This library is distributed\n"
+                  "under the GNU Public License\n"
+                  "(C) 2007 XYZ Software"
+ }
+\endcode
+
+It is much more readable by humans because the \e new-line characters
+contained in the value string are enforced by splitting the string into three lines.
+The wxJSONReader allows this but reports a \e warning if the parser
+was not constructed usign the wxJSONREADER_STRICT flag.
+If \b strict is used, strings cannot be splitted.
+
+In order to get this feature, the parser concatenates strings if a comma
+character is not found between them. 
+Note that only strings can be splitted into more than one line: numbers
+and literals cannot be splitted.
+
+The drawback is that this feature is error-prone. Consider the following
+example:
+\code
+  {
+    "seasons" :  [
+      "spring",
+      "summer"
+      "autumn",
+      "winter"
+     ]
+  }
+\endcode
+
+The array has four elements but I forgot the comma character between the
+second and the third element.
+What I get in this case is a three-elements array where the second element
+is the concatenation of the two strings "summer" and "autumn" which is not
+what I wanted.
+Worse, the parser does not consider this an error: only a warning is
+reported.
+
+For this reason, I am not sure that this feature is really a feature:
+maybe it will be dropped in next versions of the wxJSON library.
+
+
+\section json_comment C/C++ comments in JSON text 
+
+Starting with release 0.2, the wxJSON library recognizes and stores
+C/C++ comments in JSON value objects.
+See \ref wxjson_comments for a detailed implementation.
+
+
+
+
+\section json_symbols Symbols used to customize the library's behaviuor
+
+In this section you find the description of all symbols used to
+customize the wxJSON's library behaviuor.
+All those symbols are defined in the \c include/wx/json_defs,h source
+file:
+
+\code
+wxJSON_MAJOR
+wxJSON_MINOR
+wxJSON_RELEASE
+\endcode
+
+The three macros are set equal to the major, minor and release version
+numbers. To more info on the versioning scheme of wxJSON see the
+VERSION text file in the top-level directory.
+
+
+\code
+WXJSON_USE_VALUE_COUNTER
+\endcode
+
+The above macro is used by the author for debugging purposes. If defined,
+it causes the wxJSONValue object to use a progressive counter each time a
+new object is created.
+The macro is not defined by default.
+
+\code
+wxJSON_USE_UNICODE
+\endcode
+
+The above macro is defined if the library is being built in Unicode
+mode.
+In ANSI builds the macro is not defined.
+Note that the macro should not be set by the user by automatically
+by the compiler: in fact, the macro is defined if and only if
+wxUSE_UNICODE == 1 which is set by \b wxWidgets itself.
+
+
+
+
+*/
+
+
+

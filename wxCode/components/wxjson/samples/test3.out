@@ -1,0 +1,130 @@
+Test #1 - START
+{
+   "bool" : true,
+   "C string" : "static string 3",
+   "double" : 20.300000,
+   "wxString" : "wxString 3",
+   "font" : {
+      "size" : 12,
+      "double" : 90.670000,
+      "encoding" : null,
+      "bold" : true,
+      "locale" : [
+         "it",
+         "en",
+         "de",
+         "is"
+      ],
+      "face" : "Arial"
+   },
+   "unsigned int" : 30,
+   "integer" : 20
+}Test #1 - END
+Test #2 - START
+{
+   "quotes" : "string with \" (quotes)",
+   "backslash" : "string with \\ (backslash)",
+   "carriage-ret" : "string with \r (CR)",
+   "backspace" : "string with \b (backspace)",
+   "tab" : "string with \t (tab)",
+   "3 CR string" : "string with 3 CR\r1-\r 2-\r",
+   "linefeed" : "string with \n (linefeed)",
+   "slash" : "string with \/ (slash)"
+}Test #2 - END
+Test #3 - START
+null
+<empty>
+{
+}
+[
+]
+Test #3 - END
+Test #4 - START
+[
+   "a string",
+   12,
+   true,
+   null,
+   <empty>,
+   90000000000000.000000
+]Test #4 - END
+Test #5 - START
+{
+   "array" : [
+      30,
+      40,
+      true,
+      false,
+      30.400000,
+      "static string 2",
+      "wxString 2",
+      {
+         "key" : "value"
+      }
+   ],
+   "escaped" : {
+      "quotes" : "string with \" (quotes)",
+      "backslash" : "string with \\ (backslash)",
+      "carriage-ret" : "string with \r (CR)",
+      "backspace" : "string with \b (backspace)",
+      "tab" : "string with \t (tab)",
+      "3 CR string" : "string with 3 CR\r1-\r 2-\r",
+      "linefeed" : "string with \n (linefeed)",
+      "slash" : "string with \/ (slash)"
+   },
+   "object" : {
+      "C string" : "static string 1",
+      "double" : 20.300000,
+      "bool-f" : false,
+      "wxString" : "wxString 1",
+      "null" : null,
+      "bool-t" : true,
+      "unsigned int" : 30,
+      "integer" : 20
+   },
+   "void-array" : [
+   ],
+   "array2" : [
+      {
+         "item" : 1
+      },
+      {
+         "item" : 2
+      },
+      {
+         "item" : 3
+      },
+      {
+         "item" : 4
+      },
+      {
+         "item" : 5
+      }
+   ],
+   "void-object" : {
+   },
+   "escaped-array" : [
+      "string with \\ (backslash)",
+      "string with \n (linefeed)",
+      "string with \/ (slash)",
+      "string with \r (CR)",
+      "string with \t (tab)",
+      "string with \b (backspace)",
+      "string with \" (quotes)",
+      "string with 3 CR\r1-\r 2-\r"
+   ]
+}Test #5 - END
+Test #6 - START
+{
+   "key-1" : {
+      "key-2" : {
+         "key-3" : [
+            null,
+            null,
+            null,
+            null,
+            12
+         ]
+      }
+   }
+}Test #6 - END
