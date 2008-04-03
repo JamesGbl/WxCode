@@ -326,9 +326,9 @@ long  cTreeTable :: RecordEx :: __ScrollPosByCursor ( const Cursor *  cursor )
 
 //          wxLogDebug  ( "Span: %ld", span );
          }
-         catch ( CTException & )
+         catch ( CTException &  e )
          {
-//          wxLogDebug ( "EstimateSpan: %d: %s", e.GetErrorCode (), e.GetErrorMsg () );
+            wxLogDebug ( "EstimateSpan: %d: %s", e.GetErrorCode (), e.GetErrorMsg () );
          }
 
          record.SeekRecord ( offset );
