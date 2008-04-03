@@ -1,0 +1,975 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+
+  
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+
+  
+  <title>wxARG-tutorial</title>
+</head>
+
+
+<body>
+
+
+<h1>wxARG tutorial v1.0</h1>
+<h4>by Mat&iacute;as Szeftel - mszeftel@yahoo.com.ar - (c) 2006</h4>
+<br>
+
+First of all: Hello you all, and welcome to this tutorial! Second of
+all, excuse my not perfect english, I'm from argentina.
+<br>
+
+In this tutorial I will attempt to show how to use
+wxActiveRecordGenerator in an application. I in this case we'll be
+developing a small contact book application. The goal of the
+application is to store the name, last name, home address, phones and
+email addresses of our friends. So...lets start!
+<br>
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <br>
+
+<ol>
+
+
+  <li><a href="#1">What you need</a></li>
+
+  <li><a href="#1">Some conventions for using wxARG</a>
+  </li>
+
+
+  <li>
+    <a href="#2">Creating the database</a>
+  </li>
+
+
+  <li>
+    <a href="#3">Using wxARG</a></li>
+
+  <li><span style="text-decoration: underline;"><a href="#4">The classes and its methods</a></span></li>
+
+  <li><span style="text-decoration: underline;"><a href="#5">The Graphic Interface skeleton</a></span></li>
+
+  <li><a href="#6">Blending wxARG with wxWidgets</a></li>
+
+  <li><a href="#7">Freeing up the memory</a></li>
+
+  <li><a href="#8">Some final words</a></li>
+
+
+</ol>
+
+<h3><a name="1"></a>1. What you need</h3>
+
+For using wxARG and follow this tutorial you need a working <a href="www.wxwidgets.org">wxWidgets</a> compilation and a working <a href="http://wxcode.sourceforge.net/components/databaselayer/">DatabaseLayer</a> backend (SQLite, PostgreSQL or MySQL for now), and of course one of this databases working.<br>
+This tutorial and the files to follow it are in this <a href="wxARG-tutorial.zip">zip file</a>.<br>
+
+You can download wxARG from this <a href="https://sourceforge.net/project/showfiles.php?group_id=51305&amp;package_id=45182">link</a>.
+<h3><a name="2"></a>2. Some conventions for
+using wxARG</h3>
+
+
+First, lets set some conventions for using wxARG. Some of this are to
+get wxARG working properly, so you it's better if &nbsp;you commit
+to them.
+<ol>
+
+
+  <li>
+All tables <strong>must</strong> have an <em>id</em>
+field. This field must be an unique integer&nbsp;with
+auto_increment (on MySql, <em>serial</em> type for
+PostgreSQL) and primary key.
+  </li>
+
+
+  <li>
+All tables name should be a plural noun (this is not
+necessary as you can change the classes name later, but it will make
+things easier).
+  </li>
+
+
+</ol>
+
+
+The item (1) is very important because tables will relate each
+other using the <em>id</em> field. The item (2) will do
+things smoother with naming conventions, i.e.: if you have a table
+named <em style="font-weight: bold;">contacts</em> wxARG will generate a class named <em style="font-weight: bold;">Contact</em>.
+<h3><a name="3"></a>3. Creating the database</h3>
+
+
+I will be doing the tutorial using a SQLite database (but you can also
+chose MySQL or PostgreSQL).<br>
+
+
+This is my SQL code for creating the tables:<br>
+
+<br>
+
+<span style="font-family: monospace; font-weight: bold;">CREATE TABLE contacts(id INTEGER PRIMARY KEY, firstName TEXT, lastName TEXT, address
+TEXT);</span><br style="font-family: monospace; font-weight: bold;">
+
+<span style="font-family: monospace; font-weight: bold;">
+CREATE TABLE telephones(id INTEGER PRIMARY KEY, contact_id INTEGER NOT
+NULL, priority INTEGER NOT NULL, number TEXT NOT NULL, description
+TEXT);</span><br style="font-family: monospace; font-weight: bold;">
+
+<span style="font-family: monospace; font-weight: bold;">
+CREATE TABLE emails(id INTEGER PRIMARY KEY, contact_id INTEGER NOT
+NULL, priority INTEGER NOT NULL, email TEXT NOT NULL, description TEXT);</span><br>
+
+
+<br>
+
+
+For MySQL the id field should be: <span style="font-family: monospace;"><span style="font-weight: bold;">id int not null primary key</span>, </span>and for PostgreSQL it should be:<span style="font-family: monospace;"> <span style="font-weight: bold;">id SERIAL PRIMARY KEY</span>.<br>
+
+</span>See that we are not going enforce or constrain any foreign keys,but uou can do it if you want to.<span style="font-family: monospace;"><br>
+
+<br>
+
+</span>Let's discuss how our data it's going to be stored. A contact has and <em>id</em> (remember the first convention), a <em>first name</em>, a last <em>name</em> and an <em>address</em>.
+Because a contact can have many different telephones and emails
+addresses we have created to seperated tables to hold them. Then a
+telephone will have an <em>id</em>, a <em>contact_id</em> referencing the&nbsp;owner contact, a <em>priority</em> [0,1,2,...], a <em>number</em> and a <em>description</em>. The email is just the same except that instead of number there is the <em>email</em> field wich is the address it self (asd@123.org).<br>
+
+<br>
+
+You can get the sql&nbsp;tables creation code and a sql insert code so you can test your database from the tutorial <a href="wxARG-tutorial.zip">zip file</a>.<br>
+
+<h3><a name="4"></a>4. Using wxARG</h3>
+
+
+When you open wxARG a Database Connection dialog pops up. Here you can
+chose the type of database you want to connect, server ip, the name of
+the database (name and location if it's a SQLite database), user and
+password. You can access this dialog via the File menu or with Ctrl+N.<br>
+
+
+<br>
+
+
+<img style="width: 799px; height: 599px;" alt="Database Connection Dialog" src="../../../../BACKUP%20%28D%29/Proyectos/Tutorial_wxARG/html/connectionDlg.PNG"><br>
+
+<br>
+
+<br>
+
+If you clicked on Connect and didn't get any error message you should
+now have a list of all the tables of &nbsp;the database. The tables you
+select will be the ones that wxARG will generate the Active Record for.
+(If you use PostgreSQL you will also see a lot of tables meaningless to
+you - or maybe not. I'll try to let the program to ignore this tables
+in upcoming releases). This dialog is the one you get when you press
+the Add button.<br>
+
+Lets chose only the contacts table fow now (you'll see why in a
+moment). Now we have somethins in the right. There's a Properties panel
+and a Relation panel.<br>
+
+In the properties panel you can change the name of the class to be
+generated. Actually three classes will be generated using this name. In
+our case those will be: <em>Contact</em>, <em>ContactRow</em> and <em>ContactRowSet</em>.<br>
+
+<br>
+
+In the relation panel you will have the two basic ralations: the
+has-many and the belongs-to relation. As you can guess a contact has
+many phones and many emails. So lets press the Has Many button. Here we
+will chose the table that contacts relates to, in this case telephones
+(is the same for emails). And we chose the foreign id field: <em>contact_id</em>.
+We can see that some Item Name and Class Name have been generated. The
+Item Name&nbsp;field (Telephones) will define the method name of the
+Contact class. The Class Name field will set the return type to that
+class. So the method created will be: <span style="font-weight: bold;">Telephone</span>RowSet* Get<span style="font-weight: bold;">Telephones</span>( ). <br>
+
+<br>
+
+<img style="width: 799px; height: 599px;" alt="Has Many Relation Dialog" src="relationDlg.PNG"><br>
+
+<br>
+
+<br>
+
+After you pressed Ok the program will tell you that the telephones
+table it's not in the tables list and ask you if want to add it. Chose
+yes. Do the same for the email and now you have the three tables to be
+generated as Active Records. <br>
+
+But before chosing an oupt directory and pressing the Generate button
+we are going to add one more relation: the belongs-to relation. Yes,
+you guessed it, both Telephone and Email should have a method that
+returns their owner; in this case, the Contact they belong to. So we
+press the Belongs To button, select the contacts table and contact_id
+as the foreing id and that's it.<br>
+
+<br>
+
+&nbsp;Now we can chose the output directory and hit Generate. If everythings worked ok we'll get a success dialog.<br>
+
+<br>
+
+<h3><a name="5"></a>5. The classes and its methods</h3>
+
+<br>
+
+So you stay with me this far...thank you! Lets take a look at what we
+have generated. If you open the Contact.h file you'll find some
+useful&nbsp; in the Contact class:<br>
+
+<br>
+
+<span style="font-family: monospace;"><span style="font-weight: bold;">ContactRow*</span> New();</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;"><span style="font-weight: bold;">ContactRow*</span> Id(int id);<br>
+
+</span><span style="font-family: monospace;"><span style="font-weight: bold;"><span style="font-family: monospace;">C</span>ontactRow*</span> Where(const wxString&amp; whereClause);</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;"><span style="font-weight: bold;">ContactRowSet*</span> WhereSet(const wxString&amp; whereClause);</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;"><span style="font-weight: bold;">ContactRowSet*</span> All();<br>
+
+<span style="font-weight: bold;">void</span> Delete(int id);<br>
+
+<br>
+
+</span>The New() method it's pretty self explanatory, you'll get a new ContactRow.<br>
+
+The Id() method<span style="font-family: monospace;"> </span>will return the ContactRow with that id.<span style="font-family: monospace;"><br>
+
+</span>The Where() and WhereSet() will take a whereClause (in a SQL
+syntax, ie: firstName='Mat&iacute;as') and return the first ContactRow
+or a ContactRow set respectevly.<br>
+
+The All() will abviously return all the contacts row in the <em>contacts</em> table as a ContactRowSet.<br>
+
+<span style="font-family: monospace;"></span>The Delete() method will delete the contact with id=<em>id </em>from the contacts table.<br>
+
+Now lets look at the ContactRow class. Its variables are:<br>
+
+<br>
+
+<span style="font-weight: bold; font-family: monospace;">wxString</span><span style="font-family: monospace;"> firstName;</span><br style="font-family: monospace;">
+
+<span style="font-weight: bold; font-family: monospace;">wxString</span><span style="font-family: monospace;"> address;</span><br style="font-family: monospace;">
+
+<span style="font-weight: bold; font-family: monospace;">wxString</span><span style="font-family: monospace;"> lastName;<br>
+
+<br>
+
+</span>This are variable, not functions, so to access them you only have to do:<span style="font-family: monospace;"> contact.firstName<br>
+
+</span><br>
+
+And its methods:<br>
+
+<br>
+
+<span style="font-family: monospace;"><span style="font-weight: bold;">EmailRowSet*</span> GetEmails();</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;"><span style="font-weight: bold;">TelephoneRowSet*</span> GetTelephones();<br>
+
+<span style="font-weight: bold;">void</span> Save();<br>
+
+<span style="font-weight: bold;">void</span> Delete();<br>
+
+<br>
+
+</span>The GetEmails() method will return all the owned by the contact. Idem as for the GetTelephones() method.<br>
+
+The Save() method will insert this record in the table if it's new or
+updated otherwise. The Delete() method will delete this contact from
+the table (don't use this object anymore).<br>
+
+<br>
+
+In the telephone.h file (almost the sabe as for the email.h file)
+you'll find that the Telephone class it's the same. The difference lays
+on the TelephoneRow class which has this variables:<br>
+
+<br style="font-family: monospace;">
+
+<span style="font-weight: bold; font-family: monospace;">int</span><span style="font-family: monospace;"> contact_id;</span><br style="font-family: monospace;">
+
+<span style="font-weight: bold; font-family: monospace;">wxString</span><span style="font-family: monospace;"> description;</span><br style="font-family: monospace;">
+
+<span style="font-weight: bold; font-family: monospace;">int</span><span style="font-family: monospace;"> priority;</span><br style="font-family: monospace;">
+
+<span style="font-weight: bold; font-family: monospace;">wxString</span><span style="font-family: monospace;"> number;</span><em><br>
+
+<br>
+
+</em>And this methods:<br>
+
+<br>
+
+<span style="font-weight: bold; font-family: monospace;">ContactRow*</span><span style="font-family: monospace;"> GetContact();<br>
+
+<br>
+
+</span>The GetContact() method will return the ContactRow* that this telephones belongs to.<br>
+
+<br>
+
+The ContactRowSet (and every RowSet) derives from wxArray has this useful methods:<br>
+
+<br>
+
+<span style="font-family: monospace;"><span style="font-weight: bold;">ContactRow*</span> Item(long index);</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;"><span style="font-weight: bold;">void</span> SaveAll();<br>
+
+<span style="font-weight: bold;">void</span> SortBy(const wxString&amp; sortStr);<br>
+
+<br>
+
+</span>In the SortBy the sortStr argument has to be a string &nbsp;like
+the one used in the ORDER BY in SQL, ie: wxT("lastName asc, address
+desc")<br>
+
+<br>
+
+So, that said, let's see how can we put this together with our Contact Book application.<br>
+
+<br>
+
+This six files (Contact.h, Contact.cpp, Email.h, Email.cpp,
+Telephone.h, Telephone.cpp) are the onew you have to include in your
+project. You also have to include the wxActiveRecord.h and
+wxActiveRecord.cpp (look them up in wxARG installation directory). In
+the wxActiveRecord.h file comment out the ones you don't use:<br>
+
+<br>
+
+<span style="font-family: monospace;">// COMMENT OUT THE ONES YOU DON'T USE</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">//#define AR_USE_POSTGRESQL</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">#define AR_USE_SQLITE</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">//#define AR_USE_MYSQL</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">//*************************************//</span><br>
+
+<span style="font-family: monospace;"></span><br>
+
+<h3><a name="6"></a>6. The Graphic Interface skeleton</h3>
+
+I have created the basic skleton of the GUI using the trial version
+DialogBlocks but you can use other GUI code generator or none at all.<br>
+
+This is how our application will look:<br>
+
+<br>
+
+<img style="width: 800px; height: 599px;" alt="Contact Book Application" src="contactBook.PNG"><br>
+
+<em></em><br>
+
+The code of the application is also in the tutorial.zip file so you can follow what I'm doing.<br>
+
+<br>
+
+<h3><a name="7"></a>7. Blending wxARG with wxWidgets</h3>
+
+<span style="font-weight: bold;"></span><span style="font-weight: normal;">First of all lets create some variables at the end of the ContactBookFrm in the contactbookfrm.h file:<br>
+
+<br>
+
+<span style="font-family: monospace;">////@end ContactBookFrm member variables</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; Contact* contact; //the contact active record</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; Telephone* telephone; //the telephone active record</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; Email* email; //the email active record</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; void Load(ContactRow* row); //Loads the properties panels for the contact row</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; void LoadContactList(); //Loads the contact list form the conctacs table</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; ContactRow* loaded; //the currently loaded contact</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; TelephoneRowSet* loadedTels; </span></span><span style="font-family: monospace;">//the currently loaded contact phones</span><span style="font-family: monospace;"></span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; EmailRowSet* loadedEmails; //</span><span style="font-family: monospace;">the currently loaded contact emails</span><span style="font-weight: normal;"><span style="font-family: monospace;"></span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">};<br>
+
+<br>
+
+</span>I put the initialization code at the end of&nbsp;ContactBookFrm::CreateControls() implementation in the </span><span style="font-weight: normal;">contactbookfrm.cpp file:<br>
+
+<br>
+
+<span style="font-family: monospace;">////@end ContactBookFrm content construction<br>
+
+&nbsp;&nbsp;&nbsp; <br>
+
+&nbsp;&nbsp;&nbsp; //Contacts ListView initialization<br>
+
+&nbsp;&nbsp;&nbsp; lv_contacts-&gt;InsertColumn(0,wxT("Last Name"));<br>
+
+&nbsp;&nbsp;&nbsp; lv_contacts-&gt;InsertColumn(1,wxT("First Name"));<br>
+
+&nbsp;&nbsp;&nbsp; lv_contacts-&gt;SetColumnWidth(0,90);<br>
+
+&nbsp;&nbsp;&nbsp; lv_contacts-&gt;SetColumnWidth(1,90);<br>
+
+&nbsp;&nbsp;&nbsp; <br>
+
+&nbsp;&nbsp;&nbsp; //Telephones ListView initialization<br>
+
+&nbsp;&nbsp;&nbsp; lv_telephones-&gt;InsertColumn(0,wxT("Number"),wxLIST_FORMAT_RIGHT);<br>
+
+&nbsp;&nbsp;&nbsp; lv_telephones-&gt;InsertColumn(1,wxT("Description"));<br>
+
+&nbsp;&nbsp;&nbsp; lv_telephones-&gt;SetColumnWidth(0,200);<br>
+
+&nbsp;&nbsp;&nbsp; lv_telephones-&gt;SetColumnWidth(1,200);<br>
+
+<br>
+
+&nbsp;&nbsp;&nbsp; //Emails ListView intialization<br>
+
+&nbsp;&nbsp;&nbsp; lv_emails-&gt;InsertColumn(0,wxT("Email"));<br>
+
+&nbsp;&nbsp;&nbsp; lv_emails-&gt;InsertColumn(1,wxT("Description"));<br>
+
+&nbsp;&nbsp;&nbsp; lv_emails-&gt;SetColumnWidth(0,200);<br>
+
+&nbsp;&nbsp;&nbsp; lv_emails-&gt;SetColumnWidth(1,200);<br>
+
+&nbsp;&nbsp;&nbsp; <br>
+
+&nbsp;&nbsp;&nbsp; try{<br>
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; //Active Records initialization<br>
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; contact=new Contact(wxT("contacts"),wxT("contact_book.db3"));<br>
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; telephone=new Telephone(contact-&gt;GetDatabase(),wxT("telephones"));<br>
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; email=new Email(contact-&gt;GetDatabase(),wxT("emails"));<br>
+
+&nbsp;&nbsp;&nbsp; }<br>
+
+&nbsp;&nbsp;&nbsp; catch(DatabaseLayerException&amp; e){<br>
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; wxActiveRecord::ProcessException(e);<br>
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Close();<br>
+
+&nbsp;&nbsp;&nbsp; }<br>
+
+<br>
+
+&nbsp;&nbsp;&nbsp; loaded=NULL;<br>
+
+&nbsp;&nbsp;&nbsp; <br>
+
+&nbsp;&nbsp;&nbsp; //Load the contact list<br>
+
+&nbsp;&nbsp;&nbsp; LoadContactList();<br>
+
+<br>
+
+}</span></span><br>
+
+<br>
+
+As you can see in the active records initialization block we only set
+up the database for one active record an then pass it as construction
+parameters to the others. If you have MySQL or PostgreSQL database
+contact should be contructed some thing like this:<br>
+
+<span style="font-weight: normal;"><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; <br>
+
+contact=new Contact(wxT("contacts"),wxT("contact_book"),wxT("localhost),wxT("user"),wxT("password"));<br>
+
+<br>
+
+</span>The you can pass the database to the others active records.<br>
+
+<br>
+
+This is how the LoadContactList() method is implemented:<br>
+
+<br>
+
+<span style="font-family: monospace;">void ContactBookFrm::LoadContactList(){</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; lv_contacts-&gt;DeleteAllItems();</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; ContactRowSet* allContacts=contact-&gt;All(); //we get all the contacts in a ContatRowSet</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;
+allContacts-&gt;SortBy(wxT("lastName desc")); //sort the contacts, desc
+so we reversed the when adding them to the ListView</span><br style="font-family: monospace;">
+
+<br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; for(unsigned
+long i=0;i&lt;allContacts-&gt;Count();++i){ //iterate the RowSet and
+add all the contacts to the listview</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; lv_contacts-&gt;InsertItem(0,allContacts-&gt;Item(i)-&gt;lastName);</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; lv_contacts-&gt;SetItem(0,1,allContacts-&gt;Item(i)-&gt;firstName);</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;
+lv_contacts-&gt;SetItemData(0,allContacts-&gt;Item(i)-&gt;id); //add
+the id of the contact as the ItemData.</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; }</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">}</span><br>
+
+<br>
+
+When you select a contact from lv_contacts we call the wxEVT_COMMAND_LIST_ITEM_SELECTED event and this is what happens:<br>
+
+<br style="font-family: monospace;">
+
+<span style="font-family: monospace;">void ContactBookFrm::OnLvcontactsSelected( wxListEvent&amp; event )</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">{</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; long index=lv_contacts-&gt;GetFirstSelected();</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; long id=lv_contacts-&gt;GetItemData(index); //get the contact id that we set earlier</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; Load(contact-&gt;Id(id)); //load the ContactRow* returned by contact-&gt;Id(id)</span><br style="font-family: monospace;">
+
+<br style="font-family: monospace;">
+
+<span style="font-family: monospace;">}</span><br>
+
+<br>
+
+The Load() method:<br>
+
+<br>
+
+<span style="font-family: monospace;">void ContactBookFrm::Load(ContactRow* row){</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; loaded=row; //set the loaded item to row</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; <br>
+
+&nbsp;&nbsp;&nbsp; //clear the panel<br style="font-family: monospace;">
+
+</span><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; lv_telephones-&gt;DeleteAllItems();</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; lv_emails-&gt;DeleteAllItems();</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; tc_lastName-&gt;SetValue(wxT(""));</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; tc_firstName-&gt;SetValue(wxT(""));</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; tc_address-&gt;SetValue(wxT(""));</span><br style="font-family: monospace;">
+
+<br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; if(loaded==NULL) //if the loaded ContactRow* is null do nothing</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return;</span><br style="font-family: monospace;">
+
+<br>
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; //load the personal data<br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; tc_lastName-&gt;SetValue(loaded-&gt;lastName);</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; tc_firstName-&gt;SetValue(loaded-&gt;firstName);</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; tc_address-&gt;SetValue(loaded-&gt;address);</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; </span><br style="font-family: monospace;">
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; TelephoneRowSet* tels=loaded-&gt;GetTelephones(); //get the phones of this contact</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; tels-&gt;SortBy(wxT("priority desc")); //sort them by descending priority, will reverse on insertion</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; </span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; for(unsigned long i=0;i&lt;tels-&gt;Count();++i){</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; lv_telephones-&gt;InsertItem(0,tels-&gt;Item(i)-&gt;number);</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; lv_telephones-&gt;SetItem(0,1,tels-&gt;Item(i)-&gt;description);</span><br style="font-family: monospace;">
+
+<br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; lv_telephones-&gt;SetItemData(0,tels-&gt;Item(i)-&gt;id); //set the id as ItemData</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; }</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; loadedTels=tels; // this are now th loaded telephones</span><br style="font-family: monospace;">
+
+<br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; EmailRowSet* emails=loaded-&gt;GetEmails(); //get the emails of this contact</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; emails-&gt;SortBy(wxT("priority desc")); </span></span><span style="font-weight: normal;"><span style="font-family: monospace;">//sort them by descending priority, will reverse on insertion</span></span><span style="font-weight: normal;"><span style="font-family: monospace;"></span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; </span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; for(unsigned long i=0;i&lt;emails-&gt;Count();++i){</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; lv_emails-&gt;InsertItem(0,emails-&gt;Item(i)-&gt;email);</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; lv_emails-&gt;SetItem(0,1,emails-&gt;Item(i)-&gt;description);</span><br style="font-family: monospace;">
+
+<br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; lv_emails-&gt;SetItemData(0,emails-&gt;Item(i)-&gt;id);</span></span><span style="font-weight: normal;"><span style="font-family: monospace;"> //set the id as ItemData</span></span><span style="font-weight: normal;"><span style="font-family: monospace;"></span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; }</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; loadedEmails=emails; </span></span><span style="font-weight: normal;"><span style="font-family: monospace;">// this are now th loaded emails</span></span><span style="font-weight: normal;"><span style="font-family: monospace;"></span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">}<br>
+
+<br>
+
+</span>Hope it's all clear for now. Next we are setting the code for the New contact and the Delete contact button events.<br>
+
+<br>
+
+<span style="font-family: monospace;">void ContactBookFrm::OnBtnnewClick( wxCommandEvent&amp; event )</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">{</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; ContactRow* newRow=contact-&gt;New(); //get a new ContactRow*</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; Load(newRow); //Load it</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; tc_lastName-&gt;SetFocus();</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">}</span><br>
+
+</span><br>
+
+<span style="font-family: monospace;">void ContactBookFrm::OnBtndeleteClick( wxCommandEvent&amp; event )</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">{&nbsp;&nbsp;&nbsp; <br>
+
+&nbsp;&nbsp;&nbsp; //Ask: you sure u want to delete?<br style="font-family: monospace;">
+
+</span><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; wxMessageDialog dlg(this,wxT("Are you sure you want to delete this contact?"),wxT("Warning"),wxYES_NO);</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; if(dlg.ShowModal()==wxID_NO)</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return; //if answer NO do nothing.</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; try{</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; long index=lv_contacts-&gt;GetFirstSelected();</span><span style="font-family: monospace;">//get the index the selected contact</span><br style="font-family: monospace;">
+
+<br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;
+contact-&gt;Delete(lv_contacts-&gt;GetItemData(index)); //use the
+active record to the delete the contact using the id returned by
+GetItemData()</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; lv_contacts-&gt;DeleteItem(index); //delete from the ListView</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; }</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; catch(DatabaseLayerException&amp; e){</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; wxActiveRecord::ProcessException(e);</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; }</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; </span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">}</span><br>
+
+<br>
+
+<br>
+
+Easy enough? I sure hope so...<br>
+
+If look around on the code you can see there is a lot of&nbsp;UpdateUI
+events assign, this is because I believe that buttons that shouldn't be
+pressed shouldn't be enabled. That way the user can delete something if
+he/she had not selected it, ie.<br>
+
+<br>
+
+Lets see the Apply button code now:<br>
+
+<br>
+
+<span style="font-family: monospace;">void ContactBookFrm::OnApplyClick( wxCommandEvent&amp; event )</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">{&nbsp;&nbsp;&nbsp; </span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; //get the personal data<br>
+
+&nbsp;&nbsp;&nbsp; loaded-&gt;lastName=tc_lastName-&gt;GetValue();</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; loaded-&gt;firstName=tc_firstName-&gt;GetValue();</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; loaded-&gt;address=tc_address-&gt;GetValue();</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; </span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; loaded-&gt;Save(); //save the Contact</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; loadedTels-&gt;SaveAll(); //save its phones, we already know they are from this contact</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; loadedEmails-&gt;SaveAll(); //save its emails, </span><span style="font-family: monospace;">we already know they are from this contact</span><br style="font-family: monospace;">
+
+<br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; LoadContactList(); //Reload the contact list (for name, last name changes).</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">}</span><br>
+
+<br>
+
+And this is the Cancel button code:<br>
+
+<br>
+
+<span style="font-family: monospace;">void ContactBookFrm::OnCancelClick( wxCommandEvent&amp; event )</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">{</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; long index=lv_contacts-&gt;GetFirstSelected();</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; if(index&lt;0)</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Load(NULL); //if none was selected = creating new, load an empty contact. &nbsp;&nbsp; </span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; else</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;
+Load(contact-&gt;Id(lv_contacts-&gt;GetItemData(index))); //if there
+was one seleceted = editing, then load it again with out changes.</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">}</span><br>
+
+<br>
+
+<br>
+
+At last we'll see how we managed the telephones (remeber it's the same
+for the emails). For this I have created a dialog (TelephoneEmailDlg)
+for creation and edition of this items, basically it's only to text
+boxes: number/email and description with an UpdeteUI event that
+prevents adding empty numbers/emails.<br>
+
+<br>
+
+So this is the New telephone code:<br>
+
+<br>
+
+<span style="font-family: monospace;">void ContactBookFrm::OnNewtelClick( wxCommandEvent&amp; event )</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">{</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; TelephoneEmailDlg dlg(this,wxID_ANY,wxT("New Telephone")); //cretethe dialog</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; dlg.st_value-&gt;SetLabel(wxT("Number:")); //show it</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; if(dlg.ShowModal()==wxID_OK){ //if OK</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; TelephoneRow* newTel=telephone-&gt;New(); //create a new phone</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; newTel-&gt;contact_id=loaded-&gt;id; //assign it the id</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; newTel-&gt;priority=loadedTels-&gt;Count()+1; //set the priority</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; newTel-&gt;number=dlg.tc_value-&gt;GetValue(); //set the number</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; newTel-&gt;description=dlg.tc_description-&gt;GetValue(); //set the description</span><br style="font-family: monospace;">
+
+<br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; newTel-&gt;Save(); //save it</span><br style="font-family: monospace;">
+
+<br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Load(loaded); //load this contact again to reflect changes</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; }</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">}<br>
+
+<br>
+
+</span>The Edit telephone code:<span style="font-family: monospace;"><br>
+
+<br>
+
+void ContactBookFrm::OnEdittelClick( wxCommandEvent&amp; event )<br>
+
+{<br>
+
+&nbsp;&nbsp;&nbsp; TelephoneEmailDlg dlg(this,wxID_ANY,wxT("Edit Telephone")); //create dialog<br>
+
+&nbsp;&nbsp;&nbsp; dlg.st_value-&gt;SetLabel(wxT("Number:")); //show it<br>
+
+&nbsp;&nbsp;&nbsp; <br>
+
+&nbsp;&nbsp;&nbsp; long index=lv_telephones-&gt;GetFirstSelected(); //get index of the select phone<br>
+
+&nbsp;&nbsp;&nbsp; TelephoneRow* editTel=telephone-&gt;Id(lv_telephones-&gt;GetItemData(index)); //get the TelephoneRow to edit<br>
+
+&nbsp;&nbsp;&nbsp; <br>
+
+&nbsp;&nbsp;&nbsp; dlg.tc_value-&gt;SetValue(editTel-&gt;number); //load the number<br>
+
+&nbsp;&nbsp;&nbsp; dlg.tc_description-&gt;SetValue(editTel-&gt;description); //load the description<br>
+
+<br>
+
+&nbsp;&nbsp;&nbsp; if(dlg.ShowModal()==wxID_OK){<br>
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; editTel-&gt;number=dlg.tc_value-&gt;GetValue(); //change the number<br>
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; editTel-&gt;description=dlg.tc_description-&gt;GetValue(); //change the description<br>
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <br>
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; editTel-&gt;Save(); //save it (it will know if it's new or not)<br>
+
+<br>
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Load(loaded); //reload contact<br>
+
+&nbsp;&nbsp;&nbsp; }<br>
+
+}<br>
+
+</span><br>
+
+The Delete telephone code:<br>
+
+<br>
+
+<span style="font-family: monospace;">void ContactBookFrm::OnDeletetelClick( wxCommandEvent&amp; event )</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">{</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; long index=lv_telephones-&gt;GetFirstSelected(); //get the selected phone</span><br style="font-family: monospace;">
+
+<br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; telephone-&gt;Delete(lv_telephones-&gt;GetItemData(index)); //delete it by its id</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; lv_telephones-&gt;DeleteItem(index); //delete it from the ListView</span><br style="font-family: monospace;">
+
+<br style="font-family: monospace;">
+
+<span style="font-family: monospace;">}<br>
+
+<br>
+
+</span>Finally (at least the final of this section), this is code to see the use of the belongs_to relation. The <span style="font-weight: normal;">wxEVT_COMMAND_LIST_ITEM_ACTIVATED of the telephones ListView<br>
+
+<span style="font-family: monospace;"><br>
+
+void ContactBookFrm::OnLvtelephonesItemActivated( wxListEvent&amp; event )<br>
+
+{<br>
+
+&nbsp;&nbsp;&nbsp; long index=lv_telephones-&gt;GetFirstSelected(); </span></span><span style="font-weight: normal;"><span style="font-family: monospace;">//get the activated phone</span></span><br>
+
+<span style="font-weight: normal;"><span style="font-family: monospace;"><br>
+
+&nbsp;&nbsp;&nbsp; ContactRow* owner=telephone-&gt;Id(lv_telephones-&gt;GetItemData(index))-&gt;GetContact(); </span></span><span style="font-weight: normal;"><span style="font-family: monospace;">//get the ContactRow this phone belongs to</span></span><br>
+
+<span style="font-weight: normal;"><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; <br>
+
+&nbsp;&nbsp;&nbsp; wxMessageBox(wxString::Format(wxT("This phone
+belongs to %s,
+%s."),owner-&gt;lastName,owner-&gt;firstName),wxT("Telephone")); </span></span><span style="font-weight: normal;"><span style="font-family: monospace;"> //show message</span></span><br>
+
+<span style="font-weight: normal;"><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; <br>
+
+}<br>
+
+<br>
+
+</span><br>
+
+</span>
+<h3><span style="font-weight: normal;"><a name="8"></a><span style="font-weight: bold;">8. Freeing up the memory</span></span><span style="text-decoration: underline;"></span><span style="font-family: monospace;"></span></h3>
+
+As you could see we have created a lot of pointer in this application.
+What do we do now with all this memory??? Well, as long this objects
+(pointer are objects? mmm...dunno, I think so) were created using any
+of the methods of any of the classes (New(), Id(), All(),
+GetTelephones(), GetContact(), etc) all you have to do is delete the
+active record. This happens because all the pointers return by this
+functions are stored in a garbage array and deleted at destruction
+time. So it's also important no to manually delete any of this.<br>
+
+<br>
+
+This is the Close funcition: <br>
+
+<br>
+
+<span style="font-family: monospace;">void ContactBookFrm::OnCloseWindow( wxCloseEvent&amp; event )</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">{</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; delete telephone; //delete the telephone active record</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; delete email; </span><span style="font-family: monospace;">//delete the email active record</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; delete contact; </span><span style="font-family: monospace;">//delete the contact active record</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">////@begin wxEVT_CLOSE_WINDOW event handler for ID_FRAME in ContactBookFrm.</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; // Before editing this code, remove the block markers.</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; event.Skip();</span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">////@end wxEVT_CLOSE_WINDOW event handler for ID_FRAME in ContactBookFrm. </span><br style="font-family: monospace;">
+
+<span style="font-family: monospace;">}</span><br>
+
+<br>
+
+That's it, the memory has beeing released. <br>
+
+<br>
+
+<br>
+
+<h3><a name="9"></a>9. Some final words</h3>
+
+I hope you'll find wxARG and this tutorial helpful. wxARG is my first
+GPL project and my most demanding so far. Any suggestion, bugs or
+question about wxARG or this tutorial please send me an <a href="mailto:mszeftel@yahoo.com.ar">email.</a><br>
+
+<br>
+
+Thanks to the <a href="http://wxcode.sourceforge.net/components/databaselayer/">DatabaseLayer</a> team for creating such a good library.
+</body>
+</html>

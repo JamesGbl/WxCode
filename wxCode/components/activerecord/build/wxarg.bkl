@@ -1,0 +1,177 @@
+<?xml version="1.0" ?>
+
+<!-- RCS-ID: $Id: wxarg.bkl,v 1.15 2007/04/12 21:55:11 mszeftel Exp $ -->
+
+<makefile>
+    <include file="presets/wxcode.bkl"/>
+
+	<set-comp-name>activerecord</set-comp-name>
+	
+	
+	
+	<set var="COMP_HDR">$(fileList('include/*.h'))</set>
+
+    <!-- ================================================================= -->
+    <!-- Settings for this component                                       -->
+    <!-- ================================================================= -->
+	
+	 <!-- SQLite settings - Copied from databaselayer.bkl -->
+	<option name="SQLITE_HEADER_LOCATION" category="path">
+		<default-value>.</default-value>
+		<description>Location of SQLite3 header files</description>
+	</option>
+	<option name="SQLITE_LIB_LOCATION" category="path">
+		<default-value>.</default-value>
+		<description>Location of SQLite3 libraries</description>
+	</option>
+	
+	<!-- Firebird settings -->
+	<option name="FIREBIRD_HEADER_LOCATION" category="path">
+		<default-value>.</default-value>
+		<description>Location of Firebird header files</description>
+	</option>
+	<option name="FIREBIRD_LIB_LOCATION" category="path">
+		<default-value>.</default-value>
+		<description>Location of Firebird libraries</description>
+	</option>
+	
+	<!-- MySQL settings -->
+	<option name="MYSQL_HEADER_LOCATION" category="path">
+		<default-value>.</default-value>
+		<description>Location of MySQL header files</description>
+	</option>
+	<option name="MYSQL_LIB_LOCATION" category="path">
+		<default-value>.</default-value>
+		<description>Location of MySQL libraries</description>
+	</option>
+	
+	<!-- PostgreSQL settings -->
+	<option name="POSTGRESQL_HEADER_LOCATION" category="path">
+		<default-value>.</default-value>
+		<description>Location of PostgreSQL header files</description>
+	</option>
+	<option name="POSTGRESQL_LIB_LOCATION" category="path">
+		<default-value>.</default-value>
+		<description>Location of PostgreSQL libraries</description>
+	</option>
+
+	<!-- DatabaseLayer settings -->
+	<option name="DATABASELAYER_HEADER_LOCATION" category="path">
+    	<default-value>../../databaselayer/include</default-value>
+    	<description>Location of DatabaseLayer header files</description>
+  	</option>
+   
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- Library file settings                                             -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+	<!-- Database support options -->
+	<option name="USE_SQLITE">
+    	<values>0,1</values>
+    	<default-value>0</default-value>
+    	<description>Do you want to compile Sqlite DB support?</description>
+ 	</option> 
+ 	<option name="USE_POSTGRESQL">
+    	<values>0,1</values>
+    	<default-value>0</default-value>
+    	<description>Do you want to compile PostgreSQL DB support?</description>
+ 	</option> 
+ 	<option name="USE_MYSQL">
+    	<values>0,1</values>
+    	<default-value>0</default-value>
+    	<description>Do you want to compile MySQL DB support?</description>
+ 	</option> 
+	<option name="USE_FIREBIRD">
+    	<values>0,1</values>
+    	<default-value>0</default-value>
+    	<description>Do you want to compile Firebird DB support?</description>
+ 	</option> 
+
+	<!-- USE_SQLITE libs -->
+	<set-wxlike var="databaselayer_sqlite_lib" prefix="wxcode" cond="USE_SQLITE=='1'">
+    	databaselayer_sqlite
+	</set-wxlike> 
+	<set var="sqlite_lib">
+          <if cond="USE_SQLITE=='1'">sqlite3</if>
+    </set>
+	
+	<!-- USE_POSTGRESQL libs -->
+	<set-wxlike var="databaselayer_postgresql_lib" prefix="wxcode" cond="USE_POSTGRESQL=='1'">
+    	databaselayer_postgresql
+	</set-wxlike>
+	<set var="postgresql_lib">
+		<if cond="USE_POSTGRESQL=='1'">pq</if>	
+    </set>
+	<set var="postgresql_lib_win32">
+		<if cond="USE_POSTGRESQL=='1'">libpq</if>	
+    </set>
+	
+	<!-- USE_MYSQL libs -->
+	<set-wxlike var="databaselayer_mysql_lib" prefix="wxcode" cond="USE_MYSQL=='1'">
+    	databaselayer_mysql
+	</set-wxlike>
+	<set var="mysql_lib">
+          <if cond="USE_MYSQL=='1'">`mysql_config --libs`</if>
+    </set>
+	<set var="mysql_lib_win32">
+          <if cond="USE_MYSQL=='1'">libmysql</if>
+    </set>
+	
+	<!-- USE_FIREBIRD libs -->
+	<set-wxlike var="databaselayer_firebird_lib" prefix="wxcode" cond="USE_FIREBIRD=='1'">
+    	databaselayer_firebird
+	</set-wxlike>
+	<set var="firebird_lib">
+          <if cond="USE_FIREBIRD=='1'">fbclient</if>
+    </set>
+	<set var="firebird_lib_win32">
+          <if cond="USE_FIREBIRD=='1'">fbclient_ms</if>
+    </set>
+
+
+
+	<wxcode-exe id="wxActiveRecordGenerator">
+    	<app-type>gui</app-type>
+      	<has-win32-res/>
+       	<exename>wxActiveRecordGenerator_$(WXLIBPOSTFIX)</exename>
+        <dirname>../bin</dirname>
+
+        <define>$(substituteFromDict(USE_SQLITE,{'0':'', '1':'AR_USE_SQLITE'}))</define>
+		<define>$(substituteFromDict(USE_POSTGRESQL,{'0':'', '1':'AR_USE_POSTGRESQL'}))</define>
+		<define>$(substituteFromDict(USE_MYSQL,{'0':'', '1':'AR_USE_MYSQL'}))</define>
+		<define>$(substituteFromDict(USE_FIREBIRD,{'0':'', '1':'AR_USE_FIREBIRD'}))</define>
+
+		<include>$(DATABASELAYER_HEADER_LOCATION)</include>
+		<include>$(SQLITE_HEADER_LOCATION)</include>
+    	<include>$(POSTGRESQL_HEADER_LOCATION)</include>
+		<include>$(MYSQL_HEADER_LOCATION)</include>
+		<include>$(FIREBIRD_HEADER_LOCATION)</include>
+
+		<!-- Using new wxcode bakefile wxlike naming of DatabaseLayer -->
+		
+		<sys-lib>$(databaselayer_sqlite_lib)</sys-lib>
+		<sys-lib>$(databaselayer_postgresql_lib)</sys-lib>
+		<sys-lib>$(databaselayer_mysql_lib)</sys-lib>
+		<sys-lib>$(databaselayer_firebird_lib)</sys-lib>
+		<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+		<if cond="TARGETING_WIN32=='0'">
+			<sys-lib>$(sqlite_lib)</sys-lib>
+			<sys-lib>$(postgresql_lib)</sys-lib>
+			<ldflags>$(mysql_lib)</ldflags>
+			<sys-lib>$(firebird_lib)</sys-lib>
+		</if>
+
+		<if cond="TARGETING_WIN32=='1'">
+			<sys-lib>$(sqlite_lib)</sys-lib>
+			<sys-lib>$(postgresql_lib_win32)</sys-lib>
+			<sys-lib>$(mysql_lib_win32)</sys-lib>
+			<sys-lib>$(firebird_lib_win32)</sys-lib>
+		</if>
+			
+        <wx-lib>xml</wx-lib>
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib> <!-- base must be last wx-lib -->
+    </wxcode-exe>
+
+ </makefile>
