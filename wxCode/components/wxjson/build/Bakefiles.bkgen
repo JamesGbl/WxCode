@@ -1,8 +1,8 @@
 <?xml version="1.0" ?>
 
-<!-- RCS-ID: $Id: Bakefiles.bkgen,v 1.1 2007/11/05 22:40:43 luccat Exp $ -->
+<!-- RCS-ID: $Id: Bakefiles.bkgen 687 2007-11-17 12:53:49Z frm $ -->
 
-<bakefile-gen>
+<bakefile-gen xmlns="http://www.bakefile.org/schema/bakefile-gen">
 
     <!-- this tag tells bakefile_gen that the user bakefile wants to use the 
          default wxCode settings found in wxCode/build/bakefiles/presets/wxcode.bkgen.

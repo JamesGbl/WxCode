@@ -51,6 +51,15 @@
 
 <makefile>
 
+    <set var="WX_VERSION_DEFAULT">
+        28
+    </set>
+
+    <!-- disable / enable other formats
+                 <disable-formats>autoconf</disable-formats>
+                 <add-formats>gnu,msvs2005prj</add-formats>
+    -->
+
     <!-- the following line tells Bakefile that this component uses the wxCode presets
          (internally wxCode presets use in turn the wxWidgets presets)
     -->

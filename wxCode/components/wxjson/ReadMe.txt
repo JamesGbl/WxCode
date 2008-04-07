@@ -4,7 +4,7 @@
  
  Website: http://lnx.mauriziovettorato.it/public/json/home.html
  Author: Luciano Cattani
- Version: 0.3.0
+ Version: 0.4.0
  Description:
  JSON (JavaScript Object Notation) is a lightweight data-interchange format.
  It is easy for humans to read and write. It is easy for machines to parse
@@ -52,16 +52,15 @@
  0.3.0 this release adds support for writing and reading JSON text from
        a stream in UTF-8 format in both ANSI and Unicode builds of wxWidgets.
 
-
  0.3.1 fixed a bug in the wxJSONReader::ReadString() function which did not
        handle correctly the unicode escape sequences.
 
+ 0.4.0 this version uses copy-on-write (also known as 'reference counting')
+       in the copy constructor and assignment operator 
 
- 
+
 BUGS
 ----
 Please, send bugs to luciano AT mauriziovettorato_DOT_it or open a bug report
 on SF.net for the 'wxCode' project ( wxcode.sf.net)
-
-
 
