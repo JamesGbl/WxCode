@@ -1,8 +1,0 @@
-config.h
-localcharset.h
-Makefile*
-gen*
-aliases*
-*vms
-*.lib
-*.dll
