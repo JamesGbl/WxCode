@@ -49,8 +49,6 @@ enum {
 };
 
 
-
-
 class WXDLLIMPEXP_JSON  wxJSONReader
 {
 public:

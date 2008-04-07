@@ -81,11 +81,11 @@ Installation - checked-out sources
 
 If you do not want to wait until the official release of the library, and
 want to be always up-to-date you can get the wxJSON sources by
-directly accessing the CVS repository on SF.
-You can use the following command:
+directly accessing the Subversion repository on SF.
+On a Unix system use the following command:
 
- $ cvs -d:ext:anonymous@wxcode.cvs.sourceforge.net:/cvsroot/wxcode'
- $ cvs checkout wxCode/componenrs/wxjson
+ $ svn co https://wxcode.svn.sourceforge.net/svnroot/wxcode/trunk/wxCode/components/wxjson
+
 
 Note that you have to create your own project file or makefile in order
 to compile the library or you can use the 'bakefile' tool to create

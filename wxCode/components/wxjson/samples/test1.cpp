@@ -210,7 +210,7 @@ int Test1()
   valueMap[_T("object")] = valueArray;
 
   // another object is created and this object is a object itself
-  valueMap[_T("font")][_T("face")] = "Arial";
+  valueMap[_T("font")][_T("face")] = _T("Arial");
   valueMap[_T("font")][_T("size")] = 12;
   valueMap[_T("font")][_T("bold")] = true;
   valueMap[_T("font")][_T("coordinate")] = 90.67;
@@ -278,4 +278,5 @@ int Test1()
 {
 }
 */
+
 

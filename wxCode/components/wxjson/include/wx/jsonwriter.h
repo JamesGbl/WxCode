@@ -32,6 +32,7 @@
 #include "json_defs.h"
 #include "jsonval.h"
 
+
 // The 'style' flags for the writer
 // BIT= 9 8 7 6 5 4 3 2 1 0
 //            | | | | | | |
@@ -50,6 +51,7 @@ enum {
   wxJSONWRITER_SPLIT_STRING    = 16
 };
 
+// class declaration
 
 class WXDLLIMPEXP_JSON wxJSONWriter
 {

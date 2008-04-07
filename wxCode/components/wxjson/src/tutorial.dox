@@ -4,12 +4,11 @@
 This page is a simple tutorial which describes how to use the
 wxJSON library in order to store data in JSON format, reading
 them, changing the values and how to generate JSON text that
-can be saved in a file, a stream or sent over a network
+can be saved to a file, a stream or sent over a network
 connection.
 
 
 \section wxjson_tutorial_toc Table of contents
-
 
 
 \li \ref wxjson_tutorial_intro
@@ -39,8 +38,8 @@ documents or to store images, audio and video streams.
 For these purposes, there are many other formats which are by
 far more appropriate than JSON.
  
-If you are new to JSON it is better than you first read the 
-following pages, which describes the JSON syntax, its advantages
+If you are new to JSON, it is better than you first read the 
+following pages, which describe the JSON syntax, its advantages
 and its disadvantages:
 
  \li <A href="http://www.json.org">Introducing JSON</A>
@@ -639,7 +638,7 @@ Let's look at an example:
 \endcode
 
 The above code fragment does not make problems: we can get an integer
-value as an int or as a string: in fact, the \c AsString() function 
+value as an \b int or as a \b string object; in fact, the \c AsString() function 
 uses \c wxString::Format() to represent the integer as a string.
 
 Let's look another example:
@@ -680,8 +679,8 @@ strings.
 
 All functions that returns a specific type of value, will return that
 type only if the stored value \b can be converted to the desired type
-without loss of informations. Otherwise, the function just returns the
-content of the \c m_value union which is, probably, garbage.
+without loss of informations. Otherwise, the function returns an undefined
+result.
 Let look at an example:
 
 \code
@@ -690,25 +689,26 @@ Let look at an example:
 \endcode
 
 In the above example, the wxJSONValue::AsInt() function cannot convert
-the string to a number so what the function returns is the content of
-the \c m_value union as an integer.
-Because the data member of the JSON value object contains a pointer
-to a wxString object, the value returned is the pointer to the string
-as an integer value which is, surely, garbage (see \ref pg_json_internals
+the string to a number so what the function returns is an undefined
+integer value (see \ref pg_json_internals
 for more info on the internal representation of JSON values).
 
 In debug builds, however, all \c AsXxxxxx() functions also ASSERT that the
 actual type stored in the JSON value class is of the correct type
 for the function or it is of a type that can be converted without
 loss of informations.
+This only happens when unpredictable results are returned by the
+\b AsXxxxxxx() function. 
 So, for example, the \c wxJSONValue::AsString() function returns an empty string
 if the object's type is \b wxJSONTYPE_ARRAY or \b wxJSONTYPE_OBJECT.
 All other types can be converted to a string.
+The user can know that he is trying to get an incompatible type by checking
+the returned string for not being empty.
 
 A final note about the \c wxJSONValue::AsCString() function. This returns a pointer
 to a (hopefully) statically allocated string.
 I know that all types that can be converted to a \b wxString object
-can also be converted to a (static?) wxChar* buffer but the problem
+can also be converted to a (static?) \b wxChar* buffer but the problem
 is: where store the buffer? Statically? What should its size be?
 The answers are not simple.
 
@@ -1119,8 +1119,9 @@ not have side effects: the only conseguence is that what I wrote
 for ANSI builds will no more apply.
 
 The JSON syntax states that JSON string values are in Unicode
-format and the encoding of a JSON text is by default UTF-8.
-The wxJSON library follows this rule but because wxJSON (and
+format and the encoding of a JSON text is by default UTF-8; UCS-2
+and UCS-4 are also allowed.
+The wxJSON library follows this rules but because wxJSON (and
 wxWidgets itself) may be compiled in two different modes we
 have to distinguish two situations:
 
@@ -1163,15 +1164,21 @@ in all character sets as, for example:
 
 The above code fragment contains characters from various european
 languages which are incompatible in a locale depended environment.
-The stream produced is a UTF-8 encoded text.
+The output memory stream contains a UTF-8 encoded text.
+\br
+\b WARNING: the possibility to directly hardcode Unicode strings
+depends on your editor which has to be able to save the source
+file in a format that support Unicode (for example, UTF-8).
+Also, your compiler must be able to read and compile UTF-8 sources.
 
-Note that when writing to a stream object, you cannot use a different
-encoding format.
+
+Note that when writing to a stream object, you cannot use an
+encoding format other than UTF-8.
 If you want to encode the JSON text to a different format you have to
 go through the \b wxString output object:
 
-\li write the JSON values to a string object
-\li convert the wxString buffer to whatever format you want
+\li write the JSON values to a wxString object
+\li convert the wxString to whatever compatible format you want
 
 For example, if you want to encode the output JSON text to UCS-4
 Little Endian, you may use the following code:
@@ -1187,20 +1194,20 @@ Little Endian, you may use the following code:
   wxCSConv  conv( _T("UCS-4LE"));
  
   // compute the length of the needed buffer
-  size_t len = conv.ToWChar( 0, 0, jsonText.wc_str());
+  size_t len = conv.FromWChar( 0, 0, jsonText.wc_str());
 
   // allocate the buffer
   char* buffer = new char[len + 4];
 
   // do the conversion and finally write the buffer to a file or
   // whatever you want
-  len = conv.ToWChar( buffer, len + 4, jsonText.wc_str());
+  len = conv.FromWChar( buffer, len + 4, jsonText.wc_str());
 \endcode
 
 
 Note that the above code fragment should work fine because the selected
 encoding format has full support for Unicode characters.
-On the other hand, you \e cannot convert the wide character string
+On the other hand, you \e cannot convert the wxString object
 to whatever format you want; in other words, you cannot convert
 it to a locale dependent charset because the string contains characters
 from different languages which are encoded in different locale dependent
@@ -1222,11 +1229,11 @@ For example, the following code does not work:
  
   // compute the length of the needed buffer
   // what we get is the wxCONV_FAILED error code
-  size_t len = conv.ToWChar( 0, 0, jsonText.wc_str());
+  size_t len = conv.FromWChar( 0, 0, jsonText.wc_str());
 \endcode
 
 The better solution, however, is to get a UTF-8 encoded buffer
-which is  compatible with all other JSON implementation.
+which is  compatible with all other JSON implementations.
 Also note that UTF-8 has full support for wide character encoding:
 
 \code
@@ -1253,11 +1260,19 @@ If you want to know more about this topic, continue read.
 
 \subsection wxjson_tutorial_unicode_ansi ANSI builds
 
-When \b wxJSON and \b wxWidgets are compiled in ANSI mode, there
-is no Unicode support at all, \b wxString objects only contain
-one-byte characters and the actual character represented is
+When \b wxJSON and \b wxWidgets are compiled in ANSI mode both the
+wxJSONReader and the wxJSONWriter give you a limited Unicode support
+but remember that the wxJSONValue class \b cannot hold unicode
+string values because the \b wxString class only contains
+one-byte character strings and the actual characters represented are
 locale dependent.
-In ANSI builds, you can encode the string object to whatever
+As with Unicode, in ANSI builds you can read the JSON 
+
+
+
+
+
+
 format you want; in addition, you can also ignore the encoding
 format and directly write the string buffer:
 

@@ -110,8 +110,11 @@ extern int Test46();   // read a UTF-8 stream containing latin-1, greek and cyri
 
 //
 // in test11.cpp: wxJSON reference counting feature
-//extern int Test47();   // check the old DeepCopy() function (maybe there is a bug)
-
+extern int Test47();   // check the old DeepCopy() function (maybe there is a bug)
+extern int Test48();   // check the new COW functions: nested objects
+extern int Test49();   // check the new COW functions: a simple 4-items array
+extern int Test50();   // check the new COW functions: several level-2 values
+extern int Test51();   // check the new COW functions: read a copy of a value
 
 
 // global variables in 'main.cpp'
@@ -134,4 +137,6 @@ extern void TestCout( double d, bool lf = false );
 {
 }
 */
+
+
 

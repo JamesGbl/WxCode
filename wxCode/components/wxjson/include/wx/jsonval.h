@@ -25,6 +25,7 @@
 // for all others, include the necessary headers (this file is usually all you
 // need because it includes almost all "standard" wxWidgets headers)
 #ifndef WX_PRECOMP
+    #include <wx/object.h>
     #include <wx/hashmap.h>
     #include <wx/dynarray.h>
     #include <wx/arrstr.h>
@@ -33,14 +34,14 @@
 
 #include "json_defs.h"
 
-// forward declarantions
-class WXDLLIMPEXP_JSON wxJSONValue;
+// forward declarations
+class WXDLLIMPEXP_JSON wxJSONReader;
+class WXDLLIMPEXP_JSON wxJSONRefData;
 class WXDLLIMPEXP_JSON wxJSONInternalMap;
+class WXDLLIMPEXP_JSON wxJSONInternalArray;
 
-WX_DECLARE_OBJARRAY( wxJSONValue, wxJSONInternalArray );
 
-
-//! The type of the value held by the wxJSONValue class
+//! The type of the value held by the wxJSONRefData class
 enum wxJSONType {
     wxJSONTYPE_EMPTY = 0,  /*!< empty type is for uninitialized objects  */
     wxJSONTYPE_NULL,       /*!< the object contains a NULL value         */
@@ -63,24 +64,14 @@ enum {
   wxJSONVALUE_COMMENT_INLINE,
 };
 
-//! The actual value held by the wxJSONValue class (internal use)
-/*!
- Note that this structure is a \b union. This means that the actual value
- depends on the \b type of the value. 
-*/
-union wxJSONValueHolder  {
-    int           m_valInt;
-    unsigned      m_valUInt;
-    double        m_valDouble;
-    const wxChar* m_valCString;
-    bool          m_valBool;
-    wxString*     m_valString;
-    wxJSONInternalArray* m_valArray;
-    wxJSONInternalMap*   m_valMap;
-  };
+/***********************************************************************
 
-class wxJSONReader;
+			class wxJSONValue
 
+***********************************************************************/
+
+
+// class WXDLLIMPEXP_JSON wxJSONValue : public wxObject
 class WXDLLIMPEXP_JSON wxJSONValue
 {
   friend class wxJSONReader;
@@ -97,11 +88,10 @@ public:
   wxJSONValue( const wxChar* str );     // assume static ASCIIZ strings
   wxJSONValue( const wxString& str );
   wxJSONValue( const wxJSONValue& other );
-  ~wxJSONValue();
+  virtual ~wxJSONValue();
 
-  // get/set the value type
+  // get the value type
   wxJSONType  GetType() const;
-  void SetType( wxJSONType type );
   bool IsEmpty() const;
   bool IsNull() const;
   bool IsInt() const;
@@ -177,26 +167,105 @@ public:
 
   // debugging functions
   wxString         GetInfo() const;
-  static  wxString TypeToString( wxJSONType type ); 
+  wxString         Dump( bool deep = false, int mode = 0 ) const;
+
+  wxJSONRefData*   GetRefData() const;
+  wxJSONRefData*   SetType( wxJSONType type );
+
+  int              GetLineNo() const;
+  void             SetLineNo( int num );
+
+  static  wxString TypeToString( wxJSONType type );
 
 protected:
   wxJSONValue*  Find( unsigned index ) const;
   wxJSONValue*  Find( const wxString& key ) const;
-  void          DeleteObj();
+  //  void          DeleteObj();
   void          DeepCopy( const wxJSONValue& other );
 
-private:
+  wxJSONRefData*  Init( wxJSONType type );
+  wxJSONRefData*  COW();
+
+  // overidden from wxObject
+  virtual wxJSONRefData*  CloneRefData(const wxJSONRefData *data) const;
+  virtual wxJSONRefData*  CreateRefData() const;
+
+  void            SetRefData(wxJSONRefData* data);
+  void            Ref(const wxJSONValue& clone);
+  void            UnRef();
+  void            UnShare();
+  void            AllocExclusive();
+
+  //! the referenced data
+  wxJSONRefData*  m_refData;
+
+  // used for debugging purposes: only in debug builds.
+#if defined( WXJSON_USE_VALUE_COUNTER )
+  int         m_progr;
+  static int  sm_progr;
+#endif
+};
+
+
+/***********************************************************************
+
+			class wxJSONRefData
+
+***********************************************************************/
+
+
+
+WX_DECLARE_OBJARRAY( wxJSONValue, wxJSONInternalArray );
+WX_DECLARE_STRING_HASH_MAP( wxJSONValue, wxJSONInternalMap );
+
+
+//! The actual value held by the wxJSONValue class (internal use)
+/*!
+ Note that this structure is not a \b union as in the previous versions.
+ This allow to store instances of the string, ObjArray and HashMap objects
+ (no more pointers to them)
+*/
+struct wxJSONValueHolder  {
+    int           m_valInt;
+    unsigned      m_valUInt;
+    double        m_valDouble;
+    const wxChar* m_valCString;
+    bool          m_valBool;
+    wxString      m_valString;
+    wxJSONInternalArray m_valArray;
+    wxJSONInternalMap   m_valMap;
+  };
+
+
+
+// class WXDLLIMPEXP_JSON wxJSONRefData : public wxObjectRefData
+class WXDLLIMPEXP_JSON wxJSONRefData
+{
+  // friend class wxJSONReader;
+  friend class wxJSONValue;
+
+public:
+
+  wxJSONRefData();
+  virtual ~wxJSONRefData();
+
+  int GetRefCount() const;
+
+  // there is no need to define copy ctor
+  // wxJSONRefData( const wxJSONRefData& other );
+
+protected:
+  //! the references count
+  int               m_refCount;
+
   //! The actual type of the value held by this object.
   wxJSONType        m_type;
 
   //! The JSON value held by this object.
   /*!
-   This data member is an \b union of the various types defined by the
-   JSON syntax. For some types (for example, wxJSONTYPE_NULL) the value is
-   meaningless.
-   The data member contains the actual value for primitive types and the
-   pointer to the actual data structure for complex types (string, hashmap
-   and array).
+   This data member contains the JSON data types defined by the
+   JSON syntax with the exception of wxJSONTYPE_EMPTY which is an
+   internal type used by the parser class.
   */
   wxJSONValueHolder m_value;
 
@@ -215,19 +284,21 @@ private:
   //! The line number when this value was read
   /*!
    This data member is used by the wxJSONReader class and it is
-   used to store the line number in the text input stream where
-   the value appeared
+   used to store the line number of the JSON text document where
+   the value appeared. This value is compared to the line number
+   of a comment line in order to obtain the value which a
+   comment refersto.
   */ 
   int               m_lineNo;
 
+
   // used for debugging purposes: only in debug builds.
-#if defined( WXJSON_USE_VALUE_COUNTER )
-  int         m_progr;
-  static int  sm_progr;
-#endif
+  #if defined( WXJSON_USE_VALUE_COUNTER )
+    int         m_progr;
+    static int  sm_progr;
+  #endif
 };
 
-WX_DECLARE_STRING_HASH_MAP( wxJSONValue, wxJSONInternalMap );
 
 
 #endif			// not defined _WX_JSONVAL_H

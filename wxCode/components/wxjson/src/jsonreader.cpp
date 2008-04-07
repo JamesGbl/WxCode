@@ -317,7 +317,7 @@ wxJSONReader::Parse( wxJSONValue* val )
 
   // set the wxJSONValue object's pointers for comment storage 
   m_next       = temp;
-  m_next->m_lineNo = -1;
+  m_next->SetLineNo( -1 );
   m_lastStored = 0;
   m_current    = 0;
 
@@ -616,7 +616,7 @@ wxJSONReader::DoRead( wxJSONValue& parent )
   m_next = &value;
 
   m_current = &parent;
-  m_current->m_lineNo = m_lineNo;
+  m_current->SetLineNo( m_lineNo );
   m_lastStored = 0;
 
   // the 'key' string is stored from 'value' when a ':' is encontered
@@ -673,7 +673,7 @@ wxJSONReader::DoRead( wxJSONValue& parent )
         StoreValue( ch, key, value, parent );
         m_current = &parent;
         m_next    = 0;
-        m_current->m_lineNo = m_lineNo;
+        m_current->SetLineNo( m_lineNo );
         ch = ReadChar();
         return ch;
         break;
@@ -708,7 +708,7 @@ wxJSONReader::DoRead( wxJSONValue& parent )
         StoreValue( ch, key, value, parent );
         m_current = &parent;
         m_next    = 0;
-        m_current->m_lineNo = m_lineNo;
+        m_current->SetLineNo( m_lineNo );
         return 0;   // returning ZERO for reading the next char
         break;
 
@@ -726,7 +726,7 @@ wxJSONReader::DoRead( wxJSONValue& parent )
 
       case ':' :   // key / value separator
         m_current = &value; 
-        m_current->m_lineNo = m_lineNo;
+        m_current->SetLineNo( m_lineNo );
         m_next    = 0;
         if ( !parent.IsObject() )  {
           AddError( _T( "\':\' cannot be used in array's values" ));
@@ -748,7 +748,7 @@ wxJSONReader::DoRead( wxJSONValue& parent )
       default :
         // errors are checked in the 'ReadValue()' function.
         m_current = &value; 
-        m_current->m_lineNo = m_lineNo;
+        m_current->SetLineNo( m_lineNo );
         m_next    = 0;
         ch = ReadValue( ch, value );
         break;
@@ -800,7 +800,7 @@ wxJSONReader::StoreValue( int ch, const wxString& key, wxJSONValue& value, wxJSO
   m_current = 0;
   m_next    = &value;
   m_lastStored = 0;
-  m_next->m_lineNo = -1;
+  m_next->SetLineNo( -1 );
 
   if ( value.IsEmpty() && key.empty() ) {
       // OK, if the char read is a close-object or close-array
@@ -827,7 +827,7 @@ wxJSONReader::StoreValue( int ch, const wxString& key, wxJSONValue& value, wxJSO
 					 __PRETTY_FUNCTION__, key.c_str());
         parent[key] = value;
         m_lastStored = &(parent[key]);
-        m_lastStored->m_lineNo = m_lineNo;
+        m_lastStored->SetLineNo( m_lineNo );
       }
     }
     else if ( parent.IsArray() ) {
@@ -842,7 +842,7 @@ wxJSONReader::StoreValue( int ch, const wxString& key, wxJSONValue& value, wxJSO
       const wxJSONInternalArray* arr = parent.AsArray();
       wxASSERT( arr );
       m_lastStored = &(arr->Last());
-      m_lastStored->m_lineNo = m_lineNo;
+      m_lastStored->SetLineNo( m_lineNo );
     }
     else  {
       wxASSERT( 0 );  // should never happen
@@ -1168,7 +1168,7 @@ wxJSONReader::ReadString( wxJSONValue& val )
   }
 
   // store the input text's line number when the string was stored in 'val'
-  val.m_lineNo = m_lineNo;
+  val.SetLineNo( m_lineNo );
 
   // read the next char after the closing quotes and returns it
   if ( ch > 0 )  {
@@ -1412,8 +1412,8 @@ wxJSONReader::StoreComment( const wxJSONValue* parent )
   // 'current', 'next' or 'lastStored' value
   if ( m_current != 0 )  {
     ::wxLogTrace( storeTraceMask, _T("(%s) m_current->lineNo=%d"),
-			 __PRETTY_FUNCTION__, m_current->m_lineNo );
-    if ( m_current->m_lineNo == m_commentLine ) {
+			 __PRETTY_FUNCTION__, m_current->GetLineNo() );
+    if ( m_current->GetLineNo() == m_commentLine ) {
       ::wxLogTrace( storeTraceMask, _T("(%s) comment added to \'m_current\' INLINE"),
 			 __PRETTY_FUNCTION__ );
       m_current->AddComment( m_comment, wxJSONVALUE_COMMENT_INLINE );
@@ -1423,8 +1423,8 @@ wxJSONReader::StoreComment( const wxJSONValue* parent )
   }
   if ( m_next != 0 )  {
    ::wxLogTrace( storeTraceMask, _T("(%s) m_next->lineNo=%d"),
-			 __PRETTY_FUNCTION__, m_next->m_lineNo );
-    if ( m_next->m_lineNo == m_commentLine ) {
+			 __PRETTY_FUNCTION__, m_next->GetLineNo() );
+    if ( m_next->GetLineNo() == m_commentLine ) {
       ::wxLogTrace( storeTraceMask, _T("(%s) comment added to \'m_next\' INLINE"),
 			 __PRETTY_FUNCTION__ );
       m_next->AddComment( m_comment, wxJSONVALUE_COMMENT_INLINE );
@@ -1434,8 +1434,8 @@ wxJSONReader::StoreComment( const wxJSONValue* parent )
   }
   if ( m_lastStored != 0 )  {
    ::wxLogTrace( storeTraceMask, _T("(%s) m_lastStored->lineNo=%d"),
-			 __PRETTY_FUNCTION__, m_lastStored->m_lineNo );
-    if ( m_lastStored->m_lineNo == m_commentLine ) {
+			 __PRETTY_FUNCTION__, m_lastStored->GetLineNo() );
+    if ( m_lastStored->GetLineNo() == m_commentLine ) {
       ::wxLogTrace( storeTraceMask, _T("(%s) comment added to \'m_lastStored\' INLINE"),
 			 __PRETTY_FUNCTION__ );
       m_lastStored->AddComment( m_comment, wxJSONVALUE_COMMENT_INLINE );
@@ -1484,14 +1484,6 @@ wxJSONReader::StoreComment( const wxJSONValue* parent )
   }
   m_comment.clear();
 }
-
-
-
-
-
-
-
-
 
 
 //! Return the number of bytes that contains a unicode char in various encodings
@@ -1610,4 +1602,6 @@ wxJSONReader::AppendUnicodeSequence( wxString& s, int hex )
 {
 }
 */
+
+
 

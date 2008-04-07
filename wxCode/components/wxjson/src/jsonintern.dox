@@ -3,6 +3,7 @@
 
 
 \li \ref json_internals_intro
+\li \ref json_internals_cow
 \li \ref json_internals_cstring
 \li \ref json_internals_array
 \li \ref json_internals_map.
@@ -10,6 +11,8 @@
 \li \ref json_multiline_string
 \li \ref json_comment
 \li \ref json_symbols
+
+
 
 
 
@@ -28,22 +31,11 @@ whatever type you want but only the following:
 \li a C string
 \li a wxString object
 \li an array of wxJSONValue objects
-\li an map of key/value pairs where \e value can be any wxJSONValue object
+\li an map of key/value pairs where \e key is a string and \e value can be any
+	wxJSONValue object
 
-In order to do its job, the class just uses a \b union of all the
-handled types and stores it in a data member along with the type of
-the held value:
-
-\code
-  wxJSONType  m_type     // the type of the stored value
-  ValueHolder m_value;   // the stored value itself
-\endcode
-
-The wxJSONValue::m_type data member is a simple enumerator. Note that
-it is not an unnamed enum but it has a type: \b wxJSONType.
-This is because the class wxJSONValue has many overloaded constructors:
-one for every type it stores (including the \b integer type) 
-plus one for the type:
+The type of the JSON value contained in a wxJSONValue object is one of the
+following constants:
 
 \code
  enum wxJSONType {
@@ -60,6 +52,7 @@ plus one for the type:
  };
 \endcode
 
+
 There is no need to specify the type of a wxJSONValue object: it is
 automatically set when you construct the object or when a value is
 assigned to it. For example:
@@ -75,36 +68,274 @@ assigned to it. For example:
 
 The only exception to this is when you want to set the wxJSONTYPE_EMPTY.
 Note that you should cast the wxJSONTYPE_EMPTY constant to a wxJSONType type
-because some compilers may call the overloaded wxJSONValue(int)
-constructor:
+because some compilers may assume the constant value to be an \b int:
 
 \code
  wxJSONValue value( (wxJSONType) wxJSONTYPE_EMPTY );
 \endcode
 
 
-The \b wxJSONValue::m_value data member is the union of all supported types:
+Starting from version 0.4.0 the internal representation of a JSON value
+has totally changed because of the implementation of the \e reference
+\e counting tecnique also known as \e copy-on-write.
+Now the wxJSONValue class does not actually contain any data: every
+instance of this class holds a pointer to the actual data structure
+defined in the wxJSONRefData class.
+The structure contains a special data member that counts the number
+of instances of wxJSONValue objects that share the data.
+
+\par The wxJSONValueHolder structure
+
+All data is stored in the wxJSONRefData class which is just like a
+simple structure: the class does not define an interface for accessing
+data: it only defines the data members and the ctors and dtor.
+The interface is totally defined in the wxJSONValue class which, in
+turn, does not contain any data (with the exception of the pointer to
+referenced data).
+
+The data structure holds the type of the JSON value, the JSON value itself,
+the comment lines, if any, etc. To know more about the individual data
+member defined in the class see the documentation of wxJSONRefData.
 
 \code
-  union ValueHolder  {
+  struct wxJSONValueHolder  {
     int                  m_valInt;
     unsigned             m_valUInt;
     double               m_valDouble;
     const wxChar*        m_valCString;
     bool                 m_valBool;
-    wxString            *m_valString;
-    wxJSONInternalArray *m_valArray;
-    wxJSONInternalMap   *m_valMap;
+    wxString             m_valString;
+    wxJSONInternalArray  m_valArray;
+    wxJSONInternalMap    m_valMap;
   };
 \endcode
 
-Note that only the primitive types are actually stored in the \b m_value
-data member;
-complex objects are stored as \b pointers to dynamically allocated instances
-because ANSI C++ does not permit to include in an union structs that have
-constructors.
+Unlike in previous versions, the actual JSON value is not held in an
+\b union but in the \c valueHolder structure: this causes some memory consumption
+but allows to store the actual values and not pointers to them.
+Since ANSI C++ does not permit to store in a union classes and
+structures that have constructors, the \b wxString, the \b wxObjArray
+and the \b wxHashMap objects cannot be stored in the union:
+
+The following code fragment instantiates a wxJSONValue object that contains
+an \b integer type.
+The image shows the internal representation of the value.
+Note the \c wxJSONValue::m_refData data member that points to the actual
+data structure and the \c wxJSONRefData::m_refCount data member that counts
+how many JSON value objects share that data structure (one, in the example):
+
+\code
+  wxJSONValue v1( 12 );
+\endcode
+
+
+<img src="images/cow01.png">
+
+
+
+\section json_internals_cow wxJSON internals: copy-on-write
+
+Reference counting is very simple: if you copy an instance of a wxJSONValue
+object, the data contained in the wxJSONRefData structure is not
+really copied but, instead, it is shared by the two JSON value objects
+which data pointer points to the same memory area.
+Here is an example:
+
+\code
+  wxJSONValue v1( 12 );
+  wxJSONvalue v2( v1 );
+\endcode
+
+<img src="images/cow02.png">
+
+
+Reference counting is implemented in many wxWidget's classes such as
+wxBitmap, wxImage, etc but the wxJSONValue class is a bit different
+because objects of this class may contain other wxJSONValue ojects and
+they can be nested to a virtually infinite level.
+This cause references to not being propagate in the hierarchy.
+Also, because values are accessed using the subscript operators -
+which are non-const functions - COW for wxJSONValue objects is not as
+efficient as we may expect.
+
+In the following paragraphs I try to explain what happens when you
+make a copy of a wxJSONValue and then call some non-const functions
+on one of the two instances.
+
+
+
+
+\subsection json_internals_cow_array Making a copy of an array type.
+
+In the following example I create an array type and set a value to the
+fourth element.
+The subscript operator automatically creates the first three elements
+and initializes them to a \b null value.
+Note that the first three array's element share the same data: this
+is because the subscript operator automatically creates all instances
+of the items until the requested index.
+Needed items are created by copying (using COW) a temporary NULL
+JSON value:
+
+\code
+  wxJSONValue v1;
+  v1[3] = 12;           // set the value of the fourth item
+\endcode
+
+<img src="images/cow08.png">
+
+Writing the value to a JSON text document we get the following:
+
+\code
+ [
+    null,
+    null,
+    null,
+    12
+ ]
+\endcode
+
+Now copy the \b v1 JSON value to a \b v3 value.
+Note that the root JSON data structure is shared by the two instances.
+
+
+
+\code
+  wxJSONValue v1;
+  v1[3] = 12;           // set the value of the fourth item
+  wxJSONValue v3(v1);   // make a copy of 'v1'
+\endcode
+
+<img src="images/cow09.png">
+
+
+
+
+Also note that the three \b null values in the array share the same data
+structure: in fact, when the subscript operator which returned the
+fourth element had created the first array's elements, a 
+reference-counted copy of a temporary NULL value was created.
+Notice that the shared \b null value is for 3 items in \b v1 plus
+3 items in \b v3 (six values in total) but as the parent object is shared,
+the wxJSONRefData::m_refCount data member only counts 3 shares.
+
+
+\subsection json_internals_cow_write Writing to a shared data
+
+
+\code
+  wxJSONValue v1;
+  v1[3] = 12;           // set the value of the fourth item
+  wxJSONValue v3(v1);   // makes a copy of 'v1'
+
+  v3[1] = 2;            // change the value of the second array's element
+\endcode
+
+When we change a value of an array's element we would expect that a real
+copy of only that array's element is done and it is assigned the new
+value.
+
+We are wrong. In fact, the wxJSONValue object makes a copy of the
+whole array. Why?
+The answer is simple: the first impression is that the \b operator=
+member function is called for the first array element and that the
+function \e unshares the referenced data.
+In reality, \b before calling the \b operator= memberfunction the
+code fragment seen above must return a reference to the first
+element of the array.
+This reference is returned by the \b operator[] (the subscript operator)
+which is itself a \b non-const memberfunction.
+So, the subscript operator of the root value object makes a real copy
+of the referenced data.
+All array's elements are copied from \b v1's instance to \b v3.
+You may notice from the memory dump that the copy of elements is
+not a real copy but it uses COW.
+Below you find the memory dump of the two object after we had changed
+one array's element.
+As you can see, each root value has now an exclusive copy of the
+array:
+
+<img src="images/cow10.png">
+
+
+
+
+In order to avoid the copy of the top-level array type we have had to
+use a \e const member function to access the first array's element.
+Note that we cannot use the wxJSONValue::ItemAt() function because
+this function returns a copy of the data not a reference to it:
+
+\code
+  wxJSONValue v1;
+  v1[3] = 12;           // set the value of the fourth item
+  wxJSONValue v2(v1);   // makes a copy of 'v1'
+
+  // does not work!!! what we do is to change a temporary copy
+  // of the first array's element
+  v2.ItemAt( 1 ) = "value changed";
+\endcode
+
+
+The only suitable function is the wxJSONValue::Find() function which is,
+unfortunately, protected so it cannot be called from outside the
+class.
+
+Another drawback of using non-const subscript operators is that 
+the copy operation is done also when we do not write to the
+JSON value object but also when we read from it.
+This is an example:
+
+\code
+  wxJSONValue v1;
+  v1[3] = 12;           // set the value of the fourth item
+  wxJSONValue v2(v1);   // makes a copy of 'v1'
+
+  int i = v1[3].AsInt();   // read from 'v1'
+\endcode
+
+Because the \b operator[] memberfunction is non-const, the read 
+operation causes the wxJSONValue class to make a exclusive copy
+of shared data even when the access to the value is only for
+read purposes.
+The good news is that we can use wxJSONValue::ItemAt() in this case
+thus avoiding the copy operation of the shared data (
+OK, tested see \c samples/test11.cpp function \c Test51() )
+
+\code
+  wxJSONValue v1;
+  v1[3] = 12;           // set the value of the fourth item
+  wxJSONValue v2(v1);   // makes a copy of 'v1'
+
+  int i = v1.ItemAt( 3 ).AsInt();
+\endcode
+
+The problem is that we can use \c ItemAt() for only one level in
+the JSON value's hierarchy.
+
+So is COW totally useless? No, it is not!
+
+Even when using subscripts operators, the real copy of shared data
+is done only until the parent of the requested level: every
+other JSON value objects of the same level and of inferior
+levels are not really copied: COW is used for all of them.
+In the following image you see that in the above example of a
+four element's array, the JSON array value \b v1 is copied to
+\b v3 but the individual items are not really copied because
+3 items of \b v1 and 2 items of \b v3 refer to the same
+referenced data.
+
+<img src="images/cow11.png">
+
+In this example, the array's items are NULL values, thus the
+time that was saved in the COW in not really much but remember
+that an array's item may contain another array which may contain
+one or more key/value hashmaps, which may contain one or more
+array which .... and so on.
+
+
 
 \section json_internals_cstring wxJSON internals: the C string type
+
 
 You may ask yourself why there are 2 different constructors for strings.
 For convenience, you may think, in order to save an implicit conversion
@@ -213,7 +444,7 @@ Note that the name of the type contains the word \e internal.
 This means that the type is used internally by the wxJSONValue
 class and should not be used by the application.
 However, the class's API defines a member function that can
-be used to get the internal array:
+be used to get the internal array type:
 
 \code
   const wxJSONInternalArray* AsArray() const;
@@ -223,7 +454,7 @@ which returns the pointer of the array, stored in the
 \c wxJSONValue::m_value.m_valArray data member.
 There is no need for the application to access the internal
 representation of the JSON array-type.
-Use the wxJSONValue::Item(unsigned), wxJSONValue::ItemAt and the
+Use the wxJSONValue::Item, wxJSONValue::ItemAt and the
 subscript operator for retreiving array's values.
 
 
@@ -263,7 +494,7 @@ and the subscript operator for retreiving hashmap's values.
 
 \section json_internals_compare The comparison function and operator
 
-You may noticed that the wxJSONValue class does not define a
+You may have noticed that the wxJSONValue class does not define a
 comparison operator (the \b operator==() function).
 This is not a forgetfullness but a precise design choice
 because comparing wxJSON Value objects may be time-consuming 
@@ -290,7 +521,7 @@ Consider the following two JSON objects:
  }
 \endcode
 
-You hav to note that the two objects are not \b equal because the
+You have to note that the two objects are not \b equal because the
 order of the key/value pairs is not the same.
 Althrough, the values that the two objects contain are \b the
 \b same.
@@ -298,7 +529,8 @@ Althrough, the values that the two objects contain are \b the
 For this reason the wxJSONValue class does not define the
 comparison operator but a similar function: the \c wxJSONValue::IsSameAs()
 which returns TRUE if the two objects contain the same values
-even if they are not in the same order.
+even if they are not in the same order: this applies for both
+key/value maps and for arrays.
 
 The comparison function is much time-consuming: for key/value
 maps, the function first compares the number of elements in the
@@ -363,7 +595,6 @@ In this way the function correctly handles this situation:
 \endcode
 
 
-
 \section json_multiline_string The multiline string 
 
 This feature allows a JSON string to be splitted in two or more lines
@@ -426,7 +657,7 @@ See \ref wxjson_comments for a detailed implementation.
 
 In this section you find the description of all symbols used to
 customize the wxJSON's library behaviuor.
-All those symbols are defined in the \c include/wx/json_defs,h source
+All those symbols are defined in the \c include/wx/json_defs.h source
 file:
 
 \code
@@ -459,8 +690,6 @@ In ANSI builds the macro is not defined.
 Note that the macro should not be set by the user by automatically
 by the compiler: in fact, the macro is defined if and only if
 wxUSE_UNICODE == 1 which is set by \b wxWidgets itself.
-
-
 
 
 */

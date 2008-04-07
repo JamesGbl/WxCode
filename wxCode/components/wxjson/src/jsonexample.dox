@@ -1,7 +1,7 @@
 
 /*! \mainpage wxJSON - The wxWidgets implementation of JSON 
 
-<center><b>version 0.3</b></center>
+<center><b>version 0.4</b></center>
 
 <center>http://lnx.mauriziovettorato.it/public/json/home.html</center>
 
@@ -147,8 +147,10 @@ The following three classes are defined in wxJSON:
 
 \li wxJSONWriter the generator of a JSON formatted text 
 
-You can know more about the internals of this JSON implementation
-by looking at \ref pg_json_internals
+Pages related to this documentation:
+
+\li \ref wxjson_tutorial.
+\li \ref pg_json_internals
 
 \section main_install Installation
 
@@ -165,7 +167,7 @@ For info about installation of the library read the INSTALL
 text file in the top-level directory.
 You can download this library in the following ways:
 
- \li using anonymous access to the CVS repository of the
+ \li using anonymous access to the \b Subversion repository of the
 	<A href="http://wxcode.sf.net">wxCode project</a> on SourceForge.
 	You will need the <A href="http://bakefile.sf.net">bakefile</a> tools in
 	order to generate the \e makefiles for your system / compiler to
@@ -176,7 +178,6 @@ You can download this library in the following ways:
 	<A href="https://sourceforge.net/project/showfiles.php?group_id=51305&package_id=45182">
 	here</a>
 
-You can know more about wxJSON by reading the \ref wxjson_tutorial
 
 \section main_links Usefull links:
 
@@ -194,13 +195,24 @@ The \b wxJSON library is a complete implementation of the
 JSON data-interchange format.
 All JSON specifications are implemented in this library plus
 some extensions in the writer and in the parser class.
-However, this version has still to be considered a beta release
-because some optimization is missing.
-One of the most important feature that will be added in a
-future release (version 0.4) is the \e copy-on-write tecnique.
-JSON value objects may be very complex and the copy constructor and
-assignment operator should implement COW in order to speed up
-the process.
+This version (0.4) has to be considered a final beta release:
+no other features should be implemented in the library.
+
+Before releasing the first stable release (1.0), I wait a
+while in order to collect user's comments and hints.
+If several users want to change memberfunction's names and/or
+parameters it may be possibile that version 1.x will
+break the compatibility with 0.x versions.
+A major vesion change will be the right place to do this.
+
+JSON data format is very stable. It is accredited to be
+stable forever or, at least, until programming languages 
+will be based on numbers, strings, booleans, structures and
+arrays.
+As a conseguence, it is improbable that the wxJSON library
+will have to be changed in its features.
+New versions of this library will be realesed in order to
+keep \b wxJSON compatible with the new releases of \b wxWidgets.
 
 
 

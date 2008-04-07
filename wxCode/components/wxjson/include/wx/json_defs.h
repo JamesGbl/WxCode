@@ -17,8 +17,8 @@
 // since some kind of tests, like those of AM_WXCODE_CHECKFOR_COMPONENT_VERSION()
 // for "configure" scripts under unix, use them.
 #define wxJSON_MAJOR          0
-#define wxJSON_MINOR          3
-#define wxJSON_RELEASE        1
+#define wxJSON_MINOR          4
+#define wxJSON_RELEASE        0
 
 // For non-Unix systems (i.e. when building without a configure script),
 // users of this component can use the following macro to check if the
@@ -57,9 +57,11 @@
 // the __PRETTY_FUNCTION__ macro expands to the full class's
 // member name in the GNU GCC.
 // For other compilers you have to set the correct macro
-#if !defined( __GNUC__ )
-  #define __PRETTY_FUNCTION__  "FunctionName"
-#endif
+//#if !defined( __GNUC__ )
+//  #define __PRETTY_FUNCTION__   __WXFUNCTION__
+//#endif
+
+#define __PRETTY_FUNCTION__   __WXFUNCTION__
 
 
 // define wxJSON_USE_UNICODE if wxWidgets was built with
@@ -68,9 +70,11 @@
   #undef wxJSON_USE_UNICODE
 #endif
 
+// do not modify the following lines
 #if wxUSE_UNICODE == 1
   #define wxJSON_USE_UNICODE
 #endif
+
 
 
 #endif // _WX_JSON_DEFS_H_

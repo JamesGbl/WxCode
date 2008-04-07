@@ -42,9 +42,9 @@
    -f FILENAME the filename to read by the wxJSONReader (only test #15)
 
 
- oct 2007
+ apr 2008
  --------
-
+ The test application was successfull
 
 *****************************************************************************/
 
@@ -184,10 +184,11 @@ int main( int argc, char* argv[] )
 	Test30, Test31, Test32, Test33, Test34, Test35, 
 	Test36, Test37, Test38, Test39, Test40, Test41, Test42, Test43, Test44,
 	Test45, Test46,
+	Test47, Test48, Test49, Test50, Test51,
 	0
   };
 
-#define TOTAL_TESTS 46
+#define TOTAL_TESTS 51
 
   int numParams = cmdLine.GetParamCount();
   if ( numParams == 0 )  {

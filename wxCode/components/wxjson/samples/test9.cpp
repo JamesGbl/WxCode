@@ -483,7 +483,7 @@ int Test42()
   // and now we check the result
   r = CheckBuffer( buffer, utf8Buff_2, sizeof( utf8Buff_2 ));
 #else
-  TestCout( _T("Test #41 is only meaningfull in ANSI builds\n" ));
+  TestCout( _T("Test #42 is only meaningfull in ANSI builds\n" ));
 #endif
   return r;
 }
@@ -550,7 +550,7 @@ int Test43()
   }
 
 #else
-  TestCout( _T("Test #38 is only meaningfull in Unicode builds\n" ));
+  TestCout( _T("Test #43 is only meaningfull in Unicode builds\n" ));
 #endif
 
   return r;
@@ -590,13 +590,11 @@ int Test44()
 
 
 #else
-  TestCout( _T("Test #38 is only meaningfull in Unicode builds\n" ));
+  TestCout( _T("Test #44 is only meaningfull in Unicode builds\n" ));
 #endif
 
   return r;
 }
-
-
 
 
 

@@ -26,7 +26,7 @@ LINKER = gcc
 
 #
 # wxJSON version
-VERSION = 0.3.1
+VERSION = 0.4.0
 
 #
 # Flags for the compiler. You always have to turn on full warnings.
@@ -79,7 +79,7 @@ CXXFLAGS_ANSI = `wx-config --unicode=no --cxxflags`
 
 #
 # the list of objects for unicode builds
-OBJECTS = src/jsonval.o		\
+OBJECTS = src/jsonval.o	\
 	src/jsonwriter.o	\
 	src/jsonreader.o
 
@@ -135,6 +135,7 @@ tarball:
 		--exclude *.o		\
 		--exclude *.oa		\
 		--exclude CVS*		\
+		--exclude .svn*		\
 		--exclude *.bin		\
 		--exclude *.a		\
 		--exclude *.doxytag	\
@@ -147,8 +148,7 @@ tarball:
 		./include/*	\
 		./lib/*.txt	\
 		./samples/*	\
-		./src/*		\
-		./iconv/*
+		./src/*
 
 
 
@@ -166,8 +166,9 @@ backup:
 		--exclude *.bin			\
 		--exclude *.a			\
 		--exclude *.doxytag		\
-		--exclude ./*.bin			\
+		--exclude ./*.bin		\
 		--exclude CVS*			\
+		--exclude .svn*			\
 		--exclude ./Makefil*	\
 		./*
 
@@ -229,7 +230,8 @@ $(LIB_LIBANSI) : $(OBJECTS_A)
 	ar rc $(LIB_LIBANSI) $(OBJECTS_A)
 	mv -f $(LIB_LIBANSI) ./lib/
 
-
+#
+# list of objects for Unicode build
 TEST_OBJECTS = samples/main.o		\
 		samples/test1.o		\
 		samples/test3.o		\
@@ -243,7 +245,8 @@ TEST_OBJECTS = samples/main.o		\
 		samples/test11.o
 
 
-
+#
+# list of objects for ANSI build
 TEST_OBJECTS_A = samples/main.oa	\
 		samples/test1.oa	\
 		samples/test3.oa	\
