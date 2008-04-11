@@ -1,7 +1,7 @@
 
 /*! \page wxjson_tutorial wxJSON - A brief tutorial
 
-This page is a simple tutorial which describes how to use the
+This page is a simple tutorial that describes how to use the
 wxJSON library in order to store data in JSON format, reading
 them, changing the values and how to generate JSON text that
 can be saved to a file, a stream or sent over a network
@@ -28,7 +28,7 @@ You do not need to worry about computer's architecture, endianness
 or operating system.
 It is very easy for humans to read and write and easy for
 machines to parse and generate.
-It is also light-weight and much more compact than other
+It is also light-weight and much more compact than any other
 data-interchange formats.
 
 We will learn how to use the wxJSON library by examining some
@@ -38,7 +38,7 @@ documents or to store images, audio and video streams.
 For these purposes, there are many other formats which are by
 far more appropriate than JSON.
  
-If you are new to JSON, it is better than you first read the 
+If you are new to JSON, it is better that you first read the 
 following pages, which describe the JSON syntax, its advantages
 and its disadvantages:
 
@@ -135,7 +135,7 @@ explained in the following code fragment:
   }
 
   // finally, we get an array of all member's names of the 'wxWidgets'
-  // item. The array will contain (maybe not in this order):
+  // item. The string array will contain (maybe not in this order):
   // 
   //   Description
   //   License
@@ -268,7 +268,7 @@ own, unreadable and proprietary format (it was a nightmare).
 Next came Windows 3: it had a better way for storing
 application's configuration data; they were
 kept in an .INI file which contains simple ASCII text.
-This was a good thing because it was easier for humans to
+This was an improvement because it was easier for humans to
 fine-tuning application's behaviour.
 
 In this example we use JSON to store the configuration data
@@ -798,7 +798,7 @@ To get the above output use the following code fragment:
   root["key-3"].AddComment( "// comment after", wxJSONVALUE_COMMENT_AFTER );
 \endcode
 
-You have to note that comment lines are kept as an array of strings in a data
+You have to note that comment lines are kept in an array of strings in a data
 member of the wxJSONValue object: this means that you can add more than one
 comment line to a JSON value object but remember that there is only one
 data member for storing the position of all comment lines.
@@ -839,7 +839,7 @@ Below you find an example:
 
   // now we add an inline comment to 'key-4'
   root["key-4"].AddComment( "// comment inline key-4",
-					 wxJSONVALUE_COMMENT_BEFORE );
+					 wxJSONVALUE_COMMENT_INLINE );
 
   // now we write the JSON 'root' value to a JSON formatted string
   // object. Note that we have to specify some flags in the wxJSONWriter
@@ -909,12 +909,16 @@ The following code fragment shows some examples:
 \code
   wxJSONValue v1( 10 );
   v1.AddComment( "// A C++ comment line\n" );     // this is OK
+
   v1.AddComment( "// Another C++ comment line" ); // this is OK
+
   v1.AddComment( "/*  A C-style comment */");     // OK
 
   wxJSONValue v2( 20 );
   v2.AddComment( "A C++ comment line\n" );   // Error: does not start with '//'
+
   v2.AddComment( "/ A C++ comment line\n" ); // Error: does not start with '//'
+
   v2.AddComment( "/*** comment **" );        // Error: the close-comment is missing
 
   // the following is OK: new-line characters may follow
@@ -986,7 +990,7 @@ Comments may be directly added to wxJSONValue objects using memberfunctions or
 they can be stored in the values when a JSON formatted text input is read
 by the parser.
 Note that by default the wxJSONReader class recognizes C/C++ comments in the
-input text but simply ignores them: if you wanr to store the comments in the
+input text but simply ignores them: if you want to store the comments in the
 value they refer to you have to pass some flags to the parser's constructor:
 
 \code
@@ -1027,7 +1031,8 @@ respect to the value.
 
 Below you find a JSON text with many comment lines and the description
 of which value the comments refer to. The parser is constructed with the
-\c wxJSONREADER_STORE_COMMENT flag set.
+\c wxJSONREADER_STORE_COMMENT flag set, thus the parser assumes that
+comments apear before the value they refer to.
 
 \code
 // comment for root (line 1)
@@ -1211,7 +1216,7 @@ On the other hand, you \e cannot convert the wxString object
 to whatever format you want; in other words, you cannot convert
 it to a locale dependent charset because the string contains characters
 from different languages which are encoded in different locale dependent
-charsets (precisely, the charsets that have to be used are
+charsets (by the way, the charsets that have to be used are
 ISO-8859-1 for Latin1, ISO-8859-7 for greek and ISO-8859-5 for cyrillic).
 For example, the following code does not work:
 
@@ -1266,23 +1271,29 @@ but remember that the wxJSONValue class \b cannot hold unicode
 string values because the \b wxString class only contains
 one-byte character strings and the actual characters represented are
 locale dependent.
-As with Unicode, in ANSI builds you can read the JSON 
+As with Unicode, in ANSI builds you can read and write the JSON values
+from / to a string object or from a stream object. 
 
+When reading from a string, the parser does not try to convert
+characters: the \b wxString object contains one-byte characters
+that are simply read by the parser and stored in the JSON string
+value.
 
-
-
-
-
-format you want; in addition, you can also ignore the encoding
-format and directly write the string buffer:
+The same applies when writing to a \b wxString object: the
+JSON output text contains one-byte, locale dependent characters.
+You can simply write the string data to a file or whatever
+other object you want but keep in mind that the JSON text
+is not correctly readable by other JSON implementations which
+expects UTF-8 encoded text:
 
 \code
   wxJSONValue  value;
+  value["key"] = "a string";
 
   wxString     jsonText;
   wxJSONWriter writer;
 
-  // write to a string object
+  // write to the string object
   writer.Write( value, jsonText );
 
   // write the output JSON text to a file in ANSI format:
@@ -1296,7 +1307,8 @@ JSON value object to a stream, as in Unicode builds.
 When writing to streams, the encoding format is UTF-8 even if the
 application is built in ANSI mode.
 This permits the data to be sent to an Unicode version of the same
-application (or another application built in Unicode mode).
+application (or another application built in Unicode mode) or
+any other JSON implementation.
 
 When reading from JSON text, you have to same options: you can read
 from a \b wxString object which may be constructed by directly
@@ -1309,10 +1321,10 @@ encoded in UTF-8 format.
 What? But we are in ANSI mode and do not have wide char support!!!
 What happens when the latin1, greek and cyrillic characters are read?
 
-There is the big difference between reading from a string and a
-stream.
-When reading from a stream, the input JSON text is read char-by-char
-and converted char-by-char to a wide character.
+This is the big difference between reading from a string and a
+stream in ANSI builds:
+when reading from a stream, the input JSON text is read char-by-char
+and converted to a wide character.
 Then, the wide character is converted to the corresponding locale
 dependent character if available.
 If the wide character cannot be represented in the current locale

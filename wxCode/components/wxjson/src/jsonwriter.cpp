@@ -53,29 +53,16 @@ static const wxChar* writerTraceMask = _T("traceWriter");
  \li a string object (\b wxString)
  \li a stream object (\b wxOutputStream)
 
- In ANSI builds there is no difference between the two types of output:
- both store strings as sequences of one-byte characters.
+ When writing to a string object, the output is platform dependent.
+ In ANSI builds, the JSON text output in the string object will
+ contain one-byte characters: the actual characters represented is
+ locale dependent.
+ In Unicode builds, the JSON text output in the string contains
+ wide characters which encoding format is platform dependent: UCS-2 in
+ Windows, UCS-4 in GNU/Linux.
 
- In Unicode builds, however, there is a big difference between the two
- objects: when writing to a \b wxString object, characters are stored
- internally as wide characters allowing all string values to maintain
- their original value.
- When writing to a stream object, you have to choose an encoding: the
- default format is UTF-8 but you can also choose other Unicode formats
- such as UCS-2 or UCS-4.
- Moreover, you can also choose to write the JSON value using a 
- locale dependent charset (such as, for example, ISO-8859-1) which does
- not support Unicode.
- In this case, all wide characters that cannot be represented in the
- locale dependent charset, will be written to the stream as \e unicode
- \e escaped \e sequence.
- For example, if a value string cantains the greek letter \e alpha and
- the value has to be encoded in ISO-8859-1 (Latin-1) charset, the
- character will be written as:
-
- \code
-   \u03B1
- \endcode
+ When writing to a stream object, the JSON text output is always
+ encoded in UTF-8 in both ANSI and Unicode builds.
 
  For more info about the unicode topic see \ref wxjson_tutorial_unicode.
 */
@@ -97,7 +84,7 @@ static const wxChar* writerTraceMask = _T("traceWriter");
 	wxJSONWRITER_WRITE_COMMENTS, this flag force the writer to write C/C++ comments
 	always before the value they refer to
 	\li wxJSONWRITER_COMMENTS_AFTER: only meaingfull if the style also includes
-	wxJSONWRITER_STORE_COMMENTS, this flag force the writer to write C/C++ comments
+	wxJSONWRITER_WRITE_COMMENTS, this flag force the writer to write C/C++ comments
 	always after the value they refer to
 	\li wxJSONWRITER_SPLIT_STRINGS: only meaningfull if the style is \b styled
 	this flag force the writer to split strings into two or more lines if they
@@ -196,8 +183,8 @@ wxJSONWriter::Write( const wxJSONValue& value, wxOutputStream& os )
  This is a recursive function. If the value is not a hashmap or
  an array, the function calls the other \b WriteXxxxx functions
  which actually write the text output.
- For maps and arrays, the function calls itself and increments
- the \c m_level data member.
+ For maps and arrays, the function calls itself for all items
+ in the array / hashmap after incrementing the \c m_level data member.
 */
 int
 wxJSONWriter::DoWrite( const wxJSONValue& value, const wxString* key,
@@ -564,7 +551,7 @@ wxJSONWriter::WriteStringValue( const wxString& str )
 
 	\li in ANSI builds, the character is converted to a wide
 		character and then to UTF-8 encoding format
-	\li in Unicode builds, the wide character is encoded in
+	\li in Unicode builds, the wide character is converted to
 		UTF-8 format
 
  The function returns the written character ('ch' itself) or -1 in case
@@ -598,7 +585,7 @@ wxJSONWriter::WriteChar( wxChar ch )
     // the m_conv data member must contain a pointer to an instance
     // of a wxMBConvUTF8 class which is, by default, wxConvLocal
 
-    char buffer[10]; int outLen;
+    char buffer[10];
     wxASSERT( m_conv != 0 );
 
     len = m_conv->FromWChar( buffer, 10, &(wchar[0]), 1 );

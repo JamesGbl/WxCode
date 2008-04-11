@@ -97,7 +97,7 @@ wxJSONRefData::GetRefCount() const
 
 This class holds a JSON value which may be of the following type:
 
-\li wxJSONTYPE_EMPTY: an empty (not initialized) JSON value
+\li wxJSONTYPE_EMPTY: an empty (invalid) JSON value
 \li wxJSONTYPE_NULL: a NULL value
 \li wxJSONTYPE_INT: an integer value
 \li wxJSONTYPE_UINT: an unsigned integer
@@ -129,7 +129,7 @@ int          wxJSONValue::sm_progr = 1;
  If you want to create an \b empty JSON value object you have to use the
  \c wxJSONValue( wxJSONTYPE_EMPTY ) ctor.
  Note that this object is not a valid JSON value - to know more about this
- topic see the SetType function.
+ topic see the SetType() function.
 
  \par The C-string JSON value object
 
@@ -618,7 +618,7 @@ wxJSONValue::AsCString() const
  converted to an unsigned integer but a warning is emitted because of
  the loss of the sign.
  In debug builds the function ASSERTs that the stored value is of
- compatible type: an \b int, an \b insigned \b int or a \b boolean
+ compatible type: an \b int, an \b unsigned \b int or a \b boolean
 */
 unsigned int
 wxJSONValue::AsUInt() const
@@ -629,6 +629,8 @@ wxJSONValue::AsUInt() const
   ui = data->m_value.m_valUInt;
   switch ( data->m_type )  {
     case wxJSONTYPE_BOOL :
+      ui = data->m_value.m_valBool;
+      break;
     case wxJSONTYPE_UINT :
       break;
     case wxJSONTYPE_INT :
@@ -1180,6 +1182,12 @@ wxJSONValue::operator = ( const wxString& str )
 }
 
 //! Assignment operator using reference counting.
+/*!
+ Unlike all other assignment operators, this one makes a
+ swallow copy of the other JSON value object.
+ The function calls \c Ref() to get a shared referenced
+ data.
+*/
 wxJSONValue&
 wxJSONValue::operator = ( const wxJSONValue& other )
 {
@@ -1645,8 +1653,8 @@ wxJSONValue::IsSameAs( const wxJSONValue& other ) const
  Note that the comment string must be a valid C/C++ comment because the
  wxJSONWriter does not modify it.
  In other words, a C++ comment string must start with '//' and must end with
- a new-line character. If not, the function automatically adds the final LF
- character.
+ a new-line character. If the final LF char is missing, the 
+ automatically adds it.
  You can also add C-style comments which must be enclosed in the usual
  C-comment characters.
  For C-style comments, the function does not try to append the final comment
@@ -1979,13 +1987,14 @@ wxJSONValue::SetLineNo( int num )
   data->m_lineNo = num;
 }
 
-
+//! Set the pointer to the referenced data.
 void
 wxJSONValue::SetRefData(wxJSONRefData* data)
 {
   m_refData = data;
 }
 
+//! Increments the referenced data counter.
 void
 wxJSONValue::Ref(const wxJSONValue& clone)
 {
@@ -2004,6 +2013,12 @@ wxJSONValue::Ref(const wxJSONValue& clone)
   }
 }
 
+//! Unreferences the shared data
+/*!
+ The function decrements the number of shares in wxJSONRefData::m_refCount
+ and if it is ZERO, deletes the referenced data.
+ It is called by the destructor.
+*/
 void
 wxJSONValue::UnRef()
 {
@@ -2016,6 +2031,7 @@ wxJSONValue::UnRef()
     }
 }
 
+//! Makes an exclusive copy of shared data
 void
 wxJSONValue::UnShare()
 {

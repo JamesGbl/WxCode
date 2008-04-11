@@ -210,12 +210,10 @@ Note that the root JSON data structure is shared by the two instances.
 
 
 
-
-Also note that the three \b null values in the array share the same data
-structure: in fact, when the subscript operator which returned the
-fourth element had created the first array's elements, a 
-reference-counted copy of a temporary NULL value was created.
-Notice that the shared \b null value is for 3 items in \b v1 plus
+We already noted that the three \b null values in the array share the same data
+structure but because the root value is shared we only have 
+a reference count of THREE for the NULL values.
+In fact, the data is shared by SIX JSON value objects: 3 items in \b v1 plus
 3 items in \b v3 (six values in total) but as the parent object is shared,
 the wxJSONRefData::m_refCount data member only counts 3 shares.
 
@@ -236,13 +234,12 @@ copy of only that array's element is done and it is assigned the new
 value.
 
 We are wrong. In fact, the wxJSONValue object makes a copy of the
-whole array. Why?
+whole root object. Why?
 The answer is simple: the first impression is that the \b operator=
-member function is called for the first array element and that the
-function \e unshares the referenced data.
+member function is called for the second array element of \b v3.
 In reality, \b before calling the \b operator= memberfunction the
-code fragment seen above must return a reference to the first
-element of the array.
+code fragment seen above must return a reference to the second
+element of \b v3's array.
 This reference is returned by the \b operator[] (the subscript operator)
 which is itself a \b non-const memberfunction.
 So, the subscript operator of the root value object makes a real copy
@@ -261,7 +258,7 @@ array:
 
 
 In order to avoid the copy of the top-level array type we have had to
-use a \e const member function to access the first array's element.
+use a \e const member function to access the second array's element.
 Note that we cannot use the wxJSONValue::ItemAt() function because
 this function returns a copy of the data not a reference to it:
 
@@ -271,7 +268,7 @@ this function returns a copy of the data not a reference to it:
   wxJSONValue v2(v1);   // makes a copy of 'v1'
 
   // does not work!!! what we do is to change a temporary copy
-  // of the first array's element
+  // of the second array's element
   v2.ItemAt( 1 ) = "value changed";
 \endcode
 
@@ -294,7 +291,7 @@ This is an example:
 \endcode
 
 Because the \b operator[] memberfunction is non-const, the read 
-operation causes the wxJSONValue class to make a exclusive copy
+operation causes the wxJSONValue class to make an exclusive copy
 of shared data even when the access to the value is only for
 read purposes.
 The good news is that we can use wxJSONValue::ItemAt() in this case
@@ -322,7 +319,7 @@ In the following image you see that in the above example of a
 four element's array, the JSON array value \b v1 is copied to
 \b v3 but the individual items are not really copied because
 3 items of \b v1 and 2 items of \b v3 refer to the same
-referenced data.
+referenced data (the NULL value):
 
 <img src="images/cow11.png">
 

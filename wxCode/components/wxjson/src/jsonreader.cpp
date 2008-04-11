@@ -27,12 +27,12 @@
  values in the \c wxJSONValue structure.
  The ctor accepts two parameters: the \e style flag, which controls how
  much error-tolerant should the parser be and an integer which is
- the maximum number of errors that have to be reported.
+ the maximum number of errors and warnings that have to be reported.
 
  If the document does not contain an open/close JSON character the
  function returns an \b empty value object; in other words, the 
  wxJSONValue::IsEmpty() function returns TRUE.
- This is the case of a document that is empty on contains only
+ This is the case of a document that is empty or contains only
  whitespaces or comments.
  If the document contains a starting object/array character immediatly
  followed by a closing object/array character
@@ -42,6 +42,10 @@
  For an empty object or array, the wxJSONValue::IsEmpty() function
  returns FALSE and the wxJSONValue::Size() returns ZERO.
 
+ In order to avoid confusion, you have to think about \b empty JSON values
+ as \b invalid JSON values.
+ \b Empty arrays and \b empty objects are valid JSON values.
+
  \par JSON text
 
  Note that the wxJSON parser just skips all characters read from the
@@ -50,14 +54,22 @@
  This means that the JSON input text may contain everything
  before the first start-object/array character except these two chars themselves
  unless they are included in a C/C++ comment.
+ Comment lines that apear before the first start array/object character,
+ are non ignored if the parser is constructed with the wxJSONREADER_STORE_COMMENT
+ flag: they are added to the comment's array of the root JSON value.
 
- Also note that the parsing process stops when the DoRead() function
+ Also note that the parsing process stops when the internal DoRead() function
  returns. Because that function is recursive, the top-level close-object
  '}' or close-array ']' character cause the top-level DoRead() function
  to return thus stopping the parsing process regardless the EOF condition.
  This mean that the JSON input text may contain everything \b after
  the top-level close-object/array character.
  Here are some examples:
+
+ Returns a wxJSONTYPE_EMPTY value (invalid JSON value)
+ \code
+   // this text does not contain an open array/object character
+ \endcode
 
  Returns a wxJSONTYPE_OBJECT value of Size() = 0 
  \code
@@ -72,7 +84,6 @@
  \endcode
 
  Text before and after the top-level open/close characters is ignored. 
-
  \code
    This non-JSON text does not cause the parser to report errors or warnings
    {
@@ -178,7 +189,7 @@ static const wxChar* storeTraceMask = _T("StoreComment");
 	the parser stops to read the JSON input text and no other error is
 	reported.
 
- The \c flag parameter flag is the combination of ZERO or more of the
+ The \c flag parameter is the combination of ZERO or more of the
  following constants OR'ed toghether:
 
  \li wxJSONREADER_ALLOW_COMMENTS: C/C++ comments are recognized by the
