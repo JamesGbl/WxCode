@@ -349,7 +349,7 @@ int Test26()
   wxJSONReader reader( wxJSONREADER_TOLERANT | wxJSONREADER_STORE_COMMENTS );
   int numErrors = reader.Parse( s26, &root );
   PrintValue( root, reader );
-  ASSERT( numErrors == 2 )
+  ASSERT( numErrors == 4 )
 
   // check if the read value is 'the same' as the expected value
   wxJSONValue result;
@@ -526,7 +526,7 @@ int Test27()
   wxJSONReader reader( wxJSONREADER_TOLERANT | wxJSONREADER_STORE_COMMENTS );
   int numErrors = reader.Parse( s27, &root );
   PrintValue( root, reader );
-  ASSERT( numErrors == 0 )
+  ASSERT( numErrors == 2 )
 
   // check if the read value is 'the same' as the expected value
   wxJSONValue result;
@@ -748,7 +748,7 @@ int Test29()
 			| wxJSONREADER_COMMENTS_AFTER );
   int numErrors = reader.Parse( s29, &root );
   PrintValue( root, reader );
-  ASSERT( numErrors == 0 )
+  ASSERT( numErrors == 6 )
 
   // check if the read value is 'the same' as the expected value
   wxJSONValue result;

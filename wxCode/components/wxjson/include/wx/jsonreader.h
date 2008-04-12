@@ -73,7 +73,7 @@ protected:
   void AddError( const wxString& descr );
   void AddError( const wxString& fmt, const wxString& str );
   void AddError( const wxString& fmt, wxChar ch );
-  void AddWarning( const wxString& descr );
+  void AddWarning( int type, const wxString& descr );
   int  GetStart();
   int  ReadChar();
   int  GetChar();

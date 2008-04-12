@@ -26,7 +26,7 @@ LINKER = gcc
 
 #
 # wxJSON version
-VERSION = 0.4.0
+VERSION = 0.4.1
 
 #
 # Flags for the compiler. You always have to turn on full warnings.
@@ -242,7 +242,8 @@ TEST_OBJECTS = samples/main.o		\
 		samples/test8.o		\
 		samples/test9.o		\
 		samples/test10.o	\
-		samples/test11.o
+		samples/test11.o	\
+		samples/test12.o
 
 
 #
@@ -257,8 +258,8 @@ TEST_OBJECTS_A = samples/main.oa	\
 		samples/test8.oa	\
 		samples/test9.oa	\
 		samples/test10.oa	\
-		samples/test11.oa
-
+		samples/test11.oa	\
+		samples/test12.oa
 
 
 

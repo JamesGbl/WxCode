@@ -116,6 +116,11 @@ extern int Test49();   // check the new COW functions: a simple 4-items array
 extern int Test50();   // check the new COW functions: several level-2 values
 extern int Test51();   // check the new COW functions: read a copy of a value
 
+//
+// in test12.cpp: bug-fixing in 0.4.1 (reader and writer)
+extern int Test52();   // testing the wxJSONReader::AddWarning() function
+
+
 
 // global variables in 'main.cpp'
 extern int gs_tolerant;
