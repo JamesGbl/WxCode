@@ -244,7 +244,7 @@ wxJSONReader::~wxJSONReader()
 
 //! Parse the JSON document.
 /*!
- The four overloaded versions of the \c Parse() function read a
+ The two overloaded versions of the \c Parse() function read a
  JSON text stored in a wxString object or in a wxInputStream
  object.
 
@@ -256,7 +256,8 @@ wxJSONReader::~wxJSONReader()
  with the \c wxJSONREADER_STRICT flag, then the parsed document
  is \e well-formed and it only contains valid JSON text.
 
- If the \c wxJSONREADER_TOLERANT was used then a return value of ZERO
+ If the \c wxJSONREADER_TOLERANT flag was used in the parser's 
+ constructor, then a return value of ZERO
  does not mean that the document is \e well-formed because it may
  contain comments and other extensions that are not fatal for the
  wxJSON parser but other parsers may fail to recognize.
@@ -273,6 +274,14 @@ wxJSONReader::~wxJSONReader()
  On the other hand, if the text document starts with a '{' then
  this function must change the type of the \c val object to
  \c wxJSONTYPE_OBJECT and the old content of 10 array elements will be lost.
+
+ When reading from a \b wxInputStream the JSON text must be encoded
+ in UTF-8 format for both Unicode and ANSI builds.
+ When reading form a \b wxString object, the input text is encoded
+ in different formats depending on the platform and the build
+ mode: in Unicode builds, strings are encoded in UCS-2 format on
+ Windows and in UCS-4 format on GNU/Linux; in ANSI builds, strings
+ contain one-byte locale dependent characters.
 */
 int
 wxJSONReader:: Parse( const wxString& doc, wxJSONValue* val )

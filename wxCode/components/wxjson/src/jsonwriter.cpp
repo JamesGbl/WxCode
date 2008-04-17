@@ -172,7 +172,7 @@ wxJSONWriter::~wxJSONWriter()
    root["key1"] = "some value";
 
    // write to a stream
-   wxMemoryOutputStreeam mem;
+   wxMemoryOutputStream mem;
    wxJSONWriter writer;
    writer.Write( root, mem );
    wxStreamError err = mem.GetLastError();
@@ -642,7 +642,7 @@ wxJSONWriter::WriteStringValue( const wxString& str )
 int
 wxJSONWriter::WriteChar( wxChar ch )
 {
-  int r = ch;
+  int r = (unsigned wxChar) ch;
   if ( m_outType == 0 )  {   // output is a string object?
     //wxString* out = wxDynamicCast( m_outObject, wxString );
     //wxASSERT( out != 0 );

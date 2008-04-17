@@ -428,14 +428,14 @@ int Test41()
   wxJSONWriter writer( wxJSONWRITER_NONE );
   writer.Write( value, jsonText );
 
-  TestCout( _T("Result buffer length=\n" ));
+  TestCout( _T("Result buffer length=" ));
   TestCout( sizeof(utf8Buff), true );
 
   // and now we check the obtained buffer against the
   // expected result stored in 'utf8Buff'
   r = CheckBuffer( buffer, utf8Buff, sizeof( utf8Buff ));
 #else
-  TestCout( _T("Test #41 is only meaningfull in ANSI builds\n" ));
+  TestCout( _T("Test #41 is only meaningfull in Unicode builds\n" ));
 #endif
   return r;
 }
@@ -445,6 +445,7 @@ int Test41()
 // characters. We set the 'it_IT.iso88591' locale so that
 // the conversion should be OK.
 // 29 feb 2008: OK, test is successfull
+// 17 apr 2008: test failed!
 int Test42()
 {
   int r = 0;

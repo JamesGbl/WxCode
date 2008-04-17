@@ -95,7 +95,7 @@ explained in the following code fragment:
 
   // now read the JSON text and store it in the 'root' structure
   // check for errors before retreiving values...
-  int numErrors = reader.Parse( document, root );
+  int numErrors = reader.Parse( document, &root );
   if ( numErrors > 0 )  {
     cout << "ERROR: the JSON document is not well-formed" << endl;
     const wxArrayString& errors = reader.GetErrors();
@@ -149,6 +149,16 @@ The wxJSONReader class's constructor has some parameters that control
 how much error-tolerant should the parser be. By default, the parser
 is very tolerant about non fatal errors which are reported as \e warnings.
 For more information see the wxJSONReader class's description.
+In addition to reading from a \b wxString object, you can also read the JSON
+text from a \b wxInputStream object.
+The difference is that the text read from a stream must be encoded in UTF-8
+format while the text stored in a string object is encoded in different
+ways depending on the platform and the build mode (in Unicode builds,
+strings are stored in UCS-2 format on Windows and UCS-4 on GNU/Linux,
+in ANSI builds, the string object contains one-byte, locale dependent
+characters).
+To know more about Unicode / ANSI read \ref wxjson_tutorial_unicode
+
 
 Adding new values or changing the value of existing JSON-value objects
 is also very simple.
@@ -213,6 +223,38 @@ flags used in the writer class.
 To know more about comment lines in JSONvalue objects, see
 \ref wxjson_tutorial_comment.
 
+In addition to writing to a \b wxString object, you can also
+write to a \b wxOutputStream object.
+The difference is that the text written to stream is always encoded in UTF-8
+format in both Unicode and ANSI builds while the text written to
+a string object is encoded in different
+ways depending on the platform and the build mode (in Unicode builds,
+strings are stored in UCS-2 format on Windows and UCS-4 on GNU/Linux,
+in ANSI builds, the string object contains one-byte, locale dependent
+characters).
+To know more about Unicode / ANSI read \ref wxjson_tutorial_unicode
+
+Also note that the wxJSONWriter::Write() function does not return
+a status code.
+This is OK when writing to a string object but when writing to
+streams, you have to check for errors.
+You can check for errors using the stream's memberfunctions,
+as in the following example code:
+
+ \code
+   // construct the JSON value object and add values to it
+   wxJSONValue root;
+   root["key1"] = "some value";
+
+   // write to a stream
+   wxMemoryOutputStream mem;
+   wxJSONWriter writer;
+   writer.Write( root, mem );
+   wxStreamError err = mem.GetLastError();
+   if ( err != wxSTREAM_NO_ERROR )  {
+     MessageBox( _T("ERROR: cannot write the JSON text output"));
+   }
+\endcode
 
 \subsection wxjson_tutorial_jsonpower The power and simplicity of JSON
 
