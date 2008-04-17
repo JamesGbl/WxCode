@@ -180,7 +180,7 @@ int Test37()
   char buffer[128];
   wxMemoryOutputStream jsonText( buffer, 128 );
   wxJSONWriter writer( wxJSONWRITER_NONE );
-  int success = writer.Write( value, jsonText );
+  writer.Write( value, jsonText );
 
   // and now we check the result
   int len = sizeof( utf8Buff );
@@ -237,7 +237,7 @@ int Test38()
 
   wxString jsonText;
   wxJSONWriter writer( wxJSONWRITER_NONE );
-  int success = writer.Write( value, jsonText );
+  writer.Write( value, jsonText );
   // ASSERT( success == 0 );
   TestCout( _T("The result string=\n" ));
   TestCout( jsonText );
@@ -339,7 +339,7 @@ int Test39()
 
   wxString jsonText;
   wxJSONWriter writer( wxJSONWRITER_NONE );
-  int success = writer.Write( value, jsonText );
+  writer.Write( value, jsonText );
   // ASSERT( success == 0 );
   TestCout( _T("The result string=\n" ));
   TestCout( jsonText );
@@ -391,8 +391,7 @@ int Test40()
 
   wxString jsonText;
   wxJSONWriter writer( wxJSONWRITER_NONE );
-  int success = writer.Write( value, jsonText );
-  // ASSERT( success == 0 );
+  writer.Write( value, jsonText );
   TestCout( _T("The result string=\n" ));
   TestCout( jsonText );
 
@@ -427,8 +426,7 @@ int Test41()
   char buffer[200];
   wxMemoryOutputStream jsonText( buffer, 200 );
   wxJSONWriter writer( wxJSONWRITER_NONE );
-  int success = writer.Write( value, jsonText );
-  // ASSERT( success == 0 )
+  writer.Write( value, jsonText );
 
   TestCout( _T("Result buffer length=\n" ));
   TestCout( sizeof(utf8Buff), true );
@@ -477,8 +475,7 @@ int Test42()
   char buffer[128];
   wxMemoryOutputStream jsonText( buffer, 128 );
   wxJSONWriter writer( wxJSONWRITER_NONE );
-  int success = writer.Write( value, jsonText );
-  // ASSERT( success == 0 )
+  writer.Write( value, jsonText );
 
   // and now we check the result
   r = CheckBuffer( buffer, utf8Buff_2, sizeof( utf8Buff_2 ));
@@ -533,8 +530,7 @@ int Test43()
 
   wxString jsonText;
   wxJSONWriter writer( wxJSONWRITER_NONE );
-  int success = writer.Write( value, jsonText );
-  // ASSERT( success == 0 );
+  writer.Write( value, jsonText );
   TestCout( _T("The result string=\n" ));
   TestCout( jsonText );
 

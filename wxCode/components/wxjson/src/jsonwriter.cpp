@@ -134,19 +134,54 @@ wxJSONWriter::~wxJSONWriter()
 
 //! Write the JSONvalue object to a JSON text.
 /*!
- The four overloaded versions of this function let the user choose
- the output object (a string or a stream) and, for stream output,
- the encoding format of the text.
- Returns ZERO if the function is successfull otherwise a negative
- integer is returned.
+ The two overloaded versions of this function let the user choose
+ the output object which can be:
 
- The encoding format may be specified either by name (for example "UCS-4LE",
- which corresponds to a little endian four-byte character encoding) or
- using a wxMBConv -derived class instance as the last parameter.
- The encoding format is only available when writing to a wxOutputStream
- object: if not specified, the default encoding is UTF-8.
+ \li a string object (\b wxString)
+ \li a stream object ( \b wxOutputStream)
+
+ The two types of output object are very different because the
+ text outputted in encoded in different formats depending on the
+ build mode.
+
+ For \b Unicode builds, the JSON text output is platform dependent
+ because \b wxString objects store wide characters which are
+ represented in different formats: UCS-2 on Windows and UCS-4
+ on Linux.
+
+ For \b ANSI mode the JSON text output written to a string object
+ is encoded in a locale dependent format: wide characters are not
+ supported and the string object always contains one-byte characters.
+
+ When the output object is a stream, the JSON text output is always
+ encoded in UTF-8 format in both Unicode and ANSI builds.
+
+ Also note that the Write() function does not return a status code.
+ If you are writing to a string, you do not have to warry about this
+ issue: no errors can occur when writing to strings.
+ On the other hand, wehn writing to a stream there could be errors
+ in the write operation.
+ If an error occurs, the \c Write(9 function immediatly returns
+ without trying further output operations.
+ You have to check the status of the stream by calling the stream's
+ memberfunctions. Example:
+
+ \code
+   // construct the JSON value object and add values to it
+   wxJSONValue root;
+   root["key1"] = "some value";
+
+   // write to a stream
+   wxMemoryOutputStreeam mem;
+   wxJSONWriter writer;
+   writer.Write( root, mem );
+   wxStreamError err = mem.GetLastError();
+   if ( err != wxSTREAM_NO_ERROR )  {
+     MessageBox( _T("ERROR: cannot write the JSON text output"));
+   }
+\endcode
 */
-int
+void
 wxJSONWriter::Write( const wxJSONValue& value, wxString& str )
 {
   m_level = 0;
@@ -158,11 +193,11 @@ wxJSONWriter::Write( const wxJSONValue& value, wxString& str )
 
   m_outType   = 0;      // string
   m_outObject = &str;
-  return DoWrite( value, 0, false );
+  DoWrite( value, 0, false );
 }
 
 //! \overload Write( const wxJSONValue&, wxString& )
-int
+void
 wxJSONWriter::Write( const wxJSONValue& value, wxOutputStream& os )
 {
   m_level = 0;
@@ -173,8 +208,7 @@ wxJSONWriter::Write( const wxJSONValue& value, wxOutputStream& os )
   m_outType   = 1;      // stream
   m_outObject = &os;
 
-  int r = DoWrite( value, 0, false );
-  return r;
+  DoWrite( value, 0, false );
 }
 
 
@@ -202,6 +236,7 @@ wxJSONWriter::DoWrite( const wxJSONValue& value, const wxString* key,
   //  wxJSONVALUE_COMMENT_AFTER
   //  wxJSONVALUE_COMMENT_INLINE
   //
+  // or -1 if comments have not to be written
   int commentPos = -1;
   if ( value.GetCommentCount() > 0 && (m_style & wxJSONWRITER_WRITE_COMMENTS))  {
     commentPos = value.GetCommentPos();
@@ -213,18 +248,27 @@ wxJSONWriter::DoWrite( const wxJSONValue& value, const wxString* key,
     }
   }
 
-  int lastChar = -1;  // check if WriteComment() writes the last LF char
+  int lastChar = 0;  // check if WriteComment() writes the last LF char
 
   // first write the comment if it is BEFORE
   if ( commentPos == wxJSONVALUE_COMMENT_BEFORE )   {
-    WriteComment( value, true );
+    lastChar = WriteComment( value, true );
+  }
+  if ( lastChar < 0 )   {
+    return lastChar;
   }
 
-  WriteIndent();
+  lastChar = WriteIndent();
+  if ( lastChar < 0 )   {
+    return lastChar;
+  }
 
   // now write the key if it is not NULL
   if ( key )   {
-    WriteKey( *key );
+    lastChar = WriteKey( *key );
+  }
+  if ( lastChar < 0 )   {
+    return lastChar;
   }
 
   // now write the value
@@ -265,20 +309,28 @@ wxJSONWriter::DoWrite( const wxJSONValue& value, const wxString* key,
 
     case wxJSONTYPE_ARRAY :
       ++m_level;
-      WriteChar( '[' );
+      lastChar = WriteChar( '[' );
       // the inline comment for objects and arrays are printed in the open char
       if ( commentPos == wxJSONVALUE_COMMENT_INLINE )   {
         commentPos = -1;  // we have already written the comment
-        WriteChar( ' ' );
+        lastChar = WriteChar( ' ' );
+        if ( lastChar < 0 )   {
+          return lastChar;
+        }
         lastChar = WriteComment( value, false );
+        if ( lastChar < 0 )   {
+          return lastChar;
+        }
         if ( lastChar != '\n' )   {
           WriteChar( '\n' );
           lastChar = '\n';
         }
       }
       else   {
-        WriteChar( '\n' );
-        lastChar = '\n';
+        lastChar = WriteChar( '\n' );
+        if ( lastChar < 0 )   {
+          return lastChar;
+        }
       }
 
       size = value.Size();
@@ -294,28 +346,34 @@ wxJSONWriter::DoWrite( const wxJSONValue& value, const wxString* key,
         }
       }
       --m_level;
-      WriteIndent();
-      WriteChar( ']' );
-      lastChar = ']';
+      lastChar = WriteIndent();
+      if ( lastChar < 0 )   {
+        return lastChar;
+      }
+      lastChar = WriteChar( ']' );
       break;
 
     case wxJSONTYPE_OBJECT :
       ++m_level;
 
-      WriteChar( '{' );
+      lastChar = WriteChar( '{' );
+      if ( lastChar < 0 )   {
+        return lastChar;
+      }
       // the inline comment for objects and arrays are printed in the open char
       if ( commentPos == wxJSONVALUE_COMMENT_INLINE )   {
-        WriteChar( ' ' );
+        lastChar = WriteChar( ' ' );
         commentPos = -1;  // we have already written the comment
         lastChar = WriteComment( value, false );
+        if ( lastChar < 0 )   {
+          return lastChar;
+        }
         if ( lastChar != '\n' )   {
           WriteChar( '\n' );
-          lastChar = '\n';
         }
       }
       else   {
-        WriteChar( '\n' );
-        lastChar = '\n';
+        lastChar = WriteChar( '\n' );
       }
 
       map = value.AsMap();
@@ -338,27 +396,38 @@ wxJSONWriter::DoWrite( const wxJSONValue& value, const wxString* key,
         i++;
       }
       --m_level;
-      WriteIndent();
-      WriteChar( '}' );
-      lastChar = '}';
+      lastChar = WriteIndent();
+      if ( lastChar < 0 )   {
+        return lastChar;
+      }
+      lastChar = WriteChar( '}' );
       break;
   }
 
   // when the value is written, check if we need a comma character
   // and if a comment inline / after must be written
   if ( comma )   {
-    WriteChar( ',' );
+    lastChar = WriteChar( ',' );
+    if ( lastChar < 0 )   {
+      return lastChar;
+    }
   }
   if ( commentPos == wxJSONVALUE_COMMENT_INLINE )   {
-    WriteChar( ' ' );
+    lastChar = WriteChar( ' ' );
     lastChar = WriteComment( value, false );
+    if ( lastChar < 0 )   {
+      return lastChar;
+    }
   }
   else if ( commentPos == wxJSONVALUE_COMMENT_AFTER )   {
     WriteChar( '\n' );
     lastChar = WriteComment( value, true );
+    if ( lastChar < 0 )   {
+      return lastChar;
+    }
   }
   if ( lastChar != '\n' )  {
-    WriteChar( '\n' );
+    lastChar = WriteChar( '\n' );
   }
   return lastChar;
 }
@@ -369,8 +438,9 @@ int
 wxJSONWriter::WriteComment( const wxJSONValue& value, bool indent )
 {
   // the function returns the last character written which should be
-  // a LF char
-  int lastChar = -1;
+  // a LF char or -1 in case of errors
+  // if nothing is written, returns ZERO
+  int lastChar = 0;
 
   // only write comments if the style is STYLED and the WRITE_COMMENTS flag
   // is set.
@@ -385,13 +455,12 @@ wxJSONWriter::WriteComment( const wxJSONValue& value, bool indent )
   int cmtSize = cmt.GetCount();
   for ( int i = 0; i < cmtSize; i++ )    {
     if ( indent )  {
-      WriteIndent();
+      lastChar = WriteIndent();
     }
     WriteString( cmt[i]);
     lastChar = cmt[i].Last();
     if ( lastChar != '\n' )   {
-      WriteChar( '\n' );
-      lastChar = '\n';
+      lastChar = WriteChar( '\n' );
     }
   }
   return lastChar;
@@ -411,7 +480,7 @@ wxJSONWriter::WriteComment( const wxJSONValue& value, bool indent )
 int
 wxJSONWriter::WriteIndent()
 {
-  int lastChar = ' ';
+  int lastChar = 0;
   int numSpaces = m_indent + ( m_step * m_level );
   if ( m_style & wxJSONWRITER_STYLED )  {
     for ( int i = 0; i < numSpaces; i++ )  {
@@ -428,7 +497,7 @@ wxJSONWriter::WriteIndent()
 int
 wxJSONWriter::WriteIndent( int num )
 {
-  int lastChar = ' ';
+  int lastChar = 0;
   if ( m_style & wxJSONWRITER_STYLED )  {
     for ( int i = 0; i < num; i++ )  {
       lastChar = WriteChar( ' ' );
@@ -503,8 +572,10 @@ wxJSONWriter::WriteStringValue( const wxString& str )
     multiLineIndent = ( m_level + 2 ) * m_step;
   }
 
-  int lastChar;
-  WriteChar( '\"' );  // open quotes
+  int lastChar = WriteChar( '\"' );  // open quotes
+  if ( lastChar < 0 )   {
+    return lastChar;
+  }
 
   // every character is written using the WriteChar() function
   size_t len = str.length();
@@ -512,26 +583,37 @@ wxJSONWriter::WriteStringValue( const wxString& str )
     wxChar ch = str.at(i ); bool replaced = false;
     for ( int l = 0; l < 8; l++ )  {
       if ( ch == escapedChars[l] )   {
-        WriteString( replaceChars[l] );
+        lastChar = WriteString( replaceChars[l] );
+        if ( lastChar < 0 )   {
+          return lastChar;
+        }
         replaced = true;
         break;
       }
     }
     if ( !replaced )  {
       lastChar = WriteChar( ch );
-      if ( lastChar == -1 )  {
+      if ( lastChar < 0 )  {
         return lastChar;
       }
     }
     // check if the char is LF and if the style is SPLIT_STRING
     if ( ch == '\n' && multiLineIndent > 0 )   {
-      WriteChar( '\"' );  // close quotes
-      WriteChar( '\n' );
-      WriteIndent( multiLineIndent );
-      WriteChar( '\"' );  // reopen quotes
+      lastChar = WriteString( _T("\"\n" ));  // close quotes
+      if ( lastChar < 0 )  {
+        return lastChar;
+      }
+      lastChar = WriteIndent( multiLineIndent );
+      if ( lastChar < 0 )  {
+        return lastChar;
+      }
+      lastChar = WriteChar( '\"' );  // reopen quotes
+      if ( lastChar < 0 )  {
+        return lastChar;
+      }
     }
   }
-  WriteChar( '\"' );  // close quotes
+  lastChar = WriteChar( '\"' );  // close quotes
   return lastChar;
 }
 
@@ -639,7 +721,7 @@ wxJSONWriter::WriteString( const wxString& str )
   size_t len = str.length();
   for ( size_t i = 0; i < len; i++ ) {
     lastChar = WriteChar( str[i] );
-    if ( lastChar == -1 )  {
+    if ( lastChar < 0 )  {
       break;
     }
   }
@@ -726,7 +808,7 @@ wxJSONWriter::WriteEmpty()
   return WriteString( s );
 }
 
-//! Writes an error string to the output JSON text
+//! Writes an error string to the output JSON text (not used)
 /*!
  The function just writes the provided string prepended with
  the \b ERROR word.

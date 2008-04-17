@@ -119,6 +119,7 @@ extern int Test51();   // check the new COW functions: read a copy of a value
 //
 // in test12.cpp: bug-fixing in 0.4.1 (reader and writer)
 extern int Test52();   // testing the wxJSONReader::AddWarning() function
+extern int Test53();   // testing errors in writing to streams
 
 
 

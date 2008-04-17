@@ -1,0 +1,4 @@
+test12.txt
+----------
+The file is opened in read-only mode in the Test53()
+function - see 'samples/test12.cpp'

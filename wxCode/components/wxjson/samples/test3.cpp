@@ -124,7 +124,9 @@ int Test5()
   root.Append( 12 );
   root.Append( true );
   root.Append( wxJSONValue( wxJSONTYPE_NULL));   // this is a 'null' value
-  // root.Append( wxJSONValue() );               // this is an empty value (error)
+
+  // the 'empty' (not valid) value cause an ASSERTION failure in debug builds
+  // root.Append( wxJSONValue() ); 
   root.Append( 90e+12 );
 
   wxString str;

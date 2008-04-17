@@ -59,8 +59,8 @@ public:
   wxJSONWriter( int style = wxJSONWRITER_STYLED, int indent = 0, int step = 3 );
   ~wxJSONWriter();
 
-  int  Write( const wxJSONValue& value, wxString& str );
-  int  Write( const wxJSONValue& value, wxOutputStream& os );
+  void Write( const wxJSONValue& value, wxString& str );
+  void Write( const wxJSONValue& value, wxOutputStream& os );
 
 protected:
 

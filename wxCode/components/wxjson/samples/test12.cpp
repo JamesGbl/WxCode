@@ -27,12 +27,43 @@
 #include <wx/app.h>
 #include <wx/string.h>
 #include <wx/debug.h>
+#include <wx/mstream.h>
+#include <wx/file.h>
+#include <wx/wfstream.h>
+
 
 #include <wx/jsonval.h>
 #include <wx/jsonreader.h>
 #include <wx/jsonwriter.h>
 #include "test.h"
 
+static void PrintStreamResult( wxOutputStream& os )
+{
+  wxFileOffset len = os.GetLength();
+  TestCout( _T("wxStreamBase::GetLength() = "));
+  TestCout( (int) len, true );
+
+  wxStreamError err = os.GetLastError();
+  TestCout( _T("wxStreamBase::GetLastError() = "));
+  TestCout( err, true );
+  switch ( err )  {
+    case wxSTREAM_NO_ERROR :
+      TestCout( _T("wxStreamBase::GetLastError(): wxSTREAM_NO_ERROR\n"));
+      break; 
+    case wxSTREAM_EOF :
+      TestCout( _T("wxStreamBase::GetLastError(): wxSTREAM_EOF\n"));
+      break; 
+    case wxSTREAM_WRITE_ERROR :
+      TestCout( _T("wxStreamBase::GetLastError(): wxSTREAM_WRITE_ERROR\n"));
+      break; 
+    case wxSTREAM_READ_ERROR :
+      TestCout( _T("wxStreamBase::GetLastError(): wxSTREAM_READ_ERROR\n"));
+      break;
+    default :
+      TestCout( _T("wxStreamBase::GetLastError(): undefined error\n"));
+      break; 
+  }
+}
 
 
 // prints the errors and warnings array
@@ -142,6 +173,83 @@ int Test52()
 
   return 0;
 }
+
+//
+// testing errors in the output stream
+int Test53()
+{
+  // the output is 45 bytes long
+  // {
+  // "key-1" : "value-1",
+  // "key-2" : "value-2"
+  // }
+
+  wxJSONValue  value;
+  value[_T("key-1")] = _T("value-1");
+  value[_T("key-2")] = _T("value-2");
+
+  char buffer[128];
+  wxMemoryOutputStream jsonText( buffer, 128 );
+  wxJSONWriter writer( wxJSONWRITER_NONE );
+  writer.Write( value, jsonText );
+
+  // get the stream result
+  TestCout( _T("\nWriting to a stream of 128 bytes\n"));
+  PrintStreamResult( jsonText );
+
+  TestCout( _T("\nWriting to a stream with no predefined length\n"));
+  wxMemoryOutputStream jsonText2;
+  writer.Write( value, jsonText2 );
+  PrintStreamResult( jsonText2 );
+
+  TestCout( _T("\nWriting to a stream of not enough bytes allocated on the stack\n"));
+  char buffer3[20];
+  wxMemoryOutputStream jsonText3( buffer3, 20 );
+  // writer.Write( value, jsonText3 );    // program aborted
+  TestCout( _T("The program aborts in the wxWidgets library\n"));
+  PrintStreamResult( jsonText3 );
+
+  TestCout( _T("\nWriting to a stream of not enough bytes dynamically allocated\n"));
+  char* buffer4 = (char*) malloc( 20 );
+  wxMemoryOutputStream jsonText4( buffer4, 20 );
+  writer.Write( value, jsonText4 );
+  PrintStreamResult( jsonText4 );
+  // free( buffer4 );          // do not free the allocated buffer
+
+  // use a buffer allocated on the stack but calls the wxStreamBuffer::Fixed(true)
+  // so that the buffer cannt grow
+  TestCout( _T("\nWriting to a stream of not enough bytes allocated on the stack (2)\n"));
+  char buffer5[20];
+  wxMemoryOutputStream jsonText5( buffer5, 20 );
+  wxStreamBuffer* sBuffer = jsonText5.GetOutputStreamBuffer();
+  ASSERT( sBuffer );
+  sBuffer->Fixed( true );
+  // writer.Write( value, jsonText5 );    // program aborted (realloc
+  TestCout( _T("The program aborts ASSERTION failure (m_flushable != TRUE)\n"));
+  // PrintStreamResult( jsonText5 );
+
+  // use a buffer allocated dynamically but calls the wxStreamBuffer::Fixed(true)
+  // so that the buffer cannt grow
+  TestCout( _T("\nWriting to a stream of not enough bytes dinamically allocated (2)\n"));
+  char* buffer6 = (char*) malloc( 20 );
+  wxMemoryOutputStream jsonText6( buffer6, 20 );
+  sBuffer = jsonText6.GetOutputStreamBuffer();
+  ASSERT( sBuffer );
+  sBuffer->Fixed( true );
+  // writer.Write( value, jsonText6 );    // program aborted (realloc
+   TestCout( _T("The program aborts ASSERTION failure (m_flushable != TRUE)\n"));
+  // PrintStreamResult( jsonText6 );
+
+  // write to a file that was opened in read-only mode
+  // an error should occur
+  TestCout( _T("\nWriting to a file opened in read-only mode\n"));
+  wxFile file( _T("test12.txt"), wxFile::read );
+  wxFileOutputStream jsonText7( file );
+  writer.Write( value, jsonText7 );
+  PrintStreamResult( jsonText7 );
+  return 0;
+}
+
 
 
 /*
