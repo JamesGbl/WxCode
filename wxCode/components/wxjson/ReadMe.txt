@@ -4,7 +4,7 @@
  
  Website: http://lnx.mauriziovettorato.it/public/json/home.html
  Author: Luciano Cattani
- Version: 0.4.0
+ Version: 0.4.1
  Description:
  JSON (JavaScript Object Notation) is a lightweight data-interchange format.
  It is easy for humans to read and write. It is easy for machines to parse
@@ -57,6 +57,10 @@
 
  0.4.0 this version uses copy-on-write (also known as 'reference counting')
        in the copy constructor and assignment operator 
+
+ 0.4.1 fixed bugs in the wxJSONWriter::Write() function which now does not
+       return a status code. Improved wxJSONWriter's and wxJSONReader's
+       documentation related to input from / output to strings and streams
 
 
 BUGS
