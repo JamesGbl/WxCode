@@ -176,6 +176,7 @@ int Test52()
 
 //
 // testing errors in the output stream
+// 12 apr 2008: OK, the test is successfull
 int Test53()
 {
   // the output is 45 bytes long
@@ -224,7 +225,7 @@ int Test53()
   wxStreamBuffer* sBuffer = jsonText5.GetOutputStreamBuffer();
   ASSERT( sBuffer );
   sBuffer->Fixed( true );
-  // writer.Write( value, jsonText5 );    // program aborted (realloc
+  // writer.Write( value, jsonText5 );    // program aborted (realloc error)
   TestCout( _T("The program aborts ASSERTION failure (m_flushable != TRUE)\n"));
   // PrintStreamResult( jsonText5 );
 
@@ -236,12 +237,12 @@ int Test53()
   sBuffer = jsonText6.GetOutputStreamBuffer();
   ASSERT( sBuffer );
   sBuffer->Fixed( true );
-  // writer.Write( value, jsonText6 );    // program aborted (realloc
+  // writer.Write( value, jsonText6 );    // program aborted (realloc error)
    TestCout( _T("The program aborts ASSERTION failure (m_flushable != TRUE)\n"));
   // PrintStreamResult( jsonText6 );
 
   // write to a file that was opened in read-only mode
-  // an error should occur
+  // an error should occur - 12 apr 2008: OK, the result is wxSTREAM_WRITE_ERROR
   TestCout( _T("\nWriting to a file opened in read-only mode\n"));
   wxFile file( _T("test12.txt"), wxFile::read );
   wxFileOutputStream jsonText7( file );

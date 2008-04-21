@@ -111,18 +111,18 @@ member defined in the class see the documentation of wxJSONRefData.
 \endcode
 
 Unlike in previous versions, the actual JSON value is not held in an
-\b union but in the \c valueHolder structure: this causes some memory consumption
+\b union but in the wxJSONValueHolder structure: this causes some memory consumption
 but allows to store the actual values and not pointers to them.
 Since ANSI C++ does not permit to store in a union classes and
 structures that have constructors, the \b wxString, the \b wxObjArray
-and the \b wxHashMap objects cannot be stored in the union:
+and the \b wxHashMap objects cannot be stored in the union.
 
 The following code fragment instantiates a wxJSONValue object that contains
 an \b integer type.
 The image shows the internal representation of the value.
 Note the \c wxJSONValue::m_refData data member that points to the actual
 data structure and the \c wxJSONRefData::m_refCount data member that counts
-how many JSON value objects share that data structure (one, in the example):
+how many JSON value objects share the data structure (one, in the example):
 
 \code
   wxJSONValue v1( 12 );
@@ -151,11 +151,11 @@ Here is an example:
 
 Reference counting is implemented in many wxWidget's classes such as
 wxBitmap, wxImage, etc but the wxJSONValue class is a bit different
-because objects of this class may contain other wxJSONValue ojects and
+because objects of this class may contain other wxJSONValue objects and
 they can be nested to a virtually infinite level.
-This cause references to not being propagate in the hierarchy.
+This cause references to not being propagated in the hierarchy.
 Also, because values are accessed using the subscript operators -
-which are non-const functions - COW for wxJSONValue objects is not as
+which are \b non-const functions - COW for wxJSONValue objects is not as
 efficient as we may expect.
 
 In the following paragraphs I try to explain what happens when you
@@ -169,8 +169,10 @@ on one of the two instances.
 
 In the following example I create an array type and set a value to the
 fourth element.
-The subscript operator automatically creates the first three elements
+The subscript operator automatically creates the first for elements
 and initializes them to a \b null value.
+Then, the integer value is assigned to the fourth element by the
+assignment operator.
 Note that the first three array's element share the same data: this
 is because the subscript operator automatically creates all instances
 of the items until the requested index.
@@ -234,9 +236,10 @@ copy of only that array's element is done and it is assigned the new
 value.
 
 We are wrong. In fact, the wxJSONValue object makes a copy of the
-whole root object. Why?
-The answer is simple: the first impression is that the \b operator=
-member function is called for the second array element of \b v3.
+whole root object \b v3. Why?
+The answer is simple: the first impression is that the assignment operator
+is called for the second array element of \b v3 and this would cause a
+real copy of that array's element.
 In reality, \b before calling the \b operator= memberfunction the
 code fragment seen above must return a reference to the second
 element of \b v3's array.

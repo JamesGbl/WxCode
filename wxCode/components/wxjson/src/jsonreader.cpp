@@ -44,12 +44,12 @@
 
  In order to avoid confusion, you have to think about \b empty JSON values
  as \b invalid JSON values.
- \b Empty arrays and \b empty objects are valid JSON values.
+ \b Empty \b arrays and \b empty \b objects are valid JSON values.
 
  \par JSON text
 
  Note that the wxJSON parser just skips all characters read from the
- input stream until the start-object '{' or start-array '[' characters
+ input JSON text until the start-object '{' or start-array '[' characters
  are encontered (see the GetStart() function).
  This means that the JSON input text may contain everything
  before the first start-object/array character except these two chars themselves
@@ -252,7 +252,7 @@ wxJSONReader::~wxJSONReader()
  values: it can be used as a JSON checker in order to check the
  syntax of the document.
  Returns the number of \b errors found in the document.
- If the returned value is ZERO and the object was constructed
+ If the returned value is ZERO and the parser was constructed
  with the \c wxJSONREADER_STRICT flag, then the parsed document
  is \e well-formed and it only contains valid JSON text.
 
@@ -261,23 +261,23 @@ wxJSONReader::~wxJSONReader()
  does not mean that the document is \e well-formed because it may
  contain comments and other extensions that are not fatal for the
  wxJSON parser but other parsers may fail to recognize.
- You can use the \c GetWarningsCount() function to know how many
+ You can use the \c GetWarningCount() function to know how many
  wxJSON extensions are present in the JSON input text.
 
  Note that the JSON value object \c val is not cleared by this
  function unless its type is of the wrong type.
  In other words, if \c val is of type wxJSONTYPE_ARRAY and it already
  contains 10 elements and the input document starts with a
- '[' then the elements read from the document are \b appended to
- the existing ones.
+ '[' (open-array char) then the elements read from the document are
+ \b appended to the existing ones.
 
- On the other hand, if the text document starts with a '{' then
- this function must change the type of the \c val object to
+ On the other hand, if the text document starts with a '{' (open-object) char
+ then this function must change the type of the \c val object to
  \c wxJSONTYPE_OBJECT and the old content of 10 array elements will be lost.
 
  When reading from a \b wxInputStream the JSON text must be encoded
  in UTF-8 format for both Unicode and ANSI builds.
- When reading form a \b wxString object, the input text is encoded
+ When reading from a \b wxString object, the input text is encoded
  in different formats depending on the platform and the build
  mode: in Unicode builds, strings are encoded in UCS-2 format on
  Windows and in UCS-4 format on GNU/Linux; in ANSI builds, strings
@@ -306,10 +306,10 @@ wxJSONReader::Parse( wxInputStream& is, wxJSONValue* val )
 }
 
 
-//! The general parsing function
+//! The general parsing function (internal use)
 /*!
- This protected function is called by all other overloaded Parse()
- functions after setting up the internal variables.
+ This protected function is called by the public overloaded Parse()
+ functions after setting up the internal data members.
 */
 int
 wxJSONReader::Parse( wxJSONValue* val )
@@ -372,8 +372,8 @@ wxJSONReader::Parse( wxJSONValue* val )
 
 //! Returns the start of the document
 /*!
- The function searches in the input stream for the starting character
- of a JSON text and returns it.
+ This is the first function called by the Parse() function and it searches
+ the input stream for the starting character of a JSON text and returns it.
  JSON text start with '{' or '['.
  If the two starting characters are inside a C/C++ comment, they
  are ignored.
@@ -484,7 +484,8 @@ wxJSONReader::ReadChar()
 
 //! Return a character from the input JSON document.
 /*!
- The function returns a single character from the input JSON document
+ The function is called by ReadChar() and returns a single character
+ from the input JSON document
  as an integer so that all 2^31 unicode characters can be represented
  as a positive integer value.
  In case of errors or EOF, the function returns -1.
@@ -496,19 +497,25 @@ wxJSONReader::ReadChar()
 
  If the input JSON text is stored in a \b wxString object, there is
  no difference between ANSI and Unicode builds: the function just returns
- the next character in the string.
- The actual character position is stored in the \c m_charPos data
- member which is incremented by one by the function.
+ the next character in the string and updates the \c m_charPos data
+ member that points the next character in the string.
+ In Unicode mode, the function returns wide characters and in ANSI
+ builds it returns only chars.
 
  \par wxInputStream input
 
- The function reads the number of bytes needed by the format to
- encode a wide-character and read that number from the stream -
- see the UTF8NumBytes() function.
+ Stream input is always encoded in UTF-8 format in both ANSI ans
+ Unicode builds.
+ In order to return a single character, the function calls the
+ UTF8NumBytes() function which returns the number of bytes that
+ have to be read from the stream in order to get one character.
  The bytes read are then converted to a wide character and
  returned.
  Note that wide chars are also returned in ANSI mode but they
- are processed differently by the ReadChar() function.
+ are processed differently by the parser: before storing the
+ wide character in the JSON value, it is converted to the
+ locale dependent character if one exists; if not, the \e unicode
+ \e escape \e sequence is stored in the JSON value. 
 */
 int
 wxJSONReader::GetChar()
@@ -597,7 +604,7 @@ wxJSONReader::GetChar()
 //! Peek a character from the input JSON document
 /*!
  This function is much like GetChar() but it does not update
- the stream input position.
+ the stream or string input position.
 */
 int
 wxJSONReader::PeekChar()
@@ -621,8 +628,12 @@ wxJSONReader::PeekChar()
  array is encontered.
  The function returns when a EOF condition is encontered or
  when the final close-object / close-array char is encontered.
- When entered the function also increments the \c m_level
- data member and decrements it on return.
+ The function also increments the \c m_level
+ data member when it is entered and decrements it on return.
+
+ The function is the heart of the wxJSON parser class but it is
+ also very easy to understand because JSON syntax is very
+ easy.
 
  Returns the last close-object/array character read or -1 on EOF.
 */
@@ -797,15 +808,15 @@ wxJSONReader::DoRead( wxJSONValue& parent )
 
 //! Store a value in the parent object.
 /*!
- The function is called by \c DoRead() when a end-value (the comma)
- or a close-object character is encontered and stores the
- value in the parent object.
+ The function is called by \c DoRead() when a the comma
+ or a close-object character is encontered and stores the current
+ value read by the parser in the parent object.
  The function checks that \c value is not empty and that \c key is
- not an empty string if parent is a object.
+ not an empty string if parent is an object.
 
  \param ch	the character read: a comma or close objecty/array char
- \param key	the \b key string (if any)
- \param value	the JSON value to be stored in \c parent
+ \param key	the \b key string: may be empty if parent ss an array
+ \param value	the current JSON value to be stored in \c parent
  \param parent	the JSON value that holds \c value.
 */
 void
@@ -934,8 +945,8 @@ wxJSONReader::AddError( const wxString& fmt, wxChar c )
  \endcode
 
  Warning messages are generated by the parser when the JSON
- text that has been read is not well-formed JSON text but the
- syntax error is not fatal and the parser recognizes the value
+ text that has been read is not well-formed but the
+ error is not fatal and the parser recognizes the text
  as an extension to the JSON standard (see the parser's ctor
  for more info about wxJSON extensions).
 
@@ -973,9 +984,12 @@ wxJSONReader::AddWarning( int type, const wxString& msg )
 
 //! Skip all whitespaces.
 /*!
- The function reads characters from the specified input stream
+ The function reads characters from the input text
  and returns the first non-whitespace character read or -1
  if EOF.
+ Note that the function does not rely on the \b isspace function
+ of the C library but checks the space constants: space, TAB and
+ LF.
 */
 int
 wxJSONReader::SkipWhiteSpace()
@@ -996,7 +1010,7 @@ wxJSONReader::SkipWhiteSpace()
 //! Skip a comment
 /*!
  The function is called by DoRead() when a '/' (slash) character
- is read from the input stream assuming that a C/C++ comment is being read.
+ is read from the input stream assuming that a C/C++ comment is starting.
  Returns the first character that follows the comment or
  -1 on EOF.
  The function also adds a warning message because comments are not 
@@ -1078,9 +1092,8 @@ wxJSONReader::SkipComment()
  double quote characters.
  The function read all characters up to the next double quotes
  unless it is escaped.
-
  Also, the function recognizes the escaped characters defined
- in the JSON text syntax.
+ in the JSON syntax.
 
  The string is also stored in the provided wxJSONValue argument
  provided that it is empty or it contains a string value.
@@ -1618,13 +1631,13 @@ wxJSONReader::UTF8NumBytes( char ch )
   \u03B1
  \endcode
 
- In unicode mode, the function just appends the wide character code to
- the string \c s.
+ In unicode mode, the function just appends the wide character code 
+ stored in \c hex to the string \c s.
  In ANSI mode, the function converts the wide character code to the
  corresponding character if it is convertible using the locale dependent
  character set.
  If the wide char cannot be converted, the function appends the
- \e unicode \e escaped \e sequence. 
+ \e unicode \e escape \e sequence to the string \c s. 
  Returns ZERO if the character was not converted to a unicode escape
  sequence.
 */
