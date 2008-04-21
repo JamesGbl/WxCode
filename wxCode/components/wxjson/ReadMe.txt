@@ -59,8 +59,11 @@
        in the copy constructor and assignment operator 
 
  0.4.1 fixed bugs in the wxJSONWriter::Write() function which now does not
-       return a status code. Improved wxJSONWriter's and wxJSONReader's
-       documentation related to input from / output to strings and streams
+       return a status code.
+       fixed a bug in the wxJSONReader::AddWarning() function which did not
+       take into account the individual extension's ON/OFF flag.
+       Improved wxJSONWriter's and wxJSONReader's documentation related to
+       input from / output to strings and streams
 
 
 BUGS

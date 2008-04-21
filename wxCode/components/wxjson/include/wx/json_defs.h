@@ -75,6 +75,19 @@
   #define wxJSON_USE_UNICODE
 #endif
 
+// the following macro, if defined, cause the wxJSONValue to store
+// pointers to C-strings as pointers to statically allocated
+// C-strings
+// by default this macro is not defined
+// #define WXJSON_USE_CSTRING
+
+
+// the following macro, if defined, cause the wxJSONvalue and its
+// referenced data structure to store and increment a static
+// progressive counter in the ctor.
+// this is only usefull for debugging purposes
+// #define WXJSON_USE_VALUE_COUNTER
+
 
 
 #endif // _WX_JSON_DEFS_H_
