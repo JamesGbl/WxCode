@@ -53,6 +53,10 @@ enum wxJSONType {
     wxJSONTYPE_BOOL,       /*!< the object contains a boolean            */
     wxJSONTYPE_ARRAY,      /*!< the object contains an array of values   */
     wxJSONTYPE_OBJECT      /*!< the object contains a map of keys/values */
+    wxJSONTYPE_INT32,      /*!< the object contains a 32-bit integer     */
+    wxJSONTYPE_INT64,      /*!< the object contains a 64-bit integer     */
+    wxJSONTYPE_UINT32,     /*!< the object contains an unsigned 32-bit integer     */
+    wxJSONTYPE_UINT64,     /*!< the object contains an unsigned 64-bit integer     */
 };
 
 // the comment position: every value only has one comment position
@@ -96,6 +100,12 @@ public:
   bool IsNull() const;
   bool IsInt() const;
   bool IsUInt() const;
+#if defined( wxJSON_64BIT_INT)
+  bool IsInt32() const;
+  bool IsInt64) const();
+  bool IsUInt32() const;
+  bool IsUInt64) const();
+#endif
   bool IsBool() const;
   bool IsDouble() const;
   bool IsString() const;
@@ -105,11 +115,17 @@ public:
 
   // get the value as ...
   int          AsInt() const;
+  unsigned int AsUInt() const;
+#if defined( wxJSON_64BIT_INT)
+  int          AsInt32() const;
+  unsigned int AsUInt32() const;
+  wxInt64      AsInt64() const );
+  wxUInt64     AsUInt64() const );
+#endif
   bool         AsBool() const;
   double       AsDouble() const;
   wxString     AsString() const;
   const wxChar* AsCString() const;
-  unsigned int  AsUInt() const;
   const wxJSONInternalMap*   AsMap() const;
   const wxJSONInternalArray* AsArray() const;
 
@@ -121,9 +137,13 @@ public:
 
   // appending items, resizing and deleting items
   wxJSONValue& Append( const wxJSONValue& value );
-  wxJSONValue& Append( int i );
   wxJSONValue& Append( bool b );
+  wxJSONValue& Append( int i );
   wxJSONValue& Append( unsigned int ui );
+#if defined( wxJSON_64BIT_INT )
+  wxJSONValue& Append( wxInt64 i );
+  wxJSONValue& Append( wxUInt64 ui );
+#endif
   wxJSONValue& Append( double d );
   wxJSONValue& Append( const wxChar* str );
   wxJSONValue& Append( const wxString& str );
@@ -144,6 +164,10 @@ public:
 
   wxJSONValue& operator = ( int i );
   wxJSONValue& operator = ( unsigned int ui );
+#if defined( wxJSON_64BIT_INT )
+  wxJSONValue& operator = ( wxInt64 i );
+  wxJSONValue& operator = ( wxUInt64 ui );
+#endif
   wxJSONValue& operator = ( bool b );
   wxJSONValue& operator = ( double d );
   wxJSONValue& operator = ( const wxChar* str );
@@ -226,8 +250,13 @@ WX_DECLARE_STRING_HASH_MAP( wxJSONValue, wxJSONInternalMap );
  (no more pointers to them)
 */
 struct wxJSONValueHolder  {
+#if defined( wxJSON_64BIT_INT )
+    wxInt64       m_valInt;
+    wxUInt64      m_valUInt;
+#else
     int           m_valInt;
     unsigned      m_valUInt;
+#endif
     double        m_valDouble;
     const wxChar* m_valCString;
     bool          m_valBool;

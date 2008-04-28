@@ -65,6 +65,10 @@
        Improved wxJSONWriter's and wxJSONReader's documentation related to
        input from / output to strings and streams
 
+ 0.5.0 this release adds support for 64-bits integer on platforms that support
+       them.
+
+
 
 BUGS
 ----

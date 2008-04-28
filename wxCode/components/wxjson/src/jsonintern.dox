@@ -5,6 +5,7 @@
 \li \ref json_internals_intro
 \li \ref json_internals_cow
 \li \ref json_internals_cstring
+\li \ref json_internals_integer
 \li \ref json_internals_array
 \li \ref json_internals_map.
 \li \ref json_internals_compare
@@ -419,6 +420,127 @@ The C string value is useless because the only reason for using it
 is speed: time is saved when no string-copy operation is performed.
 But the \b wxString object uses \e copy-on-write to avoid unnecessary
 copies so it is much more wisely (and SAFE) to never use C-strings.
+
+
+\section json_internals_integer 64-bits and 32-bits integers
+
+Starting from version 0.5, the \e wxJSON library supports 64-bits
+integers but only on those platforms that have native support for
+64-bits integers.
+What I write now only applies to platforms that has 64-bits
+support, unless otherwise stated.
+
+All integer types (and unsigned integers, too) are stored in a
+64 bits integer storage of type \b wx(U)Int64 which is the wxWidget's
+platform-independent data type for representing a 64-bits integer:
+this data type is a \b tydepef for the underlying compiler / platform-dependent
+type, for example, \b __int64 on MSVC/win32 and \b long \b long on
+GNU/Linux systems.
+To know more about the wxWidget's 64-bits integer stuff read the
+documentation of the \b wxLongLong class.
+
+When stored in the wxJSONValue class, the integer value is set of a generic integer
+type: wxJSONTYPE_INT or wxJSONTYPE_UINT regardless its size: in other
+words, no matter the type of the original value  (\b int or \b long int) 
+or the numeric weight of the value.
+The only thing that matters is the sign of the value (unsigned or not).
+For this reason, the \c wxJSONValue::Is(U)Int function returns
+TRUE if the stored value is of type (unsigned) integer which is just
+like in the previous versions of the library and also is compatible
+with platforms that do not support 64-bits integers.
+Also, in order to remain compatible with older 0.x versions,
+the \b wxJSONValue::GetType() memberfunction just returns the generic
+integer type in both 32-bits and 64-bits platforms regardless the
+actual size of the integer.
+
+If the platform natively supports 64-bits integers, then the wxJSONValue
+class defines some other functions related to the integer's storage size:
+
+\li \c Is(U)Int32: the function only returns TRUE if the value stored in
+	the JSON value object is of type (unsigned) \e integer and the number
+	represented fits in a 32-bit integer data type.
+
+\li \c Is(U)Int64: the function only returns TRUE if the value stored in
+	the JSON value object is of type (unsigned) \e integer and the number
+	represented is too large to fit in a 32-bit integer data type.
+
+\li \c As(U)Int32(): the function returns the low-order 32-bits of the
+	integer stored in the wxJSONValue class. Note that the function
+	does not check that the returned value fits in a 32-bit (unsigned)
+	integer.
+
+\li \c As(U)Int64(): the function returns the 64-bit integer as it is
+	stored in the value object.
+
+Also note that in order to remain compatible with older 0.x versions, the
+\c wxJSONValue::As(U)Int function behaves exatly as in the past on
+32-bits platforms but it was changed on 64-bits platforms: on these systems,
+the function calls \c As(U)Int32 and returns a 32-bits integer data type
+but an ASSERTION failure occurs in debug builds if the returned value is
+too big to fit in a 32-bit int type.
+
+This organization let us to remain compatible with older 0.x versions of
+the \b wxJSON library but allows new applications to get 64-bit support
+on platforms that natively support it.
+The following are some examples:
+
+\code
+  // an old application that does not know nothing about 64-bits
+  // integer support (the app only uses 32-bit integers)
+  int i;
+  wxJSONValue v1 = 128;
+  if ( v1.IsInt() )  {
+    i = v1.AsInt();
+  }
+  switch ( v1.GetType() )  {
+    case wxJSONTYPE_INT :
+      i = v1.AsInt();
+    case wxJSONTYPE_UINT :
+      ui = v1.AsUInt();
+    ...
+  }
+\endcode
+
+Note that a new application that knows about 64 bits support but does never
+use so large numbers, just use the same code of the old application which
+does not know anything.
+If the value stored in the JSON value object is too large, the \c As(U)Int
+memberfunction fails with an ASSERTION failure. This is good, because
+the JSON text read by the application needs a new rewrite of the code.
+
+If an application uses very large integers, it may just use 64-bits storage
+for all integer types:
+
+\code
+  // a new application that needs 64-bits integers
+  wxInt64     i64;
+  wxJSONValue v1( 128 );
+
+  if ( v1.IsInt() )  {    // calling IsInt64() is an error!!!
+    i64 = v1.AsInt64();
+  }
+  switch ( v1.GetType() )  {
+    case wxJSONTYPE_INT :
+      i64 = v1.AsInt64();
+    case wxJSONTYPE_UINT :
+      ui64 = v1.AsUInt64();
+    ...
+  }
+
+  // for some purposes, the new application just uses 32-bits ints
+  int         i32;
+  wxJSONValue v2( 6545322 );
+
+  wxASSERT( v2.IsInt32() );
+  i32 = v2.AsInt32();
+\endcode
+
+Note that all 64-bits integer memberfunctions are only available if
+the platform on which runs your application natively supports
+64-bits integers.
+This is in constrast with the \b wxLongLong class which is also
+available on 32-bits platforms.
+
 
 
 \section json_internals_array The array of values.

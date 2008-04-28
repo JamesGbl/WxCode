@@ -121,6 +121,9 @@ extern int Test51();   // check the new COW functions: read a copy of a value
 extern int Test52();   // testing the wxJSONReader::AddWarning() function
 extern int Test53();   // testing errors in writing to streams
 
+//
+// in test13.cpp: test the 64-bit integer support
+extern int Test54();   // testing wxWidget's macro definitions
 
 
 // global variables in 'main.cpp'

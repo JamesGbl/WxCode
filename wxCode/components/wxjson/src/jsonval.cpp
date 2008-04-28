@@ -1302,11 +1302,15 @@ wxJSONValue::TypeToString( wxJSONType type )
     _T( "wxJSONTYPE_BOOL" ),    // 7
     _T( "wxJSONTYPE_ARRAY" ),   // 8
     _T( "wxJSONTYPE_OBJECT" ),  // 9
+    _T( "wxJSONTYPE_INT32" ),   // 10
+    _T( "wxJSONTYPE_INT64" ),   // 11
+    _T( "wxJSONTYPE_UINT32" ),  // 12
+    _T( "wxJSONTYPE_UINT64" ),  // 13
   };
 
   wxString s;
   int idx = (int) type;
-  if ( idx >= 0 && idx < 10 )  {
+  if ( idx >= 0 && idx < 14 )  {
     s = str[idx];
   }
   return s;
@@ -1838,12 +1842,21 @@ wxJSONValue::ClearComments()
   \li wxJSONTYPE_NULL: a NULL value
   \li wxJSONTYPE_INT: an integer value
   \li wxJSONTYPE_UINT: an unsigned integer
+  \li wxJSONTYPE_INT32: a 32-bits integer value
+  \li wxJSONTYPE_UINT32: an unsigned 32-bits integer
+  \li wxJSONTYPE_INT64: a 64-bits integer value
+  \li wxJSONTYPE_UINT64: an unsigned 64-bits integer
   \li wxJSONTYPE_DOUBLE: a double precision number
   \li wxJSONTYPE_BOOL: a boolean
   \li wxJSONTYPE_CSTRING: a C string
   \li wxJSONTYPE_STRING: a wxString object
   \li wxJSONTYPE_ARRAY: an array of wxJSONValue objects
   \li wxJSONTYPE_OBJECT: a hashmap of key/value pairs where \e value is a wxJSONValue object
+
+ The integer storage depends on the platform: for platforms that support 64-bits
+ integers, integers are always stored as 64-bits integers.
+ To know more about the internal representation of integers, read
+ \ref json_internals_integer.
 
  Note that there is no need to set a type for the object in order to assign
  a value to it.
@@ -1916,14 +1929,18 @@ wxJSONValue::SetType( wxJSONType type )
   }
 
   // the function unshares the referenced data but does not delete the
-  // structure.
+  // structure. This is because the wxJSON reader stores comments
+  // that apear before the value in a temporary value of type wxJSONTYPE_EMPTY
+  // which is invalid and, next, it stores the JSON value in the same
+  // wxJSONValue object.
+  // If we would delete the structure using 'Unref()' we loose the
+  // comments
   data = COW();
 
   // do nothing if the actual type is the same as 'type'
   if ( type == oldType )  {
     return data;
   }
-
 
   // change the type of the referened structure
   wxASSERT( data );
@@ -1944,7 +1961,6 @@ wxJSONValue::SetType( wxJSONType type )
       // there is not need to clear primitive types
       break;
   }
-
 
   // if the WXJSON_USE_CSTRING macro is not defined, the class forces
   // C-string to be stored as wxString objects
@@ -2161,6 +2177,59 @@ wxJSONValue::AllocExclusive()
                   _T("wxObject::AllocExclusive() failed.") );
 }
 
+
+/*************************************************************************
+
+			64-bits integer support
+
+*************************************************************************/
+
+
+
+#if defined( wxJSON_64BIT_INT)
+bool
+wxJSONValue::IsInt32() const
+
+bool
+wxJSONValue::IsInt64) const()
+
+bool
+wxJSONValue::IsUInt32() const
+
+bool
+wxJSONValue::IsUInt64) const()
+#endif
+
+#if defined( wxJSON_64BIT_INT)
+int
+wxJSONValue::AsInt32() const )
+
+unsigned int
+wxJSONValue::AsUInt32() const )
+
+wxInt64
+wxJSONValue::AsInt64() const )
+
+wxUInt64
+wxJSONValue::AsUInt64() const )
+#endif
+
+#if defined( wxJSON_64BIT_INT )
+wxJSONValue&
+wxJSONValue::Append( wxInt64 i )
+
+wxJSONValue&
+wxJSONValue::Append( wxUInt64 ui )
+#endif
+
+
+#if defined( wxJSON_64BIT_INT )
+wxJSONValue&
+wxJSONValue::operator = ( wxInt64 i )
+
+wxJSONValue&
+wxJSONValue::operator = ( wxUInt64 ui )
+#endif
 
 
 
