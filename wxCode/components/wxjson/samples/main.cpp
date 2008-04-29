@@ -128,6 +128,40 @@ void TestCout( double d, bool lf )
   TestCout( s );
 }
 
+void TestCout( bool b, bool lf )
+{
+  wxString s( ( b ? _T("TRUE") : _T("FALSE")));
+  if ( lf ) {
+    s.Append( '\n', 1 );
+  }
+  TestCout( s );
+}
+
+#if defined( wxJSON_64BIT_INT )
+void TestCout( wxInt64 i64, bool lf )
+{
+  wxString s;
+  if ( lf ) {
+    s.Printf( _T("%lld\n" ), i64);
+  }
+  else  {
+    s.Printf( _T("%lld" ), i64);
+  }
+  TestCout( s );
+}
+
+void TestCout( wxUint64 ui64, bool lf )
+{
+  wxString s;
+  if ( lf ) {
+    s.Printf( _T("%llu\n" ), ui64);
+  }
+  else  {
+    s.Printf( _T("%llu" ), ui64);
+  }
+  TestCout( s );
+}
+#endif            // defined( wxJSON_64BIT_INT)
 
 
 int main( int argc, char* argv[] ) 
@@ -186,11 +220,11 @@ int main( int argc, char* argv[] )
 	Test45, Test46,
 	Test47, Test48, Test49, Test50, Test51,
 	Test52, Test53,
-	Test54,
+	Test54, Test55,
 	0
   };
 
-#define TOTAL_TESTS 54
+#define TOTAL_TESTS 55
 
   int numParams = cmdLine.GetParamCount();
   if ( numParams == 0 )  {

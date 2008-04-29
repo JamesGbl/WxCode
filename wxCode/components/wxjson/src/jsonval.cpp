@@ -360,6 +360,19 @@ wxJSONValue::IsEmpty() const
 }
 
 //! Return TRUE if the type of the value stored is integer.
+/*!
+ This function returns TRUE if and only if the stored value is of
+ type \b wxJSONTYPE_INT.
+ Note that integers are stored in the JSON value object as 64-bits
+ integers on platforms that support 64-bit.
+ The function does not check if the value actually fits in a 32-bit
+ integer.
+ Also, if the type of the value is \b wxJSONTYPE_UINT but the value
+ may be stored in a integer, the function returns FALSE.
+ On platforms that support 64-bits integers, you can call \c isInt32()
+ and \c IsInt64() to know if the value is too large to fit in  32-bit
+ integer.
+*/
 bool
 wxJSONValue::IsInt() const
 {
@@ -372,6 +385,19 @@ wxJSONValue::IsInt() const
 }
 
 //! Return TRUE if the type of the value stored is a unsigned int.
+/*!
+ This function returns TRUE if and only if the stored value is of
+ type \b wxJSONTYPE_UINT.
+ Note that unsigned integers are stored in the JSON value object as 64-bits
+ unsigned integers on platforms that support 64-bit.
+ The function does not check if the value actually fits in a 32-bit
+ unsigned integer.
+ Also, if the type of the value is \b wxJSONTYPE_INT but the value
+ may be stored in an unsigned integer, the function returns FALSE.
+ On platforms that support 64-bits integers, you can call \c isUInt32()
+ and \c IsUInt64() to know if the value is too large to fit in  32-bit
+ unsigned integer.
+*/
 bool
 wxJSONValue::IsUInt() const
 {
@@ -486,7 +512,7 @@ wxJSONValue::AsInt() const
   // on 64-bits platforms check if the value fits in 32-bits
 #if defined( wxJSON_64BIT_INT )
     wxASSERT( IsInt32());
-    r = (int) GetLow();
+    r = (int) AsInt32();
 #else
   switch ( data->m_type )  {
     case wxJSONTYPE_BOOL :
@@ -649,7 +675,7 @@ wxJSONValue::AsUInt() const
 
 #if defined( wxJSON_64BIT_INT )
   wxASSERT( IsUInt32() );
-  ui = (unsigned int) GetLow();
+  ui = (unsigned int) AsUInt32();
 #else
   ui = data->m_value.m_valUInt;
   switch ( data->m_type )  {
