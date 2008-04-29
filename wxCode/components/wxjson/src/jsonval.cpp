@@ -583,10 +583,10 @@ wxJSONValue::AsString() const
       s.assign( data->m_value.m_valCString);
       break;
     case wxJSONTYPE_INT :
-      s.Printf( _T("%d"), data->m_value.m_valInt );
+      s.Printf( _T("%") wxLongLongFmtSpec _T("i"), data->m_value.m_valInt );
       break;
     case wxJSONTYPE_UINT :
-      s.Printf( _T("%u"), data->m_value.m_valUInt );
+      s.Printf( _T("%") wxLongLongFmtSpec _T("u"), data->m_value.m_valInt );
       break;
     case wxJSONTYPE_DOUBLE :
       s.Printf( _T("%f"), data->m_value.m_valDouble );
@@ -2248,17 +2248,13 @@ wxJSONValue::IsInt32() const
   wxASSERT( data );
 
   bool r = false;
-  switch ( data-m_type )  {
+  switch ( data->m_type )  {
     case wxJSONTYPE_INT : 
-      if ( data->m_value.m_valInt <= MAX_INT &&
-		data->m_value.m_valInt >= MIN_INT )
-      r = true;
-    case wxJSONTYPE_UINT :
-      if ( data->m_value.m_valUInt <= MAX_INT &&
-		data->m_value.m_valUInt >= MIN_INT )
-      r = true;
-    case wxJSONTYPE_BOOL :
-      r = true;
+      if ( data->m_value.m_valInt <= INT_MAX &&
+		data->m_value.m_valInt >= INT_MIN )
+        r = true;
+      break;
+    default :
       break;
   }
   return r;
@@ -2273,6 +2269,20 @@ wxJSONValue::IsInt32() const
 bool
 wxJSONValue::IsInt64() const
 {
+  wxJSONRefData* data = GetRefData();
+  wxASSERT( data );
+
+  bool r = false;
+  switch ( data->m_type )  {
+    case wxJSONTYPE_INT : 
+      if ( data->m_value.m_valInt > INT_MAX ||
+		data->m_value.m_valInt < INT_MIN )
+        r = true;
+      break;
+    default :
+      break;
+  }
+  return r;
 }
 
 
@@ -2285,6 +2295,19 @@ wxJSONValue::IsInt64() const
 bool
 wxJSONValue::IsUInt32() const
 {
+  wxJSONRefData* data = GetRefData();
+  wxASSERT( data );
+
+  bool r = false;
+  switch ( data->m_type )  {
+    case wxJSONTYPE_UINT :
+      if ( data->m_value.m_valUInt <= UINT_MAX )
+        r = true;
+      break;
+    default :
+      break;
+  }
+  return r;
 }
 
 //! Return TRUE if the stored value is a 64-bits unsigned integer
@@ -2296,6 +2319,19 @@ wxJSONValue::IsUInt32() const
 bool
 wxJSONValue::IsUInt64() const
 {
+  wxJSONRefData* data = GetRefData();
+  wxASSERT( data );
+
+  bool r = false;
+  switch ( data->m_type )  {
+    case wxJSONTYPE_UINT :
+      if ( data->m_value.m_valUInt > UINT_MAX )
+        r = true;
+      break;
+    default :
+      break;
+  }
+  return r;
 }
 
 //! Returns the low-order 32 bits of the value as an integer
@@ -2311,6 +2347,8 @@ wxJSONValue::IsUInt64() const
 int
 wxJSONValue::AsInt32() const
 {
+  int i = (int) GetLow();
+  return i;
 }
 
 //! Returns the low-order 32 bits of the value as an unsigned integer
@@ -2326,6 +2364,8 @@ wxJSONValue::AsInt32() const
 unsigned int
 wxJSONValue::AsUInt32() const
 {
+  unsigned int ui = (unsigned int) GetLow();
+  return ui;
 }
 
 
@@ -2340,6 +2380,21 @@ wxJSONValue::AsUInt32() const
 wxInt64
 wxJSONValue::AsInt64() const
 {
+  wxJSONRefData* data = GetRefData();
+  wxASSERT( data );
+
+  wxInt64 i64;
+  switch ( data->m_type )  {
+    case wxJSONTYPE_INT :
+      i64 = data->m_value.m_valInt;
+      break;
+    case wxJSONTYPE_UINT :
+      i64 = (wxInt64) data->m_value.m_valUInt;
+      break;
+    default :
+      break;
+  }
+  return i64;
 }
 
 //! Return the numeric value as a 64-bit unsigned integer.
@@ -2353,18 +2408,39 @@ wxJSONValue::AsInt64() const
 wxUint64
 wxJSONValue::AsUInt64() const
 {
+  wxJSONRefData* data = GetRefData();
+  wxASSERT( data );
+
+  wxUint64 ui64;
+  switch ( data->m_type )  {
+    case wxJSONTYPE_INT :
+      ui64 = (wxUint64) data->m_value.m_valInt;
+      break;
+    case wxJSONTYPE_UINT :
+      ui64 = data->m_value.m_valUInt;
+      break;
+    default :
+      break;
+  }
+  return ui64;
 }
 
 //! \overload Append( const wxJSONValue& )
 wxJSONValue&
 wxJSONValue::Append( wxInt64 i )
 {
+  wxJSONValue v( i );
+  wxJSONValue& r = Append( v );
+  return r;
 }
 
 //! \overload Append( const wxJSONValue& )
 wxJSONValue&
 wxJSONValue::Append( wxUint64 ui )
 {
+  wxJSONValue v( ui );
+  wxJSONValue& r = Append( v );
+  return r;
 }
 
 
@@ -2372,26 +2448,91 @@ wxJSONValue::Append( wxUint64 ui )
 wxJSONValue&
 wxJSONValue::operator = ( wxInt64 i )
 {
+  wxJSONRefData* data = SetType( wxJSONTYPE_INT );
+  data->m_value.m_valInt = i;
+  return *this;
 }
 
 //! \overload operator = (int)
 wxJSONValue&
 wxJSONValue::operator = ( wxUint64 ui )
 {
+  wxJSONRefData* data = SetType( wxJSONTYPE_UINT );
+  data->m_value.m_valUInt = ui;
+  return *this;
 }
 
 //! Returns the low 32-bit of an integer value
+/*!
+ This function is only available on 64-bits platforms and returns
+ the low 32-bits of the integer value stored in this object.
+ If the value stored in not of type integer or unsigned int, the
+ function returns an undefined result.
+*/
 int
 wxJSONValue::GetLow() const
 {
+  // we use an array of two wxInt32 that points to the integer
+  // type. Next we get the first or the second array's element
+  // depending on the platform's endianness
+
+  wxJSONRefData* data = GetRefData();
+  wxASSERT( data );
+
+  int r;               // not initialized: undefined result
+  wxInt32* result = 0;
+
+  switch ( data->m_type )  {
+    case wxJSONTYPE_INT : 
+      result = (wxInt32*) &(data->m_value.m_valInt );
+      break;
+    case wxJSONTYPE_UINT :
+      result = (wxInt32*) &(data->m_value.m_valUInt );
+      break;
+    default :
+      break;
+  }
+#if defined( wxLITTLE_ENDIAN )
+  r = result[0];
+#else
+  r = result[1];
+#endif
+  return r;
 }
 
 //! Returns the high 32-bit of an integer value
+/*!
+ This function is only available on 64-bits platforms and returns
+ the high 32-bits of the integer value stored in this object.
+ If the value stored in not of type integer or unsigned int, the
+ function returns an undefined result.
+*/
 int
 wxJSONValue::GetHi() const
 {
-}
+  wxJSONRefData* data = GetRefData();
+  wxASSERT( data );
 
+  int r;               // not initialized: undefined result
+  wxInt32* result = 0;
+
+  switch ( data->m_type )  {
+    case wxJSONTYPE_INT : 
+      result = (wxInt32*) &(data->m_value.m_valInt );
+      break;
+    case wxJSONTYPE_UINT :
+      result = (wxInt32*) &(data->m_value.m_valUInt );
+      break;
+    default :
+      break;
+  }
+#if defined( wxLITTLE_ENDIAN )
+  r = result[1];
+#else
+  r = result[0];
+#endif
+  return r;
+}
 
 #endif  // defined( wxJSON_64BIT_INT )
 
