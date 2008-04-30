@@ -215,8 +215,8 @@ protected:
   wxJSONRefData*  COW();
 
 #if defined( wxJSON_64BIT_INT )
-  int             GetLow() const;
-  int             GetHi() const;
+  bool             AsInt32( wxInt32* i) const;
+  bool             AsUInt32( wxUint32* i ) const;
 #endif
 
   // overidden from wxObject

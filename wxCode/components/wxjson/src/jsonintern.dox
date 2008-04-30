@@ -541,6 +541,55 @@ the platform on which runs your application natively supports
 This is in constrast with the \b wxLongLong class which is also
 available on 32-bits platforms.
 
+\subsection json_internals_integer_asis The IsXxxxxxx() and AsXxxxxxx() functions
+
+You can get the type of a JSON value object by calling the \c IsXxxxxx()
+functions where \c Xxxxxx is the type.
+For example, to know if a JSON value object contains an integer value,
+you call the \c wxJSONValue::IsInt() memberfunction.
+Note that the function only returns TRUE if the stored value is of
+type wxJSONTYPE_INT regardless whether or not the stored value
+may also be represented as an unsigned integer.
+Example:
+
+\code
+ wxJSONValue value(100);
+ bool r = value.IsInt();        // return TRUE
+      r = value.IsUInt();       // return FALSE
+\code
+
+On the other hand, the \b AsXxxxxx functions return the value as the
+specified type, without checking if the stored value is actually
+of the same type as the one wanted.
+In other words, if a JSON value contains a signed integer which
+value is -1, the user can get the value as an unsigned int.
+Example:
+
+\code
+ wxJSONValue value(-1);
+ int i       = value.AsInt();        // return -1
+ unsigned ui = value.AsUInt();       // return 4294967295
+\code
+
+Also note that the \b Is(U)Int32/64 memberfunctions checks that the
+stored integer fits in the integer storage specified in the 
+memberfunction's name but you can still get the integer as another
+(compatible) type.
+For example, if an integer fits in 32-bits storage, the \c Is(U)Int64
+memberfunction returns FALSE but you can still get the value as a
+64-bit integer:
+
+\code
+ wxJSONValue value( 10000 );
+ bool r      = value.IsInt64();        // return FALSE
+ wxInt64 i64 = value.AsInt64();        // perfectly legal
+\code
+
+To know more about the return values of the \b IsXxxxxx and the \b AsXxxxxx
+memberfunctions in 64-bits platforms, see the \c Test55() function in the
+\c samples/test13.cpp source file.
+The test function calls all the mentioned memberfunctions for several signed and
+unsigned integers: results are commented.
 
 
 \section json_internals_array The array of values.

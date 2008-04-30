@@ -128,6 +128,7 @@ int Test55()
   value.Append( (wxInt64) INT_MIN - 10 );
   value.Append( (wxUint64) UINT_MAX + 10 );
   value.Append( (wxInt64) UINT_MAX + 10 );
+  value.Append( _T("A string"));
 
   // the memberfunction that we check are:
   //
@@ -148,8 +149,6 @@ int Test55()
   // the expected results for every element are stored in an array
   // of structures: for every function there is a result.
   // the first field contains wxJSONTYPE_INT or wxJSONTYPE_UINT
-  // if the first field contains wxJSONTYPE_EMPTY then we get ab
-  // ASSERTION failure if we call the function 
   struct Result {
   wxJSONType iType;
     bool     isInt;
@@ -167,7 +166,7 @@ int Test55()
   };
 
   Result res[] =  {
-	// element 0: a positive, signed 32-bit integer
+	// element 0: a positive, signed 32-bit integer, value=100
 	{
 		wxJSONTYPE_INT,	// iType,
 		true,		// isInt,
@@ -182,12 +181,165 @@ int Test55()
 		100,		// asUInt32,
 		100,		// asInt64,
 		100		// asUInt64
+	},
+
+	// element 1: a positive, unsigned 32-bit integer, value=110
+	{
+		wxJSONTYPE_UINT,	// iType,
+		false,			// isInt,
+		true,			// isUInt,
+		false,			// isInt32,
+		true,			// isUInt32,
+		false,			// isInt64,
+		false,			// isUInt64,
+		110,			// asInt,
+		110,			// asUInt,
+		110,			// asInt32,
+		110,			// asUInt32,
+		110,			// asInt64,
+		110			// asUInt64
+	},
+
+	// element 2: a negative, signed 32-bit integer, value=-1
+	{
+		wxJSONTYPE_INT,		// iType,
+		true,			// isInt,
+		false,			// isUInt,
+		true,			// isInt32,
+		false,			// isUInt32,
+		false,			// isInt64,
+		false,			// isUInt64,
+		-1,			// asInt,
+		0,			// asUInt,  ASSERTION failure: signed value
+		-1,			// asInt32,
+		UINT_MAX,		// asUInt32,
+		-1,			// asInt64,
+		ULLONG_MAX		// asUInt64
+	},
+
+	// element 3: a unsigned integer, value= (unsigned) -1
+	{
+		wxJSONTYPE_UINT,	// iType,
+		false,			// isInt,
+		true,			// isUInt,
+		false,			// isInt32,
+		true,			// isUInt32,
+		false,			// isInt64,
+		false,			// isUInt64,
+		0,			// asInt,   ASSERTION failure: too large for signed 32-bit
+		UINT_MAX,		// asUInt, 
+		-1,			// asInt32,
+		UINT_MAX,		// asUInt32,
+		UINT_MAX,		// asInt64,
+		UINT_MAX		// asUInt64
+	},
+
+	// element 4: a negative, signed integer, value=-65000
+	{
+		wxJSONTYPE_INT,		// iType,
+		true,			// isInt,
+		false,			// isUInt,
+		true,			// isInt32,
+		false,			// isUInt32,
+		false,			// isInt64,
+		false,			// isUInt64,
+		-65000,			// asInt,
+		0,			// asUInt,   ASSERTION failure: signed int. 
+		-65000,			// asInt32,
+		-65000,			// asUInt32, WRONG RESULT
+		-65000,			// asInt64,
+		-65000			// asUInt64  WRONG RESULT
+	},
+
+	// element 5: a positive, signed integer, value=INT_MAX + 10
+	{
+		wxJSONTYPE_INT,		// iType,
+		true,			// isInt,
+		false,			// isUInt,
+		false,			// isInt32,
+		false,			// isUInt32,
+		true,			// isInt64,
+		false,			// isUInt64,
+		0, 			// asInt,   ASSERTION failure: value too large
+		INT_MAX + 10,		// asUInt 
+		-2147483639,		// asInt32, WRONG RESULT: too big for 'int32'
+		INT_MAX + 10,		// asUInt32
+		(wxInt64) INT_MAX + 10,	// asInt64,
+		(wxUint64)INT_MAX + 10	// asUInt64
+	},
+
+	// element 6: a negative, signed integer, value=INT_MIN - 10 (-2147483658)
+	{
+		wxJSONTYPE_INT,		// iType,
+		true,			// isInt,
+		false,			// isUInt,
+		false,			// isInt32,
+		false,			// isUInt32,
+		true,			// isInt64,
+		false,			// isUInt64,
+		0,			// asInt,  ASSERTION failure: value cannot fit( too large)
+		0,			// asUInt  ASSERTION failure: value cannot fit (negative)
+		2147483638,		// asInt32, WRONG RESULT:
+		2147483638,		// asUInt32 WRONG RESULT
+		(wxInt64) INT_MIN - 10,	// asInt64,
+		(wxUint64)INT_MIN - 10	// asUInt64 WRONG RESULT: returned as a unsigned int64
+	},
+
+	// element 7: a positive, unsigned integer, value=UINT_MAX + 10 (4294967305)
+	{
+		wxJSONTYPE_UINT,	// iType,
+		false,			// isInt,
+		true,			// isUInt,
+		false,			// isInt32,
+		false,			// isUInt32,
+		false,			// isInt64,
+		true,			// isUInt64,
+		0,			// asInt,  ASSERTION failure: value cannot fit (too large)
+		0,			// asUInt  ASSERTION failure: value cannot fit (too large)
+		9,			// asInt32, WRONG RESULT:
+		9,			// asUInt32 WRONG RESULT
+		(wxInt64) UINT_MAX + 10,  // asInt64,
+		(wxUint64)UINT_MAX + 10	  // asUInt64
+	},
+
+	// element 8: a positive, signed integer, value=UINT_MAX + 10 (4294967305)
+	{
+		wxJSONTYPE_INT,		// iType,
+		true,			// isInt,
+		false,			// isUInt,
+		false,			// isInt32,
+		false,			// isUInt32,
+		true,			// isInt64,
+		false,			// isUInt64,
+		0,			// asInt,  ASSERTION failure: value cannot fit (too large)
+		0,			// asUInt  ASSERTION failure: value cannot fit (too large)
+		9,			// asInt32, WRONG RESULT:
+		9,			// asUInt32 WRONG RESULT
+		(wxInt64) UINT_MAX + 10,  // asInt64,
+		(wxUint64)UINT_MAX + 10	  // asUInt64
+	},
+
+	// element 9: a string, value="A string"
+	{
+		wxJSONTYPE_STRING,	// iType,
+		false,			// isInt,
+		false,			// isUInt,
+		false,			// isInt32,
+		false,			// isUInt32,
+		false,			// isInt64,
+		false,			// isUInt64,
+		0,			// asInt,   ASSERTION failure: type not compatible
+		0,			// asUInt   ASSERTION failure: type not compatible
+		0,			// asInt32, ASSERTION failure: type not compatible
+		0,			// asUInt32 ASSERTION failure: type not compatible
+		0,			// asInt64, ASSERTION failure: type not compatible
+		0			// asUInt64 ASSERTION failure: type not compatible
 	}
 
   };
 
-  for ( int i = 0; i < 1; i++ )  {
-    TestCout( _T("Checking element no. "));
+  for ( int i = 0; i < 10; i++ )  {
+    TestCout( _T("\nChecking element no. "));
     TestCout( i, true );
     TestCout( _T("Value is: "));
     TestCout( value[i].AsString() );
@@ -227,32 +379,64 @@ int Test55()
 
     int d; unsigned int ui;   // checking the AsXxxxxx() functions
     TestCout( _T("Checking AsInt(): "));
-    d = value[i].AsInt();
-    TestCout( d, true );
-    ASSERT( d == res[i].asInt )
+    if ( res[i].asInt != 0 )  {
+      d = value[i].AsInt();
+      TestCout( d, true );
+      ASSERT( d == res[i].asInt )
+    }
+    else  {
+      TestCout( _T("ASSERTION failure\n"));
+    }
     TestCout( _T("Checking AsUInt(): "));
-    ui = value[i].AsUInt();
-    TestCout( ui, true );
-    ASSERT( ui == res[i].asUInt )
+    if ( res[i].asUInt != 0 )  {
+      ui = value[i].AsUInt();
+      TestCout( ui, true );
+      ASSERT( ui == res[i].asUInt )
+    }
+    else  {
+      TestCout( _T("ASSERTION failure\n"));
+    }
     TestCout( _T("Checking AsInt32(): "));
-    d = value[i].AsInt32();
-    TestCout( d, true );
-    ASSERT( d == res[i].asInt32 )
+    if ( res[i].asInt32 != 0 )  {
+      d = value[i].AsInt32();
+      TestCout( d, true );
+      ASSERT( d == res[i].asInt32 )
+    }
+    else  {
+      TestCout( _T("ASSERTION failure\n"));
+    }
     TestCout( _T("Checking AsUInt32(): "));
-    ui = value[i].AsUInt32();
-    TestCout( ui, true );
-    ASSERT( ui == res[i].asUInt32 )
+    if ( res[i].asUInt32 != 0 )  {
+      ui = value[i].AsUInt32();
+      TestCout( ui, true );
+      ASSERT( ui == res[i].asUInt32 )
+    }
+    else  {
+      TestCout( _T("ASSERTION failure\n"));
+    }
 
     wxInt64 i64; wxUint64 ui64;
+
     TestCout( _T("Checking AsInt64(): "));
-    i64 = value[i].AsInt64();
-    TestCout( i64, true );
-    ASSERT( i64 == res[i].asInt64 )
+    if ( res[i].asInt64 != 0 )  {
+      i64 = value[i].AsInt64();
+      TestCout( i64, true );
+      ASSERT( i64 == res[i].asInt64 )
+    }
+    else  {
+      TestCout( _T("ASSERTION failure\n"));
+    }
     TestCout( _T("Checking AsUInt64(): "));
-    ui64 = value[i].AsUInt64();
-    TestCout( ui64, true );
-    ASSERT( ui64 == res[i].asUInt64 )
-  }
+    if ( res[i].asUInt64 != 0 )  {
+      ui64 = value[i].AsUInt64();
+      TestCout( ui64, true );
+      ASSERT( ui64 == res[i].asUInt64 )
+    }
+    else  {
+      TestCout( _T("ASSERTION failure\n"));
+    }
+
+  }    // end for
 
 
 #endif    // defined ( wxJSON_64BIT_INT )

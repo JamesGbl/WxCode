@@ -317,6 +317,8 @@ wxJSONValue::~wxJSONValue()
  wxJSONTYPE_EMPTY which represent an invalid JSON value object.
  Also note that the pointer to the referenced data structure
  should NEVER be NULL.
+
+ \sa SetType
 */
 wxJSONType
 wxJSONValue::GetType() const
@@ -372,6 +374,8 @@ wxJSONValue::IsEmpty() const
  On platforms that support 64-bits integers, you can call \c isInt32()
  and \c IsInt64() to know if the value is too large to fit in  32-bit
  integer.
+
+ \sa \ref json_internals_integer
 */
 bool
 wxJSONValue::IsInt() const
@@ -397,6 +401,8 @@ wxJSONValue::IsInt() const
  On platforms that support 64-bits integers, you can call \c isUInt32()
  and \c IsUInt64() to know if the value is too large to fit in  32-bit
  unsigned integer.
+
+ \sa \ref json_internals_integer
 */
 bool
 wxJSONValue::IsUInt() const
@@ -496,34 +502,37 @@ wxJSONValue::IsObject() const
  supports 64-bits integers on platforms that have native support 
  for this.
  Because integer values are stored internally as 64-bits integers,
- this function returns the low-order 32-bit of the value stored in
+ this function returns the low 32-bits of the value stored in
  this objects.
  If the value is too large to fit in a 32 bits signed integer, the
  function fails with an ASSERTION failure.
  \sa AsInt32() AsUInt32()
+ \sa \ref json_internals_integer
 */
 int
 wxJSONValue::AsInt() const
 {
   wxJSONRefData* data = GetRefData();
   wxASSERT( data );
-  int r;
+  int i;
 
   // on 64-bits platforms check if the value fits in 32-bits
 #if defined( wxJSON_64BIT_INT )
-    wxASSERT( IsInt32());
-    r = (int) AsInt32();
+    wxInt32 i32;
+    bool success = AsInt32( &i32 );
+    wxASSERT( success );
+    i = (int) i32;
 #else
   switch ( data->m_type )  {
     case wxJSONTYPE_BOOL :
-      r = (int) data->m_value.m_valBool;
+      i = (int) data->m_value.m_valBool;
 
     case wxJSONTYPE_INT :
-      r = (int) data->m_value.m_valInt;
+      i = (int) data->m_value.m_valInt;
       break;
     case wxJSONTYPE_UINT :
       ::wxLogWarning( _T("wxJSONValue::AsInt() - value type is unsigned" ));
-      r = (int) data->m_value.m_valUInt;
+      i = (int) data->m_value.m_valUInt;
       break;
     default :
       wxFAIL_MSG( _T("wxJSONValue::AsInt() - the value is not compatible with INT"));
@@ -532,7 +541,7 @@ wxJSONValue::AsInt() const
   } 
 #endif
 
-  return r;
+  return i;
 }
 
 //! Return the stored value as a boolean.
@@ -612,7 +621,7 @@ wxJSONValue::AsString() const
       s.Printf( _T("%") wxLongLongFmtSpec _T("i"), data->m_value.m_valInt );
       break;
     case wxJSONTYPE_UINT :
-      s.Printf( _T("%") wxLongLongFmtSpec _T("u"), data->m_value.m_valInt );
+      s.Printf( _T("%") wxLongLongFmtSpec _T("u"), data->m_value.m_valUInt );
       break;
     case wxJSONTYPE_DOUBLE :
       s.Printf( _T("%f"), data->m_value.m_valDouble );
@@ -658,13 +667,23 @@ wxJSONValue::AsCString() const
 
 //! Return the stored value as a unsigned int.
 /*!
- If the type of the stored value is not an unsigned int, an int or a bool
- the function  returns an undefined result.
- Note that if the type is a signed int, the function returns the value
- converted to an unsigned integer but a warning is emitted because of
- the loss of the sign.
+ The function returns the value stored in this JSON-value
+ object as an unsigned integer
+ If the type of the stored value is not an integer, an unsigned int
+ or a bool the function returns an undefined value.
  In debug builds the function ASSERTs that the stored value is of
- compatible type: an \b int, an \b unsigned \b int or a \b boolean
+ compatible type: an \b int, an \b unsigned \b int or a \b boolean.
+
+ Also note that starting from version 0.5, the \b wxJSON library
+ supports 64-bits integers on platforms that have native support 
+ for this.
+ Because integer values are stored internally as 64-bits integers,
+ this function returns the low 32-bits of the value stored in
+ this objects.
+ If the value is too large to fit in a 32 bits unsigned integer, the
+ function fails with an ASSERTION failure.
+ \sa AsInt32 AsUInt32 AsInt
+ \sa \ref json_internals_integer
 */
 unsigned int
 wxJSONValue::AsUInt() const
@@ -674,8 +693,10 @@ wxJSONValue::AsUInt() const
   wxASSERT( data );
 
 #if defined( wxJSON_64BIT_INT )
-  wxASSERT( IsUInt32() );
-  ui = (unsigned int) AsUInt32();
+    wxUint32 ui32;
+    bool success = AsUInt32( &ui32 );
+    wxASSERT( success );
+    ui = (unsigned int) ui32;
 #else
   ui = data->m_value.m_valUInt;
   switch ( data->m_type )  {
@@ -801,7 +822,7 @@ wxJSONValue::Size() const
 
 //! Return an array of keys
 /*!
- If the stored value is an key/value map, the function returns an
+ If the stored value is a key/value map, the function returns an
  array of strings containing the \e key of all elements.
  Note that the returned array may be empty if the map has ZERO
  elements.
@@ -832,8 +853,8 @@ wxJSONValue::GetMemberNames() const
 
 //! Append the specified value in the array.
 /*!
- The function appends the JSON value \c value to the array contained
- in this object.
+ The function appends the value specified in the parameter to the array
+ contained in this object.
  If this object does not contain an array type, the actual content is
  deleted and a new array is created.
  Returns a reference to the appended object.
@@ -1163,7 +1184,7 @@ wxJSONValue::operator [] ( const wxString& key )
 //! Assign the specified value to this object replacing the old value.
 /*!
  The function assigns to this object the value specified in the
- left operand of the assignment operator.
+ right operand of the assignment operator.
  Note that the old value is deleted but not the other data members
  in the wxJSONRefData structure.
  This is particularly usefull for the parser class which stores
@@ -1239,6 +1260,7 @@ wxJSONValue::operator = ( const wxString& str )
  swallow copy of the other JSON value object.
  The function calls \c Ref() to get a shared referenced
  data.
+ \sa \ref json_internals_cow
 */
 wxJSONValue&
 wxJSONValue::operator = ( const wxJSONValue& other )
@@ -1253,7 +1275,7 @@ wxJSONValue::operator = ( const wxJSONValue& other )
 
 //! Return a value or a default value.
 /*!
- This function returns the value object for the specified key.
+ This function returns a copy of the value object for the specified key.
  If the key is not found, a copy of \c defaultValue is returned.
 */
 wxJSONValue
@@ -1894,16 +1916,16 @@ wxJSONValue::ClearComments()
   \li wxJSONTYPE_NULL: a NULL value
   \li wxJSONTYPE_INT: an integer value
   \li wxJSONTYPE_UINT: an unsigned integer
-  \li wxJSONTYPE_INT32: a 32-bits integer value
-  \li wxJSONTYPE_UINT32: an unsigned 32-bits integer
-  \li wxJSONTYPE_INT64: a 64-bits integer value
-  \li wxJSONTYPE_UINT64: an unsigned 64-bits integer
   \li wxJSONTYPE_DOUBLE: a double precision number
   \li wxJSONTYPE_BOOL: a boolean
   \li wxJSONTYPE_CSTRING: a C string
   \li wxJSONTYPE_STRING: a wxString object
   \li wxJSONTYPE_ARRAY: an array of wxJSONValue objects
   \li wxJSONTYPE_OBJECT: a hashmap of key/value pairs where \e value is a wxJSONValue object
+  \li wxJSONTYPE_INT32: a 32-bits integer value
+  \li wxJSONTYPE_UINT32: an unsigned 32-bits integer
+  \li wxJSONTYPE_INT64: a 64-bits integer value
+  \li wxJSONTYPE_UINT64: an unsigned 64-bits integer
 
  The integer storage depends on the platform: for platforms that support 64-bits
  integers, integers are always stored as 64-bits integers.
@@ -2277,8 +2299,9 @@ wxJSONValue::IsInt32() const
   switch ( data->m_type )  {
     case wxJSONTYPE_INT : 
       if ( data->m_value.m_valInt <= INT_MAX &&
-		data->m_value.m_valInt >= INT_MIN )
+		data->m_value.m_valInt >= INT_MIN )  {
         r = true;
+      }
       break;
     default :
       break;
@@ -2302,8 +2325,9 @@ wxJSONValue::IsInt64() const
   switch ( data->m_type )  {
     case wxJSONTYPE_INT : 
       if ( data->m_value.m_valInt > INT_MAX ||
-		data->m_value.m_valInt < INT_MIN )
+		data->m_value.m_valInt < INT_MIN )  {
         r = true;
+      }
       break;
     default :
       break;
@@ -2327,8 +2351,9 @@ wxJSONValue::IsUInt32() const
   bool r = false;
   switch ( data->m_type )  {
     case wxJSONTYPE_UINT :
-      if ( data->m_value.m_valUInt <= UINT_MAX )
+      if ( data->m_value.m_valUInt <= UINT_MAX )  {
         r = true;
+      }
       break;
     default :
       break;
@@ -2351,8 +2376,9 @@ wxJSONValue::IsUInt64() const
   bool r = false;
   switch ( data->m_type )  {
     case wxJSONTYPE_UINT :
-      if ( data->m_value.m_valUInt > UINT_MAX )
+      if ( data->m_value.m_valUInt > UINT_MAX )    { 
         r = true;
+      }
       break;
     default :
       break;
@@ -2370,10 +2396,11 @@ wxJSONValue::IsUInt64() const
  If you want to get ASSERTION failures in this case, call the \c AsInt()
  memberfunction.
 */
-int
+wxInt32
 wxJSONValue::AsInt32() const
 {
-  int i = (int) GetLow();
+  wxInt32 i;
+  AsInt32( &i );
   return i;
 }
 
@@ -2390,7 +2417,8 @@ wxJSONValue::AsInt32() const
 unsigned int
 wxJSONValue::AsUInt32() const
 {
-  unsigned int ui = (unsigned int) GetLow();
+  wxUint32 ui;
+  AsUInt32( &ui );
   return ui;
 }
 
@@ -2418,6 +2446,7 @@ wxJSONValue::AsInt64() const
       i64 = (wxInt64) data->m_value.m_valUInt;
       break;
     default :
+      wxFAIL_MSG( _T("wxJSONValue::AsInt64(): The type is not compatible with INT"));
       break;
   }
   return i64;
@@ -2446,6 +2475,7 @@ wxJSONValue::AsUInt64() const
       ui64 = data->m_value.m_valUInt;
       break;
     default :
+      wxFAIL_MSG( _T("wxJSONValue::AsUInt64(): The type is not compatible with INT"));
       break;
   }
   return ui64;
@@ -2492,71 +2522,101 @@ wxJSONValue::operator = ( wxUint64 ui )
 /*!
  This function is only available on 64-bits platforms and returns
  the low 32-bits of the integer value stored in this object.
- If the value stored in not of type integer or unsigned int, the
- function returns an undefined result.
-*/
-int
-wxJSONValue::GetLow() const
-{
-  // we use an array of two wxInt32 that points to the integer
-  // type. Next we get the first or the second array's element
-  // depending on the platform's endianness
+ The value is stored in the integer pointed to by \c i and the
+ function returns TRUE on success.
+ If the value stored in the 64-bit integer is too large to fit
+ in a signed integer, the function returns FALSE.
 
+ If the value stored in not of type integer or unsigned int, the
+ function returns FALSE and the variable pointed to by \c i contains
+ an undefined result.
+ However, in debug builds, the function calls FAIL_MSG if the type
+ of the stored object is not compatible with integer.
+*/
+bool
+wxJSONValue::AsInt32( wxInt32* i) const
+{
   wxJSONRefData* data = GetRefData();
   wxASSERT( data );
 
-  int r;               // not initialized: undefined result
-  wxInt32* result = 0;
+  bool r = false;
+  wxInt64* result = 0;
 
   switch ( data->m_type )  {
     case wxJSONTYPE_INT : 
-      result = (wxInt32*) &(data->m_value.m_valInt );
+      r = true;
+      result = &(data->m_value.m_valInt );
       break;
     case wxJSONTYPE_UINT :
-      result = (wxInt32*) &(data->m_value.m_valUInt );
+      result = (wxInt64*) &(data->m_value.m_valUInt );
+      r = true;
       break;
     default :
+      result = &(data->m_value.m_valInt );  // undefined value
+      wxFAIL_MSG( _T("wxJSONValue::AsInt32() - the value is not compatible with INT"));
       break;
   }
-#if defined( wxLITTLE_ENDIAN )
-  r = result[0];
-#else
-  r = result[1];
-#endif
+
+  // check if the integer fits in a 32-bit signed integer
+  if ( r )  {
+      if ( *result > INT_MAX || *result < INT_MIN )  {
+        r = false;
+      }
+  }
+
+  // now cast the 64-bit integer in a 32-bit integer
+  *i = (wxInt32) *result;
   return r;
 }
 
-//! Returns the high 32-bit of an integer value
+//! Returns the low 32-bit of an integer value
 /*!
  This function is only available on 64-bits platforms and returns
- the high 32-bits of the integer value stored in this object.
+ the low 32-bits of the integer value stored in this object.
+ The value is stored in the unsigned 32-bit integer pointed to by \c ui and the
+ function returns TRUE on success.
+ If the value stored in the 64-bit integer is too large to fit
+ in a unsigned integer, the function returns FALSE.
+
  If the value stored in not of type integer or unsigned int, the
- function returns an undefined result.
+ function returns FALSE and the variable pointed to by \c ui contains
+ an undefined result.
+ However, in debug builds, the function calls FAIL_MSG if the type
+ of the stored object is not compatible with integer.
 */
-int
-wxJSONValue::GetHi() const
+bool
+wxJSONValue::AsUInt32( wxUint32* ui ) const
 {
   wxJSONRefData* data = GetRefData();
   wxASSERT( data );
 
-  int r;               // not initialized: undefined result
-  wxInt32* result = 0;
+  bool r = false;
+  wxUint64* result = 0;
 
   switch ( data->m_type )  {
     case wxJSONTYPE_INT : 
-      result = (wxInt32*) &(data->m_value.m_valInt );
+      r = true;
+      result = (wxUint64*) &(data->m_value.m_valInt );
       break;
     case wxJSONTYPE_UINT :
-      result = (wxInt32*) &(data->m_value.m_valUInt );
+      result = &(data->m_value.m_valUInt );
+      r = true;
       break;
     default :
+      result = &(data->m_value.m_valUInt );  // undefined value
+      wxFAIL_MSG( _T("wxJSONValue::AsUInt32() - the value is not compatible with UINT"));
       break;
   }
-#if defined( wxLITTLE_ENDIAN )
-  r = result[1];
-#else
-  r = result[0];
-#endif
+
+  // check if the integer fits in a 32-bit signed integer
+  if ( r )  {
+      if ( *result > UINT_MAX || *result < 0 )  {
+        r = false;
+      }
+  }
+
+  // now cast the 64-bit integer in a 32-bit integer
+  *ui = (wxUint32) *result;
   return r;
 }
 

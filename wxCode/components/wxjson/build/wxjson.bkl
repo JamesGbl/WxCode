@@ -151,6 +151,7 @@
                  samples/test10.cpp
                  samples/test11.cpp
                  samples/test12.cpp
+                 samples/test13.cpp
         </sources>
         <include>./include</include>
         <include>../include</include>
