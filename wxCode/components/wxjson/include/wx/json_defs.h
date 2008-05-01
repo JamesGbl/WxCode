@@ -97,6 +97,19 @@
 #endif
 
 
+//
+// the following macro, if defined, cause the wxJSON library to
+// always use 32-bits integers also when the platform seems to
+// have native 64-bits support: by default the macro if not defined
+// #define wxJSON_NO_64BIT_INT
+#if defined( wxJSON_NO_64BIT_INT ) && defined( wxJSON_64BIT_INT )
+#undef wxJSON_64BIT_INT
+#endif
+
+
+
+
+
 #endif // _WX_JSON_DEFS_H_
 
 

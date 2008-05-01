@@ -71,6 +71,7 @@ protected:
 
   int  WriteString( const wxString& str );
   int  WriteStringValue( const wxString& str );
+  int  WritePrimitiveValue( const wxJSONValue& value );
   int  WriteInt( int i );
   int  WriteUInt( unsigned int ui );
   int  WriteBool( bool b );

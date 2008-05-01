@@ -458,10 +458,10 @@ class defines some other functions related to the integer's storage size:
 
 \li \c Is(U)Int32: the function only returns TRUE if the value stored in
 	the JSON value object is of type (unsigned) \e integer and the number
-	represented fits in a 32-bit integer data type.
+	represented fits in a 32-bit (unsigned) integer data type.
 
 \li \c Is(U)Int64: the function only returns TRUE if the value stored in
-	the JSON value object is of type (unsigned) \e integer and the number
+	the JSON value object is of type \b wx(U)Int64 and the number
 	represented is too large to fit in a 32-bit integer data type.
 
 \li \c As(U)Int32(): the function returns the low-order 32-bits of the
@@ -477,7 +477,11 @@ Also note that in order to remain compatible with older 0.x versions, the
 32-bits platforms but it was changed on 64-bits platforms: on these systems,
 the function calls \c As(U)Int32 and returns a 32-bits integer data type
 but an ASSERTION failure occurs in debug builds if the returned value is
-too big to fit in a 32-bit int type.
+too large to fit in a 32-bit int type.
+On the other hand, the functions \c As(U)Int32 does not ASSERT that the
+value fits in a 32 bit storage: these functions just returns the JSON
+value object as a 32-bits integer: wrong results may be returned if the
+value is too large for that storage size.
 
 This organization let us to remain compatible with older 0.x versions of
 the \b wxJSON library but allows new applications to get 64-bit support
@@ -486,7 +490,8 @@ The following are some examples:
 
 \code
   // an old application that does not know nothing about 64-bits
-  // integer support (the app only uses 32-bit integers)
+  // integer support (the app only uses 32-bit integers, as in the
+  // previuos versions)
   int i;
   wxJSONValue v1 = 128;
   if ( v1.IsInt() )  {
@@ -506,7 +511,7 @@ use so large numbers, just use the same code of the old application which
 does not know anything.
 If the value stored in the JSON value object is too large, the \c As(U)Int
 memberfunction fails with an ASSERTION failure. This is good, because
-the JSON text read by the application needs a new rewrite of the code.
+the JSON text read by the application needs a code rewriting.
 
 If an application uses very large integers, it may just use 64-bits storage
 for all integer types:

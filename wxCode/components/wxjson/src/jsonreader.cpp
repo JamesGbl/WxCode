@@ -1319,9 +1319,16 @@ wxJSONReader::ReadValue( int ch, wxJSONValue& val )
   }
 
   // variables used in the switch statement
-  long int l; double d; bool r;
+  unsigned long int ul; long int l; double d; bool r;
+
+  // on 64-bits platforms, integers are stored in a wx(U)Int64 data type
+#if defined( wxJSON_64BIT_INT )
+  wxInt64  i64;
+  wxUint64 ui64;
+#endif
 
   // try to convert to a number if the token starts with a digit
+  // or a sign character
   switch ( ch )  {
     case '0' :
     case '1' :
@@ -1335,6 +1342,7 @@ wxJSONReader::ReadValue( int ch, wxJSONValue& val )
     case '9' :
     case '+' :
     case '-' :
+      // try a signed 32-bits integer
       r = s.ToLong( &l );
       ::wxLogTrace( traceMask, _T("(%s) convert to int result=%d"),  __PRETTY_FUNCTION__, r );
       if ( r )  {
@@ -1342,7 +1350,37 @@ wxJSONReader::ReadValue( int ch, wxJSONValue& val )
         val = (int) l;
         return nextCh;
       }
-      // try double
+
+      // try a unsigned 32-bits integer
+      r = s.ToULong( &ul );
+      ::wxLogTrace( traceMask, _T("(%s) convert to int result=%d"),  __PRETTY_FUNCTION__, r );
+      if ( r )  {
+        // store the value
+        val = (unsigned int) l;
+        return nextCh;
+      }
+
+
+      // if the platform supports 64-bits integers, try a int64 and, next, a uint64
+#if defined( wxJSON_64BIT_INT)
+      r = s.ToLongLong( &i64 );
+      ::wxLogTrace( traceMask, _T("(%s) convert to wxInt64 result=%d"),  __PRETTY_FUNCTION__, r );
+      if ( r )  {
+        // store the value
+        val = i64;
+        return nextCh;
+      }
+      r = s.ToULongLong( &ui64 );
+      ::wxLogTrace( traceMask, _T("(%s) convert to wxUint64 result=%d"),
+							  __PRETTY_FUNCTION__, r );
+      if ( r )  {
+        // store the value
+        val = ui64;
+        return nextCh;
+      }
+#endif
+
+      // number is very large or it is in exponential notation, try double
       r = s.ToDouble( &d );
       ::wxLogTrace( traceMask, _T("(%s) convert to double result=%d"),  __PRETTY_FUNCTION__, r );
       if ( r )  {
@@ -1357,9 +1395,9 @@ wxJSONReader::ReadValue( int ch, wxJSONValue& val )
 
       break;
 
-    // if it is not a number than try the constants
+    // if it is not a number than try the literals
     // JSON syntax states that constant must be lowercase
-    // but this parser tolerate uppercase constant and
+    // but this parser tolerate mixed-case literals but
     // reports a warning.
     default: 
       if ( s == _T("null") ) {

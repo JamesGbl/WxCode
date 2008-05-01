@@ -125,6 +125,8 @@ extern int Test53();   // testing errors in writing to streams
 // in test13.cpp: test the 64-bit integer support
 extern int Test54();   // testing wxWidget's macro definitions
 extern int Test55();   // testing the wxJSONValue's 64-bits related functions
+extern int Test56();   // testing the wxJSONWriter's 64-bits int output
+extern int Test57();   // testing the wxJSONReader's 64-bits int output
 
 
 // global variables in 'main.cpp'
@@ -139,6 +141,8 @@ extern void TestCout( int i, bool lf = false );
 extern void TestCout( bool b, bool lf = false );
 extern void TestCout( unsigned ui, bool lf = false );
 extern void TestCout( double d, bool lf = false );
+
+
 
 #if defined( wxJSON_64BIT_INT )
 extern void TestCout( wxInt64 i64, bool lf = false );

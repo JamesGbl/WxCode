@@ -275,23 +275,29 @@ wxJSONWriter::DoWrite( const wxJSONValue& value, const wxString* key,
   int t = value.GetType();
   switch ( t )  {
     case wxJSONTYPE_EMPTY :
-      lastChar = WriteEmpty();
-      break;
+      // lastChar = WriteEmpty();
+      // break;
 
     case wxJSONTYPE_NULL :
-      lastChar = WriteNull();
-      break;
+      // lastChar = WriteNull();
+      // break;
 
     case wxJSONTYPE_INT :
-      lastChar = WriteInt( value.AsInt());
-      break;
+      // lastChar = WriteInt( value.AsInt());
+      // break;
 
     case wxJSONTYPE_UINT :
-      lastChar = WriteUInt( value.AsUInt());
-      break;
+      // lastChar = WriteUInt( value.AsUInt());
+      // break;
 
     case wxJSONTYPE_BOOL :
-      lastChar = WriteBool( value.AsBool());
+      // lastChar = WriteBool( value.AsBool());
+      // break;
+
+    case wxJSONTYPE_DOUBLE :
+      // lastChar = WriteDouble( value.AsDouble());
+      // break;
+      lastChar = WritePrimitiveValue( value );
       break;
 
     case wxJSONTYPE_STRING :
@@ -301,10 +307,6 @@ wxJSONWriter::DoWrite( const wxJSONValue& value, const wxString* key,
     case wxJSONTYPE_CSTRING :
       // we use the 'WriteString()' function
       lastChar = WriteStringValue( value.AsString());
-      break;
-
-    case wxJSONTYPE_DOUBLE :
-      lastChar = WriteDouble( value.AsDouble());
       break;
 
     case wxJSONTYPE_ARRAY :
@@ -726,6 +728,24 @@ wxJSONWriter::WriteString( const wxString& str )
     }
   }
   return lastChar;
+}
+
+//! Writes a value of primitive type.
+/*!
+ This function is called for every value object of primite types
+ except string values and it relaces all \c WriteXxxxx() functions.
+ In order to write primitive types, this functions calls the
+ wxJSONValue::AsString() function to get a string representation
+ of the value.
+*/
+int
+wxJSONWriter::WritePrimitiveValue( const wxJSONValue& value )
+{
+  int r;
+  wxString s = value.AsString();
+  wxASSERT( !s.empty());
+  r =  WriteString( s );
+  return r;
 }
 
 

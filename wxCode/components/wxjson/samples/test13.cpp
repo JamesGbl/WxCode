@@ -438,11 +438,187 @@ int Test55()
 
   }    // end for
 
+#endif    // defined ( wxJSON_64BIT_INT )
+  return r;
+}
+
+// test the writer class for 64-bits integers
+int Test56()
+{
+#if defined( wxJSON_64BIT_INT )
+  wxJSONValue root;
+
+  // the 'object' object contains all primitive types
+  root[_T("object")][_T("integer")]      = -20;
+  root[_T("object")][_T("unsigned int")] = (unsigned int) 30;
+  root[_T("object")][_T("int64")] = (wxInt64) INT_MIN - 100;
+  root[_T("object")][_T("uint64")] = (wxUint64) INT_MAX + 100;
+  root[_T("object")][_T("int64-2")] = (wxInt64) LLONG_MIN;
+  root[_T("object")][_T("uint64-2")] = (wxUint64) LLONG_MAX;
+  root[_T("object")][_T("bool-t")]       = true;
+  root[_T("object")][_T("bool-f")]       = false;
+  root[_T("object")][_T("double")]       = 20.30;
+  root[_T("object")][_T("C string")]     = _T("static string 1");
+  root[_T("object")][_T("wxString")]     = _T("wxString 1");
+  root[_T("object")][_T("null")]         = wxJSONValue();
+
+  wxJSONWriter writer;
+  wxString str;
+
+  writer.Write( root, str );
+  TestCout( _T("The JSON text document:\n"));
+  TestCout( str );
+  TestCout( _T("\n\n"));
 
 #endif    // defined ( wxJSON_64BIT_INT )
+  return 0;
+}
+
+
+
+// prints the errors and warnings array
+static void PrintErrors( wxJSONReader& reader )
+{
+  wxString s;
+  int numErrors = reader.GetErrorCount();
+  s.Printf( _T( "\nERRORS: count=%d\n"), numErrors );
+  TestCout( s );
+  const wxArrayString& errors = reader.GetErrors();
+  for ( int i = 0; i < errors.size(); i++ )  {
+    TestCout( errors[i] );
+    TestCout( _T( "\n" ));
+  }
+  int numWarn   = reader.GetWarningCount();
+  const wxArrayString& warnings = reader.GetWarnings();
+  s.Printf( _T("WARNINGS: count=%d\n"), numWarn );
+  TestCout( s );
+  for ( int i = 0; i < warnings.size(); i++ )  {
+    TestCout( warnings[i] );
+    TestCout( _T( "\n" ));
+  }
+}
+
+// prints a JSON value object and the reader's errors
+static void PrintValue( wxJSONValue& val, wxJSONReader* reader = 0 )
+{
+  wxJSONWriter writer( wxJSONWRITER_STYLED | wxJSONWRITER_WRITE_COMMENTS );
+  wxString s;
+  writer.Write( val, s );
+  TestCout( s );
+  if ( reader )  {
+    PrintErrors( *reader );
+  }
+}
+
+// test the reader class for 64-bits integers
+int Test57()
+{
+  static const wxChar* buff = _T("\n")
+	_T("[\n")
+	_T("   -20,\n")
+	_T("   30,\n")
+
+	// 32-bits limits
+	_T("   -2147483648,\n")	// INT_MIN
+	_T("   2147483647,\n")	// INT_MAX
+	_T("   4294967295,\n")	// UINT_MAX
+
+	// 32-bits limits exceeded
+	_T("   2147483747,\n")	// INT_MAX + 100
+	_T("   -2147483748,\n")	// INT_MIN - 100
+	_T("   4294967395,\n")	// UINT_MAX + 100
+
+	// 64-bits limits
+	_T("   9223372036854775807,\n")		// LLONG_MAX
+	_T("   -9223372036854775808,\n")	// LLONG_MIN
+	_T("   18446744073709551615,\n")	// ULLONG_MAX
+
+	// 64-bits limits exceeded
+	_T("   9223372036854775907,\n")		// LLONG_MAX + 100
+	_T("   -9223372036854775908,\n")	// LLONG_MIN - 100
+	_T("   18446744073709551715\n")		// ULLONG_MAX + 100
+
+	_T("]\n");
+
+  int r = 0;                // return status code ZERO=Ok
+
+  wxString str( buff );
+  TestCout( _T("The JSON text document:\n"));
+  TestCout( str );
+
+  wxJSONValue  root;
+  wxJSONReader reader;
+  int numErrors = reader.Parse( str, &root );
+  TestCout( _T("\n\nErrors reading the document: "));
+  TestCout( numErrors, true );
+
+  if ( numErrors > 0 )  {
+    PrintErrors( reader );
+    r = 1;
+  }
+  else  {
+    // now check the results by getting the type of the values
+    // note that the results are different if the platform does
+    // support 64-bits integer or not
+#if defined( wxJSON_64BIT_INT )
+    wxJSONType results[] = {
+	wxJSONTYPE_INT,		// -20
+	wxJSONTYPE_INT,		// 30
+	wxJSONTYPE_INT,		// INT_MIN
+	wxJSONTYPE_INT,		// INT_MAX
+
+	wxJSONTYPE_UINT,	// UINT_MAX
+	wxJSONTYPE_INT,		// INT_MAX + 100
+	wxJSONTYPE_INT,		// INT_MIN - 100
+	wxJSONTYPE_INT,		// UINT_MAX + 100
+
+	wxJSONTYPE_INT,		// LLONG_MAX
+	wxJSONTYPE_INT,		// LLONG_MIN
+	wxJSONTYPE_UINT,	// ULLONG_MAX
+
+	wxJSONTYPE_DOUBLE,	// LLONG_MAX + 100
+	wxJSONTYPE_DOUBLE,	// LLONG_MIN - 100
+	wxJSONTYPE_DOUBLE,	// ULLONG_MAX + 100
+    };
+#else
+    wxJSONType results[] = {
+	wxJSONTYPE_INT,		// -20
+	wxJSONTYPE_INT,		// 30
+	wxJSONTYPE_INT,		// INT_MIN
+	wxJSONTYPE_INT,		// INT_MAX
+
+	wxJSONTYPE_UINT,	// UINT_MAX
+	wxJSONTYPE_DOUBLE,	// INT_MAX + 100
+	wxJSONTYPE_DOUBLE,	// INT_MIN - 100
+	wxJSONTYPE_DOUBLE,	// UINT_MAX + 100
+
+	wxJSONTYPE_DOUBLE,	// LLONG_MAX
+	wxJSONTYPE_DOUBLE,	// LLONG_MIN
+	wxJSONTYPE_DOUBLE,	// ULLONG_MAX
+
+	wxJSONTYPE_DOUBLE,	// LLONG_MAX + 100
+	wxJSONTYPE_DOUBLE,	// LLONG_MIN - 100
+	wxJSONTYPE_DOUBLE,	// ULLONG_MAX + 100
+    };
+#endif
+
+    for ( int i = 0; i < 14; i++ )  {
+      wxJSONType type;
+      type =  root[i].GetType();
+      TestCout( _T("Element no. "));
+      TestCout( i );
+      TestCout( _T(" type is: "));
+      TestCout( wxJSONValue::TypeToString( type));
+      TestCout( _T("\n"));
+      ASSERT( type == results[i] );
+    }
+
+    r = 0;
+  }
 
   return r;
 }
+
 
 
 /*
