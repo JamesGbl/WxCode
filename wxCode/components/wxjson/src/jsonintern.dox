@@ -561,7 +561,7 @@ Example:
  wxJSONValue value(100);
  bool r = value.IsInt();        // return TRUE
       r = value.IsUInt();       // return FALSE
-\code
+\endcode
 
 On the other hand, the \b AsXxxxxx functions return the value as the
 specified type, without checking if the stored value is actually
@@ -574,7 +574,7 @@ Example:
  wxJSONValue value(-1);
  int i       = value.AsInt();        // return -1
  unsigned ui = value.AsUInt();       // return 4294967295
-\code
+\endcode
 
 Also note that the \b Is(U)Int32/64 memberfunctions checks that the
 stored integer fits in the integer storage specified in the 
@@ -588,7 +588,7 @@ memberfunction returns FALSE but you can still get the value as a
  wxJSONValue value( 10000 );
  bool r      = value.IsInt64();        // return FALSE
  wxInt64 i64 = value.AsInt64();        // perfectly legal
-\code
+\endcode
 
 To know more about the return values of the \b IsXxxxxx and the \b AsXxxxxx
 memberfunctions in 64-bits platforms, see the \c Test55() function in the

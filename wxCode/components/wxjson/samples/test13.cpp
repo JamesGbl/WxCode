@@ -619,6 +619,23 @@ int Test57()
   return r;
 }
 
+// there is a bug in the wxJSONReader::ReadValue() function: it seems
+// that the wxString::To(U)LongLong() function always fails to convert
+// numbers that are, in fact, 64-bits integers
+// I test this
+int Test58()
+{
+  wxString s1( _T("200"));
+  wxInt64 i64;
+  bool r = s1.ToLongLong( &i64);
+  TestCout( _T("Converting string: 200 - result:"));
+  TestCout( r, true );
+  ASSERT( r )
+  return 0;  
+}
+
+
+
 
 
 /*

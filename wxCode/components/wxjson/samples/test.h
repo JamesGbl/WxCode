@@ -127,6 +127,7 @@ extern int Test54();   // testing wxWidget's macro definitions
 extern int Test55();   // testing the wxJSONValue's 64-bits related functions
 extern int Test56();   // testing the wxJSONWriter's 64-bits int output
 extern int Test57();   // testing the wxJSONReader's 64-bits int output
+extern int Test58();   // testing the wxString::To(U)LongLong() functions
 
 
 // global variables in 'main.cpp'
