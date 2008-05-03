@@ -61,7 +61,12 @@ public:
   int   GetErrorCount() const;
   int   GetWarningCount() const;
 
-  static int UTF8NumBytes( char ch );
+  static int  UTF8NumBytes( char ch );
+
+#if defined( wxJSON_64BIT_INT )
+  static bool Strtoll( const wxString& str, wxInt64* i64 );
+  static bool Strtoull( const wxString& str, wxUint64* ui64 );
+#endif
 
   const wxArrayString& GetErrors() const;
   const wxArrayString& GetWarnings() const;
@@ -88,6 +93,8 @@ protected:
   int  ReadUnicode( long int& hex );
   int  AppendUnicodeSequence( wxString& s, int hex );
   int  NumBytes();
+
+  static bool DoStrto_ll( const wxString& str, wxUint64* ui64, wxChar* sign );
 
   // constructor's parameters
 

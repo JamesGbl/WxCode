@@ -622,7 +622,25 @@ int Test57()
 // there is a bug in the wxJSONReader::ReadValue() function: it seems
 // that the wxString::To(U)LongLong() function always fails to convert
 // numbers that are, in fact, 64-bits integers
-// I test this
+// I test this because I have a bug in the Test57() function
+//
+// 3 may 2008: the test failed: the wxString::ToLongLong() function
+// always returns FALSE because the 'wxHAS_STRTOLL' macro is not
+// defined on my system although the 'strtoll' function does exist.
+//
+// This is the source of the wxWidgets 2.8.7 function:
+// bool wxString::ToLongLong(wxLongLong_t *val, int base) const
+// {
+// #ifdef wxHAS_STRTOLL
+//     return wxStringToIntType(c_str(), val, base, wxStrtoll);
+// #else
+//    // TODO: implement this ourselves
+//    wxUnusedVar(val);
+//    wxUnusedVar(base);
+//    return false;
+// #endif // wxHAS_STRTOLL
+// }
+//
 int Test58()
 {
   wxString s1( _T("200"));
@@ -635,8 +653,98 @@ int Test58()
 }
 
 
+//
+// because some systems lack the 'strtoll' function even if the system
+// has native 64-bit integer support, I implemented my own 'strtoll'
+// function: it is a incomplete implementation because only base 10
+// conversion is implemented. This function tests the conversion 
+int Test59()
+{
+  wxString s1( _T("200"));
+  wxUint64 ui64;
+  bool r = wxJSONReader::Strtoull( s1, &ui64);
+  TestCout( _T("Converting string: 200 - result:"));
+  TestCout( r, true );
+  TestCout( _T("Printing the converted value: "));
+  TestCout( ui64, true );
+  ASSERT( r )
+  ASSERT( ui64 == 200 )
 
+  wxString s2( _T("-200"));
+  wxInt64 i64;
+  r = wxJSONReader::Strtoll( s2, &i64);
+  TestCout( _T("Converting string: -200 - result:"));
+  TestCout( r, true );
+  TestCout( _T("Printing the converted value: "));
+  TestCout( i64, true );
+  ASSERT( r )
+  ASSERT( i64 == -200 )
 
+  // check many values
+  wxString str[] = {
+	_T("1000000" ),
+	_T("1007463540000" ),
+	_T("-465342984756" ),
+	_T("-1" ),
+	_T("a89" ),
+	_T("980a89" ),
+	_T("9223372036854775807" ),	// LLONG_MAX
+	_T("-9223372036854775808" ),	// LLONG_MIN
+	_T("18446744073709551615" ),	// ULLONG_MAX
+	_T("18446744073709551625" ),	// ULLONG_MAX + 10 (overflow)
+	_T("-9223372036854775809" ),	// LLONG_MIN + 1 (overflow)
+	_T("9223372036854775808" ),	// LLONG_MAX + 1 (overflow)
+	_T("218446744073709551615" ),	// string is too long
+  };
+
+  struct Result {
+    bool     res;	// result
+    bool     uRes;	// result for unsigned
+    wxInt64  value;	// value
+    wxUint64 uValue;	// value for unsigned
+  }; 
+
+  Result results[] = {
+	// _T("1000000" ),
+	{
+		true, true,
+		wxLL(1000000), wxULL(1000000)
+	},
+
+	// _T("1007463540000" )
+		true, true,
+		wxLL(1007463540000), wxULL(1007463540000)
+
+  };
+
+  for ( int i = 0; i < 2; i++ )  {
+    bool r1, r2;
+    TestCout( _T("Converting string: "));
+    TestCout( str[i] );
+    TestCout( _T("\n    To wxInt64 - result is: "));
+    r1 = wxJSONReader::Strtoll( str[i], &i64);
+    TestCout( r1, true );
+
+    TestCout( _T("    To wxUint64 - result is: "));
+    r2 = wxJSONReader::Strtoull( str[i], &ui64);
+    TestCout( r2, true );
+    ASSERT( r1 == results[i].res )
+    ASSERT( r2 == results[i].uRes )
+
+    if ( r1 ) {
+      TestCout( _T("    Printing the converted INT value: "));
+      TestCout( i64, true );
+      ASSERT( i64 == results[i].value )
+    }
+    if ( r2 ) {
+      TestCout( _T("    Printing the converted UINT value: "));
+      TestCout( ui64, true );
+      ASSERT( ui64 == results[i].uValue )
+    }
+  }
+
+  return 0;  
+}
 
 /*
 {

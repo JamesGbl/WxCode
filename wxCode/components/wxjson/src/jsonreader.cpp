@@ -1702,6 +1702,171 @@ wxJSONReader::AppendUnicodeSequence( wxString& s, int hex )
   return r;
 }
 
+#if defined( wxJSON_64BIT_INT )
+// Converts a decimal string to a 64-bit signed integer
+/*
+ This is an undcumented function which implements a simple variant
+ of the 'strtoll' C-library function.
+ I needed this implementation because the wxString::To(U)LongLong
+ function does not work on my system:
+
+  \li GNU/Linux Fedora Core 6
+  \li GCC version 4.1.1
+  \li libc.so.6
+
+ The wxWidgets library (actually I have installed version 2.8.7)
+ relies on 'strtoll' in order to do the conversion from a string
+ to a long long integer but, in fact, it does not work because
+ the 'wxHAS_STRTOLL' macro is not defined on my system. 
+
+ Note that this implementation is not a complete substitute of the
+ strtoll function because it only converts decimal strings (only base
+ 10 is implemented).
+*/
+bool
+wxJSONReader::Strtoll( const wxString& str, wxInt64* i64 )
+{
+  wxChar sign = ' ';
+  wxUint64 ui64;
+  bool r = DoStrto_ll( str, &ui64, &sign );
+
+  // check overflow for signed long long
+  switch ( sign )  {
+    case '-' :
+      if ( ui64 > (wxUint64) LLONG_MAX + 1 )  {
+        r = false;
+      }
+      else  {
+        *i64 = (wxInt64) (ui64 * -1);
+      }
+      break;
+
+    // case '+' :
+    default :
+      if ( ui64 > LLONG_MAX )  {
+        r = false;
+      }
+      else  {
+        *i64 = (wxInt64) ui64;
+      }
+      break;
+  }
+  return r;
+}
+
+
+bool
+wxJSONReader::Strtoull( const wxString& str, wxUint64* ui64 )
+{
+  wxChar sign = ' ';
+  bool r = DoStrto_ll( str, ui64, &sign );
+  if ( sign == '-' )  {
+    r = false;
+  }
+  return r;
+}
+
+
+bool
+wxJSONReader::DoStrto_ll( const wxString& str, wxUint64* ui64, wxChar* sign )
+{
+  // the conversion is done by multiplying the individual digits
+  // in reverse order to the corresponding power of 10
+  //
+  //  10's power:  987654321.9876543210
+  //
+  // LLONG_MAX:     9223372036854775807
+  // LLONG_MIN:    -9223372036854775808
+  // ULLONG_MAX:   18446744073709551615
+  //
+  // the function does not take into account the sign: only a
+  // unsigned long long int is returned
+
+  int maxDigits = 20;       // 20 + 1 (for the sign)
+
+  wxUint64 power10[] = {
+	wxULL(1),
+	wxULL(10),
+	wxULL(100),
+	wxULL(1000),
+	wxULL(10000),
+	wxULL(100000),
+	wxULL(1000000),
+	wxULL(10000000),
+	wxULL(100000000),
+	wxULL(1000000000),
+	wxULL(10000000000),
+	wxULL(100000000000),
+	wxULL(1000000000000),
+	wxULL(10000000000000),
+	wxULL(100000000000000),
+	wxULL(1000000000000000),
+	wxULL(10000000000000000),
+	wxULL(100000000000000000),
+	wxULL(1000000000000000000),
+	wxULL(10000000000000000000)
+  };
+
+
+  wxUint64 temp1 = wxULL(0);   // the temporary converted integer
+
+  int strLen = str.length();
+  if ( strLen == 0 )  {
+    // an empty string is converted to a ZERO value: the function succeeds
+    *ui64 = wxLL(0);
+    return true;
+  }
+
+  int index = 0;
+  wxChar ch = str[0];
+  if ( ch == '+' || ch == '-' )  {
+    *sign = ch;
+    ++index;
+    ++maxDigits;
+  }
+
+  if ( strLen > maxDigits )  {
+    return false;
+  }
+
+  // check the overflow: check the string length and the individual digits
+  // of the string; the overflow is checked for unsigned long long
+  if ( strLen == maxDigits )  {
+    wxString uLongMax( _T("18446744073709551615"));
+    int j = 0;
+    for ( int i = index; i < strLen - 1; i++ )  {
+      ch = str[i];
+      if ( ch < '0' || ch > '9' ) {
+        return false;
+      }
+      if ( ch > uLongMax[j] ) {
+        return false;
+      }
+      if ( ch < uLongMax[j] ) {
+        break;
+      }
+      ++j;
+    }
+  }
+
+  // get the digits in the reverse order and multiply them by the
+  // corresponding power of 10
+  int exponent = 0;
+  for ( int i = strLen - 1; i >= index; i-- )   {
+    wxChar ch = str[i];
+    if ( ch < '0' || ch > '9' ) {
+      return false;
+    }
+    ch = ch - '0';
+    // compute the new temporary value
+    temp1 += ch * power10[exponent];
+    ++exponent;
+  }
+  *ui64 = temp1;
+  return true;
+}
+
+#endif       // defined( wxJSON_64BIT_INT )
 
 /*
 {
