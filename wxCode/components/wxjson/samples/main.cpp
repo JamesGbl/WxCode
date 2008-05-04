@@ -183,7 +183,7 @@ int main( int argc, char* argv[] )
 	{ wxCMD_LINE_OPTION, _T("f"), _T("file"), _T("the filename to be read (test #15)"),
 						wxCMD_LINE_VAL_STRING },
 	
-	{ wxCMD_LINE_PARAM, NULL, NULL, _T("test number (1-17)"), wxCMD_LINE_VAL_NUMBER,
+	{ wxCMD_LINE_PARAM, NULL, NULL, _T("test number (1-xx)"), wxCMD_LINE_VAL_NUMBER,
 				wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_PARAM_MULTIPLE },
 
 	{ wxCMD_LINE_NONE },

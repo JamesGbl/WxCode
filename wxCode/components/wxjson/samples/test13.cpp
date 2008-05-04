@@ -567,7 +567,7 @@ int Test57()
 	wxJSONTYPE_INT,		// INT_MIN
 	wxJSONTYPE_INT,		// INT_MAX
 
-	wxJSONTYPE_UINT,	// UINT_MAX
+	wxJSONTYPE_INT,		// UINT_MAX
 	wxJSONTYPE_INT,		// INT_MAX + 100
 	wxJSONTYPE_INT,		// INT_MIN - 100
 	wxJSONTYPE_INT,		// UINT_MAX + 100
@@ -576,7 +576,7 @@ int Test57()
 	wxJSONTYPE_INT,		// LLONG_MIN
 	wxJSONTYPE_UINT,	// ULLONG_MAX
 
-	wxJSONTYPE_DOUBLE,	// LLONG_MAX + 100
+	wxJSONTYPE_UINT,	// LLONG_MAX + 100
 	wxJSONTYPE_DOUBLE,	// LLONG_MIN - 100
 	wxJSONTYPE_DOUBLE,	// ULLONG_MAX + 100
     };
@@ -658,6 +658,8 @@ int Test58()
 // has native 64-bit integer support, I implemented my own 'strtoll'
 // function: it is a incomplete implementation because only base 10
 // conversion is implemented. This function tests the conversion 
+//
+// 4 may 2008: test is sucessfull
 int Test59()
 {
   wxString s1( _T("200"));
@@ -681,23 +683,9 @@ int Test59()
   ASSERT( i64 == -200 )
 
   // check many values
-  wxString str[] = {
-	_T("1000000" ),
-	_T("1007463540000" ),
-	_T("-465342984756" ),
-	_T("-1" ),
-	_T("a89" ),
-	_T("980a89" ),
-	_T("9223372036854775807" ),	// LLONG_MAX
-	_T("-9223372036854775808" ),	// LLONG_MIN
-	_T("18446744073709551615" ),	// ULLONG_MAX
-	_T("18446744073709551625" ),	// ULLONG_MAX + 10 (overflow)
-	_T("-9223372036854775809" ),	// LLONG_MIN + 1 (overflow)
-	_T("9223372036854775808" ),	// LLONG_MAX + 1 (overflow)
-	_T("218446744073709551615" ),	// string is too long
-  };
 
   struct Result {
+    wxChar*  str;       // the string that has to be converted
     bool     res;	// result
     bool     uRes;	// result for unsigned
     wxInt64  value;	// value
@@ -705,28 +693,97 @@ int Test59()
   }; 
 
   Result results[] = {
-	// _T("1000000" ),
 	{
+		_T("1000000" ),
 		true, true,
 		wxLL(1000000), wxULL(1000000)
 	},
 
-	// _T("1007463540000" )
+	{
+		_T("1007463540000" ),
 		true, true,
 		wxLL(1007463540000), wxULL(1007463540000)
+	},
+
+	{
+		_T("-465342984756" ),
+		true, false,
+		wxLL(-465342984756), wxULL(0)
+	},
+
+	{
+		_T("-1" ),
+		true, false,
+		wxLL(-1), wxULL(0)
+	},
+
+	{
+		_T("a89" ),
+		false, false,
+		wxLL(-465342984756), wxULL(0)
+	},
+
+	{
+		_T("980a89" ),
+		false, false,
+		wxLL(-465342984756), wxULL(0)
+	},
+
+	{
+		_T("9223372036854775807" ),	// LLONG_MAX
+		true, true,
+		wxLL( 9223372036854775807), wxULL(9223372036854775807)
+	},
+
+	{
+		_T("-9223372036854775808" ),	// LLONG_MIN
+		true, false,
+		wxLL(-9223372036854775808), wxULL(0)
+	},
+
+	{
+		_T("18446744073709551615" ),	// ULLONG_MAX
+		false, true,
+		wxLL(0), wxULL(18446744073709551615)
+	},
+
+	{
+		_T("18446744073709551625" ),	// ULLONG_MAX + 10 (overflow)
+		false, false,
+		wxLL(0), wxULL(0)
+	},
+
+	{
+		_T("-9223372036854775809" ),	// LLONG_MIN - 1 (overflow)
+		false, false,
+		wxLL(0), wxULL(0)
+	},
+
+	{
+		_T("9223372036854775808" ),	// LLONG_MAX + 1
+		false, true,
+		wxLL(0), wxULL(9223372036854775808)
+	},
+
+	{
+		_T("218446744073709551615" ),	// string is too long (21 digits)
+		false, false,
+		wxLL(-9223372036854775808), wxULL(0)
+	}
 
   };
 
-  for ( int i = 0; i < 2; i++ )  {
+  for ( int i = 0; i < 13; i++ )  {
     bool r1, r2;
     TestCout( _T("Converting string: "));
-    TestCout( str[i] );
+    TestCout( results[i].str );
     TestCout( _T("\n    To wxInt64 - result is: "));
-    r1 = wxJSONReader::Strtoll( str[i], &i64);
+    wxString strStr( results[i].str );
+    r1 = wxJSONReader::Strtoll( strStr, &i64);
     TestCout( r1, true );
 
     TestCout( _T("    To wxUint64 - result is: "));
-    r2 = wxJSONReader::Strtoull( str[i], &ui64);
+    r2 = wxJSONReader::Strtoull( strStr, &ui64);
     TestCout( r2, true );
     ASSERT( r1 == results[i].res )
     ASSERT( r2 == results[i].uRes )
@@ -745,6 +802,8 @@ int Test59()
 
   return 0;  
 }
+
+
 
 /*
 {

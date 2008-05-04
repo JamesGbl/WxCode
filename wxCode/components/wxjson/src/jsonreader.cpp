@@ -1342,7 +1342,16 @@ wxJSONReader::ReadValue( int ch, wxJSONValue& val )
     case '9' :
     case '+' :
     case '-' :
-      // try a signed 32-bits integer
+      // first try a signed integer, then a unsigned integer, then a double
+#if defined( wxJSON_64BIT_INT)
+      r = Strtoll( s, &i64 );
+      ::wxLogTrace( traceMask, _T("(%s) convert to wxInt64 result=%d"),  __PRETTY_FUNCTION__, r );
+      if ( r )  {
+        // store the value
+        val = i64;
+        return nextCh;
+      }
+#else
       r = s.ToLong( &l );
       ::wxLogTrace( traceMask, _T("(%s) convert to int result=%d"),  __PRETTY_FUNCTION__, r );
       if ( r )  {
@@ -1350,32 +1359,24 @@ wxJSONReader::ReadValue( int ch, wxJSONValue& val )
         val = (int) l;
         return nextCh;
       }
+#endif
 
-      // try a unsigned 32-bits integer
-      r = s.ToULong( &ul );
-      ::wxLogTrace( traceMask, _T("(%s) convert to int result=%d"),  __PRETTY_FUNCTION__, r );
-      if ( r )  {
-        // store the value
-        val = (unsigned int) l;
-        return nextCh;
-      }
-
-
-      // if the platform supports 64-bits integers, try a int64 and, next, a uint64
+      // try a unsigned integer
 #if defined( wxJSON_64BIT_INT)
-      r = s.ToLongLong( &i64 );
-      ::wxLogTrace( traceMask, _T("(%s) convert to wxInt64 result=%d"),  __PRETTY_FUNCTION__, r );
-      if ( r )  {
-        // store the value
-        val = i64;
-        return nextCh;
-      }
-      r = s.ToULongLong( &ui64 );
+      r = Strtoull( s, &ui64 );
       ::wxLogTrace( traceMask, _T("(%s) convert to wxUint64 result=%d"),
 							  __PRETTY_FUNCTION__, r );
       if ( r )  {
         // store the value
         val = ui64;
+        return nextCh;
+      }
+#else
+      r = s.ToULong( &ul );
+      ::wxLogTrace( traceMask, _T("(%s) convert to int result=%d"),  __PRETTY_FUNCTION__, r );
+      if ( r )  {
+        // store the value
+        val = (unsigned int) l;
         return nextCh;
       }
 #endif
