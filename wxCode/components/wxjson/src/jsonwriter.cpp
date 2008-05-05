@@ -275,8 +275,8 @@ wxJSONWriter::DoWrite( const wxJSONValue& value, const wxString* key,
   int t = value.GetType();
   switch ( t )  {
     case wxJSONTYPE_EMPTY :
-      // lastChar = WriteEmpty();
-      // break;
+      wxFAIL_MSG( _T("wxJSONWriter::WriteEmpty() cannot be called (not a valid JSON text"));
+      break;
 
     case wxJSONTYPE_NULL :
       // lastChar = WriteNull();
@@ -644,7 +644,8 @@ wxJSONWriter::WriteStringValue( const wxString& str )
 int
 wxJSONWriter::WriteChar( wxChar ch )
 {
-  int r = (unsigned wxChar) ch;
+  // int r = (unsigned wxChar) ch;   // fails to compile on BCC 5.5
+  int r = (unsigned int) ch;
   if ( m_outType == 0 )  {   // output is a string object?
     //wxString* out = wxDynamicCast( m_outObject, wxString );
     //wxASSERT( out != 0 );
@@ -823,7 +824,7 @@ wxJSONWriter::WriteKey( const wxString& key )
 int
 wxJSONWriter::WriteEmpty()
 {
-  wxASSERT(0);
+  wxFAIL_MSG( _T("wxJSONWriter::WriteEmpty() cannot be called (not a valid JSON text"));
   wxString s( _T( "<empty>" ));
   return WriteString( s );
 }

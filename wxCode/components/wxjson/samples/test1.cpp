@@ -168,12 +168,12 @@ int Test1()
   d = valueUInt.AsDouble();
   ASSERT( d == 20 );
 
-#if defined( NOT_DEFINED )
-  //  only if WXJSON_USECSTRING is defined
+  // changed in version 0.5: the AsCString() returns a pointer-to-Cstring
+  // if the value is a C-string or a wxString object (wxString::c_str() is
+  // returned
   const wxChar* cStr = valueCString.AsCString();
-  i = strcmp( cStr, buff1 );
-  ASSERT( i == 0 )
-#endif
+  wxString str12( buff1 );
+  ASSERT( str12 == cStr )
 
   wxString wxStr1 = valueCString.AsString();
   ASSERT( wxStr1 == _T("This is a static C string" ));

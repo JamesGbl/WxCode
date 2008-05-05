@@ -106,6 +106,26 @@
 #undef wxJSON_64BIT_INT
 #endif
 
+//
+// it seems that some compilers do not define 'long long int' limits
+// constants. For example, this is the output of the Borland BCC 5.5
+// compiler when I tried to compile wxJSON with 64-bits integer support:
+//   Error E2451 ..\src\jsonreader.cpp 1737: Undefined symbol 'LLONG_MAX'
+//   in function wxJSONReader::Strtoll(const wxString &,__int64 *)
+//   *** 1 errors in Compile ***
+// so, if the constants are not defined, I define them by myself
+#if !defined( LLONG_MAX )
+  #define LLONG_MAX      9223372036854775807
+#endif
+
+#if !defined( ULLONG_MAX )
+  #define ULLONG_MAX    18446744073709551615
+#endif
+
+#if !defined( LLONG_MIN )
+  #define LLONG_MIN     -9223372036854775808    
+#endif
+
 
 
 

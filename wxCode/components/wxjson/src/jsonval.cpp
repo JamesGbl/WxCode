@@ -643,13 +643,12 @@ wxJSONValue::AsString() const
 
 //! Return the stored value as a pointer to a static C string.
 /*!
- If the type of the stored value is not a pointer to a C-string the function 
- returns a NULL pointer.
- Note that althrough this object was actually constructed using a static C-string
- pointer as the ctor's argument but the wxJSON_USE_CSTRING macro is not defined,
- the value is stored as a wxString object.
- For this reason, if wxJSON_USE_CSTRING is not defined, the function always
- returns a NULL pointer.
+ If the type of the value is stored as a C-string data type the
+ function just returns that pointer.
+ If the stored value is a wxString object, the function returns the
+ pointer returned by the \b wxString::c_str() function.
+ If the stored value is of other types, the functions a NULL pointer
+ (changed in version 0.5 thanks to Robbie Groenewoudt)
 
  See also \ref json_internals_cstring
 */
@@ -659,8 +658,15 @@ wxJSONValue::AsCString() const
   const wxChar* s = 0;
   wxJSONRefData* data = GetRefData();
   wxASSERT( data );
-  if ( data->m_type == wxJSONTYPE_CSTRING ) {
-    s = data->m_value.m_valCString;
+  switch ( data->m_type )  {
+    case wxJSONTYPE_CSTRING :
+      s = data->m_value.m_valCString;
+      break;
+    case wxJSONTYPE_STRING :
+      s = data->m_value.m_valString.c_str();
+      break;
+    default :
+      break;
   }
   return s;
 }
@@ -1717,8 +1723,8 @@ wxJSONValue::IsSameAs( const wxJSONValue& other ) const
       break;
     default :
       // should never happen
-      // wxFAIL();  why does this code fail to compile
-      wxASSERT( 0 );
+      wxFAIL_MSG( _T("wxJSONValue::IsSameAs() unexpected wxJSONType"));
+      // wxASSERT( 0 );
       break;
   }
   return r;

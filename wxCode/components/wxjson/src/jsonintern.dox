@@ -426,9 +426,7 @@ copies so it is much more wisely (and SAFE) to never use C-strings.
 
 Starting from version 0.5, the \e wxJSON library supports 64-bits
 integers but only on those platforms that have native support for
-64-bits integers.
-What I write now only applies to platforms that has 64-bits
-support, unless otherwise stated.
+64-bits integers (currently win32 and GNU/Linux, for sure).
 
 All integer types (and unsigned integers, too) are stored in a
 64 bits integer storage of type \b wx(U)Int64 which is the wxWidget's
@@ -441,7 +439,7 @@ documentation of the \b wxLongLong class.
 
 When stored in the wxJSONValue class, the integer value is set of a generic integer
 type: wxJSONTYPE_INT or wxJSONTYPE_UINT regardless its size: in other
-words, no matter the type of the original value  (\b int or \b long int) 
+words, no matter the type of the original value  (\b int or \b long \b long \b int) 
 or the numeric weight of the value.
 The only thing that matters is the sign of the value (unsigned or not).
 For this reason, the \c wxJSONValue::Is(U)Int function returns
@@ -452,12 +450,25 @@ Also, in order to remain compatible with older 0.x versions,
 the \b wxJSONValue::GetType() memberfunction just returns the generic
 integer type in both 32-bits and 64-bits platforms regardless the
 actual size of the integer.
+I added four constants in the \b wxJSONType enum type:
+
+\li wxJSONTYPE_INT32
+\li wxJSONTYPE_UINT32
+\li wxJSONTYPE_INT64
+\li wxJSONTYPE_UINT64
+
+but they are, by now, unused because returning them from the \b GetType()
+function, I will break compatibility with the past and I do not want to
+do this in \b 0.x versions.
+Maybe, when version \b 1.x will be released, I will evaluate the opportunity
+of an incompatible release. 
 
 If the platform natively supports 64-bits integers, then the wxJSONValue
-class defines some other functions related to the integer's storage size:
+class defines some other functions related to the integer's storage size
+so that the user knows about the size of the stored integer:
 
 \li \c Is(U)Int32: the function only returns TRUE if the value stored in
-	the JSON value object is of type (unsigned) \e integer and the number
+	the JSON value object is of type (\b unsigned) \e integer and the number
 	represented fits in a 32-bit (unsigned) integer data type.
 
 \li \c Is(U)Int64: the function only returns TRUE if the value stored in
@@ -474,11 +485,11 @@ class defines some other functions related to the integer's storage size:
 
 Also note that in order to remain compatible with older 0.x versions, the
 \c wxJSONValue::As(U)Int function behaves exatly as in the past on
-32-bits platforms but it was changed on 64-bits platforms: on these systems,
-the function calls \c As(U)Int32 and returns a 32-bits integer data type
-but an ASSERTION failure occurs in debug builds if the returned value is
-too large to fit in a 32-bit int type.
-On the other hand, the functions \c As(U)Int32 does not ASSERT that the
+64-bits and 32-bits platforms: the function just returns a (unsigned) \b int
+data type although on 64-bits platforms, the function also wxASSERTs that
+the number stored fits in a 32-bit integer.
+
+On the other hand, the functions \c As(U)Int32 does not wxASSERT that the
 value fits in a 32 bit storage: these functions just returns the JSON
 value object as a 32-bits integer: wrong results may be returned if the
 value is too large for that storage size.
@@ -545,6 +556,18 @@ the platform on which runs your application natively supports
 64-bits integers.
 This is in constrast with the \b wxLongLong class which is also
 available on 32-bits platforms.
+
+If your system natively supports 64-bits integers but you do not want
+to include this feature in the \b wxJSON library, you can define the
+following macro when compiling the library (see \c include/wx/json_defs.h):
+
+\code
+  wxJSON_NO_64BIT_INT
+\endcode
+
+You can check whether ot not 64-bits support is enabled in the wxJSON library,
+by checking if the wxJSON_64BIT_INT macro is defined
+ 
 
 \subsection json_internals_integer_asis The IsXxxxxxx() and AsXxxxxxx() functions
 

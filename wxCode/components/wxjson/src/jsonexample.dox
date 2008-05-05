@@ -1,7 +1,7 @@
 
 /*! \mainpage wxJSON - The wxWidgets implementation of JSON 
 
-<center><b>version 0.4</b></center>
+<center><b>version 0.5</b></center>
 
 <center>http://lnx.mauriziovettorato.it/public/json/home.html</center>
 
@@ -195,15 +195,15 @@ The \b wxJSON library is a complete implementation of the
 JSON data-interchange format.
 All JSON specifications are implemented in this library plus
 some extensions in the writer and in the parser class.
-This version (0.4) has to be considered a final beta release:
+This version (0.5) has to be considered a final beta release:
 no other features should be implemented in the library.
 
-Before releasing the first stable release (1.0), I wait a
-while in order to collect user's comments and hints.
-If several users want to change memberfunction's names and/or
-parameters it may be possibile that version 1.x will
-break the compatibility with 0.x versions.
-A major vesion change will be the right place to do this.
+One of the most important features that is not present in this
+JSON implementation is \b iterators.
+Many other JSON implementations do provide iterators for the
+array and the object JSON types.
+I do not implement them because they need STL containers and I
+do not want the wxJSON library to depend on STL.
 
 JSON data format is very stable. It is accredited to be
 stable forever or, at least, until programming languages 
@@ -214,6 +214,11 @@ will have to be changed in its features.
 New versions of this library will be realesed in order to
 keep \b wxJSON compatible with the new releases of \b wxWidgets.
 
+
+\section main_thanks Contributors
+
+Many thanks to Bryan Ashby and Robbie Groenewoudt for their help
+in writing and debugging this library.
 
 
 */
