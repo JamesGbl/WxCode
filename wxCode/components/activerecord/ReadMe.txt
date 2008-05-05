@@ -1,5 +1,5 @@
  
- wxActiveRecordGenerator ReadMe
+ wxActiveRecordGenerator  ReadMe
  -------------
  
  Website: http://wxcode.sourceforge.net/components/activerecord
