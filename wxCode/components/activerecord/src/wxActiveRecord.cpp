@@ -281,7 +281,7 @@ wxSqliteActiveRecord::wxSqliteActiveRecord():wxActiveRecord(){
 
 wxSqliteActiveRecord::wxSqliteActiveRecord(const wxString& name,const wxString& server,const wxString& user,const wxString& password,const wxString& table):wxActiveRecord(name,server,user,password,table){
 	m_database=NULL;
-	Create(table,name,server,user,password);
+	Create(name,server,user,password,table);
 }
 
 wxSqliteActiveRecord::wxSqliteActiveRecord(DatabaseLayer* database,const wxString& table):wxActiveRecord(database,table){
@@ -318,7 +318,7 @@ wxPostgresActiveRecord::wxPostgresActiveRecord():wxActiveRecord(){
 
 wxPostgresActiveRecord::wxPostgresActiveRecord(const wxString& name,const wxString& server,const wxString& user,const wxString& password,const wxString& table):wxActiveRecord(name,server,user,password,table){
 	m_database=NULL;
-	Create(table,name,server,user,password);
+	Create(name,server,user,password,table);
 }
 
 wxPostgresActiveRecord::wxPostgresActiveRecord(DatabaseLayer* database,const wxString& table):wxActiveRecord(database,table){
@@ -353,7 +353,7 @@ wxMysqlActiveRecord::wxMysqlActiveRecord():wxActiveRecord(){
 
 wxMysqlActiveRecord::wxMysqlActiveRecord(const wxString& name,const wxString& server,const wxString& user,const wxString& password,const wxString& table):wxActiveRecord(name,server,user,password,table){
 	m_database=NULL;
-	Create(table,name,server,user,password);
+	Create(name,server,user,password,table);
 }
 
 wxMysqlActiveRecord::wxMysqlActiveRecord(DatabaseLayer* database,const wxString& table):wxActiveRecord(database,table){
@@ -388,7 +388,7 @@ wxFirebirdActiveRecord::wxFirebirdActiveRecord():wxActiveRecord(){
 
 wxFirebirdActiveRecord::wxFirebirdActiveRecord(const wxString& name,const wxString& server,const wxString& user,const wxString& password,const wxString& table):wxActiveRecord(name,server,user,password,table){
 	m_database=NULL;
-	Create(table,name,server,user,password);
+	Create(name,server,user,password,table);
 }
 
 wxFirebirdActiveRecord::wxFirebirdActiveRecord(DatabaseLayer* database,const wxString& table):wxActiveRecord(database,table){
@@ -417,7 +417,7 @@ wxFirebirdEmbeddedActiveRecord::wxFirebirdEmbeddedActiveRecord():wxActiveRecord(
 
 wxFirebirdEmbeddedActiveRecord::wxFirebirdEmbeddedActiveRecord(const wxString& name,const wxString& server,const wxString& user,const wxString& password,const wxString& table):wxActiveRecord(name,server,user,password,table){
 	m_database=NULL;
-	Create(table,name,server,user,password);
+	Create(name,server,user,password,table);
 }
 
 wxFirebirdEmbeddedActiveRecord::wxFirebirdEmbeddedActiveRecord(DatabaseLayer* database,const wxString& table):wxActiveRecord(database,table){

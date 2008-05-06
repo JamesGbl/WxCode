@@ -204,7 +204,7 @@ struct arRelation{
 		keyId=src.keyId;
 	}
 	
-	arRelation& arRelation::operator=(const arRelation& src){
+	arRelation& operator=(const arRelation& src){
 		relationType=src.relationType;
 		itemName=src.itemName;
 		table=src.table;

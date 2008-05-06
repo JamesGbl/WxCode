@@ -226,6 +226,9 @@ bool wxActiveRecordGenerator::BelongsTo(const wxString& itemName,const wxString&
 }
 
 bool wxActiveRecordGenerator::GenerateDecl(wxString& fileContent)const{
+	
+	//If the table is read-only erase the Write stuff
+	//Else...leave the labels to be replaced later
 	{
 		wxRegEx reg(wxT("////@@begin template arWrite(.*)////@@end template arWrite"));
 		bool matched=reg.Matches(fileContent);
@@ -256,6 +259,8 @@ bool wxActiveRecordGenerator::GenerateDecl(wxString& fileContent)const{
 				reg.Replace(&fileContent,wxT("\\1"));
 		}
 	}
+	
+	//Replace the labels
 
 	fileContent.Replace(wxT("%%IFDEF%%"),GetIfdef(),true);
 	fileContent.Replace(wxT("%%ARROWSETNAME%%"),m_className+wxT("RowSet"),true);
@@ -285,23 +290,27 @@ bool wxActiveRecordGenerator::GenerateDecl(wxString& fileContent)const{
 	wxString vars=wxT("");
 	VarHash::const_iterator it;
     for( it = m_varHash.begin() ; it != m_varHash.end(); ++it )
-    {
+    {	
+		if(it->first==m_idField)
+			continue;
 		if(it!=m_varHash.begin()) vars+=wxT("\t");
-		vars+=GetVarDecl(it->first,it->second)+wxT("\n");
+		vars+=GetVarDecl(it->first,it->second)+wxT("\n\t");
     }
 
 	fileContent.Replace(wxT("%%VARDECL%%"),vars,true);
+	
+	//CUSTOM DECLARATION
 
 	if(m_customArClass.IsEmpty())
-		fileContent.Replace(wxT("%%CUSTOMAR%%"),wxT("public:"),true);
+		fileContent.Replace(wxT("%%CUSTOMAR%%"),wxT(""),true);
 	else
 		fileContent.Replace(wxT("%%CUSTOMAR%%"),m_customArClass,true);
 	if(m_customArRowClass.IsEmpty())
-		fileContent.Replace(wxT("%%CUSTOMARROW%%"),wxT("public:"),true);
+		fileContent.Replace(wxT("%%CUSTOMARROW%%"),wxT(""),true);
 	else
 		fileContent.Replace(wxT("%%CUSTOMARROW%%"),m_customArRowClass,true);
 	if(m_customArClass.IsEmpty())
-		fileContent.Replace(wxT("%%CUSTOMARROWSET%%"),wxT("public:"),true);
+		fileContent.Replace(wxT("%%CUSTOMARROWSET%%"),wxT(""),true);
 	else
 		fileContent.Replace(wxT("%%CUSTOMARROWSET%%"),m_customArRowSetClass,true);
 
@@ -325,6 +334,9 @@ wxString wxActiveRecordGenerator::GetIfdef() const{
 }
 
 bool wxActiveRecordGenerator::GenerateImpl(wxString& fileContent)const{
+	//If the table is read-only erase the Write stuff
+	//Else...leave the labels to be replaced later
+
 	{
 		wxRegEx reg(wxT("////@@begin template arWrite(.*)////@@end template arWrite"));
 		bool matched=reg.Matches(fileContent);
@@ -355,6 +367,8 @@ bool wxActiveRecordGenerator::GenerateImpl(wxString& fileContent)const{
 				reg.Replace(&fileContent,wxT("\\1"));
 		}
 	}
+	
+	//Replace the labels
 
 	fileContent.Replace(wxT("%%ARROWSETNAME%%"),m_className+wxT("RowSet"),true);
 	fileContent.Replace(wxT("%%ARROWNAME%%"),m_className+wxT("Row"),true);
@@ -548,13 +562,19 @@ wxString wxActiveRecordGenerator::GetSave() const{
 
 	VarHash::const_iterator it;
 
+	bool first_item=false;
+
     for( it = m_varHash.begin(); it != m_varHash.end(); ++it )
     {
 		if(it->first==m_idField)
 			continue;
-		if(it!=m_varHash.begin())
+		if(!first_item)
+			first_item=true;
+		else
 			str+=wxT(",");
 		str+=it->first+wxT("=?");
+		
+
 
     }
 	str+=wxString::Format(wxT(" WHERE %s=?\"),m_table.c_str()));\n"),m_idField.c_str());
@@ -622,22 +642,28 @@ wxString wxActiveRecordGenerator::GetInsert() const{
 	wxString str=wxT("PreparedStatement* pStatement=m_database->PrepareStatement(wxString::Format(wxT(\"INSERT INTO %s (");
 
 	VarHash::const_iterator it;
+	bool first_item=false;
 
     for( it = m_varHash.begin(); it != m_varHash.end(); ++it )
     {
 		if(it->first==m_idField && m_autoIncr)
 			continue;
-		if(it!=m_varHash.begin())
+		if(!first_item)
+			first_item=true;
+		else
 			str+=wxT(",");
-		str+=it->first;
+		str+=it->first;		
 	}
 
+	first_item=false;
 	str+=wxT(") VALUES (");
 	for( it = m_varHash.begin(); it != m_varHash.end(); ++it )
     {
 		if(it->first==m_idField && m_autoIncr)
 			continue;
-		if(it!=m_varHash.begin())
+		if(!first_item)
+			first_item=true;
+		else
 			str+=wxT(",");
 		str+=wxT("?");
 	}
@@ -696,7 +722,7 @@ wxString wxActiveRecordGenerator::GetRowFromResult() const{
 			vars+=wxT("(wxT(\"")+it->first+wxT("\"),")+it->first+wxT(");\n");
 		}
 		else{
-			vars+=wxT("row->")+it->first+wxT("=result->GetResult")+GetParamString(it->second);
+			vars+=it->first+wxT("=result->GetResult")+GetParamString(it->second);
 			vars+=wxT("(wxT(\"")+it->first+wxT("\"));\n");
 		}
     }
@@ -852,6 +878,11 @@ bool wxActiveRecordGenerator::GenerateH(bool overwrite, const wxString& dir,cons
 
 	if(fn!=wxEmptyString)
 		fileName=wxFileName(dir,fn);
+
+	m_customArClass=wxT("");
+	m_customArRowClass=wxT("");
+	m_customArRowSetClass=wxT("");
+
 
 	if(!overwrite){
 		wxString oldStr=wxT("");

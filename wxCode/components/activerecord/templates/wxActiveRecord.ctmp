@@ -122,11 +122,11 @@ bool %%ARNAME%%::Create(const wxString& name,const wxString& server,const wxStri
 /** ACTIVE RECORD ROW **/
 
 %%ARROWNAME%%::%%ARROWNAME%%():wxActiveRecordRow(){
-	bool newRow=true;
+	newRow=true;
 }
 
 %%ARROWNAME%%::%%ARROWNAME%%(%%ARNAME%%* activeRecord):wxActiveRecordRow(activeRecord){
-	bool newRow=true;
+	newRow=true;
 }
 
 %%ARROWNAME%%::%%ARROWNAME%%(const %%ARROWNAME%%& src){
