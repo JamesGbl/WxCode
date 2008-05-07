@@ -64,21 +64,8 @@ wxServiceDiscoveryControlWithItems<T>::~wxServiceDiscoveryControlWithItems( void
 		m_pBrowser = NULL;
 	}
 	
-	while ( this->GetCount() > 0 ) 
-	{
-	#ifdef __DARWIN__
-		delete static_cast<wxServiceDiscoveryControlClientData *>( this->GetClientObject( 0 ) );
-	#endif
-		
-		this->Delete( 0 );
-	}
-	
-	
+	this->Clear();
 	m_ResultsArray.Clear();
-//	for( size_t i = 0; i < m_ResultsArray.GetCount(); i++ )
-//	{
-//		m_ResultsArray.RemoveAt( 0 );
-//	}
 }
 
 
