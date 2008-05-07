@@ -14,6 +14,7 @@
 
 #include <wx/wxprec.h>
 #include "wx/wx.h"
+#include "wx/window.h"
 
 #include "wx/servicediscoverybrowser.h"
 
@@ -177,6 +178,10 @@ void wxServiceDiscoveryBrowser::DoHandleBrowserCallback(	DNSServiceRef WXUNUSED_
 				}
 			}
 		}
+		
+		wxWindow * pListener = wxDynamicCast( m_pListener, wxWindow );
+		if ( pListener != NULL )
+			event.SetId( pListener->GetId() );
 		
 		wxPostEvent( m_pListener, event );
 	}

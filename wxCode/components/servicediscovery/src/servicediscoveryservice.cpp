@@ -12,6 +12,7 @@
 
 #include "wx/wxprec.h"
 #include "wx/wx.h"
+#include "wx/window.h"
 
 #include "wx/servicediscoveryservice.h"
 
@@ -134,6 +135,10 @@ void wxServiceDiscoveryService::DoHandleRegistrationCallback( DNSServiceRef WXUN
 			event.SetNetworkInterface( 0 );
 			event.SetRegType( wxString( regtype, wxConvUTF8 ) );
 			event.SetDomain( wxString( domain, wxConvUTF8 ) );
+			
+			wxWindow * pListener = wxDynamicCast( m_pListener, wxWindow );
+			if ( pListener != NULL )
+				event.SetId( pListener->GetId() );
 			
 			wxPostEvent( m_pListener, event );
 		}	

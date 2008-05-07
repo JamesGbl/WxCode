@@ -13,6 +13,7 @@
 #include "wx/wxprec.h"
 #include "wx/wx.h"
 #include "wx/arrimpl.cpp"
+#include "wx/window.h"
 
 #include "wx/servicediscoveryresolver.h"
 
@@ -125,7 +126,13 @@ void wxServiceDiscoveryResolver::DoHandleResolveCallback(	DNSServiceRef WXUNUSED
 		}
 		
 		if ( m_pListener != NULL )
+		{
+			wxWindow * pListener = wxDynamicCast( m_pListener, wxWindow );
+			if ( pListener != NULL )
+				m_Result.SetId( pListener->GetId() );
+			
 			wxPostEvent( m_pListener, m_Result );
+		}
 		
 		if ( m_pParentBrowser != NULL )
 		{
