@@ -27,7 +27,7 @@
 #pragma mark  -- class servicediscoverycontrolwithitemst --
 
 template<class T>
-class WXDLLIMPEXP_SERVICEDISCOVERY wxServiceDiscoveryControlWithItems : public T
+class wxServiceDiscoveryControlWithItems : public T
 {
 public:
 

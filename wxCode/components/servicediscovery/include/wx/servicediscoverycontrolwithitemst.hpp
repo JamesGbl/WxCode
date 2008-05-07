@@ -398,7 +398,7 @@ void wxServiceDiscoveryControlWithItems<T>::DoUpdateVisibleList( wxUpdateUIEvent
 			{
 				if ( results_array[j].Resolved() )
 				{
-					const wxString text = wxString::Format( _TR("%s (as address: %s,  connected to interface: %s)"),
+					const wxString text = wxString::Format( wxT("%s (as address: %s,  connected to interface: %s)"),
 														   results_array[j].ServiceName().c_str(),
 														   results_array[j].Target().c_str(),
 														   results_array[j].NetworkInterfaceName().c_str() );
@@ -407,7 +407,7 @@ void wxServiceDiscoveryControlWithItems<T>::DoUpdateVisibleList( wxUpdateUIEvent
 				}
 				else
 				{
-					const wxString text = wxString::Format( _TR("%s (connected to interface: %s)"),
+					const wxString text = wxString::Format( wxT("%s (connected to interface: %s)"),
 														   results_array[j].ServiceName().c_str(),
 														   results_array[j].NetworkInterfaceName().c_str() );
 					this->Append( text, 
