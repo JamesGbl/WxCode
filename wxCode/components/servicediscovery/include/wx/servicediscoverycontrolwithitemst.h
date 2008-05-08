@@ -87,6 +87,10 @@ protected:
 };
 
 
+template<>
+WXDLLIMPEXP_DATA_SERVICEDISCOVERY( bool wxServiceDiscoveryControlWithItems<wxListBox>::TransferDataFromWindow() );
+
+
 
 #endif // wxUSE_SERVICE_DISCOVERY
 
