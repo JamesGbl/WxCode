@@ -750,18 +750,20 @@ All other types can be converted to a string.
 The user can know that he is trying to get an incompatible type by checking
 the returned string for not being empty.
 
-A final note about the \c wxJSONValue::AsCString() function. This returns a pointer
-to a (hopefully) statically allocated string.
-I know that all types that can be converted to a \b wxString object
-can also be converted to a (static?) \b wxChar* buffer but the problem
-is: where store the buffer? Statically? What should its size be?
-The answers are not simple.
+Starting from version 0.5 the wxJSON library supports 64-bits integers
+on platforms that have native support for this.
+If the library is compiled with the 64-bits support enabled, the
+JSON value class defines functions in order to let the user know
+the storage needed by the integer value (32-bits or 64-bits).
+To know more about this topic read \ref json_internals_integer.
 
-For this reason, the \c wxJSONValue::AsCString() function always returns the
-content of the \c m_value union: a NULL pointer is returned if the
-type of the value is not \c wxJSONTYPE_CSTRING.
-Also note that if wxJSON was compiled without the WXJSON_USE_CSTRING symbol,
-the \c AsCString() function always returns a NULL pointer.
+A final note about the \c wxJSONValue::AsCString() function.
+Starting from version 0.5 included, this function returns the pointer
+to the statically allocated C-string if the wxJSON library was
+compiled with the wxJSON_USE_CSTRING macro defined.
+If the JSON value object contains a \b wxString object, the function
+returns the pointer returned by \c wxString::c_str() function.
+In all other cases, the function returns a NULL pointer.
 
 
 \section wxjson_tutorial_comment Using comment lines in wxJSON

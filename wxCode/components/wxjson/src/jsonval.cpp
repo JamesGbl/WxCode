@@ -111,6 +111,14 @@ This class holds a JSON value which may be of the following type:
 
 To know more about the internal representation of JSON values see
 \ref pg_json_internals.
+
+Starting from version 0.5 the wxJSON library supports 64-bits integers on
+platforms that have native support for very large integers.
+Note that the integer type is still stored as a generic wxJSONTYPE_(U)INT
+constant regardless the size of the value but the JSON value class defines
+functions in order to let the user know if an integer value fits in a
+32-bit integer or it is so large that it needs a 64-bits integer storage.
+To know more about 64-bits integer support see \ref json_internals_integer
 */
 
 
@@ -379,7 +387,7 @@ wxJSONValue::IsEmpty() const
  integer.
  Also, if the type of the value is \b wxJSONTYPE_UINT but the value
  may be stored in a integer, the function returns FALSE.
- On platforms that support 64-bits integers, you can call \c isInt32()
+ On platforms that support 64-bits integers, you can call \c IsInt32()
  and \c IsInt64() to know if the value is too large to fit in  32-bit
  integer.
 
@@ -406,7 +414,7 @@ wxJSONValue::IsInt() const
  unsigned integer.
  Also, if the type of the value is \b wxJSONTYPE_INT but the value
  may be stored in an unsigned integer, the function returns FALSE.
- On platforms that support 64-bits integers, you can call \c isUInt32()
+ On platforms that support 64-bits integers, you can call \c IsUInt32()
  and \c IsUInt64() to know if the value is too large to fit in  32-bit
  unsigned integer.
 
@@ -663,7 +671,7 @@ wxJSONValue::AsString() const
  function just returns that pointer.
  If the stored value is a wxString object, the function returns the
  pointer returned by the \b wxString::c_str() function.
- If the stored value is of other types, the functions a NULL pointer
+ If the stored value is all other JSON types, the functions returns a NULL pointer
  (changed in version 0.5 thanks to Robbie Groenewoudt)
 
  See also \ref json_internals_cstring
