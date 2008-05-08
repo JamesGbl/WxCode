@@ -327,6 +327,16 @@ wxJSONValue::GetType() const
   wxJSONType type = wxJSONTYPE_EMPTY;
   if ( data )  {
     type = data->m_type;
+    // on 64-bits platforms, the function returns wxJSONTYPE_INT64
+    // if the integer is too large to fit in 32-bits
+#if defined( wxJSON_64BIT_INT )
+    if( type == wxJSONTYPE_INT && IsInt64() )  {
+      type = wxJSONTYPE_INT64;
+    }
+    if( type == wxJSONTYPE_UINT && IsUInt64() )  {
+      type = wxJSONTYPE_UINT64;
+    }
+#endif
   }
   return type;
 }
@@ -364,9 +374,7 @@ wxJSONValue::IsEmpty() const
 //! Return TRUE if the type of the value stored is integer.
 /*!
  This function returns TRUE if and only if the stored value is of
- type \b wxJSONTYPE_INT.
- Note that integers are stored in the JSON value object as 64-bits
- integers on platforms that support 64-bit.
+ type \b wxJSONTYPE_INT or \b wxJSONTYPE_INT64.
  The function does not check if the value actually fits in a 32-bit
  integer.
  Also, if the type of the value is \b wxJSONTYPE_UINT but the value
@@ -382,7 +390,7 @@ wxJSONValue::IsInt() const
 {
   wxJSONType type = GetType();
   bool r = false;
-  if ( type == wxJSONTYPE_INT )  {
+  if ( type == wxJSONTYPE_INT || type == wxJSONTYPE_INT64 )  {
     r = true;
   }
   return r;
@@ -391,7 +399,7 @@ wxJSONValue::IsInt() const
 //! Return TRUE if the type of the value stored is a unsigned int.
 /*!
  This function returns TRUE if and only if the stored value is of
- type \b wxJSONTYPE_UINT.
+ type \b wxJSONTYPE_UINT or \b wxJSONTYPE_UINT64.
  Note that unsigned integers are stored in the JSON value object as 64-bits
  unsigned integers on platforms that support 64-bit.
  The function does not check if the value actually fits in a 32-bit
@@ -409,7 +417,7 @@ wxJSONValue::IsUInt() const
 {
   wxJSONType type = GetType();
   bool r = false;
-  if ( type == wxJSONTYPE_UINT )  {
+  if ( type == wxJSONTYPE_UINT || type == wxJSONTYPE_UINT64 )  {
     r = true;
   }
   return r;
@@ -618,10 +626,18 @@ wxJSONValue::AsString() const
       s.assign( data->m_value.m_valCString);
       break;
     case wxJSONTYPE_INT :
+#if defined( wxJSON_64BIT_INT )
       s.Printf( _T("%") wxLongLongFmtSpec _T("i"), data->m_value.m_valInt );
+#else
+      s.Printf( _T("%d"), data->m_value.m_valInt );
+#endif
       break;
     case wxJSONTYPE_UINT :
+#if defined( wxJSON_64BIT_INT )
       s.Printf( _T("%") wxLongLongFmtSpec _T("u"), data->m_value.m_valUInt );
+#else
+      s.Printf( _T("%u"), data->m_value.m_valInt );
+#endif
       break;
     case wxJSONTYPE_DOUBLE :
       s.Printf( _T("%f"), data->m_value.m_valDouble );
@@ -1551,6 +1567,9 @@ wxJSONValue::GetInfo() const
  data, the function immediatly returns TRUE without doing a deep
  comparison which is, sure, useless.
  For further info see \ref json_internals_compare.
+
+ \bug comparing very large 64-bits integers that differ by a small
+	value may cause the function to return TRUE intead of FALSE
 */
 bool
 wxJSONValue::IsSameAs( const wxJSONValue& other ) const
@@ -1935,6 +1954,8 @@ wxJSONValue::ClearComments()
 
  The integer storage depends on the platform: for platforms that support 64-bits
  integers, integers are always stored as 64-bits integers.
+ You should never use the wxJSON_TYPE(U)INTxx types: integers are always stored
+ as the generic wxJSONTYPE_(U)INT 
  To know more about the internal representation of integers, read
  \ref json_internals_integer.
 
@@ -2023,6 +2044,13 @@ wxJSONValue::SetType( wxJSONType type )
   }
 
   // change the type of the referened structure
+  // NOTE: integer types are always stored as the generic integer types
+  if ( type == wxJSONTYPE_INT32 || type == wxJSONTYPE_INT64 )  {
+    type = wxJSONTYPE_INT;
+  }
+  if ( type == wxJSONTYPE_UINT32 || type == wxJSONTYPE_UINT64 )  {
+    type = wxJSONTYPE_UINT;
+  }
   wxASSERT( data );
   data->m_type = type;
 

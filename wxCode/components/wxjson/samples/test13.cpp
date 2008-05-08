@@ -254,7 +254,7 @@ int Test55()
 
 	// element 5: a positive, signed integer, value=INT_MAX + 10
 	{
-		wxJSONTYPE_INT,		// iType,
+		wxJSONTYPE_INT64,	// iType,
 		true,			// isInt,
 		false,			// isUInt,
 		false,			// isInt32,
@@ -271,7 +271,7 @@ int Test55()
 
 	// element 6: a negative, signed integer, value=INT_MIN - 10 (-2147483658)
 	{
-		wxJSONTYPE_INT,		// iType,
+		wxJSONTYPE_INT64,	// iType,
 		true,			// isInt,
 		false,			// isUInt,
 		false,			// isInt32,
@@ -288,7 +288,7 @@ int Test55()
 
 	// element 7: a positive, unsigned integer, value=UINT_MAX + 10 (4294967305)
 	{
-		wxJSONTYPE_UINT,	// iType,
+		wxJSONTYPE_UINT64,	// iType,
 		false,			// isInt,
 		true,			// isUInt,
 		false,			// isInt32,
@@ -305,7 +305,7 @@ int Test55()
 
 	// element 8: a positive, signed integer, value=UINT_MAX + 10 (4294967305)
 	{
-		wxJSONTYPE_INT,		// iType,
+		wxJSONTYPE_INT64,	// iType,
 		true,			// isInt,
 		false,			// isUInt,
 		false,			// isInt32,
@@ -570,16 +570,16 @@ int Test57()
 	wxJSONTYPE_INT,		// INT_MIN
 	wxJSONTYPE_INT,		// INT_MAX
 
-	wxJSONTYPE_INT,		// UINT_MAX
-	wxJSONTYPE_INT,		// INT_MAX + 100
-	wxJSONTYPE_INT,		// INT_MIN - 100
-	wxJSONTYPE_INT,		// UINT_MAX + 100
+	wxJSONTYPE_INT64,	// UINT_MAX
+	wxJSONTYPE_INT64,	// INT_MAX + 100
+	wxJSONTYPE_INT64,	// INT_MIN - 100
+	wxJSONTYPE_INT64,	// UINT_MAX + 100
 
-	wxJSONTYPE_INT,		// LLONG_MAX
-	wxJSONTYPE_INT,		// LLONG_MIN
-	wxJSONTYPE_UINT,	// ULLONG_MAX
+	wxJSONTYPE_INT64,	// LLONG_MAX
+	wxJSONTYPE_INT64,	// LLONG_MIN
+	wxJSONTYPE_UINT64,	// ULLONG_MAX
 
-	wxJSONTYPE_UINT,	// LLONG_MAX + 100
+	wxJSONTYPE_UINT64,	// LLONG_MAX + 100
 	wxJSONTYPE_DOUBLE,	// LLONG_MIN - 100
 	wxJSONTYPE_DOUBLE,	// ULLONG_MAX + 100
     };
