@@ -810,6 +810,57 @@ int Test59()
   return 0;  
 }
 
+// testing the wxJSONWriter::WriteChar() function
+int Test60()
+// the problem:
+//  the wxJSONWriter::WriteChar( wxChar ch ) function returns -1 if
+//  an error occur; otherwise the character itself is returned that is
+//  'ch' itself.
+//  The problem is that in Unicode builds the character is never
+//  negative because 'wxChar' is a 'wchar_t' type but in ANSI builds
+//  the character 'ch' may be greater than 0x7F and it becomes
+//  negative when it is assigned to the 'int' return value.
+//  I tried a cast to unsigned character:
+// 
+//    int r = (unsigned wxChar) ch;   // fails to compile on BCC 5.5
+//
+//  but this does not compile on BCC 5.5 in Unicode mode because
+//  'unsigned 'wchar_t' is not a recognized as a type.
+//  I tried:
+//
+//    int r = (unsigned int) ch;
+//
+//  but this does not work: the integer 'r' still remains negative
+//  causing the JSON writer to stop writing.
+//  This test function is a test for getting the solution.
+{
+  wxChar ch1 = 0x48;         // the ASCII '0' (decimal 72)
+  wxChar ch2 = 0xa9;         // the copyright sign in latin1 (decimal 169)
+
+  int r1 = ch1;
+  int r2 = ch2;              // in ANSI 'r2' is negative -87
+
+  int r3 = (unsigned char) ch2;  // OK, in ANSI 'r2' is 169
+
+
+#if defined( wxJSON_USE_UNICODE )
+  TestCout( _T("Unicode mode:\n"));
+  TestCout( _T("   r1 (0x48) ="));
+  TestCout( r1, true );
+  TestCout( _T("   r2 (0xA9) ="));
+  TestCout( r2, true );
+#else
+  TestCout( _T("ANSI mode:\n"));
+  TestCout( _T("   r1 (0x48) ="));
+  TestCout( r1, true );
+  TestCout( _T("   r2 (0xA9) ="));
+  TestCout( r2, true );
+  TestCout( _T("   r3 (0xA9) ="));
+  TestCout( r3, true );
+#endif
+
+  return 0;
+}
 
 
 /*

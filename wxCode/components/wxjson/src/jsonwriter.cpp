@@ -644,8 +644,14 @@ wxJSONWriter::WriteStringValue( const wxString& str )
 int
 wxJSONWriter::WriteChar( wxChar ch )
 {
-  // int r = (unsigned wxChar) ch;   // fails to compile on BCC 5.5
-  int r = (unsigned int) ch;
+  // we have to set the result 'r' equal to the returned char
+  // but ANSI and Unicode are different - see the Test60() function
+  // in 'samples/test13.cpp' source file.
+#if defined( wxJSON_USE_UNICODE )
+  int r = ch;
+#else
+  int r = (unsigned char) ch;
+#endif
   if ( m_outType == 0 )  {   // output is a string object?
     //wxString* out = wxDynamicCast( m_outObject, wxString );
     //wxASSERT( out != 0 );

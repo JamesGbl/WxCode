@@ -129,6 +129,7 @@ extern int Test56();   // testing the wxJSONWriter's 64-bits int output
 extern int Test57();   // testing the wxJSONReader's 64-bits int output
 extern int Test58();   // testing the wxString::To(U)LongLong() functions
 extern int Test59();   // testing the wxJSONReader::Strtoll() functions
+extern int Test60();   // testing the wxJSONWriter::WriteChar() functions
 
 
 // global variables in 'main.cpp'
