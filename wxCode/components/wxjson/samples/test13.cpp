@@ -668,7 +668,11 @@ int Test58()
 // 4 may 2008: test is sucessfull
 int Test59()
 {
-#if defined( wxJSON_64BIT_INT )
+  // The Borland BCC 5.5 compiler fails to compile this test
+  // function because:
+  //   'Undefined call to function wxULL() in Test59()'
+  //
+#if defined( wxJSON_64BIT_INT ) && !defined( __BORLANDC__ )
   wxString s1( _T("200"));
   wxUint64 ui64;
   bool r = wxJSONReader::Strtoull( s1, &ui64);

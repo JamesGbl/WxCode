@@ -443,19 +443,16 @@ documentation of the \b wxLongLong class.
 If the system / platform do not support 64-bits integers, integer values
 are stored, as in old versions, in a \b int (32-bit) data type.
 
-When stored in the wxJSONValue class, the integer value is set of a generic integer
+When stored in the wxJSONValue class, an integer value is set of a generic integer
 type: wxJSONTYPE_INT or wxJSONTYPE_UINT regardless its size: in other
 words, no matter the type of the original value  (\b int or \b long \b long \b int) 
 or the numeric weight of the value.
-The only thing that matters is the sign of the value (unsigned or not).
-For this reason, the \b wxJSONValue::Is(U)Int functions return
-TRUE if the stored value is of type (unsigned) integer which is just
-like in the previous versions of the library and also is compatible
-with platforms that do not support 64-bits integers.
-Also, in order to remain compatible with older 0.x versions,
-the \b wxJSONValue::GetType() memberfunction just returns the generic
-integer type in both 32-bits and 64-bits platforms regardless the
-actual size of the integer.
+The only thing that matters is the sign of the value: signed or unsigned.
+In order to remain compatible with the past, the \b wxJSONValue::Is(U)Int
+functions return
+TRUE if, and only if, the stored value is of type (unsigned) integer
+AND the value fits in a 32-bit integer data type.
+
 In order to know if the value needs 64-bits integer storage the following constants
 are added to the \b wxJSONType enum type:
 
@@ -472,27 +469,28 @@ In fact, the wxJSONTYPE_(U)INT32 is merely a definition for the wxJSONTYPE_(U)IN
 type and you can use it as an alternate name.
 
 If the stored integer value is too large to fit in a 32-bit integer data type
-then the \c wxJSONValue::GetType() function returns wxJSONTYPE_UINT64.
+then the \c wxJSONValue::GetType() function returns wxJSONTYPE_(U)INT64.
 In this way the user knows if the value needs 64-bits integer storage or not.
 
 If the platform natively supports 64-bits integers, then the wxJSONValue
 class defines some functions related to the integer's storage size
 so that the user knows about the size of the stored integer:
 
-\li \c Is(U)Int32: the function only returns TRUE if the value stored in
+\li \b Is(U)Int32: the function only returns TRUE if the value stored in
 	the JSON value object is of type (\b unsigned) \e integer and the number
 	represented fits in a 32-bit (unsigned) integer data type.
+	This is the just the same as the \b Is(U)Int functions
 
-\li \c Is(U)Int64: the function only returns TRUE if the value stored in
+\li \b Is(U)Int64: the function only returns TRUE if the value stored in
 	the JSON value object is of type \b wx(U)Int64 and the number
 	represented is too large to fit in a 32-bit integer data type.
 
-\li \c As(U)Int32(): the function returns the low-order 32-bits of the
+\li \b As(U)Int32(): the function returns the low-order 32-bits of the
 	integer stored in the wxJSONValue class. Note that the function
 	does not check that the returned value fits in a 32-bit (unsigned)
 	integer.
 
-\li \c As(U)Int64(): the function returns the 64-bit integer as it is
+\li \b As(U)Int64(): the function returns the 64-bit integer as it is
 	stored in the value object.
 
 Also note that in order to remain compatible with older 0.x versions, the
@@ -501,7 +499,7 @@ Also note that in order to remain compatible with older 0.x versions, the
 data type.
 If 64-bits support is enabled, however, on 64-bits platforms, the function also
 wxASSERTs that the number stored fits in a 32-bit integer.
-The ASSERTION check is nto done for the \b As(U)Int32 function: if the user
+The ASSERTION check is not done for the \b As(U)Int32 function: if the user
 calls this function(s), it is assumed that he knows what he is doing:
 wrong results may be returned if the value is too large for that storage size.
 
@@ -648,6 +646,32 @@ memberfunctions in 64-bits platforms, see the \c Test55() function in the
 \c samples/test13.cpp source file.
 The test function calls all the mentioned memberfunctions for several signed and
 unsigned integers: results are commented.
+
+
+\subsection json_internals_integer_read Reading numeric values from JSON text.
+
+If 64-bits support is enabled in the wxJSON library, reading values
+from JSON text may have different results.
+If a numeric value is too large for 32-bits integer storage, it will be
+stored as a double in previous versions of the library but it may be
+stored as and integer if it fits in a 64-bit integer storage.
+
+When the wxJSON parser reads a token that start with a digit or with a
+minus or plus sign, it assumes that the value read is a number and
+it tries to convert it to:
+
+\li first tries signed integer conversion
+\li if the number does not fit, tries unsigned conversion
+\li if the number does not fit, tries double conversion
+\li if unsuccessfull, an error is reported
+
+
+Note that if 64-bits storage is enabled, the wxJSON parser, does not try to
+convert numeric tokens in a 32-bits integer but immediatly tries 64-bits
+storage.
+This has the conseguence that numeric values that are between
+INT_MAX + 1 and UINT_MAX are stored as signed integers in a 64-bits environment
+and as unsigned integers in a 32-bits environment.
 
 
 \section json_internals_array The array of values.
