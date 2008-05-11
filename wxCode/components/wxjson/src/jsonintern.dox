@@ -509,7 +509,7 @@ on platforms that natively support it.
 The following are some examples:
 
 \code
-  // an old application that does not know nothing about 64-bits
+  // an old application that does not know anything about 64-bits
   // integer support; the app runs in a 64-bit integer environment
   int i;
   wxJSONValue v1 = 128;
@@ -524,6 +524,7 @@ The following are some examples:
       ui = v1.AsUInt();
     ...
     default:
+      // the old app does not know the existance of wxJSONTYPE_(U)INT64 type
       // if the integer needs 64-bits storage, the app fails
       wxFAIL_MSG( _T("Unknow JSON data type %s"), wxJSONValue::TypeToString( v1.GetType());
       break;
@@ -546,8 +547,8 @@ for all integer types, or it may use 32-bits for some of them:
 
   wxJSONValue v1( 128 );
 
-  // the IsInt() function returns TRUE if the value is of type integer
-  // regardless its size
+  // the IsInt() function returns TRUE if the value is a signed integer, regardless
+  // its storage needs thus  we can surely store it in a 64-bits integer storage
   if ( v1.IsInt() )  {
     i64 = v1.AsInt64();
   }

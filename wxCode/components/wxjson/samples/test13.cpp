@@ -97,14 +97,14 @@ int Test54()
   // TestCout( _T("Printing UINT_MIN: "));  not defined: it is always ZERO
   // TestCout( UINT_MIN, true );
 
-  #if defined( wxJSON_64BIT_INT )
+#if defined( wxJSON_64BIT_INT )
     TestCout( _T("Printing LLONG_MAX: "));
     TestCout( (wxInt64) LLONG_MAX, true );
     TestCout( _T("Printing LLONG_MIN: "));
     TestCout( (wxInt64) LLONG_MIN, true );
     TestCout( _T("Printing ULLONG_MAX: "));
     TestCout( (wxUint64) ULLONG_MAX, true );
-  #endif
+#endif
   return 0;
 }
 
@@ -591,7 +591,7 @@ int Test57()
 	wxJSONTYPE_INT,		// INT_MAX
 
 	wxJSONTYPE_UINT,	// UINT_MAX
-	wxJSONTYPE_DOUBLE,	// INT_MAX + 100
+	wxJSONTYPE_UINT,	// INT_MAX + 100
 	wxJSONTYPE_DOUBLE,	// INT_MIN - 100
 	wxJSONTYPE_DOUBLE,	// UINT_MAX + 100
 

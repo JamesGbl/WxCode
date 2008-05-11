@@ -1319,12 +1319,14 @@ wxJSONReader::ReadValue( int ch, wxJSONValue& val )
   }
 
   // variables used in the switch statement
-  unsigned long int ul; long int l; double d; bool r;
+  bool r;  double d;
 
   // on 64-bits platforms, integers are stored in a wx(U)Int64 data type
 #if defined( wxJSON_64BIT_INT )
   wxInt64  i64;
   wxUint64 ui64;
+#else
+  unsigned long int ul; long int l;
 #endif
 
   // try to convert to a number if the token starts with a digit
@@ -1376,7 +1378,7 @@ wxJSONReader::ReadValue( int ch, wxJSONValue& val )
       ::wxLogTrace( traceMask, _T("(%s) convert to int result=%d"),  __PRETTY_FUNCTION__, r );
       if ( r )  {
         // store the value
-        val = (unsigned int) l;
+        val = (unsigned int) ul;
         return nextCh;
       }
 #endif
