@@ -429,14 +429,13 @@ copies so it is much more wisely (and SAFE) to never use C-strings.
 
 Starting from version 0.5, the \e wxJSON library supports 64-bits
 integers but only on those platforms that have native support for
-64-bits integers (currently win32 and GNU/Linux, for sure; I do not
-know if other platforms do support it).
+64-bits integers such as, for example, Windows32 and GNU/Linux.
 
 All integer types (and unsigned integers, too) are stored in a
-64 bits integer storage of type \b wx(U)Int64 which is the wxWidget's
-platform-independent data type for representing a 64-bits integer:
-this data type is a \b tydepef for the underlying compiler / platform-dependent
-type, for example, \b __int64 on MSVC/win32 and \b long \b long on
+64-bits integer storage of type \b wx(U)Int64 which is the wxWidget's
+platform-independent data type that represents a 64-bits integer:
+this data type is a \b typedef for the underlying compiler / platform-dependent
+type, for example, \b __int64 on MSVC/win32 and \b long \b long \b int on
 GNU/Linux systems.
 To know more about the wxWidget's 64-bits integer stuff read the
 documentation of the \b wxLongLong class.
@@ -450,8 +449,8 @@ or the numeric weight of the value.
 The only thing that matters is the sign of the value: signed or unsigned.
 In order to remain compatible with the past, the \b wxJSONValue::Is(U)Int
 functions return
-TRUE if, and only if, the stored value is of type (unsigned) integer
-AND the value fits in a 32-bit integer data type.
+TRUE if, and only if, the stored value is of type wxJSONTYPE_(U)INT
+regardless its size.
 
 In order to know if the value needs 64-bits integer storage the following constants
 are added to the \b wxJSONType enum type:
@@ -462,7 +461,7 @@ are added to the \b wxJSONType enum type:
 \li wxJSONTYPE_UINT64
 
 The \b wxJSONTYPE_(U)INT32 are not used: this is to remain compatible with
-the past: if the integer value fits in a 32-bit (unsigned) data type, the
+the past: if the integer value fits in a 32-bit (unsigned) integer data type, the
 \c wxJSONValue::GetType() function returns wxJSONTYPE_(U)INT which has to
 be read as wxJSONTYPE_(U)INT32.
 In fact, the wxJSONTYPE_(U)INT32 is merely a definition for the wxJSONTYPE_(U)INT
@@ -471,6 +470,9 @@ type and you can use it as an alternate name.
 If the stored integer value is too large to fit in a 32-bit integer data type
 then the \c wxJSONValue::GetType() function returns wxJSONTYPE_(U)INT64.
 In this way the user knows if the value needs 64-bits integer storage or not.
+Note that if the 64-bits integer support is not available (or it was
+disabled when compiling this library) the \b GetType() memberfunction
+never returns wxJSONTYPE_(U)INT64.
 
 If the platform natively supports 64-bits integers, then the wxJSONValue
 class defines some functions related to the integer's storage size
@@ -497,7 +499,7 @@ Also note that in order to remain compatible with older 0.x versions, the
 \c wxJSONValue::As(U)Int function behaves exatly as in the past on
 64-bits and 32-bits platforms: the function just returns a (unsigned) \b int
 data type.
-If 64-bits support is enabled, however, on 64-bits platforms, the function also
+If 64-bits support is enabled, however, the function also
 wxASSERTs that the number stored fits in a 32-bit integer.
 The ASSERTION check is not done for the \b As(U)Int32 function: if the user
 calls this function(s), it is assumed that he knows what he is doing:

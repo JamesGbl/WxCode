@@ -1342,8 +1342,6 @@ wxJSONReader::ReadValue( int ch, wxJSONValue& val )
     case '7' :
     case '8' :
     case '9' :
-    case '+' :
-    case '-' :
       // first try a signed integer, then a unsigned integer, then a double
 #if defined( wxJSON_64BIT_INT)
       r = Strtoll( s, &i64 );
@@ -1382,7 +1380,6 @@ wxJSONReader::ReadValue( int ch, wxJSONValue& val )
         return nextCh;
       }
 #endif
-
       // number is very large or it is in exponential notation, try double
       r = s.ToDouble( &d );
       ::wxLogTrace( traceMask, _T("(%s) convert to double result=%d"),  __PRETTY_FUNCTION__, r );
@@ -1397,6 +1394,76 @@ wxJSONReader::ReadValue( int ch, wxJSONValue& val )
       }
 
       break;
+
+    case '+' :
+      // the plus sign forces a unsigned integer
+#if defined( wxJSON_64BIT_INT)
+      r = Strtoull( s, &ui64 );
+      ::wxLogTrace( traceMask, _T("(%s) convert to wxUint64 result=%d"),
+							  __PRETTY_FUNCTION__, r );
+      if ( r )  {
+        // store the value
+        val = ui64;
+        return nextCh;
+      }
+#else
+      r = s.ToULong( &ul );
+      ::wxLogTrace( traceMask, _T("(%s) convert to int result=%d"),  __PRETTY_FUNCTION__, r );
+      if ( r )  {
+        // store the value
+        val = (unsigned int) ul;
+        return nextCh;
+      }
+#endif
+      // number is very large or it is in exponential notation, try double
+      r = s.ToDouble( &d );
+      ::wxLogTrace( traceMask, _T("(%s) convert to double result=%d"),  __PRETTY_FUNCTION__, r );
+      if ( r )  {
+        // store the value
+        val = d;
+        return nextCh;
+      }
+      else  {  // the value is not syntactically correct
+        AddError( _T( "Value \'%s\' is incorrect (did you forget quotes?)"), s );
+        return nextCh;
+      }
+
+      break;
+
+    case '-' :
+      // try a signed integer, then a double
+#if defined( wxJSON_64BIT_INT)
+      r = Strtoll( s, &i64 );
+      ::wxLogTrace( traceMask, _T("(%s) convert to wxInt64 result=%d"),  __PRETTY_FUNCTION__, r );
+      if ( r )  {
+        // store the value
+        val = i64;
+        return nextCh;
+      }
+#else
+      r = s.ToLong( &l );
+      ::wxLogTrace( traceMask, _T("(%s) convert to int result=%d"),  __PRETTY_FUNCTION__, r );
+      if ( r )  {
+        // store the value
+        val = (int) l;
+        return nextCh;
+      }
+#endif
+      // number is very large or it is in exponential notation, try double
+      r = s.ToDouble( &d );
+      ::wxLogTrace( traceMask, _T("(%s) convert to double result=%d"),  __PRETTY_FUNCTION__, r );
+      if ( r )  {
+        // store the value
+        val = d;
+        return nextCh;
+      }
+      else  {  // the value is not syntactically correct
+        AddError( _T( "Value \'%s\' is incorrect (did you forget quotes?)"), s );
+        return nextCh;
+      }
+
+      break;
+
 
     // if it is not a number than try the literals
     // JSON syntax states that constant must be lowercase

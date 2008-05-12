@@ -116,6 +116,30 @@ void TestCout( unsigned ui, bool lf )
   TestCout( s );
 }
 
+void TestCout( long int l, bool lf )
+{
+  wxString s;
+  if ( lf ) {
+    s.Printf( _T("%ld\n" ), l );
+  }
+  else  {
+    s.Printf( _T("%ld" ), l);
+  }
+  TestCout( s );
+}
+
+void TestCout( unsigned long int ul, bool lf )
+{
+  wxString s;
+  if ( lf ) {
+    s.Printf( _T("%lu\n" ), ul );
+  }
+  else  {
+    s.Printf( _T("%lu" ), ul);
+  }
+  TestCout( s );
+}
+
 void TestCout( double d, bool lf )
 {
   wxString s;
@@ -220,11 +244,11 @@ int main( int argc, char* argv[] )
 	Test45, Test46,
 	Test47, Test48, Test49, Test50, Test51,
 	Test52, Test53,
-	Test54, Test55, Test56, Test57, Test58, Test59, Test60,
+	Test54, Test55, Test56, Test57, Test58, Test59, Test60, Test61,
 	0
   };
 
-#define TOTAL_TESTS 60
+#define TOTAL_TESTS 61
 
   int numParams = cmdLine.GetParamCount();
   if ( numParams == 0 )  {

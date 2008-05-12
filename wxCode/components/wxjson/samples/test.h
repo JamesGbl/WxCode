@@ -129,7 +129,9 @@ extern int Test56();   // testing the wxJSONWriter's 64-bits int output
 extern int Test57();   // testing the wxJSONReader's 64-bits int output
 extern int Test58();   // testing the wxString::To(U)LongLong() functions
 extern int Test59();   // testing the wxJSONReader::Strtoll() functions
-extern int Test60();   // testing the wxJSONWriter::WriteChar() functions
+extern int Test60();   // testing the wxJSONWriter::WriteChar() function
+extern int Test61();   // testing the wxString::To(U)Long functions
+
 
 
 // global variables in 'main.cpp'
@@ -143,6 +145,8 @@ extern void TestCout( const wxString& str );
 extern void TestCout( int i, bool lf = false );
 extern void TestCout( bool b, bool lf = false );
 extern void TestCout( unsigned ui, bool lf = false );
+extern void TestCout( long int l, bool lf = false );
+extern void TestCout( unsigned long int ul, bool lf = false );
 extern void TestCout( double d, bool lf = false );
 
 

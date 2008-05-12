@@ -445,7 +445,7 @@ int Test41()
 // characters. We set the 'it_IT.iso88591' locale so that
 // the conversion should be OK.
 // 29 feb 2008: OK, test is successfull
-// 17 apr 2008: test failed!
+// 12 may 2008: test is successfull
 int Test42()
 {
   int r = 0;

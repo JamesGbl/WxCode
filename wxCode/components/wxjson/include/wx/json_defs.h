@@ -18,7 +18,7 @@
 // for "configure" scripts under unix, use them.
 #define wxJSON_MAJOR          0
 #define wxJSON_MINOR          5
-#define wxJSON_RELEASE        0
+#define wxJSON_RELEASE        1
 
 // For non-Unix systems (i.e. when building without a configure script),
 // users of this component can use the following macro to check if the
@@ -101,7 +101,9 @@
 // the following macro, if defined, cause the wxJSON library to
 // always use 32-bits integers also when the platform seems to
 // have native 64-bits support: by default the macro if not defined
+//
 // #define wxJSON_NO_64BIT_INT
+//
 #if defined( wxJSON_NO_64BIT_INT ) && defined( wxJSON_64BIT_INT )
 #undef wxJSON_64BIT_INT
 #endif

@@ -514,6 +514,9 @@ static void PrintValue( wxJSONValue& val, wxJSONReader* reader = 0 )
 // test the reader class for 64-bits integers
 // this test is also done in 32-bits mode: the 64-bits integers will
 // be stored as double types
+//
+// 12 may 2008: the test is successfull in both 64-bits integer support
+// enabled and disabled
 int Test57()
 {
   static const wxChar* buff = _T("\n")
@@ -829,7 +832,7 @@ int Test60()
 //    int r = (unsigned wxChar) ch;   // fails to compile on BCC 5.5
 //
 //  but this does not compile on BCC 5.5 in Unicode mode because
-//  'unsigned 'wchar_t' is not a recognized as a type.
+//  'unsigned 'wchar_t' is not recognized as a type.
 //  I tried:
 //
 //    int r = (unsigned int) ch;
@@ -837,6 +840,11 @@ int Test60()
 //  but this does not work: the integer 'r' still remains negative
 //  causing the JSON writer to stop writing.
 //  This test function is a test for getting the solution.
+//
+// OK, the solution is:
+//
+//   - we can assign a 'wchar_t' to an int without the need of a cast
+//   - to assign a 'char' to an int we cast it to: 'unsigned char'
 {
   wxChar ch1 = 0x48;         // the ASCII '0' (decimal 72)
   wxChar ch2 = 0xa9;         // the copyright sign in latin1 (decimal 169)
@@ -844,7 +852,7 @@ int Test60()
   int r1 = ch1;
   int r2 = ch2;              // in ANSI 'r2' is negative -87
 
-  int r3 = (unsigned char) ch2;  // OK, in ANSI 'r2' is 169
+  int r3 = (unsigned char) ch2;  // OK, in ANSI 'r3' is 169
 
 
 #if defined( wxJSON_USE_UNICODE )
@@ -865,6 +873,91 @@ int Test60()
 
   return 0;
 }
+
+//
+// Testing the wxString::To(U)Long functions.
+// The problem is that the wxJSONReader::ReadValue() function
+// returns unexpected results when it reads a integer that is
+// too large to fit in a 32-bits integer.
+// The problem only happens when 64-bits integer is disabled.
+// Seems that the wxString::To(U)Long function does not behave
+// correctly and returns wrong results.
+// Note that the unexpected results are not to blame to the
+// wxString::To(U)Long functions which just call the 'strtol'
+// (or 'wcstol' functions.
+// Numbers that start with a minus sign are converted by 
+// ToULong() as unsigned integers.
+// I had to change the wxJSONReader::ReadValue() function so
+// that negative values are never converted to unsigned ints
+// OK, the Test57() function is now successfull
+int Test61()
+{
+// results of the test are dispolayed in the comment lines
+// the system on which the test was run is GNULinux FC6
+// running wxWidgets 2.8.7 compiled un Unicode=yes debug=yes
+// GCC version 4.1.1 20061011
+//
+
+  wxString str[] = {
+	_T("-2147483648"),		// INT_MIN
+					//  ToLong()  TRUE, -2147483648
+					//  ToULong() TRUE, 2147483648
+
+	_T("2147483647"),		// INT_MAX
+					//  ToLong()  TRUE, 2147483647
+					//  ToULong() TRUE, =2147483647
+
+	_T("4294967295"),		// UINT_MAX
+					//  ToLong()  FALSE, 2147483647
+					//  ToULong() TRUE,  4294967295
+
+	// 32-bits limits exceeded
+	_T("2147483747"),		// INT_MAX + 100
+					//  ToLong()  FALSE, 2147483647
+					//  ToULong() TRUE,  2147483747
+
+	_T("-2147483748"),		// INT_MIN - 100
+					//  ToLong()  FALSE  -2147483648
+					//  ToULong() TRUE   2147483548
+
+	_T("4294967395"),		// UINT_MAX + 100
+					//  ToLong()  FALSE 2147483647
+					//  ToULong() FALSE 4294967295
+
+	// small 32-bits integers
+	_T("-65000"),			//  ToLong()  TRUE, -65000
+					//  ToULong() TRUE, 4294902296
+
+	_T("65000")			//  ToLong()  TRUE, 65000
+					//  ToULong() TRUE, 65000
+
+  };
+
+  // we call the ToLong() and ToULong function for every string
+  for ( int i = 0; i < 8; i++ )  {
+    unsigned long int ul; long int l; bool r;
+    TestCout( _T("\nConverting the string: "));
+    TestCout( str[i] );
+    r = str[i].ToLong( &l, 10 );
+    TestCout( _T("\n    ToLong() result="));
+    TestCout( r, true );
+    TestCout( _T("    ToLong() value="));
+    TestCout( l, true );
+    r = str[i].ToULong( &ul, 10 );
+    TestCout( _T("    ToULong() result="));
+    TestCout( r, true );
+    TestCout( _T("    ToULong() value="));
+    TestCout( ul, true );
+
+    TestCout( _T("\n    strtol() result="));
+
+
+  }
+  return 0;
+
+}
+
+
 
 
 /*
