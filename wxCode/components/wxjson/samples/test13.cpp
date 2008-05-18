@@ -949,8 +949,6 @@ int Test61()
     TestCout( _T("    ToULong() value="));
     TestCout( ul, true );
 
-    TestCout( _T("\n    strtol() result="));
-
 
   }
   return 0;
