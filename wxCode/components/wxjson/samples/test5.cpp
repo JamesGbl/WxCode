@@ -104,6 +104,7 @@ int Test9()
     _T( "[\n"
 	"   \"a string\",\n"
 	"   12,\n"
+	"   +20,\n"
 	"   true,\n"
 	"   null,\n"
 	"   90.98\n"

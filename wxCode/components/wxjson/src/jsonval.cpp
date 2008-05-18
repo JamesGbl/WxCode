@@ -642,9 +642,9 @@ wxJSONValue::AsString() const
       break;
     case wxJSONTYPE_UINT :
 #if defined( wxJSON_64BIT_INT )
-      s.Printf( _T("%") wxLongLongFmtSpec _T("u"), data->m_value.m_valUInt );
+      s.Printf( _T("+%") wxLongLongFmtSpec _T("u"), data->m_value.m_valUInt );
 #else
-      s.Printf( _T("%u"), data->m_value.m_valInt );
+      s.Printf( _T("+%u"), data->m_value.m_valInt );
 #endif
       break;
     case wxJSONTYPE_DOUBLE :
