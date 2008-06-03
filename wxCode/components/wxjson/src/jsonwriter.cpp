@@ -272,7 +272,10 @@ wxJSONWriter::DoWrite( const wxJSONValue& value, const wxString* key,
   }
 
   // now write the value
-  int t = value.GetType();
+  wxJSONInternalMap::const_iterator it; 
+  int i = 0;
+
+  wxJSONType t = value.GetType();
   switch ( t )  {
     case wxJSONTYPE_EMPTY :
       wxFAIL_MSG( _T("wxJSONWriter::WriteEmpty() cannot be called (not a valid JSON text"));
@@ -289,6 +292,9 @@ wxJSONWriter::DoWrite( const wxJSONValue& value, const wxString* key,
     case wxJSONTYPE_UINT :
       // lastChar = WriteUInt( value.AsUInt());
       // break;
+
+    case wxJSONTYPE_INT64 :
+    case wxJSONTYPE_UINT64 :
 
     case wxJSONTYPE_BOOL :
       // lastChar = WriteBool( value.AsBool());
@@ -380,8 +386,6 @@ wxJSONWriter::DoWrite( const wxJSONValue& value, const wxString* key,
 
       map = value.AsMap();
       size = value.Size();
-      wxJSONInternalMap::const_iterator it; 
-      int i = 0;
       for ( it = map->begin(); it != map->end(); ++it )  {
         // get the key and the value
         wxString key = it->first;
@@ -404,6 +408,13 @@ wxJSONWriter::DoWrite( const wxJSONValue& value, const wxString* key,
       }
       lastChar = WriteChar( '}' );
       break;
+
+    default :
+      // a not yet defined wxJSONType: let's call WritePrimitiveValue()
+      // which writes the string returned by wxJSONVal::AsString() function;
+      lastChar = WritePrimitiveValue( value );
+      break;
+
   }
 
   // when the value is written, check if we need a comma character
@@ -726,6 +737,9 @@ wxJSONWriter::WriteChar( wxChar ch )
 int
 wxJSONWriter::WriteString( const wxString& str )
 {
+  ::wxLogTrace( writerTraceMask, _T("(%s) string to write=%s"),
+				  __PRETTY_FUNCTION__, str.c_str() );
+
   int lastChar = 0;
   size_t len = str.length();
   for ( size_t i = 0; i < len; i++ ) {
@@ -734,6 +748,8 @@ wxJSONWriter::WriteString( const wxString& str )
       break;
     }
   }
+  ::wxLogTrace( writerTraceMask, _T("(%s) result=%d"),
+				  __PRETTY_FUNCTION__, lastChar );
   return lastChar;
 }
 
@@ -750,6 +766,9 @@ wxJSONWriter::WritePrimitiveValue( const wxJSONValue& value )
 {
   int r;
   wxString s = value.AsString();
+  ::wxLogTrace( writerTraceMask, _T("(%s) value.AsString()=%s"),
+				  __PRETTY_FUNCTION__, s.c_str() );
+
   wxASSERT( !s.empty());
   r =  WriteString( s );
   return r;
@@ -806,6 +825,9 @@ wxJSONWriter::WriteNull()
 int
 wxJSONWriter::WriteKey( const wxString& key )
 {
+ ::wxLogTrace( writerTraceMask, _T("(%s) key write=%s"),
+				  __PRETTY_FUNCTION__, key.c_str() );
+
   WriteStringValue( key );
   wxString s( _T( " : " ));
   return WriteString( s );

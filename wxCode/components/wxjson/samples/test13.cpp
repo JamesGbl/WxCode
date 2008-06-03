@@ -444,6 +444,7 @@ int Test55()
 }
 
 // test the writer class for 64-bits integers
+// jun 3, 2008: OK, test is successfull
 int Test56()
 {
 #if defined( wxJSON_64BIT_INT )
@@ -892,7 +893,7 @@ int Test60()
 // OK, the Test57() function is now successfull
 int Test61()
 {
-// results of the test are dispolayed in the comment lines
+// results of the test are displayed in the comment lines
 // the system on which the test was run is GNULinux FC6
 // running wxWidgets 2.8.7 compiled un Unicode=yes debug=yes
 // GCC version 4.1.1 20061011
@@ -955,7 +956,64 @@ int Test61()
 
 }
 
+// bug in the wxJSONWriter::DoWrite() function: 64-bits integers are
+// not printed correctly - see Test56()
+//
+// jun 3, 2008: the output of the Test56() function:
+// Performing test number: 56
+// The JSON text document:
+// {
+//   "object" : {
+//      "C string" : "static string 1",
+//      "double" : 20.300000,
+//      "uint64-2" : ,
+//      "bool-f" : false,
+//      "wxString" : "wxString 1",
+//      "null" : null,
+//      "bool-t" : true,
+//      "uint64" : +2147483747,
+//      "unsigned int" : +30,
+//      "integer" : -20,
+//      "int64" : ,
+//      "int64-2" :
+//   }
+// }
+//
+// OK, now the Test56() function is successfull
+int Test62()
+{
+#if defined( wxJSON_64BIT_INT )
 
+  wxJSONValue i64 = (wxInt64) INT_MIN - 100;
+  wxJSONValue ui64 = (wxUint64) INT_MAX + 100;
+  wxJSONValue i64_2 = (wxInt64) LLONG_MIN;
+  wxJSONValue ui64_2 = (wxUint64) LLONG_MAX;
+
+  wxString s;
+
+  TestCout( _T("i64 (INT_MIN - 100): "));
+  s = i64.AsString();
+  TestCout( s );
+  TestCout( _T("\n"));
+
+  TestCout( _T("ui64 (INT_MAX + 100): "));
+  s = ui64.AsString();
+  TestCout( s );
+  TestCout( _T("\n"));
+
+  TestCout( _T("i64_2 (LLONG_MIN): "));
+  s = i64_2.AsString();
+  TestCout( s );
+  TestCout( _T("\n"));
+
+  TestCout( _T("ui64_2 (LLONG_MAX): "));
+  s = ui64_2.AsString();
+  TestCout( s );
+  TestCout( _T("\n"));
+
+#endif    // defined ( wxJSON_64BIT_INT )
+  return 0;
+}
 
 
 /*

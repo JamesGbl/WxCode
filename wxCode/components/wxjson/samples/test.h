@@ -131,6 +131,7 @@ extern int Test58();   // testing the wxString::To(U)LongLong() functions
 extern int Test59();   // testing the wxJSONReader::Strtoll() functions
 extern int Test60();   // testing the wxJSONWriter::WriteChar() function
 extern int Test61();   // testing the wxString::To(U)Long functions
+extern int Test62();   // testing the wxJSONValue::AsString() function for 64-bits int
 
 
 
