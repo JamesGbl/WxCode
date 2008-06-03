@@ -74,6 +74,9 @@
        values if 32-bits integer support is disabled. This bug also affects
        all other 0.x versions of the wxJSON parser
 
+ 0.5.2 fixed a bug in the wxJSONWriter::DoWrite() function: I forgot the 'case'
+       wxJSONTYPE_(U)INT64 types in the switch statement so 64-bits integers
+       where not printed in the JSON text output
 
 
 BUGS
