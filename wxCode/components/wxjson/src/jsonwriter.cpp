@@ -663,6 +663,11 @@ wxJSONWriter::WriteChar( wxChar ch )
 #else
   int r = (unsigned char) ch;
 #endif
+
+  if(m_style & wxJSONWRITER_NO_LINEFEEDS && wxChar('\n') == ch) {
+    return r;	//	style specifies not to include line feeds
+  }
+
   if ( m_outType == 0 )  {   // output is a string object?
     //wxString* out = wxDynamicCast( m_outObject, wxString );
     //wxASSERT( out != 0 );
