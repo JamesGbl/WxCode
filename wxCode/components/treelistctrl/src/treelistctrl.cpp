@@ -2,11 +2,11 @@
 // Name:        treelistctrl.cpp
 // Purpose:     multi column tree control implementation
 // Author:      Robert Roebling
-// Maintainer:  Otto Wyss
+// Maintainer:  $Author: pgriddev $
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.99 2006-12-18 21:10:13 wyo Exp $
-// Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
-//              Vadim Zeitlin, Otto Wyss
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.100 2008-06-18 07:01:40 pgriddev Exp $
+// Copyright:   (c) 2004-2008 Robert Roebling, Julian Smart, Alberto Griggio,
+//              Vadim Zeitlin, Otto Wyss, Ronan Chartois
 // Licence:     wxWindows
 /////////////////////////////////////////////////////////////////////////////
 
@@ -38,6 +38,7 @@
 #include <wx/dcclient.h>
 #include <wx/dcscreen.h>
 #include <wx/scrolwin.h>
+#include <wx/dcmemory.h>
 #if wxCHECK_VERSION(2, 7, 0)
 #include <wx/renderer.h>
 #endif
@@ -1363,7 +1364,6 @@ void wxTreeListHeaderWindow::OnMouse (wxMouseEvent &event) {
     // we want to work with logical coords
     int x;
     m_owner->CalcUnscrolledPosition(event.GetX(), 0, &x, NULL);
-    int y = event.GetY();
 
 #if wxCHECK_VERSION_FULL(2, 7, 0, 1)
     if ( event.Moving() )
@@ -1434,7 +1434,7 @@ void wxTreeListHeaderWindow::OnMouse (wxMouseEvent &event) {
 
             xpos += GetColumnWidth (column);
             m_column = column;
-            if ((abs (x-xpos) < 3) && (y < 22)) {
+            if (abs (x-xpos) < 3) {
                 // near the column border
                 hit_border = true;
                 break;
@@ -4283,7 +4283,11 @@ void wxTreeListCtrl::CalculateAndSetHeaderHeight()
         // we use 'g' to get the descent, too
         int h;
 #if wxCHECK_VERSION_FULL(2, 7, 0, 1)
+#ifdef __WXMSW__
+        h = (int)(wxRendererNative::Get().GetHeaderButtonHeight(m_header_win) * 0.8) + 2;
+#else
         h = wxRendererNative::Get().GetHeaderButtonHeight(m_header_win);
+#endif
 #else
         int w, d;
         m_header_win->GetTextExtent(_T("Hg"), &w, &h, &d);
