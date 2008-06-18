@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////
 // File:        treelisttest.cpp
-// Purpose:     treelisttest application
-// Maintainer:  Otto Wyss
+// Purpose:     wxTreeListCtrl test application
+// Maintainer:  $Author: pgriddev $
 // Created:     2004-12-21
-// RCS-ID:      $Id: treelisttest.cpp,v 1.25 2006-08-17 20:24:01 wyo Exp $
-// Copyright:   (c) 2004 wxCode
+// RCS-ID:      $Id: treelisttest.cpp,v 1.26 2008-06-18 07:07:50 pgriddev Exp $
+// Copyright:   (c) 2004-2008 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
 
@@ -36,8 +36,8 @@
 //! wxCode headers
 #include "wx/treelistctrl.h" // wxTreeListCtrl control
 
-// detecting memory leaks on Windows with _CrtSetBreakAlloc (<memory_number>)
-#if defined(__WINDOWS__)
+// detecting memory leaks on Windows Visual C++ with _CrtSetBreakAlloc (<memory_number>)
+#if defined(__MSVC__)
 #include <crtdbg.h>
 #endif
 

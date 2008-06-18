@@ -1,12 +1,13 @@
 ##############################################################################
 ## File:        Makefile
 ## Purpose:     treelisttest
-## Maintainer:  Otto Wyss
+## Maintainer:  $Author: pgriddev $
 ## Created:     2004-10-01
-## RCS-ID:      $Id: Makefile,v 1.10 2006-01-05 15:16:36 wyo Exp $
-## Copyright:   (c) 2004 wxCode
+## RCS-ID:      $Id: Makefile,v 1.11 2008-06-18 07:07:50 pgriddev Exp $
+## Copyright:   (c) 2004-2008 wxCode
 ## Licence:     wxWindows
 ##############################################################################
+
 
 # list of source files
 SRC = treelisttest.cpp \
@@ -21,6 +22,7 @@ vpath %.cpp ../../src
 # additional header directories
 INC = -I../../include
 
+
 ##############################################################################
 # implementation, change only if other settings or other targets are needed
 
@@ -28,6 +30,7 @@ ifneq ($(WXDEVEL),)
   WXDEVEL_Debug = $(WXDEVEL)/Debug/
   WXDEVEL_Univ = $(WXDEVEL)/Univ/
 endif
+
 
 ifeq ($(MAKECMDGOALS),)
   WXCONFIG=wx-config
@@ -45,10 +48,16 @@ ifeq ($(MAKECMDGOALS),univdebug)
   WXCONFIG=$(WXDEVEL_Univ)wx-config --inplace
 endif
 
-OBJ = $(SRC:.cpp=.o)
 
-.cpp.o:
+OBJ = $(SRC:.cpp=.o) treelisttest.res
+
+
+%.o : %.cpp
 	g++ -c $(INC) `$(WXCONFIG) --cxxflags` -g -o $@ $<
+
+%.res : %.rc
+	windres `$(WXCONFIG) --cppflags -rescomp` -i $< -J rc -o $@ -O coff
+
 
 all:	$(PRG)
 $(PRG):	$(OBJ)
@@ -71,4 +80,4 @@ $(PRG)ud:	$(OBJ)
 	g++ -o $@ $^ `$(WXCONFIG) --libs`
 
 clean:
-	rm -f *.o
+	rm -f *.o *.res
