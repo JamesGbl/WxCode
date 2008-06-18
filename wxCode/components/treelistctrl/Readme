@@ -1,8 +1,8 @@
 Component:  wxTreeListCtrl
-Release:    2006-06-21
+Release:    2008-06-17
 Documents:  http://wxcode.sourceforge.net/components/treelistctrl/index.html
-wxWidgets:  2.6.x
-Maintainer: Otto Wyss (wyo)
+wxWidgets:  2.8.x
+Maintainer: Ronan Chartois (pgriddev)
 Subdir:     treelistctrl
 
 Description:

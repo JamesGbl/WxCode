@@ -1,11 +1,9 @@
-To do
-=====
+TO DO:
+======
 - none
 
 
-Future enhancements
-===================
-- none
+Future enhancements:
+====================
+- very very long term: unification between wxTreeListCtrl, wxGrid, wxDataViewCtrl, wxTreeMultiCtrl, wxTreeCtrl....
 
-
-O. Wyss
