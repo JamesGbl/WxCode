@@ -15,7 +15,7 @@
         <set-srcdir>..</set-srcdir>
 
         <!-- with autoconf, the object files must be put in the default directory -->
-        <set-wxlike-builddir/>
+        <set-wxcode-builddir/>
     </if>
 
     <!-- the list of sources & headers for this component:

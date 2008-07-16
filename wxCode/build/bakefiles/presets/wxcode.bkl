@@ -10,7 +10,7 @@
          the SVN version ;) -->
     <requires version="0.2.3"/>
 
-	<set var="USE_UNSTABLE_VERSION" overwrite="0">0</set>
+    <set var="USE_UNSTABLE_VERSION" overwrite="0">0</set>
 
 
     <!-- include the wxpresets and check that they are recent enough -->
@@ -22,6 +22,9 @@
         <!-- this is to avoid that I (Francesco) erraneously commit presets with 29 as def version -->
         <error>Please use the current stable branch as WX_VERSION option default and not $(WX_VERSION_DEFAULT)!</error>
     </if>
+
+    <!-- Our additional wxCode-specific options -->
+    <include file="options.bkl" once="1"/>
 
     <!-- Our defaults -->
     <include file="defaults.bkl" once="1"/>
