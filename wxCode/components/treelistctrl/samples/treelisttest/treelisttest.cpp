@@ -3,7 +3,7 @@
 // Purpose:     wxTreeListCtrl test application
 // Maintainer:  $Author: pgriddev $
 // Created:     2004-12-21
-// RCS-ID:      $Id: treelisttest.cpp,v 1.26 2008-06-18 07:07:50 pgriddev Exp $
+// RCS-ID:      $Id: treelisttest.cpp,v 1.27 2008-07-21 14:50:00 pgriddev Exp $
 // Copyright:   (c) 2004-2008 wxCode
 // Licence:     wxWindows
 //////////////////////////////////////////////////////////////////////////////
@@ -58,12 +58,17 @@
 // declarations
 //============================================================================
 
+#define TRACE_MASK  "treelisttest"
+
+// define to inherit wxTreeListCtrl and thus be able to get mouse events
+// #define WITH_CHILD_CLASS
+
 const wxString APP_NAME = _T("wxTreeListCtrl");
 const wxString APP_VENDOR = _T("wxCode");
 const wxString APP_VERSION = _T("1.0.0");
-const wxString APP_MAINT = _T("Otto Wyss");
+const wxString APP_MAINT = _T("Ronan Chartois");
 const wxString APP_LICENCE = _T("wxWindows");
-const wxString APP_COPYRIGTH = _T("(C) 2005 Otto Wyss");
+const wxString APP_COPYRIGTH = _T("(C) 2005-2008 Otto Wyss && others");
 
 const wxString APP_DESCR = _("\
 A tree list control presents information as a hierarchy, with \n\
@@ -134,6 +139,29 @@ wxString g_appname;
 //----------------------------------------------------------------------------
 //! class declarations
 class AppFrame;
+
+#ifdef WITH_CHILD_CLASS
+//! wxTreeListCtrl child class to get mouse events
+
+class MyTreeListCtrl : public wxTreeListCtrl {
+public:
+    MyTreeListCtrl(wxWindow *parent, wxWindowID id = -1,
+               const wxPoint& pos = wxDefaultPosition,
+               const wxSize& size = wxDefaultSize,
+               long style = wxTR_DEFAULT_STYLE,
+               const wxValidator &validator = wxDefaultValidator,
+               const wxString& name = wxTreeListCtrlNameStr )
+        : wxTreeListCtrl(parent, id, pos, size, style, validator, name)
+    {
+    }
+protected:
+    void OnMouseGeneric(wxMouseEvent &event);
+
+    DECLARE_EVENT_TABLE()
+};
+#else // WITH_CHILD_CLASS
+    #define MyTreeListCtrl wxTreeListCtrl
+#endif // WITH_CHILD_CLASS
 
 
 //----------------------------------------------------------------------------
@@ -229,18 +257,25 @@ public:
     void OnSetIndent (wxCommandEvent &event);
     void OnSetImageSize (wxCommandEvent &event);
     void OnVetoEvent (wxCommandEvent &event);
+    // tree events
     void OnVetoingEvent (wxTreeEvent &event);
+    void OnTreeGeneric (wxTreeEvent &event);
+    // mouse events
+    void OnMouseGeneric(wxMouseEvent &event);
 
 private:
-    //! creates the application menu bar
-    void CreateMenu ();
-
-    // tree window
-    wxTreeListCtrl* m_treelist;
-
     int m_alignment;
     int m_imgsize;
     bool m_vetoEvent;
+    // tree window
+    MyTreeListCtrl* m_treelist;
+#if wxUSE_LOG
+    // the listbox for logging messages
+    wxLog *m_logOld;
+#endif // wxUSE_LOG
+
+    //! creates the application menu bar
+    void CreateMenu ();
 
     void CheckStyle (int id, long flag);
     void ToggleStyle (int id, long flag);
@@ -265,6 +300,10 @@ bool App::OnInit () {
     // detecting memory leaks on Windows with _CrtSetBreakAlloc (<memory_number>)
     // _CrtSetBreakAlloc (13029);
 #endif
+
+#if wxUSE_LOG
+    wxLog::AddTraceMask(TRACE_MASK);
+#endif // wxUSE_LOG
 
     // set application and vendor name
     SetAppName (APP_NAME);
@@ -320,7 +359,7 @@ AppAbout::AppAbout (wxWindow *parent,
     aboutinfo->Add (new wxStaticText(this, -1, APP_VERSION));
     aboutinfo->Add (new wxStaticText(this, -1, _("wxWidgets: ")));
     aboutinfo->Add (new wxStaticText(this, -1, wxVERSION_STRING));
-    aboutinfo->Add (new wxStaticText(this, -1, _("Written by: ")));
+    aboutinfo->Add (new wxStaticText(this, -1, _("Maintained by: ")));
     aboutinfo->Add (new wxStaticText(this, -1, APP_MAINT));
     aboutinfo->Add (new wxStaticText(this, -1, _("Licence type: ")));
     aboutinfo->Add (new wxStaticText(this, -1, APP_LICENCE));
@@ -432,15 +471,34 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
     // help events
     EVT_MENU (wxID_ABOUT,              AppFrame::OnAbout)
     // tree
-    EVT_TREE_BEGIN_LABEL_EDIT (-1,     AppFrame::OnVetoingEvent)
-    EVT_TREE_END_LABEL_EDIT (-1,       AppFrame::OnVetoingEvent)
-    EVT_TREE_ITEM_COLLAPSING (-1,      AppFrame::OnVetoingEvent)
-    EVT_TREE_ITEM_EXPANDING (-1,       AppFrame::OnVetoingEvent)
-    EVT_TREE_SEL_CHANGING (-1,         AppFrame::OnVetoingEvent)
+    EVT_TREE_BEGIN_DRAG(-1,             AppFrame::OnTreeGeneric)  // Begin dragging with the left mouse button.
+    EVT_TREE_BEGIN_RDRAG(-1,            AppFrame::OnTreeGeneric)  // Begin dragging with the right mouse button.
+    EVT_TREE_END_DRAG(-1,               AppFrame::OnTreeGeneric)
+    EVT_TREE_BEGIN_LABEL_EDIT(-1,       AppFrame::OnVetoingEvent)  // Begin editing a label. This can be prevented by calling Veto().
+    EVT_TREE_END_LABEL_EDIT(-1,         AppFrame::OnVetoingEvent)  // Finish editing a label. This can be prevented by calling Veto().
+    EVT_TREE_DELETE_ITEM(-1,            AppFrame::OnTreeGeneric)  // Delete an item.
+    EVT_TREE_GET_INFO(-1,               AppFrame::OnTreeGeneric)  // Request information from the application.
+    EVT_TREE_SET_INFO(-1,               AppFrame::OnTreeGeneric)  // Information is being supplied.
+    EVT_TREE_ITEM_ACTIVATED(-1,         AppFrame::OnTreeGeneric)  // The item has been activated, i.e. chosen by double clicking it with mouse or from keyboard.
+    EVT_TREE_ITEM_COLLAPSED(-1,         AppFrame::OnTreeGeneric)  // The item has been collapsed.
+    EVT_TREE_ITEM_COLLAPSING(-1,        AppFrame::OnVetoingEvent)  // The item is being collapsed. This can be prevented by calling Veto().
+    EVT_TREE_ITEM_EXPANDED(-1,          AppFrame::OnTreeGeneric)  // The item has been expanded.
+    EVT_TREE_ITEM_EXPANDING(-1,         AppFrame::OnVetoingEvent)  // The item is being expanded. This can be prevented by calling Veto().
+    EVT_TREE_ITEM_MIDDLE_CLICK(-1,      AppFrame::OnVetoingEvent)
+    EVT_TREE_ITEM_RIGHT_CLICK(-1,       AppFrame::OnVetoingEvent)
+    EVT_TREE_SEL_CHANGED(-1,            AppFrame::OnTreeGeneric)  // Selection has changed.
+    EVT_TREE_SEL_CHANGING(-1,           AppFrame::OnVetoingEvent)  // Selection is changing. This can be prevented by calling Veto().
+    EVT_TREE_KEY_DOWN(-1,               AppFrame::OnTreeGeneric)  // A key has been pressed.
+    EVT_TREE_ITEM_GETTOOLTIP(-1,        AppFrame::OnTreeGeneric)  // NOT IMPLEMENTED
+    EVT_TREE_ITEM_MENU(-1,              AppFrame::OnTreeGeneric)
+    EVT_TREE_STATE_IMAGE_CLICK(-1,      AppFrame::OnTreeGeneric)  // NOT IMPLEMENTED
+    // mouse
+    EVT_MOUSE_EVENTS(                   AppFrame::OnMouseGeneric)
 END_EVENT_TABLE ()
 
+
 AppFrame::AppFrame (const wxString &title)
-        : wxFrame ((wxFrame *)NULL, -1, title, wxDefaultPosition, wxSize(480,320),
+        : wxFrame ((wxFrame *)NULL, -1, title, wxDefaultPosition, wxSize(760,560),
                     wxDEFAULT_FRAME_STYLE | wxNO_FULL_REPAINT_ON_RESIZE) {
 
     // set icon and background
@@ -454,8 +512,24 @@ AppFrame::AppFrame (const wxString &title)
     m_imgsize = -1;
     m_vetoEvent = false;
 
+    wxPanel *m_panel = new wxPanel(this, wxID_ANY);
+    wxSizer *sizerTop = new wxBoxSizer(wxVERTICAL);
+    m_panel->SetSizer(sizerTop);
+
+#if wxUSE_LOG
+    wxTextCtrl *logWin = new wxTextCtrl(
+        m_panel, wxID_ANY, wxEmptyString,
+        wxDefaultPosition, wxDefaultSize,
+        wxTE_MULTILINE );
+    wxLogTextCtrl *logger = new wxLogTextCtrl( logWin );
+    // now that everything is created we can redirect log messages
+    m_logOld = wxLog::SetActiveTarget( logger );
+    wxLogNull *log_disabler = new wxLogNull();
+#endif // wxUSE_LOG
+
     // create tree
-    m_treelist = new wxTreeListCtrl (this);
+    m_treelist = new MyTreeListCtrl (m_panel);
+    sizerTop->Add(m_treelist, 1, wxEXPAND, 5);
     CheckStyle (myID_BUTTONSNORMAL, wxTR_HAS_BUTTONS);
     CheckStyle (myID_BUTTONSTWISTER, wxTR_TWIST_BUTTONS);
     CheckStyle (myID_HIDEROOT, wxTR_HIDE_ROOT);
@@ -519,12 +593,20 @@ AppFrame::AppFrame (const wxString &title)
     m_treelist->SetItemText (item, 1, wxString::Format (_T("Item #%d, text #%d"), n, ++m));
     m_treelist->ExpandAll (root);
 
+#if wxUSE_LOG
+    sizerTop->Add(logWin, 1,  wxEXPAND | wxGROW, 5);
+    delete log_disabler ;
+    wxLogMessage("this is the test sample 'treelisttest' for the wxTreeListCtrl widget - now ready");
+#endif // wxUSE_LOG
 }
 
 AppFrame::~AppFrame () {
     wxTreeItemId root = m_treelist->GetRootItem();
     m_treelist->DeleteChildren (root);
     m_treelist->DeleteRoot();
+#if wxUSE_LOG
+    wxLog::SetActiveTarget(m_logOld);
+#endif // wxUSE_LOG
 }
 
 // common event handlers
@@ -794,8 +876,144 @@ void AppFrame::OnVetoEvent (wxCommandEvent &event) {
 }
 
 void AppFrame::OnVetoingEvent (wxTreeEvent &event) {
+    OnTreeGeneric(event);
     if (m_vetoEvent) event.Veto();
 }
+
+void AppFrame::OnTreeGeneric (wxTreeEvent &event) {
+const char *name;
+
+    if (event.GetEventType() == wxEVT_COMMAND_TREE_BEGIN_DRAG) {
+        name = "wxEVT_COMMAND_TREE_BEGIN_DRAG";
+    } else
+    if (event.GetEventType() == wxEVT_COMMAND_TREE_BEGIN_RDRAG) {
+        name = "wxEVT_COMMAND_TREE_BEGIN_RDRAG";
+    } else
+    if (event.GetEventType() == wxEVT_COMMAND_TREE_END_DRAG) {
+        name = "wxEVT_COMMAND_TREE_END_DRAG";
+    } else
+    if (event.GetEventType() == wxEVT_COMMAND_TREE_BEGIN_LABEL_EDIT) {
+        name = "wxEVT_COMMAND_TREE_BEGIN_LABEL_EDIT";
+    } else
+    if (event.GetEventType() == wxEVT_COMMAND_TREE_END_LABEL_EDIT) {
+        name = "wxEVT_COMMAND_TREE_END_LABEL_EDIT";
+    } else
+    if (event.GetEventType() == wxEVT_COMMAND_TREE_DELETE_ITEM) {
+        name = "wxEVT_COMMAND_TREE_DELETE_ITEM";
+    } else
+    if (event.GetEventType() == wxEVT_COMMAND_TREE_GET_INFO) {
+        name = "wxEVT_COMMAND_TREE_GET_INFO";
+    } else
+    if (event.GetEventType() == wxEVT_COMMAND_TREE_SET_INFO) {
+        name = "wxEVT_COMMAND_TREE_SET_INFO";
+    } else
+    if (event.GetEventType() == wxEVT_COMMAND_TREE_ITEM_ACTIVATED) {
+        name = "wxEVT_COMMAND_TREE_ITEM_ACTIVATED";
+    } else
+    if (event.GetEventType() == wxEVT_COMMAND_TREE_ITEM_COLLAPSED) {
+        name = "wxEVT_COMMAND_TREE_ITEM_COLLAPSED";
+    } else
+    if (event.GetEventType() == wxEVT_COMMAND_TREE_ITEM_COLLAPSING) {
+        name = "wxEVT_COMMAND_TREE_ITEM_COLLAPSING";
+    } else
+    if (event.GetEventType() == wxEVT_COMMAND_TREE_ITEM_EXPANDED) {
+        name = "wxEVT_COMMAND_TREE_ITEM_EXPANDED";
+    } else
+    if (event.GetEventType() == wxEVT_COMMAND_TREE_ITEM_EXPANDING) {
+        name = "wxEVT_COMMAND_TREE_ITEM_EXPANDING";
+    } else
+    if (event.GetEventType() == wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK) {
+        name = "wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK";
+    } else
+    if (event.GetEventType() == wxEVT_COMMAND_TREE_ITEM_MIDDLE_CLICK) {
+        name = "wxEVT_COMMAND_TREE_ITEM_MIDDLE_CLICK";
+    } else
+    if (event.GetEventType() == wxEVT_COMMAND_TREE_SEL_CHANGED) {
+        name = "wxEVT_COMMAND_TREE_SEL_CHANGED";
+    } else
+    if (event.GetEventType() == wxEVT_COMMAND_TREE_SEL_CHANGING) {
+        name = "wxEVT_COMMAND_TREE_SEL_CHANGING";
+    } else
+    if (event.GetEventType() == wxEVT_COMMAND_TREE_KEY_DOWN) {
+        name = "wxEVT_COMMAND_TREE_KEY_DOWN";
+    } else
+    if (event.GetEventType() == wxEVT_COMMAND_TREE_ITEM_GETTOOLTIP) {
+        name = "wxEVT_TREE_ITEM_GETTOOLTIP";
+    } else
+    if (event.GetEventType() == wxEVT_COMMAND_TREE_ITEM_MENU) {
+        name = "wxEVT_COMMAND_TREE_ITEM_MENU";
+    } else
+    if (event.GetEventType() == wxEVT_COMMAND_TREE_STATE_IMAGE_CLICK) {
+        name = "wxEVT_COMMAND_TREE_STATE_IMAGE_CLICK";
+    } else
+    {
+        name = "BUG,unexpected";
+    }
+
+    wxLogMessage("TREE    type=<%s (%d)>    item=<%X> label=<%s> col=<%d> isOK=%s    keycode=<%d> point=<%d, %d> isEditCancelled=<%s>",
+        name, event.GetEventType(),
+        (unsigned int)(event.GetItem().m_pItem), event.GetLabel().c_str(), event.GetInt(), event.GetItem().IsOk() ? "true" : "false",
+        event.GetKeyCode(), event.GetPoint().x, event.GetPoint().y, event.IsEditCancelled() ? "true" : "false"
+    );
+
+    event.Skip();  // safer, and necessary for default behavior of double-click
+}
+
+
+void AppFrame::OnMouseGeneric(wxMouseEvent &event) {
+const char *name;
+
+    if (event.GetEventType() == wxEVT_LEFT_DOWN) {
+        name = "wxEVT_LEFT_DOWN";
+    } else
+    if (event.GetEventType() == wxEVT_LEFT_UP) {
+        name = "wxEVT_LEFT_UP";
+    } else
+    if (event.GetEventType() == wxEVT_LEFT_DCLICK) {
+        name = "wxEVT_LEFT_DCLICK";
+    } else
+    if (event.GetEventType() == wxEVT_MIDDLE_DOWN) {
+        name = "wxEVT_MIDDLE_DOWN";
+    } else
+    if (event.GetEventType() == wxEVT_MIDDLE_UP) {
+        name = "wxEVT_MIDDLE_UP";
+    } else
+    if (event.GetEventType() == wxEVT_MIDDLE_DCLICK) {
+        name = "wxEVT_MIDDLE_DCLICK";
+    } else
+    if (event.GetEventType() == wxEVT_RIGHT_DOWN) {
+        name = "wxEVT_RIGHT_DOWN";
+    } else
+    if (event.GetEventType() == wxEVT_RIGHT_UP) {
+        name = "wxEVT_RIGHT_UP";
+    } else
+    if (event.GetEventType() == wxEVT_RIGHT_DCLICK) {
+        name = "wxEVT_RIGHT_DCLICK";
+    } else
+    if (event.GetEventType() == wxEVT_MOTION) {
+        name = "wxEVT_MOTION";
+    } else
+    if (event.GetEventType() == wxEVT_ENTER_WINDOW) {
+        name = "wxEVT_ENTER_WINDOW";
+    } else
+    if (event.GetEventType() == wxEVT_LEAVE_WINDOW) {
+        name = "wxEVT_LEAVE_WINDOW";
+    } else
+    if (event.GetEventType() == wxEVT_MOUSEWHEEL) {
+        name = "wxEVT_MOUSEWHEEL";
+    } else
+    {
+        name = "BUG,unexpected";
+    }
+
+    wxLogMessage("MOUSE    type=<%s (%d)>    point=(%d, %d)",
+        name, event.GetEventType(),
+        event.GetX(), event.GetY()
+    );
+
+    event.Skip();
+}
+
 
 // private functions
 void AppFrame::CreateMenu () {
@@ -898,3 +1116,69 @@ void AppFrame::ToggleStyle (int id, long flag) {
     m_treelist->SetWindowStyle (style);
     GetMenuBar()->Check (id, (style & flag) != 0);
 }
+
+
+//----------------------------------------------------------------------------
+// wxTreeListCtrl child class to get mouse events
+//----------------------------------------------------------------------------
+#ifdef WITH_CHILD_CLASS
+
+BEGIN_EVENT_TABLE(MyTreeListCtrl, wxTreeListCtrl)
+    EVT_MOUSE_EVENTS(MyTreeListCtrl::OnMouseGeneric)
+END_EVENT_TABLE();
+
+
+void MyTreeListCtrl::OnMouseGeneric(wxMouseEvent &event) {
+const char *name;
+
+    if (event.GetEventType() == wxEVT_LEFT_DOWN) {
+        name = "wxEVT_LEFT_DOWN";
+    } else
+    if (event.GetEventType() == wxEVT_LEFT_UP) {
+        name = "wxEVT_LEFT_UP";
+    } else
+    if (event.GetEventType() == wxEVT_LEFT_DCLICK) {
+        name = "wxEVT_LEFT_DCLICK";
+    } else
+    if (event.GetEventType() == wxEVT_MIDDLE_DOWN) {
+        name = "wxEVT_MIDDLE_DOWN";
+    } else
+    if (event.GetEventType() == wxEVT_MIDDLE_UP) {
+        name = "wxEVT_MIDDLE_UP";
+    } else
+    if (event.GetEventType() == wxEVT_MIDDLE_DCLICK) {
+        name = "wxEVT_MIDDLE_DCLICK";
+    } else
+    if (event.GetEventType() == wxEVT_RIGHT_DOWN) {
+        name = "wxEVT_RIGHT_DOWN";
+    } else
+    if (event.GetEventType() == wxEVT_RIGHT_UP) {
+        name = "wxEVT_RIGHT_UP";
+    } else
+    if (event.GetEventType() == wxEVT_RIGHT_DCLICK) {
+        name = "wxEVT_RIGHT_DCLICK";
+    } else
+    if (event.GetEventType() == wxEVT_MOTION) {
+        name = "wxEVT_MOTION";
+    } else
+    if (event.GetEventType() == wxEVT_ENTER_WINDOW) {
+        name = "wxEVT_ENTER_WINDOW";
+    } else
+    if (event.GetEventType() == wxEVT_LEAVE_WINDOW) {
+        name = "wxEVT_LEAVE_WINDOW";
+    } else
+    if (event.GetEventType() == wxEVT_MOUSEWHEEL) {
+        name = "wxEVT_MOUSEWHEEL";
+    } else {
+        name = "BUG,unexpected";
+    }
+
+    wxLogMessage("CHILDMOUSE    type=<%s (%d)>    point=(%d, %d)",
+        name, event.GetEventType(),
+        event.GetX(), event.GetY()
+    );
+
+    event.Skip();
+}
+
+#endif // WITH_CHILD_CLASS
