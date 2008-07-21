@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  Otto Wyss
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.h,v 1.33 2006-08-17 20:27:13 wyo Exp $
+// RCS-ID:      $Id: treelistctrl.h,v 1.34 2008-07-21 14:47:18 pgriddev Exp $
 // Copyright:   (c) 2004 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss
 // Licence:     wxWindows
@@ -463,8 +463,8 @@ public:
     // remove the selection from currently selected item (if any)
     void Unselect();
     void UnselectAll();
-    // select this item
-    void SelectItem (const wxTreeItemId& item,
+    // select this item - return true if selection was allowed (no veto)
+    bool SelectItem (const wxTreeItemId& item,
                      const wxTreeItemId& last = (wxTreeItemId*)NULL,
                      bool unselect_others = true);
     // select all items in the expanded tree
