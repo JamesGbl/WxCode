@@ -30,21 +30,16 @@
  the maximum number of errors and warnings that have to be reported.
 
  If the document does not contain an open/close JSON character the
- function returns an \b empty value object; in other words, the 
- wxJSONValue::IsEmpty() function returns TRUE.
+ function returns an \b invalid value object; in other words, the 
+ wxJSONValue::IsValid() function returns FALSE.
  This is the case of a document that is empty or contains only
  whitespaces or comments.
  If the document contains a starting object/array character immediatly
  followed by a closing object/array character
  (i.e.: \c {} ) then the function returns an \b empty array or object
- JSON value (note the little distinction: \b empty value is not the
- same as \b empty \b array or \b empty \b object ).
- For an empty object or array, the wxJSONValue::IsEmpty() function
- returns FALSE and the wxJSONValue::Size() returns ZERO.
-
- In order to avoid confusion, you have to think about \b empty JSON values
- as \b invalid JSON values.
- \b Empty \b arrays and \b empty \b objects are valid JSON values.
+ JSON value.
+ This is a valid JSON object of type wxJSONTYPE_OBJECT or wxJSONTYPE_ARRAY
+ whose wxJSONValue::Size() function returns ZERO.
 
  \par JSON text
 
@@ -66,7 +61,7 @@
  the top-level close-object/array character.
  Here are some examples:
 
- Returns a wxJSONTYPE_EMPTY value (invalid JSON value)
+ Returns a wxJSONTYPE_INVALID value (invalid JSON value)
  \code
    // this text does not contain an open array/object character
  \endcode
@@ -325,8 +320,8 @@ wxJSONReader::Parse( wxJSONValue* val )
   m_warnings.clear();
 
   // check the internal data members
-  wxASSERT( m_inObject != 0 );
-  wxASSERT( m_inType >= 0 );
+  wxJSON_ASSERT( m_inObject != 0 );
+  wxJSON_ASSERT( m_inType >= 0 );
 
   if ( val != 0 )  {
     temp = val;
@@ -541,7 +536,7 @@ wxJSONReader::GetChar()
   else  {
     // input is a stream: it must be UTF-8
     wxInputStream* is = (wxInputStream*) m_inObject;
-    wxASSERT( is != 0 );
+    wxJSON_ASSERT( is != 0 );
 
     // must know the number fo bytes to read
     char buffer[10];
@@ -559,7 +554,7 @@ wxJSONReader::GetChar()
     // }
 
     int numBytes = UTF8NumBytes( buffer[0] );
-    wxASSERT( numBytes < 10 );
+    wxJSON_ASSERT( numBytes < 10 );
     if ( numBytes > 1 )  {
       is->Read( buffer + 1, numBytes - 1);
     }
@@ -575,7 +570,7 @@ wxJSONReader::GetChar()
     // we convert the UTF-8 char to a wide char; if the conversion
     // fails, returns -1
     wchar_t dst[5];
-    wxASSERT( m_conv != 0 );
+    wxJSON_ASSERT( m_conv != 0 );
     size_t outLength = m_conv->ToWChar( dst, 10, buffer, numBytes );
     if ( outLength == wxCONV_FAILED )  {
       AddError( _T("Cannot convert multibyte sequence to wide character"));
@@ -583,7 +578,7 @@ wxJSONReader::GetChar()
       return ch;
     }
     else {
-      wxASSERT( outLength == 2 );  // seems that a NULL char is appended
+      wxJSON_ASSERT( outLength == 2 );  // seems that a NULL char is appended
       ch = dst[0];
     }
     // we are only interested in the dst[0] wide-chracter; it could be
@@ -643,7 +638,7 @@ wxJSONReader::DoRead( wxJSONValue& parent )
   ++m_level;
   // the value that has to be read (can be a complex structure)
   // it can also be a 'name' (key) string
-  wxJSONValue value( wxJSONTYPE_EMPTY );
+  wxJSONValue value( wxJSONTYPE_INVALID );
   m_next = &value;
 
   m_current = &parent;
@@ -679,17 +674,17 @@ wxJSONReader::DoRead( wxJSONValue& parent )
           if ( key.empty() )   {
             AddError( _T("\'{\' is not allowed here (\'name\' is missing") );
           }
-          if ( !value.IsEmpty() )   {
+          if ( value.IsValid() )   {
             AddError( _T("\'{\' cannot follow a \'value\'") );
           }
         }
         else if ( parent.IsArray() )  {
-          if ( !value.IsEmpty() )   {
+          if ( value.IsValid() )   {
             AddError( _T("\'{\' cannot follow a \'value\' in JSON array") );
           }
         }
         else  {
-          wxASSERT( 0 );       // always fails
+          wxJSON_ASSERT( 0 );       // always fails
         }
 
         // althrough there were errors, we go into the subobject
@@ -715,17 +710,17 @@ wxJSONReader::DoRead( wxJSONValue& parent )
           if ( key.empty() )   {
             AddError( _T("\'[\' is not allowed here (\'name\' is missing") );
           }
-          if ( !value.IsEmpty() )   {
+          if ( value.IsValid() )   {
             AddError( _T("\'[\' cannot follow a \'value\' text") );
           }
         }
         else if ( parent.IsArray())  {
-          if ( !value.IsEmpty() )   {
+          if ( value.IsValid() )   {
             AddError( _T("\'[\' cannot follow a \'value\'") );
           }
         }
         else  {
-          wxASSERT( 0 );       // always fails
+          wxJSON_ASSERT( 0 );       // always fails
         }
 
         // althrough there were errors, we go into the subobject
@@ -772,7 +767,7 @@ wxJSONReader::DoRead( wxJSONValue& parent )
         }
         else  {
           key = value.AsString();
-          value.SetType( wxJSONTYPE_EMPTY );
+          value.SetType( wxJSONTYPE_INVALID );
         }
         ch = ReadChar();
         break;
@@ -796,7 +791,7 @@ wxJSONReader::DoRead( wxJSONValue& parent )
     AddWarning( wxJSONREADER_MISSING, _T("\'}\' missing at end of file"));
   }
   else  {
-    wxASSERT( 0 );
+    wxJSON_ASSERT( 0 );
   }
 
   // we store the value, as there is a missing close-object/array char
@@ -835,7 +830,7 @@ wxJSONReader::StoreValue( int ch, const wxString& key, wxJSONValue& value, wxJSO
   m_lastStored = 0;
   m_next->SetLineNo( -1 );
 
-  if ( value.IsEmpty() && key.empty() ) {
+  if ( !value.IsValid() && key.empty() ) {
       // OK, if the char read is a close-object or close-array
     if ( ch == '}' || ch == ']' )  {
       m_lastStored = 0;
@@ -849,7 +844,7 @@ wxJSONReader::StoreValue( int ch, const wxString& key, wxJSONValue& value, wxJSO
   else  {
     // key or value are not empty
     if ( parent.IsObject() )  {
-      if ( value.IsEmpty() ) {
+      if ( !value.IsValid() ) {
         AddError( _T("cannot store the value: \'value\' is missing for JSON object type"));
       }
       else if ( key.empty() ) {
@@ -864,7 +859,7 @@ wxJSONReader::StoreValue( int ch, const wxString& key, wxJSONValue& value, wxJSO
       }
     }
     else if ( parent.IsArray() ) {
-      if ( value.IsEmpty() ) {
+      if ( !value.IsValid() ) {
         AddError( _T("cannot store the item: \'value\' is missing for JSON array type"));
       }
       if ( !key.empty() ) {
@@ -873,15 +868,15 @@ wxJSONReader::StoreValue( int ch, const wxString& key, wxJSONValue& value, wxJSO
       ::wxLogTrace( traceMask, _T("(%s) appending value to parent array"), __PRETTY_FUNCTION__ );
       parent.Append( value );
       const wxJSONInternalArray* arr = parent.AsArray();
-      wxASSERT( arr );
+      wxJSON_ASSERT( arr );
       m_lastStored = &(arr->Last());
       m_lastStored->SetLineNo( m_lineNo );
     }
     else  {
-      wxASSERT( 0 );  // should never happen
+      wxJSON_ASSERT( 0 );  // should never happen
     }
   }
-  value.SetType( wxJSONTYPE_EMPTY );
+  value.SetType( wxJSONTYPE_INVALID );
   value.ClearComments();
 }
 
@@ -1022,6 +1017,7 @@ wxJSONReader::SkipWhiteSpace()
 int
 wxJSONReader::SkipComment()
 {
+
   static const wxChar* warn = 
 	_T("Comments may be tolerated in JSON text but they are not part of JSON syntax");
 
@@ -1203,7 +1199,7 @@ wxJSONReader::ReadString( wxJSONValue& val )
   //   'value'  is empty
   //   'value'  is a string; concatenate it but emit warning
 
-  if ( val.IsEmpty() )   {
+  if ( !val.IsValid() )   {
     ::wxLogTrace( traceMask, _T("(%s) assigning the string to value"), __PRETTY_FUNCTION__ );
     val = s ;
   }
@@ -1300,7 +1296,7 @@ wxJSONReader::ReadToken( int ch, wxString& s )
  It assumes that the string is a numeric value or a 'null' or a
  boolean value and stores it in the wxJSONValue object \c val.
 
- The function also checks that \c val is of type wxJSONTYPE_EMPTY otherwise
+ The function also checks that \c val is of type wxJSONTYPE_INVALID otherwise
  an error is reported becasue a value cannot follow another value:
  maybe a (,) or (:) is missing.
  Returns the next character or -1 on EOF.
@@ -1313,7 +1309,7 @@ wxJSONReader::ReadValue( int ch, wxJSONValue& val )
   ::wxLogTrace( traceMask, _T("(%s) value=%s"),
 			 __PRETTY_FUNCTION__, val.AsString().c_str() );
 
-  if ( !val.IsEmpty() )  {
+  if ( val.IsValid() )  {
     AddError( _T( "Value \'%s\' cannot follow a value: \',\' or \':\' missing?"), s );
     return nextCh;
   }
@@ -1345,7 +1341,8 @@ wxJSONReader::ReadValue( int ch, wxJSONValue& val )
       // first try a signed integer, then a unsigned integer, then a double
 #if defined( wxJSON_64BIT_INT)
       r = Strtoll( s, &i64 );
-      ::wxLogTrace( traceMask, _T("(%s) convert to wxInt64 result=%d"),  __PRETTY_FUNCTION__, r );
+      ::wxLogTrace( traceMask, _T("(%s) convert to wxInt64 result=%d"),
+			  __PRETTY_FUNCTION__, r );
       if ( r )  {
         // store the value
         val = i64;
@@ -1626,7 +1623,7 @@ wxJSONReader::StoreComment( const wxJSONValue* parent )
 
   if ( m_flags & wxJSONREADER_COMMENTS_AFTER )  {  // comment AFTER
     if ( m_current )  {
-      if ( m_current == parent || m_current->IsEmpty()) {
+      if ( m_current == parent || !m_current->IsValid()) {
         AddError( _T("Cannot find a value for storing the comment (flag AFTER)"));
       }
       else  {
@@ -1681,7 +1678,7 @@ int
 wxJSONReader::NumBytes()
 {
   // always fails
-  wxASSERT( 0 );
+  wxJSON_ASSERT( 0 );
   return 0;
 }
 

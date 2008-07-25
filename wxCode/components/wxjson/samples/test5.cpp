@@ -126,6 +126,8 @@ int Test9()
 }
 
 // test a map of values
+// 24/7/2008 failed to read the integer!!!
+// Warning: lne 2 col: 3 comment is not on col 3 but col. 1
 int Test10()
 {
   static const wxChar* text = 
@@ -144,6 +146,9 @@ int Test10()
   wxJSONReader reader( gs_tolerant );
 
   int numErrors = reader.Parse( text, &root );
+
+  wxInt64 i = root[_T("integer")].AsInt64();
+  ASSERT( i == 12 )
 
   // now print the JSON value that we have read
   // note the lack of comments

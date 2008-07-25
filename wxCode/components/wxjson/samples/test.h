@@ -150,8 +150,6 @@ extern void TestCout( long int l, bool lf = false );
 extern void TestCout( unsigned long int ul, bool lf = false );
 extern void TestCout( double d, bool lf = false );
 
-
-
 #if defined( wxJSON_64BIT_INT )
 extern void TestCout( wxInt64 i64, bool lf = false );
 extern void TestCout( wxUint64 ui64, bool lf = false );

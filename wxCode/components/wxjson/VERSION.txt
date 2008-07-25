@@ -31,3 +31,20 @@ The bug-fix release is done when some bugs are fixed.
 The library remains compatible with the past and no new feature
 was added.
 
+
+If your application has to compile differently depending on the wxJSON
+version you can know the actual version of the library by checking the
+value of the following three macros that are defined in the header file
+'include/wx/json_defs.h':
+
+  - wxJSON_MAJOR
+  - wxJSON_MINOR
+  - wxJSON_RELEASE
+
+
+For non-Unix systems (i.e. when building without a configure script),
+users of this component can use the following macro to check if the
+current version is at least major.minor.release:
+
+   wxCHECK_JSON_VERSION(major,minor,release)
+

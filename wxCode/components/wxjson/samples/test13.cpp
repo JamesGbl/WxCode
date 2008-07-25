@@ -2,7 +2,7 @@
 
    test13.cpp
 
-    test the 64-bit integer
+    test the int, short, long and 64-bit integer
     Copyright (C) 2008  Luciano Cattani
 
     This program is free software; you can redistribute it and/or modify
@@ -94,8 +94,20 @@ int Test54()
   TestCout( (unsigned int) UINT_MAX, true );
   TestCout( _T("Printing INT_MIN: "));
   TestCout( (int) INT_MIN, true );
-  // TestCout( _T("Printing UINT_MIN: "));  not defined: it is always ZERO
-  // TestCout( UINT_MIN, true );
+
+  TestCout( _T("Printing LONG_MAX: "));
+  TestCout( (long int) LONG_MAX, true );
+  TestCout( _T("Printing ULONG_MAX: "));
+  TestCout( (unsigned long) ULONG_MAX, true );
+  TestCout( _T("Printing LONG_MIN: "));
+  TestCout( (long int) LONG_MIN, true );
+
+  TestCout( _T("Printing SHORT_MAX: "));
+  TestCout( SHORT_MAX, true );
+  TestCout( _T("Printing USHORT_MAX: "));
+  TestCout( (unsigned) USHORT_MAX, true );
+  TestCout( _T("Printing SHORT_MIN: "));
+  TestCout( SHORT_MIN, true );
 
 #if defined( wxJSON_64BIT_INT )
     TestCout( _T("Printing LLONG_MAX: "));
@@ -109,237 +121,177 @@ int Test54()
 }
 
 
-// test the wxJSON's 64-bits related functions
-// the test is only done on 64bits platforms
+// test the wxJSON_ASSERT macro which just expands to:
+//	 wxASSERT in unicode builds
+// and to
+//	print ASSERTION failure in ansi
+//
+// 10 jul 2008: test is successfull. In Unicode, the app aborts
+//			while in ANSI it quits normally but prints the
+//			ASSERTION FAILURE message
 int Test55()
 {
-  // the test result
-  int r = 0;
+#if defined( wxJSON_USE_UNICODE )
+  #define wxJSON_ASSERT( cond )		wxASSERT( cond );
+#else
+  #define wxJSON_ASSERT( cond )				\
+	if ( !(cond))   {				\
+		wxString s;				\
+		s.Printf( _T("(%s) line: %d ASSERTION FAILED (%s)\n" ),	\
+		_T(__FILE__), __LINE__ , wxSTRINGIZE_T( cond ));		\
+		TestCout( s );				\
+	}
+#endif
+  int a = 0;
 
-#if defined( wxJSON_64BIT_INT )
-  // we use an array of integers and check the results of the
-  // memberfunctions. We set an integer value to every element
-  wxJSONValue value;
-  value.Append( 100 ); 
-  value.Append( (unsigned) 110 );
-  value.Append( -1 ); 
-  value.Append( (unsigned) -1 ); 
-  value.Append( -65000 ); 
-  value.Append( (wxInt64) INT_MAX + 10 );
-  value.Append( (wxInt64) INT_MIN - 10 );
-  value.Append( (wxUint64) UINT_MAX + 10 );
-  value.Append( (wxInt64) UINT_MAX + 10 );
-  value.Append( _T("A string"));
+  wxJSON_ASSERT( a == 0 )
+  wxJSON_ASSERT( a == 1 )
+
+  TestCout( _T("\nTest #55: function is returning\n"));
+
+  int r = 0;
+  return r;
+}
+
+//
+// test the wxJSON_NOABORT_ASSERT
+// this function is used to test the wxJSON_NOABORT_ASSERT macro which
+// cause the wxJSON_ASSERT macro to:
+//
+//	- abort the program if 'wxJSON_NOABORT_ASSERT' is not defined
+//	- print a message if it is defined
+//
+// In order to test boh situations, we have to recompile the whole
+// application with both cases
+//
+int Test56()
+{
+  wxJSONValue v1( 100 );
+  wxJSONValue v2( _T( "a string"));
+
+  int i;
+  i = v1.AsInt();
+  i = v2.AsInt();		// ASSERTION FAILURE
+
+  TestCout( _T("TEST #56 is about to return\n"));
+  return 0;
+}
+
+//
+// test various return values from INT, SHORT, LONG and LONG LONG
+int Test57()
+{
+  int r = 0;
 
   // the memberfunction that we check are:
   //
   //   GetType()
   //   IsInt()
   //   IsUInt()
-  //   IsInt32()
-  //   IsUInt32()
+  //   IsShort()
+  //   IsUShort()
+  //   IsInt32()     from version 1.0.0 just calls IsLong()
+  //   IsUInt32()    from version 1.0.0 just calls IsULong()
   //   IsInt64()
   //   IsUInt64()
   //   AsInt()
   //   AsUInt()
-  //   AsInt32()
-  //   AsUInt32()
+  //   AsInt32()     from version 1.0.0 just calls AsLong()
+  //   AsUInt32()    from version 1.0.0 just calls AsULong()
   //   AsInt64()
   //   AsUInt64()
 
+
+  // we use an array of integers and check the results of the
+  // memberfunctions. We set an integer value to every element
+  wxJSONValue value;
+
+  value.Append( 100 );                 // 0: signed short
+  value.Append( (unsigned) 110 );      // 1: unsigned short
+  value.Append( -1 );                  // 2: signed integer
+  value.Append( (unsigned) -1 );       // 3: unsigned integer
+  value.Append( (unsigned) 65000 );    // 4: unsigned short
+  value.Append( 65000 );	       // 5. signed long (cannot be short)
+
+  value.Append( (long) SHORT_MAX + 10 );            // 6: positive, signed long
+  value.Append( (long) SHORT_MIN - 10 );            // 7. negative, sigend long
+  value.Append( (unsigned long) USHORT_MAX + 10 );  // 8. unsigned long
+
+#if defined( wxJSON_64BIT_INT )
+  value.Append( (wxInt64) LONG_MAX + 10 );    // 9. positive, signed longlong
+  value.Append( (wxInt64) LONG_MIN - 10 );    //10. negative, signed longlong
+  value.Append( (wxUint64) ULONG_MAX + 10 );  //11. unsigned longlong
+#endif
+  value.Append( _T("A string"));            //12. a string value
+
+
   // the expected results for every element are stored in an array
   // of structures: for every function there is a result.
-  // the first field contains wxJSONTYPE_INT or wxJSONTYPE_UINT
+  // the first field contains the type returned by GetType().
+  // Note that if the IsXxxxx() returns TRUE we can call AsXxxxx()
+  // and ASSERT the return value.
+  // In debug builds, the AsXxxxxx() will abort the program with an
+  // ASSERTION failure unless the wxJSON_NOABORT_ASSERT is defined
   struct Result {
-  wxJSONType iType;
-    bool     isInt;
-    bool     isUInt;
-    bool     isInt32;
-    bool     isUInt32;
-    bool     isInt64;
-    bool     isUInt64;
-    int      asInt;
-    unsigned asUInt;
-    int      asInt32;
-    unsigned asUInt32;
-    wxInt64  asInt64;
-    wxUint64 asUInt64;
+    wxJSONType     iType;
+    bool           isInt;
+    bool           isUInt;
+    bool           isShort;
+    bool           isUShort;
+    bool           isLong;
+    bool           isULong;
+    bool           isInt64;
+    bool           isUInt64;
+    int            asInt;
+    unsigned       asUInt;
+    short int      asShort;
+    unsigned short asUShort;
+    long           asLong;
+    unsigned long  asULong;
+#if defined( wxJSON_64BIT_INT )
+    wxInt64        asInt64;
+    wxUint64       asUInt64;
+#endif
   };
 
   Result res[] =  {
-	// element 0: a positive, signed 32-bit integer, value=100
+	// element 0: a positive, signed int, value=100
 	{
-		wxJSONTYPE_INT,	// iType,
+		wxJSONTYPE_SHORT,	// iType,
 		true,		// isInt,
 		false,		// isUInt,
-		true,		// isInt32,
-		false,		// isUInt32,
-		false,		// isInt64,
+		true,		// isShort,
+		false,		// isUShort,
+		true,		// isLong,
+		false,		// isULong,
+		true,		// isInt64,
 		false,		// isUInt64,
 		100,		// asInt,
 		100,		// asUInt,
-		100,		// asInt32,
-		100,		// asUInt32,
+		100,		// asShort,
+		100,		// asUShort,
+		100,		// asLong,
+		100		// asULong
+#if defined( wxJSON_64BIT_INT )
+	           ,
 		100,		// asInt64,
 		100		// asUInt64
-	},
-
-	// element 1: a positive, unsigned 32-bit integer, value=110
-	{
-		wxJSONTYPE_UINT,	// iType,
-		false,			// isInt,
-		true,			// isUInt,
-		false,			// isInt32,
-		true,			// isUInt32,
-		false,			// isInt64,
-		false,			// isUInt64,
-		110,			// asInt,
-		110,			// asUInt,
-		110,			// asInt32,
-		110,			// asUInt32,
-		110,			// asInt64,
-		110			// asUInt64
-	},
-
-	// element 2: a negative, signed 32-bit integer, value=-1
-	{
-		wxJSONTYPE_INT,		// iType,
-		true,			// isInt,
-		false,			// isUInt,
-		true,			// isInt32,
-		false,			// isUInt32,
-		false,			// isInt64,
-		false,			// isUInt64,
-		-1,			// asInt,
-		0,			// asUInt,  ASSERTION failure: signed value
-		-1,			// asInt32,
-		UINT_MAX,		// asUInt32,
-		-1,			// asInt64,
-		ULLONG_MAX		// asUInt64
-	},
-
-	// element 3: a unsigned integer, value= (unsigned) -1
-	{
-		wxJSONTYPE_UINT,	// iType,
-		false,			// isInt,
-		true,			// isUInt,
-		false,			// isInt32,
-		true,			// isUInt32,
-		false,			// isInt64,
-		false,			// isUInt64,
-		0,			// asInt,   ASSERTION failure: too large for signed 32-bit
-		UINT_MAX,		// asUInt, 
-		-1,			// asInt32,
-		UINT_MAX,		// asUInt32,
-		UINT_MAX,		// asInt64,
-		UINT_MAX		// asUInt64
-	},
-
-	// element 4: a negative, signed integer, value=-65000
-	{
-		wxJSONTYPE_INT,		// iType,
-		true,			// isInt,
-		false,			// isUInt,
-		true,			// isInt32,
-		false,			// isUInt32,
-		false,			// isInt64,
-		false,			// isUInt64,
-		-65000,			// asInt,
-		0,			// asUInt,   ASSERTION failure: signed int. 
-		-65000,			// asInt32,
-		-65000,			// asUInt32, WRONG RESULT
-		-65000,			// asInt64,
-		-65000			// asUInt64  WRONG RESULT
-	},
-
-	// element 5: a positive, signed integer, value=INT_MAX + 10
-	{
-		wxJSONTYPE_INT64,	// iType,
-		true,			// isInt,
-		false,			// isUInt,
-		false,			// isInt32,
-		false,			// isUInt32,
-		true,			// isInt64,
-		false,			// isUInt64,
-		0, 			// asInt,   ASSERTION failure: value too large
-		INT_MAX + 10,		// asUInt 
-		-2147483639,		// asInt32, WRONG RESULT: too big for 'int32'
-		INT_MAX + 10,		// asUInt32
-		(wxInt64) INT_MAX + 10,	// asInt64,
-		(wxUint64)INT_MAX + 10	// asUInt64
-	},
-
-	// element 6: a negative, signed integer, value=INT_MIN - 10 (-2147483658)
-	{
-		wxJSONTYPE_INT64,	// iType,
-		true,			// isInt,
-		false,			// isUInt,
-		false,			// isInt32,
-		false,			// isUInt32,
-		true,			// isInt64,
-		false,			// isUInt64,
-		0,			// asInt,  ASSERTION failure: value cannot fit( too large)
-		0,			// asUInt  ASSERTION failure: value cannot fit (negative)
-		2147483638,		// asInt32, WRONG RESULT:
-		2147483638,		// asUInt32 WRONG RESULT
-		(wxInt64) INT_MIN - 10,	// asInt64,
-		(wxUint64)INT_MIN - 10	// asUInt64 WRONG RESULT: returned as a unsigned int64
-	},
-
-	// element 7: a positive, unsigned integer, value=UINT_MAX + 10 (4294967305)
-	{
-		wxJSONTYPE_UINT64,	// iType,
-		false,			// isInt,
-		true,			// isUInt,
-		false,			// isInt32,
-		false,			// isUInt32,
-		false,			// isInt64,
-		true,			// isUInt64,
-		0,			// asInt,  ASSERTION failure: value cannot fit (too large)
-		0,			// asUInt  ASSERTION failure: value cannot fit (too large)
-		9,			// asInt32, WRONG RESULT:
-		9,			// asUInt32 WRONG RESULT
-		(wxInt64) UINT_MAX + 10,  // asInt64,
-		(wxUint64)UINT_MAX + 10	  // asUInt64
-	},
-
-	// element 8: a positive, signed integer, value=UINT_MAX + 10 (4294967305)
-	{
-		wxJSONTYPE_INT64,	// iType,
-		true,			// isInt,
-		false,			// isUInt,
-		false,			// isInt32,
-		false,			// isUInt32,
-		true,			// isInt64,
-		false,			// isUInt64,
-		0,			// asInt,  ASSERTION failure: value cannot fit (too large)
-		0,			// asUInt  ASSERTION failure: value cannot fit (too large)
-		9,			// asInt32, WRONG RESULT:
-		9,			// asUInt32 WRONG RESULT
-		(wxInt64) UINT_MAX + 10,  // asInt64,
-		(wxUint64)UINT_MAX + 10	  // asUInt64
-	},
-
-	// element 9: a string, value="A string"
-	{
-		wxJSONTYPE_STRING,	// iType,
-		false,			// isInt,
-		false,			// isUInt,
-		false,			// isInt32,
-		false,			// isUInt32,
-		false,			// isInt64,
-		false,			// isUInt64,
-		0,			// asInt,   ASSERTION failure: type not compatible
-		0,			// asUInt   ASSERTION failure: type not compatible
-		0,			// asInt32, ASSERTION failure: type not compatible
-		0,			// asUInt32 ASSERTION failure: type not compatible
-		0,			// asInt64, ASSERTION failure: type not compatible
-		0			// asUInt64 ASSERTION failure: type not compatible
+#endif
 	}
-
   };
 
-  for ( int i = 0; i < 10; i++ )  {
+  int x;       unsigned int ui;
+  long int l;  unsigned long int ul;
+  short int h; unsigned short int uh;
+
+#if defined( wxJSON_64BIT_INT )
+  wxInt64 i64; wxUint64 ui64; 
+#endif
+
+  int numElem = value.Size();	// the number of elements in the array
+
+  // for ( int i = 0; i < numElem; i++ )  {
+  for ( int i = 0; i < 1; i++ )  {
     TestCout( _T("\nChecking element no. "));
     TestCout( i, true );
     TestCout( _T("Value is: "));
@@ -352,276 +304,60 @@ int Test55()
     TestCout( _T("\n"));
     ASSERT( type == res[i].iType );
 
-    bool r;     // checking the IsXxxxxx() functions
+    bool r;     // checking the IsXxxxxx() and AsXxxxxx() functions
+
+    /****************** INT *****************************/
+
     TestCout( _T("Checking IsInt(): "));
     r = value[i].IsInt();
     TestCout( r, true );
     ASSERT( r == res[i].isInt );
+
+    TestCout( _T("Checking AsInt(): "));
+    if ( r )  {
+      x = value[i].AsInt();
+      TestCout( x, true );
+      ASSERT( x == res[i].asInt )
+    }
+    else  {
+      x = value[i].AsInt();
+      TestCout( x, false );
+      TestCout( _T( " - ASSERTION failure on debug"));
+    }
+
+    /****************** UINT *****************************/
+
     TestCout( _T("Checking IsUInt(): "));
     r = value[i].IsUInt();
     TestCout( r, true );
     ASSERT( r == res[i].isUInt );
-    TestCout( _T("Checking IsInt32(): "));
-    r = value[i].IsInt32();
-    TestCout( r, true );
-    ASSERT( r == res[i].isInt32 );
-    TestCout( _T("Checking IsUInt32(): "));
-    r = value[i].IsUInt32();
-    TestCout( r, true );
-    ASSERT( r == res[i].isUInt32 );
-    TestCout( _T("Checking IsInt64(): "));
-    r = value[i].IsInt64();
-    TestCout( r, true );
-    ASSERT( r == res[i].isInt64 );
-    TestCout( _T("Checking IsUInt64(): "));
-    r = value[i].IsUInt64();
-    TestCout( r, true );
-    ASSERT( r == res[i].isUInt64 );
 
-    int d; unsigned int ui;   // checking the AsXxxxxx() functions
-    TestCout( _T("Checking AsInt(): "));
-    if ( res[i].asInt != 0 )  {
-      d = value[i].AsInt();
-      TestCout( d, true );
-      ASSERT( d == res[i].asInt )
-    }
-    else  {
-      TestCout( _T("ASSERTION failure\n"));
-    }
     TestCout( _T("Checking AsUInt(): "));
-    if ( res[i].asUInt != 0 )  {
+    if ( r )  {
       ui = value[i].AsUInt();
       TestCout( ui, true );
       ASSERT( ui == res[i].asUInt )
     }
     else  {
-      TestCout( _T("ASSERTION failure\n"));
-    }
-    TestCout( _T("Checking AsInt32(): "));
-    if ( res[i].asInt32 != 0 )  {
-      d = value[i].AsInt32();
-      TestCout( d, true );
-      ASSERT( d == res[i].asInt32 )
-    }
-    else  {
-      TestCout( _T("ASSERTION failure\n"));
-    }
-    TestCout( _T("Checking AsUInt32(): "));
-    if ( res[i].asUInt32 != 0 )  {
-      ui = value[i].AsUInt32();
-      TestCout( ui, true );
-      ASSERT( ui == res[i].asUInt32 )
-    }
-    else  {
-      TestCout( _T("ASSERTION failure\n"));
+      ui = value[i].AsUInt();
+      TestCout( ui, false );
+      TestCout( _T( " - ASSERTION failure on debug"));
     }
 
-    wxInt64 i64; wxUint64 ui64;
 
-    TestCout( _T("Checking AsInt64(): "));
-    if ( res[i].asInt64 != 0 )  {
-      i64 = value[i].AsInt64();
-      TestCout( i64, true );
-      ASSERT( i64 == res[i].asInt64 )
-    }
-    else  {
-      TestCout( _T("ASSERTION failure\n"));
-    }
-    TestCout( _T("Checking AsUInt64(): "));
-    if ( res[i].asUInt64 != 0 )  {
-      ui64 = value[i].AsUInt64();
-      TestCout( ui64, true );
-      ASSERT( ui64 == res[i].asUInt64 )
-    }
-    else  {
-      TestCout( _T("ASSERTION failure\n"));
-    }
+    /****************** SHORT *****************************/
+    /****************** USHORT *****************************/
+    /****************** LONG *****************************/
+    /****************** ULONG *****************************/
 
-  }    // end for
-
-#endif    // defined ( wxJSON_64BIT_INT )
-  return r;
-}
-
-// test the writer class for 64-bits integers
-// jun 3, 2008: OK, test is successfull
-int Test56()
-{
 #if defined( wxJSON_64BIT_INT )
-  wxJSONValue root;
 
-  // the 'object' object contains all primitive types
-  root[_T("object")][_T("integer")]      = -20;
-  root[_T("object")][_T("unsigned int")] = (unsigned int) 30;
-  root[_T("object")][_T("int64")] = (wxInt64) INT_MIN - 100;
-  root[_T("object")][_T("uint64")] = (wxUint64) INT_MAX + 100;
-  root[_T("object")][_T("int64-2")] = (wxInt64) LLONG_MIN;
-  root[_T("object")][_T("uint64-2")] = (wxUint64) LLONG_MAX;
-  root[_T("object")][_T("bool-t")]       = true;
-  root[_T("object")][_T("bool-f")]       = false;
-  root[_T("object")][_T("double")]       = 20.30;
-  root[_T("object")][_T("C string")]     = _T("static string 1");
-  root[_T("object")][_T("wxString")]     = _T("wxString 1");
-  root[_T("object")][_T("null")]         = wxJSONValue();
+    /****************** INT64 *****************************/
+    /****************** UINT64 *****************************/
 
-  wxJSONWriter writer;
-  wxString str;
-
-  writer.Write( root, str );
-  TestCout( _T("The JSON text document:\n"));
-  TestCout( str );
-  TestCout( _T("\n\n"));
-
-#endif    // defined ( wxJSON_64BIT_INT )
-  return 0;
-}
-
-
-
-// prints the errors and warnings array
-static void PrintErrors( wxJSONReader& reader )
-{
-  wxString s;
-  int numErrors = reader.GetErrorCount();
-  s.Printf( _T( "\nERRORS: count=%d\n"), numErrors );
-  TestCout( s );
-  const wxArrayString& errors = reader.GetErrors();
-  for ( int i = 0; i < errors.size(); i++ )  {
-    TestCout( errors[i] );
-    TestCout( _T( "\n" ));
-  }
-  int numWarn   = reader.GetWarningCount();
-  const wxArrayString& warnings = reader.GetWarnings();
-  s.Printf( _T("WARNINGS: count=%d\n"), numWarn );
-  TestCout( s );
-  for ( int i = 0; i < warnings.size(); i++ )  {
-    TestCout( warnings[i] );
-    TestCout( _T( "\n" ));
-  }
-}
-
-// prints a JSON value object and the reader's errors
-static void PrintValue( wxJSONValue& val, wxJSONReader* reader = 0 )
-{
-  wxJSONWriter writer( wxJSONWRITER_STYLED | wxJSONWRITER_WRITE_COMMENTS );
-  wxString s;
-  writer.Write( val, s );
-  TestCout( s );
-  if ( reader )  {
-    PrintErrors( *reader );
-  }
-}
-
-// test the reader class for 64-bits integers
-// this test is also done in 32-bits mode: the 64-bits integers will
-// be stored as double types
-//
-// 12 may 2008: the test is successfull in both 64-bits integer support
-// enabled and disabled
-int Test57()
-{
-  static const wxChar* buff = _T("\n")
-	_T("[\n")
-	_T("   -20,\n")
-	_T("   30,\n")
-
-	// 32-bits limits
-	_T("   -2147483648,\n")	// INT_MIN
-	_T("   2147483647,\n")	// INT_MAX
-	_T("   4294967295,\n")	// UINT_MAX
-
-	// 32-bits limits exceeded
-	_T("   2147483747,\n")	// INT_MAX + 100
-	_T("   -2147483748,\n")	// INT_MIN - 100
-	_T("   4294967395,\n")	// UINT_MAX + 100
-
-	// 64-bits limits
-	_T("   9223372036854775807,\n")		// LLONG_MAX
-	_T("   -9223372036854775808,\n")	// LLONG_MIN
-	_T("   18446744073709551615,\n")	// ULLONG_MAX
-
-	// 64-bits limits exceeded
-	_T("   9223372036854775907,\n")		// LLONG_MAX + 100
-	_T("   -9223372036854775908,\n")	// LLONG_MIN - 100
-	_T("   18446744073709551715\n")		// ULLONG_MAX + 100
-
-	_T("]\n");
-
-  int r = 0;                // return status code ZERO=Ok
-
-  wxString str( buff );
-  TestCout( _T("The JSON text document:\n"));
-  TestCout( str );
-
-  wxJSONValue  root;
-  wxJSONReader reader;
-  int numErrors = reader.Parse( str, &root );
-  TestCout( _T("\n\nErrors reading the document: "));
-  TestCout( numErrors, true );
-
-  if ( numErrors > 0 )  {
-    PrintErrors( reader );
-    r = 1;
-  }
-  else  {
-    // now check the results by getting the type of the values
-    // note that the results are different if the platform does
-    // support 64-bits integer or not
-#if defined( wxJSON_64BIT_INT )
-    wxJSONType results[] = {
-	wxJSONTYPE_INT,		// -20
-	wxJSONTYPE_INT,		// 30
-	wxJSONTYPE_INT,		// INT_MIN
-	wxJSONTYPE_INT,		// INT_MAX
-
-	wxJSONTYPE_INT64,	// UINT_MAX
-	wxJSONTYPE_INT64,	// INT_MAX + 100
-	wxJSONTYPE_INT64,	// INT_MIN - 100
-	wxJSONTYPE_INT64,	// UINT_MAX + 100
-
-	wxJSONTYPE_INT64,	// LLONG_MAX
-	wxJSONTYPE_INT64,	// LLONG_MIN
-	wxJSONTYPE_UINT64,	// ULLONG_MAX
-
-	wxJSONTYPE_UINT64,	// LLONG_MAX + 100
-	wxJSONTYPE_DOUBLE,	// LLONG_MIN - 100
-	wxJSONTYPE_DOUBLE,	// ULLONG_MAX + 100
-    };
-#else
-    wxJSONType results[] = {
-	wxJSONTYPE_INT,		// -20
-	wxJSONTYPE_INT,		// 30
-	wxJSONTYPE_INT,		// INT_MIN
-	wxJSONTYPE_INT,		// INT_MAX
-
-	wxJSONTYPE_UINT,	// UINT_MAX
-	wxJSONTYPE_UINT,	// INT_MAX + 100
-	wxJSONTYPE_DOUBLE,	// INT_MIN - 100
-	wxJSONTYPE_DOUBLE,	// UINT_MAX + 100
-
-	wxJSONTYPE_DOUBLE,	// LLONG_MAX
-	wxJSONTYPE_DOUBLE,	// LLONG_MIN
-	wxJSONTYPE_DOUBLE,	// ULLONG_MAX
-
-	wxJSONTYPE_DOUBLE,	// LLONG_MAX + 100
-	wxJSONTYPE_DOUBLE,	// LLONG_MIN - 100
-	wxJSONTYPE_DOUBLE,	// ULLONG_MAX + 100
-    };
 #endif
 
-    for ( int i = 0; i < 14; i++ )  {
-      wxJSONType type;
-      type =  root[i].GetType();
-      TestCout( _T("Element no. "));
-      TestCout( i );
-      TestCout( _T(" type is: "));
-      TestCout( wxJSONValue::TypeToString( type));
-      TestCout( _T("\n"));
-      ASSERT( type == results[i] );
-    }
-
-    r = 0;
-  }
+  }    // end for
 
   return r;
 }

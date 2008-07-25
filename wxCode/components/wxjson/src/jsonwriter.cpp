@@ -273,11 +273,11 @@ wxJSONWriter::DoWrite( const wxJSONValue& value, const wxString* key,
 
   // now write the value
   wxJSONInternalMap::const_iterator it; 
-  int i = 0;
+  long int count = 0;
 
   wxJSONType t = value.GetType();
   switch ( t )  {
-    case wxJSONTYPE_EMPTY :
+    case wxJSONTYPE_INVALID :
       wxFAIL_MSG( _T("wxJSONWriter::WriteEmpty() cannot be called (not a valid JSON text"));
       break;
 
@@ -386,20 +386,21 @@ wxJSONWriter::DoWrite( const wxJSONValue& value, const wxString* key,
 
       map = value.AsMap();
       size = value.Size();
+      count = 0;
       for ( it = map->begin(); it != map->end(); ++it )  {
         // get the key and the value
         wxString key = it->first;
         const wxJSONValue& v = it->second;
 
         bool comma = false;
-        if ( i < size - 1 )  {
+        if ( count < (size - 1) )  {
           comma = true;
         }
         lastChar = DoWrite( v, &key, comma );
         if ( lastChar == -1 )  {
           return lastChar;
         }
-        i++;
+        count++;
       }
       --m_level;
       lastChar = WriteIndent();
@@ -670,13 +671,13 @@ wxJSONWriter::WriteChar( wxChar ch )
 
   if ( m_outType == 0 )  {   // output is a string object?
     //wxString* out = wxDynamicCast( m_outObject, wxString );
-    //wxASSERT( out != 0 );
+    //wxJSON_ASSERT( out != 0 );
     wxString* out = (wxString*) m_outObject;
     out->append( ch );
   }
   else  {                   // output is a stream
     //wxOutputStream* out = wxDynamicCast( m_outObject, wxOutputStream );
-    //wxASSERT( out != 0 );
+    //wxJSON_ASSERT( out != 0 );
     wxOutputStream* out = (wxOutputStream*) m_outObject;
     wchar_t wchar[2]; size_t len;
 
@@ -693,10 +694,10 @@ wxJSONWriter::WriteChar( wxChar ch )
     // of a wxMBConvUTF8 class which is, by default, wxConvLocal
 
     char buffer[10];
-    wxASSERT( m_conv != 0 );
+    wxJSON_ASSERT( m_conv != 0 );
 
     len = m_conv->FromWChar( buffer, 10, &(wchar[0]), 1 );
-    wxASSERT( len != wxCONV_FAILED );
+    wxJSON_ASSERT( len != wxCONV_FAILED );
 
     // conversion is OK, write the buffer
     // it seems that the conversion function adds a trailing NULL byte
@@ -709,7 +710,7 @@ wxJSONWriter::WriteChar( wxChar ch )
 		_T("(%s) length less than or equal to 1"), __PRETTY_FUNCTION__ );
     }
 
-    wxASSERT( len > 1 );
+    wxJSON_ASSERT( len > 1 );
     out->Write( buffer, len - 1 );
     wxStreamError err = out->GetLastError();
     switch ( err )  {
@@ -774,7 +775,7 @@ wxJSONWriter::WritePrimitiveValue( const wxJSONValue& value )
   ::wxLogTrace( writerTraceMask, _T("(%s) value.AsString()=%s"),
 				  __PRETTY_FUNCTION__, s.c_str() );
 
-  wxASSERT( !s.empty());
+  wxJSON_ASSERT( !s.empty());
   r =  WriteString( s );
   return r;
 }

@@ -16,9 +16,9 @@
 // The following symbols should be updated for each new component release
 // since some kind of tests, like those of AM_WXCODE_CHECKFOR_COMPONENT_VERSION()
 // for "configure" scripts under unix, use them.
-#define wxJSON_MAJOR          0
-#define wxJSON_MINOR          5
-#define wxJSON_RELEASE        2
+#define wxJSON_MAJOR          1
+#define wxJSON_MINOR          0
+#define wxJSON_RELEASE        0
 
 // For non-Unix systems (i.e. when building without a configure script),
 // users of this component can use the following macro to check if the
@@ -56,12 +56,11 @@
 
 // the __PRETTY_FUNCTION__ macro expands to the full class's
 // member name in the GNU GCC.
-// For other compilers you have to set the correct macro
-//#if !defined( __GNUC__ )
-//  #define __PRETTY_FUNCTION__   __WXFUNCTION__
-//#endif
+// For other compilers we use the standard __wxFUNCTION__ macro
+#if !defined( __GNUC__ )
+  #define __PRETTY_FUNCTION__   __WXFUNCTION__
+#endif
 
-#define __PRETTY_FUNCTION__   __WXFUNCTION__
 
 
 // define wxJSON_USE_UNICODE if wxWidgets was built with
@@ -77,9 +76,8 @@
 
 // the following macro, if defined, cause the wxJSONValue to store
 // pointers to C-strings as pointers to statically allocated
-// C-strings
-// by default this macro is not defined
-// #define WXJSON_USE_CSTRING
+// C-strings. By default this macro is not defined
+// #define wxJSON_USE_CSTRING
 
 
 // the following macro, if defined, cause the wxJSONvalue and its
@@ -128,6 +126,55 @@
   #define LLONG_MIN     -9223372036854775808    
 #endif
 
+
+
+// the same applies for all other integer constants
+#if !defined( INT_MIN )
+  #define INT_MIN       -32768
+#endif
+#if !defined( INT_MAX )
+  #define INT_MAX        32767
+#endif
+#if !defined( UINT_MAX )
+  #define UINT_MAX       65535
+#endif
+#if !defined( LONG_MIN )
+  #define LONG_MIN       -2.147.483.648
+#endif
+#if !defined( LONG_MAX )
+  #define LONG_MAX       2.147.483.647
+#endif
+#if !defined( ULONG_MAX )
+  #define ULONG_MAX       4.294.967.295
+#endif
+#if !defined( SHORT_MAX )
+  #define SHORT_MAX	32767
+#endif
+#if !defined( SHORT_MIN )
+  #define SHORT_MIN	-32768
+#endif
+#if !defined( USHORT_MAX )
+  #define USHORT_MAX	65535
+#endif
+
+
+
+//
+// define the wxJSON_ASSERT() macro to expand to wxASSERT()
+// unless the wxJSON_NOABORT_ASSERT is defined
+// #define wxJSON_NOABORT_ASSERT
+#if defined( wxJSON_NOABORT_ASSERT )
+  #define wxJSON_ASSERT( cond )	
+#else
+  #define wxJSON_ASSERT( cond )		wxASSERT( cond );
+#endif
+
+
+//
+// version 1.0 introduced some incompatibilities between previous
+// versions (0.x). If you want the 1.x library to remain compatible
+// with the past, uncomment the following line
+// #define wxJSON_COMPATIBILITY_0X
 
 
 

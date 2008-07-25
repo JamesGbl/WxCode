@@ -43,7 +43,7 @@ class WXDLLIMPEXP_JSON wxJSONInternalArray;
 
 //! The type of the value held by the wxJSONRefData class
 enum wxJSONType {
-    wxJSONTYPE_EMPTY = 0,  /*!< empty type is for uninitialized objects  */
+    wxJSONTYPE_INVALID = 0,  /*!< the object is not uninitialized        */
     wxJSONTYPE_NULL,       /*!< the object contains a NULL value         */
     wxJSONTYPE_INT,        /*!< the object contains an integer           */
     wxJSONTYPE_UINT,       /*!< the object contains an unsigned integer  */
@@ -53,10 +53,12 @@ enum wxJSONType {
     wxJSONTYPE_BOOL,       /*!< the object contains a boolean            */
     wxJSONTYPE_ARRAY,      /*!< the object contains an array of values   */
     wxJSONTYPE_OBJECT,     /*!< the object contains a map of keys/values */
-    wxJSONTYPE_INT32,      /*!< the object contains a 32-bit integer     */
+    wxJSONTYPE_LONG,       /*!< the object contains a 32-bit integer     */
     wxJSONTYPE_INT64,      /*!< the object contains a 64-bit integer     */
-    wxJSONTYPE_UINT32,     /*!< the object contains an unsigned 32-bit integer     */
-    wxJSONTYPE_UINT64      /*!< the object contains an unsigned 64-bit integer     */
+    wxJSONTYPE_ULONG,      /*!< the object contains an unsigned 32-bit integer  */
+    wxJSONTYPE_UINT64,     /*!< the object contains an unsigned 64-bit integer  */
+    wxJSONTYPE_SHORT,      /*!< the object contains a 16-bit integer            */
+    wxJSONTYPE_USHORT      /*!< the object contains a 16-bit unsigned integer   */
 };
 
 // the comment position: every value only has one comment position
@@ -87,6 +89,10 @@ public:
   wxJSONValue( wxJSONType type );
   wxJSONValue( int i );
   wxJSONValue( unsigned int i );
+  wxJSONValue( short i );
+  wxJSONValue( unsigned short i );
+  wxJSONValue( long int i );
+  wxJSONValue( unsigned long int i );
 #if defined( wxJSON_64BIT_INT)
   wxJSONValue( wxInt64 i );
   wxJSONValue( wxUint64 ui );
@@ -100,10 +106,14 @@ public:
 
   // get the value type
   wxJSONType  GetType() const;
-  bool IsEmpty() const;
+  bool IsValid() const;
   bool IsNull() const;
   bool IsInt() const;
   bool IsUInt() const;
+  bool IsShort() const;
+  bool IsUShort() const;
+  bool IsLong() const;
+  bool IsULong() const;
 #if defined( wxJSON_64BIT_INT)
   bool IsInt32() const;
   bool IsInt64() const;
@@ -118,18 +128,23 @@ public:
   bool IsObject() const;
 
   // get the value as ...
-  int          AsInt() const;
-  unsigned int AsUInt() const;
+  int            AsInt() const;
+  unsigned int   AsUInt() const;
+  short          AsShort() const;
+  unsigned short AsUShort() const;
+  long int       AsLong() const;
+  unsigned long  AsULong() const;
 #if defined( wxJSON_64BIT_INT)
-  int          AsInt32() const;
-  unsigned int AsUInt32() const;
-  wxInt64      AsInt64() const;
-  wxUint64     AsUInt64() const;
+  wxInt32        AsInt32() const;
+  wxUint32       AsUInt32() const;
+  wxInt64        AsInt64() const;
+  wxUint64       AsUInt64() const;
 #endif
-  bool         AsBool() const;
-  double       AsDouble() const;
-  wxString     AsString() const;
-  const wxChar* AsCString() const;
+  bool           AsBool() const;
+  double         AsDouble() const;
+  wxString       AsString() const;
+  const wxChar*  AsCString() const;
+
   const wxJSONInternalMap*   AsMap() const;
   const wxJSONInternalArray* AsArray() const;
 
@@ -144,6 +159,10 @@ public:
   wxJSONValue& Append( bool b );
   wxJSONValue& Append( int i );
   wxJSONValue& Append( unsigned int ui );
+  wxJSONValue& Append( short int i );
+  wxJSONValue& Append( unsigned short int ui );
+  wxJSONValue& Append( long int l );
+  wxJSONValue& Append( unsigned long int ul );
 #if defined( wxJSON_64BIT_INT )
   wxJSONValue& Append( wxInt64 i );
   wxJSONValue& Append( wxUint64 ui );
@@ -168,6 +187,10 @@ public:
 
   wxJSONValue& operator = ( int i );
   wxJSONValue& operator = ( unsigned int ui );
+  wxJSONValue& operator = ( short int i );
+  wxJSONValue& operator = ( unsigned short int ui );
+  wxJSONValue& operator = ( long int l );
+  wxJSONValue& operator = ( unsigned long int ul );
 #if defined( wxJSON_64BIT_INT )
   wxJSONValue& operator = ( wxInt64 i );
   wxJSONValue& operator = ( wxUint64 ui );
@@ -214,11 +237,6 @@ protected:
   wxJSONRefData*  Init( wxJSONType type );
   wxJSONRefData*  COW();
 
-#if defined( wxJSON_64BIT_INT )
-  bool             AsInt32( wxInt32* i) const;
-  bool             AsUInt32( wxUint32* i ) const;
-#endif
-
   // overidden from wxObject
   virtual wxJSONRefData*  CloneRefData(const wxJSONRefData *data) const;
   virtual wxJSONRefData*  CreateRefData() const;
@@ -254,25 +272,41 @@ WX_DECLARE_STRING_HASH_MAP( wxJSONValue, wxJSONInternalMap );
 
 //! The actual value held by the wxJSONValue class (internal use)
 /*!
- Note that this structure is not a \b union as in the previous versions.
- This allow to store instances of the string, ObjArray and HashMap objects
- (no more pointers to them)
+ Note that this structure is a \b union as in versions prior to 0.4.x
+ The union just stores primitive types and not complex types which are
+ stored in separate data members of the wxJSONRefData structure.
+
+ This organization give us more flexibility when retrieving compatible
+ types such as ints unsigned ints, long and so on.
 */
-struct wxJSONValueHolder  {
+union wxJSONValueHolder  {
+    int             m_valInt;
+    unsigned int    m_valUInt;
+    short int       m_valShort;
+    unsigned short  m_valUShort;
+    long int        m_valLong;
+    unsigned long   m_valULong;
+    double          m_valDouble;
+    const wxChar*   m_valCString;
+    bool            m_valBool;
 #if defined( wxJSON_64BIT_INT )
-    wxInt64       m_valInt;
-    wxUint64      m_valUInt;
-#else
-    int           m_valInt;
-    unsigned      m_valUInt;
+    wxInt64         m_valInt64;
+    wxUint64        m_valUInt64;
 #endif
-    double        m_valDouble;
-    const wxChar* m_valCString;
-    bool          m_valBool;
-    wxString      m_valString;
-    wxJSONInternalArray m_valArray;
-    wxJSONInternalMap   m_valMap;
   };
+
+//
+// access to the (unsigned) integer value is done through
+// the VAL_INT macro which expands to the 'long' integer
+// data member of the 'long long' integer if 64-bits integer
+// support is enabled
+#if defined( wxJSON_64BIT_INT )
+ #define VAL_INT  m_valInt64
+ #define VAL_UINT m_valUInt64
+#else
+ #define VAL_INT  m_valLong
+ #define VAL_UINT m_valULong
+#endif
 
 
 
@@ -302,10 +336,21 @@ protected:
   //! The JSON value held by this object.
   /*!
    This data member contains the JSON data types defined by the
-   JSON syntax with the exception of wxJSONTYPE_EMPTY which is an
-   internal type used by the parser class.
+   JSON syntax with the exception of the complex objects.
+   This data member is an union of the primitive types
+   so that it is simplier to cast them in other compatible types.
   */
   wxJSONValueHolder m_value;
+
+  //! The JSON string value.
+  wxString            m_valString;
+
+  //! The JSON array value.
+  wxJSONInternalArray m_valArray;
+
+  //! The JSON object value.
+  wxJSONInternalMap   m_valMap;
+
 
   //! The position of the comment line(s), if any.
   /*!

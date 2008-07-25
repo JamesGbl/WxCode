@@ -79,6 +79,10 @@
        where not printed in the JSON text output
 
 
+ 1.0.0 added support for (unsigned) long int and (unsigned) short int data type
+
+
+
 BUGS
 ----
 Please, send bugs to luciano AT mauriziovettorato_DOT_it or open a bug report

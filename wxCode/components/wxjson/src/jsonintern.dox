@@ -32,27 +32,11 @@ whatever type you want but only the following:
 \li a C string
 \li a wxString object
 \li an array of wxJSONValue objects
-\li an map of key/value pairs where \e key is a string and \e value can be any
-	wxJSONValue object
+\li an map of key/value pairs where the \e key is a wxString and the \e value
+	can be any wxJSONValue object.
 
-The type of the JSON value contained in a wxJSONValue object is one of the
-following constants:
-
-\code
- enum wxJSONType {
-    wxJSONTYPE_EMPTY = 0,
-    wxJSONTYPE_NULL,
-    wxJSONTYPE_INT,
-    wxJSONTYPE_UINT,
-    wxJSONTYPE_DOUBLE,
-    wxJSONTYPE_STRING,
-    wxJSONTYPE_CSTRING,
-    wxJSONTYPE_BOOL,
-    wxJSONTYPE_ARRAY,
-    wxJSONTYPE_OBJECT
- };
-\endcode
-
+The type of the JSON value contained in a wxJSONValue object is an enumerated
+constant of type wxJSONType.
 Starting from version 0.5 the \b wxJSON library supports 64-bits integers
 which introduced new JSON types. For more info see \ref json_internals_integer.
 
@@ -61,6 +45,7 @@ automatically set when you construct the object or when a value is
 assigned to it. For example:
 
 \code
+ wxJSONValue v;            // a 'null' value
  wxJSONValue v1( 10 );     // integer type
  wxJSONValue v2( 12.90);   // double type
  v1 = "some string";       // now 'v1' is of type string
@@ -70,13 +55,93 @@ assigned to it. For example:
 \endcode
 
 
-The only exception to this is when you want to set the wxJSONTYPE_EMPTY.
-Note that you should cast the wxJSONTYPE_EMPTY constant to a wxJSONType type
+The only exception to this is when you want to set the wxJSONTYPE_INVALID.
+Note that you should cast the wxJSONTYPE_INVALID constant to a wxJSONType type
 because some compilers may assume the constant value to be an \b int:
 
 \code
- wxJSONValue value( (wxJSONType) wxJSONTYPE_EMPTY );
+ wxJSONValue value( (wxJSONType) wxJSONTYPE_INVALID );
 \endcode
+
+
+\par The wxJSONRefData structure
+
+All data is stored in the wxJSONRefData class which is just like a
+simple structure: the class does not define an interface for accessing
+data: it only defines the data members and the ctors and dtor.
+The interface is totally defined in the wxJSONValue class which, in
+turn, does not contain any data (with the exception of the pointer to
+referenced data). This organization lets we use the \e reference \e counting
+tecnique (also known as \e copy-on-write) when copying wxJSONValue objects.
+
+The data structure holds the type of the JSON value, the JSON value itself,
+the comment lines, if any, etc. To know more about the individual data
+member defined in the class see the documentation of wxJSONRefData.
+The data structure holds data in two different modes:
+
+\li in a \b union for primitive types
+\li in data members for complex types such as strings, arrays and maps
+
+The union is defined as follows:
+
+\code
+  union wxJSONValueHolder  {
+    int              m_valInt;
+    unsigned int     m_valUInt;
+    short int        m_valShort;
+    unsigned short   m_valUShort;
+    long int         m_valLong;
+    unsigned long    m_valULong;
+    double           m_valDouble;
+    const wxChar*    m_valCString;
+    bool             m_valBool;
+
+ #if defined( wxJSON_64BIT_INT )
+    wxInt64          m_valInt64;
+    wxUint64         m_valUInt64;
+ #endif
+  };
+\endcode
+
+
+ The wxJSONRefData structure also holds the three complex objects
+ that represent the three JSON value types: strings, arrays and objects
+ (this is referred to JSON objets, not C++ class's instances):
+
+\code
+    wxString             m_valString;
+    wxJSONInternalArray  m_valArray;
+    wxJSONInternalMap    m_valMap;
+\endcode
+
+Note that primitive types are stored in a union and not in a structure:
+this means that when you store a value in one of the data member, all
+other are also affected.
+I will explain more clearly with an example:
+
+integers are stored using the most wide storage size; (unsigned) \b long \b int by default
+and \b wx(U)Int64 on platforms that support 64-bits integers.
+(to know more about 64-bits integer support read \ref json_internals_integer).
+So if you store a \b int data type of value -1, all other data member will
+get a value that depends on the data type stored.
+Below you find an hardcopy of the memory dump of a JSON value object which
+was assigned the integer value of -1:
+
+
+<img src="images/intern01.png">
+
+A value of -1 is stored as all binary '1' in the union but
+the value returned by the wxJSONValue class depends on the type you want.
+In other words, if you get the value as an integer you get -1 but if you
+get the value as an \b unsigned integer you get different values depending
+on the size of the requested type.
+Also note that when the same value is returned as a double, the
+wxJSONValue::AsDouble() function does not promote the \b int to a \b double:
+the function just returns the bits as they are stored and interpreted as a
+double thus returning a \e NaN.
+
+
+\section json_internals_cow wxJSON internals: reference counting
 
 
 Starting from version 0.4.0 the internal representation of a JSON value
@@ -88,56 +153,10 @@ defined in the wxJSONRefData class.
 The structure contains a special data member that counts the number
 of instances of wxJSONValue objects that share the data.
 
-\par The wxJSONValueHolder structure
-
-All data is stored in the wxJSONRefData class which is just like a
-simple structure: the class does not define an interface for accessing
-data: it only defines the data members and the ctors and dtor.
-The interface is totally defined in the wxJSONValue class which, in
-turn, does not contain any data (with the exception of the pointer to
-referenced data).
-
-The data structure holds the type of the JSON value, the JSON value itself,
-the comment lines, if any, etc. To know more about the individual data
-member defined in the class see the documentation of wxJSONRefData.
-
-\code
-  struct wxJSONValueHolder  {
-    int                  m_valInt;
-    unsigned             m_valUInt;
-    double               m_valDouble;
-    const wxChar*        m_valCString;
-    bool                 m_valBool;
-    wxString             m_valString;
-    wxJSONInternalArray  m_valArray;
-    wxJSONInternalMap    m_valMap;
-  };
-\endcode
-
-Unlike in previous versions, the actual JSON value is not held in an
-\b union but in the wxJSONValueHolder structure: this causes some memory consumption
-but allows to store the actual values and not pointers to them.
-Since ANSI C++ does not permit to store in a union classes and
-structures that have constructors, the \b wxString, the \b wxObjArray
-and the \b wxHashMap objects cannot be stored in the union.
-
-The following code fragment instantiates a wxJSONValue object that contains
-an \b integer type.
-The image shows the internal representation of the value.
-Note the \c wxJSONValue::m_refData data member that points to the actual
+If you look at the example memory dump seen above, you will note the
+\c wxJSONValue::m_refData data member that points to the actual
 data structure and the \c wxJSONRefData::m_refCount data member that counts
-how many JSON value objects share the data structure (one, in the example):
-
-\code
-  wxJSONValue v1( 12 );
-\endcode
-
-
-<img src="images/cow01.png">
-
-
-
-\section json_internals_cow wxJSON internals: copy-on-write
+how many JSON value objects share the data structure (one, in the example).
 
 Reference counting is very simple: if you copy an instance of a wxJSONValue
 object, the data contained in the wxJSONRefData structure is not
@@ -340,24 +359,24 @@ array which .... and so on.
 
 \section json_internals_cstring wxJSON internals: the C string type
 
-
-You may ask yourself why there are 2 different constructors for strings.
-For convenience, you may think, in order to save an implicit conversion
-from \b const \b wxChar* to \b wxString.
-The answer is: NO. The two constructors store the string in a very
-different way:
-
 \code
   wxJSONValue( const wxChar* str );
   wxJSONValue( const wxString& str );
 \endcode
 
-Both two ctors store strings and they could be
+
+You may ask yourself why there are 2 different constructors for strings.
+For convenience, you may think, in order to save an implicit conversion
+from \b const \b wxChar* to \b wxString.
+The answer is: NO. The two constructors store the string in a very
+different way.
+
+Both ctors store strings and they could be
 stored just as \b wxString objects. In fact, this is the default
 behaviour of the class if the \c WXJSON_USE_CSTRING macro is not defined.
 
 If this macro is defined, however, the first ctor stores the pointer in the
-\c wxJSONValue::m_value data member assuming that the string is statically
+\c wxJSONRefData structure assuming that the string is statically
 allocated and it does NOT copy the string.
 This behaviour saves a string's copy which can be time-consuming
 but, on the other hand, you must be sure that the pointed-to
@@ -371,7 +390,9 @@ string type:
 \endcode
 
 The code above is correct, because the pointed-to string is really
-statically allocated (and it cannot even change).
+statically allocated (and, on most platforms, static strings are allocated
+in the code segment so that they cannot be changed for the lifetime of the
+application).
 
 The following code is not correct and it would probably result
 in a SEGFAULT when you try to access the wxJSONValue data.
@@ -405,9 +426,9 @@ The code above should be written as follows:
 \endcode
 
 Now it is correct because the \b wxString object holds a \b copy of the
-string buffer.
+\c buffer memory area.
 Note that if the \c WXJSON_USE_CSTRING macro is not defined, there is no need
-to actually construct a temporary wxString object in order to force the
+to actually construct a temporary \b wxString object in order to force the
 wxJSONValue class to create an instance of the wxString object: it is
 automaticlly created by the wxJSONValue( const wxChar*) ctor.
 This mean that you can use use the code in \b Example \b 1 without
@@ -429,165 +450,136 @@ copies so it is much more wisely (and SAFE) to never use C-strings.
 
 Starting from version 0.5, the \e wxJSON library supports 64-bits
 integers but only on those platforms that have native support for
-64-bits integers such as, for example, Windows32 and GNU/Linux.
+64-bits integers such as, for example, Win32 and GNU/Linux.
+Starting from version 1.x the wxJSONValue also stores
+\b long \b int and \b short \b int data types.
 
-All integer types (and unsigned integers, too) are stored in a
-64-bits integer storage of type \b wx(U)Int64 which is the wxWidget's
-platform-independent data type that represents a 64-bits integer:
-this data type is a \b typedef for the underlying compiler / platform-dependent
-type, for example, \b __int64 on MSVC/win32 and \b long \b long \b int on
-GNU/Linux systems.
+By default, the library checks if the \b wxLongLong_t macro is
+defined by \b wxWidgets and, if it is, the library enables 64-bits
+integer support.
+The \b wxLongLong_t macro is the wxWidget's platform independent
+data type for representing a 64-bits integer and it is defined
+by the GUI framework as a placeholder for the underlying
+compiler / platform specific data type: \b __int64 on Windows
+and \b long \b long on GNU/Linux systems.
 To know more about the wxWidget's 64-bits integer stuff read the
 documentation of the \b wxLongLong class.
 If the system / platform do not support 64-bits integers, integer values
-are stored, as in old versions, in a \b int (32-bit) data type.
+are stored in a \b (unsigned) \b long \b int (32-bit) data type in
+wxJSON versions 1.x and above, or in a \b (unsigned) \b int type
+in all 0.x versions.
 
-When stored in the wxJSONValue class, an integer value is set of a generic integer
-type: wxJSONTYPE_INT or wxJSONTYPE_UINT regardless its size: in other
-words, no matter the type of the original value  (\b int or \b long \b long \b int) 
-or the numeric weight of the value.
-The only thing that matters is the sign of the value: signed or unsigned.
-In order to remain compatible with the past, the \b wxJSONValue::Is(U)Int
-functions return
-TRUE if, and only if, the stored value is of type wxJSONTYPE_(U)INT
-regardless its size.
 
-In order to know if the value needs 64-bits integer storage the following constants
-are added to the \b wxJSONType enum type:
+The user can disable 64-bits integer support by defining the:
 
-\li wxJSONTYPE_INT32
-\li wxJSONTYPE_UINT32
-\li wxJSONTYPE_INT64
-\li wxJSONTYPE_UINT64
+\code
+  wxJSON_NO_64BIT_INT
+\endcode
 
-The \b wxJSONTYPE_(U)INT32 are not used: this is to remain compatible with
-the past: if the integer value fits in a 32-bit (unsigned) integer data type, the
-\c wxJSONValue::GetType() function returns wxJSONTYPE_(U)INT which has to
-be read as wxJSONTYPE_(U)INT32.
-In fact, the wxJSONTYPE_(U)INT32 is merely a definition for the wxJSONTYPE_(U)INT
-type and you can use it as an alternate name.
+macro in the \c include/wx/json_defs.h header file (just uncomment the
+line where the macro is defined).
 
-If the stored integer value is too large to fit in a 32-bit integer data type
-then the \c wxJSONValue::GetType() function returns wxJSONTYPE_(U)INT64.
-In this way the user knows if the value needs 64-bits integer storage or not.
-Note that if the 64-bits integer support is not available (or it was
-disabled when compiling this library) the \b GetType() memberfunction
-never returns wxJSONTYPE_(U)INT64.
 
-If the platform natively supports 64-bits integers, then the wxJSONValue
-class defines some functions related to the integer's storage size
-so that the user knows about the size of the stored integer:
+All integer types (and unsigned integers, too) are stored in the widest
+available data type (64-bits or long, depending on the platform).
+What is the JSON data type of integers? How can the user know the
+storage needs of a integer data type?
 
-\li \b Is(U)Int32: the function only returns TRUE if the value stored in
-	the JSON value object is of type (\b unsigned) \e integer and the number
-	represented fits in a 32-bit (unsigned) integer data type.
-	This is the just the same as the \b Is(U)Int functions
-
-\li \b Is(U)Int64: the function only returns TRUE if the value stored in
-	the JSON value object is of type \b wx(U)Int64 and the number
-	represented is too large to fit in a 32-bit integer data type.
-
-\li \b As(U)Int32(): the function returns the low-order 32-bits of the
-	integer stored in the wxJSONValue class. Note that the function
-	does not check that the returned value fits in a 32-bit (unsigned)
-	integer.
-
-\li \b As(U)Int64(): the function returns the 64-bit integer as it is
-	stored in the value object.
-
-Also note that in order to remain compatible with older 0.x versions, the
-\c wxJSONValue::As(U)Int function behaves exatly as in the past on
-64-bits and 32-bits platforms: the function just returns a (unsigned) \b int
+First of all you have to ask yourself if you really need to know this
+information.
+In other words, if your application only uses the \b int data type (for integers) and
+it only reads its own JSON data file, it is improbable that an integer
+value stored in the JSON value class will hold other than an \b int.
+On the other hand, if your application communicate with other applications
+over a network connection, it may be possible that the JSON value class
+holds integers which are so large that they cannot fit in a simple \b int
 data type.
-If 64-bits support is enabled, however, the function also
-wxASSERTs that the number stored fits in a 32-bit integer.
-The ASSERTION check is not done for the \b As(U)Int32 function: if the user
-calls this function(s), it is assumed that he knows what he is doing:
-wrong results may be returned if the value is too large for that storage size.
 
-This organization let us to remain compatible with older 0.x versions of
-the \b wxJSON library but allows new applications to get 64-bit support
-on platforms that natively support it.
-The following are some examples:
+All integer values are stored in the widest storage size: \b wx(U)int64
+or \b long \b int depending the platform.
+The \c m_type data member of the JSON value is set to the generic integer
+type: wxJSONTYPE_INT or wxJSONTYPE_UINT regardless its size: in other
+words, no matter the type of the original value:
+the only thing that matters is the sign of the value: signed or unsigned.
 
 \code
-  // an old application that does not know anything about 64-bits
-  // integer support; the app runs in a 64-bit integer environment
-  int i;
-  wxJSONValue v1 = 128;
-  if ( v1.IsInt() )  {     // returns TRUE for both 32-bits and 64-bits ints
-    i = v1.AsInt();        // the function wxASSERT that INT_MIN <= i <= INT_MAX
-  }
-
-  switch ( v1.GetType() )  {
-    case wxJSONTYPE_INT :
-      i = v1.AsInt();
-    case wxJSONTYPE_UINT :
-      ui = v1.AsUInt();
-    ...
-    default:
-      // the old app does not know the existance of wxJSONTYPE_(U)INT64 type
-      // if the integer needs 64-bits storage, the app fails
-      wxFAIL_MSG( _T("Unknow JSON data type %s"), wxJSONValue::TypeToString( v1.GetType());
-      break;
-  }
+  wxJSONValue i( 100)               // an int
+  wxJSONValue l( (short) 100)       // a short int
+  wxJSONValue l( (long) 100)        // a long int
+  wxJSONvalue i64( (wxInt64) 100 ); // a long long int
 \endcode
 
-Note that the application uses the new version of the library, which stores
-integers in a 64-bit storage.
-If 64-bits is not enabled, the app can never fail because long integers cannot
-be stored in the JSON value object.
+All the above integer values are stored in the wxJSONValueHolder::m_valInt64
+or in the wxJSONValueHolder::m_valLong data member.
+The JSON value type is set to wxJSONTYPE_INT for all cases.
 
-If an application uses very large integers, it may just use 64-bits storage
-for all integer types, or it may use 32-bits for some of them:
+In order to know the storage needs of the value stored in the class you call
+the \c wxJSONType::GetType() function which returns different constants
+depending on the weight of the numeric value:
+
+
+\li \b wxJSONTYPE_INT: the value is signed integer and it fits in an \b int data type.
+\li \b wxJSONTYPE_UINT: the value is unsigned integer and it fits in a \b unsigned
+	\b int.
+\li \b wxJSONTYPE_LONG: the value is signed integer and it fits in a \b long \b int
+	but it is too large for \b int.
+\li \b wxJSONTYPE_ULONG: the value is unsigned integer and it fits in a \b unsigned
+	\b long but it is too large for \b unsigned \b int.
+\li \b wxJSONTYPE_SHORT: the value is signed integer and it fits in a \b short \b int
+\li \b wxJSONTYPE_USHORT: the value is unsigned integer and it fits in a \b unsigned
+	\b short
+\li \b wxJSONTYPE_INT64: the value is signed integer and it is so large that it needs 64-bits.
+\li \b wxJSONTYPE_UINT64: the value is unsigned integer and it is so large that
+	it needs 64-bits.
+
+The \b GetType() function relies on the definition of the INT_MAX, INT_MIN, UINT_MAX,
+LONG_MAX, LONG_MIN, ULONG_MAX, SHORT_MAX, SHORT_MIN and USHORT_MAX macros to check
+if the value fits in a particular data type.
+If the macros are not defined (I do not know if this could happen), the wxJSON
+library defines them by itself (see the \c include/wx/json_defs.h header file):
 
 \code
-  // a new application that needs 64-bits integers and stores all integer
-  // data type in a 64-bits storage
-  wxInt64     i64;
-  wxUint64    ui64;
-
-  wxJSONValue v1( 128 );
-
-  // the IsInt() function returns TRUE if the value is a signed integer, regardless
-  // its storage needs thus  we can surely store it in a 64-bits integer storage
-  if ( v1.IsInt() )  {
-    i64 = v1.AsInt64();
-  }
-  else  if ( v1.IsUInt() )  {
-    ui64 = v1.AsUInt64();
-  }
-
-
-  // the same happens in a switch statement: 32-bits and 64-bits integers
-  // are all stored in a 64-bit integer data type:
-  switch ( v1.GetType() )  {
-    case wxJSONTYPE_INT :
-    case wxJSONTYPE_INT64 :
-      i64 = v1.AsInt64();
-    case wxJSONTYPE_UINT :
-    case wxJSONTYPE_UINT64 :
-      ui64 = v1.AsUInt64();
-    ...
-  }
-
-  // another application that use different integer's storage for different
-  // purposes:
-  wxInt32  i32;
-  wxInt64  i64
-
-  wxJSONValue value;  // suppose we read this from a JSON text
-
-  switch ( value.GetType() )  {
-    case wxJSONTYPE_INT :
-      i32 = value.AsInt32()
-    case wxJSONTYPE_INT64 :
-      i64 = v1.AsInt64();
-    ...
-  }
+   C99 type      width (bits)         limits
+   --------      ------------         ------
+   int              16                -32.768 .. +32.767
+   uint             16                0 .. 65.535
+   short            16                -32.768 .. +32.767
+   ushort           16                0 .. 65.535
+   long             32                -2.147.483.648 .. +2.147.483.647
+   ulong            32                0 .. +4.294.967.295
 \endcode
 
-Note that all 64-bits integer memberfunctions are only available if
+Note that the C99 standard only defines the \e minimum width of these types
+but on some platforms, such as win32 and GNU/Linux, the \b int and the \b long
+\b int data types have the same width of 32 bits.
+This is not true for all platforms: the \b int data type may be only 16 bits
+wide so it is recommended to always use \b long instead of \b int when the
+program should be compiled for several platforms.
+In addition, the C++ language does not define a minimum size for these integer
+types.
+
+\subsection json_internals_integer_is The IsXxxxx() functions
+
+The wxJSONValue class also defines functions of the form \b IsXxxxxx() to know
+the storage needs of an integer type:
+
+\li \c IsInt()
+\li \c IsShort()
+\li \c IsLong()
+\li \c IsInt64()
+\li \c IsUInt()
+\li \c IsUShort()
+\li \c IsULong()
+\li \c IsUInt64()
+
+which meaning is simple to understand.
+
+Note that in version 1.x those functions behaves differently than in versions 0.x
+(see \ref wxjson_compatibility_1x.
+All functions return TRUE if the value can be stored in the desired type, with
+respect to the sign of the value.
+
+All 64-bits integer memberfunctions are only available if
 the platform on which runs your application natively supports
 64-bits integers.
 This is in constrast with the \b wxLongLong class which is also
@@ -605,44 +597,62 @@ You can check whether or not 64-bits support is enabled in the wxJSON library,
 by checking if the wxJSON_64BIT_INT macro is defined.
  
 
+
 \subsection json_internals_integer_asis The IsXxxxxxx() and AsXxxxxxx() functions
 
 You can get the type of a JSON value object by calling the \c IsXxxxxx()
 functions where \c Xxxxxx is the type.
 For example, to know if a JSON value object contains an integer value,
 you call the \c wxJSONValue::IsInt() memberfunction.
-Note that the function only returns TRUE if the stored value is of
-type wxJSONTYPE_INT regardless the storage size.
+Note that the function returns TRUE if the stored value is of
+type wxJSONTYPE_INT and it fits in a integer data type.
 Example:
 
 \code
  wxJSONValue value(100);
  bool r = value.IsInt();        // return TRUE
-      r = value.IsUInt();       // return FALSE
+      r = value.IsShort();      // return TRUE
+      r = value.IsUInt();       // return FALSE (value is signed)
+      r = value.IsLong();       // return TRUE
+
+ value = (wxInt64) LONG_MAX + 1;  // needs 64-bits integer support
+
+      r = value.IsInt64();        // return TRUE
+      r = value.IsLong();         // return FALSE
+      r = value.IsInt();          // return FALSE 
 \endcode
 
 On the other hand, the \b AsXxxxxx functions return the value as the
 specified type, without checking if the stored value is actually
-of the same type as the one wanted (but it has to be compatible).
-In other words, if a JSON value contains a signed integer which
-value is -1, the user can get the value as an unsigned int.
+of the same type as the one wanted.
+In other words, the AsXxxxxx() functions just returns the bit pattern
+stored in the union interpreting those bits as the desired type.
+
 Example:
 
 \code
  wxJSONValue value(-1);
- int i       = value.AsInt();        // return -1
- unsigned ui = value.AsUInt();       // return 4294967295
+ int i             = value.AsLong();    // return -1
+ unsigned int ui   = value.AsULong();   // return 4294967295
+ unsigned short us = value.AsUShort();  // return 65535
 \endcode
 
-The same applies for integer storage size: the \b Is(U)Int64 memberfunctions
-return TRUE if the value is too lareg for 32-bit integer data type but you can
-get a 32-bit integer as a 64-bit integer type:
+Note that all primitive types are stored in a \b union so you can get
+the value of a primitive type as the one you want.
+Also note that the \c AsXxxxxx() function does not check that the
+value is compatible with the one you want.
+For example:
 
 \code
- wxJSONValue value( 10000 );
- bool r      = value.IsInt64();        // return FALSE
- wxInt64 i64 = value.AsInt64();        // perfectly legal if the type is INT.
+  wxJSONValue value( 10000 );
+  wxChar* ch = value.AsCString();    // returns 10000 which is garbage
 \endcode
+
+However, in debug builds, all AsXxxxxx() functions wxASSERT that the
+type of the stored value is compatible with the one you want.
+In the previuos example, an ASSERTION failure occurs in the \c AsCString()
+function because the returned value is, surely, garbage.
+
 
 To know more about the return values of the \b IsXxxxxx and the \b AsXxxxxx
 memberfunctions in 64-bits platforms, see the \c Test55() function in the
@@ -656,7 +666,7 @@ unsigned integers: results are commented.
 If 64-bits support is enabled in the wxJSON library, reading values
 from JSON text may have different results.
 If a numeric value is too large for 32-bits integer storage, it will be
-stored as a double in previous versions of the library but it may be
+stored as a double data type in versions 0.4 and previous ones but it may be
 stored as and integer if it fits in a 64-bit integer storage.
 
 When the wxJSON parser reads a token that start with a digit or with a
@@ -675,6 +685,76 @@ storage.
 This has the conseguence that numeric values that are between
 INT_MAX + 1 and UINT_MAX are stored as signed integers in a 64-bits environment
 and as unsigned integers in a 32-bits environment.
+
+Examples:
+
+\code
+  {
+    // if 64 bits integer is not enabled
+    100         // read as a signed long integer
+    2147483647  // INT_MAX: read as a signed long integer
+    2147483648  // INT_MAX + 1: read as a unsigned long
+
+   -2147483648  // INT_MIN: read as a signed long integer
+    4294967295  // UINT_MAX: read as a unsigned long integer
+
+    4294967296  // UINT_MAX: read as a double
+
+    // if 64-bits integer is enabled
+    4294967295  // UINT_MAX: read as a signed wxInt64
+    4294967296  // UINT_MAX: read as a signed wxInt64
+  }
+\endcode
+
+
+\subsection json_internals_integer_force_unsigned Reading numeric values from JSON text: force unsigned int
+
+A string that apears as a number which value is between INT_MIN and INT_MAX is always
+stored as a signed integer even if it is positive.
+For example, the numeric value 100 is read as a signed int (or signed wxInt64)
+data type even when it was written from a wxJSON Value object that held
+a unsigned integer.
+This is the code:
+
+\code
+  wxJSONValue v( (unsigned int) 100);
+  wxJSONWriter writer;
+  wxString     jsonText;
+  writer.Write( v, jsonText );
+
+  // the output is:
+  {
+    100
+  }
+\endcode
+
+The reader cannot know that the variable that generated the value
+was of type \e unsigned and it stores the value as a signed integer.
+In order to force the reader use a unsigned integer in this case,
+the wxJSONWriter prepends a plus sign to the integer value:
+
+\code
+  wxJSONValue v( (unsigned) 100);
+  wxJSONWriter writer;
+  wxString     jsonText;
+  writer.Write( v, jsonText );
+
+  // the output is:
+  {
+    +100
+  }
+\endcode
+
+
+Now the wxJSONReader class assigns the integer to a \b unsigned \b int
+data type.
+Note that this feature is not strict JSON and may be handled incorrectly
+by other JSON mplementations so, by default, this feature is disabled;
+you have to use a special wxJSONWriter's flag to use it.
+Also note that other JSON implementations may fail to read such integers:
+you should only use the feature if your applications only use the \b wxJSON
+library for reading JSON text.
+
 
 
 \section json_internals_array The array of values.

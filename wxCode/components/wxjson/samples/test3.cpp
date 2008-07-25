@@ -63,7 +63,7 @@ int Test2()
   //root[_T("font")][_T("locale")].Append( "de" );
   //root[_T("font")][_T("locale")].Append( "is" );
 
-  // now write the JSON object to the stream
+  // now write the JSON object to a string object
   wxString str;
   wxJSONWriter wrt( gs_indentation );
   wrt.Write( root, str );
@@ -96,15 +96,15 @@ int Test3()
 // prints the 'null', 'empty' and 'empty map' empty array' objects
 int Test4()
 {
-  wxJSONValue valueNull( wxJSONTYPE_NULL );
-  wxJSONValue valueEmpty;
+  wxJSONValue valueNull;
+  wxJSONValue valueEmpty( wxJSONTYPE_INVALID );
   wxJSONValue valueEmptyMap( wxJSONTYPE_OBJECT );
   wxJSONValue valueEmptyArray( wxJSONTYPE_ARRAY );
 
   wxJSONValue root;
   root.Append( valueNull );
-  // the following line cause an ASSERTION failure in debug builds
-  //root.Append( valueEmpty );
+
+  // root.Append( valueEmpty );   // 24/7/08 ASSERTION failure in debug builds
   root.Append( valueEmptyMap );
   root.Append( valueEmptyArray );
 
@@ -125,8 +125,6 @@ int Test5()
   root.Append( true );
   root.Append( wxJSONValue());   // this is a 'null' value
 
-  // the 'empty' (not valid) value cause an ASSERTION failure in debug builds
-  // root.Append( wxJSONValue( wxJSONTYPE_EMPTY )); 
   root.Append( 90e+12 );
 
   wxString str;

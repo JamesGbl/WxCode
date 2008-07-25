@@ -162,7 +162,7 @@ int Test49()
   wxString s1, s2;  // used for dumping the values
 
   // creates a INT value
-  wxJSONValue v1( 12 );
+  wxJSONValue v1( -1 );
   s1 = v1.Dump( true );
 
   // now display the 'v1' value in DDD and save an hardcopy
