@@ -36,7 +36,7 @@
  and the '-w' option tells that the parser is contructed with the
  strict flag. In other words, warnings are considered errors.
 
- mar 2008 (ver 0.3.0)
+ jul 2008 (ver 1.0.0)
  --------
 
  OK, successfull for both ANSI and Unicode mode. Note that Test14()
@@ -236,14 +236,14 @@ int Test13()
       "    {\n"                                   // (4)
       "       \"title\"  : \"The title\", ,\n"    // (5) ERR: two consecutive commas
       "       \"author\" : \"Captain Hook\"\n"    // 
-      "       pages      : 300,\n"                // (7) ERR: " missing for key
-                                                  // (7) ERR: double ':' there is already a key
+      "       pages      : 300,\n"                // (7) ERR: "," missing for key
+                                                  // (7) ERR: ':' not allowed 
                                                   // (7) ERR: value '300' cannot follow a value
-      "       \"pages2\" : abc300,\n"             // (8) ERR: 'abc' not allowed in numbers
+      "       \"pages2\" : abc300,\n"             // (8) ERR: 'abc300' unrecognized literal
                                                   // (8) ERR: value is missing when comma
                                                   //          encontered
       "       \"price\"  : 30.30,\n"              //
-      "       \"price2\" : 30.30abc,\n"           // (10) ERR: strange 'abc' in double
+      "       \"price2\" : 30.30abc,\n"           // (10) ERR: '30.30abc unrecognized literal
                                                   // (10) ERR: value is missing when comma
                                                   //           encontered
 
@@ -278,6 +278,7 @@ int Test13()
 // encoded streams are tested in the 'test10.cpp' file
 int Test14()
 {
+  TestCout( _T( "\nTest #14 was deleted: UTF-8 streams are tested in \'test10.cpp\'\n" ));
 #if defined( NOT_DEFINED )
   wxString fileName = _T("samples/test5.json");
   wxFileInputStream is( fileName );

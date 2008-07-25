@@ -26,6 +26,10 @@
  the 'unicode world' which is, at time of writing, absolutely
  unknown by me.
 
+ jul 2008 (version 1.0.0=
+ --------
+ Tests were successfull in both Unicode and ANSI mode
+
 *****************************************************************************/
 
 #include <stdio.h>
@@ -121,7 +125,7 @@ int Test30()
 
 
 // check the wxJSON_USE_UNICODE macro
-// 21 jan 2008: test is successfull on wxGTK-2.8.7
+// 24 jul 2008: test is successfull on wxGTK-2.8.7
 int Test31()
 {
   // we determine the size of the wxChar data type which is

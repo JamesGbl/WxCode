@@ -34,6 +34,10 @@
  Test24(): test the wxJSONWRITER_MULTISTRING style: writing multiple-line
            strings
 
+ jul 2008 (vers. 1.0.0)
+ --------
+ Tests were successfull
+
 *****************************************************************************/
 
 
@@ -425,12 +429,12 @@ int Test24()
   wxJSONWriter writer( wxJSONWRITER_STYLED
                        | wxJSONWRITER_SPLIT_STRING );
 
-  TestCout( _T("\nTest24(): STYLE=SPLIT_STRING)\n"));
+  TestCout( _T("\nTest24(): STYLE=SPLIT_STRING\n"));
   wxString s;
   writer.Write( root, s );
   TestCout( s );
 
-  TestCout( _T("\nTest24(): STYLE=STYLED)\n"));
+  TestCout( _T("\nTest24(): STYLE=STYLED\n"));
   wxJSONWriter wrt( wxJSONWRITER_STYLED );
   wxString s2;
   wrt.Write( root, s2 );

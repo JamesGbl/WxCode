@@ -22,6 +22,13 @@
 
  Detailed description of the test application
 
+ Test36() ANSI: conversion from a locale charset to UTF-8: successfull
+
+
+ jul 2008 (vers. 1.0.0)
+ -------
+ some tests failed but the wxJSON library is not to blame.
+
 *****************************************************************************/
 
 #include <locale.h>
@@ -58,7 +65,6 @@ int CheckBuffer( const char* buff1, const char* buff2, int len )
 // test the conversion from a locale dependent charset
 // to UTF-8: the conversion is done by first converting
 // to wide char and then to UTF-8
-// OK, 26 feb 2008 the test is successfull
 int Test36()
 {
   int  r = 0;
@@ -446,6 +452,7 @@ int Test41()
 // the conversion should be OK.
 // 29 feb 2008: OK, test is successfull
 // 12 may 2008: test is successfull
+// This test fails on win32 BCC 5.5 compiler
 int Test42()
 {
   int r = 0;

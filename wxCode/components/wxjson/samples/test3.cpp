@@ -19,6 +19,10 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+ jul 2008 (vers. 1.0.0=
+ --------
+ Test is successfull
+
 *****************************************************************************/
 
 
