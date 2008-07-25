@@ -79,8 +79,13 @@
        where not printed in the JSON text output
 
 
- 1.0.0 added support for (unsigned) long int and (unsigned) short int data type
-
+ 1.0.0 (r 777) changed wxJSONTYPE_EMPTY to wxJSONTYPE_INVALID 
+       (r XXX) added support for (unsigned) long int and (unsigned) short int data type
+       (r XXX) changed return value of the wxJSONValue::Is(U)Int Is(U)Int64 functions
+       (r XXX) added the following wxJSONWriter's flags:
+               - wxJSONWRITER_NO_LINEFEED
+               - wxJSONWRITER_ESCAPE_SOLIDUS
+               - wxJSONWRITER_MULTILINE_STRING
 
 
 BUGS
