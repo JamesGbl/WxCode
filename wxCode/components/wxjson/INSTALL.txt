@@ -98,7 +98,7 @@ Installation - Do you really need it?
 
 The wxJSON is made of only three source files and four header files.
 If you want to install the library and also want to build it for the
-standard options shared/static, debug/release, UTF8/unicode you end
+standard options shared/static, debug/release, ANSI/unicode you end
 up with several different builds.
 Worse, if you distribute your application dynamically linked you have
 to supply a binary copy of the library or have to let your user to 
@@ -106,7 +106,7 @@ build it in addition to build wxWidgets itself.
 This makes your app to depend on another external library in addition
 to wxWidgets.
 
-The library itself is only 124 KB in release mode and 420 KB in debug
+The library itself is only 150 KB in release mode and 555 KB in debug
 mode so it is more simple to just include it in your own sources and
 let the compiler of your application to compile the library itself.
 You just have to copy the three source files located in the 'src/'

@@ -37,7 +37,7 @@
    hexd.bin FILENAME
 
  NOTE: this app is not built using wxWidgets so it would only run
- in a Unix-like system.
+ (or even compile) in a Unix-like system.
 
 
 *****************************************************************************/

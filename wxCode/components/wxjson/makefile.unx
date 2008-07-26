@@ -116,14 +116,26 @@ LIB_LIBANSI = lib$(LIBANSI)$(LIB_EXT)
 
 ### Targets: ###
 
+#
+# the folllowing target makes all that we need. Pleasenote
+# that the target makes both ANSI and Unicode builds of the
+# library and both ANSI and Unicode builds of the test
+# application.
+# You may delete some of the dependencies if you just need
+# one or two targets
+# Example:
+# the following just builds the Unicode version of the library
+# and nothing else
+
+# all: $(LIB_LIBUNI)
+
 all: $(LIB_LIBUNI) $(LIB_LIBANSI) testuni.bin testansi.bin
 
 
 
-
+#
+# phony targets: do not modify.
 .PHONY: install uninstall clean tarball backup
-
-
 
 
 
@@ -177,7 +189,7 @@ backup:
 # anything. The library is moved into the 'lib/' subfolder when
 # it is compiled. Only the static version of the library is built
 # when you 'make' this makefile you should end up with a file
-# called something like 'libwxjson-0.1.a' in the 'lib/' subfolder.
+# called something like 'libwxjson-0.1.0uni.a' in the 'lib/' subfolder.
 install: 
 
 
@@ -186,7 +198,8 @@ install:
 # the whole directory.
 uninstall: 
 
-
+#
+# this target deletes all objects, binary and library files
 clean: 
 	rm -f $(OBJECTS)
 	rm -f *.bin
@@ -216,22 +229,20 @@ clean:
 
 
 #
-# this is the main target; it creates the static library
-# when you type
-#
-# make -f makefile.unx
-#
+# this target creates the Unicode build of the library
 $(LIB_LIBUNI) : $(OBJECTS)
 	ar rc $(LIB_LIBUNI) $(OBJECTS)
 	mv -f $(LIB_LIBUNI) ./lib/
 
 
+#
+# this target creates the ANSI build of the library
 $(LIB_LIBANSI) : $(OBJECTS_A)
 	ar rc $(LIB_LIBANSI) $(OBJECTS_A)
 	mv -f $(LIB_LIBANSI) ./lib/
 
 #
-# list of objects for Unicode build
+# list of objects for Unicode build for the test application
 TEST_OBJECTS = samples/main.o		\
 		samples/test1.o		\
 		samples/test3.o		\
@@ -248,7 +259,7 @@ TEST_OBJECTS = samples/main.o		\
 
 
 #
-# list of objects for ANSI build
+# list of objects for ANSI build for the test application
 TEST_OBJECTS_A = samples/main.oa	\
 		samples/test1.oa	\
 		samples/test3.oa	\
@@ -266,16 +277,14 @@ TEST_OBJECTS_A = samples/main.oa	\
 
 
 #
-# the following targets are related to the test applications
-# and depends on the 'test' target.
+# the following target creates the Unicode builds of test application
 testuni.bin: $(TEST_OBJECTS) $(LIB_LIBUNI)
 	$(LINKER) -o testuni.bin $(TEST_OBJECTS) $(LDFLAGS)	\
 		-l$(LIBUNI) `wx-config --unicode=yes --libs base`
 
 
 #
-# the following target is the ANSI build of the library and
-# test application.
+# the following target creates the ANSI build of the application
 testansi.bin: $(TEST_OBJECTS_A) $(LIB_LIBANSI)
 	$(LINKER) -o testansi.bin $(TEST_OBJECTS_A) $(LDFLAGS)	\
 		-l$(LIBANSI) `wx-config --unicode=no --libs base`
@@ -292,7 +301,7 @@ hexd.o : samples/hexd.cpp
 	$(CC) -c -g -Wall -o hexd.o samples/hexd.cpp
 
 #
-# makes the test_assert
+# makes the test_assert - only usefull for the author
 test_assert.bin: samples/test_assert.o
 	$(LINKER) -o test_assert.bin samples/test_assert.o $(LDFLAGS)	\
 		`wx-config --unicode=yes --libs base`

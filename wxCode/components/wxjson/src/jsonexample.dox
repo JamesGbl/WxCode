@@ -217,8 +217,9 @@ keep \b wxJSON compatible with the new releases of \b wxWidgets.
 
 \section main_thanks Contributors
 
-Many thanks to Bryan Ashby and Robbie Groenewoudt for their help
-in writing and debugging this library.
+Many thanks to Bryan Ashby, Robbie Groenewoudt and Alexander Stigsen
+for their help in writing and debugging this library.
+
 
 
 */

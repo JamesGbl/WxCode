@@ -42,6 +42,14 @@
    -f FILENAME the filename to read by the wxJSONReader (only test #15)
 
 
+ Please note that some compilers may fail to compile and link this test
+ application, especially on Windows. The test app was written for unix-like
+ systems so if you get errors on compiling it does not mean that you
+ cannot use the library.
+ The wxJSON library is compiled first, so an error in the building process
+ of the test application means that the library was corretly complied.
+
+
  apr 2008
  --------
  The test application was successfull
