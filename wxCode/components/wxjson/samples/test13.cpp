@@ -208,7 +208,7 @@ int Test57()
 
   value.Append( 100 );                 // 0: signed short
   value.Append( (unsigned) 110 );      // 1: unsigned short
-  value.Append( -1 );                  // 2: signed integer
+  value.Append( -1 );                  // 2: signed short
   value.Append( (unsigned) -1 );       // 3: unsigned integer
   value.Append( (unsigned) 65000 );    // 4: unsigned short
   value.Append( 65000 );	       // 5. signed long (cannot be short)
@@ -385,15 +385,19 @@ int Test57()
 //   #endif // wxHAS_STRTOLL
 //   }
 //
+// The test is successfull in ANSI mode but fails in Unicode.
+// This is because the 'strtoll' function only accepts 'char *'
+// and not 'wchar_t*' type.
+// Trying to convert wxString objects to multibyte buffers.
 int Test58()
 {
 #if defined( wxJSON_64BIT_INT )
   wxString s1( _T("200"));
   wxInt64 i64;
   bool r = s1.ToLongLong( &i64);
-  TestCout( _T("Converting string: 200 - result:"));
+  TestCout( _T("Converting string: 200 using wxString::ToLongLong() - result:"));
   TestCout( r, true );
-  // ASSERT( r )         // the test app. fails (see above)
+  TestCout( _T("The result should be TRUE"));
 #endif
   return 0;  
 }
@@ -693,9 +697,9 @@ int Test61()
 }
 
 // bug in the wxJSONWriter::DoWrite() function: 64-bits integers are
-// not printed correctly - see Test56()
+// not printed correctly
 //
-// jun 3, 2008: the output of the Test56() function:
+// jun 3, 2008: the output of the old Test56() function:
 // Performing test number: 56
 // The JSON text document:
 // {

@@ -19,6 +19,13 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+ jul 2008 (vers. 1.0.0)
+ --------
+ Test are successfull for wxJSON but read the notes for Test53() in which
+ I wanted to simulate write errors on streams.
+ For example, I have to write 45 bytes to a memory stream which I constructed
+ with 20 bytes space. Instead of getting a wxSTREAM_ERROR error condition,
+ the wxWidgets library aborts the application with an ASSERTION condition.
 
 *****************************************************************************/
 

@@ -19,6 +19,10 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+ jul 2008 (vers. 1.0.0)
+ --------
+ Test is successfull except Test46() which fails but I cannot find a
+ solution for this
 
 *****************************************************************************/
 
@@ -135,7 +139,7 @@ int Test46()
 {
   int r = 0;
 
-  // 6 mar 2006: test failed: the latin-1 strng value read is not as
+  // 25 jul 2008: test failed: the latin-1 strng value read is not as
   // expected but I run the application in the DDD debugger and watched the
   // content of the latin-1 string: it was OK
   return r;
@@ -160,7 +164,7 @@ int Test46()
   bool b = value.IsSameAs( result );
   ASSERT( b )
 #else
-  TestCout( _T("Test #45 is only meaningfull in ANSI builds\n" ));
+  TestCout( _T("Test #46 is only meaningfull in ANSI builds\n" ));
 #endif
 
   return r;

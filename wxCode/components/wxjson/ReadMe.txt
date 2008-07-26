@@ -4,7 +4,7 @@
  
  Website: http://lnx.mauriziovettorato.it/public/json/home.html
  Author: Luciano Cattani
- Version: 0.5.1
+ Version: 1.0.0
  Description:
  JSON (JavaScript Object Notation) is a lightweight data-interchange format.
  It is easy for humans to read and write. It is easy for machines to parse
@@ -16,13 +16,25 @@
  ideal data-interchange language.
 
 
- Installation
+ INSTALLATION
  ------------
  For installation instructions see the INSTALL text file.
 
 
+ DOCUMENTATION
+ -------------
+ The library has a wide documentation that you find in the 'docs/html/' subfolder
+ if you installed from the tarball.
+ If you got the library by directly accessing the SVN repository, you have
+ to build the docs by yourself using the 'doxygen' documentation generator
+ (http://doxygen.sf.net). Type the following commands:
 
- ChangeLog
+ $ cd docs
+ $ doxygen
+
+
+
+ CHANGELOG
  ---------
  
  0.1 - first version of wxJSON at wxCode
@@ -79,17 +91,27 @@
        where not printed in the JSON text output
 
 
- 1.0.0 (r 777) changed wxJSONTYPE_EMPTY to wxJSONTYPE_INVALID 
+ 1.0.0 this release breaks compatibility with 0.x versions: please note that
+       there is not a 'compatibility' version of this library. New features:
+       (r 777) changed wxJSONTYPE_EMPTY to wxJSONTYPE_INVALID 
        (r XXX) added support for (unsigned) long int and (unsigned) short int data type
-       (r XXX) changed return value of the wxJSONValue::Is(U)Int Is(U)Int64 functions
+               changed return value of the wxJSONValue::Is(U)Int Is(U)Int64 functions
        (r XXX) added the following wxJSONWriter's flags:
                - wxJSONWRITER_NO_LINEFEED
                - wxJSONWRITER_ESCAPE_SOLIDUS
                - wxJSONWRITER_MULTILINE_STRING
+               - wxJSONWRITER_RECOGNIZE_UNSIGNED
 
 
 BUGS
 ----
-Please, send bugs to luciano AT mauriziovettorato_DOT_it or open a bug report
+Please, send bugs to luciano@mauriziovettorato.it or open a bug report
 on SF.net for the 'wxCode' project ( wxcode.sf.net)
+
+
+LICENSE
+-------
+The wxJSON library is distributed under the terms of the wxWidgets license
+(http://www.wxwidgets.org/about/newlicen.htm) either the current version 3.1 or,
+at your option, any later version.
 

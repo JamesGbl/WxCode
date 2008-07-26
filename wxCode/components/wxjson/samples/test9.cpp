@@ -23,6 +23,25 @@
  Detailed description of the test application
 
  Test36() ANSI: conversion from a locale charset to UTF-8: successfull
+ Test37() Unicode: write a JSON value that contains characters from four
+          different charsets to UTF-8: successfull
+ Test38():Unicode: the same as above but writing to a wxString object
+          and converting the string to UCS2-BE: failed
+ Test39():Unicode: the same as above but converting the output wxString
+          to UCS4-LE: successfull but I got warnings related to 'iconv'
+ Test40():Unicode: the same as above but converting the output wxString
+          to ISO-8859-1 (Latin-1): successfull, the conversion cannot be done
+ Test41():Unicode: the same as above but the output JSON text is to a
+          stream (UTF-8 format): successfull
+ Test42():ANSI: writing a value that contains latin-1 chars to a stream
+          (UTF-8 format): successfull
+ Test43() Unicode: much like Test38() which failed - writes a JSON value
+          that contains latin-1, greek and cyrillic chars to a wxString
+          JSON text output then converting the string to UCS2-BE using
+          the wxCharBuffer class: failed!
+ Test44() Unicode: testing the conversion utility without using wxJSON
+          library: the test converts a wxString object to UCS-2BE and to
+          UTF-8: fails for UCS-2BE, success for UTF-8
 
 
  jul 2008 (vers. 1.0.0)
