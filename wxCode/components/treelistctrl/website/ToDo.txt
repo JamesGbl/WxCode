@@ -1,6 +1,6 @@
 TO DO:
 ======
-- none
+- unicode support ?
 
 
 Future enhancements:
