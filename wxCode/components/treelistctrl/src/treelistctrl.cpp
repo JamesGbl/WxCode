@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  $Author: pgriddev $
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.101 2008-07-21 14:47:18 pgriddev Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.102 2008-07-28 13:54:12 pgriddev Exp $
 // Copyright:   (c) 2004-2008 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss, Ronan Chartois
 // Licence:     wxWindows
@@ -97,6 +97,7 @@ static wxTreeListColumnInfo wxInvalidTreeListColumnInfo;
 // ---------------------------------------------------------------------------
 // private classes
 // ---------------------------------------------------------------------------
+
 //-----------------------------------------------------------------------------
 //  wxTreeListHeaderWindow (internal)
 //-----------------------------------------------------------------------------
@@ -231,6 +232,10 @@ private:
     DECLARE_EVENT_TABLE()
 };
 
+
+//-----------------------------------------------------------------------------
+//  wxTreeListMainWindow (internal)
+//-----------------------------------------------------------------------------
 
 // this is the "true" control
 class  wxTreeListMainWindow: public wxScrolledWindow
@@ -399,7 +404,7 @@ public:
     // wxTreeItemId.IsOk() will return false if there is no such item
 
     // get the root tree item
-    wxTreeItemId GetRootItem() const { return m_rootItem; }
+    wxTreeItemId GetRootItem() const { return m_rootItem; }  // implict cast from wxTreeListItem *
 
     // get the item currently selected, only if a single item is selected
     wxTreeItemId GetSelection() const { return m_selectItem; }
@@ -569,8 +574,6 @@ public:
     void OnScroll(wxScrollWinEvent& event);
 
     // implementation helpers
-    void SendDeleteEvent(wxTreeListItem *itemBeingDeleted);
-
     int GetColumnCount() const
     { return m_owner->GetHeaderWindow()->GetColumnCount(); }
 
@@ -637,6 +640,7 @@ protected:
 
     wxTimer             *m_renameTimer;
     wxString             m_renameRes;
+    wxEditTextCtrl      *m_renameControl;
 
     // char navigation
     wxTimer             *m_findTimer;
@@ -651,6 +655,7 @@ protected:
                               const wxString& text,
                               int image, int selectedImage,
                               wxTreeItemData *data);
+    void wxTreeListMainWindow::DoDeleteItem (wxTreeListItem *item);
     bool HasButtons(void) const
         { return (m_imageListButtons) || HasFlag (wxTR_TWIST_BUTTONS|wxTR_HAS_BUTTONS); }
 
@@ -676,13 +681,13 @@ protected:
     void RefreshSelectedUnder (wxTreeListItem *item);
 
     void OnRenameTimer();
-    void OnRenameAccept();
+    void OnRenameAccept(bool isCancelled);
 
     void FillArray(wxTreeListItem*, wxArrayTreeItemIds&) const;
     bool TagAllChildrenUntilLast (wxTreeListItem *crt_item, wxTreeListItem *last_item);
     bool TagNextChildren (wxTreeListItem *crt_item, wxTreeListItem *last_item);
     void UnselectAllChildren (wxTreeListItem *item );
-    bool SendEvent(wxEventType event_type, wxTreeListItem *item, const wxPoint &p = wxDefaultPosition, bool veto = false);  // returns true if processed
+    bool SendEvent(wxEventType event_type, wxTreeListItem *item, const wxPoint &p = wxDefaultPosition, bool veto = false);  // returns true if processed  --TODO: redesign to always use SendEvent()
 
 private:
     DECLARE_EVENT_TABLE()
@@ -717,22 +722,27 @@ public:
                     int style = 0,
                     const wxValidator& validator = wxDefaultValidator,
                     const wxString &name = wxTextCtrlNameStr );
+    ~wxEditTextCtrl();
+
+    void CancelEdit();
 
     void OnChar( wxKeyEvent &event );
     void OnKeyUp( wxKeyEvent &event );
     void OnKillFocus( wxFocusEvent &event );
 
+
 private:
+    wxTreeListMainWindow  *m_owner;
     bool               *m_accept;
     wxString           *m_res;
-    wxTreeListMainWindow  *m_owner;
     wxString            m_startValue;
     bool                m_finished;
 
     DECLARE_EVENT_TABLE()
 };
 
-// a tree item
+
+// a tree item (NOTE: this class is storage only, does not generate events)
 class  wxTreeListItem
 {
 public:
@@ -828,9 +838,8 @@ public:
     wxTreeListItem *GetItemParent() const { return m_parent; }
 
     // operations
-    // deletes all children notifying the treectrl about it if !NULL
-    // pointer given
-    void DeleteChildren(wxTreeListMainWindow *tree = NULL);
+    // deletes all children
+    void DeleteChildren();
 
     // get count of all children (and grand children if 'recursively')
     size_t GetChildrenCount(bool recursively = true) const;
@@ -973,35 +982,58 @@ wxEditTextCtrl::wxEditTextCtrl (wxWindow *parent,
     m_finished = false;
 }
 
+wxEditTextCtrl::~wxEditTextCtrl() {
+    CancelEdit();
+}
+
+void wxEditTextCtrl::CancelEdit() {
+    if (m_finished) return;
+
+    (*m_accept) = false;
+    (*m_res) = m_startValue;
+
+    m_finished = true;
+    if (m_owner) {
+        m_owner->OnRenameAccept(true);  // cancelled
+        if (m_owner->m_renameControl == this) {
+            m_owner->m_renameControl = NULL;
+            m_owner->m_editItem = NULL;
+        }
+        m_owner->SetFocus(); // This doesn't work. TODO.
+    }
+
+    Hide();
+
+    if (!wxPendingDelete.Member(this))
+        wxPendingDelete.Append(this);
+}
+
 void wxEditTextCtrl::OnChar( wxKeyEvent &event )
 {
+    if (m_finished)
+    {
+        event.Skip();
+        return;
+    }
     if (event.GetKeyCode() == WXK_RETURN)
     {
         (*m_accept) = true;
         (*m_res) = GetValue();
 
         if ((*m_res) != m_startValue)
-            m_owner->OnRenameAccept();
+            if (m_owner) m_owner->OnRenameAccept(false);  // not cancelled
 
         if (!wxPendingDelete.Member(this))
             wxPendingDelete.Append(this);
 
         m_finished = true;
-        m_owner->SetFocus(); // This doesn't work. TODO.
+        if (m_owner) m_owner->SetFocus(); // This doesn't work. TODO.
 
         return;
     }
     if (event.GetKeyCode() == WXK_ESCAPE)
     {
-        (*m_accept) = false;
-        (*m_res) = wxEmptyString;
-
-        if (!wxPendingDelete.Member(this))
-            wxPendingDelete.Append(this);
-
-        m_finished = true;
-        m_owner->SetFocus(); // This doesn't work. TODO.
-
+        CancelEdit();
         return;
     }
     event.Skip();
@@ -1043,7 +1075,7 @@ void wxEditTextCtrl::OnKillFocus( wxFocusEvent &event )
     (*m_res) = GetValue();
 
     if ((*m_res) != m_startValue)
-        m_owner->OnRenameAccept();
+        if (m_owner) m_owner->OnRenameAccept(false);  // not cancelled
 }
 
 //-----------------------------------------------------------------------------
@@ -1586,17 +1618,7 @@ wxTreeListItem::~wxTreeListItem() {
     wxASSERT_MSG( m_children.IsEmpty(), _T("please call DeleteChildren() before destructor"));
 }
 
-void wxTreeListItem::DeleteChildren (wxTreeListMainWindow *tree) {
-    size_t count = m_children.Count();
-    for (size_t n = 0; n < count; n++) {
-        wxTreeListItem *child = m_children[n];
-        if (tree) {
-            tree->SendDeleteEvent (child);
-            if (tree->m_selectItem == child) tree->m_selectItem = (wxTreeListItem*)NULL;
-        }
-        child->DeleteChildren (tree);
-        delete child;
-    }
+void wxTreeListItem::DeleteChildren () {
     m_children.Empty();
 }
 
@@ -1827,6 +1849,8 @@ void wxTreeListMainWindow::Init() {
     m_dragItem = (wxTreeListItem*)NULL;
 
     m_renameTimer = new wxTreeListRenameTimer (this);
+    m_renameControl = (wxEditTextCtrl *)NULL;
+
     m_lastOnSame = false;
     m_left_down_selection = false;
 
@@ -1916,6 +1940,8 @@ wxTreeListMainWindow::~wxTreeListMainWindow() {
     if (m_ownsImageListNormal) delete m_imageListNormal;
     if (m_ownsImageListState) delete m_imageListState;
     if (m_ownsImageListButtons) delete m_imageListButtons;
+
+    if (m_renameControl) delete m_renameControl;
 
     DeleteRoot();
 }
@@ -2294,6 +2320,8 @@ wxTreeItemId wxTreeListMainWindow::GetPrevVisible (const wxTreeItemId& item, boo
 // operations
 // ----------------------------------------------------------------------------
 
+// ----------------------------  ADD OPERATION  -------------------------------
+
 wxTreeItemId wxTreeListMainWindow::DoInsertItem (const wxTreeItemId& parentId,
                                                  size_t previous,
                                                  const wxString& text,
@@ -2396,56 +2424,96 @@ wxTreeItemId wxTreeListMainWindow::AppendItem (const wxTreeItemId& parentId,
     return DoInsertItem (parent, parent->GetChildren().Count(), text, image, selImage, data);
 }
 
-void wxTreeListMainWindow::SendDeleteEvent (wxTreeListItem *item) {
-    SendEvent(wxEVT_COMMAND_TREE_DELETE_ITEM, item);
-}
+
+// --------------------------  DELETE OPERATION  ------------------------------
 
 void wxTreeListMainWindow::Delete (const wxTreeItemId& itemId) {
+    if (! itemId.IsOk()) return;
     wxTreeListItem *item = (wxTreeListItem*) itemId.m_pItem;
-    wxCHECK_RET (item != m_rootItem, _T("invalid item, root may not be deleted this way!"));
-    m_dirty = true; // do this first so stuff below doesn't cause flicker
-
-    // don't stay with invalid m_shiftItem or we will crash in the next call to OnChar()
-    bool changeKeyCurrent = false;
-    wxTreeListItem *itemKey = m_shiftItem;
-    while (itemKey) {
-        if (itemKey == item) { // m_shiftItem is a descendant of the item being deleted
-            changeKeyCurrent = true;
-            break;
-        }
-        itemKey = itemKey->GetItemParent();
-    }
-
     wxTreeListItem *parent = item->GetItemParent();
+    wxCHECK_RET (item != m_rootItem, _T("invalid item, root may not be deleted this way!"));
+
+    // recursive delete
+    DoDeleteItem(item);
+
+    // update parent --CAUTION: must come after delete itself, so that item's
+    //  siblings may be found
     if (parent) {
         parent->GetChildren().Remove (item);  // remove by value
     }
-    if (changeKeyCurrent)  m_shiftItem = parent;
+}
 
-    SendDeleteEvent (item);
-    if (m_selectItem == item) m_selectItem = (wxTreeListItem*)NULL;
-    item->DeleteChildren (this);
+
+void wxTreeListMainWindow::DeleteRoot() {
+    if (! m_rootItem) return;
+
+    m_curItem = (wxTreeListItem*)NULL;
+    m_selectItem = (wxTreeListItem*)NULL;
+    m_shiftItem = (wxTreeListItem*)NULL;
+
+    DeleteChildren (m_rootItem);
+    SendEvent(wxEVT_COMMAND_TREE_DELETE_ITEM, m_rootItem);
+    delete m_rootItem; m_rootItem = NULL;
+}
+
+
+void wxTreeListMainWindow::DeleteChildren (const wxTreeItemId& itemId) {
+    if (! itemId.IsOk()) return;
+    wxTreeListItem *item = (wxTreeListItem*) itemId.m_pItem;
+
+    // recursive delete on all children, starting from the right to prevent
+    //  multiple selection changes (see m_curItem handling in DoDeleteItem() )
+    wxArrayTreeListItems& children = item->GetChildren();
+    for (size_t n = children.GetCount(); n>0; n--) {
+        DoDeleteItem(children[n-1]);
+    }
+    item->DeleteChildren();
+}
+
+
+void wxTreeListMainWindow::DoDeleteItem(wxTreeListItem *item) {
+    wxCHECK_RET (item, _T("invalid item for delete!"));
+
+    m_dirty = true; // do this first so stuff below doesn't cause flicker
+
+    // don't stay with invalid m_curItem: take next sibling or reset to NULL
+    // NOTE: this might be slighty inefficient when deleting a whole tree
+    //  but has the advantage that all deletion side-effects are handled here
+    if (item == m_curItem) {
+        m_curItem = item->GetItemParent();
+        if (m_curItem) {
+            wxArrayTreeListItems& siblings = m_curItem->GetChildren();
+            size_t index = siblings.Index (item);
+            wxASSERT (index != (size_t)wxNOT_FOUND); // I'm not a child of my parent?
+            m_curItem = index < siblings.Count()-1 ? siblings[index+1]: (wxTreeListItem*)NULL;
+        }
+    }
+    // don't stay with invalid m_shiftItem: reset it to NULL
+    if (item == m_shiftItem) m_shiftItem = (wxTreeListItem*)NULL;
+    // don't stay with invalid m_selectItem: default to current item
+    if (item == m_selectItem) {
+        m_selectItem = m_curItem;
+        SelectItem(m_selectItem, NULL, true);  // unselect others
+    }
+    // cancel any editing
+    if (m_renameControl) {
+        m_renameControl->CancelEdit();
+    }
+
+    // recurse children, starting from the right to prevent multiple selection
+    //  changes (see m_curItem handling above)
+    wxArrayTreeListItems& children = item->GetChildren();
+    for (size_t n = children.GetCount(); n>0; n--) {
+        DoDeleteItem(children[n-1]);
+    }
+    item->DeleteChildren();
+
+    // delete item itself
+    SendEvent(wxEVT_COMMAND_TREE_DELETE_ITEM, item);
     delete item;
 }
 
-void wxTreeListMainWindow::DeleteChildren (const wxTreeItemId& itemId) {
-    wxTreeListItem *item = (wxTreeListItem*) itemId.m_pItem;
-    m_dirty = true; // do this first so stuff below doesn't cause flicker
-
-    item->DeleteChildren (this);
-}
-
-void wxTreeListMainWindow::DeleteRoot() {
-    if (m_rootItem) {
-        m_dirty = true;
-        SendDeleteEvent (m_rootItem);
-        m_curItem = (wxTreeListItem*)NULL;
-        m_selectItem= (wxTreeListItem*)NULL;
-        m_rootItem->DeleteChildren (this);
-        delete m_rootItem;
-        m_rootItem = NULL;
-    }
-}
+// ----------------------------------------------------------------------------
 
 void wxTreeListMainWindow::Expand (const wxTreeItemId& itemId) {
     wxTreeListItem *item = (wxTreeListItem*) itemId.m_pItem;
@@ -2474,6 +2542,8 @@ void wxTreeListMainWindow::Expand (const wxTreeItemId& itemId) {
 }
 
 void wxTreeListMainWindow::ExpandAll (const wxTreeItemId& itemId) {
+    wxCHECK_RET (itemId.IsOk(), _T("invalid tree item"));
+
     Expand (itemId);
     if (!IsExpanded (itemId)) return;
 #if !wxCHECK_VERSION(2, 5, 0)
@@ -2515,11 +2585,15 @@ void wxTreeListMainWindow::Collapse (const wxTreeItemId& itemId) {
 }
 
 void wxTreeListMainWindow::CollapseAndReset (const wxTreeItemId& item) {
+    wxCHECK_RET (item.IsOk(), _T("invalid tree item"));
+
     Collapse (item);
     DeleteChildren (item);
 }
 
 void wxTreeListMainWindow::Toggle (const wxTreeItemId& itemId) {
+    wxCHECK_RET (itemId.IsOk(), _T("invalid tree item"));
+
     if (IsExpanded (itemId)) {
         Collapse (itemId);
     }else{
@@ -2536,6 +2610,8 @@ void wxTreeListMainWindow::Unselect() {
 }
 
 void wxTreeListMainWindow::UnselectAllChildren (wxTreeListItem *item) {
+    wxCHECK_RET (item, _T("invalid tree item"));
+
     if (item->IsSelected()) {
         item->SetHilight (false);
         RefreshLine (item);
@@ -2675,7 +2751,9 @@ bool wxTreeListMainWindow::SelectItem (const wxTreeItemId& itemId,
 }
 
 void wxTreeListMainWindow::SelectAll() {
+    wxTreeItemId root = GetRootItem();
     wxCHECK_RET (HasFlag(wxTR_MULTIPLE), _T("invalid tree style"));
+    wxCHECK_RET (root.IsOk(), _T("no tree"));
 
     // send event to user code
     // NOTE: not using SendEvent() as we need to check event afterwards
@@ -2695,7 +2773,6 @@ void wxTreeListMainWindow::SelectAll() {
 #else
     wxTreeItemIdValue cookie = 0;
 #endif
-    wxTreeItemId root = GetRootItem();
     wxTreeListItem *first = (wxTreeListItem *)GetFirstChild (root, cookie).m_pItem;
     wxTreeListItem *last = (wxTreeListItem *)GetLastChild (root, cookie).m_pItem;
     if (!TagAllChildrenUntilLast (first, last)) {
@@ -2835,9 +2912,9 @@ wxTreeItemId wxTreeListMainWindow::FindItem (const wxTreeItemId& item, const wxS
     wxTreeItemIdValue cookie = 0;
 #endif
     if (!next.IsOk()) {
-        next = (wxTreeListItem*)GetRootItem().m_pItem;
-        if (HasFlag(wxTR_HIDE_ROOT)) {
-            next = (wxTreeListItem*)GetFirstChild (GetRootItem().m_pItem, cookie).m_pItem;
+        next = GetRootItem();
+        if (next.IsOk() && HasFlag(wxTR_HIDE_ROOT)) {
+            next = GetFirstChild (GetRootItem(), cookie);
         }
     }
     if (!next.IsOk()) return (wxTreeItemId*)NULL;
@@ -3416,9 +3493,10 @@ void wxTreeListMainWindow::OnChar (wxKeyEvent &event) {
     nevent.SetEventObject (m_owner);
     if (m_owner->GetEventHandler()->ProcessEvent (nevent)) return; // handled in user code
 
-    // determine first current if none
+    // if no item current, select root
     bool curItemSet = false;
     if (!m_curItem) {
+        if (! GetRootItem().IsOk()) return;
         m_curItem = (wxTreeListItem*)GetRootItem().m_pItem;
         if (HasFlag(wxTR_HIDE_ROOT)) {
 #if !wxCHECK_VERSION(2, 5, 0)
@@ -3428,9 +3506,9 @@ void wxTreeListMainWindow::OnChar (wxKeyEvent &event) {
 #endif
             m_curItem = (wxTreeListItem*)GetFirstChild (m_curItem, cookie).m_pItem;
         }
+        SelectItem(m_curItem, NULL, true);  // unselect others
         curItemSet = true;
     }
-    if (!m_curItem) return; // do nothing if empty tree
 
     // remember item at shift down
     if (HasFlag(wxTR_MULTIPLE) && event.ShiftDown()) {
@@ -3438,6 +3516,8 @@ void wxTreeListMainWindow::OnChar (wxKeyEvent &event) {
     }else{
         m_shiftItem = (wxTreeListItem*)NULL;
     }
+
+    if (curItemSet) return;  // if no item was current until now, do nothing more
 
     // process all cases
     wxTreeItemId newItem = (wxTreeItemId*)NULL;
@@ -3472,7 +3552,13 @@ void wxTreeListMainWindow::OnChar (wxKeyEvent &event) {
 
         // <RETURN>: activate current item
         case WXK_RETURN: {
-            SendEvent(wxEVT_COMMAND_TREE_ITEM_ACTIVATED, m_curItem);
+            if (! SendEvent(wxEVT_COMMAND_TREE_ITEM_ACTIVATED, m_curItem)) {
+
+                // if the user code didn't process the activate event,
+                // handle it ourselves by toggling the item when it is
+                // double clicked
+                if (m_curItem && m_curItem->HasPlus()) Toggle(m_curItem);
+            }
         }break;
 
         // <BKSP>: go to the parent without collapsing
@@ -3483,7 +3569,7 @@ void wxTreeListMainWindow::OnChar (wxKeyEvent &event) {
             }
         }break;
 
-        // <UP>: go to the previous sibling or to the last of its children, to the parent
+        // <UP>: go to the previous sibling or for the last of its children, to the parent
         case WXK_UP: {
             newItem = GetPrevSibling (m_curItem);
             if (newItem) {
@@ -3533,24 +3619,20 @@ void wxTreeListMainWindow::OnChar (wxKeyEvent &event) {
 
         // <DOWN>: if expanded go to the first child, else to the next sibling, ect
         case WXK_DOWN: {
-            if (curItemSet) {
-                newItem = m_curItem;
-            }else{
-                if (IsExpanded (m_curItem) && HasChildren (m_curItem)) {
+            if (IsExpanded (m_curItem) && HasChildren (m_curItem)) {
 #if !wxCHECK_VERSION(2, 5, 0)
-                    long cookie = 0;
+                long cookie = 0;
 #else
-                    wxTreeItemIdValue cookie = 0;
+                wxTreeItemIdValue cookie = 0;
 #endif
-                    newItem = GetFirstChild( m_curItem, cookie );
-                }
-                if (!newItem) {
-                    wxTreeItemId parent = m_curItem;
-                    do {
-                        newItem = GetNextSibling (parent);
-                        parent = GetItemParent (parent);
-                    } while (!newItem && parent);
-                }
+                newItem = GetFirstChild( m_curItem, cookie );
+            }
+            if (!newItem) {
+                wxTreeItemId parent = m_curItem;
+                do {
+                    newItem = GetNextSibling (parent);
+                    parent = GetItemParent (parent);
+                } while (!newItem && parent);
             }
         }break;
 
@@ -3705,20 +3787,24 @@ void wxTreeListMainWindow::EditLabel (const wxTreeItemId& item, int column) {
     x = dc.LogicalToDeviceX (x);
     y = dc.LogicalToDeviceY (y);
 
-    wxEditTextCtrl *text = new wxEditTextCtrl (this, -1, &m_renameAccept, &m_renameRes,
+    // cancel any editing
+    if (m_renameControl) {
+        m_renameControl->CancelEdit();
+    }
+    m_renameControl = new wxEditTextCtrl (this, -1, &m_renameAccept, &m_renameRes,
                                                this, m_editItem->GetText (column),
                                                wxPoint (x, y), wxSize (w, h), style);
-    text->SetFocus();
+    m_renameControl->SetFocus();
 }
 
 void wxTreeListMainWindow::OnRenameTimer() {
     EditLabel (m_curItem, m_curColumn);
 }
 
-void wxTreeListMainWindow::OnRenameAccept() {
+void wxTreeListMainWindow::OnRenameAccept(bool isCancelled) {
 
     // TODO if the validator fails this causes a crash
-    // NOTE: we can't use SendEvent() because we need to check the event's state afterwards
+    // NOTE: we can't use SendEvent() because we need to check the event's state afterwards (+ call to SetEditCanceled())
     wxTreeEvent le( wxEVT_COMMAND_TREE_END_LABEL_EDIT, m_owner->GetId() );
 #if !wxCHECK_VERSION(2, 5, 0)
     le.SetItem((long)m_editItem);
@@ -3728,9 +3814,13 @@ void wxTreeListMainWindow::OnRenameAccept() {
     le.SetEventObject( /*this*/m_owner );
     le.SetLabel( m_renameRes );
     le.SetInt(GetMainColumn());  // label column
-    m_owner->GetEventHandler()->ProcessEvent( le ); if (!le.IsAllowed()) return;
+    le.SetEditCanceled(isCancelled);
+    m_owner->GetEventHandler()->ProcessEvent( le );
 
-    SetItemText (m_editItem, m_curColumn, m_renameRes);
+    if (! isCancelled  && le.IsAllowed())
+    {
+        SetItemText (m_editItem, m_curColumn, m_renameRes);
+    }
 }
 
 void wxTreeListMainWindow::OnMouse (wxMouseEvent &event) {
@@ -4274,6 +4364,7 @@ bool wxTreeListCtrl::Create(wxWindow *parent, wxWindowID id,
 {
     long main_style = style & ~(wxSIMPLE_BORDER|wxSUNKEN_BORDER|wxDOUBLE_BORDER|
                                 wxRAISED_BORDER|wxSTATIC_BORDER);
+         main_style |= wxWANTS_CHARS ;
     long ctrl_style = style & ~(wxVSCROLL|wxHSCROLL);
 
     if (!wxControl::Create(parent, id, pos, size, ctrl_style, validator, name)) {
