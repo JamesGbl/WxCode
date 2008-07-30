@@ -75,6 +75,10 @@ void MysqlPreparedStatementWrapper::RunQuery()
   {
     SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(mysql_stmt_errno(m_pStatement)));
     SetErrorMessage(ConvertFromUnicodeStream(mysql_stmt_error(m_pStatement)));
+    if (pBoundParameters)
+    {
+      delete []pBoundParameters;
+    }
     ThrowDatabaseException();
   }
   else
@@ -84,6 +88,10 @@ void MysqlPreparedStatementWrapper::RunQuery()
     {
       SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(mysql_stmt_errno(m_pStatement)));
       SetErrorMessage(ConvertFromUnicodeStream(mysql_stmt_error(m_pStatement)));
+      if (pBoundParameters)
+      {
+        delete []pBoundParameters;
+      }
       ThrowDatabaseException();
     }
   }
