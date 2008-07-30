@@ -252,7 +252,8 @@
 <!-- ========================== -->
   <template id="databaselayer_test">
     <app-type>console</app-type>
-    <sources>$(fileList('tests/*.c*'))</sources>
+    <sources>$(fileList('tests/*.cpp'))</sources>
+    <sources>$(fileList('tests/*.cxx'))</sources>
     <headers>$(fileList('tests/*.h*'))</headers>
     <include>../tests</include>
     <dirname>../tests</dirname>
@@ -396,6 +397,7 @@
 <!-- Convenience targets -->
   <phony id="sqlite">
     <depends>databaselayer_sqlite_lib</depends>
+    <depends>databaselayer_sqlite_dll</depends>
   </phony>
 
   <phony id="sqlite_test">
@@ -404,6 +406,7 @@
 
   <phony id="firebird">
     <depends>databaselayer_firebird_lib</depends>
+    <depends>databaselayer_firebird_dll</depends>
   </phony>
 
   <phony id="firebird_test">
@@ -416,6 +419,7 @@
 
   <phony id="mysql">
     <depends>databaselayer_mysql_lib</depends>
+    <depends>databaselayer_mysql_dll</depends>
   </phony>
 
   <phony id="mysql_test">
@@ -424,6 +428,7 @@
 
   <phony id="postgresql">
     <depends>databaselayer_postgresql_lib</depends>
+    <depends>databaselayer_postgresql_dll</depends>
   </phony>
 
   <phony id="postgresql_test">
@@ -432,6 +437,7 @@
 
   <phony id="oracle">
     <depends>databaselayer_oracle_lib</depends>
+    <depends>databaselayer_oracle_dll</depends>
   </phony>
 
   <phony id="oracle_test">
@@ -440,6 +446,7 @@
 
   <phony id="odbc">
     <depends>databaselayer_odbc_lib</depends>
+    <depends>databaselayer_odbc_dll</depends>
   </phony>
 
   <phony id="odbc_test">
@@ -448,6 +455,7 @@
 
   <phony id="tds">
     <depends>databaselayer_tds_lib</depends>
+    <depends>databaselayer_tds_dll</depends>
   </phony>
 
   <phony id="tds_test">
