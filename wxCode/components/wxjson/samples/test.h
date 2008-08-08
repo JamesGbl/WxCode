@@ -26,6 +26,10 @@
 
 #define ASSERT( cond )  wxASSERT( cond );
 
+
+#include <wx/jsonreader.h>
+
+
 // external functions: each source file 'testX.cpp is specialized
 // for testing a specific feature or class.
 // the following is a list of the performed tests:
@@ -124,14 +128,16 @@ extern int Test53();   // testing errors in writing to streams
 //
 // in test13.cpp: test the 64-bit integer support
 extern int Test54();   // testing wxWidget's macro definitions
-extern int Test55();   // testing the wxJSONValue's 64-bits related functions
-extern int Test56();   // testing the wxJSONWriter's 64-bits int output
-extern int Test57();   // testing the wxJSONReader's 64-bits int output
+extern int Test55();   // testing a custom version of the wxASSERT macro
+extern int Test56();   // testing the wxJSON_NOABORT_ASSERT macro
+extern int Test57();   // testing the wxJSONReader's integer related functions
 extern int Test58();   // testing the wxString::To(U)LongLong() functions
 extern int Test59();   // testing the wxJSONReader::Strtoll() functions
 extern int Test60();   // testing the wxJSONWriter::WriteChar() function
 extern int Test61();   // testing the wxString::To(U)Long functions
 extern int Test62();   // testing the wxJSONValue::AsString() function for 64-bits int
+extern int Test63();   // testing the wxJSONWriter for various integer types
+extern int Test64();   // testing the wxJSONReader for various integer types
 
 
 
@@ -149,6 +155,11 @@ extern void TestCout( unsigned ui, bool lf = false );
 extern void TestCout( long int l, bool lf = false );
 extern void TestCout( unsigned long int ul, bool lf = false );
 extern void TestCout( double d, bool lf = false );
+
+// functions for printing values and parser error array
+extern void PrintErrors( wxJSONReader& reader );
+extern void PrintValue( wxJSONValue& val, wxJSONReader* reader = 0 );
+
 
 #if defined( wxJSON_64BIT_INT )
 extern void TestCout( wxInt64 i64, bool lf = false );

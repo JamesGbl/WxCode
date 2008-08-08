@@ -253,10 +253,11 @@ int main( int argc, char* argv[] )
 	Test47, Test48, Test49, Test50, Test51,
 	Test52, Test53,
 	Test54, Test55, Test56, Test57, Test58, Test59, Test60, Test61, Test62,
+		Test63, Test64,
 	0
   };
 
-#define TOTAL_TESTS 62
+#define TOTAL_TESTS 64
 
   int numParams = cmdLine.GetParamCount();
   if ( numParams == 0 )  {
@@ -308,6 +309,41 @@ int main( int argc, char* argv[] )
   TestCout( _T( "\nTEST application successfully completed\n\n" ));
   ::wxUninitialize();
   return 0;
+}
+
+
+// prints the errors and warnings array of the 
+void PrintErrors( wxJSONReader& reader )
+{
+  wxString s;
+  int numErrors = reader.GetErrorCount();
+  s.Printf( _T( "\nERRORS: count=%d\n"), numErrors );
+  TestCout( s );
+  const wxArrayString& errors = reader.GetErrors();
+  for ( int i = 0; i < errors.size(); i++ )  {
+    TestCout( errors[i] );
+    TestCout( _T( "\n" ));
+  }
+  int numWarn   = reader.GetWarningCount();
+  const wxArrayString& warnings = reader.GetWarnings();
+  s.Printf( _T("WARNINGS: count=%d\n"), numWarn );
+  TestCout( s );
+  for ( int i = 0; i < warnings.size(); i++ )  {
+    TestCout( warnings[i] );
+    TestCout( _T( "\n" ));
+  }
+}
+
+// prints a JSON value object and the reader's errors
+void PrintValue( wxJSONValue& val, wxJSONReader* reader )
+{
+  wxJSONWriter writer( wxJSONWRITER_STYLED | wxJSONWRITER_WRITE_COMMENTS );
+  wxString s;
+  writer.Write( val, s );
+  TestCout( s );
+  if ( reader )  {
+    PrintErrors( *reader );
+  }
 }
 
 

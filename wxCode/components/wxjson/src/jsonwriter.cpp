@@ -761,11 +761,18 @@ wxJSONWriter::WriteString( const wxString& str )
 
 //! Writes a value of primitive type.
 /*!
- This function is called for every value object of primite types
+ This function is called for every value object of primitive types
  except string values and it relaces all \c WriteXxxxx() functions.
  In order to write primitive types, this functions calls the
  wxJSONValue::AsString() function to get a string representation
  of the value.
+ This function is called for values of type:
+ \li wxJSONTYPE_NULL
+ \li wxJSONTYPE_INT, LONG, SHORT, INT64
+ \li wxJSONTYPE_UINT, ULONG, USHORT, UINT64
+ \li wxJSONTYPE_DOUBLE
+ \li wxJSONTYPE_BOOL
+
 */
 int
 wxJSONWriter::WritePrimitiveValue( const wxJSONValue& value )
@@ -782,7 +789,7 @@ wxJSONWriter::WritePrimitiveValue( const wxJSONValue& value )
 
 
 
-//! Write the provided integer to the output stream.
+//! Write the provided integer to the output JSON document (not used).
 int
 wxJSONWriter::WriteInt( int i )
 {
@@ -791,7 +798,7 @@ wxJSONWriter::WriteInt( int i )
   return WriteString( s );
 }
 
-//! Write the provided unsigned integer to the output stream.
+//! Write the provided unsigned integer to the output JSON document (not used).
 int
 wxJSONWriter::WriteUInt( unsigned int ui )
 {
@@ -801,7 +808,7 @@ wxJSONWriter::WriteUInt( unsigned int ui )
 }
 
 
-//! Write the provided boolean to the output stream.
+//! Write the provided boolean to the output JSON document (not used).
 int
 wxJSONWriter::WriteBool( bool b )
 {
@@ -810,7 +817,7 @@ wxJSONWriter::WriteBool( bool b )
   return WriteString( s );
 }
 
-//! Write the specified double number to the output stream.
+//! Write the specified double number to the output JSON document (not used).
 int
 wxJSONWriter::WriteDouble( double d )
 {
@@ -819,7 +826,7 @@ wxJSONWriter::WriteDouble( double d )
   return WriteString( s );
 }
 
-//! Write the null value to the output stream.
+//! Write the null value to the output JSON document (not used).
 int
 wxJSONWriter::WriteNull()
 {

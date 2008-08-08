@@ -1,7 +1,7 @@
 
 /*! \mainpage wxJSON - The wxWidgets implementation of JSON 
 
-<center><b>version 0.5</b></center>
+<center><b>version 1.0</b></center>
 
 <center>http://lnx.mauriziovettorato.it/public/json/home.html</center>
 
@@ -195,7 +195,7 @@ The \b wxJSON library is a complete implementation of the
 JSON data-interchange format.
 All JSON specifications are implemented in this library plus
 some extensions in the writer and in the parser class.
-This version (0.5) has to be considered a final beta release:
+This version (1.0) has to be considered a final beta release:
 no other features should be implemented in the library.
 
 One of the most important features that is not present in this

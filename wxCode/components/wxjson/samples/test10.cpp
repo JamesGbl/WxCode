@@ -40,38 +40,6 @@
 #include "test.h"
 
 
-// prints the errors and warnings array
-static void PrintErrors( wxJSONReader& reader )
-{
-  wxString s;
-  int numErrors = reader.GetErrorCount();
-  s.Printf( _T( "\nERRORS: count=%d\n"), numErrors );
-  TestCout( s );
-  const wxArrayString& errors = reader.GetErrors();
-  for ( int i = 0; i < errors.size(); i++ )  {
-    TestCout( errors[i] );
-    TestCout( _T( "\n" ));
-  }
-  int numWarn   = reader.GetWarningCount();
-  const wxArrayString& warnings = reader.GetWarnings();
-  s.Printf( _T("WARNINGS: count=%d\n"), numWarn );
-  TestCout( s );
-  for ( int i = 0; i < warnings.size(); i++ )  {
-    TestCout( warnings[i] );
-    TestCout( _T( "\n" ));
-  }
-}
-
-
-static void PrintValue( wxJSONValue& val, wxJSONReader& reader )
-{
-  wxJSONWriter writer;
-  wxString s;
-  writer.Write( val, s );
-  TestCout( s );
-  PrintErrors( reader );
-}
-
 
 // The JSON text in UTF-8 format is (without indentation):
 //
@@ -113,7 +81,7 @@ int Test45()
 
   wxMemoryInputStream jsonText( utf8Buff, sizeof( utf8Buff ));
   int numErrors = reader.Parse( jsonText, &value );
-  PrintValue( value, reader );
+  PrintValue( value, &reader );
   ASSERT( numErrors == 0 )
 
   wxJSONValue result;
@@ -152,7 +120,7 @@ int Test46()
 
   wxMemoryInputStream jsonText( utf8Buff, sizeof( utf8Buff ));
   int numErrors = reader.Parse( jsonText, &value );
-  PrintValue( value, reader );
+  PrintValue( value, &reader );
   ASSERT( numErrors == 0 )
 
   wxJSONValue result;

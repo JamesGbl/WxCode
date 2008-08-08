@@ -25,7 +25,7 @@ The JSON value class is a bit different from wxVariant because it cannot hold
 whatever type you want but only the following:
 
 \li a NULL value
-\li an integer value
+\li a signed integer
 \li an unsigned integer
 \li a double
 \li a boolean
@@ -46,11 +46,11 @@ assigned to it. For example:
 
 \code
  wxJSONValue v;            // a 'null' value
- wxJSONValue v1( 10 );     // integer type
+ wxJSONValue v1( 10 );     // signed integer type
  wxJSONValue v2( 12.90);   // double type
  v1 = "some string";       // now 'v1' is of type string
 
- wxJSONValue v3;           // an 'empty' value (=not initialized)
+ wxJSONValue v3;           // a 'null' value
  v3.Append( 10 );          // 'v3' is now of type wxJSONTYPE_ARRAY
 \endcode
 
@@ -451,7 +451,8 @@ copies so it is much more wisely (and SAFE) to never use C-strings.
 Starting from version 0.5, the \e wxJSON library supports 64-bits
 integers but only on those platforms that have native support for
 64-bits integers such as, for example, Win32 and GNU/Linux.
-Starting from version 1.x the wxJSONValue also stores
+
+Starting from version 1.0 the wxJSONValue also handles
 \b long \b int and \b short \b int data types.
 
 By default, the library checks if the \b wxLongLong_t macro is
@@ -465,9 +466,10 @@ and \b long \b long on GNU/Linux systems.
 To know more about the wxWidget's 64-bits integer stuff read the
 documentation of the \b wxLongLong class.
 If the system / platform do not support 64-bits integers, integer values
-are stored in a \b (unsigned) \b long \b int (32-bit) data type in
-wxJSON versions 1.x and above, or in a \b (unsigned) \b int type
-in all 0.x versions.
+are stored in a:
+
+ \li (unsigned) \b long \b int (32-bit) data type in wxJSON versions 1.0 and above
+ \li (unsigned) \b int data type in all 0.x versions.
 
 
 The user can disable 64-bits integer support by defining the:
@@ -478,22 +480,6 @@ The user can disable 64-bits integer support by defining the:
 
 macro in the \c include/wx/json_defs.h header file (just uncomment the
 line where the macro is defined).
-
-
-All integer types (and unsigned integers, too) are stored in the widest
-available data type (64-bits or long, depending on the platform).
-What is the JSON data type of integers? How can the user know the
-storage needs of a integer data type?
-
-First of all you have to ask yourself if you really need to know this
-information.
-In other words, if your application only uses the \b int data type (for integers) and
-it only reads its own JSON data file, it is improbable that an integer
-value stored in the JSON value class will hold other than an \b int.
-On the other hand, if your application communicate with other applications
-over a network connection, it may be possible that the JSON value class
-holds integers which are so large that they cannot fit in a simple \b int
-data type.
 
 All integer values are stored in the widest storage size: \b wx(U)int64
 or \b long \b int depending the platform.
@@ -509,9 +495,23 @@ the only thing that matters is the sign of the value: signed or unsigned.
   wxJSONvalue i64( (wxInt64) 100 ); // a long long int
 \endcode
 
-All the above integer values are stored in the wxJSONValueHolder::m_valInt64
-or in the wxJSONValueHolder::m_valLong data member.
+All the above integer values are stored in the \c wxJSONValueHolder::m_valInt64
+or in the \c wxJSONValueHolder::m_valLong data member.
 The JSON value type is set to wxJSONTYPE_INT for all cases.
+As the storage area of all primitive types is the same (it is an union) it is
+very easy to return an integer value in different sizes provided that the
+requested integer type has sufficient bits to store the value.
+
+How can the user know the storage needs of a integer data type?
+First of all you have to ask yourself if you really need to know this
+information.
+In other words, if your application only uses the \b int data type (for integers) and
+it only reads its own JSON data file, it is improbable that an integer
+value stored in the JSON value class will hold other than an \b int.
+On the other hand, if your application communicate with other applications
+over a network connection, it may be possible that the JSON value class
+holds integers which are so large that they cannot fit in a simple \b int
+data type.
 
 In order to know the storage needs of the value stored in the class you call
 the \c wxJSONType::GetType() function which returns different constants
@@ -575,9 +575,15 @@ the storage needs of an integer type:
 which meaning is simple to understand.
 
 Note that in version 1.x those functions behaves differently than in versions 0.x
-(see \ref wxjson_compatibility_1x.
 All functions return TRUE if the value can be stored in the desired type, with
 respect to the sign of the value.
+In older versions only one of the 8 functions returned TRUE: the one that match
+the sign of the stored value AND the storage needs.
+In other words, if a value contains the signed integer value of 100, the
+\b IsInt() function returns TRUE while the \b isInt64() returns FALSE.
+This is wrong because the value fits in a 64-bits integer.
+In the new 1.0 version, all the functions returns TRUE except those related to
+unsigned integer.
 
 All 64-bits integer memberfunctions are only available if
 the platform on which runs your application natively supports

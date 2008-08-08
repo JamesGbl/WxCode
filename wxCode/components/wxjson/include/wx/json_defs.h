@@ -162,7 +162,7 @@
 //
 // define the wxJSON_ASSERT() macro to expand to wxASSERT()
 // unless the wxJSON_NOABORT_ASSERT is defined
-// #define wxJSON_NOABORT_ASSERT
+#define wxJSON_NOABORT_ASSERT
 #if defined( wxJSON_NOABORT_ASSERT )
   #define wxJSON_ASSERT( cond )	
 #else

@@ -73,37 +73,6 @@ static void PrintStreamResult( wxOutputStream& os )
 }
 
 
-// prints the errors and warnings array
-static void PrintErrors( wxJSONReader& reader )
-{
-  wxString s;
-  int numErrors = reader.GetErrorCount();
-  s.Printf( _T( "\nERRORS: count=%d\n"), numErrors );
-  TestCout( s );
-  const wxArrayString& errors = reader.GetErrors();
-  for ( int i = 0; i < errors.size(); i++ )  {
-    TestCout( errors[i] );
-    TestCout( _T( "\n" ));
-  }
-  int numWarn   = reader.GetWarningCount();
-  const wxArrayString& warnings = reader.GetWarnings();
-  s.Printf( _T("WARNINGS: count=%d\n"), numWarn );
-  TestCout( s );
-  for ( int i = 0; i < warnings.size(); i++ )  {
-    TestCout( warnings[i] );
-    TestCout( _T( "\n" ));
-  }
-}
-
-
-static void PrintValue( wxJSONValue& val )
-{
-  wxJSONWriter writer;
-  wxString s;
-  writer.Write( val, s );
-  TestCout( s );
-}
-
 //
 // testing the wxJSONReader::AddWarning() function which should
 // report errors when the individual wxJSON extension is turned off

@@ -64,38 +64,6 @@
 #include "test.h"
 
 
-// prints the errors and warnings array
-static void PrintErrors( wxJSONReader& reader )
-{
-  wxString s;
-  int numErrors = reader.GetErrorCount();
-  s.Printf( _T( "\nERRORS: count=%d\n"), numErrors );
-  TestCout( s );
-  const wxArrayString& errors = reader.GetErrors();
-  for ( int i = 0; i < errors.size(); i++ )  {
-    TestCout( errors[i] );
-    TestCout( _T( "\n" ));
-  }
-  int numWarn   = reader.GetWarningCount();
-  const wxArrayString& warnings = reader.GetWarnings();
-  s.Printf( _T("WARNINGS: count=%d\n"), numWarn );
-  TestCout( s );
-  for ( int i = 0; i < warnings.size(); i++ )  {
-    TestCout( warnings[i] );
-    TestCout( _T( "\n" ));
-  }
-}
-
-
-static void PrintValue( wxJSONValue& val, wxJSONReader& reader )
-{
-  wxJSONWriter writer;
-  wxString s;
-  writer.Write( val, s );
-  TestCout( s );
-  PrintErrors( reader );
-}
-
 
 // test an array of values: text is well-formed with comments
 int Test9()
@@ -117,7 +85,7 @@ int Test9()
   int numErrors = reader.Parse( text, &root );
   // now print the JSON value that we have read
   // note the lack of comments
-  PrintValue( root, reader );
+  PrintValue( root, &reader );
 
   ASSERT( numErrors == 0 )
   int numWarn = reader.GetWarningCount();
@@ -152,7 +120,7 @@ int Test10()
 
   // now print the JSON value that we have read
   // note the lack of comments
-  PrintValue( root, reader );
+  PrintValue( root, &reader );
   ASSERT( numErrors == 0 )
   int numWarn = reader.GetWarningCount();
   ASSERT( numWarn == 2 )
@@ -182,7 +150,7 @@ int Test11()
 
   wxJSONReader reader( gs_tolerant );
   int numErrors = reader.Parse( text, &root );
-  PrintValue( root, reader );
+  PrintValue( root, &reader );
 
   ASSERT( numErrors == 0 )
   int numWarn = reader.GetWarningCount();
@@ -216,7 +184,7 @@ int Test12()
 
   wxJSONReader reader( gs_tolerant );
   int numErrors = reader.Parse( text, &root );
-  PrintValue( root, reader );
+  PrintValue( root, &reader );
 
   ASSERT( numErrors == 0 )
   int numWarn = reader.GetWarningCount();
@@ -264,7 +232,7 @@ int Test13()
 
   wxJSONReader reader( gs_tolerant );
   int numErrors = reader.Parse( text, &root );
-  PrintValue( root, reader );
+  PrintValue( root, &reader );
 
   ASSERT( numErrors == 13 )
   int numWarn = reader.GetWarningCount();
@@ -290,7 +258,7 @@ int Test14()
 
   wxJSONReader reader( gs_tolerant );
   int numErrors = reader.Parse( is, &root );
-  PrintValue( root, reader );
+  PrintValue( root, &reader );
   ASSERT( numErrors == 0 )
 
   // there are 17 warnings that are the comment line
@@ -324,7 +292,7 @@ int Test15()
   int numWarn = reader.GetWarningCount();
   ASSERT( numWarn == 0 )
 
-  PrintValue( root, reader );
+  PrintValue( root, &reader );
   return 0;
 }
 
@@ -355,7 +323,7 @@ int Test16()
 
   wxJSONReader reader( gs_tolerant );
   int numErrors = reader.Parse( s, &root );
-  PrintValue( root, reader );
+  PrintValue( root, &reader );
 
   ASSERT( numErrors == 0 )
   int numWarn = reader.GetWarningCount();
@@ -392,7 +360,7 @@ int Test17()
 
   wxJSONReader reader( gs_tolerant );
   int numErrors = reader.Parse( s, &root );
-  PrintValue( root, reader );
+  PrintValue( root, &reader );
 
   ASSERT( numErrors == 0 )
   int numWarn = reader.GetWarningCount();

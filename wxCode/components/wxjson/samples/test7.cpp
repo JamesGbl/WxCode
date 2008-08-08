@@ -38,37 +38,6 @@
 #include "test.h"
 
 
-// prints the errors and warnings array
-static void PrintErrors( wxJSONReader& reader )
-{
-  wxString s;
-  int numErrors = reader.GetErrorCount();
-  s.Printf( _T( "\nERRORS: count=%d\n"), numErrors );
-  TestCout( s );
-  const wxArrayString& errors = reader.GetErrors();
-  for ( int i = 0; i < errors.size(); i++ )  {
-    TestCout( errors[i] );
-    TestCout( _T( "\n" ));
-  }
-  int numWarn   = reader.GetWarningCount();
-  const wxArrayString& warnings = reader.GetWarnings();
-  s.Printf( _T("WARNINGS: count=%d\n"), numWarn );
-  TestCout( s );
-  for ( int i = 0; i < warnings.size(); i++ )  {
-    TestCout( warnings[i] );
-    TestCout( _T( "\n" ));
-  }
-}
-
-
-static void PrintValue( wxJSONValue& val, wxJSONReader& reader )
-{
-  wxJSONWriter writer( wxJSONWRITER_STYLED | wxJSONWRITER_WRITE_COMMENTS );
-  wxString s;
-  writer.Write( val, s );
-  TestCout( s );
-  PrintErrors( reader );
-}
 
 
 static const wxChar* test25Text = _T("// comment for root (1)\n"
@@ -326,7 +295,7 @@ int Test25()
   // do not store comments
   wxJSONReader reader( wxJSONREADER_TOLERANT );
   int numErrors = reader.Parse( s25, &root );
-  PrintValue( root, reader );
+  PrintValue( root, &reader );
   ASSERT( numErrors == 2 )
 
   wxJSONValue result;
@@ -352,7 +321,7 @@ int Test26()
   // do not store comments
   wxJSONReader reader( wxJSONREADER_TOLERANT | wxJSONREADER_STORE_COMMENTS );
   int numErrors = reader.Parse( s26, &root );
-  PrintValue( root, reader );
+  PrintValue( root, &reader );
   ASSERT( numErrors == 4 )
 
   // check if the read value is 'the same' as the expected value
@@ -529,7 +498,7 @@ int Test27()
   // do not store comments
   wxJSONReader reader( wxJSONREADER_TOLERANT | wxJSONREADER_STORE_COMMENTS );
   int numErrors = reader.Parse( s27, &root );
-  PrintValue( root, reader );
+  PrintValue( root, &reader );
   ASSERT( numErrors == 2 )
 
   // check if the read value is 'the same' as the expected value
@@ -719,7 +688,7 @@ int Test28()
   // do not store comments
   wxJSONReader reader( wxJSONREADER_TOLERANT );
   int numErrors = reader.Parse( s28, &root );
-  PrintValue( root, reader );
+  PrintValue( root, &reader );
   ASSERT( numErrors == 0 )
 
   wxJSONValue result;
@@ -751,7 +720,7 @@ int Test29()
 			| wxJSONREADER_STORE_COMMENTS
 			| wxJSONREADER_COMMENTS_AFTER );
   int numErrors = reader.Parse( s29, &root );
-  PrintValue( root, reader );
+  PrintValue( root, &reader );
   ASSERT( numErrors == 6 )
 
   // check if the read value is 'the same' as the expected value

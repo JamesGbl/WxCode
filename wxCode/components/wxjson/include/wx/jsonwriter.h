@@ -35,21 +35,30 @@
 
 // The 'style' flags for the writer
 // BIT= 9 8 7 6 5 4 3 2 1 0
-//            | | | | | | |
-//            | | | | | |  -> 1=styled (indentation), 0=not styled (other bits ignored)
-//            | | | | |  ---> 0=do not write comments, 1=write comments
-//            | | | |  -----> 1=force comments to be written before.the value
-//            | | |  -------> 1=forcecomments to be written after the value
-//            | |  ---------> 0=do not split strings, 1=split strings
-//
+//      | | | | | | | | | |
+//      | | | | | | | | |  -> 1=styled (indentation), 0=not styled (other bits ignored)
+//      | | | | | | | |  ---> 0=do not write comments, 1=write comments
+//      | | | | | | |  -----> 1=force comments to be written before.the value
+//      | | | | | |  -------> 1=forcecomments to be written after the value
+//      | | | | |  ---------> 0=do not split strings, 1=split strings
+//      | | | |  -----------> 1=do not add linefeeds between values
+//      | | |  -------------> 1=escape the solidus '/' character
+//      | |  ---------------> 1=multiline string (LF and TAB not escaped)
+//      |  -----------------> 1=prepend a plus (+) sign to unsigned integers
+//       -------------------> 1=use tabs for indentation
 enum {
-  wxJSONWRITER_NONE					= 0x00000000,
-  wxJSONWRITER_STYLED				= 0x00000001,
-  wxJSONWRITER_WRITE_COMMENTS		= 0x00000002,
-  wxJSONWRITER_COMMENTS_BEFORE		= 0x00000004,
-  wxJSONWRITER_COMMENTS_AFTER		= 0x00000008,
-  wxJSONWRITER_SPLIT_STRING			= 0x00000010,
-  wxJSONWRITER_NO_LINEFEEDS			= 0x00000020,
+  wxJSONWRITER_NONE            = 0x00000000,
+  wxJSONWRITER_STYLED          = 0x00000001,
+  wxJSONWRITER_WRITE_COMMENTS  = 0x00000002,
+  wxJSONWRITER_COMMENTS_BEFORE = 0x00000004,
+  wxJSONWRITER_COMMENTS_AFTER  = 0x00000008,
+  wxJSONWRITER_SPLIT_STRING    = 0x00000010,
+  wxJSONWRITER_NO_LINEFEEDS    = 0x00000020,
+  wxJSONWRITER_ESCAPE_SOLIDUS	 = 0x00000040,
+  wxJSONWRITER_MULTILINE_STRING   = 0x00000080,
+  wxJSONWRITER_RECOGNIZE_UNSIGNED = 0x00000100,
+  wxJSONWRITER_TAB_INDENT         = 0x00000200,
+
 };
 
 // class declaration

@@ -73,7 +73,7 @@ int Test1()
   asString = valueInt.AsString();
   ASSERT( asString == _T("10"));
   asString = valueUInt.AsString();
-  ASSERT( asString == _T("+20"));
+  ASSERT( asString == _T("20"));
   asString = valueDouble.AsString();
   ASSERT( asString == _T("10.200000"));
   asString = valueNull.AsString();

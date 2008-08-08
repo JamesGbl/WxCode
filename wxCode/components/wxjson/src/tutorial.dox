@@ -644,16 +644,65 @@ as in the previous version.
 \section wxjson_tutorial_get Obtaining values from JSON value class
 
 The wxJSONValue class defines functions for getting the value stored
-in the class. The value can be obtained in the same type it was stored
-or in another (compatible) type.
-You can know the type stored by a JSON value class using the \b IsXxxxx()
-functions. For example, to know if a value contains an integer type you
-use the wxJSONValue::IsInt() function:
+in the class.
+This topic has totally changed from versions 0.x to versions 1.x.
+
+In older 0.x versions you can get a value stored in the JSON value object
+in a type that is different from the one that is actually stored provided
+that the two types are compatible.
+For example, if a value contains an integer type of value -1, you can
+get the value as an integer or as a double, or as a string:
 
 \code
-  wxJSONValue value( 100 );
-  bool r = value.IsInt();   // return TRUE
+  wxJSONValue v( -1 );
+
+  int i      = v.AsInt();    // returns -1
+  double d   = v.AsDouble(); // returns -1.0
+  wxString s = v.AsString(); // returns "-1"
 \endcode
+
+This is no longer supported in new 1.x versions: all \b AsXxxxxx() functions
+return the stored value without reinterpreting the bits stored in memory
+so when you call the \b AsDouble() function on a value object that contains
+the integer -1 (all bits set), you get a \b NaN because all bits set in a double
+type repersent a NaN:
+
+\code
+  wxJSONValue v( -1 );
+
+  int i      = v.AsInt();    // returns -1
+  double d   = v.AsDouble(); // returns NaN
+  wxString s = v.AsString(); // returns "-1"
+\endcode
+
+The only exceptions to this are the functions:
+
+\li \b AsString()
+\li \b AsCString()
+
+The first function returns a string representation of all types except arrays
+and objects.
+The second function returns the pointer returned by \b wxString::c_str() if the
+JSON value object contains a wxString object or the pointer stored in the
+wxJSONRefData::m_value union if it contains a \e pointer-to-static-string or
+a NULL pointer in all other cases.
+
+
+In order to get the correct value from a JSON value object you should always
+call the \b IsXxxxxx() function before getting the value:
+
+\code
+  wxJSONValue v;
+
+  if ( v.IsInt() )  {
+    int i = v.AsInt();
+  }
+  else if ( v.IsDouble() )  {
+    double d = v.AsDouble();
+  }
+  else ...
+\endcode
+
 
 You can also use the wxJSONValue::GetType() function to get directly
 the type of the value which returns a \b wxJSONType type that can be used
@@ -665,90 +714,34 @@ in a \b switch statement:
   switch ( type )  {
     case wxJSONTYPE_INT :
     case wxJSONTYPE_UINT :
+    case wxJSONTYPE_DOUBLE :
     ...
   }
 \endcode
 
-For obtaining the value there are functions in the form: \b AsXxxxxxx()
-where \b Xxxxxx is the desired type.
-For example, if you want the value as an integer you call the
-\c wxJSONValue::AsInt() function.
-A problem is that the class may hold many types of value and that not
-all of these types are compatible with the one you want.
-Let's look at an example:
-\code
-  wxJSONValue v1( 120 );
-  int i      = v1.AsInt();
-  wxString s = v1.AsString();
-\endcode
 
-The above code fragment does not make problems: we can get an integer
-value as an \b int or as a \b string object; in fact, the \c AsString() function 
-uses \c wxString::Format() to represent the integer as a string.
+What happens if I get the worng type?
 
-Let's look another example:
-\code
-  wxJSONValue v1( 120.20 );
-  int i      = v1.AsInt();
-  wxString s = v1.AsString();
-\endcode
-
-As explained above, there is no problem in getting a string representation
-of a double numeric data: the \c wxString::Format() is called for this
-purpose.
-The problem is the \b AsInt() function call: note that the value stored
-can be converted to an integer with little precision loss but what
-happens if the numeric value is too big (i.e. 9.1+E16)? It cannot be
-represented as an integer.
-Moreover, maybe the user made a mistake and what he wanted
-is the double value:
+As explained earlier, the \c wxJSONValue::AsXxxxxx() functions just return
+the content of the memory area as it apears thus returning the wrong value
+if you do not call the correct function:
 
 \code
-  wxJSONValue v1( 120.20 );
+  wxJSONValue v( -1 );
 
-  // this is what the user wanted
-  double d = v1.AsDouble();
-
-  // these are mistakes the user may make
-  int i    = v1.AsInt();
-  int i    = v1.AsDouble();
+  int i      = v.AsInt();    // returns -1 (correct)IsInt() returns TRUE
+  double d   = v.AsDouble(); // returns NaN         IsDouble() returns FALSE
+  unsigned u = v.AsUInt();   // returns 4294967295  IsUInt() returns FALSE
+  unsigned
+    short h  = v.AsUShort(); // returns 65535       IsUShort() returns FALSE
 \endcode
 
-The second mistake is catched by the compiler which warns you that you
-are trying to assign to an integer a double. But if you use \c AsInt()
-the compiler could not catch the mistake.
-In order to help the user to catch errors, the wxJSONValue class does
-not try to convert types that cannot (or should not) be converted.
-This also apply to maps an arrays: they cannot even be converted to
-strings.
+However, in debug builds all \b AsXxxxxx() functions ASSERT that the
+corresponding \b IsXxxxx fucntions return TRUE so avoiding type mismatch
+errors.
+The ASSERTION failures does not occur in release builds.
 
-All functions that returns a specific type of value, will return that
-type only if the stored value \b can be converted to the desired type
-without loss of informations. Otherwise, the function returns an undefined
-result.
-Let look at an example:
 
-\code
-  wxJSONValue value( _T("A string"));
-  int i = value.AsInt();
-\endcode
-
-In the above example, the wxJSONValue::AsInt() function cannot convert
-the string to a number so what the function returns is an undefined
-integer value (see \ref pg_json_internals
-for more info on the internal representation of JSON values).
-
-In debug builds, however, all \c AsXxxxxx() functions also ASSERT that the
-actual type stored in the JSON value class is of the correct type
-for the function or it is of a type that can be converted without
-loss of informations.
-This only happens when unpredictable results are returned by the
-\b AsXxxxxxx() function. 
-So, for example, the \c wxJSONValue::AsString() function returns an empty string
-if the object's type is \b wxJSONTYPE_ARRAY or \b wxJSONTYPE_OBJECT.
-All other types can be converted to a string.
-The user can know that he is trying to get an incompatible type by checking
-the returned string for not being empty.
 
 Starting from version 0.5 the wxJSON library supports 64-bits integers
 on platforms that have native support for this.

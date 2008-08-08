@@ -40,16 +40,6 @@
 #include "test.h"
 
 
-
-
-static void PrintValue( wxJSONValue& val )
-{
-  wxJSONWriter writer;
-  wxString s;
-  writer.Write( val, s );
-  TestCout( s );
-}
-
 //
 // testing the old wxJSONValue::DeepCopy() function which was never
 // tested before. This test is done in a version before 0.4 when COW

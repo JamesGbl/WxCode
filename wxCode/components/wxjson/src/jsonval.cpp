@@ -363,10 +363,10 @@ wxJSONValue::~wxJSONValue()
 //! Return the type of the value stored in the object.
 /*!
  This function is the only one that does not ASSERT that the
- \c m_refData data member is not-NULL.
+ \c m_refData data member is not NULL.
  In fact, if the JSON value object does not contain a pointer
  to a wxJSONRefData structure, the function returns the
- wxJSONTYPE_INVALID which represent an invalid JSON value object.
+ wxJSONTYPE_INVALID constant which represent an invalid JSON value object.
  Also note that the pointer to the referenced data structure
  should NEVER be NULL.
 
@@ -384,26 +384,32 @@ wxJSONValue::~wxJSONValue()
  returned by this function is:
 
  - for signed integers:
-   - \b wxJSONTYPE_INT if the value is between INT_MIN and INT_MAX
    - \b wxJSONTYPE_SHORT if the value is between SHORT_MIN and SHORT_MAX
    - \b wxJSONTYPE_LONG if the value is between LONG_MIN and LONG_MAX
-     and greater than INT_MAX and less than INT_MIN
+     and greater than SHORT_MAX and less than SHORT_MIN
    - \b wxJSONTYPE_INT64 if the value is greater than LONG_MAX and
      less than LONG_MIN
 
  - for unsigned integers:
-   - \b wxJSONTYPE_UINT if the value is between 0 and UINT_MAX
    - \b wxJSONTYPE_USHORT if the value is between 0 and USHORT_MAX
    - \b wxJSONTYPE_ULONG if the value is between 0 and ULONG_MAX
-     and greater than UINT_MAX
+     and greater than USHORT_MAX
    - \b wxJSONTYPE_UINT64 if the value is greater than ULONG_MAX
 
- Note that on some platforms such, for example, win32 and GNU/Linux
- \b int and \b long \b int are the same size (32 bits) so the
- wxJSONTYPE_(U)LONG types are never returned and you can indifferently
- get the value as an \b int or as a \b long \b int.
+ Note that this function never returns the wxJSONTYPE_(U)INT constant
+ because the \b int data type may have the same width as SHORT or LONG
+ depending on the platform.
+ This does not mean that you cannot use \b int as the return value: if
+ you use \b wxWidgets to develop application in only one platform, you
+ can use \b int because you know the size of the data type.
+ Otherwise, if is preferable to always use \b long instead of \b int.
 
- \sa SetType
+ Also note that the class defines the \c IsInt() memberfunction which
+ works fine regardless the actual width of the \b int data type.
+ This function returns TRUE if the stored value fits in a \b int data
+ type whatever its size is on the current platform (16 or 32-bits).
+
+ \sa SetType IsInt
 */
 wxJSONType
 wxJSONValue::GetType() const
@@ -417,31 +423,29 @@ wxJSONValue::GetType() const
     // note that ints are stored as 'long' or as 'long long'
     switch ( type )  {
       case wxJSONTYPE_INT :
+        // check if the integer fits in a SHORT INT
         if ( data->m_value.VAL_INT >= SHORT_MIN && data->m_value.VAL_INT <= SHORT_MAX ) {
           type = wxJSONTYPE_SHORT;
         }
-        else if ( data->m_value.VAL_INT < INT_MIN || data->m_value.VAL_INT > INT_MAX ) {
+        // check if the value fits in LONG INT
+        else if ( data->m_value.VAL_INT >= LONG_MIN && data->m_value.VAL_INT <= LONG_MAX ) {
           type = wxJSONTYPE_LONG;
         }
-     #if defined( wxJSON_64BIT_INT )
-        else if ( data->m_value.VAL_INT < LONG_MIN || data->m_value.VAL_INT > LONG_MAX ) {
+        else {
           type = wxJSONTYPE_INT64;
         }
-     #endif
         break;
 
       case wxJSONTYPE_UINT :
         if ( data->m_value.VAL_UINT <= USHORT_MAX ) {
           type = wxJSONTYPE_USHORT;
         }
-        else if ( data->m_value.VAL_UINT > UINT_MAX ) {
+        else if ( data->m_value.VAL_UINT <= ULONG_MAX ) {
           type = wxJSONTYPE_ULONG;
         }
-     #if defined( wxJSON_64BIT_INT )
-        else if ( data->m_value.VAL_UINT > ULONG_MAX ) {
+        else  {
           type = wxJSONTYPE_UINT64;
         }
-     #endif
         break;
 
       default :
@@ -484,7 +488,7 @@ wxJSONValue::IsValid() const
 //! Return TRUE if the type of the value stored is integer.
 /*!
  This function returns TRUE if the stored value is of
- type signed integer and the numeric value fits int a
+ type signed integer and the numeric value fits in a
  \b int data type.
  In other words, the function returns TRUE if the \c wxJSONRefData::m_type 
  data member is of type \c wxJSONTYPE_INT and:
@@ -493,6 +497,14 @@ wxJSONValue::IsValid() const
    INT_MIN <= m_value <= INT_MAX
  \endcode
 
+ Note that if you are developing cross-platform applications you should never
+ use \b int as the integer data type but \b long for 32-bits integers and
+ \b short for 16-bits integers.
+ This is because the \b int data type may have different width on different
+ platforms.
+ Regardless the widht of the data type (16 or 32 bits), the function returns
+ the correct result because it relies on the INT_MAX and INT_MIN macros.
+
  \sa \ref json_internals_integer
 */
 bool
@@ -500,8 +512,15 @@ wxJSONValue::IsInt() const
 {
   wxJSONType type = GetType();
   bool r = false;
-  if ( type == wxJSONTYPE_INT || type == wxJSONTYPE_SHORT )  {
+  // if the type is SHORT the value fits into an INT, too
+  if ( type == wxJSONTYPE_SHORT )  {
     r = true;
+  }
+  else if ( type == wxJSONTYPE_LONG )  {
+    // in case of LONG, check if the bit width is the same
+    if ( INT_MAX == LONG_MAX )  {
+      r = true;
+    }
   }
   return r;
 }
@@ -543,6 +562,15 @@ wxJSONValue::IsShort() const
    0 <= m_value <= UINT_MAX
  \endcode
 
+ Note that if you are developing cross-platform applications you should never
+ use \b unsigned \b int as the integer data type but \b unsigned \b long for
+ 32-bits integers and \b unsigned \b short for 16-bits integers.
+ This is because the \b unsigned \b int data type may have different width
+ on different platforms.
+ Regardless the widht of the data type (16 or 32 bits), the function returns
+ the correct result because it relies on the UINT_MAX macro.
+
+
  \sa \ref json_internals_integer
 */
 bool
@@ -550,8 +578,13 @@ wxJSONValue::IsUInt() const
 {
   wxJSONType type = GetType();
   bool r = false;
-  if ( type == wxJSONTYPE_UINT || type == wxJSONTYPE_USHORT )  {
+  if ( type == wxJSONTYPE_USHORT )  {
     r = true;
+  }
+  else if ( type == wxJSONTYPE_ULONG )  {
+    if ( INT_MAX == LONG_MAX )  {
+      r = true;
+    }
   }
   return r;
 }
@@ -812,9 +845,9 @@ wxJSONValue::AsString() const
       break;
     case wxJSONTYPE_UINT :
 #if defined( wxJSON_64BIT_INT )
-      s.Printf( _T("+%") wxLongLongFmtSpec _T("u"), data->m_value.m_valUInt64 );
+      s.Printf( _T("%") wxLongLongFmtSpec _T("u"), data->m_value.m_valUInt64 );
 #else
-      s.Printf( _T("+%lu"), data->m_value.m_valULong );
+      s.Printf( _T("%lu"), data->m_value.m_valULong );
 #endif
       break;
     case wxJSONTYPE_DOUBLE :
