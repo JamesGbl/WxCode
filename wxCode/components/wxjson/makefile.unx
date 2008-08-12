@@ -255,7 +255,8 @@ TEST_OBJECTS = samples/main.o		\
 		samples/test10.o	\
 		samples/test11.o	\
 		samples/test12.o	\
-		samples/test13.o
+		samples/test13.o	\
+		samples/test14.o
 
 
 #
@@ -272,7 +273,8 @@ TEST_OBJECTS_A = samples/main.oa	\
 		samples/test10.oa	\
 		samples/test11.oa	\
 		samples/test12.oa	\
-		samples/test13.oa
+		samples/test13.oa	\
+		samples/test14.oa
 
 
 

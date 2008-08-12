@@ -139,6 +139,17 @@ extern int Test62();   // testing the wxJSONValue::AsString() function for 64-bi
 extern int Test63();   // testing the wxJSONWriter for various integer types
 extern int Test64();   // testing the wxJSONReader for various integer types
 
+//
+// in test14.cpp: test the wxJSONWriter class with various flags
+extern int Test65();   // writing an array of values using wxJSONWRITER_NONE
+extern int Test66();   // writing an array of values using wxJSONWRITER_STYLED
+extern int Test67();   // writing an array of values using wxJSONWRITER_WRITE_COMMENTS
+extern int Test68();   // writing an array of values using wxJSONWRITER_NO_LINEFEEDS
+extern int Test69();   // writing an array of values using wxJSONWRITER_SPLIT_STRING
+extern int Test70();   // writing an array of values using wxJSONWRITER_MULTILINE_STRING
+
+
+
 
 
 // global variables in 'main.cpp'
@@ -148,6 +159,7 @@ extern wxString gs_fileName;
 
 // printf functions in 'main.cpp'
 extern void TestCout( const wxChar* str );
+extern void TestCout( wxChar ch, bool lf = true );
 extern void TestCout( const wxString& str );
 extern void TestCout( int i, bool lf = false );
 extern void TestCout( bool b, bool lf = false );

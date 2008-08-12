@@ -84,23 +84,27 @@
        compile on Borland BCC 5.5.
        fixed a bug in the wxJSONReader::ReadValue() function which stores wrong
        values if 32-bits integer support is disabled. This bug also affects
-       all other 0.x versions of the wxJSON parser
+       all other 0.x versions of the wxJSON parser.
 
  0.5.2 fixed a bug in the wxJSONWriter::DoWrite() function: I forgot the 'case'
        wxJSONTYPE_(U)INT64 types in the switch statement so 64-bits integers
-       where not printed in the JSON text output
-
+       where not printed in the JSON text output.
+       introduced the 'unsigned int' recognition by the parser by prepending
+       a plus sign (+) to the unsigned int value.
 
  1.0.0 this release breaks compatibility with 0.x versions: please note that
        there is not a 'compatibility' version of this library. New features:
-       (r 777) changed wxJSONTYPE_EMPTY to wxJSONTYPE_INVALID 
-       (r XXX) added support for (unsigned) long int and (unsigned) short int data type
-               changed return value of the wxJSONValue::Is(U)Int Is(U)Int64 functions
+       (r 777) changed wxJSONTYPE_EMPTY to wxJSONTYPE_INVALID.
+       (r 785) added support for (unsigned) long int and (unsigned) short int data type.
+               changed return value of the wxJSONValue::Is(U)Int Is(U)Int64 functions.
+               removed the 'unsigned int' recognition by the parser due to incompatibility
+               with other JSON parsers.
        (r XXX) added the following wxJSONWriter's flags:
-               - wxJSONWRITER_NO_LINEFEED
-               - wxJSONWRITER_ESCAPE_SOLIDUS
-               - wxJSONWRITER_MULTILINE_STRING
-               - wxJSONWRITER_RECOGNIZE_UNSIGNED
+               - wxJSONWRITER_NO_LINEFEED: suppress LF
+               - wxJSONWRITER_ESCAPE_SOLIDUS: the solidus char is not escaped by default
+               - wxJSONWRITER_MULTILINE_STRING: LFs and TABs are not escaped
+               - wxJSONWRITER_RECOGNIZE_UNSIGNED: force the reader to recognize unsigned
+               - wxJSONWRITER_TAB_INDENT: use TABs instead of spaces for indentation
 
 
 BUGS

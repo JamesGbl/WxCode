@@ -47,17 +47,17 @@
 //      |  -----------------> 1=prepend a plus (+) sign to unsigned integers
 //       -------------------> 1=use tabs for indentation
 enum {
-  wxJSONWRITER_NONE            = 0x00000000,
-  wxJSONWRITER_STYLED          = 0x00000001,
-  wxJSONWRITER_WRITE_COMMENTS  = 0x00000002,
-  wxJSONWRITER_COMMENTS_BEFORE = 0x00000004,
-  wxJSONWRITER_COMMENTS_AFTER  = 0x00000008,
-  wxJSONWRITER_SPLIT_STRING    = 0x00000010,
-  wxJSONWRITER_NO_LINEFEEDS    = 0x00000020,
-  wxJSONWRITER_ESCAPE_SOLIDUS	 = 0x00000040,
-  wxJSONWRITER_MULTILINE_STRING   = 0x00000080,
-  wxJSONWRITER_RECOGNIZE_UNSIGNED = 0x00000100,
-  wxJSONWRITER_TAB_INDENT         = 0x00000200,
+  wxJSONWRITER_NONE            = 0,
+  wxJSONWRITER_STYLED          = 1,
+  wxJSONWRITER_WRITE_COMMENTS  = 2,
+  wxJSONWRITER_COMMENTS_BEFORE = 4,
+  wxJSONWRITER_COMMENTS_AFTER  = 8,
+  wxJSONWRITER_SPLIT_STRING    = 16,
+  wxJSONWRITER_NO_LINEFEEDS    = 32,
+  wxJSONWRITER_ESCAPE_SOLIDUS	  = 64,
+  wxJSONWRITER_MULTILINE_STRING   = 128,
+  wxJSONWRITER_RECOGNIZE_UNSIGNED = 256,
+  wxJSONWRITER_TAB_INDENT         = 512
 
 };
 
@@ -78,17 +78,22 @@ protected:
 				bool comma );
   int  WriteIndent();
   int  WriteIndent( int num );
+  int  WriteTabIndent();
 
   int  WriteString( const wxString& str );
   int  WriteStringValue( const wxString& str );
   int  WritePrimitiveValue( const wxJSONValue& value );
-  int  WriteInt( int i );
-  int  WriteUInt( unsigned int ui );
-  int  WriteBool( bool b );
-  int  WriteDouble( double d );
-  int  WriteNull();
+  int  WriteInvalid();
+
+  // the following functions are no more used: replaced by 'WritePrimitiveValue'
+  // int  WriteInt( int i );
+  // int  WriteUInt( unsigned int ui );
+  // int  WriteBool( bool b );
+  // int  WriteDouble( double d );
+  // int  WriteNull();
+  // int  WriteEmpty();
+
   int  WriteKey( const wxString& key );
-  int  WriteEmpty();
   int  WriteComment( const wxJSONValue& value, bool indent );
   int  WriteChar( wxChar ch );
 
