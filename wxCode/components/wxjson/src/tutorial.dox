@@ -18,6 +18,7 @@ connection.
 \li \ref wxjson_tutorial_get
 \li \ref wxjson_tutorial_comment
 \li \ref wxjson_tutorial_unicode
+\li \ref wxjson_tutorial_style
 
 
 \section wxjson_tutorial_intro Introduction
@@ -29,7 +30,7 @@ or operating system.
 It is very easy for humans to read and write and easy for
 machines to parse and generate.
 It is also light-weight and much more compact than any other
-data-interchange formats.
+text-based data-interchange formats.
 
 We will learn how to use the wxJSON library by examining some
 simple examples.
@@ -39,11 +40,10 @@ For these purposes, there are many other formats which are by
 far more appropriate than JSON.
  
 If you are new to JSON, it is better that you first read the 
-following pages, which describe the JSON syntax, its advantages
+following page, which describe the JSON syntax, its advantages
 and its disadvantages:
 
  \li <A href="http://www.json.org">Introducing JSON</A>
- \li <A href="http://www.json.org/fatfree.html">The Fat-Free Alternative to XML</A>
 
 
 \section wxjson_tutorial_ex1 Example 1: a simple example
@@ -217,7 +217,7 @@ Also note that in order to actually have comment lines written
 back to the JSON text document, you also have to store comments
 when reading the JSON text document.
 By default, the parser is error-tolerant and recognizes C/C++
-comments but it does not store them in the value they refer to.
+comments but it ignores them.
 This means that you cannot rewrite them back regardless the
 flags used in the writer class.
 To know more about comment lines in JSONvalue objects, see
@@ -285,7 +285,7 @@ This feature lets you use constructs such as the following:
 
 Because \c value does not contain any of the specified
 keys (for objects) and elements (for the array), they will be created.
-The JSON output of the code fragment seen above is as follows:
+The JSON text output of the code fragment seen above is as follows:
 
 \code
   {
@@ -643,8 +643,8 @@ as in the previous version.
 
 \section wxjson_tutorial_get Obtaining values from JSON value class
 
-The wxJSONValue class defines functions for getting the value stored
-in the class.
+The wxJSONValue class defines functions for checking what type of data is
+stored in the JSON object and for getting the value stored in the class.
 This topic has totally changed from versions 0.x to versions 1.x.
 
 In older 0.x versions you can get a value stored in the JSON value object
@@ -665,7 +665,7 @@ This is no longer supported in new 1.x versions: all \b AsXxxxxx() functions
 return the stored value without reinterpreting the bits stored in memory
 so when you call the \b AsDouble() function on a value object that contains
 the integer -1 (all bits set), you get a \b NaN because all bits set in a double
-type repersent a NaN:
+type represent a NaN:
 
 \code
   wxJSONValue v( -1 );
@@ -675,17 +675,21 @@ type repersent a NaN:
   wxString s = v.AsString(); // returns "-1"
 \endcode
 
-The only exceptions to this are the functions:
+The only exceptions to this rule are the functions:
 
 \li \b AsString()
 \li \b AsCString()
 
 The first function returns a string representation of all types except arrays
 and objects.
-The second function returns the pointer returned by \b wxString::c_str() if the
-JSON value object contains a wxString object or the pointer stored in the
-wxJSONRefData::m_value union if it contains a \e pointer-to-static-string or
-a NULL pointer in all other cases.
+The second function returns:
+
+ \li the pointer returned by \b wxString::c_str() if the JSON value object
+	contains a wxString object.
+ \li the pointer stored in the wxJSONRefData::m_value.m_valCString if the
+	JSON value object contains a \e pointer-to-static-string i.e. the
+	object is of type wxJSONTYPE_CSTRING.
+ \li a NULL pointer in all other cases.
 
 
 In order to get the correct value from a JSON value object you should always
@@ -713,27 +717,55 @@ in a \b switch statement:
   wxJSONType type = value.GetType();
   switch ( type )  {
     case wxJSONTYPE_INT :
+    case wxJSONTYPE_SHORT :
+    case wxJSONTYPE_LONG :
+    case wxJSONTYPE_INT64 :
+      wxInt64 i64 = value.AsInt64();
+
     case wxJSONTYPE_UINT :
+    case wxJSONTYPE_USHORT :
+    case wxJSONTYPE_ULONG :
+    case wxJSONTYPE_UINT64 :
+      wxUint64 i64 = value.AsUInt64();
+
     case wxJSONTYPE_DOUBLE :
-    ...
+      double d = value.AsDouble();
+
+    ... always specify ALL the possible types ...
+
+    default :
+      wxFAIL_MSG( _T("Unexpected value type"));
   }
 \endcode
 
 
-What happens if I get the worng type?
+What happens if I get the wrong type?
 
 As explained earlier, the \c wxJSONValue::AsXxxxxx() functions just return
-the content of the memory area as it apears thus returning the wrong value
-if you do not call the correct function:
+the content of the memory area as it apears without trying to promote the
+stored type to another type even when they are compatible.
+The conseguence is that the function returns a wrong value. Example:
 
 \code
   wxJSONValue v( -1 );
 
-  int i      = v.AsInt();    // returns -1 (correct)IsInt() returns TRUE
-  double d   = v.AsDouble(); // returns NaN         IsDouble() returns FALSE
-  unsigned u = v.AsUInt();   // returns 4294967295  IsUInt() returns FALSE
-  unsigned
-    short h  = v.AsUShort(); // returns 65535       IsUShort() returns FALSE
+  // returns -1 (OK): the IsInt() returns TRUE
+  int i      = v.AsInt();
+
+  // returns NaN (wrong): IsDouble() returns FALSE
+  double d   = v.AsDouble();
+
+  // returns 4294967295 (wrong) IsUInt() returns FALSE
+  unsigned u = v.AsUInt();
+
+  // returns 65535 (wrong) IsUShort() returns FALSE
+  unsigned short h  = v.AsUShort();
+
+  // returns "-1" (OK) IsString() returns FALSE; this is an exception
+  wxString s  = v.AsString();
+
+  // returns a NULL pointer IsCString() returns FALSE
+  wxChar* c  = v.AsCString();
 \endcode
 
 However, in debug builds all \b AsXxxxxx() functions ASSERT that the
@@ -742,21 +774,12 @@ errors.
 The ASSERTION failures does not occur in release builds.
 
 
-
 Starting from version 0.5 the wxJSON library supports 64-bits integers
 on platforms that have native support for this.
 If the library is compiled with the 64-bits support enabled, the
 JSON value class defines functions in order to let the user know
 the storage needed by the integer value (32-bits or 64-bits).
 To know more about this topic read \ref json_internals_integer.
-
-A final note about the \c wxJSONValue::AsCString() function.
-Starting from version 0.5 included, this function returns the pointer
-to the statically allocated C-string if the wxJSON library was
-compiled with the wxJSON_USE_CSTRING macro defined.
-If the JSON value object contains a \b wxString object, the function
-returns the pointer returned by \c wxString::c_str() function.
-In all other cases, the function returns a NULL pointer.
 
 
 \section wxjson_tutorial_comment Using comment lines in wxJSON
@@ -1425,6 +1448,296 @@ which has a different locale, for example ISO-8859-7 (greek),
 the latin-1 characters will be stored as \e unicode \e escaped
 \e sequences while the greek sequences will be converted to
 the corresponding greek letters.
+
+
+\section wxjson_tutorial_style The wxJSON writer's styles
+
+The JSON text generator - wxJSONWriter class - normally generates
+strict JSON text which is very hard to read by humans.
+In order to facilitate this job, mainly for debugging purposes,
+the writer can write \e styled text using some flags in the
+writer's constructor.
+Note that some flags depend on other ones in order to take effect.
+The following are some examples of the text output using
+various flags.
+
+\subsection wxjson_tutorial_style_styled The wxJSONWRITER_STYLED flag
+
+This flag cause the wxJSON writer to produce human-readable text output.
+Every value is separated from the previous one by a line-feed character
+and sub-objects are indented by a three space characters.
+Here is an example:
+
+\code
+{
+   "key1" : "value1",
+   "key2" : {
+      "key2-1" : 12
+   }
+}
+\endcode
+
+
+\subsection wxjson_tutorial_style_tab The wxJSONWRITER_TAB_INDENT flag
+
+This is the same as above but the indentation is done using TABs and not
+the space character.This produces a more compact text and it is preferable
+than the normal styled output.
+This flag only has effect if wxJSONWRITER_STYLED is also set. Example:
+
+\code
+{
+	"key1" : "value1",
+	"key2" : {
+		"key2-1" : 12
+	}
+}
+\endcode
+
+
+\subsection wxjson_tutorial_style_none The wxJSONWRITER_NONE flag
+
+This flag cause the writer to only produce strict JSON text without any
+formatting: LF characters between values are not written and no 
+indentation is performed. Also, no comment strings are written.
+This is a good choice if the text has to be sent over a network
+connection because it produces the most compact text.
+Example:
+
+\code
+{"key1" : "value1","key2" : { "key2-1" : 12 }}
+\endcode
+
+Note that the JSON text output is a bit different from that of 0.x
+versions because in the prevoious versions this style adds LF
+characters between value. Linefeeds are not added in the new 1.0
+version of wxJSON.
+The JSON output text is syntactically equal in both implementations:
+they only differ for the LF character.
+If you rely on the old text output, you can have the same
+results by specifying the following flags:
+\code
+  wxJSONWRITER_STYLED | wxJSONWRITER_NO_INDENTATION
+\endcode
+
+which actually produce the same result as the old wxJSONWRITER_NONE
+flag; adds LF between values but suppress indentation.
+
+\subsection wxjson_tutorial_style_nolf The wxJSONWRITER_NO_LINEFEEDS flag
+\subsection wxjson_tutorial_style_notab The wxJSONWRITER_NO_INDENTATION flag
+
+These two flags are only meaningfull if the wxJSONWRITER_STYLED was specified and
+cause the writer to not add line-feed characters between values and / or to
+remove the indentation.
+Because wxJSONWRITER_STYLED adds LF and performs indentation, specifying all
+the three flags is equal as wxJSONWRITER_NONE:
+
+\code
+  wxJSONWriter writer( wxJSONWRITER_STYLED | 
+			wxJSONWRITER_NO_INDENTATION |
+			wxJSONWRITER_NO_LINEFEEDS );
+
+  // is the same as:
+  wxJSONWriter writer( wxJSONWRITER_NONE );
+\endcode
+
+If the \b styled flag is not specfified, these two flags are useless and has no effect:
+it is not an error to specify them because the writer simply ignores them.
+The following is a text output of a value written using the
+wxJSONWRITER_STYLED and wxJSONWRITER_NO_LINEFEEDS flags: as you can see,
+LF are not printed but indentation is performed.
+
+\code
+{   "key1" : "value1",   "key2" : {      "key2-1" : 12      }   }
+\endcode
+
+Also note that the LF characters are only suppressed between values and not
+for comments.
+If you include C++ comments in the JSON text output, they \b need LF characters
+in order to mark the end of the comment.
+Note that C-style comments do not need a LF character to mark their end
+so this flag cause the LF character to be suppressed between values.
+LF characters that are contained in the C-style comment are not suppressed.
+Example using the wxJSONWRITER_NO_LINEFEEDS and wxJSONWRITER_WRITE_COMMENTS:
+
+\code
+{   "key1" : "value1", // C++ comment cause the LF char to be written
+      "key2" : {      "key2-1" : 12   }}
+\endcode
+
+
+Also note that string values may contain line-feeds: they never are suppressed
+by these flags.
+
+
+
+\subsection wxjson_tutorial_style_write_comment The wxJSONWRITER_WRITE_COMMENTS flag
+
+Comments are not supported by the JSON syntax specifications although many
+JSON implementation do recognize C/C++ comment strings.
+The wxJSON library also recognizes and stores C/C++ comments when a JSON text
+is read and is also capable to write comments.
+To know more about comments see \ref wxjson_tutorial_comment.
+
+Unlike in older 0.x versions, this flag does not depend on the wxJSONWRITER_STYLED
+flag. Comments may be added to the JSON text output even if indentation 
+is suppressed.
+Because C++ comments rely on the LF character to mark their end, a LF character
+is always added to the end of a C++ comment and ti cannot be suppressed even
+if you specify the wxJSONWRITER_NO_LINEFEEDS flag.
+
+Example using only this flag:
+\code
+{ "key1" : "value1", // C++ comment cause the LF char to be written
+"key2" : { "key2-1" : 12 } /* C-style comment */ }
+\endcode
+
+Comments in JSON text are normally used for debugging purposes and,
+in general, because a human has to read them so the most common use of
+this flag is toghether with wxJSONREADER_STYLED:
+
+\code
+{
+	"key1" : "value1", // C++ comment always include a trailing LF
+	"key2" : {
+		"key2-1" : 12 /* C-style comment */
+	}
+}
+\endcode
+
+Note that the wxJSON writer only writes one LF character between the
+first value and the second one. Because wxJSONWRITER_STYLED prints a LF
+between values and the C++ comment already terminates with a LF, the
+writer checks that a LF char was already written before writing the
+final LF that separates values.
+
+The same applies for C-style comments: they do not need a terminating
+LF character but you can store it in the comment string: moreover, you
+can store more than one of them.
+Before writing the LF character that separates the values, the writer
+checks if the last character written is a LF: it is it, the final LF
+is not needed so it is omitted.
+
+
+\subsection wxjson_tutorial_style_comment_before The wxJSONWRITER_COMMENT_BEFORE flag
+\subsection wxjson_tutorial_style_comment_after The wxJSONWRITER_COMMENT_AFTER flag
+
+The two syles are mutually exclusive and only have effect if
+wxJSONWRITER_WRITE_COMMENTS is also specified. If not, they are simply ignored.
+The flags cause the writer to always write comments before or after the
+value they refer to regardless the position of the comments specified in
+the wxJSONValue object.
+The following is an example using wxJSONWRITER_COMMENTS_BEFORE and the
+\b styled flag:
+
+\code
+{
+	// C++ comment always include a trailing LF
+	"key1" : "value1",
+	"key2" : {
+		 /* C-style comment */
+		"key2-1" : 12
+	}
+}
+\endcode
+
+Note that comments that are not written \b inline are indented using the same
+number of TABs (or spaces) of the value they refer to.
+
+
+\subsection wxjson_tutorial_style_split The wxJSONWRITER_SPLIT_STRINGS flag
+
+Strings in a JSON value object and JSON text may be very long.
+Consider the following example:
+
+\code
+{
+	"key" : "A very long string value that cause the user to scroll horizontally in order to actually read the whole line"
+}
+\endcode
+
+It would be more readable if it was written as:
+
+\code
+{
+	"key" : "A very long string value that cause the user to scroll"
+		" horizontally in order to actually read the whole line"
+}
+\endcode
+
+This flag forces the wxJSON writer to split string values if the output
+column number at which the next character would be printed is equal or greater
+than 75.
+Note that the writer will split the string value only in correndonce of a
+space or punctuation character in order to prevent single words to be splitted.
+Also, strings that exceeds column number 75 are not splitted if:
+
+\li the number of characters left to be printed is less than 15
+\li the starting column number of the string is 50 or above. 
+
+This flag has no effect if wxJSONWRITER_STYLED is not set.
+Note that the output text is not strict JSON: the wxJSONReader class is
+capable to read strings that are splitted in two or more lines but
+other JSON implementations may fail to recognize the generated text.
+Also note that the wxJSON reader class has to be constructed with a flag
+that does not consider splitted strings as errors.
+
+The limits of column number is hardcoded in the wxJSON library but they
+are \c #defined in the \c include/wx/json_defs.h header file.
+If you want to change these limits edit that header file and recompile
+the library.
+
+
+\subsection wxjson_tutorial_style_unsigned The wxJSONWRITER_RECOGNIZE_UNSIGNED flag
+
+When the wxJSON parser reads a JSON text and enconters
+a string that apears as a number which value is between INT64_MIN and INT64_MAX
+( or LONG_MIN and LONG_MAX if 64-bits support is disabled)
+it stores the value as a signed integer.
+For example, the numeric value 100 is read as a signed integer 
+data type even if it was written from a wxJSONValue object that held
+a unsigned integer (for example a counter).
+This is the code:
+
+\code
+  wxJSONValue v[ _T("counter")] = (unsigned int) 100;
+  wxJSONWriter writer;
+  wxString     jsonText;
+  writer.Write( v, jsonText );
+
+  // the output is:
+  {
+    "counter" : 100
+  }
+\endcode
+
+The reader cannot know that the variable that generated the value
+was of type \e unsigned and it stores the value as a signed integer.
+In order to force the reader use a unsigned integer in this case,
+the wxJSONWriter prepends a plus sign to the integer value:
+
+\code
+  wxJSONValue v[ _T("counter")] = (unsigned int) 100;
+  wxJSONWriter writer( wxJSONWRITER_RECOGNIZE_UNSIGNED );
+  wxString     jsonText;
+  writer.Write( v, jsonText );
+
+  // the output is:
+  {
+    "counter" : +100
+  }
+\endcode
+
+
+Now the wxJSONReader class assigns the value to a \b unsigned integer
+data type.
+Note that this feature is not strict JSON and may be handled incorrectly
+by other JSON mplementations so, by default, this feature is disabled;
+you have to use a special wxJSONWriter's flag to get this.
+Also note that other JSON implementations may fail to read such integers:
+you should only use the feature if your applications only use the \b wxJSON
+library for reading JSON text.
+
 
 
 

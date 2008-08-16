@@ -147,9 +147,9 @@ extern int Test67();   // writing an array of values using wxJSONWRITER_WRITE_CO
 extern int Test68();   // writing an array of values using wxJSONWRITER_NO_LINEFEEDS
 extern int Test69();   // writing an array of values using wxJSONWRITER_SPLIT_STRING
 extern int Test70();   // writing an array of values using wxJSONWRITER_MULTILINE_STRING
-
-
-
+extern int Test71();   // checking the wxJSONWRITER_SPLIT_STRING
+extern int Test72();   // checking the wxJSONWRITER_SPLIT_STRING
+extern int Test73();   // checking the wxJSONWRITER_TAB_INDENT
 
 
 // global variables in 'main.cpp'

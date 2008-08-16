@@ -204,7 +204,7 @@ int Test37()
 
   char buffer[128];
   wxMemoryOutputStream jsonText( buffer, 128 );
-  wxJSONWriter writer( wxJSONWRITER_NONE );
+  wxJSONWriter writer( wxJSONWRITER_STYLED | wxJSONWRITER_NO_INDENTATION );
   writer.Write( value, jsonText );
 
   // and now we check the result
@@ -223,7 +223,7 @@ int Test37()
 
 // writing to a string in Unicode mode and then
 // converting to UCS-2BE
-// 3 mar 2008: the test fails because the convesion function
+// aug 2008: the test fails because the convesion function
 // returned wxCONV_FAILED
 int Test38()
 {
@@ -297,7 +297,7 @@ int Test38()
 
 // writing to a string in Unicode mode and then
 // converting to UCS-4LE
-// the test is successfull but i got debug error messages
+// aug 2008: the test is successfull but i got debug error messages
 // related to the 'iconv' facility. Here is the output:
 // 22:38:51: Debug: In file ./src/common/strconv.cpp at line 1731: 'iconv' failed with error
 //       0x00000016 (Invalid argument).
@@ -363,7 +363,7 @@ int Test39()
   value[_T("cyrillic")] = _T("ФХЦЧ");
 
   wxString jsonText;
-  wxJSONWriter writer( wxJSONWRITER_NONE );
+  wxJSONWriter writer( wxJSONWRITER_STYLED | wxJSONWRITER_NO_INDENTATION );
   writer.Write( value, jsonText );
   // ASSERT( success == 0 );
   TestCout( _T("The result string=\n" ));
@@ -436,7 +436,8 @@ int Test40()
 
 
 // Unicode mode: writes to a stream in UTF-8 a value
-// 29 feb 2008: OK, test successfull
+// feb 2008: OK, test successfull
+// aug 2008: OK, test successfull
 int Test41()
 {
   int r = 0;
@@ -450,7 +451,7 @@ int Test41()
 
   char buffer[200];
   wxMemoryOutputStream jsonText( buffer, 200 );
-  wxJSONWriter writer( wxJSONWRITER_NONE );
+  wxJSONWriter writer( wxJSONWRITER_STYLED | wxJSONWRITER_NO_INDENTATION );
   writer.Write( value, jsonText );
 
   TestCout( _T("Result buffer length=" ));
@@ -471,6 +472,7 @@ int Test41()
 // the conversion should be OK.
 // 29 feb 2008: OK, test is successfull
 // 12 may 2008: test is successfull
+// 15 aug 2008: test is successfull
 // This test fails on win32 BCC 5.5 compiler
 int Test42()
 {
@@ -501,7 +503,7 @@ int Test42()
 
   char buffer[128];
   wxMemoryOutputStream jsonText( buffer, 128 );
-  wxJSONWriter writer( wxJSONWRITER_NONE );
+  wxJSONWriter writer( wxJSONWRITER_STYLED | wxJSONWRITER_NO_INDENTATION );
   writer.Write( value, jsonText );
 
   // and now we check the result
@@ -556,7 +558,7 @@ int Test43()
   value[_T("cyrillic")] = _T("ФХЦЧ");
 
   wxString jsonText;
-  wxJSONWriter writer( wxJSONWRITER_NONE );
+  wxJSONWriter writer( wxJSONWRITER_STYLED | wxJSONWRITER_NO_INDENTATION );
   writer.Write( value, jsonText );
   TestCout( _T("The result string=\n" ));
   TestCout( jsonText );

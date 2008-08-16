@@ -25,11 +25,11 @@ static const wxChar* writerTraceMask = _T("traceWriter");
  \brief The JSON document writer
 
  This class is a JSON document writer and it is used to write a
- wxJSONValue object to an output stream or to a string object
- of type wxString.
+ wxJSONValue object to an output stream or to a string object.
  The ctor accepts some parameters which can be used to 
  change the style of the output.
- The default output is in human-readable format.
+ The default output is in human-readable format that uses a three-space
+ indentation for object / array sub-items.
 
  Here is an example on how to use this class:
 
@@ -39,10 +39,13 @@ static const wxChar* writerTraceMask = _T("traceWriter");
    root["key1"] = "some value";
    ...
 
-   // now we want a string that contains the text data
-   // we use the default settings to obtain human-readable text
-   wxJSONWriter jsw;
+   // construct the string that will contain the JSON text
    wxString     str;
+
+   // construct a JSON writer: use the default writer's settings
+   wxJSONWriter jsw;
+
+   // call the writer's Write() memberfunction
    jsw.Write( root, str );
  \endcode
 
@@ -53,7 +56,7 @@ static const wxChar* writerTraceMask = _T("traceWriter");
  \li a string object (\b wxString)
  \li a stream object (\b wxOutputStream)
 
- When writing to a string object, the output is platform dependent.
+ When writing to a string object, the output is platform- and mode-dependent.
  In ANSI builds, the JSON text output in the string object will
  contain one-byte characters: the actual characters represented is
  locale dependent.
@@ -79,62 +82,59 @@ static const wxChar* writerTraceMask = _T("traceWriter");
 
  \param step the indentation increment for new objects/arrays in number of spaces
 	 (default is 3).
-	If you specify the wxJSONWRITER_TAB_INDENT flag for the \e style,
-	this value ignored: the indentation increment is only one TAB character.
+	This value is ignored if you specify the wxJSONWRITER_TAB_INDENT flag for
+	the \e style: the indentation increment is only one TAB character.
 
- \param style this can be a combination of the following constant OR'ed togheter:
-	\li wxJSONWRITER_NONE: no indentation is performed (hard to read by humans)
-			and no comment lines are written.
-	\li wxJSONWRITER_STYLED: output is human-readable (indented)
-	\li wxJSONWRITER_WRITE_COMMENTS:
-	this flag force the writer to write C/C++ comment strings: the comments
-	will be written in their original position. Specifying this flag also
-	implies the wxJSONWRITER_STYLED flag to be automatically set.
+ \param style this is a combination of the following constants OR'ed togheter:
+	\li wxJSONWRITER_NONE: no indentation is performed and no LF character is
+		written between values.
+		This style produces strict JSON text but it is hard to read by humans
+	\li wxJSONWRITER_STYLED: output is human-readable: values are separated by
+		LF characters and sub-items are indented.
+		This style produces strict JSON text that is easy to read by humans.
+	\li wxJSONWRITER_WRITE_COMMENTS: this flag force the writer to write C/C++
+		comment strings, if any. The comments will be written in their original position.
+		C/C++ comments may not be recognized by other JSON implementations because
+		they are not strict JSON text.
 	\li wxJSONWRITER_COMMENTS_BEFORE: this flag force the writer to write C/C++ comments
-	always before the value they refer to.
-	Specifying this flag also implies the wxJSONWRITER_STYLED and
-	wxJSONWRITER_WRITE_COMMENTS flags to be	automatically set.
+		always before the value they refer to.
+		In order for this style to take effect, you also have to specify the 
+		wxJSONWRITER_WRITE_COMMENTS flag.
 	\li wxJSONWRITER_COMMENTS_AFTER: this flag force the writer to write C/C++ comments
-	always after the value they refer to.
-	Specifying this flag also implies the wxJSONWRITER_STYLED and
-	wxJSONWRITER_WRITE_COMMENTS flags to be	automatically set.
-	\li wxJSONWRITER_SPLIT_STRINGS: this flag force the writer to split string
-	values into two or more lines if they contain a new-line character.
-	Specifying this flag also implies the wxJSONWRITER_STYLED flag to be
-	automatically set.
-	See \ref json_multiline_string for more info.
+		always after the value they refer to.
+		In order for this style to take effect, you also have to specify the 
+		wxJSONWRITER_WRITE_COMMENTS flag.
+	\li wxJSONWRITER_SPLIT_STRINGS: this flag cause the writer to split strings
+		in more than one line if they are too long.
 	\li wxJSONWRITER_NO_LINEFEEDS: this flag cause the JSON writer to not add
-	new-lines between values
+		newlines between values. It is ignored if wxJSONWRITER_STYLED is not set.
+		This style produces strict JSON text.
 	\li wxJSONWRITER_ESCAPE_SOLIDUS: the solidus character (/) should only be
-	escaped if the JSON text is meant for embedding in HTML.
-	Unlike in older 0.x versions, it is disabled by default and this flag cause
-	the solidus char to be escaped.
+		escaped if the JSON text is meant for embedding in HTML.
+		Unlike in older 0.x versions, it is disabled by default and this flag cause
+		the solidus char to be escaped.
+		This style produces strict JSON text.
 	\li wxJSONWRITER_MULTILINE_STRING:this is a multiline-string mode where newlines
-	and tabs are not escaped. This is not strict JSON, but it helps immensely when
-	manually editing json files with multiline strings
+		and tabs are not escaped. This is not strict JSON, but it helps immensely when
+		manually editing json files with multiline strings
 	\li wxJSONWRITER_RECOGNIZE_UNSIGNED: this flag cause the JSON writer to prepend
-	a plus sign (+) to unsigned integer values. This is used by the wxJSON reader to
-	force the integer to be stored in an \b unsigned \b int. Note that this
-	feature may be incompatible with other JSON implementations.
+		a plus sign (+) to unsigned integer values. This is used by the wxJSON reader to
+		force the integer to be stored in an \b unsigned \b int. Note that this
+		feature may be incompatible with other JSON implementations.
 	\li wxJSONWRITER_TAB_INDENT: this flag cause the indentation of sub-objects / arrays
-	to be done using a TAB character instead of SPACES.
-	Specifying this flag also implies the wxJSONWRITER_STYLED flag to be
-	automatically set.
+		to be done using a TAB character instead of SPACES.
+		In order for this style to take effect, you also have to specify the 
+		wxJSONWRITER_STYLED flag.
+		This style produces strict JSON text.
+	\li wxSJONWRITER_NO_INDENTATION: this flag cause the JSON writer to not add
+		indentation. It is ignored if wxJSONWRITER_STYLED is not set.
+		This style produces strict JSON text.
 
-
- Note that some flags depends on other flags: for example, all comment-related
- flags depend on the \e styled flag (wxJSONWRITER_STYLED)..
- In other words, if you want comments to be written to the JSON text both the
- wxJSONWRITER_WRITE_COMMENTS \b and wxJSONWRITER_STYLED flags must be set.
-
- Unlike in older 0.x versions, all flags that depend on other flags cause the
- dependant flag to be set automatically. This is compatible with the past: old
- applications can specify all necessary flags.
-
- You have to note that the wxJSONWRITER_NO_LINEFEEDS flag is incompatible with
- comments and with the multiline-string flag.
- This is because C++ comments ends when a LF character is encontered and the
- wxJSONWRITER_MULTILINE_STRING cause the LF char to not being escaped
+ Note that for the style wxJSONWRITER_NONE the JSON text output is a bit
+ different from that of old 0.x versions although it is syntactically equal.
+ If you rely on the old JSON output formatting read the following page
+ \ref wxjson_tutorial_style_none.
+ To know more about the writer's styles see \ref wxjson_tutorial_style
 
  \b Examples
 
@@ -147,20 +147,11 @@ static const wxChar* writerTraceMask = _T("traceWriter");
                 0,                             // initial indentation
                 4);                            // indentation step
   writer.Write( value, document );
-
-  // in the new 1.0 version, you can get the same result using the
-  // following construct
-
-  wxJSONWriter writer( 
-		wxJSONWRITER_COMMENTS_BEFORE,  // the other flags are set automatically
-                0,                             // initial indentation
-                4);                            // indentation step
-  writer.Write( value, document );
  \endcode
 
  The following code construct a JSON writer that produces hard-to-read
  output: indentation is suppressed and no comment lines are written
- and the values in the JSON text are not separated by LF
+ and the values in the JSON text are not separated by LF.
 
  \code
   wxJSONWriter writer( wxJSONWRITER_NO_LINEFEEDS );
@@ -193,20 +184,12 @@ wxJSONWriter::~wxJSONWriter()
  \li a stream object ( \b wxOutputStream)
 
  The two types of output object are very different because the
- text outputted in encoded in different formats depending on the
+ text outputted is encoded in different formats depending on the
  build mode.
-
- For \b Unicode builds, the JSON text output is platform dependent
- because \b wxString objects store wide characters which are
- represented in different formats: UCS-2 on Windows and UCS-4
- on Linux.
-
- For \b ANSI mode the JSON text output written to a string object
- is encoded in a locale dependent format: wide characters are not
- supported and the string object always contains one-byte characters.
-
- When the output object is a stream, the JSON text output is always
- encoded in UTF-8 format in both Unicode and ANSI builds.
+ When writing to a string object, the JSON text output is encoded
+ differently depending on the build mode and the platform.
+ Writing to a stream always produce UTF-8 encoded text.
+ To know more about this topic read \ref wxjson_tutorial_unicode.
 
  Also note that the Write() function does not return a status code.
  If you are writing to a string, you do not have to warry about this
@@ -253,7 +236,9 @@ void
 wxJSONWriter::Write( const wxJSONValue& value, wxOutputStream& os )
 {
   m_level = 0;
-  // we use the UTF-8 encoding. It is only meaningfull in Unicode builds
+  // we use the UTF-8 encoding. It is not hard to change the encoding
+  // format for stream output: just construct the wxMBConv -derived object
+  // and store its pointer in the 'm_conv' data member
   wxMBConvUTF8 conv;
   m_conv  = &conv;
 
@@ -266,10 +251,12 @@ wxJSONWriter::Write( const wxJSONValue& value, wxOutputStream& os )
 
 //! Perform the real write operation.
 /*!
- This is a recursive function. If the value is not a hashmap or
- an array, the function calls the other \b WriteXxxxx functions
- which actually write the text output.
- For maps and arrays, the function calls itself for all items
+ This is a recursive function. The function calls: 
+
+ \li \c WritePrimitiveValue() the null, boolean, integer and double types
+ \li \c \WriteStringValue() for string and C-string types
+
+ For maps and arrays, the function calls itself for all elements
  in the array / hashmap after incrementing the \c m_level data member.
 */
 int
@@ -281,7 +268,8 @@ wxJSONWriter::DoWrite( const wxJSONValue& value, const wxString* key,
   // some variables that cannot be allocated in the switch statement
   const wxJSONInternalMap* map = 0;
   int size;
-
+  m_colNo = 1; m_lineNo = 1
+;
   // determine the comment position; it is one of:
   //
   //  wxJSONVALUE_COMMENT_BEFORE
@@ -305,9 +293,12 @@ wxJSONWriter::DoWrite( const wxJSONValue& value, const wxString* key,
   // first write the comment if it is BEFORE
   if ( commentPos == wxJSONVALUE_COMMENT_BEFORE )   {
     lastChar = WriteComment( value, true );
-  }
-  if ( lastChar < 0 )   {
-    return lastChar;
+    if ( lastChar < 0 )   {
+      return lastChar;
+    }
+    else if ( lastChar != '\n' )  {
+      WriteSeparator();
+    }
   }
 
   lastChar = WriteIndent();
@@ -360,11 +351,7 @@ wxJSONWriter::DoWrite( const wxJSONValue& value, const wxString* key,
       break;
 
     case wxJSONTYPE_STRING :
-      lastChar = WriteStringValue( value.AsString());
-      break;
-
     case wxJSONTYPE_CSTRING :
-      // we use the 'WriteString()' function
       lastChar = WriteStringValue( value.AsString());
       break;
 
@@ -383,17 +370,17 @@ wxJSONWriter::DoWrite( const wxJSONValue& value, const wxString* key,
           return lastChar;
         }
         if ( lastChar != '\n' )   {
-          WriteChar( '\n' );
-          lastChar = '\n';
+          lastChar = WriteSeparator();
         }
       }
-      else   {
-        lastChar = WriteChar( '\n' );
+      else   {    // comment is not to be printed inline, so write a LF
+        lastChar = WriteSeparator();
         if ( lastChar < 0 )   {
           return lastChar;
         }
       }
 
+      // now iterate through all sub-items and call DoWrite() recursively
       size = value.Size();
       for ( int i = 0; i < size; i++ )  {
         bool comma = false;
@@ -430,11 +417,11 @@ wxJSONWriter::DoWrite( const wxJSONValue& value, const wxString* key,
           return lastChar;
         }
         if ( lastChar != '\n' )   {
-          WriteChar( '\n' );
+          WriteSeparator();
         }
       }
       else   {
-        lastChar = WriteChar( '\n' );
+        lastChar = WriteSeparator();
       }
 
       map = value.AsMap();
@@ -487,14 +474,14 @@ wxJSONWriter::DoWrite( const wxJSONValue& value, const wxString* key,
     }
   }
   else if ( commentPos == wxJSONVALUE_COMMENT_AFTER )   {
-    WriteChar( '\n' );
+    WriteSeparator();
     lastChar = WriteComment( value, true );
     if ( lastChar < 0 )   {
       return lastChar;
     }
   }
   if ( lastChar != '\n' )  {
-    lastChar = WriteChar( '\n' );
+    lastChar = WriteSeparator();
   }
   return lastChar;
 }
@@ -509,11 +496,7 @@ wxJSONWriter::WriteComment( const wxJSONValue& value, bool indent )
   // if nothing is written, returns ZERO
   int lastChar = 0;
 
-  // only write comments if the style is STYLED and the WRITE_COMMENTS flag
-  // is set.
-  if ( (m_style & wxJSONWRITER_STYLED ) == 0 ) {
-    return lastChar;
-  }
+  // only write comments if the style include the WRITE_COMMENTS flag
   if ( (m_style & wxJSONWRITER_WRITE_COMMENTS ) == 0 ) {
     return lastChar;
   }
@@ -540,38 +523,52 @@ wxJSONWriter::WriteComment( const wxJSONValue& value, bool indent )
  writes the specified number of spaces.
  If no parameter is given, the function computes the number of spaces
  using the following formula:
- \code
-  numSpaces = m_indent + ( m_step * m_level )
- \endcode
+ If the wxJSONWRITER_TAB_INDENT flag is used in the writer's cnstructor,
+ the function calls WriteTabIndent().
+
+ The function also checks that wxJSONWRITER_STYLED is set and the
+ wxJSONWRITER_NO_INDENTATION is not set.
 */
 int
 wxJSONWriter::WriteIndent()
 {
-  int lastChar = 0;
-  if ( m_style & wxJSONWRITER_TAB_INDENT ) {
-    lastChar = WriteTabIndent();
-  }
-  else {
-    int numSpaces = m_indent + ( m_step * m_level );
-    if ( m_style & wxJSONWRITER_STYLED )  {
-      for ( int i = 0; i < numSpaces; i++ )  {
-        lastChar = WriteChar( ' ' );
-        if ( lastChar == -1 )  {
-          break;
-        }
-      }
-    }
-  }
+  int lastChar = WriteIndent( m_level );
   return lastChar;
 }
 
-//! \overload WriteIndent()
+//! Write the specified number of indentation (spaces or tabs)
+/*!
+ The function is called by WriteIndent() and other writer's functions.
+ It writes the indentation as specified in the \c num parameter which is
+ the actual \b level of annidation.
+ The function checks if wxJSONWRITER_STYLED is set: if not, no indentation
+ is performed.
+ Also, the function checks if wxJSONWRITER_TAB_INDENT is set: if it is,
+ indentation is done by writing \b num TAB characters otherwise, 
+ it is performed by writing a number of spaces computed as:
+ \code
+  numSpaces = m_indent + ( m_step * num )
+ \endcode
+
+*/
 int
 wxJSONWriter::WriteIndent( int num )
 {
   int lastChar = 0;
-  if ( m_style & wxJSONWRITER_STYLED )  {
+  if ( !(m_style & wxJSONWRITER_STYLED) || (m_style & wxJSONWRITER_NO_INDENTATION))  {
+    return lastChar;
+  }
+  if ( m_style & wxJSONWRITER_TAB_INDENT ) {
     for ( int i = 0; i < num; i++ )  {
+      lastChar = WriteChar( '\t' );
+      if ( lastChar == -1 )  {
+        break;
+      }
+    }
+  }
+  else {
+    int numSpaces = m_indent + ( m_step * num );
+    for ( int i = 0; i < numSpaces; i++ )  {
       lastChar = WriteChar( ' ' );
       if ( lastChar == -1 )  {
         break;
@@ -581,32 +578,6 @@ wxJSONWriter::WriteIndent( int num )
   return lastChar;
 }
 
-//! Writes the indentation to the JSON text.
-/*!
- The function is called by \c WriteIndent when the writer object was
- constructed using the wxJSONWRITER_TAB_INDENT which cause indentation
- to be done using TAB characters instead of a variable number of spaces.
-
- The function computes the number of TAB of indentation using thefollowing formula:
- \code
-  numTabs = m_indent + m_level
- \endcode
-*/
-int
-wxJSONWriter::WriteTabIndent()
-{
-  int lastChar = 0;
-  int numTabs = m_indent + m_level;
-  if ( m_style & wxJSONWRITER_STYLED )  {
-    for ( int i = 0; i < numTabs; i++ )  {
-      lastChar = WriteChar( '\t' );
-      if ( lastChar == -1 )  {
-        break;
-      }
-    }
-  }
-  return lastChar;
-}
 
 //! Write the provided string to the output object.
 /*!
@@ -625,43 +596,26 @@ wxJSONWriter::WriteTabIndent()
 int
 wxJSONWriter::WriteStringValue( const wxString& str )
 {
-
-  // the 'multiLineIndent' variable controls
-  // the output and indentation of multiline strings
-  // it would be nice if the lines after the first one start at the same
-  // column as, for example:
-  //
-  //    "key" : "this is first line\n"
-  //            "this is line #2\n"
-  //            "this is line #3"
-  //
-  // but there is not a data member that stores the actual column number
-  // so by now, the indentation is calculated by adding 2 levels to the
-  // current level number so the output of the above example will be
-  // (consider a indent step of 3 (the default):
-  //
-  //    "key" : "this is first line\n"
-  //          "this is line #2\n"
-  //          "this is line #3"
-  //
-  int multiLineIndent = -1;
-  if ( ( m_style & wxJSONWRITER_SPLIT_STRING) && ( m_style & wxJSONWRITER_STYLED) )   {
-    multiLineIndent = ( m_level + 2 ) * m_step;
-  }
-
   int lastChar = WriteChar( '\"' );  // open quotes
   if ( lastChar < 0 )   {
     return lastChar;
   }
 
+  // store the column at which the string starts
+  // splitting strings only happen if the string starts within
+  // column wxJSONWRITER_LAST_COL (default 50)
+  // see 'include/wx/json_defs.h' for the defines
+  int tempCol = m_colNo;
+
   // every character is written using the WriteChar() function
-  // for every character we have to check if it is a character that
-  // needs to be escaped: note that characters that should be escaped
-  // may be not if some writer's flags are specified
   size_t len = str.length();
-  for ( size_t i = 0; i < len; i++ ) {
+  size_t i;
+  for ( i = 0; i < len; i++ ) {
     bool shouldEscape = false;
     wxChar ch = str.at(i );
+    // for every character we have to check if it is a character that
+    // needs to be escaped: note that characters that should be escaped
+    // may be not if some writer's flags are specified
     switch ( ch )  {
       case '\"' :     // quotes
         shouldEscape = true;
@@ -718,19 +672,28 @@ wxJSONWriter::WriteStringValue( const wxString& str )
       return lastChar;
     }
 
-    // check if the char is LF and if the style is SPLIT_STRING
-    if ( ch == '\n' && multiLineIndent > 0 )   {
-      lastChar = WriteString( _T("\"\n" ));       // close quotes and CR
-      if ( lastChar < 0 )  {
-        return lastChar;
-      }
-      lastChar = WriteIndent( multiLineIndent ); // write indentation
-      if ( lastChar < 0 )  {
-        return lastChar;
-      }
-      lastChar = WriteChar( '\"' );              // reopen quotes
-      if ( lastChar < 0 )  {
-        return lastChar;
+    // check if SPLIT_STRING flag is set and if the string has to
+    // be splitted
+    if ( (m_style & wxJSONWRITER_STYLED) && (m_style & wxJSONWRITER_SPLIT_STRING))   {
+      if ( m_colNo >= wxJSONWRITER_SPLIT_COL && tempCol <= wxJSONWRITER_LAST_COL ) {
+        // split the string only if there is at least wxJSONWRITER_MIN_LENGTH
+        // character to write and the character written is a punctuation or space
+        if ( IsSpace( ch ) || IsPunctuation( ch ))  {
+          if ( len - i > wxJSONWRITER_MIN_LENGTH )  {
+            lastChar = WriteString( _T("\"\n" ));       // close quotes and CR
+            if ( lastChar < 0 )  {
+              return lastChar;
+            }
+            lastChar = WriteIndent( m_level + 2 ); 	// write indentation
+            if ( lastChar < 0 )  {
+              return lastChar;
+            }
+            lastChar = WriteChar( '\"' );              // reopen quotes
+            if ( lastChar < 0 )  {
+              return lastChar;
+            }
+          }
+        }
       }
     }
   }
@@ -758,7 +721,8 @@ wxJSONWriter::WriteStringValue( const wxString& str )
 		UTF-8 format
 
  The function returns the written character ('ch' itself) or -1 in case
- of errors.
+ of errors. Also the function updates the \c m_colNo and \c m_lineNo data
+ members
 */
 int
 wxJSONWriter::WriteChar( wxChar ch )
@@ -772,9 +736,12 @@ wxJSONWriter::WriteChar( wxChar ch )
   int r = (unsigned char) ch;
 #endif
 
-  if(m_style & wxJSONWRITER_NO_LINEFEEDS && wxChar('\n') == ch) {
-    return r;	//	style specifies not to include line feeds
-  }
+  // cannot work: string values may contain LF characters that have
+  // to be printed in the output JSON text
+  //
+  // if(m_style & wxJSONWRITER_NO_LINEFEEDS && wxChar('\n') == ch) {
+  //   return r;	//	style specifies not to include line feeds
+  // }
 
   if ( m_outType == 0 )  {   // output is a string object?
     //wxString* out = wxDynamicCast( m_outObject, wxString );
@@ -834,6 +801,22 @@ wxJSONWriter::WriteChar( wxChar ch )
         break;
     }
   }
+  // update m_colNo snd m_lineNo
+  switch ( ch ) {
+    case '\n' :
+      ++m_lineNo;
+      m_colNo = 1;
+      break;
+    case '\r' :
+      m_colNo = 1;
+      break;
+    case '\t' :
+      m_colNo += wxJSONWRITER_TAB_LENGTH;
+      break;
+    default :
+      ++m_colNo;
+      break;
+  }
   return r;
 }
 
@@ -842,10 +825,7 @@ wxJSONWriter::WriteChar( wxChar ch )
  The function writes the wxString object \c str to the output object.
  The string is written as is; you cannot use it to write JSON strings
  to the output text.
- The function is used by many other functions for example by WriteInt()
- which converts the integer in a string and then writes it to the
- output JSON text.
- The function just calls WriteChar() for every character in the string.
+ It just calls WriteChar() for every character in the string.
 */
 int
 wxJSONWriter::WriteString( const wxString& str )
@@ -869,7 +849,7 @@ wxJSONWriter::WriteString( const wxString& str )
 //! Writes a value of primitive type.
 /*!
  This function is called for every value object of primitive types
- except string values and it relaces all \c WriteXxxxx() functions.
+ except string values.
  In order to write primitive types, this functions calls the
  wxJSONValue::AsString() function to get a string representation
  of the value.
@@ -942,6 +922,67 @@ wxJSONWriter::WriteError( const wxString& err )
   wxString s( _T( "ERROR: "));
   s.append( err );
   return WriteString( s );
+}
+
+//! Writes the separator between values
+/*!
+ The function is called when a value has been written to the JSON
+ text output and it writes the separator character: LF.
+ The LF char is actually written only if the wxJSONWRITER_STYLED flag
+ is specified and wxJSONWRITER_NO_LINEFEEDS is not set.
+
+ Returns the last character written which is LF itself or -1 in case
+ of errors. Note that LF is returned even if the character is not
+ actually written.
+*/
+int
+wxJSONWriter::WriteSeparator()
+{
+  wxChar lf = '\n';
+  int lastChar = lf;
+  if ( (m_style & wxJSONWRITER_STYLED) && !(m_style & wxJSONWRITER_NO_LINEFEEDS ))  {
+    lastChar = WriteChar( lf );
+  }
+  return lastChar;
+}
+
+//! Returns TRUE if the character is a space character.
+bool
+wxJSONWriter::IsSpace( wxChar ch )
+{
+  bool r = false;
+  switch ( ch ) {
+    case ' ' :
+    case '\t' :
+    case '\r' :
+    case '\f' :
+    case '\n' :
+      r = true;
+      break;
+    default :
+      break;
+  }
+  return r;
+}
+
+//! Returns TRUE if the character if a puctuation character
+bool
+wxJSONWriter::IsPunctuation( wxChar ch )
+{
+  bool r = false;
+  switch ( ch ) {
+    case '.' :
+    case ',' :
+    case ';' :
+    case ':' :
+    case '!' :
+    case '?' :
+      r = true;
+      break;
+    default :
+      break;
+  }
+  return r;
 }
 
 

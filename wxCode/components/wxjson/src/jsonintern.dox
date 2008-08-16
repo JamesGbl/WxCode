@@ -518,72 +518,79 @@ the \c wxJSONType::GetType() function which returns different constants
 depending on the weight of the numeric value:
 
 
-\li \b wxJSONTYPE_INT: the value is signed integer and it fits in an \b int data type.
-\li \b wxJSONTYPE_UINT: the value is unsigned integer and it fits in a \b unsigned
-	\b int.
-\li \b wxJSONTYPE_LONG: the value is signed integer and it fits in a \b long \b int
-	but it is too large for \b int.
-\li \b wxJSONTYPE_ULONG: the value is unsigned integer and it fits in a \b unsigned
-	\b long but it is too large for \b unsigned \b int.
-\li \b wxJSONTYPE_SHORT: the value is signed integer and it fits in a \b short \b int
-\li \b wxJSONTYPE_USHORT: the value is unsigned integer and it fits in a \b unsigned
+\li \b wxJSONTYPE_SHORT: the value is of type wxJSONVALUE_INT and it fits in a \b short \b int
+\li \b wxJSONTYPE_USHORT: the value is of type wxJSONVALUE_UINT and it fits in a \b unsigned
 	\b short
-\li \b wxJSONTYPE_INT64: the value is signed integer and it is so large that it needs 64-bits.
-\li \b wxJSONTYPE_UINT64: the value is unsigned integer and it is so large that
+\li \b wxJSONTYPE_LONG: the value is of type wxJSONVALUE_INT and it fits in a \b long \b int
+	but it is too large for \b short \b int.
+\li \b wxJSONTYPE_ULONG: the value is of type wxJSONVALUE_UINT and it fits in a \b unsigned
+	\b long but it is too large for \b unsigned \b short.
+\li \b wxJSONTYPE_INT64: the value is of type wxJSONVALUE_INT and it is so large that it needs 64-bits.
+\li \b wxJSONTYPE_UINT64: the value is of type wxJSONVALUE_UINT and it is so large that
 	it needs 64-bits.
 
-The \b GetType() function relies on the definition of the INT_MAX, INT_MIN, UINT_MAX,
-LONG_MAX, LONG_MIN, ULONG_MAX, SHORT_MAX, SHORT_MIN and USHORT_MAX macros to check
-if the value fits in a particular data type.
+The \b GetType() function relies on the definition of the SHORT_MAX, SHORT_MIN, USHORT_MAX, 
+LONG_MAX, LONG_MIN, ULONG_MAX, macros to check if the value fits in a particular data type.
 If the macros are not defined (I do not know if this could happen), the wxJSON
-library defines them by itself (see the \c include/wx/json_defs.h header file):
+library defines them by itself according to the rules of the C99 standard
+(see the \c include/wx/json_defs.h header file):
 
 \code
    C99 type      width (bits)         limits
    --------      ------------         ------
-   int              16                -32.768 .. +32.767
-   uint             16                0 .. 65.535
    short            16                -32.768 .. +32.767
    ushort           16                0 .. 65.535
    long             32                -2.147.483.648 .. +2.147.483.647
    ulong            32                0 .. +4.294.967.295
 \endcode
 
-Note that the C99 standard only defines the \e minimum width of these types
-but on some platforms, such as win32 and GNU/Linux, the \b int and the \b long
-\b int data types have the same width of 32 bits.
-This is not true for all platforms: the \b int data type may be only 16 bits
-wide so it is recommended to always use \b long instead of \b int when the
-program should be compiled for several platforms.
-In addition, the C++ language does not define a minimum size for these integer
+Note that the C99 standard only defines the \e minimum width of these types;
+in addition, the C++ language does not define a minimum size for these integer
 types.
+
+Also note that the wxJSONValue::GetType() function never returns wxJSONTYPE_INT.
+This is because the \b int data type has a variable bit-width that depends on
+the platform: on Win32 and GNU/Linux, the \b int type is the same as \b long
+(32 bits wide) but on other platforms it may be only 16 because the minimum width
+of \b int is 16 in the C99 standard.
+For this reason, it is always a good practice to never use \b int in C/C++ 
+programming language but the \b long data type which ensures 32-bits integers.
+
+The wxJSONValue class lets you use \b int as the returned data type because it
+defines the \b Is(U)Int memberfunction which returns the correct result depending
+on the definition of the INT_MAX, INT_MIN and UINT_MAX macros.
+
+
 
 \subsection json_internals_integer_is The IsXxxxx() functions
 
 The wxJSONValue class also defines functions of the form \b IsXxxxxx() to know
 the storage needs of an integer type:
 
+\par Signed integers
 \li \c IsInt()
 \li \c IsShort()
 \li \c IsLong()
 \li \c IsInt64()
+
+\par Unsigned integers
 \li \c IsUInt()
 \li \c IsUShort()
 \li \c IsULong()
 \li \c IsUInt64()
 
-which meaning is simple to understand.
 
 Note that in version 1.x those functions behaves differently than in versions 0.x
-All functions return TRUE if the value can be stored in the desired type, with
+Now all functions return TRUE if the value can be stored in the desired type, with
 respect to the sign of the value.
-In older versions only one of the 8 functions returned TRUE: the one that match
+
+In 0.x versions only one of the 8 functions returned TRUE: the one that match
 the sign of the stored value AND the storage needs.
 In other words, if a value contains the signed integer value of 100, the
 \b IsInt() function returns TRUE while the \b isInt64() returns FALSE.
 This is wrong because the value fits in a 64-bits integer.
-In the new 1.0 version, all the functions returns TRUE except those related to
-unsigned integer.
+In the new 1.0 version, all functions related to signed integer return TRUE if
+the value contained is 100.
 
 All 64-bits integer memberfunctions are only available if
 the platform on which runs your application natively supports
@@ -611,7 +618,7 @@ functions where \c Xxxxxx is the type.
 For example, to know if a JSON value object contains an integer value,
 you call the \c wxJSONValue::IsInt() memberfunction.
 Note that the function returns TRUE if the stored value is of
-type wxJSONTYPE_INT and it fits in a integer data type.
+type wxJSONTYPE_INT and it fits in a \b int data type.
 Example:
 
 \code
@@ -712,55 +719,12 @@ Examples:
   }
 \endcode
 
-
-\subsection json_internals_integer_force_unsigned Reading numeric values from JSON text: force unsigned int
-
-A string that apears as a number which value is between INT_MIN and INT_MAX is always
-stored as a signed integer even if it is positive.
-For example, the numeric value 100 is read as a signed int (or signed wxInt64)
-data type even when it was written from a wxJSON Value object that held
-a unsigned integer.
-This is the code:
-
-\code
-  wxJSONValue v( (unsigned int) 100);
-  wxJSONWriter writer;
-  wxString     jsonText;
-  writer.Write( v, jsonText );
-
-  // the output is:
-  {
-    100
-  }
-\endcode
-
-The reader cannot know that the variable that generated the value
-was of type \e unsigned and it stores the value as a signed integer.
-In order to force the reader use a unsigned integer in this case,
-the wxJSONWriter prepends a plus sign to the integer value:
-
-\code
-  wxJSONValue v( (unsigned) 100);
-  wxJSONWriter writer;
-  wxString     jsonText;
-  writer.Write( v, jsonText );
-
-  // the output is:
-  {
-    +100
-  }
-\endcode
-
-
-Now the wxJSONReader class assigns the integer to a \b unsigned \b int
-data type.
-Note that this feature is not strict JSON and may be handled incorrectly
-by other JSON mplementations so, by default, this feature is disabled;
-you have to use a special wxJSONWriter's flag to use it.
-Also note that other JSON implementations may fail to read such integers:
-you should only use the feature if your applications only use the \b wxJSON
-library for reading JSON text.
-
+Also note that if a number is between INT64_MIN and INT64_MAX (or
+LONG_MIN and LONG_MAX, depending on the platform) it is always
+read as a signed integer regardless its original type.
+You can use a special writer's flag in order to force the wxJSON
+library to recognize unsigned JSON values written to JSON text.
+See wxjson_tutorial_style_unsigned for more info.
 
 
 \section json_internals_array The array of values.
@@ -939,6 +903,13 @@ In this way the function correctly handles this situation:
 
 \section json_multiline_string The multiline string 
 
+\b WARNING: this feature in old 0.x versions is a conseguence of an error
+in the implementation or the wxJSONWriter's flags.
+The feature is still usefull but its implementation had changed in the
+writer class: no change is needed in the parser.
+
+\par The old 0.x documentation
+
 This feature allows a JSON string to be splitted in two or more lines
 in the input JSON test:
 
@@ -985,6 +956,108 @@ reported.
 For this reason, I am not sure that this feature is really a feature:
 maybe it will be dropped in next versions of the wxJSON library.
 
+\par The actual documentation
+
+
+I wrote the old documentation just for historycal purposes and for clarity:
+it helps to understand why the feature was changed in 1.0 version.
+First of all if you run the test #24 in the test application (see the
+Test24() function in the \c samples/test6.cpp source file) you got
+the following output:
+
+\code
+   "This is a multiline string\n"
+      "this is line #2\n"
+      "this is line #3"
+\endcode
+
+which is just as explained before and it seems good but it isn't.
+The problem is that the LF character \b contained in the three strings
+would have to break the line just before the close-quote characters
+but this does not happen. The reason is that the LF character was not
+acually a LF (0x0D) but the lowercase letter 'n'.
+This is due to a implementation error in the \c wxJSONWriter::WriteStringValue()
+function which contains a table of characters that have to be escaped and the
+corresponding table of escape sequences.
+Here is the old code:
+
+\code
+  // the characters that have to be escaped
+  static const wxChar escapedChars[] = { 
+	_T( '\"' ), // quotes 
+	_T( '\\' ), // reverse solidus
+	_T( '/' ),  // solidus
+	_T( '\b' ), // backspace
+	_T( '\f' ), // formfeed
+	_T( '\n' ), // newline
+	_T( '\r' ), // carriage-return
+	_T( '\t' )  // horizontal tab
+  };
+
+  // the escape sequences that has to be written instead of the characters
+  const wxString replaceChars[] = { 
+	_T("\\\""),		// OK
+	_T("\\\\"),		// OK
+	_T("\\/"),		// OK
+	_T("\\b"),		// should be "\\\b"
+	_T("\\f"),		// should be "\\\f"
+	_T("\\n"),		// should be "\\\n"
+	_T("\\r"),		// should be "\\\r"
+	_T("\\t")		// should be "\\\t"
+  };
+\endcode
+
+As you can see, I forgot one ESC character so the escape sequence for a LF
+character results in a ESCAPE character followed by a lowercase letter 'n'.
+
+The conseguence is that the \e multiline string feature is good for the
+parser but it is useless for the writer: there is no need to enforce a line-feed
+character by adding another line-feed character: the string already results splitted.
+If we add the line-feed after the close-quote character, the readibility
+of the JSON text will be made worse.
+
+
+\code
+// the output without the MULTILINE string feature is more readable
+// than using it: LF character are escaped.
+
+"This is a multiline string\
+this is line #2\
+this is line #3"
+\endcode
+
+
+Nevertheless, the flag is still usefull in the JSON writer.
+If a string value is very long, it would be nice to split it into two or
+more lines provided that the string itself does not contain LF characters.
+Consider the following example:
+
+\code
+  {
+  	"key" : "A very long string value that cause the user to scroll horizontally in order to actually read the whole line"
+  }
+\endcode
+
+It would be more readable if it was written as:
+
+\code
+  {
+  	"key" : "A very long string value that cause the user to scroll"
+		" horizontally in order to actually read the whole line"
+  }
+\endcode
+
+The reader is already capable of reading multiline strings such as the one
+seen above regardless they contain LF characters (escaped or not) just
+specify the wxJSONREADER_MULTISTRING flag in its constructor.
+
+For the writer, the wxJSONWRITER_SPLIT_STRING flag has changed its implementation:
+strings are not splitted when a LF character is encontered but only if
+the 75th column has reached in the output JSON text.
+Note that the writer will split the string when a space character is encontered
+so that a single word is not splitted in two lines.
+
+
 
 \section json_comment C/C++ comments in JSON text 
 
@@ -993,45 +1066,6 @@ C/C++ comments in JSON value objects.
 See \ref wxjson_comments for a detailed implementation.
 
 
-
-
-\section json_symbols Symbols used to customize the library's behaviuor
-
-In this section you find the description of all symbols used to
-customize the wxJSON's library behaviuor.
-All those symbols are defined in the \c include/wx/json_defs.h source
-file:
-
-\code
-wxJSON_MAJOR
-wxJSON_MINOR
-wxJSON_RELEASE
-\endcode
-
-The three macros are set equal to the major, minor and release version
-numbers. To more info on the versioning scheme of wxJSON see the
-VERSION text file in the top-level directory.
-
-
-\code
-WXJSON_USE_VALUE_COUNTER
-\endcode
-
-The above macro is used by the author for debugging purposes. If defined,
-it causes the wxJSONValue object to use a progressive counter each time a
-new object is created.
-The macro is not defined by default.
-
-\code
-wxJSON_USE_UNICODE
-\endcode
-
-The above macro is defined if the library is being built in Unicode
-mode.
-In ANSI builds the macro is not defined.
-Note that the macro should not be set by the user by automatically
-by the compiler: in fact, the macro is defined if and only if
-wxUSE_UNICODE == 1 which is set by \b wxWidgets itself.
 
 
 */
