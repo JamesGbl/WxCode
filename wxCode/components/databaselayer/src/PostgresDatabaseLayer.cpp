@@ -4,14 +4,6 @@
 #include "../include/DatabaseErrorCodes.h"
 #include "../include/DatabaseLayerException.h"
 
-#ifdef __cplusplus 
-extern "C" {
-#endif
-#include "server/mb/pg_wchar.h"
-#ifdef __cplusplus 
-}
-#endif
-
 // ctor
 PostgresDatabaseLayer::PostgresDatabaseLayer()
  : DatabaseLayer()

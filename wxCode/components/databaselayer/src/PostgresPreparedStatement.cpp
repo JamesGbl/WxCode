@@ -2,14 +2,6 @@
 #include "../include/PostgresDatabaseLayer.h"
 #include "../include/DatabaseErrorCodes.h"
 
-#ifdef __cplusplus 
-extern "C" {
-#endif
-#include "server/mb/pg_wchar.h"
-#ifdef __cplusplus 
-}
-#endif
-
 #include "wx/tokenzr.h"
 
 #include "wx/arrimpl.cpp"
