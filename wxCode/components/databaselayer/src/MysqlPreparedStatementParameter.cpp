@@ -66,7 +66,7 @@ MysqlPreparedStatementParameter::MysqlPreparedStatementParameter(MYSQL_BIND* pBi
   //if (nType == MYSQL_TYPE_STRING || nType == MYSQL_TYPE_VAR_STRING || nType == MYSQL_TYPE_BLOB
   //  || nType == MYSQL_TYPE_TINY_BLOB || nType == MYSQL_TYPE_MEDIUM_BLOB || nType == MYSQL_TYPE_LONG_BLOB)
   //{
-    wxLogDebug(_("Allocating %ld bytes in the MYSQL_BIND buffer\n"), pField->length);
+    //wxLogDebug(_("Allocating %ld bytes in the MYSQL_BIND buffer\n"), pField->length);
     void* pBuffer = m_Data.bufferValue.GetWriteBuf(m_pBind->buffer_length);
     if (pBuffer == 0)
     {
@@ -81,7 +81,11 @@ MysqlPreparedStatementParameter::MysqlPreparedStatementParameter(MYSQL_BIND* pBi
   //  {
   //  pCurrentBinding->buffer = malloc(1);
   //  }
-  m_pBind->length = &m_Data.nBufferLength;
+
+  int nType = m_pBind->buffer_type;
+  if (nType == MYSQL_TYPE_BLOB || nType == MYSQL_TYPE_TINY_BLOB || nType == MYSQL_TYPE_MEDIUM_BLOB 
+    || nType == MYSQL_TYPE_LONG_BLOB)
+    m_pBind->length = &m_Data.nBufferLength;
 }
 
 // dtor

@@ -132,6 +132,7 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
         TEST_CASE(testMemoryBufferBlobParameter)
         TEST_CASE(testSmallMemoryBuffer)
         TEST_CASE(testLargeMemoryBuffer)
+        TEST_CASE(testReusePreparedStatementWithResults)
       }
 
     private:
@@ -5046,6 +5047,142 @@ typedef std::map<int, wxArrayString> SQL_STATEMENT_ARRAY;
         }
       }
 
+      void testReusePreparedStatementWithResults()
+      {
+        puts("testReusePreparedStatementWithResults");
+        ASSERT( m_pDatabaseLayer != NULL );
+        
+        if (m_pDatabaseLayer)
+        {
+#ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
+          try
+          {
+#endif
+
+          // Add a table just for this test
+#ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
+          try
+          {
+#endif
+          SQL_STATEMENT_ARRAY::iterator createTableSql = m_SqlMap.find(CREATE_TABLE6);
+          if (createTableSql != m_SqlMap.end())
+          {
+            for (unsigned int i=0; i<(*createTableSql).second.size(); i++)
+            {
+              m_pDatabaseLayer->RunQuery((*createTableSql).second.Item(i));
+            }
+          }
+          DatabaseErrorCheck(m_pDatabaseLayer);
+#ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
+          }
+          catch (DatabaseLayerException& e)
+          {
+            // Don't stop on error here since this could be a "table already exists" error
+            ProcessException(e, false);
+          }
+#endif
+          // Make sure that the tearDown function knows to remove this test table
+          m_DeleteStatements.push_back(_("DROP TABLE table6;"));
+
+          m_pDatabaseLayer->RunQuery(_("DELETE FROM table6;")); // Be extra sure the table is empty
+          DatabaseErrorCheck(m_pDatabaseLayer);
+
+          wxString strInsertSQL = _("INSERT INTO table6 (IntCol, DoubleCol, StringCol, BlobCol) VALUES (?, ?, ?, ?);");
+          // Use a prepared statement to insert values into the database
+          PreparedStatement* pInsertStatement = m_pDatabaseLayer->PrepareStatement(strInsertSQL);
+          DatabaseErrorCheck(m_pDatabaseLayer);
+          ASSERT(pInsertStatement != NULL);
+          if (pInsertStatement)
+          {
+            wxPrintf(_("Asserting parameter count = 4\n"));
+            ASSERT_EQUALS( 4, pInsertStatement->GetParameterCount() );
+            for (int i=1; i<=5; i++)
+            {
+              pInsertStatement->SetParamInt(1, i);
+              DatabaseErrorCheck(pInsertStatement);
+              pInsertStatement->SetParamDouble(2, 1.234);
+              DatabaseErrorCheck(pInsertStatement);
+              pInsertStatement->SetParamString(3, wxString::Format(_("Test%d"), i));
+              DatabaseErrorCheck(pInsertStatement);
+              wxString strBlob = wxString::Format(_("Test Blob %d"), i);
+              // Use the length + 1 so that we get the null terminating character at the end of the string
+              wxCharBuffer charBuffer = strBlob.mb_str(*wxConvCurrent);
+              pInsertStatement->SetParamBlob(4, (const unsigned char*)(const char*)charBuffer, strBlob.Length()+1);
+              DatabaseErrorCheck(pInsertStatement);
+
+              pInsertStatement->RunQuery();
+              DatabaseErrorCheck(pInsertStatement);
+            }
+
+            // Close the insert prepared statement
+            m_pDatabaseLayer->CloseStatement(pInsertStatement);
+          }
+
+          // Use a prepared statement to retrieve the values from the database
+          wxString strSelectSQL = _("SELECT * FROM table6 WHERE StringCol = ?;"); 
+          PreparedStatement* pSelectStatement = m_pDatabaseLayer->PrepareStatement(strSelectSQL);
+          DatabaseErrorCheck(m_pDatabaseLayer);
+          ASSERT(pSelectStatement != NULL);
+          if (pSelectStatement)
+          {
+            ASSERT_EQUALS( 1, pSelectStatement->GetParameterCount() );
+            for (int i=5; i>0; i--)
+            {
+              wxString strStringCol = wxString::Format(_("Test%d"), i);
+              wxPrintf(_("SELECT * FROM table6 WHERE StringCol = '%s';\n"), strStringCol.c_str());
+              pSelectStatement->SetParamString(1, strStringCol);
+              DatabaseResultSet* pResultSet = pSelectStatement->RunQueryWithResults();
+              ASSERT(pResultSet != NULL);
+              if (pResultSet)
+              {
+                DatabaseErrorCheck(pResultSet);
+                if (pResultSet->Next())
+                {
+                  DatabaseErrorCheck(pResultSet);
+                  wxPrintf(_("Asserting IntCol = 10\n"));
+                  ASSERT_EQUALS( i, pResultSet->GetResultInt(_("IntCol")));
+                  wxPrintf(_("Asserting DoubleCol = 1.234\n"));
+                  ASSERT_EQUALS_EPSILON( 1.234, pResultSet->GetResultDouble(_("DoubleCol")), 0.000001);
+                  wxPrintf(_("Asserting StringCol = 'Test2'\n"));
+                  ASSERT_EQUALS(strStringCol, pResultSet->GetResultString(_("StringCol")));
+                  wxMemoryBuffer buffer;
+                  pResultSet->GetResultBlob(_("BlobCol"), buffer);
+                  wxString strResult((char*)buffer.GetData(), *wxConvCurrent);
+                  wxString strBlob = wxString::Format(_("Test Blob %d"), i);
+                  wxPrintf(_("Asserting BlobCol = 'Test Blob %d'\n"), i);
+                  ASSERT_EQUALS( strBlob, strResult );
+                }
+                else
+                {
+                  FAIL("Empty ResultSet");
+                }
+                m_pDatabaseLayer->CloseResultSet(pResultSet);
+              }
+              else
+              {
+                puts(m_pDatabaseLayer->GetErrorMessage().mb_str());
+                FAIL(m_pDatabaseLayer->GetErrorMessage().mb_str());
+              }
+            }
+
+            // Close the select prepared statement
+            m_pDatabaseLayer->CloseStatement(pSelectStatement);
+          }
+          else
+          {
+            puts(m_pDatabaseLayer->GetErrorMessage().mb_str());
+            FAIL(m_pDatabaseLayer->GetErrorMessage().mb_str());
+          }
+      
+#ifndef DONT_USE_DATABASE_LAYER_EXCEPTIONS
+          }
+          catch (DatabaseLayerException& e)
+          {
+            ProcessException(e);
+          }
+#endif
+        }
+      }
 
 
       
