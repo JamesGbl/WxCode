@@ -26,7 +26,7 @@ class SqliteDatabaseLayer : public DatabaseLayer
 public:
   // ctor()
   SqliteDatabaseLayer();
-  SqliteDatabaseLayer(const wxString& strDatabase);
+  SqliteDatabaseLayer(const wxString& strDatabase, bool mustExist = false);
   SqliteDatabaseLayer(sqlite3* pDatabase) { m_pDatabase = pDatabase; }
   
   // dtor()
@@ -34,6 +34,7 @@ public:
   
   // open database
   virtual bool Open(const wxString& strDatabase);
+  virtual bool Open(const wxString& strDatabase, bool mustExist);
   
   // close database  
   virtual bool Close();

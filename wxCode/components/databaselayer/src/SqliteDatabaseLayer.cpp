@@ -5,6 +5,7 @@
 #include "../include/DatabaseLayerException.h"
 
 #include <wx/tokenzr.h>
+#include <wx/filename.h>
 
 // ctor()
 SqliteDatabaseLayer::SqliteDatabaseLayer()
@@ -15,13 +16,13 @@ SqliteDatabaseLayer::SqliteDatabaseLayer()
   SetEncoding(&conv);
 }
 
-SqliteDatabaseLayer::SqliteDatabaseLayer(const wxString& strDatabase)
+SqliteDatabaseLayer::SqliteDatabaseLayer(const wxString& strDatabase, bool mustExist /*= false*/)
  : DatabaseLayer()
 {
   m_pDatabase = NULL; //new sqlite3;
   wxCSConv conv(_("UTF-8"));
   SetEncoding(&conv);
-  Open(strDatabase);
+  Open(strDatabase, mustExist);
 }
 
 // dtor()
@@ -33,6 +34,19 @@ SqliteDatabaseLayer::~SqliteDatabaseLayer()
 }
 
 // open database
+bool SqliteDatabaseLayer::Open(const wxString& strDatabase, bool mustExist)
+{
+  if (strDatabase!= _(":memory:") && // :memory: is a special SQLite in-memory database
+    mustExist && !(wxFileName::FileExists(strDatabase)))
+  {
+    SetErrorCode(DATABASE_LAYER_ERROR);
+    SetErrorMessage(_("The specified database file '") + strDatabase + _("' does not exist."));
+    ThrowDatabaseException();
+    return false;
+  }
+  return Open(strDatabase);
+}
+
 bool SqliteDatabaseLayer::Open(const wxString& strDatabase)
 {
   ResetErrorCodes();
