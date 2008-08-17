@@ -75,11 +75,9 @@ void MysqlPreparedStatementWrapper::RunQuery()
   {
     SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(mysql_stmt_errno(m_pStatement)));
     SetErrorMessage(ConvertFromUnicodeStream(mysql_stmt_error(m_pStatement)));
-    if (pBoundParameters)
-    {
-      delete []pBoundParameters;
-    }
+    wxDELETEA(pBoundParameters);
     ThrowDatabaseException();
+    return;
   }
   else
   {
@@ -88,14 +86,12 @@ void MysqlPreparedStatementWrapper::RunQuery()
     {
       SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(mysql_stmt_errno(m_pStatement)));
       SetErrorMessage(ConvertFromUnicodeStream(mysql_stmt_error(m_pStatement)));
-      if (pBoundParameters)
-      {
-        delete []pBoundParameters;
-      }
+      wxDELETEA(pBoundParameters);
       ThrowDatabaseException();
+      return;
     }
   }
-  delete []pBoundParameters;
+  wxDELETEA(pBoundParameters);
 }
 
 DatabaseResultSet* MysqlPreparedStatementWrapper::RunQueryWithResults()
@@ -107,7 +103,9 @@ DatabaseResultSet* MysqlPreparedStatementWrapper::RunQueryWithResults()
   {
     SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(mysql_stmt_errno(m_pStatement)));
     SetErrorMessage(ConvertFromUnicodeStream(mysql_stmt_error(m_pStatement)));
+    wxDELETEA(pBoundParameters);
     ThrowDatabaseException();
+    return NULL;
   }
   else
   {
@@ -115,7 +113,9 @@ DatabaseResultSet* MysqlPreparedStatementWrapper::RunQueryWithResults()
     {
       SetErrorCode(MysqlDatabaseLayer::TranslateErrorCode(mysql_stmt_errno(m_pStatement)));
       SetErrorMessage(ConvertFromUnicodeStream(mysql_stmt_error(m_pStatement)));
+      wxDELETEA(pBoundParameters);
       ThrowDatabaseException();
+      return NULL;
     }
     else
     {
@@ -124,7 +124,7 @@ DatabaseResultSet* MysqlPreparedStatementWrapper::RunQueryWithResults()
         pResultSet->SetEncoding(GetEncoding());
     }
   }
-  delete []pBoundParameters;
+  wxDELETEA(pBoundParameters);;
   
   return pResultSet;
 }
