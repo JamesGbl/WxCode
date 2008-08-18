@@ -4,7 +4,7 @@
 // Author:      Robert Roebling
 // Maintainer:  $Author: pgriddev $
 // Created:     01/02/97
-// RCS-ID:      $Id: treelistctrl.cpp,v 1.102 2008-07-28 13:54:12 pgriddev Exp $
+// RCS-ID:      $Id: treelistctrl.cpp,v 1.103 2008-08-18 11:29:34 pgriddev Exp $
 // Copyright:   (c) 2004-2008 Robert Roebling, Julian Smart, Alberto Griggio,
 //              Vadim Zeitlin, Otto Wyss, Ronan Chartois
 // Licence:     wxWindows
@@ -236,6 +236,9 @@ private:
 //-----------------------------------------------------------------------------
 //  wxTreeListMainWindow (internal)
 //-----------------------------------------------------------------------------
+
+class wxEditTextCtrl;
+
 
 // this is the "true" control
 class  wxTreeListMainWindow: public wxScrolledWindow
@@ -655,7 +658,7 @@ protected:
                               const wxString& text,
                               int image, int selectedImage,
                               wxTreeItemData *data);
-    void wxTreeListMainWindow::DoDeleteItem (wxTreeListItem *item);
+    void DoDeleteItem (wxTreeListItem *item);
     bool HasButtons(void) const
         { return (m_imageListButtons) || HasFlag (wxTR_TWIST_BUTTONS|wxTR_HAS_BUTTONS); }
 
