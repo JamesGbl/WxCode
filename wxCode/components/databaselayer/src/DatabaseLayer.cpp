@@ -27,6 +27,7 @@ void DatabaseLayer::CloseResultSets()
   DatabaseResultSetHashSet::iterator stop = m_ResultSets.end();
   while (start != stop)
   {
+    wxLogDebug(_("ResultSet NOT closed and cleaned up by the DatabaseLayer dtor"));
     delete (*start);
     start++;
   }
@@ -40,6 +41,7 @@ void DatabaseLayer::CloseStatements()
   DatabaseStatementHashSet::iterator stop = m_Statements.end();
   while (start != stop)
   {
+    wxLogDebug(_("PreparedStatement NOT closed and cleaned up by the DatabaseLayer dtor"));
     delete (*start);
     start++;
   }

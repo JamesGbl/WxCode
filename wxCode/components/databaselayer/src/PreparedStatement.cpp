@@ -21,6 +21,7 @@ void PreparedStatement::CloseResultSets()
   while (start != stop)
   {
     //wxPrintf(_("Deleting statement result set %d\n"), (*start));
+    wxLogDebug(_("ResultSet NOT closed and cleaned up by the PreparedStatement dtor"));
     delete (*start);
     start++;
   }
