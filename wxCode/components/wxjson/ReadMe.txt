@@ -95,11 +95,11 @@
  1.0.0 this release breaks compatibility with 0.x versions: please note that
        there is not a 'compatibility' version of this library. New features:
        (r 777) changed wxJSONTYPE_EMPTY to wxJSONTYPE_INVALID.
-       (r 785) added support for (unsigned) long int and (unsigned) short int data type.
+       (r 785) added support for '(unsigned) long int' and '(unsigned) short int' data type.
                changed return value of the wxJSONValue::Is(U)Int Is(U)Int64 functions.
                removed the 'unsigned int' recognition by the parser due to incompatibility
                with other JSON parsers.
-       (r XXX) added the following wxJSONWriter's flags:
+       (r 787) added the following wxJSONWriter's flags:
                - wxJSONWRITER_NO_LINEFEED: suppress LF
                - wxJSONWRITER_ESCAPE_SOLIDUS: the solidus char is not escaped by default
                - wxJSONWRITER_MULTILINE_STRING: LFs and TABs are not escaped
@@ -118,4 +118,6 @@ LICENSE
 The wxJSON library is distributed under the terms of the wxWidgets license
 (http://www.wxwidgets.org/about/newlicen.htm) either the current version 3.1 or,
 at your option, any later version.
+
+
 

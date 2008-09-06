@@ -11,9 +11,6 @@
 \li \ref json_internals_compare
 \li \ref json_multiline_string
 \li \ref json_comment
-\li \ref json_symbols
-
-
 
 
 
@@ -514,7 +511,7 @@ holds integers which are so large that they cannot fit in a simple \b int
 data type.
 
 In order to know the storage needs of the value stored in the class you call
-the \c wxJSONType::GetType() function which returns different constants
+the \c wxJSONValue::GetType() function which returns different constants
 depending on the weight of the numeric value:
 
 
@@ -711,11 +708,11 @@ Examples:
    -2147483648  // INT_MIN: read as a signed long integer
     4294967295  // UINT_MAX: read as a unsigned long integer
 
-    4294967296  // UINT_MAX: read as a double
+    4294967296  // UINT_MAX + 1: read as a double
 
     // if 64-bits integer is enabled
     4294967295  // UINT_MAX: read as a signed wxInt64
-    4294967296  // UINT_MAX: read as a signed wxInt64
+    4294967296  // UINT_MAX + 1: read as a signed wxInt64
   }
 \endcode
 
@@ -724,7 +721,7 @@ LONG_MIN and LONG_MAX, depending on the platform) it is always
 read as a signed integer regardless its original type.
 You can use a special writer's flag in order to force the wxJSON
 library to recognize unsigned JSON values written to JSON text.
-See wxjson_tutorial_style_unsigned for more info.
+See \ref wxjson_tutorial_style_unsigned for more info.
 
 
 \section json_internals_array The array of values.
@@ -961,7 +958,7 @@ maybe it will be dropped in next versions of the wxJSON library.
 
 I wrote the old documentation just for historycal purposes and for clarity:
 it helps to understand why the feature was changed in 1.0 version.
-First of all if you run the test #24 in the test application (see the
+First of all if you run the test #24 in the test application (see the \c
 Test24() function in the \c samples/test6.cpp source file) you got
 the following output:
 
