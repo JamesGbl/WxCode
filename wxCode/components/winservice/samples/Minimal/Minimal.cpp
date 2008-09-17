@@ -23,8 +23,8 @@ IMPLEMENT_APP_CONSOLE ( Minimal )
 
 
 
-static wxChar *               SERVICENAME = wxT ( "wxWinService"              );
-static wxChar *               DISPLAYNAME = wxT ( "wxWidgets Windows Service" );
+static wxChar *               SERVICENAME = wxT ( "MinimalWinService"                  );
+static wxChar *               DISPLAYNAME = wxT ( "Minimal wxWidgets Windows Service"  );
 
 
 
@@ -63,7 +63,7 @@ bool  Minimal :: OnInit ()
       case CmdLineParser :: Action_DEBUG     :
          Debug ( argc, argv );
    }
-   
+
    return ( true );
 }
 
@@ -78,7 +78,7 @@ int  Minimal :: OnExit ()
 
 wxWinServiceThread *  Minimal :: StartThread ()
 {
-   MinimalServiceThread *    t  = new  MinimalServiceThread  ( SERVICENAME );
+   MinimalServiceThread *    t  = new  MinimalServiceThread  ( SERVICENAME, ( cmdlineparser.GetAction () != CmdLineParser :: Action_DEBUG ) ? MinimalServiceThread :: Log_FILE : MinimalServiceThread :: Log_STDERR );
    
    const wxThreadError  c  = t -> Create   ();
    const wxThreadError  r  = t -> Run      ();

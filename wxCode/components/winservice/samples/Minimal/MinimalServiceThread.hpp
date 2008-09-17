@@ -18,6 +18,7 @@
 
 #include <wx/WinServiceApp.hpp>
 
+#include "CmdLineParser.hpp"
 #include "MinimalServiceThread.h"
 
 
@@ -28,14 +29,24 @@ class  MinimalServiceThread : public  wxWinServiceThread
       typedef wxWinServiceThread 
                            super;
    
+   public    :
+      enum  Log
+      {
+         Log_FILE          = 0,
+         Log_STDERR        = 1,
+      };
+
+
+
    protected :
       ExitCode             Entry          ();
       
    private   :
       const wxString       name;
+      const Log            log;
       
    public    :
-      MinimalServiceThread ( const wxString & );
+      MinimalServiceThread ( const wxString &, const Log & );
 };
 
 
